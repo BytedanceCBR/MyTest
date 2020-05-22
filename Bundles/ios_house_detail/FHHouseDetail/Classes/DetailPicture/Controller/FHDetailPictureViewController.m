@@ -48,7 +48,6 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
     BOOL _reachDragCondition; //是否满足过一次触发手势条件
 }
 @property(nonatomic, copy)TTPhotoScrollViewDismissBlock dismissBlock;
-@property(nonatomic, strong)UIScrollView * photoScrollView;
 @property(nonatomic, strong)UIView *containerView;
 
 @property(nonatomic, assign, readwrite)NSInteger currentIndex;
@@ -1277,7 +1276,7 @@ static BOOL kFHStaticPhotoBrowserAtTop = NO;
             [self stayCallBack:stayTime];
         };
         
-        [self presentViewController:showVC animated:NO completion:nil];
+        [self presentViewController:showVC animated:YES completion:nil];
     }
 }
 

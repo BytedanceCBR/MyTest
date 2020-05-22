@@ -28,6 +28,7 @@
 
 @property(nonatomic, strong) UICollectionView *colletionView;
 @property(nonatomic, strong) UILabel *infoLabel;
+@property (nonatomic, strong) UIView *listMoreView;
 @property(nonatomic, strong) UIImageView *noDataImageView;
 @property(nonatomic, strong) UIImage *placeHolder;
 @property(nonatomic, strong) NSArray *medias;
@@ -383,6 +384,9 @@
             self.headerMoreStateView.moreState = FHHouseDetailHeaderMoreStateBegin;
         }
     }
+    if (scrollView == self.colletionView) {
+        self.listMoreView.frame = CGRectMake(CGRectGetWidth(self.frame) - 74 - 15 - scrollView.contentOffset.x, CGRectGetMaxY(self.colletionView.frame) - 36 - 65, 74, 65);
+    }
 }
 
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
@@ -393,7 +397,6 @@
     //房源详情 左滑 超过 52px，松手，进入图片列表页
     if (self.isShowTopImageTab) {
         if (scrollView.contentOffset.x >= 52) {
-            NSLog(@"push picture list");
             if ([self.delegate respondsToSelector:@selector(goToPictureList)]) {
                 [self.delegate goToPictureList];
             }
@@ -500,9 +503,32 @@
 
 - (void)updateModel:(FHMultiMediaModel *)model withTitleModel:(FHDetailHouseTitleModel *)titleModel{
     self.medias = model.medias;
+    
+    self.titleView.model = titleModel;
+    if (_medias.count > 0) {
+        [self setInfoLabelText:[NSString stringWithFormat:@"%d/%ld",1,_medias.count]];
+        self.infoLabel.hidden = NO;
+        self.colletionView.hidden = NO;
+        self.noDataImageView.hidden = YES;
+        if (_medias.count > 1) {
+            NSIndexPath *indexPath = [NSIndexPath indexPathForItem:1 inSection:0];
+            [self.colletionView scrollToItemAtIndexPath:indexPath atScrollPosition:UICollectionViewScrollPositionLeft animated:NO];
+        }
+        //        [self.infoLabel mas_updateConstraints:^(MASConstraintMaker *make) {
+        //            make.bottom.equalTo(self).offset(-10 + yOffset);
+        //        }];
+    }else{
+        self.infoLabel.hidden = YES;
+        self.colletionView.hidden = YES;
+        self.noDataImageView.hidden = NO;
+        if (!_noDataImageView.image) {
+            _noDataImageView.image = [UIImage imageNamed:@"default_image"];
+        }
+    }
     //如果新房详情 并且 isShowTopImageTab = true 取第一张图
     self.colletionView.alwaysBounceHorizontal = NO;
     if (titleModel.housetype == FHHouseTypeNewHouse && self.isShowTopImageTab) {
+        self.infoLabel.hidden = YES;
         self.colletionView.alwaysBounceHorizontal = YES;
         if (model.medias.count) {
             self.medias = @[model.medias.firstObject];
@@ -513,7 +539,37 @@
             [self.colletionView addSubview:self.headerMoreStateView];
             self.headerMoreStateView.frame = CGRectMake(CGRectGetMaxX(self.colletionView.frame), 0, 52, CGRectGetHeight(self.colletionView.frame));
         }
-//        self.colletionView
+        if (!self.listMoreView) {
+            self.listMoreView = [[UIView alloc] init];
+            self.listMoreView.frame = CGRectMake(CGRectGetWidth(self.frame) - 74 - 15, CGRectGetMaxY(self.colletionView.frame) - 36 - 65, 74, 65);
+            self.listMoreView.backgroundColor = [UIColor colorWithWhite:1.0 alpha:0.75];
+            self.listMoreView.layer.masksToBounds = YES;
+            self.listMoreView.layer.cornerRadius = 10;
+            [self addSubview:self.listMoreView];
+            
+            UILabel *countLabel = [[UILabel alloc] init];
+            countLabel.font = [UIFont themeFontMedium:16];
+            countLabel.textColor = [UIColor colorWithHexStr:@"#4a4a4a"];
+            countLabel.textAlignment = NSTextAlignmentCenter;
+            countLabel.text = [NSString stringWithFormat:@"+%d",model.medias.count];
+            [self.listMoreView addSubview:countLabel];
+            [countLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+                make.centerX.mas_equalTo(self.listMoreView);
+                make.top.mas_equalTo(12);
+            }];
+            
+            UILabel *moreLabel = [[UILabel alloc] init];
+            moreLabel.font = [UIFont themeFontRegular:12];
+            moreLabel.textColor = [UIColor colorWithHexStr:@"#4a4a4a"];
+            moreLabel.textAlignment = NSTextAlignmentCenter;
+            moreLabel.text = @"查看更多";
+            [self.listMoreView addSubview:moreLabel];
+            [moreLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+                make.centerX.mas_equalTo(self.listMoreView);
+                make.bottom.mas_equalTo(-12);
+            }];
+            [self.listMoreView addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleListMoreGesture:)]];
+        }
     }
     [self.colletionView reloadData];
     
@@ -530,27 +586,6 @@
 //        make.left.right.bottom.equalTo(self);
 //        make.top.equalTo(self.colletionView.mas_bottom).offset(-topOffset);
 //    }];
-    self.titleView.model = titleModel;
-    if (_medias.count > 0) {
-        [self setInfoLabelText:[NSString stringWithFormat:@"%d/%ld",1,_medias.count]];
-        self.infoLabel.hidden = NO;
-        self.colletionView.hidden = NO;
-        self.noDataImageView.hidden = YES;
-        if (_medias.count > 1) {
-            NSIndexPath *indexPath = [NSIndexPath indexPathForItem:1 inSection:0];
-            [self.colletionView scrollToItemAtIndexPath:indexPath atScrollPosition:UICollectionViewScrollPositionLeft animated:NO];
-        }
-//        [self.infoLabel mas_updateConstraints:^(MASConstraintMaker *make) {
-//            make.bottom.equalTo(self).offset(-10 + yOffset);
-//        }];
-    }else{
-        self.infoLabel.hidden = YES;
-        self.colletionView.hidden = YES;
-        self.noDataImageView.hidden = NO;
-        if (!_noDataImageView.image) {
-            _noDataImageView.image = [UIImage imageNamed:@"default_image"];
-        }
-    }
     
     self.itemArray = [NSMutableArray array];
     self.itemIndexArray = [NSMutableArray array];
@@ -588,6 +623,12 @@
 {
     if (self.firstVRCell) {
         [self.firstVRCell checkVRLoadingAnimate];
+    }
+}
+
+- (void)handleListMoreGesture:(UITapGestureRecognizer *)gensture {
+    if ([self.delegate respondsToSelector:@selector(goToPictureList)]) {
+        [self.delegate goToPictureList];
     }
 }
 

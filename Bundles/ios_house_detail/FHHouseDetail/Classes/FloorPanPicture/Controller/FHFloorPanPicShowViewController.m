@@ -15,11 +15,12 @@
 #import <FHHouseBase/FHBaseCollectionView.h>
 #import "FHPictureListTitleCollectionView.h"
 #import "FHDetailPictureTitleView.h"
+#import "FHLoadingButton.h"
 
 @interface FHFloorPanPicShowViewController ()<UICollectionViewDelegate,UICollectionViewDataSource>
 
 @property (nonatomic , strong) UITableView* tableView;
-@property (nonatomic , strong) UICollectionView *mainCollectionView;
+@property (nonatomic , strong) UICollectionView *collectionView;
 
 @property (nonatomic, strong) FHDetailPictureTitleView *segmentTitleView;
 @property (nonatomic, copy)   NSArray       *pictureTitles;
@@ -28,21 +29,25 @@
 @property (nonatomic, strong) NSIndexPath *lastIndexPath;
 
 @property(nonatomic, strong) UIView *bottomBar;
+@property (nonatomic, strong)   UIButton       *onlineBtn;
+@property (nonatomic, strong)   FHLoadingButton       *contactBtn;
 
+@property (nonatomic, assign) UIStatusBarStyle lastStatusBarStyle;
 @end
 
 @implementation FHFloorPanPicShowViewController
 
-- (UIStatusBarStyle)preferredStatusBarStyle {
-    if (@available(iOS 13.0, *)) {
-        return UIStatusBarStyleDarkContent;
-    }
-    return UIStatusBarStyleDefault;
-}
+//- (UIStatusBarStyle)preferredStatusBarStyle {
+//    return UIStatusBarStyleDefault;;
+//}
 
 - (void)setTopImages:(NSArray<FHDetailNewTopImage *> *)topImages {
     _topImages = topImages;
     [self processImagesList];
+}
+
+- (void)dealloc {
+    [[UIApplication sharedApplication] setStatusBarStyle:_lastStatusBarStyle];
 }
 
 - (instancetype)init
@@ -50,17 +55,55 @@
     self = [super init];
     if (self) {
         self.ttTrackStayEnable = YES;
+        _lastStatusBarStyle = [[UIApplication sharedApplication] statusBarStyle];
     }
     return self;
 }
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
     [self initNavbar];
     [self setUpPictureTable];
     
     // Do any additional setup after loading the view.
+}
+
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+//    [self setNeedsStatusBarAppearanceUpdate];
+    [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault animated:YES];
+}
+
+- (UIButton *)onlineBtn {
+    if (!_onlineBtn) {
+        _onlineBtn = [[UIButton alloc] init];
+        _onlineBtn.layer.cornerRadius = 10;
+        _onlineBtn.titleLabel.font = [UIFont themeFontRegular:16];
+        _onlineBtn.backgroundColor = [UIColor colorWithHexStr:@"#ff9629"];
+        [_onlineBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+        [_onlineBtn setTitle:@"在线联系" forState:UIControlStateNormal];
+        [_onlineBtn setTitle:@"在线联系" forState:UIControlStateHighlighted];
+        [_onlineBtn addTarget:self action:@selector(onlineButtonClick:) forControlEvents:UIControlEventTouchUpInside];
+        _onlineBtn.layer.shadowColor = [UIColor colorWithRed:255/255.0 green:143/255.0 blue:0 alpha:0.3].CGColor;
+        _onlineBtn.layer.shadowOffset = CGSizeMake(4, 10);
+    }
+    return _onlineBtn;
+}
+
+- (FHLoadingButton *)contactBtn {
+    if (!_contactBtn) {
+        _contactBtn = [[FHLoadingButton alloc]init];
+        _contactBtn.layer.cornerRadius = 10;
+        _contactBtn.titleLabel.font = [UIFont themeFontRegular:16];
+        _contactBtn.backgroundColor = [UIColor colorWithHexStr:@"#fe5500"];
+        [_contactBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+        [_contactBtn setTitle:@"电话咨询" forState:UIControlStateNormal];
+        [_contactBtn setTitle:@"电话咨询" forState:UIControlStateHighlighted];
+        [_contactBtn addTarget:self action:@selector(contactButtonClick:) forControlEvents:UIControlEventTouchUpInside];
+        _contactBtn.layer.shadowColor = [UIColor colorWithRed:254/255.0 green:85/255.0 blue:0 alpha:0.3].CGColor;
+        _contactBtn.layer.shadowOffset = CGSizeMake(4, 10);
+    }
+    return _contactBtn;
 }
 
 - (void)setUpPictureTable
@@ -70,6 +113,7 @@
     if (self.topImages && self.pictureTitles.count > 1) {
         self.segmentTitleView = [[FHDetailPictureTitleView alloc] initWithFrame:CGRectMake(0, CGRectGetMaxY(self.customNavBarView.frame), CGRectGetWidth(self.view.bounds), 42)];
         self.segmentTitleView.backgroundColor = [UIColor clearColor];
+        self.segmentTitleView.usedInPictureList = YES;
         [self.view addSubview:self.segmentTitleView];
         [self.segmentTitleView mas_makeConstraints:^(MASConstraintMaker *make) {
             make.left.right.mas_equalTo(0);
@@ -95,23 +139,23 @@
     layout.itemSize =CGSizeMake(110, 150);
     
     //2.初始化collectionView
-    _mainCollectionView = [[FHBaseCollectionView alloc] initWithFrame:self.view.bounds collectionViewLayout:layout];
-    [self.view addSubview:_mainCollectionView];
-    _mainCollectionView.backgroundColor = [UIColor clearColor];
+    _collectionView = [[FHBaseCollectionView alloc] initWithFrame:self.view.bounds collectionViewLayout:layout];
+    [self.view addSubview:_collectionView];
+    _collectionView.backgroundColor = [UIColor clearColor];
     
     //3.注册collectionViewCell
     //注意，此处的ReuseIdentifier 必须和 cellForItemAtIndexPath 方法中 一致 均为 cellId
-    [_mainCollectionView registerClass:[FHFloorPanPicCollectionCell class] forCellWithReuseIdentifier:NSStringFromClass([FHFloorPanPicCollectionCell class])];
+    [_collectionView registerClass:[FHFloorPanPicCollectionCell class] forCellWithReuseIdentifier:NSStringFromClass([FHFloorPanPicCollectionCell class])];
     
     //注册headerView  此处的ReuseIdentifier 必须和 cellForItemAtIndexPath 方法中 一致  均为reusableView
-    [_mainCollectionView registerClass:[FHPictureListTitleCollectionView class] forSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:NSStringFromClass([FHPictureListTitleCollectionView class])];
+    [_collectionView registerClass:[FHPictureListTitleCollectionView class] forSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:NSStringFromClass([FHPictureListTitleCollectionView class])];
     //设置代理
-    _mainCollectionView.delegate = self;
-    _mainCollectionView.dataSource = self;
+    _collectionView.delegate = self;
+    _collectionView.dataSource = self;
   
     
-    [self.view addSubview:self.mainCollectionView];
-    [self.mainCollectionView mas_makeConstraints:^(MASConstraintMaker *make) {
+    [self.view addSubview:self.collectionView];
+    [self.collectionView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.right.equalTo(self.view);
         if (self.segmentTitleView) {
             make.top.equalTo(self.segmentTitleView.mas_bottom);
@@ -120,9 +164,89 @@
         }
         make.bottom.mas_equalTo(0);
     }];
-    _mainCollectionView.showsVerticalScrollIndicator = NO;
-    _mainCollectionView.showsHorizontalScrollIndicator = NO;
-    [_mainCollectionView setBackgroundColor:[UIColor whiteColor]];
+    _collectionView.showsVerticalScrollIndicator = NO;
+    _collectionView.showsHorizontalScrollIndicator = NO;
+    [_collectionView setBackgroundColor:[UIColor whiteColor]];
+    
+    if (self.contactViewModel) {
+        UIEdgeInsets contentInset = self.collectionView.contentInset;
+        contentInset.bottom = 100;
+        self.collectionView.contentInset = contentInset;
+        self.bottomBar = [[UIView alloc] initWithFrame:CGRectMake(0, CGRectGetHeight(self.view.bounds) - 80, CGRectGetWidth(self.view.bounds), 80)];
+        self.bottomBar.backgroundColor = [UIColor whiteColor];
+        [self.view addSubview:self.bottomBar];
+        [self.bottomBar mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.left.right.mas_equalTo(0);
+            make.height.mas_equalTo(80);
+            if (@available(iOS 11.0, *)) {
+                make.bottom.mas_equalTo(self.mas_bottomLayoutGuide);
+            } else {
+                make.bottom.mas_equalTo(0);
+            }
+        }];
+        
+        BOOL showenOnline = self.contactViewModel.showenOnline;
+        CGFloat itemWidth = CGRectGetWidth(self.view.bounds) - 30;
+        if (showenOnline) {
+            itemWidth = (itemWidth - 15) / 2.0;
+            // 在线联系
+            NSString *title = @"在线联系";
+            if (self.contactViewModel.onLineName.length > 0) {
+                title = self.contactViewModel.onLineName;
+            }
+            NSMutableAttributedString *buttonTitle = [[NSMutableAttributedString alloc] initWithString:title?:@"" attributes:@{NSFontAttributeName : [UIFont themeFontSemibold:16], NSForegroundColorAttributeName : [UIColor whiteColor]}];
+            [buttonTitle appendAttributedString:[[NSAttributedString alloc] initWithString:@"\n线上联系更方便" attributes:@{NSFontAttributeName : [UIFont themeFontRegular:10], NSForegroundColorAttributeName : [UIColor whiteColor]}]];
+            self.onlineBtn.titleLabel.numberOfLines = 0;
+            [self.onlineBtn setAttributedTitle:buttonTitle.copy forState:UIControlStateNormal];
+
+            [self.bottomBar addSubview:self.onlineBtn];
+            [self.onlineBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+                make.left.mas_equalTo(15);
+                make.top.mas_equalTo(14);
+                make.width.mas_equalTo(itemWidth);
+                make.height.mas_equalTo(48);
+            }];
+            
+            // 电话咨询
+            NSString *photoTitle = @"电话咨询";
+            if (self.contactViewModel.phoneCallName.length > 0) {
+                photoTitle = self.contactViewModel.phoneCallName;
+            }
+            NSMutableAttributedString *buttonPhoneTitle = [[NSMutableAttributedString alloc] initWithString:photoTitle?:@"" attributes:@{NSFontAttributeName : [UIFont themeFontSemibold:16], NSForegroundColorAttributeName : [UIColor whiteColor]}];
+            [buttonPhoneTitle appendAttributedString:[[NSAttributedString alloc] initWithString:@"\n隐私保护更安全" attributes:@{NSFontAttributeName : [UIFont themeFontRegular:10], NSForegroundColorAttributeName : [UIColor whiteColor]}]];
+            self.contactBtn.titleLabel.numberOfLines = 0;
+            [self.contactBtn setAttributedTitle:buttonPhoneTitle.copy forState:UIControlStateNormal];
+            [self.bottomBar addSubview:self.contactBtn];
+            [self.contactBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+                make.right.mas_equalTo(-15);
+                make.top.mas_equalTo(self.onlineBtn.mas_top);
+                make.width.mas_equalTo(self.onlineBtn.mas_width);
+                make.height.mas_equalTo(self.onlineBtn.mas_height);
+            }];
+        } else {
+            // 电话咨询
+            NSString *photoTitle = @"电话咨询";
+            if (self.contactViewModel.phoneCallName.length > 0) {
+                photoTitle = self.contactViewModel.phoneCallName;
+            }
+            NSMutableAttributedString *buttonPhoneTitle = [[NSMutableAttributedString alloc] initWithString:photoTitle?:@"" attributes:@{NSFontAttributeName : [UIFont themeFontSemibold:16], NSForegroundColorAttributeName : [UIColor whiteColor]}];
+            [buttonPhoneTitle appendAttributedString:[[NSAttributedString alloc] initWithString:@"\n隐私保护更安全" attributes:@{NSFontAttributeName : [UIFont themeFontRegular:10], NSForegroundColorAttributeName : [UIColor whiteColor]}]];
+            self.contactBtn.titleLabel.numberOfLines = 0;
+            [self.contactBtn setAttributedTitle:buttonPhoneTitle.copy forState:UIControlStateNormal];
+
+            [self.bottomBar addSubview:self.contactBtn];
+            [self.contactBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+                make.left.mas_equalTo(15);
+                make.top.mas_equalTo(14);
+                make.width.mas_equalTo(itemWidth);
+                make.height.mas_equalTo(48);
+            }];
+        }
+    } else {
+        UIEdgeInsets contentInset = self.collectionView.contentInset;
+        contentInset.bottom = 20;
+        self.collectionView.contentInset = contentInset;
+    }
 }
 
 
@@ -134,8 +258,8 @@
 }
 
 - (void)setNavBar:(BOOL)error {
-    [self.customNavBarView.leftBtn setBackgroundImage:[UIImage imageNamed:@"icon-return"] forState:UIControlStateNormal];
-    [self.customNavBarView.leftBtn setBackgroundImage:[UIImage imageNamed:@"icon-return"] forState:UIControlStateHighlighted];
+//    [self.customNavBarView.leftBtn setBackgroundImage:[UIImage imageNamed:@"icon-return"] forState:UIControlStateNormal];
+//    [self.customNavBarView.leftBtn setBackgroundImage:[UIImage imageNamed:@"icon-return"] forState:UIControlStateHighlighted];
     [self.customNavBarView setNaviBarTransparent:NO];
 }
 
@@ -154,24 +278,24 @@
             break;
         }
     }
-    UICollectionViewLayoutAttributes *attributes = [self.mainCollectionView layoutAttributesForItemAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:titleIndex]];
+    UICollectionViewLayoutAttributes *attributes = [self.collectionView layoutAttributesForItemAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:titleIndex]];
     CGRect frame = attributes.frame;
     frame.origin.y -= 65;
     //section header frame
     //需要滚到到顶部，如果滚动的距离超过contengsize，则滚动到底部
-    CGPoint contentOffset = self.mainCollectionView.contentOffset;
+    CGPoint contentOffset = self.collectionView.contentOffset;
     contentOffset.y = frame.origin.y;
-    if (contentOffset.y + CGRectGetHeight(self.mainCollectionView.frame) > self.mainCollectionView.contentSize.height) {
-        contentOffset.y = self.mainCollectionView.contentSize.height - CGRectGetHeight(self.mainCollectionView.frame);
+    if (contentOffset.y + CGRectGetHeight(self.collectionView.frame) > self.collectionView.contentSize.height) {
+        contentOffset.y = self.collectionView.contentSize.height - CGRectGetHeight(self.collectionView.frame);
     }
-    [self.mainCollectionView setContentOffset:contentOffset animated:YES];
+    [self.collectionView setContentOffset:contentOffset animated:YES];
     
 //    [self.mainCollectionView scrollRectToVisible:frame animated:YES];
 //    [self.mainCollectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:titleIndex] atScrollPosition:UICollectionViewScrollPositionBottom animated:YES];
 }
 
 - (void)scrollToSegmentView {
-    NSIndexPath *indexPath = [self.mainCollectionView indexPathForItemAtPoint:self.mainCollectionView.contentOffset];
+    NSIndexPath *indexPath = [self.collectionView indexPathForItemAtPoint:self.collectionView.contentOffset];
     
     if (self.lastIndexPath.section != indexPath.section) {
         self.lastIndexPath = indexPath;
@@ -231,8 +355,50 @@
     }
 }
 
+#pragma mark - Action
+// 电话咨询点击
+- (void)contactButtonClick:(UIButton *)btn {
+    if (self.contactViewModel) {
+        NSMutableDictionary *extraDic = @{
+            @"realtor_position":@"phone_button",
+            @"position":@"report_button",
+            @"element_from":self.elementFrom?:@"be_null"
+        }.mutableCopy;
+        
+        extraDic[@"from"] = @"app_newhouse_property_picture";
+//        if (cluePage) {
+//            extraDic[kFHCluePage] = cluePage;
+//        }
+        NSDictionary *associateInfoDict = nil;
+        FHDetailContactModel *contactPhone = self.contactViewModel.contactPhone;
+        if (contactPhone.phone.length > 0) {
+            associateInfoDict = self.associateInfo.phoneInfo;
+        }else {
+            associateInfoDict = self.associateInfo.reportFormInfo;
+        }
+        extraDic[kFHAssociateInfo] = associateInfoDict;
+        [self.contactViewModel contactActionWithExtraDict:extraDic];
+    }
+}
 
-#pragma mark collectionView代理方法
+// 在线联系点击
+- (void)onlineButtonClick:(UIButton *)btn {
+    if (self.contactViewModel) {
+        NSMutableDictionary *extraDic = @{}.mutableCopy;
+        extraDic[@"realtor_position"] = @"online";
+        extraDic[@"position"] = @"online";
+        extraDic[@"element_from"] = self.elementFrom?:@"be_null";
+        extraDic[@"from"] = @"app_newhouse_property_picture";
+        // 头图im入口线索透传
+        if(self.mediaHeaderModel.houseImageAssociateInfo) {
+            extraDic[kFHAssociateInfo] = self.mediaHeaderModel.houseImageAssociateInfo;
+        }
+        [self.mediaHeaderModel.contactViewModel onlineActionWithExtraDict:extraDic];
+    }
+}
+
+
+#pragma mark - collectionView代理方法
 //返回section个数
 - (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView
 {
@@ -321,8 +487,9 @@
 //点击item方法
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    
-    [self dismissViewControllerAnimated:NO completion:nil];
+    if (!self.topImages) {
+        [self dismissViewControllerAnimated:NO completion:nil];
+    }
     
     if (self.albumImageBtnClickBlock && self.pictsArray.count > indexPath.section) {
         NSInteger total = 0;
@@ -361,8 +528,8 @@
 //    NSIndexPath *indexPathOfCentralCell = [self.mainCollectionView indexPathForItemAtPoint:centerPoint];
     
 //    CGPoint centerPoint = [self.view convertPoint:CGPointMake(20, 55) toView:self.mainCollectionView];
-    NSIndexPath *indexPath = [self.mainCollectionView indexPathForItemAtPoint:centerPoint];
-    NSLog(@"centerPoint :%@ section:%d,row:%d",NSStringFromCGPoint(centerPoint),indexPath.section,indexPath.item);
+    NSIndexPath *indexPath = [self.collectionView indexPathForItemAtPoint:centerPoint];
+//    NSLog(@"centerPoint :%@ section:%d,row:%d",NSStringFromCGPoint(centerPoint),indexPath.section,indexPath.item);
     if (indexPath && self.lastIndexPath.section != indexPath.section) {
         self.lastIndexPath = indexPath;
         if (indexPath.section < self.pictsArray.count) {

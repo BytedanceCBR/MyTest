@@ -32,6 +32,10 @@
             make.width.mas_equalTo(16);
         }];
         
+        NSMutableAttributedString *title = [[NSMutableAttributedString alloc] initWithString:@"查看更多"];
+        [title addAttributes:[self titleLabelAttributes] range:NSMakeRange(0, title.length)];
+        self.stateLabel.attributedText = title.copy;
+        
         self.stateImageView = [[UIImageView alloc] init];
         [self addSubview:self.stateImageView];
         [self.stateImageView mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -39,6 +43,7 @@
             make.size.mas_equalTo(CGSizeMake(20, 20));
             make.centerX.mas_equalTo(self);
         }];
+        self.stateImageView.image = [UIImage imageNamed:@"house_detail_header_more_icon_left"];
     }
     return self;
 }

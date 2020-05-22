@@ -165,9 +165,12 @@
 
     UIColor *selectColor = [UIColor whiteColor];
     UIColor *normalColor = [UIColor colorWithHexString:@"#ffffff" alpha:0.4];
-    if (self.userInteractionEnabled) {
+    UIFont *selectFont = [UIFont themeFontRegular:16];
+    UIFont *normalFont = [UIFont themeFontRegular:16];
+    if (self.usedInPictureList) {
         selectColor = [UIColor themeGray1];
         normalColor = [UIColor colorWithHexStr:@"#6d7278"];
+        selectFont = [UIFont themeFontSemibold:16];
         [cell.titleLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
             make.height.mas_equalTo(22);
             make.bottom.mas_equalTo(-15);

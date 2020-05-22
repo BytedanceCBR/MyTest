@@ -42,6 +42,8 @@
 @property (nonatomic, strong , nullable)TTRouteObject *preloadRouteObj;
 @property (nonatomic, weak , nullable)UIViewController *weakDetailVC;
 
+@property (nonatomic, weak) FHFloorPanPicShowViewController *pictureListViewController;
+@property (nonatomic, weak) FHDetailPictureViewController *pictureDetailVC;
 @end
 
 @implementation FHDetailMediaHeaderCorrectingCell
@@ -261,8 +263,7 @@
     }
 }
 
--(void)showImagesWithCurrentIndex:(NSInteger)index
-{
+-(void)showImagesWithCurrentIndex:(NSInteger)index {
     NSArray *images = self.imageList;
     
     if([images.firstObject isKindOfClass:[FHMultiMediaItemModel class]])
@@ -328,7 +329,11 @@
     self.baseViewModel.detailController.ttNeedIgnoreZoomAnimation = YES;
     FHDetailPictureViewController *pictureDetailViewController = [[FHDetailPictureViewController alloc] init];
     pictureDetailViewController.houseType = self.baseViewModel.houseType;
-    pictureDetailViewController.topVC = self.baseViewModel.detailController;
+    if (self.pictureListViewController) {
+        pictureDetailViewController.topVC = self.pictureListViewController;
+    } else {
+        pictureDetailViewController.topVC = self.baseViewModel.detailController;
+    }
     
     // 获取图片需要的房源信息数据
     if ([self.baseViewModel.detailData isKindOfClass:[FHDetailOldModel class]]) {
@@ -418,10 +423,11 @@
         }
         pictureDetailViewController.bottomBarTitle = bottomBarTitle.copy;
         
-        if (model.titleDataModel.saleStatus.length && [model.titleDataModel.saleStatus isEqualToString:@"在售"]) {
+        if (model.titleDataModel.saleStatus.length) {
             pictureDetailViewController.saleStatus = model.titleDataModel.saleStatus;
         }
     }
+    
     UIImage *placeholder = [UIImage imageNamed:@"default_image"];
     UIWindow *window = [[[UIApplication sharedApplication] delegate] window];
     CGRect frame = [self convertRect:self.bounds toView:window];
@@ -432,8 +438,21 @@
         NSValue *frameValue = [NSValue valueWithCGRect:frame];
         [frames addObject:frameValue];
     }
-    pictureDetailViewController.placeholderSourceViewFrames = frames;
-    pictureDetailViewController.placeholders = placeholders;
+    if (!self.pictureListViewController) {
+        pictureDetailViewController.placeholderSourceViewFrames = frames;
+        pictureDetailViewController.placeholders = placeholders;
+    }
+    if (model.isShowTopImageTab) {
+        __weak FHDetailPictureViewController * weakPictureController = pictureDetailViewController;
+        [pictureDetailViewController setAllPhotoActionBlock:^{
+            __strong typeof(weakSelf) strongSelf = weakSelf;
+            if (strongSelf.pictureListViewController) {
+                [weakPictureController dismissSelf];
+            } else {
+                [strongSelf showPictureList];
+            }
+        }];
+    }
     pictureDetailViewController.indexUpdatedBlock = ^(NSInteger lastIndex, NSInteger currentIndex) {
         if (currentIndex >= 0 && currentIndex < weakSelf.model.medias.count) {
             weakSelf.currentIndex = currentIndex;
@@ -473,6 +492,57 @@
     self.isLarge = YES;
     [self trackPictureShowWithIndex:index];
     self.enterTimestamp = [[NSDate date] timeIntervalSince1970];
+    self.pictureDetailVC = pictureDetailViewController;
+}
+
+- (void)showPictureList {
+    FHDetailMediaHeaderCorrectingModel *data = (FHDetailMediaHeaderCorrectingModel *)self.currentData;
+    FHFloorPanPicShowViewController *pictureListViewController = [[FHFloorPanPicShowViewController alloc] init];
+    pictureListViewController.contactViewModel = data.contactViewModel;
+    pictureListViewController.modalPresentationStyle = UIModalPresentationFullScreen;
+    if (data.isShowTopImageTab) {
+        pictureListViewController.topImages = data.topImages;
+        pictureListViewController.associateInfo = data.houseImageAssociateInfo;
+        pictureListViewController.mediaHeaderModel = self.currentData;
+    } else {
+        if (data.topImages.count) {
+            FHDetailNewTopImage *topImage = data.topImages.firstObject;
+            pictureListViewController.pictsArray = topImage.smallImageGroup;
+        }
+    }
+    __weak typeof(self)weakSelf = self;
+    pictureListViewController.albumImageStayBlock = ^(NSInteger index, NSInteger stayTime) {
+        [weakSelf stayPictureShowPictureWithIndex:index andTime:stayTime];
+    };
+    if (self.pictureDetailVC) {
+        pictureListViewController.albumImageBtnClickBlock = ^(NSInteger index){
+            if (index >= 0) {
+                [weakSelf.pictureDetailVC.photoScrollView setContentOffset:CGPointMake(weakSelf.pictureDetailVC.view.frame.size.width * index, 0) animated:NO];
+            }
+        };
+    } else {
+        pictureListViewController.albumImageBtnClickBlock = ^(NSInteger index){
+            __strong typeof(weakSelf) strongSelf = weakSelf;
+            //如果是从大图进入的图片列表，dismiss picturelist
+            if (strongSelf.pictureDetailVC) {
+                [strongSelf.pictureListViewController dismissViewControllerAnimated:NO completion:nil];
+            }
+            [weakSelf showImagesWithCurrentIndex:index];
+        };
+    }
+    
+    UIViewController *presentedVC;
+    if (self.pictureDetailVC) {
+        presentedVC = self.pictureDetailVC;
+    }
+    if (!presentedVC) {
+        presentedVC = data.weakVC;
+    }
+    if (!presentedVC) {
+        presentedVC = [TTUIResponderHelper visibleTopViewController];
+    }
+    [presentedVC presentViewController:pictureListViewController animated:YES completion:nil];
+    self.pictureListViewController = pictureListViewController;
 }
 
 // 重置视频view，注意状态以及是否是首屏幕图片
@@ -727,37 +797,12 @@
 //进入图片页面页
 - (void)goToPictureList {
     
-    FHDetailMediaHeaderCorrectingModel *data = (FHDetailMediaHeaderCorrectingModel *)self.currentData;
-    FHFloorPanPicShowViewController *pictureListViewController = [[FHFloorPanPicShowViewController alloc] init];
-    pictureListViewController.modalPresentationStyle = UIModalPresentationFullScreen;
-    if (data.isShowTopImageTab) {
-        pictureListViewController.topImages = data.topImages;
-    } else {
-        if (data.topImages.count) {
-            FHDetailNewTopImage *topImage = data.topImages.firstObject;
-            pictureListViewController.pictsArray = topImage.smallImageGroup;
-        }
+    if ([(FHDetailMediaHeaderCorrectingModel *)self.currentData isInstantData]) {
+        //列表页带入的数据不响应
+        return;
     }
-    __weak typeof(self)weakSelf = self;
-    pictureListViewController.albumImageBtnClickBlock = ^(NSInteger index){
-        
-//        if (index >= 0) {
-//            [weakSelf.photoScrollView setContentOffset:CGPointMake(self.view.frame.size.width * index, 0) animated:NO];
-//        }
-    };
-
-    pictureListViewController.albumImageStayBlock = ^(NSInteger index, NSInteger stayTime) {
-//        [self stayCallBack:stayTime];
-    };
-    UIViewController *presentedVC = data.weakVC;
-    if (!presentedVC) {
-        presentedVC = [TTUIResponderHelper visibleTopViewController];
-    }
-    if (presentedVC.navigationController) {
-        [presentedVC.navigationController pushViewController:pictureListViewController animated:YES];
-    } else {
-        [presentedVC presentViewController:pictureListViewController animated:YES completion:nil];
-    }
+    [self showPictureList];
+    
 }
 
 #pragma mark - FHDetailScrollViewDidScrollProtocol

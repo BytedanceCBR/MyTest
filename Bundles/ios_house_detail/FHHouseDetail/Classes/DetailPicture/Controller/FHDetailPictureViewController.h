@@ -19,6 +19,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface FHDetailPictureViewController : FHBaseViewController
 
 @property (nonatomic, weak)     UIViewController       *topVC;
+@property(nonatomic, strong) UIScrollView * photoScrollView;
 /** 当前index */
 @property(nonatomic, assign, readonly)NSInteger currentIndex;
 /** 打开的时候需要展示的index */
