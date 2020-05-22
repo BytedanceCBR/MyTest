@@ -15,9 +15,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FHHousePhoneCallUtils : NSObject
 
-//+ (void)callWithConfig:(NSDictionary *)configDict completion:(FHHousePhoneCallCompletionBlock)completionBlock;
-//+ (void)callWithConfigModel:(FHHouseContactConfigModel *)configModel completion:(FHHousePhoneCallCompletionBlock)completionBlock;
-
 #pragma mark - refator
 + (void)callWithAssociatePhoneDict:(NSDictionary *)associatePhoneDict completion:(FHHousePhoneCallCompletionBlock)completionBlock;
 + (void)callWithAssociatePhoneModel:(FHAssociatePhoneModel *)associatePhoneModel completion:(FHHousePhoneCallCompletionBlock)completionBlock;

@@ -54,19 +54,18 @@ def fhPods
 #    'Core',
 #    'DelegateForC'
 #    ]
-    pod 'FHPopupViewCenter', '0.0.2-rc.5', :subspecs => [
+    pod 'FHPopupViewCenter', '0.0.2-rc.6', :subspecs => [
     'Core',
     'DelegateForC'
     ]
-
     # pod 'FHPopupViewCenter', :git => 'git@code.byted.org:fproject/FHPopupViewCenter.git', :commit => '819997a3afbc7eb3e1eaf2b0d8cc3ecb488b71c1', :subspecs => [
     # 'Core',
     # 'DelegateForC'
     #]
 
-    pod 'ios_house_im' , '0.2.0-rc.19'
-#     pod 'ios_house_im' , :path => '../../../ios_house_im'
-#    pod 'ios_house_im' , :git => 'git@code.byted.org:fproject/ios_house_im.git' , :commit => '212a5046deb7cef04268ff184689acbcdcb6353d'
+     pod 'ios_house_im' , '0.2.0-rc.22'
+#    pod 'ios_house_im' , :path => '../../../ios_house_im'
+#    pod 'ios_house_im' , :git => 'git@code.byted.org:fproject/ios_house_im.git' , :commit => 'b78a40336e699b72fc7df70dfad9c63585d3d405'
 
 end
 
@@ -414,9 +413,9 @@ def appPods
     
     pod 'Lynx','0.2.2',:subspecs =>[
     'Framework',
-    'InspectorFramework',
+#    'InspectorFramework',
     'Native',
-    'InspectorNative',
+#    'InspectorNative',
     'JSRuntime',
     'ReleaseResource',
     'DebugResource']
