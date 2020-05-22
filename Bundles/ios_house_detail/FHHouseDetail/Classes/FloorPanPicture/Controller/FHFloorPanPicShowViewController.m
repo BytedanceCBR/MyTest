@@ -33,6 +33,8 @@
 @property (nonatomic, strong)   FHLoadingButton       *contactBtn;
 
 @property (nonatomic, assign) UIStatusBarStyle lastStatusBarStyle;
+
+@property (nonatomic, assign) BOOL segmentViewChangedFlag;
 @end
 
 @implementation FHFloorPanPicShowViewController
@@ -114,12 +116,6 @@
         self.segmentTitleView = [[FHDetailPictureTitleView alloc] initWithFrame:CGRectMake(0, CGRectGetMaxY(self.customNavBarView.frame), CGRectGetWidth(self.view.bounds), 42)];
         self.segmentTitleView.backgroundColor = [UIColor clearColor];
         self.segmentTitleView.usedInPictureList = YES;
-        [self.view addSubview:self.segmentTitleView];
-        [self.segmentTitleView mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.left.right.mas_equalTo(0);
-            make.height.mas_equalTo(42);
-            make.top.mas_equalTo(self.customNavBarView.mas_bottom);
-        }];
         self.segmentTitleView.seperatorLine.hidden = NO;
         self.segmentTitleView.titleNames = self.pictureTitles;
         self.segmentTitleView.titleNums = self.pictureNumbers;
@@ -128,6 +124,14 @@
             __strong typeof(weakSelf) strongSelf = weakSelf;
             [strongSelf scrollToCurrentIndex:currentIndex];
         }];
+        [self.view addSubview:self.segmentTitleView];
+        [self.segmentTitleView mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.left.right.mas_equalTo(0);
+            make.height.mas_equalTo(42);
+            make.top.mas_equalTo(self.customNavBarView.mas_bottom);
+        }];
+        [self.segmentTitleView reloadData];
+        self.segmentTitleView.selectIndex = 0;
     }
     //1.初始化layout
     UICollectionViewFlowLayout *layout = [[UICollectionViewFlowLayout alloc] init];
@@ -285,10 +289,15 @@
     //需要滚到到顶部，如果滚动的距离超过contengsize，则滚动到底部
     CGPoint contentOffset = self.collectionView.contentOffset;
     contentOffset.y = frame.origin.y;
-    if (contentOffset.y + CGRectGetHeight(self.collectionView.frame) > self.collectionView.contentSize.height) {
-        contentOffset.y = self.collectionView.contentSize.height - CGRectGetHeight(self.collectionView.frame);
+    if (contentOffset.y + CGRectGetHeight(self.collectionView.frame) > (self.collectionView.contentSize.height + self.collectionView.contentInset.bottom)) {
+        contentOffset.y = self.collectionView.contentSize.height - CGRectGetHeight(self.collectionView.frame) + self.collectionView.contentInset.bottom;
     }
-    [self.collectionView setContentOffset:contentOffset animated:YES];
+    self.segmentViewChangedFlag = YES;
+    [UIView animateWithDuration:0.2 animations:^{
+        [self.collectionView setContentOffset:contentOffset];
+    } completion:^(BOOL finished) {
+        self.segmentViewChangedFlag = NO;
+    }];
     
 //    [self.mainCollectionView scrollRectToVisible:frame animated:YES];
 //    [self.mainCollectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:titleIndex] atScrollPosition:UICollectionViewScrollPositionBottom animated:YES];
@@ -523,6 +532,9 @@
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
 
+    if (self.segmentViewChangedFlag) {
+        return;
+    }
     //locate the scrollview which is in the centre
     CGPoint centerPoint = CGPointMake(20, scrollView.contentOffset.y + 55);
 //    NSIndexPath *indexPathOfCentralCell = [self.mainCollectionView indexPathForItemAtPoint:centerPoint];

@@ -34,12 +34,16 @@
     if (!_indicatorView) {
         _indicatorView = [[UIView alloc] init];
         _indicatorView.backgroundColor = [UIColor colorWithHexStr:@"#ff9629"];
-        _indicatorView.frame = CGRectMake(0, 0, 20, 4);
+        _indicatorView.frame = CGRectMake(5, CGRectGetHeight(self.colletionView.frame) - 13, 20, 4);
         _indicatorView.layer.masksToBounds = YES;
         _indicatorView.layer.cornerRadius = 2.0;
         [self.colletionView addSubview:_indicatorView];
     }
     return _indicatorView;
+}
+
+- (void)reloadData {
+    [self.colletionView reloadData];
 }
 
 - (void)setupUI {
@@ -78,21 +82,21 @@
 }
 
 - (void)setSelectIndex:(NSInteger)selectIndex {
-    if (_selectIndex != selectIndex) {
+    if (_selectIndex != selectIndex || selectIndex == 0) {
         _selectIndex = selectIndex; // 图片索引
-        [self.colletionView reloadData];
+        
         NSInteger titleIndex = [self titleIndexBySelectIndex];
         if (titleIndex >= 0 && titleIndex < self.titleNames.count) {
             NSIndexPath *indexPath = [NSIndexPath indexPathForRow:titleIndex inSection:0];
             if (indexPath) {
                 [self.colletionView scrollToItemAtIndexPath:indexPath atScrollPosition:UICollectionViewScrollPositionCenteredHorizontally animated:YES];
             }
-            if (self.userInteractionEnabled) {
+            if (self.usedInPictureList) {
                 UICollectionViewCell *cell = [self.colletionView cellForItemAtIndexPath:indexPath];
                 if (cell) {
                     [self.colletionView bringSubviewToFront:self.indicatorView];
                     [UIView animateWithDuration:0.2 animations:^{
-                        self.indicatorView.frame = CGRectMake(cell.center.x - 10, CGRectGetHeight(self.colletionView.frame) - 13, 20, 4);
+                        self.indicatorView.frame = CGRectMake(cell.center.x - 15, CGRectGetHeight(self.colletionView.frame) - 13, 20, 4);
                     }];
                 }
             }

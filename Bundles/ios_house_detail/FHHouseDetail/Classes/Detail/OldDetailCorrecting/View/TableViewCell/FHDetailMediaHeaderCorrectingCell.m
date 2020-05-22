@@ -514,22 +514,18 @@
     pictureListViewController.albumImageStayBlock = ^(NSInteger index, NSInteger stayTime) {
         [weakSelf stayPictureShowPictureWithIndex:index andTime:stayTime];
     };
-    if (self.pictureDetailVC) {
-        pictureListViewController.albumImageBtnClickBlock = ^(NSInteger index){
+    pictureListViewController.albumImageBtnClickBlock = ^(NSInteger index){
+        __strong typeof(weakSelf) strongSelf = weakSelf;
+        //如果是从大图进入的图片列表，dismiss picturelist
+        if (strongSelf.pictureDetailVC) {
+            [strongSelf.pictureListViewController dismissViewControllerAnimated:NO completion:nil];
             if (index >= 0) {
-                [weakSelf.pictureDetailVC.photoScrollView setContentOffset:CGPointMake(weakSelf.pictureDetailVC.view.frame.size.width * index, 0) animated:NO];
+                [strongSelf.pictureDetailVC.photoScrollView setContentOffset:CGPointMake(weakSelf.pictureDetailVC.view.frame.size.width * index, 0) animated:NO];
             }
-        };
-    } else {
-        pictureListViewController.albumImageBtnClickBlock = ^(NSInteger index){
-            __strong typeof(weakSelf) strongSelf = weakSelf;
-            //如果是从大图进入的图片列表，dismiss picturelist
-            if (strongSelf.pictureDetailVC) {
-                [strongSelf.pictureListViewController dismissViewControllerAnimated:NO completion:nil];
-            }
-            [weakSelf showImagesWithCurrentIndex:index];
-        };
-    }
+        } else {
+            [strongSelf showImagesWithCurrentIndex:index];
+        }
+    };
     
     UIViewController *presentedVC;
     if (self.pictureDetailVC) {

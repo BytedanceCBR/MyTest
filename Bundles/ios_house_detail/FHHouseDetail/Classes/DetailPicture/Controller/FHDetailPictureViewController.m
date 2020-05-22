@@ -321,6 +321,7 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
             [weakSelf.photoScrollView setContentOffset:CGPointMake(pageWidth * tempIndex, 0) animated:NO];
         }
     };
+    [self.pictureTitleView reloadData];
     
     if (self.vedioCount > 0 && _isShowBottomBar) {
         _videoInfoView = [[FHDetailVideoInfoView alloc] initWithFrame:CGRectMake(0, 0, self.view.width, 67)];

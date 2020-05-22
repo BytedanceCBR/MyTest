@@ -24,6 +24,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign) BOOL usedInPictureList;
 
 @property (nonatomic, strong) UIView *seperatorLine;
+
+- (void)reloadData;
 @end
 
 @interface FHDetailPictureTitleCell : UICollectionViewCell
