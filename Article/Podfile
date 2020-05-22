@@ -570,7 +570,7 @@ end
 
 
 def testPods
-    pod 'BDSSOAuthSDK'
+    pod 'BDSSOAuthSDK' ,  '1.1.1-alpha.6'
     pod_binary 'TTDebugAssistant', '0.2.33'
     pod_binary 'FLEX', '3.1.2'#, :configurations=>['Debug']
 #    pod_source 'BDNetworkDevMonitor', '0.1.6'

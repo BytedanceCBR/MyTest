@@ -117,7 +117,16 @@ DEC_TASK_N(TTStartupUITask,FHTaskTypeUI,TASK_PRIORITY_HIGH);
         Class c = NSClassFromString(@"BDSSOAuthManager");
         if (c) {
             id instance = [c sharedInstance];
-            [instance performSelector:NSSelectorFromString(@"requestSSOAuthWithCompletionHandler:") withObject:ssoBlock];
+            SEL sel = NSSelectorFromString(@"requestSSOAuthExceptIntranet:completionHandler:");
+            NSMethodSignature *sig = [c instanceMethodSignatureForSelector:sel];
+            ssoBlock = [ssoBlock copy];
+            BOOL exceptIntranet = YES;
+            NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:sig];
+            [invocation setArgument:(void *)&exceptIntranet atIndex:2];
+            [invocation setArgument:(void *)&ssoBlock atIndex:3];
+            [invocation retainArguments];
+            invocation.selector = sel;
+            [invocation invokeWithTarget:instance];
         }
     } else {
         ssoBlock();
