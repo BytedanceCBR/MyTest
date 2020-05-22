@@ -64,7 +64,9 @@
         _priceLabel.textAlignment = NSTextAlignmentRight;
         [self.contentView addSubview:_priceLabel];
         
-        _tagBacView = [[FHDetailTagBackgroundView alloc] init];
+        _tagBacView = [[FHDetailTagBackgroundView alloc] initWithLabelHeight:16.0 withCornerRadius:2.0];
+        [_tagBacView setMarginWithTagMargin:4.0 withInsideMargin:4.0];
+        _tagBacView.textFont = [UIFont themeFontMedium:10.0];
         [self.contentView addSubview:_tagBacView];
         
         [self initConstaints];

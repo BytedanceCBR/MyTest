@@ -377,7 +377,7 @@
         NSMutableArray *tagArr = [NSMutableArray array];
         self.descLabel.text = model.title;
         [self.descLabel sizeToFit];
-        CGSize itemSize = [self.descLabel sizeThatFits:CGSizeMake([UIScreen mainScreen].bounds.size.width, 19.0)];
+        CGSize itemSize = [self.descLabel sizeThatFits:CGSizeMake([UIScreen mainScreen].bounds.size.width, [UIFont themeFontMedium:16].lineHeight)];
         CGFloat width = itemSize.width;
         
         [self.descLabel mas_updateConstraints:^(MASConstraintMaker *make) {
@@ -421,7 +421,9 @@
     _descLabel.textColor = [UIColor themeGray1];
     [self addSubview:_descLabel];
     
-    _tagBacView = [[FHDetailTagBackgroundView alloc] init];
+    _tagBacView = [[FHDetailTagBackgroundView alloc] initWithLabelHeight:16.0 withCornerRadius:2.0];
+    [_tagBacView setMarginWithTagMargin:4.0 withInsideMargin:4.0];
+    _tagBacView.textFont = [UIFont themeFontMedium:10.0];
     [self addSubview:_tagBacView];
     
     _spaceLabel = [UILabel createLabel:@"" textColor:@"" fontSize:12];

@@ -11,14 +11,11 @@
 #import "UIColor+Theme.h"
 #import "UIFont+House.h"
 
-#define kTagMargin 4;
 @interface FHDetailTagBackgroundView ()
 @property (nonatomic, strong)   UIView       *containerView;
 @property (nonatomic, strong)   NSArray      *tags;
-@property (nonatomic, assign)   NSUInteger   maxNum;
-@property (nonatomic, assign)   NSUInteger   nowNum;
-@property (nonatomic, assign)   CGFloat   left;
-@property (nonatomic, assign)   CGFloat   maxLen;
+@property (nonatomic, assign)   NSUInteger   maxNum,nowNum;
+@property (nonatomic, assign)   CGFloat      left,maxLen;
 
 @end
 
@@ -34,6 +31,12 @@
         _nowNum = 0;
         _left = 0.0;
         _maxLen = 0.0;
+        _tagMargin = 4.0;
+        _insideMargin = 4.0;
+        _labelHeight = 16.0;
+        _fontHeight = 10.0;
+        _cornerRadius = 2.0;
+        _textFont = [UIFont themeFontMedium:10];
         _containerView = [UIView new];
         [self addSubview:_containerView];
         [_containerView mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -43,6 +46,23 @@
     }
     return self;
 }
+
+- (instancetype)initWithLabelHeight:(CGFloat)labelHeight withCornerRadius:(CGFloat)cornerRadius {
+    
+    self = [self init];
+    if (self) {
+        self.labelHeight = labelHeight;
+        self.cornerRadius = cornerRadius;
+    }
+    return self;
+}
+
+- (void)setMarginWithTagMargin:(CGFloat)tagMargin withInsideMargin:(CGFloat)insideMargin {
+    self.tagMargin = tagMargin;
+    self.insideMargin = insideMargin;
+}
+
+
 
 - (void)removeAllTag{
     for (UIView *v in self.containerView.subviews) {
@@ -65,7 +85,7 @@
             break;
         }
         UILabel *tagLabel = [self createLabelWithText:tag.content bacColor:tag.backgroundColor textColor:tag.textColor];
-        CGFloat width = [self getLabelWidth:tagLabel withHeight:16.0];
+        CGFloat width = [self getLabelWidth:tagLabel];
         if (_left + width > maxLen) {
             continue;
         }
@@ -73,11 +93,11 @@
         [tagLabel mas_makeConstraints:^(MASConstraintMaker *make) {
             make.left.mas_equalTo(self.left);
             make.width.mas_equalTo(width);
-            make.height.mas_equalTo(16.0);
+            make.height.mas_equalTo(self.labelHeight);
             make.top.mas_equalTo(0);
         }];
         
-        _left += width + kTagMargin;
+        _left += width + _tagMargin;
         _nowNum ++;
     }
     [self layoutIfNeeded];
@@ -90,17 +110,17 @@
     label.textAlignment = NSTextAlignmentCenter;
     label.backgroundColor = tagBacColor;
     label.textColor = tagTextColor;
-    label.layer.cornerRadius = 2;
+    label.layer.cornerRadius = _cornerRadius;
     label.layer.masksToBounds = YES;
     label.text = text;
-    label.font = [UIFont themeFontMedium:10];
+    label.font = _textFont;
     return label;
 }
 
-- (CGFloat)getLabelWidth:(UILabel *)label withHeight:(CGFloat)height {
+- (CGFloat)getLabelWidth:(UILabel *)label {
     [label sizeToFit];
-    CGSize itemSize = [label sizeThatFits:CGSizeMake([UIScreen mainScreen].bounds.size.width, height)];
-    return itemSize.width + 2 * kTagMargin;
+    CGSize itemSize = [label sizeThatFits:CGSizeMake([UIScreen mainScreen].bounds.size.width, _textFont.lineHeight)];
+    return itemSize.width + 2 * _insideMargin;
 }
 
 
