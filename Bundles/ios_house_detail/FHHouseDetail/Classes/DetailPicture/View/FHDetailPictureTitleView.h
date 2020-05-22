@@ -20,12 +20,15 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property(nonatomic, copy) void (^currentIndexBlock)(NSInteger currentIndex);
 
+/// 如果是true，说明是图片列表页使用，需要重新layout titlelabel 以及 color
+@property (nonatomic, assign) BOOL usedInPictureList;
+
+@property (nonatomic, strong) UIView *seperatorLine;
 @end
 
 @interface FHDetailPictureTitleCell : UICollectionViewCell
 
 @property (nonatomic, strong)   UILabel        *titleLabel;
-@property (nonatomic, assign)   BOOL       hasSelected;
 
 @end
 

@@ -13,15 +13,21 @@
 #import "UIViewController+Track.h"
 #import <FHHouseBase/TTDeviceHelper+FHHouse.h>
 #import <FHHouseBase/FHBaseCollectionView.h>
-
-
-#define FH_FLOOR_PIC_HEADER_HEIGHT 30
+#import "FHPictureListTitleCollectionView.h"
+#import "FHDetailPictureTitleView.h"
 
 @interface FHFloorPanPicShowViewController ()<UICollectionViewDelegate,UICollectionViewDataSource>
 
 @property (nonatomic , strong) UITableView* tableView;
 @property (nonatomic , strong) UICollectionView *mainCollectionView;
 
+@property (nonatomic, strong) FHDetailPictureTitleView *segmentTitleView;
+@property (nonatomic, copy)   NSArray       *pictureTitles;
+@property (nonatomic, copy)   NSArray       *pictureNumbers;
+
+@property (nonatomic, strong) NSIndexPath *lastIndexPath;
+
+@property(nonatomic, strong) UIView *bottomBar;
 
 @end
 
@@ -61,7 +67,24 @@
 {
     // Do any additional setup after loading the view.
     self.view.backgroundColor = [UIColor whiteColor];
-    
+    if (self.topImages && self.pictureTitles.count > 1) {
+        self.segmentTitleView = [[FHDetailPictureTitleView alloc] initWithFrame:CGRectMake(0, CGRectGetMaxY(self.customNavBarView.frame), CGRectGetWidth(self.view.bounds), 42)];
+        self.segmentTitleView.backgroundColor = [UIColor clearColor];
+        [self.view addSubview:self.segmentTitleView];
+        [self.segmentTitleView mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.left.right.mas_equalTo(0);
+            make.height.mas_equalTo(42);
+            make.top.mas_equalTo(self.customNavBarView.mas_bottom);
+        }];
+        self.segmentTitleView.seperatorLine.hidden = NO;
+        self.segmentTitleView.titleNames = self.pictureTitles;
+        self.segmentTitleView.titleNums = self.pictureNumbers;
+        __weak typeof(self) weakSelf = self;
+        [self.segmentTitleView setCurrentIndexBlock:^(NSInteger currentIndex) {
+            __strong typeof(weakSelf) strongSelf = weakSelf;
+            [strongSelf scrollToCurrentIndex:currentIndex];
+        }];
+    }
     //1.初始化layout
     UICollectionViewFlowLayout *layout = [[UICollectionViewFlowLayout alloc] init];
     //设置collectionView滚动方向
@@ -78,10 +101,10 @@
     
     //3.注册collectionViewCell
     //注意，此处的ReuseIdentifier 必须和 cellForItemAtIndexPath 方法中 一致 均为 cellId
-    [_mainCollectionView registerClass:[FHFloorPanPicCollectionCell class] forCellWithReuseIdentifier:@"cellId"];
+    [_mainCollectionView registerClass:[FHFloorPanPicCollectionCell class] forCellWithReuseIdentifier:NSStringFromClass([FHFloorPanPicCollectionCell class])];
     
     //注册headerView  此处的ReuseIdentifier 必须和 cellForItemAtIndexPath 方法中 一致  均为reusableView
-    [_mainCollectionView registerClass:[UICollectionReusableView class] forSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:@"reusableView"];
+    [_mainCollectionView registerClass:[FHPictureListTitleCollectionView class] forSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:NSStringFromClass([FHPictureListTitleCollectionView class])];
     //设置代理
     _mainCollectionView.delegate = self;
     _mainCollectionView.dataSource = self;
@@ -90,7 +113,11 @@
     [self.view addSubview:self.mainCollectionView];
     [self.mainCollectionView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.right.equalTo(self.view);
-        make.top.equalTo(self.customNavBarView.mas_bottom);
+        if (self.segmentTitleView) {
+            make.top.equalTo(self.segmentTitleView.mas_bottom);
+        } else {
+            make.top.equalTo(self.customNavBarView.mas_bottom);
+        }
         make.bottom.mas_equalTo(0);
     }];
     _mainCollectionView.showsVerticalScrollIndicator = NO;
@@ -112,22 +139,78 @@
     [self.customNavBarView setNaviBarTransparent:NO];
 }
 
+- (void)scrollToCurrentIndex:(NSInteger )toIndex {
+    //segmentview 的index 和 collectionview的index 不一一对应
+    //需要通过计算得出，
+    NSInteger count = 0;
+    NSInteger titleIndex = 0;
+    
+    for (int i = 0; i < self.pictsArray.count; i++) {
+        FHDetailNewDataSmallImageGroupModel *smallImageGroupModel = self.pictsArray[i];
+        NSInteger tempCount = smallImageGroupModel.images.count;
+        count += tempCount;
+        if (toIndex <= count) {
+            titleIndex = i;
+            break;
+        }
+    }
+    UICollectionViewLayoutAttributes *attributes = [self.mainCollectionView layoutAttributesForItemAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:titleIndex]];
+    CGRect frame = attributes.frame;
+    frame.origin.y -= 65;
+    //section header frame
+    //需要滚到到顶部，如果滚动的距离超过contengsize，则滚动到底部
+    CGPoint contentOffset = self.mainCollectionView.contentOffset;
+    contentOffset.y = frame.origin.y;
+    if (contentOffset.y + CGRectGetHeight(self.mainCollectionView.frame) > self.mainCollectionView.contentSize.height) {
+        contentOffset.y = self.mainCollectionView.contentSize.height - CGRectGetHeight(self.mainCollectionView.frame);
+    }
+    [self.mainCollectionView setContentOffset:contentOffset animated:YES];
+    
+//    [self.mainCollectionView scrollRectToVisible:frame animated:YES];
+//    [self.mainCollectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:titleIndex] atScrollPosition:UICollectionViewScrollPositionBottom animated:YES];
+}
+
+- (void)scrollToSegmentView {
+    NSIndexPath *indexPath = [self.mainCollectionView indexPathForItemAtPoint:self.mainCollectionView.contentOffset];
+    
+    if (self.lastIndexPath.section != indexPath.section) {
+        self.lastIndexPath = indexPath;
+        if (indexPath.section < self.pictsArray.count) {
+            NSInteger currentIndex = 0;
+            for (int i = 0; i < indexPath.section; i++) {
+                FHDetailNewDataSmallImageGroupModel *smallImageGroupModel = self.pictsArray[i];
+                currentIndex += smallImageGroupModel.images.count;
+            }
+            self.segmentTitleView.selectIndex = currentIndex;
+        }
+    }
+}
+
 - (void)processImagesList {
     NSMutableArray *smallImageGroup = [NSMutableArray array];
+
+    NSMutableArray *titles = [NSMutableArray array];
+    NSMutableArray *numbers = [NSMutableArray array];
+    
     for (FHDetailNewTopImage *topImage in self.topImages) {
         FHDetailNewDataSmallImageGroupModel *smallImageGroupModel = [[FHDetailNewDataSmallImageGroupModel alloc] init];
         smallImageGroupModel.type = [@(topImage.type) stringValue];
         smallImageGroupModel.name = topImage.name;
-
+        
+        NSInteger tempCount = 0;
+        
         NSMutableArray *smallImageList = [NSMutableArray array];
         for (FHDetailNewDataImageGroupModel * groupModel in topImage.smallImageGroup) {
             for (NSInteger j = 0; j < groupModel.images.count; j++) {
                 [smallImageList addObject:groupModel.images[j]];
             }
+            
+            tempCount += smallImageList.count;
+            
             if (topImage.type == FHDetailHouseImageTypeApartment) {
                 smallImageGroupModel.name = groupModel.name;
                 smallImageGroupModel.images = smallImageList.copy;
-                [smallImageGroup addObject:smallImageGroupModel];
+                [smallImageGroup addObject:smallImageGroupModel.copy];
                 [smallImageList removeAllObjects];
                 continue;
             }
@@ -137,8 +220,15 @@
             smallImageGroupModel.images = smallImageList.copy;
             [smallImageGroup addObject:smallImageGroupModel];
         }
+        [titles addObject:[NSString stringWithFormat:@"%@（%ld）",topImage.name?:@"",tempCount]];
+        [numbers addObject:@(tempCount)];
     }
     self.pictsArray = smallImageGroup.copy;
+    
+    if (titles.count > 1) {
+        self.pictureTitles = titles.copy;
+        self.pictureNumbers = numbers.copy;
+    }
 }
 
 
@@ -161,9 +251,8 @@
     return 0;
 }
 
-- (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
-{
-    FHFloorPanPicCollectionCell *cell =[collectionView dequeueReusableCellWithReuseIdentifier:@"cellId" forIndexPath:indexPath];
+- (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
+    FHFloorPanPicCollectionCell *cell =[collectionView dequeueReusableCellWithReuseIdentifier:NSStringFromClass([FHFloorPanPicCollectionCell class]) forIndexPath:indexPath];
     if (indexPath.section < self.pictsArray.count) {
         FHDetailNewDataSmallImageGroupModel *groupModel = self.pictsArray[indexPath.section];
         if ([groupModel isKindOfClass:[FHDetailNewDataSmallImageGroupModel class]] && groupModel.images.count > indexPath.row) {
@@ -175,30 +264,31 @@
     return cell;
 }
 
-//设置每个item的尺寸
-- (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath
-{
-    return CGSizeMake(78 * [TTDeviceHelper scaleToScreen375], 78* [TTDeviceHelper scaleToScreen375]);
+//设置每个item的尺寸 81 * 61
+- (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath {
+    
+    CGFloat itemWidth = floor((CGRectGetWidth(collectionView.frame) - 15 * 2 - 6 * 3) / 4.0);
+    CGFloat itemHeight = floor(itemWidth / 81.0 * 61.0);
+    return CGSizeMake(itemWidth, itemHeight);
 }
 
 //header的size
 -(CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout referenceSizeForHeaderInSection:(NSInteger)section
 {
-    return CGSizeMake([UIScreen mainScreen].bounds.size.width, FH_FLOOR_PIC_HEADER_HEIGHT);
+    return CGSizeMake(CGRectGetWidth(collectionView.frame) , 30 + 15 + 20);
 }
 
 //设置每个item的UIEdgeInsets
 - (UIEdgeInsets)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout insetForSectionAtIndex:(NSInteger)section
 {
-    return UIEdgeInsetsMake(10, 10, 10, 10);
+    return UIEdgeInsetsMake(0, 15, 0, 15);
 }
 
 //设置每个item水平间距
 - (CGFloat)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout minimumInteritemSpacingForSectionAtIndex:(NSInteger)section
 {
-    return 10;
+    return 6;
 }
-
 
 //设置每个item垂直间距
 - (CGFloat)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout minimumLineSpacingForSectionAtIndex:(NSInteger)section
@@ -212,46 +302,17 @@
 {
     UICollectionReusableView *reusableView = nil;
     if ([kind isEqualToString:UICollectionElementKindSectionHeader]) {
-//        [_mainCollectionView registerClass:[UICollectionReusableView class] forSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:[NSString stringWithFormat:@"reusableView%ld",indexPath.section]];
-        
-        UICollectionReusableView *view = (UICollectionReusableView *)[collectionView dequeueReusableSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:@"reusableView" forIndexPath:indexPath];
-        view.backgroundColor = [UIColor whiteColor];
-        UIView *titleView = [view viewWithTag:10010];
+        FHPictureListTitleCollectionView *titleView = (FHPictureListTitleCollectionView *)[collectionView dequeueReusableSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:NSStringFromClass([FHPictureListTitleCollectionView class]) forIndexPath:indexPath];
         if (self.pictsArray.count > indexPath.section) {
 
            FHDetailNewDataSmallImageGroupModel *groupModel = self.pictsArray[indexPath.section];
-
-            if ([titleView isKindOfClass:[UILabel class]]) {
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    if([groupModel.name length] > 0)
-                    {
-                       ((UILabel *)titleView).text = [NSString stringWithFormat:@"%@(%ld)",groupModel.name,groupModel.images.count];
-                    }else
-                    {
-                        ((UILabel *)titleView).text = [NSString stringWithFormat:@"(%ld)",groupModel.images.count];
-                    }
-                });
-            }else
-            {
-                UILabel *labelTitle = [[UILabel alloc] initWithFrame:CGRectMake(10.0, 0.0, 100, FH_FLOOR_PIC_HEADER_HEIGHT)];
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    if([groupModel.name length] > 0)
-                    {
-                        labelTitle.text = [NSString stringWithFormat:@"%@(%ld)",groupModel.name,groupModel.images.count];
-                    }else
-                    {
-                        labelTitle.text = [NSString stringWithFormat:@"(%ld)",groupModel.images.count];
-                    }
-                });
-                labelTitle.tag = 10010;
-                labelTitle.font = [UIFont themeFontRegular:14];
-                [labelTitle setTextColor:[UIColor themeGray1]];
-                [view addSubview:labelTitle];
+            if([groupModel.name length] > 0) {
+                titleView.titleLabel.text = [NSString stringWithFormat:@"%@ (%ld)",groupModel.name,groupModel.images.count];
+            } else {
+                titleView.titleLabel.text = [NSString stringWithFormat:@"(%ld)",groupModel.images.count];
             }
-            
         }
-
-        reusableView = view;
+        reusableView = titleView;
     }
     //如果是头视图
     return reusableView;
@@ -283,6 +344,38 @@
 //    }
 
 }
+
+//- (void)collectionView:(UICollectionView *)collectionView didEndDisplayingCell:(UICollectionViewCell *)cell forItemAtIndexPath:(NSIndexPath *)indexPath {
+//    //计算总index，传segmentview
+//    [self scrollToSegmentView];
+//}
+//
+//- (void)collectionView:(UICollectionView *)collectionView willDisplayCell:(UICollectionViewCell *)cell forItemAtIndexPath:(NSIndexPath *)indexPath {
+//    [self scrollToSegmentView];
+//}
+
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView {
+
+    //locate the scrollview which is in the centre
+    CGPoint centerPoint = CGPointMake(20, scrollView.contentOffset.y + 55);
+//    NSIndexPath *indexPathOfCentralCell = [self.mainCollectionView indexPathForItemAtPoint:centerPoint];
+    
+//    CGPoint centerPoint = [self.view convertPoint:CGPointMake(20, 55) toView:self.mainCollectionView];
+    NSIndexPath *indexPath = [self.mainCollectionView indexPathForItemAtPoint:centerPoint];
+    NSLog(@"centerPoint :%@ section:%d,row:%d",NSStringFromCGPoint(centerPoint),indexPath.section,indexPath.item);
+    if (indexPath && self.lastIndexPath.section != indexPath.section) {
+        self.lastIndexPath = indexPath;
+        if (indexPath.section < self.pictsArray.count) {
+            NSInteger currentIndex = 0;
+            for (int i = 0; i <= indexPath.section; i++) {
+                FHDetailNewDataSmallImageGroupModel *smallImageGroupModel = self.pictsArray[i];
+                currentIndex += smallImageGroupModel.images.count;
+            }
+            self.segmentTitleView.selectIndex = currentIndex;
+        }
+    }
+}
+
 
 
 #pragma mark - TTUIViewControllerTrackProtocol
