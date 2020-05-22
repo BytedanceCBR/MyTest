@@ -450,7 +450,7 @@
     [self.tagBacView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(self.descLabel.mas_right).offset(4);
         make.right.mas_equalTo(self.iconView);
-        make.bottom.mas_equalTo(self.descLabel);
+        make.centerY.mas_equalTo(self.descLabel);
         make.height.mas_equalTo(16);
     }];
     [self.spaceLabel mas_makeConstraints:^(MASConstraintMaker *make) {
