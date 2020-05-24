@@ -89,19 +89,17 @@
     [[FHEnvContext sharedInstance].configDataReplay subscribeNext:^(id _Nullable x) {
         StrongSelf;
         FHConfigDataModel *xConfigDataModel = (FHConfigDataModel *) x;
-//        if([FHEnvContext isNewDiscovery]){
-//            BOOL same = [[FHUGCCategoryManager sharedManager] isSameCategory:self.categorys];
-//            if(!self.isFirstLoad && (self.isNewDiscovery != [xConfigDataModel.channelType boolValue] || !same)){
-//                [self initViewModel];
-//                self.segmentControl.selectedSegmentIndex = self.viewModel.currentTabIndex;
-//            }
-//        }else{
-            if (self.isUgcOpen != xConfigDataModel.ugcCitySwitch) {
-                self.isUgcOpen = xConfigDataModel.ugcCitySwitch;
-                [self initViewModel];
-            }
-            self.segmentControl.sectionTitles = [self getSegmentTitles];
-//        }
+
+        if (self.isUgcOpen != xConfigDataModel.ugcCitySwitch) {
+            self.isUgcOpen = xConfigDataModel.ugcCitySwitch;
+            [self initViewModel];
+        }
+        
+        if(![FHEnvContext isNewDiscovery] && self.isNewDiscovery != [FHEnvContext isNewDiscovery]){
+            [self updateSegmentView];
+        }
+        
+        self.segmentControl.sectionTitles = [self getSegmentTitles];
     }];
 
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(topVCChange:) name:@"kExploreTopVCChangeNotification" object:nil];
@@ -357,6 +355,11 @@
 }
 
 - (void)setupSetmentedControl {
+    if(_segmentControl){
+        [_segmentControl removeFromSuperview];
+        _segmentControl = nil;
+    }
+    
     _segmentControl = [[HMSegmentedControl alloc] initWithSectionTitles:[self getSegmentTitles]];
 
     NSDictionary *titleTextAttributes = @{NSFontAttributeName: [UIFont themeFontRegular:16],
@@ -388,9 +391,22 @@
     _segmentControl.indexRepeatBlock = ^(NSInteger index) {
         [weakSelf.viewModel refreshCell:NO isClick:YES];
     };
+    
+    CGFloat segmentContentWidth = [self.segmentControl totalSegmentedControlWidth];
+    [self.segmentControl mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.centerX.mas_equalTo(self.topView);
+        make.width.mas_equalTo(segmentContentWidth);
+        make.height.mas_equalTo(44);
+        make.bottom.mas_equalTo(self.topView).offset(-8);
+    }];
 }
 
 - (void)setupDiscoverySetmentedControl {
+    if(_segmentControl){
+        [_segmentControl removeFromSuperview];
+        _segmentControl = nil;
+    }
+    
     _segmentControl = [[HMSegmentedControl alloc] initWithSectionTitles:[self getSegmentTitles]];
 
     NSDictionary *titleTextAttributes = @{NSFontAttributeName: [UIFont themeFontRegular:16],
@@ -423,6 +439,23 @@
     _segmentControl.indexRepeatBlock = ^(NSInteger index) {
         [weakSelf.viewModel refreshCell:NO isClick:YES];
     };
+    
+    CGFloat segmentContentWidth = [self.segmentControl totalSegmentedControlWidth];
+
+     if(segmentContentWidth >= SCREEN_WIDTH){
+         [self.segmentControl mas_makeConstraints:^(MASConstraintMaker *make) {
+             make.left.right.mas_equalTo(self.topView);
+             make.height.mas_equalTo(44);
+             make.bottom.mas_equalTo(self.topView).offset(-8);
+         }];
+     }else{
+         [self.segmentControl mas_makeConstraints:^(MASConstraintMaker *make) {
+             make.centerX.mas_equalTo(self.topView);
+             make.width.mas_equalTo(segmentContentWidth);
+             make.height.mas_equalTo(44);
+             make.bottom.mas_equalTo(self.topView).offset(-8);
+         }];
+     }
 }
 
 - (NSArray *)getSegmentTitles {
@@ -474,22 +507,22 @@
         make.height.mas_equalTo(TTDeviceHelper.ssOnePixel);
     }];
     
-    CGFloat segmentContentWidth = [self.segmentControl totalSegmentedControlWidth];
-
-    if(self.isNewDiscovery && segmentContentWidth >= SCREEN_WIDTH){
-        [self.segmentControl mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.left.right.mas_equalTo(self.topView);
-            make.height.mas_equalTo(44);
-            make.bottom.mas_equalTo(self.topView).offset(-8);
-        }];
-    }else{
-        [self.segmentControl mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.centerX.mas_equalTo(self.topView);
-            make.width.mas_equalTo(segmentContentWidth);
-            make.height.mas_equalTo(44);
-            make.bottom.mas_equalTo(self.topView).offset(-8);
-        }];
-    }
+//    CGFloat segmentContentWidth = [self.segmentControl totalSegmentedControlWidth];
+//
+//    if(self.isNewDiscovery && segmentContentWidth >= SCREEN_WIDTH){
+//        [self.segmentControl mas_makeConstraints:^(MASConstraintMaker *make) {
+//            make.left.right.mas_equalTo(self.topView);
+//            make.height.mas_equalTo(44);
+//            make.bottom.mas_equalTo(self.topView).offset(-8);
+//        }];
+//    }else{
+//        [self.segmentControl mas_makeConstraints:^(MASConstraintMaker *make) {
+//            make.centerX.mas_equalTo(self.topView);
+//            make.width.mas_equalTo(segmentContentWidth);
+//            make.height.mas_equalTo(44);
+//            make.bottom.mas_equalTo(self.topView).offset(-8);
+//        }];
+//    }
     
     [self.containerView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(self.topView.mas_bottom);
@@ -518,24 +551,33 @@
 - (void)updateSegmentView {
     BOOL same = [[FHUGCCategoryManager sharedManager] isSameCategory:self.categorys];
     if(self.isNewDiscovery != [FHEnvContext isNewDiscovery] || !same){
-        [self initViewModel];
-        self.segmentControl.selectedSegmentIndex = self.viewModel.currentTabIndex;
-        
-        self.segmentControl.sectionTitles = [self getSegmentTitles];
-        CGFloat segmentContentWidth = [self.segmentControl totalSegmentedControlWidth];
-        if(self.isNewDiscovery && segmentContentWidth >= SCREEN_WIDTH){
-            [self.segmentControl mas_remakeConstraints:^(MASConstraintMaker *make) {
-                make.left.right.mas_equalTo(self.topView);
-                make.height.mas_equalTo(44);
-                make.bottom.mas_equalTo(self.topView).offset(-8);
-            }];
+        if(self.isNewDiscovery != [FHEnvContext isNewDiscovery]){
+            self.isNewDiscovery = [FHEnvContext isNewDiscovery];
+            [self initViewModel];
+            if(self.isNewDiscovery){
+                [self setupDiscoverySetmentedControl];
+            }else{
+                [self setupSetmentedControl];
+            }
         }else{
-            [self.segmentControl mas_remakeConstraints:^(MASConstraintMaker *make) {
-                make.centerX.mas_equalTo(self.topView);
-                make.width.mas_equalTo(segmentContentWidth);
-                make.height.mas_equalTo(44);
-                make.bottom.mas_equalTo(self.topView).offset(-8);
-            }];
+            [self initViewModel];
+            self.segmentControl.selectedSegmentIndex = self.viewModel.currentTabIndex;
+            self.segmentControl.sectionTitles = [self getSegmentTitles];
+            CGFloat segmentContentWidth = [self.segmentControl totalSegmentedControlWidth];
+            if(self.isNewDiscovery && segmentContentWidth >= SCREEN_WIDTH){
+                [self.segmentControl mas_remakeConstraints:^(MASConstraintMaker *make) {
+                    make.left.right.mas_equalTo(self.topView);
+                    make.height.mas_equalTo(44);
+                    make.bottom.mas_equalTo(self.topView).offset(-8);
+                }];
+            }else{
+                [self.segmentControl mas_remakeConstraints:^(MASConstraintMaker *make) {
+                    make.centerX.mas_equalTo(self.topView);
+                    make.width.mas_equalTo(segmentContentWidth);
+                    make.height.mas_equalTo(44);
+                    make.bottom.mas_equalTo(self.topView).offset(-8);
+                }];
+            }
         }
     }else{
         self.viewModel.currentTabIndex = 0;
