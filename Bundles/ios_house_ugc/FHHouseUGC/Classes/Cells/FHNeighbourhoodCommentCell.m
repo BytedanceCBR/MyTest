@@ -7,7 +7,6 @@
 
 #import "FHNeighbourhoodCommentCell.h"
 #import "UIImageView+BDWebImage.h"
-#import "FHUGCCellHeaderView.h"
 #import "FHUGCCellUserInfoView.h"
 #import "FHUGCCellMultiImageView.h"
 #import "FHUGCCellHelper.h"

@@ -62,6 +62,8 @@
     [self addSubview:_positionView];
     
     self.position = [self LabelWithFont:[UIFont themeFontRegular:13] textColor:[UIColor themeOrange1]];
+    _position.layer.masksToBounds = YES;
+    _position.backgroundColor = [UIColor themeOrange2];
     [_position sizeToFit];
     [_position setContentHuggingPriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisHorizontal];
     [_position setContentCompressionResistancePriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisHorizontal];

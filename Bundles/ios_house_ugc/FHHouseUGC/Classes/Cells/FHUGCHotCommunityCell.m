@@ -6,7 +6,6 @@
 //
 
 #import "FHUGCHotCommunityCell.h"
-#import "FHUGCCellHeaderView.h"
 #import "FHBaseCollectionView.h"
 #import "FHUGCHotCommunitySubCell.h"
 #import "TTRoute.h"

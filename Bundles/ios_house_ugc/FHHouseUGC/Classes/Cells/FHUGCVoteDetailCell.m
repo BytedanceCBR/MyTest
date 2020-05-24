@@ -7,7 +7,6 @@
 
 #import "FHUGCVoteDetailCell.h"
 #import "UIImageView+BDWebImage.h"
-#import "FHUGCCellHeaderView.h"
 #import "FHUGCCellUserInfoView.h"
 #import "FHUGCCellBottomView.h"
 #import "FHUGCCellMultiImageView.h"
@@ -273,10 +272,6 @@
     self.cellModel = data;
     //设置userInfo
     [self.userInfoView refreshWithData:cellModel];
-//    self.userInfoView.cellModel = self.cellModel;
-//    self.userInfoView.userName.text = !isEmptyString(self.cellModel.user.name) ? self.cellModel.user.name : @"用户";
-//    self.userInfoView.descLabel.attributedText = self.cellModel.desc;
-//    [self.userInfoView.icon bd_setImageWithURL:[NSURL URLWithString:self.cellModel.user.avatarUrl] placeholder:[UIImage imageNamed:@"fh_mine_avatar"]];
     __weak typeof(self) weakSelf = self;
     self.userInfoView.deleteCellBlock = ^{
         FHCommentBaseDetailViewModel *viewModel = weakSelf.baseViewModel;
@@ -589,6 +584,7 @@
         bottomHeight += 28;
         FHUGCVoteFoldViewButton *foldButton = [[FHUGCVoteFoldViewButton alloc] initWithDownText:@"展开查看更多" upText:@"收起" isFold:self.voteInfo.isFold];
         foldButton.frame = CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, 28);
+        foldButton.backgroundColor = [UIColor whiteColor];
         [self.bottomBgView addSubview:foldButton];
         [foldButton addTarget:self action:@selector(foldButtonClick:) forControlEvents:UIControlEventTouchUpInside];
         self.foldButton = foldButton;
@@ -642,6 +638,7 @@
     bottomHeight += 5;
     self.dateLabel = [[UILabel alloc] initWithFrame:CGRectMake(20, bottomHeight, [UIScreen mainScreen].bounds.size.width - 40, 17)];
     self.dateLabel.backgroundColor = [UIColor themeWhite];
+    self.dateLabel.layer.masksToBounds = YES;
     self.dateLabel.text = @"";
     self.dateLabel.textAlignment = NSTextAlignmentCenter;
     self.dateLabel.textColor = [UIColor themeGray3];
@@ -1074,6 +1071,8 @@
     self.bgView.backgroundColor = [UIColor colorWithHexStr:@"#ebeef0"];// fef2ec
     [self addSubview:self.bgView];
     self.contentLabel = [[UILabel alloc] initWithFrame:CGRectMake(10, 8, 0, 22)];
+    self.contentLabel.layer.masksToBounds = YES;
+    self.contentLabel.backgroundColor = [UIColor whiteColor];
     self.contentLabel.text = @"";
     if ([UIScreen mainScreen].bounds.size.width <= 321) {
         self.contentLabel.font = [UIFont themeFontRegular:12];
@@ -1233,6 +1232,8 @@
     _keyLabel = [[UILabel alloc] init];
     _keyLabel.text = @"";
     _keyLabel.textColor = [UIColor colorWithHexStr:@"#ff8151"];
+    _keyLabel.backgroundColor = [UIColor whiteColor];
+    _keyLabel.layer.masksToBounds = YES;
     _keyLabel.font = [UIFont themeFontRegular:13];
     [self addSubview:_keyLabel];
     
