@@ -503,28 +503,7 @@
 
 - (void)updateModel:(FHMultiMediaModel *)model withTitleModel:(FHDetailHouseTitleModel *)titleModel{
     self.medias = model.medias;
-    
     self.titleView.model = titleModel;
-    if (_medias.count > 0) {
-        [self setInfoLabelText:[NSString stringWithFormat:@"%d/%ld",1,_medias.count]];
-        self.infoLabel.hidden = NO;
-        self.colletionView.hidden = NO;
-        self.noDataImageView.hidden = YES;
-        if (_medias.count > 1) {
-            NSIndexPath *indexPath = [NSIndexPath indexPathForItem:1 inSection:0];
-            [self.colletionView scrollToItemAtIndexPath:indexPath atScrollPosition:UICollectionViewScrollPositionLeft animated:NO];
-        }
-        //        [self.infoLabel mas_updateConstraints:^(MASConstraintMaker *make) {
-        //            make.bottom.equalTo(self).offset(-10 + yOffset);
-        //        }];
-    }else{
-        self.infoLabel.hidden = YES;
-        self.colletionView.hidden = YES;
-        self.noDataImageView.hidden = NO;
-        if (!_noDataImageView.image) {
-            _noDataImageView.image = [UIImage imageNamed:@"default_image"];
-        }
-    }
     //如果新房详情 并且 isShowTopImageTab = true 取第一张图
     self.colletionView.alwaysBounceHorizontal = NO;
     if (titleModel.housetype == FHHouseTypeNewHouse && self.isShowTopImageTab) {
@@ -570,8 +549,27 @@
             }];
             [self.listMoreView addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleListMoreGesture:)]];
         }
+        [self.colletionView reloadData];
+    } else if (_medias.count > 0) {
+        [self.colletionView reloadData];
+        [self setInfoLabelText:[NSString stringWithFormat:@"%d/%ld",1,_medias.count]];
+        self.infoLabel.hidden = NO;
+        self.colletionView.hidden = NO;
+        self.noDataImageView.hidden = YES;
+        if (_medias.count > 1) {
+            NSIndexPath *indexPath = [NSIndexPath indexPathForItem:1 inSection:0];
+            [self.colletionView scrollToItemAtIndexPath:indexPath atScrollPosition:UICollectionViewScrollPositionLeft animated:NO];
+        }
+    } else {
+        [self.colletionView reloadData];
+        self.infoLabel.hidden = YES;
+        self.colletionView.hidden = YES;
+        self.noDataImageView.hidden = NO;
+        if (!_noDataImageView.image) {
+            _noDataImageView.image = [UIImage imageNamed:@"default_image"];
+        }
     }
-    [self.colletionView reloadData];
+
     
 //    BOOL isShowBottomBannerView = model.isShowSkyEyeLogo;
 //    self.bottomBannerView.hidden = !isShowBottomBannerView;

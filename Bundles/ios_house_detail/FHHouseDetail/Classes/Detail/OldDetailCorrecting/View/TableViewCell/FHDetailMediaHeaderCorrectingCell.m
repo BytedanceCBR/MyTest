@@ -396,7 +396,7 @@
     }
     pictureDetailViewController.startWithIndex = index;
     pictureDetailViewController.albumImageBtnClickBlock = ^(NSInteger index){
-        [weakSelf enterPictureShowPictureWithIndex:index];
+        [weakSelf enterPictureShowPictureWithIndex:index from:@"all_pic"];
     };
     pictureDetailViewController.albumImageStayBlock = ^(NSInteger index,NSInteger stayTime) {
         [weakSelf stayPictureShowPictureWithIndex:index andTime:stayTime];
@@ -510,8 +510,8 @@
     pictureListViewController.modalPresentationStyle = UIModalPresentationFullScreen;
     if (data.isShowTopImageTab) {
         pictureListViewController.topImages = data.topImages;
-        pictureListViewController.associateInfo = data.houseImageAssociateInfo;
-        pictureListViewController.contactViewModel = data.contactViewModel;
+//        pictureListViewController.associateInfo = data.houseImageAssociateInfo;
+//        pictureListViewController.contactViewModel = data.contactViewModel;
 //        pictureListViewController.elementFrom = @"new_detail";
     } else {
         if (data.topImages.count) {
@@ -733,8 +733,11 @@
 }
 
 //埋点
-- (void)enterPictureShowPictureWithIndex:(NSInteger)index {
+- (void)enterPictureShowPictureWithIndex:(NSInteger)index from:(NSString *)from{
     NSMutableDictionary *dict = [self traceParamsForGallery:index];
+    if (from.length) {
+        dict[@"element_from"] = from;
+    }
     TRACK_EVENT(@"picture_gallery", dict);
 }
 

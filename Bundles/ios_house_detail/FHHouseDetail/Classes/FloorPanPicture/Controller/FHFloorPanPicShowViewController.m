@@ -334,7 +334,9 @@
                 FHDetailNewDataSmallImageGroupModel *smallImageGroupModel = self.pictsArray[i];
                 currentIndex += smallImageGroupModel.images.count;
             }
-            self.segmentTitleView.selectIndex = currentIndex;
+            if (self.segmentTitleView) {
+                self.segmentTitleView.selectIndex = currentIndex;
+            }
         }
     }
 }
@@ -378,10 +380,8 @@
     }
     self.pictsArray = smallImageGroup.copy;
     
-    if (titles.count > 1) {
-        self.pictureTitles = titles.copy;
-        self.pictureNumbers = numbers.copy;
-    }
+    self.pictureTitles = titles.copy;
+    self.pictureNumbers = numbers.copy;
 }
 
 #pragma mark - Action
@@ -576,7 +576,9 @@
                 FHDetailNewDataSmallImageGroupModel *smallImageGroupModel = self.pictsArray[i];
                 currentIndex += smallImageGroupModel.images.count;
             }
-            self.segmentTitleView.selectIndex = currentIndex;
+            if (self.segmentTitleView) {
+                self.segmentTitleView.selectIndex = currentIndex;
+            }
         }
     }
 }

@@ -295,33 +295,36 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
         make.height.mas_equalTo(kFHDPTopBarHeight);
     }];
     
-    self.pictureTitleView = [[FHDetailPictureTitleView alloc] initWithFrame:CGRectMake(0, topInset + kFHDPTopBarHeight, self.view.width, 42)];
-    self.pictureTitleView.backgroundColor = [UIColor clearColor];
-    [self.topBar addSubview:self.pictureTitleView];
-    [self.pictureTitleView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.right.mas_equalTo(0);
-        make.height.mas_equalTo(42);
-        make.top.mas_equalTo(self.naviView.mas_bottom);
-    }];
-    self.pictureTitleView.titleNames = self.pictureTitles;
-    self.pictureTitleView.titleNums = self.pictureNumbers;
-    self.pictureTitleView.currentIndexBlock = ^(NSInteger currentIndex) {
-        
-        if (weakSelf.topImageClickTabBlock) {
-            weakSelf.topImageClickTabBlock(currentIndex);
-        }
-        // 选中图片标签
-        NSInteger tempIndex = currentIndex;
-        if (currentIndex == 0) {
-            // 选中第一个标签，跳过视频
-            tempIndex += weakSelf.vedioCount;
-        }
-        if (tempIndex >= 0 && tempIndex < weakSelf.photoCount) {
-            CGFloat pageWidth = weakSelf.photoScrollView.frame.size.width;
-            [weakSelf.photoScrollView setContentOffset:CGPointMake(pageWidth * tempIndex, 0) animated:NO];
-        }
-    };
-    [self.pictureTitleView reloadData];
+    if (self.pictureTitles.count > 1) {
+        self.pictureTitleView = [[FHDetailPictureTitleView alloc] initWithFrame:CGRectMake(0, topInset + kFHDPTopBarHeight, self.view.width, 42)];
+        self.pictureTitleView.backgroundColor = [UIColor clearColor];
+        [self.topBar addSubview:self.pictureTitleView];
+        [self.pictureTitleView mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.left.right.mas_equalTo(0);
+            make.height.mas_equalTo(42);
+            make.top.mas_equalTo(self.naviView.mas_bottom);
+        }];
+        self.pictureTitleView.titleNames = self.pictureTitles;
+        self.pictureTitleView.titleNums = self.pictureNumbers;
+        self.pictureTitleView.currentIndexBlock = ^(NSInteger currentIndex) {
+            
+            if (weakSelf.topImageClickTabBlock) {
+                weakSelf.topImageClickTabBlock(currentIndex);
+            }
+            // 选中图片标签
+            NSInteger tempIndex = currentIndex;
+            if (currentIndex == 0) {
+                // 选中第一个标签，跳过视频
+                tempIndex += weakSelf.vedioCount;
+            }
+            if (tempIndex >= 0 && tempIndex < weakSelf.photoCount) {
+                CGFloat pageWidth = weakSelf.photoScrollView.frame.size.width;
+                [weakSelf.photoScrollView setContentOffset:CGPointMake(pageWidth * tempIndex, 0) animated:NO];
+            }
+        };
+        [self.pictureTitleView reloadData];
+    }
+
     
     if (self.vedioCount > 0 && _isShowBottomBar) {
         _videoInfoView = [[FHDetailVideoInfoView alloc] initWithFrame:CGRectMake(0, 0, self.view.width, 67)];
@@ -666,7 +669,9 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
         }
     }
     self.disableAutoPlayVideo = NO;
-    [self.pictureTitleView.colletionView reloadData];
+    if (self.pictureTitleView) {
+        [self.pictureTitleView reloadData];
+    }
 }
 
 - (void)viewDidDisappear:(BOOL)animated {
@@ -791,10 +796,10 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
             }
         }
         // 只有一个分类时隐藏
-        if (titles.count > 1) {
+//        if (titles.count > 1) {
             self.pictureTitles = titles;
             self.pictureNumbers = numbers;
-        }
+//        }
     }
 }
 
@@ -1023,7 +1028,9 @@ static BOOL kFHStaticPhotoBrowserAtTop = NO;
     
     _currentIndex = newIndex;
     [self updateNavHeaderTitle];
-    self.pictureTitleView.selectIndex = newIndex;
+    if (self.pictureTitleView) {
+        self.pictureTitleView.selectIndex = newIndex;
+    }
     self.naviView.videoTitle.isSelectVideo = newIndex < self.vedioCount;
     self.isShowenVideo = self.naviView.videoTitle.isSelectVideo;
     [self unloadPhoto:_currentIndex + 2];
