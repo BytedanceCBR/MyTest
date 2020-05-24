@@ -143,6 +143,9 @@
         __weak typeof(self) weakSelf = self;
         [self.segmentTitleView setCurrentIndexBlock:^(NSInteger currentIndex) {
             __strong typeof(weakSelf) strongSelf = weakSelf;
+            if (strongSelf.topImageClickTabBlock) {
+                strongSelf.topImageClickTabBlock(currentIndex);
+            }
             [strongSelf scrollToCurrentIndex:currentIndex];
         }];
         [self.view addSubview:self.segmentTitleView];

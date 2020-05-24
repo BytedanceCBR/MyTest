@@ -87,6 +87,7 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
 @property (nonatomic, copy) NSArray<NSValue *> *animateFrames;
 @property (nonatomic, copy) NSString *locationStr;
 
+@property (nonatomic, copy) NSString *currentTypeName;
 @end
 
 @implementation FHDetailPictureViewController
@@ -535,6 +536,7 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
         extraDic[@"realtor_position"] = @"online";
         extraDic[@"position"] = @"online";
         extraDic[@"element_from"] = [self elementFrom];
+        extraDic[@"picture_type"] = self.currentTypeName?:@"be_null";
         NSString *vid = [self videoId];
         if ([vid length] > 0) {
             extraDic[@"item_id"] = vid;
@@ -562,7 +564,8 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
 //        }
         NSMutableDictionary *extraDic = @{@"realtor_position":@"phone_button",
                                           @"position":@"report_button",
-                                          @"element_from":[self elementFrom]
+                                          @"element_from":[self elementFrom],
+                                          @"picture_type": self.currentTypeName?:@"be_null"
                                           }.mutableCopy;
         NSString *vid = [self videoId];
         if ([vid length] > 0) {
@@ -750,6 +753,7 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
         }
     }
     NSNumber *num = self.pictureNumbers[titleIndex];
+    self.currentTypeName = self.pictureTitles[titleIndex];
     self.naviView.titleLabel.text = [NSString stringWithFormat:@"%d/%d",num.unsignedIntValue - currentTitleIndex + 1,num.unsignedIntValue];
 }
 

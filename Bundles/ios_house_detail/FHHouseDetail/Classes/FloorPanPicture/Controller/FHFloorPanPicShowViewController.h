@@ -19,6 +19,9 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic, copy) void (^albumImageBtnClickBlock)(NSInteger index);
 @property(nonatomic, copy) void (^albumImageStayBlock)(NSInteger index,NSInteger stayTime);
 
+/**点击头图的tab栏出现的埋点*/
+@property(nonatomic, copy) void (^topImageClickTabBlock)(NSInteger index);
+
 @property (nonatomic, strong , nullable) NSArray<FHDetailNewTopImage *> *topImages;
 //@property (nonatomic, strong) FHDetailMediaHeaderModel       *mediaHeaderModel;
 @property (nonatomic, strong) FHHouseDetailContactViewModel *contactViewModel;

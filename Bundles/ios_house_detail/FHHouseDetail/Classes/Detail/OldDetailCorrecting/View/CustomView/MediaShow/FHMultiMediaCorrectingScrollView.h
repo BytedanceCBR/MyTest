@@ -23,7 +23,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)bottomBannerViewDidShow;
 
-- (void)goToPictureList;
+- (void)goToPictureList:(NSString *)from;
 
 @end
 

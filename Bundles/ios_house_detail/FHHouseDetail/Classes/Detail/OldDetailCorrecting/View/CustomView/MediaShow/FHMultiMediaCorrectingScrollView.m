@@ -397,8 +397,8 @@
     //房源详情 左滑 超过 52px，松手，进入图片列表页
     if (self.isShowTopImageTab) {
         if (scrollView.contentOffset.x >= 52) {
-            if ([self.delegate respondsToSelector:@selector(goToPictureList)]) {
-                [self.delegate goToPictureList];
+            if ([self.delegate respondsToSelector:@selector(goToPictureList:)]) {
+                [self.delegate goToPictureList:@"view_more_slide"];
             }
         }
     }
@@ -625,8 +625,8 @@
 }
 
 - (void)handleListMoreGesture:(UITapGestureRecognizer *)gensture {
-    if ([self.delegate respondsToSelector:@selector(goToPictureList)]) {
-        [self.delegate goToPictureList];
+    if ([self.delegate respondsToSelector:@selector(goToPictureList:)]) {
+        [self.delegate goToPictureList:@"view_more"];
     }
 }
 

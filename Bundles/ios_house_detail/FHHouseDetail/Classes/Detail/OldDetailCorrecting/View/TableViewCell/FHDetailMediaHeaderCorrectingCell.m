@@ -402,7 +402,7 @@
         [weakSelf stayPictureShowPictureWithIndex:index andTime:stayTime];
     };
     pictureDetailViewController.topImageClickTabBlock = ^(NSInteger index) {
-        [weakSelf trackClickTabWithIndex:index];
+        [weakSelf trackClickTabWithIndex:index element:@"big_photo_album"];
     };
     
     [pictureDetailViewController setMediaHeaderModel:self.currentData mediaImages:images];
@@ -535,6 +535,9 @@
             [strongSelf showImagesWithCurrentIndex:index];
         }
     };
+    pictureListViewController.topImageClickTabBlock = ^(NSInteger index) {
+        [weakSelf trackClickTabWithIndex:index element:@"photo_album"];
+    };
     
     UIViewController *presentedVC;
     if (self.pictureDetailVC) {
@@ -579,7 +582,7 @@
 }
 
 //埋点
-- (void)trackClickTabWithIndex:(NSInteger )index {
+- (void)trackClickTabWithIndex:(NSInteger )index element:(NSString *)element{
     index += self.vedioCount;           //如果有视频要+1
     FHDetailHouseVRDataModel *vrModel = ((FHDetailMediaHeaderCorrectingModel *)self.currentData).vrModel;
     
@@ -595,7 +598,10 @@
         if([dict isKindOfClass:[NSDictionary class]]){
             [dict removeObjectsForKeys:@[@"card_type",@"rank",@"element_from"]];
             dict[@"picture_id"] = itemModel.imageUrl;
-            dict[@"tab_name"] = itemModel.pictureTypeName;;
+            dict[@"tab_name"] = itemModel.pictureTypeName;
+            if (element) {
+                dict[@"element_type"] = element;
+            }
             TRACK_EVENT(@"click_tab", dict);
         }else{
             NSAssert(NO, @"传入的detailTracerDic不是字典");
@@ -716,19 +722,17 @@
 - (NSMutableDictionary *)traceParamsForGallery:(NSInteger)index
 {
     NSMutableDictionary *dict = [self.baseViewModel.detailTracerDic mutableCopy];
-    
     if (_model.medias.count > index) {
         FHMultiMediaItemModel *itemModel = _model.medias[index];
         if(!dict){
             dict = [NSMutableDictionary dictionary];
         }
-        
-        if([dict isKindOfClass:[NSDictionary class]]){
-            [dict removeObjectsForKeys:@[@"card_type",@"rank",@"element_from"]];
-            dict[@"picture_id"] = itemModel.imageUrl;
-            dict[@"show_type"] = @"large";
-        }
+        dict[@"picture_id"] = itemModel.imageUrl;
     }
+    if([dict isKindOfClass:[NSDictionary class]]){
+        [dict removeObjectsForKeys:@[@"card_type",@"rank",@"element_from"]];
+    }
+    dict[@"show_type"] = @"large";
     return dict;
 }
 
@@ -805,12 +809,13 @@
 }
 
 //进入图片页面页
-- (void)goToPictureList {
+- (void)goToPictureList:(NSString *)from {
     
     if ([(FHDetailMediaHeaderCorrectingModel *)self.currentData isInstantData]) {
         //列表页带入的数据不响应
         return;
     }
+    [self enterPictureShowPictureWithIndex:NSUIntegerMax from:from];
     [self showPictureList];
     
 }
