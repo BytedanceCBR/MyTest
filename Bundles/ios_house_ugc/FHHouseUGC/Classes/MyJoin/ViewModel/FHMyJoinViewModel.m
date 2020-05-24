@@ -20,7 +20,6 @@
 
 #define cellId @"cellId"
 #define allCellId @"allCellId"
-#define maxFollowItem 3
 #define leaveOffSet 60
 
 @interface FHMyJoinViewModel () <UICollectionViewDelegate, UICollectionViewDataSource, FHMyJoinNeighbourhoodViewDelegate,UICollectionViewDelegateFlowLayout,UIScrollViewDelegate>
@@ -34,6 +33,7 @@
 @property(nonatomic, strong) FHMyJoinAllNeighbourhoodCell *allCell;
 @property(nonatomic, strong) NSMutableDictionary *clientShowDict;
 @property(nonatomic, assign) CGFloat beiginOffset;
+@property(nonatomic, assign) NSInteger maxFollowItem;
 
 @end
 
@@ -54,8 +54,10 @@
         _messageViewHeight = 0;
 
         if([FHEnvContext isNewDiscovery]){
+            _maxFollowItem = 3;
             [_collectionView registerClass:[FHMyJoinCommnityCell class] forCellWithReuseIdentifier:cellId];
         }else{
+            _maxFollowItem = 6;
             [_collectionView registerClass:[FHMyJoinNeighbourhoodCell class] forCellWithReuseIdentifier:cellId];
             [_collectionView registerClass:[FHMyJoinAllNeighbourhoodCell class] forCellWithReuseIdentifier:allCellId];
             
@@ -100,17 +102,17 @@
     [self.clientShowDict removeAllObjects];
     if([FHEnvContext isNewDiscovery]){
         [self addAllItem];
-        if([[FHUGCConfig sharedInstance] followList].count > maxFollowItem){
+        if([[FHUGCConfig sharedInstance] followList].count > _maxFollowItem){
             NSArray *followList = [[FHUGCConfig sharedInstance] followList];
-            NSArray *subFollowList = [followList subarrayWithRange:NSMakeRange(0, maxFollowItem)];
+            NSArray *subFollowList = [followList subarrayWithRange:NSMakeRange(0, _maxFollowItem)];
             [self.dataList addObjectsFromArray:subFollowList];
         }else{
             [self.dataList addObjectsFromArray:[[FHUGCConfig sharedInstance] followList]];
         }
     }else{
-        if([[FHUGCConfig sharedInstance] followList].count > maxFollowItem){
+        if([[FHUGCConfig sharedInstance] followList].count > _maxFollowItem){
             NSArray *followList = [[FHUGCConfig sharedInstance] followList];
-            NSArray *subFollowList = [followList subarrayWithRange:NSMakeRange(0, maxFollowItem)];
+            NSArray *subFollowList = [followList subarrayWithRange:NSMakeRange(0, _maxFollowItem)];
             [self.dataList addObjectsFromArray:subFollowList];
         }else{
             [self.dataList addObjectsFromArray:[[FHUGCConfig sharedInstance] followList]];
