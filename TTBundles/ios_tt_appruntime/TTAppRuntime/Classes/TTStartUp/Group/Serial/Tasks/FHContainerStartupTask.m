@@ -85,7 +85,7 @@
                 popupClickDict[@"click_button"] = @"取消";
             }
         }
-        TRACK_EVENT(@"third_party_bind_popup_click", popupTipsDict);
+        TRACK_EVENT(@"third_party_bind_tips", popupTipsDict);
         TRACK_EVENT(@"third_party_bind_popup_click", popupClickDict);
     }
 }
