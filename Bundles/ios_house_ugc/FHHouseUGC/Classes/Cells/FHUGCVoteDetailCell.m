@@ -1071,8 +1071,6 @@
     self.bgView.backgroundColor = [UIColor colorWithHexStr:@"#ebeef0"];// fef2ec
     [self addSubview:self.bgView];
     self.contentLabel = [[UILabel alloc] initWithFrame:CGRectMake(10, 8, 0, 22)];
-    self.contentLabel.layer.masksToBounds = YES;
-    self.contentLabel.backgroundColor = [UIColor whiteColor];
     self.contentLabel.text = @"";
     if ([UIScreen mainScreen].bounds.size.width <= 321) {
         self.contentLabel.font = [UIFont themeFontRegular:12];
