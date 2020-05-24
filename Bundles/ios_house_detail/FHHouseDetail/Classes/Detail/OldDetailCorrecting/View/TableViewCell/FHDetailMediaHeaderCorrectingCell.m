@@ -511,7 +511,7 @@
     if (data.isShowTopImageTab) {
         pictureListViewController.topImages = data.topImages;
         pictureListViewController.associateInfo = data.houseImageAssociateInfo;
-        pictureListViewController.contactViewModel = data.contactViewModel.copy;
+        pictureListViewController.contactViewModel = data.contactViewModel;
 //        pictureListViewController.elementFrom = @"new_detail";
     } else {
         if (data.topImages.count) {

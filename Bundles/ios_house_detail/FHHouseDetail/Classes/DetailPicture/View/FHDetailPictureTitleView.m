@@ -94,22 +94,19 @@
             if (self.usedInPictureList) {
                 UICollectionViewLayoutAttributes *attributes = [self.colletionView layoutAttributesForItemAtIndexPath:indexPath];
                 CGRect frame = attributes.frame;
-                NSString *title = self.titleNames[titleIndex];
-                NSRange range = [title rangeOfString:@"（"];
-                if (range.location != NSNotFound) {
-                    title = [title substringToIndex:range.location];
-                }
-                CGFloat width = [title btd_widthWithFont:[UIFont themeFontRegular:16] height:22];
-                if (frame.size.width > width) {
-                    frame.size.width = width;
-                }
-//                UICollectionViewCell *cell = [self.colletionView cellForItemAtIndexPath:indexPath];
-//                if (cell) {
+//                NSString *title = self.titleNames[titleIndex];
+//                NSRange range = [title rangeOfString:@"（"];
+//                if (range.location != NSNotFound) {
+//                    title = [title substringToIndex:range.location];
+//                }
+//                CGFloat width = [title btd_widthWithFont:[UIFont themeFontRegular:16] height:22];
+//                if (frame.size.width > width) {
+//                    frame.size.width = width;
+//                }
                 [self.colletionView bringSubviewToFront:self.indicatorView];
                 [UIView animateWithDuration:0.2 animations:^{
                     self.indicatorView.frame = CGRectMake(frame.origin.x + frame.size.width/2 - 10, CGRectGetHeight(self.colletionView.frame) - 13, 20, 4);
                 }];
-//                }
             }
         }
     }
@@ -194,8 +191,10 @@
     }
     if (titleIndex == index) {
         cell.titleLabel.textColor = selectColor;
+        cell.titleLabel.font = selectFont;
     } else {
         cell.titleLabel.textColor = normalColor;
+        cell.titleLabel.font = normalFont;
     }
     return cell;
 }

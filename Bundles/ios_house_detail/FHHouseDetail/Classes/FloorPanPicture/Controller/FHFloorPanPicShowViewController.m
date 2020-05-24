@@ -16,6 +16,7 @@
 #import "FHPictureListTitleCollectionView.h"
 #import "FHDetailPictureTitleView.h"
 #import "FHLoadingButton.h"
+#import <FHHouseBase/UIImage+FIconFont.h>
 
 @interface FHFloorPanPicShowViewController ()<UICollectionViewDelegate,UICollectionViewDataSource>
 
@@ -73,7 +74,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     [self initNavbar];
-    [self setUpPictureTable];
+    [self setupUserInterface];
     
     // Do any additional setup after loading the view.
 }
@@ -82,6 +83,19 @@
     [super viewWillAppear:animated];
 //    [self setNeedsStatusBarAppearanceUpdate];
     [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault animated:YES];
+}
+
+- (void)viewWillLayoutSubviews
+{
+    [super viewWillLayoutSubviews];
+    CGFloat bottomInset = 0;
+    if (@available(iOS 11.0, *)) {
+        bottomInset = [UIApplication sharedApplication].keyWindow.safeAreaInsets.bottom;
+    }
+    [self.bottomBar mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.height.mas_equalTo(80 + bottomInset);
+    }];
+    
 }
 
 - (UIButton *)onlineBtn {
@@ -116,8 +130,7 @@
     return _contactBtn;
 }
 
-- (void)setUpPictureTable
-{
+- (void)setupUserInterface {
     // Do any additional setup after loading the view.
     self.view.backgroundColor = [UIColor whiteColor];
     if (self.topImages && self.pictureTitles.count > 1) {
@@ -190,11 +203,7 @@
         [self.bottomBar mas_makeConstraints:^(MASConstraintMaker *make) {
             make.left.right.mas_equalTo(0);
             make.height.mas_equalTo(80);
-            if (@available(iOS 11.0, *)) {
-                make.bottom.mas_equalTo(self.mas_bottomLayoutGuide);
-            } else {
-                make.bottom.mas_equalTo(0);
-            }
+            make.bottom.mas_equalTo(0);
         }];
         
         BOOL showenOnline = self.contactViewModel.showenOnline;
@@ -267,12 +276,15 @@
     [self setNavBar:NO];
     [self.customNavBarView setNaviBarTransparent:YES];
     self.customNavBarView.title.text = @"楼盘相册";
+    [self.customNavBarView.leftBtn setBackgroundImage:ICON_FONT_IMG(24, @"\U0000e68a", [UIColor themeGray1]) forState:UIControlStateNormal];
+    [self.customNavBarView.leftBtn setBackgroundImage:ICON_FONT_IMG(24, @"\U0000e68a", [UIColor themeGray1]) forState:UIControlStateHighlighted];
 }
 
 - (void)setNavBar:(BOOL)error {
 //    [self.customNavBarView.leftBtn setBackgroundImage:[UIImage imageNamed:@"icon-return"] forState:UIControlStateNormal];
 //    [self.customNavBarView.leftBtn setBackgroundImage:[UIImage imageNamed:@"icon-return"] forState:UIControlStateHighlighted];
     [self.customNavBarView setNaviBarTransparent:NO];
+    
 }
 
 - (void)scrollToCurrentIndex:(NSInteger )toIndex {
