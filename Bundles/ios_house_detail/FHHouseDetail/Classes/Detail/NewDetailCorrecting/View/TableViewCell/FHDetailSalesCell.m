@@ -220,6 +220,12 @@
     FHDetailNewDiscountInfoItemModel *itemInfo = model.discountInfo[index];
 
     [self addClickOptionLog:@(itemInfo.actionType)];
+    
+    //099 优惠跳转类型
+    if (itemInfo.actionType == 3 && itemInfo.activityURLString.length) {
+        [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:itemInfo.activityURLString]];
+        return;
+    }
 
     NSString *title = itemInfo.discountReportTitle;
     NSString *subtitle = itemInfo.discountReportSubTitle;
