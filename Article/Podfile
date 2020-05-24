@@ -63,9 +63,9 @@ def fhPods
     # 'DelegateForC'
     #]
 
-     pod 'ios_house_im' , '0.2.0-rc.22'
-#    pod 'ios_house_im' , :path => '../../../ios_house_im'
-#    pod 'ios_house_im' , :git => 'git@code.byted.org:fproject/ios_house_im.git' , :commit => 'b78a40336e699b72fc7df70dfad9c63585d3d405'
+    pod 'ios_house_im' , '0.2.0-rc.24'
+#     pod 'ios_house_im' , :path => '../../../im/1/'
+#    pod 'ios_house_im' , :git => 'git@code.byted.org:fproject/ios_house_im.git' , :commit => 'f101433093f26c69a284aba90f9cfdc82ae4aa4d'
 
 end
 
