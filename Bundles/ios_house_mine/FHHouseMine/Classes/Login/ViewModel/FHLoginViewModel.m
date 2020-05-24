@@ -147,6 +147,7 @@ static FHLoginSharedModel *_sharedModel = nil;
             dispatch_group_leave(group);
             return;
         }
+        
         // 注意获取完手机号之后长期不登录的异常结果
         [TTAccount getOneKeyLoginPhoneNumberCompleted:^(NSString * _Nullable phoneNumber, NSString * _Nullable serviceName, NSError * _Nullable error) {
             __strong typeof(weakSelf) strongSelf = weakSelf;
@@ -161,6 +162,16 @@ static FHLoginSharedModel *_sharedModel = nil;
     
     dispatch_group_enter(group);
     dispatch_group_async(group, dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        
+        dispatch_sync(dispatch_get_main_queue(), ^{
+            self.douyinCanQucikLogin = [TTAccount isDouyinInstalledSupportBindMobile];
+        });
+        
+        if (!self.douyinCanQucikLogin) {
+            dispatch_group_leave(group);
+            return;
+        }
+
         [TTAccount canQuickLoginWithAweme:^(BOOL canQucikLogin, NSError * _Nullable error) {
             __strong typeof(weakSelf) strongSelf = weakSelf;
             strongSelf.douyinCanQucikLogin = canQucikLogin;
@@ -492,6 +503,9 @@ static FHLoginSharedModel *_sharedModel = nil;
     
     
     tracerDict[@"login_suggest_method"] = login_suggest_method?:@"";
+    if (self.hasShowAppleLogin) {
+        tracerDict[@"apple_is_show"] = @(1);
+    }
     [FHLoginTrackHelper loginShow:tracerDict];
 }
 
@@ -995,7 +1009,19 @@ static FHLoginSharedModel *_sharedModel = nil;
             YYCache *sendPhoneNumberCache = [[FHEnvContext sharedInstance].generalBizConfig sendPhoneNumberCache];
             [sendPhoneNumberCache removeObjectForKey:kFHPLoginhoneNumberCacheKey];
         }
-        [strongSelf popViewController];
+        //绑定页面，不直接退出登录页面，返回到当前最近的一个登录页面
+        __block UIViewController *loginViewController = nil;
+        [strongSelf.viewController.navigationController.viewControllers enumerateObjectsWithOptions:NSEnumerationReverse usingBlock:^(__kindof UIViewController * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+            if ([obj isKindOfClass:[FHLoginContainerViewController class]]) {
+                loginViewController = obj;
+                *stop = YES;
+            }
+        }];
+        if (!loginViewController) {
+            loginViewController = strongSelf.viewController;
+        }
+        [strongSelf.viewController.navigationController popToViewController:loginViewController animated:YES];
+
     }];
 }
 

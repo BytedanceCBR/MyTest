@@ -37,34 +37,56 @@
         //绑定冲突 放弃原账号 tt_account_didDropOrignalaccount param.cancel = 0
         //绑定冲突 解绑原账号 取消 tt_account_switchBindAlertView param.cancel = 1
         //绑定冲突 解绑原账号 确定 tt_account_switchBindAlertView param.cancel = 0
-        NSMutableDictionary *tracerDict = @{}.mutableCopy;
-        tracerDict[@"event_page"] = @"account_safe";
-        tracerDict[@"event_type"] = @"click";
-        tracerDict[@"event_belong"] = @"account";
-        tracerDict[@"platform"] = @"aweme";
-        tracerDict[@"params_for_special"] = @"uc_login";
-        if ([event isEqualToString:@"tt_account_switchBindAlertView"] && [params btd_intValueForKey:@"cancel"] == 0) {
-            tracerDict[@"status"] = @"on";
-        } else {
-            tracerDict[@"status"] = @"off";
-        }
+        NSMutableDictionary *popupClickDict = @{}.mutableCopy;
+        NSMutableDictionary *popupTipsDict = @{}.mutableCopy;
+        popupTipsDict[@"event_page"] = @"account_safe";
+        popupTipsDict[@"event_type"] = @"show";
+        popupTipsDict[@"event_belong"] = @"account";
+        popupTipsDict[@"show_type"] = @"popup";
+        popupTipsDict[@"platform"] = @"aweme";
+        popupTipsDict[@"params_for_special"] = @"uc_login";
+        
+        popupClickDict[@"event_page"] = @"account_safe";
+        popupClickDict[@"event_type"] = @"click";
+        popupClickDict[@"event_belong"] = @"account";
+        popupClickDict[@"platform"] = @"aweme";
+        popupClickDict[@"params_for_special"] = @"uc_login";
+
         if ([event isEqualToString:@"tt_account_didDropOrignalaccount"]) {
-            tracerDict[@"popup_type"] = @"冲突弹框";
+            popupClickDict[@"popup_type"] = @"冲突弹框";
+            popupClickDict[@"status_info"] = @"绑定失败";
+            
+            popupTipsDict[@"popup_type"] = @"冲突弹框";
+            popupTipsDict[@"status_info"] = @"绑定失败";
+            
             if ([params btd_intValueForKey:@"cancel"] == 0) {
-                tracerDict[@"click_button"] = @"放弃原账号";
+                popupClickDict[@"status"] = @"on";
+                popupTipsDict[@"status"] = @"on";
+                popupClickDict[@"click_button"] = @"放弃原账号";
             } else {
-                tracerDict[@"click_button"] = @"取消";
+                popupClickDict[@"status"] = @"off";
+                popupTipsDict[@"status"] = @"off";
+                popupClickDict[@"click_button"] = @"取消";
             }
         }
         if ([event isEqualToString:@"tt_account_switchBindAlertView"]) {
-            tracerDict[@"popup_type"] = @"冲突二次确认";
+            popupClickDict[@"popup_type"] = @"冲突二次确认";
+            popupClickDict[@"status_info"] = @"操作确认";
+            
+            popupTipsDict[@"popup_type"] = @"冲突二次确认";
+            popupTipsDict[@"status_info"] = @"操作确认";
             if ([params btd_intValueForKey:@"cancel"] == 0) {
-                tracerDict[@"click_button"] = @"确定";
+                popupClickDict[@"status"] = @"on";
+                popupTipsDict[@"status"] = @"on";
+                popupClickDict[@"click_button"] = @"确定";
             } else {
-                tracerDict[@"click_button"] = @"取消";
+                popupClickDict[@"status"] = @"off";
+                popupTipsDict[@"status"] = @"off";
+                popupClickDict[@"click_button"] = @"取消";
             }
         }
-        TRACK_EVENT(@"third_party_bind_popup_click", tracerDict);
+        TRACK_EVENT(@"third_party_bind_popup_click", popupTipsDict);
+        TRACK_EVENT(@"third_party_bind_popup_click", popupClickDict);
     }
 }
 

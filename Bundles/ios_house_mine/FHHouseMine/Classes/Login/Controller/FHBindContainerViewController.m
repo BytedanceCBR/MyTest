@@ -78,8 +78,10 @@
     switch (self.navigationType) {
         case FHBindContainerViewNavigationTypeClose: {
             [self setupDefaultNavBar:NO];
-            [self.customNavBarView.leftBtn setBackgroundImage:[UIImage imageNamed:@"douyin_login_close"] forState:UIControlStateNormal];
-            [self.customNavBarView.leftBtn setBackgroundImage:[UIImage imageNamed:@"douyin_login_close"] forState:UIControlStateHighlighted];
+//            [self.customNavBarView.leftBtn setBackgroundImage:[UIImage imageNamed:@"douyin_login_close"] forState:UIControlStateNormal];
+//            [self.customNavBarView.leftBtn setBackgroundImage:[UIImage imageNamed:@"douyin_login_close"] forState:UIControlStateHighlighted];
+            [self.customNavBarView.leftBtn setBackgroundImage:ICON_FONT_IMG(24, @"\U0000e68a", [UIColor themeGray1]) forState:UIControlStateNormal];
+            [self.customNavBarView.leftBtn setBackgroundImage:ICON_FONT_IMG(24, @"\U0000e68a", [UIColor themeGray1]) forState:UIControlStateHighlighted];
 //            self.customNavBarView.seperatorLine.hidden = YES;
             [self.customNavBarView cleanStyle:YES];
             [self.customNavBarView setNaviBarTransparent:YES];
