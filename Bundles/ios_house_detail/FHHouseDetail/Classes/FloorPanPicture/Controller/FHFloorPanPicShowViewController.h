@@ -23,7 +23,6 @@ NS_ASSUME_NONNULL_BEGIN
 //@property (nonatomic, strong) FHDetailMediaHeaderModel       *mediaHeaderModel;
 @property (nonatomic, strong) FHHouseDetailContactViewModel *contactViewModel;
 @property (nonatomic, strong, nullable) FHClueAssociateInfoModel *associateInfo;
-@property (nonatomic, strong) FHDetailMediaHeaderModel       *mediaHeaderModel;
 
 @property (nonatomic, copy) NSString *elementFrom;
 @end

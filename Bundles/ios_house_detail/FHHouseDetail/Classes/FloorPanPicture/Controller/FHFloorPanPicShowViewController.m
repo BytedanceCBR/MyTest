@@ -62,6 +62,14 @@
     return self;
 }
 
+- (instancetype)initWithRouteParamObj:(TTRouteParamObj *)paramObj {
+    if (self = [super initWithRouteParamObj:paramObj]) {
+        self.ttTrackStayEnable = YES;
+        _lastStatusBarStyle = [[UIApplication sharedApplication] statusBarStyle];
+    }
+    return self;
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     [self initNavbar];
@@ -368,13 +376,16 @@
 // 电话咨询点击
 - (void)contactButtonClick:(UIButton *)btn {
     if (self.contactViewModel) {
+        if (self.tracerDict) {
+            self.contactViewModel.tracerDict = self.tracerDict.copy;
+        }
         NSMutableDictionary *extraDic = @{
             @"realtor_position":@"phone_button",
             @"position":@"report_button",
             @"element_from":self.elementFrom?:@"be_null"
         }.mutableCopy;
         
-        extraDic[@"from"] = @"app_newhouse_property_picture";
+//        extraDic[@"from"] = @"app_newhouse_property_picture";
 //        if (cluePage) {
 //            extraDic[kFHCluePage] = cluePage;
 //        }
@@ -393,16 +404,19 @@
 // 在线联系点击
 - (void)onlineButtonClick:(UIButton *)btn {
     if (self.contactViewModel) {
+        if (self.tracerDict) {
+            self.contactViewModel.tracerDict = self.tracerDict.copy;
+        }
         NSMutableDictionary *extraDic = @{}.mutableCopy;
         extraDic[@"realtor_position"] = @"online";
         extraDic[@"position"] = @"online";
         extraDic[@"element_from"] = self.elementFrom?:@"be_null";
         extraDic[@"from"] = @"app_newhouse_property_picture";
         // 头图im入口线索透传
-        if(self.mediaHeaderModel.houseImageAssociateInfo) {
-            extraDic[kFHAssociateInfo] = self.mediaHeaderModel.houseImageAssociateInfo;
+        if(self.associateInfo) {
+            extraDic[kFHAssociateInfo] = self.associateInfo;
         }
-        [self.mediaHeaderModel.contactViewModel onlineActionWithExtraDict:extraDic];
+        [self.contactViewModel onlineActionWithExtraDict:extraDic];
     }
 }
 

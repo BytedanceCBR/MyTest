@@ -83,7 +83,8 @@
     @"saleStatus": @"sale_status",
     @"highlightedRealtorAssociateInfo":@"highlighted_realtor_associate_info",
     @"displayPrice": @"display_price",
-    @"imageDictList": @"house_image_dict_list"
+    @"imageDictList": @"house_image_dict_list",
+    @"imageAssociateInfo" : @"image_associate_info"
   };
   return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
      return dict[keyName]?:keyName;

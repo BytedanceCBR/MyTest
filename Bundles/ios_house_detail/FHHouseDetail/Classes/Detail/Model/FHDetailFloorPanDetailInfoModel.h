@@ -71,6 +71,9 @@ NS_ASSUME_NONNULL_BEGIN
 /// 099 新增楼盘详情页 户型和样板间展示UI
 //@property (nonatomic, copy) NSArray<FHImageModel> *imageDictList;
 @property (nonatomic, strong , nullable) NSArray<FHHouseDetailImageListDataModel> *imageDictList;
+
+/// 099 新增户型详情页的线索相关
+@property (nonatomic, strong, nullable) FHClueAssociateInfoModel *imageAssociateInfo;
 @end
 
 @interface FHDetailFloorPanDetailInfoModel : JSONModel 

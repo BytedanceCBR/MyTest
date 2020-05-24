@@ -25,6 +25,7 @@
 #import "NSDictionary+TTAdditions.h"
 #import "FHFloorPanPicShowViewController.h"
 #import <TTBaseLib/TTUIResponderHelper.h>
+#import "FHDetailFloorPanDetailInfoModel.h"
 
 @interface FHDetailMediaHeaderCorrectingCell ()<FHMultiMediaCorrectingScrollViewDelegate,FHDetailScrollViewDidScrollProtocol,FHDetailVCViewLifeCycleProtocol>
 
@@ -357,6 +358,10 @@
         pictureDetailViewController.associateInfo = model.data.imageGroupAssociateInfo;
     }else if ([self.baseViewModel.detailData isKindOfClass:[FHDetailNeighborhoodModel class]]) {
         FHDetailNeighborhoodModel *model = (FHDetailOldModel *)self.baseViewModel.detailData;
+    } else if ([self.baseViewModel.detailData isKindOfClass:[FHDetailFloorPanDetailInfoModel class]]) {
+        //户型详情
+        FHDetailFloorPanDetailInfoModel *model = (FHDetailFloorPanDetailInfoModel *)self.baseViewModel.detailData;
+        pictureDetailViewController.associateInfo = model.data.imageAssociateInfo;
     }
     
 
@@ -497,13 +502,17 @@
 
 - (void)showPictureList {
     FHDetailMediaHeaderCorrectingModel *data = (FHDetailMediaHeaderCorrectingModel *)self.currentData;
-    FHFloorPanPicShowViewController *pictureListViewController = [[FHFloorPanPicShowViewController alloc] init];
-    pictureListViewController.contactViewModel = data.contactViewModel;
+    NSMutableDictionary *routeParam = [NSMutableDictionary dictionary];
+//    NSDictionary *tracker = @{
+//        @"enter_from" = self.pictureDetailVC?:
+//    };
+    FHFloorPanPicShowViewController *pictureListViewController = [[FHFloorPanPicShowViewController alloc] initWithRouteParamObj:TTRouteParamObjWithDict(routeParam)];
     pictureListViewController.modalPresentationStyle = UIModalPresentationFullScreen;
     if (data.isShowTopImageTab) {
         pictureListViewController.topImages = data.topImages;
         pictureListViewController.associateInfo = data.houseImageAssociateInfo;
-        pictureListViewController.mediaHeaderModel = self.currentData;
+        pictureListViewController.contactViewModel = data.contactViewModel.copy;
+//        pictureListViewController.elementFrom = @"new_detail";
     } else {
         if (data.topImages.count) {
             FHDetailNewTopImage *topImage = data.topImages.firstObject;
@@ -692,6 +701,8 @@
             dict[@"click_position"] = @"house_vr_icon";
         }else if([str isEqualToString:@"VR"]){
             dict[@"click_position"] = @"house_vr";
+        }else if ([str isEqualToString:@"样板间"]) {
+            dict[@"click_position"] = @"prototype";
         }
 
         dict[@"rank"] = @"be_null";

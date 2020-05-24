@@ -29,6 +29,7 @@
 #import "FHOldDetailDisclaimerCell.h"
 #import "FHDetailListSectionTitleCell.h"
 #import "FHFloorPanDetailPropertyListCell.h"
+#import "FHDetailBaseModel.h"
 
 @interface FHFloorPanDetailViewModel()<UITableViewDelegate,UITableViewDataSource>
 
@@ -153,7 +154,7 @@
 
 - (void)processDetailData:(FHDetailFloorPanDetailInfoModel *)model {
     NSMutableArray *itemsArray = [NSMutableArray new];
-    
+    self.detailData = model;
     self.currentModel = model;
     //头部轮播图
     FHMultiMediaItemModel *itemModel = nil;
@@ -170,6 +171,8 @@
         }
         headerCellModel.houseImageDictList = houseImageList.copy;
     }
+    headerCellModel.houseImageAssociateInfo = model.data.imageAssociateInfo;
+    
     FHDetailHouseTitleModel *houseTitleModel = [[FHDetailHouseTitleModel alloc] init];
     houseTitleModel.titleStr = model.data.title;
     houseTitleModel.squaremeter = model.data.squaremeter;
