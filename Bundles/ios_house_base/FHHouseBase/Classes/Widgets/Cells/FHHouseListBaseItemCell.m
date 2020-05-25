@@ -467,10 +467,8 @@
         [self.mainIma bd_setImageWithURL:[NSURL URLWithString:imageModel.url] placeholder:[FHHouseListBaseItemCell placeholderImage]];
         FHImageModel *tagimageModel = model.tagImage.firstObject;
         [self.mainImaTag bd_setImageWithURL:[NSURL URLWithString:tagimageModel.url]];
-        self.displayDescriptionLabel.text = model.displayDescription;
-        if (model.buildingSquareMeter.length > 0) {
-            self.displayDescriptionLabel.text = [NSString stringWithFormat:@"%@/%@", model.displayDescription, model.buildingSquareMeter];
-        }
+        //只展示display_description，跟安卓端保持一致
+        self.displayDescriptionLabel.text = model.displayDescription ?: @"";
         if (model.displayPriceColor) {
             self.unitPrice.textColor = [UIColor colorWithHexStr:model.displayPriceColor];
         }else {
@@ -491,10 +489,8 @@
         [self.mainIma bd_setImageWithURL:[NSURL URLWithString:imageModel.url] placeholder:[FHHouseListBaseItemCell placeholderImage]];
         FHImageModel *tagimageModel = model.tagImage.firstObject;
         [self.mainImaTag bd_setImageWithURL:[NSURL URLWithString:tagimageModel.url]];
-        self.displayDescriptionLabel.text = model.displayDescription;
-        if (model.buildingSquareMeter.length > 0) {
-            self.displayDescriptionLabel.text = [NSString stringWithFormat:@"%@/%@", model.displayDescription, model.buildingSquareMeter];
-        }
+        //只展示display_description，跟安卓端保持一致
+        self.displayDescriptionLabel.text = model.displayDescription ?: @"";
         if (model.displayPriceColor) {
             self.unitPrice.textColor = [UIColor colorWithHexStr:model.displayPriceColor];
         }else {
