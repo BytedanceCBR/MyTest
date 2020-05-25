@@ -18,6 +18,7 @@
 #import <FHHouseBase/FHLocManager.h>
 #import "BDUGLocationDataCollect.h"
 #import "FHEnvContext.h"
+#import "FHLocManager.h"
 DEC_TASK("TTLocationStartupTask",FHTaskTypeAfterLaunch,TASK_PRIORITY_HIGH+1);
 
 @implementation TTLocationStartupTask
@@ -57,6 +58,7 @@ DEC_TASK("TTLocationStartupTask",FHTaskTypeAfterLaunch,TASK_PRIORITY_HIGH+1);
 {
     //单次采集上报
     if ([[FHEnvContext sharedInstance] hasConfirmPermssionProtocol]) {
+        [[FHLocManager sharedInstance] configLocationManager];
         [BDUGLocationDataCollect sharedCollector].geocoders = @[[BDUGAmapGeocoder sharedGeocoder]];
         [[BDUGLocationDataCollect sharedCollector] reportLocationInfoWithCompletion:^(BDUGLocationInfo * _Nullable locationInfo, NSError * _Nullable error) {
                if (block) {

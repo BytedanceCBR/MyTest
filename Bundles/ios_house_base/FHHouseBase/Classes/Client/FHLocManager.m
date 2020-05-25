@@ -318,6 +318,18 @@ NSString * const kFHTopSwitchCityLocalKey = @"f_switch_city_top_time_local_key";
     [AMapServices sharedServices].crashReportEnabled = false;
 }
 
+- (void)configLocationManager
+{
+    [BDUGLocationManager sharedManager].baseUrl = [FHMainApi host];
+    BDUGLocationAppConfig *config = [[BDUGLocationAppConfig alloc] init];
+    config.oversea = NO;
+    config.appID = @"1370";
+    config.deviceID = [[TTInstallIDManager sharedInstance] deviceID];
+    config.appVersion =  [FHEnvContext getToutiaoVersionCode];
+    config.devicePlatform = @"iPhone";
+    [BDUGLocationManager sharedManager].hostAppConfig = config;
+}
+
 - (void)requestCurrentLocation:(BOOL)showAlert completion:(void(^)(AMapLocationReGeocode * reGeocode))completion
 {
         NSDictionary *fhSettings= [[TTSettingsManager sharedManager] settingForKey:@"f_settings" defaultValue:@{} freeze:YES];
@@ -328,14 +340,7 @@ NSString * const kFHTopSwitchCityLocalKey = @"f_switch_city_top_time_local_key";
             return;
         }
     
-        [BDUGLocationManager sharedManager].baseUrl = [FHMainApi host];
-        BDUGLocationAppConfig *config = [[BDUGLocationAppConfig alloc] init];
-        config.oversea = NO;
-        config.appID = @"1370";
-        config.deviceID = [[TTInstallIDManager sharedInstance] deviceID];
-        config.appVersion =  [FHEnvContext getToutiaoVersionCode];
-        config.devicePlatform = @"iPhone";
-        [BDUGLocationManager sharedManager].hostAppConfig = config;
+        [self configLocationManager];
     
         __weak typeof(self) wSelf = self;
         [[BDUGLocationManager sharedManager] requestLocationWithDesiredAccuracy:BDUGLocationAccuracyHundredMeters geocoders:@[[BDUGAmapGeocoder sharedGeocoder]] timeout:4 completion:^(BDUGLocationInfo * _Nullable locationInfo, NSError * _Nullable error) {

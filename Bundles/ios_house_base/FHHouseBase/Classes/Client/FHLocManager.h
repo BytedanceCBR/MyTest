@@ -42,6 +42,8 @@ extern NSString * const kFHAllConfigLoadErrorNotice;
 
 - (void)setUpLocManagerLocalInfo;
 
+- (void)configLocationManager;
+
 - (void)showCitySwitchAlert:(NSString *)cityName;
 
 - (void)showCitySwitchAlert:(NSString *)cityName openUrl:(NSString *)openUrl;
