@@ -573,6 +573,7 @@ NSString * const kFHTopSwitchCityLocalKey = @"f_switch_city_top_time_local_key";
             currentRe.district = regeocode.district;
             currentRe.cityCode = regeocode.citycode;
             currentRe.administrativeArea = regeocode.province;
+            currentRe.city = regeocode.city;
             wSelf.currentReGeocode = currentRe;
         }
         
