@@ -143,10 +143,10 @@
         }
     }
     if (titleModel.isFloorPan) {    //户型详情页特有的总价Label
-        if (titleModel.tags.count) {
-           _photoCellHeight += 20 + 20 + 20;
+        if (titleModel.tags && titleModel.tags.count > 1) {
+           _photoCellHeight += 20 + 20 + 24;
         } else {
-            _photoCellHeight += 20 + 20;
+            _photoCellHeight += 20 + 12;
         }
     }
     
