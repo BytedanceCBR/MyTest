@@ -321,9 +321,9 @@ NSString * const kFHTopSwitchCityLocalKey = @"f_switch_city_top_time_local_key";
 - (void)requestCurrentLocation:(BOOL)showAlert completion:(void(^)(AMapLocationReGeocode * reGeocode))completion
 {
         NSDictionary *fhSettings= [[TTSettingsManager sharedManager] settingForKey:@"f_settings" defaultValue:@{} freeze:YES];
-        BOOL f_bduglocation_sdk = [fhSettings tt_boolValueForKey:@"f_bduglocation_sdk_close"];
+        BOOL f_bduglocation_sdk = [fhSettings tt_boolValueForKey:@"f_bduglocation_sdk_enable"];
     
-        if (f_bduglocation_sdk) {
+        if (!f_bduglocation_sdk) {
             [self requestCurrentLocationPrevious:showAlert completion:completion];
             return;
         }
