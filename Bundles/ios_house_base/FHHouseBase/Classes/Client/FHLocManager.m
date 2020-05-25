@@ -338,7 +338,7 @@ NSString * const kFHTopSwitchCityLocalKey = @"f_switch_city_top_time_local_key";
         [BDUGLocationManager sharedManager].hostAppConfig = config;
     
         __weak typeof(self) wSelf = self;
-        [[BDUGLocationManager sharedManager] requestLocationWithDesiredAccuracy:BDUGLocationAccuracyKilometer geocoders:@[[BDUGAmapGeocoder sharedGeocoder]] timeout:4 completion:^(BDUGLocationInfo * _Nullable locationInfo, NSError * _Nullable error) {
+        [[BDUGLocationManager sharedManager] requestLocationWithDesiredAccuracy:BDUGLocationAccuracyHundredMeters geocoders:@[[BDUGAmapGeocoder sharedGeocoder]] timeout:4 completion:^(BDUGLocationInfo * _Nullable locationInfo, NSError * _Nullable error) {
                     
            BDUGBasePlacemark *location = locationInfo.placeMark;
         
