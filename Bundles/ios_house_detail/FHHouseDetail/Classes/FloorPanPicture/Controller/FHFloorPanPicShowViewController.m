@@ -167,7 +167,8 @@
     layout.itemSize =CGSizeMake(110, 150);
     
     //2.初始化collectionView
-    _collectionView = [[FHBaseCollectionView alloc] initWithFrame:self.view.bounds collectionViewLayout:layout];
+    self.collectionView = [[FHBaseCollectionView alloc] initWithFrame:self.view.bounds collectionViewLayout:layout];
+    self.collectionView.alwaysBounceVertical = YES;
     [self.view addSubview:_collectionView];
     _collectionView.backgroundColor = [UIColor clearColor];
     
@@ -300,12 +301,13 @@
         FHDetailNewDataSmallImageGroupModel *smallImageGroupModel = self.pictsArray[i];
         NSInteger tempCount = smallImageGroupModel.images.count;
         count += tempCount;
-        if (toIndex <= count) {
+        if (toIndex < count) {
             titleIndex = i;
             break;
         }
     }
-    UICollectionViewLayoutAttributes *attributes = [self.collectionView layoutAttributesForItemAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:titleIndex]];
+    self.lastIndexPath = [NSIndexPath indexPathForItem:0 inSection:titleIndex];
+    UICollectionViewLayoutAttributes *attributes = [self.collectionView layoutAttributesForItemAtIndexPath:self.lastIndexPath];
     CGRect frame = attributes.frame;
     frame.origin.y -= 65;
     //section header frame
@@ -314,6 +316,10 @@
     contentOffset.y = frame.origin.y;
     if (contentOffset.y + CGRectGetHeight(self.collectionView.frame) > (self.collectionView.contentSize.height + self.collectionView.contentInset.bottom)) {
         contentOffset.y = self.collectionView.contentSize.height - CGRectGetHeight(self.collectionView.frame) + self.collectionView.contentInset.bottom;
+    }
+    //防止向上滑动
+    if (contentOffset.y < 0) {
+        contentOffset.y = 0;
     }
     self.segmentViewChangedFlag = YES;
     [UIView animateWithDuration:0.2 animations:^{
@@ -326,23 +332,23 @@
 //    [self.mainCollectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:titleIndex] atScrollPosition:UICollectionViewScrollPositionBottom animated:YES];
 }
 
-- (void)scrollToSegmentView {
-    NSIndexPath *indexPath = [self.collectionView indexPathForItemAtPoint:self.collectionView.contentOffset];
-    
-    if (self.lastIndexPath.section != indexPath.section) {
-        self.lastIndexPath = indexPath;
-        if (indexPath.section < self.pictsArray.count) {
-            NSInteger currentIndex = 0;
-            for (int i = 0; i < indexPath.section; i++) {
-                FHDetailNewDataSmallImageGroupModel *smallImageGroupModel = self.pictsArray[i];
-                currentIndex += smallImageGroupModel.images.count;
-            }
-            if (self.segmentTitleView) {
-                self.segmentTitleView.selectIndex = currentIndex;
-            }
-        }
-    }
-}
+//- (void)scrollToSegmentView {
+//    NSIndexPath *indexPath = [self.collectionView indexPathForItemAtPoint:self.collectionView.contentOffset];
+//
+//    if (self.lastIndexPath.section != indexPath.section) {
+//        self.lastIndexPath = indexPath;
+//        if (indexPath.section < self.pictsArray.count) {
+//            NSInteger currentIndex = 0;
+//            for (int i = 0; i < indexPath.section; i++) {
+//                FHDetailNewDataSmallImageGroupModel *smallImageGroupModel = self.pictsArray[i];
+//                currentIndex += smallImageGroupModel.images.count;
+//            }
+//            if (self.segmentTitleView) {
+//                self.segmentTitleView.selectIndex = currentIndex;
+//            }
+//        }
+//    }
+//}
 
 - (void)processImagesList {
     NSMutableArray *smallImageGroup = [NSMutableArray array];
@@ -361,9 +367,8 @@
         for (FHDetailNewDataImageGroupModel * groupModel in topImage.smallImageGroup) {
             for (NSInteger j = 0; j < groupModel.images.count; j++) {
                 [smallImageList addObject:groupModel.images[j]];
+                tempCount += 1;
             }
-            
-            tempCount += smallImageList.count;
             
             if (topImage.type == FHDetailHouseImageTypeApartment) {
                 smallImageGroupModel.name = groupModel.name;
@@ -550,15 +555,6 @@
 
 }
 
-//- (void)collectionView:(UICollectionView *)collectionView didEndDisplayingCell:(UICollectionViewCell *)cell forItemAtIndexPath:(NSIndexPath *)indexPath {
-//    //计算总index，传segmentview
-//    [self scrollToSegmentView];
-//}
-//
-//- (void)collectionView:(UICollectionView *)collectionView willDisplayCell:(UICollectionViewCell *)cell forItemAtIndexPath:(NSIndexPath *)indexPath {
-//    [self scrollToSegmentView];
-//}
-
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
 
     if (self.segmentViewChangedFlag) {
@@ -569,13 +565,14 @@
 //    NSIndexPath *indexPathOfCentralCell = [self.mainCollectionView indexPathForItemAtPoint:centerPoint];
     
 //    CGPoint centerPoint = [self.view convertPoint:CGPointMake(20, 55) toView:self.mainCollectionView];
+    //1 6 2
     NSIndexPath *indexPath = [self.collectionView indexPathForItemAtPoint:centerPoint];
-//    NSLog(@"centerPoint :%@ section:%d,row:%d",NSStringFromCGPoint(centerPoint),indexPath.section,indexPath.item);
+    NSLog(@"centerPoint :%@ section:%d,row:%d",NSStringFromCGPoint(centerPoint),indexPath.section,indexPath.item);
     if (indexPath && self.lastIndexPath.section != indexPath.section) {
         self.lastIndexPath = indexPath;
         if (indexPath.section < self.pictsArray.count) {
             NSInteger currentIndex = 0;
-            for (int i = 0; i <= indexPath.section; i++) {
+            for (int i = 0; i < indexPath.section; i++) {
                 FHDetailNewDataSmallImageGroupModel *smallImageGroupModel = self.pictsArray[i];
                 currentIndex += smallImageGroupModel.images.count;
             }
