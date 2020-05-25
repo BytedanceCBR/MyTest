@@ -795,7 +795,23 @@
             userInfo[@"vote_info"] = weakSelf.voteInfo;
             [[NSNotificationCenter defaultCenter] postNotificationName:kFHUGCPostVoteSuccessNotification object:nil userInfo:userInfo];
         } else {
-            weakSelf.voteInfo.voteState = FHUGCVoteStateComplete;
+            if(error.code == 1005){ //过期
+                weakSelf.voteInfo.selected = YES;
+                weakSelf.voteInfo.voteState = FHUGCVoteStateExpired;
+                weakSelf.voteInfo.deadLineContent = @"";
+                for (FHUGCVoteInfoVoteInfoItemsModel *item in weakSelf.voteInfo.items) {
+                    if (item.selected) {
+                        item.selected = NO;
+                    }
+                }
+                [weakSelf refreshWithData:weakSelf.voteInfo];
+                NSMutableDictionary *userInfo = [NSMutableDictionary dictionary];
+                userInfo[@"vote_info"] = weakSelf.voteInfo;
+                [[NSNotificationCenter defaultCenter] postNotificationName:kFHUGCPostVoteSuccessNotification object:nil userInfo:userInfo];
+            }else{
+                weakSelf.voteInfo.voteState = FHUGCVoteStateComplete;
+            }
+            
             if (error && [self isChinese:error.domain]) {
                 [[ToastManager manager] showToast:error.domain];
             } else {

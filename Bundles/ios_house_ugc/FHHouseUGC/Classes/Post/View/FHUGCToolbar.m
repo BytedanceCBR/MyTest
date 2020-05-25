@@ -539,7 +539,7 @@
             } else {
                 [self.tagSelectCollectionView reloadData];
             }
-            [self.tagSelectCollectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForRow:tagInfo.index inSection:0] atScrollPosition:UICollectionViewScrollPositionRight animated:YES];
+//            [self.tagSelectCollectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForRow:tagInfo.index inSection:0] atScrollPosition:UICollectionViewScrollPositionRight animated:YES];
         }
     }
 }

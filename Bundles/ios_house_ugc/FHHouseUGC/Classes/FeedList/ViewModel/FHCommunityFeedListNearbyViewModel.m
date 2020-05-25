@@ -254,7 +254,6 @@
                     }else{
                         wself.tableView.hasMore = feedListModel.hasMore;
                     }
-
                     //第一次拉取数据过少时，在多拉一次loadmore
                     if(wself.dataList.count > 0 && wself.dataList.count < 5 && wself.tableView.hasMore && wself.retryCount < 1){
                         wself.retryCount += 1;
@@ -270,7 +269,7 @@
                         [wself.viewController.emptyView hideEmptyView];
                         [wself insertGuideCell];
                     }else{
-                        [wself.viewController.emptyView showEmptyWithTip:@"暂无新内容，快去发布吧" errorImageName:kFHErrorMaskNetWorkErrorImageName showRetry:NO];
+                        [wself.viewController.emptyView showEmptyWithTip:@"暂无新内容，快去发布吧" errorImageName:kFHErrorMaskNetWorkErrorImageName showRetry:YES];
                         wself.viewController.showenRetryButton = NO;
                         wself.refreshFooter.hidden = YES;
                     }
