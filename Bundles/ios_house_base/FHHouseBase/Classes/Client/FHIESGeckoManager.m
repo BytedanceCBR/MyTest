@@ -15,6 +15,7 @@
 #import "NSDictionary+TTAdditions.h"
 #import "IESGeckoCacheManager.h"
 #import "FHLynxManager.h"
+#import "TTSettingsManager.h"
 
 @implementation FHIESGeckoManager
 
@@ -61,7 +62,18 @@
     if ([[[FHHouseBridgeManager sharedInstance] envContextBridge] isOpenWebOffline]) {
         IESFalconManager.interceptionWKHttpScheme = YES;
         IESFalconManager.interceptionEnable = YES;
-        NSString *pattern = @"^(http|https)://.*.(pstatp.com/(toutiao)?|haoduofangs.com/f100/inner|99hdf.com/f100/inner)";
+        NSDictionary *fhSettings= [[TTSettingsManager sharedManager] settingForKey:@"f_settings" defaultValue:@{} freeze:YES];
+        NSArray * domainVRPreload = [fhSettings tt_objectForKey:@"f_vr_preload_domain_list"];
+
+        NSMutableString *pattern = [NSMutableString stringWithString:@"^(http|https)://.*.(pstatp.com/(toutiao)?|haoduofangs.com/f100/inner|99hdf.com/f100/inner|byteimg.com"] ;
+        if ([domainVRPreload isKindOfClass:[NSArray class]]) {
+            [domainVRPreload enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+                if ([obj isKindOfClass:[NSString class]]) {
+                    [pattern appendFormat:@"|%@",obj];
+                }
+            }];
+        }
+        [pattern appendString:@")"];
         [IESFalconManager registerPattern:pattern forGeckoAccessKey:[FHIESGeckoManager getGeckoKey]];
     }
 }
