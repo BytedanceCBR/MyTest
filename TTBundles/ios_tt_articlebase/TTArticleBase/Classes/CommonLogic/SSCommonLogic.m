@@ -5443,6 +5443,15 @@ static NSString *const kFFeedRefreshStrategy = @"feed_refresh_settings";
     return NO;
 }
 
++(BOOL)enableWebViewBlankDetect
+{
+    NSDictionary *fhSettings = [self fhSettings];
+    if (fhSettings && [fhSettings objectForKey:@"enable_webview_blank_detect"]) {
+        return [[fhSettings objectForKey:@"enable_webview_blank_detect"] boolValue];
+    }
+    return YES;
+}
+
 @end
 
 

@@ -186,17 +186,20 @@
 //    }
 //
     
-    if ([callParams[@"log_pb"] isKindOfClass:[NSString class]]) {
-        callParams[@"log_pb"] = [FHUtils dictionaryWithJsonString:callParams[@"log_pb"]];
-    }
+
 //    callParams[@"from"] = @"app_realtor_mainpage";
     callParams[kFHAssociateInfo] = associateInfoDict;
     FHAssociatePhoneModel *associatePhone = [[FHAssociatePhoneModel alloc]init];
     associatePhone.reportParams = reportParamsDict;
     associatePhone.associateInfo = associateInfoDict;
     associatePhone.realtorId = realtorId;
-    if (reportParamsDict[@"log_pb"]) {
-        NSDictionary *logPb = reportParamsDict[@"log_pb"];
+    if ([callParams[@"log_pb"] isKindOfClass:[NSDictionary class]]) {
+        NSDictionary *logPb = callParams[@"log_pb"];
+        associatePhone.searchId = logPb[@"search_id"];
+        associatePhone.imprId = logPb[@"impr_id"];
+    }else if ([callParams[@"log_pb"] isKindOfClass:[NSString class]]) {
+        NSDictionary *logPb = [FHUtils dictionaryWithJsonString:callParams[@"log_pb"]];
+        callParams[@"log_pb"] = logPb;
         associatePhone.searchId = logPb[@"search_id"];
         associatePhone.imprId = logPb[@"impr_id"];
     }
@@ -205,7 +208,6 @@
     associatePhone.showLoading = YES;
     [FHHousePhoneCallUtils callWithAssociatePhoneModel:associatePhone completion:^(BOOL success, NSError * _Nonnull error, FHDetailVirtualNumModel * _Nonnull virtualPhoneNumberModel) {
 
-//    [FHHousePhoneCallUtils callWithConfig:callParams completion:^(BOOL success, NSError * _Nonnull error, FHDetailVirtualNumModel * _Nonnull virtualPhoneNumberModel) {
         if (callback) {
             callback(TTBridgeMsgSuccess, nil,nil);
         }

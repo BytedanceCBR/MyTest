@@ -100,7 +100,7 @@
                 BOOL isStickTop = cellModel.isStick && (cellModel.stickStyle == FHFeedContentStickStyleTop || cellModel.stickStyle == FHFeedContentStickStyleTopAndGood);
                 
                 //这里的只是针对推荐tab，而且后面的类型根据实际需求改变
-                if(!isStickTop && cellModel.cellSubType != FHUGCFeedListCellSubTypeUGCRecommendCircle && cellModel.cellSubType != FHUGCFeedListCellSubTypeUGCBanner) {
+                if(!isStickTop && cellModel.cellSubType != FHUGCFeedListCellSubTypeUGCRecommendCircle && cellModel.cellSubType != FHUGCFeedListCellSubTypeUGCBanner && cellModel.cellSubType != FHUGCFeedListCellSubTypeUGCHotCommunity) {
                     index = idx;
                     *stop = YES;
                 }
