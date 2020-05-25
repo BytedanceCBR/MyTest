@@ -155,5 +155,68 @@ NSString *const FHLoginTrackLoginSuggestMethodKey = @"FHLoginTrackLoginSuggestMe
     TRACK_EVENT(@"uc_login_popup_click", trackDict.copy);
 }
 
++ (void)bindShow:(NSDictionary *)dict {
+    if (!dict) {
+        return;
+    }
+    NSMutableDictionary *trackDict = [dict mutableCopy];
+    trackDict[@"trigger"] = @"user";
+    trackDict[@"params_for_special"] = @"uc_login";
+    TRACK_EVENT(@"uc_bind_notify", trackDict.copy);
+}
+
++ (void)bindSubmit:(NSDictionary *)dict {
+    if (!dict) {
+        return;
+    }
+    NSMutableDictionary *trackDict = [dict mutableCopy];
+    trackDict[@"trigger"] = @"user";
+    trackDict[@"params_for_special"] = @"uc_login";
+    TRACK_EVENT(@"uc_bind_submit", trackDict.copy);
+}
+
++ (void)bindResult:(NSDictionary *)dict error:(NSError *)error {
+    if (!dict) {
+        return;
+    }
+    NSMutableDictionary *trackDict = [dict mutableCopy];
+    
+    if (error) {
+        trackDict[@"status"] = @"fail";
+        trackDict[@"error_code"] = [@(error.code) stringValue];
+        trackDict[@"fail_info"] = error.localizedDescription;
+    } else {
+        trackDict[@"status"] = @"success";
+    }
+    trackDict[@"trigger"] = @"user";
+    trackDict[@"params_for_special"] = @"uc_login";
+    TRACK_EVENT(@"uc_bind_result", trackDict.copy);
+}
+
++ (void)bindExit:(NSDictionary *)dict {
+    if (!dict) {
+        return;
+    }
+    NSMutableDictionary *trackDict = [dict mutableCopy];
+
+    trackDict[@"params_for_special"] = @"uc_login";
+    TRACK_EVENT(@"uc_bind_click_exit", trackDict.copy);
+}
+
++ (void)bindSendSMS:(NSDictionary *)dict error:(NSError *)error {
+    if (!dict) {
+        return;
+    }
+    NSMutableDictionary *trackDict = [dict mutableCopy];
+    if (error) {
+        trackDict[@"status"] = @"fail";
+        trackDict[@"error_code"] = [@(error.code) stringValue];
+        trackDict[@"fail_info"] = error.localizedDescription;
+    } else {
+        trackDict[@"status"] = @"success";
+    }
+    trackDict[@"params_for_special"] = @"uc_login";
+    TRACK_EVENT(@"uc_send_sms", trackDict.copy);
+}
 
 @end

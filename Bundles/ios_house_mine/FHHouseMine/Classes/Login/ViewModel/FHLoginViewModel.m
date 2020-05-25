@@ -257,6 +257,8 @@ static FHLoginSharedModel *_sharedModel = nil;
 @property (nonatomic, assign) BOOL hasShowDouyinLogin;
 
 @property (nonatomic, copy) void (^douyinLoginConflictHandlerBlock)(void);
+
+@property (nonatomic, copy) NSString *bindPlatform;
 @end
 
 @implementation FHLoginViewModel
@@ -389,6 +391,11 @@ static FHLoginSharedModel *_sharedModel = nil;
 
     [FHMineAPI requestSendVerifyCode:phoneNumber captcha:captcha isForBindMobile:isForBindMobile completion:^(NSNumber *_Nonnull retryTime, UIImage *_Nonnull captchaImage, NSError *_Nonnull error) {
         __strong typeof(weakSelf) strongSelf = weakSelf;
+        NSMutableDictionary *tracker = [NSMutableDictionary dictionary];
+        tracker[@"send_method"] = needPushVerifyCodeView?@"user_click":@"resend";
+        tracker[@"send_reason"] = isForBindMobile?@(TTASMSCodeScenarioBindPhone) : @(TTASMSCodeScenarioQuickLogin);
+        tracker[@"send_type"] = @"text";
+        [FHLoginTrackHelper bindSendSMS:tracker error:error];
         if (!error) {
             [strongSelf blockRequestSendMessage:[retryTime integerValue]];
             [[ToastManager manager] showToast:@"短信验证码发送成功"];
@@ -759,7 +766,12 @@ static FHLoginSharedModel *_sharedModel = nil;
     dict[@"viewType"] = @(viewType);
     dict[@"navigationType"] = @(navigationType);
     dict[@"viewModel"] = self;
-    dict[TRACER_KEY] = self.viewController.tracerDict;
+    NSMutableDictionary *tracker = self.viewController.tracerDict.mutableCopy;
+    if (self.bindPlatform.length) {
+        tracker[@"platform"] = self.bindPlatform;
+    }
+    
+    dict[TRACER_KEY] = tracker.copy;
     FHBindContainerViewController *vc = [[FHBindContainerViewController alloc] initWithRouteParamObj:TTRouteParamObjWithDict(dict.copy)];
     [self.viewController.navigationController pushViewController:vc animated:YES];
 }
@@ -815,7 +827,7 @@ static FHLoginSharedModel *_sharedModel = nil;
 }
 
 - (void)appleLoginAction {
-    NSMutableDictionary *tracerDict = [self.viewController tracerDict].mutableCopy;
+    __block NSMutableDictionary *tracerDict = [self.viewController tracerDict].mutableCopy;
     tracerDict[@"login_method"] = @"apple";
     [FHLoginTrackHelper loginSubmit:tracerDict];
 
@@ -836,6 +848,7 @@ static FHLoginSharedModel *_sharedModel = nil;
                 [strongSelf handleLoginResult:nil phoneNum:nil smsCode:nil error:error isOneKeyLogin:NO];
             } else {
                 //苹果登录成功，判定没有手机号，进入绑定流程
+                strongSelf.bindPlatform = @"apple";
                 [strongSelf goToOneKeyBind];
             }
         }
@@ -864,7 +877,7 @@ static FHLoginSharedModel *_sharedModel = nil;
         [FHLoginTrackHelper loginResult:tracerDict error:error];
         [[NSUserDefaults standardUserDefaults] setObject:isDouyinIcon?@"douyin":@"douyin_one_click" forKey:FHLoginTrackLastLoginMethodKey];
         [[NSUserDefaults standardUserDefaults] synchronize];
-
+        strongSelf.bindPlatform = isDouyinIcon?@"douyin":@"douyin_one_click";
         if (error) {
             //失败则提示
             //登录冲突处理
@@ -981,6 +994,8 @@ static FHLoginSharedModel *_sharedModel = nil;
 
 - (void)bindCancelAction {
     //登出帐号，并且退出所有页面
+    NSMutableDictionary *tracerDict = [self.viewController tracerDict].mutableCopy;
+    [FHLoginTrackHelper bindExit:tracerDict];
     __weak typeof(self) weakSelf = self;
     void(^popToLoginVC)(void) = ^(void) {
         //绑定页面，不直接退出登录页面，返回到当前最近的一个登录页面
@@ -1041,13 +1056,21 @@ static FHLoginSharedModel *_sharedModel = nil;
 }
 
 - (void)oneKeyBindAction {
+    NSMutableDictionary *tracerDict = [self.viewController tracerDict].mutableCopy;
+    tracerDict[@"bind_type"] = @"oneclick_bind";
+    if (self.bindPlatform.length) {
+        tracerDict[@"platform"] = self.bindPlatform;
+    }
+    [FHLoginTrackHelper bindSubmit:tracerDict.copy];
     __weak typeof(self) weakSelf = self;
     if (self.profileKey.length) {
         [TTAccount oneKeyBindPhoneWithProfileKey:self.profileKey completed:^(NSError * _Nullable error) {
+            [FHLoginTrackHelper bindResult:tracerDict error:error];
             [weakSelf handleBindingResult:nil phoneNum:nil smsCode:nil error:error isOneKeyBinding:YES];
         }];
     } else {
         [TTAccount oneKeyBindPhoneWithPassword:nil unbind:NO completed:^(NSError * _Nullable error) {
+            [FHLoginTrackHelper bindResult:tracerDict error:error];
             [weakSelf handleBindingResult:nil phoneNum:nil smsCode:nil error:error isOneKeyBinding:YES];
         }];
     }
@@ -1066,14 +1089,22 @@ static FHLoginSharedModel *_sharedModel = nil;
         [[ToastManager manager] showToast:@"验证码为空"];
         return;
     }
+    NSMutableDictionary *tracerDict = [self.viewController tracerDict].mutableCopy;
+    tracerDict[@"bind_type"] = @"sms_bind";
+    if (self.bindPlatform.length) {
+        tracerDict[@"platform"] = self.bindPlatform;
+    }
+    [FHLoginTrackHelper bindSubmit:tracerDict];
     [[ToastManager manager] showToast:@"正在绑定中"];
     __weak typeof(self) weakSelf = self;
     if (self.profileKey.length) {
         [TTAccount requesetBindAndLogingWithPhonenumber:mobileNumber SMSCode:smsCode profileKey:self.profileKey SMSCodeType:TTASMSCodeScenarioBindPhoneSubmit captcha:captcha completion:^(UIImage * _Nullable captchaImage, NSError * _Nullable error) {
+            [FHLoginTrackHelper bindResult:tracerDict error:error];
             [weakSelf handleBindingResult:captchaImage phoneNum:mobileNumber smsCode:smsCode error:error isOneKeyBinding:NO];
         }];
     } else {
         [TTAccount bindPhoneWithPhone:mobileNumber SMSCode:smsCode password:nil captcha:captcha unbind:NO completion:^(UIImage * _Nullable captchaImage, NSError * _Nullable error) {
+            [FHLoginTrackHelper bindResult:tracerDict error:error];
             [weakSelf handleBindingResult:captchaImage phoneNum:mobileNumber smsCode:smsCode error:error isOneKeyBinding:NO];
         }];
     }

@@ -115,6 +115,7 @@
 }
 
 - (void)setupUI {
+    NSMutableDictionary *tracker = self.tracerDict.mutableCopy;
     switch (self.viewType) {
         case FHBindViewTypeOneKey: {
             FHOneKeyBindingView *onekeyBindView = [[FHOneKeyBindingView alloc] init];
@@ -131,6 +132,8 @@
                 make.left.right.equalTo(self.view);
             }];
             [onekeyBindView updateOneKeyLoginWithPhone:self.viewModel.mobileNumber service:[self.viewModel serviceName] protocol:[self.viewModel protocolAttrTextByIsOneKeyLoginViewType:self.viewType]];
+            tracker[@"bind_type"] = @"oneclick_bind";
+            tracker[@"carrier"] = [self.viewModel serviceName]?:@"";
             break;
         }
         case FHBindViewTypeMobile: {
@@ -148,6 +151,7 @@
                 make.left.right.equalTo(self.view);
             }];
             self.textField = mobileInputView.mobileTextField;
+            tracker[@"bind_type"] = @"sms_bind";
             break;
         }
         case FHBindViewTypeVerify: {
@@ -175,11 +179,13 @@
             [self.viewModel setClearVerifyCodeWhenError:^{
                 [weakCodeView clearTextFieldText];
             }];
+            tracker[@"bind_type"] = @"sms_bind";
             break;
         }
         default:
             break;
     }
+    [FHLoginTrackHelper bindShow:tracker];
 }
 
 @end

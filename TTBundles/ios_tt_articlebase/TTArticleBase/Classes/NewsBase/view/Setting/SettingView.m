@@ -1461,10 +1461,23 @@ TTEditUserProfileViewControllerDelegate
 
 - (void)logout {
     NSString *userID = [TTAccountManager userID];
-    
+    __block NSMutableDictionary *tracker = [NSMutableDictionary dictionary];
+    tracker[@"params_for_special"] = @"uc_login";
+    tracker[@"uid"] = userID?:@"";
+    tracker[@"trigger"] = @"user";
+    TRACK_EVENT(@"uc_user_logout_click", tracker.copy);
     WeakSelf;
     [TTAccount logoutInScene:TTAccountLogoutSceneNormal completion:^(BOOL success, NSError * _Nullable error) {
         StrongSelf;
+        
+        if (error) {
+            tracker[@"status"] = @"fail";
+            tracker[@"error_code"] = [@(error.code) stringValue];
+            tracker[@"fail_info"] = error.localizedDescription;
+        } else {
+            tracker[@"status"] = @"success";
+        }
+        TRACK_EVENT(@"uc_user_logout_result", tracker.copy);
         
         BOOL shouldIgnoreError = NO;
         //未设置密码也可以退出登录

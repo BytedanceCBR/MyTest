@@ -26,7 +26,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)goToMobileLogin;
 
 /// 跳转一键绑定界面 不支持一键绑定跳转手机号绑定界面
-- (void)goToOneKeyBind;
+
 
 /// 跳转手机号绑定界面
 - (void)goToMobileBind;
@@ -101,6 +101,16 @@ FOUNDATION_EXPORT NSString *const FHLoginTrackLoginSuggestMethodKey;
 + (void)loginPopup:(NSDictionary *)dict error:(NSError *)error;
 
 + (void)loginPopupClick:(NSDictionary *)dict error:(NSError *)error;
+
++ (void)bindShow:(NSDictionary *)dict;
+
++ (void)bindSubmit:(NSDictionary *)dict;
+
++ (void)bindResult:(NSDictionary *)dict error:(NSError *)error;
+
++ (void)bindExit:(NSDictionary *)dict;
+
++ (void)bindSendSMS:(NSDictionary *)dict error:(NSError *)error;
 
 @end
 
