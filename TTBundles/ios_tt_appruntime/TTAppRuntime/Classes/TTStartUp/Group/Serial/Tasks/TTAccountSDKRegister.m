@@ -84,7 +84,7 @@ DEC_TASK("TTAccountSDKRegister",FHTaskTypeSerial,TASK_PRIORITY_HIGH+5);
      */
     [TTAccount accountConf].autoSynchronizeUserInfo = YES;
     // x_tt_token 长票据功能是否可用,默认开启，可以配置一个开关，控制是否开启
-//    [TTAccount accountConf].isXTTTokenActive = YES;
+    [TTAccount accountConf].isXTTTokenActive = NO;
     // x_tt_token 长票据功能轮询间隔，默认 10 min
 //    [TTAccount accountConf].tokenPollingInterveral = TTATokenPollingInterveralTen;
     // 设置需要票据的域名（必须）
