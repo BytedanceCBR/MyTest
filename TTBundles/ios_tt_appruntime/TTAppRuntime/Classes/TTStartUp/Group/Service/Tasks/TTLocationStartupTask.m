@@ -17,7 +17,7 @@
 #import <FHHouseBase/FHMainApi.h>
 #import <FHHouseBase/FHLocManager.h>
 #import "BDUGLocationDataCollect.h"
-
+#import "FHEnvContext.h"
 DEC_TASK("TTLocationStartupTask",FHTaskTypeAfterLaunch,TASK_PRIORITY_HIGH+1);
 
 @implementation TTLocationStartupTask
@@ -56,12 +56,15 @@ DEC_TASK("TTLocationStartupTask",FHTaskTypeAfterLaunch,TASK_PRIORITY_HIGH+1);
 - (void)uploadLocationWithBlock:(void (^)(BOOL isSuccess))block
 {
     //单次采集上报
-    [BDUGLocationDataCollect sharedCollector].geocoders = @[[BDUGAmapGeocoder sharedGeocoder]];
-    [[BDUGLocationDataCollect sharedCollector] reportLocationInfoWithCompletion:^(BDUGLocationInfo * _Nullable locationInfo, NSError * _Nullable error) {
-           if (block) {
-               block(error?NO:YES);
-           }
-    }];
+    if ([[FHEnvContext sharedInstance] hasConfirmPermssionProtocol]) {
+        [BDUGLocationDataCollect sharedCollector].geocoders = @[[BDUGAmapGeocoder sharedGeocoder]];
+        [[BDUGLocationDataCollect sharedCollector] reportLocationInfoWithCompletion:^(BDUGLocationInfo * _Nullable locationInfo, NSError * _Nullable error) {
+               if (block) {
+                   block(error?NO:YES);
+               }
+        }];
+    }
+
 //
 //    [BDUGAmapGeocoder sharedGeocoder].apiKey = [FHLocManager amapAPIKey];
 //    [BDUGLocationNetworkManager sharedManager].allowedPopupAlert = NO;
