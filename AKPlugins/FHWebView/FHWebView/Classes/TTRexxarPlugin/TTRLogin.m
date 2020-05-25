@@ -39,6 +39,11 @@ extern NSString * TTAccountPlatformDidAuthorizeCompletionNotification;
 
 - (void)loginWithParam:(NSDictionary *)param callback:(TTRJSBResponse)callback webView:(UIView<TTRexxarEngine> *)webview controller:(UIViewController *)controller {
     
+    //如果为空对象，或者不是字典类型，某些网页错误情况 param 类型为字符串
+    if (!param || ![param isKindOfClass:[NSDictionary class]]) {
+        callback(TTRJSBMsgParamError, @{@"code": @2});
+        return;
+    }
     NSString *platform = [param objectForKey:@"platform"];
     NSString *source = [param tt_stringValueForKey:@"login_source"];
     NSString *title = [param tt_stringValueForKey:@"title"];

@@ -981,8 +981,34 @@ static FHLoginSharedModel *_sharedModel = nil;
 
 - (void)bindCancelAction {
     //登出帐号，并且退出所有页面
-    NSString *userID = [TTAccount sharedAccount].user.userID;
     __weak typeof(self) weakSelf = self;
+    void(^popToLoginVC)(void) = ^(void) {
+        //绑定页面，不直接退出登录页面，返回到当前最近的一个登录页面
+        __strong typeof(weakSelf) strongSelf = self;
+        __block UIViewController *loginViewController = nil;
+        [strongSelf.viewController.navigationController.viewControllers enumerateObjectsWithOptions:NSEnumerationReverse usingBlock:^(__kindof UIViewController * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+            if ([obj isKindOfClass:[FHLoginContainerViewController class]]) {
+                loginViewController = obj;
+                *stop = YES;
+            }
+            if ([obj isKindOfClass:[FHLoginViewController class]]) {
+                loginViewController = obj;
+                *stop = YES;
+            }
+        }];
+        if (loginViewController) {
+            [strongSelf.viewController.navigationController popToViewController:loginViewController animated:YES];
+        } else {
+            [strongSelf.viewController.navigationController popToRootViewControllerAnimated:YES];
+        }
+    };
+    
+    if (![TTAccount sharedAccount].isLogin) {
+        popToLoginVC();
+        return;
+    }
+    NSString *userID = [TTAccount sharedAccount].user.userID;
+    
     [TTAccount logoutInScene:TTAccountLogoutSceneNormal completion:^(BOOL success, NSError * _Nullable error) {
         __strong typeof(weakSelf) strongSelf = self;
         BOOL shouldIgnoreError = NO;
@@ -1009,19 +1035,8 @@ static FHLoginSharedModel *_sharedModel = nil;
             YYCache *sendPhoneNumberCache = [[FHEnvContext sharedInstance].generalBizConfig sendPhoneNumberCache];
             [sendPhoneNumberCache removeObjectForKey:kFHPLoginhoneNumberCacheKey];
         }
-        //绑定页面，不直接退出登录页面，返回到当前最近的一个登录页面
-        __block UIViewController *loginViewController = nil;
-        [strongSelf.viewController.navigationController.viewControllers enumerateObjectsWithOptions:NSEnumerationReverse usingBlock:^(__kindof UIViewController * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-            if ([obj isKindOfClass:[FHLoginContainerViewController class]]) {
-                loginViewController = obj;
-                *stop = YES;
-            }
-        }];
-        if (!loginViewController) {
-            loginViewController = strongSelf.viewController;
-        }
-        [strongSelf.viewController.navigationController popToViewController:loginViewController animated:YES];
 
+        popToLoginVC();
     }];
 }
 
