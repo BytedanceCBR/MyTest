@@ -143,7 +143,11 @@
         }
     }
     if (titleModel.isFloorPan) {    //户型详情页特有的总价Label
-           _photoCellHeight += 20 + 20;
+        if (titleModel.tags.count) {
+           _photoCellHeight += 20 + 20 + 20;
+        } else {
+            _photoCellHeight += 20 + 20;
+        }
     }
     
     if (((FHDetailMediaHeaderCorrectingModel *)self.currentData).vedioModel.cellHouseType == FHMultiMediaCellHouseNeiborhood) {

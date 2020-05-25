@@ -166,7 +166,7 @@
             make.left.mas_equalTo(self).offset(31);
             make.right.mas_equalTo(self).offset(-35);
             make.height.mas_equalTo(28);
-            make.top.mas_equalTo(self.mas_top).offset(40);
+            make.top.mas_equalTo(self.mas_top).offset(50);
         }];
 //        [label mas_makeConstraints:^(MASConstraintMaker *make) {
 //            make.left.mas_equalTo(self.nameLabel.mas_right).offset(6);
@@ -177,7 +177,7 @@
         [self.tagBacView mas_makeConstraints:^(MASConstraintMaker *make) {
             make.left.mas_equalTo(self).offset(15);
             make.right.mas_equalTo(self).offset(-15);
-            make.top.mas_equalTo(self.nameLabel.mas_bottom).offset(9);
+            make.top.mas_equalTo(self.nameLabel.mas_bottom).offset(12);
             make.height.mas_offset(tagHeight);
         }];
     }
