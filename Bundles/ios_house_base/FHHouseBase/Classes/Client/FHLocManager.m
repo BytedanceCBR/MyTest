@@ -417,7 +417,7 @@ NSString * const kFHTopSwitchCityLocalKey = @"f_switch_city_top_time_local_key";
             
             [[[FHHouseBridgeManager sharedInstance] envContextBridge] setUpLocationInfo:amapInfo];
             
-            if (location && [self isHaveLocationAuthorization]) {
+            if (location && [self isHaveLocationAuthorization] && locationInfo.location.coordinate.latitude != 0) {
                 wSelf.currentReGeocode = location;
             }
             
