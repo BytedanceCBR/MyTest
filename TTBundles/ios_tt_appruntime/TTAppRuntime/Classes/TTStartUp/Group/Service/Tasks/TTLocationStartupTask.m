@@ -34,6 +34,8 @@ DEC_TASK("TTLocationStartupTask",FHTaskTypeAfterLaunch,TASK_PRIORITY_HIGH+1);
 - (void)startWithApplication:(UIApplication *)application options:(NSDictionary *)launchOptions
 {
     [super startWithApplication:application options:launchOptions];
+    [[TTLocationManager sharedManager]disableReportLocationAtFinishLaunch];
+    
     [self uploadLocationWithBlock:^(BOOL isSuccess) {
         //        NSLog(@"zjing test:isSuccess:%ld",isSuccess);
     }];

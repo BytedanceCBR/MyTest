@@ -50,7 +50,7 @@ static NSString * const kFUGCPrefixStr = @"fugc";
     [self bindTopIndexChanged];//绑定头部选中index变化
     // Do any additional setup after loading the view.
     
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         if (!self.isSendNotification) {
             [[NSNotificationCenter defaultCenter] postNotificationName:@"kTTFeedDidDisplay" object:nil];
             self.isSendNotification = YES;
