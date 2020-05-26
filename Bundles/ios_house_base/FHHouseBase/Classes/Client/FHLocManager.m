@@ -42,6 +42,7 @@ NSString * const kFHTopSwitchCityLocalKey = @"f_switch_city_top_time_local_key";
 @property (nonatomic, assign) BOOL isHasSendPermissionTrace;
 @property(nonatomic , strong) NSTimer *messageTimer;
 @property (nonatomic, assign) CLAuthorizationStatus currentStatus;
+
 @end
 
 @implementation FHLocManager
@@ -407,7 +408,7 @@ NSString * const kFHTopSwitchCityLocalKey = @"f_switch_city_top_time_local_key";
             
             [[[FHHouseBridgeManager sharedInstance] envContextBridge] setUpLocationInfo:amapInfo];
             
-            if (location) {
+            if (location && [self isHaveLocationAuthorization]) {
                 wSelf.currentReGeocode = location;
             }
             

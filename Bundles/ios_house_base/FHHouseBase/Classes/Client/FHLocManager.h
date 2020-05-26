@@ -23,6 +23,7 @@ extern NSString * const kFHAllConfigLoadErrorNotice;
 
 @property (nonatomic, strong) AMapLocationManager * locMgr;
 @property (nonatomic, strong) BDUGBasePlacemark * currentReGeocode;
+@property (nonatomic, strong) AMapLocationReGeocode * currentAmpReGeocode;
 @property (nonatomic, strong) CLLocation * currentLocaton;
 @property (nonatomic, assign) BOOL isLocationSuccess;
 @property (nonatomic, assign) NSInteger retryConfigCount;
