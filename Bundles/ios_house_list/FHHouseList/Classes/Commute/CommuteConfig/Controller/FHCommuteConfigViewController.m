@@ -172,10 +172,10 @@
     NSString *destLocation = manager.destLocation;
     if (destLocation.length == 0) {
         NSString *selectCityName = [FHEnvContext getCurrentUserDeaultCityNameFromLocal];
-        AMapLocationReGeocode * currentReGeocode =  [FHLocManager sharedInstance].currentReGeocode;
+        AMapLocationReGeocode * currentReGeocode =  [FHLocManager sharedInstance].currentAmpReGeocode;
         
         if ([FHEnvContext isSameLocCityToUserSelect] && currentReGeocode.city &&([currentReGeocode.city hasPrefix:selectCityName] || [selectCityName hasPrefix:currentReGeocode.city])) {
-            AMapLocationReGeocode *currentReGeocode =  [FHLocManager sharedInstance].currentReGeocode;
+            AMapLocationReGeocode *currentReGeocode =  [FHLocManager sharedInstance].currentAmpReGeocode;
             self.chooseLocation = [FHLocManager sharedInstance].currentLocaton;
             if (currentReGeocode && self.chooseLocation) {
                 destLocation = currentReGeocode.AOIName;
@@ -201,8 +201,8 @@
 -(void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    if (self.useLocation && _chooseRegeoCode != [FHLocManager sharedInstance].currentReGeocode ) {
-        _chooseRegeoCode = [FHLocManager sharedInstance].currentReGeocode;
+    if (self.useLocation && _chooseRegeoCode != [FHLocManager sharedInstance].currentAmpReGeocode ) {
+        _chooseRegeoCode = [FHLocManager sharedInstance].currentAmpReGeocode;
         _inputLabel.text = _chooseRegeoCode.AOIName;
     }
 }

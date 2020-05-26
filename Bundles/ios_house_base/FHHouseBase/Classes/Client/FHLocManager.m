@@ -346,8 +346,17 @@ NSString * const kFHTopSwitchCityLocalKey = @"f_switch_city_top_time_local_key";
         __weak typeof(self) wSelf = self;
         [[BDUGLocationManager sharedManager] requestLocationWithDesiredAccuracy:BDUGLocationAccuracyHundredMeters geocoders:@[[BDUGAmapGeocoder sharedGeocoder]] timeout:4 completion:^(BDUGLocationInfo * _Nullable locationInfo, NSError * _Nullable error) {
                     
-           BDUGBasePlacemark *location = locationInfo.placeMark;
-        
+            BDUGBasePlacemark *location = locationInfo.placeMark;
+             
+            if (!error && location.city && location.aoiList.count > 0) {
+                AMapLocationReGeocode *locationAmap = [AMapLocationReGeocode new];
+                locationAmap.city = location.city;
+                if ([location.aoiList.firstObject isKindOfClass:[NSDictionary class]]) {
+                    locationAmap.AOIName = [(NSDictionary *)location.aoiList.firstObject objectForKey:@"name"];
+                }
+                self.currentAmpReGeocode = locationAmap;
+            }
+      
            if (showAlert)
             {
                 BOOL isLocationEnabled = [CLLocationManager locationServicesEnabled];
