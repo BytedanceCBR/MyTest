@@ -516,7 +516,12 @@
 
            FHDetailNewDataSmallImageGroupModel *groupModel = self.pictsArray[indexPath.section];
             if([groupModel.name length] > 0) {
-                titleView.titleLabel.text = [NSString stringWithFormat:@"%@ (%ld)",groupModel.name,groupModel.images.count];
+                if ([groupModel.type isEqualToString:@"2"]) {
+                    //户型图后面不带计数
+                    titleView.titleLabel.text = [NSString stringWithFormat:@"%@",groupModel.name];
+                } else {
+                    titleView.titleLabel.text = [NSString stringWithFormat:@"%@ (%ld)",groupModel.name,groupModel.images.count];
+                }
             } else {
                 titleView.titleLabel.text = [NSString stringWithFormat:@"(%ld)",groupModel.images.count];
             }
