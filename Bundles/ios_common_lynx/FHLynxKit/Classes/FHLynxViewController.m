@@ -20,6 +20,7 @@
 #import <FHHouseBase/FHIESGeckoManager.h>
 #import "FHLynxPageBridge.h"
 #import "UIViewController+Refresh_ErrorHandler.h"
+#import "BDWebViewBlankDetect.h"
 
 @interface FHLynxViewController ()<LynxViewClient>
 @property (nonatomic, assign) NSTimeInterval loadTime; //页面加载时间
@@ -65,7 +66,7 @@
           _requestParams = paramObj.allParams[@"request_params"];
           _reportParams = paramObj.allParams[@"report_params"];
 
-          NSData *templateData =  [[FHLynxManager sharedInstance] lynxDataForChannel:channelName templateKey:[FHLynxManager defaultJSFileName] version:0];            
+          NSData *templateData =  [[FHLynxManager sharedInstance] lynxDataForChannel:channelName templateKey:[FHLynxManager defaultJSFileName] version:0];
           NSMutableDictionary *dataParams = [NSMutableDictionary new];
     
             
@@ -214,6 +215,16 @@
     NSTimeInterval costTime = [[NSDate date] timeIntervalSince1970] - _loadTime;
     [self sendCostTimeEvent:costTime andService:@"lynx_page_duration"];
     [self sendEvent:@"0" andError:nil];
+    
+    [BDWebViewBlankDetect detectBlankByOldSnapshotWithView:view CompleteBlock:^(BOOL isBlank, UIImage * _Nonnull image, NSError * _Nonnull error) {
+        if (isBlank) {
+            NSMutableDictionary * paramsExtra = [NSMutableDictionary new];
+            [paramsExtra setValue:[[TTInstallIDManager sharedInstance] deviceID] forKey:@"device_id"];
+            NSMutableDictionary *uploadParams = [NSMutableDictionary new];
+            [uploadParams setValue:error.description forKey:@"error"];
+            [[HMDTTMonitor defaultManager] hmdTrackService:@"lynx_template_black_error" metric:uploadParams category:nil extra:paramsExtra];
+        }
+    }];
 }
 
 - (void)lynxView:(LynxView *)view didRecieveError:(NSError *)error{
