@@ -120,7 +120,7 @@
         for (NSDictionary *event in self.eventArray) {
             totalDuration += [event[@"stay_time"] integerValue];
         }
-        
+
         NSDictionary *params = @{
                                  @"link_list": [self.eventArray copy],
                                  @"group_id_first": entranceGroupID ?: @"",
@@ -128,7 +128,7 @@
                                  @"link_cnt": @([self.eventArray count]),
                                  };
         [FHUserTracker writeEvent:@"stay_page_link" params:params];
-        
+
         [self.eventArray removeAllObjects];
     }
     self.tracking = NO;
