@@ -449,7 +449,9 @@ def appPods
 #    'Logger',
     'WeChatAccount',
     'OneKeyLogin',
-    'ThirdPartyAccountFoundation'
+    'ThirdPartyAccountFoundation',
+    'TTAwemeAccount',
+    'AppleAccount'
     ]
     pod 'BDUGContainer', '1.1.2'
     pod 'BDUGTrackerInterface', '1.1.1'
@@ -458,7 +460,7 @@ def appPods
     pod 'TYRZApiSDK' , '1.2.2-rc.0'
     pod 'EAccountApiSDK', '1.2.0-alpha.0'
     pod 'BDUGUnionSDK', '0.1.2'
-  
+
     pod_binary 'BDUIKeyboardImplHook', '1.0.3'
 
     #************业务SDK**********
@@ -595,6 +597,7 @@ target 'NewsLiteInHouse' do
 end
 
 target 'f100' do
+#    testPods
     fhPods
     appPods
     appDevelopPods

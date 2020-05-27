@@ -29,7 +29,7 @@
 @interface FHEditUserViewModel()<UITableViewDelegate,UITableViewDataSource,FHEditingInfoControllerDelegate,FHEditUserBaseCellDelegate,FHHomePageSettingControllerDelegate,TTImagePickerControllerDelegate>
 
 @property(nonatomic, strong) NSArray *dataList;
-@property(nonatomic, strong) UITableView *tableView;
+@property(nonatomic, weak) UITableView *tableView;
 @property(nonatomic, strong) FHEditableUserInfo *userInfo;
 @property(nonatomic, weak) FHEditUserController *viewController;
 @property (nonatomic, strong) TTImagePickerController *ttImagePickerController;

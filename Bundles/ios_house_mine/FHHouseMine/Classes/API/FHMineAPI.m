@@ -133,8 +133,8 @@
     return [FHMainApi queryData:queryPath params:paramDic class:cls completion:completion];
 }
 
-+ (void)requestSendVerifyCode:(NSString *)phoneNumber captcha:(NSString *_Nullable)captcha completion:(void(^_Nullable)(NSNumber *retryTime, UIImage *captchaImage, NSError *error))completion {
-    [TTAccountManager startSendCodeWithPhoneNumber:phoneNumber captcha:captcha type:TTASMSCodeScenarioQuickLogin unbindExist:NO completion:completion];
++ (void)requestSendVerifyCode:(NSString *)phoneNumber captcha:(NSString *_Nullable)captcha isForBindMobile:(BOOL)isForBindMobile completion:(void(^_Nullable)(NSNumber *retryTime, UIImage *captchaImage, NSError *error))completion {
+    [TTAccountManager startSendCodeWithPhoneNumber:phoneNumber captcha:captcha type:isForBindMobile ? TTASMSCodeScenarioBindPhone : TTASMSCodeScenarioQuickLogin unbindExist:NO completion:completion];
 }
 
 + (void)requestQuickLogin:(NSString *)phoneNumber smsCode:(NSString *)smsCode captcha:(NSString *)captcha completion:(void(^_Nullable)(UIImage *captchaImage, NSNumber *newUser, NSError *error))completion {
