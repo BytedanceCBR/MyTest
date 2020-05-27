@@ -17,7 +17,9 @@
 #import "TTDeviceHelper.h"
 #import "TTBaseMacro.h"
 #import "TTThemeConst.h"
-#import "TTTracker.h"
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
+
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 
 //UIWindow的rootViewController
 @interface TTActionSheetViewController : UIViewController
@@ -399,7 +401,10 @@ static TTActionSheetController *sharedInstance;
         if (self.extra) {
             [extraDic addEntriesFromDictionary:self.extra];
         }
-        ttTrackEventWithCustomKeys(@"detail", self.manager.source, self.groupID, self.source, extraDic);
+        
+        [BDTrackerProtocol trackEventWithCustomKeys:@"detail" label:self.manager.source value:self.groupID source:self.source extraDic:extraDic];
+
+//        ttTrackEventWithCustomKeys(@"detail", self.manager.source, self.groupID, self.source, extraDic);
         
         self.lastDislikeCount = currentDislikeCount;
         self.lastReportCount = currentReportCount;
@@ -459,7 +464,10 @@ static TTActionSheetController *sharedInstance;
         if (self.extra) {
             [extraDic addEntriesFromDictionary:self.extra];
         }
-        ttTrackEventWithCustomKeys(@"detail", self.manager.source, self.groupID, self.source, extraDic);
+        
+        [BDTrackerProtocol trackEventWithCustomKeys:@"detail" label:self.manager.source value:self.groupID source:self.source extraDic:extraDic];
+
+//        ttTrackEventWithCustomKeys(@"detail", self.manager.source, self.groupID, self.source, extraDic);
         
         self.lastDislikeCount = currentDislikeCount;
         self.lastReportCount = currentReportCount;

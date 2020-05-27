@@ -600,7 +600,7 @@ typedef void (^TTCommentLoginPipelineCompletion)(TTCommentLoginState state);
                     
 //                    [paramsDict setValue:[FHTraceEventUtils generateEnterfrom:[self categoryName]]  forKey:@"enter_from"];
                     
-                    [TTTracker eventV3:@"rt_post_comment" params:paramsDict];
+                    [BDTrackerProtocol eventV3:@"rt_post_comment" params:paramsDict];
                 }
 
                 if (self.publishStatusForTrack == 1) {

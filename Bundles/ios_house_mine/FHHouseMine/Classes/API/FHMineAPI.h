@@ -22,7 +22,7 @@ NS_ASSUME_NONNULL_BEGIN
 + (TTHttpTask *)requestFocusDetailInfoWithType:(NSInteger)type offset:(NSInteger)offset searchId:(nullable NSString *)searchId limit:(NSInteger)limit className:(NSString *)className completion:(void(^_Nullable)(id<FHBaseModelProtocol> model , NSError *error))completion;
 
 //发送短信验证码
-+ (void)requestSendVerifyCode:(NSString *)phoneNumber captcha:(NSString *_Nullable)captcha completion:(void(^_Nullable)(NSNumber *retryTime, UIImage *captchaImage, NSError *error))completion ;
++ (void)requestSendVerifyCode:(NSString *)phoneNumber captcha:(NSString *_Nullable)captcha isForBindMobile:(BOOL)isForBindMobile completion:(void(^_Nullable)(NSNumber *retryTime, UIImage *captchaImage, NSError *error))completion ;
 
 //登录
 + (void)requestQuickLogin:(NSString *)phoneNumber smsCode:(NSString *)smsCode captcha:(NSString *)captcha completion:(void(^_Nullable)(UIImage *captchaImage, NSNumber *newUser, NSError *error))completion;

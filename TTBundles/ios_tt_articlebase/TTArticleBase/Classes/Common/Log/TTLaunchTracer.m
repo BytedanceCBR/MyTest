@@ -6,7 +6,8 @@
 //
 
 #import "TTLaunchTracer.h"
-#import "TTTracker.h"
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
+
 
 @interface TTLaunchTracer ()
 {
@@ -52,7 +53,7 @@ static TTLaunchTracer* _instance;
     NSMutableDictionary *params = @{@"gd_label": launchType,
                                     @"tips": @(_badgeNumber),
                                     @"event_type": @"house_app2c_v2"}.mutableCopy;
-    [TTTracker eventV3:@"launch_log" params:params];
+    [BDTrackerProtocol eventV3:@"launch_log" params:params];
 }
 
 - (void)willEnterForeground {

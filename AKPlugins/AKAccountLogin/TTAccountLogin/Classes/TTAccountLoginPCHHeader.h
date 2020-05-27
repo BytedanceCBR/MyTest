@@ -31,7 +31,8 @@
 #import "NetworkUtilities.h"
 
 #import "TTMonitor.h"
-#import "TTTracker.h"
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
+
 #import "TTTrackerWrapper.h"
 
 #import "TTAccountSDK.h"

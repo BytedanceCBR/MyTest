@@ -16,7 +16,6 @@
 #import "TTPersistence.h"
 #import "TTTrackerWrapper.h"
 #import "TTStringHelper.h"
-#import <TTNetBusiness/TTHttpsControlManager.h>
 #import "NSStringAdditions.h"
 #import "NSString+URLEncoding.h"
 #import "TTNetworkHelper.h"
@@ -288,7 +287,6 @@ static NSString *const kTrackFaildURLFileName = @"ssADTrackFailedURLs.plist";
     }
 
     NSURL * url = [TTStringHelper URLWithURLString:sendURLStr];
-    url = [[TTHttpsControlManager sharedInstance_tt] transferedURLFrom:url];
     if (!url) {
         return;
     }

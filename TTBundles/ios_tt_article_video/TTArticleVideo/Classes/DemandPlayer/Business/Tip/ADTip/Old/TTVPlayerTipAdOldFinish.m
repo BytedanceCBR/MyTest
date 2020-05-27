@@ -235,7 +235,7 @@
     [params setValue:@"2" forKey:@"ext_value"];
     [params setValue:@(connectionType) forKey:@"nt"];
     [params setValue:@"1" forKey:@"is_ad_event"];
-    [TTTracker eventV3:@"realtime_click" params:params];
+    [BDTrackerProtocol eventV3:@"realtime_click" params:params];
 }
 
 - (void)sendTrackEvent:(NSString *)event label:(NSString *)label{

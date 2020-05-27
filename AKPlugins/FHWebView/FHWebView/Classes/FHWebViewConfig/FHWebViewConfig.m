@@ -69,10 +69,9 @@
         
         NSString *url = [NSString stringWithFormat:@"fschema://fhomepage?city_id=%@",cityId];
         // 注销登录
-        [TTAccount logout:^(BOOL success, NSError * _Nullable error) {
+        [TTAccount logoutInScene:TTAccountLogoutSceneCancel completion:^(BOOL success, NSError * _Nullable error) {
             callback(TTRJSBMsgSuccess, @{@"code": @(success ? 1 : 0)});
-        }];
-        
+        }];        
         
         [FHEnvContext openLogoutSuccessURL:url completion:^(BOOL isSuccess) {
             

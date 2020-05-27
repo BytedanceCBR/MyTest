@@ -91,7 +91,7 @@ static pthread_mutex_t stopWatchMutex = PTHREAD_MUTEX_INITIALIZER;
             netState = @"cellular";
         }
         
-        [TTTracker eventV3:@"ugc_image_firstframe_monitor" params:@{@"time": @(interval),
+        [BDTrackerProtocol eventV3:@"ugc_image_firstframe_monitor" params:@{@"time": @(interval),
                                                                     @"is_cache": @(inCache),
                                                                     @"format": @(model.imageModel.type),
                                                                     @"net_state": netState,

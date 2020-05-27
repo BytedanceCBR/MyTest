@@ -106,6 +106,11 @@ callback(status, @{@"msg": [NSString stringWithFormat:msg]? [NSString stringWith
     method = [method.uppercaseString isEqualToString:@"POST"]? @"POST": @"GET";
     
     NSDictionary *header = [param tt_dictionaryValueForKey:@"header"];
+    if ([header.allKeys containsObject:@"content-type"]) {
+        NSMutableDictionary *caseSensitiveHeader = header.mutableCopy;
+        [caseSensitiveHeader setObject:header[@"content-type"] forKey:@"Content-Type"];
+        header = caseSensitiveHeader.copy;
+    }
     NSDictionary *params = nil;
     id tempParams = [param objectForKey:[method isEqualToString:@"GET"]? @"params": @"data"];
     if([tempParams isKindOfClass:[NSDictionary class]]){

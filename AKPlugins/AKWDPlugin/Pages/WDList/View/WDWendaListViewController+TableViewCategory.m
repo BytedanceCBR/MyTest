@@ -25,6 +25,7 @@
 #import <TTImpression/SSImpressionManager.h>
 //Router
 #import "WDListCellRouterCenter.h"
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 
 @implementation WDWendaListViewController(TableViewCategory)
 
@@ -216,7 +217,9 @@
                 }
                 NSString *clickTag = [NSString stringWithFormat:@"click_%@",tag];
                 [extra setValue:clickTag forKey:@"label"];
-                ttTrackEventWithCustomKeys(@"video_show", clickTag, answerEntity.ansid, nil, extra);
+                
+                [BDTrackerProtocol trackEventWithCustomKeys:@"video_show" label:clickTag value:answerEntity.ansid source:nil extraDic:extra];
+//                ttTrackEventWithCustomKeys(@"video_show", clickTag, answerEntity.ansid, nil, extra);
             }
         }
     }

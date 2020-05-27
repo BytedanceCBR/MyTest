@@ -190,7 +190,6 @@ typedef enum : NSUInteger {
     params[@"realtor_rank"] = reportParams[@"realtor_rank"] ? : @(0);
     params[@"realtor_id"] = reportParams[@"realtor_id"] ? : @"be_null";
 
-    // todo zjing test
     params[@"position"] = reportParams[@"position"] ? : @"be_null";
     if (reportParams[@"item_id"]) {
         params[@"item_id"] = reportParams[@"item_id"];

@@ -126,7 +126,7 @@
     if ([[TTRoute sharedRoute] canOpenURL:[TTStringHelper URLWithURLString:openPageURL]]) {
         [[TTRoute sharedRoute] openURLByViewController:[TTStringHelper URLWithURLString:openPageURL] userInfo:nil];
     }
-    [TTTracker category:@"umeng" event:kWDDetailViewControllerUMEventName label:@"click_related" dict:self.detailModule.gdExtJsonDict];
+    [BDTrackerProtocol category:@"umeng" event:kWDDetailViewControllerUMEventName label:@"click_related" dict:self.detailModule.gdExtJsonDict];
 
 }
 
