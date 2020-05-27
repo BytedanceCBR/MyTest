@@ -19,6 +19,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface FHDetailPictureViewController : FHBaseViewController
 
 @property (nonatomic, weak)     UIViewController       *topVC;
+@property(nonatomic, strong) UIScrollView * photoScrollView;
 /** 当前index */
 @property(nonatomic, assign, readonly)NSInteger currentIndex;
 /** 打开的时候需要展示的index */
@@ -55,6 +56,9 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic , copy) void (^shareActionBlock)(void);
 @property(nonatomic , copy) void (^collectActionBlock)(BOOL followStatus);
 
+/// 查看全部图片的block，如果没有block，执行默认操作
+@property(nonatomic , copy) void (^allPhotoActionBlock)();
+
 /** 图片URL数组*/
 @property(nonatomic, strong)NSArray * imageURLs; //every item also is array, and it contains url and header infos
 
@@ -71,8 +75,12 @@ NS_ASSUME_NONNULL_BEGIN
 /** 是否支持长按保存，默认YES */
 @property (nonatomic, assign)BOOL longPressToSave;
 
-/** 是否显示所有按钮，默认YES */
-@property (nonatomic, assign)BOOL isShowAllBtns;
+/** 是否显示底部bottombar以及按钮，默认YES */
+@property (nonatomic, assign)BOOL isShowBottomBar;
+
+//099户型详情 查看大图新增 title & 售卖 状态字段
+@property (nonatomic, copy) NSString *bottomBarTitle;
+@property (nonatomic, copy) NSString *saleStatus;
 
 // Extended by lizhuoli to support drag down and drag up to close
 

@@ -309,7 +309,7 @@ typedef NS_ENUM(NSUInteger, FHRealtorCellShowStyle) {
 @property (nonatomic, copy , nullable) NSString *infoTitle;
 @end
 
-@protocol FHDetailOldDataHouseImageDictListModel<NSObject>
+@protocol FHHouseDetailImageListDataModel<NSObject>
 @end
 
 // 房源详情图片类型
@@ -330,10 +330,21 @@ typedef enum : NSInteger {
     FHDetailHouseImageTypeBuildingLicenses  = 1007, //楼盘证照
 } FHDetailHouseImageType;
 
-@interface FHDetailOldDataHouseImageDictListModel : JSONModel
+
+typedef NS_ENUM (NSUInteger, FHHouseDetailImageListDataUsedSceneType) {
+    FHHouseDetailImageListDataUsedSceneTypeUnknown = 0,
+    FHHouseDetailImageListDataUsedSceneTypeOld = 1,
+    FHHouseDetailImageListDataUsedSceneTypeNew = 2,
+    FHHouseDetailImageListDataUsedSceneTypeNeighborhood = 3,
+    FHHouseDetailImageListDataUsedSceneTypeRent = 4,
+    FHHouseDetailImageListDataUsedSceneTypeFloorPan = 5
+};
+
+@interface FHHouseDetailImageListDataModel : JSONModel
 
 @property (nonatomic, copy , nullable) NSString *houseImageTypeName;
 @property (nonatomic, assign) FHDetailHouseImageType houseImageType;
+@property (nonatomic, assign) FHHouseDetailImageListDataUsedSceneType usedSceneType; //使用场景，主要区分户型详情，type显示 户型&样板间
 @property (nonatomic, strong , nullable) NSArray<FHImageModel> *houseImageList;
 @property (nonatomic, strong , nullable) NSArray<FHImageModel> *instantHouseImageList;
 @end

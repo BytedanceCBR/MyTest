@@ -2,6 +2,7 @@
 #import "JSONModel.h"
 #import "FHDetailBaseModel.h"
 #import "FHDetailNewModel.h"
+#import "FHHouseTagsModel.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -39,8 +40,6 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign) NSInteger index;
 @end
 
-
-
 @interface FHDetailFloorPanDetailInfoDataModel : JSONModel 
 
 @property (nonatomic, copy , nullable) NSString *status;
@@ -50,7 +49,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *areaName;
 @property (nonatomic, copy , nullable) NSString *districtId;
 @property (nonatomic, copy , nullable) NSString *pricingPerSqm;
-@property (nonatomic, copy , nullable) NSString *squaremeter;
+@property (nonatomic, copy , nullable) NSString *squaremeter; //面积
+@property (nonatomic, copy) NSString *facingDirection; //朝向
 @property (nonatomic, copy , nullable) NSString *pricing;
 @property (nonatomic, copy , nullable) NSString *displayPrice;
 @property (nonatomic, strong , nullable) NSArray<FHDetailFloorPanDetailInfoDataRecommendModel> *recommend;
@@ -60,7 +60,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong , nullable) NSDictionary *logPb;
 @property (nonatomic, copy , nullable) NSString *id;
 @property (nonatomic, strong , nullable) FHDetailNewDataCoreInfoSaleStatusModel *saleStatus ;
-
+@property (nonatomic, strong , nullable) NSArray<FHHouseTagsModel> *tags;
 @property (nonatomic, strong , nullable) FHDetailContactModel *highlightedRealtor;
 @property (nonatomic, strong , nullable) NSArray<FHFillFormAgencyListItemModel> *chooseAgencyList;
 @property (nonatomic, strong , nullable) FHDetailContactModel *contact ;
@@ -68,6 +68,12 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong , nullable)  FHClueAssociateInfoModel *highlightedRealtorAssociateInfo;
 @property (nonatomic, strong , nullable) FHDetailNewDataDisclaimerModel *disclaimer ;
 
+/// 099 新增楼盘详情页 户型和样板间展示UI
+//@property (nonatomic, copy) NSArray<FHImageModel> *imageDictList;
+@property (nonatomic, strong , nullable) NSArray<FHHouseDetailImageListDataModel> *imageDictList;
+
+/// 099 新增户型详情页的线索相关
+@property (nonatomic, strong, nullable) FHClueAssociateInfoModel *imageAssociateInfo;
 @end
 
 @interface FHDetailFloorPanDetailInfoModel : JSONModel 

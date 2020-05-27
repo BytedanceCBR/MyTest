@@ -189,6 +189,9 @@ typedef enum : NSUInteger {
     params[@"realtor_position"] = reportParams[@"realtor_position"] ? : @"detail_button";
     params[@"realtor_rank"] = reportParams[@"realtor_rank"] ? : @(0);
     params[@"realtor_id"] = reportParams[@"realtor_id"] ? : @"be_null";
+    if (reportParams[@"picture_type"]) {
+        params[@"picture_type"] = reportParams[@"picture_type"];
+    }
 
     params[@"position"] = reportParams[@"position"] ? : @"be_null";
     if (reportParams[@"item_id"]) {

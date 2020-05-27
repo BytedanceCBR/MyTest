@@ -40,7 +40,7 @@
     _titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(50, 10, self.frame.size.width - 100, 24)];
     _titleLabel.text = @"图片";
     _titleLabel.textAlignment = NSTextAlignmentCenter;
-    _titleLabel.font = [UIFont themeFontMedium:18];
+    _titleLabel.font = [UIFont themeFontMedium:16];
     _titleLabel.textColor = [UIColor whiteColor];
     [self addSubview:_titleLabel];
     
