@@ -20,7 +20,7 @@
         [self addSubview:self.titleLabel];
         [self.titleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
             make.left.mas_equalTo(15);
-            make.top.mas_equalTo(30);
+            make.centerY.mas_equalTo(self);
         }];
     }
     return self;

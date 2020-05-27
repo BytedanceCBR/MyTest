@@ -170,7 +170,7 @@
     //设置headerView的尺寸大小
     layout.headerReferenceSize = CGSizeMake(self.view.frame.size.width, 40);
     //该方法也可以设置itemSize
-    layout.itemSize =CGSizeMake(110, 150);
+//    layout.itemSize =CGSizeMake(110, 150);
     
     //2.初始化collectionView
     self.collectionView = [[FHBaseCollectionView alloc] initWithFrame:self.view.bounds collectionViewLayout:layout];
