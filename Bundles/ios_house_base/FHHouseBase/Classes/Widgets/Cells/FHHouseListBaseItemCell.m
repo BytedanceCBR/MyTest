@@ -109,14 +109,13 @@
         make.bottom.mas_equalTo(-12);
         make.right.mas_equalTo(-rightMargin);
         make.height.mas_equalTo(19);
-        make.width.mas_equalTo(110);
     }];
     [self.unitPrice setContentCompressionResistancePriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisHorizontal];
     [self.unitPrice setContentHuggingPriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisHorizontal];
     [self.tagLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(_maintitle);
         make.top.mas_equalTo(_displayDescriptionLabel.mas_bottom).offset(10);
-        make.right.mas_equalTo(_unitPrice.mas_left);
+        make.right.mas_equalTo(_unitPrice.mas_left).offset(-1);
         make.height.mas_equalTo(14);
     }];
     self.positionInformation.textColor = [UIColor themeGray3];
@@ -386,6 +385,7 @@
         YYLabel *tagLabel = [[YYLabel alloc]init];
         tagLabel.font = [UIFont themeFontRegular:12];
         tagLabel.textColor = [UIColor themeGray3];
+        tagLabel.lineBreakMode = NSLineBreakByTruncatingTail;  //截断时展示...与安卓端对齐
         [self.contentView addSubview:tagLabel];
         _tagLabel = tagLabel;
     }
@@ -476,7 +476,7 @@
         }
         CGFloat maxWidth = SCREEN_WIDTH - 257.f;
         NSAttributedString *attributeString = [FHSingleImageInfoCellModel newTagsStringWithTagList:model.tags maxWidth:maxWidth];
-             _tagLabel.lineBreakMode = NSLineBreakByWordWrapping;
+//             _tagLabel.lineBreakMode = NSLineBreakByWordWrapping;
         self.tagLabel.attributedText = attributeString;
     }
 }
@@ -499,7 +499,7 @@
 
         CGFloat maxWidth = SCREEN_WIDTH - 237.f;
         NSAttributedString *attributeString = [FHSingleImageInfoCellModel newTagsStringWithTagList:model.tags maxWidth:maxWidth];
-             _tagLabel.lineBreakMode = NSLineBreakByWordWrapping;
+//             _tagLabel.lineBreakMode = NSLineBreakByWordWrapping;
         self.tagLabel.attributedText = attributeString;
     }
 }
