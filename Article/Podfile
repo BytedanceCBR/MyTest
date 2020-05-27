@@ -50,22 +50,22 @@ def fhPods
 #    pod 'FHCommonUI',:path => '../../../ios_common_ui/'
 #    pod 'FHCommonUI', :git => 'https://code.byted.org/fproject/ios_common_ui.git', :commit => 'fef6ed9bea94a343313805b978fda9511cbbf213'
 
-#    pod 'FHPopupViewCenter', :path => '../../../FHPopupViewCenter', :subspecs => [
-#    'Core',
-#    'DelegateForC'
-#    ]
-    pod 'FHPopupViewCenter', '0.0.2-rc.6', :subspecs => [
+
+    pod 'FHPopupViewCenter', '0.0.2-rc.7', :subspecs => [
     'Core',
     'DelegateForC'
     ]
+    #    pod 'FHPopupViewCenter', :path => '../../../FHPopupViewCenter', :subspecs => [
+    #    'Core',
+    #    'DelegateForC'
+    #    ]
     # pod 'FHPopupViewCenter', :git => 'git@code.byted.org:fproject/FHPopupViewCenter.git', :commit => '819997a3afbc7eb3e1eaf2b0d8cc3ecb488b71c1', :subspecs => [
     # 'Core',
     # 'DelegateForC'
     #]
 
-    pod 'ios_house_im' , '0.2.1'
-#   pod 'ios_house_im' , :path => '../../ios_house_im'
-#     pod 'ios_house_im' , :path => '../../../ios_house_im'
+    pod 'ios_house_im' , '0.2.2'
+#    pod 'ios_house_im' , :path => '../../../im/2'
 #    pod 'ios_house_im' , :git => 'git@code.byted.org:fproject/ios_house_im.git' , :commit => '74606168b7a978c54ac2e7cde4ae1cacfa0bb6db'
 
 end
@@ -498,7 +498,7 @@ def appPods
     #支持自动约束cell缓存高度
     pod_binary 'UITableView+FDTemplateLayoutCell', '1.6'
 
-    pod 'TTIMSDK', '1.0.0-rc.34', :subspecs => [
+    pod 'TTIMSDK', '1.0.0-rc.34.1-bugfix', :subspecs => [
         'IMKit',
         'IMKit_WebSocket',
         'IMKit_Core',
