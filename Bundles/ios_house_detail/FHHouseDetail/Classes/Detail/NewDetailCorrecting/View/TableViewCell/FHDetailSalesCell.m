@@ -220,6 +220,19 @@
     FHDetailNewDiscountInfoItemModel *itemInfo = model.discountInfo[index];
 
     [self addClickOptionLog:@(itemInfo.actionType)];
+    
+    //099 优惠跳转类型
+    if (itemInfo.actionType == 3 && itemInfo.activityURLString.length) {
+        NSString *urlString = itemInfo.activityURLString.copy;
+        //@"https://m.xflapp.com/magic/page/ejs/5ecb69c9d7ff73025f6ea4e0?appType=manyhouse";
+        if([urlString hasPrefix:@"http://"] ||
+           [urlString hasPrefix:@"https://"]) {
+            urlString = [NSString stringWithFormat:@"sslocal://webview?url=%@",urlString];
+
+        }
+        [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:urlString]];
+        return;
+    }
 
     NSString *title = itemInfo.discountReportTitle;
     NSString *subtitle = itemInfo.discountReportSubTitle;
