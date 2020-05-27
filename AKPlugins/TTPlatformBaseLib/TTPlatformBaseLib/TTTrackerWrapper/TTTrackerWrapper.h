@@ -7,6 +7,10 @@
 //
 
 #import <Foundation/Foundation.h>
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
+#import <ByteDanceKit/BTDMacros.h>
+#import <TTInstallService/TTInstallSandBoxHelper.h>
+#import <TTInstallService/TTInstallIDManager.h>
 #import <TTTracker/TTTracker.h>
 
 @interface TTTrackerWrapper : NSObject
@@ -83,19 +87,32 @@
 @end
 
 // sendTrackerLog: true to send own log()
-static inline void wrapperTrackEventWithOption(NSString * _Nonnull appName, NSString * _Nonnull event, NSString * _Nonnull label, BOOL sendTrackerLog)
-{
-    ttTrackEventWithOption(appName,event,label,sendTrackerLog);
+static inline void wrapperTrackEventWithOption(NSString * _Nonnull appName, NSString * _Nonnull event, NSString * _Nonnull label, BOOL sendTrackerLog) {
+    if(event == nil) {
+        return;
+    }
+    
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0), ^{
+        if(!BTD_isEmptyString(label)) {
+            if(sendTrackerLog) {
+                [BDTrackerProtocol event:event label:label];
+            }
+        }
+    });
 }
 
 static inline void wrapperTrackerEvent (NSString * _Nonnull appName, NSString * _Nonnull event, NSString * _Nonnull label) {
-    ttTrackerEvent(appName, event, label);
+    wrapperTrackEventWithOption(appName, event, label, true);
 }
 
 static inline void wrapperTrackEvent (NSString * _Nonnull event, NSString * _Nonnull label) {
-    ttTrackEvent(event, label);
+    if (BTD_isEmptyString(event)) {
+        return;
+    }
+    
+    wrapperTrackEventWithOption([TTInstallSandBoxHelper appName], event, label, true);
 }
 
 static inline void wrapperTrackEventWithCustomKeys (NSString * _Nonnull event, NSString * _Nonnull label, NSString * _Nullable value, NSString * _Nullable source, NSDictionary * _Nullable extraDic) {
-    ttTrackEventWithCustomKeys(event, label, value, source, extraDic);
+    [BDTrackerProtocol trackEventWithCustomKeys:event label:label value:value source:source extraDic:extraDic];
 }

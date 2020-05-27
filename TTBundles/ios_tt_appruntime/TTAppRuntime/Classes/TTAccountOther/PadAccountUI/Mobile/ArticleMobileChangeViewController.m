@@ -223,82 +223,82 @@
 
 - (void)changePhoneNumber
 {
-    __weak ArticleMobileChangeViewController *weakSelf = self;
-    void (^changeMobileBlock)(NSString *, NSString *, NSString *) = ^(NSString *oldMobile, NSString *mobile, NSString *captcha) {
-        NSDictionary *previousMobileInformation = [[self class] previousMobileCodeInformation];
-        NSTimeInterval timeInterval = [[previousMobileInformation valueForKey:@"time"] doubleValue];
-        NSInteger retryTime = [[previousMobileInformation valueForKey:@"retryTime"] intValue];
-        NSInteger timeOffset = [[NSDate date] timeIntervalSinceDate:[NSDate dateWithTimeIntervalSince1970:timeInterval]];
-        if (([[previousMobileInformation valueForKey:@"mobile"] isEqualToString:mobile] &&
-             ([[previousMobileInformation valueForKey:@"type"] intValue] == TTASMSCodeScenarioChangePhone ||
-              [[previousMobileInformation valueForKey:@"type"] intValue] == TTASMSCodeScenarioChangePhoneRetry)) &&
-            (retryTime > timeOffset)) {
-            /// 已经发送过验证码
-            NSNumber *retryTime = [previousMobileInformation valueForKey:@"retryTime"];
-            
-            ArticleMobileChangeCaptchaViewController *viewController = [[ArticleMobileChangeCaptchaViewController alloc] init];
-            viewController.mobileNumber = mobile;
-            viewController.timeoutInterval = retryTime.intValue;
-            viewController.completion = weakSelf.completion;
-            [weakSelf.navigationController pushViewController:viewController animated:YES];
-        } else {
-            [self showWaitingIndicator];
-            
-            [TTAccountManager startSendCodeWithPhoneNumber:mobile captcha:captcha type:TTASMSCodeScenarioChangePhone unbindExist:NO completion:^(NSNumber *retryTime, UIImage *captchaImage, NSError *error) {
-                
-                weakSelf.captchaImage = captchaImage;
-                weakSelf.captchaValue = nil;
-                weakSelf.error = error;
-                if (!error) {
-                    ArticleMobileChangeCaptchaViewController *viewController = [[ArticleMobileChangeCaptchaViewController alloc] init];
-                    viewController.mobileNumber = mobile;
-                    viewController.timeoutInterval = retryTime.intValue;
-                    viewController.completion = weakSelf.completion;
-                    [weakSelf.navigationController pushViewController:viewController animated:YES];
-                    
-                    NSMutableDictionary *information =
-                    [NSMutableDictionary dictionaryWithCapacity:2];
-                    [information setValue:@(TTASMSCodeScenarioChangePhone) forKey:@"type"];
-                    [information setValue:retryTime forKey:@"retryTime"];
-                    [information setValue:mobile forKey:@"mobile"];
-                    [information setValue:@([[NSDate date] timeIntervalSince1970]) forKey:@"time"];
-                    [[self class] setPreviousMobileCodeInformation:information];
-                    
-                    [weakSelf dismissWaitingIndicator];
-                    
-                    wrapperTrackEvent(@"login_register", @"change_mobile_next");
-                } else {
-                    wrapperTrackEvent(@"login_register", @"change_mobile_error");
-                    
-                    if (captchaImage) {
-                        [weakSelf dismissWaitingIndicator];
-                        [weakSelf changePhoneNumber];
-                    } else {
-                        [weakSelf dismissWaitingIndicatorWithError:error];
-                    }
-                }
-            }];
-        }
-    };
-    
-    void (^alertCaptchaBlock)(UIImage *, NSError *) =
-    ^(UIImage *captcha, NSError *error) {
-        ArticleMobileCaptchaAlertView *alertView = [[ArticleMobileCaptchaAlertView alloc] initWithCaptchaImage:captcha];
-        alertView.error = error;
-        [alertView showWithDismissBlock:^(ArticleMobileCaptchaAlertView *alertView, NSInteger buttonIndex) {
-            self.captchaValue = alertView.captchaValue;
-            self.captchaImage = alertView.captchaImage;
-            if (alertView.captchaValue.length > 0) {
-                changeMobileBlock(self.fromMobileNumberField.text, self.toMobileNumberField.text, alertView.captchaValue);
-            }
-        }];
-    };
-    
-    if (self.captchaImage && !self.captchaValue) {
-        alertCaptchaBlock(self.captchaImage, self.error);
-    } else {
-        changeMobileBlock(self.fromMobileNumberField.text, self.toMobileNumberField.text, self.captchaValue);
-    }
+//    __weak ArticleMobileChangeViewController *weakSelf = self;
+//    void (^changeMobileBlock)(NSString *, NSString *, NSString *) = ^(NSString *oldMobile, NSString *mobile, NSString *captcha) {
+//        NSDictionary *previousMobileInformation = [[self class] previousMobileCodeInformation];
+//        NSTimeInterval timeInterval = [[previousMobileInformation valueForKey:@"time"] doubleValue];
+//        NSInteger retryTime = [[previousMobileInformation valueForKey:@"retryTime"] intValue];
+//        NSInteger timeOffset = [[NSDate date] timeIntervalSinceDate:[NSDate dateWithTimeIntervalSince1970:timeInterval]];
+//        if (([[previousMobileInformation valueForKey:@"mobile"] isEqualToString:mobile] &&
+//             ([[previousMobileInformation valueForKey:@"type"] intValue] == TTASMSCodeScenarioChangePhone ||
+//              [[previousMobileInformation valueForKey:@"type"] intValue] == TTASMSCodeScenarioChangePhoneRetry)) &&
+//            (retryTime > timeOffset)) {
+//            /// 已经发送过验证码
+//            NSNumber *retryTime = [previousMobileInformation valueForKey:@"retryTime"];
+//            
+//            ArticleMobileChangeCaptchaViewController *viewController = [[ArticleMobileChangeCaptchaViewController alloc] init];
+//            viewController.mobileNumber = mobile;
+//            viewController.timeoutInterval = retryTime.intValue;
+//            viewController.completion = weakSelf.completion;
+//            [weakSelf.navigationController pushViewController:viewController animated:YES];
+//        } else {
+//            [self showWaitingIndicator];
+//            
+//            [TTAccountManager startSendCodeWithPhoneNumber:mobile captcha:captcha type:TTASMSCodeScenarioChangePhone unbindExist:NO completion:^(NSNumber *retryTime, UIImage *captchaImage, NSError *error) {
+//                
+//                weakSelf.captchaImage = captchaImage;
+//                weakSelf.captchaValue = nil;
+//                weakSelf.error = error;
+//                if (!error) {
+//                    ArticleMobileChangeCaptchaViewController *viewController = [[ArticleMobileChangeCaptchaViewController alloc] init];
+//                    viewController.mobileNumber = mobile;
+//                    viewController.timeoutInterval = retryTime.intValue;
+//                    viewController.completion = weakSelf.completion;
+//                    [weakSelf.navigationController pushViewController:viewController animated:YES];
+//                    
+//                    NSMutableDictionary *information =
+//                    [NSMutableDictionary dictionaryWithCapacity:2];
+//                    [information setValue:@(TTASMSCodeScenarioChangePhone) forKey:@"type"];
+//                    [information setValue:retryTime forKey:@"retryTime"];
+//                    [information setValue:mobile forKey:@"mobile"];
+//                    [information setValue:@([[NSDate date] timeIntervalSince1970]) forKey:@"time"];
+//                    [[self class] setPreviousMobileCodeInformation:information];
+//                    
+//                    [weakSelf dismissWaitingIndicator];
+//                    
+//                    wrapperTrackEvent(@"login_register", @"change_mobile_next");
+//                } else {
+//                    wrapperTrackEvent(@"login_register", @"change_mobile_error");
+//                    
+//                    if (captchaImage) {
+//                        [weakSelf dismissWaitingIndicator];
+//                        [weakSelf changePhoneNumber];
+//                    } else {
+//                        [weakSelf dismissWaitingIndicatorWithError:error];
+//                    }
+//                }
+//            }];
+//        }
+//    };
+//    
+//    void (^alertCaptchaBlock)(UIImage *, NSError *) =
+//    ^(UIImage *captcha, NSError *error) {
+//        ArticleMobileCaptchaAlertView *alertView = [[ArticleMobileCaptchaAlertView alloc] initWithCaptchaImage:captcha];
+//        alertView.error = error;
+//        [alertView showWithDismissBlock:^(ArticleMobileCaptchaAlertView *alertView, NSInteger buttonIndex) {
+//            self.captchaValue = alertView.captchaValue;
+//            self.captchaImage = alertView.captchaImage;
+//            if (alertView.captchaValue.length > 0) {
+//                changeMobileBlock(self.fromMobileNumberField.text, self.toMobileNumberField.text, alertView.captchaValue);
+//            }
+//        }];
+//    };
+//    
+//    if (self.captchaImage && !self.captchaValue) {
+//        alertCaptchaBlock(self.captchaImage, self.error);
+//    } else {
+//        changeMobileBlock(self.fromMobileNumberField.text, self.toMobileNumberField.text, self.captchaValue);
+//    }
 }
 
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string {

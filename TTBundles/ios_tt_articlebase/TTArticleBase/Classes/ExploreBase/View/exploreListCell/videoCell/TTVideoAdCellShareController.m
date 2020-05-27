@@ -280,7 +280,7 @@ extern BOOL ttvs_isShareIndividuatioEnable(void);
     if (extra) {
         [events addEntriesFromDictionary:extra];
     }
-    [TTTracker eventData:events];
+    [BDTrackerProtocol eventData:events];
 }
 
 #pragma mark - SSActivityViewDelegate

@@ -212,6 +212,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *discountReportDoneSubTitle;
 @property (nonatomic, strong) NSNumber *page;
 @property (nonatomic, strong, nullable) FHClueAssociateInfoModel *associateInfo;
+@property (nonatomic, strong) NSString *activityURLString;
 
 @end
 

@@ -280,7 +280,7 @@
     NSDictionary *dict = [self.cellViewModel followButtonTappedTrackDict];
     NSMutableDictionary *fullDict = [NSMutableDictionary dictionaryWithDictionary:self.gdExtJson];
     [fullDict addEntriesFromDictionary:dict];
-    [TTTracker eventV3:event params:fullDict];
+    [BDTrackerProtocol eventV3:event params:fullDict];
     self.isSelfFollow = YES;
     [followBtn startLoading];
     WeakSelf;
@@ -325,12 +325,12 @@
             NSDictionary *dict = [self.cellViewModel diggButtonTappedTrackDict];
             NSMutableDictionary *fullDict = [NSMutableDictionary dictionaryWithDictionary:self.gdExtJson];
             [fullDict addEntriesFromDictionary:dict];
-            [TTTracker eventV3:WDMoreListCellDiggButtonClickTrackerEvent params:fullDict];
+            [BDTrackerProtocol eventV3:WDMoreListCellDiggButtonClickTrackerEvent params:fullDict];
         } else {
             NSDictionary *dict = [self.cellViewModel diggButtonTappedTrackDict];
             NSMutableDictionary *fullDict = [NSMutableDictionary dictionaryWithDictionary:self.gdExtJson];
             [fullDict addEntriesFromDictionary:dict];
-            [TTTracker eventV3:WDMoreListCellUnDiggButtonClickTrackerEvent params:fullDict];
+            [BDTrackerProtocol eventV3:WDMoreListCellUnDiggButtonClickTrackerEvent params:fullDict];
             if (diggButton.selected) {
                 diggButton.selected = NO;
             }
@@ -348,7 +348,7 @@
     NSDictionary *dict = [self.cellViewModel commentButtonTappedTrackDict];
     NSMutableDictionary *fullDict = [NSMutableDictionary dictionaryWithDictionary:self.gdExtJson];
     [fullDict addEntriesFromDictionary:dict];
-    [TTTracker eventV3:WDMoreListCellCommentButtonClickTrackerEvent params:fullDict];
+    [BDTrackerProtocol eventV3:WDMoreListCellCommentButtonClickTrackerEvent params:fullDict];
 }
 
 - (void)listCellActionFooterViewForwardButtonClick {
@@ -356,7 +356,7 @@
     NSDictionary *dict = [self.cellViewModel forwardButtonTappedTrackDict];
     NSMutableDictionary *fullDict = [NSMutableDictionary dictionaryWithDictionary:self.gdExtJson];
     [fullDict addEntriesFromDictionary:dict];
-    [TTTracker eventV3:WDMoreListCellForwardButtonClickTrackerEvent params:fullDict];
+    [BDTrackerProtocol eventV3:WDMoreListCellForwardButtonClickTrackerEvent params:fullDict];
 }
 
 #pragma mark - Notification

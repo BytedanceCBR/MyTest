@@ -15,7 +15,8 @@
 #import <TTPhotoScrollVC/TTPhotoScrollViewController.h>
 #import "FHDetailBottomBarView.h"
 #import "TTAccount.h"
-#import "TTTracker.h"
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
+
 #import <FHHouseBase/FHUserTracker.h>
 #import <FHHouseBase/FHGeneralBizConfig.h>
 #import <FHHouseBase/FHEnvContext.h>

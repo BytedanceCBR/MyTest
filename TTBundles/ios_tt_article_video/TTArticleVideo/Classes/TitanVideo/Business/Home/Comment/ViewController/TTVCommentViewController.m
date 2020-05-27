@@ -43,7 +43,7 @@
 #import <TTBaseLib/NSDictionary+TTAdditions.h>
 #import <ReactiveObjC/ReactiveObjC.h>
 //#import "TTProfileFillViewController.h"
-#import <TTTracker/TTTracker.h>
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 #import <TTPlatformBaseLib/TTTrackerWrapper.h>
 
 static NSString *kTTVCommentCellIdentifier = @"TTVCommentCellIdentifier";
@@ -475,7 +475,7 @@ TTCommentFooterCellDelegate>
     [dic setValue:model.commentID forKey:@"comment_id"];
     [dic setValue:@"detail" forKey:@"position"];
     
-    [TTTracker eventV3:@"comment_enter" params:dic];
+    [BDTrackerProtocol eventV3:@"comment_enter" params:dic];
 }
 
 

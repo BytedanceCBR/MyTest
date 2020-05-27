@@ -274,6 +274,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *title;
 @property (nonatomic, strong , nullable) FHHomeHouseDataItemsTimelineModel *timeline ;
 @property (nonatomic, copy , nullable) NSString *idx;
+@property (nonatomic, copy , nullable) NSString *buildingSquareMeter;
 @property (nonatomic, strong , nullable) NSArray<FHHouseTagsModel> *tags;
 @property (nonatomic, copy , nullable) NSString *uploadAt;
 @property (nonatomic, copy , nullable) NSString *displayDescription;

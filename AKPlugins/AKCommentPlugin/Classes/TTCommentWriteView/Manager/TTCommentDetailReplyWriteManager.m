@@ -19,6 +19,7 @@
 #import "TTCommentDataManager.h"
 #import "TTCommentWriteView.h"
 #import "FHTraceEventUtils.h"
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 #import "FHUserTracker.h"
 
 #define Persistence [TTPersistence persistenceWithName:NSStringFromClass(self.class)]
@@ -469,13 +470,13 @@ static bool isTTCommentPublishing = NO;
             paramsDict[@"category_name"] = self.extraDic[@"enter_from"];
         }
     }
-    
+
     [paramsDict setValue:@"update_detail" forKey:@"page_type"];
 //    if (self.enterFrom.length > 0) {
 //        [paramsDict setValue:[FHTraceEventUtils generateEnterfrom:[self categoryName] enterFrom:[self enterFrom]]  forKey:@"enter_from"];
 //    }
     
-    [TTTracker eventV3:@"rt_post_reply" params:paramsDict];
+    [BDTrackerProtocol eventV3:@"rt_post_reply" params:paramsDict];
     
     NSMutableDictionary *userInfoDic = [[NSMutableDictionary alloc] init];
     if ([self.commentDetailModel respondsToSelector:@selector(groupModel)]) {

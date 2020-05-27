@@ -15,7 +15,7 @@
 #import <Masonry/Masonry.h>
 #import "UIColor+TTThemeExtension.h"
 #import "UIViewAdditions.h"
-#import <TTTracker/TTTracker.h>
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 #import <TTBaseLib/TTUIResponderHelper.h>
 #import "TTDeviceHelper.h"
 

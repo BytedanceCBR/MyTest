@@ -132,7 +132,7 @@
     [params setValue:@"1" forKey:@"ext_value"];
     [params setValue:@(connectionType) forKey:@"nt"];
     [params setValue:@"1" forKey:@"is_ad_event"];
-    [TTTracker eventV3:@"realtime_click" params:params];
+    [BDTrackerProtocol eventV3:@"realtime_click" params:params];
 }
 
 + (void)trackRealTimeAd:(TTVRelatedVideoAD*)ad
@@ -146,7 +146,7 @@
     [params setValue:@"1" forKey:@"ext_value"];
     [params setValue:@(connectionType) forKey:@"nt"];
     [params setValue:@"1" forKey:@"is_ad_event"];
-    [TTTracker eventV3:@"realtime_click" params:params];
+    [BDTrackerProtocol eventV3:@"realtime_click" params:params];
 }
 
 - (void)handleForm:(TTAdVideoRelateAdModel *)adModel

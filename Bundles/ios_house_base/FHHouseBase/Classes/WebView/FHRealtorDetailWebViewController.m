@@ -10,7 +10,7 @@
 #import "TTRStaticPlugin.h"
 #import <FHHouseDetail/FHHouseDetailPhoneCallViewModel.h>
 #import "TTRoute.h"
-#import <TTTracker/TTTracker.h>
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 #import "FHUserTracker.h"
 #import "NetworkUtilities.h"
 #import <FHHouseBase/FHHousePhoneCallUtils.h>
@@ -112,27 +112,18 @@ static NSString *s_oldAgent = nil;
     if (extraDict) {
         [params addEntriesFromDictionary:extraDict];
     }
-//    FHHouseContactConfigModel *contactConfig = [[FHHouseContactConfigModel alloc]initWithDictionary:params error:nil];
-//    contactConfig.houseType = self.houseType ? self.houseType : 9;
-//    contactConfig.houseId = self.houseId;
-//    contactConfig.phone = phone;
-//    contactConfig.realtorId = self->_realtorId;
-//    contactConfig.from = @"app_realtor_mainpage";
-//    [FHHousePhoneCallUtils callWithConfigModel:contactConfig completion:^(BOOL success, NSError * _Nonnull error, FHDetailVirtualNumModel * _Nonnull virtualPhoneNumberModel) {
-//        if (success) {
-//            completion(TTRJSBMsgSuccess, @{});
-//        }else {
-//            completion(TTRJSBMsgFailed, @{});
-//        }
-//    }];
     
     params[kFHAssociateInfo] = phoneInfo;
     FHAssociatePhoneModel *associatePhone = [[FHAssociatePhoneModel alloc]init];
     associatePhone.reportParams = params;
     associatePhone.associateInfo = phoneInfo;
     associatePhone.realtorId = self->_realtorId;
-    if (params[@"log_pb"]) {
+    if ([params[@"log_pb"] isKindOfClass:[NSDictionary class]]) {
         NSDictionary *logPb = params[@"log_pb"];
+        associatePhone.searchId = logPb[@"search_id"];
+        associatePhone.imprId = logPb[@"impr_id"];
+    }else if ([params[@"log_pb"] isKindOfClass:[NSString class]]) {
+        NSDictionary *logPb = [FHUtils dictionaryWithJsonString:params[@"log_pb"]];
         associatePhone.searchId = logPb[@"search_id"];
         associatePhone.imprId = logPb[@"impr_id"];
     }

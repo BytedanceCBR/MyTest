@@ -15,7 +15,7 @@
 #import "AWEUserModel.h"
 #import <TTRoute/TTRoute.h>
 #import "AWEVideoPlayTransitionBridge.h"
-#import <TTTracker/TTTracker.h>
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 
 @interface TSVRecUserCardCollectionViewCellViewModel()
 
@@ -168,7 +168,7 @@
 
 - (void)trackWithEvent:(NSString *)event extraParams:(NSDictionary *)extraParams
 {
-    [TTTracker eventV3:event params:[self trackParamsWithExtraParams:extraParams]];
+    [BDTrackerProtocol eventV3:event params:[self trackParamsWithExtraParams:extraParams]];
 }
 
 - (NSDictionary *)trackParamsWithExtraParams:(NSDictionary *)extraParams

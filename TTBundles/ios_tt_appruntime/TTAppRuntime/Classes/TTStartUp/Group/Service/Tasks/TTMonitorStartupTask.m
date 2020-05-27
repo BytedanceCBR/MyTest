@@ -10,7 +10,7 @@
 #import "TTMonitor.h"
 #import "TTInstallIDManager.h"
 #import "TTDebugRealMonitorManager.h"
-#import <TTNetBusiness/TTHttpsControlManager.h>
+
 #import "NewsBaseDelegate.h"
 #import "BSBacktraceLogger.h"
 #import "TTWatchdogMonitorRecorder.h"
@@ -135,9 +135,9 @@ NSString * const TTDebugrealInitializedNotification = @"TTDebugrealInitializedNo
 }
 
 + (void)registerTransferService{
-    [[TTMonitor shareManager] setUrlTransformBlock:^(NSURL * url){
-        return [[[TTHttpsControlManager sharedInstance_tt] transferedURLFrom:url] copy];
-    }];
+//    [[TTMonitor shareManager] setUrlTransformBlock:^(NSURL * url){
+//        return [[[TTHttpsControlManager sharedInstance_tt] transferedURLFrom:url] copy];
+//    }];
 }
 
 

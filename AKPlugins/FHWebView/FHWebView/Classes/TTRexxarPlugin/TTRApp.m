@@ -150,7 +150,7 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
     IESFalconManager.interceptionWKHttpScheme = open;
     IESFalconManager.interceptionEnable = open;
           
-    NSString *pattern = @"^(http|https)://.*.(pstatp.com/toutiao|haoduofangs.com/f101/client|99hdf.com/f101/client)";
+    NSString *pattern = @"^(http|https)://.*.(pstatp.com/(toutiao)?|haoduofangs.com/f100/inner|99hdf.com/f100/inner|byteimg.com|byteimg.com)";
     //        [IESFalconManager registerPattern:pattern forGurdAccessKey:[FHIESGeckoManager getGeckoKey]];
     [IESFalconManager registerPattern:pattern forGeckoAccessKey:[FHIESGeckoManager getGeckoKey]];
 }

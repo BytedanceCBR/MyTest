@@ -8,7 +8,8 @@
 #import "TTAdShortVideoModel.h"
 
 #import "TTURLTracker.h"
-#import "TTTracker.h"
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
+
 #import "TTTrackerProxy.h"
 
 @implementation TTAdShortVideoModel
@@ -62,7 +63,7 @@
     if (extra) {
         [events addEntriesFromDictionary:extra];
     }
-    [TTTracker eventData:events];
+    [BDTrackerProtocol eventData:events];
 }
 
 - (void)trackDrawWithTag:(NSString *)tag label:(NSString *)label extra:(NSDictionary *)extra {
@@ -81,7 +82,7 @@
     if (extra) {
         [events addEntriesFromDictionary:extra];
     }
-    [TTTracker eventData:events];
+    [BDTrackerProtocol eventData:events];
 }
 
 @end

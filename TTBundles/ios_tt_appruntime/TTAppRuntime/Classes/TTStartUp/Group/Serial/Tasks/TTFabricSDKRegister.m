@@ -11,7 +11,6 @@
 #import "TTInstallIDManager.h"
 //#import "revision.h"
 
-#import <TTNetBusiness/TTHttpsControlManager.h>
 #import "TTTrackerUtil.h"
 #import "TTAppLogExceptionResponseModel.h"
 #import "TTAccountBusiness.h"
@@ -22,6 +21,7 @@
 #import "CommonURLSetting.h"
 #import "TTLaunchDefine.h"
 #import "BDDYCClient.h"
+#import <TTNetworkManager/TTNetworkManager.h>
 
 static NSString *const kTTFabricLaunchCrashKey = @"kTTFabricLaunchCrashKey";
 
@@ -73,7 +73,6 @@ DEC_TASK("TTFabricSDKRegister",FHTaskTypeSerial,TASK_PRIORITY_HIGH+3);
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         NSString *urlString = [CommonURLSetting exceptionURLString];
         urlString = [urlString stringByAddingPercentEscapesUsingEncoding :NSUTF8StringEncoding];
-        urlString = [[TTHttpsControlManager sharedInstance_tt] transferedURLFrom:[NSURL URLWithString:urlString]].absoluteString;
         
         NSMutableDictionary *postDict = [NSMutableDictionary dictionaryWithCapacity:3];
         [postDict addEntriesFromDictionary:[TTTrackerUtil onTheFlyParameter]];

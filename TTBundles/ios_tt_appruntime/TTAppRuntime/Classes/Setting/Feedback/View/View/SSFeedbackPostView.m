@@ -23,7 +23,7 @@
 #import <AssetsLibrary/AssetsLibrary.h>
 #import <TTBaseLib/TTSandBoxHelper.h>
 #import <TTBaseLib/TTUIResponderHelper.h>
-#import <TTTracker/TTTracker.h>
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 #import "CommonURLSetting.h"
 #import "SSCommonLogic.h"
 
@@ -177,7 +177,7 @@
     [_feedbackManager startPostFeedbackContent:self.inputTextView.text userContact:[self availableContact] imgURI:_editedImgWebURI backgorundImgURI:_screenImgWebURI imageCreateDate:_editedImgCreateDate];
     
     //统计
-    [TTTracker eventV3:@"feedback_confirm" params:[SSFeedbackManager shareInstance].trackerInfo];
+    [BDTrackerProtocol eventV3:@"feedback_confirm" params:[SSFeedbackManager shareInstance].trackerInfo];
 }
 
 /*
