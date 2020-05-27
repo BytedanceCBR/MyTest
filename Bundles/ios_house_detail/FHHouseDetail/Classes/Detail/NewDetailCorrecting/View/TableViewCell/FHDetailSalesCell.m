@@ -13,6 +13,7 @@
 #import "FHHouseFillFormHelper.h"
 #import "FHUIAdaptation.h"
 #import <TTBaseLib/TTUIResponderHelper.h>
+#import <FHWebView/SSWebViewController.h>
 
 @interface FHDetailSalesItemView: UIView
 
