@@ -222,6 +222,7 @@
             [paramsExtra setValue:[[TTInstallIDManager sharedInstance] deviceID] forKey:@"device_id"];
             NSMutableDictionary *uploadParams = [NSMutableDictionary new];
             [uploadParams setValue:error.description forKey:@"error"];
+            [uploadParams setValue:_channelName forKey:@"channel"];
             [[HMDTTMonitor defaultManager] hmdTrackService:@"lynx_template_black_error" metric:uploadParams category:nil extra:paramsExtra];
         }
     }];
