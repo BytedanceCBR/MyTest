@@ -38,6 +38,12 @@
         _topLine = [[UIView alloc] init];
         [self.contentView addSubview:_topLine];
         _topLine.backgroundColor =  RGB(0xe7, 0xe7, 0xe7);
+        [self.topLine mas_makeConstraints:^(MASConstraintMaker *make){
+            make.left.mas_equalTo(34);
+            make.right.mas_equalTo(-34);
+            make.top.mas_equalTo(0);
+            make.height.mas_equalTo(0.5);
+        }];
         
         _iconView = [UIImageView new];
         _iconView.image = [UIImage imageNamed:@"default_image"];
@@ -46,31 +52,74 @@
         _iconView.layer.cornerRadius = 8;
         _iconView.layer.masksToBounds = YES;
         [self.contentView addSubview:_iconView];
+        [_iconView mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.left.mas_equalTo(31);
+            make.top.mas_equalTo(20);
+            make.bottom.mas_equalTo(-20);
+            make.width.mas_equalTo(66);
+            make.height.mas_equalTo(66);
+        }];
         
         _nameLabel = [UILabel new];
         _nameLabel.font = [UIFont themeFontMedium:16];
         _nameLabel.textColor = RGB(0x4a, 0x4a, 0x4a);
         _nameLabel.textAlignment = NSTextAlignmentLeft;
+        [_nameLabel setContentHuggingPriority:UILayoutPriorityDefaultHigh forAxis:UILayoutConstraintAxisHorizontal];
         [self.contentView addSubview:_nameLabel];
+        [_nameLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.left.mas_equalTo(_iconView.mas_right).offset(13);
+            make.top.mas_equalTo(20);
+            make.height.mas_equalTo(19);
+        }];
+        
+        _priceLabel = [UILabel new];
+        _priceLabel.font = [UIFont themeFontSemibold:16];
+        _priceLabel.textColor = [UIColor themeOrange1];
+        _priceLabel.textAlignment = NSTextAlignmentRight;
+        [_priceLabel setContentCompressionResistancePriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisHorizontal];
+        [self.contentView addSubview:_priceLabel];
+        [_priceLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.right.mas_equalTo(-31);
+            make.top.mas_equalTo(20);
+            make.height.mas_equalTo(19);
+            make.left.mas_equalTo(self.nameLabel.mas_right);
+        }];
 
         _roomSpaceLabel = [UILabel new];
         _roomSpaceLabel.font = [UIFont themeFontRegular:12];
         _roomSpaceLabel.textColor = [UIColor themeGray3];
         _roomSpaceLabel.textAlignment = NSTextAlignmentLeft;
         [self.contentView addSubview:_roomSpaceLabel];
+        [_roomSpaceLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.left.equalTo(_nameLabel.mas_left);
+            make.top.mas_equalTo(self.nameLabel.mas_bottom).offset(8);
+            make.right.mas_equalTo(-15);
+            make.height.mas_equalTo(14);
+        }];
 
-        _priceLabel = [UILabel new];
-        _priceLabel.font = [UIFont themeFontSemibold:16];
-        _priceLabel.textColor = [UIColor themeOrange1];
-        _priceLabel.textAlignment = NSTextAlignmentRight;
-        [self.contentView addSubview:_priceLabel];
+
         
         _tagBacView = [[FHDetailTagBackgroundView alloc] initWithLabelHeight:16.0 withCornerRadius:2.0];
         [_tagBacView setMarginWithTagMargin:4.0 withInsideMargin:4.0];
         _tagBacView.textFont = [UIFont themeFontMedium:10.0];
         [self.contentView addSubview:_tagBacView];
+        [self.cellBackView mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.left.mas_equalTo(15);
+            make.right.mas_equalTo(-15);
+            make.top.bottom.mas_equalTo(0);
+        }];
         
-        [self initConstaints];
+        
+        
+
+
+
+        [_tagBacView mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.left.mas_equalTo(_iconView.mas_right).offset(13);
+            make.right.mas_equalTo(-31);
+            make.height.mas_equalTo(16);
+            make.bottom.mas_equalTo(_iconView);
+        }];
 
     }
     return self;
@@ -113,58 +162,6 @@
     } else {
         self.topLine.hidden = NO;
     }
-}
-
--(void)initConstaints
-{
-    [self.topLine mas_makeConstraints:^(MASConstraintMaker *make){
-        make.left.mas_equalTo(34);
-        make.right.mas_equalTo(-34);
-        make.top.mas_equalTo(0);
-        make.height.mas_equalTo(0.5);
-    }];
-    
-    [self.cellBackView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(15);
-        make.right.mas_equalTo(-15);
-        make.top.bottom.mas_equalTo(0);
-    }];
-    
-    [_iconView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(31);
-        make.top.mas_equalTo(20);
-        make.bottom.mas_equalTo(-20);
-        make.width.mas_equalTo(66);
-        make.height.mas_equalTo(66);
-    }];
-    
-    [_nameLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(_iconView.mas_right).offset(13);
-        make.top.mas_equalTo(20);
-        make.height.mas_equalTo(19);
-        make.right.mas_equalTo(self.priceLabel.mas_left);
-    }];
-    
-    [_roomSpaceLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.equalTo(_nameLabel.mas_left);
-        make.top.mas_equalTo(self.nameLabel.mas_bottom).offset(8);
-        make.right.mas_equalTo(-15);
-        make.height.mas_equalTo(14);
-        make.right.mas_equalTo(self.priceLabel.mas_left);
-    }];
-
-    [_priceLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.right.mas_equalTo(-31);
-        make.top.mas_equalTo(20);
-        make.height.mas_equalTo(19);
-        make.width.mas_equalTo(110);
-    }];
-    [_tagBacView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(_iconView.mas_right).offset(13);
-        make.right.mas_equalTo(-31);
-        make.height.mas_equalTo(16);
-        make.bottom.mas_equalTo(_iconView);
-    }];
 }
 
 - (void)refreshWithData:(id)data

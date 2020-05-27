@@ -320,6 +320,7 @@ static const NSString *kDefaultTopFilterStatus = @"-1";
         traceParam[@"rank"] = @(indexPath.row);
         traceParam[@"element_type"] = @"house_model";
         traceParam[@"page_type"] = @"house_model_list";
+        traceParam[@"house_type"] = @"house_model";
         [traceParam removeObjectForKey:@"enter_from"];
         [traceParam removeObjectForKey:@"element_from"];
         [traceParam addEntriesFromDictionary:tracer[@"log_pb"]];
