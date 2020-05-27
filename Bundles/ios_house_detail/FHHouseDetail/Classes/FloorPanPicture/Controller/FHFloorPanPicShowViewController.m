@@ -92,10 +92,16 @@
     if (@available(iOS 11.0, *)) {
         bottomInset = [UIApplication sharedApplication].keyWindow.safeAreaInsets.bottom;
     }
-    [self.bottomBar mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.height.mas_equalTo(80 + bottomInset);
-    }];
-    
+    UIEdgeInsets contentInset = self.collectionView.contentInset;
+    if (self.bottomBar) {
+        [self.bottomBar mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.height.mas_equalTo(80 + bottomInset);
+        }];
+        contentInset.bottom = 20 + bottomInset + 80;
+    } else {
+        contentInset.bottom = 20 + bottomInset;
+    }
+    self.collectionView.contentInset = contentInset;
 }
 
 - (UIButton *)onlineBtn {
@@ -198,9 +204,6 @@
     [_collectionView setBackgroundColor:[UIColor whiteColor]];
     
     if (self.contactViewModel) {
-        UIEdgeInsets contentInset = self.collectionView.contentInset;
-        contentInset.bottom = 100;
-        self.collectionView.contentInset = contentInset;
         self.bottomBar = [[UIView alloc] initWithFrame:CGRectMake(0, CGRectGetHeight(self.view.bounds) - 80, CGRectGetWidth(self.view.bounds), 80)];
         self.bottomBar.backgroundColor = [UIColor whiteColor];
         [self.view addSubview:self.bottomBar];
@@ -267,10 +270,6 @@
                 make.height.mas_equalTo(48);
             }];
         }
-    } else {
-        UIEdgeInsets contentInset = self.collectionView.contentInset;
-        contentInset.bottom = 20;
-        self.collectionView.contentInset = contentInset;
     }
 }
 
