@@ -533,7 +533,7 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
 - (void)onlineButtonClick:(UIButton *)btn {
     if (self.mediaHeaderModel.contactViewModel) {
         NSMutableDictionary *extraDic = @{}.mutableCopy;
-        extraDic[@"realtor_position"] = @"online";
+        extraDic[@"realtor_position"] = @"im_button";
         extraDic[@"position"] = @"online";
         extraDic[@"element_from"] = [self elementFrom];
         extraDic[@"picture_type"] = self.currentTypeName?:@"be_null";
