@@ -29,6 +29,14 @@ DEC_TASK("TTLocationStartupTask",FHTaskTypeAfterLaunch,TASK_PRIORITY_HIGH+1);
     return YES;
 }
 
+- (void)startWithApplication:(UIApplication *)application options:(NSDictionary *)launchOptions
+{
+    [super startWithApplication:application options:launchOptions];
+    [self uploadLocationWithBlock:^(BOOL isSuccess) {
+        //        NSLog(@"zjing test:isSuccess:%ld",isSuccess);
+    }];
+    
+}
 #pragma mark - UIApplicationDelegate Method
 - (void)applicationDidBecomeActive:(UIApplication *)application {
 //    if (![SSCommonLogic shouldUseOptimisedLaunch]) {
@@ -41,10 +49,6 @@ DEC_TASK("TTLocationStartupTask",FHTaskTypeAfterLaunch,TASK_PRIORITY_HIGH+1);
 //        [ExploreExtenstionDataHelper saveSharedUserCity:[TTLocationManager sharedManager].city];
 //        [[TTCookieManager sharedManager] updateLocationCookie];
 //    }
-    
-    [self uploadLocationWithBlock:^(BOOL isSuccess) {
-//        NSLog(@"zjing test:isSuccess:%ld",isSuccess);
-    }];
 }
 
 

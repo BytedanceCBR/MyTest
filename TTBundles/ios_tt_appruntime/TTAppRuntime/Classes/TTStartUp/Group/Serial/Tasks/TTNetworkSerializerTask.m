@@ -13,12 +13,10 @@
 #import "TTDefaultJSONResponseSerializer.h"
 #import "TTDefaultBinaryResponseSerializer.h"
 #import "TTDefaultResponseModelResponseSerializer.h"
-#import <TTNetBusiness/TTDefaultResponsePreprocessor.h>
-
+#import "TTDefaultResponsePreprocessor.h"
 #import <TTNetBusiness/TTNetworkUtilities.h>
 #import "TTPostDataHttpRequestSerializer.h"
 #import <TTNetBusiness/TTRouteSelectionServerConfig.h>
-#import <TTNetBusiness/TTHttpsControlManager.h>
 #import "TTLocationManager.h"  //add by songlu
 #import <CommonCrypto/CommonCrypto.h>
 #import "SSCookieManager.h"
@@ -34,6 +32,7 @@
 #import <FHHouseBase/TTSandBoxHelper+House.h>
 #import <TTBaseLib/TTNetworkHelper.h>
 #import <FHHouseBase/TTSandBoxHelper+House.h>
+#import <TTAccountSDK/TTAccount+SessionToken.h>
 
 DEC_TASK("TTNetworkSerializerTask",FHTaskTypeSerial,TASK_PRIORITY_HIGH+6);
 
@@ -123,7 +122,6 @@ DEC_TASK("TTNetworkSerializerTask",FHTaskTypeSerial,TASK_PRIORITY_HIGH+6);
             urlObj = [NSURL URLWithString:urlStr];
         }
 
-        urlObj = [[TTHttpsControlManager sharedInstance_tt] transferedURLFrom:urlObj];
         urlStr = urlObj.absoluteString;
 
         BOOL isHttps = [urlStr hasPrefix:@"https://"];
@@ -220,8 +218,14 @@ DEC_TASK("TTNetworkSerializerTask",FHTaskTypeSerial,TASK_PRIORITY_HIGH+6);
     //        }
     //    };
     
+    //在[[TTNetworkManager shareInstance] start];之前加以下代码
+    //通过TTNet 的 requestFilterBlock在header 中添加token
+    [TTNetworkManager shareInstance].requestFilterBlock = ^(TTHttpRequest *request){
+        [TTAccount addTokenToRequest:request];
+    };
+    
+    //更新token及过期设置:过期判断取决于业务方业务，如果业务方没有踢人操作的话，只需要根据下面进行设置
     [TTNetworkManager shareInstance].responseFilterBlock = ^(TTHttpRequest *request, TTHttpResponse *response, id data, NSError *responseError) {
-        
         BOOL sessionExpired = NO;
         if ([data isKindOfClass:[NSData class]]) {
 //            if ([(NSData *)data length] > 300) {
@@ -243,6 +247,7 @@ DEC_TASK("TTNetworkSerializerTask",FHTaskTypeSerial,TASK_PRIORITY_HIGH+6);
         if (sessionExpired) {
             [[TTMonitor shareManager] trackService:@"session_expired" status:1 extra:response.allHeaderFields];
         }
+        [TTAccount setXTokenWithResponse:response responseError:responseError sessionHasExpired:sessionExpired];
         //[BDAccountSessionXTTToken setXTokenWithResponse:response responseError:responseError sessionHasExpired:sessionExpired];
     };
     

@@ -14,7 +14,8 @@
 #import "UIImage+TTThemeExtension.h"
 #import "UIViewAdditions.h"
 #import "TTDeviceHelper.h"
-#import "TTTracker.h"
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
+
 #import "TTImagePreviewAnimateManager.h"
 #import "ALAssetsLibrary+TTImagePicker.h"
 #import "UIColor+Theme.h"
@@ -999,12 +1000,12 @@ static BOOL staticPhotoBrowserAtTop = NO;
 - (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate
 {
     if (_mode == PhotosScrollViewSupportSelectMode) {
-        [TTTracker ttTrackEventWithCustomKeys:self.umengEventName label:@"flip" value:nil source:nil extraDic:self.trackerDic];
+        [BDTrackerProtocol trackEventWithCustomKeys:self.umengEventName label:@"flip" value:nil source:nil extraDic:self.trackerDic];
     }
     //统计
     else if (_mode == PhotosScrollViewSupportDownloadMode) {
         if (self.trackerDic) {
-            [TTTracker ttTrackEventWithCustomKeys:self.umengEventName label:@"pic_slipe" value:nil source:nil extraDic:self.trackerDic];
+            [BDTrackerProtocol trackEventWithCustomKeys:self.umengEventName label:@"pic_slipe" value:nil source:nil extraDic:self.trackerDic];
         }
     }
 }
@@ -1299,7 +1300,7 @@ static BOOL staticPhotoBrowserAtTop = NO;
     //统计
     if (_mode == PhotosScrollViewSupportDownloadMode) {
         if (self.trackerDic) {
-            [TTTracker ttTrackEventWithCustomKeys:self.umengEventName label:@"pic_click" value:nil source:nil extraDic:self.trackerDic];
+            [BDTrackerProtocol trackEventWithCustomKeys:self.umengEventName label:@"pic_click" value:nil source:nil extraDic:self.trackerDic];
         }
     }
     
@@ -1391,7 +1392,7 @@ static BOOL staticPhotoBrowserAtTop = NO;
     //统计
     if (_mode == PhotosScrollViewSupportDownloadMode) {
         if (self.trackerDic) {
-            [TTTracker ttTrackEventWithCustomKeys:self.umengEventName label:@"pic_back" value:nil source:nil extraDic:self.trackerDic];
+            [BDTrackerProtocol trackEventWithCustomKeys:self.umengEventName label:@"pic_back" value:nil source:nil extraDic:self.trackerDic];
         }
     }
     [[UIApplication sharedApplication] setStatusBarHidden:_statusBarHidden
@@ -1542,7 +1543,7 @@ static BOOL staticPhotoBrowserAtTop = NO;
             _reachDismissCondition = YES;
             self.containerView.alpha = 0;
             [self finished];
-            [TTTracker ttTrackEventWithCustomKeys:@"slide_over" label:@"random_slide_close" value:nil source:nil extraDic:nil];
+            [BDTrackerProtocol trackEventWithCustomKeys:@"slide_over" label:@"random_slide_close" value:nil source:nil extraDic:nil];
             break;
         case TTPreviewAnimateStateWillCancel:
             [[UIApplication sharedApplication] setStatusBarHidden:YES

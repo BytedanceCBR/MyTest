@@ -1408,7 +1408,7 @@ extern BOOL ttvs_isVideoFeedURLEnabled(void);
         [dict setValue:@"main_tab" forKey:@"list_entrance"];
     }
     
-    [TTTracker eventV3:@"rt_unlike" params:[dict copy]];
+    [BDTrackerProtocol eventV3:@"rt_unlike" params:[dict copy]];
 }
 
 - (void)digButtonAnimationWith:(TTAlphaThemedButton *)button
@@ -2065,7 +2065,7 @@ extern BOOL ttvs_isVideoFeedURLEnabled(void);
     [params setValue:@(connectionType) forKey:@"nt"];
     [params setValue:@"1" forKey:@"is_ad_event"];
     [params addEntriesFromDictionary:[orderData realTimeAdExtraData:@"embeded_ad" label:@"click" extraData:extraData]];
-    [TTTracker eventV3:@"realtime_click" params:params];
+    [BDTrackerProtocol eventV3:@"realtime_click" params:params];
 }
 
 //监听电话状态

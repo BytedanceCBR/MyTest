@@ -11,7 +11,7 @@
 #import "FHHouseCellsBridge.h"
 #import "FHUserTrackerDefine.h"
 #import "FHHouseSwitchCityDelegate.h"
-#import "FHHouseAccountBridge.h"
+//#import "FHHouseAccountBridge.h"
 
 #define SETTRACERKV(key ,value) [[[FHHouseBridgeManager sharedInstance] envContextBridge] setTraceValue:value forKey:key]
 

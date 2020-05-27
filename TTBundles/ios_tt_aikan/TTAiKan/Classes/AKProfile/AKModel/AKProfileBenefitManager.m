@@ -12,7 +12,8 @@
 #import "TTAccountManager.h"
 #import "TTNetworkManager.h"
 #import "AKTaskSettingHelper.h"
-#import "TTTracker.h"
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
+
 @implementation AKProfileBenefitManager
 
 static AKProfileBenefitManager *shareInstance = nil;

@@ -207,27 +207,28 @@ def appPods
     #-----UGC Other-----
     pod 'TTSettingsManager','0.4.16'
     pod 'TTLocationManager','1.2.4'
-    pod 'BDUGLocationKit', '1.4.3',:subspecs => [ # , '1.1.0'
+    pod_binary 'BDUGLocationKit', '1.5.0-rc.2',:subspecs => [ # , '1.1.0'
     'Core',
     'DataCollection',
-    'ByteDancePlacemark',
+#    'ByteDancePlacemark',
     'AmapLocation'
     ]
+    
     pod 'BDUGSettingsInterface' , '1.1.0'
     pod 'BDUGKit' , '1.3.3'
     
-    pod 'Gaia','1.0.7-rc.1'
-    pod 'TTGaiaExtension','0.4.2'
+    pod_binary 'Gaia','3.1.0-rc.5'
+    pod_binary 'TTGaiaExtension','0.4.7'
     pod 'BDAssert','2.0.0',:subspecs => [
     'Core'
     ]
     pod_binary 'BDTFactoryConfigurator', '0.1.0'
 
     pod_binary 'TencentQQSDK','1.0.0' #QQ SDK降级 iOS13有问题
-    pod        'WechatSDK','0.1.5'
+    pod        'WechatSDK','0.3.0'
 
     #-----免流量统计-----
-    pod_binary 'TTFlowStatisticsManager', '0.0.10'
+    pod_binary 'TTFlowStatisticsManager', '0.2.1'
 
     #-----头条视频播放器库，依赖自研播放器库，还包含系统播放器-----
     pod_binary 'TTVideo', '1.1.1'
@@ -248,7 +249,7 @@ def appPods
     pod_binary 'TTInstallService','2.1.6'
 
     #-----头条用户设置库--------
-    pod 'TTUserSettings', '0.3.4'
+    pod_binary 'TTUserSettings','0.3.20'
 
     pod_binary 'TTRexxar', '0.8.14', subspecs:['Core', 'WebView', 'PackageApp', 'Plugins']
     #----头条组件协议库-----
@@ -279,11 +280,16 @@ def appPods
     pod_binary 'TTABManager', '0.0.7'
 
     #-----头条网络业务库------
-    pod_binary 'TTNetBusiness', '0.0.10'
+    pod_binary 'TTNetBusiness','0.1.0', :subspecs => [
+    'TTRouteSelectionManager',
+    'DNSManager',
+    'TTNetworkUtilities'
+    ]
 
     #-----授权管理----
-    pod 'FHPushAuthorizationManager','0.1.4'
-    
+   # pod 'FHPushAuthorizationManager','0.1.4'
+        pod 'FHPushAuthorizationManager', git:'git@code.byted.org:fproject/push_authorization_manager.git', :commit => '9e4474f01e3fd53497c4bfee294eaa030eb20335'
+
     #-----手机通讯录操作库---
     pod_binary 'TTAddressBookService', '0.1.4'
     
@@ -315,7 +321,7 @@ def appPods
     'UIKit'
     ]
     #-----头条网络库-----
-    pod_binary 'TTNetworkManager' , '2.2.18.1'
+    pod_binary 'TTNetworkManager', '3.2.24.1'
 
     #-----播放器SDK相关-----
     pod 'TTPlayerSDK', '2.9.9.10'
@@ -367,11 +373,9 @@ def appPods
     pod 'BDAlogProtocol','0.1.7'
 
     #----- 长连接 & IM -----
-    pod_binary 'TTLCSService', '0.1.1' # 依赖于 'TTPushManager' 和 'TTReachability'
-    pod 'TTPushManager', '0.0.13.4'
-    #pod_binary 'TTReachability', '0.8.1'
-    pod_binary 'TTReachability', '1.5.1'
-    pod_binary 'Protobuf', '3.0.1-ttv'
+    pod_binary 'TTLCSService','0.1.11' # 依赖于 'TTPushManager' 和 'TTReachability'
+    pod_binary 'TTReachability','0.10.1'
+    pod_binary 'Protobuf', '3.6.1.2'
     #----- 存储库 -----
     pod_binary 'TTPersistence', '0.2.3'
     pod_binary 'TTEntityBase', '0.2.4'
@@ -393,17 +397,13 @@ def appPods
     #-----头条交互式退出手势----
     pod_binary 'TTImagePreviewAnimateManager', '1.0.13'
     #-----头条日志库-----
-    pod_binary 'TTTracker','1.3.7'
-    pod_binary 'BDTracker','0.5.7',:subspecs => [
-    'InstallBase',
-    'InstallCore',
-    'InstallHome',
-    'Network/Base',
-    'Network/TTNetwork',
-    'TrackerBase',
-    'TrackerCore',
-    'TrackerHome'
-    ]
+    pod_binary 'TTTracker','1.3.20'
+#    pod_binary 'BDTracker','1.3.1',:subspecs => [
+#    'Network',
+#    'Base',
+#    'Core',
+#    'Debug'
+#    ]
     pod_binary 'BDDataDecorator','2.0.1',:subspecs => [
       'Data',
     ]
@@ -440,12 +440,14 @@ def appPods
     ]
 
     #-----TTAccountSDK-----
-    pod 'TTAccountSDK', '4.9.1', :inhibit_warnings => false, :subspecs => [
+    pod 'TTAccountSDK', '5.10.1-rc.4', :inhibit_warnings => false, :subspecs => [
     'Account',
-    'Logger',
+#    'Logger',
     'WeChatAccount',
     'OneKeyLogin',
-    'ThirdPartyAccountFoundation'
+    'ThirdPartyAccountFoundation',
+    'TTAwemeAccount',
+    'AppleAccount'
     ]
     pod 'BDUGContainer', '1.1.2'
     pod 'BDUGTrackerInterface', '1.1.1'
@@ -454,7 +456,7 @@ def appPods
     pod 'TYRZApiSDK' , '1.2.2-rc.0'
     pod 'EAccountApiSDK', '1.2.0-alpha.0'
     pod 'BDUGUnionSDK', '0.1.2'
-  
+
     pod_binary 'BDUIKeyboardImplHook', '1.0.3'
 
     #************业务SDK**********
@@ -485,7 +487,7 @@ def appPods
     'GIF',
     'WebP'
     ]
-    pod_binary 'BDAccountSessionSDK','0.1.11'
+#    pod_binary 'BDAccountSessionSDK','0.1.11'
     pod_binary 'YYText' , '1.0.7'
     pod_source 'AMapLocation' , '2.6.0'
     pod_source 'AMap3DMap' , '6.9.0'
@@ -591,6 +593,7 @@ target 'NewsLiteInHouse' do
 end
 
 target 'f100' do
+#    testPods
     fhPods
     appPods
     appDevelopPods

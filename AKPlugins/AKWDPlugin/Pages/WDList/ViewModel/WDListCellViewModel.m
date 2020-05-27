@@ -180,7 +180,7 @@
     NSMutableDictionary * dict = [NSMutableDictionary dictionaryWithDictionary:dictInfo];
     [dict setValue:kWDWendaListViewControllerUMEventName forKey:@"tag"];
     [dict setValue:@"umeng" forKey:@"category"];
-    [TTTracker eventData:dict];
+    [BDTrackerProtocol eventData:dict];
 }
 
 #pragma mark - Util

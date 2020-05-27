@@ -290,9 +290,9 @@
     [self.avatarButton setBackgroundImage:tImage forState:UIControlStateNormal];
     if (tImage) {
         
-        [TTAccountManager startUploadUserPhoto:tImage completion:^(TTAccountUserEntity *userEntity, NSError *error) {
-            
-        }];
+//        [TTAccountManager startUploadUserPhoto:tImage completion:^(TTAccountUserEntity *userEntity, NSError *error) {
+//            
+//        }];
     }
 }
 
