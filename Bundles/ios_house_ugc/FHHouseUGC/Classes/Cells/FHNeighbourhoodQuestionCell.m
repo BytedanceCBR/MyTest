@@ -365,8 +365,11 @@
 
 - (void)gotoPostWDAnswer {
     if(!isEmptyString(self.cellModel.writeAnswerSchema)){
+        NSMutableDictionary *dict = @{}.mutableCopy;
+        dict[@"title"] = @"写回答";
+        TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
         NSURL *url = [TTStringHelper URLWithURLString:self.cellModel.writeAnswerSchema];
-        [[TTRoute sharedRoute] openURLByPresentViewController:url userInfo:nil];
+        [[TTRoute sharedRoute] openURLByPresentViewController:url userInfo:userInfo];
     }
 }
 
