@@ -21,9 +21,11 @@
 #import <TTBaseLib/NSDictionary+TTAdditions.h>
 #import <TTBaseLib/TTUIResponderHelper.h>
 #import <TTThemed/TTThemeManager.h>
-#import <TTTracker/TTTracker.h>
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 #import <TTTracker/TTTrackerSessionHandler.h>
 #import <TTBaseLib/UIViewAdditions.h>
+#import <TTPlatformBaseLib/TTTrackerWrapper.h>
+
 //#import "TTAccountBusiness.h"
 
 #define kFooterDivKey @"toutiao_ios_footer_div"
@@ -510,7 +512,7 @@
             [_delegate processRequestOpenWebViewUseURL:requestURL supportRotate:NO];
         }
     }
-    ttTrackEvent(@"detail", @"open_url");
+    wrapperTrackEvent(@"detail", @"open_url");
 }
 
 
@@ -594,10 +596,10 @@
         }
         if (originStatus != _footerStatus) {
             if (_footerStatus == TTDetailWebViewFooterStatusDisplayHalf && originStatus == TTDetailWebViewFooterStatusNoDisplay) {
-                ttTrackEvent(@"detail", @"pull_open_drawer");
+                wrapperTrackEvent(@"detail", @"pull_open_drawer");
             }
             else if (_footerStatus == TTDetailWebViewFooterStatusNoDisplay && originStatus == TTDetailWebViewFooterStatusDisplayHalf) {
-                ttTrackEvent(@"detail", @"pull_close_drawer");
+                wrapperTrackEvent(@"detail", @"pull_close_drawer");
             }
         }
         

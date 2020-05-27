@@ -82,6 +82,7 @@
     
     [[TTRJSBForwarding sharedInstance] registeJSBAlias:@"TTRShortVideo.getRedPackIntro" for:@"get_redpack_state"];
 
+    [[TTRJSBForwarding sharedInstance] registeJSBAlias:@"FHLoginConflictBridgePlugin.postMessageToNative" for:@"app.postMessageToNative"];
 }
 
 @end

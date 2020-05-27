@@ -29,7 +29,7 @@
 #import <TTThemed/TTThemeManager.h>
 #import "Masonry.h"
 
-#import <TTTracker/TTTracker.h>
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 #import <TTPlatformBaseLib/TTTrackerWrapper.h>
 
 typedef NS_ENUM(NSInteger, WDDetailReportStyle) {

@@ -10,6 +10,7 @@
 #import "TTWeChatShare.h"
 #import "TTAccountAuthWeChat.h"
 #import "TTLaunchDefine.h"
+#import <TTAccountSDK/TTAccount+PlatformAuthLogin.h>
 
 DEC_TASK("TTWeixinOpenURLTask",FHTaskTypeOpenURL,TASK_PRIORITY_HIGH+4);
 
@@ -29,6 +30,12 @@ DEC_TASK("TTWeixinOpenURLTask",FHTaskTypeOpenURL,TASK_PRIORITY_HIGH+4);
     /**
      * WECHAT登录授权会清空粘贴板而分享和支付不会，所以分享和授权放前面，登录授权放后面
      */
+    //TODO:后面调试完毕创建一个新的TTAccountOPENURLTask类
+    BOOL accountAuthResult = [TTAccount handleOpenURL:url];
+    if (accountAuthResult) {
+        return accountAuthResult;
+    }
+    
     BOOL weChatShareResult = [TTWeChatShare handleOpenURL:url];
     BOOL weChatAuthResult  = [TTAccountAuthWeChat handleOpenURL:url];
     return weChatShareResult || weChatAuthResult;

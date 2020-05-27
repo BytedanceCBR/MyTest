@@ -47,7 +47,6 @@
     return YES;
 }
 @end
-
 @implementation FHDetailFloorPanDetailInfoDataBaseInfoModel
 + (JSONKeyMapper*)keyMapper
 {
@@ -71,19 +70,21 @@
     @"areaId": @"area_id",
     @"baseInfo": @"base_info",
     @"logPb": @"log_pb",
+    @"facingDirection": @"facing_direction",
     @"saleStatus": @"sale_status",
     @"areaName": @"area_name",
     @"districtId": @"district_id",
     @"pricingPerSqm": @"pricing_per_sqm",
     @"districtName": @"district_name",
     @"courtId": @"court_id",
-    
     @"userStatus": @"user_status",
     @"highlightedRealtor": @"highlighted_realtor",
     @"chooseAgencyList": @"choose_agency_list",
     @"saleStatus": @"sale_status",
     @"highlightedRealtorAssociateInfo":@"highlighted_realtor_associate_info",
-    @"displayPrice": @"display_price"
+    @"displayPrice": @"display_price",
+    @"imageDictList": @"house_image_dict_list",
+    @"imageAssociateInfo" : @"image_associate_info"
   };
   return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
      return dict[keyName]?:keyName;

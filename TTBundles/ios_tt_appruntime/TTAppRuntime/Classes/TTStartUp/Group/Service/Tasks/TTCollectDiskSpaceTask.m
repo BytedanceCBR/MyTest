@@ -11,7 +11,7 @@
 #import "SSCommonLogic.h"
 #import <TTBaseLib/TTDeviceHelper.h>
 #import <TTBaseLib/TTSandBoxHelper.h>
-#import <TTTracker/TTTracker.h>
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 #import <FHHouseBase/TTSandBoxHelper+House.h>
 
 @implementation TTCollectDiskSpaceTask
@@ -35,7 +35,7 @@
             if ([TTSandBoxHelper hasValidAssetCountSavedLastTime]) {
                 [photoInfo setObject:@([TTSandBoxHelper assetCountSavedLastTime]) forKey:@"photo_count"];
             }
-            [TTTracker eventV3:@"user_disk_space_collection" params:photoInfo];
+            [BDTrackerProtocol eventV3:@"user_disk_space_collection" params:photoInfo];
         });
     }
 }

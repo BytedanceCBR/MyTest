@@ -285,7 +285,7 @@
 {
     FHFloorPanCorePropertyCellModel *companyInfoModel = [[FHFloorPanCorePropertyCellModel alloc] init];
     
-    NSArray *pNameArray = [NSArray arrayWithObjects:@"物业类型",@"占地面积",@"建筑面积",@"装修状况",@"建筑类型",@"产权年限", nil];
+    NSArray *pNameArray = [NSArray arrayWithObjects:@"物业类型",@"占地面积",@"建筑面积",@"装修状况",@"建筑类型",@"产权年限", @"拿地时间", @"规划楼栋数", @"规划户数", nil];
     
     NSMutableArray *pItemsArray = [[NSMutableArray alloc] init];
     for (NSInteger i = 0; i < pNameArray.count; i++) {
@@ -309,6 +309,15 @@
                 break;
             case 5:
                 pItemModel.propertyValue = [self checkPValueStr:model.data.propertyRight];
+                break;
+            case 6:
+                pItemModel.propertyValue = [self checkPValueStr:model.data.buyFieldTime];
+                break;
+            case 7:
+                pItemModel.propertyValue = [self checkPValueStr:model.data.plannedBuilding];
+                break;
+            case 8:
+                pItemModel.propertyValue = [self checkPValueStr:model.data.plannedFamily];
                 break;
                 
             default:
@@ -387,12 +396,13 @@
 {
     FHFloorPanCorePermitCellModel *companyInfoModel = [[FHFloorPanCorePermitCellModel alloc] init];
     
-    NSArray *pNameArray = [NSArray arrayWithObjects:@"预售许可证",@"发证信息",@"绑定信息", nil];
+    NSArray *pNameArray = [NSArray arrayWithObjects:@"预售许可证",@"发证时间",@"绑定信息", nil];
     NSMutableArray *pItemsArray = [[NSMutableArray alloc] init];
     for (FHDetailNewCoreDetailDataPermitListModel *model in items) {
         for (NSInteger i = 0; i < pNameArray.count; i++) {
             FHFloorPanCorePermitCellItemModel *pItemModel = [[FHFloorPanCorePermitCellItemModel alloc] init];
             pItemModel.permitName = pNameArray[i];
+            pItemModel.image = model.image;
             switch (i) {
                 case 0:
                     pItemModel.permitValue = [self checkPValueStr:model.permit];

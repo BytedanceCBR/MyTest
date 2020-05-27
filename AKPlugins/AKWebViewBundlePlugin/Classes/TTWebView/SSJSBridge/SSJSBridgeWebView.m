@@ -25,7 +25,7 @@
 #import <TTRexxar/TTRWebViewApplication.h>
 #import <TTRexxar/TTRJSBForwarding.h>
 #import <TTRexxar/TTRexxarNotificationCenter.h>
-#import <TTTracker/TTTracker.h>
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 #import <TTUsersettings/TTUserSettingsManager+FontSettings.h>
 #import <TTPlatformBaseLib/TTTrackerWrapper.h>
 #import "FHEnvContext.h"
@@ -59,7 +59,7 @@ NSString *const TTWebViewRequestKey = @"request";
 //    CLS_LOG(@"dealloc");
     [[NSNotificationCenter defaultCenter] removeObserver:self];
     if (_historyTracker.count) {
-        [TTTracker eventV3:@"webview_history_tracker" params:({
+        [BDTrackerProtocol eventV3:@"webview_history_tracker" params:({
             NSMutableDictionary *params = [[NSMutableDictionary alloc] init];
             [params setValue:[_historyTracker copy] forKey:@"pages"];
             [params copy];
@@ -316,10 +316,10 @@ NSString *const TTWebViewRequestKey = @"request";
     //添加单独为广告加的convert事件实时发送逻辑,新增标识实时事件字段:realtime_report
     if ([[parameters valueForKey:@"realtime_report"] intValue] == 1) {
         [parameters setValue:nil forKey:@"realtime_report"];
-        [TTTracker eventV3:@"realtime_report" params:parameters];
+        [BDTrackerProtocol eventV3:@"realtime_report" params:parameters];
     }
     else{
-        [TTTracker eventData:parameters];
+        [BDTrackerProtocol eventData:parameters];
     }
 }
 

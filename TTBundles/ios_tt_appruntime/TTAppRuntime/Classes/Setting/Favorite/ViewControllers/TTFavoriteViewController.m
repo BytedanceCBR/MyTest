@@ -92,7 +92,7 @@
     [dict setValue:@"favorite" forKey:@"category_name"];
     [dict setValue:@"house_app2c_v2" forKey:@"event_type"];
     [dict setValue:@"click" forKey:@"enter_type"];
-    [TTTracker eventV3:@"enter_category" params:dict isDoubleSending:NO];
+    [BDTrackerProtocol eventV3:@"enter_category" params:dict isDoubleSending:NO];
 }
 
 - (void)setupTableView {
@@ -315,7 +315,7 @@
     [dict setValue:@"click" forKey:@"enter_type"];
     NSString *stayTimeStr = [NSString stringWithFormat:@"%.0f", stayTime * 1000];
     [dict setValue:stayTimeStr forKey:@"stay_time"];
-    [TTTracker eventV3:@"stay_category" params:dict isDoubleSending:NO];
+    [BDTrackerProtocol eventV3:@"stay_category" params:dict isDoubleSending:NO];
 }
 
 - (void)fetchRemoteData {
@@ -804,7 +804,7 @@
     [traceParams setValue:dictTraceData.groupSource forKey:@"group_source"];
     [traceParams setValue:@(dictTraceData.cellType) ? : @"be_null" forKey:@"cell_type"];
 
-    [TTTracker eventV3:@"client_show" params:traceParams];
+    [BDTrackerProtocol eventV3:@"client_show" params:traceParams];
 }
 
 #pragma mark  delegate

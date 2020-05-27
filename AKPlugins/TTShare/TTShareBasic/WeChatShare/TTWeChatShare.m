@@ -50,7 +50,7 @@ static NSString *wechatShareAppID = nil;
 + (void)registerWechatShareIDIfNeeded {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        [WXApi registerApp:wechatShareAppID];
+        [WXApi registerApp:wechatShareAppID universalLink:@" https://i.haoduofangs.com/"];
     });
 }
 
@@ -107,7 +107,7 @@ static NSString *wechatShareAppID = nil;
     req.text = text;
     req.scene = scene;
     
-    [WXApi sendReq:req];
+    [WXApi sendReq:req completion:nil];
 }
 
 - (void)sendImageToScene:(enum WXScene)scene withImage:(UIImage *)image customCallbackUserInfo:(NSDictionary *)customCallbackUserInfo {
@@ -131,7 +131,7 @@ static NSString *wechatShareAppID = nil;
     req.bText = NO;
     req.message = message;
     req.scene = scene;
-    [WXApi sendReq:req];
+    [WXApi sendReq:req completion:nil];
 }
 
 - (void)sendWebpageToScene:(enum WXScene)scene withWebpageURL:(NSString *)webpageURL thumbnailImage:(UIImage *)thumbnailImage title:(NSString *)title description:(NSString *)description customCallbackUserInfo:(NSDictionary *)customCallbackUserInfo {
@@ -192,7 +192,7 @@ static NSString *wechatShareAppID = nil;
     req.message = message;
     req.scene = scene;
     
-    [WXApi sendReq:req];
+    [WXApi sendReq:req completion:nil];
 }
 
 - (void)sendWebpageWithMiniProgramShareInScene:(enum WXScene)scene withParameterDict:(NSDictionary *)dict WebpageURL:(NSString *)webpageURL thumbnailImage:(UIImage *)thumbnailImage title:(NSString *)title description:(NSString *)description customCallbackUserInfo:(NSDictionary *)customCallbackUserInfo{
@@ -265,7 +265,7 @@ static NSString *wechatShareAppID = nil;
     req.message = message;
     req.scene = scene;
     
-    [WXApi sendReq:req];
+    [WXApi sendReq:req completion:nil];
 }
 
 - (void)sendVideoToScene:(enum WXScene)scene withVideoURL:(NSString *)videoURL thumbnailImage:(UIImage*)thumbnailImage title:(NSString*)title description:(NSString*)description customCallbackUserInfo:(NSDictionary *)customCallbackUserInfo {
@@ -317,7 +317,7 @@ static NSString *wechatShareAppID = nil;
     req.message = message;
     req.scene = scene;
     
-    [WXApi sendReq:req];
+    [WXApi sendReq:req completion:nil];
 }
 
 -(void)onResp:(BaseResp*)resp {

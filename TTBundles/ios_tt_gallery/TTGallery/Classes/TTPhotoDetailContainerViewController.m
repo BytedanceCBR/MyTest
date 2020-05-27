@@ -26,7 +26,7 @@
 #import <TTBaseLib/TTUIResponderHelper.h>
 #import <TTThemed/TTThemeManager.h>
 #import <TTPlatformBaseLib/TTTrackerWrapper.h>
-#import <TTTracker/TTTracker.h>
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 #import <TTMonitor/TTMonitor.h>
 #import <Masonry/Masonry.h>
 

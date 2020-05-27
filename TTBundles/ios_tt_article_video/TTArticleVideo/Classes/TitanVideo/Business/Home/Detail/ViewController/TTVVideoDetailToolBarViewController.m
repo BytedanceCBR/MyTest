@@ -650,7 +650,7 @@ extern NSInteger ttvs_isShareTimelineOptimize(void);
         [paramsDict addEntriesFromDictionary:self.detailModel.reportParams];
     }
 
-    [TTTracker eventV3:@"rt_post_comment" params:paramsDict];
+    [BDTrackerProtocol eventV3:@"rt_post_comment" params:paramsDict];
 
     [commentView dismissAnimated:YES];
     commentWriteManager.delegate = nil;

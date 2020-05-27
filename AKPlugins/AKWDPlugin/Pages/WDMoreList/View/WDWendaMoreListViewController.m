@@ -34,6 +34,7 @@
 #import "WDMoreListCellLayoutModel.h"
 #import "WDMoreListCellViewModel.h"
 #import "WDListCellDataModel.h"
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 
 extern NSString * const kWDWendaListViewControllerUMEventName;
 
@@ -261,7 +262,7 @@ extern NSString * const kWDWendaListViewControllerUMEventName;
     NSString *label = [WDShareUtilsHelper labelNameForShareActivity:activity];
     NSMutableDictionary *dict = [self.viewModel.gdExtJson mutableCopy];
     [dict setValue:self.viewModel.qID forKey:@"source"];
-    [TTTracker category:@"umeng" event:kWDWendaListViewControllerUMEventName label:label dict:[dict copy]];
+    [BDTrackerProtocol category:@"umeng" event:kWDWendaListViewControllerUMEventName label:label dict:[dict copy]];
     
     TTGroupModel *groupModel = [[TTGroupModel alloc] initWithGroupID:self.viewModel.qID];
     TTDetailActionReuestContext *context = [TTDetailActionReuestContext new];
@@ -282,7 +283,8 @@ extern NSString * const kWDWendaListViewControllerUMEventName;
     NSMutableDictionary *extraDict = [NSMutableDictionary dictionary];
     [extraDict setValue:self.viewModel.qID forKey:@"media_id"];
     
-    ttTrackEventWithCustomKeys(kWDWendaListViewControllerUMEventName, label, self.viewModel.qID, nil, extraDict);
+    [BDTrackerProtocol trackEventWithCustomKeys:kWDWendaListViewControllerUMEventName label:label value:self.viewModel.qID source:nil extraDic:extraDict];
+//    ttTrackEventWithCustomKeys(kWDWendaListViewControllerUMEventName, label, self.viewModel.qID, nil, extraDict);
 }
 
 #pragma mark frame
@@ -324,7 +326,7 @@ extern NSString * const kWDWendaListViewControllerUMEventName;
     if (isEmptyString(label)) {
         return;
     }
-    [TTTracker event:kWDWendaListViewControllerUMEventName label:label];
+    [BDTrackerProtocol event:kWDWendaListViewControllerUMEventName label:label];
 }
 
 #pragma mark -- showing util
