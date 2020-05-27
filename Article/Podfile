@@ -162,7 +162,7 @@ def appPods
     
     pod_binary 'IESGeckoKit', '0.4.0'
     pod_binary 'IESWebKit', '0.2.0-rc.3'
-    pod 'React', '0.55.13-rc.0', :subspecs => [ #可根据需要选择相应子库以减少包大小
+    pod_binary 'React', '0.55.13-rc.0', :subspecs => [ #可根据需要选择相应子库以减少包大小
     'Core',
     'CxxBridge',
     'RCTActionSheet',
