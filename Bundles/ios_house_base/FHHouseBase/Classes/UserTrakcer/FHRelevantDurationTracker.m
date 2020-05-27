@@ -47,7 +47,7 @@
 {
     NSParameterAssert(groupID);
     NSAssert([NSThread isMainThread], @"Must be on main thread");
-    
+
     NSDictionary *event = @{
                             @"group_id": groupID ?: @"",
                             @"item_id": itemID ?: @"",
@@ -71,7 +71,7 @@
     NSMutableDictionary *filteredDictionary = @{}.mutableCopy;
 
     if (self.eventArray.count > 0) {
-        
+
         NSString *newGroupId = eventDictionary[@"group_id"];
         for (NSInteger index = 0; index < self.eventArray.count; index++) {
             NSDictionary *itemDict = self.eventArray[index];
@@ -99,7 +99,7 @@
         }
         [self.eventArray addObject:filteredDictionary];
     }
-    
+
     NSDate *endDate = [NSDate date];
 }
 
@@ -120,7 +120,7 @@
         for (NSDictionary *event in self.eventArray) {
             totalDuration += [event[@"stay_time"] integerValue];
         }
-        
+
         NSDictionary *params = @{
                                  @"link_list": [self.eventArray copy],
                                  @"group_id_first": entranceGroupID ?: @"",
@@ -128,7 +128,7 @@
                                  @"link_cnt": @([self.eventArray count]),
                                  };
         [FHUserTracker writeEvent:@"stay_page_link" params:params];
-        
+
         [self.eventArray removeAllObjects];
     }
     self.tracking = NO;

@@ -50,6 +50,7 @@
     if ([[FHLynxManager sharedInstance] allConfigChannelsArray]) {
         [localChannels addObjectsFromArray:[[FHLynxManager sharedInstance] allConfigChannelsArray]];
     }
+
     
     if ([localChannels isKindOfClass:[NSArray class]] && localChannels.count > 0) {
         [IESGeckoKit registerAccessKey:[FHIESGeckoManager getGeckoKey] appVersion:stringVersion channels:localChannels];
