@@ -397,7 +397,6 @@
         associatePhone.houseId = self.modelData.id;
         associatePhone.showLoading = NO;
         [FHHousePhoneCallUtils callWithAssociatePhoneModel:associatePhone completion:nil];
-//        [FHHousePhoneCallUtils callWithConfigModel:contactConfig completion:nil];
     }
 
 }
