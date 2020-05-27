@@ -253,8 +253,9 @@ static FHLoginSharedModel *_sharedModel = nil;
 /// 是否展示了苹果登录
 @property (nonatomic, assign) BOOL hasShowAppleLogin;
 
-/// 是否展示了抖音登录
-@property (nonatomic, assign) BOOL hasShowDouyinLogin;
+@property (nonatomic, assign) BOOL hasShowDouyinOneClickLogin;
+/// 是否展示了抖音icon登录
+@property (nonatomic, assign) BOOL hasShowDouyinIconLogin;
 
 @property (nonatomic, copy) void (^douyinLoginConflictHandlerBlock)(void);
 
@@ -477,16 +478,13 @@ static FHLoginSharedModel *_sharedModel = nil;
         case FHLoginViewTypeDouYin:
             login_suggest_method = @"douyin_one_click";
             tracerDict[@"douyin_one_click_show"] = @(1);
-            self.hasShowDouyinLogin = YES;
-            if (@available(iOS 13.0, *)) {
-                self.hasShowAppleLogin = YES;
-            }
+            self.hasShowDouyinOneClickLogin = YES;
             break;
         case FHLoginViewTypeOneKey:
             login_suggest_method = @"one_click";
             tracerDict[@"carrier_one_click_show"] = @(1);
             if (self.shouldShowDouyinIcon) {
-                self.hasShowDouyinLogin = YES;
+                self.hasShowDouyinIconLogin = YES;
                 if (@available(iOS 13.0, *)) {
                     self.hasShowAppleLogin = YES;
                 }
@@ -496,7 +494,7 @@ static FHLoginSharedModel *_sharedModel = nil;
             login_suggest_method = @"phone_sms";
             tracerDict[@"phone_show"] = @(1);
             if (self.shouldShowDouyinIcon) {
-                self.hasShowDouyinLogin = YES;
+                self.hasShowDouyinIconLogin = YES;
                 if (@available(iOS 13.0, *)) {
                     self.hasShowAppleLogin = YES;
                 }
@@ -510,6 +508,9 @@ static FHLoginSharedModel *_sharedModel = nil;
     
     
     tracerDict[@"login_suggest_method"] = login_suggest_method?:@"";
+    if (self.hasShowDouyinIconLogin) {
+        tracerDict[@"douyin_is_show"] = @(1);
+    }
     if (self.hasShowAppleLogin) {
         tracerDict[@"apple_is_show"] = @(1);
     }
@@ -748,7 +749,7 @@ static FHLoginSharedModel *_sharedModel = nil;
 
 - (void)goToLoginContainerController:(FHLoginViewType )viewType {
     if (self.shouldShowDouyinIcon) {
-        self.hasShowDouyinLogin = YES;
+        self.hasShowDouyinIconLogin = YES;
         if (@available(iOS 13.0, *)) {
             self.hasShowAppleLogin = YES;
         }
@@ -981,10 +982,13 @@ static FHLoginSharedModel *_sharedModel = nil;
         default:
             break;
     }
+    if (self.hasShowDouyinOneClickLogin) {
+        tracerDict[@"douyin_one_click_show"] = @(1);
+    }
     if (self.hasShowAppleLogin) {
         tracerDict[@"apple_is_show"] = @(1);
     }
-    if (self.hasShowDouyinLogin) {
+    if (self.hasShowDouyinIconLogin) {
         tracerDict[@"douyin_is_show:"] = @(1);
     }
     

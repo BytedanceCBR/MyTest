@@ -108,6 +108,7 @@
             }];
             [onekeyLoginView updateOneKeyLoginWithPhone:self.viewModel.mobileNumber service:[self.viewModel serviceName] protocol:[self.viewModel protocolAttrTextByIsOneKeyLoginViewType:self.viewType] showDouyinIcon:[self.viewModel shouldShowDouyinIcon]];
             if ([self.viewModel shouldShowDouyinIcon]) {
+                tracerDict[@"douyin_is_show"] = @(1);
                 if (@available(iOS 13.0, *)) {
                     tracerDict[@"apple_is_show"] = @(1);
                 }
@@ -132,6 +133,7 @@
             self.textField = mobileInputView.mobileTextField;
             [mobileInputView updateProtocol:[self.viewModel protocolAttrTextByIsOneKeyLoginViewType:self.viewType] showDouyinIcon:[self.viewModel shouldShowDouyinIcon]];
             if ([self.viewModel shouldShowDouyinIcon]) {
+                tracerDict[@"douyin_is_show"] = @(1);
                 if (@available(iOS 13.0, *)) {
                     tracerDict[@"apple_is_show"] = @(1);
                 }

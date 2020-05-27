@@ -273,7 +273,7 @@ typedef NS_ENUM(NSUInteger, FHAccountBindingOperationWordType) {
 - (void)handleItemselected:(UISwitch *)sender withType:(FHAccountBindingOperationWordType)type withError:(NSError *)error {
     __weak typeof(self) wSelf = self;
     if (type == FHAccountBindingOperationCancel) {
-        [self thirdPartyBindTipsLog:!sender.isOn statusInfo:@"操作确认" popType:@"解绑弹窗"];
+        [self thirdPartyBindTipsLog:!sender.isOn statusInfo:@"操作确认" popType:@"解绑弹窗" showType:@"popup"];
         [self showAlert:@"解除绑定？" message:nil cancelTitle:@"取消" confirmTitle:@"确定" cancelBlock:^{
             [sender setOn:!sender.isOn animated:YES];
         } confirmBlock:^{
@@ -323,10 +323,10 @@ typedef NS_ENUM(NSUInteger, FHAccountBindingOperationWordType) {
 #pragma mark - Handing
 - (void)handleBindingResult:(NSError *)error sender:(UISwitch *)sender {
     if (!error) {
-        [self thirdPartyBindTipsLog:!sender.isOn statusInfo:@"绑定成功" popType:@"绑定弹窗"];
+        [self thirdPartyBindTipsLog:!sender.isOn statusInfo:@"绑定成功" popType:@"绑定弹窗" showType:@"toast"];
         [[ToastManager manager] showToast:@"绑定成功"];
     } else {
-        [self thirdPartyBindTipsLog:!sender.isOn statusInfo:@"绑定失败" popType:@"绑定弹窗"];
+        [self thirdPartyBindTipsLog:!sender.isOn statusInfo:@"绑定失败" popType:@"绑定弹窗" showType:@"toast"];
         NSString *errorMessage = nil;
         if (error.code == 6) {
             errorMessage = @"服务异常";
@@ -345,10 +345,10 @@ typedef NS_ENUM(NSUInteger, FHAccountBindingOperationWordType) {
 
 - (void)handleCancelBindingResult:(NSError *)error sender:(UISwitch *)sender {
     if (!error) {
-        [self thirdPartyBindTipsLog:!sender.isOn statusInfo:@"解绑成功" popType:@"解绑弹窗"];
+        [self thirdPartyBindTipsLog:!sender.isOn statusInfo:@"解绑成功" popType:@"解绑弹窗" showType:@"toast"];
         [[ToastManager manager] showToast:@"解绑成功"];
     } else {
-        [self thirdPartyBindTipsLog:!sender.isOn statusInfo:@"解绑失败" popType:@"解绑弹窗"];
+        [self thirdPartyBindTipsLog:!sender.isOn statusInfo:@"解绑失败" popType:@"解绑弹窗" showType:@"toast"];
         NSString *errorMessage = nil;
         if (error.code == 6) {
             errorMessage = @"服务异常";
@@ -378,15 +378,17 @@ typedef NS_ENUM(NSUInteger, FHAccountBindingOperationWordType) {
     TRACK_EVENT(@"third_party_bind", tracerDict);
 }
 
-- (void)thirdPartyBindTipsLog :(BOOL)isOn statusInfo:(NSString *)info popType:(NSString *)type {
+- (void)thirdPartyBindTipsLog:(BOOL)isOn statusInfo:(NSString *)info popType:(NSString *)type showType:(NSString *)showType {
     NSMutableDictionary *tracerDict = @{}.mutableCopy;
     tracerDict[@"status"] = isOn ? @"on":@"off";
     tracerDict[@"event_page"] = @"account_safe";
     tracerDict[@"event_type"] = @"show";
     tracerDict[@"event_belong"] = @"account";
-    tracerDict[@"show_type"] = @"toast";
+    tracerDict[@"show_type"] = showType;
     tracerDict[@"platform"] = @"aweme";
-    tracerDict[@"popup_type"] = type;
+    if ([showType isEqualToString:@"popup"]) {
+        tracerDict[@"popup_type"] = type;
+    }
     tracerDict[@"status_info"] = info;
     tracerDict[@"params_for_special"] = @"uc_login";
     TRACK_EVENT(@"third_party_bind_tips", tracerDict);
