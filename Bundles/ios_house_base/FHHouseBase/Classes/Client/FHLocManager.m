@@ -419,6 +419,8 @@ NSString * const kFHTopSwitchCityLocalKey = @"f_switch_city_top_time_local_key";
             
             if (location && [self isHaveLocationAuthorization] && locationInfo.location.coordinate.latitude != 0) {
                 wSelf.currentReGeocode = location;
+            }else{
+                location = nil;
             }
             
             if (locationInfo) {
