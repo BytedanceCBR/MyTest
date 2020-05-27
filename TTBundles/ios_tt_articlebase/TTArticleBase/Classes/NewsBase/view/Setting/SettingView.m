@@ -1252,13 +1252,20 @@ TTEditUserProfileViewControllerDelegate
 
 - (void)_showIPhoneActionSheetForClearCache
 {
-    UIActionSheet * sheet = [[UIActionSheet alloc] initWithTitle:NSLocalizedString(@"确定删除所有缓存？离线内容及图片均会被清除", nil)
-                                                        delegate:self
-                                               cancelButtonTitle:NSLocalizedString(@"取消", nil)
-                                          destructiveButtonTitle:nil
-                                               otherButtonTitles:NSLocalizedString(@"确定", nil), nil];
-    sheet.tag = kActionSheetForClearCacheTag;
-    [sheet showInView:self];
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"确定删除所有缓存？离线内容及图片均会被清除", nil) message:nil preferredStyle:UIAlertControllerStyleActionSheet];
+    
+    UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:NSLocalizedString(@"取消", nil) style:UIAlertActionStyleCancel handler:nil];
+    
+    WeakSelf;
+    UIAlertAction *confirmAction = [UIAlertAction actionWithTitle:NSLocalizedString(@"确定", nil) style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+        StrongSelf;
+        [self clearCache];
+    }];
+    
+    [alert addAction:cancelAction];
+    [alert addAction:confirmAction];
+
+    [self.viewController presentViewController:alert animated:YES completion:nil];
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
