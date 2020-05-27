@@ -17,13 +17,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FHHouseFillFormHelper : NSObject
 
-//+ (void)fillFormActionWithConfigModel:(FHHouseFillFormConfigModel *)configModel; // 填表单
-//+ (void)fillFormActionWithConfig:(NSDictionary *)config;
 typedef  void(^fillFormSubmitCallBack)();
-//+ (void)fillFormActionWithConfigModel:(FHHouseFillFormConfigModel *)configModel submitBlock:(fillFormSubmit)submitBlock;   // 填表单
-//+ (void)fillFormActionWithConfig:(NSDictionary *)config;
-//+ (void)fillOnlineFormActionWithConfigModel:(FHHouseFillFormConfigModel *)configModel; // 在线联系
-//+ (void)fillOnlineFormActionWithConfig:(NSDictionary *)config;
 
 #pragma mark - associate refactor
 + (void)fillFormActionWithAssociateReport:(NSDictionary *)associateReportDict;

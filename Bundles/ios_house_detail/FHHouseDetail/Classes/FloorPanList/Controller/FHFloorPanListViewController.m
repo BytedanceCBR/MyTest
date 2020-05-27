@@ -48,6 +48,8 @@
 
     _panListModel = [[FHFloorPanListViewModel alloc] initWithController:self tableView:self.floorListTable houseType:0 andSegementView:self.segmentedControl andItems:_floorList andCourtId:_courtId];
     
+    self.viewModel = self.panListModel; // IM线索使用，不可以删除
+    
     [self setNavBarTitle:@"户型列表"];
     
     [(FHDetailNavBar *)[self getNaviBar] removeBottomLine];
