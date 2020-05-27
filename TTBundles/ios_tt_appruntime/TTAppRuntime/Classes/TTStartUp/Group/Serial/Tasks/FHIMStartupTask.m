@@ -326,10 +326,15 @@ DEC_TASK("FHIMStartupTask",FHTaskTypeSerial,TASK_PRIORITY_HIGH+16);
 }
 - (BOOL)isEnableIMShortConnect {
     BOOL ret = NO;
-#if DEBUG
     BOOL isShortConnectEnable = [[NSUserDefaults standardUserDefaults] boolForKey:@"_IM_ShortConnection_Enable_"];
     ret = isShortConnectEnable;
-#endif
+    return ret;
+}
+
+- (BOOL)isFakeToken {
+    BOOL ret = NO;
+    BOOL isFakeToken = [[NSUserDefaults standardUserDefaults] boolForKey:@"_IM_Fake_Token_Enable_"];
+    ret = isFakeToken;
     return ret;
 }
 @end
