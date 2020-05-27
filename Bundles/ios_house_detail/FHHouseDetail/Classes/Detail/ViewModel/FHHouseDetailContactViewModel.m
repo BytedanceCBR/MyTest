@@ -537,6 +537,9 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
             //        if ([extraDict[@"source_from"] isEqualToString:@"loan"]) {
             //           imExtra[@"realtor_position"] = @"loan";
         }
+        if (extraDict[@"picture_type"]) {
+            imExtra[@"picture_type"] = extraDict[@"picture_type"];
+        }
     }
     [self.phoneCallViewModel imchatActionWithPhone:self.contactPhone realtorRank:@"0" extraDic:imExtra];
 }

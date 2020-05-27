@@ -753,7 +753,11 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
         }
     }
     NSNumber *num = self.pictureNumbers[titleIndex];
-    self.currentTypeName = self.pictureTitles[titleIndex];
+//    self.currentTypeName = self.pictureTitles[titleIndex];
+    if (titleIndex < self.mediaHeaderModel.houseImageDictList.count) {
+        FHHouseDetailImageListDataModel *listModel = self.mediaHeaderModel.houseImageDictList[titleIndex];
+        self.currentTypeName = listModel.houseImageTypeName;
+    }
     self.naviView.titleLabel.text = [NSString stringWithFormat:@"%d/%d",num.unsignedIntValue - currentTitleIndex + 1,num.unsignedIntValue];
 }
 
