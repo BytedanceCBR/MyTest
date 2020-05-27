@@ -98,13 +98,13 @@
         make.height.mas_equalTo(18);
         make.right.equalTo(self.contentView).offset(-30);
     }];
+    CGFloat rightMargin = 3 + (_isHomePage ? 20 : 12);
     [self.displayDescriptionLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(_maintitle);
         make.top.mas_equalTo(_maintitle.mas_bottom).offset(8);
-        make.right.mas_equalTo(-49);
+        make.right.mas_equalTo(-rightMargin);
         make.height.mas_equalTo(14);
     }];
-    CGFloat rightMargin = 3 + (_isHomePage ? 20 : 12);
     [self.unitPrice mas_makeConstraints:^(MASConstraintMaker *make) {
         make.bottom.mas_equalTo(-12);
         make.right.mas_equalTo(-rightMargin);
