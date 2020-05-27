@@ -12,6 +12,7 @@
 #import <TTBaseLib/UIViewAdditions.h>
 #import "FHHouseFillFormHelper.h"
 #import "FHUIAdaptation.h"
+#import <TTBaseLib/TTUIResponderHelper.h>
 
 @interface FHDetailSalesItemView: UIView
 
@@ -227,8 +228,9 @@
         //@"https://m.xflapp.com/magic/page/ejs/5ecb69c9d7ff73025f6ea4e0?appType=manyhouse";
         if([urlString hasPrefix:@"http://"] ||
            [urlString hasPrefix:@"https://"]) {
-            urlString = [NSString stringWithFormat:@"sslocal://webview?url=%@",urlString];
-
+            UIViewController *topController = [TTUIResponderHelper topViewControllerFor:self];
+            ssOpenWebView([NSURL URLWithString:urlString], @"", topController.navigationController, NO, nil);
+            return;
         }
         [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:urlString]];
         return;
