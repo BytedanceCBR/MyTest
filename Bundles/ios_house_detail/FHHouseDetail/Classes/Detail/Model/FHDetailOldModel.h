@@ -460,7 +460,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong , nullable) NSArray<FHDetailPriceTrendModel> *priceTrend;
 @property (nonatomic, strong , nullable) NSArray<FHHouseTagsModel> *tags;
 @property (nonatomic, strong , nullable) NSArray<FHImageModel> *houseImage;
-@property (nonatomic, strong , nullable) NSArray<FHDetailOldDataHouseImageDictListModel> *houseImageDictList;
+@property (nonatomic, strong , nullable) NSArray<FHHouseDetailImageListDataModel> *houseImageDictList;
 @property (nonatomic, strong , nullable) FHVideoHouseVideoModel *houseVideo ;
 @property (nonatomic, strong , nullable) FHDetailShareInfoModel *shareInfo ;
 @property (nonatomic, copy , nullable) NSString *uploadAt;

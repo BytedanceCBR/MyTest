@@ -140,174 +140,174 @@
 - (void)registerButtonClicked:(id)sender
 {
     // 本地检测不合法
-    if (![self isContentValid]) {
-        // 统计：找回密码输手机号页点下一步报错
-        TTASMSCodeScenarioType scenarioType = TTASMSCodeScenarioFindPassword;
-        if (self.state == TTAccountLoginQuickRetrieveStateNext) {
-            scenarioType = TTASMSCodeScenarioFindPassword;
-        } else if (self.state == TTAccountLoginQuickRetrieveStateSubmit) {
-            scenarioType = TTASMSCodeScenarioFindPasswordRetry;
-        }
-        
-        if (scenarioType == TTASMSCodeScenarioFindPassword) {
-            // LogV1
-            if (![TTTrackerWrapper isOnlyV3SendingEnable]) {
-                ttTrackEvent(@"register_new", @"find_password_next_error");
-            }
-            // LogV3
-            NSMutableDictionary *extraDict = [NSMutableDictionary dictionaryWithCapacity:2];
-            [extraDict setValue:self.source forKey:@"source"];
-            [extraDict setValue:@"error" forKey:@"return_value"];
-            [TTTrackerWrapper eventV3:@"login_find_password" params:extraDict isDoubleSending:YES];
-        } else if (scenarioType == TTASMSCodeScenarioFindPasswordRetry) {
-            // LogV1
-            if (![TTTrackerWrapper isOnlyV3SendingEnable]) {
-                ttTrackEvent(@"register_new", @"reset_password_next_error");
-            }
-            // LogV3
-            NSMutableDictionary *extraDict = [NSMutableDictionary dictionaryWithCapacity:2];
-            [extraDict setValue:self.source forKey:@"source"];
-            [extraDict setValue:@"error" forKey:@"return_value"];
-            [TTTrackerWrapper eventV3:@"login_reset_password" params:extraDict isDoubleSending:YES];
-        }
-        
-        if (self.state == TTAccountLoginQuickRetrieveStateNext) {
-            if (self.mobileInput.field.text.length == 0 || ![self validateMobileNumber:self.mobileInput.field.text]) {
-                [self.mobileInput showError];
-                return;
-            }
-        } else if (self.state == TTAccountLoginQuickRetrieveStateSubmit) {
-            if (self.captchaInput.field.text.length == 0) {
-                [self.captchaInput showError];
-                return;
-            }
-        }
-        [TTIndicatorView showWithIndicatorStyle:TTIndicatorViewStyleImage indicatorText:NSLocalizedString(@"信息填写不全", nil) indicatorImage:[UIImage themedImageNamed:@"close_popup_textpage.png"] autoDismiss:YES dismissHandler:nil];
-        return;
-    }
-    
-    if (self.state == TTAccountLoginQuickRetrieveStateNext) {
-        [self sendCode:TTASMSCodeScenarioFindPassword];
-    } else if(self.state == TTAccountLoginQuickRetrieveStateSubmit) {
-        [self changePassword];
-    }
+//    if (![self isContentValid]) {
+//        // 统计：找回密码输手机号页点下一步报错
+//        TTASMSCodeScenarioType scenarioType = TTASMSCodeScenarioFindPassword;
+//        if (self.state == TTAccountLoginQuickRetrieveStateNext) {
+//            scenarioType = TTASMSCodeScenarioFindPassword;
+//        } else if (self.state == TTAccountLoginQuickRetrieveStateSubmit) {
+//            scenarioType = TTASMSCodeScenarioFindPasswordRetry;
+//        }
+//
+//        if (scenarioType == TTASMSCodeScenarioFindPassword) {
+//            // LogV1
+//            if (![TTTrackerWrapper isOnlyV3SendingEnable]) {
+//                wrapperTrackEvent(@"register_new", @"find_password_next_error");
+//            }
+//            // LogV3
+//            NSMutableDictionary *extraDict = [NSMutableDictionary dictionaryWithCapacity:2];
+//            [extraDict setValue:self.source forKey:@"source"];
+//            [extraDict setValue:@"error" forKey:@"return_value"];
+//            [TTTrackerWrapper eventV3:@"login_find_password" params:extraDict isDoubleSending:YES];
+//        } else if (scenarioType == TTASMSCodeScenarioFindPasswordRetry) {
+//            // LogV1
+//            if (![TTTrackerWrapper isOnlyV3SendingEnable]) {
+//                wrapperTrackEvent(@"register_new", @"reset_password_next_error");
+//            }
+//            // LogV3
+//            NSMutableDictionary *extraDict = [NSMutableDictionary dictionaryWithCapacity:2];
+//            [extraDict setValue:self.source forKey:@"source"];
+//            [extraDict setValue:@"error" forKey:@"return_value"];
+//            [TTTrackerWrapper eventV3:@"login_reset_password" params:extraDict isDoubleSending:YES];
+//        }
+//
+//        if (self.state == TTAccountLoginQuickRetrieveStateNext) {
+//            if (self.mobileInput.field.text.length == 0 || ![self validateMobileNumber:self.mobileInput.field.text]) {
+//                [self.mobileInput showError];
+//                return;
+//            }
+//        } else if (self.state == TTAccountLoginQuickRetrieveStateSubmit) {
+//            if (self.captchaInput.field.text.length == 0) {
+//                [self.captchaInput showError];
+//                return;
+//            }
+//        }
+//        [TTIndicatorView showWithIndicatorStyle:TTIndicatorViewStyleImage indicatorText:NSLocalizedString(@"信息填写不全", nil) indicatorImage:[UIImage themedImageNamed:@"close_popup_textpage.png"] autoDismiss:YES dismissHandler:nil];
+//        return;
+//    }
+//
+//    if (self.state == TTAccountLoginQuickRetrieveStateNext) {
+//        [self sendCode:TTASMSCodeScenarioFindPassword];
+//    } else if(self.state == TTAccountLoginQuickRetrieveStateSubmit) {
+//        [self changePassword];
+//    }
 }
 
 - (void)sendCode:(TTASMSCodeScenarioType)scenarioType
 {
-    if(self.state == TTAccountLoginQuickRetrieveStateNext) {
-        self.phoneNumberString = self.mobileInput.field.text;
-    }
-    
-    [self showWaitingIndicator];
-    
-    __weak typeof(self) wself = self;
-    [TTAccount sendSMSCodeWithPhone:self.phoneNumberString captcha:self.captchaString SMSCodeType:scenarioType unbindExist:NO completion:^(NSNumber *retryTime, UIImage *captchaImage, NSError *error) {
-        
-        if (!error) {
-            if (scenarioType != TTASMSCodeScenarioFindPasswordRetry) {
-                //找回密码输手机号页顺利点下一步
-                // LogV1
-                if (![TTTrackerWrapper isOnlyV3SendingEnable]) {
-                    ttTrackEvent(@"register_new", @"find_password_next");
-                }
-                // LogV3
-                NSMutableDictionary *extraDict = [NSMutableDictionary dictionaryWithCapacity:2];
-                [extraDict setValue:@"confirm" forKey:@"action_type"];
-                [TTTrackerWrapper eventV3:@"login_find_password" params:extraDict isDoubleSending:YES];
-            }
-            
-            self.state = TTAccountLoginQuickRetrieveStateSubmit;
-            [self refreshSubviews];
-            [self layoutSubviews];
-            [self startTimer];
-            [wself dismissWaitingIndicatorWithText:NSLocalizedString(@"发送成功", nil)];
-            
-        } else {
-            
-            if (scenarioType != TTASMSCodeScenarioFindPasswordRetry) {
-                //找回密码输手机号页点下一步报错
-                // LogV1
-                if (![TTTrackerWrapper isOnlyV3SendingEnable]) {
-                    ttTrackEvent(@"register_new", @"find_password_next_error");
-                }
-                // LogV3
-                NSMutableDictionary *extraDict = [NSMutableDictionary dictionaryWithCapacity:2];
-                [extraDict setValue:self.source forKey:@"source"];
-                [extraDict setValue:@"error" forKey:@"return_value"];
-                [TTTrackerWrapper eventV3:@"login_find_password" params:extraDict isDoubleSending:YES];
-            }
-            
-            if (captchaImage) {
-                [wself dismissWaitingIndicator];
-                TTAccountCaptchaAlert *cAlert = [[TTAccountCaptchaAlert alloc] initWithTitle:@"请输入图片中的字符" captchaImage:captchaImage placeholder:nil cancelBtnTitle:@"取消" confirmBtnTitle:@"确定" animated:YES completion:^(TTAccountAlertCompletionEventType type, NSString * _Nullable captchaStr) {
-                    
-                    if (type == TTAccountAlertCompletionEventTypeDone) {
-                        wself.captchaString = captchaStr;
-                        [wself sendCode:scenarioType];
-                    } else {
-                        [wself dismissWaitingIndicator];
-                    }
-                }];
-                [cAlert showInView:wself.view];
-            } else {
-                [wself dismissWaitingIndicatorWithError:error];
-            }
-        }
-    }];
+//    if(self.state == TTAccountLoginQuickRetrieveStateNext) {
+//        self.phoneNumberString = self.mobileInput.field.text;
+//    }
+//
+//    [self showWaitingIndicator];
+//
+//    __weak typeof(self) wself = self;
+//    [TTAccount sendSMSCodeWithPhone:self.phoneNumberString captcha:self.captchaString SMSCodeType:scenarioType unbindExist:NO completion:^(NSNumber *retryTime, UIImage *captchaImage, NSError *error) {
+//
+//        if (!error) {
+//            if (scenarioType != TTASMSCodeScenarioFindPasswordRetry) {
+//                //找回密码输手机号页顺利点下一步
+//                // LogV1
+//                if (![TTTrackerWrapper isOnlyV3SendingEnable]) {
+//                    wrapperTrackEvent(@"register_new", @"find_password_next");
+//                }
+//                // LogV3
+//                NSMutableDictionary *extraDict = [NSMutableDictionary dictionaryWithCapacity:2];
+//                [extraDict setValue:@"confirm" forKey:@"action_type"];
+//                [TTTrackerWrapper eventV3:@"login_find_password" params:extraDict isDoubleSending:YES];
+//            }
+//
+//            self.state = TTAccountLoginQuickRetrieveStateSubmit;
+//            [self refreshSubviews];
+//            [self layoutSubviews];
+//            [self startTimer];
+//            [wself dismissWaitingIndicatorWithText:NSLocalizedString(@"发送成功", nil)];
+//
+//        } else {
+//
+//            if (scenarioType != TTASMSCodeScenarioFindPasswordRetry) {
+//                //找回密码输手机号页点下一步报错
+//                // LogV1
+//                if (![TTTrackerWrapper isOnlyV3SendingEnable]) {
+//                    wrapperTrackEvent(@"register_new", @"find_password_next_error");
+//                }
+//                // LogV3
+//                NSMutableDictionary *extraDict = [NSMutableDictionary dictionaryWithCapacity:2];
+//                [extraDict setValue:self.source forKey:@"source"];
+//                [extraDict setValue:@"error" forKey:@"return_value"];
+//                [TTTrackerWrapper eventV3:@"login_find_password" params:extraDict isDoubleSending:YES];
+//            }
+//
+//            if (captchaImage) {
+//                [wself dismissWaitingIndicator];
+//                TTAccountCaptchaAlert *cAlert = [[TTAccountCaptchaAlert alloc] initWithTitle:@"请输入图片中的字符" captchaImage:captchaImage placeholder:nil cancelBtnTitle:@"取消" confirmBtnTitle:@"确定" animated:YES completion:^(TTAccountAlertCompletionEventType type, NSString * _Nullable captchaStr) {
+//
+//                    if (type == TTAccountAlertCompletionEventTypeDone) {
+//                        wself.captchaString = captchaStr;
+//                        [wself sendCode:scenarioType];
+//                    } else {
+//                        [wself dismissWaitingIndicator];
+//                    }
+//                }];
+//                [cAlert showInView:wself.view];
+//            } else {
+//                [wself dismissWaitingIndicatorWithError:error];
+//            }
+//        }
+//    }];
 }
 
 - (void)changePassword
 {
-    [self showWaitingIndicator];
-    
-    __weak typeof(self) wself = self;
-    [TTAccount resetPasswordWithPhone:self.phoneNumberString SMSCode:self.mobileInput.field.text password:self.captchaInput.field.text captcha:self.captchaString completion:^(UIImage *captchaImage, NSError *error) {
-        
-        if (!error) {
-            // 重设密码页顺利点下一步
-            // LogV1
-            if (![TTTrackerWrapper isOnlyV3SendingEnable]) {
-                ttTrackEvent(@"register_new", @"reset_password_next");
-            }
-            // LogV3
-            NSMutableDictionary *extraDict = [NSMutableDictionary dictionaryWithCapacity:2];
-            [extraDict setValue:self.source forKey:@"source"];
-            [extraDict setValue:@"confirm" forKey:@"action_type"];
-            [TTTrackerWrapper eventV3:@"login_reset_password" params:extraDict isDoubleSending:YES];
-            
-            [self dismissWaitingIndicatorWithText:NSLocalizedString(@"修改成功", nil)];
-            [self dismissViewControllerAnimated:true completion:nil];
-            
-        } else {
-            // 重设密码页点下一步报错
-            // LogV1
-            if (![TTTrackerWrapper isOnlyV3SendingEnable]) {
-                ttTrackEvent(@"register_new", @"reset_password_next_error");
-            }
-            // LogV3
-            NSMutableDictionary *extraDict = [NSMutableDictionary dictionaryWithCapacity:2];
-            [extraDict setValue:self.source forKey:@"source"];
-            [extraDict setValue:@"error" forKey:@"return_value"];
-            [TTTrackerWrapper eventV3:@"login_reset_password" params:extraDict isDoubleSending:YES];
-            
-            if (captchaImage) {
-                [wself dismissWaitingIndicator];
-                TTAccountCaptchaAlert *cAlert = [[TTAccountCaptchaAlert alloc] initWithTitle:@"请输入图片中的字符" captchaImage:captchaImage placeholder:nil cancelBtnTitle:@"取消" confirmBtnTitle:@"确定" animated:YES completion:^(TTAccountAlertCompletionEventType type, NSString * _Nullable captchaStr) {
-                    
-                    if (type == TTAccountAlertCompletionEventTypeDone) {
-                        wself.captchaString = captchaStr;
-                        [wself changePassword];
-                    } else {
-                        [wself dismissWaitingIndicator];
-                    }
-                }];
-                [cAlert showInView:wself.view];
-            } else {
-                [wself dismissWaitingIndicatorWithError:error];
-            }
-        }
-    }];
+//    [self showWaitingIndicator];
+//
+//    __weak typeof(self) wself = self;
+//    [TTAccount resetPasswordWithPhone:self.phoneNumberString SMSCode:self.mobileInput.field.text password:self.captchaInput.field.text captcha:self.captchaString completion:^(UIImage *captchaImage, NSError *error) {
+//
+//        if (!error) {
+//            // 重设密码页顺利点下一步
+//            // LogV1
+//            if (![TTTrackerWrapper isOnlyV3SendingEnable]) {
+//                wrapperTrackEvent(@"register_new", @"reset_password_next");
+//            }
+//            // LogV3
+//            NSMutableDictionary *extraDict = [NSMutableDictionary dictionaryWithCapacity:2];
+//            [extraDict setValue:self.source forKey:@"source"];
+//            [extraDict setValue:@"confirm" forKey:@"action_type"];
+//            [TTTrackerWrapper eventV3:@"login_reset_password" params:extraDict isDoubleSending:YES];
+//
+//            [self dismissWaitingIndicatorWithText:NSLocalizedString(@"修改成功", nil)];
+//            [self dismissViewControllerAnimated:true completion:nil];
+//
+//        } else {
+//            // 重设密码页点下一步报错
+//            // LogV1
+//            if (![TTTrackerWrapper isOnlyV3SendingEnable]) {
+//                wrapperTrackEvent(@"register_new", @"reset_password_next_error");
+//            }
+//            // LogV3
+//            NSMutableDictionary *extraDict = [NSMutableDictionary dictionaryWithCapacity:2];
+//            [extraDict setValue:self.source forKey:@"source"];
+//            [extraDict setValue:@"error" forKey:@"return_value"];
+//            [TTTrackerWrapper eventV3:@"login_reset_password" params:extraDict isDoubleSending:YES];
+//
+//            if (captchaImage) {
+//                [wself dismissWaitingIndicator];
+//                TTAccountCaptchaAlert *cAlert = [[TTAccountCaptchaAlert alloc] initWithTitle:@"请输入图片中的字符" captchaImage:captchaImage placeholder:nil cancelBtnTitle:@"取消" confirmBtnTitle:@"确定" animated:YES completion:^(TTAccountAlertCompletionEventType type, NSString * _Nullable captchaStr) {
+//
+//                    if (type == TTAccountAlertCompletionEventTypeDone) {
+//                        wself.captchaString = captchaStr;
+//                        [wself changePassword];
+//                    } else {
+//                        [wself dismissWaitingIndicator];
+//                    }
+//                }];
+//                [cAlert showInView:wself.view];
+//            } else {
+//                [wself dismissWaitingIndicatorWithError:error];
+//            }
+//        }
+//    }];
 }
 
 - (void)leftItemClicked
@@ -328,18 +328,18 @@
 
 - (void)resendButtonClicked:(id)sender
 {
-    // 重设密码页点重发验证码
-    // LogV1
-    if (![TTTrackerWrapper isOnlyV3SendingEnable]) {
-        ttTrackEvent(@"register_new", @"reset_password_retry");
-    }
-    // LogV3
-    NSMutableDictionary *extraDict = [NSMutableDictionary dictionaryWithCapacity:2];
-    [extraDict setValue:self.source forKey:@"source"];
-    [extraDict setValue:@"retry" forKey:@"action_type"];
-    [TTTrackerWrapper eventV3:@"login_reset_password" params:extraDict isDoubleSending:YES];
-    
-    [self sendCode:TTASMSCodeScenarioFindPasswordRetry];
+//    // 重设密码页点重发验证码
+//    // LogV1
+//    if (![TTTrackerWrapper isOnlyV3SendingEnable]) {
+//        wrapperTrackEvent(@"register_new", @"reset_password_retry");
+//    }
+//    // LogV3
+//    NSMutableDictionary *extraDict = [NSMutableDictionary dictionaryWithCapacity:2];
+//    [extraDict setValue:self.source forKey:@"source"];
+//    [extraDict setValue:@"retry" forKey:@"action_type"];
+//    [TTTrackerWrapper eventV3:@"login_reset_password" params:extraDict isDoubleSending:YES];
+//    
+//    [self sendCode:TTASMSCodeScenarioFindPasswordRetry];
 }
 
 #pragma mark - UITextFieldDelegate

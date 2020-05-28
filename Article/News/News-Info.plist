@@ -82,6 +82,16 @@
 				<string>snssdk1370bdd20</string>
 			</array>
 		</dict>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLName</key>
+			<string>douyin</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>awua3q1k3j4ymeii</string>
+			</array>
+		</dict>
 	</array>
 	<key>CFBundleVersion</key>
 	<string>$(CURRENT_PROJECT_VERSION)</string>
@@ -171,6 +181,8 @@
 		<string>awemesso</string>
 		<string>snssdk147</string>
 		<string>youmischeme</string>
+		<string>douyinv1opensdk</string>
+		<string>douyinopensdk</string>
 	</array>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
@@ -242,6 +254,6 @@
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
 	<key>UPDATE_VERSION_CODE</key>
-	<string>69801</string>
+	<string>69901</string>
 </dict>
 </plist>

@@ -14,7 +14,8 @@
 #import <FHCommonUI/ToastManager.h>
 #import "TTReachability.h"
 #import "TTAccount.h"
-#import "TTTracker.h"
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
+
 #import <FHHouseBase/FHUserTracker.h>
 #import <FHHouseBase/FHGeneralBizConfig.h>
 #import <FHHouseBase/FHEnvContext.h>

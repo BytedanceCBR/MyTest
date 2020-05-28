@@ -18,7 +18,7 @@
 #import <BDWebImage/BDWebImageManager.h>
 #import <FHHouseBase/FHUserTrackerDefine.h>
 #import <FHHouseBase/FHBaseCollectionView.h>
-#import "FHDeatilHeaderTitleView.h"
+#import "FHDetailHeaderTitleView.h"
 
 #define K_CELLID @"cell_id"
 
@@ -31,7 +31,7 @@
 @interface FHOldDetailPhotoHeaderCell ()<UICollectionViewDelegate,UICollectionViewDataSource, TTPhotoScrollViewControllerDelegate>
 @property(nonatomic , strong) UICollectionView *colletionView;
 @property(nonatomic , strong) NSArray<FHDetailPhotoHeaderModelProtocol> *images;
-@property(nonatomic, strong) FHDeatilHeaderTitleView *titleView;
+@property(nonatomic, strong) FHDetailHeaderTitleView *titleView;
 @property(nonatomic , strong) UILabel *infoLabel;
 @property(nonatomic , strong) UIImage *placeHolder;
 @property(nonatomic , strong) UIImageView *noDataImageView;
@@ -131,7 +131,7 @@
         [self.contentView addSubview:_noDataImageView];
         _noDataImageView.hidden = YES;
         
-        _titleView = [[FHDeatilHeaderTitleView alloc]init];
+        _titleView = [[FHDetailHeaderTitleView alloc]init];
         [self.contentView addSubview:_titleView];
         
         

@@ -20,7 +20,8 @@
 #import "IMConsDefine.h"
 #import "FHErrorView.h"
 #import "IFHMyFavoriteController.h"
-#import "TTTracker.h"
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
+
 #import <FHHouseBase/FHBaseTableView.h>
 
 @interface FHIMFavoriteViewController : NSObject<IFHMyFavoriteController>
@@ -377,7 +378,7 @@
     trace[@"conversation_id"] = self.shareViewModel.conversactionId ? : @"";
     trace[@"log_pb"] = @"be_null";
     trace[@"send_total"] = @([self.shareViewModel.selectedItems count]);
-    [TTTracker eventV3:@"click_send" params:trace];
+    [BDTrackerProtocol eventV3:@"click_send" params:trace];
 }
 
 -(NSString*)houseTypeByIndex:(NSUInteger)index {

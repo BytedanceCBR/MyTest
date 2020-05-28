@@ -10,7 +10,7 @@
 #import "TTRStaticPlugin.h"
 #import <FHHouseDetail/FHHouseDetailPhoneCallViewModel.h>
 #import "TTRoute.h"
-#import <TTTracker/TTTracker.h>
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 #import "FHUserTracker.h"
 #import "NetworkUtilities.h"
 #import <FHHouseBase/FHHousePhoneCallUtils.h>

@@ -322,7 +322,7 @@ static CGFloat const rewardLabelLeftInset = 9;
             [dict setValue:@"detail_mid" forKey:@"position"];
      
             if (type == WDDiggButtonClickTypeDigg) {
-                [TTTracker eventV3:@"rt_like" params:[dict copy]];
+                [BDTrackerProtocol eventV3:@"rt_like" params:[dict copy]];
 
                 self.detailModel.answerEntity.diggCount = @([self.detailModel.answerEntity.diggCount longLongValue] + 1);
                 self.detailModel.answerEntity.isDigg = YES;
@@ -333,7 +333,7 @@ static CGFloat const rewardLabelLeftInset = 9;
                                      finishBlock:nil];
 //                [[NSNotificationCenter defaultCenter] postNotificationName:@"TTAppStoreStarManagerShowNotice" object:nil userInfo:@{@"trigger":@"like"}];
             } else {
-                [TTTracker eventV3:@"rt_unlike" params:[dict copy]];
+                [BDTrackerProtocol eventV3:@"rt_unlike" params:[dict copy]];
 
                 self.digButton.selected = NO;
                 self.detailModel.answerEntity.diggCount = (self.detailModel.answerEntity.diggCount.longLongValue >= 1) ? @(self.detailModel.answerEntity.diggCount.longLongValue - 1) : @0;

@@ -143,7 +143,7 @@
         [traceParams addEntriesFromDictionary:self.extraDic];
     }
     
-    [TTTracker eventV3:@"video_over" params:traceParams];
+    [BDTrackerProtocol eventV3:@"video_over" params:traceParams];
 }
 
 

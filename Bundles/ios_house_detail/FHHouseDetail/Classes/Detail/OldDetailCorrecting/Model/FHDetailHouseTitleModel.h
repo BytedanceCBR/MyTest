@@ -23,6 +23,11 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign) BOOL isFloorPan;
 @property (nonatomic, copy) NSString *Picing;
 @property (nonatomic, copy) NSString *displayPrice;
+
+//099 户型详情查看大图补充内容
+@property (nonatomic, copy) NSString *squaremeter; //面积
+@property (nonatomic, copy) NSString *facingDirection; //朝向
+@property (nonatomic, copy) NSString *saleStatus;//售卖状态
 @end
 
 NS_ASSUME_NONNULL_END

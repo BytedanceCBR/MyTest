@@ -104,7 +104,7 @@ static TTCategoryStayTrackManager * manager;
     if (!isEmptyString(_enterType)) {
         [dict setValue:_enterType forKey:@"enter_type"];
     }
-    [TTTracker eventV3:@"stay_category" params:dict isDoubleSending:NO];
+    [BDTrackerProtocol eventV3:@"stay_category" params:dict isDoubleSending:NO];
 
     self.lastTrackingCategoryID = _trackingCategoryID;
     /* //lite 频道切换埋点代码
@@ -140,7 +140,7 @@ static TTCategoryStayTrackManager * manager;
         }
     
         if (![TTTrackerWrapper isOnlyV3SendingEnable]) {
-            [TTTracker eventData:dict];
+            [BDTrackerProtocol eventData:dict];
         }
     } else {
         //NSLog(@"~~~~~~~~~~~~~~~~~~ignore, %f less than %f", stayTime, [self ignoreMinTime]);

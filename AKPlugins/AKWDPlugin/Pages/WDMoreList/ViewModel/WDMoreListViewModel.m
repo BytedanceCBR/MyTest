@@ -267,7 +267,7 @@ NSString * const kWDWendaMoreListViewControllerUMEventName = @"question";
     [dictionary setValue:@"umeng" forKey:@"category"];
     [dictionary setValue:event forKey:@"tag"];
     [dictionary setValue:label forKey:@"label"];
-    [TTTracker eventData:dictionary];
+    [BDTrackerProtocol eventData:dictionary];
 }
 
 @end

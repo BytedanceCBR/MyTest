@@ -48,7 +48,7 @@
 #import "ExploreMomentDefine.h"
 #import <TTArticleBase/SSCommonLogic.h>
 #import <TTPlatformBaseLib/TTTrackerWrapper.h>
-#import <TTTracker/TTTracker.h>
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 #import <TTBaseLib/UIImageAdditions.h>
 #import <TTMonitor/TTMonitor.h>
 #import <TTBaseLib/TTUIResponderHelper.h>
@@ -600,7 +600,7 @@ SYNTHESE_CATEGORY_PROPERTY_STRONG(shareManager, setShareManager, TTShareManager 
     }
 
     [dict setValue:[[self class] sharePlatformByRequestType: itemType] forKey:@"share_platform"];
-    [TTTracker eventV3:@"rt_share_to_platform" params:[dict copy]];
+    [BDTrackerProtocol eventV3:@"rt_share_to_platform" params:[dict copy]];
 }
 
 + (NSString*)sharePlatformByRequestType:(TTActivityType) activityType {

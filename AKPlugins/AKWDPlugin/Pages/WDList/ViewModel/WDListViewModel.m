@@ -196,7 +196,7 @@ NSString * const kWDWendaListViewControllerUMEventName = @"question";
     [dict setValue:@"umeng" forKey:@"category"];
     [dict setValue:@"question" forKey:@"tag"];
     [dict setValue:@"report" forKey:@"label"];
-    [TTTracker eventData:dict];
+    [BDTrackerProtocol eventData:dict];
 }
 
 - (void)requestFinishBlock:(WDWendaListManagerFinishBlock)finishBlock
@@ -559,7 +559,7 @@ NSString * const kWDWendaListViewControllerUMEventName = @"question";
     [dictionary setValue:@"umeng" forKey:@"category"];
     [dictionary setValue:event forKey:@"tag"];
     [dictionary setValue:label forKey:@"label"];
-    [TTTracker eventData:dictionary];
+    [BDTrackerProtocol eventData:dictionary];
 }
 
 @end

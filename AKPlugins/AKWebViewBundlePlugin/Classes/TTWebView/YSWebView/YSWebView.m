@@ -6,7 +6,7 @@
 //
 
 #import "YSWebView.h"
-#import <TTNetBusiness/TTHttpsControlManager.h>
+//#import <TTNetBusiness/TTHttpsControlManager.h>
 #import "TTMonitor.h"
 #import "WKNavigation+TTAdditions.h"
 #import "TTURLUtils.h"
@@ -273,7 +273,7 @@ YSWebViewNavigationType mapUIWebViewNavigationTypeToYSWebViewNavigationType(UIWe
     BOOL isHttpsRequest = [self _isHttpsURL:self.origRequest.URL];
     
     if (shouldTransfered && [[[NSUserDefaults standardUserDefaults] objectForKey:@"SSCommonLogicSettingWebViewHttpsSwitchKey"] boolValue] && !hasTransferedHttps && !isHttpsRequest) {
-        realRequest = [NSURLRequest requestWithURL:[[TTHttpsControlManager sharedInstance_tt] transferedURLFrom:realRequest.URL]];
+//        realRequest = [NSURLRequest requestWithURL:[[TTHttpsControlManager sharedInstance_tt] transferedURLFrom:realRequest.URL]];
         if ([self _isHttpsURL:realRequest.URL]) { //transfer成功后再打标
             realRequest = [self _markHadTransferIfNeed:realRequest];
         }
@@ -407,14 +407,14 @@ YSWebViewNavigationType mapUIWebViewNavigationTypeToYSWebViewNavigationType(UIWe
         return;
     }
     
-    TTHttpRequest *ttHttpRequest = [[TTHttpRequest alloc] init];
-    ttHttpRequest.URL = self.request.URL;
-    ttHttpRequest.allHTTPHeaderFields = self.request.allHTTPHeaderFields;
-    ttHttpRequest.timeoutInterval = self.request.timeoutInterval;
-    ttHttpRequest.HTTPBody = self.request.HTTPBody;
-    ttHttpRequest.HTTPMethod = self.request.HTTPMethod;
+//    TTHttpRequest *ttHttpRequest = [[TTHttpRequest alloc] init];
+//    ttHttpRequest.URL = self.request.URL;
+//    ttHttpRequest.allHTTPHeaderFields = self.request.allHTTPHeaderFields;
+//    ttHttpRequest.timeoutInterval = self.request.timeoutInterval;
+//    ttHttpRequest.HTTPBody = self.request.HTTPBody;
+//    ttHttpRequest.HTTPMethod = self.request.HTTPMethod;
     
-    BOOL isHttpsFailed = [[TTHttpsControlManager sharedInstance_tt] checkHTTPsFailedWithURLResponse:nil responseError:error trackInfoList:nil forRequest:ttHttpRequest];
+    BOOL isHttpsFailed = NO;// [[TTHttpsControlManager sharedInstance_tt] checkHTTPsFailedWithURLResponse:nil responseError:error trackInfoList:nil forRequest:ttHttpRequest];
     if (!isHttpsFailed) {
         return;
     }

@@ -29,7 +29,8 @@
 #import "TTRoute.h"
 #import "ToastManager.h"
 #import "IMManager.h"
-#import "TTTracker.h"
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
+
 #import <FHHouseBase/FHUserTracker.h>
 #import "FHEnvContext.h"
 #import "FHMessageManager.h"
@@ -319,7 +320,7 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
     [params setValue:[_tracerDict objectForKey:@"origin_search_id"] forKey:@"origin_search_id"];
     [params setValue:[_tracerDict objectForKey:@"log_pb"] forKey:@"log_pb"];
     [params setValue: [[FHEnvContext sharedInstance].messageManager getTotalUnreadMessageCount] >0?@"1":@"0" forKey:@"with_tips"];
-    [TTTracker eventV3:@"click_im_message" params:params];
+    [BDTrackerProtocol eventV3:@"click_im_message" params:params];
     
     
     NSString *messageSchema = @"sslocal://message_conversation_list";
@@ -435,7 +436,7 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
         [params setValue:[_tracerDict objectForKey:@"origin_search_id"] forKey:@"origin_search_id"];
         [params setValue:[_tracerDict objectForKey:@"log_pb"] forKey:@"log_pb"];
         params[@"enter_from"] = _tracerDict[@"enter_from"];
-        [TTTracker eventV3:@"element_show" params:params];
+        [BDTrackerProtocol eventV3:@"element_show" params:params];
     }
 }
 
@@ -537,6 +538,9 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
             //        if ([extraDict[@"source_from"] isEqualToString:@"loan"]) {
             //           imExtra[@"realtor_position"] = @"loan";
         }
+        if (extraDict[@"picture_type"]) {
+            imExtra[@"picture_type"] = extraDict[@"picture_type"];
+        }
     }
     [self.phoneCallViewModel imchatActionWithPhone:self.contactPhone realtorRank:@"0" extraDic:imExtra];
 }
@@ -548,11 +552,9 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
     NSDictionary *associateInfoDict = associatePhone.associateInfo;
     NSDictionary *reportParamsDict = associatePhone.reportParams;
     // 圈子电话咨询数据备份
-    // todo zjing test
     self.socialContactConfig = nil;
     if (associatePhone.houseType == FHHouseTypeNewHouse) {
         // 拨打电话 弹窗显示的话 本数据保留，否则 删除 nil
-        // todo zjing test
         self.socialContactConfig = [[FHAssociatePhoneModel alloc]init];
         
         self.socialContactConfig.houseType = associatePhone.houseType;
@@ -566,7 +568,6 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
         if(success && [wself.phoneCallViewModel.belongsVC isKindOfClass:[FHHouseDetailViewController class]]){
             FHHouseDetailViewController *vc = (FHHouseDetailViewController *)wself.phoneCallViewModel.belongsVC;
             vc.isPhoneCallShow = YES;
-            // todo zjing test
             vc.phoneCallRealtorId = realtorId;
             
             vc.phoneCallRequestId = virtualPhoneNumberModel.requestId;
@@ -574,7 +575,6 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
             wself.socialContactConfig = nil;
         }
     }];
-    // todo zjing test
     FHHouseFollowUpConfigModel *configModel = [[FHHouseFollowUpConfigModel alloc]initWithDictionary:reportParamsDict error:nil];
     configModel.houseType = associatePhone.houseType;
     configModel.followId = associatePhone.houseId;

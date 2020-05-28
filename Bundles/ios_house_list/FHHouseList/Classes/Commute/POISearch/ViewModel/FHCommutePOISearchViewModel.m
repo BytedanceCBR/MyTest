@@ -83,7 +83,7 @@
         _searchAPI.delegate = self;
         //
         NSString *selectCityName = [FHEnvContext getCurrentUserDeaultCityNameFromLocal];
-        _currentReGeocode =  [FHLocManager sharedInstance].currentReGeocode;
+        _currentReGeocode =  [FHLocManager sharedInstance].currentAmpReGeocode;
         
         if ([FHEnvContext isSameLocCityToUserSelect] && _currentReGeocode.city &&([_currentReGeocode.city hasPrefix:selectCityName] || [selectCityName hasPrefix:_currentReGeocode.city])) {
             //定位地和选择地是同一城市才选择
@@ -673,7 +673,7 @@
         //有网络了，重新请求
         if (self.aroundPois.count == 0) {
             NSString *selectCityName = [FHEnvContext getCurrentUserDeaultCityNameFromLocal];
-            _currentReGeocode =  [FHLocManager sharedInstance].currentReGeocode;
+            _currentReGeocode =  [FHLocManager sharedInstance].currentAmpReGeocode;
             if ([FHEnvContext isSameLocCityToUserSelect] && _currentReGeocode &&([_currentReGeocode.city hasPrefix:selectCityName] || [selectCityName hasPrefix:_currentReGeocode.city])) {
                 [self nearBySearch:YES];
             }            

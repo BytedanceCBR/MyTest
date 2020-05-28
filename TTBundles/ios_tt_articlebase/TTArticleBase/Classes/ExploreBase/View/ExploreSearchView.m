@@ -33,7 +33,8 @@
 #import "TTURLUtils.h"
 #import "TTNavigationController.h"
 #import "TTNetworkHelper.h"
-#import "TTTracker.h"
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
+
 #import "TTCustomAnimationDelegate.h"
 #import <TTSettingsManager/TTSettingsManager.h>
 #import "TTTopBar.h"
