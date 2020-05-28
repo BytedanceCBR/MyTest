@@ -312,6 +312,7 @@
                 break;
             case 6:
                 pItemModel.propertyValue = [self checkPValueStr:model.data.buyFieldTime];
+                pItemModel.propertyValue = @"";
                 break;
             case 7:
                 pItemModel.propertyValue = [self checkPValueStr:model.data.plannedBuilding];
@@ -323,7 +324,9 @@
             default:
                 break;
         }
-        [pItemsArray addObject:pItemModel];
+        if (pItemModel.propertyValue.length) {
+            [pItemsArray addObject:pItemModel];
+        }
     }
     companyInfoModel.list = pItemsArray;
     
