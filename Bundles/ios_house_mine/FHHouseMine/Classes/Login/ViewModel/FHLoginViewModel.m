@@ -1192,9 +1192,13 @@ static FHLoginSharedModel *_sharedModel = nil;
         errorMessage = [FHMineAPI errorMessageByErrorCode:error];
     }
     [[ToastManager manager] showToast:errorMessage];
-    if (error.code == TTAccountErrCodeSMSCodeError && self.clearVerifyCodeWhenError) {
-        //验证码错误
-        self.clearVerifyCodeWhenError();
+    if (error.code == TTAccountErrCodeSMSCodeError || error.code == TTAccountErrCodeSMSCodeExpired ||
+        error.code == TTAccountErrCodeSMSCodeTypeError ||
+        error.code == TTAccountErrCodeSMSCodeFreqError) {
+        if (self.clearVerifyCodeWhenError) {
+            //验证码错误，清空输入框
+            self.clearVerifyCodeWhenError();
+        }
     }
 }
 
