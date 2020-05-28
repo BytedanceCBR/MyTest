@@ -84,10 +84,14 @@
     if (![data isKindOfClass:[FHFeedUGCCellModel class]]) {
         return;
     }
-    self.currentData = data;
     
     FHFeedUGCCellModel *cellModel = (FHFeedUGCCellModel *)data;
-    self.cellModel = cellModel;
+    
+    if(self.currentData == data && !cellModel.ischanged){
+        return;
+    }
+    self.currentData = data;
+    self.cellModel= cellModel;
     //图片
     FHFeedContentImageListModel *imageModel = [cellModel.imageList firstObject];
     if(imageModel){

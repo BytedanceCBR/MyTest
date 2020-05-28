@@ -89,10 +89,13 @@
     if (![data isKindOfClass:[FHFeedUGCCellModel class]]) {
         return;
     }
-    self.currentData = data;
-    
     FHFeedUGCCellModel *cellModel = (FHFeedUGCCellModel *)data;
-    self.cellModel = cellModel;
+    
+    if(self.currentData == data && !cellModel.ischanged){
+        return;
+    }
+    self.currentData = data;
+    self.cellModel= cellModel;
     //内容
     self.contentLabel.numberOfLines = cellModel.numberOfLines;
     if(isEmptyString(cellModel.title)){
