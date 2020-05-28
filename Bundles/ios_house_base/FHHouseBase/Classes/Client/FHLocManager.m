@@ -30,6 +30,7 @@
 
 #import <BDUGLocationKit/BDUGAmapGeocoder.h>
 #import <BDUGLocationKit/BDUGLocationManager.h>
+#import <BDUGLocationKit/BDUGAmapAdapter.h>
 
 NSString * const kFHAllConfigLoadSuccessNotice = @"FHAllConfigLoadSuccessNotice"; //通知名称
 NSString * const kFHAllConfigLoadErrorNotice = @"FHAllConfigLoadErrorNotice"; //通知名称
@@ -100,9 +101,9 @@ NSString * const kFHTopSwitchCityLocalKey = @"f_switch_city_top_time_local_key";
 }
 
 - (void)saveCurrentLocationData {
-    if (self.currentReGeocode) {
-        [self.locationCache setObject:self.currentReGeocode forKey:@"fh_currentReGeocode"];
-    }
+//    if (self.currentReGeocode) {
+//        [self.locationCache setObject:self.currentReGeocode forKey:@"fh_currentReGeocode"];
+//    }
     if (self.currentLocaton) {
         [self.locationCache setObject:self.currentLocaton forKey:@"fh_currentLocaton"];
     }
@@ -344,7 +345,7 @@ NSString * const kFHTopSwitchCityLocalKey = @"f_switch_city_top_time_local_key";
         [self configLocationManager];
     
         __weak typeof(self) wSelf = self;
-        [[BDUGLocationManager sharedManager] requestLocationWithDesiredAccuracy:BDUGLocationAccuracyHundredMeters geocoders:@[[BDUGAmapGeocoder sharedGeocoder]] timeout:4 completion:^(BDUGLocationInfo * _Nullable locationInfo, NSError * _Nullable error) {
+        [[BDUGLocationManager sharedManager] requestLocationWithDesiredAccuracy:BDUGLocationAccuracyBest geocoders:@[[BDUGAmapGeocoder sharedGeocoder]] timeout:4 completion:^(BDUGLocationInfo * _Nullable locationInfo, NSError * _Nullable error) {
                     
             BDUGBasePlacemark *location = locationInfo.placeMark;
             
@@ -432,7 +433,10 @@ NSString * const kFHTopSwitchCityLocalKey = @"f_switch_city_top_time_local_key";
             }
             
             if (locationInfo) {
-                wSelf.currentLocaton = [[CLLocation alloc] initWithLatitude:locationInfo.location.coordinate.latitude longitude:locationInfo.location.coordinate.longitude];
+                
+                CLLocationCoordinate2D gcjLoc = [BDUGAmapAdapter convertWGSCoordinateToGCJ:locationInfo.location.coordinate];
+                
+                wSelf.currentLocaton = [[CLLocation alloc] initWithLatitude:gcjLoc.latitude longitude:gcjLoc.longitude];
             }
         
         // 存储当前定位信息
