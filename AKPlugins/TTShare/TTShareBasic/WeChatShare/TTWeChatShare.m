@@ -50,7 +50,7 @@ static NSString *wechatShareAppID = nil;
 + (void)registerWechatShareIDIfNeeded {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        [WXApi registerApp:wechatShareAppID universalLink:@" https://i.haoduofangs.com/"];
+        [WXApi registerApp:wechatShareAppID universalLink:@"https://i.haoduofangs.com/"];
     });
 }
 

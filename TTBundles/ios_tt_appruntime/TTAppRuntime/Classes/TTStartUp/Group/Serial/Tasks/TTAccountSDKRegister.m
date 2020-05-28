@@ -154,6 +154,7 @@ DEC_TASK("TTAccountSDKRegister",FHTaskTypeSerial,TASK_PRIORITY_HIGH+5);
     TTAccountPlatformConfiguration *wechatConf = [TTAccountPlatformConfiguration new];
     wechatConf.platformType = TTAccountAuthTypeWeChat;
     wechatConf.consumerKey  = WXAppID;
+    wechatConf.universalLink = @"https://i.haoduofangs.com/";
     wechatConf.platformName = PLATFORM_WEIXIN;
 //#ifdef INHOUSE
     if ([TTSandBoxHelper isInHouseApp]) {
