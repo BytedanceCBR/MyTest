@@ -258,16 +258,22 @@ static NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
                   [indexArr addObject:tarIndexPath];
                 }
                 
-                @try {
-                    [self.tableView beginUpdates];
-                    [self.tableView insertRowsAtIndexPaths:indexArr withRowAnimation:UITableViewRowAnimationBottom];
-                    [self.tableView endUpdates];
-                } @catch (NSException *exception) {
-                    [self.tableView reloadData];
-                }
-                           
-                [[FHHouseSimilarManager sharedInstance] resetSimilarArray];
+                NSDictionary *fhSettings= [[TTSettingsManager sharedManager] settingForKey:@"f_settings" defaultValue:@{} freeze:YES];
+                BOOL similarReloadEnable = [fhSettings tt_boolValueForKey:@"f_home_similar_reload_enable"];
                 
+                if (similarReloadEnable) {
+                   [self.tableView reloadData];
+                }else{
+                    if (([self.tableView numberOfRowsInSection:1] + indexArr.count) == self.houseDataItemsModel.count) {
+                        [self.tableView beginUpdates];
+                        [self.tableView insertRowsAtIndexPaths:indexArr withRowAnimation:UITableViewRowAnimationBottom];
+                        [self.tableView endUpdates];
+                    }else{
+                        [self.houseDataItemsModel removeObjectsInArray:similarItems];
+                        [self.tableView reloadData];
+                   }
+               }
+                [[FHHouseSimilarManager sharedInstance] resetSimilarArray];
                 [FHEnvContext recordEvent:self.similarTraceParam andEventKey:@"house_recallable"];
             }
         }
