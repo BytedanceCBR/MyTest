@@ -259,8 +259,12 @@ static NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
                   [indexArr addObject:tarIndexPath];
                 }
                 
-                [self.tableView insertRowsAtIndexPaths:indexArr withRowAnimation:UITableViewRowAnimationBottom];
-                
+                @try {
+                  [self.tableView insertRowsAtIndexPaths:indexArr withRowAnimation:UITableViewRowAnimationBottom];
+                } @catch (NSException *exception) {
+                    [self.tableView reloadData];
+                }
+                           
                 [[FHHouseSimilarManager sharedInstance] resetSimilarArray];
                 
                 [FHEnvContext recordEvent:self.similarTraceParam andEventKey:@"house_recallable"];
