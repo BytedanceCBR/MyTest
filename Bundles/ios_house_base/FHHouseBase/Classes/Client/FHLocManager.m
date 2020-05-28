@@ -30,6 +30,7 @@
 
 #import <BDUGLocationKit/BDUGAmapGeocoder.h>
 #import <BDUGLocationKit/BDUGLocationManager.h>
+#import <BDUGLocationKit/BDUGAmapAdapter.h>
 
 NSString * const kFHAllConfigLoadSuccessNotice = @"FHAllConfigLoadSuccessNotice"; //通知名称
 NSString * const kFHAllConfigLoadErrorNotice = @"FHAllConfigLoadErrorNotice"; //通知名称
@@ -100,9 +101,9 @@ NSString * const kFHTopSwitchCityLocalKey = @"f_switch_city_top_time_local_key";
 }
 
 - (void)saveCurrentLocationData {
-    if (self.currentReGeocode) {
-        [self.locationCache setObject:self.currentReGeocode forKey:@"fh_currentReGeocode"];
-    }
+//    if (self.currentReGeocode) {
+//        [self.locationCache setObject:self.currentReGeocode forKey:@"fh_currentReGeocode"];
+//    }
     if (self.currentLocaton) {
         [self.locationCache setObject:self.currentLocaton forKey:@"fh_currentLocaton"];
     }
@@ -344,7 +345,7 @@ NSString * const kFHTopSwitchCityLocalKey = @"f_switch_city_top_time_local_key";
         [self configLocationManager];
     
         __weak typeof(self) wSelf = self;
-        [[BDUGLocationManager sharedManager] requestLocationWithDesiredAccuracy:BDUGLocationAccuracyHundredMeters geocoders:@[[BDUGAmapGeocoder sharedGeocoder]] timeout:4 completion:^(BDUGLocationInfo * _Nullable locationInfo, NSError * _Nullable error) {
+        [[BDUGLocationManager sharedManager] requestLocationWithDesiredAccuracy:BDUGLocationAccuracyBest geocoders:@[[BDUGAmapGeocoder sharedGeocoder]] timeout:4 completion:^(BDUGLocationInfo * _Nullable locationInfo, NSError * _Nullable error) {
                     
             BDUGBasePlacemark *location = locationInfo.placeMark;
             
@@ -356,6 +357,9 @@ NSString * const kFHTopSwitchCityLocalKey = @"f_switch_city_top_time_local_key";
             if (!error && location.city && location.aoiList.count > 0) {
                 AMapLocationReGeocode *locationAmap = [AMapLocationReGeocode new];
                 locationAmap.city = location.city;
+                locationAmap.province = location.administrativeArea;
+                locationAmap.citycode = location.cityCode;
+                locationAmap.formattedAddress = location.address;
                 if ([location.aoiList.firstObject isKindOfClass:[NSDictionary class]]) {
                     locationAmap.AOIName = [(NSDictionary *)location.aoiList.firstObject objectForKey:@"name"];
                 }
@@ -429,7 +433,10 @@ NSString * const kFHTopSwitchCityLocalKey = @"f_switch_city_top_time_local_key";
             }
             
             if (locationInfo) {
-                wSelf.currentLocaton = [[CLLocation alloc] initWithLatitude:locationInfo.location.coordinate.latitude longitude:locationInfo.location.coordinate.longitude];
+                
+                CLLocationCoordinate2D gcjLoc = [BDUGAmapAdapter convertWGSCoordinateToGCJ:locationInfo.location.coordinate];
+                
+                wSelf.currentLocaton = [[CLLocation alloc] initWithLatitude:gcjLoc.latitude longitude:gcjLoc.longitude];
             }
         
         // 存储当前定位信息
@@ -596,7 +603,10 @@ NSString * const kFHTopSwitchCityLocalKey = @"f_switch_city_top_time_local_key";
             currentRe.cityCode = regeocode.citycode;
             currentRe.administrativeArea = regeocode.province;
             currentRe.city = regeocode.city;
+            currentRe.address = regeocode.formattedAddress;
+            currentRe.street = regeocode.street;
             wSelf.currentReGeocode = currentRe;
+            wSelf.currentAmpReGeocode = regeocode;
         }
         
         if (location) {

@@ -258,20 +258,25 @@
         if (!self.textFieldArray[i].isFirstResponder) {
             continue;
         }
-        [self.textFieldArray[i] resignFirstResponder];
-        [self.textFieldArray[i - 1] becomeFirstResponder];
-        self.textFieldArray[i - 1].text = @"";
+        if (self.textFieldArray[i].text.length) {
+            self.textFieldArray[i].text = @"";
+        } else {
+            [self.textFieldArray[i] resignFirstResponder];
+            self.textFieldArray[i - 1].text = @"";
+            [self.textFieldArray[i - 1] becomeFirstResponder];
+        }
+        
     }
 }
 
 #pragma mark - UITextFieldDelegate
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string {
-    if (!textField.text.length) {
-        //用户输入
-        if (string.length == 1) {
-            NSUInteger index = [self.textFieldArray indexOfObject:textField];
-            [textField resignFirstResponder];
-            
+    if (string.length == 1) {
+        NSUInteger index = [self.textFieldArray indexOfObject:textField];
+        [textField resignFirstResponder];
+        
+        if (!textField.text.length) {
+            //用户输入
             if (index == self.textFieldArray.count - 1) {
                 self.textFieldArray[index].text = string;
                 [self beginLoginWithMobile];
@@ -279,7 +284,27 @@
             }
             self.textFieldArray[index].text = string;
             [self.textFieldArray[index + 1] becomeFirstResponder];
+        } else {
+            if (index == self.textFieldArray.count - 1) {
+                [self beginLoginWithMobile];
+                return NO;
+            }
+            self.textFieldArray[index + 1].text = string;
+            [self.textFieldArray[index + 1] becomeFirstResponder];
+            if (index + 1 == self.textFieldArray.count - 1) {
+                [self beginLoginWithMobile];
+                return NO;
+            }
         }
+
+        
+        return NO;
+    }
+
+    if (string.length == 0) {
+        //删除 操作
+        [self didClickBackWard];
+        return NO;
     }
         //来自键盘的快捷提示
 //        if (string.length >= 4) {

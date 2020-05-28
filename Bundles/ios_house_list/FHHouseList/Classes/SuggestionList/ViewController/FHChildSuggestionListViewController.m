@@ -228,7 +228,6 @@
     if (isIphoneX) {
         tableView.contentInset = UIEdgeInsetsMake(0, 0, 34, 0);
     }
-    tableView.keyboardDismissMode = UIScrollViewKeyboardDismissModeOnDrag;
     [self.view addSubview:tableView];
     [tableView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.right.mas_equalTo(self.view);
