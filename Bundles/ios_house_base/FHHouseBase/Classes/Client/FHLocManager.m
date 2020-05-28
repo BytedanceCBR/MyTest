@@ -356,6 +356,9 @@ NSString * const kFHTopSwitchCityLocalKey = @"f_switch_city_top_time_local_key";
             if (!error && location.city && location.aoiList.count > 0) {
                 AMapLocationReGeocode *locationAmap = [AMapLocationReGeocode new];
                 locationAmap.city = location.city;
+                locationAmap.province = location.administrativeArea;
+                locationAmap.citycode = location.cityCode;
+                locationAmap.formattedAddress = location.address;
                 if ([location.aoiList.firstObject isKindOfClass:[NSDictionary class]]) {
                     locationAmap.AOIName = [(NSDictionary *)location.aoiList.firstObject objectForKey:@"name"];
                 }
@@ -596,7 +599,10 @@ NSString * const kFHTopSwitchCityLocalKey = @"f_switch_city_top_time_local_key";
             currentRe.cityCode = regeocode.citycode;
             currentRe.administrativeArea = regeocode.province;
             currentRe.city = regeocode.city;
+            currentRe.address = regeocode.formattedAddress;
+            currentRe.street = regeocode.street;
             wSelf.currentReGeocode = currentRe;
+            wSelf.currentAmpReGeocode = regeocode;
         }
         
         if (location) {
