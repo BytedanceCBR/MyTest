@@ -789,6 +789,12 @@
     }
 }
 
+- (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView {
+    // 开始拖拽滑动时，收起键盘
+    [[[UIApplication sharedApplication] keyWindow] endEditing:YES];
+}
+
+
 // 1、默认
 - (NSAttributedString *)processHighlightedDefault:(NSString *)text textColor:(UIColor *)textColor fontSize:(CGFloat)fontSize {
     NSDictionary *attr = @{NSFontAttributeName:[UIFont themeFontRegular:fontSize],NSForegroundColorAttributeName:textColor};

@@ -39,6 +39,7 @@
 #import "SSMyUserModel.h"
 #import "TTBusinessManager+StringUtils.h"
 #import "UIColor+Theme.h"
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 
 
 #define kDeleteCommentNotificationKey   @"kDeleteCommentNotificationKey"
@@ -97,6 +98,7 @@ NSString *const kTTCommentDetailForwardCommentNotification = @"kTTCommentDetailF
     self.pageState.uniqueID = [baseCondition tt_stringValueForKey:@"uniqueID"];
     self.pageState.serviceID = [baseCondition tt_stringValueForKey:@"serviceID"];
     self.fromUGC = [baseCondition tt_boolValueForKey:@"fromUGC"];
+    self.extraDic = [baseCondition tt_objectForKey:@"extraDic"];
     //从消息进入, 或者从置顶评论进入 都算isFromMessage
     self.pageState.isFromMessage = [baseCondition tt_boolValueForKey:@"from_message"] || !isEmptyString(self.pageState.stickID);
     //TODO: 后续各种id迁到 pageState中
@@ -136,6 +138,7 @@ NSString *const kTTCommentDetailForwardCommentNotification = @"kTTCommentDetailF
     self.store.element_from = self.element_from;
     self.store.ansid = self.groupId;
     self.store.qid = self.qid;
+    self.store.extraDic = self.extraDic;
     
     self.hidePost = [baseCondition[@"hidePost"] boolValue];
     
@@ -426,7 +429,7 @@ NSString *const kTTCommentDetailForwardCommentNotification = @"kTTCommentDetailF
     [dic setValue:@"detail" forKey:@"position"];
     [dic setValue:@(time).stringValue forKey:@"stay_time"];
     
-    [TTTracker eventV3:@"comment_close" params:dic];
+    [BDTrackerProtocol eventV3:@"comment_close" params:dic];
 
     [self trySendCurrentPageStayTime];
 }
@@ -717,7 +720,7 @@ NSString *const kTTCommentDetailForwardCommentNotification = @"kTTCommentDetailF
         [params setValue:[FHTraceEventUtils generateEnterfrom:_categoryName] forKey:@"enter_from"];
         [params setValue:@"comment_detail" forKey:@"position"];
         [params setValue:commentId forKey:@"comment_id"];
-        [TTTracker eventV3:@"rt_like" params:params];
+        [BDTrackerProtocol eventV3:@"rt_like" params:params];
     }
 //    wrapperTrackEvent(@"update_detail", @"bottom_digg_click");
 //    TTMomentDetailAction *action = [TTMomentDetailAction digActionWithCommentDetailModel:self.pageState.detailModel];
@@ -846,9 +849,9 @@ NSString *const kTTCommentDetailForwardCommentNotification = @"kTTCommentDetailF
     }
     [params setValue:[self.commentModel.commentID stringValue] forKey:@"comment_id"];
     if (!self.pageState.detailModel.userDigg) {
-        [TTTracker eventV3:@"rt_like" params:params];
+        [BDTrackerProtocol eventV3:@"rt_like" params:params];
     } else {
-         [TTTracker eventV3:@"rt_unlike" params:params];
+         [BDTrackerProtocol eventV3:@"rt_unlike" params:params];
     }
     
     SSUserModel *userModel;
@@ -1006,16 +1009,29 @@ NSString *const kTTCommentDetailForwardCommentNotification = @"kTTCommentDetailF
     [params setValue:_groupId forKey:@"item_Id"];
     [params setValue:_logPb forKey:@"log_pd"];
     [params setValue:_categoryName  forKey:@"category_name"];
-    [params setValue:[FHTraceEventUtils generateEnterfrom:_categoryName] forKey:@"enter_from"];
-    [params setValue:@"replay" forKey:@"position"];
+    [params setValue:@"reply" forKey:@"position"];
     [params setValue:_commentModel.commentID forKey:@"comment_id"];
     if (!isEmptyString(_qid)) {
         [params setValue:_qid forKey:@"qid"];
          [params setValue:_groupId forKey:@"ansid"];
     }
     
+    if(self.extraDic){
+        [params addEntriesFromDictionary:self.extraDic];
+        
+        if(self.extraDic[@"enter_from"]){
+            params[@"category_name"] = self.extraDic[@"enter_from"];
+        }
+    }
+    
+//    [params setValue:[FHTraceEventUtils generateEnterfrom:_categoryName] forKey:@"enter_from"];
+    
     if (!model.userDigg) {
-        [TTTracker eventV3:@"rt_like" params:params];
+        [params setValue:@"feed_like" forKey:@"click_position"];
+        [BDTrackerProtocol eventV3:@"rt_like" params:params];
+    }else{
+        [params setValue:@"feed_dislike" forKey:@"click_position"];
+        [BDTrackerProtocol eventV3:@"rt_unlike" params:params];
     }
     TTMomentDetailAction *action = [TTMomentDetailAction digActionWithReplyCommentModel:model];
     action.commentDetailModel = self.pageState.detailModel;

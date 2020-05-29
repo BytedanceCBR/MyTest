@@ -190,7 +190,7 @@
     if (isEmptyString(label)) {
         return;
     }
-    [TTTracker event:kWDWendaListViewControllerUMEventName label:label];
+    [BDTrackerProtocol event:kWDWendaListViewControllerUMEventName label:label];
 }
 
 #pragma mark - Util

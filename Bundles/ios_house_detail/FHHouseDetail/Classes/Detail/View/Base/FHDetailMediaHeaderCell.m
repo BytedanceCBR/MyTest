@@ -60,7 +60,7 @@
 }
 
 + (CGFloat)cellHeight {
-    CGFloat photoCellHeight = 276; // 默认300
+    CGFloat photoCellHeight = 281.0;
     photoCellHeight = round([UIScreen mainScreen].bounds.size.width / 375.0f * photoCellHeight + 0.5);
     return photoCellHeight;
 }
@@ -142,7 +142,7 @@
         [itemArray addObject:vedioModel];
     }
     
-    for (FHDetailOldDataHouseImageDictListModel *listModel in houseImageDict) {
+    for (FHHouseDetailImageListDataModel *listModel in houseImageDict) {
 //        if (listModel.houseImageTypeName.length > 0) {
             NSString *groupType = nil;
             if(listModel.houseImageType == FHDetailHouseImageTypeApartment){
@@ -269,7 +269,7 @@
     
     //如果是小区，移除按钮
     if (vedioModel.cellHouseType == FHMultiMediaCellHouseNeiborhood) {
-        vc.isShowAllBtns = NO;
+        vc.isShowBottomBar = NO;
     }
     
     // 分享

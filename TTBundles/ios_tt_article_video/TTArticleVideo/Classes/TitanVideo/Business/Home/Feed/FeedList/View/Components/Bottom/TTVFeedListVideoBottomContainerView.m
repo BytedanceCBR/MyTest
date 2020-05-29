@@ -41,7 +41,7 @@
 #import <TTThemed/TTThemeManager.h>
 #import <TTBaseLib/TTBusinessManager+StringUtils.h>
 #import <TTPlatformBaseLib/TTTrackerWrapper.h>
-#import <TTTracker/TTTracker.h>
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 #import <TTBaseLib/UIButton+TTAdditions.h>
 #import <TTThemed/UIImage+TTThemeExtension.h>
 #import <TTArticleBase/SSCommonLogic.h>
@@ -703,7 +703,7 @@ extern NSString * const TTActivityContentItemTypeForwardWeitoutiao;
             [params setObject:@"click_category" forKey:@"enter_from"];
             [params setValue:self.cellEntity.originData.logPb forKey:@"log_pb"];
             [params setValue:@"f_shipin" forKey:@"category_name"];
-            [TTTracker eventV3:@"rt_like" params:params];
+            [BDTrackerProtocol eventV3:@"rt_like" params:params];
         }
         self.cellEntity.article.userDigg = digg;
     };

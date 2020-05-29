@@ -12,7 +12,7 @@
 #import "NSString-Extension.h"
 #import "TTURLTracker.h"
 #import <TTTracker/TTTrackerProxy.h>
-#import <TTTracker/TTTracker.h>
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 
 #define kPlayerOverTrackUrlList @"playover_track_url_list"
 #define kPlayerEffectiveTrackUrlList @"effective_play_track_url_list"
@@ -194,7 +194,7 @@
         [events setValue:self.ad_id forKey:@"value"];
         [events setValue:self.log_extra forKey:@"log_extra"];
         [events addEntriesFromDictionary:extra];
-        [TTTracker eventData:events];
+        [BDTrackerProtocol eventData:events];
     }
 }
 

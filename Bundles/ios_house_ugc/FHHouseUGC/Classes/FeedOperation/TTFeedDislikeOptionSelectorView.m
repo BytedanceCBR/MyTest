@@ -13,7 +13,8 @@
 #import "TTFeedPopupController.h"
 #import "extobjc.h"
 #import "TTFeedDislikeConfig.h"
-#import "TTTracker.h"
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
+
 
 #define CLASS_NAME(Class) NSStringFromClass([Class class])
 

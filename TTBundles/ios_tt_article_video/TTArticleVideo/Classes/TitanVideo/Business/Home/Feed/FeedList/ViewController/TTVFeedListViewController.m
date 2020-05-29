@@ -906,7 +906,7 @@ TTRefreshViewDelegate>
     [dictTraceParams setValue:itemID forKey:@"item_id"];
 //    [dictTraceParams setValue:item.originData.logPb[@"impr_id"] forKey:@"impr_id"];
     [dictTraceParams setValue:item.originData.logPb forKey:@"log_pb"];
-    [TTTracker eventV3:@"client_show" params:dictTraceParams];
+    [BDTrackerProtocol eventV3:@"client_show" params:dictTraceParams];
     
     /*impression统计相关*/
     SSImpressionStatus impressionStatus = (self.isDisplayView && _isShowing) ? SSImpressionStatusRecording : SSImpressionStatusSuspend;

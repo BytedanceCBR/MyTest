@@ -92,6 +92,13 @@ completion:(void(^)(id<FHBaseModelProtocol> _Nullable model , NSError *error))co
                                                              query:(NSString*)query
                                                              count:(NSInteger)count
                                                         completion:(void(^)(FHDetailSameNeighborhoodHouseResponseModel * _Nullable model , NSError * _Nullable error))completion;
+// 二手房-推荐新盘
++(TTHttpTask*)requestOldHouseRecommendedCourtSearch:(NSString*)houseId
+                                             offset:(NSString *)offset
+                                              query:(NSString*)query
+                                              count:(NSInteger)count
+                                         completion:(void(^)(FHListResultHouseModel * _Nullable model , NSError * _Nullable error))completion;
+
 // 新房-周边新盘
 +(TTHttpTask*)requestRelatedFloorSearch:(NSString*)houseId
                                  offset:(NSString *)offset
@@ -129,8 +136,9 @@ completion:(void(^)(id<FHBaseModelProtocol> _Nullable model , NSError *error))co
  */
 +(TTHttpTask *)requestPhoneFeedback:(NSString *)houseId houseType:(FHHouseType)houseType realtorId:(NSString *)realtorId imprId:(NSString *)imprId searchId:(NSString *)searchId score:(NSInteger)score requestId:(NSString*) requestId completion:(void (^)(bool succss , NSError *error))completion;
 
-+ (TTHttpTask *)requestRealtorEvaluationFeedback:(NSString *)targetId targetType:(NSInteger)targetType evaluationType:(NSInteger)evaluationType realtorId:(NSString *)realtorId content:(NSString *)content score:(NSInteger)score tags: (NSArray*)tags completion:(void (^)(bool, NSError * _Nullable))completion;
 
++ (TTHttpTask *)requestRealtorEvaluationFeedback:(NSString *)targetId targetType:(NSInteger)targetType evaluationType:(NSInteger)evaluationType realtorId:(NSString *)realtorId content:(NSString *)content score:(NSInteger)score tags: (NSArray*)tags completion:(void (^)(bool, NSError * _Nullable))completion;
++ (TTHttpTask *)requestRealtorEvaluationFeedback:(NSString *)targetId targetType:(NSInteger)targetType evaluationType:(NSInteger)evaluationType realtorId:(NSString *)realtorId content:(NSString *)content score:(NSInteger)score tags: (NSArray*)tags from:(NSString *)from completion:(void (^)(bool, NSError * _Nullable))completion;
 @end
 
 

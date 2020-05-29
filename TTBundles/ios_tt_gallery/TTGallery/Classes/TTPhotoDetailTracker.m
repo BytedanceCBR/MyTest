@@ -22,7 +22,7 @@
 #import <TTBaseLib/UIViewAdditions.h>
 #import <Masonry/Masonry.h>
 #import <TTPlatformBaseLib/TTTrackerWrapper.h>
-#import <TTTracker/TTTracker.h>
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 
 @implementation TTPhotoDetailTracker
 
@@ -267,7 +267,7 @@
     [param setValue:[self.detailModel.statParams tt_stringValueForKey:@"card_position"] forKey:@"card_position"];
     [param copy];
 
-    [TTTracker eventV3:@"read_pct" params:param];
+    [BDTrackerProtocol eventV3:@"read_pct" params:param];
 
 //    [TTTrackerWrapper eventV3:@"read_pct" params:({
 //        NSMutableDictionary *param = [[NSMutableDictionary alloc] initWithCapacity:10];

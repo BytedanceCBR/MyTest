@@ -12,6 +12,8 @@
 #import <TTBaseLib/UIViewAdditions.h>
 #import "FHHouseFillFormHelper.h"
 #import "FHUIAdaptation.h"
+#import <TTBaseLib/TTUIResponderHelper.h>
+#import <FHWebView/SSWebViewController.h>
 
 @interface FHDetailSalesItemView: UIView
 
@@ -220,6 +222,20 @@
     FHDetailNewDiscountInfoItemModel *itemInfo = model.discountInfo[index];
 
     [self addClickOptionLog:@(itemInfo.actionType)];
+    
+    //099 优惠跳转类型
+    if (itemInfo.actionType == 3 && itemInfo.activityURLString.length) {
+        NSString *urlString = itemInfo.activityURLString.copy;
+        //@"https://m.xflapp.com/magic/page/ejs/5ecb69c9d7ff73025f6ea4e0?appType=manyhouse";
+        if([urlString hasPrefix:@"http://"] ||
+           [urlString hasPrefix:@"https://"]) {
+            UIViewController *topController = [TTUIResponderHelper topViewControllerFor:self];
+            ssOpenWebView([NSURL URLWithString:urlString], @"", topController.navigationController, NO, nil);
+            return;
+        }
+        [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:urlString]];
+        return;
+    }
 
     NSString *title = itemInfo.discountReportTitle;
     NSString *subtitle = itemInfo.discountReportSubTitle;

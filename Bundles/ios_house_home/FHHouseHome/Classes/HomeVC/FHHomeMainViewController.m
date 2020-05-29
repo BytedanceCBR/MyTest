@@ -50,7 +50,7 @@ static NSString * const kFUGCPrefixStr = @"fugc";
     [self bindTopIndexChanged];//绑定头部选中index变化
     // Do any additional setup after loading the view.
     
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         if (!self.isSendNotification) {
             [[NSNotificationCenter defaultCenter] postNotificationName:@"kTTFeedDidDisplay" object:nil];
             self.isSendNotification = YES;
@@ -120,6 +120,9 @@ static NSString * const kFUGCPrefixStr = @"fugc";
     self.topView = [[FHHomeMainTopView alloc] init];
     _topView.backgroundColor = [UIColor themeHomeColor];
     [self.view addSubview:_topView];
+    
+    self.topView.segmentControl.hidden = [FHEnvContext isNewDiscovery];
+    
     
     self.containerView = [[UIView alloc] init];
     [self.view addSubview:_containerView];
@@ -231,7 +234,7 @@ static NSString * const kFUGCPrefixStr = @"fugc";
         [FHEnvContext showRedPointForNoUgc];
         [self.topView  updateMapSearchBtn];
         self.viewModel = [[FHHomeMainViewModel alloc] initWithCollectionView:self.collectionView controller:self];
-        
+        self.topView.segmentControl.hidden = [FHEnvContext isNewDiscovery];
         if([FHEnvContext sharedInstance].isRefreshFromCitySwitch) {
             [self.switchCityView removeFromSuperview];
         }
@@ -274,7 +277,7 @@ static NSString * const kFUGCPrefixStr = @"fugc";
 
 - (void)changeTopStatusShowHouse:(BOOL)isShowHouse
 {
-    self.topView.segmentControl.hidden = isShowHouse;
+    self.topView.segmentControl.hidden = [FHEnvContext isNewDiscovery] ? YES :isShowHouse;
     self.topView.houseSegmentControl.hidden = !isShowHouse;
     //房源显示时，禁止滑动
     if (isShowHouse) {

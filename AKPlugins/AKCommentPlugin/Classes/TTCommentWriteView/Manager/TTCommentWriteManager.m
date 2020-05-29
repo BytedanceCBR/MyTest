@@ -27,6 +27,7 @@
 #import <TTKitchen/TTKitchen.h> 
 #import <TTKitchenExtension/TTKitchenExtension.h>
 #import "FHTraceEventUtils.h"
+#import "FHUserTracker.h"
 
 #define Persistence [TTPersistence persistenceWithName:NSStringFromClass(self.class)]
 #define PersistenceGroupDraftKey @"PersistenceGroupDraftKey" // 对应文章、帖子
@@ -410,6 +411,15 @@ typedef void (^TTCommentLoginPipelineCompletion)(TTCommentLoginState state);
     if (isTTArticleWritePublishing){
         return;
     }
+    
+    //上报埋点
+    NSMutableDictionary *params = [NSMutableDictionary dictionary];
+    params[@"click_position"] = @"submit_comment";
+    params[@"page_type"] = self.reportParams[@"page_type"] ?: @"be_null";
+    params[@"origin_from"] = self.reportParams[@"origin_from"] ?: @"be_null";
+    params[@"group_id"] = self.groupModel.groupID ?: @"be_null";
+    [FHUserTracker writeEvent:@"click_submit_comment" params:params];
+    
     isTTArticleWritePublishing = YES;
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         isTTArticleWritePublishing = NO;
@@ -577,14 +587,20 @@ typedef void (^TTCommentLoginPipelineCompletion)(TTCommentLoginState state);
                 }
                 [paramsDict setValue:[self categoryName] forKey:@"category_name"];
                 [paramsDict setValue:@"house_app2c_v2"  forKey:@"event_type"];
+                [paramsDict setValue:@"submit_comment"  forKey:@"click_position"];
+                
                 if (self.enterFrom.length > 0 || self.reportParams) {
-                    [paramsDict setValue:[FHTraceEventUtils generateEnterfrom:[self categoryName]]  forKey:@"enter_from"];
-                    
                     if([self.reportParams isKindOfClass:[NSDictionary class]]){
                         [paramsDict addEntriesFromDictionary:self.reportParams];
                     }
                     
-                    [TTTracker eventV3:@"rt_post_comment" params:paramsDict];
+                    if(self.reportParams[@"enter_from"]){
+                        [paramsDict setValue:self.reportParams[@"enter_from"] forKey:@"category_name"];
+                    }
+                    
+//                    [paramsDict setValue:[FHTraceEventUtils generateEnterfrom:[self categoryName]]  forKey:@"enter_from"];
+                    
+                    [BDTrackerProtocol eventV3:@"rt_post_comment" params:paramsDict];
                 }
 
                 if (self.publishStatusForTrack == 1) {

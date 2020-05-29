@@ -40,7 +40,8 @@
 #import "TTNavigationController.h"
 #import "TTCustomAnimationNavigationController.h"
 #import "TSVRecommendCardViewModel.h"
-#import "TTTracker.h"
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
+
 #import <TTKitchen/TTKitchen.h> 
 #import <TTKitchenExtension/TTKitchenExtension.h>
 #import "FHCommonApi.h"
@@ -731,6 +732,6 @@ NSString *const TSVLastShareActivityName = @"TSVLastShareActivityName";
     [params setValue:self.model.author.userID forKey:@"profile_user_id"];
     [params setValue:[NSNumber numberWithInteger:self.recViewModel.userCards.count] forKey:@"show_num"];
     [params setValue:@"shortvideo_detail_follow_card" forKey:@"source"];
-    [TTTracker eventV3:@"follow_card" params:[params copy]];
+    [BDTrackerProtocol eventV3:@"follow_card" params:[params copy]];
 }
 @end

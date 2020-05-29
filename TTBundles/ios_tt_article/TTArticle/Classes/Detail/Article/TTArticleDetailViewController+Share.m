@@ -607,6 +607,11 @@ extern BOOL ttvs_isShareIndividuatioEnable(void);
             [params setValue:self.detailModel.orderedData.categoryID forKey:@"category_name"];
             [params setValue:[FHTraceEventUtils generateEnterfrom:self.detailModel.orderedData.categoryID] forKey:@"enter_from"];
             [params setValue:@"detail" forKey:@"position"];
+            
+            if(self.detailModel.reportParams.count > 0){
+                [params addEntriesFromDictionary:self.detailModel.reportParams];
+            }
+            
             [TTTrackerWrapper eventV3:@"rt_favourite" params:params];
             // 加入收藏吊起登录弹窗的代码
             TTAccountLoginAlertTitleType type = TTAccountLoginAlertTitleTypeFavor;

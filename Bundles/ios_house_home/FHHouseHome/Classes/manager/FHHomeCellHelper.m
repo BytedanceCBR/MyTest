@@ -17,7 +17,8 @@
 #import "TTRoute.h"
 #import "FHUserTracker.h"
 #import "FHHouseBridgeManager.h"
-#import "TTTracker.h"
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
+
 #import "TTDeviceHelper.h"
 #import "FHHomeHeaderTableViewCell.h"
 #import "FHPlaceHolderCell.h"
@@ -164,9 +165,8 @@ static NSMutableArray  * _Nullable identifierArr;
             
             [dictTraceParams setValue:@"maintab" forKey:@"page_type"];
             
-            [TTTracker eventV3:@"operation_show" params:dictTraceParams];
             [[FHHouseErrorHubManager sharedInstance] checkBuryingPointWithEvent:@"operation_show" Params:dictTraceParams errorHubType:FHErrorHubTypeBuryingPoint];
-            
+            [BDTrackerProtocol eventV3:@"operation_show" params:dictTraceParams];
         }];
     }
     
@@ -208,8 +208,8 @@ static NSMutableArray  * _Nullable identifierArr;
             [dictTraceParams setValue:@"house_app2c_v2" forKey:@"event_type"];
             [dictTraceParams setValue:@"maintab" forKey:@"page_type"];
             
-            [TTTracker eventV3:@"operation_show" params:dictTraceParams];
             [[FHHouseErrorHubManager sharedInstance] checkBuryingPointWithEvent:@"operation_show" Params:dictTraceParams errorHubType:FHErrorHubTypeBuryingPoint];
+            [BDTrackerProtocol eventV3:@"operation_show" params:dictTraceParams];
         }];
     }
 }

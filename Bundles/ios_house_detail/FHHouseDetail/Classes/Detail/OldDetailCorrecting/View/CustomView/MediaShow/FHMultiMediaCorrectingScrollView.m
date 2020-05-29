@@ -16,7 +16,9 @@
 #import "FHVideoModel.h"
 #import <FHHouseBase/FHBaseCollectionView.h>
 #import "FHMultiMediaVRImageCell.h"
-#import "FHDeatilHeaderTitleView.h"
+#import "FHDetailHeaderTitleView.h"
+#import "UIViewAdditions.h"
+#import "FHHouseDetailHeaderMoreStateView.h"
 
 #define k_VIDEOCELLID @"video_cell_id"
 #define k_IMAGECELLID @"image_cell_id"
@@ -26,12 +28,12 @@
 
 @property(nonatomic, strong) UICollectionView *colletionView;
 @property(nonatomic, strong) UILabel *infoLabel;
+@property (nonatomic, strong) UIView *listMoreView;
 @property(nonatomic, strong) UIImageView *noDataImageView;
 @property(nonatomic, strong) UIImage *placeHolder;
 @property(nonatomic, strong) NSArray *medias;
 @property(nonatomic, strong) FHVideoAndImageItemCorrectingView *itemView;   //图片户型的标签
-
-@property(nonatomic, strong) FHDeatilHeaderTitleView *titleView;            //头图下面的标题栏
+@property(nonatomic, strong) FHDetailHeaderTitleView *titleView;            //头图下面的标题栏
 @property(nonatomic, strong) NSMutableArray *itemIndexArray;
 @property(nonatomic, strong) NSMutableArray *itemArray;
 @property(nonatomic, strong) UICollectionViewCell *lastCell;
@@ -40,6 +42,7 @@
 @property(nonatomic, assign) CGFloat beginX;
 @property(nonatomic, strong) UIView *bottomBannerView;
 @property(nonatomic, strong) UIView *bottomGradientView;
+@property (nonatomic, strong) FHHouseDetailHeaderMoreStateView *headerMoreStateView;
 @end
 
 @implementation FHMultiMediaCorrectingScrollView
@@ -86,7 +89,7 @@
     [self addSubview:_noDataImageView];
     _noDataImageView.hidden = YES;
         
-    _titleView = [[FHDeatilHeaderTitleView alloc]init];
+    _titleView = [[FHDetailHeaderTitleView alloc]init];
     [self addSubview:_titleView];
     
     __weak typeof(self) wself = self;
@@ -199,12 +202,12 @@
         make.height.mas_equalTo(20);
     }];
     
-    [self.infoLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.width.mas_equalTo(44);
-        make.height.mas_equalTo(20);
-        make.right.mas_equalTo(self).offset(-16);
-        make.bottom.mas_equalTo(self.titleView.mas_top).offset(5);
-    }];
+    [self layoutIfNeeded];
+    
+    self.infoLabel.width = 44;
+    self.infoLabel.height = 20;
+    self.infoLabel.left = self.width - self.infoLabel.width - 16;
+    self.infoLabel.bottom = self.titleView.top + 5;
 }
 
 - (void)selectItem:(NSInteger)index {
@@ -224,7 +227,8 @@
         if (curPage == 0 ){
             curPage = 1;
         }
-        self.infoLabel.text = [NSString stringWithFormat:@"%ld/%ld",curPage,self.medias.count];
+      
+        [self setInfoLabelText:[NSString stringWithFormat:@"%ld/%ld",curPage,self.medias.count]];
         
         if(self.delegate && [self.delegate respondsToSelector:@selector(selectItem:)]){
             [self.delegate selectItem:self.itemArray[index]];
@@ -240,9 +244,9 @@
             [self.videoVC pause];
         }
 
-        if([currentCell isKindOfClass:[FHMultiMediaVideoCell class]] && self.videoVC.playbackState == TTVPlaybackState_Paused){
-            [self.videoVC play];
-        }
+//        if([currentCell isKindOfClass:[FHMultiMediaVideoCell class]] && self.videoVC.playbackState == TTVPlaybackState_Paused){
+//            [self.videoVC play];
+//        }
         self.lastCell = currentCell;
     }
 }
@@ -371,10 +375,33 @@
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
     [self updateItemAndInfoLabel];
+    //新房详情新增查看更多样式
+    if (self.isShowTopImageTab) {
+        //调用更多样式state变化
+        if (scrollView.contentOffset.x >= 52) {
+            self.headerMoreStateView.moreState = FHHouseDetailHeaderMoreStateRelease;
+        } else {
+            self.headerMoreStateView.moreState = FHHouseDetailHeaderMoreStateBegin;
+        }
+    }
+    if (scrollView == self.colletionView) {
+        self.listMoreView.frame = CGRectMake(CGRectGetWidth(self.frame) - 74 - 15 - scrollView.contentOffset.x, CGRectGetMaxY(self.colletionView.frame) - 36 - 65, 74, 65);
+    }
 }
 
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
     [self updateVideoState];
+}
+
+- (void)scrollViewWillEndDragging:(UIScrollView *)scrollView withVelocity:(CGPoint)velocity targetContentOffset:(inout CGPoint *)targetContentOffset {
+    //房源详情 左滑 超过 52px，松手，进入图片列表页
+    if (self.isShowTopImageTab) {
+        if (scrollView.contentOffset.x >= 52) {
+            if ([self.delegate respondsToSelector:@selector(goToPictureList:)]) {
+                [self.delegate goToPictureList:@"view_more_slide"];
+            }
+        }
+    }
 }
 
 - (void)updateItemAndInfoLabel {
@@ -403,24 +430,23 @@
             FHMultiMediaItemModel *itemModel = self.medias[index];
             NSString *groupType = itemModel.groupType;
             [self.itemView selectedItem:groupType];
-            
-            self.infoLabel.text = [NSString stringWithFormat:@"%ld/%ld",curPage,self.medias.count];
-            [self.infoLabel sizeToFit];
-            CGSize itemSize = [self.infoLabel sizeThatFits:CGSizeMake(CGFLOAT_MAX, 20)];
-            itemSize.width += 14.0;
-            if (itemSize.width < 44) {
-                itemSize.width = 44;
-            }
-            
-            [self.infoLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
-                make.width.mas_equalTo(itemSize.width);
-                make.height.mas_equalTo(20);
-                make.right.mas_equalTo(self).offset(-16);
-                make.bottom.mas_equalTo(self.titleView.mas_top).offset(5);
-            }];
+            [self setInfoLabelText:[NSString stringWithFormat:@"%ld/%ld",curPage,self.medias.count]];
         }
     }
+}
+
+- (void)setInfoLabelText:(NSString *)text {
+    self.infoLabel.text = text;
+    [self.infoLabel sizeToFit];
+    CGSize itemSize = [self.infoLabel sizeThatFits:CGSizeMake(CGFLOAT_MAX, 20)];
+    CGFloat width = itemSize.width;
+    width += 14.0;
+    if (width < 44) {
+        width = 44;
+    }
     
+    self.infoLabel.width = width;
+    self.infoLabel.left = self.width - self.infoLabel.width - 16;
 }
 
 - (void)updateVideoState {
@@ -477,7 +503,73 @@
 
 - (void)updateModel:(FHMultiMediaModel *)model withTitleModel:(FHDetailHouseTitleModel *)titleModel{
     self.medias = model.medias;
-    [self.colletionView reloadData];
+    self.titleView.model = titleModel;
+    //如果新房详情 并且 isShowTopImageTab = true 取第一张图
+    self.colletionView.alwaysBounceHorizontal = NO;
+    if (titleModel.housetype == FHHouseTypeNewHouse && self.isShowTopImageTab) {
+        self.infoLabel.hidden = YES;
+        self.colletionView.alwaysBounceHorizontal = YES;
+        if (model.medias.count) {
+            self.medias = @[model.medias.firstObject];
+        }
+        if (!self.headerMoreStateView) {
+            self.headerMoreStateView = [[FHHouseDetailHeaderMoreStateView alloc] init];
+            self.headerMoreStateView.moreState = FHHouseDetailHeaderMoreStateBegin;
+            [self.colletionView addSubview:self.headerMoreStateView];
+            self.headerMoreStateView.frame = CGRectMake(CGRectGetMaxX(self.colletionView.frame), 0, 52, CGRectGetHeight(self.colletionView.frame));
+        }
+        if (!self.listMoreView) {
+            self.listMoreView = [[UIView alloc] init];
+            self.listMoreView.frame = CGRectMake(CGRectGetWidth(self.frame) - 74 - 15, CGRectGetMaxY(self.colletionView.frame) - 36 - 65, 74, 65);
+            self.listMoreView.backgroundColor = [UIColor colorWithWhite:1.0 alpha:0.75];
+            self.listMoreView.layer.masksToBounds = YES;
+            self.listMoreView.layer.cornerRadius = 10;
+            [self addSubview:self.listMoreView];
+            
+            UILabel *countLabel = [[UILabel alloc] init];
+            countLabel.font = [UIFont themeFontMedium:16];
+            countLabel.textColor = [UIColor colorWithHexStr:@"#4a4a4a"];
+            countLabel.textAlignment = NSTextAlignmentCenter;
+            countLabel.text = [NSString stringWithFormat:@"+%d",model.medias.count];
+            [self.listMoreView addSubview:countLabel];
+            [countLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+                make.centerX.mas_equalTo(self.listMoreView);
+                make.top.mas_equalTo(12);
+            }];
+            
+            UILabel *moreLabel = [[UILabel alloc] init];
+            moreLabel.font = [UIFont themeFontRegular:12];
+            moreLabel.textColor = [UIColor colorWithHexStr:@"#4a4a4a"];
+            moreLabel.textAlignment = NSTextAlignmentCenter;
+            moreLabel.text = @"查看更多";
+            [self.listMoreView addSubview:moreLabel];
+            [moreLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+                make.centerX.mas_equalTo(self.listMoreView);
+                make.bottom.mas_equalTo(-12);
+            }];
+            [self.listMoreView addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleListMoreGesture:)]];
+        }
+        [self.colletionView reloadData];
+    } else if (_medias.count > 0) {
+        [self.colletionView reloadData];
+        [self setInfoLabelText:[NSString stringWithFormat:@"%d/%ld",1,_medias.count]];
+        self.infoLabel.hidden = NO;
+        self.colletionView.hidden = NO;
+        self.noDataImageView.hidden = YES;
+        if (_medias.count > 1) {
+            NSIndexPath *indexPath = [NSIndexPath indexPathForItem:1 inSection:0];
+            [self.colletionView scrollToItemAtIndexPath:indexPath atScrollPosition:UICollectionViewScrollPositionLeft animated:NO];
+        }
+    } else {
+        [self.colletionView reloadData];
+        self.infoLabel.hidden = YES;
+        self.colletionView.hidden = YES;
+        self.noDataImageView.hidden = NO;
+        if (!_noDataImageView.image) {
+            _noDataImageView.image = [UIImage imageNamed:@"default_image"];
+        }
+    }
+
     
 //    BOOL isShowBottomBannerView = model.isShowSkyEyeLogo;
 //    self.bottomBannerView.hidden = !isShowBottomBannerView;
@@ -492,27 +584,6 @@
 //        make.left.right.bottom.equalTo(self);
 //        make.top.equalTo(self.colletionView.mas_bottom).offset(-topOffset);
 //    }];
-    self.titleView.model = titleModel;
-    if (_medias.count > 0) {
-        self.infoLabel.text = [NSString stringWithFormat:@"%d/%ld",1,_medias.count];
-        self.infoLabel.hidden = NO;
-        self.colletionView.hidden = NO;
-        self.noDataImageView.hidden = YES;
-        if (_medias.count > 1) {
-            NSIndexPath *indexPath = [NSIndexPath indexPathForItem:1 inSection:0];
-            [self.colletionView scrollToItemAtIndexPath:indexPath atScrollPosition:UICollectionViewScrollPositionLeft animated:NO];
-        }
-//        [self.infoLabel mas_updateConstraints:^(MASConstraintMaker *make) {
-//            make.bottom.equalTo(self).offset(-10 + yOffset);
-//        }];
-    }else{
-        self.infoLabel.hidden = YES;
-        self.colletionView.hidden = YES;
-        self.noDataImageView.hidden = NO;
-        if (!_noDataImageView.image) {
-            _noDataImageView.image = [UIImage imageNamed:@"default_image"];
-        }
-    }
     
     self.itemArray = [NSMutableArray array];
     self.itemIndexArray = [NSMutableArray array];
@@ -550,6 +621,12 @@
 {
     if (self.firstVRCell) {
         [self.firstVRCell checkVRLoadingAnimate];
+    }
+}
+
+- (void)handleListMoreGesture:(UITapGestureRecognizer *)gensture {
+    if ([self.delegate respondsToSelector:@selector(goToPictureList:)]) {
+        [self.delegate goToPictureList:@"view_more"];
     }
 }
 

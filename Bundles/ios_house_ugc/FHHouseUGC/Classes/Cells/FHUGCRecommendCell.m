@@ -277,7 +277,7 @@
     dict[@"card_type"] = @"left_pic";
     dict[@"house_type"] = @"community";
     dict[@"element_from"] = @"like_neighborhood";
-    dict[@"page_type"] = @"nearby_list";
+    dict[@"page_type"] = @"hot_discuss_feed";
     dict[@"enter_from"] = @"neighborhood_tab";
     return dict;
 }
@@ -290,7 +290,7 @@
     dict[@"select_district_tab"] = @(FHUGCCommunityDistrictTabIdRecommend);
     NSMutableDictionary *traceParam = @{}.mutableCopy;
     traceParam[@"enter_type"] = @"click";
-    traceParam[@"enter_from"] = @"nearby_list";
+    traceParam[@"enter_from"] = @"hot_discuss_feed";
     traceParam[@"element_from"] = @"like_neighborhood";
     dict[@"tracer"] = traceParam;
     TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
@@ -389,10 +389,15 @@
         
         NSMutableDictionary *dict = @{}.mutableCopy;
         dict[@"community_id"] = model.socialGroupId;
-        dict[@"tracer"] = @{@"enter_from":@"like_neighborhood",
-                            @"enter_type":@"click",
-                            @"rank":@(indexPath.row),
-                            @"log_pb":model.logPb ?: @"be_null"};
+        NSString *originFrom = self.model.tracerDic[UT_ORIGIN_FROM] ?: @"be_null";
+        dict[@"tracer"] = @{
+            @"origin_from":@"originFrom",
+            @"enter_from":@"like_neighborhood",
+            @"enter_type":@"click",
+            @"group_id":self.model.groupId ?: @"be_null",
+            @"rank":@(indexPath.row),
+            @"log_pb":model.logPb ?: @"be_null"
+        };
         TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
         //跳转到圈子详情页
         NSURL *openUrl = [NSURL URLWithString:@"sslocal://ugc_community_detail"];

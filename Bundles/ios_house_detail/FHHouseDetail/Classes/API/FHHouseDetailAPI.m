@@ -392,6 +392,27 @@
     
 }
 
+// 二手房-推荐新盘
++(TTHttpTask*)requestOldHouseRecommendedCourtSearch:(NSString*)houseId
+                                 offset:(NSString *)offset
+                                  query:(NSString*)query
+                                  count:(NSInteger)count
+                             completion:(void(^)(FHListResultHouseModel * _Nullable model , NSError * _Nullable error))completion {
+    NSString * host = [FHURLSettings baseURL] ?: @"https://i.haoduofangs.com";
+    NSString* url = [host stringByAppendingFormat:@"/f100/api/related_court?house_id=%@&offset=%@",houseId,offset];
+    NSMutableDictionary *paramDic = [NSMutableDictionary new];
+    if (query.length > 0) {
+        url = [NSString stringWithFormat:@"%@&%@",url,query];
+    }
+    paramDic[CHANNEL_ID] = CHANNEL_ID_RECOMMEND_COURT_OLD;
+    paramDic[@"count"] = @(count);
+    return [FHMainApi getRequest:url query:nil params:paramDic jsonClass:[FHListResultHouseModel class] completion:^(JSONModel * _Nullable model, NSError * _Nullable error) {
+        if (completion) {
+            completion(model,error);
+        }
+    }];
+}
+
 // 新房-周边新盘
 +(TTHttpTask*)requestRelatedFloorSearch:(NSString*)houseId
                                  offset:(NSString *)offset
@@ -410,7 +431,6 @@
             completion(model,error);
         }
     }];
-    
 }
 
 // 新房-楼盘动态
@@ -592,8 +612,12 @@
     }];
 }
 
-+ (TTHttpTask *)requestRealtorEvaluationFeedback:(NSString *)targetId targetType:(NSInteger)targetType evaluationType:(NSInteger)evaluationType realtorId:(NSString *)realtorId content:(NSString *)content score:(NSInteger)score tags: (NSArray*)tags completion:(void (^)(bool, NSError * _Nullable))completion
-{
+
++ (TTHttpTask *)requestRealtorEvaluationFeedback:(NSString *)targetId targetType:(NSInteger)targetType evaluationType:(NSInteger)evaluationType realtorId:(NSString *)realtorId content:(NSString *)content score:(NSInteger)score tags: (NSArray*)tags completion:(void (^)(bool, NSError * _Nullable))completion {
+    [self requestRealtorEvaluationFeedback:targetId targetType:targetType evaluationType:evaluationType realtorId:realtorId content:content score:score tags:tags from:nil completion:completion];
+}
++ (TTHttpTask *)requestRealtorEvaluationFeedback:(NSString *)targetId targetType:(NSInteger)targetType evaluationType:(NSInteger)evaluationType realtorId:(NSString *)realtorId content:(NSString *)content score:(NSInteger)score tags: (NSArray*)tags from:(NSString *)from completion:(void (^)(bool, NSError * _Nullable))completion {
+
     NSString *path = @"/f100/api/associate/realtor_evaluation/assign";
     NSMutableDictionary *param = [NSMutableDictionary new];
     if(!isEmptyString(realtorId)){
@@ -612,7 +636,8 @@
         param[@"content"] = content;
     }
     param[@"tag_ids"] = tags;
-
+    param[@"element_from"] = from;
+    
     return [FHMainApi postJsonRequest:path query:nil params:param completion:^(NSDictionary * _Nullable result, NSError * _Nullable error) {
         BOOL success = NO;
         if (result) {

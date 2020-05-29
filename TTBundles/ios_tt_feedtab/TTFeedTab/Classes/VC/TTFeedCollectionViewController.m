@@ -36,7 +36,7 @@
 #import <TTArticleBase/SSCommonLogic.h>
 #import <Masonry/Masonry.h>
 #import <TTPlatformBaseLib/TTTrackerWrapper.h>
-#import <TTTracker/TTTracker.h>
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 #import <TTBaseLib/UIViewAdditions.h>
 #import <TTNetworkManager/TTNetworkManager.h>
 
@@ -168,17 +168,17 @@ TTFeedCollectionCellDelegate>
             [dict setValue:searchId forKey:@"origin_search_id"];
             [dict setValue:categoryName forKey:@"category_name"];
             
-            [TTTracker eventV3:@"enter_category" params:dict isDoubleSending:NO];
+            [BDTrackerProtocol eventV3:@"enter_category" params:dict isDoubleSending:NO];
         }else
         {
             //切换城市之后埋点变化
             if ([FHEnvContext sharedInstance].isRefreshFromCitySwitch) {
                 if (![[FHEnvContext sharedInstance] getConfigFromCache].cityAvailability.enable.boolValue) {
-                    [TTTracker eventV3:@"enter_category" params:dict isDoubleSending:NO];
+                    [BDTrackerProtocol eventV3:@"enter_category" params:dict isDoubleSending:NO];
                 }
             }else
             {
-                [TTTracker eventV3:@"enter_category" params:dict isDoubleSending:NO];
+                [BDTrackerProtocol eventV3:@"enter_category" params:dict isDoubleSending:NO];
             }
         }
         
@@ -542,10 +542,10 @@ TTFeedCollectionCellDelegate>
                 [dict setValue:searchId forKey:@"origin_search_id"];
                 [dict setValue:categoryName forKey:@"category_name"];
 
-                [TTTracker eventV3:@"enter_category" params:dict isDoubleSending:NO];
+                [BDTrackerProtocol eventV3:@"enter_category" params:dict isDoubleSending:NO];
             }else
             {
-                [TTTracker eventV3:@"enter_category" params:dict isDoubleSending:NO];
+                [BDTrackerProtocol eventV3:@"enter_category" params:dict isDoubleSending:NO];
             }
                 
 //            NSDictionary *dict =  [[EnvContext shared] homePageParams].paramsGetter([:])

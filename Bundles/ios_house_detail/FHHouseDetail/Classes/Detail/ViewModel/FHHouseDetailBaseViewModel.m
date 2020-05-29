@@ -343,6 +343,9 @@
             NSMutableDictionary *tracerDic = self.detailTracerDic.mutableCopy;
             tracerDic[@"element_type"] = element_type;
             [tracerDic removeObjectForKey:@"element_from"];
+            if ([element_type isEqualToString:@"recommend_new"]) {
+                tracerDic[@"event_tracking_id"] = @"234883";
+            }
             [FHUserTracker writeEvent:@"element_show" params:tracerDic];
             [[FHHouseErrorHubManager sharedInstance] checkBuryingPointWithEvent:@"element_show" Params:tracerDic errorHubType:FHErrorHubTypeBuryingPoint];
         }

@@ -142,8 +142,9 @@
     //报的是我关注的feed页的埋点
     NSMutableDictionary *tracerDict = [NSMutableDictionary dictionary];
     
-    tracerDict[@"category_name"] = @"my_join_list";
+    tracerDict[@"category_name"] = @"my_join_feed";
     tracerDict[@"enter_type"] = @"click";
+    tracerDict[@"origin_from"] = @"neighborhood_tab";
     tracerDict[@"enter_from"] = @"neighborhood_tab";
     tracerDict[@"show_type"] = @"feed_blank_select";
     [tracerDict setValue:@(0) forKey:@"with_tips"];
@@ -159,8 +160,9 @@
     }
     NSMutableDictionary *tracerDict = [NSMutableDictionary dictionary];
     
-    tracerDict[@"category_name"] = @"my_join_list";
+    tracerDict[@"category_name"] = @"my_join_feed";
     tracerDict[@"enter_type"] = @"click";
+    tracerDict[@"origin_from"] = @"neighborhood_tab";
     tracerDict[@"enter_from"] = @"neighborhood_tab";
     tracerDict[@"show_type"] = @"feed_blank_select";
     [tracerDict setValue:@(0) forKey:@"with_tips"];
@@ -174,7 +176,7 @@
     NSMutableDictionary *tracerDict = [NSMutableDictionary dictionary];
     
     tracerDict[@"element_type"] = @"like_neighborhood";
-    tracerDict[@"page_type"] = @"my_join_list";
+    tracerDict[@"page_type"] = @"my_join_feed";
     tracerDict[@"enter_from"] = @"neighborhood_tab";
     tracerDict[@"card_type"] = @"left_pic";
     tracerDict[@"show_type"] = @"feed_blank_select";
@@ -219,7 +221,7 @@
     dict[@"rank"] = @(rank);
     
     if(self.viewController.type == FHUGCMyInterestedTypeEmpty){
-        dict[@"page_type"] = @"my_join_list";
+        dict[@"page_type"] = @"my_join_feed";
         dict[@"show_type"] = @"feed_blank_select";
     }else{
         dict[@"page_type"] = @"like_neighborhood_list";
@@ -256,6 +258,23 @@
     [cell refreshWithData:model];
     
     return cell;
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section {
+    if(self.viewController.type == FHUGCMyInterestedTypeEmpty && self.dataList.count > 0){
+        return 1.0f;
+    }else{
+        return 0.001f;
+    }
+}
+
+- (UIView *)tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section {
+    if(self.viewController.type == FHUGCMyInterestedTypeEmpty && self.dataList.count > 0){
+        UIView *view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, 1)];
+        return view;
+    }
+    
+    return [[UIView alloc] initWithFrame:CGRectZero];
 }
 
 #pragma mark - UITableViewDelegate

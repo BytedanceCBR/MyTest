@@ -24,6 +24,7 @@
 "house_list_in_neighborhood" = "FHNeighborListViewController";
 "house_list_related_house" = "FHNeighborListViewController";
 "house_list_same_neighborhood" = "FHNeighborListViewController";
+"house_list_recommend_court" = "FHNeighborListViewController";
 "myFocus"            = "FHMyFavoriteViewController";
 //"editUserProfile"       = "TTEditUserProfileViewController";
 "editUserProfile"       = "FHEditUserController";
@@ -118,6 +119,7 @@
 "test_detail"           = "FHHouseDetailViewController";
 
 "react" = "FHRNBaseViewController";
+"sample_lynx_page" = "FHLynxViewController";
 
 //im 单聊
 "open_single_chat" = "ChatRootViewController";

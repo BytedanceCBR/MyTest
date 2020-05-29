@@ -10,6 +10,7 @@
 #import <AMapLocationKit/AMapLocationKit.h>
 #import <MAMapKit/MAMapKit.h>
 #import <AMapSearchKit/AMapSearchKit.h>
+#import <BDUGLocationKit/BDUGSystemGeocoder.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -21,7 +22,8 @@ extern NSString * const kFHAllConfigLoadErrorNotice;
 @interface FHLocManager : NSObject
 
 @property (nonatomic, strong) AMapLocationManager * locMgr;
-@property (nonatomic, strong) AMapLocationReGeocode * currentReGeocode;
+@property (nonatomic, strong) BDUGBasePlacemark * currentReGeocode;
+@property (nonatomic, strong) AMapLocationReGeocode * currentAmpReGeocode;
 @property (nonatomic, strong) CLLocation * currentLocaton;
 @property (nonatomic, assign) BOOL isLocationSuccess;
 @property (nonatomic, assign) NSInteger retryConfigCount;
@@ -40,6 +42,8 @@ extern NSString * const kFHAllConfigLoadErrorNotice;
 - (void)checkUserLocationStatus;
 
 - (void)setUpLocManagerLocalInfo;
+
+- (void)configLocationManager;
 
 - (void)showCitySwitchAlert:(NSString *)cityName;
 

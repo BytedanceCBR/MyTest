@@ -94,6 +94,35 @@
     return [FHMainApi queryData:queryPath params:paramDic class:cls completion:completion];
 }
 
++ (TTHttpTask *)requestOldHouseRecommendedCourtSearchList:(NSString *)houseId
+                                                 searchId:(NSString *)searchId
+                                                   cityId:(NSInteger)cityId
+                                                   offset:(NSString *)offset
+                                                    query:(NSString *)query
+                                                    count:(NSInteger)count
+                                               completion:(void (^)(FHListResultHouseModel * _Nullable, NSError * _Nullable))completion {
+    NSString * host = [FHURLSettings baseURL] ?: @"https://i.haoduofangs.com";
+    NSString* url = [host stringByAppendingFormat:@"/f100/api/related_court?house_id=%@&offset=%@",houseId, offset];
+    if (searchId.length > 0) {
+        url = [NSString stringWithFormat:@"%@&search_id=%@", url, searchId];
+    }
+    if (cityId) {
+        url = [NSString stringWithFormat:@"%@&city_id=%ld", url, cityId];
+    }
+    NSMutableDictionary *paramDic = [NSMutableDictionary new];
+    if (query.length > 0) {
+        url = [NSString stringWithFormat:@"%@&%@",url,query];
+    }
+    paramDic[CHANNEL_ID] = CHANNEL_ID_RECOMMEND_COURT_OLD;
+    paramDic[@"count"] = @(count);
+    return [FHMainApi getRequest:url query:nil params:paramDic jsonClass:[FHListResultHouseModel class] completion:^(JSONModel * _Nullable model, NSError * _Nullable error) {
+        if (completion) {
+            completion(model,error);
+        }
+    }];
+}
+
+
 /*
  *  二手房列表请求
  *  @param: query 筛选等请求

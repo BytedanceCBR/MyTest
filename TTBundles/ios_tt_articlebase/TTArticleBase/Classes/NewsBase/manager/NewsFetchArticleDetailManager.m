@@ -204,7 +204,12 @@ static NewsFetchArticleDetailManager * sharedManager;
             [[TTMonitor shareManager] trackService:@"cdn_finish_load" status:2 extra:extra];
         }
         else {
-            NSMutableDictionary *data = [NSMutableDictionary dictionaryWithDictionary:[jsonObj objectForKey:@"data"]];
+            NSMutableDictionary *data =  @{}.mutableCopy;
+            if ([[(NSDictionary *)jsonObj objectForKey:@"data"] isKindOfClass:[NSDictionary class]]) {
+                NSDictionary  *dataDict = [(NSDictionary *)jsonObj objectForKey:@"data"];
+                [data addEntriesFromDictionary:dataDict];
+            }
+//            [NSMutableDictionary dictionaryWithDictionary:((NSDictionary *)[(NSDictionary *)jsonObj objectForKey:@"data"])];
             NSString *content = [data objectForKey:@"content"];
             NSArray *gallery = [data tt_arrayValueForKey:@"gallery"];
             if(article && article.managedObjectContext == nil)
