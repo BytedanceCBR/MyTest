@@ -41,4 +41,15 @@ DEC_TASK("TTWeixinOpenURLTask",FHTaskTypeOpenURL,TASK_PRIORITY_HIGH+4);
     return weChatShareResult || weChatAuthResult;
 }
 
+- (BOOL)application:(UIApplication *)application continueUserActivity:(NSUserActivity *)userActivity restorationHandler:(void(^)(NSArray *restorableObjects))restorationHandler {
+    BOOL accountAuthResult = [TTAccount continueUserActivity:userActivity restorationHandler:restorationHandler];
+    if (accountAuthResult) {
+        return accountAuthResult;
+    }
+
+    BOOL weChatShareResult = [TTWeChatShare continueUserActivity:userActivity restorationHandler:restorationHandler];
+    BOOL weChatAuthResult  = [TTAccountAuthWeChat continueUserActivity:userActivity restorationHandler:restorationHandler];
+    return weChatShareResult || weChatAuthResult;
+}
+
 @end
