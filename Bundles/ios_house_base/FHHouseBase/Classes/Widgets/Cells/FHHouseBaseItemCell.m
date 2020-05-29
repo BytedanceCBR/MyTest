@@ -948,7 +948,8 @@
         layout.isEnabled = YES;
         layout.right = YGPointValue(rightMargin);
         layout.marginTop = YGPointValue(28.5);
-        layout.maxWidth = YGPointValue(YOGA_RIGHT_PRICE_WIDITH + 20);
+        layout.maxWidth = YGPointValue(YOGA_RIGHT_PRICE_WIDITH + 100);
+        layout.position = YGPositionTypeAbsolute;
     }];
     
     
@@ -1479,16 +1480,21 @@
                 self.tagLabel.attributedText =  attributeString;
             }
             _priceLabel.font = [UIFont themeFontSemibold:[TTDeviceHelper isScreenWidthLarge320] ? 16 : 15];
+            
+            CGSize priceSize = [_priceLabel sizeThatFits:CGSizeMake(SCREEN_WIDTH, 30)];
             [_priceLabel configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
                 if (self.priceLabel.yoga.marginTop.value != 28.5) {
                     layout.marginTop = YGPointValue(28.5);
                 }
-                layout.maxWidth = YGPointValue(YOGA_RIGHT_PRICE_WIDITH + 20);
+                layout.width = YGPointValue(priceSize.width);
+//                layout.maxWidth = YGPointValue(YOGA_RIGHT_PRICE_WIDITH + 20);
             }];
             [self.mainTitleLabel.yoga markDirty];
             [self.subTitleLabel.yoga markDirty];
             [self.distanceLabel.yoga markDirty];
             [self.rightInfoView.yoga markDirty];
+            [self.priceLabel.yoga markDirty];
+            
             [self.rightInfoView configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
                 layout.flexGrow = 0;
             }];
