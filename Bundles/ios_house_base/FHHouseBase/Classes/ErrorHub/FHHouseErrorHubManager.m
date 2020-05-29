@@ -54,7 +54,6 @@
         [outputDic setValue:host forKey:@"name"];
         [outputDic setValue:[self removeNillValue:responseDictionary] forKey:@"response"];
         [outputDic setValue:[self removeNillValue:params] forKey:@"params"];
-        [outputDic setValue:[self removeNillValue:params] forKey:@"params"];
         [outputDic setValue:[self removeNillValue:responseStatusDic] forKey:@"httpStatus"];
         [outputDic setValue:[NSString stringWithFormat:@"%@",@(type)] forKey:@"error_info"];
         if (analysisError) {
@@ -91,8 +90,11 @@
     dispatch_async(dispatch_get_global_queue(0, 0), ^{
         NSArray *eventArr = [self localCheckBuryingPointData];
         NSMutableDictionary *errorSaveDic = [[NSMutableDictionary alloc]init];
+        NSMutableArray *err_infoArr = [[NSMutableArray alloc]init];
+        __block NSInteger error_level = 0;
         [errorSaveDic setValue:eventParams forKey:@"parmas"];
         [errorSaveDic setValue:eventName forKey:@"name"];
+        __block NSString *errorStr = @"";
         [eventArr enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
             NSDictionary *dic = obj;
             if ([[dic objectForKey:@"event"] isEqualToString:eventName]) {
@@ -108,37 +110,51 @@
                     NSString *level = paramItem[@"error_level"]?:@"";
                     if ([paramItem[@"type"] isEqualToString:@"mandatory"]) {
                         if (checkValue.length<1) {
-                            [errorSaveDic setValue:[NSString stringWithFormat:@"埋点关键字段%@为空",checkKey] forKey:@"error_info"];
+                            [err_infoArr addObject:[NSString stringWithFormat:@"埋点关键字段%@为空\n ",checkKey]];
+                            //                            [errorSaveDic setValue: forKey:@"error_info"];
                         }else {
-                            if (![rangeArr containsObject:checkValue]) {
-                                [errorSaveDic setValue:[NSString stringWithFormat:@"埋点关键字段%@取值范围错误",checkKey] forKey:@"error_info"];
+                            if (rangeArr.count>0) {
+                                if (![rangeArr containsObject:checkValue]) {
+                                    [err_infoArr addObject:[NSString stringWithFormat:@"埋点关键字段%@取值范围错误\n",checkKey]];
+                                    //                                [errorSaveDic setValue:forKey:@"error_info"];
+                                }
                             }
                         }
                     }else {
-                        if (![rangeArr containsObject:checkValue]) {
-                            [errorSaveDic setValue:[NSString stringWithFormat:@"埋点关键字段%@取值范围错误",checkKey] forKey:@"error_info"];
+                        if (rangeArr.count>0) {
+                            if (![rangeArr containsObject:checkValue]) {
+                                [err_infoArr addObject:[NSString stringWithFormat:@"埋点关键字段%@取值范围错误\n",checkKey]];
+                                //                            [errorSaveDic setValue:[NSString stringWithFormat:@"埋点关键字段%@取值范围错误",checkKey] forKey:@"error_info"];
+                            }
                         }
+                        
                     }
-                    NSString *errStr = errorSaveDic[@"error_info"] ;
-                    if (errStr.length>0) {
-                        if ([level isEqualToString:@"critical"]) {
-                            dispatch_async(dispatch_get_main_queue(), ^{
-                                [FHHouseErrorHubView showErrorHubViewWithTitle:@"埋点异常" content:[NSString stringWithFormat:@"event_name:%@ error:%@",eventName,errStr]];
-                            });
-                        }
-                        [errorSaveDic setValue:[self getCurrentTimes] forKey:@"currentTime"];
-                        //添加埋点监控
-                        NSMutableDictionary *extra = @{}.mutableCopy;
-                        [extra setValue:@"buryingPoint" forKey:@"errorHubType"];
-                        [extra setValue:eventName forKey:@"eventName"];
-                        [extra setValue:errorSaveDic[@"error_info"] forKey:@"error_info"];
-                        [extra setValue:[self getCurrentTimes] forKey:@"currentTime"];
-                        NSArray *senceArr = @[@"config",@"settings"];
-                        FHHouseErrorHub *errorHub = [FHHouseErrorHub initFHHouseErrorHubWithEventname:eventName errorInfo:@"埋点错误" saveDic:errorSaveDic senceArr:senceArr extra:extra type:errorHubType];
-                        [self saveDicWithErrorHub:errorHub];
-                        [FHErrorHubMonitor errorErrorReportingMessage:errorHub];
+                    if ([level isEqualToString:@"critical"]) {
+                        error_level = 1;
                     }
                 }];
+                if (err_infoArr.count>0) {
+                    for (NSString *str in err_infoArr) {
+                        errorStr = [errorStr stringByAppendingString:str];
+                    }
+                    if (error_level == 1) {
+                        dispatch_async(dispatch_get_main_queue(), ^{
+                            [FHHouseErrorHubView showErrorHubViewWithTitle:@"埋点异常" content:[NSString stringWithFormat:@"event_name:%@ error:%@",eventName,errorStr]];
+                        });
+                    }
+                }
+                [errorSaveDic setValue:[self getCurrentTimes] forKey:@"currentTime"];
+                [errorSaveDic setValue:errorStr forKey:@"error_info"];
+                //添加埋点监控
+                NSMutableDictionary *extra = @{}.mutableCopy;
+                [extra setValue:@"buryingPoint" forKey:@"errorHubType"];
+                [extra setValue:eventName forKey:@"eventName"];
+                [extra setValue:errorStr forKey:@"error_info"];
+                [extra setValue:[self getCurrentTimes] forKey:@"currentTime"];
+                NSArray *senceArr = @[@"config",@"settings"];
+                FHHouseErrorHub *errorHub = [FHHouseErrorHub initFHHouseErrorHubWithEventname:eventName errorInfo:@"埋点错误" saveDic:errorSaveDic senceArr:senceArr extra:extra type:errorHubType];
+                [self saveDicWithErrorHub:errorHub];
+                [FHErrorHubMonitor errorErrorReportingMessage:errorHub];
             }
         }];
     });
@@ -233,10 +249,10 @@
     NSMutableArray *senceNameArr = [[NSMutableArray alloc]init];
     [_procotalClassArr enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
         id <FHeErrorHubProtocol> associatedSence = [[obj alloc]init];
-            if ([associatedSence respondsToSelector:@selector(associatedKey)]) {
-                NSString *associatedKey = [associatedSence associatedKey];
-                [senceNameArr addObject:associatedKey];
-                }
+        if ([associatedSence respondsToSelector:@selector(associatedKey)]) {
+            NSString *associatedKey = [associatedSence associatedKey];
+            [senceNameArr addObject:associatedKey];
+        }
     }];
     return senceNameArr;
 }

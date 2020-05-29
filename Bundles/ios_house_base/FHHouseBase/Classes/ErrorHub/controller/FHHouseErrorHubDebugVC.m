@@ -144,7 +144,7 @@
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-    return 80;
+    return UITableViewAutomaticDimension;;
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
@@ -304,7 +304,9 @@
     }];
     [self.errorLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.equalTo(self.contentView).offset(15);
+        make.right.equalTo(self.contentView).offset(-15);
         make.top.equalTo(self.contentLabel.mas_bottom).offset(5);
+        make.bottom.equalTo(self.contentView).offset(-10);
     }];
 }
 
@@ -346,6 +348,7 @@
     if (!_errorLabel) {
         UILabel *errorLabel = [[UILabel alloc]init];
         errorLabel.font = [UIFont systemFontOfSize:12];
+        errorLabel.numberOfLines = 0;
         errorLabel.textColor = [UIColor blackColor];
         [self.contentView addSubview:errorLabel];
         _errorLabel = errorLabel;

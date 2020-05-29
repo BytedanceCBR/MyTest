@@ -773,7 +773,6 @@
 
 - (void)gotoLogin:(id)model enterFrom:(NSString *)enterFrom
 {
-    
     NSMutableDictionary *params = [NSMutableDictionary dictionary];
     
     [params setObject:enterFrom forKey:@"enter_from"];
