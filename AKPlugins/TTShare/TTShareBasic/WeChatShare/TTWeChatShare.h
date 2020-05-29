@@ -103,6 +103,8 @@ extern NSString * const TTWeChatShareErrorDomain;
  */
 + (BOOL)handleOpenURL:(NSURL *)url;
 
++ (BOOL)continueUserActivity:(NSUserActivity *)userActivity restorationHandler:(void (^)(NSArray<id<UIUserActivityRestoring>> * _Nullable))restorationHandler;
+
 /**
  *  发送文本消息到微信
  *
