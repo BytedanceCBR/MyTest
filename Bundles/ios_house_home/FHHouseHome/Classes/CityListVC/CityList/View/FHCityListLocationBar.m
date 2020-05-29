@@ -79,7 +79,7 @@
 - (void)setIsLocationSuccess:(BOOL)isLocationSuccess {
     _isLocationSuccess = isLocationSuccess;
     _cityNameBtn.enabled = isLocationSuccess;
-    if (isLocationSuccess) {
+    if (isLocationSuccess && _cityName) {
         [_cityNameBtn setTitleColor:[UIColor themeGray1] forState:UIControlStateNormal];
         [_cityNameBtn setTitleColor:[UIColor themeGray1] forState:UIControlStateHighlighted];
         [self.cityNameBtn setTitle:_cityName forState:UIControlStateNormal];

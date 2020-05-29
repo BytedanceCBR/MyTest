@@ -182,6 +182,7 @@
 		<string>youmischeme</string>
 		<string>douyinopensdk</string>
 		<string>douyinv1opensdk</string>
+		<string>weixinULAPI</string>
 	</array>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
