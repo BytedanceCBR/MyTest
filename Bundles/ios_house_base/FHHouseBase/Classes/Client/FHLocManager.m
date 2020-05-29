@@ -444,7 +444,7 @@ NSString * const kFHTopSwitchCityLocalKey = @"f_switch_city_top_time_local_key";
         
         if (completion) {
             // 城市选择重新定位需回调
-            completion(location);
+            completion(self.currentAmpReGeocode);
             [[FHEnvContext sharedInstance] updateRequestCommonParams];
         } else {
             NSInteger cityId = 0;
