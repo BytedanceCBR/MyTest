@@ -433,7 +433,7 @@ static BOOL s_loginAlertShowing = NO;
         if ([params tta_stringForKey:@"enter_type"] != nil) {
             [dict setObject:[params tta_stringForKey:@"enter_type"] forKey:@"enter_type"];
         }
-        if ([params tta_stringForKey:@"need_pop_vc"] != nil) {
+        if (params[@"need_pop_vc"] && [params tta_stringForKey:@"need_pop_vc"] != nil) {
             [dict setObject:[params tta_stringForKey:@"need_pop_vc"] forKey:@"need_pop_vc"];
         }
         if (params[@"from_ugc"]) {
@@ -461,7 +461,7 @@ static BOOL s_loginAlertShowing = NO;
         if ([params tta_stringForKey:@"enter_type"] != nil) {
             [dict setObject:[params tta_stringForKey:@"enter_type"] forKey:@"enter_type"];
         }
-        if ([params tta_stringForKey:@"need_pop_vc"] != nil) {
+        if (params[@"need_pop_vc"] && [params tta_stringForKey:@"need_pop_vc"] != nil) {
             [dict setObject:[params tta_stringForKey:@"need_pop_vc"] forKey:@"need_pop_vc"];
         }
         if (params[@"from_ugc"]) {
