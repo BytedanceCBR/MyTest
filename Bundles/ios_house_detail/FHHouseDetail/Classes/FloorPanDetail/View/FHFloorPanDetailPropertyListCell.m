@@ -47,6 +47,9 @@
     adjustImageScopeType(model)
     __block UIView *lastView = nil; // 最后一个视图
      NSInteger count = model.baseInfo.count;
+    for (UIView *v in self.itemArray) {
+        [v removeFromSuperview];
+    }
      if (count > 0) {
          NSMutableArray *singles = [NSMutableArray new];
          __block NSInteger doubleCount = 0;// 两列计数
@@ -112,8 +115,8 @@
              topOffset = kGrayLineX + 10 + (doubleCount / 2 + doubleCount % 2) * listRowHeight;
              [singles enumerateObjectsUsingBlock:^(FHHouseCoreInfoModel*  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
                  FHPropertyListCorrectingRowView *v = [[FHPropertyListCorrectingRowView alloc] init];
-                 [self.contentView addSubview:v];
-                   [self.itemArray addObject:v];
+                [self.contentView addSubview:v];
+                [self.itemArray addObject:v];
                  
                  
                  v.keyLabel.text = obj.attr;
@@ -122,7 +125,6 @@
                  v.valueLabel.font = [UIFont themeFontMedium:12];
                  v.keyLabel.textColor = [UIColor colorWithHexStr:@"#aeadad"];
                  v.valueLabel.textColor = [UIColor themeGray2];
-                 [v.valueLabel sizeToFit];
                  [v.keyLabel sizeToFit];
                  CGFloat keyWidth = [v.keyLabel sizeThatFits:CGSizeMake(SCREEN_WIDTH - 31 * 2, v.keyLabel.font.lineHeight)].width;
                  
@@ -151,13 +153,13 @@
                      make.top.mas_equalTo(topOffset);
                      make.left.mas_equalTo(31);
                      make.right.mas_equalTo(-31);
-                     make.height.mas_equalTo(MAX(valueHeight + 10, listRowHeight));
+                     make.height.mas_equalTo(valueHeight + 20);
                  }];
                  lastView = v;
                  lastViewLeftOffset = 20;
                  lastTopOffset = topOffset;
                  
-                 topOffset += listRowHeight;
+                 topOffset += valueHeight + 10;
              }];
          }
      }
