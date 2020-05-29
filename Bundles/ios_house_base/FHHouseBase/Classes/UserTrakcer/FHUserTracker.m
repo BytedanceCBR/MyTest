@@ -5,8 +5,9 @@
 //  Created by 谷春晖 on 2018/11/18.
 //
 
-#import "TTTracker.h"
+#import "FHUserTracker.h"
 #import "FHHouseErrorHubManager.h"
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 
 @interface FHUserTracker ()
 
