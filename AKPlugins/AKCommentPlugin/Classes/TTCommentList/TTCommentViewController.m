@@ -1084,11 +1084,13 @@ static NSInteger kDeleteCommentActionSheetTag = 10;
 #pragma mark - SSImpressionProtocol
 
 - (void)needRerecordImpressions {
-    if (self.enableImpressionRecording && self.hasSelfShown) {
-        for (id cell in [self.commentTableView visibleCells]) {
-            [self _recordImpressionsIfNeedWithCell:cell status:_isCommentShownForNatant? SSImpressionStatusRecording: SSImpressionStatusSuspend];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        if (self.enableImpressionRecording && self.hasSelfShown) {
+            for (id cell in [self.commentTableView visibleCells]) {
+                [self _recordImpressionsIfNeedWithCell:cell status:_isCommentShownForNatant? SSImpressionStatusRecording: SSImpressionStatusSuspend];
+            }
         }
-    }
+    });
 }
 
 - (void)_recordImpressionsIfNeedWithCell:(UITableViewCell *)cell status:(SSImpressionStatus)status {
