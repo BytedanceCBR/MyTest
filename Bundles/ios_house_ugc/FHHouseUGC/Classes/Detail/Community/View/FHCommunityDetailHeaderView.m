@@ -16,6 +16,7 @@
 #import "FHUGCScialGroupModel.h"
 #import "UIViewAdditions.h"
 
+
 @interface FHCommunityDetailHeaderView ()
 
 @property (nonatomic, strong) UIView *infoContainer;
