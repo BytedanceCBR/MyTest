@@ -159,7 +159,7 @@
                  lastViewLeftOffset = 20;
                  lastTopOffset = topOffset;
                  
-                 topOffset += valueHeight + 10;
+                 topOffset += valueHeight + 20;
              }];
          }
      }
