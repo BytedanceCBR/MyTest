@@ -115,8 +115,8 @@
              topOffset = kGrayLineX + 10 + (doubleCount / 2 + doubleCount % 2) * listRowHeight;
              [singles enumerateObjectsUsingBlock:^(FHHouseCoreInfoModel*  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
                  FHPropertyListCorrectingRowView *v = [[FHPropertyListCorrectingRowView alloc] init];
-                [self.contentView addSubview:v];
-                [self.itemArray addObject:v];
+                 [self.contentView addSubview:v];
+                 [self.itemArray addObject:v];
                  
                  
                  v.keyLabel.text = obj.attr;
@@ -135,11 +135,11 @@
                      make.height.mas_equalTo(20);
                  }];
                  v.valueLabel.numberOfLines = 0;
-                NSDictionary *attributes = @{NSFontAttributeName: [UIFont themeFontMedium:12]};
-                CGRect rect = [obj.value boundingRectWithSize:CGSizeMake(SCREEN_WIDTH- 31*2 - 10 - keyWidth, CGFLOAT_MAX)
-                                                           options:NSStringDrawingUsesLineFragmentOrigin
-                                                        attributes:attributes
-                                                           context:nil];
+                 NSDictionary *attributes = @{NSFontAttributeName: [UIFont themeFontMedium:12]};
+                 CGRect rect = [obj.value boundingRectWithSize:CGSizeMake(SCREEN_WIDTH- 31*2 - 10 - keyWidth, CGFLOAT_MAX)
+                                                       options:NSStringDrawingUsesLineFragmentOrigin
+                                                    attributes:attributes
+                                                       context:nil];
                  CGFloat valueHeight = rect.size.height;
                  [v.valueLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
                      make.left.mas_equalTo(v.keyLabel.mas_right).offset(10);
