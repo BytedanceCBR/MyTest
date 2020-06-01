@@ -54,7 +54,7 @@
 
 - (instancetype)initWithFrame:(CGRect)frame {
     if(self = [super initWithFrame:frame]) {
-        [self addSubview:self.tagLabel];
+        [self.contentView addSubview:self.tagLabel];
         
         [self.tagLabel mas_makeConstraints:^(MASConstraintMaker *make) {
             make.edges.equalTo(self.contentView);
@@ -168,6 +168,7 @@
         UICollectionViewFlowLayout *flowLayout = [[UICollectionViewFlowLayout alloc] init];
         flowLayout.scrollDirection = UICollectionViewScrollDirectionHorizontal;
         flowLayout.minimumInteritemSpacing = 10;
+        flowLayout.sectionInset = UIEdgeInsetsMake(0, LEFT_PADDING, 10, RIGHT_PADDING);
         
         _tagSelectCollectionView = [[UICollectionView alloc] initWithFrame:CGRectMake(0, self.socialGroupSelectEntry.bottom, self.frame.size.width, TAGS_VIEW_HEIGHT) collectionViewLayout:flowLayout];
         
@@ -499,9 +500,9 @@
     return CGSizeZero;
 }
 
-- (UIEdgeInsets)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout insetForSectionAtIndex:(NSInteger)section {
-    return UIEdgeInsetsMake(0, LEFT_PADDING, 10, RIGHT_PADDING);
-}
+//- (UIEdgeInsets)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout insetForSectionAtIndex:(NSInteger)section {
+//    return UIEdgeInsetsMake(0, LEFT_PADDING, 10, RIGHT_PADDING);
+//}
 
 #pragma mark - FHPostUGCMainViewDelegate
 

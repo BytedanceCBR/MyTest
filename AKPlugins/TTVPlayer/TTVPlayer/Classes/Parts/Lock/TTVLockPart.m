@@ -60,7 +60,9 @@
             shouldImplementTouchupInsideBlock = YES;
         }
         if (shouldImplementTouchupInsideBlock) {
+            @weakify(self);
             self.lockToggledButton.didToggledButtonTouchUpInside = ^{
+                @strongify(self);
                 if (self.lockToggledButton.currentToggledStatus == TTVToggledButtonStatus_Normal) {
                     [self.playerStore dispatch:[self.playerAction actionForKey:TTVPlayerActionType_Lock]];
                 }

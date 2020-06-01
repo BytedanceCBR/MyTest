@@ -294,7 +294,7 @@
         WeakSelf;
         NSString *host = [FHURLSettings baseURL];
         NSString *urlStr = [NSString stringWithFormat:@"%@/f100/ugc/material/v1/vote_detail",host];
-        [TTUGCRequestManager requestForJSONWithURL:urlStr params:param method:@"GET" needCommonParams:YES callBackWithMonitor:^(NSError *error, id jsonObj, TTUGCRequestMonitorModel *monitorModel) {
+        [TTUGCRequestManager requestForJSONWithURL:urlStr params:param method:@"GET" needCommonParams:YES callBackWithMonitor:^(NSError *error, id jsonObj, TTHttpResponse *response) {
             StrongSelf;
             uint64_t endTime = [NSObject currentUnixTime];
             uint64_t total = [NSObject machTimeToSecs:endTime - startTime] * 1000;

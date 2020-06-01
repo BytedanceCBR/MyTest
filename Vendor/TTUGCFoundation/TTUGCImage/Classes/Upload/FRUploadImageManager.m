@@ -337,7 +337,7 @@
         [postParams addEntriesFromDictionary:extParameter];
     }
 
-    [TTUGCRequestManager requestForJSONWithURL:[FRCommonURLSetting uploadWithUrlOfImageURL] params:postParams method:@"POST" needCommonParams:NO callBackWithMonitor:^(NSError *error, id obj, TTUGCRequestMonitorModel *monitorModel) {
+    [TTUGCRequestManager requestForJSONWithURL:[FRCommonURLSetting uploadWithUrlOfImageURL] params:postParams method:@"POST" needCommonParams:NO callBackWithMonitor:^(NSError *error, id obj, TTHttpResponse *response) {
         NSString * webURI = nil;
         int64_t width = 0;
         int64_t height = 0;

@@ -45,6 +45,6 @@ typedef void (^TTMonitorNetworkJSONFinishBlock)(NSError *error, id jsonObj, TTUG
                                params:(id)params
                                method:(NSString *)method
                      needCommonParams:(BOOL)commonParams
-                  callBackWithMonitor:(TTMonitorNetworkJSONFinishBlock)callback;
+                  callBackWithMonitor:(TTNetworkJSONFinishBlockWithResponse)callback;
 
 @end

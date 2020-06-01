@@ -45,12 +45,27 @@ static NSString *wechatShareAppID = nil;
 
 + (void)registerWithID:(NSString*)appID {
     wechatShareAppID = appID;
+    [self registerWechatShareIDIfNeeded];
 }
 
 + (void)registerWechatShareIDIfNeeded {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        [WXApi registerApp:wechatShareAppID universalLink:@" https://i.haoduofangs.com/"];
+        //在register之前打开log, 后续可以根据log排查问题
+//        [WXApi startLogByLevel:WXLogLevelDetail logBlock:^(NSString *log) {
+//            NSLog(@"WeChatSDK: %@", log);
+//        }];
+        
+        BOOL result = [WXApi registerApp:wechatShareAppID universalLink:@"https://i.haoduofangs.com/"];
+        
+        if (!result) {
+            NSLog(@"WeChatSDK: register faile");
+        }
+
+        //调用自检函数
+//        [WXApi checkUniversalLinkReady:^(WXULCheckStep step, WXCheckULStepResult* result) {
+//            NSLog(@"WeChatSDK: %@, %u, %@, %@", @(step), result.success, result.errorInfo, result.suggestion);
+//        }];
     });
 }
 
@@ -66,6 +81,10 @@ static NSString *wechatShareAppID = nil;
 + (BOOL)handleOpenURL:(NSURL *)url {
     [[self class] registerWechatShareIDIfNeeded];
     return [WXApi handleOpenURL:url delegate:[TTWeChatShare sharedWeChatShare]];
+}
+
++ (BOOL)continueUserActivity:(NSUserActivity *)userActivity restorationHandler:(void (^)(NSArray<id<UIUserActivityRestoring>> * _Nullable))restorationHandler {
+    return [WXApi handleOpenUniversalLink:userActivity delegate:[TTWeChatShare sharedWeChatShare]];;
 }
 
 - (void)sendTextToScene:(enum WXScene)scene withText:(NSString *)text customCallbackUserInfo:(NSDictionary *)customCallbackUserInfo {
