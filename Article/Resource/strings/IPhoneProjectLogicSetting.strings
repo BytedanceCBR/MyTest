@@ -217,3 +217,5 @@
 
 //local_testdebug
 "errrorhub_debug" = "FHHouseErrorHubDebugVC";
+//购房百科
+"house_encyclopedia" = "FHEncyclopediaViewController";

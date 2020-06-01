@@ -39,7 +39,6 @@
     
     collectionView.delegate = self;
     collectionView.dataSource = self;
-    
     [self initDataArray];
     
     return self;

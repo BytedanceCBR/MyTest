@@ -121,6 +121,11 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (TTHttpTask *)requestSpecialTopicHeaderWithforumId:(NSString *)forumId completion:(void (^ _Nullable)(id <FHBaseModelProtocol> model, NSError *error))completion;
 
+//购房百科
++ (TTHttpTask *)requestEncyclopediaListWithCategory:(NSString *)category channelid:(NSString *)channelId lastGroupId:(NSString *)lastGroupId behotTime:(double)behotTime loadMore:(BOOL)loadMore listCount:(NSInteger)listCount extraDic:(NSDictionary *)extraDic completion:(void (^ _Nullable)(id <FHBaseModelProtocol> model, NSError *error))completion;
+//购房百科配置
++ (TTHttpTask *)requestEncyclopediaConfigWithCategory:(NSString *)category extraDic:(NSDictionary *)extraDic completion:(void (^ _Nullable)(id <FHBaseModelProtocol> model, NSError *error))completion;
+
 @end
 
 NS_ASSUME_NONNULL_END
