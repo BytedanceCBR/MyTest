@@ -51,6 +51,7 @@
 #import "FHEnvContext.h"
 #import "FHMessageManager.h"
 #import "FHNeighbourhoodAgencyCardCell.h"
+#import "FHHousReserveAdviserCell.h"
 #import <FHHouseDetail/FHDetailBaseModel.h>
 #import "FHHouseListRecommendTipCell.h"
 #import <TTBaseLib/NSDictionary+TTAdditions.h>
@@ -239,7 +240,8 @@ extern NSString *const INSTANT_DATA_KEY;
                          NSStringFromClass([FHPlaceHolderCell class]),
                          NSStringFromClass([FHHomePlaceHolderCell class]),
                          NSStringFromClass([FHHouseListRedirectTipCell class]),
-                         NSStringFromClass([FHNeighbourhoodAgencyCardCell class])
+                         NSStringFromClass([FHNeighbourhoodAgencyCardCell class]),
+                         NSStringFromClass([FHHousReserveAdviserCell class])
                          ];
     }
     return _cellIdArray;
@@ -305,6 +307,8 @@ extern NSString *const INSTANT_DATA_KEY;
         return [FHHouseListNoHouseCell class];
     }else if ([model isKindOfClass:[FHSearchHouseDataRedirectTipsModel class]]) {
         return [FHHouseListRedirectTipCell class];
+    }else if ([model isKindOfClass:[FHHouseReserveAdviserModel class]]) {
+        return [FHHousReserveAdviserCell class];
     }
     return [FHListBaseCell class];
 }
@@ -902,7 +906,7 @@ extern NSString *const INSTANT_DATA_KEY;
                 if ([theItemModel isKindOfClass:[FHSearchHouseItemModel class]]) {
                     FHSearchHouseItemModel *itemModel = theItemModel;
                     itemModel.isLastCell = (idx == itemArray.count - 1);
-                    if ([lastObj isKindOfClass:[FHHouseNeighborAgencyModel class]]) {
+                    if ([lastObj isKindOfClass:[FHHouseNeighborAgencyModel class]] || [lastObj isKindOfClass:[FHHouseReserveAdviserModel class]]) {
                         itemModel.topMargin = 0;
                     }
                     if ((itemModel.houseType.integerValue == FHHouseTypeRentHouse || itemModel.houseType.integerValue == FHHouseTypeNeighborhood) && idx == 0) {
@@ -953,6 +957,22 @@ extern NSString *const INSTANT_DATA_KEY;
                         [wself clickRedirectTip:openUrl];
                     };
                     theItemModel = tipModel;
+                }else if ([theItemModel isKindOfClass:[FHHouseReserveAdviserModel class]]) {
+                    FHHouseReserveAdviserModel *model = theItemModel;
+                    NSMutableDictionary *traceParam = [NSMutableDictionary new];
+                    traceParam[@"card_type"] = @"left_pic";
+                    traceParam[@"enter_from"] = traceDictParams[@"enter_from"];
+                    traceParam[@"element_from"] = traceDictParams[@"element_from"];
+                    traceParam[@"page_type"] = [self pageTypeString];
+                    traceParam[@"search_id"] = wself.searchId;
+                    traceParam[@"log_pb"] = model.logPb;
+                    traceParam[@"origin_from"] = wself.originFrom;
+                    traceParam[@"origin_search_id"] = wself.originSearchId;
+                    traceParam[@"rank"] = @(0);
+                    model.tracerDict = traceParam;
+                    model.belongsVC = wself.listVC;
+                    model.tableView = wself.tableView;
+                    theItemModel = model;
                 }
             
                 if (theItemModel) {
@@ -1681,6 +1701,11 @@ extern NSString *const INSTANT_DATA_KEY;
             cellModel = self.sugesstHouseList[indexPath.row];
         }
     }
+    
+    if([cellModel isKindOfClass:[FHHouseReserveAdviserModel class]] || [cellModel isKindOfClass:[FHHouseNeighborAgencyModel class]]){
+        return;
+    }
+    
     [self jump2HouseDetailPage:cellModel withRank:indexPath.row];
     if ([cellModel isKindOfClass:[FHSearchHouseItemModel class]]) {
         FHSearchHouseItemModel *model = (FHSearchHouseItemModel *)cellModel;
@@ -1694,6 +1719,10 @@ extern NSString *const INSTANT_DATA_KEY;
             [[FHRelevantDurationTracker sharedTracker] beginRelevantDurationTracking];
         }
     }
+}
+
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView {
+    [self.listVC.view endEditing:YES];
 }
 
 #pragma mark - 详情页跳转

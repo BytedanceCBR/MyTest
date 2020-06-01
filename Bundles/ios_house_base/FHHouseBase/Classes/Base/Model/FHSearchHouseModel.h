@@ -348,6 +348,25 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
+@interface FHHouseReserveAdviserModel : FHSearchBaseItemModel
+
+@property (nonatomic, copy , nullable) NSString *tipText;
+@property (nonatomic, copy , nullable) NSString *realtorType;
+@property (nonatomic, copy , nullable) NSString *targetId;
+@property (nonatomic, copy , nullable) NSString *targetName;
+@property (nonatomic, copy , nullable) NSString *districtAreaName;
+@property (nonatomic, copy , nullable) NSString *areaPrice;
+@property (nonatomic, copy , nullable) NSString *displayStatusInfo;
+@property (nonatomic, strong , nullable) NSDictionary *logPb;
+@property (nonatomic, strong, nullable) FHClueAssociateInfoModel *associateInfo;
+
+@property (nonatomic, strong , nullable) NSDictionary *tracerDict;
+@property(nonatomic, weak) UIViewController *belongsVC;
+@property(nonatomic, weak) UITableView *tableView;
+@property(nonatomic, assign) BOOL isSubcribed;
+
+@end
+
 @interface  FHSearchHouseItemModel  : FHSearchBaseItemModel
 
 @property (nonatomic, copy , nullable) NSString *buildingSquareMeter;

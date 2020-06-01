@@ -324,6 +324,9 @@
         case FHSearchCardTypeRedirectTip:
             itemModel = [[FHSearchHouseDataRedirectTipsModel alloc]initWithDictionary:itemDict error:&jerror];
             break;
+        case FHSearchCardTypeReserveAdviser:
+            itemModel = [[FHHouseReserveAdviserModel alloc]initWithDictionary:itemDict error:&jerror];
+            break;
         default:
             break;
     }
