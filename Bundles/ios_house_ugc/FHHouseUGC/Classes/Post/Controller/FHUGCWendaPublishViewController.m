@@ -54,7 +54,7 @@
 #define RIGHT_PADDING               20
 
 // 输入文本长度限制
-#define TITLE_MAX_COUNT             40  // 问题标题文字长度限制
+#define TITLE_MAX_COUNT             30  // 问题标题文字长度限制
 #define DESC_MAX_COUNT              100  // 问题描述文字长度限制
 #define IMAGE_MAX_COUNT             3   // 问题副带图片个数限制
 

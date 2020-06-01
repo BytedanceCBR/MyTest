@@ -470,7 +470,15 @@ static FHLoginSharedModel *_sharedModel = nil;
     }
     self.currentViewType = viewType;
     if (self.loginViewViewTypeChanged) {
-        self.loginViewViewTypeChanged(viewType);
+        if (viewType == FHLoginViewTypeMobile) {
+            //如果是手机号登录，进入登录页面之前的页面存在键盘，会有问题
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                self.loginViewViewTypeChanged(viewType);
+            });
+        } else {
+            self.loginViewViewTypeChanged(viewType);
+        }
+        
     }
     NSString *login_suggest_method = @"";
     NSMutableDictionary *tracerDict = [self.viewController tracerDict].mutableCopy;
@@ -1178,6 +1186,10 @@ static FHLoginSharedModel *_sharedModel = nil;
     }
     if (self.needPopVC) {
         [self popViewController];
+    } else {
+        if (self.viewController) {
+            [self.viewController.navigationController popToViewController:self.viewController animated:NO];
+        }
     }
     [self loginSuccessedWithPhoneNum:phoneNumber];
     

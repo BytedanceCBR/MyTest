@@ -84,7 +84,12 @@ NSString * const kFHTopSwitchCityLocalKey = @"f_switch_city_top_time_local_key";
     if (![self.currentReGeocode isKindOfClass:[BDUGBasePlacemark class]]) {
            self.currentReGeocode = nil;
     }
-    self.currentLocaton = [self.locationCache objectForKey:@"fh_currentLocaton"];
+    
+    if ([self isHaveLocationAuthorization]) {
+        self.currentLocaton = [self.locationCache objectForKey:@"fh_currentLocaton"];
+    }else{
+        [self cleanLocationData];
+    }
 
     self.isLocationSuccess = [(NSNumber *)[self.locationCache objectForKey:@"fh_isLocationSuccess"] boolValue];
     self.retryConfigCount = 3;
@@ -113,6 +118,7 @@ NSString * const kFHTopSwitchCityLocalKey = @"f_switch_city_top_time_local_key";
     [self.locationCache removeObjectForKey:@"fh_currentLocaton"];
     [self.locationCache removeObjectForKey:@"fh_currentReGeocode"];
 }
+
 
 - (void)setIsLocationSuccess:(BOOL)isLocationSuccess {
     _isLocationSuccess = isLocationSuccess;

@@ -297,15 +297,18 @@ static CGRect splitViewFrameForView(UIView *view)
 
 - (void)needRerecordImpressions
 {
-    if (self.isViewAppear) {
-        for (id cell in [self.commentListView visibleCells]) {
-            
-            NSIndexPath *indexPath = [self.commentListView  indexPathForCell:cell];
-            TTVReplyListItem *item = [self getCurReplyListItemAtIndexPath:indexPath];
-            [self tt_recordForComment:item
-                               status:SSImpressionStatusRecording];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        if (self.isViewAppear) {
+            for (id cell in [self.commentListView visibleCells]) {
+                
+                NSIndexPath *indexPath = [self.commentListView  indexPathForCell:cell];
+                TTVReplyListItem *item = [self getCurReplyListItemAtIndexPath:indexPath];
+                [self tt_recordForComment:item
+                                   status:SSImpressionStatusRecording];
+            }
         }
-    }
+    });
+    
 }
 
 
