@@ -51,7 +51,7 @@
     __block UIView *lastView = nil; // 最后一个视图
     __block NSInteger doubleCount = 0;// 两列计数
     NSMutableArray *singles = [NSMutableArray new];
-    CGFloat vHeight = 30.0;
+    CGFloat vHeight = 35.0;
     if (model.baseInfo.count > 0) {
         CGFloat viewWidth = (UIScreen.mainScreen.bounds.size.width - 40) / 2;
         [model.baseInfo enumerateObjectsUsingBlock:^(FHHouseBaseInfoModel*  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
@@ -71,7 +71,6 @@
                      itemView.keyLabel.text = obj.attr;
                      itemView.valueLabel.text = obj.value;
                     lastView = itemView;
-//                     itemsCount += 1;
                 }else {
                     FHDetailNeighborhoodPropertyItemView *itemView = [[FHDetailNeighborhoodPropertyItemView alloc] init];
                               [self.containerView addSubview:itemView];
@@ -105,7 +104,7 @@
            }];
        }
         [self.containerView mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.height.mas_equalTo(((doubleCount/2 + doubleCount % 2)+singles.count) * 30);
+            make.height.mas_equalTo(((doubleCount/2 + doubleCount % 2)+singles.count) * vHeight);
         }];
 }
 
@@ -159,7 +158,7 @@
 - (void)updateItems:(BOOL)animated {
     FHDetailNeighborhoodPropertyInfoModel *model = (FHDetailNeighborhoodPropertyInfoModel *)self.currentData;
         [self.containerView mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.height.mas_equalTo(30 * model.baseInfo.count);
+            make.height.mas_equalTo(35 * model.baseInfo.count);
         }];
 }
 
@@ -214,7 +213,7 @@
         make.top.mas_equalTo(10);
         make.height.mas_equalTo(20);
         make.width.mas_offset(56);
-        make.bottom.mas_equalTo(self);
+        make.bottom.mas_equalTo(self).offset(-5);
     }];
     
     [self.valueLabel mas_makeConstraints:^(MASConstraintMaker *make) {
