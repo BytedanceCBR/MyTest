@@ -126,6 +126,7 @@
                 [wSelf.detailController.emptyView hideEmptyView];
                 wSelf.bottomBar.hidden = NO;
                 NSString *neighborhoodId = model.data.neighborhoodInfo.id;
+                [wSelf.navBar showMessageNumber];
                 wSelf.neighborhoodId = neighborhoodId;
                 // 周边数据请求
                 [wSelf requestRelatedData:neighborhoodId];
