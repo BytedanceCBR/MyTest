@@ -1055,20 +1055,22 @@ NSString *const kTTCommentDetailForwardCommentNotification = @"kTTCommentDetailF
 #pragma mark -- SSImpressionManager
 
 - (void)needRerecordImpressions {
-    if (self.isViewAppear) {
-        self.headerView.willAppearBlock();
-        for (id cell in [self.tableView visibleCells]) {
-            NSIndexPath *indexPath = [self.tableView indexPathForCell:cell];
-            if (indexPath.section < self.pageState.totalComments.count) {
-                NSArray<TTCommentDetailReplyCommentModel *> *array = self.pageState.totalComments[indexPath.section];
-                if (indexPath.row < array.count) {
-                    
-                    [self tt_recordForComment:self.pageState.totalComments[indexPath.section][indexPath.row]
-                                       status:SSImpressionStatusRecording];
-                }
-            }
-        }
-    }
+    dispatch_async(dispatch_get_main_queue(), ^{
+       if (self.isViewAppear) {
+           self.headerView.willAppearBlock();
+           for (id cell in [self.tableView visibleCells]) {
+               NSIndexPath *indexPath = [self.tableView indexPathForCell:cell];
+               if (indexPath.section < self.pageState.totalComments.count) {
+                   NSArray<TTCommentDetailReplyCommentModel *> *array = self.pageState.totalComments[indexPath.section];
+                   if (indexPath.row < array.count) {
+                       
+                       [self tt_recordForComment:self.pageState.totalComments[indexPath.section][indexPath.row]
+                                          status:SSImpressionStatusRecording];
+                   }
+               }
+           }
+       }
+    });
 }
 
 - (void)tt_registerToImpressionManager:(id)object {
