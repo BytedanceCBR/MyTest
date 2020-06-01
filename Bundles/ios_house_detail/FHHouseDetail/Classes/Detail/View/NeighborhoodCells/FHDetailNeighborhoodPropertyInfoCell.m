@@ -25,6 +25,7 @@
 @property (nonatomic, weak) UIImageView *shadowImage;
 @property (nonatomic, strong)   UIView       *containerView;
 @property (nonatomic, strong)   FHDetailFoldViewButton       *foldButton;
+@property (nonatomic, strong)   NSArray       *singleItems;
 
 @end
 
@@ -56,7 +57,7 @@
         CGFloat viewWidth = (UIScreen.mainScreen.bounds.size.width - 40) / 2;
         [model.baseInfo enumerateObjectsUsingBlock:^(FHHouseBaseInfoModel*  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
             if (obj.isSingle) {
-                      [singles addObject:obj];
+                    [singles addObject:obj];
             } else {
                 // 两列
                 if (doubleCount % 2 == 0) {
@@ -89,23 +90,49 @@
         }];
         
     }
+    self.singleItems = singles;
     if (singles.count > 0) {
-           [singles enumerateObjectsUsingBlock:^(FHHouseCoreInfoModel*  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-               FHDetailNeighborhoodPropertyItemView *itemView = [[FHDetailNeighborhoodPropertyItemView alloc] init];
-                         [self.containerView addSubview:itemView];
-                         [itemView mas_makeConstraints:^(MASConstraintMaker *make) {
-                             make.top.mas_equalTo((idx+(doubleCount/2)+doubleCount % 2)* vHeight);
-                             make.left.right.mas_equalTo(self.containerView);
-                             make.height.mas_equalTo(vHeight);
-                         }];
-                         itemView.keyLabel.text = obj.attr;
-                         itemView.valueLabel.text = obj.value;
-               lastView = itemView;
-           }];
-       }
-        [self.containerView mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.height.mas_equalTo(((doubleCount/2 + doubleCount % 2)+singles.count) * vHeight);
+        // 先布局items
+        [singles enumerateObjectsUsingBlock:^(FHHouseCoreInfoModel*  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+            FHDetailNeighborhoodPropertyItemView *itemView = [[FHDetailNeighborhoodPropertyItemView alloc] init];
+            [self.containerView addSubview:itemView];
+            [itemView mas_makeConstraints:^(MASConstraintMaker *make) {
+                make.top.mas_equalTo((idx+(doubleCount/2)+doubleCount % 2)* vHeight);
+                make.left.right.mas_equalTo(self.containerView);
+                make.height.mas_equalTo(vHeight);
+            }];
+            itemView.keyLabel.text = obj.attr;
+            itemView.valueLabel.text = obj.value;
+            lastView = itemView;
         }];
+        // > 7 添加折叠展开
+        if (singles.count > 7) {
+            if (_foldButton) {
+                [_foldButton removeFromSuperview];
+                _foldButton = nil;
+            }
+            _foldButton = [[FHDetailFoldViewButton alloc] initWithDownText:@"查看全部信息" upText:@"收起" isFold:YES];
+            _foldButton.openImage = [UIImage imageNamed:@"message_more_arrow"];
+            _foldButton.foldImage = [UIImage imageNamed:@"message_flod_arrow"];
+            _foldButton.keyLabel.textColor = [UIColor colorWithHexStr:@"#4a4a4a"];
+            _foldButton.keyLabel.font = [UIFont themeFontRegular:14];
+            [self.contentView addSubview:_foldButton];
+            [_foldButton mas_makeConstraints:^(MASConstraintMaker *make) {
+                make.top.mas_equalTo(self.containerView.mas_bottom);
+                make.height.mas_equalTo(58);
+                make.left.right.mas_equalTo(self.contentView);
+            }];
+            [self.containerView mas_updateConstraints:^(MASConstraintMaker *make) {
+                make.bottom.mas_equalTo(self.shadowImage).offset(-93);
+            }];
+            [self.foldButton addTarget:self action:@selector(foldButtonClick:) forControlEvents:UIControlEventTouchUpInside];
+        } else {
+            [self.containerView mas_updateConstraints:^(MASConstraintMaker *make) {
+                make.height.mas_equalTo(((doubleCount/2 + doubleCount % 2)+singles.count) * vHeight);
+            }];
+        }
+    }
+    [self updateItems:NO];
 }
 
 
@@ -144,22 +171,53 @@
         make.left.equalTo(self.contentView).offset(15);
         make.right.equalTo(self.contentView).offset(-15);
     }];
-//    _headerView = [[FHDetailHeaderViewNoMargin alloc] init];
-//    _headerView.label.text = @"小区概况";
-//    [self.containerView addSubview:_headerView];
-//    [self.headerView mas_makeConstraints:^(MASConstraintMaker *make) {
-//        make.left.equalTo(self.containerView);
-//        make.top.equalTo(self.containerView);
-//        make.right.equalTo(self.containerView).offset(-15);
-//        make.height.mas_offset(26);
-//    }];
 }
 
+//- (void)updateItems:(BOOL)animated {
+//    FHDetailNeighborhoodPropertyInfoModel *model = (FHDetailNeighborhoodPropertyInfoModel *)self.currentData;
+//        [self.containerView mas_updateConstraints:^(MASConstraintMaker *make) {
+//            make.height.mas_equalTo(35 * model.baseInfo.count);
+//        }];
+//}
 - (void)updateItems:(BOOL)animated {
     FHDetailNeighborhoodPropertyInfoModel *model = (FHDetailNeighborhoodPropertyInfoModel *)self.currentData;
+    NSInteger realtorShowCount = 0;
+    if (self.singleItems.count > 7) {
+        if (animated) {
+            [model.tableView beginUpdates];
+        }
+        if (model.isFold) {
+            CGFloat showHeight = 35.0 * 7;
+            [self.containerView mas_updateConstraints:^(MASConstraintMaker *make) {
+                make.height.mas_equalTo(showHeight);
+            }];
+        } else {
+           CGFloat showHeight = 35.0 * self.singleItems.count;
+            [self.containerView mas_updateConstraints:^(MASConstraintMaker *make) {
+                make.height.mas_equalTo(showHeight);
+            }];
+        }
+        [self setNeedsUpdateConstraints];
+        if (animated) {
+            [model.tableView endUpdates];
+        }
+    } else if (self.singleItems.count > 0) {
+        CGFloat showHeight = 35.0 * self.singleItems.count;
+         [self.containerView mas_updateConstraints:^(MASConstraintMaker *make) {
+             make.height.mas_equalTo(showHeight);
+         }];
+    } else {
         [self.containerView mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.height.mas_equalTo(35 * model.baseInfo.count);
+            make.height.mas_equalTo(0);
         }];
+    }
+}
+
+- (void)foldButtonClick:(UIButton *)button {
+    FHDetailNeighborhoodPropertyInfoModel *model = (FHDetailNeighborhoodPropertyInfoModel *)self.currentData;
+    model.isFold = !model.isFold;
+    self.foldButton.isFold = model.isFold;
+    [self updateItems:YES];
 }
 
 - (NSString *)elementTypeString:(FHHouseType)houseType {
