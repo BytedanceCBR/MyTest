@@ -358,8 +358,12 @@
 
         pictureDetailViewController.followStatus = self.baseViewModel.contactViewModel.followStatus;
     }else if ([self.baseViewModel.detailData isKindOfClass:[FHDetailNewModel class]]) {
-        FHDetailNewModel *model = (FHDetailOldModel *)self.baseViewModel.detailData;
+        FHDetailNewModel *model = (FHDetailNewModel *)self.baseViewModel.detailData;
         pictureDetailViewController.associateInfo = model.data.imageGroupAssociateInfo;
+        if (!model.data.isShowTopImageTab) {
+            //如果是新房，非北京、江州以外的城市，暂时隐藏头部
+            pictureDetailViewController.isShowSegmentView = NO;
+        }
     }else if ([self.baseViewModel.detailData isKindOfClass:[FHDetailNeighborhoodModel class]]) {
         FHDetailNeighborhoodModel *model = (FHDetailOldModel *)self.baseViewModel.detailData;
     } else if ([self.baseViewModel.detailData isKindOfClass:[FHDetailFloorPanDetailInfoModel class]]) {
