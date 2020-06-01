@@ -26,6 +26,7 @@
 @property (nonatomic, strong)   UIView       *containerView;
 @property (nonatomic, strong)   FHDetailFoldViewButton       *foldButton;
 @property (nonatomic, strong)   NSArray       *singleItems;
+@property (nonatomic, strong)   UIView       *opView;// 半透明视图
 
 @end
 
@@ -114,6 +115,25 @@
                 [_foldButton removeFromSuperview];
                 _foldButton = nil;
             }
+            if (_opView) {
+                [_opView removeFromSuperview];
+            }
+            _opView = [[UIView alloc] initWithFrame:CGRectZero];
+            // 渐变色layer
+            CAGradientLayer *gradientLayer = [CAGradientLayer layer];
+            gradientLayer.frame = CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width - 30, 53);
+            gradientLayer.colors = @[(__bridge id)[[UIColor whiteColor] colorWithAlphaComponent:0.3].CGColor,
+                                     (__bridge id)[[UIColor whiteColor] colorWithAlphaComponent:1.0].CGColor];
+            gradientLayer.startPoint = CGPointMake(0.5, 0.0);
+            gradientLayer.endPoint = CGPointMake(0.5, 1.0);
+            [_opView.layer addSublayer:gradientLayer];
+            [self.contentView addSubview:_opView];
+            [_opView mas_makeConstraints:^(MASConstraintMaker *make) {
+                make.height.mas_equalTo(53);
+                make.left.right.mas_equalTo(self.containerView);
+                make.top.mas_equalTo(self.containerView.mas_bottom).offset(-30);
+            }];
+            
             _foldButton = [[FHDetailFoldViewButton alloc] initWithDownText:@"查看全部信息" upText:@"收起" isFold:YES];
             _foldButton.openImage = [UIImage imageNamed:@"message_more_arrow"];
             _foldButton.foldImage = [UIImage imageNamed:@"message_flod_arrow"];
@@ -159,7 +179,6 @@
 }
 
 - (void)setupUI {
-
     [self.shadowImage mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.right.equalTo(self);
         make.top.equalTo(self.contentView).offset(-12);
@@ -213,6 +232,11 @@
     FHDetailNeighborhoodPropertyInfoModel *model = (FHDetailNeighborhoodPropertyInfoModel *)self.currentData;
     model.isFold = !model.isFold;
     self.foldButton.isFold = model.isFold;
+    if (model.isFold) {
+        self.opView.hidden = NO;
+    } else {
+        self.opView.hidden = YES;
+    }
     [self updateItems:YES];
 }
 
