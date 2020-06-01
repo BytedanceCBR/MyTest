@@ -56,39 +56,42 @@
     if (model.baseInfo.count > 0) {
         CGFloat viewWidth = (UIScreen.mainScreen.bounds.size.width - 40) / 2;
         [model.baseInfo enumerateObjectsUsingBlock:^(FHHouseBaseInfoModel*  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+            obj.isSingle = YES;
             if (obj.isSingle) {
-                    [singles addObject:obj];
+                // 非空字段
+                if (obj.value.length > 0 && ![obj.value isEqualToString:@"-"]) {
+                     [singles addObject:obj];
+                }
             } else {
                 // 两列
                 if (doubleCount % 2 == 0) {
                     FHDetailNeighborhoodPropertyItemView *itemView = [[FHDetailNeighborhoodPropertyItemView alloc] init];
-                     [self.containerView addSubview:itemView];
-                     [itemView mas_makeConstraints:^(MASConstraintMaker *make) {
-                         make.top.mas_equalTo((doubleCount/2) * vHeight);
-                         make.left.mas_equalTo(self.containerView);
-                         make.width.mas_equalTo(viewWidth);
-                         make.height.mas_equalTo(vHeight);
-                     }];
-                     itemView.keyLabel.text = obj.attr;
-                     itemView.valueLabel.text = obj.value;
+                    [self.containerView addSubview:itemView];
+                    [itemView mas_makeConstraints:^(MASConstraintMaker *make) {
+                        make.top.mas_equalTo((doubleCount/2) * vHeight);
+                        make.left.mas_equalTo(self.containerView);
+                        make.width.mas_equalTo(viewWidth);
+                        make.height.mas_equalTo(vHeight);
+                    }];
+                    itemView.keyLabel.text = obj.attr;
+                    itemView.valueLabel.text = obj.value;
                     lastView = itemView;
                 }else {
                     FHDetailNeighborhoodPropertyItemView *itemView = [[FHDetailNeighborhoodPropertyItemView alloc] init];
-                              [self.containerView addSubview:itemView];
-                              [itemView mas_makeConstraints:^(MASConstraintMaker *make) {
-                                  make.top.mas_equalTo((doubleCount/2) * vHeight);
-                                  make.left.equalTo(self.containerView).offset(viewWidth);
-                                  make.width.mas_equalTo(viewWidth);
-                                  make.height.mas_equalTo(vHeight);
-                              }];
-                              itemView.keyLabel.text = obj.attr;
-                              itemView.valueLabel.text = obj.value;
+                    [self.containerView addSubview:itemView];
+                    [itemView mas_makeConstraints:^(MASConstraintMaker *make) {
+                        make.top.mas_equalTo((doubleCount/2) * vHeight);
+                        make.left.equalTo(self.containerView).offset(viewWidth);
+                        make.width.mas_equalTo(viewWidth);
+                        make.height.mas_equalTo(vHeight);
+                    }];
+                    itemView.keyLabel.text = obj.attr;
+                    itemView.valueLabel.text = obj.value;
                     lastView = itemView;
                 }
                 doubleCount += 1;
             }
         }];
-        
     }
     self.singleItems = singles;
     if (singles.count > 0) {
@@ -173,15 +176,8 @@
     }];
 }
 
-//- (void)updateItems:(BOOL)animated {
-//    FHDetailNeighborhoodPropertyInfoModel *model = (FHDetailNeighborhoodPropertyInfoModel *)self.currentData;
-//        [self.containerView mas_updateConstraints:^(MASConstraintMaker *make) {
-//            make.height.mas_equalTo(35 * model.baseInfo.count);
-//        }];
-//}
 - (void)updateItems:(BOOL)animated {
     FHDetailNeighborhoodPropertyInfoModel *model = (FHDetailNeighborhoodPropertyInfoModel *)self.currentData;
-    NSInteger realtorShowCount = 0;
     if (self.singleItems.count > 7) {
         if (animated) {
             [model.tableView beginUpdates];
