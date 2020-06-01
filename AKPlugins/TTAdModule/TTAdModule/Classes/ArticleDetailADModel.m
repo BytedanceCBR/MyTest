@@ -12,6 +12,7 @@
 #import "TTURLTracker.h"
 #import "TTTrackerProxy.h"
 #import "TTBaseMacro.h"
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 
 const NSInteger GroupImageCount = 3;
 
@@ -215,7 +216,7 @@ const NSInteger GroupImageCount = 3;
     if (extra) {
         [events addEntriesFromDictionary:extra];
     }
-    [TTTracker eventData:events];
+    [BDTrackerProtocol eventData:events];
 }
 
 - (void)trackRealTimeDownload
@@ -229,7 +230,7 @@ const NSInteger GroupImageCount = 3;
     [params setValue:@"2" forKey:@"ext_value"];
     [params setValue:@(connectionType) forKey:@"nt"];
     [params setValue:@"1" forKey:@"is_ad_event"];
-    [TTTracker eventV3:@"realtime_click" params:params];
+    [BDTrackerProtocol eventV3:@"realtime_click" params:params];
 }
 
 @end

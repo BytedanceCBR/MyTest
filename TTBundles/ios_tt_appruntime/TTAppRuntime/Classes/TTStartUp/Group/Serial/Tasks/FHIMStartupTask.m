@@ -281,8 +281,9 @@ DEC_TASK("FHIMStartupTask",FHTaskTypeSerial,TASK_PRIORITY_HIGH+16);
     NSString *targetId = traceParams[@"target_id"];
     NSInteger targetType = [traceParams btd_integerValueForKey:@"target_type"];
     NSInteger evaluationType = [traceParams btd_integerValueForKey:@"evaluation_type"];
+    NSString *element_from = [traceParams btd_stringValueForKey:@"element_from"];
 
-    [FHHouseDetailAPI requestRealtorEvaluationFeedback:targetId targetType:targetType evaluationType:evaluationType realtorId:realtorId content:content score:scoreCount tags:scoreTags completion:^(bool succss, NSError *_Nullable error) {
+    [FHHouseDetailAPI requestRealtorEvaluationFeedback:targetId targetType:targetType evaluationType:evaluationType realtorId:realtorId content:content score:scoreCount tags:scoreTags from:element_from completion:^(bool succss, NSError *_Nullable error) {
         if (succss) {
             [[ToastManager manager] showToast:@"提交成功，感谢您的评价"];
         } else {
@@ -326,10 +327,15 @@ DEC_TASK("FHIMStartupTask",FHTaskTypeSerial,TASK_PRIORITY_HIGH+16);
 }
 - (BOOL)isEnableIMShortConnect {
     BOOL ret = NO;
-#if DEBUG
     BOOL isShortConnectEnable = [[NSUserDefaults standardUserDefaults] boolForKey:@"_IM_ShortConnection_Enable_"];
     ret = isShortConnectEnable;
-#endif
+    return ret;
+}
+
+- (BOOL)isFakeToken {
+    BOOL ret = NO;
+    BOOL isFakeToken = [[NSUserDefaults standardUserDefaults] boolForKey:@"_IM_Fake_Token_Enable_"];
+    ret = isFakeToken;
     return ret;
 }
 @end

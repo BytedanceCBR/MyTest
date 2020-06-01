@@ -16,7 +16,7 @@
 #import "UIViewAdditions.h"
 #import "TTDeviceHelper.h"
 #import "TTDeviceUIUtils.h"
-#import "TTTracker.h"
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 
 #define kMaskViewTag 20171017
 

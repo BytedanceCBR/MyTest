@@ -44,6 +44,9 @@
 + (JSONKeyMapper*)keyMapper
 {
   NSDictionary *dict = @{
+    @"buyFieldTime": @"buy_field_time",
+    @"plannedBuilding": @"planned_building",
+    @"plannedFamily": @"planned_family",
     @"areaSquareMeter": @"area_square_meter",
     @"buildingSquareMeter": @"building_square_meter",
     @"pricingPerSqm": @"pricing_per_sqm",

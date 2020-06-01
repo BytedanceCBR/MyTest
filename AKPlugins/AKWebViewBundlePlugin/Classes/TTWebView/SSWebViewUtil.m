@@ -7,7 +7,7 @@
 //
 
 #import "SSWebViewUtil.h"
-#import <TTTracker/TTTracker.h>
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 #import "NetworkUtilities.h"
 #import <TTBaseLib/TTDeviceHelper.h>
 #import <TTSettingsManager/TTSettingsManager.h>
@@ -55,7 +55,7 @@ static WKWebView *wkWebView;
     [dict setValue:URLStrings forKey:@"links"];
     [dict setValue:adid forKey:@"ext_value"];
     [dict setValue:logExtra forKey:@"log_extra"];
-    [TTTracker eventData:dict];
+    [BDTrackerProtocol eventData:dict];
 }
 
 static NSString *s_oldAgent = nil;

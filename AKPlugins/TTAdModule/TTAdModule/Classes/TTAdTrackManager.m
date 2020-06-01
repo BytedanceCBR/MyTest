@@ -10,6 +10,7 @@
 #import <TTAdModule/TTAdMonitorManager.h>
 #import <TTTracker/TTTrackerProxy.h>
 //#import "TTTrackerWrapper.h"
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 
 @implementation TTAdTrackManager
 
@@ -20,7 +21,10 @@
                value:(NSString *)value
             extraDic:(NSDictionary *)dic
 {
-    ttTrackEventWithCustomKeys(tag, label, value, nil, dic);
+    
+    [BDTrackerProtocol trackEventWithCustomKeys:tag label:label value:value source:nil extraDic:dic];
+
+//    ttTrackEventWithCustomKeys(tag, label, value, nil, dic);
     {
         NSMutableDictionary *events = [NSMutableDictionary dictionaryWithCapacity:10];
         [events setValue:tag forKey:@"tag"];

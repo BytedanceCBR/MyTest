@@ -14,10 +14,19 @@
 #import "FHEnvContext.h"
 #import "UIColor+Theme.h"
 #import "UIViewController+Track.h"
+#import "FHHomeEntranceItemView.h"
+#import "FHCommonDefines.h"
+#import "UIViewAdditions.h"
+#import "FHCommuteManager.h"
+#import "FHUserTracker.h"
+#import "TTSettingsManager.h"
+#import "NSDictionary+TTAdditions.h"
 
 @interface FHHomeMoreIconViewController ()<TTRouteInitializeProtocol,UITableViewDelegate,UITableViewDataSource>
 @property (nonatomic, strong) UITableView* contentTableView;
 @property (nonatomic, assign) NSTimeInterval stayTime; //页面停留时间
+@property(nonatomic , strong) NSMutableArray *itemViews;
+
 
 @end
 
@@ -41,6 +50,20 @@
     
     self.customNavBarView.title.text = @"工具箱";
     
+    NSDictionary *fhSettings= [[TTSettingsManager sharedManager] settingForKey:@"f_settings" defaultValue:@{} freeze:YES];
+    NSInteger topInterger = [fhSettings tt_integerValueForKey:@"f_tool_box_try_fps_close"];
+    
+    if (!topInterger) {
+        [self tryFPSFixUICreate];
+    }else{
+        [self normalCreate];
+    }
+    
+    [self sendGoDetailTrace];
+    
+}
+
+- (void)normalCreate {
     self.contentTableView.separatorStyle = UITableViewCellSelectionStyleNone;
     [self.view addSubview:self.contentTableView];
     [self.contentTableView setBackgroundColor:[UIColor themeGray8]];
@@ -50,8 +73,64 @@
     [self setupConstrains];
     
     [self.contentTableView registerClass:[FHHomeEntrancesCell class] forCellReuseIdentifier:NSStringFromClass([FHHomeEntrancesCell class])];
+}
+
+- (void)tryFPSFixUICreate{
     
-    [self sendGoDetailTrace];
+    CGFloat top = 0;
+    CGFloat safeTop = 20;
+    if (@available(iOS 11.0, *)) {
+        safeTop = [[[[UIApplication sharedApplication] delegate] window] safeAreaInsets].top;
+    }
+    
+    CGFloat topSet = 44 + (safeTop == 0 ? 20 : safeTop);
+    
+    _itemViews = [NSMutableArray new];
+
+    FHConfigDataModel *configData = [[FHEnvContext sharedInstance] getConfigFromCache];
+    NSArray * items = (NSArray<FHConfigDataOpDataItemsModel> *)configData.toolboxData.items;
+    
+    NSInteger countPerRow = [FHHomeCellHelper sharedInstance].kFHHomeIconRowCount;
+    if(items.count > countPerRow*2){
+        items = [items subarrayWithRange:NSMakeRange(0, countPerRow*2)];
+    }
+    NSInteger rowCount = (items.count+countPerRow-1)/countPerRow;
+    NSInteger totalCount = MIN(items.count, rowCount*countPerRow);
+    CGFloat ratio = SCREEN_WIDTH/375;
+    
+    CGRect itemFrame = CGRectMake(0, topSet, MAX(ceil(ratio*NORMAL_ICON_WIDTH),NORMAL_ITEM_WIDTH), ceil(ratio*NORMAL_ICON_WIDTH+NORMAL_NAME_HEIGHT));
+    
+    if(self.itemViews.count < totalCount){
+        CGSize iconSize = CGSizeMake(ceil(NORMAL_ICON_WIDTH*ratio), ceil(NORMAL_ICON_WIDTH*ratio));
+        for (NSInteger i = _itemViews.count; i < totalCount; i++) {
+            FHHomeEntranceItemView *itemView = [[FHHomeEntranceItemView alloc] initWithFrame:itemFrame iconSize:iconSize];
+            [itemView setBackgroundColor:[UIColor clearColor]];
+            [itemView addTarget:self action:@selector(onItemAction:) forControlEvents:UIControlEventTouchUpInside];
+            [self.itemViews addObject:itemView];
+            [self.view addSubview:itemView];
+        }
+    }
+    
+    [self.itemViews enumerateObjectsUsingBlock:^(UIView *   obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        obj.hidden = YES;
+    }];
+    
+    CGFloat margin = (SCREEN_WIDTH - countPerRow*itemFrame.size.width - 2*HOR_MARGIN)/(countPerRow-1);
+    UIImage *placeHolder = [UIImage imageNamed:@"icon_placeholder"];;
+    for (NSInteger i = 0 ; i < totalCount; i++) {
+        FHConfigDataOpDataItemsModel *model = items[i];
+        FHHomeEntranceItemView *itemView = _itemViews[i];
+        itemView.tag = ITEM_TAG_BASE+i;
+        FHConfigDataOpDataItemsImageModel *imgModel = [model.image firstObject];
+        [itemView updateWithIconUrl:imgModel.url name:model.title placeHolder:placeHolder];
+        NSInteger row = i / countPerRow;
+        NSInteger col = i % countPerRow;
+        itemView.origin = CGPointMake(HOR_MARGIN+(itemFrame.size.width+margin)*col, row*[self.class rowHeight]+TOP_MARGIN_PER_ROW + topSet);
+        [itemView setBackgroundColor:[UIColor clearColor]];
+        itemView.hidden = NO;
+    }
+    
+    [self.view setBackgroundColor:[UIColor themeHomeColor]];
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -197,6 +276,86 @@
 {
     return NO;
 }
+
+
+
+-(void)onItemAction:(FHHomeEntranceItemView *)itemView
+{
+    NSInteger index = itemView.tag - ITEM_TAG_BASE;
+    FHConfigDataOpDataItemsModel *model = nil;
+    FHConfigDataModel *configData = [[FHEnvContext sharedInstance] getConfigFromCache];
+    NSArray * items = (NSArray<FHConfigDataOpDataItemsModel> *)configData.toolboxData.items;
+    if(items.count > index){
+        model = items[index];
+    }
+    
+    NSMutableDictionary *dictTrace = [NSMutableDictionary new];
+           [dictTrace setValue:@"maintab" forKey:@"enter_from"];
+    NSDictionary *traceParams = @{@"enter_from":@"tools_box"};
+       if ([traceParams isKindOfClass:[NSDictionary class]]) {
+           [dictTrace addEntriesFromDictionary:traceParams];
+       }
+       
+       //首页工具箱里面的icon追加上报
+       NSString *enterFrom = traceParams[@"enter_from"];
+       if (enterFrom && [enterFrom isEqualToString:@"tools_box"]) {
+           [self addCLickIconLog:model andPageType:@"tools_box"];
+       }else
+       {
+           [self addCLickIconLog:model andPageType:@"maintab"];
+       }
+       
+       [dictTrace setValue:@"maintab_icon" forKey:@"element_from"];
+       [dictTrace setValue:@"click" forKey:@"enter_type"];
+       
+       if ([model.logPb isKindOfClass:[NSDictionary class]] && model.logPb[@"element_from"] != nil) {
+           [dictTrace setValue:model.logPb[@"element_from"] forKey:@"element_from"];
+       }
+       
+       NSString *stringOriginFrom = model.logPb[@"origin_from"];
+
+       NSDictionary *userInfoDict = @{@"tracer":dictTrace};
+       TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:userInfoDict];
+       
+       if ([model.openUrl isKindOfClass:[NSString class]]) {
+           NSURL *url = [NSURL URLWithString:model.openUrl];
+           if ([model.openUrl containsString:@"snssdk1370://category_feed"]) {
+               [FHHomeConfigManager sharedInstance].isNeedTriggerPullDownUpdate = YES;
+               [FHHomeConfigManager sharedInstance].isTraceClickIcon = YES;
+               [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:nil];
+           }else if ([model.openUrl containsString:@"://commute_list"]){
+               //通勤找房
+               [[FHCommuteManager sharedInstance] tryEnterCommutePage:model.openUrl logParam:dictTrace];
+           }else{
+               [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
+           }
+       }
+}
+
+-(void)addCLickIconLog:(FHConfigDataOpDataItemsModel *)itemModel andPageType:(NSString *)pageType
+{
+    NSMutableDictionary *param = [NSMutableDictionary dictionary];
+    if([itemModel.logPb isKindOfClass:[NSDictionary class]]){
+        [param addEntriesFromDictionary:itemModel.logPb];
+    }
+    param[@"log_pb"] = itemModel.logPb ?: @"be_null";
+    param[@"page_type"] = pageType;
+    [FHUserTracker writeEvent:@"click_icon" params:param];
+}
+
++(CGFloat)rowHeight
+{
+    if([[FHEnvContext sharedInstance] getConfigFromCache].mainPageBannerOpData.items.count > 0){
+        return ceil(SCREEN_WIDTH/375.f*NORMAL_ICON_WIDTH+NORMAL_NAME_HEIGHT)+TOP_MARGIN_PER_ROW;
+    }else
+    {
+        return ceil(SCREEN_WIDTH/375.f*NORMAL_ICON_WIDTH+NORMAL_NAME_HEIGHT)+TOP_MARGIN_PER_ROW + 10;
+    }
+}
+
+
+
+
 /*
 #pragma mark - Navigation
 

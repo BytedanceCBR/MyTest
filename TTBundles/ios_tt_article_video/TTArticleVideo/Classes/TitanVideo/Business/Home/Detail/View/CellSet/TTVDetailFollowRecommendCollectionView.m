@@ -489,31 +489,34 @@
 }
 
 - (void)needRerecordImpressions {
-    if ([_userCardModels count] == 0) {
-        return;
-    }
-    
-    for (NSIndexPath* indexPath in self.indexPathsForVisibleItems) { //顺序不一定对，要做取最小
-        if (_userCardModels.count > indexPath.row) {
-            id<TTVDetailRelatedRecommendCellViewModelProtocol> model = _userCardModels[indexPath.row];
-            NSMutableDictionary *params = @{}.mutableCopy;
-            if (self.recommendUserDelegate && [self.recommendUserDelegate respondsToSelector:@selector(impressionParams)]) {
-                if ([self.recommendUserDelegate impressionParams].count > 0) {
-                    [params addEntriesFromDictionary:[self.recommendUserDelegate impressionParams]];
-                }
-            }
-            if (params.count <= 0) {
-                params = nil;
-            }
-            
-            [params setValue:[self sourceName] forKey:@"source"];
-            [[SSImpressionManager shareInstance] recordRecommendUserListImpressionUserID:model.userId
-                                                                            categoryName:[self _currentCategoryName]
-                                                                                  cellId:[self _currentUniqueId]
-                                                                                  status:_isDisplay? SSImpressionStatusRecording:SSImpressionStatusSuspend
-                                                                                   extra:params.copy];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        if ([_userCardModels count] == 0) {
+            return;
         }
-    }
+        
+        for (NSIndexPath* indexPath in self.indexPathsForVisibleItems) { //顺序不一定对，要做取最小
+            if (_userCardModels.count > indexPath.row) {
+                id<TTVDetailRelatedRecommendCellViewModelProtocol> model = _userCardModels[indexPath.row];
+                NSMutableDictionary *params = @{}.mutableCopy;
+                if (self.recommendUserDelegate && [self.recommendUserDelegate respondsToSelector:@selector(impressionParams)]) {
+                    if ([self.recommendUserDelegate impressionParams].count > 0) {
+                        [params addEntriesFromDictionary:[self.recommendUserDelegate impressionParams]];
+                    }
+                }
+                if (params.count <= 0) {
+                    params = nil;
+                }
+                
+                [params setValue:[self sourceName] forKey:@"source"];
+                [[SSImpressionManager shareInstance] recordRecommendUserListImpressionUserID:model.userId
+                                                                                categoryName:[self _currentCategoryName]
+                                                                                      cellId:[self _currentUniqueId]
+                                                                                      status:_isDisplay? SSImpressionStatusRecording:SSImpressionStatusSuspend
+                                                                                       extra:params.copy];
+            }
+        }
+    });
+    
 }
 
 //impression需要

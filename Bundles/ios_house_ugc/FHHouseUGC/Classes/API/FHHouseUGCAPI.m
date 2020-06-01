@@ -1170,7 +1170,7 @@
                               success = ([json[@"status"] integerValue] == 0);
                               if (!success) {
                                   NSString *msg = json[@"message"];
-                                  backError = [NSError errorWithDomain:msg?:@"取消投票失败" code:API_ERROR_CODE userInfo:nil];
+                                  backError = [NSError errorWithDomain:msg?:@"取消投票失败" code:[json[@"status"] integerValue] userInfo:nil];
                                   [[HMDTTMonitor defaultManager] hmdTrackService:@"unvote_action" metric:nil category:@{@"status":@(1)} extra:nil];
                               } else {
                                   [[HMDTTMonitor defaultManager] hmdTrackService:@"unvote_action" metric:nil category:@{@"status":@(0)} extra:nil];
@@ -1185,7 +1185,7 @@
             [FHMainApi addRequestLog:queryPath startDate:startDate backDate:backDate serializeDate:serDate resultType:resultType errorCode:code errorMsg:errMsg extra:extraDict exceptionDict:exceptionDict responseCode:responseCode];
             if (completion) {
                 dispatch_async(dispatch_get_main_queue(), ^{
-                    completion(success,error);
+                    completion(success,backError);
                 });
             }
         });
@@ -1243,7 +1243,7 @@
 
             if (completion) {
                 dispatch_async(dispatch_get_main_queue(), ^{
-                    completion(model,error);
+                    completion(model,backError);
                 });
             }
         });

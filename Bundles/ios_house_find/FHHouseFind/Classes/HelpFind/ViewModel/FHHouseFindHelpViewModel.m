@@ -1215,7 +1215,12 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
 
 - (void)requestQuickLogin:(NSString *)phoneNumber smsCode:(NSString *)smsCode completion:(void(^_Nullable)(UIImage *captchaImage, NSNumber *newUser, NSError *error))completion
 {
-    [TTAccountManager startQuickLoginWithPhoneNumber:phoneNumber code:smsCode captcha:nil completion:completion];
+    [TTAccount quickLoginWithPhone:phoneNumber SMSCode:smsCode captcha:nil jsonObjCompletion:^(UIImage * _Nullable captchaImage, NSError * _Nullable error, id  _Nullable jsonObj) {
+        if (completion) {
+            completion(captchaImage, @([[TTAccount sharedAccount] user].newUser), error);
+        }
+    }];
+//    [TTAccountManager startQuickLoginWithPhoneNumber:phoneNumber code:smsCode captcha:nil completion:completion];
 }
 
 - (NSString *)errorMessageByErrorCode:(NSError *)error {

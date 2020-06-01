@@ -6,7 +6,8 @@
 //
 
 #import "FHUserTracker.h"
-#import "TTTracker.h"
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
+
 
 @interface FHUserTracker ()
 
@@ -24,7 +25,7 @@
     
     NSMutableDictionary *params = [NSMutableDictionary dictionaryWithDictionary:param];
     [params addEntriesFromDictionary:[self basicParam]];
-    [TTTracker eventV3:event params:params];
+    [BDTrackerProtocol eventV3:event params:params];
 }
 
 +(void)writeEvent:(NSString *)event withModel:(FHTracerModel *_Nullable)model
@@ -34,7 +35,7 @@
     }    
     NSMutableDictionary *param = [model logDict];
     [param addEntriesFromDictionary:[self basicParam]];
-    [TTTracker eventV3:event params:param];
+    [BDTrackerProtocol eventV3:event params:param];
     
 }
 

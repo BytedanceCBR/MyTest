@@ -22,6 +22,7 @@
 #import "TTPhotoDetailAdCollectionCell.h"
 #import "TTPhotoDetailAdModel.h"
 #import <TTAdModule/TTAdCallManager.h>
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 #import <TTTracker/TTTracker.h>
 
 #define TTAdManageInstance  [TTAdManager sharedManager]

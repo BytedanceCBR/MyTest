@@ -483,7 +483,7 @@
         }
         [dict setValue:@1 forKey:@"is_redpacket"];
     }
-    [TTTracker eventV3:event params:[dict copy]];
+    [BDTrackerProtocol eventV3:event params:[dict copy]];
     
     self.isSelfFollow = YES;
     [followBtn startLoading];

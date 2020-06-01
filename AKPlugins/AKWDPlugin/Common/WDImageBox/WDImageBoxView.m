@@ -156,7 +156,7 @@
 - (void)imageTaped:(UITapGestureRecognizer *)tap
 {
     if (!isEmptyString(_umengEventStr) && tap.view != nil && _threadId != 0) {
-        [TTTracker category:@"umeng" event:_umengEventStr label:@"click_image" dict:@{@"value":@(_threadId), @"ext_value":@(tap.view.tag)}];
+        [BDTrackerProtocol category:@"umeng" event:_umengEventStr label:@"click_image" dict:@{@"value":@(_threadId), @"ext_value":@(tap.view.tag)}];
     }
     UIImageView *view = (UIImageView *)tap.view;
     if (view.image == nil) {

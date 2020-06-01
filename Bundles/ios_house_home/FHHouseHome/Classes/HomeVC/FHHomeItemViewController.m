@@ -237,6 +237,7 @@ static NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
 - (void)resumeSimliarHouses
 {
     if (self.houseType == FHHouseTypeSecondHandHouse && [[FHHouseSimilarManager sharedInstance] checkTimeIsInvalid]) {
+
         NSArray * similarItems = [[FHHouseSimilarManager sharedInstance] getCurrentSimilarArray];
         if (similarItems.count > 0) {
             NSInteger targetIndex = self.lastClickOffset + 1;
@@ -257,12 +258,22 @@ static NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
                   [indexArr addObject:tarIndexPath];
                 }
                 
-                [self.tableView beginUpdates];
-                [self.tableView insertRowsAtIndexPaths:indexArr withRowAnimation:UITableViewRowAnimationBottom];
-                [self.tableView endUpdates];
+                NSDictionary *fhSettings= [[TTSettingsManager sharedManager] settingForKey:@"f_settings" defaultValue:@{} freeze:YES];
+                BOOL similarReloadEnable = [fhSettings tt_boolValueForKey:@"f_home_similar_reload_enable"];
                 
+                if (similarReloadEnable) {
+                   [self.tableView reloadData];
+                }else{
+                    if (([self.tableView numberOfRowsInSection:1] + indexArr.count) == self.houseDataItemsModel.count) {
+                        [self.tableView beginUpdates];
+                        [self.tableView insertRowsAtIndexPaths:indexArr withRowAnimation:UITableViewRowAnimationBottom];
+                        [self.tableView endUpdates];
+                    }else{
+                        [self.houseDataItemsModel removeObjectsInArray:similarItems];
+                        [self.tableView reloadData];
+                   }
+               }
                 [[FHHouseSimilarManager sharedInstance] resetSimilarArray];
-                
                 [FHEnvContext recordEvent:self.similarTraceParam andEventKey:@"house_recallable"];
             }
         }

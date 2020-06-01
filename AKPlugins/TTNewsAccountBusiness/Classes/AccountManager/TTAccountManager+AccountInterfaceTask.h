@@ -28,26 +28,26 @@
                              captcha:(NSString *)captchaString
                           completion:(void (^)(UIImage *captchaImage, NSError *error))completedBlock;
 
-+ (void)startLoginWithPhoneNumber:(NSString *)phoneString
-                         password:(NSString *)passwordString
-                          captcha:(NSString *)captchaString
-                       completion:(void (^)(UIImage *captchaImage, NSError *error))completedBlock;
-
-+ (void)startLoginWithMail:(NSString *)mailString
-                  password:(NSString *)passwordString
-                   captcha:(NSString *)captchaString
-                completion:(void (^)(UIImage *captchaImage, NSError *error))completedBlock;
-
-+ (void)startQuickLoginWithPhoneNumber:(NSString *)phoneNumber
-                                  code:(NSString *)codeString
-                               captcha:(NSString *)captchaString
-                            completion:(void(^)(UIImage *captchaImage, NSNumber *newUser, NSError *error))completedBlock;
-
-+ (void)startResetPasswordWithPhoneNumber:(NSString *)phoneString
-                                     code:(NSString *)codeString
-                                 password:(NSString *)passwordString
-                                  captcha:(NSString *)captchaString
-                               completion:(void (^)(UIImage *captchaImage, NSError *error))completedBlock;
+//+ (void)startLoginWithPhoneNumber:(NSString *)phoneString
+//                         password:(NSString *)passwordString
+//                          captcha:(NSString *)captchaString
+//                       completion:(void (^)(UIImage *captchaImage, NSError *error))completedBlock;
+//
+//+ (void)startLoginWithMail:(NSString *)mailString
+//                  password:(NSString *)passwordString
+//                   captcha:(NSString *)captchaString
+//                completion:(void (^)(UIImage *captchaImage, NSError *error))completedBlock;
+//
+//+ (void)startQuickLoginWithPhoneNumber:(NSString *)phoneNumber
+//                                  code:(NSString *)codeString
+//                               captcha:(NSString *)captchaString
+//                            completion:(void(^)(UIImage *captchaImage, NSNumber *newUser, NSError *error))completedBlock;
+//
+//+ (void)startResetPasswordWithPhoneNumber:(NSString *)phoneString
+//                                     code:(NSString *)codeString
+//                                 password:(NSString *)passwordString
+//                                  captcha:(NSString *)captchaString
+//                               completion:(void (^)(UIImage *captchaImage, NSError *error))completedBlock;
 
 + (void)startChangePasswordWithPassword:(NSString *)passwordString
                                    code:(NSString *)codeString
@@ -61,25 +61,25 @@
                  unbindExist:(BOOL)unbindExist
                   completion:(void (^)(UIImage *captchaImage, NSError *error))completedBlock;
 
-+ (void)startUnbindPhoneWithCode:(NSString *)codeString
-                         captcha:(NSString *)captchaString
-                      completion:(void (^)(UIImage *captchaImage, NSError *error))completedBlock;
+//+ (void)startUnbindPhoneWithCode:(NSString *)codeString
+//                         captcha:(NSString *)captchaString
+//                      completion:(void (^)(UIImage *captchaImage, NSError *error))completedBlock;
 
 + (void)startChangePhoneNumber:(NSString *)phoneString
                           code:(NSString *)codeString
                        captcha:(NSString *)captchaString
                     completion:(void (^)(UIImage *captchaImage, NSError *error))completedBlock;
 
-+ (void)startLogoutUserWithCompletion:(void(^)(BOOL success, NSError *error))completedBlock;
+//+ (void)startLogoutUserWithCompletion:(void(^)(BOOL success, NSError *error))completedBlock;
 
-+ (void)startGetAccountUserInfoStatus:(BOOL)dispatchExpiration
-                           completion:(void (^)(TTAccountUserEntity *userEntity, NSError *error))completedBlock;
+//+ (void)startGetAccountUserInfoStatus:(BOOL)dispatchExpiration
+//                           completion:(void (^)(TTAccountUserEntity *userEntity, NSError *error))completedBlock;
 
 + (void)startGetAccountUserAuditInfoStatus:(BOOL)dispatchExpiration
                                 completion:(void (^)(TTAccountUserAuditSet *userAuditSet, NSError *error))completedBlock;
 
-+ (void)startUploadUserPhoto:(UIImage *)image
-                  completion:(void(^)(TTAccountUserEntity *userEntity, NSError *error))completedBlock;
+//+ (void)startUploadUserPhoto:(UIImage *)image
+//                  completion:(void(^)(TTAccountUserEntity *userEntity, NSError *error))completedBlock;
 
 + (void)startUploadUserImage:(UIImage *)image
                   completion:(void(^)(TTAccountImageEntity *imageEntity, NSError *error))completedBlock;

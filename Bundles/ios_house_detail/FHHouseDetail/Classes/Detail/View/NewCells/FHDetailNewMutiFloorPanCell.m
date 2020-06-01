@@ -19,9 +19,9 @@
 #import <TTAccountSDK/TTAccount.h>
 #import <FHHouseBase/FHHouseIMClueHelper.h>
 #import "FHEnvContext.h"
-
-#define ITEM_HEIGHT 242
-#define ITEM_BOTTOM_HEIGHT 35
+//242+34
+#define ITEM_HEIGHT 276
+#define ITEM_BOTTOM_HEIGHT 45
 #define ITEM_WIDTH  184
 
 @interface FHDetailNewMutiFloorPanCell ()<FHDetailScrollViewDidScrollProtocol>
@@ -354,9 +354,9 @@
     }
     self.currentData = data;
     FHDetailNewDataFloorpanListListModel *model = (FHDetailNewDataFloorpanListListModel *)data;
+    [self.tagBacView removeAllTag];
     if (model) {
         if (model.images.count > 0) {
-            
             FHDetailNewDataFloorpanListListImagesModel *imageModel = model.images.firstObject;
             NSString *urlStr = imageModel.url;
             if ([urlStr length] > 0) {
@@ -372,8 +372,18 @@
             }
         }
         self.consultDetailButton.hidden = model.imOpenUrl.length > 0 ? NO : YES;
-        self.descLabel.text = model.title;
         self.spaceLabel.text = [NSString stringWithFormat:@"建面 %@ 朝向 %@",model.squaremeter,model.facingDirection];
+        self.priceLabel.text = model.pricing;
+        NSMutableArray *tagArr = [NSMutableArray array];
+        self.descLabel.text = model.title;
+        [self.descLabel sizeToFit];
+        CGSize itemSize = [self.descLabel sizeThatFits:CGSizeMake([UIScreen mainScreen].bounds.size.width, [UIFont themeFontMedium:16].lineHeight)];
+        CGFloat width = itemSize.width;
+        
+        [self.descLabel mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.width.mas_equalTo(width);
+        }];
+        [self.tagBacView refreshWithTags:model.tags withNum:model.tags.count withMaxLen:ITEM_WIDTH - width - 4];
     }
     [self layoutIfNeeded];
 }
@@ -397,9 +407,19 @@
     _descLabel.textColor = [UIColor themeGray1];
     [self addSubview:_descLabel];
     
+    _tagBacView = [[FHDetailTagBackgroundView alloc] initWithLabelHeight:16.0 withCornerRadius:2.0];
+    [_tagBacView setMarginWithTagMargin:4.0 withInsideMargin:4.0];
+    _tagBacView.textFont = [UIFont themeFontMedium:10.0];
+    [self addSubview:_tagBacView];
+    
     _spaceLabel = [UILabel createLabel:@"" textColor:@"" fontSize:12];
     _spaceLabel.textColor = [UIColor themeGray3];
     [self addSubview:_spaceLabel];
+    
+    _priceLabel = [UILabel createLabel:@"" textColor:@"" fontSize:19];
+    _priceLabel.textColor = [UIColor themeOrange1];
+    _priceLabel.font = [UIFont themeFontSemibold:16];
+    [self addSubview:_priceLabel];
     
     _consultDetailButton = [[UIButton alloc] init];
     [_consultDetailButton setTitle:@"一键咨询户型详情" forState:UIControlStateNormal];
@@ -413,8 +433,8 @@
     _consultDetailButton.hidden = YES;
     
     [self.iconView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.equalTo(self);
-        make.left.right.equalTo(self);
+        make.top.equalTo(self.contentView);
+        make.left.right.equalTo(self.contentView);
         make.width.height.mas_equalTo(ITEM_WIDTH);
     }];
     [self.icon mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -423,20 +443,30 @@
     }];
     [self.descLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(self.iconView.mas_bottom).mas_offset(10);
-        make.left.right.equalTo(self);
+        make.left.equalTo(self.contentView);
         make.height.mas_equalTo(20);
-        
+        make.width.mas_equalTo(0);
+    }];
+    [self.tagBacView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.mas_equalTo(self.descLabel.mas_right).offset(4);
+        make.right.mas_equalTo(self.iconView);
+        make.centerY.mas_equalTo(self.descLabel);
+        make.height.mas_equalTo(16);
     }];
     [self.spaceLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.equalTo(self.descLabel.mas_bottom).offset(6);
+        make.top.equalTo(self.descLabel.mas_bottom).offset(7);
         make.left.equalTo(self.descLabel);
-        make.right.equalTo(self);
+        make.right.equalTo(self.contentView);
         make.height.mas_equalTo(15);
     }];
-    
+    [self.priceLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.mas_equalTo(self.spaceLabel.mas_bottom).offset(8);
+        make.left.right.equalTo(self.contentView);
+        make.height.mas_equalTo(20);
+    }];
     [self.consultDetailButton mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.equalTo(self.spaceLabel.mas_bottom).offset(10);
-        make.left.right.equalTo(self);
+        make.top.equalTo(self.priceLabel.mas_bottom).offset(16);
+        make.left.right.equalTo(self.contentView);
         make.height.mas_equalTo(32);
     }];
 }
@@ -447,7 +477,6 @@
         [self.delegate clickCellItem:sender onCell:self];
     }
 }
-
 @end
 
 @implementation FHDetailNewMutiFloorPanCellModel

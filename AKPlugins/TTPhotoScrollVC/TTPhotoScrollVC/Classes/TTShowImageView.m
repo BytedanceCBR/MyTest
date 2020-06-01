@@ -25,7 +25,8 @@
 #import "UIImage+TTThemeExtension.h"
 #import "ALAssetsLibrary+TTImagePicker.h"
 #import "UIViewAdditions.h"
-#import "TTTracker.h"
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
+
 #import <TTImage/TTImageView.h>
 #import <TTImage/TTWebImageManager.h>
 #import <BDWebImage/BDWebImageDownloader.h>
@@ -425,7 +426,7 @@
 {
     self.imageData = nil;
     _imageloadingProgressView.hidden = YES;
-    [TTTracker event:@"image" label:@"fail"];;
+    [BDTrackerProtocol event:@"image" label:@"fail"];;
     [TTIndicatorView showWithIndicatorStyle:TTIndicatorViewStyleImage indicatorText:@"加载失败" indicatorImage:[UIImage themedImageNamed:@"excalmatoryicon_loading.png"] autoDismiss:YES dismissHandler:nil];
 }
 
@@ -613,7 +614,7 @@
         self.isDownloading = NO;
         if (error) {
             [self tryLoadNextUrlIfFailed];
-            [TTTracker event:@"image" label:@"fail"];
+            [BDTrackerProtocol event:@"image" label:@"fail"];
             
             dispatch_async(dispatch_get_main_queue(), ^{
                 self.imageloadingProgressView.hidden = YES;

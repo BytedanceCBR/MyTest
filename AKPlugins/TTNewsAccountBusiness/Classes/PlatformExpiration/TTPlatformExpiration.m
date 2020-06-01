@@ -7,7 +7,7 @@
 //
 
 #import "TTPlatformExpiration.h"
-#import "TTACustomWapAuthViewController.h"
+//#import "TTACustomWapAuthViewController.h"
 #import "TTThemedAlertController.h"
 #import "TTNavigationController.h"
 #import "TTUIResponderHelper.h"
@@ -77,79 +77,79 @@ NSString * const SSWeiboExpiredNeedAlertKey = @"SSWeiboExpiredNeedAlertKey";
 
 - (void)platformsExpired:(NSArray *)platforms error:(NSError *)error
 {
-    double delayInSeconds = 2.0;
-    dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delayInSeconds * NSEC_PER_SEC));
-    dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
-        
-        if ([self.topmostController isKindOfClass:[UINavigationController class]]) {
-            UIViewController *lastController = ((UINavigationController*)self.topmostController).topViewController;
-            if ([lastController isKindOfClass:[TTACustomWapAuthViewController class]]) {
-                return;
-            }
-            
-            if ([self.topmostController respondsToSelector:@selector(presentedViewController)]) {
-                UIViewController *topPresentedController = self.topmostController.presentedViewController;
-                while (topPresentedController.presentedViewController != nil) {
-                    topPresentedController = topPresentedController.presentedViewController;
-                }
-                
-                if ([topPresentedController isKindOfClass:[TTACustomWapAuthViewController class]]) {
-                    return;
-                }
-            }
-        }
-        
-        if (!self.platformExpiredAlertViewDisplaying) {
-            NSMutableString *tips = [NSMutableString stringWithCapacity:100];
-            if (platforms.count > 0 && !error) {
-                NSString *platformKey = [platforms objectAtIndex:0];
-                NSMutableDictionary *mDict = [NSMutableDictionary dictionaryWithDictionary:[[NSUserDefaults standardUserDefaults] objectForKey:kPlatformExpireDisplayKey]];
-                
-                NSTimeInterval lastDisplay = [[mDict objectForKey:platformKey] doubleValue];
-                
-                if ([[NSDate date] timeIntervalSince1970] - lastDisplay > kDisplayDuration) {
-                    TTThirdPartyAccountInfoBase *accountInfo = [[TTPlatformAccountManager sharedManager] platformAccountInfoForKey:platformKey];
-                    NSString *platformName = [accountInfo displayName];
-                    [tips appendFormat:@"%@", platformName];
-                    self.lastExpiredPlatform = platformKey;
-                    
-                    if (!isEmptyString(tips)) {
-                        self.platformExpiredAlertViewDisplaying = YES;
-                        [tips appendString:NSLocalizedString(@"登录过期，需要重新登录", nil)];
-                        double delayInSeconds = 2.0;
-                        dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delayInSeconds * NSEC_PER_SEC));
-                        dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
-                            TTThemedAlertController *alert = [[TTThemedAlertController alloc] initWithTitle:nil message:tips preferredType:TTThemedAlertControllerTypeAlert];
-                            [alert addActionWithTitle:NSLocalizedString(@"不再提示", nil) actionType:TTThemedAlertActionTypeCancel actionBlock:^{
-                                NSMutableDictionary *mDict = [NSMutableDictionary dictionaryWithDictionary:[[NSUserDefaults standardUserDefaults] objectForKey:kPlatformExpireDisplayKey]];
-                                [mDict setValue: [NSNumber numberWithDouble:[[NSDate date] timeIntervalSince1970]] forKey:self.lastExpiredPlatform];
-                                [[NSUserDefaults standardUserDefaults] setObject:mDict forKey:kPlatformExpireDisplayKey];
-                            }];
-                            [alert addActionWithTitle:NSLocalizedString(@"登录", nil) actionType:TTThemedAlertActionTypeNormal actionBlock:^{
-                                if ([TTAccountManager isLogin]) {
-                                    if (!isEmptyString(self.lastExpiredPlatform)) {
-                                        
-                                        [TTAccountLoginManager requestLoginPlatformByName:self.lastExpiredPlatform completion:^(BOOL success, NSError *error) {
-                                            
-                                        }];
-                                    }
-                                } else {
-                                    
-                                    [TTAccountManager showLoginAlertWithType:TTAccountLoginAlertTitleTypeDefault source:nil completion:^(TTAccountAlertCompletionEventType type, NSString *phoneNum) {
-                                        if (type == TTAccountAlertCompletionEventTypeTip) {
-                                            [TTAccountManager presentQuickLoginFromVC:[TTUIResponderHelper topNavigationControllerFor:nil] type:TTAccountLoginDialogTitleTypeDefault source:nil completion:^(TTAccountLoginState state) {
-                                            }];
-                                        }
-                                    }];
-                                }
-                            }];
-                            [alert showFrom:self.topmostController animated:YES];
-                        });
-                    }
-                }
-            }
-        }
-    });
+//    double delayInSeconds = 2.0;
+//    dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delayInSeconds * NSEC_PER_SEC));
+//    dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
+//
+//        if ([self.topmostController isKindOfClass:[UINavigationController class]]) {
+//            UIViewController *lastController = ((UINavigationController*)self.topmostController).topViewController;
+//            if ([lastController isKindOfClass:[TTACustomWapAuthViewController class]]) {
+//                return;
+//            }
+//
+//            if ([self.topmostController respondsToSelector:@selector(presentedViewController)]) {
+//                UIViewController *topPresentedController = self.topmostController.presentedViewController;
+//                while (topPresentedController.presentedViewController != nil) {
+//                    topPresentedController = topPresentedController.presentedViewController;
+//                }
+//
+//                if ([topPresentedController isKindOfClass:[TTACustomWapAuthViewController class]]) {
+//                    return;
+//                }
+//            }
+//        }
+//
+//        if (!self.platformExpiredAlertViewDisplaying) {
+//            NSMutableString *tips = [NSMutableString stringWithCapacity:100];
+//            if (platforms.count > 0 && !error) {
+//                NSString *platformKey = [platforms objectAtIndex:0];
+//                NSMutableDictionary *mDict = [NSMutableDictionary dictionaryWithDictionary:[[NSUserDefaults standardUserDefaults] objectForKey:kPlatformExpireDisplayKey]];
+//
+//                NSTimeInterval lastDisplay = [[mDict objectForKey:platformKey] doubleValue];
+//
+//                if ([[NSDate date] timeIntervalSince1970] - lastDisplay > kDisplayDuration) {
+//                    TTThirdPartyAccountInfoBase *accountInfo = [[TTPlatformAccountManager sharedManager] platformAccountInfoForKey:platformKey];
+//                    NSString *platformName = [accountInfo displayName];
+//                    [tips appendFormat:@"%@", platformName];
+//                    self.lastExpiredPlatform = platformKey;
+//
+//                    if (!isEmptyString(tips)) {
+//                        self.platformExpiredAlertViewDisplaying = YES;
+//                        [tips appendString:NSLocalizedString(@"登录过期，需要重新登录", nil)];
+//                        double delayInSeconds = 2.0;
+//                        dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delayInSeconds * NSEC_PER_SEC));
+//                        dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
+//                            TTThemedAlertController *alert = [[TTThemedAlertController alloc] initWithTitle:nil message:tips preferredType:TTThemedAlertControllerTypeAlert];
+//                            [alert addActionWithTitle:NSLocalizedString(@"不再提示", nil) actionType:TTThemedAlertActionTypeCancel actionBlock:^{
+//                                NSMutableDictionary *mDict = [NSMutableDictionary dictionaryWithDictionary:[[NSUserDefaults standardUserDefaults] objectForKey:kPlatformExpireDisplayKey]];
+//                                [mDict setValue: [NSNumber numberWithDouble:[[NSDate date] timeIntervalSince1970]] forKey:self.lastExpiredPlatform];
+//                                [[NSUserDefaults standardUserDefaults] setObject:mDict forKey:kPlatformExpireDisplayKey];
+//                            }];
+//                            [alert addActionWithTitle:NSLocalizedString(@"登录", nil) actionType:TTThemedAlertActionTypeNormal actionBlock:^{
+//                                if ([TTAccountManager isLogin]) {
+//                                    if (!isEmptyString(self.lastExpiredPlatform)) {
+//
+//                                        [TTAccountLoginManager requestLoginPlatformByName:self.lastExpiredPlatform completion:^(BOOL success, NSError *error) {
+//
+//                                        }];
+//                                    }
+//                                } else {
+//
+//                                    [TTAccountManager showLoginAlertWithType:TTAccountLoginAlertTitleTypeDefault source:nil completion:^(TTAccountAlertCompletionEventType type, NSString *phoneNum) {
+//                                        if (type == TTAccountAlertCompletionEventTypeTip) {
+//                                            [TTAccountManager presentQuickLoginFromVC:[TTUIResponderHelper topNavigationControllerFor:nil] type:TTAccountLoginDialogTitleTypeDefault source:nil completion:^(TTAccountLoginState state) {
+//                                            }];
+//                                        }
+//                                    }];
+//                                }
+//                            }];
+//                            [alert showFrom:self.topmostController animated:YES];
+//                        });
+//                    }
+//                }
+//            }
+//        }
+//    });
 }
 
 #pragma mark - UIAlertViewDelegate
