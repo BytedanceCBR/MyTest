@@ -1846,6 +1846,7 @@ static NSUInteger const kOldAnimationViewTag = 20161221;
 
 - (void)webView:(nullable TTDetailWebviewContainer *)webViewContainer scrollViewDidScroll:(nullable UIScrollView *)scrollView
 {
+    [[NSNotificationCenter defaultCenter] postNotificationName:UIMenuControllerWillHideMenuNotification object:nil];
     UIScrollView *targetScrollView = [self.detailView.detailWebView isNewWebviewContainer] ? webViewContainer.containerScrollView: webViewContainer.webView.scrollView;
     
     if (scrollView == targetScrollView) {

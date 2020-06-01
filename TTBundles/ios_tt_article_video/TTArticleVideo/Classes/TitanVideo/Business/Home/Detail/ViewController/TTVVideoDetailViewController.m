@@ -1771,6 +1771,7 @@ NSString *const assertDesc_articleType = @"protocoledArticle must be Article";
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView
 {
+    [[NSNotificationCenter defaultCenter] postNotificationName:UIMenuControllerWillHideMenuNotification object:nil];
     if (scrollView == self.ttvContainerScrollView) {
         if (![TTDeviceHelper isPadDevice]) {
             self.topPGCVC.authorView.bottomLine.hidden = (scrollView.contentOffset.y<=0);

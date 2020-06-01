@@ -341,9 +341,14 @@
 - (void)willHideMenu {
     [[NSNotificationCenter defaultCenter] removeObserver:self name:UIMenuControllerWillHideMenuNotification object:nil];
     self.contentLabel.backgroundColor = [UIColor clearColor];
-    
-    UIMenuController *menu = [UIMenuController sharedMenuController];
-    menu.menuItems = self.menuItems;
+     UIMenuController *menu = [UIMenuController sharedMenuController];
+    if ([menu isMenuVisible]) {
+        [menu setMenuVisible:NO animated:YES];
+        return;
+    }
+
+//    UIMenuController *menu = [UIMenuController sharedMenuController];
+//    menu.menuItems = self.menuItems;
 }
 
 - (BOOL)canPerformAction:(SEL)action withSender:(__unused id)sender {
