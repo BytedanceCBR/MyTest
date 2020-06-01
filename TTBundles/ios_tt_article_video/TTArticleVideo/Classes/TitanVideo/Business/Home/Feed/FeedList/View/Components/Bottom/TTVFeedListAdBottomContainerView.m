@@ -21,6 +21,7 @@
 #import "TTADEventTrackerEntity.h"
 #import <TTBaseLib/UIViewAdditions.h>
 #import <TTArticleBase/SSCommonLogic.h>
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 
 #define kLeftPadding        15
 #define kRightPadding       15
@@ -137,7 +138,7 @@ extern CGFloat adBottomContainerViewHeight(void);
     [params setValue:@(connectionType) forKey:@"nt"];
     [params setValue:@"1" forKey:@"is_ad_event"];
     [params addEntriesFromDictionary:[feedListItem realTimeAdExtraData:@"embeded_ad" label:@"click" extraData:nil]];
-    [TTTracker eventV3:@"realtime_click" params:params];
+    [BDTrackerProtocol eventV3:@"realtime_click" params:params];
 }
 
 - (void)layoutSubviews

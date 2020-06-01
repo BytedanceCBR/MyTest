@@ -20,6 +20,7 @@
 #import <TTBaseLib/JSONAdditions.h>
 #import <TTRoute/TTRoute.h>
 #import <TTNewsAccountBusiness/TTAccountManager.h>
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 
 NSString * const kWDDetailNeedReturnKey = @"need_return";
 NSString * const kWDDetailShowReport = @"detail_related_report_style";
@@ -334,7 +335,9 @@ NSString * const kWDDetailNatantLikeAndRewardsKey = @"WDDetailNatantLikeAndRewar
     NSMutableDictionary *extValueDic = [NSMutableDictionary dictionaryWithDictionary:self.gdExtJsonDict];
     [extValueDic setValue:self.answerEntity.ansid forKey:@"item_id"];
 //    [extValueDic setValue:@(0) forKey:@"aggr_type"];
-    ttTrackEventWithCustomKeys(tag, label, self.answerEntity.ansid, self.enterFrom, extValueDic);
+    
+    [BDTrackerProtocol trackEventWithCustomKeys:tag label:label value:self.answerEntity.ansid source:self.enterFrom extraDic:extValueDic];
+//    ttTrackEventWithCustomKeys(tag, label, self.answerEntity.ansid, self.enterFrom, extValueDic);
 }
 
 @end

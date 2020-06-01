@@ -1038,7 +1038,7 @@ static const CGFloat kBottomBarHeight = 80;
             }
         }
     }
-    ttTrackEvent(event, label);
+    wrapperTrackEvent(event, label);
 }
 
 #pragma mark - getter & setter

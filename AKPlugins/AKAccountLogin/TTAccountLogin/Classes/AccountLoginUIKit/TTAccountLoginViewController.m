@@ -153,7 +153,7 @@ static TTAccountLoginStyle s_preLoginStyle = 0;
         if (self.loginStyle == TTAccountLoginStyleCaptcha) {
             // LogV1
             if (![TTTrackerWrapper isOnlyV3SendingEnable]) {
-                [TTTracker category:@"umeng" event:@"register_new" label:@"mobile_login_close" dict:@{@"source":self.source}];
+                [BDTrackerProtocol category:@"umeng" event:@"register_new" label:@"mobile_login_close" dict:@{@"source":self.source}];
             }
             // LogV3
             NSMutableDictionary *extraDict = [NSMutableDictionary dictionaryWithCapacity:2];
@@ -164,7 +164,7 @@ static TTAccountLoginStyle s_preLoginStyle = 0;
             
             // LogV1
             if (![TTTrackerWrapper isOnlyV3SendingEnable]) {
-                [TTTracker category:@"umeng" event:@"register_new" label:@"password_login_close" dict:@{@"source":self.source}];
+                [BDTrackerProtocol category:@"umeng" event:@"register_new" label:@"password_login_close" dict:@{@"source":self.source}];
             }
             // LogV3
             NSMutableDictionary *extraDict = [NSMutableDictionary dictionaryWithCapacity:2];
@@ -371,7 +371,7 @@ static TTAccountLoginStyle s_preLoginStyle = 0;
     if (!isEmptyString(self.captchaInput.field.text) || !isEmptyString(self.mobileInput.field.text)) {
         // LogV1
         if (![TTTrackerWrapper isOnlyV3SendingEnable]) {
-            [TTTracker category:@"umeng" event:@"register_new" label:@"cancel_register_dialog_show" dict:@{@"source":self.source}];
+            [BDTrackerProtocol category:@"umeng" event:@"register_new" label:@"cancel_register_dialog_show" dict:@{@"source":self.source}];
         }
         // LogV3
         NSMutableDictionary *extraDict = [NSMutableDictionary dictionaryWithCapacity:2];
@@ -385,7 +385,7 @@ static TTAccountLoginStyle s_preLoginStyle = 0;
             //放弃注册
             // LogV1
             if (![TTTrackerWrapper isOnlyV3SendingEnable]) {
-                [TTTracker category:@"umeng" event:@"register_new" label:@"cancel_register_click_confirm" dict:@{@"source":self.source}];
+                [BDTrackerProtocol category:@"umeng" event:@"register_new" label:@"cancel_register_click_confirm" dict:@{@"source":self.source}];
             }
             // LogV3
             NSMutableDictionary *extraDict = [NSMutableDictionary dictionaryWithCapacity:2];
@@ -399,7 +399,7 @@ static TTAccountLoginStyle s_preLoginStyle = 0;
             //继续注册流程
             // LogV1
             if (![TTTrackerWrapper isOnlyV3SendingEnable]) {
-                [TTTracker category:@"umeng" event:@"register_new" label:@"cancel_register_click_continue" dict:@{@"source":self.source}];
+                [BDTrackerProtocol category:@"umeng" event:@"register_new" label:@"cancel_register_click_continue" dict:@{@"source":self.source}];
             }
             // LogV3
             NSMutableDictionary *extraDict = [NSMutableDictionary dictionaryWithCapacity:2];
@@ -432,7 +432,7 @@ static TTAccountLoginStyle s_preLoginStyle = 0;
         // 在 [账号密码登录页] 点击switchButton后切换到 [账号短信验证码页], 记录该点击量
         // LogV1
         if (![TTTrackerWrapper isOnlyV3SendingEnable]) {
-            [TTTracker category:@"umeng" event:@"register_new" label:@"password_login_to_mobile" dict:@{@"source":self.source}];
+            [BDTrackerProtocol category:@"umeng" event:@"register_new" label:@"password_login_to_mobile" dict:@{@"source":self.source}];
         }
         // LogV3
         NSMutableDictionary *extraDict = [NSMutableDictionary dictionaryWithCapacity:2];
@@ -449,7 +449,7 @@ static TTAccountLoginStyle s_preLoginStyle = 0;
     } else if (self.loginStyle == TTAccountLoginStylePassword) {
         // LogV1
         if (![TTTrackerWrapper isOnlyV3SendingEnable]) {
-            [TTTracker category:@"umeng" event:@"register_new" label:@"mobile_login_to_password" dict:@{@"source":self.source}];
+            [BDTrackerProtocol category:@"umeng" event:@"register_new" label:@"mobile_login_to_password" dict:@{@"source":self.source}];
         }
         // LogV3
         NSMutableDictionary *extraDict = [NSMutableDictionary dictionaryWithCapacity:2];
@@ -482,7 +482,7 @@ static TTAccountLoginStyle s_preLoginStyle = 0;
 {
     // LogV1
     if (![TTTrackerWrapper isOnlyV3SendingEnable]) {
-        [TTTracker category:@"umeng" event:@"register_new" label:@"mobile_login_show" dict:@{@"source":self.source}];
+        [BDTrackerProtocol category:@"umeng" event:@"register_new" label:@"mobile_login_show" dict:@{@"source":self.source}];
     }
     // LogV3
     NSMutableDictionary *extraDict = [NSMutableDictionary dictionaryWithCapacity:2];
@@ -494,7 +494,7 @@ static TTAccountLoginStyle s_preLoginStyle = 0;
 {
     // LogV1
     if (![TTTrackerWrapper isOnlyV3SendingEnable]) {
-        [TTTracker category:@"umeng" event:@"register_new" label:@"password_login_show" dict:@{@"source":self.source}];
+        [BDTrackerProtocol category:@"umeng" event:@"register_new" label:@"password_login_show" dict:@{@"source":self.source}];
     }
     // LogV3
     NSMutableDictionary *extraDict = [NSMutableDictionary dictionaryWithCapacity:2];
@@ -504,45 +504,45 @@ static TTAccountLoginStyle s_preLoginStyle = 0;
 
 - (void)resendButtonClicked:(id)sender
 {
-    __weak typeof(self) weakSelf = self;
-    if (self.loginStyle == TTAccountLoginStyleCaptcha) {
-        // LogV1
-        if (![TTTrackerWrapper isOnlyV3SendingEnable]) {
-            [TTTracker category:@"umeng" event:@"register_new" label:@"mobile_login_send_auth" dict:@{@"source":self.source}];
-        }
-        // LogV3
-        NSMutableDictionary *extraDict = [NSMutableDictionary dictionaryWithCapacity:2];
-        [extraDict setValue:self.source forKey:@"source"];
-        [extraDict setValue:@"send_auth" forKey:@"action_type"];
-        [TTTrackerWrapper eventV3:@"login_mobile_click" params:extraDict isDoubleSending:YES];
-        
-        //手机号格式错误
-        if (isEmptyString(self.mobileInput.field.text) || ![self validateMobileNumber:self.mobileInput.field.text]) {
-            [self.mobileInput showError];
-            return;
-        }
-        //获取验证码
-        //注册/绑定点重发验证码（倒计时阶段点击不算）
-        [weakSelf sendCode:TTASMSCodeScenarioQuickLoginRetry];
-        
-    } else if (self.loginStyle == TTAccountLoginStylePassword) {
-        //账号密码登录页点忘记密码
-        //跳转至找回密码
-        TTAccountLoginQuickRetrieveViewController *viewController = [[TTAccountLoginQuickRetrieveViewController alloc] init];
-        viewController.mobileInput.field.text = self.mobileInput.field.text;
-        [self.navigationController pushViewController:viewController animated:YES];
-        
-        // 进入 [账号密码登录页]后，点击"找回密码量"
-        // LogV1
-        if (![TTTrackerWrapper isOnlyV3SendingEnable]) {
-            [TTTracker category:@"umeng" event:@"register_new" label:@"click_find_password" dict:@{@"source":self.source}];
-        }
-        // LogV3
-        NSMutableDictionary *extraDict = [NSMutableDictionary dictionaryWithCapacity:2];
-        [extraDict setValue:self.source forKey:@"source"];
-        [extraDict setValue:@"find_password" forKey:@"action_type"];
-        [TTTrackerWrapper eventV3:@"login_password_click" params:extraDict isDoubleSending:YES];
-    }
+//    __weak typeof(self) weakSelf = self;
+//    if (self.loginStyle == TTAccountLoginStyleCaptcha) {
+//        // LogV1
+//        if (![TTTrackerWrapper isOnlyV3SendingEnable]) {
+//            [BDTrackerProtocol category:@"umeng" event:@"register_new" label:@"mobile_login_send_auth" dict:@{@"source":self.source}];
+//        }
+//        // LogV3
+//        NSMutableDictionary *extraDict = [NSMutableDictionary dictionaryWithCapacity:2];
+//        [extraDict setValue:self.source forKey:@"source"];
+//        [extraDict setValue:@"send_auth" forKey:@"action_type"];
+//        [TTTrackerWrapper eventV3:@"login_mobile_click" params:extraDict isDoubleSending:YES];
+//
+//        //手机号格式错误
+//        if (isEmptyString(self.mobileInput.field.text) || ![self validateMobileNumber:self.mobileInput.field.text]) {
+//            [self.mobileInput showError];
+//            return;
+//        }
+//        //获取验证码
+//        //注册/绑定点重发验证码（倒计时阶段点击不算）
+//        [weakSelf sendCode:TTASMSCodeScenarioQuickLoginRetry];
+//
+//    } else if (self.loginStyle == TTAccountLoginStylePassword) {
+//        //账号密码登录页点忘记密码
+//        //跳转至找回密码
+//        TTAccountLoginQuickRetrieveViewController *viewController = [[TTAccountLoginQuickRetrieveViewController alloc] init];
+//        viewController.mobileInput.field.text = self.mobileInput.field.text;
+//        [self.navigationController pushViewController:viewController animated:YES];
+//
+//        // 进入 [账号密码登录页]后，点击"找回密码量"
+//        // LogV1
+//        if (![TTTrackerWrapper isOnlyV3SendingEnable]) {
+//            [BDTrackerProtocol category:@"umeng" event:@"register_new" label:@"click_find_password" dict:@{@"source":self.source}];
+//        }
+//        // LogV3
+//        NSMutableDictionary *extraDict = [NSMutableDictionary dictionaryWithCapacity:2];
+//        [extraDict setValue:self.source forKey:@"source"];
+//        [extraDict setValue:@"find_password" forKey:@"action_type"];
+//        [TTTrackerWrapper eventV3:@"login_password_click" params:extraDict isDoubleSending:YES];
+//    }
 }
 
 - (void)emailButtonClick:(UIButton *)sender
@@ -589,266 +589,266 @@ static TTAccountLoginStyle s_preLoginStyle = 0;
 
 - (void)quickLogin
 {
-    [self showWaitingIndicator];
-    
-    __weak typeof(self) wself = self;
-    [TTAccount quickLoginWithPhone:self.mobileInput.field.text SMSCode:self.captchaInput.field.text captcha:self.captchaString completion:^(UIImage *captchaImage, NSError *error) {
-        
-        if (!error) {
-            
-            [TTAccountLoginManager setDefaultLoginUIStyleFor:TTAccountLoginStyleCaptcha];
-            
-            BOOL isNewUser = [[TTAccount sharedAccount] user].newUser;
-            
-            [[TTMonitor shareManager] trackService:@"account_mobile_quick_login" status:1 extra:nil];
-            wself.nonThirdPartySource = @"mobile";
-            
-            // LogV1
-            if (![TTTrackerWrapper isOnlyV3SendingEnable]) {
-                [TTTracker category:@"umeng" event:@"register_new" label:@"mobile_login_success" dict:@{@"source":self.source}];
-            }
-            // LogV3
-            NSMutableDictionary *extraDict = [NSMutableDictionary dictionaryWithCapacity:2];
-            [extraDict setValue:self.source forKey:@"source"];
-            [extraDict setValue:@"mobile" forKey:@"type"];
-            [TTTrackerWrapper eventV3:@"login_mobile_success" params:extraDict isDoubleSending:YES];
-            
-            if (wself.subscribeCompletionHandler) {
-                wself.subscribeState = TTAccountLoginStateLogin;
-            }
-            if (wself.loginCompletionHandler) {
-                wself.loginState = TTAccountLoginStateLogin;
-            }
-            
-//            if (isNewUser) {
-//                [wself dismissWaitingIndicator];
-//                TTAccountLoginEditProfileViewController *userInfoVC = [[TTAccountLoginEditProfileViewController alloc] initWithSource:self.source];
-//                // 设置新用户信息
-//                [[NSNotificationCenter defaultCenter] postNotificationName:@"DISMISS_MASK_AFTER_LOGIN_SUCCESS" object:nil userInfo:@{@"source": @"phoneNumber"}];
-//                [wself.navigationController pushViewController:userInfoVC animated:YES];
-//                return;
+//    [self showWaitingIndicator];
+//
+//    __weak typeof(self) wself = self;
+//    [TTAccount quickLoginWithPhone:self.mobileInput.field.text SMSCode:self.captchaInput.field.text captcha:self.captchaString completion:^(UIImage *captchaImage, NSError *error) {
+//
+//        if (!error) {
+//
+//            [TTAccountLoginManager setDefaultLoginUIStyleFor:TTAccountLoginStyleCaptcha];
+//
+//            BOOL isNewUser = [[TTAccount sharedAccount] user].newUser;
+//
+//            [[TTMonitor shareManager] trackService:@"account_mobile_quick_login" status:1 extra:nil];
+//            wself.nonThirdPartySource = @"mobile";
+//
+//            // LogV1
+//            if (![TTTrackerWrapper isOnlyV3SendingEnable]) {
+//                [BDTrackerProtocol category:@"umeng" event:@"register_new" label:@"mobile_login_success" dict:@{@"source":self.source}];
 //            }
-            // 验证码正确注册成功
-            [wself dismissWaitingIndicatorWithText:NSLocalizedString(@"登录成功", nil)];
-            
-            if (IS_IOS_8_LATER) {
-                if (wself.subscribeCompletionHandler) {
-                    wself.subscribeCompletionHandler(TTAccountLoginStateLogin);
-                }
-                
-                [wself dismissViewControllerAnimated:YES completion:nil];
-                
-                [[NSNotificationCenter defaultCenter] postNotificationName:@"DISMISS_MASK_AFTER_LOGIN_SUCCESS" object:nil userInfo:@{@"source": @"phoneNumber"}];
-            } else {
-                [wself dismissViewControllerAnimated:YES completion:^{
-                    
-                    if (wself.subscribeCompletionHandler) {
-                        wself.subscribeCompletionHandler(TTAccountLoginStateLogin);
-                    }
-                    
-                    dispatch_async(dispatch_get_main_queue(), ^{
-                        [[NSNotificationCenter defaultCenter] postNotificationName:@"DISMISS_MASK_AFTER_LOGIN_SUCCESS" object:nil userInfo:@{@"source": @"phoneNumber"}];
-                    });
-                }];
-            }
-        } else {
-            // 验证码注册错误
-            // 出现验证码错误时，隐藏“未注册。。。”
-            _loginTipLabel.text = @"";
-            
-            NSMutableDictionary *extra = [NSMutableDictionary dictionary];
-            [extra setValue:error.description forKey:@"error_description"];
-            [extra setValue:@(error.code) forKey:@"error_code"];
-            
-            if (captchaImage) {
-                [[TTMonitor shareManager] trackService:@"account_mobile_quick_login" status:2 extra:extra];
-                
-                TTAccountCaptchaAlert *cAlert = [[TTAccountCaptchaAlert alloc] initWithTitle:@"请输入图片中的字符" captchaImage:captchaImage placeholder:nil cancelBtnTitle:@"取消" confirmBtnTitle:@"确定" animated:YES completion:^(TTAccountAlertCompletionEventType type, NSString *captchaStr) {
-                    
-                    if (type == TTAccountAlertCompletionEventTypeDone) {
-                        [wself showWaitingIndicator];
-                        wself.captchaString = captchaStr;
-                        [wself quickLogin];
-                    } else {
-                        [wself dismissWaitingIndicator];
-                    }
-                }];
-                [wself dismissWaitingIndicator];
-                [cAlert show];
-            } else {
-                [[TTMonitor shareManager] trackService:@"account_mobile_quick_login" status:3 extra:extra];
-                [wself monitorUserLoginFailureWithError:error status:1];
-                
-                [wself dismissWaitingIndicator];
-                [wself.captchaInput showError];
-                wself.loginTipLabel.hidden = YES;
-            }
-        }
-    }];
+//            // LogV3
+//            NSMutableDictionary *extraDict = [NSMutableDictionary dictionaryWithCapacity:2];
+//            [extraDict setValue:self.source forKey:@"source"];
+//            [extraDict setValue:@"mobile" forKey:@"type"];
+//            [TTTrackerWrapper eventV3:@"login_mobile_success" params:extraDict isDoubleSending:YES];
+//
+//            if (wself.subscribeCompletionHandler) {
+//                wself.subscribeState = TTAccountLoginStateLogin;
+//            }
+//            if (wself.loginCompletionHandler) {
+//                wself.loginState = TTAccountLoginStateLogin;
+//            }
+//
+////            if (isNewUser) {
+////                [wself dismissWaitingIndicator];
+////                TTAccountLoginEditProfileViewController *userInfoVC = [[TTAccountLoginEditProfileViewController alloc] initWithSource:self.source];
+////                // 设置新用户信息
+////                [[NSNotificationCenter defaultCenter] postNotificationName:@"DISMISS_MASK_AFTER_LOGIN_SUCCESS" object:nil userInfo:@{@"source": @"phoneNumber"}];
+////                [wself.navigationController pushViewController:userInfoVC animated:YES];
+////                return;
+////            }
+//            // 验证码正确注册成功
+//            [wself dismissWaitingIndicatorWithText:NSLocalizedString(@"登录成功", nil)];
+//
+//            if (IS_IOS_8_LATER) {
+//                if (wself.subscribeCompletionHandler) {
+//                    wself.subscribeCompletionHandler(TTAccountLoginStateLogin);
+//                }
+//
+//                [wself dismissViewControllerAnimated:YES completion:nil];
+//
+//                [[NSNotificationCenter defaultCenter] postNotificationName:@"DISMISS_MASK_AFTER_LOGIN_SUCCESS" object:nil userInfo:@{@"source": @"phoneNumber"}];
+//            } else {
+//                [wself dismissViewControllerAnimated:YES completion:^{
+//
+//                    if (wself.subscribeCompletionHandler) {
+//                        wself.subscribeCompletionHandler(TTAccountLoginStateLogin);
+//                    }
+//
+//                    dispatch_async(dispatch_get_main_queue(), ^{
+//                        [[NSNotificationCenter defaultCenter] postNotificationName:@"DISMISS_MASK_AFTER_LOGIN_SUCCESS" object:nil userInfo:@{@"source": @"phoneNumber"}];
+//                    });
+//                }];
+//            }
+//        } else {
+//            // 验证码注册错误
+//            // 出现验证码错误时，隐藏“未注册。。。”
+//            _loginTipLabel.text = @"";
+//
+//            NSMutableDictionary *extra = [NSMutableDictionary dictionary];
+//            [extra setValue:error.description forKey:@"error_description"];
+//            [extra setValue:@(error.code) forKey:@"error_code"];
+//
+//            if (captchaImage) {
+//                [[TTMonitor shareManager] trackService:@"account_mobile_quick_login" status:2 extra:extra];
+//
+//                TTAccountCaptchaAlert *cAlert = [[TTAccountCaptchaAlert alloc] initWithTitle:@"请输入图片中的字符" captchaImage:captchaImage placeholder:nil cancelBtnTitle:@"取消" confirmBtnTitle:@"确定" animated:YES completion:^(TTAccountAlertCompletionEventType type, NSString *captchaStr) {
+//
+//                    if (type == TTAccountAlertCompletionEventTypeDone) {
+//                        [wself showWaitingIndicator];
+//                        wself.captchaString = captchaStr;
+//                        [wself quickLogin];
+//                    } else {
+//                        [wself dismissWaitingIndicator];
+//                    }
+//                }];
+//                [wself dismissWaitingIndicator];
+//                [cAlert show];
+//            } else {
+//                [[TTMonitor shareManager] trackService:@"account_mobile_quick_login" status:3 extra:extra];
+//                [wself monitorUserLoginFailureWithError:error status:1];
+//
+//                [wself dismissWaitingIndicator];
+//                [wself.captchaInput showError];
+//                wself.loginTipLabel.hidden = YES;
+//            }
+//        }
+//    }];
 }
 
 - (void)loginWithPassword
 {
-    __weak typeof(self) wself = self;
-    [wself showWaitingIndicator];
-    
-    [TTAccount loginWithPhone:self.mobileInput.field.text password:self.captchaInput.field.text captcha:self.captchaString completion:^(UIImage *captchaImage, NSError *error) {
-        
-        if (!error) {
-            
-            [TTAccountLoginManager setDefaultLoginUIStyleFor:TTAccountLoginStylePassword];
-            
-            [[TTMonitor shareManager] trackService:@"account_mobile_login" status:1 extra:nil];
-            self.nonThirdPartySource = @"password";
-            // 在［账号密码登录页］，使用密码登录验证后，成功授权的账号量
-            
-            // LogV1
-            if (![TTTrackerWrapper isOnlyV3SendingEnable]) {
-                [TTTracker category:@"umeng" event:@"register_new" label:@"password_login_success" dict:@{@"source":self.source}];
-            }
-            // LogV3
-            NSMutableDictionary *extraDict = [NSMutableDictionary dictionaryWithCapacity:2];
-            [extraDict setValue:self.source forKey:@"source"];
-            [extraDict setValue:@"password" forKey:@"type"];
-            [TTTrackerWrapper eventV3:@"login_password_success" params:extraDict isDoubleSending:YES];
-            
-            [self dismissWaitingIndicatorWithText:NSLocalizedString(@"登录成功", nil)];
-            
-            if (self.subscribeCompletionHandler) {
-                self.subscribeState = TTAccountLoginStateLogin;
-            }
-            if (self.loginCompletionHandler) {
-                self.loginState = TTAccountLoginStateLogin;
-            }
-            
-            if (IS_IOS_8_LATER) {
-                if (self.subscribeCompletionHandler) {
-                    self.subscribeCompletionHandler(TTAccountLoginStateLogin);
-                }
-                
-                [self dismissViewControllerAnimated:YES completion:nil];
-                
-                [[NSNotificationCenter defaultCenter] postNotificationName:@"DISMISS_MASK_AFTER_LOGIN_SUCCESS" object:nil userInfo:@{@"source": @"phoneNumber"}];
-            } else {
-                [self dismissViewControllerAnimated:YES completion:^{
-                    
-                    if (self.subscribeCompletionHandler) {
-                        self.subscribeCompletionHandler(TTAccountLoginStateLogin);
-                    }
-                    
-                    dispatch_async(dispatch_get_main_queue(), ^{
-                        [[NSNotificationCenter defaultCenter] postNotificationName:@"DISMISS_MASK_AFTER_LOGIN_SUCCESS" object:nil userInfo:@{@"source": @"phoneNumber"}];
-                    });
-                }];
-            }
-        } else {
-            NSMutableDictionary *extra = [NSMutableDictionary dictionary];
-            [extra setValue:error.description forKey:@"error_description"];
-            [extra setValue:@(error.code) forKey:@"error_code"];
-            
-            if (captchaImage) {
-                [[TTMonitor shareManager] trackService:@"account_mobile_login" status:2 extra:extra];
-                
-                TTAccountCaptchaAlert *cAlert = [[TTAccountCaptchaAlert alloc] initWithTitle:@"请输入图片中的字符" captchaImage:captchaImage placeholder:nil cancelBtnTitle:@"取消" confirmBtnTitle:@"确定" animated:YES completion:^(TTAccountAlertCompletionEventType type, NSString *captchaStr) {
-                    
-                    if (type == TTAccountAlertCompletionEventTypeDone) {
-                        [wself showWaitingIndicator];
-                        wself.captchaString = captchaStr;
-                        [wself loginWithPassword];
-                    } else {
-                        [wself dismissWaitingIndicator];
-                    }
-                }];
-                [wself dismissWaitingIndicator];
-                [cAlert show];
-            } else {
-                [[TTMonitor shareManager] trackService:@"account_mobile_login" status:3 extra:extra];
-                [wself monitorUserLoginFailureWithError:error status:2];
-                [wself dismissWaitingIndicatorWithError:error];
-            }
-        }
-    }];
+//    __weak typeof(self) wself = self;
+//    [wself showWaitingIndicator];
+//
+//    [TTAccount loginWithPhone:self.mobileInput.field.text password:self.captchaInput.field.text captcha:self.captchaString completion:^(UIImage *captchaImage, NSError *error) {
+//
+//        if (!error) {
+//
+//            [TTAccountLoginManager setDefaultLoginUIStyleFor:TTAccountLoginStylePassword];
+//
+//            [[TTMonitor shareManager] trackService:@"account_mobile_login" status:1 extra:nil];
+//            self.nonThirdPartySource = @"password";
+//            // 在［账号密码登录页］，使用密码登录验证后，成功授权的账号量
+//
+//            // LogV1
+//            if (![TTTrackerWrapper isOnlyV3SendingEnable]) {
+//                [BDTrackerProtocol category:@"umeng" event:@"register_new" label:@"password_login_success" dict:@{@"source":self.source}];
+//            }
+//            // LogV3
+//            NSMutableDictionary *extraDict = [NSMutableDictionary dictionaryWithCapacity:2];
+//            [extraDict setValue:self.source forKey:@"source"];
+//            [extraDict setValue:@"password" forKey:@"type"];
+//            [TTTrackerWrapper eventV3:@"login_password_success" params:extraDict isDoubleSending:YES];
+//
+//            [self dismissWaitingIndicatorWithText:NSLocalizedString(@"登录成功", nil)];
+//
+//            if (self.subscribeCompletionHandler) {
+//                self.subscribeState = TTAccountLoginStateLogin;
+//            }
+//            if (self.loginCompletionHandler) {
+//                self.loginState = TTAccountLoginStateLogin;
+//            }
+//
+//            if (IS_IOS_8_LATER) {
+//                if (self.subscribeCompletionHandler) {
+//                    self.subscribeCompletionHandler(TTAccountLoginStateLogin);
+//                }
+//
+//                [self dismissViewControllerAnimated:YES completion:nil];
+//
+//                [[NSNotificationCenter defaultCenter] postNotificationName:@"DISMISS_MASK_AFTER_LOGIN_SUCCESS" object:nil userInfo:@{@"source": @"phoneNumber"}];
+//            } else {
+//                [self dismissViewControllerAnimated:YES completion:^{
+//
+//                    if (self.subscribeCompletionHandler) {
+//                        self.subscribeCompletionHandler(TTAccountLoginStateLogin);
+//                    }
+//
+//                    dispatch_async(dispatch_get_main_queue(), ^{
+//                        [[NSNotificationCenter defaultCenter] postNotificationName:@"DISMISS_MASK_AFTER_LOGIN_SUCCESS" object:nil userInfo:@{@"source": @"phoneNumber"}];
+//                    });
+//                }];
+//            }
+//        } else {
+//            NSMutableDictionary *extra = [NSMutableDictionary dictionary];
+//            [extra setValue:error.description forKey:@"error_description"];
+//            [extra setValue:@(error.code) forKey:@"error_code"];
+//
+//            if (captchaImage) {
+//                [[TTMonitor shareManager] trackService:@"account_mobile_login" status:2 extra:extra];
+//
+//                TTAccountCaptchaAlert *cAlert = [[TTAccountCaptchaAlert alloc] initWithTitle:@"请输入图片中的字符" captchaImage:captchaImage placeholder:nil cancelBtnTitle:@"取消" confirmBtnTitle:@"确定" animated:YES completion:^(TTAccountAlertCompletionEventType type, NSString *captchaStr) {
+//
+//                    if (type == TTAccountAlertCompletionEventTypeDone) {
+//                        [wself showWaitingIndicator];
+//                        wself.captchaString = captchaStr;
+//                        [wself loginWithPassword];
+//                    } else {
+//                        [wself dismissWaitingIndicator];
+//                    }
+//                }];
+//                [wself dismissWaitingIndicator];
+//                [cAlert show];
+//            } else {
+//                [[TTMonitor shareManager] trackService:@"account_mobile_login" status:3 extra:extra];
+//                [wself monitorUserLoginFailureWithError:error status:2];
+//                [wself dismissWaitingIndicatorWithError:error];
+//            }
+//        }
+//    }];
 }
 
 - (void)loginWithMail
 {
-    WeakSelf;
-    [self showWaitingIndicator];
-    
-    [TTAccount loginWithEmail:self.mobileInput.field.text password:self.captchaInput.field.text captcha:self.captchaString completion:^(UIImage *captchaImage, NSError *error) {
-        
-        if (!error) {
-            [[TTMonitor shareManager] trackService:@"account_email_login" status:1 extra:nil];
-            self.nonThirdPartySource = @"password";
-            // 在［账号密码登录页］，使用密码登录验证后，成功授权的账号量
-            
-            // LogV1
-            if (![TTTrackerWrapper isOnlyV3SendingEnable]) {
-                [TTTracker category:@"umeng" event:@"register_new" label:@"email_login_success" dict:@{@"source":self.source}];
-            }
-            // LogV3
-            NSMutableDictionary *extraDict = [NSMutableDictionary dictionaryWithCapacity:2];
-            [extraDict setValue:self.source forKey:@"source"];
-            [extraDict setValue:@"email" forKey:@"type"];
-            [TTTrackerWrapper eventV3:@"login_email_success" params:extraDict isDoubleSending:YES];
-            
-            [self dismissWaitingIndicatorWithText:NSLocalizedString(@"登录成功", nil)];
-            
-            if (self.subscribeCompletionHandler) {
-                self.subscribeState = TTAccountLoginStateLogin;
-            }
-            if (self.loginCompletionHandler) {
-                self.loginState = TTAccountLoginStateLogin;
-            }
-            
-            if (IS_IOS_8_LATER) {
-                if (self.subscribeCompletionHandler) {
-                    self.subscribeCompletionHandler(TTAccountLoginStateLogin);
-                }
-                
-                [self dismissViewControllerAnimated:YES completion:nil];
-                
-                [[NSNotificationCenter defaultCenter] postNotificationName:@"DISMISS_MASK_AFTER_LOGIN_SUCCESS" object:nil userInfo:@{@"source": @"phoneNumber"}];
-            } else {
-                [self dismissViewControllerAnimated:YES completion:^{
-                    
-                    if (self.subscribeCompletionHandler) {
-                        self.subscribeCompletionHandler(TTAccountLoginStateLogin);
-                    }
-                    
-                    dispatch_async(dispatch_get_main_queue(), ^{
-                        [[NSNotificationCenter defaultCenter] postNotificationName:@"DISMISS_MASK_AFTER_LOGIN_SUCCESS" object:nil userInfo:@{@"source": @"mail"}];
-                    });
-                }];
-            }
-            
-        } else {
-            NSMutableDictionary *extra = [NSMutableDictionary dictionary];
-            [extra setValue:error.description forKey:@"error_description"];
-            [extra setValue:@(error.code) forKey:@"error_code"];
-            
-            if (captchaImage) {
-                [[TTMonitor shareManager] trackService:@"account_email_login" status:2 extra:extra];
-                
-                TTAccountCaptchaAlert *cAlert = [[TTAccountCaptchaAlert alloc] initWithTitle:@"请输入图片中的字符" captchaImage:captchaImage placeholder:nil cancelBtnTitle:@"取消" confirmBtnTitle:@"确定" animated:YES completion:^(TTAccountAlertCompletionEventType type, NSString *captchaStr) {
-                    
-                    if (type == TTAccountAlertCompletionEventTypeDone) {
-                        [wself showWaitingIndicator];
-                        wself.captchaString = captchaStr;
-                        [wself loginWithMail];
-                    } else {
-                        [wself dismissWaitingIndicator];
-                    }
-                }];
-                [wself dismissWaitingIndicator];
-                [cAlert show];
-            } else {
-                [[TTMonitor shareManager] trackService:@"account_email_login" status:3 extra:extra];
-                [wself monitorUserLoginFailureWithError:error status:3];
-                [wself dismissWaitingIndicatorWithError:error];
-            }
-        }
-    }];
+//    WeakSelf;
+//    [self showWaitingIndicator];
+//    
+//    [TTAccount loginWithEmail:self.mobileInput.field.text password:self.captchaInput.field.text captcha:self.captchaString completion:^(UIImage *captchaImage, NSError *error) {
+//        
+//        if (!error) {
+//            [[TTMonitor shareManager] trackService:@"account_email_login" status:1 extra:nil];
+//            self.nonThirdPartySource = @"password";
+//            // 在［账号密码登录页］，使用密码登录验证后，成功授权的账号量
+//            
+//            // LogV1
+//            if (![TTTrackerWrapper isOnlyV3SendingEnable]) {
+//                [BDTrackerProtocol category:@"umeng" event:@"register_new" label:@"email_login_success" dict:@{@"source":self.source}];
+//            }
+//            // LogV3
+//            NSMutableDictionary *extraDict = [NSMutableDictionary dictionaryWithCapacity:2];
+//            [extraDict setValue:self.source forKey:@"source"];
+//            [extraDict setValue:@"email" forKey:@"type"];
+//            [TTTrackerWrapper eventV3:@"login_email_success" params:extraDict isDoubleSending:YES];
+//            
+//            [self dismissWaitingIndicatorWithText:NSLocalizedString(@"登录成功", nil)];
+//            
+//            if (self.subscribeCompletionHandler) {
+//                self.subscribeState = TTAccountLoginStateLogin;
+//            }
+//            if (self.loginCompletionHandler) {
+//                self.loginState = TTAccountLoginStateLogin;
+//            }
+//            
+//            if (IS_IOS_8_LATER) {
+//                if (self.subscribeCompletionHandler) {
+//                    self.subscribeCompletionHandler(TTAccountLoginStateLogin);
+//                }
+//                
+//                [self dismissViewControllerAnimated:YES completion:nil];
+//                
+//                [[NSNotificationCenter defaultCenter] postNotificationName:@"DISMISS_MASK_AFTER_LOGIN_SUCCESS" object:nil userInfo:@{@"source": @"phoneNumber"}];
+//            } else {
+//                [self dismissViewControllerAnimated:YES completion:^{
+//                    
+//                    if (self.subscribeCompletionHandler) {
+//                        self.subscribeCompletionHandler(TTAccountLoginStateLogin);
+//                    }
+//                    
+//                    dispatch_async(dispatch_get_main_queue(), ^{
+//                        [[NSNotificationCenter defaultCenter] postNotificationName:@"DISMISS_MASK_AFTER_LOGIN_SUCCESS" object:nil userInfo:@{@"source": @"mail"}];
+//                    });
+//                }];
+//            }
+//            
+//        } else {
+//            NSMutableDictionary *extra = [NSMutableDictionary dictionary];
+//            [extra setValue:error.description forKey:@"error_description"];
+//            [extra setValue:@(error.code) forKey:@"error_code"];
+//            
+//            if (captchaImage) {
+//                [[TTMonitor shareManager] trackService:@"account_email_login" status:2 extra:extra];
+//                
+//                TTAccountCaptchaAlert *cAlert = [[TTAccountCaptchaAlert alloc] initWithTitle:@"请输入图片中的字符" captchaImage:captchaImage placeholder:nil cancelBtnTitle:@"取消" confirmBtnTitle:@"确定" animated:YES completion:^(TTAccountAlertCompletionEventType type, NSString *captchaStr) {
+//                    
+//                    if (type == TTAccountAlertCompletionEventTypeDone) {
+//                        [wself showWaitingIndicator];
+//                        wself.captchaString = captchaStr;
+//                        [wself loginWithMail];
+//                    } else {
+//                        [wself dismissWaitingIndicator];
+//                    }
+//                }];
+//                [wself dismissWaitingIndicator];
+//                [cAlert show];
+//            } else {
+//                [[TTMonitor shareManager] trackService:@"account_email_login" status:3 extra:extra];
+//                [wself monitorUserLoginFailureWithError:error status:3];
+//                [wself dismissWaitingIndicatorWithError:error];
+//            }
+//        }
+//    }];
 }
 
 /**
@@ -881,7 +881,7 @@ static TTAccountLoginStyle s_preLoginStyle = 0;
     if (self.loginStyle == TTAccountLoginStyleCaptcha) {
         // LogV1
         if (![TTTrackerWrapper isOnlyV3SendingEnable]) {
-            [TTTracker category:@"umeng" event:@"register_new" label:@"mobile_login_click_confirm" dict:@{@"source":self.source}];
+            [BDTrackerProtocol category:@"umeng" event:@"register_new" label:@"mobile_login_click_confirm" dict:@{@"source":self.source}];
         }
         // LogV3
         NSMutableDictionary *extraDict = [NSMutableDictionary dictionaryWithCapacity:2];
@@ -892,7 +892,7 @@ static TTAccountLoginStyle s_preLoginStyle = 0;
         // 进入[账号密码登录页] 点击 “进入头条量”
         // LogV1
         if (![TTTrackerWrapper isOnlyV3SendingEnable]) {
-            [TTTracker category:@"umeng" event:@"register_new" label:@"password_login_click_confirm" dict:@{@"source":self.source}];
+            [BDTrackerProtocol category:@"umeng" event:@"register_new" label:@"password_login_click_confirm" dict:@{@"source":self.source}];
         }
         // LogV3
         NSMutableDictionary *extraDict = [NSMutableDictionary dictionaryWithCapacity:2];
@@ -996,7 +996,7 @@ static TTAccountLoginStyle s_preLoginStyle = 0;
         if (self.loginStyle != TTAccountLoginStyleEmail) {
             // LogV1
             if (![TTTrackerWrapper isOnlyV3SendingEnable]) {
-                [TTTracker category:@"umeng" event:@"register_new" label:@"email_login_click" dict:@{@"source":self.source}];
+                [BDTrackerProtocol category:@"umeng" event:@"register_new" label:@"email_login_click" dict:@{@"source":self.source}];
             }
             
             // LogV3
@@ -1143,7 +1143,7 @@ static TTAccountLoginStyle s_preLoginStyle = 0;
 - (void)trackLoginSuccessByThirdPartyPlatform:(NSString *)platformName
 {
     // LogV1
-    [TTTracker category:@"umeng" event:@"register_new" label:self.thirdPartySource dict:@{@"source":self.source}];
+    [BDTrackerProtocol category:@"umeng" event:@"register_new" label:self.thirdPartySource dict:@{@"source":self.source}];
     // LogV3
     NSString *loginStyleEventString = nil;
     if (self.loginStyle == TTAccountLoginStyleCaptcha) {
@@ -1218,7 +1218,7 @@ static TTAccountLoginStyle s_preLoginStyle = 0;
         //发一个埋点
         // LogV1
         if (![TTTrackerWrapper isOnlyV3SendingEnable]) {
-            [TTTracker category:@"umeng" event:@"register_new" label:@"email_password_error" dict:@{@"source":self.source}];
+            [BDTrackerProtocol category:@"umeng" event:@"register_new" label:@"email_password_error" dict:@{@"source":self.source}];
         }
         // LogV3
         NSMutableDictionary *extraDict = [NSMutableDictionary dictionaryWithCapacity:2];
@@ -1429,7 +1429,7 @@ static TTAccountLoginStyle s_preLoginStyle = 0;
         if (self.loginStyle == TTAccountLoginStylePassword) {
             // LogV1
             if (![TTTrackerWrapper isOnlyV3SendingEnable]) {
-                [TTTracker category:@"umeng" event:@"register_new" label:@"password_login_click_sinaweibo" dict:@{@"source":self.source}];
+                [BDTrackerProtocol category:@"umeng" event:@"register_new" label:@"password_login_click_sinaweibo" dict:@{@"source":self.source}];
             }
             // LogV3
             NSMutableDictionary *extraDict = [NSMutableDictionary dictionaryWithCapacity:2];
@@ -1440,7 +1440,7 @@ static TTAccountLoginStyle s_preLoginStyle = 0;
         else if (self.loginStyle == TTAccountLoginStyleCaptcha) {
             // LogV1
             if (![TTTrackerWrapper isOnlyV3SendingEnable]) {
-                [TTTracker category:@"umeng" event:@"register_new" label:@"mobile_login_click_sinaweibo" dict:@{@"source":self.source}];
+                [BDTrackerProtocol category:@"umeng" event:@"register_new" label:@"mobile_login_click_sinaweibo" dict:@{@"source":self.source}];
             }
             // LogV3
             NSMutableDictionary *extraDict = [NSMutableDictionary dictionaryWithCapacity:2];
@@ -1451,7 +1451,7 @@ static TTAccountLoginStyle s_preLoginStyle = 0;
         else if (self.loginStyle == TTAccountLoginStyleEmail) {
             // LogV1
             if (![TTTrackerWrapper isOnlyV3SendingEnable]) {
-                [TTTracker category:@"umeng" event:@"register_new" label:@"email_login_click_sinaweibo" dict:@{@"source":self.source}];
+                [BDTrackerProtocol category:@"umeng" event:@"register_new" label:@"email_login_click_sinaweibo" dict:@{@"source":self.source}];
             }
             // LogV3
             NSMutableDictionary *extraDict = [NSMutableDictionary dictionaryWithCapacity:2];
@@ -1465,7 +1465,7 @@ static TTAccountLoginStyle s_preLoginStyle = 0;
         if (self.loginStyle == TTAccountLoginStylePassword) {
             // LogV1
             if (![TTTrackerWrapper isOnlyV3SendingEnable]) {
-                [TTTracker category:@"umeng" event:@"register_new" label:@"password_login_click_qq" dict:@{@"source":self.source}];
+                [BDTrackerProtocol category:@"umeng" event:@"register_new" label:@"password_login_click_qq" dict:@{@"source":self.source}];
             }
             // LogV3
             NSMutableDictionary *extraDict = [NSMutableDictionary dictionaryWithCapacity:2];
@@ -1476,7 +1476,7 @@ static TTAccountLoginStyle s_preLoginStyle = 0;
         else if (self.loginStyle == TTAccountLoginStyleCaptcha) {
             // LogV1
             if (![TTTrackerWrapper isOnlyV3SendingEnable]) {
-                [TTTracker category:@"umeng" event:@"register_new" label:@"mobile_login_click_qq" dict:@{@"source":self.source}];
+                [BDTrackerProtocol category:@"umeng" event:@"register_new" label:@"mobile_login_click_qq" dict:@{@"source":self.source}];
             }
             // LogV3
             NSMutableDictionary *extraDict = [NSMutableDictionary dictionaryWithCapacity:2];
@@ -1487,7 +1487,7 @@ static TTAccountLoginStyle s_preLoginStyle = 0;
         else if (self.loginStyle == TTAccountLoginStyleEmail) {
             // LogV1
             if (![TTTrackerWrapper isOnlyV3SendingEnable]) {
-                [TTTracker category:@"umeng" event:@"register_new" label:@"email_login_click_qq" dict:@{@"source":self.source}];
+                [BDTrackerProtocol category:@"umeng" event:@"register_new" label:@"email_login_click_qq" dict:@{@"source":self.source}];
             }
             // LogV3
             NSMutableDictionary *extraDict = [NSMutableDictionary dictionaryWithCapacity:2];
@@ -1501,7 +1501,7 @@ static TTAccountLoginStyle s_preLoginStyle = 0;
         if (self.loginStyle == TTAccountLoginStylePassword) {
             // LogV1
             if (![TTTrackerWrapper isOnlyV3SendingEnable]) {
-                [TTTracker category:@"umeng" event:@"register_new" label:@"password_login_click_weixin" dict:@{@"source":self.source}];
+                [BDTrackerProtocol category:@"umeng" event:@"register_new" label:@"password_login_click_weixin" dict:@{@"source":self.source}];
             }
             // LogV3
             NSMutableDictionary *extraDict = [NSMutableDictionary dictionaryWithCapacity:2];
@@ -1512,7 +1512,7 @@ static TTAccountLoginStyle s_preLoginStyle = 0;
         else if (self.loginStyle == TTAccountLoginStyleCaptcha) {
             // LogV1
             if (![TTTrackerWrapper isOnlyV3SendingEnable]) {
-                [TTTracker category:@"umeng" event:@"register_new" label:@"mobile_login_click_weixin" dict:@{@"source":self.source}];
+                [BDTrackerProtocol category:@"umeng" event:@"register_new" label:@"mobile_login_click_weixin" dict:@{@"source":self.source}];
             }
             // LogV3
             NSMutableDictionary *extraDict = [NSMutableDictionary dictionaryWithCapacity:2];
@@ -1523,7 +1523,7 @@ static TTAccountLoginStyle s_preLoginStyle = 0;
         else if (self.loginStyle == TTAccountLoginStyleEmail) {
             // LogV1
             if (![TTTrackerWrapper isOnlyV3SendingEnable]) {
-                [TTTracker category:@"umeng" event:@"register_new" label:@"email_login_click_weixin" dict:@{@"source":self.source}];
+                [BDTrackerProtocol category:@"umeng" event:@"register_new" label:@"email_login_click_weixin" dict:@{@"source":self.source}];
             }
             // LogV3
             NSMutableDictionary *extraDict = [NSMutableDictionary dictionaryWithCapacity:2];
@@ -1537,7 +1537,7 @@ static TTAccountLoginStyle s_preLoginStyle = 0;
         if (self.loginStyle == TTAccountLoginStylePassword) {
             // LogV1
             if (![TTTrackerWrapper isOnlyV3SendingEnable]) {
-                [TTTracker category:@"umeng" event:@"register_new" label:@"password_login_click_qqweibo" dict:@{@"source":self.source}];
+                [BDTrackerProtocol category:@"umeng" event:@"register_new" label:@"password_login_click_qqweibo" dict:@{@"source":self.source}];
             }
             // LogV3
             NSMutableDictionary *extraDict = [NSMutableDictionary dictionaryWithCapacity:2];
@@ -1548,7 +1548,7 @@ static TTAccountLoginStyle s_preLoginStyle = 0;
         else if (self.loginStyle == TTAccountLoginStyleCaptcha) {
             // LogV1
             if (![TTTrackerWrapper isOnlyV3SendingEnable]) {
-                [TTTracker category:@"umeng" event:@"register_new" label:@"mobile_login_click_qqweibo" dict:@{@"source":self.source}];
+                [BDTrackerProtocol category:@"umeng" event:@"register_new" label:@"mobile_login_click_qqweibo" dict:@{@"source":self.source}];
             }
             // LogV3
             NSMutableDictionary *extraDict = [NSMutableDictionary dictionaryWithCapacity:2];
@@ -1559,7 +1559,7 @@ static TTAccountLoginStyle s_preLoginStyle = 0;
         else if (self.loginStyle == TTAccountLoginStyleEmail) {
             // LogV1
             if (![TTTrackerWrapper isOnlyV3SendingEnable]) {
-                [TTTracker category:@"umeng" event:@"register_new" label:@"email_login_click_qqweibo" dict:@{@"source":self.source}];
+                [BDTrackerProtocol category:@"umeng" event:@"register_new" label:@"email_login_click_qqweibo" dict:@{@"source":self.source}];
             }
             // LogV3
             NSMutableDictionary *extraDict = [NSMutableDictionary dictionaryWithCapacity:2];
@@ -1573,7 +1573,7 @@ static TTAccountLoginStyle s_preLoginStyle = 0;
         if (self.loginStyle == TTAccountLoginStylePassword) {
             // LogV1
             if (![TTTrackerWrapper isOnlyV3SendingEnable]) {
-                [TTTracker category:@"umeng" event:@"register_new" label:@"password_login_click_renren" dict:@{@"source":self.source}];
+                [BDTrackerProtocol category:@"umeng" event:@"register_new" label:@"password_login_click_renren" dict:@{@"source":self.source}];
             }
             // LogV3
             NSMutableDictionary *extraDict = [NSMutableDictionary dictionaryWithCapacity:2];
@@ -1584,7 +1584,7 @@ static TTAccountLoginStyle s_preLoginStyle = 0;
         else if (self.loginStyle == TTAccountLoginStyleCaptcha) {
             // LogV1
             if (![TTTrackerWrapper isOnlyV3SendingEnable]) {
-                [TTTracker category:@"umeng" event:@"register_new" label:@"mobile_login_click_renren" dict:@{@"source":self.source}];
+                [BDTrackerProtocol category:@"umeng" event:@"register_new" label:@"mobile_login_click_renren" dict:@{@"source":self.source}];
             }
             // LogV3
             NSMutableDictionary *extraDict = [NSMutableDictionary dictionaryWithCapacity:2];
@@ -1595,7 +1595,7 @@ static TTAccountLoginStyle s_preLoginStyle = 0;
         else if (self.loginStyle == TTAccountLoginStyleEmail) {
             // LogV1
             if (![TTTrackerWrapper isOnlyV3SendingEnable]) {
-                [TTTracker category:@"umeng" event:@"register_new" label:@"email_login_click_renren" dict:@{@"source":self.source}];
+                [BDTrackerProtocol category:@"umeng" event:@"register_new" label:@"email_login_click_renren" dict:@{@"source":self.source}];
             }
             // LogV3
             NSMutableDictionary *extraDict = [NSMutableDictionary dictionaryWithCapacity:2];
@@ -1609,7 +1609,7 @@ static TTAccountLoginStyle s_preLoginStyle = 0;
         if (self.loginStyle == TTAccountLoginStylePassword) {
             // LogV1
             if (![TTTrackerWrapper isOnlyV3SendingEnable]) {
-                [TTTracker category:@"umeng" event:@"register_new" label:@"password_login_click_telecom" dict:@{@"source":self.source}];
+                [BDTrackerProtocol category:@"umeng" event:@"register_new" label:@"password_login_click_telecom" dict:@{@"source":self.source}];
             }
             // LogV3
             NSMutableDictionary *extraDict = [NSMutableDictionary dictionaryWithCapacity:2];
@@ -1620,7 +1620,7 @@ static TTAccountLoginStyle s_preLoginStyle = 0;
         else if (self.loginStyle == TTAccountLoginStyleCaptcha) {
             // LogV1
             if (![TTTrackerWrapper isOnlyV3SendingEnable]) {
-                [TTTracker category:@"umeng" event:@"register_new" label:@"mobile_login_click_telecom" dict:@{@"source":self.source}];
+                [BDTrackerProtocol category:@"umeng" event:@"register_new" label:@"mobile_login_click_telecom" dict:@{@"source":self.source}];
             }
             // LogV3
             NSMutableDictionary *extraDict = [NSMutableDictionary dictionaryWithCapacity:2];
@@ -1631,7 +1631,7 @@ static TTAccountLoginStyle s_preLoginStyle = 0;
         else if (self.loginStyle == TTAccountLoginStyleEmail) {
             // LogV1
             if (![TTTrackerWrapper isOnlyV3SendingEnable]) {
-                [TTTracker category:@"umeng" event:@"register_new" label:@"email_login_click_telecom" dict:@{@"source":self.source}];
+                [BDTrackerProtocol category:@"umeng" event:@"register_new" label:@"email_login_click_telecom" dict:@{@"source":self.source}];
             }
             // LogV3
             NSMutableDictionary *extraDict = [NSMutableDictionary dictionaryWithCapacity:2];
@@ -1737,7 +1737,7 @@ static TTAccountLoginStyle s_preLoginStyle = 0;
      
      // LogV1
      if (![TTTrackerWrapper isOnlyV3SendingEnable]) {
-     [TTTracker category:@"umeng" event:@"register_new" label:(oldLogLabelString ? : @"") dict:@{@"source":self.source}];
+     [BDTrackerProtocol category:@"umeng" event:@"register_new" label:(oldLogLabelString ? : @"") dict:@{@"source":self.source}];
      }
      // LogV3
      NSMutableDictionary *extraDict = [NSMutableDictionary dictionaryWithCapacity:2];

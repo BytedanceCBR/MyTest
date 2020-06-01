@@ -1073,7 +1073,7 @@ static CGFloat maxAnimationHeight = 154;//超过这个高度才做动画
     NSMutableDictionary *params = [[NSMutableDictionary alloc] init];
     [params setValue:self.sourceArticle.groupModel.groupID forKey:@"group_id"];
     [params setValue:@"page_detail_gallery_pic" forKey:@"obj_id"];
-    [TTTracker eventV3:@"clk_event" params:params];
+    [BDTrackerProtocol eventV3:@"clk_event" params:params];
     [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:_currSubjectModel.carOpenURL]];
 }
 
@@ -1386,7 +1386,7 @@ static CGFloat maxAnimationHeight = 154;//超过这个高度才做动画
         NSMutableDictionary *params = [[NSMutableDictionary alloc] init];
         [params setValue:self.sourceArticle.groupModel.groupID forKey:@"group_id"];
         [params setValue:@"page_detail_gallery_pic" forKey:@"obj_id"];
-        [TTTracker eventV3:@"show_event" params:params];
+        [BDTrackerProtocol eventV3:@"show_event" params:params];
     }
     CGFloat maxNatantHeight = lineHeight * 7;
     if(UIInterfaceOrientationIsLandscape([UIApplication sharedApplication].statusBarOrientation)){

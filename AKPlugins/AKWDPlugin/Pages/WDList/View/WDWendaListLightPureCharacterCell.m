@@ -355,7 +355,7 @@
         }
         [dict setValue:@1 forKey:@"is_redpacket"];
     }
-    [TTTracker eventV3:event params:[dict copy]];
+    [BDTrackerProtocol eventV3:event params:[dict copy]];
     
     self.isSelfFollow = YES;
     [followBtn startLoading];
@@ -413,13 +413,13 @@
             [dict setValue:@"answer_list_answer_cell" forKey:@"source"];
             [dict setValue:@"answer_list" forKey:@"position"];
             [dict setValue:self.ansEntity.ansid forKey:@"group_id"];
-            [TTTracker eventV3:@"rt_like" params:[dict copy]];
+            [BDTrackerProtocol eventV3:@"rt_like" params:[dict copy]];
         } else {
             NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithDictionary:self.gdExtJson];
             [dict setValue:@"answer_list_answer_cell" forKey:@"source"];
             [dict setValue:@"answer_list" forKey:@"position"];
             [dict setValue:self.ansEntity.ansid forKey:@"group_id"];
-            [TTTracker eventV3:@"rt_unlike" params:[dict copy]];
+            [BDTrackerProtocol eventV3:@"rt_unlike" params:[dict copy]];
             if (diggButton.selected) {
                 diggButton.selected = NO;
             }
@@ -438,7 +438,7 @@
     [dict setValue:@"answer_list_answer_cell" forKey:@"source"];
     [dict setValue:@"answer_list" forKey:@"position"];
     [dict setValue:self.ansEntity.ansid forKey:@"group_id"];
-    [TTTracker eventV3:@"cell_comment" params:[dict copy]];
+    [BDTrackerProtocol eventV3:@"cell_comment" params:[dict copy]];
 }
 
 - (void)listCellActionFooterViewForwardButtonClick {
@@ -449,7 +449,7 @@
     [dict setValue:self.ansEntity.ansid forKey:@"group_id"];
     [dict setValue:@"weitoutiao" forKey:@"share_platform"];
     dict[@"event_type"] = @"house_app2c_v2";
-    [TTTracker eventV3:@"rt_share_to_platform" params:[dict copy]];
+    [BDTrackerProtocol eventV3:@"rt_share_to_platform" params:[dict copy]];
 }
 
 #pragma mark - Notification

@@ -5,7 +5,7 @@
 //  Created by 张静 on 2019/1/31.
 //
 
-#import "FHDetailBaseModel.h"shadowImage
+#import "FHDetailBaseModel.h"
 
 @implementation FHDetailBaseModel
 - (void)setShadowImageType:(FHHouseShdowImageType)shadowImageType {
@@ -409,7 +409,7 @@
 }
 @end
 
-@implementation FHDetailOldDataHouseImageDictListModel
+@implementation FHHouseDetailImageListDataModel
 + (JSONKeyMapper*)keyMapper
 {
     NSDictionary *dict = @{

@@ -17,7 +17,8 @@
 #import "TTBadgeTrackerHelper.h"
 #import "TTArticleSearchManager.h"
 #import "TTCategoryBadgeNumberManager.h"
-#import "TTTracker.h"
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
+
 #import "TTAccountBusiness.h"
 #import "TTSearchHomeSugModel.h"
 #import "TTTintThemeButton.h"

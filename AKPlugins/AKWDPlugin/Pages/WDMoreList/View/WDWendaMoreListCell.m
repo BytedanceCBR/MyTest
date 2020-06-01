@@ -31,7 +31,7 @@
 #import <TTFriendRelation/TTFollowManager.h>
 #import <TTUIWidget/SSMotionRender.h>
 #import <TTBaseLib/NetworkUtilities.h>
-#import <TTTracker/TTTracker.h>
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 #import <TTRoute/TTRoute.h>
 #import "WDTrackerHelper.h"
 #import "WDQuestionEntity.h"
@@ -243,7 +243,7 @@ NSString * const WDMoreListCellUnDiggButtonClickTrackerEvent = @"rt_unlike";
     NSDictionary *dict = [self.cellViewModel followButtonTappedTrackDict];
     NSMutableDictionary *fullDict = [NSMutableDictionary dictionaryWithDictionary:self.gdExtJson];
     [fullDict addEntriesFromDictionary:dict];
-    [TTTracker eventV3:event params:fullDict];
+    [BDTrackerProtocol eventV3:event params:fullDict];
     self.isSelfFollow = YES;
     [followBtn startLoading];
     WeakSelf;

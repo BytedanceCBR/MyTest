@@ -1604,7 +1604,7 @@ TTRefreshViewDelegate
                         //问答下运营卡片增加 gid
                         [dictTraceParams setValue:obj.uniqueID ? : @"be_null" forKey:@"element_card_id"];
                     }
-                    [TTTracker eventV3:@"client_show" params:dictTraceParams];
+                    [BDTrackerProtocol eventV3:@"client_show" params:dictTraceParams];
                     
                 }else {
                     
@@ -1614,7 +1614,7 @@ TTRefreshViewDelegate
                     [dictTraceParams setValue:obj.logPb[@"impr_id"] forKey:@"impr_id"];
                     [dictTraceParams setValue:obj.logPb forKey:@"log_pb"];
                     [dictTraceParams setValue:@(obj.cellType) ? : @"be_null" forKey:@"cell_type"];
-                    [TTTracker eventV3:@"client_show" params:dictTraceParams];
+                    [BDTrackerProtocol eventV3:@"client_show" params:dictTraceParams];
                     
                     [_cellIdDict setObject:@"" forKey:obj.itemID];
                     
@@ -2287,7 +2287,7 @@ TTRefreshViewDelegate
                                     isDisplyView:_isDisplayView
                                         listType:_listType
                                     listLocation:_listLocation
-                                     finishBlock:^(NSArray *increaseItems, id operationContext, NSError *error) {
+                                     finishBlock:^(NSArray *increaseItems, NSDictionary *operationContext, NSError *error) {
                                          
                                          __strong typeof(oldwself) self = oldwself;
                                          __strong typeof(oldwself) wself = oldwself;
@@ -2354,18 +2354,18 @@ TTRefreshViewDelegate
                                          
                                          //fix 5.3:无error时再处理置顶
                                          if (!error) {
-                                             NSDictionary *result = [operationContext objectForKey:kExploreFetchListResponseRemoteDataKey];
+                                             NSDictionary *result = (NSDictionary *)[operationContext objectForKey:kExploreFetchListResponseRemoteDataKey];
                                              weakSelf.movieCommentVideoAPIOffset = [[result objectForKey:@"result"] tt_unsignedIntegerValueForKey:@"offset"];
                                              weakSelf.verticalVideoAPIOffset = [[result objectForKey:@"result"] tt_unsignedIntegerValueForKey:@"offset"];
                                          }
                                          
                                          BOOL isResponseFromRemote = NO;
                                          if (operationContext) {
-                                             isResponseFromRemote = [[operationContext objectForKey:kExploreFetchListIsResponseFromRemoteKey] boolValue];
+                                             isResponseFromRemote = [[(NSDictionary *)operationContext objectForKey:kExploreFetchListIsResponseFromRemoteKey] boolValue];
                                          }
                                          
                                          //获取视频订阅号开关标志信息
-                                         NSDictionary *resultDict = [[operationContext objectForKey:kExploreFetchListResponseRemoteDataKey] objectForKey:@"result"];
+                                         NSDictionary *resultDict = [(NSDictionary *)[operationContext objectForKey:kExploreFetchListResponseRemoteDataKey] objectForKey:@"result"];
                                          if ([[resultDict allKeys] containsObject:@"show_top_pgc_list"]) {
                                              NSNumber *showPCGList = resultDict[@"show_top_pgc_list"];
                                              if ([showPCGList isKindOfClass:[NSNumber class]]) {
@@ -2376,9 +2376,9 @@ TTRefreshViewDelegate
                                         
                                          [TTFeedDislikeView enable];
                                          
-                                         NSString *cid = [[operationContext objectForKey:kExploreFetchListConditionKey] objectForKey:kExploreFetchListConditionListUnitIDKey];
+                                         NSString *cid = [(NSDictionary *)[operationContext objectForKey:kExploreFetchListConditionKey] objectForKey:kExploreFetchListConditionListUnitIDKey];
                                          
-                                         NSString *concernID = [[operationContext objectForKey:kExploreFetchListConditionKey] objectForKey:kExploreFetchListConditionListConcernIDKey];
+                                         NSString *concernID = [(NSDictionary *)[operationContext objectForKey:kExploreFetchListConditionKey] objectForKey:kExploreFetchListConditionListConcernIDKey];
                                          
                                          NSString *key = !isEmptyString(cid) ? cid : concernID;
                                          
@@ -2659,7 +2659,7 @@ TTRefreshViewDelegate
                                                      }
                                                  }
                                                  
-                                                 NSDictionary *remoteTipResult = [[[operationContext objectForKey:kExploreFetchListResponseRemoteDataKey] objectForKey:@"result"] objectForKey:@"tips"];
+                                                 NSDictionary *remoteTipResult = [(NSDictionary *)[(NSDictionary *)[operationContext objectForKey:kExploreFetchListResponseRemoteDataKey] objectForKey:@"result"] objectForKey:@"tips"];
                                                  
                                                  tipModel = [[SSTipModel alloc] initWithDictionary:remoteTipResult];
                                                  NSString * msg = nil;
@@ -2749,7 +2749,7 @@ TTRefreshViewDelegate
                                                      [weakSelf updateCustomTopOffset];
                                                      [weakSelf.listView finishPullDownWithSuccess:!error];
                                                  }
-                                                 NSMutableDictionary * exploreMixedListConsumeTimeStamps = [[operationContext objectForKey:kExploreFetchListConditionKey] objectForKey:kExploreFetchListRefreshOrLoadMoreConsumeTimeStampsKey];
+                                                 NSMutableDictionary * exploreMixedListConsumeTimeStamps = [(NSMutableDictionary *)[operationContext objectForKey:kExploreFetchListConditionKey] objectForKey:kExploreFetchListRefreshOrLoadMoreConsumeTimeStampsKey];
                                                  [exploreMixedListConsumeTimeStamps setValue:@([NSObject currentUnixTime])
                                                                                       forKey:kExploreFetchListFinishRequestTimeStampKey];
                                                  [weakSelf exploreMixedListTimeConsumingMonitorWithContext:operationContext];
@@ -4635,21 +4635,23 @@ TTRefreshViewDelegate
 #pragma mark -- SSImpressionProtocol
 
 - (void)needRerecordImpressions {
-    
-    if ([_fetchListManager.items count] == 0) {
-        return;
-    }
-    
-    for (UITableViewCell * cell in [_listView visibleCells]) {
-        if ([cell isKindOfClass:[ExploreCellBase class]]) {
-            ExploreCellBase * cellBase = (ExploreCellBase *)cell;
-            if ([cellBase.cellData isKindOfClass:[ExploreOrderedData class]]) {
-                ExploreOrderedData * orderedData = (ExploreOrderedData *)cellBase.cellData;
-                SSImpressionStatus status = (self.isDisplayView && _isShowing) ? SSImpressionStatusRecording : SSImpressionStatusSuspend;
-                [self recordGroupForExploreOrderedData:orderedData status:status cellBase:cellBase];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        if ([_fetchListManager.items count] == 0) {
+            return;
+        }
+        
+        for (UITableViewCell * cell in [_listView visibleCells]) {
+            if ([cell isKindOfClass:[ExploreCellBase class]]) {
+                ExploreCellBase * cellBase = (ExploreCellBase *)cell;
+                if ([cellBase.cellData isKindOfClass:[ExploreOrderedData class]]) {
+                    ExploreOrderedData * orderedData = (ExploreOrderedData *)cellBase.cellData;
+                    SSImpressionStatus status = (self.isDisplayView && _isShowing) ? SSImpressionStatusRecording : SSImpressionStatusSuspend;
+                    [self recordGroupForExploreOrderedData:orderedData status:status cellBase:cellBase];
+                }
             }
         }
-    }
+    });
+    
 }
 
 // cell的model变动时，列表需要刷新cell显示

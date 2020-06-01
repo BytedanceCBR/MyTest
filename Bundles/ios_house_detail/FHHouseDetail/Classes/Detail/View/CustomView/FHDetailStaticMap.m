@@ -12,7 +12,7 @@
 #import "MAMapKit.h"
 
 // 兼容之前的版本
-NSNotificationName kReachabilityChangedNotification = @"TTReachabilityChangedNotification";
+//NSNotificationName kReachabilityChangedNotification = @"TTReachabilityChangedNotification";
 const CGFloat kStaticMapHWRatio  = 7.0f / 16.0f;
 
 @interface FHStaticMapAnnotation ()

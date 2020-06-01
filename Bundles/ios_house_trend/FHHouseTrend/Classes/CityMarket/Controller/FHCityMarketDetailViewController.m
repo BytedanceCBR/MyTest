@@ -24,7 +24,8 @@
 #import "FHCityMarketBottomBarView.h"
 #import "FHCityMarketRecommendViewModel.h"
 #import "FHImmersionNavBarViewModel.h"
-#import "TTTracker.h"
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
+
 #import "TTTrackerWrapper.h"
 #import "FHUserTracker.h"
 #import <FHHouseBase/FHBaseTableView.h>

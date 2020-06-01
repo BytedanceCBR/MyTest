@@ -82,7 +82,7 @@
 #import "SSCommonLogic.h"
 #import "ExploreLogicSetting.h"
 #import <BDUGAccountOnekeyLogin/BDUGOnekeySettingManager.h>
-
+#import "FHLocManager.h"
 
 #define SSFetchSettingsManagerFetchedDateKey @"SSFetchSettingsManagerFetchedDateKey"
 #define kFetchTimeInterval (3 * 60 * 60)
@@ -489,7 +489,7 @@
     }
     [SSCommonLogic setBaiduMapKey:[dSettings tt_stringValueForKey:@"lbs_baidu_key"]];
     
-    [SSCommonLogic setAmapKey:[dSettings tt_stringValueForKey:@"lbs_amap_key"]];
+    [SSCommonLogic setAmapKey:[FHLocManager amapAPIKey]];
     
     if ([dSettings objectForKey:@"use_dns_mapping"]) {
         [SSCommonLogic setEnabledDNSMapping:[[dSettings valueForKey:@"use_dns_mapping"] integerValue]];
@@ -952,7 +952,9 @@
     }
     
     // [[TTLCSServerConfig sharedTTLCSServerConfig] updateEnabledFlag:dSettings];
-    [[TTLCSServerConfig sharedInstance] resetServerConfigEnabled:[dSettings tt_boolValueForKey:kTTLCSServerConfigEnabledKey]];
+    
+    // todo zjing test check 已和高海东确认只要TTKitchen正常获取settings，则不影响
+//    [[TTLCSServerConfig sharedInstance] resetServerConfigEnabled:[dSettings tt_boolValueForKey:kTTLCSServerConfigEnabledKey]];
     
     [[TTWebviewAntiHijackServerConfig sharedTTWebviewAntiHijackServerConfig] updateServerConfig:dSettings];
     

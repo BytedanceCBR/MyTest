@@ -15,7 +15,7 @@
 #import "TTDeviceHelper.h"
 #import "TTDebugRealMonitorManager.h"
 #import <TTBaseLib/NSDictionary+TTAdditions.h>
-#import <TTTracker/TTTracker.h>
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 #import <TTBaseLib/TTUIResponderHelper.h>
 #import <BDTSharedHeaders/SSCommonDefines.h>
 
@@ -94,7 +94,7 @@
     
     
     //统计事件
-    [TTTracker eventV3:@"feedback_show" params:self.paramObj.allParams];
+    [BDTrackerProtocol eventV3:@"feedback_show" params:self.paramObj.allParams];
     [SSFeedbackManager shareInstance].trackerInfo = self.paramObj.allParams;
         
 }

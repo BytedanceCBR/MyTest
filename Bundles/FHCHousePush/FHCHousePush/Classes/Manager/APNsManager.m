@@ -100,7 +100,7 @@ static APNsManager *_sharedManager = nil;
     if (extGrowth) {
         params[@"ext_growth"] = extGrowth;
     }
-    [TTTracker eventV3:@"launch_log" params:params];
+    [BDTrackerProtocol eventV3:@"launch_log" params:params];
 }
 
 - (void)handleRemoteNotification:(NSDictionary *)userInfo
