@@ -42,9 +42,16 @@
         return;
     }
     NSInteger status = -1;
-    NSDictionary *responseDictionary = [NSJSONSerialization JSONObjectWithData:response?response:@{}
-                                                                       options:NSJSONReadingAllowFragments
-                                                                         error:nil];
+    NSDictionary *responseDictionary;
+    if ([response isKindOfClass:[NSDictionary class]]) {
+        responseDictionary = response;
+    }else if ([response isKindOfClass:[NSData class]]) {
+        responseDictionary = [NSJSONSerialization JSONObjectWithData:response?response:@{}
+                                                                           options:NSJSONReadingAllowFragments
+                                                                             error:nil];
+    }else {
+        return;
+    }
     if ([responseDictionary.allKeys containsObject:@"status"]) {
         status = [NSString stringWithFormat:@"%@",responseDictionary[@"status"]].integerValue;
     }
