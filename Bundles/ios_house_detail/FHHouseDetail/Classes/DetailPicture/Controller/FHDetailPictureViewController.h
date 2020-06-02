@@ -78,6 +78,9 @@ NS_ASSUME_NONNULL_BEGIN
 /** 是否显示底部bottombar以及按钮，默认YES */
 @property (nonatomic, assign)BOOL isShowBottomBar;
 
+/// 头部切换name类型的view是否显示，默认YES
+@property (nonatomic, assign) BOOL isShowSegmentView;
+
 //099户型详情 查看大图新增 title & 售卖 状态字段
 @property (nonatomic, copy) NSString *bottomBarTitle;
 @property (nonatomic, copy) NSString *saleStatus;
