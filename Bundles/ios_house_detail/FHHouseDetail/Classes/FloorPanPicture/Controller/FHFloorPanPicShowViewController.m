@@ -297,7 +297,7 @@
     NSInteger titleIndex = 0;
     
     for (int i = 0; i < self.pictsArray.count; i++) {
-        FHDetailNewDataSmallImageGroupModel *smallImageGroupModel = self.pictsArray[i];
+        FHHouseDetailImageGroupModel *smallImageGroupModel = self.pictsArray[i];
         NSInteger tempCount = smallImageGroupModel.images.count;
         count += tempCount;
         if (toIndex < count) {
@@ -331,24 +331,6 @@
 //    [self.mainCollectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:titleIndex] atScrollPosition:UICollectionViewScrollPositionBottom animated:YES];
 }
 
-//- (void)scrollToSegmentView {
-//    NSIndexPath *indexPath = [self.collectionView indexPathForItemAtPoint:self.collectionView.contentOffset];
-//
-//    if (self.lastIndexPath.section != indexPath.section) {
-//        self.lastIndexPath = indexPath;
-//        if (indexPath.section < self.pictsArray.count) {
-//            NSInteger currentIndex = 0;
-//            for (int i = 0; i < indexPath.section; i++) {
-//                FHDetailNewDataSmallImageGroupModel *smallImageGroupModel = self.pictsArray[i];
-//                currentIndex += smallImageGroupModel.images.count;
-//            }
-//            if (self.segmentTitleView) {
-//                self.segmentTitleView.selectIndex = currentIndex;
-//            }
-//        }
-//    }
-//}
-
 - (void)processImagesList {
     NSMutableArray *smallImageGroup = [NSMutableArray array];
 
@@ -356,14 +338,14 @@
     NSMutableArray *numbers = [NSMutableArray array];
     
     for (FHDetailNewTopImage *topImage in self.topImages) {
-        FHDetailNewDataSmallImageGroupModel *smallImageGroupModel = [[FHDetailNewDataSmallImageGroupModel alloc] init];
+        FHHouseDetailImageGroupModel *smallImageGroupModel = [[FHHouseDetailImageGroupModel alloc] init];
         smallImageGroupModel.type = [@(topImage.type) stringValue];
         smallImageGroupModel.name = topImage.name;
         
         NSInteger tempCount = 0;
         
         NSMutableArray *smallImageList = [NSMutableArray array];
-        for (FHDetailNewDataImageGroupModel * groupModel in topImage.smallImageGroup) {
+        for (FHHouseDetailImageGroupModel * groupModel in topImage.smallImageGroup) {
             for (NSInteger j = 0; j < groupModel.images.count; j++) {
                 [smallImageList addObject:groupModel.images[j]];
                 tempCount += 1;
@@ -451,8 +433,8 @@
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
 {
     if (section < self.pictsArray.count) {
-        FHDetailNewDataSmallImageGroupModel *groupModel = self.pictsArray[section];
-        if ([groupModel isKindOfClass:[FHDetailNewDataSmallImageGroupModel class]]) {
+        FHHouseDetailImageGroupModel *groupModel = self.pictsArray[section];
+        if ([groupModel isKindOfClass:[FHHouseDetailImageGroupModel class]]) {
             return groupModel.images.count;
         }
     }
@@ -462,8 +444,8 @@
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
     FHFloorPanPicCollectionCell *cell =[collectionView dequeueReusableCellWithReuseIdentifier:NSStringFromClass([FHFloorPanPicCollectionCell class]) forIndexPath:indexPath];
     if (indexPath.section < self.pictsArray.count) {
-        FHDetailNewDataSmallImageGroupModel *groupModel = self.pictsArray[indexPath.section];
-        if ([groupModel isKindOfClass:[FHDetailNewDataSmallImageGroupModel class]] && groupModel.images.count > indexPath.row) {
+        FHHouseDetailImageGroupModel *groupModel = self.pictsArray[indexPath.section];
+        if ([groupModel isKindOfClass:[FHHouseDetailImageGroupModel class]] && groupModel.images.count > indexPath.row) {
             cell.dataModel = groupModel.images[indexPath.row];
         }
     }
@@ -513,7 +495,7 @@
         FHPictureListTitleCollectionView *titleView = (FHPictureListTitleCollectionView *)[collectionView dequeueReusableSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:NSStringFromClass([FHPictureListTitleCollectionView class]) forIndexPath:indexPath];
         if (self.pictsArray.count > indexPath.section) {
 
-           FHDetailNewDataSmallImageGroupModel *groupModel = self.pictsArray[indexPath.section];
+           FHHouseDetailImageGroupModel *groupModel = self.pictsArray[indexPath.section];
             if([groupModel.name length] > 0) {
                 if ([groupModel.type isEqualToString:@"2"]) {
                     //户型图后面不带计数
@@ -543,7 +525,7 @@
       
         for (NSInteger i = 0; i <= indexPath.section; i++) {
             if (i < indexPath.section) {
-                FHDetailNewDataSmallImageGroupModel *groupModel = self.pictsArray[i];
+                FHHouseDetailImageGroupModel *groupModel = self.pictsArray[i];
                 total += groupModel.images.count;
             }else
             {
@@ -577,7 +559,7 @@
         if (indexPath.section < self.pictsArray.count) {
             NSInteger currentIndex = 0;
             for (int i = 0; i < indexPath.section; i++) {
-                FHDetailNewDataSmallImageGroupModel *smallImageGroupModel = self.pictsArray[i];
+                FHHouseDetailImageGroupModel *smallImageGroupModel = self.pictsArray[i];
                 currentIndex += smallImageGroupModel.images.count;
             }
             if (self.segmentTitleView) {

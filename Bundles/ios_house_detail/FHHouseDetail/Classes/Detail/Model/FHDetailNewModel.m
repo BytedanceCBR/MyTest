@@ -34,15 +34,7 @@
 }
 @end
 
-@implementation FHDetailNewDataImageGroupModel
-+ (BOOL)propertyIsOptional:(NSString *)propertyName
-{
-    return YES;
-}
-@end
-
-
-@implementation FHDetailNewDataSmallImageGroupModel
+@implementation FHHouseDetailImageGroupModel
 + (BOOL)propertyIsOptional:(NSString *)propertyName
 {
     return YES;

@@ -511,20 +511,22 @@
 - (void)showPictureList {
     FHDetailMediaHeaderCorrectingModel *data = (FHDetailMediaHeaderCorrectingModel *)self.currentData;
     NSMutableDictionary *routeParam = [NSMutableDictionary dictionary];
-//    NSDictionary *tracker = @{
-//        @"enter_from" = self.pictureDetailVC?:
-//    };
     FHFloorPanPicShowViewController *pictureListViewController = [[FHFloorPanPicShowViewController alloc] initWithRouteParamObj:TTRouteParamObjWithDict(routeParam)];
     pictureListViewController.modalPresentationStyle = UIModalPresentationFullScreen;
     if (data.isShowTopImageTab) {
         pictureListViewController.topImages = data.topImages;
-//        pictureListViewController.associateInfo = data.houseImageAssociateInfo;
-//        pictureListViewController.contactViewModel = data.contactViewModel;
-//        pictureListViewController.elementFrom = @"new_detail";
+        pictureListViewController.associateInfo = data.houseImageAssociateInfo;
+        pictureListViewController.contactViewModel = data.contactViewModel;
+        pictureListViewController.elementFrom = @"new_detail";
     } else {
         if (data.topImages.count) {
-            FHDetailNewTopImage *topImage = data.topImages.firstObject;
-            pictureListViewController.pictsArray = topImage.smallImageGroup;
+            NSMutableArray *pictsArray = [NSMutableArray array];
+//            for (FHDetailNewTopImage *topImage in data.topImages) {
+//                topImage.type
+//                topImage.smallImageGroup
+//            }
+             
+            pictureListViewController.pictsArray = pictsArray.copy;
         }
     }
     __weak typeof(self)weakSelf = self;

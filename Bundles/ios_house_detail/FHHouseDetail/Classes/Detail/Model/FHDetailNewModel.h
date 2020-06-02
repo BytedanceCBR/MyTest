@@ -43,10 +43,10 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong , nullable) NSArray<FHDetailNewDataGlobalPricingListModel> *list;
 @end
 
-@protocol FHDetailNewDataImageGroupModel<NSObject>
+@protocol FHHouseDetailImageGroupModel<NSObject>
 @end
 
-@interface FHDetailNewDataImageGroupModel : JSONModel
+@interface FHHouseDetailImageGroupModel : JSONModel
 
 @property (nonatomic, strong , nullable) NSArray<FHImageModel> *images;
 @property (nonatomic, copy , nullable) NSString *type;
@@ -68,16 +68,6 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign) BOOL hasMore;
 @property (nonatomic, copy , nullable) NSString *userStatus;
 @property (nonatomic, strong , nullable) NSArray<FHDetailNewDataTimelineListModel> *list;
-@end
-
-@protocol FHDetailNewDataSmallImageGroupModel<NSObject>
-@end
-
-@interface FHDetailNewDataSmallImageGroupModel : JSONModel
-
-@property (nonatomic, strong , nullable) NSArray<FHImageModel> *images;
-@property (nonatomic, copy , nullable) NSString *type;
-@property (nonatomic, copy , nullable) NSString *name;
 @end
 
 @protocol FHDetailNewDataFloorpanListListModel<NSObject>
@@ -242,8 +232,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, copy , nullable) NSString *name;
 @property (nonatomic, assign) FHDetailHouseImageType type;
-@property (nonatomic, strong , nullable) NSArray<FHDetailNewDataImageGroupModel> *imageGroup;
-@property (nonatomic, strong , nullable) NSArray<FHDetailNewDataSmallImageGroupModel> *smallImageGroup;
+@property (nonatomic, strong , nullable) NSArray<FHHouseDetailImageGroupModel> *imageGroup;
+@property (nonatomic, strong , nullable) NSArray<FHHouseDetailImageGroupModel> *smallImageGroup;
 
 @end
 
@@ -255,9 +245,9 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong , nullable) FHDetailNewUserStatusModel *userStatus ;
 @property (nonatomic, strong , nullable) FHDetailNewDataGlobalPricingModel *globalPricing ;
 @property (nonatomic, strong , nullable) NSArray<FHHouseTagsModel> *tags;
-@property (nonatomic, strong , nullable) NSArray<FHDetailNewDataImageGroupModel> *imageGroup;
+@property (nonatomic, strong , nullable) NSArray<FHHouseDetailImageGroupModel> *imageGroup;
 @property (nonatomic, strong , nullable) FHDetailNewDataTimelineModel *timeline ;
-@property (nonatomic, strong , nullable) NSArray<FHDetailNewDataSmallImageGroupModel> *smallImageGroup;
+@property (nonatomic, strong , nullable) NSArray<FHHouseDetailImageGroupModel> *smallImageGroup;
 @property (nonatomic, strong , nullable) FHDetailContactModel *contact ;
 @property (nonatomic, strong , nullable) FHDetailContactModel *highlightedRealtor;
 @property (nonatomic, strong , nullable) FHDetailNewDataFloorpanListModel *floorpanList ;
