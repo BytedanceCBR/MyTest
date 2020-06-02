@@ -35,6 +35,8 @@
 #import "TTAccountManager.h"
 #import "FHHouseUGCHeader.h"
 #import "FHUGCCategoryManager.h"
+#import "FHLoginTipView.h"
+#import "WDDefines.h"
 
 @interface FHCommunityViewController ()
 
@@ -236,6 +238,10 @@
     [self.view addSubview:_containerView];
     
     [self initPublishBtn];
+    [self initLoginTipView];
+}
+- (void)initLoginTipView {
+    [FHLoginTipView showLoginTipViewInView:self.containerView navbarHeight:kNavigationBarHeight withTracerDic:self.tracerDict];
 }
 
 - (void)initPublishBtn {

@@ -23,6 +23,8 @@
 #import "FHHomeTopCitySwitchView.h"
 #import "TTSettingsManager.h"
 #import "NSDictionary+TTAdditions.h"
+#import "FHLoginTipView.h"
+#import "WDDefines.h"
 
 static NSString * const kFUGCPrefixStr = @"fugc";
 
@@ -46,6 +48,7 @@ static NSString * const kFUGCPrefixStr = @"fugc";
     [self initConstraints]; //更新约束
     [self initViewModel]; //创建viewModel
     [self initNotifications];//订阅通知
+    [self initLoginTipView];
     [self initCityChangeSubscribe];//城市变化通知
     [self bindTopIndexChanged];//绑定头部选中index变化
     // Do any additional setup after loading the view.
@@ -145,6 +148,10 @@ static NSString * const kFUGCPrefixStr = @"fugc";
     _collectionView.backgroundColor = [UIColor themeGray7];
     [self.containerView addSubview:_collectionView];
     
+}
+
+- (void)initLoginTipView {
+    [FHLoginTipView showLoginTipViewInView:self.containerView navbarHeight:kNavigationBarHeight withTracerDic:self.tracerDict];
 }
 
 - (void)initCitySwitchView
