@@ -417,8 +417,9 @@
     FHDetailMediaHeaderCorrectingModel *model = ((FHDetailMediaHeaderCorrectingModel *)self.currentData);
     //去除flag判断，改为判断详情页type
     if (self.baseViewModel.houseType == FHHouseTypeNewHouse && [model.topImages isKindOfClass:[NSArray class]] && model.topImages.count > 0) {
-        FHDetailNewTopImage *topImage = model.topImages.firstObject;
-        pictureDetailViewController.smallImageInfosModels = topImage.smallImageGroup;
+//        FHDetailNewTopImage *topImage = model.topImages.firstObject;
+//        pictureDetailViewController.smallImageInfosModels = topImage.smallImageGroup;
+        pictureDetailViewController.smallImageInfosModels = [model processTopImagesToSmallImageGroups];
     }
     //如果是小区，移除按钮 或者户型详情页也移除按钮
     //099 户型详情页 显示底部按钮
@@ -519,15 +520,7 @@
         pictureListViewController.contactViewModel = data.contactViewModel;
         pictureListViewController.elementFrom = @"new_detail";
     } else {
-        if (data.topImages.count) {
-            NSMutableArray *pictsArray = [NSMutableArray array];
-//            for (FHDetailNewTopImage *topImage in data.topImages) {
-//                topImage.type
-//                topImage.smallImageGroup
-//            }
-             
-            pictureListViewController.pictsArray = pictsArray.copy;
-        }
+        pictureListViewController.pictsArray = [data processTopImagesToSmallImageGroups];
     }
     __weak typeof(self)weakSelf = self;
     pictureListViewController.albumImageStayBlock = ^(NSInteger index, NSInteger stayTime) {
@@ -871,6 +864,30 @@
 @end
 
 @implementation FHDetailMediaHeaderCorrectingModel
+
+- (NSArray *)processTopImagesToSmallImageGroups {
+    NSMutableArray <FHHouseDetailImageGroupModel *> *pictsArray = [NSMutableArray array];
+    //之前传入fisrtTopImage 表示数据不全，需要全部传入
+    for (FHDetailNewTopImage *topImage in self.topImages) {
+        for (FHHouseDetailImageGroupModel *groupModel in topImage.smallImageGroup) {
+            //type类型相同的数据归为一类
+            __block NSUInteger index = NSNotFound;
+             [pictsArray enumerateObjectsUsingBlock:^(FHHouseDetailImageGroupModel * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+                 if ([obj.type isEqualToString:groupModel.type]) {
+                     index = idx;
+                     *stop = YES;
+                 }
+             }];
+            if (index != NSNotFound) {
+                FHHouseDetailImageGroupModel *existGroupModel = pictsArray[index];
+                existGroupModel.images = [[NSArray arrayWithArray:existGroupModel.images] arrayByAddingObjectsFromArray:groupModel.images];
+            } else {
+                [pictsArray addObject:groupModel];
+            }
+        }
+    }
+    return pictsArray.copy;
+}
 
 @end
 

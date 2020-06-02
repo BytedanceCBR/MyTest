@@ -37,4 +37,7 @@ NS_ASSUME_NONNULL_END
 
 @property (nonatomic, copy) NSArray<FHHouseDetailImageGroupModel> *smallImageGroup; //新房头图进入图片列表页datasource
 
+/// 合并，组合，处理
+- (NSArray *)processTopImagesToSmallImageGroups;
+
 @end
