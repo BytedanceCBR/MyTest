@@ -667,8 +667,14 @@ extern NSString *const DETAIL_SHOW_POP_LAYER_NOTIFICATION ;
     _nameLabel.text = budgetmodel.baseTitle;
     
     NSMutableAttributedString *minfoAttrStr = [[NSMutableAttributedString alloc] init];
+    UIColor *infoColor = [UIColor colorWithHexStr:@"#ff9629"];
     if (!IS_EMPTY_STRING(budgetmodel.baseContent)) {
-        NSAttributedString *infoStr = [[NSAttributedString alloc] initWithString:budgetmodel.baseContent attributes:@{NSForegroundColorAttributeName:[UIColor colorWithHexStr:@"#ff9629"],NSFontAttributeName:[UIFont themeFontMedium:14]}];
+        // 支持贷款及展示
+        if (!budgetmodel.canLoan) {
+            infoColor = [UIColor themeGray2];
+        }
+        // TODO 字体颜色也要改---- 整个模块的？？？？
+        NSAttributedString *infoStr = [[NSAttributedString alloc] initWithString:budgetmodel.baseContent attributes:@{NSForegroundColorAttributeName:infoColor,NSFontAttributeName:[UIFont themeFontMedium:14]}];
         [minfoAttrStr appendAttributedString:infoStr];
     }
     _infoLabel.attributedText = minfoAttrStr;
