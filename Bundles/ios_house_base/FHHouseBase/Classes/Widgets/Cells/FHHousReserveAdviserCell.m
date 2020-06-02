@@ -25,6 +25,8 @@
 #import "YYLabel.h"
 #import "NSAttributedString+YYText.h"
 #import "FHEnvContext.h"
+#import "ToastManager.h"
+#import "FHMainApi+Contact.h"
 
 extern NSString *const kFHPhoneNumberCacheKey;
 
@@ -48,6 +50,7 @@ extern NSString *const kFHPhoneNumberCacheKey;
 @property(nonatomic, strong) FHHouseReserveAdviserModel *modelData;
 @property(nonatomic, strong) NSMutableDictionary *traceParams;
 @property(nonatomic, strong) NSString *phoneNum;
+@property(nonatomic, assign) CGFloat offsetY;
 
 @end
 
@@ -108,7 +111,6 @@ extern NSString *const kFHPhoneNumberCacheKey;
     _bottomInfoView = [[UIImageView alloc] init];
     _bottomInfoView.userInteractionEnabled = YES;
     _bottomInfoView.image = [UIImage imageNamed:@"house_reserve_bg"];
-//    _bottomInfoView.contentMode = UIViewContentModeScaleAspectFill;
     [self.containerView addSubview:_bottomInfoView];
     
     _tipNameLabel = [[UILabel alloc] init];
@@ -216,6 +218,8 @@ extern NSString *const kFHPhoneNumberCacheKey;
 }
 
 - (void)initNotification {
+//    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(keyboardWillShowNotifiction:) name:UIKeyboardWillShowNotification object:nil];
+//    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(keyboardWillHideNotifiction:) name:UIKeyboardWillHideNotification object:nil];
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(textFieldDidChange:) name:UITextFieldTextDidChangeNotification object:nil];
 }
 
@@ -317,24 +321,18 @@ extern NSString *const kFHPhoneNumberCacheKey;
 }
 
 - (void)subscribe {
-//    NSString *phoneNum = self.phoneNum;
-//    if (phoneNum.length == 11 && [phoneNum hasPrefix:@"1"] && [self isPureInt:phoneNum]) {
-//
-//        FHDetailHouseSubscribeCorrectingModel *model = (FHDetailHouseSubscribeCorrectingModel *)self.currentData;
-//        NSMutableDictionary *tracerDic = self.baseViewModel.detailTracerDic.mutableCopy;
-//        tracerDic[@"log_pb"] = self.baseViewModel.listLogPB ? self.baseViewModel.listLogPB : @"be_null";
-//        tracerDic[@"position"] = @"card";
-//        tracerDic[@"growth_deepevent"] = @(1);
-//        tracerDic[kFHAssociateInfo] = model.associateInfo.reportFormInfo;
-//        [FHUserTracker writeEvent:@"click_confirm" params:tracerDic];
-//
-//        [self subscribeFormRequest:self.phoneNum];
-//    }else {
-//        [[ToastManager manager] showToast:@"手机格式错误"];
-//        self.textField.textColor = [UIColor themeOrange1];
-//    }
-    
-    [self subscribeSuccess];
+    NSString *phoneNum = self.phoneNum;
+    if (phoneNum.length == 11 && [phoneNum hasPrefix:@"1"] && [self isPureInt:phoneNum]) {
+        NSMutableDictionary *tracerDic = self.modelData.tracerDict.mutableCopy;
+        tracerDic[@"position"] = @"card";
+        tracerDic[kFHAssociateInfo] = self.modelData.associateInfo.reportFormInfo;
+        [FHUserTracker writeEvent:@"click_confirm" params:tracerDic];
+
+        [self subscribeFormRequest:self.phoneNum];
+    }else {
+        [[ToastManager manager] showToast:@"手机格式错误"];
+        self.textField.textColor = [UIColor themeOrange1];
+    }
 }
 
 - (void)subscribeSuccess {
@@ -352,7 +350,6 @@ extern NSString *const kFHPhoneNumberCacheKey;
     [self setNeedsUpdateConstraints];
     
     [self.modelData.tableView endUpdates];
-//    [self.modelData.tableView reloadData];
 }
 
 - (BOOL)isPureInt:(NSString*)string{
@@ -362,6 +359,7 @@ extern NSString *const kFHPhoneNumberCacheKey;
 }
 
 - (void)legalAnnouncementClick{
+    [self.modelData.belongsVC.view endEditing:YES];
     NSString *privateUrlStr = [NSString stringWithFormat:@"%@/f100/client/user_privacy&title=个人信息保护声明&hide_more=1",[FHURLSettings baseURL]];
     NSString *urlStr = [privateUrlStr stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
     NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"fschema://webview?url=%@",urlStr]];
@@ -393,57 +391,29 @@ extern NSString *const kFHPhoneNumberCacheKey;
 }
 
 - (void)subscribeFormRequest:(NSString *)phoneNum {
-//    __weak typeof(self)wself = self;
-//    if (![TTReachability isNetworkConnected]) {
-//        [[ToastManager manager] showToast:@"网络异常"];
-//        return;
-//    }
-//    NSString *houseId = self.houseId;
-//    NSString *from = @"app_oldhouse_subscription";
-//
-//    [FHMainApi requestCallReportByHouseId:houseId phone:phoneNum from:nil cluePage:nil clueEndpoint:nil targetType:nil reportAssociate:subscribeModel.associateInfo.reportFormInfo agencyList:nil completion:^(FHDetailResponseModel * _Nullable model, NSError * _Nullable error) {
-//
-//        if (model.status.integerValue == 0 && !error) {
-//            FHDetailOldModel * model = (FHDetailOldModel *)self.detailData;
-//            NSString *toast =@"提交成功，经纪人将尽快与您联系";
-//            if (model.data.subscriptionToast && model.data.subscriptionToast.length > 0) {
-//                toast = model.data.subscriptionToast;
-//            }
-//            [[ToastManager manager] showToast:toast];
-//            YYCache *sendPhoneNumberCache = [[FHEnvContext sharedInstance].generalBizConfig sendPhoneNumberCache];
-//            [sendPhoneNumberCache setObject:phoneNum forKey:kFHPhoneNumberCacheKey];
-//
-//            YYCache *subscribeHouseCache = [[FHEnvContext sharedInstance].generalBizConfig subscribeHouseCache];
-//            [subscribeHouseCache setObject:@"1" forKey:wself.houseId];
-//
-//            [wself.items removeObject:subscribeModel];
-//            [wself reloadData];
-//        }else {
-//            [[ToastManager manager] showToast:[NSString stringWithFormat:@"提交失败 %@",model.message]];
-//        }
-//    }];
-//    // 静默关注功能
-//    NSMutableDictionary *params = @{}.mutableCopy;
-//    if (self.detailTracerDic) {
-//        [params addEntriesFromDictionary:self.detailTracerDic];
-//    }
-//    FHHouseFollowUpConfigModel *configModel = [[FHHouseFollowUpConfigModel alloc]initWithDictionary:params error:nil];
-//    configModel.houseType = self.houseType;
-//    configModel.followId = self.houseId;
-//    configModel.actionType = self.houseType;
-//
-//    [FHHouseFollowUpHelper silentFollowHouseWithConfigModel:configModel];
+    if (![TTReachability isNetworkConnected]) {
+        [[ToastManager manager] showToast:@"网络异常"];
+        return;
+    }
+
+    __weak typeof(self) wself = self;
+    [FHMainApi requestCallReportByHouseId:nil phone:phoneNum from:nil cluePage:nil clueEndpoint:nil targetType:nil reportAssociate:self.modelData.associateInfo.reportFormInfo agencyList:nil completion:^(FHDetailResponseModel * _Nullable model, NSError * _Nullable error) {
+
+        if (model.status.integerValue == 0 && !error) {
+            NSString *toast = @"已为您预约顾问，稍后将会和您联系";
+            [[ToastManager manager] showToast:toast];
+            [wself subscribeSuccess];
+            YYCache *sendPhoneNumberCache = [[FHEnvContext sharedInstance].generalBizConfig sendPhoneNumberCache];
+            [sendPhoneNumberCache setObject:phoneNum forKey:kFHPhoneNumberCacheKey];
+        }else {
+            [[ToastManager manager] showToast:[NSString stringWithFormat:@"提交失败 %@",model.message]];
+        }
+    }];
 }
 
 #pragma mark -- UITextFieldDelegate
 
 - (BOOL)textFieldShouldBeginEditing:(UITextField *)textField {
-//    NSMutableDictionary *tracerDic = self.baseViewModel.detailTracerDic.mutableCopy;
-//    tracerDic[@"log_pb"] = self.baseViewModel.listLogPB ? self.baseViewModel.listLogPB : @"be_null";
-//    tracerDic[@"position"] = @"card";
-//    tracerDic[@"growth_deepevent"] = @(1);
-//    [FHUserTracker writeEvent:@"inform_show" params:tracerDic];
-    
     [self showFullPhoneNum:YES];
     return YES;
 }
@@ -471,6 +441,48 @@ extern NSString *const kFHPhoneNumberCacheKey;
         self.subscribeBtn.enabled = NO;
         [self.subscribeBtn setTitleColor:[UIColor colorWithHexStr:@"#a57d59"] forState:UIControlStateNormal];
         self.subscribeBtn.backgroundColor = [UIColor whiteColor];
+    }
+}
+
+#pragma mark - 键盘通知
+- (void)keyboardWillShowNotifiction:(NSNotification *)notification {
+    if (!self.textField.isFirstResponder) {
+        return;
+    }
+    NSNumber *duration = notification.userInfo[UIKeyboardAnimationDurationUserInfoKey];
+    NSNumber *curve = notification.userInfo[UIKeyboardAnimationCurveUserInfoKey];
+    CGFloat height = [notification.userInfo[UIKeyboardFrameEndUserInfoKey] CGRectValue].size.height;
+    
+    CGRect frame = [self convertRect:self.bounds toView:nil];
+    CGFloat y = [UIScreen mainScreen].bounds.size.height - frame.origin.y - frame.size.height - height;
+    self.offsetY = y;
+    
+    if(y < 0){
+        [UIView animateWithDuration:[duration floatValue] delay:0 options:(UIViewAnimationOptions)[curve integerValue] animations:^{
+            [UIView setAnimationBeginsFromCurrentState:YES];
+            CGPoint point = self.modelData.tableView.contentOffset;
+            point.y -= y;
+            self.modelData.tableView.contentOffset = point;
+        } completion:^(BOOL finished) {
+            
+        }];
+    }
+}
+
+- (void)keyboardWillHideNotifiction:(NSNotification *)notification {
+    self.offsetY = 0;
+    if(self.modelData.tableView.contentOffset.y + self.modelData.tableView.frame.size.height > self.modelData.tableView.contentSize.height){
+        //剩余不满一屏幕
+        NSNumber *duration = notification.userInfo[UIKeyboardAnimationDurationUserInfoKey];
+        NSNumber *curve = notification.userInfo[UIKeyboardAnimationCurveUserInfoKey];
+        [UIView animateWithDuration:[duration floatValue] delay:0 options:(UIViewAnimationOptions)[curve integerValue] animations:^{
+            [UIView setAnimationBeginsFromCurrentState:YES];
+            CGPoint point = self.modelData.tableView.contentOffset;
+            point.y = (self.modelData.tableView.contentSize.height - self.modelData.tableView.frame.size.height);
+            self.modelData.tableView.contentOffset = point;
+        } completion:^(BOOL finished) {
+            
+        }];
     }
 }
 

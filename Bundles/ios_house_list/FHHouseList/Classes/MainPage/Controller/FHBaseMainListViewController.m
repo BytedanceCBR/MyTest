@@ -236,6 +236,9 @@
     [super viewWillAppear:animated];
     [self.view addObserver:self forKeyPath:@"userInteractionEnabled" options:NSKeyValueObservingOptionNew context:nil];
     
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShow)  name:UIKeyboardWillShowNotification object:nil];
+//    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardDidShow)  name:UIKeyboardDidShowNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardDidHide) name:UIKeyboardDidHideNotification object:nil];
 }
 -(void)viewWillDisappear:(BOOL)animated
 {
@@ -244,11 +247,30 @@
     [self.viewModel addStayLog:self.ttTrackStayTime];
     [self tt_resetStayTime];
     
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:UIKeyboardWillShowNotification object:nil];
+//    [[NSNotificationCenter defaultCenter] removeObserver:self name:UIKeyboardDidShowNotification object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:UIKeyboardDidHideNotification object:nil];
 }
 
 - (void)viewDidDisappear:(BOOL)animated {
     [super viewDidDisappear:animated];
     self.isViewDidDisapper = YES;
+}
+
+- (void)keyboardWillShow {
+//    self.iskeyBoardVisible = YES;
+    self.originY = self.tableView.contentOffset.y;
+//    self.iskeyBoardShowing = YES;
+}
+
+- (void)keyboardDidShow {
+//    self.iskeyBoardVisible = YES;
+//    self.iskeyBoardShowing = NO;
+}
+
+- (void)keyboardDidHide {
+//    self.iskeyBoardShowing = NO;
+//    self.iskeyBoardVisible = NO;
 }
 
 - (void)refreshContentOffset:(CGPoint)contentOffset

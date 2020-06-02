@@ -17,6 +17,7 @@
 #import <TTThemed/SSViewBase.h>
 #import <TTThemed/UIColor+TTThemeExtension.h>
 #import "UIImage+FIconFont.h"
+#import "TTAccountManager.h"
 
 @interface FHNeighbourhoodAgencyCardCell ()
 
@@ -289,8 +290,8 @@
                 [self.avator bd_setImageWithURL:[NSURL URLWithString:model.contactModel.avatarUrl] placeholder:[UIImage imageNamed:@"detail_default_avatar"]];
             }
             self.phoneCallViewModel = [[FHHouseDetailPhoneCallViewModel alloc] initWithHouseType:FHHouseTypeNeighborhood houseId:model.id];
-//            BOOL isLicenceIconHidden = ![self shouldShowContact:model.contactModel];
-            [self.licenceIcon setHidden:YES];
+            BOOL isLicenceIconHidden = ![self shouldShowContact:model.contactModel];
+            [self.licenceIcon setHidden:isLicenceIconHidden];
 
             NSMutableDictionary *tracerDict = @{}.mutableCopy;
             if (self.traceParams) {
@@ -333,7 +334,7 @@
         FHDetailContactModel *contact = self.modelData.contactModel;
         if (self.phoneCallViewModel) {
             NSMutableDictionary *imExtra = @{}.mutableCopy;
-            imExtra[@"realtor_position"] = @"neighborhood_expert_card";
+            imExtra[@"realtor_position"] = self.traceParams[@"realtor_position"];
                         
             if(self.modelData.associateInfo) {
                 imExtra[kFHAssociateInfo] = self.modelData.associateInfo;
@@ -355,7 +356,6 @@
         }
         extraDict[@"realtor_id"] = contact.realtorId;
         extraDict[@"realtor_rank"] = @"be_null";
-        extraDict[@"realtor_position"] = @"neighborhood_expert_card";
         extraDict[@"realtor_logpb"] = contact.realtorLogpb;
 //        extraDict[@"element_from"] = @"neighborhood_expert_card";
 //        extraDict[kFHClueEndpoint] = @(FHClueEndPointTypeC);
@@ -402,8 +402,8 @@
     if (self.modelData) {
         FHDetailContactModel *contact = self.modelData.contactModel;
         NSMutableDictionary *extraDict = @{}.mutableCopy;
-        extraDict[@"realtor_position"] = @"neighborhood_expert_card";
-        extraDict[@"element_from"] = @"neighborhood_expert_card";
+        extraDict[@"realtor_position"] = self.traceParams[@"realtor_position"];
+        extraDict[@"element_from"] = self.traceParams[@"realtor_position"];
         extraDict[@"enter_from"] = self.traceParams[@"page_type"];
         extraDict[@"page_type"] = nil;
 //        extraDict[@"realtor_rank"] = @"be_null";
@@ -411,22 +411,6 @@
         if (self.phoneCallViewModel) {
             [self.phoneCallViewModel jump2RealtorDetailWithPhone:contact isPreLoad:YES extra:extraDict];
         }
-    }
-}
-- (void)neighbourhoodInfoClick:(id)neighbourhoodInfoClick {
-    if (self.modelData) {
-        NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"sslocal://neighborhood_detail?neighborhood_id=%@", self.modelData.id]];
-
-        NSMutableDictionary *tracerDict = @{}.mutableCopy;
-        if (self.traceParams) {
-            [tracerDict addEntriesFromDictionary:self.traceParams];
-        }
-        tracerDict[@"element_from"] = @"neighborhood_expert_card";
-        tracerDict[@"enter_from"] = self.traceParams[@"page_type"];
-        tracerDict[@"page_type"] = nil;
-        NSMutableDictionary *dict = @{@"house_type": @(FHHouseTypeNeighborhood), @"tracer": tracerDict}.mutableCopy;
-        TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
-        [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
     }
 }
 
