@@ -772,6 +772,17 @@
        self.phoneCallRealtorId &&
        self.phoneCallRequestId &&
        (self.viewModel.houseType == FHHouseTypeSecondHandHouse)){
+        
+        /**
+         
+         经纪人评价页面原本只应该出现在房源详情页
+         目前会在房源详情页后面的所有页面只要触发手机号拨通就会弹出
+         在判断弹出的方法内进行页面层级的判断，或者在其他页面不接收电话相关的observer
+         */
+        if (self.navigationController.viewControllers.lastObject != self || self.presentedViewController != nil) {
+            return NO;
+        }
+        
         NSString *houseId = self.viewModel.houseId;
         NSString *deviceId = [[TTInstallIDManager sharedInstance] deviceID];
         NSString *cacheKey = @"";

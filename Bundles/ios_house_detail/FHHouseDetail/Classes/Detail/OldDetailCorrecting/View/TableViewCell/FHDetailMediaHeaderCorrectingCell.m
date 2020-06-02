@@ -817,7 +817,7 @@
 }
 
 //进入图片页面页
-- (void)goToPictureList:(NSString *)from {
+- (void)goToPictureListFrom:(NSString *)from {
     
     if ([(FHDetailMediaHeaderCorrectingModel *)self.currentData isInstantData]) {
         //列表页带入的数据不响应
