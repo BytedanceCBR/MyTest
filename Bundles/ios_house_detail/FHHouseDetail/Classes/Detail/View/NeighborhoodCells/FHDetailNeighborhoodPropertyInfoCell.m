@@ -19,6 +19,8 @@
 #import "UIColor+Theme.h"
 #import "FHDetailHeaderViewNoMargin.h"
 
+#define kFHPropertyItemInfoHeight 35.0
+
 @interface FHDetailNeighborhoodPropertyInfoCell ()
 
 @property (nonatomic, strong)   FHDetailHeaderViewNoMargin       *headerView;
@@ -27,6 +29,7 @@
 @property (nonatomic, strong)   FHDetailFoldViewButton       *foldButton;
 @property (nonatomic, strong)   NSArray       *singleItems;
 @property (nonatomic, strong)   UIView       *opView;// 半透明视图
+@property (nonatomic, assign)   NSInteger       foldCount;// 折叠展开计数，默认是7
 
 @end
 
@@ -53,7 +56,7 @@
     __block UIView *lastView = nil; // 最后一个视图
     __block NSInteger doubleCount = 0;// 两列计数
     NSMutableArray *singles = [NSMutableArray new];
-    CGFloat vHeight = 35.0;
+    CGFloat vHeight = kFHPropertyItemInfoHeight;
     if (model.baseInfo.count > 0) {
         CGFloat viewWidth = (UIScreen.mainScreen.bounds.size.width - 40) / 2;
         [model.baseInfo enumerateObjectsUsingBlock:^(FHHouseBaseInfoModel*  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
@@ -110,7 +113,7 @@
             lastView = itemView;
         }];
         // > 7 添加折叠展开
-        if (singles.count > 7) {
+        if (singles.count > self.foldCount) {
             if (_foldButton) {
                 [_foldButton removeFromSuperview];
                 _foldButton = nil;
@@ -179,6 +182,7 @@
 }
 
 - (void)setupUI {
+    _foldCount = 7;
     [self.shadowImage mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.right.equalTo(self);
         make.top.equalTo(self.contentView).offset(-12);
@@ -188,7 +192,7 @@
     _containerView.clipsToBounds = YES;
     [self.contentView addSubview:_containerView];
     [self.containerView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.equalTo(self.shadowImage).offset(22);
+        make.top.equalTo(self.shadowImage).offset(12);
         make.bottom.equalTo(self.shadowImage).offset(-42);
         make.left.equalTo(self.contentView).offset(15);
         make.right.equalTo(self.contentView).offset(-15);
@@ -197,17 +201,17 @@
 
 - (void)updateItems:(BOOL)animated {
     FHDetailNeighborhoodPropertyInfoModel *model = (FHDetailNeighborhoodPropertyInfoModel *)self.currentData;
-    if (self.singleItems.count > 7) {
+    if (self.singleItems.count > self.foldCount) {
         if (animated) {
             [model.tableView beginUpdates];
         }
         if (model.isFold) {
-            CGFloat showHeight = 35.0 * 7;
+            CGFloat showHeight = kFHPropertyItemInfoHeight * self.foldCount;
             [self.containerView mas_updateConstraints:^(MASConstraintMaker *make) {
                 make.height.mas_equalTo(showHeight);
             }];
         } else {
-           CGFloat showHeight = 35.0 * self.singleItems.count;
+           CGFloat showHeight = kFHPropertyItemInfoHeight * self.singleItems.count;
             [self.containerView mas_updateConstraints:^(MASConstraintMaker *make) {
                 make.height.mas_equalTo(showHeight);
             }];
@@ -217,7 +221,7 @@
             [model.tableView endUpdates];
         }
     } else if (self.singleItems.count > 0) {
-        CGFloat showHeight = 35.0 * self.singleItems.count;
+        CGFloat showHeight = kFHPropertyItemInfoHeight * self.singleItems.count;
          [self.containerView mas_updateConstraints:^(MASConstraintMaker *make) {
              make.height.mas_equalTo(showHeight);
          }];
