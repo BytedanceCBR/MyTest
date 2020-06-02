@@ -85,6 +85,7 @@
 
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
+    [self.viewModel refreshConversationList];
     [[FHPopupViewManager shared] triggerPopupView];
     [[FHPopupViewManager shared] triggerPendant];
 }
