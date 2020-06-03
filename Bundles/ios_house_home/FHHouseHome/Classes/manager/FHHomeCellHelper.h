@@ -29,6 +29,7 @@ typedef NS_ENUM(NSUInteger, FHHomeCellViewType) {
 //#define kFHHomeIconRowCount 5 //每行icon个数
 
 #define kFHHomeBannerRowCount 2 //每行banner个数
+#define kFHHomeAgentCardType 6 //经纪人卡片类型
 
 @class FHHomeEntrancesCell;
 

@@ -8,6 +8,7 @@
 #import "FHListBaseCell.h"
 #import "FHSearchBaseItemModel.h"
 #import "FHSearchHouseModel.h"
+#import "FHHomeHouseModel.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -15,6 +16,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)bindData:(FHHouseNeighborAgencyModel *)model traceParams:(NSMutableDictionary *)params;
 
+- (void)bindAgentData:(FHHomeHouseDataItemsModel *)itemModel traceParams:(NSMutableDictionary *)params;
 @end
 
 NS_ASSUME_NONNULL_END

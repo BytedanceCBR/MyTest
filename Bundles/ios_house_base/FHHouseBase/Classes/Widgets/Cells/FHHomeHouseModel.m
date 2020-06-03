@@ -422,6 +422,8 @@
         @"vrInfo": @"vr_info",
         @"advantageDescription":@"advantage_description",
         @"cellStyle": @"cell_style",
+        @"contactModel": @"realtor_info",
+        @"cardType": @"card_type",
         @"houseImageTag": @"house_image_tag",
         @"floorpanList": @"floorpan_list",
         @"houseType": @"house_type",

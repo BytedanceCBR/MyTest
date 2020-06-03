@@ -11,6 +11,7 @@
 #import <FHHouseBase/FHHouseBaseInfoModel.h>
 #import "FHHouseTagsModel.h"
 #import "FHRentFacilitiesModel.h"
+#import "FHSearchHouseModel.h"
 
 @class FHHouseItemHouseVideo;
 
@@ -291,6 +292,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *displayPricePerSqm;
 @property (nonatomic, strong , nullable) FHHomeHouseDataItemsFloorpanListModel *floorpanList ;
 @property (nonatomic, copy , nullable) NSString *cellStyle;
+@property (nonatomic, copy , nullable) NSString *cardType;
 @property (nonatomic, strong , nullable) NSArray<FHHouseCoreInfoModel> *coreInfoList;
 @property (nonatomic, strong , nullable) FHHomeHouseDataItemsCoreInfoModel *coreInfo ;
 @property (nonatomic, strong , nullable) NSArray<FHHouseBaseInfoModel> *baseInfo;
@@ -300,6 +302,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong , nullable) NSArray<FHImageModel> *houseImage;
 @property (nonatomic, copy , nullable) NSString *displayPriceColor;
 @property (nonatomic, strong, nullable) NSMutableAttributedString *tagString;
+@property (nonatomic, strong , nullable) FHDetailContactModel *contactModel ;
 
 
 @property (nonatomic, copy , nullable) NSString *houseType;
