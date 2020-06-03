@@ -577,6 +577,10 @@
     }
 }
 
+- (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView {
+    [self.viewController scrollViewBeginDrag];
+}
+
 - (void)jumpToDetail:(FHFeedUGCCellModel *)cellModel showComment:(BOOL)showComment enterType:(NSString *)enterType {
     if(cellModel.cellType == FHUGCFeedListCellTypeArticle || cellModel.cellType == FHUGCFeedListCellTypeQuestion){
         if(cellModel.hasVideo){

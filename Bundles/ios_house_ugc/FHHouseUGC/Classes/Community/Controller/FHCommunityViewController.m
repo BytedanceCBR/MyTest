@@ -36,7 +36,6 @@
 #import "FHHouseUGCHeader.h"
 #import "FHUGCCategoryManager.h"
 #import "FHLoginTipView.h"
-#import "WDDefines.h"
 
 @interface FHCommunityViewController ()
 
@@ -45,6 +44,7 @@
 @property(nonatomic, strong) UIView *topView;
 @property(nonatomic, strong) UIButton *searchBtn;
 @property(nonatomic, assign) NSTimeInterval stayTime; //页面停留时间
+@property (nonatomic, strong) FHLoginTipView * loginTipview;
 @property(nonatomic, strong) FHUGCGuideView *guideView;
 @property(nonatomic, assign) BOOL hasShowDots;
 @property(nonatomic, assign) BOOL alreadyShowGuide;
@@ -117,10 +117,16 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(refreshData) name:kFindTabbarKeepClickedNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(changeTab) name:kFHUGCForumPostThreadFinish object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateSegmentView) name:kUGCCategoryGotFinishedNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(loginTipViewDisapper) name:kUGCLoginTipDisapperNotification object:nil];
     
     [TTForumPostThreadStatusViewModel sharedInstance_tt];
     self.isFirstLoad = NO;
 }
+
+- (void)loginTipViewDisapper {
+  [self.loginTipview loginTipViewDsappear];
+}
+   
 
 - (void)dealloc {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
@@ -241,7 +247,7 @@
     [self initLoginTipView];
 }
 - (void)initLoginTipView {
-    [FHLoginTipView showLoginTipViewInView:self.containerView navbarHeight:kNavigationBarHeight withTracerDic:self.tracerDict];
+    self.loginTipview =  [FHLoginTipView showLoginTipViewInView:self.view navbarHeight:0 withTracerDic:self.tracerDict];
 }
 
 - (void)initPublishBtn {

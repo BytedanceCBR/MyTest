@@ -77,6 +77,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)hideImmediately;
 
+- (void)scrollViewBeginDrag;
 @end
 
 NS_ASSUME_NONNULL_END

@@ -36,6 +36,7 @@ static NSString * const kFUGCPrefixStr = @"fugc";
 @property (nonatomic,strong)NSTimer *switchTimer;
 @property (nonatomic,assign)NSInteger totalNum;
 @property (nonatomic, assign) BOOL isSendNotification;
+@property (nonatomic, strong) FHLoginTipView *loginTipview;
 
 @end
 
@@ -151,7 +152,7 @@ static NSString * const kFUGCPrefixStr = @"fugc";
 }
 
 - (void)initLoginTipView {
-    [FHLoginTipView showLoginTipViewInView:self.containerView navbarHeight:kNavigationBarHeight withTracerDic:self.tracerDict];
+ self.loginTipview =  [FHLoginTipView showLoginTipViewInView:self.containerView navbarHeight:kNavigationBarHeight withTracerDic:self.tracerDict];
 }
 
 - (void)initCitySwitchView
@@ -300,6 +301,7 @@ static NSString * const kFUGCPrefixStr = @"fugc";
 
 - (void)mainCollectionScrollBegin{
     self.collectionView.scrollEnabled = NO;
+    [self.loginTipview loginTipViewDsappear];
 }
 
 - (void)mainCollectionScrollEnd{

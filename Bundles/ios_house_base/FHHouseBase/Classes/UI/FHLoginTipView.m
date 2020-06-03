@@ -16,25 +16,29 @@
 @interface FHLoginTipView ()
 @property (weak, nonatomic)UILabel *contentLab;
 @property (weak, nonatomic)UIButton *loginBtn;
+
 @end
 @implementation FHLoginTipView
 
-+ (void)showLoginTipViewInView:(UIView *)bacView navbarHeight:(CGFloat)navbarHeight withTracerDic:(NSDictionary *)tracerDic {
++ (instancetype)showLoginTipViewInView:(UIView *)bacView navbarHeight:(CGFloat)navbarHeight withTracerDic:(NSDictionary *)tracerDic {
     FHLoginTipView *loginTipView = [[FHLoginTipView alloc]initWithFrame:CGRectMake(0, MAIN_SCREENH_HEIGHT - navbarHeight - ([UIDevice btd_isIPhoneXSeries] ? 83 : 49)-50, MAIN_SCREEN_WIDTH, 50)];
     loginTipView.traceDict = tracerDic;
     loginTipView.navbarHeight = navbarHeight;
     [bacView addSubview:loginTipView];
-    [NSTimer scheduledTimerWithTimeInterval:5 target:loginTipView selector:@selector(timeOut) userInfo:nil repeats:NO];
+     loginTipView.showTimer =   [NSTimer scheduledTimerWithTimeInterval:7 target:loginTipView selector:@selector(loginTipViewDsappear) userInfo:nil repeats:NO];
+    return loginTipView;
 }
 
-- (void)timeOut {
+- (void)loginTipViewDsappear {
     [UIView animateWithDuration:0.25 animations:^{
         self.frame = CGRectMake(0, MAIN_SCREENH_HEIGHT -self.navbarHeight, [UIScreen mainScreen].bounds.size.width, 50);
         self.alpha = 0;
     } completion:^(BOOL finished) {
         [self removeFromSuperview];
     }];
-    
+    if (_showTimer) {
+        [_showTimer invalidate];
+    }
 }
 
 - (instancetype)initWithFrame:(CGRect)frame {
