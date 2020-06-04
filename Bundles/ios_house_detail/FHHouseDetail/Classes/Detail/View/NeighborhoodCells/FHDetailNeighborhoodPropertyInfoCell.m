@@ -53,6 +53,12 @@
     self.currentData = data;
     FHDetailNeighborhoodPropertyInfoModel *model = (FHDetailNeighborhoodPropertyInfoModel *)data;
     self.shadowImage.image = model.shadowImage;
+    if (model.baseInfoFoldCount && model.baseInfoFoldCount.length > 0) {
+        NSInteger value = [model.baseInfoFoldCount integerValue];
+        if (value > 0) {
+            self.foldCount = value;
+        }
+    }
     __block UIView *lastView = nil; // 最后一个视图
     __block NSInteger doubleCount = 0;// 两列计数
     NSMutableArray *singles = [NSMutableArray new];

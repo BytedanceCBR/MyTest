@@ -328,6 +328,7 @@
         infoModel.houseModelType = FHPlotHouseModelTypeCoreInfo;
         infoModel.tableView = self.tableView;
         infoModel.baseInfo = model.data.baseInfo;
+        infoModel.baseInfoFoldCount = model.data.baseInfoFoldCount;
         [self.items addObject:infoModel];
     }
     
