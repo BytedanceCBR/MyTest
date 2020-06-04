@@ -1743,12 +1743,6 @@ extern NSString *const INSTANT_DATA_KEY;
             return;
         }
         
-//        self.topView.top = -self.topView.height;
-//        [self.tableView addSubview:self.topView];
-//        [self.tableView sendSubviewToBack:self.topView];
-//        [self.topContainerView mas_updateConstraints:^(MASConstraintMaker *make) {
-//            make.height.mas_equalTo(0);
-//        }];
         self.topView.top = 0;
         self.tableView.tableHeaderView = self.topView;
         [self.topContainerView mas_updateConstraints:^(MASConstraintMaker *make) {
@@ -1798,17 +1792,19 @@ extern NSString *const INSTANT_DATA_KEY;
 {
     UIEdgeInsets insets = self.tableView.contentInset;
     BOOL isTop = (fabs(self.tableView.contentOffset.y) < 0.1) || fabs(self.tableView.contentOffset.y + self.tableView.contentInset.top) < 0.1; //首次进入情况
-//    insets.top = topViewHeight;
-//    self.tableView.contentInset = insets;
     _topView.frame = CGRectMake(0, 0, _topView.width, topViewHeight);
-    self.tableView.tableHeaderView.frame = _topView.frame;
-    if (isShow) {
+    
+    [self.tableView beginUpdates];
+    self.tableView.tableHeaderView = _topView;
+    [self.tableView endUpdates];
+    
+//    if (isShow) {
 //        if (isTop) {
 //            [self.tableView setContentOffset:CGPointMake(0, -topViewHeight) animated:NO];
 //        }else{
 //            self.tableView.contentOffset = CGPointMake(0, [self.topView filterTop] -topViewHeight);
 //        }
-    }else{
+//    }else{
 //        if (isTop) {
 //            [self.tableView setContentOffset:CGPointMake(0, -topViewHeight) animated:NO];
 //        } else {
@@ -1825,7 +1821,7 @@ extern NSString *const INSTANT_DATA_KEY;
 //                }
 //            }
 //        }
-    }
+//    }
     
     if (_topView.superview == self.topContainerView) {
         self.topView.top = -[self.topView filterTop];
