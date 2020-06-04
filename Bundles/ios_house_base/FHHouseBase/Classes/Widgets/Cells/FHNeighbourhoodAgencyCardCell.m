@@ -29,6 +29,7 @@
 @property(nonatomic, strong) UILabel *mainTitleLabel; //小区名称
 @property(nonatomic, strong) UILabel *pricePerSqmLabel; //房源价格
 @property(nonatomic, strong) UILabel *countOnSale; //在售套数
+@property(nonatomic, strong) UIImageView *rightArrow;
 
 @property(nonatomic, strong) UIView *bottomInfoView;
 @property(nonatomic, strong) UIView *lineView;
@@ -99,6 +100,9 @@
     _countOnSale.textColor = [UIColor themeGray1];
     _countOnSale.font = [UIFont themeFontRegular:12];
     [self.topInfoView addSubview:_countOnSale];
+    
+    self.rightArrow = [[UIImageView alloc] initWithImage:ICON_FONT_IMG(10, @"\U0000e670", [UIColor themeGray6])];
+    [self.topInfoView addSubview:_rightArrow];
 
     _bottomInfoView = [[UIView alloc] init];
     _bottomInfoView.backgroundColor = [UIColor colorWithHexString:@"fafafa"];
@@ -155,6 +159,7 @@
     _scoreDescription.textAlignment = NSTextAlignmentLeft;
     [self.bottomInfoView addSubview:_scoreDescription];
 
+    [self.topInfoView addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(neighbourhoodInfoClick:)]];
     [self.bottomInfoView addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(realtorInfoClick:)]];
 
     [self.licenceIcon addTarget:self action:@selector(licenseClick:) forControlEvents:UIControlEventTouchUpInside];
@@ -186,7 +191,7 @@
     }];
 
     [self.pricePerSqmLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.right.mas_equalTo(self.topInfoView.mas_right).offset(-15);
+        make.right.mas_equalTo(self.rightArrow.mas_left).offset(-10);
         make.centerY.mas_equalTo(self.topInfoView);
     }];
 
@@ -195,6 +200,13 @@
         make.top.mas_equalTo(self.mainTitleLabel.mas_bottom).offset(2);
         make.height.mas_equalTo(17);
         make.right.mas_lessThanOrEqualTo(self.pricePerSqmLabel.mas_left).offset(-10);
+    }];
+    
+    [self.rightArrow mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.right.mas_equalTo(self.topInfoView.mas_right).offset(-15);
+        make.centerY.mas_equalTo(self.topInfoView);
+        make.width.mas_equalTo(18);
+        make.height.mas_equalTo(18);
     }];
 
     [self.bottomInfoView mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -411,6 +423,23 @@
         if (self.phoneCallViewModel) {
             [self.phoneCallViewModel jump2RealtorDetailWithPhone:contact isPreLoad:YES extra:extraDict];
         }
+    }
+}
+
+- (void)neighbourhoodInfoClick:(id)neighbourhoodInfoClick {
+    if (self.modelData) {
+        NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"sslocal://neighborhood_detail?neighborhood_id=%@", self.modelData.id]];
+
+        NSMutableDictionary *tracerDict = @{}.mutableCopy;
+        if (self.traceParams) {
+            [tracerDict addEntriesFromDictionary:self.traceParams];
+        }
+        tracerDict[@"element_from"] = @"neighborhood_expert_card";
+        tracerDict[@"enter_from"] = self.traceParams[@"page_type"];
+        tracerDict[@"page_type"] = nil;
+        NSMutableDictionary *dict = @{@"house_type": @(FHHouseTypeNeighborhood), @"tracer": tracerDict}.mutableCopy;
+        TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
+        [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
     }
 }
 

@@ -1328,43 +1328,43 @@ extern NSString *const INSTANT_DATA_KEY;
     self.navbar.backgroundColor = bgColor;
 }
 
--(void)rentBannerLoaded:(UIView *)bannerView
-{
-    self.showNotifyDoneBlock = ^{
-        //banner图片加载成功
-        CGFloat bannerHeight = bannerView.height;
-        self.topBannerView.frame = CGRectMake(0, 0,SCREEN_WIDTH , ICON_HEADER_HEIGHT + bannerHeight);
-        
-        CGRect frame = [self.topView relayout];
-        UIEdgeInsets insets = self.tableView.contentInset;
-        
-        BOOL scrolled = fabs(self.tableView.contentOffset.y + insets.top) > 1;
-        
-        insets.top = CGRectGetHeight(frame);
-        self.tableView.contentInset = insets;
-        
-        if (self.topView.superview == self.topContainerView) {
-            [self.topContainerView mas_updateConstraints:^(MASConstraintMaker *make) {
-                make.height.mas_equalTo(self.topView.height - [self.topView filterTop]);
-            }];
-            self.topView.top = -[self.topView filterTop];
-        }else{
-            self.topView.top = -frame.size.height;
-            if (!scrolled) {
-                self.tableView.contentOffset = CGPointMake(0, -insets.top);
-            }
-        }
-    };
-    
-    if (self.animateShowNotify) {        
-        return;
-    }
-    
-    self.showNotifyDoneBlock();
-    self.showNotifyDoneBlock = nil;
-    
-
-}
+//-(void)rentBannerLoaded:(UIView *)bannerView
+//{
+//    self.showNotifyDoneBlock = ^{
+//        //banner图片加载成功
+//        CGFloat bannerHeight = bannerView.height;
+//        self.topBannerView.frame = CGRectMake(0, 0,SCREEN_WIDTH , ICON_HEADER_HEIGHT + bannerHeight);
+//        
+//        CGRect frame = [self.topView relayout];
+//        UIEdgeInsets insets = self.tableView.contentInset;
+//        
+//        BOOL scrolled = fabs(self.tableView.contentOffset.y + insets.top) > 1;
+//        
+//        insets.top = CGRectGetHeight(frame);
+//        self.tableView.contentInset = insets;
+//        
+//        if (self.topView.superview == self.topContainerView) {
+//            [self.topContainerView mas_updateConstraints:^(MASConstraintMaker *make) {
+//                make.height.mas_equalTo(self.topView.height - [self.topView filterTop]);
+//            }];
+//            self.topView.top = -[self.topView filterTop];
+//        }else{
+//            self.topView.top = -frame.size.height;
+//            if (!scrolled) {
+//                self.tableView.contentOffset = CGPointMake(0, -insets.top);
+//            }
+//        }
+//    };
+//    
+//    if (self.animateShowNotify) {        
+//        return;
+//    }
+//    
+//    self.showNotifyDoneBlock();
+//    self.showNotifyDoneBlock = nil;
+//    
+//
+//}
 
 - (NSString *)getEvaluateWebParams:(NSDictionary *)dic
 {
@@ -1444,7 +1444,8 @@ extern NSString *const INSTANT_DATA_KEY;
 {
     if (self.topView.superview != self.topContainerView){
         //筛选器不在顶部时 才上移
-        self.tableView.contentOffset = CGPointMake(0, [self.topView filterTop] - self.topView.height);
+        self.tableView.contentOffset = CGPointMake(0, self.topView.height - ([self.topView filterBottom] - [self.topView filterTop]));
+//        (scrollView.contentOffset.y <  [self.topView filterTop])
     }
     
     //只显示筛选器
@@ -1703,16 +1704,8 @@ extern NSString *const INSTANT_DATA_KEY;
         return;
     }
     
-    NSLog(@"________tableview___y:%f",scrollView.contentOffset.y);
-    
-    if(self.viewController.iskeyBoardShowing){
-        CGPoint contentOffset = self.tableView.contentOffset;
-        contentOffset.y = self.viewController.originY;
-        self.tableView.contentOffset = contentOffset;
-        return;
-    }
-//    [self.viewController.view endEditing:YES];
-    BOOL shouldInTable = (scrollView.contentOffset.y + scrollView.contentInset.top <  [self.topView filterTop]);
+    [self.viewController.view endEditing:YES];
+    BOOL shouldInTable = (scrollView.contentOffset.y <  [self.topView filterTop]);
     [self moveToTableView:shouldInTable];
     [self.viewController refreshContentOffset:scrollView.contentOffset];
 
@@ -1727,13 +1720,18 @@ extern NSString *const INSTANT_DATA_KEY;
         if (!self.topBannerView) {
             return;
         }
-        if (self.topView.superview == self.tableView) {
+        if (self.topView == self.tableView.tableHeaderView) {
             return;
         }
         
-        self.topView.top = -self.topView.height;
-        [self.tableView addSubview:self.topView];
-        [self.tableView sendSubviewToBack:self.topView];
+//        self.topView.top = -self.topView.height;
+//        [self.tableView addSubview:self.topView];
+//        [self.tableView sendSubviewToBack:self.topView];
+//        [self.topContainerView mas_updateConstraints:^(MASConstraintMaker *make) {
+//            make.height.mas_equalTo(0);
+//        }];
+        self.topView.top = 0;
+        self.tableView.tableHeaderView = self.topView;
         [self.topContainerView mas_updateConstraints:^(MASConstraintMaker *make) {
             make.height.mas_equalTo(0);
         }];
@@ -1748,6 +1746,7 @@ extern NSString *const INSTANT_DATA_KEY;
             make.height.mas_equalTo(self.topView.height - [self.topView filterTop]);
         }];
         
+        self.tableView.tableHeaderView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width , self.topView.height)];
         [self.topContainerView addSubview:self.topView];
         self.topView.top = -[self.topView filterTop];
     }
@@ -1774,40 +1773,39 @@ extern NSString *const INSTANT_DATA_KEY;
     }];
     
     [self configNotifyInfo:height isShow:YES];
-    
 }
 
 -(void)configNotifyInfo:(CGFloat)topViewHeight isShow:(BOOL)isShow
 {
     UIEdgeInsets insets = self.tableView.contentInset;
     BOOL isTop = (fabs(self.tableView.contentOffset.y) < 0.1) || fabs(self.tableView.contentOffset.y + self.tableView.contentInset.top) < 0.1; //首次进入情况
-    insets.top = topViewHeight;
-    self.tableView.contentInset = insets;
-    _topView.frame = CGRectMake(0, -topViewHeight, _topView.width, topViewHeight);
-    
+//    insets.top = topViewHeight;
+//    self.tableView.contentInset = insets;
+    _topView.frame = CGRectMake(0, 0, _topView.width, topViewHeight);
+    self.tableView.tableHeaderView.frame = _topView.frame;
     if (isShow) {
-        if (isTop) {
-            [self.tableView setContentOffset:CGPointMake(0, -topViewHeight) animated:NO];
-        }else{
-            self.tableView.contentOffset = CGPointMake(0, [self.topView filterTop] -topViewHeight);
-        }
+//        if (isTop) {
+//            [self.tableView setContentOffset:CGPointMake(0, -topViewHeight) animated:NO];
+//        }else{
+//            self.tableView.contentOffset = CGPointMake(0, [self.topView filterTop] -topViewHeight);
+//        }
     }else{
-        if (isTop) {
-            [self.tableView setContentOffset:CGPointMake(0, -topViewHeight) animated:NO];
-        } else {
-            if (self.tableView.contentOffset.y >= -[self.topView filterBottom]) {
-                if (self.tableView.contentOffset.y < ([self.topView filterTop] - topViewHeight - [self.topView notifyHeight])) {
-                    self.tableView.contentOffset = CGPointMake(0, self.tableView.contentOffset.y + [self.topView notifyHeight]);
-                } else if (self.tableView.contentOffset.y < self.tableView.height){
-                    
-                    if (!self.tableView.isDragging || (self.tableView.contentOffset.y < ([self.topView filterTop] - topViewHeight))) {
-                        //小于一屏再进行设置
-                        self.tableView.contentOffset = CGPointMake(0, [self.topView filterTop] - topViewHeight);
-                        
-                    }
-                }
-            }
-        }
+//        if (isTop) {
+//            [self.tableView setContentOffset:CGPointMake(0, -topViewHeight) animated:NO];
+//        } else {
+//            if (self.tableView.contentOffset.y >= -[self.topView filterBottom]) {
+//                if (self.tableView.contentOffset.y < ([self.topView filterTop] - topViewHeight - [self.topView notifyHeight])) {
+//                    self.tableView.contentOffset = CGPointMake(0, self.tableView.contentOffset.y + [self.topView notifyHeight]);
+//                } else if (self.tableView.contentOffset.y < self.tableView.height){
+//
+//                    if (!self.tableView.isDragging || (self.tableView.contentOffset.y < ([self.topView filterTop] - topViewHeight))) {
+//                        //小于一屏再进行设置
+//                        self.tableView.contentOffset = CGPointMake(0, [self.topView filterTop] - topViewHeight);
+//
+//                    }
+//                }
+//            }
+//        }
     }
     
     if (_topView.superview == self.topContainerView) {

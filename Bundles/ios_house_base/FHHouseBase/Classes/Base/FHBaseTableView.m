@@ -35,6 +35,16 @@
     }
 }
 
+- (void)setContentOffset:(CGPoint)contentOffset {
+    [super setContentOffset:contentOffset];
+    NSLog(@"66");
+}
+
+- (void)scrollRectToVisible:(CGRect)rect animated:(BOOL)animated {
+    [super scrollRectToVisible:rect animated:animated];
+    NSLog(@"66");
+}
+
 /*
 // Only override drawRect: if you perform custom drawing.
 // An empty implementation adversely affects performance during animation.

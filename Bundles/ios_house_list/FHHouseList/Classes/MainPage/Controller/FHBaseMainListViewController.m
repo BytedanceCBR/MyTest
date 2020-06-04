@@ -151,11 +151,13 @@
     
     _topView = [[FHMainListTopView alloc] initWithBannerView:self.viewModel.topBannerView filterView:self.viewModel.filterPanel filterTagsView:self.viewModel.topTagsView];
     
-    UIEdgeInsets insets = self.tableView.contentInset;
-    insets.top = CGRectGetHeight(_topView.bounds);
-    self.tableView.contentInset = insets;
-    _topView.top = -_topView.height;
-    [self.tableView addSubview:_topView];
+    self.tableView.tableHeaderView = _topView;
+    
+//    UIEdgeInsets insets = self.tableView.contentInset;
+//    insets.top = CGRectGetHeight(_topView.bounds);
+//    self.tableView.contentInset = insets;
+//    _topView.top = -_topView.height;
+//    [self.tableView addSubview:_topView];
     
     [self.containerView addSubview:self.tableView];
 
@@ -182,7 +184,7 @@
     }
     self.tracerModel.categoryName = [_viewModel categoryName];
     [self.viewModel requestData:YES];
-    self.tableView.contentOffset = CGPointMake(0, -self.tableView.contentInset.top);
+//    self.tableView.contentOffset = CGPointMake(0, -self.tableView.contentInset.top);
     self.isViewDidDisapper = NO;
 
 }
@@ -282,7 +284,7 @@
     UIColor *bgColor = [UIColor whiteColor];
     if ([self.viewModel.topBannerView isKindOfClass:[FHMainOldTopView class]]) {
         FHMainOldTopView *oldTopView = (FHMainOldTopView *)self.viewModel.topBannerView;
-        offsetY = self.topView.height + contentOffset.y;
+        offsetY = contentOffset.y;
         if ([FHMainOldTopView showBanner]) {
             offset = [FHMainOldTopView bannerHeight] - 42 + 10;
         }else if ([FHMainOldTopView showEntrance]) {
@@ -290,9 +292,9 @@
         }else {
             offset = [FHFakeInputNavbar perferredHeight];
         }
-        if (contentOffset.y >= 0) {
+        if (contentOffset.y >= self.topView.height) {
             alpha = 1;
-        }else if (offset != 0){
+        }else if (offset != self.topView.height){
             CGFloat notiBarHeight = self.viewModel.animateShowNotify ? self.topView.notifyHeight : 0;
             alpha = (offsetY - notiBarHeight) / offset;
         }
@@ -308,10 +310,10 @@
 //        }else {
 //            offset = [FHFakeInputNavbar perferredHeight];
 //        }
-        offsetY = self.topView.height + contentOffset.y;
+        offsetY = contentOffset.y;
         offset = [FHFakeInputNavbar perferredHeight];
 
-        if (contentOffset.y >= 0) {
+        if (contentOffset.y >= self.topView.height) {
             alpha = 1;
         } else {
             CGFloat notiBarHeight = self.viewModel.animateShowNotify ? self.topView.notifyHeight : 0;
