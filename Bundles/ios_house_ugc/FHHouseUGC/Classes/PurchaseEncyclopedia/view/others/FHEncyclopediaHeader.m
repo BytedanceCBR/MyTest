@@ -13,9 +13,15 @@
 #import "Masonry.h"
 #import "NSObject+YYModel.h"
 #import "FHLynxHeaderSegBridge.h"
+#import "IESGeckoKit.h"
+#import "FHIESGeckoManager.h"
+#import "SDWebImageManager.h"
+#import "UIColor+Theme.h"
+#import <BDWebImage/UIImageView+BDWebImage.h>
 @interface FHEncyclopediaHeader()<LynxViewClient>
 @property (strong, nonatomic)LynxView *segmentView;
 @property(nonatomic ,strong) NSData *currentTemData;
+@property (strong, nonatomic) UIImage *placeholderImage;
 @property (nonatomic, assign) NSTimeInterval loadTime; //页面加载时间
 @end
 
@@ -52,9 +58,9 @@
              _segmentView.preferredMaxLayoutHeight = screenFrame.size.height;
              [_segmentView triggerLayout];
              [self addSubview:_segmentView];
-        NSData *templateData =  [[FHLynxManager sharedInstance] lynxDataForChannel:@"ugc_encyclopedia_lynx_header" templateKey:[FHLynxManager defaultJSFileName] version:0];
-        [_segmentView loadTemplate:templateData withURL:@"local"];
-//              NSData *templateData = templateData = [NSData dataWithContentsOfURL:[NSURL URLWithString:@"http://10.95.248.197:30334/feed/template.js?1590050059493"]];
+//        NSData *templateData =  [[FHLynxManager sharedInstance] lynxDataForChannel:@"ugc_encyclopedia_lynx_header" templateKey:[FHLynxManager defaultJSFileName] version:0];
+//        [_segmentView loadTemplate:templateData withURL:@"local"];
+              NSData *templateData = templateData = [NSData dataWithContentsOfURL:[NSURL URLWithString:@"http://10.95.248.197:30334/horizontal-header/template.js?1591263310456"]];
             [_segmentView loadTemplate:templateData withURL:@"local"];
               if (templateData) {
                    if (templateData != self.currentTemData) {
@@ -67,9 +73,67 @@
 }
 
 - (void)updateModel:(EncyclopediaConfigDataModel *)model {
-    NSString *lynxData = [model yy_modelToJSONString];
-    [_segmentView updateDataWithString:lynxData];
+//    NSString *lynxData = [model yy_modelToJSONString];
+//    [_segmentView updateDataWithString:lynxData];
     
+}
+
+-(UIImage*) createImageWithColor:(UIColor*) color
+{
+    CGRect rect=CGRectMake(0.0f, 0.0f, 1.0f, 1.0f);
+    UIGraphicsBeginImageContext(rect.size);
+    CGContextRef context = UIGraphicsGetCurrentContext();
+    CGContextSetFillColorWithColor(context, [color CGColor]);
+    CGContextFillRect(context, rect);
+    UIImage *theImage = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    return theImage;
+}
+
+- (UIImage *)placeholderImage {
+    if (!_placeholderImage) {
+        UIImage *placeholderImage = [self createImageWithColor:[UIColor themeGray6]];
+        _placeholderImage = placeholderImage;
+    }
+    return _placeholderImage;
+}
+
+
+- (void)loadImageWithURL:(nonnull NSURL*)url
+                    size:(CGSize)targetSize
+              completion:(nonnull LynxImageLoadCompletionBlock)completionBlock {
+    completionBlock(self.placeholderImage,nil,nil);
+    if([url.absoluteString containsString:@"gecko:"]){
+        NSString * imageStr = url.absoluteString;
+        NSString *imageRootPath = [IESGeckoKit rootDirForAccessKey:[FHIESGeckoManager getGeckoKey] channel:nil];
+        NSString *imageUrlPath = [imageStr substringFromIndex:8];
+        NSString *filePath = [NSString stringWithFormat:@"%@/%@",imageRootPath,imageUrlPath];
+        NSURL *fileURL = [NSURL fileURLWithPath:filePath];
+        
+        [[SDWebImageManager sharedManager] loadImageWithURL:fileURL
+                                                    options:0
+                                                   progress:^(NSInteger receivedSize, NSInteger expectedSize, NSURL* _Nullable targetURL) {
+            
+        }
+                                                  completed:^(UIImage* _Nullable image, NSData* _Nullable data, NSError* _Nullable error,
+                                                              SDImageCacheType cacheType, BOOL finished, NSURL* _Nullable imageURL) {
+            if (error) {
+                completionBlock(self.placeholderImage, nil, url);
+            }else{
+                completionBlock(image, error, url);
+            }
+        }];
+    }else {
+        [[SDWebImageManager sharedManager] loadImageWithURL:url
+            options:0
+            progress:^(NSInteger receivedSize, NSInteger expectedSize, NSURL* _Nullable targetURL) {
+
+            }
+            completed:^(UIImage* _Nullable image, NSData* _Nullable data, NSError* _Nullable error,
+                        SDImageCacheType cacheType, BOOL finished, NSURL* _Nullable imageURL) {
+              completionBlock(image, error, url);
+            }];
+    }
 }
 
 - (void)onSelectChange:(id )param {

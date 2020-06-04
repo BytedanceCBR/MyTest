@@ -50,7 +50,7 @@
     [self.encyclopediaHeader mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.right.equalTo(self.view);
         make.top.equalTo(self.view).offset([UIDevice btd_isIPhoneXSeries]?84:64);
-        make.height.mas_equalTo(85);
+        make.height.mas_equalTo(140);
     }];
     [self.collectionView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(self.encyclopediaHeader.mas_bottom);
