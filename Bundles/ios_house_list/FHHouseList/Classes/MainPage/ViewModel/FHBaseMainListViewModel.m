@@ -762,6 +762,27 @@ extern NSString *const INSTANT_DATA_KEY;
                     agencyModel.tracerDict = traceParam;
                     agencyModel.belongsVC = wself.viewController;
                     theItemModel = agencyModel;
+                }else if ([theItemModel isKindOfClass:[FHHouseReserveAdviserModel class]]) {
+                    FHHouseReserveAdviserModel *model = theItemModel;
+                    NSMutableDictionary *traceParam = [NSMutableDictionary new];
+                    traceParam[@"card_type"] = @"left_pic";
+                    traceParam[@"enter_from"] = traceDictParams[@"enter_from"];
+                    traceParam[@"element_from"] = traceDictParams[@"element_from"];
+                    traceParam[@"page_type"] = [self pageTypeString];
+                    traceParam[@"search_id"] = wself.searchId;
+                    traceParam[@"log_pb"] = model.logPb;
+                    traceParam[@"origin_from"] = wself.originFrom;
+                    traceParam[@"origin_search_id"] = wself.originSearchId;
+                    traceParam[@"rank"] = @(0);
+                    if(self.houseType == FHHouseTypeNeighborhood){
+                        traceParam[@"element_type"] = @"neighborhood_expert_card";
+                    }else{
+                        traceParam[@"element_type"] = @"area_expert_card";
+                    }
+                    model.tracerDict = traceParam;
+                    model.belongsVC = wself.viewController;
+                    model.tableView = wself.tableView;
+                    theItemModel = model;
                 }else if ([theItemModel isKindOfClass:[FHSearchHouseDataRedirectTipsModel class]]) {
                     FHSearchHouseDataRedirectTipsModel *tipModel = theItemModel;
                     tipModel.clickRightBlock = ^(NSString *openUrl){
@@ -1704,11 +1725,9 @@ extern NSString *const INSTANT_DATA_KEY;
         return;
     }
     
-    [self.viewController.view endEditing:YES];
     BOOL shouldInTable = (scrollView.contentOffset.y <  [self.topView filterTop]);
     [self moveToTableView:shouldInTable];
     [self.viewController refreshContentOffset:scrollView.contentOffset];
-
 }
 
 

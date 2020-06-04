@@ -40,6 +40,7 @@ extern NSString *const kFHPhoneNumberCacheKey;
 @property(nonatomic, strong) UILabel *mainTitleLabel; //小区名称
 @property(nonatomic, strong) UILabel *pricePerSqmLabel; //房源价格
 @property(nonatomic, strong) UILabel *countOnSale; //在售套数
+@property(nonatomic, strong) UIImageView *rightArrow;
 
 @property(nonatomic, strong) UIImageView *bottomInfoView;
 @property(nonatomic, strong) UILabel *tipNameLabel;
@@ -88,6 +89,7 @@ extern NSString *const kFHPhoneNumberCacheKey;
     [self.contentView addSubview:_containerView];
 
     _topInfoView = [[UIView alloc] init];
+    _topInfoView.userInteractionEnabled = NO;
     [self.containerView addSubview:_topInfoView];
 
     _mainTitleLabel = [[UILabel alloc] init];
@@ -107,6 +109,10 @@ extern NSString *const kFHPhoneNumberCacheKey;
     _countOnSale.textColor = [UIColor themeGray1];
     _countOnSale.font = [UIFont themeFontRegular:12];
     [self.topInfoView addSubview:_countOnSale];
+    
+    self.rightArrow = [[UIImageView alloc] initWithImage:ICON_FONT_IMG(10, @"\U0000e670", [UIColor themeGray6])];
+    _rightArrow.hidden = YES;
+    [self.topInfoView addSubview:_rightArrow];
 
     _bottomInfoView = [[UIImageView alloc] init];
     _bottomInfoView.userInteractionEnabled = YES;
@@ -151,6 +157,8 @@ extern NSString *const kFHPhoneNumberCacheKey;
     _legalAnnouncement.textAlignment = NSTextAlignmentLeft;
     _legalAnnouncement.lineBreakMode = NSLineBreakByWordWrapping;
     [self.bottomInfoView addSubview:_legalAnnouncement];
+    
+    [self.topInfoView addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(neighbourhoodInfoClick:)]];
 
     [self.containerView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(self.contentView).mas_offset(15);
@@ -186,6 +194,13 @@ extern NSString *const kFHPhoneNumberCacheKey;
         make.height.mas_equalTo(17);
         make.right.mas_lessThanOrEqualTo(self.pricePerSqmLabel.mas_left).offset(-10);
     }];
+    
+    [self.rightArrow mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.right.mas_equalTo(self.topInfoView.mas_right).offset(-15);
+        make.centerY.mas_equalTo(self.topInfoView);
+        make.width.mas_equalTo(18);
+        make.height.mas_equalTo(18);
+    }];
 
     [self.bottomInfoView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(self.topInfoView.mas_bottom);
@@ -218,8 +233,8 @@ extern NSString *const kFHPhoneNumberCacheKey;
 }
 
 - (void)initNotification {
-//    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(keyboardWillShowNotifiction:) name:UIKeyboardWillShowNotification object:nil];
-//    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(keyboardWillHideNotifiction:) name:UIKeyboardWillHideNotification object:nil];
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(keyboardWillShowNotifiction:) name:UIKeyboardWillShowNotification object:nil];
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(keyboardWillHideNotifiction:) name:UIKeyboardWillHideNotification object:nil];
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(textFieldDidChange:) name:UITextFieldTextDidChangeNotification object:nil];
 }
 
@@ -287,6 +302,24 @@ extern NSString *const kFHPhoneNumberCacheKey;
         self.subscribeBtn.hidden = model.isSubcribed;
         self.textField.hidden = model.isSubcribed;
         self.legalAnnouncement.hidden = model.isSubcribed;
+        
+        if([model.realtorType isEqualToString:@"4"]){
+            //小区
+            [self.pricePerSqmLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
+                make.right.mas_equalTo(self.rightArrow.mas_left).offset(-10);
+                make.centerY.mas_equalTo(self.topInfoView);
+            }];
+            self.topInfoView.userInteractionEnabled = YES;
+            self.rightArrow.hidden = NO;
+        }else if([model.realtorType isEqualToString:@"5"]){
+            //商圈
+            [self.pricePerSqmLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
+                make.right.mas_equalTo(self.topInfoView.mas_right).offset(-15);
+                make.centerY.mas_equalTo(self.topInfoView);
+            }];
+            self.topInfoView.userInteractionEnabled = NO;
+            self.rightArrow.hidden = YES;
+        }
         
         if(model.isSubcribed){
             self.tipNameLabel.text = @"已为您预约顾问，稍后会和您联系";
@@ -483,6 +516,23 @@ extern NSString *const kFHPhoneNumberCacheKey;
         } completion:^(BOOL finished) {
             
         }];
+    }
+}
+
+- (void)neighbourhoodInfoClick:(id)neighbourhoodInfoClick {
+    if (self.modelData) {
+        NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"sslocal://neighborhood_detail?neighborhood_id=%@", self.modelData.targetId]];
+
+        NSMutableDictionary *tracerDict = @{}.mutableCopy;
+        if (self.traceParams) {
+            [tracerDict addEntriesFromDictionary:self.traceParams];
+        }
+        tracerDict[@"element_from"] = self.traceParams[@"realtor_position"];
+        tracerDict[@"enter_from"] = self.traceParams[@"page_type"];
+        tracerDict[@"page_type"] = nil;
+        NSMutableDictionary *dict = @{@"house_type": @(FHHouseTypeNeighborhood), @"tracer": tracerDict}.mutableCopy;
+        TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
+        [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
     }
 }
 

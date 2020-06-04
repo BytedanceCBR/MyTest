@@ -338,6 +338,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *neighborhoodName;
 @property (nonatomic, copy , nullable) NSString *neighborhoodPrice;
 @property (nonatomic, copy , nullable) NSString *displayStatusInfo;
+@property (nonatomic, copy , nullable) NSString *realtorType;
 @property (nonatomic, strong , nullable) NSDictionary *logPb;
 @property (nonatomic, strong , nullable) FHDetailContactModel *contactModel ;
 @property (nonatomic, copy , nullable) NSString *districtAreaName;

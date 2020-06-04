@@ -1029,7 +1029,29 @@ extern NSString *const INSTANT_DATA_KEY;
                     agencyModel.tracerDict = traceParam;
                     agencyModel.belongsVC = wself.listVC;
                     theItemModel = agencyModel;
+                }else if ([theItemModel isKindOfClass:[FHHouseReserveAdviserModel class]]) {
+                    FHHouseReserveAdviserModel *model = theItemModel;
+                    NSMutableDictionary *traceParam = [NSMutableDictionary new];
+                    traceParam[@"card_type"] = @"left_pic";
+                    traceParam[@"enter_from"] = traceDictParams[@"enter_from"];
+                    traceParam[@"element_from"] = traceDictParams[@"element_from"];
+                    traceParam[@"page_type"] = [self pageTypeString];
+                    traceParam[@"search_id"] = wself.searchId;
+                    traceParam[@"log_pb"] = model.logPb;
+                    traceParam[@"origin_from"] = wself.originFrom;
+                    traceParam[@"origin_search_id"] = wself.originSearchId;
+                    traceParam[@"rank"] = @(0);
+                    if(self.houseType == FHHouseTypeNeighborhood){
+                        traceParam[@"element_type"] = @"neighborhood_expert_card";
+                    }else{
+                        traceParam[@"element_type"] = @"area_expert_card";
+                    }
+                    model.tracerDict = traceParam;
+                    model.belongsVC = wself.listVC;
+                    model.tableView = wself.tableView;
+                    theItemModel = model;
                 }
+            
                 if (theItemModel) {
                     [wself.sugesstHouseList addObject:theItemModel];
                 }
@@ -1729,10 +1751,6 @@ extern NSString *const INSTANT_DATA_KEY;
             [[FHRelevantDurationTracker sharedTracker] beginRelevantDurationTracking];
         }
     }
-}
-
-- (void)scrollViewDidScroll:(UIScrollView *)scrollView {
-    [self.listVC.view endEditing:YES];
 }
 
 #pragma mark - 详情页跳转

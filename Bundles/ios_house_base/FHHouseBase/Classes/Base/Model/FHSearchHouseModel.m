@@ -584,6 +584,7 @@
                                    @"districtAreaName": @"district_area_name",
                                    @"contactModel": @"realtor_info",
                                    @"associateInfo": @"associate_info",
+                                   @"realtorType": @"realtor_type",
                                    @"logPb": @"log_pb",
                                    };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {

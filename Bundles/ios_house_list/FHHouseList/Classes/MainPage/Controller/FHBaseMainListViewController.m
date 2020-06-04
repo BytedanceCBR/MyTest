@@ -90,6 +90,7 @@
         _tableView.estimatedSectionFooterHeight = 0;
         _tableView.scrollsToTop = YES;
         _tableView.bounces = NO;
+        _tableView.keyboardDismissMode = UIScrollViewKeyboardDismissModeOnDrag;
     }
     return _tableView;
 }

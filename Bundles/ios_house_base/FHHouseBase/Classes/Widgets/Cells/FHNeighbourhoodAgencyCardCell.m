@@ -81,6 +81,7 @@
     [self.contentView addSubview:_containerView];
 
     _topInfoView = [[UIView alloc] init];
+    _topInfoView.userInteractionEnabled = NO;
     [self.containerView addSubview:_topInfoView];
 
     _mainTitleLabel = [[UILabel alloc] init];
@@ -102,6 +103,7 @@
     [self.topInfoView addSubview:_countOnSale];
     
     self.rightArrow = [[UIImageView alloc] initWithImage:ICON_FONT_IMG(10, @"\U0000e670", [UIColor themeGray6])];
+    _rightArrow.hidden = YES;
     [self.topInfoView addSubview:_rightArrow];
 
     _bottomInfoView = [[UIView alloc] init];
@@ -189,9 +191,9 @@
         make.height.mas_equalTo(22);
         make.right.mas_lessThanOrEqualTo(self.pricePerSqmLabel.mas_left).offset(-10);
     }];
-
+    
     [self.pricePerSqmLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.right.mas_equalTo(self.rightArrow.mas_left).offset(-10);
+        make.right.mas_equalTo(self.topInfoView.mas_right).offset(-15);
         make.centerY.mas_equalTo(self.topInfoView);
     }];
 
@@ -314,6 +316,25 @@
         } else {
             [self.bottomInfoView setHidden:YES];
         }
+        
+        if([model.realtorType isEqualToString:@"4"]){
+            //小区
+            [self.pricePerSqmLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
+                make.right.mas_equalTo(self.rightArrow.mas_left).offset(-10);
+                make.centerY.mas_equalTo(self.topInfoView);
+            }];
+            self.topInfoView.userInteractionEnabled = YES;
+            self.rightArrow.hidden = NO;
+        }else if([model.realtorType isEqualToString:@"5"]){
+            //商圈
+            [self.pricePerSqmLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
+                make.right.mas_equalTo(self.topInfoView.mas_right).offset(-15);
+                make.centerY.mas_equalTo(self.topInfoView);
+            }];
+            self.topInfoView.userInteractionEnabled = NO;
+            self.rightArrow.hidden = YES;
+        }
+        
     }
 }
 
@@ -434,7 +455,7 @@
         if (self.traceParams) {
             [tracerDict addEntriesFromDictionary:self.traceParams];
         }
-        tracerDict[@"element_from"] = @"neighborhood_expert_card";
+        tracerDict[@"element_from"] = self.traceParams[@"realtor_position"];
         tracerDict[@"enter_from"] = self.traceParams[@"page_type"];
         tracerDict[@"page_type"] = nil;
         NSMutableDictionary *dict = @{@"house_type": @(FHHouseTypeNeighborhood), @"tracer": tracerDict}.mutableCopy;
