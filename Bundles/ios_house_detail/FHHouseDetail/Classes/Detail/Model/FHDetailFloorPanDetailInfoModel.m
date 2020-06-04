@@ -17,8 +17,6 @@
 }
 @end
 
-
-
 @implementation FHDetailFloorPanDetailInfoDataRecommendModel
 + (JSONKeyMapper*)keyMapper
 {
@@ -63,6 +61,63 @@
 }
 @end
 
+@implementation FHFloorPanDetailInfoModelBaseExtraModel
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+@end
+
+@implementation FHFloorPanDetailInfoModelPriceConsultModel
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+@end
+
+@implementation FHFloorPanDetailInfoModelBaseExtraAddressGaodeImgModel
++ (JSONKeyMapper*)keyMapper
+{
+  NSDictionary *dict = @{
+    @"latRatio": @"lat_ratio",
+    @"lngRatio": @"lng_ratio",
+  };
+  return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+     return dict[keyName]?:keyName;
+  }];
+}
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+@end
+
+@implementation FHFloorPanDetailInfoModelBaseExtraAddressModel
++ (JSONKeyMapper*)keyMapper
+{
+  NSDictionary *dict = @{
+    @"gaodeLat": @"gaode_lat",
+    @"gaodeImg": @"gaode_img",
+    @"gaodeImgUrl": @"gaode_img_url",
+    @"gaodeLng": @"gaode_lng",
+  };
+  return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+     return dict[keyName]?:keyName;
+  }];
+}
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+@end
+
+@implementation FHFloorPanDetailInfoModelBaseExtraCourtModel
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+@end
+
 @implementation FHDetailFloorPanDetailInfoDataModel
 + (JSONKeyMapper*)keyMapper
 {
@@ -84,7 +139,10 @@
     @"highlightedRealtorAssociateInfo":@"highlighted_realtor_associate_info",
     @"displayPrice": @"display_price",
     @"imageDictList": @"house_image_dict_list",
-    @"imageAssociateInfo" : @"image_associate_info"
+    @"imageAssociateInfo" : @"image_associate_info",
+    @"discountInfo": @"discount_info",
+    @"priceConsult": @"price_consult",
+    @"baseExtra": @"base_extra"
   };
   return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
      return dict[keyName]?:keyName;

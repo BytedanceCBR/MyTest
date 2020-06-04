@@ -40,6 +40,42 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign) NSInteger index;
 @end
 
+@interface FHFloorPanDetailInfoModelPriceConsultModel : JSONModel
+
+@property (nonatomic, copy , nullable) NSString *text;
+@property (nonatomic, copy , nullable) NSString *openurl;
+@end
+
+@interface FHFloorPanDetailInfoModelBaseExtraCourtModel : JSONModel
+
+@property (nonatomic, copy , nullable) NSString *content;
+@property (nonatomic, copy , nullable) NSString *openurl;
+@property (nonatomic, copy , nullable) NSString *title;
+@end
+
+@interface FHFloorPanDetailInfoModelBaseExtraAddressGaodeImgModel : JSONModel
+
+@property (nonatomic, copy , nullable) NSString *url;
+@property (nonatomic, copy , nullable) NSString *latRatio;
+@property (nonatomic, copy , nullable) NSString *lngRatio;
+@end
+
+@interface FHFloorPanDetailInfoModelBaseExtraAddressModel : JSONModel
+
+@property (nonatomic, copy , nullable) NSString *title;
+@property (nonatomic, copy , nullable) NSString *gaodeLng;
+@property (nonatomic, copy , nullable) NSString *content;
+@property (nonatomic, copy , nullable) NSString *gaodeLat;
+@property (nonatomic, copy , nullable) NSString *gaodeImgUrl;
+@property (nonatomic, strong , nullable) FHFloorPanDetailInfoModelBaseExtraAddressGaodeImgModel *gaodeImg ;
+@end
+
+@interface FHFloorPanDetailInfoModelBaseExtraModel : JSONModel
+
+@property (nonatomic, strong , nullable) FHFloorPanDetailInfoModelBaseExtraCourtModel *court ;
+@property (nonatomic, strong , nullable) FHFloorPanDetailInfoModelBaseExtraAddressModel *address ;
+@end
+
 @interface FHDetailFloorPanDetailInfoDataModel : JSONModel 
 
 @property (nonatomic, copy , nullable) NSString *status;
@@ -74,6 +110,15 @@ NS_ASSUME_NONNULL_BEGIN
 
 /// 099 新增户型详情页的线索相关
 @property (nonatomic, strong, nullable) FHClueAssociateInfoModel *imageAssociateInfo;
+
+/// 1.0.0 新增户型详情页优惠券信息数据，与楼盘详情页数据保持一致
+@property (nonatomic, strong , nullable) NSArray<FHDetailNewDiscountInfoItemModel> *discountInfo;
+
+/// 1.0.0 新增资讯UI样式
+@property (nonatomic, strong , nullable) FHFloorPanDetailInfoModelPriceConsultModel *priceConsult;
+
+/// 1.0.0 新增所属楼盘和项目地址
+@property (nonatomic, strong , nullable) FHFloorPanDetailInfoModelBaseExtraModel *baseExtra;
 @end
 
 @interface FHDetailFloorPanDetailInfoModel : JSONModel 

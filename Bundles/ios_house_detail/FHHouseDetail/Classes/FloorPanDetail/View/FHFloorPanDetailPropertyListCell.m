@@ -6,6 +6,7 @@
 //
 
 #import "FHFloorPanDetailPropertyListCell.h"
+#import "FHDetailPropertyListCorrectingCell.h"
 #import "FHPropertyListCorrectingRowView.h"
 #import "FHDetailBaseModel.h"
 #import "FHHouseBaseInfoModel.h"
@@ -13,7 +14,6 @@
 #import "FHCommonDefines.h"
 #import <FHHouseBase/UIImage+FIconFont.h>
 #import "FHUIAdaptation.h"
-
 
 #define kGrayLineX 19
 @interface FHFloorPanDetailPropertyListCell ()
@@ -55,55 +55,38 @@
          __block NSInteger doubleCount = 0;// 两列计数
          __block CGFloat topOffset = kGrayLineX + 10;// 高度
          __block CGFloat listRowHeight = 29;// 30
-         __block CGFloat lastViewLeftOffset = 20;
-         __block CGFloat lastTopOffset = 20;
          CGFloat viewWidth = (UIScreen.mainScreen.bounds.size.width - 40) / 2;
          [model.baseInfo enumerateObjectsUsingBlock:^(FHHouseBaseInfoModel*  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
              if (obj.isSingle) {
                  [singles addObject:obj];
              } else {
                  // 两列
+                 FHPropertyListCorrectingRowView *rowView = [[FHPropertyListCorrectingRowView alloc] init];
+                 rowView.keyLabel.text = obj.attr;
+                 rowView.valueLabel.text = obj.value;
+                 rowView.keyLabel.font = [UIFont themeFontRegular:12];
+                 rowView.valueLabel.font = [UIFont themeFontMedium:12];
+                 rowView.keyLabel.textColor = [UIColor colorWithHexStr:@"#aeadad"];
+                 rowView.valueLabel.textColor = [UIColor themeGray2];
+                 [self.contentView addSubview:rowView];
+                 [self.itemArray addObject:rowView];
+                 lastView = rowView;
                  if (doubleCount % 2 == 0) {
                      // 第1列
-                     FHPropertyListCorrectingRowView *v = [[FHPropertyListCorrectingRowView alloc] init];
-                     [self.contentView addSubview:v];
-                     [self.itemArray addObject:v];
-                     [v mas_makeConstraints:^(MASConstraintMaker *make) {
+                     [rowView mas_makeConstraints:^(MASConstraintMaker *make) {
                          make.top.mas_equalTo(topOffset);
                          make.left.mas_equalTo(31);
                          make.width.mas_equalTo(viewWidth);
                          make.height.mas_equalTo(listRowHeight);
                      }];
-                     v.keyLabel.text = obj.attr;
-                     v.valueLabel.text = obj.value;
-                     v.keyLabel.font = [UIFont themeFontRegular:12];
-                     v.valueLabel.font = [UIFont themeFontMedium:12];
-                     v.keyLabel.textColor = [UIColor colorWithHexStr:@"#aeadad"];
-                     v.valueLabel.textColor = [UIColor themeGray2];
-                     lastView = v;
-                     lastViewLeftOffset = 20;
-                     lastTopOffset = topOffset;
                  } else {
                      // 第2列
-                     FHPropertyListCorrectingRowView *v = [[FHPropertyListCorrectingRowView alloc] init];
-                     [self.contentView addSubview:v];
-                     [self.itemArray addObject:v];
-                     [v mas_makeConstraints:^(MASConstraintMaker *make) {
+                     [rowView mas_makeConstraints:^(MASConstraintMaker *make) {
                          make.top.mas_equalTo(topOffset);
                          make.left.mas_equalTo(31 + viewWidth);
                          make.width.mas_equalTo(viewWidth);
                          make.height.mas_equalTo(listRowHeight);
                      }];
-                     v.keyLabel.text = obj.attr;
-                     v.valueLabel.text = obj.value;
-                     v.keyLabel.font = [UIFont themeFontRegular:12];
-                     v.valueLabel.font = [UIFont themeFontMedium:12];
-                     v.keyLabel.textColor = [UIColor colorWithHexStr:@"#aeadad"];
-                     v.valueLabel.textColor = [UIColor themeGray2];
-                     lastView = v;
-                     lastViewLeftOffset = 20 + viewWidth;
-                     lastTopOffset = topOffset;
-                     //
                      topOffset += listRowHeight;
                  }
                  doubleCount += 1;
@@ -117,8 +100,6 @@
                  FHPropertyListCorrectingRowView *v = [[FHPropertyListCorrectingRowView alloc] init];
                  [self.contentView addSubview:v];
                  [self.itemArray addObject:v];
-                 
-                 
                  v.keyLabel.text = obj.attr;
                  v.valueLabel.text = obj.value;
                  v.keyLabel.font = [UIFont themeFontRegular:12];
@@ -156,17 +137,100 @@
                      make.height.mas_equalTo(valueHeight + 20);
                  }];
                  lastView = v;
-                 lastViewLeftOffset = 20;
-                 lastTopOffset = topOffset;
                  
                  topOffset += valueHeight + 20;
              }];
          }
+         
+         if (model.baseExtra) {
+             //所属楼盘信息
+             if (model.baseExtra.court) {
+                 FHDetailExtarInfoCorrectingRowView *rowView = [[FHDetailExtarInfoCorrectingRowView alloc] initWithFrame:CGRectMake(31, topOffset, CGRectGetWidth(self.contentView.bounds) - 31 * 2, listRowHeight)];
+                 rowView.logoImageView.hidden = YES;
+                 rowView.indicatorLabel.hidden = YES;
+                 rowView.nameLabel.font = [UIFont themeFontRegular:12];
+                 rowView.nameLabel.textColor = [UIColor colorWithHexStr:@"#aeadad"];
+                 rowView.nameLabel.text = model.baseExtra.court.title;
+                 
+                 rowView.infoLabel.font = [UIFont themeFontMedium:12];
+                 rowView.infoLabel.textColor = [UIColor themeGray2];
+                 rowView.infoLabel.text = model.baseExtra.court.content;
+                 [rowView addTarget:self action:@selector(jumpToDetailNewPage:) forControlEvents:UIControlEventTouchUpInside];
+                 [self.contentView addSubview:rowView];
+                 [rowView mas_makeConstraints:^(MASConstraintMaker *make) {
+                     make.top.mas_equalTo(topOffset);
+                     make.left.mas_equalTo(31);
+                     make.right.mas_equalTo(-31);
+                     make.height.mas_equalTo(listRowHeight);
+                 }];
+                 [rowView.nameLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
+                     make.left.mas_equalTo(0).priorityHigh();
+                     make.top.mas_equalTo(10);
+                     make.bottom.mas_equalTo(0);
+                 }];
+                 
+                 [rowView.indicator mas_remakeConstraints:^(MASConstraintMaker *make) {
+                     make.right.mas_equalTo(0);
+                     make.size.mas_equalTo(CGSizeMake(20, 20));
+                     make.centerY.mas_equalTo(rowView.nameLabel);
+                 }];
+                 
+                 [rowView.infoLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
+                     make.left.mas_equalTo(rowView.nameLabel.mas_right).offset(10);
+                     make.top.mas_equalTo(10);
+                     make.bottom.mas_equalTo(0);
+                     make.right.mas_lessThanOrEqualTo(rowView.indicator.mas_left).offset(-10);
+                 }];
+                 
+                 topOffset += listRowHeight;
+                 lastView = rowView;
+             }
+             //楼盘地址
+             if (model.baseExtra.address) {
+                 FHDetailExtarInfoCorrectingRowView *rowView = [[FHDetailExtarInfoCorrectingRowView alloc] initWithFrame:CGRectMake(31, topOffset, CGRectGetWidth(self.contentView.bounds) - 31 * 2, listRowHeight)];
+                 rowView.logoImageView.hidden = YES;
+                 rowView.indicatorLabel.hidden = YES;
+                 rowView.nameLabel.font = [UIFont themeFontRegular:12];
+                 rowView.nameLabel.textColor = [UIColor colorWithHexStr:@"#aeadad"];
+                 rowView.nameLabel.text = model.baseExtra.address.title;
+                 rowView.infoLabel.font = [UIFont themeFontMedium:12];
+                 rowView.infoLabel.textColor = [UIColor themeGray2];
+                 rowView.infoLabel.text = model.baseExtra.address.content;
+                 [rowView addTarget:self action:@selector(jumpToDetailNewAddressPage:) forControlEvents:UIControlEventTouchUpInside];
+                 [self.contentView addSubview:rowView];
+                 [rowView mas_makeConstraints:^(MASConstraintMaker *make) {
+                     make.top.mas_equalTo(topOffset);
+                     make.left.mas_equalTo(31);
+                     make.right.mas_equalTo(-31);
+                     make.height.mas_equalTo(listRowHeight);
+                 }];
+                 [rowView.nameLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
+                     make.left.mas_equalTo(0).priorityHigh();
+                     make.top.mas_equalTo(10);
+                     make.bottom.mas_equalTo(0);
+                 }];
+                 
+                 [rowView.indicator mas_remakeConstraints:^(MASConstraintMaker *make) {
+                     make.right.mas_equalTo(0);
+                     make.size.mas_equalTo(CGSizeMake(20, 20));
+                     make.centerY.mas_equalTo(rowView.nameLabel);
+                 }];
+                 
+                 [rowView.infoLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
+                     make.left.mas_equalTo(rowView.nameLabel.mas_right).offset(10);
+                     make.top.mas_equalTo(10);
+                     make.bottom.mas_equalTo(0);
+                     make.right.mas_lessThanOrEqualTo(rowView.indicator.mas_left).offset(-10);
+                 }];
+                 topOffset += listRowHeight;
+                 lastView = rowView;
+             }
+         }
      }
-         [lastView mas_updateConstraints:^(MASConstraintMaker *make) {
-             make.bottom.mas_equalTo(self.shadowImage.mas_bottom).offset(-50);
-         }];
-         [self layoutIfNeeded];
+    [lastView mas_updateConstraints:^(MASConstraintMaker *make) {
+        make.bottom.mas_equalTo(self.shadowImage.mas_bottom).offset(-50);
+    }];
+    [self layoutIfNeeded];
 }
 
 - (void)setupUI
@@ -210,6 +274,54 @@
     [super setSelected:selected animated:animated];
 
     // Configure the view for the selected state
+}
+
+//跳转新房详情页，如果是从详情页来的，则回到房源详情页，否则跳转详情页
+- (void)jumpToDetailNewPage:(id)sender {
+    FHFloorPanDetailPropertyListModel *model = (FHFloorPanDetailPropertyListModel *)self.currentData;
+    NSMutableDictionary *traceParam =  [NSMutableDictionary dictionary];
+//    traceParam[@"card_type"] = @"left_pic";
+//    traceParam[@"enter_from"] = [self categoryName];
+//    traceParam[@"log_pb"] = [cellModel logPb];
+//    traceParam[@"rank"] = @(rank);
+    NSDictionary *dict = @{
+        @"house_type":@(FHHouseTypeNewHouse),
+        @"court_id":model.courtId?:@"",
+        @"tracer": traceParam };
+    TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
+    NSString *urlStr = [NSString stringWithFormat:@"sslocal://new_house_detail"];
+    [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:urlStr] userInfo:userInfo];
+}
+
+//跳转
+- (void)jumpToDetailNewAddressPage:(id)sender {
+    FHFloorPanDetailPropertyListModel *model = (FHFloorPanDetailPropertyListModel *)self.currentData;
+    //地图页调用示例
+    NSString *longitude = model.baseExtra.address.gaodeLng;
+    NSString *latitude = model.baseExtra.address.gaodeLat;
+    
+//    NSString *selectCategory = [self.curCategory isEqualToString:@"交通"] ? @"公交" : self.curCategory;
+    NSMutableDictionary *infoDict = [NSMutableDictionary dictionary];
+//    [infoDict setValue:selectCategory forKey:@"category"];
+    [infoDict setValue:latitude?:@"" forKey:@"latitude"];
+    [infoDict setValue:longitude?:@"" forKey:@"longitude"];
+//    [infoDict setValue:dataModel.mapCentertitle forKey:@"title"];
+    
+    NSMutableDictionary *tracer = [NSMutableDictionary dictionaryWithDictionary:self.baseViewModel.detailTracerDic];
+//    if (sender == _mapMaskBtnLocation) {
+//        [tracer setValue:@"map_list" forKey:@"click_type"];
+//    }
+    
+//    if (sender == _mapMaskBtn) {
+//        [tracer setValue:@"map" forKey:@"click_type"];
+//    }
+    
+    [tracer setValue:@"map" forKey:@"element_from"];
+    [tracer setObject:tracer[@"page_type"] forKey:@"enter_from"];
+    [infoDict setValue:tracer forKey:@"tracer"];
+    
+    TTRouteUserInfo *info = [[TTRouteUserInfo alloc] initWithInfo:infoDict];
+    [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:@"sslocal://fh_map_detail"] userInfo:info];
 }
 
 

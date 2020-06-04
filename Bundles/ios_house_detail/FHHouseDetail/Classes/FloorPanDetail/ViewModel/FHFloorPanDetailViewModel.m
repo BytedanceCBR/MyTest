@@ -22,7 +22,6 @@
 #import "FHFloorPanDetailMutiFloorPanCell.h"
 #import "FHHouseDetailSubPageViewController.h"
 #import "FHDetailBottomBar.h"
-
 #import "FHDetailMediaHeaderCorrectingCell.h"
 #import "FHDetailPropertyListCorrectingCell.h"
 #import "FHFloorPanDetailModuleHelper.h"
@@ -30,11 +29,11 @@
 #import "FHDetailListSectionTitleCell.h"
 #import "FHFloorPanDetailPropertyListCell.h"
 #import "FHDetailBaseModel.h"
+#import "FHDetailSalesCell.h"
 
 @interface FHFloorPanDetailViewModel()<UITableViewDelegate,UITableViewDataSource>
 
 @property (nonatomic , weak) UITableView *infoListTable;
-@property (nonatomic , strong) NSMutableArray *currentItems;
 @property (nonatomic , strong) NSString *floorPanId;
 @property (nonatomic , strong) FHDetailFloorPanDetailInfoModel *currentModel;
 @property(nonatomic , weak) FHHouseDetailSubPageViewController *subPageVC;
@@ -52,7 +51,6 @@
         _subPageVC = viewController;
         _infoListTable = tableView;
         _floorPanId = floorPanId;
-        _currentItems = [NSMutableArray new];
         [self configTableView];
         WeakSelf;
         FHDetailBottomBar *bottomBar = [_subPageVC getBottomBar];
@@ -101,6 +99,9 @@
     
     //户型信息
     [self.infoListTable registerClass:[FHFloorPanDetailPropertyListCell class] forCellReuseIdentifier:NSStringFromClass([FHFloorPanDetailPropertyListModel class])];
+    
+    //1.0.0 新增优惠信息
+    [self.infoListTable registerClass:[FHDetailSalesCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailSalesCellModel class])];
     //楼盘推荐
     [self.infoListTable registerClass:[FHFloorPanDetailMutiFloorPanCell class] forCellReuseIdentifier:NSStringFromClass([FHFloorPanDetailMutiFloorPanCellModel class])];
     //标题
@@ -194,15 +195,25 @@
     headerCellModel.contactViewModel = self.contactViewModel;
     headerCellModel.isInstantData = nil;
     headerCellModel.titleDataModel = houseTitleModel;
-    [self.currentItems addObject:headerCellModel];
+    [self.items addObject:headerCellModel];
     
     //基础信息
     if (model.data.baseInfo) {
         FHFloorPanDetailPropertyListModel *propertyModel = [[FHFloorPanDetailPropertyListModel alloc] init];
+        propertyModel.courtId = model.data.courtId;
         propertyModel.baseInfo = model.data.baseInfo;
+        propertyModel.baseExtra = model.data.baseExtra;
         propertyModel.houseModelType = FHFloorPanHouseModelTypeCoreInfo;
-        [self.currentItems addObject:propertyModel];
-        
+        [self.items addObject:propertyModel];
+    }
+    
+    // 优惠信息
+    if (model.data.discountInfo) {
+        FHDetailSalesCellModel *salesModel = [[FHDetailSalesCellModel alloc] init];
+        salesModel.discountInfo = model.data.discountInfo;
+        salesModel.houseModelType = FHFloorPanHouseModelTypeNewSales;
+        salesModel.contactViewModel = self.contactViewModel;
+        [self.items addObject:salesModel];
     }
     
     //楼盘户型
@@ -218,7 +229,7 @@
             }
         }
         mutiDataModel.houseModelType = FHFloorPanHouseModelTypeFloorPlan;
-        [self.currentItems addObject:mutiDataModel];
+        [self.items addObject:mutiDataModel];
     }
     // 免责声明
     if (model.data.disclaimer) {
@@ -226,7 +237,7 @@
         infoModel.disclaimer = model.data.disclaimer;
         //infoModel.disclaimer.text = @"楼盘信息仅供参考，请以开发商公示为准，若有误可反馈纠错";
         infoModel.houseModelType = FHHouseModelTypeDisclaimer;
-        [self.currentItems addObject:infoModel];
+        [self.items addObject:infoModel];
     }
     
     FHDetailContactModel *contactPhone = nil;
@@ -245,7 +256,7 @@
     self.contactViewModel.followStatus = model.data.userStatus.courtSubStatus;
     self.contactViewModel.chooseAgencyList = model.data.chooseAgencyList;
     self.contactViewModel.highlightedRealtorAssociateInfo = model.data.highlightedRealtorAssociateInfo;
-    self.currentItems = [FHFloorPanDetailModuleHelper moduleClassificationMethod:self.currentItems];
+    self.items = [FHFloorPanDetailModuleHelper moduleClassificationMethod:self.items];
     [_infoListTable reloadData];
 }
 
@@ -255,7 +266,7 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return [_currentItems count];
+    return self.items.count;
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
@@ -271,8 +282,8 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     NSInteger row = indexPath.row;
-    if (row >= 0 && row < self.currentItems.count) {
-        id data = self.currentItems[row];
+    if (row >= 0 && row < self.items.count) {
+        id data = self.items[row];
         NSString *identifier = NSStringFromClass([data class]);//[self cellIdentifierForEntity:data];
         if (identifier.length > 0) {
             FHDetailBaseCell *cell = (FHDetailBaseCell *)[tableView dequeueReusableCellWithIdentifier:identifier];

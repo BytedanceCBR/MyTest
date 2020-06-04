@@ -150,6 +150,18 @@
     return self;
 }
 
+- (BOOL)isTopestViewController {
+    /**
+     经纪人评价页面原本只应该出现在房源详情页
+     目前会在房源详情页后面的所有页面只要触发手机号拨通就会弹出
+     在判断弹出的方法内进行页面层级的判断，或者在其他页面不接收电话相关的observer
+     */
+    if (self.navigationController.viewControllers.lastObject != self || self.presentedViewController != nil) {
+        return NO;
+    }
+    return YES;
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.automaticallyAdjustsScrollViewInsets = NO;
@@ -449,6 +461,9 @@
 
 - (void)callObserver:(CXCallObserver *)callObserver callChanged:(CXCall *)call{
     
+    if (![self isTopestViewController]) {
+        return ;
+    }
 //    NSLog(@"outgoing :%d  onHold :%d   hasConnected :%d   hasEnded :%d",call.outgoing,call.onHold,call.hasConnected,call.hasEnded);
     /** 以下为我手动测试 如有错误欢迎指出
       拨通:  outgoing :1  onHold :0   hasConnected :0   hasEnded :0
@@ -482,6 +497,10 @@
 
 - (void)callHandlerWith:(CTCall*)call
 {
+    if (![self isTopestViewController]) {
+        return ;
+    }
+
     if ([call.callState isEqualToString:CTCallStateDisconnected]){
         //未接通和挂断
         if (self.isPhoneCalled && self.isPhoneCallPickUp) {
@@ -773,13 +792,7 @@
        self.phoneCallRequestId &&
        (self.viewModel.houseType == FHHouseTypeSecondHandHouse)){
         
-        /**
-         
-         经纪人评价页面原本只应该出现在房源详情页
-         目前会在房源详情页后面的所有页面只要触发手机号拨通就会弹出
-         在判断弹出的方法内进行页面层级的判断，或者在其他页面不接收电话相关的observer
-         */
-        if (self.navigationController.viewControllers.lastObject != self || self.presentedViewController != nil) {
+        if (![self isTopestViewController]) {
             return NO;
         }
         

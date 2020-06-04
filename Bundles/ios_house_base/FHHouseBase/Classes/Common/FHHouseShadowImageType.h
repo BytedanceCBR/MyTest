@@ -85,6 +85,8 @@ typedef NS_ENUM (NSInteger , FHHouseModelType){
     FHHouseModelTypeNewTimeline,
     // 户型详情页属性模块
     FHFloorPanHouseModelTypeCoreInfo,
+    // 新房详情页优惠信息模块
+    FHFloorPanHouseModelTypeNewSales,
     // 户型详情页户型模块
     FHFloorPanHouseModelTypeFloorPlan,
     
