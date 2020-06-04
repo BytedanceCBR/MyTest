@@ -415,6 +415,7 @@
                            @"externalInfo": @"external_info",
                            @"skyEyeTag": @"sky_eye_tag",
                            @"associateInfo": @"associate_info",
+                           @"tagImage": @"tag_image",
                            };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
         return dict[keyName]?:keyName;

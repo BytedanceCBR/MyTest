@@ -238,6 +238,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign) BOOL isRecommendCell;
 @property (nonatomic, strong, nullable) FHClueAssociateInfoModel *associateInfo;
 
+@property (nonatomic, strong, nullable) NSArray<FHImageModel> *tagImage;  //企业担保图标
+
 @end
 
 @protocol FHRecommendSecondhandHouseTitleModel<NSObject>

@@ -273,6 +273,7 @@
 
 @property(nonatomic, strong) UILabel *imageTagLabel;
 @property(nonatomic, strong) FHSameHouseTagView *imageTagLabelBgView;
+@property (nonatomic, strong) UIImageView *topLeftTagImageView;
 
 @property (nonatomic, strong) UIImageView *imageBacView;
 @end
@@ -329,6 +330,33 @@
         self.descLabel.attributedText = attributeText;
         self.priceLabel.text = model.displayPrice;
         self.spaceLabel.text = model.displayPricePerSqm;
+        
+        //企业担保标签
+        if (model.tagImage && model.tagImage.count > 0) {
+            FHImageModel *imageModel = model.tagImage.firstObject;
+            if (!imageModel.url.length) {
+                return;
+            }
+            
+            [self.topLeftTagImageView bd_setImageWithURL:[NSURL URLWithString:imageModel.url]];
+            
+            CGFloat width = [imageModel.width floatValue];
+            CGFloat height = [imageModel.height floatValue];
+            if (width > 0.0) {
+                [self.topLeftTagImageView mas_updateConstraints:^(MASConstraintMaker *make) {
+                    make.width.mas_equalTo(width);
+                }];
+            }
+            if (height > 0.0) {
+                [self.topLeftTagImageView mas_updateConstraints:^(MASConstraintMaker *make) {
+                    make.height.mas_equalTo(height);
+                }];
+            }
+            
+            self.topLeftTagImageView.hidden = NO;
+        } else {
+            self.topLeftTagImageView.hidden = YES;
+        }
     }
     [self layoutIfNeeded];
 }
@@ -426,6 +454,12 @@
         make.height.mas_equalTo(22);
         make.top.mas_equalTo(self.spaceLabel.mas_bottom).offset(8);
     }];
+    
+    [self.icon addSubview:self.topLeftTagImageView];
+    [self.topLeftTagImageView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.top.equalTo(self.icon);
+        make.size.mas_equalTo(CGSizeMake(60, 20));
+    }];
 }
 
 - (UILabel *)imageTagLabel
@@ -447,6 +481,15 @@
         _imageTagLabelBgView.hidden = YES;
     }
     return _imageTagLabelBgView;
+}
+
+- (UIImageView *)topLeftTagImageView {
+    if (!_topLeftTagImageView) {
+        _topLeftTagImageView = [[UIImageView alloc] init];
+        _topLeftTagImageView.hidden = YES;
+    }
+    
+    return _topLeftTagImageView;
 }
 
 @end
