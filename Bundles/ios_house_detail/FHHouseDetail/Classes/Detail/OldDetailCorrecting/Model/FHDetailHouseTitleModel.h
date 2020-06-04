@@ -7,6 +7,7 @@
 
 #import <Foundation/Foundation.h>
 #import "FHNeighborhoodDetailSubMessageCell.h"
+#import "FHDetailFloorPanDetailInfoModel.h"
 NS_ASSUME_NONNULL_BEGIN
 
 @interface FHDetailHouseTitleModel : FHDetailBaseModel
@@ -28,6 +29,9 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy) NSString *squaremeter; //面积
 @property (nonatomic, copy) NSString *facingDirection; //朝向
 @property (nonatomic, copy) NSString *saleStatus;//售卖状态
+
+//100 户型详情增加咨询样式
+@property (nonatomic, strong , nullable) FHFloorPanDetailInfoModelPriceConsultModel *priceConsult;
 @end
 
 NS_ASSUME_NONNULL_END

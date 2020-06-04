@@ -13,7 +13,7 @@
 #import "UILabel+House.h"
 #import "UIColor+Theme.h"
 #import "FHDetailTopBannerView.h"
-
+#import <FHHouseBase/UIImage+FIconFont.h>
 
 @interface FHDetailHeaderTitleView ()
 @property (nonatomic, weak) UIImageView *shadowImage;
@@ -22,7 +22,7 @@
 @property (nonatomic, weak) UILabel *nameLabel;
 @property (nonatomic, weak) UILabel *addressLab;
 @property (nonatomic, weak) UILabel *totalPirce;//仅户型详情页x展示
-
+@property (nonatomic, weak) UIControl *priceAskView;
 
 @property (nonatomic, strong) FHDetailTopBannerView *topBanner;
 
@@ -135,6 +135,37 @@
     label.text = text;
     label.font = [UIFont themeFontMedium:12];
     return label;
+}
+
+- (UIControl *)priceAskView {
+    if (!_priceAskView) {
+        UIControl *priceAskView = [[UIControl alloc] init];
+        [priceAskView addTarget:self action:@selector(priceAskViewAction:) forControlEvents:UIControlEventTouchUpInside];
+        [self addSubview:priceAskView];
+        _priceAskView = priceAskView;
+        
+        UILabel *titleLabel = [[UILabel alloc] init];
+        titleLabel.textColor = [UIColor themeOrange1];
+        titleLabel.font = [UIFont themeFontMedium:14];
+        titleLabel.text = self.model.priceConsult.text;
+        [_priceAskView addSubview:titleLabel];
+        [titleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.left.mas_equalTo(0);
+            make.centerY.mas_equalTo(_priceAskView);
+        }];
+        
+        UIImageView *indicatorImageView = [[UIImageView alloc] init];
+        indicatorImageView.image = ICON_FONT_IMG(16, @"\U0000e670", [UIColor themeOrange1]);
+        indicatorImageView.contentMode = UIViewContentModeCenter;
+        [_priceAskView addSubview:indicatorImageView];
+        [indicatorImageView mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.right.mas_equalTo(0);
+            make.size.mas_equalTo(CGSizeMake(20, 20));
+            make.top.bottom.mas_equalTo(0);
+            make.left.mas_equalTo(titleLabel.mas_right).mas_offset(5);
+        }];
+    }
+    return _priceAskView;
 }
 
 - (void)setTags:(NSArray *)tags {
@@ -256,10 +287,16 @@
     [self.totalPirce mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(self).offset(31);
         make.top.mas_equalTo(self.tagBacView.mas_bottom).offset(tagTop);
-        make.right.mas_equalTo(self).offset(- 35);
         make.height.mas_equalTo(24);
         make.bottom.mas_equalTo(self);
     }];
+    
+    if (self.model.priceConsult.text.length && self.model.priceConsult.openurl.length) {
+        [self.priceAskView mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.right.mas_equalTo(-31);
+            make.centerY.mas_equalTo(self.totalPirce.mas_centerY);
+        }];
+    }
 }
 
 - (void)setModel:(FHDetailHouseTitleModel *)model {
@@ -398,6 +435,12 @@
 - (void)clickMapAction:(UIButton *)btn {
     if (self.model.mapImageClick) {
         self.model.mapImageClick();
+    }
+}
+
+- (void)priceAskViewAction:(id)sender {
+    if (self.model.priceConsult.openurl.length) {
+        [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:self.model.priceConsult.openurl]];
     }
 }
 @end

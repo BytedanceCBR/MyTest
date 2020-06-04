@@ -191,6 +191,7 @@
     houseTitleModel.Picing = model.data.pricing;
     houseTitleModel.displayPrice = model.data.displayPrice;
     houseTitleModel.isFloorPan = YES;
+    houseTitleModel.priceConsult = model.data.priceConsult;
     headerCellModel.vedioModel = itemModel;
     headerCellModel.contactViewModel = self.contactViewModel;
     headerCellModel.isInstantData = nil;
