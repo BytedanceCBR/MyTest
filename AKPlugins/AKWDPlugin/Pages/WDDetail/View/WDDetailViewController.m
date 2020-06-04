@@ -346,7 +346,7 @@ static NSUInteger const kOldAnimationViewTag = 20161221;
 - (void)viewWillDisappear:(BOOL)animated
 {
     [super viewWillDisappear:animated];
-    
+    [[NSNotificationCenter defaultCenter] postNotificationName:UIMenuControllerWillHideMenuNotification object:nil];
     if (_isNewVersion) return;
     
     [self p_removeIndicatorPolicyView];

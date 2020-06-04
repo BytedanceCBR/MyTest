@@ -148,6 +148,7 @@
 
 - (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
+    [[NSNotificationCenter defaultCenter] postNotificationName:UIMenuControllerWillHideMenuNotification object:nil];
     [self addStayPageLog];
     //跳页时关闭举报的弹窗
     [FHFeedOperationView dismissIfVisible];

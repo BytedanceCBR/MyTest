@@ -623,6 +623,7 @@ NSString *const assertDesc_articleType = @"protocoledArticle must be Article";
     
     self.detailStateStore.state.isBackAction = ![self.navigationController.viewControllers containsObject:self.parentViewController] || [self.navigationController.viewControllers containsObject:self];
     [self.detailStateStore sendAction:TTVDetailEventTypeViewWillDisappear payload:nil];
+    [[NSNotificationCenter defaultCenter] postNotificationName:UIMenuControllerWillHideMenuNotification object:nil];
 }
 
 - (BOOL)shouldContinuePlayVideoWhenback
