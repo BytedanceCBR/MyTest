@@ -122,7 +122,7 @@
     [params setValue:@"shortvideo_detail_follow_card" forKey:@"source"];
     [params setValue:self.listEntrance forKey:@"list_entrance"];
     [params setValue:self.logPb forKey:@"log_pb"];
-    [TTTracker eventV3:eventName params:[params copy]];
+    [BDTrackerProtocol eventV3:eventName params:[params copy]];
 }
 
 @end

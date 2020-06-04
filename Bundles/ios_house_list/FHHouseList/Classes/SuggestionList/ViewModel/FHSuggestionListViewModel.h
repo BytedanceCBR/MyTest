@@ -7,8 +7,8 @@
 
 #import <Foundation/Foundation.h>
 #import "FHSuggestionListViewController.h"
-#import "FHBaseCollectionView.h"
 #import "HMSegmentedControl.h"
+#import "FHSuggestionCollectionView.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -21,7 +21,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 -(instancetype)initWithController:(FHSuggestionListViewController *)viewController;
 
--(void)initCollectionView:(FHBaseCollectionView *) collectionView;
+-(void)initCollectionView:(FHSuggestionCollectionView *) collectionView;
 
 -(void)textFieldShouldReturn:(NSString *)text;
 

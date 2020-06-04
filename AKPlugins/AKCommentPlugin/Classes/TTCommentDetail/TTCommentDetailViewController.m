@@ -39,6 +39,7 @@
 #import "SSMyUserModel.h"
 #import "TTBusinessManager+StringUtils.h"
 #import "UIColor+Theme.h"
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 
 
 #define kDeleteCommentNotificationKey   @"kDeleteCommentNotificationKey"
@@ -428,7 +429,7 @@ NSString *const kTTCommentDetailForwardCommentNotification = @"kTTCommentDetailF
     [dic setValue:@"detail" forKey:@"position"];
     [dic setValue:@(time).stringValue forKey:@"stay_time"];
     
-    [TTTracker eventV3:@"comment_close" params:dic];
+    [BDTrackerProtocol eventV3:@"comment_close" params:dic];
 
     [self trySendCurrentPageStayTime];
 }
@@ -719,7 +720,7 @@ NSString *const kTTCommentDetailForwardCommentNotification = @"kTTCommentDetailF
         [params setValue:[FHTraceEventUtils generateEnterfrom:_categoryName] forKey:@"enter_from"];
         [params setValue:@"comment_detail" forKey:@"position"];
         [params setValue:commentId forKey:@"comment_id"];
-        [TTTracker eventV3:@"rt_like" params:params];
+        [BDTrackerProtocol eventV3:@"rt_like" params:params];
     }
 //    wrapperTrackEvent(@"update_detail", @"bottom_digg_click");
 //    TTMomentDetailAction *action = [TTMomentDetailAction digActionWithCommentDetailModel:self.pageState.detailModel];
@@ -848,9 +849,9 @@ NSString *const kTTCommentDetailForwardCommentNotification = @"kTTCommentDetailF
     }
     [params setValue:[self.commentModel.commentID stringValue] forKey:@"comment_id"];
     if (!self.pageState.detailModel.userDigg) {
-        [TTTracker eventV3:@"rt_like" params:params];
+        [BDTrackerProtocol eventV3:@"rt_like" params:params];
     } else {
-         [TTTracker eventV3:@"rt_unlike" params:params];
+         [BDTrackerProtocol eventV3:@"rt_unlike" params:params];
     }
     
     SSUserModel *userModel;
@@ -1027,10 +1028,10 @@ NSString *const kTTCommentDetailForwardCommentNotification = @"kTTCommentDetailF
     
     if (!model.userDigg) {
         [params setValue:@"feed_like" forKey:@"click_position"];
-        [TTTracker eventV3:@"rt_like" params:params];
+        [BDTrackerProtocol eventV3:@"rt_like" params:params];
     }else{
         [params setValue:@"feed_dislike" forKey:@"click_position"];
-        [TTTracker eventV3:@"rt_unlike" params:params];
+        [BDTrackerProtocol eventV3:@"rt_unlike" params:params];
     }
     TTMomentDetailAction *action = [TTMomentDetailAction digActionWithReplyCommentModel:model];
     action.commentDetailModel = self.pageState.detailModel;
@@ -1054,20 +1055,22 @@ NSString *const kTTCommentDetailForwardCommentNotification = @"kTTCommentDetailF
 #pragma mark -- SSImpressionManager
 
 - (void)needRerecordImpressions {
-    if (self.isViewAppear) {
-        self.headerView.willAppearBlock();
-        for (id cell in [self.tableView visibleCells]) {
-            NSIndexPath *indexPath = [self.tableView indexPathForCell:cell];
-            if (indexPath.section < self.pageState.totalComments.count) {
-                NSArray<TTCommentDetailReplyCommentModel *> *array = self.pageState.totalComments[indexPath.section];
-                if (indexPath.row < array.count) {
-                    
-                    [self tt_recordForComment:self.pageState.totalComments[indexPath.section][indexPath.row]
-                                       status:SSImpressionStatusRecording];
-                }
-            }
-        }
-    }
+    dispatch_async(dispatch_get_main_queue(), ^{
+       if (self.isViewAppear) {
+           self.headerView.willAppearBlock();
+           for (id cell in [self.tableView visibleCells]) {
+               NSIndexPath *indexPath = [self.tableView indexPathForCell:cell];
+               if (indexPath.section < self.pageState.totalComments.count) {
+                   NSArray<TTCommentDetailReplyCommentModel *> *array = self.pageState.totalComments[indexPath.section];
+                   if (indexPath.row < array.count) {
+                       
+                       [self tt_recordForComment:self.pageState.totalComments[indexPath.section][indexPath.row]
+                                          status:SSImpressionStatusRecording];
+                   }
+               }
+           }
+       }
+    });
 }
 
 - (void)tt_registerToImpressionManager:(id)object {

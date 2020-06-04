@@ -102,6 +102,9 @@
 #import "IMManager.h"
 #import "FHLynxScanVC.h"
 #import "FHLynxDebugVC.h"
+#import "IMManager.h"
+
+#import "FHHouseErrorHubDebugVC.h"
 
 extern BOOL ttvs_isVideoNewRotateEnabled(void);
 extern void ttvs_setIsVideoNewRotateEnabled(BOOL enabled);
@@ -382,6 +385,10 @@ extern NSString *const BOE_OPEN_KEY ;
         item_41.switchAction = @selector(_switchToDetailvConsole:);
         item_41.checked = [TTDetailWebContainerDebugger isvConsoleEnable];
         [itemArray addObject:item_41];
+        
+        STTableViewCellItem *item_42 = [[STTableViewCellItem alloc] initWithTitle:@"local_test异常" target:self action:@selector(_openLocalTestDebugViewController)];
+        item_42.switchStyle = NO;
+        [itemArray addObject:item_42];
 
         // todo zjing test
 //        STTableViewCellItem *item_42 = [[STTableViewCellItem alloc] initWithTitle:@"JSBridge功能回归测试" target:self action:@selector(jsBridgeTest)];
@@ -738,7 +745,14 @@ extern NSString *const BOE_OPEN_KEY ;
         toggleIMConnectionItem.switchAction = @selector(toggleIMConnection);
         toggleIMConnectionItem.detail = [NSString stringWithFormat:@"https抓包 /message/send  请求，验证是否生效"];
         
-        STTableViewSectionItem *section = [[STTableViewSectionItem alloc] initWithSectionTitle:@"IM相关调试选项" items:@[toggleIMConnectionItem]];
+        STTableViewCellItem *toggleIMFakeTokenItem = [[STTableViewCellItem alloc] initWithTitle:@"模拟IM服务端返回失效Token" target:self action:nil];
+        toggleIMFakeTokenItem.switchStyle = YES;
+        toggleIMFakeTokenItem.checked = [[NSUserDefaults standardUserDefaults] boolForKey:@"_IM_Fake_Token_Enable_"];
+        toggleIMFakeTokenItem.switchAction = @selector(toggleIMFakeToken);
+        
+        STTableViewCellItem *invalidIMToken = [[STTableViewCellItem alloc] initWithTitle:@"IM手动触发token失效更新" target:self action:@selector(triggerIMTokenInvalide)];
+        
+        STTableViewSectionItem *section = [[STTableViewSectionItem alloc] initWithSectionTitle:@"IM相关调试选项" items:@[toggleIMConnectionItem, toggleIMFakeTokenItem, invalidIMToken]];
         
         [dataSource addObject:section];
     }
@@ -751,6 +765,19 @@ extern NSString *const BOE_OPEN_KEY ;
     BOOL isShortConnectEnable = [[NSUserDefaults standardUserDefaults] boolForKey:@"_IM_ShortConnection_Enable_"];
     [[NSUserDefaults standardUserDefaults] setBool:!isShortConnectEnable forKey:@"_IM_ShortConnection_Enable_"];
     [[NSUserDefaults standardUserDefaults] synchronize];
+}
+
+- (void)toggleIMFakeToken {
+    BOOL isFakeTokenEnable = [[NSUserDefaults standardUserDefaults] boolForKey:@"_IM_Fake_Token_Enable_"];
+    [[NSUserDefaults standardUserDefaults] setBool:!isFakeTokenEnable forKey:@"_IM_Fake_Token_Enable_"];
+    [[NSUserDefaults standardUserDefaults] synchronize];
+    
+    if(!isFakeTokenEnable) {
+        [self triggerIMTokenInvalide];
+    }
+}
+- (void)triggerIMTokenInvalide {
+    [[IMManager shareInstance] invalidTokenForDebug];
 }
 
 -(void)makeACrash {
@@ -1032,6 +1059,12 @@ extern NSString *const BOE_OPEN_KEY ;
 - (void)_openAdDebug
 {
     [self.navigationController pushViewController:[[TADDebugViewController alloc] init]
+                                         animated:YES];
+}
+
+- (void)_openLocalTestDebugViewController
+{
+    [self.navigationController pushViewController:[[FHHouseErrorHubDebugVC alloc] init]
                                          animated:YES];
 }
 

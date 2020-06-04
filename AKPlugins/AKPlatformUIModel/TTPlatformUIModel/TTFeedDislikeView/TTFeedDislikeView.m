@@ -17,8 +17,10 @@
 #import "TTDeviceHelper.h"
 #import "UIImage+TTThemeExtension.h"
 #import "TTDeviceUIUtils.h"
-#import "TTTracker.h"
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
+
 #import "UIColor+Theme.h"
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 
 #define kMaskViewTag 20141209
 
@@ -189,7 +191,10 @@ static TTFeedDislikeView *__visibleDislikeView;
     }
 
     NSString *source = model.source;
-    ttTrackEventWithCustomKeys(@"dislike", keywords.count > 0 ? @"menu_with_reason" : @"menu_no_reason", __lastGroupID, source, extValueDic);
+    
+    [BDTrackerProtocol trackEventWithCustomKeys:@"dislike" label:keywords.count > 0 ? @"menu_with_reason" : @"menu_no_reason" value:__lastGroupID source:source extraDic:extValueDic];
+
+//    ttTrackEventWithCustomKeys(@"dislike", keywords.count > 0 ? @"menu_with_reason" : @"menu_no_reason", __lastGroupID, source, extValueDic);
 }
 
 - (void)refreshArrowUI
@@ -296,15 +301,18 @@ static TTFeedDislikeView *__visibleDislikeView;
     if (self.dislikeWords.count > 0) {
         [self dismiss];
         
-        ttTrackEventWithCustomKeys(@"dislike", @"confirm_with_reason", __lastGroupID, nil, extValueDic);
+        [BDTrackerProtocol trackEventWithCustomKeys:@"dislike" label:@"confirm_with_reason" value:__lastGroupID source:nil extraDic:extValueDic];
+
+//        ttTrackEventWithCustomKeys(@"dislike", @"confirm_with_reason", __lastGroupID, nil, extValueDic);
 
         __lastDislikedWords = nil;
         __lastGroupID = nil;
 
     } else {
         [self showDislikeButton:NO atPoint:self.origin];
-        
-        ttTrackEventWithCustomKeys(@"dislike", @"confirm_no_reason", __lastGroupID, nil, extValueDic);
+
+        [BDTrackerProtocol trackEventWithCustomKeys:@"dislike" label:@"confirm_no_reason" value:__lastGroupID source:nil extraDic:extValueDic];
+//        ttTrackEventWithCustomKeys(@"dislike", @"confirm_no_reason", __lastGroupID, nil, extValueDic);
     }
 }
 

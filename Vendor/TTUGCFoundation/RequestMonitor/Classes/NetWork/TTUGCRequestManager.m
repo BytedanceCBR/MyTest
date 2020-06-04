@@ -50,25 +50,25 @@
     return [[TTNetworkManager shareInstance] requestModel:model callback:callbackWrap];
 }
 
-+ (TTHttpTask *)requestForJSONWithURL:(NSString *)URL params:(id)params method:(NSString *)method needCommonParams:(BOOL)commonParams callback:(TTNetworkJSONFinishBlock)callback {
-    TTMonitorNetworkJSONFinishBlock callbackWrap;
++ (TTHttpTask *)requestForJSONWithURL:(NSString *)URL params:(id)params method:(NSString *)method needCommonParams:(BOOL)commonParams callback:(TTNetworkJSONFinishBlockWithResponse)callback {
+    TTNetworkJSONFinishBlockWithResponse callbackWrap;
     if (callback) {
-        callbackWrap = ^(NSError *error, id jsonObj, TTUGCRequestMonitorModel *monitorModel){
-            callback(error, jsonObj);
+        callbackWrap = ^(NSError *error, id jsonObj,TTHttpResponse *response){
+            callback(error, jsonObj,response);
         };
     }
 
     return [self requestForJSONWithURL:URL params:params method:method needCommonParams:commonParams callBackWithMonitor:callbackWrap];
 }
 
-+ (TTHttpTask *)requestForJSONWithURL:(NSString *)URL params:(id)params method:(NSString *)method needCommonParams:(BOOL)commonParams callBackWithMonitor:(TTMonitorNetworkJSONFinishBlock)callback {
++ (TTHttpTask *)requestForJSONWithURL:(NSString *)URL params:(id)params method:(NSString *)method needCommonParams:(BOOL)commonParams callBackWithMonitor:(TTNetworkJSONFinishBlockWithResponse)callback {
     NSTimeInterval start = CFAbsoluteTimeGetCurrent();
-    TTNetworkJSONFinishBlock callbackWrap = ^(NSError *error, id jsonObj){
+    TTNetworkJSONFinishBlockWithResponse callbackWrap = ^(NSError *error, id jsonObj,TTHttpResponse *response){
         NSTimeInterval cost = (CFAbsoluteTimeGetCurrent() - start) * 1000;
         error = [TTUGCResponseError mapResponseError:error];
         TTUGCRequestMonitorModel *monitorModel = [[TTUGCNetworkMonitor sharedInstance] monitorNetWorkErrorWithURL:URL WithError:error];
         if (callback) {
-            callback(error, jsonObj, monitorModel);
+            callback(error, jsonObj, response);
         }
         if (!isEmptyString(monitorModel.monitorService) && monitorModel.enableMonitor) {
             monitorModel.cost = cost;
@@ -79,7 +79,7 @@
         }
     };
 
-    return [[TTNetworkManager shareInstance] requestForJSONWithURL:URL params:params method:method needCommonParams:commonParams callback:callbackWrap];
+    return [[TTNetworkManager shareInstance] requestForJSONWithResponse:URL params:params method:method needCommonParams:commonParams callback:callbackWrap];
 }
 
 @end

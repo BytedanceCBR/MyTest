@@ -261,7 +261,7 @@
         [dict setValue:self.detailModel.rid forKey:@"rule_id"];
         [dict setValue:self.detailModel.originalGroupID forKey:@"group_id"];
         [dict setValue:@"article" forKey:@"message_type"];
-        [TTTracker eventV3:@"push_page_back_to_feed" params:[dict copy]];
+        [BDTrackerProtocol eventV3:@"push_page_back_to_feed" params:[dict copy]];
     }
     
     if (self.shouldShowTipsOnNavBar) {

@@ -863,27 +863,30 @@
 #pragma mark -- SSImpressionProtocol
 
 - (void)needRerecordImpressions {
-    if (self.dataList.count == 0) {
-        return;
-    }
-    
-    SSImpressionParams *params = [[SSImpressionParams alloc] init];
-    params.refer = self.refer;
-     UITableView *tableView = self.currentTableView;
-    for (FHUGCBaseCell *cell in [tableView visibleCells]) {
-        if ([cell isKindOfClass:[FHUGCBaseCell class]]) {
-            id data = cell.currentData;
-            if ([data isKindOfClass:[FHFeedUGCCellModel class]]) {
-                FHFeedUGCCellModel *cellModel = (FHFeedUGCCellModel *)data;
-                if (self.isShowing) {
-                    [self recordGroupWithCellModel:cellModel status:SSImpressionStatusRecording];
-                }
-                else {
-                    [self recordGroupWithCellModel:cellModel status:SSImpressionStatusSuspend];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        if (self.dataList.count == 0) {
+            return;
+        }
+        
+        SSImpressionParams *params = [[SSImpressionParams alloc] init];
+        params.refer = self.refer;
+        UITableView *tableView = self.currentTableView;
+        for (FHUGCBaseCell *cell in [tableView visibleCells]) {
+            if ([cell isKindOfClass:[FHUGCBaseCell class]]) {
+                id data = cell.currentData;
+                if ([data isKindOfClass:[FHFeedUGCCellModel class]]) {
+                    FHFeedUGCCellModel *cellModel = (FHFeedUGCCellModel *)data;
+                    if (self.isShowing) {
+                        [self recordGroupWithCellModel:cellModel status:SSImpressionStatusRecording];
+                    }
+                    else {
+                        [self recordGroupWithCellModel:cellModel status:SSImpressionStatusSuspend];
+                    }
                 }
             }
         }
-    }
+    });
+    
 }
 
 #pragma mark - 埋点

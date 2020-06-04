@@ -119,7 +119,7 @@ static NSString *FROMSOURCE = @"fromSource";
         if (extra) {
             [events addEntriesFromDictionary:extra];
         }
-        [TTTracker eventData:events];
+        [BDTrackerProtocol eventData:events];
     }
 }
 

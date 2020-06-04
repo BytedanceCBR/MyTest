@@ -8,11 +8,12 @@
 #import "FHSuggestionListViewModel.h"
 #import "FHSuggestionListViewController.h"
 #import "FHSuggestionCollectionViewCell.h"
+#import "FHSuggestionCollectionView.h"
 
 @interface FHSuggestionListViewModel ()<UICollectionViewDelegate, UICollectionViewDataSource>
 
 @property (nonatomic, weak) FHSuggestionListViewController *listController;
-@property (nonatomic, weak) FHBaseCollectionView *collectionView;
+@property (nonatomic, weak) FHSuggestionCollectionView *collectionView;
 @property (nonatomic, strong) NSMutableDictionary *cellDict;
 @property (nonatomic, assign) CGPoint beginOffSet;
 @property (nonatomic, assign) CGFloat oldX;
@@ -54,7 +55,7 @@
     [cell.vc textFiledTextChange:text andIsCanTrack:YES];
 }
 
-- (void)initCollectionView:(FHBaseCollectionView *)collectionView
+- (void)initCollectionView:(FHSuggestionCollectionView *)collectionView
 {
     self.collectionView = collectionView;
     collectionView.delegate = self;

@@ -265,7 +265,7 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
                 // 视频没有url
                 if (model.data.houseImageDictList.count > 0) {
                     for (int i = 0; i < model.data.houseImageDictList.count; i++) {
-                        FHDetailOldDataHouseImageDictListModel *item = model.data.houseImageDictList[i];
+                        FHHouseDetailImageListDataModel *item = model.data.houseImageDictList[i];
                         if (item.houseImageList.count > 0) {
                             FHImageModel *imageModel = item.houseImageList[0];
                             if (imageModel.url.length > 0) {
@@ -289,7 +289,7 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
         headerCellModel.houseImageAssociateInfo = model.data.houseImageAssociateInfo;
         headerCellModel.houseImageDictList = model.data.houseImageDictList;
         if (!isInstant) {
-            FHDetailOldDataHouseImageDictListModel *imgModel = [headerCellModel.houseImageDictList firstObject];
+            FHHouseDetailImageListDataModel *imgModel = [headerCellModel.houseImageDictList firstObject];
             imgModel.instantHouseImageList = [self instantHouseImages];
         }
         FHDetailHouseTitleModel *houseTitleModel = [[FHDetailHouseTitleModel alloc] init];

@@ -8,7 +8,8 @@
 
 #import "TTVPlayerCacheProgressController.h"
 #import "KVOController.h"
-#import "TTTRacker.h"
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
+
 
 @interface TTVPlayerCacheProgressObject : NSObject
 
@@ -96,7 +97,7 @@
     if (self.playerStateStore.state.isInDetail) {
         label = @"detail_continue";
     }
-    ttTrackEvent(stopEvent, label);
+    wrapperTrackEvent(stopEvent, label);
 }
 
 - (void)removeCacheForVideoID:(NSString *)videoID

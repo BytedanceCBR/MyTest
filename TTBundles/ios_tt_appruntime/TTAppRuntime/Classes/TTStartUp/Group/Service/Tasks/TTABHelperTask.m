@@ -11,7 +11,8 @@
 #import "TTSystemPermClientAB.h"
 #import <BDABTestSDK/BDABTestBaseExperiment.h>
 #import <BDABTestSDK/BDABTestManager.h>
-#import "TTTracker.h"
+#import <TTTracker/TTTracker.h>
+
 #import <TTSettingsManager/TTSettingsManager.h>
 #import "TTLaunchDefine.h"
 
@@ -64,21 +65,34 @@ DEC_TASK("TTABHelperTask",FHTaskTypeSerial,TASK_PRIORITY_HIGH+4);
 {
     // 注册实验（所有通过BDABTestSDK取值的实验都必须注册
     // 需要添加的服务端实验都在此先注册
-        BDABTestBaseExperiment *exp = [[BDABTestBaseExperiment alloc] initWithKey:@"zjing_find_tab_show"
-                                                                            owner:@"zjing"
-                                                                      description:@"模拟服务端实验找房tab是否增加房源展现，默认为0"
-                                                                     defaultValue:@{@"show":@(0)}
-                                                                        valueType:BDABTestValueTypeDictionary
-                                                                         isSticky:YES settingsValueBlock:^id(NSString *key) {
-                                                                             if (key.length > 0) {
-                                                                                 NSDictionary *archSettings= [[TTSettingsManager sharedManager] settingForKey:@"f_settings" defaultValue:@{} freeze:YES];
-                                                                                 if ([archSettings valueForKey:key]) {
-                                                                                     return archSettings[key];
-                                                                                 }
-                                                                             }
-                                                                             return nil;
-                                                                         }];
-        [BDABTestManager registerExperiment:exp];
+    BDABTestBaseExperiment *exp = [[BDABTestBaseExperiment alloc] initWithKey:@"zjing_find_tab_show"
+                                                                        owner:@"zjing"
+                                                                  description:@"模拟服务端实验找房tab是否增加房源展现，默认为0"
+                                                                 defaultValue:@{@"show":@(0)}
+                                                                    valueType:BDABTestValueTypeDictionary
+                                                                     isSticky:YES settingsValueBlock:^id(NSString *key) {
+        if (key.length > 0) {
+            NSDictionary *archSettings= [[TTSettingsManager sharedManager] settingForKey:@"f_settings" defaultValue:@{} freeze:YES];
+            if ([archSettings valueForKey:key]) {
+                return archSettings[key];
+            }
+        }
+        return nil;
+    }];
+    [BDABTestManager registerExperiment:exp];
+    
+    //实验地址 https://data.bytedance.net/libra/flight/392641
+    BDABTestBaseExperiment *douyinLoginExp = [[BDABTestBaseExperiment alloc] initWithKey:@"f_douyin_login_type" owner:@"xielei.233" description:@"分对照组，P0（优先运营商显示），P1（优先抖音）" defaultValue:@{@"value": @(0)} valueType:BDABTestValueTypeDictionary isSticky:YES settingsValueBlock:^id(NSString *key) {
+        if (key.length > 0) {
+            NSDictionary *archSettings= [[TTSettingsManager sharedManager] settingForKey:@"f_settings" defaultValue:@{} freeze:YES];
+            if ([archSettings valueForKey:key]) {
+                return archSettings[key];
+            }
+        }
+        return nil;
+    }];
+    [BDABTestManager registerExperiment:douyinLoginExp];
+    
 }
 
 // 添加客户端实验

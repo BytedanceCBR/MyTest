@@ -14,11 +14,11 @@ static NSString *const kTTTrackerOnlyV3SendingEnableKey = @"kTTTrackerOnlyV3Send
 @implementation TTTrackerWrapper
 
 + (void)event:(nonnull NSString*)event label:(nonnull NSString*)label {
-    [TTTracker event:event label:label];
+    [BDTrackerProtocol event:event label:label];
 }
 
 + (void)eventData:(nonnull NSDictionary*)event {
-    [TTTracker eventData:event];
+    [BDTrackerProtocol eventData:event];
 }
 
 + (void)event:(nonnull NSString*)event
@@ -26,7 +26,7 @@ static NSString *const kTTTrackerOnlyV3SendingEnableKey = @"kTTTrackerOnlyV3Send
         value:(nullable id)value
      extValue:(nullable id)extValue
     extValue2:(nullable id)extValue2 {
-    [TTTracker event:event label:label value:value extValue:extValue extValue2:extValue2];
+    [BDTrackerProtocol event:event label:label value:value extValue:extValue extValue2:extValue2];
 }
 
 + (void)event:(nonnull NSString*)event
@@ -35,27 +35,27 @@ static NSString *const kTTTrackerOnlyV3SendingEnableKey = @"kTTTrackerOnlyV3Send
      extValue:(nullable id)extValue
     extValue2:(nullable id)extValue2
          dict:(nullable NSDictionary *)aDict {
-    [TTTracker event:event label:label value:value extValue:extValue extValue2:extValue2 dict:aDict];
+    [BDTrackerProtocol event:event label:label value:value extValue:extValue extValue2:extValue2 dict:aDict];
 }
 
 + (void)event:(nonnull NSString *)event label:(nonnull NSString *)label json:(nullable NSString *)json {
-    [TTTracker event:event label:label json:json];
+    [BDTrackerProtocol event:event label:label json:json];
 }
 
 + (void)category:(nonnull NSString *)category event:(nonnull NSString *)event label:(nonnull NSString *)label json:(nullable NSString *)json {
-    [TTTracker category:category event:event label:label json:json];
+    [BDTrackerProtocol category:category event:event label:label json:json];
 }
 
 + (void)category:(nonnull NSString *)category event:(nonnull NSString *)event label:(nonnull NSString *)label dict:(nullable NSDictionary *)aDict {
-    [TTTracker category:category event:event label:label dict:aDict];
+    [BDTrackerProtocol category:category event:event label:label dict:aDict];
 }
 
 + (void)category:(nonnull NSString *)category event:(nonnull NSString *)event label:(nonnull NSString *)label dict:(nullable NSDictionary *)aDict json:(nullable NSString *)json {
-    [TTTracker category:category event:event label:label dict:aDict json:json];
+    [BDTrackerProtocol category:category event:event label:label dict:aDict json:json];
 }
 
 + (void)ttTrackEventWithCustomKeys:(nonnull NSString *)event label:(nonnull NSString *)label value:(nullable NSString *)value source:(nullable NSString *)source extraDic:(nullable NSDictionary *)extraDic {
-    [TTTracker ttTrackEventWithCustomKeys:event label:label value:value source:source extraDic:extraDic];
+    [BDTrackerProtocol trackEventWithCustomKeys:event label:label value:value source:source extraDic:extraDic];
 }
 
 + (void)eventV3:(nonnull NSString *)event params:(nullable NSDictionary *)params {
@@ -70,7 +70,7 @@ static NSString *const kTTTrackerOnlyV3SendingEnableKey = @"kTTTrackerOnlyV3Send
     if ([self isOnlyV3SendingEnable]) {
         isDoubleSending = NO;
     }
-    [TTTracker eventV3:event params:params isDoubleSending:isDoubleSending];
+    [BDTrackerProtocol eventV3:event params:params isDoubleSending:isDoubleSending];
 }
 
 #pragma mark - Helper

@@ -111,6 +111,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *roomCount;
 @property (nonatomic, copy , nullable) NSString *title;
 @property (nonatomic, strong , nullable) FHDetailNewDataFloorpanListListSaleStatusModel *saleStatus ;
+@property (nonatomic, strong , nullable) NSArray<FHHouseTagsModel> *tags;
 @property (nonatomic, copy , nullable) NSString *id;
 @property (nonatomic, copy , nullable) NSString *pricingPerSqm;
 @property (nonatomic, copy , nullable) NSString *squaremeter;
@@ -211,6 +212,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *discountReportDoneSubTitle;
 @property (nonatomic, strong) NSNumber *page;
 @property (nonatomic, strong, nullable) FHClueAssociateInfoModel *associateInfo;
+@property (nonatomic, strong) NSString *activityURLString;
 
 @end
 

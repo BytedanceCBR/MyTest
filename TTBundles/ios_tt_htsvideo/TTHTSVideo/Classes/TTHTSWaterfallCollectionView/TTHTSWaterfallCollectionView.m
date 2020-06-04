@@ -1093,7 +1093,9 @@ TTAccountMulticastProtocol
 
 - (void)needRerecordImpressions
 {
-    [self processVisibleCellsImpress];
+    dispatch_async(dispatch_get_main_queue(), ^{
+       [self processVisibleCellsImpress];
+    });
 }
 
 - (void)processVisibleCellsImpress
@@ -1549,7 +1551,7 @@ TTAccountMulticastProtocol
     [traceParams setValue:dictTraceData.shortVideoOriginalData.shortVideo.groupSource forKey:@"group_source"];
     [traceParams setValue:@(dictTraceData.cellType) ? : @"be_null" forKey:@"cell_type"];
 
-    [TTTracker eventV3:@"client_show" params:traceParams];
+    [BDTrackerProtocol eventV3:@"client_show" params:traceParams];
 }
 
 - (void)eventV3ForRefresh
@@ -1676,7 +1678,7 @@ TTAccountMulticastProtocol
         return;
     }
 
-    NSDictionary *exploreMixedListConsumeTimeStamps = [[context objectForKey:kExploreFetchListConditionKey] objectForKey:kExploreFetchListRefreshOrLoadMoreConsumeTimeStampsKey];
+    NSDictionary *exploreMixedListConsumeTimeStamps = [(NSDictionary *)[context objectForKey:kExploreFetchListConditionKey] objectForKey:kExploreFetchListRefreshOrLoadMoreConsumeTimeStampsKey];
 
     NSMutableDictionary *mutDict = [[NSMutableDictionary alloc] initWithCapacity:3];
 

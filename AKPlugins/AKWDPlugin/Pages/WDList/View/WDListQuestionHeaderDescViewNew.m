@@ -297,7 +297,7 @@ typedef NS_ENUM(NSInteger, DescTextAndImageFoldStateShowType) {
     [self updateFrame];
     
     NSMutableDictionary *params = [NSMutableDictionary dictionaryWithDictionary:self.viewModel.gdExtJson];
-    [TTTracker eventV3:@"question_unfold_question" params:[params copy]];
+    [BDTrackerProtocol eventV3:@"question_unfold_question" params:[params copy]];
 }
 
 #pragma mark - getter

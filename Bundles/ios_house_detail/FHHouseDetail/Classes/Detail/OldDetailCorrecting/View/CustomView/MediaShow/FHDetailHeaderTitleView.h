@@ -8,7 +8,7 @@
 #import <UIKit/UIKit.h>
 #import "FHDetailHouseTitleModel.h"
 NS_ASSUME_NONNULL_BEGIN
-@interface FHDeatilHeaderTitleView : UIView
+@interface FHDetailHeaderTitleView : UIView
 @property (nonatomic, strong) NSArray *tags;// FHHouseTagsModel item类型
 @property (nonatomic, copy) NSString *titleStr;
 @property (strong, nonatomic) FHDetailHouseTitleModel *model;
