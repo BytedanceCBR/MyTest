@@ -331,31 +331,33 @@
         self.priceLabel.text = model.displayPrice;
         self.spaceLabel.text = model.displayPricePerSqm;
         
-        //企业担保标签
-        if (model.tagImage && model.tagImage.count > 0) {
-            FHImageModel *imageModel = model.tagImage.firstObject;
-            if (!imageModel.url.length) {
-                return;
+        //企业担保标签（优先展示house_image_tag）
+        if (!model.houseImageTag.text || !model.houseImageTag) {
+            if (model.tagImage && model.tagImage.count > 0) {
+                FHImageModel *imageModel = model.tagImage.firstObject;
+                if (!imageModel.url.length) {
+                    return;
+                }
+                
+                [self.topLeftTagImageView bd_setImageWithURL:[NSURL URLWithString:imageModel.url]];
+                
+                CGFloat width = [imageModel.width floatValue];
+                CGFloat height = [imageModel.height floatValue];
+                if (width > 0.0) {
+                    [self.topLeftTagImageView mas_updateConstraints:^(MASConstraintMaker *make) {
+                        make.width.mas_equalTo(width);
+                    }];
+                }
+                if (height > 0.0) {
+                    [self.topLeftTagImageView mas_updateConstraints:^(MASConstraintMaker *make) {
+                        make.height.mas_equalTo(height);
+                    }];
+                }
+                
+                self.topLeftTagImageView.hidden = NO;
+            } else {
+                self.topLeftTagImageView.hidden = YES;
             }
-            
-            [self.topLeftTagImageView bd_setImageWithURL:[NSURL URLWithString:imageModel.url]];
-            
-            CGFloat width = [imageModel.width floatValue];
-            CGFloat height = [imageModel.height floatValue];
-            if (width > 0.0) {
-                [self.topLeftTagImageView mas_updateConstraints:^(MASConstraintMaker *make) {
-                    make.width.mas_equalTo(width);
-                }];
-            }
-            if (height > 0.0) {
-                [self.topLeftTagImageView mas_updateConstraints:^(MASConstraintMaker *make) {
-                    make.height.mas_equalTo(height);
-                }];
-            }
-            
-            self.topLeftTagImageView.hidden = NO;
-        } else {
-            self.topLeftTagImageView.hidden = YES;
         }
     }
     [self layoutIfNeeded];
