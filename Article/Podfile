@@ -131,8 +131,7 @@ def appDevelopPods
     pod_binary 'TTAudio', '0.1.6'
     
     #----弹窗互斥---
-    pod 'TTDialogDirector', :path => '../AKPlugins/TTDialogDirector' , :subspecs => [
-    #'0.1.4' , :subspecs => [ #:git => 'git@code.byted.org:TTIOS/TTDialogDirector.git', :commit => '8ed5beb',
+    pod 'TTDialogDirector', '0.1.4' , :subspecs => [
     'Core',
     'PhotoLibrary',
     'Microphone',
