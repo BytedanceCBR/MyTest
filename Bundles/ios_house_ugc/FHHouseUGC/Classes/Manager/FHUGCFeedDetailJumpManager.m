@@ -186,7 +186,13 @@
 
 //问答回答
 - (void)jumpToAnswerDetail:(FHFeedUGCCellModel *)cellModel showComment:(BOOL)showComment enterType:(NSString *)enterType {
-    NSDictionary *dict = @{@"is_jump_comment":@(showComment)};
+    NSMutableDictionary *dict = @{@"is_jump_comment":@(showComment)}.mutableCopy;
+    NSMutableDictionary *tracerDic = [NSMutableDictionary dictionary];
+    tracerDic[@"origin_from"] = cellModel.tracerDic[@"origin_from"] ?: @"be_null";
+    tracerDic[@"enter_from"] = cellModel.tracerDic[@"page_type"] ?: @"be_null";
+    tracerDic[@"category_name"] = cellModel.tracerDic[@"page_type"] ?: @"be_null";
+    dict[@"tracer"] = tracerDic;
+    
     TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
     NSURL *openUrl = [NSURL URLWithString:cellModel.openUrl];
     if(showComment && cellModel.commentSchema.length > 0){

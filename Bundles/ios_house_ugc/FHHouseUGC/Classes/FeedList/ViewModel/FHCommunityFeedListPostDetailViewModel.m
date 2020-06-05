@@ -852,6 +852,7 @@
     
     dict[@"enter_from"] = @"community_group";
     dict[@"page_type"] = [self pageType];
+    dict[@"category_name"] = self.categoryId;
     dict[@"log_pb"] = cellModel.logPb;
     dict[@"rank"] = @(rank);
     

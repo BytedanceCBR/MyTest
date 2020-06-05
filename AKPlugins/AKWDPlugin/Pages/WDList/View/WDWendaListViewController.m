@@ -144,10 +144,18 @@ static NSString * const WukongListTipsHasShown = @"kWukongListTipsHasShown";
     self.adjustPosition = ([[paramObj.allParams objectForKey:@"isLargeVideo"] boolValue] && [[paramObj.allParams objectForKey:@"video_auto_play"] boolValue]);
     NSDictionary *apiParam = [WDParseHelper apiParamFromBaseCondition:paramObj.allParams];
     NSDictionary *extraDicts = [WDParseHelper gdExtJsonFromBaseCondition:paramObj.allParams];
+    NSMutableDictionary *extraDictsAdd = [NSMutableDictionary dictionaryWithDictionary:extraDicts];
+    NSDictionary *tracer = paramObj.allParams[@"tracer"];
+    if(tracer && tracer.count > 0){
+        extraDictsAdd[@"enter_from"] = tracer[@"enter_from"];
+        extraDictsAdd[@"origin_from"] = tracer[@"origin_from"];
+        extraDictsAdd[@"category_name"] = tracer[@"category_name"];
+    }
+    
     BOOL needReturn = [[paramObj.userInfo.extra tt_stringValueForKey:kWDListNeedReturnKey] boolValue];
     NSString *rid = [paramObj.allParams tt_stringValueForKey:@"rid"];
     self = [self initWithQuestionID:qid
-                      baseCondition:extraDicts
+                      baseCondition:extraDictsAdd
                        apiParameter:apiParam
                          needReturn:needReturn
                                 rid:rid];
