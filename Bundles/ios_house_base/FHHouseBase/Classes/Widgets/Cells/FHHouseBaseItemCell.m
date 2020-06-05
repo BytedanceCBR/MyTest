@@ -1989,14 +1989,16 @@
     [super layoutSubviews];
     
     //图片圆角
-    if (!_topLeftTagMaskLayer) {
-        UIBezierPath *maskPath = [UIBezierPath bezierPathWithRoundedRect:self.topLeftTagImageView.bounds
-                                                       byRoundingCorners:UIRectCornerTopLeft | UIRectCornerBottomRight
-                                                             cornerRadii:CGSizeMake(4, 4)];
-        _topLeftTagMaskLayer = [[CAShapeLayer alloc] init];
-        _topLeftTagMaskLayer.frame = self.topLeftTagImageView.bounds;
-        _topLeftTagMaskLayer.path = maskPath.CGPath;
-        self.topLeftTagImageView.layer.mask = _topLeftTagMaskLayer;
+    if (!CGRectEqualToRect(self.topLeftTagImageView.frame, CGRectZero)) {
+        if (!_topLeftTagMaskLayer) {
+            UIBezierPath *maskPath = [UIBezierPath bezierPathWithRoundedRect:self.topLeftTagImageView.bounds
+                                                           byRoundingCorners:UIRectCornerTopLeft | UIRectCornerBottomRight
+                                                                 cornerRadii:CGSizeMake(4, 4)];
+            _topLeftTagMaskLayer = [[CAShapeLayer alloc] init];
+            _topLeftTagMaskLayer.frame = self.topLeftTagImageView.bounds;
+            _topLeftTagMaskLayer.path = maskPath.CGPath;
+            self.topLeftTagImageView.layer.mask = _topLeftTagMaskLayer;
+        }
     }
 }
 
