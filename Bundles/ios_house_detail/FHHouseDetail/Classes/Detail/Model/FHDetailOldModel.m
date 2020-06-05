@@ -382,7 +382,7 @@
                            @"extraContent":@"extra_content",
                            @"openUrl":@"open_url",
                            @"associateInfo": @"associate_info",
-                           @"canLoan":@"can_oan",
+                           @"canLoan":@"can_loan",
                            };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
         return dict[keyName]?:keyName;
