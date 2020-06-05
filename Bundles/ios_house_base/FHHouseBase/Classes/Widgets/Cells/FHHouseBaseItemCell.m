@@ -69,6 +69,7 @@
 @property(nonatomic, strong) UIView *houseMainImageBackView;
 
 @property(nonatomic, strong) UIImageView *topLeftTagImageView;  //企业担保图标
+@property(nonatomic, strong) CAShapeLayer *topLeftTagMaskLayer;
 
 @property(nonatomic, strong) UIView *rightInfoView;
 @property(nonatomic, strong) UILabel *mainTitleLabel; //主title lable
@@ -1981,6 +1982,21 @@
         [self.topLeftTagImageView.yoga markDirty];
     }else {
         self.topLeftTagImageView.hidden = YES;
+    }
+}
+
+- (void)layoutSubviews {
+    [super layoutSubviews];
+    
+    //图片圆角
+    if (!_topLeftTagMaskLayer) {
+        UIBezierPath *maskPath = [UIBezierPath bezierPathWithRoundedRect:self.topLeftTagImageView.bounds
+                                                       byRoundingCorners:UIRectCornerTopLeft | UIRectCornerBottomRight
+                                                             cornerRadii:CGSizeMake(4, 4)];
+        _topLeftTagMaskLayer = [[CAShapeLayer alloc] init];
+        _topLeftTagMaskLayer.frame = self.topLeftTagImageView.bounds;
+        _topLeftTagMaskLayer.path = maskPath.CGPath;
+        self.topLeftTagImageView.layer.mask = _topLeftTagMaskLayer;
     }
 }
 

@@ -115,7 +115,7 @@
     [self.tagLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(_maintitle);
         make.top.mas_equalTo(_displayDescriptionLabel.mas_bottom).offset(10);
-        make.right.mas_equalTo(_unitPrice.mas_left).offset(-1);
+        make.right.mas_equalTo(_unitPrice.mas_left).offset(-16);
         make.height.mas_equalTo(14);
     }];
     self.positionInformation.textColor = [UIColor themeGray3];

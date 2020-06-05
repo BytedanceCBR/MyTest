@@ -274,6 +274,7 @@
 @property(nonatomic, strong) UILabel *imageTagLabel;
 @property(nonatomic, strong) FHSameHouseTagView *imageTagLabelBgView;
 @property (nonatomic, strong) UIImageView *topLeftTagImageView;
+@property (nonatomic, strong) CAShapeLayer *topLeftTagMaskLayer;
 
 @property (nonatomic, strong) UIImageView *imageBacView;
 @end
@@ -462,6 +463,23 @@
         make.left.top.equalTo(self.icon);
         make.size.mas_equalTo(CGSizeMake(60, 20));
     }];
+}
+
+- (void)layoutSubviews {
+    [super layoutSubviews];
+    
+    //图片圆角
+    if (!CGRectEqualToRect(self.topLeftTagImageView.frame, CGRectZero)) {
+        if (!_topLeftTagMaskLayer) {
+            UIBezierPath *maskPath = [UIBezierPath bezierPathWithRoundedRect:self.topLeftTagImageView.bounds
+                                                           byRoundingCorners:UIRectCornerTopLeft | UIRectCornerBottomRight
+                                                                 cornerRadii:CGSizeMake(10, 10)];
+            _topLeftTagMaskLayer = [[CAShapeLayer alloc] init];
+            _topLeftTagMaskLayer.frame = self.topLeftTagImageView.bounds;
+            _topLeftTagMaskLayer.path = maskPath.CGPath;
+            self.topLeftTagImageView.layer.mask = _topLeftTagMaskLayer;
+        }
+    }
 }
 
 - (UILabel *)imageTagLabel
