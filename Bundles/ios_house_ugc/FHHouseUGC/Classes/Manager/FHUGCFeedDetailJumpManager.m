@@ -71,7 +71,15 @@
         else if([[TTRoute sharedRoute] canOpenURL:url]){
             canOpenURL = YES;
             //优先跳转openurl
-            [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:nil];
+            NSMutableDictionary *dict = [NSMutableDictionary dictionary];
+            NSMutableDictionary *tracerDic = [NSMutableDictionary dictionary];
+            tracerDic[@"origin_from"] = cellModel.tracerDic[@"origin_from"] ?: @"be_null";
+            tracerDic[@"enter_from"] = cellModel.tracerDic[@"page_type"] ?: @"be_null";
+            tracerDic[@"category_name"] = cellModel.tracerDic[@"category_name"] ?: @"be_null";
+            dict[@"tracer"] = tracerDic;
+            
+            TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
+            [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
         }
     }else{
         NSURL *openUrl = [NSURL URLWithString:cellModel.detailScheme];
@@ -190,7 +198,7 @@
     NSMutableDictionary *tracerDic = [NSMutableDictionary dictionary];
     tracerDic[@"origin_from"] = cellModel.tracerDic[@"origin_from"] ?: @"be_null";
     tracerDic[@"enter_from"] = cellModel.tracerDic[@"page_type"] ?: @"be_null";
-    tracerDic[@"category_name"] = cellModel.tracerDic[@"page_type"] ?: @"be_null";
+    tracerDic[@"category_name"] = cellModel.tracerDic[@"category_name"] ?: @"be_null";
     dict[@"tracer"] = tracerDic;
     
     TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
