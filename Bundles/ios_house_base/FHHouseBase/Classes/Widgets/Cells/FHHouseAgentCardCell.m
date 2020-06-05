@@ -233,42 +233,7 @@
 
 - (void)bindAgentData:(FHHomeHouseDataItemsModel *)itemModel traceParams:(NSMutableDictionary *)params {
     if (itemModel) {
-        FHDetailContactModel *contactModel =  itemModel.contactModel;
-        self.modelData = contactModel;
-        self.itemHomeModel = itemModel;
-        
-        self.mainTitleLabel.text = @"天府新区南区其他金牌经纪人1对1服务";
-        if (contactModel) {
-            self.name.text = contactModel.realtorName;
-            self.agency.text = contactModel.agencyName;
-            self.score.text = contactModel.realtorScoreDisplay;
-            NSAttributedString * attributeString =  [FHSingleImageInfoCellModel tagsStringWithTagList:itemModel.tags];
-            self.tagLabel.attributedText =  attributeString;
-            self.scoreDescription.text = contactModel.realtorScoreDescription;
-            if (IS_EMPTY_STRING(self.scoreDescription.text) || IS_EMPTY_STRING(self.score.text)) {
-                [self.name mas_remakeConstraints:^(MASConstraintMaker *make) {
-                    make.centerY.mas_equalTo(self.avator);
-                    make.left.mas_equalTo(self.avator.mas_right).offset(10);
-                    make.height.mas_equalTo(22);
-                }];
-                self.score.hidden = YES;
-                self.scoreDescription.hidden = YES;
-            }
-            if (contactModel.avatarUrl.length > 0) {
-                [self.avator bd_setImageWithURL:[NSURL URLWithString:contactModel.avatarUrl] placeholder:[UIImage imageNamed:@"detail_default_avatar"]];
-            }
-            self.phoneCallViewModel = [[FHHouseDetailPhoneCallViewModel alloc] initWithHouseType:FHHouseTypeSecondHandHouse houseId:itemModel.idx];
-//            BOOL isLicenceIconHidden = ![self shouldShowContact:model.contactModel];
-
-            NSMutableDictionary *tracerDict = @{}.mutableCopy;
-            if (self.traceParams) {
-                [tracerDict addEntriesFromDictionary:self.traceParams];
-            }
-            self.phoneCallViewModel.tracerDict = tracerDict;
-//            self.phoneCallViewModel.belongsVC = ite.belongsVC;
-        } else {
-            [self.bottomInfoView setHidden:YES];
-        }
+        [self updateUIFromData:itemModel];
     }
 }
 
@@ -284,18 +249,83 @@
     return _tagLabel;
 }
 
+- (void)updateUIFromData:(id)data{
+     FHHomeHouseDataItemsModel *itemModel =  (FHHomeHouseDataItemsModel *)data;
+        if (itemModel) {
+            FHDetailContactModel *contactModel =  itemModel.contactModel;
+            self.modelData = contactModel;
+            self.itemHomeModel = itemModel;
+            
+            
+            self.mainTitleLabel.text = @"天府新区南区其他金牌经纪人1对1服务";
+            if (contactModel) {
+                self.name.text = contactModel.realtorName;
+                self.agency.text = contactModel.agencyName;
+                self.score.text = contactModel.realtorScoreDisplay;
+                NSAttributedString * attributeString =  [FHSingleImageInfoCellModel tagsStringWithTagList:itemModel.tags];
+                self.tagLabel.attributedText =  attributeString;
+                self.scoreDescription.text = contactModel.realtorScoreDescription;
+                if (IS_EMPTY_STRING(self.scoreDescription.text) || IS_EMPTY_STRING(self.score.text)) {
+                    [self.name mas_remakeConstraints:^(MASConstraintMaker *make) {
+                        make.centerY.mas_equalTo(self.avator);
+                        make.left.mas_equalTo(self.avator.mas_right).offset(10);
+                        make.height.mas_equalTo(22);
+                    }];
+                    self.score.hidden = YES;
+                    self.scoreDescription.hidden = YES;
+                }
+                if (contactModel.avatarUrl.length > 0) {
+                    [self.avator bd_setImageWithURL:[NSURL URLWithString:contactModel.avatarUrl] placeholder:[UIImage imageNamed:@"detail_default_avatar"]];
+                }
+                self.phoneCallViewModel = [[FHHouseDetailPhoneCallViewModel alloc] initWithHouseType:FHHouseTypeSecondHandHouse houseId:nil];
+    //            BOOL isLicenceIconHidden = ![self shouldShowContact:model.contactModel];
+
+                NSMutableDictionary *tracerDict = @{}.mutableCopy;
+                if (self.traceParams) {
+                    [tracerDict addEntriesFromDictionary:self.traceParams];
+                }
+                self.phoneCallViewModel.tracerDict = tracerDict;
+    //            self.phoneCallViewModel.belongsVC = ite.belongsVC;
+            } else {
+                [self.bottomInfoView setHidden:YES];
+            }
+        }
+}
 
 - (void)refreshWithData:(id)data
 {
-    if ([data isKindOfClass:[FHHouseNeighborAgencyModel class]]) {
-        FHHouseNeighborAgencyModel *model = (FHHouseNeighborAgencyModel *)data;
-        [self bindData:model traceParams:model.tracerDict];
+    FHHomeHouseDataItemsModel *itemModel =  (FHHomeHouseDataItemsModel *)data;
+    if (itemModel) {
+        FHDetailContactModel *contactModel =  itemModel.contactModel;
+        self.modelData = contactModel;
+        self.itemHomeModel = itemModel;
+        
+        CALayer *layer = _containerView.layer;
+        layer.cornerRadius = 10;
+        layer.masksToBounds = YES;
+        layer.borderColor =  [UIColor colorWithHexString:@"#e8e8e8"].CGColor;
+        layer.borderWidth = 0.5f;
+        _shadowView.hidden = NO;
+        
+        [self.containerView mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.left.mas_equalTo(self).mas_offset(15);
+            make.right.mas_equalTo(self).mas_offset(-15);
+            make.top.mas_equalTo(self).offset(10);
+            make.bottom.mas_equalTo(self).offset(-10);
+        }];
+
+
+        [self.contentView setBackgroundColor:[UIColor whiteColor]];
+        [_containerView setBackgroundColor:[UIColor whiteColor]];
+        
+       [self updateUIFromData:itemModel];
     }
+    
 }
 
 + (CGFloat)heightForData:(id)data
 {
-    return 169;// + 10;
+    return 136;// + 10;
 }
 
 - (BOOL)shouldShowContact:(FHDetailContactModel *)contact {
@@ -364,7 +394,6 @@
             associatePhone.imprId = self.itemHomeModel.logPb[@"impr_id"];
         }
         associatePhone.houseType = FHHouseTypeNeighborhood;
-        associatePhone.houseId = self.itemHomeModel.idx;
         associatePhone.showLoading = NO;
         [FHHousePhoneCallUtils callWithAssociatePhoneModel:associatePhone completion:nil];
     }

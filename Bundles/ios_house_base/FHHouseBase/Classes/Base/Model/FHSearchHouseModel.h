@@ -389,6 +389,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong) NSArray* bottomText;
 @property (nonatomic, strong , nullable) FHSearchHouseDataItemsSkyEyeTagModel *skyEyeTag ; // 先下线
 @property (nonatomic, strong , nullable) FHHouseListHouseAdvantageTagModel *advantageDescription ;
+@property (nonatomic, strong , nullable) FHDetailContactModel *contactModel ;
+@property (nonatomic, strong, nullable) FHClueAssociateInfoModel *associateInfo;
 
 @property (nonatomic, copy , nullable) NSString *id;
 @property (nonatomic, copy , nullable) NSString *pricePerSqmNum;

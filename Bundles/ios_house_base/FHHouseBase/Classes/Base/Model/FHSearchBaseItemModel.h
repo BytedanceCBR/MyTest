@@ -36,6 +36,7 @@ typedef NS_ENUM(NSUInteger, FHSearchCardType) {
     FHSearchCardTypeGuessYouWantTip = 9,
     FHSearchCardTypeGuessYouWantContent = 10,
     FHSearchCardTypeRedirectTip = 11,
+    FHSearchCardTypeAgentCard = 14,
 };
 
 @interface FHSearchBaseItemModel : JSONModel
