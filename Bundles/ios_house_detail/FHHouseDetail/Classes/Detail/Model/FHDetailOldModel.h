@@ -438,6 +438,11 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong, nullable) FHClueAssociateInfoModel *associateInfo;
 @end
 
+@interface FHDetailOldVouchModel : JSONModel
+@property (nonatomic, assign) NSUInteger vouchStatus;
+@property (nonatomic, copy , nullable) NSString *vouchText;
+@end
+
 @interface FHDetailOldDataModel : JSONModel
 
 @property (nonatomic, assign) NSInteger status;
@@ -499,6 +504,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong , nullable) FHDetailNeighborhoodDataCommentsModel *comments;
 @property (nonatomic, strong , nullable) FHDetailNeighborhoodDataStrategyModel *strategy;
 
+/// 1.0.0 新增企业担保相关字段
+@property (nonatomic, strong) FHDetailOldVouchModel *vouchModel;
 @end
 
 @interface FHDetailOldModel : JSONModel

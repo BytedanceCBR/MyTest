@@ -612,6 +612,27 @@
 }
 
 @end
+
+@implementation FHDetailOldVouchModel
+
++ (JSONKeyMapper*)keyMapper
+{
+    NSDictionary *dict = @{
+                           @"vouchStatus": @"vouch_status",
+                           @"vouchText": @"vouch_text",
+                           };
+    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+        return dict[keyName]?:keyName;
+    }];
+}
+
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+
+@end
+
 @implementation FHDetailOldDataModel
 + (JSONKeyMapper*)keyMapper
 {
@@ -662,6 +683,7 @@
 
                            @"priceChangeNotice":@"price_change_notice",
                            @"downPaymentInfo":@"down_payment_info",
+                           @"vouchModel":@"vouch_info",
                            };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
         return dict[keyName]?:keyName;

@@ -24,6 +24,7 @@
 @property(nonatomic, strong)UILabel *messageDotNumber;
 @property(nonatomic , strong) UIView *gradientView;
 @property(nonatomic , strong) UIView *bottomLine;
+@property (nonatomic, strong) CAGradientLayer *gradientLayer;
 
 @property(nonatomic , assign) CGFloat subAlpha;
 @property(nonatomic , assign) NSInteger followStatus;
@@ -97,6 +98,24 @@
 {
     _bottomLine.hidden = YES;
     [_bottomLine removeFromSuperview];
+}
+
+- (void)configureVouchStyle {
+    if (!_gradientView) {
+        UIColor *leftColor = [UIColor colorWithHexString:@"#ff9629"];
+        UIColor *rightColor = [UIColor themeOrange1];
+        NSArray *gradientColors = [NSArray arrayWithObjects:(id)(leftColor.CGColor), (id)(rightColor.CGColor), nil];
+        CAGradientLayer *gradientLayer = [[CAGradientLayer alloc] init];
+        gradientLayer.colors = gradientColors;
+        gradientLayer.startPoint = CGPointMake(0, 0);
+        gradientLayer.endPoint = CGPointMake(1, 1);
+        
+        gradientLayer.frame = self.bounds;
+        //        gradientlayer.cornerRadius = 4.0;
+        [self.bgView.layer insertSublayer:gradientLayer atIndex:0];
+        _gradientLayer = gradientLayer;
+    }
+
 }
 
 - (void)setupUI

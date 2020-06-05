@@ -650,8 +650,8 @@
     }];
 }
 
-- (void)refreshContentOffset:(CGPoint)contentOffset
-{
+- (void)refreshContentOffset:(CGPoint)contentOffset {
+    //如果房源是企业担保的，不需要更新statusbar样式，header背景黄色，也不需要更换图标
     CGFloat alpha = contentOffset.y / 139 * 2;
     [self.navBar refreshAlpha:alpha];
     

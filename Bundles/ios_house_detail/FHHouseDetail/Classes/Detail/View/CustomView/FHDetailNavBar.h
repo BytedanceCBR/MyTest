@@ -17,9 +17,9 @@ typedef enum : NSUInteger {
 @interface FHDetailNavBar : UIView
 
 @property(nonatomic , assign) FHDetailNavBarType type;
-@property(nonatomic , copy) void (^backActionBlock)();
-@property(nonatomic , copy) void (^shareActionBlock)();
-@property(nonatomic , copy) void (^messageActionBlock)();
+@property(nonatomic , copy) void (^backActionBlock)(void);
+@property(nonatomic , copy) void (^shareActionBlock)(void);
+@property(nonatomic , copy) void (^messageActionBlock)(void);
 @property(nonatomic , copy) void (^collectActionBlock)(BOOL followStatus);
 
 - (instancetype)initWithType:(FHDetailNavBarType)type;
@@ -29,6 +29,7 @@ typedef enum : NSUInteger {
 - (void)showRightItems:(BOOL)showItem;
 - (void)hideFollowBtn;
 - (void)removeBottomLine;
+- (void)configureVouchStyle;
 
 @end
 
