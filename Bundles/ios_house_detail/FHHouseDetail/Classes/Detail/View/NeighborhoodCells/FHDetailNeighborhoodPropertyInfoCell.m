@@ -291,7 +291,7 @@
     [_keyLabel setContentHuggingPriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisHorizontal];
     
     _valueLabel = [UILabel createLabel:@"" textColor:@"" fontSize:14];
-    _valueLabel.textColor = [UIColor themeGray2];
+    _valueLabel.textColor = [UIColor themeGray1];
     _valueLabel.font = [UIFont themeFontMedium:14];
     [self addSubview:_valueLabel];
     _valueLabel.textAlignment = NSTextAlignmentLeft;
