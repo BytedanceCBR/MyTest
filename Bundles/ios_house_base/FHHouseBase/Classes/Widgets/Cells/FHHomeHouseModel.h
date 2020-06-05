@@ -303,6 +303,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *displayPriceColor;
 @property (nonatomic, strong, nullable) NSMutableAttributedString *tagString;
 @property (nonatomic, strong , nullable) FHDetailContactModel *contactModel ;
+@property (nonatomic, strong, nullable) FHClueAssociateInfoModel *associateInfo;
 
 
 @property (nonatomic, copy , nullable) NSString *houseType;

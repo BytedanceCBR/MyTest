@@ -942,7 +942,7 @@ static NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
         
         if (self.houseType == FHHouseTypeSecondHandHouse) {
                 FHHomeHouseDataItemsModel *model = (FHHomeHouseDataItemsModel *)self.houseDataItemsModel[indexPath.row];
-            if ([model.cardType integerValue] == 6) {
+            if ([model.cardType integerValue] == kFHHomeAgentCardType) {
                     //to do 房源cell
                 FHHouseAgentCardCell *cell = [tableView dequeueReusableCellWithIdentifier:NSStringFromClass([FHHouseAgentCardCell class])];
                 [cell bindAgentData:model traceParams:nil];

@@ -423,6 +423,7 @@
         @"advantageDescription":@"advantage_description",
         @"cellStyle": @"cell_style",
         @"contactModel": @"realtor_info",
+        @"associateInfo": @"associate_info",
         @"cardType": @"card_type",
         @"houseImageTag": @"house_image_tag",
         @"floorpanList": @"floorpan_list",

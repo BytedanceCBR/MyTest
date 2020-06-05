@@ -40,7 +40,7 @@
 @property(nonatomic, strong) UILabel *agency;
 @property (nonatomic, strong) UILabel     *score;
 @property (nonatomic, strong) UILabel     *scoreDescription;
-
+@property (nonatomic, strong) FHHomeHouseDataItemsModel *itemHomeModel;
 @property(nonatomic, strong) FHDetailContactModel *modelData;
 @property(nonatomic, strong) FHHouseDetailPhoneCallViewModel *phoneCallViewModel;
 @property(nonatomic, strong) NSMutableDictionary *traceParams;
@@ -235,7 +235,8 @@
     if (itemModel) {
         FHDetailContactModel *contactModel =  itemModel.contactModel;
         self.modelData = contactModel;
-
+        self.itemHomeModel = itemModel;
+        
         self.mainTitleLabel.text = @"天府新区南区其他金牌经纪人1对1服务";
         if (contactModel) {
             self.name.text = contactModel.realtorName;
@@ -256,7 +257,7 @@
             if (contactModel.avatarUrl.length > 0) {
                 [self.avator bd_setImageWithURL:[NSURL URLWithString:contactModel.avatarUrl] placeholder:[UIImage imageNamed:@"detail_default_avatar"]];
             }
-            self.phoneCallViewModel = [[FHHouseDetailPhoneCallViewModel alloc] initWithHouseType:FHHouseTypeNeighborhood houseId:itemModel.idx];
+            self.phoneCallViewModel = [[FHHouseDetailPhoneCallViewModel alloc] initWithHouseType:FHHouseTypeSecondHandHouse houseId:itemModel.idx];
 //            BOOL isLicenceIconHidden = ![self shouldShowContact:model.contactModel];
 
             NSMutableDictionary *tracerDict = @{}.mutableCopy;
@@ -310,62 +311,62 @@
 
 - (void)imclick:(UIButton *)btn {
     if (self.modelData) {
-//        FHDetailContactModel *contact = self.modelData;
-//        if (self.phoneCallViewModel) {
-//            NSMutableDictionary *imExtra = @{}.mutableCopy;
-//            imExtra[@"realtor_position"] = @"neighborhood_expert_card";
-//
-//            if(self.modelData.associateInfo) {
-//                imExtra[kFHAssociateInfo] = self.modelData.associateInfo;
-//            }
-//            imExtra[@"im_open_url"] = contact.imOpenUrl;
-//            [self.phoneCallViewModel imchatActionWithPhone:contact realtorRank:@"0" extraDic:imExtra];
-//        }
+        FHDetailContactModel *contact = self.modelData;
+        if (self.phoneCallViewModel) {
+            NSMutableDictionary *imExtra = @{}.mutableCopy;
+            imExtra[@"realtor_position"] = @"neighborhood_expert_card";
+
+            if(self.itemHomeModel.associateInfo) {
+                imExtra[kFHAssociateInfo] = self.itemHomeModel.associateInfo;
+            }
+            imExtra[@"im_open_url"] = contact.imOpenUrl;
+            [self.phoneCallViewModel imchatActionWithPhone:contact realtorRank:@"0" extraDic:imExtra];
+        }
     }
 
 }
 
 - (void)phoneClick:(UIButton *)btn {
     if (self.modelData) {
-//        FHDetailContactModel *contact = self.modelData.contactModel;
-//
-//        NSMutableDictionary *extraDict = @{}.mutableCopy;
-//        if (self.traceParams) {
-//            [extraDict addEntriesFromDictionary:self.traceParams];
-//        }
-//        extraDict[@"realtor_id"] = contact.realtorId;
-//        extraDict[@"realtor_rank"] = @"be_null";
-//        extraDict[@"realtor_position"] = @"neighborhood_expert_card";
-//        extraDict[@"realtor_logpb"] = contact.realtorLogpb;
-////        extraDict[@"element_from"] = @"neighborhood_expert_card";
-////        extraDict[kFHClueEndpoint] = @(FHClueEndPointTypeC);
-////        extraDict[kFHCluePage] = @(FHClueCallPageTypeCNeighborhoodAladdin);
-//
-////        FHHouseContactConfigModel *contactConfig = [[FHHouseContactConfigModel alloc] initWithDictionary:extraDict error:nil];
-////        contactConfig.houseType = FHHouseTypeNeighborhood;
-////        contactConfig.houseId = self.modelData.id;
-////        contactConfig.phone = contact.phone;
-////        contactConfig.realtorId = contact.realtorId;
-////        contactConfig.pageType = @"old_list";
-////        if (self.modelData.logPb) {
-////            contactConfig.searchId = self.modelData.logPb[@"search_id"];
-////            contactConfig.imprId = self.modelData.logPb[@"impr_id"];
-////        }
-//
-//        NSDictionary *associateInfoDict = self.modelData.associateInfo.phoneInfo;
-//        extraDict[kFHAssociateInfo] = associateInfoDict;
-//        FHAssociatePhoneModel *associatePhone = [[FHAssociatePhoneModel alloc]init];
-//        associatePhone.reportParams = extraDict;
-//        associatePhone.associateInfo = associateInfoDict;
-//        associatePhone.realtorId = contact.realtorId;
+        FHDetailContactModel *contact = self.itemHomeModel.contactModel;
+
+        NSMutableDictionary *extraDict = @{}.mutableCopy;
+        if (self.traceParams) {
+            [extraDict addEntriesFromDictionary:self.traceParams];
+        }
+        extraDict[@"realtor_id"] = contact.realtorId;
+        extraDict[@"realtor_rank"] = @"be_null";
+        extraDict[@"realtor_position"] = @"neighborhood_expert_card";
+        extraDict[@"realtor_logpb"] = contact.realtorLogpb;
+//        extraDict[@"element_from"] = @"neighborhood_expert_card";
+//        extraDict[kFHClueEndpoint] = @(FHClueEndPointTypeC);
+//        extraDict[kFHCluePage] = @(FHClueCallPageTypeCNeighborhoodAladdin);
+
+//        FHHouseContactConfigModel *contactConfig = [[FHHouseContactConfigModel alloc] initWithDictionary:extraDict error:nil];
+//        contactConfig.houseType = FHHouseTypeNeighborhood;
+//        contactConfig.houseId = self.modelData.id;
+//        contactConfig.phone = contact.phone;
+//        contactConfig.realtorId = contact.realtorId;
+//        contactConfig.pageType = @"old_list";
 //        if (self.modelData.logPb) {
-//            associatePhone.searchId = self.modelData.logPb[@"search_id"];
-//            associatePhone.imprId = self.modelData.logPb[@"impr_id"];
+//            contactConfig.searchId = self.modelData.logPb[@"search_id"];
+//            contactConfig.imprId = self.modelData.logPb[@"impr_id"];
 //        }
-//        associatePhone.houseType = FHHouseTypeNeighborhood;
-//        associatePhone.houseId = self.modelData.id;
-//        associatePhone.showLoading = NO;
-//        [FHHousePhoneCallUtils callWithAssociatePhoneModel:associatePhone completion:nil];
+
+        NSDictionary *associateInfoDict = self.itemHomeModel.associateInfo.phoneInfo;
+        extraDict[kFHAssociateInfo] = associateInfoDict;
+        FHAssociatePhoneModel *associatePhone = [[FHAssociatePhoneModel alloc]init];
+        associatePhone.reportParams = extraDict;
+        associatePhone.associateInfo = associateInfoDict;
+        associatePhone.realtorId = contact.realtorId;
+        if ([self.itemHomeModel.logPb isKindOfClass:[NSDictionary class]]) {
+            associatePhone.searchId = self.itemHomeModel.logPb[@"search_id"];
+            associatePhone.imprId = self.itemHomeModel.logPb[@"impr_id"];
+        }
+        associatePhone.houseType = FHHouseTypeNeighborhood;
+        associatePhone.houseId = self.itemHomeModel.idx;
+        associatePhone.showLoading = NO;
+        [FHHousePhoneCallUtils callWithAssociatePhoneModel:associatePhone completion:nil];
     }
 
 }
