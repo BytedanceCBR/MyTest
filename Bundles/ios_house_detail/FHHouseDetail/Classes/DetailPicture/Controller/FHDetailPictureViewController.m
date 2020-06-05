@@ -108,6 +108,7 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
         _disableAutoPlayVideo = NO;
         _didEnterFullscreen = NO;
         _isShowBottomBar = YES;
+        _isShowSegmentView = YES;
         
         self.ttHideNavigationBar = YES;
         
@@ -297,7 +298,7 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
         make.height.mas_equalTo(kFHDPTopBarHeight);
     }];
     
-    if (self.pictureTitles.count > 1) {
+    if (self.pictureTitles.count > 1 && self.isShowSegmentView) {
         self.pictureTitleView = [[FHDetailPictureTitleView alloc] initWithFrame:CGRectMake(0, topInset + kFHDPTopBarHeight, self.view.width, 42)];
         self.pictureTitleView.backgroundColor = [UIColor clearColor];
         [self.topBar addSubview:self.pictureTitleView];
