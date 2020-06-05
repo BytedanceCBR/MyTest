@@ -107,7 +107,8 @@
 - (UIButton *)onlineBtn {
     if (!_onlineBtn) {
         _onlineBtn = [[UIButton alloc] init];
-        _onlineBtn.layer.cornerRadius = 10;
+        _onlineBtn.layer.cornerRadius = 20;
+        _onlineBtn.layer.masksToBounds = YES;
         _onlineBtn.titleLabel.font = [UIFont themeFontRegular:16];
         _onlineBtn.backgroundColor = [UIColor colorWithHexStr:@"#ff9629"];
         [_onlineBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
@@ -123,7 +124,8 @@
 - (FHLoadingButton *)contactBtn {
     if (!_contactBtn) {
         _contactBtn = [[FHLoadingButton alloc]init];
-        _contactBtn.layer.cornerRadius = 10;
+        _contactBtn.layer.cornerRadius = 20;
+        _contactBtn.layer.masksToBounds = YES;
         _contactBtn.titleLabel.font = [UIFont themeFontRegular:16];
         _contactBtn.backgroundColor = [UIColor colorWithHexStr:@"#fe5500"];
         [_contactBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
@@ -204,35 +206,35 @@
     [_collectionView setBackgroundColor:[UIColor whiteColor]];
     
     if (self.contactViewModel) {
-        self.bottomBar = [[UIView alloc] initWithFrame:CGRectMake(0, CGRectGetHeight(self.view.bounds) - 80, CGRectGetWidth(self.view.bounds), 80)];
+        self.bottomBar = [[UIView alloc] initWithFrame:CGRectMake(0, CGRectGetHeight(self.view.bounds) - 64, CGRectGetWidth(self.view.bounds), 64)];
         self.bottomBar.backgroundColor = [UIColor whiteColor];
         [self.view addSubview:self.bottomBar];
         [self.bottomBar mas_makeConstraints:^(MASConstraintMaker *make) {
             make.left.right.mas_equalTo(0);
-            make.height.mas_equalTo(80);
+            make.height.mas_equalTo(64);
             make.bottom.mas_equalTo(0);
         }];
         
         BOOL showenOnline = self.contactViewModel.showenOnline;
         CGFloat itemWidth = CGRectGetWidth(self.view.bounds) - 30;
         if (showenOnline) {
-            itemWidth = (itemWidth - 15) / 2.0;
+            itemWidth = (itemWidth - 13) / 2.0;
             // 在线联系
             NSString *title = @"在线联系";
             if (self.contactViewModel.onLineName.length > 0) {
                 title = self.contactViewModel.onLineName;
             }
-            NSMutableAttributedString *buttonTitle = [[NSMutableAttributedString alloc] initWithString:title?:@"" attributes:@{NSFontAttributeName : [UIFont themeFontSemibold:16], NSForegroundColorAttributeName : [UIColor whiteColor]}];
-            [buttonTitle appendAttributedString:[[NSAttributedString alloc] initWithString:@"\n线上联系更方便" attributes:@{NSFontAttributeName : [UIFont themeFontRegular:10], NSForegroundColorAttributeName : [UIColor whiteColor]}]];
+            NSMutableAttributedString *buttonTitle = [[NSMutableAttributedString alloc] initWithString:title?:@"" attributes:@{NSFontAttributeName : [UIFont themeFontRegular:16], NSForegroundColorAttributeName : [UIColor whiteColor]}];
+//            [buttonTitle appendAttributedString:[[NSAttributedString alloc] initWithString:@"\n线上联系更方便" attributes:@{NSFontAttributeName : [UIFont themeFontRegular:10], NSForegroundColorAttributeName : [UIColor whiteColor]}]];
             self.onlineBtn.titleLabel.numberOfLines = 0;
             [self.onlineBtn setAttributedTitle:buttonTitle.copy forState:UIControlStateNormal];
 
             [self.bottomBar addSubview:self.onlineBtn];
             [self.onlineBtn mas_makeConstraints:^(MASConstraintMaker *make) {
                 make.left.mas_equalTo(15);
-                make.top.mas_equalTo(14);
+                make.top.mas_equalTo(12);
                 make.width.mas_equalTo(itemWidth);
-                make.height.mas_equalTo(48);
+                make.height.mas_equalTo(40);
             }];
             
             // 电话咨询
@@ -240,13 +242,13 @@
             if (self.contactViewModel.phoneCallName.length > 0) {
                 photoTitle = self.contactViewModel.phoneCallName;
             }
-            NSMutableAttributedString *buttonPhoneTitle = [[NSMutableAttributedString alloc] initWithString:photoTitle?:@"" attributes:@{NSFontAttributeName : [UIFont themeFontSemibold:16], NSForegroundColorAttributeName : [UIColor whiteColor]}];
-            [buttonPhoneTitle appendAttributedString:[[NSAttributedString alloc] initWithString:@"\n隐私保护更安全" attributes:@{NSFontAttributeName : [UIFont themeFontRegular:10], NSForegroundColorAttributeName : [UIColor whiteColor]}]];
+            NSMutableAttributedString *buttonPhoneTitle = [[NSMutableAttributedString alloc] initWithString:photoTitle?:@"" attributes:@{NSFontAttributeName : [UIFont themeFontRegular:16], NSForegroundColorAttributeName : [UIColor whiteColor]}];
+//            [buttonPhoneTitle appendAttributedString:[[NSAttributedString alloc] initWithString:@"\n隐私保护更安全" attributes:@{NSFontAttributeName : [UIFont themeFontRegular:10], NSForegroundColorAttributeName : [UIColor whiteColor]}]];
             self.contactBtn.titleLabel.numberOfLines = 0;
             [self.contactBtn setAttributedTitle:buttonPhoneTitle.copy forState:UIControlStateNormal];
             [self.bottomBar addSubview:self.contactBtn];
             [self.contactBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-                make.right.mas_equalTo(-15);
+                make.right.mas_equalTo(-16);
                 make.top.mas_equalTo(self.onlineBtn.mas_top);
                 make.width.mas_equalTo(self.onlineBtn.mas_width);
                 make.height.mas_equalTo(self.onlineBtn.mas_height);
@@ -257,17 +259,17 @@
             if (self.contactViewModel.phoneCallName.length > 0) {
                 photoTitle = self.contactViewModel.phoneCallName;
             }
-            NSMutableAttributedString *buttonPhoneTitle = [[NSMutableAttributedString alloc] initWithString:photoTitle?:@"" attributes:@{NSFontAttributeName : [UIFont themeFontSemibold:16], NSForegroundColorAttributeName : [UIColor whiteColor]}];
-            [buttonPhoneTitle appendAttributedString:[[NSAttributedString alloc] initWithString:@"\n隐私保护更安全" attributes:@{NSFontAttributeName : [UIFont themeFontRegular:10], NSForegroundColorAttributeName : [UIColor whiteColor]}]];
+            NSMutableAttributedString *buttonPhoneTitle = [[NSMutableAttributedString alloc] initWithString:photoTitle?:@"" attributes:@{NSFontAttributeName : [UIFont themeFontRegular:16], NSForegroundColorAttributeName : [UIColor whiteColor]}];
+//            [buttonPhoneTitle appendAttributedString:[[NSAttributedString alloc] initWithString:@"\n隐私保护更安全" attributes:@{NSFontAttributeName : [UIFont themeFontRegular:10], NSForegroundColorAttributeName : [UIColor whiteColor]}]];
             self.contactBtn.titleLabel.numberOfLines = 0;
             [self.contactBtn setAttributedTitle:buttonPhoneTitle.copy forState:UIControlStateNormal];
 
             [self.bottomBar addSubview:self.contactBtn];
             [self.contactBtn mas_makeConstraints:^(MASConstraintMaker *make) {
                 make.left.mas_equalTo(15);
-                make.top.mas_equalTo(14);
+                make.top.mas_equalTo(12);
                 make.width.mas_equalTo(itemWidth);
-                make.height.mas_equalTo(48);
+                make.height.mas_equalTo(40);
             }];
         }
     }
