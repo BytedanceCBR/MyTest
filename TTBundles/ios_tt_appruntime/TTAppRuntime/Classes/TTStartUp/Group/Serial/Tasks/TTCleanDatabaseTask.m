@@ -20,8 +20,12 @@
 #import <TTKitchen/TTKitchen.h>
 #import <BDUIKeyboardImplHook/BDUIKeyboardImplHook.h>
 #import "GAIAEngine+TTBase.h"
+#import <TTLocationManager/TTLocationManager.h>
+#import <TTLocationManager/TTSystemGeocoder.h>
+#import <BDWatchdogProtector/WPUIApplicationProtector.h>
 
 static NSString *const kHookSystemKeyboardMethodPlanType = @"f_settings.hook_system_keyboard_method_plan_type";
+static NSString *const kTTLocationSystemGeoDisable = @"f_settings.location_system_geo_disable";
 
 DEC_TASK("TTCleanDatabaseTask",FHTaskTypeSerial,TASK_PRIORITY_HIGH+8);
 
@@ -30,7 +34,7 @@ DEC_TASK("TTCleanDatabaseTask",FHTaskTypeSerial,TASK_PRIORITY_HIGH+8);
 + (void)registerKitchen {
     TTRegisterKitchenMethod
     TTKitchenRegisterBlock(^{
-        TTKConfigInt(kHookSystemKeyboardMethodPlanType, @"系统键盘私有方法hook方案类型", -1);
+        TTKConfigInt(kHookSystemKeyboardMethodPlanType, @"系统键盘私有方法hook方案类型", -1); TTKConfigBOOL(kTTLocationSystemGeoDisable, @"禁用系统GEO", YES);
     });
 }
 
@@ -55,6 +59,17 @@ TTFeedDidDisplayFunction() {
         [[GYDataContext sharedInstance] setAutoTransactionEnabled:enbaled.boolValue];
     });
     [self deleteFeedDataBase];
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        if ([TTKitchen getBOOL:kTTLocationSystemGeoDisable]) {
+            [self unregisterSystemGEO];
+        }
+    });
+    [WPUIApplicationProtector startWithType:WPUIApplicationProtectorAll];
+}
+
+// 禁用系统geo
+- (void)unregisterSystemGEO {
+    [[TTLocationManager sharedManager] unregisterReverseGeocoderForKey:NSStringFromClass([TTSystemGeocoder class])];
 }
 
 + (void)cleanCoreDataIfNeeded {
