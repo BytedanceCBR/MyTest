@@ -2270,27 +2270,29 @@ TTRefreshViewDelegate>
 #pragma mark -- SSImpressionProtocol
 
 - (void)needRerecordImpressions {
-
-    if ([self.listVideoModel.dataArr count] == 0) {
-        return;
-    }
-
-    SSImpressionParams *params = [[SSImpressionParams alloc] init];
-    params.refer = self.refer;
-
-    for (TTVFeedListVideoCell * cell in [self.tableView visibleCells]) {
-        if ([cell isKindOfClass:[TTVFeedListVideoCell class]]) {
-            TTVFeedListItem *entity = cell.item;
-            if ([entity isKindOfClass:[TTVFeedListItem class]]) {
-                if (self.isDisplayView && _isShowing) {
-                    [self recordGroupWithItem:entity status:SSImpressionStatusRecording];
-                }
-                else {
-                    [self recordGroupWithItem:entity status:SSImpressionStatusSuspend];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        if ([self.listVideoModel.dataArr count] == 0) {
+            return;
+        }
+        
+        SSImpressionParams *params = [[SSImpressionParams alloc] init];
+        params.refer = self.refer;
+        
+        for (TTVFeedListVideoCell * cell in [self.tableView visibleCells]) {
+            if ([cell isKindOfClass:[TTVFeedListVideoCell class]]) {
+                TTVFeedListItem *entity = cell.item;
+                if ([entity isKindOfClass:[TTVFeedListItem class]]) {
+                    if (self.isDisplayView && _isShowing) {
+                        [self recordGroupWithItem:entity status:SSImpressionStatusRecording];
+                    }
+                    else {
+                        [self recordGroupWithItem:entity status:SSImpressionStatusSuspend];
+                    }
                 }
             }
         }
-    }
+    });
+    
 }
 
 #warning 暂时用于对比 测试通过后可删除

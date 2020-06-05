@@ -10,6 +10,7 @@
 #import "FHDetailBaseModel.h"
 #import "FHHouseBaseInfoModel.h"
 #import <TTBaseLib/TTBaseMacro.h>
+#import "FHCommonDefines.h"
 #import <FHHouseBase/UIImage+FIconFont.h>
 #import "FHUIAdaptation.h"
 
@@ -46,6 +47,9 @@
     adjustImageScopeType(model)
     __block UIView *lastView = nil; // 最后一个视图
      NSInteger count = model.baseInfo.count;
+    for (UIView *v in self.itemArray) {
+        [v removeFromSuperview];
+    }
      if (count > 0) {
          NSMutableArray *singles = [NSMutableArray new];
          __block NSInteger doubleCount = 0;// 两列计数
@@ -112,24 +116,50 @@
              [singles enumerateObjectsUsingBlock:^(FHHouseCoreInfoModel*  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
                  FHPropertyListCorrectingRowView *v = [[FHPropertyListCorrectingRowView alloc] init];
                  [self.contentView addSubview:v];
-                   [self.itemArray addObject:v];
-                 [v mas_makeConstraints:^(MASConstraintMaker *make) {
-                     make.top.mas_equalTo(topOffset);
-                     make.left.mas_equalTo(31);
-                     make.width.mas_equalTo(viewWidth * 2);
-                     make.height.mas_equalTo(listRowHeight);
-                 }];
+                 [self.itemArray addObject:v];
+                 
+                 
                  v.keyLabel.text = obj.attr;
                  v.valueLabel.text = obj.value;
                  v.keyLabel.font = [UIFont themeFontRegular:12];
                  v.valueLabel.font = [UIFont themeFontMedium:12];
                  v.keyLabel.textColor = [UIColor colorWithHexStr:@"#aeadad"];
                  v.valueLabel.textColor = [UIColor themeGray2];
+                 [v.keyLabel sizeToFit];
+                 CGFloat keyWidth = [v.keyLabel sizeThatFits:CGSizeMake(SCREEN_WIDTH - 31 * 2, v.keyLabel.font.lineHeight)].width;
+                 
+                 [v.keyLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
+                     make.left.mas_equalTo(0);
+                     make.top.mas_equalTo(10);
+                     make.width.mas_equalTo(keyWidth);
+                     make.height.mas_equalTo(20);
+                 }];
+                 v.valueLabel.numberOfLines = 0;
+                 NSDictionary *attributes = @{NSFontAttributeName: [UIFont themeFontMedium:12]};
+                 CGRect rect = [obj.value boundingRectWithSize:CGSizeMake(SCREEN_WIDTH- 31*2 - 10 - keyWidth, CGFLOAT_MAX)
+                                                       options:NSStringDrawingUsesLineFragmentOrigin
+                                                    attributes:attributes
+                                                       context:nil];
+                 CGFloat valueHeight = rect.size.height;
+                 [v.valueLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
+                     make.left.mas_equalTo(v.keyLabel.mas_right).offset(10);
+                     make.top.mas_equalTo(10);
+                     make.height.mas_equalTo(valueHeight);
+                     make.right.mas_equalTo(0);
+                     make.bottom.mas_equalTo(v);
+                 }];
+                 
+                 [v mas_makeConstraints:^(MASConstraintMaker *make) {
+                     make.top.mas_equalTo(topOffset);
+                     make.left.mas_equalTo(31);
+                     make.right.mas_equalTo(-31);
+                     make.height.mas_equalTo(valueHeight + 20);
+                 }];
                  lastView = v;
                  lastViewLeftOffset = 20;
                  lastTopOffset = topOffset;
                  
-                 topOffset += listRowHeight;
+                 topOffset += valueHeight + 20;
              }];
          }
      }
