@@ -14,6 +14,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FHHousReserveAdviserCell : FHListBaseCell
 
+@property (nonatomic, copy) void (^textFieldShouldBegin)(void);
+@property (nonatomic, copy) void (^textFieldDidEnd)(void);
+
 - (void)bindData:(FHHouseReserveAdviserModel *)model traceParams:(NSDictionary *)params;
 
 @end

@@ -69,6 +69,7 @@
 #import <FHHouseBase/FHRelevantDurationTracker.h>
 #import "FHHouseListBaseItemCell.h"
 #import "FHHousReserveAdviserCell.h"
+#import "FHMainListTableView.h"
 
 #define kPlaceCellId @"placeholder_cell_id"
 #define kSingleCellId @"single_cell_id"
@@ -1465,8 +1466,7 @@ extern NSString *const INSTANT_DATA_KEY;
 {
     if (self.topView.superview != self.topContainerView){
         //筛选器不在顶部时 才上移
-        self.tableView.contentOffset = CGPointMake(0, self.topView.height - ([self.topView filterBottom] - [self.topView filterTop]));
-//        (scrollView.contentOffset.y <  [self.topView filterTop])
+        self.tableView.contentOffset = CGPointMake(0, [self.topView filterTop] - self.topView.height);
     }
     
     //只显示筛选器
@@ -1572,6 +1572,21 @@ extern NSString *const INSTANT_DATA_KEY;
                 }
                 subscribeCell.deleteSubscribeAction = ^(NSString * _Nonnull subscribeId) {
                     [wself requestDeleteSubScribe:subscribeId andText:subscribeText];
+                };
+            }else if ([cell isKindOfClass:[FHHousReserveAdviserCell class]]) {
+                FHHousReserveAdviserCell *adCell = (FHHousReserveAdviserCell *)cell;
+                WeakSelf;
+                adCell.textFieldShouldBegin = ^{
+                    if([wself.tableView isKindOfClass:[FHMainListTableView class]]){
+                        FHMainListTableView *tableView = (FHMainListTableView *)wself.tableView;
+                        tableView.forbiddenScrollRectToVisible = YES;
+                    }
+                };
+                adCell.textFieldDidEnd = ^{
+                    if([wself.tableView isKindOfClass:[FHMainListTableView class]]){
+                        FHMainListTableView *tableView = (FHMainListTableView *)wself.tableView;
+                        tableView.forbiddenScrollRectToVisible = NO;
+                    }
                 };
             }
             return cell;
@@ -1724,10 +1739,10 @@ extern NSString *const INSTANT_DATA_KEY;
         //正在展示筛选器
         return;
     }
-    
-    BOOL shouldInTable = (scrollView.contentOffset.y <  [self.topView filterTop]);
+    BOOL shouldInTable = (scrollView.contentOffset.y + scrollView.contentInset.top <  [self.topView filterTop]);
     [self moveToTableView:shouldInTable];
     [self.viewController refreshContentOffset:scrollView.contentOffset];
+
 }
 
 
@@ -1739,12 +1754,13 @@ extern NSString *const INSTANT_DATA_KEY;
         if (!self.topBannerView) {
             return;
         }
-        if (self.topView == self.tableView.tableHeaderView) {
+        if (self.topView.superview == self.tableView) {
             return;
         }
         
-        self.topView.top = 0;
-        self.tableView.tableHeaderView = self.topView;
+        self.topView.top = -self.topView.height;
+        [self.tableView addSubview:self.topView];
+        [self.tableView sendSubviewToBack:self.topView];
         [self.topContainerView mas_updateConstraints:^(MASConstraintMaker *make) {
             make.height.mas_equalTo(0);
         }];
@@ -1759,7 +1775,6 @@ extern NSString *const INSTANT_DATA_KEY;
             make.height.mas_equalTo(self.topView.height - [self.topView filterTop]);
         }];
         
-        self.tableView.tableHeaderView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width , self.topView.height)];
         [self.topContainerView addSubview:self.topView];
         self.topView.top = -[self.topView filterTop];
     }
@@ -1786,42 +1801,41 @@ extern NSString *const INSTANT_DATA_KEY;
     }];
     
     [self configNotifyInfo:height isShow:YES];
+    
 }
 
 -(void)configNotifyInfo:(CGFloat)topViewHeight isShow:(BOOL)isShow
 {
     UIEdgeInsets insets = self.tableView.contentInset;
     BOOL isTop = (fabs(self.tableView.contentOffset.y) < 0.1) || fabs(self.tableView.contentOffset.y + self.tableView.contentInset.top) < 0.1; //首次进入情况
-    _topView.frame = CGRectMake(0, 0, _topView.width, topViewHeight);
+    insets.top = topViewHeight;
+    self.tableView.contentInset = insets;
+    _topView.frame = CGRectMake(0, -topViewHeight, _topView.width, topViewHeight);
     
-    [self.tableView beginUpdates];
-    self.tableView.tableHeaderView = _topView;
-    [self.tableView endUpdates];
-    
-//    if (isShow) {
-//        if (isTop) {
-//            [self.tableView setContentOffset:CGPointMake(0, -topViewHeight) animated:NO];
-//        }else{
-//            self.tableView.contentOffset = CGPointMake(0, [self.topView filterTop] -topViewHeight);
-//        }
-//    }else{
-//        if (isTop) {
-//            [self.tableView setContentOffset:CGPointMake(0, -topViewHeight) animated:NO];
-//        } else {
-//            if (self.tableView.contentOffset.y >= -[self.topView filterBottom]) {
-//                if (self.tableView.contentOffset.y < ([self.topView filterTop] - topViewHeight - [self.topView notifyHeight])) {
-//                    self.tableView.contentOffset = CGPointMake(0, self.tableView.contentOffset.y + [self.topView notifyHeight]);
-//                } else if (self.tableView.contentOffset.y < self.tableView.height){
-//
-//                    if (!self.tableView.isDragging || (self.tableView.contentOffset.y < ([self.topView filterTop] - topViewHeight))) {
-//                        //小于一屏再进行设置
-//                        self.tableView.contentOffset = CGPointMake(0, [self.topView filterTop] - topViewHeight);
-//
-//                    }
-//                }
-//            }
-//        }
-//    }
+    if (isShow) {
+        if (isTop) {
+            [self.tableView setContentOffset:CGPointMake(0, -topViewHeight) animated:NO];
+        }else{
+            self.tableView.contentOffset = CGPointMake(0, [self.topView filterTop] -topViewHeight);
+        }
+    }else{
+        if (isTop) {
+            [self.tableView setContentOffset:CGPointMake(0, -topViewHeight) animated:NO];
+        } else {
+            if (self.tableView.contentOffset.y >= -[self.topView filterBottom]) {
+                if (self.tableView.contentOffset.y < ([self.topView filterTop] - topViewHeight - [self.topView notifyHeight])) {
+                    self.tableView.contentOffset = CGPointMake(0, self.tableView.contentOffset.y + [self.topView notifyHeight]);
+                } else if (self.tableView.contentOffset.y < self.tableView.height){
+                    
+                    if (!self.tableView.isDragging || (self.tableView.contentOffset.y < ([self.topView filterTop] - topViewHeight))) {
+                        //小于一屏再进行设置
+                        self.tableView.contentOffset = CGPointMake(0, [self.topView filterTop] - topViewHeight);
+                        
+                    }
+                }
+            }
+        }
+    }
     
     if (_topView.superview == self.topContainerView) {
         self.topView.top = -[self.topView filterTop];

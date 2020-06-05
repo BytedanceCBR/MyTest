@@ -448,11 +448,20 @@ extern NSString *const kFHPhoneNumberCacheKey;
 
 - (BOOL)textFieldShouldBeginEditing:(UITextField *)textField {
     [self showFullPhoneNum:YES];
+    if(self.textFieldShouldBegin){
+        self.textFieldShouldBegin();
+    }
     return YES;
 }
 
 - (BOOL)textFieldShouldEndEditing:(UITextField *)textField {
     return YES;
+}
+
+- (void)textFieldDidEndEditing:(UITextField *)textField {
+    if(self.textFieldDidEnd){
+        self.textFieldDidEnd();
+    }
 }
 
 - (void)textFieldDidChange:(NSNotification *)notification {

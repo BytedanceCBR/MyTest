@@ -18,6 +18,7 @@
 #import <FHHouseBase/FHBaseTableView.h>
 #import "FHMainOldTopView.h"
 #import "FHMainRentTopView.h"
+#import "FHMainListTableView.h"
 
 #define TOP_HOR_PADDING 3
 
@@ -77,7 +78,7 @@
 -(UITableView *)tableView
 {
     if (!_tableView) {
-        _tableView = [[FHBaseTableView alloc] init];
+        _tableView = [[FHMainListTableView alloc] init];
         if (@available(iOS 11.0 , *)) {
             _tableView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
             UIEdgeInsets inset = UIEdgeInsetsZero;
@@ -152,13 +153,11 @@
     
     _topView = [[FHMainListTopView alloc] initWithBannerView:self.viewModel.topBannerView filterView:self.viewModel.filterPanel filterTagsView:self.viewModel.topTagsView];
     
-    self.tableView.tableHeaderView = _topView;
-    
-//    UIEdgeInsets insets = self.tableView.contentInset;
-//    insets.top = CGRectGetHeight(_topView.bounds);
-//    self.tableView.contentInset = insets;
-//    _topView.top = -_topView.height;
-//    [self.tableView addSubview:_topView];
+    UIEdgeInsets insets = self.tableView.contentInset;
+    insets.top = CGRectGetHeight(_topView.bounds);
+    self.tableView.contentInset = insets;
+    _topView.top = -_topView.height;
+    [self.tableView addSubview:_topView];
     
     [self.containerView addSubview:self.tableView];
 
@@ -185,7 +184,7 @@
     }
     self.tracerModel.categoryName = [_viewModel categoryName];
     [self.viewModel requestData:YES];
-//    self.tableView.contentOffset = CGPointMake(0, -self.tableView.contentInset.top);
+    self.tableView.contentOffset = CGPointMake(0, -self.tableView.contentInset.top);
     self.isViewDidDisapper = NO;
 
 }
@@ -239,9 +238,6 @@
     [super viewWillAppear:animated];
     [self.view addObserver:self forKeyPath:@"userInteractionEnabled" options:NSKeyValueObservingOptionNew context:nil];
     
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShow)  name:UIKeyboardWillShowNotification object:nil];
-//    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardDidShow)  name:UIKeyboardDidShowNotification object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardDidHide) name:UIKeyboardDidHideNotification object:nil];
 }
 -(void)viewWillDisappear:(BOOL)animated
 {
@@ -250,30 +246,11 @@
     [self.viewModel addStayLog:self.ttTrackStayTime];
     [self tt_resetStayTime];
     
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:UIKeyboardWillShowNotification object:nil];
-//    [[NSNotificationCenter defaultCenter] removeObserver:self name:UIKeyboardDidShowNotification object:nil];
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:UIKeyboardDidHideNotification object:nil];
 }
 
 - (void)viewDidDisappear:(BOOL)animated {
     [super viewDidDisappear:animated];
     self.isViewDidDisapper = YES;
-}
-
-- (void)keyboardWillShow {
-//    self.iskeyBoardVisible = YES;
-    self.originY = self.tableView.contentOffset.y;
-//    self.iskeyBoardShowing = YES;
-}
-
-- (void)keyboardDidShow {
-//    self.iskeyBoardVisible = YES;
-//    self.iskeyBoardShowing = NO;
-}
-
-- (void)keyboardDidHide {
-//    self.iskeyBoardShowing = NO;
-//    self.iskeyBoardVisible = NO;
 }
 
 - (void)refreshContentOffset:(CGPoint)contentOffset
@@ -285,7 +262,7 @@
     UIColor *bgColor = [UIColor whiteColor];
     if ([self.viewModel.topBannerView isKindOfClass:[FHMainOldTopView class]]) {
         FHMainOldTopView *oldTopView = (FHMainOldTopView *)self.viewModel.topBannerView;
-        offsetY = contentOffset.y;
+        offsetY = self.topView.height + contentOffset.y;
         if ([FHMainOldTopView showBanner]) {
             offset = [FHMainOldTopView bannerHeight] - 42 + 10;
         }else if ([FHMainOldTopView showEntrance]) {
@@ -293,9 +270,9 @@
         }else {
             offset = [FHFakeInputNavbar perferredHeight];
         }
-        if (contentOffset.y >= self.topView.height) {
+        if (contentOffset.y >= 0) {
             alpha = 1;
-        }else if (offset != self.topView.height){
+        }else if (offset != 0){
             CGFloat notiBarHeight = self.viewModel.animateShowNotify ? self.topView.notifyHeight : 0;
             alpha = (offsetY - notiBarHeight) / offset;
         }
@@ -311,10 +288,10 @@
 //        }else {
 //            offset = [FHFakeInputNavbar perferredHeight];
 //        }
-        offsetY = contentOffset.y;
+        offsetY = self.topView.height + contentOffset.y;
         offset = [FHFakeInputNavbar perferredHeight];
 
-        if (contentOffset.y >= self.topView.height) {
+        if (contentOffset.y >= 0) {
             alpha = 1;
         } else {
             CGFloat notiBarHeight = self.viewModel.animateShowNotify ? self.topView.notifyHeight : 0;
