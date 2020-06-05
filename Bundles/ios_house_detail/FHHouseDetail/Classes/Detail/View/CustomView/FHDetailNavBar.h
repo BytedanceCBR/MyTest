@@ -29,7 +29,10 @@ typedef enum : NSUInteger {
 - (void)showRightItems:(BOOL)showItem;
 - (void)hideFollowBtn;
 - (void)removeBottomLine;
+
+//100 版本企业担保 对header的样式修改
 - (void)configureVouchStyle;
+@property (nonatomic, assign) BOOL isForVouch; //如果是企业担保
 
 @end
 
