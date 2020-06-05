@@ -175,7 +175,7 @@
     traceParam[@"enter_type"] = enterType ? enterType : @"be_null";
     traceParam[@"rank"] = cellModel.tracerDic[@"rank"];
     traceParam[@"log_pb"] = cellModel.logPb;
-    
+    traceParam[@"category_name"] = cellModel.tracerDic[@"category_name"]?:@"be_null";
     dict[@"tracer"] = traceParam;
     dict[@"data"] = cellModel;
     dict[@"begin_show_comment"] = showComment ? @"1" : @"0";
