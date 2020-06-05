@@ -111,6 +111,7 @@
     traceParam[@"rank"] = cellModel.tracerDic[@"rank"];
     traceParam[@"log_pb"] = cellModel.logPb;
     traceParam[@"community_id"] = cellModel.community.socialGroupId ?: @"";
+    traceParam[@"category_name"] = cellModel.tracerDic[@"category_name"]?:@"be_null";
     dict[@"tracer"] = traceParam;
     
     dict[@"data"] = cellModel;
@@ -259,6 +260,7 @@
     NSMutableDictionary *traceParam = @{}.mutableCopy;
     traceParam[@"origin_from"] = cellModel.tracerDic[@"origin_from"];
     traceParam[@"enter_from"] = cellModel.tracerDic[@"page_type"];
+    traceParam[@"category_name"] = cellModel.tracerDic[@"category_name"]?:@"be_null";
     traceParam[@"enter_type"] = enterType ? enterType : @"be_null";
     traceParam[@"rank"] = cellModel.tracerDic[@"rank"];
     traceParam[@"log_pb"] = cellModel.logPb;
