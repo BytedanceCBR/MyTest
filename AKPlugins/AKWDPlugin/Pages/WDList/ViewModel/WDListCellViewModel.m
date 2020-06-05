@@ -167,6 +167,7 @@
     NSMutableDictionary *tracerDic = [NSMutableDictionary dictionary];
     tracerDic[@"origin_from"] = gdExtJson[@"origin_from"] ?: @"be_null";
     tracerDic[@"category_name"] = gdExtJson[@"category_name"] ?: @"be_null";
+    tracerDic[@"enter_from"] = @"question";
     dic[@"tracer"] = tracerDic;
     
     TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dic];
