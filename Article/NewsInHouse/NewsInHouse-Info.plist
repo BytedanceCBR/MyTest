@@ -193,8 +193,6 @@
 	</dict>
 	<key>NSCameraUsageDescription</key>
 	<string>方便您使用拍照功能上传头像，发送图片以及发帖</string>
-	<key>NSContactsUsageDescription</key>
-	<string>允许访问可帮您快速找到通讯录好友</string>
 	<key>NSLocationAlwaysUsageDescription</key>
 	<string>以便我们更好地为您推荐房源及丰富信息推荐维度</string>
 	<key>NSLocationUsageDescription</key>
