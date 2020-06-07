@@ -114,8 +114,16 @@
 - (void)goToDetail {
     NSString *routeUrl = self.cellModel.originItemModel.openUrl;
     if(routeUrl){
+        NSMutableDictionary *dict = [NSMutableDictionary dictionary];
+        NSMutableDictionary *tracerDic = [NSMutableDictionary dictionary];
+        tracerDic[@"origin_from"] = self.cellModel.tracerDic[@"origin_from"] ?: @"be_null";
+        tracerDic[@"enter_from"] = self.cellModel.tracerDic[@"page_type"] ?: @"be_null";
+        tracerDic[@"category_name"] = self.cellModel.tracerDic[@"category_name"] ?: @"be_null";
+        dict[@"tracer"] = tracerDic;
+        
+        TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
         NSURL *openUrl = [NSURL URLWithString:routeUrl];
-        [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:nil];
+        [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:userInfo];
     }
 }
 
