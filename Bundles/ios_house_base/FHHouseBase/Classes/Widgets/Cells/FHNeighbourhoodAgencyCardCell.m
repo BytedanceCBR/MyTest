@@ -107,12 +107,12 @@
     [self.topInfoView addSubview:_rightArrow];
 
     _bottomInfoView = [[UIView alloc] init];
-    _bottomInfoView.backgroundColor = [UIColor colorWithHexString:@"fafafa"];
+    _bottomInfoView.backgroundColor = [UIColor whiteColor];
     [self.containerView addSubview:_bottomInfoView];
     
     
     _lineView = [[UIView alloc]init];
-    _lineView.backgroundColor = [UIColor themeGray8];
+    _lineView.backgroundColor = [UIColor themeGray7];
      [self.bottomInfoView addSubview:_lineView];
 
     _avator = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"detail_default_avatar"]];
@@ -152,7 +152,7 @@
     
     _score = [UILabel createLabel:@"" textColor:@"" fontSize:14];
     _score.textColor = [UIColor themeGray1];
-     _score.font = [UIFont themeFontDINAlternateBold:14];
+     _score.font = [UIFont themeFontSemibold:14];
     _score.textAlignment = NSTextAlignmentLeft;
     [self.bottomInfoView addSubview:_score];
     
