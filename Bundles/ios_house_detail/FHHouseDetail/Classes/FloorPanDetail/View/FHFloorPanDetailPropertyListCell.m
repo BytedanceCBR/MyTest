@@ -64,8 +64,8 @@
                  FHPropertyListCorrectingRowView *rowView = [[FHPropertyListCorrectingRowView alloc] init];
                  rowView.keyLabel.text = obj.attr;
                  rowView.valueLabel.text = obj.value;
-                 rowView.keyLabel.font = [UIFont themeFontRegular:12];
-                 rowView.valueLabel.font = [UIFont themeFontMedium:12];
+                 rowView.keyLabel.font = [UIFont themeFontRegular:14];
+                 rowView.valueLabel.font = [UIFont themeFontMedium:14];
                  rowView.keyLabel.textColor = [UIColor colorWithHexStr:@"#aeadad"];
                  rowView.valueLabel.textColor = [UIColor themeGray2];
                  [self.contentView addSubview:rowView];
@@ -102,8 +102,8 @@
                  [self.itemArray addObject:v];
                  v.keyLabel.text = obj.attr;
                  v.valueLabel.text = obj.value;
-                 v.keyLabel.font = [UIFont themeFontRegular:12];
-                 v.valueLabel.font = [UIFont themeFontMedium:12];
+                 v.keyLabel.font = [UIFont themeFontRegular:14];
+                 v.valueLabel.font = [UIFont themeFontMedium:14];
                  v.keyLabel.textColor = [UIColor colorWithHexStr:@"#aeadad"];
                  v.valueLabel.textColor = [UIColor themeGray2];
                  [v.keyLabel sizeToFit];
@@ -116,12 +116,16 @@
                      make.height.mas_equalTo(20);
                  }];
                  v.valueLabel.numberOfLines = 0;
-                 NSDictionary *attributes = @{NSFontAttributeName: [UIFont themeFontMedium:12]};
+                 NSDictionary *attributes = @{NSFontAttributeName: [UIFont themeFontMedium:14]};
                  CGRect rect = [obj.value boundingRectWithSize:CGSizeMake(SCREEN_WIDTH- 31*2 - 10 - keyWidth, CGFLOAT_MAX)
                                                        options:NSStringDrawingUsesLineFragmentOrigin
                                                     attributes:attributes
                                                        context:nil];
                  CGFloat valueHeight = rect.size.height;
+                 //number lins > 1
+                 if (valueHeight <= 21) {
+                     valueHeight = listRowHeight - 10;
+                 }
                  [v.valueLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
                      make.left.mas_equalTo(v.keyLabel.mas_right).offset(10);
                      make.top.mas_equalTo(10);
@@ -134,11 +138,11 @@
                      make.top.mas_equalTo(topOffset);
                      make.left.mas_equalTo(31);
                      make.right.mas_equalTo(-31);
-                     make.height.mas_equalTo(valueHeight + 20);
+                     make.height.mas_equalTo(valueHeight + 10);
                  }];
                  lastView = v;
                  
-                 topOffset += valueHeight + 20;
+                 topOffset += valueHeight + 10;
              }];
          }
          
@@ -148,15 +152,16 @@
                  FHDetailExtarInfoCorrectingRowView *rowView = [[FHDetailExtarInfoCorrectingRowView alloc] initWithFrame:CGRectMake(31, topOffset, CGRectGetWidth(self.contentView.bounds) - 31 * 2, listRowHeight)];
                  rowView.logoImageView.hidden = YES;
                  rowView.indicatorLabel.hidden = YES;
-                 rowView.nameLabel.font = [UIFont themeFontRegular:12];
+                 [rowView.nameLabel setContentCompressionResistancePriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisHorizontal];
+                 rowView.nameLabel.font = [UIFont themeFontRegular:14];
                  rowView.nameLabel.textColor = [UIColor colorWithHexStr:@"#aeadad"];
                  rowView.nameLabel.text = model.baseExtra.court.title;
-                 
-                 rowView.infoLabel.font = [UIFont themeFontMedium:12];
+                 rowView.infoLabel.font = [UIFont themeFontMedium:14];
                  rowView.infoLabel.textColor = [UIColor themeGray2];
                  rowView.infoLabel.text = model.baseExtra.court.content;
                  [rowView addTarget:self action:@selector(jumpToDetailNewPage:) forControlEvents:UIControlEventTouchUpInside];
                  [self.contentView addSubview:rowView];
+                 [self.itemArray addObject:rowView];
                  [rowView mas_makeConstraints:^(MASConstraintMaker *make) {
                      make.top.mas_equalTo(topOffset);
                      make.left.mas_equalTo(31);
@@ -164,17 +169,15 @@
                      make.height.mas_equalTo(listRowHeight);
                  }];
                  [rowView.nameLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
-                     make.left.mas_equalTo(0).priorityHigh();
+                     make.left.mas_equalTo(0);
                      make.top.mas_equalTo(10);
                      make.bottom.mas_equalTo(0);
                  }];
-                 
                  [rowView.indicator mas_remakeConstraints:^(MASConstraintMaker *make) {
                      make.right.mas_equalTo(0);
                      make.size.mas_equalTo(CGSizeMake(20, 20));
                      make.centerY.mas_equalTo(rowView.nameLabel);
                  }];
-                 
                  [rowView.infoLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
                      make.left.mas_equalTo(rowView.nameLabel.mas_right).offset(10);
                      make.top.mas_equalTo(10);
@@ -190,14 +193,16 @@
                  FHDetailExtarInfoCorrectingRowView *rowView = [[FHDetailExtarInfoCorrectingRowView alloc] initWithFrame:CGRectMake(31, topOffset, CGRectGetWidth(self.contentView.bounds) - 31 * 2, listRowHeight)];
                  rowView.logoImageView.hidden = YES;
                  rowView.indicatorLabel.hidden = YES;
-                 rowView.nameLabel.font = [UIFont themeFontRegular:12];
+                 [rowView.nameLabel setContentCompressionResistancePriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisHorizontal];
+                 rowView.nameLabel.font = [UIFont themeFontRegular:14];
                  rowView.nameLabel.textColor = [UIColor colorWithHexStr:@"#aeadad"];
                  rowView.nameLabel.text = model.baseExtra.address.title;
-                 rowView.infoLabel.font = [UIFont themeFontMedium:12];
+                 rowView.infoLabel.font = [UIFont themeFontMedium:14];
                  rowView.infoLabel.textColor = [UIColor themeGray2];
                  rowView.infoLabel.text = model.baseExtra.address.content;
                  [rowView addTarget:self action:@selector(jumpToDetailNewAddressPage:) forControlEvents:UIControlEventTouchUpInside];
                  [self.contentView addSubview:rowView];
+                 [self.itemArray addObject:rowView];
                  [rowView mas_makeConstraints:^(MASConstraintMaker *make) {
                      make.top.mas_equalTo(topOffset);
                      make.left.mas_equalTo(31);
@@ -205,7 +210,7 @@
                      make.height.mas_equalTo(listRowHeight);
                  }];
                  [rowView.nameLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
-                     make.left.mas_equalTo(0).priorityHigh();
+                     make.left.mas_equalTo(0);
                      make.top.mas_equalTo(10);
                      make.bottom.mas_equalTo(0);
                  }];
