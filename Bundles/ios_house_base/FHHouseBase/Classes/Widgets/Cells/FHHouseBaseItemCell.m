@@ -1990,7 +1990,7 @@
     
     //图片圆角
     if (!CGRectEqualToRect(self.topLeftTagImageView.frame, CGRectZero)) {
-        if (!_topLeftTagMaskLayer) {
+        if (!_topLeftTagMaskLayer || !CGSizeEqualToSize(_topLeftTagMaskLayer.frame.size, self.topLeftTagImageView.frame.size)) {
             UIBezierPath *maskPath = [UIBezierPath bezierPathWithRoundedRect:self.topLeftTagImageView.bounds
                                                            byRoundingCorners:UIRectCornerTopLeft | UIRectCornerBottomRight
                                                                  cornerRadii:CGSizeMake(4, 4)];
