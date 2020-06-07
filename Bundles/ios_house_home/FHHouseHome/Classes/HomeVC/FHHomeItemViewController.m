@@ -1042,6 +1042,8 @@ static NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
 
 #pragma mark - 详情页跳转
 -(void)jumpToDetailPage:(NSIndexPath *)indexPath {
+    [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:@"sslocal://sample_lynx_page?channel=lynx_common_question"] userInfo:nil];
+    return;
     if (self.houseDataItemsModel.count > indexPath.row) {
         FHHomeHouseDataItemsModel *theModel = self.houseDataItemsModel[indexPath.row];
         NSMutableDictionary *traceParam = [NSMutableDictionary new];
@@ -1092,10 +1094,7 @@ static NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
             TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
             [[TTRoute sharedRoute] openURLByPushViewController:jumpUrl userInfo:userInfo];
         }
-        
-        
         if (houseType == FHHouseTypeSecondHandHouse) {
-            
             NSDictionary *fhSettings= [[TTSettingsManager sharedManager] settingForKey:@"f_settings" defaultValue:@{} freeze:YES];
             BOOL boolIsOpenSimilar = [fhSettings tt_boolValueForKey:@"f_similar_house_close"];
             self.lastClickOffset = indexPath.row;
@@ -1104,13 +1103,10 @@ static NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
                 [parmasIds setValue:self.currentSearchId forKey:@"search_id"];
                 [parmasIds setValue:theModel.idx forKey:@"house_id"];
                 [parmasIds setValue:@"94349544675" forKey:@"channel_id"];
-
-                
                 if (theModel.idx && [FHEnvContext isNetworkConnected]) {
                     [[FHHouseSimilarManager sharedInstance] requestForSimilarHouse:parmasIds];
                     [self.cacheClickIds addObject:theModel.idx];
                 }
-                
                 NSMutableDictionary *traceParamsSim = [NSMutableDictionary new];
                 traceParamsSim[@"page_type"] = @"old_detail";
                 traceParamsSim[@"card_type"] = @"left_pic";
@@ -1128,12 +1124,11 @@ static NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
 }
 
 - (UITableView *)tableView {
-    
     if (!_tableView) {
         _tableView = [[FHHomeBaseTableView alloc] initWithFrame:CGRectMake(0, 0,  [UIScreen mainScreen].bounds.size.width,[[FHHomeCellHelper sharedInstance] heightForFHHomeListHouseSectionHeight]) style:UITableViewStylePlain];
         _tableView.dataSource = self;
         _tableView.delegate = self;
-//        _tableView.bounces = NO;
+        //        _tableView.bounces = NO;
         //        _tableView.decelerationRate = 0.1;
         _tableView.showsVerticalScrollIndicator = NO;
         _tableView.estimatedRowHeight = 0;
