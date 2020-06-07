@@ -45,7 +45,7 @@
 @property(nonatomic, strong) UIButton *searchBtn;
 @property(nonatomic, assign) NSTimeInterval stayTime; //页面停留时间
 @property (nonatomic, strong) FHLoginTipView * loginTipview;
-@property(nonatomic, strong) FHUGCGuideView *guideView;
+//@property(nonatomic, strong) FHUGCGuideView *guideView;
 @property(nonatomic, assign) BOOL hasShowDots;
 @property(nonatomic, assign) BOOL alreadyShowGuide;
 //新的发现页面
@@ -132,35 +132,35 @@
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
-- (void)addUgcGuide {
-    if ([FHUGCGuideHelper shouldShowSearchGuide] && self.isUgcOpen && !self.alreadyShowGuide && !self.isNewDiscovery) {
-        [self.guideView show:self.view dismissDelayTime:5.0f completion:^{
-            [FHUGCGuideHelper hideSearchGuide];
-        }];
-        self.alreadyShowGuide = YES;
-    }
-}
+//- (void)addUgcGuide {
+//    if ([FHUGCGuideHelper shouldShowSearchGuide] && self.isUgcOpen && !self.alreadyShowGuide && !self.isNewDiscovery) {
+//        [self.guideView show:self.view dismissDelayTime:5.0f completion:^{
+//            [FHUGCGuideHelper hideSearchGuide];
+//        }];
+//        self.alreadyShowGuide = YES;
+//    }
+//}
+//
+//- (void)hideGuideView {
+//    if(_guideView){
+//        [_guideView hide];
+//        [FHUGCGuideHelper hideSearchGuide];
+//    }
+//}
 
-- (void)hideGuideView {
-    if(_guideView){
-        [_guideView hide];
-        [FHUGCGuideHelper hideSearchGuide];
-    }
-}
+//- (FHUGCGuideView *)guideView {
+//    [self.view layoutIfNeeded];
+//    if (!_guideView) {
+//        _guideView = [[FHUGCGuideView alloc] initWithFrame:CGRectMake(self.view.frame.size.width - 186, CGRectGetMaxY(self.topView.frame) - 7, 176, 42) andType:FHUGCGuideViewTypeSearch];
+//    }
+//    return _guideView;
+//}
 
-- (FHUGCGuideView *)guideView {
-    [self.view layoutIfNeeded];
-    if (!_guideView) {
-        _guideView = [[FHUGCGuideView alloc] initWithFrame:CGRectMake(self.view.frame.size.width - 186, CGRectGetMaxY(self.topView.frame) - 7, 176, 42) andType:FHUGCGuideViewTypeSearch];
-    }
-    return _guideView;
-}
-
-- (void)topVCChange:(NSNotification *)notification {
-    if (self.isUgcOpen) {
-        [self hideGuideView];
-    }
-}
+//- (void)topVCChange:(NSNotification *)notification {
+//    if (self.isUgcOpen) {
+//        [self hideGuideView];
+//    }
+//}
 
 - (void)onUnreadMessageChange {
     BOOL hasSocialGroups = [FHUGCConfig sharedInstance].followList.count > 0;
@@ -267,7 +267,7 @@
     [super viewWillAppear:animated];
     [self.viewModel viewWillAppear];
     self.stayTime = [[NSDate date] timeIntervalSince1970];
-    [self addUgcGuide];
+//    [self addUgcGuide];
 
     if(self.isUgcOpen){
         //去掉邻里tab的红点
@@ -788,7 +788,7 @@
 
 //进入搜索页
 - (void)goToSearch {
-    [self hideGuideView];
+//    [self hideGuideView];
     [self addGoToSearchLog];
     NSString *routeUrl = @"sslocal://ugc_search_list";
     NSURL *openUrl = [NSURL URLWithString:routeUrl];

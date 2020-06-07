@@ -132,10 +132,10 @@ NS_ASSUME_NONNULL_BEGIN
  */
 + (void)changeFindTabTitle;
 
-/*
- 增加引导
- */
-+ (void)addTabUGCGuid;
+///*
+// 增加引导
+// */
+//+ (void)addTabUGCGuid;
 
 /*
   app启动调用

@@ -943,15 +943,15 @@ static NSInteger kGetLightRequestRetryCount = 3;
 /*
  增加引导
  */
-+ (void)addTabUGCGuid
-{
-    UIWindow * mainWindow = [[UIApplication sharedApplication].delegate window];
-    
-    TTArticleTabBarController * rootTabController = (TTArticleTabBarController*)mainWindow.rootViewController;
-    if ([mainWindow.rootViewController isKindOfClass:[TTArticleTabBarController class]]) {
-        [rootTabController addUgcGuide];
-    }
-}
+//+ (void)addTabUGCGuid
+//{
+//    UIWindow * mainWindow = [[UIApplication sharedApplication].delegate window];
+//    
+//    TTArticleTabBarController * rootTabController = (TTArticleTabBarController*)mainWindow.rootViewController;
+//    if ([mainWindow.rootViewController isKindOfClass:[TTArticleTabBarController class]]) {
+//        [rootTabController addUgcGuide];
+//    }
+//}
 
 - (TTReachability *)reachability
 {

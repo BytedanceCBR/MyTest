@@ -108,7 +108,7 @@ static NSString * const kFUGCPrefixStr = @"fugc";
 {
     [super viewDidAppear:animated];
     
-    [FHEnvContext addTabUGCGuid];
+//    [FHEnvContext addTabUGCGuid];
         
     [UIApplication sharedApplication].statusBarStyle = UIStatusBarStyleDefault;
     

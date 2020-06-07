@@ -30,12 +30,12 @@
 }
 
 - (void)loginTipViewDsappear {
-    [UIView animateWithDuration:0.25 animations:^{
-        self.frame = CGRectMake(0, MAIN_SCREENH_HEIGHT -self.navbarHeight, [UIScreen mainScreen].bounds.size.width, 50);
-        self.alpha = 0;
-    } completion:^(BOOL finished) {
+//    [UIView animateWithDuration:0.25 animations:^{
+//        self.frame = CGRectMake(0, MAIN_SCREENH_HEIGHT -self.navbarHeight, [UIScreen mainScreen].bounds.size.width, 50);
+//        self.alpha = 0;
+//    } completion:^(BOOL finished) {
         [self removeFromSuperview];
-    }];
+//    }];
     if (_showTimer) {
         [_showTimer invalidate];
     }
