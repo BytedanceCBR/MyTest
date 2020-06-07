@@ -355,6 +355,9 @@
     if (self.subAlpha > 0) {
         UIImage *image = self.collectBlackImage;
         image = followStatus != 0 ? self.collectYellowImage : image;
+        if (self.isForVouch) {
+            image = followStatus != 0 ? self.collectWhiteSolidImage : self.collectWhiteImage;
+        }
         [_collectBtn setImage:image forState:UIControlStateNormal];
         [_collectBtn setImage:image forState:UIControlStateHighlighted];
     }else {

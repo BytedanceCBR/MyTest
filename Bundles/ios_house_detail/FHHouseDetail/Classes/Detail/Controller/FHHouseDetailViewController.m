@@ -72,7 +72,7 @@
 - (instancetype)initWithRouteParamObj:(TTRouteParamObj *)paramObj {
     self = [super initWithRouteParamObj:paramObj];
     if (self) {
-        
+        self.isResetStatusBar = NO;
         self.houseType = [paramObj.allParams[@"house_type"] integerValue];
         self.ridcode = paramObj.allParams[@"ridcode"];
         self.realtorId = paramObj.allParams[@"realtor_id"];
@@ -183,6 +183,7 @@
     [super viewDidAppear:animated];
     self.isViewDidDisapper = NO;
     [self updateStatusBar:self.tableView.contentOffset];
+    [self refreshContentOffset:self.tableView.contentOffset];
     [self.view endEditing:YES];
     [self.viewModel vc_viewDidAppear:animated];
 }
