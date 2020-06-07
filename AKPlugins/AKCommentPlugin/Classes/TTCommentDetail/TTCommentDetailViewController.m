@@ -414,7 +414,7 @@ NSString *const kTTCommentDetailForwardCommentNotification = @"kTTCommentDetailF
 - (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
     _isViewAppear = NO;
-
+    [[NSNotificationCenter defaultCenter] postNotificationName:UIMenuControllerWillHideMenuNotification object:nil];
     TTMomentDetailAction *action = [TTMomentDetailAction actionWithType:TTMomentDetailActionTypeWillDisappear comment:self.commentModel];
     [self.store dispatch:action];
     
