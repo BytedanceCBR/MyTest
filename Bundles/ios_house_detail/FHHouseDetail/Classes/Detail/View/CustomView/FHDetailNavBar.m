@@ -135,7 +135,7 @@
         UILabel *vouchLabel = [[UILabel alloc] init];
         vouchLabel.text = @"企业担保";
         vouchLabel.textColor = [UIColor themeWhite];
-        vouchLabel.font = [UIFont themeFontMedium:16];
+        vouchLabel.font = [UIFont themeFontSemibold:16];
         [self.vouchView addSubview:vouchLabel];
         [vouchLabel mas_makeConstraints:^(MASConstraintMaker *make) {
             make.left.mas_equalTo(vouchIconImageView.mas_right).mas_offset(4);

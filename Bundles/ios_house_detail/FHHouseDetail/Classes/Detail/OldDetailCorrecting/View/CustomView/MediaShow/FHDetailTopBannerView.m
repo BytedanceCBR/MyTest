@@ -62,15 +62,13 @@
         make.width.mas_equalTo(114);
     }];
     [self.leftIcon mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(12);
+        make.left.mas_equalTo(11);
         make.centerY.mas_equalTo(self.leftView);
-        make.width.height.mas_equalTo(18);
+        make.width.height.mas_equalTo(24);
     }];
     [self.leftLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(self.leftIcon.mas_right).mas_equalTo(5);
-        make.right.mas_equalTo(-12);
         make.centerY.mas_equalTo(self.leftView);
-
     }];
     [self.rightView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.right.top.bottom.mas_equalTo(0);
@@ -85,6 +83,20 @@
 
 - (void)updateWithTitle:(NSString *)title content:(NSString *)content
 {
+//    switch (self.housetype) {
+//        case FHHouseTypeSecondHandHouse:
+//            [self.leftIcon mas_updateConstraints:^(MASConstraintMaker *make) {
+//                make.left.mas_equalTo(11);
+//                make.width.height.mas_equalTo(24);
+//            }];
+//            break;
+//        default:
+//            [self.leftIcon mas_updateConstraints:^(MASConstraintMaker *make) {
+//                make.left.mas_equalTo(12);
+//                make.width.height.mas_equalTo(18);
+//            }];
+//            break;
+//    }
     self.leftLabel.text = title;
     self.rightLabel.text = content;
     
@@ -178,6 +190,9 @@
         _rightLabel = [[UILabel alloc]init];
         _rightLabel.textColor = [UIColor colorWithHexString:@"#b53d00"];
         _rightLabel.font = [UIFont themeFontRegular:14];
+//        _rightLabel.minimumScaleFactor = 0.5;
+//        _rightLabel.adjustsFontSizeToFitWidth = YES;
+        _rightLabel.lineBreakMode = NSLineBreakByTruncatingTail;
         _rightLabel.numberOfLines = 1;
     }
     return _rightLabel;

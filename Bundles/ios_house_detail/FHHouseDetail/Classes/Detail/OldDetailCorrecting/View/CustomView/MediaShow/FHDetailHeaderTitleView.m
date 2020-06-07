@@ -277,6 +277,7 @@
         [self setFloorPanModel];
         return;
     }
+//    self.topBanner.housetype = model.housetype;
     //housetype if 改 switch
     switch (model.housetype) {
         case FHHouseTypeNewHouse:{
