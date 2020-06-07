@@ -440,7 +440,23 @@
 
 - (void)priceAskViewAction:(id)sender {
     if (self.model.priceConsult.openurl.length) {
+        NSMutableDictionary *trackerDict = self.baseViewModel.detailTracerDic;
+//        self.baseViewModel.contactViewModel.
+        NSString *position = @"询总价";
+        if ([self.model.priceConsult.text rangeOfString:@"首付"].location != NSNotFound) {
+            position = @"询首付";
+        }
+        trackerDict[@"click_position"] = position;
+        trackerDict[@"page_type"] = @"house_model_info";
+        FHDetailContactModel *contactPhone = self.baseViewModel.contactViewModel.contactPhone;
+        trackerDict[@"realtor_id"] = contactPhone.realtorId?:@"be_null";
+        trackerDict[@"realtor_rank"] = @"0";
+        trackerDict[@"realtor_logpb"] = contactPhone.realtorLogpb?:@"";
+        trackerDict[@"realtor_position"] = @"detail_button";
+        TRACK_EVENT(@"click_im", trackerDict);
         [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:self.model.priceConsult.openurl]];
     }
+//    reportParams.sourceFrom = @"house_model";
+//    reportParams.extra = @{@"house_model_rank":@(index)};
 }
 @end

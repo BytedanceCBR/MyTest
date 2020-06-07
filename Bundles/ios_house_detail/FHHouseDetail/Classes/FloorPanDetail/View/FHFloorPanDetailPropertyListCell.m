@@ -284,7 +284,9 @@
 //跳转新房详情页，如果是从详情页来的，则回到房源详情页，否则跳转详情页
 - (void)jumpToDetailNewPage:(id)sender {
     FHFloorPanDetailPropertyListModel *model = (FHFloorPanDetailPropertyListModel *)self.currentData;
-    NSMutableDictionary *traceParam =  [NSMutableDictionary dictionary];
+    NSMutableDictionary *traceParam = self.baseViewModel.detailTracerDic;
+    traceParam[@"enter_from"] = @"house_model_detail";
+    traceParam[@"element_from"] = @"house_info";
 //    traceParam[@"card_type"] = @"left_pic";
 //    traceParam[@"enter_from"] = [self categoryName];
 //    traceParam[@"log_pb"] = [cellModel logPb];
@@ -292,7 +294,7 @@
     NSDictionary *dict = @{
         @"house_type":@(FHHouseTypeNewHouse),
         @"court_id":model.courtId?:@"",
-        @"tracer": traceParam };
+        @"tracer": traceParam.copy};
     TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
     NSString *urlStr = [NSString stringWithFormat:@"sslocal://new_house_detail"];
     [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:urlStr] userInfo:userInfo];
@@ -313,15 +315,8 @@
 //    [infoDict setValue:dataModel.mapCentertitle forKey:@"title"];
     
     NSMutableDictionary *tracer = [NSMutableDictionary dictionaryWithDictionary:self.baseViewModel.detailTracerDic];
-//    if (sender == _mapMaskBtnLocation) {
-//        [tracer setValue:@"map_list" forKey:@"click_type"];
-//    }
-    
-//    if (sender == _mapMaskBtn) {
-//        [tracer setValue:@"map" forKey:@"click_type"];
-//    }
-    
-    [tracer setValue:@"map" forKey:@"element_from"];
+    [tracer setValue:@"map" forKey:@"click_type"];
+    [tracer setValue:@"house_info" forKey:@"element_from"];
     [tracer setObject:tracer[@"page_type"] forKey:@"enter_from"];
     [infoDict setValue:tracer forKey:@"tracer"];
     
