@@ -1961,22 +1961,14 @@
         
         NSURL *imageUrl = [NSURL URLWithString:tagImageModel.url];
         [self.topLeftTagImageView bd_setImageWithURL:imageUrl];
-        if (tagImageModel.width) {
-            CGFloat width = tagImageModel.width.floatValue;
-            if (width > 0.0) {
-                [self.topLeftTagImageView configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
-                    layout.width = YGPointValue(width);
-                }];
-            }
-        }
-        if (tagImageModel.height) {
-            CGFloat height = tagImageModel.height.floatValue;
-            if (height > 0.0) {
-                [self.topLeftTagImageView configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
-                    layout.height = YGPointValue(height);
-                }];
-            }
-        }
+        CGFloat width = [tagImageModel.width floatValue];
+        CGFloat height = [tagImageModel.height floatValue];
+        [self.topLeftTagImageView configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
+            layout.width = YGPointValue(width > 0.0 ? width : 48);
+        }];
+        [self.topLeftTagImageView configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
+            layout.height = YGPointValue(height > 0.0 ? height : 15);
+        }];
         
         self.topLeftTagImageView.hidden = NO;
         [self.topLeftTagImageView.yoga markDirty];

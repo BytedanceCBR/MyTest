@@ -344,16 +344,12 @@
                 
                 CGFloat width = [imageModel.width floatValue];
                 CGFloat height = [imageModel.height floatValue];
-                if (width > 0.0) {
-                    [self.topLeftTagImageView mas_updateConstraints:^(MASConstraintMaker *make) {
-                        make.width.mas_equalTo(width);
-                    }];
-                }
-                if (height > 0.0) {
-                    [self.topLeftTagImageView mas_updateConstraints:^(MASConstraintMaker *make) {
-                        make.height.mas_equalTo(height);
-                    }];
-                }
+                [self.topLeftTagImageView mas_updateConstraints:^(MASConstraintMaker *make) {
+                    make.width.mas_equalTo(width > 0.0 ? width : 60);
+                }];
+                [self.topLeftTagImageView mas_updateConstraints:^(MASConstraintMaker *make) {
+                    make.height.mas_equalTo(height > 0.0 ? height : 20);
+                }];
                 
                 self.topLeftTagImageView.hidden = NO;
             } else {
