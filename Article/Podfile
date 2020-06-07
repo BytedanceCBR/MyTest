@@ -131,13 +131,13 @@ def appDevelopPods
     pod_binary 'TTAudio', '0.1.6'
     
     #----弹窗互斥---
-    pod 'TTDialogDirector', '0.1.4' , :subspecs => [ #:git => 'git@code.byted.org:TTIOS/TTDialogDirector.git', :commit => '8ed5beb',
+    pod 'TTDialogDirector', '0.1.4' , :subspecs => [
     'Core',
     'PhotoLibrary',
     'Microphone',
     'Camera',
-    'UserNotification',
-    'Contacts',
+    'UserNotification'
+#    'Contacts',
     #    'Location'
     ]
     #-----视频业务库-----#
@@ -295,7 +295,7 @@ def appPods
         pod 'FHPushAuthorizationManager', git:'git@code.byted.org:fproject/push_authorization_manager.git', :commit => '9e4474f01e3fd53497c4bfee294eaa030eb20335'
 
     #-----手机通讯录操作库---
-    pod_binary 'TTAddressBookService', '0.1.4'
+    #pod_binary 'TTAddressBookService', '0.1.4'
     
     #-----头条基础库-----
     pod 'TTBaseLib','2.0.13', :subspecs => [

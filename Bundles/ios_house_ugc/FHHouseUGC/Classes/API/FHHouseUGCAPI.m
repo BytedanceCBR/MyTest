@@ -27,6 +27,7 @@
 #import "TTInstallIDManager.h"
 #import "ExploreExtenstionDataHelper.h"
 #import "TTModuleBridge.h"
+#import "FHHouseErrorHubManager.h"
 
 #define DEFULT_ERROR @"请求错误"
 #define API_ERROR_CODE  10000
@@ -103,6 +104,7 @@
                 }
             }
             [FHMainApi addRequestLog:queryPath startDate:startDate backDate:backDate serializeDate:serDate resultType:resultType errorCode:code errorMsg:errMsg extra:extraDict exceptionDict:exceptionDict responseCode:responseCode];
+            [[FHHouseErrorHubManager sharedInstance] checkRequestResponseWithHost:url requestParams:paramDic responseStatus:response response:obj analysisError:backError changeModelType:resultType errorHubType:FHErrorHubTypeRequest];
             if (completion) {
                 dispatch_async(dispatch_get_main_queue(), ^{
                     completion(model,backError);
@@ -214,6 +216,7 @@
                 }
             }
             [FHMainApi addRequestLog:requestLogPath startDate:startDate backDate:backDate serializeDate:serDate resultType:resultType errorCode:code errorMsg:errMsg extra:extraDict exceptionDict:exceptionDict responseCode:responseCode];
+            [[FHHouseErrorHubManager sharedInstance] checkRequestResponseWithHost:queryPath requestParams:paramDic responseStatus:response response:obj analysisError:backError changeModelType:resultType errorHubType:FHErrorHubTypeRequest];
             if (completion) {
                 dispatch_async(dispatch_get_main_queue(), ^{
                     completion(model, backError);

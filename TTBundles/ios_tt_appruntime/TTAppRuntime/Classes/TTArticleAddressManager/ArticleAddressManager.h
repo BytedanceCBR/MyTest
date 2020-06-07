@@ -7,7 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "SSAddressBook.h"
+//#import "SSAddressBook.h"
 
 @interface ArticleAddressManager : NSObject
 + (instancetype)sharedManager;
