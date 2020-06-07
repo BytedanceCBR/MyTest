@@ -6,15 +6,31 @@
 //
 
 #import "FHLynxView.h"
-#import <Lynx/LynxView.h>
 #import <mach/mach_time.h>
 #import "FHLynxCoreBridge.h"
+#import "FHLynxManager.h"
+#import <Lynx/LynxView.h>
+#import <mach/mach_time.h>
+#import "HMDTTMonitor.h"
+#import "TTInstallIDManager.h"
+#import <SDWebImage/SDWebImageManager.h>
+#import "UIDevice+BTDAdditions.h"
+#import "IESGeckoKit.h"
+#import <FHHouseBase/FHIESGeckoManager.h>
+#import "FHLynxPageBridge.h"
+#import "UIViewController+Refresh_ErrorHandler.h"
+#import "BDWebViewBlankDetect.h"
+
+@implementation FHLynxViewBaseParams
+@end
 
 @interface FHLynxView()
 @property (nonatomic, assign) CGRect lynxViewFrame;
 @property (nonatomic, copy) NSString *channel;
+@property (nonatomic, assign) NSTimeInterval loadTime; //页面加载时间
 
 @end
+
 
 @implementation FHLynxView
 
@@ -52,20 +68,10 @@
         self.channel = params.channel;
     }
     
-    if (self.data) {
-        // Hybrid Monitor
-        [self loadLynxBaseParams:params];
-    } else if (params.sourceUrl) {
-        // Add params to url for reload url from remote without cache
-        BOOL hasParams = [params.sourceUrl rangeOfString:@"?"].location != NSNotFound;
-        NSString* seperator = hasParams ? @"&" : @"?";
-        NSString* url = [params.sourceUrl stringByAppendingFormat:@"%@t=%llu", seperator, mach_absolute_time()];
-        [_lynxView loadTemplateFromURL:url];
-    } else {
-        NSAssert(false, @"url or data should set for TemplateView");
-    }
+    NSData *tempLateData = [[FHLynxManager sharedInstance] lynxDataForChannel:self.channel templateKey:[FHLynxManager defaultJSFileName] version:0];
     
-    [self insertSubview:self.lynxView atIndex:0];
+    [self.lynxView loadTemplate:tempLateData withURL:@"local"];
+
 }
 
 #pragma mark - reload Lynx
@@ -111,11 +117,18 @@
 - (LynxView *)lynxView
 {
     if (!_lynxView) {
+        CGRect screenFrame = [UIScreen mainScreen].bounds;
         _lynxView = [[LynxView alloc] initWithBuilderBlock:^(LynxViewBuilder* builder) {
-            builder.isUIRunningMode = YES;
-            builder.config = [[LynxConfig alloc] initWithProvider:LynxConfig.globalConfig.templateProvider];
-            [builder.config registerModule:[FHLynxCoreBridge class]];
-        }];
+               builder.isUIRunningMode = YES;
+               builder.config = [[LynxConfig alloc] initWithProvider:LynxConfig.globalConfig.templateProvider];
+               [builder.config registerModule:[FHLynxCoreBridge class]];
+          }];
+        _lynxView.layoutWidthMode = LynxViewSizeModeExact;
+        _lynxView.layoutHeightMode = LynxViewSizeModeUndefined;
+        _lynxView.preferredLayoutWidth = screenFrame.size.width;
+        _lynxView.client = self;
+        _lynxView.preferredMaxLayoutHeight = screenFrame.size.height;
+        [_lynxView triggerLayout];
         switch (self.widthMode) {
             case FHLynxViewSizeModeUndefined:
                 _lynxView.layoutWidthMode = LynxViewSizeModeUndefined;
@@ -152,10 +165,114 @@
                 _lynxView.preferredMaxLayoutHeight = self.lynxViewFrame.size.height;
                 break;
         }
-        [_lynxView invalidateIntrinsicContentSize];
         _lynxView.frame = CGRectMake(0, 0, _lynxView.intrinsicContentSize.width, _lynxView.intrinsicContentSize.height);
     }
     return _lynxView;
+}
+
+#pragma mark - LynxClient
+- (void)lynxViewDidFirstScreen:(LynxView*)view{
+    NSTimeInterval costTime = [[NSDate date] timeIntervalSince1970] - _loadTime;
+    [self sendCostTimeEvent:costTime andService:@"lynx_page_duration"];
+    [self sendEvent:@"0" andError:nil];
+    
+    [BDWebViewBlankDetect detectBlankByOldSnapshotWithView:view CompleteBlock:^(BOOL isBlank, UIImage * _Nonnull image, NSError * _Nonnull error) {
+        if (isBlank) {
+            NSMutableDictionary * paramsExtra = [NSMutableDictionary new];
+            [paramsExtra setValue:[[TTInstallIDManager sharedInstance] deviceID] forKey:@"device_id"];
+            NSMutableDictionary *uploadParams = [NSMutableDictionary new];
+            [uploadParams setValue:error.description forKey:@"error"];
+            [uploadParams setValue:self.channel forKey:@"channel"];
+            [[HMDTTMonitor defaultManager] hmdTrackService:@"lynx_template_black_error" metric:uploadParams category:nil extra:paramsExtra];
+        }
+    }];
+}
+
+- (void)lynxView:(LynxView *)view didRecieveError:(NSError *)error{
+    [self sendEvent:@"1" andError:error];
+
+}
+
+- (void)lynxView:(LynxView *)view didLoadFailedWithUrl:(NSString *)url error:(NSError *)error{
+    [self sendEvent:@"2" andError:error];
+}
+
+- (void)sendEvent:(NSString *)statusStr andError:(NSError *)error
+{
+    NSMutableDictionary * paramsExtra = [NSMutableDictionary new];
+    [paramsExtra setValue:[[TTInstallIDManager sharedInstance] deviceID] forKey:@"device_id"];
+    NSMutableDictionary *uploadParams = [NSMutableDictionary new];
+    [uploadParams setValue:error.description forKey:@"error"];
+    [uploadParams setValue:statusStr forKey:@"status"];
+    [[HMDTTMonitor defaultManager] hmdTrackService:@"lynx_template_data_error" metric:uploadParams category:nil extra:paramsExtra];
+}
+
+- (void)sendCostTimeEvent:(NSTimeInterval)time andService:(NSString *)sevice
+{
+    NSMutableDictionary * paramsExtra = [NSMutableDictionary new];
+    [paramsExtra setValue:[[TTInstallIDManager sharedInstance] deviceID] forKey:@"device_id"];
+     NSMutableDictionary *uploadParams = [NSMutableDictionary new];
+     [uploadParams setValue:@(time) forKey:@"lynx_page_duration"];
+    [[HMDTTMonitor defaultManager] hmdTrackService:sevice metric:uploadParams category:nil extra:paramsExtra];
+}
+
+
+//这里接收TTLynxViewClient抛上来的sizeChange事件
+- (void)lynxViewDidChangeIntrinsicContentSize:(LynxView*)view {
+    
+}
+
+- (NSURL*)shouldRedirectImageUrl:(NSURL*)url {
+  return url;
+}
+
+- (void)loadImageWithURL:(nonnull NSURL*)url
+                    size:(CGSize)targetSize
+              completion:(nonnull LynxImageLoadCompletionBlock)completionBlock {
+    if([url.absoluteString containsString:@"gecko:"]){
+                
+        NSString * imageStr = url.absoluteString;
+        
+        NSString *imageRootPath = [IESGeckoKit rootDirForAccessKey:[FHIESGeckoManager getGeckoKey] channel:nil];
+        NSString *imageUrlPath = [imageStr substringFromIndex:8];
+        NSString *filePath = [NSString stringWithFormat:@"%@/%@",imageRootPath,imageUrlPath];
+        NSURL *fileURL = [NSURL fileURLWithPath:filePath];
+        
+        
+        [[SDWebImageManager sharedManager] loadImageWithURL:fileURL
+          options:0
+          progress:^(NSInteger receivedSize, NSInteger expectedSize, NSURL* _Nullable targetURL) {
+
+          }
+          completed:^(UIImage* _Nullable image, NSData* _Nullable data, NSError* _Nullable error,
+                      SDImageCacheType cacheType, BOOL finished, NSURL* _Nullable imageURL) {
+            if (error) {
+                UIImage *imagePlaceholder = [UIImage imageNamed:@"house_cell_placeholder"];
+                if (imagePlaceholder) {
+                    completionBlock(imagePlaceholder, nil, url);
+                }
+            }else{
+                completionBlock(image, error, url);
+            }
+        }];
+    }else{
+        [[SDWebImageManager sharedManager] loadImageWithURL:url
+          options:0
+          progress:^(NSInteger receivedSize, NSInteger expectedSize, NSURL* _Nullable targetURL) {
+
+          }
+          completed:^(UIImage* _Nullable image, NSData* _Nullable data, NSError* _Nullable error,
+                      SDImageCacheType cacheType, BOOL finished, NSURL* _Nullable imageURL) {
+            if (error) {
+                UIImage *imagePlaceholder = [UIImage imageNamed:@"house_cell_placeholder"];
+                if (imagePlaceholder) {
+                    completionBlock(imagePlaceholder, nil, url);
+                }
+            }else{
+                completionBlock(image, error, url);
+            }
+        }];
+    }
 }
 /*
 // Only override drawRect: if you perform custom drawing.
