@@ -492,7 +492,7 @@ NSString * const kFHTopSwitchCityLocalKey = @"f_switch_city_top_time_local_key";
                      }
                 }else
                 {
-                    if ([model.data.citySwitch.enable respondsToSelector:@selector(boolValue)] && [model.data.citySwitch.enable boolValue] && hasSelectedCity && [self isTopCitySwitchTimeCompare]) {
+                    if ([model.data.citySwitch.enable respondsToSelector:@selector(boolValue)] && [model.data.citySwitch.enable boolValue] && hasSelectedCity && [self isTopCitySwitchTimeCompare] && ![FHEnvContext canShowLoginTip]) {
                         NSString *stringCurrentDate = [FHUtils stringFromNSDate:[NSDate date]];
                         [FHUtils setContent:stringCurrentDate forKey:kFHTopSwitchCityLocalKey];
                         
@@ -666,7 +666,7 @@ NSString * const kFHTopSwitchCityLocalKey = @"f_switch_city_top_time_local_key";
                      }
                 }else
                 {
-                    if ([model.data.citySwitch.enable respondsToSelector:@selector(boolValue)] && [model.data.citySwitch.enable boolValue] && [self isTopCitySwitchTimeCompare]) {
+                    if ([model.data.citySwitch.enable respondsToSelector:@selector(boolValue)] && [model.data.citySwitch.enable boolValue] && [self isTopCitySwitchTimeCompare] &&![FHEnvContext canShowLoginTip]) {
                         NSString *stringCurrentDate = [FHUtils stringFromNSDate:[NSDate date]];
                         [FHUtils setContent:stringCurrentDate forKey:kFHTopSwitchCityLocalKey];
                         

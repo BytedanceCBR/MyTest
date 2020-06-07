@@ -52,7 +52,7 @@
 @property(nonatomic, assign) BOOL isNewDiscovery;
 @property(nonatomic, assign) BOOL isFirstLoad;
 @property(nonatomic, strong) FHUGCPostMenuView *publishMenuView;
-
+@property (nonatomic, assign) BOOL isShowLoginTip;
 @end
 
 @implementation FHCommunityViewController
@@ -68,7 +68,7 @@
     self.categorys = [[FHUGCCategoryManager sharedManager].allCategories copy];
     self.alreadyShowGuide = NO;
     self.ttTrackStayEnable = YES;
-
+    self.isShowLoginTip = NO;
     [self initView];
     [self initViewModel];
     if(self.isNewDiscovery){
@@ -244,10 +244,18 @@
     [self.view addSubview:_containerView];
     
     [self initPublishBtn];
-    [self initLoginTipView];
 }
 - (void)initLoginTipView {
-    self.loginTipview =  [FHLoginTipView showLoginTipViewInView:self.view navbarHeight:0 withTracerDic:self.tracerDict];
+    if (!self.isShowLoginTip) {
+        self.loginTipview =  [FHLoginTipView showLoginTipViewInView:self.view navbarHeight:0 withTracerDic:self.tracerDict];
+        self.isShowLoginTip = YES;
+        self.loginTipview.type = FHLoginTipViewtTypeNeighborhood;
+    }else {
+        if (self.loginTipview) {
+                [self.loginTipview startTimer];
+        }
+    }
+    
 }
 
 - (void)initPublishBtn {
@@ -260,12 +268,16 @@
 - (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
     [self.viewModel viewWillDisappear];
+    if (self.loginTipview) {
+         [self.loginTipview pauseTimer];
+    }
     [self addStayCategoryLog:self.stayTime];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     [self.viewModel viewWillAppear];
+    [self initLoginTipView];
     self.stayTime = [[NSDate date] timeIntervalSince1970];
 //    [self addUgcGuide];
 

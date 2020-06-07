@@ -21,12 +21,16 @@
 @implementation FHLoginTipView
 
 + (instancetype)showLoginTipViewInView:(UIView *)bacView navbarHeight:(CGFloat)navbarHeight withTracerDic:(NSDictionary *)tracerDic {
-    FHLoginTipView *loginTipView = [[FHLoginTipView alloc]initWithFrame:CGRectMake(0, MAIN_SCREENH_HEIGHT - navbarHeight - ([UIDevice btd_isIPhoneXSeries] ? 83 : 49)-50, MAIN_SCREEN_WIDTH, 50)];
-    loginTipView.traceDict = tracerDic;
-    loginTipView.navbarHeight = navbarHeight;
-    [bacView addSubview:loginTipView];
-     loginTipView.showTimer =   [NSTimer scheduledTimerWithTimeInterval:7 target:loginTipView selector:@selector(loginTipViewDsappear) userInfo:nil repeats:NO];
-    return loginTipView;
+    if ([FHEnvContext canShowLoginTip]) {
+        FHLoginTipView *loginTipView = [[FHLoginTipView alloc]initWithFrame:CGRectMake(0, MAIN_SCREENH_HEIGHT - navbarHeight - ([UIDevice btd_isIPhoneXSeries] ? 83 : 49)-50, MAIN_SCREEN_WIDTH, 50)];
+        loginTipView.traceDict = tracerDic;
+        loginTipView.navbarHeight = navbarHeight;
+        [bacView addSubview:loginTipView];
+         loginTipView.showTimer =   [NSTimer scheduledTimerWithTimeInterval:10 target:loginTipView selector:@selector(loginTipViewDsappear) userInfo:nil repeats:NO];
+        return loginTipView;
+    }else {
+        return nil;
+    }
 }
 
 - (void)loginTipViewDsappear {
@@ -38,6 +42,22 @@
 //    }];
     if (_showTimer) {
         [_showTimer invalidate];
+        _showTimer = nil;
+    }
+}
+
+
+
+- (void)pauseTimer {
+    if (_showTimer) {
+        [_showTimer invalidate];
+        _showTimer = nil;
+    }
+}
+
+- (void)startTimer {
+    if (!_showTimer) {
+       _showTimer =   [NSTimer scheduledTimerWithTimeInterval:10 target:self selector:@selector(loginTipViewDsappear) userInfo:nil repeats:NO];
     }
 }
 
@@ -82,7 +102,7 @@
         loginBtn.titleLabel.font = [UIFont themeFontRegular:12];
         [loginBtn addTarget:self action:@selector(gotoLogin) forControlEvents:UIControlEventTouchDown];
         [loginBtn setTitleColor:[UIColor themeWhite] forState:UIControlStateNormal];
-        loginBtn.layer.cornerRadius = 4;
+        loginBtn.layer.cornerRadius = 12;
         [self addSubview:loginBtn];
         _loginBtn = loginBtn;
     }
@@ -91,23 +111,11 @@
 
 - (void)gotoLogin {
     NSMutableDictionary *params = [NSMutableDictionary dictionary];
-    NSString *enterFrom = self.traceDict[@"enter_from"]?:@"be_null";
+    NSString *enterFrom = self.type == FHLoginTipViewtTypeMain? @"maintab":@"neighborhood_tab";
     [params setObject:enterFrom forKey:@"enter_from"];
-    //    [params setObject:@"feed_like" forKey:@"enter_type"];
-    // 登录成功之后不自己Pop，先进行页面跳转逻辑，再pop
+    [params setObject:@"login_tips" forKey:@"enter_type"];
     [params setObject:@(YES) forKey:@"need_pop_vc"];
-    params[@"from_ugc"] = @(YES);
-    //    __weak typeof(self) wSelf = self;
-    //    [TTAccountLoginManager pres]
-    
     [TTAccountLoginManager presentAlertFLoginVCWithParams:params completeBlock:^(TTAccountAlertCompletionEventType type, NSString * _Nullable phoneNum) {
-        //        if (type == TTAccountAlertCompletionEventTypeDone) {
-        //            // 登录成功
-        //            if ([TTAccountManager isLogin]) {
-        //                wSelf.digButton.borderColorThemeKey = kColorLine4;
-        //                [wSelf digButtonOnClick:wSelf.digButton];
-        //            }
-        //        }
     }];
 }
 

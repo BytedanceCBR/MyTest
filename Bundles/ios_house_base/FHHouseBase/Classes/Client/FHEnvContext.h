@@ -307,6 +307,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (NSString *)getCurrentTabIdentifier;
 
+//是否展展示登陆弹窗
++(BOOL)canShowLoginTip;
+
 @end
 
 

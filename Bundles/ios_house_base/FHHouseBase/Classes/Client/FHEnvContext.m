@@ -440,6 +440,11 @@ static NSInteger kGetLightRequestRetryCount = 3;
     return ![[FHEnvContext sharedInstance] getConfigFromCache].citySwitch.enable.boolValue;
 }
 
++ (BOOL)canShowLoginTip
+{
+    return ![[FHEnvContext sharedInstance] getConfigFromCache].barConfig.status.boolValue;
+}
+
 + (void)recordEvent:(NSDictionary *)params andEventKey:(NSString *)traceKey
 {
     if (kIsNSString(traceKey) && kIsNSDictionary(params)) {

@@ -1456,7 +1456,7 @@ typedef NS_ENUM(NSUInteger,TTTabbarTipViewType){
         && nav.viewControllers.count == 1) {
         [self showTipViewIfNeeded];
         
-        [self addUgcGuide];
+//        [self addUgcGuide];
     }
 }
 

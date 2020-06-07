@@ -37,6 +37,7 @@ static NSString * const kFUGCPrefixStr = @"fugc";
 @property (nonatomic,assign)NSInteger totalNum;
 @property (nonatomic, assign) BOOL isSendNotification;
 @property (nonatomic, strong) FHLoginTipView *loginTipview;
+@property (nonatomic, assign) BOOL isShowLoginTip;
 
 @end
 
@@ -49,11 +50,10 @@ static NSString * const kFUGCPrefixStr = @"fugc";
     [self initConstraints]; //更新约束
     [self initViewModel]; //创建viewModel
     [self initNotifications];//订阅通知
-    [self initLoginTipView];
     [self initCityChangeSubscribe];//城市变化通知
     [self bindTopIndexChanged];//绑定头部选中index变化
     // Do any additional setup after loading the view.
-    
+    self.isShowLoginTip = NO;
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         if (!self.isSendNotification) {
             [[NSNotificationCenter defaultCenter] postNotificationName:@"kTTFeedDidDisplay" object:nil];
@@ -66,7 +66,7 @@ static NSString * const kFUGCPrefixStr = @"fugc";
     [super viewWillAppear:animated];
     self.isShowing = YES;
     self.ttTrackStayEnable = YES;
-
+    [self initLoginTipView];
     //UGC地推包检查粘贴板
     [self checkPasteboard:NO];
     
@@ -84,7 +84,9 @@ static NSString * const kFUGCPrefixStr = @"fugc";
 - (void)viewWillDisappear:(BOOL)animated{
     [super viewWillDisappear:animated];
     self.isShowing = NO;
-    
+    if (self.loginTipview) {
+            [self.loginTipview pauseTimer];
+    }
     [self addStayCategoryLog:self.ttTrackStayTime];
     
 }
@@ -152,7 +154,15 @@ static NSString * const kFUGCPrefixStr = @"fugc";
 }
 
 - (void)initLoginTipView {
- self.loginTipview =  [FHLoginTipView showLoginTipViewInView:self.containerView navbarHeight:kNavigationBarHeight withTracerDic:self.tracerDict];
+    if (!self.isShowLoginTip) {
+        self.loginTipview =  [FHLoginTipView showLoginTipViewInView:self.containerView navbarHeight:kNavigationBarHeight withTracerDic:self.tracerDict];
+        self.isShowLoginTip = YES;
+        self.loginTipview.type = FHLoginTipViewtTypeMain;
+    }else {
+        if (self.loginTipview) {
+                [self.loginTipview startTimer];
+        }
+    }
 }
 
 - (void)initCitySwitchView
