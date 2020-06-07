@@ -21,7 +21,7 @@
 @implementation FHLoginTipView
 
 + (instancetype)showLoginTipViewInView:(UIView *)bacView navbarHeight:(CGFloat)navbarHeight withTracerDic:(NSDictionary *)tracerDic {
-    if ([FHEnvContext canShowLoginTip]) {
+    if ([FHEnvContext canShowLoginTip] && ![TTAccount sharedAccount].isLogin) {
         FHLoginTipView *loginTipView = [[FHLoginTipView alloc]initWithFrame:CGRectMake(0, MAIN_SCREENH_HEIGHT - navbarHeight - ([UIDevice btd_isIPhoneXSeries] ? 83 : 49)-50, MAIN_SCREEN_WIDTH, 50)];
         loginTipView.traceDict = tracerDic;
         loginTipView.navbarHeight = navbarHeight;
@@ -116,6 +116,7 @@
     [params setObject:@"login_tips" forKey:@"enter_type"];
     [params setObject:@(YES) forKey:@"need_pop_vc"];
     [TTAccountLoginManager presentAlertFLoginVCWithParams:params completeBlock:^(TTAccountAlertCompletionEventType type, NSString * _Nullable phoneNum) {
+        [self removeFromSuperview];
     }];
 }
 

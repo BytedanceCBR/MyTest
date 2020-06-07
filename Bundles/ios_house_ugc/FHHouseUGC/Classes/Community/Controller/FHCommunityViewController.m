@@ -117,15 +117,11 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(refreshData) name:kFindTabbarKeepClickedNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(changeTab) name:kFHUGCForumPostThreadFinish object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateSegmentView) name:kUGCCategoryGotFinishedNotification object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(loginTipViewDisapper) name:kUGCLoginTipDisapperNotification object:nil];
     
     [TTForumPostThreadStatusViewModel sharedInstance_tt];
     self.isFirstLoad = NO;
 }
 
-- (void)loginTipViewDisapper {
-  [self.loginTipview loginTipViewDsappear];
-}
    
 
 - (void)dealloc {
@@ -252,7 +248,11 @@
         self.loginTipview.type = FHLoginTipViewtTypeNeighborhood;
     }else {
         if (self.loginTipview) {
+            if ([TTAccount sharedAccount].isLogin) {
+                [self.loginTipview removeFromSuperview];
+            }else {
                 [self.loginTipview startTimer];
+            }
         }
     }
     

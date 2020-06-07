@@ -96,7 +96,7 @@
     [_loginBtn setTitleColor:[UIColor themeOrange1] forState:UIControlStateNormal];
     _loginBtn.titleLabel.font = [UIFont themeFontMedium:14];
     _loginBtn.userInteractionEnabled = NO;
-    [_loginBtn setTitle:@"登陆" forState:UIControlStateNormal];
+    [_loginBtn setTitle:@"登录" forState:UIControlStateNormal];
     _loginBtn.layer.cornerRadius = 22;
     [self addSubview:_loginBtn];
     

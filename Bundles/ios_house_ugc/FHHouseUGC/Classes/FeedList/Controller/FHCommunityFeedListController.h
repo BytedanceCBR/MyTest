@@ -76,8 +76,6 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)scrollToTopAndRefreshAllData;
 
 - (void)hideImmediately;
-
-- (void)scrollViewBeginDrag;
 @end
 
 NS_ASSUME_NONNULL_END

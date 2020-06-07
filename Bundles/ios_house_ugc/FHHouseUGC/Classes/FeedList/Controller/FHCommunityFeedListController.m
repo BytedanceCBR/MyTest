@@ -183,9 +183,6 @@
         make.top.mas_equalTo(self.view).offset(errorViewTopOffset);
     }];
 }
-- (void)scrollViewBeginDrag {
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"kUGCLoginTipDisapperNotification" object:nil];
-}
 
 - (void)initNotifyBarView {
     self.notifyBarView = [[ArticleListNotifyBarView alloc]initWithFrame:CGRectZero];
