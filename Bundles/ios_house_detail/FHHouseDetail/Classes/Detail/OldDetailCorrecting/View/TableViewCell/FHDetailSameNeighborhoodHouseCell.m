@@ -344,16 +344,12 @@
                 
                 CGFloat width = [imageModel.width floatValue];
                 CGFloat height = [imageModel.height floatValue];
-                if (width > 0.0) {
-                    [self.topLeftTagImageView mas_updateConstraints:^(MASConstraintMaker *make) {
-                        make.width.mas_equalTo(width);
-                    }];
-                }
-                if (height > 0.0) {
-                    [self.topLeftTagImageView mas_updateConstraints:^(MASConstraintMaker *make) {
-                        make.height.mas_equalTo(height);
-                    }];
-                }
+                [self.topLeftTagImageView mas_updateConstraints:^(MASConstraintMaker *make) {
+                    make.width.mas_equalTo(width > 0.0 ? width : 60);
+                }];
+                [self.topLeftTagImageView mas_updateConstraints:^(MASConstraintMaker *make) {
+                    make.height.mas_equalTo(height > 0.0 ? height : 20);
+                }];
                 
                 self.topLeftTagImageView.hidden = NO;
             } else {
@@ -470,7 +466,7 @@
     
     //图片圆角
     if (!CGRectEqualToRect(self.topLeftTagImageView.frame, CGRectZero)) {
-        if (!_topLeftTagMaskLayer) {
+        if (!_topLeftTagMaskLayer || !CGSizeEqualToSize(_topLeftTagMaskLayer.frame.size, self.topLeftTagImageView.frame.size)) {
             UIBezierPath *maskPath = [UIBezierPath bezierPathWithRoundedRect:self.topLeftTagImageView.bounds
                                                            byRoundingCorners:UIRectCornerTopLeft | UIRectCornerBottomRight
                                                                  cornerRadii:CGSizeMake(10, 10)];
