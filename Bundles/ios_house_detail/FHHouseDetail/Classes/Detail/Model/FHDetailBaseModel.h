@@ -126,6 +126,7 @@ typedef NS_ENUM(NSUInteger, FHRealtorCellShowStyle) {
 @property (nonatomic, copy , nullable) NSString *realtorDetailUrl;
 @property (nonatomic, copy , nullable) NSString *realtorScoreDisplay;
 @property (nonatomic, copy , nullable) NSString *realtorScoreDescription;
+@property (nonatomic, copy , nullable) NSString *realtorDescription;
 @property (nonatomic, assign) NSInteger showRealtorinfo;
 @property (nonatomic, copy , nullable) NSString *callButtonText;
 @property (nonatomic, copy , nullable) NSString *reportButtonText;

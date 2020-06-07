@@ -1533,6 +1533,9 @@ extern NSString *const INSTANT_DATA_KEY;
                 subscribeCell.deleteSubscribeAction = ^(NSString * _Nonnull subscribeId) {
                     [wself requestDeleteSubScribe:subscribeId andText:subscribeText];
                 };
+            }else if ([cell isKindOfClass:[FHHouseAgentCardCell class]]) {
+                FHHouseAgentCardCell *agentCardCell = (FHHouseAgentCardCell *)cell;
+                agentCardCell.currentWeakVC = self.viewController;
             }
             return cell;
         }

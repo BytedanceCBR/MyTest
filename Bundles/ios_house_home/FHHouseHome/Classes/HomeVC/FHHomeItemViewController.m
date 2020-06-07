@@ -945,6 +945,7 @@ static NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
             if ([model.cardType integerValue] == kFHHomeAgentCardType) {
                     //to do 房源cell
                 FHHouseAgentCardCell *cell = [tableView dequeueReusableCellWithIdentifier:NSStringFromClass([FHHouseAgentCardCell class])];
+                cell.currentWeakVC = self;
                 [cell bindAgentData:model traceParams:nil];
                 return cell;
             }

@@ -23,6 +23,8 @@
 #import "UIImage+FIconFont.h"
 #import "YYLabel.h"
 #import "FHSingleImageInfoCellModel.h"
+#import "FHLynxView.h"
+#import "FHLynxRealtorBridge.h"
 
 @interface FHHouseAgentCardCell ()
 
@@ -44,6 +46,7 @@
 @property(nonatomic, strong) FHDetailContactModel *modelData;
 @property(nonatomic, strong) FHHouseDetailPhoneCallViewModel *phoneCallViewModel;
 @property(nonatomic, strong) NSMutableDictionary *traceParams;
+@property(nonatomic, strong) FHLynxView *lynxView;
 
 @property(nonatomic, strong) YYLabel *tagLabel; // 标签 label
 
@@ -80,6 +83,25 @@
 //    layer.borderColor =  [UIColor colorWithHexString:@"#e8e8e8"].CGColor;
 //    layer.borderWidth = 0.5f;
     [self.contentView addSubview:_containerView];
+    
+    [self.containerView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.mas_equalTo(self).mas_offset(15);
+        make.right.mas_equalTo(self).mas_offset(-15);
+        make.top.mas_equalTo(self).offset(0);
+        make.bottom.mas_equalTo(self).offset(0);
+    }];
+    
+     [self.contentView setBackgroundColor:[UIColor themeHomeColor]];
+     [_containerView setBackgroundColor:[UIColor whiteColor]];
+    
+    [self.shadowView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.edges.mas_equalTo(self.containerView);
+    }];
+    
+    if (NO) {
+        [self setUpLynxView];
+        return;
+    }
 
     _topInfoView = [[UIView alloc] init];
     [self.containerView addSubview:_topInfoView];
@@ -99,7 +121,6 @@
     _avator.contentMode = UIViewContentModeScaleAspectFill;
     _avator.clipsToBounds = YES;
     [self.bottomInfoView addSubview:_avator];
-
 
 
     _callBtn = [[FHExtendHotAreaButton alloc] init];
@@ -137,21 +158,11 @@
     [self.bottomInfoView addSubview:_scoreDescription];
 
     [self.topInfoView addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(neighbourhoodInfoClick:)]];
-    [self.bottomInfoView addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(realtorInfoClick:)]];
+    [self.bottomInfoView addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(realtorInfoClick)]];
 
-    [self.callBtn addTarget:self action:@selector(phoneClick:) forControlEvents:UIControlEventTouchUpInside];
-    [self.imBtn addTarget:self action:@selector(imclick:) forControlEvents:UIControlEventTouchUpInside];
+    [self.callBtn addTarget:self action:@selector(phoneClick) forControlEvents:UIControlEventTouchUpInside];
+    [self.imBtn addTarget:self action:@selector(imclick) forControlEvents:UIControlEventTouchUpInside];
 
-    [self.containerView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(self).mas_offset(15);
-        make.right.mas_equalTo(self).mas_offset(-15);
-        make.top.mas_equalTo(self).offset(0);
-        make.bottom.mas_equalTo(self).offset(0);
-    }];
-
-    [self.shadowView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.edges.mas_equalTo(self.containerView);
-    }];
 
     [self.topInfoView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.left.right.mas_equalTo(self.containerView);
@@ -220,10 +231,18 @@
         make.right.mas_equalTo(self.callBtn.mas_left).offset(-30);
         make.centerY.mas_equalTo(self.avator);
     }];
-    
-    [self.contentView setBackgroundColor:[UIColor themeHomeColor]];
-    [_containerView setBackgroundColor:[UIColor whiteColor]];
+ 
 
+}
+
+- (void)setUpLynxView{
+    _lynxView = [[FHLynxView alloc] initWithFrame:CGRectMake(15, 0, [UIScreen mainScreen].bounds.size.width - 30, 116)];
+    [self.containerView addSubview:_lynxView];
+    FHLynxViewBaseParams *baesparmas = [[FHLynxViewBaseParams alloc] init];
+    baesparmas.channel = @"lynx_realtor_card";
+    baesparmas.bridgePrivate = self;
+    baesparmas.clsPrivate = [FHLynxRealtorBridge class];
+    [_lynxView loadLynxWithParams:baesparmas];
 }
 
 - (void)bindData:(FHHouseNeighborAgencyModel *)model traceParams:(NSMutableDictionary *)params {
@@ -251,14 +270,32 @@
 
 - (void)updateUIFromData:(id)data{
      FHHomeHouseDataItemsModel *itemModel =  (FHHomeHouseDataItemsModel *)data;
+     
         if (itemModel) {
             FHDetailContactModel *contactModel =  itemModel.contactModel;
             self.modelData = contactModel;
             self.itemHomeModel = itemModel;
             
-            
-            self.mainTitleLabel.text = @"天府新区南区其他金牌经纪人1对1服务";
+   
             if (contactModel) {
+                
+                NSMutableDictionary *tracerDict = @{}.mutableCopy;
+                if (self.traceParams) {
+                      [tracerDict addEntriesFromDictionary:self.traceParams];
+                }
+                
+                if (!self.phoneCallViewModel) {
+                    self.phoneCallViewModel = [[FHHouseDetailPhoneCallViewModel alloc] initWithHouseType:FHHouseTypeSecondHandHouse houseId:nil];
+                }
+                self.phoneCallViewModel.tracerDict = tracerDict;
+                self.phoneCallViewModel.belongsVC = self.currentWeakVC;
+
+                if (itemModel.contactModel && _lynxView) {
+                  [_lynxView updateData:itemModel.contactModel.toDictionary];
+                  return;
+                }
+                
+                self.mainTitleLabel.text = contactModel.realtorDescription;
                 self.name.text = contactModel.realtorName;
                 self.agency.text = contactModel.agencyName;
                 self.score.text = contactModel.realtorScoreDisplay;
@@ -277,15 +314,8 @@
                 if (contactModel.avatarUrl.length > 0) {
                     [self.avator bd_setImageWithURL:[NSURL URLWithString:contactModel.avatarUrl] placeholder:[UIImage imageNamed:@"detail_default_avatar"]];
                 }
-                self.phoneCallViewModel = [[FHHouseDetailPhoneCallViewModel alloc] initWithHouseType:FHHouseTypeSecondHandHouse houseId:nil];
     //            BOOL isLicenceIconHidden = ![self shouldShowContact:model.contactModel];
 
-                NSMutableDictionary *tracerDict = @{}.mutableCopy;
-                if (self.traceParams) {
-                    [tracerDict addEntriesFromDictionary:self.traceParams];
-                }
-                self.phoneCallViewModel.tracerDict = tracerDict;
-    //            self.phoneCallViewModel.belongsVC = ite.belongsVC;
             } else {
                 [self.bottomInfoView setHidden:YES];
             }
@@ -323,6 +353,11 @@
     
 }
 
+- (void)setCurrentWeakVC:(UIViewController *)currentWeakVC{
+    _currentWeakVC = currentWeakVC;
+    self.phoneCallViewModel.belongsVC = currentWeakVC;
+}
+
 + (CGFloat)heightForData:(id)data
 {
     return 136;// + 10;
@@ -339,7 +374,7 @@
     return result;
 }
 
-- (void)imclick:(UIButton *)btn {
+- (void)imclick{
     if (self.modelData) {
         FHDetailContactModel *contact = self.modelData;
         if (self.phoneCallViewModel) {
@@ -356,7 +391,7 @@
 
 }
 
-- (void)phoneClick:(UIButton *)btn {
+- (void)phoneClick {
     if (self.modelData) {
         FHDetailContactModel *contact = self.itemHomeModel.contactModel;
 
@@ -408,19 +443,19 @@
     }
 }
 
-- (void)realtorInfoClick:(id)realtorInfoClick {
+- (void)realtorInfoClick {
     if (self.modelData) {
-//        FHDetailContactModel *contact = self.modelData.contactModel;
-//        NSMutableDictionary *extraDict = @{}.mutableCopy;
-//        extraDict[@"realtor_position"] = @"neighborhood_expert_card";
-//        extraDict[@"element_from"] = @"neighborhood_expert_card";
-//        extraDict[@"enter_from"] = self.traceParams[@"page_type"];
-//        extraDict[@"page_type"] = nil;
-////        extraDict[@"realtor_rank"] = @"be_null";
-////        extraDict[@"realtor_logpb"] = contact.realtorLogpb;
-//        if (self.phoneCallViewModel) {
-//            [self.phoneCallViewModel jump2RealtorDetailWithPhone:contact isPreLoad:YES extra:extraDict];
-//        }
+        FHDetailContactModel *contact = self.modelData;
+        NSMutableDictionary *extraDict = @{}.mutableCopy;
+        extraDict[@"realtor_position"] = @"neighborhood_expert_card";
+        extraDict[@"element_from"] = @"neighborhood_expert_card";
+        extraDict[@"enter_from"] = self.traceParams[@"page_type"];
+        extraDict[@"page_type"] = nil;
+//        extraDict[@"realtor_rank"] = @"be_null";
+//        extraDict[@"realtor_logpb"] = contact.realtorLogpb;
+        if (self.phoneCallViewModel) {
+            [self.phoneCallViewModel jump2RealtorDetailWithPhone:contact isPreLoad:YES extra:extraDict];
+        }
     }
 }
 - (void)neighbourhoodInfoClick:(id)neighbourhoodInfoClick {

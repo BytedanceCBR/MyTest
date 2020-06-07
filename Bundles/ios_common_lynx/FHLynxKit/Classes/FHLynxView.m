@@ -68,7 +68,10 @@
         self.channel = params.channel;
     }
     
+    [self addSubview:self.lynxView];
+    
     NSData *tempLateData = [[FHLynxManager sharedInstance] lynxDataForChannel:self.channel templateKey:[FHLynxManager defaultJSFileName] version:0];
+    tempLateData = [NSData dataWithContentsOfURL:[NSURL URLWithString:@"http://10.95.249.250:30334/recommend_realtor_card/template.js?1591514916205"]];
     
     [self.lynxView loadTemplate:tempLateData withURL:@"local"];
 
@@ -118,10 +121,12 @@
 {
     if (!_lynxView) {
         CGRect screenFrame = [UIScreen mainScreen].bounds;
+        __weak typeof(self) weakSelf = self;
         _lynxView = [[LynxView alloc] initWithBuilderBlock:^(LynxViewBuilder* builder) {
                builder.isUIRunningMode = YES;
                builder.config = [[LynxConfig alloc] initWithProvider:LynxConfig.globalConfig.templateProvider];
                [builder.config registerModule:[FHLynxCoreBridge class]];
+               [builder.config registerModule:weakSelf.params.clsPrivate param:weakSelf.params.bridgePrivate];
           }];
         _lynxView.layoutWidthMode = LynxViewSizeModeExact;
         _lynxView.layoutHeightMode = LynxViewSizeModeUndefined;
