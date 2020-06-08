@@ -85,7 +85,12 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
     reportParams.extra = extra;
     reportParams.realtorPosition = extra[@"realtor_position"];
     reportParams.searchId = self.tracerDict[@"search_id"] ? : @"be_null";
-    reportParams.groupId = self.tracerDict[@"group_id"]?:(self.tracerDict[@"log_pb"][@"group_id"] ? : @"be_null");
+    
+    if(self.tracerDict[@"group_id"]) {
+        reportParams.groupId = self.tracerDict[@"group_id"];
+    } else if([self.tracerDict[@"log_pb"] isKindOfClass:NSDictionary.class]) {
+        reportParams.groupId = (self.tracerDict[@"log_pb"][@"group_id"] ? : @"be_null");
+    }
     
     associateIMModel.reportParams = reportParams;
     
