@@ -175,6 +175,7 @@
 #import "HMDTTMonitor.h"
 #import "UIColor+Theme.h"
 #import <TTUIWidget/TTRefreshAnimationView.h>
+#import "FHUserTracker.h"
 
 #define kPreloadMoreThreshold           10
 #define kInsertLastReadMinThreshold     5
@@ -1604,7 +1605,8 @@ TTRefreshViewDelegate
                         //问答下运营卡片增加 gid
                         [dictTraceParams setValue:obj.uniqueID ? : @"be_null" forKey:@"element_card_id"];
                     }
-                    [BDTrackerProtocol eventV3:@"client_show" params:dictTraceParams];
+//                    [BDTrackerProtocol eventV3:@"client_show" params:dictTraceParams];
+                    [FHUserTracker writeEvent:@"client_show" params:dictTraceParams];
                     
                 }else {
                     
@@ -1614,7 +1616,8 @@ TTRefreshViewDelegate
                     [dictTraceParams setValue:obj.logPb[@"impr_id"] forKey:@"impr_id"];
                     [dictTraceParams setValue:obj.logPb forKey:@"log_pb"];
                     [dictTraceParams setValue:@(obj.cellType) ? : @"be_null" forKey:@"cell_type"];
-                    [BDTrackerProtocol eventV3:@"client_show" params:dictTraceParams];
+//                    [BDTrackerProtocol eventV3:@"client_show" params:dictTraceParams];
+                    [FHUserTracker writeEvent:@"client_show" params:dictTraceParams];
                     
                     [_cellIdDict setObject:@"" forKey:obj.itemID];
                     

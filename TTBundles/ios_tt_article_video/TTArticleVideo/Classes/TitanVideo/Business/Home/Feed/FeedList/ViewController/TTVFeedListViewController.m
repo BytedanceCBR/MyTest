@@ -108,6 +108,7 @@
 #import <BDTSharedHeaders/SSCommonDefines.h>
 #import <Masonry/Masonry.h>
 #import <TTArticleBase/SSCommonLogic.h>
+#import "FHUserTracker.h"
 
 extern BOOL ttvs_threeTopBarEnable(void);
 extern BOOL ttsettings_getAutoRefreshIntervalForCategoryID(NSString *categoryID);
@@ -906,7 +907,8 @@ TTRefreshViewDelegate>
     [dictTraceParams setValue:itemID forKey:@"item_id"];
 //    [dictTraceParams setValue:item.originData.logPb[@"impr_id"] forKey:@"impr_id"];
     [dictTraceParams setValue:item.originData.logPb forKey:@"log_pb"];
-    [BDTrackerProtocol eventV3:@"client_show" params:dictTraceParams];
+//    [BDTrackerProtocol eventV3:@"client_show" params:dictTraceParams];
+    [FHUserTracker writeEvent:@"client_show" params:dictTraceParams];
     
     /*impression统计相关*/
     SSImpressionStatus impressionStatus = (self.isDisplayView && _isShowing) ? SSImpressionStatusRecording : SSImpressionStatusSuspend;
