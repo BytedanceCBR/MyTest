@@ -84,7 +84,12 @@ NSString * const kFHTopSwitchCityLocalKey = @"f_switch_city_top_time_local_key";
     if (![self.currentReGeocode isKindOfClass:[BDUGBasePlacemark class]]) {
            self.currentReGeocode = nil;
     }
-    self.currentLocaton = [self.locationCache objectForKey:@"fh_currentLocaton"];
+    
+    if ([self isHaveLocationAuthorization]) {
+        self.currentLocaton = [self.locationCache objectForKey:@"fh_currentLocaton"];
+    }else{
+        [self cleanLocationData];
+    }
 
     self.isLocationSuccess = [(NSNumber *)[self.locationCache objectForKey:@"fh_isLocationSuccess"] boolValue];
     self.retryConfigCount = 3;
@@ -113,6 +118,7 @@ NSString * const kFHTopSwitchCityLocalKey = @"f_switch_city_top_time_local_key";
     [self.locationCache removeObjectForKey:@"fh_currentLocaton"];
     [self.locationCache removeObjectForKey:@"fh_currentReGeocode"];
 }
+
 
 - (void)setIsLocationSuccess:(BOOL)isLocationSuccess {
     _isLocationSuccess = isLocationSuccess;
@@ -444,14 +450,14 @@ NSString * const kFHTopSwitchCityLocalKey = @"f_switch_city_top_time_local_key";
         
         if (completion) {
             // 城市选择重新定位需回调
-            completion(location);
+            completion(self.currentAmpReGeocode);
             [[FHEnvContext sharedInstance] updateRequestCommonParams];
         } else {
             NSInteger cityId = 0;
             if ([[FHEnvContext getCurrentSelectCityIdFromLocal] respondsToSelector:@selector(integerValue)]) {
                 cityId = [[FHEnvContext getCurrentSelectCityIdFromLocal] integerValue];
             }
-            [FHConfigAPI requestGeneralConfig:cityId gaodeLocation:locationInfo.location.coordinate gaodeCityId:location.cityCode gaodeCityName:location.city completion:^(FHConfigModel * _Nullable model, NSError * _Nullable error) {
+            [FHConfigAPI requestGeneralConfig:cityId gaodeLocation:wSelf.currentLocaton.coordinate gaodeCityId:location.cityCode gaodeCityName:location.city completion:^(FHConfigModel * _Nullable model, NSError * _Nullable error) {
                 if (!model || error) {
                     wSelf.retryConfigCount -= 1;
                     if (wSelf.retryConfigCount >= 0)

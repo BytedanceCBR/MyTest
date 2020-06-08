@@ -14,7 +14,7 @@
 #import "TTThirdPartyAccountsHeader.h"
 #import "SSAvatarView+VerifyIcon.h"
 
-#import "SSABPerson.h"
+//#import "SSABPerson.h"
 #import "ArticleAddressManager.h"
 #import "SSThemed.h"
 #import "UIImage+TTThemeExtension.h"
