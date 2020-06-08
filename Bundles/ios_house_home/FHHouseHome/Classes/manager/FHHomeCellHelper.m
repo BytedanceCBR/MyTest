@@ -383,17 +383,7 @@ static NSMutableArray  * _Nullable identifierArr;
                 //通勤找房
                 [[FHCommuteManager sharedInstance] tryEnterCommutePage:itemModel.openUrl logParam:dictTrace];
             }else{
-                BOOL jumpLynxHeader = [[FHLynxManager sharedInstance] checkChannelTemplateIsAvalable:@"ugc_encyclopedia_lynx_header" templateKey:[FHLynxManager defaultJSFileName]];
-                BOOL jumpLynxItem = [[FHLynxManager sharedInstance] checkChannelTemplateIsAvalable:@"ugc_encyclopedia_lynx_item" templateKey:[FHLynxManager defaultJSFileName]];
-                if (jumpLynxHeader && jumpLynxItem) {
-                    if ([[url absoluteString] containsString:@"f_house_encyclopedia"]) {
-                        url = [NSURL URLWithString:@"sslocal://house_encyclopedia?page_type=f_house_encyclopedia&category_name=f_house_encyclopedia&enter_from=f_house_encyclopedia"] ;
-                    }
-                    [dictTrace setValue:@"maintab_icon" forKey:@"origin_from"];
-                    [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
-                }else {
-                    [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
-                }
+                 [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
             }
         }
     };
