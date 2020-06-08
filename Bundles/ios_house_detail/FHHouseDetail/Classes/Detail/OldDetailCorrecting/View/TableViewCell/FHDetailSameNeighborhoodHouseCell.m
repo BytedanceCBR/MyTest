@@ -310,13 +310,16 @@
             self.icon.image = [UIImage imageNamed:@"default_image"];
         }
         
-        if (model.houseImageTag.text) {
-            self.imageTagLabel.textColor = [UIColor whiteColor];
-            self.imageTagLabel.text = model.houseImageTag.text;
-            self.imageTagLabelBgView.backgroundColor = [UIColor colorWithHexStr:@"#f3ae0c"];
-            self.imageTagLabelBgView.hidden = NO;
-        }else {
-            self.imageTagLabelBgView.hidden = YES;
+        //当企业担保和降价房源同时存在时，优先展示企业担保标签
+        if (!model.tagImage || !model.tagImage.count) {
+            if (model.houseImageTag.text) {
+                self.imageTagLabel.textColor = [UIColor whiteColor];
+                self.imageTagLabel.text = model.houseImageTag.text;
+                self.imageTagLabelBgView.backgroundColor = [UIColor colorWithHexStr:@"#f3ae0c"];
+                self.imageTagLabelBgView.hidden = NO;
+            }else {
+                self.imageTagLabelBgView.hidden = YES;
+            }
         }
         
         self.houseVideoImageView.hidden = !model.houseVideo.hasVideo;
@@ -332,29 +335,27 @@
         self.priceLabel.text = model.displayPrice;
         self.spaceLabel.text = model.displayPricePerSqm;
         
-        //企业担保标签（优先展示house_image_tag）
-        if (!model.houseImageTag.text || !model.houseImageTag) {
-            if (model.tagImage && model.tagImage.count > 0) {
-                FHImageModel *imageModel = model.tagImage.firstObject;
-                if (!imageModel.url.length) {
-                    return;
-                }
-                
-                [self.topLeftTagImageView bd_setImageWithURL:[NSURL URLWithString:imageModel.url]];
-                
-                CGFloat width = [imageModel.width floatValue];
-                CGFloat height = [imageModel.height floatValue];
-                [self.topLeftTagImageView mas_updateConstraints:^(MASConstraintMaker *make) {
-                    make.width.mas_equalTo(width > 0.0 ? width : 60);
-                }];
-                [self.topLeftTagImageView mas_updateConstraints:^(MASConstraintMaker *make) {
-                    make.height.mas_equalTo(height > 0.0 ? height : 20);
-                }];
-                
-                self.topLeftTagImageView.hidden = NO;
-            } else {
-                self.topLeftTagImageView.hidden = YES;
+        //企业担保标签
+        if (model.tagImage && model.tagImage.count > 0) {
+            FHImageModel *imageModel = model.tagImage.firstObject;
+            if (!imageModel.url.length) {
+                return;
             }
+            
+            [self.topLeftTagImageView bd_setImageWithURL:[NSURL URLWithString:imageModel.url]];
+            
+            CGFloat width = [imageModel.width floatValue];
+            CGFloat height = [imageModel.height floatValue];
+            [self.topLeftTagImageView mas_updateConstraints:^(MASConstraintMaker *make) {
+                make.width.mas_equalTo(width > 0.0 ? width : 60);
+            }];
+            [self.topLeftTagImageView mas_updateConstraints:^(MASConstraintMaker *make) {
+                make.height.mas_equalTo(height > 0.0 ? height : 20);
+            }];
+            
+            self.topLeftTagImageView.hidden = NO;
+        } else {
+            self.topLeftTagImageView.hidden = YES;
         }
     }
     [self layoutIfNeeded];
