@@ -946,7 +946,15 @@ static NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
                     //to do 房源cell
                 FHHouseAgentCardCell *cell = [tableView dequeueReusableCellWithIdentifier:NSStringFromClass([FHHouseAgentCardCell class])];
                 cell.currentWeakVC = self;
-                [cell bindAgentData:model traceParams:nil];
+                NSMutableDictionary *traceDict = [NSMutableDictionary new];
+                traceDict[@"origin_from"] = @"old_list";
+                traceDict[@"element_type"] = @"maintab_list";
+                traceDict[@"page_type"] = @"maintab";
+                traceDict[@"rank"] = @"0";
+                traceDict[@"search_id"] = self.currentSearchId;
+                traceDict[@"origin_search_id"] = self.originSearchId;
+                traceDict[@"realtor_position"] = @"realtor_card";
+                [cell bindAgentData:model traceParams:traceDict];
                 return cell;
             }
         }
@@ -982,6 +990,9 @@ static NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
     }
     
     FHHomeHouseDataItemsModel *cellModel = [_houseDataItemsModel objectAtIndex:indexPath.row];
+    if ([cellModel.cardType integerValue] == kFHHomeAgentCardType) {
+        return;
+    }
     if (cellModel.idx && ![self.traceRecordDict objectForKey:cellModel.idx])
     {
         if (cellModel.idx) {
@@ -1043,10 +1054,13 @@ static NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
 
 #pragma mark - 详情页跳转
 -(void)jumpToDetailPage:(NSIndexPath *)indexPath {
-    [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:@"sslocal://sample_lynx_page?channel=lynx_common_question"] userInfo:nil];
-    return;
     if (self.houseDataItemsModel.count > indexPath.row) {
         FHHomeHouseDataItemsModel *theModel = self.houseDataItemsModel[indexPath.row];
+        
+        if ([theModel.cardType integerValue] == kFHHomeAgentCardType) {
+            return;
+        }
+        
         NSMutableDictionary *traceParam = [NSMutableDictionary new];
         traceParam[@"enter_from"] = [self pageTypeString];
         traceParam[@"log_pb"] = theModel.logPb;

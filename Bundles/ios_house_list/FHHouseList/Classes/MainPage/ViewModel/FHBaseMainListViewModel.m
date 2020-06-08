@@ -1512,6 +1512,21 @@ extern NSString *const INSTANT_DATA_KEY;
                     return newHousecell;
                 }
             }
+            
+            if ([cell isKindOfClass:[FHHouseAgentCardCell class]]) {
+                FHHouseAgentCardCell *agentCardCell = (FHHouseAgentCardCell *)cell;
+                NSMutableDictionary *traceDict = [NSMutableDictionary new];
+                traceDict[@"origin_from"] = @"old";
+                traceDict[@"element_type"] = @"be_null";
+                traceDict[@"page_type"] = @"old_kind_list";
+                traceDict[@"rank"] = @"0";
+                traceDict[@"search_id"] = self.searchId;
+                traceDict[@"origin_search_id"] = self.originSearchId;
+                traceDict[@"realtor_position"] = @"realtor_card";
+                agentCardCell.traceParams = traceDict;
+                agentCardCell.currentWeakVC = self.viewController;
+            }
+            
                [cell refreshWithData:data];
             if ([cell isKindOfClass:[FHHouseListAgencyInfoCell class]]) {
                 FHHouseListAgencyInfoCell *agencyInfoCell = (FHHouseListAgencyInfoCell *)cell;
@@ -1533,9 +1548,6 @@ extern NSString *const INSTANT_DATA_KEY;
                 subscribeCell.deleteSubscribeAction = ^(NSString * _Nonnull subscribeId) {
                     [wself requestDeleteSubScribe:subscribeId andText:subscribeText];
                 };
-            }else if ([cell isKindOfClass:[FHHouseAgentCardCell class]]) {
-                FHHouseAgentCardCell *agentCardCell = (FHHouseAgentCardCell *)cell;
-                agentCardCell.currentWeakVC = self.viewController;
             }
             return cell;
         }
@@ -1634,6 +1646,11 @@ extern NSString *const INSTANT_DATA_KEY;
         if (hashString.length < 1) {
             return;
         }
+        
+        if (cellModel.cardType == FHSearchCardTypeAgentCard) {
+           return;
+        }
+        
         NSString *hasShow = self.showHouseDict[hashString];
         if ([hasShow isEqualToString:@"1"]) {
             return;
@@ -1659,6 +1676,11 @@ extern NSString *const INSTANT_DATA_KEY;
             cellModel = self.sugesstHouseList[indexPath.row];           
         }
     }
+    
+    if ([cellModel isKindOfClass:[FHSearchBaseItemModel class]] && ((FHSearchBaseItemModel *)cellModel).cardType == FHSearchCardTypeAgentCard) {
+        return;
+    }
+    
     [self showHouseDetail:cellModel atIndexPath:indexPath];
     if ([cellModel isKindOfClass:[FHSearchHouseItemModel class]]) {
         FHSearchHouseItemModel *model = (FHSearchHouseItemModel *)cellModel;

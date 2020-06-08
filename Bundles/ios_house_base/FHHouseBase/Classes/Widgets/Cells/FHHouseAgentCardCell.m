@@ -45,9 +45,7 @@
 @property (nonatomic, strong) FHHomeHouseDataItemsModel *itemHomeModel;
 @property(nonatomic, strong) FHDetailContactModel *modelData;
 @property(nonatomic, strong) FHHouseDetailPhoneCallViewModel *phoneCallViewModel;
-@property(nonatomic, strong) NSMutableDictionary *traceParams;
 @property(nonatomic, strong) FHLynxView *lynxView;
-
 @property(nonatomic, strong) YYLabel *tagLabel; // 标签 label
 
 @end
@@ -232,7 +230,6 @@
         make.centerY.mas_equalTo(self.avator);
     }];
  
-
 }
 
 - (void)setUpLynxView{
@@ -252,6 +249,8 @@
 
 - (void)bindAgentData:(FHHomeHouseDataItemsModel *)itemModel traceParams:(NSMutableDictionary *)params {
     if (itemModel) {
+        self.traceParams = params;
+        self.tracerDict = params;
         [self updateUIFromData:itemModel];
     }
 }
@@ -320,6 +319,9 @@
                 [self.bottomInfoView setHidden:YES];
             }
         }
+    
+    
+    [self addRealtorShowLog:self.modelData];
 }
 
 - (void)refreshWithData:(id)data
@@ -373,13 +375,17 @@
     }
     return result;
 }
+- (void)setTraceParams:(NSMutableDictionary *)traceParams{
+    _traceParams = traceParams;
+    _tracerDict = traceParams;
+}
 
 - (void)imclick{
     if (self.modelData) {
         FHDetailContactModel *contact = self.modelData;
         if (self.phoneCallViewModel) {
             NSMutableDictionary *imExtra = @{}.mutableCopy;
-            imExtra[@"realtor_position"] = @"neighborhood_expert_card";
+            imExtra[@"realtor_position"] = @"realtor_card";
 
             if(self.itemHomeModel.associateInfo) {
                 imExtra[kFHAssociateInfo] = self.itemHomeModel.associateInfo;
@@ -389,6 +395,24 @@
         }
     }
 
+}
+
+- (void)addRealtorShowLog:(FHDetailContactModel *)contactPhone
+{
+    NSMutableDictionary *tracerDic = @{}.mutableCopy;
+    tracerDic[@"page_type"] = self.tracerDict[@"page_type"] ? : @"be_null";
+    tracerDic[@"element_type"] = self.tracerDict[@"element_type"];
+    tracerDic[@"realtor_rank"] = self.tracerDict[@"rank"] ? : @"be_null";
+    tracerDic[@"origin_from"] = self.tracerDict[@"origin_from"] ? : @"be_null";
+    tracerDic[@"origin_search_id"] = self.tracerDict[@"origin_search_id"] ? : @"be_null";
+    tracerDic[@"log_pb"] = self.tracerDict[@"log_pb"] ? : @"be_null";
+    tracerDic[@"realtor_id"] = contactPhone.realtorId ?: @"be_null";
+    tracerDic[@"realtor_rank"] = @(0);
+    tracerDic[@"realtor_logpb"] = contactPhone.realtorLogpb;
+    tracerDic[@"search_id"] = self.tracerDict[@"search_id"] ? : @"be_null";
+    tracerDic[@"origin_search_id"] = self.tracerDict[@"origin_search_id"] ? : @"be_null";
+    tracerDic[@"realtor_position"] = self.tracerDict[@"realtor_position"] ? : @"realtor_card";
+    [FHUserTracker writeEvent:@"realtor_show" params:tracerDic];
 }
 
 - (void)phoneClick {
@@ -401,7 +425,7 @@
         }
         extraDict[@"realtor_id"] = contact.realtorId;
         extraDict[@"realtor_rank"] = @"be_null";
-        extraDict[@"realtor_position"] = @"neighborhood_expert_card";
+        extraDict[@"realtor_position"] = @"realtor_card";
         extraDict[@"realtor_logpb"] = contact.realtorLogpb;
 //        extraDict[@"element_from"] = @"neighborhood_expert_card";
 //        extraDict[kFHClueEndpoint] = @(FHClueEndPointTypeC);
@@ -447,10 +471,11 @@
     if (self.modelData) {
         FHDetailContactModel *contact = self.modelData;
         NSMutableDictionary *extraDict = @{}.mutableCopy;
-        extraDict[@"realtor_position"] = @"neighborhood_expert_card";
-        extraDict[@"element_from"] = @"neighborhood_expert_card";
+        extraDict[@"realtor_position"] = @"realtor_card";
+        extraDict[@"element_from"] = @"realtor_card";
         extraDict[@"enter_from"] = self.traceParams[@"page_type"];
         extraDict[@"page_type"] = nil;
+        extraDict[@"origin_from"] = self.traceParams[@"origin_from"];
 //        extraDict[@"realtor_rank"] = @"be_null";
 //        extraDict[@"realtor_logpb"] = contact.realtorLogpb;
         if (self.phoneCallViewModel) {
