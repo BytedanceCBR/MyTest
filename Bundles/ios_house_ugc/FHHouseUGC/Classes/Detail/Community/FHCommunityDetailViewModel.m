@@ -314,6 +314,7 @@
             }
             self.isLoginSatusChangeFromGroupChat = NO;
             self.isLoginSatusChangeFromPost = NO;
+            [self updateNavBarWithAlpha:self.viewController.customNavBarView.bgView.alpha];
         }else{
             self.isLoginSatusChangeFromGroupChat = NO;
             self.isLoginSatusChangeFromPost = NO;
@@ -731,10 +732,11 @@
     if (!self.isViewAppear) {
         return;
     }
+    UIImage *whiteBackArrowImage = ICON_FONT_IMG(24, @"\U0000e68a", [UIColor whiteColor]);
+    UIImage *blackBackArrowImage = ICON_FONT_IMG(24, @"\U0000e68a", [UIColor themeGray1]);
     alpha = fminf(fmaxf(0.0f, alpha), 1.0f);
     if (alpha <= 0.1f) {
         [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
-        UIImage *whiteBackArrowImage = ICON_FONT_IMG(24, @"\U0000e68a", [UIColor whiteColor]);
         [self.viewController.customNavBarView.leftBtn setBackgroundImage:whiteBackArrowImage forState:UIControlStateNormal];
         [self.viewController.customNavBarView.leftBtn setBackgroundImage:whiteBackArrowImage forState:UIControlStateHighlighted];
         self.viewController.titleContainer.hidden = YES;
@@ -743,7 +745,6 @@
     } else if (alpha > 0.1f && alpha < 0.9f) {
         [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault];
         self.viewController.customNavBarView.title.textColor = [UIColor themeGray1];
-        UIImage *blackBackArrowImage = ICON_FONT_IMG(24, @"\U0000e68a", [UIColor themeGray1]);
         [self.viewController.customNavBarView.leftBtn setBackgroundImage:blackBackArrowImage forState:UIControlStateNormal];
         [self.viewController.customNavBarView.leftBtn setBackgroundImage:blackBackArrowImage forState:UIControlStateHighlighted];
         self.viewController.titleContainer.hidden = YES;
@@ -751,12 +752,15 @@
         self.shareButton.hidden = NO;
     } else {
         [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault];
-        UIImage *blackBackArrowImage = ICON_FONT_IMG(24, @"\U0000e68a", [UIColor themeGray1]);
         [self.viewController.customNavBarView.leftBtn setBackgroundImage:blackBackArrowImage forState:UIControlStateNormal];
         [self.viewController.customNavBarView.leftBtn setBackgroundImage:blackBackArrowImage forState:UIControlStateHighlighted];
         self.viewController.titleContainer.hidden = NO;
         self.viewController.rightBtn.hidden = NO;
         self.shareButton.hidden = YES;
+    }
+    if(self.viewController.emptyView.hidden == NO) {
+        [self.viewController.customNavBarView.leftBtn setBackgroundImage:blackBackArrowImage forState:UIControlStateNormal];
+        [self.viewController.customNavBarView.leftBtn setBackgroundImage:blackBackArrowImage forState:UIControlStateHighlighted];
     }
     [self.viewController.customNavBarView refreshAlpha:alpha];
 

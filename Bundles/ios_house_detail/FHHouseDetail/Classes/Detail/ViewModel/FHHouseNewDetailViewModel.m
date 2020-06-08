@@ -51,6 +51,7 @@
 #import "FHDetailNewRelatedCell.h"
 #import "FHDetailNeighborhoodAssessCell.h"
 #import "FHDetailAccessCellModel.h"
+#import "FHDetailPictureViewController.h"
 
 @interface FHHouseNewDetailViewModel ()
 
@@ -127,7 +128,20 @@
         }
         
         // 当前VC是否在顶部
-        UIViewController * viewController = (UIViewController *)[TTUIResponderHelper topViewControllerFor: self.detailController];
+        __block UIViewController * viewController = (UIViewController *)[TTUIResponderHelper topViewControllerFor: self.detailController];
+        if (viewController == self.detailController) {
+            // 房源详情添加了子图片VC为子VC，导致需要特殊处理
+            NSArray *tempSubVCs = [viewController childViewControllers];
+            if (tempSubVCs.count > 0) {
+                [tempSubVCs enumerateObjectsUsingBlock:^(UIViewController *  _Nonnull tempVC, NSUInteger idx, BOOL * _Nonnull stop) {
+                    // 图片VC
+                    if([tempVC isKindOfClass:[FHDetailPictureViewController class]]) {
+                        viewController = tempVC;
+                        *stop = YES;
+                    }
+                }];
+            }
+        }
         if (viewController != self.detailController) {
             return NO;
         }
