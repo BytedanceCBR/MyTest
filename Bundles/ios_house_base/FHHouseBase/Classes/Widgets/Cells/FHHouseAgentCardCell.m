@@ -25,6 +25,9 @@
 #import "FHSingleImageInfoCellModel.h"
 #import "FHLynxView.h"
 #import "FHLynxRealtorBridge.h"
+#import "TTSettingsManager.h"
+#import "NSDictionary+TTAdditions.h"
+#import "FHLynxManager.h"
 
 @interface FHHouseAgentCardCell ()
 
@@ -96,7 +99,10 @@
         make.edges.mas_equalTo(self.containerView);
     }];
     
-    if (NO) {
+    NSDictionary *fhSettings= [[TTSettingsManager sharedManager] settingForKey:@"f_settings" defaultValue:@{} freeze:YES];
+    BOOL bool_is_lynx_agent_card_enable = [fhSettings tt_boolValueForKey:@"lynx_agent_card_enable"];
+    
+    if (bool_is_lynx_agent_card_enable) {
         [self setUpLynxView];
         return;
     }
