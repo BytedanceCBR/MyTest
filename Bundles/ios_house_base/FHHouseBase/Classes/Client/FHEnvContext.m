@@ -442,6 +442,8 @@ static NSInteger kGetLightRequestRetryCount = 3;
 
 + (BOOL)canShowLoginTip
 {
+    BOOL canlogin = ![[FHEnvContext sharedInstance] getConfigFromCache].barConfig.status.boolValue;
+    [[ToastManager manager] showToast:[NSString stringWithFormat:@"%@",canlogin]];
     return ![[FHEnvContext sharedInstance] getConfigFromCache].barConfig.status.boolValue;
 }
 
