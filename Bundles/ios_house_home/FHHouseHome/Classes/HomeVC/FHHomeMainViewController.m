@@ -235,6 +235,7 @@ static NSString * const kFUGCPrefixStr = @"fugc";
         [self.topView  updateMapSearchBtn];
         self.viewModel = [[FHHomeMainViewModel alloc] initWithCollectionView:self.collectionView controller:self];
         self.topView.segmentControl.hidden = [FHEnvContext isNewDiscovery];
+        [FHEnvContext sharedInstance].isShowingHomeHouseFind = [FHEnvContext isCurrentCityNormalOpen];
         if([FHEnvContext sharedInstance].isRefreshFromCitySwitch) {
             [self.switchCityView removeFromSuperview];
         }
