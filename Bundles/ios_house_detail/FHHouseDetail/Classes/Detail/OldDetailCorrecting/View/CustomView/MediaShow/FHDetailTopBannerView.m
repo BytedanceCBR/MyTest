@@ -11,6 +11,7 @@
 #import <FHCommonUI/UILabel+House.h>
 #import <FHCommonUI/UIColor+Theme.h>
 #import "FHUIAdaptation.h"
+#import <ByteDanceKit/UIDevice+BTDAdditions.h>
 
 @interface FHDetailTopBannerView ()
 @property (nonatomic, strong) UIImageView *shadowImage;
@@ -59,12 +60,21 @@
     }];
     [self.leftView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.top.bottom.mas_equalTo(0);
-        make.width.mas_equalTo(114);
+        if ([UIDevice btd_deviceWidthType] == BTDDeviceWidthMode320) {
+            make.width.mas_equalTo(98);
+        } else {
+            make.width.mas_equalTo(114);
+        }
     }];
     [self.leftIcon mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(11);
         make.centerY.mas_equalTo(self.leftView);
-        make.width.height.mas_equalTo(24);
+        if ([UIDevice btd_deviceWidthType] == BTDDeviceWidthMode320) {
+            make.left.mas_equalTo(10);
+            make.width.height.mas_equalTo(18);
+        } else {
+            make.left.mas_equalTo(11);
+            make.width.height.mas_equalTo(24);
+        }
     }];
     [self.leftLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(self.leftIcon.mas_right).mas_equalTo(5);
@@ -75,8 +85,13 @@
         make.left.mas_equalTo(self.leftView.mas_right);
     }];
     [self.rightLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(15);
-        make.right.mas_equalTo(-15);
+        if ([UIDevice btd_deviceWidthType] == BTDDeviceWidthMode320) {
+            make.left.mas_equalTo(10);
+            make.right.mas_equalTo(-10);
+        } else {
+            make.left.mas_equalTo(15);
+            make.right.mas_equalTo(-15);
+        }
         make.centerY.mas_equalTo(self.rightView);
     }];
 }
@@ -169,7 +184,7 @@
     if (!_leftLabel) {
         _leftLabel = [[UILabel alloc]init];
         _leftLabel.textColor = [UIColor whiteColor];
-        _leftLabel.font = [UIFont themeFontSemibold:16];
+        _leftLabel.font = [UIDevice btd_deviceWidthType] == BTDDeviceWidthMode320 ? [UIFont themeFontSemibold:14] : [UIFont themeFontSemibold:16];
         _leftLabel.numberOfLines = 1;
     }
     return _leftLabel;
@@ -189,7 +204,7 @@
     if (!_rightLabel) {
         _rightLabel = [[UILabel alloc]init];
         _rightLabel.textColor = [UIColor colorWithHexString:@"#b53d00"];
-        _rightLabel.font = [UIFont themeFontRegular:14];
+        _rightLabel.font = [UIDevice btd_deviceWidthType] == BTDDeviceWidthMode320 ? [UIFont themeFontRegular:12] : [UIFont themeFontRegular:14];
 //        _rightLabel.minimumScaleFactor = 0.5;
 //        _rightLabel.adjustsFontSizeToFitWidth = YES;
         _rightLabel.lineBreakMode = NSLineBreakByTruncatingTail;
