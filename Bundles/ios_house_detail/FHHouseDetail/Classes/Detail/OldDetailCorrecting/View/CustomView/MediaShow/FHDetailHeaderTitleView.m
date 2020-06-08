@@ -442,11 +442,7 @@
     if (self.model.priceConsult.openurl.length) {
         NSMutableDictionary *trackerDict = self.baseViewModel.detailTracerDic;
 //        self.baseViewModel.contactViewModel.
-        NSString *position = @"询总价";
-        if ([self.model.priceConsult.text rangeOfString:@"首付"].location != NSNotFound) {
-            position = @"询首付";
-        }
-        trackerDict[@"click_position"] = position;
+        trackerDict[@"click_position"] = self.model.priceConsult.text?:@"be_null";
         trackerDict[@"page_type"] = @"house_model_info";
         FHDetailContactModel *contactPhone = self.baseViewModel.contactViewModel.contactPhone;
         trackerDict[@"realtor_id"] = contactPhone.realtorId?:@"be_null";

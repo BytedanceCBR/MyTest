@@ -26,6 +26,7 @@
 #import "FHFloorPanPicShowViewController.h"
 #import <TTBaseLib/TTUIResponderHelper.h>
 #import "FHDetailFloorPanDetailInfoModel.h"
+#import <TTUIWidget/TTNavigationController.h>
 
 @interface FHDetailMediaHeaderCorrectingCell ()<FHMultiMediaCorrectingScrollViewDelegate,FHDetailScrollViewDidScrollProtocol,FHDetailVCViewLifeCycleProtocol>
 
@@ -551,7 +552,9 @@
     if (!presentedVC) {
         presentedVC = [TTUIResponderHelper visibleTopViewController];
     }
-    [presentedVC presentViewController:pictureListViewController animated:YES completion:nil];
+    TTNavigationController *navigationController = [[TTNavigationController alloc] initWithRootViewController:pictureListViewController];
+    navigationController.modalPresentationStyle = UIModalPresentationFullScreen;
+    [presentedVC presentViewController:navigationController animated:YES completion:nil];
     self.pictureListViewController = pictureListViewController;
 }
 

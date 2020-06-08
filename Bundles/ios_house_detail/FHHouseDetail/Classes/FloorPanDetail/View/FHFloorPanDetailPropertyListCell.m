@@ -309,7 +309,7 @@
     
 //    NSString *selectCategory = [self.curCategory isEqualToString:@"交通"] ? @"公交" : self.curCategory;
     NSMutableDictionary *infoDict = [NSMutableDictionary dictionary];
-//    [infoDict setValue:selectCategory forKey:@"category"];
+    [infoDict setValue:@"公交" forKey:@"category"];
     [infoDict setValue:latitude?:@"" forKey:@"latitude"];
     [infoDict setValue:longitude?:@"" forKey:@"longitude"];
 //    [infoDict setValue:dataModel.mapCentertitle forKey:@"title"];

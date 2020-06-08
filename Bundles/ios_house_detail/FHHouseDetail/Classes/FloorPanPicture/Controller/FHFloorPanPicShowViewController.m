@@ -94,10 +94,10 @@
     }
     UIEdgeInsets contentInset = self.collectionView.contentInset;
     if (self.bottomBar) {
-        [self.bottomBar mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.height.mas_equalTo(80 + bottomInset);
+        [self.bottomBar mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.height.mas_equalTo(64 + bottomInset);
         }];
-        contentInset.bottom = 20 + bottomInset + 80;
+        contentInset.bottom = 20 + bottomInset + 64;
     } else {
         contentInset.bottom = 20 + bottomInset;
     }
