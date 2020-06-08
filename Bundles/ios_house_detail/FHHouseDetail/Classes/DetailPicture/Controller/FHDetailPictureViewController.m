@@ -259,35 +259,35 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
     self.naviView.albumActionBlock  = ^{
         [weakSelf albumBtnClick];
     };
-    self.naviView.videoTitle.currentTitleBlock = ^(NSInteger currentIndex) {
-        // 1 视频 2 图片
-        if (weakSelf.vedioCount > 0) {
-            NSInteger tempIndex = 0;
-            if (currentIndex == 1) {
-                tempIndex = 0; // 视频
-            }
-            if (currentIndex == 2) {
-                if (weakSelf.currentIndex < weakSelf.vedioCount) {
-                    tempIndex = weakSelf.vedioCount;
-                }
-            }
-            if (tempIndex >= 0 && tempIndex < weakSelf.photoCount && tempIndex != weakSelf.currentIndex) {
-                CGFloat pageWidth = weakSelf.photoScrollView.frame.size.width;
-                [weakSelf.photoScrollView setContentOffset:CGPointMake(pageWidth * tempIndex, 0) animated:NO];
-            }
-        }
-    };
-    self.naviView.hasVideo = self.vedioCount > 0;
+//    self.naviView.videoTitle.currentTitleBlock = ^(NSInteger currentIndex) {
+//        // 1 视频 2 图片
+//        if (weakSelf.vedioCount > 0) {
+//            NSInteger tempIndex = 0;
+//            if (currentIndex == 1) {
+//                tempIndex = 0; // 视频
+//            }
+//            if (currentIndex == 2) {
+//                if (weakSelf.currentIndex < weakSelf.vedioCount) {
+//                    tempIndex = weakSelf.vedioCount;
+//                }
+//            }
+//            if (tempIndex >= 0 && tempIndex < weakSelf.photoCount && tempIndex != weakSelf.currentIndex) {
+//                CGFloat pageWidth = weakSelf.photoScrollView.frame.size.width;
+//                [weakSelf.photoScrollView setContentOffset:CGPointMake(pageWidth * tempIndex, 0) animated:NO];
+//            }
+//        }
+//    };
+//    self.naviView.hasVideo = self.vedioCount > 0;
     if (self.vedioCount > 0) {
         // 有视频
-        if (_startWithIndex < self.vedioCount) {
-            self.naviView.videoTitle.isSelectVideo = YES;
-        } else {
-            self.naviView.videoTitle.isSelectVideo = NO;
-        }
+//        if (_startWithIndex < self.vedioCount) {
+//            self.naviView.videoTitle.isSelectVideo = YES;
+//        } else {
+//            self.naviView.videoTitle.isSelectVideo = NO;
+//        }
         // 特殊处理，如果只有视频
         if (self.photoCount == self.vedioCount) {
-            self.naviView.hasVideo = NO;
+//            self.naviView.hasVideo = NO;
             self.naviView.titleLabel.text = @"视频";
         }
     }
@@ -367,22 +367,7 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
                 make.height.mas_equalTo(60);
                 make.top.mas_equalTo(0);
             }];
-            if (self.saleStatus.length) {
-                UILabel *saleStatusLabel = [[UILabel alloc] init];
-                saleStatusLabel.text = self.saleStatus;
-                saleStatusLabel.textAlignment = NSTextAlignmentCenter;
-                saleStatusLabel.textColor = [UIColor colorWithHexStr:@"#ff9300"];
-                saleStatusLabel.font = [UIFont themeFontMedium:12];
-                saleStatusLabel.layer.cornerRadius = 10;
-                saleStatusLabel.layer.masksToBounds = YES;
-                saleStatusLabel.backgroundColor = [UIColor colorWithRed:255/255.0 green:234/255.0 blue:211/255.0 alpha:0.2];
-                [self.bottomBar addSubview:saleStatusLabel];
-                [saleStatusLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-                    make.centerY.mas_equalTo(bottomTitleLabel.mas_centerY);
-                    make.size.mas_equalTo(CGSizeMake(40, 20));
-                    make.left.mas_equalTo(bottomTitleLabel.mas_right).mas_offset(8);
-                }];
-            }
+
         }
         
         if (self.mediaHeaderModel.contactViewModel) {
@@ -463,7 +448,8 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
         navi.panRecognizer.enabled = NO;
     }
     // 是否正在显示 视频
-    self.isShowenVideo = _naviView.videoTitle.isSelectVideo;
+    self.isShowenVideo = self.currentIndex < self.vedioCount;
+//    _naviView.videoTitle.isSelectVideo;
     // lead_show 埋点
     if (self.mediaHeaderModel.contactViewModel && self.bottomBar && self.bottomBar.hidden == NO) {
         [self addLeadShowLog:self.mediaHeaderModel.contactViewModel.contactPhone baseParams:[self.mediaHeaderModel.contactViewModel baseParams]];
@@ -473,11 +459,11 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
 - (void)setIsShowenVideo:(BOOL)isShowenVideo {
     _isShowenVideo = isShowenVideo;
     if (isShowenVideo) {
-        _pictureTitleView.hidden = YES;
+//        _pictureTitleView.hidden = YES;
         _videoInfoView.hidden = NO;
         [self.videoVC play];
     } else {
-        _pictureTitleView.hidden = NO;
+//        _pictureTitleView.hidden = NO;
         _videoInfoView.hidden = YES;
         [self.videoVC pause];
     }
@@ -786,7 +772,12 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
         _mediaHeaderModel = mediaHeaderModel;
         NSMutableArray *titles = [NSMutableArray new];
         NSMutableArray *numbers = [NSMutableArray new];
-        __block BOOL isFirstItem = YES;
+        if (self.vedioCount) {
+            //把视频添加到第一个图片归类中
+            //1.0.0 需求 视频单独分类
+            [titles addObject:[NSString stringWithFormat:@"视频（%ld）",self.vedioCount]];
+            [numbers addObject:@(self.vedioCount)];
+        }
         for (FHHouseDetailImageListDataModel *listModel in mediaHeaderModel.houseImageDictList) {
             if (listModel.houseImageTypeName.length > 0) {
                 NSInteger tempCount = 0;
@@ -797,10 +788,6 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
                 }
                 if (tempCount > 0) {
                     [titles addObject:[NSString stringWithFormat:@"%@（%ld）",listModel.houseImageTypeName,tempCount]];
-                    if (isFirstItem) {
-                        isFirstItem = NO;
-                        tempCount += self.vedioCount; // 把视频添加到第一个图片归类中
-                    }
                     [numbers addObject:@(tempCount)];
                 }
             }
@@ -1041,8 +1028,8 @@ static BOOL kFHStaticPhotoBrowserAtTop = NO;
     if (self.pictureTitleView) {
         self.pictureTitleView.selectIndex = newIndex;
     }
-    self.naviView.videoTitle.isSelectVideo = newIndex < self.vedioCount;
-    self.isShowenVideo = self.naviView.videoTitle.isSelectVideo;
+//    self.naviView.videoTitle.isSelectVideo = newIndex < self.vedioCount;
+    self.isShowenVideo = newIndex < self.vedioCount;;
     [self unloadPhoto:_currentIndex + 2];
     [self unloadPhoto:_currentIndex - 2];
     

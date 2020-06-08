@@ -435,11 +435,10 @@
         if (model.titleDataModel.facingDirection.length) {
             [bottomBarTitle appendFormat:@" %@",model.titleDataModel.facingDirection];
         }
-        pictureDetailViewController.bottomBarTitle = bottomBarTitle.copy;
-        
         if (model.titleDataModel.saleStatus.length) {
-            pictureDetailViewController.saleStatus = model.titleDataModel.saleStatus;
+             [bottomBarTitle appendFormat:@" %@",model.titleDataModel.saleStatus];
         }
+        pictureDetailViewController.bottomBarTitle = bottomBarTitle.copy;
     }
     
     UIImage *placeholder = [UIImage imageNamed:@"default_image"];
