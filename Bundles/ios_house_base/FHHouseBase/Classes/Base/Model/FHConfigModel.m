@@ -1053,6 +1053,15 @@ DICT_PROP_GET(FHConfigDataRentBannerModel,rentBanner,@"rent_banner")
 
 @end
 
+@implementation  FHConfigDataBarConfigModel
+
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+
+@end
+
 
 @implementation  FHConfigDataOpData2ItemsModel
 

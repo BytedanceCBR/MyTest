@@ -46,7 +46,14 @@
     }
 }
 
-
+- (void)setType:(FHLoginTipViewtType)type {
+    _type = type;
+    if (type == FHLoginTipViewtTypeMain) {
+        _contentLab.text = @"立即登录，关注房源不丢失";
+    }else {
+        _contentLab.text = @"立即登录，推荐内容更精准";
+    }
+}
 
 - (void)pauseTimer {
     if (_showTimer) {

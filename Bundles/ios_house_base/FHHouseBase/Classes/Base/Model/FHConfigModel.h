@@ -340,6 +340,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
+
 @interface  FHConfigDataBarConfigModel  : JSONModel
 
 @property (nonatomic, copy , nullable) NSNumber *status;
