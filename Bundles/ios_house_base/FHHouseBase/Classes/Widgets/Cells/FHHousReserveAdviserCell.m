@@ -321,13 +321,25 @@ extern NSString *const kFHPhoneNumberCacheKey;
             self.rightArrow.hidden = YES;
         }
         
+        if(model.subscribeCache && model.targetId){
+            model.isSubcribed = [model.subscribeCache[model.targetId] boolValue];
+        }else{
+            model.isSubcribed = NO;
+        }
+        
         if(model.isSubcribed){
             self.tipNameLabel.text = @"已为您预约顾问，稍后会和您联系";
+            self.subscribeBtn.hidden = YES;
+            self.textField.hidden = YES;
+            self.legalAnnouncement.hidden = YES;
             [self.bottomInfoView mas_updateConstraints:^(MASConstraintMaker *make) {
                 make.height.mas_equalTo(53);
             }];
         }else{
             self.tipNameLabel.text = model.tipText;
+            self.subscribeBtn.hidden = NO;
+            self.textField.hidden = NO;
+            self.legalAnnouncement.hidden = NO;
             [self.bottomInfoView mas_updateConstraints:^(MASConstraintMaker *make) {
                 make.height.mas_equalTo(118);
             }];
@@ -433,6 +445,9 @@ extern NSString *const kFHPhoneNumberCacheKey;
     [FHMainApi requestCallReportByHouseId:nil phone:phoneNum from:nil cluePage:nil clueEndpoint:nil targetType:nil reportAssociate:self.modelData.associateInfo.reportFormInfo agencyList:nil completion:^(FHDetailResponseModel * _Nullable model, NSError * _Nullable error) {
 
         if (model.status.integerValue == 0 && !error) {
+            if(wself.modelData.subscribeCache && wself.modelData.targetId){
+                wself.modelData.subscribeCache[wself.modelData.targetId] = @(YES);
+            }
             NSString *toast = @"已为您预约顾问，稍后将会和您联系";
             [[ToastManager manager] showToast:toast];
             [wself subscribeSuccess];

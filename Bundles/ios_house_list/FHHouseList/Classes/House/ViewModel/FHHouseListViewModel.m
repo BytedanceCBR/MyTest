@@ -116,6 +116,8 @@ extern NSString *const INSTANT_DATA_KEY;
 @property (nonatomic, weak)     FHFakeInputNavbar       *navbar;
 @property(nonatomic , weak) FHMainOldTopTagsView *topTagsView;
 @property(nonatomic , strong) NSArray *cellIdArray;
+//预约以后的状态暂存
+@property (nonatomic, strong) NSMutableDictionary *subscribeCache;
 
 @end
 
@@ -163,6 +165,7 @@ extern NSString *const INSTANT_DATA_KEY;
         _canChangeHouseSearchDic = YES;
         self.houseList = [NSMutableArray array];
         self.sugesstHouseList = [NSMutableArray array];
+        self.subscribeCache = [NSMutableDictionary dictionary];
         self.showPlaceHolder = YES;
         self.isRefresh = YES;
         self.isEnterCategory = YES;
@@ -982,6 +985,7 @@ extern NSString *const INSTANT_DATA_KEY;
                     model.tracerDict = traceParam;
                     model.belongsVC = wself.listVC;
                     model.tableView = wself.tableView;
+                    model.subscribeCache = wself.subscribeCache;
                     theItemModel = model;
                 }
             
@@ -1049,6 +1053,7 @@ extern NSString *const INSTANT_DATA_KEY;
                     model.tracerDict = traceParam;
                     model.belongsVC = wself.listVC;
                     model.tableView = wself.tableView;
+                    model.subscribeCache = wself.subscribeCache;
                     theItemModel = model;
                 }
             

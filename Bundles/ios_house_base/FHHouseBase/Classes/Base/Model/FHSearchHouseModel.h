@@ -364,6 +364,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong , nullable) NSDictionary *tracerDict;
 @property(nonatomic, weak) UIViewController *belongsVC;
 @property(nonatomic, weak) UITableView *tableView;
+@property (nonatomic, strong) NSMutableDictionary *subscribeCache;
 @property(nonatomic, assign) BOOL isSubcribed;
 
 @end

@@ -93,6 +93,8 @@ extern NSString *const INSTANT_DATA_KEY;
 
 @property(nonatomic , strong) UIView *bottomLine;
 @property (nonatomic, strong) NSMutableDictionary *showCache;
+//预约以后的状态暂存
+@property (nonatomic, strong) NSMutableDictionary *subscribeCache;
 
 @end
 
@@ -117,6 +119,7 @@ extern NSString *const INSTANT_DATA_KEY;
         _sugesstHouseList = [NSMutableArray new];
         _showHouseDict = [NSMutableDictionary new];
         _showCache = [NSMutableDictionary new];
+        _subscribeCache = [NSMutableDictionary new];
         _currentRecommendHouseDataModel = nil;
         _houseDataModel = nil;
         
@@ -782,6 +785,7 @@ extern NSString *const INSTANT_DATA_KEY;
                     }
                     model.tracerDict = traceParam;
                     model.belongsVC = wself.viewController;
+                    model.subscribeCache = wself.subscribeCache;
                     model.tableView = wself.tableView;
                     theItemModel = model;
                 }else if ([theItemModel isKindOfClass:[FHSearchHouseDataRedirectTipsModel class]]) {
@@ -855,6 +859,7 @@ extern NSString *const INSTANT_DATA_KEY;
                     model.tracerDict = traceParam;
                     model.belongsVC = wself.viewController;
                     model.tableView = wself.tableView;
+                    model.subscribeCache = wself.subscribeCache;
                     theItemModel = model;
                 }
             
