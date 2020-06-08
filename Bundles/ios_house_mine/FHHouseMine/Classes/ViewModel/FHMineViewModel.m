@@ -262,12 +262,6 @@
              tracer[@"enter_type"] = @"click";
              //通勤找房
              [[FHCommuteManager sharedInstance] tryEnterCommutePage:model.openUrl logParam:tracer];
-         }else if([model.openUrl containsString:@"f_house_encyclopedia"]){
-            NSMutableDictionary *tracer = [NSMutableDictionary dictionary];
-            NSURL *url = [NSURL URLWithString:@"sslocal://house_encyclopedia?page_type=f_house_encyclopedia&category_name=f_house_encyclopedia&enter_from=f_house_encyclopedia"] ;
-            [tracer setValue:@"minetab_tools" forKey:@"origin_from"];
-             TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:tracer];
-            [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
          }else
          {
              //埋点
