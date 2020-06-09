@@ -322,9 +322,13 @@
     // 属性列表
     if (model.data.baseInfo.count > 0) {
         FHDetailNeighborhoodPropertyInfoModel *infoModel = [[FHDetailNeighborhoodPropertyInfoModel alloc] init];
+        [model.data.baseInfo enumerateObjectsUsingBlock:^(FHHouseBaseInfoModel *  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+            obj.isSingle = YES;
+        }];
         infoModel.houseModelType = FHPlotHouseModelTypeCoreInfo;
         infoModel.tableView = self.tableView;
         infoModel.baseInfo = model.data.baseInfo;
+        infoModel.baseInfoFoldCount = model.data.baseInfoFoldCount;
         [self.items addObject:infoModel];
     }
     
