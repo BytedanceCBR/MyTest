@@ -1145,6 +1145,7 @@
             }];
         }
         [self.mainTitleLabel.yoga markDirty];
+        [self.subTitleLabel.yoga markDirty];
     } else if (houseType == FHHouseTypeRentHouse) {
         _mainTitleLabel.numberOfLines = 2;
         self.mainTitleLabel.text = commonModel.title;
