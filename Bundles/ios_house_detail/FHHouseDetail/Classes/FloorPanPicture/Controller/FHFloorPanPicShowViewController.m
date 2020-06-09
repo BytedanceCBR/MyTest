@@ -263,7 +263,7 @@
 //            [buttonPhoneTitle appendAttributedString:[[NSAttributedString alloc] initWithString:@"\n隐私保护更安全" attributes:@{NSFontAttributeName : [UIFont themeFontRegular:10], NSForegroundColorAttributeName : [UIColor whiteColor]}]];
             self.contactBtn.titleLabel.numberOfLines = 0;
             [self.contactBtn setAttributedTitle:buttonPhoneTitle.copy forState:UIControlStateNormal];
-
+            self.contactBtn.backgroundColor = [UIColor colorWithHexStr:@"#ff9629"];
             [self.bottomBar addSubview:self.contactBtn];
             [self.contactBtn mas_makeConstraints:^(MASConstraintMaker *make) {
                 make.left.mas_equalTo(15);
