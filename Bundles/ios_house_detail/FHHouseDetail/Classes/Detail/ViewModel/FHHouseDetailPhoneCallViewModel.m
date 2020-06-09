@@ -90,6 +90,8 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
         reportParams.groupId = self.tracerDict[@"group_id"];
     } else if([self.tracerDict[@"log_pb"] isKindOfClass:NSDictionary.class]) {
         reportParams.groupId = (self.tracerDict[@"log_pb"][@"group_id"] ? : @"be_null");
+    } else {
+        reportParams.groupId = @"be_null";
     }
     
     associateIMModel.reportParams = reportParams;
