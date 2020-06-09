@@ -40,6 +40,7 @@ static NSString * const kFUGCPrefixStr = @"fugc";
 @property (nonatomic, assign) BOOL isSendNotification;
 @property (nonatomic, strong) FHLoginTipView *loginTipview;
 @property (nonatomic, assign) BOOL isShowLoginTip;
+@property (nonatomic, assign) BOOL firstLanchCanShowLogin;
 
 @end
 
@@ -56,6 +57,7 @@ static NSString * const kFUGCPrefixStr = @"fugc";
     [self bindTopIndexChanged];//绑定头部选中index变化
     // Do any additional setup after loading the view.
     self.isShowLoginTip = NO;
+    self.firstLanchCanShowLogin = NO;
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         if (!self.isSendNotification) {
             [[NSNotificationCenter defaultCenter] postNotificationName:@"kTTFeedDidDisplay" object:nil];
@@ -156,18 +158,26 @@ static NSString * const kFUGCPrefixStr = @"fugc";
 }
 
 - (void)initLoginTipView {
-    if (!self.isShowLoginTip) {
-        self.loginTipview =  [FHLoginTipView showLoginTipViewInView:self.containerView navbarHeight:kNavigationBarHeight withTracerDic:self.tracerDict];
-        self.isShowLoginTip = YES;
-        self.loginTipview.type = FHLoginTipViewtTypeMain;
+    if ([TTSandBoxHelper isAPPFirstLaunch] && !_firstLanchCanShowLogin) {
+        _firstLanchCanShowLogin = YES;
+        return;
     }else {
-        if (self.loginTipview) {
-            if ([TTAccount sharedAccount].isLogin) {
-                [self.loginTipview removeFromSuperview];
-            }else {
-                [self.loginTipview startTimer];
-            }
-        }
+        _firstLanchCanShowLogin = YES;
+    }
+    if (_firstLanchCanShowLogin ) {
+           if (!self.isShowLoginTip) {
+             self.loginTipview =  [FHLoginTipView showLoginTipViewInView:self.containerView navbarHeight:kNavigationBarHeight withTracerDic:self.tracerDict];
+             self.isShowLoginTip = YES;
+             self.loginTipview.type = FHLoginTipViewtTypeMain;
+         }else {
+             if (self.loginTipview) {
+                 if ([TTAccount sharedAccount].isLogin) {
+                     [self.loginTipview removeFromSuperview];
+                 }else {
+                     [self.loginTipview startTimer];
+                 }
+             }
+         }
     }
 }
 
