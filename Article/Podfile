@@ -7,7 +7,7 @@ install! 'cocoapods', :warn_for_multiple_pod_sources => false,:deterministic_uui
 # 用于开启Pods的源码与二进制快速转化服务
 plugin 'cocoapods-bytedance-transform'
 # 用于开启依赖解析加速的服务，传true表示使用，false表示不使用
- bytedanceAnalyzeSpeed(true)
+bytedanceAnalyzeSpeed(true)
 bd_use_app("thirdParty","public","toutiao", "fProject")
 
 #全部使用源码
@@ -573,8 +573,11 @@ def appPods
     pod 'BDUGSecGuardInterface', '1.0.2.1-binary-debug'
     pod 'BDUGTuringInterface', '1.0.3.1-binary-debug'
     pod 'BDWCDB', '1.0.3'
-    pod 'GoogleMaps', '3.1.0'
-    pod 'SocketRocket', '0.5.1'
+    pod_binary 'GoogleMaps', '3.1.0',:subspecs => [
+    'Base',
+    'Maps'
+    ]
+    pod_binary 'SocketRocket', '0.5.1'
     pod 'TikTokOpenPlatformSDK', '3.0.0'
     pod 'objc-geohash', '0.0.3'
     pod 'protobuf_lite', '0.0.1'
