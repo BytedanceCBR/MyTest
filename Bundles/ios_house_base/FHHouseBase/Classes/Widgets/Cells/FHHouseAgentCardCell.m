@@ -102,7 +102,7 @@
     NSDictionary *fhSettings= [[TTSettingsManager sharedManager] settingForKey:@"f_settings" defaultValue:@{} freeze:YES];
     BOOL bool_is_lynx_agent_card_enable = [fhSettings tt_boolValueForKey:@"lynx_agent_card_enable"];
     
-    if (bool_is_lynx_agent_card_enable) {
+    if (bool_is_lynx_agent_card_enable && [[FHLynxManager sharedInstance] checkChannelTemplateIsAvalable:@"lynx_realtor_card" templateKey:@"0"]) {
         [self setUpLynxView];
         return;
     }
@@ -278,6 +278,12 @@
      
         if (itemModel) {
             FHDetailContactModel *contactModel =  itemModel.contactModel;
+            if (self.itemHomeModel != itemModel) {
+                [self addRealtorShowLog:self.modelData];
+            }else{
+                return;
+            }
+            
             self.modelData = contactModel;
             self.itemHomeModel = itemModel;
             
@@ -326,14 +332,18 @@
             }
         }
     
-    
-    [self addRealtorShowLog:self.modelData];
 }
 
 - (void)refreshWithData:(id)data
 {
     FHHomeHouseDataItemsModel *itemModel =  (FHHomeHouseDataItemsModel *)data;
     if (itemModel) {
+        if (self.itemHomeModel != itemModel) {
+            [self addRealtorShowLog:self.modelData];
+        }else{
+            return;
+        }
+        
         FHDetailContactModel *contactModel =  itemModel.contactModel;
         self.modelData = contactModel;
         self.itemHomeModel = itemModel;
