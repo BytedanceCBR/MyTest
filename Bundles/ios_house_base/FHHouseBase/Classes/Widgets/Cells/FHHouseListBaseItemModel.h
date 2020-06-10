@@ -104,6 +104,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign) FHHouseShdowImageScopeType shdowImageScopeType;
 //根据houseModelType将多个cell分为一个模块
 @property (nonatomic, assign)FHHouseModelType houseModelType;
+
+@property (nonatomic, strong, nullable) NSArray<FHImageModel> *tagImage;  //企业担保图标
 @end
 
 @interface  FHHouseListDataModel  : JSONModel

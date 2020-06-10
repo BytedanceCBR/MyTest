@@ -133,7 +133,7 @@
                  type == FHUGCFeedListCellTypeUGCRecommendCircle ||
                  type == FHUGCFeedListCellTypeUGCEncyclopedias ){
             cls = [FHFeedContentModel class];
-        }else if(type >= FHUGCFeedListCellTypeUGCCommonLynx || 1200 < type < 1300){
+        }else if(type >= FHUGCFeedListCellTypeUGCCommonLynx && type < 1300){
             cls = [FHFeedContentModel class];
         }else{
             //其他类型直接过滤掉
@@ -544,7 +544,7 @@
         }else{
             cellModel.openUrl = model.rawData.operation.url;
         }
-    }else if((cellModel.cellType == FHUGCFeedListCellTypeUGCCommonLynx || (1200 <= cellModel.cellType && cellModel.cellType < 1300)) && cellModel.cellType != FHUGCFeedListCellTypeUGCBanner){
+    }else if(cellModel.cellType >= FHUGCFeedListCellTypeUGCCommonLynx && cellModel.cellType < 1300){
         cellModel.cellSubType = FHUGCFeedListCellSubTypeUGCLynx;
         if(model.rawData.groupId){
             cellModel.groupId = model.rawData.groupId;
@@ -727,7 +727,7 @@
     } else if (cellModel.cellType == FHUGCFeedListCellTypeUGCEncyclopedias) {
         cellModel.cellSubType = FHUGCFeedListCellSubTypeUGCEncyclopedias;
         cellModel.groupId = model.rawData.groupId;
-        cellModel.articleTitle = model.rawData.title;
+        cellModel.desc = [[NSAttributedString alloc] initWithString:model.rawData.title];
         cellModel.openUrl = model.rawData.schema;
         cellModel.logPb = model.logPb;
         FHFeedUGCCellUserModel *user = [[FHFeedUGCCellUserModel alloc] init];
@@ -758,6 +758,19 @@
     
     if(model.attachCardInfo && model.attachCardInfo.title.length > 0){
         cellModel.attachCardInfo = model.attachCardInfo;
+        //这里转一下图片的模型
+        FHFeedContentImageListModel *imageModel = [[FHFeedContentImageListModel alloc] init];
+        imageModel.url = cellModel.attachCardInfo.coverImage.url;
+        imageModel.uri = cellModel.attachCardInfo.coverImage.uri;
+        
+        NSMutableArray *urlList = [NSMutableArray array];
+        for (NSInteger i = 0; i < 3; i++) {
+            FHFeedContentImageListUrlListModel *urlListModel = [[FHFeedContentImageListUrlListModel alloc] init];
+            urlListModel.url = cellModel.attachCardInfo.coverImage.url;
+            [urlList addObject:urlListModel];
+        }
+        imageModel.urlList = urlList;
+        cellModel.attachCardInfo.imageModel = imageModel;
     }
     
     cellModel.isStick = (model.isStick || model.rawData.isStick);

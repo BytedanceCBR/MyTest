@@ -103,16 +103,11 @@
         
         self.segmentControl.sectionTitles = [self getSegmentTitles];
     }];
-
-//    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(topVCChange:) name:@"kExploreTopVCChangeNotification" object:nil];
-    if([FHEnvContext isNewDiscovery]){
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onCommunityHaveNewContents) name:kFHUGCCommunityTabHasNewNotification object:nil];
-    }else{
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onUnreadMessageChange) name:kTTMessageNotificationTipsChangeNotification object:nil];
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onUnreadMessageChange) name:kFHUGCFollowNotification object:nil];
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onFocusHaveNewContents) name:kFHUGCFocusTabHasNewNotification object:nil];
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onUnreadMessageChange) name:kFHUGCLoadFollowDataFinishedNotification object:nil];
-    }
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onCommunityHaveNewContents) name:kFHUGCCommunityTabHasNewNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onUnreadMessageChange) name:kTTMessageNotificationTipsChangeNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onUnreadMessageChange) name:kFHUGCFollowNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onFocusHaveNewContents) name:kFHUGCFocusTabHasNewNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onUnreadMessageChange) name:kFHUGCLoadFollowDataFinishedNotification object:nil];
     //tabbar双击的通知
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(refreshData) name:kFindTabbarKeepClickedNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(changeTab) name:kFHUGCForumPostThreadFinish object:nil];
@@ -161,7 +156,7 @@
 - (void)onUnreadMessageChange {
     BOOL hasSocialGroups = [FHUGCConfig sharedInstance].followList.count > 0;
     FHUnreadMsgDataUnreadModel *model = [FHMessageNotificationTipsManager sharedManager].tipsModel;
-    if (model && [model.unread integerValue] > 0 && hasSocialGroups) {
+    if (model && [model.unread integerValue] > 0 && hasSocialGroups && !self.isNewDiscovery) {
         NSInteger count = [model.unread integerValue];
         _segmentControl.sectionMessageTips = @[@(count)];
     } else {
@@ -172,7 +167,7 @@
 - (void)onFocusHaveNewContents {
     BOOL hasSocialGroups = [FHUGCConfig sharedInstance].followList.count > 0;
     BOOL hasNew = [FHUGCConfig sharedInstance].ugcFocusHasNew;
-    if(self.viewModel.currentTabIndex != 0 && hasSocialGroups && hasNew){
+    if(self.viewModel.currentTabIndex != 0 && hasSocialGroups && hasNew && !self.isNewDiscovery){
         _segmentControl.sectionRedPoints = @[@1];
         self.hasFocusTips = YES;
     }
@@ -181,7 +176,7 @@
 - (void)onCommunityHaveNewContents {
     BOOL hasNew = [FHUGCConfig sharedInstance].ugcCommunityHasNew;
     NSInteger index = [[FHUGCCategoryManager sharedManager] getCategoryIndex:@"f_ugc_neighbor"];
-    if(self.viewModel.currentTabIndex != index && hasNew && index >= 0){
+    if(self.viewModel.currentTabIndex != index && hasNew && index >= 0 && self.isNewDiscovery){
         NSMutableArray *redPoints = [NSMutableArray array];
         for (NSInteger i = 0; i <= index; i++) {
             if(i == index){

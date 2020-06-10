@@ -19,10 +19,11 @@
 #import "TTRoute.h"
 #import "JSONAdditions.h"
 #import "FHUGCCellHelper.h"
+#import "TTImageView+TrafficSave.h"
 
 @interface FHUGCCellOriginItemView ()<TTUGCAsyncLabelDelegate>
 
-@property(nonatomic ,strong) UIImageView *iconView;
+@property(nonatomic ,strong) TTImageView *iconView;
 @property(nonatomic ,strong) TTUGCAsyncLabel *contentLabel;
 @property(nonatomic ,assign) BOOL isClickLink;
 
@@ -50,10 +51,10 @@
 //    singleTap
 //    [self addGestureRecognizer:singleTap];
     
-    self.iconView = [[UIImageView alloc] init];
+    self.iconView = [[TTImageView alloc] init];
     _iconView.hidden = YES;
     _iconView.backgroundColor = [UIColor whiteColor];
-    _iconView.contentMode = UIViewContentModeScaleAspectFill;
+    _iconView.imageContentMode = TTImageViewContentModeScaleAspectFill;
     _iconView.clipsToBounds = YES;
     [self addSubview:_iconView];
     
@@ -61,50 +62,52 @@
     _contentLabel.numberOfLines = 2;
     _contentLabel.layer.masksToBounds = YES;
     _contentLabel.backgroundColor = [UIColor themeGray7];
-//    NSDictionary *linkAttributes = @{
-//                                     NSForegroundColorAttributeName : [UIColor themeRed3],
-//                                     NSFontAttributeName : [UIFont themeFontRegular:16]
-//                                     };
-//    _contentLabel.linkAttributes = linkAttributes;
-//    _contentLabel.activeLinkAttributes = linkAttributes;
-//    _contentLabel.inactiveLinkAttributes = linkAttributes;
     _contentLabel.delegate = self;
     [self addSubview:_contentLabel];
 }
 
 - (void)initConstraints {
-    [self.contentLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(self).offset(10);
-        make.right.mas_equalTo(self).offset(-10);
-        make.centerY.mas_equalTo(self);
-        make.height.mas_equalTo(80);
-    }];
-    
-    [self.iconView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(self).offset(10);
-        make.centerY.mas_equalTo(self);
-        make.width.height.mas_equalTo(60);
-    }];
+    self.contentLabel.left = 10;
+    self.contentLabel.width = self.width - 20;
+    self.contentLabel.height = 80;
+    self.contentLabel.centerY = self.height/2;
+
+    self.iconView.left = 10;
+    self.iconView.width = 60;
+    self.iconView.height = 60;
+    self.iconView.centerY = self.height/2;
 }
 
 - (void)refreshWithdata:(id)data {
     if([data isKindOfClass:[FHFeedUGCCellModel class]]){
         FHFeedUGCCellModel *cellModel = (FHFeedUGCCellModel *)data;
+        
+        if(self.cellModel == cellModel && !cellModel.ischanged){
+            return;
+        }
+        
         self.cellModel = cellModel;
-        [FHUGCCellHelper setOriginRichContent:self.contentLabel model:cellModel numberOfLines:2];
         if(cellModel.originItemModel.imageModel){
-            [self.iconView bd_setImageWithURL:[NSURL URLWithString:cellModel.originItemModel.imageModel.url] placeholder:nil];
-            _iconView.hidden = NO;
-            [self.contentLabel mas_updateConstraints:^(MASConstraintMaker *make) {
-                make.left.mas_equalTo(self).offset(80);
+//            [self.iconView bd_setImageWithURL:[NSURL URLWithString:cellModel.originItemModel.imageModel.url] placeholder:nil];
+            TTImageInfosModel *imageInfoModel = [FHUGCCellHelper convertTTImageInfosModel:cellModel.originItemModel.imageModel];
+            __weak typeof(self) wSelf = self;
+            [self.iconView setImageWithModelInTrafficSaveMode:imageInfoModel placeholderImage:nil success:nil failure:^(NSError *error) {
+                [wSelf.iconView setImage:nil];
             }];
+            _iconView.hidden = NO;
+            
+            self.contentLabel.left = 80;
+            self.contentLabel.width = self.width - 90;
+            self.contentLabel.height = 80;
+            self.contentLabel.centerY = self.height/2;
         }else{
             _iconView.hidden = YES;
-            [self.contentLabel mas_updateConstraints:^(MASConstraintMaker *make) {
-                make.left.mas_equalTo(self).offset(10);
-                make.height.mas_equalTo(cellModel.originItemHeight);
-            }];
+            self.contentLabel.left = 10;
+            self.contentLabel.width = self.width - 20;
+            self.contentLabel.height = cellModel.originItemHeight;
+            self.contentLabel.top = 0;
         }
+        [FHUGCCellHelper setOriginRichContent:self.contentLabel model:cellModel numberOfLines:2];
     }
 }
 

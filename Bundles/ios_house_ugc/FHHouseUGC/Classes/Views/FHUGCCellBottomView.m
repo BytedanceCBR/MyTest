@@ -62,6 +62,8 @@
     [self addSubview:_positionView];
     
     self.position = [self LabelWithFont:[UIFont themeFontRegular:13] textColor:[UIColor themeOrange1]];
+    _position.layer.masksToBounds = YES;
+    _position.backgroundColor = [UIColor themeOrange2];
     [_position sizeToFit];
     [_position setContentHuggingPriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisHorizontal];
     [_position setContentCompressionResistancePriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisHorizontal];
@@ -78,6 +80,7 @@
     _commentBtn.hitTestEdgeInsets = UIEdgeInsetsMake(-10, -10, -10, -10);
     _commentBtn.titleLabel.layer.masksToBounds = YES;
     _commentBtn.titleLabel.backgroundColor = [UIColor whiteColor];
+    [_commentBtn sizeToFit];
     [self addSubview:_commentBtn];
     
     self.likeBtn = [[UIButton alloc] init];
@@ -91,6 +94,7 @@
     [_likeBtn addTarget:self action:@selector(like:) forControlEvents:UIControlEventTouchUpInside];
     _likeBtn.titleLabel.layer.masksToBounds = YES;
     _likeBtn.titleLabel.backgroundColor = [UIColor whiteColor];
+    [_likeBtn sizeToFit];
     [self addSubview:_likeBtn];
 
     self.bottomSepView = [[UIView alloc] init];
@@ -109,37 +113,55 @@
 }
 
 - (void)initConstraints {
-    [self.positionView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(self).offset(20);
-        make.top.mas_equalTo(self);
-        make.height.mas_equalTo(24);
-    }];
+//    [self.positionView mas_makeConstraints:^(MASConstraintMaker *make) {
+//        make.left.mas_equalTo(self).offset(20);
+//        make.top.mas_equalTo(self);
+//        make.height.mas_equalTo(24);
+//    }];
+//
+//    [self.position mas_makeConstraints:^(MASConstraintMaker *make) {
+//        make.left.mas_equalTo(self.positionView).offset(6);
+//        make.right.mas_equalTo(self.positionView).offset(-6);
+//        make.centerY.mas_equalTo(self.positionView);
+//        make.height.mas_equalTo(18);
+//    }];
+//
+//    [self.likeBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+//        make.top.mas_equalTo(self).offset(2);
+//        make.right.mas_equalTo(self).offset(-20);
+//        make.height.mas_equalTo(24);
+//    }];
+//
+//    [self.commentBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+//        make.top.mas_equalTo(self).offset(2);
+//        make.right.mas_equalTo(self.likeBtn.mas_left).offset(-20);
+//        make.height.mas_equalTo(24);
+//    }];
+//
+//    [self.bottomSepView mas_makeConstraints:^(MASConstraintMaker *make) {
+//        make.top.mas_equalTo(self.positionView.mas_bottom).offset(20);
+//        make.left.mas_equalTo(self).offset(0);
+//        make.right.mas_equalTo(self).offset(0);
+//        make.height.mas_equalTo(5);
+//    }];
     
-    [self.position mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(self.positionView).offset(6);
-        make.right.mas_equalTo(self.positionView).offset(-6);
-        make.centerY.mas_equalTo(self.positionView);
-        make.height.mas_equalTo(18);
-    }];
-    
-    [self.likeBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self).offset(2);
-        make.right.mas_equalTo(self).offset(-20);
-        make.height.mas_equalTo(24);
-    }];
-    
-    [self.commentBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self).offset(2);
-        make.right.mas_equalTo(self.likeBtn.mas_left).offset(-20);
-        make.height.mas_equalTo(24);
-    }];
-    
-    [self.bottomSepView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.positionView.mas_bottom).offset(20);
-        make.left.mas_equalTo(self).offset(0);
-        make.right.mas_equalTo(self).offset(0);
-        make.height.mas_equalTo(5);
-    }];
+    self.positionView.top = 0;
+    self.positionView.left = 20;
+    self.positionView.width = 0;
+    self.positionView.height = 24;
+        
+    self.commentBtn.top = 2;
+    self.commentBtn.height = 24;
+    self.commentBtn.left = self.width - 20 - self.likeBtn.width - 20 - self.commentBtn.width;
+
+    self.likeBtn.left = self.commentBtn.right + 20;
+    self.likeBtn.top = 2;
+    self.likeBtn.height = 24;
+        
+    self.bottomSepView.left = 0;
+    self.bottomSepView.top = self.positionView.bottom + 20;
+    self.bottomSepView.height = 5;
+    self.bottomSepView.width = [UIScreen mainScreen].bounds.size.width;
 }
 
 - (void)setCellModel:(FHFeedUGCCellModel *)cellModel {
@@ -181,21 +203,30 @@
     //设置是否显示引导
     if(cellModel.isInsertGuideCell){
         self.guideView.hidden = NO;
-        [self.guideView mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.top.mas_equalTo(self.positionView.mas_bottom);
-            make.left.right.mas_equalTo(self);
-            make.height.mas_equalTo(42);
-        }];
+        self.guideView.top = self.positionView.bottom;
+        self.guideView.left = 0;
+        self.guideView.width = self.bounds.size.width;
+        self.guideView.height = 42;
+//        [self.guideView mas_makeConstraints:^(MASConstraintMaker *make) {
+//            make.top.mas_equalTo(self.positionView.mas_bottom);
+//            make.left.right.mas_equalTo(self);
+//            make.height.mas_equalTo(42);
+//        }];
     }else{
         self.guideView.hidden = YES;
     }
     
-    [self.bottomSepView mas_updateConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.positionView.mas_bottom).offset(20);
-        make.left.mas_equalTo(self).offset(cellModel.bottomLineLeftMargin);
-        make.right.mas_equalTo(self).offset(-cellModel.bottomLineRightMargin);
-        make.height.mas_equalTo(cellModel.bottomLineHeight);
-    }];
+    self.bottomSepView.left = cellModel.bottomLineLeftMargin;
+    self.bottomSepView.top = self.positionView.bottom + 20;
+    self.bottomSepView.height = cellModel.bottomLineHeight;
+    self.bottomSepView.width = self.bounds.size.width - cellModel.bottomLineLeftMargin - cellModel.bottomLineRightMargin;
+    
+//    [self.bottomSepView mas_updateConstraints:^(MASConstraintMaker *make) {
+//        make.top.mas_equalTo(self.positionView.mas_bottom).offset(20);
+//        make.left.mas_equalTo(self).offset(cellModel.bottomLineLeftMargin);
+//        make.right.mas_equalTo(self).offset(-cellModel.bottomLineRightMargin);
+//        make.height.mas_equalTo(cellModel.bottomLineHeight);
+//    }];
 }
 
 - (UILabel *)LabelWithFont:(UIFont *)font textColor:(UIColor *)textColor {
@@ -207,6 +238,25 @@
 
 - (void)showPositionView:(BOOL)isShow {
     self.positionView.hidden = !isShow;
+    
+    if(isShow){
+        self.position.top = 3;
+        self.position.height = 18;
+        self.position.left = 6;
+        [self.position sizeToFit];
+        CGFloat labelWidth = self.position.width;
+        
+        self.positionView.left = 20;
+        self.positionView.width = labelWidth + 12;
+        self.positionView.height = 24;
+    }
+}
+
+- (void)updateFrame {
+    [self.commentBtn sizeToFit];
+    [self.likeBtn sizeToFit];
+    self.commentBtn.left = self.width - 20 - self.likeBtn.width - 20 - self.commentBtn.width;
+    self.likeBtn.left = self.commentBtn.right + 20;
 }
 
 - (void)updateLikeState:(NSString *)diggCount userDigg:(NSString *)userDigg {
@@ -228,6 +278,7 @@
     if([userDigg boolValue] && count == 0){
         [self.likeBtn setTitle:@"1" forState:UIControlStateNormal];
     }
+    [self updateFrame];
 }
 
 // 点赞
@@ -346,6 +397,7 @@
                 }else{
                     [self.commentBtn setTitle:[TTBusinessManager formatCommentCount:commentCount] forState:UIControlStateNormal];
                 }
+                [self updateFrame];
             });
         }
     }
