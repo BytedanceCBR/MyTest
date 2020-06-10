@@ -521,7 +521,9 @@ static NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
             self.lastOffset = model.data.items.count;
             
             [self.houseDataItemsModel enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-                [self.cahceHouseRankidsDict setValue:@(idx) forKey:((FHHomeHouseDataItemsModel *)(obj)).idx];
+                if(((FHHomeHouseDataItemsModel *)(obj)).idx){
+                    [self.cahceHouseRankidsDict setValue:@(idx) forKey:((FHHomeHouseDataItemsModel *)(obj)).idx];
+                }
             }];
             
             [self.cacheSimilarIdsDict removeAllObjects];
@@ -531,7 +533,9 @@ static NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
             if (model.data.items && self.houseDataItemsModel && model.data.items.count != 0) {
                 
                 [model.data.items enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-                    [self.cahceHouseRankidsDict setValue:@(idx + self.houseDataItemsModel.count - self.cacheSimilarIdsDict.allKeys.count) forKey:((FHHomeHouseDataItemsModel *)(obj)).idx];
+                    if(((FHHomeHouseDataItemsModel *)(obj)).idx){
+                        [self.cahceHouseRankidsDict setValue:@(idx + self.houseDataItemsModel.count - self.cacheSimilarIdsDict.allKeys.count) forKey:((FHHomeHouseDataItemsModel *)(obj)).idx];
+                    }
                 }];
                 
                 [self.houseDataItemsModel addObjectsFromArray:model.data.items];

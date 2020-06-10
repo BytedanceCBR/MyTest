@@ -42,6 +42,7 @@
 #import <TTAppRuntime/NewsBaseDelegate.h>
 #import "FHLynxManager.h"
 #import "FHUGCCategoryManager.h"
+#import "FHUserTracker.h"
 
 #define kFHHouseMixedCategoryID   @"f_house_news" // 推荐频道
 
@@ -440,12 +441,16 @@ static NSInteger kGetLightRequestRetryCount = 3;
     return ![[FHEnvContext sharedInstance] getConfigFromCache].citySwitch.enable.boolValue;
 }
 
++ (BOOL)canShowLoginTip
+{
+    return [[FHEnvContext sharedInstance] getConfigFromCache].barConfig.status.boolValue;
+}
+
 + (void)recordEvent:(NSDictionary *)params andEventKey:(NSString *)traceKey
 {
     if (kIsNSString(traceKey) && kIsNSDictionary(params)) {
         NSMutableDictionary *pramsDict = [[NSMutableDictionary alloc] initWithDictionary:params];
-        pramsDict[@"event_type"] = kTracerEventType;
-        [TTTrackerWrapper eventV3:traceKey params:pramsDict];
+        [FHUserTracker writeEvent:traceKey params:pramsDict];
     }
 }
 
@@ -943,15 +948,15 @@ static NSInteger kGetLightRequestRetryCount = 3;
 /*
  增加引导
  */
-+ (void)addTabUGCGuid
-{
-    UIWindow * mainWindow = [[UIApplication sharedApplication].delegate window];
-    
-    TTArticleTabBarController * rootTabController = (TTArticleTabBarController*)mainWindow.rootViewController;
-    if ([mainWindow.rootViewController isKindOfClass:[TTArticleTabBarController class]]) {
-        [rootTabController addUgcGuide];
-    }
-}
+//+ (void)addTabUGCGuid
+//{
+//    UIWindow * mainWindow = [[UIApplication sharedApplication].delegate window];
+//    
+//    TTArticleTabBarController * rootTabController = (TTArticleTabBarController*)mainWindow.rootViewController;
+//    if ([mainWindow.rootViewController isKindOfClass:[TTArticleTabBarController class]]) {
+//        [rootTabController addUgcGuide];
+//    }
+//}
 
 - (TTReachability *)reachability
 {

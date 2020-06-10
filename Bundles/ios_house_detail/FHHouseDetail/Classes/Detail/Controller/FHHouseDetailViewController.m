@@ -72,7 +72,7 @@
 - (instancetype)initWithRouteParamObj:(TTRouteParamObj *)paramObj {
     self = [super initWithRouteParamObj:paramObj];
     if (self) {
-        
+        self.isResetStatusBar = NO;
         self.houseType = [paramObj.allParams[@"house_type"] integerValue];
         self.ridcode = paramObj.allParams[@"ridcode"];
         self.realtorId = paramObj.allParams[@"realtor_id"];
@@ -195,6 +195,7 @@
     [super viewDidAppear:animated];
     self.isViewDidDisapper = NO;
     [self updateStatusBar:self.tableView.contentOffset];
+    [self refreshContentOffset:self.tableView.contentOffset];
     [self.view endEditing:YES];
     [self.viewModel vc_viewDidAppear:animated];
 }
@@ -669,8 +670,19 @@
     }];
 }
 
-- (void)refreshContentOffset:(CGPoint)contentOffset
-{
+- (void)refreshContentOffset:(CGPoint)contentOffset {
+    //如果房源是企业担保的，不需要更新statusbar样式，header背景黄色，也不需要更换图标
+    if (self.navBar.isForVouch) {
+        if (contentOffset.y > CGRectGetWidth(self.view.bounds)*281.0/375.0 - 41 + 20 - (CGRectGetHeight(self.navBar.frame) - 40)) {
+            [self.navBar refreshAlpha:1.0];
+        } else {
+            [self.navBar refreshAlpha:0];
+        }
+        if ([UIApplication sharedApplication].statusBarStyle != UIStatusBarStyleLightContent) {
+            [UIApplication sharedApplication].statusBarStyle = UIStatusBarStyleLightContent;
+        }
+        return;
+    }
     CGFloat alpha = contentOffset.y / 139 * 2;
     [self.navBar refreshAlpha:alpha];
     

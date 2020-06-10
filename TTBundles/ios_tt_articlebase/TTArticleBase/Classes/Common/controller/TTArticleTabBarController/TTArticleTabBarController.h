@@ -39,7 +39,7 @@ extern NSString * const TTArticleTabBarControllerChangeSelectedIndexNotification
 
 - (NSString *)currentTabIdentifier;
 
-- (void)addUgcGuide;//F项目引导
+//- (void)addUgcGuide;//F项目引导
 
 @end
 

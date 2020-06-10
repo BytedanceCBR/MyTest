@@ -287,7 +287,12 @@ NSString *const kTTCommentDetailCellIdentifier = @"kTTCommentDetailCellIdentifie
     [self resetContentLabelBackgroundColor];
 
     UIMenuController *menu = [UIMenuController sharedMenuController];
-    menu.menuItems = self.menuItems;
+    if ([menu isMenuVisible]) {
+        [menu setMenuVisible:NO animated:YES];
+        return;
+    }
+//    UIMenuController *menu = [UIMenuController sharedMenuController];
+//    menu.menuItems = self.menuItems;
 
 }
 
