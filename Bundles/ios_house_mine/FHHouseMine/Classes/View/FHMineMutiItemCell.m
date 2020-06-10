@@ -88,7 +88,6 @@
 
 - (void)updateCell:(FHMineConfigDataIconOpDataModel *)model isFirst:(BOOL)isFirst {
     self.model = model;
-    
     _headerView.hidden = !isFirst;
     
     if(model.title && ![model.title isEqualToString:@""]){
@@ -122,7 +121,7 @@
             title = [self getFocusItemTitle:itemModel.title];
         }
         NSString *imageUrl = ((FHMineConfigDataIconOpDataMyIconItemsImageModel *)[itemModel.image firstObject]).url;
-        FHMineFavoriteItemView *view = [[FHMineFavoriteItemView alloc] initWithName:title imageName:imageUrl];
+        FHMineFavoriteItemView *view = [[FHMineFavoriteItemView alloc] initWithName:title imageName:imageUrl moduletype:self.model.myIconId.integerValue];
         view.itemClickBlock = ^{
             [wself didItemClick:itemModel];
         };

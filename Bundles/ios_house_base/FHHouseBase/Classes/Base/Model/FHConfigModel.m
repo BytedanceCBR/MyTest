@@ -408,6 +408,7 @@
              @"jumpPageOnStartup":@"jump_page_on_startup",
              @"tabWidget": @"tab_widget",
              @"channelType": @"channel_type",
+             @"barConfig": @"bar_config"
              };
 }
 
@@ -1044,6 +1045,15 @@ DICT_PROP_GET(FHConfigDataRentBannerModel,rentBanner,@"rent_banner")
 
 
 @implementation  FHConfigDataBannersModel
+
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+
+@end
+
+@implementation  FHConfigDataBarConfigModel
 
 + (BOOL)propertyIsOptional:(NSString *)propertyName
 {

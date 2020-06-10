@@ -278,7 +278,25 @@
         NSString *filePath = [NSString stringWithFormat:@"%@/%@",imageRootPath,imageUrlPath];
         NSURL *fileURL = [NSURL fileURLWithPath:filePath];
         
+        
         [[SDWebImageManager sharedManager] loadImageWithURL:fileURL
+          options:0
+          progress:^(NSInteger receivedSize, NSInteger expectedSize, NSURL* _Nullable targetURL) {
+
+          }
+          completed:^(UIImage* _Nullable image, NSData* _Nullable data, NSError* _Nullable error,
+                      SDImageCacheType cacheType, BOOL finished, NSURL* _Nullable imageURL) {
+            if (error) {
+                UIImage *imagePlaceholder = [UIImage imageNamed:@"house_cell_placeholder"];
+                if (imagePlaceholder) {
+                    completionBlock(imagePlaceholder, nil, url);
+                }
+            }else{
+                completionBlock(image, error, url);
+            }
+        }];
+    }else{
+        [[SDWebImageManager sharedManager] loadImageWithURL:url
           options:0
           progress:^(NSInteger receivedSize, NSInteger expectedSize, NSURL* _Nullable targetURL) {
 

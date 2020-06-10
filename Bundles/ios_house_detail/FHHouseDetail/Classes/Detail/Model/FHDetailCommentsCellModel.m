@@ -32,10 +32,19 @@
 
     self.dataList = [[NSMutableArray alloc] init];
     
-    for (NSString *content in comments.content.data) {
+    for (NSInteger i = 0; i < comments.content.data.count; i++) {
+        NSString *content = comments.content.data[i];
         FHFeedUGCCellModel *cellModel = [FHFeedUGCCellModel modelFromFeed:content];
         cellModel.isInNeighbourhoodCommentsList = NO;
         cellModel.cellSubType = FHUGCFeedListCellSubTypeUGCNeighbourhoodComments;
+        
+        NSMutableDictionary *tracerDic = [NSMutableDictionary dictionary];
+        tracerDic[@"rank"] = @(i);
+        tracerDic[@"origin_from"] = self.tracerDict[@"origin_from"] ?: @"be_null";
+        tracerDic[@"enter_from"] = self.tracerDict[@"enter_from"] ?: @"be_null";
+        tracerDic[@"page_type"] = self.tracerDict[@"page_type"] ?: @"be_null";
+        cellModel.tracerDic = [tracerDic copy];
+        
         [_dataList addObject:cellModel];
     }
     

@@ -13,7 +13,7 @@
 #import "UILabel+House.h"
 #import "UIColor+Theme.h"
 #import "FHDetailTopBannerView.h"
-
+#import <FHHouseBase/UIImage+FIconFont.h>
 
 @interface FHDetailHeaderTitleView ()
 @property (nonatomic, weak) UIImageView *shadowImage;
@@ -22,7 +22,7 @@
 @property (nonatomic, weak) UILabel *nameLabel;
 @property (nonatomic, weak) UILabel *addressLab;
 @property (nonatomic, weak) UILabel *totalPirce;//仅户型详情页x展示
-
+@property (nonatomic, weak) UIControl *priceAskView;
 
 @property (nonatomic, strong) FHDetailTopBannerView *topBanner;
 
@@ -135,6 +135,37 @@
     label.text = text;
     label.font = [UIFont themeFontMedium:12];
     return label;
+}
+
+- (UIControl *)priceAskView {
+    if (!_priceAskView) {
+        UIControl *priceAskView = [[UIControl alloc] init];
+        [priceAskView addTarget:self action:@selector(priceAskViewAction:) forControlEvents:UIControlEventTouchUpInside];
+        [self addSubview:priceAskView];
+        _priceAskView = priceAskView;
+        
+        UILabel *titleLabel = [[UILabel alloc] init];
+        titleLabel.textColor = [UIColor themeOrange1];
+        titleLabel.font = [UIFont themeFontMedium:14];
+        titleLabel.text = self.model.priceConsult.text;
+        [_priceAskView addSubview:titleLabel];
+        [titleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.left.mas_equalTo(0);
+            make.centerY.mas_equalTo(_priceAskView);
+        }];
+        
+        UIImageView *indicatorImageView = [[UIImageView alloc] init];
+        indicatorImageView.image = ICON_FONT_IMG(16, @"\U0000e670", [UIColor themeOrange1]);
+        indicatorImageView.contentMode = UIViewContentModeCenter;
+        [_priceAskView addSubview:indicatorImageView];
+        [indicatorImageView mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.right.mas_equalTo(0);
+            make.size.mas_equalTo(CGSizeMake(20, 20));
+            make.top.bottom.mas_equalTo(0);
+            make.left.mas_equalTo(titleLabel.mas_right).mas_offset(5);
+        }];
+    }
+    return _priceAskView;
 }
 
 - (void)setTags:(NSArray *)tags {
@@ -256,10 +287,16 @@
     [self.totalPirce mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(self).offset(31);
         make.top.mas_equalTo(self.tagBacView.mas_bottom).offset(tagTop);
-        make.right.mas_equalTo(self).offset(- 35);
         make.height.mas_equalTo(24);
         make.bottom.mas_equalTo(self);
     }];
+    
+    if (self.model.priceConsult.text.length && self.model.priceConsult.openurl.length) {
+        [self.priceAskView mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.right.mas_equalTo(-31);
+            make.centerY.mas_equalTo(self.totalPirce.mas_centerY);
+        }];
+    }
 }
 
 - (void)setModel:(FHDetailHouseTitleModel *)model {
@@ -277,85 +314,119 @@
         [self setFloorPanModel];
         return;
     }
-        
-    if (model.housetype == FHHouseTypeNewHouse) {
-        if (model.businessTag.length > 0 && model.advantage.length > 0) {
-            topHeight = 40;
-            [self.topBanner updateWithTitle:model.businessTag content:model.advantage];
+//    self.topBanner.housetype = model.housetype;
+    //housetype if 改 switch
+    switch (model.housetype) {
+        case FHHouseTypeNewHouse:{
+            if (model.businessTag.length > 0 && model.advantage.length > 0) {
+                topHeight = 40;
+                [self.topBanner updateWithTitle:model.businessTag content:model.advantage];
+            }
+            self.topBanner.hidden = (topHeight <= 0);
+            [self.topBanner mas_updateConstraints:^(MASConstraintMaker *make) {
+                make.height.mas_equalTo(topHeight);
+            }];
+            [self.nameLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+                make.left.mas_equalTo(self).offset(31);
+                make.right.mas_equalTo(self).offset(-35);
+                make.top.mas_equalTo(self.topBanner.mas_bottom).offset(28);
+                //            make.height.mas_offset(25);
+                //            make.bottom.mas_equalTo(-tagBottom - tagHeight);
+            }];
+            [self.tagBacView mas_makeConstraints:^(MASConstraintMaker *make) {
+                make.left.mas_equalTo(self).offset(15);
+                make.right.mas_equalTo(self).offset(-15);
+                make.top.mas_equalTo(self.nameLabel.mas_bottom).offset(15);
+                make.height.mas_offset(tagHeight);
+                make.bottom.mas_equalTo(self).offset(tags.count > 0 ?-5:0);
+            }];
+            break;
+            }
+        case FHHouseTypeNeighborhood:{
+            self.nameLabel.numberOfLines = 1;
+            self.addressLab.numberOfLines = 1;
+            if (model.address.length>0) {
+                [self.tagBacView mas_makeConstraints:^(MASConstraintMaker *make) {
+                    make.left.mas_equalTo(self).offset(15);
+                    make.right.mas_equalTo(self).offset(-15);
+                    make.top.mas_equalTo(self.topBanner.mas_bottom).mas_offset(30);
+                    make.height.mas_offset(tagHeight);
+                }];
+                [self.nameLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
+                    make.left.mas_equalTo(self).offset(31);
+                    make.right.mas_equalTo(self).offset(-100);
+                    make.top.mas_equalTo(self.tagBacView.mas_bottom).offset(tagTop);
+                }];
+                [self.addressLab mas_remakeConstraints:^(MASConstraintMaker *make) {
+                    make.left.mas_equalTo(self).offset(31);
+                    make.right.mas_equalTo(self).offset(-100);
+                    make.top.mas_equalTo(self.nameLabel.mas_bottom).offset(4);
+                    make.bottom.mas_equalTo(self);
+                }];
+                [self.mapBtn mas_remakeConstraints:^(MASConstraintMaker *make) {
+                    make.top.equalTo(self.nameLabel).offset(5);
+                    make.right.equalTo(self).offset(-32);
+                    make.size.mas_equalTo(CGSizeMake(44, 44));
+                }];
+                self.addressLab.text = model.address;
+            }else {
+                [self.tagBacView mas_makeConstraints:^(MASConstraintMaker *make) {
+                    make.left.mas_equalTo(self).offset(15);
+                    make.right.mas_equalTo(self).offset(-15);
+                    make.top.mas_equalTo(self.topBanner.mas_bottom).mas_offset(30);
+                    make.height.mas_offset(tagHeight);
+                }];
+                [self.nameLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
+                    make.left.mas_equalTo(self).offset(31);
+                    make.right.mas_equalTo(self).offset(-35);
+                    make.top.mas_equalTo(self.tagBacView.mas_bottom).offset(tagTop);
+                    make.bottom.mas_equalTo(self);
+                }];
+            }
+            break;
         }
-        self.topBanner.hidden = (topHeight <= 0);
-        [self.topBanner mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.height.mas_equalTo(topHeight);
-        }];
-        [self.nameLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.left.mas_equalTo(self).offset(31);
-            make.right.mas_equalTo(self).offset(-35);
-            make.top.mas_equalTo(self.topBanner.mas_bottom).offset(28);
-//            make.height.mas_offset(25);
-//            make.bottom.mas_equalTo(-tagBottom - tagHeight);
-        }];
-        [self.tagBacView mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.left.mas_equalTo(self).offset(15);
-            make.right.mas_equalTo(self).offset(-15);
-            make.top.mas_equalTo(self.nameLabel.mas_bottom).offset(15);
-            make.height.mas_offset(tagHeight);
-            make.bottom.mas_equalTo(self).offset(tags.count > 0 ?-5:0);
-        }];
-    }else if (model.housetype == FHHouseTypeNeighborhood) {
-        self.nameLabel.numberOfLines = 1;
-        self.addressLab.numberOfLines = 1;
-        if (model.address.length>0) {
+        case FHHouseTypeSecondHandHouse:{
+            if (model.businessTag.length > 0 && model.advantage.length > 0) {
+                topHeight = 40;
+                [self.topBanner updateWithTitle:model.businessTag content:model.advantage];
+            }
+            self.topBanner.hidden = (topHeight <= 0);
+            [self.topBanner mas_updateConstraints:^(MASConstraintMaker *make) {
+                make.height.mas_equalTo(topHeight);
+            }];
+            
             [self.tagBacView mas_makeConstraints:^(MASConstraintMaker *make) {
                 make.left.mas_equalTo(self).offset(15);
                 make.right.mas_equalTo(self).offset(-15);
                 make.top.mas_equalTo(self.topBanner.mas_bottom).mas_offset(30);
                 make.height.mas_offset(tagHeight);
             }];
-            [self.nameLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
+            [self.nameLabel mas_makeConstraints:^(MASConstraintMaker *make) {
                 make.left.mas_equalTo(self).offset(31);
-                make.right.mas_equalTo(self).offset(-100);
+                make.right.mas_equalTo(self).offset(-35);
                 make.top.mas_equalTo(self.tagBacView.mas_bottom).offset(tagTop);
-            }];
-            [self.addressLab mas_remakeConstraints:^(MASConstraintMaker *make) {
-                make.left.mas_equalTo(self).offset(31);
-                make.right.mas_equalTo(self).offset(-100);
-                make.top.mas_equalTo(self.nameLabel.mas_bottom).offset(4);
                 make.bottom.mas_equalTo(self);
             }];
-            [self.mapBtn mas_remakeConstraints:^(MASConstraintMaker *make) {
-                make.top.equalTo(self.nameLabel).offset(5);
-                make.right.equalTo(self).offset(-32);
-                make.size.mas_equalTo(CGSizeMake(44, 44));
-            }];
-            self.addressLab.text = model.address;
-        }else {
+            break;
+        }
+        //貌似租房不会走这里哦
+        default:{
             [self.tagBacView mas_makeConstraints:^(MASConstraintMaker *make) {
                 make.left.mas_equalTo(self).offset(15);
                 make.right.mas_equalTo(self).offset(-15);
                 make.top.mas_equalTo(self.topBanner.mas_bottom).mas_offset(30);
                 make.height.mas_offset(tagHeight);
             }];
-            [self.nameLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
+            [self.nameLabel mas_makeConstraints:^(MASConstraintMaker *make) {
                 make.left.mas_equalTo(self).offset(31);
                 make.right.mas_equalTo(self).offset(-35);
                 make.top.mas_equalTo(self.tagBacView.mas_bottom).offset(tagTop);
                 make.bottom.mas_equalTo(self);
             }];
         }
-    }else {
-        [self.tagBacView mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.left.mas_equalTo(self).offset(15);
-            make.right.mas_equalTo(self).offset(-15);
-            make.top.mas_equalTo(self.topBanner.mas_bottom).mas_offset(30);
-            make.height.mas_offset(tagHeight);
-        }];
-        [self.nameLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.left.mas_equalTo(self).offset(31);
-            make.right.mas_equalTo(self).offset(-35);
-            make.top.mas_equalTo(self.tagBacView.mas_bottom).offset(tagTop);
-            make.bottom.mas_equalTo(self);
-        }];
+            break;
     }
+
 
     __block UIView *lastView = self.tagBacView;
 
@@ -398,6 +469,18 @@
 - (void)clickMapAction:(UIButton *)btn {
     if (self.model.mapImageClick) {
         self.model.mapImageClick();
+    }
+}
+
+- (void)priceAskViewAction:(id)sender {
+    if (self.model.priceConsult.openurl.length && self.baseViewModel.contactViewModel) {
+        NSMutableDictionary *extraDic = self.baseViewModel.detailTracerDic;
+        extraDic[@"click_position"] = self.model.priceConsult.text?:@"be_null";
+        extraDic[@"im_open_url"] = self.model.priceConsult.openurl;
+        if (self.model.priceConsult.associateInfo) {
+            extraDic[kFHAssociateInfo] = self.model.priceConsult.associateInfo;
+        }
+        [self.baseViewModel.contactViewModel onlineActionWithExtraDict:extraDic];
     }
 }
 @end

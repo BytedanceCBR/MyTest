@@ -165,32 +165,40 @@
 }
 
 - (void)updateHeaderView {
-    NSString *avatar = [TTAccountManager avatarURLString];
-    [self.viewController.headerView updateAvatar:avatar];
     
-    NSString *name = [TTAccountManager userName];
-    TTAccountUserEntity *userInfo = [TTAccount sharedAccount].user;
+     TTAccountUserEntity *userInfo = [TTAccount sharedAccount].user;
     
-    NSDictionary *fhSettings = [self fhSettings];
-    NSInteger state = [fhSettings tt_integerValueForKey:@"f_is_show_profile_edit_entry"];
+    if (userInfo) {
+         NSString *avatar = [TTAccountManager avatarURLString];
+           [self.viewController.headerView updateAvatar:avatar];
+           
+           NSString *name = [TTAccountManager userName];
+           NSDictionary *fhSettings = [self fhSettings];
+           NSInteger state = [fhSettings tt_integerValueForKey:@"f_is_show_profile_edit_entry"];
 
-    [self.viewController.headerView setUserInfoState:state];
-    
-    if (userInfo != nil) {
+           [self.viewController.headerView setUserInfoState:state];
         self.viewController.headerView.userNameLabel.text = name?:@"";
         self.viewController.headerView.descLabel.text = @"查看并编辑个人信息";
         if(state != 0){
             self.viewController.headerView.editIcon.hidden = NO;
         }
         _hasLogin = YES;
-    } else {
-        self.viewController.headerView.userNameLabel.text = @"登录/注册";
-        self.viewController.headerView.descLabel.text = @"关注房源永不丢失";
-        self.viewController.headerView.editIcon.hidden = YES;
+         [self.viewController.headerView sethomePageWithModel:self.configModel.data.homePage];
+        [self.viewController.headerView setDeaultShowTypeByLogin:YES];
+    }else {
+        [self.viewController.headerView setDeaultShowTypeByLogin:NO];
         _hasLogin = NO;
     }
+//    if (userInfo != nil) {
+//
+//    } else {
+//        self.viewController.headerView.userNameLabel.text = @"登录/注册";
+//        self.viewController.headerView.descLabel.text = @"关注房源永不丢失";
+//        self.viewController.headerView.editIcon.hidden = YES;
+//
+//    }
     
-    [self.viewController.headerView sethomePageWithModel:self.configModel.data.homePage];
+   
 }
 
 - (NSDictionary *)fhSettings {
@@ -262,7 +270,8 @@
              tracer[@"enter_type"] = @"click";
              //通勤找房
              [[FHCommuteManager sharedInstance] tryEnterCommutePage:model.openUrl logParam:tracer];
-         }else{
+         }else
+         {
              //埋点
              NSMutableDictionary *dict = [NSMutableDictionary dictionary];
              NSMutableDictionary *tracer = [NSMutableDictionary dictionary];

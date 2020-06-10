@@ -11,6 +11,7 @@
 #import "FHSearchHouseModel.h"
 #import <TTBaseLib/NSDictionary+TTAdditions.h>
 #import <FHHouseBase/FHHouseNeighborModel.h>
+#import "FHHouseErrorHubManager.h"
 
 #define QURL(QPATH) [[FHMainApi host] stringByAppendingString:QPATH]
 #define GET @"GET"
@@ -198,7 +199,7 @@
                 resultType = FHNetworkMonitorTypeNetFailed;
             }
             [FHMainApi addRequestLog:logPath?:response.URL.path startDate:startDate backDate:backDate serializeDate:serDate resultType:resultType errorCode:code errorMsg:errMsg extra:extraDict responseCode:responseCode];
-            
+            [[FHHouseErrorHubManager sharedInstance] checkRequestResponseWithHost:url requestParams:param responseStatus:response response:obj analysisError:backError changeModelType:resultType errorHubType:FHErrorHubTypeRequest];
             if (completion) {
                 dispatch_async(dispatch_get_main_queue(), ^{
                     completion(model,backError);
@@ -323,6 +324,12 @@
             break;
         case FHSearchCardTypeRedirectTip:
             itemModel = [[FHSearchHouseDataRedirectTipsModel alloc]initWithDictionary:itemDict error:&jerror];
+            break;
+        case FHSearchCardTypeAgentCard:
+            itemModel = [[FHSearchHouseItemModel alloc]initWithDictionary:itemDict error:&jerror];
+            ((FHSearchHouseItemModel *)itemModel).cardType = FHSearchCardTypeAgentCard;
+        case FHSearchCardTypeReserveAdviser:
+            itemModel = [[FHHouseReserveAdviserModel alloc]initWithDictionary:itemDict error:&jerror];
             break;
         default:
             break;

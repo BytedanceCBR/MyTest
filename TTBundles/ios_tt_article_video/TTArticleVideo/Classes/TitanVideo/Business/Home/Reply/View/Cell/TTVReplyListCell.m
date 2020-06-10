@@ -304,8 +304,13 @@ NSString *const kTTVReplyListCellIdentifier = @"kTTVReplyListCellIdentifier";
     [[NSNotificationCenter defaultCenter] removeObserver:self name:UIMenuControllerWillHideMenuNotification object:nil];
     [self resetContentLabelBackgroundColor];
     
+//    UIMenuController *menu = [UIMenuController sharedMenuController];
+//    menu.menuItems = self.menuItems;
     UIMenuController *menu = [UIMenuController sharedMenuController];
-    menu.menuItems = self.menuItems;
+    if ([menu isMenuVisible]) {
+        [menu setMenuVisible:NO animated:YES];
+        return;
+    }
     
 }
 

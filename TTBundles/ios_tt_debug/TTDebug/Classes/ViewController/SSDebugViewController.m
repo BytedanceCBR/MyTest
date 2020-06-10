@@ -104,6 +104,8 @@
 #import "FHLynxDebugVC.h"
 #import "IMManager.h"
 
+#import "FHHouseErrorHubDebugVC.h"
+
 extern BOOL ttvs_isVideoNewRotateEnabled(void);
 extern void ttvs_setIsVideoNewRotateEnabled(BOOL enabled);
 
@@ -383,6 +385,10 @@ extern NSString *const BOE_OPEN_KEY ;
         item_41.switchAction = @selector(_switchToDetailvConsole:);
         item_41.checked = [TTDetailWebContainerDebugger isvConsoleEnable];
         [itemArray addObject:item_41];
+        
+        STTableViewCellItem *item_42 = [[STTableViewCellItem alloc] initWithTitle:@"local_test异常" target:self action:@selector(_openLocalTestDebugViewController)];
+        item_42.switchStyle = NO;
+        [itemArray addObject:item_42];
 
         // todo zjing test
 //        STTableViewCellItem *item_42 = [[STTableViewCellItem alloc] initWithTitle:@"JSBridge功能回归测试" target:self action:@selector(jsBridgeTest)];
@@ -1053,6 +1059,12 @@ extern NSString *const BOE_OPEN_KEY ;
 - (void)_openAdDebug
 {
     [self.navigationController pushViewController:[[TADDebugViewController alloc] init]
+                                         animated:YES];
+}
+
+- (void)_openLocalTestDebugViewController
+{
+    [self.navigationController pushViewController:[[FHHouseErrorHubDebugVC alloc] init]
                                          animated:YES];
 }
 

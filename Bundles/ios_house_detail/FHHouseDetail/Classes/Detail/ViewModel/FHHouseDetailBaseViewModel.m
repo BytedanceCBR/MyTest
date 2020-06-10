@@ -22,6 +22,7 @@
 #import <TTReachability/TTReachability.h>
 #import "FHDetailQuestionPopView.h"
 #import "FHDetailMediaHeaderCorrectingCell.h"
+#import "FHHouseErrorHubManager.h"
 
 @interface FHHouseDetailBaseViewModel ()<UITableViewDelegate, UITableViewDataSource>
 
@@ -80,6 +81,13 @@
         [self configTableView];
     }
     return self;
+}
+
+- (NSMutableArray *)items {
+    if (!_items) {
+        _items = [NSMutableArray array];
+    }
+    return _items;
 }
 
 -(void)configTableView
@@ -346,6 +354,7 @@
                 tracerDic[@"event_tracking_id"] = @"234883";
             }
             [FHUserTracker writeEvent:@"element_show" params:tracerDic];
+            [[FHHouseErrorHubManager sharedInstance] checkBuryingPointWithEvent:@"element_show" Params:tracerDic errorHubType:FHErrorHubTypeBuryingPoint];
         }
         NSArray *element_array = [tempCell elementTypeStringArray:self.houseType];
         if (element_array.count > 0) {
@@ -774,7 +783,6 @@
 
 - (void)gotoLogin:(id)model enterFrom:(NSString *)enterFrom
 {
-    
     NSMutableDictionary *params = [NSMutableDictionary dictionary];
     
     [params setObject:enterFrom forKey:@"enter_from"];

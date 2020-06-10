@@ -26,6 +26,7 @@
 #import "FHUGCSmallVideoCell.h"
 #import "AWEVideoConstants.h"
 #import "HMDTTMonitor.h"
+#import "FHUGCFeedDetailJumpManager.h"
 
 @interface FHTopicDetailViewModel ()<UITableViewDelegate,UITableViewDataSource>
 
@@ -51,6 +52,7 @@
 @property (nonatomic, copy)     NSString       *tab_id;
 @property (nonatomic, copy)     NSString       *appExtraParams;
 @property (nonatomic, weak)     FHErrorView       *tableEmptyView;// 暂时记一个就好了
+@property(nonatomic, strong) FHUGCFeedDetailJumpManager *detailJumpManager;
 
 @end
 
@@ -73,6 +75,8 @@
         self.feedOffset = 0;
         self.dataList = [[NSMutableArray alloc] init];
         self.hashTable = [NSHashTable weakObjectsHashTable];
+        self.detailJumpManager = [[FHUGCFeedDetailJumpManager alloc] init];
+        self.detailJumpManager.refer = self.refer;
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(acceptMsg:) name:@"kFHUGCGoTop" object:@"topicDetail"];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(acceptMsg:) name:@"kFHUGCLeaveTop" object:@"topicDetail"];
         // 删帖成功
@@ -212,6 +216,7 @@
                 [feedList.data enumerateObjectsUsingBlock:^(FHTopicFeedListDataModel*  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
                     if ([obj isKindOfClass:[FHTopicFeedListDataModel class]]) {
                         FHFeedUGCCellModel *cellModel = [FHFeedUGCCellModel modelFromFeed:obj.content];
+                        cellModel.categoryId = self.categoryName;
                         if (cellModel) {
                             [tempArray addObject:cellModel];
                         }
@@ -407,7 +412,8 @@
         FHFeedUGCCellModel *cellModel = self.dataList[indexPath.row];
         self.currentCellModel = cellModel;
         self.currentCell = [tableView cellForRowAtIndexPath:indexPath];
-        [self jumpToDetail:cellModel showComment:NO enterType:@"feed_content_blank"];
+        self.detailJumpManager.currentCell = self.currentCell;
+        [self.detailJumpManager jumpToDetail:cellModel showComment:NO enterType:@"feed_content_blank"];
     }
 }
 #pragma mark - UIScrollViewDelegate
@@ -569,37 +575,19 @@
     [self trackClickComment:cellModel];
     self.currentCellModel = cellModel;
     self.currentCell = cell;
-    [self jumpToDetail:cellModel showComment:YES enterType:@"feed_comment"];
+    self.detailJumpManager.currentCell = self.currentCell;
+    [self.detailJumpManager jumpToDetail:cellModel showComment:YES enterType:@"feed_comment"];
 }
 
 - (void)goToCommunityDetail:(FHFeedUGCCellModel *)cellModel {
-    //关闭引导cell
-    if(cellModel.community.socialGroupId){
-        NSMutableDictionary *dict = @{}.mutableCopy;
-        dict[@"community_id"] = cellModel.community.socialGroupId;
-        NSString *originFrom = cellModel.tracerDic[@"origin_from"] ?: @"be_null";
-        dict[@"tracer"] = @{
-            @"origin_from":originFrom,
-            @"enter_from":[self pageType],
-            @"enter_type":@"click",
-            @"group_id":cellModel.groupId ?: @"be_null",
-            @"rank":cellModel.tracerDic[@"rank"] ?: @"be_null",
-            @"log_pb":cellModel.logPb ?: @"be_null"};
-        TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
-        //跳转到圈子详情页
-        NSURL *openUrl = [NSURL URLWithString:@"sslocal://ugc_community_detail"];
-        [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:userInfo];
-    }
+    [self.detailJumpManager goToCommunityDetail:cellModel];
 }
 
 - (void)lookAllLinkClicked:(FHFeedUGCCellModel *)cellModel cell:(nonnull FHUGCBaseCell *)cell {
     self.currentCellModel = cellModel;
     self.currentCell = cell;
-    [self jumpToDetail:cellModel showComment:NO enterType:@"feed_content_blank"];
-}
-
-- (void)closeFeedGuide:(FHFeedUGCCellModel *)cellModel {
-    
+    self.detailJumpManager.currentCell = self.currentCell;
+    [self.detailJumpManager jumpToDetail:cellModel showComment:NO enterType:@"feed_content_blank"];
 }
 
 - (void)gotoLinkUrl:(FHFeedUGCCellModel *)cellModel url:(NSURL *)url {
@@ -632,130 +620,6 @@
             [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
         }
     }
-}
-
-// go detail
-- (void)jumpToDetail:(FHFeedUGCCellModel *)cellModel showComment:(BOOL)showComment enterType:(NSString *)enterType {
-    if(cellModel.cellType == FHUGCFeedListCellTypeArticle || cellModel.cellType == FHUGCFeedListCellTypeQuestion){
-        BOOL canOpenURL = NO;
-        if (!canOpenURL && !isEmptyString(cellModel.openUrl)) {
-            NSURL *url = [TTStringHelper URLWithURLString:cellModel.openUrl];
-            if ([[UIApplication sharedApplication] canOpenURL:url]) {
-                canOpenURL = YES;
-                [[UIApplication sharedApplication] openURL:url];
-            }
-            else if([[TTRoute sharedRoute] canOpenURL:url]){
-                canOpenURL = YES;
-                //优先跳转openurl
-                [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:nil];
-            }
-        }else{
-            NSURL *openUrl = [NSURL URLWithString:cellModel.detailScheme];
-            [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:nil];
-        }
-    }else if(cellModel.cellType == FHUGCFeedListCellTypeUGC){
-        [self jumpToPostDetail:cellModel showComment:showComment enterType:enterType];
-    }else if(cellModel.cellType == FHUGCFeedListCellTypeUGCBanner || cellModel.cellType == FHUGCFeedListCellTypeUGCBanner2){
-        //根据url跳转
-        NSURL *openUrl = [NSURL URLWithString:cellModel.openUrl];
-        [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:nil];
-    }else if(cellModel.cellType == FHUGCFeedListCellTypeArticleComment || cellModel.cellType == FHUGCFeedListCellTypeArticleComment2){
-        // 评论
-        NSMutableDictionary *dict = [NSMutableDictionary new];
-        NSMutableDictionary *traceParam = @{}.mutableCopy;
-        traceParam[@"enter_from"] = [self pageType];
-        traceParam[@"enter_type"] = enterType ? enterType : @"be_null";
-        traceParam[@"rank"] = cellModel.tracerDic[@"rank"];
-        traceParam[@"log_pb"] = cellModel.logPb;
-        dict[TRACER_KEY] = traceParam;
-        
-        dict[@"data"] = cellModel;
-        dict[@"begin_show_comment"] = showComment ? @"1" : @"0";
-        dict[@"social_group_id"] = cellModel.community.socialGroupId ?: @"";
-        TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
-        NSURL *openUrl = [NSURL URLWithString:cellModel.openUrl];
-        [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:userInfo];
-    }else if(cellModel.cellType == FHUGCFeedListCellTypeAnswer){
-        // 问题 回答
-        BOOL jump_comment = NO;
-        if (showComment) {
-            jump_comment = YES;
-        }
-        NSDictionary *dict = @{@"is_jump_comment":@(jump_comment)};
-        TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
-        NSURL *openUrl = [NSURL URLWithString:cellModel.openUrl];
-        if(showComment && cellModel.commentSchema.length > 0){
-            openUrl = [NSURL URLWithString:cellModel.commentSchema];
-        }
-        [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:userInfo];
-    } if(cellModel.cellType == FHUGCFeedListCellTypeUGCSmallVideo){
-        //小视频
-        WeakSelf;
-        TSVShortVideoDetailExitManager *exitManager = [[TSVShortVideoDetailExitManager alloc] initWithUpdateBlock:^CGRect{
-            StrongSelf;
-            CGRect imageFrame = [self selectedSmallVideoFrame];
-            imageFrame.origin = CGPointZero;
-            return imageFrame;
-        } updateTargetViewBlock:^UIView *{
-            StrongSelf;
-            return [self currentSelectSmallVideoView];
-        }];
-        NSMutableDictionary *info = [NSMutableDictionary dictionaryWithCapacity:2];
-        [info setValue:exitManager forKey:HTSVideoDetailExitManager];
-        if (showComment) {
-            [info setValue:@(1) forKey:AWEVideoShowComment];
-        }
-        
-        NSURL *openUrl = [NSURL URLWithString:cellModel.openUrl];
-        [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:TTRouteUserInfoWithDict(info)];
-    }
-}
-
-- (void)jumpToPostDetail:(FHFeedUGCCellModel *)cellModel showComment:(BOOL)showComment enterType:(NSString *)enterType {
-    NSMutableDictionary *dict = @{}.mutableCopy;
-    // 埋点
-    NSMutableDictionary *traceParam = @{}.mutableCopy;
-    traceParam[@"enter_from"] = [self pageType];
-    traceParam[@"enter_type"] = enterType ? enterType : @"be_null";
-    traceParam[@"rank"] = cellModel.tracerDic[@"rank"];
-    traceParam[@"log_pb"] = cellModel.logPb;
-    // traceParam[@"concern_id"] = @(self.cid);
-    dict[TRACER_KEY] = traceParam;
-    
-    dict[@"data"] = cellModel;
-    dict[@"begin_show_comment"] = showComment ? @"1" : @"0";
-    dict[@"social_group_id"] = cellModel.community.socialGroupId ?: @"";
-    dict[@"thread_detail_source"] = @"ugc_thread";
-    TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
-    FHFeedUGCContentModel *contentModel = cellModel.originData;
-    NSString *routeUrl = @"sslocal://thread_detail";
-    if (contentModel && [contentModel isKindOfClass:[FHFeedUGCContentModel class]]) {
-        NSString *schema = contentModel.schema;
-        if (schema.length > 0) {
-            routeUrl = schema;
-        }
-    }
-    
-    NSURL *openUrl = [NSURL URLWithString:routeUrl];
-    [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:userInfo];
-}
-
-- (UIView *)currentSelectSmallVideoView {
-    if (self.currentCell && [self.currentCell isKindOfClass:[FHUGCSmallVideoCell class]]) {
-        FHUGCSmallVideoCell *smallVideoCell = self.currentCell;
-        return smallVideoCell.videoImageView;
-    }
-    return nil;
-}
-
-- (CGRect)selectedSmallVideoFrame
-{
-    UIView *view = [self currentSelectSmallVideoView];
-    if (view) {
-        CGRect frame = [view convertRect:view.bounds toView:nil];
-        return frame;
-    }
-    return CGRectZero;
 }
 
 #pragma mark - 埋点
@@ -854,6 +718,7 @@
     dict[@"page_type"] = [self pageType];
     dict[@"log_pb"] = cellModel.logPb;
     dict[@"rank"] = @(rank);
+    dict[@"category_name"] = self.categoryName;
     
     return dict;
 }

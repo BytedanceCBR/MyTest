@@ -187,6 +187,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong , nullable) NSDictionary *logPb;
 @property (nonatomic, strong , nullable) NSArray<FHDetailNeighborhoodDataStatsInfoModel> *statsInfo;
 @property (nonatomic, strong , nullable) NSArray<FHHouseBaseInfoModel> *baseInfo;
+@property (nonatomic, copy , nullable) NSString *baseInfoFoldCount;
 @property (nonatomic, copy , nullable) NSString *name;
 @property (nonatomic, strong , nullable) FHDetailNeighborhoodDataNeighborhoodInfoModel *neighborhoodInfo ;
 @property (nonatomic, strong , nullable) FHDetailShareInfoModel *shareInfo ;

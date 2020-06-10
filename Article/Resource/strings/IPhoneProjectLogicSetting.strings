@@ -214,3 +214,6 @@
 "ugc_community_reviews_list" = "FHNeighbourhoodCommentsController";
 //专题页
 "forum_topic" = "FHSpecialTopicViewController";
+
+//local_testdebug
+"errrorhub_debug" = "FHHouseErrorHubDebugVC";

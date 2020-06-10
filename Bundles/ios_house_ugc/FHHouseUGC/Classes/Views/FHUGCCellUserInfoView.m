@@ -23,6 +23,9 @@
 #import "FHFeedOperationResultModel.h"
 #import "TTCommentDataManager.h"
 #import "TTAssetModel.h"
+#import "UIViewAdditions.h"
+#import "UIImageView+BDWebImage.h"
+#import "FHUGCCellHelper.h"
 
 @interface FHUGCCellUserInfoView()
 
@@ -75,13 +78,16 @@
 }
 
 - (void)initViews {
-    self.icon = [[UIImageView alloc] init];
-    _icon.backgroundColor = [UIColor themeGray7];
+    self.icon = [[TTAsyncCornerImageView alloc] initWithFrame:CGRectMake(20, 0, 40, 40) allowCorner:YES];
+//    _icon.backgroundColor = [UIColor themeGray7];
+    _icon.placeholderName = @"fh_mine_avatar";
+    _icon.cornerRadius = 20;
+//    _icon.imageContentMode = TTImageViewContentModeScaleAspectFill;
     _icon.contentMode = UIViewContentModeScaleAspectFill;
-    _icon.layer.masksToBounds = YES;
-    _icon.layer.cornerRadius = 20;
-    _icon.layer.borderWidth = 1;
-    _icon.layer.borderColor = [[UIColor themeGray6] CGColor];
+//    _icon.layer.masksToBounds = YES;
+//    _icon.layer.cornerRadius = 20;
+    _icon.borderWidth = 1;
+    _icon.borderColor = [UIColor themeGray6];
     
     [self addSubview:_icon];
     
@@ -133,49 +139,68 @@
 }
 
 - (void)initConstraints {
-    [self.icon mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self);
-        make.left.mas_equalTo(self).offset(20);
-        make.width.height.mas_equalTo(40);
-    }];
+    self.icon.top = 0;
+    self.icon.left = 20;
+    self.icon.width = 40;
+    self.icon.height = 40;
     
-    [self.moreBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.centerY.mas_equalTo(self);
-        make.right.mas_equalTo(self).offset(-20);
-        make.width.height.mas_equalTo(20);
-    }];
+    self.userName.top = 0;
+    self.userName.left = self.icon.right + 10;
+    self.userName.width = 100;
+    self.userName.height = 22;
     
-    [self.userName mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.icon);
-        make.left.mas_equalTo(self.icon.mas_right).offset(10);
-        make.width.mas_lessThanOrEqualTo([UIScreen mainScreen].bounds.size.width - 100);
-        make.height.mas_equalTo(22);
-    }];
-    
-    [self.userAuthLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.centerY.equalTo(self.userName);
-        make.left.equalTo(self.userName.mas_right).offset(4);
-        make.height.mas_equalTo(16);
-    }];
-    
+    self.moreBtn.top = 10;
+    self.moreBtn.width = 20;
+    self.moreBtn.height = 20;
+    self.moreBtn.left = self.width - self.moreBtn.width - 20;
+
+    self.userAuthLabel.top = 3;
+    self.userAuthLabel.left = self.userName.right + 4;
+    self.userAuthLabel.width = 0;
+    self.userAuthLabel.height = 16;
+
     CGFloat maxWidth = [UIScreen mainScreen].bounds.size.width - 40 - 40 - 10 - 20 - 10;
-    [self.descLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.bottom.mas_equalTo(self.icon);
-        make.left.mas_equalTo(self.icon.mas_right).offset(10);
-        make.height.mas_equalTo(17);
-        make.width.mas_equalTo(maxWidth);
-    }];
+    self.descLabel.top = self.userName.bottom + 1;
+    self.descLabel.left = self.icon.right + 10;
+    self.descLabel.height = 17;
+    self.descLabel.width = maxWidth;
     
-    [self.editLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.bottom.mas_equalTo(self.icon).offset(3);
-        make.left.mas_equalTo(self.descLabel.mas_right).offset(5);
-        make.width.mas_equalTo(60);
-        make.height.mas_equalTo(23);
-    }];
+    self.editLabel.top = self.descLabel.top - 3;
+    self.editLabel.left = self.descLabel.right + 5;
+    self.editLabel.width = 60;
+    self.editLabel.height = 23;
     
-    [self.editingLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.edges.mas_equalTo(self.editLabel);
-    }];
+    self.editingLabel.top = self.descLabel.top - 3;
+    self.editingLabel.left = self.descLabel.right + 5;
+    self.editingLabel.width = 60;
+    self.editingLabel.height = 23;
+}
+
+- (void)refreshWithData:(FHFeedUGCCellModel *)cellModel {
+    //设置userInfo
+    self.cellModel = cellModel;
+    //图片
+    FHFeedContentImageListModel *imageModel = [[FHFeedContentImageListModel alloc] init];
+    imageModel.url = cellModel.user.avatarUrl;
+    NSMutableArray *urlList = [NSMutableArray array];
+    for (NSInteger i = 0; i < 3; i++) {
+        FHFeedContentImageListUrlListModel *urlListModel = [[FHFeedContentImageListUrlListModel alloc] init];
+        urlListModel.url = cellModel.user.avatarUrl;
+        [urlList addObject:urlListModel];
+    }
+    imageModel.urlList = urlList;
+    
+    if (imageModel && imageModel.url.length > 0) {
+        [self.icon tt_setImageWithURLString:imageModel.url];
+    }else{
+        [self.icon setImage:[UIImage imageNamed:@"fh_mine_avatar"]];
+    }
+
+    self.userName.text = !isEmptyString(cellModel.user.name) ? cellModel.user.name : @"用户";
+    self.userAuthLabel.hidden = self.userAuthLabel.text.length <= 0;
+    [self updateDescLabel];
+    [self updateEditState];
+    [self updateFrame];
 }
 
 - (void)updateMoreBtnWithTitleType {
@@ -183,42 +208,39 @@
     [self.moreBtn setTitle:@"查看更多" forState:UIControlStateNormal];
     [self.moreBtn setTitleColor:[UIColor themeOrange1] forState:UIControlStateNormal];
     self.moreBtn.titleLabel.font = [UIFont themeFontRegular:12];
-    [self.moreBtn mas_updateConstraints:^(MASConstraintMaker *make) {
-         make.width.mas_equalTo(50);
-     }];
-    [self.userName mas_updateConstraints:^(MASConstraintMaker *make) {
-        make.width.mas_lessThanOrEqualTo([UIScreen mainScreen].bounds.size.width - 150);
-    }];
-    CGFloat maxWidth = [UIScreen mainScreen].bounds.size.width - 40 - 40 - 10 - 20 - 10 -50;
-    [self.descLabel mas_updateConstraints:^(MASConstraintMaker *make) {
-        make.width.mas_equalTo(maxWidth);
-    }];
+    
+    self.moreBtn.width = 50;
+    self.moreBtn.left = self.width - self.moreBtn.width - 20;
+    
+    CGFloat maxWidth = [UIScreen mainScreen].bounds.size.width - 40 - 40 - 10 - 20 - 10 - 50;
+    
+    self.descLabel.width = maxWidth;
+    self.editLabel.left = self.descLabel.right + 5;
+    self.editingLabel.left = self.descLabel.right + 5;
 }
 
-- (void)layoutSubviews {
-    [super layoutSubviews];
+- (void)updateFrame {
+    CGSize userNameSize = [self.userName sizeThatFits:CGSizeMake(MAXFLOAT, 22)];
+    self.userName.width = userNameSize.width;
     
-    self.userAuthLabel.hidden = self.userAuthLabel.text.length <= 0;
-    
-    CGRect userAuthLabelFrame = self.userAuthLabel.frame;
-    userAuthLabelFrame.size.width += 10;
-    
-    CGFloat maxUserNameWidth = self.frame.size.width - 40 - 50 - (self.userAuthLabel.hidden ? 0 : (self.userAuthLabel.frame.size.width + 9));
-    if(self.cellModel.isStick && self.cellModel.stickStyle == FHFeedContentStickStyleGood) {
-        // 置顶加精移动位置
-        if(self.cellModel.isInNeighbourhoodCommentsList){
-            maxUserNameWidth -= 56;
+    CGSize userAuthLabelSize = [self.userAuthLabel sizeThatFits:CGSizeMake(MAXFLOAT, 16)];
+    self.userAuthLabel.width = userAuthLabelSize.width + 10;
+  
+    CGFloat maxUserNameWidth = self.width - 40 - 50 - (self.userAuthLabel.hidden ? 0 : (self.userAuthLabel.width + 9));
+    if(!self.userAuthLabel.hidden){
+        if(self.cellModel.isStick && self.cellModel.stickStyle == FHFeedContentStickStyleGood) {
+            // 置顶加精移动位置
+            if(self.cellModel.isInNeighbourhoodCommentsList){
+                maxUserNameWidth -= 56;
+            }
         }
     }
     
-    CGRect userNameFrame = self.userName.frame;
-    if(userNameFrame.size.width > maxUserNameWidth){
-        userNameFrame.size.width = maxUserNameWidth;
-        self.userName.frame = userNameFrame;
+    if(self.userName.width > maxUserNameWidth){
+        self.userName.width = maxUserNameWidth;
     }
     
-    userAuthLabelFrame.origin.x = CGRectGetMaxX(self.userName.frame) + 4;
-    self.userAuthLabel.frame = userAuthLabelFrame;
+    self.userAuthLabel.left = self.userName.right + 4;
 }
 
 - (UILabel *)LabelWithFont:(UIFont *)font textColor:(UIColor *)textColor {
@@ -267,14 +289,16 @@
     CGFloat maxWidth = [UIScreen mainScreen].bounds.size.width - 40 - 40 - 10 - 20 - 10;
     if(size.width + 15 + 60 <= maxWidth){
         self.isDescToLong = NO;
-        [self.descLabel mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.width.mas_equalTo(size.width);
-        }];
+
+        self.descLabel.width = size.width;
+        self.editLabel.left = self.descLabel.right + 5;
+        self.editingLabel.left = self.descLabel.right + 5;
     }else{
         self.isDescToLong = YES;
-        [self.descLabel mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.width.mas_equalTo(maxWidth);
-        }];
+        
+        self.descLabel.width = maxWidth;
+        self.editLabel.left = self.descLabel.right + 5;
+        self.editingLabel.left = self.descLabel.right + 5;
     }
 }
 
@@ -285,7 +309,8 @@
     } else {
         self.editLabel.text = @"";
     }
-    [self.editLabel updateConstraintsIfNeeded];
+    CGSize size = [self.descLabel sizeThatFits:CGSizeMake(MAXFLOAT, 23)];
+    self.descLabel.width = size.width;
     // 是否显示
     if(self.isDescToLong){
         self.editLabel.hidden = YES;
