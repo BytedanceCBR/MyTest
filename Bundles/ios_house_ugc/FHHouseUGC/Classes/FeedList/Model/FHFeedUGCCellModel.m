@@ -133,7 +133,7 @@
                  type == FHUGCFeedListCellTypeUGCRecommendCircle ||
                  type == FHUGCFeedListCellTypeUGCEncyclopedias ){
             cls = [FHFeedContentModel class];
-        }else if(type >= FHUGCFeedListCellTypeUGCCommonLynx || 1200 < type < 1300){
+        }else if(type >= FHUGCFeedListCellTypeUGCCommonLynx && type < 1300){
             cls = [FHFeedContentModel class];
         }else{
             //其他类型直接过滤掉
@@ -544,7 +544,7 @@
         }else{
             cellModel.openUrl = model.rawData.operation.url;
         }
-    }else if((cellModel.cellType == FHUGCFeedListCellTypeUGCCommonLynx || (1200 <= cellModel.cellType && cellModel.cellType < 1300)) && cellModel.cellType != FHUGCFeedListCellTypeUGCBanner){
+    }else if(cellModel.cellType >= FHUGCFeedListCellTypeUGCCommonLynx && cellModel.cellType < 1300){
         cellModel.cellSubType = FHUGCFeedListCellSubTypeUGCLynx;
         if(model.rawData.groupId){
             cellModel.groupId = model.rawData.groupId;

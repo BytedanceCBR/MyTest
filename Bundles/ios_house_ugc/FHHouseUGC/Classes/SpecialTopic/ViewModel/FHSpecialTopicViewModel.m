@@ -1155,7 +1155,7 @@
         guideDict[@"origin_from"] = self.viewController.tracerDict[@"origin_from"];
         guideDict[@"page_type"] = [self pageType];
         guideDict[@"card_type"] = @"encyclopedia";
-        guideDict[@"impr_id"] = cellModel.tracerDic[@"log_pb"][@"impr_id"] ?: @"be_null";;
+        guideDict[@"impr_id"] = cellModel.tracerDic[@"log_pb"][@"impr_id"] ?: @"be_null";
         guideDict[@"group_id"] = cellModel.groupId;
         guideDict[@"rank"] = @(rank);
         TRACK_EVENT(@"card_show", guideDict);

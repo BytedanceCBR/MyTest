@@ -10,7 +10,6 @@
 #import <FHCommonUI/FHFakeInputNavbar.h>
 #import <FHCommonUI/FHErrorView.h>
 
-
 NS_ASSUME_NONNULL_BEGIN
 @class TTRouteParamObj;
 @class FHBaseMainListViewController;

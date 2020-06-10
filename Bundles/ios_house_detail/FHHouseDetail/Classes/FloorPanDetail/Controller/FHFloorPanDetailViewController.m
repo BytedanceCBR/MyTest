@@ -32,6 +32,7 @@
 - (instancetype)initWithRouteParamObj:(TTRouteParamObj *)paramObj {
     self = [super initWithRouteParamObj:paramObj];
     if (self) {
+        self.isResetStatusBar = NO;
         self.ttTrackStayEnable = YES;
         _floorPanId = paramObj.allParams[@"floor_plan_id"];
         

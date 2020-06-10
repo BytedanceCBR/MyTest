@@ -273,6 +273,10 @@
                 CGFloat lineHeight = tagLayout.textBoundingSize.height;
                 if (lineHeight > 20) {
                     maxCount = i;
+                    //如果只有一个标签且长度过长，仍然展示这个标签，结尾用...截断
+                    if (i == 0 && paramsArrary.count == 1) {
+                        resultAttr = attr;
+                    }
                     break;
                 }
                 resultAttr = attr;

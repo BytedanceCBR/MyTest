@@ -67,7 +67,7 @@ typedef NS_ENUM(NSInteger, FHUGCFeedListCellType)
     FHUGCFeedListCellTypeUGCVoteInfo = 1107,               //UGC投票，新投票类型
     FHUGCFeedListCellTypeUGCRecommendCircle = 1108,        //推荐圈子
     FHUGCFeedListCellTypeUGCEncyclopedias = 1109,          //百科
-    FHUGCFeedListCellTypeUGCCommonLynx = 1200,             //Lynx卡片
+    FHUGCFeedListCellTypeUGCCommonLynx = 1200,             //Lynx卡片 1200 - 1300 这个之间不要在定义其他类型
 };
 
 typedef NS_ENUM(NSInteger, FHUGCMyInterestedType)
