@@ -341,6 +341,13 @@ NS_ASSUME_NONNULL_BEGIN
 @end
 
 
+@interface  FHConfigDataBarConfigModel  : JSONModel
+
+@property (nonatomic, copy , nullable) NSNumber *status;
+
+@end
+
+
 @protocol FHConfigDataRentBannerItemsModel<NSObject>
 @end
 
@@ -473,6 +480,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong, nullable) FHConfigDataAvailabilityModel *cityAvailability;
 @property (nonatomic, strong, nullable) FHConfigDataCitySwitchModel *citySwitch;
 @property (nonatomic, strong , nullable) FHConfigDataEntranceSwitchModel *entranceSwitch ;
+@property (nonatomic, strong , nullable) FHConfigDataBarConfigModel *barConfig ;
+
 @property (nonatomic, copy , nullable) NSNumber *houseTypeDefault;
 
 @property (nonatomic, strong , nullable) NSArray<FHSearchFilterConfigItem> *searchTabNeighborhoodFilter;

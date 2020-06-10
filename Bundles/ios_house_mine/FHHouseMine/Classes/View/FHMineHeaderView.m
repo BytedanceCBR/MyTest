@@ -91,8 +91,26 @@
 //    }else{
 //        _homePageBtn.hitTestEdgeInsets = UIEdgeInsetsMake(-20, -20, -20, -20);
 //    }
+    self.loginBtn = [[UIButton alloc]init];
+    _loginBtn.backgroundColor = [UIColor themeWhite];
+    [_loginBtn setTitleColor:[UIColor themeOrange1] forState:UIControlStateNormal];
+    _loginBtn.titleLabel.font = [UIFont themeFontMedium:14];
+    _loginBtn.userInteractionEnabled = NO;
+    [_loginBtn setTitle:@"登录" forState:UIControlStateNormal];
+    _loginBtn.layer.cornerRadius = 22;
+    [self addSubview:_loginBtn];
     
     [self addSubview:_homePageBtn];
+    [self setDeaultShowTypeByLogin:NO];
+}
+
+- (void)setDeaultShowTypeByLogin:(BOOL)isLogin {
+    self.iconBorderView.hidden = !isLogin;
+    self.userNameLabel.hidden = !isLogin;
+    self.descLabel.hidden = !isLogin;
+    self.editIcon.hidden = !isLogin;
+    self.homePageBtn.hidden = !isLogin;
+    self.loginBtn.hidden = isLogin;
 }
 
 - (void)initConstaints {
@@ -145,6 +163,12 @@
         make.width.mas_equalTo(50);
         make.right.mas_equalTo(self);
         make.centerY.mas_equalTo(self.iconBorderView.mas_centerY);
+    }];
+    
+    [_loginBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.bottom.equalTo(self.mas_bottom).offset(-30);
+        make.centerX.equalTo(self);
+        make.size.mas_equalTo(CGSizeMake(88, 40));
     }];
     
     [self layoutIfNeeded];
