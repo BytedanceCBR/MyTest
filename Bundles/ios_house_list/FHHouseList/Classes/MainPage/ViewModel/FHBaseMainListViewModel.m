@@ -204,15 +204,15 @@ extern NSString *const INSTANT_DATA_KEY;
 - (Class)cellClassForEntity:(id)model {
 
     if ([model isKindOfClass:[FHSearchHouseItemModel class]]) {
-         FHSearchHouseItemModel *houseModel = (FHSearchHouseItemModel *)model;
-        if(houseModel.houseType.integerValue == FHHouseTypeNewHouse) {
+        FHSearchHouseItemModel *houseModel = (FHSearchHouseItemModel *)model;
             
         if (houseModel.cardType == FHSearchCardTypeAgentCard) {
             return [FHHouseAgentCardCell class];
         }
-            
-        if (houseModel.cellStyles ==6) {
-                 return [FHHouseListBaseItemCell class];
+        
+        if(houseModel.houseType.integerValue == FHHouseTypeNewHouse) {
+            if (houseModel.cellStyles ==6) {
+               return [FHHouseListBaseItemCell class];
             }
         }
         return [FHHouseBaseItemCell class];
