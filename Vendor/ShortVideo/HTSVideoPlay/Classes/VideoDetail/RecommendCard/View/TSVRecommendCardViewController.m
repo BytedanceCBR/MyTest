@@ -208,15 +208,18 @@
 
 - (void)needRerecordImpressions
 {
-    if (self.viewModel.userCards.count <= 0) {
-        return;
-    }
-    
-    for (NSIndexPath* indexPath in self.collectionView.indexPathsForVisibleItems) {
-        if (indexPath.item < self.viewModel.userCards.count) {
-            [self.viewModel processImpressionAtIndex:indexPath status:self.viewModel.isRecommendCardShowing? SSImpressionStatusRecording:SSImpressionStatusSuspend];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        if (self.viewModel.userCards.count <= 0) {
+            return;
         }
-    }
+        
+        for (NSIndexPath* indexPath in self.collectionView.indexPathsForVisibleItems) {
+            if (indexPath.item < self.viewModel.userCards.count) {
+                [self.viewModel processImpressionAtIndex:indexPath status:self.viewModel.isRecommendCardShowing? SSImpressionStatusRecording:SSImpressionStatusSuspend];
+            }
+        }
+    });
+    
 }
 
 - (void)viewWillAppear:(BOOL)animated

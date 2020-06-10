@@ -65,24 +65,17 @@
 - (void)initViews {
     __weak typeof(self) wself = self;
     
-    self.userInfoView = [[FHUGCCellUserInfoView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, 0)];
+    self.userInfoView = [[FHUGCCellUserInfoView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, userInfoViewHeight)];
     [self.contentView addSubview:_userInfoView];
     
     self.contentLabel = [[TTUGCAsyncLabel alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width - leftMargin - rightMargin, 0)];
     _contentLabel.numberOfLines = maxLines;
     _contentLabel.layer.masksToBounds = YES;
     _contentLabel.backgroundColor = [UIColor whiteColor];
-//    NSDictionary *linkAttributes = @{
-//                                     NSForegroundColorAttributeName : [UIColor themeRed3],
-//                                     NSFontAttributeName : [UIFont themeFontRegular:16]
-//                                     };
-//    self.contentLabel.linkAttributes = linkAttributes;
-//    self.contentLabel.activeLinkAttributes = linkAttributes;
-//    self.contentLabel.inactiveLinkAttributes = linkAttributes;
     _contentLabel.delegate = self;
     [self.contentView addSubview:_contentLabel];
     
-    self.originView = [[FHUGCCellOriginItemView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width - leftMargin - rightMargin, 0)];
+    self.originView = [[FHUGCCellOriginItemView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width - leftMargin - rightMargin, originViewHeight)];
     _originView.hidden = YES;
     _originView.goToLinkBlock = ^(FHFeedUGCCellModel * _Nonnull cellModel, NSURL * _Nonnull url) {
         if(wself.delegate && [wself.delegate respondsToSelector:@selector(gotoLinkUrl:url:)]){
@@ -91,11 +84,11 @@
     };
     [self.contentView addSubview:_originView];
     
-    self.attachCardView = [[FHUGCCellAttachCardView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width - leftMargin - rightMargin, 0)];
+    self.attachCardView = [[FHUGCCellAttachCardView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width - leftMargin - rightMargin, attachCardViewHeight)];
     _attachCardView.hidden = YES;
     [self.contentView addSubview:_attachCardView];
     
-    self.bottomView = [[FHUGCCellBottomView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, 0)];
+    self.bottomView = [[FHUGCCellBottomView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, bottomViewHeight)];
     [_bottomView.commentBtn addTarget:self action:@selector(commentBtnClick) forControlEvents:UIControlEventTouchUpInside];
     [_bottomView.guideView.closeBtn addTarget:self action:@selector(closeGuideView) forControlEvents:UIControlEventTouchUpInside];
     [self.contentView addSubview:_bottomView];
@@ -152,11 +145,12 @@
     self.currentData = data;
     self.cellModel = cellModel;
     //设置userInfo
-    self.userInfoView.cellModel = cellModel;
-    self.userInfoView.userName.text = !isEmptyString(cellModel.user.name) ? cellModel.user.name : @"用户";
-    [self.userInfoView updateDescLabel];
-    [self.userInfoView updateEditState];
-    [self.userInfoView.icon bd_setImageWithURL:[NSURL URLWithString:cellModel.user.avatarUrl] placeholder:[UIImage imageNamed:@"fh_mine_avatar"]];
+//    self.userInfoView.cellModel = cellModel;
+//    self.userInfoView.userName.text = !isEmptyString(cellModel.user.name) ? cellModel.user.name : @"用户";
+//    [self.userInfoView updateDescLabel];
+//    [self.userInfoView updateEditState];
+//    [self.userInfoView.icon bd_setImageWithURL:[NSURL URLWithString:cellModel.user.avatarUrl] placeholder:[UIImage imageNamed:@"fh_mine_avatar"]];
+    [self.userInfoView refreshWithData:cellModel];
     //设置底部
     self.bottomView.cellModel = cellModel;
     

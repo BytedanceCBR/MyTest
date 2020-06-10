@@ -36,6 +36,7 @@
 #import "FHEnvContext.h"
 #import <Masonry/Masonry.h>
 #import <TTBaseLib/TTUIResponderHelper.h>
+#import "FHUserTracker.h"
 
 #define kHasBottomTipFavlistClosedUserDefaultKey @"kHasBottomTipFavlistClosedUserDefaultKey"
 
@@ -804,7 +805,8 @@
     [traceParams setValue:dictTraceData.groupSource forKey:@"group_source"];
     [traceParams setValue:@(dictTraceData.cellType) ? : @"be_null" forKey:@"cell_type"];
 
-    [BDTrackerProtocol eventV3:@"client_show" params:traceParams];
+//    [BDTrackerProtocol eventV3:@"client_show" params:traceParams];
+    [FHUserTracker writeEvent:@"client_show" params:traceParams];
 }
 
 #pragma mark  delegate

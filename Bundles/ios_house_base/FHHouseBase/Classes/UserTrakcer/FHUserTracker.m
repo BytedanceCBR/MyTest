@@ -8,6 +8,7 @@
 #import "FHUserTracker.h"
 #import "FHHouseErrorHubManager.h"
 #import <BDTrackerProtocol/BDTrackerProtocol.h>
+#import "FHEnvContext.h"
 
 @interface FHUserTracker ()
 
@@ -16,8 +17,15 @@
 
 +(NSDictionary *)basicParam
 {
-    // ["event_type": "house_app2c_v2"]
-    return @{@"event_type":@"house_app2c_v2"};
+    NSMutableDictionary *basic = [NSMutableDictionary dictionary];
+    basic[@"event_type"] = @"house_app2c_v2";
+    //统计增加当前选中的城市id，为了让需要城市区分的数据更准确，原因是applog是延时上报，上报时候的城市可能已经切换到其他城市了
+    NSString *currentCityId = [FHEnvContext getCurrentSelectCityIdFromLocal];
+    if(currentCityId.length > 0){
+        basic[@"f_current_city_id"] = currentCityId;
+    }
+
+    return [basic copy];
 }
 
 +(void)writeEvent:(NSString *)event params:(NSDictionary *)param
