@@ -585,6 +585,33 @@
                                    @"districtAreaName": @"district_area_name",
                                    @"contactModel": @"realtor_info",
                                    @"associateInfo": @"associate_info",
+                                   @"realtorType": @"realtor_type",
+                                   @"logPb": @"log_pb",
+                                   };
+    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+        return dict[keyName]?:keyName;
+    }];
+}
+
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+
+@end
+
+@implementation FHHouseReserveAdviserModel
++ (JSONKeyMapper*)keyMapper
+{
+    NSDictionary *dict = @{
+                                   @"tipText": @"tip_text",
+                                   @"realtorType": @"realtor_type",
+                                   @"targetId": @"target_id",
+                                   @"targetName": @"target_name",
+                                   @"districtAreaName": @"district_area_name",
+                                   @"areaPrice": @"area_price",
+                                   @"displayStatusInfo": @"display_status_info",
+                                   @"associateInfo": @"associate_info",
                                    @"logPb": @"log_pb",
                                    };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
