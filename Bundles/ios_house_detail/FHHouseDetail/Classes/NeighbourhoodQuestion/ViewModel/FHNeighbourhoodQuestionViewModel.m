@@ -543,6 +543,7 @@
     dict[@"log_pb"] = cellModel.logPb;
     dict[@"rank"] = @(rank);
     dict[@"question_id"] = cellModel.groupId;
+    dict[@"category_name"] = self.categoryId;
     
     return dict;
 }
