@@ -822,7 +822,9 @@
     }
     [self enterPictureShowPictureWithIndex:NSUIntegerMax from:from];
     [self showPictureList];
-    
+    if (self.pictureListViewController) {
+        self.pictureListViewController.elementFrom = from;
+    }
 }
 
 #pragma mark - FHDetailScrollViewDidScrollProtocol

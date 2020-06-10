@@ -206,6 +206,8 @@
     [_collectionView setBackgroundColor:[UIColor whiteColor]];
     
     if (self.contactViewModel) {
+        // lead_show 埋点
+        [self addLeadShowLog:self.contactViewModel.contactPhone baseParams:[self.contactViewModel baseParams]];
         self.bottomBar = [[UIView alloc] initWithFrame:CGRectMake(0, CGRectGetHeight(self.view.bounds) - 64, CGRectGetWidth(self.view.bounds), 64)];
         self.bottomBar.backgroundColor = [UIColor whiteColor];
         [self.view addSubview:self.bottomBar];
@@ -379,9 +381,7 @@
 // 电话咨询点击
 - (void)contactButtonClick:(UIButton *)btn {
     if (self.contactViewModel) {
-        if (self.tracerDict) {
-            self.contactViewModel.tracerDict = self.tracerDict.copy;
-        }
+
         NSMutableDictionary *extraDic = @{
             @"realtor_position":@"phone_button",
             @"position":@"report_button",
@@ -407,9 +407,6 @@
 // 在线联系点击
 - (void)onlineButtonClick:(UIButton *)btn {
     if (self.contactViewModel) {
-        if (self.tracerDict) {
-            self.contactViewModel.tracerDict = self.tracerDict.copy;
-        }
         NSMutableDictionary *extraDic = @{}.mutableCopy;
         extraDic[@"realtor_position"] = @"online";
         extraDic[@"position"] = @"online";
@@ -597,6 +594,19 @@
     [super viewDidDisappear:animated];
     if (self.albumImageStayBlock) {
         self.albumImageStayBlock(0,self.ttTrackStayTime);
+    }
+}
+
+- (void)addLeadShowLog:(FHDetailContactModel *)contactPhone baseParams:(NSDictionary *)dic
+{
+    if (dic && [dic isKindOfClass:[NSDictionary class]]) {
+        NSMutableDictionary *tracerDic = dic.mutableCopy;
+        tracerDic[@"is_im"] = contactPhone.imOpenUrl.length ? @"1" : @"0";
+        tracerDic[@"is_call"] = contactPhone.phone.length < 1 ? @"0" : @"1";
+        tracerDic[@"is_report"] = contactPhone.phone.length < 1 ? @"1" : @"0";
+        tracerDic[@"is_online"] = contactPhone.unregistered ? @"1" : @"0";
+        tracerDic[@"element_from"] = [self elementFrom];
+        TRACK_EVENT(@"lead_show", tracerDic);
     }
 }
 

@@ -442,7 +442,6 @@
     if (self.model.priceConsult.openurl.length && self.baseViewModel.contactViewModel) {
         NSMutableDictionary *extraDic = self.baseViewModel.detailTracerDic;
         extraDic[@"click_position"] = self.model.priceConsult.text?:@"be_null";
-        extraDic[@"page_type"] = @"house_model_info";
         extraDic[@"im_open_url"] = self.model.priceConsult.openurl;
         if (self.model.priceConsult.associateInfo) {
             extraDic[kFHAssociateInfo] = self.model.priceConsult.associateInfo;
