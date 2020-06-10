@@ -850,7 +850,7 @@
 - (NSMutableDictionary *)trackDict:(FHFeedUGCCellModel *)cellModel rank:(NSInteger)rank {
     NSMutableDictionary *dict = [NSMutableDictionary dictionary];
     
-    dict[@"enter_from"] = @"community_group";
+    dict[@"enter_from"] = self.viewController.tracerDict[@"enter_from"] ?: @"be_null";
     dict[@"page_type"] = [self pageType];
     dict[@"category_name"] = self.categoryId;
     dict[@"log_pb"] = cellModel.logPb;
