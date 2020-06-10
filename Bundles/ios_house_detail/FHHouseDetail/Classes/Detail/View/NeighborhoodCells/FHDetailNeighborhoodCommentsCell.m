@@ -18,6 +18,7 @@
 #import "TTAccountManager.h"
 #import "TTStringHelper.h"
 #import "FHUGCCellManager.h"
+#import "FHUGCFeedDetailJumpManager.h"
 
 #define cellId @"cellId"
 
@@ -29,8 +30,9 @@
 @property(nonatomic , strong) UILabel *titleLabel;
 @property(nonatomic , strong) UIButton *commentBtn;
 @property(nonatomic , strong) FHUGCCellManager *cellManager;
-@property (nonatomic, strong) UIView *containerView;
-@property (nonatomic, weak) UIImageView *shadowImage;
+@property(nonatomic , strong) FHUGCFeedDetailJumpManager *detailJumpManager;
+@property(nonatomic, strong) UIView *containerView;
+@property(nonatomic, weak) UIImageView *shadowImage;
 @property(nonatomic , strong) NSMutableDictionary *clientShowDict;
 
 @end
@@ -81,6 +83,9 @@
     
     self.cellManager = [[FHUGCCellManager alloc] init];
     [self.cellManager registerAllCell:_tableView];
+    
+    self.detailJumpManager = [[FHUGCFeedDetailJumpManager alloc] init];
+    self.detailJumpManager.refer = 1;
     
     self.titleView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width - 60, 50)];
     
@@ -401,46 +406,7 @@
 }
 
 - (void)lookAllLinkClicked:(FHFeedUGCCellModel *)cellModel cell:(nonnull FHUGCBaseCell *)cell {
-    [self jumpToDetail:cellModel showComment:NO enterType:@"feed_content_blank"];
-}
-
-- (void)jumpToDetail:(FHFeedUGCCellModel *)cellModel showComment:(BOOL)showComment enterType:(NSString *)enterType {
-    if(cellModel.cellType == FHUGCFeedListCellTypeUGC){
-        [self jumpToPostDetail:cellModel showComment:showComment enterType:enterType];
-    }
-}
-- (void)jumpToPostDetail:(FHFeedUGCCellModel *)cellModel showComment:(BOOL)showComment enterType:(NSString *)enterType {
-    NSMutableDictionary *dict = @{}.mutableCopy;
-    // 埋点
-    NSMutableDictionary *traceParam = @{}.mutableCopy;
-    traceParam[@"enter_from"] = [self.baseViewModel pageTypeString];
-    traceParam[@"enter_type"] = enterType ? enterType : UT_BE_NULL;
-    
-    NSInteger loc =  [self.dataList indexOfObject:cellModel];
-    if(loc != NSNotFound) {
-        traceParam[@"rank"] = @(loc).stringValue;
-    }
-    traceParam[@"log_pb"] = cellModel.logPb;
-    traceParam[@"community_id"] = cellModel.groupId;
-    dict[TRACER_KEY] = traceParam;
-    
-    dict[@"data"] = cellModel;
-    dict[@"begin_show_comment"] = showComment ? @"1" : @"0";
-    dict[@"social_group_id"] = cellModel.community.socialGroupId ?: @"";
-    dict[@"tid"] = cellModel.groupId;
-    dict[@"thread_detail_source"] = @"ugc_thread";
-    TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
-    FHFeedUGCContentModel *contentModel = cellModel.originData;
-    NSString *routeUrl = @"sslocal://thread_detail";
-    if (contentModel && [contentModel isKindOfClass:[FHFeedUGCContentModel class]]) {
-        NSString *schema = contentModel.schema;
-        if (schema.length > 0) {
-            routeUrl = schema;
-        }
-    }
-    
-    NSURL *openUrl = [NSURL URLWithString:routeUrl];
-    [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:userInfo];
+    [self.detailJumpManager jumpToDetail:cellModel showComment:NO enterType:@"feed_content_blank"];
 }
 
 @end

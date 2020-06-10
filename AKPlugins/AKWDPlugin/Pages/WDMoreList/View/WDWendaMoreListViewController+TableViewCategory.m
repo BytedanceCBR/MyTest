@@ -225,35 +225,38 @@
 
 -(void)needRerecordImpressions
 {
-    if ([self.viewModel.dataModelsArray count] == 0) {
-        return;
-    }
-    
-    for (UITableViewCell *cell in [self.answerListView visibleCells]) {
-        NSIndexPath *indexPath = [self.answerListView indexPathForCell:cell];
-        if (indexPath.row < [self.viewModel.dataModelsArray count]) {
-            WDListCellDataModel *dataModel = [self.viewModel.dataModelsArray objectAtIndex:indexPath.row];
-            if (![[WDListCellRouterCenter sharedInstance] canRecgonizeData:dataModel]) {
-                return;
-            }
-            if (dataModel.hasAnswerEntity) {
-                WDAnswerEntity *answerEntity = dataModel.answerEntity;
-                if (!isEmptyString(answerEntity.ansid)) {
-                    SSImpressionStatus st = SSImpressionStatusSuspend;
-                    if ([self _isListShowing]) {
-                        st = SSImpressionStatusRecording;
+    dispatch_async(dispatch_get_main_queue(), ^{
+        if ([self.viewModel.dataModelsArray count] == 0) {
+            return;
+        }
+        
+        for (UITableViewCell *cell in [self.answerListView visibleCells]) {
+            NSIndexPath *indexPath = [self.answerListView indexPathForCell:cell];
+            if (indexPath.row < [self.viewModel.dataModelsArray count]) {
+                WDListCellDataModel *dataModel = [self.viewModel.dataModelsArray objectAtIndex:indexPath.row];
+                if (![[WDListCellRouterCenter sharedInstance] canRecgonizeData:dataModel]) {
+                    return;
+                }
+                if (dataModel.hasAnswerEntity) {
+                    WDAnswerEntity *answerEntity = dataModel.answerEntity;
+                    if (!isEmptyString(answerEntity.ansid)) {
+                        SSImpressionStatus st = SSImpressionStatusSuspend;
+                        if ([self _isListShowing]) {
+                            st = SSImpressionStatusRecording;
+                        }
+                        [[SSImpressionManager shareInstance]
+                         recordWendaListImpressionKeyName:[self impressionKeyName]
+                         ansID:answerEntity.ansid
+                         groupType:[self impressionType]
+                         status:st
+                         userID:answerEntity.user.userID
+                         userInfo:nil];
                     }
-                    [[SSImpressionManager shareInstance]
-                     recordWendaListImpressionKeyName:[self impressionKeyName]
-                     ansID:answerEntity.ansid
-                     groupType:[self impressionType]
-                     status:st
-                     userID:answerEntity.user.userID
-                     userInfo:nil];
                 }
             }
         }
-    }
+    });
+    
 }
 
 @end

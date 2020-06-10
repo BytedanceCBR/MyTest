@@ -159,7 +159,7 @@ typedef enum : NSUInteger {
         NSMutableDictionary *extraDict = @{}.mutableCopy;
 //        extraDict[@"realtor_id"] = realtorId;
         extraDict[@"house_id"] = houseId;
-        [self addDetailCallExceptionLog:FHPhoneCallTypeNetFailed extraDict:extraDict errorCode:error.code message:model.message ? : error.localizedDescription];
+        [self addDetailCallExceptionLog:FHPhoneCallTypeRequestFailed extraDict:extraDict errorCode:error.code message:model.message ? : error.localizedDescription];
         if (completionBlock) {
             completionBlock(NO,nil,nil);
         }

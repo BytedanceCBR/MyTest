@@ -37,6 +37,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *id;
 @property (nonatomic, copy , nullable) NSString *schema;
 @property (nonatomic, strong , nullable) FHFeedUGCContentAttachCardInfoExtraModel *extra ;
+@property (nonatomic, strong , nullable) FHFeedContentImageListModel *imageModel ;
 @end
 
 @interface FHFeedUGCContentCommunityModel : JSONModel

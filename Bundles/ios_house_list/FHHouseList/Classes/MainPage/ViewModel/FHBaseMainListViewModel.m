@@ -1729,13 +1729,7 @@ extern NSString *const INSTANT_DATA_KEY;
                       [[FHRelevantDurationTracker sharedTracker] beginRelevantDurationTracking];
                   }
         }
-    }else {
-        if (self.houseType == FHHouseTypeSecondHandHouse) {
-            [[FHRelevantDurationTracker sharedTracker] beginRelevantDurationTracking];
-        }
     }
-
-
 }
 
 -(void)scrollViewDidScroll:(UIScrollView *)scrollView

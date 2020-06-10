@@ -322,9 +322,13 @@
     // 属性列表
     if (model.data.baseInfo.count > 0) {
         FHDetailNeighborhoodPropertyInfoModel *infoModel = [[FHDetailNeighborhoodPropertyInfoModel alloc] init];
+        [model.data.baseInfo enumerateObjectsUsingBlock:^(FHHouseBaseInfoModel *  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+            obj.isSingle = YES;
+        }];
         infoModel.houseModelType = FHPlotHouseModelTypeCoreInfo;
         infoModel.tableView = self.tableView;
         infoModel.baseInfo = model.data.baseInfo;
+        infoModel.baseInfoFoldCount = model.data.baseInfoFoldCount;
         [self.items addObject:infoModel];
     }
     
@@ -544,30 +548,30 @@
         // 小区点评
         if(model.data.comments) {
             FHDetailCommentsCellModel *commentsModel = [[FHDetailCommentsCellModel alloc] init];
-            commentsModel.neighborhoodId = self.houseId;
-            commentsModel.comments = model.data.comments;
-             commentsModel.houseModelType = FHPlotHouseModelTypeNeighborhoodComment;
             NSMutableDictionary *paramsDict = @{}.mutableCopy;
             if (self.detailTracerDic) {
                 [paramsDict addEntriesFromDictionary:self.detailTracerDic];
             }
             paramsDict[@"page_type"] = [self pageTypeString];
             commentsModel.tracerDict = paramsDict;
+            commentsModel.neighborhoodId = self.houseId;
+            commentsModel.comments = model.data.comments;
+             commentsModel.houseModelType = FHPlotHouseModelTypeNeighborhoodComment;
             [self.items addObject:commentsModel];
         }
         // 小区问答
         if (model.data.question) {
             // 添加分割线--当存在某个数据的时候在顶部添加分割线
             FHDetailQACellModel *qaModel = [[FHDetailQACellModel alloc] init];
-            qaModel.neighborhoodId = self.houseId;
-            qaModel.question = model.data.question;
-            qaModel.houseModelType = FHPlotHouseModelTypeNeighborhoodQA;
             NSMutableDictionary *paramsDict = @{}.mutableCopy;
             if (self.detailTracerDic) {
                 [paramsDict addEntriesFromDictionary:self.detailTracerDic];
             }
             paramsDict[@"page_type"] = [self pageTypeString];
             qaModel.tracerDict = paramsDict;
+            qaModel.neighborhoodId = self.houseId;
+            qaModel.question = model.data.question;
+            qaModel.houseModelType = FHPlotHouseModelTypeNeighborhoodQA;
             [self.items addObject:qaModel];
         }
         // 周边小区

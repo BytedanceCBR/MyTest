@@ -6,9 +6,9 @@
 //
 
 #import "FHUserTracker.h"
+#import "FHHouseErrorHubManager.h"
 #import <BDTrackerProtocol/BDTrackerProtocol.h>
 #import "FHEnvContext.h"
-
 
 @interface FHUserTracker ()
 
@@ -33,6 +33,7 @@
     
     NSMutableDictionary *params = [NSMutableDictionary dictionaryWithDictionary:param];
     [params addEntriesFromDictionary:[self basicParam]];
+    [[FHHouseErrorHubManager sharedInstance] checkBuryingPointWithEvent:event Params:params errorHubType:FHErrorHubTypeBuryingPoint];
     [BDTrackerProtocol eventV3:event params:params];
 }
 
@@ -43,8 +44,8 @@
     }    
     NSMutableDictionary *param = [model logDict];
     [param addEntriesFromDictionary:[self basicParam]];
+      [[FHHouseErrorHubManager sharedInstance] checkBuryingPointWithEvent:event Params:param errorHubType:FHErrorHubTypeBuryingPoint];
     [BDTrackerProtocol eventV3:event params:param];
-    
 }
 
 @end

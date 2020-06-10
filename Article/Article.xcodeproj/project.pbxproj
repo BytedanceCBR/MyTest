@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		1463BBA9E3DCC925B4FEE0F2 /* libPods-com.f100.client.FHNotificationServiceExtension.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 463126C447392DFA6D0E387F /* libPods-com.f100.client.FHNotificationServiceExtension.a */; };
+		170182F724597A3F00334E1B /* buryingPointCheck.json in Resources */ = {isa = PBXBuildFile; fileRef = 170182F624597A3F00334E1B /* buryingPointCheck.json */; };
+		170182F824597A3F00334E1B /* buryingPointCheck.json in Resources */ = {isa = PBXBuildFile; fileRef = 170182F624597A3F00334E1B /* buryingPointCheck.json */; };
 		3D2F39962270545700AE567D /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 3D2F398A2270545700AE567D /* InfoPlist.strings */; };
 		3D2F39982270545700AE567D /* TargetLogicSetting.strings in Resources */ = {isa = PBXBuildFile; fileRef = 3D2F398E2270545700AE567D /* TargetLogicSetting.strings */; };
 		3D2F399A2270545700AE567D /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D2F39912270545700AE567D /* main.m */; };
@@ -274,6 +276,7 @@
 		01FA60521E9F5D7300CE6FD3 /* area.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = area.plist; sourceTree = "<group>"; };
 		06479D701ACD71FB00A44FB9 /* OpenGLES.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGLES.framework; path = System/Library/Frameworks/OpenGLES.framework; sourceTree = SDKROOT; };
 		0695AFD018EEEEE50009444F /* ImageIO.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ImageIO.framework; path = System/Library/Frameworks/ImageIO.framework; sourceTree = SDKROOT; };
+		170182F624597A3F00334E1B /* buryingPointCheck.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = buryingPointCheck.json; sourceTree = "<group>"; };
 		2217C766FCBF2A4BB412EB2B /* Pods-f100.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-f100.release.xcconfig"; path = "Pods/Target Support Files/Pods-f100/Pods-f100.release.xcconfig"; sourceTree = "<group>"; };
 		2D33175D1F30AE6D009D2936 /* PushNotification.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = PushNotification.xcassets; sourceTree = "<group>"; };
 		2E14CCE61FE007BD0093E05D /* sound1.caf */ = {isa = PBXFileReference; lastKnownFileType = file; path = sound1.caf; sourceTree = "<group>"; };
@@ -732,6 +735,7 @@
 		A8A57F531B16F44D00783AA9 /* Resource */ = {
 			isa = PBXGroup;
 			children = (
+				170182F624597A3F00334E1B /* buryingPointCheck.json */,
 				FB6C55C923ACD41700651456 /* fireworks */,
 				FBA5892023AB64D20053EC79 /* introduce */,
 				D37495DE23965409006D44D2 /* gaode_house_detail_style_extra.data */,
@@ -1042,6 +1046,7 @@
 				FBA5894323AB872A0053EC79 /* introduce_1.json in Resources */,
 				B373CEA62174587A008F9905 /* Weather.xcassets in Resources */,
 				FBA5894223AB87270053EC79 /* introduce_2.json in Resources */,
+				170182F824597A3F00334E1B /* buryingPointCheck.json in Resources */,
 				3D2F39982270545700AE567D /* TargetLogicSetting.strings in Resources */,
 				D48E93C2233CF142005A42CD /* VRImageLoading.json in Resources */,
 				B373CEAA2174587A008F9905 /* sound3.caf in Resources */,
@@ -1120,6 +1125,7 @@
 				3D721A9F218FE7FA006C1156 /* gaode_map_style.data in Resources */,
 				FB6C55CF23ACD41800651456 /* firework.json in Resources */,
 				D37495E223965409006D44D2 /* gaode_house_detail_style.data in Resources */,
+				170182F724597A3F00334E1B /* buryingPointCheck.json in Resources */,
 				3DB49F8E2265E34900A0780E /* ProjectNightModeThemeUISetting.strings in Resources */,
 				FEFA5A15205FB1A8001F50D8 /* NewsInHouse.debug.xcconfig in Resources */,
 				FEFA5A16205FB1A8001F50D8 /* NewsInHouseWatchKitExtension.debug.xcconfig in Resources */,

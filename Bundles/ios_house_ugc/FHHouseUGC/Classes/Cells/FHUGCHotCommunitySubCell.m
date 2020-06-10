@@ -123,6 +123,8 @@
     self.lookAllLabel = [self LabelWithFont:[UIFont themeFontRegular:12] textColor:[UIColor themeOrange1]];
     _lookAllLabel.textAlignment = NSTextAlignmentRight;
     _lookAllLabel.text = @"查看全部";
+    _lookAllLabel.layer.masksToBounds = YES;
+    _lookAllLabel.backgroundColor = [UIColor themeOrange2];
     _lookAllLabel.hidden = YES;
     [self.bgView addSubview:_lookAllLabel];
     

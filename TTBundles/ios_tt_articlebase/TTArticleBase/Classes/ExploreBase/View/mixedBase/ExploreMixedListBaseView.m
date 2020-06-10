@@ -4638,21 +4638,23 @@ TTRefreshViewDelegate
 #pragma mark -- SSImpressionProtocol
 
 - (void)needRerecordImpressions {
-    
-    if ([_fetchListManager.items count] == 0) {
-        return;
-    }
-    
-    for (UITableViewCell * cell in [_listView visibleCells]) {
-        if ([cell isKindOfClass:[ExploreCellBase class]]) {
-            ExploreCellBase * cellBase = (ExploreCellBase *)cell;
-            if ([cellBase.cellData isKindOfClass:[ExploreOrderedData class]]) {
-                ExploreOrderedData * orderedData = (ExploreOrderedData *)cellBase.cellData;
-                SSImpressionStatus status = (self.isDisplayView && _isShowing) ? SSImpressionStatusRecording : SSImpressionStatusSuspend;
-                [self recordGroupForExploreOrderedData:orderedData status:status cellBase:cellBase];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        if ([_fetchListManager.items count] == 0) {
+            return;
+        }
+        
+        for (UITableViewCell * cell in [_listView visibleCells]) {
+            if ([cell isKindOfClass:[ExploreCellBase class]]) {
+                ExploreCellBase * cellBase = (ExploreCellBase *)cell;
+                if ([cellBase.cellData isKindOfClass:[ExploreOrderedData class]]) {
+                    ExploreOrderedData * orderedData = (ExploreOrderedData *)cellBase.cellData;
+                    SSImpressionStatus status = (self.isDisplayView && _isShowing) ? SSImpressionStatusRecording : SSImpressionStatusSuspend;
+                    [self recordGroupForExploreOrderedData:orderedData status:status cellBase:cellBase];
+                }
             }
         }
-    }
+    });
+    
 }
 
 // cell的model变动时，列表需要刷新cell显示
