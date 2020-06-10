@@ -95,9 +95,14 @@ static MAMapView *kFHPageMapView = nil;
     _keyWordArray = [NSArray arrayWithObjects:@"bank",@"bus",@"subway",@"scholl",@"hospital",@"entertainment",@"shopping",@"gym",@"food", nil];
     _iconImageArray = [NSArray arrayWithObjects:@"icon-bank",@"icon-bus",@"icon-subway",@"icon_education",@"icon_hospital",@"icon-relaxation",@"icon-mall",@"icon_swim",@"icon-restaurant", nil];
     
-    NSInteger selectIndex = [_nameArray indexOfObject:self.searchCategory];
-
-    self.selectedIndex = selectIndex;
+    //修复外部没有传入searchCategory的情况下
+    if (!self.searchCategory.length) {
+        self.searchCategory = self.nameArray.firstObject;
+    }
+    //修复index越界的情况
+    if ([self.nameArray indexOfObject:self.searchCategory] < self.nameArray.count) {
+        self.selectedIndex = [self.nameArray indexOfObject:self.searchCategory];
+    }
     
     [self setUpNaviBar];
     

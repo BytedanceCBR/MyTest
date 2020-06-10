@@ -83,6 +83,13 @@
     return self;
 }
 
+- (NSMutableArray *)items {
+    if (!_items) {
+        _items = [NSMutableArray array];
+    }
+    return _items;
+}
+
 -(void)configTableView
 {
     _tableView.delegate = self;

@@ -439,6 +439,7 @@
         
         FHDetailMediaHeaderCorrectingModel *headerCellModel = [[FHDetailMediaHeaderCorrectingModel alloc] init];
         headerCellModel.houseImageAssociateInfo = model.data.imageGroupAssociateInfo;
+        headerCellModel.imageAlbumAssociateInfo = model.data.imageAlbumAssociateInfo;
         headerCellModel.isShowTopImageTab = model.data.isShowTopImageTab;
         if ([model.data.topImages isKindOfClass:[NSArray class]] && model.data.topImages.count > 0) {
             NSMutableArray *houseImageList = [NSMutableArray array];
@@ -449,7 +450,7 @@
             for (FHDetailNewTopImage *topImage in model.data.topImages) {
                 FHHouseDetailImageListDataModel *houseImageDictList = [[FHHouseDetailImageListDataModel alloc] init];
                 NSMutableArray *houseImages = [NSMutableArray array];
-                for (FHDetailNewDataImageGroupModel * groupModel in topImage.imageGroup) {
+                for (FHHouseDetailImageGroupModel * groupModel in topImage.imageGroup) {
                     for (NSInteger j = 0; j < groupModel.images.count; j++) {
                         [houseImages addObject:groupModel.images[j]];
                     }
@@ -482,7 +483,7 @@
         if (model.data.imageGroup.count > 0) {
             NSMutableArray *arrayHouseImage = [NSMutableArray new];
             for (NSInteger i = 0; i < model.data.imageGroup.count; i++) {
-                FHDetailNewDataImageGroupModel * groupModel = model.data.imageGroup[i];
+                FHHouseDetailImageGroupModel * groupModel = model.data.imageGroup[i];
                 for (NSInteger j = 0; j < groupModel.images.count; j++) {
                     [arrayHouseImage addObject:groupModel.images[j]];
                 }
@@ -515,7 +516,7 @@
     //    if (model.data.imageGroup) {
     //        NSMutableArray *arrayHouseImage = [NSMutableArray new];
     //        for (NSInteger i = 0; i < model.data.imageGroup.count; i++) {
-    //            FHDetailNewDataImageGroupModel * groupModel = model.data.imageGroup[i];
+    //            FHHouseDetailImageGroupModel * groupModel = model.data.imageGroup[i];
     //            for (NSInteger j = 0; j < groupModel.images.count; j++) {
     //                [arrayHouseImage addObject:groupModel.images[j]];
     //            }
