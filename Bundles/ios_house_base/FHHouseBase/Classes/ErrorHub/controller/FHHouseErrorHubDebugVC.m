@@ -114,7 +114,7 @@
 }
 
 - (void)saveConfigAction {
-    [[FHHouseErrorHubManager sharedInstance] saveConfigAndSettings];
+    [[FHHouseErrorHubManager sharedInstance] saveConfigAndSettingsSence];
 }
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     NSArray *dataArr = self.dataSource[self.keyArr[section]];
