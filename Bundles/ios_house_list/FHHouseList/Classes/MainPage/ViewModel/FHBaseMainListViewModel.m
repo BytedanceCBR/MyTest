@@ -1704,6 +1704,11 @@ extern NSString *const INSTANT_DATA_KEY;
         if (![cellModel isKindOfClass:[FHSearchBaseItemModel class]]) {
             return;
         }
+        
+        if (cellModel.cardType == FHSearchCardTypeAgentCard) {
+           return;
+        }
+        
         if ([cellModel respondsToSelector:@selector(hash)]) {
             hashString = [NSString stringWithFormat:@"%ld",[cellModel hash]];
         }
@@ -1713,10 +1718,6 @@ extern NSString *const INSTANT_DATA_KEY;
         }
         if (hashString.length < 1) {
             return;
-        }
-        
-        if (cellModel.cardType == FHSearchCardTypeAgentCard) {
-           return;
         }
         
         NSString *hasShow = self.showHouseDict[hashString];
