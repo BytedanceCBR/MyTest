@@ -252,6 +252,7 @@
     NSMutableDictionary *associateParamDict = @{}.mutableCopy;
     associateParamDict[kFHAssociateInfo] = itemInfo.associateInfo.reportFormInfo;
     NSMutableDictionary *reportParamsDict = [model.contactViewModel baseParams].mutableCopy;
+    reportParamsDict[@"position"] = @"coupon";
     if (extraDic.count > 0) {
         [associateParamDict addEntriesFromDictionary:extraDic];
         reportParamsDict[kFHAssociateInfo] = itemInfo.associateInfo.reportFormInfo;
