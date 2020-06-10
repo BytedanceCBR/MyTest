@@ -121,7 +121,7 @@
                                                        options:NSStringDrawingUsesLineFragmentOrigin
                                                     attributes:attributes
                                                        context:nil];
-                 CGFloat valueHeight = rect.size.height;
+                 CGFloat valueHeight = ceil(rect.size.height);
                  //number lins > 1
                  if (valueHeight <= 21) {
                      valueHeight = listRowHeight - 10;
