@@ -107,7 +107,7 @@
                  v.keyLabel.textColor = [UIColor colorWithHexStr:@"#aeadad"];
                  v.valueLabel.textColor = [UIColor themeGray2];
                  [v.keyLabel sizeToFit];
-                 CGFloat keyWidth = [v.keyLabel sizeThatFits:CGSizeMake(SCREEN_WIDTH - 31 * 2, v.keyLabel.font.lineHeight)].width;
+                 CGFloat keyWidth = ceil([v.keyLabel sizeThatFits:CGSizeMake(SCREEN_WIDTH - 31 * 2, v.keyLabel.font.lineHeight)].width);
                  
                  [v.keyLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
                      make.left.mas_equalTo(0);
@@ -130,7 +130,7 @@
                      make.left.mas_equalTo(v.keyLabel.mas_right).offset(10);
                      make.top.mas_equalTo(10);
                      make.height.mas_equalTo(valueHeight);
-                     make.right.mas_equalTo(0);
+                     make.width.mas_equalTo(ceil(rect.size.width));
                      make.bottom.mas_equalTo(v);
                  }];
                  

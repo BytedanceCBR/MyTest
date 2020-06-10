@@ -13,7 +13,7 @@
 #import <FHHouseBase/FHBaseCollectionView.h>
 #import <ByteDanceKit/ByteDanceKit.h>
 
-@interface FHDetailPictureTitleView()<UICollectionViewDelegate,UICollectionViewDataSource>
+@interface FHDetailPictureTitleView()<UICollectionViewDelegate,UICollectionViewDataSource,UICollectionViewDelegateFlowLayout>
 
 @property (nonatomic, strong) UIView *indicatorView;
 
@@ -60,7 +60,9 @@
     _colletionView.backgroundColor = [UIColor clearColor];
     _colletionView.pagingEnabled = NO;
     _colletionView.showsHorizontalScrollIndicator = NO;
-    
+    if(@available(iOS 11.0 , *)){
+        _colletionView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
+    }
     [_colletionView registerClass:[FHDetailPictureTitleCell class] forCellWithReuseIdentifier:NSStringFromClass([FHDetailPictureTitleCell class])];
     
     _colletionView.delegate = self;

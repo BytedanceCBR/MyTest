@@ -49,6 +49,10 @@
     [self processImagesList];
 }
 
+- (BOOL)automaticallyAdjustsScrollViewInsets {
+    return NO;
+}
+
 - (void)dealloc {
     [[UIApplication sharedApplication] setStatusBarStyle:_lastStatusBarStyle];
 }

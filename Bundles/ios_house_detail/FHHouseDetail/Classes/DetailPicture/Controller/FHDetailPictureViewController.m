@@ -318,7 +318,8 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
             NSInteger tempIndex = currentIndex;
             if (currentIndex == 0) {
                 // 选中第一个标签，跳过视频
-                tempIndex += weakSelf.vedioCount;
+                //1.0.0 视频独立分类
+//                tempIndex += weakSelf.vedioCount;
             }
             if (tempIndex >= 0 && tempIndex < weakSelf.photoCount) {
                 CGFloat pageWidth = weakSelf.photoScrollView.frame.size.width;
