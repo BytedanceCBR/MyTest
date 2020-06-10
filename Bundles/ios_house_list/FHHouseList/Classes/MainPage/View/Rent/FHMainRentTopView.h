@@ -34,7 +34,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 -(void)tapRentBanner;
 
--(void)rentBannerLoaded:(UIView *)bannerView;
+//-(void)rentBannerLoaded:(UIView *)bannerView;
 
 @end
 

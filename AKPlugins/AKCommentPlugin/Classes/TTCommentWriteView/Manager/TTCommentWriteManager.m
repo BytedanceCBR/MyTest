@@ -623,9 +623,9 @@ typedef void (^TTCommentLoginPipelineCompletion)(TTCommentLoginState state);
             [self.commentWriteView.inputTextView resignFirstResponder];
             // [self dismissAnimated:NO];//隐藏键盘的黑罩，否则会导致两个黑罩叠加
 
-            if ([TTDeviceHelper isPadDevice]) {
-                [self.commentWriteView dismissAnimated:NO];
-            }
+//            if ([TTDeviceHelper isPadDevice]) {
+            [self.commentWriteView dismissAnimated:NO];
+//            }
             
             NSMutableDictionary *params = [NSMutableDictionary dictionary];
             if (self.enterFrom.length > 0) {

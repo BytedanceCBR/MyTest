@@ -209,26 +209,29 @@
 }
 
 - (void)needRerecordImpressions {
-    if ([self.viewModel numberOfSinglePersonCollectionViewCellViewModel] == 0) {
-        return;
-    }
-    
-    for (NSIndexPath* indexPath in self.collectionView.indexPathsForVisibleItems) {
-        if ([self.viewModel numberOfSinglePersonCollectionViewCellViewModel] > indexPath.row) {
-            TSVRecUserSinglePersonCollectionViewCellViewModel *viewModel = [self.viewModel singlePersonCollectionViewCellViewModelAtIndex:indexPath.item];
-            NSMutableDictionary *params = @{}.mutableCopy;
-            if (!isEmptyString(viewModel.statsPlaceHolder)) {
-                [params setValue:[NSString stringWithFormat:@"user_recommend_impression_event:%@", viewModel.statsPlaceHolder]
-                          forKey:@"user_recommend_impression_event"];
-            }
-            NSAssert(viewModel.userID, @"userID should not be nil");
-            [[SSImpressionManager shareInstance] recordRecommendUserListImpressionUserID:viewModel.userID
-                                                                            categoryName:[self _categoryName]
-                                                                                  cellId:[self _cellID]
-                                                                                  status:self.isOnScreen? SSImpressionStatusRecording:SSImpressionStatusSuspend
-                                                                                   extra:params.copy];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        if ([self.viewModel numberOfSinglePersonCollectionViewCellViewModel] == 0) {
+            return;
         }
-    }
+        
+        for (NSIndexPath* indexPath in self.collectionView.indexPathsForVisibleItems) {
+            if ([self.viewModel numberOfSinglePersonCollectionViewCellViewModel] > indexPath.row) {
+                TSVRecUserSinglePersonCollectionViewCellViewModel *viewModel = [self.viewModel singlePersonCollectionViewCellViewModelAtIndex:indexPath.item];
+                NSMutableDictionary *params = @{}.mutableCopy;
+                if (!isEmptyString(viewModel.statsPlaceHolder)) {
+                    [params setValue:[NSString stringWithFormat:@"user_recommend_impression_event:%@", viewModel.statsPlaceHolder]
+                              forKey:@"user_recommend_impression_event"];
+                }
+                NSAssert(viewModel.userID, @"userID should not be nil");
+                [[SSImpressionManager shareInstance] recordRecommendUserListImpressionUserID:viewModel.userID
+                                                                                categoryName:[self _categoryName]
+                                                                                      cellId:[self _cellID]
+                                                                                      status:self.isOnScreen? SSImpressionStatusRecording:SSImpressionStatusSuspend
+                                                                                       extra:params.copy];
+            }
+        }
+    });
+    
 }
 
 - (NSString *)_categoryName

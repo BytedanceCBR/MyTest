@@ -11,6 +11,7 @@
 #import "FHUGCHotTopicSubCell.h"
 #import "TTRoute.h"
 #import "FHUserTracker.h"
+#import "UIViewAdditions.h"
 
 #define leftMargin 20
 #define rightMargin 20
@@ -60,7 +61,7 @@
 - (void)initViews {
     self.contentView.backgroundColor = [UIColor whiteColor];
     
-    self.headerView = [[FHUGCCellHeaderView alloc] initWithFrame:CGRectZero];
+    self.headerView = [[FHUGCCellHeaderView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, headerViewHeight)];
     _headerView.titleLabel.text = @"话题榜";
     _headerView.bottomLine.hidden = YES;
     _headerView.refreshBtn.hidden = YES;
@@ -85,7 +86,6 @@
     flowLayout.sectionInset = UIEdgeInsetsMake(0, 4, 0, 4);
     flowLayout.minimumLineSpacing = 0;
     flowLayout.minimumInteritemSpacing = 0;
-//    flowLayout.scrollDirection = UICollectionViewScrollDirectionVertical;
     
     self.collectionView = [[FHBaseCollectionView alloc] initWithFrame:CGRectZero collectionViewLayout:flowLayout];
     _collectionView.showsHorizontalScrollIndicator = NO;
@@ -100,31 +100,49 @@
 }
 
 - (void)initConstraints {
-    [self.headerView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.left.right.mas_equalTo(self.contentView);
-        make.height.mas_equalTo(headerViewHeight);
-    }];
-    
+    self.headerView.top = 0;
+    self.headerView.left = 0;
+    self.headerView.width = [UIScreen mainScreen].bounds.size.width;
+    self.headerView.height = headerViewHeight;
+//    [self.headerView mas_makeConstraints:^(MASConstraintMaker *make) {
+//        make.top.left.right.mas_equalTo(self.contentView);
+//        make.height.mas_equalTo(headerViewHeight);
+//    }];
+
     [self.headerView.moreBtn mas_updateConstraints:^(MASConstraintMaker *make) {
         make.width.mas_equalTo(65);
     }];
     
-    [self.seprateLine mas_updateConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.headerView.mas_bottom);
-        make.left.right.mas_equalTo(self.headerView);
-        make.height.mas_equalTo(1);
-    }];
+    self.seprateLine.top = self.headerView.bottom;
+    self.seprateLine.left = 0;
+    self.seprateLine.width = self.headerView.width;
+    self.seprateLine.height = 1;
+
+//    [self.seprateLine mas_updateConstraints:^(MASConstraintMaker *make) {
+//        make.top.mas_equalTo(self.headerView.mas_bottom);
+//        make.left.right.mas_equalTo(self.headerView);
+//        make.height.mas_equalTo(1);
+//    }];
+    self.collectionView.top = self.seprateLine.bottom + 10;
+    self.collectionView.left = 0;
+    self.collectionView.width = self.headerView.width;
+    self.collectionView.height = 0;
     
-    [self.collectionView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.seprateLine.mas_bottom).offset(10);
-        make.left.right.mas_equalTo(self.contentView);
-        make.bottom.mas_equalTo(self.bottomSepView.mas_top).offset(-3);
-    }];
-    
-    [self.bottomSepView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.bottom.left.right.mas_equalTo(self.contentView);
-        make.height.mas_equalTo(bottomSepViewHeight);
-    }];
+
+//    [self.collectionView mas_makeConstraints:^(MASConstraintMaker *make) {
+//        make.top.mas_equalTo(self.seprateLine.mas_bottom).offset(10);
+//        make.left.right.mas_equalTo(self.contentView);
+//        make.bottom.mas_equalTo(self.bottomSepView.mas_top).offset(-3);
+//    }];
+    self.bottomSepView.top = self.collectionView.bottom + 3;
+    self.bottomSepView.left = 0;
+    self.bottomSepView.width = self.headerView.width;
+    self.bottomSepView.height = bottomSepViewHeight;
+
+//    [self.bottomSepView mas_makeConstraints:^(MASConstraintMaker *make) {
+//        make.bottom.left.right.mas_equalTo(self.contentView);
+//        make.height.mas_equalTo(bottomSepViewHeight);
+//    }];
 }
 
 - (UILabel *)LabelWithFont:(UIFont *)font textColor:(UIColor *)textColor {
@@ -151,6 +169,11 @@
     self.cellModel = cellModel;
     self.dataList = cellModel.hotTopicList;
     [self.collectionView reloadData];
+    
+    NSInteger row = ceil(cellModel.hotTopicList.count / 2.0);
+    CGFloat height = (46 * row);
+    self.collectionView.height = height;
+    self.bottomSepView.top = self.collectionView.bottom + 3;
 }
 
 + (CGFloat)heightForData:(id)data {

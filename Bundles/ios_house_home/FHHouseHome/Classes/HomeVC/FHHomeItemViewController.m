@@ -525,7 +525,7 @@ static NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
             self.lastOffset = model.data.items.count;
             
             [self.houseDataItemsModel enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-                if (((FHHomeHouseDataItemsModel *)(obj)).idx) {
+                if(((FHHomeHouseDataItemsModel *)(obj)).idx){
                     [self.cahceHouseRankidsDict setValue:@(idx) forKey:((FHHomeHouseDataItemsModel *)(obj)).idx];
                 }
             }];

@@ -17,6 +17,7 @@
 #import <TTThemed/SSViewBase.h>
 #import <TTThemed/UIColor+TTThemeExtension.h>
 #import "UIImage+FIconFont.h"
+#import "TTAccountManager.h"
 
 @interface FHNeighbourhoodAgencyCardCell ()
 
@@ -80,6 +81,7 @@
     [self.contentView addSubview:_containerView];
 
     _topInfoView = [[UIView alloc] init];
+    _topInfoView.userInteractionEnabled = NO;
     [self.containerView addSubview:_topInfoView];
 
     _mainTitleLabel = [[UILabel alloc] init];
@@ -99,16 +101,18 @@
     _countOnSale.textColor = [UIColor themeGray1];
     _countOnSale.font = [UIFont themeFontRegular:12];
     [self.topInfoView addSubview:_countOnSale];
-
+    
     self.rightArrow = [[UIImageView alloc] initWithImage:ICON_FONT_IMG(10, @"\U0000e670", [UIColor themeGray6])];
+    _rightArrow.hidden = YES;
     [self.topInfoView addSubview:_rightArrow];
 
     _bottomInfoView = [[UIView alloc] init];
+    _bottomInfoView.backgroundColor = [UIColor whiteColor];
     [self.containerView addSubview:_bottomInfoView];
     
     
     _lineView = [[UIView alloc]init];
-    _lineView.backgroundColor = [UIColor themeGray8];
+    _lineView.backgroundColor = [UIColor themeGray7];
      [self.bottomInfoView addSubview:_lineView];
 
     _avator = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"detail_default_avatar"]];
@@ -148,7 +152,7 @@
     
     _score = [UILabel createLabel:@"" textColor:@"" fontSize:14];
     _score.textColor = [UIColor themeGray1];
-     _score.font = [UIFont themeFontDINAlternateBold:14];
+     _score.font = [UIFont themeFontSemibold:14];
     _score.textAlignment = NSTextAlignmentLeft;
     [self.bottomInfoView addSubview:_score];
     
@@ -187,9 +191,9 @@
         make.height.mas_equalTo(22);
         make.right.mas_lessThanOrEqualTo(self.pricePerSqmLabel.mas_left).offset(-10);
     }];
-
+    
     [self.pricePerSqmLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.right.mas_equalTo(self.rightArrow.mas_left).offset(-10);
+        make.right.mas_equalTo(self.topInfoView.mas_right).offset(-15);
         make.centerY.mas_equalTo(self.topInfoView);
     }];
 
@@ -199,7 +203,7 @@
         make.height.mas_equalTo(17);
         make.right.mas_lessThanOrEqualTo(self.pricePerSqmLabel.mas_left).offset(-10);
     }];
-
+    
     [self.rightArrow mas_makeConstraints:^(MASConstraintMaker *make) {
         make.right.mas_equalTo(self.topInfoView.mas_right).offset(-15);
         make.centerY.mas_equalTo(self.topInfoView);
@@ -300,8 +304,8 @@
                 [self.avator bd_setImageWithURL:[NSURL URLWithString:model.contactModel.avatarUrl] placeholder:[UIImage imageNamed:@"detail_default_avatar"]];
             }
             self.phoneCallViewModel = [[FHHouseDetailPhoneCallViewModel alloc] initWithHouseType:FHHouseTypeNeighborhood houseId:model.id];
-//            BOOL isLicenceIconHidden = ![self shouldShowContact:model.contactModel];
-            [self.licenceIcon setHidden:YES];
+            BOOL isLicenceIconHidden = ![self shouldShowContact:model.contactModel];
+            [self.licenceIcon setHidden:isLicenceIconHidden];
 
             NSMutableDictionary *tracerDict = @{}.mutableCopy;
             if (self.traceParams) {
@@ -312,6 +316,25 @@
         } else {
             [self.bottomInfoView setHidden:YES];
         }
+        
+        if([model.realtorType isEqualToString:@"4"]){
+            //小区
+            [self.pricePerSqmLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
+                make.right.mas_equalTo(self.rightArrow.mas_left).offset(-10);
+                make.centerY.mas_equalTo(self.topInfoView);
+            }];
+            self.topInfoView.userInteractionEnabled = YES;
+            self.rightArrow.hidden = NO;
+        }else if([model.realtorType isEqualToString:@"5"]){
+            //商圈
+            [self.pricePerSqmLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
+                make.right.mas_equalTo(self.topInfoView.mas_right).offset(-15);
+                make.centerY.mas_equalTo(self.topInfoView);
+            }];
+            self.topInfoView.userInteractionEnabled = NO;
+            self.rightArrow.hidden = YES;
+        }
+        
     }
 }
 
@@ -344,7 +367,7 @@
         FHDetailContactModel *contact = self.modelData.contactModel;
         if (self.phoneCallViewModel) {
             NSMutableDictionary *imExtra = @{}.mutableCopy;
-            imExtra[@"realtor_position"] = @"neighborhood_expert_card";
+            imExtra[@"realtor_position"] = self.traceParams[@"realtor_position"];
                         
             if(self.modelData.associateInfo) {
                 imExtra[kFHAssociateInfo] = self.modelData.associateInfo;
@@ -366,7 +389,6 @@
         }
         extraDict[@"realtor_id"] = contact.realtorId;
         extraDict[@"realtor_rank"] = @"be_null";
-        extraDict[@"realtor_position"] = @"neighborhood_expert_card";
         extraDict[@"realtor_logpb"] = contact.realtorLogpb;
 //        extraDict[@"element_from"] = @"neighborhood_expert_card";
 //        extraDict[kFHClueEndpoint] = @(FHClueEndPointTypeC);
@@ -413,8 +435,8 @@
     if (self.modelData) {
         FHDetailContactModel *contact = self.modelData.contactModel;
         NSMutableDictionary *extraDict = @{}.mutableCopy;
-        extraDict[@"realtor_position"] = @"neighborhood_expert_card";
-        extraDict[@"element_from"] = @"neighborhood_expert_card";
+        extraDict[@"realtor_position"] = self.traceParams[@"realtor_position"];
+        extraDict[@"element_from"] = self.traceParams[@"realtor_position"];
         extraDict[@"enter_from"] = self.traceParams[@"page_type"];
         extraDict[@"page_type"] = nil;
 //        extraDict[@"realtor_rank"] = @"be_null";
@@ -424,6 +446,7 @@
         }
     }
 }
+
 - (void)neighbourhoodInfoClick:(id)neighbourhoodInfoClick {
     if (self.modelData) {
         NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"sslocal://neighborhood_detail?neighborhood_id=%@", self.modelData.id]];
@@ -432,7 +455,7 @@
         if (self.traceParams) {
             [tracerDict addEntriesFromDictionary:self.traceParams];
         }
-        tracerDict[@"element_from"] = @"neighborhood_expert_card";
+        tracerDict[@"element_from"] = self.traceParams[@"realtor_position"];
         tracerDict[@"enter_from"] = self.traceParams[@"page_type"];
         tracerDict[@"page_type"] = nil;
         NSMutableDictionary *dict = @{@"house_type": @(FHHouseTypeNeighborhood), @"tracer": tracerDict}.mutableCopy;

@@ -7,12 +7,13 @@
 
 #import <UIKit/UIKit.h>
 #import "FHFeedUGCCellModel.h"
+#import "TTAsyncCornerImageView.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
 @interface FHUGCCellUserInfoView : UIView
 
-@property(nonatomic ,strong) UIImageView *icon;
+@property(nonatomic ,strong) TTAsyncCornerImageView *icon;
 @property(nonatomic ,strong) UILabel *userName;
 @property(nonatomic ,strong) UILabel *userAuthLabel;
 @property(nonatomic ,strong) UILabel *descLabel;
@@ -29,6 +30,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 //购房百科样式morebtn:
 - (void)updateMoreBtnWithTitleType;
+
+- (void)refreshWithData:(FHFeedUGCCellModel *)cellModel;
 
 @end
 

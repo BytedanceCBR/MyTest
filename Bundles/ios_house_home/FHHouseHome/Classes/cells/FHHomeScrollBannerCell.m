@@ -22,6 +22,7 @@
 @property (nonatomic, strong)   FHConfigDataMainPageBannerOpDataModel       *model;
 @property (nonatomic, strong)   NSMutableDictionary       *tracerDic;
 @property (nonatomic, strong)   FHShadowView       *shadowView;
+@property (nonatomic, strong)   NSMutableArray *validOpDatas;
 
 @end
 
@@ -122,6 +123,7 @@
             }
         }
     }
+    self.validOpDatas = opDatas;
     [self.tracerDic removeAllObjects];
     [_bannerView setURLs:imageUrls];
 }
@@ -194,14 +196,14 @@
 #pragma mark - FHBannerViewIndexProtocol
 
 - (void)currentIndexChanged:(NSInteger)currentIndex {
-    if (currentIndex >= 0 && currentIndex < self.model.items.count) {
-        FHConfigDataRentOpDataItemsModel *opData = self.model.items[currentIndex];
+    if (currentIndex >= 0 && currentIndex < self.validOpDatas.count) {
+        FHConfigDataRentOpDataItemsModel *opData = self.validOpDatas[currentIndex];
         [self addTracerShow:opData index:currentIndex];
     }
 }
 - (void)clickBannerWithIndex:(NSInteger)currentIndex {
-    if (currentIndex >= 0 && currentIndex < self.model.items.count) {
-        FHConfigDataRentOpDataItemsModel *opData = self.model.items[currentIndex];
+    if (currentIndex >= 0 && currentIndex < self.validOpDatas.count) {
+        FHConfigDataRentOpDataItemsModel *opData = self.validOpDatas[currentIndex];
         [self clickBanner:opData index:currentIndex];
     }
 }

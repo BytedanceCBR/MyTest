@@ -18,6 +18,7 @@
 #import <FHHouseBase/FHBaseTableView.h>
 #import "FHMainOldTopView.h"
 #import "FHMainRentTopView.h"
+#import "FHMainListTableView.h"
 
 #define TOP_HOR_PADDING 3
 
@@ -77,7 +78,7 @@
 -(UITableView *)tableView
 {
     if (!_tableView) {
-        _tableView = [[FHBaseTableView alloc] init];
+        _tableView = [[FHMainListTableView alloc] init];
         if (@available(iOS 11.0 , *)) {
             _tableView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
             UIEdgeInsets inset = UIEdgeInsetsZero;
@@ -90,6 +91,7 @@
         _tableView.estimatedSectionFooterHeight = 0;
         _tableView.scrollsToTop = YES;
         _tableView.bounces = NO;
+        _tableView.keyboardDismissMode = UIScrollViewKeyboardDismissModeOnDrag;
     }
     return _tableView;
 }
