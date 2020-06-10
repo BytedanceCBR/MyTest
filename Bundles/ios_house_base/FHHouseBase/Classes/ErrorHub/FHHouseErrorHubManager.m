@@ -46,7 +46,7 @@
     if ([response isKindOfClass:[NSDictionary class]]) {
         responseDictionary = response;
     }else if ([response isKindOfClass:[NSData class]]) {
-        responseDictionary = [NSJSONSerialization JSONObjectWithData:response?response:@{}
+        responseDictionary = [NSJSONSerialization JSONObjectWithData:response
                                                                            options:NSJSONReadingAllowFragments
                                                                              error:nil];
     }else {
@@ -206,7 +206,7 @@
         };
         if ([dicItem isKindOfClass:[NSArray class]]) {
             NSMutableArray *dicItems = [(NSArray *)dicItem mutableCopy];
-            [dicItems enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+            [dicItem enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
                 if ([obj isKindOfClass:[NSDictionary class]]) {
                     [dicItems replaceObjectAtIndex:idx withObject:[self removeNillValue:obj]];
                 }

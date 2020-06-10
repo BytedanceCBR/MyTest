@@ -23,6 +23,10 @@
 #import "FHHomeTopCitySwitchView.h"
 #import "TTSettingsManager.h"
 #import "NSDictionary+TTAdditions.h"
+#import "FHLoginTipView.h"
+#import "WDDefines.h"
+#import "TTAccountLoginManager.h"
+#import "TTAccountManager.h"
 
 static NSString * const kFUGCPrefixStr = @"fugc";
 
@@ -34,6 +38,9 @@ static NSString * const kFUGCPrefixStr = @"fugc";
 @property (nonatomic,strong)NSTimer *switchTimer;
 @property (nonatomic,assign)NSInteger totalNum;
 @property (nonatomic, assign) BOOL isSendNotification;
+@property (nonatomic, strong) FHLoginTipView *loginTipview;
+@property (nonatomic, assign) BOOL isShowLoginTip;
+@property (nonatomic, assign) BOOL firstLanchCanShowLogin;
 
 @end
 
@@ -49,7 +56,8 @@ static NSString * const kFUGCPrefixStr = @"fugc";
     [self initCityChangeSubscribe];//城市变化通知
     [self bindTopIndexChanged];//绑定头部选中index变化
     // Do any additional setup after loading the view.
-    
+    self.isShowLoginTip = NO;
+    self.firstLanchCanShowLogin = NO;
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         if (!self.isSendNotification) {
             [[NSNotificationCenter defaultCenter] postNotificationName:@"kTTFeedDidDisplay" object:nil];
@@ -62,7 +70,7 @@ static NSString * const kFUGCPrefixStr = @"fugc";
     [super viewWillAppear:animated];
     self.isShowing = YES;
     self.ttTrackStayEnable = YES;
-
+    [self initLoginTipView];
     //UGC地推包检查粘贴板
     [self checkPasteboard:NO];
     
@@ -80,7 +88,9 @@ static NSString * const kFUGCPrefixStr = @"fugc";
 - (void)viewWillDisappear:(BOOL)animated{
     [super viewWillDisappear:animated];
     self.isShowing = NO;
-    
+    if (self.loginTipview) {
+        [self.loginTipview pauseTimer];
+    }
     [self addStayCategoryLog:self.ttTrackStayTime];
     
 }
@@ -89,14 +99,14 @@ static NSString * const kFUGCPrefixStr = @"fugc";
     NSMutableDictionary *tracerDict = [NSMutableDictionary new];
     if (self.stayTime>0) {
         NSTimeInterval duration = ([[NSDate date] timeIntervalSince1970] -  self.stayTime) * 1000.0;
-          [tracerDict setValue:@"main" forKey:@"tab_name"];
-          [tracerDict setValue:@(0) forKey:@"with_tips"];
-          [tracerDict setValue:[FHEnvContext sharedInstance].isClickTab ? @"click_tab" : @"default" forKey:@"enter_type"];
-          tracerDict[@"stay_time"] = @((int)duration);
-          
-          if (((int)duration) > 0) {
-              [FHEnvContext recordEvent:tracerDict andEventKey:@"stay_tab"];
-          }
+        [tracerDict setValue:@"main" forKey:@"tab_name"];
+        [tracerDict setValue:@(0) forKey:@"with_tips"];
+        [tracerDict setValue:[FHEnvContext sharedInstance].isClickTab ? @"click_tab" : @"default" forKey:@"enter_type"];
+        tracerDict[@"stay_time"] = @((int)duration);
+        
+        if (((int)duration) > 0) {
+            [FHEnvContext recordEvent:tracerDict andEventKey:@"stay_tab"];
+        }
     }
 }
 
@@ -104,8 +114,8 @@ static NSString * const kFUGCPrefixStr = @"fugc";
 {
     [super viewDidAppear:animated];
     
-    [FHEnvContext addTabUGCGuid];
-        
+    //    [FHEnvContext addTabUGCGuid];
+    
     [UIApplication sharedApplication].statusBarStyle = UIStatusBarStyleDefault;
     
     self.stayTime = [[NSDate date] timeIntervalSince1970];
@@ -116,7 +126,7 @@ static NSString * const kFUGCPrefixStr = @"fugc";
 - (void)initView {
     self.view.backgroundColor = [UIColor themeHomeColor];
     self.isHaveCheckUpgrage = NO;
-
+    
     self.topView = [[FHHomeMainTopView alloc] init];
     _topView.backgroundColor = [UIColor themeHomeColor];
     [self.view addSubview:_topView];
@@ -147,28 +157,52 @@ static NSString * const kFUGCPrefixStr = @"fugc";
     
 }
 
+- (void)initLoginTipView {
+    if ([TTSandBoxHelper isAPPFirstLaunch] && !_firstLanchCanShowLogin) {
+        _firstLanchCanShowLogin = YES;
+        return;
+    }else {
+        _firstLanchCanShowLogin = YES;
+    }
+    if (_firstLanchCanShowLogin ) {
+           if (!self.isShowLoginTip) {
+             self.loginTipview =  [FHLoginTipView showLoginTipViewInView:self.containerView navbarHeight:kNavigationBarHeight withTracerDic:self.tracerDict];
+             self.isShowLoginTip = YES;
+             self.loginTipview.type = FHLoginTipViewtTypeMain;
+         }else {
+             if (self.loginTipview) {
+                 if ([TTAccount sharedAccount].isLogin) {
+                     [self.loginTipview removeFromSuperview];
+                 }else {
+                     [self.loginTipview startTimer];
+                 }
+             }
+         }
+    }
+}
+
 - (void)initCitySwitchView
 {
     dispatch_async(dispatch_get_main_queue(), ^{
         if (self.containerView && ![self.containerView.subviews containsObject:self.switchCityView] && [[NSThread currentThread] isMainThread]) {
-               CGFloat top = 0;
-               CGFloat safeTop = 20;
-               if (@available(iOS 11.0, *)) {
-                   safeTop = [[[[UIApplication sharedApplication] delegate] window] safeAreaInsets].top;
-               }
-               self.switchCityView = [[FHHomeTopCitySwitchView alloc] initWithFrame:CGRectMake(0.0f, 0.0, MAIN_SCREEN_WIDTH, 42)];
-                self.switchCityView.backgroundColor = [UIColor clearColor];
-               [self.containerView addSubview:self.switchCityView];
-               self.totalNum = 60;
-               self.switchTimer = [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(downCounter) userInfo:nil repeats:YES];
-               
-               NSMutableDictionary *popTraceParams = [NSMutableDictionary new];
-               [popTraceParams setValue:@"maintab" forKey:@"page_type"];
-               [popTraceParams setValue:@"city_switch" forKey:@"popup_name"];
-               [FHEnvContext recordEvent:popTraceParams andEventKey:@"popup_show"];
+            CGFloat top = 0;
+            CGFloat safeTop = 20;
+            if (@available(iOS 11.0, *)) {
+                safeTop = [[[[UIApplication sharedApplication] delegate] window] safeAreaInsets].top;
+            }
+            self.switchCityView = [[FHHomeTopCitySwitchView alloc] initWithFrame:CGRectMake(0.0f, 0.0, MAIN_SCREEN_WIDTH, 42)];
+            self.switchCityView.backgroundColor = [UIColor clearColor];
+            [self.containerView addSubview:self.switchCityView];
+            self.totalNum = 60;
+            self.switchTimer = [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(downCounter) userInfo:nil repeats:YES];
+            
+            NSMutableDictionary *popTraceParams = [NSMutableDictionary new];
+            [popTraceParams setValue:@"maintab" forKey:@"page_type"];
+            [popTraceParams setValue:@"city_switch" forKey:@"popup_name"];
+            [FHEnvContext recordEvent:popTraceParams andEventKey:@"popup_show"];
         }
     });
-
+    
 }
 
 - (void)initConstraints {

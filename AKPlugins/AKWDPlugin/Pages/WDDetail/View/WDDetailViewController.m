@@ -346,7 +346,7 @@ static NSUInteger const kOldAnimationViewTag = 20161221;
 - (void)viewWillDisappear:(BOOL)animated
 {
     [super viewWillDisappear:animated];
-    
+    [[NSNotificationCenter defaultCenter] postNotificationName:UIMenuControllerWillHideMenuNotification object:nil];
     if (_isNewVersion) return;
     
     [self p_removeIndicatorPolicyView];
@@ -1846,6 +1846,7 @@ static NSUInteger const kOldAnimationViewTag = 20161221;
 
 - (void)webView:(nullable TTDetailWebviewContainer *)webViewContainer scrollViewDidScroll:(nullable UIScrollView *)scrollView
 {
+    [[NSNotificationCenter defaultCenter] postNotificationName:UIMenuControllerWillHideMenuNotification object:nil];
     UIScrollView *targetScrollView = [self.detailView.detailWebView isNewWebviewContainer] ? webViewContainer.containerScrollView: webViewContainer.webView.scrollView;
     
     if (scrollView == targetScrollView) {

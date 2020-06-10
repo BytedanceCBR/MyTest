@@ -159,11 +159,13 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
                 wSelf.neighborhoodId = neighborhoodId;
                 // 周边数据请求
                 [wSelf requestRelatedData:neighborhoodId];
+                [wSelf.navBar showMessageNumber];
                 wSelf.contactViewModel.imShareInfo = model.data.imShareInfo;
             } else {
                 wSelf.detailController.isLoadingData = NO;
                 wSelf.detailController.hasValidateData = NO;
                 wSelf.bottomBar.hidden = YES;
+
                 [wSelf.detailController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoData];
                 [wSelf addDetailRequestFailedLog:model.status.integerValue message:@"empty"];
             }

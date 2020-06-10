@@ -71,7 +71,15 @@
         else if([[TTRoute sharedRoute] canOpenURL:url]){
             canOpenURL = YES;
             //优先跳转openurl
-            [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:nil];
+            NSMutableDictionary *dict = [NSMutableDictionary dictionary];
+            NSMutableDictionary *tracerDic = [NSMutableDictionary dictionary];
+            tracerDic[@"origin_from"] = cellModel.tracerDic[@"origin_from"] ?: @"be_null";
+            tracerDic[@"enter_from"] = cellModel.tracerDic[@"page_type"] ?: @"be_null";
+            tracerDic[@"category_name"] = cellModel.tracerDic[@"category_name"] ?: @"be_null";
+            dict[@"tracer"] = tracerDic;
+            
+            TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
+            [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
         }
     }else{
         NSURL *openUrl = [NSURL URLWithString:cellModel.detailScheme];
@@ -111,6 +119,7 @@
     traceParam[@"rank"] = cellModel.tracerDic[@"rank"];
     traceParam[@"log_pb"] = cellModel.logPb;
     traceParam[@"community_id"] = cellModel.community.socialGroupId ?: @"";
+    traceParam[@"category_name"] = cellModel.tracerDic[@"category_name"]?:@"be_null";
     dict[@"tracer"] = traceParam;
     
     dict[@"data"] = cellModel;
@@ -170,11 +179,11 @@
     NSMutableDictionary *dict = [NSMutableDictionary new];
     
     NSMutableDictionary *traceParam = @{}.mutableCopy;
-    traceParam[@"enter_from"] = cellModel.tracerDic[@"enter_from"];
+    traceParam[@"enter_from"] = cellModel.tracerDic[@"page_type"] ?: @"be_null";
     traceParam[@"enter_type"] = enterType ? enterType : @"be_null";
     traceParam[@"rank"] = cellModel.tracerDic[@"rank"];
     traceParam[@"log_pb"] = cellModel.logPb;
-    
+    traceParam[@"category_name"] = cellModel.tracerDic[@"category_name"]?:@"be_null";
     dict[@"tracer"] = traceParam;
     dict[@"data"] = cellModel;
     dict[@"begin_show_comment"] = showComment ? @"1" : @"0";
@@ -186,7 +195,13 @@
 
 //问答回答
 - (void)jumpToAnswerDetail:(FHFeedUGCCellModel *)cellModel showComment:(BOOL)showComment enterType:(NSString *)enterType {
-    NSDictionary *dict = @{@"is_jump_comment":@(showComment)};
+    NSMutableDictionary *dict = @{@"is_jump_comment":@(showComment)}.mutableCopy;
+    NSMutableDictionary *tracerDic = [NSMutableDictionary dictionary];
+    tracerDic[@"origin_from"] = cellModel.tracerDic[@"origin_from"] ?: @"be_null";
+    tracerDic[@"enter_from"] = cellModel.tracerDic[@"page_type"] ?: @"be_null";
+    tracerDic[@"category_name"] = cellModel.tracerDic[@"category_name"] ?: @"be_null";
+    dict[@"tracer"] = tracerDic;
+    
     TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
     NSURL *openUrl = [NSURL URLWithString:cellModel.openUrl];
     if(showComment && cellModel.commentSchema.length > 0){
@@ -253,6 +268,7 @@
     NSMutableDictionary *traceParam = @{}.mutableCopy;
     traceParam[@"origin_from"] = cellModel.tracerDic[@"origin_from"];
     traceParam[@"enter_from"] = cellModel.tracerDic[@"page_type"];
+    traceParam[@"category_name"] = cellModel.tracerDic[@"category_name"]?:@"be_null";
     traceParam[@"enter_type"] = enterType ? enterType : @"be_null";
     traceParam[@"rank"] = cellModel.tracerDic[@"rank"];
     traceParam[@"log_pb"] = cellModel.logPb;

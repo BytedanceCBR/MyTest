@@ -29,6 +29,7 @@ typedef enum : NSUInteger {
 - (void)showRightItems:(BOOL)showItem;
 - (void)hideFollowBtn;
 - (void)removeBottomLine;
+- (void)showMessageNumber;
 
 //100 版本企业担保 对header的样式修改
 - (void)configureVouchStyle;
