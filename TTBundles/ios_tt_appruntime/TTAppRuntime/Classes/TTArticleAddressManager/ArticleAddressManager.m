@@ -7,8 +7,8 @@
 //
 
 #import "ArticleAddressManager.h"
-#import "SSAddressBook.h"
-#import "SSABPerson.h"
+//#import "SSAddressBook.h"
+//#import "SSABPerson.h"
 #import "ArticleURLSetting.h"
 #import "TTNetworkManager.h"
 #import "NSStringAdditions.h"
@@ -39,15 +39,15 @@ static ArticleAddressManager *s_manager;
         s_manager = [[ArticleAddressManager alloc] init];
         NSUserDefaults * userDefaults = [NSUserDefaults standardUserDefaults];
         _privateAddressbookPersons = [[NSMutableDictionary alloc] initWithCapacity:2];
-        if ([userDefaults valueForKey:ArticleAddressPersonCacheKey]) {
-            NSDictionary * dictionary = [userDefaults valueForKey:ArticleAddressPersonCacheKey];
-            [dictionary enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
-                if ([obj isKindOfClass:[NSDictionary class]]) {
-                    SSABPerson * person = [[SSABPerson alloc] initWithDictionary:obj];
-                    [_privateAddressbookPersons setValue:person forKey:key];
-                }
-            }];
-        }
+//        if ([userDefaults valueForKey:ArticleAddressPersonCacheKey]) {
+//            NSDictionary * dictionary = [userDefaults valueForKey:ArticleAddressPersonCacheKey];
+//            [dictionary enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
+//                if ([obj isKindOfClass:[NSDictionary class]]) {
+//                    SSABPerson * person = [[SSABPerson alloc] initWithDictionary:obj];
+//                    [_privateAddressbookPersons setValue:person forKey:key];
+//                }
+//            }];
+//        }
     });
     
     return s_manager;
@@ -95,68 +95,68 @@ static ArticleAddressManager *s_manager;
 
 - (void)startUploadAddressBookWithPermissionBlock:(void(^)(NSError * error)) permissionBlock uploadFinishBlock:(void(^)(NSError *error))finishBlock {
     [ArticleAddressManager sharedManager];
-    SSAddressBook *book = [[SSAddressBook alloc] init];
-    [book startGetAllContactsWithFinishBlock:^(NSArray *persons, NSError *error) {
-        if (permissionBlock) {
-            permissionBlock(error);
-        }
-        if(!error && persons.count >= 1) {
-            [[NSNotificationCenter defaultCenter] postNotificationName:kAddressBookHasGotNotification object:nil];
-            
-            [[TTNetworkManager shareInstance] requestForJSONWithURL:[ArticleURLSetting uploadAddressBookURLString] params:[self postDataFromPersons:persons] method:@"POST" needCommonParams:YES callback:^(NSError *error, id jsonObj) {
-                if(finishBlock) {
-                    finishBlock(error);
-                }
-            }];
-        }
-        else
-        {
-            if(finishBlock)
-            {
-                finishBlock(error);
-            }
-        }
-    }];
+//    SSAddressBook *book = [[SSAddressBook alloc] init];
+//    [book startGetAllContactsWithFinishBlock:^(NSArray *persons, NSError *error) {
+//        if (permissionBlock) {
+//            permissionBlock(error);
+//        }
+//        if(!error && persons.count >= 1) {
+//            [[NSNotificationCenter defaultCenter] postNotificationName:kAddressBookHasGotNotification object:nil];
+//
+//            [[TTNetworkManager shareInstance] requestForJSONWithURL:[ArticleURLSetting uploadAddressBookURLString] params:[self postDataFromPersons:persons] method:@"POST" needCommonParams:YES callback:^(NSError *error, id jsonObj) {
+//                if(finishBlock) {
+//                    finishBlock(error);
+//                }
+//            }];
+//        }
+//        else
+//        {
+//            if(finishBlock)
+//            {
+//                finishBlock(error);
+//            }
+//        }
+//    }];
 }
 
 - (id)postDataFromPersons:(NSArray*)persons {
     NSMutableDictionary *result = [NSMutableDictionary dictionary];
     NSMutableArray *contacts = [NSMutableArray arrayWithCapacity:persons.count];
     [_privateAddressbookPersons removeAllObjects];
-    for(SSABPerson *person in persons)
-    {
-        if(person.phoneNumbers) {
-            [contacts addObject:@{@"mobiles": [self processPhoneNumbers:person.phoneNumbers inPerson:person]}];
-        }
-    }
-    NSUserDefaults * userDefaults = [NSUserDefaults standardUserDefaults];
-    NSMutableDictionary * dictionary = [NSMutableDictionary dictionaryWithCapacity:5];
-    [_privateAddressbookPersons enumerateKeysAndObjectsUsingBlock:^(id key, SSABPerson * obj, BOOL *stop) {
-        if ([obj isKindOfClass:[SSABPerson class]]) {
-            [dictionary setValue:[obj toDictionary] forKey:key];
-        }
-    }];
-    [userDefaults setValue:dictionary forKey:ArticleAddressPersonCacheKey];
-    [userDefaults synchronize];
-    result[@"contacts"] = contacts;
+//    for(SSABPerson *person in persons)
+//    {
+//        if(person.phoneNumbers) {
+//            [contacts addObject:@{@"mobiles": [self processPhoneNumbers:person.phoneNumbers inPerson:person]}];
+//        }
+//    }
+//    NSUserDefaults * userDefaults = [NSUserDefaults standardUserDefaults];
+//    NSMutableDictionary * dictionary = [NSMutableDictionary dictionaryWithCapacity:5];
+//    [_privateAddressbookPersons enumerateKeysAndObjectsUsingBlock:^(id key, SSABPerson * obj, BOOL *stop) {
+//        if ([obj isKindOfClass:[SSABPerson class]]) {
+//            [dictionary setValue:[obj toDictionary] forKey:key];
+//        }
+//    }];
+//    [userDefaults setValue:dictionary forKey:ArticleAddressPersonCacheKey];
+//    [userDefaults synchronize];
+//    result[@"contacts"] = contacts;
     return result;
 }
 
 
-- (NSArray*)processPhoneNumbers:(NSArray*)phoneNumabers inPerson:(SSABPerson *) person{
-    NSMutableArray *result = [NSMutableArray arrayWithCapacity:phoneNumabers.count];
-    for(NSString *phoneNumber in phoneNumabers)
-    {
-        NSString *processedString = [self processPhoneNumber:phoneNumber];
-        if(!isEmptyString(processedString))
-        {
-            [result addObject:processedString];
-            [_privateAddressbookPersons setValue:person forKey:[processedString lowercaseString]];
-        }
-    }
-    
-    return result;
-}
+//- (NSArray*)processPhoneNumbers:(NSArray*)phoneNumabers inPerson:(SSABPerson *) person{
+//    NSMutableArray *result = [NSMutableArray arrayWithCapacity:phoneNumabers.count];
+//    for(NSString *phoneNumber in phoneNumabers)
+//    {
+//        NSString *processedString = [self processPhoneNumber:phoneNumber];
+//        if(!isEmptyString(processedString))
+//        {
+//            [result addObject:processedString];
+//            [_privateAddressbookPersons setValue:person forKey:[processedString lowercaseString]];
+//        }
+//    }
+//    
+//    return result;
+//}
 
 - (NSDictionary *) addressBookPersons {
     return [_privateAddressbookPersons copy];
