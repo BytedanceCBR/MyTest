@@ -222,11 +222,6 @@
 }
 
 - (void)gotoWendaPublish {
-//    NSMutableDictionary *params = @{}.mutableCopy;
-//    params[UT_ELEMENT_TYPE] = @"question_icon";
-//    params[UT_PAGE_TYPE] = [self pageType];
-//    TRACK_EVENT(@"click_options", params);
-    
     if ([TTAccountManager isLogin]) {
         [self gotoWendaVC];
     } else {
@@ -301,9 +296,7 @@
 }
 
 - (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
-    if(indexPath.row < self.dataList.count){
-//        [self traceClientShowAtIndexPath:indexPath];
-    }
+
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {

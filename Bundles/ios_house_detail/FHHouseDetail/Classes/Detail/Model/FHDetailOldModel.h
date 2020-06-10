@@ -334,6 +334,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *extraContent;
 @property (nonatomic, copy , nullable) NSString *baseContent;
 @property (nonatomic, copy , nullable) NSString *openUrl;
+@property (nonatomic, assign)   BOOL       canLoan;
 @property (nonatomic, strong , nullable) FHClueAssociateInfoModel *associateInfo;
 
 @end
