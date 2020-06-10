@@ -370,6 +370,7 @@
                            @"discountInfoAssociateInfo": @"discount_info_associate_info",
                            @"highlightedRealtorAssociateInfo":@"highlighted_realtor_associate_info",
                            @"isShowTopImageTab": @"is_show_top_image_tab",
+                           @"imageAlbumAssociateInfo": @"image_album_associate_info",
                            };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
         return dict[keyName]?:keyName;

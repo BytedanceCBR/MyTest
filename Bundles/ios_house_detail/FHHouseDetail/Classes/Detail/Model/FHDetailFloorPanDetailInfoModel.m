@@ -69,6 +69,18 @@
 @end
 
 @implementation FHFloorPanDetailInfoModelPriceConsultModel
++ (JSONKeyMapper*)keyMapper
+{
+  NSDictionary *dict = @{
+    @"text": @"text",
+    @"openurl": @"openurl",
+    @"associateInfo": @"associate_info",
+  };
+  return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+     return dict[keyName]?:keyName;
+  }];
+}
+
 + (BOOL)propertyIsOptional:(NSString *)propertyName
 {
     return YES;

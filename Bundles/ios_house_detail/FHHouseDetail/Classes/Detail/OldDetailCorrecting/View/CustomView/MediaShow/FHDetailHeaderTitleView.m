@@ -439,20 +439,15 @@
 }
 
 - (void)priceAskViewAction:(id)sender {
-    if (self.model.priceConsult.openurl.length) {
-        NSMutableDictionary *trackerDict = self.baseViewModel.detailTracerDic;
-//        self.baseViewModel.contactViewModel.
-        trackerDict[@"click_position"] = self.model.priceConsult.text?:@"be_null";
-        trackerDict[@"page_type"] = @"house_model_info";
-        FHDetailContactModel *contactPhone = self.baseViewModel.contactViewModel.contactPhone;
-        trackerDict[@"realtor_id"] = contactPhone.realtorId?:@"be_null";
-        trackerDict[@"realtor_rank"] = @"0";
-        trackerDict[@"realtor_logpb"] = contactPhone.realtorLogpb?:@"";
-        trackerDict[@"realtor_position"] = @"detail_button";
-        TRACK_EVENT(@"click_im", trackerDict);
-        [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:self.model.priceConsult.openurl]];
+    if (self.model.priceConsult.openurl.length && self.baseViewModel.contactViewModel) {
+        NSMutableDictionary *extraDic = self.baseViewModel.detailTracerDic;
+        extraDic[@"click_position"] = self.model.priceConsult.text?:@"be_null";
+        extraDic[@"page_type"] = @"house_model_info";
+        extraDic[@"im_open_url"] = self.model.priceConsult.openurl;
+        if (self.model.priceConsult.associateInfo) {
+            extraDic[kFHAssociateInfo] = self.model.priceConsult.associateInfo;
+        }
+        [self.baseViewModel.contactViewModel onlineActionWithExtraDict:extraDic];
     }
-//    reportParams.sourceFrom = @"house_model";
-//    reportParams.extra = @{@"house_model_rank":@(index)};
 }
 @end

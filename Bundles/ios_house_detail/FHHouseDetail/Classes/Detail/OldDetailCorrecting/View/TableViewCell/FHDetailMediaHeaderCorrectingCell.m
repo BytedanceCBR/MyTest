@@ -516,7 +516,7 @@
     pictureListViewController.modalPresentationStyle = UIModalPresentationFullScreen;
     if (data.isShowTopImageTab) {
         pictureListViewController.topImages = data.topImages;
-        pictureListViewController.associateInfo = data.houseImageAssociateInfo;
+        pictureListViewController.associateInfo = data.imageAlbumAssociateInfo;
         pictureListViewController.contactViewModel = data.contactViewModel;
         pictureListViewController.elementFrom = @"new_detail";
     } else {

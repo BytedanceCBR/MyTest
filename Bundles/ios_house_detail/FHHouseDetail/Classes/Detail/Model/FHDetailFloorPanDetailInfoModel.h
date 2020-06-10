@@ -44,6 +44,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, copy , nullable) NSString *text;
 @property (nonatomic, copy , nullable) NSString *openurl;
+@property (nonatomic, strong , nullable)  FHClueAssociateInfoModel *associateInfo;
 @end
 
 @interface FHFloorPanDetailInfoModelBaseExtraCourtModel : JSONModel

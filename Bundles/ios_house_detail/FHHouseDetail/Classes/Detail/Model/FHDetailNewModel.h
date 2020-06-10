@@ -277,6 +277,10 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong , nullable) FHDetailNeighborhoodDataStrategyModel *strategy;
 
 @property (nonatomic, assign) BOOL isShowTopImageTab; //是否显示头图的tab标题，如果显示那么隐藏显示全部按钮
+
+//1.0.0 新增楼盘相册页线索
+@property (nonatomic, strong , nullable) FHClueAssociateInfoModel *imageAlbumAssociateInfo;
+
 @end
 
 @interface FHDetailNewTimeLineDataModel : JSONModel
