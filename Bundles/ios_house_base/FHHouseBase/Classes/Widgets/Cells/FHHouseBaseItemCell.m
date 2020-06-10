@@ -1169,6 +1169,7 @@
             }];
         }
         [self.mainTitleLabel.yoga markDirty];
+        [self.subTitleLabel.yoga markDirty];
         
         //企业担保标签
         [self configTopLeftTagWithTagImages:commonModel.tagImage];

@@ -270,7 +270,8 @@
              tracer[@"enter_type"] = @"click";
              //通勤找房
              [[FHCommuteManager sharedInstance] tryEnterCommutePage:model.openUrl logParam:tracer];
-         }else{
+         }else
+         {
              //埋点
              NSMutableDictionary *dict = [NSMutableDictionary dictionary];
              NSMutableDictionary *tracer = [NSMutableDictionary dictionary];

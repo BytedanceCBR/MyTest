@@ -589,5 +589,16 @@
     return [NSString stringWithFormat:@"%@/score_task/v1/task/get_read_bonus/",[self baseURL]];
 }
 
+//首页购房百科
++ (NSString *)encyclopediaListUrlString
+{
+    return [NSString stringWithFormat:@"%@/f100/api/channel/article_list", [self baseURL]];
+}
+
+//首页购房百科头部配置
++ (NSString *)encyclopediaConfigUrlString
+{
+    return [NSString stringWithFormat:@"%@/f100/api/channel/config", [self baseURL]];
+}
 @end
 

@@ -207,14 +207,17 @@ def appPods
     #-----UGC Other-----
     pod 'TTSettingsManager','0.4.16'
     pod 'TTLocationManager','1.2.4'
-#    pod_binary 'BDUGLocationKit', '1.5.1-rc6',:subspecs => [ # , '1.1.0'
-#    'Core',
-#    'DataCollection',
-##    'ByteDancePlacemark',
-#    'AmapLocation'
-#    ]
-
-    pod 'BDUGLocationKit', '1.5.1-rc.6'
+    
+    pod_binary 'BDUGLocationKit', '1.5.1',:subspecs => [
+    'Core',
+    'Network',
+    'Location',
+    'Log',
+    'Foundation',
+    'Adapter',
+    'DataCollection',
+    'AmapLocation'
+    ]
     
     pod 'BDUGSettingsInterface' , '1.1.0'
     pod 'BDUGKit' , '1.3.3'
@@ -413,7 +416,7 @@ def appPods
       'Data',
     ]
     
-    pod 'Lynx','0.2.2',:subspecs =>[
+    pod 'Lynx','1.0.12',:subspecs =>[
     'Framework',
 #    'InspectorFramework',
     'Native',
@@ -576,10 +579,10 @@ def appPods
     pod 'BDUGSecGuardInterface', '1.0.2.1-binary-debug'
     pod 'BDUGTuringInterface', '1.0.3.1-binary-debug'
     pod 'BDWCDB', '1.0.3'
-    pod_binary 'GoogleMaps', '3.1.0',:subspecs => [
-    'Base',
-    'Maps'
-    ]
+#    pod_binary 'GoogleMaps', '3.1.0',:subspecs => [
+#    'Base',
+#    'Maps'
+#    ]
     pod_binary 'SocketRocket', '0.5.1'
     pod 'TikTokOpenPlatformSDK', '3.0.0'
     pod 'objc-geohash', '0.0.3'
