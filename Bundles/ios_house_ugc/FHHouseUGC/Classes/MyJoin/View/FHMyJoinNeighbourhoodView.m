@@ -34,7 +34,7 @@
 }
 
 - (void)initViews {
-    self.headerView = [[FHUGCCellHeaderView alloc] initWithFrame:CGRectZero];
+    self.headerView = [[FHUGCCellHeaderView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, 50)];
     _headerView.titleLabel.text = @"我的关注";
     _headerView.titleLabel.backgroundColor = [UIColor themeGray7];
     _headerView.moreBtn.hidden = YES;

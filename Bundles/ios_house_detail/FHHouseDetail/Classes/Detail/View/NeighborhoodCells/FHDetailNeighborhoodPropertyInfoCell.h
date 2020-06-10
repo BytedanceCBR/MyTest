@@ -23,6 +23,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, weak)     UITableView       *tableView;
 @property (nonatomic, assign)   BOOL       isFold; // 折叠
+@property (nonatomic, copy , nullable) NSString *baseInfoFoldCount;
 @property (nonatomic, strong , nullable) NSArray<FHHouseBaseInfoModel> *baseInfo;
 
 @end

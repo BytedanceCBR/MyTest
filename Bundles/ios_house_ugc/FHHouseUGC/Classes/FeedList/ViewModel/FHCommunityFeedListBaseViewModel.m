@@ -25,6 +25,8 @@
         
         self.refer = 1;
         
+        self.detailJumpManager = [[FHUGCFeedDetailJumpManager alloc] init];
+        self.detailJumpManager.refer = self.refer;
     }
     return self;
 }
