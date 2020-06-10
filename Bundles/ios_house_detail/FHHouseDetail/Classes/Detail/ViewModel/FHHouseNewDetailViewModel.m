@@ -348,6 +348,7 @@
                 [wSelf.detailController.emptyView hideEmptyView];
                 wSelf.bottomBar.hidden = NO;
                 [wSelf processDetailData:model];
+                [wSelf.navBar showMessageNumber];
             }else {
                 wSelf.detailController.isLoadingData = NO;
                 wSelf.detailController.hasValidateData = NO;
