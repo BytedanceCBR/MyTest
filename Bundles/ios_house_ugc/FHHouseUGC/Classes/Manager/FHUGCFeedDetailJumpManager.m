@@ -179,7 +179,7 @@
     NSMutableDictionary *dict = [NSMutableDictionary new];
     
     NSMutableDictionary *traceParam = @{}.mutableCopy;
-    traceParam[@"enter_from"] = cellModel.tracerDic[@"enter_from"];
+    traceParam[@"enter_from"] = cellModel.tracerDic[@"page_type"] ?: @"be_null";
     traceParam[@"enter_type"] = enterType ? enterType : @"be_null";
     traceParam[@"rank"] = cellModel.tracerDic[@"rank"];
     traceParam[@"log_pb"] = cellModel.logPb;
