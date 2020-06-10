@@ -151,7 +151,7 @@ typedef NS_ENUM(NSUInteger,TTTabbarTipViewType){
 
 @property (nonatomic, assign) BOOL isClickTab;
 
-@property(nonatomic, strong) FHUGCGuideView *guideView;
+//@property(nonatomic, strong) FHUGCGuideView *guideView;
 @property(nonatomic, assign) BOOL isAlreadyShowedGuideView;
 
 @end
@@ -261,39 +261,39 @@ typedef NS_ENUM(NSUInteger,TTTabbarTipViewType){
     }
     
     // 解决首次安装时，聊房提示在从push进入im会话页时不消失问题
-    @weakify(self);
-    [[[RACObserve(self.tabBar, hidden) subscribeOn:RACScheduler.mainThreadScheduler] distinctUntilChanged] subscribeNext:^(id  _Nullable x) {
-        @strongify(self);
-        BOOL hidden = [x boolValue];
-        if(hidden) {
-            [self.guideView hide];
-        }
-    }];
+//    @weakify(self);
+//    [[[RACObserve(self.tabBar, hidden) subscribeOn:RACScheduler.mainThreadScheduler] distinctUntilChanged] subscribeNext:^(id  _Nullable x) {
+//        @strongify(self);
+//        BOOL hidden = [x boolValue];
+//        if(hidden) {
+//            [self.guideView hide];
+//        }
+//    }];
 }
 
-- (void)addUgcGuide {
-    if([FHUGCGuideHelper shouldShowSecondTabGuide] && !self.isAlreadyShowedGuideView && [FHEnvContext isUGCOpen]){
-        self.isAlreadyShowedGuideView = YES;
-        [self.guideView show:self.view dismissDelayTime:5.0f completion:nil];
-    }
-}
+//- (void)addUgcGuide {
+//    if([FHUGCGuideHelper shouldShowSecondTabGuide] && !self.isAlreadyShowedGuideView && [FHEnvContext isUGCOpen]){
+//        self.isAlreadyShowedGuideView = YES;
+//        [self.guideView show:self.view dismissDelayTime:5.0f completion:nil];
+//    }
+//}
 
-- (FHUGCGuideView *)guideView {
-    CGFloat width = 163.0f;
-    CGFloat height = 40.0f;
-    CGFloat x ;
-     YYCache *epidemicSituationCache = [[FHEnvContext sharedInstance].generalBizConfig epidemicSituationCache];
-    FHConfigCenterTabModel *cacheTab = [epidemicSituationCache objectForKey:@"tab_cache"];
-    if(!_guideView){
-        if (cacheTab.enable && cacheTab.openUrl.length>0 && [epidemicSituationCache objectForKey:@"esituationNormalImage"] && [epidemicSituationCache objectForKey:@"esituationHighlightImage"] &&cacheTab.isShow == YES) {
-                x = self.view.frame.size.width * 3/10 - width/2;
-        }else {
-            x = self.view.frame.size.width * 9/24 - width/2;
-        }
-            _guideView = [[FHUGCGuideView alloc] initWithFrame:CGRectMake(x, self.view.frame.size.height - self.tabbarHeight - height + 3, width, height) andType:FHUGCGuideViewTypeSecondTab];
-    }
-    return _guideView;
-}
+//- (FHUGCGuideView *)guideView {
+//    CGFloat width = 163.0f;
+//    CGFloat height = 40.0f;
+//    CGFloat x ;
+//     YYCache *epidemicSituationCache = [[FHEnvContext sharedInstance].generalBizConfig epidemicSituationCache];
+//    FHConfigCenterTabModel *cacheTab = [epidemicSituationCache objectForKey:@"tab_cache"];
+//    if(!_guideView){
+//        if (cacheTab.enable && cacheTab.openUrl.length>0 && [epidemicSituationCache objectForKey:@"esituationNormalImage"] && [epidemicSituationCache objectForKey:@"esituationHighlightImage"] &&cacheTab.isShow == YES) {
+//                x = self.view.frame.size.width * 3/10 - width/2;
+//        }else {
+//            x = self.view.frame.size.width * 9/24 - width/2;
+//        }
+//            _guideView = [[FHUGCGuideView alloc] initWithFrame:CGRectMake(x, self.view.frame.size.height - self.tabbarHeight - height + 3, width, height) andType:FHUGCGuideViewTypeSecondTab];
+//    }
+//    return _guideView;
+//}
 
 - (void)viewDidDisappear:(BOOL)animated {
     [super viewDidDisappear:animated];
@@ -747,7 +747,7 @@ typedef NS_ENUM(NSUInteger,TTTabbarTipViewType){
             }
         }];
         //隐藏ugc引导
-        [self.guideView hide];
+//        [self.guideView hide];
         [[NSNotificationCenter defaultCenter] postNotificationName:kExploreTopVCChangeNotification object:self];
     }
 }
@@ -757,7 +757,7 @@ typedef NS_ENUM(NSUInteger,TTTabbarTipViewType){
     if (navigationController.viewControllers.count == 1 && NO == [TTAdSplashMediator shareInstance].isAdShowing) {
         //回到tabbar controller某个导航控制器的栈底，并且没有开屏广告
         [self showTipViewIfNeeded];
-        [self addUgcGuide];
+//        [self addUgcGuide];
         [self showMessageNotificationTips:nil];
     }
 }
@@ -1171,10 +1171,10 @@ typedef NS_ENUM(NSUInteger,TTTabbarTipViewType){
 //    }
     else if ([[self currentTabIdentifier] isEqualToString:kFHouseFindTabKey]) {
         //隐藏引导提示
-        if([FHEnvContext isUGCOpen]){
-            [self.guideView hide];
-            [FHUGCGuideHelper hideSecondTabGuide];
-        }
+//        if([FHEnvContext isUGCOpen]){
+//            [self.guideView hide];
+//            [FHUGCGuideHelper hideSecondTabGuide];
+//        }
         
         [self trackBadgeWithTabBarTag:kFHouseFindTabKey enter_type:@"click_tab"];
         
@@ -1456,7 +1456,7 @@ typedef NS_ENUM(NSUInteger,TTTabbarTipViewType){
         && nav.viewControllers.count == 1) {
         [self showTipViewIfNeeded];
         
-        [self addUgcGuide];
+//        [self addUgcGuide];
     }
 }
 

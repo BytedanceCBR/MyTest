@@ -409,7 +409,7 @@
 
 - (void)displayMessageDot:(NSInteger)dotNumber{
     if (dotNumber >0) {
-        self.messageDotNumber.hidden = NO;
+//        self.messageDotNumber.hidden = YES;
         self.messageDotNumber.text = dotNumber >99?@"99+":[NSString stringWithFormat:@"%ld",dotNumber];
         if (dotNumber>9) {
             [_messageDotNumber mas_updateConstraints:^(MASConstraintMaker *make) {
@@ -417,7 +417,7 @@
             }];
         }
     }else {
-        self.messageDotNumber.hidden = YES;
+//        self.messageDotNumber.hidden = YES;
     }
 }
 
@@ -503,6 +503,10 @@
         _messageWhiteImage =  ICON_FONT_IMG(24, @"\U0000e691", [UIColor whiteColor]); //detail_message_white
     }
     return _messageWhiteImage;
+}
+
+- (void)showMessageNumber {
+    self.messageDotNumber.hidden = NO;
 }
 
 @end

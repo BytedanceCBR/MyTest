@@ -252,7 +252,6 @@
 }
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
-
     CGFloat scrollDistance = scrollView.contentOffset.x - _oldX;
     CGFloat diff = scrollView.contentOffset.x - self.beginOffSet.x;
 
