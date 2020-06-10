@@ -53,6 +53,15 @@ NSString * const kWDDetailNatantLikeAndRewardsKey = @"WDDetailNatantLikeAndRewar
 - (instancetype)initWithAnswerId:(NSString *)answerID params:(NSDictionary *)params {
     if (self = [super init]) {
         NSDictionary *gdExtJson = [WDParseHelper gdExtJsonFromBaseCondition:params];
+        NSMutableDictionary *gdExtJsonAdd = [NSMutableDictionary dictionaryWithDictionary:gdExtJson];
+        NSDictionary *tracer = params[@"tracer"];
+        if(tracer && tracer.count > 0){
+            gdExtJsonAdd[@"enter_from"] = tracer[@"enter_from"];
+            gdExtJsonAdd[@"origin_from"] = tracer[@"origin_from"];
+            gdExtJsonAdd[@"category_name"] = tracer[@"category_name"];
+        }
+        gdExtJson = [gdExtJsonAdd copy];
+        
         NSDictionary *apiParam =  [WDParseHelper apiParamWithSourceApiParam:[WDParseHelper apiParamFromBaseCondition:params] source:kWDDetailViewControllerUMEventName];
         _gdExtJsonDict = gdExtJson ? [gdExtJson copy] : @{};
         NSDictionary *innerLogPb = [_gdExtJsonDict objectForKey:@"log_pb"];
