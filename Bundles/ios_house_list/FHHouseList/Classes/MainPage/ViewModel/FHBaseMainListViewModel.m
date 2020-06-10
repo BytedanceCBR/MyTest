@@ -206,12 +206,14 @@ extern NSString *const INSTANT_DATA_KEY;
     if ([model isKindOfClass:[FHSearchHouseItemModel class]]) {
          FHSearchHouseItemModel *houseModel = (FHSearchHouseItemModel *)model;
         if(houseModel.houseType.integerValue == FHHouseTypeNewHouse) {
+            
+        if (houseModel.cardType == FHSearchCardTypeAgentCard) {
+            return [FHHouseAgentCardCell class];
+        }
+            
         if (houseModel.cellStyles ==6) {
                  return [FHHouseListBaseItemCell class];
             }
-        }
-        if (houseModel.cardType == FHSearchCardTypeAgentCard) {
-            return [FHHouseAgentCardCell class];
         }
         return [FHHouseBaseItemCell class];
     }else if ([model isKindOfClass:[FHSugSubscribeDataDataSubscribeInfoModel class]]) {
