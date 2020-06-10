@@ -42,6 +42,7 @@
 #import <TTAppRuntime/NewsBaseDelegate.h>
 #import "FHLynxManager.h"
 #import "FHUGCCategoryManager.h"
+#import "FHUserTracker.h"
 
 #define kFHHouseMixedCategoryID   @"f_house_news" // 推荐频道
 
@@ -444,8 +445,7 @@ static NSInteger kGetLightRequestRetryCount = 3;
 {
     if (kIsNSString(traceKey) && kIsNSDictionary(params)) {
         NSMutableDictionary *pramsDict = [[NSMutableDictionary alloc] initWithDictionary:params];
-        pramsDict[@"event_type"] = kTracerEventType;
-        [TTTrackerWrapper eventV3:traceKey params:pramsDict];
+        [FHUserTracker writeEvent:traceKey params:pramsDict];
     }
 }
 
