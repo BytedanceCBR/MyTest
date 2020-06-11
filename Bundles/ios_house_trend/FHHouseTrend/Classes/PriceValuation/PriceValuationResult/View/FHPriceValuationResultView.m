@@ -508,17 +508,17 @@
         make.height.mas_equalTo(0);
     }];
     
-//    [self layoutIfNeeded];
-//    //当内容高度不足时，不足下方高度，为了背景颜色变灰色
-//    CGFloat height = self.scrollView.contentSize.height;
-//    CGFloat scrollViewHeight = self.scrollView.frame.size.height;
-//    CGFloat descHeight = self.descView.frame.size.height;
-//    if(scrollViewHeight > height){
-//        CGFloat diff = scrollViewHeight - height;
-//        [self.descView mas_updateConstraints:^(MASConstraintMaker *make) {
-//            make.height.mas_equalTo(descHeight + diff);
-//        }];
-//    }
+    [self layoutIfNeeded];
+    //当内容高度不足时，不足下方高度，为了背景颜色变灰色
+    CGFloat height = self.scrollView.contentSize.height;
+    CGFloat scrollViewHeight = self.scrollView.frame.size.height;
+    CGFloat descHeight = self.descView.frame.size.height;
+    if(scrollViewHeight > height){
+        CGFloat diff = scrollViewHeight - height;
+        [self.descView mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.height.mas_equalTo(descHeight + diff);
+        }];
+    }
 }
 
 - (NSAttributedString *)getAtributeStr:(NSString *)title content:(NSString *)content {
