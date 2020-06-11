@@ -20,7 +20,8 @@
     NSArray<NSString *> *supportedCookieDomains = @[
                                                     @".snssdk.com",
                                                     @".toutiao.com",
-                                                    @".wukong.com"
+                                                    @".wukong.com",
+                                                    @".haoduofangs.com"
                                                     ];
 #endif
     
