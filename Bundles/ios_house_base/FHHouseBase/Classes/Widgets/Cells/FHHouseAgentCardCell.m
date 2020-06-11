@@ -257,6 +257,8 @@
     if (itemModel) {
         self.traceParams = params;
         self.tracerDict = params;
+
+        
         [self updateUIFromData:itemModel];
     }
 }
@@ -278,10 +280,9 @@
      
         if (itemModel) {
             FHDetailContactModel *contactModel =  itemModel.contactModel;
+       
             if (self.itemHomeModel != itemModel) {
-                [self addRealtorShowLog:self.modelData];
-            }else{
-                return;
+                  [self addRealtorShowLog:contactModel];
             }
             
             self.modelData = contactModel;
@@ -338,12 +339,6 @@
 {
     FHHomeHouseDataItemsModel *itemModel =  (FHHomeHouseDataItemsModel *)data;
     if (itemModel) {
-        if (self.itemHomeModel != itemModel) {
-            [self addRealtorShowLog:self.modelData];
-        }else{
-            return;
-        }
-        
         FHDetailContactModel *contactModel =  itemModel.contactModel;
         self.modelData = contactModel;
         self.itemHomeModel = itemModel;
