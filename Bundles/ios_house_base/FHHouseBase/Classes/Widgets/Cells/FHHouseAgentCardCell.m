@@ -239,7 +239,7 @@
 }
 
 - (void)setUpLynxView{
-    _lynxView = [[FHLynxView alloc] initWithFrame:CGRectMake(15, 0, [UIScreen mainScreen].bounds.size.width - 30, 116)];
+    _lynxView = [[FHLynxView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width - 30, 116)];
     [self.containerView addSubview:_lynxView];
     FHLynxViewBaseParams *baesparmas = [[FHLynxViewBaseParams alloc] init];
     baesparmas.channel = @"lynx_realtor_card";
