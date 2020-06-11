@@ -339,9 +339,9 @@
 {
     FHHomeHouseDataItemsModel *itemModel =  (FHHomeHouseDataItemsModel *)data;
     if (itemModel) {
-        FHDetailContactModel *contactModel =  itemModel.contactModel;
-        self.modelData = contactModel;
-        self.itemHomeModel = itemModel;
+//        FHDetailContactModel *contactModel =  itemModel.contactModel;
+//        self.modelData = contactModel;
+//        self.itemHomeModel = itemModel;
         
         CALayer *layer = _containerView.layer;
         layer.cornerRadius = 10;
