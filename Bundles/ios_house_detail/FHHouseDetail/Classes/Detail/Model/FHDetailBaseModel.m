@@ -146,6 +146,7 @@
                            @"showRealtorinfo": @"show_realtorinfo",
                            @"noticeDesc": @"notice_desc",
                            @"imOpenUrl" : @"chat_openurl",
+                           @"realtorDescription" : @"realtor_description",
                            @"imLabel" : @"chat_button_text",
                            @"callButtonText" : @"call_button_text",
                            @"realtorDetailUrl" : @"main_page_info",

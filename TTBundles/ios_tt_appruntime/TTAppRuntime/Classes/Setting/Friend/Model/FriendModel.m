@@ -8,7 +8,7 @@
 
 #import "FriendModel.h"
 #import "TTAccountBusiness.h"
-#import "SSABPerson.h"
+//#import "SSABPerson.h"
 #import "ArticleAddressManager.h"
 #import "TTBlockManager.h"
 
@@ -135,8 +135,8 @@ static NSDictionary *s_abDictionary;
         if(!isEmptyString(mobileHash))
         {
             mobileHash = [mobileHash lowercaseString];
-            SSABPerson * person = [[FriendModel addressbookDictionary] valueForKey:mobileHash];
-            self.platformScreenName = [person personName];
+//            SSABPerson * person = [[FriendModel addressbookDictionary] valueForKey:mobileHash];
+//            self.platformScreenName = [person personName];
         }
     }
     

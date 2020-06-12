@@ -24,6 +24,8 @@
 @property(nonatomic, strong)UILabel *messageDotNumber;
 @property(nonatomic , strong) UIView *gradientView;
 @property(nonatomic , strong) UIView *bottomLine;
+@property (nonatomic, strong) UIView *vouchView;
+@property (nonatomic, strong) CAGradientLayer *gradientLayer;
 
 @property(nonatomic , assign) CGFloat subAlpha;
 @property(nonatomic , assign) NSInteger followStatus;
@@ -31,6 +33,7 @@
 @property(nonatomic , strong) UIImage *collectBlackImage;
 @property(nonatomic , strong) UIImage *collectWhiteImage;
 @property(nonatomic , strong) UIImage *collectYellowImage;
+@property(nonatomic , strong) UIImage *collectWhiteSolidImage;
 @property(nonatomic , strong) UIImage *backBlackImage;
 @property(nonatomic , strong) UIImage *backWhiteImage;
 @property(nonatomic , strong) UIImage *shareBlackImage;
@@ -55,6 +58,7 @@
 {
     self = [super initWithFrame:frame];
     if (self) {
+        self.isForVouch = NO;
         [self setupUI];
     }
     return self;
@@ -99,6 +103,55 @@
     [_bottomLine removeFromSuperview];
 }
 
+- (void)configureVouchStyle {
+    self.isForVouch = YES;
+    if (!_gradientLayer) {
+        UIColor *leftColor = [UIColor colorWithHexString:@"#ff9629"];
+        UIColor *rightColor = [UIColor themeOrange1];
+        NSArray *gradientColors = [NSArray arrayWithObjects:(id)(leftColor.CGColor), (id)(rightColor.CGColor), nil];
+        CAGradientLayer *gradientLayer = [[CAGradientLayer alloc] init];
+        gradientLayer.colors = gradientColors;
+        gradientLayer.startPoint = CGPointMake(0, 0);
+        gradientLayer.endPoint = CGPointMake(1, 1);
+        
+        gradientLayer.frame = self.bounds;
+        //        gradientlayer.cornerRadius = 4.0;
+        [self.bgView.layer insertSublayer:gradientLayer atIndex:0];
+        _gradientLayer = gradientLayer;
+    }
+    if (!_vouchView) {
+        self.vouchView = [[UIView alloc] init];
+        [self.bgView addSubview:self.vouchView];
+        
+        UIImageView *vouchIconImageView = [[UIImageView alloc] init];
+        vouchIconImageView.image = [UIImage imageNamed:@"detail_header_top_icon"];
+        [self.vouchView addSubview:vouchIconImageView];
+        [vouchIconImageView mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.size.mas_equalTo(CGSizeMake(24, 24));
+            make.left.mas_equalTo(0);
+            make.top.bottom.mas_equalTo(0);
+        }];
+        
+        UILabel *vouchLabel = [[UILabel alloc] init];
+        vouchLabel.text = @"企业担保";
+        vouchLabel.textColor = [UIColor themeWhite];
+        vouchLabel.font = [UIFont themeFontSemibold:16];
+        [self.vouchView addSubview:vouchLabel];
+        [vouchLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.left.mas_equalTo(vouchIconImageView.mas_right).mas_offset(4);
+            make.top.bottom.mas_equalTo(0);
+            make.right.mas_equalTo(0);
+        }];
+        
+        [self.vouchView mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.centerY.mas_equalTo(self.backBtn);
+            make.left.mas_equalTo(self.backBtn.mas_right).mas_offset(15);
+        }];
+    }
+    self.vouchView.hidden = YES;
+    self.gradientLayer.hidden = YES;
+}
+
 - (void)setupUI
 {
     _bgView = [[UIView alloc]initWithFrame:self.bounds];
@@ -109,7 +162,7 @@
     _bottomLine.backgroundColor = [UIColor themeGray6];
     [_bgView addSubview:_bottomLine];
     _bottomLine.hidden = YES;
-
+    
     _gradientView = [[UIView alloc]initWithFrame:self.bounds];
     [self addSubview:_gradientView];
     CAGradientLayer *gradientLayer = [CAGradientLayer layer];
@@ -118,7 +171,7 @@
     gradientLayer.startPoint = CGPointMake(0, 0);
     gradientLayer.endPoint = CGPointMake(0, 1);
     [_gradientView.layer addSublayer:gradientLayer];
-
+    
     _backBtn = [UIButton buttonWithType:UIButtonTypeCustom];
     [_backBtn setImage:self.backWhiteImage forState:UIControlStateNormal];
     [_backBtn setImage:self.backWhiteImage forState:UIControlStateHighlighted];
@@ -128,7 +181,7 @@
     _collectBtn = [UIButton buttonWithType:UIButtonTypeCustom];
     [_collectBtn setImage:self.collectWhiteImage forState:UIControlStateNormal];
     [_collectBtn setImage:self.collectWhiteImage forState:UIControlStateHighlighted];
-//    [_collectBtn addTarget:self action:@selector(collectAction:) forControlEvents:UIControlEventTouchUpInside];
+    //    [_collectBtn addTarget:self action:@selector(collectAction:) forControlEvents:UIControlEventTouchUpInside];
     [self addSubview:_collectBtn];
     @weakify(self);
     [[[[_collectBtn rac_signalForControlEvents:UIControlEventTouchUpInside]takeUntil:self.rac_willDeallocSignal] throttle:0.3]subscribeNext:^(__kindof UIControl * _Nullable x) {
@@ -143,7 +196,7 @@
     [_messageBtn setImage:img forState:UIControlStateHighlighted];
     [_messageBtn addTarget:self action:@selector(messageAction:) forControlEvents:UIControlEventTouchUpInside];
     [self addSubview:_messageBtn];
-
+    
     _shareBtn = [UIButton buttonWithType:UIButtonTypeCustom];
     img = ICON_FONT_IMG(24, @"\U0000e692", [UIColor whiteColor]);//detail_share_white
     [_shareBtn setImage:img forState:UIControlStateNormal];
@@ -160,18 +213,18 @@
     _messageDotNumber.layer.cornerRadius = 8;
     _messageDotNumber.layer.masksToBounds = YES;
     _messageDotNumber.hidden = YES;
-//    _messageDot = [[UIImageView alloc] init];
-//    _messageDot.hidden = YES;
-//    [_messageDot setImage:[UIImage imageNamed:@"detail_message_dot"]];
+    //    _messageDot = [[UIImageView alloc] init];
+    //    _messageDot.hidden = YES;
+    //    [_messageDot setImage:[UIImage imageNamed:@"detail_message_dot"]];
     [self addSubview:_messageDotNumber];
-
+    
     [_backBtn mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(12);
         make.height.mas_equalTo(44);
         make.width.mas_equalTo(40);
         make.bottom.mas_equalTo(self);
     }];
-
+    
     if (_type == FHDetailNavBarTypeDefault) {
         [self addSubview:self.shareBtn];
         [_shareBtn mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -198,12 +251,12 @@
             make.width.mas_equalTo(16);
             make.top.mas_equalTo(self.messageBtn).offset(6);
         }];
-//        [_messageDot mas_makeConstraints:^(MASConstraintMaker *make) {
-//            make.right.mas_equalTo(self.messageBtn).offset(-5);
-//            make.height.mas_equalTo(10);
-//            make.width.mas_equalTo(10);
-//            make.top.mas_equalTo(self.messageBtn).offset(10);
-//        }];
+        //        [_messageDot mas_makeConstraints:^(MASConstraintMaker *make) {
+        //            make.right.mas_equalTo(self.messageBtn).offset(-5);
+        //            make.height.mas_equalTo(10);
+        //            make.width.mas_equalTo(10);
+        //            make.top.mas_equalTo(self.messageBtn).offset(10);
+        //        }];
     }else {
         [_messageBtn mas_makeConstraints:^(MASConstraintMaker *make) {
             make.right.mas_equalTo(-12);
@@ -218,19 +271,19 @@
             make.bottom.mas_equalTo(self);
         }];
         [_messageDotNumber mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.right.mas_equalTo(self.messageBtn.mas_right).offset(5);
+            make.left.mas_equalTo(self.messageBtn.mas_centerX).offset(2);
             make.height.mas_equalTo(16);
             make.width.mas_equalTo(16);
             make.top.mas_equalTo(self.messageBtn).offset(6);
         }];
-//        [_messageDot mas_makeConstraints:^(MASConstraintMaker *make) {
-//            make.right.mas_equalTo(self.messageBtn).offset(-5);
-//            make.height.mas_equalTo(10);
-//            make.width.mas_equalTo(10);
-//            make.top.mas_equalTo(self.messageBtn).offset(10);
-//        }];
+        //        [_messageDot mas_makeConstraints:^(MASConstraintMaker *make) {
+        //            make.right.mas_equalTo(self.messageBtn).offset(-5);
+        //            make.height.mas_equalTo(10);
+        //            make.width.mas_equalTo(10);
+        //            make.top.mas_equalTo(self.messageBtn).offset(10);
+        //        }];
     }
-
+    
     [_bottomLine mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.right.bottom.mas_equalTo(0);
         make.height.mas_equalTo(0.5);
@@ -243,15 +296,31 @@
     _subAlpha = alpha;
     if (alpha > 0) {
         _gradientView.alpha = 0;
-        UIImage *image = self.followStatus ? self.collectYellowImage : self.collectBlackImage;
-        [_backBtn setImage:self.backBlackImage forState:UIControlStateNormal];
-        [_backBtn setImage:self.backBlackImage forState:UIControlStateHighlighted];
-        [_collectBtn setImage:image forState:UIControlStateNormal];
-        [_collectBtn setImage:image forState:UIControlStateHighlighted];
-        [_shareBtn setImage:self.shareBlackImage forState:UIControlStateNormal];
-        [_shareBtn setImage:self.shareBlackImage forState:UIControlStateHighlighted];
-        [_messageBtn setImage:self.messageBlackImage forState:UIControlStateNormal];
-        [_messageBtn setImage:self.messageBlackImage forState:UIControlStateHighlighted];
+        if (self.isForVouch) {
+            [_backBtn setImage:self.backWhiteImage forState:UIControlStateNormal];
+            [_backBtn setImage:self.backWhiteImage forState:UIControlStateHighlighted];
+            [_shareBtn setImage:self.shareWhiteImage forState:UIControlStateNormal];
+            [_shareBtn setImage:self.shareWhiteImage forState:UIControlStateHighlighted];
+            [_messageBtn setImage:self.messageWhiteImage forState:UIControlStateNormal];
+            [_messageBtn setImage:self.messageWhiteImage forState:UIControlStateHighlighted];
+            UIImage *image = self.followStatus ? self.collectWhiteSolidImage : self.collectWhiteImage;
+            [_collectBtn setImage:image forState:UIControlStateNormal];
+            [_collectBtn setImage:image forState:UIControlStateHighlighted];
+            
+            self.vouchView.hidden = NO;
+            self.gradientLayer.hidden = NO;
+        } else {
+            [_backBtn setImage:self.backBlackImage forState:UIControlStateNormal];
+            [_backBtn setImage:self.backBlackImage forState:UIControlStateHighlighted];
+            UIImage *image = self.followStatus ? self.collectYellowImage : self.collectBlackImage;
+            [_collectBtn setImage:image forState:UIControlStateNormal];
+            [_collectBtn setImage:image forState:UIControlStateHighlighted];
+            [_shareBtn setImage:self.shareBlackImage forState:UIControlStateNormal];
+            [_shareBtn setImage:self.shareBlackImage forState:UIControlStateHighlighted];
+            [_messageBtn setImage:self.messageBlackImage forState:UIControlStateNormal];
+            [_messageBtn setImage:self.messageBlackImage forState:UIControlStateHighlighted];
+        }
+        
     }else {
         _gradientView.alpha = 1;
         UIImage *image = self.followStatus ? self.collectYellowImage : self.collectWhiteImage;
@@ -263,9 +332,17 @@
         [_shareBtn setImage:self.shareWhiteImage forState:UIControlStateHighlighted];
         [_messageBtn setImage:self.messageWhiteImage forState:UIControlStateNormal];
         [_messageBtn setImage:self.messageWhiteImage forState:UIControlStateHighlighted];
+        if (self.isForVouch) {
+            self.vouchView.hidden = YES;
+            self.gradientLayer.hidden = YES;
+        }
     }
     if (alpha >= 1) {
-        _bottomLine.hidden = NO;
+        if (self.isForVouch) {
+            _bottomLine.hidden = YES;
+        } else {
+            _bottomLine.hidden = NO;
+        }
     }else {
         _bottomLine.hidden = YES;
     }
@@ -278,6 +355,9 @@
     if (self.subAlpha > 0) {
         UIImage *image = self.collectBlackImage;
         image = followStatus != 0 ? self.collectYellowImage : image;
+        if (self.isForVouch) {
+            image = followStatus != 0 ? self.collectWhiteSolidImage : self.collectWhiteImage;
+        }
         [_collectBtn setImage:image forState:UIControlStateNormal];
         [_collectBtn setImage:image forState:UIControlStateHighlighted];
     }else {
@@ -293,9 +373,9 @@
     self.shareBtn.hidden = !showItem;
     self.collectBtn.hidden = !showItem;
     self.messageBtn.hidden = !showItem;
-//    if (!showItem) {
-//        self.messageDot.hidden = !showItem;
-//    }
+    //    if (!showItem) {
+    //        self.messageDot.hidden = !showItem;
+    //    }
 }
 
 - (void)backAction:(UIButton *)sender
@@ -329,7 +409,7 @@
 
 - (void)displayMessageDot:(NSInteger)dotNumber{
     if (dotNumber >0) {
-        self.messageDotNumber.hidden = NO;
+        //        self.messageDotNumber.hidden = YES;
         self.messageDotNumber.text = dotNumber >99?@"99+":[NSString stringWithFormat:@"%ld",dotNumber];
         if (dotNumber>9) {
             [_messageDotNumber mas_updateConstraints:^(MASConstraintMaker *make) {
@@ -337,7 +417,7 @@
             }];
         }
     }else {
-        self.messageDotNumber.hidden = YES;
+        //        self.messageDotNumber.hidden = YES;
     }
 }
 
@@ -373,6 +453,14 @@
     }
     return _collectYellowImage;
 }
+
+- (UIImage *)collectWhiteSolidImage {
+    if (!_collectWhiteSolidImage) {
+        _collectWhiteSolidImage = ICON_FONT_IMG(24, @"\U0000e6b2", [UIColor whiteColor]);
+    }
+    return _collectWhiteSolidImage;
+}
+
 - (UIImage *)backBlackImage
 {
     if (!_backBlackImage) {
@@ -415,6 +503,12 @@
         _messageWhiteImage =  ICON_FONT_IMG(24, @"\U0000e691", [UIColor whiteColor]); //detail_message_white
     }
     return _messageWhiteImage;
+}
+
+- (void)showMessageNumber {
+    if (self.messageDotNumber.text.length>0) {
+        self.messageDotNumber.hidden = NO;
+    }
 }
 
 @end

@@ -41,10 +41,6 @@
         make.right.left.bottom.equalTo(self.contentView);
         make.height.mas_offset(5);
     }];
-//    self.bottomSepView.bottom = self.contentView.bottom;
-//    self.bottomSepView.left = 0;
-//    self.bottomSepView.width = [UIScreen mainScreen].bounds.size.width ;
-//    self.bottomSepView.height = 5;
 }
 
 - (void)initmMainCollection {
@@ -126,10 +122,6 @@
         [cell refreshWithData:self.dataList[indexPath.row]];
         
     }
-    //
-    //    if((indexPath.row == self.dataList.count - 1) && ![FHEnvContext isNewDiscovery]){
-    //        self.allCell = (FHMyJoinAllNeighbourhoodCell *)cell;
-    //    }
     
     return cell;
 }
@@ -204,4 +196,5 @@
     
     TRACK_EVENT(@"community_group_show", tracerDict);
 }
+
 @end

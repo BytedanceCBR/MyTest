@@ -132,10 +132,10 @@ NS_ASSUME_NONNULL_BEGIN
  */
 + (void)changeFindTabTitle;
 
-/*
- 增加引导
- */
-+ (void)addTabUGCGuid;
+///*
+// 增加引导
+// */
+//+ (void)addTabUGCGuid;
 
 /*
   app启动调用
@@ -306,6 +306,9 @@ NS_ASSUME_NONNULL_BEGIN
 -(void)addUNRemoteNOtification:(UNUserNotificationCenter *)center didReceiveNotificationResponse:(UNNotificationResponse *)response withCompletionHandler:(void (^)())completionHandler ;
 
 + (NSString *)getCurrentTabIdentifier;
+
+//是否展展示登陆弹窗
++(BOOL)canShowLoginTip;
 
 @end
 

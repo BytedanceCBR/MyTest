@@ -46,6 +46,11 @@
 + (NSString *)newArticleInfoString;
 + (NSString*)cityURLString;
 
+//首页购房百科
++ (NSString *)encyclopediaListUrlString;
+//首页购房百科头部配置
++ (NSString *)encyclopediaConfigUrlString;
+
 //详情页CDN
 + (NSString *)detailFullPathString;
 + (NSString *)detailContentPathString;

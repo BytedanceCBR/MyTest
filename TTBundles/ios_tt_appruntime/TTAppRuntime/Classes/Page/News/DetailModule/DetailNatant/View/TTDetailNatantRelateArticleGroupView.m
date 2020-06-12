@@ -23,6 +23,7 @@
 #import <TTBaseLib/UIViewAdditions.h>
 #import <BDTrackerProtocol/BDTrackerProtocol.h>
 #import <TTPlatformBaseLib/TTTrackerWrapper.h>
+#import "FHUserTracker.h"
 
 @interface TTDetailNatantRelateReadSectionView : TTDetailNatantViewBase
 @property(nonatomic, strong)SSThemedLabel * titleLabel;
@@ -158,7 +159,8 @@
     [traceParams setValue:@"related" forKey:@"category_name"];
     [traceParams setValue:@"be_null" forKey:@"cell_type"];
 
-    [BDTrackerProtocol eventV3:@"client_show" params:traceParams];
+//    [BDTrackerProtocol eventV3:@"client_show" params:traceParams];
+    [FHUserTracker writeEvent:@"client_show" params:traceParams];
 }
 
 - (void)themeChanged:(NSNotification *)notification{

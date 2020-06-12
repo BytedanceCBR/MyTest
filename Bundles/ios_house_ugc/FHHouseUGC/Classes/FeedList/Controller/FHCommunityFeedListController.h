@@ -76,7 +76,6 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)scrollToTopAndRefreshAllData;
 
 - (void)hideImmediately;
-
 @end
 
 NS_ASSUME_NONNULL_END

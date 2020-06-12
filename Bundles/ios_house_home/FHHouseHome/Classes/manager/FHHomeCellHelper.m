@@ -32,7 +32,8 @@
 #import "FHHomePlaceHolderCell.h"
 #import <FHHouseBase/TTDeviceHelper+FHHouse.h>
 #import "FHHouseListBaseItemCell.h"
-
+#import "FHHouseErrorHubManager.h"
+#import "FHLynxManager.h"
 static NSMutableArray  * _Nullable identifierArr;
 
 @interface FHHomeCellHelper ()
@@ -108,7 +109,7 @@ static NSMutableArray  * _Nullable identifierArr;
         // 首页轮播banner，数据封装的时候判断是否是有效的数据
         if (dataModel.mainPageBannerOpData.items.count > 0) {
             // 经过一层逻辑处理
-           BOOL enableScrollBanner = [FHHomeScrollBannerCell hasValidModel:dataModel.mainPageBannerOpData];
+            BOOL enableScrollBanner = [FHHomeScrollBannerCell hasValidModel:dataModel.mainPageBannerOpData];
             if (enableScrollBanner) {
                 [modelsArray addObject:dataModel.mainPageBannerOpData];
             }
@@ -135,7 +136,7 @@ static NSMutableArray  * _Nullable identifierArr;
     }
     
     FHConfigDataModel *currentDataModel = [[FHEnvContext sharedInstance] getConfigFromCache];
-
+    
     if (currentDataModel && dataModel.currentCityId && ![self.traceShowCache.allKeys containsObject:dataModel.currentCityId] && ![FHHomeCellHelper sharedInstance].isFirstLanuch) {
         [FHHomeCellHelper sendCellShowTrace];
         [self.traceShowCache setValue:@"1" forKey:dataModel.currentCityId];
@@ -165,6 +166,7 @@ static NSMutableArray  * _Nullable identifierArr;
             
             [dictTraceParams setValue:@"maintab" forKey:@"page_type"];
             
+            [[FHHouseErrorHubManager sharedInstance] checkBuryingPointWithEvent:@"operation_show" Params:dictTraceParams errorHubType:FHErrorHubTypeBuryingPoint];
             [BDTrackerProtocol eventV3:@"operation_show" params:dictTraceParams];
         }];
     }
@@ -207,6 +209,7 @@ static NSMutableArray  * _Nullable identifierArr;
             [dictTraceParams setValue:@"house_app2c_v2" forKey:@"event_type"];
             [dictTraceParams setValue:@"maintab" forKey:@"page_type"];
             
+            [[FHHouseErrorHubManager sharedInstance] checkBuryingPointWithEvent:@"operation_show" Params:dictTraceParams errorHubType:FHErrorHubTypeBuryingPoint];
             [BDTrackerProtocol eventV3:@"operation_show" params:dictTraceParams];
         }];
     }
@@ -271,7 +274,7 @@ static NSMutableArray  * _Nullable identifierArr;
     }
     
     BOOL isHasFindHouseCategory = YES;
-
+    
     //如果数据无变化直接返回
     if (self.previousDataModel == dataModel && isHasFindHouseCategory) {
         return self.headerHeight;
@@ -285,7 +288,7 @@ static NSMutableArray  * _Nullable identifierArr;
         if (countValue > 0) {
             height = [FHHomeEntrancesCell cellHeightForModel:dataModel.opData];
         }
-                
+        
         if (dataModel.mainPageBannerOpData.items.count > 0) {
             // 经过一层逻辑处理
             BOOL available = [FHHomeScrollBannerCell hasValidModel:dataModel.mainPageBannerOpData];
@@ -333,24 +336,19 @@ static NSMutableArray  * _Nullable identifierArr;
 
 #pragma mark 填充数据 fill data =======================
 + (void)fillFHHomeEntrancesCell:(FHHomeEntrancesCell *)cell withModel:(FHConfigDataOpDataModel *)model withTraceParams:(NSDictionary *)traceParams{
-    
     FHHomeEntrancesCell *cellEntrance = cell;
-    
     NSInteger countItems = model.items.count;
-//    if (countItems > [FHHomeCellHelper sharedInstance].kFHHomeIconRowCount * 2) {
-//        countItems = [FHHomeCellHelper sharedInstance].kFHHomeIconRowCount * 2;
-//    }
-    
+    //    if (countItems > [FHHomeCellHelper sharedInstance].kFHHomeIconRowCount * 2) {
+    //        countItems = [FHHomeCellHelper sharedInstance].kFHHomeIconRowCount * 2;
+    //    }
     [cell updateWithItems:model.items];
-    
     cellEntrance.clickBlock = ^(NSInteger clickIndex , FHConfigDataOpDataItemsModel *itemModel){
         NSMutableDictionary *dictTrace = [NSMutableDictionary new];
         [dictTrace setValue:@"maintab" forKey:@"enter_from"];
-
+        
         if ([traceParams isKindOfClass:[NSDictionary class]]) {
             [dictTrace addEntriesFromDictionary:traceParams];
         }
-        
         //首页工具箱里面的icon追加上报
         NSString *enterFrom = traceParams[@"enter_from"];
         if (enterFrom && [enterFrom isEqualToString:@"tools_box"]) {
@@ -359,14 +357,12 @@ static NSMutableArray  * _Nullable identifierArr;
         {
             [self addCLickIconLog:itemModel andPageType:@"maintab"];
         }
-        
         [dictTrace setValue:@"maintab_icon" forKey:@"element_from"];
         [dictTrace setValue:@"click" forKey:@"enter_type"];
         
         if ([itemModel.logPb isKindOfClass:[NSDictionary class]] && itemModel.logPb[@"element_from"] != nil) {
             [dictTrace setValue:itemModel.logPb[@"element_from"] forKey:@"element_from"];
         }
-        
         NSString *stringOriginFrom = itemModel.logPb[@"origin_from"];
         if ([stringOriginFrom isKindOfClass:[NSString class]] && stringOriginFrom.length != 0) {
             [[[FHHouseBridgeManager sharedInstance] envContextBridge] setTraceValue:stringOriginFrom forKey:@"origin_from"];
@@ -375,10 +371,8 @@ static NSMutableArray  * _Nullable identifierArr;
             [[[FHHouseBridgeManager sharedInstance] envContextBridge] setTraceValue:@"be_null" forKey:@"origin_from"];
             [dictTrace setValue:@"be_null" forKey:@"origin_from"];
         }
-        
         NSDictionary *userInfoDict = @{@"tracer":dictTrace};
         TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:userInfoDict];
-        
         if ([itemModel.openUrl isKindOfClass:[NSString class]]) {
             NSURL *url = [NSURL URLWithString:itemModel.openUrl];
             if ([itemModel.openUrl containsString:@"snssdk1370://category_feed"]) {
@@ -389,25 +383,19 @@ static NSMutableArray  * _Nullable identifierArr;
                 //通勤找房
                 [[FHCommuteManager sharedInstance] tryEnterCommutePage:itemModel.openUrl logParam:dictTrace];
             }else{
-                [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
+                 [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
             }
         }
     };
-    
-    
     [cellEntrance setNeedsLayout];
-
 }
 
 + (void)fillFHHomeBannerCell:(FHHomeBannerCell *)cell withModel:(FHConfigDataOpData2Model *)model
 {
     FHHomeBannerCell *cellBanner = cell;
     NSMutableArray *itemsArray = [[NSMutableArray alloc] init];
-    
     NSInteger countItems = model.items.count;
-    
     BOOL isNeedAllocNewItems = YES;
-    
     //判断是否需要重复创建
     if (cellBanner.bannerView.currentItems.count == model.items.count) {
         isNeedAllocNewItems = NO;
@@ -417,13 +405,10 @@ static NSMutableArray  * _Nullable identifierArr;
             [subView removeFromSuperview];
         }
     }
-    
     if (countItems >= 4) {
         countItems = 4;
     }
-    
     for (int index = 0; index < countItems; index++) {
-        
         FHHomeBannerItem *itemView = nil;
         if (isNeedAllocNewItems) {
             itemView = [[FHHomeBannerItem alloc] init];
@@ -464,9 +449,7 @@ static NSMutableArray  * _Nullable identifierArr;
                 }
             }];
         }
-
         BOOL isFindHouse = YES;
-
         if (itemModel.title && [itemModel.title isKindOfClass:[NSString class]]) {
             itemView.titleLabel.textColor = [UIColor themeGray1];
             
@@ -529,12 +512,12 @@ static NSMutableArray  * _Nullable identifierArr;
             if ([stringOriginFrom isKindOfClass:[NSString class]] && stringOriginFrom.length != 0) {
                 [[[FHHouseBridgeManager sharedInstance] envContextBridge] setTraceValue:stringOriginFrom forKey:@"origin_from"];
                 [dictTrace setValue:stringOriginFrom forKey:@"origin_from"];
-
+                
             }else
             {
                 [[[FHHouseBridgeManager sharedInstance] envContextBridge] setTraceValue:@"school_operation" forKey:@"origin_from"];
                 [dictTrace setValue:@"school_operation" forKey:@"origin_from"];
-
+                
             }
             
             NSDictionary *userInfoDict = @{@"tracer":dictTrace};
@@ -565,21 +548,21 @@ static NSMutableArray  * _Nullable identifierArr;
     //    }];
     
     [cellBanner setNeedsLayout];
-//    [cellBanner layoutIfNeeded];
-
+    //    [cellBanner layoutIfNeeded];
+    
 }
 
 // 首页轮播banner
 + (void)fillFHHomeScrollBannerCell:(FHHomeScrollBannerCell *)cell withModel:(FHConfigDataMainPageBannerOpDataModel *)model {
     // 更新cell数据
-     [cell updateWithModel:model];
+    [cell updateWithModel:model];
 }
 
 + (void)fillFHHomeCityTrendCell:(FHHomeCityTrendCell *)cell withModel:(FHConfigDataCityStatsModel *)model {
-//    model.openUrl = @"sslocal://mapfind_house?center_latitude=34.7579750000&center_longitude=113.6654120000&house_type=2&resize_level=10&rm=a";
+    //    model.openUrl = @"sslocal://mapfind_house?center_latitude=34.7579750000&center_longitude=113.6654120000&house_type=2&resize_level=10&rm=a";
     WeakSelf;
     BOOL isFindHouse = YES;
-
+    
     [cell updateTrendFont:isFindHouse];
     
     [cell updateWithModel:model];
@@ -592,9 +575,9 @@ static NSMutableArray  * _Nullable identifierArr;
         id<FHHouseEnvContextBridge> contextBridge = [[FHHouseBridgeManager sharedInstance]envContextBridge];
         [contextBridge setTraceValue:@"city_market" forKey:@"origin_from"];
         [contextBridge setTraceValue:@"be_null" forKey:@"origin_search_id"];
-
+        
         if (model.openUrl.length > 0) {
-
+            
             NSMutableString *urlStr = [NSMutableString stringWithString:model.openUrl];
             [urlStr appendString:@"?"];
             if (![urlStr containsString:@"enter_from"]) {

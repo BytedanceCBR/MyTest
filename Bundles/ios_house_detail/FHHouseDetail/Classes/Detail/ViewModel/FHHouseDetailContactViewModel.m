@@ -53,6 +53,7 @@
 #import "FHHouseUGCAPI.h"
 #import "FHHouseNewDetailViewModel.h"
 #import "FHDetailBaseCell.h"
+#import "FHHouseErrorHubManager.h"
 #import "FHDetailNewModel.h"
 #import "FHDetailOldModel.h"
 #import "FHDetailNeighborhoodModel.h"
@@ -320,6 +321,7 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
     [params setValue:[_tracerDict objectForKey:@"origin_search_id"] forKey:@"origin_search_id"];
     [params setValue:[_tracerDict objectForKey:@"log_pb"] forKey:@"log_pb"];
     [params setValue: [[FHEnvContext sharedInstance].messageManager getTotalUnreadMessageCount] >0?@"1":@"0" forKey:@"with_tips"];
+      [[FHHouseErrorHubManager sharedInstance] checkBuryingPointWithEvent:@"click_im_message" Params:params errorHubType:FHErrorHubTypeBuryingPoint];
     [BDTrackerProtocol eventV3:@"click_im_message" params:params];
     
     
@@ -436,6 +438,7 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
         [params setValue:[_tracerDict objectForKey:@"origin_search_id"] forKey:@"origin_search_id"];
         [params setValue:[_tracerDict objectForKey:@"log_pb"] forKey:@"log_pb"];
         params[@"enter_from"] = _tracerDict[@"enter_from"];
+        [[FHHouseErrorHubManager sharedInstance] checkBuryingPointWithEvent:@"element_show" Params:params errorHubType:FHErrorHubTypeBuryingPoint];
         [BDTrackerProtocol eventV3:@"element_show" params:params];
     }
 }
@@ -538,8 +541,13 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
             //        if ([extraDict[@"source_from"] isEqualToString:@"loan"]) {
             //           imExtra[@"realtor_position"] = @"loan";
         }
+        //099 大图详情新增 picture_type
         if (extraDict[@"picture_type"]) {
             imExtra[@"picture_type"] = extraDict[@"picture_type"];
+        }
+        //100 户型详情页新增 click_position
+        if (extraDict[@"click_position"]) {
+            imExtra[@"click_position"] = extraDict[@"click_position"];
         }
     }
     [self.phoneCallViewModel imchatActionWithPhone:self.contactPhone realtorRank:@"0" extraDic:imExtra];

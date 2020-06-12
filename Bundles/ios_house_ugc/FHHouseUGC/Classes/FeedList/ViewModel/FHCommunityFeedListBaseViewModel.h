@@ -20,6 +20,7 @@
 #import "AWEVideoConstants.h"
 #import "TTVFeedListItem.h"
 #import "TTReachability.h"
+#import "FHUGCFeedDetailJumpManager.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -30,6 +31,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic, weak) TTHttpTask *requestTask;
 @property(nonatomic, strong) NSMutableArray *dataList;
 @property(nonatomic, strong) FHUGCCellManager *cellManager;
+@property(nonatomic, strong) FHUGCFeedDetailJumpManager *detailJumpManager;
 @property(nonatomic, strong) FHRefreshCustomFooter *refreshFooter;
 @property(nonatomic, copy) NSString *categoryId;
 @property(nonatomic, strong) FHUGCBaseCell *currentCell;

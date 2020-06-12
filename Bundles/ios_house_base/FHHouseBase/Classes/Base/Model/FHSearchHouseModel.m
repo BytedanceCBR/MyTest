@@ -415,6 +415,7 @@
                            @"externalInfo": @"external_info",
                            @"skyEyeTag": @"sky_eye_tag",
                            @"associateInfo": @"associate_info",
+                           @"tagImage": @"tag_image",
                            };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
         return dict[keyName]?:keyName;
@@ -584,6 +585,33 @@
                                    @"districtAreaName": @"district_area_name",
                                    @"contactModel": @"realtor_info",
                                    @"associateInfo": @"associate_info",
+                                   @"realtorType": @"realtor_type",
+                                   @"logPb": @"log_pb",
+                                   };
+    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+        return dict[keyName]?:keyName;
+    }];
+}
+
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+
+@end
+
+@implementation FHHouseReserveAdviserModel
++ (JSONKeyMapper*)keyMapper
+{
+    NSDictionary *dict = @{
+                                   @"tipText": @"tip_text",
+                                   @"realtorType": @"realtor_type",
+                                   @"targetId": @"target_id",
+                                   @"targetName": @"target_name",
+                                   @"districtAreaName": @"district_area_name",
+                                   @"areaPrice": @"area_price",
+                                   @"displayStatusInfo": @"display_status_info",
+                                   @"associateInfo": @"associate_info",
                                    @"logPb": @"log_pb",
                                    };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
@@ -630,7 +658,9 @@
                            @"uploadAt": @"upload_at",
                            @"imprId": @"impr_id",
                            @"vrInfo": @"vr_info",
-
+                           @"contactModel": @"realtor_info",
+                           @"associateInfo": @"associate_info",
+                           
                            @"searchId": @"search_id",
                            @"houseImage": @"house_image",
                            @"houseType": @"house_type",

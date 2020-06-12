@@ -34,6 +34,7 @@
 #import "FHUGCConfig.h"
 #import "FHUGCCellHelper.h"
 #import "HMDTTMonitor.h"
+#import "FHHouseErrorHubManager.h"
 
 @interface FHPostDetailViewModel ()
 
@@ -337,7 +338,7 @@
         NSString *host = [FHURLSettings baseURL];
         NSString *urlStr = [NSString stringWithFormat:@"%@/f100/ugc/thread",host];
         NSDate *startDate = [NSDate date];
-        [TTUGCRequestManager requestForJSONWithURL:urlStr params:param method:@"GET" needCommonParams:YES callBackWithMonitor:^(NSError *error, id jsonObj, TTUGCRequestMonitorModel *monitorModel) {
+        [TTUGCRequestManager requestForJSONWithURL:urlStr params:param method:@"GET" needCommonParams:YES callBackWithMonitor:^(NSError *error, id jsonObj, TTHttpResponse *response) {
             StrongSelf;
             NSDate *backDate = [NSDate date];
             uint64_t endTime = [NSObject currentUnixTime];
@@ -349,9 +350,10 @@
             NSMutableDictionary *extraDict = nil;
             NSDictionary *exceptionDict = nil;
             NSInteger responseCode = -1;
-            if (monitorModel.monitorStatus) {
-                responseCode = monitorModel.monitorStatus;
+            if (response.statusCode) {
+                responseCode = response.statusCode;
             }
+            NSError *jsonParseError;
             if (!error) {
                 NSDictionary *dataDict = [jsonObj isKindOfClass:[NSDictionary class]]? jsonObj: nil;
                 if ([dataDict tt_longValueForKey:@"err_no"] == 0) {
@@ -367,7 +369,7 @@
                         code = 1;
                         errMsg = @"ugc_post_detail_error:empty";
                     } else {
-                        NSError *jsonParseError;
+                        
                         NSData *jsonData = [dataStr dataUsingEncoding:NSUTF8StringEncoding];
                         if (jsonData) {
                             Class cls = [FHFeedUGCContentModel class];
@@ -409,6 +411,7 @@
             serDate = [NSDate date];
             // 帖子接口成功率
             [FHMainApi addRequestLog:@"/f100/ugc/thread" startDate:startDate backDate:backDate serializeDate:serDate resultType:resultType errorCode:code errorMsg:errMsg extra:extraDict exceptionDict:exceptionDict responseCode:responseCode];
+            [[FHHouseErrorHubManager sharedInstance] checkRequestResponseWithHost:urlStr requestParams:param responseStatus:response response:jsonObj analysisError:jsonParseError changeModelType:resultType errorHubType:FHErrorHubTypeRequest];
             
             if (completion) {
                 completion(error,total);

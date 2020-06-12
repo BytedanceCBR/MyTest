@@ -1083,6 +1083,13 @@
     //    [TTKitchen parseSettings:dSettings];
     // check了下settings里面的参数，目前项目中没有需要更新到TTKitchen的参数，但是还是先保守的保留此逻辑。
     [TTKitchen updateWithDictionary:dSettings];
+    
+    NSString *amapKey = [dSettings tta_stringForKey:@"lbs_amap_key"];
+    if (amapKey.length < 1) {
+        amapKey = [FHLocManager amapAPIKey];
+        [TTKitchen setString:amapKey forKey:@"lbs_amap_key"];
+    }
+    
 
     //头条认证展现配置
     if ([dSettings valueForKey:@"user_verify_info_conf"]) {

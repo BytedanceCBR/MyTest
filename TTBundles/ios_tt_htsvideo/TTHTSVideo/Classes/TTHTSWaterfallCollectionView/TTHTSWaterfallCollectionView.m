@@ -80,6 +80,7 @@
 #import <TTArticleBase/SSCommonLogic.h>
 #import <BDTSharedHeaders/SSCommonDefines.h>
 #import <TTBaseLib/TTUIResponderHelper.h>
+#import "FHUserTracker.h"
 
 #define kDefaultDismissDuration 2.0f
 #define kColumnSpacing 1
@@ -1551,7 +1552,8 @@ TTAccountMulticastProtocol
     [traceParams setValue:dictTraceData.shortVideoOriginalData.shortVideo.groupSource forKey:@"group_source"];
     [traceParams setValue:@(dictTraceData.cellType) ? : @"be_null" forKey:@"cell_type"];
 
-    [BDTrackerProtocol eventV3:@"client_show" params:traceParams];
+//    [BDTrackerProtocol eventV3:@"client_show" params:traceParams];
+    [FHUserTracker writeEvent:@"client_show" params:traceParams];
 }
 
 - (void)eventV3ForRefresh
