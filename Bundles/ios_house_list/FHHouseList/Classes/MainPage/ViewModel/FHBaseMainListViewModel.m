@@ -68,6 +68,7 @@
 #import <TTBaseLib/TTDeviceHelper.h>
 #import <FHHouseBase/FHRelevantDurationTracker.h>
 #import "FHHouseListBaseItemCell.h"
+#import "UIDevice+BTDAdditions.h"
 #import "FHHouseAgentCardCell.h"
 #import "FHHousReserveAdviserCell.h"
 #import "FHMainListTableView.h"
@@ -204,15 +205,15 @@ extern NSString *const INSTANT_DATA_KEY;
 - (Class)cellClassForEntity:(id)model {
 
     if ([model isKindOfClass:[FHSearchHouseItemModel class]]) {
-         FHSearchHouseItemModel *houseModel = (FHSearchHouseItemModel *)model;
-        if(houseModel.houseType.integerValue == FHHouseTypeNewHouse) {
+        FHSearchHouseItemModel *houseModel = (FHSearchHouseItemModel *)model;
             
         if (houseModel.cardType == FHSearchCardTypeAgentCard) {
             return [FHHouseAgentCardCell class];
         }
-            
-        if (houseModel.cellStyles ==6) {
-                 return [FHHouseListBaseItemCell class];
+        
+        if(houseModel.houseType.integerValue == FHHouseTypeNewHouse) {
+            if (houseModel.cellStyles ==6) {
+               return [FHHouseListBaseItemCell class];
             }
         }
         return [FHHouseBaseItemCell class];
@@ -430,6 +431,9 @@ extern NSString *const INSTANT_DATA_KEY;
         self.tableView.scrollEnabled = NO;
     }
     self.errorMaskView.hidden = !show;
+    if ([UIDevice btd_deviceWidthType] == BTDDeviceWidthMode320) {
+        self.topTagsView.hidden = show;
+    }
 }
 
 - (void)requestAddSubScribe:(NSString *)text

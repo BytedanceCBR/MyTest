@@ -139,18 +139,15 @@
 - (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
     //这里由于单击和长按都会触发这个方法，长按可能会导致黑屏的问题，所以这个只保留单击跳转，屏蔽长按的情况
     UITouch *touch = [touches anyObject];
-    BOOL hasLongPress = NO;
     
     for (UIGestureRecognizer *gesture in touch.gestureRecognizers) {
-        if([gesture isKindOfClass:[UILongPressGestureRecognizer class]]){
-            hasLongPress = YES;
-            break;
+        NSString *otherGesClsStr = NSStringFromClass([gesture class]);
+        if ([otherGesClsStr isEqualToString:@"UIScrollViewPanGestureRecognizer"] || [otherGesClsStr isEqualToString:@"UIScrollViewDelayedTouchesBeganGestureRecognizer"] || [gesture isKindOfClass:[UILongPressGestureRecognizer class]]) {
+            return;
         }
     }
     
-    if(!hasLongPress){
-        [self goToDetail];
-    }
+    [self goToDetail];
 }
 
 - (void)touchesEnded:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
