@@ -91,17 +91,18 @@
 //    }else{
 //        _homePageBtn.hitTestEdgeInsets = UIEdgeInsetsMake(-20, -20, -20, -20);
 //    }
-    self.loginBtn = [[UIButton alloc]init];
-    _loginBtn.backgroundColor = [UIColor themeWhite];
-    [_loginBtn setTitleColor:[UIColor themeOrange1] forState:UIControlStateNormal];
-    _loginBtn.titleLabel.font = [UIFont themeFontMedium:14];
-    _loginBtn.userInteractionEnabled = NO;
-    [_loginBtn setTitle:@"登录" forState:UIControlStateNormal];
-    _loginBtn.layer.cornerRadius = 22;
-    [self addSubview:_loginBtn];
-    
+    if ([FHEnvContext canShowLoginTip]) {
+        self.loginBtn = [[UIButton alloc]init];
+        _loginBtn.backgroundColor = [UIColor themeWhite];
+        [_loginBtn setTitleColor:[UIColor themeOrange1] forState:UIControlStateNormal];
+        _loginBtn.titleLabel.font = [UIFont themeFontMedium:14];
+        _loginBtn.userInteractionEnabled = NO;
+        [_loginBtn setTitle:@"登录" forState:UIControlStateNormal];
+        _loginBtn.layer.cornerRadius = 22;
+        [self addSubview:_loginBtn];
+        [self setDeaultShowTypeByLogin:NO];
+    }
     [self addSubview:_homePageBtn];
-    [self setDeaultShowTypeByLogin:NO];
 }
 
 - (void)setDeaultShowTypeByLogin:(BOOL)isLogin {

@@ -127,46 +127,12 @@
           }];
         _lynxView.layoutWidthMode = LynxViewSizeModeExact;
         _lynxView.layoutHeightMode = LynxViewSizeModeUndefined;
-        _lynxView.preferredLayoutWidth = screenFrame.size.width;
+        _lynxView.preferredLayoutWidth = _lynxViewFrame.size.width;
+        _lynxView.preferredMaxLayoutWidth = _lynxViewFrame.size.width;
+        _lynxView.preferredLayoutHeight = _lynxViewFrame.size.height;
+        _lynxView.preferredMaxLayoutHeight = _lynxViewFrame.size.height;
         _lynxView.client = self;
-        _lynxView.preferredMaxLayoutHeight = screenFrame.size.height;
         [_lynxView triggerLayout];
-        switch (self.widthMode) {
-            case FHLynxViewSizeModeUndefined:
-                _lynxView.layoutWidthMode = LynxViewSizeModeUndefined;
-                _lynxView.preferredMaxLayoutWidth = self.lynxViewFrame.size.width;
-                break;
-            case FHLynxViewSizeModeExact:
-                _lynxView.layoutWidthMode = LynxViewSizeModeExact;
-                _lynxView.preferredLayoutWidth = self.lynxViewFrame.size.width;
-                break;
-            case FHLynxViewSizeModeMax:
-                _lynxView.layoutWidthMode = FHLynxViewSizeModeMax;
-                _lynxView.preferredMaxLayoutWidth = self.lynxViewFrame.size.width;
-                break;
-            default:
-                _lynxView.layoutWidthMode = LynxViewSizeModeUndefined;
-                _lynxView.preferredMaxLayoutWidth = self.lynxViewFrame.size.width;
-                break;
-        }
-        switch (self.heightMode) {
-            case FHLynxViewSizeModeUndefined:
-                _lynxView.layoutHeightMode = LynxViewSizeModeUndefined;
-                _lynxView.preferredMaxLayoutHeight = self.lynxViewFrame.size.height;
-                break;
-            case FHLynxViewSizeModeExact:
-                _lynxView.layoutHeightMode = LynxViewSizeModeExact;
-                _lynxView.preferredLayoutHeight = self.lynxViewFrame.size.height;
-                break;
-            case FHLynxViewSizeModeMax:
-                _lynxView.layoutHeightMode = FHLynxViewSizeModeMax;
-                _lynxView.preferredMaxLayoutHeight = self.lynxViewFrame.size.width;
-                break;
-            default:
-                _lynxView.layoutHeightMode = LynxViewSizeModeUndefined;
-                _lynxView.preferredMaxLayoutHeight = self.lynxViewFrame.size.height;
-                break;
-        }
         _lynxView.frame = CGRectMake(0, 0, _lynxView.intrinsicContentSize.width, _lynxView.intrinsicContentSize.height);
     }
     return _lynxView;

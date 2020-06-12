@@ -850,7 +850,7 @@ static NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
                 };
             }else
             {
-                [noDataErrorView showEmptyWithTip:@"网络异常，请检查网络连接" errorImageName:@"group-9"
+                [noDataErrorView showEmptyWithTip:@"网络异常，请检查网络连接" errorImageName:@"group-4"
                                         showRetry:YES];
                 __weak typeof(self) weakSelf = self;
                 noDataErrorView.retryBlock = ^{
@@ -925,19 +925,6 @@ static NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
             }
             [cell refreshIndexCorner:(indexPath.row == 0) andLast:(indexPath.row == (self.houseDataItemsModel.count - 1) && !self.hasMore)];
             return cell;
-        }
-        
-        if (self.houseType == FHHouseTypeNewHouse) {
-                   //to do 房源cell
-               FHHouseBaseNewHouseCell *cell = [tableView dequeueReusableCellWithIdentifier:kCellNewHouseItemImageId];
-               cell.delegate = self;
-               if (indexPath.row < self.houseDataItemsModel.count) {
-                   JSONModel *model = self.houseDataItemsModel[indexPath.row];
-                   [cell refreshTopMargin:([TTDeviceHelper is896Screen3X] || [TTDeviceHelper is896Screen2X]) ? 4 : 0];
-                   [cell updateHomeNewHouseCellModel:model];
-               }
-               [cell refreshIndexCorner:(indexPath.row == 0) andLast:(indexPath.row == (self.houseDataItemsModel.count - 1) && !self.hasMore)];
-               return cell;
         }
         
         if (self.houseType == FHHouseTypeSecondHandHouse) {
@@ -1035,7 +1022,7 @@ static NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
         [self jumpToDetailPage:indexPath];
         if(self.houseDataItemsModel.count > indexPath.row){
             FHHomeHouseDataItemsModel *theModel = self.houseDataItemsModel[indexPath.row];
-                if (self.houseType == FHHouseTypeSecondHandHouse &&theModel.houseType.integerValue != FHHouseTypeNewHouse) {
+                if (self.houseType == FHHouseTypeSecondHandHouse &&theModel.houseType.integerValue != FHHouseTypeNewHouse && [theModel.cardType integerValue] != kFHHomeAgentCardType) {
                     [[FHRelevantDurationTracker sharedTracker] beginRelevantDurationTracking];
              }
         }

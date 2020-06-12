@@ -383,6 +383,7 @@
     _icon.layer.shadowOffset = CGSizeMake(5, 5);
     _icon.layer.shadowOpacity = 1;
     _icon.image = [UIImage imageNamed:@"default_image"];
+    _icon.contentMode = UIViewContentModeScaleAspectFill;
     [self.contentView addSubview:_icon];
 
     _houseVideoImageView = [[UIImageView alloc] init];
