@@ -170,7 +170,7 @@ static const NSString *kDefaultTopFilterStatus = @"-1";
             {
                 self.floorListTable.hidden = NO;
                 self.segmentedControl.hidden = NO;
-                
+                [wSelf.navBar showMessageNumber];
                 [wSelf.detailController.emptyView hideEmptyView];
                 wSelf.detailController.hasValidateData = YES;
                 [wSelf processDetailData:model];

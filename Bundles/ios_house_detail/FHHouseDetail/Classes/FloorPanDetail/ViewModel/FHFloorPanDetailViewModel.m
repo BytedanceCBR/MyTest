@@ -130,6 +130,7 @@
         [FHHouseDetailAPI requestFloorPanDetailCoreInfoSearch:_floorPanId completion:^(FHDetailFloorPanDetailInfoModel * _Nullable model, NSError * _Nullable error) {
             if(model.data && !error)
             {
+                [wSelf.navBar showMessageNumber];
                 [wSelf.detailController.emptyView hideEmptyView];
                 wSelf.detailController.hasValidateData = YES;
                 [wSelf processDetailData:model];

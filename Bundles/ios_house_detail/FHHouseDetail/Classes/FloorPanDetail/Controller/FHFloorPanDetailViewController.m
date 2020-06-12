@@ -50,7 +50,7 @@
     [self addDefaultEmptyViewFullScreen];
 
     _coreInfoListViewModel = [[FHFloorPanDetailViewModel alloc] initWithController:self tableView:_infoListTable floorPanId:_floorPanId];
-    
+    _coreInfoListViewModel.navBar = navbar;
     self.coreInfoListViewModel.detailTracerDic = [self makeDetailTracerData];
     
     [_coreInfoListViewModel addGoDetailLog];
