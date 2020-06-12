@@ -886,7 +886,7 @@
                 FHHouseDetailImageGroupModel *existGroupModel = pictsArray[index];
                 existGroupModel.images = [[NSArray arrayWithArray:existGroupModel.images] arrayByAddingObjectsFromArray:groupModel.images];
             } else {
-                [pictsArray addObject:groupModel];
+                [pictsArray addObject:groupModel.copy];
             }
         }
     }
