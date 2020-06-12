@@ -45,10 +45,10 @@
     [self addSubview:_titleLabel];
     
     // 视频 图片title
-    CGFloat videoTitleWidth = 102; //  34 * 3
-    CGFloat leftOffset = ([UIScreen mainScreen].bounds.size.width - videoTitleWidth) / 2;
-    _videoTitle = [[FHDetailVideoTitle alloc] initWithFrame:CGRectMake(leftOffset, 10, 102, 34)];
-    [self addSubview:_videoTitle];
+//    CGFloat videoTitleWidth = 102; //  34 * 3
+//    CGFloat leftOffset = ([UIScreen mainScreen].bounds.size.width - videoTitleWidth) / 2;
+//    _videoTitle = [[FHDetailVideoTitle alloc] initWithFrame:CGRectMake(leftOffset, 10, 102, 34)];
+//    [self addSubview:_videoTitle];
     
     _albumBtn = [UIButton buttonWithType:UIButtonTypeCustom];
     [_albumBtn setTitle:@"全部图片" forState:UIControlStateNormal];
@@ -59,14 +59,14 @@
     [self addSubview:_albumBtn];
 
     // 默认无视频
-    self.hasVideo = NO;
+//    self.hasVideo = NO;
 }
 
-- (void)setHasVideo:(BOOL)hasVideo {
-    _hasVideo = hasVideo;
-    _titleLabel.hidden = hasVideo;
-    _videoTitle.hidden = !hasVideo;
-}
+//- (void)setHasVideo:(BOOL)hasVideo {
+//    _hasVideo = hasVideo;
+//    _titleLabel.hidden = hasVideo;
+//    _videoTitle.hidden = !hasVideo;
+//}
 
 - (void)setShowAlbum:(BOOL)showAlbum
 {

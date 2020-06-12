@@ -49,6 +49,10 @@
     [self processImagesList];
 }
 
+- (BOOL)automaticallyAdjustsScrollViewInsets {
+    return NO;
+}
+
 - (void)dealloc {
     [[UIApplication sharedApplication] setStatusBarStyle:_lastStatusBarStyle];
 }
@@ -94,10 +98,10 @@
     }
     UIEdgeInsets contentInset = self.collectionView.contentInset;
     if (self.bottomBar) {
-        [self.bottomBar mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.height.mas_equalTo(80 + bottomInset);
+        [self.bottomBar mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.height.mas_equalTo(64 + bottomInset);
         }];
-        contentInset.bottom = 20 + bottomInset + 80;
+        contentInset.bottom = 20 + bottomInset + 64;
     } else {
         contentInset.bottom = 20 + bottomInset;
     }
@@ -107,7 +111,8 @@
 - (UIButton *)onlineBtn {
     if (!_onlineBtn) {
         _onlineBtn = [[UIButton alloc] init];
-        _onlineBtn.layer.cornerRadius = 10;
+        _onlineBtn.layer.cornerRadius = 20;
+        _onlineBtn.layer.masksToBounds = YES;
         _onlineBtn.titleLabel.font = [UIFont themeFontRegular:16];
         _onlineBtn.backgroundColor = [UIColor colorWithHexStr:@"#ff9629"];
         [_onlineBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
@@ -123,7 +128,8 @@
 - (FHLoadingButton *)contactBtn {
     if (!_contactBtn) {
         _contactBtn = [[FHLoadingButton alloc]init];
-        _contactBtn.layer.cornerRadius = 10;
+        _contactBtn.layer.cornerRadius = 20;
+        _contactBtn.layer.masksToBounds = YES;
         _contactBtn.titleLabel.font = [UIFont themeFontRegular:16];
         _contactBtn.backgroundColor = [UIColor colorWithHexStr:@"#fe5500"];
         [_contactBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
@@ -204,35 +210,37 @@
     [_collectionView setBackgroundColor:[UIColor whiteColor]];
     
     if (self.contactViewModel) {
-        self.bottomBar = [[UIView alloc] initWithFrame:CGRectMake(0, CGRectGetHeight(self.view.bounds) - 80, CGRectGetWidth(self.view.bounds), 80)];
+        // lead_show 埋点
+        [self addLeadShowLog:self.contactViewModel.contactPhone baseParams:[self.contactViewModel baseParams]];
+        self.bottomBar = [[UIView alloc] initWithFrame:CGRectMake(0, CGRectGetHeight(self.view.bounds) - 64, CGRectGetWidth(self.view.bounds), 64)];
         self.bottomBar.backgroundColor = [UIColor whiteColor];
         [self.view addSubview:self.bottomBar];
         [self.bottomBar mas_makeConstraints:^(MASConstraintMaker *make) {
             make.left.right.mas_equalTo(0);
-            make.height.mas_equalTo(80);
+            make.height.mas_equalTo(64);
             make.bottom.mas_equalTo(0);
         }];
         
         BOOL showenOnline = self.contactViewModel.showenOnline;
         CGFloat itemWidth = CGRectGetWidth(self.view.bounds) - 30;
         if (showenOnline) {
-            itemWidth = (itemWidth - 15) / 2.0;
+            itemWidth = (itemWidth - 13) / 2.0;
             // 在线联系
             NSString *title = @"在线联系";
             if (self.contactViewModel.onLineName.length > 0) {
                 title = self.contactViewModel.onLineName;
             }
-            NSMutableAttributedString *buttonTitle = [[NSMutableAttributedString alloc] initWithString:title?:@"" attributes:@{NSFontAttributeName : [UIFont themeFontSemibold:16], NSForegroundColorAttributeName : [UIColor whiteColor]}];
-            [buttonTitle appendAttributedString:[[NSAttributedString alloc] initWithString:@"\n线上联系更方便" attributes:@{NSFontAttributeName : [UIFont themeFontRegular:10], NSForegroundColorAttributeName : [UIColor whiteColor]}]];
+            NSMutableAttributedString *buttonTitle = [[NSMutableAttributedString alloc] initWithString:title?:@"" attributes:@{NSFontAttributeName : [UIFont themeFontRegular:16], NSForegroundColorAttributeName : [UIColor whiteColor]}];
+//            [buttonTitle appendAttributedString:[[NSAttributedString alloc] initWithString:@"\n线上联系更方便" attributes:@{NSFontAttributeName : [UIFont themeFontRegular:10], NSForegroundColorAttributeName : [UIColor whiteColor]}]];
             self.onlineBtn.titleLabel.numberOfLines = 0;
             [self.onlineBtn setAttributedTitle:buttonTitle.copy forState:UIControlStateNormal];
 
             [self.bottomBar addSubview:self.onlineBtn];
             [self.onlineBtn mas_makeConstraints:^(MASConstraintMaker *make) {
                 make.left.mas_equalTo(15);
-                make.top.mas_equalTo(14);
+                make.top.mas_equalTo(12);
                 make.width.mas_equalTo(itemWidth);
-                make.height.mas_equalTo(48);
+                make.height.mas_equalTo(40);
             }];
             
             // 电话咨询
@@ -240,13 +248,13 @@
             if (self.contactViewModel.phoneCallName.length > 0) {
                 photoTitle = self.contactViewModel.phoneCallName;
             }
-            NSMutableAttributedString *buttonPhoneTitle = [[NSMutableAttributedString alloc] initWithString:photoTitle?:@"" attributes:@{NSFontAttributeName : [UIFont themeFontSemibold:16], NSForegroundColorAttributeName : [UIColor whiteColor]}];
-            [buttonPhoneTitle appendAttributedString:[[NSAttributedString alloc] initWithString:@"\n隐私保护更安全" attributes:@{NSFontAttributeName : [UIFont themeFontRegular:10], NSForegroundColorAttributeName : [UIColor whiteColor]}]];
+            NSMutableAttributedString *buttonPhoneTitle = [[NSMutableAttributedString alloc] initWithString:photoTitle?:@"" attributes:@{NSFontAttributeName : [UIFont themeFontRegular:16], NSForegroundColorAttributeName : [UIColor whiteColor]}];
+//            [buttonPhoneTitle appendAttributedString:[[NSAttributedString alloc] initWithString:@"\n隐私保护更安全" attributes:@{NSFontAttributeName : [UIFont themeFontRegular:10], NSForegroundColorAttributeName : [UIColor whiteColor]}]];
             self.contactBtn.titleLabel.numberOfLines = 0;
             [self.contactBtn setAttributedTitle:buttonPhoneTitle.copy forState:UIControlStateNormal];
             [self.bottomBar addSubview:self.contactBtn];
             [self.contactBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-                make.right.mas_equalTo(-15);
+                make.right.mas_equalTo(-16);
                 make.top.mas_equalTo(self.onlineBtn.mas_top);
                 make.width.mas_equalTo(self.onlineBtn.mas_width);
                 make.height.mas_equalTo(self.onlineBtn.mas_height);
@@ -257,17 +265,17 @@
             if (self.contactViewModel.phoneCallName.length > 0) {
                 photoTitle = self.contactViewModel.phoneCallName;
             }
-            NSMutableAttributedString *buttonPhoneTitle = [[NSMutableAttributedString alloc] initWithString:photoTitle?:@"" attributes:@{NSFontAttributeName : [UIFont themeFontSemibold:16], NSForegroundColorAttributeName : [UIColor whiteColor]}];
-            [buttonPhoneTitle appendAttributedString:[[NSAttributedString alloc] initWithString:@"\n隐私保护更安全" attributes:@{NSFontAttributeName : [UIFont themeFontRegular:10], NSForegroundColorAttributeName : [UIColor whiteColor]}]];
+            NSMutableAttributedString *buttonPhoneTitle = [[NSMutableAttributedString alloc] initWithString:photoTitle?:@"" attributes:@{NSFontAttributeName : [UIFont themeFontRegular:16], NSForegroundColorAttributeName : [UIColor whiteColor]}];
+//            [buttonPhoneTitle appendAttributedString:[[NSAttributedString alloc] initWithString:@"\n隐私保护更安全" attributes:@{NSFontAttributeName : [UIFont themeFontRegular:10], NSForegroundColorAttributeName : [UIColor whiteColor]}]];
             self.contactBtn.titleLabel.numberOfLines = 0;
             [self.contactBtn setAttributedTitle:buttonPhoneTitle.copy forState:UIControlStateNormal];
-
+            self.contactBtn.backgroundColor = [UIColor colorWithHexStr:@"#ff9629"];
             [self.bottomBar addSubview:self.contactBtn];
             [self.contactBtn mas_makeConstraints:^(MASConstraintMaker *make) {
                 make.left.mas_equalTo(15);
-                make.top.mas_equalTo(14);
+                make.top.mas_equalTo(12);
                 make.width.mas_equalTo(itemWidth);
-                make.height.mas_equalTo(48);
+                make.height.mas_equalTo(40);
             }];
         }
     }
@@ -297,7 +305,7 @@
     NSInteger titleIndex = 0;
     
     for (int i = 0; i < self.pictsArray.count; i++) {
-        FHDetailNewDataSmallImageGroupModel *smallImageGroupModel = self.pictsArray[i];
+        FHHouseDetailImageGroupModel *smallImageGroupModel = self.pictsArray[i];
         NSInteger tempCount = smallImageGroupModel.images.count;
         count += tempCount;
         if (toIndex < count) {
@@ -331,24 +339,6 @@
 //    [self.mainCollectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:titleIndex] atScrollPosition:UICollectionViewScrollPositionBottom animated:YES];
 }
 
-//- (void)scrollToSegmentView {
-//    NSIndexPath *indexPath = [self.collectionView indexPathForItemAtPoint:self.collectionView.contentOffset];
-//
-//    if (self.lastIndexPath.section != indexPath.section) {
-//        self.lastIndexPath = indexPath;
-//        if (indexPath.section < self.pictsArray.count) {
-//            NSInteger currentIndex = 0;
-//            for (int i = 0; i < indexPath.section; i++) {
-//                FHDetailNewDataSmallImageGroupModel *smallImageGroupModel = self.pictsArray[i];
-//                currentIndex += smallImageGroupModel.images.count;
-//            }
-//            if (self.segmentTitleView) {
-//                self.segmentTitleView.selectIndex = currentIndex;
-//            }
-//        }
-//    }
-//}
-
 - (void)processImagesList {
     NSMutableArray *smallImageGroup = [NSMutableArray array];
 
@@ -356,14 +346,14 @@
     NSMutableArray *numbers = [NSMutableArray array];
     
     for (FHDetailNewTopImage *topImage in self.topImages) {
-        FHDetailNewDataSmallImageGroupModel *smallImageGroupModel = [[FHDetailNewDataSmallImageGroupModel alloc] init];
+        FHHouseDetailImageGroupModel *smallImageGroupModel = [[FHHouseDetailImageGroupModel alloc] init];
         smallImageGroupModel.type = [@(topImage.type) stringValue];
         smallImageGroupModel.name = topImage.name;
         
         NSInteger tempCount = 0;
         
         NSMutableArray *smallImageList = [NSMutableArray array];
-        for (FHDetailNewDataImageGroupModel * groupModel in topImage.smallImageGroup) {
+        for (FHHouseDetailImageGroupModel * groupModel in topImage.smallImageGroup) {
             for (NSInteger j = 0; j < groupModel.images.count; j++) {
                 [smallImageList addObject:groupModel.images[j]];
                 tempCount += 1;
@@ -395,9 +385,7 @@
 // 电话咨询点击
 - (void)contactButtonClick:(UIButton *)btn {
     if (self.contactViewModel) {
-        if (self.tracerDict) {
-            self.contactViewModel.tracerDict = self.tracerDict.copy;
-        }
+
         NSMutableDictionary *extraDic = @{
             @"realtor_position":@"phone_button",
             @"position":@"report_button",
@@ -423,9 +411,6 @@
 // 在线联系点击
 - (void)onlineButtonClick:(UIButton *)btn {
     if (self.contactViewModel) {
-        if (self.tracerDict) {
-            self.contactViewModel.tracerDict = self.tracerDict.copy;
-        }
         NSMutableDictionary *extraDic = @{}.mutableCopy;
         extraDic[@"realtor_position"] = @"online";
         extraDic[@"position"] = @"online";
@@ -451,8 +436,8 @@
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
 {
     if (section < self.pictsArray.count) {
-        FHDetailNewDataSmallImageGroupModel *groupModel = self.pictsArray[section];
-        if ([groupModel isKindOfClass:[FHDetailNewDataSmallImageGroupModel class]]) {
+        FHHouseDetailImageGroupModel *groupModel = self.pictsArray[section];
+        if ([groupModel isKindOfClass:[FHHouseDetailImageGroupModel class]]) {
             return groupModel.images.count;
         }
     }
@@ -462,8 +447,8 @@
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
     FHFloorPanPicCollectionCell *cell =[collectionView dequeueReusableCellWithReuseIdentifier:NSStringFromClass([FHFloorPanPicCollectionCell class]) forIndexPath:indexPath];
     if (indexPath.section < self.pictsArray.count) {
-        FHDetailNewDataSmallImageGroupModel *groupModel = self.pictsArray[indexPath.section];
-        if ([groupModel isKindOfClass:[FHDetailNewDataSmallImageGroupModel class]] && groupModel.images.count > indexPath.row) {
+        FHHouseDetailImageGroupModel *groupModel = self.pictsArray[indexPath.section];
+        if ([groupModel isKindOfClass:[FHHouseDetailImageGroupModel class]] && groupModel.images.count > indexPath.row) {
             cell.dataModel = groupModel.images[indexPath.row];
         }
     }
@@ -513,7 +498,7 @@
         FHPictureListTitleCollectionView *titleView = (FHPictureListTitleCollectionView *)[collectionView dequeueReusableSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:NSStringFromClass([FHPictureListTitleCollectionView class]) forIndexPath:indexPath];
         if (self.pictsArray.count > indexPath.section) {
 
-           FHDetailNewDataSmallImageGroupModel *groupModel = self.pictsArray[indexPath.section];
+           FHHouseDetailImageGroupModel *groupModel = self.pictsArray[indexPath.section];
             if([groupModel.name length] > 0) {
                 if ([groupModel.type isEqualToString:@"2"]) {
                     //户型图后面不带计数
@@ -543,7 +528,7 @@
       
         for (NSInteger i = 0; i <= indexPath.section; i++) {
             if (i < indexPath.section) {
-                FHDetailNewDataSmallImageGroupModel *groupModel = self.pictsArray[i];
+                FHHouseDetailImageGroupModel *groupModel = self.pictsArray[i];
                 total += groupModel.images.count;
             }else
             {
@@ -577,7 +562,7 @@
         if (indexPath.section < self.pictsArray.count) {
             NSInteger currentIndex = 0;
             for (int i = 0; i < indexPath.section; i++) {
-                FHDetailNewDataSmallImageGroupModel *smallImageGroupModel = self.pictsArray[i];
+                FHHouseDetailImageGroupModel *smallImageGroupModel = self.pictsArray[i];
                 currentIndex += smallImageGroupModel.images.count;
             }
             if (self.segmentTitleView) {
@@ -613,6 +598,19 @@
     [super viewDidDisappear:animated];
     if (self.albumImageStayBlock) {
         self.albumImageStayBlock(0,self.ttTrackStayTime);
+    }
+}
+
+- (void)addLeadShowLog:(FHDetailContactModel *)contactPhone baseParams:(NSDictionary *)dic
+{
+    if (dic && [dic isKindOfClass:[NSDictionary class]]) {
+        NSMutableDictionary *tracerDic = dic.mutableCopy;
+        tracerDic[@"is_im"] = contactPhone.imOpenUrl.length ? @"1" : @"0";
+        tracerDic[@"is_call"] = contactPhone.phone.length < 1 ? @"0" : @"1";
+        tracerDic[@"is_report"] = contactPhone.phone.length < 1 ? @"1" : @"0";
+        tracerDic[@"is_online"] = contactPhone.unregistered ? @"1" : @"0";
+        tracerDic[@"element_from"] = [self elementFrom];
+        TRACK_EVENT(@"lead_show", tracerDic);
     }
 }
 

@@ -7,9 +7,7 @@
 
 #import "FHPostDetailCell.h"
 #import "UIImageView+BDWebImage.h"
-#import "FHUGCCellHeaderView.h"
 #import "FHUGCCellUserInfoView.h"
-#import "FHUGCCellBottomView.h"
 #import "FHUGCCellMultiImageView.h"
 #import "FHUGCCellHelper.h"
 #import "FHCommentBaseDetailViewModel.h"
@@ -71,7 +69,7 @@
 }
 
 - (void)setupViews {
-    self.userInfoView = [[FHUGCCellUserInfoView alloc] initWithFrame:CGRectZero];
+    self.userInfoView = [[FHUGCCellUserInfoView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, userInfoViewHeight)];
     [self.contentView addSubview:_userInfoView];
     __weak typeof(self) weakSelf = self;
     self.userInfoView.deleteCellBlock = ^{
@@ -121,7 +119,7 @@
     [_position setContentCompressionResistancePriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisHorizontal];
     [_positionView addSubview:_position];
     
-    self.originView = [[FHUGCCellOriginItemView alloc] initWithFrame:CGRectZero];
+    self.originView = [[FHUGCCellOriginItemView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width - leftMargin - rightMargin, 80)];
     _originView.hidden = YES;
     _originView.goToLinkBlock = ^(FHFeedUGCCellModel * _Nonnull cellModel, NSURL * _Nonnull url) {
         if(weakSelf.delegate && [weakSelf.delegate respondsToSelector:@selector(gotoLinkUrl:url:)]){
@@ -133,7 +131,7 @@
     UITapGestureRecognizer* singleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(gotoCommunityDetail)];
     [self.positionView addGestureRecognizer:singleTap];
     
-    self.attachCardView = [[FHUGCCellAttachCardView alloc] initWithFrame:CGRectZero];
+    self.attachCardView = [[FHUGCCellAttachCardView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width - leftMargin - rightMargin, attachCardViewHeight)];
     _attachCardView.hidden = YES;
     [self.contentView addSubview:_attachCardView];
     
@@ -313,11 +311,12 @@
     self.hasAttachCard = cellModel.attachCardInfo != nil;
     [self setupUIs];
     // 设置userInfo
-    self.userInfoView.cellModel = cellModel;
-    self.userInfoView.userName.text = !isEmptyString(cellModel.user.name) ? cellModel.user.name : @"用户";
-    [self.userInfoView updateDescLabel];
-    [self.userInfoView updateEditState];
-    [self.userInfoView.icon bd_setImageWithURL:[NSURL URLWithString:cellModel.user.avatarUrl] placeholder:[UIImage imageNamed:@"fh_mine_avatar"]];
+    [self.userInfoView refreshWithData:cellModel];
+//    self.userInfoView.cellModel = cellModel;
+//    self.userInfoView.userName.text = !isEmptyString(cellModel.user.name) ? cellModel.user.name : @"用户";
+//    [self.userInfoView updateDescLabel];
+//    [self.userInfoView updateEditState];
+//    [self.userInfoView.icon bd_setImageWithURL:[NSURL URLWithString:cellModel.user.avatarUrl] placeholder:[UIImage imageNamed:@"fh_mine_avatar"]];
     // 内容
     if(isEmptyString(cellModel.content)){
         self.contentLabel.hidden = YES;

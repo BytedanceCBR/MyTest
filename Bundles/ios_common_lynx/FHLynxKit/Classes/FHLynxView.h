@@ -34,7 +34,8 @@ typedef void (^FHLynxViewBridgeHandler)(id container, NSString *name, NSDictiona
 @property (nonatomic, copy) NSString * bundle;
 @property (nonatomic, copy) NSString * fallbackSchema;
 @property (nonatomic, copy) id initialProperties;
-
+@property (nonatomic, weak) id bridgePrivate;
+@property (nonatomic, assign) Class clsPrivate;
 @end
 
 

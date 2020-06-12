@@ -35,6 +35,12 @@ NS_ASSUME_NONNULL_END
 @property (nonatomic, strong, nullable) FHClueAssociateInfoModel *houseImageAssociateInfo;
 @property (nonatomic, assign) BOOL isShowTopImageTab;
 
-@property (nonatomic, copy) NSArray<FHDetailNewDataSmallImageGroupModel> *smallImageGroup; //新房头图进入图片列表页datasource
+//新房头图进入图片列表页datasource
+@property (nonatomic, copy) NSArray<FHHouseDetailImageGroupModel> *smallImageGroup;
+
+//1.0.0 新增楼盘相册页线索
+@property (nonatomic, strong , nullable) FHClueAssociateInfoModel *imageAlbumAssociateInfo;
+/// 合并，组合，处理
+- (NSArray *)processTopImagesToSmallImageGroups;
 
 @end

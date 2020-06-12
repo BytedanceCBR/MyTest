@@ -14,6 +14,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property(nonatomic , strong , readonly) UITableView *tableView;
 @property(nonatomic , strong, readonly) UIView *containerView;
+@property(nonatomic , assign) BOOL iskeyBoardVisible;
+@property(nonatomic , assign) BOOL iskeyBoardShowing;
+@property(nonatomic , assign) CGFloat originY;
 
 - (void)refreshContentOffset:(CGPoint)contentOffset;
 

@@ -273,6 +273,8 @@
 
 @property(nonatomic, strong) UILabel *imageTagLabel;
 @property(nonatomic, strong) FHSameHouseTagView *imageTagLabelBgView;
+@property (nonatomic, strong) UIImageView *topLeftTagImageView;
+@property (nonatomic, strong) CAShapeLayer *topLeftTagMaskLayer;
 
 @property (nonatomic, strong) UIImageView *imageBacView;
 @end
@@ -308,13 +310,16 @@
             self.icon.image = [UIImage imageNamed:@"default_image"];
         }
         
-        if (model.houseImageTag.text) {
-            self.imageTagLabel.textColor = [UIColor whiteColor];
-            self.imageTagLabel.text = model.houseImageTag.text;
-            self.imageTagLabelBgView.backgroundColor = [UIColor colorWithHexStr:@"#f3ae0c"];
-            self.imageTagLabelBgView.hidden = NO;
-        }else {
-            self.imageTagLabelBgView.hidden = YES;
+        //当企业担保和降价房源同时存在时，优先展示企业担保标签
+        if (!model.tagImage || !model.tagImage.count) {
+            if (model.houseImageTag.text) {
+                self.imageTagLabel.textColor = [UIColor whiteColor];
+                self.imageTagLabel.text = model.houseImageTag.text;
+                self.imageTagLabelBgView.backgroundColor = [UIColor colorWithHexStr:@"#f3ae0c"];
+                self.imageTagLabelBgView.hidden = NO;
+            }else {
+                self.imageTagLabelBgView.hidden = YES;
+            }
         }
         
         self.houseVideoImageView.hidden = !model.houseVideo.hasVideo;
@@ -329,6 +334,29 @@
         self.descLabel.attributedText = attributeText;
         self.priceLabel.text = model.displayPrice;
         self.spaceLabel.text = model.displayPricePerSqm;
+        
+        //企业担保标签
+        if (model.tagImage && model.tagImage.count > 0) {
+            FHImageModel *imageModel = model.tagImage.firstObject;
+            if (!imageModel.url.length) {
+                return;
+            }
+            
+            [self.topLeftTagImageView bd_setImageWithURL:[NSURL URLWithString:imageModel.url]];
+            
+            CGFloat width = [imageModel.width floatValue];
+            CGFloat height = [imageModel.height floatValue];
+            [self.topLeftTagImageView mas_updateConstraints:^(MASConstraintMaker *make) {
+                make.width.mas_equalTo(width > 0.0 ? width : 60);
+            }];
+            [self.topLeftTagImageView mas_updateConstraints:^(MASConstraintMaker *make) {
+                make.height.mas_equalTo(height > 0.0 ? height : 20);
+            }];
+            
+            self.topLeftTagImageView.hidden = NO;
+        } else {
+            self.topLeftTagImageView.hidden = YES;
+        }
     }
     [self layoutIfNeeded];
 }
@@ -355,6 +383,7 @@
     _icon.layer.shadowOffset = CGSizeMake(5, 5);
     _icon.layer.shadowOpacity = 1;
     _icon.image = [UIImage imageNamed:@"default_image"];
+    _icon.contentMode = UIViewContentModeScaleAspectFill;
     [self.contentView addSubview:_icon];
 
     _houseVideoImageView = [[UIImageView alloc] init];
@@ -426,6 +455,29 @@
         make.height.mas_equalTo(22);
         make.top.mas_equalTo(self.spaceLabel.mas_bottom).offset(8);
     }];
+    
+    [self.icon addSubview:self.topLeftTagImageView];
+    [self.topLeftTagImageView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.top.equalTo(self.icon);
+        make.size.mas_equalTo(CGSizeMake(60, 20));
+    }];
+}
+
+- (void)layoutSubviews {
+    [super layoutSubviews];
+    
+    //图片圆角
+    if (!CGRectEqualToRect(self.topLeftTagImageView.frame, CGRectZero)) {
+        if (!_topLeftTagMaskLayer || !CGSizeEqualToSize(_topLeftTagMaskLayer.frame.size, self.topLeftTagImageView.frame.size)) {
+            UIBezierPath *maskPath = [UIBezierPath bezierPathWithRoundedRect:self.topLeftTagImageView.bounds
+                                                           byRoundingCorners:UIRectCornerTopLeft | UIRectCornerBottomRight
+                                                                 cornerRadii:CGSizeMake(10, 10)];
+            _topLeftTagMaskLayer = [[CAShapeLayer alloc] init];
+            _topLeftTagMaskLayer.frame = self.topLeftTagImageView.bounds;
+            _topLeftTagMaskLayer.path = maskPath.CGPath;
+            self.topLeftTagImageView.layer.mask = _topLeftTagMaskLayer;
+        }
+    }
 }
 
 - (UILabel *)imageTagLabel
@@ -447,6 +499,15 @@
         _imageTagLabelBgView.hidden = YES;
     }
     return _imageTagLabelBgView;
+}
+
+- (UIImageView *)topLeftTagImageView {
+    if (!_topLeftTagImageView) {
+        _topLeftTagImageView = [[UIImageView alloc] init];
+        _topLeftTagImageView.hidden = YES;
+    }
+    
+    return _topLeftTagImageView;
 }
 
 @end

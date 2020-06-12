@@ -75,4 +75,11 @@
     [listener didLogout];
 }
 
+/// 用户帐号会话过期，按登出处理
+/// @param error 过期原因
+- (void)onAccountSessionExpired:(NSError *)error {
+    id<AccountStatusListener> listener = _observerMulticast;
+    [listener didLogout];
+}
+
 @end

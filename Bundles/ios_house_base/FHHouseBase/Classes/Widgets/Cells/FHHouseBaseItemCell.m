@@ -68,6 +68,9 @@
 @property(nonatomic, strong) UIView *maskVRImageView;
 @property(nonatomic, strong) UIView *houseMainImageBackView;
 
+@property(nonatomic, strong) UIImageView *topLeftTagImageView;  //企业担保图标
+@property(nonatomic, strong) CAShapeLayer *topLeftTagMaskLayer;
+
 @property(nonatomic, strong) UIView *rightInfoView;
 @property(nonatomic, strong) UILabel *mainTitleLabel; //主title lable
 @property(nonatomic, strong) UILabel *subTitleLabel; // sub title lable
@@ -291,6 +294,14 @@
         layer.shadowOpacity = 0.2;
     }
     return _houseMainImageBackView;
+}
+
+- (UIImageView *)topLeftTagImageView {
+    if (!_topLeftTagImageView) {
+        _topLeftTagImageView = [[UIImageView alloc] init];
+    }
+    
+    return _topLeftTagImageView;
 }
 
 -(LOTAnimationView *)vrLoadingView
@@ -563,6 +574,18 @@
         layout.left = YGPointValue(MAIN_SMALL_IMG_LEFT);
         layout.width = YGPointValue(MAIN_SMALL_IMG_WIDTH);
         layout.height = YGPointValue(MAIN_SMALL_IMG_HEIGHT);
+    }];
+    
+    //企业担保图标，加到mainImageView上
+    [_mainImageView addSubview:self.topLeftTagImageView];
+    
+    [self.topLeftTagImageView configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
+        layout.isEnabled = YES;
+        layout.position = YGPositionTypeAbsolute;
+        layout.left = YGPointValue(0);
+        layout.top = YGPointValue(0);
+        layout.width = YGPointValue(48);
+        layout.height = YGPointValue(16);
     }];
     
     [self.houseMainImageBackView configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
@@ -1146,6 +1169,10 @@
             }];
         }
         [self.mainTitleLabel.yoga markDirty];
+        [self.subTitleLabel.yoga markDirty];
+        
+        //企业担保标签
+        [self configTopLeftTagWithTagImages:commonModel.tagImage];
     } else if (houseType == FHHouseTypeRentHouse) {
         _mainTitleLabel.numberOfLines = 2;
         self.mainTitleLabel.text = commonModel.title;
@@ -1235,6 +1262,8 @@
         self.pricePerSqmLabel.attributedText = [[NSAttributedString alloc]initWithString:(model.displayPricePerSqm.length>0?model.displayPricePerSqm:@"") attributes:@{NSStrikethroughStyleAttributeName:@(NSUnderlineStyleNone)}];
     }
     
+    //企业担保标签
+    [self configTopLeftTagWithTagImages:model.tagImage];
     
     self.tagTitleLabel.hidden = YES;
     [self.mainTitleLabel configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
@@ -1451,6 +1480,9 @@
             }
             [self.mainTitleLabel.yoga markDirty];
             [self updateSamllTitlesLayout:attributeString.length > 0];
+            
+            //企业担保标签，tag_image字段下发
+            [self configTopLeftTagWithTagImages:commonModel.tagImage];
         } else if (houseType == FHHouseTypeRentHouse) {
             
             self.tagLabel.attributedText =  attributeString;
@@ -1918,6 +1950,48 @@
     }
     if (dirty) {
         [self.contentView.yoga applyLayoutPreservingOrigin:NO];
+    }
+}
+
+- (void)configTopLeftTagWithTagImages:(NSArray<FHImageModel> *)tagImages {
+    if (tagImages.count > 0) {
+        FHImageModel *tagImageModel = tagImages.firstObject;
+        if (!tagImageModel.url.length) {
+            return;
+        }
+        
+        NSURL *imageUrl = [NSURL URLWithString:tagImageModel.url];
+        [self.topLeftTagImageView bd_setImageWithURL:imageUrl];
+        CGFloat width = [tagImageModel.width floatValue];
+        CGFloat height = [tagImageModel.height floatValue];
+        [self.topLeftTagImageView configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
+            layout.width = YGPointValue(width > 0.0 ? width : 48);
+        }];
+        [self.topLeftTagImageView configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
+            layout.height = YGPointValue(height > 0.0 ? height : 15);
+        }];
+        
+        self.topLeftTagImageView.hidden = NO;
+        [self.topLeftTagImageView.yoga markDirty];
+    }else {
+        self.topLeftTagImageView.hidden = YES;
+    }
+}
+
+- (void)layoutSubviews {
+    [super layoutSubviews];
+    
+    //图片圆角
+    if (!CGRectEqualToRect(self.topLeftTagImageView.frame, CGRectZero)) {
+        if (!_topLeftTagMaskLayer || !CGSizeEqualToSize(_topLeftTagMaskLayer.frame.size, self.topLeftTagImageView.frame.size)) {
+            UIBezierPath *maskPath = [UIBezierPath bezierPathWithRoundedRect:self.topLeftTagImageView.bounds
+                                                           byRoundingCorners:UIRectCornerTopLeft | UIRectCornerBottomRight
+                                                                 cornerRadii:CGSizeMake(4, 4)];
+            _topLeftTagMaskLayer = [[CAShapeLayer alloc] init];
+            _topLeftTagMaskLayer.frame = self.topLeftTagImageView.bounds;
+            _topLeftTagMaskLayer.path = maskPath.CGPath;
+            self.topLeftTagImageView.layer.mask = _topLeftTagMaskLayer;
+        }
     }
 }
 

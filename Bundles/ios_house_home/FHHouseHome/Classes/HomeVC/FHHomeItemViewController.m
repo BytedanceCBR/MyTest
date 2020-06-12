@@ -35,6 +35,8 @@
 #import "FHHouseSimilarManager.h"
 #import "TTSettingsManager.h"
 #import "NSDictionary+TTAdditions.h"
+#import "FHHouseAgentCardCell.h"
+
 extern NSString *const INSTANT_DATA_KEY;
 
 static NSString const * kCellSmallItemImageId = @"FHHomeSmallImageItemCell";
@@ -353,6 +355,8 @@ static NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
     [self.tableView registerClass:[FHPlaceHolderCell class] forCellReuseIdentifier:NSStringFromClass([FHPlaceHolderCell class])];
     
     [self.tableView registerClass:[UITableViewCell class] forCellReuseIdentifier:NSStringFromClass([UITableViewCell class])];
+    
+    [self.tableView registerClass:[FHHouseAgentCardCell class] forCellReuseIdentifier:NSStringFromClass([FHHouseAgentCardCell class])];
 }
 
 //判断是否有运营位
@@ -521,7 +525,9 @@ static NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
             self.lastOffset = model.data.items.count;
             
             [self.houseDataItemsModel enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-                [self.cahceHouseRankidsDict setValue:@(idx) forKey:((FHHomeHouseDataItemsModel *)(obj)).idx];
+                if(((FHHomeHouseDataItemsModel *)(obj)).idx){
+                    [self.cahceHouseRankidsDict setValue:@(idx) forKey:((FHHomeHouseDataItemsModel *)(obj)).idx];
+                }
             }];
             
             [self.cacheSimilarIdsDict removeAllObjects];
@@ -531,7 +537,9 @@ static NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
             if (model.data.items && self.houseDataItemsModel && model.data.items.count != 0) {
                 
                 [model.data.items enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-                    [self.cahceHouseRankidsDict setValue:@(idx + self.houseDataItemsModel.count - self.cacheSimilarIdsDict.allKeys.count) forKey:((FHHomeHouseDataItemsModel *)(obj)).idx];
+                    if(((FHHomeHouseDataItemsModel *)(obj)).idx){
+                        [self.cahceHouseRankidsDict setValue:@(idx + self.houseDataItemsModel.count - self.cacheSimilarIdsDict.allKeys.count) forKey:((FHHomeHouseDataItemsModel *)(obj)).idx];
+                    }
                 }];
                 
                 [self.houseDataItemsModel addObjectsFromArray:model.data.items];
@@ -770,7 +778,14 @@ static NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
         if (self.showPlaceHolder && self.houseType == FHHouseTypeNewHouse) {
             return 118;
         }
-        
+        if (self.houseType == FHHouseTypeSecondHandHouse) {
+            if (indexPath.row < self.houseDataItemsModel.count) {
+               FHHomeHouseDataItemsModel *model = self.houseDataItemsModel[indexPath.row];
+                if ([model.cardType integerValue] == kFHHomeAgentCardType) {
+                    return 116;
+                }
+            }
+        }
         return kFHHomeHouseItemHeight;
     }
 }
@@ -912,6 +927,25 @@ static NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
             return cell;
         }
         
+        if (self.houseType == FHHouseTypeSecondHandHouse) {
+                FHHomeHouseDataItemsModel *model = (FHHomeHouseDataItemsModel *)self.houseDataItemsModel[indexPath.row];
+            if ([model.cardType integerValue] == kFHHomeAgentCardType) {
+                    //to do 房源cell
+                FHHouseAgentCardCell *cell = [tableView dequeueReusableCellWithIdentifier:NSStringFromClass([FHHouseAgentCardCell class])];
+                cell.currentWeakVC = self;
+                NSMutableDictionary *traceDict = [NSMutableDictionary new];
+                traceDict[@"origin_from"] = @"old_list";
+                traceDict[@"element_type"] = @"maintab_list";
+                traceDict[@"page_type"] = @"maintab";
+                traceDict[@"rank"] = @"0";
+                traceDict[@"search_id"] = self.currentSearchId;
+                traceDict[@"origin_search_id"] = self.originSearchId;
+                traceDict[@"realtor_position"] = @"realtor_card";
+                [cell bindAgentData:model traceParams:traceDict];
+                return cell;
+            }
+        }
+        
         
         //to do 房源cell
         NSString *identifier = self.houseType == FHHouseTypeRentHouse ? kCellRentHouseItemImageId : kCellSmallItemImageId;
@@ -943,6 +977,9 @@ static NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
     }
     
     FHHomeHouseDataItemsModel *cellModel = [_houseDataItemsModel objectAtIndex:indexPath.row];
+    if ([cellModel.cardType integerValue] == kFHHomeAgentCardType) {
+        return;
+    }
     if (cellModel.idx && ![self.traceRecordDict objectForKey:cellModel.idx])
     {
         if (cellModel.idx) {
@@ -985,7 +1022,7 @@ static NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
         [self jumpToDetailPage:indexPath];
         if(self.houseDataItemsModel.count > indexPath.row){
             FHHomeHouseDataItemsModel *theModel = self.houseDataItemsModel[indexPath.row];
-                if (self.houseType == FHHouseTypeSecondHandHouse &&theModel.houseType.integerValue != FHHouseTypeNewHouse) {
+                if (self.houseType == FHHouseTypeSecondHandHouse &&theModel.houseType.integerValue != FHHouseTypeNewHouse && [theModel.cardType integerValue] != kFHHomeAgentCardType) {
                     [[FHRelevantDurationTracker sharedTracker] beginRelevantDurationTracking];
              }
         }
@@ -1006,6 +1043,11 @@ static NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
 -(void)jumpToDetailPage:(NSIndexPath *)indexPath {
     if (self.houseDataItemsModel.count > indexPath.row) {
         FHHomeHouseDataItemsModel *theModel = self.houseDataItemsModel[indexPath.row];
+        
+        if ([theModel.cardType integerValue] == kFHHomeAgentCardType) {
+            return;
+        }
+        
         NSMutableDictionary *traceParam = [NSMutableDictionary new];
         traceParam[@"enter_from"] = [self pageTypeString];
         traceParam[@"log_pb"] = theModel.logPb;
@@ -1054,10 +1096,7 @@ static NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
             TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
             [[TTRoute sharedRoute] openURLByPushViewController:jumpUrl userInfo:userInfo];
         }
-        
-        
         if (houseType == FHHouseTypeSecondHandHouse) {
-            
             NSDictionary *fhSettings= [[TTSettingsManager sharedManager] settingForKey:@"f_settings" defaultValue:@{} freeze:YES];
             BOOL boolIsOpenSimilar = [fhSettings tt_boolValueForKey:@"f_similar_house_close"];
             self.lastClickOffset = indexPath.row;
@@ -1066,13 +1105,10 @@ static NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
                 [parmasIds setValue:self.currentSearchId forKey:@"search_id"];
                 [parmasIds setValue:theModel.idx forKey:@"house_id"];
                 [parmasIds setValue:@"94349544675" forKey:@"channel_id"];
-
-                
                 if (theModel.idx && [FHEnvContext isNetworkConnected]) {
                     [[FHHouseSimilarManager sharedInstance] requestForSimilarHouse:parmasIds];
                     [self.cacheClickIds addObject:theModel.idx];
                 }
-                
                 NSMutableDictionary *traceParamsSim = [NSMutableDictionary new];
                 traceParamsSim[@"page_type"] = @"old_detail";
                 traceParamsSim[@"card_type"] = @"left_pic";
@@ -1090,12 +1126,11 @@ static NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
 }
 
 - (UITableView *)tableView {
-    
     if (!_tableView) {
         _tableView = [[FHHomeBaseTableView alloc] initWithFrame:CGRectMake(0, 0,  [UIScreen mainScreen].bounds.size.width,[[FHHomeCellHelper sharedInstance] heightForFHHomeListHouseSectionHeight]) style:UITableViewStylePlain];
         _tableView.dataSource = self;
         _tableView.delegate = self;
-//        _tableView.bounces = NO;
+        //        _tableView.bounces = NO;
         //        _tableView.decelerationRate = 0.1;
         _tableView.showsVerticalScrollIndicator = NO;
         _tableView.estimatedRowHeight = 0;

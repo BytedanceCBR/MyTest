@@ -39,6 +39,9 @@
 @property (nonatomic, weak) YYLabel *tagLabel; // 标签 label
 @property (nonatomic, assign) BOOL isHomePage;
 
+@property(nonatomic, strong) UIImageView *topLeftTagImageView;  //企业担保图标
+@property(nonatomic, strong) CAShapeLayer *topLeftTagMaskLayer;
+
 @property (nonatomic, copy) NSString *reuseIdentifier;
 @end
 @implementation FHHouseListBaseItemCell
@@ -115,7 +118,7 @@
     [self.tagLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(_maintitle);
         make.top.mas_equalTo(_displayDescriptionLabel.mas_bottom).offset(10);
-        make.right.mas_equalTo(_unitPrice.mas_left).offset(-1);
+        make.right.mas_equalTo(_unitPrice.mas_left).offset(-16);
         make.height.mas_equalTo(14);
     }];
     self.positionInformation.textColor = [UIColor themeGray3];
@@ -211,6 +214,10 @@
     [self.totalPrice mas_makeConstraints:^(MASConstraintMaker *make) {
         make.right.equalTo(self.unitPrice.mas_right);
         make.top.equalTo(self.unitPrice.mas_bottom).offset(4);
+    }];
+    [self.topLeftTagImageView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.top.equalTo(self.mainIma);
+        make.size.mas_equalTo(CGSizeMake(48, 15));
     }];
 }
 #pragma mark ---------------------- UIInit:初始化控件
@@ -392,6 +399,15 @@
     return _tagLabel;
 }
 
+- (UIImageView *)topLeftTagImageView {
+    if (!_topLeftTagImageView) {
+        _topLeftTagImageView = [[UIImageView alloc] init];
+        [self.contentView addSubview:_topLeftTagImageView];
+    }
+    
+    return _topLeftTagImageView;
+}
+
 #pragma mark ---------------------- dataPross:数据加载
 - (void)refreshWithData:(id)data {
     self.currentData = data;
@@ -424,6 +440,14 @@
         }else {
             self.vrLoadingView.hidden = YES;
             [self.vrLoadingView stop];
+        }
+        
+        /**
+         周边新盘，我关注的新房 这两种场景也使用了tag_image字段（用于下发左上角“新房”标签），
+         这里绕过这两种场景，即在这两个页面不走“企业担保”逻辑
+         */
+        if (![self.reuseIdentifier isEqualToString:@"FHNewHouseCell"]) {
+            [self configTopLeftTagWithTagImages:model.tagImage];
         }
     };
 }
@@ -523,6 +547,48 @@
     }else
     {
         self.houseCellBackView.layer.mask = nil;
+    }
+}
+
+- (void)configTopLeftTagWithTagImages:(NSArray<FHImageModel> *)tagImages {
+    if (tagImages.count > 0) {
+        FHImageModel *tagImageModel = tagImages.firstObject;
+        if (!tagImageModel.url.length) {
+            return;
+        }
+        
+        NSURL *imageUrl = [NSURL URLWithString:tagImageModel.url];
+        [self.topLeftTagImageView bd_setImageWithURL:imageUrl];
+        CGFloat width = [tagImageModel.width floatValue];
+        CGFloat height = [tagImageModel.height floatValue];
+        [self.topLeftTagImageView mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.width.mas_equalTo(width > 0.0 ? width : 48);
+        }];
+        [self.topLeftTagImageView mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.height.mas_equalTo(height > 0.0 ? height : 15);
+        }];
+        
+        self.topLeftTagImageView.hidden = NO;
+        [self layoutIfNeeded];
+    }else {
+        self.topLeftTagImageView.hidden = YES;
+    }
+}
+
+- (void)layoutSubviews {
+    [super layoutSubviews];
+    
+    //图片圆角
+    if (!CGRectEqualToRect(self.topLeftTagImageView.frame, CGRectZero)) {
+        if (!_topLeftTagMaskLayer || !CGSizeEqualToSize(_topLeftTagMaskLayer.frame.size, self.topLeftTagImageView.frame.size)) {
+            UIBezierPath *maskPath = [UIBezierPath bezierPathWithRoundedRect:self.topLeftTagImageView.bounds
+                                                           byRoundingCorners:UIRectCornerTopLeft | UIRectCornerBottomRight
+                                                                 cornerRadii:CGSizeMake(4, 4)];
+            _topLeftTagMaskLayer = [[CAShapeLayer alloc] init];
+            _topLeftTagMaskLayer.frame = self.topLeftTagImageView.bounds;
+            _topLeftTagMaskLayer.path = maskPath.CGPath;
+            self.topLeftTagImageView.layer.mask = _topLeftTagMaskLayer;
+        }
     }
 }
 

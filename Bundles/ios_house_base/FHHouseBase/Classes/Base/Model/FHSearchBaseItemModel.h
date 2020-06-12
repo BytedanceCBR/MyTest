@@ -23,6 +23,7 @@ NS_ASSUME_NONNULL_BEGIN
 //9. card_type=9 猜你想找tip（没有找到相关房源，猜你想找下面这些？）
 //10. card_type=10猜你想找文本 （猜你想找）
 //11. card_type=11切换城市卡片 （你是不是想找“xxx”的房源？）
+//13. card_type=13 预约顾问
 
 typedef NS_ENUM(NSUInteger, FHSearchCardType) {
     FHSearchCardTypeNewHouse = 1, //1. card_type=1 新房卡片
@@ -36,6 +37,8 @@ typedef NS_ENUM(NSUInteger, FHSearchCardType) {
     FHSearchCardTypeGuessYouWantTip = 9,
     FHSearchCardTypeGuessYouWantContent = 10,
     FHSearchCardTypeRedirectTip = 11,
+    FHSearchCardTypeReserveAdviser = 13,
+    FHSearchCardTypeAgentCard = 14,
 };
 
 @interface FHSearchBaseItemModel : JSONModel

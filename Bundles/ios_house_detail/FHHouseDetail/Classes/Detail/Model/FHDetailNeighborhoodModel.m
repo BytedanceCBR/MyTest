@@ -29,6 +29,7 @@
                            @"logPb": @"log_pb",
                            @"statsInfo": @"stats_info",
                            @"baseInfo": @"base_info",
+                           @"baseInfoFoldCount":@"base_info_fold_count",
                            @"neighborhoodInfo": @"neighborhood_info",
                            @"shareInfo": @"share_info",
                            @"totalSales": @"total_sales",

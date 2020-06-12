@@ -35,6 +35,7 @@
 #import "TTAccountManager.h"
 #import "FHHouseUGCHeader.h"
 #import "FHUGCCategoryManager.h"
+#import "FHLoginTipView.h"
 
 @interface FHCommunityViewController ()
 
@@ -43,14 +44,15 @@
 @property(nonatomic, strong) UIView *topView;
 @property(nonatomic, strong) UIButton *searchBtn;
 @property(nonatomic, assign) NSTimeInterval stayTime; //页面停留时间
-@property(nonatomic, strong) FHUGCGuideView *guideView;
+@property (nonatomic, strong) FHLoginTipView * loginTipview;
+//@property(nonatomic, strong) FHUGCGuideView *guideView;
 @property(nonatomic, assign) BOOL hasShowDots;
 @property(nonatomic, assign) BOOL alreadyShowGuide;
 //新的发现页面
 @property(nonatomic, assign) BOOL isNewDiscovery;
 @property(nonatomic, assign) BOOL isFirstLoad;
 @property(nonatomic, strong) FHUGCPostMenuView *publishMenuView;
-
+@property (nonatomic, assign) BOOL isShowLoginTip;
 @end
 
 @implementation FHCommunityViewController
@@ -66,7 +68,7 @@
     self.categorys = [[FHUGCCategoryManager sharedManager].allCategories copy];
     self.alreadyShowGuide = NO;
     self.ttTrackStayEnable = YES;
-
+    self.isShowLoginTip = NO;
     [self initView];
     [self initViewModel];
     if(self.isNewDiscovery){
@@ -101,16 +103,11 @@
         
         self.segmentControl.sectionTitles = [self getSegmentTitles];
     }];
-
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(topVCChange:) name:@"kExploreTopVCChangeNotification" object:nil];
-    if([FHEnvContext isNewDiscovery]){
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onCommunityHaveNewContents) name:kFHUGCCommunityTabHasNewNotification object:nil];
-    }else{
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onUnreadMessageChange) name:kTTMessageNotificationTipsChangeNotification object:nil];
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onUnreadMessageChange) name:kFHUGCFollowNotification object:nil];
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onFocusHaveNewContents) name:kFHUGCFocusTabHasNewNotification object:nil];
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onUnreadMessageChange) name:kFHUGCLoadFollowDataFinishedNotification object:nil];
-    }
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onCommunityHaveNewContents) name:kFHUGCCommunityTabHasNewNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onUnreadMessageChange) name:kTTMessageNotificationTipsChangeNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onUnreadMessageChange) name:kFHUGCFollowNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onFocusHaveNewContents) name:kFHUGCFocusTabHasNewNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onUnreadMessageChange) name:kFHUGCLoadFollowDataFinishedNotification object:nil];
     //tabbar双击的通知
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(refreshData) name:kFindTabbarKeepClickedNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(changeTab) name:kFHUGCForumPostThreadFinish object:nil];
@@ -120,44 +117,46 @@
     self.isFirstLoad = NO;
 }
 
+   
+
 - (void)dealloc {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
-- (void)addUgcGuide {
-    if ([FHUGCGuideHelper shouldShowSearchGuide] && self.isUgcOpen && !self.alreadyShowGuide && !self.isNewDiscovery) {
-        [self.guideView show:self.view dismissDelayTime:5.0f completion:^{
-            [FHUGCGuideHelper hideSearchGuide];
-        }];
-        self.alreadyShowGuide = YES;
-    }
-}
+//- (void)addUgcGuide {
+//    if ([FHUGCGuideHelper shouldShowSearchGuide] && self.isUgcOpen && !self.alreadyShowGuide && !self.isNewDiscovery) {
+//        [self.guideView show:self.view dismissDelayTime:5.0f completion:^{
+//            [FHUGCGuideHelper hideSearchGuide];
+//        }];
+//        self.alreadyShowGuide = YES;
+//    }
+//}
+//
+//- (void)hideGuideView {
+//    if(_guideView){
+//        [_guideView hide];
+//        [FHUGCGuideHelper hideSearchGuide];
+//    }
+//}
 
-- (void)hideGuideView {
-    if(_guideView){
-        [_guideView hide];
-        [FHUGCGuideHelper hideSearchGuide];
-    }
-}
+//- (FHUGCGuideView *)guideView {
+//    [self.view layoutIfNeeded];
+//    if (!_guideView) {
+//        _guideView = [[FHUGCGuideView alloc] initWithFrame:CGRectMake(self.view.frame.size.width - 186, CGRectGetMaxY(self.topView.frame) - 7, 176, 42) andType:FHUGCGuideViewTypeSearch];
+//    }
+//    return _guideView;
+//}
 
-- (FHUGCGuideView *)guideView {
-    [self.view layoutIfNeeded];
-    if (!_guideView) {
-        _guideView = [[FHUGCGuideView alloc] initWithFrame:CGRectMake(self.view.frame.size.width - 186, CGRectGetMaxY(self.topView.frame) - 7, 176, 42) andType:FHUGCGuideViewTypeSearch];
-    }
-    return _guideView;
-}
-
-- (void)topVCChange:(NSNotification *)notification {
-    if (self.isUgcOpen) {
-        [self hideGuideView];
-    }
-}
+//- (void)topVCChange:(NSNotification *)notification {
+//    if (self.isUgcOpen) {
+//        [self hideGuideView];
+//    }
+//}
 
 - (void)onUnreadMessageChange {
     BOOL hasSocialGroups = [FHUGCConfig sharedInstance].followList.count > 0;
     FHUnreadMsgDataUnreadModel *model = [FHMessageNotificationTipsManager sharedManager].tipsModel;
-    if (model && [model.unread integerValue] > 0 && hasSocialGroups) {
+    if (model && [model.unread integerValue] > 0 && hasSocialGroups && !self.isNewDiscovery) {
         NSInteger count = [model.unread integerValue];
         _segmentControl.sectionMessageTips = @[@(count)];
     } else {
@@ -168,7 +167,7 @@
 - (void)onFocusHaveNewContents {
     BOOL hasSocialGroups = [FHUGCConfig sharedInstance].followList.count > 0;
     BOOL hasNew = [FHUGCConfig sharedInstance].ugcFocusHasNew;
-    if(self.viewModel.currentTabIndex != 0 && hasSocialGroups && hasNew){
+    if(self.viewModel.currentTabIndex != 0 && hasSocialGroups && hasNew && !self.isNewDiscovery){
         _segmentControl.sectionRedPoints = @[@1];
         self.hasFocusTips = YES;
     }
@@ -177,7 +176,7 @@
 - (void)onCommunityHaveNewContents {
     BOOL hasNew = [FHUGCConfig sharedInstance].ugcCommunityHasNew;
     NSInteger index = [[FHUGCCategoryManager sharedManager] getCategoryIndex:@"f_ugc_neighbor"];
-    if(self.viewModel.currentTabIndex != index && hasNew && index >= 0){
+    if(self.viewModel.currentTabIndex != index && hasNew && index >= 0 && self.isNewDiscovery){
         NSMutableArray *redPoints = [NSMutableArray array];
         for (NSInteger i = 0; i <= index; i++) {
             if(i == index){
@@ -237,6 +236,22 @@
     
     [self initPublishBtn];
 }
+- (void)initLoginTipView {
+    if (!self.isShowLoginTip) {
+        self.loginTipview =  [FHLoginTipView showLoginTipViewInView:self.view navbarHeight:0 withTracerDic:self.tracerDict];
+        self.isShowLoginTip = YES;
+        self.loginTipview.type = FHLoginTipViewtTypeNeighborhood;
+    }else {
+        if (self.loginTipview) {
+            if ([TTAccount sharedAccount].isLogin) {
+                [self.loginTipview removeFromSuperview];
+            }else {
+                [self.loginTipview startTimer];
+            }
+        }
+    }
+    
+}
 
 - (void)initPublishBtn {
     self.publishBtn = [[UIButton alloc] init];
@@ -248,14 +263,18 @@
 - (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
     [self.viewModel viewWillDisappear];
+    if (self.loginTipview) {
+         [self.loginTipview pauseTimer];
+    }
     [self addStayCategoryLog:self.stayTime];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     [self.viewModel viewWillAppear];
+    [self initLoginTipView];
     self.stayTime = [[NSDate date] timeIntervalSince1970];
-    [self addUgcGuide];
+//    [self addUgcGuide];
 
     if(self.isUgcOpen){
         //去掉邻里tab的红点
@@ -776,7 +795,7 @@
 
 //进入搜索页
 - (void)goToSearch {
-    [self hideGuideView];
+//    [self hideGuideView];
     [self addGoToSearchLog];
     NSString *routeUrl = @"sslocal://ugc_search_list";
     NSURL *openUrl = [NSURL URLWithString:routeUrl];
