@@ -318,20 +318,20 @@
                 
 //                weakSelf.tableViewV.scrollEnabled = YES;
 //                UIScrollView *scrollView = currentTable;
-//                if (weakSelf.tableViewV.contentOffset.y < weakSelf.headerHeight + KFHHomeSectionHeight + KFHHomeSearchBarHeight) {
+                if (weakSelf.tableViewV.contentOffset.y < weakSelf.headerHeight + KFHHomeSectionHeight + KFHHomeSearchBarHeight) {
 //                    scrollView.contentOffset = CGPointZero;
 //                    scrollView.showsVerticalScrollIndicator = NO;
                     
                     //将未滑动到置顶的子table置顶
-//                    for (FHHomeItemViewController *vc in weakSelf.itemsVCArray) {
-//                        if (vc.tableView.numberOfSections > 0 && [vc.tableView numberOfRowsInSection:0] > 0 && (NSInteger)vc.tableView.contentOffset.y != 0){
-//                            vc.tableView.contentOffset = CGPointZero;
-//                        }
-//                    }
+                    for (FHHomeItemViewController *vc in weakSelf.itemsVCArray) {
+                        if (vc.tableView.numberOfSections > 0 && [vc.tableView numberOfRowsInSection:0] > 0 && (NSInteger)vc.tableView.contentOffset.y != 0){
+                            vc.tableView.contentOffset = CGPointZero;
+                        }
+                    }
 //                } else {
                     //        self.tableView.contentOffset = CGPointMake(0, HeaderViewH);
 //                    scrollView.showsVerticalScrollIndicator = YES;
-//                }
+                }
             };
             
             itemVC.requestCallBack = ^(FHHomePullTriggerType refreshType, FHHouseType houseType, BOOL isSuccess, JSONModel * _Nonnull dataModel) {
