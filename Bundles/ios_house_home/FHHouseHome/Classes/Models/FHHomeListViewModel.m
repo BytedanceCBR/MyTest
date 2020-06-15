@@ -316,7 +316,7 @@
                 UIScrollView *scrollView = currentTable;
                 weakSelf.childVCScrollView = scrollView;
                 if (weakSelf.tableViewV.contentOffset.y < weakSelf.headerHeight + KFHHomeSectionHeight + KFHHomeSearchBarHeight) {
-                    scrollView.contentOffset = CGPointZero;
+//                    scrollView.contentOffset = CGPointZero;
                     scrollView.showsVerticalScrollIndicator = NO;
                     
                     //将未滑动到置顶的子table置顶
