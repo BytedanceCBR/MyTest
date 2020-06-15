@@ -755,6 +755,7 @@
            for (FHHomeItemViewController *vc in self.itemsVCArray) {
                 vc.childScrollEnable = YES;
             }
+            [self changeHouseCategoryStatus:NO];
         }else{
             if (scrollView.contentOffset.y >= self.headerHeight + KFHHomeSectionHeight + KFHHomeSearchBarHeight) {
                 scrollView.contentOffset = CGPointMake(0.0, self.headerHeight + KFHHomeSectionHeight + KFHHomeSearchBarHeight);
@@ -762,11 +763,13 @@
                 for (FHHomeItemViewController *vc in self.itemsVCArray) {
                     vc.childScrollEnable = YES;
                 }
+            }else
+            {
+                [self changeHouseCategoryStatus:YES];
             }
         }
         
 //        if ((self.childVCScrollView && _childVCScrollView.contentOffset.y > 0) || (scrollView.contentOffset.y > self.headerHeight + KFHHomeSectionHeight + KFHHomeSearchBarHeight)) {
-//            [self.categoryView showOriginStyle:NO];
 //            [self changeHouseCategoryStatus:NO];
 //            if (!self.isResetingOffsetZero) {
 //                [self.homeViewController hideImmediately];

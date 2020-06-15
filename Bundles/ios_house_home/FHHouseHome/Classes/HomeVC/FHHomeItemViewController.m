@@ -708,6 +708,7 @@ static NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
        scrollView.contentOffset = CGPointMake(0, 0);
    }else{
        if (scrollView.contentOffset.y <= 0) {
+           _childScrollEnable = NO;
            if (self.scrollDidScrollCallBack) {
                 self.scrollDidScrollCallBack(scrollView,YES);
           }
