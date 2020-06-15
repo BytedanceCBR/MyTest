@@ -57,6 +57,7 @@
 @property (nonatomic, assign) BOOL isShowTopTabbar;
 @property (nonatomic, assign) BOOL isRequestFromSwitch; //左右切换房源类型
 @property(nonatomic, weak)   NSTimer *timer;
+@property (nonatomic, assign) BOOL superScrollEnable;
 
 @property (nonatomic, strong) UIScrollView *childVCScrollView;
 @property (nonatomic, assign) BOOL isSelectIndex;
@@ -264,7 +265,7 @@
 {
     self.isResetingOffsetZero = YES;
     self.tableViewV.contentOffset = CGPointMake(0, 0);
-    
+    self.superScrollEnable = YES;
     if (self.tableViewV.numberOfSections > 0 && [self.tableViewV numberOfRowsInSection:0] > 0) {
         [self.tableViewV scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] atScrollPosition:UITableViewScrollPositionNone animated:NO];
         
@@ -311,24 +312,26 @@
             // 添加子控制器
             [self.homeViewController addChildViewController:itemVC];
             
-            itemVC.scrollDidScrollCallBack = ^(UIScrollView * _Nonnull currentTable) {
-                weakSelf.tableViewV.scrollEnabled = YES;
-                UIScrollView *scrollView = currentTable;
-                weakSelf.childVCScrollView = scrollView;
-                if (weakSelf.tableViewV.contentOffset.y < weakSelf.headerHeight + KFHHomeSectionHeight + KFHHomeSearchBarHeight) {
+            itemVC.scrollDidScrollCallBack = ^(UIScrollView * _Nonnull currentTable,BOOL isCanScroll) {
+                weakSelf.childVCScrollView = currentTable;
+                _superScrollEnable = isCanScroll;
+                
+//                weakSelf.tableViewV.scrollEnabled = YES;
+//                UIScrollView *scrollView = currentTable;
+//                if (weakSelf.tableViewV.contentOffset.y < weakSelf.headerHeight + KFHHomeSectionHeight + KFHHomeSearchBarHeight) {
 //                    scrollView.contentOffset = CGPointZero;
-                    scrollView.showsVerticalScrollIndicator = NO;
+//                    scrollView.showsVerticalScrollIndicator = NO;
                     
                     //将未滑动到置顶的子table置顶
-                    for (FHHomeItemViewController *vc in weakSelf.itemsVCArray) {
-                        if (vc.tableView.numberOfSections > 0 && [vc.tableView numberOfRowsInSection:0] > 0 && (NSInteger)vc.tableView.contentOffset.y != 0){
-                            vc.tableView.contentOffset = CGPointZero;
-                        }
-                    }
-                } else {
+//                    for (FHHomeItemViewController *vc in weakSelf.itemsVCArray) {
+//                        if (vc.tableView.numberOfSections > 0 && [vc.tableView numberOfRowsInSection:0] > 0 && (NSInteger)vc.tableView.contentOffset.y != 0){
+//                            vc.tableView.contentOffset = CGPointZero;
+//                        }
+//                    }
+//                } else {
                     //        self.tableView.contentOffset = CGPointMake(0, HeaderViewH);
-                    scrollView.showsVerticalScrollIndicator = YES;
-                }
+//                    scrollView.showsVerticalScrollIndicator = YES;
+//                }
             };
             
             itemVC.requestCallBack = ^(FHHomePullTriggerType refreshType, FHHouseType houseType, BOOL isSuccess, JSONModel * _Nonnull dataModel) {
@@ -746,20 +749,36 @@
         
         [self changeTopSearchBtn:scrollView.contentOffset.y > KFHHomeSearchBarHeight];
         
-        if ((self.childVCScrollView && _childVCScrollView.contentOffset.y > 0) || (scrollView.contentOffset.y > self.headerHeight + KFHHomeSectionHeight + KFHHomeSearchBarHeight)) {
-            [self.categoryView showOriginStyle:NO];
-            [self changeHouseCategoryStatus:NO];
-            if (!self.isResetingOffsetZero) {
-                [self.homeViewController hideImmediately];
-                self.tableViewV.contentOffset = CGPointMake(0, self.headerHeight + KFHHomeSectionHeight + KFHHomeSearchBarHeight + 0.01);
-            }else
-            {
-                [self changeHouseCategoryStatus:YES];
+        
+        if (!_superScrollEnable) {
+            scrollView.contentOffset = CGPointMake(0, self.headerHeight + KFHHomeSectionHeight + KFHHomeSearchBarHeight);
+           for (FHHomeItemViewController *vc in self.itemsVCArray) {
+                vc.childScrollEnable = YES;
             }
-        }else
-        {
-            [self changeHouseCategoryStatus:YES];
+        }else{
+            if (scrollView.contentOffset.y >= self.headerHeight + KFHHomeSectionHeight + KFHHomeSearchBarHeight) {
+                scrollView.contentOffset = CGPointMake(0.0, self.headerHeight + KFHHomeSectionHeight + KFHHomeSearchBarHeight);
+                self.superScrollEnable = NO;
+                for (FHHomeItemViewController *vc in self.itemsVCArray) {
+                    vc.childScrollEnable = YES;
+                }
+            }
         }
+        
+//        if ((self.childVCScrollView && _childVCScrollView.contentOffset.y > 0) || (scrollView.contentOffset.y > self.headerHeight + KFHHomeSectionHeight + KFHHomeSearchBarHeight)) {
+//            [self.categoryView showOriginStyle:NO];
+//            [self changeHouseCategoryStatus:NO];
+//            if (!self.isResetingOffsetZero) {
+//                [self.homeViewController hideImmediately];
+//                self.tableViewV.contentOffset = CGPointMake(0, self.headerHeight + KFHHomeSectionHeight + KFHHomeSearchBarHeight + 0.01);
+//            }else
+//            {
+//                [self changeHouseCategoryStatus:YES];
+//            }
+//        }else
+//        {
+//            [self changeHouseCategoryStatus:YES];
+//        }
         
         
         CGFloat offSetY = scrollView.contentOffset.y;

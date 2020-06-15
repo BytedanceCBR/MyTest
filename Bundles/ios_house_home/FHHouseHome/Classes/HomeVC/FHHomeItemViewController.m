@@ -704,9 +704,15 @@ static NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
     // 滚动时发出通知
 //    [[NSNotificationCenter defaultCenter] postNotificationName:@"FHHomeSubTableViewDidScroll" object:scrollView];
-    if (self.scrollDidScrollCallBack) {
-        self.scrollDidScrollCallBack(scrollView);
-    }
+   if (!_childScrollEnable) {
+       scrollView.contentOffset = CGPointMake(0, 0);
+   }else{
+       if (scrollView.contentOffset.y <= 0) {
+           if (self.scrollDidScrollCallBack) {
+                self.scrollDidScrollCallBack(scrollView,YES);
+          }
+       }
+   }
 }
 
 - (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate
@@ -1130,10 +1136,9 @@ static NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
         _tableView = [[FHHomeBaseTableView alloc] initWithFrame:CGRectMake(0, 0,  [UIScreen mainScreen].bounds.size.width,[[FHHomeCellHelper sharedInstance] heightForFHHomeListHouseSectionHeight]) style:UITableViewStylePlain];
         _tableView.dataSource = self;
         _tableView.delegate = self;
-        //        _tableView.bounces = NO;
+        _tableView.bounces = NO;
         //        _tableView.decelerationRate = 0.1;
         _tableView.showsVerticalScrollIndicator = NO;
-        _tableView.bounces = NO;
         _tableView.estimatedRowHeight = 0;
         if (@available(iOS 11.0 , *)) {
             self.tableView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
