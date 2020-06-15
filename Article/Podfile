@@ -64,9 +64,10 @@ def fhPods
     # 'DelegateForC'
     #]
 
+    
 #    pod 'ios_house_im' , '0.2.7'
 #    pod 'ios_house_im' , :path => '../../../im/2'
-    pod 'ios_house_im' , :git => 'git@code.byted.org:fproject/ios_house_im.git' , :commit => '1dbc275fdae08658b56eb7a8693ed24fe71e5032'
+    pod 'ios_house_im' , :git => 'git@code.byted.org:fproject/ios_house_im.git' , :commit => 'aab1bbed574a754b0e5b6140e671b4faf57933c5'
 
 end
 
@@ -525,7 +526,6 @@ def appPods
         'Feature_Core_ReadReceipt',
         'Feature_Core',
         'Feature_ApplicationStatus',
-        'IMSugar_MediaFileUploader',
         'Protocols',
         'Bridges'
     ]
