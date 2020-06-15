@@ -58,6 +58,7 @@
 @property (nonatomic, assign) BOOL isRequestFromSwitch; //左右切换房源类型
 @property(nonatomic, weak)   NSTimer *timer;
 @property (nonatomic, assign) BOOL superScrollEnable;
+@property (nonatomic, assign) BOOL childResetZeroStatus;
 
 @property (nonatomic, strong) UIScrollView *childVCScrollView;
 @property (nonatomic, assign) BOOL isSelectIndex;
@@ -245,6 +246,8 @@
     
     [self setUpSubtableIndex:indexValue];
     
+    [self updateIndexChangedScrollStatus];
+    
     [self bindItemVCTrace];
 }
 
@@ -318,20 +321,20 @@
                 
 //                weakSelf.tableViewV.scrollEnabled = YES;
 //                UIScrollView *scrollView = currentTable;
-                if (weakSelf.tableViewV.contentOffset.y < weakSelf.headerHeight + KFHHomeSectionHeight + KFHHomeSearchBarHeight) {
+//                if (weakSelf.tableViewV.contentOffset.y < weakSelf.headerHeight + KFHHomeSectionHeight + KFHHomeSearchBarHeight) {
 //                    scrollView.contentOffset = CGPointZero;
 //                    scrollView.showsVerticalScrollIndicator = NO;
                     
                     //将未滑动到置顶的子table置顶
-                    for (FHHomeItemViewController *vc in weakSelf.itemsVCArray) {
-                        if (vc.tableView.numberOfSections > 0 && [vc.tableView numberOfRowsInSection:0] > 0 && (NSInteger)vc.tableView.contentOffset.y != 0){
-                            vc.tableView.contentOffset = CGPointZero;
-                        }
-                    }
+//                    for (FHHomeItemViewController *vc in weakSelf.itemsVCArray) {
+//                        if (vc.tableView.numberOfSections > 0 && [vc.tableView numberOfRowsInSection:0] > 0 && (NSInteger)vc.tableView.contentOffset.y != 0){
+//                            vc.tableView.contentOffset = CGPointZero;
+//                        }
+//                    }
 //                } else {
                     //        self.tableView.contentOffset = CGPointMake(0, HeaderViewH);
 //                    scrollView.showsVerticalScrollIndicator = YES;
-                }
+//                }
             };
             
             itemVC.requestCallBack = ^(FHHomePullTriggerType refreshType, FHHouseType houseType, BOOL isSuccess, JSONModel * _Nonnull dataModel) {
@@ -590,6 +593,16 @@
     }
 }
 
+- (void)updateIndexChangedScrollStatus{
+      for (FHHomeItemViewController *vc in self.itemsVCArray) {
+          if ([vc isKindOfClass:[FHHomeItemViewController class]] && vc.houseType == self.houseType) {
+              if (vc.tableView.contentOffset.y == 0) {
+                  self.superScrollEnable = YES;
+              }
+          }
+      }
+}
+
 - (void)bindItemVCTrace
 {
     for (FHHomeItemViewController *vc in self.itemsVCArray) {
@@ -823,6 +836,11 @@
         if ([self.homeViewController.parentViewController isKindOfClass:[FHHomeMainViewController class]]) {
             mainVC = (FHHomeMainViewController *)self.homeViewController.parentViewController;
         };
+        
+        if (mainVC.topView.houseSegmentControl.selectedSegmentIndex != scrollIndex) {
+            [self updateIndexChangedScrollStatus];
+        }
+  
         mainVC.topView.houseSegmentControl.selectedSegmentIndex = scrollIndex;
     }
 }
@@ -916,6 +934,15 @@
     };
     [self.categoryView showOriginStyle:isShowTopHouse];
     [mainVC changeTopStatusShowHouse:!isShowTopHouse];
+    
+    if (isShowTopHouse && (self.childResetZeroStatus != isShowTopHouse)) {
+        for (FHHomeItemViewController *vc in self.itemsVCArray) {
+               if (vc.tableView.numberOfSections > 0 && [vc.tableView numberOfRowsInSection:0] > 0 && (NSInteger)vc.tableView.contentOffset.y != 0){
+                   vc.tableView.contentOffset = CGPointZero;
+               }
+        }
+    }
+    self.childResetZeroStatus = isShowTopHouse;
 }
 
 - (void)changeTopSearchBtn:(BOOL)isShow
