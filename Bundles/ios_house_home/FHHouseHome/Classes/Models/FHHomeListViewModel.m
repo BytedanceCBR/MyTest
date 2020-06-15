@@ -100,11 +100,6 @@
         self.isHasCallBackForFirstTime = NO;
         self.isFirstChange = YES;
         self.isRequestFromSwitch = NO;
-        
-        //**************
-        // 监听子控制器发出的通知
-//        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(subTableViewDidScroll:) name:@"FHHomeSubTableViewDidScroll" object:nil];
-
 
         //*************
         self.tableViewV.hasMore = YES;
@@ -318,23 +313,6 @@
             itemVC.scrollDidScrollCallBack = ^(UIScrollView * _Nonnull currentTable,BOOL isCanScroll) {
                 weakSelf.childVCScrollView = currentTable;
                 _superScrollEnable = isCanScroll;
-                
-//                weakSelf.tableViewV.scrollEnabled = YES;
-//                UIScrollView *scrollView = currentTable;
-//                if (weakSelf.tableViewV.contentOffset.y < weakSelf.headerHeight + KFHHomeSectionHeight + KFHHomeSearchBarHeight) {
-//                    scrollView.contentOffset = CGPointZero;
-//                    scrollView.showsVerticalScrollIndicator = NO;
-                    
-                    //将未滑动到置顶的子table置顶
-//                    for (FHHomeItemViewController *vc in weakSelf.itemsVCArray) {
-//                        if (vc.tableView.numberOfSections > 0 && [vc.tableView numberOfRowsInSection:0] > 0 && (NSInteger)vc.tableView.contentOffset.y != 0){
-//                            vc.tableView.contentOffset = CGPointZero;
-//                        }
-//                    }
-//                } else {
-                    //        self.tableView.contentOffset = CGPointMake(0, HeaderViewH);
-//                    scrollView.showsVerticalScrollIndicator = YES;
-//                }
             };
             
             itemVC.requestCallBack = ^(FHHomePullTriggerType refreshType, FHHouseType houseType, BOOL isSuccess, JSONModel * _Nonnull dataModel) {
@@ -723,20 +701,6 @@
     return [[FHHomeCellHelper sharedInstance] heightForFHHomeListHouseSectionHeight] + KFHHomeSectionHeight;
 }
 
-//- (UIView*)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
-//{
-//    UIView *headerView = [UIView new];
-//    [headerView setBackgroundColor:[UIColor greenColor]];
-//    return headerView;
-//}
-//
-//- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
-//{
-//    if (section = 0) {
-//        return KFHHomeSectionHeight;
-//    }
-//}
-
 - (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView {
     [self.homeViewController hideImmediately];
     self.isResetingOffsetZero = NO;
@@ -781,21 +745,6 @@
                 [self changeHouseCategoryStatus:YES];
             }
         }
-        
-//        if ((self.childVCScrollView && _childVCScrollView.contentOffset.y > 0) || (scrollView.contentOffset.y > self.headerHeight + KFHHomeSectionHeight + KFHHomeSearchBarHeight)) {
-//            [self changeHouseCategoryStatus:NO];
-//            if (!self.isResetingOffsetZero) {
-//                [self.homeViewController hideImmediately];
-//                self.tableViewV.contentOffset = CGPointMake(0, self.headerHeight + KFHHomeSectionHeight + KFHHomeSearchBarHeight + 0.01);
-//            }else
-//            {
-//                [self changeHouseCategoryStatus:YES];
-//            }
-//        }else
-//        {
-//            [self changeHouseCategoryStatus:YES];
-//        }
-        
         
         CGFloat offSetY = scrollView.contentOffset.y;
         
@@ -901,28 +850,6 @@
 //    }
     [self setUpHomeItemScrollView:YES];
     [[NSNotificationCenter defaultCenter] postNotificationName:@"FHHomeMainDidScrollEnd" object:nil];
-}
-
-#pragma mark notifications
-
-- (void)subTableViewDidScroll:(NSNotification *)noti {
-//    self.tableViewV.scrollEnabled = YES;
-//    UIScrollView *scrollView = noti.object;
-//    self.childVCScrollView = scrollView;
-//    if (self.tableViewV.contentOffset.y < self.headerHeight + KFHHomeSectionHeight + KFHHomeSearchBarHeight) {
-//        scrollView.contentOffset = CGPointZero;
-//        scrollView.showsVerticalScrollIndicator = NO;
-//
-//        //将未滑动到置顶的子table置顶
-//        for (FHHomeItemViewController *vc in self.itemsVCArray) {
-//            if (vc.tableView.numberOfSections > 0 && [vc.tableView numberOfRowsInSection:0] > 0 && (NSInteger)vc.tableView.contentOffset.y != 0){
-//                vc.tableView.contentOffset = CGPointZero;
-//            }
-//        }
-//    } else {
-//        //        self.tableView.contentOffset = CGPointMake(0, HeaderViewH);
-//        scrollView.showsVerticalScrollIndicator = YES;
-//    }
 }
 
 #pragma mark changeTopStatus

@@ -703,7 +703,6 @@ static NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
     // 滚动时发出通知
-//    [[NSNotificationCenter defaultCenter] postNotificationName:@"FHHomeSubTableViewDidScroll" object:scrollView];
    if (!_childScrollEnable) {
        scrollView.contentOffset = CGPointMake(0, 0);
    }else{
