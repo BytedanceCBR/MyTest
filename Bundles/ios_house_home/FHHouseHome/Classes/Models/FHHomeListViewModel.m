@@ -301,6 +301,7 @@
             itemVC.panelVM = self.panelVM;
             if (houseTypeNum.integerValue == self.houseType) {
                 itemVC.isOriginShowSelf = YES;
+                self.childVCScrollView = itemVC.tableView;
                 self.previousHouseType = self.houseType;
             }else
             {
@@ -348,6 +349,8 @@
     if (![FHEnvContext isNetworkConnected]) {
         self.homeViewController.scrollView.scrollEnabled = NO;
     }
+    
+    self.superScrollEnable = YES;
     //    [self.tableViewV reloadData];
     //    self.tableViewV.scrollEnabled = YES;
 }
@@ -574,6 +577,7 @@
 - (void)updateIndexChangedScrollStatus{
       for (FHHomeItemViewController *vc in self.itemsVCArray) {
           if ([vc isKindOfClass:[FHHomeItemViewController class]] && vc.houseType == self.houseType) {
+              self.childVCScrollView = vc.tableView;
               if (vc.tableView.contentOffset.y == 0) {
                   self.superScrollEnable = YES;
               }
@@ -734,9 +738,13 @@
             }
             [self changeHouseCategoryStatus:NO];
         }else{
-            if (scrollView.contentOffset.y >= self.headerHeight + KFHHomeSectionHeight + KFHHomeSearchBarHeight) {
+            if (scrollView.contentOffset.y > (self.headerHeight + KFHHomeSectionHeight + KFHHomeSearchBarHeight)) {
                 scrollView.contentOffset = CGPointMake(0.0, self.headerHeight + KFHHomeSectionHeight + KFHHomeSearchBarHeight);
-                self.superScrollEnable = NO;
+                if ((self.childVCScrollView.contentSize.height >= [[FHHomeCellHelper sharedInstance] heightForFHHomeListHouseSectionHeight])) {
+                    self.superScrollEnable = NO;
+                }else{
+                     self.superScrollEnable = YES;
+                }
                 for (FHHomeItemViewController *vc in self.itemsVCArray) {
                     vc.childScrollEnable = YES;
                 }
@@ -864,9 +872,15 @@
     
     if (isShowTopHouse && (self.childResetZeroStatus != isShowTopHouse)) {
         for (FHHomeItemViewController *vc in self.itemsVCArray) {
-               if (vc.tableView.numberOfSections > 0 && [vc.tableView numberOfRowsInSection:0] > 0 && (NSInteger)vc.tableView.contentOffset.y != 0){
-                   vc.tableView.contentOffset = CGPointZero;
-               }
+            if (vc.houseType == self.houseType) {
+                self.childVCScrollView = vc.tableView;
+                if (vc.tableView.contentSize.height < [[FHHomeCellHelper sharedInstance] heightForFHHomeListHouseSectionHeight]) {
+                    self.superScrollEnable = YES;
+                }
+            }
+           if (vc.tableView.numberOfSections > 0 && [vc.tableView numberOfRowsInSection:0] > 0 && (NSInteger)vc.tableView.contentOffset.y != 0){
+               vc.tableView.contentOffset = CGPointZero;
+           }
         }
     }
     self.childResetZeroStatus = isShowTopHouse;
