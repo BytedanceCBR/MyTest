@@ -46,12 +46,18 @@ DEC_TASK_N(TTStartupUITask,FHTaskTypeUI,TASK_PRIORITY_HIGH);
 
 - (void)startWithApplication:(UIApplication *)application options:(NSDictionary *)launchOptions {
     [super startWithApplication:application options:launchOptions];
+    
+    double before = CFAbsoluteTimeGetCurrent();
+    
     [[self class] makeKeyWindowVisible];
     if ([[TTThemeManager sharedInstance_tt] respondsToSelector:@selector(applyBundleName:)]) {
         [[TTThemeManager sharedInstance_tt] performSelector:@selector(applyBundleName:) withObject:@"FHHouseBase"];
     }
     [self registerHomePageViewControllers];
     [[self class] setLaunchController];
+    
+    double launchTime2 = (CFAbsoluteTimeGetCurrent() - before);
+    NSLog( @"UI阶段耗时：%.2fms", launchTime2 * 1000);
     
     //待首页view初始化后 再执行切tab
     

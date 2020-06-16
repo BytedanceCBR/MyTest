@@ -173,6 +173,8 @@ static NSDate *preMainDate = nil;
         return nil;
     }
     
+    double before = CFAbsoluteTimeGetCurrent();
+     
     TTStartupTask *task = [[taskClass alloc] init];
     if ([task shouldExecuteForApplication:application options:options]) {
         if ([self isConcurrentFotType:headerInfo->type] || [task isConcurrent]) {
@@ -193,6 +195,8 @@ static NSDate *preMainDate = nil;
         [SharedAppDelegate trackCurrentIntervalInMainThreadWithTag:[task taskIdentifier]];
     }
     [SharedAppDelegate addResidentTaskIfNeeded:task];
+    double launchTime2 = (CFAbsoluteTimeGetCurrent() - before);
+    NSLog( @"%@阶段耗时：%.2fms",taskName, launchTime2 * 1000);
     return task;
 }
 

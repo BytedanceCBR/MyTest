@@ -40,7 +40,7 @@
     
     [group.tasks addObject:[[self class] serviceStartupForType:TTServiceStartupTypeMonitor]];
 //    [group.tasks addObject:[[self class] serviceStartupForType:TTServiceStartupTypeCustomUISetting]];
-    [group.tasks addObject:[[self class] serviceStartupForType:TTServiceStartupTypeCellRegister]];
+//    [group.tasks addObject:[[self class] serviceStartupForType:TTServiceStartupTypeCellRegister]];
     [group.tasks addObject:[[self class] serviceStartupForType:TTServiceStartupTypeMapperRegister]];
     [group.tasks addObject:[[self class] serviceStartupForType:TTServiceStartupTypeAVPlayer]];
     [group.tasks addObject:[[self class] serviceStartupForType:TTServiceStartupTypeTimeInterval]];
