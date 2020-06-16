@@ -730,6 +730,11 @@
         
         [self changeTopSearchBtn:scrollView.contentOffset.y > KFHHomeSearchBarHeight];
         
+        if(self.tableViewV.contentOffset.y == 0){
+            for (FHHomeItemViewController *vc in self.itemsVCArray) {
+                 vc.childScrollEnable = NO;
+            }
+        }
         
         if (!_superScrollEnable) {
             scrollView.contentOffset = CGPointMake(0, self.headerHeight + KFHHomeSectionHeight + KFHHomeSearchBarHeight);
