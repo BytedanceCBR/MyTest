@@ -735,19 +735,20 @@
             scrollView.contentOffset = CGPointMake(0, self.headerHeight + KFHHomeSectionHeight + KFHHomeSearchBarHeight);
            for (FHHomeItemViewController *vc in self.itemsVCArray) {
                 vc.childScrollEnable = YES;
-            }
+           }
             [self changeHouseCategoryStatus:NO];
         }else{
-            if (scrollView.contentOffset.y > (self.headerHeight + KFHHomeSectionHeight + KFHHomeSearchBarHeight)) {
+            if (scrollView.contentOffset.y >= (self.headerHeight + KFHHomeSectionHeight + KFHHomeSearchBarHeight)) {
                 scrollView.contentOffset = CGPointMake(0.0, self.headerHeight + KFHHomeSectionHeight + KFHHomeSearchBarHeight);
-                if ((self.childVCScrollView.contentSize.height >= [[FHHomeCellHelper sharedInstance] heightForFHHomeListHouseSectionHeight])) {
+                if ((self.childVCScrollView.contentSize.height >= [[FHHomeCellHelper sharedInstance] heightForFHHomeListHouseSectionHeight]) && self.childVCScrollView.contentOffset.y != 0) {
                     self.superScrollEnable = NO;
                 }else{
-                     self.superScrollEnable = YES;
+                    self.superScrollEnable = YES;
                 }
                 for (FHHomeItemViewController *vc in self.itemsVCArray) {
                     vc.childScrollEnable = YES;
                 }
+                [self changeHouseCategoryStatus:NO];
             }else
             {
                 [self changeHouseCategoryStatus:YES];
