@@ -6,6 +6,9 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "FHFilterNodeModel.h"
+#import "FHConditionPanelNodeSelection.h"
+#import "FHFindHouseAreaSelectionPanel.h"
 
 #define REGION_CONTENT_HEIGHT 258
 #define REGION_CELL_ID @"region_cell_id"
@@ -25,8 +28,11 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FHHouseFindHelpRegionSheet : UIView
 
+@property(nonatomic, strong) FHFindHouseAreaSelectionPanel *areaPanel;
 @property(nonatomic, weak) id tableViewDelegate;
 
+- (void)setNodes:(NSArray<FHFilterNodeModel*>*)nodes;
+- (NSArray<FHFilterNodeModel *> *)selectedNodes;
 - (void)showWithCompleteBlock:(FHHouseFindRegionCompleteBlock)completeBlock cancelBlock:(FHHouseFindRegionCancelBlock)cancelBlock;
 - (void)dismiss;
 @end

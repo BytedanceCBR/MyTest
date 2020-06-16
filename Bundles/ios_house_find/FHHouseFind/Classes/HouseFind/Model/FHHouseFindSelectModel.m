@@ -13,7 +13,7 @@
 {
     self = [super init];
     if (self) {
-        _selectIndexes = [NSMutableSet new];
+        _selectIndexes = [NSMutableArray new];
     }
     return self;
 }
@@ -104,6 +104,93 @@
                 [query appendFormat:@"%@[]=%@",op.type,op.value];
             }
         }
+    }
+    
+    return [query copy];
+}
+
+//该方法用于帮我找房区域选择
+- (NSString *)selectQueryForFindingHouse
+{
+    NSMutableString *query = [[NSMutableString alloc] init];
+    if (self.tabId == FHSearchTabIdTypePrice) {
+ 
+        if (!self.rate) {
+            return nil;
+        }
+        
+        NSInteger r = self.rate.integerValue;
+        if (self.lowerPrice && self.higherPrice) {
+            NSInteger lowPrice = self.lowerPrice.integerValue;
+            NSInteger highPrice = self.higherPrice.integerValue;
+            if (lowPrice > highPrice) {
+                NSInteger temp = lowPrice;
+                lowPrice = highPrice;
+                highPrice = temp;
+            }
+            if (highPrice == 0 && self.fromType == FHHouseFindPriceFromTypeHelp) {
+                [query appendFormat:@"%@[]=[%ld]",self.configOption.type?:@"price",lowPrice*r];
+            }else {
+                [query appendFormat:@"%@[]=[%ld,%ld]",self.configOption.type?:@"price",lowPrice*r,highPrice*r];
+            }
+            
+        }else if (self.lowerPrice){
+            NSInteger lowPrice = self.lowerPrice.integerValue;
+            [query appendFormat:@"%@[]=[%ld]",self.configOption.type?:@"price",lowPrice*r];
+            
+        }else if (self.higherPrice){
+            NSInteger highPrice = self.higherPrice.integerValue;
+            if (highPrice > 0) {
+                [query appendFormat:@"%@[]=[0,%ld]",self.configOption.type?:@"price",highPrice*r];
+            }else {
+                [query appendFormat:@"%@[]=[%ld]",self.configOption.type?:@"price",0];
+            }
+        }else{
+            if (self.fromType == FHHouseFindPriceFromTypeHelp) {
+                for (NSNumber *index in self.selectIndexes) {
+                    if (self.configOption.options.count > index.integerValue) {
+                        FHSearchFilterConfigOption *op = self.configOption.options[index.integerValue];
+                        if (query.length > 0) {
+                            [query appendString:@"&"];
+                        }
+                        [query appendFormat:@"%@[]=%@",op.type,op.value];
+                    }
+                }
+            }
+        }
+    }else{
+        
+        if (!_configOption) {
+            return nil;
+        }
+        
+        //帮我找房区域选择特殊处理，需要支持商圈
+        if (self.tabId == FHSearchTabIdTypeRegion) {
+            NSArray<FHSearchFilterConfigOption *> *options = @[self.configOption];
+            __block NSArray<FHSearchFilterConfigOption *> *itemOptions = options.copy;
+            for (NSNumber *index in self.selectIndexes) {
+                if (itemOptions.count > index.integerValue) {
+                    FHSearchFilterConfigOption *op = itemOptions[index.integerValue];
+                    if (query.length > 0) {
+                        [query appendString:@"&"];
+                    }
+                    [query appendFormat:@"%@[]=%@",op.type,op.value];
+                    
+                    itemOptions = itemOptions[index.integerValue].options;
+                }
+            }
+        } else {
+            for (NSNumber *index in self.selectIndexes) {
+                if (self.configOption.options.count > index.integerValue) {
+                    FHSearchFilterConfigOption *op = self.configOption.options[index.integerValue];
+                    if (query.length > 0) {
+                        [query appendString:@"&"];
+                    }
+                    [query appendFormat:@"%@[]=%@",op.type,op.value];
+                }
+            }
+        }
+        
     }
     
     return [query copy];

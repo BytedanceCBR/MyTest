@@ -29,6 +29,9 @@
 #import <TTBaseLib/TTDeviceHelper.h>
 #import <FHHouseBase/FHCommonDefines.h>
 #import <FHHouseMine/FHLoginDefine.h>
+#import "FHFindHouseAreaSelectionPanel.h"
+#import "FHFilterModelParser.h"
+#import "AreaSelectionTableViewVM.h"
 
 #define HELP_HEADER_ID @"header_id"
 #define HELP_ITEM_HOR_MARGIN 20
@@ -63,6 +66,7 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
 @property (nonatomic , strong) FHSearchFilterConfigItem *roomConfigItem;
 
 @property (nonatomic , strong) FHHouseFindSelectItemModel *selectRegionItem;
+@property (nonatomic , strong) FHHouseFindHelpRegionSheet *regionSheet;
 
 @property (nonatomic , weak) FHHouseFindHelpContactCell *contactCell;
 @property (nonatomic , weak) FHHouseFindHelpSubmitCell *commitCell;
@@ -241,7 +245,7 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
     NSMutableString *query = [NSMutableString new];
     if (selectModel.items.count > 0) {
         for (FHHouseFindSelectItemModel *item in selectModel.items ) {
-            NSString *q = [item selectQuery];
+            NSString *q = [item selectQueryForFindingHouse];
             if (!q) {
 #if DEBUG
                 NSLog(@"WARNING select query is nil for item : %@",item);
@@ -386,19 +390,95 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
     } else {
         // Fallback on earlier versions
     }
+    NSArray<FHFilterNodeModel*> *configs = [self.class convertConfigItemsToModel:@[model.items.lastObject.configOption]];
     __weak typeof(self)wself = self;
     frame.size.height = REGION_CONTENT_HEIGHT + bottomHeight;
-    FHHouseFindHelpRegionSheet *sheet = [[FHHouseFindHelpRegionSheet alloc]initWithFrame:frame];
-    sheet.tableViewDelegate = self;
-    [sheet showWithCompleteBlock:^{
+    _regionSheet = [[FHHouseFindHelpRegionSheet alloc]initWithFrame:frame];
+    [_regionSheet setNodes:configs];
+    [_regionSheet showWithCompleteBlock:^{
         [wself updateRegionItem:section];
     } cancelBlock:^{
-        
+
     }];
+}
+
++(NSArray<FHFilterNodeModel*>*)convertConfigItemsToModel:(NSArray<FHSearchFilterConfigOption*>*)items {
+    NSMutableArray<FHFilterNodeModel*>* result = [[NSMutableArray alloc] initWithCapacity:[items count]];
+    [items enumerateObjectsUsingBlock:^(FHSearchFilterConfigOption * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        FHFilterNodeModel* model = [self convertConfigItemToModel:obj];
+        [result addObject:model];
+    }];
+    return result;
+}
+
++(FHFilterNodeModel*)convertConfigItemToModel:(FHSearchFilterConfigOption*)item {
+    FHFilterNodeModel* model = [[FHFilterNodeModel alloc] init];
+    model.label = item.text;
+    model.isSupportMulti = item.supportMulti;
+    if ([item.options count] > 0) {
+        model.children = [self convertConfigOptionsToModel:item.options
+                                              supportMutli:item.supportMulti
+                                                withParent:model];
+    } else {
+        model.children = nil;
+    }
+    return model;
+}
+
+
++(NSArray<FHFilterNodeModel*>*)convertConfigOptionsToModel:(NSArray<FHSearchFilterConfigOption*>*)options
+                                              supportMutli:(NSNumber*)supportNutli
+                                                withParent:(FHFilterNodeModel*)model {
+    NSMutableArray<FHFilterNodeModel*>* result = [[NSMutableArray alloc] init];
+    [options enumerateObjectsUsingBlock:^(FHSearchFilterConfigOption * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        FHFilterNodeModel* mm = [self convertConfigOptionToModel:obj
+                                                    supportMutli:supportNutli ? supportNutli : obj.supportMulti
+                                                      withParent:model];
+        [result addObject:mm];
+    }];
+    return result;
+}
+
++(FHFilterNodeModel*)convertConfigOptionToModel:(FHSearchFilterConfigOption*)option
+                                   supportMutli:(NSNumber*)supportNutli
+                                     withParent:(FHFilterNodeModel*)model {
+    FHFilterNodeModel* result = [[FHFilterNodeModel alloc] init];
+    result.label = option.text;
+    result.rankType = option.rankType;
+    result.isEmpty = [option.isEmpty integerValue];
+    result.isNoLimit = [option.isNoLimit integerValue];
+    result.value = option.value;
+    result.key = option.type;
+    result.parent = model;
+    result.rate = model.rate;
+    result.isSupportMulti = supportNutli ? [supportNutli boolValue] : [option.supportMulti boolValue];
+    result.children = [self convertConfigOptionsToModel:option.options supportMutli:supportNutli withParent:result];
+    return result;
+}
+
+- (NSString*)getFilterLabelForSelectedNodes:(NSArray<FHFilterNodeModel*>*)nodes {
+    if (nodes == nil || [nodes count] == 0) {
+        return nil;
+    } else if ([nodes count] == 1) {
+        return [nodes firstObject].label;
+    }
+    
+    return nil;
 }
 
 - (void)updateRegionItem:(NSInteger)section
 {
+    NSArray *VMs = self.regionSheet.areaPanel.selectionViewModels;
+    [_selectRegionItem.selectIndexes removeAllObjects];
+    [VMs enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        AreaSelectionTableViewVM *viewModel = (AreaSelectionTableViewVM *)obj;
+        if (viewModel.selectedIndexPath.count > 0) {
+            //区域选择控件不支持多选，所以indexPath取数组中的第一个就可以
+            NSIndexPath *indexPath = [viewModel.selectedIndexPath allObjects].firstObject;
+            [_selectRegionItem.selectIndexes addObject:@(indexPath.row)];
+        }
+    }];
+    
     FHHouseType ht = _houseType;
     FHHouseFindSelectModel *model = [self selectModelWithType:ht];
     FHHouseFindSelectItemModel *selectItem = [model selectItemWithTabId:FHSearchTabIdTypeRegion];
@@ -440,6 +520,7 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
     
     FHSearchFilterConfigOption *options = [item.options firstObject];
     NSString *optionType = options.type;
+    NSMutableArray *optionTypes = [NSMutableArray array];  //帮我找房多级区域选择
     FHHouseFindSelectItemModel *selectItem = [model selectItemWithTabId:[item.tabId integerValue]];
     if (!selectItem) {
         selectItem = [model makeItemWithTabId:item.tabId.integerValue];
@@ -448,13 +529,22 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
         selectItem.configOption = [item.options firstObject];
     }
     if (item.tabId.integerValue == FHSearchTabIdTypeRegion && options.options.count > 0) {
-        for (FHSearchFilterConfigOption *subOptions in options.options) {
-            if (![subOptions.type isEqualToString:@"empty"]) {
-                optionType = subOptions.type;
-                break;
-            }
-        }
+//        for (FHSearchFilterConfigOption *subOptions in options.options) {
+//            if (![subOptions.type isEqualToString:@"empty"]) {
+//                optionType = subOptions.type;
+//                break;
+//            }
+//        }
+        //1.0.1版本帮我找房优化需求，此处为支持多级区域选择改动较大，逻辑独立处理
+        [self configAreaMultiSelectionWithOptionTypes:optionTypes
+                                              options:options
+                                                model:model
+                                               params:params
+                                                 item:item
+                                           selectItem:selectItem];
+        return;
     }
+    
     __block id priceItem = nil;
     __block NSNumber *rate = nil;
     [params enumerateKeysAndObjectsUsingBlock:^(NSString *key, id _Nonnull obj, BOOL * _Nonnull stop) {
@@ -506,6 +596,90 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
         [self fillPriceItem:item selectItem:selectItem priceItem:priceItem rate:rate];
         //        NSLog(@"zjing %@",selectItem);
     }
+}
+
+- (void)configAreaMultiSelectionWithOptionTypes:(NSMutableArray *)optionTypes
+                                        options:(FHSearchFilterConfigOption *)options
+                                          model:(FHHouseFindSelectModel *)model
+                                         params:(NSDictionary *)params
+                                           item:(FHSearchFilterConfigItem *)item
+                                     selectItem:(FHHouseFindSelectItemModel *)selectItem {
+    //加入region级type（区域）
+    [optionTypes addObject:options.type];
+    
+    //遍历disrict级type（行政区）
+    [options.options enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        FHSearchFilterConfigOption *currentOption = (FHSearchFilterConfigOption *)obj;
+        if ([currentOption.type isEqualToString:@"empty"] || [optionTypes containsObject:currentOption.type]) {
+            return;
+        }
+        
+        //加入不存在的type
+        if (![optionTypes containsObject:currentOption.type]) {
+            [optionTypes addObject:currentOption.type];
+        }
+        
+        //遍历area级type（商圈）
+        [currentOption.options enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+            FHSearchFilterConfigOption *currentOption = (FHSearchFilterConfigOption *)obj;
+            if ([currentOption.type isEqualToString:@"empty"] || [optionTypes containsObject:currentOption.type]) {
+                return;
+            }
+            
+            //加入不存在的type
+            if (![optionTypes containsObject:currentOption.type]) {
+                [optionTypes addObject:currentOption.type];
+            }
+        }];
+    }];
+    
+    //把region写死，默认插到第一个位置
+    [model addSelecteItem:selectItem withIndex:0];
+    
+    //帮我找房区域选择支持多级，因此需要重新实现逻辑
+    __block NSArray *currentOptions = options.options;
+    [params enumerateKeysAndObjectsUsingBlock:^(NSString *key, id _Nonnull obj, BOOL * _Nonnull stop) {
+        if (![self isValidKey:key inTypes:optionTypes]) {
+            return;
+        }
+        
+        if ([obj isKindOfClass:[NSArray class]]) {
+            NSArray* items = (NSArray*)obj;
+            
+            [items enumerateObjectsUsingBlock:^(NSString *it, NSUInteger idx, BOOL * _Nonnull stop) {
+                //遍历area
+                for (NSInteger index = 0; index < currentOptions.count; index++) {
+                    FHSearchFilterConfigOption *option = currentOptions[index];
+                    if (![it isEqualToString:option.value]) {
+                        continue;
+                    }
+                    if (item.tabId.integerValue == FHSearchTabIdTypeRegion) {
+                        FHSearchFilterConfigOption *op = nil;
+                        if (item.options.count > 0) {
+                            op = [item.options firstObject];
+                        }
+                        if ([op.supportMulti boolValue]) {
+                            [model addSelecteItem:selectItem withIndex:index];
+                            currentOptions = option.options;
+                            *stop = YES;
+                        }
+                    }
+                }
+            }];
+        }
+    }];
+}
+
+- (BOOL)isValidKey:(NSString *)key inTypes:(NSArray *)types {
+    __block BOOL hasThisKey = NO;
+    [types enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        if ([key hasPrefix:obj]) {
+            hasThisKey = YES;
+            *stop = YES;
+        }
+    }];
+    
+    return hasThisKey;
 }
 
 - (void)selectDefaultItems
@@ -710,20 +884,27 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
             
             FHHouseFindHelpRegionCell *pcell = [collectionView dequeueReusableCellWithReuseIdentifier:HELP_REGION_CELL_ID forIndexPath:indexPath];
             FHHouseFindSelectItemModel *selectItem = [model selectItemWithTabId:[item.tabId integerValue]];
-            FHSearchFilterConfigOption *options = [item.options firstObject];
+            NSArray<FHSearchFilterConfigOption *> *options = item.options;
             NSMutableString *titleString = [NSMutableString stringWithString:@""];
-            
-            NSSortDescriptor *sort = [NSSortDescriptor sortDescriptorWithKey:@"description" ascending:YES];
-            NSMutableArray *itemsArray = [selectItem.selectIndexes sortedArrayUsingDescriptors:[NSArray arrayWithObject:sort]];
+            __block NSArray<FHSearchFilterConfigOption *> *filterOptions = options;
+            NSMutableArray *itemsArray = selectItem.selectIndexes.mutableCopy;
             [itemsArray enumerateObjectsUsingBlock:^(NSNumber *obj, NSUInteger idx, BOOL * _Nonnull stop) {
                 
-                if (obj.integerValue < options.options.count) {
-                    FHSearchFilterConfigOption *itemOption = options.options[obj.integerValue];
+                if (!filterOptions) {
+                    *stop = YES;
+                    return;
+                }
+                
+                NSInteger optionIndex = obj.integerValue;
+                if (optionIndex < filterOptions.count) {
+                    FHSearchFilterConfigOption *itemOption = filterOptions[optionIndex];
                     if (idx == 0) {
                         [titleString appendString:itemOption.text];
                     }else {
                         [titleString appendString:[NSString stringWithFormat:@"/%@",itemOption.text]];
                     }
+                    
+                    filterOptions = filterOptions[optionIndex].options;
                 }
             }];
             [pcell updateWithTitle:titleString];
