@@ -34,7 +34,11 @@ NS_ASSUME_NONNULL_BEGIN
 @interface FHSuggestHeaderViewCell : UITableViewCell
 
 @property (nonatomic, strong)   UILabel       *label;
-@property (nonatomic, strong)   UIButton       *deleteBtn;
+@property (nonatomic, strong)   UIButton      *findHouseButton;
+@property (nonatomic, copy)     void(^buttonAction)(void);
+
+//TODO: 修改参数类型
+- (void)refreshData:(id)data;
 
 @end
 

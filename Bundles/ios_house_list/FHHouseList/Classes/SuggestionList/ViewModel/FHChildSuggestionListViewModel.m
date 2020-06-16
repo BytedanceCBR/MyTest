@@ -18,6 +18,7 @@
 #import "FHOldSuggestionItemCell.h"
 #import "FHSuggestionListViewController.h"
 #import "FHSuggestionEmptyCell.h"
+#import "FHFindHouseHelperCell.h"
 
 @interface FHChildSuggestionListViewModel () <UITableViewDelegate, UITableViewDataSource, FHSugSubscribeListDelegate>
 
@@ -587,7 +588,8 @@
         if (indexPath.row == 0) {
             FHSuggestHeaderViewCell *headerCell = (FHSuggestHeaderViewCell *)[tableView dequeueReusableCellWithIdentifier:@"suggestHeaderCell" forIndexPath:indexPath];
             headerCell.selectionStyle = UITableViewCellSelectionStyleNone;
-            __weak typeof(self) wself = self;
+            //TODO: 猜你想找增加帮我找房入口
+//            [headerCell refreshData:model];
             return headerCell;
         }
         FHGuessYouWantCell *cell = (FHGuessYouWantCell *)[tableView dequeueReusableCellWithIdentifier:@"guessYouWantCell" forIndexPath:indexPath];
@@ -599,10 +601,15 @@
         return cell;
     } else if (tableView.tag == 2) {
         if (self.sugListData.count == 0) {
-            //空页面
-            FHSuggestionEmptyCell *cell = (FHSuggestionEmptyCell *)[tableView dequeueReusableCellWithIdentifier:@"suggetEmptyCell" forIndexPath:indexPath];
+            //TODO: 跳转到帮我找房，如何展示待确认，先不展示空页面
+            FHFindHouseHelperCell *cell = (FHFindHouseHelperCell *)[tableView dequeueReusableCellWithIdentifier:@"helperCell" forIndexPath:indexPath];
             cell.selectionStyle = UITableViewCellSelectionStyleNone;
             return cell;
+            
+//            //空页面
+//            FHSuggestionEmptyCell *cell = (FHSuggestionEmptyCell *)[tableView dequeueReusableCellWithIdentifier:@"suggetEmptyCell" forIndexPath:indexPath];
+//            cell.selectionStyle = UITableViewCellSelectionStyleNone;
+//            return cell;
         }
         // 联想词列表
         if (self.houseType == FHHouseTypeNewHouse) {
@@ -714,6 +721,9 @@
     } else if (tableView.tag == 2) {
         // 联想词
         if (self.sugListData.count == 0) {
+            //TODO: 展示帮我找房
+            return 133;
+            
             return self.listController.suggestTableView.frame.size.height;
         }
         if (self.houseType == FHHouseTypeNewHouse) {

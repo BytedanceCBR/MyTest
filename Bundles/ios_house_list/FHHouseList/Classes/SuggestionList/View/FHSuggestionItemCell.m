@@ -269,6 +269,29 @@
         make.height.mas_equalTo(20);
         make.bottom.mas_equalTo(self.contentView);
     }];
+    
+    _findHouseButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    [_findHouseButton setTitle:@"帮我找房" forState:UIControlStateNormal];
+    [_findHouseButton setBackgroundColor:[UIColor whiteColor]];
+    [_findHouseButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+    [_findHouseButton.titleLabel setFont:[UIFont systemFontOfSize:12]];
+    [_findHouseButton addTarget:self action:@selector(findHouseButtonAction:) forControlEvents:UIControlEventTouchUpInside];
+    [self.contentView addSubview:_findHouseButton];
+    [_findHouseButton mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.centerY.equalTo(self.label);
+        make.right.mas_equalTo(-10);
+        make.size.mas_equalTo(CGSizeMake(60, 20));
+    }];
+}
+
+- (void)refreshData:(id)data {
+//    self.findHouseButton.hidden = data.xxx;
+}
+
+- (void)findHouseButtonAction:(UIButton *)sender {
+    if (self.buttonAction) {
+        self.buttonAction();
+    }
 }
 
 @end
