@@ -9,6 +9,7 @@
 #import "ConditionSelectPanelDelegate.h"
 #import "FHConditionPanelNodeSelection.h"
 #import "AreaConditionFilterPanel.h"
+#import "FHFindHouseAreaSelectionTableViewVM.h"
 @class FHFilterNodeModel;
 
 NS_ASSUME_NONNULL_BEGIN
@@ -17,14 +18,15 @@ NS_ASSUME_NONNULL_BEGIN
 {
     NSMutableArray<HotLink*>* _hotLinks;
     NSMutableArray<UITableView*>* _tables;
-    AreaSelectionTableViewVM* _lastListViewModel;
+    FHFindHouseAreaSelectionTableViewVM* _lastListViewModel;
 }
-@property (nonatomic, strong) NSArray<AreaSelectionTableViewVM*>* selectionViewModels;
+@property (nonatomic, strong) NSArray<FHFindHouseAreaSelectionTableViewVM *>* selectionViewModels;
 @property (nonatomic, strong) ButtomBarView* buttomBarView;
 @property (nonatomic, weak) id<FHConditionPanelDelegate> delegate;
 @property (nonatomic, weak) id<UserReactionListener> userReactionListener;
--(instancetype)initWithLastListViewModel:(AreaSelectionTableViewVM*)lastListViweModel;
+-(instancetype)initWithLastListViewModel:(FHFindHouseAreaSelectionTableViewVM*)lastListViweModel;
 -(void)setNodes:(NSArray<FHFilterNodeModel*>*)nodes;
+-(void)setSelectedNodes:(NSArray<FHFilterNodeModel *> *)nodes selectedIndexes:(NSArray<NSNumber *> *)selectedIndexes;
 -(void)addRightVerticalLineViewToMiddleView:(UIView*)target;
 -(void)onExtendCategoryActivite;
 -(void)onExtendCategoryDeactivite;

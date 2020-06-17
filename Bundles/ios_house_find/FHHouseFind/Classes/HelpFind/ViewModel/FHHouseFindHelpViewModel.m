@@ -394,7 +394,11 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
     __weak typeof(self)wself = self;
     frame.size.height = REGION_CONTENT_HEIGHT + bottomHeight;
     _regionSheet = [[FHHouseFindHelpRegionSheet alloc]initWithFrame:frame];
-    [_regionSheet setNodes:configs];
+    if (selectItem.selectIndexes.count > 0) {
+        [_regionSheet setSelectedNodes:configs selectedIndexes:selectItem.selectIndexes];
+    } else {
+        [_regionSheet setNodes:configs];
+    }
     [_regionSheet showWithCompleteBlock:^{
         [wself updateRegionItem:section];
     } cancelBlock:^{
@@ -402,7 +406,7 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
     }];
 }
 
-+(NSArray<FHFilterNodeModel*>*)convertConfigItemsToModel:(NSArray<FHSearchFilterConfigOption*>*)items {
++ (NSArray<FHFilterNodeModel *> *)convertConfigItemsToModel:(NSArray<FHSearchFilterConfigOption *> *)items {
     NSMutableArray<FHFilterNodeModel*>* result = [[NSMutableArray alloc] initWithCapacity:[items count]];
     [items enumerateObjectsUsingBlock:^(FHSearchFilterConfigOption * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
         FHFilterNodeModel* model = [self convertConfigItemToModel:obj];
@@ -411,7 +415,7 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
     return result;
 }
 
-+(FHFilterNodeModel*)convertConfigItemToModel:(FHSearchFilterConfigOption*)item {
++ (FHFilterNodeModel *)convertConfigItemToModel:(FHSearchFilterConfigOption *)item {
     FHFilterNodeModel* model = [[FHFilterNodeModel alloc] init];
     model.label = item.text;
     model.isSupportMulti = item.supportMulti;
@@ -426,9 +430,9 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
 }
 
 
-+(NSArray<FHFilterNodeModel*>*)convertConfigOptionsToModel:(NSArray<FHSearchFilterConfigOption*>*)options
-                                              supportMutli:(NSNumber*)supportNutli
-                                                withParent:(FHFilterNodeModel*)model {
++ (NSArray<FHFilterNodeModel *> *)convertConfigOptionsToModel:(NSArray<FHSearchFilterConfigOption *> *)options
+                                                 supportMutli:(NSNumber*)supportNutli
+                                                   withParent:(FHFilterNodeModel*)model {
     NSMutableArray<FHFilterNodeModel*>* result = [[NSMutableArray alloc] init];
     [options enumerateObjectsUsingBlock:^(FHSearchFilterConfigOption * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
         FHFilterNodeModel* mm = [self convertConfigOptionToModel:obj
@@ -439,9 +443,9 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
     return result;
 }
 
-+(FHFilterNodeModel*)convertConfigOptionToModel:(FHSearchFilterConfigOption*)option
-                                   supportMutli:(NSNumber*)supportNutli
-                                     withParent:(FHFilterNodeModel*)model {
++ (FHFilterNodeModel *)convertConfigOptionToModel:(FHSearchFilterConfigOption *)option
+                                     supportMutli:(NSNumber*)supportNutli
+                                       withParent:(FHFilterNodeModel*)model {
     FHFilterNodeModel* result = [[FHFilterNodeModel alloc] init];
     result.label = option.text;
     result.rankType = option.rankType;

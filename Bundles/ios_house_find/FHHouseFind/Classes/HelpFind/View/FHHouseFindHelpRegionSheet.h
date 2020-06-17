@@ -32,6 +32,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic, weak) id tableViewDelegate;
 
 - (void)setNodes:(NSArray<FHFilterNodeModel*>*)nodes;
+- (void)setSelectedNodes:(NSArray<FHFilterNodeModel *> *)nodes selectedIndexes:(NSArray<NSNumber *> *)selectedIndexes;
 - (NSArray<FHFilterNodeModel *> *)selectedNodes;
 - (void)showWithCompleteBlock:(FHHouseFindRegionCompleteBlock)completeBlock cancelBlock:(FHHouseFindRegionCancelBlock)cancelBlock;
 - (void)dismiss;

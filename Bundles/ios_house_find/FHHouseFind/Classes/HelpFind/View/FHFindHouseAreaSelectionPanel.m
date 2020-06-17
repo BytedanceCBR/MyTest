@@ -7,7 +7,6 @@
 
 #import "FHFindHouseAreaSelectionPanel.h"
 #import <Masonry/Masonry.h>
-#import "AreaSelectionTableViewVM.h"
 #import "UIColor+Theme.h"
 //#import "ButtomBarView.h"
 #import "FHFilterNodeModel.h"
@@ -23,7 +22,7 @@
 
 @implementation FHFindHouseAreaSelectionPanel
 
--(instancetype)initWithLastListViewModel:(AreaSelectionTableViewVM*)lastListViweModel {
+-(instancetype)initWithLastListViewModel:(FHFindHouseAreaSelectionTableViewVM*)lastListViweModel {
     self = [super init];
     if (self) {
         _tables = [[NSMutableArray alloc] init];
@@ -47,7 +46,7 @@
 
 // only for testing
 - (instancetype)initWithTables:(NSArray<UITableView*>*)tables
-                    withModels:(NSArray<AreaSelectionTableViewVM*>*) models {
+                    withModels:(NSArray<FHFindHouseAreaSelectionTableViewVM*>*) models {
     self = [super init];
     if (self) {
         _tables = [tables mutableCopy];
@@ -77,8 +76,9 @@
     tableView.showsVerticalScrollIndicator = NO;
     [_tables addObject:tableView];
     [self addSubview:tableView];
-    AreaSelectionTableViewVM* vm = [[AreaSelectionTableViewVM alloc] initWithTableView:tableView];
-    vm.isMutliChecked = NO;
+    FHFindHouseAreaSelectionTableViewVM* vm = [[FHFindHouseAreaSelectionTableViewVM alloc] initWithTableView:tableView];
+    vm.isMultiChecked = NO;
+    vm.isLeaf = NO;
     vm.isShowHotDot = YES;
     vm.name = @"main";
 
@@ -89,8 +89,10 @@
     [_tables addObject:tableView];
     [self addSubview:tableView];
 
-    AreaSelectionTableViewVM* subVm = [[AreaSelectionTableViewVM alloc] initWithTableView:tableView];
-    subVm.isMutliChecked = NO;
+    FHFindHouseAreaSelectionTableViewVM* subVm = [[FHFindHouseAreaSelectionTableViewVM alloc] initWithTableView:tableView];
+    subVm.isMultiChecked = NO;
+    subVm.isLeaf = NO;
+    subVm.hiddenRows = @[@(0)];  //隐藏行政区第一项“不限”选项
     subVm.cellBackgroundColor = HEXRGBA(style.grayBGColor);
 
     tableView = [[UITableView alloc] init];
@@ -101,14 +103,15 @@
     [self addSubview:tableView];
     [self addRightVerticalLineViewToMiddleView:tableView];
     
-    AreaSelectionTableViewVM* extendVm = nil;
+    FHFindHouseAreaSelectionTableViewVM* extendVm = nil;
     if (_lastListViewModel == nil) {
-        extendVm = [[AreaSelectionTableViewVM alloc] initWithTableView:tableView];
+        extendVm = [[FHFindHouseAreaSelectionTableViewVM alloc] initWithTableView:tableView];
     } else {
         extendVm = _lastListViewModel;
         extendVm.tableView = tableView;
     }
-    extendVm.isMutliChecked = YES;
+    extendVm.isMultiChecked = NO;
+    extendVm.isLeaf = YES;
     extendVm.isAllowLabelShift = YES;
     extendVm.cellBackgroundColor = HEXRGBA(style.grayBGColor);
     extendVm.name = @"extendVm";
@@ -157,7 +160,7 @@
 }
 
 -(void)onReset:(id)sender {
-    [_selectionViewModels enumerateObjectsUsingBlock:^(AreaSelectionTableViewVM * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+    [_selectionViewModels enumerateObjectsUsingBlock:^(FHFindHouseAreaSelectionTableViewVM * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
         [obj setSelectedIndexPath:[NSIndexPath indexPathForRow:0 inSection:0]];
     }];
 }
@@ -243,14 +246,42 @@
 -(void)setNodes:(NSArray<FHFilterNodeModel*>*)nodes {
     NSParameterAssert(nodes);
     if (nodes && [nodes count] > 0) {
-        AreaSelectionTableViewVM* vm = [_selectionViewModels firstObject];
+        FHFindHouseAreaSelectionTableViewVM* vm = [_selectionViewModels firstObject];
         [vm setNodes:nodes];
         [vm setSelectedNode:[nodes firstObject]];
     }
 }
 
+/**
+ 展开多级选择列表
+ 
+ @param nodes 模型数组
+ @param selectedIndexes 列表选中行
+ */
+-(void)setSelectedNodes:(NSArray<FHFilterNodeModel *> *)nodes selectedIndexes:(NSArray<NSNumber *> *)selectedIndexes {
+    NSParameterAssert(nodes);
+    NSParameterAssert(selectedIndexes);
+    NSAssert(selectedIndexes.count <= _selectionViewModels.count, @"请确保selectedIndexes数量小于viewModel数量！");
+    
+    __block NSArray<FHFilterNodeModel *> *currentNodes = nodes;
+    [selectedIndexes enumerateObjectsUsingBlock:^(NSNumber * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        NSInteger childIndex = obj.integerValue;
+        if (childIndex >= currentNodes.count || idx >= _selectionViewModels.count) {
+            *stop = YES;
+            return;
+        }
+        
+        FHFilterNodeModel *node = [currentNodes objectAtIndex:childIndex];
+        FHFindHouseAreaSelectionTableViewVM *vm = [_selectionViewModels objectAtIndex:idx];
+        [vm setNodes:currentNodes];
+        [vm setSelectedNode:node];
+        
+        currentNodes = node.children;
+    }];
+}
+
 -(void)setConditions:(NSDictionary*)conditions {
-    [_selectionViewModels enumerateObjectsUsingBlock:^(AreaSelectionTableViewVM * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+    [_selectionViewModels enumerateObjectsUsingBlock:^(FHFindHouseAreaSelectionTableViewVM * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
         [obj setConditions:conditions];
     }];
     [self commitSelected];
@@ -269,15 +300,15 @@
 }
 
 -(void)resetCondition:(NSDictionary*)params {
-    [_selectionViewModels enumerateObjectsUsingBlock:^(AreaSelectionTableViewVM * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+    [_selectionViewModels enumerateObjectsUsingBlock:^(FHFindHouseAreaSelectionTableViewVM * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
         [obj setConditions:params];
     }];
     [self commitSelected];
 }
 
 - (NSArray<FHFilterNodeModel *> *)selectedNodes {
-    NSEnumerator<AreaSelectionTableViewVM*> * enumator = [_selectionViewModels reverseObjectEnumerator];
-    AreaSelectionTableViewVM* viewModel = [enumator nextObject];
+    NSEnumerator<FHFindHouseAreaSelectionTableViewVM*> * enumator = [_selectionViewModels reverseObjectEnumerator];
+    FHFindHouseAreaSelectionTableViewVM* viewModel = [enumator nextObject];
     while (viewModel) {
         NSArray* selectedNodes = [viewModel selectedNodes];
         if (selectedNodes != nil && [selectedNodes count] > 0) {
@@ -297,7 +328,7 @@
 }
 
 -(void)commitSelected {
-    [_selectionViewModels enumerateObjectsUsingBlock:^(AreaSelectionTableViewVM * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+    [_selectionViewModels enumerateObjectsUsingBlock:^(FHFindHouseAreaSelectionTableViewVM * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
         [obj.transaction commit];
         // 由于B端造成需要提交回滚conditionCache
         [obj commitSelectedState];
@@ -305,7 +336,7 @@
 }
 
 -(void)rollbackSelected {
-    [_selectionViewModels enumerateObjectsUsingBlock:^(AreaSelectionTableViewVM * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+    [_selectionViewModels enumerateObjectsUsingBlock:^(FHFindHouseAreaSelectionTableViewVM * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
         [obj.transaction rollback];
     }];
     [[_selectionViewModels firstObject] resotreSelectedState];
@@ -322,14 +353,14 @@
 
 -(void)viewWillDisplay {
 //    NSLog(@"viewWillDisplay %@", _name);
-    [_selectionViewModels enumerateObjectsUsingBlock:^(AreaSelectionTableViewVM * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+    [_selectionViewModels enumerateObjectsUsingBlock:^(FHFindHouseAreaSelectionTableViewVM * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
         [obj selectedTableCellAtIndex];
     }];
 }
 
 -(void)viewDidDisplay {
 //    NSLog(@"viewDidDisplay %@", _name);
-    [_selectionViewModels enumerateObjectsUsingBlock:^(AreaSelectionTableViewVM * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+    [_selectionViewModels enumerateObjectsUsingBlock:^(FHFindHouseAreaSelectionTableViewVM * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
         obj.shouldTraceScroll = YES;
     }];
 }
@@ -342,7 +373,7 @@
 //    NSLog(@"viewDidDismiss %@", _name);
 //    NSLog(@"table: %@", _name);
     [self rollbackSelected];
-    [_selectionViewModels enumerateObjectsUsingBlock:^(AreaSelectionTableViewVM * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+    [_selectionViewModels enumerateObjectsUsingBlock:^(FHFindHouseAreaSelectionTableViewVM * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
         obj.shouldTraceScroll = NO;
     }];
 }

@@ -159,6 +159,10 @@
     [self.areaPanel setNodes:nodes];
 }
 
+- (void)setSelectedNodes:(NSArray<FHFilterNodeModel *> *)nodes selectedIndexes:(NSArray<NSNumber *> *)selectedIndexes {
+    [self.areaPanel setSelectedNodes:nodes selectedIndexes:selectedIndexes];
+}
+
 - (NSArray<FHFilterNodeModel *> *)selectedNodes {
     return [self.areaPanel selectedNodes];
 }
