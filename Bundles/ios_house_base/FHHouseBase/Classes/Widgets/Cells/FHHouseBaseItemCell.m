@@ -351,7 +351,7 @@
 
 -(CGFloat)contentSmallImageMaxWidth
 {
-    return  SCREEN_WIDTH - (_isHomePage ? 20 : 5) - YOGA_RIGHT_PRICE_WIDITH - 90; //根据UI图 直接计算出来
+    return  SCREEN_WIDTH - (_isHomePage ? 20 : -40) - YOGA_RIGHT_PRICE_WIDITH - 90; //根据UI图 直接计算出来
 }
 
 -(CGFloat)contentSmallImageTagMaxWidth
@@ -681,7 +681,7 @@
         layout.maxWidth = YGPointValue([self contentSmallImageTagMaxWidth]);
         layout.flexGrow = 0;
     }];
-    CGFloat maxWidth = [self contentSmallImageMaxWidth] - 45;
+    CGFloat maxWidth = [self contentSmallImageMaxWidth] - 70;
     if (_isHomePage) {
         maxWidth = [self contentSmallImageMaxWidth] - 60;
     }
@@ -906,7 +906,7 @@
         layout.flexGrow = 0;
     }];
     
-    CGFloat maxWidth = [self contentSmallImageMaxWidth] - 45;
+    CGFloat maxWidth = [self contentSmallImageMaxWidth] - 70;
     if (_isHomePage) {
         maxWidth = [self contentSmallImageMaxWidth] - 60;
     }
@@ -1387,7 +1387,7 @@
                 _tagLabel.lineBreakMode = NSLineBreakByTruncatingTail;
             }
         }else {
-            CGFloat maxWidth = [self contentSmallImageMaxWidth] - 45;
+            CGFloat maxWidth = [self contentSmallImageMaxWidth] - 70;
             attributeString = [FHSingleImageInfoCellModel newTagsStringWithTagList:commonModel.tags maxWidth:maxWidth];
             _tagLabel.lineBreakMode = NSLineBreakByWordWrapping;
         }
