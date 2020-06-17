@@ -7,12 +7,10 @@
 
 #import "FHUGCVideoCell.h"
 #import "UIImageView+BDWebImage.h"
-#import "FHUGCCellHeaderView.h"
 #import "FHUGCCellUserInfoView.h"
 #import "FHUGCCellBottomView.h"
 #import "FHUGCCellMultiImageView.h"
 #import "FHUGCCellHelper.h"
-#import "FHUGCCellOriginItemView.h"
 #import "TTRoute.h"
 #import "TTBusinessManager+StringUtils.h"
 #import "FHUGCVideoView.h"
@@ -83,20 +81,13 @@
 }
 
 - (void)initViews {
-    self.userInfoView = [[FHUGCCellUserInfoView alloc] initWithFrame:CGRectZero];
+    self.userInfoView = [[FHUGCCellUserInfoView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, userInfoViewHeight)];
     [self.contentView addSubview:_userInfoView];
     
     self.contentLabel = [[TTUGCAsyncLabel alloc] initWithFrame:CGRectZero];
     _contentLabel.numberOfLines = maxLines;
     _contentLabel.layer.masksToBounds = YES;
     _contentLabel.backgroundColor = [UIColor whiteColor];
-//    NSDictionary *linkAttributes = @{
-//                                     NSForegroundColorAttributeName : [UIColor themeRed3],
-//                                     NSFontAttributeName : [UIFont themeFontRegular:16]
-//                                     };
-//    self.contentLabel.linkAttributes = linkAttributes;
-//    self.contentLabel.activeLinkAttributes = linkAttributes;
-//    self.contentLabel.inactiveLinkAttributes = linkAttributes;
     _contentLabel.delegate = self;
     [self.contentView addSubview:_contentLabel];
     
@@ -108,7 +99,7 @@
     _videoView.layer.cornerRadius = 4;
     [self.contentView addSubview:_videoView];
 
-    self.bottomView = [[FHUGCCellBottomView alloc] initWithFrame:CGRectZero];
+    self.bottomView = [[FHUGCCellBottomView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, bottomViewHeight)];
     [_bottomView.commentBtn addTarget:self action:@selector(commentBtnClick) forControlEvents:UIControlEventTouchUpInside];
     [_bottomView.guideView.closeBtn addTarget:self action:@selector(closeGuideView) forControlEvents:UIControlEventTouchUpInside];
     [self.contentView addSubview:_bottomView];
@@ -171,11 +162,7 @@
     self.currentData = data;
     self.cellModel = cellModel;
     //设置userInfo
-    self.userInfoView.cellModel = cellModel;
-    self.userInfoView.userName.text = !isEmptyString(cellModel.user.name) ? cellModel.user.name : @"用户";
-    [self.userInfoView updateDescLabel];
-    [self.userInfoView updateEditState];
-    [self.userInfoView.icon bd_setImageWithURL:[NSURL URLWithString:cellModel.user.avatarUrl] placeholder:[UIImage imageNamed:@"fh_mine_avatar"]];
+    [self.userInfoView refreshWithData:cellModel];
     //设置底部
     self.bottomView.cellModel = cellModel;
     
@@ -199,7 +186,6 @@
         }];
         [self.videoView mas_updateConstraints:^(MASConstraintMaker *make) {
             make.top.mas_equalTo(self.userInfoView.mas_bottom).offset(20 + cellModel.contentHeight);
-            make.height.mas_equalTo(self.videoViewheight);
         }];
         [FHUGCCellHelper setAsyncRichContent:self.contentLabel model:cellModel];
     }

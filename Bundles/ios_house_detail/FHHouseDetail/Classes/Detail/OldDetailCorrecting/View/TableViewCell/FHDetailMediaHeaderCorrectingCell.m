@@ -26,6 +26,7 @@
 #import "FHFloorPanPicShowViewController.h"
 #import <TTBaseLib/TTUIResponderHelper.h>
 #import "FHDetailFloorPanDetailInfoModel.h"
+#import <TTUIWidget/TTNavigationController.h>
 
 @interface FHDetailMediaHeaderCorrectingCell ()<FHMultiMediaCorrectingScrollViewDelegate,FHDetailScrollViewDidScrollProtocol,FHDetailVCViewLifeCycleProtocol>
 
@@ -417,8 +418,9 @@
     FHDetailMediaHeaderCorrectingModel *model = ((FHDetailMediaHeaderCorrectingModel *)self.currentData);
     //去除flag判断，改为判断详情页type
     if (self.baseViewModel.houseType == FHHouseTypeNewHouse && [model.topImages isKindOfClass:[NSArray class]] && model.topImages.count > 0) {
-        FHDetailNewTopImage *topImage = model.topImages.firstObject;
-        pictureDetailViewController.smallImageInfosModels = topImage.smallImageGroup;
+//        FHDetailNewTopImage *topImage = model.topImages.firstObject;
+//        pictureDetailViewController.smallImageInfosModels = topImage.smallImageGroup;
+        pictureDetailViewController.smallImageInfosModels = [model processTopImagesToSmallImageGroups];
     }
     //如果是小区，移除按钮 或者户型详情页也移除按钮
     //099 户型详情页 显示底部按钮
@@ -434,11 +436,10 @@
         if (model.titleDataModel.facingDirection.length) {
             [bottomBarTitle appendFormat:@" %@",model.titleDataModel.facingDirection];
         }
-        pictureDetailViewController.bottomBarTitle = bottomBarTitle.copy;
-        
         if (model.titleDataModel.saleStatus.length) {
-            pictureDetailViewController.saleStatus = model.titleDataModel.saleStatus;
+             [bottomBarTitle appendFormat:@" %@",model.titleDataModel.saleStatus];
         }
+        pictureDetailViewController.bottomBarTitle = bottomBarTitle.copy;
     }
     
     UIImage *placeholder = [UIImage imageNamed:@"default_image"];
@@ -511,21 +512,15 @@
 - (void)showPictureList {
     FHDetailMediaHeaderCorrectingModel *data = (FHDetailMediaHeaderCorrectingModel *)self.currentData;
     NSMutableDictionary *routeParam = [NSMutableDictionary dictionary];
-//    NSDictionary *tracker = @{
-//        @"enter_from" = self.pictureDetailVC?:
-//    };
     FHFloorPanPicShowViewController *pictureListViewController = [[FHFloorPanPicShowViewController alloc] initWithRouteParamObj:TTRouteParamObjWithDict(routeParam)];
     pictureListViewController.modalPresentationStyle = UIModalPresentationFullScreen;
     if (data.isShowTopImageTab) {
         pictureListViewController.topImages = data.topImages;
-//        pictureListViewController.associateInfo = data.houseImageAssociateInfo;
-//        pictureListViewController.contactViewModel = data.contactViewModel;
-//        pictureListViewController.elementFrom = @"new_detail";
+        pictureListViewController.associateInfo = data.imageAlbumAssociateInfo;
+        pictureListViewController.contactViewModel = data.contactViewModel;
+        pictureListViewController.elementFrom = @"new_detail";
     } else {
-        if (data.topImages.count) {
-            FHDetailNewTopImage *topImage = data.topImages.firstObject;
-            pictureListViewController.pictsArray = topImage.smallImageGroup;
-        }
+        pictureListViewController.pictsArray = [data processTopImagesToSmallImageGroups];
     }
     __weak typeof(self)weakSelf = self;
     pictureListViewController.albumImageStayBlock = ^(NSInteger index, NSInteger stayTime) {
@@ -557,7 +552,9 @@
     if (!presentedVC) {
         presentedVC = [TTUIResponderHelper visibleTopViewController];
     }
-    [presentedVC presentViewController:pictureListViewController animated:YES completion:nil];
+    TTNavigationController *navigationController = [[TTNavigationController alloc] initWithRootViewController:pictureListViewController];
+    navigationController.modalPresentationStyle = UIModalPresentationFullScreen;
+    [presentedVC presentViewController:navigationController animated:YES completion:nil];
     self.pictureListViewController = pictureListViewController;
 }
 
@@ -817,7 +814,7 @@
 }
 
 //进入图片页面页
-- (void)goToPictureList:(NSString *)from {
+- (void)goToPictureListFrom:(NSString *)from {
     
     if ([(FHDetailMediaHeaderCorrectingModel *)self.currentData isInstantData]) {
         //列表页带入的数据不响应
@@ -825,7 +822,9 @@
     }
     [self enterPictureShowPictureWithIndex:NSUIntegerMax from:from];
     [self showPictureList];
-    
+    if (self.pictureListViewController) {
+        self.pictureListViewController.elementFrom = from;
+    }
 }
 
 #pragma mark - FHDetailScrollViewDidScrollProtocol
@@ -869,6 +868,30 @@
 @end
 
 @implementation FHDetailMediaHeaderCorrectingModel
+
+- (NSArray *)processTopImagesToSmallImageGroups {
+    NSMutableArray <FHHouseDetailImageGroupModel *> *pictsArray = [NSMutableArray array];
+    //之前传入fisrtTopImage 表示数据不全，需要全部传入
+    for (FHDetailNewTopImage *topImage in self.topImages) {
+        for (FHHouseDetailImageGroupModel *groupModel in topImage.smallImageGroup) {
+            //type类型相同的数据归为一类
+            __block NSUInteger index = NSNotFound;
+             [pictsArray enumerateObjectsUsingBlock:^(FHHouseDetailImageGroupModel * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+                 if ([obj.type isEqualToString:groupModel.type]) {
+                     index = idx;
+                     *stop = YES;
+                 }
+             }];
+            if (index != NSNotFound) {
+                FHHouseDetailImageGroupModel *existGroupModel = pictsArray[index];
+                existGroupModel.images = [[NSArray arrayWithArray:existGroupModel.images] arrayByAddingObjectsFromArray:groupModel.images];
+            } else {
+                [pictsArray addObject:groupModel];
+            }
+        }
+    }
+    return pictsArray.copy;
+}
 
 @end
 

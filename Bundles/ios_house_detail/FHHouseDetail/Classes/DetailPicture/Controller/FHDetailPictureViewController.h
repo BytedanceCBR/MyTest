@@ -83,7 +83,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 //099户型详情 查看大图新增 title & 售卖 状态字段
 @property (nonatomic, copy) NSString *bottomBarTitle;
-@property (nonatomic, copy) NSString *saleStatus;
 
 // Extended by lizhuoli to support drag down and drag up to close
 

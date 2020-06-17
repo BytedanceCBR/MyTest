@@ -402,7 +402,7 @@
 
 - (void)viewWillDisappear:(BOOL)animated {
     TLS_LOG(@"viewWillDisappear with groupID %lld, adID:%lld", self.detailModel.article.uniqueID, self.detailModel.adID.longLongValue);
-    
+     [[NSNotificationCenter defaultCenter] postNotificationName:UIMenuControllerWillHideMenuNotification object:nil];
     CGFloat currentMemory = [TTMemoryMonitor currentMemoryUsageByAppleFormula];
     CGFloat memory_growth = currentMemory - self.memoryOnViewWillAppear;
     [TTArticleDetailMemoryMonitor monitorMemoryGrowth:memory_growth forGroupID:self.detailModel.article.uniqueID title:self.detailModel.article.title];

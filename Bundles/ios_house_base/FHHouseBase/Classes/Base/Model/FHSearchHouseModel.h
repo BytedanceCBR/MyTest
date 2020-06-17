@@ -238,6 +238,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign) BOOL isRecommendCell;
 @property (nonatomic, strong, nullable) FHClueAssociateInfoModel *associateInfo;
 
+@property (nonatomic, strong, nullable) NSArray<FHImageModel> *tagImage;  //企业担保图标
+
 @end
 
 @protocol FHRecommendSecondhandHouseTitleModel<NSObject>
@@ -338,6 +340,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *neighborhoodName;
 @property (nonatomic, copy , nullable) NSString *neighborhoodPrice;
 @property (nonatomic, copy , nullable) NSString *displayStatusInfo;
+@property (nonatomic, copy , nullable) NSString *realtorType;
 @property (nonatomic, strong , nullable) NSDictionary *logPb;
 @property (nonatomic, strong , nullable) FHDetailContactModel *contactModel ;
 @property (nonatomic, copy , nullable) NSString *districtAreaName;
@@ -345,6 +348,26 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong , nullable) NSDictionary *tracerDict;
 @property(nonatomic, weak) UIViewController *belongsVC;
 @property (nonatomic, strong, nullable) FHClueAssociateInfoModel *associateInfo;
+
+@end
+
+@interface FHHouseReserveAdviserModel : FHSearchBaseItemModel
+
+@property (nonatomic, copy , nullable) NSString *tipText;
+@property (nonatomic, copy , nullable) NSString *realtorType;
+@property (nonatomic, copy , nullable) NSString *targetId;
+@property (nonatomic, copy , nullable) NSString *targetName;
+@property (nonatomic, copy , nullable) NSString *districtAreaName;
+@property (nonatomic, copy , nullable) NSString *areaPrice;
+@property (nonatomic, copy , nullable) NSString *displayStatusInfo;
+@property (nonatomic, strong , nullable) NSDictionary *logPb;
+@property (nonatomic, strong, nullable) FHClueAssociateInfoModel *associateInfo;
+
+@property (nonatomic, strong , nullable) NSDictionary *tracerDict;
+@property(nonatomic, weak) UIViewController *belongsVC;
+@property(nonatomic, weak) UITableView *tableView;
+@property (nonatomic, strong) NSMutableDictionary *subscribeCache;
+@property(nonatomic, assign) BOOL isSubcribed;
 
 @end
 
@@ -389,6 +412,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong) NSArray* bottomText;
 @property (nonatomic, strong , nullable) FHSearchHouseDataItemsSkyEyeTagModel *skyEyeTag ; // 先下线
 @property (nonatomic, strong , nullable) FHHouseListHouseAdvantageTagModel *advantageDescription ;
+@property (nonatomic, strong , nullable) FHDetailContactModel *contactModel ;
+@property (nonatomic, strong, nullable) FHClueAssociateInfoModel *associateInfo;
 
 @property (nonatomic, copy , nullable) NSString *id;
 @property (nonatomic, copy , nullable) NSString *pricePerSqmNum;

@@ -64,7 +64,7 @@
 }
 
 - (void)initViews {
-    self.headerView = [[FHUGCCellHeaderView alloc] initWithFrame:CGRectZero];
+    self.headerView = [[FHUGCCellHeaderView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, headerViewHeight)];
     _headerView.titleLabel.text = @"猜你喜欢";
     _headerView.bottomLine.hidden = NO;
     [_headerView.refreshBtn addTarget:self action:@selector(changeData) forControlEvents:UIControlEventTouchUpInside];

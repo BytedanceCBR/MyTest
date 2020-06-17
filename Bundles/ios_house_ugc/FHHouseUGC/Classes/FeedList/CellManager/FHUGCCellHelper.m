@@ -507,31 +507,20 @@
 
 + (void)setUGCVoteContentString:(FHFeedUGCCellModel *)model width:(CGFloat)width numberOfLines:(NSInteger)numberOfLines {
     if(!isEmptyString(model.voteInfo.title)){
-        UILabel *label = [[UILabel alloc] init];
-        label.numberOfLines = numberOfLines;
-        label.font = [UIFont themeFontRegular:16];
         //设置字间距0.4
         NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:model.voteInfo.title attributes:@{NSForegroundColorAttributeName : [UIColor themeGray1],NSFontAttributeName : [UIFont themeFontRegular:16]}];
-        label.attributedText = attributedString;
         
         YYTextLayout *layout = [YYTextLayout layoutWithContainerSize:CGSizeMake(width, MAXFLOAT) text:attributedString];
-        CGFloat height= layout.textBoundingSize.height;
+        CGFloat height = layout.textBoundingSize.height;
         // 下面这种方法对系统表情计算高度兼容性不好，用YYTextLayout吧
-        CGSize size = [label sizeThatFits:CGSizeMake(width, MAXFLOAT)];
-        // 好傻的逻辑 为了兼容 系统表情 展示
         if (numberOfLines == 2) {
             if (height >= 45) {
                 // 说明是两行
-                size.height = 53;// 两行
-            } else {
-                size.height = height;
+                height = 53;// 两行
             }
-        } else {
-            // 全部展示
-            size.height = height;
         }
         model.voteInfo.contentAStr = attributedString;
-        model.voteInfo.contentHeight = size.height;
+        model.voteInfo.contentHeight = height;
     }else{
         model.voteInfo.contentHeight = 0;
         model.voteInfo.contentAStr = nil;

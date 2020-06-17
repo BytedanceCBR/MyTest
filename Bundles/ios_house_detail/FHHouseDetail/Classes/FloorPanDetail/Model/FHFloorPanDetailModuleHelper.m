@@ -20,6 +20,7 @@
         }
     }
     NSMutableArray *coreInfos = [[NSMutableArray alloc]init];
+    NSMutableArray *sales = [NSMutableArray array];
     NSMutableArray *floorPlans = [[NSMutableArray alloc]init];
     NSMutableArray *disclaimers = [[NSMutableArray alloc]init];
     
@@ -29,6 +30,9 @@
         switch (model.houseModelType) {
             case FHFloorPanHouseModelTypeCoreInfo:
                 [coreInfos addObject:obj];
+                break;
+            case FHFloorPanHouseModelTypeNewSales:
+                [sales addObject:obj];
                 break;
             case FHFloorPanHouseModelTypeFloorPlan:
                 [floorPlans addObject:obj];
@@ -44,6 +48,9 @@
     if (coreInfos.count > 0) {
         [moduleItems addObject:@{@"coreInfos":coreInfos}];
     }
+    if (sales.count > 0) {
+        [moduleItems addObject:@{@"sales":sales}];
+    }
     if (floorPlans.count > 0) {
         [moduleItems addObject:@{@"floorPlans":floorPlans}];
     }
@@ -52,7 +59,8 @@
     }
     [moduleItems enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
         NSArray *currentItemArr = obj[[obj allKeys][0]];
-        if ([[obj allKeys] containsObject:@"floorPlans"]) {
+        if ([[obj allKeys] containsObject:@"sales"] ||
+            [[obj allKeys] containsObject:@"floorPlans"]) {
             [currentItemArr enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
                 FHDetailBaseModel *model = (FHDetailBaseModel *)obj;
                 model.shadowImageType = FHHouseShdowImageTypeRound;

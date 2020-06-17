@@ -243,11 +243,6 @@
     self.baseViewModel.detailController.ttNeedIgnoreZoomAnimation = YES;
     FHDetailPictureViewController *vc = [[FHDetailPictureViewController alloc] init];
     vc.topVC = self.baseViewModel.detailController;
-    
-//    if (FHVideoModel.cellhou == FHCellt) {
-//        <#statements#>
-//    }
-    
 
     // 获取图片需要的房源信息数据
     if ([self.baseViewModel.detailData isKindOfClass:[FHDetailOldModel class]]) {

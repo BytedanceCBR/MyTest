@@ -91,6 +91,9 @@
         //针对租房相关
         @"pricingNum": @"pricing_num",
         @"pricingUnit": @"pricing_unit",
+        
+        //企业担保
+        @"tagImage": @"tag_image",
     };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
         return dict[keyName]?:keyName;

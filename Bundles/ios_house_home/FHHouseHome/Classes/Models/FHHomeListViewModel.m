@@ -178,7 +178,7 @@
                 //更新切换
                 [self updateCategoryViewSegmented:NO];
                 
-                [FHEnvContext addTabUGCGuid];
+//                [FHEnvContext addTabUGCGuid];
             }else
             {
                 //收起tip

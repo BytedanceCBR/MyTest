@@ -198,8 +198,15 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
         NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"fschema://webview?url=%@",urlStr]];
         [[TTRoute sharedRoute]openURLByPushViewController:url];
     };
-    
-    [alertView showFrom:associateReport.topViewController.view];
+    //加一个判断，如果viewcontroller 不是最上面的 viewcontroller，则替换成最顶部的 viewcontroller
+    UIViewController *topViewController = associateReport.topViewController;
+    if (topViewController.presentedViewController) {
+        topViewController = topViewController.presentedViewController;
+    }
+    if (topViewController.navigationController) {
+        topViewController = topViewController.navigationController.viewControllers.lastObject;
+    }
+    [alertView showFrom:topViewController.view];
 }
 
 + (void)fillFormRequestWithAssociateReport:(FHAssociateFormReportModel *)associateReport phone:(NSString *)phone alertView:(FHDetailNoticeAlertView *)alertView

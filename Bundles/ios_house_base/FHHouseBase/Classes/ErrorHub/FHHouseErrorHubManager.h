@@ -34,7 +34,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)checkBuryingPointWithEvent:(NSString *)eventName Params:(NSDictionary* )eventParams errorHubType:(FHErrorHubType)errorHubType;
 - (UIViewController *)jsd_getRootViewController;
 
-- (void)saveConfigAndSettings;
+- (void)saveConfigAndSettingsSence;
 
 
 /// 注册需要上报自己信息的类也就是现场
