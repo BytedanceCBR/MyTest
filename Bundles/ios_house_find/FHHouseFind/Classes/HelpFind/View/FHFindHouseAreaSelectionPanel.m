@@ -79,6 +79,7 @@
     FHFindHouseAreaSelectionTableViewVM* vm = [[FHFindHouseAreaSelectionTableViewVM alloc] initWithTableView:tableView];
     vm.isMultiChecked = NO;
     vm.isLeaf = NO;
+    vm.disabledRows = @[@(0)];  //最左侧“区域”选项禁止点击
     vm.isShowHotDot = YES;
     vm.name = @"main";
 

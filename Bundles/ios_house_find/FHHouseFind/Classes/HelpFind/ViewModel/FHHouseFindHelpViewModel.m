@@ -72,11 +72,12 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
 @property (nonatomic , weak) FHHouseFindHelpSubmitCell *commitCell;
 @property (nonatomic , weak) UITextField *activeTextField;
 
-@property(nonatomic , assign) BOOL isRequestingSMS;
-@property(nonatomic , strong) NSTimer *timer;
-@property(nonatomic , assign) NSInteger verifyCodeRetryTime;
-//是否重新是重新发送验证码
-@property(nonatomic , assign) BOOL isVerifyCodeRetry;
+//1.0.1版本帮我找房优化需求去掉了验证码逻辑
+//@property(nonatomic , assign) BOOL isRequestingSMS;
+//@property(nonatomic , strong) NSTimer *timer;
+//@property(nonatomic , assign) NSInteger verifyCodeRetryTime;
+////是否重新是重新发送验证码
+//@property(nonatomic , assign) BOOL isVerifyCodeRetry;
 @property(nonatomic , assign) CGPoint lastContentOffset;
 @property(nonatomic , assign) BOOL isKeyboardShow;
 
@@ -183,58 +184,61 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
         return;
     }
     
-    if([TTAccount sharedAccount].isLogin){
+    NSString *phoneNumber = self.contactCell.phoneInput.text;
+    //包含*说明没有编辑过电话号码，直接取真实的手机号
+    if ([phoneNumber containsString:@"*"]) {
+        phoneNumber = self.contactCell.phoneNum;
+    }
+    if (phoneNumber.length < 1 || ![phoneNumber hasPrefix:@"1"] || phoneNumber.length != 11 || ![self isPureInt:phoneNumber]) {
+        [[ToastManager manager] showToast:@"请填写正确的手机号"];
+        return;
+    }
+    [self storePhoneNumber:phoneNumber];
+    
+//    if([TTAccount sharedAccount].isLogin){
         [self submitAction];
         return;
-    }
-    [self addClickLoginLog];
+//    }
+//    [self addClickLoginLog];
 
-    NSString *phoneNumber = self.contactCell.phoneInput.text;
-    NSString *smsCode = self.contactCell.varifyCodeInput.text;
+//    NSString *phoneNumber = self.contactCell.phoneInput.text;
+//    NSString *smsCode = self.contactCell.varifyCodeInput.text;
     
-    if (phoneNumber.length < 1) {
-        [[ToastManager manager] showToast:@"请填写并验证手机号"];
-        return;
-    }
-    if(![phoneNumber hasPrefix:@"1"] || phoneNumber.length != 11 || ![self isPureInt:phoneNumber]){
-        [[ToastManager manager] showToast:@"手机号错误"];
-        return;
-    }
-    if (![TTReachability isNetworkConnected]) {
-        [[ToastManager manager] showToast:@"网络错误"];
-        return;
-    }
-    if(smsCode.length == 0){
-        [[ToastManager manager] showToast:@"验证码为空"];
-        return;
-    }
+//    if (![TTReachability isNetworkConnected]) {
+//        [[ToastManager manager] showToast:@"网络错误"];
+//        return;
+//    }
+//    if(smsCode.length == 0){
+//        [[ToastManager manager] showToast:@"验证码为空"];
+//        return;
+//    }
     
-    if (![TTReachability isNetworkConnected]) {
-        [[ToastManager manager] showToast:@"网络异常"];
-        return;
-    }
-    //添加抖音 submit 埋点
-    NSMutableDictionary *trackerDict = [self.viewController tracerDict].mutableCopy;
-    trackerDict[@"enter_from"] = @"driving_find_house";
-    trackerDict[@"login_method"] = @"phone_sms";
-    trackerDict[@"enter_method"] = @"click";
-    [FHLoginTrackHelper loginSubmit:trackerDict];
-    [self requestQuickLogin:phoneNumber smsCode:smsCode completion:^(UIImage * _Nonnull captchaImage, NSNumber * _Nonnull newUser, NSError * _Nonnull error) {
-        //添加抖音 result 埋点
-        [FHLoginTrackHelper loginResult:trackerDict error:error];
-        if(!error){
-            //记录上一次登录成功的行为
-            [[NSUserDefaults standardUserDefaults] setObject:@"phone_sms" forKey:FHLoginTrackLastLoginMethodKey];
-            [[NSUserDefaults standardUserDefaults] synchronize];
-            YYCache *sendPhoneNumberCache = [[FHEnvContext sharedInstance].generalBizConfig sendPhoneNumberCache];
-//            [sendPhoneNumberCache setObject:phoneNumber forKey:kFHPhoneNumberCacheKey];
-            [sendPhoneNumberCache setObject:phoneNumber forKey:kFHPLoginhoneNumberCacheKey];
-            [wself submitAction];
-        }else{
-            NSString *errorMessage = [wself errorMessageByErrorCode:error];
-            [[ToastManager manager] showToast:errorMessage];
-        }
-    }];
+//    if (![TTReachability isNetworkConnected]) {
+//        [[ToastManager manager] showToast:@"网络异常"];
+//        return;
+//    }
+//    //添加抖音 submit 埋点
+//    NSMutableDictionary *trackerDict = [self.viewController tracerDict].mutableCopy;
+//    trackerDict[@"enter_from"] = @"driving_find_house";
+//    trackerDict[@"login_method"] = @"phone_sms";
+//    trackerDict[@"enter_method"] = @"click";
+//    [FHLoginTrackHelper loginSubmit:trackerDict];
+//    [self requestQuickLogin:phoneNumber smsCode:smsCode completion:^(UIImage * _Nonnull captchaImage, NSNumber * _Nonnull newUser, NSError * _Nonnull error) {
+//        //添加抖音 result 埋点
+//        [FHLoginTrackHelper loginResult:trackerDict error:error];
+//        if(!error){
+//            //记录上一次登录成功的行为
+//            [[NSUserDefaults standardUserDefaults] setObject:@"phone_sms" forKey:FHLoginTrackLastLoginMethodKey];
+//            [[NSUserDefaults standardUserDefaults] synchronize];
+//            YYCache *sendPhoneNumberCache = [[FHEnvContext sharedInstance].generalBizConfig sendPhoneNumberCache];
+////            [sendPhoneNumberCache setObject:phoneNumber forKey:kFHPhoneNumberCacheKey];
+//            [sendPhoneNumberCache setObject:phoneNumber forKey:kFHPLoginhoneNumberCacheKey];
+//            [wself submitAction];
+//        }else{
+//            NSString *errorMessage = [wself errorMessageByErrorCode:error];
+//            [[ToastManager manager] showToast:errorMessage];
+//        }
+//    }];
 }
 #pragma mark 提交选项
 - (void)submitAction
@@ -757,6 +761,27 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
     }
 }
 
+//手机号单独保存，不复用表单的缓存
+- (NSString *)loadPhoneNumber {
+    YYCache *findHousePhoneNumberCache = [[FHEnvContext sharedInstance].generalBizConfig findHousePhoneNumberCache];
+    id phoneCache = [findHousePhoneNumberCache objectForKey:kFHFindHousePhoneNumberCacheKey];
+    
+    NSString *phoneNum = nil;
+    if ([phoneCache isKindOfClass:[NSString class]]) {
+        NSString *cacheNum = (NSString *)phoneCache;
+        if (cacheNum.length > 0) {
+            phoneNum = cacheNum;
+        }
+    }
+   
+    return phoneNum;
+}
+
+- (BOOL)storePhoneNumber:(NSString *)phoneNumber {
+    YYCache *findHousePhoneNumberCache = [[FHEnvContext sharedInstance].generalBizConfig findHousePhoneNumberCache];
+    [findHousePhoneNumberCache setObject:phoneNumber ?: @"" forKey:kFHFindHousePhoneNumberCacheKey];
+}
+
 #pragma mark - price cell delegate
 - (void)reloadCollectionViewSection:(NSInteger)section
 {
@@ -940,17 +965,19 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
         
         FHHouseFindHelpContactCell *pcell = [collectionView dequeueReusableCellWithReuseIdentifier:HELP_CONTACT_CELL_ID forIndexPath:indexPath];
         pcell.phoneInput.delegate = self;
-        pcell.varifyCodeInput.delegate = self;
+//        pcell.varifyCodeInput.delegate = self;
         pcell.delegate = self;
         self.contactCell = pcell;
+        pcell.phoneNum = [self loadPhoneNumber];
+        [pcell showFullPhoneNum:NO];
         
-        if([TTAccount sharedAccount].isLogin){
-            
-            TTAccountUserEntity *userInfo = [TTAccount sharedAccount].user;
-            pcell.phoneNum = userInfo.mobile;
-        }else {
-            pcell.phoneNum = nil;
-        }
+//        if([TTAccount sharedAccount].isLogin){
+//
+//            TTAccountUserEntity *userInfo = [TTAccount sharedAccount].user;
+//            pcell.phoneNum = userInfo.mobile;
+//        }else {
+//            pcell.phoneNum = nil;
+//        }
         return pcell;
     }
     FHHouseFindHelpSubmitCell *pcell = [collectionView dequeueReusableCellWithReuseIdentifier:HELP_SUBMIT_CELL_ID forIndexPath:indexPath];
@@ -1315,7 +1342,7 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
 {
     UITextField *textField = (UITextField *)notification.object;
 
-    if (textField != self.contactCell.phoneInput && textField != self.contactCell.varifyCodeInput) {
+    if (textField != self.contactCell.phoneInput/* && textField != self.contactCell.varifyCodeInput*/) {
         [self resetPriceSelectItems];
         return;
     }
@@ -1325,14 +1352,15 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
         limit = 11;
         
         //设置登录和获取验证码是否可点击
-        if(text.length > 0){
-            [self setVerifyCodeButtonAndConfirmBtnEnabled:YES];
-        }else{
-            [self setVerifyCodeButtonAndConfirmBtnEnabled:NO];
-        }
-    }else if(textField == self.contactCell.varifyCodeInput) {
-        limit = 6;
+//        if(text.length > 0){
+//            [self setVerifyCodeButtonAndConfirmBtnEnabled:YES];
+//        }else{
+//            [self setVerifyCodeButtonAndConfirmBtnEnabled:NO];
+//        }
     }
+//    else if(textField == self.contactCell.varifyCodeInput) {
+//        limit = 6;
+//    }
     
     if(text.length > limit) {
         textField.text = [text substringToIndex:limit];
@@ -1341,6 +1369,12 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
 
 - (void)textFieldDidBeginEditing:(UITextField *)textField
 {
+    if (textField == self.contactCell.phoneInput) {
+        [self.contactCell showFullPhoneNum:YES];
+        
+        return;
+    }
+    
     self.activeTextField = textField;
 }
 
@@ -1349,53 +1383,53 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
     self.activeTextField = nil;
 }
 
-- (void)sendVerifyCode
-{
-    [self.collectionView endEditing:YES];
-    __weak typeof(self) weakSelf = self;
-    NSString *phoneNumber = self.contactCell.phoneInput.text;
-    
-    if(![phoneNumber hasPrefix:@"1"] || phoneNumber.length != 11 || ![self isPureInt:phoneNumber]){
-        [[ToastManager manager] showToast:@"手机号错误"];
-        return;
-    }
-    
-    if (![TTReachability isNetworkConnected]) {
-        [[ToastManager manager] showToast:@"网络错误"];
-        return;
-    }
-    
-    if(self.isRequestingSMS){
-        return;
-    }
-    
-    self.isRequestingSMS = YES;
-    [[ToastManager manager] showToast:@"正在获取验证码"];
-    
-    __weak typeof(self)wself = self;
-    [self requestSendVerifyCode:phoneNumber completion:^(NSNumber * _Nonnull retryTime, UIImage * _Nonnull captchaImage, NSError * _Nonnull error) {
-        wself.isRequestingSMS = NO;
-        if(!error){
-            [wself blockRequestSendMessage:[retryTime integerValue]];
-            [[ToastManager manager] showToast:@"短信验证码发送成功"];
-            wself.isVerifyCodeRetry = YES;
-        }else{
-            NSString *errorMessage = [wself errorMessageByErrorCode:error];
-            [[ToastManager manager] showToast:errorMessage];
-        }
-    }];
-}
+//- (void)sendVerifyCode
+//{
+//    [self.collectionView endEditing:YES];
+//    __weak typeof(self) weakSelf = self;
+//    NSString *phoneNumber = self.contactCell.phoneInput.text;
+//
+//    if(![phoneNumber hasPrefix:@"1"] || phoneNumber.length != 11 || ![self isPureInt:phoneNumber]){
+//        [[ToastManager manager] showToast:@"手机号错误"];
+//        return;
+//    }
+//
+//    if (![TTReachability isNetworkConnected]) {
+//        [[ToastManager manager] showToast:@"网络错误"];
+//        return;
+//    }
+//
+//    if(self.isRequestingSMS){
+//        return;
+//    }
+//
+//    self.isRequestingSMS = YES;
+//    [[ToastManager manager] showToast:@"正在获取验证码"];
+//
+//    __weak typeof(self)wself = self;
+//    [self requestSendVerifyCode:phoneNumber completion:^(NSNumber * _Nonnull retryTime, UIImage * _Nonnull captchaImage, NSError * _Nonnull error) {
+//        wself.isRequestingSMS = NO;
+//        if(!error){
+//            [wself blockRequestSendMessage:[retryTime integerValue]];
+//            [[ToastManager manager] showToast:@"短信验证码发送成功"];
+//            wself.isVerifyCodeRetry = YES;
+//        }else{
+//            NSString *errorMessage = [wself errorMessageByErrorCode:error];
+//            [[ToastManager manager] showToast:errorMessage];
+//        }
+//    }];
+//}
 
-- (void)blockRequestSendMessage:(NSInteger)retryTime
-{
-    self.verifyCodeRetryTime = retryTime;
-    [self startTimer];
-}
+//- (void)blockRequestSendMessage:(NSInteger)retryTime
+//{
+//    self.verifyCodeRetryTime = retryTime;
+//    [self startTimer];
+//}
 
-- (void)setVerifyCodeButtonAndConfirmBtnEnabled:(BOOL)enabled
-{
-    [self.contactCell enableSendVerifyCodeBtn:(enabled && self.verifyCodeRetryTime <= 0)];
-}
+//- (void)setVerifyCodeButtonAndConfirmBtnEnabled:(BOOL)enabled
+//{
+//    [self.contactCell enableSendVerifyCodeBtn:(enabled && self.verifyCodeRetryTime <= 0)];
+//}
 
 - (BOOL)isPureInt:(NSString *)str
 {
@@ -1431,46 +1465,46 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
     }
 }
 
-- (void)setVerifyCodeButtonCountDown
-{
-    if(self.verifyCodeRetryTime < 0){
-        self.verifyCodeRetryTime = 0;
-    }
-    
-    if(self.verifyCodeRetryTime == 0){
-        [self stopTimer];
-        [self.contactCell.sendVerifyCodeBtn setTitle:@"重新发送" forState:UIControlStateNormal];
-        [self.contactCell.sendVerifyCodeBtn setTitle:@"重新发送" forState:UIControlStateHighlighted];
-        [self.contactCell.sendVerifyCodeBtn setTitle:@"重新发送" forState:UIControlStateDisabled];
-        self.contactCell.sendVerifyCodeBtn.enabled = (self.contactCell.phoneInput.text.length > 0);
-        self.isRequestingSMS = NO;
-    }else{
-        self.contactCell.sendVerifyCodeBtn.enabled = NO;
-        [self.contactCell.sendVerifyCodeBtn setTitle:[NSString stringWithFormat:@"重新发送(%lis)",(long)self.verifyCodeRetryTime] forState:UIControlStateDisabled];
-    }
-    self.verifyCodeRetryTime--;
-}
+//- (void)setVerifyCodeButtonCountDown
+//{
+//    if(self.verifyCodeRetryTime < 0){
+//        self.verifyCodeRetryTime = 0;
+//    }
+//
+//    if(self.verifyCodeRetryTime == 0){
+//        [self stopTimer];
+//        [self.contactCell.sendVerifyCodeBtn setTitle:@"重新发送" forState:UIControlStateNormal];
+//        [self.contactCell.sendVerifyCodeBtn setTitle:@"重新发送" forState:UIControlStateHighlighted];
+//        [self.contactCell.sendVerifyCodeBtn setTitle:@"重新发送" forState:UIControlStateDisabled];
+//        self.contactCell.sendVerifyCodeBtn.enabled = (self.contactCell.phoneInput.text.length > 0);
+//        self.isRequestingSMS = NO;
+//    }else{
+//        self.contactCell.sendVerifyCodeBtn.enabled = NO;
+//        [self.contactCell.sendVerifyCodeBtn setTitle:[NSString stringWithFormat:@"重新发送(%lis)",(long)self.verifyCodeRetryTime] forState:UIControlStateDisabled];
+//    }
+//    self.verifyCodeRetryTime--;
+//}
 
-- (void)startTimer
-{
-    if(_timer){
-        [self stopTimer];
-    }
-    [self.timer fire];
-}
-
-- (void)stopTimer {
-    [_timer invalidate];
-    _timer = nil;
-}
-
-- (NSTimer *)timer {
-    if(!_timer){
-        _timer  =  [NSTimer timerWithTimeInterval:1 target:self selector:@selector(setVerifyCodeButtonCountDown) userInfo:nil repeats:YES];
-        [[NSRunLoop mainRunLoop] addTimer:_timer forMode:NSRunLoopCommonModes];
-    }
-    return _timer;
-}
+//- (void)startTimer
+//{
+//    if(_timer){
+//        [self stopTimer];
+//    }
+//    [self.timer fire];
+//}
+//
+//- (void)stopTimer {
+//    [_timer invalidate];
+//    _timer = nil;
+//}
+//
+//- (NSTimer *)timer {
+//    if(!_timer){
+//        _timer  =  [NSTimer timerWithTimeInterval:1 target:self selector:@selector(setVerifyCodeButtonCountDown) userInfo:nil repeats:YES];
+//        [[NSRunLoop mainRunLoop] addTimer:_timer forMode:NSRunLoopCommonModes];
+//    }
+//    return _timer;
+//}
 
 #pragma mark - 埋点相关
 

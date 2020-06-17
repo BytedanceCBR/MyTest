@@ -139,6 +139,12 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     // 如果不支持单选，则先去掉所有选项
 //    [self onSelectedAtIndexPath:indexPath];
+    //禁止cell点击事件
+    NSInteger row = indexPath.row;
+    if ([_disabledRows containsObject:@(row)]) {
+        return;
+    }
+    
     [self onSelectedAtIndexPath:indexPath];
     [[FHFilterRedDotManagement shareInstance] mark];
 }

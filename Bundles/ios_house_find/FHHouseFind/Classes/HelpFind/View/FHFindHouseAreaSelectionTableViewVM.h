@@ -25,6 +25,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong) NSString* name;
 @property (nonatomic, copy) void (^didSelectedNode)(void);
 @property (nonatomic, strong) NSSet<NSNumber *> *hiddenRows;  //需要隐藏的cell行
+@property (nonatomic, strong) NSSet<NSNumber *> *disabledRows;  //禁止点击的cell行
 
 - (instancetype)initWithTableView:(UITableView*)tableView;
 
