@@ -25,6 +25,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy) NSString *phoneCallRequestId;
 //ViewModel
 @property (nonatomic, strong)   FHHouseDetailBaseViewModel       *viewModel;
+//bizTrace
+@property (nonatomic, strong)   NSDictionary       *bizTrace;
 
 //设置状态栏
 - (void)refreshContentOffset:(CGPoint)contentOffset;

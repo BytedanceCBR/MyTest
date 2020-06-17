@@ -76,6 +76,7 @@
         self.houseType = [paramObj.allParams[@"house_type"] integerValue];
         self.ridcode = paramObj.allParams[@"ridcode"];
         self.realtorId = paramObj.allParams[@"realtor_id"];
+        self.bizTrace = paramObj.allParams[@"biz_trace"];
         
         NSObject *extraInfo = paramObj.allParams[kFHClueExtraInfo];
         if ([extraInfo isKindOfClass:[NSString class]]) {

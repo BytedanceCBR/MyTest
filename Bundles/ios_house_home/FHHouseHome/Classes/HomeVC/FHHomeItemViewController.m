@@ -1085,7 +1085,7 @@ static NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
                                @"tracer": traceParam
                                }.mutableCopy;
         dict[INSTANT_DATA_KEY] = theModel;
-        
+        dict[@"biz_trace"] = theModel.bizTrace;
         NSURL *jumpUrl = nil;
         
         if (houseType == FHHouseTypeSecondHandHouse) {
