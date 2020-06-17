@@ -159,7 +159,7 @@ static NSDate *preMainDate = nil;
         }
     }
     
-    [self updateTaskRecords:taskList];
+//    [self updateTaskRecords:taskList];
 #ifndef DEBUG
     NSLog(@"[LAUNCH] tasks takes %f S ",[[NSDate date]timeIntervalSinceDate:s]);
 #endif
@@ -172,8 +172,6 @@ static NSDate *preMainDate = nil;
     if (![taskClass isSubclassOfClass:[TTStartupTask class]]) {
         return nil;
     }
-    
-    double before = CFAbsoluteTimeGetCurrent();
      
     TTStartupTask *task = [[taskClass alloc] init];
     if ([task shouldExecuteForApplication:application options:options]) {
@@ -188,15 +186,13 @@ static NSDate *preMainDate = nil;
                 });
             });
         } else {
-            [task setTaskNormal:NO];
+//            [task setTaskNormal:NO];
             [task startAndTrackWithApplication:application options:options];
-            [task setTaskNormal:YES];
+//            [task setTaskNormal:YES];
         }
         [SharedAppDelegate trackCurrentIntervalInMainThreadWithTag:[task taskIdentifier]];
     }
     [SharedAppDelegate addResidentTaskIfNeeded:task];
-    double launchTime2 = (CFAbsoluteTimeGetCurrent() - before);
-    NSLog( @"%@阶段耗时：%.2fms",taskName, launchTime2 * 1000);
     return task;
 }
 
