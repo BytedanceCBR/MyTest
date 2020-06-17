@@ -4139,15 +4139,16 @@ static NSString *const kSSCommonLogicHTSVideoPlayerTypeKey = @"kSSCommonLogicHTS
 }
 
 + (BOOL)isNewLaunchOptimizeEnabled {
-    static BOOL isNewLaunchOptimizeEnabled = NO;
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        NSNumber * enable = [[NSUserDefaults standardUserDefaults] objectForKey:@"kSSCommonLogicNewLaunchOptimizeEnabledKey"];
-        if (nil != enable && [enable isKindOfClass:[NSNumber class]]) {
-            isNewLaunchOptimizeEnabled = [enable boolValue];
-        }
-    });
-    return isNewLaunchOptimizeEnabled;
+//    static BOOL isNewLaunchOptimizeEnabled = NO;
+//    static dispatch_once_t onceToken;
+//    dispatch_once(&onceToken, ^{
+//        NSNumber * enable = [[NSUserDefaults standardUserDefaults] objectForKey:@"kSSCommonLogicNewLaunchOptimizeEnabledKey"];
+//        if (nil != enable && [enable isKindOfClass:[NSNumber class]]) {
+//            isNewLaunchOptimizeEnabled = [enable boolValue];
+//        }
+//    });
+//    return isNewLaunchOptimizeEnabled;
+    return YES;
 }
 
 @end

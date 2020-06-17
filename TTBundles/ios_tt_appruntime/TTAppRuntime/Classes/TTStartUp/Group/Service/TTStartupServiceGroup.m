@@ -74,9 +74,9 @@
 //        case TTServiceStartupTypeCustomUISetting:
 //            return [[TTCustomUISettingTask alloc] init];
 //            break;
-        case TTServiceStartupTypeCellRegister:
-            return [[TTCellRegisterTask alloc] init];
-            break;
+//        case TTServiceStartupTypeCellRegister:
+//            return [[TTCellRegisterTask alloc] init];
+//            break;
         case TTServiceStartupTypeMapperRegister:
             return [[TTMapperRegisterTask alloc] init];
             break;

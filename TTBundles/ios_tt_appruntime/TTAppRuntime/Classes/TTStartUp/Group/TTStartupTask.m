@@ -71,11 +71,11 @@ NSString *const AbnormalTaskIdentifier = @"abnormal_task_identifier";
 
 - (void)setTaskNormal:(BOOL)isNormal {
     [[NSUserDefaults standardUserDefaults] setBool:isNormal forKey:[TTStartupProtectPrefix stringByAppendingString:[self taskIdentifier]]];
-    if (!isNormal) {
-        [[NSUserDefaults standardUserDefaults] setObject:[self taskIdentifier] forKey:AbnormalTaskIdentifier];
-    } else {
-        [[NSUserDefaults standardUserDefaults] removeObjectForKey:AbnormalTaskIdentifier];
-    }
+//    if (!isNormal) {
+//        [[NSUserDefaults standardUserDefaults] setObject:[self taskIdentifier] forKey:AbnormalTaskIdentifier];
+//    } else {
+//        [[NSUserDefaults standardUserDefaults] removeObjectForKey:AbnormalTaskIdentifier];
+//    }
 }
 
 - (BOOL)isConcurrent {
