@@ -442,7 +442,13 @@
             [self.vrLoadingView stop];
         }
         
-        [self configTopLeftTagWithTagImages:model.tagImage];
+        /**
+         周边新盘，我关注的新房 这两种场景也使用了tag_image字段（用于下发左上角“新房”标签），
+         这里绕过这两种场景，即在这两个页面不走“企业担保”逻辑
+         */
+        if (![self.reuseIdentifier isEqualToString:@"FHNewHouseCell"]) {
+            [self configTopLeftTagWithTagImages:model.tagImage];
+        }
     };
 }
 

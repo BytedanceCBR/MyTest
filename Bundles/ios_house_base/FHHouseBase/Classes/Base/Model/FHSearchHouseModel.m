@@ -658,7 +658,9 @@
                            @"uploadAt": @"upload_at",
                            @"imprId": @"impr_id",
                            @"vrInfo": @"vr_info",
-
+                           @"contactModel": @"realtor_info",
+                           @"associateInfo": @"associate_info",
+                           
                            @"searchId": @"search_id",
                            @"houseImage": @"house_image",
                            @"houseType": @"house_type",

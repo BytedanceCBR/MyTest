@@ -109,6 +109,25 @@
     [self updateStatusBar:self.infoListTable.contentOffset];
     [self.view endEditing:YES];
     [self.coreInfoListViewModel vc_viewDidAppear:animated];
+    //在页面完全显示后，判断navigationController.viewControllers的前一个是否也是户型详情页，是的话就移除掉
+    if (self.navigationController && self.navigationController.viewControllers.count) {
+        NSUInteger index = self.navigationController.viewControllers.count;
+        //index - 1 == current  index - 2 == last
+        UIViewController *lastVC = self.navigationController.viewControllers[index - 2];
+        BOOL shouldRemove = NO;
+        if ([lastVC isKindOfClass:[self class]]) {
+//            NSLog(@"lastVC is FHFloorPanDetailViewController");
+            shouldRemove = YES;
+        } else if ([NSStringFromClass([lastVC class]) rangeOfString:NSStringFromClass([self class])].location != NSNotFound) {
+//            NSLog(@"lastVC is FHFloorPanDetailViewController swizzle class");
+            shouldRemove = YES;
+        }
+        if (shouldRemove) {
+            NSMutableArray *viewControllers = [NSMutableArray arrayWithArray:self.navigationController.viewControllers];
+            [viewControllers removeObject:lastVC];
+            self.navigationController.viewControllers = viewControllers.copy;
+        }
+    }
 }
 
 #pragma mark - TTUIViewControllerTrackProtocol

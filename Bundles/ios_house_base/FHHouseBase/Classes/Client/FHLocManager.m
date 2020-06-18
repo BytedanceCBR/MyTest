@@ -31,6 +31,8 @@
 #import <BDUGLocationKit/BDUGAmapGeocoder.h>
 #import <BDUGLocationKit/BDUGLocationManager.h>
 #import <BDUGLocationKit/BDUGAmapAdapter.h>
+#import "TTAccountLoginManager.h"
+#import "TTAccountManager.h"
 
 NSString * const kFHAllConfigLoadSuccessNotice = @"FHAllConfigLoadSuccessNotice"; //通知名称
 NSString * const kFHAllConfigLoadErrorNotice = @"FHAllConfigLoadErrorNotice"; //通知名称
@@ -498,7 +500,7 @@ NSString * const kFHTopSwitchCityLocalKey = @"f_switch_city_top_time_local_key";
                      }
                 }else
                 {
-                    if ([model.data.citySwitch.enable respondsToSelector:@selector(boolValue)] && [model.data.citySwitch.enable boolValue] && hasSelectedCity && [self isTopCitySwitchTimeCompare]) {
+                    if ([model.data.citySwitch.enable respondsToSelector:@selector(boolValue)] && [model.data.citySwitch.enable boolValue] && hasSelectedCity && [self isTopCitySwitchTimeCompare] &&(![FHEnvContext canShowLoginTip] || [TTAccount sharedAccount].isLogin)) {
                         NSString *stringCurrentDate = [FHUtils stringFromNSDate:[NSDate date]];
                         [FHUtils setContent:stringCurrentDate forKey:kFHTopSwitchCityLocalKey];
                         
@@ -672,10 +674,9 @@ NSString * const kFHTopSwitchCityLocalKey = @"f_switch_city_top_time_local_key";
                      }
                 }else
                 {
-                    if ([model.data.citySwitch.enable respondsToSelector:@selector(boolValue)] && [model.data.citySwitch.enable boolValue] && [self isTopCitySwitchTimeCompare]) {
+                    if ([model.data.citySwitch.enable respondsToSelector:@selector(boolValue)] && [model.data.citySwitch.enable boolValue] && [self isTopCitySwitchTimeCompare] && (![FHEnvContext canShowLoginTip] || [TTAccount sharedAccount].isLogin)) {
                         NSString *stringCurrentDate = [FHUtils stringFromNSDate:[NSDate date]];
                         [FHUtils setContent:stringCurrentDate forKey:kFHTopSwitchCityLocalKey];
-                        
                         [[NSNotificationCenter defaultCenter] postNotificationName:@"FHHomeInitSwitchCityTopView" object:nil];
                     }
                 }

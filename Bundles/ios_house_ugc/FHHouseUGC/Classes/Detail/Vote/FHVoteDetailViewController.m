@@ -148,6 +148,7 @@
 
 - (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
+    [[NSNotificationCenter defaultCenter] postNotificationName:UIMenuControllerWillHideMenuNotification object:nil];
     [self addStayPageLog];
     //跳页时关闭举报的弹窗
     [FHFeedOperationView dismissIfVisible];
@@ -290,6 +291,7 @@
 
 // 子类滚动方法
 - (void)sub_scrollViewDidScroll:(UIScrollView *)scrollView {
+    [[NSNotificationCenter defaultCenter] postNotificationName:UIMenuControllerWillHideMenuNotification object:nil];
     if (self.weakViewModel.detailHeaderModel) {
         // 有头部数据
         CGFloat offsetY = scrollView.contentOffset.y;

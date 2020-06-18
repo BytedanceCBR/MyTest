@@ -1200,6 +1200,7 @@
     dict[@"subject_id"] = self.viewController.forumId;
     dict[@"group_id"] = cellModel.groupId;
     dict[@"rank"] = @(rank);
+    dict[@"category_name"] = self.categoryId;
     
     if(section < self.dataArray.count && section < self.tabContentModel.count){
         FHFeedContentModel *model = self.tabContentModel[section];

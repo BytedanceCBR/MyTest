@@ -541,8 +541,13 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
             //        if ([extraDict[@"source_from"] isEqualToString:@"loan"]) {
             //           imExtra[@"realtor_position"] = @"loan";
         }
+        //099 大图详情新增 picture_type
         if (extraDict[@"picture_type"]) {
             imExtra[@"picture_type"] = extraDict[@"picture_type"];
+        }
+        //100 户型详情页新增 click_position
+        if (extraDict[@"click_position"]) {
+            imExtra[@"click_position"] = extraDict[@"click_position"];
         }
     }
     [self.phoneCallViewModel imchatActionWithPhone:self.contactPhone realtorRank:@"0" extraDic:imExtra];

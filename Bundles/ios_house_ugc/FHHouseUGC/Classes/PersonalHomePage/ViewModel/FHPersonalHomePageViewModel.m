@@ -834,6 +834,7 @@
     dict[@"page_type"] = [self pageType];
     dict[@"log_pb"] = cellModel.logPb;
     dict[@"rank"] = @(rank);
+    dict[@"category_name"] = self.categoryName;
     
     return dict;
 }
