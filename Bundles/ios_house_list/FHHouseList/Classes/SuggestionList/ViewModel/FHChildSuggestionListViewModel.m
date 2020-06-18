@@ -18,6 +18,8 @@
 #import "FHOldSuggestionItemCell.h"
 #import "FHSuggestionListViewController.h"
 #import "FHSuggestionEmptyCell.h"
+#import "FHFindHouseHelperCell.h"
+#import "FHHouseListRecommendTipCell.h"
 
 @interface FHChildSuggestionListViewModel () <UITableViewDelegate, UITableViewDataSource, FHSugSubscribeListDelegate>
 
@@ -31,6 +33,7 @@
 @property (nonatomic, strong , nullable) NSArray<FHSuggestionResponseDataModel> *sugListData;
 @property (nonatomic, strong , nullable) NSArray<FHSuggestionSearchHistoryResponseDataDataModel> *historyData;
 @property (nonatomic, strong , nullable) NSMutableArray<FHGuessYouWantResponseDataDataModel> *guessYouWantData;
+@property (nonatomic, strong , nullable) FHGuessYouWantExtraInfoModel *guessYouWantExtraInfo;  //帮我找房入口信息
 
 @property (nonatomic, copy)     NSString       *highlightedText;
 @property (nonatomic, strong)   FHHistoryView *historyView;
@@ -561,6 +564,14 @@
     return @"be_null";
 }
 
+//跳转到帮我找房
+- (void)jump2HouseFindPageWithUrl:(NSString *)url {
+    if (url.length > 0) {
+        NSURL *openUrl = [NSURL URLWithString:url];
+        [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:nil];
+    }
+}
+
 #pragma mark - tableview delegate
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
@@ -585,9 +596,14 @@
     if (tableView.tag == 1) {
         // 历史记录
         if (indexPath.row == 0) {
+            __weak typeof(self) weakSelf = self;
             FHSuggestHeaderViewCell *headerCell = (FHSuggestHeaderViewCell *)[tableView dequeueReusableCellWithIdentifier:@"suggestHeaderCell" forIndexPath:indexPath];
             headerCell.selectionStyle = UITableViewCellSelectionStyleNone;
-            __weak typeof(self) wself = self;
+            //猜你想找增加帮我找房入口
+            [headerCell refreshData:self.guessYouWantExtraInfo];
+            headerCell.entryTapAction = ^(NSString *url) {
+                [weakSelf jump2HouseFindPageWithUrl:url];
+            };
             return headerCell;
         }
         FHGuessYouWantCell *cell = (FHGuessYouWantCell *)[tableView dequeueReusableCellWithIdentifier:@"guessYouWantCell" forIndexPath:indexPath];
@@ -604,6 +620,30 @@
             cell.selectionStyle = UITableViewCellSelectionStyleNone;
             return cell;
         }
+        
+        //服务端会同时下发cardType=9和cardType=16两种类型的卡片数据
+        if (self.sugListData.count <= 2) {
+            //XXX: 为支持1.0.1版本帮我找房需求，暂时根据model.cardType字段区分cell，后期需支持混排
+            FHSuggestionResponseDataModel *model = self.sugListData[indexPath.row];
+            if (model.cardType == 9) {
+                FHHouseListRecommendTipCell *tipCell = (FHHouseListRecommendTipCell *)[tableView dequeueReusableCellWithIdentifier:@"tipcell" forIndexPath:indexPath];
+                FHSearchGuessYouWantTipsModel *tipModel = [[FHSearchGuessYouWantTipsModel alloc] init];
+                tipModel.text = model.text;
+                [tipCell refreshWithData:tipModel];
+                
+                return tipCell;
+            } else if (model.cardType == 15) {
+                __weak typeof(self) weakSelf = self;
+                FHFindHouseHelperCell *helperCell = (FHFindHouseHelperCell *)[tableView dequeueReusableCellWithIdentifier:@"helperCell" forIndexPath:indexPath];
+                helperCell.cellTapAction = ^(NSString *url) {
+                    [weakSelf jump2HouseFindPageWithUrl:url];
+                };
+                [helperCell updateWithData:model];
+                
+                return helperCell;;
+            }
+        }
+        
         // 联想词列表
         if (self.houseType == FHHouseTypeNewHouse) {
             // 新房
@@ -700,7 +740,7 @@
     if (tableView.tag == 1) {
         // 猜你想搜
         if (indexPath.row == 0) {
-            return 42;
+            return 62;
         } else {
             if (self.guessYouWantData.count > 0) {
                 FHGuessYouWantResponseDataDataModel *model = self.guessYouWantData.firstObject;
@@ -715,6 +755,16 @@
         // 联想词
         if (self.sugListData.count == 0) {
             return self.listController.suggestTableView.frame.size.height;
+        } else if (self.sugListData.count <= 2) {
+            NSInteger row = indexPath.row;
+            if (row < self.sugListData.count) {
+                FHSuggestionResponseDataModel *model = self.sugListData[row];
+                if (model.cardType == 9) {
+                    return 40;
+                } else if (model.cardType == 15) {  //帮我找房卡片高度
+                    return 73;
+                }
+            }
         }
         if (self.houseType == FHHouseTypeNewHouse) {
             // 新房
@@ -1004,6 +1054,7 @@
         wself.loadRequestTimes += 1;
         if (model != NULL && error == NULL) {
             wself.guessYouWantData = model.data.data;
+            wself.guessYouWantExtraInfo = model.data.extraInfo;
             [wself reloadHistoryTableView];
         }  else {
             if (error && ![error.userInfo[@"NSLocalizedDescription"] isEqualToString:@"the request was cancelled"]) {

@@ -7,6 +7,7 @@
 
 #import "FHFindHouseAreaSelectionPanel.h"
 #import <Masonry/Masonry.h>
+#import "AreaSelectionTableViewVM.h"
 #import "UIColor+Theme.h"
 //#import "ButtomBarView.h"
 #import "FHFilterNodeModel.h"

@@ -72,6 +72,7 @@
 #import "FHHouseAgentCardCell.h"
 #import "FHHousReserveAdviserCell.h"
 #import "FHMainListTableView.h"
+#import "FHFindHouseHelperCell.h"
 
 #define kPlaceCellId @"placeholder_cell_id"
 #define kSingleCellId @"single_cell_id"
@@ -192,6 +193,7 @@ extern NSString *const INSTANT_DATA_KEY;
      [_tableView registerClass:[FHHouseBaseItemCell class] forCellReuseIdentifier:[FHSearchHouseItemModel cellIdentifierByHouseType:FHHouseTypeNewHouse]];
      [_tableView registerClass:[FHHouseListBaseItemCell class] forCellReuseIdentifier:@"FHListSynchysisNewHouseCell"];
     [_tableView registerClass:[FHHouseAgentCardCell class] forCellReuseIdentifier:NSStringFromClass([FHHouseAgentCardCell class])];
+    [_tableView registerClass:[FHFindHouseHelperCell class] forCellReuseIdentifier:@"FHFindHouseHelperCell"];
     for (NSString *className in self.cellIdArray) {
         [self registerCellClassBy:className];
     }
@@ -240,11 +242,19 @@ extern NSString *const INSTANT_DATA_KEY;
         return [FHHouseListRedirectTipCell class];
     }else if ([model isKindOfClass:[FHHouseReserveAdviserModel class]]) {
         return [FHHousReserveAdviserCell class];
+    }else if ([model isKindOfClass:[FHSearchFindHouseHelperModel class]]) {
+        return [FHFindHouseHelperCell class];
     }
     return [FHListBaseCell class];
 }
 // cell identifier
 - (NSString *)cellIdentifierForEntity:(id)model {
+    if ([model isKindOfClass:[FHSearchFindHouseHelperModel class]]) {
+        FHSearchFindHouseHelperModel *helperModel = (FHSearchFindHouseHelperModel *)model;
+        if (helperModel.cardType == FHSearchCardTypeFindHouseHelper) {
+            return @"FHFindHouseHelperCell";
+        }
+    }
     if ([model isKindOfClass:[FHSearchHouseItemModel class]]) {
         FHSearchHouseItemModel *houseModel = (FHSearchHouseItemModel *)model;
         if(houseModel.houseType.integerValue == FHHouseTypeNewHouse && houseModel.cellStyles == 6){
@@ -1586,6 +1596,13 @@ extern NSString *const INSTANT_DATA_KEY;
                 agentCardCell.currentWeakVC = self.viewController;
             }
             
+            if ([cell isKindOfClass:[FHFindHouseHelperCell class]]) {
+                FHFindHouseHelperCell *helperCell = (FHFindHouseHelperCell *) cell;
+                helperCell.cellTapAction = ^(NSString *url){
+                    [wself jump2HouseFindPageWithUrl:url];
+                };
+            }
+            
                [cell refreshWithData:data];
             if ([cell isKindOfClass:[FHHouseListAgencyInfoCell class]]) {
                 FHHouseListAgencyInfoCell *agencyInfoCell = (FHHouseListAgencyInfoCell *)cell;
@@ -2000,6 +2017,14 @@ extern NSString *const INSTANT_DATA_KEY;
             TTRouteUserInfo* userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
             [[TTRoute sharedRoute] openURLByViewController:url userInfo: userInfo];
         }
+    }
+}
+
+//跳转到帮我找房
+- (void)jump2HouseFindPageWithUrl:(NSString *)url {
+    if (url.length > 0) {
+        NSURL *openUrl = [NSURL URLWithString:url];
+        [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:nil];
     }
 }
 

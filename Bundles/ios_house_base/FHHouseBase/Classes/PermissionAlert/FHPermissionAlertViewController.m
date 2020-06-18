@@ -156,7 +156,7 @@
     _confirmButton.titleLabel.font = [UIFont themeFontSemibold:18];
     [_confirmButton setTitleColor:[UIColor themeWhite] forState:UIControlStateNormal];
     
-    [_confirmButton addTarget:self action:@selector(confirmAction:) forControlEvents:UIControlEventTouchUpInside];
+    [_confirmButton addTarget:self action:@selector(cellTapAction:) forControlEvents:UIControlEventTouchUpInside];
     [_confirmButton setTitle:@"我知道了" forState:UIControlStateNormal];
     
     CGSize fitSize = [_contentLabel sizeThatFits:CGSizeMake(_contentLabel.preferredMaxLayoutWidth, CGFLOAT_MAX)];
