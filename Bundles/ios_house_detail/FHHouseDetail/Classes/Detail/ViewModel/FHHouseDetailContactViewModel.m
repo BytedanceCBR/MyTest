@@ -490,8 +490,13 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
         associatePhone.imprId = self.imprId;
         associatePhone.showLoading = YES;
         associatePhone.realtorId = self.contactPhone.realtorId;
-        if (self.contactPhone.bizTrace) {
+        //如果是底部展位用自己的biz_trace，其余用详情页的biz_trace
+        if (self.contactPhone.bizTrace && extraDict[@"position"] && [extraDict[@"position"] isEqualToString:@"button"]) {
             associatePhone.extraDict = @{@"biz_trace":self.contactPhone.bizTrace};
+        }else{
+            if(self.houseInfoBizTrace){
+                associatePhone.extraDict = @{@"biz_trace":self.houseInfoBizTrace};
+            }
         }
         // 拨打电话
         [self callActionWithAssociatePhone:associatePhone];
