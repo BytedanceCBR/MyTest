@@ -6,12 +6,15 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "FHListBaseCell.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface FHFindHouseHelperCell : UITableViewCell
+@interface FHFindHouseHelperCell : FHListBaseCell
 
-@property (nonatomic, copy) void(^cellTapAction)(void);
+@property (nonatomic, copy) void(^cellTapAction)(NSString *);
+
+- (void)updateWithData:(id)data;
 
 @end
 

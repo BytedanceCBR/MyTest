@@ -8,16 +8,17 @@
 #import "FHFindHouseHelperCell.h"
 #import "UIColor+Theme.h"
 #import "Masonry.h"
+#import "FHSearchHouseModel.h"
+#import "FHSuggestionListModel.h"
 
 @interface FHFindHouseHelperCell ()
 
 @property (nonatomic, strong) UIView *containerView;
-@property (nonatomic, strong) UILabel *topLabel;
-@property (nonatomic, strong) UIView *leftSeparator;
-@property (nonatomic, strong) UIView *rightSeparator;
 @property (nonatomic, strong) UILabel *titleLabel;
 @property (nonatomic, strong) UILabel *subTitleLabel;
 @property (nonatomic, strong) UIButton *confirmButton;
+
+@property (nonatomic, copy) NSString *openUrl;
 
 @end
 
@@ -34,36 +35,7 @@
 
 - (void)initViews {
     self.contentView.backgroundColor = [UIColor whiteColor];
-    
-    _topLabel = [[UILabel alloc] init];
-    _topLabel.text = @"没有找到相关房源，换个条件试试吧";
-    _topLabel.font = [UIFont fontWithName:@"PingFangSC-Regular" size:14];
-    _topLabel.textColor = [UIColor themeGray3];
-    _topLabel.textAlignment = NSTextAlignmentCenter;
-    [self.contentView addSubview:_topLabel];
-    [_topLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.equalTo(self.contentView).offset(20);
-        make.centerX.equalTo(self.contentView);
-    }];
-    
-    _leftSeparator = [[UIView alloc] init];
-    _leftSeparator.backgroundColor = [UIColor colorWithHexStr:@"d8d8d8"];
-    [self.contentView addSubview:_leftSeparator];
-    [_leftSeparator mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.size.mas_equalTo(CGSizeMake(40, 1));
-        make.left.mas_equalTo(15);
-        make.centerY.equalTo(self.topLabel.mas_centerY);
-    }];
-    
-    _rightSeparator = [[UIView alloc] init];
-    _rightSeparator.backgroundColor = [UIColor colorWithHexStr:@"d8d8d8"];
-    [self.contentView addSubview:_rightSeparator];
-    [_rightSeparator mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.size.mas_equalTo(CGSizeMake(40, 1));
-        make.right.mas_equalTo(-15);
-        make.centerY.equalTo(self.topLabel.mas_centerY);
-    }];
-    
+  
     _containerView = [[UIView alloc] init];
     _containerView.backgroundColor = [UIColor themeWhite];
     _containerView.layer.cornerRadius = 10;
@@ -75,7 +47,7 @@
     _containerView.layer.shadowRadius = 3;
     [self.contentView addSubview:_containerView];
     [_containerView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(60);
+        make.top.mas_equalTo(0);
         make.bottom.mas_equalTo(0);
         make.left.mas_equalTo(15);
         make.right.mas_equalTo(-15);
@@ -85,7 +57,6 @@
     [_containerView addGestureRecognizer:tap];
     
     _titleLabel = [[UILabel alloc] init];
-    _titleLabel.text = @"坐享定制找房服务";
     _titleLabel.font = [UIFont fontWithName:@"PingFangSC-Semibold" size:16];
     _titleLabel.textColor = [UIColor themeGray1];
     [self.containerView addSubview:_titleLabel];
@@ -95,7 +66,6 @@
     }];
     
     _subTitleLabel = [[UILabel alloc] init];
-    _subTitleLabel.text = @"即刻查看专属好房";
     _subTitleLabel.font = [UIFont fontWithName:@"PingFangSC-Regular" size:12];
     _subTitleLabel.textColor = [UIColor themeGray3];
     [self.containerView addSubview:_subTitleLabel];
@@ -108,7 +78,6 @@
     _confirmButton.layer.cornerRadius = 4;
     _confirmButton.layer.borderWidth = 0.5;
     _confirmButton.layer.borderColor = [UIColor themeOrange1].CGColor;
-    [_confirmButton setTitle:@"帮我找房" forState:UIControlStateNormal];
     [_confirmButton setBackgroundColor:[UIColor whiteColor]];
     [_confirmButton setTitleColor:[UIColor themeOrange1] forState:UIControlStateNormal];
     [_confirmButton.titleLabel setFont:[UIFont fontWithName:@"PingFangSC-Regular" size:12]];
@@ -121,11 +90,44 @@
     }];
 }
 
+- (void)refreshWithData:(id)data {
+    if (!data || ![data isKindOfClass:[FHSearchFindHouseHelperModel class]]) {
+        return;
+    }
+    
+    FHSearchFindHouseHelperModel *model = (FHSearchFindHouseHelperModel *)data;
+    
+    _titleLabel.text = model.title ?: @"";
+    _subTitleLabel.text = model.text ?: @"";
+    NSString *buttonTitle = model.buttonText ?: @"";
+    [_confirmButton setTitle:buttonTitle forState:UIControlStateNormal];
+    _openUrl = model.openUrl;
+}
+
+//Sug页面使用（model类型不同）
+- (void)updateWithData:(id)data {
+    if (!data || ![data isKindOfClass:[FHSuggestionResponseDataModel class]]) {
+        return;
+    }
+    
+    FHSuggestionResponseDataModel *model = (FHSuggestionResponseDataModel *)data;
+    
+    _titleLabel.text = model.title ?: @"";
+    _subTitleLabel.text = model.text ?: @"";
+    NSString *buttonTitle = model.buttonText ?: @"";
+    [_confirmButton setTitle:buttonTitle forState:UIControlStateNormal];
+    _openUrl = model.openUrl;
+}
+
++ (CGFloat)heightForData:(id)data {
+    return 73;
+}
+
 #pragma mark - Action
 
 - (void)cellTapAction:(UITapGestureRecognizer *)sender {
     if (self.cellTapAction) {
-        self.cellTapAction();
+        self.cellTapAction(self.openUrl);
     }
 }
 

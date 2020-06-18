@@ -20,6 +20,7 @@
 #import "FHOldSuggestionItemCell.h"
 #import "FHSuggestionEmptyCell.h"
 #import "FHFindHouseHelperCell.h"
+#import "FHHouseListRecommendTipCell.h"
 
 @interface FHChildSuggestionListViewController ()<UITextFieldDelegate>
 
@@ -244,6 +245,7 @@
     [tableView registerClass:[FHGuessYouWantCell class] forCellReuseIdentifier:@"guessYouWantCell"];
     [tableView registerClass:[FHSuggestionEmptyCell class] forCellReuseIdentifier:@"suggetEmptyCell"];
     [tableView registerClass:[FHFindHouseHelperCell class] forCellReuseIdentifier:@"helperCell"];
+    [tableView registerClass:[FHHouseListRecommendTipCell class] forCellReuseIdentifier:@"tipcell"];
 
     if (@available(iOS 11.0 , *)) {
         tableView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
