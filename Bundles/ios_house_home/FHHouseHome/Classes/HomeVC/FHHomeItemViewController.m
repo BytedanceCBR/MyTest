@@ -850,7 +850,7 @@ static NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
                 };
             }else
             {
-                [noDataErrorView showEmptyWithTip:@"网络异常，请检查网络连接" errorImageName:@"group-9"
+                [noDataErrorView showEmptyWithTip:@"网络异常，请检查网络连接" errorImageName:@"group-4"
                                         showRetry:YES];
                 __weak typeof(self) weakSelf = self;
                 noDataErrorView.retryBlock = ^{
