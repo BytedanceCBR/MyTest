@@ -504,6 +504,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong , nullable) FHDetailNeighborhoodDataQuestionModel *question;
 @property (nonatomic, strong , nullable) FHDetailNeighborhoodDataCommentsModel *comments;
 @property (nonatomic, strong , nullable) FHDetailNeighborhoodDataStrategyModel *strategy;
+@property (nonatomic, copy, nullable) NSString *bizTrace;
 
 /// 1.0.0 新增企业担保相关字段
 @property (nonatomic, strong) FHDetailOldVouchModel *vouchModel;

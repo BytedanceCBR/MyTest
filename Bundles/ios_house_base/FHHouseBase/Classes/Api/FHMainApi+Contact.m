@@ -33,6 +33,7 @@
                                           phone:(NSString*)phone
                                            from:(NSString*)from
                                            type:(NSNumber*)type
+                                        extraInfo:(nonnull NSDictionary *)extra
                                      completion:(void(^)(FHDetailResponseModel * _Nullable model , NSError * _Nullable error))completion
 {
     NSString * host = [FHURLSettings baseURL] ?: @"https://i.haoduofangs.com";
@@ -101,7 +102,7 @@
                                      agencyList:(NSArray<FHFillFormAgencyListItemModel *> *)agencyList
                                      completion:(void(^)(FHDetailResponseModel * _Nullable model , NSError * _Nullable error))completion
 {
-    [self requestSendPhoneNumbserByHouseId:houseId phone:phone from:from cluePage:nil clueEndpoint:nil targetType:nil agencyList:agencyList completion:completion];
+    [self requestSendPhoneNumbserByHouseId:houseId phone:phone from:from cluePage:nil clueEndpoint:nil targetType:nil extraInfo:nil agencyList:agencyList completion:completion];
 }
 // 详情页线索提交表单
 + (TTHttpTask*)requestSendPhoneNumbserByHouseId:(NSString*)houseId
@@ -110,6 +111,7 @@
                                        cluePage:(NSNumber*)cluePage
                                    clueEndpoint:(NSNumber*)clueEndpoint
                                      targetType:(NSNumber *)targetType
+                                     extraInfo:(nonnull NSDictionary *)extra
                                      agencyList:(NSArray<FHFillFormAgencyListItemModel *> *)agencyList
                                      completion:(void(^)(FHDetailResponseModel * _Nullable model , NSError * _Nullable error))completion
 {
@@ -191,9 +193,10 @@
                            searchId:(NSString*)searchId
                              imprId:(NSString*)imprId
                                from:(NSString*)fromStr
+                          extraInfo:(nonnull NSDictionary *)extra
                          completion:(void(^)(FHDetailVirtualNumResponseModel * _Nullable model , NSError * _Nullable error))completion
 {
-    [self requestVirtualNumber:realtorId houseId:houseId houseType:houseType searchId:searchId imprId:imprId from:fromStr cluePage:nil clueEndpoint:nil completion:completion];
+    [self requestVirtualNumber:realtorId houseId:houseId houseType:houseType searchId:searchId imprId:imprId from:fromStr cluePage:nil clueEndpoint:nil extraInfo:nil completion:completion];
 }
 
 // 中介转接电话
@@ -205,6 +208,7 @@
                              from:(NSString*)fromStr
                                cluePage:(NSNumber*)cluePage
                                clueEndpoint:(NSNumber*)clueEndpoint
+                          extraInfo:(nonnull NSDictionary *)extra
                          completion:(void(^)(FHDetailVirtualNumResponseModel * _Nullable model , NSError * _Nullable error))completion {
     NSString * host = [FHURLSettings baseURL] ?: @"https://i.haoduofangs.com";
     NSString* url = [host stringByAppendingString:@"/f100/api/virtual_number"];
@@ -276,6 +280,7 @@
                          houseType:(FHHouseType)houseType
                           searchId:(NSString*)searchId
                             imprId:(NSString*)imprId
+                         extraInfo:(NSDictionary *)extra
                          completion:(void(^)(FHDetailVirtualNumResponseModel * _Nullable model , NSError * _Nullable error))completion
 {
     NSString * host = [FHURLSettings baseURL] ?: @"https://i.haoduofangs.com";
@@ -350,6 +355,7 @@ clueEndpoint:(NSNumber*)clueEndpoint
   targetType:(NSNumber *)targetType
 reportAssociate:(NSDictionary*)reportAssociate
 agencyList:(NSArray<FHFillFormAgencyListItemModel *> *)agencyList
+extraInfo:(NSDictionary *)extra
 completion:(void(^)(FHDetailResponseModel * _Nullable model , NSError * _Nullable error))completion
 {
     NSString * host = [FHURLSettings baseURL] ?: @"https://i.haoduofangs.com";

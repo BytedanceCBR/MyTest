@@ -1992,6 +1992,10 @@ extern NSString *const INSTANT_DATA_KEY;
             dict[@"tracer"] = tracerParam;
              dict[@"house_type"] = @(self.houseType);
             if ([cellModel isKindOfClass:[FHSearchHouseItemModel class]]) {
+                   FHSearchHouseItemModel *model = (FHSearchHouseItemModel *)cellModel;
+                dict[@"biz_trace"] = model.bizTrace;
+            }
+            if ([cellModel isKindOfClass:[FHSearchHouseItemModel class]]) {
                 FHSearchHouseItemModel *model = (FHSearchHouseItemModel *)cellModel;
                 if (model.houseType.integerValue == FHHouseTypeNewHouse) {
                     dict[@"house_type"] = @(model.houseType.integerValue);

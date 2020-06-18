@@ -155,6 +155,7 @@
                            @"realtorType":@"realtor_type",
                            @"realtorCellShow":@"realtor_cell_show",
                            @"realtorTags":@"realtor_tags",
+                           @"bizTrace":@"biz_trace",
                            @"realtorEvaluate":@"realtor_evaluate",
                            @"realtorScoreDisplay":@"realtor_score_display",
                            @"realtorScoreDescription":@"realtor_score_description",

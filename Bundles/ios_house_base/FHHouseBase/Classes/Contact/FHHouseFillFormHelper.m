@@ -216,7 +216,7 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
         return;
     }
     NSArray *selectAgencyList = [alertView selectAgencyList] ? : associateReport.chooseAgencyList;
-    [FHMainApi requestCallReportByHouseId:associateReport.houseId phone:phone from:nil cluePage:nil clueEndpoint:nil targetType:nil reportAssociate:associateReport.associateInfo agencyList:selectAgencyList completion:^(FHDetailResponseModel * _Nullable model, NSError * _Nullable error) {
+    [FHMainApi requestCallReportByHouseId:associateReport.houseId phone:phone from:nil cluePage:nil clueEndpoint:nil targetType:nil reportAssociate:associateReport.associateInfo agencyList:selectAgencyList extraInfo:nil completion:^(FHDetailResponseModel * _Nullable model, NSError * _Nullable error) {
 
         if (model.status.integerValue == 0 && !error) {
             YYCache *sendPhoneNumberCache = [[FHEnvContext sharedInstance].generalBizConfig sendPhoneNumberCache];

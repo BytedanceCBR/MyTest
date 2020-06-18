@@ -115,7 +115,6 @@ typedef enum : NSUInteger {
     NSString *houseId = associatePhoneModel.houseId;
     FHHouseType houseType = associatePhoneModel.houseType;
     
-    
     if (![TTReachability isNetworkConnected]) {
         [[ToastManager manager] showToast:@"网络异常，请稍后重试!"];
         [self addDetailCallExceptionLog:FHPhoneCallTypeNetFailed extraDict:nil errorCode:0 message:nil];
@@ -127,13 +126,12 @@ typedef enum : NSUInteger {
     }
     
     if (associatePhoneModel.showLoading) {
-        
         NSMutableDictionary *userInfo = @{}.mutableCopy;
         userInfo[@"house_id"] = houseId;
         userInfo[@"show_loading"] = @(1);
         [[NSNotificationCenter defaultCenter]postNotificationName:@"kFHDetailLoadingNotification" object:nil userInfo:userInfo];
     }
-    [FHMainApi requestVirtualNumberWithAssociateInfo:associateInfo realtorId:associatePhoneModel.realtorId houseId:associatePhoneModel.houseId houseType:associatePhoneModel.houseType searchId:associatePhoneModel.searchId imprId:associatePhoneModel.imprId completion:^(FHDetailVirtualNumResponseModel * _Nullable model, NSError * _Nullable error) {
+    [FHMainApi requestVirtualNumberWithAssociateInfo:associateInfo realtorId:associatePhoneModel.realtorId houseId:associatePhoneModel.houseId houseType:associatePhoneModel.houseType searchId:associatePhoneModel.searchId imprId:associatePhoneModel.imprId extraInfo:nil completion:^(FHDetailVirtualNumResponseModel * _Nullable model, NSError * _Nullable error) {
         
         NSMutableDictionary *userInfo = @{}.mutableCopy;
         userInfo[@"house_id"] = houseId;

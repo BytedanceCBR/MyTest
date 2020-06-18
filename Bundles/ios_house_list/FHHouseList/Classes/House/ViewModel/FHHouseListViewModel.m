@@ -1899,6 +1899,7 @@ extern NSString *const INSTANT_DATA_KEY;
     
     if (urlStr.length > 0) {
         NSURL *url = [NSURL URLWithString:urlStr];
+        dict[@"biz_trace"] = theModel.bizTrace;
         TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
         [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
     }
