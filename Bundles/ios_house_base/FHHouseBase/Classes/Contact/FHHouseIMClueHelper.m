@@ -103,6 +103,7 @@
         report_params[UT_ENTER_FROM] = report_params[UT_PAGE_TYPE];
         userInfoDict[@"report_params"] = report_params;
         userInfoDict[@"associate_info"] = associateIM.associateInfo.imInfo?:@{}; // 只传入im_info即可
+        userInfoDict[@"extra_info"] = associateIM.extraInfo;
         TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:userInfoDict];
         [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:userInfo];
         

@@ -490,6 +490,9 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
         associatePhone.imprId = self.imprId;
         associatePhone.showLoading = YES;
         associatePhone.realtorId = self.contactPhone.realtorId;
+        if (self.contactPhone.bizTrace) {
+            associatePhone.extraDict = @{@"biz_trace":self.contactPhone.bizTrace};
+        }
         // 拨打电话
         [self callActionWithAssociatePhone:associatePhone];
     }
@@ -636,6 +639,9 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
     associateReport.reportParams = reportParamsDict;
     associateReport.associateInfo = associateInfoDict;
     associateReport.chooseAgencyList = self.chooseAgencyList;
+    if (self.houseInfoBizTrace) {
+        associateReport.extraInfo = @{@"biz_trace":self.houseInfoBizTrace};
+    }
     [FHHouseFillFormHelper fillFormActionWithAssociateReportModel:associateReport];
     
 }

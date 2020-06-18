@@ -244,6 +244,7 @@ logPB:self.listLogPB extraInfo:self.extraInfo completion:^(FHDetailOldModel * _N
         contactPhone.isFormReport = YES;
     }
     self.houseInfoBizTrace = model.data.bizTrace;
+    self.contactViewModel.houseInfoBizTrace = model.data.bizTrace;
     // 添加头滑动图片 && 视频
     if (model.data.houseVideo && model.data.houseVideo.videoInfos.count > 0) {
         hasVideo = YES;
@@ -883,8 +884,13 @@ logPB:self.listLogPB extraInfo:self.extraInfo completion:^(FHDetailOldModel * _N
     }
     NSString *houseId = self.houseId;
     NSString *from = @"app_oldhouse_subscription";
+    NSDictionary *extraInfo = nil;
+    
+    if (self.houseInfoBizTrace) {
+        extraInfo = @{@"biz_trace":self.houseInfoBizTrace};
+    }
 
-    [FHMainApi requestCallReportByHouseId:houseId phone:phoneNum from:nil cluePage:nil clueEndpoint:nil targetType:nil reportAssociate:subscribeModel.associateInfo.reportFormInfo agencyList:nil extraInfo:nil completion:^(FHDetailResponseModel * _Nullable model, NSError * _Nullable error) {
+    [FHMainApi requestCallReportByHouseId:houseId phone:phoneNum from:nil cluePage:nil clueEndpoint:nil targetType:nil reportAssociate:subscribeModel.associateInfo.reportFormInfo agencyList:nil extraInfo:extraInfo completion:^(FHDetailResponseModel * _Nullable model, NSError * _Nullable error) {
 
 //    [FHMainApi requestSendPhoneNumbserByHouseId:houseId phone:phoneNum from:from cluePage:nil clueEndpoint:nil targetType:nil agencyList:nil completion:^(FHDetailResponseModel * _Nullable model, NSError * _Nullable error) {
         

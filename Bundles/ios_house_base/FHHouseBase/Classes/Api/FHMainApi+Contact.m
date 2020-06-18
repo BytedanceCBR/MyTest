@@ -18,6 +18,7 @@
 #import <TTReachability/TTReachability.h>
 #import <FHHouseBase/FHHouseContactDefines.h>
 #import <JSONModel/JSONModel.h>
+#import "FHUtils.h"
 
 #define GET @"GET"
 #define POST @"POST"
@@ -57,6 +58,10 @@
         paramDic[@"target_type"] = type;
     }
     paramDic[@"city_id"] = [FHEnvContext getCurrentSelectCityIdFromLocal];
+    
+    if(extra && [extra isKindOfClass:[NSDictionary class]]){
+        paramDic[@"extra_info"] = [FHUtils getJsonStrFromNoEncode:extra];
+    }
 
     return [[TTNetworkManager shareInstance]requestForBinaryWithResponse:url params:paramDic method:@"POST" needCommonParams:YES requestSerializer:[FHPostDataHTTPRequestSerializer class] responseSerializer:[[TTNetworkManager shareInstance]defaultBinaryResponseSerializerClass] autoResume:YES callback:^(NSError *error, id jsonObj, TTHttpResponse *response) {
         FHDetailResponseModel *model = nil;
@@ -149,6 +154,11 @@
         }
         paramDic[@"choose_agency_list"] = array;
     }
+    
+    if(extra && [extra isKindOfClass:[NSDictionary class]]){
+        paramDic[@"extra_info"] = [FHUtils getJsonStrFromNoEncode:extra];
+    }
+    
     return [[TTNetworkManager shareInstance]requestForBinaryWithResponse:url params:paramDic method:POST needCommonParams:YES requestSerializer:[FHPostDataHTTPRequestSerializer class] responseSerializer:[[TTNetworkManager shareInstance]defaultBinaryResponseSerializerClass] autoResume:YES callback:^(NSError *error, id jsonObj, TTHttpResponse *response) {
         FHDetailResponseModel *model = nil;
         NSError *jerror = nil;
@@ -233,6 +243,10 @@
     }else if (fromStr.length > 0) {
         paramDic[@"enterfrom"] = fromStr;
     }
+    
+    if(extra && [extra isKindOfClass:[NSDictionary class]]){
+        paramDic[@"extra_info"] = [FHUtils getJsonStrFromNoEncode:extra];
+    }
 
     return [[TTNetworkManager shareInstance]requestForJSONWithResponse:url params:paramDic method:GET needCommonParams:YES callback:^(NSError *error, id jsonObj, TTHttpResponse *response) {
         
@@ -305,6 +319,9 @@
         if (data && string) {
             paramDic[@"phone_info"] = string;
         }
+    }
+    if(extra && [extra isKindOfClass:[NSDictionary class]]){
+        paramDic[@"extra_info"] = [FHUtils getJsonStrFromNoEncode:extra];
     }
 
     return [[TTNetworkManager shareInstance]requestForJSONWithResponse:url params:paramDic method:GET needCommonParams:YES callback:^(NSError *error, id jsonObj, TTHttpResponse *response) {
@@ -393,6 +410,11 @@ completion:(void(^)(FHDetailResponseModel * _Nullable model , NSError * _Nullabl
         paramDic[@"choose_agency_list"] = array;
     }
     paramDic[@"report_form_info"] = reportAssociate;
+    
+    if (extra && [extra
+                  isKindOfClass:[NSDictionary class]]) {
+        paramDic[@"extra_info"] = [FHUtils getJsonStrFromNoEncode:extra];
+    }
 
     return [[TTNetworkManager shareInstance]requestForBinaryWithResponse:url params:paramDic method:POST needCommonParams:YES requestSerializer:[FHPostDataHTTPRequestSerializer class] responseSerializer:[[TTNetworkManager shareInstance]defaultBinaryResponseSerializerClass] autoResume:YES callback:^(NSError *error, id jsonObj, TTHttpResponse *response) {
         FHDetailResponseModel *model = nil;

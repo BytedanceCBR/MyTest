@@ -131,7 +131,8 @@ typedef enum : NSUInteger {
         userInfo[@"show_loading"] = @(1);
         [[NSNotificationCenter defaultCenter]postNotificationName:@"kFHDetailLoadingNotification" object:nil userInfo:userInfo];
     }
-    [FHMainApi requestVirtualNumberWithAssociateInfo:associateInfo realtorId:associatePhoneModel.realtorId houseId:associatePhoneModel.houseId houseType:associatePhoneModel.houseType searchId:associatePhoneModel.searchId imprId:associatePhoneModel.imprId extraInfo:nil completion:^(FHDetailVirtualNumResponseModel * _Nullable model, NSError * _Nullable error) {
+    [FHMainApi requestVirtualNumberWithAssociateInfo:associateInfo realtorId:associatePhoneModel.realtorId houseId:associatePhoneModel.houseId houseType:associatePhoneModel.houseType searchId:associatePhoneModel.searchId imprId:associatePhoneModel.imprId extraInfo:associatePhoneModel.extraDict
+                                          completion:^(FHDetailVirtualNumResponseModel * _Nullable model, NSError * _Nullable error) {
         
         NSMutableDictionary *userInfo = @{}.mutableCopy;
         userInfo[@"house_id"] = houseId;

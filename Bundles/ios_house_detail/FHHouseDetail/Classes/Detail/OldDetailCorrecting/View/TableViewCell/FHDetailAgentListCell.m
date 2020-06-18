@@ -263,6 +263,10 @@
         associatePhone.houseId = self.baseViewModel.houseId;
         associatePhone.showLoading = NO;
         
+        if (contact.bizTrace) {
+            associatePhone.extraDict = @{@"biz_trace":contact.bizTrace};
+        }
+        
         //        FHHouseContactConfigModel *contactConfig = [[FHHouseContactConfigModel alloc]initWithDictionary:extraDict error:nil];
 //        contactConfig.houseType = self.baseViewModel.houseType;
 //        contactConfig.houseId = self.baseViewModel.houseId;
