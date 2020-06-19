@@ -174,8 +174,13 @@
                     if (query.length > 0) {
                         [query appendString:@"&"];
                     }
-                    [query appendFormat:@"%@[]=%@",op.type,op.value];
-                    
+                    if (op.value) {
+                        if ([query containsString:op.type]) {
+                            //商圈的“不限”选项op.type=district，直接忽略不上报
+                            continue;
+                        }
+                        [query appendFormat:@"%@[]=%@",op.type,op.value];
+                    }
                     itemOptions = itemOptions[index.integerValue].options;
                 }
             }

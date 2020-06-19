@@ -676,6 +676,11 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
             }];
         }
     }];
+    
+    //如果selectIndexes只有两个值，说明没有包含商圈area，此处添加一个0代表“不限”选项
+    if (selectItem.selectIndexes.count == 2) {
+        [model addSelecteItem:selectItem withIndex:0];
+    }
 }
 
 - (BOOL)isValidKey:(NSString *)key inTypes:(NSArray *)types {
@@ -1370,6 +1375,10 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
 - (void)textFieldDidBeginEditing:(UITextField *)textField
 {
     if (textField == self.contactCell.phoneInput) {
+        //明文展示或者内容为空时不用读缓存
+        if (![self.contactCell.phoneInput.text containsString:@"*"]) {
+            return;
+        }
         [self.contactCell showFullPhoneNum:YES];
         
         return;
