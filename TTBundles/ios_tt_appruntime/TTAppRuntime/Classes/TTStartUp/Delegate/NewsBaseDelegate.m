@@ -83,7 +83,6 @@
 #import "BDUGDeepLinkManager.h"
 #import <Heimdallr/HMDTTMonitor.h>
 #import <FHHouseBase/FHEnvContext.h>
-#import "ToastManager.h"
 
 #import <FHCHousePush/TTPushServiceDelegate.h>
 
@@ -97,7 +96,6 @@
 
 static NSTimeInterval startTime;
 static NSTimeInterval lastTime;
-extern CFAbsoluteTime mainStartTime;
 
 //static NSString *const kTTUseWebViewLaunch = @"kTTUseWebViewLaunch";
 
@@ -185,18 +183,9 @@ extern CFAbsoluteTime mainStartTime;
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     
-    double mainLaunchTime = (CFAbsoluteTimeGetCurrent() - mainStartTime);
-    NSLog( @"NewsBaseDelegate didFinishLaunchingWithOptions开始阶段耗时：%.2fms", mainLaunchTime * 1000);
-    
     [GAIAEngine appDidFinishLaunching];
-    
-    double launchTime1 = (CFAbsoluteTimeGetCurrent() - mainStartTime);
-    NSLog( @"NewsBaseDelegate GAIAEngine结束阶段耗时：%.2fms", launchTime1 * 1000);
     // add by zjing 这行代码要保留，为了解决启动时addObserver引起的死锁crash问题，我只是代码的搬运工，有问题找谷妈妈
     [self _syncToGetCurrentNetWorkStatus];
-    
-    double launchTime2 = (CFAbsoluteTimeGetCurrent() - mainStartTime);
-    NSLog( @"NewsBaseDelegate syncToGetCurrentNetWorkStatus结束阶段耗时：%.2fms", launchTime2 * 1000);
     
     self.userLaunchTheAppDirectly = SSIsEmptyDictionary(launchOptions);
     if ([TTVersionHelper isFirstLaunchAfterUpdate]) {
@@ -212,9 +201,6 @@ extern CFAbsoluteTime mainStartTime;
     [launchParams setValue:[TTVersionHelper currentVersion] forKey:@"now_version"];
     [[TTStartupTasksTracker sharedTracker] cacheInitializeDevLog:@"AppLaunch" params:launchParams];
     [[TTLocalImageTracker sharedTracker] setup];
-    
-    double launchTime3 = (CFAbsoluteTimeGetCurrent() - mainStartTime);
-    NSLog( @"NewsBaseDelegate TTLocalImageTracker结束阶段耗时：%.2fms", launchTime3 * 1000);
     
     self.residentTasks = [NSMutableArray array];
     self.barrierQueue = dispatch_queue_create("com.bytedance.startup", DISPATCH_QUEUE_CONCURRENT);
@@ -232,18 +218,12 @@ extern CFAbsoluteTime mainStartTime;
     [TTLaunchManager dumpLaunchDuration];
 #endif
     
-    double endLaunchTime = (CFAbsoluteTimeGetCurrent() - mainStartTime);
-    NSLog( @"NewsBaseDelegate didFinishLaunchingWithOptions结束阶段耗时：%.2fms", endLaunchTime * 1000);
-    
     return result;
 }
     
 //正常打包，上线，走此方法
 - (BOOL)application:(UIApplication *)application onlineBoundleWithOptions:(NSDictionary *)launchOptions
 {
-    double launchTime1 = (CFAbsoluteTimeGetCurrent() - mainStartTime);
-    NSLog( @"NewsBaseDelegate onlineBoundleWithOptions开始阶段耗时：%.2fms", launchTime1 * 1000);
-    
     __weak typeof(self) wself = self;
     
     //CompletionBlock:头条正常启动逻辑
@@ -283,18 +263,12 @@ extern CFAbsoluteTime mainStartTime;
 //        }
     }];
     
-    double launchTime2 = (CFAbsoluteTimeGetCurrent() - mainStartTime);
-    NSLog( @"NewsBaseDelegate onlineBoundleWithOptions结束阶段耗时：%.2fms", launchTime2 * 1000);
-    
     //启动执行逻辑，完成后调用CompletionBlock
     return [[TTLauchProcessManager shareInstance] launchContinuousCrashProcess];
 }
 
 //refactorLaunchProcess
 - (BOOL)application:(UIApplication *)application refactorLaunchProcessWithOptions:(NSDictionary *)launchOptions {
-    double launchTime1 = (CFAbsoluteTimeGetCurrent() - mainStartTime);
-    NSLog( @"NewsBaseDelegate refactorLaunchProcessWithOptions开始阶段耗时：%.2fms", launchTime1 * 1000);
-    
     [self trackCurrentIntervalInMainThreadWithTag:@"refactor start"];
     
     [[TTLaunchManager sharedInstance] launchWithApplication:application andOptions:launchOptions];
@@ -324,11 +298,6 @@ extern CFAbsoluteTime mainStartTime;
     [[TTStartupTasksTracker sharedTracker] cacheInitializeDevLog:@"AppLaunchFinish" params:@{@"wait_time" : @(waitTime)}];
     
     [[NSUserDefaults standardUserDefaults] setValue:[NSNumber numberWithLongLong:[NSObject currentUnixTime]] forKey:@"kTrackTime_didFinishLaunch_end"];
-
-    double launchTime2 = (CFAbsoluteTimeGetCurrent() - mainStartTime);
-    NSString *str = [NSString stringWithFormat:@"耗时：%.2fms",launchTime2 * 1000];
-    NSLog( @"NewsBaseDelegate refactorLaunchProcessWithOptions结束阶段耗时：%.2fms", launchTime2 * 1000);
-//    [[ToastManager manager] showToast:str];
     
     return YES;
 }

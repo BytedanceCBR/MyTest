@@ -4139,16 +4139,15 @@ static NSString *const kSSCommonLogicHTSVideoPlayerTypeKey = @"kSSCommonLogicHTS
 }
 
 + (BOOL)isNewLaunchOptimizeEnabled {
-//    static BOOL isNewLaunchOptimizeEnabled = NO;
-//    static dispatch_once_t onceToken;
-//    dispatch_once(&onceToken, ^{
-//        NSNumber * enable = [[NSUserDefaults standardUserDefaults] objectForKey:@"kSSCommonLogicNewLaunchOptimizeEnabledKey"];
-//        if (nil != enable && [enable isKindOfClass:[NSNumber class]]) {
-//            isNewLaunchOptimizeEnabled = [enable boolValue];
-//        }
-//    });
-//    return isNewLaunchOptimizeEnabled;
-    return YES;
+    static BOOL isNewLaunchOptimizeEnabled = NO;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        NSNumber * enable = [[NSUserDefaults standardUserDefaults] objectForKey:@"kSSCommonLogicNewLaunchOptimizeEnabledKey"];
+        if (nil != enable && [enable isKindOfClass:[NSNumber class]]) {
+            isNewLaunchOptimizeEnabled = [enable boolValue];
+        }
+    });
+    return isNewLaunchOptimizeEnabled;
 }
 
 @end
@@ -5451,6 +5450,11 @@ static NSString *const kFFeedRefreshStrategy = @"feed_refresh_settings";
         return [[fhSettings objectForKey:@"enable_webview_blank_detect"] boolValue];
     }
     return YES;
+}
+
++ (BOOL)isFHNewLaunchOptimizeEnabled {
+    BOOL startupOptimizeClose =  [[self fhSettings] tt_boolValueForKey:@"f_startup_optimize_close"];
+    return !startupOptimizeClose;
 }
 
 @end

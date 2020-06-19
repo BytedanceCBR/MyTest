@@ -56,9 +56,6 @@ DEC_TASK_N(TTStartupUITask,FHTaskTypeUI,TASK_PRIORITY_HIGH);
     [self registerHomePageViewControllers];
     [[self class] setLaunchController];
     
-    double launchTime2 = (CFAbsoluteTimeGetCurrent() - before);
-    NSLog( @"UI阶段耗时：%.2fms", launchTime2 * 1000);
-    
     //待首页view初始化后 再执行切tab
     
     NSString *lastCityId = [FHEnvContext getCurrentSelectCityIdFromLocal];
@@ -144,7 +141,7 @@ DEC_TASK_N(TTStartupUITask,FHTaskTypeUI,TASK_PRIORITY_HIGH);
 
 + (void)setRootViewControllerWithStoryboardName:(NSString *)name {
     // TTTabBarController还是先用storyBoard加载，否则tabBar上出飘新提示的时第三个Tab上面容易出现小灰条的问题
-    if([SSCommonLogic isNewLaunchOptimizeEnabled]) {
+    if([SSCommonLogic isFHNewLaunchOptimizeEnabled]) {
         SharedAppDelegate.window.rootViewController = [[TTArticleTabBarController alloc] init];
     } else {
         SharedAppDelegate.window.rootViewController = [[UIStoryboard storyboardWithName:name bundle:nil] instantiateInitialViewController];

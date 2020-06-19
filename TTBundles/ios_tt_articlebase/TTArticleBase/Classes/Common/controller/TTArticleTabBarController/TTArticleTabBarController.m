@@ -167,7 +167,7 @@ typedef NS_ENUM(NSUInteger,TTTabbarTipViewType){
 - (void)setupEssentialInitialization {
     [self registerNotification];
     
-    if ([SSCommonLogic isNewLaunchOptimizeEnabled]) {
+    if ([SSCommonLogic isFHNewLaunchOptimizeEnabled]) {
         self.tabbarHeight = [TTDeviceHelper isIPhoneXDevice] ? ([TTUIResponderHelper mainWindow].tt_safeAreaInsets.bottom + 49.f) : 49.f;
         self.ttTabBarStyle = @"White";
         self.ttHideNavigationBar = YES;
@@ -228,7 +228,7 @@ typedef NS_ENUM(NSUInteger,TTTabbarTipViewType){
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    if ([SSCommonLogic isNewLaunchOptimizeEnabled]) {
+    if ([SSCommonLogic isFHNewLaunchOptimizeEnabled]) {
         [self setValue:[[TTTabbar alloc] init] forKey:@"tabBar"];
     }
     [self setupEssentialInitialization];

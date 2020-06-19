@@ -29,7 +29,6 @@
 #import "TTAccountManager.h"
 
 static NSString * const kFUGCPrefixStr = @"fugc";
-extern CFAbsoluteTime mainStartTime;
 
 @interface FHHomeMainViewController ()<TTAppUpdateHelperProtocol>
 @property (nonatomic,strong)FHHomeMainViewModel *viewModel;
@@ -123,10 +122,6 @@ extern CFAbsoluteTime mainStartTime;
     
     [[FHPopupViewManager shared] triggerPopupView];
     [[FHPopupViewManager shared] triggerPendant];
-    
-    double mainLaunchTime = (CFAbsoluteTimeGetCurrent() - mainStartTime);
-
-    NSLog( @"main之后阶段耗时：%.2fms", mainLaunchTime * 1000);
 }
 - (void)initView {
     self.view.backgroundColor = [UIColor themeHomeColor];
