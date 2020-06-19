@@ -13,6 +13,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)refreshWithData:(FHFeedUGCCellModel *)cellModel;
 @property(nonatomic ,strong) FHFeedUGCCellModel *cellModel;
 @property(nonatomic, copy) void (^imClick)(void);
+@property(nonatomic, copy) void (^headerClick)(void);
 @property(nonatomic, copy) void (^phoneCilck)(void);
 @end
 

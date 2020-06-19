@@ -73,6 +73,9 @@
     self.headerView.phoneCilck = ^{
          [weakSelf clickPhoneAction];
     };
+    self.headerView.headerClick  = ^{
+         [weakSelf clickHeader];
+    };
     [self.contentContainer addSubview:_headerView];
     
     self.contentLabel = [[TTUGCAsyncLabel alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width - leftMargin - rightMargin - 30, 0)];
@@ -295,6 +298,11 @@
     }
 }
 
+- (void)clickHeader {
+        if(self.delegate && [self.delegate respondsToSelector:@selector(clickRealtorHeader:cell:)]){
+        [self.delegate clickRealtorHeader:self.cellModel cell:self];
+    }
+}
 
 // 评论点击
 - (void)commentBtnClick {

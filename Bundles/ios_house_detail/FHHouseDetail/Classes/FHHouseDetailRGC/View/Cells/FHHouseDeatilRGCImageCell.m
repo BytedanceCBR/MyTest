@@ -70,7 +70,10 @@
         [weakSelf clickImAction];
     };
     self.headerView.phoneCilck = ^{
-         [weakSelf clickPhoneAction];
+          [weakSelf clickPhoneAction];
+    };
+    self.headerView.headerClick  = ^{
+         [weakSelf clickHeader];
     };
     [self.contentContainer addSubview:_headerView];
     
@@ -234,6 +237,13 @@
         [self.delegate clickRealtorPhone:self.cellModel cell:self];
     }
 }
+
+- (void)clickHeader {
+        if(self.delegate && [self.delegate respondsToSelector:@selector(clickRealtorHeader:cell:)]){
+        [self.delegate clickRealtorHeader:self.cellModel cell:self];
+    }
+}
+
 #pragma mark - TTUGCAsyncLabelDelegate
 
 - (void)asyncLabel:(TTUGCAsyncLabel *)label didSelectLinkWithURL:(NSURL *)url {

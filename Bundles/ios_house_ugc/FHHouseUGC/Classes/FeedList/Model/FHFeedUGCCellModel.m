@@ -681,6 +681,7 @@
         cellModel.openUrl = model.rawData.detailSchema;
         cellModel.showLookMore = YES;
         cellModel.numberOfLines = 3;
+        cellModel.createTime = [FHBusinessManager ugcCustomtimeAndCustomdateStringSince1970:model.rawData.createTime.doubleValue type:@"onlyDate"];
         NSString *dur = model.rawData.video.duration;
         if (dur.length > 0) {
             double durTime = [dur doubleValue];
@@ -804,6 +805,7 @@
     cellModel.diggCount = model.diggCount;
     cellModel.readCount = model.readCount;
     cellModel.commentCount = model.commentCount;
+    cellModel.createTime =  [FHBusinessManager ugcCustomtimeAndCustomdateStringSince1970:model.createTime.doubleValue type:@"onlyDate"];
     cellModel.userDigg = model.userDigg;
     cellModel.desc = [self generateUGCDesc:model];
     cellModel.groupId = model.threadId.length > 0 ? model.threadId: model.rawData.threadId;

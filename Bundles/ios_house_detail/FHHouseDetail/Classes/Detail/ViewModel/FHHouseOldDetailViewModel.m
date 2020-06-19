@@ -549,6 +549,7 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
         detailRGCListCellModel.count = model.data.realtorContent.content.count;
         detailRGCListCellModel.houseModelType = FHHouseModelTypeHousingEvaluation;
         detailRGCListCellModel.contentModel = model.data.realtorContent.content;
+        detailRGCListCellModel.belongsVC = self.detailController;
         [self.items addObject:detailRGCListCellModel];
     }
     

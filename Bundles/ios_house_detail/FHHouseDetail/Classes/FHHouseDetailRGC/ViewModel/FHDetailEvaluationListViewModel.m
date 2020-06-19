@@ -19,6 +19,9 @@
 
 #import "FHFeedListModel.h"
 #import "FHRealtorEvaluatingTracerHelper.h"
+#import "FHUGCFeedDetailJumpManager.h"
+#import "FHRealtorEvaluatingPhoneCallModel.h"
+#import "FHUserTracker.h"
 @interface FHDetailEvaluationListViewModel()<UITableViewDelegate,UITableViewDataSource>
 @property (nonatomic, strong)UITableView *tableView;
 @property (nonatomic, weak)FHDetailEvaluationListViewController *listController;
@@ -31,6 +34,10 @@
 @property(nonatomic, strong) FHFeedListModel *feedListModel;
 @property (nonatomic, strong)NSMutableDictionary *elementShowCaches;
 @property (nonatomic, strong)FHRealtorEvaluatingTracerHelper *tracerHelper;
+@property(nonatomic, strong) FHUGCBaseCell *currentCell;
+@property(nonatomic, strong) FHFeedUGCCellModel *currentCellModel;
+@property(nonatomic, strong) FHUGCFeedDetailJumpManager *detailJumpManager;
+@property(nonatomic, strong) FHRealtorEvaluatingPhoneCallModel *realtorPhoneCallModel;
 @property (copy, nonatomic) NSString *houseType;
 @property (copy, nonatomic) NSString *houseId;
 
@@ -50,7 +57,12 @@
         self.elementShowCaches = [NSMutableDictionary new];
         self.tracerHelper = [[FHRealtorEvaluatingTracerHelper alloc]init];
         self.listController.emptyView.backgroundColor = [UIColor colorWithHexStr:@"#f8f8f8"];
+        self.detailJumpManager = [[FHUGCFeedDetailJumpManager alloc] init];
+        self.detailJumpManager.refer = 1;
         [self configTableView];
+        self.realtorPhoneCallModel = [[FHRealtorEvaluatingPhoneCallModel alloc]initWithHouseType:self.houseType.integerValue houseId:self.houseId];
+        self.realtorPhoneCallModel.tracerDict = self.tracerDic;
+        self.realtorPhoneCallModel.belongsVC = self.listController;
     }
     return self;
 }
@@ -75,6 +87,11 @@
     self.tableView.mj_footer = self.refreshFooter;
     self.refreshFooter.hidden = YES;
      [wself requestData:YES first:YES];
+}
+
+- (void)setTracerDic:(NSMutableDictionary *)tracerDic {
+    _tracerDic = tracerDic;
+    self.tracerHelper.tracerModel = [FHTracerModel makerTracerModelWithDic:tracerDic];
 }
 
 - (void)reloadData {
@@ -252,7 +269,6 @@ if (hasMore) {
         FHFeedUGCCellModel *cellModel = self.dataList[indexPath.row];
         NSString *cellIdentifier = NSStringFromClass([self.cellManager cellClassFromCellViewType:cellModel.cellSubType data:nil]);
         FHUGCBaseCell *cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
-        
         if (cell == nil) {
             Class cellClass = NSClassFromString(cellIdentifier);
             cell = [[cellClass alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
@@ -262,6 +278,7 @@ if (hasMore) {
         if(indexPath.row < self.dataList.count){
             [cell refreshWithData:cellModel];
         }
+        cell.delegate = self;
         return cell;
     }
     return [[FHUGCBaseCell alloc] init];
@@ -276,7 +293,11 @@ if (hasMore) {
         NSString *tempKey = [NSString stringWithFormat:@"%ld_%ld",indexPath.section,indexPath.row];
         if (!self.elementShowCaches[tempKey]) {
             self.elementShowCaches[tempKey] = @(YES);
-            [self.tracerHelper trackFeedClientShow:self.dataList[indexPath.row] withExtraDic:@{}];
+            FHFeedUGCCellModel *cellModel = self.dataList[indexPath.row];
+            NSDictionary  *extraDic = self.tracerDic.mutableCopy;
+            [extraDic setValue:[NSString stringWithFormat:@"%ld",(long)indexPath.row] forKey:@"rank"];
+            [extraDic setValue:cellModel.logPb forKey:@"log_pb"];
+            [self.tracerHelper trackFeedClientShow:self.dataList[indexPath.row] withExtraDic:extraDic];
         }
     }
 }
@@ -313,5 +334,53 @@ if (hasMore) {
         }
     }
     return 100;
+}
+
+- (void)commentClicked:(FHFeedUGCCellModel *)cellModel cell:(nonnull FHUGCBaseCell *)cell {
+    [self trackClickComment:cellModel];
+    self.currentCellModel = cellModel;
+    self.currentCell = cell;
+    self.detailJumpManager.currentCell = self.currentCell;
+    [self.detailJumpManager jumpToDetail:cellModel showComment:YES enterType:@"feed_comment"];
+}
+
+- (void)clickRealtorIm:(FHFeedUGCCellModel *)cellModel cell:(FHUGCBaseCell *)cell {
+    NSInteger index = [self.dataList indexOfObject:cellModel];
+    NSMutableDictionary *imExtra = @{}.mutableCopy;
+    imExtra[@"realtor_position"] = @"detail_related";
+    [self.realtorPhoneCallModel imchatActionWithPhone:cellModel.realtor realtorRank:[NSString stringWithFormat:@"%ld",(long)index] extraDic:imExtra];
+}
+
+- (void)clickRealtorPhone:(FHFeedUGCCellModel *)cellModel cell:(FHUGCBaseCell *)cell {
+    NSMutableDictionary *extraDict = @{}.mutableCopy;
+    extraDict[@"realtor_id"] = cellModel.realtor.realtorId;
+    extraDict[@"realtor_rank"] = @"be_null";
+    extraDict[@"realtor_logpb"] = cellModel.realtor.realtorLogpb;
+    NSDictionary *associateInfoDict = cellModel.realtor.associateInfo.phoneInfo;
+    extraDict[kFHAssociateInfo] = associateInfoDict;
+    FHAssociatePhoneModel *associatePhone = [[FHAssociatePhoneModel alloc]init];
+    associatePhone.reportParams = extraDict;
+    associatePhone.associateInfo = associateInfoDict;
+    associatePhone.realtorId = cellModel.realtor.realtorId;
+    associatePhone.searchId = self.tracerDic[@"log_pb"][@"search_id"];
+    associatePhone.imprId = self.tracerDic[@"log_pb"][@"impr_id"];
+    associatePhone.houseType =self.houseType.integerValue;
+    associatePhone.houseId = self.houseId;
+    associatePhone.showLoading = NO;
+    [self.realtorPhoneCallModel phoneChatActionWithAssociateModel:associatePhone];
+}
+
+- (void)clickRealtorHeader:(FHFeedUGCCellModel *)cellModel cell:(FHUGCBaseCell *)cell {
+    NSMutableDictionary *dict = [NSMutableDictionary dictionary];
+     dict[@"element_from"] = @"old_detail_related";
+     dict[@"enter_from"] = @"realtor_evaluate_list";
+    [self.realtorPhoneCallModel jump2RealtorDetailWithPhone:cellModel.realtor isPreLoad:NO extra:dict];
+}
+
+
+- (void)trackClickComment:(FHFeedUGCCellModel *)cellModel {
+    NSMutableDictionary *dict = [cellModel.tracerDic mutableCopy];
+    dict[@"click_position"] = @"feed_comment";
+    TRACK_EVENT(@"click_comment", dict);
 }
 @end

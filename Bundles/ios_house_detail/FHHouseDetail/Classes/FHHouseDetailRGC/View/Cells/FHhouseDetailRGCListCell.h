@@ -16,6 +16,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (assign, nonatomic) CGFloat cellHeight;
 @property (strong, nonatomic) NSDictionary *extraDic;
 @property(nonatomic , strong) NSMutableDictionary *detailTracerDic; // 详情页基础埋点数据
+@property (nonatomic, weak) UIViewController *belongsVC;
 @end
 
 

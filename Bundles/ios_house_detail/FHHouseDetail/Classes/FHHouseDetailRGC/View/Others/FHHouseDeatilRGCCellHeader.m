@@ -73,7 +73,7 @@
     
     [self.infoLab mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.equalTo(self.nameLab);
-        make.bottom.equalTo(self.headerIma.mas_bottom).offset(-2);
+        make.bottom.equalTo(self.headerIma.mas_bottom).offset(3);
         make.right.equalTo(self.iMBtn.mas_left).offset(-20);
     }];
 }
@@ -84,6 +84,9 @@
         headerIma.layer.cornerRadius = 17;
         headerIma.layer.masksToBounds = YES;
         headerIma.backgroundColor = [UIColor themeGray7];
+        UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(clickImage)];
+        [headerIma addGestureRecognizer:tapGesture];
+        headerIma.userInteractionEnabled = YES;
         headerIma.contentMode = UIViewContentModeScaleAspectFill;
         [self addSubview:headerIma];
         _headerIma = headerIma;
@@ -126,7 +129,7 @@
 - (UIImageView *)idIma {
     if (!_idIma) {
         UIImageView *idIma = [[UIImageView alloc]init];
-        idIma.image = [UIImage imageNamed:@"detail_contact"];
+        idIma.image = [UIImage imageNamed:@""];
         [self addSubview:idIma];
         _idIma = idIma;
     }
@@ -136,7 +139,6 @@
 - (UILabel *)infoLab {
     if (!_infoLab) {
         UILabel *infoLab = [[UILabel alloc]init];
-        infoLab.text = @"带看本房源1次 2019.06.22带看过 ";
         infoLab.font = [UIFont themeFontMedium:10];
         infoLab.textColor = [UIColor themeGray3];
         [self addSubview:infoLab];
@@ -149,7 +151,7 @@
     if (!_iMBtn) {
         UIButton *iMBtn = [[UIButton alloc]init];
         [iMBtn addTarget:self action:@selector(imAction:) forControlEvents:UIControlEventTouchDown];
-        [iMBtn setBackgroundImage:[UIImage imageNamed:@"detail_agent_message_press_new"] forState:UIControlStateNormal];
+        [iMBtn setBackgroundImage:[UIImage imageNamed:@"detail_agent_message_normal_new"] forState:UIControlStateNormal];
         [self addSubview:iMBtn];
         _iMBtn = iMBtn;
     }
@@ -160,7 +162,7 @@
     if (!_phoneBtn) {
         UIButton *phoneBtn = [[UIButton alloc]init];
         [phoneBtn addTarget:self action:@selector(phoneAction:) forControlEvents:UIControlEventTouchDown];
-        [phoneBtn setBackgroundImage:[UIImage imageNamed:@"detail_agent_call_press_new"] forState:UIControlStateNormal];
+        [phoneBtn setBackgroundImage:[UIImage imageNamed:@"detail_agent_call_normal_new"] forState:UIControlStateNormal];
         [self addSubview:phoneBtn];
         _phoneBtn = phoneBtn;
     }
@@ -172,6 +174,10 @@
     if (cellModel.realtor.avatarUrl) {
         [self.headerIma bd_setImageWithURL:[NSURL URLWithString:cellModel.realtor.avatarUrl]];
     }
+    if (cellModel.realtor.certificationIcon) {
+          [self.idIma bd_setImageWithURL:[NSURL URLWithString:cellModel.realtor.certificationIcon]];
+      }
+    
     self.nameLab.text = cellModel.realtor.realtorName;
     if (cellModel.realtor.agencyName.length>0) {
         self.companyNameLab.text = cellModel.realtor.agencyName;
@@ -183,12 +189,18 @@
             make.width.mas_offset(0);
         }];
     }
-    self.infoLab.text = cellModel.realtor.desc;
+    self.infoLab.text = [NSString stringWithFormat:@"%@ %@",cellModel.realtor.desc,cellModel.createTime];
 }
 
 - (void)imAction:(UIButton *)sender {
     if (self.imClick) {
         self.imClick();
+    }
+}
+
+- (void)clickImage {
+    if (self.headerClick) {
+        self.headerClick();
     }
 }
 

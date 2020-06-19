@@ -137,6 +137,7 @@
     
     self.realtorPhoneCallModel = [[FHRealtorEvaluatingPhoneCallModel alloc]initWithHouseType:[NSString stringWithFormat:@"%@",houseInfo[@"houseType"]].intValue houseId:houseInfo[@"houseId"]];
     self.realtorPhoneCallModel.tracerDict = cellModel.detailTracerDic;
+    self.realtorPhoneCallModel.belongsVC = cellModel.belongsVC;
     self.tracerHelper.tracerModel = [FHTracerModel makerTracerModelWithDic:cellModel.detailTracerDic];
     self.shadowImage.image = cellModel.shadowImage;
     if(cellModel.shdowImageScopeType == FHHouseShdowImageScopeTypeBottomAll){
@@ -313,13 +314,22 @@
     [self.realtorPhoneCallModel phoneChatActionWithAssociateModel:associatePhone];
 }
 
-- (void)moreButtonClick {
+- (void)clickRealtorHeader:(FHFeedUGCCellModel *)cellModel cell:(FHUGCBaseCell *)cell {
+    NSMutableDictionary *dict = [NSMutableDictionary dictionary];
+     dict[@"element_from"] = @"old_detail_related";
+     dict[@"enter_from"] = [self.baseViewModel pageTypeString];
+    [self.realtorPhoneCallModel jump2RealtorDetailWithPhone:cellModel.realtor isPreLoad:NO extra:dict];
+}
 
+
+- (void)moreButtonClick {
     FHhouseDetailRGCListCellModel *dataModel = (FHhouseDetailRGCListCellModel *)self.currentData;
-        NSDictionary *dict = @{@"tracer":dataModel.detailTracerDic};
-//    NSDictionary *houseInfo = dataModel.extraDic;
+    NSDictionary *houseInfo = dataModel.extraDic;
+    NSMutableDictionary *tracer = @{}.mutableCopy;
+    [tracer addEntriesFromDictionary:dataModel.detailTracerDic];
+    [tracer setValue:houseInfo[@"houseId"] forKey:@"from_gid"];
+    NSDictionary *dict = @{@"tracer":tracer};
     TTRouteUserInfo* userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
-//    NSString *schema = [NSString stringWithFormat:@"%@&houseId=%@&houseType=%@&channelId=%@",dataModel.contentModel.schema,houseInfo[@"houseId"],houseInfo[@"houseType"],houseInfo[@"channelId"]];
     NSURL *openURL = [NSURL URLWithString:dataModel.contentModel.schema];
     if ([[TTRoute sharedRoute] canOpenURL:openURL]) {
         [[TTRoute sharedRoute] openURLByPushViewController:openURL userInfo:userInfo];

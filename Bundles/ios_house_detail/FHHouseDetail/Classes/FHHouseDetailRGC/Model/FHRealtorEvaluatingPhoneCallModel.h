@@ -15,9 +15,12 @@ NS_ASSUME_NONNULL_BEGIN
 - (instancetype)initWithHouseType:(FHHouseType)houseType houseId:(NSString *)houseId;
 @property(nonatomic , strong) NSDictionary *tracerDict; // 详情页基础埋点数据
 @property (nonatomic, assign)   BOOL isEnterIM;
+@property (nonatomic, weak) UIViewController *belongsVC;
 - (void)imchatActionWithPhone:(FHFeedUGCCellRealtorModel *)realtorModel realtorRank:(NSString *)rank extraDic:(NSDictionary *)extra ;
 
 - (void)phoneChatActionWithAssociateModel:(FHAssociatePhoneModel *)associatePhoneModel;
+
+- (void)jump2RealtorDetailWithPhone:(FHFeedUGCCellRealtorModel *)realtorModel isPreLoad:(BOOL)isPre extra:(NSDictionary*)extra;
 @end
 
 NS_ASSUME_NONNULL_END

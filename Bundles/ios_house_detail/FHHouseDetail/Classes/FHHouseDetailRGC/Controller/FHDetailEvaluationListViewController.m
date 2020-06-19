@@ -129,6 +129,7 @@
     detailTracerDic[@"element_from"] = self.tracerDict[@"element_from"] ? : @"be_null";
     detailTracerDic[@"origin_from"] = self.tracerDict[@"origin_from"] ? : @"be_null";
     detailTracerDic[@"from_gid"] = self.tracerDict[@"from_gid"];
+    detailTracerDic[@"log_pb"] = self.tracerDict[@"log_pb"];
     return detailTracerDic;
 }
 -(NSString *)pageTypeString {
