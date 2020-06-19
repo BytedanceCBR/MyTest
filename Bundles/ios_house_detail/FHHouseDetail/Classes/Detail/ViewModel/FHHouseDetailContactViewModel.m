@@ -423,6 +423,7 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
 }
 
 - (void)generateImParams:(NSString *)houseId houseTitle:(NSString *)houseTitle houseCover:(NSString *)houseCover houseType:(NSString *)houseType houseDes:(NSString *)houseDes housePrice:(NSString *)housePrice houseAvgPrice:(NSString *)houseAvgPrice {
+    _phoneCallViewModel.houseInfoBizTrace = self.houseInfoBizTrace;
     [self.phoneCallViewModel generateImParams:houseId houseTitle:houseTitle houseCover:houseCover houseType:houseType houseDes:houseDes housePrice:housePrice houseAvgPrice:houseAvgPrice];
 }
 

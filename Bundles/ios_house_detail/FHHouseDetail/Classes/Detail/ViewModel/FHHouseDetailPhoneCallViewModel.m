@@ -64,8 +64,13 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
     associateIMModel.houseId = self.houseId;
     associateIMModel.houseType = self.houseType;
     associateIMModel.associateInfo = extra[kFHAssociateInfo];
-    if (contactPhone.bizTrace) {
+    BOOL isUseContactBizTrace = [extra[@"realtor_position"] isEqualToString:@"detail_button"] || [extra[@"realtor_position"] isEqualToString:@"detail_related"];
+    if (contactPhone.bizTrace && [extra isKindOfClass:[NSDictionary class]] && isUseContactBizTrace) {
         associateIMModel.extraInfo = @{@"biz_trace":contactPhone.bizTrace};
+    }else{
+        if (self.houseInfoBizTrace) {
+            associateIMModel.extraInfo = @{@"biz_trace":self.houseInfoBizTrace};
+        }
     }
 
     NSMutableDictionary *tempExtra = extra.mutableCopy;

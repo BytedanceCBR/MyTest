@@ -245,6 +245,7 @@ logPB:self.listLogPB extraInfo:self.extraInfo completion:^(FHDetailOldModel * _N
     }
     self.houseInfoBizTrace = model.data.bizTrace;
     self.contactViewModel.houseInfoBizTrace = model.data.bizTrace;
+    
     // 添加头滑动图片 && 视频
     if (model.data.houseVideo && model.data.houseVideo.videoInfos.count > 0) {
         hasVideo = YES;
@@ -483,6 +484,7 @@ logPB:self.listLogPB extraInfo:self.extraInfo completion:^(FHDetailOldModel * _N
         agentListModel.recommendedRealtors = model.data.recommendedRealtors;
         agentListModel.associateInfo = model.data.recommendRealtorsAssociateInfo;
         agentListModel.phoneCallViewModel = [[FHHouseDetailPhoneCallViewModel alloc] initWithHouseType:FHHouseTypeSecondHandHouse houseId:self.houseId];
+        agentListModel.phoneCallViewModel.houseInfoBizTrace = self.houseInfoBizTrace;
         [agentListModel.phoneCallViewModel generateImParams:self.houseId houseTitle:model.data.title houseCover:imgUrl houseType:houseType  houseDes:houseDes housePrice:price houseAvgPrice:avgPrice];
         agentListModel.phoneCallViewModel.tracerDict = self.detailTracerDic.mutableCopy;
         //        agentListModel.phoneCallViewModel.followUpViewModel = self.contactViewModel.followUpViewModel;
@@ -514,6 +516,7 @@ logPB:self.listLogPB extraInfo:self.extraInfo completion:^(FHDetailOldModel * _N
         houseReviewCommentModel.houseModelType = FHHouseModelTypeHousingEvaluation;
         houseReviewCommentModel.houseReviewComment = model.data.houseReviewComment;
         houseReviewCommentModel.phoneCallViewModel = [[FHHouseDetailPhoneCallViewModel alloc] initWithHouseType:FHHouseTypeSecondHandHouse houseId:self.houseId];
+        houseReviewCommentModel.phoneCallViewModel.houseInfoBizTrace = self.houseInfoBizTrace;
         [houseReviewCommentModel.phoneCallViewModel generateImParams:self.houseId houseTitle:model.data.title houseCover:imgUrl houseType:houseType  houseDes:houseDes housePrice:price houseAvgPrice:avgPrice];
         houseReviewCommentModel.phoneCallViewModel.tracerDict = self.detailTracerDic.mutableCopy;
         houseReviewCommentModel.searchId = searchId;
