@@ -129,12 +129,15 @@
     configModel.followId = associateIM.houseId;
     configModel.actionType = associateIM.houseType;
     configModel.hideToast = YES;
-    // 静默关注功能
-    [FHHouseFollowUpHelper silentFollowHouseWithConfigModel:configModel completionBlock:^(BOOL isSuccess) {
-        if(associateIM.slientFollowCallbackBlock) {
-            associateIM.slientFollowCallbackBlock(isSuccess);
-        }
-    }];
+    
+    if (configModel.followId && configModel.followId.length > 0) {
+        // 静默关注功能
+        [FHHouseFollowUpHelper silentFollowHouseWithConfigModel:configModel completionBlock:^(BOOL isSuccess) {
+            if(associateIM.slientFollowCallbackBlock) {
+                associateIM.slientFollowCallbackBlock(isSuccess);
+            }
+        }];
+    }
 }
 
 + (void)addClickIMLog:(FHAssociateIMModel *)associateIM

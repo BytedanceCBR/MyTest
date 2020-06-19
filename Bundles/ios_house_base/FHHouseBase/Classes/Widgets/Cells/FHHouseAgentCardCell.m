@@ -239,7 +239,7 @@
 }
 
 - (void)setUpLynxView{
-    _lynxView = [[FHLynxView alloc] initWithFrame:CGRectMake(15, 0, [UIScreen mainScreen].bounds.size.width - 30, 116)];
+    _lynxView = [[FHLynxView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width - 30, 116)];
     [self.containerView addSubview:_lynxView];
     FHLynxViewBaseParams *baesparmas = [[FHLynxViewBaseParams alloc] init];
     baesparmas.channel = @"lynx_realtor_card";
@@ -257,6 +257,8 @@
     if (itemModel) {
         self.traceParams = params;
         self.tracerDict = params;
+
+        
         [self updateUIFromData:itemModel];
     }
 }
@@ -278,10 +280,9 @@
      
         if (itemModel) {
             FHDetailContactModel *contactModel =  itemModel.contactModel;
+       
             if (self.itemHomeModel != itemModel) {
-                [self addRealtorShowLog:self.modelData];
-            }else{
-                return;
+                  [self addRealtorShowLog:contactModel];
             }
             
             self.modelData = contactModel;
@@ -338,15 +339,9 @@
 {
     FHHomeHouseDataItemsModel *itemModel =  (FHHomeHouseDataItemsModel *)data;
     if (itemModel) {
-        if (self.itemHomeModel != itemModel) {
-            [self addRealtorShowLog:self.modelData];
-        }else{
-            return;
-        }
-        
-        FHDetailContactModel *contactModel =  itemModel.contactModel;
-        self.modelData = contactModel;
-        self.itemHomeModel = itemModel;
+//        FHDetailContactModel *contactModel =  itemModel.contactModel;
+//        self.modelData = contactModel;
+//        self.itemHomeModel = itemModel;
         
         CALayer *layer = _containerView.layer;
         layer.cornerRadius = 10;

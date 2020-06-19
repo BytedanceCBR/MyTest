@@ -328,6 +328,7 @@
         case FHSearchCardTypeAgentCard:
             itemModel = [[FHSearchHouseItemModel alloc]initWithDictionary:itemDict error:&jerror];
             ((FHSearchHouseItemModel *)itemModel).cardType = FHSearchCardTypeAgentCard;
+            break;
         case FHSearchCardTypeReserveAdviser:
             itemModel = [[FHHouseReserveAdviserModel alloc]initWithDictionary:itemDict error:&jerror];
             break;
