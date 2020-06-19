@@ -834,6 +834,16 @@
                 [FHUserTracker writeEvent:@"hot_word_show" params:tracerDic];
             }
         }
+        //帮我找房埋点
+        if ([cell isKindOfClass:[FHSuggestHeaderViewCell class]]) {
+            NSDictionary *tracerDict = @{
+                @"event_type": @"house_app2c_v2",
+                @"page_type": @"search_detail",
+                @"element_type": @"driving_find_house_card",
+            };
+            
+            [FHUserTracker writeEvent:@"element_show" params:tracerDict];
+        }
     } else if (tableView.tag == 2) {
         // 联想词 associate_word_show 埋点 在 返回数据的地方进行一次性埋点
     }

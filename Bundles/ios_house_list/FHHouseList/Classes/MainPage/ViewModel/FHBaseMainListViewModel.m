@@ -2023,8 +2023,11 @@ extern NSString *const INSTANT_DATA_KEY;
 //跳转到帮我找房
 - (void)jump2HouseFindPageWithUrl:(NSString *)url {
     if (url.length > 0) {
+        NSDictionary *userInfo = @{
+            @"enter_from": self.tracerModel.enterFrom.length > 0 ? self.tracerModel.enterFrom : @"be_null",
+        };
         NSURL *openUrl = [NSURL URLWithString:url];
-        [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:nil];
+        [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:userInfo];
     }
 }
 
