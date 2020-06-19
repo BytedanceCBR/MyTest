@@ -685,6 +685,7 @@
                            @"priceChangeNotice":@"price_change_notice",
                            @"downPaymentInfo":@"down_payment_info",
                            @"vouchModel":@"vouch_info",
+                           @"realtorContent":@"realtor_content"
                            };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
         return dict[keyName]?:keyName;

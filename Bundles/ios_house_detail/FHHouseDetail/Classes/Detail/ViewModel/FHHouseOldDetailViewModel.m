@@ -66,7 +66,7 @@
 #import "FHDetailPriceChangeNoticeCell.h"
 #import "FHVRPreloadManager.h"
 #import "TTSettingsManager.h"
-
+#import "FHhouseDetailRGCListCell.h"
 extern NSString *const kFHPhoneNumberCacheKey;
 extern NSString *const kFHSubscribeHouseCacheKey;
 extern NSString *const kFHPLoginhoneNumberCacheKey;
@@ -135,6 +135,8 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
     [self.tableView registerClass:[FHDetailNeighborhoodCommentsCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailCommentsCellModel class])];
     //小区攻略
     [self.tableView registerClass:[FHDetailNeighborhoodAssessCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailAccessCellModel class])];
+    //经纪人评测
+    [self.tableView registerClass:[FHhouseDetailRGCListCell class] forCellReuseIdentifier:NSStringFromClass([FHhouseDetailRGCListCellModel class])];
 }
 
 // cell identifier
@@ -527,6 +529,27 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
         userHouseCommentModel.houseModelType = FHHouseModelTypeHousingEvaluation;
         userHouseCommentModel.userComments = model.data.userHouseComments;
         [self.items addObject:userHouseCommentModel];
+    }
+    
+    //经纪人评测
+    if (model.data.realtorContent.content.data.count > 0) {
+        FHhouseDetailRGCListCellModel *detailRGCListCellModel = [[FHhouseDetailRGCListCellModel alloc] init];
+        detailRGCListCellModel.detailTracerDic = self.detailTracerDic;
+        NSString *searchId = self.listLogPB[@"search_id"];
+        NSString *imprId = self.listLogPB[@"impr_id"];
+        NSDictionary *extraDic = @{
+            @"searchId":searchId,
+            @"imprId":imprId,
+            @"houseId":self.houseId,
+            @"houseType":@(self.houseType),
+            @"channelId":@"f_hosue_wtt"
+        };
+        detailRGCListCellModel.extraDic = extraDic;
+        detailRGCListCellModel.title = model.data.realtorContent.title;
+        detailRGCListCellModel.count = model.data.realtorContent.content.count;
+        detailRGCListCellModel.houseModelType = FHHouseModelTypeHousingEvaluation;
+        detailRGCListCellModel.contentModel = model.data.realtorContent.content;
+        [self.items addObject:detailRGCListCellModel];
     }
     
     BOOL hasOtherNeighborhoodInfo = NO;
@@ -948,7 +971,6 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
     if ([data isKindOfClass:[FHSearchHouseDataItemsModel class]]) {
         FHSearchHouseDataItemsModel *item = (FHSearchHouseDataItemsModel *)data;
         return  item.houseImage;
-        
     }else if ([data isKindOfClass:[FHHomeHouseDataItemsModel class]]){
         FHHomeHouseDataItemsModel *item = (FHHomeHouseDataItemsModel *)data;
         return item.houseImage;

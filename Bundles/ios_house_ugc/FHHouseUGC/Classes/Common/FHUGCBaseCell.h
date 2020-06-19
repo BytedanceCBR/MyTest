@@ -37,6 +37,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)goToVoteDetail:(FHFeedUGCCellModel *)cellModel value:(NSInteger)value;
 
+- (void)clickRealtorIm:(FHFeedUGCCellModel *)cellModel cell:(FHUGCBaseCell *)cell;
+
+- (void)clickRealtorPhone:(FHFeedUGCCellModel *)cellModel cell:(FHUGCBaseCell *)cell;
 @end
 
 @interface FHUGCBaseCell : UITableViewCell
@@ -51,6 +54,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 // 子类需要重写的方法，根据数据源刷新当前Cell，以及布局
 - (void)refreshWithData:(id)data;
+
 
 + (CGFloat)heightForData:(id)data;
 

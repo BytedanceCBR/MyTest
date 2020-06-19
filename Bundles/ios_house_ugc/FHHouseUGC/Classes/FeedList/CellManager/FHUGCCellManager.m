@@ -28,6 +28,8 @@
 #import "FHUGCRecommendCircleCell.h"
 #import "FHUGCEncyclopediasCell.h"
 #import "FHUGCLynxCommonCell.h"
+#import "FHHouseDeatilRGCImageCell.h"
+#import "FHHouseDeatilRGCVideoCell.h"
 
 @interface FHUGCCellManager ()
 
@@ -47,28 +49,30 @@
 
 - (void)initSupportCellTypeList {
     self.supportCellTypeList = @[
-                                @"FHUGCPureTitleCell",
-                                @"FHUGCSingleImageCell",
-                                @"FHUGCMultiImageCell",
-                                @"FHArticlePureTitleCell",
-                                @"FHArticleSingleImageCell",
-                                @"FHArticleMultiImageCell",
-                                @"FHUGCRecommendCell",
-                                @"FHUGCLynxBannerCell",
-                                @"FHUGCBannerCell",
-                                @"FHUGCHotTopicCell",
-                                @"FHUGCVoteCell",
-                                @"FHUGCVideoCell",
-                                @"FHUGCSmallVideoCell",
-                                @"FHUGCVoteDetailCell",
-                                @"FHUGCHotCommunityCell",
-                                @"FHNeighbourhoodQuestionCell",
-                                @"FHNeighbourhoodCommentCell",
-                                @"FHUGCRecommendCircleCell",
-                                @"FHUGCEncyclopediasCell",
-                                @"FHUGCLynxCommonCell",
-                                //可扩展
-                                 ];
+        @"FHUGCPureTitleCell",
+        @"FHUGCSingleImageCell",
+        @"FHUGCMultiImageCell",
+        @"FHArticlePureTitleCell",
+        @"FHArticleSingleImageCell",
+        @"FHArticleMultiImageCell",
+        @"FHUGCRecommendCell",
+        @"FHUGCLynxBannerCell",
+        @"FHUGCBannerCell",
+        @"FHUGCHotTopicCell",
+        @"FHUGCVoteCell",
+        @"FHUGCVideoCell",
+        @"FHUGCSmallVideoCell",
+        @"FHUGCVoteDetailCell",
+        @"FHUGCHotCommunityCell",
+        @"FHNeighbourhoodQuestionCell",
+        @"FHNeighbourhoodCommentCell",
+        @"FHUGCRecommendCircleCell",
+        @"FHUGCEncyclopediasCell",
+        @"FHUGCLynxCommonCell",
+        @"FHHouseDeatilRGCImageCell",
+        @"FHHouseDeatilRGCVideoCell"
+        //可扩展
+    ];
 }
 
 - (void)registerAllCell:(UITableView *)tableView {
@@ -101,7 +105,7 @@
             
         case FHUGCFeedListCellSubTypeUGCRecommend:
             return [FHUGCRecommendCell class];
-
+            
         case FHUGCFeedListCellSubTypeUGCBanner:
             return [[FHLynxManager sharedInstance] checkChannelTemplateIsAvalable:kFHLynxUGCOperationChannel templateKey:[FHLynxManager defaultJSFileName]] ? [FHUGCLynxBannerCell class] : [FHUGCBannerCell class];
             
@@ -116,7 +120,7 @@
             
         case FHUGCFeedListCellSubTypeUGCSmallVideo:
             return [FHUGCSmallVideoCell class];
-        
+            
         case FHUGCFeedListCellSubTypeUGCVoteDetail:
             return [FHUGCVoteDetailCell class];
             
@@ -138,6 +142,15 @@
         case FHUGCFeedListCellSubTypeUGCLynx:
             
             return [FHUGCLynxCommonCell class];
+        case FHUGCFeedListCellSubTypeUGCBrokerImage:
+            
+            return [FHHouseDeatilRGCImageCell class];
+            
+            case FHUGCFeedListCellSubTypeUGCBrokerVideo:
+                
+                return [FHHouseDeatilRGCVideoCell class];
+            
+            
         default:
             break;
     }

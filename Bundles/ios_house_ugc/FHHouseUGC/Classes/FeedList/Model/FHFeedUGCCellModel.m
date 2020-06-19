@@ -38,7 +38,9 @@
 @implementation FHFeedUGCOriginItemModel
 
 @end
+@implementation FHFeedUGCCellRealtorModel
 
+@end
 @implementation FHFeedUGCCellContentDecorationModel
 + (BOOL)propertyIsOptional:(NSString *)propertyName
 {
@@ -686,6 +688,23 @@
         } else {
             cellModel.videoDuration = 0;
         }
+        
+        
+        FHFeedUGCCellRealtorModel *realtor = [[FHFeedUGCCellRealtorModel alloc] init];
+        realtor.agencyName = model.rawData.realtor.agencyName;
+        realtor.avatarUrl  = model.rawData.realtor.avatarUrl;
+        realtor.certificationIcon  = model.rawData.realtor.certificationIcon;
+        realtor.certificationPage  = model.rawData.realtor.certificationPage;
+        realtor.chatOpenurl  = model.rawData.realtor.chatOpenurl;
+        realtor.desc  = model.rawData.realtor.desc;
+        realtor.realtorId  = model.rawData.realtor.realtorId;
+        realtor.realtorName  = model.rawData.realtor.realtorName;
+        realtor.associateInfo = model.rawData.realtor.associateInfo;
+        realtor.realtorLogpb = model.rawData.realtor.realtorLogpb;
+        cellModel.realtor = realtor;
+        
+        
+        
         FHFeedUGCCellUserModel *user = [[FHFeedUGCCellUserModel alloc] init];
         user.name = model.rawData.user.info.name;
         user.avatarUrl = model.rawData.user.info.avatarUrl;
@@ -706,8 +725,11 @@
         
         cellModel.imageList = model.rawData.firstFrameImageList;
         cellModel.largeImageList = nil;
-        
+        if([model.cellCtrls.cellLayoutStyle isEqualToString:@"10001"]){
+        [FHUGCCellHelper setRichContentWithModel:cellModel width:([UIScreen mainScreen].bounds.size.width - 60) numberOfLines:cellModel.numberOfLines];
+        }else {
         [FHUGCCellHelper setRichContentWithModel:cellModel width:([UIScreen mainScreen].bounds.size.width - 40) numberOfLines:cellModel.numberOfLines];
+        }
     } else if (cellModel.cellType == FHUGCFeedListCellTypeUGCRecommendCircle) {
         cellModel.cellSubType = FHUGCFeedListCellSubTypeUGCRecommendCircle;
         cellModel.hotSocialList = model.rawData.hotSocialList;
@@ -833,6 +855,36 @@
     }
     cellModel.user = user;
     
+    FHFeedUGCCellRealtorModel *realtor = [[FHFeedUGCCellRealtorModel alloc] init];
+    if(model.realtor) {
+        realtor.agencyName = model.realtor.agencyName;
+        realtor.avatarUrl  = model.realtor.avatarUrl;
+        realtor.certificationIcon  = model.realtor.certificationIcon;
+        realtor.certificationPage  = model.realtor.certificationPage;
+        realtor.chatOpenurl  = model.realtor.chatOpenurl;
+        realtor.desc  = model.realtor.desc;
+        realtor.realtorId  = model.realtor.realtorId;
+        realtor.realtorName  = model.realtor.realtorName;
+        realtor.associateInfo  = model.realtor.associateInfo;
+        realtor.realtorLogpb = model.realtor.realtorLogpb;
+        cellModel.realtor = realtor;
+    } else if(model.rawData.realtor) {
+        realtor.agencyName = model.rawData.realtor.agencyName;
+        realtor.avatarUrl  = model.rawData.realtor.avatarUrl;
+        realtor.certificationIcon  = model.rawData.realtor.certificationIcon;
+        realtor.certificationPage  = model.rawData.realtor.certificationPage;
+        realtor.chatOpenurl  = model.rawData.realtor.chatOpenurl;
+        realtor.desc  = model.rawData.realtor.desc;
+        realtor.realtorId  = model.rawData.realtor.realtorId;
+        realtor.realtorName  = model.rawData.realtor.realtorName;
+        realtor.associateInfo  = model.rawData.realtor.associateInfo;
+        realtor.realtorLogpb = model.rawData.realtor.realtorLogpb;
+        cellModel.realtor = realtor;
+    }
+//    if (cellModel.) {
+//        <#statements#>
+//    }
+    
     NSMutableArray *cellImageList = [NSMutableArray array];
     
     //单图
@@ -868,8 +920,12 @@
     } else if(model.rawData.largeImageList.count > 0) {
         cellModel.largeImageList = model.rawData.largeImageList;
     }
-    
+//    if([model.cellCtrls.cellLayoutStyle isEqualToString:@"10001"]){
+//    [FHUGCCellHelper setRichContentWithModel:cellModel width:([UIScreen mainScreen].bounds.size.width - 60) numberOfLines:cellModel.numberOfLines];
+//    }else {
     [FHUGCCellHelper setRichContentWithModel:cellModel width:([UIScreen mainScreen].bounds.size.width - 40) numberOfLines:cellModel.numberOfLines];
+//    }
+
     
     if(cellModel.imageList.count == 1){
         cellModel.cellSubType = FHUGCFeedListCellSubTypeSingleImage;
