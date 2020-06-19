@@ -22,6 +22,7 @@
 #import "FHUGCFeedDetailJumpManager.h"
 #import "FHRealtorEvaluatingPhoneCallModel.h"
 #import "FHUserTracker.h"
+#import "TTStringHelper.h"
 @interface FHDetailEvaluationListViewModel()<UITableViewDelegate,UITableViewDataSource>
 @property (nonatomic, strong)UITableView *tableView;
 @property (nonatomic, weak)FHDetailEvaluationListViewController *listController;
@@ -61,7 +62,6 @@
         self.detailJumpManager.refer = 1;
         [self configTableView];
         self.realtorPhoneCallModel = [[FHRealtorEvaluatingPhoneCallModel alloc]initWithHouseType:self.houseType.integerValue houseId:self.houseId];
-        self.realtorPhoneCallModel.tracerDict = self.tracerDic;
         self.realtorPhoneCallModel.belongsVC = self.listController;
     }
     return self;
@@ -91,6 +91,7 @@
 
 - (void)setTracerDic:(NSMutableDictionary *)tracerDic {
     _tracerDic = tracerDic;
+    self.realtorPhoneCallModel.tracerDict = self.tracerDic;
     self.tracerHelper.tracerModel = [FHTracerModel makerTracerModelWithDic:tracerDic];
 }
 
@@ -334,6 +335,26 @@ if (hasMore) {
         }
     }
     return 100;
+}
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    FHFeedUGCCellModel *cellModel = self.dataList[indexPath.row];
+    BOOL canOpenURL = NO;
+    if (!canOpenURL && !isEmptyString(cellModel.openUrl)) {
+        NSURL *url = [TTStringHelper URLWithURLString:cellModel.openUrl];
+        if ([[UIApplication sharedApplication] canOpenURL:url]) {
+            canOpenURL = YES;
+            [[UIApplication sharedApplication] openURL:url];
+        }
+        else if([[TTRoute sharedRoute] canOpenURL:url]){
+            canOpenURL = YES;
+            //优先跳转openurl
+            [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:nil];
+        }
+    }else{
+        NSURL *openUrl = [NSURL URLWithString:cellModel.detailScheme];
+        [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:nil];
+    }
 }
 
 - (void)commentClicked:(FHFeedUGCCellModel *)cellModel cell:(nonnull FHUGCBaseCell *)cell {
