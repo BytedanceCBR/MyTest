@@ -146,6 +146,7 @@
                 [wSelf.detailController.emptyView hideEmptyView];
                 wSelf.detailController.hasValidateData = YES;
                 [wSelf processDetailData:model];
+                [wSelf.navBar showMessageNumber];
             }else
             {
                 wSelf.detailController.hasValidateData = NO;
