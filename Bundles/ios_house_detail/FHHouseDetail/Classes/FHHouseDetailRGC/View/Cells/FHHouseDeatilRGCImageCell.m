@@ -92,6 +92,8 @@
     [_bottomView.commentBtn addTarget:self action:@selector(commentBtnClick) forControlEvents:UIControlEventTouchUpInside];
 //    [_bottomView.guideView.closeBtn addTarget:self action:@selector(closeGuideView) forControlEvents:UIControlEventTouchUpInside];
     _bottomView.bottomSepView.hidden = YES;
+    _bottomView.marginRight = 8;
+    _bottomView.paddingLike = 30;
     [self.contentContainer addSubview:_bottomView];
 }
 
@@ -106,17 +108,17 @@
     
     [self.contentContainer mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.equalTo(self.contentView).offset(cellModel.isInRealtorEvaluationList?15:0);
-        make.top.equalTo(self.contentView).offset(cellModel.isInRealtorEvaluationList?5:0);
+        make.top.equalTo(self.contentView);
         make.right.equalTo(self.contentView).offset(cellModel.isInRealtorEvaluationList?-15:0);
-        make.bottom.equalTo(self.contentView).offset(cellModel.isInRealtorEvaluationList?-5:0);
+        make.bottom.equalTo(self.contentView).offset(cellModel.isInRealtorEvaluationList?-16:0);
     }];
     
-    self.userInfoView.top =cellModel.isInRealtorEvaluationList?15:topMargin;
+    self.userInfoView.top =cellModel.isInRealtorEvaluationList?18:topMargin;
     self.userInfoView.left = 0;
     self.userInfoView.width = [UIScreen mainScreen].bounds.size.width - leftMargin - rightMargin;
     self.userInfoView.height = userInfoViewHeight;
     
-    self.headerView.top = cellModel.isInRealtorEvaluationList?15:topMargin;
+    self.headerView.top = cellModel.isInRealtorEvaluationList?18:topMargin;
     self.headerView.left = 0;
     self.headerView.width = [UIScreen mainScreen].bounds.size.width - leftMargin - rightMargin;
     self.headerView.height = userInfoViewHeight;

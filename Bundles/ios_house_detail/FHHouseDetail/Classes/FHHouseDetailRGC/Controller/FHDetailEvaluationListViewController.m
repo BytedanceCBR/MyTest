@@ -10,6 +10,7 @@
 #import "Masonry.h"
 #import "UIDevice+BTDAdditions.h"
 #import "FHDetailEvaluationListViewModel.h"
+#import "UIImage+FIconFont.h"
 @interface FHDetailEvaluationListViewController ()
 @property (weak, nonatomic) UITableView *mainTable;
 @property (strong, nonatomic) FHDetailEvaluationListViewModel *viewModel;
@@ -61,6 +62,9 @@
 - (void)initUI {
     [self addDefaultEmptyViewFullScreen];
     [self setupDefaultNavBar:NO];
+    UIImage *backimage = ICON_FONT_IMG(24, @"\U0000e68a", [UIColor themeGray1]);
+    [self.customNavBarView.leftBtn setBackgroundImage:backimage forState:UIControlStateNormal];
+     [self.customNavBarView.leftBtn setBackgroundImage:backimage forState:UIControlStateHighlighted];
     self.view.backgroundColor = [UIColor colorWithHexStr:@"#f8f8f8"];
     self.customNavBarView.title.text = self.vcTitle;
     [self.evaluationHeader mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -75,8 +79,16 @@
         }else {
             make.bottom.mas_equalTo(self.view);
         }
-        make.top.equalTo(self.evaluationHeader.mas_bottom);
+        if (self.tabsInfo.count>2) {
+            make.top.equalTo(self.evaluationHeader.mas_bottom);
+        }else {
+           make.top.equalTo(self.evaluationHeader);
+        }
     }];
+    if (self.tabsInfo.count<3) {
+        self.evaluationHeader.hidden = YES;
+        self.mainTable.contentInset = UIEdgeInsetsMake(16, 0, 0, 0);
+    }
 }
 
 - (FHDetailEvaluationListViewHeader *)evaluationHeader {

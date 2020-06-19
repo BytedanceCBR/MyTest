@@ -247,7 +247,7 @@
                     contentHeight = cellModel.contentHeight  +75 + 30 + 50 + 40;
                     break;
                 case FHUGCFeedListCellTypeUGCSmallVideo:
-                    contentHeight = cellModel.contentHeight  +150 + 30 + 50 + 80;
+                    contentHeight = cellModel.contentHeight  +150 + 30 + 50 + 90;
                     break;
                 default:
                     break;
@@ -336,6 +336,13 @@
     }
 }
 
+- (void)lookAllLinkClicked:(FHFeedUGCCellModel *)cellModel cell:(nonnull FHUGCBaseCell *)cell {
+    self.currentCellModel = cellModel;
+    self.currentCell = cell;
+    self.detailJumpManager.currentCell = self.currentCell;
+    [self.detailJumpManager jumpToDetail:cellModel showComment:NO enterType:@"feed_content_blank"];
+}
+
 - (void)trackClickComment:(FHFeedUGCCellModel *)cellModel {
     NSMutableDictionary *dict = [cellModel.tracerDic mutableCopy];
     dict[@"click_position"] = @"feed_comment";
@@ -360,7 +367,7 @@
                 break;
             case FHUGCFeedListCellTypeUGCSmallVideo:
                 model.cellSubType = FHUGCFeedListCellSubTypeUGCBrokerVideo;
-                contentHeight = model.contentHeight  +150 + 30 + 50 +contentHeight + 80;
+                contentHeight = model.contentHeight  +150 + 30 + 50 +contentHeight + 90;
                 break;
             default:
                 break;

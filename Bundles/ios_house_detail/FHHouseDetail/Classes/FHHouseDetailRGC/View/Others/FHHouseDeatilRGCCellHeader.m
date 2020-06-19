@@ -40,7 +40,7 @@
     }];
     [self.nameLab mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.equalTo(self.headerIma.mas_right).offset(10);
-        make.top.equalTo(self.headerIma).offset(2);
+        make.top.equalTo(self.headerIma).offset(1);
     }];
     
     [self.companyBac mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -61,19 +61,19 @@
         
     }];
     [self.phoneBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.right.equalTo(self.mas_right).offset(-15);
+        make.right.equalTo(self.mas_right).offset(-8);
         make.centerY.equalTo(self.headerIma);
         make.size.mas_equalTo(CGSizeMake(30, 30));
     }];
     [self.iMBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.right.equalTo(self.phoneBtn.mas_left).offset(-20);
+        make.right.equalTo(self.phoneBtn.mas_left).offset(-30);
         make.centerY.equalTo(self.headerIma);
         make.size.mas_equalTo(CGSizeMake(30, 30));
     }];
     
     [self.infoLab mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.equalTo(self.nameLab);
-        make.bottom.equalTo(self.headerIma.mas_bottom).offset(3);
+        make.bottom.equalTo(self.headerIma.mas_bottom).offset(2);
         make.right.equalTo(self.iMBtn.mas_left).offset(-20);
     }];
 }

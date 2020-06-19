@@ -56,7 +56,13 @@
     }
     _tabInfoArr = tabInfoArr;
     self.bacScroll.scrollEnabled = tabInfoArr.count>4;
-    CGFloat btnWidth = ([UIScreen mainScreen].bounds.size.width - 15*2 - 10*3)/4;
+    CGFloat btnWidth = 0;
+    if (tabInfoArr.count<4) {
+        int betWeenCount = tabInfoArr.count-1;
+        btnWidth =  ([UIScreen mainScreen].bounds.size.width - 15*2 - 10*betWeenCount)/tabInfoArr.count;
+    }else {
+        btnWidth = ([UIScreen mainScreen].bounds.size.width - 15*2 - 10*3)/4;
+    }
     CGFloat marginLeft = 10;
     CGFloat btnHeight = 30;
     UIView *leftView = self.bacScroll;

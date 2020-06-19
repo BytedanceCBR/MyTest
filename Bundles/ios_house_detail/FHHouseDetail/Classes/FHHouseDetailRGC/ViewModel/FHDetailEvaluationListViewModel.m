@@ -180,6 +180,8 @@
                     wself.refreshFooter.hidden = YES;
                 }
             }else{
+                [wself.listController.emptyView showEmptyWithTip:@"网络异常，请检查网络连接" errorImageName:kFHErrorMaskNetWorkErrorImageName showRetry:NO];
+                     wself.refreshFooter.hidden = YES;
                 [[ToastManager manager] showToast:@"网络异常"];
                 [wself updateTableViewWithMoreData:YES];
             }
@@ -210,7 +212,7 @@
                         [wself updateTableViewWithMoreData:wself.tableView.hasMore];
                         [wself.listController.emptyView hideEmptyView];
                     }else{
-                        [wself.listController.emptyView showEmptyWithTip:@"暂无内容" errorImageName:kFHErrorMaskNetWorkErrorImageName showRetry:YES];
+                        [wself.listController.emptyView showEmptyWithTip:@"暂无内容" errorImageName:kFHErrorMaskNoDataImageName showRetry:NO];
                         wself.refreshFooter.hidden = YES;
                     }
                     [wself.tableView reloadData];
@@ -323,10 +325,10 @@ if (hasMore) {
             //图片高+user高 +bottomview 高度
             switch (cellModel.cellType) {
                 case FHUGCFeedListCellTypeUGC:
-                    contentHeight = cellModel.contentHeight  +75 + 30 + 50 + 60;
+                    contentHeight = cellModel.contentHeight  +75 + 30 + 50 + 75;
                     break;
                 case FHUGCFeedListCellTypeUGCSmallVideo:
-                    contentHeight = cellModel.contentHeight  +150 + 30 + 50 + 120;
+                    contentHeight = cellModel.contentHeight  +150 + 30 + 50 + 130;
                     break;
                 default:
                     break;
@@ -389,6 +391,13 @@ if (hasMore) {
     associatePhone.houseId = self.houseId;
     associatePhone.showLoading = NO;
     [self.realtorPhoneCallModel phoneChatActionWithAssociateModel:associatePhone];
+}
+
+- (void)lookAllLinkClicked:(FHFeedUGCCellModel *)cellModel cell:(nonnull FHUGCBaseCell *)cell {
+    self.currentCellModel = cellModel;
+    self.currentCell = cell;
+    self.detailJumpManager.currentCell = self.currentCell;
+    [self.detailJumpManager jumpToDetail:cellModel showComment:NO enterType:@"feed_content_blank"];
 }
 
 - (void)clickRealtorHeader:(FHFeedUGCCellModel *)cellModel cell:(FHUGCBaseCell *)cell {
