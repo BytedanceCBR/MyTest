@@ -31,7 +31,6 @@
 @property(nonatomic, strong) FHFeedListModel *feedListModel;
 @property (nonatomic, strong)NSMutableDictionary *elementShowCaches;
 @property (nonatomic, strong)FHRealtorEvaluatingTracerHelper *tracerHelper;
-@property(nonatomic ,strong) NSMutableDictionary *tracerDic; // 详情页基础埋点数据
 @property (copy, nonatomic) NSString *houseType;
 @property (copy, nonatomic) NSString *houseId;
 
@@ -48,7 +47,6 @@
         self.houseId = userInfo[@"house_id"];
         self.houseType = userInfo[@"house_type"];
         self.categoryId = userInfo[@"category_name"];
-        self.tracerDic = userInfo[@"tracer"];
         self.elementShowCaches = [NSMutableDictionary new];
         self.tracerHelper = [[FHRealtorEvaluatingTracerHelper alloc]init];
         self.listController.emptyView.backgroundColor = [UIColor colorWithHexStr:@"#f8f8f8"];

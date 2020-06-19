@@ -33,6 +33,7 @@
         _channelId = allParams[@"category_name"];
         _tabsInfo = [self arrayWithJsonString:allParams[@"tab_list"]];
         _vcTitle = allParams[@"title"];
+        self.tracerDict = allParams [@"tracer"];
     }
     return self;
 }
@@ -50,6 +51,7 @@
 }
 - (void)initViewModel {
     _viewModel = [[FHDetailEvaluationListViewModel alloc] initWithController:self tableView:self.mainTable headerView:self.evaluationHeader userInfo:_paramObj.allParams];;
+    _viewModel.tracerDic = [self makeDetailTracerData];
 }
 
 - (void)startLoadData {
@@ -117,6 +119,20 @@
         _mainTable = mainTable;
     }
     return _mainTable;
+}
+
+// 构建基础埋点数据
+- (NSMutableDictionary *)makeDetailTracerData {
+    NSMutableDictionary *detailTracerDic = [NSMutableDictionary new];
+    detailTracerDic[@"page_type"] = [self pageTypeString];
+    detailTracerDic[@"enter_from"] = self.tracerDict[@"enter_from"] ? : @"be_null";
+    detailTracerDic[@"element_from"] = self.tracerDict[@"element_from"] ? : @"be_null";
+    detailTracerDic[@"origin_from"] = self.tracerDict[@"origin_from"] ? : @"be_null";
+    detailTracerDic[@"from_gid"] = self.tracerDict[@"from_gid"];
+    return detailTracerDic;
+}
+-(NSString *)pageTypeString {
+    return @"realtor_evaluate_list";
 }
 
 - (NSArray *)arrayWithJsonString:(NSString *)jsonString{

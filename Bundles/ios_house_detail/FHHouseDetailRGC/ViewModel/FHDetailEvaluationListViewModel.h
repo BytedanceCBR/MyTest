@@ -12,7 +12,7 @@
 NS_ASSUME_NONNULL_BEGIN
 @interface FHDetailEvaluationListViewModel : NSObject
 - (instancetype)initWithController:(FHDetailEvaluationListViewController *)viewController tableView:(UITableView *)table headerView:(FHDetailEvaluationListViewHeader *)header userInfo:(NSDictionary *)userInfo;
-
+@property(nonatomic ,strong) NSMutableDictionary *tracerDic; // 基础埋点数据
 - (void)reloadData;
 @end
 
