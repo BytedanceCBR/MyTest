@@ -26,12 +26,13 @@
 @property (strong, nonatomic) FHUGCCellBottomView *bottomView;
 @property (strong, nonatomic) FHHouseDeatilRGCCellHeader *headerView;
 @property (strong ,nonatomic) FHUGCCellUserInfoView *userInfoView;
+@property (strong, nonatomic) UIImageView *videoBacImage;
 @property (nonatomic ,assign) CGFloat imageViewheight;
-@property(nonatomic ,assign) CGFloat imageViewWidth;
-@property (nonatomic, strong)   UIImageView       *playIcon;
-@property (nonatomic, strong)   UIView       *timeBgView;
-@property (nonatomic, strong)   UILabel       *timeLabel;
-@property(nonatomic ,strong) FHFeedUGCCellModel *cellModel;
+@property (nonatomic  ,assign) CGFloat imageViewWidth;
+@property (nonatomic ,strong) UIImageView *playIcon;
+@property (nonatomic ,strong) UIView       *timeBgView;
+@property (nonatomic ,strong) UILabel       *timeLabel;
+@property (nonatomic ,strong) FHFeedUGCCellModel *cellModel;
 @end
 @implementation FHHouseDeatilRGCVideoCell
 
@@ -87,24 +88,26 @@
     self.imageViewheight = 200;
     self.imageViewWidth = 150;
     
+    self.videoBacImage = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width - leftMargin - rightMargin - 30, self.imageViewheight)];
+    _videoBacImage.backgroundColor = [UIColor themeGray1];
+    _videoBacImage.layer.cornerRadius = 4;
+    [self.contentContainer addSubview:_videoBacImage];
+    
     self.videoImageView = [[TTImageView alloc] initWithFrame:CGRectMake(0, 0, self.imageViewWidth, self.imageViewheight)];
     _videoImageView.backgroundColor = [UIColor themeGray7];
-    _videoImageView.layer.masksToBounds = YES;
     _videoImageView.imageContentMode = TTImageViewContentModeScaleAspectFill;
-    _videoImageView.layer.borderColor = [[UIColor themeGray6] CGColor];
-    _videoImageView.layer.borderWidth = 0.5;
-    _videoImageView.layer.cornerRadius = 4;
-    [self.contentContainer addSubview:_videoImageView];
+    [self.videoBacImage addSubview:_videoImageView];
     
     self.playIcon = [[UIImageView alloc] init];
     self.playIcon.image = [UIImage imageNamed:@"fh_ugc_icon_videoplay"];
     [self.videoImageView addSubview:self.playIcon];
     
+    
     self.timeBgView = [[UIView alloc] init];
     self.timeBgView.backgroundColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:0.5];
     self.timeBgView.layer.cornerRadius = 10.0;
     self.timeBgView.clipsToBounds = YES;
-    [self.videoImageView addSubview:self.timeBgView];
+    [self.videoBacImage addSubview:self.timeBgView];
     
     self.timeLabel = [self LabelWithFont:[UIFont themeFontRegular:10] textColor:[UIColor themeWhite]];
     self.timeLabel.textAlignment = NSTextAlignmentCenter;
@@ -134,8 +137,8 @@
     }];
 
     [self.timeBgView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.right.mas_equalTo(self.videoImageView.mas_right).offset(-4);
-        make.bottom.mas_equalTo(self.videoImageView.mas_bottom).offset(-4);
+        make.right.mas_equalTo(self.videoBacImage.mas_right).offset(-4);
+        make.bottom.mas_equalTo(self.videoBacImage.mas_bottom).offset(-4);
         make.height.mas_equalTo(20);
         make.width.mas_greaterThanOrEqualTo(44);
     }];
@@ -178,8 +181,13 @@
     self.contentLabel.width = [UIScreen mainScreen].bounds.size.width - leftMargin - rightMargin -30;
     self.contentLabel.height = 0;
     
-    self.videoImageView.top = self.userInfoView.bottom + 10;
-    self.videoImageView.left = leftMargin;
+    self.videoBacImage.top = self.userInfoView.bottom + 10;
+    self.videoBacImage.left = leftMargin;
+    self.videoBacImage.width = [UIScreen mainScreen].bounds.size.width - leftMargin - rightMargin -30;
+    self.videoBacImage.height = self.imageViewheight;
+    
+    self.videoImageView.top = 0;
+    self.videoImageView.left =  ([UIScreen mainScreen].bounds.size.width - leftMargin - rightMargin -30)/2-self.imageViewWidth/2;
     self.videoImageView.width = self.imageViewWidth;
     self.videoImageView.height = self.imageViewheight;
     
@@ -191,15 +199,15 @@
     if(isEmptyString(cellModel.content)){
         self.contentLabel.hidden = YES;
         self.contentLabel.height = 0;
-        self.videoImageView.top = self.userInfoView.bottom + 10;
+        self.videoBacImage.top = self.userInfoView.bottom + 10;
     }else{
         self.contentLabel.hidden = NO;
         self.contentLabel.height = cellModel.contentHeight;
-        self.videoImageView.top = self.contentLabel.bottom + 10 ;
+        self.videoBacImage.top = self.contentLabel.bottom + 10 ;
         [FHUGCCellHelper setAsyncRichContent:self.contentLabel model:cellModel];
     }
     
-    self.bottomView.top = self.videoImageView.bottom + 10;
+    self.bottomView.top = self.videoBacImage.bottom + 10;
 }
 - (void)refreshWithData:(id)data {
     if (![data isKindOfClass:[FHFeedUGCCellModel class]]) {
