@@ -23,6 +23,7 @@
 #import "FHRealtorEvaluatingPhoneCallModel.h"
 #import "FHUserTracker.h"
 #import "TTStringHelper.h"
+#import "FHHouseDetailRealtorTabListModel.h"
 @interface FHDetailEvaluationListViewModel()<UITableViewDelegate,UITableViewDataSource>
 @property (nonatomic, strong)UITableView *tableView;
 @property (nonatomic, weak)FHDetailEvaluationListViewController *listController;
@@ -88,6 +89,7 @@
     self.tableView.mj_footer = self.refreshFooter;
     self.refreshFooter.hidden = YES;
      [wself requestData:YES first:YES];
+    [self requestTabList];
 }
 
 - (void)setTracerDic:(NSMutableDictionary *)tracerDic {
@@ -101,52 +103,51 @@
     [self requestData:YES first:YES];
 }
 
+- (void)requestTabList {
+    [FHHouseUGCAPI requestTabListWithhouseId:self.houseId class:[FHHouseDetailRealtorTabListModel class] houseType:self.houseType completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
+             if (error) {
+               return;
+           }
+        if (model) {
+            [self checkTabListwithModel:model];
+        }
+    }];
+}
+
+- (void)checkTabListwithModel:(FHHouseDetailRealtorTabListModel *)model {
+    NSArray *requestTabListInfoArr = model.data[@"tab_list"];
+    if ([requestTabListInfoArr isEqualToArray:self.evaluationHeader.tabInfoArr]) {
+        return;
+    }else {
+        self.evaluationHeader.tabInfoArr = requestTabListInfoArr;
+    }
+}
+
 - (void)requestData:(BOOL)isHead first:(BOOL)isFirst {
     if(self.listController.isLoadingData){
         return;
     }
-    
     NSString *refreshType = @"be_null";
-//    if(isHead){
-//        if(self.listController.isRefreshTypeClicked){
-//            refreshType = @"click";
-//            self.listController.isRefreshTypeClicked = NO;
-//        }else{
-//            refreshType = @"push";
-//        }
-//    }else{
-//        refreshType = @"pre_load_more";
-//    }
-//    [self trackCategoryRefresh:refreshType];
-    
     self.listController.isLoadingData = YES;
     
 
     if(isFirst){
         [self.listController startLoading];
-//        self.retryCount = 0;
     }
-    
     __weak typeof(self) wself = self;
-    
     NSInteger listCount = self.dataList.count;
-    
     if(isFirst){
         listCount = 0;
     }
-
     double behotTime = 0;
     if(!isHead && listCount > 0){
         FHFeedUGCCellModel *cellModel = [self.dataList lastObject];
         behotTime = [cellModel.behotTime doubleValue];
     }
-    
     if(isHead && listCount > 0){
         FHFeedUGCCellModel *cellModel = [self.dataList firstObject];
         behotTime = [cellModel.behotTime doubleValue];
     }
-    
-    
     NSMutableDictionary *extraDic = [NSMutableDictionary dictionary];
     NSString *fCityId = [FHEnvContext getCurrentSelectCityIdFromLocal];
     if(fCityId){
@@ -197,11 +198,9 @@
                 if(isHead){
                     [wself.dataList removeAllObjects];
                     [wself.dataList addObjectsFromArray:resultArr];
-//                    [wself.dataList insertObjects:result atIndexes:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, result.count)]];
                 }else{
                     [wself.dataList addObjectsFromArray:resultArr];
                 }
-                
                 dispatch_async(dispatch_get_main_queue(), ^{
                     if(isHead){
                         wself.tableView.hasMore = YES;
@@ -217,16 +216,6 @@
                         wself.refreshFooter.hidden = YES;
                     }
                     [wself.tableView reloadData];
-//                    NSString *refreshTip = feedListModel.tips.displayInfo;
-//                    if (isHead && wself.dataList.count > 0 && ![refreshTip isEqualToString:@""] && wself.viewController.tableViewNeedPullDown && !wself.isRefreshingTip){
-//                        wself.isRefreshingTip = YES;
-//                        [wself.viewController showNotify:refreshTip completion:^{
-//                            dispatch_async(dispatch_get_main_queue(), ^{
-//                                wself.isRefreshingTip = NO;
-//                            });
-//                        }];
-//                        [wself.tableView scrollRectToVisible:CGRectMake(0, 0, 1, 1) animated:NO];
-//                    }
                 });
             });
         }

@@ -1759,6 +1759,80 @@
     }];
 }
 
++ (TTHttpTask *)requestTabListWithhouseId:(NSString *)houseId class:(Class)cls houseType:(NSString *)houseType completion:(void (^ _Nullable)(id<FHBaseModelProtocol> model, NSError *error))completion {
+    NSString *queryPath = @"/f100/ugc/feed_tab";
+    NSString *url = QURL(queryPath);
+    
+    NSMutableDictionary *paramDic = [NSMutableDictionary new];
+    if (houseId) {
+        paramDic[@"house_id"] = @(houseId.intValue);
+    }
+    if (houseType.length > 0) {
+       paramDic[@"house_type"] = @(houseType.intValue);
+    }
+    NSDate *startDate = [NSDate date];
+    return [[TTNetworkManager shareInstance] requestForBinaryWithResponse:url params:paramDic method:@"GET" needCommonParams:YES callback:^(NSError *error, id obj, TTHttpResponse *response) {
+        NSDate *backDate = [NSDate date];
+        __block NSError *backError = error;
+        
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
+            
+            NSDate *serDate = [NSDate date];
+             FHNetworkMonitorType resultType = FHNetworkMonitorTypeSuccess;
+             NSInteger code = 0;
+             NSString *errMsg = nil;
+             NSMutableDictionary *extraDict = nil;
+             NSDictionary *exceptionDict = nil;
+            id <FHBaseModelProtocol> model = nil;
+            NSInteger responseCode = -1;
+            if (response.statusCode) {
+                responseCode = response.statusCode;
+            }
+            if (backError && !obj) {
+                code = backError.code;
+                resultType = FHNetworkMonitorTypeNetFailed;
+            } else {
+                if (!backError) {
+                    @try{
+                        NSDictionary *json = [NSJSONSerialization JSONObjectWithData:obj options:kNilOptions error:&backError];
+                        
+                        if (backError) {
+                            if ([json isKindOfClass:[NSDictionary class]]) {
+                                NSString *msg = json[@"message"];
+                                backError = [NSError errorWithDomain:msg?:DEFULT_ERROR code:API_ERROR_CODE userInfo:nil];
+                            }
+                        }else{
+                            model = (id <FHBaseModelProtocol>) [FHMainApi generateModel:obj class:cls error:&backError];
+                            serDate = [NSDate date];
+                            
+                            if (!model) {
+                                // model 为nil
+                                code = 1;
+                                resultType = FHNetworkMonitorTypeBizFailed + 1;
+                            } else {
+                                // model 不为nil
+                                if (backError != nil) {
+                                    code = backError.code;
+                                    errMsg = backError.domain;
+                                    resultType = FHNetworkMonitorTypeBizFailed+code;
+                                }
+                            }
+                        }
+                    }
+                    @catch(NSException *e){
+                        backError = [NSError errorWithDomain:e.reason code:API_ERROR_CODE userInfo:e.userInfo];
+                    }
+                }
+            }
+            if (completion) {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    completion(model, backError);
+                });
+            }
+        });
+    }];
+}
+
 @end
 
 @implementation FHVoteHTTPRequestSerializer
