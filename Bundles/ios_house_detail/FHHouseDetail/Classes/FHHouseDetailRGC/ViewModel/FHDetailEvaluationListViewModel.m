@@ -82,7 +82,8 @@
         self.refreshFooter.hidden = YES;
         [wself.tableView reloadData];
         wself.listController.hasValidateData = NO;
-         [wself requestData:YES first:YES];
+        [wself requestData:YES first:YES];
+        [wself addTabClickOptionTracer];
     };
     self.tableView.mj_footer = self.refreshFooter;
     self.refreshFooter.hidden = YES;
@@ -370,15 +371,16 @@ if (hasMore) {
 - (void)clickRealtorIm:(FHFeedUGCCellModel *)cellModel cell:(FHUGCBaseCell *)cell {
     NSInteger index = [self.dataList indexOfObject:cellModel];
     NSMutableDictionary *imExtra = @{}.mutableCopy;
-    imExtra[@"realtor_position"] = @"detail_related";
+    imExtra[@"realtor_position"] = @"realtor_evaluation";
     [self.realtorPhoneCallModel imchatActionWithPhone:cellModel.realtor realtorRank:[NSString stringWithFormat:@"%ld",(long)index] extraDic:imExtra];
 }
 
 - (void)clickRealtorPhone:(FHFeedUGCCellModel *)cellModel cell:(FHUGCBaseCell *)cell {
-    NSMutableDictionary *extraDict = @{}.mutableCopy;
+     NSMutableDictionary *extraDict = self.tracerDic.mutableCopy;
     extraDict[@"realtor_id"] = cellModel.realtor.realtorId;
     extraDict[@"realtor_rank"] = @"be_null";
     extraDict[@"realtor_logpb"] = cellModel.realtor.realtorLogpb;
+    extraDict[@"realtor_position"] = @"realtor_evaluate";
     NSDictionary *associateInfoDict = cellModel.realtor.associateInfo.phoneInfo;
     extraDict[kFHAssociateInfo] = associateInfoDict;
     FHAssociatePhoneModel *associatePhone = [[FHAssociatePhoneModel alloc]init];
@@ -412,5 +414,25 @@ if (hasMore) {
     NSMutableDictionary *dict = [cellModel.tracerDic mutableCopy];
     dict[@"click_position"] = @"feed_comment";
     TRACK_EVENT(@"click_comment", dict);
+}
+
+- (void)addGoDtailTracer {
+    //    1. event_type ：house_app2c_v2
+    //    2. page_type（详情页类型）：rent_detail（租房详情页），old_detail（二手房详情页）
+    //    3. card_type（房源展现时的卡片样式）：left_pic（左图）
+    //    4. enter_from（详情页入口）：search_related_list（搜索结果推荐）
+    //    5. element_from ：search_related
+    //    6. rank
+    //    7. origin_from
+    //    8. origin_search_id
+    //    9.log_pb
+    NSMutableDictionary *params = self.tracerDic.mutableCopy;
+    [FHUserTracker writeEvent:@"go_detail" params:params];
+}
+
+- (void)addTabClickOptionTracer {
+    NSMutableDictionary *params = self.tracerDic.mutableCopy;
+     [params setObject:self.evaluationHeader.selectName forKey:@"click_position"];
+    [FHUserTracker writeEvent:@"click_options" params:params];
 }
 @end

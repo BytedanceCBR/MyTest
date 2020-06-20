@@ -73,7 +73,7 @@
     
     [self.infoLab mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.equalTo(self.nameLab);
-        make.bottom.equalTo(self.headerIma.mas_bottom).offset(2);
+        make.bottom.equalTo(self.headerIma.mas_bottom).offset(-2);
         make.right.equalTo(self.iMBtn.mas_left).offset(-20);
     }];
 }

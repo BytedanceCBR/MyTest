@@ -14,6 +14,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (instancetype)initWithController:(FHDetailEvaluationListViewController *)viewController tableView:(UITableView *)table headerView:(FHDetailEvaluationListViewHeader *)header userInfo:(NSDictionary *)userInfo;
 @property(nonatomic ,strong) NSMutableDictionary *tracerDic; // 基础埋点数据
 - (void)reloadData;
+- (void)addGoDtailTracer;
 @end
 
 NS_ASSUME_NONNULL_END

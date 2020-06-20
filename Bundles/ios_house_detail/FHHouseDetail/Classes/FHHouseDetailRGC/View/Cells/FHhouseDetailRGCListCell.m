@@ -289,17 +289,18 @@
 - (void)clickRealtorIm:(FHFeedUGCCellModel *)cellModel cell:(FHUGCBaseCell *)cell {
     NSInteger index = [self.dataList indexOfObject:cellModel];
     NSMutableDictionary *imExtra = @{}.mutableCopy;
-    imExtra[@"realtor_position"] = @"detail_related";
+    imExtra[@"realtor_position"] = @"realtor_evaluate";
     [self.realtorPhoneCallModel imchatActionWithPhone:cellModel.realtor realtorRank:[NSString stringWithFormat:@"%ld",(long)index] extraDic:imExtra];
 }
 
 - (void)clickRealtorPhone:(FHFeedUGCCellModel *)cellModel cell:(FHUGCBaseCell *)cell {
     FHhouseDetailRGCListCellModel *dataModel = (FHhouseDetailRGCListCellModel *)self.currentData;
     NSDictionary *houseInfo = dataModel.extraDic;
-    NSMutableDictionary *extraDict = @{}.mutableCopy;
+    NSMutableDictionary *extraDict = dataModel.detailTracerDic.mutableCopy;
     extraDict[@"realtor_id"] = cellModel.realtor.realtorId;
     extraDict[@"realtor_rank"] = @"be_null";
     extraDict[@"realtor_logpb"] = cellModel.realtor.realtorLogpb;
+    extraDict[@"realtor_position"] = @"realtor_evaluate";
     NSDictionary *associateInfoDict = cellModel.realtor.associateInfo.phoneInfo;
     extraDict[kFHAssociateInfo] = associateInfoDict;
     FHAssociatePhoneModel *associatePhone = [[FHAssociatePhoneModel alloc]init];
@@ -320,7 +321,6 @@
      dict[@"enter_from"] = [self.baseViewModel pageTypeString];
     [self.realtorPhoneCallModel jump2RealtorDetailWithPhone:cellModel.realtor isPreLoad:NO extra:dict];
 }
-
 
 - (void)moreButtonClick {
     FHhouseDetailRGCListCellModel *dataModel = (FHhouseDetailRGCListCellModel *)self.currentData;

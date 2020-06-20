@@ -43,7 +43,10 @@
     [self initUI];
     [self initViewModel];
 }
-
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    [_viewModel addGoDtailTracer];
+}
 // 重新加载
 - (void)retryLoadData {
     if (!self.isLoadingData) {
