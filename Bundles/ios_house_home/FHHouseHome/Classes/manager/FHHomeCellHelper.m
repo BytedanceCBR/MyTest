@@ -383,7 +383,8 @@ static NSMutableArray  * _Nullable identifierArr;
                 //通勤找房
                 [[FHCommuteManager sharedInstance] tryEnterCommutePage:itemModel.openUrl logParam:dictTrace];
             }else{
-                 [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
+                    [dictTrace setValue:@"maintab_icon" forKey:@"origin_from"];
+                    [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
             }
         }
     };
