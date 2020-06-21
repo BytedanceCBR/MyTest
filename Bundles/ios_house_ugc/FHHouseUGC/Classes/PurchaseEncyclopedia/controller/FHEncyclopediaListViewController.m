@@ -78,6 +78,7 @@
         UITableView * mainTable = [[FHBaseTableView alloc]init];
         mainTable.showsVerticalScrollIndicator = NO;
         mainTable.estimatedRowHeight = 0;
+        mainTable.separatorStyle = UITableViewCellSeparatorStyleNone;
         if (@available(iOS 11.0 , *)) {
             mainTable.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
         }else{
