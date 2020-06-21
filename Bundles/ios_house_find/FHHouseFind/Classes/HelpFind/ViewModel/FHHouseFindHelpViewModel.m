@@ -487,6 +487,16 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
         }
     }];
     
+    //重置后只选择未选择“行政区”以及“区域”
+   if (_selectRegionItem.selectIndexes.count == 2) {
+       NSNumber *index0 = _selectRegionItem.selectIndexes[0];
+       NSNumber *index1 = _selectRegionItem.selectIndexes[1];
+       if (index0.integerValue == 0 && index1.integerValue == 0) {
+           [[ToastManager manager] showToast:@"请选择意向区域"];
+           return;
+       }
+   }
+    
     FHHouseType ht = _houseType;
     FHHouseFindSelectModel *model = [self selectModelWithType:ht];
     FHHouseFindSelectItemModel *selectItem = [model selectItemWithTabId:FHSearchTabIdTypeRegion];
@@ -1043,7 +1053,7 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
         if([TTAccount sharedAccount].isLogin){
             return CGSizeMake(collectionView.frame.size.width, 90);
         }
-        return CGSizeMake(collectionView.frame.size.width, 174);
+        return CGSizeMake(collectionView.frame.size.width, 107);
     }
     return CGSizeMake(collectionView.frame.size.width, 60);
 }
@@ -1377,11 +1387,10 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
     if (textField == self.contactCell.phoneInput) {
         //明文展示或者内容为空时不用读缓存
         if (![self.contactCell.phoneInput.text containsString:@"*"]) {
+            self.activeTextField = textField;
             return;
         }
         [self.contactCell showFullPhoneNum:YES];
-        
-        return;
     }
     
     self.activeTextField = textField;

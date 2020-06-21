@@ -255,8 +255,8 @@
 {
     if (!_finishBtn) {
         _finishBtn = [[UIButton alloc]init];
-        [_finishBtn setTitle:@"完成" forState:UIControlStateNormal];
-        [_finishBtn setTitle:@"完成" forState:UIControlStateHighlighted];
+        [_finishBtn setTitle:@"确认" forState:UIControlStateNormal];
+        [_finishBtn setTitle:@"确认" forState:UIControlStateHighlighted];
         [_finishBtn setTitleColor:[UIColor themeOrange1] forState:UIControlStateNormal];
         [_finishBtn setTitleColor:[UIColor themeOrange1] forState:UIControlStateHighlighted];
     }
