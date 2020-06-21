@@ -162,7 +162,7 @@
     _bottomLine.backgroundColor = [UIColor themeGray6];
     [_bgView addSubview:_bottomLine];
     _bottomLine.hidden = YES;
-
+    
     _gradientView = [[UIView alloc]initWithFrame:self.bounds];
     [self addSubview:_gradientView];
     CAGradientLayer *gradientLayer = [CAGradientLayer layer];
@@ -171,7 +171,7 @@
     gradientLayer.startPoint = CGPointMake(0, 0);
     gradientLayer.endPoint = CGPointMake(0, 1);
     [_gradientView.layer addSublayer:gradientLayer];
-
+    
     _backBtn = [UIButton buttonWithType:UIButtonTypeCustom];
     [_backBtn setImage:self.backWhiteImage forState:UIControlStateNormal];
     [_backBtn setImage:self.backWhiteImage forState:UIControlStateHighlighted];
@@ -181,7 +181,7 @@
     _collectBtn = [UIButton buttonWithType:UIButtonTypeCustom];
     [_collectBtn setImage:self.collectWhiteImage forState:UIControlStateNormal];
     [_collectBtn setImage:self.collectWhiteImage forState:UIControlStateHighlighted];
-//    [_collectBtn addTarget:self action:@selector(collectAction:) forControlEvents:UIControlEventTouchUpInside];
+    //    [_collectBtn addTarget:self action:@selector(collectAction:) forControlEvents:UIControlEventTouchUpInside];
     [self addSubview:_collectBtn];
     @weakify(self);
     [[[[_collectBtn rac_signalForControlEvents:UIControlEventTouchUpInside]takeUntil:self.rac_willDeallocSignal] throttle:0.3]subscribeNext:^(__kindof UIControl * _Nullable x) {
@@ -196,7 +196,7 @@
     [_messageBtn setImage:img forState:UIControlStateHighlighted];
     [_messageBtn addTarget:self action:@selector(messageAction:) forControlEvents:UIControlEventTouchUpInside];
     [self addSubview:_messageBtn];
-
+    
     _shareBtn = [UIButton buttonWithType:UIButtonTypeCustom];
     img = ICON_FONT_IMG(24, @"\U0000e692", [UIColor whiteColor]);//detail_share_white
     [_shareBtn setImage:img forState:UIControlStateNormal];
@@ -213,18 +213,18 @@
     _messageDotNumber.layer.cornerRadius = 8;
     _messageDotNumber.layer.masksToBounds = YES;
     _messageDotNumber.hidden = YES;
-//    _messageDot = [[UIImageView alloc] init];
-//    _messageDot.hidden = YES;
-//    [_messageDot setImage:[UIImage imageNamed:@"detail_message_dot"]];
+    //    _messageDot = [[UIImageView alloc] init];
+    //    _messageDot.hidden = YES;
+    //    [_messageDot setImage:[UIImage imageNamed:@"detail_message_dot"]];
     [self addSubview:_messageDotNumber];
-
+    
     [_backBtn mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(12);
         make.height.mas_equalTo(44);
         make.width.mas_equalTo(40);
         make.bottom.mas_equalTo(self);
     }];
-
+    
     if (_type == FHDetailNavBarTypeDefault) {
         [self addSubview:self.shareBtn];
         [_shareBtn mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -251,12 +251,12 @@
             make.width.mas_equalTo(16);
             make.top.mas_equalTo(self.messageBtn).offset(6);
         }];
-//        [_messageDot mas_makeConstraints:^(MASConstraintMaker *make) {
-//            make.right.mas_equalTo(self.messageBtn).offset(-5);
-//            make.height.mas_equalTo(10);
-//            make.width.mas_equalTo(10);
-//            make.top.mas_equalTo(self.messageBtn).offset(10);
-//        }];
+        //        [_messageDot mas_makeConstraints:^(MASConstraintMaker *make) {
+        //            make.right.mas_equalTo(self.messageBtn).offset(-5);
+        //            make.height.mas_equalTo(10);
+        //            make.width.mas_equalTo(10);
+        //            make.top.mas_equalTo(self.messageBtn).offset(10);
+        //        }];
     }else {
         [_messageBtn mas_makeConstraints:^(MASConstraintMaker *make) {
             make.right.mas_equalTo(-12);
@@ -271,19 +271,19 @@
             make.bottom.mas_equalTo(self);
         }];
         [_messageDotNumber mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.right.mas_equalTo(self.messageBtn.mas_right).offset(5);
+            make.left.mas_equalTo(self.messageBtn.mas_centerX).offset(2);
             make.height.mas_equalTo(16);
             make.width.mas_equalTo(16);
             make.top.mas_equalTo(self.messageBtn).offset(6);
         }];
-//        [_messageDot mas_makeConstraints:^(MASConstraintMaker *make) {
-//            make.right.mas_equalTo(self.messageBtn).offset(-5);
-//            make.height.mas_equalTo(10);
-//            make.width.mas_equalTo(10);
-//            make.top.mas_equalTo(self.messageBtn).offset(10);
-//        }];
+        //        [_messageDot mas_makeConstraints:^(MASConstraintMaker *make) {
+        //            make.right.mas_equalTo(self.messageBtn).offset(-5);
+        //            make.height.mas_equalTo(10);
+        //            make.width.mas_equalTo(10);
+        //            make.top.mas_equalTo(self.messageBtn).offset(10);
+        //        }];
     }
-
+    
     [_bottomLine mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.right.bottom.mas_equalTo(0);
         make.height.mas_equalTo(0.5);
@@ -320,7 +320,7 @@
             [_messageBtn setImage:self.messageBlackImage forState:UIControlStateNormal];
             [_messageBtn setImage:self.messageBlackImage forState:UIControlStateHighlighted];
         }
-
+        
     }else {
         _gradientView.alpha = 1;
         UIImage *image = self.followStatus ? self.collectYellowImage : self.collectWhiteImage;
@@ -373,9 +373,9 @@
     self.shareBtn.hidden = !showItem;
     self.collectBtn.hidden = !showItem;
     self.messageBtn.hidden = !showItem;
-//    if (!showItem) {
-//        self.messageDot.hidden = !showItem;
-//    }
+    //    if (!showItem) {
+    //        self.messageDot.hidden = !showItem;
+    //    }
 }
 
 - (void)backAction:(UIButton *)sender
@@ -409,7 +409,7 @@
 
 - (void)displayMessageDot:(NSInteger)dotNumber{
     if (dotNumber >0) {
-//        self.messageDotNumber.hidden = YES;
+        //        self.messageDotNumber.hidden = YES;
         self.messageDotNumber.text = dotNumber >99?@"99+":[NSString stringWithFormat:@"%ld",dotNumber];
         if (dotNumber>9) {
             [_messageDotNumber mas_updateConstraints:^(MASConstraintMaker *make) {
@@ -417,7 +417,7 @@
             }];
         }
     }else {
-//        self.messageDotNumber.hidden = YES;
+        //        self.messageDotNumber.hidden = YES;
     }
 }
 
@@ -506,7 +506,9 @@
 }
 
 - (void)showMessageNumber {
-    self.messageDotNumber.hidden = NO;
+    if (self.messageDotNumber.text.length>0) {
+        self.messageDotNumber.hidden = NO;
+    }
 }
 
 @end
