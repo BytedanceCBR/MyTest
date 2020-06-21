@@ -115,6 +115,9 @@
 }
 
 - (void)checkTabListwithModel:(FHHouseDetailRealtorTabListModel *)model {
+    if (!model.data) {
+        return;
+    }
     NSArray *requestTabListInfoArr = model.data[@"tab_list"];
     if ([requestTabListInfoArr isEqualToArray:self.evaluationHeader.tabInfoArr]) {
         return;

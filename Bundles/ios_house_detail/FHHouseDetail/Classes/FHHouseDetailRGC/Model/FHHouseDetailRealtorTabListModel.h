@@ -10,7 +10,7 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @interface FHHouseDetailRealtorTabListModel : JSONModel
-@property (nonatomic, copy , nullable) NSString *status;
+@property (nonatomic, copy , nullable) NSString *status ;
 @property (nonatomic, copy , nullable) NSString *message;
 @property (nonatomic, copy , nullable) NSDictionary *data;
 @end
