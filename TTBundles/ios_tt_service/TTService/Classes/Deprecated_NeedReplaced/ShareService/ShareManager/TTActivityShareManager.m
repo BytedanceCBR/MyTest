@@ -8,7 +8,7 @@
 
 #import "TTActivityShareManager.h"
 #import "TTQQShare.h"
-#import <TTWeChatShare.h>
+#import "TTWeChatShare.h"
 //#import <TTAliShare.h>
 //#import <TTDingTalkShare.h>
 //#import <TTMailShare.h>
@@ -16,8 +16,8 @@
 #import "TTShareConstants.h"
 
 #import <Social/Social.h>
-#import <TTAccountBusiness.h>
-#import <TTPlatformExpiration.h>
+#import "TTAccountBusiness.h"
+#import "TTPlatformExpiration.h"
 #import "TTThemedAlertController.h"
 #import "NetworkUtilities.h"
 #import "TTNavigationController.h"

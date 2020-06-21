@@ -6,7 +6,7 @@
 //
 //
 
-#import <SSThemed.h>
+#import "SSThemed.h"
 #import "TTInterfaceTipHeader.h"
 #import "TTInterfaceTipManager.h"
 

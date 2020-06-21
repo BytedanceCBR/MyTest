@@ -6,32 +6,30 @@
 //
 
 #import "FHUGCVideoCell.h"
-#import <UIImageView+BDWebImage.h>
-#import "FHUGCCellHeaderView.h"
+#import "UIImageView+BDWebImage.h"
 #import "FHUGCCellUserInfoView.h"
 #import "FHUGCCellBottomView.h"
 #import "FHUGCCellMultiImageView.h"
 #import "FHUGCCellHelper.h"
-#import "FHUGCCellOriginItemView.h"
 #import "TTRoute.h"
-#import <TTBusinessManager+StringUtils.h>
+#import "TTBusinessManager+StringUtils.h"
 #import "FHUGCVideoView.h"
-#import <TTVFeedPlayMovie.h>
-#import <TTVCellPlayMovieProtocol.h>
-#import <TTVPlayVideo.h>
-#import <TTVCellPlayMovie.h>
-#import <TTVFeedCellMoreActionManager.h>
-#import <TTVVideoArticle+Extension.h>
-#import <TTUIResponderHelper.h>
-#import <TTStringHelper.h>
-#import <TTVFeedCellSelectContext.h>
-#import <TTVFeedItem+TTVArticleProtocolSupport.h>
-#import <JSONAdditions.h>
-#import <TTVideoShareMovie.h>
+#import "TTVFeedPlayMovie.h"
+#import "TTVCellPlayMovieProtocol.h"
+#import "TTVPlayVideo.h"
+#import "TTVCellPlayMovie.h"
+#import "TTVFeedCellMoreActionManager.h"
+#import "TTVVideoArticle+Extension.h"
+#import "TTUIResponderHelper.h"
+#import "TTStringHelper.h"
+#import "TTVFeedCellSelectContext.h"
+#import "TTVFeedItem+TTVArticleProtocolSupport.h"
+#import "JSONAdditions.h"
+#import "TTVideoShareMovie.h"
 #import <ReactiveObjC/ReactiveObjC.h>
-#import <TTVFeedUserOpDataSyncMessage.h>
-#import <SSCommonLogic.h>
-#import <TTVFeedItem+TTVConvertToArticle.h>
+#import "TTVFeedUserOpDataSyncMessage.h"
+#import "SSCommonLogic.h"
+#import "TTVFeedItem+TTVConvertToArticle.h"
 
 #define leftMargin 20
 #define rightMargin 20
@@ -42,9 +40,9 @@
 #define guideViewHeight 17
 #define topMargin 20
 
-@interface FHUGCVideoCell ()<TTUGCAttributedLabelDelegate,TTVFeedPlayMovie,TTVFeedUserOpDataSyncMessage>
+@interface FHUGCVideoCell ()<TTUGCAsyncLabelDelegate,TTVFeedPlayMovie,TTVFeedUserOpDataSyncMessage>
 
-@property(nonatomic ,strong) TTUGCAttributedLabel *contentLabel;
+@property(nonatomic ,strong) TTUGCAsyncLabel *contentLabel;
 @property(nonatomic ,strong) FHUGCCellUserInfoView *userInfoView;
 @property(nonatomic ,strong) FHUGCCellBottomView *bottomView;
 @property(nonatomic ,strong) FHFeedUGCCellModel *cellModel;
@@ -83,20 +81,13 @@
 }
 
 - (void)initViews {
-    self.userInfoView = [[FHUGCCellUserInfoView alloc] initWithFrame:CGRectZero];
+    self.userInfoView = [[FHUGCCellUserInfoView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, userInfoViewHeight)];
     [self.contentView addSubview:_userInfoView];
     
-    self.contentLabel = [[TTUGCAttributedLabel alloc] initWithFrame:CGRectZero];
+    self.contentLabel = [[TTUGCAsyncLabel alloc] initWithFrame:CGRectZero];
     _contentLabel.numberOfLines = maxLines;
     _contentLabel.layer.masksToBounds = YES;
     _contentLabel.backgroundColor = [UIColor whiteColor];
-    NSDictionary *linkAttributes = @{
-                                     NSForegroundColorAttributeName : [UIColor themeRed3],
-                                     NSFontAttributeName : [UIFont themeFontRegular:16]
-                                     };
-    self.contentLabel.linkAttributes = linkAttributes;
-    self.contentLabel.activeLinkAttributes = linkAttributes;
-    self.contentLabel.inactiveLinkAttributes = linkAttributes;
     _contentLabel.delegate = self;
     [self.contentView addSubview:_contentLabel];
     
@@ -108,7 +99,7 @@
     _videoView.layer.cornerRadius = 4;
     [self.contentView addSubview:_videoView];
 
-    self.bottomView = [[FHUGCCellBottomView alloc] initWithFrame:CGRectZero];
+    self.bottomView = [[FHUGCCellBottomView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, bottomViewHeight)];
     [_bottomView.commentBtn addTarget:self action:@selector(commentBtnClick) forControlEvents:UIControlEventTouchUpInside];
     [_bottomView.guideView.closeBtn addTarget:self action:@selector(closeGuideView) forControlEvents:UIControlEventTouchUpInside];
     [self.contentView addSubview:_bottomView];
@@ -171,10 +162,7 @@
     self.currentData = data;
     self.cellModel = cellModel;
     //设置userInfo
-    self.userInfoView.cellModel = cellModel;
-    self.userInfoView.userName.text = cellModel.user.name;
-    self.userInfoView.descLabel.attributedText = cellModel.desc;
-    [self.userInfoView.icon bd_setImageWithURL:[NSURL URLWithString:cellModel.user.avatarUrl] placeholder:[UIImage imageNamed:@"fh_mine_avatar"]];
+    [self.userInfoView refreshWithData:cellModel];
     //设置底部
     self.bottomView.cellModel = cellModel;
     
@@ -198,9 +186,8 @@
         }];
         [self.videoView mas_updateConstraints:^(MASConstraintMaker *make) {
             make.top.mas_equalTo(self.userInfoView.mas_bottom).offset(20 + cellModel.contentHeight);
-            make.height.mas_equalTo(self.videoViewheight);
         }];
-        [FHUGCCellHelper setRichContent:self.contentLabel model:cellModel];
+        [FHUGCCellHelper setAsyncRichContent:self.contentLabel model:cellModel];
     }
     //处理视频
     self.videoItem = cellModel.videoItem;
@@ -460,9 +447,9 @@
     return NO;
 }
 
-#pragma mark - TTUGCAttributedLabelDelegate
+#pragma mark - TTUGCAsyncLabelDelegate
 
-- (void)attributedLabel:(TTUGCAttributedLabel *)label didSelectLinkWithURL:(NSURL *)url {
+- (void)asyncLabel:(TTUGCAsyncLabel *)label didSelectLinkWithURL:(NSURL *)url {
     if([url.absoluteString isEqualToString:defaultTruncationLinkURLString]){
         if(self.delegate && [self.delegate respondsToSelector:@selector(lookAllLinkClicked:cell:)]){
             [self.delegate lookAllLinkClicked:self.cellModel cell:self];

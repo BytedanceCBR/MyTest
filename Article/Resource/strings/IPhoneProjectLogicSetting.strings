@@ -24,6 +24,7 @@
 "house_list_in_neighborhood" = "FHNeighborListViewController";
 "house_list_related_house" = "FHNeighborListViewController";
 "house_list_same_neighborhood" = "FHNeighborListViewController";
+"house_list_recommend_court" = "FHNeighborListViewController";
 "myFocus"            = "FHMyFavoriteViewController";
 //"editUserProfile"       = "TTEditUserProfileViewController";
 "editUserProfile"       = "FHEditUserController";
@@ -118,6 +119,7 @@
 "test_detail"           = "FHHouseDetailViewController";
 
 "react" = "FHRNBaseViewController";
+"sample_lynx_page" = "FHLynxViewController";
 
 //im 单聊
 "open_single_chat" = "ChatRootViewController";
@@ -177,6 +179,10 @@
 //VR详情页
 "house_vr_web" = "FHVRDetailWebViewController";
 
+//新增工具箱
+"toolbox" = "FHHomeMoreIconViewController";
+
+
 //UGC相关
 "ugc_post" = "FHPostUGCViewController";
 "thread_detail" = "FHPostDetailViewController";
@@ -184,7 +190,7 @@
 "ugc_post_at_list" = "TTUGCSearchUserViewController";
 "ugc_community_detail" = "FHCommunityDetailViewController";
 "ugc_my_interest" = "FHUGCMyInterestedController";
-"ugc_post_wd_answer" = "FHWDAnswerPictureTextViewController";
+"wenda_post" = "FHWDAnswerPictureTextViewController";
 "ugc_message_list" = "FHMessageListController";
 "ugc_search_list" = "FHUGCSearchListController";
 "ugc_community_list" = "FHUGCCommunityListViewController";
@@ -199,6 +205,15 @@
 "ugc_vote_publish_type_select" = "FHUGCVotePublishTypeSelectViewController"; // 投票发布器投票类型选择页
 "ugc_vote_publish_visible_scope" = "FHUGCVotePublishVisibleScopeController"; // 投票发布器投票可见范围
 "ugc_vote_detail" = "FHVoteDetailViewController";// 投票详情页
+"ugc_post_history" = "FHPostEditListController";// 帖子编辑历史页面
 
 //幸福问答
 "quick_ask" = "FHFastQAViewController";
+//小区问答
+"ugc_wenda_list" = "FHNeighbourhoodQuestionController";
+"ugc_community_reviews_list" = "FHNeighbourhoodCommentsController";
+//专题页
+"forum_topic" = "FHSpecialTopicViewController";
+
+//local_testdebug
+"errrorhub_debug" = "FHHouseErrorHubDebugVC";

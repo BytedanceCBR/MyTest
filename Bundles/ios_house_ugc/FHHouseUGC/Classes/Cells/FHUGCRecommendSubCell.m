@@ -8,8 +8,8 @@
 #import "FHUGCRecommendSubCell.h"
 #import "UIColor+Theme.h"
 #import "UIFont+House.h"
-#import <Masonry.h>
-#import <UIImageView+BDWebImage.h>
+#import "Masonry.h"
+#import "UIImageView+BDWebImage.h"
 #import "FHUGCFollowButton.h"
 #import "FHFeedContentModel.h"
 #import "FHUGCConfig.h"
@@ -24,7 +24,6 @@
 @property(nonatomic, strong) UILabel *sourceLabel;
 @property(nonatomic, strong) UIImageView *icon;
 @property(nonatomic, strong) FHUGCFollowButton *joinBtn;
-@property (nonatomic, assign)   NSInteger       currentRank;
 
 @property(nonatomic, strong) FHFeedContentRecommendSocialGroupListModel *model;
 
@@ -56,7 +55,6 @@
 
 - (void)initNotification {
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(followStateChanged:) name:kFHUGCFollowNotification object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(socialGroupDataChange:) name:@"kFHUGCSicialGroupDataChangeKey" object:nil];
 }
 
 - (void)dealloc {
@@ -65,7 +63,6 @@
 
 - (void)refreshWithData:(id)data rank:(NSInteger)rank {
     if([data isKindOfClass:[FHFeedContentRecommendSocialGroupListModel class]]){
-        self.currentRank = rank;
         FHFeedContentRecommendSocialGroupListModel *model = (FHFeedContentRecommendSocialGroupListModel *)data;
         _model = model;
         _titleLabel.text = model.socialGroupName;
@@ -84,7 +81,7 @@
     dict[@"house_type"] = @"community";
     dict[@"element_from"] = @"like_neighborhood";
     dict[@"log_pb"] = _model.logPb;
-    dict[@"page_type"] = @"nearby_list";
+    dict[@"page_type"] = @"hot_discuss_feed";
     dict[@"enter_from"] = @"neighborhood_tab";
     dict[@"rank"] = @(rank);
     
@@ -98,7 +95,7 @@
     _icon.contentMode = UIViewContentModeScaleAspectFill;
     _icon.layer.masksToBounds = YES;
     _icon.layer.cornerRadius = 4;
-    _icon.backgroundColor = [UIColor themeGray7];
+    _icon.backgroundColor = [UIColor themeGray6];
     _icon.layer.borderWidth = 0.5;
     _icon.layer.borderColor = [[UIColor themeGray6] CGColor];
     [self.contentView addSubview:_icon];
@@ -172,30 +169,6 @@
     if([groupId isEqualToString:self.model.socialGroupId] && followed){
         if(self.delegate && [self.delegate respondsToSelector:@selector(joinIn:cell:)]){
             [self.delegate joinIn:self.model cell:self];
-        }
-    }
-}
-
-- (void)socialGroupDataChange:(NSNotification *)notification {
-    if (notification) {
-        FHFeedContentRecommendSocialGroupListModel *tempModel = self.model;
-        if (tempModel && [tempModel isKindOfClass:[FHFeedContentRecommendSocialGroupListModel class]]) {
-            NSString *socialGroupId = tempModel.socialGroupId;
-            FHUGCScialGroupDataModel *model = [[FHUGCConfig sharedInstance] socialGroupData:socialGroupId];
-            if (model && (![model.countText isEqualToString:tempModel.countText] || ![model.hasFollow isEqualToString:tempModel.hasFollow])) {
-                tempModel.contentCount = model.contentCount;
-                tempModel.countText = model.countText;
-                tempModel.hasFollow = model.hasFollow;
-                tempModel.followerCount = model.followerCount;
-                [self refreshWithData:tempModel rank:self.currentRank];
-                
-                BOOL followed = [model.hasFollow boolValue];
-                if([socialGroupId isEqualToString:self.model.socialGroupId] && followed){
-                    if(self.delegate && [self.delegate respondsToSelector:@selector(joinIn:cell:)]){
-                        [self.delegate joinIn:self.model cell:self];
-                    }
-                }
-            }
         }
     }
 }

@@ -8,7 +8,7 @@
 
 #import "TTInterfaceTipBaseView.h"
 #import "TTInterfaceTipBaseModel.h"
-#import <UIViewAdditions.h>
+#import "UIViewAdditions.h"
 
 @interface TTInterfaceTipBaseView ()
 

@@ -7,10 +7,11 @@
 
 #import "FHArticleMultiImageCell.h"
 #import "FHArticleCellBottomView.h"
-#import <UIImageView+BDWebImage.h>
+#import "UIImageView+BDWebImage.h"
 #import "FHUGCCellHelper.h"
 #import "TTBaseMacro.h"
-#import <TTImageView+TrafficSave.h>
+#import "UIViewAdditions.h"
+#import "TTImageView+TrafficSave.h"
 
 #define maxLines 3
 #define bottomViewHeight 39
@@ -23,7 +24,7 @@
 
 @interface FHArticleMultiImageCell ()
 
-@property(nonatomic ,strong) TTUGCAttributedLabel *contentLabel;
+@property(nonatomic ,strong) TTUGCAsyncLabel *contentLabel;
 @property(nonatomic ,strong) NSMutableArray *imageViewList;
 @property(nonatomic ,strong) UIView *imageViewContainer;
 @property(nonatomic ,strong) FHArticleCellBottomView *bottomView;
@@ -61,13 +62,14 @@
 }
 
 - (void)initViews {
-    self.contentLabel = [[TTUGCAttributedLabel alloc] initWithFrame:CGRectZero];
+    self.contentLabel = [[TTUGCAsyncLabel alloc] initWithFrame:CGRectZero];
     _contentLabel.numberOfLines = maxLines;
     _contentLabel.layer.masksToBounds = YES;
     _contentLabel.backgroundColor = [UIColor whiteColor];
     [self.contentView addSubview:_contentLabel];
     
     self.imageViewContainer = [[UIView alloc] init];
+    _imageViewContainer.hidden = YES;
     [self.contentView addSubview:_imageViewContainer];
     
     self.bottomView = [[FHArticleCellBottomView alloc] initWithFrame:CGRectZero];
@@ -91,45 +93,39 @@
         imageView.layer.masksToBounds = YES;
         imageView.layer.cornerRadius = 4;
         imageView.hidden = YES;
-        [self.contentView addSubview:imageView];
+        [self.imageViewContainer addSubview:imageView];
         
         [self.imageViewList addObject:imageView];
     }
 }
 
 - (void)initConstraints {
-    [self.contentLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.contentView).offset(topMargin);
-        make.left.mas_equalTo(self.contentView).offset(leftMargin);
-        make.right.mas_equalTo(self.contentView).offset(-rightMargin);
-    }];
+    self.contentLabel.top = topMargin;
+    self.contentLabel.left = leftMargin;
+    self.contentLabel.width = [UIScreen mainScreen].bounds.size.width - leftMargin - rightMargin;
+    self.contentLabel.height = 0;
     
-    [self.imageViewContainer mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.contentLabel.mas_bottom).offset(10);
-        make.right.mas_equalTo(self.contentView).offset(-rightMargin);
-        make.left.mas_equalTo(self.contentView).offset(leftMargin);
-        make.height.mas_equalTo(self.imageHeight);
-    }];
+    self.imageViewContainer.top = self.contentLabel.bottom + 10;
+    self.imageViewContainer.left = leftMargin;
+    self.imageViewContainer.width = [UIScreen mainScreen].bounds.size.width - leftMargin - rightMargin;
+    self.imageViewContainer.height = self.imageHeight;
     
-    [self.bottomView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.imageViewContainer.mas_bottom).offset(10);
-        make.height.mas_equalTo(bottomViewHeight);
-        make.left.right.mas_equalTo(self.contentView);
-        make.bottom.mas_equalTo(self.contentView);
-    }];
+    self.bottomView.top = self.contentLabel.bottom + 10;
+    self.bottomView.left = 0;
+    self.bottomView.width = [UIScreen mainScreen].bounds.size.width;
+    self.bottomView.height = bottomViewHeight;
     
     UIView *firstView = self.imageViewContainer;
     for (UIImageView *imageView in self.imageViewList) {
-        [imageView mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.top.bottom.mas_equalTo(self.imageViewContainer);
-            if(firstView == self.imageViewContainer){
-                make.left.mas_equalTo(firstView);
-            }else{
-                make.left.mas_equalTo(firstView.mas_right).offset(imagePadding);
-            }
-            make.width.mas_equalTo(self.imageWidth);
-            make.height.mas_equalTo(self.imageWidth);
-        }];
+        if(firstView == self.imageViewContainer){
+            imageView.left = 0;
+        }else{
+            imageView.left = firstView.right + imagePadding;
+        }
+        imageView.top = 0;
+        imageView.width = self.imageWidth;
+        imageView.height = self.imageHeight;
+        
         firstView = imageView;
     }
 }
@@ -145,17 +141,25 @@
     if (![data isKindOfClass:[FHFeedUGCCellModel class]]) {
         return;
     }
-    self.currentData = data;
     
     FHFeedUGCCellModel *cellModel = (FHFeedUGCCellModel *)data;
+    
+    if(self.currentData == data && !cellModel.ischanged){
+        return;
+    }
+    self.currentData = data;
     self.cellModel= cellModel;
     //内容
     self.contentLabel.numberOfLines = cellModel.numberOfLines;
     if(isEmptyString(cellModel.title)){
         self.contentLabel.hidden = YES;
+        self.contentLabel.height = 0;
+        self.imageViewContainer.top = self.contentLabel.bottom + 10;
     }else{
         self.contentLabel.hidden = NO;
-        [FHUGCCellHelper setRichContent:self.contentLabel model:cellModel];
+        self.contentLabel.height = cellModel.contentHeight;
+        self.imageViewContainer.top = self.contentLabel.bottom + 10;
+        [FHUGCCellHelper setAsyncRichContent:self.contentLabel model:cellModel];
     }
     self.bottomView.cellModel = cellModel;
     self.bottomView.descLabel.attributedText = cellModel.desc;
@@ -165,21 +169,29 @@
     [self.bottomView showPositionView:showCommunity];
     //图片
     NSArray *imageList = cellModel.imageList;
-    for (NSInteger i = 0; i < self.imageViewList.count; i++) {
-        TTImageView *imageView = self.imageViewList[i];
-        if(i < imageList.count){
-            FHFeedContentImageListModel *imageModel = imageList[i];
-            imageView.hidden = NO;
-            if (imageModel && imageModel.url.length > 0) {
-                TTImageInfosModel *imageInfoModel = [FHUGCCellHelper convertTTImageInfosModel:imageModel];
-                __weak typeof(imageView) wImageView = imageView;
-                [imageView setImageWithModelInTrafficSaveMode:imageInfoModel placeholderImage:nil success:nil failure:^(NSError *error) {
-                    [wImageView setImage:nil];
-                }];
+    if(imageList.count > 0){
+        self.imageViewContainer.hidden = NO;
+        for (NSInteger i = 0; i < self.imageViewList.count; i++) {
+            TTImageView *imageView = self.imageViewList[i];
+            if(i < imageList.count){
+                FHFeedContentImageListModel *imageModel = imageList[i];
+                imageView.hidden = NO;
+                if (imageModel && imageModel.url.length > 0) {
+//                    [imageView bd_setImageWithURL:[NSURL URLWithString:imageModel.url] placeholder:nil];
+                    TTImageInfosModel *imageInfoModel = [FHUGCCellHelper convertTTImageInfosModel:imageModel];
+                    __weak typeof(imageView) wImageView = imageView;
+                    [imageView setImageWithModelInTrafficSaveMode:imageInfoModel placeholderImage:nil success:nil failure:^(NSError *error) {
+                        [wImageView setImage:nil];
+                    }];
+                }
+            }else{
+                imageView.hidden = YES;
             }
-        }else{
-            imageView.hidden = YES;
         }
+        self.bottomView.top = self.imageViewContainer.bottom + 10;
+    }else{
+        self.imageViewContainer.hidden = YES;
+        self.bottomView.top = self.contentLabel.bottom + 10;
     }
     
     [self showGuideView];
@@ -188,10 +200,12 @@
 + (CGFloat)heightForData:(id)data {
     if([data isKindOfClass:[FHFeedUGCCellModel class]]){
         FHFeedUGCCellModel *cellModel = (FHFeedUGCCellModel *)data;
-        CGFloat height = cellModel.contentHeight + + bottomViewHeight + topMargin + 20;
+        CGFloat height = cellModel.contentHeight + bottomViewHeight + topMargin + 10;
         
-        CGFloat imageViewHeight = ([UIScreen mainScreen].bounds.size.width - leftMargin - rightMargin - imagePadding * 2)/3 * 82.0f/109.0f;
-        height += imageViewHeight;
+        if(cellModel.imageList.count > 0){
+            CGFloat imageViewHeight = ([UIScreen mainScreen].bounds.size.width - leftMargin - rightMargin - imagePadding * 2)/3 * 82.0f/109.0f;
+            height += (imageViewHeight + 10);
+        }
         
         if(cellModel.isInsertGuideCell){
             height += guideViewHeight;
@@ -204,13 +218,9 @@
 
 - (void)showGuideView {
     if(_cellModel.isInsertGuideCell){
-        [self.bottomView mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.height.mas_equalTo(bottomViewHeight + guideViewHeight);
-        }];
+        self.bottomView.height = bottomViewHeight + guideViewHeight;
     }else{
-        [self.bottomView mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.height.mas_equalTo(bottomViewHeight);
-        }];
+        self.bottomView.height = bottomViewHeight;
     }
 }
 

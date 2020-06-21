@@ -6,8 +6,8 @@
 //
 
 #import "FHMineViewModel.h"
-#import <TTHttpTask.h>
-#import <TTRoute.h>
+#import "TTHttpTask.h"
+#import "TTRoute.h"
 #import "FHMineBaseCell.h"
 #import "FHMineMutiItemCell.h"
 #import "FHMineAPI.h"
@@ -19,6 +19,8 @@
 #import "TTReachability.h"
 #import "FHMineConfigModel.h"
 #import "FHMineMutiItemCell.h"
+#import "FHCommuteManager.h"
+#import "FHEnvContext.h"
 
 #define mutiItemCellId @"mutiItemCellId"
 
@@ -52,13 +54,13 @@
         self.viewController = viewController;
         
         [self.tableView registerClass:NSClassFromString(@"FHMineMutiItemCell") forCellReuseIdentifier:mutiItemCellId];
-//        [TTAccount addMulticastDelegate:self];
+        //        [TTAccount addMulticastDelegate:self];
     }
     return self;
 }
 
 - (void)dealloc {
-//    [TTAccount removeMulticastDelegate:self];
+    //    [TTAccount removeMulticastDelegate:self];
 }
 
 - (void)requestData {
@@ -69,7 +71,7 @@
             [wself.tableView reloadData];
             return;
         }
-
+        
         if(response.count == 4){
             self.focusItemDic = response;
             
@@ -128,14 +130,14 @@
             [[ToastManager manager] showToast:@"个人资料功能升级中，敬请期待"];
         }else if(state == 2){
             NSString *goDetailTrackDic = @{
-                                           @"enter_from":@"minetab",
-                                           @"page_type":@"personal_info"
-                                           };
+                @"enter_from":@"minetab",
+                @"page_type":@"personal_info"
+            };
             TRACK_EVENT(@"go_detail", goDetailTrackDic);
             NSString *clickTrackDic = @{
-                                        @"click_type":@"edit_info",
-                                        @"page_type":@"minetab"
-                                        };
+                @"click_type":@"edit_info",
+                @"page_type":@"minetab"
+            };
             TRACK_EVENT(@"click_minetab", clickTrackDic);
             
             NSURL* url = [NSURL URLWithString:@"sslocal://editUserProfile"];
@@ -143,15 +145,19 @@
         }
     }else{
         NSString *clickTrackDic = @{
-                                    @"click_type":@"login",
-                                    @"page_type":@"minetab"
-                                    };
+            @"click_type":@"login",
+            @"page_type":@"minetab"
+        };
         TRACK_EVENT(@"click_minetab", clickTrackDic);
         
         NSMutableDictionary *dict = @{}.mutableCopy;
-        dict[@"enter_from"] = @"minetab";
-        dict[@"enter_type"] = @"login";
         dict[@"isCheckUGCADUser"] = @(1);
+        dict[TRACER_KEY] = @{
+            @"enter_from": @"minetab",
+            @"enter_method": @"click_mine",
+            @"enter_type": @"login",
+            @"trigger": @"user"
+        };
         TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
         
         NSURL* url = [NSURL URLWithString:@"snssdk1370://flogin"];
@@ -160,32 +166,52 @@
 }
 
 - (void)updateHeaderView {
-    NSString *avatar = [TTAccountManager avatarURLString];
-    [self.viewController.headerView updateAvatar:avatar];
-    
-    NSString *name = [TTAccountManager userName];
-    TTAccountUserEntity *userInfo = [TTAccount sharedAccount].user;
-    
-    NSDictionary *fhSettings = [self fhSettings];
-    NSInteger state = [fhSettings tt_integerValueForKey:@"f_is_show_profile_edit_entry"];
-
-    [self.viewController.headerView setUserInfoState:state];
-    
-    if (userInfo != nil) {
-        self.viewController.headerView.userNameLabel.text = name?:@"";
-        self.viewController.headerView.descLabel.text = @"查看并编辑个人信息";
-        if(state != 0){
-            self.viewController.headerView.editIcon.hidden = NO;
+    if ([FHEnvContext canShowLoginTip]) {
+        TTAccountUserEntity *userInfo = [TTAccount sharedAccount].user;
+        if (userInfo) {
+            NSString *avatar = [TTAccountManager avatarURLString];
+            [self.viewController.headerView updateAvatar:avatar];
+            NSString *name = [TTAccountManager userName];
+            NSDictionary *fhSettings = [self fhSettings];
+            NSInteger state = [fhSettings tt_integerValueForKey:@"f_is_show_profile_edit_entry"];
+            [self.viewController.headerView setUserInfoState:state];
+            self.viewController.headerView.userNameLabel.text = name?:@"";
+            self.viewController.headerView.descLabel.text = @"查看并编辑个人信息";
+            if(state != 0){
+                self.viewController.headerView.editIcon.hidden = NO;
+            }
+            _hasLogin = YES;
+            [self.viewController.headerView sethomePageWithModel:self.configModel.data.homePage];
+            [self.viewController.headerView setDeaultShowTypeByLogin:YES];
+        }else {
+            [self.viewController.headerView setDeaultShowTypeByLogin:NO];
+            _hasLogin = NO;
         }
-        _hasLogin = YES;
-    } else {
-        self.viewController.headerView.userNameLabel.text = @"登录/注册";
-        self.viewController.headerView.descLabel.text = @"关注房源永不丢失";
-        self.viewController.headerView.editIcon.hidden = YES;
-        _hasLogin = NO;
+    }else {
+        NSString *avatar = [TTAccountManager avatarURLString];
+        [self.viewController.headerView updateAvatar:avatar];
+        NSString *name = [TTAccountManager userName];
+        TTAccountUserEntity *userInfo = [TTAccount sharedAccount].user;
+        NSDictionary *fhSettings = [self fhSettings];
+        NSInteger state = [fhSettings tt_integerValueForKey:@"f_is_show_profile_edit_entry"];
+        
+        [self.viewController.headerView setUserInfoState:state];
+        
+        if (userInfo != nil) {
+            self.viewController.headerView.userNameLabel.text = name?:@"";
+            self.viewController.headerView.descLabel.text = @"查看并编辑个人信息";
+            if(state != 0){
+                self.viewController.headerView.editIcon.hidden = NO;
+            }
+            _hasLogin = YES;
+        } else {
+            self.viewController.headerView.userNameLabel.text = @"登录/注册";
+            self.viewController.headerView.descLabel.text = @"关注房源永不丢失";
+            self.viewController.headerView.editIcon.hidden = YES;
+            _hasLogin = NO;
+        }
+        [self.viewController.headerView sethomePageWithModel:self.configModel.data.homePage];
     }
-    
-    [self.viewController.headerView sethomePageWithModel:self.configModel.data.homePage];
 }
 
 - (NSDictionary *)fhSettings {
@@ -198,14 +224,14 @@
 
 - (void)goToFeedback:(FHMineConfigDataIconOpDataMyIconItemsModel *)model {
     NSString *goDetailTrackDic = @{
-                                   @"enter_from":@"minetab",
-                                   @"page_type":@"feedback",
-                                   };
+        @"enter_from":@"minetab",
+        @"page_type":@"feedback",
+    };
     TRACK_EVENT(@"go_detail", goDetailTrackDic);
     NSString *clickTrackDic = @{
-                                @"click_type":@"feedback",
-                                @"page_type":@"minetab",
-                                };
+        @"click_type":@"feedback",
+        @"page_type":@"minetab",
+    };
     TRACK_EVENT(@"click_minetab", clickTrackDic);
     
     NSURL* url = [NSURL URLWithString:model.openUrl];
@@ -215,16 +241,16 @@
 
 - (void)goToSystemSetting {
     NSString *goDetailTrackDic = @{
-                                   @"enter_from":@"minetab",
-                                   @"page_type":@"setting",
-                                   };
+        @"enter_from":@"minetab",
+        @"page_type":@"setting",
+    };
     TRACK_EVENT(@"go_detail", goDetailTrackDic);
     NSString *clickTrackDic = @{
-                                @"click_type":@"setting",
-                                @"page_type":@"minetab",
-                                };
+        @"click_type":@"setting",
+        @"page_type":@"minetab",
+    };
     TRACK_EVENT(@"click_minetab", clickTrackDic);
-
+    
     NSURL* url = [NSURL URLWithString:@"sslocal://more"];
     [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:nil];
 }
@@ -245,10 +271,20 @@
 
 - (void)didItemClick:(FHMineConfigDataIconOpDataMyIconItemsModel *)model {
      if ([TTReachability isNetworkConnected]) {
+         [self addCLickIconLog:model];
          FHMineItemType type = [model.id integerValue];
          if(type == FHMineItemTypeSugSubscribe || type == FHMineItemTypeFeedback){
              [self jumpWithMoreAction:model];
-         }else{
+         }else if ([model.openUrl containsString:@"://commute_list"]){
+             NSMutableDictionary *tracer = [NSMutableDictionary dictionary];
+             if (model.reportParams) {
+                 [tracer addEntriesFromDictionary:model.reportParams];
+             }
+             tracer[@"enter_type"] = @"click";
+             //通勤找房
+             [[FHCommuteManager sharedInstance] tryEnterCommutePage:model.openUrl logParam:tracer];
+         }else
+         {
              //埋点
              NSMutableDictionary *dict = [NSMutableDictionary dictionary];
              NSMutableDictionary *tracer = [NSMutableDictionary dictionary];
@@ -310,11 +346,11 @@
         NSString *pageType = @"";
         // 特殊埋点需求，此处enter_query和search_query都埋:be_null
         NSDictionary *houseSearchParams = @{
-                                            @"enter_query":@"be_null",
-                                            @"search_query":@"be_null",
-                                            @"page_type":pageType.length > 0 ? pageType : @"be_null",
-                                            @"query_type":queryType
-                                            };
+            @"enter_query":@"be_null",
+            @"search_query":@"be_null",
+            @"page_type":pageType.length > 0 ? pageType : @"be_null",
+            @"query_type":queryType
+        };
         NSMutableDictionary *infos = [NSMutableDictionary new];
         infos[@"houseSearch"] = houseSearchParams;
         
@@ -393,11 +429,12 @@
     [self.viewController refreshContentOffset:scrollView.contentOffset];
 }
 
-//#pragma mark - TTAccountMulticaastProtocol
-//
-//// 帐号切换
-//- (void)onAccountStatusChanged:(TTAccountStatusChangedReasonType)reasonType platform:(NSString *)platformName {
-//    [self requestMineConfig];
-//}
+- (void)addCLickIconLog:(FHMineConfigDataIconOpDataMyIconItemsModel *)model
+{
+    NSMutableDictionary *param = [NSMutableDictionary dictionary];
+    param[@"log_pb"] = model.logPb ?: @"be_null";
+    param[@"page_type"] = @"minetab";
+    [FHUserTracker writeEvent:@"click_icon" params:param];
+}
 
 @end

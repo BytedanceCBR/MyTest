@@ -7,9 +7,9 @@
 //
 
 #import "ArticleMobileChangeCaptchaViewController.h"
-#import <TTThemedAlertController.h>
-#import <TTDeviceHelper.h>
-#import <TTAccountBusiness.h>
+#import "TTThemedAlertController.h"
+#import "TTDeviceHelper.h"
+#import "TTAccountBusiness.h"
 #import "TTTrackerWrapper.h"
 
 
@@ -65,16 +65,16 @@
     self.resendButton.highlightedTitleColorThemeKey = kColorText4Highlighted;
     
     
-    NSDictionary *previousCode = [[self class] previousMobileCodeInformation];
-    if ([[previousCode valueForKey:@"mobile"] isEqualToString:self.mobileNumber] && ([[previousCode valueForKey:@"type"] intValue] == TTASMSCodeScenarioChangePhone || [[previousCode valueForKey:@"type"] intValue] == TTASMSCodeScenarioChangePhoneRetry)) {
-        NSTimeInterval timeInterval = [[previousCode valueForKey:@"time"] doubleValue];
-        NSInteger retryTime = [[previousCode valueForKey:@"retryTime"] intValue];
-        NSInteger timeOffset = [[NSDate date] timeIntervalSinceDate:[NSDate dateWithTimeIntervalSince1970:timeInterval]];
-        self.timeoutInterval = retryTime;
-        self.countdown = MAX(0, (retryTime - timeOffset));
-    } else {
-        self.countdown = self.timeoutInterval;
-    }
+//    NSDictionary *previousCode = [[self class] previousMobileCodeInformation];
+//    if ([[previousCode valueForKey:@"mobile"] isEqualToString:self.mobileNumber] && ([[previousCode valueForKey:@"type"] intValue] == TTASMSCodeScenarioChangePhone || [[previousCode valueForKey:@"type"] intValue] == TTASMSCodeScenarioChangePhoneRetry)) {
+//        NSTimeInterval timeInterval = [[previousCode valueForKey:@"time"] doubleValue];
+//        NSInteger retryTime = [[previousCode valueForKey:@"retryTime"] intValue];
+//        NSInteger timeOffset = [[NSDate date] timeIntervalSinceDate:[NSDate dateWithTimeIntervalSince1970:timeInterval]];
+//        self.timeoutInterval = retryTime;
+//        self.countdown = MAX(0, (retryTime - timeOffset));
+//    } else {
+//        self.countdown = self.timeoutInterval;
+//    }
     
     [self setButtonEnabled:NO];
     [self fitResendButton];
@@ -131,53 +131,53 @@
 }
 
 - (void) resendButtonActionFired:(id) sender {
-    wrapperTrackEvent(@"login_register", @"change_mobile_auth_retry");
-    
-    __weak ArticleMobileChangeCaptchaViewController * weakSelf = self;
-    void (^ sendCodeBlock)(NSString *, NSString *) = ^(NSString * mobile, NSString * captcha) {
-        
-        [TTAccountManager startSendCodeWithPhoneNumber:mobile captcha:captcha type:TTASMSCodeScenarioChangePhoneRetry unbindExist:NO completion:^(NSNumber *retryTime, UIImage *captchaImage, NSError *error) {
-            
-            weakSelf.captchaImage = captchaImage;
-            weakSelf.captchaValue = nil;
-            weakSelf.error = error;
-            weakSelf.timeoutInterval = retryTime.intValue;
-            if (error) {
-                if (captchaImage) {
-                    [weakSelf resendButtonActionFired:nil];
-                } else {
-                    [weakSelf showAutoDismissIndicatorWithError:error];
-                }
-            } else {
-                weakSelf.countdown = weakSelf.timeoutInterval;
-                [weakSelf startTimer];
-                NSMutableDictionary * information = [NSMutableDictionary dictionaryWithCapacity:2];
-                [information setValue:@(TTASMSCodeScenarioChangePhoneRetry) forKey:@"type"];
-                [information setValue:retryTime forKey:@"retryTime"];
-                [information setValue:mobile forKey:@"mobile"];
-                [information setValue:@([[NSDate date] timeIntervalSince1970]) forKey:@"time"];
-                [[weakSelf class] setPreviousMobileCodeInformation:information];
-            }
-        }];
-    };
-    
-    void (^ alertCaptchaBlock) (UIImage *, NSError *, TTASMSCodeScenarioType) = ^(UIImage * captcha, NSError * error, TTASMSCodeScenarioType scenario) {
-        ArticleMobileCaptchaAlertView * alertView = [[ArticleMobileCaptchaAlertView alloc] initWithCaptchaImage:captcha];
-        alertView.error = error;
-        [alertView showWithDismissBlock:^(ArticleMobileCaptchaAlertView * alertView, NSInteger buttonIndex) {
-            self.captchaValue = alertView.captchaValue;
-            self.captchaImage = alertView.captchaImage;
-            if (alertView.captchaValue.length > 0) {
-                sendCodeBlock(self.mobileNumber, alertView.captchaValue);
-            }
-        }];
-    };
-    @ArticleTipAndReturnIFNetworkNotOK;
-    if (self.captchaImage && !self.captchaValue) {
-        alertCaptchaBlock(self.captchaImage, self.error, TTASMSCodeScenarioChangePhoneRetry);
-    } else {
-        sendCodeBlock(self.mobileNumber, self.captchaValue);
-    }
+//    wrapperTrackEvent(@"login_register", @"change_mobile_auth_retry");
+//    
+//    __weak ArticleMobileChangeCaptchaViewController * weakSelf = self;
+//    void (^ sendCodeBlock)(NSString *, NSString *) = ^(NSString * mobile, NSString * captcha) {
+//        
+//        [TTAccountManager startSendCodeWithPhoneNumber:mobile captcha:captcha type:TTASMSCodeScenarioChangePhoneRetry unbindExist:NO completion:^(NSNumber *retryTime, UIImage *captchaImage, NSError *error) {
+//            
+//            weakSelf.captchaImage = captchaImage;
+//            weakSelf.captchaValue = nil;
+//            weakSelf.error = error;
+//            weakSelf.timeoutInterval = retryTime.intValue;
+//            if (error) {
+//                if (captchaImage) {
+//                    [weakSelf resendButtonActionFired:nil];
+//                } else {
+//                    [weakSelf showAutoDismissIndicatorWithError:error];
+//                }
+//            } else {
+//                weakSelf.countdown = weakSelf.timeoutInterval;
+//                [weakSelf startTimer];
+//                NSMutableDictionary * information = [NSMutableDictionary dictionaryWithCapacity:2];
+//                [information setValue:@(TTASMSCodeScenarioChangePhoneRetry) forKey:@"type"];
+//                [information setValue:retryTime forKey:@"retryTime"];
+//                [information setValue:mobile forKey:@"mobile"];
+//                [information setValue:@([[NSDate date] timeIntervalSince1970]) forKey:@"time"];
+//                [[weakSelf class] setPreviousMobileCodeInformation:information];
+//            }
+//        }];
+//    };
+//    
+//    void (^ alertCaptchaBlock) (UIImage *, NSError *, TTASMSCodeScenarioType) = ^(UIImage * captcha, NSError * error, TTASMSCodeScenarioType scenario) {
+//        ArticleMobileCaptchaAlertView * alertView = [[ArticleMobileCaptchaAlertView alloc] initWithCaptchaImage:captcha];
+//        alertView.error = error;
+//        [alertView showWithDismissBlock:^(ArticleMobileCaptchaAlertView * alertView, NSInteger buttonIndex) {
+//            self.captchaValue = alertView.captchaValue;
+//            self.captchaImage = alertView.captchaImage;
+//            if (alertView.captchaValue.length > 0) {
+//                sendCodeBlock(self.mobileNumber, alertView.captchaValue);
+//            }
+//        }];
+//    };
+//    @ArticleTipAndReturnIFNetworkNotOK;
+//    if (self.captchaImage && !self.captchaValue) {
+//        alertCaptchaBlock(self.captchaImage, self.error, TTASMSCodeScenarioChangePhoneRetry);
+//    } else {
+//        sendCodeBlock(self.mobileNumber, self.captchaValue);
+//    }
 }
 
 - (BOOL)isContentValid

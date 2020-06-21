@@ -48,7 +48,7 @@
 #import "TTActionSheetController.h"
 #import "TTMovieExitFullscreenAnimatedTransitioning.h"
 //#import "FRRouteHelper.h"
-#import <TTAccountBusiness.h>
+#import "TTAccountBusiness.h"
 #import "TTNetworkManager.h"
 
 #import "NSObject+FBKVOController.h"
@@ -994,7 +994,7 @@ static NSDictionary *fontSizes = nil;
     [params setValue:@(connectionType) forKey:@"nt"];
     [params setValue:@"1" forKey:@"is_ad_event"];
     [params addEntriesFromDictionary:[orderData realTimeAdExtraData:@"embeded_ad" label:@"click" extraData:extraData]];
-    [TTTracker eventV3:@"realtime_click" params:params];
+    [BDTrackerProtocol eventV3:@"realtime_click" params:params];
 }
 
 //监听电话状态
@@ -1718,7 +1718,7 @@ static NSDictionary *fontSizes = nil;
     if (extra) {
         [events addEntriesFromDictionary:extra];
     }
-    [TTTracker eventData:events];
+    [BDTrackerProtocol eventData:events];
 }
 
 - (void)digUpActivityClicked
@@ -1760,7 +1760,7 @@ static NSDictionary *fontSizes = nil;
         }
         [dict setValue:@"video" forKey:@"article_type"];
         [dict setValue:[self.orderedData.article.userInfo ttgc_contentID] forKey:@"author_id"];
-        [TTTracker eventV3:@"rt_unlike" params:[dict copy]];
+        [BDTrackerProtocol eventV3:@"rt_unlike" params:[dict copy]];
 
     } else {
         article.userDigg = YES;
@@ -1847,7 +1847,7 @@ static NSDictionary *fontSizes = nil;
         }
         [dict setValue:@"video" forKey:@"article_type"];
         [dict setValue:[self.orderedData.article.userInfo ttgc_contentID] forKey:@"author_id"];
-        [TTTracker eventV3:@"rt_unbury" params:[dict copy]];
+        [BDTrackerProtocol eventV3:@"rt_unbury" params:[dict copy]];
     }
 }
 

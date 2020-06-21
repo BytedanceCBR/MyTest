@@ -87,12 +87,14 @@
 #import "TTURLUtils.h"
 #import <FHHouseBase/FHEnvContext.h>
 
+#import "FHAccountBindingViewController.h"
+
 //爱看
 #import "AKTaskSettingHelper.h"
 #import "FHUserTracker.h"
 #import "FHUserTrackerDefine.h"
-
 #import <TTBaseLib/TTSandBoxHelper.h>
+#import <ByteDanceKit/NSDictionary+BTDAdditions.h>
 
 
 #define kCellHeight     43.f
@@ -155,6 +157,7 @@ typedef NS_ENUM(NSUInteger, TTSettingCellType) {
     SettingCellTypeUserProtocol,            // 用户协议
     SettingCellTypePrivacyProtocol,         // 隐私政策
     SettingCellTypeBusinessLicense,         // 证照资质
+    SettingCellTypeFHAccountBindingSetting, // 幸福里账号设置
     SettingCellTypeLogoutUnRegister         // 注销登录
 
 };
@@ -214,10 +217,19 @@ TTEditUserProfileViewControllerDelegate
  */
 @property (nonatomic, assign) BOOL resetPasswordAlertShowed; // default is NO
 @property (nonatomic, assign) BOOL airDownloading;
+@property (nonatomic, assign) BOOL disableDouyinIconLoginSetting;
 
 @end
 
 @implementation SettingView
+
++ (NSDictionary *)fhSettings {
+    if ([[NSUserDefaults standardUserDefaults] objectForKey:@"kFHSettingsKey"]) {
+        return [[NSUserDefaults standardUserDefaults] dictionaryForKey:@"kFHSettingsKey"];
+    } else {
+        return nil;
+    }
+}
 
 - (void)dealloc {
     [NSObject cancelPreviousPerformRequestsWithTarget:self];
@@ -240,6 +252,13 @@ TTEditUserProfileViewControllerDelegate
         // _shouldShowADRegisterEntrance = ![TTSettingMineTabManager sharedInstance_tt].hadDisplayedADRegisterEntrance;
         // 产品要求暂时去除该入口
         _shouldShowADRegisterEntrance = NO;
+        
+        NSDictionary *fhSettings = [self.class fhSettings];
+        NSDictionary *loginSettings = [fhSettings btd_dictionaryValueForKey:@"login_settings"];
+        if (loginSettings) {
+            self.disableDouyinIconLoginSetting = [loginSettings btd_boolValueForKey:@"disable_douyin_icon" default:NO];
+//            self.disableDouyinIconLoginSetting = YES;
+        }
 
         
         // table view
@@ -265,7 +284,7 @@ TTEditUserProfileViewControllerDelegate
         [_readModeSwitch addTarget:self action:@selector(readModeChanged:) forControlEvents:UIControlEventValueChanged];
         
         self.pushNotificatoinSwitch = [[SettingSwitch alloc] initWithFrame:CGRectZero];
-        self.pushNotificatoinSwitch.onTintColor = [UIColor tt_themedColorForKey:@"red1"];
+        self.pushNotificatoinSwitch.onTintColor = [UIColor tt_themedColorForKey:@"orange4"];
         [_pushNotificatoinSwitch addTarget:self action:@selector(pushNotificationChanged:) forControlEvents:UIControlEventValueChanged];
         self.showAwardCoinTipSwitch = [[SettingSwitch alloc] initWithFrame:CGRectZero];
         [_showAwardCoinTipSwitch addTarget:self action:@selector(showAwardCoinTipSwitchAction:) forControlEvents:UIControlEventValueChanged];
@@ -723,11 +742,16 @@ TTEditUserProfileViewControllerDelegate
         [itemCell reloadWithProfileItem:item];
     }
     else if (cellType == SettingCellTypeAccountBindingSetting) {
-        cell.textLabel.text = NSLocalizedString(@"账号和隐私设置", nil);
+        cell.textLabel.text = NSLocalizedString(@"帐号和隐私设置", nil);
         UIImageView *accessoryImage = [[UIImageView alloc] initWithImage:[UIImage themedImageNamed:@"icon-youjiantou-hui"]];
         cell.accessoryView = accessoryImage;
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
-    } else if (cellType == SettingCellTypeBlockUsersList) {
+    }else if(cellType == SettingCellTypeFHAccountBindingSetting){
+        cell.textLabel.text = NSLocalizedString(@"帐号设置", nil);
+        UIImageView *accessoryImage = [[UIImageView alloc] initWithImage:[UIImage themedImageNamed:@"icon-youjiantou-hui"]];
+        cell.accessoryView = accessoryImage;
+        cell.selectionStyle = UITableViewCellSelectionStyleNone;
+    }else if (cellType == SettingCellTypeBlockUsersList) {
         cell.textLabel.text = NSLocalizedString(@"黑名单", nil);
         UIImageView *accessoryImage = [[UIImageView alloc] initWithImage:[UIImage themedImageNamed:@"icon-youjiantou-hui"]];
         cell.accessoryView = accessoryImage;
@@ -824,11 +848,17 @@ TTEditUserProfileViewControllerDelegate
             }
             return array;
         }
-        case kTTSettingSectionTypeAbout:
-            return @[@(SettingCellTypeAbout),
-                     @(SettingCellTypeUserProtocol),
-                     @(SettingCellTypePrivacyProtocol),
-                    @(SettingCellTypeBusinessLicense)];
+        case kTTSettingSectionTypeAbout:{
+            NSMutableArray *array = [NSMutableArray arrayWithArray:@[
+                                                                     @(SettingCellTypeAbout),
+                                                                      @(SettingCellTypeUserProtocol),
+                                                                      @(SettingCellTypePrivacyProtocol),
+                                                                     @(SettingCellTypeBusinessLicense),]];
+            if ([TTAccountManager isLogin] && !self.disableDouyinIconLoginSetting) {
+                [array addObject:@(SettingCellTypeFHAccountBindingSetting)];
+            }
+            return array;
+        }
         case kTTSettingSectionTypeLogout:
             return @[@(SettingCellTypeLogout)];
 //        case kTTSettingSectionTypeLogoutUnRegister:
@@ -1252,13 +1282,20 @@ TTEditUserProfileViewControllerDelegate
 
 - (void)_showIPhoneActionSheetForClearCache
 {
-    UIActionSheet * sheet = [[UIActionSheet alloc] initWithTitle:NSLocalizedString(@"确定删除所有缓存？离线内容及图片均会被清除", nil)
-                                                        delegate:self
-                                               cancelButtonTitle:NSLocalizedString(@"取消", nil)
-                                          destructiveButtonTitle:nil
-                                               otherButtonTitles:NSLocalizedString(@"确定", nil), nil];
-    sheet.tag = kActionSheetForClearCacheTag;
-    [sheet showInView:self];
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"确定删除所有缓存？离线内容及图片均会被清除", nil) message:nil preferredStyle:UIAlertControllerStyleActionSheet];
+    
+    UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:NSLocalizedString(@"取消", nil) style:UIAlertActionStyleCancel handler:nil];
+    
+    WeakSelf;
+    UIAlertAction *confirmAction = [UIAlertAction actionWithTitle:NSLocalizedString(@"确定", nil) style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+        StrongSelf;
+        [self clearCache];
+    }];
+    
+    [alert addAction:cancelAction];
+    [alert addAction:confirmAction];
+
+    [self.viewController presentViewController:alert animated:YES completion:nil];
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
@@ -1328,6 +1365,8 @@ TTEditUserProfileViewControllerDelegate
         [self showEditUserView:nil]; //编辑资料
     } else if (cellType == SettingCellTypeAccountBindingSetting) {
         [self openAccountBindingSettingDidSelectCell:nil];
+    } else if (cellType == SettingCellTypeFHAccountBindingSetting) {
+        [self openFHAccountBindingSettingDidSelectCell];
     } else if (cellType == SettingCellTypeBlockUsersList) {
         [ self openUserBlacklistsDidSelectCell:nil];
     } else if (cellType == SettingCellTypeLogout) {
@@ -1429,10 +1468,23 @@ TTEditUserProfileViewControllerDelegate
 
 - (void)logout {
     NSString *userID = [TTAccountManager userID];
-    
+    __block NSMutableDictionary *tracker = [NSMutableDictionary dictionary];
+    tracker[@"params_for_special"] = @"uc_login";
+    tracker[@"uid"] = userID?:@"";
+    tracker[@"trigger"] = @"user";
+    TRACK_EVENT(@"uc_user_logout_click", tracker.copy);
     WeakSelf;
-    [TTAccountManager startLogoutUserWithCompletion:^(BOOL success, NSError *error) {
+    [TTAccount logoutInScene:TTAccountLogoutSceneNormal completion:^(BOOL success, NSError * _Nullable error) {
         StrongSelf;
+        
+        if (error) {
+            tracker[@"status"] = @"fail";
+            tracker[@"error_code"] = [@(error.code) stringValue];
+            tracker[@"fail_info"] = error.localizedDescription;
+        } else {
+            tracker[@"status"] = @"success";
+        }
+        TRACK_EVENT(@"uc_user_logout_result", tracker.copy);
         
         BOOL shouldIgnoreError = NO;
         //未设置密码也可以退出登录
@@ -1467,6 +1519,9 @@ TTEditUserProfileViewControllerDelegate
             [sendPhoneNumberCache removeObjectForKey:kFHPLoginhoneNumberCacheKey];
         }
     }];
+//    [TTAccountManager startLogoutUserWithCompletion:^(BOOL success, NSError *error) {
+//        
+//    }];
 }
 
 - (void)feedbackButtonClicked:(id)sender
@@ -1582,6 +1637,12 @@ TTEditUserProfileViewControllerDelegate
     wrapperTrackEvent(@"setting", @"enter_edit_account");
     
     TTAccountBindingViewController *vc = [[TTAccountBindingViewController alloc] init];
+    UINavigationController *topNav = [TTUIResponderHelper topNavigationControllerFor:self];
+    [topNav pushViewController:vc animated:YES];
+}
+
+-(void)openFHAccountBindingSettingDidSelectCell{
+    FHAccountBindingViewController *vc = [[FHAccountBindingViewController alloc]initWithRouteParamObj:nil];
     UINavigationController *topNav = [TTUIResponderHelper topNavigationControllerFor:self];
     [topNav pushViewController:vc animated:YES];
 }

@@ -19,7 +19,7 @@
 #import "TTLabel.h"
 #import "TTIconLabel+VerifyIcon.h"
 #import "ExploreAvatarView+VerifyIcon.h"
-#import <TTInstallJSONHelper.h>
+//#import <TTInstallJSONHelper.h>
 #import "SSCommonLogic.h"
 #import <TTBaseLib/TTBusinessManager+StringUtils.h>
 #import <TTPlatformBaseLib/TTTrackerWrapper.h>

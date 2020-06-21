@@ -8,16 +8,18 @@
 #import "FHPersonalHomePageHeaderView.h"
 #import "UIColor+Theme.h"
 #import "UIFont+House.h"
-#import <Masonry.h>
+#import "Masonry.h"
 #import "TTDeviceHelper.h"
 #import "FHPersonalHomePageItemView.h"
-#import <UIImageView+BDWebImage.h>
-#import <TTRoute.h>
+#import "UIImageView+BDWebImage.h"
+#import "TTRoute.h"
 #import "TTPhotoScrollViewController.h"
 #import "TTBaseMacro.h"
 #import "TTInteractExitHelper.h"
 #import "FHUserTracker.h"
 #import "TTAccountManager.h"
+#import "TTUGCAttributedLabel.h"
+#import "YYTextLayout.h"
 
 #define iconWidth 60
 #define topMargin 20
@@ -34,6 +36,7 @@
 @property(nonatomic, strong) FHPersonalHomePageItemView *focusView;
 @property(nonatomic, strong) FHPersonalHomePageModel *model;
 @property(nonatomic, strong) NSDictionary *tracerDic;
+@property(nonatomic ,strong) TTUGCAttributedLabel *descLabel;
 
 @end
 
@@ -49,6 +52,7 @@
 }
 
 - (void)initViews {
+    self.headerViewheight = 100;// 默认值
     self.backgroundColor = [UIColor whiteColor];
     
     self.icon = [[UIImageView alloc] init];
@@ -56,6 +60,8 @@
     _icon.contentMode = UIViewContentModeScaleAspectFill;
     _icon.layer.masksToBounds = YES;
     _icon.layer.cornerRadius = iconWidth/2;
+    _icon.layer.borderWidth = 1;
+    _icon.layer.borderColor = [[UIColor themeGray6] CGColor];
     [self addSubview:_icon];
     
     _icon.userInteractionEnabled = YES;
@@ -77,6 +83,22 @@
         [wself focusClicked];
     };
     [self addSubview:_focusView];
+    
+    self.descLabel = [[TTUGCAttributedLabel alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width - 20 * 2, 0)];
+    _descLabel.numberOfLines = 0;
+    _descLabel.font = [UIFont themeFontRegular:13];
+    _descLabel.layer.masksToBounds = YES;
+    _descLabel.backgroundColor = [UIColor whiteColor];
+    NSDictionary *linkAttributes = @{
+                                     NSForegroundColorAttributeName : [UIColor themeGray3],
+                                     NSFontAttributeName : [UIFont themeFontRegular:13]
+                                     };
+    self.descLabel.linkAttributes = linkAttributes;
+    self.descLabel.activeLinkAttributes = linkAttributes;
+    self.descLabel.inactiveLinkAttributes = linkAttributes;
+    _descLabel.delegate = nil;
+    self.descLabel.hidden = YES;
+    [self addSubview:_descLabel];
     
     self.spLine = [[UIView alloc] init];
     _spLine.backgroundColor = [UIColor themeGray6];
@@ -114,6 +136,12 @@
         make.centerY.mas_equalTo(self.commentView);
         make.height.mas_equalTo(33);
     }];
+    
+    [self.descLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.mas_equalTo(self).offset(20);
+        make.right.mas_equalTo(self).offset(-20);
+        make.top.mas_equalTo(self.icon.mas_bottom).offset(10);
+    }];
 }
 
 - (UILabel *)LabelWithFont:(UIFont *)font textColor:(UIColor *)textColor {
@@ -138,6 +166,21 @@
     }else{
         [self.commentView updateWithTopContent:@"*" bottomContent:@"评论"];
         [self.focusView updateWithTopContent:@"*" bottomContent:@"关注"];
+    }
+    if (model.data.desc && [model.data.desc isKindOfClass:[NSString class]] && model.data.desc.length > 0) {
+        self.descLabel.hidden = NO;
+        NSString *descText = [NSString stringWithFormat:@"简介：%@",model.data.desc];
+        NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:descText attributes:@{NSForegroundColorAttributeName : [UIColor themeGray3],NSFontAttributeName : [UIFont themeFontRegular:13]}];
+        self.descLabel.attributedText = attributedString;
+        
+        YYTextLayout *layout = [YYTextLayout layoutWithContainerSize:CGSizeMake([UIScreen mainScreen].bounds.size.width - 20 * 2, MAXFLOAT) text:attributedString];
+        CGFloat height= layout.textBoundingSize.height;
+        self.headerViewheight = 100 + height;
+        [self.descLabel setText:attributedString];
+        [self.descLabel sizeToFit];
+    } else {
+        self.descLabel.hidden = YES;
+        self.headerViewheight = 100;
     }
 }
 

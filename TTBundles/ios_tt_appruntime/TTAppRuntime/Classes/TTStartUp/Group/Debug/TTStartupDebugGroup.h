@@ -5,7 +5,7 @@
 //  Created by fengyadong on 17/1/17.
 //
 //
-#if 0
+#if INHOUSE
 #import "TTStartupGroup.h"
 
 typedef NS_ENUM(NSUInteger, TTDebugStartupType) {
@@ -16,6 +16,6 @@ typedef NS_ENUM(NSUInteger, TTDebugStartupType) {
 @interface TTStartupDebugGroup : TTStartupGroup
 
 + (TTStartupDebugGroup *)debugGroup;
-
++ (void)checkShouldSimulateStartCrash;
 @end
 #endif

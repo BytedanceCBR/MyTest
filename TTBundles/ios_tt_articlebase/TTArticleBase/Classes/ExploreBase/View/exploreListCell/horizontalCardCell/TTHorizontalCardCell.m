@@ -25,16 +25,16 @@
 #import "TTDeviceUIUtils.h"
 #import "TSVTransitionAnimationManager.h"
 #import "TTHorizontalHuoShanLoadingCell.h"
-#import <extobjc.h>
+#import "extobjc.h"
 #import "ArticleImpressionHelper.h"
 #import "TTDeviceHelper.h"
 #import "TTShortVideoHelper.h"
 #import "ExploreOrderedData+TTAd.h"
-#import <TTRelevantDurationTracker.h>
+#import "TTRelevantDurationTracker.h"
 #import "TSVChannelDecoupledConfig.h"
 #import "TSVShortVideoDecoupledFetchManager.h"
-#import <ReactiveObjC.h>
-#import <TSVPrefetchVideoManager.h>
+#import "ReactiveObjC.h"
+#import "TSVPrefetchVideoManager.h"
 #import "TTUISettingHelper.h"
 //#import "ExploreOrderDataSimpleWitnessRecorder.h"
 #import "TSVHorizontalCardCellInfoView.h"
@@ -665,11 +665,14 @@ static CGFloat const kMinimumLineSpacing = 6;
 
 - (void)needRerecordImpressions
 {
-    NSArray<NSIndexPath *> *visibileIndexPaths = [self.collectionView indexPathsForVisibleItems];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        NSArray<NSIndexPath *> *visibileIndexPaths = [self.collectionView indexPathsForVisibleItems];
+        
+        for (NSIndexPath *indexPath in visibileIndexPaths) {
+            [self processImpressionForItemAtIndexPath:indexPath status:_isDisplaying ? SSImpressionStatusRecording : SSImpressionStatusSuspend];
+        }
+    });
     
-    for (NSIndexPath *indexPath in visibileIndexPaths) {
-        [self processImpressionForItemAtIndexPath:indexPath status:_isDisplaying ? SSImpressionStatusRecording : SSImpressionStatusSuspend];
-    }
 }
 
 #pragma mark - 视频预加载

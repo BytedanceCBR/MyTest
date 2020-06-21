@@ -38,13 +38,13 @@
 #import "TTDeviceHelper.h"
 #import "UIImage+TTThemeExtension.h"
 #import "TTRoute.h"
-#import <TTShareManager.h>
-#import <TTShareActivity.h>
+#import "TTShareManager.h"
+#import "TTShareActivity.h"
 #import "UIViewController+Refresh_ErrorHandler.h"
 #import "TTUserSettings/TTUserSettingsManager+FontSettings.h"
 #import "TTIndicatorView.h"
 #import "SSNavigationBar.h"
-#import <TTInteractExitHelper.h>
+#import "TTInteractExitHelper.h"
 #import <TTRoute/TTRoute.h>
 #import "WDListCellLayoutModel.h"
 #import "WDListCellViewModel.h"
@@ -54,6 +54,7 @@
 #import "WDListBottomButton.h"
 #import "TTAccountManager.h"
 #import "FHUserTracker.h"
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 
 #define kListBottomBarHeight (self.view.tt_safeAreaInsets.bottom ? self.view.tt_safeAreaInsets.bottom + 44 : 44)
 
@@ -122,7 +123,7 @@ static NSString * const WukongListTipsHasShown = @"kWukongListTipsHasShown";
         [dict setValue:_rid forKey:@"rule_id"];
         [dict setValue:self.viewModel.qID forKey:@"group_id"];
         [dict setValue:@"wenda_question" forKey:@"message_type"];
-        [TTTracker eventV3:@"push_page_back_to_feed" params:[dict copy]];
+        [BDTrackerProtocol eventV3:@"push_page_back_to_feed" params:[dict copy]];
     }
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
@@ -143,10 +144,18 @@ static NSString * const WukongListTipsHasShown = @"kWukongListTipsHasShown";
     self.adjustPosition = ([[paramObj.allParams objectForKey:@"isLargeVideo"] boolValue] && [[paramObj.allParams objectForKey:@"video_auto_play"] boolValue]);
     NSDictionary *apiParam = [WDParseHelper apiParamFromBaseCondition:paramObj.allParams];
     NSDictionary *extraDicts = [WDParseHelper gdExtJsonFromBaseCondition:paramObj.allParams];
+    NSMutableDictionary *extraDictsAdd = [NSMutableDictionary dictionaryWithDictionary:extraDicts];
+    NSDictionary *tracer = paramObj.allParams[@"tracer"];
+    if(tracer && tracer.count > 0){
+        extraDictsAdd[@"enter_from"] = tracer[@"enter_from"];
+        extraDictsAdd[@"origin_from"] = tracer[@"origin_from"];
+        extraDictsAdd[@"category_name"] = tracer[@"category_name"];
+    }
+    
     BOOL needReturn = [[paramObj.userInfo.extra tt_stringValueForKey:kWDListNeedReturnKey] boolValue];
     NSString *rid = [paramObj.allParams tt_stringValueForKey:@"rid"];
     self = [self initWithQuestionID:qid
-                      baseCondition:extraDicts
+                      baseCondition:extraDictsAdd
                        apiParameter:apiParam
                          needReturn:needReturn
                                 rid:rid];
@@ -227,7 +236,7 @@ static NSString * const WukongListTipsHasShown = @"kWukongListTipsHasShown";
         [v3Dic removeObjectForKey:@"article_type"];
         [v3Dic removeObjectForKey:@"pct"];
         [v3Dic setValue:self.viewModel.qID forKey:@"group_id"];
-        [TTTracker eventV3:@"go_detail" params:v3Dic isDoubleSending:NO];
+        [BDTrackerProtocol eventV3:@"go_detail" params:v3Dic isDoubleSending:NO];
         self.goDetailDict = v3Dic;
 
         
@@ -368,7 +377,9 @@ static NSString * const WukongListTipsHasShown = @"kWukongListTipsHasShown";
         [self.view addSubview:self.answerListView];
     }
     CGFloat bottomSafeHeight = 0;
-    if (@available(iOS 11.0 , *)) {
+    if (@available(iOS 13.0 , *)) {
+        bottomSafeHeight = [UIApplication sharedApplication].keyWindow.safeAreaInsets.bottom;
+    } else if (@available(iOS 11.0 , *)) {
         bottomSafeHeight = self.view.tt_safeAreaInsets.bottom;
     }
     self.bottomButtonHeight = 48 + bottomSafeHeight;
@@ -407,7 +418,7 @@ static NSString * const WukongListTipsHasShown = @"kWukongListTipsHasShown";
 }
 
 - (void)gotoPostWDAnswer {
-    NSString *routeUrl = @"sslocal://ugc_post_wd_answer";
+    NSString *routeUrl = @"sslocal://wenda_post";
     NSURL *openUrl = [NSURL URLWithString:routeUrl];
     NSMutableDictionary *dict = @{}.mutableCopy;
     if (self.qid.length > 0) {
@@ -622,9 +633,9 @@ static void extracted(WDWendaListViewController *object, WDWendaListViewControll
                 self.listFooterView.height = kWDWendaListFooterViewHeight + bottom;
                 _answerListView.tableFooterView = self.listFooterView;
                 WeakSelf;
-                [self.listFooterView setTitle:[NSString stringWithFormat:@"%@",self.viewModel.moreListAnswersTitle] isShowArrow:YES isNoAnswers:NO clickedBlock:^{
-                    StrongSelf;
-                    [self _enterMoreListController];
+                [self.listFooterView setTitle:[NSString stringWithFormat:@"%@",self.viewModel.moreListAnswersTitle] isShowArrow:NO isNoAnswers:NO clickedBlock:^{
+//                    StrongSelf;
+//                    [self _enterMoreListController];
                 }];
             } else {
                 // 查看0个折叠回答
@@ -721,7 +732,7 @@ static void extracted(WDWendaListViewController *object, WDWendaListViewControll
     [dict setValue:[self.viewModel.gdExtJson objectForKey:@"category_name"] forKey:@"category_name"];
     dict[@"event_type"] = @"house_app2c_v2";
 
-    [TTTracker eventV3:@"read_pct" params:[dict copy]];
+    [BDTrackerProtocol eventV3:@"read_pct" params:[dict copy]];
 }
 
 #pragma mark frame
@@ -892,7 +903,7 @@ static void extracted(WDWendaListViewController *object, WDWendaListViewControll
     dict[@"enter_from"] = [self enterFrom];
 
     [dict setValue:[[self class] sharePlatformByRequestType: requestType] forKey:@"share_platform"];
-    [TTTracker eventV3:@"rt_share_to_platform" params:[dict copy]];
+    [BDTrackerProtocol eventV3:@"rt_share_to_platform" params:[dict copy]];
 
 
 }
@@ -930,7 +941,8 @@ static void extracted(WDWendaListViewController *object, WDWendaListViewControll
         media_id = [self.viewModel.gdExtJson objectForKey:@"ansid"];
     }
     [extraDict setValue:media_id forKey:@"media_id"];
-    ttTrackEventWithCustomKeys(kWDWendaListViewControllerUMEventName, label, self.viewModel.qID, nil, extraDict);
+    [BDTrackerProtocol trackEventWithCustomKeys:kWDWendaListViewControllerUMEventName label:label value:self.viewModel.qID source:nil extraDic:extraDict];
+//    ttTrackEventWithCustomKeys(kWDWendaListViewControllerUMEventName, label, self.viewModel.qID, nil, extraDict);
 }
 
 #pragma mark - UIScrollViewDelegate
@@ -988,7 +1000,7 @@ static void extracted(WDWendaListViewController *object, WDWendaListViewControll
     NSMutableDictionary * dict = [NSMutableDictionary dictionaryWithDictionary:dictInfo];
     [dict setValue:kWDWendaListViewControllerUMEventName forKey:@"tag"];
     [dict setValue:@"umeng" forKey:@"category"];
-    [TTTracker eventData:dict];
+    [BDTrackerProtocol eventData:dict];
 }
 
 #pragma mark -- stay page
@@ -1034,7 +1046,7 @@ static void extracted(WDWendaListViewController *object, WDWendaListViewControll
         
         [v3Dic removeObjectForKey:@"author_id"];
 
-        [TTTracker eventV3:@"stay_page" params:v3Dic isDoubleSending:NO];
+        [BDTrackerProtocol eventV3:@"stay_page" params:v3Dic isDoubleSending:NO];
         
         NSString *groupId = self.viewModel.qID;
         NSString *ansId = [self.viewModel.gdExtJson objectForKey:@"ansid"];

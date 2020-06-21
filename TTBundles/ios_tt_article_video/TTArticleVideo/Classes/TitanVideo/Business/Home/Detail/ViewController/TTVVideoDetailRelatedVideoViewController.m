@@ -41,6 +41,7 @@
 #import <objc/runtime.h>
 #import <TTPlatformBaseLib/TTTrackerWrapper.h>
 #import <TTArticleBase/Log.h>
+#import "FHUserTracker.h"
 
 @interface TTVDetailRelatedTableViewItem (sourceRelatedItemCarried)
 
@@ -299,7 +300,8 @@
                     }
                 }
                 [traceParams setValue: @"be_null" forKey:@"cell_type"];
-                [TTTracker eventV3:@"client_show" params:traceParams];
+//                [BDTrackerProtocol eventV3:@"client_show" params:traceParams];
+                [FHUserTracker writeEvent:@"client_show" params:traceParams];
 
                 [self.traceIdDict setObject:@"" forKey:itemId];
             }
@@ -376,7 +378,7 @@
             else {
                 wrapperTrackEvent(@"detail", label);
             }
-            CLS_LOG(@"didReceiveMemoryWarning");
+            // CLS_LOG(@"didReceiveMemoryWarning");
             
             if (!article.hasVideoItem) {
                 return;

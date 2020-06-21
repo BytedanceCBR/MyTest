@@ -29,7 +29,8 @@
 #import "FHCommonApi.h"
 #import "TTSandBoxHelper.h"
 #import "TTIndicatorView.h"
-#import <UIColor+Theme.h>
+#import "UIColor+Theme.h"
+#import "TTAccountManager.h"
 
 
 #define kTTCommentCellDigButtonHitTestInsets UIEdgeInsetsMake(-30, -30, -10, -30)
@@ -114,7 +115,7 @@
                               [self refreshNameView];
                           }];
     self.layout = layout;
-    self.backgroundColorThemeKey = model.isStick? kColorBackground22: kColorBackground4;
+    self.backgroundColorThemeKey = kColorBackground4;
     [self refreshAvatarView];
     [self refreshDigButton];
     [self refreshNameView];
@@ -433,6 +434,11 @@
 - (BOOL)canBecomeFirstResponder {
     return YES;
 }
+//- (void)panRecognizer:(UIGestureRecognizer*)recognizer {
+//    if (recognizer.state == UIGestureRecognizerStateBegan) {
+//        [self willHideMenu];
+//    }
+//}
 
 - (void)handleLongPress:(UIGestureRecognizer*)recognizer {
     if (recognizer.state == UIGestureRecognizerStateBegan) {
@@ -457,7 +463,12 @@
     [self resetContentLabelBackgroundColor];
 
     UIMenuController *menu = [UIMenuController sharedMenuController];
-    menu.menuItems = self.menuItems;
+    if ([menu isMenuVisible]) {
+        [menu setMenuVisible:NO animated:YES];
+        return;
+    }
+//    UIMenuController *menu = [UIMenuController sharedMenuController];
+//    menu.menuItems = self.menuItems;
 }
 
 - (BOOL)canPerformAction:(SEL)action withSender:(__unused id)sender {
@@ -573,9 +584,36 @@
             StrongSelf;
             [self digButtonOnClick:nil];
         }];
-    
+        
+        _digButton.shouldClickBlock = ^BOOL{
+            StrongSelf;
+            BOOL ret = [TTAccountManager isLogin];
+            if(ret == NO) {
+                [self gotoLogin];
+            }
+            return ret;
+        };
     }
     return _digButton;
+}
+
+- (void)gotoLogin {
+    NSMutableDictionary *params = [NSMutableDictionary dictionary];
+    NSString *enterFrom = self.tracerDict[@"enter_from"]?:@"feed_detail";
+    [params setObject:enterFrom forKey:@"enter_from"];
+    [params setObject:@"feed_like" forKey:@"enter_type"];
+    // 登录成功之后不自己Pop，先进行页面跳转逻辑，再pop
+    [params setObject:@(YES) forKey:@"need_pop_vc"];
+    params[@"from_ugc"] = @(YES);
+    __weak typeof(self) wSelf = self;
+    [TTAccountLoginManager showAlertFLoginVCWithParams:params completeBlock:^(TTAccountAlertCompletionEventType type, NSString * _Nullable phoneNum) {
+        if (type == TTAccountAlertCompletionEventTypeDone) {
+            // 登录成功
+            if ([TTAccountManager isLogin]) {
+                [wSelf digButtonOnClick:wSelf.digButton];
+            }
+        }
+    }];
 }
 
 - (TTAsyncLabel *)userInfoLabel {
@@ -631,6 +669,12 @@
         [_contentLabel addGestureRecognizer:({
             [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(handleLongPress:)];
         })];
+//        UIPanGestureRecognizer *panGestureRecognizer = [[UIPanGestureRecognizer alloc]initWithTarget:self action:@selector(panRecognizer:)];
+//        panGestureRecognizer.cancelsTouchesInView = NO;
+//        [_contentLabel addGestureRecognizer:panGestureRecognizer];
+//        [_contentLabel addGestureRecognizer:({
+//            [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(panRecognizer:)];
+//        })];
     }
     return _contentLabel;
 }

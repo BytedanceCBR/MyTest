@@ -9,8 +9,8 @@
 #import "FHHouseDetailAPI.h"
 #import "FHDetailNewTimeLineItemCell.h"
 #import "FHDetailNewModel.h"
-#import <FHRefreshCustomFooter.h>
-#import <FHEnvContext.h>
+#import "FHRefreshCustomFooter.h"
+#import "FHEnvContext.h"
 
 @interface FHFloorTimeLineViewModel()<UITableViewDelegate,UITableViewDataSource>
 
@@ -86,6 +86,7 @@
                 wSelf.refreshFooter.hidden = NO;
                 wSelf.currentPage ++;
                 [wSelf processDetailData:model];
+                [wSelf.navBar showMessageNumber];
             }else
             {
                 wSelf.detailController.hasValidateData = NO;
@@ -113,6 +114,9 @@
     [self updateTableViewWithMoreData:model.data.hasMore];
 
     [self.currentItems addObjectsFromArray:itemsArray];
+    
+    UIView *bottomBar = [self.detailController getBottomBar];
+    bottomBar.hidden = YES;
 
     [_timeLineListTable reloadData];
 }

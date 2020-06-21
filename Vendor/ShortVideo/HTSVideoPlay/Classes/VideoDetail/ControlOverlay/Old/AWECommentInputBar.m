@@ -9,18 +9,18 @@
 #import "AWECommentInputBar.h"
 #import "HTSVideoPlayColor.h"
 #import "HTSVideoPlayToast.h"
-#import "TTDeviceHelper.h"
+#import <TTBaseLib/TTDeviceUIUtils.h>
 #import "SSThemed.h"
 #import "TTThemeConst.h"
 #import "UIImageAdditions.h"
 #import <TTUGCFoundation/TTUGCTextView.h>
 #import <TTUGCFoundation/TTUGCTextViewMediator.h>
-#import <UIViewAdditions.h>
+#import "UIViewAdditions.h"
 #import "UIColor+Theme.h"
 #import <TTBaseLib/UITextView+TTAdditions.h>
 #import <TTUGCFoundation/TTRichSpanText.h>
 #import <TTBaseLib/NSObject+MultiDelegates.h>
-#import <TTCommentDefines.h>
+#import "TTCommentDefines.h"
 
 static struct timeval kFHCommentTimeval;
 

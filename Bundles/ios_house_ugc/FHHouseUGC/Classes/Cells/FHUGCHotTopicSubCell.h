@@ -11,6 +11,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FHUGCHotTopicSubCell : FHUGCBaseCollectionCell
 
+- (void)refreshWithData:(id)data index:(NSInteger)index;
+
 @end
 
 NS_ASSUME_NONNULL_END

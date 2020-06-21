@@ -94,7 +94,7 @@
         }];
         self.configDisposable = disposable;
         
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(connectionChanged:) name:kReachabilityChangedNotification object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(connectionChanged:) name:TTReachabilityChangedNotification object:nil];
         
         _networkConnected = [TTReachability isNetworkConnected];
         

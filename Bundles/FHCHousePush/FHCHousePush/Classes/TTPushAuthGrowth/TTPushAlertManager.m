@@ -7,10 +7,10 @@
 //
 
 #import "TTPushAlertManager.h"
-#import <TTKeyboardListener.h>
+#import "TTKeyboardListener.h"
 #import "TTInAppPushSettings.h"
-#import <TTAccountLoginManager.h>
-#import <TTPhotoScrollViewController.h>
+#import "TTAccountLoginManager.h"
+#import "TTPhotoScrollViewController.h"
 //#import "FRPhotoBrowserViewController.h"
 #import <TTDialogDirector/TTDialogDirector.h>
 #import <FHHouseDetail/FHDetailPictureViewController.h>
@@ -193,31 +193,29 @@ static TTPushWeakAlertPageType s_currentPageType = TTPushWeakAlertPageTypeNone;
 
 + (BOOL)meetsWeakAlertCondition
 {
-//    if ([self.class isFullScreenVideoPlaying]) {
-//        return NO;
-//    }
+    if ([self.class isFullScreenVideoPlaying]) {
+        return NO;
+    }
+    if ([self.class isFullScreenPhotoBrowsering]) {
+        return NO;
+    }
+    if ([TTAccountLoginManager isLoginAlertShowing]) {
+        return NO;
+    }
+    if ([TTStrongPushAlertView isShowing]) {
+        return NO;
+    }
+    if ([TTWeakPushAlertView isShowing]) {
+        return NO;
+    }
+    if ([TTInAppPushSettings weakAlertShowPageScope] == 1) {
+        return YES;
+    }
+    if (TTPushWeakAlertPageTypeNone != s_currentPageType) {
+        return YES;
+    }
+
     return YES;
-//    if ([self.class isFullScreenPhotoBrowsering]) {
-//        return NO;
-//    }
-//    if ([TTAccountLoginManager isLoginAlertShowing]) {
-//        return NO;
-//    }
-//    if ([TTStrongPushAlertView isShowing]) {
-//        return NO;
-//    }
-//    if ([TTWeakPushAlertView isShowing]) {
-//        return NO;
-//    }
-//
-//    if ([TTInAppPushSettings weakAlertShowPageScope] == 1) {
-//        return YES;
-//    }
-//    if (TTPushWeakAlertPageTypeNone != s_currentPageType) {
-//        return YES;
-//    }
-//
-//    return NO;
 }
 
 + (BOOL)isFullScreenVideoPlaying

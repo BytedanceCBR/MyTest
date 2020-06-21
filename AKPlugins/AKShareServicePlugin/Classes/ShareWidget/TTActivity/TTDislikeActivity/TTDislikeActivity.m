@@ -7,7 +7,7 @@
 //
 
 #import "TTDislikeActivity.h"
-#import <TTShareManager.h>
+#import "TTShareManager.h"
 
 NSString * const TTActivityTypeDislike = @"com.toutiao.UIKit.activity.Dislike";
 

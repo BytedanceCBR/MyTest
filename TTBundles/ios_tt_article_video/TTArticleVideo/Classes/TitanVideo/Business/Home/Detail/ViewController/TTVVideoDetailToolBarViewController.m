@@ -54,8 +54,8 @@
 #import "TTVPlayVideo.h"
 #import <BDTArticle/Article.h>
 //新分享库
-#import <TTShareActivity.h>
-#import <TTShareManager.h>
+#import "TTShareActivity.h"
+#import "TTShareManager.h"
 #import "TTPanelActivity.h"
 #import "TTAdPromotionContentItem.h"
 #import "NSDictionary+TTGeneratedContent.h"
@@ -71,7 +71,7 @@
 #import <TTKitchenExtension/TTKitchenExtension.h>
 #import "BDPlayerObjManager.h"
 #import "TTDirectForwardWeitoutiaoContentItem.h"
-#import <TTDirectForwardWeitoutiaoActivity.h>
+#import "TTDirectForwardWeitoutiaoActivity.h"
 #import "TTVVideoDetailViewController.h"
 //#import "TTRepostService.h"
 
@@ -650,7 +650,7 @@ extern NSInteger ttvs_isShareTimelineOptimize(void);
         [paramsDict addEntriesFromDictionary:self.detailModel.reportParams];
     }
 
-    [TTTracker eventV3:@"rt_post_comment" params:paramsDict];
+    [BDTrackerProtocol eventV3:@"rt_post_comment" params:paramsDict];
 
     [commentView dismissAnimated:YES];
     commentWriteManager.delegate = nil;

@@ -6,7 +6,7 @@
 //
 
 #import "AKProfileLoginButton.h"
-#import <UIColor+TTThemeExtension.h>
+#import "UIColor+TTThemeExtension.h"
 #import <TTNewsAccountBusiness/TTAccountManagerDefine.h>
 #import <TTBaseLib/UIViewAdditions.h>
 #import <TTBaseLib/TTDeviceUIUtils.h>

@@ -23,6 +23,10 @@ static NSString *const kFHUGCDelPostNotification = @"k_fh_ugc_del_post_finish";
 static NSString *const kFHUGCReportPostNotification = @"k_fh_ugc_report_post_finish";
 // 关注tab是否有新内容的通知
 static NSString *const kFHUGCFocusTabHasNewNotification = @"k_fh_ugc_focus_tab_has_new";
+// 推荐tab是否有新内容的通知
+static NSString *const kFHUGCRecomendTabHasNewNotification = @"k_fh_ugc_recomend_tab_has_new";
+// 圈子tab是否有新内容的通知
+static NSString *const kFHUGCCommunityTabHasNewNotification = @"k_fh_ugc_community_tab_has_new";
 // 置顶和取消置顶成功通知 数放在userinfo的：social_group_id
 static NSString *const kFHUGCTopPostNotification = @"k_fh_ugc_top_post_finish";
 // 加精和取消加精成功通知 数放在userinfo的：social_group_id
@@ -43,6 +47,10 @@ static NSString *const kFHUGCGoodPostNotification = @"k_fh_ugc_good_post_finish"
 @property (nonatomic, assign) BOOL isAlreadyShowFeedGuide;
 // 是否关注列表有新内容
 @property (nonatomic, assign) BOOL ugcFocusHasNew;
+// 邻里tab是否有新内容
+@property (nonatomic, assign) BOOL ugcHasNew;
+// 圈子频道是否有内容
+@property (nonatomic, assign) BOOL ugcCommunityHasNew;
 @property (nonatomic, assign) double behotTime;
 
 // 关注列表
@@ -88,6 +96,8 @@ static NSString *const kFHUGCGoodPostNotification = @"k_fh_ugc_good_post_finish"
 - (NSArray *)ugcDetailLeadSuggest;
 
 - (void)recordHideRedPointTime;
+- (void)recordHideUGCRedPointTime;
+- (void)recordHideCommunityRedPointTime;
 
 
 /**

@@ -29,8 +29,8 @@
 #import "TTVPlayerCacheProgressController.h"
 #import "TTVDemanderTrackerManager.h"
 
-#import <TTShareActivity.h>
-#import <TTShareManager.h>
+#import "TTShareActivity.h"
+#import "TTShareManager.h"
 #import "TTPanelActivity.h"
 #import "TTShareMethodUtil.h"
 #import "TTActivityShareSequenceManager.h"

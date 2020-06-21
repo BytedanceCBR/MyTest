@@ -11,6 +11,7 @@
 #import "FHHouseDetailBaseViewModel.h"
 #import "FHDetailRelatedHouseResponseModel.h"
 #import "FHHouseRentRelatedResponse.h"
+#import "FHHouseListBaseItemModel.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -21,7 +22,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FHDetailRentRelatedHouseModel : FHDetailBaseModel
 
-@property (nonatomic, strong , nullable) FHHouseRentRelatedResponseDataModel *relatedHouseData;
+//@property (nonatomic, strong , nullable) FHHouseRentRelatedResponseDataModel *relatedHouseData;
+@property (nonatomic, strong , nullable) FHHouseListDataModel *relatedHouseData;
 
 @end
 

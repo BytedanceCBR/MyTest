@@ -22,9 +22,10 @@
 #import <TTBaseLib/TTDeviceHelper.h>
 #import <TTBaseLib/TTUIResponderHelper.h>
 #import <TTPlatformBaseLib/TTTrackerWrapper.h>
-#import <Masonry.h>
+#import "Masonry.h"
 #import "UIColor+Theme.h"
 #import "UIFont+House.h"
+#import "UIImage+FIconFont.h"
 
 @interface FHExploreDetailToolbarView ()
 
@@ -69,9 +70,8 @@
         TTAlphaThemedButton *digButton = [TTAlphaThemedButton buttonWithType:UIButtonTypeCustom];
         _digButton = digButton;
         _digButton.hitTestEdgeInsets = toolBarButtonHitTestInsets;
-        _digButton.imageName = @"fh_ugc_toolbar_like_normal";
-        _digButton.selectedImageName = @"fh_ugc_toolbar_like_selected";
-        _digButton.tintColor = [UIColor tt_themedColorForKey:kColorText1];
+        [_digButton setImage:ICON_FONT_IMG(24, @"\U0000e69c", [UIColor themeGray1]) forState:UIControlStateNormal];
+        [_digButton setImage:ICON_FONT_IMG(24, @"\U0000e6b1", [UIColor themeOrange4]) forState:UIControlStateSelected];
         [self addSubview:digButton];
         
         _separatorView = [[SSThemedView alloc] init];

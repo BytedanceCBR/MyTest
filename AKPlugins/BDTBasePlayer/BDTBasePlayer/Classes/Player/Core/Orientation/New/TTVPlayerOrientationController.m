@@ -31,6 +31,8 @@ extern NSString *const TTVDidExitFullscreenNotification;
 @property (nonatomic, weak) UIViewController *destVCForAutoHideHomeIndicator;
 @property (nonatomic, strong) id<AspectToken> autoHideHomeIndicatorToken;
 
+@property (nonatomic, assign)   UIInterfaceOrientation statusBarOrientation; // 记录 状态栏的方向
+
 @end
 
 @implementation TTVPlayerOrientationController
@@ -47,6 +49,7 @@ extern NSString *const TTVDidExitFullscreenNotification;
     if (self) {
         _monitor = [[TTVOrientationMonitor alloc] init];
         _monitor.delegate = self;
+        _statusBarOrientation = UIInterfaceOrientationPortrait;
     }
     return self;
 }
@@ -248,6 +251,11 @@ extern NSString *const TTVDidExitFullscreenNotification;
 
 - (CGAffineTransform)ttv_transformForRotationAngle {
     UIInterfaceOrientation orientation = [UIApplication sharedApplication].statusBarOrientation;
+    // 上述方法 iOS13 不生效了
+//     if (@available(iOS 13.0, *)) {
+//        orientation = self.statusBarOrientation;
+//    }
+    orientation = self.statusBarOrientation;
     if (orientation == UIInterfaceOrientationPortrait) {
         return CGAffineTransformIdentity;
     } else if (orientation == UIInterfaceOrientationLandscapeLeft) {
@@ -276,6 +284,7 @@ extern NSString *const TTVDidExitFullscreenNotification;
         }
     }
     [[UIApplication sharedApplication] setStatusBarOrientation:interfaceOrientation animated:NO];
+    self.statusBarOrientation = interfaceOrientation;
     if (aspectToken) {
         [aspectToken remove];
     }

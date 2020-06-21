@@ -9,7 +9,7 @@
 #import "TTPushResourceMgr.h"
 //#import <SDWebImageDownloader.h>
 #import <BDWebImage/SDWebImageAdapter.h>
-//#import <SDWebImageManager.h>
+//#import "SDWebImageManager.h"
 #import <BDWebImage/SDWebImageAdapter.h>
 
 

@@ -16,19 +16,23 @@
 #import "SSCommonLogic.h"
 #import "UIViewController+NavigationBarStyle.h"
 #import "UIViewController+Track.h"
-#import <Crashlytics/Crashlytics.h>
 #import "TTInteractExitHelper.h"
 #import <TTServiceKit/TTServiceCenter.h>
 #import "TTAdManagerProtocol.h"
-#import <TTInteractExitHelper.h>
+#import "TTInteractExitHelper.h"
 #import "TTInterfaceTipHeader.h"
 #import "TTTopBar.h"
 #import "TTCustomAnimationDelegate.h"
 #import "TTAdSplashMediator.h"
 #import <Masonry/Masonry.h>
 #import "Log.h"
+#import "FHEnvContext.h"
+#import "FHIntroduceManager.h"
 
 @interface ArticleTabBarStyleNewsListViewController ()<TTInteractExitProtocol>
+
+@property (nonatomic, assign) NSTimeInterval stayTime; //页面停留时间
+@property (nonatomic, strong) NSMutableDictionary *traceEnterTopTabache;
 
 @end
 
@@ -132,18 +136,26 @@
     [self.navigationController setNavigationBarHidden:YES animated:YES];
     SharedAppDelegate.mainViewDidShow = YES;
     [[NSNotificationCenter defaultCenter] postNotificationName:@"MainList_ViewAppear" object:nil];
+    
+    if (![FHEnvContext sharedInstance].isShowingHomeHouseFind) {
+         [self viewAppearForEnterType:FHHomeMainTraceEnterTypeClick];
+     }
 }
 
 - (void)viewDidDisappear:(BOOL)animated
 {
     [super viewDidDisappear:animated];
+    
+    if (![FHEnvContext sharedInstance].isShowingHomeHouseFind) {
+        [self viewDisAppearForEnterType:FHHomeMainTraceEnterTypeClick];
+    }
 }
 
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
 
-    if (![TTAdSplashMediator shareInstance].adWillShow) {
+    if (![TTAdSplashMediator shareInstance].adWillShow && ![FHIntroduceManager sharedInstance].isShowing) {
         [[UIApplication sharedApplication] setStatusBarHidden:NO];
     }
     
@@ -184,6 +196,61 @@
         self.view.backgroundColor = [UIColor whiteColor];
 
     }
+}
+
+- (void)viewAppearForEnterType:(FHHomeMainTraceEnterType)enterType
+{
+    self.stayTime = [self getCurrentTime];
+    self.traceEnterTopTabache = [NSMutableDictionary new];
+    
+    if (enterType == FHHomeMainTraceEnterTypeClick) {
+        [self.traceEnterTopTabache setValue:@"click" forKey:@"enter_type"];
+    }else
+    {
+        [self.traceEnterTopTabache setValue:@"flip" forKey:@"enter_type"];
+    }
+    
+    self.stayTime = [self getCurrentTime];
+    
+    [self.traceEnterTopTabache setValue:@"maintab" forKey:@"enter_from"];
+    [self.traceEnterTopTabache setValue:@"discover_stream" forKey:@"category_name"];
+    [FHEnvContext recordEvent:self.traceEnterTopTabache andEventKey:@"enter_category"];
+    
+    NSMutableDictionary *feedCategoryDict = [NSMutableDictionary new];
+    if (self.traceEnterTopTabache) {
+        [feedCategoryDict addEntriesFromDictionary:self.traceEnterTopTabache];
+    }
+    [feedCategoryDict setValue:self.mainVC.categorySelectorView.currentSelectedCategory.categoryID
+                        forKey:@"category_name"];
+    [FHEnvContext recordEvent:feedCategoryDict andEventKey:@"enter_category"];
+}
+
+- (void)viewDisAppearForEnterType:(FHHomeMainTraceEnterType)enterType
+{
+    NSMutableDictionary *tracerDict = [NSMutableDictionary new];
+    if (self.traceEnterTopTabache) {
+        [tracerDict addEntriesFromDictionary:self.traceEnterTopTabache];
+    }
+    
+    NSTimeInterval duration = ([self getCurrentTime] - self.stayTime) * 1000.0;
+    if (duration) {
+        [tracerDict setValue:@((int)duration) forKey:@"stay_time"];
+    }
+    [FHEnvContext recordEvent:tracerDict andEventKey:@"stay_category"];
+    
+    
+    NSMutableDictionary *feedCategoryDict = [NSMutableDictionary new];
+    if (tracerDict) {
+        [feedCategoryDict addEntriesFromDictionary:tracerDict];
+    }
+    [feedCategoryDict setValue:self.mainVC.categorySelectorView.currentSelectedCategory.categoryID
+                        forKey:@"category_name"];
+    [FHEnvContext recordEvent:feedCategoryDict andEventKey:@"stay_category"];
+}
+
+- (NSTimeInterval)getCurrentTime
+{
+    return  [[NSDate date] timeIntervalSince1970];
 }
 
 #pragma mark -

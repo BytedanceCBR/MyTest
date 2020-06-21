@@ -7,7 +7,7 @@
 
 #import <UIKit/UIKit.h>
 #import "TTImageView.h"
-#import <TTVFeedListItem.h>
+#import "TTVFeedListItem.h"
 #import "TTAlphaThemedButton.h"
 #import "TTVFeedContainerBaseView.h"
 #import "TTVFullscreenProtocol.h"

@@ -6,9 +6,9 @@
 //
 
 #import "FHDetailNeighborhoodInfoCell.h"
-#import <Masonry.h>
+#import "Masonry.h"
 #import "UIFont+House.h"
-#import <UIImageView+BDWebImage.h>
+#import "UIImageView+BDWebImage.h"
 #import "FHCommonDefines.h"
 #import "FHDetailOldModel.h"
 #import "FHURLSettings.h"
@@ -22,7 +22,7 @@
 #import "UILabel+House.h"
 #import "UIColor+Theme.h"
 #import <FHCommonUI/UIView+House.h>
-#import <FHCommonDefines.h>
+#import "FHCommonDefines.h"
 #import <TTBaseLib/UIButton+TTAdditions.h>
 #import "FHDetailSchoolInfoItemView.h"
 #import "FHDetailHeaderViewNoMargin.h"
@@ -63,7 +63,7 @@
     
     _infoLabel = [[UILabel alloc]init];
     _infoLabel.font = [UIFont themeFontRegular:15];
-    _infoLabel.textColor = [UIColor themeRed1];
+    _infoLabel.textColor = [UIColor themeOrange1];
     [self addSubview:_infoLabel];
     _infoLabel.textAlignment = NSTextAlignmentLeft;
     
@@ -122,6 +122,7 @@
 @property (nonatomic, assign)   CGFloat       topHeight;
 @property (nonatomic, strong)   FHDetailNeighborhoodConsultView       *consultView;
 @property (nonatomic, strong)   UIView       *schoolView;
+@property (nonatomic, strong)   NSMutableDictionary       *houseShowCache; // 埋点缓存
 
 @end
 
@@ -222,7 +223,7 @@
         if (model.neighborhoodInfo.useSchoolIm) {
             self.schoolView.hidden = YES;
             self.consultView.hidden = NO;
-            self.consultView.nameLabel.text = @"学校资源";
+            self.consultView.nameLabel.text = @"学校资源:";
             self.consultView.infoLabel.text = model.neighborhoodInfo.schoolConsult.text;
             [self.schoolView mas_updateConstraints:^(MASConstraintMaker *make) {
                 make.top.mas_equalTo(26 + self.topHeight);
@@ -243,17 +244,67 @@
     }
 }
 
+#pragma mark - FHDetailScrollViewDidScrollProtocol
+
+- (void)fhDetail_scrollViewDidScroll:(UIView *)vcParentView {
+    if (vcParentView) {
+        CGPoint point = [self convertPoint:CGPointZero toView:vcParentView];
+        if (UIScreen.mainScreen.bounds.size.height - point.y > 150) {
+            [self addHouseShowLog];
+        }
+    }
+}
+
+// 添加house_show 埋点
+- (void)addHouseShowLog
+{
+    FHDetailNeighborhoodInfoModel *model = (FHDetailNeighborhoodInfoModel *)self.currentData;
+    NSDictionary *logPb = nil;
+    NSString *searchId = nil;
+    NSString *groupId = nil;
+    NSString *imprId = nil;
+
+    if (model.neighborhoodInfo) {
+        FHDetailOldDataNeighborhoodInfoModel *neighborhoodInfo = model.neighborhoodInfo;
+        logPb = neighborhoodInfo.logPb;
+        searchId = neighborhoodInfo.searchId;
+        groupId = neighborhoodInfo.groupId.length > 0 ? neighborhoodInfo.groupId : ( neighborhoodInfo.id ? neighborhoodInfo.id : @"be_null");
+        imprId = neighborhoodInfo.imprId.length > 0 ? neighborhoodInfo.imprId : @"be_null";
+    }else if (model.rent_neighborhoodInfo) {
+        FHRentDetailResponseDataNeighborhoodInfoModel *neighborhoodInfo = model.rent_neighborhoodInfo;
+        logPb = neighborhoodInfo.logPb;
+        searchId = neighborhoodInfo.searchId;
+        groupId = neighborhoodInfo.id ? neighborhoodInfo.id : @"be_null";
+        imprId = neighborhoodInfo.imprId.length > 0 ? neighborhoodInfo.imprId : @"be_null";
+    }
+    NSString *tempKey = [NSString stringWithFormat:@"%ld", groupId];
+    if ([self.houseShowCache valueForKey:tempKey]) {
+        return;
+    }
+    [self.houseShowCache setValue:@(YES) forKey:tempKey];
+    // house_show
+    NSMutableDictionary *tracerDic = self.baseViewModel.detailTracerDic.mutableCopy;
+    tracerDic[@"rank"] = @(0);
+    tracerDic[@"card_type"] = @"left_pic";
+    tracerDic[@"log_pb"] = logPb ? logPb : @"be_null";
+    tracerDic[@"house_type"] = @"neighborhood";
+    tracerDic[@"element_type"] = @"neighborhood_detail";
+    tracerDic[@"search_id"] = searchId;
+    tracerDic[@"group_id"] = groupId;
+    tracerDic[@"impr_id"] = imprId;
+    [tracerDic removeObjectsForKeys:@[@"element_from"]];
+    [FHUserTracker writeEvent:@"house_show" params:tracerDic];
+}
+
+
 - (void)imAction
 {
     FHDetailNeighborhoodInfoModel *model = (FHDetailNeighborhoodInfoModel *)self.currentData;
     if (model.neighborhoodInfo.useSchoolIm && model.neighborhoodInfo.schoolConsult.openUrl.length > 0) {
         
         NSMutableDictionary *imExtra = @{}.mutableCopy;
-        imExtra[@"from"] = @"app_oldhouse_school";
         imExtra[@"source_from"] = @"education_type";
         imExtra[@"im_open_url"] = model.neighborhoodInfo.schoolConsult.openUrl;
-        imExtra[kFHClueEndpoint] = [NSString stringWithFormat:@"%ld",FHClueEndPointTypeC];
-        imExtra[kFHCluePage] = [NSString stringWithFormat:@"%ld",FHClueIMPageTypeCOldSchool];
         [model.contactViewModel onlineActionWithExtraDict:imExtra];
         if (self.baseViewModel) {
             [self.baseViewModel addClickOptionLog:@"education_type"];
@@ -361,6 +412,7 @@
     self = [super initWithStyle:style
                 reuseIdentifier:reuseIdentifier];
     if (self) {
+        _houseShowCache = [NSMutableDictionary new];
         [self setupUI];
     }
     return self;

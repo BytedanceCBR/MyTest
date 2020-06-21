@@ -13,19 +13,20 @@
 #import <AMapFoundationKit/AMapFoundationKit.h>
 #import <MAMapKit/MAMapKit.h>
 
-#import <TTDeviceHelper.h>
-#import <TTUIResponderHelper.h>
-#import <UIViewAdditions.h>
-#import <FHEnvContext.h>
-#import <ToastManager.h>
+#import "TTDeviceHelper.h"
+#import "TTUIResponderHelper.h"
+#import "UIViewAdditions.h"
+#import "FHEnvContext.h"
+#import "ToastManager.h"
 #import <AMapSearchKit/AMapSearchKit.h>
-#import <FHEnvContext.h>
+#import "FHEnvContext.h"
 #import "UIViewController+Track.h"
-#import <FHEnvContext.h>
-#import <HMDTTMonitor.h>
+#import "FHEnvContext.h"
+#import "HMDTTMonitor.h"
 #import "FHMyMAAnnotation.h"
 #import "FHDetailMapView.h"
 #import "FHFakeInputNavbar.h"
+#import "UIImage+FIconFont.h"
 
 static NSInteger const kBottomBarTagValue = 100;
 static NSInteger const kBottomButtonLabelTagValue = 1000;
@@ -94,9 +95,14 @@ static MAMapView *kFHPageMapView = nil;
     _keyWordArray = [NSArray arrayWithObjects:@"bank",@"bus",@"subway",@"scholl",@"hospital",@"entertainment",@"shopping",@"gym",@"food", nil];
     _iconImageArray = [NSArray arrayWithObjects:@"icon-bank",@"icon-bus",@"icon-subway",@"icon_education",@"icon_hospital",@"icon-relaxation",@"icon-mall",@"icon_swim",@"icon-restaurant", nil];
     
-    NSInteger selectIndex = [_nameArray indexOfObject:self.searchCategory];
-
-    self.selectedIndex = selectIndex;
+    //修复外部没有传入searchCategory的情况下
+    if (!self.searchCategory.length) {
+        self.searchCategory = self.nameArray.firstObject;
+    }
+    //修复index越界的情况
+    if ([self.nameArray indexOfObject:self.searchCategory] < self.nameArray.count) {
+        self.selectedIndex = [self.nameArray indexOfObject:self.searchCategory];
+    }
     
     [self setUpNaviBar];
     
@@ -145,7 +151,7 @@ static MAMapView *kFHPageMapView = nil;
 
 - (void)setUpNaviBar
 {
-    _naviBar = [[FHDetailMapPageNaviBarView alloc] initWithBackImage:[UIImage imageNamed:@"icon-return"]];
+    _naviBar = [[FHDetailMapPageNaviBarView alloc] init];
     [self.view addSubview:_naviBar];
     
     
@@ -323,12 +329,13 @@ static MAMapView *kFHPageMapView = nil;
         categoryName = @"公交";
     }
     
-    AMapPOIKeywordsSearchRequest *requestPoi = [AMapPOIKeywordsSearchRequest new];
+    AMapPOIAroundSearchRequest *requestPoi = [AMapPOIAroundSearchRequest new];
     requestPoi.keywords = categoryName;
     requestPoi.location = [AMapGeoPoint locationWithLatitude:self.centerPoint.latitude longitude:self.centerPoint.longitude];
     requestPoi.requireExtension = YES;
     requestPoi.requireSubPOIs = YES;
-    requestPoi.cityLimit = YES;
+//    requestPoi.cityLimit = YES;
+    requestPoi.radius = 2000;
     
     [self.searchApi AMapPOIIDSearch:requestPoi];
 }
@@ -360,6 +367,18 @@ static MAMapView *kFHPageMapView = nil;
     CGRect mapFrame = CGRectMake(0, 0, self.view.width, self.view.height - navHeight - bottomHeight);
     if (!kFHPageMapView) {
         kFHPageMapView = [[MAMapView alloc] initWithFrame:mapFrame];// 不会同时出两个页面
+
+        //设置地图style
+        NSString *stylePath = [[NSBundle mainBundle] pathForResource:@"gaode_house_detail_style.data" ofType:nil];
+        NSData *data = [NSData dataWithContentsOfFile:stylePath];
+        NSString *extraPath = [[NSBundle mainBundle] pathForResource:@"gaode_house_detail_style_extra.data" ofType:nil];
+        NSData *extraData = [NSData dataWithContentsOfFile:extraPath];
+        MAMapCustomStyleOptions *options = [MAMapCustomStyleOptions new];
+        options.styleData = data;
+        options.styleExtraData = extraData;
+        [kFHPageMapView setCustomMapStyleOptions:options];
+        [kFHPageMapView setCustomMapStyleEnabled:YES];
+
         kFHPageMapView.zoomLevel  = 14;
         [kFHPageMapView setCenterCoordinate:self.centerPoint];
     }
@@ -507,16 +526,22 @@ static MAMapView *kFHPageMapView = nil;
 #pragma poi Delegate
 - (void)onPOISearchDone:(AMapPOISearchBaseRequest *)request response:(AMapPOISearchResponse *)response
 {
-    AMapPOIKeywordsSearchRequest *searchReqeust = (AMapPOIKeywordsSearchRequest *)request;
-    if (![searchReqeust isKindOfClass:[AMapPOIKeywordsSearchRequest class]]) {
+    AMapPOIAroundSearchRequest *searchReqeust = (AMapPOIAroundSearchRequest *)request;
+    if (![searchReqeust isKindOfClass:[AMapPOIAroundSearchRequest class]]) {
+        [[ToastManager manager] showToast:@"暂无相关信息"];
+        [self.mapView setCenterCoordinate:self.centerPoint];
         return;
     }
     NSString *keyWords = searchReqeust.keywords;
     if (keyWords.length <= 0) {
+        [[ToastManager manager] showToast:@"暂无相关信息"];
+        [self.mapView setCenterCoordinate:self.centerPoint];
         return;
     }
     NSInteger index = [self.nameArray indexOfObject:keyWords];
     if (index < 0 || index >= self.nameArray.count) {
+        [[ToastManager manager] showToast:@"暂无相关信息"];
+        [self.mapView setCenterCoordinate:self.centerPoint];
         return;
     }
     if (![self.searchCategory isEqualToString:keyWords]) {

@@ -7,7 +7,7 @@
 //
 
 #import "ExploreMixedListBaseView.h"
-#import <TTAccountBusiness.h>
+#import "TTAccountBusiness.h"
 #import "Article.h"
 #import "WapData.h"
 #import "HuoShan.h"
@@ -105,7 +105,6 @@
 //#import "TTRNView.h"
 #import "NSObject+FBKVOController.h"
 #import "TTLayOutCellViewBase.h"
-#import <Crashlytics/Crashlytics.h>
 #import <TTNetworkManager/TTNetworkManager.h>
 #import "ArticleURLSetting.h"
 //#import "TTForumCellHelper.h"
@@ -166,15 +165,17 @@
 #import "FHHomeConfigManager.h"
 #import "FHFeedHouseCellHelper.h"
 #import "FHFeedHouseItemCell.h"
-//#import "Bubble-Swift.h"
-#import <FHEnvContext.h>
-#import <FHLocManager.h>
-#import <FHHomeCellHelper.h>
+#import "FHEnvContext.h"
+#import "FHLocManager.h"
+#import "FHHomeCellHelper.h"
 #import "SSCommonLogic.h"
 #import "TTSandBoxHelper.h"
-#import <FHUtils.h>
-#import <TTTabBarItem.h>
-#import <HMDTTMonitor.h>
+#import "FHUtils.h"
+#import "TTTabBarItem.h"
+#import "HMDTTMonitor.h"
+#import "UIColor+Theme.h"
+#import <TTUIWidget/TTRefreshAnimationView.h>
+#import "FHUserTracker.h"
 
 #define kPreloadMoreThreshold           10
 #define kInsertLastReadMinThreshold     5
@@ -740,11 +741,15 @@ TTRefreshViewDelegate
         }
     }];
     
+    
     [_listView tt_addDefaultPullUpLoadMoreWithHandler:^{
         __strong typeof(self) sself = wself;
         sself.refreshFromType = ListDataOperationReloadFromTypeLoadMore;
         [wself loadMoreWithUmengLabel:[wself modifyEventLabelForRefreshEvent:@"load_more"]];
     }];
+    _listView.pullDownView.backgroundColor = [UIColor whiteColor];
+    _listView.pullDownView.bgView.backgroundColor = [UIColor whiteColor];
+    _listView.pullDownView.defaultRefreshAnimateView.backgroundColor = [UIColor whiteColor];
 }
 
 - (void)didFinishLoadTable
@@ -944,7 +949,7 @@ TTRefreshViewDelegate
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(appDidBeComeactive:) name:UIApplicationDidBecomeActiveNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(appDidEnterBackground:) name:UIApplicationDidEnterBackgroundNotification object:nil];
     
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(connectionChanged:) name:kReachabilityChangedNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(connectionChanged:) name:TTReachabilityChangedNotification object:nil];
 }
 
 - (void)didAppear
@@ -979,7 +984,6 @@ TTRefreshViewDelegate
         }
     }
         
-    
     self.listView.backgroundColor = [UIColor whiteColor];
 }
 
@@ -1601,7 +1605,8 @@ TTRefreshViewDelegate
                         //问答下运营卡片增加 gid
                         [dictTraceParams setValue:obj.uniqueID ? : @"be_null" forKey:@"element_card_id"];
                     }
-                    [TTTracker eventV3:@"client_show" params:dictTraceParams];
+//                    [BDTrackerProtocol eventV3:@"client_show" params:dictTraceParams];
+                    [FHUserTracker writeEvent:@"client_show" params:dictTraceParams];
                     
                 }else {
                     
@@ -1611,7 +1616,8 @@ TTRefreshViewDelegate
                     [dictTraceParams setValue:obj.logPb[@"impr_id"] forKey:@"impr_id"];
                     [dictTraceParams setValue:obj.logPb forKey:@"log_pb"];
                     [dictTraceParams setValue:@(obj.cellType) ? : @"be_null" forKey:@"cell_type"];
-                    [TTTracker eventV3:@"client_show" params:dictTraceParams];
+//                    [BDTrackerProtocol eventV3:@"client_show" params:dictTraceParams];
+                    [FHUserTracker writeEvent:@"client_show" params:dictTraceParams];
                     
                     [_cellIdDict setObject:@"" forKey:obj.itemID];
                     
@@ -2141,6 +2147,7 @@ TTRefreshViewDelegate
     }
 
     [self tt_startUpdate];
+    [self.ttLoadingView setBackgroundColor:[UIColor whiteColor]];
 //    //有开屏广告展示的时候首页列表页初始化和广告同步进行，故此优化仅针对于无开屏广告展示且读取本地缓存的时候
 //    static BOOL isFirst = YES; // 只是第一次启动时异步调用，之后同步调用，避免切换频道闪白问题
 //    if (fromLocal && ![SSADManager shareInstance].adShow && [SSCommonLogic shouldUseOptimisedLaunch] /*&& isFirst*/) {
@@ -2283,7 +2290,7 @@ TTRefreshViewDelegate
                                     isDisplyView:_isDisplayView
                                         listType:_listType
                                     listLocation:_listLocation
-                                     finishBlock:^(NSArray *increaseItems, id operationContext, NSError *error) {
+                                     finishBlock:^(NSArray *increaseItems, NSDictionary *operationContext, NSError *error) {
                                          
                                          __strong typeof(oldwself) self = oldwself;
                                          __strong typeof(oldwself) wself = oldwself;
@@ -2350,18 +2357,18 @@ TTRefreshViewDelegate
                                          
                                          //fix 5.3:无error时再处理置顶
                                          if (!error) {
-                                             NSDictionary *result = [operationContext objectForKey:kExploreFetchListResponseRemoteDataKey];
+                                             NSDictionary *result = (NSDictionary *)[operationContext objectForKey:kExploreFetchListResponseRemoteDataKey];
                                              weakSelf.movieCommentVideoAPIOffset = [[result objectForKey:@"result"] tt_unsignedIntegerValueForKey:@"offset"];
                                              weakSelf.verticalVideoAPIOffset = [[result objectForKey:@"result"] tt_unsignedIntegerValueForKey:@"offset"];
                                          }
                                          
                                          BOOL isResponseFromRemote = NO;
                                          if (operationContext) {
-                                             isResponseFromRemote = [[operationContext objectForKey:kExploreFetchListIsResponseFromRemoteKey] boolValue];
+                                             isResponseFromRemote = [[(NSDictionary *)operationContext objectForKey:kExploreFetchListIsResponseFromRemoteKey] boolValue];
                                          }
                                          
                                          //获取视频订阅号开关标志信息
-                                         NSDictionary *resultDict = [[operationContext objectForKey:kExploreFetchListResponseRemoteDataKey] objectForKey:@"result"];
+                                         NSDictionary *resultDict = [(NSDictionary *)[operationContext objectForKey:kExploreFetchListResponseRemoteDataKey] objectForKey:@"result"];
                                          if ([[resultDict allKeys] containsObject:@"show_top_pgc_list"]) {
                                              NSNumber *showPCGList = resultDict[@"show_top_pgc_list"];
                                              if ([showPCGList isKindOfClass:[NSNumber class]]) {
@@ -2372,9 +2379,9 @@ TTRefreshViewDelegate
                                         
                                          [TTFeedDislikeView enable];
                                          
-                                         NSString *cid = [[operationContext objectForKey:kExploreFetchListConditionKey] objectForKey:kExploreFetchListConditionListUnitIDKey];
+                                         NSString *cid = [(NSDictionary *)[operationContext objectForKey:kExploreFetchListConditionKey] objectForKey:kExploreFetchListConditionListUnitIDKey];
                                          
-                                         NSString *concernID = [[operationContext objectForKey:kExploreFetchListConditionKey] objectForKey:kExploreFetchListConditionListConcernIDKey];
+                                         NSString *concernID = [(NSDictionary *)[operationContext objectForKey:kExploreFetchListConditionKey] objectForKey:kExploreFetchListConditionListConcernIDKey];
                                          
                                          NSString *key = !isEmptyString(cid) ? cid : concernID;
                                          
@@ -2655,7 +2662,7 @@ TTRefreshViewDelegate
                                                      }
                                                  }
                                                  
-                                                 NSDictionary *remoteTipResult = [[[operationContext objectForKey:kExploreFetchListResponseRemoteDataKey] objectForKey:@"result"] objectForKey:@"tips"];
+                                                 NSDictionary *remoteTipResult = [(NSDictionary *)[(NSDictionary *)[operationContext objectForKey:kExploreFetchListResponseRemoteDataKey] objectForKey:@"result"] objectForKey:@"tips"];
                                                  
                                                  tipModel = [[SSTipModel alloc] initWithDictionary:remoteTipResult];
                                                  NSString * msg = nil;
@@ -2745,7 +2752,7 @@ TTRefreshViewDelegate
                                                      [weakSelf updateCustomTopOffset];
                                                      [weakSelf.listView finishPullDownWithSuccess:!error];
                                                  }
-                                                 NSMutableDictionary * exploreMixedListConsumeTimeStamps = [[operationContext objectForKey:kExploreFetchListConditionKey] objectForKey:kExploreFetchListRefreshOrLoadMoreConsumeTimeStampsKey];
+                                                 NSMutableDictionary * exploreMixedListConsumeTimeStamps = [(NSMutableDictionary *)[operationContext objectForKey:kExploreFetchListConditionKey] objectForKey:kExploreFetchListRefreshOrLoadMoreConsumeTimeStampsKey];
                                                  [exploreMixedListConsumeTimeStamps setValue:@([NSObject currentUnixTime])
                                                                                       forKey:kExploreFetchListFinishRequestTimeStampKey];
                                                  [weakSelf exploreMixedListTimeConsumingMonitorWithContext:operationContext];
@@ -3041,9 +3048,9 @@ TTRefreshViewDelegate
 
 - (void)setListTopInset:(CGFloat)topInset BottomInset:(CGFloat)bottomInset
 {
-//    [self setTtContentInset:UIEdgeInsetsMake(topInset, 0, bottomInset, 0)];
-//    [self.listView setContentInset:UIEdgeInsetsMake(topInset, 0, bottomInset, 0)];
-//    [self.listView setScrollIndicatorInsets:UIEdgeInsetsMake(topInset, 0, bottomInset, 0)];
+    [self setTtContentInset:UIEdgeInsetsMake(topInset, 0, bottomInset, 0)];
+    [self.listView setContentInset:UIEdgeInsetsMake(topInset, 0, bottomInset, 0)];
+    [self.listView setScrollIndicatorInsets:UIEdgeInsetsMake(topInset, 0, bottomInset, 0)];
 }
 
 - (void)clearListContent
@@ -4631,21 +4638,23 @@ TTRefreshViewDelegate
 #pragma mark -- SSImpressionProtocol
 
 - (void)needRerecordImpressions {
-    
-    if ([_fetchListManager.items count] == 0) {
-        return;
-    }
-    
-    for (UITableViewCell * cell in [_listView visibleCells]) {
-        if ([cell isKindOfClass:[ExploreCellBase class]]) {
-            ExploreCellBase * cellBase = (ExploreCellBase *)cell;
-            if ([cellBase.cellData isKindOfClass:[ExploreOrderedData class]]) {
-                ExploreOrderedData * orderedData = (ExploreOrderedData *)cellBase.cellData;
-                SSImpressionStatus status = (self.isDisplayView && _isShowing) ? SSImpressionStatusRecording : SSImpressionStatusSuspend;
-                [self recordGroupForExploreOrderedData:orderedData status:status cellBase:cellBase];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        if ([_fetchListManager.items count] == 0) {
+            return;
+        }
+        
+        for (UITableViewCell * cell in [_listView visibleCells]) {
+            if ([cell isKindOfClass:[ExploreCellBase class]]) {
+                ExploreCellBase * cellBase = (ExploreCellBase *)cell;
+                if ([cellBase.cellData isKindOfClass:[ExploreOrderedData class]]) {
+                    ExploreOrderedData * orderedData = (ExploreOrderedData *)cellBase.cellData;
+                    SSImpressionStatus status = (self.isDisplayView && _isShowing) ? SSImpressionStatusRecording : SSImpressionStatusSuspend;
+                    [self recordGroupForExploreOrderedData:orderedData status:status cellBase:cellBase];
+                }
             }
         }
-    }
+    });
+    
 }
 
 // cell的model变动时，列表需要刷新cell显示
@@ -4816,8 +4825,6 @@ TTRefreshViewDelegate
         }
         
         [[NSUserDefaults standardUserDefaults] setBool:YES forKey:tipKey];
-        
-        [Answers logCustomEventWithName:@"TTFeedGuideView" customAttributes:@{@"type":@"dislike"}];
         
         TTFeedGuideView<TTGuideProtocol> *feedGuideItem = [[TTFeedGuideView alloc] initWithFrame:self.window.bounds];
         

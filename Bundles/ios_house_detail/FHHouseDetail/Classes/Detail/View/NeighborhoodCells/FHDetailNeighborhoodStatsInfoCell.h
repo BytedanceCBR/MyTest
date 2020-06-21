@@ -20,6 +20,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface FHDetailNeighborhoodStatsInfoModel : FHDetailBaseModel
 
 @property (nonatomic, strong , nullable) NSArray<FHDetailNeighborhoodDataStatsInfoModel> *statsInfo;
+@property (assign, nonatomic) BOOL showBottomLine;
 
 @end
 // 按钮

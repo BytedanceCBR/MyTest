@@ -30,7 +30,7 @@
 #import "DetailActionRequestManager.h"
 #import <TTBaseLib/JSONAdditions.h>
 
-#import <TTAccountBusiness.h>
+#import "TTAccountBusiness.h"
 
 #define CASE(str)                       if ([__s__ isEqualToString:(str)])
 #define SWITCH(s)                       for (NSString *__s__ = (s); ; )
@@ -149,7 +149,7 @@
     [dict setValue:kWDDetailViewControllerUMEventName forKey:@"tag"];
     [dict setValue:label forKey:@"label"];
     [dict setValue:self.detailModel.answerEntity.ansid forKey:@"value"];
-    [TTTracker eventData:[dict copy]];
+    [BDTrackerProtocol eventData:[dict copy]];
 }
 
 - (void)tt_removeAnswerForAnswerIDFinishBlock:(void(^)(NSString *tips, NSError *error))finishBlock
@@ -159,7 +159,7 @@
     [dict setValue:kWDDetailViewControllerUMEventName forKey:@"tag"];
     [dict setValue:@"delete_answer" forKey:@"label"];
     [dict setValue:self.detailModel.answerEntity.ansid forKey:@"value"];
-    [TTTracker eventData:[dict copy]];
+    [BDTrackerProtocol eventData:[dict copy]];
     
     [WDAnswerService deleteWithAnswerID:self.detailModel.answerEntity.ansid apiParam:self.detailModel.apiParam finishBlock:^(WDWendaCommitDeleteanswerResponseModel *responseModel, NSError *error) {
         if ((error.code != TTNetworkErrorCodeSuccess) || [responseModel.err_no integerValue] != 0) {
@@ -215,7 +215,7 @@
     if (adID.longLongValue > 0) {
         [dict setValue:adID forKey:@"ad_id"];
     }
-    [TTTracker eventData:dict];
+    [BDTrackerProtocol eventData:dict];
 }
 #pragma mark - fav
 
@@ -286,7 +286,7 @@
             [params setValue:self.detailModel.apiParam[@"enter_from"] forKey:@"enter_from"];
             [params setValue:@"answer" forKey:@"page_type"];
         }
-        [TTTracker eventV3:@"rt_favourite" params:params];
+        [BDTrackerProtocol eventV3:@"rt_favourite" params:params];
        
     }
 }
@@ -324,7 +324,7 @@
     [dict setValue:@"answer_detail" forKey:@"tag"];
     [dict setValue:@"info_report" forKey:@"label"];
     [dict setValue:self.detailModel.answerEntity.ansid forKey:@"value"];
-    [TTTracker eventData:dict];
+    [BDTrackerProtocol eventData:dict];
 }
 
 - (void)tt_willShowReport
@@ -335,7 +335,7 @@
     [dict setValue:@"umeng" forKey:@"category"];
     [dict setValue:@"answer_detail" forKey:@"tag"];
     [dict setValue:@"report" forKey:@"label"];
-    [TTTracker eventData:dict];
+    [BDTrackerProtocol eventData:dict];
 }
 
 - (void)showReportSheetController {

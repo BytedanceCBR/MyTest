@@ -9,7 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "SSThemed.h"
 #import "TTBadgeNumberView.h"
-#import <Lottie/Lottie.h>
+#import <lottie-ios/Lottie/Lottie.h>
 
 typedef void(^SelectedBlock)();
 

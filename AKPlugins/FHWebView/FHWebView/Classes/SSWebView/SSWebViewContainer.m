@@ -8,7 +8,7 @@
 //
 
 #import "SSWebViewContainer.h"
-//#import <TTAccountBusiness.h>
+//#import "TTAccountBusiness.h"
 #import "SSCommonLogic.h"
 //#import "TTAdManager.h"
 //#import "TTAdSiteWebPreloadManager.h"
@@ -26,11 +26,13 @@
 #import <TTUIWidget/TTIndicatorView.h>
 #import <TTUIWidget/UIView+Refresh_ErrorHandler.h>
 #import <TTTracker/TTTrackerProxy.h>
-#import <TTtracker/TTTracker.h>
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 #import <TTRoute/TTRoute.h>
 #import <TTSettingsManager/TTSettingsManager.h>
 #import "FHWebViewConfig.h"
 #import "UIViewAdditions.h"
+#import "BDWebViewBlankDetect.h"
+#import <Heimdallr/HMDTTMonitor.h>
 
 #define kSaveImgActionSheetTagKey 111
 
@@ -251,7 +253,7 @@
     
     if ([request.URL.scheme isEqualToString:@"sslocal"] && [request.URL.host isEqualToString:@"refresh_user_info"]) {
         // 登录
-        //        [TTTracker eventV3:@"deprecated_feature" params:@{@"name": @"sswebviewcontainer_refresh_user_info"}];
+        //        [BDTrackerProtocol eventV3:@"deprecated_feature" params:@{@"name": @"sswebviewcontainer_refresh_user_info"}];
         //        [TTAccountManager setIsLogin:YES];
         //        [TTAccountManager startGetAccountStatus:NO];
         
@@ -305,6 +307,14 @@
     if (self.extraJS.length > 0) {
         [self.ssWebView stringByEvaluatingJavaScriptFromString:self.extraJS completionHandler:nil];
     }
+    
+    if ([SSCommonLogic enableWebViewBlankDetect]) {
+        WeakSelf;
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.6 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            [wself detectWebViewBlank:webView];
+        });
+        
+    }
 }
 
 - (void)webView:(YSWebView *)webView didFailLoadWithError:(NSError *)error {
@@ -335,6 +345,41 @@
     }
 }
 
+-(void)detectWebViewBlank:(YSWebView *)webview
+{
+    WKWebView *wkWebView = nil;
+    if (@available(iOS 11.0 , *)) {
+        if (webview.isWKWebView && [webview.tt_webViewInUse isKindOfClass:[WKWebView class]]) {
+            wkWebView = [webview tt_webViewInUse];
+        }
+    }
+    
+    WeakSelf;
+    if (wkWebView) {
+        [BDWebViewBlankDetect detectBlankByNewSnapshotWithWKWebView:wkWebView CompleteBlock:^(BOOL isBlank, UIImage * _Nonnull image, NSError * _Nonnull error) {
+            if (isBlank && !error) {
+                [wself addBlankReport];
+            }
+        }];
+    }else{
+        [BDWebViewBlankDetect detectBlankByOldSnapshotWithView:webview.tt_webViewInUse CompleteBlock:^(BOOL isBlank, UIImage * _Nonnull image, NSError * _Nonnull error) {
+            if (isBlank && !error) {
+                [wself addBlankReport];
+            }
+        }];
+    }
+}
+
+-(void)addBlankReport
+{
+    NSMutableDictionary *monitorDictionary = @{}.mutableCopy;
+    NSMutableDictionary *categoryDict = @{}.mutableCopy;
+    categoryDict[@"url"] = self.request.URL.absoluteString;
+    categoryDict[@"status"] = @(1);
+    NSDictionary *metricDict = @{@"url":self.request.URL.absoluteString?:@""};
+    [[HMDTTMonitor defaultManager]hmdTrackService:@"webview_blank_error" metric:metricDict category:categoryDict extra:nil];
+}
+
 #pragma mark -- UIActionSheetDelegate
 
 - (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
@@ -343,7 +388,7 @@
             self.tmpSaveImgURLString = nil;
         }
         else {
-            [TTTracker eventV3:@"deprecated_feature" params:@{@"name": @"sswebviewcontainer_savephoto"}];
+            [BDTrackerProtocol eventV3:@"deprecated_feature" params:@{@"name": @"sswebviewcontainer_savephoto"}];
             [[TTNetworkManager shareInstance] requestForBinaryWithURL:_tmpSaveImgURLString params:nil method:@"GET" needCommonParams:NO callback:^(NSError *error, id obj) {
                 if (![obj isKindOfClass:[NSData class]]) {
                     return;

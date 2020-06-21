@@ -6,18 +6,18 @@
 //
 
 #import "FHMineHeaderView.h"
-#import "BDWebImage.h"
+#import <BDWebImage/BDWebImage.h>
 #import <Masonry/Masonry.h>
 #import "UIFont+House.h"
 #import "UIColor+Theme.h"
-#import <UIImageView+BDWebImage.h>
+#import "UIImageView+BDWebImage.h"
 #import "FHUtils.h"
 #import "UIButton+TTAdditions.h"
 #import <FHHouseBase/UIImage+FIconFont.h>
-#import <TTRoute.h>
-#import <FHEnvContext.h>
+#import "TTRoute.h"
+#import "FHEnvContext.h"
 #import "TTAccountManager.h"
-#import <TTDeviceHelper.h>
+#import "TTDeviceHelper.h"
 
 @interface FHMineHeaderView ()
 
@@ -46,7 +46,7 @@
 
 - (void)initView {
     self.headerImageView = [[UIImageView alloc] init];
-    UIImage *image = [self ct_imageFromImage:[UIImage imageNamed:@"fh_mine_header_bg"] inRect:self.bounds];
+    UIImage *image = [self ct_imageFromImage:[UIImage imageNamed:@"fh_mine_header_bg_orange"] inRect:self.bounds];
     _headerImageView.image = image;
     [self addSubview:_headerImageView];
     
@@ -91,8 +91,27 @@
 //    }else{
 //        _homePageBtn.hitTestEdgeInsets = UIEdgeInsetsMake(-20, -20, -20, -20);
 //    }
-    
+    if ([FHEnvContext canShowLoginTip]) {
+        self.loginBtn = [[UIButton alloc]init];
+        _loginBtn.backgroundColor = [UIColor themeWhite];
+        [_loginBtn setTitleColor:[UIColor themeOrange1] forState:UIControlStateNormal];
+        _loginBtn.titleLabel.font = [UIFont themeFontMedium:14];
+        _loginBtn.userInteractionEnabled = NO;
+        [_loginBtn setTitle:@"登录" forState:UIControlStateNormal];
+        _loginBtn.layer.cornerRadius = 22;
+        [self addSubview:_loginBtn];
+        [self setDeaultShowTypeByLogin:NO];
+    }
     [self addSubview:_homePageBtn];
+}
+
+- (void)setDeaultShowTypeByLogin:(BOOL)isLogin {
+    self.iconBorderView.hidden = !isLogin;
+    self.userNameLabel.hidden = !isLogin;
+    self.descLabel.hidden = !isLogin;
+    self.editIcon.hidden = !isLogin;
+    self.homePageBtn.hidden = !isLogin;
+    self.loginBtn.hidden = isLogin;
 }
 
 - (void)initConstaints {
@@ -145,6 +164,12 @@
         make.width.mas_equalTo(50);
         make.right.mas_equalTo(self);
         make.centerY.mas_equalTo(self.iconBorderView.mas_centerY);
+    }];
+    
+    [_loginBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.bottom.equalTo(self.mas_bottom).offset(-30);
+        make.centerX.equalTo(self);
+        make.size.mas_equalTo(CGSizeMake(88, 40));
     }];
     
     [self layoutIfNeeded];

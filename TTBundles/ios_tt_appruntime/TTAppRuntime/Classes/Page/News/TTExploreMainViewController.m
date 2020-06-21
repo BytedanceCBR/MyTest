@@ -28,7 +28,6 @@
 #import "UIImage+TTThemeExtension.h"
 #import "UIViewController+RefreshEvent.h"
 #import "ExploreMixedListView.h"
-#import <Crashlytics/Crashlytics.h>
 #import "TTCustomAnimationNavigationController.h"
 #import "TTProfileViewController.h"
 #import "TTAccountBindingMobileViewController.h"
@@ -36,7 +35,7 @@
 #import "TTPlatformSwitcher.h"
 //#import "TTFollowCategoryMixedListView.h"
 #import "TTModalContainerController.h"
-#import <TTInteractExitHelper.h>
+#import "TTInteractExitHelper.h"
 #import "TTFeedGuideView.h"
 //#import "SSADManager.h"
 #import "TTAdSplashMediator.h"
@@ -46,13 +45,12 @@
 //#import "TTContactsGuideManager.h"
 #import "TTTabBarProvider.h"
 #import "ExploreExtenstionDataHelper.h"
-#import <TTAppUpdateHelper.h>
-//#import "Bubble-Swift.h"
+#import "TTAppUpdateHelper.h"
 #import "FHHomeSearchPanelViewModel.h"
 #import "FHEnvContext.h"
 #import "TTLaunchTracer.h"
 #import "TTCategoryStayTrackManager.h"
-#import <FHEnvContext.h>
+#import "FHEnvContext.h"
 #import <TTInstallService/TTInstallIDManager.h>
 #import <TTPlatformBaseLib/TTTrackerWrapper.h>
 #import <TTArticleBase/ExploreLogicSetting.h>
@@ -61,8 +59,8 @@
 #import "CommonURLSetting.h"
 #import <TTBaseLib/TTSandBoxHelper.h>
 #import "TTTabBarController.h"
-#import <FHCommuteManager.h>
-#import <TTTabBarItem.h>
+#import "FHCommuteManager.h"
+#import "TTTabBarItem.h"
 
 @interface TTExploreMainViewController () <TTCategorySelectorViewDelegate, ExploreSearchViewDelegate, TTTopBarDelegate, UINavigationControllerDelegate, TTFeedCollectionViewControllerDelegate, TTInteractExitProtocol>
 
@@ -137,9 +135,7 @@
 
 - (void)viewWillAppear:(BOOL)animated
 {
-    [super viewWillAppear:animated];
-    
-    [[TTLaunchTracer shareInstance] writeEvent];
+    [super viewWillAppear:animated];    
 }
 
 - (void)checkLocalTestUpgradeVersionAlert

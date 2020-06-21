@@ -16,18 +16,19 @@
 #import "UIViewAdditions.h"
 #import <TTThemeConst.h>
 #import <Masonry/Masonry.h>
-#import <UIImage+TTThemeExtension.h>
+#import "UIImage+TTThemeExtension.h"
 #import "TTAsyncCornerImageView+VerifyIcon.h"
 #import "NSDictionary+TTAdditions.h"
 #import "NSStringAdditions.h"
 #import "TTSandBoxHelper.h"
 #import "TTIndicatorView.h"
-#import <TTUGCAttributedLabel.h>
-#import <FHUGCCellHelper.h>
-#import <TTUniversalCommentLayout.h>
-#import <TTRichSpanText+Comment.h>
-#import <UIColor+Theme.h>
-#import <UIFont+House.h>
+#import "TTUGCAttributedLabel.h"
+#import "FHUGCCellHelper.h"
+#import "TTUniversalCommentLayout.h"
+#import "TTRichSpanText+Comment.h"
+#import "UIColor+Theme.h"
+#import "UIFont+House.h"
+#import "UIImage+FIconFont.h"
 
 #define kTTCommentContentLabelQuotedCommentUserURLString @"com.bytedance.kTTCommentContentLabelQuotedCommentUserURLString"
 
@@ -149,14 +150,14 @@
         }];
         
         self.likeButton = [UIButton new];
-        [self.likeButton setTitleColor:[UIColor tt_themedColorForKey:kColorText13] forState:UIControlStateNormal];
-        [self.likeButton setTitleColor:[UIColor tt_themedColorForKey:kColorText4] forState:UIControlStateSelected];
+        [self.likeButton setTitleColor:[UIColor colorWithHexStr:@"0x979f9c"] forState:UIControlStateNormal];
+        [self.likeButton setTitleColor:[UIColor themeOrange4] forState:UIControlStateSelected];
         [self.likeButton setTitle:@"赞" forState:UIControlStateNormal];
         [self.likeButton setTitle:@"赞" forState:UIControlStateSelected];
         self.likeButton.titleLabel.font = [UIFont systemFontOfSize:13.0];
         self.likeButton.titleEdgeInsets = UIEdgeInsetsMake(0, 6, 0, 0);
-        [self.likeButton setImage:[UIImage themedImageNamed:@"hts_vp_comment_like"] forState:UIControlStateNormal];
-        [self.likeButton setImage:[UIImage themedImageNamed:@"hts_vp_comment_like_h"] forState:UIControlStateSelected];
+        [self.likeButton setImage:ICON_FONT_IMG(24, @"\U0000e69c", [UIColor colorWithHexStr:@"0x979f9c"]) forState:UIControlStateNormal];
+        [self.likeButton setImage:ICON_FONT_IMG(24, @"\U0000e6b1", [UIColor themeOrange4]) forState:UIControlStateSelected];
         [self.likeButton addTarget:self action:@selector(likeButtonTapped) forControlEvents:UIControlEventTouchUpInside];
         UIEdgeInsets insets = self.likeButton.titleEdgeInsets;
         self.likeButton.titleEdgeInsets = UIEdgeInsetsMake(4, insets.left, insets.bottom, insets.right);

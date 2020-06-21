@@ -8,11 +8,11 @@
 
 #import "TTAccountBindingViewController.h"
 #import <objc/runtime.h>
-#import <SSThemed.h>
+#import "SSThemed.h"
 
-#import <TTUIResponderHelper.h>
-#import <TTNetworkManager.h>
-#import <TTAccountBusiness.h>
+#import "TTUIResponderHelper.h"
+#import "TTNetworkManager.h"
+#import "TTAccountBusiness.h"
 #import "UIActionSheet+TTBlocks.h"
 
 #import "TTEditUserProfileItemCell.h"
@@ -27,7 +27,7 @@
 #import "ArticleAddressBridger.h"
 
 #import "TTArticleCategoryManager.h"
-#import <TTCategoryDefine.h>
+#import "TTCategoryDefine.h"
 #import <TTAccountSDK/TTAccountAuthWeChat.h>
 #import <TTArticleBase/SSCommonLogic.h>
 

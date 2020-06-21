@@ -16,15 +16,15 @@
 #import "TTAdPromotionContentItem.h"
 #import "TTIndicatorView.h"
 #import "TTRoute.h"
-#import <NetworkUtilities.h>
+#import "NetworkUtilities.h"
 #import "SDImageCache.h"
 #import "TTURLUtils.h"
 
 #import "TTActivityContentItemProtocol.h"
-#import <TTWechatTimelineContentItem.h>
+#import "TTWechatTimelineContentItem.h"
 #import "TTWechatContentItem.h"
-#import <TTQQFriendContentItem.h>
-#import <TTQQZoneContentItem.h>
+#import "TTQQFriendContentItem.h"
+#import "TTQQZoneContentItem.h"
 #import "TTFavouriteContentItem.h"
 #import "TTReportContentItem.h"
 #import "TTDislikeContentItem.h"
@@ -33,6 +33,13 @@
 #import "TTCommentStatContentItem.h"
 #import "TTEditContentItem.h"
 #import "TTFontSettingContentItem.h"
+
+#ifndef WeakSelf
+#define WeakSelf __weak typeof(self) wself = self
+#endif
+#ifndef StrongSelf
+#define StrongSelf __strong typeof(wself) self = wself
+#endif
 
 @implementation WDDetailNatantViewModel (ShareCategory)
 

@@ -23,17 +23,7 @@
 #import "TTDeviceHelper.h"
 #import "TTNetworkManager.h"
 #import "TTURLDomainHelper.h"
-#import <TTAccountBusiness.h>
-
-//用于存储category的version值
-#define kArticleCategoryManagerVersionKey @"kArticleCategoryManagerVersionKey"
-
-#define kCategoryStoreVersion 2
-
-#define KArticleCategoryManagerHasNewTipKey [NSString stringWithFormat:@"KArticleCategoryManagerHasNewTip%i", kCategoryStoreVersion]
-
-#define kArticleCategoryManagerUserSelectedLocalCityKey @"kArticleCategoryManagerUserSelectedLocalCityKey"
-#define kArticleCategoryManagerServerLocalCityNameKey   @"kArticleCategoryManagerServerLocalCityNameKey"
+#import "TTAccountBusiness.h"
 
 NSString *const kTTInsertCategoryToLastPositionNotification = @"kInsertCategoryToLastPositionNotification";
 NSString *const kTTInsertCategoryNotificationCategoryKey = @"kInsertCategoryNotificationCategoryKey";
@@ -1080,10 +1070,10 @@ static NSString *s_currentSelectedCategoryID;
                                         @"name":NSLocalizedString(@"推荐",nil),
                                         @"type":@(TTFeedListDataTypeArticle),
                                         @"concernID":@""},
-                                      @{@"category":@"f_find_house",
-                                        @"name":NSLocalizedString(@"找房",nil),
-                                        @"type":@(TTFeedListDataTypeArticle),
-                                        @"concernID":@""},
+//                                      @{@"category":@"f_find_house",
+//                                        @"name":NSLocalizedString(@"找房",nil),
+//                                        @"type":@(TTFeedListDataTypeArticle),
+//                                        @"concernID":@""},
                                       @{@"category": @"f_shipin",
                                         @"name": NSLocalizedString(@"视频", nil),
                                         @"type": @(TTFeedListDataTypeArticle),

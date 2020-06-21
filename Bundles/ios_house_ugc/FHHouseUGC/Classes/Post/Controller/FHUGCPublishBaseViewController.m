@@ -6,7 +6,7 @@
 //
 
 #import "FHUGCPublishBaseViewController.h"
-#import <FHBubbleTipManager.h>
+#import "FHBubbleTipManager.h"
 
 @interface FHUGCPublishBaseViewController ()
 
@@ -53,6 +53,9 @@
 - (void)configNavigation {
     
     [self setupDefaultNavBar:YES];
+    
+    
+    [self.titleLabel sizeToFit];
     
     // 标题
     self.navigationItem.titleView = self.titleLabel;
@@ -120,7 +123,14 @@
 
 - (void)exitPage {
     [self.view endEditing:YES];
-    [self dismissViewControllerAnimated:YES completion:nil];
+    
+    NSArray *viewControllers = self.navigationController.viewControllers;
+    if (viewControllers && viewControllers.count > 1) {
+        [self.navigationController popViewControllerAnimated:YES];
+    }
+    else {
+        [self dismissViewControllerAnimated:YES completion:nil];
+    }
 }
 
 #pragma mark - 成员方法

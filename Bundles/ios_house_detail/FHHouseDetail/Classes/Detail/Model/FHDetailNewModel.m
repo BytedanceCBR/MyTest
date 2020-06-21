@@ -34,15 +34,7 @@
 }
 @end
 
-@implementation FHDetailNewDataImageGroupModel
-+ (BOOL)propertyIsOptional:(NSString *)propertyName
-{
-    return YES;
-}
-@end
-
-
-@implementation FHDetailNewDataSmallImageGroupModel
+@implementation FHHouseDetailImageGroupModel
 + (BOOL)propertyIsOptional:(NSString *)propertyName
 {
     return YES;
@@ -71,6 +63,7 @@
 {
     NSDictionary *dict = @{
                            @"courtAddress": @"court_address",
+                           @"courtAddressIcon": @"court_address_icon",                           
                            @"areaId": @"area_id",
                            @"cityId": @"city_id",
                            @"saleStatus": @"sale_status",
@@ -85,6 +78,7 @@
                            @"gaodeLng": @"gaode_lng",
                            @"shareInfo": @"share_info",
                            @"gaodeImageUrl": @"gaode_image_url",
+                           @"gaodeImage": @"gaode_image",
                            @"dataSourceId": @"data_source_id",
                            };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
@@ -103,7 +97,11 @@
     NSDictionary *dict = @{
                            @"hasMore": @"has_more",
                            @"userStatus": @"user_status",
-                           };
+                           @"totalNumber": @"total_number",
+                           @"highlightedRealtor": @"highlighted_realtor",
+                           @"chooseAgencyList": @"choose_agency_list",
+                           @"highlightedRealtorAssociateInfo":@"highlighted_realtor_associate_info",
+    };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
         return dict[keyName]?:keyName;
     }];
@@ -130,23 +128,6 @@
 }
 @end
 
-@implementation FHDetailNewDataUserStatusModel
-+ (JSONKeyMapper*)keyMapper
-{
-    NSDictionary *dict = @{
-                           @"courtOpenSubStatus": @"court_open_sub_status",
-                           @"pricingSubStatus": @"pricing_sub_status",
-                           @"courtSubStatus": @"court_sub_status",
-                           };
-    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
-        return dict[keyName]?:keyName;
-    }];
-}
-+ (BOOL)propertyIsOptional:(NSString *)propertyName
-{
-    return YES;
-}
-@end
 
 @implementation FHDetailNewDataFloorpanListListModel
 + (JSONKeyMapper*)keyMapper
@@ -156,9 +137,13 @@
                            @"roomCount": @"room_count",
                            @"saleStatus": @"sale_status",
                            @"pricingPerSqm": @"pricing_per_sqm",
+                           @"facingDirection": @"facing_direction",
                            @"imprId": @"impr_id",
                            @"searchId": @"search_id",
-                           @"groupId": @"group_id"
+                           @"groupId": @"group_id",
+                           @"imOpenUrl":@"im_openurl",
+                           @"associateInfo": @"associate_info",
+                           @"displayPrice": @"display_price"
                            };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
         return dict[keyName]?:keyName;
@@ -227,6 +212,97 @@
 }
 @end
 
+@implementation FHDetailNewDiscountInfoItemModel
+
++ (JSONKeyMapper*)keyMapper
+{
+    NSDictionary *dict = @{
+        @"itemType": @"item_type",
+        @"itemDesc": @"item_desc",
+        @"actionType": @"action_type",
+        @"actionDesc": @"action_desc",
+        @"discountContent": @"discount_content",
+        @"discountSubContent": @"discount_sub_content",
+        @"discountReportTitle": @"discount_report_title",
+        @"discountReportSubTitle": @"discount_report_sub_title",
+        @"discountButtonText": @"discount_button_text",
+        @"discountReportDoneTitle": @"discount_report_done_title",
+        @"associateInfo": @"associate_info",
+        @"discountReportDoneSubTitle":@"discount_report_done_sub_title",
+        @"activityURLString": @"activity_url"
+    };
+    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+        return dict[keyName]?:keyName;
+    }];
+    
+}
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+
+@end
+
+@implementation FHDetailNewSurroundingInfoSurrounding
+
++ (JSONKeyMapper*)keyMapper
+{
+    NSDictionary *dict = @{
+        @"chatOpenurl": @"chat_openurl",
+    };
+    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+        return dict[keyName]?:keyName;
+    }];
+    
+}
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+
+@end
+
+@implementation FHDetailNewSurroundingInfo
+
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+
++ (JSONKeyMapper*)keyMapper
+{
+    NSDictionary *dict = @{
+        @"associateInfo": @"associate_info",
+    };
+    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+        return dict[keyName]?:keyName;
+    }];
+}
+@end
+
+
+@implementation FHDetailNewTopImage
+
++ (JSONKeyMapper*)keyMapper
+{
+    NSDictionary *dict = @{
+        @"imageGroup": @"image_group",
+        @"smallImageGroup": @"small_image_group",
+    };
+    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+        return dict[keyName]?:keyName;
+    }];
+}
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+
+@end
+
+
+
+
 @implementation FHDetailNewDataFloorpanListListSaleStatusModel
 + (JSONKeyMapper*)keyMapper
 {
@@ -276,7 +352,25 @@
                            @"shareInfo": @"share_info",
                            @"highlightedRealtor": @"highlighted_realtor",
                            @"chooseAgencyList": @"choose_agency_list",
+                           @"recommendedRealtors": @"recommended_realtors",
+                           @"recommendedRealtorsTitle": @"recommended_realtors_title",
+                           @"recommendedRealtorsSubTitle":@"recommended_realtors_sub_title",
                            @"socialInfo":@"ugc_social_group",
+                           @"houseVideo": @"house_video",
+                           @"baseInfo": @"base_info",
+                           @"discountInfo": @"discount_info",
+                           @"relatedCourtInfo": @"related_court_info",
+                           @"surroundingInfo": @"surrounding_info",
+                           @"topImages": @"top_images",
+                           @"topBanner": @"top_banner",
+                           @"changePriceNotifyAssociateInfo": @"change_price_notify_associate_info",
+                           @"beginSellingNotifyAssociateInfo": @"begin_selling_notify_associate_info",
+                           @"recommendRealtorsAssociateInfo": @"recommend_realtors_associate_info",
+                           @"imageGroupAssociateInfo": @"image_group_associate_info",
+                           @"discountInfoAssociateInfo": @"discount_info_associate_info",
+                           @"highlightedRealtorAssociateInfo":@"highlighted_realtor_associate_info",
+                           @"isShowTopImageTab": @"is_show_top_image_tab",
+                           @"imageAlbumAssociateInfo": @"image_album_associate_info",
                            };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
         return dict[keyName]?:keyName;

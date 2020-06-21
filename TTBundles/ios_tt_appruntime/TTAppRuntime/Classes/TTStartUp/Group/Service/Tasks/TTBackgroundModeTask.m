@@ -15,7 +15,7 @@
 #import "TTNetworkManager.h"
 #import <FHCHousePush/FHCHandleAPNSTask.h>
 #import <TTNetworkManager/TTDefaultHTTPRequestSerializer.h>
-#import "TouTiaoPushSDK.h"
+
 #import <TTArticleBase/ExploreLogicSetting.h>
 #import "SSCommonLogic.h"
 #import <TTBaseLib/TTSandBoxHelper.h>
@@ -24,7 +24,9 @@
 #import <TTArticleBase/Log.h>
 #import <TTBaseLib/TTBaseMacro.h>
 #import "TTLaunchDefine.h"
-#import <HMDTTMonitor.h>
+#import "HMDTTMonitor.h"
+#import <FHCHousePush/TTPushServiceDelegate.h>
+#import <BDUGPushSDK/BDUGPushManager.h>
 
 DEC_TASK("TTBackgroundModeTask",FHTaskTypeService,TASK_PRIORITY_HIGH+9);
 
@@ -60,7 +62,9 @@ static NSUInteger reportTryCount = 0;
     
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         [[SSBatchItemActionManager shareManager] excuteSynchronizedBatch];
-        [[TTUserSettingsReporter sharedInstance] startReportUserConfiguration];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [[TTUserSettingsReporter sharedInstance] startReportUserConfiguration];
+        });
         
         reportTryCount = 0;
         [self reportAppEnterBackground];
@@ -132,24 +136,7 @@ static NSUInteger reportTryCount = 0;
             }
         }];
     } else {
-        TTUploadTokenRequestParam *param = [TTUploadTokenRequestParam requestParam];
-        param.token = [FHCHandleAPNSTask deviceTokenString];
-        [TouTiaoPushSDK sendRequestWithParam:param completionHandler:^(TTBaseResponse *response) {
-            if(!response.error && [[response.jsonObj valueForKey:@"message"] isEqualToString:@"success"]) {
-                reportTryCount = 0;
-                [[HMDTTMonitor defaultManager] hmdTrackService:@"push_update_token_result" metric:nil category:@{@"message":@"success",@"has_token":@(1)} extra:nil];
-            } else {
-                [self.class reportDeviceTokenByAppLogout];
-                NSMutableDictionary *categoryDict = @{}.mutableCopy;
-                NSMutableDictionary *extraDict = @{}.mutableCopy;
-                NSString *message = [response.jsonObj valueForKey:@"message"];
-                if ([message isKindOfClass:[NSString class]]) {
-                    categoryDict[@"message"] = message;
-                }
-                categoryDict[@"has_token"] = param.token.length > 0 ? @(1): @(0);
-                [[HMDTTMonitor defaultManager] hmdTrackService:@"push_update_token_result" metric:nil category:categoryDict extra:extraDict];
-            }
-        }];
+           [BDUGPushManager handleDeviceToken:[BDUGPushService deviceToken]];
     }
 }
 

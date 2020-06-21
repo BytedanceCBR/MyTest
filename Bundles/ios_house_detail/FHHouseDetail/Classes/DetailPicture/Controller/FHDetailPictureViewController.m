@@ -13,7 +13,8 @@
 #import "UIImage+TTThemeExtension.h"
 #import "UIViewAdditions.h"
 #import "TTDeviceHelper.h"
-#import "TTTracker.h"
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
+
 #import "TTImagePreviewAnimateManager.h"
 #import "ALAssetsLibrary+TTImagePicker.h"
 #import "UIColor+Theme.h"
@@ -28,8 +29,10 @@
 #import "FHDetailVideoInfoView.h"
 #import "NSDictionary+TTAdditions.h"
 #import "FHLoadingButton.h"
+#import "FHDetailBaseModel.h"
+
 #define kFHDPTopBarHeight 44.f
-#define kFHDPBottomBarHeight 54.f
+#define kFHDPBottomBarHeight 60.f
 
 #define kFHDPMoveDirectionStartOffset 20.f
 NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
@@ -46,7 +49,6 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
     BOOL _reachDragCondition; //是否满足过一次触发手势条件
 }
 @property(nonatomic, copy)TTPhotoScrollViewDismissBlock dismissBlock;
-@property(nonatomic, strong)UIScrollView * photoScrollView;
 @property(nonatomic, strong)UIView *containerView;
 
 @property(nonatomic, assign, readwrite)NSInteger currentIndex;
@@ -86,6 +88,7 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
 @property (nonatomic, copy) NSArray<NSValue *> *animateFrames;
 @property (nonatomic, copy) NSString *locationStr;
 
+@property (nonatomic, copy) NSString *currentTypeName;
 @end
 
 @implementation FHDetailPictureViewController
@@ -104,10 +107,11 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
         _longPressToSave = YES;
         _disableAutoPlayVideo = NO;
         _didEnterFullscreen = NO;
-        _isShowAllBtns = YES;
+        _isShowBottomBar = YES;
+        _isShowSegmentView = YES;
         
         self.ttHideNavigationBar = YES;
-
+        
         _addedToContainer = NO;
         
         self.photoViewPools = [[NSMutableSet alloc] initWithCapacity:5];
@@ -118,7 +122,7 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
         _isRotating = NO;
         
         _whiteMaskViewEnable = YES;
-
+        
         _statusBarHidden = [[UIApplication sharedApplication] isStatusBarHidden];
         _lastStatusBarStyle = [[UIApplication sharedApplication] statusBarStyle];
         [self setCurrentStatusStyle];
@@ -231,67 +235,102 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
     if (topInset < 1) {
         topInset = 20;
     }
-    _topBar = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.width, kFHDPTopBarHeight + topInset)];
-    _topBar.backgroundColor = [UIColor colorWithHexString:@"#000000" alpha:0.3]; // [UIColor clearColor];
-    [self.view addSubview:_topBar];
+    self.topBar = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.width, kFHDPTopBarHeight + topInset)];
+    self.topBar.backgroundColor = [UIColor clearColor]; //[UIColor colorWithHexString:@"#000000" alpha:0.3];
+    [self.view addSubview:self.topBar];
+    [self.topBar mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.right.top.mas_equalTo(0);
+        make.height.mas_equalTo(kFHDPTopBarHeight + topInset + 42);
+    }];
+    
+    UIImageView *topBgImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"picture_detail_header_bg"]];
+    topBgImageView.frame = self.topBar.bounds;
+    [self.topBar addSubview:topBgImageView];
+    [topBgImageView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.edges.mas_equalTo(UIEdgeInsetsZero);
+    }];
+    
     __weak typeof(self) weakSelf = self;
-    _naviView = [[FHDetailPictureNavView alloc] initWithFrame:CGRectMake(0, topInset, self.view.width, kFHDPTopBarHeight)];
-    _naviView.backActionBlock = ^{
+    self.naviView = [[FHDetailPictureNavView alloc] initWithFrame:CGRectMake(0, topInset, self.view.width, kFHDPTopBarHeight)];
+    self.naviView.showAlbum = self.smallImageInfosModels > 0;
+    self.naviView.backActionBlock = ^{
         [weakSelf finished];
     };
-    _naviView.videoTitle.currentTitleBlock = ^(NSInteger currentIndex) {
-        // 1 视频 2 图片
-        if (weakSelf.vedioCount > 0) {
-            NSInteger tempIndex = 0;
-            if (currentIndex == 1) {
-                tempIndex = 0; // 视频
+    self.naviView.albumActionBlock  = ^{
+        [weakSelf albumBtnClick];
+    };
+//    self.naviView.videoTitle.currentTitleBlock = ^(NSInteger currentIndex) {
+//        // 1 视频 2 图片
+//        if (weakSelf.vedioCount > 0) {
+//            NSInteger tempIndex = 0;
+//            if (currentIndex == 1) {
+//                tempIndex = 0; // 视频
+//            }
+//            if (currentIndex == 2) {
+//                if (weakSelf.currentIndex < weakSelf.vedioCount) {
+//                    tempIndex = weakSelf.vedioCount;
+//                }
+//            }
+//            if (tempIndex >= 0 && tempIndex < weakSelf.photoCount && tempIndex != weakSelf.currentIndex) {
+//                CGFloat pageWidth = weakSelf.photoScrollView.frame.size.width;
+//                [weakSelf.photoScrollView setContentOffset:CGPointMake(pageWidth * tempIndex, 0) animated:NO];
+//            }
+//        }
+//    };
+//    self.naviView.hasVideo = self.vedioCount > 0;
+    if (self.vedioCount > 0) {
+        // 有视频
+//        if (_startWithIndex < self.vedioCount) {
+//            self.naviView.videoTitle.isSelectVideo = YES;
+//        } else {
+//            self.naviView.videoTitle.isSelectVideo = NO;
+//        }
+        // 特殊处理，如果只有视频
+        if (self.photoCount == self.vedioCount) {
+//            self.naviView.hasVideo = NO;
+            self.naviView.titleLabel.text = @"视频";
+        }
+    }
+    [self.topBar addSubview:self.naviView];
+    [self.naviView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.mas_equalTo(topInset);
+        make.left.right.mas_equalTo(0);
+        make.height.mas_equalTo(kFHDPTopBarHeight);
+    }];
+    
+    if (self.pictureTitles.count > 1 && self.isShowSegmentView) {
+        self.pictureTitleView = [[FHDetailPictureTitleView alloc] initWithFrame:CGRectMake(0, topInset + kFHDPTopBarHeight, self.view.width, 42)];
+        self.pictureTitleView.backgroundColor = [UIColor clearColor];
+        [self.topBar addSubview:self.pictureTitleView];
+        [self.pictureTitleView mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.left.right.mas_equalTo(0);
+            make.height.mas_equalTo(42);
+            make.top.mas_equalTo(self.naviView.mas_bottom);
+        }];
+        self.pictureTitleView.titleNames = self.pictureTitles;
+        self.pictureTitleView.titleNums = self.pictureNumbers;
+        self.pictureTitleView.currentIndexBlock = ^(NSInteger currentIndex) {
+            
+            if (weakSelf.topImageClickTabBlock) {
+                weakSelf.topImageClickTabBlock(currentIndex);
             }
-            if (currentIndex == 2) {
-                if (weakSelf.currentIndex < weakSelf.vedioCount) {
-                    tempIndex = weakSelf.vedioCount;
-                }
+            // 选中图片标签
+            NSInteger tempIndex = currentIndex;
+            if (currentIndex == 0) {
+                // 选中第一个标签，跳过视频
+                //1.0.0 视频独立分类
+//                tempIndex += weakSelf.vedioCount;
             }
-            if (tempIndex >= 0 && tempIndex < weakSelf.photoCount && tempIndex != weakSelf.currentIndex) {
+            if (tempIndex >= 0 && tempIndex < weakSelf.photoCount) {
                 CGFloat pageWidth = weakSelf.photoScrollView.frame.size.width;
                 [weakSelf.photoScrollView setContentOffset:CGPointMake(pageWidth * tempIndex, 0) animated:NO];
             }
-        }
-    };
-    _naviView.hasVideo = self.vedioCount > 0;
-    if (self.vedioCount > 0) {
-        // 有视频
-        if (_startWithIndex < self.vedioCount) {
-            _naviView.videoTitle.isSelectVideo = YES;
-        } else {
-            _naviView.videoTitle.isSelectVideo = NO;
-        }
-        // 特殊处理，如果只有视频
-        if (self.photoCount == self.vedioCount) {
-            _naviView.hasVideo = NO;
-            _naviView.titleLabel.text = @"视频";
-        }
+        };
+        [self.pictureTitleView reloadData];
     }
-    [_topBar addSubview:_naviView];
+
     
-    _pictureTitleView = [[FHDetailPictureTitleView alloc] initWithFrame:CGRectMake(0, 64, self.view.width, 42)];
-    _pictureTitleView.backgroundColor = [UIColor clearColor];
-    [self.view addSubview:_pictureTitleView];
-    self.pictureTitleView.titleNames = self.pictureTitles;
-    self.pictureTitleView.titleNums = self.pictureNumbers;
-    self.pictureTitleView.currentIndexBlock = ^(NSInteger currentIndex) {
-        // 选中图片标签
-        NSInteger tempIndex = currentIndex;
-        if (currentIndex == 0) {
-            // 选中第一个标签，跳过视频
-            tempIndex += weakSelf.vedioCount;
-        }
-        if (tempIndex >= 0 && tempIndex < weakSelf.photoCount) {
-            CGFloat pageWidth = weakSelf.photoScrollView.frame.size.width;
-            [weakSelf.photoScrollView setContentOffset:CGPointMake(pageWidth * tempIndex, 0) animated:NO];
-        }
-    };
-    
-    if (self.vedioCount > 0 && _isShowAllBtns) {
+    if (self.vedioCount > 0 && _isShowBottomBar) {
         _videoInfoView = [[FHDetailVideoInfoView alloc] initWithFrame:CGRectMake(0, 0, self.view.width, 67)];
         _videoInfoView.hidden = _startWithIndex >= self.vedioCount;
         [self.view addSubview:_videoInfoView];
@@ -302,46 +341,85 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
         self.videoInfoView.collectActionBlock = self.collectActionBlock;
     }
     
-    if (self.isShowAllBtns) {
-        _bottomBar = [[UIView alloc] initWithFrame:CGRectMake(0, self.view.height - kFHDPBottomBarHeight, self.view.width, kFHDPBottomBarHeight)];
-        _bottomBar.backgroundColor = [UIColor clearColor];
-        [self.view addSubview:_bottomBar];
-    }
+    if (self.isShowBottomBar) {
+        self.bottomBar = [[UIView alloc] initWithFrame:CGRectMake(0, self.view.height - kFHDPBottomBarHeight, self.view.width, kFHDPBottomBarHeight)];
+        self.bottomBar.backgroundColor = [UIColor clearColor];
+        [self.view addSubview:self.bottomBar];
+        [self.bottomBar mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.left.bottom.right.mas_equalTo(0);
+            make.height.mas_equalTo(120 + bottomInset);
+        }];
+        
+        UIImageView *bottomBgImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"picture_detail_bottombar_bg"]];
+        bottomBgImageView.frame = self.topBar.bounds;
+        [self.bottomBar addSubview:bottomBgImageView];
+        [bottomBgImageView mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.edges.mas_equalTo(UIEdgeInsetsZero);
+        }];
+        
+        if (self.bottomBarTitle.length) {
+            UILabel *bottomTitleLabel = [[UILabel alloc] init];
+            bottomTitleLabel.text = self.bottomBarTitle;
+            bottomTitleLabel.font = [UIFont themeFontSemibold:20];
+            bottomTitleLabel.textColor = [UIColor whiteColor];
+            [self.bottomBar addSubview:bottomTitleLabel];
+            [bottomTitleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+                make.left.mas_equalTo(20);
+                make.height.mas_equalTo(60);
+                make.top.mas_equalTo(0);
+            }];
 
-    
-    if (self.mediaHeaderModel.contactViewModel) {
-        CGFloat itemWidth = self.view.width - 40;
-        BOOL showenOnline = self.mediaHeaderModel.contactViewModel.showenOnline;
-        if (showenOnline) {
-            itemWidth = (itemWidth - 15) / 2.0;
-            // 在线联系
-            UIButton *online = self.onlineBtn;
-            if (self.mediaHeaderModel.contactViewModel.onLineName.length > 0) {
-                NSString *title = self.mediaHeaderModel.contactViewModel.onLineName;
-                [online setTitle:title forState:UIControlStateNormal];
-                [online setTitle:title forState:UIControlStateHighlighted];
+        }
+        
+        if (self.mediaHeaderModel.contactViewModel) {
+            CGFloat itemWidth = self.view.width - 30;
+            BOOL showenOnline = self.mediaHeaderModel.contactViewModel.showenOnline;
+            if (showenOnline) {
+                itemWidth = (itemWidth - 15) / 2.0;
+                // 在线联系
+                if (self.mediaHeaderModel.contactViewModel.onLineName.length > 0) {
+                    NSString *title = self.mediaHeaderModel.contactViewModel.onLineName;
+                    [self.onlineBtn setTitle:title forState:UIControlStateNormal];
+                    [self.onlineBtn setTitle:title forState:UIControlStateHighlighted];
+                }
+                self.onlineBtn.frame = CGRectMake(15, 0, itemWidth, 44);
+                [self.bottomBar addSubview:self.onlineBtn];
+                [self.onlineBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+                    make.left.mas_equalTo(15);
+                    make.top.mas_equalTo(60);
+                    make.width.mas_equalTo(itemWidth);
+                    make.height.mas_equalTo(44);
+                }];
+                // 电话咨询
+                if (self.mediaHeaderModel.contactViewModel.phoneCallName.length > 0) {
+                    NSString *title = self.mediaHeaderModel.contactViewModel.phoneCallName;
+                    [self.contactBtn setTitle:title forState:UIControlStateNormal];
+                    [self.contactBtn setTitle:title forState:UIControlStateHighlighted];
+                }
+                self.contactBtn.frame = CGRectMake(20 + itemWidth + 10, 0, itemWidth, 44);
+                [self.bottomBar addSubview:self.contactBtn];
+                [self.contactBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+                    make.right.mas_equalTo(-15);
+                    make.top.mas_equalTo(self.onlineBtn.mas_top);
+                    make.width.mas_equalTo(self.onlineBtn.mas_width);
+                    make.height.mas_equalTo(self.onlineBtn.mas_height);
+                }];
+            } else {
+                // 电话咨询
+                if (self.mediaHeaderModel.contactViewModel.phoneCallName.length > 0) {
+                    NSString *title = self.mediaHeaderModel.contactViewModel.phoneCallName;
+                    [self.contactBtn setTitle:title forState:UIControlStateNormal];
+                    [self.contactBtn setTitle:title forState:UIControlStateHighlighted];
+                }
+                self.contactBtn.frame = CGRectMake(15, 0, itemWidth, 44);
+                [self.bottomBar addSubview:self.contactBtn];
+                [self.contactBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+                    make.left.mas_equalTo(15);
+                    make.top.mas_equalTo(60);
+                    make.width.mas_equalTo(itemWidth);
+                    make.height.mas_equalTo(44);
+                }];
             }
-            online.frame = CGRectMake(20, 0, itemWidth, 44);
-            [self.bottomBar addSubview:online];
-            // 电话咨询
-            UIButton *contact = self.contactBtn;
-            if (self.mediaHeaderModel.contactViewModel.phoneCallName.length > 0) {
-                NSString *title = self.mediaHeaderModel.contactViewModel.phoneCallName;
-                [contact setTitle:title forState:UIControlStateNormal];
-                [contact setTitle:title forState:UIControlStateHighlighted];
-            }
-            contact.frame = CGRectMake(20 + itemWidth + 10, 0, itemWidth, 44);
-            [self.bottomBar addSubview:contact];
-        } else {
-            // 电话咨询
-            UIButton *contact = self.contactBtn;
-            if (self.mediaHeaderModel.contactViewModel.phoneCallName.length > 0) {
-                NSString *title = self.mediaHeaderModel.contactViewModel.phoneCallName;
-                [contact setTitle:title forState:UIControlStateNormal];
-                [contact setTitle:title forState:UIControlStateHighlighted];
-            }
-            contact.frame = CGRectMake(20, 0, itemWidth, 44);
-            [self.bottomBar addSubview:contact];
         }
     }
     
@@ -371,9 +449,10 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
         navi.panRecognizer.enabled = NO;
     }
     // 是否正在显示 视频
-    self.isShowenVideo = _naviView.videoTitle.isSelectVideo;
+    self.isShowenVideo = self.currentIndex < self.vedioCount;
+//    _naviView.videoTitle.isSelectVideo;
     // lead_show 埋点
-    if (self.mediaHeaderModel.contactViewModel) {
+    if (self.mediaHeaderModel.contactViewModel && self.bottomBar && self.bottomBar.hidden == NO) {
         [self addLeadShowLog:self.mediaHeaderModel.contactViewModel.contactPhone baseParams:[self.mediaHeaderModel.contactViewModel baseParams]];
     }
 }
@@ -381,11 +460,11 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
 - (void)setIsShowenVideo:(BOOL)isShowenVideo {
     _isShowenVideo = isShowenVideo;
     if (isShowenVideo) {
-        _pictureTitleView.hidden = YES;
+//        _pictureTitleView.hidden = YES;
         _videoInfoView.hidden = NO;
         [self.videoVC play];
     } else {
-        _pictureTitleView.hidden = NO;
+//        _pictureTitleView.hidden = NO;
         _videoInfoView.hidden = YES;
         [self.videoVC pause];
     }
@@ -442,14 +521,18 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
 // 在线联系点击
 - (void)onlineButtonClick:(UIButton *)btn {
     if (self.mediaHeaderModel.contactViewModel) {
-        NSMutableDictionary *extraDic = @{@"realtor_position":@"online",
-                                   @"position":@"online",
-                                   @"element_from":[self elementFrom],
-                                   @"from":@"app_oldhouse_picview"
-                                   }.mutableCopy;
+        NSMutableDictionary *extraDic = @{}.mutableCopy;
+        extraDic[@"realtor_position"] = @"im_button";
+        extraDic[@"position"] = @"online";
+        extraDic[@"element_from"] = [self elementFrom];
+        extraDic[@"picture_type"] = self.currentTypeName?:@"be_null";
         NSString *vid = [self videoId];
         if ([vid length] > 0) {
             extraDic[@"item_id"] = vid;
+        }
+        // 头图im入口线索透传
+        if(self.mediaHeaderModel.houseImageAssociateInfo) {
+            extraDic[kFHAssociateInfo] = self.mediaHeaderModel.houseImageAssociateInfo;
         }
         [self.mediaHeaderModel.contactViewModel onlineActionWithExtraDict:extraDic];
     }
@@ -458,15 +541,37 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
 // 电话咨询点击
 - (void)contactButtonClick:(UIButton *)btn {
     if (self.mediaHeaderModel.contactViewModel) {
+//        NSString *fromStr = @"app_oldhouse_picview";
+//        NSNumber *cluePage = nil;
+//        if (_houseType == FHHouseTypeNewHouse) {
+//            fromStr = @"app_newhouse_picview";
+//            if(self.mediaHeaderModel.contactViewModel.contactPhone.phone.length > 0) {
+//                cluePage = @(FHClueCallPageTypeCNewHousePicview);
+//            }else {
+//                cluePage = @(FHClueFormPageTypeCNewHousePicview);
+//            }
+//        }
         NSMutableDictionary *extraDic = @{@"realtor_position":@"phone_button",
-                                   @"position":@"report_button",
-                                   @"element_from":[self elementFrom]
-                                   }.mutableCopy;
+                                          @"position":@"report_button",
+                                          @"element_from":[self elementFrom],
+                                          @"picture_type": self.currentTypeName?:@"be_null"
+                                          }.mutableCopy;
         NSString *vid = [self videoId];
         if ([vid length] > 0) {
             extraDic[@"item_id"] = vid;
         }
-        extraDic[@"from"] = @"app_oldhouse_picview";
+//        extraDic[@"from"] = fromStr;
+//        if (cluePage) {
+//            extraDic[kFHCluePage] = cluePage;
+//        }
+        NSDictionary *associateInfoDict = nil;
+        FHDetailContactModel *contactPhone = self.mediaHeaderModel.contactViewModel.contactPhone;
+        if (contactPhone.phone.length > 0) {
+            associateInfoDict = self.associateInfo.phoneInfo;
+        }else {
+            associateInfoDict = self.associateInfo.reportFormInfo;
+        }
+        extraDic[kFHAssociateInfo] = associateInfoDict;
         [self.mediaHeaderModel.contactViewModel contactActionWithExtraDict:extraDic];
     }
 }
@@ -474,11 +579,12 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
 - (UIButton *)onlineBtn {
     if (!_onlineBtn) {
         _onlineBtn = [[UIButton alloc] init];
-        _onlineBtn.layer.cornerRadius = 4;
+        _onlineBtn.layer.cornerRadius = 22;
+        _onlineBtn.layer.borderColor = [UIColor colorWithWhite:1.0 alpha:0.3].CGColor;
+        _onlineBtn.layer.borderWidth = 1.0;///UIScreen.mainScreen.scale;
         _onlineBtn.titleLabel.font = [UIFont themeFontRegular:16];
-        _onlineBtn.backgroundColor = [UIColor colorWithHexStr:@"#151515"];
-        [_onlineBtn setTitleColor:[UIColor themeGray5] forState:UIControlStateNormal];
-        [_onlineBtn setTitleColor:[UIColor themeGray5] forState:UIControlStateHighlighted];
+        _onlineBtn.backgroundColor = [UIColor colorWithWhite:0 alpha:0.2];
+        [_onlineBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
         [_onlineBtn setTitle:@"在线联系" forState:UIControlStateNormal];
         [_onlineBtn setTitle:@"在线联系" forState:UIControlStateHighlighted];
         [_onlineBtn addTarget:self action:@selector(onlineButtonClick:) forControlEvents:UIControlEventTouchUpInside];
@@ -488,12 +594,13 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
 
 - (FHLoadingButton *)contactBtn {
     if (!_contactBtn) {
-         _contactBtn = [[FHLoadingButton alloc]init];
-        _contactBtn.layer.cornerRadius = 4;
+        _contactBtn = [[FHLoadingButton alloc]init];
+        _contactBtn.layer.cornerRadius = 22;
+        _contactBtn.layer.borderColor = [UIColor colorWithWhite:1.0 alpha:0.3].CGColor;
+        _contactBtn.layer.borderWidth = 1.0;///UIScreen.mainScreen.scale;
         _contactBtn.titleLabel.font = [UIFont themeFontRegular:16];
-        _contactBtn.backgroundColor = [UIColor colorWithHexStr:@"#151515"];
-        [_contactBtn setTitleColor:[UIColor themeGray5] forState:UIControlStateNormal];
-        [_contactBtn setTitleColor:[UIColor themeGray5] forState:UIControlStateHighlighted];
+        _contactBtn.backgroundColor = [UIColor colorWithWhite:0 alpha:0.2];
+        [_contactBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
         [_contactBtn setTitle:@"电话咨询" forState:UIControlStateNormal];
         [_contactBtn setTitle:@"电话咨询" forState:UIControlStateHighlighted];
         [_contactBtn addTarget:self action:@selector(contactButtonClick:) forControlEvents:UIControlEventTouchUpInside];
@@ -516,10 +623,17 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
     if (topInset < 1) {
         topInset = 20;
     }
-    self.bottomBar.frame = CGRectMake(0, self.view.height - kFHDPBottomBarHeight - bottomInset, self.view.width, kFHDPBottomBarHeight);
-    self.topBar.frame = CGRectMake(0, 0, self.view.width, kFHDPTopBarHeight + topInset);
-    self.naviView.frame = CGRectMake(0, topInset, self.view.width, kFHDPTopBarHeight);
-    self.pictureTitleView.frame = CGRectMake(0, topInset + kFHDPTopBarHeight, self.view.width, 42);
+    [self.topBar mas_updateConstraints:^(MASConstraintMaker *make) {
+        make.height.mas_equalTo(kFHDPTopBarHeight + topInset + 42);
+    }];
+    
+    [self.naviView mas_updateConstraints:^(MASConstraintMaker *make) {
+        make.top.mas_equalTo(topInset);
+    }];
+
+    [self.bottomBar mas_updateConstraints:^(MASConstraintMaker *make) {
+        make.height.mas_equalTo(120 + bottomInset);
+    }];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -547,7 +661,9 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
         }
     }
     self.disableAutoPlayVideo = NO;
-    [self.pictureTitleView.colletionView reloadData];
+    if (self.pictureTitleView) {
+        [self.pictureTitleView reloadData];
+    }
 }
 
 - (void)viewDidDisappear:(BOOL)animated {
@@ -611,6 +727,28 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
     [self scrollToIndex:_currentIndex];
 }
 
+- (void)updateNavHeaderTitle {
+    NSInteger count = 0;
+    NSInteger currentTitleIndex;
+    NSInteger titleIndex = 0;
+    for (int i = 0; i < self.pictureNumbers.count; i++) {
+        NSNumber *num = self.pictureNumbers[i];
+        NSInteger tempCount = [num integerValue];
+        count += tempCount;
+        if (self.currentIndex < count) {
+            titleIndex = i;
+            currentTitleIndex = count - self.currentIndex;
+            break;
+        }
+    }
+    NSNumber *num = self.pictureNumbers[titleIndex];
+//    self.currentTypeName = self.pictureTitles[titleIndex];
+    if (titleIndex < self.mediaHeaderModel.houseImageDictList.count) {
+        FHHouseDetailImageListDataModel *listModel = self.mediaHeaderModel.houseImageDictList[titleIndex];
+        self.currentTypeName = listModel.houseImageTypeName;
+    }
+    self.naviView.titleLabel.text = [NSString stringWithFormat:@"%d/%d",num.unsignedIntValue - currentTitleIndex + 1,num.unsignedIntValue];
+}
 
 #pragma mark - Setter & Getter
 // 设置初始化数据入口
@@ -635,8 +773,13 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
         _mediaHeaderModel = mediaHeaderModel;
         NSMutableArray *titles = [NSMutableArray new];
         NSMutableArray *numbers = [NSMutableArray new];
-        __block BOOL isFirstItem = YES;
-        for (FHDetailOldDataHouseImageDictListModel *listModel in mediaHeaderModel.houseImageDictList) {
+        if (self.vedioCount) {
+            //把视频添加到第一个图片归类中
+            //1.0.0 需求 视频单独分类
+            [titles addObject:[NSString stringWithFormat:@"视频（%ld）",self.vedioCount]];
+            [numbers addObject:@(self.vedioCount)];
+        }
+        for (FHHouseDetailImageListDataModel *listModel in mediaHeaderModel.houseImageDictList) {
             if (listModel.houseImageTypeName.length > 0) {
                 NSInteger tempCount = 0;
                 for (FHImageModel *imageModel in listModel.houseImageList) {
@@ -646,19 +789,15 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
                 }
                 if (tempCount > 0) {
                     [titles addObject:[NSString stringWithFormat:@"%@（%ld）",listModel.houseImageTypeName,tempCount]];
-                    if (isFirstItem) {
-                        isFirstItem = NO;
-                        tempCount += self.vedioCount; // 把视频添加到第一个图片归类中
-                    }
                     [numbers addObject:@(tempCount)];
                 }
             }
         }
         // 只有一个分类时隐藏
-        if (titles.count > 1) {
+//        if (titles.count > 1) {
             self.pictureTitles = titles;
             self.pictureNumbers = numbers;
-        }
+//        }
     }
 }
 
@@ -886,9 +1025,12 @@ static BOOL kFHStaticPhotoBrowserAtTop = NO;
     }
     
     _currentIndex = newIndex;
-    self.pictureTitleView.selectIndex = newIndex;
-    self.naviView.videoTitle.isSelectVideo = newIndex < self.vedioCount;
-    self.isShowenVideo = self.naviView.videoTitle.isSelectVideo;
+    [self updateNavHeaderTitle];
+    if (self.pictureTitleView) {
+        self.pictureTitleView.selectIndex = newIndex;
+    }
+//    self.naviView.videoTitle.isSelectVideo = newIndex < self.vedioCount;
+    self.isShowenVideo = newIndex < self.vedioCount;;
     [self unloadPhoto:_currentIndex + 2];
     [self unloadPhoto:_currentIndex - 2];
     
@@ -1000,7 +1142,7 @@ static BOOL kFHStaticPhotoBrowserAtTop = NO;
         else {
             [_vedioViewPools removeObject:showVedioView];
         }
- 
+        
         showVedioView.frame = [self frameForPageAtIndex:index];
         if (self.mediaHeaderModel.vedioModel) {
             
@@ -1113,6 +1255,37 @@ static BOOL kFHStaticPhotoBrowserAtTop = NO;
     }
 }
 
+- (void)albumBtnClick
+{
+    if (self.imageInfosModels.count == 0) {
+        return;
+    }
+    
+    if (self.albumImageBtnClickBlock) {
+        self.albumImageBtnClickBlock(self.currentIndex);
+    }
+    
+    if (self.allPhotoActionBlock) {
+        self.allPhotoActionBlock();
+    } else {
+        FHFloorPanPicShowViewController *showVC = [[FHFloorPanPicShowViewController alloc] init];
+        showVC.modalPresentationStyle = UIModalPresentationFullScreen;
+        showVC.pictsArray = self.smallImageInfosModels;
+        __weak typeof(self)weakSelf = self;
+        showVC.albumImageBtnClickBlock = ^(NSInteger index){
+            if (index >= 0) {
+                [weakSelf.photoScrollView setContentOffset:CGPointMake(self.view.frame.size.width * index, 0) animated:NO];
+            }
+        };
+        
+        showVC.albumImageStayBlock = ^(NSInteger index, NSInteger stayTime) {
+            [self stayCallBack:stayTime];
+        };
+        
+        [self presentViewController:showVC animated:YES completion:nil];
+    }
+}
+
 - (void)backButtonClicked
 {
     [self dismissAnimated:YES];
@@ -1142,7 +1315,7 @@ static BOOL kFHStaticPhotoBrowserAtTop = NO;
 
 - (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate
 {
-
+    
 }
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView
@@ -1454,7 +1627,7 @@ static BOOL kFHStaticPhotoBrowserAtTop = NO;
     [self resetStatusStyle];
     self.containerView.alpha = (1 - yFraction * 2 / 3);
     [UIView animateWithDuration:0.15 animations:^{
-//        self.indexPromptLabel.alpha = 0;
+        //        self.indexPromptLabel.alpha = 0;
     }];
 }
 
@@ -1464,7 +1637,7 @@ static BOOL kFHStaticPhotoBrowserAtTop = NO;
     self.photoScrollView.frame = [self frameForPagingScrollView];
     self.containerView.alpha = 1;
     [UIView animateWithDuration:0.15 animations:^{
-//        self.indexPromptLabel.alpha = 1;
+        //        self.indexPromptLabel.alpha = 1;
         [self setCurrentStatusStyle];
     }];
 }
@@ -1522,7 +1695,7 @@ static BOOL kFHStaticPhotoBrowserAtTop = NO;
                 containerView.backgroundColor = [UIColor blackColor];
             }
             largeImageView.frame = beginFrame;
-            
+            largeImageView.alpha = 1;
             UIView *originalSupperView = largeImageView.superview;
             [containerView addSubview:largeImageView];
             [rootViewController.view addSubview:self.view]; //图片放大动画情况下，先加入view再加入遮罩
@@ -1597,7 +1770,7 @@ static BOOL kFHStaticPhotoBrowserAtTop = NO;
                 || (UIInterfaceOrientationIsLandscape(_enterOrientation) && UIInterfaceOrientationIsPortrait(currentOrientation))) {
                 [[UIApplication sharedApplication] beginIgnoringInteractionEvents];
                 
-                [UIView animateWithDuration:.35f animations:^{
+                [UIView animateWithDuration:.2f animations:^{
                     self.view.alpha = 0.0f;
                 } completion:^(BOOL finished) {
                     kFHStaticPhotoBrowserAtTop = NO;
@@ -1676,10 +1849,11 @@ static BOOL kFHStaticPhotoBrowserAtTop = NO;
             
             [[UIApplication sharedApplication] beginIgnoringInteractionEvents];
             
-            [UIView animateWithDuration:0.4f animations:^{
-                self.containerView.backgroundColor = [UIColor clearColor];
-                containerView.backgroundColor = [UIColor clearColor];
-                largeImageView.frame = endFrame;
+            [UIView animateWithDuration:0.25f animations:^{
+                
+                largeImageView.alpha = 0;
+                self.containerView.alpha = 0;
+                containerView.alpha = 0;
             } completion:^(BOOL finished) {
                 [containerView removeFromSuperview];
                 kFHStaticPhotoBrowserAtTop = NO;
@@ -1731,7 +1905,7 @@ static BOOL kFHStaticPhotoBrowserAtTop = NO;
             self.containerView.alpha = 0;
             [self resetStatusStyle];
             [self finished];
-            [TTTracker ttTrackEventWithCustomKeys:@"slide_over" label:@"random_slide_close" value:nil source:nil extraDic:nil];
+            [BDTrackerProtocol trackEventWithCustomKeys:@"slide_over" label:@"random_slide_close" value:nil source:nil extraDic:nil];
             break;
         case TTPreviewAnimateStateWillCancel:
             break;

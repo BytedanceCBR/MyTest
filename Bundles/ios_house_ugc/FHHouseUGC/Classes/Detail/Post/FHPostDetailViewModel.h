@@ -22,6 +22,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, weak)     FHPostDetailHeaderModel       *detailHeaderModel;
 @property (nonatomic, copy)     NSString       *lastPageSocialGroupId;
+@property (nonatomic, weak)     UIButton       *weakShareButton;
+//标识来源的入口，是发现过来的（house_thread）还是UGC过来的（ugc_thread）
+@property(nonatomic, copy) NSString *threadDetailSource;
 
 @end
 

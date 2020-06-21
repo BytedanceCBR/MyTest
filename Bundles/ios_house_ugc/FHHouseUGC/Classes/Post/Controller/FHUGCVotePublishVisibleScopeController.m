@@ -6,10 +6,10 @@
 //
 
 #import "FHUGCVotePublishVisibleScopeController.h"
-#import <WDDefines.h>
-#import <FHCommonDefines.h>
-#import <Masonry.h>
-#import <FHLocManager.h>
+#import "WDDefines.h"
+#import "FHCommonDefines.h"
+#import "Masonry.h"
+#import "FHLocManager.h"
 #import <FHHouseUGCAPI.h>
 #import <FHUGCCommunityListModel.h>
 #import "FHUGCVotePublishModel.h"
@@ -479,6 +479,7 @@
             self.completeBtn.hidden = YES;
             return;
         }
+        [self.emptyView hideEmptyView];
         NSMutableArray *socialGroupList = [NSMutableArray array];
         
         NSMutableSet<NSString *> *selectedGroupIdSet = [NSMutableSet set];

@@ -6,22 +6,24 @@
 //
 
 #import "FHUGCVoteDetailCell.h"
-#import <UIImageView+BDWebImage.h>
-#import "FHUGCCellHeaderView.h"
+#import "UIImageView+BDWebImage.h"
 #import "FHUGCCellUserInfoView.h"
 #import "FHUGCCellBottomView.h"
 #import "FHUGCCellMultiImageView.h"
 #import "FHUGCCellHelper.h"
 #import "FHCommentBaseDetailViewModel.h"
-#import "FHUGCCellOriginItemView.h"
 #import "TTRoute.h"
-#import <TTBusinessManager+StringUtils.h>
-#import <UIViewAdditions.h>
+#import "TTBusinessManager+StringUtils.h"
+#import "UIViewAdditions.h"
 #import "TTAccountManager.h"
 #import "FHHouseUGCAPI.h"
 #import "ToastManager.h"
 #import "FHUGCVoteResponseModel.h"
 #import "FHUserTracker.h"
+#import "MJRefresh.h"
+#import "FHRefreshCustomFooter.h"
+#import "UIScrollView+Refresh.h"
+#import "TTReachability.h"
 
 #define leftMargin 20
 #define rightMargin 20
@@ -79,8 +81,8 @@
         NSDictionary *userInfo = notification.userInfo;
         
         FHUGCVoteInfoVoteInfoModel *voteInfo = notification.userInfo[@"vote_info"];
-        if (voteInfo && voteInfo.selected) {
-            // 完成(或者过期)
+        if (voteInfo) {
+            // 完成(或者过期) 或者 取消投票
             FHUGCVoteInfoVoteInfoModel *currentVoteInfo = self.cellModel.voteInfo;
             if ([currentVoteInfo.voteId isEqualToString:voteInfo.voteId] && currentVoteInfo != voteInfo) {
                 // 同样的投票
@@ -101,6 +103,7 @@
                     }
                 }];
                 // 更新UI
+                self.cellModel.ischanged = YES;
                 [self refreshWithData:self.cellModel];
             }
         }
@@ -115,7 +118,7 @@
 - (void)setupViews {
     __weak typeof(self) wself = self;
     
-    self.userInfoView = [[FHUGCCellUserInfoView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, 0)];
+    self.userInfoView = [[FHUGCCellUserInfoView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, userInfoViewHeight)];
     [self.contentView addSubview:_userInfoView];
     
     self.contentLabel = [[TTUGCAttributedLabel alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width - 30 * 2, 0)];
@@ -143,7 +146,7 @@
     self.voteView.detailCell = self;
     [self.contentView addSubview:self.voteView];
     
-    self.bottomView = [[FHUGCCellBottomView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, 0)];
+    self.bottomView = [[FHUGCCellBottomView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, bottomViewHeight)];
     [_bottomView.commentBtn addTarget:self action:@selector(commentBtnClick) forControlEvents:UIControlEventTouchUpInside];
     [_bottomView.guideView.closeBtn addTarget:self action:@selector(closeGuideView) forControlEvents:UIControlEventTouchUpInside];
     [self.contentView addSubview:_bottomView];
@@ -239,9 +242,14 @@
         NSDictionary *log_pb = cellModel.tracerDic[@"log_pb"];
         dict[@"community_id"] = cellModel.community.socialGroupId;
         NSString *enter_from = cellModel.tracerDic[@"page_type"] ?: @"be_null";
-        dict[@"tracer"] = @{@"enter_from":enter_from,
-                            @"enter_type":@"click",
-                            @"log_pb":log_pb ?: @"be_null"};
+        NSString *originFrom = cellModel.tracerDic[UT_ORIGIN_FROM] ?: @"be_null";
+        dict[@"tracer"] = @{
+            @"origin_from":originFrom,
+            @"enter_from":enter_from,
+            @"enter_type":@"click",
+            @"group_id":cellModel.groupId ?: @"be_null",
+            @"log_pb":log_pb ?: @"be_null"
+        };
         TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
         // 跳转到圈子详情页
         NSURL *openUrl = [NSURL URLWithString:@"sslocal://ugc_community_detail"];
@@ -253,13 +261,17 @@
     if (![data isKindOfClass:[FHFeedUGCCellModel class]]) {
         return;
     }
+    
+    FHFeedUGCCellModel *cellModel = (FHFeedUGCCellModel *)data;
+    
+    if(self.currentData == data && !cellModel.ischanged){
+        return;
+    }
+    
     self.currentData = data;
     self.cellModel = data;
     //设置userInfo
-    self.userInfoView.cellModel = self.cellModel;
-    self.userInfoView.userName.text = self.cellModel.user.name;
-    self.userInfoView.descLabel.attributedText = self.cellModel.desc;
-    [self.userInfoView.icon bd_setImageWithURL:[NSURL URLWithString:self.cellModel.user.avatarUrl] placeholder:[UIImage imageNamed:@"fh_mine_avatar"]];
+    [self.userInfoView refreshWithData:cellModel];
     __weak typeof(self) weakSelf = self;
     self.userInfoView.deleteCellBlock = ^{
         FHCommentBaseDetailViewModel *viewModel = weakSelf.baseViewModel;
@@ -359,6 +371,8 @@
     self.voteView.height = voteInfo.voteHeight;
     // 更新布局
     [self setupUIFrames];
+    
+    [self showGuideView];
 }
 
 + (CGFloat)heightForData:(id)data {
@@ -411,6 +425,11 @@
         } else {
             height += (24 + 25);
         }
+        
+        if(cellModel.isInsertGuideCell){
+            height += guideViewHeight;
+        }
+        
         return height;
     }
     return 44;
@@ -478,6 +497,30 @@
     [TTIndicatorView showWithIndicatorStyle:TTIndicatorViewStyleImage indicatorText:@"拷贝成功" indicatorImage:nil autoDismiss:YES dismissHandler:nil];
 }
 
+- (void)showGuideView {
+    if(_cellModel.isInsertGuideCell){
+        self.bottomView.height = bottomViewHeight + guideViewHeight;
+    }else{
+        self.bottomView.height = bottomViewHeight;
+    }
+}
+
+- (void)closeGuideView {
+    self.cellModel.isInsertGuideCell = NO;
+    [self.cellModel.tableView beginUpdates];
+    
+    [self showGuideView];
+    self.bottomView.cellModel = self.cellModel;
+    
+    [self setNeedsUpdateConstraints];
+    
+    [self.cellModel.tableView endUpdates];
+    
+    if(self.delegate && [self.delegate respondsToSelector:@selector(closeFeedGuide:)]){
+        [self.delegate closeFeedGuide:self.cellModel];
+    }
+}
+
 @end
 
 // FHUGCVoteMainView
@@ -541,6 +584,7 @@
         bottomHeight += 28;
         FHUGCVoteFoldViewButton *foldButton = [[FHUGCVoteFoldViewButton alloc] initWithDownText:@"展开查看更多" upText:@"收起" isFold:self.voteInfo.isFold];
         foldButton.frame = CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, 28);
+        foldButton.backgroundColor = [UIColor whiteColor];
         [self.bottomBgView addSubview:foldButton];
         [foldButton addTarget:self action:@selector(foldButtonClick:) forControlEvents:UIControlEventTouchUpInside];
         self.foldButton = foldButton;
@@ -550,7 +594,7 @@
     self.hasVotedLabel = [[UILabel alloc] initWithFrame:CGRectMake(20, bottomHeight, ([UIScreen mainScreen].bounds.size.width - 40 - 10) / 2, 38)];
     self.hasVotedLabel.layer.cornerRadius = 19;
     self.hasVotedLabel.clipsToBounds = YES;
-    self.hasVotedLabel.backgroundColor = [UIColor colorWithHexString:@"#ff5869" alpha:0.24];
+    self.hasVotedLabel.backgroundColor = [UIColor colorWithHexString:@"#ff9629" alpha:0.24];
     self.hasVotedLabel.text = @"已投票";
     self.hasVotedLabel.font = [UIFont themeFontRegular:16];
     self.hasVotedLabel.textAlignment = NSTextAlignmentCenter;
@@ -560,13 +604,13 @@
     FHUGCLoadingButton *editBtn = [[FHUGCLoadingButton alloc] initWithFrame:CGRectMake(self.hasVotedLabel.right + 10, bottomHeight, ([UIScreen mainScreen].bounds.size.width - 40 - 10) / 2, 38)];
     editBtn.layer.cornerRadius = 19;
     editBtn.layer.borderWidth = 0.5;
-    editBtn.layer.borderColor = [UIColor themeRed1].CGColor;
+    editBtn.layer.borderColor = [UIColor themeOrange1].CGColor;
     editBtn.backgroundColor = [UIColor themeWhite];
     editBtn.titleLabel.font = [UIFont themeFontRegular:16];
     [editBtn setTitle:@"修改投票" forState:UIControlStateNormal];
     [editBtn setTitle:@"修改投票" forState:UIControlStateHighlighted];
-    [editBtn setTitleColor:[UIColor themeRed1] forState:UIControlStateNormal];
-    [editBtn setTitleColor:[UIColor themeRed1] forState:UIControlStateHighlighted];
+    [editBtn setTitleColor:[UIColor themeOrange1] forState:UIControlStateNormal];
+    [editBtn setTitleColor:[UIColor themeOrange1] forState:UIControlStateHighlighted];
     [editBtn addTarget:self action:@selector(editButtonClick:) forControlEvents:UIControlEventTouchUpInside];
     [self.bottomBgView addSubview:editBtn];
     self.editButton = editBtn;
@@ -577,13 +621,13 @@
     // 投票按钮
     FHUGCLoadingButton *voteBtn = [[FHUGCLoadingButton alloc] initWithFrame:CGRectMake(20, bottomHeight, [UIScreen mainScreen].bounds.size.width - 40, 38)];
     voteBtn.layer.cornerRadius = 19;
-    voteBtn.backgroundColor = [UIColor themeRed1];
+    voteBtn.backgroundColor = [UIColor themeOrange4];
     voteBtn.titleLabel.font = [UIFont themeFontRegular:16];
     [voteBtn setTitle:@"确定投票" forState:UIControlStateNormal];
     [voteBtn setTitle:@"确定投票" forState:UIControlStateHighlighted];
     [voteBtn setTitleColor:[UIColor themeWhite] forState:UIControlStateNormal];
     [voteBtn setTitleColor:[UIColor themeWhite] forState:UIControlStateHighlighted];
-    voteBtn.backgroundColor = [UIColor colorWithHexString:@"#ff5869" alpha:0.24];
+    voteBtn.backgroundColor = [UIColor colorWithHexString:@"#ff9629" alpha:0.24];
     voteBtn.enabled = NO;
     [voteBtn addTarget:self action:@selector(voteButtonClick:) forControlEvents:UIControlEventTouchUpInside];
     [self.bottomBgView addSubview:voteBtn];
@@ -594,6 +638,7 @@
     bottomHeight += 5;
     self.dateLabel = [[UILabel alloc] initWithFrame:CGRectMake(20, bottomHeight, [UIScreen mainScreen].bounds.size.width - 40, 17)];
     self.dateLabel.backgroundColor = [UIColor themeWhite];
+    self.dateLabel.layer.masksToBounds = YES;
     self.dateLabel.text = @"";
     self.dateLabel.textAlignment = NSTextAlignmentCenter;
     self.dateLabel.textColor = [UIColor themeGray3];
@@ -628,7 +673,7 @@
         }
     }
     
-    if (self.voteInfo.voteId.length <= 0 || options.count <= 0) {
+    if (self.voteInfo.voteId.length <= 0 || options.count <= 0 || ![TTReachability isNetworkConnected]) {
         [[ToastManager manager] showToast:@"投票失败"];
         return;
     }
@@ -636,11 +681,30 @@
     [self.voteButton startLoading];
     self.voteInfo.voteState = FHUGCVoteStateVoting;
     __weak typeof(self) weakSelf = self;
-    [FHHouseUGCAPI requestVoteSubmit:self.voteInfo.voteId optionIDs:options optionNum:optionNum completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
+    [FHHouseUGCAPI requestVoteSubmit:self.voteInfo.voteId optionIDs:options optionNum:optionNum class:FHUGCVoteResponseModel.class completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
         [weakSelf.voteButton stopLoading];
         if (error) {
-            [[ToastManager manager] showToast:error.domain];
-            weakSelf.voteInfo.voteState = FHUGCVoteStateNone;
+            if([self isChinese:error.domain]){
+                [[ToastManager manager] showToast:error.domain];
+            }else{
+                [[ToastManager manager] showToast:@"投票失败"];
+            }
+            if(error.code == 1005){ //过期
+                weakSelf.voteInfo.selected = YES;
+                weakSelf.voteInfo.voteState = FHUGCVoteStateExpired;
+                weakSelf.voteInfo.deadLineContent = @"";
+                for (FHUGCVoteInfoVoteInfoItemsModel *item in weakSelf.voteInfo.items) {
+                    if (item.selected) {
+                        item.selected = NO;
+                    }
+                }
+                [weakSelf refreshWithData:weakSelf.voteInfo];
+                NSMutableDictionary *userInfo = [NSMutableDictionary dictionary];
+                userInfo[@"vote_info"] = weakSelf.voteInfo;
+                [[NSNotificationCenter defaultCenter] postNotificationName:kFHUGCPostVoteSuccessNotification object:nil userInfo:userInfo];
+            }else{
+                weakSelf.voteInfo.voteState = FHUGCVoteStateNone;
+            }
         } else {
             FHUGCVoteResponseModel *responseModel = (FHUGCVoteResponseModel *)model;
             if ([responseModel.status isEqualToString:@"0"]) {
@@ -669,7 +733,7 @@
                 weakSelf.voteInfo.voteState = FHUGCVoteStateComplete;
                 [weakSelf refreshWithData:weakSelf.voteInfo];
                 NSMutableDictionary *userInfo = [NSMutableDictionary dictionary];
-                [userInfo setObject:weakSelf.voteInfo forKey:@"vote_info"];
+                userInfo[@"vote_info"] = weakSelf.voteInfo;
                 [[NSNotificationCenter defaultCenter] postNotificationName:kFHUGCPostVoteSuccessNotification object:nil userInfo:userInfo];
             } else {
                 // 失败
@@ -680,6 +744,12 @@
     }];
 }
 
+- (BOOL)isChinese:(NSString *)str {
+    NSString *match = @"(^[\u4e00-\u9fa5]+$)";
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"SELF matches %@", match];
+    return [predicate evaluateWithObject:str];
+}
+
 // 编辑按钮点击
 - (void)editButtonClick:(UIButton *)btn {
     // 先登录
@@ -687,7 +757,7 @@
         [self gotoLogin];
         return;
     }
-    if (self.voteInfo.voteId.length <= 0) {
+    if (self.voteInfo.voteId.length <= 0 || ![TTReachability isNetworkConnected]) {
         [[ToastManager manager] showToast:@"取消投票失败"];
         return;
     }
@@ -721,13 +791,49 @@
             }];
             
             [weakSelf refreshWithData:weakSelf.voteInfo];
+            NSMutableDictionary *userInfo = [NSMutableDictionary dictionary];
+            userInfo[@"vote_info"] = weakSelf.voteInfo;
+            [[NSNotificationCenter defaultCenter] postNotificationName:kFHUGCPostVoteSuccessNotification object:nil userInfo:userInfo];
         } else {
-            weakSelf.voteInfo.voteState = FHUGCVoteStateComplete;
-            if (error) {
+            if(error.code == 1005){ //过期
+                weakSelf.voteInfo.selected = YES;
+                weakSelf.voteInfo.voteState = FHUGCVoteStateExpired;
+                weakSelf.voteInfo.deadLineContent = @"";
+                for (FHUGCVoteInfoVoteInfoItemsModel *item in weakSelf.voteInfo.items) {
+                    if (item.selected) {
+                        item.selected = NO;
+                    }
+                }
+                [weakSelf refreshWithData:weakSelf.voteInfo];
+                NSMutableDictionary *userInfo = [NSMutableDictionary dictionary];
+                userInfo[@"vote_info"] = weakSelf.voteInfo;
+                [[NSNotificationCenter defaultCenter] postNotificationName:kFHUGCPostVoteSuccessNotification object:nil userInfo:userInfo];
+            }else{
+                weakSelf.voteInfo.voteState = FHUGCVoteStateComplete;
+            }
+            
+            if (error && [self isChinese:error.domain]) {
                 [[ToastManager manager] showToast:error.domain];
             } else {
                 [[ToastManager manager] showToast:@"取消投票失败"];
             }
+        }
+    }];
+}
+
+- (void)adjustVoteItemPercentPrecision {
+    __block CGFloat totalPercent = 0;
+    [self.voteInfo.items enumerateObjectsUsingBlock:^(FHUGCVoteInfoVoteInfoItemsModel*  _Nonnull item, NSUInteger idx, BOOL * _Nonnull stop) {
+        item.percent = floor(item.percent * 100) / 100.0f;
+        totalPercent += item.percent;
+    }];
+    
+    CGFloat diff = 1 - totalPercent;
+    
+    [self.voteInfo.items enumerateObjectsUsingBlock:^(FHUGCVoteInfoVoteInfoItemsModel*  _Nonnull item, NSUInteger idx, BOOL * _Nonnull stop) {
+        if(item.percent != 0) {
+            item.percent += diff;
+            *stop = YES;
         }
     }];
 }
@@ -754,6 +860,10 @@
         FHUGCOptionView *optionV = obj;
         if (idx < self.voteInfo.items.count) {
             FHUGCVoteInfoVoteInfoItemsModel *item = self.voteInfo.items[idx];
+            //如果是过期了，把状态都改成没有选中的状态 by xsm
+            if (self.voteInfo.voteState == FHUGCVoteStateExpired) {
+                item.selected = NO;
+            }
             NSInteger voteCount = [item.voteCount integerValue];
             totalCount += voteCount;
             if (item.selected) {
@@ -774,6 +884,17 @@
                 NSInteger voteCount = [item.voteCount integerValue];
                 item.percent = (double)voteCount / totalCount;
             }
+        }
+    }];
+    
+    // 调整各选项的精度
+    [self adjustVoteItemPercentPrecision];
+    
+    // 展示百分比
+    [self.optionsViewArray enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        FHUGCOptionView *optionV = obj;
+        if (idx < self.voteInfo.items.count) {
+            FHUGCVoteInfoVoteInfoItemsModel *item = self.voteInfo.items[idx];
             [optionV refreshWithData:item];
         }
     }];
@@ -796,10 +917,10 @@
         self.voteButton.hidden = NO;
         if (hasSelected) {
             // 有选中项
-            self.voteButton.backgroundColor = [UIColor themeRed1];
+            self.voteButton.backgroundColor = [UIColor themeOrange4];
             self.voteButton.enabled = YES;
         } else {
-            self.voteButton.backgroundColor = [UIColor colorWithHexString:@"#ff5869" alpha:0.24];
+            self.voteButton.backgroundColor = [UIColor colorWithHexString:@"#ff9629" alpha:0.24];
             self.voteButton.enabled = NO;
         }
     }
@@ -826,7 +947,7 @@
         self.editButton.hidden = YES;
         self.hasVotedLabel.hidden = YES;
         self.voteButton.hidden = NO;
-        self.voteButton.backgroundColor = [UIColor colorWithHexString:@"#ff5869" alpha:0.24];
+        self.voteButton.backgroundColor = [UIColor colorWithHexString:@"#ff9629" alpha:0.24];
         [self.voteButton setTitle:@"投票已结束" forState:UIControlStateNormal];
         [self.voteButton setTitle:@"投票已结束" forState:UIControlStateHighlighted];
         self.voteButton.enabled = NO;
@@ -867,12 +988,30 @@
     if (animated) {
         [self.tableView beginUpdates];
     }
+    //这里设置隐藏是因为在只有一个投票时候，改变高度会导致footer文字和内容有重叠，效果不好
+    self.tableView.mj_footer.hidden = YES;
     [UIView animateWithDuration:0.3 animations:^{
         [self refreshWithData:self.voteInfo];
         [self.detailCell setupUIFrames];
+    } completion:^(BOOL finished) {
+        [self updateTableViewWithMoreData];
     }];
     if (animated) {
         [self.tableView endUpdates];
+    }
+}
+
+//这里是因为设置隐藏之后，在设置回来时候，文字就变了，所以需要根据实际情况设置正确的文字
+- (void)updateTableViewWithMoreData {
+    self.tableView.mj_footer.hidden = NO;
+    if (self.tableView.hasMore) {
+        [self.tableView.mj_footer endRefreshing];
+    }else {
+        if([self.tableView.mj_footer isKindOfClass:[FHRefreshCustomFooter class]]){
+            FHRefreshCustomFooter *refreshFooter = (FHRefreshCustomFooter *)self.tableView.mj_footer;
+            [refreshFooter setUpNoMoreDataText:@"没有更多信息了" offsetY:-3];
+        }
+        [self.tableView.mj_footer endRefreshingWithNoMoreData];
     }
 }
 
@@ -1111,6 +1250,8 @@
     _keyLabel = [[UILabel alloc] init];
     _keyLabel.text = @"";
     _keyLabel.textColor = [UIColor colorWithHexStr:@"#ff8151"];
+    _keyLabel.backgroundColor = [UIColor whiteColor];
+    _keyLabel.layer.masksToBounds = YES;
     _keyLabel.font = [UIFont themeFontRegular:13];
     [self addSubview:_keyLabel];
     

@@ -14,9 +14,9 @@
 #import <MAMapKit/MAMapKit.h>
 #import <AMapSearchKit/AMapSearchKit.h>
 
-#import <HMSegmentedControl.h>
-#import <FHEnvContext.h>
-#import <ToastManager.h>
+#import "HMSegmentedControl.h"
+#import "FHEnvContext.h"
+#import "ToastManager.h"
 
 #import "FHMyMAAnnotation.h"
 #import "FHDetailNearbyMapItemCell.h"
@@ -24,7 +24,7 @@
 #import "FHDetailHeaderView.h"
 #import "UIColor+Theme.h"
 #import "TTRoute.h"
-#import <HMDTTMonitor.h>
+#import "HMDTTMonitor.h"
 #import "FHDetailMapView.h"
 
 static const float kSegementedOneWidth = 50;
@@ -89,7 +89,6 @@ FHDetailVCViewLifeCycleProtocol>
         
         self.searchApi = [[AMapSearchAPI alloc] init];
         self.searchApi.delegate = self;
-        
         [self setUpLocationListTableView];
     }
     return self;
@@ -137,7 +136,7 @@ FHDetailVCViewLifeCycleProtocol>
     _segmentedControl = [HMSegmentedControl new];
     _segmentedControl.sectionTitles = @[@"交通(0)",@"购物(0)",@"医院(0)",@"教育(0)"];
     _segmentedControl.selectionIndicatorHeight = 2;
-    _segmentedControl.selectionIndicatorColor = [UIColor themeRed1];
+    _segmentedControl.selectionIndicatorColor = [UIColor themeOrange1];
     _segmentedControl.selectionStyle = HMSegmentedControlSelectionStyleTextWidthStripe;
     _segmentedControl.segmentWidthStyle = HMSegmentedControlSegmentWidthStyleFixed;
     _segmentedControl.isNeedNetworkCheck = NO;
@@ -148,7 +147,7 @@ FHDetailVCViewLifeCycleProtocol>
     
     NSDictionary *attributeSelect = [NSDictionary dictionaryWithObjectsAndKeys:
                                      [UIFont themeFontRegular:16],NSFontAttributeName,
-                                     [UIColor themeRed1],NSForegroundColorAttributeName,nil];
+                                     [UIColor themeOrange1],NSForegroundColorAttributeName,nil];
     _segmentedControl.titleTextAttributes = attributeNormal;
     _segmentedControl.selectedTitleTextAttributes = attributeSelect;
 //    _segmentedControl.segmentEdgeInset = UIEdgeInsetsMake(-10, 5, 0, 5);
@@ -285,7 +284,7 @@ FHDetailVCViewLifeCycleProtocol>
     _emptyInfoLabel.textAlignment = NSTextAlignmentCenter;
 //    _emptyInfoLabel.hidden = [FHEnvContext isNetworkConnected] ? YES : NO;
     _emptyInfoLabel.hidden = NO;
-    _emptyInfoLabel.textColor = [UIColor themeGray1];
+    _emptyInfoLabel.textColor = [UIColor themeGray3];
     
     [_locationList addSubview:_emptyInfoLabel];
     

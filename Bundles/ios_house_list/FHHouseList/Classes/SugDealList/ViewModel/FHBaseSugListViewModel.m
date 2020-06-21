@@ -8,7 +8,7 @@
 #import "FHBaseSugListViewModel.h"
 #import "FHBaseSugListViewModel+Internal.h"
 #import "FHSuggestionItemCell.h"
-#import <Masonry.h>
+#import "Masonry.h"
 #import <FHCommonUI/UIColor+Theme.h>
 #import <FHCommonUI/UIFont+House.h>
 #import <TTRoute/TTRoute.h>
@@ -145,7 +145,7 @@
                 NSAttributedString *text2 = [self processHighlightedGray:model.text2];
                 [resultText appendAttributedString:text2];
             }
-            cell.label.attributedText = [self processHighlighted:resultText originText:originText textColor:[UIColor themeRed1] fontSize:15.0];
+            cell.label.attributedText = [self processHighlighted:resultText originText:originText textColor:[UIColor themeOrange1] fontSize:15.0];
             cell.secondaryLabel.text = model.tips;
             if (indexPath.row == self.sugListData.count - 1) {
                 // 末尾
@@ -165,7 +165,7 @@
             NSString *originText = model.text;
             NSAttributedString *text1 = [self processHighlightedDefault:model.text textColor:[UIColor themeGray1] fontSize:15.0];
             NSMutableAttributedString *resultText = [[NSMutableAttributedString alloc] initWithAttributedString:text1];
-            cell.label.attributedText = [self processHighlighted:resultText originText:originText textColor:[UIColor themeRed1] fontSize:15.0];
+            cell.label.attributedText = [self processHighlighted:resultText originText:originText textColor:[UIColor themeOrange1] fontSize:15.0];
             if (indexPath.row == self.sugListData.count - 1) {
                 // 末尾
                 cell.sepLine.hidden = YES;

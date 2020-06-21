@@ -8,9 +8,9 @@
 #import "TTUGCImageMonitor.h"
 #import <pthread.h>
 #import <mach/mach_time.h>
-#import <TTTrackerWrapper.h>
+#import "TTTrackerWrapper.h"
 #import "NetworkUtilities.h"
-#import <TTMonitor.h>
+#import "TTMonitor.h"
 #import "TTUGCImageHelper.h"
 
 @interface TTUGCImageMonitorModel : NSObject
@@ -91,7 +91,7 @@ static pthread_mutex_t stopWatchMutex = PTHREAD_MUTEX_INITIALIZER;
             netState = @"cellular";
         }
         
-        [TTTracker eventV3:@"ugc_image_firstframe_monitor" params:@{@"time": @(interval),
+        [BDTrackerProtocol eventV3:@"ugc_image_firstframe_monitor" params:@{@"time": @(interval),
                                                                     @"is_cache": @(inCache),
                                                                     @"format": @(model.imageModel.type),
                                                                     @"net_state": netState,

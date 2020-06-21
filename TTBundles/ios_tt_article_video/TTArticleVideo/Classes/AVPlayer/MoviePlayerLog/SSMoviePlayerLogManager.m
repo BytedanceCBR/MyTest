@@ -9,7 +9,7 @@
 #import "SSMoviePlayerLogManager.h"
 #import "SSMoviePlayerLogConfig.h"
 
-#define kReachabilityChangedNotification @"kNetworkReachabilityChangedNotification"
+#define TTReachabilityChangedNotification @"kNetworkReachabilityChangedNotification"
 
 @interface SSMoviePlayerLogManager()
 {
@@ -41,7 +41,7 @@ static SSMoviePlayerLogManager * dataManager;
 - (instancetype)init {
     self = [super init];
     if (self) {
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(connectionChanged:) name:kReachabilityChangedNotification object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(connectionChanged:) name:TTReachabilityChangedNotification object:nil];
     }
     return self;
 }
@@ -135,7 +135,7 @@ static SSMoviePlayerLogManager * dataManager;
     });
 }
 
-#pragma mark - kReachabilityChangedNotification
+#pragma mark - TTReachabilityChangedNotification
 
 - (void)connectionChanged:(NSNotification *)notification
 {

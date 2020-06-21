@@ -12,12 +12,13 @@
 #import "FHUGCShareManager.h"
 #import "TTBaseMacro.h"
 #import "FHUGCFollowButton.h"
-#import <UILabel+House.h>
-#import <TTDeviceHelper.h>
+#import "UILabel+House.h"
+#import "TTDeviceHelper.h"
 #import "FHUGCPostMenuView.h"
 #import "FHCommonDefines.h"
 #import "FHUserTracker.h"
-#import <UIViewController+NavigationBarStyle.h>
+#import "UIViewController+NavigationBarStyle.h"
+#import "UIImage+FIconFont.h"
 
 @interface FHCommunityDetailViewController ()<TTUIViewControllerTrackProtocol, FHUGCPostMenuViewDelegate>
 @property (nonatomic, strong) FHCommunityDetailViewModel *viewModel;
@@ -34,6 +35,7 @@
     if (self) {
         self.ttTrackStayEnable = YES;
         self.communityId = paramObj.allParams[@"community_id"];
+        self.tabName = paramObj.allParams[@"tab_name"];
         // 取链接中的埋点数据
         NSDictionary *params = paramObj.allParams;
         NSString *enter_from = params[@"enter_from"];
@@ -84,6 +86,21 @@
         }
     }
     return self;
+}
+
+// 重载方法
+- (BOOL)isOpenUrlParamsSame:(NSDictionary *)queryParams {
+    /*
+    if (queryParams.count > 0) {
+        NSString *queryId = queryParams[@"community_id"];
+        NSString *queryIdStr = [NSString stringWithFormat:@"%@",queryId];
+        NSString *currentIdStr = [NSString stringWithFormat:@"%@",self.communityId];
+        if (queryIdStr.length > 0 && [queryIdStr isEqualToString:currentIdStr]) {
+            return YES;
+        }
+    }
+     */
+    return NO;
 }
 
 - (void)viewDidLoad {
@@ -291,14 +308,16 @@
 - (void)setNavBar:(BOOL)showJoinButton {
     if (showJoinButton) {
         self.customNavBarView.title.textColor = [UIColor themeGray1];
-        [self.customNavBarView.leftBtn setBackgroundImage:[UIImage imageNamed:@"icon-return"] forState:UIControlStateNormal];
-        [self.customNavBarView.leftBtn setBackgroundImage:[UIImage imageNamed:@"icon-return"] forState:UIControlStateHighlighted];
+        UIImage *blackBackArrowImage = ICON_FONT_IMG(24, @"\U0000e68a", [UIColor themeGray1]);
+        [self.customNavBarView.leftBtn setBackgroundImage:blackBackArrowImage forState:UIControlStateNormal];
+        [self.customNavBarView.leftBtn setBackgroundImage:blackBackArrowImage forState:UIControlStateHighlighted];
         self.shareButton.hidden = YES;
         [self.customNavBarView setNaviBarTransparent:NO];
     } else {
         self.customNavBarView.title.textColor = [UIColor whiteColor];
-        [self.customNavBarView.leftBtn setBackgroundImage:[UIImage imageNamed:@"icon-return-white"] forState:UIControlStateNormal];
-        [self.customNavBarView.leftBtn setBackgroundImage:[UIImage imageNamed:@"icon-return-white"] forState:UIControlStateHighlighted];
+        UIImage *whiteBackArrowImage = ICON_FONT_IMG(24, @"\U0000e68a", [UIColor whiteColor]);
+        [self.customNavBarView.leftBtn setBackgroundImage:whiteBackArrowImage forState:UIControlStateNormal];
+        [self.customNavBarView.leftBtn setBackgroundImage:whiteBackArrowImage forState:UIControlStateHighlighted];
         self.shareButton.hidden = NO;
         [self.customNavBarView setNaviBarTransparent:YES];
     }
@@ -309,6 +328,7 @@
     self.viewModel.shareButton = self.shareButton;
     [self.viewModel addGoDetailLog];
     [self.viewModel addPublicationsShowLog];
+    [self.viewModel updateNavBarWithAlpha:self.customNavBarView.bgView.alpha];
     [self.viewModel requestData:NO refreshFeed:NO showEmptyIfFailed:YES showToast:NO];
 }
 
@@ -385,12 +405,12 @@
 
 - (void)postMenuViewWillShow {
     self.bageView.alpha = 0;
-    self.groupChatBtn.hidden = YES;
+    self.groupChatBtn.alpha = 0.0f;
 }
 
 - (void)postMenuDidHide {
     self.bageView.alpha = 1;
-    self.groupChatBtn.hidden = NO;
+    self.groupChatBtn.alpha = 1.0f;
 }
 
 //去到群聊

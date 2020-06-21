@@ -7,9 +7,9 @@
 
 #import "FHPriceValuationResultView.h"
 #import "UIFont+House.h"
-#import <Masonry.h>
+#import "Masonry.h"
 #import "UIColor+Theme.h"
-#import <PNChart.h>
+#import "PNChart.h"
 #import "TTDeviceHelper.h"
 #import "UIView+House.h"
 #import "FHDetailPriceMarkerView.h"
@@ -78,7 +78,7 @@
     }
     [self addSubview:_scrollView];
     
-    UIImage *headerImage = [UIImage imageNamed:@"price_valuation_result_header_image"];
+    UIImage *headerImage = [UIImage imageNamed:@"price_valuation_result_header_image_orange"];
     self.headerImageView = [[UIImageView alloc] init];
     _headerImageView.image = headerImage;
     [self.scrollView addSubview:_headerImageView];
@@ -106,7 +106,7 @@
     [_titleBtn addTarget:self action:@selector(goToNeiborhoodDetail) forControlEvents:UIControlEventTouchUpInside];
     [self.cardView addSubview:_titleBtn];
 
-    self.priceLabel = [self LabelWithFont:[UIFont themeFontRegular:14] textColor:[UIColor themeRed1]];
+    self.priceLabel = [self LabelWithFont:[UIFont themeFontRegular:14] textColor:[UIColor themeOrange1]];
     [self.cardView addSubview:_priceLabel];
     
     self.middleSpLine = [[UIView alloc] init];
@@ -127,7 +127,7 @@
     [self.cardView addSubview:_toLastMonthLabel];
     
     self.moreInfoBtn = [[UIButton alloc] init];
-    _moreInfoBtn.backgroundColor = [UIColor themeRed1];
+    _moreInfoBtn.backgroundColor = [UIColor themeOrange4];
     [_moreInfoBtn setTitle:@"补全信息，结果更精确" forState:UIControlStateNormal];
     [_moreInfoBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     _moreInfoBtn.titleLabel.font = [UIFont themeFontRegular:16];
@@ -151,7 +151,7 @@
     
     self.spLineView = [[UIView alloc] init];
     _spLineView.backgroundColor = [UIColor themeGray7];
-    [self.evaluateView addSubview:_spLineView];
+    [self addSubview:_spLineView];
     
     self.chartNameLabel = [self LabelWithFont:[UIFont themeFontMedium:18] textColor:[UIColor themeGray1]];
     _chartNameLabel.text = @"房价走势";
@@ -198,11 +198,11 @@
     [self addSubview:_bottomView];
     
     self.bottomBtn = [[UIButton alloc] init];
-    _bottomBtn.backgroundColor = [UIColor themeRed1];
+    _bottomBtn.backgroundColor = [UIColor themeOrange4];
     [_bottomBtn setTitle:@"我要卖房" forState:UIControlStateNormal];
     [_bottomBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     _bottomBtn.titleLabel.font = [UIFont themeFontRegular:16];
-    _bottomBtn.layer.cornerRadius = 4;
+    _bottomBtn.layer.cornerRadius = 22; //4;
     _bottomBtn.layer.masksToBounds = YES;
     [_bottomBtn addTarget:self action:@selector(houseSale) forControlEvents:UIControlEventTouchUpInside];
     [self.bottomView addSubview:_bottomBtn];
@@ -283,7 +283,7 @@
         make.top.mas_equalTo(self.cardView.mas_bottom);
         make.left.mas_equalTo(self.scrollView);
         make.right.mas_equalTo(self);
-        make.height.mas_equalTo(128);
+        make.height.mas_equalTo(118);
     }];
 
     [self.evaluateLabel mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -317,7 +317,8 @@
     }];
     
     [self.spLineView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.right.bottom.mas_equalTo(self.evaluateView);
+        make.top.mas_equalTo(self.evaluateView.mas_bottom);
+        make.left.right.mas_equalTo(self);
         make.height.mas_equalTo(10);
     }];
     
@@ -370,9 +371,10 @@
     }];
     
     [self.descLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.bottom.mas_equalTo(self.descView);
+        make.top.mas_equalTo(self.descView);
         make.left.mas_equalTo(self.scrollView).offset(20);
         make.right.mas_equalTo(self).offset(-20);
+        make.height.mas_equalTo(52);
     }];
 
     [self.scrollView mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -449,29 +451,72 @@
 }
 
 - (void)updateChart:(FHDetailNeighborhoodModel *)detailModel {
-    FHDetailPriceMarkerView *view = [self.chartView viewWithTag:200];
-    if (view) {
-        [view removeFromSuperview];
-        view = nil;
-        self.hideMarker = NO;
+    if(detailModel.data.priceTrend){
+        self.chartBgView.hidden = NO;
+        [self.chartBgView mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.height.mas_equalTo(322);
+        }];
+        [self.spLineView mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.height.mas_equalTo(10);
+        }];
+        FHDetailPriceMarkerView *view = [self.chartView viewWithTag:200];
+        if (view) {
+            [view removeFromSuperview];
+            view = nil;
+            self.hideMarker = NO;
+        }
+        [self.chartView resetChart];
+        self.priceTrends = detailModel.data.priceTrend;
+    }else{
+        self.chartBgView.hidden = YES;
+        [self.chartBgView mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.height.mas_equalTo(0);
+        }];
+        [self.spLineView mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.height.mas_equalTo(0);
+        }];
     }
-    [self.chartView resetChart];
-    self.priceTrends = detailModel.data.priceTrend;
+    
+    [self layoutIfNeeded];
+    //当内容高度不足时，不足下方高度，为了背景颜色变灰色
+    CGFloat height = self.scrollView.contentSize.height;
+    CGFloat scrollViewHeight = self.scrollView.frame.size.height;
+    CGFloat descHeight = self.descView.frame.size.height;
+    if(scrollViewHeight > height){
+        CGFloat diff = scrollViewHeight - height;
+        [self.descView mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.height.mas_equalTo(descHeight + diff);
+        }];
+    }
 }
 
 - (void)hideEvaluateView {
+    if(self.chartBgView.hidden){
+        self.scrollView.backgroundColor = [UIColor themeGray7];
+        [self.spLineView mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.height.mas_equalTo(10);
+        }];
+    }else{
+        self.scrollView.backgroundColor = [UIColor whiteColor];
+        [self.spLineView mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.height.mas_equalTo(0);
+        }];
+    }
+    
     self.evaluateView.hidden = YES;
     [self.evaluateView mas_updateConstraints:^(MASConstraintMaker *make) {
         make.height.mas_equalTo(0);
     }];
+    
     [self layoutIfNeeded];
-    //当内容高度不足时，让描述文字贴近底部按钮
+    //当内容高度不足时，不足下方高度，为了背景颜色变灰色
     CGFloat height = self.scrollView.contentSize.height;
     CGFloat scrollViewHeight = self.scrollView.frame.size.height;
+    CGFloat descHeight = self.descView.frame.size.height;
     if(scrollViewHeight > height){
         CGFloat diff = scrollViewHeight - height;
         [self.descView mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.top.mas_equalTo(self.chartBgView.mas_bottom).offset(diff);
+            make.height.mas_equalTo(descHeight + diff);
         }];
     }
 }
@@ -668,13 +713,13 @@
             return [UIColor themeRed1];
             break;
         case 1:
-            return [UIColor colorWithHexString:@"#bebebe"];
+            return [UIColor colorWithHexString:@"#ffc464"];
             break;
         case 2:
-            return [UIColor themeGray5];
+            return [UIColor colorWithHexString:@"#bebebe"];
             break;
         default:
-            return [UIColor themeGray5];
+            return [UIColor colorWithHexString:@"#bebebe"];
             break;
     }
 }

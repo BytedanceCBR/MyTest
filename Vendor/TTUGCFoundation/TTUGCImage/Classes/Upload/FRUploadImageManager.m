@@ -11,7 +11,7 @@
 #import <TTUGCFoundation/FRCommonURLSetting.h>
 #import <TTKitchen/TTKitchen.h>
 #import <TTBaseLib/TTBaseMacro.h>
-#import <TTSandBoxHelper.h>
+#import "TTSandBoxHelper.h"
 #import <TTBaseLib/NSDictionary+TTAdditions.h>
 #import <TTBaseLib/NSObject+TTAdditions.h>
 #import "TTUGCRequestManager.h"
@@ -128,7 +128,7 @@
     if (_expectedCount == 0) {
         [self callFinishModels:_finishUpLoadModels error:nil];
     } else {
-        TTMainSafeExecuteBlock(^{
+        FHMainSafeExecuteBlock(^{
             for (int i = 0; i < kSynchronizedCount; i ++) {
                 [self upLoadNext];
             }
@@ -152,7 +152,7 @@
         }
         if (_needUploadModels.count > 0) {
             _expectedCount = _needUploadModels.count + _finishUpLoadModels.count;
-            TTMainSafeExecuteBlock(^{
+            FHMainSafeExecuteBlock(^{
                 for (int i = 0; i < kSynchronizedCount; i ++) {
                     [self upLoadNext];
                 }
@@ -337,7 +337,7 @@
         [postParams addEntriesFromDictionary:extParameter];
     }
 
-    [TTUGCRequestManager requestForJSONWithURL:[FRCommonURLSetting uploadWithUrlOfImageURL] params:postParams method:@"POST" needCommonParams:NO callBackWithMonitor:^(NSError *error, id obj, TTUGCRequestMonitorModel *monitorModel) {
+    [TTUGCRequestManager requestForJSONWithURL:[FRCommonURLSetting uploadWithUrlOfImageURL] params:postParams method:@"POST" needCommonParams:NO callBackWithMonitor:^(NSError *error, id obj, TTHttpResponse *response) {
         NSString * webURI = nil;
         int64_t width = 0;
         int64_t height = 0;

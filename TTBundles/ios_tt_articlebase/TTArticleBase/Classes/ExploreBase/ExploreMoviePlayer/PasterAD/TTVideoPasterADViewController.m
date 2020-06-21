@@ -17,7 +17,7 @@
 #import "TTVideoPasterADTracker.h"
 #import "TTVideoPasterADService.h"
 
-#import <Masonry.h>
+#import "Masonry.h"
 #import "SSAppStore.h"
 #import <TTBaseLib/TTUIResponderHelper.h>
 #import <TTBaseLib/TTStringHelper.h>

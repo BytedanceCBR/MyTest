@@ -7,7 +7,7 @@
 //
 
 #import "AWEVideoPlayTrackerBridge.h"
-#import <TTBaseMacro.h>
+#import "TTBaseMacro.h"
 #import <TTPlatformBaseLib/TTTrackerWrapper.h>
 
 @implementation AWEVideoPlayTrackerBridge

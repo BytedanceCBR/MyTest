@@ -44,5 +44,19 @@
 @property (nonatomic, assign)   BOOL       hasSocialGroup;// 是否是外部传入小区
 @property (nonatomic, copy)     NSString       *social_group_id;   // 选中的小区ID
 @property (nonatomic, copy)     NSString       *social_group_name; // 选中的小区name
+@property (nonatomic, assign) NSInteger bindType; // 绑定对象类型: 0 = 圈子, 1 = 城市
+// 小区点评相关参数
+@property (nonatomic, copy) NSString *neighborhoodId; // 小区id
+@property (nonatomic, copy) NSString *source;
+@property (nonatomic, copy) NSString *neighborhoodTags; // 小区点评标签 json String
+@property (nonatomic, copy) NSString *scores; // 小区点评评分 json string
+
+
+
+
+// 编辑帖子报数相关
+@property (nonatomic, copy)     NSString       *enterFrom;
+@property (nonatomic, copy)     NSString       *pageType;
+@property (nonatomic, copy)     NSString       *elementFrom;
 
 @end

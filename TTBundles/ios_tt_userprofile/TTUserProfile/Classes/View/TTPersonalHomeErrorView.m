@@ -10,7 +10,7 @@
 #import "TTCancelFollowButton.h"
 #import "FriendDataManager.h"
 #import "TTIndicatorView.h"
-#import <SSNavigationBar.h>
+#import "SSNavigationBar.h"
 #import <TTBaseLib/UIViewAdditions.h>
 #import <TTBaseLib/TTDeviceUIUtils.h>
 #import <TTBaseLib/NSDictionary+TTAdditions.h>

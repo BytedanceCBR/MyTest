@@ -8,7 +8,7 @@
 #import "FHDetailNeighborhoodHouseCell.h"
 #import <Masonry/Masonry.h>
 #import "UIFont+House.h"
-#import <UIImageView+BDWebImage.h>
+#import "UIImageView+BDWebImage.h"
 #import "FHCommonDefines.h"
 #import "FHDetailOldModel.h"
 #import "FHURLSettings.h"
@@ -267,7 +267,7 @@
         [_rentBtn setTitle:@"租房" forState:UIControlStateHighlighted];
         _rentBtn.titleLabel.font = [UIFont themeFontRegular:14];
         [_rentBtn setTitleColor:[UIColor themeGray3] forState:UIControlStateNormal];
-        [_rentBtn setTitleColor:[UIColor themeRed1] forState:UIControlStateSelected];
+        [_rentBtn setTitleColor:[UIColor themeOrange1] forState:UIControlStateSelected];
         [self.headerView addSubview:_rentBtn];
         [_rentBtn mas_makeConstraints:^(MASConstraintMaker *make) {
             make.top.mas_equalTo(self.headerView).offset(23);
@@ -285,7 +285,7 @@
         [_ershouBtn setTitle:@"二手房" forState:UIControlStateHighlighted];
         _ershouBtn.titleLabel.font = [UIFont themeFontRegular:14];
         [_ershouBtn setTitleColor:[UIColor themeGray3] forState:UIControlStateNormal];
-        [_ershouBtn setTitleColor:[UIColor themeRed1] forState:UIControlStateSelected];
+        [_ershouBtn setTitleColor:[UIColor themeOrange1] forState:UIControlStateSelected];
         [self.headerView addSubview:_ershouBtn];
         [_ershouBtn mas_makeConstraints:^(MASConstraintMaker *make) {
             make.top.mas_equalTo(self.headerView).offset(23);

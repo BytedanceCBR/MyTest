@@ -15,7 +15,7 @@
 #import "UIView+TTFFrame.h"
 #import "UITextView+TTAdditions.h"
 #import "TTUGCTextViewMediator.h"
-#import "TTUGCToolbar.h"
+#import "FHUGCToolbar.h"
 #import "NSObject+MultiDelegates.h"
 #import "UIViewAdditions.h"
 #import "FRAddMultiImagesView.h"
@@ -44,12 +44,16 @@
 #import "FHBubbleTipManager.h"
 #import "FHUGCConfig.h"
 #import "FHUGCCommunityListViewController.h"
-#import "FHPostUGCSelectedGroupHistoryView.h"
 #import "FHUGCConfig.h"
 #import "FHEnvContext.h"
 #import "NSString+UGCUtils.h"
 #import "FHTopicHeaderModel.h"
 #import "FHTopicListModel.h"
+#import "FHHouseUGCAPI.h"
+#import "FHUGCPublishTagModel.h"
+#import "SSAPNsAlertManager.h"
+#import "FHUGCTagsView.h"
+#import "FHUGCTagAndRemarkModel.h"
 
 static CGFloat const kLeftPadding = 20.f;
 static CGFloat const kRightPadding = 20.f;
@@ -60,7 +64,6 @@ static CGFloat const kTextViewHeight = 100.f;
 static CGFloat const kUserInfoViewHeight = 44.f;
 static CGFloat const kAddImagesViewTopPadding = 10.f;
 static CGFloat const kAddImagesViewBottomPadding = 18.f;
-static CGFloat kUGCToolbarHeight = 80.f;
 
 static NSString * const kPostTopicEventName = @"topic_post";
 static NSString * const kUserInputTelephoneKey = @"userInputTelephoneKey";
@@ -68,7 +71,7 @@ static NSInteger const kTitleCharactersLimit = 20;
 
 static NSInteger const kMaxPostImageCount = 9;
 
-@interface FHPostUGCViewController ()<FRAddMultiImagesViewDelegate,UITextFieldDelegate, UIScrollViewDelegate,  TTUGCTextViewDelegate, TTUGCToolbarDelegate,FRPostThreadAddLocationViewDelegate,FHUGCCommunityChooseDelegate, FHPostUGCSelectedGroupHistoryViewDelegate>
+@interface FHPostUGCViewController ()<FRAddMultiImagesViewDelegate,UITextFieldDelegate, UIScrollViewDelegate,  TTUGCTextViewDelegate, TTUGCToolbarDelegate,FRPostThreadAddLocationViewDelegate,FHUGCCommunityChooseDelegate,FHUGCToolbarDelegate, UIGestureRecognizerDelegate>
 
 @property (nonatomic, strong) SSThemedButton * cancelButton;
 @property (nonatomic, strong) SSThemedButton * postButton;
@@ -76,7 +79,7 @@ static NSInteger const kMaxPostImageCount = 9;
 @property (nonatomic, strong) UIScrollView       *containerView;
 @property (nonatomic, strong) SSThemedView * inputContainerView;
 @property (nonatomic, strong) TTUGCTextViewMediator       *textViewMediator;
-@property (nonatomic, strong) TTUGCToolbar *toolbar;
+@property (nonatomic, strong) FHUGCToolbar *toolbar;
 @property (nonatomic, strong) FRAddMultiImagesView * addImagesView;
 @property (nonatomic, copy) NSDictionary *position; //编辑带入的位置信息
 @property (nonatomic, strong) FRPostThreadAddLocationView * addLocationView;
@@ -89,7 +92,6 @@ static NSInteger const kMaxPostImageCount = 9;
 @property (nonatomic, copy) NSString * cid; //关心ID
 @property (nonatomic, copy) NSString * categoryID; //频道ID  
 @property (nonatomic, copy) NSDictionary *sdkParamsDict;// 分享调起
-@property (nonatomic, strong) SSThemedLabel * tipLabel;
 @property (nonatomic, assign) UIStatusBarStyle originStatusBarStyle;
 @property (nonatomic, assign) BOOL firstAppear;
 @property (nonatomic, strong) SSThemedView * infoContainerView;
@@ -106,11 +108,11 @@ static NSInteger const kMaxPostImageCount = 9;
 @property (nonatomic, copy) NSString *entrance; //入口
 @property (nonatomic, copy) NSString *enterConcernID; //entrance为concern时有意义
 
-@property (nonatomic, strong)   FHPostUGCMainView       *selectView;
 @property (nonatomic, copy)     NSString       *selectGroupId;// 选中的小区id 小区位置不能点击 默认是已关注
 @property (nonatomic, copy)     NSString       *selectGroupName; // 选中的小区name
+@property (nonatomic, copy  )   NSString   *neighborhoodId; //小区详情页id
 @property (nonatomic, assign)   BOOL       hasSocialGroup;// 外部传入小区
-@property (nonatomic, strong)   FHPostUGCSelectedGroupHistoryView   *selectedGrouplHistoryView; // 用户手动选择发布小区历史选择视图
+@property (nonatomic, copy  )   NSString   *groupId; //微头条卡片进入，微头条id
 
 @property (nonatomic, assign)   BOOL       lastCanShowMessageTip;
 @property (nonatomic, assign)   BOOL       lastInAppPushTipsHidden;
@@ -118,18 +120,56 @@ static NSInteger const kMaxPostImageCount = 9;
 @property (nonatomic, strong)   FHTopicHeaderModel  *topicHeaderModel; // 话题详情页进发布器传入的话题数据
 @property (nonatomic, assign)   BOOL isAddedTopicHeaderModel;
 
+@property (nonatomic, assign)   BOOL isOuterEdit;
+@property (nonatomic, copy)     NSString *outerPostId;
+@property (nonatomic, strong)   NSMutableArray<FHUGCToolBarTag *> *hotTags;
+@property (nonatomic, assign)   CGRect keyboardFrameForToolbar;
+@property (nonatomic, assign)   BOOL isKeyboardShow;
+@property (nonatomic, assign)   BOOL isToolbarWillEndEditing;
+@property (nonatomic, copy)     NSString *customTitle;
+
+// 小区点评发布器
+@property (nonatomic, strong)   FHUGCTagsView *tagsView;
 @end
 
 @implementation FHPostUGCViewController
+
+
+- (NSMutableArray<FHUGCToolBarTag *> *)hotTags {
+    if(!_hotTags) {
+        _hotTags = [[NSMutableArray alloc] init];
+        
+        // 不使用本地记录，改使用接口返回数据
+        // 本地发布历史添加标签列表数据
+//        NSMutableArray<FHUGCToolBarTag *> *tags = [[NSMutableArray alloc] init];
+//        FHPostUGCSelectedGroupHistory *selectedGroupHistory = [[FHUGCConfig sharedInstance] loadPublisherHistoryData];
+//        NSString* currentUserID = [TTAccountManager currentUser].userID.stringValue;
+//        NSString *currentCityID = [FHEnvContext getCurrentSelectCityIdFromLocal];
+//        FHPostUGCSelectedGroupModel *selectedGroup = nil;
+//        if(selectedGroupHistory && currentCityID.length > 0 && currentUserID.length > 0) {
+//            NSString *saveKey = [currentUserID stringByAppendingString:currentCityID];
+//            selectedGroup = [selectedGroupHistory.historyInfos objectForKey:saveKey];
+//        }
+//        if(selectedGroup) {
+//            FHUGCToolBarTag *tag = [[FHUGCToolBarTag alloc] init];
+//            tag.groupId = selectedGroup.socialGroupId;
+//            tag.groupName = selectedGroup.socialGroupName;
+//            tag.tagType = FHPostUGCTagType_History;
+//            [_hotTags addObject:tag];
+//        }
+    }
+    return _hotTags;
+}
 
 - (instancetype)initWithRouteParamObj:(TTRouteParamObj *)paramObj {
     self = [super initWithRouteParamObj:paramObj];
     if (self) {
         NSDictionary * params = paramObj.allParams;
         if ([params isKindOfClass:[NSDictionary class]]) {
-            
+            self.customTitle = [params tta_stringForKey:@"title"]?:@"发贴";
             self.useDraftFirst = [params tt_boolValueForKey:@"use_draft_first"];
-            
+            self.isOuterEdit = [params tta_boolForKey:@"isOuterEdit"];
+            self.outerPostId = [params tta_stringForKey:@"outerPostId"];
             //Post hint
             self.postContentHint = [params tt_stringValueForKey:@"post_content_hint"];
             self.postPreContent = [params tt_stringValueForKey:@"post_content"];
@@ -137,16 +177,27 @@ static NSInteger const kMaxPostImageCount = 9;
             if (!isEmptyString(self.postPreContent) || !isEmptyString(self.postPreContentRichSpan)) {
                 self.postPreContent = self.postPreContent ?: @"";
                 self.richSpanText = [[[TTRichSpanText alloc] initWithText:self.postPreContent richSpansJSONString:self.postPreContentRichSpan] replaceWhitelistLinks];
+                NSString *highlight_color_string = [NSString hexStringWithColor:[UIColor themeRed3]];
+                [self.richSpanText.richSpans.links enumerateObjectsUsingBlock:^(TTRichSpanLink * _Nonnull spanLink, NSUInteger idx, BOOL * _Nonnull stop) {
+                    NSMutableDictionary *userInfo = spanLink.userInfo.mutableCopy;
+                    userInfo[@"color_info"] = @{
+                        @"day": highlight_color_string,
+                        @"night": highlight_color_string
+                    };
+                    spanLink.userInfo = userInfo;
+                }];
             } else {
                 self.richSpanText = [[TTRichSpanText alloc] initWithText:@"" richSpans:nil];
             }
             self.outerInputRichSpanText = self.richSpanText;
-            
+            self.outerInputAssets = [params tt_arrayValueForKey:@"outerInputAssets"];
             self.postFinishCompletionBlock = [params tt_objectForKey:@"completionBlock"];
             // 选中圈子
+            self.neighborhoodId = [params tta_stringForKey:@"neighborhood_id"];
+            self.groupId = [params tta_stringForKey:@"group_id"];
             self.selectGroupId = [params tt_stringValueForKey:@"select_group_id"];
             self.selectGroupName = [params tt_stringValueForKey:@"select_group_name"];
-            if (!(self.selectGroupId.length > 0 && self.selectGroupName.length > 0)) {
+            if (!((self.selectGroupId.length > 0 && self.selectGroupName.length > 0) || self.neighborhoodId.length > 0)) {
                 // 必须都有值
                 self.hasSocialGroup = NO;
                 self.selectGroupId = nil;
@@ -226,6 +277,89 @@ static NSInteger const kMaxPostImageCount = 9;
     // App 内push
     self.lastInAppPushTipsHidden = kFHInAppPushTipsHidden;
     kFHInAppPushTipsHidden = YES;// 不展示
+    
+    [self addGoDetailLog];
+    
+    [self requestHotTags];
+    
+    // 小区点评发布器调用，内部有判断条件
+    [self requestNeightborhoodRemark];
+}
+
+- (void)requestHotTags {
+    
+    NSMutableDictionary *param = @{}.mutableCopy;
+    param[@"f_city_id"] = [FHEnvContext getCurrentSelectCityIdFromLocal];
+
+    @weakify(self);
+    [FHHouseUGCAPI requestPublishHotTagsWithParam:param class:FHUGCPublishTagModel.class completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
+        @strongify(self);
+        
+        if([model isKindOfClass:[FHUGCPublishTagModel class]]) {
+            FHUGCPublishTagModel* tagsModel = (FHUGCPublishTagModel *)model;
+            
+            
+            if(tagsModel.data.recentlySocials.count > 0) {
+                [tagsModel.data.recentlySocials enumerateObjectsUsingBlock:^(FHUGCPublishTagSocialModel * _Nonnull tagModel, NSUInteger idx, BOOL * _Nonnull stop) {
+                    
+                    FHUGCToolBarTag *tag = [[FHUGCToolBarTag alloc] init];
+                    tag.groupId = @(tagModel.socialGroupId).stringValue;
+                    tag.groupName = tagModel.socialGroupName;
+                    tag.tagType = FHPostUGCTagType_History;
+                    
+                    // 热门圈子标签优先于发布历史
+                    NSUInteger index = [self.hotTags indexOfObject:tag];
+                    if(index == NSNotFound) {
+                        [self.hotTags addObject:tag];
+                    }
+                }];
+            }
+            
+            if(tagsModel.data.socials.count > 0) {
+                [tagsModel.data.socials enumerateObjectsUsingBlock:^(FHUGCPublishTagSocialModel * _Nonnull tagModel, NSUInteger idx, BOOL * _Nonnull stop) {
+                    
+                    FHUGCToolBarTag *tag = [[FHUGCToolBarTag alloc] init];
+                    tag.groupId = @(tagModel.socialGroupId).stringValue;
+                    tag.groupName = tagModel.socialGroupName;
+                    tag.tagType = FHPostUGCTagType_HotTag;
+                    
+                    // 热门圈子标签优先于发布历史
+                    NSUInteger index = [self.hotTags indexOfObject:tag];
+                    if(index == NSNotFound) {
+                        [self.hotTags addObject:tag];
+                    }
+                }];
+            }
+        }
+        
+        [self.hotTags enumerateObjectsUsingBlock:^(FHUGCToolBarTag * _Nonnull tag, NSUInteger idx, BOOL * _Nonnull stop) {
+            tag.index = idx;
+        }];
+        
+        [self needRelayoutToolbar];
+        
+    }];
+}
+
+- (void)requestNeightborhoodRemark {
+    
+    [self needRelayoutToolbar];
+    
+    if(self.neighborhoodId.length <= 0) {
+        return;
+    }
+    
+    NSMutableDictionary *param = @{}.mutableCopy;
+    param[@"neighborhood_id"] = self.neighborhoodId;
+    
+    @weakify(self);
+    [FHHouseUGCAPI requestNeighborhoodRemarkWithParam:param class:FHUGCTagAndRemarkModel.class completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
+        @strongify(self);
+        if(!error && model) {
+            FHUGCTagAndRemarkModel *tagAndRemarkModel = (FHUGCTagAndRemarkModel *)model;
+            [self.tagsView refreshWithTags:tagAndRemarkModel.data.tags];
+        }
+    }];
 }
 
 - (void)restoreData {
@@ -251,7 +385,7 @@ static NSInteger const kMaxPostImageCount = 9;
 
 - (void)setupNaviBar {
     [self setupDefaultNavBar:YES];
-    [self setTitle:@"发帖"];
+    [self setTitle:self.customTitle];
     TTNavigationBarItemContainerView * leftBarItem = nil;
     leftBarItem = (TTNavigationBarItemContainerView *)[SSNavigationBar navigationButtonOfOrientation:SSNavigationButtonOrientationOfLeft
                                                                                            withTitle:NSLocalizedString(@"取消", nil)
@@ -315,65 +449,14 @@ static NSInteger const kMaxPostImageCount = 9;
     [self addNotification];
     
     UITapGestureRecognizer *tapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapAction:)];
+    tapGestureRecognizer.delegate = self;
     [self.containerView addGestureRecognizer:tapGestureRecognizer];
 }
 
 - (void) createInputComponent {
-    // select view
-    if (!self.hasSocialGroup) {
-        CGFloat top = MAX(self.ttNavigationBar.bottom, [TTDeviceHelper isIPhoneXSeries] ? 88 : 64);
-        self.selectView = [[FHPostUGCMainView alloc] initWithFrame:CGRectMake(0, top, SCREEN_WIDTH, 44) type: FHPostUGCMainViewType_Post];
-        [self.view addSubview:self.selectView];
-        self.selectView.userInteractionEnabled = YES;
-        UITapGestureRecognizer *tapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(selectCommunityViewClick:)];
-        [self.selectView addGestureRecognizer:tapGestureRecognizer];
-        NSMutableDictionary *tracerDict = self.trackDict.mutableCopy;
-        tracerDict[@"element_type"] = @"select_like_publisher_neighborhood";
-        if (self.selectGroupId.length > 0) {
-            tracerDict[@"group_id"] = self.selectGroupId;
-        } else {
-            tracerDict[@"group_id"] = @"be_null";
-        }
-        [FHUserTracker writeEvent:@"element_show" params:tracerDict];
-        
-    } else {
-        self.selectView = [[FHPostUGCMainView alloc] init];
-    }
-    
-    // selected history View
-    BOOL isShowSelectedGroupHistory = NO;
-    FHPostUGCSelectedGroupHistory *selectedGroupHistory = [[FHUGCConfig sharedInstance] loadPublisherHistoryData];
-    NSString* currentUserID = [TTAccountManager currentUser].userID.stringValue;
-    NSString *currentCityID = [FHEnvContext getCurrentSelectCityIdFromLocal];
-    FHPostUGCSelectedGroupModel *selectedGroup = nil;
-    if(selectedGroupHistory && currentCityID.length > 0 && currentUserID.length > 0) {
-        NSString *saveKey = [currentUserID stringByAppendingString:currentCityID];
-        selectedGroup = [selectedGroupHistory.historyInfos objectForKey:saveKey];
-        if(selectedGroup) {
-            isShowSelectedGroupHistory = YES;
-        }
-    }
-    
-    if(isShowSelectedGroupHistory && selectedGroup) {
-        CGRect frame = self.selectView.bounds;
-        frame.origin.y = self.selectView.bottom;
-        self.selectedGrouplHistoryView = [[FHPostUGCSelectedGroupHistoryView alloc] initWithFrame:frame delegate:self historyModel:selectedGroup];
-        [self.view addSubview:self.selectedGrouplHistoryView];
-        
-        NSMutableDictionary *param = [NSMutableDictionary dictionary];
-        param[UT_ELEMENT_TYPE] = @"last_published_neighborhood";
-        param[UT_PAGE_TYPE] = @"feed_publisher";
-        param[UT_ENTER_FROM] = self.tracerDict[UT_ENTER_FROM];
-        param[@"group_id"] = selectedGroup.socialGroupId;
-        TRACK_EVENT(@"element_show", param);
-    }
     
     //Container View
     CGFloat top = 44.f + [UIApplication sharedApplication].statusBarFrame.size.height;
-    if (!self.hasSocialGroup) {
-        top += 44;
-    }
-    top += self.selectedGrouplHistoryView.height;
 
     self.containerView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, top, self.view.width, self.view.height - top)];
     self.containerView.backgroundColor = [UIColor tt_themedColorForKey:kColorBackground4];
@@ -395,6 +478,11 @@ static NSInteger const kMaxPostImageCount = 9;
     self.inputTextView.isBanAt = YES;
     self.inputTextView.isBanHashtag = YES;
     self.inputTextView.source = @"post";
+    self.inputTextView.typingAttributes = @{
+        NSFontAttributeName: [UIFont themeFontRegular:self.inputTextView.textViewFontSize],
+        NSForegroundColorAttributeName: SSGetThemedColorWithKey(kColorText1),
+    };
+    
     y = self.inputTextView.bottom;
     
     HPGrowingTextView *internalTextView = self.inputTextView.internalGrowingTextView;
@@ -416,20 +504,18 @@ static NSInteger const kMaxPostImageCount = 9;
         maxNumberOfLines -= 2;
     }
     internalTextView.maxNumberOfLines = maxNumberOfLines;
-    
+    internalTextView.backgroundColor = [UIColor clearColor];
+    internalTextView.textColor = SSGetThemedColorWithKey(kColorText1);
+    internalTextView.tintColor = [UIColor themeRed1];
+    internalTextView.placeholderColor =  SSGetThemedColorWithKey(kColorText3);
+    internalTextView.internalTextView.placeHolderFont = [UIFont themeFontRegular:self.inputTextView.textViewFontSize];
+    internalTextView.font = [UIFont themeFontRegular:self.inputTextView.textViewFontSize];
+    internalTextView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleBottomMargin;
     if (!isEmptyString(self.postContentHint)) {
         internalTextView.placeholder = self.postContentHint;
     } else {
         internalTextView.placeholder = [NSString stringWithFormat:@"新鲜事"];
     }
-    
-    internalTextView.backgroundColor = [UIColor clearColor];
-    internalTextView.textColor = SSGetThemedColorWithKey(kColorText1);
-    internalTextView.tintColor = [UIColor themeRed1];
-    internalTextView.placeholderColor =  SSGetThemedColorWithKey(kColorText3);
-    internalTextView.internalTextView.placeHolderFont = [UIFont systemFontOfSize:self.inputTextView.textViewFontSize];
-    internalTextView.font = [UIFont systemFontOfSize:self.inputTextView.textViewFontSize];
-    internalTextView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleBottomMargin;
     [self.inputContainerView addSubview:self.inputTextView];
     
     // add image view
@@ -444,11 +530,23 @@ static NSInteger const kMaxPostImageCount = 9;
     
     [self.inputContainerView addSubview:self.addImagesView];
   
-    self.inputContainerView.height = self.addImagesView.bottom + kAddImagesViewBottomPadding;
+
+    
+    CGFloat inputContainerViewHeight = (self.addImagesView.selectedImageCacheTasks.count <= 0 ? self.inputTextView.bottom : self.addImagesView.bottom) + kAddImagesViewBottomPadding;
+
+    // 小区点评标签选择视图
+    if(self.neighborhoodId.length > 0) {
+        self.tagsView = [[FHUGCTagsView alloc] initWithFrame:CGRectMake(0, inputContainerViewHeight, self.inputContainerView.width, 100)];
+        [self.inputContainerView addSubview:self.tagsView];
+        
+        inputContainerViewHeight = self.tagsView.bottom + kAddImagesViewTopPadding;
+        
+    }
+    self.inputContainerView.height = inputContainerViewHeight;
     
     // toolbar
-    kUGCToolbarHeight = 80.f + [TTUIResponderHelper mainWindow].tt_safeAreaInsets.bottom;
-    self.toolbar = [[TTUGCToolbar alloc] initWithFrame:CGRectMake(0, self.view.height - kUGCToolbarHeight, self.view.width, kUGCToolbarHeight)];
+    CGFloat toolbarHeight = [FHUGCToolbar toolbarHeightWithTags:self.hotTags hasSelected:self.hasSocialGroup];
+    self.toolbar = [[FHUGCToolbar alloc] initWithFrame:CGRectMake(0, self.view.height - toolbarHeight, self.view.width, toolbarHeight) type:FHPostUGCMainViewType_Post];
     self.toolbar.emojiInputView.source = @"post";
     self.toolbar.banHashtagInput = YES;
     self.toolbar.banLongText = YES;
@@ -457,8 +555,28 @@ static NSInteger const kMaxPostImageCount = 9;
         // 添加图片
         [weakSelf.addImagesView showImagePicker];
     };
+    self.toolbar.tagDelegate = self;
     
+    // 报数参数设置
+    FHUGCToolbarReportModel *reportModel = [FHUGCToolbarReportModel new];
+    reportModel.enterFrom = self.tracerModel.enterFrom;
+    reportModel.originFrom = self.tracerModel.originFrom;
+    reportModel.pageType = @"feed_publisher";
+    self.toolbar.reportModel = reportModel;
+    
+    // 圈子选择列表跳转手势
+    UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(selectCommunityViewClick:)];
+    [self.toolbar.socialGroupSelectEntry addGestureRecognizer:tap];
     [self.view addSubview:self.toolbar];
+    
+    // 选择小区
+    if (self.selectGroupId.length > 0 && self.selectGroupName.length > 0) {
+        self.toolbar.socialGroupSelectEntry.groupId = self.selectGroupId;
+        self.toolbar.socialGroupSelectEntry.communityName = self.selectGroupName;
+        self.toolbar.socialGroupSelectEntry.followed = YES;
+        self.toolbar.socialGroupSelectEntry.tagType = FHPostUGCTagType_Normal;
+        self.toolbar.socialGroupSelectEntry.tagIndex = INVALID_TAG_INDEX;
+    }
     
     //Location view
     
@@ -472,18 +590,6 @@ static NSInteger const kMaxPostImageCount = 9;
     self.addLocationView.delegate = self;
     self.addLocationView.hidden = YES;
     [self.toolbar addSubview:self.addLocationView];
-    
-    //Tip label
-    CGFloat tipLabelWidth = self.view.width - kRightPadding * 2;
-    self.tipLabel = [[SSThemedLabel alloc] initWithFrame:CGRectMake(kRightPadding, 11, tipLabelWidth, 25.f)];
-    self.tipLabel.backgroundColor = [UIColor whiteColor];
-    self.tipLabel.font = [UIFont systemFontOfSize:11];
-    self.tipLabel.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleTopMargin;
-    self.tipLabel.textAlignment = NSTextAlignmentRight;
-    self.tipLabel.verticalAlignment = ArticleVerticalAlignmentMiddle;
-    [self.tipLabel setTextColor:[UIColor themeGray4]];
-    self.tipLabel.hidden = NO;
-    [self.toolbar addSubview:self.tipLabel];
     
     // TextView and Toolbar Mediator
     self.textViewMediator = [[TTUGCTextViewMediator alloc] init];
@@ -518,7 +624,7 @@ static NSInteger const kMaxPostImageCount = 9;
             [self endEditing];
             
             NSURLComponents *components = [NSURLComponents componentsWithString:@"sslocal://ugc_post_topic_list"];
-            NSString *groupId = self.hasSocialGroup ? self.selectGroupId : self.selectView.groupId;
+            NSString *groupId = self.hasSocialGroup ? self.selectGroupId : self.toolbar.socialGroupSelectEntry.groupId;
             NSURLQueryItem *groudIPItem = [NSURLQueryItem queryItemWithName:@"groupId" value:groupId];
             
             NSURL *url = components.URL;
@@ -559,7 +665,7 @@ static NSInteger const kMaxPostImageCount = 9;
             [self endEditing];
             
             NSURLComponents *components = [NSURLComponents componentsWithString:@"sslocal://ugc_post_at_list"];
-            NSString *groupId = self.hasSocialGroup ? self.selectGroupId : self.selectView.groupId;
+            NSString *groupId = self.hasSocialGroup ? self.selectGroupId : self.toolbar.socialGroupSelectEntry.groupId;
             NSURLQueryItem *groudIPItem = [NSURLQueryItem queryItemWithName:@"groupId" value:groupId];
             
             NSURL *url = components.URL;
@@ -591,16 +697,13 @@ static NSInteger const kMaxPostImageCount = 9;
 }
 
 - (void)selectCommunityViewClick:(UITapGestureRecognizer *)sender {
-    // 外部传入圈子，不跳转
-    if (self.selectGroupId.length > 0 && self.selectGroupName.length > 0) {
-        return;
-    }
     
     NSMutableDictionary *tracerDict = self.trackDict.mutableCopy;
     tracerDict[@"click_position"] = @"select_like_publisher_neighborhood";
     [FHUserTracker writeEvent:@"click_like_publisher_neighborhood" params:tracerDict];
     
     self.keyboardVisibleBeforePresent = self.inputTextView.keyboardVisible;
+    self.isToolbarWillEndEditing = YES;
     [self endEditing];
     NSMutableDictionary *dict = @{}.mutableCopy;
     dict[@"action_type"] = @(FHCommunityListTypeChoose);
@@ -733,18 +836,38 @@ static NSInteger const kMaxPostImageCount = 9;
 }
 
 - (void)endEditing {
+    self.isToolbarWillEndEditing = YES;
+    
     [self.view endEditing:YES];
     
     [self.toolbar endEditing:YES];
+    
+    [self needRelayoutToolbar];
 }
 
-- (void)tapAction:(UITapGestureRecognizer *)sender {
+- (void)tapAction:(UITapGestureRecognizer *)tap {
     // 点击空白处可以收起或呼出键盘
     if (self.inputTextView.isFirstResponder) {
         [self.inputTextView resignFirstResponder];
     } else {
         [self.inputTextView becomeFirstResponder];
     }
+}
+
+- (BOOL)checkPostContentShowAlertIfNeedWhenCancel {
+    BOOL isContentChanged = [self checkPostContentChanged];
+    
+    BOOL isHasNewInputContent = isContentChanged;
+
+    // 小区点评，非编辑状态下，退出时，如果用户输入内容或选择了图片，
+    // 则弹出提示确认删除弹窗
+    if(self.neighborhoodId.length > 0 && !self.isOuterEdit) {
+        if(self.addImagesView.selectedImageCacheTasks.count != 0 || self.inputTextView.trimmedLength > 0) {
+            isHasNewInputContent = YES;
+        }
+    }
+    
+    return isHasNewInputContent;
 }
 
 - (void)cancel:(id)sender {
@@ -755,7 +878,7 @@ static NSInteger const kMaxPostImageCount = 9;
     
     NSString * inputText = [self.inputTextView.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
     
-    BOOL shouldAlert = !isEmptyString(inputText) || self.addImagesView.selectedImageCacheTasks.count != 0;
+    BOOL shouldAlert = [self checkPostContentShowAlertIfNeedWhenCancel];
     
     if (!shouldAlert) {
         [self postFinished:NO];
@@ -809,11 +932,6 @@ static NSInteger const kMaxPostImageCount = 9;
         return;
     }
     
-    if (![self.selectView hasValidData] && !self.hasSocialGroup) {
-        [[ToastManager manager] showToast:@"请选择要发布的小区！"];
-        return;
-    }
-    
     [self endEditing];
     
     // 注意 参数 下一步获取手机号
@@ -832,19 +950,23 @@ static NSInteger const kMaxPostImageCount = 9;
 
 // 先关注再发帖
 - (void)followAndPostThreadWithTitleText:(NSString *)titleText inputText:(NSString *)inputText phoneText:(NSString *)phoneText {
-    if (self.selectView.followed) {
+    if (self.toolbar.socialGroupSelectEntry.followed) {
         // 已关注，直接发帖
         [self postThreadWithTitleText:titleText inputText:inputText phoneText:phoneText];
     } else {
         // 先关注
-        __weak typeof(self) weakSelf = self;
-        [[FHUGCConfig sharedInstance] followUGCBy:self.selectView.groupId isFollow:YES enterFrom:@"feed_publisher" enterType:@"click" completion:^(BOOL isSuccess) {
-            if (isSuccess) {
-                [weakSelf postThreadWithTitleText:titleText inputText:inputText phoneText:phoneText];
-            } else {
-                // [[ToastManager manager] showToast:@"发帖失败"];
-            }
-        }];
+        if(self.toolbar.socialGroupSelectEntry.groupId.length > 0) {
+            __weak typeof(self) weakSelf = self;
+            [[FHUGCConfig sharedInstance] followUGCBy:self.toolbar.socialGroupSelectEntry.groupId isFollow:YES enterFrom:@"feed_publisher" enterType:@"click" completion:^(BOOL isSuccess) {
+                if (isSuccess) {
+                    [weakSelf postThreadWithTitleText:titleText inputText:inputText phoneText:phoneText];
+                } else {
+                    // [[ToastManager manager] showToast:@"发帖失败"];
+                }
+            }];
+        } else {
+            [self postThreadWithTitleText:titleText inputText:inputText phoneText:phoneText];
+        }
     }
 }
 
@@ -874,33 +996,45 @@ static NSInteger const kMaxPostImageCount = 9;
     [richSpanText trimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
     
     NSMutableArray *mentionUsers = [NSMutableArray arrayWithCapacity:richSpanText.richSpans.links.count];
-    for (TTRichSpanLink *link in richSpanText.richSpans.links) {
-        NSString *userId = [link.userInfo tt_stringValueForKey:@"user_id"];
-        if (!isEmptyString(userId)) {
-            [mentionUsers addObject:userId];
-        }
-    }
-    
     NSMutableArray *mentionConcerns = [NSMutableArray arrayWithCapacity:richSpanText.richSpans.links.count];
-    NSMutableArray *hashtagNames = [NSMutableArray arrayWithCapacity:richSpanText.richSpans.links.count];
     NSMutableArray *createdConcerns = [NSMutableArray arrayWithCapacity:richSpanText.richSpans.links.count];
+    
     for (TTRichSpanLink *link in richSpanText.richSpans.links) {
-        if ([link.link isEqualToString:TTUGCSelfCreateHashtagLinkURLString]) {
-            NSString *forumName = [link.userInfo tt_stringValueForKey:@"forum_name"];
-            if (!isEmptyString(forumName)) {
-                [createdConcerns addObject:forumName];
+        
+        // 外部传入编辑Feed，获取@用户和话题数组
+        if(self.isOuterEdit) {
+            switch (link.type) {
+                case TTRichSpanLinkTypeAt:
+                    if(link.idStr.length > 0) {
+                        [mentionUsers addObject:link.idStr];
+                    }
+                    break;
+                case TTRichSpanLinkTypeHashtag:
+                    if(link.idStr.length > 0) {
+                        [mentionConcerns addObject:link.idStr];
+                    }
+                    break;
+                default:
+                    break;
             }
-        } else {
-            NSString *concernId = [link.userInfo tt_stringValueForKey:@"concern_id"];
-            if (!isEmptyString(concernId)) {
-                [mentionConcerns addObject:concernId];
+        }
+        
+        // 内部用户输入内容发布获取@用户和话题数组
+        else {
+            NSString *userId = [link.userInfo tt_stringValueForKey:@"user_id"];
+            if (!isEmptyString(userId)) {
+                [mentionUsers addObject:userId];
             }
-            
-            NSString *forumName = [link.userInfo tt_stringValueForKey:@"forum_name"];
-            if (!isEmptyString(forumName)) {
-                [hashtagNames addObject:forumName];
-            } else if (link.type == TTRichSpanLinkTypeHashtag && !isEmptyString(link.text)) {
-                [hashtagNames addObject:link.text];
+            if ([link.link isEqualToString:TTUGCSelfCreateHashtagLinkURLString]) {
+                NSString *forumName = [link.userInfo tt_stringValueForKey:@"forum_name"];
+                if (!isEmptyString(forumName)) {
+                    [createdConcerns addObject:forumName];
+                }
+            } else {
+                NSString *concernId = [link.userInfo tt_stringValueForKey:@"concern_id"];
+                if (!isEmptyString(concernId)) {
+                    [mentionConcerns addObject:concernId];
+                }
             }
         }
     }
@@ -940,7 +1074,9 @@ static NSInteger const kMaxPostImageCount = 9;
         richSpans = [[TTRichSpans alloc] initWithRichSpanLinks:[links copy] imageInfoModelsDict:richSpans.imageInfoModesDict];
     }
     
+    // 收集参数数据模型
     TTPostThreadModel *postThreadModel = [[TTPostThreadModel alloc] init];
+    postThreadModel.postID = self.outerPostId;
     postThreadModel.content = inputText;
     postThreadModel.contentRichSpans = [TTRichSpans JSONStringForRichSpans:richSpans];
     postThreadModel.mentionUsers = [mentionUsers componentsJoinedByString:@","];
@@ -958,21 +1094,42 @@ static NSInteger const kMaxPostImageCount = 9;
     postThreadModel.longitude = longitude;
     postThreadModel.latitude = latitude;
     postThreadModel.hasSocialGroup = self.hasSocialGroup;
-    if (self.hasSocialGroup) {
-        postThreadModel.social_group_id = self.selectGroupId;
-        postThreadModel.social_group_name = self.selectGroupName;
-    } else {
-        postThreadModel.social_group_id = self.selectView.groupId;
-        postThreadModel.social_group_name = self.selectView.communityName;
+    postThreadModel.extraTrack = self.trackDict.copy;
+    postThreadModel.social_group_id = self.toolbar.socialGroupSelectEntry.groupId;
+    postThreadModel.social_group_name = self.toolbar.socialGroupSelectEntry.communityName;
+    postThreadModel.bindType = postThreadModel.social_group_id.length > 0 ? 0 : 1;
+    if(self.neighborhoodId.length > 0) {
+        postThreadModel.neighborhoodId = self.neighborhoodId;
+        postThreadModel.source =  @"neighborhood";
+        
+        if(self.tagsView.selectedTags.count > 0) {
+            NSMutableString *jsonString = [NSMutableString stringWithString:@"["];
+            NSMutableArray *arrayStrElement = [NSMutableArray array];
+            [self.tagsView.selectedTags enumerateObjectsUsingBlock:^(FHUGCTagModel * _Nonnull tagInfo, NSUInteger idx, BOOL * _Nonnull stop) {
+                [arrayStrElement addObject:tagInfo.toJSONString];
+            }];
+            [jsonString appendString:[arrayStrElement componentsJoinedByString:@","]];
+            [jsonString appendString:@"]"];
+            postThreadModel.neighborhoodTags = jsonString;
+        }
     }
     
-    
-    postThreadModel.extraTrack = self.trackDict.copy;
-    
-    [[TTPostThreadCenter sharedInstance_tt] postThreadWithPostThreadModel:postThreadModel finishBlock:^(TTPostThreadTask *task) {
-        [self postFinished:YES task:task];
-    }];
+    // 外部传入图文发布器数据，重新编辑后发布
+    if(self.isOuterEdit) {
+        [[TTPostThreadCenter sharedInstance_tt] postEditedThreadWithPostThreadModel:postThreadModel finishBlock:^{
+            [self dismissSelf];
+        }];
+    }
+    // 图文发布器内部编辑后发布
+    else {
+        [[TTPostThreadCenter sharedInstance_tt] postThreadWithPostThreadModel:postThreadModel finishBlock:^(TTPostThreadTask *task) {
+            [self postFinished:YES task:task];
+        }];
+    }
 }
+
+#pragma mark - 图文发布器内部编辑后发布
+
 - (void)postFinished:(BOOL)hasSent {
     [self postFinished:hasSent task:nil];
 }
@@ -1039,13 +1196,18 @@ static NSInteger const kMaxPostImageCount = 9;
 }
 
 - (void)addImagesViewSizeChanged {
-    self.inputContainerView.height = self.addImagesView.bottom + kAddImagesViewBottomPadding;
+    CGFloat inputContainerViewHeight = (self.addImagesView.selectedImageCacheTasks.count <= 0 ? self.inputTextView.bottom : self.addImagesView.bottom) + kAddImagesViewBottomPadding;
+    if(self.neighborhoodId.length > 0) {
+        self.tagsView.top = inputContainerViewHeight;
+        inputContainerViewHeight = self.tagsView.bottom + kAddImagesViewTopPadding;
+    }
+    self.inputContainerView.height = inputContainerViewHeight;
     self.infoContainerView.top = self.inputContainerView.height + kMidPadding;
 
     CGFloat targetHeight = self.infoContainerView.bottom + kMidPadding;
     CGFloat containerHeight = self.view.height - 64;
     containerHeight = containerHeight >= targetHeight ? containerHeight : targetHeight;
-    containerHeight += kUGCToolbarHeight;
+    containerHeight += [FHUGCToolbar toolbarHeightWithTags:self.hotTags hasSelected:self.hasSocialGroup];
     self.containerView.contentSize = CGSizeMake(self.containerView.frame.size.width, containerHeight);
     [self refreshPostButtonUI];
 }
@@ -1053,31 +1215,83 @@ static NSInteger const kMaxPostImageCount = 9;
 - (void)refreshUI {
     NSUInteger maxTextCount = [TTKitchen getInt:kTTKUGCPostAndRepostContentMaxCount];
     NSString *inputText = [self.inputTextView.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
-    self.tipLabel.hidden = NO;
-    self.tipLabel.text = [NSString stringWithFormat:@"%ld/%lu",inputText.length, maxTextCount];
-    
+    self.toolbar.tipLabel.text = [NSString stringWithFormat:@"%ld/%lu",inputText.length, maxTextCount];
     [self refreshPostButtonUI];
 }
 
 - (void)refreshPostButtonUI {
     //发布器
-    if (self.inputTextView.text.length > 0 || self.addImagesView.selectedImageCacheTasks.count > 0) {
-        self.postButton.enabled = YES;
-        [self.postButton setTitleColor:[UIColor themeRed1] forState:UIControlStateHighlighted];
-        [self.postButton setTitleColor:[UIColor themeRed1] forState:UIControlStateNormal];
-        [self.postButton setTitleColor:[UIColor themeRed1] forState:UIControlStateDisabled];
-    } else {
+    [self refreshPostButtonValidStatus];
+}
+
+- (void)refreshPostButtonValidStatus {
+    
+    BOOL isEnablePostButton = [self checkPostContentChanged];
+    
+    [self setPostButtonEnable:isEnablePostButton];
+}
+
+- (BOOL)checkPostContentChanged {
+    
+    BOOL ret = NO;
+    
+    if(self.isOuterEdit) {
+        
+        NSString *outerContent = self.postPreContent;
+        NSMutableString *outerImageUris = [NSMutableString string];
+        [self.outerInputAssets enumerateObjectsUsingBlock:^(TTAssetModel * _Nonnull model, NSUInteger idx, BOOL * _Nonnull stop) {
+            if(model.imageURI.length > 0) {
+                [outerImageUris appendFormat:@"%@", model.imageURI];
+            }
+        }];
+        
+        TTRichSpanText *richSpanText = [self.inputTextView.richSpanText restoreWhitelistLinks];
+        [richSpanText trimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+        
+        NSString *currentContent = richSpanText.text;
+        NSMutableString *currentImageUris = [NSMutableString string];
+        [self.addImagesView.selectedImageCacheTasks enumerateObjectsUsingBlock:^(TTUGCImageCompressTask * _Nonnull task, NSUInteger idx, BOOL * _Nonnull stop) {
+            if(task.assetModel.imageURI.length > 0) {
+                [currentImageUris appendFormat:@"%@", task.assetModel.imageURI];
+            }
+            
+            if(task.preCompressFilePath.length > 0) {
+                [currentImageUris appendFormat:@"%@", task.preCompressFilePath];
+            } else if(task.assetModel.assetID.length > 0) {
+                [currentImageUris appendFormat:@"%@", task.assetModel.assetID];
+            }
+        }];
+        
+        ret = !([currentContent isEqualToString:outerContent] &&  [currentImageUris isEqualToString:outerImageUris]);
+    }
+    else {
+        NSInteger validContentLength = 0;
+        if(self.neighborhoodId.length > 0) {
+            validContentLength = 10;
+            ret = self.inputTextView.trimmedLength > validContentLength;
+        }
+        else {
+            validContentLength = 0;
+            ret = self.inputTextView.trimmedLength > validContentLength || self.addImagesView.selectedImageCacheTasks.count != 0;
+        }
+    }
+    
+    return ret;
+}
+
+- (void)setPostButtonEnable:(BOOL)isEnable {
+    
+    self.postButton.enabled = isEnable;
+    
+    if(isEnable) {
+        [self.postButton setTitleColor:[UIColor themeOrange1] forState:UIControlStateHighlighted];
+        [self.postButton setTitleColor:[UIColor themeOrange1] forState:UIControlStateNormal];
+        [self.postButton setTitleColor:[UIColor themeOrange1] forState:UIControlStateDisabled];
+    }
+    else {
         [self.postButton setTitleColor:[UIColor themeGray3] forState:UIControlStateHighlighted];
         [self.postButton setTitleColor:[UIColor themeGray3] forState:UIControlStateNormal];
         [self.postButton setTitleColor:[UIColor themeGray3] forState:UIControlStateDisabled];
-        self.postButton.enabled = NO;
-    }
-    // 选择小区
-    if (self.selectGroupId.length > 0 && self.selectGroupName.length > 0) {
-        self.selectView.groupId = self.selectGroupId;
-        self.selectView.communityName = self.selectGroupName;
-        self.selectView.followed = YES;
-        self.selectView.rightImageView.hidden = YES;
     }
 }
 
@@ -1144,13 +1358,18 @@ static NSInteger const kMaxPostImageCount = 9;
 - (void)textView:(TTUGCTextView *)textView willChangeHeight:(float)height withDiffHeight:(CGFloat)diffHeight {
     // 图文发布器展示
     self.addImagesView.top = self.inputTextView.bottom + kAddImagesViewTopPadding;
-    self.inputContainerView.height = self.addImagesView.bottom + kAddImagesViewBottomPadding;
+    CGFloat inputContainerViewHeight = (self.addImagesView.selectedImageCacheTasks.count <= 0 ? self.inputTextView.bottom : self.addImagesView.bottom) + kAddImagesViewBottomPadding;
+    if(self.neighborhoodId.length > 0) {
+        self.tagsView.top = inputContainerViewHeight;
+        inputContainerViewHeight = self.tagsView.bottom + kAddImagesViewTopPadding;
+    }
+    self.inputContainerView.height = inputContainerViewHeight;
     self.infoContainerView.top = self.inputContainerView.height + kMidPadding;
     
     CGFloat targetHeight = self.infoContainerView.bottom + kMidPadding;
     CGFloat containerHeight = self.view.height - 64;
     containerHeight = containerHeight >= targetHeight ? containerHeight : targetHeight;
-    containerHeight += kUGCToolbarHeight;
+    containerHeight += [FHUGCToolbar toolbarHeightWithTags:self.hotTags hasSelected:self.hasSocialGroup];
     self.containerView.contentSize = CGSizeMake(self.containerView.frame.size.width, containerHeight);
 }
 
@@ -1194,6 +1413,7 @@ static NSInteger const kMaxPostImageCount = 9;
 #pragma mark - UIScrollViewDelegate
 
 - (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView {
+    self.isToolbarWillEndEditing = YES;
     [self endEditing];
 }
 
@@ -1363,6 +1583,15 @@ static NSInteger const kMaxPostImageCount = 9;
 }
 
 - (void)keyboardWillChange:(NSNotification *)notification {
+    CGRect keyboardEndFrame = [[notification.userInfo objectForKey:UIKeyboardFrameEndUserInfoKey] CGRectValue];
+    self.isKeyboardShow = keyboardEndFrame.origin.y < SCREEN_HEIGHT;
+    if(self.isKeyboardShow) {
+        self.keyboardFrameForToolbar = keyboardEndFrame;
+    } else {
+        self.keyboardFrameForToolbar = CGRectZero;
+    }
+    
+    [self needRelayoutToolbar];
     
     UIView * firstResponder = nil;
     if (self.inputTextView.isFirstResponder) {
@@ -1379,7 +1608,7 @@ static NSInteger const kMaxPostImageCount = 9;
         [self.containerView setContentOffset:CGPointMake(0, fabs(self.containerView.contentOffset.y+offset)) animated:YES];
         return;
     }
-    offset = self.containerView.height - endFrame.size.height - (CGRectGetMaxY(firstResponderFrame) - self.containerView.contentOffset.y) - kUGCToolbarHeight;
+    offset = self.containerView.height - endFrame.size.height - (CGRectGetMaxY(firstResponderFrame) - self.containerView.contentOffset.y) - [FHUGCToolbar toolbarHeightWithTags:self.hotTags hasSelected:self.hasSocialGroup];
     if (offset < 0) {
         self.keyboardEndFrame = endFrame;
         
@@ -1399,13 +1628,6 @@ static NSInteger const kMaxPostImageCount = 9;
     
     // 避免视频详情页转发时，出现 statusBar 高度获取为 0 的情况
     CGFloat top = MAX(self.ttNavigationBar.bottom, [TTDeviceHelper isIPhoneXSeries] ? 88 : 64);
-    if (!self.hasSocialGroup) {
-        self.selectView.frame = CGRectMake(0, top, SCREEN_WIDTH, 44);
-        top += 44;
-    }
-    if(self.selectedGrouplHistoryView) {
-        top += (self.selectedGrouplHistoryView.hidden == NO) ? self.selectedGrouplHistoryView.height : 0;
-    }
     self.containerView.frame = CGRectMake(0, top, self.view.width, self.view.height - top);
 }
 
@@ -1447,7 +1669,12 @@ static NSInteger const kMaxPostImageCount = 9;
     [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault];
     if (self.firstAppear) {
         self.firstAppear = NO;
-        [self.inputTextView becomeFirstResponder];
+        if(self.neighborhoodId.length > 0) {
+            // 小区点评发布器，进入不弹键盘
+            [self.tagsView becomeFirstResponder];
+        } else {
+            [self.inputTextView becomeFirstResponder];
+        }
     } else {
         // 选择圈子子
         __weak typeof(self) weakSelf = self;
@@ -1537,11 +1764,27 @@ static NSInteger const kMaxPostImageCount = 9;
 
 #pragma mark - FHUGCFollowListDelegate
 - (void)selectedItem:(FHUGCScialGroupDataModel *)item {
-    // 选择 圈子子
+    
     if (item) {
-        self.selectView.groupId = item.socialGroupId;
-        self.selectView.communityName = item.socialGroupName;
-        self.selectView.followed = [item.hasFollow boolValue];
+        
+        if([self.toolbar.socialGroupSelectEntry hasValidData]) {
+            if(![item.socialGroupId isEqualToString:self.toolbar.socialGroupSelectEntry.groupId]) {
+                if(self.toolbar.socialGroupSelectEntry.tagType != FHPostUGCTagType_Normal) {
+                    [self.toolbar tagCloseButtonClicked];
+                }
+            } else {
+                if(self.toolbar.socialGroupSelectEntry.tagType != FHPostUGCTagType_Normal) {
+                    return;
+                }
+            }
+        }
+        
+        self.toolbar.socialGroupSelectEntry.groupId = item.socialGroupId;
+        self.toolbar.socialGroupSelectEntry.communityName = item.socialGroupName;
+        self.toolbar.socialGroupSelectEntry.followed = [item.hasFollow boolValue];
+        self.toolbar.socialGroupSelectEntry.tagType = FHPostUGCTagType_Normal;
+        self.toolbar.socialGroupSelectEntry.tagIndex = INVALID_TAG_INDEX;
+        [self.toolbar stagePushDuplicateTagIfNeedWithGroupId:item.socialGroupId];
         [self refreshPostButtonUI];
         
         NSMutableDictionary *tracerDict = self.trackDict.mutableCopy;
@@ -1550,28 +1793,77 @@ static NSInteger const kMaxPostImageCount = 9;
             tracerDict[@"group_id"] = item.socialGroupId;
         }
         [FHUserTracker writeEvent:@"element_show" params:tracerDict];
-        // 如何选中的圈子和上一次一样就隐藏选择历史模块
-        if(self.selectedGrouplHistoryView) {
-            self.selectedGrouplHistoryView.hidden = [self.selectedGrouplHistoryView.model.socialGroupId isEqualToString:item.socialGroupId];
-        }
     }
 }
 
-#pragma mark - FHPostUGCSelectedGroupHistoryViewDelegate
--(void)selectedHistoryGroup:(FHPostUGCSelectedGroupModel *)item {
-    // 选择 圈子子
-    self.selectedGrouplHistoryView.hidden = YES;
-    if (item) {
-        self.selectView.groupId = item.socialGroupId;
-        self.selectView.communityName = item.socialGroupName;
-        self.selectView.followed = NO;
-        [self refreshPostButtonUI];
-        
-        NSMutableDictionary *param = [NSMutableDictionary dictionary];
+- (void)addGoDetailLog {
+    if(self.isOuterEdit) {
+        NSMutableDictionary *param = @{}.mutableCopy;
         param[UT_PAGE_TYPE] = @"feed_publisher";
-        param[UT_ENTER_FROM] = self.tracerDict[UT_ENTER_FROM];
-        param[@"click_position"] = @"last_published_neighborhood";
-        TRACK_EVENT(@"click_last_published_neighborhood", param);
+        param[UT_LOG_PB] = self.tracerModel.logPb;
+        param[UT_ENTER_FROM] = self.tracerModel.enterFrom;
+        param[UT_ENTER_TYPE] = self.tracerModel.enterType;
+        TRACK_EVENT(UT_GO_DETAIL, param);
     }
+    
+    if(self.neighborhoodId.length > 0) {
+        NSMutableDictionary *param = @{}.mutableCopy;
+        param[UT_PAGE_TYPE] = @"feed_publisher";
+        param[UT_LOG_PB] = self.tracerModel.logPb;
+        param[@"group_id"] = self.neighborhoodId;
+        param[UT_ELEMENT_FROM] = self.tracerModel.elementFrom;
+        param[UT_ENTER_FROM] = self.tracerModel.enterFrom;
+        TRACK_EVENT(UT_GO_DETAIL, param);
+    }else if(self.groupId.length > 0){
+        NSMutableDictionary *param = @{}.mutableCopy;
+        param[UT_PAGE_TYPE] = @"feed_publisher";
+        param[UT_LOG_PB] = self.tracerDict[UT_LOG_PB];
+        param[@"group_id"] = self.groupId;
+        param[UT_ELEMENT_FROM] = self.tracerDict[UT_ELEMENT_FROM];
+        param[UT_ENTER_FROM] = self.tracerDict[UT_ENTER_FROM];
+        param[UT_ENTER_TYPE] = @"click";
+        TRACK_EVENT(UT_GO_DETAIL, param);
+    }
+}
+
+#pragma mark - FHUGCToolbarDelegate
+
+- (void)selectedTag:(FHUGCToolBarTag *)tagInfo {
+    self.toolbar.socialGroupSelectEntry.groupId = tagInfo.groupId;
+    self.toolbar.socialGroupSelectEntry.communityName = tagInfo.groupName;
+    FHUGCScialGroupDataModel * model = [[FHUGCConfig sharedInstance] socialGroupData:tagInfo.groupId];
+    self.toolbar.socialGroupSelectEntry.followed = model ? [model.hasFollow boolValue] : NO;
+    self.toolbar.socialGroupSelectEntry.tagType = tagInfo.tagType;
+    self.toolbar.socialGroupSelectEntry.tagIndex = tagInfo.index;
+    
+    [self needRelayoutToolbar];
+}
+
+- (void)needRelayoutToolbar {
+    
+    CGFloat toolbarHeight = [FHUGCToolbar toolbarHeightWithTags:self.hotTags hasSelected:self.hasSocialGroup];
+    CGRect frame = self.toolbar.frame;
+    frame.origin.y = self.view.height - toolbarHeight - self.keyboardFrameForToolbar.size.height;
+    if(self.isKeyboardShow) {
+        frame.origin.y += [TTUIResponderHelper mainWindow].tt_safeAreaInsets.bottom;
+    } else {
+        if(self.toolbar.emojiInputViewVisible && !self.toolbar.switchToInput && !self.isToolbarWillEndEditing) {
+            frame.origin.y -= self.toolbar.emojiInputView.height;
+        }
+    }
+    self.isToolbarWillEndEditing = NO;
+    self.toolbar.frame = frame;
+    [self.toolbar layoutTagSelectCollectionViewWithTags:self.hotTags hasSelected:self.hasSocialGroup];
+}
+
+#pragma mark - UIGestureRecognizerDelegate
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch {
+
+    CGPoint location = [touch locationInView:self.tagsView];
+    
+    if(CGRectContainsPoint(self.tagsView.bounds, location)) {
+        return NO;
+    }
+    return YES;
 }
 @end

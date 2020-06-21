@@ -18,9 +18,10 @@
 #import "UIViewController+Track.h"
 #import "FHFeedOperationView.h"
 #import "FHUGCConfig.h"
-#import <TTBusinessManager+StringUtils.h>
+#import "TTBusinessManager+StringUtils.h"
 #import <FHHouseBase/UIImage+FIconFont.h>
 #import "FHUGCShareManager.h"
+#import "UIImage+FIconFont.h"
 
 @interface FHPostDetailViewController ()
 
@@ -38,6 +39,8 @@
 @property (nonatomic, strong)   UIButton       *shareButton;// 分享
 @property (nonatomic, assign)   BOOL       isViewAppearing;
 @property (nonatomic, copy)     NSString       *lastPageSocialGroupId;
+//标识来源的入口，是发现过来的（house_thread）还是UGC过来的（ugc_thread）
+@property(nonatomic, copy) NSString *threadDetailSource;
 
 @end
 
@@ -66,6 +69,7 @@
             self.digg_count = [self.detailData.diggCount longLongValue];
             self.detailData.groupId = [NSString stringWithFormat:@"%ld",tid];
         }
+        self.threadDetailSource = params[@"thread_detail_source"];
         // 埋点
         self.tracerDict[@"page_type"] = @"feed_detail";
         self.ttTrackStayEnable = YES;
@@ -73,6 +77,10 @@
         NSString *enter_from = params[@"enter_from"];
         if (enter_from.length > 0) {
             self.tracerDict[@"enter_from"] = enter_from;
+        }
+        NSString *origin_from = params[@"origin_from"];
+        if (origin_from.length > 0) {
+            self.tracerDict[@"origin_from"] = origin_from;
         }
         NSString *enter_type = params[@"enter_type"];
         if (enter_type.length > 0) {
@@ -130,6 +138,7 @@
     self.weakViewModel.forumID = self.fid;
     self.weakViewModel.category = @"thread_detail";
     self.weakViewModel.lastPageSocialGroupId = self.lastPageSocialGroupId;
+    self.weakViewModel.threadDetailSource = self.threadDetailSource;
     // 导航栏
     [self setupDetailNaviBar];
     // 全部评论
@@ -138,6 +147,7 @@
     if (self.detailData) {
         self.weakViewModel.detailData = self.detailData;
     }
+    self.weakViewModel.weakShareButton = self.shareButton;
     [self addDefaultEmptyViewFullScreen];
     // 请求 详情页数据
     [self startLoadData];
@@ -146,6 +156,7 @@
 
 - (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
+    [[NSNotificationCenter defaultCenter] postNotificationName:UIMenuControllerWillHideMenuNotification object:nil];
     [self addStayPageLog];
     //跳页时关闭举报的弹窗
     [FHFeedOperationView dismissIfVisible];
@@ -215,6 +226,10 @@
     self.naviHeaderView.hidden = YES;
     self.followButton.hidden = YES;
     self.shareButton.hidden = NO;
+    
+    UIImage *blackBackArrowImage = ICON_FONT_IMG(24, @"\U0000e68a", [UIColor themeGray1]);
+    [self.customNavBarView.leftBtn setBackgroundImage:blackBackArrowImage forState:UIControlStateNormal];
+    [self.customNavBarView.leftBtn setBackgroundImage:blackBackArrowImage forState:UIControlStateHighlighted];
 }
 
 - (void)startLoadData {
@@ -286,6 +301,7 @@
 
 // 子类滚动方法
 - (void)sub_scrollViewDidScroll:(UIScrollView *)scrollView {
+        [[NSNotificationCenter defaultCenter] postNotificationName:UIMenuControllerWillHideMenuNotification object:nil];
     if (self.weakViewModel.detailHeaderModel) {
         // 有头部数据
         CGFloat offsetY = scrollView.contentOffset.y;

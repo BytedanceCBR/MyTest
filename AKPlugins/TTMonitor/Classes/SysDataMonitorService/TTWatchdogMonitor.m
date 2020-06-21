@@ -125,8 +125,9 @@ typedef void(^TTPingResultBlock)(BOOL timeout);
 
 - (void)startMonitorWithInterval:(NSTimeInterval)interval watchdogThreshold:(NSTimeInterval)threshold watchdogCallback:(TTWatchdogCallback)callback {
     
+    NSAssert([NSThread isMainThread], @"watchdog monitor must be called from main thread!");
+
     if (![NSThread isMainThread]) {
-        NSLog(@"Error: startWatch must be called from main thread!");
         return;
     }
     

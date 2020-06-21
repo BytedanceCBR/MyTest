@@ -14,7 +14,7 @@
 #import "ExploreExtenstionDataHelper.h"
 #import "NewsBaseDelegate.h"
 #import "TTInstallIDManager.h"
-#import <TTAccountBusiness.h>
+#import "TTAccountBusiness.h"
 #import "SSImpressionManager.h"
 #import "SSLogDataManager.h"
 #import "TTModuleBridge.h"
@@ -60,11 +60,12 @@ DEC_TASK("TTAppLogStartupTask",FHTaskTypeSerial,TASK_PRIORITY_HIGH+7);
     [[TTTracker sharedInstance] setConfigParamsBlock:^(void) {
         NSMutableDictionary *params = [NSMutableDictionary dictionaryWithCapacity:2];
         [params setValue:[TTAccountManager userID] forKey:@"user_id"];
-        if([TTSandBoxHelper isInHouseApp]) {
-            [params setValue:@(NO) forKey:@"need_encrypt"];
-        } else {
+        //in house 环境下也使用下发的加密开关
+//        if([TTSandBoxHelper isInHouseApp]) {
+//            [params setValue:@(NO) forKey:@"need_encrypt"];
+//        } else {
             [params setValue:@([SSCommonLogic useEncrypt]) forKey:@"need_encrypt"];
-        }
+//        }
         
         return [params copy];
     }];
@@ -107,7 +108,7 @@ DEC_TASK("TTAppLogStartupTask",FHTaskTypeSerial,TASK_PRIORITY_HIGH+7);
         //        NSString* currentCityName = [[EnvContext shared].client currentCityName];
         //        NSString* provinceName = [[EnvContext shared].client currentProvince];
         NSString* currentCityName = [FHLocManager sharedInstance].currentReGeocode.city;
-        NSString* provinceName = [FHLocManager sharedInstance].currentReGeocode.province;
+        NSString* provinceName = [FHLocManager sharedInstance].currentReGeocode.administrativeArea;
         customHeader[@"city_name"] = currentCityName;
         customHeader[@"province_name"] = provinceName;
         customHeader[@"house_city"] =  [FHEnvContext getCurrentUserDeaultCityNameFromLocal];

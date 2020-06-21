@@ -18,7 +18,7 @@
 #import "UIViewController+Track.h"
 #import "FHFeedOperationView.h"
 #import "FHUGCConfig.h"
-#import <TTBusinessManager+StringUtils.h>
+#import "TTBusinessManager+StringUtils.h"
 #import <FHHouseBase/UIImage+FIconFont.h>
 #import "FHUGCShareManager.h"
 
@@ -67,6 +67,10 @@
         self.tracerDict[@"page_type"] = @"vote_detail";
         self.ttTrackStayEnable = YES;
         // 取链接中的埋点数据
+        NSString *origin_from = params[@"origin_from"];
+        if (origin_from.length > 0) {
+            self.tracerDict[@"origin_from"] = origin_from;
+        }
         NSString *enter_from = params[@"enter_from"];
         if (enter_from.length > 0) {
             self.tracerDict[@"enter_from"] = enter_from;
@@ -139,10 +143,12 @@
     // 请求 详情页数据
     [self startLoadData];
     [self addGoDetailLog];
+    
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
+    [[NSNotificationCenter defaultCenter] postNotificationName:UIMenuControllerWillHideMenuNotification object:nil];
     [self addStayPageLog];
     //跳页时关闭举报的弹窗
     [FHFeedOperationView dismissIfVisible];
@@ -176,6 +182,8 @@
 
 - (void)setupDetailNaviBar {
     self.customNavBarView.title.text = @"详情";
+    [self.customNavBarView.leftBtn setBackgroundImage:ICON_FONT_IMG(24, @"\U0000e68a", [UIColor themeGray1]) forState:UIControlStateNormal];
+    [self.customNavBarView.leftBtn setBackgroundImage:ICON_FONT_IMG(24, @"\U0000e68a", [UIColor themeGray1]) forState:UIControlStateHighlighted];
     // 分享按钮
     self.shareButton = [[UIButton alloc] init];
     [self.shareButton setBackgroundImage:self.shareBlackImage forState:UIControlStateNormal];
@@ -283,6 +291,7 @@
 
 // 子类滚动方法
 - (void)sub_scrollViewDidScroll:(UIScrollView *)scrollView {
+    [[NSNotificationCenter defaultCenter] postNotificationName:UIMenuControllerWillHideMenuNotification object:nil];
     if (self.weakViewModel.detailHeaderModel) {
         // 有头部数据
         CGFloat offsetY = scrollView.contentOffset.y;

@@ -6,7 +6,8 @@
 //
 
 #import <Foundation/Foundation.h>
-#import <JSONModel.h>
+#import "JSONModel.h"
+#import <UIKit/UIKit.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -21,7 +22,8 @@ NS_ASSUME_NONNULL_BEGIN
 //8. card_type=8 过滤文本卡片 （已为您过滤xxx套可疑房源）
 //9. card_type=9 猜你想找tip（没有找到相关房源，猜你想找下面这些？）
 //10. card_type=10猜你想找文本 （猜你想找）
-
+//11. card_type=11切换城市卡片 （你是不是想找“xxx”的房源？）
+//13. card_type=13 预约顾问
 
 typedef NS_ENUM(NSUInteger, FHSearchCardType) {
     FHSearchCardTypeNewHouse = 1, //1. card_type=1 新房卡片
@@ -34,11 +36,14 @@ typedef NS_ENUM(NSUInteger, FHSearchCardType) {
     FHSearchCardTypeFilterHouseTip = 8,
     FHSearchCardTypeGuessYouWantTip = 9,
     FHSearchCardTypeGuessYouWantContent = 10,
+    FHSearchCardTypeRedirectTip = 11,
+    FHSearchCardTypeReserveAdviser = 13,
+    FHSearchCardTypeAgentCard = 14,
 };
 
 @interface FHSearchBaseItemModel : JSONModel
 
-@property (nonatomic, assign) NSInteger cellType;
+@property (nonatomic, assign) NSInteger cardType;
 @property (nonatomic, assign) NSInteger cellStyle;
 @property (nonatomic, assign) CGFloat topMargin;
 

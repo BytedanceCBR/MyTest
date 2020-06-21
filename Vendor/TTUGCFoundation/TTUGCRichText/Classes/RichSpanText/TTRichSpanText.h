@@ -55,6 +55,8 @@ typedef NS_ENUM (NSInteger, TTRichSpanLinkFlagType) {
 @property (nonatomic, strong, readonly) NSArray<TTRichSpanImage*> *imageInfoModels;
 
 @property (nonatomic, strong) NSDictionary *userInfo;
+@property (nonatomic, copy) NSString *idStr;
+
 
 - (instancetype)initWithStart:(NSUInteger)start length:(NSUInteger)length link:(NSString *)link;
 

@@ -6,7 +6,7 @@
 //
 
 #import "FHUGCBaseCell.h"
-#import <TTVFeedListItem.h>
+#import "TTVFeedListItem.h"
 
 NS_ASSUME_NONNULL_BEGIN
 

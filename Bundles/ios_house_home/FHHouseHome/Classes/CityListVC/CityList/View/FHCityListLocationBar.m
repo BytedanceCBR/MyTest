@@ -6,9 +6,9 @@
 //
 
 #import "FHCityListLocationBar.h"
-#import <Masonry.h>
-#import <UIFont+House.h>
-#import <UIColor+Theme.h>
+#import "Masonry.h"
+#import "UIFont+House.h"
+#import "UIColor+Theme.h"
 #import "TTDeviceHelper.h"
 #import "FHExtendHotAreaButton.h"
 
@@ -60,8 +60,8 @@
     [_reLocationBtn setTitle:@"重新定位" forState:UIControlStateNormal];
     [_reLocationBtn setTitle:@"重新定位" forState:UIControlStateHighlighted];
     _reLocationBtn.titleLabel.font = [UIFont themeFontRegular:14];
-    [_reLocationBtn setTitleColor:[UIColor themeRed1] forState:UIControlStateNormal];
-    [_reLocationBtn setTitleColor:[UIColor themeRed1] forState:UIControlStateHighlighted];
+    [_reLocationBtn setTitleColor:[UIColor themeOrange1] forState:UIControlStateNormal];
+    [_reLocationBtn setTitleColor:[UIColor themeOrange1] forState:UIControlStateHighlighted];
     [self addSubview:_reLocationBtn];
     [_reLocationBtn mas_makeConstraints:^(MASConstraintMaker *make) {
         make.right.mas_equalTo(self).offset(-20);
@@ -79,7 +79,7 @@
 - (void)setIsLocationSuccess:(BOOL)isLocationSuccess {
     _isLocationSuccess = isLocationSuccess;
     _cityNameBtn.enabled = isLocationSuccess;
-    if (isLocationSuccess) {
+    if (isLocationSuccess && _cityName) {
         [_cityNameBtn setTitleColor:[UIColor themeGray1] forState:UIControlStateNormal];
         [_cityNameBtn setTitleColor:[UIColor themeGray1] forState:UIControlStateHighlighted];
         [self.cityNameBtn setTitle:_cityName forState:UIControlStateNormal];

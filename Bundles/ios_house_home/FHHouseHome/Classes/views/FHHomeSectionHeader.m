@@ -10,12 +10,12 @@
 #import "TTDeviceHelper.h"
 #import "UIColor+Theme.h"
 #import "FHEnvContext.h"
-#import <UIViewAdditions.h>
-#import <ToastManager.h>
+#import "UIViewAdditions.h"
+#import "ToastManager.h"
 
 static const float kSegementedOneWidth = 50;
-static const float kSegementedHeight = 35;
-static const float kSegementedPadingTop = 10;
+static const float kSegementedHeight = 30;
+static const float kSegementedPadingTop = 0;
 
 static const NSInteger kTopScrollViewTag = 100;
 
@@ -38,12 +38,12 @@ static const NSInteger kTopScrollViewTag = 100;
     self = [super initWithFrame:frame];
     if (self) {
         self.categoryLabel = [UILabel new];
-        self.categoryLabel.font = [UIFont themeFontMedium:[TTDeviceHelper isScreenWidthLarge320] ? 16 : 14];
+        self.categoryLabel.font = [UIFont themeFontSemibold:[TTDeviceHelper isScreenWidthLarge320] ? 18 : 14];
         self.categoryLabel.textColor = [UIColor themeGray1];
         self.categoryLabel.text = @"为你推荐";
-        self.backgroundColor = [UIColor clearColor];
+        self.backgroundColor = [UIColor themeHomeColor];
         [self addSubview:self.categoryLabel];
-        self.categoryLabel.frame = CGRectMake(20, 22, 100, 20);
+        self.categoryLabel.frame = CGRectMake(15, 0, 100, 30);
         [self setUpSegmentedControl];
     }
     return self;
@@ -55,18 +55,19 @@ static const NSInteger kTopScrollViewTag = 100;
     _segmentedControl.frame = CGRectMake(MAIN_SCREEN_WIDTH - (kSegementedOneWidth + 5) * 3, kSegementedPadingTop, (kSegementedOneWidth + 5) * 3, kSegementedHeight);
     _segmentedControl.sectionTitles = @[@"",@"",@""];
     _segmentedControl.selectionIndicatorHeight = 0;
-    _segmentedControl.selectionIndicatorColor = [UIColor colorWithHexString:@"#ff5869"];
+    _segmentedControl.selectionIndicatorColor = [UIColor themeOrange4]; //[UIColor colorWithHexString:@"#ff5869"];
     _segmentedControl.selectionStyle = HMSegmentedControlSelectionStyleFullWidthStripe;
     _segmentedControl.segmentWidthStyle = HMSegmentedControlSegmentWidthStyleDynamic;
     _segmentedControl.isNeedNetworkCheck = YES;
+    [_segmentedControl setBackgroundColor:[UIColor themeHomeColor]];
     
     NSDictionary *attributeNormal = [NSDictionary dictionaryWithObjectsAndKeys:
                                      [UIFont themeFontRegular:[TTDeviceHelper isScreenWidthLarge320] ? 16 : 12],NSFontAttributeName,
-                                     [UIColor themeGray3],NSForegroundColorAttributeName,nil];
+                                     [UIColor themeGray1],NSForegroundColorAttributeName,nil];
     
     NSDictionary *attributeSelect = [NSDictionary dictionaryWithObjectsAndKeys:
-                                     [UIFont themeFontMedium:[TTDeviceHelper isScreenWidthLarge320] ? 16 : 12],NSFontAttributeName,
-                                      [UIColor themeRed1],NSForegroundColorAttributeName,nil];
+                                     [UIFont themeFontSemibold:[TTDeviceHelper isScreenWidthLarge320] ? 16 : 12],NSFontAttributeName,
+                                     [UIColor colorWithHexStr:@"#fe5500"],NSForegroundColorAttributeName,nil];
     _segmentedControl.titleTextAttributes = attributeNormal;
     _segmentedControl.selectedTitleTextAttributes = attributeSelect;
     _segmentedControl.segmentEdgeInset = UIEdgeInsetsMake(5, 15, 0, 0);
@@ -80,10 +81,8 @@ static const NSInteger kTopScrollViewTag = 100;
     [self addSubview:self.segmentedControl];
     
     _topStyleContainer = [[UIView alloc] initWithFrame:self.frame];
-    [_topStyleContainer setBackgroundColor:[UIColor whiteColor]];
-    _topStyleContainer.hidden = YES; 
+    _topStyleContainer.hidden = YES;
     [self addSubview:_topStyleContainer];
-    
 }
 
 - (void)refreshSelectionIconFromOffsetX:(CGFloat)offsetX
@@ -114,12 +113,12 @@ static const NSInteger kTopScrollViewTag = 100;
 - (void)showOriginStyle:(BOOL)isOrigin
 {
     if (isOrigin) {
+        
         _topStyleContainer.hidden = YES;
         [self sendSubviewToBack:_topStyleContainer];
     }else
     {
-        _topStyleContainer.hidden = NO;
-        [self bringSubviewToFront:_topStyleContainer];
+        _topStyleContainer.hidden = YES;
     }
 }
 
@@ -142,8 +141,7 @@ static const NSInteger kTopScrollViewTag = 100;
     _segmentedControl.sectionTitles = titles;
     _segmentedControl.selectedSegmentIndex = 0;
     _segmentedControl.frame = CGRectMake(MAIN_SCREEN_WIDTH - (kSegementedOneWidth + 5) * titles.count - leftPading, kSegementedPadingTop, (kSegementedOneWidth  + 5) * titles.count, kSegementedHeight);
-    
-    [self addScrollTopSection:titles andSelectIndex:0];
+//    [self addScrollTopSection:titles andSelectIndex:0];
 }
 
 - (void)updateSegementedTitles:(NSArray <NSString *> *)titles andSelectIndex:(NSInteger)index
@@ -178,7 +176,7 @@ static const NSInteger kTopScrollViewTag = 100;
     }
     
     if ([TTDeviceHelper isScreenWidthLarge320]) {
-        _segmentedControl.frame = CGRectMake(MAIN_SCREEN_WIDTH - (kSegementedOneWidth + 5) * titles.count - leftPading, kSegementedPadingTop, (kSegementedOneWidth  + 5) * titles.count, kSegementedHeight);
+        _segmentedControl.frame = CGRectMake(MAIN_SCREEN_WIDTH - (kSegementedOneWidth + 5) * titles.count - leftPading, kSegementedPadingTop, (kSegementedOneWidth  + 5) * titles.count + (titles.count == 1 ? 10 : 0), kSegementedHeight);
     }else
     {
         if (titles.count < 3) {

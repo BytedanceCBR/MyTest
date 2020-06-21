@@ -36,12 +36,12 @@
 #import "UIButton+TTAdditions.h"
 #import "UIView+Yoga.h"
 #import "UIViewAdditions.h"
-#import <Lottie/Lottie.h>
+#import <lottie-ios/Lottie/Lottie.h>
 #import <Masonry/Masonry.h>
 #import <ReactiveObjC/ReactiveObjC.h>
 #import <TTThemed/UIColor+TTThemeExtension.h>
 #import <BDWebImage/SDWebImageAdapter.h>
-#import <UIView+CustomTimingFunction.h>
+#import "UIView+CustomTimingFunction.h"
 
 @import AssetsLibrary;
 
@@ -535,7 +535,7 @@ CGFloat const userInfoHeight = 40.f;
 
 - (void)digg
 {
-    CGFloat viewWidth = 300;
+    CGFloat viewWidth = 100;
     NSString *animationPath = [[NSBundle mainBundle] pathForResource:@"like" ofType:@"json" inDirectory:@"HTSVideoPlay.bundle"];
     LOTAnimationView *animationView = [LOTAnimationView animationWithFilePath:animationPath];
     animationView.contentMode = UIViewContentModeScaleAspectFit;

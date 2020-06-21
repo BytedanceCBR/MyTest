@@ -13,18 +13,14 @@
 #import "TTDefaultJSONResponseSerializer.h"
 #import "TTDefaultBinaryResponseSerializer.h"
 #import "TTDefaultResponseModelResponseSerializer.h"
-#import <TTNetBusiness/TTDefaultResponsePreprocessor.h>
-
+#import "TTDefaultResponsePreprocessor.h"
 #import <TTNetBusiness/TTNetworkUtilities.h>
 #import "TTPostDataHttpRequestSerializer.h"
 #import <TTNetBusiness/TTRouteSelectionServerConfig.h>
-#import <TTNetBusiness/TTHttpsControlManager.h>
 #import "TTLocationManager.h"  //add by songlu
-#import "TTFingerprintManager.h"
 #import <CommonCrypto/CommonCrypto.h>
 #import "SSCookieManager.h"
 #import "AKTaskSettingHelper.h"
-//#import "Bubble-Swift.h"
 #import <SecGuard/SGMSafeGuardManager.h>
 //#import "AKSafeGuardHelper.h"
 #import "FHEnvContext.h"
@@ -36,6 +32,7 @@
 #import <FHHouseBase/TTSandBoxHelper+House.h>
 #import <TTBaseLib/TTNetworkHelper.h>
 #import <FHHouseBase/TTSandBoxHelper+House.h>
+#import <TTAccountSDK/TTAccount+SessionToken.h>
 
 DEC_TASK("TTNetworkSerializerTask",FHTaskTypeSerial,TASK_PRIORITY_HIGH+6);
 
@@ -125,7 +122,6 @@ DEC_TASK("TTNetworkSerializerTask",FHTaskTypeSerial,TASK_PRIORITY_HIGH+6);
             urlObj = [NSURL URLWithString:urlStr];
         }
 
-        urlObj = [[TTHttpsControlManager sharedInstance_tt] transferedURLFrom:urlObj];
         urlStr = urlObj.absoluteString;
 
         BOOL isHttps = [urlStr hasPrefix:@"https://"];
@@ -168,9 +164,9 @@ DEC_TASK("TTNetworkSerializerTask",FHTaskTypeSerial,TASK_PRIORITY_HIGH+6);
             [commonParams setValue:cityId forKey:@"city_id"];
         }
 
-        if (/*[TTRouteSelectionServerConfig sharedTTRouteSelectionServerConfig].figerprintEnabled &&*/ !isEmptyString([TTFingerprintManager sharedInstance].fingerprint)) {
-            [commonParams addEntriesFromDictionary:@{@"fp":[TTFingerprintManager sharedInstance].fingerprint}];
-        }
+//        if (/*[TTRouteSelectionServerConfig sharedTTRouteSelectionServerConfig].figerprintEnabled &&*/ !isEmptyString([TTFingerprintManager sharedInstance].fingerprint)) {
+//            [commonParams addEntriesFromDictionary:@{@"fp":[TTFingerprintManager sharedInstance].fingerprint}];
+//        }
 
 //      NSDictionary* fParams = [[EnvContext shared] client].commonParamsProvider();
 
@@ -187,8 +183,8 @@ DEC_TASK("TTNetworkSerializerTask",FHTaskTypeSerial,TASK_PRIORITY_HIGH+6);
     [TTNetworkManager shareInstance].isKeepPlainQuery = [TTRouteSelectionServerConfig sharedTTRouteSelectionServerConfig].isKeepPlainQuery;
 
     [TTNetworkManager shareInstance].ServerConfigHostFirst = @"dm.haoduofangs.com";
-    [TTNetworkManager shareInstance].ServerConfigHostSecond = @"dm.bytedance.com";
-    [TTNetworkManager shareInstance].ServerConfigHostThird = @"dm.pstatp.com";
+    [TTNetworkManager shareInstance].ServerConfigHostSecond = @"dm-lq.haoduofangs.com";
+    [TTNetworkManager shareInstance].ServerConfigHostThird = @"dm-hl.haoduofangs.com";
 
     [[TTNetworkManager shareInstance] setDomainBase:@"i.haoduofangs.com"];
     [[TTNetworkManager shareInstance] setDomainLog:@"log.haoduofangs.com"];
@@ -222,8 +218,14 @@ DEC_TASK("TTNetworkSerializerTask",FHTaskTypeSerial,TASK_PRIORITY_HIGH+6);
     //        }
     //    };
     
+    //在[[TTNetworkManager shareInstance] start];之前加以下代码
+    //通过TTNet 的 requestFilterBlock在header 中添加token
+    [TTNetworkManager shareInstance].requestFilterBlock = ^(TTHttpRequest *request){
+        [TTAccount addTokenToRequest:request];
+    };
+    
+    //更新token及过期设置:过期判断取决于业务方业务，如果业务方没有踢人操作的话，只需要根据下面进行设置
     [TTNetworkManager shareInstance].responseFilterBlock = ^(TTHttpRequest *request, TTHttpResponse *response, id data, NSError *responseError) {
-        
         BOOL sessionExpired = NO;
         if ([data isKindOfClass:[NSData class]]) {
 //            if ([(NSData *)data length] > 300) {
@@ -245,13 +247,14 @@ DEC_TASK("TTNetworkSerializerTask",FHTaskTypeSerial,TASK_PRIORITY_HIGH+6);
         if (sessionExpired) {
             [[TTMonitor shareManager] trackService:@"session_expired" status:1 extra:response.allHeaderFields];
         }
+        [TTAccount setXTokenWithResponse:response responseError:responseError sessionHasExpired:sessionExpired];
         //[BDAccountSessionXTTToken setXTokenWithResponse:response responseError:responseError sessionHasExpired:sessionExpired];
     };
     
     if ([TTSandBoxHelper isInHouseApp] && [[NSUserDefaults standardUserDefaults]boolForKey:@"BOE_OPEN_KEY"]) {
         //设置BOE环境和白名单 https://wiki.bytedance.net/pages/viewpage.action?pageId=336579929
         [[TTNetworkManager shareInstance] setBoeProxyEnabled:YES];
-        [[TTNetworkManager shareInstance] setBypassBoeJSON:@"{\"bypass_boe_host_list\": [\"mon.haoduofangs.com\", \"mon.snssdk.com\", \"soulkiller.bytedance.net\",\"p1.pstatp.com\",\"p3.pstatp.com\",\"p6.pstatp.com\",\"p9.pstatp.com\",\"p11.pstatp.com\",\"p9-tt.bytecdn.cn\"]}"];
+        [[TTNetworkManager shareInstance] setBypassBoeJSON:@"{\"bypass_boe_host_list\": [\"mon.haoduofangs.com\", \"mon.snssdk.com\", \"soulkiller.bytedance.net\",\"p1.pstatp.com\",\"p3.pstatp.com\",\"p6.pstatp.com\",\"p9.pstatp.com\",\"p11.pstatp.com\",\"p9-tt.bytecdn.cn\",\"sf1-ttcdn-tos.pstatp.com\",\"sf6-ttcdn-tos.pstatp.com\",\"sf3-ttcdn-tos.pstatp.com\"]}"];
     }
     [[TTNetworkManager shareInstance] start];
     

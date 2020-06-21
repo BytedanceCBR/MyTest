@@ -33,6 +33,9 @@
 #import <TTThemed/TTThemeManager.h>
 #import "FHWebViewConfig.h"
 #import <TTBaseLib/TTSandBoxHelper.h>
+#import "IESFalconManager.h"
+#import "FHIESGeckoManager.h"
+
 
 #if __has_include(<BDNativeWebComponent/WKWebView+BDNative.h>)
 #import <BDNativeWebComponent/WKWebView+BDNative.h>
@@ -59,7 +62,8 @@ NSString *const  SSViewControllerBaseConditionADIDKey = @"SSViewControllerBaseCo
     BOOL _shouldhideStatusBar;
     BOOL _webViewBounceEnable;
     BOOL _shouldHideBackButton;             //是否隐藏左上角返回键
-    
+    BOOL _geckoEnable; //是否开启gecko
+
     // 下面这个名字起得不好
     BOOL _shouldHideBackButtonView;         //是否用 backButton 替代 SSWebViewBackButtonView
 }
@@ -200,8 +204,21 @@ NSString *const  SSViewControllerBaseConditionADIDKey = @"SSViewControllerBaseCo
             _shouldhideStatusBar = [[NSString stringWithFormat:@"%@", params[@"hide_bar"]] isEqualToString:@"1"] ||  [[NSString stringWithFormat:@"%@", params[@"hide_bar"]] isEqualToString:@"true"];
         }
         
+        _geckoEnable = YES;
+        if ([params valueForKey:@"gecko_enable"]) {
+            _geckoEnable=  [[NSString stringWithFormat:@"%@", params[@"gecko_enable"]] isEqualToString:@"1"] ||  [[NSString stringWithFormat:@"%@", params[@"gecko_enable"]] isEqualToString:@"true"];
+        }
+        
+        [self setGeckStatus];
+        
         if ([params valueForKey:@"hide_nav_bar"]) {//hide_nav_bar 与 hide_bar 功能一致 王伟老师说要换个名字，但是老版本要兼容
             _shouldHideNavigationBar = [[NSString stringWithFormat:@"%@", params[@"hide_nav_bar"]] isEqualToString:@"1"] || [[NSString stringWithFormat:@"%@", params[@"hide_nav_bar"]] isEqualToString:@"true"];
+        }
+        
+        // 升级文章详情页模板后，服务端跳转的时候 有这两个参数：hide_status_bar hide_bar，没有hide_nav_bar，做个兼容吧
+        if ([params valueForKey:@"hide_status_bar"] && [params valueForKey:@"hide_bar"] && ![params valueForKey:@"hide_nav_bar"]) {
+            _shouldHideNavigationBar = [[NSString stringWithFormat:@"%@", params[@"hide_bar"]] isEqualToString:@"1"] ||  [[NSString stringWithFormat:@"%@", params[@"hide_bar"]] isEqualToString:@"true"];
+            _shouldhideStatusBar = [[NSString stringWithFormat:@"%@", params[@"hide_status_bar"]] isEqualToString:@"1"] || [[NSString stringWithFormat:@"%@", params[@"hide_status_bar"]] isEqualToString:@"true"];
         }
         
         _shouldHideBackButton = NO;
@@ -611,6 +628,21 @@ NSString *const  SSViewControllerBaseConditionADIDKey = @"SSViewControllerBaseCo
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationWillEnterForeground:) name:UIApplicationWillEnterForegroundNotification object:nil];
 }
 
+- (void)setGeckStatus
+{
+    if (!_geckoEnable) {
+        IESFalconManager.interceptionWKHttpScheme = NO;
+        IESFalconManager.interceptionEnable = NO;
+
+    }else
+    {
+        if (IESFalconManager.interceptionWKHttpScheme != [SSCommonLogic configSwitchFWebOffline]) {
+                IESFalconManager.interceptionWKHttpScheme = [SSCommonLogic configSwitchFWebOffline];
+                IESFalconManager.interceptionEnable = [SSCommonLogic configSwitchFWebOffline];
+        }
+    }
+}
+
 // F项目JS注册，route参数中要传递：fhJSParams:{} url: title:
 -(void)registerFHJSBridge
 {
@@ -661,7 +693,7 @@ NSString *const  SSViewControllerBaseConditionADIDKey = @"SSViewControllerBaseCo
                 }
             }
         }
-        [TTTracker eventV3:@"deprecated_feature" params:@{@"name": @"sswebviewvc_setBrowserOpBtnVisible"}];
+        [BDTrackerProtocol eventV3:@"deprecated_feature" params:@{@"name": @"sswebviewvc_setBrowserOpBtnVisible"}];
     } forMethodName:@"setBrowserOpBtnVisible"];
     
     [self.ssWebView.ssWebContainer.ssWebView.ttr_staticPlugin registerHandlerBlock:^(NSDictionary *result, TTRJSBResponse callback) {
@@ -708,7 +740,7 @@ NSString *const  SSViewControllerBaseConditionADIDKey = @"SSViewControllerBaseCo
             [[UIDevice currentDevice] setValue:@(UIInterfaceOrientationPortrait)
                                         forKey:@"orientation"];
         }
-        [TTTracker eventV3:@"deprecated_feature" params:@{@"name": @"sswebviewvc_requestChangeOrientation"}];
+        [BDTrackerProtocol eventV3:@"deprecated_feature" params:@{@"name": @"sswebviewvc_requestChangeOrientation"}];
     } forMethodName:@"requestChangeOrientation"];
     
     // 控制页面顶部状态条风格和返回按钮颜色
@@ -956,7 +988,7 @@ NSString *const  SSViewControllerBaseConditionADIDKey = @"SSViewControllerBaseCo
             }
             break;
         case SSWebViewBackButtonPositionTypeTopRight:
-            [TTTracker eventV3:@"deprecated_feature" params:@{@"name": @"sswebviewvc_backbut_tr"}];
+            [BDTrackerProtocol eventV3:@"deprecated_feature" params:@{@"name": @"sswebviewvc_backbut_tr"}];
             [_backButton setImageEdgeInsets:UIEdgeInsetsMake(0, 44, 0, 0)];
             if (_shouldHideNavigationBar) {
                 _backButton.right = frame.size.width - 12;
@@ -965,14 +997,14 @@ NSString *const  SSViewControllerBaseConditionADIDKey = @"SSViewControllerBaseCo
             }
             break;
         case SSWebViewBackButtonPositionTypeBottomLeft:
-            [TTTracker eventV3:@"deprecated_feature" params:@{@"name": @"sswebviewvc_backbut_bl"}];
+            [BDTrackerProtocol eventV3:@"deprecated_feature" params:@{@"name": @"sswebviewvc_backbut_bl"}];
             _backButton.left = 12;
             _backButton.bottom = frame.size.height - 2;
             [_backButton setImageEdgeInsets:UIEdgeInsetsMake(0, 0, 0, 44)];
             [self.view addSubview:_backButton];
             break;
         case SSWebViewBackButtonPositionTypeBottomRight:
-            [TTTracker eventV3:@"deprecated_feature" params:@{@"name": @"sswebviewvc_backbut_br"}];
+            [BDTrackerProtocol eventV3:@"deprecated_feature" params:@{@"name": @"sswebviewvc_backbut_br"}];
             _backButton.right = frame.size.width - 12;
             _backButton.bottom = frame.size.height - 2;
             [_backButton setImageEdgeInsets:UIEdgeInsetsMake(0, 44, 0, 0)];

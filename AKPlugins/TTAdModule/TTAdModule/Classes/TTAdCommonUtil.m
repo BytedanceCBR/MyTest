@@ -8,7 +8,6 @@
 
 
 #import "TTAdCommonUtil.h"
-#import <TTMonitor/TTExtensions.h>
 #import <TTBaseLib/TTNetworkHelper.h>
 #import <TTBaseLib/TTUIResponderHelper.h>
 #import <UIKit/UIKit.h>
@@ -18,8 +17,8 @@
 + (NSDictionary *)generalDeviceInfo {
     NSMutableDictionary * parameterDict = [NSMutableDictionary dictionaryWithCapacity:10];
 
-    [parameterDict setValue:[TTExtensions connectMethodName] forKey:@"access"];
-    NSString *carrierName = [TTExtensions carrierName];
+    [parameterDict setValue:[TTNetworkHelper connectMethodName] forKey:@"access"];
+    NSString *carrierName = [TTNetworkHelper carrierName];
     [parameterDict setValue:carrierName forKey:@"carrier"];
     
     NSString *carrierMnc = [TTNetworkHelper carrierMNC];

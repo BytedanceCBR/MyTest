@@ -6,9 +6,9 @@
 //
 
 #import "FHErrorMaskView.h"
-#import <Masonry.h>
-#import <UIFont+House.h>
-#import <UIColor+Theme.h>
+#import "Masonry.h"
+#import "UIFont+House.h"
+#import "UIColor+Theme.h"
 
 @interface FHErrorMaskView ()
 
@@ -36,11 +36,11 @@
         [_tipLabel sizeToFit];
         
         _retryButton = [UIButton buttonWithType:UIButtonTypeCustom];
-        [_retryButton setTitleColor:[UIColor themeRed1] forState:UIControlStateNormal];
+        [_retryButton setTitleColor:[UIColor themeOrange1] forState:UIControlStateNormal];
         [_retryButton setTitle:@"刷新" forState:UIControlStateNormal];
         _retryButton.layer.cornerRadius  = 15;
         _retryButton.titleLabel.font = [UIFont themeFontRegular:14];
-        _retryButton.layer.borderColor = [[UIColor themeRed1]CGColor];
+        _retryButton.layer.borderColor = [[UIColor themeOrange1]CGColor];
         _retryButton.layer.borderWidth = 1;
         _retryButton.layer.masksToBounds = YES;
         [_retryButton addTarget:self action:@selector(retryAction:) forControlEvents:UIControlEventTouchUpInside];

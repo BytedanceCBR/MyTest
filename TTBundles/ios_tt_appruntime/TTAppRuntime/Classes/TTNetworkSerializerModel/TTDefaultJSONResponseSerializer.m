@@ -9,10 +9,10 @@
 #import "TTDefaultJSONResponseSerializer.h"
 #import "TTNetworkTouTiaoDefine.h"
 
-#import <TTBaseMacro.h>
-#import <TTAccountMulticastDispatcher.h>
-#import <TTAccountMonitorDispatcher.h>
-#import <TTAccountManager.h>
+#import "TTBaseMacro.h"
+#import "TTAccountMulticastDispatcher.h"
+//#import "TTAccountMonitorDispatcher.h"
+#import "TTAccountManager.h"
 
 #import "SSHTTPProcesser.h"
 #import "SSCommonLogic.h"
@@ -316,9 +316,9 @@ NSString * const SSResponeStatusCodeKey = @"status_code";
                 }
                 
                 // 新的监控
-                [TTAccountMonitorDispatcher dispatchHttpResp:jsonObj error:parseError originalURL:response.URL.absoluteString];
+//                [TTAccountMonitorDispatcher dispatchHttpResp:jsonObj error:parseError originalURL:response.URL.absoluteString];
                 
-                [TTAccountMonitorDispatcher dispatchPlatformExpirationWithUser:userIdString platform:joinedPlatformString error:parseError originalURL:response.URL.absoluteString];
+//                [TTAccountMonitorDispatcher dispatchPlatformExpirationWithUser:userIdString platform:joinedPlatformString error:parseError originalURL:response.URL.absoluteString];
             }
             
             // if has platform expired, session_expired should be ignored ???
@@ -348,9 +348,9 @@ NSString * const SSResponeStatusCodeKey = @"status_code";
                 }
                 
                 // 新的监控
-                [TTAccountMonitorDispatcher dispatchHttpResp:jsonObj error:parseError originalURL:response.URL.absoluteString];
+//                [TTAccountMonitorDispatcher dispatchHttpResp:jsonObj error:parseError originalURL:response.URL.absoluteString];
                 
-                [TTAccountMonitorDispatcher dispatchSessionExpirationWithUser:userIdString error:parseError originalURL:response.URL.absoluteString];
+//                [TTAccountMonitorDispatcher dispatchSessionExpirationWithUser:userIdString error:parseError originalURL:response.URL.absoluteString];
             }
         }
     }

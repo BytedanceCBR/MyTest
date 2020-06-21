@@ -14,7 +14,8 @@
 #import "UIImage+TTThemeExtension.h"
 #import "UIViewAdditions.h"
 #import "TTDeviceHelper.h"
-#import "TTTracker.h"
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
+
 #import "TTImagePreviewAnimateManager.h"
 #import "ALAssetsLibrary+TTImagePicker.h"
 #import "UIColor+Theme.h"
@@ -22,6 +23,8 @@
 #import "FHFloorPanPicShowViewController.h"
 #import <Photos/Photos.h>
 #import "HTSDeviceManager.h"
+#import "UIViewController+BanTip.h"
+#import <FHPopupViewCenter/FHPopupViewManager.h>
 
 #define indexPromptLabelTextSize 16.f
 #define indexPromptLabelBottomPadding 5.f
@@ -382,6 +385,7 @@
     }
     
     FHFloorPanPicShowViewController *showVC = [[FHFloorPanPicShowViewController alloc] init];
+    showVC.modalPresentationStyle = UIModalPresentationFullScreen;
     showVC.pictsArray = _smallImageInfosModels;
     __weak TTPhotoScrollViewController * weakSelf = self;
     showVC.albumImageBtnClickBlock = ^(NSInteger index){
@@ -936,6 +940,9 @@ static BOOL staticPhotoBrowserAtTop = NO;
     }
     staticPhotoBrowserAtTop = NO;
     alreadyFinished = YES;
+    
+    [self banTip:NO];
+    [[FHPopupViewManager shared] triggerPendant];
 }
 
 - (void)selectButtonClicked:(id)sender
@@ -994,12 +1001,12 @@ static BOOL staticPhotoBrowserAtTop = NO;
 - (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate
 {
     if (_mode == PhotosScrollViewSupportSelectMode) {
-        [TTTracker ttTrackEventWithCustomKeys:self.umengEventName label:@"flip" value:nil source:nil extraDic:self.trackerDic];
+        [BDTrackerProtocol trackEventWithCustomKeys:self.umengEventName label:@"flip" value:nil source:nil extraDic:self.trackerDic];
     }
     //统计
     else if (_mode == PhotosScrollViewSupportDownloadMode) {
         if (self.trackerDic) {
-            [TTTracker ttTrackEventWithCustomKeys:self.umengEventName label:@"pic_slipe" value:nil source:nil extraDic:self.trackerDic];
+            [BDTrackerProtocol trackEventWithCustomKeys:self.umengEventName label:@"pic_slipe" value:nil source:nil extraDic:self.trackerDic];
         }
     }
 }
@@ -1287,11 +1294,14 @@ static BOOL staticPhotoBrowserAtTop = NO;
 
 - (void)presentPhotoScrollViewWithDismissBlock:(TTPhotoScrollViewDismissBlock)block
 {
+    [self banTip:YES];
+    [[FHPopupViewManager shared] hidePendant];
+    
     staticPhotoBrowserAtTop = YES;
     //统计
     if (_mode == PhotosScrollViewSupportDownloadMode) {
         if (self.trackerDic) {
-            [TTTracker ttTrackEventWithCustomKeys:self.umengEventName label:@"pic_click" value:nil source:nil extraDic:self.trackerDic];
+            [BDTrackerProtocol trackEventWithCustomKeys:self.umengEventName label:@"pic_click" value:nil source:nil extraDic:self.trackerDic];
         }
     }
     
@@ -1377,10 +1387,13 @@ static BOOL staticPhotoBrowserAtTop = NO;
 
 - (void)dismissSelf
 {
+    [self banTip:NO];
+    [[FHPopupViewManager shared] triggerPendant];
+    
     //统计
     if (_mode == PhotosScrollViewSupportDownloadMode) {
         if (self.trackerDic) {
-            [TTTracker ttTrackEventWithCustomKeys:self.umengEventName label:@"pic_back" value:nil source:nil extraDic:self.trackerDic];
+            [BDTrackerProtocol trackEventWithCustomKeys:self.umengEventName label:@"pic_back" value:nil source:nil extraDic:self.trackerDic];
         }
     }
     [[UIApplication sharedApplication] setStatusBarHidden:_statusBarHidden
@@ -1531,7 +1544,7 @@ static BOOL staticPhotoBrowserAtTop = NO;
             _reachDismissCondition = YES;
             self.containerView.alpha = 0;
             [self finished];
-            [TTTracker ttTrackEventWithCustomKeys:@"slide_over" label:@"random_slide_close" value:nil source:nil extraDic:nil];
+            [BDTrackerProtocol trackEventWithCustomKeys:@"slide_over" label:@"random_slide_close" value:nil source:nil extraDic:nil];
             break;
         case TTPreviewAnimateStateWillCancel:
             [[UIApplication sharedApplication] setStatusBarHidden:YES

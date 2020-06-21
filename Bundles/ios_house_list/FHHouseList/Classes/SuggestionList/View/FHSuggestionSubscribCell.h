@@ -6,7 +6,7 @@
 //
 
 #import <UIKit/UIKit.h>
-#import <JSONModel.h>
+#import "JSONModel.h"
 #import <FHHouseBase/FHListBaseCell.h>
 
 NS_ASSUME_NONNULL_BEGIN
@@ -19,7 +19,6 @@ static NSString * const kFHSuggestionSubscribeNotificationKey = @"kFHSuggestionS
 @property (nonatomic, strong)   UILabel       *subTitleLabel;
 @property (nonatomic, strong)   UILabel       *bottomContentLabel;
 @property (nonatomic, strong)   UIButton      *subscribeBtn;
-@property (nonatomic, strong)   UIImageView   *backImageView;
 
 @property (nonatomic, copy) void (^addSubscribeAction)(NSString *subscribeText);
 

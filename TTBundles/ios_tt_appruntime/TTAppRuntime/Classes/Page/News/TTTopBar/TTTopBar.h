@@ -12,7 +12,6 @@
 #import <TTUIWidget/TTSearchBarView.h>
 #import "ExploreSearchView.h"
 #import "TTTopBarHeader.h"
-//#import "Bubble-Swift.h"
 
 @class TTCategorySelectorView;
 @class TTSearchBarView;
@@ -40,4 +39,6 @@
 + (UIImage *)searchBackgroundImage;
 
 + (UIImage *)searchBarImage;
+
+- (void)changeBackColor:(NSInteger)index;
 @end

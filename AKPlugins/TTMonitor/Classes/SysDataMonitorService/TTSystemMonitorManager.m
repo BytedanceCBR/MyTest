@@ -16,6 +16,7 @@
 #import "TTWatchdogMonitorRecorder.h"
 #import "TTAppPerformanceMonitorRecorder.h"
 #import "TTFPSMonitor.h"
+#import "UIViewController+Monitor.h"
 
 @interface TTSystemMonitorManager ()
 
@@ -87,6 +88,8 @@
 }
 
 -(void)startTimer{
+    NSAssert([NSThread isMainThread], @"timer must be triggered on main thread!");
+
     NSTimeInterval cpuInterval = [self.cpuRecorder monitorInterval];
     NSTimeInterval memoryInterval = [self.memoryRecorder monitorInterval];
     NSTimeInterval timerInterval = MIN(cpuInterval, memoryInterval);
@@ -116,6 +119,7 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(receiveStartNotification:) name:UIApplicationWillEnterForegroundNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(receiveFinishNotification:) name:UIApplicationDidEnterBackgroundNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(receiveTerminteNotification:) name:UIApplicationWillTerminateNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(receiveViewWillAppearNotification:) name:TTMonitorViewWillAppearNotification object:nil];
 }
 
 -(void)receiveStartNotification:(NSNotification *)notify{
@@ -139,6 +143,10 @@
     [self.batteryRecorder recordIfNeeded:YES];
     [self.oomRecorder handleApplicationTermination];
     [self.performanceRecorder handleAppEnterBackground];
+}
+
+- (void)receiveViewWillAppearNotification:(NSNotification *)notify {
+    [self.oomRecorder handleViewAppear:notify.object];
 }
 
 

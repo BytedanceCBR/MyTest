@@ -11,16 +11,16 @@
 #import "TTRichSpanText+Emoji.h"
 #import "TTTrackerWrapper.h"
 #import "TTIndicatorView.h"
-#import <TTStringHelper.h>
+#import "TTStringHelper.h"
 //#import <TTServiceProtocols/TTAccountProvider.h>
 //#import <BDMobileRuntime/BDMobileRuntime.h>
 //#import <TTRegistry/TTRegistryDefines.h>
 #import "TTUGCHashtagModel.h"
 #import "FHTopicListController.h"
-#import <UIColor+Theme.h>
+#import "UIColor+Theme.h"
 #import "NSString+UGCUtils.h"
 #import "TTAccountManager.h"
-#import <FHEnvContext.h>
+#import "FHEnvContext.h"
 
 @interface TTUGCTextViewMediator() <FHTopicListControllerDelegate>
 @end
@@ -99,13 +99,7 @@
 }
 
 - (void)gotoLogin {
-    NSMutableDictionary *params = [NSMutableDictionary dictionary];
-    NSString *enter_from = @"";
-    if (enter_from.length <= 0) {
-        enter_from = @"be_null";
-    }
-    [params setObject:enter_from forKey:@"enter_from"];
-//    [params setObject:@"feed_like" forKey:@"enter_type"];
+    NSMutableDictionary *params = [NSMutableDictionary dictionaryWithDictionary:self.traceDict];
     // 登录成功之后不自己Pop，先进行页面跳转逻辑，再pop
     params[@"from_ugc"] = @(YES);
     __weak typeof(self) wSelf = self;
@@ -122,7 +116,7 @@
             }
         }else{
             wSelf.isSelectViewControllerVisible = NO;
-            [wSelf.textView becomeFirstResponder];
+//            [wSelf.textView becomeFirstResponder];
         }
     }];
 }

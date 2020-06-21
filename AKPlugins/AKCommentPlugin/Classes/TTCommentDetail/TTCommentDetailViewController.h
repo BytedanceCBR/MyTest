@@ -33,6 +33,7 @@ extern NSString *const kTTCommentDetailForwardCommentNotification;
 @property (nonatomic, copy) NSString *element_from;
 @property (nonatomic, copy) NSString *categoryID;
 @property (nonatomic, strong) NSDictionary *logPb;
+@property (nonatomic, strong) NSDictionary *extraDic;
 
 
 @end

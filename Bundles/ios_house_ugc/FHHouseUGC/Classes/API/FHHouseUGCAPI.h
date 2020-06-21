@@ -4,7 +4,7 @@
 //
 
 #import <Foundation/Foundation.h>
-#import <TTNetworkManager.h>
+#import "TTNetworkManager.h"
 #import <FHHouseBase/FHURLSettings.h>
 #import <FHHouseBase/FHHouseType.h>
 #import <FHHouseBase/FHMainApi.h>
@@ -13,6 +13,8 @@
 
 @class TTHttpTask;
 @class FHUGCNoticeModel;
+
+#define kInterceptionUserFollows @"kInterceptionUserFollows"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -25,7 +27,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (TTHttpTask *)requestTopicList:(NSString *)communityId class:(Class)cls completion:(void (^ _Nullable)(id <FHBaseModelProtocol> model, NSError *error))completion;
 
-+ (TTHttpTask *)requestCommunityDetail:(NSString *)communityId class:(Class)cls completion:(void (^ _Nullable)(id <FHBaseModelProtocol> model, NSError *error))completion;
++ (TTHttpTask *)requestCommunityDetail:(NSString *)communityId tabName:(NSString *)tabName class:(Class)cls completion:(void (^ _Nullable)(id <FHBaseModelProtocol> model, NSError *error))completion;
 
 + (TTHttpTask *)requestFeedListWithCategory:(NSString *)category behotTime:(double)behotTime loadMore:(BOOL)loadMore listCount:(NSInteger)listCount extraDic:(NSDictionary *)extraDic completion:(void (^ _Nullable)(id <FHBaseModelProtocol> model, NSError *error))completion;
 
@@ -73,7 +75,7 @@ NS_ASSUME_NONNULL_BEGIN
 + (TTHttpTask *)requestTopicList:(NSString *)query_id tab_id:(NSString *)tab_id categoryName:(NSString *)category offset:(NSInteger)offset count:(NSInteger)count appExtraParams:(NSString *)appExtraParams completion:(void (^ _Nullable)(id<FHBaseModelProtocol> model, NSError *error))completion;
 
 // 管理员修改公告信息及通知用户
-+ (TTHttpTask *)requestUpdateUGCNoticeWithParam:(NSDictionary *)params completion:(void (^)(FHUGCNoticeModel *model, NSError *error))completion;
++ (TTHttpTask *)requestUpdateUGCNoticeWithParam:(NSDictionary *)params class:(Class)cls completion:(void (^)(FHUGCNoticeModel *model, NSError *error))completion;
 
 //请求评论列表
 + (TTHttpTask *)requestMyCommentListWithUserId:(NSString *)userId offset:(NSInteger)offset completion:(void (^ _Nullable)(id <FHBaseModelProtocol> model, NSError *error))completion;
@@ -92,17 +94,38 @@ NS_ASSUME_NONNULL_BEGIN
 + (TTHttpTask *)requestFollowSugSearchByText:(NSString *)text socialGroupId:(NSString *)socialGroupId offset:(NSInteger)offset class:(Class)cls completion:(void (^ _Nullable)(id <FHBaseModelProtocol> model, NSError *error))completion;
 
 // 投票发布器发布请求
-+ (TTHttpTask *)requestVotePublishWithParam: (NSDictionary *)params completion:(void (^ _Nullable)(id <FHBaseModelProtocol> model, NSError *error))completion;
++ (TTHttpTask *)requestVotePublishWithParam: (NSDictionary *)params class:(Class)cls completion:(void (^ _Nullable)(id <FHBaseModelProtocol> model, NSError *error))completion;
 
 // 投票
 // 提交投票
-+ (TTHttpTask *)requestVoteSubmit:(NSString *)voteId optionIDs:(NSArray *)optionIds optionNum:(NSNumber *)optionNum completion:(void(^ _Nullable)(id <FHBaseModelProtocol> model, NSError *error))completion;
++ (TTHttpTask *)requestVoteSubmit:(NSString *)voteId optionIDs:(NSArray *)optionIds optionNum:(NSNumber *)optionNum class:(Class)cls completion:(void(^ _Nullable)(id <FHBaseModelProtocol> model, NSError *error))completion;
 
 // 取消投票
 + (TTHttpTask *)requestVoteCancel:(NSString *)voteId optionNum:(NSNumber *)optionNum completion:(void(^)(BOOL success , NSError *error))completion;
 
 // 提问发布请求
-+ (TTHttpTask *)requestPublishWendaWithParam: (NSDictionary *)params  completion:(void (^_Nullable)(id <FHBaseModelProtocol> model, NSError *error))completion;
++ (TTHttpTask *)requestPublishWendaWithParam: (NSDictionary *)params class:(Class)cls completion:(void (^_Nullable)(id <FHBaseModelProtocol> model, NSError *error))completion;
+
+// 帖子编辑历史
++ (TTHttpTask *)requestPostHistoryByGroupId:(NSString *)gid offset:(NSInteger)offset class:(Class)cls completion:(void (^ _Nullable)(id <FHBaseModelProtocol> model, NSError *error))completion;
+
+// Feed编辑帖子发布请求
++ (TTHttpTask *)requestPublishEditedPostWithParam:(NSDictionary *)params  class:(Class)cls completion:(void (^_Nullable)(id <FHBaseModelProtocol> model, NSError *error))completion;
+
+// 发布器热门标签
++ (TTHttpTask *)requestPublishHotTagsWithParam:(NSDictionary *)params class:(Class)cls completion:(void (^_Nullable)(id <FHBaseModelProtocol> model, NSError *error))completion;
+
+// 小区点评发布器tag请求
++ (TTHttpTask *)requestNeighborhoodRemarkWithParam:(NSDictionary *)params class:(Class)cls completion:(void (^_Nullable)(id <FHBaseModelProtocol> model, NSError *error))completion;
++ (TTHttpTask *)requestSpecialTopicContentWithTabId:(NSString *)tabId queryPath:(NSString *)queryPath categoryName:(NSString *)categoryName queryId:(NSString *)queryId extraDic:(NSDictionary *)extraDic completion:(void (^ _Nullable)(id <FHBaseModelProtocol> model, NSError *error))completion;
+
++ (TTHttpTask *)requestSpecialTopicHeaderWithforumId:(NSString *)forumId completion:(void (^ _Nullable)(id <FHBaseModelProtocol> model, NSError *error))completion;
+
+//购房百科
++ (TTHttpTask *)requestEncyclopediaListWithCategory:(NSString *)category channelid:(NSString *)channelId lastGroupId:(NSString *)lastGroupId behotTime:(double)behotTime loadMore:(BOOL)loadMore listCount:(NSInteger)listCount extraDic:(NSDictionary *)extraDic completion:(void (^ _Nullable)(id <FHBaseModelProtocol> model, NSError *error))completion;
+//购房百科配置
++ (TTHttpTask *)requestEncyclopediaConfigWithCategory:(NSString *)category extraDic:(NSDictionary *)extraDic completion:(void (^ _Nullable)(id <FHBaseModelProtocol> model, NSError *error))completion;
+
 @end
 
 NS_ASSUME_NONNULL_END

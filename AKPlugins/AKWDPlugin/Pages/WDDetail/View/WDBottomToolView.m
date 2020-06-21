@@ -22,6 +22,9 @@
 #import <TTUIWidget/TTIndicatorView.h>
 #import <TTUIWidget/SSMotionRender.h>
 #import <KVOController/NSObject+FBKVOController.h>
+#import "UIImage+FIconFont.h"
+#import "UIColor+Theme.h"
+#import "TTAccountManager.h"
 
 //#import "TTUGCEmojiTextAttachment.h"
 
@@ -82,7 +85,7 @@ static NSString * const kWDHasTipSupportsEmojiInputDefaultKey = @"WDHasTipSuppor
         _commentButton = commentButton;
         [_commentButton addTarget:self action:@selector(commentButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
         _commentButton.hitTestEdgeInsets = toolBarButtonHitTestInsets;
-        _commentButton.imageName = @"tab_comment";
+        [_commentButton setImage:ICON_FONT_IMG(24, @"\U0000e699", [UIColor themeGray1]) forState:UIControlStateNormal];
 
         self.badgeLabel = [[SSThemedLabel alloc] init];
         self.badgeLabel.backgroundColorThemeKey = kColorBackground7;
@@ -96,15 +99,17 @@ static NSString * const kWDHasTipSupportsEmojiInputDefaultKey = @"WDHasTipSuppor
         TTAlphaThemedButton *digButton = [TTAlphaThemedButton buttonWithType:UIButtonTypeCustom];
         _digButton = digButton;
         _digButton.hitTestEdgeInsets = toolBarButtonHitTestInsets;
-        _digButton.imageName = @"tab_like";
-        _digButton.selectedImageName = @"tab_like_press";
+        [_digButton setImage:ICON_FONT_IMG(24, @"\U0000e69c", [UIColor themeGray1]) forState:UIControlStateNormal];
+        [_digButton setImage:ICON_FONT_IMG(24, @"\U0000e6b1", [UIColor themeOrange4]) forState:UIControlStateSelected];
         [_digButton addTarget:self action:@selector(diggButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
         [self addSubview:digButton];
         
         SSThemedButton *nextButton = [SSThemedButton buttonWithType:UIButtonTypeCustom];
         [self addSubview:nextButton];
         _nextButton = nextButton;
-        _nextButton.imageName = @"tab_next";
+        UIImage *backArrowImage = ICON_FONT_IMG(24, @"\U0000e68a", [UIColor themeGray1]);
+        UIImage *nextArrowImage = [UIImage imageWithCGImage:backArrowImage.CGImage scale:backArrowImage.scale orientation:UIImageOrientationDown];
+        [_nextButton setImage:nextArrowImage forState:UIControlStateNormal];
         _nextButton.hitTestEdgeInsets = toolBarButtonHitTestInsets;
         [_nextButton addTarget:self action:@selector(nextButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
         
@@ -373,6 +378,26 @@ static NSString * const kWDHasTipSupportsEmojiInputDefaultKey = @"WDHasTipSuppor
 
 - (void)diggButtonClicked:(SSThemedButton *)diggButton
 {
+    if(![TTAccountManager isLogin]) {
+        NSMutableDictionary *params = [NSMutableDictionary dictionary];
+        [params setObject:@"answer" forKey:@"enter_from"];
+        [params setObject:@"feed_like" forKey:@"enter_type"];
+        // 登录成功之后不自己Pop，先进行页面跳转逻辑，再pop
+        [params setObject:@(YES) forKey:@"need_pop_vc"];
+        params[@"from_ugc"] = @(YES);
+        __weak typeof(self) wSelf = self;
+        [TTAccountLoginManager showAlertFLoginVCWithParams:params completeBlock:^(TTAccountAlertCompletionEventType type, NSString * _Nullable phoneNum) {
+            if (type == TTAccountAlertCompletionEventTypeDone) {
+                // 登录成功
+                if ([TTAccountManager isLogin]) {
+                    [wSelf diggButtonClicked:diggButton];
+                }
+            }
+        }];
+        
+        return;
+    }
+    
     if ([self.detailModel.answerEntity isBuryed]) {
         [TTIndicatorView showWithIndicatorStyle:TTIndicatorViewStyleImage indicatorText:NSLocalizedString(@"您已经反对过", nil) indicatorImage:nil autoDismiss:YES dismissHandler:nil];
     } else {

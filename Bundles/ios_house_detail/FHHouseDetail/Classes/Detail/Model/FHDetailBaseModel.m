@@ -8,6 +8,33 @@
 #import "FHDetailBaseModel.h"
 
 @implementation FHDetailBaseModel
+- (void)setShadowImageType:(FHHouseShdowImageType)shadowImageType {
+    _shadowImageType = shadowImageType;
+    switch (shadowImageType) {
+        case FHHouseShdowImageTypeLR:
+            _shadowImage = [[UIImage imageNamed:@"left_right"]resizableImageWithCapInsets:UIEdgeInsetsMake(0,25,0,25) resizingMode:UIImageResizingModeStretch];
+            break;
+        case FHHouseShdowImageTypeLTR:
+            _shadowImage = [[UIImage imageNamed:@"left_top_right"] resizableImageWithCapInsets:UIEdgeInsetsMake(30,25,0,25) resizingMode:UIImageResizingModeStretch];
+            break;
+        case FHHouseShdowImageTypeLBR:
+            _shadowImage = [[UIImage imageNamed:@"left_bottom_right"] resizableImageWithCapInsets:UIEdgeInsetsMake(0,25,30,25) resizingMode:UIImageResizingModeStretch];
+            break;
+        case FHHouseShdowImageTypeRound:
+            _shadowImage = [[UIImage imageNamed:@"top_left_right_bottom"] resizableImageWithCapInsets:UIEdgeInsetsMake(30,25,30,25) resizingMode:UIImageResizingModeStretch];
+            break;
+        default:
+            break;
+    }
+}
+
+- (void)setShdowImageScopeType:(FHHouseShdowImageScopeType)shdowImageScopeType {
+    if (_shdowImageScopeType ==  FHHouseShdowImageScopeTypeDefault) {
+               _shdowImageScopeType = shdowImageScopeType;
+    }else {
+        _shdowImageScopeType = FHHouseShdowImageScopeTypeAll;
+    }
+}
 
 @end
 
@@ -39,6 +66,7 @@
                            @"isVideo": @"is_video",
                            @"shareUrl": @"share_url",
                            @"desc": @"description",
+                           @"associateInfo": @"associate_info",
                            };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
         return dict[keyName]?:keyName;
@@ -77,11 +105,30 @@
         NSDictionary *dict = @{
                                @"backgroundColor": @"background_color",
                                @"fontColor": @"font_color",
+                               @"borderColor":@"border_color"
                                };
         return dict[keyName]?:keyName;
     }];
 }
 @end
+
+@implementation FHClueAssociateInfoModel
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
++(JSONKeyMapper *)keyMapper {
+    return [[JSONKeyMapper alloc] initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+        NSDictionary *dict = @{
+                               @"imInfo": @"im_info",
+                               @"phoneInfo": @"phone_info",
+                               @"reportFormInfo":@"report_form_info",
+                               };
+        return dict[keyName]?:keyName;
+    }];
+}
+@end
+
 
 @implementation FHDetailContactModel
 + (JSONKeyMapper*)keyMapper
@@ -93,11 +140,13 @@
                            @"homePage": @"home_page",
                            @"realtorId": @"realtor_id",
                            @"agencyId": @"agency_id",
+                           @"agencyDescription": @"agency_description",
                            @"agencyName": @"agency_name",
                            @"avatarUrl": @"avatar_url",
                            @"showRealtorinfo": @"show_realtorinfo",
                            @"noticeDesc": @"notice_desc",
                            @"imOpenUrl" : @"chat_openurl",
+                           @"realtorDescription" : @"realtor_description",
                            @"imLabel" : @"chat_button_text",
                            @"callButtonText" : @"call_button_text",
                            @"realtorDetailUrl" : @"main_page_info",
@@ -107,6 +156,8 @@
                            @"realtorCellShow":@"realtor_cell_show",
                            @"realtorTags":@"realtor_tags",
                            @"realtorEvaluate":@"realtor_evaluate",
+                           @"realtorScoreDisplay":@"realtor_score_display",
+                           @"realtorScoreDescription":@"realtor_score_description",
                            };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
         return dict[keyName]?:keyName;
@@ -302,10 +353,116 @@
 {
     return YES;
 }
+
+@end
+
+@implementation FHDetailGaodeImageModel
++(JSONKeyMapper *)keyMapper {
+    NSDictionary *dict = @{
+            @"latRatio": @"lat_ratio",
+            @"lngRatio": @"lng_ratio",
+    };
+    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+        return dict[keyName]?:keyName;
+    }];
+}
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+@end
+
+@implementation FHVideoHouseVideoModel
++ (JSONKeyMapper*)keyMapper
+{
+    NSDictionary *dict = @{
+                           @"videoInfos": @"video_infos",
+                           @"infoSubTitle": @"info_sub_title",
+                           @"infoTitle": @"info_title",
+                           };
+    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+        return dict[keyName]?:keyName;
+    }];
+}
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+@end
+
+@implementation FHVideoHouseVideoVideoInfosModel
++ (JSONKeyMapper*)keyMapper
+{
+    NSDictionary *dict = @{
+                           @"vHeight": @"v_height",
+                           @"imageHeight": @"image_height",
+                           @"vWidth": @"v_width",
+                           @"imageWidth": @"image_width",
+                           @"coverImageUrl": @"cover_image_url",
+                           };
+    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+        return dict[keyName]?:keyName;
+    }];
+}
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+@end
+
+@implementation FHHouseDetailImageListDataModel
++ (JSONKeyMapper*)keyMapper
+{
+    NSDictionary *dict = @{
+                           @"houseImageTypeName": @"house_image_type_name",
+                           @"houseImageType": @"house_image_type",
+                           @"houseImageList": @"house_image_list",
+                           };
+    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+        return dict[keyName]?:keyName;
+    }];
+}
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
 @end
 
 
 
 
+@implementation FHDetailNewTopBanner
 
++ (JSONKeyMapper*)keyMapper
+{
+    NSDictionary *dict = @{
+        @"businessTag": @"business_tag",
+    };
+    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+        return dict[keyName]?:keyName;
+    }];
+}
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
 
+@end
+
+@implementation FHDetailNewUserStatusModel
++ (JSONKeyMapper*)keyMapper
+{
+  NSDictionary *dict = @{
+    @"courtOpenSubStatus": @"court_open_sub_status",
+    @"pricingSubStatus": @"pricing_sub_status",
+    @"courtSubStatus": @"court_sub_status",
+  };
+  return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+     return dict[keyName]?:keyName;
+  }];
+}
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+@end

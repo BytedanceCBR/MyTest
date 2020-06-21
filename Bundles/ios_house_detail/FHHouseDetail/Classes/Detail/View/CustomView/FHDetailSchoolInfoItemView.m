@@ -7,12 +7,12 @@
 
 #import "FHDetailSchoolInfoItemView.h"
 #import "FHDetailBaseModel.h"
-#import <FHCommonDefines.h>
+#import "FHCommonDefines.h"
 #import <TTBaseLib/UIButton+TTAdditions.h>
 #import <FHCommonUI/UILabel+House.h>
 #import <FHCommonUI/UIFont+House.h>
 #import <FHCommonUI/UIColor+Theme.h>
-#import <Masonry.h>
+#import "Masonry.h"
 #import <FHCommonUI/UIView+House.h>
 #import <FHHouseBase/UIImage+FIconFont.h>
 
@@ -41,7 +41,7 @@
 
 - (CGFloat)showSchoolItem:(FHDetailDataNeighborhoodInfoSchoolInfoModel *)item parentView:(UIView *)parentView bottomY:(CGFloat)bottomY
 {
-    UILabel *nameKey = [UILabel createLabel:@"学校资源" textColor:@"" fontSize:15];
+    UILabel *nameKey = [UILabel createLabel:@"学校资源:" textColor:@"" fontSize:15];
     [nameKey sizeToFit];
     nameKey.left = 20;
     nameKey.top = bottomY + 4;

@@ -13,7 +13,7 @@
 #import "NewsDetailLogicManager.h"
 #import "PGCAccountManager.h"
 #import "YSWebView.h"
-#import <TTUserSettingsManager+FontSettings.h>
+#import "TTUserSettingsManager+FontSettings.h"
 #import "ExploreEntryManager.h"
 #import "SSWebViewUtil.h"
 

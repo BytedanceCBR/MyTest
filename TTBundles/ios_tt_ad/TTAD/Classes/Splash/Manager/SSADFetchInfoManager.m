@@ -14,7 +14,7 @@
 #import <TTBaseLib/NetworkUtilities.h>
 #import <TTBaseLib/TTDeviceHelper.h>
 #import <TTNetworkManager/TTNetworkManager.h>
-#import <TTMonitor/TTExtensions.h>
+#import "TTNetworkHelper.h"
 #import "TTSettingsManager.h"
 #import <TTBaseLib/NSDictionary+TTAdditions.h>
 #import <TTBaseLib/TTBaseMacro.h>
@@ -44,7 +44,7 @@
     NSString * url = [CommonURLSetting appADURLString];
     NSMutableDictionary *parameterDict = [NSMutableDictionary dictionary];
     [parameterDict addEntriesFromDictionary:extra];
-    NSString *carrierName = [TTExtensions carrierName];
+    NSString *carrierName = [TTNetworkHelper carrierName];
     [parameterDict setValue:carrierName forKey:@"carrier"];
     
     __weak typeof(self) weakSelf = self;

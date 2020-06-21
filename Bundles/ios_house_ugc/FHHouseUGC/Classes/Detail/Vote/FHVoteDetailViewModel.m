@@ -222,7 +222,7 @@
             }*/
         }
         cellModel.tracerDic = [self.detailController.tracerDict copy];
-        if (socialGroupModel && ![socialGroupModel.hasFollow boolValue]) {
+        if (socialGroupModel && ![socialGroupModel.hasFollow boolValue] && ![socialGroupModel.showStatus isEqualToString:@"1"]) {
             // 未关注
             FHPostDetailHeaderModel *headerModel = [[FHPostDetailHeaderModel alloc] init];
             headerModel.socialGroupModel = socialGroupModel;
@@ -236,9 +236,9 @@
             [self.items addObject:grayLine];
             cellModel.showCommunity = NO;
         } else {
-            if (cellModel.community && cellModel.community.name.length > 0 && cellModel.community.socialGroupId.length > 0) {
+            if (cellModel.community && cellModel.community.name.length > 0 && cellModel.community.socialGroupId.length > 0 && ![cellModel.community.showStatus isEqualToString:@"1"]) {
                 cellModel.showCommunity = YES;
-            } else if (socialGroupModel && socialGroupModel.socialGroupId.length > 0 && socialGroupModel.socialGroupName.length > 0) {
+            } else if (socialGroupModel && socialGroupModel.socialGroupId.length > 0 && socialGroupModel.socialGroupName.length > 0 && ![socialGroupModel.showStatus isEqualToString:@"1"]) {
                 // 挽救一下 balabala
                 cellModel.community = [[FHFeedUGCCellCommunityModel alloc] init];
                 cellModel.community.name = socialGroupModel.socialGroupName;
@@ -294,7 +294,7 @@
         WeakSelf;
         NSString *host = [FHURLSettings baseURL];
         NSString *urlStr = [NSString stringWithFormat:@"%@/f100/ugc/material/v1/vote_detail",host];
-        [TTUGCRequestManager requestForJSONWithURL:urlStr params:param method:@"GET" needCommonParams:YES callBackWithMonitor:^(NSError *error, id jsonObj, TTUGCRequestMonitorModel *monitorModel) {
+        [TTUGCRequestManager requestForJSONWithURL:urlStr params:param method:@"GET" needCommonParams:YES callBackWithMonitor:^(NSError *error, id jsonObj, TTHttpResponse *response) {
             StrongSelf;
             uint64_t endTime = [NSObject currentUnixTime];
             uint64_t total = [NSObject machTimeToSecs:endTime - startTime] * 1000;
@@ -367,10 +367,14 @@
     if(cellModel.community.socialGroupId){
         NSMutableDictionary *dict = @{}.mutableCopy;
         dict[@"community_id"] = cellModel.community.socialGroupId;
-        dict[@"tracer"] = @{@"enter_from":[self pageType],
-                            @"enter_type":@"click",
-                            @"rank":cellModel.tracerDic[@"rank"] ?: @"be_null",
-                            @"log_pb":cellModel.logPb ?: @"be_null"};
+        NSString *originFrom = cellModel.tracerDic[@"origin_from"] ?: @"be_null";
+        dict[@"tracer"] = @{
+            @"origin_from":originFrom,
+            @"enter_from":[self pageType],
+            @"enter_type":@"click",
+            @"group_id":cellModel.groupId ?: @"be_null",
+            @"rank":cellModel.tracerDic[@"rank"] ?: @"be_null",
+            @"log_pb":cellModel.logPb ?: @"be_null"};
         TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
         //跳转到圈子详情页
         NSURL *openUrl = [NSURL URLWithString:@"sslocal://ugc_community_detail"];

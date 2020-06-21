@@ -88,7 +88,7 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
     [self.bgView addSubview:_tipLabel];
     
     _subscribeBtn = [[UIButton alloc] init];
-    _subscribeBtn.backgroundColor = [UIColor themeRed1];
+    _subscribeBtn.backgroundColor = [UIColor themeOrange4];
     [_subscribeBtn setTitle:@"订阅动态" forState:UIControlStateNormal];
     [_subscribeBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     _subscribeBtn.titleLabel.font = [UIFont themeFontRegular:14];
@@ -107,7 +107,7 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
     _textField.textColor = [UIColor themeGray1];
     _textField.keyboardType = UIKeyboardTypeNumberPad;
     _textField.placeholder = @"填写手机号";
-    [_textField setValue:[UIColor themeGray4] forKeyPath:@"_placeholderLabel.textColor"];
+    _textField.attributedPlaceholder = [[NSAttributedString alloc] initWithString:@"填写手机号" attributes:@{NSForegroundColorAttributeName: [UIColor themeGray4]}];
     _textField.layer.cornerRadius = 4;
     _textField.layer.masksToBounds = YES;
     _textField.delegate = self;
@@ -215,19 +215,23 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
 }
 
 - (void)subscribe {
-    NSMutableDictionary *tracerDic = self.baseViewModel.detailTracerDic.mutableCopy;
-    tracerDic[@"log_pb"] = self.baseViewModel.listLogPB ? self.baseViewModel.listLogPB : @"be_null";
-    tracerDic[@"position"] = @"card";
-    [FHUserTracker writeEvent:@"click_confirm" params:tracerDic];
-    
     NSString *phoneNum = self.phoneNum;
     if (phoneNum.length == 11 && [phoneNum hasPrefix:@"1"] && [self isPureInt:phoneNum]) {
+        
+        FHDetailHouseSubscribeModel *model = (FHDetailHouseSubscribeModel *)self.currentData;
+        NSMutableDictionary *tracerDic = self.baseViewModel.detailTracerDic.mutableCopy;
+        tracerDic[@"log_pb"] = self.baseViewModel.listLogPB ? self.baseViewModel.listLogPB : @"be_null";
+        tracerDic[@"position"] = @"card";
+        tracerDic[@"growth_deepevent"] = @(1);
+        tracerDic[kFHAssociateInfo] = model.associateInfo.reportFormInfo;
+        [FHUserTracker writeEvent:@"click_confirm" params:tracerDic];
+        
         if(self.subscribeBlock){
             self.subscribeBlock(self.phoneNum);
         }
     }else {
         [[ToastManager manager] showToast:@"手机格式错误"];
-        self.textField.textColor = [UIColor themeRed1];
+        self.textField.textColor = [UIColor themeOrange1];
     }
 }
 
@@ -294,6 +298,7 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
     NSMutableDictionary *tracerDic = self.baseViewModel.detailTracerDic.mutableCopy;
     tracerDic[@"log_pb"] = self.baseViewModel.listLogPB ? self.baseViewModel.listLogPB : @"be_null";
     tracerDic[@"position"] = @"card";
+    tracerDic[@"growth_deepevent"] = @(1);
     [FHUserTracker writeEvent:@"inform_show" params:tracerDic];
     
     [self showFullPhoneNum:YES];

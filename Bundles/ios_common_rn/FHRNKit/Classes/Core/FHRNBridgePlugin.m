@@ -8,29 +8,29 @@
 #import "FHRNBridgePlugin.h"
 #import <TTNetBusiness/TTNetworkUtilities.h>
 #import <TTNetworkManager/TTNetworkManager.h>
-#import <FHEnvContext.h>
-#import <NSDictionary+TTAdditions.h>
+#import "FHEnvContext.h"
+#import "NSDictionary+TTAdditions.h"
 #import "FHRNHTTPRequestSerializer.h"
 #import "TTBridgeRegister.h"
 #import "TTBridgeDefines.h"
-#import <TTRoute.h>
-#import <TTStringHelper.h>
+#import "TTRoute.h"
+#import "TTStringHelper.h"
 #import "TTDeviceHelper.h"
-#import <TTUIResponderHelper.h>
+#import "TTUIResponderHelper.h"
 #import <FHRNBaseViewController.h>
-#import <UIViewController+Refresh_ErrorHandler.h>
-#import <FHEnvContext.h>
-#import <NSDictionary+TTAdditions.h>
-#import <FHUtils.h>
-#import <HMDTTMonitor.h>
-#import <UIViewController+NavigationBarStyle.h>
+#import "UIViewController+Refresh_ErrorHandler.h"
+#import "FHEnvContext.h"
+#import "NSDictionary+TTAdditions.h"
+#import "FHUtils.h"
+#import "HMDTTMonitor.h"
+#import "UIViewController+NavigationBarStyle.h"
 #import "FHHousePhoneCallUtils.h"
 #import "FHHouseFollowUpHelper.h"
-#import <TTSandBoxHelper.h>
+#import "TTSandBoxHelper.h"
 #import "NetworkUtilities.h"
 #import "TTInstallIDManager.h"
 #import "TTAccount.h"
-#import <ToastManager.h>
+#import "ToastManager.h"
 
 @interface FHRNBridgePlugin ()
 @property (nonatomic, strong) NSMutableArray<NSString *> *events;
@@ -128,6 +128,8 @@
     
     NSString *houseType = [param tt_stringValueForKey:@"houseType"];
     NSString *realtorId = [param tt_stringValueForKey:@"realtorId"];
+    NSString *houseId = [param tt_stringValueForKey:@"house_id"];
+
     //    NSString *reportParams = [param tt_stringValueForKey:@"report_params"];
     NSString *reportParamsStr = [param tt_stringValueForKey:@"report_params"];
     NSMutableString *processString = [NSMutableString stringWithString:reportParamsStr];
@@ -138,9 +140,27 @@
         if ([character isEqualToString:@"\\"])
             [processString deleteCharactersInRange:NSMakeRange(i, 1)];
     }
-    
     NSDictionary *reportParamsDict = [FHUtils dictionaryWithJsonString:processString];
+    
+    NSDictionary *associateInfoDict = nil;
+    NSString *associateInfoStr = [param tt_stringValueForKey:@"phone_info"];
+    if (associateInfoStr) {
+        NSMutableString *processString= [NSMutableString stringWithString:associateInfoStr];
+        NSString *character = nil;
+        for (int i = 0; i < processString.length; i ++) {
+            character = [processString substringWithRange:NSMakeRange(i, 1)];
+            
+            if ([character isEqualToString:@"\\"])
+                [processString deleteCharactersInRange:NSMakeRange(i, 1)];
+        }
+        associateInfoDict = [FHUtils dictionaryWithJsonString:processString];
+    }
     NSMutableDictionary *callParams = [NSMutableDictionary new];
+    
+    if ([param isKindOfClass:[NSDictionary class]]) {
+        [callParams addEntriesFromDictionary:param];
+    }
+    
     if ([reportParamsDict isKindOfClass:[NSDictionary class]]) {
         [callParams addEntriesFromDictionary:reportParamsDict];
     }
@@ -151,25 +171,43 @@
         [callParams setValue:houseType forKey:@"house_type"];
     }
     
-    if([callParams[@"group_id"] isKindOfClass:[NSString class]])
-    {
-        if (![callParams[@"group_id"] isEqualToString:@"be_null"]) {
-            callParams[@"follow_id"] = callParams[@"group_id"];
-        }
-    }
+//    if([callParams[@"group_id"] isKindOfClass:[NSString class]])
+//    {
+//        if (![callParams[@"group_id"] isEqualToString:@"be_null"]) {
+//            callParams[@"follow_id"] = callParams[@"group_id"];
+//        }
+//    }
     
-    if([callParams[@"group_id"] isKindOfClass:[NSString class]])
-    {
-        if (![callParams[@"group_id"] isEqualToString:@"be_null"]) {
-            callParams[@"house_id"] = callParams[@"group_id"];
-        }
-    }
+//    if([callParams[@"group_id"] isKindOfClass:[NSString class]])
+//    {
+//        if (![callParams[@"group_id"] isEqualToString:@"be_null"]) {
+//            callParams[@"house_id"] = callParams[@"group_id"];
+//        }
+//    }
+//
     
-    if ([callParams[@"log_pb"] isKindOfClass:[NSString class]]) {
-        callParams[@"log_pb"] = [FHUtils dictionaryWithJsonString:callParams[@"log_pb"]];
+
+//    callParams[@"from"] = @"app_realtor_mainpage";
+    callParams[kFHAssociateInfo] = associateInfoDict;
+    FHAssociatePhoneModel *associatePhone = [[FHAssociatePhoneModel alloc]init];
+    associatePhone.reportParams = reportParamsDict;
+    associatePhone.associateInfo = associateInfoDict;
+    associatePhone.realtorId = realtorId;
+    if ([callParams[@"log_pb"] isKindOfClass:[NSDictionary class]]) {
+        NSDictionary *logPb = callParams[@"log_pb"];
+        associatePhone.searchId = logPb[@"search_id"];
+        associatePhone.imprId = logPb[@"impr_id"];
+    }else if ([callParams[@"log_pb"] isKindOfClass:[NSString class]]) {
+        NSDictionary *logPb = [FHUtils dictionaryWithJsonString:callParams[@"log_pb"]];
+        callParams[@"log_pb"] = logPb;
+        associatePhone.searchId = logPb[@"search_id"];
+        associatePhone.imprId = logPb[@"impr_id"];
     }
-    callParams[@"from"] = @"app_realtor_mainpage";
-    [FHHousePhoneCallUtils callWithConfig:callParams completion:^(BOOL success, NSError * _Nonnull error, FHDetailVirtualNumModel * _Nonnull virtualPhoneNumberModel) {
+    associatePhone.houseType = houseType.integerValue;
+    associatePhone.houseId = houseId;
+    associatePhone.showLoading = YES;
+    [FHHousePhoneCallUtils callWithAssociatePhoneModel:associatePhone completion:^(BOOL success, NSError * _Nonnull error, FHDetailVirtualNumModel * _Nonnull virtualPhoneNumberModel) {
+
         if (callback) {
             callback(TTBridgeMsgSuccess, nil,nil);
         }
@@ -382,7 +420,7 @@
     });
     
     if (!isEmptyString(openURL)) {
-        NSURL *openUrlResultUTF8 =  [NSURL URLWithString:[openURL stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
+        NSURL *openUrlResultUTF8 =  [NSURL URLWithString:openURL];
         if(openUrlResultUTF8)
         {
             [[TTRoute sharedRoute] openURLByViewController:openUrlResultUTF8 userInfo:nil];

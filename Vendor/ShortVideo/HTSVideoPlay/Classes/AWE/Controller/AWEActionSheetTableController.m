@@ -19,7 +19,7 @@
 #import "UIColor+TTThemeExtension.h"
 #import "TTUIResponderHelper.h"
 #import "AWEActionSheetWriteCommentCell.h"
-#import <SSThemed.h>
+#import "SSThemed.h"
 #import "UIViewAdditions.h"
 #import "UIButton+TTAdditions.h"
 

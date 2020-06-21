@@ -7,7 +7,7 @@
 
 #import "FHNeighborListViewController.h"
 #import "FHHouseType.h"
-#import "FHNeighborViewModel.h"
+#import "FHNeighborListViewModel.h"
 #import "TTReachability.h"
 #import "UIViewAdditions.h"
 #import "FHRefreshCustomFooter.h"
@@ -27,7 +27,7 @@
 @property (nonatomic, copy) NSString *neighborhoodId;
 @property (nonatomic, copy) NSString *houseId;
 
-@property (nonatomic, strong) FHNeighborViewModel *viewModel;
+@property (nonatomic, strong) FHNeighborListViewModel *viewModel;
 @property (nonatomic, strong) TTRouteParamObj *paramObj;
 
 @property (nonatomic, assign) FHNeighborListVCType neighborListVCType;
@@ -78,6 +78,12 @@
                     self.tracerDict[@"category_name"] = self.tracerModel.categoryName;
                 }
 
+            } else if ([paramObj.host isEqualToString:@"house_list_recommend_court"]) {
+                self.neighborListVCType = FHNeighborListVCTypeRecommendCourt;
+                self.tracerModel.categoryName = [self categoryName];
+                if (self.tracerDict) {
+                    self.tracerDict[@"category_name"] = self.tracerModel.categoryName;
+                }
             }
         }
         self.ttTrackStayEnable = YES;
@@ -91,6 +97,8 @@
         return @"related_list";
     }else if ([_paramObj.host isEqualToString:@"house_list_same_neighborhood"]) {
         return @"same_neighborhood_list";
+    } else if ([_paramObj.host isEqualToString:@"house_list_recommend_court"]) {
+        return @"recommend_new_list";
     }
     return @"";
 }
@@ -101,6 +109,8 @@
         return @"周边房源";
     }else if ([_paramObj.host isEqualToString:@"house_list_same_neighborhood"]) {
         return @"同小区房源";
+    } else if ([_paramObj.host isEqualToString:@"house_list_recommend_court"]) {
+        return @"推荐新盘";
     }
     return @"";
 }
@@ -127,7 +137,9 @@
 - (void)setupUI {
     [self setupDefaultNavBar:NO];
     self.ttNeedHideBottomLine = YES;
-    
+    if (self.neighborListVCType == FHNeighborListVCTypeRecommendCourt) {
+        [self.customNavBarView.seperatorLine setHidden:YES];
+    }
     CGFloat height = [FHFakeInputNavbar perferredHeight];
     
     [self.filterPanel mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -142,7 +154,7 @@
     }];
     
     [self configTableView];
-    self.viewModel = [[FHNeighborViewModel alloc] initWithController:self tableView:_tableView];
+    self.viewModel = [[FHNeighborListViewModel alloc] initWithController:self tableView:_tableView];
     [self.view addSubview:_tableView];
     [_tableView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.right.mas_equalTo(self.view);
@@ -161,9 +173,9 @@
 
 -(void)setupFilter
 {
+
     id<FHHouseFilterBridge> bridge = [[FHHouseBridgeManager sharedInstance] filterBridge];
     self.houseFilterBridge = bridge;
-    
     self.houseFilterViewModel = [bridge filterViewModelWithType:self.houseType showAllCondition:NO showSort:NO];
     self.filterPanel = [bridge filterPannel:self.houseFilterViewModel];
     self.filterBgControl = [bridge filterBgView:self.houseFilterViewModel];
@@ -191,8 +203,17 @@
     _tableView.estimatedRowHeight = 0;
     _tableView.estimatedSectionFooterHeight = 0;
     _tableView.estimatedSectionHeaderHeight = 0;
+    CGFloat bottom = 0;
     if ([TTDeviceHelper isIPhoneXDevice]) {
-        _tableView.contentInset = UIEdgeInsetsMake(0, 0, 34, 0);
+        bottom = 34;
+    }
+    CGFloat top = 0;
+    if (self.neighborListVCType == FHNeighborListVCTypeRecommendCourt) {
+        top = 15;
+    }
+    _tableView.contentInset = UIEdgeInsetsMake(top, 0, bottom, 0);
+    if (self.neighborListVCType == FHNeighborListVCTypeRecommendCourt) {
+        _tableView.backgroundColor = [UIColor themeGray7];
     }
     __weak typeof(self) wself = self;
     self.refreshFooter = [FHRefreshCustomFooter footerWithRefreshingBlock:^{
@@ -264,6 +285,8 @@
         [self.viewModel requestRelatedHouseSearch:self.neighborhoodId houseId:self.houseId offset:offset];
     } else if (self.neighborListVCType == FHNeighborListVCTypeRentNearBy) {
         [self.viewModel requestRentRelatedHouseSearch:self.neighborhoodId houseId:self.houseId offset:offset];
+    } else if (self.neighborListVCType == FHNeighborListVCTypeRecommendCourt) {
+        [self.viewModel requestOldRecommendCourt:self.houseId offset:offset];
     }
 }
 

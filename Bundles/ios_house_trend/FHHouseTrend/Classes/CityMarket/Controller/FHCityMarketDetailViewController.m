@@ -8,7 +8,7 @@
 #import "FHCityMarketDetailViewController.h"
 #import "FHDetailListViewModel.h"
 #import "FHCityMarketHeaderView.h"
-#import <Masonry.h>
+#import "Masonry.h"
 #import "TTDeviceHelper.h"
 #import "FHCityMarketTrendHeaderViewModel.h"
 #import "FHDetailListViewModel.h"
@@ -24,7 +24,8 @@
 #import "FHCityMarketBottomBarView.h"
 #import "FHCityMarketRecommendViewModel.h"
 #import "FHImmersionNavBarViewModel.h"
-#import "TTTracker.h"
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
+
 #import "TTTrackerWrapper.h"
 #import "FHUserTracker.h"
 #import <FHHouseBase/FHBaseTableView.h>
@@ -297,6 +298,7 @@
         action.userInfo = info;
         [item addTarget:action action:@selector(jump) forControlEvents:UIControlEventTouchUpInside];
         [_actions addObject:action];
+        item.layer.cornerRadius = 22;
         return item;
     }];
 
@@ -344,7 +346,7 @@
 -(void)onNetworkError {
     [self endLoading];
     _navBarViewModel.isHasData = NO;
-    [self.emptyView showEmptyWithType:FHEmptyMaskViewTypeNetWorkError];
+    [self.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoNetWorkAndRefresh];
 }
 
 -(void)onNoNetwork {

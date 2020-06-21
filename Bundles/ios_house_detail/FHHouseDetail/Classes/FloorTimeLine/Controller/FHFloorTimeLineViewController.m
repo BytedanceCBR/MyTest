@@ -39,6 +39,7 @@
     [self addDefaultEmptyViewFullScreen];
 
     _timeLineListViewModel = [[FHFloorTimeLineViewModel alloc] initWithController:self tableView:_timeLineListTable courtId:_courtId];
+    _timeLineListViewModel.navBar = [self getNaviBar];
     [self setNavBarTitle:@"楼盘动态"];
     [self.view bringSubviewToFront:[self getNaviBar]];
 
@@ -59,8 +60,8 @@
     
     [_timeLineListTable mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo([self getNaviBar].mas_bottom);
-        make.left.right.equalTo(self.view);
-        make.bottom.equalTo([self getBottomBar].mas_top);
+        make.left.right.bottom.equalTo(self.view);
+//        make.bottom.equalTo([self getBottomBar].mas_top);
     }];
     
     [_timeLineListTable setBackgroundColor:[UIColor whiteColor]];

@@ -37,7 +37,9 @@
 #import "TTCommentModel.h"
 #import "TTAccountManager.h"
 #import "SSMyUserModel.h"
-#import <TTBusinessManager+StringUtils.h>
+#import "TTBusinessManager+StringUtils.h"
+#import "UIColor+Theme.h"
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 
 
 #define kDeleteCommentNotificationKey   @"kDeleteCommentNotificationKey"
@@ -96,6 +98,7 @@ NSString *const kTTCommentDetailForwardCommentNotification = @"kTTCommentDetailF
     self.pageState.uniqueID = [baseCondition tt_stringValueForKey:@"uniqueID"];
     self.pageState.serviceID = [baseCondition tt_stringValueForKey:@"serviceID"];
     self.fromUGC = [baseCondition tt_boolValueForKey:@"fromUGC"];
+    self.extraDic = [baseCondition tt_objectForKey:@"extraDic"];
     //从消息进入, 或者从置顶评论进入 都算isFromMessage
     self.pageState.isFromMessage = [baseCondition tt_boolValueForKey:@"from_message"] || !isEmptyString(self.pageState.stickID);
     //TODO: 后续各种id迁到 pageState中
@@ -135,6 +138,7 @@ NSString *const kTTCommentDetailForwardCommentNotification = @"kTTCommentDetailF
     self.store.element_from = self.element_from;
     self.store.ansid = self.groupId;
     self.store.qid = self.qid;
+    self.store.extraDic = self.extraDic;
     
     self.hidePost = [baseCondition[@"hidePost"] boolValue];
     
@@ -240,6 +244,8 @@ NSString *const kTTCommentDetailForwardCommentNotification = @"kTTCommentDetailF
         digCountLabelText = @"赞";
     }
     self.toolbarView.digCountLabel.text = digCountLabelText;
+    self.toolbarView.digCountLabel.textColor = self.pageState.detailModel.userDigg ? [UIColor themeOrange4] : [UIColor themeGray1];
+    
 
     NSString *title;
     if (self.hasNestedInModalContainer) {
@@ -408,7 +414,7 @@ NSString *const kTTCommentDetailForwardCommentNotification = @"kTTCommentDetailF
 - (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
     _isViewAppear = NO;
-
+    [[NSNotificationCenter defaultCenter] postNotificationName:UIMenuControllerWillHideMenuNotification object:nil];
     TTMomentDetailAction *action = [TTMomentDetailAction actionWithType:TTMomentDetailActionTypeWillDisappear comment:self.commentModel];
     [self.store dispatch:action];
     
@@ -423,7 +429,7 @@ NSString *const kTTCommentDetailForwardCommentNotification = @"kTTCommentDetailF
     [dic setValue:@"detail" forKey:@"position"];
     [dic setValue:@(time).stringValue forKey:@"stay_time"];
     
-    [TTTracker eventV3:@"comment_close" params:dic];
+    [BDTrackerProtocol eventV3:@"comment_close" params:dic];
 
     [self trySendCurrentPageStayTime];
 }
@@ -655,11 +661,11 @@ NSString *const kTTCommentDetailForwardCommentNotification = @"kTTCommentDetailF
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     TTCommentDetailCell *cell = [tableView dequeueReusableCellWithIdentifier:kTTCommentDetailCellIdentifier forIndexPath:indexPath];
     cell.delegate = self;
-    cell.backgroundColorThemeKey = indexPath.section == 0? kColorBackground22: kColorBackground4;
-    __weak typeof(cell) wCell = cell;
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        wCell.backgroundColorThemeKey = kColorBackground4;
-    });
+//    cell.backgroundColorThemeKey = indexPath.section == 0? kColorBackground22: kColorBackground4;
+//    __weak typeof(cell) wCell = cell;
+//    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+//        wCell.backgroundColorThemeKey = kColorBackground4;
+//    });
     TTCommentDetailCellLayout *layout = self.pageState.totalCommentLayouts[indexPath.section][indexPath.row];
     if ([self hasDeleteReplyPermission]) {
         layout.deleteLayout.hidden = NO;
@@ -670,8 +676,29 @@ NSString *const kTTCommentDetailForwardCommentNotification = @"kTTCommentDetailF
 }
 
 #pragma mark - actions
-
 - (void)toolbarDiggButtonOnClicked:(id)sender {
+    
+    if(![TTAccountManager isLogin]) {
+        NSMutableDictionary *params = [NSMutableDictionary dictionary];
+        NSString *enterFrom = self.enterFrom ?:@"feed_detail";
+        [params setObject:enterFrom forKey:@"enter_from"];
+        [params setObject:@"feed_like" forKey:@"enter_type"];
+        // 登录成功之后不自己Pop，先进行页面跳转逻辑，再pop
+        [params setObject:@(YES) forKey:@"need_pop_vc"];
+        params[@"from_ugc"] = @(YES);
+        __weak typeof(self) wSelf = self;
+        [TTAccountLoginManager showAlertFLoginVCWithParams:params completeBlock:^(TTAccountAlertCompletionEventType type, NSString * _Nullable phoneNum) {
+            if (type == TTAccountAlertCompletionEventTypeDone) {
+                // 登录成功
+                if ([TTAccountManager isLogin]) {
+                    [wSelf toolbarDiggButtonOnClicked:sender];
+                }
+            }
+        }];
+        
+        return;
+    }
+    
     if (self.groupId == nil) {
         self.groupId = self.pageState.detailModel.groupModel.groupID;
     }
@@ -693,7 +720,7 @@ NSString *const kTTCommentDetailForwardCommentNotification = @"kTTCommentDetailF
         [params setValue:[FHTraceEventUtils generateEnterfrom:_categoryName] forKey:@"enter_from"];
         [params setValue:@"comment_detail" forKey:@"position"];
         [params setValue:commentId forKey:@"comment_id"];
-        [TTTracker eventV3:@"rt_like" params:params];
+        [BDTrackerProtocol eventV3:@"rt_like" params:params];
     }
 //    wrapperTrackEvent(@"update_detail", @"bottom_digg_click");
 //    TTMomentDetailAction *action = [TTMomentDetailAction digActionWithCommentDetailModel:self.pageState.detailModel];
@@ -822,9 +849,9 @@ NSString *const kTTCommentDetailForwardCommentNotification = @"kTTCommentDetailF
     }
     [params setValue:[self.commentModel.commentID stringValue] forKey:@"comment_id"];
     if (!self.pageState.detailModel.userDigg) {
-        [TTTracker eventV3:@"rt_like" params:params];
+        [BDTrackerProtocol eventV3:@"rt_like" params:params];
     } else {
-         [TTTracker eventV3:@"rt_unlike" params:params];
+         [BDTrackerProtocol eventV3:@"rt_unlike" params:params];
     }
     
     SSUserModel *userModel;
@@ -982,16 +1009,29 @@ NSString *const kTTCommentDetailForwardCommentNotification = @"kTTCommentDetailF
     [params setValue:_groupId forKey:@"item_Id"];
     [params setValue:_logPb forKey:@"log_pd"];
     [params setValue:_categoryName  forKey:@"category_name"];
-    [params setValue:[FHTraceEventUtils generateEnterfrom:_categoryName] forKey:@"enter_from"];
-    [params setValue:@"replay" forKey:@"position"];
+    [params setValue:@"reply" forKey:@"position"];
     [params setValue:_commentModel.commentID forKey:@"comment_id"];
     if (!isEmptyString(_qid)) {
         [params setValue:_qid forKey:@"qid"];
          [params setValue:_groupId forKey:@"ansid"];
     }
     
+    if(self.extraDic){
+        [params addEntriesFromDictionary:self.extraDic];
+        
+        if(self.extraDic[@"enter_from"]){
+            params[@"category_name"] = self.extraDic[@"enter_from"];
+        }
+    }
+    
+//    [params setValue:[FHTraceEventUtils generateEnterfrom:_categoryName] forKey:@"enter_from"];
+    
     if (!model.userDigg) {
-        [TTTracker eventV3:@"rt_like" params:params];
+        [params setValue:@"feed_like" forKey:@"click_position"];
+        [BDTrackerProtocol eventV3:@"rt_like" params:params];
+    }else{
+        [params setValue:@"feed_dislike" forKey:@"click_position"];
+        [BDTrackerProtocol eventV3:@"rt_unlike" params:params];
     }
     TTMomentDetailAction *action = [TTMomentDetailAction digActionWithReplyCommentModel:model];
     action.commentDetailModel = self.pageState.detailModel;
@@ -1015,20 +1055,22 @@ NSString *const kTTCommentDetailForwardCommentNotification = @"kTTCommentDetailF
 #pragma mark -- SSImpressionManager
 
 - (void)needRerecordImpressions {
-    if (self.isViewAppear) {
-        self.headerView.willAppearBlock();
-        for (id cell in [self.tableView visibleCells]) {
-            NSIndexPath *indexPath = [self.tableView indexPathForCell:cell];
-            if (indexPath.section < self.pageState.totalComments.count) {
-                NSArray<TTCommentDetailReplyCommentModel *> *array = self.pageState.totalComments[indexPath.section];
-                if (indexPath.row < array.count) {
-                    
-                    [self tt_recordForComment:self.pageState.totalComments[indexPath.section][indexPath.row]
-                                       status:SSImpressionStatusRecording];
-                }
-            }
-        }
-    }
+    dispatch_async(dispatch_get_main_queue(), ^{
+       if (self.isViewAppear) {
+           self.headerView.willAppearBlock();
+           for (id cell in [self.tableView visibleCells]) {
+               NSIndexPath *indexPath = [self.tableView indexPathForCell:cell];
+               if (indexPath.section < self.pageState.totalComments.count) {
+                   NSArray<TTCommentDetailReplyCommentModel *> *array = self.pageState.totalComments[indexPath.section];
+                   if (indexPath.row < array.count) {
+                       
+                       [self tt_recordForComment:self.pageState.totalComments[indexPath.section][indexPath.row]
+                                          status:SSImpressionStatusRecording];
+                   }
+               }
+           }
+       }
+    });
 }
 
 - (void)tt_registerToImpressionManager:(id)object {
@@ -1072,6 +1114,10 @@ NSString *const kTTCommentDetailForwardCommentNotification = @"kTTCommentDetailF
         _headerView.delegate = self;
         _headerView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
         _headerView.hidePost = self.hidePost;
+        NSMutableDictionary *dict = @{}.mutableCopy;
+        dict[@"enter_from"] = self.enterFrom;
+        _headerView.traceDict = dict;
+        
         //headView主评论出现的时间
         NSMutableDictionary *extra = [NSMutableDictionary dictionary];
         [extra setValue:@"comment_detail" forKey:@"comment_position"];

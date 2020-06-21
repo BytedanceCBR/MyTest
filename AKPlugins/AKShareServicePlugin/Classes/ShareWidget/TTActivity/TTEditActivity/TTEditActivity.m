@@ -8,7 +8,7 @@
 
 #import "TTEditActivity.h"
 #import <TTBaseLib/TTUIResponderHelper.h>
-#import <TTShareManager.h>
+#import "TTShareManager.h"
 
 NSString * const TTActivityTypeEditting = @"com.toutiao.UIKit.activity.Editting";
 @implementation TTEditActivity

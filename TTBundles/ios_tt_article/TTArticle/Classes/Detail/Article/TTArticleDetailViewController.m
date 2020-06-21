@@ -26,7 +26,7 @@
 #import "NewsDetailLogicManager.h"
 #import "NewsListLogicManager.h"
 #import "TTAuthorizeManager.h" //Account&Login系列
-#import <TTAccountBusiness.h>
+#import "TTAccountBusiness.h"
 
 #import "FriendDataManager.h"
 #import <TTFriendRelation/TTBlockManager.h>
@@ -81,19 +81,18 @@
 #import <TTThemed/UIImage+TTThemeExtension.h>
 
 #import <KVOController/KVOController.h>
-#import <Crashlytics/Crashlytics.h>
 
 #import "SSWebViewBackTipsButtonView.h"
 #import "ArticleTabBarStyleNewsListViewController.h"
 
-#import <TTInteractExitHelper.h>
+#import "TTInteractExitHelper.h"
 #import "TTInteractExitHelper.h"
 //#import "TTRedPacketManager.h"
 #import "TTAuthorizeManager.h"
 
 #import "TTMemoryMonitor.h"
 #import "TTArticleDetailMemoryMonitor.h"
-#import <TTNetworkUtil.h>
+#import "TTNetworkUtil.h"
 #import <TTKitchen/TTKitchen.h> 
 #import <TTKitchenExtension/TTKitchenExtension.h>
 
@@ -104,13 +103,12 @@
 #import "SSCommentInputHeader.h"
 #import "TTCommentViewControllerProtocol.h"
 #import "TTUGCTrackerHelper.h"
-#import <ExploreMomentDefine_Enums.h>
+#import "ExploreMomentDefine_Enums.h"
 #import "FHTraceEventUtils.h"
 #import <TTArticleBase/Log.h>
 
 //爱看
 #import "AKHelper.h"
-//#import "Bubble-Swift.h"
 #import "FHEnvContext.h"
 
 #define CASE(str)                       if ([__s__ isEqualToString:(str)])
@@ -263,7 +261,7 @@
         [dict setValue:self.detailModel.rid forKey:@"rule_id"];
         [dict setValue:self.detailModel.originalGroupID forKey:@"group_id"];
         [dict setValue:@"article" forKey:@"message_type"];
-        [TTTracker eventV3:@"push_page_back_to_feed" params:[dict copy]];
+        [BDTrackerProtocol eventV3:@"push_page_back_to_feed" params:[dict copy]];
     }
     
     if (self.shouldShowTipsOnNavBar) {
@@ -404,7 +402,7 @@
 
 - (void)viewWillDisappear:(BOOL)animated {
     TLS_LOG(@"viewWillDisappear with groupID %lld, adID:%lld", self.detailModel.article.uniqueID, self.detailModel.adID.longLongValue);
-    
+     [[NSNotificationCenter defaultCenter] postNotificationName:UIMenuControllerWillHideMenuNotification object:nil];
     CGFloat currentMemory = [TTMemoryMonitor currentMemoryUsageByAppleFormula];
     CGFloat memory_growth = currentMemory - self.memoryOnViewWillAppear;
     [TTArticleDetailMemoryMonitor monitorMemoryGrowth:memory_growth forGroupID:self.detailModel.article.uniqueID title:self.detailModel.article.title];
@@ -1075,10 +1073,15 @@
     self.toolbarView.hidden = NO;
     [self p_refreshToolbarView];
 }
-
+- (NSString *)pageType {
+    return @"article";
+}
 - (void)p_buildCommentViewController
 {
     self.commentViewController = [[TTCommentViewController alloc] initWithViewFrame:[self p_contentVisableRect] dataSource:self delegate:self];
+    NSMutableDictionary *dict = @{}.mutableCopy;
+    dict[@"page_type"] = [self pageType];
+    self.commentViewController.tracerDict = dict;
     self.commentViewController.enableImpressionRecording = YES;
     [self.commentViewController willMoveToParentViewController:self];
     [self addChildViewController:self.commentViewController];
@@ -2642,13 +2645,20 @@
         [params setValue:model.userID.stringValue forKey:@"user_id"];
         [params setValue:self.detailModel.orderedData.logPb forKey:@"log_pb"];
         [params setValue:self.detailModel.orderedData.categoryID forKey:@"category_name"];
-        [params setValue:self.detailModel.clickLabel forKey:@"enter_from"];
+        [params setValue:@"comment" forKey:@"position"];
+        [params setValue:@"feed_dislike" forKey:@"click_position"];
         
         if([self.detailModel.reportParams isKindOfClass:[NSDictionary class]]){
             [params addEntriesFromDictionary:self.detailModel.reportParams];
+            
+            if(self.detailModel.reportParams[@"enter_from"]){
+                params[@"category_name"] = self.detailModel.reportParams[@"enter_from"];
+            }
         }
         
-        [TTTrackerWrapper eventV3:@"comment_undigg" params:params];
+//        [params setValue:self.detailModel.clickLabel forKey:@"enter_from"];
+        
+        [TTTrackerWrapper eventV3:@"rt_unlike" params:params];
     } else {
         NSMutableDictionary *params = [[NSMutableDictionary alloc] initWithCapacity:5];
         [params setValue:@"house_app2c_v2" forKey:@"event_type"];
@@ -2658,12 +2668,18 @@
 //        [params setValue:model.userID.stringValue forKey:@"user_id"];
         [params setValue:self.detailModel.orderedData.logPb forKey:@"log_pb"];
         [params setValue:self.detailModel.orderedData.categoryID forKey:@"category_name"];
-        [params setValue:[FHTraceEventUtils generateEnterfrom:self.detailModel.orderedData.categoryID] forKey:@"enter_from"];
         [params setValue:@"comment" forKey:@"position"];
+        [params setValue:@"feed_like" forKey:@"click_position"];
         
         if([self.detailModel.reportParams isKindOfClass:[NSDictionary class]]){
             [params addEntriesFromDictionary:self.detailModel.reportParams];
+            
+            if(self.detailModel.reportParams[@"enter_from"]){
+                params[@"category_name"] = self.detailModel.reportParams[@"enter_from"];
+            }
         }
+        
+//        [params setValue:[FHTraceEventUtils generateEnterfrom:self.detailModel.orderedData.categoryID] forKey:@"enter_from"];
         
         [TTTrackerWrapper eventV3:@"rt_like" params:params];
     }
@@ -2727,12 +2743,19 @@
     
     [mdict setValue:self.detailModel.categoryID forKey:@"categoryID"];
     [mdict setValue:self.detailModel.clickLabel forKey:@"enterFrom"];
+    if(self.detailModel.clickLabel.length <= 0) {
+        [mdict setValue:[self pageType] forKey:@"enterFrom"];
+    }
     [mdict setValue:self.detailModel.logPb forKey:@"logPb"];
+    [mdict setValue:self.detailModel.reportParams forKey:@"extraDic"];
 
     TTCommentDetailViewController *detailRoot = [[TTCommentDetailViewController alloc] initWithRouteParamObj:TTRouteParamObjWithDict(mdict.copy)];
     
     detailRoot.categoryID = self.detailModel.categoryID;
     detailRoot.enterFrom = self.detailModel.clickLabel;
+    if(self.detailModel.clickLabel.length <= 0) {
+        detailRoot.enterFrom = [self pageType];
+    }
     detailRoot.logPb = self.detailModel.logPb;
 
     TTModalContainerController *navVC = [[TTModalContainerController alloc] initWithRootViewController:detailRoot];

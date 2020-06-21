@@ -16,7 +16,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface FHUserTracker : NSObject<BDUGTrackerInterface>
+@interface FHUserTracker : NSObject
 
 +(void)writeEvent:(NSString *)event params:(NSDictionary *_Nullable)param;
 

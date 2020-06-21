@@ -12,7 +12,7 @@
 #import "HTSVideoPlayJSONResponseSerializer.h"
 #import "TSVShortVideoDecoupledFetchManager.h"
 #import "TSVChannelDecoupledConfig.h"
-#import <ReactiveObjC.h>
+#import "ReactiveObjC.h"
 #import <TTBaseLib/TTBaseMacro.h>
 #import <TTBaseLib/NSDictionary+TTAdditions.h>
 

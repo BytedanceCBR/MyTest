@@ -6,7 +6,7 @@
 #import <Masonry/View+MASAdditions.h>
 #import "FHCommunitySuggestionBubble.h"
 #import "WDDefines.h"
-#import "BDWebImage.h"
+#import <BDWebImage/BDWebImage.h>
 
 
 @interface FHCommunitySuggestionBubble ()
@@ -40,7 +40,7 @@
     _iconView.clipsToBounds = YES;
 
     _label = [[UILabel alloc] init];
-    _label.textColor = [UIColor themeRed1];
+    _label.textColor = [UIColor themeOrange1];
     _label.backgroundColor = [UIColor clearColor];
     _label.font = [UIFont systemFontOfSize:10.0f];
     _label.numberOfLines = 1;
@@ -76,5 +76,12 @@
     CGSize preferSize = [self.label sizeThatFits:CGSizeMake(140, 14)];
     CGFloat labelSize = fminf(140, preferSize.width);
     return labelSize;
+}
+
+- (void)setBacColor:(UIColor *)bacColor {
+    self.backgroundColor = bacColor;
+}
+- (void)setCornerRadius:(CGFloat)cornerRadius {
+    self.layer.cornerRadius = cornerRadius;
 }
 @end

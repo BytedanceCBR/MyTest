@@ -16,7 +16,9 @@
 #define NO_EMPTY_STR(str) ([str isKindOfClass:[NSString class]] && str.length > 0)
 #define SCREEN_WIDTH      CGRectGetWidth([[UIScreen mainScreen] bounds])
 #define SCREEN_HEIGHT     CGRectGetHeight([[UIScreen mainScreen] bounds])
+#define SCREEN_SCALE      [[UIScreen mainScreen]scale]
 #define HOR_MARGIN        20
+#define HOR_MARGIN_NEW        15
 #define ONE_PIXEL         (1.0/[[UIScreen mainScreen]scale])
 
 #define SYS_IMG(name)     [UIImage imageNamed:name]
@@ -27,9 +29,16 @@
 
 
 #define SAFE_AREA   UIEdgeInsets safeInsets = UIEdgeInsetsZero; \
-    if (@available(iOS 11.8 , *)) { \
+    if (@available(iOS 11.0 , *)) { \
         safeInsets = [[[[UIApplication sharedApplication] delegate] window] safeAreaInsets]; \
     }
+
+#ifndef WeakSelf
+#define WeakSelf __weak typeof(self) wself = self
+#endif
+#ifndef StrongSelf
+#define StrongSelf __strong typeof(wself) self = wself
+#endif
 
 #pragma mark - log
 

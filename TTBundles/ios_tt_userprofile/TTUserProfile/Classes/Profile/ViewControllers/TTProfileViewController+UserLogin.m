@@ -7,7 +7,7 @@
 //
 
 #import "TTProfileViewController+UserLogin.h"
-#import <TTAccountBusiness.h>
+#import "TTAccountBusiness.h"
 #import "ArticleBadgeManager.h"
 #import "TTSettingMineTabGroup.h"
 #import "TTSettingMineTabManager.h"
@@ -23,7 +23,7 @@
 #import "AKProfileBenefitModel.h"
 #import "AKProfileBenefitManager.h"
 #import "AKProfileHeaderBeneficialButton.h"
-#import <TTNetworkManager.h>
+#import "TTNetworkManager.h"
 #import <TTBaseLib/TTUIResponderHelper.h>
 
 @implementation TTProfileViewController (UserLogin)

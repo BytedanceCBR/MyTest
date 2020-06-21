@@ -25,15 +25,16 @@
 #import "HTSVideoPageParamHeader.h"
 #import "FHUGCSmallVideoCell.h"
 #import "AWEVideoConstants.h"
-#import <TTURLUtils.h>
+#import "TTURLUtils.h"
 #import "FHUGCVideoCell.h"
-#import <TTVFeedPlayMovie.h>
-#import <TTVPlayVideo.h>
-#import <TTVFeedCellWillDisplayContext.h>
-#import <TTVFeedCellAction.h>
+#import "TTVFeedPlayMovie.h"
+#import "TTVPlayVideo.h"
+#import "TTVFeedCellWillDisplayContext.h"
+#import "TTVFeedCellAction.h"
 #import "FHFeedListModel.h"
 #import "ToastManager.h"
 #import "TTAccountManager.h"
+#import "FHUGCFeedDetailJumpManager.h"
 
 @interface FHPersonalHomePageViewModel ()<FHUGCBaseCellDelegate>
 
@@ -61,6 +62,7 @@
 @property (nonatomic, strong) FHErrorView *tableEmptyView;
 //只上报一次埋点
 @property (nonatomic, assign) BOOL reportedGoDetail;
+@property(nonatomic, strong) FHUGCFeedDetailJumpManager *detailJumpManager;
 
 @end
 
@@ -83,6 +85,8 @@
         self.feedOffset = 0;
         self.dataList = [[NSMutableArray alloc] init];
         self.hashTable = [NSHashTable weakObjectsHashTable];
+        self.detailJumpManager = [[FHUGCFeedDetailJumpManager alloc] init];
+        self.detailJumpManager.refer = self.refer;
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(acceptMsg:) name:@"kFHUGCGoTop" object:@"homePage"];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(acceptMsg:) name:@"kFHUGCLeaveTop" object:@"homePage"];
         // 删帖成功
@@ -91,6 +95,9 @@
 //        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(postDeleteSuccess:) name:kFHUGCReportPostNotification object:nil];
         
         self.tableEmptyView = [[FHErrorView alloc] initWithFrame:CGRectMake(0, 0, UIScreen.mainScreen.bounds.size.width, 500)];
+        
+        // 编辑成功
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(postEditNoti:) name:@"kTTForumPostEditedThreadSuccessNotification" object:nil]; // 编辑发送成功
     }
     return self;
 }
@@ -99,6 +106,42 @@
 {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
+
+// 编辑发送成功 - 更新数据
+- (void)postEditNoti:(NSNotification *)noti {
+    if (noti && noti.userInfo) {
+        NSDictionary *userInfo = noti.userInfo;
+        NSString *groupId = userInfo[@"group_id"];
+        if (groupId.length > 0) {
+            __block NSUInteger index = -1;
+            [self.dataList enumerateObjectsUsingBlock:^(FHFeedUGCCellModel*  _Nonnull cellModel, NSUInteger idx, BOOL * _Nonnull stop) {
+                if ([cellModel.groupId isEqualToString:groupId]) {
+                    index = idx;
+                }
+            }];
+            // 找到 要更新的数据
+            if (index >= 0 && index < self.dataList.count) {
+                NSString *thread_cell = userInfo[@"thread_cell"];
+                if (thread_cell && [thread_cell isKindOfClass:[NSString class]]) {
+                    FHFeedUGCCellModel *cellModel = [FHFeedUGCCellModel modelFromFeed:thread_cell];
+                    FHFeedUGCCellModel *lastCellModel = self.dataList[index];
+                    cellModel.isFromDetail = NO;
+                    cellModel.isStick = lastCellModel.isStick;
+                    cellModel.stickStyle = lastCellModel.stickStyle;
+                    cellModel.contentDecoration = lastCellModel.contentDecoration;
+                    if (cellModel) {
+                        self.dataList[index] = cellModel;
+                    }
+                    // 异步一下
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        [self.currentTableView reloadData];
+                    });
+                }
+            }
+        }
+    }
+}
+
 
 - (void)startLoadData {
     self.loadDataSuccessCount = 0;// 网络接口返回计数
@@ -161,7 +204,16 @@
                     [wSelf loadFeedListData];
                 }
             } else {
-                wSelf.headerModel = nil;
+                if ([model isKindOfClass:[FHPersonalHomePageModel class]]){
+                    FHPersonalHomePageModel *homePageModel = (FHPersonalHomePageModel *)model;
+                    if(homePageModel.data.desc.length > 0){
+                        wSelf.headerModel = model;
+                    }else{
+                        wSelf.headerModel = nil;
+                    }
+                }else{
+                    wSelf.headerModel = nil;
+                }
                 // 强制endLoading
                 wSelf.loadDataSuccessCount += 1;
             }
@@ -192,69 +244,78 @@
                 return;
             }
         } else {
+            FHFeedListModel *feedList = nil;
             if ([model isKindOfClass:[FHFeedListModel class]]) {
-                FHFeedListModel *feedList = (FHFeedListModel *)model;
-                
-                // 数据转模型 添加数据
-                NSMutableArray *tempArray = [NSMutableArray new];
-                [feedList.data enumerateObjectsUsingBlock:^(FHFeedListDataModel*  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-                    if ([obj isKindOfClass:[FHFeedListDataModel class]]) {
-                        FHFeedUGCCellModel *cellModel = [FHFeedUGCCellModel modelFromFeed:obj.content];
-                        if (cellModel) {
-                            [tempArray addObject:cellModel];
+                feedList = (FHFeedListModel *)model;
+            }
+            
+            if(feedList){
+                dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
+                    // 数据转模型 添加数据
+                    NSMutableArray *tempArray = [NSMutableArray new];
+                    [feedList.data enumerateObjectsUsingBlock:^(FHFeedListDataModel*  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+                        if ([obj isKindOfClass:[FHFeedListDataModel class]]) {
+                            FHFeedUGCCellModel *cellModel = [FHFeedUGCCellModel modelFromFeed:obj.content];
+                            if (cellModel) {
+                                [tempArray addObject:cellModel];
+                            }
                         }
-                    }
-                }];
-                
-                if (wSelf.feedOffset == 0) {
-                    // 说明是第一次请求--之前的数据保留（去重）
-                    if (tempArray.count > 0) {
-                        // 有返回（下拉）
-                        [tempArray enumerateObjectsUsingBlock:^(FHFeedUGCCellModel*  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-                            if (obj.groupId.length > 0) {
-                                [self removeDuplicaionModel:obj.groupId];
-                            }
-                        }];
-                    }
-                    // 再插入顶部
-                    if (self.dataList.count > 0) {
-                        // JOKER: 头部插入时，旧数据的置顶全部取消，以新数据中的置顶贴子为准
-                        [self.dataList enumerateObjectsUsingBlock:^(FHFeedUGCCellModel *  _Nonnull cellModel, NSUInteger idx, BOOL * _Nonnull stop) {
-                            cellModel.isStick = NO;
-                        }];
-                        // 头部插入新数据
-                        [tempArray addObjectsFromArray:self.dataList];
-                    }
-                    [self.dataList removeAllObjects];
-                    if (tempArray.count > 0) {
-                        [self.dataList addObjectsFromArray:tempArray];
-                    }
-                } else {
-                    // 上拉加载loadmore
-                    if (tempArray.count > 0) {
-                        [self.dataList enumerateObjectsUsingBlock:^(FHFeedUGCCellModel*  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-                            if (obj.groupId.length > 0) {
-                                // 新数据去重
-                                for (FHFeedUGCCellModel *itemModel in tempArray) {
-                                    if([obj.groupId isEqualToString:itemModel.groupId]){
-                                        [tempArray removeObject:itemModel];
-                                        break;
-                                    }
+                    }];
+                    
+                    if (wSelf.feedOffset == 0) {
+                        // 说明是第一次请求--之前的数据保留（去重）
+                        if (tempArray.count > 0) {
+                            // 有返回（下拉）
+                            [tempArray enumerateObjectsUsingBlock:^(FHFeedUGCCellModel*  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+                                if (obj.groupId.length > 0) {
+                                    [self removeDuplicaionModel:obj.groupId];
                                 }
-                            }
-                        }];
-                        // 插入底部
+                            }];
+                        }
+                        // 再插入顶部
+                        if (self.dataList.count > 0) {
+                            // JOKER: 头部插入时，旧数据的置顶全部取消，以新数据中的置顶贴子为准
+                            [self.dataList enumerateObjectsUsingBlock:^(FHFeedUGCCellModel *  _Nonnull cellModel, NSUInteger idx, BOOL * _Nonnull stop) {
+                                cellModel.isStick = NO;
+                            }];
+                            // 头部插入新数据
+                            [tempArray addObjectsFromArray:self.dataList];
+                        }
+                        [self.dataList removeAllObjects];
                         if (tempArray.count > 0) {
                             [self.dataList addObjectsFromArray:tempArray];
                         }
+                    } else {
+                        // 上拉加载loadmore
+                        if (tempArray.count > 0) {
+                            [self.dataList enumerateObjectsUsingBlock:^(FHFeedUGCCellModel*  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+                                if (obj.groupId.length > 0) {
+                                    // 新数据去重
+                                    for (FHFeedUGCCellModel *itemModel in tempArray) {
+                                        if([obj.groupId isEqualToString:itemModel.groupId]){
+                                            [tempArray removeObject:itemModel];
+                                            break;
+                                        }
+                                    }
+                                }
+                            }];
+                            // 插入底部
+                            if (tempArray.count > 0) {
+                                [self.dataList addObjectsFromArray:tempArray];
+                            }
+                        }
                     }
-                }
-        
-                wSelf.hasMore = feedList.hasMore;
-                wSelf.feedOffset = [feedList.offset integerValue];// 时间序 服务端返回的是时间
+                    
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        wSelf.hasMore = feedList.hasMore;
+                        wSelf.feedOffset = [feedList.offset integerValue];// 时间序 服务端返回的是时间
+                        [wSelf processLoadingState];
+                    });
+                });
+            }else{
+                [wSelf processLoadingState];
             }
         }
-        [wSelf processLoadingState];
     }];
 }
 
@@ -475,7 +536,8 @@
         FHFeedUGCCellModel *cellModel = self.dataList[indexPath.row];
         self.currentCellModel = cellModel;
         self.currentCell = [tableView cellForRowAtIndexPath:indexPath];
-        [self jumpToDetail:cellModel showComment:NO enterType:@"feed_content_blank"];
+        self.detailJumpManager.currentCell = self.currentCell;
+        [self.detailJumpManager jumpToDetail:cellModel showComment:NO enterType:@"feed_content_blank"];
     }
 }
 #pragma mark - UIScrollViewDelegate
@@ -574,29 +636,19 @@
     [self trackClickComment:cellModel];
     self.currentCellModel = cellModel;
     self.currentCell = cell;
-    [self jumpToDetail:cellModel showComment:YES enterType:@"feed_comment"];
+    self.detailJumpManager.currentCell = self.currentCell;
+    [self.detailJumpManager jumpToDetail:cellModel showComment:YES enterType:@"feed_comment"];
 }
 
 - (void)goToCommunityDetail:(FHFeedUGCCellModel *)cellModel {
-    //关闭引导cell
-    if(cellModel.community.socialGroupId){
-        NSMutableDictionary *dict = @{}.mutableCopy;
-        dict[@"community_id"] = cellModel.community.socialGroupId;
-        dict[@"tracer"] = @{@"enter_from":[self pageType],
-                            @"enter_type":@"click",
-                            @"rank":cellModel.tracerDic[@"rank"] ?: @"be_null",
-                            @"log_pb":cellModel.logPb ?: @"be_null"};
-        TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
-        //跳转到圈子详情页
-        NSURL *openUrl = [NSURL URLWithString:@"sslocal://ugc_community_detail"];
-        [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:userInfo];
-    }
+    [self.detailJumpManager goToCommunityDetail:cellModel];
 }
 
 - (void)lookAllLinkClicked:(FHFeedUGCCellModel *)cellModel cell:(nonnull FHUGCBaseCell *)cell {
     self.currentCellModel = cellModel;
     self.currentCell = cell;
-    [self jumpToDetail:cellModel showComment:NO enterType:@"feed_content_blank"];
+    self.detailJumpManager.currentCell = self.currentCell;
+    [self.detailJumpManager jumpToDetail:cellModel showComment:NO enterType:@"feed_content_blank"];
 }
 
 - (void)gotoLinkUrl:(FHFeedUGCCellModel *)cellModel url:(NSURL *)url {
@@ -630,172 +682,6 @@
             [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
         }
     }
-}
-
-// go detail
-- (void)jumpToDetail:(FHFeedUGCCellModel *)cellModel showComment:(BOOL)showComment enterType:(NSString *)enterType {
-    if(cellModel.cellType == FHUGCFeedListCellTypeArticle || cellModel.cellType == FHUGCFeedListCellTypeQuestion){
-        if(cellModel.hasVideo){
-            //跳转视频详情页
-            [self jumpToVideoDetail:cellModel showComment:showComment enterType:enterType];
-        }else{
-            BOOL canOpenURL = NO;
-            if (!canOpenURL && !isEmptyString(cellModel.openUrl)) {
-                NSURL *url = [TTStringHelper URLWithURLString:cellModel.openUrl];
-                if ([[UIApplication sharedApplication] canOpenURL:url]) {
-                    canOpenURL = YES;
-                    [[UIApplication sharedApplication] openURL:url];
-                }
-                else if([[TTRoute sharedRoute] canOpenURL:url]){
-                    canOpenURL = YES;
-                    //优先跳转openurl
-                    [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:nil];
-                }
-            }else{
-                NSURL *openUrl = [NSURL URLWithString:cellModel.detailScheme];
-                [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:nil];
-            }
-        }
-    }else if(cellModel.cellType == FHUGCFeedListCellTypeUGC){
-        [self jumpToPostDetail:cellModel showComment:showComment enterType:enterType];
-    }else if(cellModel.cellType == FHUGCFeedListCellTypeUGCBanner || cellModel.cellType == FHUGCFeedListCellTypeUGCBanner2){
-        //根据url跳转
-        NSURL *openUrl = [NSURL URLWithString:cellModel.openUrl];
-        [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:nil];
-    }else if(cellModel.cellType == FHUGCFeedListCellTypeArticleComment || cellModel.cellType == FHUGCFeedListCellTypeArticleComment2){
-        // 评论
-        NSMutableDictionary *dict = [NSMutableDictionary new];
-        NSMutableDictionary *traceParam = @{}.mutableCopy;
-        traceParam[@"enter_from"] = [self pageType];
-        traceParam[@"enter_type"] = enterType ? enterType : @"be_null";
-        traceParam[@"rank"] = cellModel.tracerDic[@"rank"];
-        traceParam[@"log_pb"] = cellModel.logPb;
-        dict[TRACER_KEY] = traceParam;
-        
-        dict[@"data"] = cellModel;
-        dict[@"begin_show_comment"] = showComment ? @"1" : @"0";
-        dict[@"social_group_id"] = cellModel.community.socialGroupId ?: @"";
-        TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
-        NSURL *openUrl = [NSURL URLWithString:cellModel.openUrl];
-        [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:userInfo];
-    }else if(cellModel.cellType == FHUGCFeedListCellTypeAnswer){
-        // 问题 回答
-        BOOL jump_comment = NO;
-        if (showComment) {
-            jump_comment = YES;
-        }
-        NSDictionary *dict = @{@"is_jump_comment":@(jump_comment)};
-        TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
-        NSURL *openUrl = [NSURL URLWithString:cellModel.openUrl];
-        [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:userInfo];
-    } if(cellModel.cellType == FHUGCFeedListCellTypeUGCSmallVideo){
-        //小视频
-        WeakSelf;
-        TSVShortVideoDetailExitManager *exitManager = [[TSVShortVideoDetailExitManager alloc] initWithUpdateBlock:^CGRect{
-            StrongSelf;
-            CGRect imageFrame = [self selectedSmallVideoFrame];
-            imageFrame.origin = CGPointZero;
-            return imageFrame;
-        } updateTargetViewBlock:^UIView *{
-            StrongSelf;
-            return [self currentSelectSmallVideoView];
-        }];
-        NSMutableDictionary *info = [NSMutableDictionary dictionaryWithCapacity:2];
-        [info setValue:exitManager forKey:HTSVideoDetailExitManager];
-        if (showComment) {
-            [info setValue:@(1) forKey:AWEVideoShowComment];
-        }
-        
-        NSURL *openUrl = [NSURL URLWithString:cellModel.openUrl];
-        [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:TTRouteUserInfoWithDict(info)];
-    } else if(cellModel.cellType == FHUGCFeedListCellTypeUGCVoteInfo) {
-        // 投票
-        BOOL jump_comment = NO;
-        if (showComment) {
-            jump_comment = YES;
-        }
-        NSMutableDictionary *dict = @{@"begin_show_comment":@(jump_comment)}.mutableCopy;
-        NSMutableDictionary *traceParam = @{}.mutableCopy;
-        traceParam[@"enter_from"] = [self pageType];
-        traceParam[@"enter_type"] = enterType ? enterType : @"be_null";
-        traceParam[@"rank"] = cellModel.tracerDic[@"rank"];
-        traceParam[@"log_pb"] = cellModel.logPb;
-        // traceParam[@"concern_id"] = @(self.cid);
-        dict[TRACER_KEY] = traceParam;
-        dict[@"data"] = cellModel;
-        dict[@"social_group_id"] = cellModel.community.socialGroupId ?: @"";
-        TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
-        NSURL *openUrl = [NSURL URLWithString:cellModel.openUrl];
-        [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:userInfo];
-    }
-}
-
-- (void)jumpToPostDetail:(FHFeedUGCCellModel *)cellModel showComment:(BOOL)showComment enterType:(NSString *)enterType {
-    NSMutableDictionary *dict = @{}.mutableCopy;
-    // 埋点
-    NSMutableDictionary *traceParam = @{}.mutableCopy;
-    traceParam[@"enter_from"] = [self pageType];
-    traceParam[@"enter_type"] = enterType ? enterType : @"be_null";
-    traceParam[@"rank"] = cellModel.tracerDic[@"rank"];
-    traceParam[@"log_pb"] = cellModel.logPb;
-    // traceParam[@"concern_id"] = @(self.cid);
-    dict[TRACER_KEY] = traceParam;
-    
-    dict[@"data"] = cellModel;
-    dict[@"begin_show_comment"] = showComment ? @"1" : @"0";
-    dict[@"social_group_id"] = cellModel.community.socialGroupId ?: @"";
-    TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
-    FHFeedUGCContentModel *contentModel = cellModel.originData;
-    NSString *routeUrl = @"sslocal://thread_detail";
-    if (contentModel && [contentModel isKindOfClass:[FHFeedUGCContentModel class]]) {
-        NSString *schema = contentModel.schema;
-        if (schema.length > 0) {
-            routeUrl = schema;
-        }
-    }
-    
-    NSURL *openUrl = [NSURL URLWithString:routeUrl];
-    [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:userInfo];
-}
-
-- (void)jumpToVideoDetail:(FHFeedUGCCellModel *)cellModel showComment:(BOOL)showComment enterType:(NSString *)enterType {
-    NSMutableDictionary *dict = @{}.mutableCopy;
-    
-    if(self.currentCell && [self.currentCell isKindOfClass:[FHUGCVideoCell class]]){
-        FHUGCVideoCell *cell = (FHUGCVideoCell *)self.currentCell;
-        
-        TTVFeedCellSelectContext *context = [[TTVFeedCellSelectContext alloc] init];
-        context.refer = self.refer;
-//        context.categoryId = self.categoryId;
-        context.feedListViewController = self;
-        context.clickComment = showComment;
-        context.enterType = enterType;
-        context.enterFrom = [self pageType];
-        
-        [cell didSelectCell:context];
-    }else if (cellModel.openUrl) {
-        NSURL *openUrl = [NSURL URLWithString:cellModel.openUrl];
-        [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:nil];
-    }
-    self.needRefreshCell = NO;
-}
-
-- (UIView *)currentSelectSmallVideoView {
-    if (self.currentCell && [self.currentCell isKindOfClass:[FHUGCSmallVideoCell class]]) {
-        FHUGCSmallVideoCell *smallVideoCell = self.currentCell;
-        return smallVideoCell.videoImageView;
-    }
-    return nil;
-}
-
-- (CGRect)selectedSmallVideoFrame
-{
-    UIView *view = [self currentSelectSmallVideoView];
-    if (view) {
-        CGRect frame = [view convertRect:view.bounds toView:nil];
-        return frame;
-    }
-    return CGRectZero;
 }
 
 - (void)endDisplay {
@@ -879,6 +765,57 @@
 - (void)trackClientShow:(FHFeedUGCCellModel *)cellModel rank:(NSInteger)rank {
     NSMutableDictionary *dict = [self trackDict:cellModel rank:rank];
     TRACK_EVENT(@"feed_client_show", dict);
+    
+    if(cellModel.attachCardInfo){
+        [self trackCardShow:cellModel rank:rank];
+    }
+    
+    if(cellModel.cellType == FHUGCFeedListCellTypeUGCBanner || cellModel.cellType == FHUGCFeedListCellTypeUGCBanner2) {
+        NSMutableDictionary *guideDict = [NSMutableDictionary dictionary];
+        guideDict[@"origin_from"] = self.detailController.tracerDict[@"origin_from"] ;
+        guideDict[@"page_type"] = [self pageType];
+        guideDict[@"description"] = cellModel.desc;
+        guideDict[@"item_title"] = cellModel.title;
+        guideDict[@"item_id"] = cellModel.groupId;
+        guideDict[@"rank"] = @(rank);
+        TRACK_EVENT(@"banner_show", guideDict);
+    }else  if(cellModel.cellType == FHUGCFeedListCellTypeUGCEncyclopedias){
+        NSMutableDictionary *guideDict = [NSMutableDictionary dictionary];
+        guideDict[@"origin_from"] = self.detailController.tracerDict[@"origin_from"] ;
+        guideDict[@"page_type"] = [self pageType];
+        guideDict[@"card_type"] = @"encyclopedia";
+        guideDict[@"impr_id"] = cellModel.tracerDic[@"log_pb"][@"impr_id"] ?: @"be_null";;
+        guideDict[@"group_id"] = cellModel.groupId;
+        guideDict[@"rank"] = @(rank);
+        TRACK_EVENT(@"card_show", guideDict);
+    }
+}
+
+- (void)trackCardShow:(FHFeedUGCCellModel *)cellModel rank:(NSInteger)rank {
+    if(cellModel.attachCardInfo.extra && cellModel.attachCardInfo.extra.event.length > 0){
+        //是房源卡片
+        NSMutableDictionary *dict = [NSMutableDictionary dictionary];
+        dict[@"origin_from"] = cellModel.tracerDic[@"origin_from"] ? cellModel.tracerDic[@"origin_from"] : @"be_null";
+        dict[@"page_type"] = [self pageType];
+        dict[@"enter_from"] = self.enter_from.length > 0 ? self.enter_from : @"be_null";
+        dict[@"group_id"] = cellModel.attachCardInfo.extra.groupId ?: @"be_null";
+        dict[@"from_gid"] = cellModel.attachCardInfo.extra.fromGid ?: @"be_null";
+        dict[@"group_source"] = cellModel.attachCardInfo.extra.groupSource ?: @"be_null";
+        dict[@"impr_id"] = cellModel.attachCardInfo.extra.imprId ?: @"be_null";
+        dict[@"house_type"] = cellModel.attachCardInfo.extra.houseType ?: @"be_null";
+        TRACK_EVENT(cellModel.attachCardInfo.extra.event ?: @"card_show", dict);
+    }else{
+        NSMutableDictionary *dict = [NSMutableDictionary dictionary];
+        dict[@"origin_from"] = cellModel.tracerDic[@"origin_from"] ? cellModel.tracerDic[@"origin_from"] : @"be_null";
+        dict[@"page_type"] = [self pageType];
+        dict[@"enter_from"] = self.enter_from.length > 0 ? self.enter_from : @"be_null";
+        dict[@"from_gid"] = cellModel.groupId;
+        dict[@"group_source"] = @(5);
+        dict[@"impr_id"] = cellModel.tracerDic[@"log_pb"][@"impr_id"] ?: @"be_null";
+        dict[@"card_type"] = cellModel.attachCardInfo.cardType ?: @"be_null";
+        dict[@"card_id"] = cellModel.attachCardInfo.id ?: @"be_null";
+        TRACK_EVENT(@"card_show", dict);
+    }
 }
 
 - (void)trackElementShow:(NSInteger)rank {
@@ -897,6 +834,7 @@
     dict[@"page_type"] = [self pageType];
     dict[@"log_pb"] = cellModel.logPb;
     dict[@"rank"] = @(rank);
+    dict[@"category_name"] = self.categoryName;
     
     return dict;
 }
@@ -918,34 +856,38 @@
     SSImpressionParams *params = [[SSImpressionParams alloc] init];
     params.categoryID = self.categoryName;
     params.refer = self.refer;
+    SSImpressionModelType modelType = [FHUGCCellManager impressModelTypeWithCellType:cellModel.cellType];
     TTGroupModel *groupModel = [[TTGroupModel alloc] initWithGroupID:uniqueID itemID:itemID impressionID:nil aggrType:[cellModel.aggrType integerValue]];
-    [ArticleImpressionHelper recordGroupWithUniqueID:uniqueID adID:nil groupModel:groupModel status:status params:params];
+    [ArticleImpressionHelper recordItemWithUniqueID:uniqueID modelType:modelType logPb:cellModel.logPb status:status params:params];
 }
 
 #pragma mark -- SSImpressionProtocol
 
 - (void)needRerecordImpressions {
-    if (self.dataList.count == 0) {
-        return;
-    }
-    
-    SSImpressionParams *params = [[SSImpressionParams alloc] init];
-    params.refer = self.refer;
-     UITableView *tableView = self.currentTableView;
-    for (FHUGCBaseCell *cell in [tableView visibleCells]) {
-        if ([cell isKindOfClass:[FHUGCBaseCell class]]) {
-            id data = cell.currentData;
-            if ([data isKindOfClass:[FHFeedUGCCellModel class]]) {
-                FHFeedUGCCellModel *cellModel = (FHFeedUGCCellModel *)data;
-                if (self.isShowing) {
-                    [self recordGroupWithCellModel:cellModel status:SSImpressionStatusRecording];
-                }
-                else {
-                    [self recordGroupWithCellModel:cellModel status:SSImpressionStatusSuspend];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        if (self.dataList.count == 0) {
+            return;
+        }
+        
+        SSImpressionParams *params = [[SSImpressionParams alloc] init];
+        params.refer = self.refer;
+        UITableView *tableView = self.currentTableView;
+        for (FHUGCBaseCell *cell in [tableView visibleCells]) {
+            if ([cell isKindOfClass:[FHUGCBaseCell class]]) {
+                id data = cell.currentData;
+                if ([data isKindOfClass:[FHFeedUGCCellModel class]]) {
+                    FHFeedUGCCellModel *cellModel = (FHFeedUGCCellModel *)data;
+                    if (self.isShowing) {
+                        [self recordGroupWithCellModel:cellModel status:SSImpressionStatusRecording];
+                    }
+                    else {
+                        [self recordGroupWithCellModel:cellModel status:SSImpressionStatusSuspend];
+                    }
                 }
             }
         }
-    }
+    });
+    
 }
 
 #pragma mark - 埋点

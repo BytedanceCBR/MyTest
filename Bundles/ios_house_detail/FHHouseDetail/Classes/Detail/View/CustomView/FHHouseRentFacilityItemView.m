@@ -10,7 +10,7 @@
 #import <Masonry/Masonry.h>
 #import "UIFont+House.h"
 #import "UIColor+Theme.h"
-#import "BDWebImage.h"
+#import <BDWebImage/BDWebImage.h>
 @implementation FHHouseRentFacilityItemView
 
 - (instancetype)initWithStrickoutLabel:(UILabel*)label

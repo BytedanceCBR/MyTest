@@ -25,16 +25,17 @@
 #import "MJRefresh.h"
 #import "FHCommonDefines.h"
 #import "TTUIResponderHelper.h"
-#import <TTUGCEmojiParser.h>
+#import "TTUGCEmojiParser.h"
 #import "TTAccount.h"
 #import "TTAccount+Multicast.h"
 #import "TTAccountManager.h"
 #import "TTHorizontalPagingView.h"
 #import "IMManager.h"
-#import <TTThemedAlertController.h>
+#import "TTThemedAlertController.h"
 #import "FHFeedUGCCellModel.h"
-#import <TTUGCDefine.h>
-#import <UIViewController+Helper.h>
+#import "TTUGCDefine.h"
+#import <FHUGCCategoryHelper.h>
+#import "UIImage+FIconFont.h"
 
 #define kSegmentViewHeight 52
 
@@ -46,6 +47,7 @@
 @property (nonatomic, strong) FHUGCScialGroupModel *socialGroupModel;
 @property (nonatomic, assign) BOOL isViewAppear;
 @property (nonatomic, assign) BOOL isLoginSatusChangeFromGroupChat;
+@property (nonatomic, assign) BOOL isLoginSatusChangeFromPost;
 @property (nonatomic, assign) BOOL isLogin;
 @property (nonatomic, strong) TTHorizontalPagingView *pagingView;
 @property (nonatomic, strong) NSMutableArray *subVCs;
@@ -57,7 +59,7 @@
 @property (nonatomic, assign) NSInteger essenceIndex;
 @property (nonatomic, assign) BOOL isFirstEnter;
 
-@property (nonatomic, strong) FHUGCGuideView *guideView;
+//@property (nonatomic, strong) FHUGCGuideView *guideView;
 @property (nonatomic) BOOL shouldShowUGcGuide;
 @end
 
@@ -105,8 +107,8 @@
     [TTAccount addMulticastDelegate:self];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(followStateChanged:) name:kFHUGCFollowNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onGlobalFollowListLoad:) name:kFHUGCLoadFollowDataFinishedNotification object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(postThreadSuccess:) name:kTTForumPostThreadSuccessNotification object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(delPostThreadSuccess:) name:kFHUGCDelPostNotification object:nil];
+//    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(postThreadSuccess:) name:kTTForumPostThreadSuccessNotification object:nil];
+//    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(delPostThreadSuccess:) name:kFHUGCDelPostNotification object:nil];
     // 加精或取消加精成功
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(postGoodSuccess:) name:kFHUGCGoodPostNotification object:nil];
 }
@@ -177,30 +179,30 @@
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
-- (void)addUgcGuide {
-    if ([FHUGCGuideHelper shouldShowUgcDetailGuide]) {
-        [self.guideView show:self.viewController.view dismissDelayTime:0.0f completion:nil];
-        [FHUGCGuideHelper hideUgcDetailGuide];
-    }
-}
+//- (void)addUgcGuide {
+//    if ([FHUGCGuideHelper shouldShowUgcDetailGuide]) {
+//        [self.guideView show:self.viewController.view dismissDelayTime:0.0f completion:nil];
+//        [FHUGCGuideHelper hideUgcDetailGuide];
+//    }
+//}
+//
+//- (FHUGCGuideView *)guideView {
+//    if (!_guideView) {
+//        WeakSelf;
+//        _guideView = [[FHUGCGuideView alloc] initWithFrame:self.viewController.view.bounds andType:FHUGCGuideViewTypeDetail];
+//        [self.viewController.view layoutIfNeeded];
+//        CGRect rect = [self.viewController.headerView.followButton convertRect:self.viewController.headerView.followButton.bounds toView:[UIApplication sharedApplication].keyWindow];
+//        _guideView.focusBtnTopY = rect.origin.y;
+//        _guideView.clickBlock = ^{
+//            [wself hideGuideView];
+//        };
+//    }
+//    return _guideView;
+//}
 
-- (FHUGCGuideView *)guideView {
-    if (!_guideView) {
-        WeakSelf;
-        _guideView = [[FHUGCGuideView alloc] initWithFrame:self.viewController.view.bounds andType:FHUGCGuideViewTypeDetail];
-        [self.viewController.view layoutIfNeeded];
-        CGRect rect = [self.viewController.headerView.followButton convertRect:self.viewController.headerView.followButton.bounds toView:self.viewController.view];
-        _guideView.focusBtnTopY = rect.origin.y;
-        _guideView.clickBlock = ^{
-            [wself hideGuideView];
-        };
-    }
-    return _guideView;
-}
-
-- (void)hideGuideView {
-    [self.guideView hide];
-}
+//- (void)hideGuideView {
+//    [self.guideView hide];
+//}
 
 - (void)viewWillAppear {
     [self.feedListController viewWillAppear];
@@ -227,6 +229,7 @@
 - (void)viewWillDisappear {
     [self.feedListController viewWillDisappear];
     self.isViewAppear = NO;
+    [[FHUGCConfig sharedInstance] updateSocialGroupDataWith:self.data];
 }
 
 - (void)endRefreshing {
@@ -255,7 +258,7 @@
         return;
     }
     WeakSelf;
-    [FHHouseUGCAPI requestCommunityDetail:self.viewController.communityId class:FHUGCScialGroupModel.class completion:^(id <FHBaseModelProtocol> model, NSError *error) {
+    [FHHouseUGCAPI requestCommunityDetail:self.viewController.communityId tabName:self.viewController.tabName class:FHUGCScialGroupModel.class completion:^(id <FHBaseModelProtocol> model, NSError *error) {
         StrongSelf;
         
         [_viewController tt_endUpdataData];
@@ -268,7 +271,8 @@
         }
         
         // 根据basicInfo接口成功失败决定是否显示群聊入口按钮
-        self.viewController.groupChatBtn.hidden = (error != nil);
+        BOOL isHidden = (error != nil);
+        self.viewController.groupChatBtn.alpha = isHidden ? 0 : 1;
         
         if (model) {
             FHUGCScialGroupModel *responseModel = (FHUGCScialGroupModel *)model;
@@ -296,11 +300,24 @@
                     }
                     self.isLoginSatusChangeFromGroupChat = NO;
                 }
+                
+                if (self.isLoginSatusChangeFromPost) {
+                    if([self.viewController isCurrentVisible]){
+                        [self gotoPostVC];
+                    }
+                    self.isLoginSatusChangeFromPost = NO;
+                }
 
                 if (refreshFeed) {
                     [self.feedListController startLoadData:YES];
                 }
             }
+            self.isLoginSatusChangeFromGroupChat = NO;
+            self.isLoginSatusChangeFromPost = NO;
+            [self updateNavBarWithAlpha:self.viewController.customNavBarView.bgView.alpha];
+        }else{
+            self.isLoginSatusChangeFromGroupChat = NO;
+            self.isLoginSatusChangeFromPost = NO;
         }
     }];
 }
@@ -346,6 +363,9 @@
     NSMutableDictionary *tracerDict = @{}.mutableCopy;
     tracerDict[UT_ENTER_FROM] = self.tracerDict[UT_PAGE_TYPE]?:UT_BE_NULL;
     dict[TRACER_KEY] = tracerDict;
+    dict[@"select_group_id"] = self.socialGroupModel.data.socialGroupId;
+    dict[@"select_group_name"] = self.socialGroupModel.data.socialGroupName;
+    dict[@"select_group_followed"] = @(self.socialGroupModel.data.hasFollow.boolValue);
     TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
     [[TTRoute sharedRoute] openURLByPresentViewController:components.URL userInfo:userInfo];
 }
@@ -386,6 +406,7 @@
         }
     }else{
         [titles addObject:@"全部"];
+        self.viewController.segmentView.hidden = YES;
     }
     self.selectedIndex = selectedIndex;
     self.viewController.segmentView.selectedIndex = selectedIndex;
@@ -421,7 +442,7 @@
     feedListController.scrollViewDelegate = self;
     feedListController.listType = FHCommunityFeedListTypePostDetail;
     feedListController.forumId = self.viewController.communityId;
-    feedListController.hidePublishBtn = YES;
+    feedListController.tracerDict = self.viewController.tracerDict;
     feedListController.tabName = tabName;
     feedListController.isResetStatusBar = NO;
     //错误页高度
@@ -502,20 +523,27 @@
         
         [alertVC addActionWithTitle:@"确认" actionType:TTThemedAlertActionTypeNormal actionBlock:^{
             StrongSelf;
-            if ([TTReachability isNetworkConnected]) {
-                [self gotoGroupChatVC:@"-1" isCreate:NO autoJoin:YES];
-                [[FHUGCConfig sharedInstance] followUGCBy:self.viewController.communityId isFollow:YES completion:^(BOOL isSuccess) {
-                    
-                }];
-            } else {
-                [[ToastManager manager] showToast:@"网络异常"];
-            }
+            [self joinAndGotoGroupChatVC];
         }];
         
         UIViewController *topVC = [TTUIResponderHelper topmostViewController];
         if (topVC) {
             [alertVC showFrom:topVC animated:YES];
         }
+    }
+}
+// 关注圈子并进入群聊
+- (void)joinAndGotoGroupChatVC {
+    if ([TTReachability isNetworkConnected]) {
+        WeakSelf;
+        [[FHUGCConfig sharedInstance] followUGCBy:self.viewController.communityId isFollow:YES completion:^(BOOL isSuccess) {
+            StrongSelf;
+            if (isSuccess) {
+                [self gotoGroupChatVC:@"-1" isCreate:NO autoJoin:YES];
+            }
+        }];
+    } else {
+        [[ToastManager manager] showToast:@"网络异常"];
     }
 }
 
@@ -569,7 +597,26 @@
 - (void)gotoLogin:(FHUGCLoginFrom)from {
     NSMutableDictionary *params = [NSMutableDictionary dictionary];
     [params setObject:@"community_group_detail" forKey:@"enter_from"];
-    [params setObject:@"feed_like" forKey:@"enter_type"];
+    
+    NSString *enter_type = UT_BE_NULL;
+    switch (from) {
+        case FHUGCLoginFrom_POST:
+            enter_type = @"click_publisher_moments";
+            break;
+        case FHUGCLoginFrom_GROUPCHAT:
+            enter_type = @"ugc_member_talk";
+            break;
+        case FHUGCLoginFrom_VOTE:
+            enter_type = @"click_publisher_vote";
+            break;
+        case FHUGCLoginFrom_WENDA:
+            enter_type = @"click_publisher_question";
+            break;
+        default:
+            break;
+    }
+    [params setObject:enter_type forKey:@"enter_type"];
+    
     // 登录成功之后不自己Pop，先进行页面跳转逻辑，再pop
     [params setObject:@(YES) forKey:@"need_pop_vc"];
     params[@"from_ugc"] = @(YES);
@@ -580,31 +627,30 @@
             // 登录成功
             if ([TTAccountManager isLogin]) {
                 if(from == FHUGCLoginFrom_GROUPCHAT) {
-                    self.viewController.groupChatBtn.hidden = YES;
+                    self.viewController.groupChatBtn.alpha = 0;
                     [self onLoginIn];
                 }
                 else {
-                    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.6 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                        switch(from) {
-                            case FHUGCLoginFrom_POST:
-                            {
-                                [self goPostDetail];
+                    if(from == FHUGCLoginFrom_POST){
+                        self.isLoginSatusChangeFromPost = YES;
+                    }else{
+                        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.6 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                            switch(from) {
+                                case FHUGCLoginFrom_VOTE:
+                                {
+                                    [self gotoVoteVC];
+                                }
+                                    break;
+                                case FHUGCLoginFrom_WENDA:
+                                {
+                                    [self gotoWendaVC];
+                                }
+                                    break;
+                                default:
+                                    break;
                             }
-                                break;
-                            case FHUGCLoginFrom_VOTE:
-                            {
-                                [self gotoVoteVC];
-                            }
-                                break;
-                            case FHUGCLoginFrom_WENDA:
-                            {
-                                [self gotoWendaVC];
-                            }
-                                break;
-                            default:
-                                break;
-                        }
-                    });
+                        });
+                    }
                 }
             }
         }
@@ -686,29 +732,35 @@
     if (!self.isViewAppear) {
         return;
     }
+    UIImage *whiteBackArrowImage = ICON_FONT_IMG(24, @"\U0000e68a", [UIColor whiteColor]);
+    UIImage *blackBackArrowImage = ICON_FONT_IMG(24, @"\U0000e68a", [UIColor themeGray1]);
     alpha = fminf(fmaxf(0.0f, alpha), 1.0f);
     if (alpha <= 0.1f) {
         [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
-        [self.viewController.customNavBarView.leftBtn setBackgroundImage:[UIImage imageNamed:@"icon-return-white"] forState:UIControlStateNormal];
-        [self.viewController.customNavBarView.leftBtn setBackgroundImage:[UIImage imageNamed:@"icon-return-white"] forState:UIControlStateHighlighted];
+        [self.viewController.customNavBarView.leftBtn setBackgroundImage:whiteBackArrowImage forState:UIControlStateNormal];
+        [self.viewController.customNavBarView.leftBtn setBackgroundImage:whiteBackArrowImage forState:UIControlStateHighlighted];
         self.viewController.titleContainer.hidden = YES;
         self.viewController.rightBtn.hidden = YES;
         self.shareButton.hidden = NO;
     } else if (alpha > 0.1f && alpha < 0.9f) {
         [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault];
         self.viewController.customNavBarView.title.textColor = [UIColor themeGray1];
-        [self.viewController.customNavBarView.leftBtn setBackgroundImage:[UIImage imageNamed:@"icon-return"] forState:UIControlStateNormal];
-        [self.viewController.customNavBarView.leftBtn setBackgroundImage:[UIImage imageNamed:@"icon-return"] forState:UIControlStateHighlighted];
+        [self.viewController.customNavBarView.leftBtn setBackgroundImage:blackBackArrowImage forState:UIControlStateNormal];
+        [self.viewController.customNavBarView.leftBtn setBackgroundImage:blackBackArrowImage forState:UIControlStateHighlighted];
         self.viewController.titleContainer.hidden = YES;
         self.viewController.rightBtn.hidden = YES;
         self.shareButton.hidden = NO;
     } else {
         [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault];
-        [self.viewController.customNavBarView.leftBtn setBackgroundImage:[UIImage imageNamed:@"icon-return"] forState:UIControlStateNormal];
-        [self.viewController.customNavBarView.leftBtn setBackgroundImage:[UIImage imageNamed:@"icon-return"] forState:UIControlStateHighlighted];
+        [self.viewController.customNavBarView.leftBtn setBackgroundImage:blackBackArrowImage forState:UIControlStateNormal];
+        [self.viewController.customNavBarView.leftBtn setBackgroundImage:blackBackArrowImage forState:UIControlStateHighlighted];
         self.viewController.titleContainer.hidden = NO;
         self.viewController.rightBtn.hidden = NO;
         self.shareButton.hidden = YES;
+    }
+    if(self.viewController.emptyView.hidden == NO) {
+        [self.viewController.customNavBarView.leftBtn setBackgroundImage:blackBackArrowImage forState:UIControlStateNormal];
+        [self.viewController.customNavBarView.leftBtn setBackgroundImage:blackBackArrowImage forState:UIControlStateHighlighted];
     }
     [self.viewController.customNavBarView refreshAlpha:alpha];
 
@@ -735,6 +787,7 @@
 -(void)updateFollowStatus:(BOOL)followed{
     [[FHUGCConfig sharedInstance] updateScialGroupDataModel:self.data byFollowed:followed];
     [self updateUIWithData:self.data];
+    [[FHUGCConfig sharedInstance] updateSocialGroupDataWith:self.data];
 }
 
 // 未登录状态下进入圈子详情页，点击发帖，这时候跳转登录，如果登录用户已经关注这个圈子，收取通知来更新状态
@@ -902,7 +955,7 @@
             param[UT_ENTER_FROM] = self.tracerDict[UT_ENTER_FROM];
             TRACK_EVENT(@"click_community_notice_more", param);
         };
-        hasDetailBtn = [self.viewController.headerView isPublicationsContentLabelLargerThanTwoLineWithoutDetailButtonShow];
+        hasDetailBtn = ([self.viewController.headerView publicationsContentLabelHeightCompareWithTwoLineTextHeight] == NSOrderedDescending);
     }
     
     [self.viewController.headerView updatePublicationsInfo: isShowPublications
@@ -924,7 +977,7 @@
     self.viewController.emptyView.hidden = YES;
     [self.viewController.headerView.avatar bd_setImageWithURL:[NSURL URLWithString:isEmptyString(data.avatar) ? @"" : data.avatar]];
     self.viewController.headerView.nameLabel.text = isEmptyString(data.socialGroupName) ? @"" : data.socialGroupName;
-    NSString *subtitle = data.countText;
+    NSString *subtitle = data.contentText;
     self.viewController.headerView.subtitleLabel.text = isEmptyString(subtitle) ? @"" : subtitle;
     NSInteger followerCount = [data.followerCount integerValue];
     if (followerCount <= 0) {
@@ -984,7 +1037,7 @@
 
     //仅仅在未关注时显示引导页
     if (![data.hasFollow boolValue] && self.shouldShowUGcGuide) {
-        [self addUgcGuide];
+//        [self addUgcGuide];
     }
     self.shouldShowUGcGuide = NO;
     [self.pagingView reloadHeaderViewHeight:self.viewController.headerView.height];
@@ -1047,8 +1100,9 @@
 
 - (void)addGoDetailLog {
     NSMutableDictionary *params = [NSMutableDictionary dictionary];
+    params[@"origin_from"] = self.tracerDict[@"origin_from"] ?: @"be_null";
     params[@"enter_from"] = self.tracerDict[@"enter_from"] ?: @"be_null";
-    params[@"enter_type"] = self.tracerDict[@"enter_type"] ?: @"be_null";
+    params[@"enter_type"] = self.tracerDict[@"enter_type"] ?: @"click";
     params[@"log_pb"] = self.tracerDict[@"log_pb"] ?: @"be_null";
     params[@"rank"] = self.tracerDict[@"rank"] ?: @"be_null";
     params[@"page_type"] = self.tracerDict[@"page_type"] ?: @"be_null";
@@ -1063,8 +1117,9 @@
         return;
     }
     NSMutableDictionary *params = [NSMutableDictionary dictionary];
+    params[@"origin_from"] = self.tracerDict[@"origin_from"] ?: @"be_null";
     params[@"enter_from"] = self.tracerDict[@"enter_from"] ?: @"be_null";
-    params[@"enter_type"] = self.tracerDict[@"enter_type"] ?: @"be_null";
+    params[@"enter_type"] = self.tracerDict[@"enter_type"] ?: @"click";
     params[@"log_pb"] = self.tracerDict[@"log_pb"] ?: @"be_null";
     params[@"rank"] = self.tracerDict[@"rank"] ?: @"be_null";
     params[@"page_type"] = self.tracerDict[@"page_type"] ?: @"be_null";

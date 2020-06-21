@@ -22,7 +22,7 @@
 #import <TTUGCFoundation/TTRichSpanText+Comment.h>
 #import <TTKitchen/TTKitchen.h> 
 #import <TTKitchenExtension/TTKitchenExtension.h>
-#import <TTUGCAttributedLabel.h>
+#import "TTUGCAttributedLabel.h"
 #import <TTShare/TTShareManager.h>
 #import <TTShare/TTWechatTimelineContentItem.h>
 #import <TTShare/TTWechatContentItem.h>
@@ -355,6 +355,7 @@
     replyManager.element_from = self.element_from;
     replyManager.ansid = self.ansid;
     replyManager.qid = self.qid;
+    replyManager.extraDic = self.extraDic;
     
     replyManager.serviceID = self.pageState.serviceID;
     TTCommentWriteView *replyView = [[TTCommentWriteView alloc] initWithCommentManager:replyManager];

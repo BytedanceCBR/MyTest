@@ -1,5 +1,5 @@
 //GENERATED CODE , DON'T EDIT
-#import <JSONModel.h>
+#import "JSONModel.h"
 NS_ASSUME_NONNULL_BEGIN
 @protocol FHUGCConfigDataLeadSuggestModel<NSObject>
 @end
@@ -44,6 +44,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic, strong, nullable) NSArray <FHUGCConfigDataLeadSuggestModel> *leadSuggest;
 @property(nonatomic, strong, nullable) NSArray <FHUGCConfigDataPermissionModel> *permission;
 @property(nonatomic, strong, nullable) NSArray <FHUGCConfigDataDistrictModel> *ugcDistrict;
+@property(nonatomic, copy, nullable) NSString *userAuth;
 @end
 
 @interface FHUGCConfigModel : JSONModel

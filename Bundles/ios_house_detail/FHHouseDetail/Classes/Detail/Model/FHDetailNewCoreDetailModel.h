@@ -1,18 +1,19 @@
 //GENERATED CODE , DON'T EDIT
-#import <JSONModel.h>
-NS_ASSUME_NONNULL_BEGIN
-@interface FHDetailNewCoreDetailDataUserStatusModel : JSONModel 
+#import "JSONModel.h"
+#import "FHDetailBaseModel.h"
 
-@property (nonatomic, copy , nullable) NSString *courtOpenSubStatus;
-@property (nonatomic, copy , nullable) NSString *pricingSubStatus;
-@property (nonatomic, copy , nullable) NSString *courtSubStatus;
-@end
+NS_ASSUME_NONNULL_BEGIN
+
+
+@class FHDetailContactModel,FHFillFormAgencyListItemModel,FHDetailNewUserStatusModel, FHImageModel;
 
 @protocol FHDetailNewCoreDetailDataPermitListModel<NSObject>
 @end
 
-@interface FHDetailNewCoreDetailDataPermitListModel : JSONModel 
 
+
+@interface FHDetailNewCoreDetailDataPermitListModel : JSONModel 
+@property (nonatomic, strong , nullable) FHImageModel *image ;
 @property (nonatomic, copy , nullable) NSString *permitDate;
 @property (nonatomic, copy , nullable) NSString *bindBuilding;
 @property (nonatomic, copy , nullable) NSString *permit;
@@ -35,12 +36,17 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FHDetailNewCoreDetailDataModel : JSONModel 
 
+@property (nonatomic, copy , nullable) NSString *buyFieldTime;
+@property (nonatomic, copy , nullable) NSString *plannedBuilding;
+@property (nonatomic, copy , nullable) NSString *plannedFamily;
+@property (nonatomic, copy , nullable) NSString *areaSquareMeter;
+@property (nonatomic, copy , nullable) NSString *buildingSquareMeter;
 @property (nonatomic, copy , nullable) NSString *pricingPerSqm;
 @property (nonatomic, copy , nullable) NSString *powerWaterGasDesc;
 @property (nonatomic, copy , nullable) NSString *decoration;
 @property (nonatomic, copy , nullable) NSString *propertyType;
 @property (nonatomic, copy , nullable) NSString *propertyName;
-@property (nonatomic, strong , nullable) FHDetailNewCoreDetailDataUserStatusModel *userStatus ;  
+
 @property (nonatomic, copy , nullable) NSString *saleAddress;
 @property (nonatomic, copy , nullable) NSString *saleStatus;
 @property (nonatomic, copy , nullable) NSString *developerName;
@@ -60,6 +66,13 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong , nullable) FHDetailNewCoreDetailDataDisclaimerModel *disclaimer ;  
 @property (nonatomic, copy , nullable) NSString *deliveryDate;
 @property (nonatomic, copy , nullable) NSString *propertyPrice;
+
+@property (nonatomic, strong , nullable) FHDetailContactModel *highlightedRealtor;
+@property (nonatomic, strong , nullable) NSArray<FHFillFormAgencyListItemModel> *chooseAgencyList;
+@property (nonatomic, strong , nullable) FHDetailContactModel *contact ;
+@property (nonatomic, strong , nullable) FHDetailNewUserStatusModel *userStatus;
+@property (nonatomic, strong , nullable) FHClueAssociateInfoModel *highlightedRealtorAssociateInfo;
+
 @end
 
 @interface FHDetailNewCoreDetailModel : JSONModel 

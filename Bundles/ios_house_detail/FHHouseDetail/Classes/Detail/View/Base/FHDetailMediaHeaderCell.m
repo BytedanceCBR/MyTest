@@ -14,8 +14,8 @@
 #import "UIViewController+NavigationBarStyle.h"
 #import "FHMultiMediaVideoCell.h"
 #import <FHHouseBase/FHUserTrackerDefine.h>
-#import <NSString+URLEncoding.h>
-#import <FHUtils.h>
+#import "NSString+URLEncoding.h"
+#import "FHUtils.h"
 #import "FHMultiMediaModel.h"
 
 @interface FHDetailMediaHeaderCell ()<FHMultiMediaScrollViewDelegate,FHDetailScrollViewDidScrollProtocol,FHDetailVCViewLifeCycleProtocol>
@@ -60,7 +60,7 @@
 }
 
 + (CGFloat)cellHeight {
-    CGFloat photoCellHeight = 300.0; // 默认300
+    CGFloat photoCellHeight = 281.0;
     photoCellHeight = round([UIScreen mainScreen].bounds.size.width / 375.0f * photoCellHeight + 0.5);
     return photoCellHeight;
 }
@@ -142,8 +142,8 @@
         [itemArray addObject:vedioModel];
     }
     
-    for (FHDetailOldDataHouseImageDictListModel *listModel in houseImageDict) {
-        if (listModel.houseImageTypeName.length > 0) {
+    for (FHHouseDetailImageListDataModel *listModel in houseImageDict) {
+//        if (listModel.houseImageTypeName.length > 0) {
             NSString *groupType = nil;
             if(listModel.houseImageType == FHDetailHouseImageTypeApartment){
                 groupType = @"户型";
@@ -170,7 +170,7 @@
                 }
                 index++;
             }
-        }
+//        }
     }
     
     self.model.medias = itemArray;
@@ -243,11 +243,6 @@
     self.baseViewModel.detailController.ttNeedIgnoreZoomAnimation = YES;
     FHDetailPictureViewController *vc = [[FHDetailPictureViewController alloc] init];
     vc.topVC = self.baseViewModel.detailController;
-    
-//    if (FHVideoModel.cellhou == FHCellt) {
-//        <#statements#>
-//    }
-    
 
     // 获取图片需要的房源信息数据
     if ([self.baseViewModel.detailData isKindOfClass:[FHDetailOldModel class]]) {
@@ -269,7 +264,7 @@
     
     //如果是小区，移除按钮
     if (vedioModel.cellHouseType == FHMultiMediaCellHouseNeiborhood) {
-        vc.isShowAllBtns = NO;
+        vc.isShowBottomBar = NO;
     }
     
     // 分享

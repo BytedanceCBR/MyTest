@@ -8,8 +8,8 @@
 #import "TTVNetworkMonitorReducer.h"
 #import "TTVPlayerState.h"
 #import "TTVPlayerAction.h"
-#import <NetworkUtilities.h>
-#import <TTReachability.h>
+#import "NetworkUtilities.h"
+#import "TTReachability.h"
 #import "TTVPlayer+Engine.h"
 
 /// 只出现一次，所以需要全局标志
@@ -104,7 +104,7 @@ BOOL _ignoreInterrupt;
 - (void)addNotification {
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(connectionChanged:)
-                                                 name:kReachabilityChangedNotification
+                                                 name:TTReachabilityChangedNotification
                                                object:nil];
     TTNetworkStartNotifier();
 }

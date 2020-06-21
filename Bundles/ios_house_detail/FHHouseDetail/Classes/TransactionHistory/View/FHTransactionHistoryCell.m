@@ -8,7 +8,7 @@
 #import "FHTransactionHistoryCell.h"
 #import "UIColor+Theme.h"
 #import "UIFont+House.h"
-#import <Masonry.h>
+#import "Masonry.h"
 #import "TTDeviceHelper.h"
 
 @interface FHTransactionHistoryCell()
@@ -50,7 +50,7 @@
     self.descLabel = [self LabelWithFont:[UIFont themeFontRegular:12] textColor:[UIColor themeGray3]];
     [self addSubview:_descLabel];
     
-    self.totalPriceLabel = [self LabelWithFont:[UIFont themeFontSemibold:16] textColor:[UIColor themeRed1]];
+    self.totalPriceLabel = [self LabelWithFont:[UIFont themeFontSemibold:16] textColor:[UIColor themeOrange1]];
     _totalPriceLabel.textAlignment = NSTextAlignmentRight;
     [self addSubview:_totalPriceLabel];
     

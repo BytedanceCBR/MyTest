@@ -9,10 +9,10 @@
 #import "FHEnvContext.h"
 #import "TTTabBarManager.h"
 #import "TTTabBarItem.h"
-#import <FHHomeConfigManager.h>
+#import "FHHomeConfigManager.h"
 #import "FHEnvContext.h"
 #import "FHLocManager.h"
-#import <ToastManager.h>
+#import "ToastManager.h"
 #import "ArticleURLSetting.h"
 #import "TTArticleCategoryManager.h"
 #import "TTCategoryBadgeNumberManager.h"
@@ -48,7 +48,7 @@
 
 -(NSString *)currentProvince
 {
-    NSString *province = [FHLocManager sharedInstance].currentReGeocode.province;
+    NSString *province = [FHLocManager sharedInstance].currentReGeocode.administrativeArea;
     return province;
 }
 

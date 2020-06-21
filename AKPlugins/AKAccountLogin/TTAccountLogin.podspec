@@ -38,15 +38,6 @@ Pod::Spec.new do |s|
 
 
   # 全局依赖
-  s.dependency "JSONModel"
-  s.dependency "TTBaseLib"
-  s.dependency "TTUIWidget"
-  s.dependency "TTReachability"
-  s.dependency "TTMonitor"
-  s.dependency "TTTracker"
-  s.dependency "TTPlatformBaseLib/TTTrackerWrapper"
-  s.dependency "TTAccountSDK" 
-  # s.dependency "TTNetworkManager"
 
 
 

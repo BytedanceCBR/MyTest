@@ -7,61 +7,53 @@
 
 #import <UIKit/UIKit.h>
 #import "FHUGCVotePublishModel.h"
+#import "TTUGCTextView.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
-#define PADDING 20
-#define CELL_HEIGHT 44
+#define PADDING            20
+#define CELL_HEIGHT        44
+#define TITLE_VIEW_HEIGHT  70
+#define DESC_VIEW_HEIGHT   65
+#define OPTION_CELL_HEIGHT 62
 
-@class FHUGCVotePublishTitleCell;
-@class FHUGCVotePublishDescriptionCell;
+@class FHUGCVotePublishScopeView;
+@class FHUGCVotePublishVoteTypeView;
+@class FHUGCVotePublishDatePickView;
+@class FHUGCVotePublishTitleView;
+@class FHUGCVotePublishDescriptionView;
 @class FHUGCVotePublishOptionCell;
-@class FHUGCVotePublishVoteTypeCell;
-@class FHUGCVotePublishDatePickCell;
 
-@protocol FHUGCVotePublishBaseCellDelegate <NSObject>
-
+@protocol FHUGCVotePublishBaseViewDelegate <NSObject>
 @optional
-- (void)voteTitleCell:(FHUGCVotePublishTitleCell *)titleCell didInputText: (NSString *)text;
-- (void)descriptionCell:(FHUGCVotePublishDescriptionCell *)descriptionCell didInputText: (NSString *)text;
-- (void)optionCell:(FHUGCVotePublishOptionCell *)optionCell didInputText: (NSString*)text;
-- (void)deleteOptionCell: (FHUGCVotePublishOptionCell *)optionCell;
+- (void)voteScopeView:(FHUGCVotePublishScopeView *)scopeView tapAction:(UITapGestureRecognizer *)tap;
+- (void)voteTypeView:(FHUGCVotePublishVoteTypeView *)scopeView tapAction:(UITapGestureRecognizer *)tap;
+- (void)voteDatePickView:(FHUGCVotePublishDatePickView *)scopeView tapAction:(UITapGestureRecognizer *)tap;
+
+- (void)voteTitleView:(FHUGCVotePublishTitleView *)titleView didInputText: (NSString *)text;
+- (void)voteTitleView:(FHUGCVotePublishTitleView *)titleView didChangeHeight: (CGFloat)newHeight;
+- (void)voteTitleViewDidBeginEditing:(FHUGCVotePublishTitleView *)titleView;
+
+- (void)descriptionView:(FHUGCVotePublishDescriptionView *)descriptionView didInputText: (NSString *)text;
+- (void)descriptionView:(FHUGCVotePublishDescriptionView *)descriptionView didChangeHeight: (CGFloat)newHeight;
+- (void)descriptionViewDidBeginEditing:(FHUGCVotePublishDescriptionView *)descriptionView;
 @end
 
-@interface FHUGCVotePublishTextView: UITextView
-@property (nonatomic, copy)NSString *placeholder;
+@interface FHUGCVotePublishBaseView: UIView
+
+@property (nonatomic, weak) id<FHUGCVotePublishBaseViewDelegate> delegate;
+
+@property (nonatomic, assign) BOOL hideBottomLine;
+
 @end
 
-@interface FHUGCVotePublishBaseCell: UITableViewCell
-
-@property (nonatomic, weak) id<FHUGCVotePublishBaseCellDelegate> delegate;
-
-+ (NSString *)reusedIdentifier;
-@end
-
-@interface FHUGCVotePublishCityCell: FHUGCVotePublishBaseCell
+@interface FHUGCVotePublishScopeView: FHUGCVotePublishBaseView
 @property (nonatomic, strong) UILabel *titleLabel;
 @property (nonatomic, strong) UILabel *cityLabel;
 @property (nonatomic, strong) UIImageView *rightArrow;
 @end
 
-@interface FHUGCVotePublishTitleCell: FHUGCVotePublishBaseCell<UITextViewDelegate>
-@property (nonatomic, strong) UITextView  *contentTextView;
-@property (nonatomic, strong) UITextField *contentTextField;
-@end
-
-@interface FHUGCVotePublishDescriptionCell: FHUGCVotePublishBaseCell <UITextViewDelegate>
-@property (nonatomic, strong) UITextField *contentTextField;
-@end
-
-@interface FHUGCVotePublishOptionCell: FHUGCVotePublishBaseCell
-@property (nonatomic, strong) UIButton *deleteButton;
-@property (nonatomic, strong) UITextField *optionTextField;
-
-- (void)updateWithOption:(FHUGCVotePublishOption *)option;
-@end
-
-@interface FHUGCVotePublishVoteTypeCell: FHUGCVotePublishBaseCell<UIPickerViewDelegate, UIPickerViewDataSource>
+@interface FHUGCVotePublishVoteTypeView: FHUGCVotePublishBaseView<UIPickerViewDelegate, UIPickerViewDataSource>
 @property (nonatomic, strong) UIPickerView *pickerView;
 @property (nonatomic, strong) UILabel *titleLabel;
 @property (nonatomic, strong) UILabel *typeLabel;
@@ -71,7 +63,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)updateWithVoteType:(VoteType) type;
 @end
 
-@interface FHUGCVotePublishDatePickCell: FHUGCVotePublishBaseCell
+@interface FHUGCVotePublishDatePickView: FHUGCVotePublishBaseView
 @property (nonatomic, strong) UILabel *titleLabel;
 @property (nonatomic, strong) UILabel *dateLabel;
 @property (nonatomic, strong, readonly)NSDateFormatter *dateFormatter;
@@ -80,4 +72,28 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)toggleDatePicker;
 @end
 
+@interface FHUGCVotePublishTitleView: FHUGCVotePublishBaseView<UITextViewDelegate>
+@property (nonatomic, strong) TTUGCTextView  *contentTextView;
+@end
+
+@interface FHUGCVotePublishDescriptionView: FHUGCVotePublishBaseView <UITextViewDelegate>
+@property (nonatomic, strong) TTUGCTextView  *contentTextView;
+@end
+
+
+@protocol FHUGCVotePublishOptionCellDelegate <NSObject>
+- (void)optionCell:(FHUGCVotePublishOptionCell *)optionCell didInputText: (NSString*)text;
+- (void)deleteOptionCell: (FHUGCVotePublishOptionCell *)optionCell;
+- (void)optionCellDidBeginEditing:(FHUGCVotePublishOptionCell *)optionCell;
+@end
+
+@interface FHUGCVotePublishOptionCell: UITableViewCell<FHUGCVotePublishOptionCellDelegate>
+@property (nonatomic, weak  ) id<FHUGCVotePublishOptionCellDelegate> delegate;
+@property (nonatomic, strong) UIButton *deleteButton;
+@property (nonatomic, strong) UITextField *optionTextField;
+
++(NSString *)reusedIdentifier;
+
+- (void)updateWithOption:(FHUGCVotePublishOption *)option;
+@end
 NS_ASSUME_NONNULL_END

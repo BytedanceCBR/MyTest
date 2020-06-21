@@ -16,7 +16,7 @@
 
 #import "ArticleFriend.h"
 #import "FriendDataManager.h"
-#import <TTAccountBusiness.h>
+#import "TTAccountBusiness.h"
 #import "NetworkUtilities.h"
 #import "SSCommonLogic.h"
 

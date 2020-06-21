@@ -14,7 +14,6 @@
 #import "SSURLTracker.h"
 #import "TTVCommentModelProtocol.h"
 #import "TTRelevantDurationTracker.h"
-//#import "Bubble-Swift.h"
 #import "FHEnvContext.h"
 #import <TTPlatformBaseLib/TTTrackerWrapper.h>
 
@@ -252,7 +251,7 @@ static NSInteger const vaildStayPageMaxInterval = 7200;
     }
 
     if (self.viewIsAppear) {
-        [TTTracker eventV3:@"stay_page" params:dict];
+        [BDTrackerProtocol eventV3:@"stay_page" params:dict];
 
 //        [TTTrackerWrapper category:@"umeng"
 //                      event:@"stay_page"
@@ -464,7 +463,7 @@ static NSInteger const vaildStayPageMaxInterval = 7200;
             [dic setValue:@"detail" forKey:@"position"];
             [dic setValue:@(round(self.commentDetailShowTimeTotal)).stringValue forKey:@"stay_time"];
             
-            [TTTracker eventV3:@"comment_close" params:dic];
+            [BDTrackerProtocol eventV3:@"comment_close" params:dic];
         }
     }
 }

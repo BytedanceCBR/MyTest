@@ -235,9 +235,71 @@
     }
 }
 
-+(NSAttributedString *)tagsStringSmallImageWithTagList:(NSArray<FHHouseTagsModel *> *)tagList
++(NSAttributedString *)newTagsStringWithTagList:(NSArray<FHHouseTagsModel *> *)tagList maxWidth:(CGFloat)maxWidth
+
 {
     NSMutableAttributedString *text = [[NSMutableAttributedString alloc]init];
+    if (maxWidth <= 0) {
+        return text;
+    }
+    if (tagList.count < 1) {
+        return text;
+    }
+    FHHouseTagsModel *element = tagList[0];
+    NSMutableAttributedString *resultAttr = [[NSMutableAttributedString alloc]init];
+
+    if (element.content && element.textColor && element.backgroundColor) {
+        if (element.content.length * 10 > maxWidth) {
+            NSArray *paramsArrary = [element.content componentsSeparatedByString:@" · "];
+            NSMutableString *tempString = [NSMutableString string];
+
+            NSInteger maxCount = 0;
+            for (NSInteger i = 0; i < paramsArrary.count; i++) {
+                NSString *str = paramsArrary[i];
+                UIColor *textColor = [UIColor colorWithHexString:element.textColor] ? : [UIColor themeRed4];
+                UIColor *backgroundColor = [UIColor colorWithHexString:element.backgroundColor] ? : [UIColor whiteColor];
+                if (i == 0) {
+                   [tempString appendString:str];
+                }else {
+                    [tempString appendString:[NSString stringWithFormat:@" · %@",str]];
+                }
+                NSMutableAttributedString *attr = [[NSMutableAttributedString alloc]init];
+                if (tempString.length > 0) {
+                    attr = [[NSMutableAttributedString alloc]initWithString:tempString];
+                }
+                attr.yy_font = [UIFont themeFontRegular:12];
+                attr.yy_color = textColor;
+                YYTextLayout *tagLayout = [YYTextLayout layoutWithContainerSize:CGSizeMake(maxWidth, CGFLOAT_MAX) text:attr];
+                CGFloat lineHeight = tagLayout.textBoundingSize.height;
+                if (lineHeight > 20) {
+                    maxCount = i;
+                    //如果只有一个标签且长度过长，仍然展示这个标签，结尾用...截断
+                    if (i == 0 && paramsArrary.count == 1) {
+                        resultAttr = attr;
+                    }
+                    break;
+                }
+                resultAttr = attr;
+            }
+        }else {
+            NSMutableAttributedString *attr = [[NSMutableAttributedString alloc]initWithString:element.content];
+            UIColor *textColor = [UIColor colorWithHexString:element.textColor] ? : [UIColor themeRed4];
+            attr.yy_font = [UIFont themeFontRegular:12];
+            attr.yy_color = textColor;
+            resultAttr = attr;
+        }
+    }
+    [text appendAttributedString:resultAttr];
+    return text;
+}
+
++(NSAttributedString *)tagsStringSmallImageWithTagList:(NSArray<FHHouseTagsModel *> *)tagList
+{
+    CGFloat maxWidth = [UIScreen mainScreen].bounds.size.width  - 60 - 72 - 90;
+    NSMutableAttributedString *text = [[NSMutableAttributedString alloc]init];
+    if (maxWidth <= 0) {
+        return text;
+    }
     if (tagList.count > 0) {
         
         NSMutableArray *attrTexts = [NSMutableArray array];
@@ -248,22 +310,27 @@
             if (element.content && element.textColor && element.backgroundColor) {
                 
                 NSMutableString *reulstString = element.content;
-                if (reulstString.length * 10 > ([UIScreen mainScreen].bounds.size.width  - 40 - 72 - 90)) {
-                    
-                    NSArray *paramsArrary = [element.content componentsSeparatedByString:@" · "];
-                    
-                    for (NSInteger i = 0; i < paramsArrary.count; i++) {
-                        reulstString = [self cutStringFromString:reulstString];
+                if (tagList.count > 0) { 
+                    if (reulstString.length * 10 > (maxWidth)) {
                         
-                        if (reulstString.length * 8 < ([UIScreen mainScreen].bounds.size.width  - 40 - 72 - 90 - 10))
-                        {
-                            break;
+                        NSArray *paramsArrary = [element.content componentsSeparatedByString:@" · "];
+                        
+                        for (NSInteger i = 0; i < paramsArrary.count; i++) {
+                            reulstString = [self cutStringFromString:reulstString];
+                            
+                            if (reulstString.length * 8 < (maxWidth - 10))
+                            {
+                                break;
+                            }
                         }
                     }
+                }else
+                {
+                    reulstString = element.content;
                 }
-
-                UIColor *textColor = [UIColor colorWithHexString:element.textColor] ? : [UIColor colorWithHexString:@"#f85959"];
-                UIColor *backgroundColor = [UIColor colorWithHexString:element.backgroundColor] ? : [UIColor colorWithRed:248/255.0 green:89/255.0 blue:89/255.0 alpha:0.08];
+          
+                UIColor *textColor = [UIColor colorWithHexString:element.textColor] ? : [UIColor themeRed4];
+                UIColor *backgroundColor = [UIColor colorWithHexString:element.backgroundColor] ? : [UIColor whiteColor];
                 NSAttributedString *attr = [self.class createSmallTagAttrString:reulstString isFirst:idx == 0 textColor:textColor backgroundColor:backgroundColor];
                 [attrTexts addObject:attr];
             }
@@ -274,8 +341,8 @@
             
             NSAttributedString *attr = obj;
             [text appendAttributedString:attr];
-            
-            YYTextLayout *tagLayout = [YYTextLayout layoutWithContainerSize:CGSizeMake([UIScreen mainScreen].bounds.size.width  - 40 - 72 - 90, CGFLOAT_MAX) text:text];
+
+            YYTextLayout *tagLayout = [YYTextLayout layoutWithContainerSize:CGSizeMake(maxWidth, CGFLOAT_MAX) text:text];
             CGFloat lineHeight = tagLayout.textBoundingSize.height;
             if (lineHeight > height) {
                 
@@ -311,7 +378,7 @@
 +(NSAttributedString *)createSmallTagAttrString:(NSString *)text isFirst:(BOOL)isFirst textColor:(UIColor *)textColor backgroundColor:(UIColor *)backgroundColor {
     
     NSMutableAttributedString *attributeText = [[NSMutableAttributedString alloc]initWithString:[NSString stringWithFormat:@"%@",text]];
-    attributeText.yy_font = [UIFont themeFontRegular:10];
+    attributeText.yy_font = [UIFont themeFontRegular:12];
     attributeText.yy_color = textColor;
     NSRange substringRange = [attributeText.string rangeOfString:text];
     [attributeText yy_setTextBinding:[YYTextBinding bindingWithDeleteConfirm:NO] range:substringRange];
@@ -319,6 +386,14 @@
     
     [attributeText yy_setTextBackgroundBorder:border range:substringRange];
     return attributeText;
+}
+
++(NSAttributedString *)createTagAttrString:(NSString *)text textColor:(UIColor *)textColor backgroundColor:(UIColor *)backgroundColor
+{
+    NSMutableAttributedString *attr = [[NSMutableAttributedString alloc]initWithString:[NSString stringWithFormat:@"%@",text ? : @""]];
+    attr.yy_font = [UIFont themeFontRegular:12];
+    attr.yy_color = textColor;
+    return attr;
 }
 
 -(UILabel *)majorTitle {

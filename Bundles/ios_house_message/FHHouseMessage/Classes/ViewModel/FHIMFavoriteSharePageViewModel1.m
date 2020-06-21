@@ -60,7 +60,7 @@
 
 - (void)registerCell:(UITableView *)tableView {
     [tableView registerClass:[FHHouseSelectedItemCell class] forCellReuseIdentifier:kCellId];
-    [tableView registerClass:[FHPlaceHolderCell class] forCellReuseIdentifier:kFHFavoriteListPlaceholderCellId];
+    [tableView registerClass:[FHPlaceHolderCell class] forCellReuseIdentifier:@"FHIMFavoriteListPlaceholderCellId"];
 }
 
 -(void)cleanSelects {

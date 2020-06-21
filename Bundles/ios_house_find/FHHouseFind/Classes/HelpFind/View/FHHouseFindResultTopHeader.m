@@ -6,10 +6,10 @@
 //
 
 #import "FHHouseFindResultTopHeader.h"
-#import <Masonry.h>
-#import <UIFont+House.h>
-#import <UIColor+Theme.h>
-#import <FHUtils.h>
+#import "Masonry.h"
+#import "UIFont+House.h"
+#import "UIColor+Theme.h"
+#import "FHUtils.h"
 
 @interface FHHouseFindResultTopHeader ()
 
@@ -26,7 +26,7 @@
 {
     self = [super initWithFrame:frame];
     if (self) {
-        _backImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"house_find_help_top"]];
+        _backImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"house_find_help_top_orange"]];
         [self addSubview:_backImageView];
         
         [_backImageView mas_makeConstraints:^(MASConstraintMaker *make) {

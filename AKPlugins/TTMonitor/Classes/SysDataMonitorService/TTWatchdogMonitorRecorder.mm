@@ -18,8 +18,6 @@
 #include <mach-o/dyld.h>
 #include <string.h>
 
-NSString * const TTWatchDogDidTrigeredNotification = @"TTWatchDogDidTrigeredNotification";
-
 #define kMaxCountOnGroup 10
 
 uint64_t StaticBaseAddress(void)
@@ -52,6 +50,7 @@ uint64_t DynamicBaseAddress(void)
 }
 
 static NSString * const TTWatchdogMonitorServiceName = @"tt_monitor_watchdog";
+NSString * const TTWatchDogDidTrigeredNotification = @"TTWatchDogDidTrigeredNotification";
 
 @interface TTWatchdogMonitorRecorder ()
 @property (nonatomic, strong)TTMonitorReporter * reporter;

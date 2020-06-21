@@ -110,7 +110,7 @@
         [[ToastManager manager] showCustomLoading:@"加载中"];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(configDataLoadSuccess:) name:kFHAllConfigLoadSuccessNotice object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(configDataLoadError:) name:kFHAllConfigLoadErrorNotice object:nil];
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(connectionChanged:) name:kReachabilityChangedNotification object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(connectionChanged:) name:TTReachabilityChangedNotification object:nil];
         // 第一次提前请求config数据
         [self checkConfigDataWithNoConfigData];
     }
@@ -315,13 +315,33 @@
     return NO;
 }
 
+
+- (void)sendGoDetail
+{
+    NSMutableDictionary *goDetailParams = [NSMutableDictionary new];
+    BOOL hasSelectedCity = [(id)[FHUtils contentForKey:kUserHasSelectedCityKey] boolValue];
+
+    if (hasSelectedCity) {
+        [goDetailParams setValue:@"maintab" forKey:@"enter_from"];
+        [goDetailParams setValue:@"maintab" forKey:@"origin_from"];
+    }else
+    {
+        [goDetailParams setValue:@"be_null" forKey:@"enter_from"];
+        [goDetailParams setValue:@"be_null" forKey:@"origin_from"];
+    }
+    [goDetailParams setValue:@"city_selection" forKey:@"page_type"];
+
+    [FHUserTracker writeEvent:@"go_detail" params:goDetailParams];
+}
+
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
     [self checkLocAuthorization];
+    [self sendGoDetail];
     
     if (self.disablePanGesture) {
         // 禁止滑动手势
-        if (self.weakNavVC) {
+        if (self.weakNavVC && self.weakNavVC.panRecognizer) {
             self.weakNavVC.panRecognizer.delegate = nil;
             [self.weakNavVC.view removeGestureRecognizer:self.weakNavVC.panRecognizer];
         }
@@ -332,7 +352,7 @@
     [super viewDidDisappear:animated];
     if (self.disablePanGesture) {
         // 取消禁止滑动手势
-        if (self.weakNavVC) {
+        if (self.weakNavVC && self.weakNavVC.panRecognizer) {
             self.weakNavVC.panRecognizer.delegate = self.weakNavVC;
             [self.weakNavVC.view addGestureRecognizer:self.weakNavVC.panRecognizer];
         }
@@ -423,7 +443,7 @@
     [[FHEnvContext sharedInstance] checkZLink];
     if (self.disablePanGesture) {
         // 取消禁止滑动手势
-        if (self.weakNavVC && self.weakNavVC.panRecognizer.delegate == nil) {
+        if (self.weakNavVC && self.weakNavVC.panRecognizer && self.weakNavVC.panRecognizer.delegate == nil) {
             self.weakNavVC.panRecognizer.delegate = self.weakNavVC;
             [self.weakNavVC.view addGestureRecognizer:self.weakNavVC.panRecognizer];
         }
@@ -445,7 +465,7 @@
         return;
     }
     // 禁止滑动手势
-    if (self.weakNavVC) {
+    if (self.weakNavVC && self.weakNavVC.panRecognizer) {
         self.weakNavVC.panRecognizer.delegate = nil;
         [self.weakNavVC.view removeGestureRecognizer:self.weakNavVC.panRecognizer];
     }
@@ -458,7 +478,7 @@
         return;
     }
     // 取消禁止滑动手势
-    if (self.weakNavVC) {
+    if (self.weakNavVC && self.weakNavVC.panRecognizer) {
         self.weakNavVC.panRecognizer.delegate = self.weakNavVC;
         [self.weakNavVC.view addGestureRecognizer:self.weakNavVC.panRecognizer];
     }

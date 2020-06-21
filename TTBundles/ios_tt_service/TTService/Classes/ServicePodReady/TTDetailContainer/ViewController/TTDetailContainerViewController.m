@@ -23,17 +23,17 @@
 #import <TTUIWidget/TTNavigationController.h>
 #import <TTUIWidget/UIView+Refresh_ErrorHandler.h>
 #import <TTUIWidget/UIViewController+NavigationBarStyle.h>
-#import <TTInteractExitHelper.h>
+#import "TTInteractExitHelper.h"
 #import <KVOController/KVOController.h>
 #import <TTArticleBase/SSCommonLogic.h>
 #import <TTMonitor/TTMonitor.h>
 #import "TTArticleDetailViewController.h"
 #import <FHCHousePush/FHPushAuthorizeManager.h>
 #import <FHHouseBase/FHTraceEventUtils.h>
-#import <FHUtils.h>
-#import <FHErrorView.h>
-#import <Masonry.h>
-#import <UIView+House.h>
+#import "FHUtils.h"
+#import "FHErrorView.h"
+#import "Masonry.h"
+#import "UIView+House.h"
 
 @interface TTDetailContainerViewController ()<TTDetailViewControllerDelegate, TTDetailViewControllerDataSource, UIViewControllerErrorHandler,TTInteractExitProtocol>
 
@@ -51,7 +51,11 @@
         TTDetailContainerViewModel * viewModel = [[TTDetailContainerViewModel alloc] initWithRouteParamObj:paramObj];
         if([paramObj.allParams[@"report_params"] isKindOfClass:[NSString class]])
         {
-            NSDictionary *reportDict = [FHUtils dictionaryWithJsonString:paramObj.allParams[@"report_params"]];
+            NSMutableDictionary *reportDict = [[FHUtils dictionaryWithJsonString:paramObj.allParams[@"report_params"]] mutableCopy];
+            //这里强插入categoryName
+            if(reportDict[@"enter_from"]){
+                reportDict[@"category_name"] = reportDict[@"enter_from"];
+            }
             
             if([reportDict isKindOfClass:[NSDictionary class]])
             {

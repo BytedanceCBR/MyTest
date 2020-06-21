@@ -20,7 +20,7 @@
 #import "TTUIResponderHelper.h"
 #import "TTUGCEmojiParser.h"
 #import "TTTAttributedLabel.h"
-#import "BDWebImage.h"
+#import <BDWebImage/BDWebImage.h>
 #import <TTBaseLib/UIViewAdditions.h>
 #import <TTBaseLib/TTStringHelper.h>
 #import <TTThemed/UIImage+TTThemeExtension.h>
@@ -372,7 +372,7 @@ NS_INLINE CGFloat kBottomLineViewHeight() {
         
         NSMutableDictionary *dict = @{}.mutableCopy;
         if([URLString containsString:@"comment_detail"]){
-            dict[@"hidePost"] = @(1);
+            //dict[@"hidePost"] = @(1);
         }
         NSMutableDictionary *traceParam = [NSMutableDictionary dictionary];
         traceParam[@"enter_from"] = @"feed_message_list";

@@ -8,9 +8,10 @@
 
 #import "TTGetCategoryTask.h"
 #import "TTArticleCategoryManager.h"
-#import <TTTrackerWrapper.h>
+#import "TTTrackerWrapper.h"
 #import "SSCommonLogic.h"
 #import "TTLaunchDefine.h"
+#import "FHUGCCategoryManager.h"
 
 DEC_TASK("TTGetCategoryTask",FHTaskTypeInterface,TASK_PRIORITY_HIGH+9);
 
@@ -51,6 +52,7 @@ static BOOL kTTHasReceivedGotCategoryNotification = NO;
 - (void)startWithApplication:(UIApplication *)application options:(NSDictionary *)launchOptions {
     [super startWithApplication:application options:launchOptions];
     [[TTArticleCategoryManager sharedManager] startGetCategory];
+    [[FHUGCCategoryManager sharedManager] startGetCategory];
 }
 
 - (void)categoryGotFinished:(NSNotification *)notfication {

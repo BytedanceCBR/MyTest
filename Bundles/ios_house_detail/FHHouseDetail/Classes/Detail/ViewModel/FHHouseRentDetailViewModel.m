@@ -28,10 +28,12 @@
 #import "FHDetailBlankLineCell.h"
 #import "FHEnvContext.h"
 #import "NSDictionary+TTAdditions.h"
+#import "FHDetailStaticMapCell.h"
 #import <FHHouseBase/FHHouseFollowUpHelper.h>
 #import <FHHouseBase/FHMainApi+Contact.h>
 #import <FHHouseBase/FHUserTrackerDefine.h>
 #import <FHHouseBase/FHHouseRentModel.h>
+#import "FHHouseListBaseItemModel.h"
 
 extern NSString *const kFHPhoneNumberCacheKey;
 extern NSString *const kFHSubscribeHouseCacheKey;
@@ -41,7 +43,8 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
 
 @property (nonatomic, assign)   NSInteger       requestRelatedCount;
 @property (nonatomic, strong , nullable) FHRentSameNeighborhoodResponseDataModel *sameNeighborhoodHouseData;
-@property (nonatomic, strong , nullable) FHHouseRentRelatedResponseDataModel *relatedHouseData;
+//@property (nonatomic, strong , nullable) FHHouseRentRelatedResponseDataModel *relatedHouseData;
+@property (nonatomic, strong , nullable) FHHouseListDataModel *relatedHouseData;
 @property (nonatomic, copy , nullable) NSString *neighborhoodId;// 周边小区房源id
 
 @end
@@ -64,6 +67,7 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
     [self.tableView registerClass:[FHDetailNeighborhoodMapInfoCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailNeighborhoodMapInfoModel class])];
     [self.tableView registerClass:[FHDetailHouseSubscribeCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailHouseSubscribeModel class])];
     [self.tableView registerClass:[FHDetailBlankLineCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailBlankLineModel class])];
+    [self.tableView registerClass:[FHDetailStaticMapCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailStaticMapCellModel class])];
 }
 //// cell class
 //- (Class)cellClassForEntity:(id)model {
@@ -131,7 +135,7 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
     // 详情页数据-Main
     __weak typeof(self) wSelf = self;
 
-    [FHHouseDetailAPI requestRentDetail:self.houseId completion:^(FHRentDetailResponseModel * _Nullable model, NSError * _Nullable error) {
+    [FHHouseDetailAPI requestRentDetail:self.houseId extraInfo:self.extraInfo completion:^(FHRentDetailResponseModel * _Nullable model, NSError * _Nullable error) {
         if (model && error == NULL) {
             if (model.data) {
                 [wSelf processDetailData:model];
@@ -145,6 +149,7 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
                 wSelf.neighborhoodId = neighborhoodId;
                 // 周边数据请求
                 [wSelf requestRelatedData:neighborhoodId];
+                [wSelf.navBar showMessageNumber];
                 wSelf.contactViewModel.imShareInfo = model.data.imShareInfo;
             } else {
                 wSelf.detailController.isLoadingData = NO;
@@ -201,72 +206,6 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
     }
 }
 
--(void)handleInstantData:(id)data
-{
-    FHRentDetailResponseModel *model = [[FHRentDetailResponseModel alloc] init];
-    model.isInstantData = YES;
-    FHRentDetailResponseDataModel *dataModel = [FHRentDetailResponseDataModel new];
-    model.data = dataModel;
-    if ([data isKindOfClass:[FHHouseRentDataItemsModel class]]) {
-        
-        FHHouseRentDataItemsModel *item = (FHHouseRentDataItemsModel *)data;
-        dataModel.title = item.title;
-        dataModel.subtitle = item.subtitle;
-        dataModel.tags = item.tags;
-        dataModel.houseImage = item.houseImage;
-        dataModel.id = item.id;
-        dataModel.logPb = item.logPb;
-        dataModel.baseInfo = item.baseInfo;
-        dataModel.coreInfo = item.coreInfo;
-        dataModel.facilities = item.facilities;
-        
-        if (item.houseImageTag) {
-            NSMutableArray *tags = [NSMutableArray new];
-            FHHouseTagsModel *tag = [[FHHouseTagsModel alloc] initWithDictionary:item.houseImageTag.toDictionary error:nil];
-            tag.content = item.houseImageTag.text;
-            [tags addObject:tag];
-            if (item.tags) {
-                [tags addObjectsFromArray:item.tags];
-            }
-            dataModel.tags = tags;
-        }
-        
-                        
-    }else if ([data isKindOfClass:[FHHomeHouseDataItemsModel class]]){
-        FHHomeHouseDataItemsModel *item = (FHHomeHouseDataItemsModel *)data;
-        dataModel.title = item.title;
-        dataModel.subtitle = item.subtitle;
-        dataModel.tags = item.tags;
-        dataModel.houseImage = item.houseImage;
-        dataModel.id = item.idx;
-        dataModel.baseInfo = item.baseInfo;
-        dataModel.coreInfo = item.coreInfoList;
-        dataModel.logPb = item.logPb;
-        dataModel.facilities = item.facilities;
-        if (item.houseImageTag) {
-            NSMutableArray *tags = [NSMutableArray new];
-            FHHouseTagsModel *tag = [[FHHouseTagsModel alloc] initWithDictionary:item.houseImageTag.toDictionary error:nil];
-            tag.content = item.houseImageTag.text;
-            [tags addObject:tag];
-            if (item.tags) {
-                [tags addObjectsFromArray:item.tags];
-            }
-            dataModel.tags = tags;
-        }
-        
-    }else{
-        self.detailController.instantData = nil;
-        return;
-    }
-    
-    
-    
-    dataModel.contact = [FHDetailContactModel new];
-    dataModel.contact.isInstantData = YES;
-    model.data = dataModel;
-    self.bottomBar.hidden = NO;
-    [self processDetailData:model];
-}
 
 -(NSArray *)instantHouseImages
 {
@@ -291,8 +230,13 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
 - (void)processDetailData:(FHRentDetailResponseModel *)model {
 
     //当前IM全是非B端注册经纪人
-    model.data.contact.unregistered = YES;
-    FHDetailContactModel *contactPhone = model.data.contact;
+    FHDetailContactModel *contactPhone = nil;
+    if (model.data.highlightedRealtor) {
+        contactPhone = model.data.highlightedRealtor;
+    }else {
+        contactPhone = model.data.contact;
+        contactPhone.unregistered = YES;
+    }
     if (contactPhone.phone.length > 0) {
         
         if ([self isShowSubscribe]) {
@@ -307,6 +251,7 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
     self.contactViewModel.shareInfo = model.data.shareInfo;
     self.contactViewModel.followStatus = model.data.userStatus.houseSubStatus;
     self.contactViewModel.chooseAgencyList = model.data.chooseAgencyList;
+    self.contactViewModel.highlightedRealtorAssociateInfo = model.data.highlightedRealtorAssociateInfo;
     self.detailData = model;
     if (model.data.status != -1) {
         [self addDetailCoreInfoExcetionLog];
@@ -362,6 +307,7 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
     if([self isShowSubscribe]){
         FHDetailHouseSubscribeModel *subscribeModel = [[FHDetailHouseSubscribeModel alloc] init];
         subscribeModel.tableView = self.tableView;
+        subscribeModel.associateInfo = model.data.middleSubscriptionAssociateInfo;
         [self.items addObject:subscribeModel];
         
         __weak typeof(self) wSelf = self;
@@ -400,16 +346,42 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
         infoModel.tableView = self.tableView;
         [self.items addObject:infoModel];
     }
-    // 地图
-    if (model.data.neighborhoodInfo.gaodeLat.length > 0 && model.data.neighborhoodInfo.gaodeLng.length > 0) {
-        FHDetailNeighborhoodMapInfoModel *infoModel = [[FHDetailNeighborhoodMapInfoModel alloc] init];
-        infoModel.gaodeLat = model.data.neighborhoodInfo.gaodeLat;
-        infoModel.gaodeLng = model.data.neighborhoodInfo.gaodeLng;
-        infoModel.title = model.data.neighborhoodInfo.name;
-        infoModel.category = @"公交";
-        
-        [self.items addObject:infoModel];
+    //地图
+    if(model.data.neighborhoodInfo.gaodeLat.length > 0 && model.data.neighborhoodInfo.gaodeLng.length > 0){
+        FHDetailStaticMapCellModel *staticMapModel = [[FHDetailStaticMapCellModel alloc] init];
+        staticMapModel.mapCentertitle = model.data.neighborhoodInfo.name;
+        staticMapModel.gaodeLat = model.data.neighborhoodInfo.gaodeLat;
+        staticMapModel.gaodeLng = model.data.neighborhoodInfo.gaodeLng;
+        staticMapModel.houseId = model.data.id;
+        staticMapModel.houseType = [NSString stringWithFormat:@"%d",FHHouseTypeRentHouse];
+        staticMapModel.tableView = self.tableView;
+        staticMapModel.staticImage = model.data.neighborhoodInfo.gaodeImage;
+        staticMapModel.mapOnly = YES;
+        [self.items addObject:staticMapModel];
+
+    } else{
+        NSString *eventName = @"detail_map_location_failed";
+        NSDictionary *cat = @{@"status": @(1)};
+
+        NSMutableDictionary *params = [NSMutableDictionary new];
+        [params setValue:@"用户点击详情页地图进入地图页失败" forKey:@"desc"];
+        [params setValue:@"经纬度缺失" forKey:@"reason"];
+        [params setValue:model.data.id forKey:@"house_id"];
+        [params setValue:@(FHHouseTypeRentHouse) forKey:@"house_type"];
+        [params setValue:model.data.neighborhoodInfo.name forKey:@"name"];
+
+        [[HMDTTMonitor defaultManager] hmdTrackService:eventName metric:nil category:cat extra:params];
     }
+    // 地图
+//    if (model.data.neighborhoodInfo.gaodeLat.length > 0 && model.data.neighborhoodInfo.gaodeLng.length > 0) {
+//        FHDetailNeighborhoodMapInfoModel *infoModel = [[FHDetailNeighborhoodMapInfoModel alloc] init];
+//        infoModel.gaodeLat = model.data.neighborhoodInfo.gaodeLat;
+//        infoModel.gaodeLng = model.data.neighborhoodInfo.gaodeLng;
+//        infoModel.title = model.data.neighborhoodInfo.name;
+//        infoModel.category = @"公交";
+//
+//        [self.items addObject:infoModel];
+//    }
  
     //生成IM卡片的schema用 个人认为server应该加接口
     NSString *imgUrl = @"";
@@ -520,9 +492,10 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
  // 周边房源
  - (void)requestRelatedHouseSearch {
      __weak typeof(self) wSelf = self;
-     [FHHouseDetailAPI requestHouseRentRelated:self.houseId completion:^(FHHouseRentRelatedResponseModel * _Nonnull model, NSError * _Nonnull error) {
+     [FHHouseDetailAPI requestHouseRentRelated:self.houseId class:[FHListResultHouseModel class] completion:^(id<FHBaseModelProtocol>  _Nullable model, NSError * _Nonnull error) {
+         FHListResultHouseModel *models = (FHListResultHouseModel*)model;
          wSelf.requestRelatedCount += 1;
-         wSelf.relatedHouseData = model.data;
+         wSelf.relatedHouseData = models.data;
          [wSelf processDetailRelatedData];
      }];
  }
@@ -553,8 +526,12 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
         return;
     }
     NSString *houseId = self.houseId;
-    NSString *from = @"app_renthouse_subscription";
-    [FHMainApi requestSendPhoneNumbserByHouseId:houseId phone:phoneNum from:from cluePage:nil clueEndpoint:nil targetType:nil agencyList:nil completion:^(FHDetailResponseModel * _Nullable model, NSError * _Nullable error) {
+//    NSString *from = @"app_renthouse_subscription";\\
+    
+    [FHMainApi requestCallReportByHouseId:houseId phone:phoneNum from:nil cluePage:nil clueEndpoint:nil targetType:nil reportAssociate:subscribeModel.associateInfo.reportFormInfo agencyList:nil completion:^(FHDetailResponseModel * _Nullable model, NSError * _Nullable error) {
+
+
+//    [FHMainApi requestSendPhoneNumbserByHouseId:houseId phone:phoneNum from:nil cluePage:nil clueEndpoint:nil targetType:nil agencyList:nil completion:^(FHDetailResponseModel * _Nullable model, NSError * _Nullable error) {
 
         if (model.status.integerValue == 0 && !error) {
             [[ToastManager manager] showToast:@"提交成功，经纪人将尽快与您联系"];

@@ -18,7 +18,7 @@
 #import <TTBaseLib/TTBaseMacro.h>
 #import <TTBaseLib/UITextView+TTAdditions.h>
 #import <TTThemed/TTThemeManager.h>
-#import <TTAccountBusiness.h>
+#import "TTAccountBusiness.h"
 #import "TTCommentFunctionView.h"
 #import "TTCommentTransparentView.h"
 #import "TTCommentDetailReplyWriteManager.h"
@@ -690,7 +690,7 @@ static struct timeval kFHCommentTimeval;
         _publishButton.titleLabel.font = [UIFont boldSystemFontOfSize:[TTDeviceUIUtils tt_newFontSize:16.f]];
         [_publishButton sizeToFit];
         _publishButton.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleTopMargin;
-        _publishButton.titleColorThemeKey = @"red1";
+        _publishButton.titleColorThemeKey = @"orange1";
         _publishButton.disabledTitleColorThemeKey = @"grey4";
         [_publishButton addTarget:self action:@selector(publish:) forControlEvents:UIControlEventTouchUpInside];
         _publishButton.enabled = NO;

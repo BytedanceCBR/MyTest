@@ -7,17 +7,18 @@
 
 #import "FHUGCNoticeEditViewController.h"
 #import "UIViewController+Track.h"
-#import <Masonry.h>
+#import "Masonry.h"
 #import <FHHouseUGCAPI.h>
-#import <ToastManager.h>
+#import "ToastManager.h"
 #import "FHUserTracker.h"
 #import "TTUGCToolbar.h"
 #import "TTUGCTextViewMediator.h"
-#import <UIViewAdditions.h>
+#import "UIViewAdditions.h"
 #import "NSObject+MultiDelegates.h"
-#import <TTUGCEmojiParser.h>
+#import "TTUGCEmojiParser.h"
 #import "FHUGCNoticeModel.h"
-#import <TTNavigationController.h>
+#import "TTNavigationController.h"
+#import <TTBaseLib/TTUIResponderHelper.h>
 
 typedef enum : NSUInteger {
     ActionTypeSaveOnly = 0,
@@ -113,7 +114,7 @@ typedef enum : NSUInteger {
         if(wself.isReadOnly) {
             [wself exitPage];
         } else {
-            [wself showAlertToAskUserDecision];
+            [wself showAlertToAskUserDecision: YES];
         }
     };
     
@@ -128,7 +129,9 @@ typedef enum : NSUInteger {
 
 - (CGFloat)navbarHeight {
     CGFloat navbarHeight = 65;
-    if (@available(iOS 11.0 , *)) {
+    if (@available(iOS 13.0 , *)) {
+           navbarHeight =  44.f + [UIApplication sharedApplication].keyWindow.safeAreaInsets.top;
+    } else if (@available(iOS 11.0 , *)) {
         navbarHeight =  44.f + self.view.tt_safeAreaInsets.top;
     }
     return navbarHeight;
@@ -277,7 +280,7 @@ typedef enum : NSUInteger {
 - (void)completeButtonPressed:(UIButton *)sender {
     [self traceCompletedButtonPressed];
     if(self.textView.text.length == 0) {
-        [self showAlertToAskUserDecision];
+        [self showAlertToAskUserDecision:NO];
     } else {
         [self showActionSheet];
     }
@@ -286,27 +289,32 @@ typedef enum : NSUInteger {
 - (void)showActionSheet {
     [self traceAlertShowWhenCompletedPressed];
     [self.textView resignFirstResponder];
-    
+    WeakSelf;
     NSString *title = @"向圈子中的人发送公告？";
     UIAlertController *alertVC = [UIAlertController alertControllerWithTitle: title message:nil preferredStyle:UIAlertControllerStyleActionSheet];
 
     UIAlertAction *saveOnlyAction = [UIAlertAction actionWithTitle:@"仅保存" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+        StrongSelf;
         [self actionWithType:ActionTypeSaveOnly];
     }];
     
     UIAlertAction *sendSMSAction = [UIAlertAction actionWithTitle:@"消息通知" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+        StrongSelf;
         [self actionWithType:ActionTypeSMS];
     }];
     
     UIAlertAction *pushAction = [UIAlertAction actionWithTitle:@"推送通知" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+        StrongSelf;
         [self actionWithType:ActionTypePush];
     }];
     
     UIAlertAction *pushAndSMSAction = [UIAlertAction actionWithTitle:@"消息加推送" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+        StrongSelf;
         [self actionWithType:ActionTypePushAndSMS];
     }];
     
     UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
+        StrongSelf;
         [self.textView becomeFirstResponder];
     }];
     
@@ -331,7 +339,7 @@ typedef enum : NSUInteger {
     params[@"announcement"] = self.textView.text;
     params[@"push_type"] = @(actionType);
 
-    [FHHouseUGCAPI requestUpdateUGCNoticeWithParam:params completion:^(FHUGCNoticeModel *model, NSError * _Nonnull error) {
+    [FHHouseUGCAPI requestUpdateUGCNoticeWithParam:params class:FHUGCNoticeModel.class completion:^(FHUGCNoticeModel *model, NSError * _Nonnull error) {
         
         [[ToastManager manager] dismissCustomLoading];
         
@@ -355,22 +363,25 @@ typedef enum : NSUInteger {
     [self goBack];
 }
 
-- (void)showAlertToAskUserDecision {
+- (void)showAlertToAskUserDecision:(BOOL)isLeftButtonAction {
     
     [self.textView resignFirstResponder];
     
     BOOL isEmpty = (self.textView.text.length == 0) && ![self.textView.text isEqualToString:self.content];
-    NSString *title = isEmpty ? @"确定清空公告栏?" : @"退出编辑?";
+    BOOL isShowEmptyAlert = isEmpty && !isLeftButtonAction;
     
+    NSString *title = isShowEmptyAlert ? @"确定清空公告栏?" : @"退出编辑?";
+    WeakSelf;
     UIAlertController *alertVC = [UIAlertController alertControllerWithTitle:title message:nil preferredStyle:UIAlertControllerStyleAlert];
     
-    if(isEmpty) {
+    if(isShowEmptyAlert) {
         [self traceAlertShowWhenUserDecideWithEventName:@"notice_empty_popup_show"];
         UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
-            [self exitPage];
+            StrongSelf;
             [self traceAlertClickWhenUserDecideWithOptionName:@"cancel"];
         }];
         UIAlertAction *confirmEmptyAction = [UIAlertAction actionWithTitle:@"清空" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+            StrongSelf;
             [self actionWithType:ActionTypeSaveOnly];
             [self traceAlertClickWhenUserDecideWithOptionName:@"empty"];
         }];
@@ -380,10 +391,12 @@ typedef enum : NSUInteger {
     else {
         [self traceAlertShowWhenUserDecideWithEventName:@"notice_quit_popup_show"];
         UIAlertAction *exitAction = [UIAlertAction actionWithTitle:@"退出" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+            StrongSelf;
             [self exitPage];
             [self traceAlertClickWhenUserDecideWithOptionName:@"quit"];
         }];
         UIAlertAction *continueEditAction = [UIAlertAction actionWithTitle:@"继续编辑" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+            StrongSelf;
             [self.textView becomeFirstResponder];
             [self traceAlertClickWhenUserDecideWithOptionName:@"continue_edit"];
         }];

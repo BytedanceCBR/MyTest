@@ -8,10 +8,11 @@
 
 #import "FHMotionImageView.h"
 #import <CoreMotion/CoreMotion.h>
-#import <Lottie/LOTAnimationView.h>
-#import <Masonry.h>
-#import <UIImageView+BDWebImage.h>
+#import <lottie-ios/Lottie/LOTAnimationView.h>
+#import "Masonry.h"
+#import "UIImageView+BDWebImage.h"
 #import <BDWebImage/BDWebImageManager.h>
+#import "TTDeviceHelper.h"
 
 static CGFloat widthXRate = 0.20f;
 static CGFloat heightYRate = 0.4f;
@@ -165,6 +166,17 @@ static CGFloat multiplier = 2;
         };
     }
     return _vrLoadingView;
+}
+
+- (void)setCellHouseType:(FHMultiMediaCellHouseType)cellHouseType {
+    _cellHouseType = cellHouseType;
+    if (_cellHouseType == FHMultiMediaCellHouseSecond)  {
+        [self.vrLoadingView  mas_remakeConstraints:^(MASConstraintMaker *make) {
+            make.width.height.mas_equalTo(60);
+            make.top.mas_equalTo([TTDeviceHelper isScreenWidthLarge320] ? 110 : 86);
+            make.centerX.mas_equalTo(self);
+        }];
+    }
 }
 
 - (CMMotionManager *)manager {

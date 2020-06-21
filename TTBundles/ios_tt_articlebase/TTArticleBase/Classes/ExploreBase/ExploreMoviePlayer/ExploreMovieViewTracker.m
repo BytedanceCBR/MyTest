@@ -16,7 +16,6 @@
 #import <TTTracker/TTTrackerProxy.h>
 #import "MZMonitor.h"
 #import "SSMoviePlayerController.h"
-//#import "Bubble-Swift.h"
 #import "FHEnvContext.h"
 #import <TTBaseLib/NSDictionary+TTAdditions.h>
 #import "SSCommonLogic.h"
@@ -565,7 +564,7 @@
     [traceParams setValue:dictVideo[@"duration"] forKey:@"duration"];
     [traceParams setValue:dictVideo[@"percent"] forKey:@"percent"];
     
-    [TTTracker eventV3:@"video_over" params:traceParams];
+    [BDTrackerProtocol eventV3:@"video_over" params:traceParams];
 }
 
 - (void)sendFHVideoPlayEventWithLabel:(NSString *)dataLabel{

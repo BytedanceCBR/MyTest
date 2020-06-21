@@ -29,6 +29,8 @@ extern NSString * const TTArticleTabBarControllerChangeSelectedIndexNotification
 
 + (NSString *)tabStayStringForIndex:(NSUInteger)index;
 
++ (NSDictionary *)tagToLogEventName;
+
 - (BOOL)isTipsShowing;
 
 - (void)reloadTheme;
@@ -37,7 +39,7 @@ extern NSString * const TTArticleTabBarControllerChangeSelectedIndexNotification
 
 - (NSString *)currentTabIdentifier;
 
-- (void)addUgcGuide;//F项目引导
+//- (void)addUgcGuide;//F项目引导
 
 @end
 

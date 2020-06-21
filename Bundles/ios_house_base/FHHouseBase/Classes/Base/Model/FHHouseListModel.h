@@ -9,6 +9,7 @@
 #import <JSONModel/JSONModel.h>
 #import <FHHouseBase/FHImageModel.h>
 #import "FHHouseTagsModel.h"
+#import "FHSearchBaseItemModel.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -46,14 +47,14 @@ NS_ASSUME_NONNULL_BEGIN
 @end
 
 
-@interface  FHSearchHouseDataRedirectTipsModel  : JSONModel
+@interface  FHSearchHouseDataRedirectTipsModel  : FHSearchBaseItemModel
 
 @property (nonatomic, copy , nullable) NSString *text;
 @property (nonatomic, copy , nullable) NSString *text2;
 @property (nonatomic, copy , nullable) NSString *openUrl;
+@property(nonatomic, copy)void (^clickRightBlock)(NSString *openUrl);
 
 @end
-
 
 @interface FHHouseListModel : NSObject
 

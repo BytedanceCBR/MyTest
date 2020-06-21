@@ -7,10 +7,10 @@
 //
 
 #import "ArticleMobileLoginViewController.h"
-#import <TTThemedAlertController.h>
-#import <TTDeviceHelper.h>
+#import "TTThemedAlertController.h"
+#import "TTDeviceHelper.h"
 
-#import <TTAccountBusiness.h>
+#import "TTAccountBusiness.h"
 #import "ArticleMobileNumberViewController.h"
 #import "TTTrackerWrapper.h"
 
@@ -161,85 +161,85 @@
 }
 
 - (void)loginButtonActionFired:(id)sender {
-    if (self.mobileField.text.length == 0) {
-        TTThemedAlertController *alert = [[TTThemedAlertController alloc] initWithTitle:NSLocalizedString(@"提示", nil) message:NSLocalizedString(@"请输入手机号", nil) preferredType:TTThemedAlertControllerTypeAlert];
-        [alert addActionWithTitle:NSLocalizedString(@"确定", nil) actionType:TTThemedAlertActionTypeCancel actionBlock:^{
-            [self.mobileField becomeFirstResponder];
-        }];
-        [alert showFrom:self animated:YES];
-        return;
-    }
-    if (![self validateMobileNumber:self.mobileField.text]) {
-        [self alertInvalidateMobileNumberWithCompletionHandler:^{
-            [self.mobileField becomeFirstResponder];
-        }];
-        return;
-    }
-    if (self.passwordField.text.length == 0) {
-        TTThemedAlertController *alert = [[TTThemedAlertController alloc] initWithTitle:NSLocalizedString(@"提示", nil) message:NSLocalizedString(@"密码不能为空", nil) preferredType:TTThemedAlertControllerTypeAlert];
-        [alert addActionWithTitle:NSLocalizedString(@"确定", nil) actionType:TTThemedAlertActionTypeCancel actionBlock:^{
-            [self.passwordField becomeFirstResponder];
-        }];
-        [alert showFrom:self animated:YES];
-        return;
-    }
-    TTAccountManager.draftMobile = self.mobileField.text;
-    
-    @ArticleTipAndReturnIFNetworkNotOK;
-    
-    /////// 友盟统计
-    wrapperTrackEvent(@"login_register", @"login_moblie");
-    
-    __weak ArticleMobileLoginViewController *weakSelf = self;
-    void (^loginMobileBlock)(NSString *, NSString *, NSString *) = ^(NSString *mobile, NSString *password, NSString *captcha) {
-        [weakSelf showWaitingIndicator];
-        
-        [TTAccountManager startLoginWithMail:mobile password:password captcha:self.captchaValue completion:^(UIImage *captchaImage, NSError *error) {
-            weakSelf.error = error;
-            weakSelf.captchaImage = captchaImage;
-            weakSelf.captchaValue = nil;
-            if (error) {
-                if (captchaImage) {
-                    [weakSelf loginButtonActionFired:nil];
-                } else {
-                    NSDictionary *userInfo = error.userInfo;
-                    if ([userInfo valueForKey:@"alert_text"]) {
-                        [weakSelf dismissWaitingIndicator];
-                        // 优先弹出Alert框
-                        [weakSelf _gotoRetrieveViewControllerWithAlertTitle:[userInfo valueForKey:@"alert_text"]];
-                    } else {
-                        [weakSelf dismissWaitingIndicatorWithError:error];
-                    }
-                }
-                /////// 友盟统计
-                wrapperTrackEvent(@"login_register", @"login_error");
-            } else {
-                /////// 友盟统计
-                wrapperTrackEvent(@"login_register", @"login_success");
-                
-                [weakSelf backToMainViewControllerAnimated:YES completion:weakSelf.completion];
-            }
-        }];
-    };
-    
-    void (^alertCaptchaBlock)(UIImage *, NSError *, TTASMSCodeScenarioType) =
-    ^(UIImage *captcha, NSError *error, TTASMSCodeScenarioType scenario) {
-        ArticleMobileCaptchaAlertView *alertView = [[ArticleMobileCaptchaAlertView alloc] initWithCaptchaImage:captcha];
-        alertView.error = error;
-        [alertView showWithDismissBlock:^(ArticleMobileCaptchaAlertView *alertView, NSInteger buttonIndex) {
-            self.captchaValue = alertView.captchaValue;
-            self.captchaImage = alertView.captchaImage;
-            if (alertView.captchaValue.length > 0) {
-                loginMobileBlock(self.mobileField.text, self.passwordField.text, alertView.captchaValue);
-            }
-        }];
-    };
-    
-    if (self.captchaImage && !self.captchaValue) {
-        alertCaptchaBlock(self.captchaImage, self.error, TTASMSCodeScenarioPhoneRegister);
-    } else {
-        loginMobileBlock(self.mobileField.text, self.passwordField.text, self.captchaValue);
-    }
+//    if (self.mobileField.text.length == 0) {
+//        TTThemedAlertController *alert = [[TTThemedAlertController alloc] initWithTitle:NSLocalizedString(@"提示", nil) message:NSLocalizedString(@"请输入手机号", nil) preferredType:TTThemedAlertControllerTypeAlert];
+//        [alert addActionWithTitle:NSLocalizedString(@"确定", nil) actionType:TTThemedAlertActionTypeCancel actionBlock:^{
+//            [self.mobileField becomeFirstResponder];
+//        }];
+//        [alert showFrom:self animated:YES];
+//        return;
+//    }
+//    if (![self validateMobileNumber:self.mobileField.text]) {
+//        [self alertInvalidateMobileNumberWithCompletionHandler:^{
+//            [self.mobileField becomeFirstResponder];
+//        }];
+//        return;
+//    }
+//    if (self.passwordField.text.length == 0) {
+//        TTThemedAlertController *alert = [[TTThemedAlertController alloc] initWithTitle:NSLocalizedString(@"提示", nil) message:NSLocalizedString(@"密码不能为空", nil) preferredType:TTThemedAlertControllerTypeAlert];
+//        [alert addActionWithTitle:NSLocalizedString(@"确定", nil) actionType:TTThemedAlertActionTypeCancel actionBlock:^{
+//            [self.passwordField becomeFirstResponder];
+//        }];
+//        [alert showFrom:self animated:YES];
+//        return;
+//    }
+//    TTAccountManager.draftMobile = self.mobileField.text;
+//    
+//    @ArticleTipAndReturnIFNetworkNotOK;
+//    
+//    /////// 友盟统计
+//    wrapperTrackEvent(@"login_register", @"login_moblie");
+//    
+//    __weak ArticleMobileLoginViewController *weakSelf = self;
+//    void (^loginMobileBlock)(NSString *, NSString *, NSString *) = ^(NSString *mobile, NSString *password, NSString *captcha) {
+//        [weakSelf showWaitingIndicator];
+//        
+//        [TTAccountManager startLoginWithMail:mobile password:password captcha:self.captchaValue completion:^(UIImage *captchaImage, NSError *error) {
+//            weakSelf.error = error;
+//            weakSelf.captchaImage = captchaImage;
+//            weakSelf.captchaValue = nil;
+//            if (error) {
+//                if (captchaImage) {
+//                    [weakSelf loginButtonActionFired:nil];
+//                } else {
+//                    NSDictionary *userInfo = error.userInfo;
+//                    if ([userInfo valueForKey:@"alert_text"]) {
+//                        [weakSelf dismissWaitingIndicator];
+//                        // 优先弹出Alert框
+//                        [weakSelf _gotoRetrieveViewControllerWithAlertTitle:[userInfo valueForKey:@"alert_text"]];
+//                    } else {
+//                        [weakSelf dismissWaitingIndicatorWithError:error];
+//                    }
+//                }
+//                /////// 友盟统计
+//                wrapperTrackEvent(@"login_register", @"login_error");
+//            } else {
+//                /////// 友盟统计
+//                wrapperTrackEvent(@"login_register", @"login_success");
+//                
+//                [weakSelf backToMainViewControllerAnimated:YES completion:weakSelf.completion];
+//            }
+//        }];
+//    };
+//    
+//    void (^alertCaptchaBlock)(UIImage *, NSError *, TTASMSCodeScenarioType) =
+//    ^(UIImage *captcha, NSError *error, TTASMSCodeScenarioType scenario) {
+//        ArticleMobileCaptchaAlertView *alertView = [[ArticleMobileCaptchaAlertView alloc] initWithCaptchaImage:captcha];
+//        alertView.error = error;
+//        [alertView showWithDismissBlock:^(ArticleMobileCaptchaAlertView *alertView, NSInteger buttonIndex) {
+//            self.captchaValue = alertView.captchaValue;
+//            self.captchaImage = alertView.captchaImage;
+//            if (alertView.captchaValue.length > 0) {
+//                loginMobileBlock(self.mobileField.text, self.passwordField.text, alertView.captchaValue);
+//            }
+//        }];
+//    };
+//    
+//    if (self.captchaImage && !self.captchaValue) {
+//        alertCaptchaBlock(self.captchaImage, self.error, TTASMSCodeScenarioPhoneRegister);
+//    } else {
+//        loginMobileBlock(self.mobileField.text, self.passwordField.text, self.captchaValue);
+//    }
 }
 
 - (void)_gotoRetrieveViewControllerWithAlertTitle:(NSString *)alertTitle {

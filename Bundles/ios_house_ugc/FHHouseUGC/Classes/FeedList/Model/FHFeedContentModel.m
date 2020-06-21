@@ -31,6 +31,7 @@
                            @"name": @"social_group_name",
                            @"url": @"announcement_url",
                            @"socialGroupId": @"social_group_id",
+                           @"showStatus": @"show_status",
                            };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
         return dict[keyName]?:keyName;
@@ -127,6 +128,7 @@
 + (JSONKeyMapper*)keyMapper
 {
   NSDictionary *dict = @{
+    @"cellCtrls": @"cell_ctrls",
     @"logPb": @"log_pb",
     @"contentDecoration": @"content_decoration",
     @"mediaName": @"media_name",
@@ -203,6 +205,7 @@
     @"isStick": @"is_stick",
     @"stickStyle": @"stick_style",
     @"originType": @"origin_type",
+    @"subRawDatas": @"sub_raw_datas"
   };
   return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
      return dict[keyName]?:keyName;
@@ -474,8 +477,21 @@
                            @"logPb":@"log_pb",
                            @"commentCount":@"comment_count",
                            @"diggCount":@"digg_count",
+                           @"readCount":@"read_count",
                            @"userDigg":@"is_digg",
                            @"distanceInfo":@"distance_info",
+                           @"subCellType": @"sub_cell_type",
+                           @"hotCellList": @"hot_cell_list",
+                           @"cardFooter": @"card_footer",
+                           @"cardHeader": @"card_header",
+                           @"hotSocialList":@"hot_social_list",
+                           @"articleTitle":@"article_title",
+                           @"userName":@"user_name",
+                            @"allSchema":@"all_schema",
+                           @"upSpace":@"up_space",
+                           @"downSpace":@"down_space",
+                           @"lynxData":@"lynx_data",
+                           @"hidelLine":@"hide_line"
                            };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
         return dict[keyName]?:keyName;
@@ -1030,6 +1046,100 @@
     @"avatarUrl": @"avatar_url",
     @"userVerified": @"user_verified",
     @"userAuthInfo": @"user_auth_info",
+  };
+  return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+     return dict[keyName]?:keyName;
+  }];
+}
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+@end
+
+@implementation FHFeedContentRawDataHotCellListModel
++ (JSONKeyMapper*)keyMapper
+{
+    NSDictionary *dict = @{
+                           @"logPb": @"log_pb",
+                           @"hotCellType": @"hot_cell_type",
+                           };
+    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+        return dict[keyName]?:keyName;
+    }];
+}
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+@end
+
+@implementation FHFeedContentRawDataHotCellListTipsModel
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+@end
+
+@implementation FHFeedContentCellCtrlsModel
++ (JSONKeyMapper*)keyMapper
+{
+    NSDictionary *dict = @{
+                           @"cellFlag": @"cell_flag",
+                           @"cellHeight": @"cell_height",
+                           @"cellLayoutStyle": @"cell_layout_style",
+                           @"needClientImprRecycle": @"need_client_impr_recycle",
+                           };
+    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+        return dict[keyName]?:keyName;
+    }];
+}
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+@end
+
+@implementation FHFeedContentRawDataCardFooterModel
++ (JSONKeyMapper*)keyMapper
+{
+  NSDictionary *dict = @{
+    @"footerLayoutStyle": @"footer_layout_style",
+    @"nightIcon": @"night_icon",
+  };
+  return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+     return dict[keyName]?:keyName;
+  }];
+}
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+@end
+
+@implementation FHFeedContentRawDataCardHeaderModel
++ (JSONKeyMapper*)keyMapper
+{
+  NSDictionary *dict = @{
+    @"headerLayoutStyle": @"header_layout_style",
+    @"publisherText": @"publisher_text",
+    @"relatedForum": @"related_forum",
+  };
+  return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+     return dict[keyName]?:keyName;
+  }];
+}
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+@end
+
+@implementation FHFeedContentRawDataCardHeaderRelatedForumModel
++ (JSONKeyMapper*)keyMapper
+{
+  NSDictionary *dict = @{
+    @"concernId": @"concern_id",
   };
   return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
      return dict[keyName]?:keyName;

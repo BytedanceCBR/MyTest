@@ -21,11 +21,11 @@
 #import "TTWebImageManager.h"
 #import "TTShareConstants.h"
 
-#import <TTActivityContentItemProtocol.h>
-#import <TTWechatTimelineContentItem.h>
-#import <TTWechatContentItem.h>
-#import <TTQQFriendContentItem.h>
-#import <TTQQZoneContentItem.h>
+#import "TTActivityContentItemProtocol.h"
+#import "TTWechatTimelineContentItem.h"
+#import "TTWechatContentItem.h"
+#import "TTQQFriendContentItem.h"
+#import "TTQQZoneContentItem.h"
 //#import <TTDingTalkContentItem.h>
 //#import "TTRepostViewController.h"
 //#import <TTRepostServiceProtocol.h>
@@ -36,11 +36,10 @@
 //#import "TTCopyContentItem.h"
 //#import <TTSystemContentItem.h>
 #import "TTShareMethodUtil.h"
-#import <TTForwardWeitoutiaoActivity.h>
-#import <TTDirectForwardWeitoutiaoActivity.h>
+#import "TTForwardWeitoutiaoActivity.h"
+#import "TTDirectForwardWeitoutiaoActivity.h"
 #import "AKAwardCoinManager.h"
 #import "FHTraceEventUtils.h"
-#import <Crashlytics/Answers.h>
 #import <TTThemed/TTThemeManager.h>
 #import <TTArticleBase/SSCommonLogic.h>
 #import <TTBaseLib/TTUIResponderHelper.h>
@@ -193,7 +192,6 @@ extern BOOL ttvs_isShareIndividuatioEnable(void);
     TLS_LOG(@"didCompleteByItemType=%d", itemType);
     //分享数量统计
     if (itemType > TTActivityTypeNone && itemType <= TTActivityTypeShareButton){
-        [Answers logCustomEventWithName:@"share" customAttributes:@{@"article": [NSString stringWithFormat:@"%d",itemType]}];
         [[TTMonitor shareManager] trackService:@"shareboard_success" status:itemType extra:@{@"source": @"article"}];
     }
     if (view == self.toolbarShareView) {
@@ -609,6 +607,11 @@ extern BOOL ttvs_isShareIndividuatioEnable(void);
             [params setValue:self.detailModel.orderedData.categoryID forKey:@"category_name"];
             [params setValue:[FHTraceEventUtils generateEnterfrom:self.detailModel.orderedData.categoryID] forKey:@"enter_from"];
             [params setValue:@"detail" forKey:@"position"];
+            
+            if(self.detailModel.reportParams.count > 0){
+                [params addEntriesFromDictionary:self.detailModel.reportParams];
+            }
+            
             [TTTrackerWrapper eventV3:@"rt_favourite" params:params];
             // 加入收藏吊起登录弹窗的代码
             TTAccountLoginAlertTitleType type = TTAccountLoginAlertTitleTypeFavor;
@@ -792,7 +795,6 @@ extern BOOL ttvs_isShareIndividuatioEnable(void);
     }
     // 收藏成功后，统计打点 favor_success
     [self report_p_sendDetailLogicTrackWithLabel:@"favorite_success"];
-    [Answers logCustomEventWithName:@"favorite" customAttributes:@{@"source": @"article"}];
     [[TTMonitor shareManager] trackService:@"favorite_success" status:1 extra:@{@"source": @"article"}];
 }
 

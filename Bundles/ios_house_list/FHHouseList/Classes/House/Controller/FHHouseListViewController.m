@@ -6,12 +6,12 @@
 //
 
 #import "FHHouseListViewController.h"
-#import <TTRoute.h>
-#import <Masonry.h>
+#import "TTRoute.h"
+#import "Masonry.h"
 #import <TTUIWidget/UIViewController+NavigationBarStyle.h>
 #import <FHHouseBase/FHHouseBridgeManager.h>
 #import "FHFakeInputNavbar.h"
-#import <UIViewAdditions.h>
+#import "UIViewAdditions.h"
 #import <TTUIWidget/ArticleListNotifyBarView.h>
 #import "FHTracerModel.h"
 #import "FHErrorMaskView.h"
@@ -20,7 +20,6 @@
 #import "TTDeviceHelper.h"
 #import "NSDictionary+TTAdditions.h"
 #import "FHConditionFilterViewModel.h"
-#import "FHHouseListRedirectTipView.h"
 #import "HMDTTMonitor.h"
 #import "FHEnvContext.h"
 #import "TTInstallIDManager.h"
@@ -29,11 +28,12 @@
 #import "FHCommuteManager.h"
 #import <FHHouseBase/FHBaseTableView.h>
 #import "FHMainOldTopTagsView.h"
+#import "TTNavigationController.h"
 
 #define kFilterBarHeight 44
 #define COMMUTE_TOP_MARGIN 6
 #define COMMUTE_HEIGHT     42
-#define kFilterTagsViewHeight 58
+#define kFilterTagsViewHeight 40
 
 @interface FHHouseListViewController ()<TTRouteInitializeProtocol, FHHouseListViewModelDelegate>
 
@@ -47,7 +47,6 @@
 
 @property (nonatomic , strong) UIView *filterContainerView;
 @property (nonatomic , strong) UIView *filterPanel;
-@property (nonatomic , strong) FHHouseListRedirectTipView *redirectTipView;
 
 @property (nonatomic , strong) UIControl *filterBgControl;
 @property (nonatomic , strong) FHConditionFilterViewModel *houseFilterViewModel;
@@ -69,10 +68,20 @@
 
 @property (nonatomic , assign) FHHouseListSearchType searchType;
 @property(nonatomic , strong) FHMainOldTopTagsView *topTagsView;
+@property(nonatomic , strong) UIView *bottomLine;
 
 @end
 
 @implementation FHHouseListViewController
+
+- (UIView *)bottomLine
+{
+    if (!_bottomLine) {
+        _bottomLine = [[UIView alloc] init];
+        _bottomLine.backgroundColor = [UIColor themeGray6];
+    }
+    return _bottomLine;
+}
 
 -(instancetype)initWithRouteParamObj:(TTRouteParamObj *)paramObj
 {
@@ -158,19 +167,26 @@
 -(void)initNavbar
 {
     FHFakeInputNavbarType type = FHFakeInputNavbarTypeDefault;
-    if (self.houseType == FHHouseTypeSecondHandHouse || self.houseType == FHHouseTypeRentHouse) {
+    if (self.houseType == FHHouseTypeSecondHandHouse) {
         type = FHFakeInputNavbarTypeMap;
     }
     // FHFakeInputNavbarTypeMessageAndMap 二手房列表页显示消息和小红点
-    if (self.houseType == FHHouseTypeSecondHandHouse) {
+    if (self.houseType == FHHouseTypeSecondHandHouse || self.houseType == FHHouseTypeRentHouse) {
         type = FHFakeInputNavbarTypeMessageAndMap;
     }
+    
+    if ( self.houseType == FHHouseTypeNewHouse || self.houseType == FHHouseTypeNeighborhood) {
+        type = FHFakeInputNavbarTypeMessageSingle;
+    }
+    
     if ([self.paramObj.sourceURL.host rangeOfString:@"commute_list"].location != NSNotFound) {
         //通勤找房不显示地图
         type = FHFakeInputNavbarTypeDefault;
     }
     
     _navbar = [[FHFakeInputNavbar alloc] initWithType:type];
+    _navbar.style = FHFakeInputNavbarStyleBorder;
+    [_navbar refreshAlpha:1];
     if (self.associationalWord.length > 0) {
         
         _navbar.placeHolder = self.associationalWord;
@@ -189,7 +205,7 @@
     _navbar.messageActionBlock = ^{
         [wself.viewModel showMessageList];
     };
-    
+
     _navbar.tapInputBar = ^{
         [wself.viewModel showInputSearch];
     };
@@ -210,18 +226,23 @@
     self.viewModel.viewModelDelegate = self;
     [bridge setViewModel:self.houseFilterViewModel withDelegate:self.viewModel];
     
-    [bridge showBottomLine:NO];
-    
-    if (!self.viewModel.isCommute) {
-        //非通勤找房下才显示分隔线
-        UIView *bottomLine = [[UIView alloc] init];
-        bottomLine.backgroundColor = [UIColor themeGray6];
-        [self.filterPanel addSubview:bottomLine];
-        [bottomLine mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.left.and.right.and.bottom.mas_equalTo(self.filterPanel);
-            make.height.mas_equalTo(TTDeviceHelper.ssOnePixel);
-        }];
-    }
+    [bridge showBottomLine:YES];
+    [self.filterBgControl addSubview:self.bottomLine];
+    [self.bottomLine mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.right.mas_equalTo(0);
+        make.top.mas_equalTo(0);
+        make.height.mas_equalTo(TTDeviceHelper.ssOnePixel);
+    }];
+//    if (!self.viewModel.isCommute) {
+//        //非通勤找房下才显示分隔线
+//        UIView *bottomLine = [[UIView alloc] init];
+//        bottomLine.backgroundColor = [UIColor themeGray6];
+//        [self.filterPanel addSubview:bottomLine];
+//        [bottomLine mas_makeConstraints:^(MASConstraintMaker *make) {
+//            make.left.and.right.and.bottom.mas_equalTo(self.filterPanel);
+//            make.height.mas_equalTo(TTDeviceHelper.ssOnePixel);
+//        }];
+//    }
 
 
 }
@@ -439,14 +460,11 @@
     [super viewWillAppear:animated];
     [self.viewModel viewWillAppear:animated];
     [self.navigationController setNavigationBarHidden:YES animated:animated];
-    [self.view addObserver:self forKeyPath:@"userInteractionEnabled" options:NSKeyValueObservingOptionNew context:nil];
-
 }
 -(void)viewWillDisappear:(BOOL)animated
 {
     [super viewWillDisappear:animated];
     [self.viewModel viewWillDisappear:animated];
-    [self.view removeObserver:self forKeyPath:@"userInteractionEnabled"];
     [self.viewModel addStayCategoryLog:self.ttTrackStayTime];
     [self tt_resetStayTime];
 
@@ -456,6 +474,7 @@
 {
     [super viewDidAppear:animated];
     [self.viewModel refreshMessageDot];
+    [self.viewModel viewDidAppear:animated];
 }
 
 - (void)viewDidDisappear:(BOOL)animated
@@ -524,18 +543,12 @@
     }];
     
     [self.tableView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.redirectTipView.mas_bottom);
-        make.left.right.bottom.mas_equalTo(self.containerView);
-    }];
-    
-    [self.redirectTipView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.right.mas_equalTo(self.containerView);
         if (self.topTagsView) {
             make.top.mas_equalTo(self.topTagsView.mas_bottom);
         }else {
             make.top.mas_equalTo(self.filterContainerView.mas_bottom);
         }
-        make.height.mas_equalTo(0);
+        make.left.right.bottom.mas_equalTo(self.containerView);
     }];
     
     [self.notifyBarView mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -564,22 +577,29 @@
 
     [self initConstraints];
     self.viewModel.maskView = self.errorMaskView;
-    [self.viewModel setRedirectTipView:self.redirectTipView];
     [self.viewModel setTopTagsView:self.topTagsView];
     if (self.topTagsView && self.paramObj.queryParams) {
         self.topTagsView.lastConditionDic = [NSMutableDictionary dictionaryWithDictionary:self.paramObj.queryParams];
     }
     [self.houseFilterViewModel trigerConditionChanged];
 
+    
+    WeakSelf;
+    self.panBeginAction = ^{
+        StrongSelf;
+        [self.view endEditing:YES];
+    };
 }
 
 -(void)refreshNavBar:(FHHouseType)houseType placeholder:(NSString *)placeholder inputText:(NSString *)inputText{
     
-    if ((houseType == FHHouseTypeRentHouse && !self.viewModel.isCommute ) || houseType == FHHouseTypeSecondHandHouse) {
-        if (houseType == FHHouseTypeSecondHandHouse) {
+    if ((houseType == FHHouseTypeRentHouse && !self.viewModel.isCommute ) || houseType == FHHouseTypeSecondHandHouse ||houseType == FHHouseTypeNewHouse || houseType == FHHouseTypeNeighborhood) {
+        if (houseType == FHHouseTypeSecondHandHouse || houseType == FHHouseTypeRentHouse) {
             // FHFakeInputNavbarTypeMessageAndMap 二手房列表页显示消息和小红点
             [self.navbar refreshNavbarType:FHFakeInputNavbarTypeMessageAndMap];
-        } else {
+        } else if(houseType == FHHouseTypeNewHouse||houseType == FHHouseTypeNeighborhood){
+            [self.navbar refreshNavbarType:FHFakeInputNavbarTypeMessageSingle];
+        } else{
             [self.navbar refreshNavbarType:FHFakeInputNavbarTypeMap];
         }
     }else {
@@ -589,13 +609,6 @@
     self.navbar.placeHolder = placeholder;
     self.navbar.inputText = inputText;
     self.associationalWord = placeholder;
-}
-
--(void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSKeyValueChangeKey,id> *)change context:(void *)context {
-    
-    if ([keyPath isEqualToString:@"userInteractionEnabled"]) {
-        [self.view endEditing:YES];
-    }
 }
 
 -(void)setupUI {
@@ -616,9 +629,6 @@
     self.notifyBarView = [[ArticleListNotifyBarView alloc]initWithFrame:CGRectZero];
     [self.view addSubview:self.notifyBarView];
     [self setupTopTagsView];
-
-    self.redirectTipView = [[FHHouseListRedirectTipView alloc]initWithFrame:CGRectZero];
-    [self.view addSubview:self.redirectTipView];
 
     [self.view addSubview:self.navbar];
     [self.view addSubview:self.filterBgControl];
@@ -684,7 +694,7 @@
 
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         [UIView animateWithDuration:0.3 animations:^{
-            self.tableView.contentInset = UIEdgeInsetsZero;
+            _tableView.contentInset = UIEdgeInsetsMake(0, 0, 34 , 0);
         }];
     });
 
@@ -706,6 +716,17 @@
 - (void)trackStartedByAppWillEnterForground {
     [self tt_resetStayTime];
     self.ttTrackStartTime = [[NSDate date] timeIntervalSince1970];
+    
+    if (self.houseType == FHHouseTypeSecondHandHouse) {
+        NSArray *tableCells = [self.tableView visibleCells];
+        if (tableCells) {
+            [tableCells enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+                    if ([obj respondsToSelector:@selector(resumeVRIcon)]) {
+                        [obj performSelector:@selector(resumeVRIcon)];
+                    }
+            }];
+        }
+    }
 }
 
 #pragma mark - lazy load
@@ -727,7 +748,7 @@
         }
         _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
         _tableView.showsVerticalScrollIndicator = NO;
-
+        _tableView.keyboardDismissMode = UIScrollViewKeyboardDismissModeOnDrag;
     }
     return _tableView;
 }

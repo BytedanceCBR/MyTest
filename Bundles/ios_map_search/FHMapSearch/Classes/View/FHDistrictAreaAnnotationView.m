@@ -6,7 +6,7 @@
 //
 
 #import "FHDistrictAreaAnnotationView.h"
-#import <UIViewAdditions.h>
+#import "UIViewAdditions.h"
 #import "UIColor+Theme.h"
 #import <FHHouseBase/FHCommonDefines.h>
 

@@ -9,7 +9,7 @@
 #import "ExploreDetailManager.h"
 #import "NewsDetailLogicManager.h"
 #import "ExploreItemActionManager.h"
-#import <TTAccountBusiness.h>
+#import "TTAccountBusiness.h"
 #import "NewsDetailConstant.h"
 
 #import "TTUIResponderHelper.h"
@@ -17,10 +17,8 @@
 #import "NSDictionary+TTGeneratedContent.h"
 #import "ExploreOrderedData+TTAd.h"
 #import "TTRelevantDurationTracker.h"
-//#import "Bubble-Swift.h"
 #import "FHEnvContext.h"
 #import <TTArticleBase/SSCommonLogic.h>
-#import <Crashlytics/Answers.h>
 
 @interface ExploreDetailManager()
 {
@@ -504,7 +502,6 @@
     // 收藏成功，统计打点 favorite_success
     [NewsDetailLogicManager trackEventTag:tag label:@"favorite_success" value:@([self article].uniqueID) extValue:[self currentADID] fromID:nil params:param groupModel:_article.groupModel];
     if ([self.article isImageSubject]) {
-        [Answers logCustomEventWithName:@"favorite" customAttributes:@{@"source": @"photo"}];
         [[TTMonitor shareManager] trackService:@"favorite_success" status:1 extra:@{@"source": @"photo"}];
     }
 }

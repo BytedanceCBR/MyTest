@@ -21,7 +21,6 @@
 #import "TTDeviceHelper.h"
 
 #import "UIImage+TTThemeExtension.h"
-#import <Crashlytics/Crashlytics.h>
 
 #import "TTCategoryBadgeNumberManager.h"
 #import "TTInfiniteLoopFetchNewsListRefreshTipManager.h"
@@ -31,8 +30,8 @@
 #import "TTPushAlertManager.h"
 //#import <TTDialogDirector/CLLocationManager+MutexDialogAdapter.h>
 #import "TTCategory+ConfigDisplayName.h"
-#import <FHLocManager.h>
-#import <UIFont+House.h>
+#import "FHLocManager.h"
+#import "UIFont+House.h"
 #import "UIColor+Theme.h"
 #import "SSCommonLogic.h"
 #import <Masonry/Masonry.h>
@@ -41,6 +40,7 @@
 #import <TTArticleBase/ExploreLogicSetting.h>
 #import <TTBaseLib/TTUIResponderHelper.h>
 #import <TTArticleBase/Log.h>
+#import "UIColor+Theme.h"
 
 #define kFirstLeftMargin    15
 #define kLastRightMargin    68
@@ -70,7 +70,7 @@
 @property (nonatomic, weak)   NSObject<CategorySelectorButtonDelegate> *delegate;
 @property (nonatomic, strong) TTGlowLabel *titleLabel;
 @property (nonatomic, strong) TTGlowLabel *maskTitleLabel;
-@property (nonatomic, strong) SSThemedView *bottomSelectView;
+//@property (nonatomic, strong) SSThemedView *bottomSelectView;
 @property (nonatomic, strong) TTBadgeNumberView *badgeView;
 @property (nonatomic, assign) TTCategorySelectorViewStyle style;
 @property (nonatomic, assign) TTCategorySelectorViewTabType tabType;
@@ -97,7 +97,7 @@
     self = [super initWithFrame:frame];
     if(self)
     {
-        self.backgroundColor = [UIColor clearColor];
+        self.backgroundColor = [UIColor whiteColor];
         
         self.style = aStyle;
         self.tabType = tabType;
@@ -105,18 +105,18 @@
         
         self.titleLabel = [[TTGlowLabel alloc] initWithFrame:self.bounds];
         [self addSubview:_titleLabel];
-        _titleLabel.backgroundColor = [UIColor clearColor];
+        _titleLabel.backgroundColor = [UIColor whiteColor];
         
         self.tapRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapped:)];
         [self addGestureRecognizer:_tapRecognizer];
         
         self.maskTitleLabel = [[TTGlowLabel alloc] initWithFrame:_titleLabel.frame];
-        self.maskTitleLabel.backgroundColor = [UIColor clearColor];
+        self.maskTitleLabel.backgroundColor = [UIColor whiteColor];
         
-        self.bottomSelectView = [[SSThemedView alloc] initWithFrame:CGRectMake(0.0f, frame.size.height - 6, 20, 3)];
-        self.bottomSelectView.backgroundColor = [UIColor themeRed1];
-        self.bottomSelectView.alpha = 0;
-        self.bottomSelectView.layer.cornerRadius = 1.5;
+//        self.bottomSelectView = [[SSThemedView alloc] initWithFrame:CGRectMake(0.0f, frame.size.height - 6, 20, 3)];
+//        self.bottomSelectView.backgroundColor = [UIColor themeRed1];
+//        self.bottomSelectView.alpha = 0;
+//        self.bottomSelectView.layer.cornerRadius = 1.5;
         
         _maskTitleLabel.alpha = 0;
         
@@ -128,7 +128,8 @@
             _maskTitleLabel.textColorThemeKey = kColorText12;
         }else if (self.style == TTCategorySelectorViewLightStyle || self.style == TTCategorySelectorViewNewVideoStyle) {
             _titleLabel.textColorThemeKey = @"grey3";
-            _maskTitleLabel.textColorThemeKey = @"grey1";
+//            _maskTitleLabel.textColorThemeKey = @"grey1";
+            _maskTitleLabel.textColor = [UIColor colorWithHexStr:@"#fe5500"];
         }else if (self.style == TTCategorySelectorViewVideoStyle) {
             _titleLabel.textColorThemeKey = kColorText1;
             _maskTitleLabel.textColorThemeKey = kColorText4;
@@ -162,7 +163,7 @@
         _maskTitleLabel.font = [UIFont themeFontSemibold:[TTCategorySelectorView channelFontSizeWithStyle:aStyle tabType:tabType]];
         
         [self addSubview:_maskTitleLabel];
-        [self addSubview:_bottomSelectView];
+//        [self addSubview:_bottomSelectView];
         
         if (![SSCommonLogic isNewLaunchOptimizeEnabled]) {
             [_maskTitleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -279,7 +280,7 @@
         bottomLeft = 0;
         bottomWidth = rect.size.width;
     }
-    self.bottomSelectView.frame = CGRectMake(bottomLeft, rect.size.height - 6, bottomWidth, 3);
+//    self.bottomSelectView.frame = CGRectMake(bottomLeft, rect.size.height - 6, bottomWidth, 3);
 }
 
 - (void)layoutSubviews
@@ -290,7 +291,7 @@
         _titleLabel.center = CGPointMake(CGRectGetWidth(self.bounds) / 2, CGRectGetHeight(self.bounds) / 2);
         _maskTitleLabel.bounds = self.bounds;
         _maskTitleLabel.center = CGPointMake(CGRectGetWidth(self.bounds) / 2, CGRectGetHeight(self.bounds) / 2);
-        _bottomSelectView.center = CGPointMake(CGRectGetWidth(self.bounds) / 2, CGRectGetHeight(self.bounds) / 2);
+//        _bottomSelectView.center = CGPointMake(CGRectGetWidth(self.bounds) / 2, CGRectGetHeight(self.bounds) / 2);
 
     }
     [self updateBadgeViewFrame];
@@ -430,7 +431,7 @@ static BOOL bNeedTrackFollowCategoryBadgeLog = YES;
     self = [super initWithFrame:frame];
     if(self)
     {
-        self.backgroundColor = [UIColor clearColor];
+        self.backgroundColor = [UIColor whiteColor];
         self.style = style;
         self.tabType = tabType;
         
@@ -500,7 +501,7 @@ static BOOL bNeedTrackFollowCategoryBadgeLog = YES;
         [self addSubview:self.rightBorderIndicatorView];
         [self addSubview:self.searchButton]; //search图片四周用很多空白，所以用expandButton覆盖
         [self addSubview:self.expandButton];
-
+        [self setBackgroundColor:[UIColor whiteColor]];
         
         [self reloadThemeUI];
         
@@ -570,6 +571,7 @@ static BOOL bNeedTrackFollowCategoryBadgeLog = YES;
     viewFrame.size.height = self.height;
     viewFrame.origin.x = self.scrollView.right - viewFrame.size.width;
     viewFrame.origin.y = 0;
+    [self.scrollView  setBackgroundColor:[UIColor whiteColor]];
     
     [self refreshExpandButton:nil];
     [self refreshSelectorView];
@@ -1078,7 +1080,7 @@ static BOOL bNeedTrackFollowCategoryBadgeLog = YES;
         [categoryButton updateBottomSelectFrame];
         [self.scrollView addSubview:categoryButton];
         
-        offsetX = categoryButton.right + 5;
+        offsetX = categoryButton.right;
         
         NSString *startCategoryID = kTTMainCategoryID;
         if (!_lastSelectedButton && [SSCommonLogic firstCategoryStyle] > 0) {
@@ -1159,7 +1161,7 @@ static BOOL bNeedTrackFollowCategoryBadgeLog = YES;
         button.maskTitleLabel.alpha = 0;
         button.titleLabel.transform = CGAffineTransformIdentity;
         button.maskTitleLabel.transform = CGAffineTransformIdentity;
-        button.bottomSelectView.alpha = 0;
+//        button.bottomSelectView.alpha = 0;
     }];
 }
 
@@ -1171,7 +1173,7 @@ static BOOL bNeedTrackFollowCategoryBadgeLog = YES;
         CGFloat scale = [[self class] channelSelectedFontSizeWithStyle:self.style tabType:self.tabType] / [[self class] channelFontSizeWithStyle:self.style tabType:self.tabType];
         button.titleLabel.transform = CGAffineTransformMakeScale(scale, scale);
         button.maskTitleLabel.transform = CGAffineTransformMakeScale(scale, scale);
-        button.bottomSelectView.alpha = 1;
+//        button.bottomSelectView.alpha = 1;
     }];
 }
 
@@ -1233,8 +1235,8 @@ static BOOL bNeedTrackFollowCategoryBadgeLog = YES;
 
         fromButton.maskTitleLabel.alpha = 1 - percent;
         toButton.maskTitleLabel.alpha = percent;
-        fromButton.bottomSelectView.alpha = 1 - percent;
-        toButton.bottomSelectView.alpha = percent;
+//        fromButton.bottomSelectView.alpha = 1 - percent;
+//        toButton.bottomSelectView.alpha = percent;
     }
 }
 

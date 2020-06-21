@@ -16,7 +16,6 @@
  
 #import "SSCommonLogic.h"
 #import "TTBaseMacro.h"
-#import <TTNetBusiness/TTHttpsControlManager.h>
 
 #import "TTLCSServerConfig.h"
 #import <TTNetBusiness/TTRouteSelectionServerConfig.h>
@@ -54,7 +53,6 @@ static inline void setBaseURLDomains(NSDictionary *domains) {
 
 static inline NSDictionary *baseURLDomains() {
     NSDictionary *domains = [[NSUserDefaults standardUserDefaults] objectForKey:kBaseURLDomainsUserDefaultKey];
-    domains = nil;
     if (!domains || !domains[kSecurityBaseURLDomainKey]) {
         domains = @{kNormalBaseURLDomainKey : NormalBaseURLDomain,
                     kSNSBaseURLDomainKey : SNSBaseURLDomain,
@@ -428,10 +426,6 @@ static CommonURLSetting *_sharedInstance = nil;
             [DNSManager setDNSMapping:[data objectForKey:@"dns_mapping"]];
 
         }
-        
-        //处理 https的切换
-        [[TTHttpsControlManager sharedInstance_tt] configWithParameters:data];
-        
         //读取长连接配置
         // [[TTLCSServerConfig sharedTTLCSServerConfig] updateUrls:data];
         [[TTLCSServerConfig sharedInstance] resetServerConfigUrls:[data tt_arrayValueForKey:kTTLCSServerConfigUrlArrayKey]];
@@ -544,10 +538,6 @@ static CommonURLSetting *_sharedInstance = nil;
         if (dns_mapping && [dns_mapping isKindOfClass:[NSArray class]]) {
             [DNSManager setDNSMapping:dns_mapping];
         }
-        
-        //处理 https的切换
-        [[TTHttpsControlManager sharedInstance_tt] configWithResponseModel:responseModel];
-        
         //读取长连接配置
         // [[TTLCSServerConfig sharedTTLCSServerConfig] updateURLsWithResponseModel:responseModel];
         [[TTLCSServerConfig sharedInstance] resetServerConfigUrls:responseModel.data.frontierURLs];

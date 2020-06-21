@@ -19,14 +19,14 @@
 #import "SSWebViewController.h"
 //#import "TTRepostViewController.h"
 //#import "TTRepostOriginModels.h"
-#import <TTRelevantDurationTracker.h>
+#import "TTRelevantDurationTracker.h"
 #import "TTPlatformSwitcher.h"
 #import "TTFeedDislikeView.h"
 //#import "TTRecommendUserCollectionViewWrapper.h"
 //#import "TTLayOutUFLargePicCellModel.h"
 //#import "RecommendCardCache.h"
 #import <TTTracker/TTTrackerProxy.h>
-#import <TTAccountBusiness.h>
+#import "TTAccountBusiness.h"
 #import "TTRichSpanText+Emoji.h"
 #import "UILabel+Tapping.h"
 
@@ -54,6 +54,8 @@
 #import <TTBaseLib/TTStringHelper.h>
 #import "SSCommonLogic.h"
 #import <TTBaseLib/TTUIResponderHelper.h>
+#import "UIImageView+BDWebImage.h"
+#import "TTRoute.h"
 
 extern BOOL ttvs_isVideoFeedURLEnabled(void);
 
@@ -354,6 +356,15 @@ extern BOOL ttvs_isVideoFeedURLEnabled(void);
     typeLabel.layer.borderWidth = [TTDeviceHelper ssOnePixel];
     [self addSubview:typeLabel];
     self.typeLabel = typeLabel;
+    /** 图片来源标签 如幸福敲门 by xsm */
+    SSThemedImageView *customSourceImageView =[[SSThemedImageView alloc] init];
+    customSourceImageView.backgroundColor = [TTUISettingHelper cellViewBackgroundColor];
+    customSourceImageView.contentMode  = UIViewContentModeScaleAspectFit;
+    customSourceImageView.hidden = YES;
+    [self addSubview:customSourceImageView];
+    self.customSourceImageView = customSourceImageView;
+    UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(customSourceImageViewClicked:)];
+    [customSourceImageView addGestureRecognizer:tap];
     /** 顶按钮 */
     TTAlphaThemedButton *digButton = [[TTAlphaThemedButton alloc] init];
     digButton.selectedTitleColorThemeKey = kColorText4;
@@ -576,6 +587,7 @@ extern BOOL ttvs_isVideoFeedURLEnabled(void);
     [self layoutInfoLabel];
     [self layoutLiveTextLabel];
     [self layoutTypeLabel];
+    [self layoutCustomSourceImageView];
     [self layoutDigButton];
     [self layoutCommentButton];
     [self layoutForwardButton];
@@ -749,8 +761,8 @@ extern BOOL ttvs_isVideoFeedURLEnabled(void);
         if ([self.orderedData isPlainCell]){
             if (self.orderedData.originalData.userRepined &&
                 self.listType != ExploreOrderedDataListTypeFavorite && self.listType != ExploreOrderedDataListTypeReadHistory && self.listType != ExploreOrderedDataListTypePushHistory) {
-                self.typeLabel.textColor = [UIColor tt_themedColorForKey:@"red1"];
-                self.typeLabel.layer.borderColor = [UIColor tt_themedColorForKey:@"red1"].CGColor;
+                self.typeLabel.textColor = [UIColor tt_themedColorForKey:@"orange1"];
+                self.typeLabel.layer.borderColor = [UIColor tt_themedColorForKey:@"orange1"].CGColor;
             }
             else{
                 [ExploreCellHelper colorTypeLabel:self.typeLabel orderedData:self.orderedData];
@@ -761,10 +773,23 @@ extern BOOL ttvs_isVideoFeedURLEnabled(void);
                 self.typeLabel.textColor = [UIColor tt_themedColorForKey:kTagViewLineColorBlue()];
                 self.typeLabel.layer.borderColor = [UIColor tt_themedColorForKey:kTagViewLineColorBlue()].CGColor;
             } else {
-                self.typeLabel.textColor = [UIColor tt_themedColorForKey:@"red1"];
-                self.typeLabel.layer.borderColor = [UIColor tt_themedColorForKey:@"red1"].CGColor;
+                self.typeLabel.textColor = [UIColor tt_themedColorForKey:@"orange1"];
+                self.typeLabel.layer.borderColor = [UIColor tt_themedColorForKey:@"orange1"].CGColor;
             }
         }
+    }
+}
+
+- (void)layoutCustomSourceImageView
+{
+    TTLayOutCellBaseModel *cellLayOut = self.orderedData.cellLayOut;
+    self.customSourceImageView.hidden = cellLayOut.customSourceImageViewHidden;
+    if (!self.customSourceImageView.hidden) {
+        self.customSourceImageView.frame = cellLayOut.customSourceImageViewFrame;
+        if (!isEmptyString(cellLayOut.customSourceImageUrl)){
+            [self.customSourceImageView bd_setImageWithURL:[NSURL URLWithString:cellLayOut.customSourceImageUrl] placeholder:nil];
+        }
+        self.customSourceImageView.userInteractionEnabled = cellLayOut.customSourceImageViewCanClick;
     }
 }
 
@@ -1217,6 +1242,15 @@ extern BOOL ttvs_isVideoFeedURLEnabled(void);
     }
 }
 
+- (void)customSourceImageViewClicked:(UITapGestureRecognizer *)tap {
+    NSDictionary *customSourceData = [[self.orderedData article] happyKnocking];
+    NSString *urlStr = customSourceData[@"schema"];
+    if(urlStr.length > 0){
+        NSURL* url = [NSURL URLWithString:urlStr];
+        [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:nil];
+    }
+}
+
 -(void)adLocationLabelClick:(UITapGestureRecognizer *)tap {
     BOOL canJump = NO;
     NSString *locationUrl = nil;
@@ -1374,7 +1408,7 @@ extern BOOL ttvs_isVideoFeedURLEnabled(void);
         [dict setValue:@"main_tab" forKey:@"list_entrance"];
     }
     
-    [TTTracker eventV3:@"rt_unlike" params:[dict copy]];
+    [BDTrackerProtocol eventV3:@"rt_unlike" params:[dict copy]];
 }
 
 - (void)digButtonAnimationWith:(TTAlphaThemedButton *)button
@@ -2031,7 +2065,7 @@ extern BOOL ttvs_isVideoFeedURLEnabled(void);
     [params setValue:@(connectionType) forKey:@"nt"];
     [params setValue:@"1" forKey:@"is_ad_event"];
     [params addEntriesFromDictionary:[orderData realTimeAdExtraData:@"embeded_ad" label:@"click" extraData:extraData]];
-    [TTTracker eventV3:@"realtime_click" params:params];
+    [BDTrackerProtocol eventV3:@"realtime_click" params:params];
 }
 
 //监听电话状态

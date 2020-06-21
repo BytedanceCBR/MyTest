@@ -42,7 +42,7 @@
 
 - (void)initViews {
     self.headerView = [[UIImageView alloc] init];
-    UIImage *image = [self ct_imageFromImage:[UIImage imageNamed:@"fh_mine_header_bg"] inRect:CGRectMake(0, 138, [UIScreen mainScreen].bounds.size.width, 32)];
+    UIImage *image = [self ct_imageFromImage:[UIImage imageNamed:@"fh_mine_header_bg_orange"] inRect:CGRectMake(0, 138, [UIScreen mainScreen].bounds.size.width, 32)];
     _headerView.image = image;
     _headerView.hidden = YES;
     [self.contentView addSubview:_headerView];
@@ -88,7 +88,6 @@
 
 - (void)updateCell:(FHMineConfigDataIconOpDataModel *)model isFirst:(BOOL)isFirst {
     self.model = model;
-    
     _headerView.hidden = !isFirst;
     
     if(model.title && ![model.title isEqualToString:@""]){
@@ -122,7 +121,7 @@
             title = [self getFocusItemTitle:itemModel.title];
         }
         NSString *imageUrl = ((FHMineConfigDataIconOpDataMyIconItemsImageModel *)[itemModel.image firstObject]).url;
-        FHMineFavoriteItemView *view = [[FHMineFavoriteItemView alloc] initWithName:title imageName:imageUrl];
+        FHMineFavoriteItemView *view = [[FHMineFavoriteItemView alloc] initWithName:title imageName:imageUrl moduletype:self.model.myIconId.integerValue];
         view.itemClickBlock = ^{
             [wself didItemClick:itemModel];
         };
@@ -142,16 +141,30 @@
     if(items.count > 0){
         CGFloat width = (UIScreen.mainScreen.bounds.size.width - bgPadding * 2 - (eachRowCount - 1) * itemPadding) / eachRowCount;
         
+        UIView *topView = self.titleLabel;
+        
         for (NSInteger i = 0; i < items.count; i++) {
             FHMineFavoriteItemView *view = items[i];
             [self.bgView addSubview:view];
             
+            NSInteger column = i % eachRowCount;
+            
             [view mas_makeConstraints:^(MASConstraintMaker *make) {
-                make.top.mas_equalTo(self.titleLabel.mas_bottom).offset(3);
-                make.left.mas_equalTo(self.bgView).offset((width + itemPadding) * i);
+                if(topView == self.titleLabel){
+                    make.top.mas_equalTo(topView.mas_bottom).offset(3);
+                }else{
+                    make.top.mas_equalTo(topView.mas_bottom).offset(-10);
+                }
+                make.left.mas_equalTo(self.bgView).offset((width + itemPadding) * column);
                 make.width.mas_equalTo(width);
-                make.bottom.mas_equalTo(self.bgView).offset(-10);
+                if(i == items.count - 1){
+                    make.bottom.mas_equalTo(self.bgView).offset(-10);
+                }
             }];
+            
+            if(column == eachRowCount - 1){
+                topView = view;
+            }
         }
     }
 }

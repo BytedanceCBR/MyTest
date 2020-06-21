@@ -12,8 +12,9 @@
 #import "TTUGCEmojiParser.h"
 #import "FHFeedUGCContentModel.h"
 #import "FHFeedUGCCellModel.h"
-#import <TTVFeedListItem.h>
-#import <AWECommentModel.h>
+#import "TTVFeedListItem.h"
+#import "AWECommentModel.h"
+#import "TTUGCAsyncLabel.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -26,8 +27,8 @@ NS_ASSUME_NONNULL_BEGIN
 + (NSAttributedString *)truncationFont:(UIFont *)font contentColor:(UIColor *)contentColor color:(UIColor *)color linkUrl:(NSString *)linkUrl;
 
 + (void)setRichContent:(TTUGCAttributedLabel *)label model:(FHFeedUGCCellModel *)model numberOfLines:(NSInteger)numberOfLines;
-
-+ (void)setRichContent:(TTUGCAttributedLabel *)label content:(NSString *)content font:(UIFont *)font numberOfLines:(NSInteger)numberOfLines;
+//感兴趣的小区使用
++ (void)setRichContent:(TTUGCAttributedLabel *)label content:(NSString *)content font:(UIFont *)font numberOfLines:(NSInteger)numberOfLines color:(UIColor *)color;
 
 + (void)setRichContentWithModel:(FHFeedUGCCellModel *)model width:(CGFloat)width numberOfLines:(NSInteger)numberOfLines;
 
@@ -35,7 +36,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (void)setRichContent:(TTUGCAttributedLabel *)label model:(FHFeedUGCCellModel *)model;
 
-+ (void)setOriginRichContent:(TTUGCAttributedLabel *)label model:(FHFeedUGCCellModel *)model;
++ (void)setOriginRichContent:(TTUGCAsyncLabel *)label model:(FHFeedUGCCellModel *)model numberOfLines:(NSInteger)numberOfLines;
 
 + (void)setOriginContentAttributeString:(FHFeedUGCCellModel *)model width:(CGFloat)width numberOfLines:(NSInteger)numberOfLines;
 
@@ -55,6 +56,14 @@ NS_ASSUME_NONNULL_BEGIN
 + (TTVFeedListItem *)configureVideoItem:(FHFeedUGCCellModel *)cellModel;
 
 + (TTImageInfosModel *)convertTTImageInfosModel:(FHFeedContentImageListModel *)imageModel;
+
+//小区问答
++ (void)setQuestionRichContentWithModel:(FHFeedUGCCellModel *)model width:(CGFloat)width numberOfLines:(NSInteger)numberOfLines;
+
++ (void)setAnswerRichContentWithModel:(FHFeedUGCCellModel *)model width:(CGFloat)width numberOfLines:(NSInteger)numberOfLines;
+
+////
++ (void)setAsyncRichContent:(TTUGCAsyncLabel *)label model:(FHFeedUGCCellModel *)model;
 
 @end
 

@@ -6,13 +6,15 @@
 //
 
 #import "WDListAnswerCellBottomView.h"
-#import <Masonry.h>
+#import "Masonry.h"
 #import "UIFont+House.h"
-#import <UIImageView+BDWebImage.h>
+#import "UIImageView+BDWebImage.h"
 #import "FHCommonDefines.h"
 #import "UIColor+Theme.h"
 #import "WDAnswerService.h"
 #import "FHUserTracker.h"
+#import "UIImage+FIconFont.h"
+#import "TTAccountManager.h"
 
 @interface WDListAnswerCellBottomView ()
 
@@ -36,13 +38,13 @@
     self.backgroundColor = [UIColor whiteColor];
     // 评论
     self.commentBtn = [[WDListAnswerCellBottomButton alloc] init];
-    self.commentBtn.icon.image = [UIImage imageNamed:@"f_ask_message_noraml"];
+    self.commentBtn.icon.image = ICON_FONT_IMG(20, @"\U0000e699", [UIColor themeGray1]);
     self.commentBtn.textLabel.text = @"0";
     [self.commentBtn addTarget:self action:@selector(commentBtnClick) forControlEvents:UIControlEventTouchUpInside];
     [self addSubview:self.commentBtn];
     // 点赞
     self.followBtn = [[WDListAnswerCellBottomButton alloc] init];
-    self.followBtn.icon.image = [UIImage imageNamed:@"f_ask_favorite_noraml"];// f_ask_favorite_selected
+    self.followBtn.icon.image = ICON_FONT_IMG(20, @"\U0000e69c", [UIColor themeGray1]);
     self.followBtn.textLabel.text = @"0";
     [self.followBtn addTarget:self action:@selector(followBtnClick) forControlEvents:UIControlEventTouchUpInside];
     [self addSubview:self.followBtn];
@@ -70,11 +72,11 @@
         self.followBtn.textLabel.text = [NSString stringWithFormat:@"%lld",[ansEntity.diggCount longLongValue]];
         if (ansEntity.isDigg) {
             self.followBtn.followed = YES;
-            self.followBtn.icon.image = [UIImage imageNamed:@"f_ask_favorite_selected"];//
-            self.followBtn.textLabel.textColor = [UIColor themeRed1];
+            self.followBtn.icon.image = ICON_FONT_IMG(20, @"\U0000e6b1", [UIColor themeOrange4]);
+            self.followBtn.textLabel.textColor = [UIColor themeOrange4];
         } else {
             self.followBtn.followed = NO;
-            self.followBtn.icon.image = [UIImage imageNamed:@"f_ask_favorite_noraml"];// f_ask_favorite_selected
+            self.followBtn.icon.image = ICON_FONT_IMG(20, @"\U0000e69c", [UIColor themeGray1]);
             self.followBtn.textLabel.textColor = [UIColor themeGray1];
         }
     }
@@ -94,6 +96,26 @@
 }
 
 - (void)followBtnClick {
+    if(![TTAccountManager isLogin]) {
+        NSMutableDictionary *params = [NSMutableDictionary dictionary];
+        [params setObject:@"question" forKey:@"enter_from"];
+        [params setObject:@"feed_like" forKey:@"enter_type"];
+        // 登录成功之后不自己Pop，先进行页面跳转逻辑，再pop
+        [params setObject:@(YES) forKey:@"need_pop_vc"];
+        params[@"from_ugc"] = @(YES);
+        __weak typeof(self) wSelf = self;
+        [TTAccountLoginManager showAlertFLoginVCWithParams:params completeBlock:^(TTAccountAlertCompletionEventType type, NSString * _Nullable phoneNum) {
+            if (type == TTAccountAlertCompletionEventTypeDone) {
+                // 登录成功
+                if ([TTAccountManager isLogin]) {
+                    [wSelf followBtnClick];
+                }
+            }
+        }];
+        
+        return;
+    }
+    
     NSMutableDictionary *tempDic = [self.apiParams mutableCopy];
     tempDic[@"page_type"] = @"question";
     self.apiParams = [tempDic copy];

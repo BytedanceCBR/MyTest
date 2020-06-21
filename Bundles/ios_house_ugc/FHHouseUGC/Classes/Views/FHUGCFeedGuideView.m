@@ -9,7 +9,7 @@
 #import "UIFont+House.h"
 #import "UIColor+Theme.h"
 #import "FHUserTracker.h"
-#import <Masonry.h>
+#import "Masonry.h"
 #import <FHHouseBase/UIImage+FIconFont.h>
 
 @interface FHUGCFeedGuideView ()
@@ -35,7 +35,8 @@
     self.backgroundColor = [UIColor whiteColor];
     
     self.arror = [[UIImageView alloc] init];
-    _arror.image = ICON_FONT_IMG(12, @"\U0000e67f", [UIColor whiteColor]);//@"fh_ugc_feed_guide_arror_up"
+//    _arror.image = ICON_FONT_IMG(12, @"\U0000e67f", [UIColor themeGray7]);//@"fh_ugc_feed_guide_arror_up"'
+    _arror.image = [UIImage imageNamed:@"fh_ugc_feed_guide_arror_up"];//@"fh_ugc_feed_guide_arror_up"
     [self addSubview:_arror];
     
     self.contentView = [[UIView alloc] init];
@@ -107,7 +108,7 @@
 -(void)onCloseGuideClick{
     NSMutableDictionary *tracerDic = [NSMutableDictionary dictionary];
     tracerDic[@"element_type"] = @"feed_community_guide_notice";
-    tracerDic[@"page_type"] = @"nearby_list";
+    tracerDic[@"page_type"] = @"hot_discuss_feed";
     tracerDic[@"enter_from"] = @"neighborhood_tab";
     tracerDic[@"click_position"] = @"cancel";
     [FHUserTracker writeEvent:@"click_options" params:tracerDic];

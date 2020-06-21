@@ -14,6 +14,8 @@
 #import "FHUserTracker.h"
 #import "TTArticleTabBarController.h"
 #import "TTTabBarManager.h"
+#import "FHNearbyViewModel.h"
+#import "FHEnvContext.h"
 
 @interface FHNearbyViewController ()
 
@@ -23,6 +25,7 @@
 @property(nonatomic, assign) BOOL noNeedAddEnterCategorylog;
 @property(nonatomic, assign) BOOL needRefresh;
 @property(nonatomic, strong) TTThemedAlertController *alertVC;
+@property(nonatomic, strong) FHNearbyViewModel *viewModel;
 
 @end
 
@@ -37,14 +40,16 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(topVCChange:) name:@"kExploreTopVCChangeNotification" object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationDidEnterBackground) name:UIApplicationDidEnterBackgroundNotification object:nil];
     
+    [self initViewModel];
+    
     if([[FHLocManager sharedInstance] isHaveLocationAuthorization]){
         self.currentLocaton = [FHLocManager sharedInstance].currentLocaton;
         [self initView];
         self.lastRequestTime = [[NSDate date] timeIntervalSince1970];
     }else{
-        [self showLocationGuideAlert];
+        [self checkNeedShowLocationAlert];
     }
-    
+
     [self addEnterCategoryLog];
 }
 
@@ -97,8 +102,15 @@
         self.feedVC =[[FHCommunityFeedListController alloc] init];
         _feedVC.listType = FHCommunityFeedListTypeNearby;
         _feedVC.currentLocaton = self.currentLocaton;
+        _feedVC.tableHeaderView = self.headerView;
         _feedVC.view.frame = self.view.bounds;
         _feedVC.tracerDict = [self.tracerDict mutableCopy];
+        __weak typeof(self) wself = self;
+        _feedVC.requestSuccess = ^(BOOL hasFeedData) {
+            if(hasFeedData){
+                wself.headerView.hidden = NO;
+            }
+        };
         [self addChildViewController:_feedVC];
         [self.view addSubview:_feedVC.view];
         [self.feedVC viewWillAppear];
@@ -121,6 +133,10 @@
     }
 }
 
+- (void)initViewModel {
+    _viewModel = [[FHNearbyViewModel alloc] initWithController:self];
+}
+
 - (void)applicationDidEnterBackground {
     [self addStayCategoryLog];
 }
@@ -132,11 +148,40 @@
     self.enterTabTimestamp = [[NSDate date]timeIntervalSince1970];
 }
 
+// UGC定位弹窗 3天 弹一次
+- (void)checkNeedShowLocationAlert {
+    NSTimeInterval currentTime = [[NSDate date] timeIntervalSince1970];
+    NSNumber *lastTime = [[NSUserDefaults standardUserDefaults] objectForKey:@"kFHUGCCheckNeedShowLocationAlert"];
+    NSNumber *currentTimeNum = [NSNumber numberWithDouble:currentTime];
+    if (lastTime == nil) {
+        if (currentTimeNum) {
+            [[NSUserDefaults standardUserDefaults] setObject:currentTimeNum forKey:@"kFHUGCCheckNeedShowLocationAlert"];
+            [[NSUserDefaults standardUserDefaults] synchronize];
+        }
+        [self showLocationGuideAlert];
+    } else {
+        double lastTimeValue = [lastTime doubleValue];
+        // 3天 = 3 * 24 * 60 * 60
+        if (currentTime - lastTimeValue >= (3 * 24 * 60 * 60)) {
+            if (currentTimeNum) {
+                [[NSUserDefaults standardUserDefaults] setObject:currentTimeNum forKey:@"kFHUGCCheckNeedShowLocationAlert"];
+                [[NSUserDefaults standardUserDefaults] synchronize];
+            }
+            [self showLocationGuideAlert];
+        } else {
+            // 3天内展示过了 直接初始化view
+            self.needRefresh = YES;
+            [self initView];
+            self.lastRequestTime = [[NSDate date] timeIntervalSince1970];
+        }
+    }
+}
+
 - (void)showLocationGuideAlert {
     __weak typeof(self) wself = self;
     self.needRefresh = NO;
     [self trackLocationAuthShow];
-    self.alertVC = [[TTThemedAlertController alloc] initWithTitle:@"你还没有开启定位服务哦" message:@"请在手机设置中开启定位服务，获取更多周边小区趣事" preferredType:TTThemedAlertControllerTypeAlert];
+    self.alertVC = [[TTThemedAlertController alloc] initWithTitle:@"您还没有开启定位权限" message:@"请前往系统设置开启，以便我们更好地为您推荐房源及丰富信息推荐维度" preferredType:TTThemedAlertControllerTypeAlert];
     [_alertVC addActionWithGrayTitle:@"我知道了" actionType:TTThemedAlertActionTypeCancel actionBlock:^{
         [wself trackLocationAuthClick:YES];
         wself.needRefresh = YES;
@@ -144,7 +189,7 @@
         wself.lastRequestTime = [[NSDate date] timeIntervalSince1970];
     }];
     
-    [_alertVC addActionWithTitle:@"开启定位" actionType:TTThemedAlertActionTypeNormal actionBlock:^{
+    [_alertVC addActionWithTitle:@"前往设置" actionType:TTThemedAlertActionTypeNormal actionBlock:^{
         [wself trackLocationAuthClick:NO];
         wself.needRefresh = YES;
         NSURL *jumpUrl = [NSURL URLWithString:UIApplicationOpenSettingsURLString];
@@ -158,6 +203,26 @@
     if (topVC) {
         [_alertVC showFrom:topVC animated:YES];
     }
+}
+
+- (FHNearbyHeaderView *)headerView {
+    if(!_headerView){
+        if([FHEnvContext isNewDiscovery]){
+            _headerViewHeight = 49.0f;
+        }else{
+            _headerViewHeight = 0.001f;
+        }
+        _headerView = [[FHNearbyHeaderView alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, _headerViewHeight)];
+        
+        NSMutableDictionary *tracerDict = [NSMutableDictionary dictionary];
+        [tracerDict addEntriesFromDictionary:self.tracerDict];
+        tracerDict[@"page_type"] = @"hot_discuss_feed";
+        _headerView.searchView.tracerDict = tracerDict;
+        
+        _headerView.searchView.hidden = ![FHEnvContext isNewDiscovery];
+        _headerView.hidden = YES;
+    }
+    return _headerView;
 }
 
 #pragma mark - 埋点
@@ -184,7 +249,7 @@
 }
 
 - (NSString *)categoryName {
-    return @"nearby_list";
+    return @"hot_discuss_feed";
 }
 
 - (void)trackLocationAuthShow {

@@ -9,6 +9,7 @@
 #import "JSONModel.h"
 #import <FHHouseBase/FHHouseType.h>
 #import <FHHouseBase/FHHouseContactDefines.h>
+#import "FHAssociateFormReportModel.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -16,20 +17,22 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FHHouseFillFormHelper : NSObject
 
-+ (void)fillFormActionWithConfigModel:(FHHouseFillFormConfigModel *)configModel; // 填表单
-+ (void)fillFormActionWithConfig:(NSDictionary *)config;
-+ (void)fillOnlineFormActionWithConfigModel:(FHHouseFillFormConfigModel *)configModel; // 在线联系
-+ (void)fillOnlineFormActionWithConfig:(NSDictionary *)config;
+typedef  void(^fillFormSubmitCallBack)();
+
+#pragma mark - associate refactor
++ (void)fillFormActionWithAssociateReport:(NSDictionary *)associateReportDict;
++ (void)fillFormActionWithAssociateReportModel:(FHAssociateFormReportModel *)associateReport;
 
 @end
 
-
+NS_CLASS_DEPRECATED_IOS(2_0, 2_0, "use FHAssociateFormReportModel instead")
 @interface FHHouseFillFormConfigModel : JSONModel
 
 #pragma mark 必填
 @property (nonatomic, assign) FHHouseType houseType; // 房源类型
 @property (nonatomic, copy) NSString *houseId;
 @property (nonatomic, weak) UIViewController *topViewController;
+@property (nonatomic, copy) NSNumber *targetType; // 线索类型
 
 #pragma mark 非必填
 @property (nonatomic, copy) NSString *title; // 非必填

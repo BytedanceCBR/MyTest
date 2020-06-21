@@ -6,7 +6,7 @@
 //
 
 #import <UIKit/UIKit.h>
-#import <SSViewControllerBase.h>
+#import "SSViewControllerBase.h"
 
 
 

@@ -23,17 +23,5 @@ Pod::Spec.new do |s|
 
   s.ios.deployment_target = '7.0'
 
-  s.dependency 'TTBaseLib'
-  s.dependency 'TTTracker'
-  s.dependency 'TTUIWidget'
-  s.dependency 'TTShare/TTShareBasic/TTWeChatShare'
-  s.dependency 'TTShare/TTShareBasic/TTQQShare'
-  s.dependency 'TTShare/TTShareBusiness/TTShareWeChatBusiness'
-  s.dependency 'TTShare/TTShareBusiness/TTShareQQBusiness'
-  s.dependency 'TTUserSettings'
-  s.dependency 'TTServiceKit', '>= 0.4.1'
-  s.dependency 'Aspects', '>= 1.4'
-  s.dependency 'TTKitchen'
-
 
 end

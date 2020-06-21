@@ -26,6 +26,8 @@
 #define kUGCTitleNearbyList @"nearby_list"
 #define kSecondTab @"tab_community"
 
+extern NSString *const PERMISSION_PROTOCOL_CONFIRMED_NOTIFICATION;
+
 static NSString *const kFHUserSelectCityNotification = @"k_fh_user_select_city";
 
 static NSString *const kUserDefaultCityName = @"kUserDefaultCityName";
@@ -34,14 +36,20 @@ static NSString *const kUserDefaultCityId = @"k_fh_config_key_select_city_id";
 
 static NSString *const kUserHasSelectedCityKey = @"k_fh_has_sel_city";
 
+static NSString *const kFHCityIsOpenKey = @"is_city_open";
+
 static NSString *const kTracerEventType = @"house_app2c_v2";
 
 static NSString *const kFHSwitchGetLightFinishedNotification = @"k_fh_get_light_finish";
 
 static NSString *const kFHUGCPromotionUser = @"is_promotion_user";
 
+
+
 @class FHMessageManager;
 @class TTReachability;
+@class UNUserNotificationCenter;
+@class UNNotificationResponse;
 NS_ASSUME_NONNULL_BEGIN
 
 @interface FHEnvContext : NSObject
@@ -53,6 +61,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign) BOOL isRefreshFromAlertCitySwitch;
 @property (nonatomic, assign) BOOL isRefreshFromCitySwitch;
 @property (nonatomic, assign) BOOL isClickTab;
+@property (nonatomic, assign) BOOL isShowingHomeHouseFind;
 @property (nonatomic, copy) NSString * refreshConfigRequestType;
 
 @property(nonatomic , strong) RACReplaySubject *configDataReplay;
@@ -61,6 +70,10 @@ NS_ASSUME_NONNULL_BEGIN
 //第二个tab小红点显示逻辑，非ugc情况下
 @property(nonatomic, assign) BOOL hasShowDots;
 @property(nonatomic, assign) BOOL isShowDots;
+//春节运营位是否正在显示
+@property(nonatomic, assign) BOOL isShowingSpringHang;
+//正在显示的画运营位ID
+@property(nonatomic, copy) NSString *currentShowHangId;
 
 
 + (instancetype)sharedInstance;
@@ -119,10 +132,10 @@ NS_ASSUME_NONNULL_BEGIN
  */
 + (void)changeFindTabTitle;
 
-/*
- 增加引导
- */
-+ (void)addTabUGCGuid;
+///*
+// 增加引导
+// */
+//+ (void)addTabUGCGuid;
 
 /*
   app启动调用
@@ -227,7 +240,77 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)jumpUGCTab;
 
+- (void)jumpMainTab;
+
+- (void)jumpTab:(NSString *)tabName;
+    
+/*
+判断开启了春节活动，默认YES
+*/
++ (BOOL)isSpringOpen;
+
+/*
+判断开启了春节运营活动按钮，默认NO
+ */
++ (BOOL)isSpringHangOpen;
+
+/*
+是否开启发现和UGC合并，默认NO
+ */
++ (BOOL)isNewDiscovery;
+
+/*
+判断开启首次安装用户引导，默认YES
+ */
++ (BOOL)isIntroduceOpen;
+/*
+ 第一次启动和切城市默认跳转的tab
+ 
+ 可能的值
+ tab_stream,
+ tab_f_find,
+ tab_message,
+ tab_mine
+ */
++ (NSDictionary *)defaultTabName;
+
+/*
+ 返回当前tab的埋点值
+ */
++ (NSString *)enterTabLogName;
+
+/*
+ 侧边挂件配置；
+ */
++ (FHConfigDataTabWidgetModel *)tabWidget;
+
+
+/**
+ * 权限隐私弹窗
+ */
+
+-(BOOL)hasConfirmPermssionProtocol;
+
+-(void)userConfirmedPermssionProtocol;
+
+-(void)pauseForPermissionProtocol;
+
+-(void)resumeForPermissionProtocl;
+
+-(void)addOpenUrlItem:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation;
+
+-(void)addContinueActivity:(UIApplication *)application activity:(NSUserActivity *)activity restorationHandler:(void(^)(NSArray *restorableObjects))restorationHandler;
+
+-(void)addRemoteNotification:(UIApplication *)application userInfo:(NSDictionary *)userInfo;
+
+-(void)addUNRemoteNOtification:(UNUserNotificationCenter *)center didReceiveNotificationResponse:(UNNotificationResponse *)response withCompletionHandler:(void (^)())completionHandler ;
+
++ (NSString *)getCurrentTabIdentifier;
+
+//是否展展示登陆弹窗
++(BOOL)canShowLoginTip;
 
 @end
+
 
 NS_ASSUME_NONNULL_END

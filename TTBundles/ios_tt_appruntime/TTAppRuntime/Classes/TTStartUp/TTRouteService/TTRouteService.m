@@ -12,7 +12,7 @@
 #import "ArticleMobileLoginViewController.h"
 #import "TTProjectLogicManager.h"
 #import "TTNavigationController.h"
-#import <TTAccountBusiness.h>
+#import "TTAccountBusiness.h"
 
 
 
@@ -67,6 +67,10 @@ SINGLETON_GCD(TTRouteService)
 {
     if ([nav respondsToSelector:@selector(setTtNavBarStyle:)]) {
         [nav performSelectorOnMainThread:@selector(setTtNavBarStyle:) withObject:@"White" waitUntilDone:YES];
+    }
+    if ([nav isKindOfClass:[UINavigationController class]]) {
+        // Fix:iOS13 UIModalPresentationAutomatic API_AVAILABLE(ios(13.0)) = -2,
+        nav.modalPresentationStyle = UIModalPresentationFullScreen;
     }
 }
 

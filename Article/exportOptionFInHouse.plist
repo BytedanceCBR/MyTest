@@ -11,7 +11,7 @@
 	<key>provisioningProfiles</key>
 	<dict>
 		<key>com.bytedance.fp1</key>
-		<string>com.bytedance.fp1.inhouse</string>
+		<string>com.bytedance.fp1_InHouse</string>
 		<key>com.bytedance.fp1.serviceNofExtension</key>
 		<string>fp1ServiceNofExtension</string>
 	</dict>

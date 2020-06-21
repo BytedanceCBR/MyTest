@@ -20,10 +20,9 @@
 #import <TTBaseLib/TTStringHelper.h>
 #import <TTBaseLib/TTBaseMacro.h>
 #import <TTPlatformBaseLib/TTTrackerWrapper.h>
-#import <TTDeviceHelper.h>
-#import <FHEnvContext.h>
-#import <FHLocManager.h>
-#import <FHEnvContext.h>
+#import "TTDeviceHelper.h"
+#import "FHEnvContext.h"
+#import "FHLocManager.h"
 
 @implementation TTRAd
 + (TTRJSBInstanceType)instanceType {
@@ -124,7 +123,7 @@
     
     double longitude = [FHLocManager sharedInstance].currentLocaton.coordinate.longitude;
     double latitude = [FHLocManager sharedInstance].currentLocaton.coordinate.latitude;
-    NSString *gCityId = [FHLocManager sharedInstance].currentReGeocode.citycode;
+    NSString *gCityId = [FHLocManager sharedInstance].currentReGeocode.cityCode;
     NSString *gCityName = [FHLocManager sharedInstance].currentReGeocode.city;
     
     TTPlacemarkItem *placemarkItem = [TTLocationManager sharedManager].placemarkItem;

@@ -6,7 +6,7 @@
 //
 
 #import "FHMultiMediaImageCell.h"
-#import <UIImageView+BDWebImage.h>
+#import "UIImageView+BDWebImage.h"
 #import <BDWebImage/BDWebImageManager.h>
 
 @interface FHMultiMediaImageCell ()
@@ -41,7 +41,6 @@
     if (!placeholder) {
         placeholder = self.placeHolder;
     }
-    
     [self.imageView bd_setImageWithURL:url placeholder:placeholder];
 }
 

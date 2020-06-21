@@ -9,7 +9,6 @@
 #import "TTVPlayerStateStore.h"
 #import "KVOController.h"
 #import "TTVResolutionStore.h"
-//#import "Bubble-Swift.h"
 #import "FHEnvContext.h"
 #import <TTPlatformBaseLib/TTTrackerWrapper.h>
 
@@ -144,7 +143,7 @@
         [traceParams addEntriesFromDictionary:self.extraDic];
     }
     
-    [TTTracker eventV3:@"video_over" params:traceParams];
+    [BDTrackerProtocol eventV3:@"video_over" params:traceParams];
 }
 
 

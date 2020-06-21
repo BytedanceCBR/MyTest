@@ -16,13 +16,13 @@
 #import <TTBaseLib/NSDictionary+TTAdditions.h>
 #import <TTBaseLib/TTStringHelper.h>
 #import <TTImage/TTWebImageManager.h>
-#import <TTTracker/TTTracker.h>
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 #import <TTRoute/TTRoute.h>
 #import <TTUserSettings/TTUserSettingsManager+NetworkTraffic.h>
 #import "TTDetailWebviewGIFManager.h"
 #import "TTVPlayerUrlTracker.h"
 #import "TTVDemanderTrackerManager.h"
-
+#import <TTPlatformBaseLib/TTTrackerWrapper.h>
 
 @implementation TTDetailWebviewContainer (JSImageVideoLogic)
 
@@ -50,7 +50,7 @@
             NSDictionary *parameters = [TTStringHelper parametersOfURLString:requestURL.query];
             if([parameters count] > 0)
             {
-                ttTrackEvent(@"detail", @"image_button");
+                wrapperTrackEvent(@"detail", @"image_button");
                 int index = [[parameters objectForKey:@"index"] intValue];
                 NSValue * frameValue = nil;
                 if ([parameters objectForKey:@"left"] && [parameters objectForKey:@"top"] && [parameters objectForKey:@"width"] && [parameters objectForKey:@"height"]) {
@@ -89,15 +89,15 @@
             
             TTNetworkTrafficSetting settingType = [TTUserSettingsManager networkTrafficSetting];
             if (settingType == TTNetworkTrafficSave) {
-                ttTrackEvent(@"detail", @"show_one_image");
+                wrapperTrackEvent(@"detail", @"show_one_image");
             }
             else {
-                ttTrackEvent(@"detail", @"enlarger_image");
+                wrapperTrackEvent(@"detail", @"enlarger_image");
             }
         }
         else if ([requestURL.host isEqualToString:kWebViewUserClickLoadOriginImg] ) {//一键切换大图 按钮
             
-            ttTrackEvent(@"detail", @"show_image");
+            wrapperTrackEvent(@"detail", @"show_image");
             
             //[self updateArticleImageMode];
             if ([self.delegate respondsToSelector:@selector(processRequestUpdateArticleImageMode:)]) {

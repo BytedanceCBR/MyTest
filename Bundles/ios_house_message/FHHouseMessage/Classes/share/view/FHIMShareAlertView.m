@@ -6,7 +6,7 @@
 //
 
 #import "FHIMShareAlertView.h"
-#import <Masonry.h>
+#import "Masonry.h"
 #import "UIColor+Theme.h"
 #import "UIFont+House.h"
 #import "TTUIResponderHelper.h"
@@ -115,7 +115,7 @@
     [_doneBtn setTitle:@"发送" forState:UIControlStateNormal];
     [_doneBtn setTitle:@"发送" forState:UIControlStateHighlighted];
     _doneBtn.layer.cornerRadius = 4;
-    _doneBtn.backgroundColor = RGBA(0xff, 0x58, 0x69, 1);
+    _doneBtn.backgroundColor = [UIColor themeOrange4];//RGBA(0xff, 0x58, 0x69, 1);
     [self.contentView addSubview:_doneBtn];
     [_doneBtn mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(self.houseView.mas_bottom);

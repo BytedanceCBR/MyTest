@@ -14,6 +14,7 @@
 @interface FHDetailPictureNavView ()
 @property (nonatomic, strong)   UIImage       *backWhiteImage;
 @property(nonatomic , strong) UIButton *backBtn;
+@property(nonatomic , strong) UIButton *albumBtn;
 
 @end
 
@@ -39,24 +40,45 @@
     _titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(50, 10, self.frame.size.width - 100, 24)];
     _titleLabel.text = @"图片";
     _titleLabel.textAlignment = NSTextAlignmentCenter;
-    _titleLabel.font = [UIFont themeFontMedium:18];
+    _titleLabel.font = [UIFont themeFontMedium:16];
     _titleLabel.textColor = [UIColor whiteColor];
     [self addSubview:_titleLabel];
     
     // 视频 图片title
-    CGFloat videoTitleWidth = 102; //  34 * 3
-    CGFloat leftOffset = ([UIScreen mainScreen].bounds.size.width - videoTitleWidth) / 2;
-    _videoTitle = [[FHDetailVideoTitle alloc] initWithFrame:CGRectMake(leftOffset, 10, 102, 34)];
-    [self addSubview:_videoTitle];
+//    CGFloat videoTitleWidth = 102; //  34 * 3
+//    CGFloat leftOffset = ([UIScreen mainScreen].bounds.size.width - videoTitleWidth) / 2;
+//    _videoTitle = [[FHDetailVideoTitle alloc] initWithFrame:CGRectMake(leftOffset, 10, 102, 34)];
+//    [self addSubview:_videoTitle];
     
+    _albumBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+    [_albumBtn setTitle:@"全部图片" forState:UIControlStateNormal];
+    [_albumBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    [_albumBtn setFrame:CGRectMake(self.frame.size.width - 100, 10, 100, 34)];
+    [_albumBtn addTarget:self action:@selector(albumBtnClick:) forControlEvents:UIControlEventTouchUpInside];
+    _albumBtn.hidden = YES;
+    [self addSubview:_albumBtn];
+
     // 默认无视频
-    self.hasVideo = NO;
+//    self.hasVideo = NO;
 }
 
-- (void)setHasVideo:(BOOL)hasVideo {
-    _hasVideo = hasVideo;
-    _titleLabel.hidden = hasVideo;
-    _videoTitle.hidden = !hasVideo;
+//- (void)setHasVideo:(BOOL)hasVideo {
+//    _hasVideo = hasVideo;
+//    _titleLabel.hidden = hasVideo;
+//    _videoTitle.hidden = !hasVideo;
+//}
+
+- (void)setShowAlbum:(BOOL)showAlbum
+{
+    _showAlbum = showAlbum;
+    self.albumBtn.hidden = !showAlbum;
+}
+
+- (void)albumBtnClick:(UIButton *)sender
+{
+    if (self.albumActionBlock) {
+        self.albumActionBlock();
+    }
 }
 
 - (void)backAction:(UIButton *)sender

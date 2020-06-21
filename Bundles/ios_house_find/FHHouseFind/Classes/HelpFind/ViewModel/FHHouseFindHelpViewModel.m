@@ -28,6 +28,7 @@
 #import <FHHouseBase/FHUserTracker.h>
 #import <TTBaseLib/TTDeviceHelper.h>
 #import <FHHouseBase/FHCommonDefines.h>
+#import <FHHouseMine/FHLoginDefine.h>
 
 #define HELP_HEADER_ID @"header_id"
 #define HELP_ITEM_HOR_MARGIN 20
@@ -208,9 +209,19 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
         [[ToastManager manager] showToast:@"网络异常"];
         return;
     }
-    
+    //添加抖音 submit 埋点
+    NSMutableDictionary *trackerDict = [self.viewController tracerDict].mutableCopy;
+    trackerDict[@"enter_from"] = @"driving_find_house";
+    trackerDict[@"login_method"] = @"phone_sms";
+    trackerDict[@"enter_method"] = @"click";
+    [FHLoginTrackHelper loginSubmit:trackerDict];
     [self requestQuickLogin:phoneNumber smsCode:smsCode completion:^(UIImage * _Nonnull captchaImage, NSNumber * _Nonnull newUser, NSError * _Nonnull error) {
+        //添加抖音 result 埋点
+        [FHLoginTrackHelper loginResult:trackerDict error:error];
         if(!error){
+            //记录上一次登录成功的行为
+            [[NSUserDefaults standardUserDefaults] setObject:@"phone_sms" forKey:FHLoginTrackLastLoginMethodKey];
+            [[NSUserDefaults standardUserDefaults] synchronize];
             YYCache *sendPhoneNumberCache = [[FHEnvContext sharedInstance].generalBizConfig sendPhoneNumberCache];
 //            [sendPhoneNumberCache setObject:phoneNumber forKey:kFHPhoneNumberCacheKey];
             [sendPhoneNumberCache setObject:phoneNumber forKey:kFHPLoginhoneNumberCacheKey];
@@ -1215,7 +1226,12 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
 
 - (void)requestQuickLogin:(NSString *)phoneNumber smsCode:(NSString *)smsCode completion:(void(^_Nullable)(UIImage *captchaImage, NSNumber *newUser, NSError *error))completion
 {
-    [TTAccountManager startQuickLoginWithPhoneNumber:phoneNumber code:smsCode captcha:nil completion:completion];
+    [TTAccount quickLoginWithPhone:phoneNumber SMSCode:smsCode captcha:nil jsonObjCompletion:^(UIImage * _Nullable captchaImage, NSError * _Nullable error, id  _Nullable jsonObj) {
+        if (completion) {
+            completion(captchaImage, @([[TTAccount sharedAccount] user].newUser), error);
+        }
+    }];
+//    [TTAccountManager startQuickLoginWithPhoneNumber:phoneNumber code:smsCode captcha:nil completion:completion];
 }
 
 - (NSString *)errorMessageByErrorCode:(NSError *)error {

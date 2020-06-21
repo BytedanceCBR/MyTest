@@ -50,6 +50,7 @@
 #import "FHUserTracker.h"
 #import "FHBubbleTipManager.h"
 #import "HMDTTMonitor.h"
+#import "SSAPNsAlertManager.h"
 
 static CGFloat const kLeftPadding = 20.f;
 static CGFloat const kRightPadding = 20.f;
@@ -609,8 +610,16 @@ static CGFloat kWenDaToolbarHeight = 80.f;
         if (wSelf.isPosting) {
             return;
         }
+        
+        NSString *gdExtJson = nil;
+        if([wSelf.gdExtJson isKindOfClass:[NSString class]]){
+            gdExtJson = wSelf.gdExtJson;
+        }else if([wSelf.gdExtJson isKindOfClass:[NSDictionary class]]){
+            gdExtJson = [wSelf.gdExtJson tt_JSONRepresentation];
+        }
+        
         wSelf.isPosting = YES;
-        [WDAnswerService postAnswerWithQid:wSelf.qid answerType:WDAnswerTypePictureText content:content richSpanText:richSpanTetxt imageUris:imageUris videoID:nil videoCoverURI:nil videoDuration:nil isBanComment:wSelf.isForbidComment apiParameter:apiParam source:source listEntrance:listEntrance gdExtJson:[wSelf.gdExtJson tt_JSONRepresentation] finishBlock:^(WDWendaCommitPostanswerResponseModel * _Nullable responseModel, NSError * _Nullable error) {
+        [WDAnswerService postAnswerWithQid:wSelf.qid answerType:WDAnswerTypePictureText content:content richSpanText:richSpanTetxt imageUris:imageUris videoID:nil videoCoverURI:nil videoDuration:nil isBanComment:wSelf.isForbidComment apiParameter:apiParam source:source listEntrance:listEntrance gdExtJson:gdExtJson finishBlock:^(WDWendaCommitPostanswerResponseModel * _Nullable responseModel, NSError * _Nullable error) {
             NSString *tips;
             NSError *postError;
             
@@ -629,8 +638,8 @@ static CGFloat kWenDaToolbarHeight = 80.f;
         }];
     };
     
-    wSelf.sendAnswerBlock = sendAnswerBlock;
-    [wSelf.uploadImageManager uploadImages:wSelf.taskModel.imageList];
+    self.sendAnswerBlock = sendAnswerBlock;
+    [self.uploadImageManager uploadImages:self.taskModel.imageList];
 }
 
 
@@ -661,8 +670,8 @@ static CGFloat kWenDaToolbarHeight = 80.f;
     if (self.inputTextView.text.length > 0 || self.addImagesView.selectedImageCacheTasks.count > 0) {
         self.postButton.enabled = YES;
         self.postButton.highlightedTitleColorThemeKey = kColorText6Highlighted;
-        [self.postButton setTitleColor:[UIColor themeRed1] forState:UIControlStateNormal];
-        [self.postButton setTitleColor:[UIColor themeRed1] forState:UIControlStateDisabled];
+        [self.postButton setTitleColor:[UIColor themeOrange1] forState:UIControlStateNormal];
+        [self.postButton setTitleColor:[UIColor themeOrange1] forState:UIControlStateDisabled];
     } else {
         self.postButton.highlightedTitleColorThemeKey = kColorText9Highlighted;
         [self.postButton setTitleColor:[UIColor themeGray3] forState:UIControlStateNormal];

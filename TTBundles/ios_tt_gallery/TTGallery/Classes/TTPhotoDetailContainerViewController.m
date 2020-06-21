@@ -20,14 +20,13 @@
 #import "TTImagePreviewAnimateManager.h"
 #import "TTPhotoTabViewController.h"
 #import "TTCollectionPageViewController.h"
-#import <TTInteractExitHelper.h>
+#import "TTInteractExitHelper.h"
 #import <TTBaseLib/NSDictionary+TTAdditions.h>
-#import <Crashlytics/Answers.h>
 #import <TTArticleBase/SSCommonLogic.h>
 #import <TTBaseLib/TTUIResponderHelper.h>
 #import <TTThemed/TTThemeManager.h>
 #import <TTPlatformBaseLib/TTTrackerWrapper.h>
-#import <TTTracker/TTTracker.h>
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 #import <TTMonitor/TTMonitor.h>
 #import <Masonry/Masonry.h>
 
@@ -184,7 +183,6 @@ static NSInteger screenshotViewTag = 1119;
     } else {
         self.originRect = self.realPhotoDetailController.view.frame;
     }
-    [Answers logCustomEventWithName:@"interactive_exit" customAttributes:@{@"album_open" : @"1"}];
 
 }
 
@@ -898,7 +896,6 @@ static NSInteger screenshotViewTag = 1119;
                 [self animationCompletion];
                 [self uninstallNavViewSnapshot];
             });
-            [Answers logCustomEventWithName:@"interactive_exit" customAttributes:@{@"album_pan_close" : @"1"}];
             wrapperTrackEventWithCustomKeys(@"slide_over", @"random_slide_close", [@(self.realPhotoDetailController.detailModel.article.uniqueID?:0)stringValue], nil, nil);
         }
             break;

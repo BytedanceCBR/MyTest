@@ -34,8 +34,8 @@
 #import "TADDebugViewController.h"
 //#import <TTLiveMainUI/TTLiveMainViewController.h>
 //#import "TTFantasyWindowManager.h"
+#import <TTKitchen/TTKitchen.h>
 
-#import "ArticleMobileSettingViewController.h"
 #import "TTPersistence.h"
 #import "TTURLUtils.h"
 #import "WDCommonLogic.h"
@@ -46,7 +46,7 @@
 #import "TTVideoTip.h"
 #import "TTLogServer.h"
 #import "TTUserSettings/TTUserSettingsManager+FontSettings.h"
-#import <TTAccountBusiness.h>
+#import "TTAccountBusiness.h"
 
 //#import "TTABAuthorizationManager.h"
 #import "TTCanvasBundleManager.h"
@@ -79,8 +79,33 @@
 #import "FHRNDebugViewController.h"
 #import "BDSSOAuthManager.h"
 #import "ToastManager.h"
+#import <ByteDanceKit/NSDictionary+BTDAdditions.h>
+#import <TTInstallService/TTInstallUtil.h>
+#import <MLeaksFinder/MLeaksFinder.h>
+//#import <MLeaksFinder/NSObject+UseCount.h>
+#import <TTRoute/TTRoute.h>
+#import <Heimdallr/HMDExceptionTracker.h>
+#import <Heimdallr/HMDUserExceptionTracker.h>
 
-//#import "TTXiguaLiveManager.h"
+
+#import <BDMobileRuntime/BDServiceManager.h>
+#import <TTLocationManager/TTDebugLocationPickerController.h>
+//#import <BDNetworkDevMonitor/BDNetworkDevMonitor.h>
+
+#import "TTInstallResetDevicePage.h"
+#import "BDAgileLog.h"
+//#import <TTBaseLib/UIAlertController+TTAdditions.h>
+#import "UIAlertController+TTAdditions.h"
+#import "HMDSRWTESTEnvironment.h"
+#import "BDTFPSBar.h"
+#import <FHPopupViewCenter/FHPopupViewManager.h>
+#import "IMManager.h"
+#import "FHLynxScanVC.h"
+#import "FHLynxDebugVC.h"
+#import "IMManager.h"
+
+#import "FHHouseErrorHubDebugVC.h"
+
 extern BOOL ttvs_isVideoNewRotateEnabled(void);
 extern void ttvs_setIsVideoNewRotateEnabled(BOOL enabled);
 
@@ -110,10 +135,33 @@ extern NSString *const BOE_OPEN_KEY ;
 @property(nonatomic, weak)   STTableViewCellItem *item53;
 @property(nonatomic, weak)   STTableViewCellItem *item54;
 @property (nonatomic, strong) TTRNKit *ttRNKit;
+@property(nonatomic, strong) UIView *tableViewHeaderView;
 
 @end
 
 @implementation SSDebugViewController
+
++ (void)registerRoute {
+    if ([TTSandBoxHelper isInHouseApp]) {
+        TTRegisterRouteMethod
+        RegisterRouteObjWithEntryName(@"debug");
+    }
+}
+
++ (void)registerKitchen {
+    TTRegisterKitchenMethod
+    if ([TTSandBoxHelper isInHouseApp]) {
+        TTKConfigBOOL(@"tt_bridge_auth_enabled", @"是否打开新版 bridge 鉴权", YES);
+        TTKConfigBOOL(@"tt_rexxar_auth_enabled", @"是否打开旧版 jsb 鉴权", YES);
+    }
+}
+
+//TTAppDidFinishLaunchingFunction() {
+//    if ([TTSandBoxHelper isInHouseApp]) {
+//        [TTBridgeAuthManager sharedManager].authEnabled = [TTKitchen getBOOL:@"tt_bridge_auth_enabled"];
+//        [TTJSBAuthManager sharedManager].isIgnoreJSBridgeAuthCheck = ![TTKitchen getBOOL:@"tt_rexxar_auth_enabled"];
+//    }
+//}
 
 - (NSArray <STTableViewSectionItem *>*)_constructDataSource
 {
@@ -123,6 +171,10 @@ extern NSString *const BOE_OPEN_KEY ;
         
         NSMutableArray *itemArray = [NSMutableArray array];
 
+        STTableViewCellItem *htmlBridgeDebugItem = [[STTableViewCellItem alloc] initWithTitle:@"Schema（H5）页面跳转" target:self action:@selector(_openHtmlBridge)];
+        htmlBridgeDebugItem.switchStyle = NO;
+        [itemArray addObject:htmlBridgeDebugItem];
+        
         STTableViewCellItem *logViewItem = [[STTableViewCellItem alloc] initWithTitle:@"埋点验证" target:self action:@selector(_openLogViewSetting)];
         logViewItem.switchStyle = NO;
         [itemArray addObject:logViewItem];
@@ -131,13 +183,13 @@ extern NSString *const BOE_OPEN_KEY ;
         clientABDebugItem.switchStyle = NO;
         [itemArray addObject:clientABDebugItem];
         
-        STTableViewCellItem *htmlBridgeDebugItem = [[STTableViewCellItem alloc] initWithTitle:@"H5与原生交互测试" target:self action:@selector(_openHtmlBridge)];
-        htmlBridgeDebugItem.switchStyle = NO;
-        [itemArray addObject:htmlBridgeDebugItem];
-        
         STTableViewCellItem *rnBridgeDebugItem = [[STTableViewCellItem alloc] initWithTitle:@"RN_Debug" target:self action:@selector(_openRNBridge)];
         rnBridgeDebugItem.switchStyle = NO;
         [itemArray addObject:rnBridgeDebugItem];
+        
+        STTableViewCellItem *lynxDebugItem = [[STTableViewCellItem alloc] initWithTitle:@"Lynx_Debug" target:self action:@selector(_openLynxBridge)];
+               lynxDebugItem.switchStyle = NO;
+        [itemArray addObject:lynxDebugItem];
         
         STTableViewCellItem *ssoDebugItem = [[STTableViewCellItem alloc] initWithTitle:@"SSO重新验证测试" target:self action:@selector(_ssoDebugClick)];
         ssoDebugItem.switchStyle = NO;
@@ -156,9 +208,57 @@ extern NSString *const BOE_OPEN_KEY ;
         item_00.checked = [ExploreCellHelper getFeedUGCTest];
         self.itemAB = item_00;
         [itemArray addObject:item_00];
+        // todo zjing test
+//        {
+//            BridgeProxy *proxy = [BridgeProxy sharedInstance];
+//            NSString *ip = getBridgeProxyIPAddress();
+//            proxy.delegate = [[BridgeProxyTTRDelegate alloc] init];
+//            NSString *title = [NSString stringWithFormat:@"BridgeProxy at ws://%@:%d", ip, BRIDGE_PROXY_PORT];
+//            STTableViewCellItem *item = [[STTableViewCellItem alloc] initWithTitle:title target:self action:@selector(_openBridgeProxy)];
+//            item.switchStyle = NO;
+//            [itemArray addObject:item];
+//        }
         
-        STTableViewCellItem *item_001 = [[STTableViewCellItem alloc] initWithTitle:@"Settings调试选项" target:self action:@selector(_openSettingsBrowserVC)];
-        [itemArray addObject:item_001];
+//        STTableViewCellItem *checkRuntimeServieItem = [[STTableViewCellItem alloc] initWithTitle:@"全局检测注册Service的状态" target:self action:@selector(_checkRuntimeServie)];
+//        checkRuntimeServieItem.switchStyle = NO;
+//        [itemArray addObject:checkRuntimeServieItem];
+        
+        
+        STTableViewCellItem *articleDebugItem = [[STTableViewCellItem alloc] initWithTitle:@"详情页 & WebView 调试选项点这里" target:self action:@selector(_openArticleDebug)];
+        articleDebugItem.switchStyle = NO;
+        [itemArray addObject:articleDebugItem];
+        
+        STTableViewCellItem *fixLaunchImageItem = [[STTableViewCellItem alloc] initWithTitle:@"修复启动图" target:self action:@selector(fixLaunchImage)];
+        [itemArray addObject:fixLaunchImageItem];
+        
+        STTableViewCellItem *destoryLaunchImageItem = [[STTableViewCellItem alloc] initWithTitle:@"损坏启动图" target:self action:@selector(destroyLaunchImage)];
+        [itemArray addObject:destoryLaunchImageItem];
+        {
+//            STTableViewCellItem *item_netMonitor = [[STTableViewCellItem alloc] initWithTitle:@"📽 查看网络请求" target:self action:@selector(_openNetworkDevMonitor)];
+//            [itemArray addObject:item_netMonitor];
+            
+//            STTableViewCellItem *item_netMonitorSwitch = [[STTableViewCellItem alloc] initWithTitle:@"App 启动时开启网络监控" target:self action:nil];
+//            item_netMonitorSwitch.switchStyle = YES;
+//            item_netMonitorSwitch.switchAction = @selector(_networkDevMonitorSwitchAction:);
+//            item_netMonitorSwitch.checked = [self networkDevMonitorLaunchOnStartupOn];
+//            [itemArray addObject:item_netMonitorSwitch];
+            
+            // TTTracker 在 Inhouse 模式下有比较多的网络请求用于验证埋点，这块会干扰其他网络请求，这边提供一个开关用于关闭 TTTracker 的 Inhouse 模式。默认仍为开启
+            STTableViewCellItem *item_ttrackerInhouse = [[STTableViewCellItem alloc] initWithTitle:@"TTTracker Inhouse Version" target:self action:nil];
+            item_ttrackerInhouse.switchStyle = YES;
+            item_ttrackerInhouse.switchAction = @selector(_tttrackerInhouseSwitchAction:);
+            item_ttrackerInhouse.checked = [self tttrackerInhouseVersion];
+            [itemArray addObject:item_ttrackerInhouse];
+            
+            STTableViewCellItem *item_Inhouse_clearDid = [[STTableViewCellItem alloc] initWithTitle:@"LogSDK冷启动清空did开关" target:self action:nil];
+            item_Inhouse_clearDid.switchStyle = YES;
+            item_Inhouse_clearDid.switchAction = @selector(_applogInhouseClearDidAction:);
+            item_Inhouse_clearDid.checked = [self applogInhouseClearDidAction];
+            [itemArray addObject:item_Inhouse_clearDid];
+        }
+
+//        STTableViewCellItem *item_001 = [[STTableViewCellItem alloc] initWithTitle:@"Settings调试选项" target:self action:@selector(_openSettingsBrowserVC)];
+//        [itemArray addObject:item_001];
         
         STTableViewCellItem *item_002 = [[STTableViewCellItem alloc] initWithTitle:@"客户端ABTest试验详情" target:self action:@selector(_openClientABTestVC)];
         
@@ -223,10 +323,33 @@ extern NSString *const BOE_OPEN_KEY ;
         STTableViewCellItem *item_19 = [[STTableViewCellItem alloc] initWithTitle:@"测试Crash" target:self action:@selector(_crashActionFired)];
         [itemArray addObject:item_19];
         
+        STTableViewCellItem *itemStartCrash = [[STTableViewCellItem alloc] initWithTitle:@"启动Crash" target:self action:NULL];
+        itemStartCrash.switchAction = @selector(_switchStartCrash:);
+        itemStartCrash.switchStyle = YES;
+        NSDictionary *dic = [[NSUserDefaults standardUserDefaults] objectForKey:@"kTTShouldSimulateStartCrashKey"];
+        BOOL shouldCrash = NO;
+        if (dic) {
+            shouldCrash = [dic btd_boolValueForKey:@"shouldCrash"];
+        }
+        itemStartCrash.checked = shouldCrash;
+        [itemArray addObject:itemStartCrash];
+        
+        STTableViewCellItem *item_heimdallr = [[STTableViewCellItem alloc] initWithTitle:@"测试Heimdallr所有功能" target:self action:@selector(heimdallrTestFired)];
+        [itemArray addObject:item_heimdallr];
+        
+        STTableViewCellItem *item_20 = [[STTableViewCellItem alloc] initWithTitle:@"测试卡死" target:self action:@selector(_waitActionFired)];
+        [itemArray addObject:item_20];
+        
+        STTableViewCellItem *item_21 = [[STTableViewCellItem alloc] initWithTitle:@"测试OOM" target:self action:@selector(_oomActionFired)];
+        [itemArray addObject:item_21];
+        
+        STTableViewCellItem *item_26 = [[STTableViewCellItem alloc] initWithTitle:@"测试自定义异常" target:self action:@selector(_customExceptionFired)];
+        [itemArray addObject:item_26];
+        
         STTableViewCellItem *item_22 = [[STTableViewCellItem alloc] initWithTitle:@"使用4G" target:self action:NULL];
         item_22.switchStyle = YES;
         item_22.switchAction = @selector(_switchTo4G:);
-        item_22.checked = [SSCommonLogic isNetWorkDebugEnable];
+        item_22.checked = [[NSUserDefaults standardUserDefaults] boolForKey:@"debug_disable_network"];
         [itemArray addObject:item_22];
         
         STTableViewCellItem *item_23 = [[STTableViewCellItem alloc] initWithTitle:@"详情页使用SharedWebView" target:self action:NULL];
@@ -262,9 +385,35 @@ extern NSString *const BOE_OPEN_KEY ;
         item_41.switchAction = @selector(_switchToDetailvConsole:);
         item_41.checked = [TTDetailWebContainerDebugger isvConsoleEnable];
         [itemArray addObject:item_41];
-
-        STTableViewCellItem *item_42 = [[STTableViewCellItem alloc] initWithTitle:@"JSBridge功能回归测试" target:self action:@selector(jsBridgeTest)];
+        
+        STTableViewCellItem *item_42 = [[STTableViewCellItem alloc] initWithTitle:@"local_test异常" target:self action:@selector(_openLocalTestDebugViewController)];
+        item_42.switchStyle = NO;
         [itemArray addObject:item_42];
+
+        // todo zjing test
+//        STTableViewCellItem *item_42 = [[STTableViewCellItem alloc] initWithTitle:@"JSBridge功能回归测试" target:self action:@selector(jsBridgeTest)];
+//        [itemArray addObject:item_42];
+//
+//        STTableViewCellItem *item_JSBridgeDocumentor = [[STTableViewCellItem alloc] initWithTitle:@"开启 Bridge 文档化" target:self action:NULL];
+//        item_JSBridgeDocumentor.switchStyle = YES;
+//        item_JSBridgeDocumentor.checked = [TTKitchen getBOOL:@"tt_bridge_config.documentor_enabled"];
+//        item_JSBridgeDocumentor.switchAction = @selector(_switchJSBridgeDocumentor:);
+//        [itemArray addObject:item_JSBridgeDocumentor];
+//
+//        STTableViewCellItem *item_JSBridgeDocs = [[STTableViewCellItem alloc] initWithTitle:@"已注册的Bridge列表" target:self action:@selector(_showJSBridgeDocs)];
+//        [itemArray addObject:item_JSBridgeDocs];
+        
+//        STTableViewCellItem *item_JSBridge = [[STTableViewCellItem alloc] initWithTitle:@"绕过JSBridge权限校验" target:self action:NULL];
+//        item_JSBridge.switchStyle = YES;
+//        item_JSBridge.checked = [TTJSBAuthManager sharedManager].isIgnoreJSBridgeAuthCheck;
+//        item_JSBridge.switchAction = @selector(_switchJSBridgeAuth:);
+//        [itemArray addObject:item_JSBridge];
+//
+//        STTableViewCellItem *item_Bridge = [[STTableViewCellItem alloc] initWithTitle:@"绕过新版Bridge权限校验" target:self action:NULL];
+//        item_Bridge.switchStyle = YES;
+//        item_Bridge.checked = ![TTBridgeAuthManager sharedManager].authEnabled;
+//        item_Bridge.switchAction = @selector(_switchBridgeAuth:);
+//        [itemArray addObject:item_Bridge];
         
 //        STTableViewCellItem *item_43 = [[STTableViewCellItem alloc] initWithTitle:@"开西瓜直播入口" target:self action:@selector(xiguaLiveTest)];
 //        [itemArray addObject:item_43];
@@ -298,16 +447,24 @@ extern NSString *const BOE_OPEN_KEY ;
         
         STTableViewCellItem *item_07 = [[STTableViewCellItem alloc] initWithTitle:@"截图分享测试" target:self action:@selector(screenshotShare)];
         
-//        STTableViewCellItem *item_08 = [[STTableViewCellItem alloc] initWithTitle:@"JIRA 创建问题" target:self action:NULL];
-//        item_08.switchStyle = YES;
-//        item_08.switchAction = @selector(_appScreenshotJIRACreateIssueFired:);
-//        item_08.checked = [[JIRAScreenshotManager sharedJIRAScreenshotManager] screenshotEnabled];
         
-        STTableViewSectionItem *section0 = [[STTableViewSectionItem alloc] initWithSectionTitle:@"调试工具" items:@[item_00, item_01, item_02, item_03, item_04, item_05, item_06, item_07]];
+        STTableViewCellItem *item_09 = [[STTableViewCellItem alloc] initWithTitle:@"FPS监测" target:self action:NULL];
+        item_09.switchStyle = YES;
+        item_09.switchAction = @selector(_appFPSMonitorActionFired:);
+        item_09.checked = [[NSUserDefaults standardUserDefaults] boolForKey:@"kTTAppFPSMonitorKey"];
+        
+        STTableViewCellItem *item_10 = [[STTableViewCellItem alloc] initWithTitle:@"展示AB实验面板" target:self action:@selector(ABTestPanelFired)];
+        STTableViewCellItem *item_11 = [[STTableViewCellItem alloc] initWithTitle:@"schema跳转:Push" target:self action:@selector(_jumpPageBySchemaActionPush)];
+
+        NSArray *debugItems = @[item_00, item_02, item_03, item_04, item_05, item_06, item_07, item_09, item_10, item_11];
+        STTableViewSectionItem *section0 = [[STTableViewSectionItem alloc] initWithSectionTitle:@"调试工具" items:debugItems];
         [dataSource addObject:section0];
     }
     
     if ([SSDebugViewController supportDebugSubitem:SSDebugSubitemLogging]) {
+        
+        STTableViewCellItem *item = [[STTableViewCellItem alloc] initWithTitle:@"导出日志" target:self action:@selector(_exportLog)];
+
         STTableViewCellItem *item00 = [[STTableViewCellItem alloc] initWithTitle:@"连接日志服务器" target:self action:@selector(_connectLogServerActionFired)];
         
         STTableViewCellItem *item01 = [[STTableViewCellItem alloc] initWithTitle:@"显示Umeng日志" target:self action:NULL];
@@ -321,7 +478,7 @@ extern NSString *const BOE_OPEN_KEY ;
         item02.switchAction = @selector(_setShouldSaveApplog:);
         item02.checked = [self _shouldSaveApplog];
         
-        STTableViewSectionItem *section0 = [[STTableViewSectionItem alloc] initWithSectionTitle:@"统计日志" items:@[item00, item01,item02]];
+        STTableViewSectionItem *section0 = [[STTableViewSectionItem alloc] initWithSectionTitle:@"统计日志" items:@[item,item00, item01,item02]];
         [dataSource addObject:section0];
     }
     
@@ -478,9 +635,19 @@ extern NSString *const BOE_OPEN_KEY ;
         [dataSource addObject:section10];
     }
     
-    if (YES) {
-        STTableViewCellItem *item = [[STTableViewCellItem alloc] initWithTitle:@"设置为新用户" target:self action:@selector(_newUserSettingActionFired)];
-        STTableViewSectionItem *section11 = [[STTableViewSectionItem alloc] initWithSectionTitle:@"新用户" items:@[item]];
+    
+    {
+        STTableViewCellItem *item = [[STTableViewCellItem alloc] initWithTitle:@"Mock新设备ID" target:self action:nil];
+        item.switchStyle = YES;
+        item.checked = [TTInstallUtil isResetMode];
+        item.switchAction = @selector(_newUserSwitch:);
+        item.detail = @"点击开关，生成新设备ID，关闭后恢复真实设备ID";
+        STTableViewCellItem *item1 = [[STTableViewCellItem alloc] initWithTitle:@"新用户风格" target:self action:nil];
+        item1.textFieldStyle = YES;
+        item1.textFieldAction = @selector(_changeDebugStyle:);
+        item1.textFieldContent = [[NSUserDefaults standardUserDefaults] stringForKey:@"kTTNewUserDebugStyleKey"];
+        item1.detail = @"Mock新设备ID开启时，才会生效";
+        STTableViewSectionItem *section11 = [[STTableViewSectionItem alloc] initWithSectionTitle:@"新用户" items:@[item,item1]];
         
         [dataSource addObject:section11];
     }
@@ -531,8 +698,35 @@ extern NSString *const BOE_OPEN_KEY ;
         
         [dataSource addObject:section14];
     }
+    {
+        STTableViewCellItem *item0 = [[STTableViewCellItem alloc] initWithTitle:@"关闭MLeaksFinder的全部功能"
+                                                                         target:self
+                                                                         action:nil];
+        item0.switchStyle = YES;
+        item0.switchAction = @selector(closeMLeaksFinder:);
+        item0.checked = [[NSUserDefaults standardUserDefaults] boolForKey:@"kMLeaksClosedByDebuggingSettings"];
+        
+        STTableViewSectionItem *section15 = [[STTableViewSectionItem alloc] initWithSectionTitle:@"OOM相关:"
+                                                                                           items:@[item0]];
+        [dataSource addObject:section15];
+    }
+    { // Heimdallr 安全气垫相关
+        STTableViewCellItem *hmdItem = [[STTableViewCellItem alloc] initWithTitle:@"关闭Heimdallr安全气垫功能"
+                                                                           target:self
+                                                                           action:nil];
+        hmdItem.switchStyle = YES;
+        hmdItem.checked = YES;
+        hmdItem.switchAction = @selector(closeHMDException:);
+        
+        STTableViewSectionItem *hmdSection = [[STTableViewSectionItem alloc] initWithSectionTitle:@"安全气垫开关" items:@[hmdItem]];
+        [dataSource addObject:hmdSection];
+    }
     
-    
+    { // 模拟新用户配置
+        STTableViewCellItem *newUserItem = [[STTableViewCellItem alloc] initWithTitle:@"模拟新用户首次启动配置" target:self action:@selector(_newUserLaunchAction)];
+        STTableViewSectionItem *section16 = [[STTableViewSectionItem alloc] initWithSectionTitle:@"设置为新用户启动" items:@[newUserItem]];
+        [dataSource addObject:section16];
+    }
     //    if (YES) {
     //        STTableViewCellItem *item1 = [[STTableViewCellItem alloc] initWithTitle:@"是否开启iCloud相册" target:self action:NULL];
     //        item1.switchStyle = YES;
@@ -543,7 +737,47 @@ extern NSString *const BOE_OPEN_KEY ;
     //        [dataSource addObject:sectionVideoAD];
     //    }
     
+    {
+        // im相关调试选项
+        STTableViewCellItem *toggleIMConnectionItem = [[STTableViewCellItem alloc] initWithTitle:@"IM强制HTTPS(短连接)，重启生效" target:self action:nil];
+        toggleIMConnectionItem.switchStyle = YES;
+        toggleIMConnectionItem.checked = [[NSUserDefaults standardUserDefaults] boolForKey:@"_IM_ShortConnection_Enable_"];
+        toggleIMConnectionItem.switchAction = @selector(toggleIMConnection);
+        toggleIMConnectionItem.detail = [NSString stringWithFormat:@"https抓包 /message/send  请求，验证是否生效"];
+        
+        STTableViewCellItem *toggleIMFakeTokenItem = [[STTableViewCellItem alloc] initWithTitle:@"模拟IM服务端返回失效Token" target:self action:nil];
+        toggleIMFakeTokenItem.switchStyle = YES;
+        toggleIMFakeTokenItem.checked = [[NSUserDefaults standardUserDefaults] boolForKey:@"_IM_Fake_Token_Enable_"];
+        toggleIMFakeTokenItem.switchAction = @selector(toggleIMFakeToken);
+        
+        STTableViewCellItem *invalidIMToken = [[STTableViewCellItem alloc] initWithTitle:@"IM手动触发token失效更新" target:self action:@selector(triggerIMTokenInvalide)];
+        
+        STTableViewSectionItem *section = [[STTableViewSectionItem alloc] initWithSectionTitle:@"IM相关调试选项" items:@[toggleIMConnectionItem, toggleIMFakeTokenItem, invalidIMToken]];
+        
+        [dataSource addObject:section];
+    }
+    
+    
     return dataSource;
+}
+
+- (void)toggleIMConnection {
+    BOOL isShortConnectEnable = [[NSUserDefaults standardUserDefaults] boolForKey:@"_IM_ShortConnection_Enable_"];
+    [[NSUserDefaults standardUserDefaults] setBool:!isShortConnectEnable forKey:@"_IM_ShortConnection_Enable_"];
+    [[NSUserDefaults standardUserDefaults] synchronize];
+}
+
+- (void)toggleIMFakeToken {
+    BOOL isFakeTokenEnable = [[NSUserDefaults standardUserDefaults] boolForKey:@"_IM_Fake_Token_Enable_"];
+    [[NSUserDefaults standardUserDefaults] setBool:!isFakeTokenEnable forKey:@"_IM_Fake_Token_Enable_"];
+    [[NSUserDefaults standardUserDefaults] synchronize];
+    
+    if(!isFakeTokenEnable) {
+        [self triggerIMTokenInvalide];
+    }
+}
+- (void)triggerIMTokenInvalide {
+    [[IMManager shareInstance] invalidTokenForDebug];
 }
 
 -(void)makeACrash {
@@ -551,6 +785,36 @@ extern NSString *const BOE_OPEN_KEY ;
     NSLog(@"array=%@", array[3]);
 }
 
+- (void)closeMLeaksFinder:(UISwitch*)uiswitch {
+    [[NSUserDefaults standardUserDefaults] setBool:uiswitch.on forKey:@"kMLeaksClosedByDebuggingSettings"];
+    [TTMLeaksFinder stopDetectMemoryLeak];
+    // todo zjing test
+//    [NSObject stopMonitor];
+}
+
+- (void)closeHMDException:(UISwitch*)uiswitch {
+    if (uiswitch.on) {
+        [[HMDExceptionTracker sharedTracker] start];
+    } else {
+        [[HMDExceptionTracker sharedTracker] stop];
+    }
+}
+
+- (void)_newUserLaunchAction {
+    // todo zjing test
+    // 清空磁盘和UserDefault数据
+//    [BDDiskRecoverManager recoverAllDiskAndDeleteUserDefault];
+    
+    // 清理 新用户 kitchen
+    NSMutableDictionary *searchDictionary = [[NSMutableDictionary alloc] init];
+    //指定item的类型为GenericPassword
+    [searchDictionary setObject:(id)kSecClassGenericPassword forKey:(id)kSecClass];
+    
+    // 类型为GenericPassword的信息必须提供以下两条属性作为unique identifier
+    [searchDictionary setObject:@"kTTFirstLaunchAccount" forKey:(id)kSecAttrAccount];
+    [searchDictionary setObject:@"kTTFirstLaunchService" forKey:(id)kSecAttrService];
+    SecItemDelete((CFDictionaryRef)searchDictionary);
+}
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
 }
@@ -563,8 +827,12 @@ extern NSString *const BOE_OPEN_KEY ;
     
     self.dataSource = [self _constructDataSource];
     
-    self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"关闭" style:UIBarButtonItemStylePlain target:self action:@selector(_cancelActionFired:)];
+    self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:[SSNavigationBar navigationButtonOfOrientation:SSNavigationButtonOrientationOfLeft withTitle:@"关闭" target:self action:@selector(_cancelActionFired:)]];
+    
     [self _reloadRightBarItem];
+    
+    self.tableView.tableHeaderView = self.tableViewHeaderView;
+
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -589,8 +857,7 @@ extern NSString *const BOE_OPEN_KEY ;
         self.item11.detail = nil;
     }
     self.item41.checked = [[self class] supportTestImageSubject];
-    self.itemFacebook.checked = [[self class] supportTestVideoFacebook];
-    self.itemOwnPlayer.checked = [[self class] supportTestVideoOwnPlayer];
+//    self.itemOwnPlayer.checked = [[self class] supportTestVideoOwnPlayer];
     [self.tableView reloadData];
 }
 
@@ -605,7 +872,7 @@ extern NSString *const BOE_OPEN_KEY ;
 
 - (void)_reloadRightBarItem {
     if ([TTLogServer logEnable]) {
-        self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"设备信息" style:UIBarButtonItemStylePlain target:self action:@selector(_sendDeviceActionFired:)];
+        self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:[SSNavigationBar navigationButtonOfOrientation:SSNavigationButtonOrientationOfRight withTitle:@"设备信息" target:self action:@selector(_sendDeviceActionFired:)]];
     }
 }
 
@@ -625,6 +892,19 @@ extern NSString *const BOE_OPEN_KEY ;
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
+
+//- (void)_checkRuntimeServie {
+//    [[BDServiceManager sharedInstance] scanAndCheckAllServices];
+//}
+
+//-(void)_openBridgeProxy{
+//    BridgeProxyViewController *vc = [[BridgeProxyViewController alloc] init];
+//    BridgeProxy *proxy = [BridgeProxy sharedInstance];
+//    proxy.vc = vc;
+//    [proxy setUserAgentString:[SSWebViewUtil optimisedUserAgentString:YES]];
+//    [proxy start];
+//    [self.navigationController pushViewController:vc animated:YES];
+//}
 
 - (void)_openInHouseDebug
 {
@@ -670,6 +950,12 @@ extern NSString *const BOE_OPEN_KEY ;
     [self.navigationController pushViewController:vc animated:YES];
 }
 
+- (void)_openLynxBridge
+{
+    FHLynxScanVC* scanVC = [FHLynxScanVC new];
+    [self.navigationController pushViewController:scanVC animated:YES];
+}
+
 - (void)_ugcDebugTest:(UISwitch *)uiswitch {
     [[NSUserDefaults standardUserDefaults] setBool:uiswitch.isOn forKey:@"kUGCDebugConfigKey"];
     [[NSUserDefaults standardUserDefaults] synchronize];
@@ -682,8 +968,32 @@ extern NSString *const BOE_OPEN_KEY ;
 #endif
 }
 
+- (void)_gotoHtmlBridge:(NSString *)urlStrInput {
+    NSString *stringToSave = [NSString stringWithString:urlStrInput];
+    
+    NSString *unencodedString = urlStrInput;
+    NSString *encodedString = (NSString *)CFBridgingRelease(CFURLCreateStringByAddingPercentEscapes(kCFAllocatorDefault,
+                                                                                                    (CFStringRef)unencodedString,
+                                                                                                    NULL,
+                                                                                                    (CFStringRef)@"!*'();:@&=+$,/?%#[]",
+                                                                                                    kCFStringEncodingUTF8));
+    NSString *urlStr = [NSString stringWithFormat:@"sslocal://webview?url=%@",encodedString];
+    
+    [FHUtils setContent:stringToSave forKey:@"k_fh_debug_h5_bridge_test"];
+    
+    NSURL *url = [TTURLUtils URLWithString:urlStr];
+    [[TTRoute sharedRoute] openURLByPushViewController:url];
+}
+
 - (void)_openHtmlBridge
 {
+    NSString *tempUrl = [UIPasteboard generalPasteboard].string;
+    if (tempUrl.length > 0 && [tempUrl hasPrefix:@"http"]) {
+        [self _gotoHtmlBridge:tempUrl];
+        [UIPasteboard generalPasteboard].string = @"";
+        return;
+    }
+    
     TTThemedAlertController *alertVC = [[TTThemedAlertController alloc] initWithTitle:@"请输入调试地址" message:nil preferredType:TTThemedAlertControllerTypeAlert];
     
 //    [alertVC addTextFieldWithConfigurationHandler:^(UITextField *textField) {
@@ -711,20 +1021,31 @@ extern NSString *const BOE_OPEN_KEY ;
         if (!urlStrInput || urlStrInput.length == 0) {
             return ;
         }
-        NSString *stringToSave = [NSString stringWithString:urlStrInput];
         
-        NSString *unencodedString = urlStrInput;
-        NSString *encodedString = (NSString *)CFBridgingRelease(CFURLCreateStringByAddingPercentEscapes(kCFAllocatorDefault,
-                                                                                                        (CFStringRef)unencodedString,
-                                                                                                        NULL,
-                                                                                                        (CFStringRef)@"!*'();:@&=+$,/?%#[]",
-                                                                                                        kCFStringEncodingUTF8));
-        NSString *urlStr = [NSString stringWithFormat:@"sslocal://webview?url=%@",encodedString];
-        
-        [FHUtils setContent:stringToSave forKey:@"k_fh_debug_h5_bridge_test"];
-        
-        NSURL *url = [TTURLUtils URLWithString:urlStr];
-        [[TTRoute sharedRoute] openURLByPushViewController:url];
+        if([urlStrInput containsString:@"sslocal://"]){
+            NSString *stringToSave = [NSString stringWithString:urlStrInput];
+             [FHUtils setContent:stringToSave forKey:@"k_fh_debug_h5_bridge_test"];
+             
+             NSURL *url = [TTURLUtils URLWithString:urlStrInput];
+             [[TTRoute sharedRoute] openURLByPushViewController:url];
+        }else
+        {
+            NSString *stringToSave = [NSString stringWithString:urlStrInput];
+             
+             NSString *unencodedString = urlStrInput;
+             NSString *encodedString = (NSString *)CFBridgingRelease(CFURLCreateStringByAddingPercentEscapes(kCFAllocatorDefault,
+                                                                                                             (CFStringRef)unencodedString,
+                                                                                                             NULL,
+                                                                                                             (CFStringRef)@"!*'();:@&=+$,/?%#[]",
+                                                                                                             kCFStringEncodingUTF8));
+             NSString *urlStr = [NSString stringWithFormat:@"sslocal://webview?url=%@",encodedString];
+             
+             [FHUtils setContent:stringToSave forKey:@"k_fh_debug_h5_bridge_test"];
+             
+             NSURL *url = [TTURLUtils URLWithString:urlStr];
+             [[TTRoute sharedRoute] openURLByPushViewController:url];
+        }
+ 
         
         alertVCWeak = nil;
     }];
@@ -738,6 +1059,12 @@ extern NSString *const BOE_OPEN_KEY ;
 - (void)_openAdDebug
 {
     [self.navigationController pushViewController:[[TADDebugViewController alloc] init]
+                                         animated:YES];
+}
+
+- (void)_openLocalTestDebugViewController
+{
+    [self.navigationController pushViewController:[[FHHouseErrorHubDebugVC alloc] init]
                                          animated:YES];
 }
 
@@ -872,8 +1199,26 @@ extern NSString *const BOE_OPEN_KEY ;
 }
 
 -(void)_switchTo4G:(UISwitch *)uiswitch{
-    [SSCommonLogic setIsNetWorkDebugEnable:uiswitch.isOn];
+    [[NSUserDefaults standardUserDefaults] setBool:uiswitch.isOn forKey:@"debug_disable_network"];
 }
+
+//- (void)_switchJSBridgeDocumentor:(UISwitch *)uiswitch {
+//    [TTKitchen setBOOL:uiswitch.isOn forKey:@"tt_bridge_config.documentor_enabled"];
+//}
+//
+//- (void)_showJSBridgeDocs {
+//    [TTBridgeDocumentsViewController showInViewController:self];
+//}
+//
+//- (void)_switchJSBridgeAuth:(UISwitch *)uiswitch {
+//    [TTKitchen setBOOL:!uiswitch.isOn forKey:@"tt_rexxar_auth_enabled"];
+//    [TTJSBAuthManager sharedManager].isIgnoreJSBridgeAuthCheck = uiswitch.isOn;
+//}
+//
+//- (void)_switchBridgeAuth:(UISwitch *)uiswitch {
+//    [TTKitchen setBOOL:!uiswitch.isOn forKey:@"tt_bridge_auth_enabled"];
+//    [TTBridgeAuthManager sharedManager].authEnabled = !uiswitch.isOn;
+//}
 
 - (void)_switchToNewPullRefresh:(UISwitch *)uiswitch {
     [SSCommonLogic setNewPullRefreshEnabled:uiswitch.isOn];
@@ -922,6 +1267,38 @@ extern NSString *const BOE_OPEN_KEY ;
 - (void)_openHTSVideoDetail
 {
     [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:@"sslocal://huoshanvideo?video_id=6354295170023820546"]];
+}
+
+// 导出log
+- (void)_exportLog {
+    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"导出log" message:nil preferredStyle:UIAlertControllerStyleActionSheet sourceView:self.view];
+    NSString *directory = [NSSearchPathForDirectoriesInDomains(NSLibraryDirectory, NSUserDomainMask, YES) firstObject];
+    NSString *path = [directory stringByAppendingPathComponent:@"alog"];
+    NSArray *array = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:path error:nil];
+    WeakSelf;
+    for (NSString *item in array) {
+        if (![item hasSuffix:@".alog"]) {
+            continue;
+        }
+
+        [alertController addAction:[UIAlertAction actionWithTitle:item style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+            StrongSelf;
+            NSString *filePath = [path stringByAppendingPathComponent:item];
+            [self _shareLog:filePath];
+        }]];
+    }
+
+    [alertController addAction:[UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:nil]];
+
+    [self presentViewController:alertController animated:YES completion:nil];
+}
+
+// 分享log
+- (void)_shareLog:(NSString*)filePath {
+    NSURL *url = [NSURL fileURLWithPath:filePath];
+    UIActivityViewController *controller = [[UIActivityViewController alloc] initWithActivityItems:@[url] applicationActivities:nil];
+    controller.excludedActivityTypes = @[UIActivityTypePostToTwitter, UIActivityTypePostToFacebook, UIActivityTypeMessage, UIActivityTypeMail, UIActivityTypePrint, UIActivityTypeCopyToPasteboard, UIActivityTypeAssignToContact, UIActivityTypeSaveToCameraRoll, UIActivityTypeAddToReadingList, UIActivityTypePostToFlickr, UIActivityTypePostToVimeo, UIActivityTypePostToTencentWeibo, UIActivityTypePostToWeibo];
+    [self presentViewController:controller animated:YES completion:nil];
 }
 
 - (void)_connectLogServerActionFired {
@@ -1002,6 +1379,28 @@ extern NSString *const BOE_OPEN_KEY ;
         [self presentViewController:viewController animated:YES completion:NULL];
     }
 }
+
+//- (void)_fakeUserLocationActionFired {
+//    TTDebugLocationPickerController *pickerController = [[TTDebugLocationPickerController alloc] init];
+//    [self.navigationController pushViewController:pickerController animated:YES];
+//    UIWindow *window = self.view.window;
+//    pickerController.completionHandler = ^(TTDebugLocationPickerController *pickerViewController){
+//        // reverse 城市
+//        if ([TTDebugLocationPickerController cachedFakeLocationCoordinate].longitude * [TTDebugLocationPickerController cachedFakeLocationCoordinate].latitude > 0) {
+//            TTIndicatorView *indicator = [[TTIndicatorView alloc] initWithIndicatorStyle:TTIndicatorViewStyleWaitingView indicatorText:nil indicatorImage:nil dismissHandler:nil];
+//            indicator.showDismissButton = NO;
+//            indicator.autoDismiss = NO;
+//            [indicator showFromParentView:window];
+//            [[TTLocationManager sharedManager] startGeolocatingWithCompletionHandler:^(NSArray *placemarks) {
+//                [self.tableView reloadData];
+//                [indicator dismissFromParentView];
+//                [pickerViewController.navigationController popViewControllerAnimated:YES];
+//            }];
+//        } else {
+//            [pickerViewController.navigationController popViewControllerAnimated:YES];
+//        }
+//    };
+//}
 
 - (void)_testPingActionFired {
     SSDebugPingViewController *pingViewController = [[SSDebugPingViewController alloc] init];
@@ -1098,6 +1497,23 @@ extern NSString *const BOE_OPEN_KEY ;
     [TTTrackerWrapper setV3DoubleSendingEnable:uiswitch.isOn];
 }
 
+//制造一个无限等待的卡死
+- (void)_waitActionFired {
+    dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
+    dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER);
+}
+
+- (void)_oomActionFired {
+    NSMutableArray *dataArray = [[NSMutableArray alloc] init];
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        for (int i = 0; i < 1000; i++) {
+            NSString *path = [[NSBundle mainBundle] pathForResource:@"Assets" ofType:@"car"];
+            NSData *data = [NSData dataWithContentsOfFile:path];
+            [dataArray addObject:data?:@""];
+        }
+    });
+}
+
 - (void)_posterADActionFired:(UISwitch *)uiswitch
 {
     [SSCommonLogic setPosterADClickEnabled:uiswitch.isOn];
@@ -1105,7 +1521,22 @@ extern NSString *const BOE_OPEN_KEY ;
 
 -(void)_crashActionFired{
     NSArray * array = [NSArray array];
-    NSLog(@"array=%@", array[3]);
+    BDALOG_INFO(@"array=%@", array[3]);
+}
+
+- (void)_switchStartCrash:(UISwitch *)sender {
+    NSDictionary *dic = @{@"shouldCrash":@(sender.on),@"times":@0};
+    [[NSUserDefaults standardUserDefaults] setValue:[dic copy] forKey:@"kTTShouldSimulateStartCrashKey"];
+}
+
+-(void)heimdallrTestFired{
+    [self.navigationController pushViewController:[HMDSRWTESTEnvironment new] animated:YES];
+}
+
+- (void)_customExceptionFired {
+    [[HMDUserExceptionTracker sharedTracker] trackCurrentThreadLogExceptionType:@"assert" skippedDepth:0 customParams:nil filters:nil callback:^(NSError * _Nullable error) {
+        
+    }];
 }
 
 - (void)jsBridgeTest
@@ -1182,6 +1613,61 @@ extern NSString *const BOE_OPEN_KEY ;
 #endif
         //  [TTMemoryMonitor hideMemoryMonitor];
     }
+}
+
+- (void)_appFPSMonitorActionFired:(UISwitch *)uiswitch {
+    [[NSUserDefaults standardUserDefaults] setBool:uiswitch.on forKey:@"kTTAppFPSMonitorKey"];
+    [BDTFPSBar sharedInstance].hidden = !uiswitch.on;
+}
+
+//- (void)_defenseTest:(UISwitch *)uiswitch {
+//    [[NSUserDefaults standardUserDefaults] setBool:uiswitch.on forKey:kDefenseTest];
+//    TTDefenseTest.shared.on = uiswitch.on;
+//}
+
+// todo zjing test
+//- (void)_openNetworkDevMonitor {
+//    [self dismissViewControllerAnimated:YES completion:^{
+//        [BDNetworkDevMonitor showRecordsView];
+//    }];
+//}
+//
+//- (void)_networkDevMonitorSwitchAction:(UISwitch *)uiswitch {
+//    [[NSUserDefaults standardUserDefaults] setBool:uiswitch.on forKey:@"kTTNetworkDevMonitorStartOnLaunchKey"];
+//
+//    if (uiswitch.on) {
+//        [BDNetworkDevMonitor start];
+//    } else {
+//        [BDNetworkDevMonitor stop];
+//    }
+//}
+
+- (BOOL)networkDevMonitorLaunchOnStartupOn {
+    BOOL launchOnStartup = [[NSUserDefaults standardUserDefaults] boolForKey:@"kTTNetworkDevMonitorStartOnLaunchKey"];
+    return launchOnStartup;
+}
+
+- (void)_tttrackerInhouseSwitchAction:(UISwitch *)uiswitch {
+    BOOL shouldOn = uiswitch.on;
+    if (shouldOn) {
+        if ([TTSandBoxHelper isInHouseApp]) {
+            [[TTTracker sharedInstance] setIsInHouseVersion:YES]; // will change kTTTrackerInHouseVersion in UserDefault
+        }
+    } else {
+        [[TTTracker sharedInstance] setIsInHouseVersion:NO];
+    }
+}
+- (BOOL)tttrackerInhouseVersion {
+    BOOL inhouse = [[NSUserDefaults standardUserDefaults] boolForKey:@"kTTTrackerInHouseVersion"];
+    return inhouse;
+}
+- (void)_applogInhouseClearDidAction:(UISwitch *)uiswitch {
+    BOOL shouldOn = uiswitch.on;
+    [[NSUserDefaults standardUserDefaults] setBool:shouldOn forKey:@"AppLogClearDidInhouse"];
+}
+
+- (BOOL)applogInhouseClearDidAction {
+    return [[NSUserDefaults standardUserDefaults] boolForKey:@"AppLogClearDidInhouse"];
 }
 
 #pragma mark - JIRA 创建问题
@@ -1357,10 +1843,35 @@ extern NSString *const BOE_OPEN_KEY ;
 }
 
 #pragma mark - 模拟新用户开关
-- (void)_newUserSettingActionFired{
-    [ExploreLogicSetting setIsUpgradeUser:NO];
-    //目前模拟新用户的方式只针对新用户刷新引导的需求有效
-    [self clearUserCachedData];
+- (void)_newUserSwitch:(UISwitch *)sender
+{
+    if (sender.on) {
+        TTInstallResetDevicePage *resetPage = [[TTInstallResetDevicePage alloc] init];
+        @weakify(self)
+        resetPage.okButtonDidClicked = ^(NSString * _Nonnull gender, NSString * _Nonnull ageLevel, BOOL isAutoReset) {
+            @strongify(self)
+            [[TTInstallIDManager sharedInstance] setIsInHouseVersion:YES];
+            [TTInstallUtil setAutoReset:isAutoReset];
+            [TTInstallUtil setResetMode:YES];
+            [[NSUserDefaults standardUserDefaults] setObject:gender forKey:@"TTInstallGenderKey"];
+            [[NSUserDefaults standardUserDefaults] setObject:ageLevel forKey:@"TTInstallAgeLevelKey"];
+            UIAlertController *alertVC = [UIAlertController alertControllerWithTitle:@"新设备ID重置成功" message:@"请杀死App后，重新冷启动即可生效" preferredStyle:UIAlertControllerStyleAlert];
+            UIAlertAction *okAction = [UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleCancel handler:nil];
+            [alertVC addAction:okAction];
+            [self presentViewController:alertVC animated:YES completion:nil];
+        };
+        resetPage.cancelButtonDidClicked = ^{
+            sender.on = NO;
+        };
+        [self presentViewController:resetPage animated:YES completion:nil];
+    } else {
+        [[TTInstallIDManager sharedInstance] setIsInHouseVersion:YES];
+        [TTInstallUtil setResetMode:NO];
+        UIAlertController *alertVC = [UIAlertController alertControllerWithTitle:@"已关闭Mock新设备ID" message:@"如需再次生成新设备ID，请再次点击开关进行重置" preferredStyle:UIAlertControllerStyleAlert];
+        UIAlertAction *okAction = [UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleCancel handler:nil];
+        [alertVC addAction:okAction];
+        [self presentViewController:alertVC animated:YES completion:nil];
+    }
 }
 
 - (void)clearUserCachedData{
@@ -1378,6 +1889,103 @@ extern NSString *const BOE_OPEN_KEY ;
     [defaults synchronize];
 }
 
+#pragma mark - header
+- (UIView *)tableViewHeaderView {
+    if (_tableViewHeaderView == nil) {
+        _tableViewHeaderView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.tableView.width, 40)];
+        WeakSelf;
+//        UIButton *kitchenBtn = [_tableViewHeaderView ugc_addSubviewWithClass:[SSThemedButton class] themePath:@"#KitchenHeaderButton"];
+//        [kitchenBtn setTitle:@"Kitchen" forState:UIControlStateNormal];
+//        [kitchenBtn addTarget:self withActionBlock:^{
+//            StrongSelf;
+//            [TTKitchenBrowserViewController showInViewController:self];
+//        } forControlEvent:(UIControlEventTouchUpInside)];
+//
+//        UIButton *flexBtn = [_tableViewHeaderView ugc_addSubviewWithClass:[SSThemedButton class] themePath:@"#KitchenHeaderButton"];
+//        [flexBtn setTitle:@"FLEX" forState:UIControlStateNormal];
+//        [flexBtn addTarget:self withActionBlock:^{
+//            [[FLEXManager sharedManager] showExplorer];
+//        } forControlEvent:(UIControlEventTouchUpInside)];
+//
+//        UIButton *fpsBtn = [_tableViewHeaderView ugc_addSubviewWithClass:[SSThemedButton class] themePath:@"#KitchenHeaderButton"];
+//        [fpsBtn setTitle:@"FPS" forState:UIControlStateNormal];
+//        [fpsBtn addTarget:self withActionBlock:^{
+//            [TTDebugAssistant show];
+//            [TTSystemInfoManager sharedInstance].sysInfoFlags = TTTopBarShowSysInfoFPS | TTTopBarShowSysInfoMemory | TTTopBarShowSysInfoCPU;
+//        } forControlEvent:(UIControlEventTouchUpInside)];
+//
+//        [kitchenBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+//            make.width.equalTo(_tableViewHeaderView.mas_width).multipliedBy(0.25);
+//            make.height.equalTo(@(40.0));
+//            make.left.equalTo(_tableViewHeaderView.mas_left);
+//            make.top.equalTo(_tableViewHeaderView.mas_top);
+//        }];
+//
+//        [flexBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+//            make.width.equalTo(kitchenBtn.mas_width);
+//            make.height.equalTo(kitchenBtn.mas_height);
+//            make.left.equalTo(kitchenBtn.mas_right);
+//            make.top.equalTo(kitchenBtn.mas_top);
+//        }];
+//
+//        [fpsBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+//            make.width.equalTo(kitchenBtn.mas_width);
+//            make.height.equalTo(kitchenBtn.mas_height);
+//            make.left.equalTo(flexBtn.mas_right);
+//            make.top.equalTo(kitchenBtn.mas_top);
+//        }];
+    }
+    return _tableViewHeaderView;
+}
+
+- (void)fixLaunchImage {
+    // todo zjing test
+//    fixLaunchImage(^UIImage *(BOOL destory) {
+//        if (destory) {
+//            UIStoryboard *sb = [UIStoryboard storyboardWithName:@"StartLogo" bundle:nil];
+//            UIViewController *vc = [sb instantiateInitialViewController];
+//            UIWindow *window = [[UIWindow alloc] initWithFrame:UIScreen.mainScreen.bounds];
+//            window.rootViewController = vc;
+//            window.windowLevel = UIWindowLevelNormal - 1;
+//            [window makeKeyAndVisible];
+//
+//            return [self.class imageWithView:window];
+//        }
+//        return nil;
+//    }, ^(BOOL fixed) {
+//        [TTIndicatorView showWithIndicatorStyle:TTIndicatorViewStyleImage
+//                                  indicatorText:@"已修复启动图"
+//                                 indicatorImage:nil
+//                                    autoDismiss:YES
+//                                 dismissHandler:nil];
+//    });
+}
+
+- (void)destroyLaunchImage {
+    
+    // todo zjing test
+//    fixLaunchImage(^(BOOL destory) {
+//        CGSize screenSize = UIScreen.mainScreen.bounds.size;
+//        CGSize size = CGSizeMake(screenSize.width * UIScreen.mainScreen.scale, screenSize.height * UIScreen.mainScreen.scale);
+//        UIImage *image = [UIImage imageWithColor:UIColor.blackColor
+//                                            size:size];
+//        return image;
+//    }, ^(BOOL fixed) {
+//        [TTIndicatorView showWithIndicatorStyle:TTIndicatorViewStyleImage
+//                                  indicatorText:@"已损坏启动图"
+//                                 indicatorImage:nil
+//                                    autoDismiss:YES
+//                                 dismissHandler:nil];
+//    });
+}
+
++ (UIImage *)imageWithView:(UIView *)view {
+    UIGraphicsBeginImageContextWithOptions(view.bounds.size, view.opaque, 0.0);
+    [view drawViewHierarchyInRect:view.bounds afterScreenUpdates:YES];
+    UIImage *img = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    return img;
+}
 #pragma mark - React Native调试
 - (void)toggleRNDevEnable:(UISwitch *)sw {
 //    [TTRNBundleManager sharedManager].devEnable = sw.on;

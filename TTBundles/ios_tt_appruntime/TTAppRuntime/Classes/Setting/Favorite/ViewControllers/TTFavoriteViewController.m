@@ -10,7 +10,7 @@
 #import "TTFeedBaseDelegate.h"
 #import "TTFeedMultiDeleteViewModel.h"
 #import "ArticleTitleImageView.h"
-#import <TTAccountBusiness.h>
+#import "TTAccountBusiness.h"
 #import "TTAuthorizeManager.h"
 #import "TTNavigationController.h"
 #import "ExploreOrderedData+TTBusiness.h"
@@ -30,13 +30,13 @@
 
 #import "TTUGCDefine.h"
 #import "TTLoginDialogStrategyManager.h"
-#import <TTAccountSDK.h>
+#import "TTAccountSDK.h"
 //#import "Thread.h"
 #import "ExploreMomentDefine.h"
-//#import "Bubble-Swift.h"
 #import "FHEnvContext.h"
 #import <Masonry/Masonry.h>
 #import <TTBaseLib/TTUIResponderHelper.h>
+#import "FHUserTracker.h"
 
 #define kHasBottomTipFavlistClosedUserDefaultKey @"kHasBottomTipFavlistClosedUserDefaultKey"
 
@@ -93,7 +93,7 @@
     [dict setValue:@"favorite" forKey:@"category_name"];
     [dict setValue:@"house_app2c_v2" forKey:@"event_type"];
     [dict setValue:@"click" forKey:@"enter_type"];
-    [TTTracker eventV3:@"enter_category" params:dict isDoubleSending:NO];
+    [BDTrackerProtocol eventV3:@"enter_category" params:dict isDoubleSending:NO];
 }
 
 - (void)setupTableView {
@@ -316,7 +316,7 @@
     [dict setValue:@"click" forKey:@"enter_type"];
     NSString *stayTimeStr = [NSString stringWithFormat:@"%.0f", stayTime * 1000];
     [dict setValue:stayTimeStr forKey:@"stay_time"];
-    [TTTracker eventV3:@"stay_category" params:dict isDoubleSending:NO];
+    [BDTrackerProtocol eventV3:@"stay_category" params:dict isDoubleSending:NO];
 }
 
 - (void)fetchRemoteData {
@@ -805,7 +805,8 @@
     [traceParams setValue:dictTraceData.groupSource forKey:@"group_source"];
     [traceParams setValue:@(dictTraceData.cellType) ? : @"be_null" forKey:@"cell_type"];
 
-    [TTTracker eventV3:@"client_show" params:traceParams];
+//    [BDTrackerProtocol eventV3:@"client_show" params:traceParams];
+    [FHUserTracker writeEvent:@"client_show" params:traceParams];
 }
 
 #pragma mark  delegate

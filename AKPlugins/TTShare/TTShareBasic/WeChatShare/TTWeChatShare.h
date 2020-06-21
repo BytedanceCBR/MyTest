@@ -7,8 +7,8 @@
 //
 
 #import <Foundation/Foundation.h>
-#import <WXApi.h>
-#import <WXApiObject.h>
+#import "WXApi.h"
+#import "WXApiObject.h"
 
 typedef NS_ENUM(int, kTTWeChatShareErrorType) {
     kTTWeChatShareErrorTypeNotInstalled = 0,
@@ -102,6 +102,8 @@ extern NSString * const TTWeChatShareErrorDomain;
  *  如果返回YES， 其他应用就不要在handle了
  */
 + (BOOL)handleOpenURL:(NSURL *)url;
+
++ (BOOL)continueUserActivity:(NSUserActivity *)userActivity restorationHandler:(void (^)(NSArray<id<UIUserActivityRestoring>> * _Nullable))restorationHandler;
 
 /**
  *  发送文本消息到微信

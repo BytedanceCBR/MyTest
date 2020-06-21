@@ -9,7 +9,7 @@
 #import "SSThemed.h"
 #import "TTPersonalHomeUserInfoResponseModel.h"
 #import "TTRoute.h"
-#import <TTURLUtils.h>
+#import "TTURLUtils.h"
 @interface TTPersonalHomeBottomPopView : SSThemedView
 
 - (void)showFromPoint:(CGPoint)point superView:(UIView *)superView dataSource:(NSArray<TTPersonalHomeUserInfoDataBottomItemResponseModel *> *)dataSource;

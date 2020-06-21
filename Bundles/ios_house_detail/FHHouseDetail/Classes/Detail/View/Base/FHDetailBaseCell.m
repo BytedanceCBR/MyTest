@@ -6,6 +6,8 @@
 //
 
 #import "FHDetailBaseCell.h"
+@interface FHDetailBaseCell ()
+@end
 
 @implementation FHDetailBaseCell
 
@@ -21,8 +23,8 @@
 - (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
     if (self) {
-        self.backgroundColor = [UIColor whiteColor];
         self.selectionStyle = UITableViewCellSelectionStyleNone;
+        self.clipsToBounds = YES;
     }
     return self;
 }
@@ -61,6 +63,7 @@
 - (void)fh_didEndDisplayingCell{
 
 }
+
 @end
 
 // FHDetailBaseCollectionCell

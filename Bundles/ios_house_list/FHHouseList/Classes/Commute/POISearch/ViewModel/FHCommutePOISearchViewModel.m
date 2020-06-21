@@ -16,7 +16,7 @@
 #import <FHHouseBase/FHEnvContext.h>
 #import <TTReachability/TTReachability.h>
 #import <FHHouseBase/NSString+Emoji.h>
-
+#import <TTUIWidget/TTThemedAlertController.h>
 
 #import "FHCommutePOIInputBar.h"
 #import "FHCommutePOIInfoCell.h"
@@ -83,7 +83,7 @@
         _searchAPI.delegate = self;
         //
         NSString *selectCityName = [FHEnvContext getCurrentUserDeaultCityNameFromLocal];
-        _currentReGeocode =  [FHLocManager sharedInstance].currentReGeocode;
+        _currentReGeocode =  [FHLocManager sharedInstance].currentAmpReGeocode;
         
         if ([FHEnvContext isSameLocCityToUserSelect] && _currentReGeocode.city &&([_currentReGeocode.city hasPrefix:selectCityName] || [selectCityName hasPrefix:_currentReGeocode.city])) {
             //定位地和选择地是同一城市才选择
@@ -103,7 +103,7 @@
             [self nearBySearch:NO];
         }
     
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(connectionChanged:) name:kReachabilityChangedNotification object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(connectionChanged:) name:TTReachabilityChangedNotification object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationWillResignActive:) name:UIApplicationWillResignActiveNotification object:nil];        
     }
     return self;
@@ -113,7 +113,7 @@
 -(void)dealloc
 {
     [_searchAPI cancelAllRequests];
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:kReachabilityChangedNotification object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:TTReachabilityChangedNotification object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:UIApplicationWillResignActiveNotification object:nil];
 }
 
@@ -448,24 +448,21 @@
         self.locationHeaderView.loading = YES;
         return;
     }
-                    
-    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"开启定位服务" message:@"请允许幸福里使用您的位置来为您提供更好的找房服务" preferredStyle:UIAlertControllerStyleAlert];
+    TTThemedAlertController *alertVC = [[TTThemedAlertController alloc] initWithTitle:@"您还没有开启定位权限" message:@"请前往系统设置开启，以便我们更好地为您推荐房源及丰富信息推荐维度" preferredType:TTThemedAlertControllerTypeAlert];
+      [alertVC addActionWithGrayTitle:@"我知道了" actionType:TTThemedAlertActionTypeCancel actionBlock:^{
+
+      }];
+      
+      [alertVC addActionWithTitle:@"前往设置" actionType:TTThemedAlertActionTypeNormal actionBlock:^{
+          NSURL *jumpUrl = [NSURL URLWithString:UIApplicationOpenSettingsURLString];
+          
+          if ([[UIApplication sharedApplication] canOpenURL:jumpUrl]) {
+              [[UIApplication sharedApplication] openURL:jumpUrl];
+          }
+      }];
     
-    UIAlertAction *cancel = [UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
-        
-    }];
+    [alertVC showFrom:self.viewController.navigationController animated:YES];
     
-    UIAlertAction *config = [UIAlertAction actionWithTitle:@"去设置" style:UIAlertActionStyleDestructive handler:^(UIAlertAction * _Nonnull action) {
-        NSURL *url = [[NSURL alloc] initWithString:UIApplicationOpenSettingsURLString];
-        if( [[UIApplication sharedApplication] canOpenURL:url]) {
-            [[UIApplication sharedApplication] openURL:url];
-        }
-    }];
-    
-    [alert addAction:cancel];
-    [alert addAction:config];
-    
-    [self.viewController presentViewController:alert animated:YES completion:nil];
 }
 
 -(void)tryUseLocation
@@ -676,7 +673,7 @@
         //有网络了，重新请求
         if (self.aroundPois.count == 0) {
             NSString *selectCityName = [FHEnvContext getCurrentUserDeaultCityNameFromLocal];
-            _currentReGeocode =  [FHLocManager sharedInstance].currentReGeocode;
+            _currentReGeocode =  [FHLocManager sharedInstance].currentAmpReGeocode;
             if ([FHEnvContext isSameLocCityToUserSelect] && _currentReGeocode &&([_currentReGeocode.city hasPrefix:selectCityName] || [selectCityName hasPrefix:_currentReGeocode.city])) {
                 [self nearBySearch:YES];
             }            

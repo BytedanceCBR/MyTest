@@ -6,9 +6,9 @@
 //
 
 #import "FHPriceValuationNSearchView.h"
-#import <Masonry.h>
-#import <UIFont+House.h>
-#import <UIColor+Theme.h>
+#import "Masonry.h"
+#import "UIFont+House.h"
+#import "UIColor+Theme.h"
 #import "TTDeviceHelper.h"
 #import "FHExtendHotAreaButton.h"
 
@@ -37,7 +37,7 @@
     _searchAreaPanel = [[UIView alloc] init];
     _searchAreaPanel.backgroundColor = [UIColor whiteColor];
     _searchAreaPanel.layer.masksToBounds = YES;
-    _searchAreaPanel.layer.cornerRadius = 4.0;
+    _searchAreaPanel.layer.cornerRadius = 22.0;
     _searchAreaPanel.layer.borderWidth = 1.0;
     _searchAreaPanel.layer.borderColor = [UIColor themeGray6].CGColor;
     [self addSubview:_searchAreaPanel];

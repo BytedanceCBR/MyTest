@@ -20,8 +20,10 @@
 #import "IMConsDefine.h"
 #import "FHErrorView.h"
 #import "IFHMyFavoriteController.h"
-#import "TTTracker.h"
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
+
 #import <FHHouseBase/FHBaseTableView.h>
+#import "FHHouseErrorHubManager.h"
 
 @interface FHIMFavoriteViewController : NSObject<IFHMyFavoriteController>
 
@@ -141,7 +143,7 @@
     HMSegmentedControl* segmented = [[HMSegmentedControl alloc] initWithSectionTitles:titles];
     segmented.selectionIndicatorHeight = 4;
     segmented.selectionIndicatorCornerRadius = 2.5f;
-    segmented.selectionIndicatorColor = [UIColor themeRed1];
+    segmented.selectionIndicatorColor = [UIColor themeOrange4];
     segmented.selectionStyle = HMSegmentedControlSelectionStyleTextWidthStripe;
     segmented.segmentWidthStyle = HMSegmentedControlSegmentWidthStyleFixed;
     segmented.isNeedNetworkCheck = NO;
@@ -308,8 +310,8 @@
     }];
 
     self.sendBtn = [[UIButton alloc] init];
-    _sendBtn.layer.cornerRadius = 4;
-    _sendBtn.backgroundColor = [UIColor themeRed1];
+    _sendBtn.layer.cornerRadius = 22; //4;
+    _sendBtn.backgroundColor = [UIColor themeOrange4];
     [_sendBtn setAttributedTitle:[self sendAttriTextByCount:0] forState:UIControlStateNormal];
 
     [bottonBg addSubview:_sendBtn];
@@ -377,7 +379,8 @@
     trace[@"conversation_id"] = self.shareViewModel.conversactionId ? : @"";
     trace[@"log_pb"] = @"be_null";
     trace[@"send_total"] = @([self.shareViewModel.selectedItems count]);
-    [TTTracker eventV3:@"click_send" params:trace];
+    [[FHHouseErrorHubManager sharedInstance] checkBuryingPointWithEvent:@"click_send" Params:trace errorHubType:FHErrorHubTypeBuryingPoint];
+    [BDTrackerProtocol eventV3:@"click_send" params:trace];
 }
 
 -(NSString*)houseTypeByIndex:(NSUInteger)index {

@@ -6,9 +6,9 @@
 //
 
 #import "FHDetailGrayLineCell.h"
-#import <Masonry.h>
+#import "Masonry.h"
 #import "UIFont+House.h"
-#import <UIImageView+BDWebImage.h>
+#import "UIImageView+BDWebImage.h"
 #import "FHCommonDefines.h"
 #import "UIColor+Theme.h"
 
@@ -78,6 +78,15 @@
     self = [super init];
     if (self) {
         _lineHeight = 6.0;
+    }
+    return self;
+}
+
+- (instancetype)initWithHeight:(CGFloat)height
+{
+    self = [super init];
+    if (self) {
+        _lineHeight = height;
     }
     return self;
 }

@@ -6,11 +6,11 @@
 //
 
 #import "FHMainApi.h"
-#import <TTNetworkManager.h>
+#import "TTNetworkManager.h"
 #import "FHURLSettings.h"
 #import "FHHouseType.h"
 #import "FHCommonDefines.h"
-#import <TTSandBoxHelper.h>
+#import "TTSandBoxHelper.h"
 #import <FHHouseBase/TTSandBoxHelper+House.h>
 #import "FHJSONHTTPRequestSerializer.h"
 #import "FHEnvContext.h"
@@ -19,6 +19,8 @@
 #import <Heimdallr/HMDTTMonitor.h>
 #import <TTReachability/TTReachability.h>
 #import <Heimdallr/HMDUserExceptionTracker.h>
+#import "TTTabbarLoadEpidemicSituatioHelper.h"
+#import "FHHouseErrorHubManager.h"
 
 #define GET @"GET"
 #define POST @"POST"
@@ -110,7 +112,10 @@
             
             NSDate *serializeDate = [NSDate date];
             NSMutableDictionary *extraDict = nil;
-            
+            NSInteger responseCode = -1;
+            if (response.statusCode) {
+                responseCode = response.statusCode;
+            }
             if (response.statusCode != 200) {
                 resultType = FHNetworkMonitorTypeNetFailed;
             }else if (backError){
@@ -123,9 +128,12 @@
                 extraDict[@"response_headers"] = response.allHeaderFields;
                 extraDict[@"error"] = error.domain;
                 extraDict[@"status"] = model.status;
+                extraDict[@"response_code"] = @(responseCode);
             }
-            [self addRequestLog:@"config" startDate:startDate backDate:backDate serializeDate:serializeDate resultType:resultType errorCode:code errorMsg:errMsg extra:extraDict];
+            [self addRequestLog:@"config" startDate:startDate backDate:backDate serializeDate:serializeDate resultType:resultType errorCode:code errorMsg:errMsg extra:extraDict responseCode:responseCode];
+            [[FHHouseErrorHubManager sharedInstance] checkRequestResponseWithHost:url requestParams:requestParam responseStatus:response response:obj analysisError:backError changeModelType:resultType errorHubType:FHErrorHubTypeRequest];
             if (completion) {
+                [TTTabbarLoadEpidemicSituatioHelper  checkConfigEpidemicSituatiData:model.data.opTab];
                 dispatch_async(dispatch_get_main_queue(), ^{
                     completion(model,backError);
                 });
@@ -169,6 +177,10 @@
         NSInteger code = 0;
         NSString *errMsg = nil;
         NSMutableDictionary *extraDict = nil;
+        NSInteger responseCode = -1;
+        if (response.statusCode) {
+            responseCode = response.statusCode;
+         }
         if (error) {
             if (response.statusCode != 200) {
                 code = response.statusCode;
@@ -185,6 +197,7 @@
                     extraDict[@"response_headers"] = response.allHeaderFields;
                     extraDict[@"error"] = error.domain;
                     extraDict[@"status"] = model.status;
+                    extraDict[@"response_code"] = @(responseCode);
                     
                     code = [status integerValue];
                     errMsg = error.domain;
@@ -193,7 +206,8 @@
             }
         }
         
-        [self addRequestLog:response.URL.path startDate:startDate backDate:backDate serializeDate:serDate resultType:resultType errorCode:code errorMsg:errMsg extra:extraDict];
+        [self addRequestLog:response.URL.path startDate:startDate backDate:backDate serializeDate:serDate resultType:resultType errorCode:code errorMsg:errMsg extra:extraDict responseCode:responseCode];
+        [[FHHouseErrorHubManager sharedInstance] checkRequestResponseWithHost:url requestParams:param responseStatus:response response:obj analysisError:error changeModelType:resultType errorHubType:FHErrorHubTypeRequest];
         if (completion) {
             completion(model,error);
         }
@@ -317,6 +331,10 @@
             NSMutableDictionary *extraDict = nil;
             
             BOOL success = NO;
+            NSInteger responseCode = -1;
+            if (response.statusCode) {
+                responseCode = response.statusCode;
+            }
             if (response.statusCode == 200 ) {
                 if ([model respondsToSelector:@selector(status)]) {
                     NSString *status = [model performSelector:@selector(status)];
@@ -337,8 +355,8 @@
                 resultType = FHNetworkMonitorTypeNetFailed;
             }
             
-            [self addRequestLog:logPath?:response.URL.path startDate:startDate backDate:backDate serializeDate:serDate resultType:resultType errorCode:code errorMsg:errMsg extra:extraDict];
-            
+            [self addRequestLog:logPath?:response.URL.path startDate:startDate backDate:backDate serializeDate:serDate resultType:resultType errorCode:code errorMsg:errMsg extra:extraDict responseCode:responseCode];
+            [[FHHouseErrorHubManager sharedInstance] checkRequestResponseWithHost:url requestParams:param responseStatus:response response:obj analysisError:backError changeModelType:resultType errorHubType:FHErrorHubTypeRequest];
             if (completion) {
                 dispatch_async(dispatch_get_main_queue(), ^{
                     completion(model,backError);
@@ -379,7 +397,10 @@
             NSString *errMsg = nil;
             NSMutableDictionary *extraDict = nil;
             NSDictionary *exceptionDict = nil;
-            
+            NSInteger responseCode = -1;
+            if (response.statusCode) {
+                responseCode = response.statusCode;
+            }
             if (response.statusCode == 200  && [model isKindOfClass:[FHHomeHouseModel class]]) {
                 if ([model respondsToSelector:@selector(status)]) {
                     NSString *status = [model performSelector:@selector(status)];
@@ -401,7 +422,8 @@
                 code = response.statusCode;
                 resultType = FHNetworkMonitorTypeNetFailed;
             }
-            [self addRequestLog:response.URL.path startDate:startDate backDate:backDate serializeDate:serDate resultType:resultType errorCode:code errorMsg:errMsg extra:extraDict exceptionDict:exceptionDict];
+            [self addRequestLog:response.URL.path startDate:startDate backDate:backDate serializeDate:serDate resultType:resultType errorCode:code errorMsg:errMsg extra:extraDict exceptionDict:exceptionDict responseCode:responseCode];
+            [[FHHouseErrorHubManager sharedInstance] checkRequestResponseWithHost:url requestParams:param responseStatus:response response:obj analysisError:backError changeModelType:resultType errorHubType:FHErrorHubTypeRequest];
             dispatch_async(dispatch_get_main_queue(), ^{
                 completion(model,backError);
             });
@@ -409,13 +431,63 @@
     }];
 }
 
-
-+(void)addRequestLog:(NSString *)path startDate:(NSDate *)startData backDate:(NSDate *)backDate serializeDate:(NSDate *)serializeDate resultType:(FHNetworkMonitorType)type errorCode:(NSInteger)errorCode errorMsg:(NSString *)errorMsg extra:(NSDictionary *)extraDict
-{
-    [self addRequestLog:path startDate:startData backDate:backDate serializeDate:serializeDate resultType:type errorCode:errorCode errorMsg:errorMsg extra:extraDict exceptionDict:nil];
++(TTHttpTask *)requestHomeSimilarRecommend:(NSDictionary *_Nullable)param completion:(void(^_Nullable)(FHHomeHouseModel *model, NSError *error))completion{
+    NSString *url = QURL(@"/f100/api/similar_house?");
+       
+    NSDate *startDate = [NSDate date];
+    return [[TTNetworkManager shareInstance] requestForBinaryWithResponse:url params:param method:@"GET" needCommonParams:YES callback:^(NSError *error, id obj, TTHttpResponse *response) {
+           if (!completion) {
+               return ;
+           }
+           NSDate *backDate = [NSDate date];
+           __block NSError *backError = error;
+           dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
+               FHHomeHouseModel *model = (FHHomeHouseModel *)[self generateModel:obj class:[FHHomeHouseModel class] error:&backError];
+               NSDate *serDate = [NSDate date];
+               FHNetworkMonitorType resultType = FHNetworkMonitorTypeSuccess;
+               NSInteger code = 0;
+               NSString *errMsg = nil;
+               NSMutableDictionary *extraDict = nil;
+               NSDictionary *exceptionDict = nil;
+               NSInteger responseCode = -1;
+               if (response.statusCode) {
+                   responseCode = response.statusCode;
+               }
+               if (response.statusCode == 200  && [model isKindOfClass:[FHHomeHouseModel class]]) {
+                   if ([model respondsToSelector:@selector(status)]) {
+                       NSString *status = [model performSelector:@selector(status)];
+                       if (status.integerValue != 0 || error != nil || model.data.items.count == 0) {
+                           extraDict = @{}.mutableCopy;
+                           extraDict[@"request_url"] = response.URL.absoluteString;
+                           extraDict[@"response_headers"] = response.allHeaderFields;
+                           extraDict[@"error"] = error.domain;
+                           
+                           code = [status integerValue];
+                           errMsg = error.domain;
+                           
+                           NSInteger houseType = [[param valueForKey:@"house_type"] integerValue];
+                           resultType = FHNetworkMonitorTypeBizFailed+houseType;
+                           exceptionDict = @{@"data_type":(param[@"house_type"]?:@"-1")};
+                       }
+                   }
+               }else{
+                   code = response.statusCode;
+                   resultType = FHNetworkMonitorTypeNetFailed;
+               }
+               [self addRequestLog:response.URL.path startDate:startDate backDate:backDate serializeDate:serDate resultType:resultType errorCode:code errorMsg:errMsg extra:extraDict exceptionDict:exceptionDict responseCode:responseCode];
+               dispatch_async(dispatch_get_main_queue(), ^{
+                   completion(model,backError);
+               });
+           });
+     }];
 }
 
-+(void)addRequestLog:(NSString *)path startDate:(NSDate *)startData backDate:(NSDate *)backDate serializeDate:(NSDate *)serializeDate resultType:(FHNetworkMonitorType)type errorCode:(NSInteger)errorCode errorMsg:(NSString *)errorMsg extra:(NSDictionary *)extraDict exceptionDict:(NSDictionary *)exceptionDict
++(void)addRequestLog:(NSString *)path startDate:(NSDate *)startData backDate:(NSDate *)backDate serializeDate:(NSDate *)serializeDate resultType:(FHNetworkMonitorType)type errorCode:(NSInteger)errorCode errorMsg:(NSString *)errorMsg extra:(NSDictionary *)extraDict responseCode:(NSInteger)responseCode
+{
+    [self addRequestLog:path startDate:startData backDate:backDate serializeDate:serializeDate resultType:type errorCode:errorCode errorMsg:errorMsg extra:extraDict exceptionDict:nil responseCode:responseCode];
+}
+
++(void)addRequestLog:(NSString *)path startDate:(NSDate *)startData backDate:(NSDate *)backDate serializeDate:(NSDate *)serializeDate resultType:(FHNetworkMonitorType)type errorCode:(NSInteger)errorCode errorMsg:(NSString *)errorMsg extra:(NSDictionary *)extraDict exceptionDict:(NSDictionary *)exceptionDict responseCode:(NSInteger)responseCode
 {
     NSString *sPath = path;
     path = [path stringByReplacingOccurrencesOfString:@"f100/api" withString:@""];
@@ -467,7 +539,7 @@
         extra[@"network_status"] = ntType;
     }
     
-    NSDictionary *cat = @{@"status":@(type)};
+    NSDictionary *cat = @{@"status":@(type),@"response_code":@(responseCode)};
     [[HMDTTMonitor defaultManager] hmdTrackService:key metric:metricDict category:cat extra:extra];
     
     if (type != FHNetworkMonitorTypeSuccess && type != FHNetworkMonitorTypeNetFailed) {
@@ -475,6 +547,7 @@
         filterDict[@"path"] = key;
         NSMutableDictionary *customDict = [NSMutableDictionary new];
         customDict[@"status"] = @(errorCode);
+        customDict[@"response_code"] = @(responseCode);
         NSDictionary *headerDict = extra[@"response_headers"];
         if ([headerDict isKindOfClass:[NSDictionary class]]) {
             customDict[@"log_id"] = headerDict[@"x-tt-logid"];
@@ -484,7 +557,7 @@
         if ([exceptionDict isKindOfClass:[NSDictionary class]]) {
             [customDict addEntriesFromDictionary:exceptionDict];
         }
-        [[HMDUserExceptionTracker sharedTracker] trackUserExceptionWithType:[NSString stringWithFormat:@"api_error:%@",sPath?:@""] Log:errorMsg?:@"api_biz_error" CustomParams:customDict filters:filterDict callback:nil];
+        [[HMDUserExceptionTracker sharedTracker] trackUserExceptionWithExceptionType:@"NetworkError" title:@"api_error" subTitle:sPath?:@"" customParams:customDict filters:filterDict callback:nil];
     }
     
 }
@@ -514,7 +587,10 @@
             NSInteger code = 0;
             NSString *errMsg = nil;
             NSMutableDictionary *extraDict = nil;
-            
+            NSInteger responseCode = -1;
+            if (response.statusCode) {
+                responseCode = response.statusCode;
+            }
             FHNetworkMonitorType resultType = FHNetworkMonitorTypeSuccess;
             if (error) {
                 code = response.statusCode;
@@ -528,13 +604,15 @@
                 extraDict[@"response_headers"] = response.allHeaderFields;
                 extraDict[@"error"] = error.domain;
                 extraDict[@"status"] = @(status);
+                extraDict[@"response_code"] = @(responseCode);
                 
                 code = backError.code;
                 errMsg = [backError description];
                 resultType = status;
             }
             
-            [self addRequestLog:response.URL.path startDate:startDate backDate:requestDoneDate serializeDate:serializeDate resultType:resultType errorCode:code errorMsg:errMsg extra:extraDict];
+            [self addRequestLog:response.URL.path startDate:startDate backDate:requestDoneDate serializeDate:serializeDate resultType:resultType errorCode:code errorMsg:errMsg extra:extraDict responseCode:responseCode];
+            [[FHHouseErrorHubManager sharedInstance] checkRequestResponseWithHost:url requestParams:param responseStatus:response response:obj analysisError:backError changeModelType:resultType errorHubType:FHErrorHubTypeRequest];
             
             if (completion) {
                 dispatch_async(dispatch_get_main_queue(), ^{
@@ -589,17 +667,23 @@
             NSString *errMsg = nil;
             NSMutableDictionary *extraDict = nil;
             FHNetworkMonitorType resultType = FHNetworkMonitorTypeSuccess;
-            
+            NSInteger responseCode = -1;
+            if (response.statusCode) {
+                responseCode = response.statusCode;
+            }
             if (response.statusCode == 200 ) {
                 
                 if ([model respondsToSelector:@selector(status)]) {
                     NSString *status = [model performSelector:@selector(status)];
                     if (status.integerValue != 0 || error != nil) {
-                        extraDict = @{}.mutableCopy;
-                        extraDict[@"request_url"] = response.URL.absoluteString;
-                        extraDict[@"response_headers"] = response.allHeaderFields;
-                        extraDict[@"error"] = error.domain;
-                        extraDict[@"status"] = status;
+                        if(uploadLog) {
+                            extraDict = @{}.mutableCopy;
+                            extraDict[@"request_url"] = response.URL.absoluteString;
+                            extraDict[@"response_headers"] = response.allHeaderFields;
+                            extraDict[@"error"] = error.domain;
+                            extraDict[@"status"] = status;
+                            extraDict[@"response_code"] = @(responseCode);
+                        }
                         code = [status integerValue];
                         errMsg = error.domain;
                         resultType = status.integerValue;
@@ -610,7 +694,8 @@
                 code = response.statusCode;
                 errMsg = error.domain;
             }
-            [self addRequestLog:response.URL.path startDate:startDate backDate:backDate serializeDate:serializeDate resultType:resultType errorCode:code errorMsg:errMsg extra:extraDict];
+            [self addRequestLog:response.URL.path startDate:startDate backDate:backDate serializeDate:serializeDate resultType:resultType errorCode:code errorMsg:errMsg extra:extraDict responseCode:responseCode];
+            [[FHHouseErrorHubManager sharedInstance] checkRequestResponseWithHost:url requestParams:param responseStatus:response response:obj analysisError:backError changeModelType:resultType errorHubType:FHErrorHubTypeRequest];
             if (completion) {
                 dispatch_async(dispatch_get_main_queue(), ^{
                     completion(model,error);
@@ -644,7 +729,10 @@
             NSString *errMsg = nil;
             NSMutableDictionary *extraDict = nil;
             FHNetworkMonitorType resultType = FHNetworkMonitorTypeSuccess;
-            
+            NSInteger responseCode = -1;
+            if (response.statusCode) {
+                responseCode = response.statusCode;
+            }
             if (!error) {
                 @try{
                     json = [NSJSONSerialization JSONObjectWithData:obj options:kNilOptions error:&error];
@@ -667,11 +755,12 @@
                         extraDict[@"response_headers"] = response.allHeaderFields;
                         extraDict[@"error"] = error.domain;
                         extraDict[@"status"] = @(status);
+                        extraDict[@"response_code"] = @(responseCode);
                         resultType = status;
                     }
                 }
             }
-            [self addRequestLog:response.URL.path startDate:startDate backDate:backDate serializeDate:nil resultType:resultType errorCode:code errorMsg:errMsg extra:extraDict];
+            [self addRequestLog:response.URL.path startDate:startDate backDate:backDate serializeDate:nil resultType:resultType errorCode:code errorMsg:errMsg extra:extraDict responseCode:responseCode];
             completion(json,error);
         }
     }];
@@ -693,7 +782,10 @@
             NSString *errMsg = nil;
             NSMutableDictionary *extraDict = nil;
             FHNetworkMonitorType resultType = FHNetworkMonitorTypeSuccess;
-            
+            NSInteger responseCode = -1;
+            if (response.statusCode) {
+                responseCode = response.statusCode;
+            }
             if (!error) {
                 @try{
                     json = [NSJSONSerialization JSONObjectWithData:obj options:kNilOptions error:&error];
@@ -716,11 +808,12 @@
                         extraDict[@"response_headers"] = response.allHeaderFields;
                         extraDict[@"error"] = error.domain;
                         extraDict[@"status"] = @(status);
+                        extraDict[@"response_code"] = @(responseCode);
                         resultType = status;
                     }
                 }
             }
-             [self addRequestLog:response.URL.path startDate:startDate backDate:backDate serializeDate:nil resultType:resultType errorCode:code errorMsg:errMsg extra:extraDict];
+             [self addRequestLog:response.URL.path startDate:startDate backDate:backDate serializeDate:nil resultType:resultType errorCode:code errorMsg:errMsg extra:extraDict responseCode:responseCode];
             completion(json,error);
         }
     }];
@@ -743,7 +836,10 @@
             NSString *errMsg = nil;
             NSMutableDictionary *extraDict = nil;
             FHNetworkMonitorType resultType = FHNetworkMonitorTypeSuccess;
-            
+            NSInteger responseCode = -1;
+            if (response.statusCode) {
+                responseCode = response.statusCode;
+            }
             if (!error) {
                 @try{
                     json = [NSJSONSerialization JSONObjectWithData:obj options:kNilOptions error:&error];
@@ -766,11 +862,12 @@
                         extraDict[@"response_headers"] = response.allHeaderFields;
                         extraDict[@"error"] = error.domain;
                         extraDict[@"status"] = @(status);
+                        extraDict[@"response_code"] = @(responseCode);
                         resultType = status;
                     }
                 }
             }
-            [self addRequestLog:response.URL.path startDate:startDate backDate:backDate serializeDate:nil resultType:resultType errorCode:code errorMsg:errMsg extra:extraDict];
+            [self addRequestLog:response.URL.path startDate:startDate backDate:backDate serializeDate:nil resultType:resultType errorCode:code errorMsg:errMsg extra:extraDict responseCode:responseCode];
             completion(json,error);
         }
     }];

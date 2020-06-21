@@ -17,10 +17,37 @@
 #import <TTArticleBase/ExploreLogicSetting.h>
 #import <TTBaseLib/TTBaseMacro.h>
 #import "TTLaunchDefine.h"
+#import <TTKitchen/TTKitchen.h>
+#import <BDUIKeyboardImplHook/BDUIKeyboardImplHook.h>
+#import "GAIAEngine+TTBase.h"
+#import <TTLocationManager/TTLocationManager.h>
+#import <TTLocationManager/TTSystemGeocoder.h>
+#import <BDWatchdogProtector/WPUIApplicationProtector.h>
+#import <BDWatchdogProtector/WPUtil.h>
+#import <BDWatchdogProtector/WPTimeoutWrapper.h>
+
+
+static NSString *const kHookSystemKeyboardMethodPlanType = @"f_settings.hook_system_keyboard_method_plan_type";
+static NSString *const kTTLocationSystemGeoDisable = @"f_settings.location_system_geo_disable";
 
 DEC_TASK("TTCleanDatabaseTask",FHTaskTypeSerial,TASK_PRIORITY_HIGH+8);
 
 @implementation TTCleanDatabaseTask
+
++ (void)registerKitchen {
+    TTRegisterKitchenMethod
+    TTKitchenRegisterBlock(^{
+        TTKConfigInt(kHookSystemKeyboardMethodPlanType, @"系统键盘私有方法hook方案类型", -1); TTKConfigBOOL(kTTLocationSystemGeoDisable, @"禁用系统GEO", YES);
+    });
+}
+
+TTFeedDidDisplayFunction() {
+    
+    NSInteger planType = [TTKitchen getInt:kHookSystemKeyboardMethodPlanType];
+    if (planType == 0 || planType == 1) {
+        [BDUIKeyboardImplHook applyHookForPlanType:planType];
+    }
+}
 
 - (NSString *)taskIdentifier {
     return @"CleanDatabase";
@@ -35,6 +62,32 @@ DEC_TASK("TTCleanDatabaseTask",FHTaskTypeSerial,TASK_PRIORITY_HIGH+8);
         [[GYDataContext sharedInstance] setAutoTransactionEnabled:enbaled.boolValue];
     });
     [self deleteFeedDataBase];
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        if ([TTKitchen getBOOL:kTTLocationSystemGeoDisable]) {
+            [self unregisterSystemGEO];
+        }
+    });
+    [WPUIApplicationProtector startWithType:WPUIApplicationProtectorAll];
+    [[self class] hookUIApplicationMethod];
+}
+
+#pragma mark 禁用系统geo
+- (void)unregisterSystemGEO {
+    [[TTLocationManager sharedManager] unregisterReverseGeocoderForKey:NSStringFromClass([TTSystemGeocoder class])];
+}
+
+#pragma mark hookUIApplicationMethod
++ (void)hookUIApplicationMethod
+{
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        if (1) {
+            // hook applicationIconBadgeNumber
+            Class class = NSClassFromString([WPUtil base64DecodedString:@"VU5Vc2VyTm90aWZpY2F0aW9uQ2VudGVy"]/*@"UNUserNotificationCenter"*/);
+            SEL selector = NSSelectorFromString([WPUtil base64DecodedString:@"YmFkZ2VOdW1iZXI="]/*@"badgeNumber"*/);
+            WPTimeoutSupportInstanceMethod(class, selector, WPTReturnType(NSInteger), WPTReturnDefault(0), WPTArgumentsType());
+        }
+    });
 }
 
 + (void)cleanCoreDataIfNeeded {

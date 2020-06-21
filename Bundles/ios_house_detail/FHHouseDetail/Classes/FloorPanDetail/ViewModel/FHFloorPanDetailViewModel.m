@@ -9,8 +9,8 @@
 #import "FHHouseDetailAPI.h"
 #import "FHDetailNewTimeLineItemCell.h"
 #import "FHDetailNewModel.h"
-#import <FHRefreshCustomFooter.h>
-#import <FHEnvContext.h>
+#import "FHRefreshCustomFooter.h"
+#import "FHEnvContext.h"
 #import "FHDetailNewCoreDetailModel.h"
 #import "FHDetailHouseNameCell.h"
 #import "FHFloorPanCorePropertyCell.h"
@@ -21,11 +21,19 @@
 #import "FHFloorPanDetailPropertyCell.h"
 #import "FHFloorPanDetailMutiFloorPanCell.h"
 #import "FHHouseDetailSubPageViewController.h"
+#import "FHDetailBottomBar.h"
+#import "FHDetailMediaHeaderCorrectingCell.h"
+#import "FHDetailPropertyListCorrectingCell.h"
+#import "FHFloorPanDetailModuleHelper.h"
+#import "FHOldDetailDisclaimerCell.h"
+#import "FHDetailListSectionTitleCell.h"
+#import "FHFloorPanDetailPropertyListCell.h"
+#import "FHDetailBaseModel.h"
+#import "FHDetailSalesCell.h"
 
 @interface FHFloorPanDetailViewModel()<UITableViewDelegate,UITableViewDataSource>
 
 @property (nonatomic , weak) UITableView *infoListTable;
-@property (nonatomic , strong) NSMutableArray *currentItems;
 @property (nonatomic , strong) NSString *floorPanId;
 @property (nonatomic , strong) FHDetailFloorPanDetailInfoModel *currentModel;
 @property(nonatomic , weak) FHHouseDetailSubPageViewController *subPageVC;
@@ -43,61 +51,63 @@
         _subPageVC = viewController;
         _infoListTable = tableView;
         _floorPanId = floorPanId;
-        _currentItems = [NSMutableArray new];
         [self configTableView];
-        
+        WeakSelf;
+        FHDetailBottomBar *bottomBar = [_subPageVC getBottomBar];
+        if ([bottomBar isKindOfClass:[FHDetailBottomBar class]]) {
+            bottomBar.bottomBarContactBlock = ^{
+                StrongSelf;
+                [wself contactAction];
+            };
+            bottomBar.bottomBarImBlock = ^{
+                StrongSelf;
+                [wself imAction];
+            };
+        }
+        self.contactViewModel = [_subPageVC getContactViewModel];
+        self.bottomBar = bottomBar;
+        bottomBar.hidden = YES;
         [self startLoadData];
     }
     return self;
 }
 
+- (void)contactAction
+{
+    if (!self.contactViewModel) {
+        return;
+    }
+    [self.contactViewModel contactAction];
+}
+
+- (void)imAction
+{
+    FHDetailContactModel *contactPhone = self.contactViewModel.contactPhone;
+    NSMutableDictionary *imExtra = @{}.mutableCopy;
+    imExtra[@"source_from"] = @"house_model_detail";
+    imExtra[@"im_open_url"] = contactPhone.imOpenUrl;
+    if(self.currentModel.data.highlightedRealtorAssociateInfo) {
+        imExtra[kFHAssociateInfo] = self.currentModel.data.highlightedRealtorAssociateInfo;
+    }
+    [self.contactViewModel onlineActionWithExtraDict:imExtra];
+}
+
 // 注册cell类型
 - (void)registerCellClasses {
-    [self.infoListTable registerClass:[FHDetailPhotoHeaderCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailPhotoHeaderCell class])];
+    //头部轮播
+    [self.infoListTable registerClass:[FHDetailMediaHeaderCorrectingCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailMediaHeaderCorrectingModel class])];
     
-    [self.infoListTable registerClass:[FHFloorPanTitleCell class] forCellReuseIdentifier:NSStringFromClass([FHFloorPanTitleCell class])];
+    //户型信息
+    [self.infoListTable registerClass:[FHFloorPanDetailPropertyListCell class] forCellReuseIdentifier:NSStringFromClass([FHFloorPanDetailPropertyListModel class])];
     
-    [self.infoListTable registerClass:[FHFloorPanDetailPropertyCell class] forCellReuseIdentifier:NSStringFromClass([FHFloorPanDetailPropertyCell class])];
-
-    [self.infoListTable registerClass:[FHDetailHouseNameCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailHouseNameCell class])];
-    
-    [self.infoListTable registerClass:[FHDetailGrayLineCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailGrayLineCell class])];
-    
-    [self.infoListTable registerClass:[FHFloorPanDetailMutiFloorPanCell class] forCellReuseIdentifier:NSStringFromClass([FHFloorPanDetailMutiFloorPanCell class])];
-}
-// cell class
-- (Class)cellClassForEntity:(id)model {
-    // 图片头部
-    if ([model isKindOfClass:[FHDetailPhotoHeaderModel class]]) {
-        return [FHDetailPhotoHeaderCell class];
-    }
-    
-    // 标题
-    if ([model isKindOfClass:[FHFloorPanTitleCellModel class]]) {
-        return [FHFloorPanTitleCell class];
-    }
-    
-    // 灰色分割线
-    if ([model isKindOfClass:[FHDetailGrayLineModel class]]) {
-        return [FHDetailGrayLineCell class];
-    }
-
-    // 属性信息
-    if ([model isKindOfClass:[FHFloorPanDetailPropertyCellModel class]]) {
-        return [FHFloorPanDetailPropertyCell class];
-    }
-    
+    //1.0.0 新增优惠信息
+    [self.infoListTable registerClass:[FHDetailSalesCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailSalesCellModel class])];
     //楼盘推荐
-    if ([model isKindOfClass:[FHFloorPanDetailMutiFloorPanCellModel class]]) {
-        return [FHFloorPanDetailMutiFloorPanCell class];
-    }
-    
-    return [FHDetailBaseCell class];
-}
-// cell identifier
-- (NSString *)cellIdentifierForEntity:(id)model {
-    Class cls = [self cellClassForEntity:model];
-    return NSStringFromClass(cls);
+    [self.infoListTable registerClass:[FHFloorPanDetailMutiFloorPanCell class] forCellReuseIdentifier:NSStringFromClass([FHFloorPanDetailMutiFloorPanCellModel class])];
+    //标题
+    [self.infoListTable registerClass:[FHDetailListSectionTitleCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailListSectionTitleModel class])];
+    //免责声明
+    [self.infoListTable registerClass:[FHOldDetailDisclaimerCell class] forCellReuseIdentifier:NSStringFromClass([FHOldDetailDisclaimerModel class])];
 }
 
 - (void)configTableView
@@ -113,13 +123,14 @@
         [self.detailController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoNetWorkNotRefresh];
         return;
     }
-    
     if (_floorPanId) {
         [self.detailController startLoading];
         __weak typeof(self) wSelf = self;
+        self.bottomBar.hidden = YES;
         [FHHouseDetailAPI requestFloorPanDetailCoreInfoSearch:_floorPanId completion:^(FHDetailFloorPanDetailInfoModel * _Nullable model, NSError * _Nullable error) {
             if(model.data && !error)
             {
+                [wSelf.navBar showMessageNumber];
                 [wSelf.detailController.emptyView hideEmptyView];
                 wSelf.detailController.hasValidateData = YES;
                 [wSelf processDetailData:model];
@@ -128,6 +139,7 @@
                 wSelf.detailController.hasValidateData = NO;
                 [wSelf.detailController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoData];
             }
+            wSelf.bottomBar.hidden = NO;
         }];
     }
 }
@@ -144,35 +156,70 @@
 
 - (void)processDetailData:(FHDetailFloorPanDetailInfoModel *)model {
     NSMutableArray *itemsArray = [NSMutableArray new];
-    
+    self.detailData = model;
     self.currentModel = model;
-    
-    if (model.data.images) {
-        FHDetailPhotoHeaderModel *headerCellModel = [[FHDetailPhotoHeaderModel alloc] init];
-        headerCellModel.houseImage = model.data.images;
-        [self.currentItems addObject:headerCellModel];
+    //头部轮播图
+    FHMultiMediaItemModel *itemModel = nil;
+    FHDetailMediaHeaderCorrectingModel *headerCellModel = [[FHDetailMediaHeaderCorrectingModel alloc] init];
+    if (model.data.imageDictList && [model.data.imageDictList isKindOfClass:[NSArray class]] && model.data.imageDictList.count > 0) {
+        NSMutableArray *houseImageList = [NSMutableArray array];
+        for (FHHouseDetailImageListDataModel *imageInfo in model.data.imageDictList) {
+            FHHouseDetailImageListDataModel *houseImageDictList = [[FHHouseDetailImageListDataModel alloc] init];
+            houseImageDictList.usedSceneType = FHHouseDetailImageListDataUsedSceneTypeFloorPan;
+            houseImageDictList.houseImageType = imageInfo.houseImageType;
+            houseImageDictList.houseImageTypeName = imageInfo.houseImageTypeName;
+            houseImageDictList.houseImageList = imageInfo.houseImageList.copy;
+            [houseImageList addObject:houseImageDictList];
+        }
+        headerCellModel.houseImageDictList = houseImageList.copy;
     }
+    headerCellModel.houseImageAssociateInfo = model.data.imageAssociateInfo;
     
-    if (model.data) {
-        FHFloorPanTitleCellModel *cellModel = [[FHFloorPanTitleCellModel alloc] init];
-        cellModel.title = model.data.title;
-        cellModel.pricing = model.data.pricing;
-        cellModel.pricingPerSqm = model.data.pricingPerSqm;
-        cellModel.saleStatus = model.data.saleStatus;
-        [self.currentItems addObject:cellModel];
-    }
+    FHDetailHouseTitleModel *houseTitleModel = [[FHDetailHouseTitleModel alloc] init];
+    houseTitleModel.titleStr = model.data.title;
+    houseTitleModel.squaremeter = model.data.squaremeter;
+    houseTitleModel.facingDirection = model.data.facingDirection;
+    houseTitleModel.saleStatus = model.data.saleStatus.content;
+    houseTitleModel.tags = model.data.tags;
+//    if (model.data.tags) {
+//        FHHouseTagsModel *tag = [[FHHouseTagsModel alloc]init];
+//        tag.backgroundColor = model.data.saleStatus.backgroundColor;
+//        tag.content = model.data.saleStatus.content;
+//        tag.id = model.data.saleStatus.id;
+//        tag.textColor = model.data.saleStatus.textColor;
+//        houseTitleModel.tags = @[tag];
+//    }
+    houseTitleModel.Picing = model.data.pricing;
+    houseTitleModel.displayPrice = model.data.displayPrice;
+    houseTitleModel.isFloorPan = YES;
+    houseTitleModel.priceConsult = model.data.priceConsult;
+    headerCellModel.vedioModel = itemModel;
+    headerCellModel.contactViewModel = self.contactViewModel;
+    headerCellModel.isInstantData = nil;
+    headerCellModel.titleDataModel = houseTitleModel;
+    [self.items addObject:headerCellModel];
     
+    //基础信息
     if (model.data.baseInfo) {
-        FHFloorPanDetailPropertyCellModel *cellModel = [[FHFloorPanDetailPropertyCellModel alloc] init];
-        cellModel.baseInfo = model.data.baseInfo;
-        [self.currentItems addObject:cellModel];
+        FHFloorPanDetailPropertyListModel *propertyModel = [[FHFloorPanDetailPropertyListModel alloc] init];
+        propertyModel.courtId = model.data.courtId;
+        propertyModel.baseInfo = model.data.baseInfo;
+        propertyModel.baseExtra = model.data.baseExtra;
+        propertyModel.houseModelType = FHFloorPanHouseModelTypeCoreInfo;
+        [self.items addObject:propertyModel];
+    }
+    
+    // 优惠信息
+    if (model.data.discountInfo) {
+        FHDetailSalesCellModel *salesModel = [[FHDetailSalesCellModel alloc] init];
+        salesModel.discountInfo = model.data.discountInfo;
+        salesModel.houseModelType = FHFloorPanHouseModelTypeNewSales;
+        salesModel.contactViewModel = self.contactViewModel;
+        [self.items addObject:salesModel];
     }
     
     //楼盘户型
     if (model.data.recommend && model.data.recommend.count > 0) {
-        // 添加分割线--当存在某个数据的时候在顶部添加分割线
-        FHDetailGrayLineModel *grayLine = [[FHDetailGrayLineModel alloc] init];
-        [self.currentItems addObject:grayLine];
         
         FHFloorPanDetailMutiFloorPanCellModel *mutiDataModel = [[FHFloorPanDetailMutiFloorPanCellModel alloc] init];
         mutiDataModel.recommend = model.data.recommend;
@@ -183,9 +230,35 @@
                 modelItem.index = i;
             }
         }
-        [self.currentItems addObject:mutiDataModel];
+        mutiDataModel.houseModelType = FHFloorPanHouseModelTypeFloorPlan;
+        [self.items addObject:mutiDataModel];
+    }
+    // 免责声明
+    if (model.data.disclaimer) {
+        FHOldDetailDisclaimerModel *infoModel = [[FHOldDetailDisclaimerModel alloc] init];
+        infoModel.disclaimer = model.data.disclaimer;
+        //infoModel.disclaimer.text = @"楼盘信息仅供参考，请以开发商公示为准，若有误可反馈纠错";
+        infoModel.houseModelType = FHHouseModelTypeDisclaimer;
+        [self.items addObject:infoModel];
     }
     
+    FHDetailContactModel *contactPhone = nil;
+    if (model.data.highlightedRealtor) {
+        contactPhone = model.data.highlightedRealtor;
+    }else {
+        contactPhone = model.data.contact;
+        contactPhone.unregistered = YES;
+    }
+    if (contactPhone.phone.length > 0) {
+        contactPhone.isFormReport = NO;
+    }else {
+        contactPhone.isFormReport = YES;
+    }
+    self.contactViewModel.contactPhone = contactPhone;
+    self.contactViewModel.followStatus = model.data.userStatus.courtSubStatus;
+    self.contactViewModel.chooseAgencyList = model.data.chooseAgencyList;
+    self.contactViewModel.highlightedRealtorAssociateInfo = model.data.highlightedRealtorAssociateInfo;
+    self.items = [FHFloorPanDetailModuleHelper moduleClassificationMethod:self.items];
     [_infoListTable reloadData];
 }
 
@@ -195,7 +268,7 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return [_currentItems count];
+    return self.items.count;
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
@@ -211,14 +284,15 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     NSInteger row = indexPath.row;
-    if (row >= 0 && row < self.currentItems.count) {
-        id data = self.currentItems[row];
-        NSString *identifier = [self cellIdentifierForEntity:data];
+    if (row >= 0 && row < self.items.count) {
+        id data = self.items[row];
+        NSString *identifier = NSStringFromClass([data class]);//[self cellIdentifierForEntity:data];
         if (identifier.length > 0) {
             FHDetailBaseCell *cell = (FHDetailBaseCell *)[tableView dequeueReusableCellWithIdentifier:identifier];
             if (!cell) {
                 cell = [[NSClassFromString(identifier) alloc] init];
             }
+            cell.backgroundColor = [UIColor clearColor];
             cell.baseViewModel = self;
             [cell refreshWithData:data];
             return cell;
@@ -266,6 +340,8 @@
     if (scrollView != self.infoListTable) {
         return;
     }
+   
+    [self.detailController refreshContentOffset:scrollView.contentOffset];
 }
 
 @end

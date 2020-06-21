@@ -8,7 +8,7 @@
 #import "FHUGCRecommendCell.h"
 #import "FHUGCCellHeaderView.h"
 #import "FHUGCRecommendSubCell.h"
-#import <TTRoute.h>
+#import "TTRoute.h"
 #import "FHUserTracker.h"
 #import "FHCommunityList.h"
 
@@ -64,8 +64,8 @@
 }
 
 - (void)initViews {
-    self.headerView = [[FHUGCCellHeaderView alloc] initWithFrame:CGRectZero];
-    _headerView.titleLabel.text = @"你可能感兴趣的圈子";
+    self.headerView = [[FHUGCCellHeaderView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, headerViewHeight)];
+    _headerView.titleLabel.text = @"猜你喜欢";
     _headerView.bottomLine.hidden = NO;
     [_headerView.refreshBtn addTarget:self action:@selector(changeData) forControlEvents:UIControlEventTouchUpInside];
     [_headerView.moreBtn addTarget:self action:@selector(moreData) forControlEvents:UIControlEventTouchUpInside];
@@ -244,7 +244,9 @@
         }else{
             k = i - self.sourceList.count;
         }
-        [self.dataList addObject:self.sourceList[k]];
+        if(k < self.sourceList.count){
+            [self.dataList addObject:self.sourceList[k]];
+        }
     }
 }
 
@@ -275,7 +277,7 @@
     dict[@"card_type"] = @"left_pic";
     dict[@"house_type"] = @"community";
     dict[@"element_from"] = @"like_neighborhood";
-    dict[@"page_type"] = @"nearby_list";
+    dict[@"page_type"] = @"hot_discuss_feed";
     dict[@"enter_from"] = @"neighborhood_tab";
     return dict;
 }
@@ -288,7 +290,7 @@
     dict[@"select_district_tab"] = @(FHUGCCommunityDistrictTabIdRecommend);
     NSMutableDictionary *traceParam = @{}.mutableCopy;
     traceParam[@"enter_type"] = @"click";
-    traceParam[@"enter_from"] = @"nearby_list";
+    traceParam[@"enter_from"] = @"hot_discuss_feed";
     traceParam[@"element_from"] = @"like_neighborhood";
     dict[@"tracer"] = traceParam;
     TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
@@ -334,6 +336,10 @@
 }
 
 #pragma mark - UITableViewDataSource
+
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
+    return 1;
+}
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     return [self.dataList count];
@@ -383,10 +389,15 @@
         
         NSMutableDictionary *dict = @{}.mutableCopy;
         dict[@"community_id"] = model.socialGroupId;
-        dict[@"tracer"] = @{@"enter_from":@"like_neighborhood",
-                            @"enter_type":@"click",
-                            @"rank":@(indexPath.row),
-                            @"log_pb":model.logPb ?: @"be_null"};
+        NSString *originFrom = self.model.tracerDic[UT_ORIGIN_FROM] ?: @"be_null";
+        dict[@"tracer"] = @{
+            @"origin_from":@"originFrom",
+            @"enter_from":@"like_neighborhood",
+            @"enter_type":@"click",
+            @"group_id":self.model.groupId ?: @"be_null",
+            @"rank":@(indexPath.row),
+            @"log_pb":model.logPb ?: @"be_null"
+        };
         TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
         //跳转到圈子详情页
         NSURL *openUrl = [NSURL URLWithString:@"sslocal://ugc_community_detail"];

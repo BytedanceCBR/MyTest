@@ -7,18 +7,18 @@
 //
 
 #import <Foundation/Foundation.h>
-#import <TTAccountSDK.h>
-#import <TTAccountMonitorProtocol.h>
-#import <TTAccountSDK/TTAccountAuthLogger.h>
+#import "TTAccountSDK.h"
+//#import "TTAccountMonitorProtocol.h"
+//#import <TTAccountSDK/TTAccountAuthLogger.h>
 
 
 
 /** 埋点和监控 */
 @interface TTAccountLoggerImp : NSObject
-<
-TTAccountAuthLoginLogger,
-TTAccountAuthLoginCallbackLogger,
-TTAccountMonitorProtocol
->
+//<
+//TTAccountAuthLoginLogger,
+//TTAccountAuthLoginCallbackLogger,
+//TTAccountMonitorProtocol
+//>
 
 @end

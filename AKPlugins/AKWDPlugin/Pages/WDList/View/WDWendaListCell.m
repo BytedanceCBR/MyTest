@@ -32,8 +32,8 @@
 #import "TTIndicatorView.h"
 #import "TTImageView.h"
 #import "UIImageView+WebCache.h"
-#import <TTShareManager.h>
-#import <TTShareActivity.h>
+#import "TTShareManager.h"
+#import "TTShareActivity.h"
 #import <TTFriendRelation/TTFollowThemeButton.h>
 #import <TTFriendRelation/TTFollowManager.h>
 #import <TTUIWidget/SSMotionRender.h>
@@ -483,7 +483,7 @@
         }
         [dict setValue:@1 forKey:@"is_redpacket"];
     }
-    [TTTracker eventV3:event params:[dict copy]];
+    [BDTrackerProtocol eventV3:event params:[dict copy]];
     
     self.isSelfFollow = YES;
     [followBtn startLoading];

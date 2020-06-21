@@ -12,6 +12,7 @@
 #import "TTUIResponderHelper.h"
 #import "UIViewAdditions.h"
 #import <FHHouseBase/FHBaseTableView.h>
+#import "UIImage+FIconFont.h"
 
 @interface FHUGCCommunityListViewController ()
 @property(nonatomic, strong) UIView *loadingView;
@@ -66,6 +67,9 @@
     [self setupDefaultNavBar:NO];
     [self.customNavBarView cleanStyle:YES];
     self.customNavBarView.title.text = self.title;
+    
+    [self.customNavBarView.leftBtn setBackgroundImage:ICON_FONT_IMG(24, @"\U0000e68a", [UIColor themeGray1]) forState:UIControlStateNormal];
+    [self.customNavBarView.leftBtn setBackgroundImage:ICON_FONT_IMG(24, @"\U0000e68a", [UIColor themeGray1]) forState:UIControlStateHighlighted];
 }
 
 - (void)initView {

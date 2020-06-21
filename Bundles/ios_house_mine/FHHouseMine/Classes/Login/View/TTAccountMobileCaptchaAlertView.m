@@ -6,7 +6,7 @@
 //
 
 #import "TTAccountMobileCaptchaAlertView.h"
-#import <TTDeviceHelper.h>
+#import "TTDeviceHelper.h"
 #import <TTAccountSDK/TTAccount+NetworkTasks.h>
 #import <FHCommonUI/UIColor+Theme.h>
 

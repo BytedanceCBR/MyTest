@@ -8,7 +8,7 @@
 #import "FHNeighborhoodAnnotationView.h"
 #import "UIColor+Theme.h"
 #import "FHHouseAnnotation.h"
-#import <UIViewAdditions.h>
+#import "UIViewAdditions.h"
 
 
 @interface FHNeighborhoodAnnotationView ()
@@ -87,8 +87,8 @@
         switch (houseAnnotation.type) {
             case FHHouseAnnotationTypeSelected:
             {
-                bgImageName = @"mapsearch_annotation_bg_red";
-                arrowImageName = @"mapsearch_annotation_arrow_red";
+                bgImageName = @"mapsearch_annotation_bg_orange";
+                arrowImageName = @"mapsearch_annotation_arrow_orange";
                 textColor = [UIColor whiteColor];
             }
                 break;

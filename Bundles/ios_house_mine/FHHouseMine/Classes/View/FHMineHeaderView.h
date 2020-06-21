@@ -21,6 +21,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong) UIImageView *editIcon;
 @property (nonatomic, strong) UIButton *homePageBtn;
 
+@property (nonatomic, strong) UIButton *loginBtn;
+
 - (void)updateAvatar:(NSString *)avatarUrl;
 
 - (void)setUserInfoState:(NSInteger)state;
@@ -29,6 +31,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (instancetype)initWithFrame:(CGRect)frame naviBarHeight:(CGFloat)naviBarHeight;
 
+- (void)setDeaultShowTypeByLogin:(BOOL)isLogin;
 @end
 
 NS_ASSUME_NONNULL_END

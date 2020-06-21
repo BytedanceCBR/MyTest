@@ -109,6 +109,12 @@ typedef NS_ENUM(NSUInteger, TTPostThreadTaskErrorPosition) {
 @property (nonatomic, copy)     NSString       *social_group_id;
 @property (nonatomic, copy)     NSString       *social_group_name;
 @property (nonatomic, assign)   BOOL       hasSocialGroup;  // 是否是外部传入小区
+@property (nonatomic, assign)  NSInteger  bindType;
+// 小区点评相关参数
+@property (nonatomic, copy) NSString *neighborhoodId; // 小区id
+@property (nonatomic, copy) NSString *pubSource;
+@property (nonatomic, copy) NSString *neighborhoodTags; // 小区点评标签 json String
+@property (nonatomic, copy) NSString *scores; // 小区点评评分 json string
 
 // 在初始化时确定Task的类型，默认为发普通帖子
 - (instancetype)initWithTaskType:(TTPostTaskType)taskType;

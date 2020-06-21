@@ -6,7 +6,7 @@
 //
 
 #import "FHUGCGuideView.h"
-#import <Masonry.h>
+#import "Masonry.h"
 #import "UIFont+House.h"
 #import "UIColor+Theme.h"
 #import "UIViewAdditions.h"
@@ -30,6 +30,15 @@
 @implementation FHUGCGuideView
 
 - (void)show:(UIView *)parentView dismissDelayTime:(NSTimeInterval)delayTime completion:(void (^)(void))completion {
+    
+    if(self.type == FHUGCGuideViewTypeSearch){
+        _contentLabel.text = [[FHUGCConfig sharedInstance] searchLeadSuggest] ? [[FHUGCConfig sharedInstance] searchLeadSuggest] : @"点击搜索你感兴趣的圈子";
+    }else if(self.type == FHUGCGuideViewTypeSecondTab){
+        _contentLabel.text = [[FHUGCConfig sharedInstance] secondTabLeadSuggest] ? [[FHUGCConfig sharedInstance] secondTabLeadSuggest] : @"速来围观附近的小区趣事";
+    }else{
+        _contentLabel.text = [[FHUGCConfig sharedInstance] ugcDetailLeadSuggest] ? [[FHUGCConfig sharedInstance] ugcDetailLeadSuggest] : @"关注圈子，不错过小区新鲜事";
+    }
+    
     [parentView addSubview:self];
     
     if(delayTime > 0){
@@ -78,7 +87,7 @@
     [self addSubview:_imageView];
     
     self.contentLabel = [[UILabel alloc] initWithFrame:CGRectMake(10, 15, self.bounds.size.width - 20, 18)];
-    _contentLabel.text = [[FHUGCConfig sharedInstance] searchLeadSuggest] ? [[FHUGCConfig sharedInstance] searchLeadSuggest] : @"点击搜索与你相关的圈子";
+    _contentLabel.text = [[FHUGCConfig sharedInstance] searchLeadSuggest] ? [[FHUGCConfig sharedInstance] searchLeadSuggest] : @"点击搜索你感兴趣的圈子";
     _contentLabel.textColor = [UIColor whiteColor];
     _contentLabel.font = [UIFont themeFontMedium:13];
     [self addSubview:_contentLabel];
@@ -118,7 +127,7 @@
     self.focusLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 58, 26)];
     _focusLabel.backgroundColor = [UIColor whiteColor];
     _focusLabel.text = @"关注";
-    _focusLabel.textColor = [UIColor themeRed1];
+    _focusLabel.textColor = [UIColor themeOrange1];
     _focusLabel.font = [UIFont themeFontRegular:12];
     _focusLabel.textAlignment = NSTextAlignmentCenter;
     _focusLabel.layer.masksToBounds =YES;

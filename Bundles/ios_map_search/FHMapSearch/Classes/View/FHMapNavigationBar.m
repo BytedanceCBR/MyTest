@@ -7,7 +7,9 @@
 
 #import "FHMapNavigationBar.h"
 #import "UIFont+House.h"
-#import <Masonry.h>
+#import "Masonry.h"
+#import "UIImage+FIconFont.h"
+#import "UIColor+Theme.h"
 
 @interface FHMapNavigationBar ()
 
@@ -27,7 +29,7 @@
         
         self.backgroundColor = [UIColor whiteColor];
         
-        UIImage *img = [UIImage imageNamed:@"icon-return"];
+        UIImage *img = ICON_FONT_IMG(24, @"\U0000e68a", [UIColor themeGray1]);
         UIButton *backButton = [UIButton buttonWithType:UIButtonTypeCustom];
         [backButton setImage:img forState:UIControlStateNormal];
         [backButton setImage:img forState:UIControlStateHighlighted];

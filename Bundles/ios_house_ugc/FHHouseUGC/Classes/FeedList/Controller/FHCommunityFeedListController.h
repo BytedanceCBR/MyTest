@@ -11,6 +11,7 @@
 #import <TTUIWidget/ArticleListNotifyBarView.h>
 #import "SSImpressionManager.h"
 #import "ArticleImpressionHelper.h"
+#import "FHHouseUGCAPI.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -19,18 +20,13 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic, assign) FHCommunityFeedListType listType;
 @property(nonatomic, strong) ArticleListNotifyBarView *notifyBarView;
 @property(nonatomic, strong) NSArray *dataList;
-//发布按钮
-@property(nonatomic, strong) UIButton *publishBtn;
-@property(nonatomic, copy) void(^publishBlock)(void);
+//内容分类
+@property(nonatomic, strong) NSString *category;
 //附加在feed上面的自定义view
 @property(nonatomic, strong) UIView *tableHeaderView;
 @property(nonatomic, strong) UITableView *tableView;
 //是否需要下拉刷新，默认为YES
 @property(nonatomic, assign) BOOL tableViewNeedPullDown;
-//发布按钮距离底部的高度,默认为0
-@property(nonatomic, assign) CGFloat publishBtnBottomHeight;
-//发布按钮隐藏
-@property(nonatomic, assign) BOOL hidePublishBtn;
 //是否需要在返回这个页面时候去刷新数据
 @property(nonatomic, assign) BOOL needReloadData;
 //当前定位的位置
@@ -45,7 +41,16 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic, strong) NSArray *operations;
 //当接口返回空数据的时候是否显示空态页，默认为YES
 @property(nonatomic, assign) BOOL showErrorView;
-
+//网络请求成功回调
+@property(nonatomic, copy) void (^requestSuccess)(BOOL hasFeedData);
+//是否需要上报enterCategory和stayCategory埋点，默认不报
+@property(nonatomic, assign) BOOL needReportEnterCategory;
+//埋点上报
+//是否是通过点击触发刷新
+@property(nonatomic, assign) BOOL isRefreshTypeClicked;
+//是否需要强插
+@property(nonatomic, assign) BOOL isInsertFeedWhenPublish;
+@property(nonatomic, assign) CGFloat headerViewHeight;
 //圈子详情页使用
 //空态页具体顶部offset
 @property (nonatomic, assign) CGFloat errorViewTopOffset;
@@ -71,7 +76,6 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)scrollToTopAndRefreshAllData;
 
 - (void)hideImmediately;
-
 @end
 
 NS_ASSUME_NONNULL_END

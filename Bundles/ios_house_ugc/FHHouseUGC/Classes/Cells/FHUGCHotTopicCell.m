@@ -9,14 +9,15 @@
 #import "FHUGCCellHeaderView.h"
 #import "FHBaseCollectionView.h"
 #import "FHUGCHotTopicSubCell.h"
-#import <TTRoute.h>
+#import "TTRoute.h"
 #import "FHUserTracker.h"
+#import "UIViewAdditions.h"
 
 #define leftMargin 20
 #define rightMargin 20
 #define cellId @"cellId"
 
-#define headerViewHeight 40
+#define headerViewHeight 44
 #define bottomSepViewHeight 5
 
 @interface FHUGCHotTopicCell()<UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout>
@@ -27,6 +28,8 @@
 @property(nonatomic ,strong) NSMutableArray *sourceList;
 @property(nonatomic ,strong) NSArray *dataList;
 @property(nonatomic, strong) NSMutableDictionary *clientShowDict;
+@property(nonatomic ,strong) UIView *seprateLine;
+@property(nonatomic ,strong) FHFeedUGCCellModel *cellModel;
 
 @end
 
@@ -58,12 +61,18 @@
 - (void)initViews {
     self.contentView.backgroundColor = [UIColor whiteColor];
     
-    self.headerView = [[FHUGCCellHeaderView alloc] initWithFrame:CGRectZero];
-    _headerView.titleLabel.text = @"热门话题";
+    self.headerView = [[FHUGCCellHeaderView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, headerViewHeight)];
+    _headerView.titleLabel.text = @"话题榜";
     _headerView.bottomLine.hidden = YES;
     _headerView.refreshBtn.hidden = YES;
+    [_headerView.moreBtn setTitle:@"查看全部" forState:UIControlStateNormal];
+    [_headerView setMoreBtnLayout];
     [_headerView.moreBtn addTarget:self action:@selector(moreData) forControlEvents:UIControlEventTouchUpInside];
     [self.contentView addSubview:_headerView];
+    
+    self.seprateLine = [[UIView alloc] init];
+    _seprateLine.backgroundColor = [UIColor themeGray7];
+    [self.contentView addSubview:_seprateLine];
     
     self.bottomSepView = [[UIView alloc] init];
     _bottomSepView.backgroundColor = [UIColor themeGray7];
@@ -74,14 +83,14 @@
 
 - (void)initCollectionView {
     UICollectionViewFlowLayout *flowLayout = [[UICollectionViewFlowLayout alloc] init];
-    flowLayout.sectionInset = UIEdgeInsetsMake(0, 20, 0, 20);
-    flowLayout.minimumLineSpacing = 8;
-    flowLayout.scrollDirection = UICollectionViewScrollDirectionHorizontal;
+    flowLayout.sectionInset = UIEdgeInsetsMake(0, 4, 0, 4);
+    flowLayout.minimumLineSpacing = 0;
+    flowLayout.minimumInteritemSpacing = 0;
     
     self.collectionView = [[FHBaseCollectionView alloc] initWithFrame:CGRectZero collectionViewLayout:flowLayout];
     _collectionView.showsHorizontalScrollIndicator = NO;
     _collectionView.backgroundColor = [UIColor whiteColor];
-    
+    _collectionView.showsVerticalScrollIndicator = NO;
     _collectionView.delegate = self;
     _collectionView.dataSource = self;
     
@@ -91,22 +100,49 @@
 }
 
 - (void)initConstraints {
-    [self.headerView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.contentView).offset(5);
-        make.left.right.mas_equalTo(self.contentView);
-        make.height.mas_equalTo(headerViewHeight);
+    self.headerView.top = 0;
+    self.headerView.left = 0;
+    self.headerView.width = [UIScreen mainScreen].bounds.size.width;
+    self.headerView.height = headerViewHeight;
+//    [self.headerView mas_makeConstraints:^(MASConstraintMaker *make) {
+//        make.top.left.right.mas_equalTo(self.contentView);
+//        make.height.mas_equalTo(headerViewHeight);
+//    }];
+
+    [self.headerView.moreBtn mas_updateConstraints:^(MASConstraintMaker *make) {
+        make.width.mas_equalTo(65);
     }];
     
-    [self.collectionView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.headerView.mas_bottom).offset(4);
-        make.left.right.mas_equalTo(self.contentView);
-        make.height.mas_equalTo(90);
-    }];
+    self.seprateLine.top = self.headerView.bottom;
+    self.seprateLine.left = 0;
+    self.seprateLine.width = self.headerView.width;
+    self.seprateLine.height = 1;
+
+//    [self.seprateLine mas_updateConstraints:^(MASConstraintMaker *make) {
+//        make.top.mas_equalTo(self.headerView.mas_bottom);
+//        make.left.right.mas_equalTo(self.headerView);
+//        make.height.mas_equalTo(1);
+//    }];
+    self.collectionView.top = self.seprateLine.bottom + 10;
+    self.collectionView.left = 0;
+    self.collectionView.width = self.headerView.width;
+    self.collectionView.height = 0;
     
-    [self.bottomSepView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.bottom.left.right.mas_equalTo(self.contentView);
-        make.height.mas_equalTo(bottomSepViewHeight);
-    }];
+
+//    [self.collectionView mas_makeConstraints:^(MASConstraintMaker *make) {
+//        make.top.mas_equalTo(self.seprateLine.mas_bottom).offset(10);
+//        make.left.right.mas_equalTo(self.contentView);
+//        make.bottom.mas_equalTo(self.bottomSepView.mas_top).offset(-3);
+//    }];
+    self.bottomSepView.top = self.collectionView.bottom + 3;
+    self.bottomSepView.left = 0;
+    self.bottomSepView.width = self.headerView.width;
+    self.bottomSepView.height = bottomSepViewHeight;
+
+//    [self.bottomSepView mas_makeConstraints:^(MASConstraintMaker *make) {
+//        make.bottom.left.right.mas_equalTo(self.contentView);
+//        make.height.mas_equalTo(bottomSepViewHeight);
+//    }];
 }
 
 - (UILabel *)LabelWithFont:(UIFont *)font textColor:(UIColor *)textColor {
@@ -120,16 +156,35 @@
     if (![data isKindOfClass:[FHFeedUGCCellModel class]]) {
         return;
     }
+    
+    FHFeedUGCCellModel *cellModel = (FHFeedUGCCellModel *)data;
+    
+    if(self.currentData == data && !cellModel.ischanged){
+        return;
+    }
+    
     [self.clientShowDict removeAllObjects];
     self.currentData = data;
     
-    FHFeedUGCCellModel *model = (FHFeedUGCCellModel *)data;
-    self.dataList = model.hotTopicList;
+    self.cellModel = cellModel;
+    self.dataList = cellModel.hotTopicList;
     [self.collectionView reloadData];
+    
+    NSInteger row = ceil(cellModel.hotTopicList.count / 2.0);
+    CGFloat height = (46 * row);
+    self.collectionView.height = height;
+    self.bottomSepView.top = self.collectionView.bottom + 3;
 }
 
 + (CGFloat)heightForData:(id)data {
-    return 160;
+    CGFloat height = headerViewHeight + 1 + 10 + bottomSepViewHeight + 3;
+    if ([data isKindOfClass:[FHFeedUGCCellModel class]]) {
+        FHFeedUGCCellModel *model = (FHFeedUGCCellModel *)data;
+        NSArray *dataList = model.hotTopicList;
+        NSInteger row = ceil(model.hotTopicList.count / 2.0);
+        height += (46 * row);
+    }
+    return height;
 }
 
 - (void)moreData {
@@ -140,7 +195,7 @@
     NSMutableDictionary *traceParam = @{}.mutableCopy;
     traceParam[UT_ENTER_TYPE] = @"click";
     traceParam[UT_ELEMENT_FROM] = @"hot_topic";
-    traceParam[UT_ENTER_FROM] = @"nearby_list";
+    traceParam[UT_ENTER_FROM] = @"hot_discuss_feed";
     dict[@"tracer"] = traceParam;
     TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
     NSURL *openUrl = [NSURL URLWithString:@"sslocal://ugc_post_topic_list"];
@@ -150,12 +205,13 @@
 - (void)trackClickMore {
     if([self.currentData isKindOfClass:[FHFeedUGCCellModel class]]) {
         FHFeedUGCCellModel *model = (FHFeedUGCCellModel *)self.currentData;
-        NSMutableDictionary *param = [NSMutableDictionary new];
-        param[@"element_type"] = @"hot_topic";
-        param[@"page_type"] = @"nearby_list";
-        param[@"enter_from"] = @"neighborhood_tab";
-        param[@"rank"] = model.tracerDic[@"rank"];
-        TRACK_EVENT(@"click_more", param);
+        NSMutableDictionary *tracerDict = [NSMutableDictionary new];
+        tracerDict[@"element_type"] = @"hot_topic";
+        tracerDict[@"rank"] = self.cellModel.tracerDic[@"rank"] ?: @"be_null";
+        tracerDict[@"page_type"] = self.cellModel.tracerDic[@"page_type"] ?: @"be_null";
+        tracerDict[@"origin_from"] = self.cellModel.tracerDic[@"origin_from"] ?: @"be_null";
+        tracerDict[@"enter_from"] = self.cellModel.tracerDic[@"enter_from"] ?: @"be_null";
+        TRACK_EVENT(@"click_more", tracerDict);
     }
 }
 
@@ -176,10 +232,10 @@
 }
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
-    FHUGCBaseCollectionCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:cellId forIndexPath:indexPath];
+    FHUGCHotTopicSubCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:cellId forIndexPath:indexPath];
     
     if (indexPath.row < self.dataList.count) {
-        [cell refreshWithData:self.dataList[indexPath.row]];
+        [cell refreshWithData:self.dataList[indexPath.row] index:indexPath.row];
     }
     
     return cell;
@@ -193,7 +249,9 @@
         NSMutableDictionary *dict = @{}.mutableCopy;
         // 埋点
         NSMutableDictionary *traceParam = @{}.mutableCopy;
-        traceParam[@"enter_from"] = @"nearby_list";
+        traceParam[@"enter_type"] = @"click";
+        traceParam[@"origin_from"] = self.cellModel.tracerDic[@"origin_from"] ?: @"be_null";
+        traceParam[@"enter_from"] = self.cellModel.tracerDic[@"page_type"] ?: @"be_null";
         traceParam[@"element_from"] = @"hot_topic";
         traceParam[@"enter_type"] = @"click";
         traceParam[@"rank"] = @(indexPath.row);
@@ -203,6 +261,7 @@
         TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
         //跳转到话题详情页
         if(model.schema.length > 0){
+            model.schema = [model.schema stringByReplacingOccurrencesOfString:@"nearby_list" withString:(self.cellModel.tracerDic[@"page_type"] ?: @"be_null")];
             NSURL *openUrl = [NSURL URLWithString:model.schema];
             [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:userInfo];
         }
@@ -210,7 +269,7 @@
 }
 
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath {
-    return CGSizeMake(90, 90);
+    return CGSizeMake([UIScreen mainScreen].bounds.size.width/2 - 4 , 46);
 }
 
 - (void)traceClientShowAtIndexPath:(NSIndexPath*)indexPath {
@@ -239,9 +298,10 @@
 - (void)trackClientShow:(FHFeedContentRawDataHotTopicListModel *)model rank:(NSInteger)rank {
     NSMutableDictionary *tracerDict = [NSMutableDictionary dictionary];
 
-    tracerDict[@"element_from"] = @"hot_topic";
-    tracerDict[@"page_type"] = @"nearby_list";
-    tracerDict[@"enter_from"] = @"neighborhood_tab";
+    tracerDict[@"element_type"] = @"hot_topic";
+    tracerDict[@"page_type"] = self.cellModel.tracerDic[@"page_type"] ?: @"be_null";
+    tracerDict[@"origin_from"] = self.cellModel.tracerDic[@"origin_from"] ?: @"be_null";
+    tracerDict[@"enter_from"] = self.cellModel.tracerDic[@"enter_from"] ?: @"be_null";
     tracerDict[@"rank"] = @(rank);
     tracerDict[@"concern_id"] = model.forumId;
     tracerDict[@"log_pb"] = model.logPb;

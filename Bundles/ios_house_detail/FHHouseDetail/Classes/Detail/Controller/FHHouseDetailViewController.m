@@ -8,7 +8,7 @@
 #import "FHHouseDetailViewController.h"
 #import "FHHouseDetailBaseViewModel.h"
 #import "TTReachability.h"
-#import "FHDetailBottomBarView.h"
+#import "FHOldDetailBottomBarView.h"
 #import "FHDetailNavBar.h"
 #import "TTDeviceHelper.h"
 #import "UIFont+House.h"
@@ -16,15 +16,22 @@
 #import "UIViewController+Track.h"
 #import "UIView+House.h"
 #import <Heimdallr/HMDTTMonitor.h>
-#import <FHRNHelper.h>
+#import "FHRNHelper.h"
 #import <TTArticleBase/SSCommonLogic.h>
 #import <CoreTelephony/CTCallCenter.h>
 #import <CoreTelephony/CTCall.h>
-#import "FHDetailFeedbackView.h"
 #import "FHEnvContext.h"
 #import "TTInstallIDManager.h"
 #import <FHHouseBase/FHBaseTableView.h>
 #import "FHDetailQuestionButton.h"
+#import "FHDetailBottomBarView.h"
+#import "TTNavigationController.h"
+#import <FHCommonUI/FHFeedbackView.h>
+#import <ios_house_im/FHIMConfigManager.h>
+#import <TTSettingsManager/TTSettingsManager.h>
+#import <FHHouseBase/FHRelevantDurationTracker.h>
+#import <CallKit/CXCallObserver.h>
+#import <CallKit/CXCall.h>
 
 @interface FHHouseDetailViewController ()<UIGestureRecognizerDelegate>
 
@@ -32,8 +39,9 @@
 @property (nonatomic, strong) UITableView *tableView;
 @property (nonatomic, strong) UILabel *bottomStatusBar;
 @property (nonatomic, strong) UIView *bottomMaskView;
-@property (nonatomic, strong) FHDetailBottomBarView *bottomBar;
-@property (nonatomic, strong) FHDetailFeedbackView *feedbackView;
+@property (nonatomic, strong) FHDetailBottomBar *bottomBar;
+@property (nonatomic, strong) FHDetailUGCGroupChatButton *bottomGroupChatBtn;// 新房群聊入口
+@property (nonatomic, strong) FHFeedbackView *feedbackView;
 @property(nonatomic , strong) FHDetailQuestionButton *questionBtn;
 
 @property (nonatomic, assign)   FHHouseType houseType; // 房源类型
@@ -49,10 +57,13 @@
 @property (nonatomic, strong) FHDetailContactModel *contactPhone;
 //@property (nonatomic, strong) id instantData;
 @property (nonatomic, strong) CTCallCenter *callCenter;
+@property (nonatomic, strong) CXCallObserver *callObserver;
 //是否拨打电话已接通
 @property (nonatomic, assign) BOOL isPhoneCallPickUp;
 //是否拨打电话（不区分是否接通）
 @property (nonatomic, assign) BOOL isPhoneCalled;// 新房UGC留资使用
+@property (nonatomic, assign) CGPoint lastContentOffset;
+@property (nonatomic, strong) NSDictionary *extraInfo;
 
 @end
 
@@ -61,10 +72,18 @@
 - (instancetype)initWithRouteParamObj:(TTRouteParamObj *)paramObj {
     self = [super initWithRouteParamObj:paramObj];
     if (self) {
-        
+        self.isResetStatusBar = NO;
         self.houseType = [paramObj.allParams[@"house_type"] integerValue];
         self.ridcode = paramObj.allParams[@"ridcode"];
         self.realtorId = paramObj.allParams[@"realtor_id"];
+        
+        NSObject *extraInfo = paramObj.allParams[kFHClueExtraInfo];
+        if ([extraInfo isKindOfClass:[NSString class]]) {
+            NSDictionary *extraInfoDict = [self getDictionaryFromJSONString:extraInfo];
+            self.extraInfo = extraInfoDict;
+        }else if ([extraInfo isKindOfClass:[NSDictionary class]]) {
+            self.extraInfo = extraInfo;
+        }
 
         if (!self.houseType) {
             if ([paramObj.sourceURL.absoluteString containsString:@"neighborhood_detail"]) {
@@ -125,9 +144,22 @@
             [[HMDTTMonitor defaultManager]hmdTrackService:@"detail_schema_error" metric:nil category:@{@"status":@(0)} extra:nil];
         }
         
-        self.instantData = paramObj.allParams[INSTANT_DATA_KEY];
+        
+//        self.instantData = paramObj.allParams[INSTANT_DATA_KEY];
     }
     return self;
+}
+
+- (BOOL)isTopestViewController {
+    /**
+     经纪人评价页面原本只应该出现在房源详情页
+     目前会在房源详情页后面的所有页面只要触发手机号拨通就会弹出
+     在判断弹出的方法内进行页面层级的判断，或者在其他页面不接收电话相关的observer
+     */
+    if (self.navigationController.viewControllers.lastObject != self || self.presentedViewController != nil) {
+        return NO;
+    }
+    return YES;
 }
 
 - (void)viewDidLoad {
@@ -138,16 +170,6 @@
     self.isViewDidDisapper = NO;
     self.isPhoneCalled = NO;
     
-    if(![SSCommonLogic disableDetailInstantShow] && [TTReachability isNetworkConnected]){
-        //有网且打开秒开的情况下才显示
-        if (self.instantData) {
-            dispatch_async(dispatch_get_main_queue(), ^{
-                [self.viewModel handleInstantData:self.instantData];
-            });
-        }
-    }else{
-        self.instantData = nil;
-    }
     
     [self startLoadData];
     
@@ -158,7 +180,7 @@
     // Push推送过来的状态栏修改
     __weak typeof(self) wSelf = self;
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.6 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        [wSelf refreshContentOffset:wSelf.tableView.contentOffset];
+        [wSelf updateStatusBar:wSelf.tableView.contentOffset];
     });
 }
 
@@ -172,6 +194,7 @@
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
     self.isViewDidDisapper = NO;
+    [self updateStatusBar:self.tableView.contentOffset];
     [self refreshContentOffset:self.tableView.contentOffset];
     [self.view endEditing:YES];
     [self.viewModel vc_viewDidAppear:animated];
@@ -181,9 +204,16 @@
 {
     [super viewWillDisappear:animated];
     [self.viewModel addStayPageLog:self.ttTrackStayTime];
+    [self sendCurrentPageStayTime: self.ttTrackStayTime * 1000.0];
     [self tt_resetStayTime];
     [self.view removeObserver:self forKeyPath:@"userInteractionEnabled"];
     [[NSNotificationCenter defaultCenter] removeObserver:self];
+    
+    //有些页面禁用了pan手势，但是在某些情况下比如直接push切换tab等操作 不会触发关闭当前的view，导致没有设置回来 by xsm
+    if([self.navigationController isKindOfClass:[TTNavigationController class]]){
+        TTNavigationController *naviVC = (TTNavigationController *)self.navigationController;
+        naviVC.panRecognizer.enabled = YES;
+    }
 }
 
 - (void)viewDidDisappear:(BOOL)animated {
@@ -200,12 +230,28 @@
     }
 }
 
+- (void)trySendCurrentPageStayTime {
+    if (self.ttTrackStartTime == 0) {//当前页面没有在展示过
+        return;
+    }
+    double duration = self.ttTrackStayTime * 1000.0;
+    if (duration <= 200) {//低于200毫秒，忽略
+        self.ttTrackStartTime = 0;
+        [self tt_resetStayTime];
+        return;
+    }
+    [self sendCurrentPageStayTime:duration];
+    
+    self.ttTrackStartTime = 0;
+    [self tt_resetStayTime];
+}
+
 #pragma mark - TTUIViewControllerTrackProtocol
 
 - (void)trackEndedByAppWillEnterBackground {
     
-    [self.viewModel addStayPageLog:self.ttTrackStayTime];
-    [self tt_resetStayTime];
+    [self.viewModel addStayPageLog:self.ttTrackStayTime * 1000.0];
+    [self trySendCurrentPageStayTime];
 }
 
 - (void)trackStartedByAppWillEnterForground {
@@ -213,11 +259,34 @@
     self.ttTrackStartTime = [[NSDate date] timeIntervalSince1970];
 }
 
+- (void)sendCurrentPageStayTime:(double)duration
+{
+    if (self.houseType != FHHouseTypeSecondHandHouse) {
+        return;
+    }
+    NSString *_categoryName = self.tracerDict[@"enter_from"];
+    NSString *elementFrom = self.tracerDict[@"element_from"];
+    NSString *enterFrom = @"";
+
+    if ([elementFrom isEqualToString:@"be_null"]) {
+        enterFrom = [NSString stringWithFormat:@"click_%@", _categoryName];
+    }else {
+        enterFrom = [NSString stringWithFormat:@"click_%@", elementFrom];
+    }
+    //新加的详情页关联时长
+    [[FHRelevantDurationTracker sharedTracker] appendRelevantDurationWithGroupID:_houseId
+                                                                          itemID:_houseId
+                                                                       enterFrom:enterFrom
+                                                                    categoryName:_categoryName
+                                                                        stayTime:(NSInteger)(duration)
+                                                                           logPb:self.listLogPB];
+}
+
 - (void)startLoadData {
     if ([TTReachability isNetworkConnected]) {
-        if (!self.instantData) {
+//        if (!self.instantData) {
             [self startLoading];
-        }
+//        }
         self.isLoadingData = YES;
         [self.viewModel startLoadData];
     } else {
@@ -251,6 +320,7 @@
     // 构建详情页需要的埋点数据，放入baseViewModel中
     self.viewModel.detailTracerDic = [self makeDetailTracerData];
     self.viewModel.source = self.source;
+    self.viewModel.extraInfo = self.extraInfo;
     [self.view addSubview:_tableView];
 
     __weak typeof(self)wself = self;
@@ -267,10 +337,20 @@
     _bottomMaskView.backgroundColor = [UIColor whiteColor];
     [self.view addSubview:_bottomMaskView];
     
-    _bottomBar = [[FHDetailBottomBarView alloc]initWithFrame:CGRectZero];
+    if  (_houseType == FHHouseTypeRentHouse ) {
+        _bottomBar = [[FHDetailBottomBarView alloc]initWithFrame:CGRectZero];
+    }else {
+         _bottomBar = [[FHOldDetailBottomBarView alloc]initWithFrame:CGRectZero];
+    }
+    
     [self.view addSubview:_bottomBar];
     self.viewModel.bottomBar = _bottomBar;
     _bottomBar.hidden = YES;
+    
+    self.bottomGroupChatBtn = [[FHDetailUGCGroupChatButton alloc] initWithFrame:CGRectZero];
+    [self.view addSubview:_bottomGroupChatBtn];
+    self.bottomBar.bottomGroupChatBtn = _bottomGroupChatBtn;// 这样子改动最小
+    _bottomGroupChatBtn.hidden = YES;
     
     _bottomStatusBar = [[UILabel alloc]init];
     _bottomStatusBar.textAlignment = NSTextAlignmentCenter;
@@ -298,7 +378,7 @@
     [self.questionBtn mas_makeConstraints:^(MASConstraintMaker *make) {
         make.right.mas_equalTo(-20);
         make.height.mas_equalTo(40);
-        make.bottom.mas_equalTo(self.view).mas_offset(-80 - bottomMargin);
+        make.bottom.mas_equalTo(self.view).mas_offset(-100 - bottomMargin);
     }];
     
     [self addDefaultEmptyViewFullScreen];
@@ -309,7 +389,7 @@
     }];
     [_bottomBar mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.right.mas_equalTo(self.view);
-        make.height.mas_equalTo(64);
+        make.height.mas_equalTo(_houseType ==FHHouseTypeRentHouse? 64:80);
         if (@available(iOS 11.0, *)) {
             make.bottom.mas_equalTo(self.view.mas_bottom).mas_offset(-[UIApplication sharedApplication].delegate.window.safeAreaInsets.bottom);
         }else {
@@ -325,6 +405,12 @@
     [_bottomMaskView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(self.bottomBar.mas_top);
         make.left.right.bottom.mas_equalTo(self.view);
+    }];
+    
+    [_bottomGroupChatBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.height.mas_equalTo(32);
+        make.right.mas_equalTo(self.view);
+        make.bottom.mas_equalTo(self.bottomBar.mas_top).offset(-30);
     }];
     
     [self.view bringSubviewToFront:_navBar];
@@ -352,29 +438,90 @@
     }
     
     [self.view setNeedsUpdateConstraints];
+    
+    
 }
 
-- (void)setupCallCenter {
+- (void)setupCallCenter
+{
     @weakify(self);
-    self.callCenter = [[CTCallCenter alloc] init];
-    _callCenter.callEventHandler = ^(CTCall* call){
-        @strongify(self);
-        if ([call.callState isEqualToString:CTCallStateDisconnected]){
-            //未接通
-            [self checkShowSocialAlert];
-        }else if ([call.callState isEqualToString:CTCallStateConnected]){
-            //通话中
-            self.isPhoneCallPickUp = YES;
-        }else if([call.callState isEqualToString:CTCallStateIncoming]){
-            //来电话
-        }else if ([call.callState isEqualToString:CTCallStateDialing]){
-            //正在拨号
-            self.isPhoneCalled = YES;
-        }else{
-            //doNothing
-        }
-    };
+    
+    if (@available(iOS 10.0 , *)) {
+        _callObserver = [[CXCallObserver alloc]init];
+        [_callObserver setDelegate:self queue:dispatch_get_main_queue()];
+    }else {
+        _callCenter = [[CTCallCenter alloc] init];
+        _callCenter.callEventHandler = ^(CTCall* call){
+            @strongify(self);
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [self callHandlerWith:call];
+            });
+        };
+    }
 }
+
+- (void)callObserver:(CXCallObserver *)callObserver callChanged:(CXCall *)call{
+    
+    if (![self isTopestViewController]) {
+        return ;
+    }
+//    NSLog(@"outgoing :%d  onHold :%d   hasConnected :%d   hasEnded :%d",call.outgoing,call.onHold,call.hasConnected,call.hasEnded);
+    /** 以下为我手动测试 如有错误欢迎指出
+      拨通:  outgoing :1  onHold :0   hasConnected :0   hasEnded :0
+      拒绝:  outgoing :1  onHold :0   hasConnected :0   hasEnded :1
+      链接:  outgoing :1  onHold :0   hasConnected :1   hasEnded :0
+      挂断:  outgoing :1  onHold :0   hasConnected :1   hasEnded :1
+     
+      新来电话:    outgoing :0  onHold :0   hasConnected :0   hasEnded :0
+      保留并接听:  outgoing :1  onHold :1   hasConnected :1   hasEnded :0
+      另一个挂掉:  outgoing :0  onHold :0   hasConnected :1   hasEnded :0
+      保持链接:    outgoing :1  onHold :0   hasConnected :1   hasEnded :1
+      对方挂掉:    outgoing :0  onHold :0   hasConnected :1   hasEnded :1
+     */
+    //接通
+    if (call.outgoing) {
+        self.isPhoneCalled = YES;
+    }
+    if (call.outgoing && call.hasConnected) {
+        //通话中
+        self.isPhoneCallPickUp = YES;
+    }
+    //挂断
+    if (call.hasEnded) {
+        if (self.isPhoneCalled && self.isPhoneCallPickUp) {
+            [self checkShowFeedbackView];
+        }
+        [self checkShowSocialAlert];
+        self.isPhoneCalled = NO;
+    }
+}
+
+- (void)callHandlerWith:(CTCall*)call
+{
+    if (![self isTopestViewController]) {
+        return ;
+    }
+
+    if ([call.callState isEqualToString:CTCallStateDisconnected]){
+        //未接通和挂断
+        if (self.isPhoneCalled && self.isPhoneCallPickUp) {
+            [self checkShowFeedbackView];
+        }
+        [self checkShowSocialAlert];
+        self.isPhoneCalled = NO;
+    }else if ([call.callState isEqualToString:CTCallStateConnected]){
+        //通话中
+        self.isPhoneCallPickUp = YES;
+    }else if([call.callState isEqualToString:CTCallStateIncoming]){
+        //来电话
+    }else if ([call.callState isEqualToString:CTCallStateDialing]){
+        //正在拨号
+        self.isPhoneCalled = YES;
+    }else{
+        //doNothing
+    }
+}
+
 
 // 埋点数据处理:1、paramObj.allParams中的"tracer"字段，2、allParams中的origin_from、report_params等字段
 - (void)processTracerData:(NSDictionary *)allParams {
@@ -481,6 +628,7 @@
     detailTracerDic[@"origin_from"] = self.tracerDict[@"origin_from"] ? : @"be_null";
     detailTracerDic[@"origin_search_id"] = self.tracerDict[@"origin_search_id"] ? : @"be_null";
     detailTracerDic[@"log_pb"] = self.tracerDict[@"log_pb"] ? : @"be_null";
+    detailTracerDic[@"from_gid"] = self.tracerDict[@"from_gid"];
     // 以下3个参数都在:log_pb中
     // group_id
     // impr_id
@@ -522,17 +670,37 @@
     }];
 }
 
-- (void)refreshContentOffset:(CGPoint)contentOffset
-{
+- (void)refreshContentOffset:(CGPoint)contentOffset {
+    //如果房源是企业担保的，不需要更新statusbar样式，header背景黄色，也不需要更换图标
+    if (self.navBar.isForVouch) {
+        if (contentOffset.y > CGRectGetWidth(self.view.bounds)*281.0/375.0 - 41 + 20 - (CGRectGetHeight(self.navBar.frame) - 40)) {
+            [self.navBar refreshAlpha:1.0];
+        } else {
+            [self.navBar refreshAlpha:0];
+        }
+        if ([UIApplication sharedApplication].statusBarStyle != UIStatusBarStyleLightContent) {
+            [UIApplication sharedApplication].statusBarStyle = UIStatusBarStyleLightContent;
+        }
+        return;
+    }
     CGFloat alpha = contentOffset.y / 139 * 2;
     [self.navBar refreshAlpha:alpha];
+    
+    if ((contentOffset.y <= 0 && _lastContentOffset.y <= 0) || (contentOffset.y > 0 && _lastContentOffset.y > 0)) {
+        return;
+    }
+    _lastContentOffset = contentOffset;
+    [self updateStatusBar:contentOffset];
+}
 
+- (void)updateStatusBar:(CGPoint)contentOffset
+{
+    UIStatusBarStyle style = UIStatusBarStyleLightContent;
+    if (contentOffset.y > 0) {
+        style = UIStatusBarStyleDefault;
+    }
     if (!self.isViewDidDisapper) {
-        if (contentOffset.y > 0) {
-            [[UIApplication sharedApplication]setStatusBarStyle:UIStatusBarStyleDefault];
-        }else {
-            [[UIApplication sharedApplication]setStatusBarStyle:UIStatusBarStyleLightContent];
-        }
+        [[UIApplication sharedApplication]setStatusBarStyle:style];
     }
 }
 
@@ -552,7 +720,7 @@
     _tableView.estimatedSectionHeaderHeight = 0;
 }
 
--(void)tapAction:(id)tap {
+- (void)tapAction:(id)tap {
     [_tableView endEditing:YES];
 }
 
@@ -602,16 +770,6 @@
 }
 
 - (void)applicationDidBecomeActive {
-    // 反馈弹窗
-    if([self isShowFeedbackView]){
-        self.isPhoneCallPickUp = NO;
-        self.isPhoneCallShow = NO;
-        [self addFeedBackView];
-        self.phoneCallRealtorId = nil;
-        self.phoneCallRequestId = nil;
-    }
-    // 数据清除
-    self.isPhoneCallShow = NO;
 }
 
 - (void)checkShowSocialAlert {
@@ -624,6 +782,20 @@
     }
 }
 
+// 二手房反馈弹窗
+- (void)checkShowFeedbackView {
+    // 反馈弹窗
+    if([self isShowFeedbackView]){
+        self.isPhoneCallPickUp = NO;
+        self.isPhoneCallShow = NO;
+        [self addFeedBackView];
+        self.phoneCallRealtorId = nil;
+        self.phoneCallRequestId = nil;
+    }
+    // 数据清除
+    self.isPhoneCallShow = NO;
+}
+
 - (BOOL)isShowFeedbackView {
     //满足这两个条件，在回来时候显示反馈弹窗
     if(self.isPhoneCallPickUp &&
@@ -631,6 +803,11 @@
        self.phoneCallRealtorId &&
        self.phoneCallRequestId &&
        (self.viewModel.houseType == FHHouseTypeSecondHandHouse)){
+        
+        if (![self isTopestViewController]) {
+            return NO;
+        }
+        
         NSString *houseId = self.viewModel.houseId;
         NSString *deviceId = [[TTInstallIDManager sharedInstance] deviceID];
         NSString *cacheKey = @"";
@@ -677,19 +854,83 @@
 }
 
 - (void)addFeedBackView {
-    self.feedbackView.realtorId = self.phoneCallRealtorId;
-    self.feedbackView.requestId = self.phoneCallRequestId;
-    [self.feedbackView show:self.view];
+//    self.feedbackView.realtorId = self.phoneCallRealtorId;
+//    self.feedbackView.requestId = self.phoneCallRequestId;
+//    [self.feedbackView show:self.view];
+    NSString *realtorId = self.phoneCallRealtorId;
+    NSString *requestId = self.phoneCallRequestId;
+
+    WeakSelf;
+    __block NSMutableDictionary *tracerDic = @{}.mutableCopy;
+    if (self.viewModel.detailTracerDic) {
+        [tracerDic addEntriesFromDictionary:self.viewModel.detailTracerDic];
+    }
+    tracerDic[@"realtor_id"] = realtorId ? realtorId : @"be_null";
+    //    tracerDic[@"click_position"] = position ? position : @"be_null";
+    tracerDic[@"request_id"] = requestId ?: UT_BE_NULL;
+    //    tracerDic[@"star_num"] = num ? num : @"be_null";
+    if (self.viewModel.contactViewModel && self.viewModel.contactViewModel.contactPhone) {
+        tracerDic[@"realtor_logpb"] = self.viewModel.contactViewModel.contactPhone.realtorLogpb;
+    } else {
+        tracerDic[@"realtor_logpb"] = UT_BE_NULL;
+    }
+    [self addClickFeedbackLog:tracerDic];
+
+    FHRealtorEvaluationModel *evaluationModel = [[FHIMConfigManager shareInstance]getRealtorEvaluationModel];
+    if (![evaluationModel isKindOfClass:[FHRealtorEvaluationModel class]]) {
+        evaluationModel = nil;
+    }
+    FHFeedbackView *feedbackView = [[FHFeedbackView alloc]initWithFrame:[UIScreen mainScreen].bounds evalationModel:evaluationModel submitBlock:^(NSString * _Nonnull content, NSInteger scoreCount, NSArray * _Nonnull scoreTags) {
+        StrongSelf;
+        NSMutableDictionary *traceParams = @{}.mutableCopy;
+        traceParams[@"realtor_id"] = realtorId;
+        traceParams[@"target_id"] = self.houseId;
+        tracerDic[@"star_num"] = @(scoreCount);
+        traceParams[@"evaluation_type"] = @(0);
+        [[FHIMConfigManager shareInstance]submitRealtorEvaluation:content scoreCount:scoreCount scoreTags:scoreTags traceParams:traceParams];
+        
+        tracerDic[@"click_position"] = @"confirm";
+        tracerDic[@"star_num"] = @(scoreCount);
+        [self addRealtorEvaluatePopupClickLog:tracerDic];
+    } closeBlock:^(FHFeedbackViewCompleteType type) {
+        StrongSelf;
+        tracerDic[@"star_num"] = @(0);
+        tracerDic[@"click_position"] = @"cancel";
+        [self addRealtorEvaluatePopupClickLog:tracerDic];
+    }];
+    BOOL isForceEnableConfirm = NO;
+    NSDictionary *fhSettings= [[TTSettingsManager sharedManager] settingForKey:@"f_settings" defaultValue:@{} freeze:YES];
+    if (fhSettings != nil && [fhSettings objectForKey:@"f_phone_feedback_low_score_submit_enabled"] != nil) {
+        NSInteger info = [[fhSettings objectForKey:@"f_phone_feedback_low_score_submit_enabled"] integerValue];
+        if (info == 1) {
+            isForceEnableConfirm = YES;
+        }
+    }
+    feedbackView.isForceEnableConfirm = isForceEnableConfirm;
+    [feedbackView showFrom:nil];
+    [self addRealtorEvaluatePopupShowLog:tracerDic];
 }
 
-- (FHDetailFeedbackView *)feedbackView {
-    if (!_feedbackView) {
-        __weak typeof(self) wself = self;
-        _feedbackView = [[FHDetailFeedbackView alloc] initWithFrame:self.view.bounds];
-        _feedbackView.navVC = self.navigationController;
-        _feedbackView.viewModel = self.viewModel;
+- (void)addClickFeedbackLog:(NSDictionary *)extraDict
+{
+    NSMutableDictionary *tracerDic = @{}.mutableCopy;
+    if (self.viewModel.detailTracerDic) {
+        [tracerDic addEntriesFromDictionary:self.viewModel.detailTracerDic];
     }
-    return _feedbackView;
+    tracerDic[@"realtor_id"] = extraDict[@"realtor_id"];
+    tracerDic[@"request_id"] = extraDict[@"request_id"];
+    tracerDic[@"enter_from"] = @"realtor_evaluate_popup";
+    TRACK_EVENT(@"click_feedback", tracerDic);
+}
+
+- (void)addRealtorEvaluatePopupShowLog:(NSDictionary *)params
+{
+    [FHUserTracker writeEvent:@"realtor_evaluate_popup_show" params:params];
+}
+
+- (void)addRealtorEvaluatePopupClickLog:(NSDictionary *)params
+{
+    [FHUserTracker writeEvent:@"realtor_evaluate_popup_click" params:params];
 }
 
 - (FHDetailQuestionButton *)questionBtn
@@ -700,6 +941,16 @@
         _questionBtn.isFold = YES;
     }
     return _questionBtn;
+}
+
+
+- (void)dealloc
+{
+    if (@available(iOS 10.0 , *)) {
+        _callObserver = nil;
+    }else {
+        _callCenter = nil;
+    }
 }
 
 @end

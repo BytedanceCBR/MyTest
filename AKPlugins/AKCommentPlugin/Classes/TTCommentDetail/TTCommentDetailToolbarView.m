@@ -17,6 +17,7 @@
 #import "UIColor+Theme.h"
 #import "UIFont+House.h"
 #import "Masonry.h"
+#import "UIImage+FIconFont.h"
 
 
 @interface TTCommentDetailToolbarView ()
@@ -82,10 +83,8 @@
         TTAlphaThemedButton *digButton = [TTAlphaThemedButton buttonWithType:UIButtonTypeCustom];
         _diggButton = digButton;
         _diggButton.hitTestEdgeInsets = toolBarButtonHitTestInsets;
-        _diggButton.imageName = @"fh_ugc_toolbar_like_normal";
-        _diggButton.selectedImageName = @"fh_ugc_toolbar_like_selected";
-        _diggButton.tintColor = [UIColor tt_themedColorForKey:kColorText1];
-        _diggButton.selectedTintColorThemeKey = @"red1";
+        [_diggButton setImage:ICON_FONT_IMG(24, @"\U0000e69c", [UIColor themeGray1]) forState:UIControlStateNormal];
+        [_diggButton setImage:ICON_FONT_IMG(24, @"\U0000e6b1", [UIColor themeOrange4]) forState:UIControlStateSelected];
         [self addSubview:digButton];
 
         _separatorView = [[SSThemedView alloc] init];

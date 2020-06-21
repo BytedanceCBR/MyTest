@@ -1,6 +1,7 @@
 //GENERATED CODE , DON'T EDIT
-#import <JSONModel.h>
+#import "JSONModel.h"
 #import "FHUGCVoteInfoModel.h"
+#import "FHUGCScialGroupModel.h"
 NS_ASSUME_NONNULL_BEGIN
 
 typedef NS_ENUM(NSUInteger, FHFeedContentStickStyle) {
@@ -9,6 +10,59 @@ typedef NS_ENUM(NSUInteger, FHFeedContentStickStyle) {
     FHFeedContentStickStyleGood = 2,            //加精
     FHFeedContentStickStyleTopAndGood = 3,    //置顶和加精
 };
+
+@interface FHFeedContentRawDataCardHeaderRelatedForumModel : JSONModel
+
+@property (nonatomic, copy , nullable) NSString *concernId;
+@property (nonatomic, copy , nullable) NSString *title;
+@property (nonatomic, copy , nullable) NSString *schema;
+@end
+
+@interface FHFeedContentRawDataCardFooterModel : JSONModel
+
+@property (nonatomic, copy , nullable) NSString *title;
+@property (nonatomic, copy , nullable) NSString *footerLayoutStyle;
+@property (nonatomic, copy , nullable) NSString *nightIcon;
+@property (nonatomic, copy , nullable) NSString *offset;
+@property (nonatomic, copy , nullable) NSString *icon;
+@end
+
+@interface FHFeedContentRawDataCardHeaderModel : JSONModel
+
+@property (nonatomic, copy , nullable) NSString *headerLayoutStyle;
+@property (nonatomic, copy , nullable) NSString *title;
+@property (nonatomic, copy , nullable) NSString *publisherText;
+@property (nonatomic, strong , nullable) FHFeedContentRawDataCardHeaderRelatedForumModel *relatedForum ;  
+@end
+
+@interface FHFeedContentCellCtrlsModel : JSONModel
+
+@property (nonatomic, copy , nullable) NSString *cellFlag;
+@property (nonatomic, copy , nullable) NSString *cellHeight;
+@property (nonatomic, copy , nullable) NSString *cellLayoutStyle;
+@property (nonatomic, copy , nullable) NSString *needClientImprRecycle;
+@end
+
+@protocol FHFeedContentRawDataHotCellListModel<NSObject>
+@end
+
+@interface FHFeedContentRawDataHotCellListTipsModel : JSONModel
+
+@property (nonatomic, copy , nullable) NSString *color;
+@property (nonatomic, copy , nullable) NSString *content;
+@end
+
+@interface FHFeedContentRawDataHotCellListModel : JSONModel
+
+@property (nonatomic, strong , nullable) NSDictionary *logPb;
+@property (nonatomic, copy , nullable) NSString *hotCellType;
+@property (nonatomic, copy , nullable) NSString *title;
+@property (nonatomic, copy , nullable) NSString *url;
+@property (nonatomic, copy , nullable) NSString *avatar;
+@property (nonatomic, strong , nullable) FHFeedContentRawDataHotCellListTipsModel *tips ;
+@property (nonatomic, copy , nullable) NSString *id;
+@property (nonatomic, copy , nullable) NSString *desc;
+@end
 
 @interface FHFeedContentRawDataVideoPlayAddrModel : JSONModel
 
@@ -170,6 +224,7 @@ typedef NS_ENUM(NSUInteger, FHFeedContentStickStyle) {
 @property (nonatomic, copy , nullable) NSString *url;
 @property (nonatomic, copy , nullable) NSString *name;
 @property (nonatomic, copy , nullable) NSString *socialGroupId;
+@property (nonatomic, copy , nullable) NSString *showStatus;
 @end
 
 @interface FHFeedContentUgcRecommendModel : JSONModel 
@@ -615,12 +670,39 @@ typedef NS_ENUM(NSUInteger, FHFeedContentStickStyle) {
 // 新
 @property (nonatomic, strong , nullable) NSDictionary *logPb;
 @property (nonatomic, copy , nullable) NSString *commentCount;
+@property (nonatomic, copy , nullable) NSString *readCount;
 @property (nonatomic, copy , nullable) NSString *diggCount;
 @property (nonatomic, copy , nullable) NSString *userDigg;
 @property (nonatomic, copy , nullable) NSString *distance;
 @property (nonatomic, copy , nullable) NSString *distanceInfo;
 // 是否被删除
 @property (nonatomic, copy)     NSString       *status;
+@property (nonatomic, strong , nullable) NSArray<FHFeedContentRawDataHotCellListModel> *hotCellList;
+@property (nonatomic, copy , nullable) NSString *subCellType;
+//专题页
+@property (nonatomic, strong , nullable) FHFeedContentRawDataCardFooterModel *cardFooter ;
+@property (nonatomic, strong , nullable) FHFeedContentRawDataCardHeaderModel *cardHeader ;
+@property (nonatomic, strong, nullable) NSArray<FHUGCScialGroupDataModel> *hotSocialList;
+@property (nonatomic, copy , nullable) NSString *articleTitle;
+
+@property (nonatomic, copy , nullable) NSString *schema;
+//购房百科标题
+@property (nonatomic, copy , nullable) NSString *userName;
+//购房百科icon
+@property (nonatomic, copy , nullable) NSString *icon;
+//购房百科内容图片icon
+@property (nonatomic, copy , nullable) NSString *avatar;
+//查看全部
+@property (nonatomic, copy , nullable) NSString *allSchema;
+
+//cell距离顶部
+@property (nonatomic, copy , nullable) NSString *upSpace;
+//cell距离底部
+@property (nonatomic, copy , nullable) NSString *downSpace;
+//分割线设置
+@property (assign, nonatomic) BOOL hidelLine;
+
+@property (nonatomic, strong, nullable) NSDictionary *lynxData;
 
 @end
 
@@ -639,6 +721,7 @@ typedef NS_ENUM(NSUInteger, FHFeedContentStickStyle) {
 
 @interface FHFeedContentModel : JSONModel 
 
+@property (nonatomic, strong , nullable) FHFeedContentCellCtrlsModel *cellCtrls ;
 @property (nonatomic, strong , nullable) NSDictionary *logPb;
 @property (nonatomic, copy , nullable) NSString *contentDecoration;
 @property (nonatomic, copy , nullable) NSString *mediaName;
@@ -705,13 +788,14 @@ typedef NS_ENUM(NSUInteger, FHFeedContentStickStyle) {
 @property (nonatomic, copy , nullable) NSString *itemVersion;
 @property (nonatomic, strong , nullable) FHFeedContentMediaInfoModel *mediaInfo ;  
 @property (nonatomic, copy , nullable) NSString *groupId;
-@property (nonatomic, strong , nullable) FHFeedContentMiddleImageModel *middleImage ;
+@property (nonatomic, strong , nullable) FHFeedContentImageListModel *middleImage ;
 @property (nonatomic, strong , nullable) NSArray<FHFeedContentImageListModel> *imageList;
 @property (nonatomic, strong , nullable) NSArray<FHFeedContentImageListModel> *largeImageList;
 @property (nonatomic, copy , nullable) NSString *openUrl;
 @property (nonatomic, copy , nullable) NSString *sourceDesc;
 @property (nonatomic, strong , nullable) FHFeedContentCommunityModel *community ;
 @property (nonatomic, strong , nullable) NSArray<FHFeedContentRecommendSocialGroupListModel> *recommendSocialGroupList;
+
 @property (nonatomic, strong , nullable) FHFeedContentRawDataModel *rawData ;
 //临时处理服务器打平的逻辑
 @property (nonatomic, copy , nullable) NSString *articleSchema;
@@ -730,6 +814,7 @@ typedef NS_ENUM(NSUInteger, FHFeedContentStickStyle) {
 @property (nonatomic, copy , nullable) NSString *danmakuCount;
 @property (nonatomic, assign)   BOOL       isStick;      // 是否置顶
 @property (nonatomic, assign)   FHFeedContentStickStyle  stickStyle; // 置顶类型：精华或其它
+@property (nonatomic, strong , nullable) NSArray *subRawDatas;
 @end
 
 

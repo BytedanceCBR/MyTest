@@ -247,6 +247,61 @@
 }
 @end
 
+@implementation FHConfigCenterTabImageModel
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+@end
+
+@implementation FHConfigCenterTabModel
++ (JSONKeyMapper*)keyMapper
+{
+    NSDictionary *dict = @{
+                           @"openUrl": @"open_url",
+                           @"staticImage": @"static_image",
+                           @"activationimage": @"activation_image",
+                           @"logPb":@"log_pb",
+                           @"tabId":@"tab_id"
+                           };
+    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+        return dict[keyName]?:keyName;
+    }];
+}
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+@end
+
+
+@implementation FHRealtorEvaluatioinConfigModel
++ (JSONKeyMapper*)keyMapper
+{
+    NSDictionary *dict = @{
+            @"scoreTags": @"score_tags",
+            @"goodTags": @"good_tags",
+            @"badTags": @"bad_tags",
+            @"goodPlaceholder": @"good_placeholder",
+            @"badPlaceholder": @"bad_placeholder",
+    };
+    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+        return dict[keyName]?:keyName;
+    }];
+}
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+@end
+
+@implementation FHRealtorEvaluatioinTagModel
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+@end
+
 @implementation  FHConfigDataModel
 
 + (JSONKeyMapper*)keyMapper
@@ -308,10 +363,14 @@
     return @{
              @"houseTypeList": @"house_type_list",
              @"opData2": @"op_data_2",
+             @"toolboxData":@"toolbox_data",
+             @"mainPageTopOpData":@"main_page_top_op_data",
              @"opData2list": @"op_data_2_list",
              @"opData": @"op_data",
+             @"houseOpData2": @"house_op_data_2",
              @"rentOpData": @"rent_op_data",
              @"mainPageBannerOpData": @"main_page_banner",
+             @"houseListBanner": @"house_list_banner",
              @"houseOpData": @"house_op_data",
              @"entryInfo": @"entry_info",
              @"currentCityId": @"current_city_id",
@@ -343,7 +402,13 @@
              @"jump2AdRecommend":@"jump_2_ad_recommend",
              @"ugcCitySwitch":@"ugc_city_switch",
              @"tabConfig": @"tab_config",
+             @"opTab":@"op_tab",
              @"ugcCategoryConfig": @"ugc_category_config",
+             @"realtorEvaluationConfig": @"realtor_evaluation",
+             @"jumpPageOnStartup":@"jump_page_on_startup",
+             @"tabWidget": @"tab_widget",
+             @"channelType": @"channel_type",
+             @"barConfig": @"bar_config"
              };
 }
 
@@ -352,6 +417,8 @@
     return @{
              @"opData2list":[FHConfigDataOpData2ListModel class],
              @"entryInfo":[FHConfigDataEntryInfoModel class],
+             @"toolboxData":[FHConfigDataOpData2Model class],
+             @"mainPageTopOpData":[FHConfigDataOpData2Model class],
              @"hotCityList":[FHConfigDataHotCityListModel class],
              @"cityList":[FHConfigDataCityListModel class],
              @"banners":[FHConfigDataBannersModel class],
@@ -379,6 +446,8 @@
     NSArray *keys = @[
                       @"op_data_2",
                       @"op_data_2_list",
+                      @"toolbox_data",
+                      @"main_page_top_op_data",
                       @"op_data",
                       @"rent_op_data",
                       @"main_page_banner",
@@ -442,9 +511,13 @@
 
 DICT_PROP_GET(FHConfigDataOpData2Model,opData2,@"op_data_2")
 ARRAY_PROP_GET(FHConfigDataOpData2ListModel,opData2list,@"op_data_2_list")
+DICT_PROP_GET(FHConfigDataOpData2Model,toolboxData,@"toolbox_data")
+DICT_PROP_GET(FHConfigDataOpData2Model,mainPageTopOpData,@"main_page_top_op_data")
 DICT_PROP_GET(FHConfigDataOpDataModel,opData,@"op_data")
+DICT_PROP_GET(FHConfigDataOpDataModel,houseOpData2,@"house_op_data_2")
 DICT_PROP_GET(FHConfigDataRentOpDataModel,rentOpData,@"rent_op_data")
 DICT_PROP_GET(FHConfigDataMainPageBannerOpDataModel ,mainPageBannerOpData,@"main_page_banner")
+DICT_PROP_GET(FHConfigDataMainPageBannerOpDataModel ,houseListBanner,@"house_list_banner")
 DICT_PROP_GET(FHConfigDataOpData2Model ,houseOpData,@"house_op_data")
 ARRAY_PROP_GET(FHConfigDataHotCityListModel, hotCityList,@"hot_city_list");
 ARRAY_PROP_GET(FHConfigDataCityListModel ,cityList,@"city_list")
@@ -980,6 +1053,15 @@ DICT_PROP_GET(FHConfigDataRentBannerModel,rentBanner,@"rent_banner")
 
 @end
 
+@implementation  FHConfigDataBarConfigModel
+
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+
+@end
+
 
 @implementation  FHConfigDataOpData2ItemsModel
 
@@ -1189,5 +1271,41 @@ DICT_PROP_GET(FHConfigDataRentBannerModel,rentBanner,@"rent_banner")
 }
 
 
+@end
+
+@implementation FHConfigDataTabWidgetModel
++ (JSONKeyMapper*)keyMapper
+{
+    NSDictionary *dict = @{
+                           @"logPb": @"log_pb",
+                           @"openUrl": @"open_url",
+                           @"backgroundColor": @"background_color",
+                           @"textColor": @"text_color",
+                           };
+    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+        return dict[keyName]?:keyName;
+    }];
+}
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+@end
+
+@implementation FHConfigDataTabWidgetImageModel
++ (JSONKeyMapper*)keyMapper
+{
+    NSDictionary *dict = @{
+                           @"imageType": @"image_type",
+                           @"urlList": @"url_list",
+                           };
+    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+        return dict[keyName]?:keyName;
+    }];
+}
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
 @end
 

@@ -9,6 +9,8 @@
 #import "TTAccount.h"
 #import "TTAccount+Multicast.h"
 #import "TIMMulticastDelegate.h"
+#import "TTAccountLoginManager.h"
+
 @interface FHIMAccountCenterImpl ()<TTAccountMulticastProtocol>
 {
     __weak id<AccountStatusListener> _litener;
@@ -36,6 +38,16 @@
     return [[TTAccount sharedAccount] isLogin];
 }
 
+-(void)showAlertFLoginVCWithParams:(NSDictionary *)params completeBlock:(FHIMAccountAlertCompletionBlock)complete {
+    [TTAccountLoginManager showAlertFLoginVCWithParams:params completeBlock:^(TTAccountAlertCompletionEventType type, NSString * _Nullable phoneNum) {
+        
+        if(complete) {
+            FHIMAccountAlertCompletionEventType imType = (FHIMAccountAlertCompletionEventType)type;
+            complete(imType, phoneNum);
+        }
+    }];
+}
+
 -(void)registerAccountStatusListener:(id<AccountStatusListener>)listener {
     [_observerMulticast addWeakDelegate:listener onQueue:dispatch_get_main_queue()];
 }
@@ -59,6 +71,13 @@
  *  登出成功
  */
 - (void)onAccountLogout {
+    id<AccountStatusListener> listener = _observerMulticast;
+    [listener didLogout];
+}
+
+/// 用户帐号会话过期，按登出处理
+/// @param error 过期原因
+- (void)onAccountSessionExpired:(NSError *)error {
     id<AccountStatusListener> listener = _observerMulticast;
     [listener didLogout];
 }

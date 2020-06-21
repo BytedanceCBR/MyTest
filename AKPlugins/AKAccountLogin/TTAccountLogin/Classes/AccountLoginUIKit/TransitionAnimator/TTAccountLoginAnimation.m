@@ -7,8 +7,8 @@
 //
 
 #import "TTAccountLoginAnimation.h"
-#import <UIViewAdditions.h>
-#import <TTDeviceHelper.h>
+#import "UIViewAdditions.h"
+#import "TTDeviceHelper.h"
 #import <objc/runtime.h>
 
 

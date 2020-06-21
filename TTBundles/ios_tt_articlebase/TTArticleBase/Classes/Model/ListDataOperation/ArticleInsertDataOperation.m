@@ -139,16 +139,18 @@
             
             insertedArray = results;
         } else {
-            insertedArray = [ExploreOrderedData insertObjectsWithDataArray:responseRemotePersistentData save:shouldPersist];
+            if (responseRemotePersistentData.count > 0) {
+                insertedArray = [ExploreOrderedData insertObjectsWithDataArray:responseRemotePersistentData save:shouldPersist];
+            }
         }
         
         NSUInteger newNumber = insertedArray.count;
         [objectsToBeSaved addObjectsFromArray:insertedArray];
         
         dispatch_async(dispatch_get_main_queue(), ^{
-            [operationContext setObject:insertedArray forKey:kExploreFetchListInsertedPersetentDataKey];
-            [operationContext setObject:@(newNumber) forKey:@"new_number"];
-            [operationContext setObject:objectsToBeSaved forKey:@"objectsToBeSaved"];
+            [operationContext setValue:insertedArray forKey:kExploreFetchListInsertedPersetentDataKey];
+            [operationContext setValue:@(newNumber) forKey:@"new_number"];
+            [operationContext setValue:objectsToBeSaved forKey:@"objectsToBeSaved"];
             [exploreMixedListConsumeTimeStamps setValue:@([NSObject currentUnixTime]) forKey:kExploreFetchListInsertDataOperationEndTimeStampKey];
             [self executeNext:operationContext];
         });

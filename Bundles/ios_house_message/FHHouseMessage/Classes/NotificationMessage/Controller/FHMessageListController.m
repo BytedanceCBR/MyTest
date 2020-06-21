@@ -10,15 +10,15 @@
 #import "FHMessageNotificationBaseCell.h"
 #import "FHMessageNotificationManager.h"
 
-#import <TTAccountBusiness.h>
+#import "TTAccountBusiness.h"
 #import "UIScrollView+Refresh.h"
 #import "FHMessageNotificationCellHelper.h"
 #import "FHMessageNotificationTipsManager.h"
-#import <WDNetWorkPluginManager.h>
+#import "WDNetWorkPluginManager.h"
 #import "FHMessageListViewModel.h"
 #import "FHRefreshCustomFooter.h"
 #import "UIViewController+Track.h"
-#import <WDApiModel.h>
+#import "WDApiModel.h"
 #import <FHHouseBase/FHBaseTableView.h>
 
 @interface FHMessageListController ()<TTUIViewControllerTrackProtocol>
@@ -62,6 +62,11 @@
     [[FHMessageNotificationTipsManager sharedManager] clearTipsModel];
 }
 
+// Push不支持连续进入两个互动消息页面--TODO：后续还需刷新页面
+- (BOOL)isOpenUrlParamsSame:(NSDictionary *)queryParams {
+    return NO;
+}
+
 - (void)initView {
     [self setupDefaultNavBar:YES];
     self.automaticallyAdjustsScrollViewInsets = NO;
@@ -92,7 +97,9 @@
 
 - (void)initConstraints {
     [self.tableView mas_makeConstraints:^(MASConstraintMaker *make) {
-        if (@available(iOS 11.0, *)) {
+        if (@available(iOS 13.0, *)) {
+            make.top.mas_equalTo(self.view).offset(44.f + [UIApplication sharedApplication].keyWindow.safeAreaInsets.top);
+        } else if (@available(iOS 11.0, *)) {
             make.top.mas_equalTo(self.view).offset(44.f + self.view.tt_safeAreaInsets.top);
         } else {
             make.top.mas_equalTo(64);

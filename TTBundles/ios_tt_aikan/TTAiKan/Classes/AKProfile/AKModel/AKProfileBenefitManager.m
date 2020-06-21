@@ -9,10 +9,11 @@
 #import "ArticleBadgeManager.h"
 #import "AKProfileBenefitModel.h"
 #import "AKProfileBenefitManager.h"
-#import <TTAccountManager.h>
-#import <TTNetworkManager.h>
+#import "TTAccountManager.h"
+#import "TTNetworkManager.h"
 #import "AKTaskSettingHelper.h"
-#import <TTTracker.h>
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
+
 @implementation AKProfileBenefitManager
 
 static AKProfileBenefitManager *shareInstance = nil;

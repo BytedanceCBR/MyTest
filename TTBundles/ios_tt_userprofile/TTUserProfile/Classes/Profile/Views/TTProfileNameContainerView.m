@@ -19,7 +19,7 @@
 #import "TTPersonalHomeUserInfoResponseModel.h"
 #import <TTVerifyKit/TTVerifyIconHelper.h>
 #import "SSCommonLogic.h"
-#import <TTAccountBusiness.h>
+#import "TTAccountBusiness.h"
 #import <TTBaseLib/TTUIResponderHelper.h>
 
 
@@ -463,7 +463,7 @@
 //        [[TTRoute sharedRoute] openURLByPushViewController:url];
 //        NSString *event = self.isRealNameAuthUser ? @"certificate_v_apply" : @"certificate_identity";
 //        NSDictionary *params = @{@"source": @"mine_tab"};
-//        [TTTracker eventV3:event params:params];
+//        [BDTrackerProtocol eventV3:event params:params];
 //
 //    } else {
 //        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil message:@"本月提交认证过于频繁，请核实信息后下月重试" delegate:nil cancelButtonTitle:@"知道了" otherButtonTitles:nil];

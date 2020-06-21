@@ -10,7 +10,7 @@
 #import "UIFont+House.h"
 #import "UIColor+Theme.h"
 #import "TTUserProfileCheckingView.h"
-#import <ToastManager.h>
+#import "ToastManager.h"
 
 @interface FHEditUserSwitchCell()
 

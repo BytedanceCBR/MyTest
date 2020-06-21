@@ -7,7 +7,8 @@
 
 #import "FHUGCBannerCell.h"
 #import "FHArticleCellBottomView.h"
-#import <UIImageView+BDWebImage.h>
+#import "UIImageView+BDWebImage.h"
+#import "UIViewAdditions.h"
 
 #define topMargin 20
 
@@ -44,7 +45,7 @@
 }
 
 - (void)initViews {
-
+    
     self.bannerImageView = [[UIImageView alloc] init];
     _bannerImageView.clipsToBounds = YES;
     _bannerImageView.contentMode = UIViewContentModeScaleAspectFill;
@@ -61,18 +62,15 @@
 - (void)initConstraints {
     self.imageWidth = [UIScreen mainScreen].bounds.size.width - 40;
     
-    [self.bannerImageView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.contentView).offset(topMargin);
-        make.left.mas_equalTo(self.contentView).offset(20);
-        make.width.mas_equalTo(self.imageWidth);
-        make.height.mas_equalTo(self.imageWidth * 58.0/335.0);
-    }];
+    self.bannerImageView.top = topMargin;
+    self.bannerImageView.left = 20;
+    self.bannerImageView.width = self.imageWidth;
+    self.bannerImageView.height = self.imageWidth * 58.0/335.0;
     
-    [self.bottomSepView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.bannerImageView.mas_bottom).offset(20);
-        make.left.right.mas_equalTo(self.contentView);
-        make.height.mas_equalTo(5);
-    }];
+    self.bottomSepView.top = self.bannerImageView.bottom + 20;
+    self.bottomSepView.left = 0;
+    self.bottomSepView.width = [UIScreen mainScreen].bounds.size.width;
+    self.bottomSepView.height = 5;
 }
 
 -(UILabel *)LabelWithFont:(UIFont *)font textColor:(UIColor *)textColor {
@@ -86,22 +84,54 @@
     if (![data isKindOfClass:[FHFeedUGCCellModel class]]) {
         return;
     }
-    self.currentData = data;
     
     FHFeedUGCCellModel *cellModel = (FHFeedUGCCellModel *)data;
-    self.cellModel = cellModel;
+    
+    if(self.currentData == data && !cellModel.ischanged){
+        return;
+    }
+    self.currentData = data;
+    self.cellModel= cellModel;
     //图片
     FHFeedContentImageListModel *imageModel = [cellModel.imageList firstObject];
     if(imageModel){
         [self.bannerImageView bd_setImageWithURL:[NSURL URLWithString:imageModel.url] placeholder:nil];
     }
+    self.bottomSepView.hidden = cellModel.hidelLine;
+    if (!isEmptyString(cellModel.upSpace) && cellModel.upSpace.integerValue >0) {
+        self.bannerImageView.top = cellModel.upSpace.integerValue;
+        self.bottomSepView.top = self.bannerImageView.bottom + 20;
+    }else {
+        self.bannerImageView.top = topMargin;
+        self.bottomSepView.top = self.bannerImageView.bottom + 20;
+    }
 }
 
 + (CGFloat)heightForData:(id)data {
+    
     CGFloat imageWidth = [UIScreen mainScreen].bounds.size.width - 40;
     CGFloat imageHeight = imageWidth * 58.0/335.0;
-    CGFloat height = imageHeight + topMargin + 25;
-    
+    //    CGFloat height = imageHeight + topMargin + 25;
+    CGFloat height = imageHeight + 5;
+    if([data isKindOfClass:[FHFeedUGCCellModel class]]){
+        FHFeedUGCCellModel *cellModel = (FHFeedUGCCellModel *)data;
+        
+        if (!isEmptyString(cellModel.upSpace) && cellModel.upSpace.integerValue >0) {
+            height += cellModel.upSpace.integerValue;
+        }else {
+            height += 20;
+        }
+        if (!isEmptyString(cellModel.downSpace) && cellModel.downSpace.integerValue >0 ) {
+            height += cellModel.downSpace.integerValue;
+        }else {
+            height += 20;
+        }
+        //
+        if (cellModel.hidelLine) {
+            height -= 5;
+        }
+        return height;
+    }
     return height;
 }
 

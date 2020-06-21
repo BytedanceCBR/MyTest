@@ -141,6 +141,32 @@
         [state.hotCommentLayouts addObject:[[TTCommentDetailCellLayout alloc] initWithCommentModel:model containViewWidth:state.cellWidth]];
     }
     
+    // 把置顶的评论放到评论的上方-不单独拿出去
+    state.needMarkedIndexPath = nil;
+    if (state.stickComments.count > 0 && (state.stickComments.count == state.stickCommentLayouts.count) && state.allComments && state.allCommentLayouts) {
+        NSMutableArray *itemArr = [[NSMutableArray alloc] init];
+        NSMutableArray *itemLayoutArr = [[NSMutableArray alloc] init];
+        for (int i = 0; i < state.stickComments.count; i++) {
+            TTCommentDetailReplyCommentModel *item = state.stickComments[i];
+            TTCommentDetailCellLayout *itemLayout = state.stickCommentLayouts[i];
+            [itemArr addObject:item];
+            [itemLayoutArr addObject:itemLayout];
+        }
+        if (itemArr.count > 0 && itemLayoutArr.count > 0) {
+            state.needMarkedIndexPath = [NSIndexPath indexPathForRow:0 inSection:2];
+            // 评论
+            [itemArr addObjectsFromArray:state.allComments];
+            [state.allComments removeAllObjects];
+            [state.allComments addObjectsFromArray:itemArr];
+            // 布局
+            [itemLayoutArr addObjectsFromArray:state.allCommentLayouts];
+            [state.allCommentLayouts removeAllObjects];
+            [state.allCommentLayouts addObjectsFromArray:itemLayoutArr];
+        }
+    }
+    [state.stickComments removeAllObjects];
+    [state.stickCommentLayouts removeAllObjects];
+    
     //接口返回的评论数
     NSInteger totalCount = [action.payload tt_integerValueForKey:@"totalCount"];
     
@@ -293,10 +319,6 @@
         action.replyCommentModel.diggCount -= 1;
         action.replyCommentModel.diggCount = MAX(0, action.replyCommentModel.diggCount);
         action.replyCommentModel.userDigg = NO;
-        NSMutableDictionary *params = [[NSMutableDictionary alloc] init];
-        [params setValue:state.detailModel.commentID forKey:@"comment_id"];
-        [params setValue:action.replyCommentModel.user.ID forKey:@"user_id"];
-        [TTTrackerWrapper eventV3:@"comment_undigg" params:params];
     } else {
         //点赞
         action.replyCommentModel.diggCount += 1;

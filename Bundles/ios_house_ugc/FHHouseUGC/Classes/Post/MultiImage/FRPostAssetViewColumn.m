@@ -8,7 +8,7 @@
 
 #import "FRPostAssetViewColumn.h"
 #import <TTThemed/SSThemed.h>
-#import <TTImagePicker/TTImagePickerManager.h>
+#import <TTImagePickerBase/TTImagePickerManager.h>
 #import <TTImagePicker/TTImagePickerLoadingView.h>
 #import <TTBaseLib/UIViewAdditions.h>
 
@@ -146,7 +146,10 @@
         });
     }
     
-    [[TTImagePickerManager manager] getPhotoWithAsset:asset.asset photoWidth:self.width completion:^(UIImage *photo, NSDictionary *info, BOOL isDegraded) {
+    TTImagePickerImageConfigItem *configItem = [TTImagePickerImageConfigItem getDefaultSettings];
+    configItem.photoWidth = self.width;
+    configItem.enableICloud = YES;
+    [[TTImagePickerManager manager] getPhotoWithAsset:asset.asset configItem:configItem progressHandler:nil completion:^(UIImage *photo, NSDictionary *info, BOOL isDegraded) {
         if (!photo) {
             return;
         }
@@ -156,16 +159,13 @@
         if (finalImg) {
             self.assetImageView.image = finalImg;
         }
-    } progressHandler:nil isIcloudEabled:YES isSingleTask:NO];
-    
-
-    
+    }];
 }
 
 - (void)setTask:(TTUGCImageCompressTask *)task {
     _task = task;
 
-    if ([[TTImagePickerManager manager] isNeedIcloudSync:self.assetModel.asset] && _task.status != iCloudSyncStatusSuccess) {
+    if ([[TTImagePickerManager manager] isNeedIcloudSync:self.assetModel.asset] && _task.status != FHiCloudSyncStatusSuccess) {
         _loadingView.progress = 0;
         _mask.hidden = NO;
         

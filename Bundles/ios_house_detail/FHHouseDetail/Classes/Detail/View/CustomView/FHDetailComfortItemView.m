@@ -8,7 +8,7 @@
 #import "FHDetailComfortItemView.h"
 #import <FHCommonUI/UIColor+Theme.h>
 #import <FHCommonUI/UIFont+House.h>
-#import <Masonry.h>
+#import "Masonry.h"
 #import <TTBaseLib/TTDeviceHelper.h>
 
 @implementation FHDetailComfortItemView

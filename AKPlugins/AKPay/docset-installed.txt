@@ -1,4 +1,0 @@
-Documentation set was installed to Xcode!
-
-Path: /Users/fengjingjun/Library/Developer/Shared/Documentation/DocSets/com.bytedance.ttpay.TTPay.docset
-Time: 2017-08-17 08:54:15 +0000

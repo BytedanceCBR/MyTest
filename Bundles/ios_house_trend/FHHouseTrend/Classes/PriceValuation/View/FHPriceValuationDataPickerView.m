@@ -48,7 +48,7 @@
     completionBtn.titleLabel.font = [UIFont themeFontRegular:16];
     [completionBtn setTitle:@"确定" forState:UIControlStateNormal];
     [completionBtn addTarget:self action:@selector(completionBtnClick) forControlEvents:UIControlEventTouchUpInside];
-    [completionBtn setTitleColor:[UIColor themeRed1] forState:UIControlStateNormal] ;
+    [completionBtn setTitleColor:[UIColor themeOrange1] forState:UIControlStateNormal] ;
     [topView addSubview:completionBtn];
     self.completionBtn = completionBtn;
     

@@ -31,7 +31,10 @@
 #import "NSDictionary+TTAdditions.h"
 #import "TTInstallIDManager.h"
 #import "TTSandBoxHelper.h"
-#import <FHUtils.h>
+#import "FHUtils.h"
+#import <FHHouseBase/FHPermissionAlertViewController.h>
+#import <FHHouseBase/FHIntroduceManager.h>
+
 
 DEC_TASK_N(TTStartupUITask,FHTaskTypeUI,TASK_PRIORITY_HIGH);
 
@@ -56,14 +59,14 @@ DEC_TASK_N(TTStartupUITask,FHTaskTypeUI,TASK_PRIORITY_HIGH);
     BOOL hasSelectedCity = [(id)[FHUtils contentForKey:kUserHasSelectedCityKey] boolValue];
 
     if (hasSelectedCity) {
-        if (![FHEnvContext isCurrentCityNormalOpen] && lastCityId) {
+        NSString *defaultTabName = [FHEnvContext defaultTabName];
+        if ([FHEnvContext isUGCAdUser] && [FHEnvContext isUGCOpen]) {
             [[FHEnvContext sharedInstance] jumpUGCTab];
-        }else
-        {
-            if ([FHEnvContext isUGCAdUser]) {
-                if ([FHEnvContext isUGCOpen]) {
-                    [[FHEnvContext sharedInstance] jumpUGCTab];
-                }
+        }else if(defaultTabName.length > 0){
+            [[FHEnvContext sharedInstance] jumpTab:defaultTabName];
+        }else{
+            if (![FHEnvContext isCurrentCityNormalOpen] && lastCityId) {
+                [[FHEnvContext sharedInstance] jumpUGCTab];
             }
         }
     }
@@ -76,6 +79,10 @@ DEC_TASK_N(TTStartupUITask,FHTaskTypeUI,TASK_PRIORITY_HIGH);
     dispatch_async(dispatch_get_main_queue(), ^{
         [self configInHouseFunc];
     });
+    
+    if ([[FHEnvContext sharedInstance] hasConfirmPermssionProtocol]) {
+        [NewsBaseDelegate startRegisterRemoteNotification];
+    }    
 }
 
 // 是否在内测版本开启某些功能
@@ -110,7 +117,16 @@ DEC_TASK_N(TTStartupUITask,FHTaskTypeUI,TASK_PRIORITY_HIGH);
         Class c = NSClassFromString(@"BDSSOAuthManager");
         if (c) {
             id instance = [c sharedInstance];
-            [instance performSelector:NSSelectorFromString(@"requestSSOAuthWithCompletionHandler:") withObject:ssoBlock];
+            SEL sel = NSSelectorFromString(@"requestSSOAuthExceptIntranet:completionHandler:");
+            NSMethodSignature *sig = [c instanceMethodSignatureForSelector:sel];
+            ssoBlock = [ssoBlock copy];
+            BOOL exceptIntranet = YES;
+            NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:sig];
+            [invocation setArgument:(void *)&exceptIntranet atIndex:2];
+            [invocation setArgument:(void *)&ssoBlock atIndex:3];
+            [invocation retainArguments];
+            invocation.selector = sel;
+            [invocation invokeWithTarget:instance];
         }
     } else {
         ssoBlock();
@@ -179,22 +195,35 @@ DEC_TASK_N(TTStartupUITask,FHTaskTypeUI,TASK_PRIORITY_HIGH);
 }
 
 - (void)constructDefaultTabs {
+     YYCache *epidemicSituationCache = [[FHEnvContext sharedInstance].generalBizConfig epidemicSituationCache];
+    FHConfigCenterTabModel *cacheTab = [epidemicSituationCache objectForKey:@"tab_cache"];
+
+    NSMutableArray *tabRegisterArr = [[NSMutableArray alloc]initWithObjects:kTTTabHomeTabKey,kFHouseFindTabKey,kFHouseMessageTabKey,kFHouseMineTabKey, nil];
+    if (cacheTab.enable && cacheTab.openUrl.length>0 && [epidemicSituationCache objectForKey:@"esituationNormalImage"] && [epidemicSituationCache objectForKey:@"esituationHighlightImage"]) {
+        [tabRegisterArr insertObject:kFHouseHouseEpidemicSituationTabKey atIndex:2];
+        cacheTab.isShow = true;
+    }
+    [tabRegisterArr enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        if (obj) {
+            BOOL isRegular = ![obj isEqualToString:kFHouseHouseEpidemicSituationTabKey] || cacheTab.title.length>0;
+            [[TTTabBarManager sharedTTTabBarManager] registerTabBarforIndentifier:obj atIndex:idx isRegular:isRegular];
+        }
+    }];
     //HomeTab
-    [[TTTabBarManager sharedTTTabBarManager] registerTabBarforIndentifier:kTTTabHomeTabKey atIndex:0 isRegular:YES];
-    
     //VideoTab
-    [[TTTabBarManager sharedTTTabBarManager] registerTabBarforIndentifier:kFHouseFindTabKey atIndex:1 isRegular:YES];
+//    [[TTTabBarManager sharedTTTabBarManager] registerTabBarforIndentifier:kFHouseFindTabKey atIndex:1 isRegular:YES];s
 
 //    [[TTTabBarManager sharedTTTabBarManager] registerTabBarforIndentifier:kTTTabVideoTabKey atIndex:1 isRegular:YES];
 
     //pm@李响说所有用户默认第三和第四个tab分别是微头条和火山小视频
 //    NSString *thirdTag = [self thirdTabBarIdentifier];
 //    [[TTTabBarManager sharedTTTabBarManager] registerTabBarforIndentifier:thirdTag atIndex:2 isRegular:YES];
-    [[TTTabBarManager sharedTTTabBarManager] registerTabBarforIndentifier:kFHouseMessageTabKey atIndex:2 isRegular:YES];
+//    [[TTTabBarManager sharedTTTabBarManager] registerTabBarforIndentifier:kFHouseMessageTabKey atIndex:2 isRegular:YES];
 
 //    NSString *forthTag = [self forthTabBarIdentifier];
 //    [[TTTabBarManager sharedTTTabBarManager] registerTabBarforIndentifier:forthTag atIndex:3 isRegular:YES];
-    [[TTTabBarManager sharedTTTabBarManager] registerTabBarforIndentifier:kFHouseMineTabKey atIndex:3 isRegular:YES];
+//    [[TTTabBarManager sharedTTTabBarManager] registerTabBarforIndentifier:kFHouseMineTabKey atIndex:3 isRegular:YES];
+//     [[TTTabBarManager sharedTTTabBarManager] registerTabBarforIndentifier:kFHouseHouseEpidemicSituationTabKey atIndex:4 isRegular:YES];
 
 }
 

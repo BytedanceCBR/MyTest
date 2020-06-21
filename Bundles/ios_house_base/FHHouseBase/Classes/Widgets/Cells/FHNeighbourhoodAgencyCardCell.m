@@ -7,7 +7,7 @@
 #import "FHNeighbourhoodAgencyCardCell.h"
 #import "FHSearchHouseModel.h"
 #import "FHDetailBaseModel.h"
-#import "BDWebImage.h"
+#import <BDWebImage/BDWebImage.h>
 #import "FHDetailAgentListCell.h"
 #import "FHExtendHotAreaButton.h"
 #import "FHShadowView.h"
@@ -16,30 +16,31 @@
 #import <FHHouseBase/FHCommonDefines.h>
 #import <TTThemed/SSViewBase.h>
 #import <TTThemed/UIColor+TTThemeExtension.h>
+#import "UIImage+FIconFont.h"
+#import "TTAccountManager.h"
 
 @interface FHNeighbourhoodAgencyCardCell ()
 
 
 @property(nonatomic, strong) UIView *containerView;
-@property(nonatomic, strong) UIView *shadowView;
+@property(nonatomic, strong) FHShadowView *shadowView;
 
 @property(nonatomic, strong) UIView *topInfoView;
 @property(nonatomic, strong) UILabel *mainTitleLabel; //小区名称
 @property(nonatomic, strong) UILabel *pricePerSqmLabel; //房源价格
 @property(nonatomic, strong) UILabel *countOnSale; //在售套数
 @property(nonatomic, strong) UIImageView *rightArrow;
-@property(nonatomic, strong) UIView *verticleDividerView;
-
-
-@property(nonatomic, strong) UIView *dividerView;
 
 @property(nonatomic, strong) UIView *bottomInfoView;
+@property(nonatomic, strong) UIView *lineView;
 @property(nonatomic, strong) UIImageView *avator;
 @property(nonatomic, strong) UIButton *licenceIcon;
 @property(nonatomic, strong) UIButton *callBtn;
 @property(nonatomic, strong) UIButton *imBtn;
 @property(nonatomic, strong) UILabel *name;
 @property(nonatomic, strong) UILabel *agency;
+@property (nonatomic, strong) UILabel     *score;
+@property (nonatomic, strong) UILabel     *scoreDescription;
 
 @property(nonatomic, strong) FHHouseNeighborAgencyModel *modelData;
 @property(nonatomic, strong) FHHouseDetailPhoneCallViewModel *phoneCallViewModel;
@@ -66,53 +67,56 @@
     self.clipsToBounds = NO;
 
     _shadowView = [[FHShadowView alloc] initWithFrame:CGRectZero];
+    [_shadowView setCornerRadius:10];
+    [_shadowView setShadowColor:[UIColor colorWithRed:110.f/255.f green:110.f/255.f blue:110.f/255.f alpha:1]];
+    [_shadowView setShadowOffset:CGSizeMake(0, 2)];
     [self.contentView addSubview:_shadowView];
 
     _containerView = [[UIView alloc] init];
     CALayer *layer = _containerView.layer;
-    layer.cornerRadius = 4;
+    layer.cornerRadius = 10;
     layer.masksToBounds = YES;
     layer.borderColor =  [UIColor colorWithHexString:@"#e8e8e8"].CGColor;
     layer.borderWidth = 0.5f;
     [self.contentView addSubview:_containerView];
 
     _topInfoView = [[UIView alloc] init];
+    _topInfoView.userInteractionEnabled = NO;
     [self.containerView addSubview:_topInfoView];
 
     _mainTitleLabel = [[UILabel alloc] init];
     _mainTitleLabel.textAlignment = NSTextAlignmentLeft;
     _mainTitleLabel.textColor = [UIColor themeGray1];
-    _mainTitleLabel.font = [UIFont fontWithName:@"PingFangSC-Semibold" size:18];
+    _mainTitleLabel.font = [UIFont themeFontSemibold:16];
     [self.topInfoView addSubview:_mainTitleLabel];
 
     _pricePerSqmLabel = [[UILabel alloc] init];
-    _pricePerSqmLabel.textAlignment = NSTextAlignmentLeft;
-    _pricePerSqmLabel.textColor = [UIColor colorWithHexString:@"#ff5969"];
-    _pricePerSqmLabel.font = [UIFont fontWithName:@"PingFangSC-Semibold" size:14];
+    _pricePerSqmLabel.textAlignment = NSTextAlignmentRight;
+    _pricePerSqmLabel.textColor = [UIColor themeOrange1];
+    _pricePerSqmLabel.font = [UIFont themeFontMedium:16];
     [self.topInfoView addSubview:_pricePerSqmLabel];
 
     _countOnSale = [[UILabel alloc] init];
     _countOnSale.textAlignment = NSTextAlignmentLeft;
     _countOnSale.textColor = [UIColor themeGray1];
-    _countOnSale.font = [UIFont themeFontRegular:14];
+    _countOnSale.font = [UIFont themeFontRegular:12];
     [self.topInfoView addSubview:_countOnSale];
-
-    _verticleDividerView = [[UIView alloc] init];
-    [_verticleDividerView setBackgroundColor:[UIColor colorWithHexString:@"#e8e8e8"]];
-    [self.topInfoView addSubview:_verticleDividerView];
-
-    self.rightArrow = [[UIImageView alloc] initWithImage:SYS_IMG(@"arrow_right_setup")];
+    
+    self.rightArrow = [[UIImageView alloc] initWithImage:ICON_FONT_IMG(10, @"\U0000e670", [UIColor themeGray6])];
+    _rightArrow.hidden = YES;
     [self.topInfoView addSubview:_rightArrow];
 
-    _dividerView = [[UIView alloc] init];
-    [_dividerView setBackgroundColor:[UIColor colorWithHexString:@"#e8e8e8"]];
-    [self.containerView addSubview:_dividerView];
-
     _bottomInfoView = [[UIView alloc] init];
+    _bottomInfoView.backgroundColor = [UIColor whiteColor];
     [self.containerView addSubview:_bottomInfoView];
+    
+    
+    _lineView = [[UIView alloc]init];
+    _lineView.backgroundColor = [UIColor themeGray7];
+     [self.bottomInfoView addSubview:_lineView];
 
     _avator = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"detail_default_avatar"]];
-    _avator.layer.cornerRadius = 21;
+    _avator.layer.cornerRadius = 23;
     _avator.contentMode = UIViewContentModeScaleAspectFill;
     _avator.clipsToBounds = YES;
     [self.bottomInfoView addSubview:_avator];
@@ -124,15 +128,15 @@
     [self.bottomInfoView addSubview:_licenceIcon];
 
     _callBtn = [[FHExtendHotAreaButton alloc] init];
-    [_callBtn setImage:[UIImage imageNamed:@"detail_agent_call_normal"] forState:UIControlStateNormal];
-    [_callBtn setImage:[UIImage imageNamed:@"detail_agent_call_press"] forState:UIControlStateSelected];
-    [_callBtn setImage:[UIImage imageNamed:@"detail_agent_call_press"] forState:UIControlStateHighlighted];
+    [_callBtn setImage:[UIImage imageNamed:@"detail_agent_call_normal_new"] forState:UIControlStateNormal];
+    [_callBtn setImage:[UIImage imageNamed:@"detail_agent_call_press_new"] forState:UIControlStateSelected];
+    [_callBtn setImage:[UIImage imageNamed:@"detail_agent_call_press_new"] forState:UIControlStateHighlighted];
     [self.bottomInfoView addSubview:_callBtn];
 
     _imBtn = [[FHExtendHotAreaButton alloc] init];
-    [_imBtn setImage:[UIImage imageNamed:@"detail_agent_message_normal"] forState:UIControlStateNormal];
-    [_imBtn setImage:[UIImage imageNamed:@"detail_agent_message_press"] forState:UIControlStateSelected];
-    [_imBtn setImage:[UIImage imageNamed:@"detail_agent_message_press"] forState:UIControlStateHighlighted];
+    [_imBtn setImage:[UIImage imageNamed:@"detail_agent_message_normal_new"] forState:UIControlStateNormal];
+    [_imBtn setImage:[UIImage imageNamed:@"detail_agent_message_press_new"] forState:UIControlStateSelected];
+    [_imBtn setImage:[UIImage imageNamed:@"detail_agent_message_press_new"] forState:UIControlStateHighlighted];
     [self.bottomInfoView addSubview:_imBtn];
 
     _name = [UILabel createLabel:@"" textColor:@"" fontSize:16];
@@ -145,6 +149,17 @@
     _agency.textColor = [UIColor themeGray3];
     _agency.textAlignment = NSTextAlignmentLeft;
     [self.bottomInfoView addSubview:_agency];
+    
+    _score = [UILabel createLabel:@"" textColor:@"" fontSize:14];
+    _score.textColor = [UIColor themeGray1];
+     _score.font = [UIFont themeFontSemibold:14];
+    _score.textAlignment = NSTextAlignmentLeft;
+    [self.bottomInfoView addSubview:_score];
+    
+    _scoreDescription= [UILabel createLabel:@"" textColor:@"" fontSize:14];
+    _scoreDescription.textColor = [UIColor colorWithHexStr:@"6d7278"];
+    _scoreDescription.textAlignment = NSTextAlignmentLeft;
+    [self.bottomInfoView addSubview:_scoreDescription];
 
     [self.topInfoView addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(neighbourhoodInfoClick:)]];
     [self.bottomInfoView addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(realtorInfoClick:)]];
@@ -155,8 +170,8 @@
 
 
     [self.containerView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(self).mas_offset(20);
-        make.right.mas_equalTo(self).mas_offset(-20);
+        make.left.mas_equalTo(self).mas_offset(15);
+        make.right.mas_equalTo(self).mas_offset(-15);
         make.top.mas_equalTo(self).offset(10);
         make.bottom.mas_equalTo(self).offset(-10);
     }];
@@ -166,65 +181,54 @@
     }];
 
     [self.topInfoView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.containerView);
-        make.left.mas_equalTo(self.containerView.mas_left);
-        make.right.mas_equalTo(self.containerView.mas_right);
-        make.width.mas_equalTo(self.containerView);
-        make.height.mas_equalTo(79);
+        make.top.left.right.mas_equalTo(self.containerView);
+        make.height.mas_equalTo(73);
     }];
 
     [self.mainTitleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.topInfoView).offset(20);
-        make.left.mas_equalTo(self.topInfoView).offset(20);
-        make.right.mas_lessThanOrEqualTo(self.rightArrow.mas_left).offset(-20);
+        make.top.mas_equalTo(self.topInfoView).offset(16);
+        make.left.mas_equalTo(self.topInfoView).offset(15);
+        make.height.mas_equalTo(22);
+        make.right.mas_lessThanOrEqualTo(self.pricePerSqmLabel.mas_left).offset(-10);
     }];
-
-
+    
     [self.pricePerSqmLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.mainTitleLabel.mas_bottom).offset(4);
-        make.left.mas_equalTo(self.topInfoView).offset(20);
+        make.right.mas_equalTo(self.topInfoView.mas_right).offset(-15);
+        make.centerY.mas_equalTo(self.topInfoView);
     }];
-
-    [self.verticleDividerView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.width.mas_equalTo(0.5);
-        make.height.mas_equalTo(14);
-        make.centerY.mas_equalTo(self.pricePerSqmLabel);
-        make.left.mas_equalTo(self.pricePerSqmLabel.mas_right).offset(4);
-    }];
-
 
     [self.countOnSale mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.centerY.mas_equalTo(self.pricePerSqmLabel);
-        make.left.mas_equalTo(self.verticleDividerView.mas_right).offset(4.5);
+        make.left.mas_equalTo(self.mainTitleLabel);
+        make.top.mas_equalTo(self.mainTitleLabel.mas_bottom).offset(2);
+        make.height.mas_equalTo(17);
+        make.right.mas_lessThanOrEqualTo(self.pricePerSqmLabel.mas_left).offset(-10);
     }];
-
+    
     [self.rightArrow mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.right.mas_equalTo(self.topInfoView.mas_right).offset(-20);
+        make.right.mas_equalTo(self.topInfoView.mas_right).offset(-15);
         make.centerY.mas_equalTo(self.topInfoView);
         make.width.mas_equalTo(18);
         make.height.mas_equalTo(18);
     }];
 
-    [self.dividerView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.height.mas_equalTo(0.5);
-        make.left.mas_equalTo(self.containerView).offset(20);
-        make.right.mas_equalTo(self.containerView).offset(-20);
-        make.top.mas_equalTo(self.topInfoView.mas_bottom);
-    }];
-
     [self.bottomInfoView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.dividerView.mas_bottom);
+        make.top.mas_equalTo(self.topInfoView.mas_bottom);
         make.left.mas_equalTo(self.containerView.mas_left);
         make.right.mas_equalTo(self.containerView.mas_right);
-        make.height.mas_equalTo(69);
+        make.height.mas_equalTo(76);
         make.left.right.mas_equalTo(self.containerView);
     }];
-
+    [self.lineView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.equalTo(self.bottomInfoView).offset(15);
+        make.right.equalTo(self.bottomInfoView).offset(-15);
+        make.top.equalTo(self.bottomInfoView);
+        make.height.mas_offset(1);
+    }];
 
     [self.avator mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.height.width.mas_equalTo(42);
-        make.left.mas_equalTo(self.bottomInfoView).mas_offset(20);
-        make.top.mas_equalTo(self.bottomInfoView).mas_offset(10);
+        make.height.width.mas_equalTo(46);
+        make.left.mas_equalTo(self.bottomInfoView).mas_offset(15);
+        make.top.mas_equalTo(self.bottomInfoView).mas_offset(15);
     }];
 
     [self.name mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -233,25 +237,34 @@
         make.height.mas_equalTo(22);
     }];
     [self.agency mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.name.mas_bottom);
+        make.centerY.mas_equalTo(self.name);
         make.height.mas_equalTo(17);
-        make.left.mas_equalTo(self.avator.mas_right).offset(10);
-        make.right.mas_lessThanOrEqualTo(self.imBtn.mas_left).offset(-20);
+        make.left.mas_equalTo(self.name.mas_right).offset(4);
+        make.right.mas_lessThanOrEqualTo(self.imBtn.mas_left).offset(-4);
+    }];
+    [self.score mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.equalTo(self.name.mas_bottom).offset(8);
+        make.left.equalTo(self.name);
+    }];
+    [self.scoreDescription mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.equalTo(self.score.mas_right).offset(3);
+        make.centerY.mas_equalTo(self.score);
+        make.right.mas_lessThanOrEqualTo(self.imBtn.mas_left).offset(-4);
     }];
     [self.licenceIcon mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(self.name.mas_right).offset(5);
         make.width.height.mas_equalTo(20);
         make.centerY.mas_equalTo(self.name);
-        make.right.mas_lessThanOrEqualTo(self.imBtn.mas_left).offset(-20);
+        make.right.mas_lessThanOrEqualTo(self.imBtn.mas_left).offset(-15);
     }];
     [self.callBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.width.height.mas_equalTo(36);
-        make.right.mas_equalTo(self.bottomInfoView.mas_right).offset(-20);
+        make.width.height.mas_equalTo(30);
+        make.right.mas_equalTo(self.bottomInfoView.mas_right).offset(-15);
         make.centerY.mas_equalTo(self.avator);
     }];
     [self.imBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.width.height.mas_equalTo(36);
-        make.right.mas_equalTo(self.callBtn.mas_left).offset(-20);
+        make.width.height.mas_equalTo(30);
+        make.right.mas_equalTo(self.callBtn.mas_left).offset(-30);
         make.centerY.mas_equalTo(self.avator);
     }];
 
@@ -264,18 +277,27 @@
 
         [self.mainTitleLabel setText:model.neighborhoodName];
         [self.pricePerSqmLabel setText:model.neighborhoodPrice];
-        [self.countOnSale setText:model.displayStatusInfo];
+        if (model.districtAreaName.length > 0 && model.displayStatusInfo.length > 0) {
+            self.countOnSale.text = [NSString stringWithFormat:@"%@/%@",model.districtAreaName,model.displayStatusInfo];
+        }else if (model.districtAreaName.length > 0) {
+            self.countOnSale.text = model.districtAreaName;
+        }else if (model.displayStatusInfo.length > 0) {
+            self.countOnSale.text = model.displayStatusInfo;
+        }
 
         if (model.contactModel) {
             self.name.text = model.contactModel.realtorName;
             self.agency.text = model.contactModel.agencyName;
-            if (IS_EMPTY_STRING(self.agency.text)) {
+            self.score.text = model.contactModel.realtorScoreDisplay;
+            self.scoreDescription.text = model.contactModel.realtorScoreDescription;
+            if (IS_EMPTY_STRING(self.scoreDescription.text) || IS_EMPTY_STRING(self.score.text)) {
                 [self.name mas_remakeConstraints:^(MASConstraintMaker *make) {
                     make.centerY.mas_equalTo(self.avator);
                     make.left.mas_equalTo(self.avator.mas_right).offset(10);
                     make.height.mas_equalTo(22);
                 }];
-
+                self.score.hidden = YES;
+                self.scoreDescription.hidden = YES;
                 [self.licenceIcon updateConstraintsIfNeeded];
             }
             if (model.contactModel.avatarUrl.length > 0) {
@@ -290,12 +312,29 @@
                 [tracerDict addEntriesFromDictionary:self.traceParams];
             }
             self.phoneCallViewModel.tracerDict = tracerDict;
-            //TODO fengbo  check this, seems like there`s no need to add view_controller?
             self.phoneCallViewModel.belongsVC = model.belongsVC;
         } else {
             [self.bottomInfoView setHidden:YES];
-            [self.dividerView setHidden:YES];
         }
+        
+        if([model.realtorType isEqualToString:@"4"]){
+            //小区
+            [self.pricePerSqmLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
+                make.right.mas_equalTo(self.rightArrow.mas_left).offset(-10);
+                make.centerY.mas_equalTo(self.topInfoView);
+            }];
+            self.topInfoView.userInteractionEnabled = YES;
+            self.rightArrow.hidden = NO;
+        }else if([model.realtorType isEqualToString:@"5"]){
+            //商圈
+            [self.pricePerSqmLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
+                make.right.mas_equalTo(self.topInfoView.mas_right).offset(-15);
+                make.centerY.mas_equalTo(self.topInfoView);
+            }];
+            self.topInfoView.userInteractionEnabled = NO;
+            self.rightArrow.hidden = YES;
+        }
+        
     }
 }
 
@@ -328,11 +367,11 @@
         FHDetailContactModel *contact = self.modelData.contactModel;
         if (self.phoneCallViewModel) {
             NSMutableDictionary *imExtra = @{}.mutableCopy;
-            imExtra[@"realtor_position"] = @"neighborhood_expert_card";
-            imExtra[@"from"] = @"app_neighborhood_aladdin";
-//            imExtra[@"enter_from"] = self.traceParams[@"enter_from"];
-            imExtra[kFHClueEndpoint] = @(FHClueEndPointTypeC);
-            imExtra[kFHCluePage] = [NSString stringWithFormat:@"%ld",FHClueIMPageTypeCNeighborhoodAladdin];
+            imExtra[@"realtor_position"] = self.traceParams[@"realtor_position"];
+                        
+            if(self.modelData.associateInfo) {
+                imExtra[kFHAssociateInfo] = self.modelData.associateInfo;
+            }
             imExtra[@"im_open_url"] = contact.imOpenUrl;
             [self.phoneCallViewModel imchatActionWithPhone:contact realtorRank:@"0" extraDic:imExtra];
         }
@@ -350,24 +389,36 @@
         }
         extraDict[@"realtor_id"] = contact.realtorId;
         extraDict[@"realtor_rank"] = @"be_null";
-        extraDict[@"realtor_position"] = @"neighborhood_expert_card";
         extraDict[@"realtor_logpb"] = contact.realtorLogpb;
 //        extraDict[@"element_from"] = @"neighborhood_expert_card";
-        extraDict[kFHClueEndpoint] = @(FHClueEndPointTypeC);
-        extraDict[kFHCluePage] = @(FHClueCallPageTypeCNeighborhoodAladdin);
+//        extraDict[kFHClueEndpoint] = @(FHClueEndPointTypeC);
+//        extraDict[kFHCluePage] = @(FHClueCallPageTypeCNeighborhoodAladdin);
         
-        FHHouseContactConfigModel *contactConfig = [[FHHouseContactConfigModel alloc] initWithDictionary:extraDict error:nil];
-        contactConfig.houseType = FHHouseTypeNeighborhood;
-        contactConfig.houseId = self.modelData.id;
-        contactConfig.phone = contact.phone;
-        contactConfig.realtorId = contact.realtorId;
-        contactConfig.pageType = @"old_list";
+//        FHHouseContactConfigModel *contactConfig = [[FHHouseContactConfigModel alloc] initWithDictionary:extraDict error:nil];
+//        contactConfig.houseType = FHHouseTypeNeighborhood;
+//        contactConfig.houseId = self.modelData.id;
+//        contactConfig.phone = contact.phone;
+//        contactConfig.realtorId = contact.realtorId;
+//        contactConfig.pageType = @"old_list";
+//        if (self.modelData.logPb) {
+//            contactConfig.searchId = self.modelData.logPb[@"search_id"];
+//            contactConfig.imprId = self.modelData.logPb[@"impr_id"];
+//        }
+        
+        NSDictionary *associateInfoDict = self.modelData.associateInfo.phoneInfo;
+        extraDict[kFHAssociateInfo] = associateInfoDict;
+        FHAssociatePhoneModel *associatePhone = [[FHAssociatePhoneModel alloc]init];
+        associatePhone.reportParams = extraDict;
+        associatePhone.associateInfo = associateInfoDict;
+        associatePhone.realtorId = contact.realtorId;
         if (self.modelData.logPb) {
-            contactConfig.searchId = self.modelData.logPb[@"search_id"];
-            contactConfig.imprId = self.modelData.logPb[@"impr_id"];
+            associatePhone.searchId = self.modelData.logPb[@"search_id"];
+            associatePhone.imprId = self.modelData.logPb[@"impr_id"];
         }
-//        contactConfig.from = @"app_neighborhood_aladdin";
-        [FHHousePhoneCallUtils callWithConfigModel:contactConfig completion:nil];
+        associatePhone.houseType = FHHouseTypeNeighborhood;
+        associatePhone.houseId = self.modelData.id;
+        associatePhone.showLoading = NO;
+        [FHHousePhoneCallUtils callWithAssociatePhoneModel:associatePhone completion:nil];
     }
 
 }
@@ -384,8 +435,8 @@
     if (self.modelData) {
         FHDetailContactModel *contact = self.modelData.contactModel;
         NSMutableDictionary *extraDict = @{}.mutableCopy;
-        extraDict[@"realtor_position"] = @"neighborhood_expert_card";
-        extraDict[@"element_from"] = @"neighborhood_expert_card";
+        extraDict[@"realtor_position"] = self.traceParams[@"realtor_position"];
+        extraDict[@"element_from"] = self.traceParams[@"realtor_position"];
         extraDict[@"enter_from"] = self.traceParams[@"page_type"];
         extraDict[@"page_type"] = nil;
 //        extraDict[@"realtor_rank"] = @"be_null";
@@ -395,6 +446,7 @@
         }
     }
 }
+
 - (void)neighbourhoodInfoClick:(id)neighbourhoodInfoClick {
     if (self.modelData) {
         NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"sslocal://neighborhood_detail?neighborhood_id=%@", self.modelData.id]];
@@ -403,7 +455,7 @@
         if (self.traceParams) {
             [tracerDict addEntriesFromDictionary:self.traceParams];
         }
-        tracerDict[@"element_from"] = @"neighborhood_expert_card";
+        tracerDict[@"element_from"] = self.traceParams[@"realtor_position"];
         tracerDict[@"enter_from"] = self.traceParams[@"page_type"];
         tracerDict[@"page_type"] = nil;
         NSMutableDictionary *dict = @{@"house_type": @(FHHouseTypeNeighborhood), @"tracer": tracerDict}.mutableCopy;

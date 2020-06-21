@@ -6,7 +6,7 @@
 //
 
 #import "FHBaseHouseListViewModel.h"
-#import <FHHouseSuggestionDelegate.h>
+#import "FHHouseSuggestionDelegate.h"
 
 typedef enum : NSUInteger {
     FHHouseListSearchTypeDefault = 0,
@@ -20,7 +20,7 @@ NS_ASSUME_NONNULL_BEGIN
  * 列表页 viewmodel
  */
 
-@class FHHouseListRedirectTipView,FHMainOldTopTagsView;
+@class FHMainOldTopTagsView;
 @class FHHouseListCommuteTipView;
 @class FHFakeInputNavbar;
 @interface FHHouseListViewModel : FHBaseHouseListViewModel <FHHouseSuggestionDelegate>
@@ -38,15 +38,12 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic , copy) void (^commuteSugSelectBlock)(NSString *poi);
 
 @property (nonatomic , assign) BOOL isEnterCategory; // 是否算enter_category
-@property (nonatomic , assign) BOOL showRedirectTip;
 @property (nonatomic , assign) BOOL fromFindTab;
 
 //通勤找房
 @property (nonatomic , assign, getter=isCommute) BOOL commute; //是否是通勤找房
 @property (nonatomic , copy) NSString *commutePoi;//用户进入sug选择后显示的内容
 @property (nonatomic , strong) FHHouseListCommuteTipView *commuteTipView;
-
--(void)setRedirectTipView:(FHHouseListRedirectTipView *)redirectTipView;
 
 #pragma mark - log相关
 -(void)addStayCategoryLog:(NSTimeInterval)stayTime;
@@ -68,6 +65,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)setTopTagsView:(FHMainOldTopTagsView *)topTagsView;
 - (void)addTagsViewClick:(NSString *)value_id;
+- (void)viewDidAppear:(BOOL)animated;
 
 @end
 

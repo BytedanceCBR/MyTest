@@ -6,7 +6,7 @@
 //
 
 #import "FHCityMarketHeaderView.h"
-#import <Masonry.h>
+#import "Masonry.h"
 #import "TTDeviceHelper.h"
 #import "UIColor+Theme.h"
 #import "UIFont+House.h"
@@ -50,7 +50,7 @@
         make.top.left.width.mas_equalTo(self);
         make.height.mas_equalTo(160 + _navBarHeight);
     }];
-    _bgView.image = [UIImage imageNamed:@"city_market_header"];
+    _bgView.image = [UIImage imageNamed:@"city_market_header_orange"];
 }
 
 -(void)initHeaderInfo {

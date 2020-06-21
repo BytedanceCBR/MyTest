@@ -7,7 +7,7 @@
 
 #import "AKProfileLoginButton.h"
 #import "AKProfileHeaderViewUnLogin.h"
-#import <UIColor+TTThemeExtension.h>
+#import "UIColor+TTThemeExtension.h"
 #import <TTBaseLib/UIViewAdditions.h>
 #import <TTBaseLib/TTUIResponderHelper.h>
 #import <TTBaseLib/TTDeviceHelper.h>

@@ -13,16 +13,18 @@
 #import "IMManager.h"
 #import "IChatService.h"
 #import "TTRoute.h"
-#import <Masonry.h>
+#import "Masonry.h"
 #import "ReactiveObjC.h"
-#import "BDWebImage.h"
+#import <BDWebImage/BDWebImage.h>
 #import "FHChatUserInfo.h"
 #import "FHUserTracker.h"
 #import "TTReachability.h"
-#import <ToastManager.h>
+#import "ToastManager.h"
 #import <FHHouseBase/FHBaseTableView.h>
 #import <FHHouseBase/UIImage+FIconFont.h>
 #import <FHHouseBase/FHHouseType.h>
+#import "FHDetailOldModel.h"
+#import "FHHouseIMClueHelper.h"
 
 @interface FHIMSharedUserListViewController () <TTRouteInitializeProtocol, FHIMShareUserListViewModelDelegate, FHIMShareAlertViewDelegate, IMChatStateObserver>
 {
@@ -35,6 +37,7 @@
 @property (nonatomic, strong) UITableView* tableView;
 @property (nonatomic, strong) FHIMShareUserListViewModel* listViewModel;
 @property (nonatomic, strong) FHIMShareAlertView* alertView;
+@property (nonatomic, strong) FHDetailImShareInfoModel *shareInfo;
 @end
 
 @implementation FHIMSharedUserListViewController
@@ -42,6 +45,7 @@
 - (instancetype)initWithRouteParamObj:(TTRouteParamObj *)paramObj {
     self = [super initWithRouteParamObj:paramObj];
     if (self) {
+        self.shareInfo = paramObj.allParams[@"shareInfo"];
         _lastModify = 0;
         _rowIndex = NSUIntegerMax;
         self.listViewModel = [[FHIMShareUserListViewModel alloc] init];
@@ -187,21 +191,8 @@
     IMConversation* conv = [[IMManager shareInstance].chatService conversationWithUserId:_target.userId];
     NSDictionary *syncParams = @{KLAST_HOUSE_ID_SYNC: @"0"};
     if([TTReachability isNetworkConnected]){
-        [conv setSyncExtEntry:syncParams completion:^(id<TIMOConversationOperationResponse>  _Nullable response, NSError * _Nullable error) {
-        }];
-
-        NSMutableDictionary* dict = [_queryParams mutableCopy];
-        NSMutableDictionary* theTracerDict = [self.tracerDict mutableCopy];
-        theTracerDict[@"page_type"] = @"realotr_pick";
-        theTracerDict[@"from"] = [self sourceByHouseType:_houseType];
-        dict[@"tracer"] = theTracerDict;
-        dict[@"target_user_id"] = _target.userId;
-        dict[@"chat_title"] = _target.username;
-        dict[@"from_im_share"] = @(1);
-        dict[@"source"] = [self sourceByHouseType:_houseType];
-        dict[@"from"] = [self sourceByHouseType:_houseType];
-        TTRouteUserInfo* info = [[TTRouteUserInfo alloc] initWithInfo:dict];
-        [[TTRoute sharedRoute] openURLByViewController:[NSURL URLWithString:@"sslocal://open_single_chat"] userInfo:info];
+        [conv setSyncExtEntry:syncParams completion:^(id<TIMOConversationOperationResponse>  _Nullable response, NSError * _Nullable error) {}];
+        [self gotoSingleChat];
     } else {
         [[ToastManager manager] showToast:@"网络异常无法分享，轻稍后重试"];
     }
@@ -217,15 +208,66 @@
     }
 }
 
--(NSString*)sourceByHouseType:(NSInteger)houseType {
-    switch (houseType) {
-        case 3://租房
-            return @"app_renthouse_share";//@"1.73";
-        case 1://新房
-            return @"app_court_share";//@"1.32";
-        default://二手房
-            return @"app_oldhouse_share";//@"1.14";
-    }
+- (void)gotoSingleChat {
+    
+    NSDictionary *queryParams = _queryParams.copy;
+    
+    // IM 透传数据模型
+    FHAssociateIMModel *associateIMModel = [FHAssociateIMModel new];
+    associateIMModel.houseId = queryParams[@"house_id"];
+    associateIMModel.houseType = queryParams[@"house_type"];
+    associateIMModel.associateInfo = self.shareInfo.associateInfo;
+
+    // IM 相关埋点上报参数
+    FHAssociateReportParams *reportParams = [FHAssociateReportParams new];
+    reportParams.enterFrom = self.tracerDict[@"enter_from"] ? : @"be_null";
+    reportParams.elementFrom = self.tracerDict[@"element_from"] ? : @"be_null";
+    reportParams.originFrom = self.tracerDict[@"origin_from"] ? : @"be_null";
+    reportParams.logPb = self.tracerDict[@"log_pb"];
+    reportParams.originSearchId = self.tracerDict[@"origin_search_id"] ? : @"be_null";
+    reportParams.rank = self.tracerDict[@"rank"] ? : @"be_null";
+    reportParams.cardType = self.tracerDict[@"card_type"] ? : @"be_null";
+    reportParams.pageType = @"realotr_pick";
+    reportParams.realtorId = _target.customerId;
+    reportParams.realtorRank = @(_rowIndex).stringValue ?: @"0";
+    reportParams.conversationId = @"be_null";
+    reportParams.extra = @{
+        
+    };
+    reportParams.searchId = self.tracerDict[@"search_id"] ? : @"be_null";
+    reportParams.groupId = self.tracerDict[@"group_id"]?:(self.tracerDict[@"log_pb"][@"group_id"] ? : @"be_null");
+
+    associateIMModel.reportParams = reportParams;
+
+    // IM跳转链接
+    NSURLComponents *urlComponents = [NSURLComponents componentsWithString:@"sslocal://open_single_chat"];
+    NSURLQueryItem *chatTitle = [NSURLQueryItem queryItemWithName:@"chat_title" value:_target.username];
+    NSURLQueryItem *targetUserId = [NSURLQueryItem queryItemWithName:@"target_user_id" value:_target.userId];
+    NSURLQueryItem *houseId = [NSURLQueryItem queryItemWithName:@"house_id" value:queryParams[@"house_id"]];
+    NSURLQueryItem *houseType = [NSURLQueryItem queryItemWithName:@"house_type" value:queryParams[@"house_type"]];
+    NSURLQueryItem *houseTitle = [NSURLQueryItem queryItemWithName:@"house_title" value:queryParams[@"house_title"]];
+    NSURLQueryItem *houseDes = [NSURLQueryItem queryItemWithName:@"house_des" value:queryParams[@"house_des"]];
+    NSURLQueryItem *houseCover = [NSURLQueryItem queryItemWithName:@"house_cover" value:queryParams[@"house_cover"]];
+    NSURLQueryItem *housePrice = [NSURLQueryItem queryItemWithName:@"house_price" value:queryParams[@"house_price"]];
+    NSURLQueryItem *houseAvgPrice = [NSURLQueryItem queryItemWithName:@"house_avg_price" value:queryParams[@"house_avg_price"]];
+    NSURLQueryItem *fromIMShare = [NSURLQueryItem queryItemWithName:@"from_im_share" value:@(1).stringValue];
+    urlComponents.queryItems = @[
+        chatTitle,
+        targetUserId,
+        houseId,
+        houseType,
+        houseTitle,
+        houseDes,
+        houseCover,
+        housePrice,
+        houseAvgPrice,
+        fromIMShare,
+    ];
+    associateIMModel.imOpenUrl = urlComponents.URL.absoluteString;
+    associateIMModel.isIgnoreReportClickIM = YES;
+
+    // 跳转IM
+    [FHHouseIMClueHelper jump2SessionPageWithAssociateIM:associateIMModel];
 }
 
 @end

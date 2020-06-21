@@ -6,9 +6,9 @@
 //
 
 #import "FHUGCFollowButton.h"
-#import <Masonry.h>
+#import "Masonry.h"
 #import "UIFont+House.h"
-#import <UIImageView+BDWebImage.h>
+#import "UIImageView+BDWebImage.h"
 #import "FHCommonDefines.h"
 #import "UIColor+Theme.h"
 #import "FHUGCConfig.h"
@@ -72,7 +72,7 @@
     } else {
         self.titleStr = @"关注";
         self.loadingImageName = @"fh_ugc_loading_red";
-        borderColor = self.unFollowedTextColor?:[UIColor themeRed1];
+        borderColor = self.unFollowedTextColor?:[UIColor themeOrange1];
         if(self.unFollowedBackgroundColor) {
             self.backgroundColor = self.unFollowedBackgroundColor;
         }
@@ -95,11 +95,11 @@
     
     self.titleLabel.font = [UIFont themeFontRegular:12];
     [self setTitle:@"关注" forState:UIControlStateNormal];
-    [self setTitleColor:[UIColor themeRed1] forState:UIControlStateNormal];
+    [self setTitleColor:[UIColor themeOrange1] forState:UIControlStateNormal];
     
     if(self.style == FHUGCFollowButtonStyleBorder){
-        self.layer.borderWidth = 0.5f;
-        self.layer.borderColor = [[UIColor themeRed1] CGColor];
+        self.layer.borderWidth = 1.0f;
+        self.layer.borderColor = [[UIColor themeOrange1] CGColor];
     }
     
     self.loadingImageName = @"fh_ugc_loading_red";
@@ -240,6 +240,7 @@
         self.tracerParams = [NSMutableDictionary new];
         //
         self.tracerParams[@"page_type"] = self.tracerDic[@"page_type"] ?: @"be_null";
+        self.tracerParams[@"origin_from"] = self.tracerDic[@"origin_from"] ?: @"be_null";
         self.tracerParams[@"enter_from"] = self.tracerDic[@"enter_from"] ?: @"be_null";
         self.tracerParams[@"enter_type"] = self.tracerDic[@"enter_type"] ?: @"be_null";
         self.tracerParams[@"rank"] = self.tracerDic[@"rank"] ?: @"be_null";

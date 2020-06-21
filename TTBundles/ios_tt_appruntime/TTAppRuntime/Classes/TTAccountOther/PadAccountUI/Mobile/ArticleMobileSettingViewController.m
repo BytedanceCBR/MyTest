@@ -7,11 +7,11 @@
 //
 
 #import "ArticleMobileSettingViewController.h"
-#import <TTNavigationController.h>
-#import <TTThemedAlertController.h>
-#import <TTDeviceHelper.h>
-#import <TTUIResponderHelper.h>
-#import <TTAccountBusiness.h>
+#import "TTNavigationController.h"
+#import "TTThemedAlertController.h"
+#import "TTDeviceHelper.h"
+#import "TTUIResponderHelper.h"
+#import "TTAccountBusiness.h"
 #import "TTTrackerWrapper.h"
 
 
@@ -290,9 +290,9 @@
     [self.avatarButton setBackgroundImage:tImage forState:UIControlStateNormal];
     if (tImage) {
         
-        [TTAccountManager startUploadUserPhoto:tImage completion:^(TTAccountUserEntity *userEntity, NSError *error) {
-            
-        }];
+//        [TTAccountManager startUploadUserPhoto:tImage completion:^(TTAccountUserEntity *userEntity, NSError *error) {
+//            
+//        }];
     }
 }
 

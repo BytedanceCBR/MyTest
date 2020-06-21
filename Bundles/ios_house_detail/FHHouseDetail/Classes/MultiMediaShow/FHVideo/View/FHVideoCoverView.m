@@ -6,7 +6,7 @@
 //
 
 #import "FHVideoCoverView.h"
-#import <Masonry.h>
+#import "Masonry.h"
 #import "UIImageView+BDWebImage.h"
 
 @interface FHVideoCoverView ()
@@ -34,9 +34,9 @@
     _coverView.autoresizingMask = UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight;
     [self addSubview:_coverView];
     
-    self.startBtn = [[UIButton alloc] initWithFrame:CGRectMake(self.bounds.size.width/2 - 30, self.bounds.size.height/2 - 30, 60, 60)];
-    [_startBtn setImage:[UIImage imageNamed:@"video_start"] forState:UIControlStateNormal];
-    [_startBtn setImage:[UIImage imageNamed:@"video_start"] forState:UIControlStateHighlighted];
+    self.startBtn = [[UIButton alloc] init];
+    [_startBtn setImage:[UIImage imageNamed:@"detail_video_start"] forState:UIControlStateNormal];
+    [_startBtn setImage:[UIImage imageNamed:@"detail_video_start"] forState:UIControlStateHighlighted];
     [_startBtn addTarget:self action:@selector(playVideo) forControlEvents:UIControlEventTouchUpInside];
     [self addSubview:_startBtn];
 }
@@ -47,8 +47,8 @@
     }];
     
     [self.startBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.width.height.mas_equalTo(60);
-        make.center.mas_equalTo(self);
+             make.width.height.mas_equalTo(60);
+            make.center.equalTo(self);
     }];
 }
 

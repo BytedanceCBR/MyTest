@@ -41,6 +41,9 @@
 #import "FHMainApi.h"
 #import "FHFeedUGCCellModel.h"
 #import "FHEnvContext.h"
+#import <FHHouseUGCAPI.h>
+#import <FHUGCEditedPostModel.h>
+#import "FRUploadImageManager.h"
 
 NSString * const TTPostTaskBeginNotification = kTTForumPostingThreadNotification;
 NSString * const TTPostTaskResumeNotification = kTTForumResumeThreadNotification;
@@ -70,7 +73,7 @@ NSString * const TTPostTaskNotificationUserInfoKeyChallengeGroupID = kTTForumPos
 @property (nonatomic, assign) BOOL isNetworkAlertShown;
 @property (nonatomic, strong) NSOperationQueue *postThreadOperationQueue;
 @property (nonatomic, assign) UIBackgroundTaskIdentifier backgroundTaskIdentifier;
-
+@property (nonatomic, strong) FRUploadImageManager *uploadImageManager;
 @end
 
 @implementation TTPostThreadCenter
@@ -204,17 +207,24 @@ NSString * const TTPostTaskNotificationUserInfoKeyChallengeGroupID = kTTForumPos
                     selectedGroupHistory.historyInfos = [NSMutableDictionary dictionary];
                 }
                 
-                FHPostUGCSelectedGroupModel *selectedGroup = [FHPostUGCSelectedGroupModel new];
-                selectedGroup.socialGroupId = task.social_group_id;
-                selectedGroup.socialGroupName = task.social_group_name;
-                NSString *saveKey = [currentUserID stringByAppendingString:currentCityID];
-                [selectedGroupHistory.historyInfos setObject:selectedGroup forKey:saveKey];
-                
-                [[FHUGCConfig sharedInstance] savePublisherHistoryDataWithModel:selectedGroupHistory];
+                if(task.social_group_id.length > 0 && task.social_group_name.length > 0) {
+                    FHPostUGCSelectedGroupModel *selectedGroup = [FHPostUGCSelectedGroupModel new];
+                    selectedGroup.socialGroupId = task.social_group_id;
+                    selectedGroup.socialGroupName = task.social_group_name;
+                    NSString *saveKey = [currentUserID stringByAppendingString:currentCityID];
+                    [selectedGroupHistory.historyInfos setObject:selectedGroup forKey:saveKey];
+                    
+                    [[FHUGCConfig sharedInstance] savePublisherHistoryDataWithModel:selectedGroupHistory];
+                }
             }
         }
         
-        [[ToastManager manager] showToast:@"发帖成功"];
+        
+        NSString *hintString = @"发帖成功";
+        if(task.neighborhoodId > 0){
+            hintString = @"发布成功，审核通过后可查看";
+        }
+        [[ToastManager manager] showToast:hintString];
         
         // 数据解析
         NSString *social_group_id = userInfo[@"social_group_id"];
@@ -378,6 +388,7 @@ NSString * const TTPostTaskNotificationUserInfoKeyChallengeGroupID = kTTForumPos
         task.concernID = postThreadModel.concernID;
         task.social_group_id = postThreadModel.social_group_id;
         task.social_group_name = postThreadModel.social_group_name;
+        task.bindType = postThreadModel.bindType;
         task.hasSocialGroup = postThreadModel.hasSocialGroup;
         task.categoryID = postThreadModel.categoryID;
         [task addTaskImages:postThreadModel.taskImages thumbImages:postThreadModel.thumbImages];
@@ -401,6 +412,10 @@ NSString * const TTPostTaskNotificationUserInfoKeyChallengeGroupID = kTTForumPos
         task.insertMixCardID = postThreadModel.insertMixCardID;
         task.relatedForumSubjectID = postThreadModel.relatedForumSubjectID;
         task.sdkParams = postThreadModel.sdkParams;
+        task.neighborhoodId = postThreadModel.neighborhoodId;
+        task.pubSource = postThreadModel.source;
+        task.scores = postThreadModel.scores;
+        task.neighborhoodTags = postThreadModel.neighborhoodTags;
         if (!task) {
             return;
         }
@@ -416,122 +431,13 @@ NSString * const TTPostTaskNotificationUserInfoKeyChallengeGroupID = kTTForumPos
 
 - (void)postEditedThreadWithPostThreadModel:(TTPostThreadModel *)postThreadModel finishBlock:(void (^)(void))finishBlock {
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        TTPostThreadTask *task = [[TTPostThreadTask alloc] initWithTaskType:TTPostTaskTypeThread];
-        task.title = postThreadModel.title;
-        task.content = postThreadModel.content;
-        task.contentRichSpans = postThreadModel.contentRichSpans;
-        task.mentionUser = postThreadModel.mentionUsers;
-        task.mentionConcern = postThreadModel.mentionConcerns;
-        task.create_time = [[NSDate date] timeIntervalSince1970];
-        task.userID = [[TTAccount sharedAccount] userIdString];//[GET_SERVICE_BY_PROTOCOL(TTAccountProvider) userID];
-        task.postID = postThreadModel.postID;
-        task.concernID = postThreadModel.concernID;
-        task.categoryID = postThreadModel.categoryID;
-        [task addTaskImages:postThreadModel.taskImages thumbImages:postThreadModel.thumbImages];
-        task.source = 2;//来源于话题
-        task.forward = postThreadModel.needForward;
-        task.latitude = postThreadModel.latitude;
-        task.longitude = postThreadModel.longitude;
-        task.city = postThreadModel.city;
-        task.detail_pos = postThreadModel.detailPos;
-        task.phone = postThreadModel.phoneNumber;
-        task.fromWhere = postThreadModel.fromWhere;
-        task.score = postThreadModel.score;
-        task.refer = postThreadModel.refer;
-        task.postUGCEnterFrom = postThreadModel.postUGCEnterFrom;
-        task.extraTrack = postThreadModel.extraTrack;
-        task.forumNames = postThreadModel.forumNames;
-        if (!task) {
-            return;
-        }
-        
-        //发送通知用当前的fake数据更新数据库中的这条threadID的帖子的信息
-        NSMutableDictionary *fakeThreadInfo = [NSMutableDictionary dictionary];
-        [fakeThreadInfo setValue:task.taskID forKey:@"taskID"];
-        [fakeThreadInfo setValue:postThreadModel.postID forKey:@"threadID"];
-        [fakeThreadInfo setValue:postThreadModel.content forKey:@"content"];
-        [fakeThreadInfo setValue:postThreadModel.contentRichSpans forKey:@"content_rich_span"];
-        //地理位置
-        NSMutableDictionary *position = [NSMutableDictionary dictionary];
-        [position setValue:postThreadModel.detailPos forKey:@"position"];
-        [position setValue:[NSNumber numberWithFloat:postThreadModel.latitude] forKey:@"latitude"];
-        [position setValue:[NSNumber numberWithFloat:postThreadModel.longitude] forKey:@"longitude"];
-        [fakeThreadInfo setValue:position forKey:@"position"];
-        //图片
-        if (task.images.count > 0) {
-            NSMutableArray *imgs = [NSMutableArray arrayWithCapacity:task.images.count];
-            [task.images enumerateObjectsUsingBlock:^(FRUploadImageModel * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-                
-                if (obj && [obj isKindOfClass:[FRUploadImageModel class]]) {
-                    NSString *uploadImageFileString = obj.cacheTask.preCompressFilePath;
-                    if (!isEmptyString(uploadImageFileString)) {
-                        NSData *uploadData = [NSData dataWithContentsOfFile:uploadImageFileString];
-                        if (uploadData) {
-                            UIImage *uploadImage = [UIImage sd_imageWithData:uploadData];
-                            if (uploadImage) {
-                                NSString * fakeURL = obj.fakeUrl;
-                                if (isEmptyString(fakeURL)) {
-                                    return;
-                                }
-                                
-                                NSString * cacheKey = [[SDWebImageManager sharedManager] cacheKeyForURL:[NSURL URLWithString:fakeURL]];
-                                [[SDImageCache sharedImageCache] storeImage:uploadImage imageData:uploadData forKey:cacheKey toDisk:YES completion:nil];
-                                
-                                NSMutableDictionary *imgDic = [NSMutableDictionary dictionaryWithCapacity:6];
-                                [imgDic setValue:fakeURL forKey:@"url"];
-                                [imgDic setValue:fakeURL forKey:@"uri"];
-                                [imgDic setValue:@[@{@"url":fakeURL}] forKey:@"url_list"];
-                                
-                                SDImageFormat imageFormat = [NSData sd_imageFormatForImageData:uploadData];
-                                if (imageFormat == SDImageFormatGIF) {
-                                    [imgDic setValue:@(FRImageTypeGif) forKey:@"type"];
-                                    
-                                    FLAnimatedImage *image = [[FLAnimatedImage alloc] initWithAnimatedGIFData:uploadData];
-                                    [imgDic setValue:@(image.size.width) forKey:@"width"];
-                                    [imgDic setValue:@(image.size.height) forKey:@"height"];
-                                    
-                                } else {
-                                    [imgDic setValue:@(FRImageTypeJpeg) forKey:@"type"];
-                                    [imgDic setValue:@(uploadImage.size.width) forKey:@"width"];
-                                    [imgDic setValue:@(uploadImage.size.height) forKey:@"height"];
-                                }
-                                
-                                [imgs addObject:imgDic];
-                            }
-                        }
-                    } else if (obj.cacheTask.assetModel.imageURI) {
-                        NSMutableDictionary *imgDic = [NSMutableDictionary dictionaryWithCapacity:6];
-                        [imgDic setValue:[NSNumber numberWithUnsignedInteger:obj.cacheTask.assetModel.width] forKey:@"width"];
-                        [imgDic setValue:[NSNumber numberWithUnsignedInteger:obj.cacheTask.assetModel.height] forKey:@"height"];
-                        TTAssetModelMediaType mediaType = obj.cacheTask.assetModel.type;
-                        if (mediaType == TTAssetModelMediaTypePhotoGif) {
-                            [imgDic setValue:@(FRImageTypeGif) forKey:@"type"];
-                        } else if (mediaType == TTAssetModelMediaTypePhoto) {
-                            [imgDic setValue:@(FRImageTypeJpeg) forKey:@"type"];
-                        }
-                        
-                        NSString *imageURL = obj.cacheTask.assetModel.imageURL.absoluteString;
-                        NSString *imageURI = obj.cacheTask.assetModel.imageURI;
-                        [imgDic setValue:imageURL forKey:@"url"];
-                        [imgDic setValue:imageURI forKey:@"uri"];
-                        [imgDic setValue:@[@{@"url":imageURL}] forKey:@"url_list"];
-                        
-                        [imgs addObject:imgDic];
-                    }
-                }
-            }];
-            [fakeThreadInfo setValue:imgs forKey:@"large_image_list"];
-            [fakeThreadInfo setValue:imgs forKey:@"thumb_image_list"];
-            [fakeThreadInfo setValue:imgs forKey:@"ugcU13CutImageList"];
-        }
-        //编辑成功
-        [[NSNotificationCenter defaultCenter] postNotificationName:kTTForumBeginPostEditedThreadNotification object:nil userInfo:fakeThreadInfo];
         
         dispatch_async(dispatch_get_main_queue(), ^{
             if (finishBlock) {
                 finishBlock();
             }
-            [self postTaskWithTaskID:task.taskID concenID:task.concernID taskType:TTPostTaskTypeThread suggestedTask:task];
+            // 替换发送逻辑，使用UGC业务方自己提供的方法
+            [self postEditedThreadWith:postThreadModel];
         });
     });
 }
@@ -638,4 +544,210 @@ NSString * const TTPostTaskNotificationUserInfoKeyChallengeGroupID = kTTForumPos
     }];
     
 }
+
+#pragma mark - 外部带入帖子信息编辑发布
+
+- (FRUploadImageManager *)uploadImageManager {
+    if (!_uploadImageManager) {
+        _uploadImageManager = [[FRUploadImageManager alloc] init];
+    }
+    return _uploadImageManager;
+}
+
+- (void)uploadImagesWith:(TTPostThreadModel *)postThreadModel {
+    
+    NSMutableArray<FRUploadImageModel *> * images = (NSMutableArray<FRUploadImageModel*> *)[NSMutableArray array];
+    // 图片压缩任务
+    NSArray<TTUGCImageCompressTask*> *taskImages = postThreadModel.taskImages;
+    // 选中的图片
+    NSArray<UIImage*> *thumbImages = postThreadModel.thumbImages;
+    
+    // 构造图片上传数据模型
+    for (int i = 0; i < [taskImages count]; i ++) {
+        TTUGCImageCompressTask* task = [taskImages objectAtIndex:i];
+        UIImage* thumbImage = nil;
+        if (thumbImages.count > i) {
+            thumbImage = thumbImages[i];
+        }
+        FRUploadImageModel * model = [[FRUploadImageModel alloc] initWithCacheTask:task thumbnail:thumbImage];
+        model.webURI = task.assetModel.imageURI;
+        model.imageOriginWidth = task.assetModel.width;
+        model.imageOriginHeight = task.assetModel.height;
+        [images addObject:model];
+    }
+    
+    NSMutableDictionary *userInfo = @{}.mutableCopy;
+    if (postThreadModel.postID) {
+        userInfo[@"group_id"] = postThreadModel.postID;
+    }
+    
+    WeakSelf;
+    [self.uploadImageManager uploadPhotos:images extParameter:@{} progressBlock:^(int expectCount, int receivedCount) {
+        StrongSelf;
+        // TODO: 展示进度
+        
+    } finishBlock:^(NSError *error, NSArray<FRUploadImageModel*> *finishUpLoadModels) {
+        StrongSelf;
+        NSError *finishError = nil;
+        for (FRUploadImageModel *model in finishUpLoadModels) {
+            if (isEmptyString(model.webURI)) {
+                finishError = [NSError errorWithDomain:kFRPostThreadErrorDomain code:TTPostThreadErrorCodeUploadImgError userInfo:nil];
+                break;
+            }
+        }
+        
+        if (error || finishError) {
+            //端监控
+            //图片上传失败
+            NSMutableDictionary * monitorDictionary = [NSMutableDictionary dictionary];
+            [monitorDictionary setValue:@(images.count) forKey:@"img_count"];
+            NSMutableArray * imageNetworks = [NSMutableArray arrayWithCapacity:images.count];
+            
+            for (FRUploadImageModel * imageModel in images) {
+                NSInteger status = isEmptyString(imageModel.webURI)?0:1;
+                NSInteger code = 0;
+                if (imageModel.error) {
+                    code = imageModel.error.code;
+                }
+                [imageNetworks addObject:@{@"network":@(imageModel.networkConsume)
+                                           , @"local":@(imageModel.localCompressConsume)
+                                           , @"status":@(status)
+                                           , @"code":@(code)
+                                           , @"count":@(imageModel.uploadCount)
+                                           , @"size":@(imageModel.size)
+                                           , @"gif":@(imageModel.isGIF)
+                                           }];
+            }
+            [monitorDictionary setValue:imageNetworks.copy forKey:@"img_networks"];
+            if (error) {
+                [monitorDictionary setValue:@(error.code) forKey:@"error"];
+            }
+            
+            [[ToastManager manager] showToast:@"编辑失败"];
+            
+            // 更新帖子发布失败
+            [[NSNotificationCenter defaultCenter] postNotificationName:kTTForumPostEditedThreadFailureNotification object:nil userInfo:userInfo];
+            
+            // 图片上传失败
+            [[HMDTTMonitor defaultManager] hmdTrackService:@"ugc_post_edit_upload_image" metric:monitorDictionary category:@{@"status":@(1)} extra:nil];
+        }
+        else {
+            // 图片上传成功
+            [[HMDTTMonitor defaultManager] hmdTrackService:@"ugc_post_edit_upload_image" metric:nil category:@{@"status":@(0)} extra:nil];
+            // 插入上传完成的图片URIs
+            NSMutableDictionary *reqParams = [self constructEditedPostReqParamsFromThreadModel:postThreadModel];
+            NSMutableArray<NSString *> *imageUris = [NSMutableArray array];
+            [finishUpLoadModels enumerateObjectsUsingBlock:^(FRUploadImageModel * _Nonnull imageModel, NSUInteger idx, BOOL * _Nonnull stop) {
+                if(imageModel.webURI.length > 0) {
+                    [imageUris addObject:imageModel.webURI];
+                }
+            }];
+            reqParams[@"image_uris"] = [imageUris componentsJoinedByString:@","];
+            
+            // 带图片链接发布
+            [self postEditedPostWith:reqParams];
+        }
+    }];
+}
+
+- (void)postEditedThreadWith: (TTPostThreadModel *)postThreadModel {
+    
+    // 编辑完成开始发送更新请求
+    NSMutableDictionary *userInfo = @{}.mutableCopy;
+    if (postThreadModel.postID) {
+        userInfo[@"group_id"] = postThreadModel.postID;
+    }
+    [[NSNotificationCenter defaultCenter] postNotificationName:kTTForumBeginPostEditedThreadNotification object:nil userInfo:userInfo];
+    
+    if(postThreadModel.taskImages.count > 0) {
+        [self uploadImagesWith:postThreadModel];
+    }
+    // 没有选中图片就直接发布
+    else {
+        NSMutableDictionary *reqParams = [self constructEditedPostReqParamsFromThreadModel:postThreadModel];
+        [self postEditedPostWith: reqParams];
+    }
+}
+
+// 从postThreadModel转换出请求参数
+- (NSMutableDictionary *)constructEditedPostReqParamsFromThreadModel:(TTPostThreadModel *)postThreadModel {
+    
+    NSMutableDictionary *publishParams = [NSMutableDictionary dictionary];
+    
+    if(postThreadModel) {
+        
+        if(postThreadModel.postID.length > 0) {
+            publishParams[@"post_id"] = @(postThreadModel.postID.longLongValue);
+        }
+        
+        if(postThreadModel.social_group_id.length > 0) {
+            publishParams[@"social_group_id"] = @(postThreadModel.social_group_id.longLongValue);
+        }
+        
+        publishParams[@"content"] = postThreadModel.content;
+        publishParams[@"content_rich_span"] = postThreadModel.contentRichSpans;
+        publishParams[@"mention_concern"] = postThreadModel.mentionConcerns;
+        publishParams[@"mention_user"] = postThreadModel.mentionUsers;
+        publishParams[@"bind_type"] = @(postThreadModel.bindType);
+        // 小区点评相关
+        publishParams[@"neighborhood_id"] = @(postThreadModel.neighborhoodId.longLongValue);
+        publishParams[@"source"] = postThreadModel.source;
+        publishParams[@"scores"] = postThreadModel.scores;
+        publishParams[@"neighborhood_tags"] = postThreadModel.neighborhoodTags;
+    
+        // 报数相关
+        publishParams[@"enter_from"] = postThreadModel.enterFrom;
+        publishParams[@"page_type"] = postThreadModel.pageType;
+        publishParams[@"element_from"] = postThreadModel.elementFrom;
+    }
+    return publishParams;
+}
+
+// 真正发送请求
+- (void)postEditedPostWith:(NSMutableDictionary *)params {
+    NSString *post_id = nil;
+    if (params[@"post_id"]) {
+        post_id = [NSString stringWithFormat:@"%@",params[@"post_id"]];
+    }
+    NSMutableDictionary *userInfo = @{}.mutableCopy;
+    userInfo[@"group_id"] = post_id;
+    WeakSelf;
+    [FHHouseUGCAPI requestPublishEditedPostWithParam:params class:FHUGCEditedPostModel.class completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
+        StrongSelf;
+        
+        if(error) {
+            [[ToastManager manager] showToast:error.localizedDescription];
+            // 更新帖子发布失败
+            [[NSNotificationCenter defaultCenter] postNotificationName:kTTForumPostEditedThreadFailureNotification object:nil userInfo:userInfo];
+            return;
+        }
+        
+        if([model isKindOfClass:[FHUGCEditedPostModel class]]) {
+            FHUGCEditedPostModel *editPostModel = model;
+
+            // 数据转换
+            NSString *jsonString = editPostModel.data.threadCell;
+            if(jsonString.length > 0) {
+                // 模型转换
+                FHFeedUGCCellModel *cellModel = [FHFeedUGCCellModel modelFromFeed:jsonString];
+                
+                userInfo[@"group_id"] = post_id;
+                userInfo[@"thread_cell"] = jsonString;
+                userInfo[@"social_group_id"] = params[@"social_group_id"];
+                userInfo[@"publish_type"] = @(FHUGCPublishTypePost);
+            
+                //编辑成功
+                [[NSNotificationCenter defaultCenter] postNotificationName:kTTForumPostEditedThreadSuccessNotification object:nil userInfo:userInfo];
+                
+                return;
+            }
+        }
+        
+        // 更新帖子发布失败
+        [[NSNotificationCenter defaultCenter] postNotificationName:kTTForumPostEditedThreadFailureNotification object:nil userInfo:userInfo];
+        [[ToastManager manager] showToast:@"编辑失败"];
+    }];
+    
+}
+
 @end

@@ -27,17 +27,16 @@
 //#import "TTForumPostThreadStatusViewModel.h"
 #import "TTSettingsManager.h"
 #import "TTRelevantDurationTracker.h"
-#import <TTMonitor.h>
-//#import "Bubble-Swift.h"
+#import "TTMonitor.h"
 #import "FHHomeConfigManager.h"
 #import "FHEnvContext.h"
 #import "TTFeedCollectionWebListCell.h"
-#import <FHUtils.h>
+#import "FHUtils.h"
 #import <TTThemed/TTThemeManager.h>
 #import <TTArticleBase/SSCommonLogic.h>
 #import <Masonry/Masonry.h>
 #import <TTPlatformBaseLib/TTTrackerWrapper.h>
-#import <TTTracker/TTTracker.h>
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 #import <TTBaseLib/UIViewAdditions.h>
 #import <TTNetworkManager/TTNetworkManager.h>
 
@@ -169,10 +168,18 @@ TTFeedCollectionCellDelegate>
             [dict setValue:searchId forKey:@"origin_search_id"];
             [dict setValue:categoryName forKey:@"category_name"];
             
-            [TTTracker eventV3:@"enter_category" params:dict isDoubleSending:NO];
+            [BDTrackerProtocol eventV3:@"enter_category" params:dict isDoubleSending:NO];
         }else
         {
-            [TTTracker eventV3:@"enter_category" params:dict isDoubleSending:NO];
+            //切换城市之后埋点变化
+            if ([FHEnvContext sharedInstance].isRefreshFromCitySwitch) {
+                if (![[FHEnvContext sharedInstance] getConfigFromCache].cityAvailability.enable.boolValue) {
+                    [BDTrackerProtocol eventV3:@"enter_category" params:dict isDoubleSending:NO];
+                }
+            }else
+            {
+                [BDTrackerProtocol eventV3:@"enter_category" params:dict isDoubleSending:NO];
+            }
         }
         
     }
@@ -535,10 +542,10 @@ TTFeedCollectionCellDelegate>
                 [dict setValue:searchId forKey:@"origin_search_id"];
                 [dict setValue:categoryName forKey:@"category_name"];
 
-                [TTTracker eventV3:@"enter_category" params:dict isDoubleSending:NO];
+                [BDTrackerProtocol eventV3:@"enter_category" params:dict isDoubleSending:NO];
             }else
             {
-                [TTTracker eventV3:@"enter_category" params:dict isDoubleSending:NO];
+                [BDTrackerProtocol eventV3:@"enter_category" params:dict isDoubleSending:NO];
             }
                 
 //            NSDictionary *dict =  [[EnvContext shared] homePageParams].paramsGetter([:])

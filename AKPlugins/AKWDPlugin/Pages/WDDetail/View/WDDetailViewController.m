@@ -56,7 +56,6 @@
 #import <TTShare/TTShareManager.h>
 #import <TTThemed/TTThemeManager.h>
 #import <TTUIWidget/TTViewWrapper.h>
-#import <Crashlytics/Crashlytics.h>
 #import <TTNewsAccountBusiness/TTAccountBusiness.h>
 #import <TTImagePreviewAnimateManager/TTInteractExitHelper.h>
 #import <TTBaseLib/UITextView+TTAdditions.h>
@@ -65,6 +64,8 @@
 #import <TTUIWidget/TTBubbleView.h>
 #import <TTImpression/TTRelevantDurationTracker.h>
 #import <TTVideoService/TTFFantasyTracker.h>
+#import "TTCommentViewController.h"
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 
 
 extern NSInteger const kWDPostCommentBindingErrorCode;
@@ -179,7 +180,7 @@ static NSUInteger const kOldAnimationViewTag = 20161221;
 //        [goDetailDict setValue:model.answerEntity.ansid forKey:@"value"];
 //        [goDetailDict setValue:@"umeng" forKey:@"category"];
         if (![TTTrackerWrapper isOnlyV3SendingEnable]) {
-            [TTTracker eventData:goDetailDict];
+            [BDTrackerProtocol eventData:goDetailDict];
         }
         
         //Wenda_V3_DoubleSending
@@ -199,7 +200,7 @@ static NSUInteger const kOldAnimationViewTag = 20161221;
         
         [v3Dic removeObjectForKey:@"pct"];
         
-        [TTTracker eventV3:@"go_detail" params:v3Dic isDoubleSending:NO];
+        [BDTrackerProtocol eventV3:@"go_detail" params:v3Dic isDoubleSending:NO];
         
         if (!isEmptyString(model.answerEntity.ansid)) {
             [TTFFantasyTracker sharedInstance].lastGid = model.answerEntity.ansid;
@@ -345,7 +346,7 @@ static NSUInteger const kOldAnimationViewTag = 20161221;
 - (void)viewWillDisappear:(BOOL)animated
 {
     [super viewWillDisappear:animated];
-    
+    [[NSNotificationCenter defaultCenter] postNotificationName:UIMenuControllerWillHideMenuNotification object:nil];
     if (_isNewVersion) return;
     
     [self p_removeIndicatorPolicyView];
@@ -426,7 +427,7 @@ static NSUInteger const kOldAnimationViewTag = 20161221;
     [goDetailDict setValue:_detailModel.answerEntity.ansid forKey:@"value"];
     [goDetailDict setValue:@"umeng" forKey:@"category"];
     if (![TTTrackerWrapper isOnlyV3SendingEnable]) {
-        [TTTracker eventData:goDetailDict];
+        [BDTrackerProtocol eventData:goDetailDict];
     }
     
     
@@ -815,7 +816,14 @@ static NSUInteger const kOldAnimationViewTag = 20161221;
 
 - (void)p_buildCommentViewController
 {
-    self.commentViewController = [[NSClassFromString(@"TTCommentViewController") alloc] initWithViewFrame:[self p_contentVisableRect] dataSource:self delegate:self];
+    self.commentViewController = [[TTCommentViewController alloc] initWithViewFrame:[self p_contentVisableRect] dataSource:self delegate:self];
+    
+    TTCommentViewController *vc = (TTCommentViewController *)(self.commentViewController);
+    NSMutableDictionary *dict = @{}.mutableCopy;
+    dict[@"enter_from"] = self.detailModel.gdExtJsonDict[@"enter_from"];
+    vc.tracerDict = dict;
+    
+    
     self.commentViewController.enableImpressionRecording = YES;
     [self.commentViewController willMoveToParentViewController:self];
     [self addChildViewController:self.commentViewController];
@@ -1091,7 +1099,7 @@ static NSUInteger const kOldAnimationViewTag = 20161221;
     TTCommentWriteManager *commentManager = [[TTCommentWriteManager alloc] initWithCommentCondition:conditions commentViewDelegate:self commentRepostBlock:^(NSString *__autoreleasing *willRepostFwID) {
         *willRepostFwID = fwID;
     } extraTrackDict:nil bindVCTrackDict:nil commentRepostWithPreRichSpanText:nil readQuality:qualityModel];
-
+    commentManager.enterFrom = self.detailModel.gdExtJsonDict[@"enter_from"];
     self.commentWriteView = [[TTCommentWriteView alloc] initWithCommentManager:commentManager];
 
     self.commentWriteView.emojiInputViewVisible = switchToEmojiInput;
@@ -1335,7 +1343,7 @@ static NSUInteger const kOldAnimationViewTag = 20161221;
         stayPageDict[@"value"] = self.detailModel.answerEntity.ansid;
         stayPageDict[@"ext_value"] = @((NSInteger)duration);
         if (![TTTrackerWrapper isOnlyV3SendingEnable]) {
-            [TTTracker eventData:stayPageDict];
+            [BDTrackerProtocol eventData:stayPageDict];
         }
         
         //Wenda_V3_DoubleSending
@@ -1349,7 +1357,7 @@ static NSUInteger const kOldAnimationViewTag = 20161221;
         [v3Dic setValue:@"answer" forKey:@"page_type"];
         [v3Dic setValue:@"house_app2c_v2" forKey:@"event_type"];
 
-        [TTTracker eventV3:@"stay_page" params:v3Dic isDoubleSending:NO];
+        [BDTrackerProtocol eventV3:@"stay_page" params:v3Dic isDoubleSending:NO];
 
         [[TTRelevantDurationTracker sharedTracker]
          appendRelevantDurationWithGroupID:self.detailModel.answerEntity.ansid
@@ -1384,7 +1392,7 @@ static NSUInteger const kOldAnimationViewTag = 20161221;
     NSMutableDictionary * dict = [NSMutableDictionary dictionaryWithDictionary:dictInfo];
     [dict setValue:@"answer" forKey:@"tag"];
     [dict setValue:@"umeng" forKey:@"category"];
-    [TTTracker eventData:dict];
+    [BDTrackerProtocol eventData:dict];
 }
 
 #pragma mark - Notifications
@@ -1455,7 +1463,7 @@ static NSUInteger const kOldAnimationViewTag = 20161221;
                 }
                 [dict setValue:@1 forKey:@"is_redpacket"];
             }
-            [TTTracker eventV3:event params:[dict copy]];
+            [BDTrackerProtocol eventV3:event params:[dict copy]];
             
             NSMutableDictionary *followDic = [NSMutableDictionary dictionary];
             [followDic setValue:self.detailModel.answerEntity.user.userID forKey:@"id"];
@@ -1605,7 +1613,7 @@ static NSUInteger const kOldAnimationViewTag = 20161221;
     [contentItems addObject:[self.natantViewModel wd_customItems]];
     [self.shareManager displayActivitySheetWithContent:[contentItems copy]];
     
-    [TTTracker category:@"umeng" event:kWDDetailViewControllerUMEventName label:@"more_clicked" dict:self.detailModel.gdExtJsonDict];
+    [BDTrackerProtocol category:@"umeng" event:kWDDetailViewControllerUMEventName label:@"more_clicked" dict:self.detailModel.gdExtJsonDict];
 }
 
 #pragma mark - Tracker
@@ -1613,10 +1621,10 @@ static NSUInteger const kOldAnimationViewTag = 20161221;
 - (void)p_sendNatantViewVisableTrack
 {
     if ([self.detailView.detailWebView isNatantViewOnOpenStatus]) {
-        ttTrackEvent(kWDDetailViewControllerUMEventName, @"handle_close_drawer");
+        wrapperTrackEvent(kWDDetailViewControllerUMEventName, @"handle_close_drawer");
     }
     else {
-        ttTrackEvent(kWDDetailViewControllerUMEventName, @"handle_open_drawer");
+        wrapperTrackEvent(kWDDetailViewControllerUMEventName, @"handle_open_drawer");
     }
 }
 
@@ -1630,7 +1638,7 @@ static NSUInteger const kOldAnimationViewTag = 20161221;
         [dict setValue:self.detailModel.rid forKey:@"rule_id"];
         [dict setValue:self.detailModel.answerEntity.ansid forKey:@"group_id"];
         [dict setValue:@"wenda_answer" forKey:@"message_type"];
-        [TTTracker eventV3:@"push_page_back_to_feed" params:[dict copy]];
+        [BDTrackerProtocol eventV3:@"push_page_back_to_feed" params:[dict copy]];
     }
 }
 
@@ -1643,7 +1651,7 @@ static NSUInteger const kOldAnimationViewTag = 20161221;
             if (error || isEmptyString(result)) {
                 NSMutableDictionary *dict = [NSMutableDictionary dictionary];
                 [dict setValue:weakSelf.detailModel.answerEntity.ansid forKey:@"value"];
-                [TTTracker category:@"article" event:@"detail_load" label:@"loading" dict:dict];
+                [BDTrackerProtocol category:@"article" event:@"detail_load" label:@"loading" dict:dict];
             }
         }];
     }
@@ -1704,7 +1712,7 @@ static NSUInteger const kOldAnimationViewTag = 20161221;
     if (!isEmptyString(self.detailModel.answerEntity.ansid)) {
         [dict setValue:self.detailModel.answerEntity.ansid forKey:@"item_id"];
     }
-    [TTTracker eventData:dict];
+    [BDTrackerProtocol eventData:dict];
 }
 
 #pragma mark UIMenuController Delegate
@@ -1787,7 +1795,7 @@ static NSUInteger const kOldAnimationViewTag = 20161221;
     }
 
     [dict setValue:[[self class] sharePlatformByRequestType: requestType] forKey:@"share_platform"];
-    [TTTracker eventV3:@"rt_share_to_platform" params:[dict copy]];
+    [BDTrackerProtocol eventV3:@"rt_share_to_platform" params:[dict copy]];
 
 }
 
@@ -1819,7 +1827,8 @@ static NSUInteger const kOldAnimationViewTag = 20161221;
 {
     NSString *label = [WDShareUtilsHelper labelNameForShareActivity:activity shareState:(error ? NO : YES)];
     if (!isEmptyString(label)) {
-        ttTrackEventWithCustomKeys(kWDDetailViewControllerUMEventName, label, self.detailModel.answerEntity.ansid, nil, self.detailModel.gdExtJsonDict);
+        [BDTrackerProtocol trackEventWithCustomKeys:kWDDetailViewControllerUMEventName label:label value:nil source:self.detailModel.answerEntity.ansid extraDic:self.detailModel.gdExtJsonDict];
+//        ttTrackEventWithCustomKeys(kWDDetailViewControllerUMEventName, label, self.detailModel.answerEntity.ansid, nil, self.detailModel.gdExtJsonDict);
     }
 }
 
@@ -1837,6 +1846,7 @@ static NSUInteger const kOldAnimationViewTag = 20161221;
 
 - (void)webView:(nullable TTDetailWebviewContainer *)webViewContainer scrollViewDidScroll:(nullable UIScrollView *)scrollView
 {
+    [[NSNotificationCenter defaultCenter] postNotificationName:UIMenuControllerWillHideMenuNotification object:nil];
     UIScrollView *targetScrollView = [self.detailView.detailWebView isNewWebviewContainer] ? webViewContainer.containerScrollView: webViewContainer.webView.scrollView;
     
     if (scrollView == targetScrollView) {
@@ -1959,7 +1969,7 @@ static NSUInteger const kOldAnimationViewTag = 20161221;
             [dict setValue:@"umeng" forKey:@"category"];
             [dict setValue:@"answer_detail" forKey:@"tag"];
             [dict setValue:@"click_dislike" forKey:@"label"];
-            [TTTracker eventData:dict];
+            [BDTrackerProtocol eventData:dict];
         } else {
             self.detailModel.answerEntity.buryCount = [self.detailModel.answerEntity.buryCount longLongValue] >= 1 ? @([self.detailModel.answerEntity.buryCount longLongValue] - 1): @0;
             self.detailModel.answerEntity.isBuryed = NO;
@@ -1970,7 +1980,7 @@ static NSUInteger const kOldAnimationViewTag = 20161221;
             [dict setValue:answerEntity.user.userID forKey:@"user_id"];
             [dict setValue:@(10) forKey:@"group_source"];
             [dict setValue:@"detail" forKey:@"position"];
-            [TTTracker eventV3:@"rt_unbury" params:[dict copy]];
+            [BDTrackerProtocol eventV3:@"rt_unbury" params:[dict copy]];
         }
     }
 }
@@ -1981,7 +1991,7 @@ static NSUInteger const kOldAnimationViewTag = 20161221;
     [dict setValue:@"umeng" forKey:@"category"];
     [dict setValue:@"answer_detail" forKey:@"tag"];
     [dict setValue:@"click_report" forKey:@"label"];
-    [TTTracker eventData:dict];
+    [BDTrackerProtocol eventData:dict];
 }
 
 #pragma mark - WDBottomToolViewDelegate
@@ -2033,9 +2043,9 @@ static NSUInteger const kOldAnimationViewTag = 20161221;
     [dict setValue:@"house_app2c_v2" forKey:@"event_type"];
     
     if (self.detailModel.answerEntity.isDigg) {
-        [TTTracker eventV3:@"rt_like" params:[dict copy]];
+        [BDTrackerProtocol eventV3:@"rt_like" params:[dict copy]];
     } else {
-        [TTTracker eventV3:@"rt_unlike" params:[dict copy]];
+        [BDTrackerProtocol eventV3:@"rt_unlike" params:[dict copy]];
     }
 }
 
@@ -2047,7 +2057,7 @@ static NSUInteger const kOldAnimationViewTag = 20161221;
     [dict setValue:kWDDetailViewControllerUMEventName forKey:@"tag"];
     [dict setValue:@"click_next_answer" forKey:@"label"];
     [dict setValue:self.detailModel.answerEntity.ansid forKey:@"value"];
-    [TTTracker eventData:[dict copy]];
+    [BDTrackerProtocol eventData:[dict copy]];
 }
 
 #pragma mark - TTCommentDataSource
@@ -2270,7 +2280,7 @@ static NSUInteger const kOldAnimationViewTag = 20161221;
     if (!params[@"group_id"]) {
         params[@"group_id"] = params[@"qid"] ?: @"be_null";
     }
-    [TTTracker eventV3:@"rt_post_comment" params:params];
+    [BDTrackerProtocol eventV3:@"rt_post_comment" params:params];
     
     commentWriteManager.delegate = nil;
     self.commentViewController.hasSelfShown = YES;
@@ -2316,7 +2326,7 @@ static NSUInteger const kOldAnimationViewTag = 20161221;
     
     NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithDictionary:self.detailModel.gdExtJsonDict];
     dict[@"group_id"] = self.detailModel.answerEntity.ansid;
-    [TTTracker eventV3:@"answer_detail_write_answer" params:dict];
+    [BDTrackerProtocol eventV3:@"answer_detail_write_answer" params:dict];
 }
 
 - (void)headerView:(UIView<WDDetailHeaderView> *)headerView goodAnswerButtonDidTap:(UIButton *)button {
@@ -2327,7 +2337,7 @@ static NSUInteger const kOldAnimationViewTag = 20161221;
     
     NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithDictionary:self.detailModel.gdExtJsonDict];
     dict[@"group_id"] = self.detailModel.answerEntity.ansid;
-    [TTTracker eventV3:@"answer_detail_top_write_answer" params:dict];
+    [BDTrackerProtocol eventV3:@"answer_detail_top_write_answer" params:dict];
 }
 
 - (void)headerView:(UIView<WDDetailHeaderView> *)headerView answerButtonDidShow:(UIButton *)button
@@ -2338,7 +2348,7 @@ static NSUInteger const kOldAnimationViewTag = 20161221;
     _headerViewAnswerButtonShowed = YES;
     NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithDictionary:self.detailModel.gdExtJsonDict];
     dict[@"group_id"] = self.detailModel.answerEntity.ansid;
-    [TTTracker eventV3:@"answer_detail_write_answer_show" params:dict];
+    [BDTrackerProtocol eventV3:@"answer_detail_write_answer_show" params:dict];
 }
 
 - (void)headerView:(UIView<WDDetailHeaderView> *)headerView goodAnswerButtonDidShow:(UIButton *)button
@@ -2349,7 +2359,7 @@ static NSUInteger const kOldAnimationViewTag = 20161221;
     _headerViewGoodAnswerButtonShowed = YES;
     NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithDictionary:self.detailModel.gdExtJsonDict];
     dict[@"group_id"] = self.detailModel.answerEntity.ansid;
-    [TTTracker eventV3:@"answer_detail_top_write_answer_show" params:dict];
+    [BDTrackerProtocol eventV3:@"answer_detail_top_write_answer_show" params:dict];
 }
 
 - (void)headerViewDidPull:(UIView<WDDetailHeaderView> *)headerView
@@ -2360,7 +2370,7 @@ static NSUInteger const kOldAnimationViewTag = 20161221;
     _headerViewPulled = YES;
     NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithDictionary:self.detailModel.gdExtJsonDict];
     dict[@"group_id"] = self.detailModel.answerEntity.ansid;
-    [TTTracker eventV3:@"question_show_pull" params:dict];
+    [BDTrackerProtocol eventV3:@"question_show_pull" params:dict];
 }
 
 #pragma mark - Getter & Setter

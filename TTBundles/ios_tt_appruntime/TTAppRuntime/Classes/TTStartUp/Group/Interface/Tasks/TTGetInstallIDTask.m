@@ -13,7 +13,6 @@
 #import "TTModuleBridge.h"
 //#import "TTPhoneConnectWatchManager.h"
 #import "AccountKeyChainManager.h"
-#import "TTFingerprintManager.h"
 #import <TTBaseLib/NSDictionary+TTAdditions.h>
 #import "SSCommonLogic.h"
 #import <TTBaseLib/TTSandBoxHelper.h>
@@ -32,9 +31,9 @@ DEC_TASK("TTGetInstallIDTask",FHTaskTypeSerial,TASK_PRIORITY_HIGH+7);
 - (void)startWithApplication:(UIApplication *)application options:(NSDictionary *)launchOptions {
     [[self class] setupInstallService];
     
-    [[TTInstallIDManager sharedInstance] setDidRegisterBlock:^(NSString *deviceID, NSString *installID) {
-        [[TTFingerprintManager sharedInstance] startFetchFingerprintIfNeeded];
-    }];
+//    [[TTInstallIDManager sharedInstance] observeDeviceDidRegistered:^(NSString * _Nonnull deviceID, NSString * _Nonnull installID) {
+//        [[TTFingerprintManager sharedInstance] startFetchFingerprintIfNeeded];
+//    }];
 }
 
 + (void)setupInstallService {
@@ -43,9 +42,9 @@ DEC_TASK("TTGetInstallIDTask",FHTaskTypeSerial,TASK_PRIORITY_HIGH+7);
         NSString *did = [[[[AccountKeyChainManager sharedManager] accountFromKeychain] stringValueForKey:@"device_id" defaultValue:nil] copy];
         [mDict setValue:did forKey:@"backup_device_id"];
         BOOL needEncrypt = [SSCommonLogic useEncrypt];
-        if ([TTSandBoxHelper isInHouseApp]) {
-            needEncrypt = NO;
-        }
+//        if ([TTSandBoxHelper isInHouseApp]) {
+//            needEncrypt = NO;
+//        }
         [mDict setValue:@(needEncrypt) forKey:@"need_encrypt"];
         
         NSString *url = [[CommonURLSetting logBaseURL] stringByAppendingString:@"/service/2/device_register/"];
@@ -54,10 +53,11 @@ DEC_TASK("TTGetInstallIDTask",FHTaskTypeSerial,TASK_PRIORITY_HIGH+7);
         return [mDict copy];
     }];
     
-    [[TTInstallIDManager sharedInstance] startWithAppID:[TTSandBoxHelper ssAppID]
-                                                channel:[TTSandBoxHelper getCurrentChannel]
-                                                appName:[TTSandBoxHelper appName]
-                                            finishBlock:^(NSString *deviceID, NSString *installID) {
+    [TTInstallIDManager sharedInstance].appID = [TTSandBoxHelper ssAppID];
+    [TTInstallIDManager sharedInstance].channel = [TTSandBoxHelper getCurrentChannel];
+    [TTInstallIDManager sharedInstance].appName = [TTSandBoxHelper appName];
+    
+    [[TTInstallIDManager sharedInstance] startRegisterDeviceWithAutoActivated:YES success:^(NSString * _Nonnull deviceID, NSString * _Nonnull installID) {       
         // 更新installID
         if(!isEmptyString(installID)) {
             [ExploreExtenstionDataHelper saveSharedIID:installID];
@@ -70,9 +70,12 @@ DEC_TASK("TTGetInstallIDTask",FHTaskTypeSerial,TASK_PRIORITY_HIGH+7);
         if (!isEmptyString(deviceID)) {
             [ExploreExtenstionDataHelper saveSharedDeviceID:deviceID];
             
-//            [self sendDeveiceIDToWatch:deviceID];
+            //            [self sendDeveiceIDToWatch:deviceID];
         }
+    } failure:^(NSError * _Nonnull error) {
+        
     }];
+
 }
 
 //+ (void)sendDeveiceIDToWatch:(NSString *)deviceID {

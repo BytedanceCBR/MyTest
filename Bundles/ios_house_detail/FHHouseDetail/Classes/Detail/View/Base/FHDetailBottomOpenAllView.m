@@ -6,9 +6,9 @@
 //
 
 #import "FHDetailBottomOpenAllView.h"
-#import <Masonry.h>
+#import "Masonry.h"
 #import "UIFont+House.h"
-#import <UIImageView+BDWebImage.h>
+#import "UIImageView+BDWebImage.h"
 #import "FHCommonDefines.h"
 #import "FHDetailOldModel.h"
 #import "FHURLSettings.h"
@@ -18,9 +18,8 @@
 @interface FHDetailBottomOpenAllView ()
 
 @property (nonatomic, strong)   UIButton       *openAllBtn;
-@property (nonatomic, strong)   UILabel       *title;
-@property (nonatomic, strong)   UIImageView       *settingArrowImageView;
-@property (nonatomic, strong)   UIView       *topBorderView;
+
+
 
 
 @end

@@ -30,7 +30,7 @@
 #import <TTBaseLib/UIViewAdditions.h>
 #import <TTThemed/TTThemeManager.h>
 #import <TTPlatformBaseLib/TTTrackerWrapper.h>
-#import <UIColor+Theme.h>
+#import "UIColor+Theme.h"
 
 NSString *const kTTVReplyListCellIdentifier = @"kTTVReplyListCellIdentifier";
 #define kTTCommentCellDigButtonHitTestInsets UIEdgeInsetsMake(-30, -30, -10, -30)
@@ -304,8 +304,13 @@ NSString *const kTTVReplyListCellIdentifier = @"kTTVReplyListCellIdentifier";
     [[NSNotificationCenter defaultCenter] removeObserver:self name:UIMenuControllerWillHideMenuNotification object:nil];
     [self resetContentLabelBackgroundColor];
     
+//    UIMenuController *menu = [UIMenuController sharedMenuController];
+//    menu.menuItems = self.menuItems;
     UIMenuController *menu = [UIMenuController sharedMenuController];
-    menu.menuItems = self.menuItems;
+    if ([menu isMenuVisible]) {
+        [menu setMenuVisible:NO animated:YES];
+        return;
+    }
     
 }
 

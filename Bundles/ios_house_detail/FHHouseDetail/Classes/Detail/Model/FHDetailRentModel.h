@@ -62,6 +62,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *areaId;
 @property (nonatomic, copy , nullable) NSString *name;
 @property (nonatomic, copy , nullable) NSString *gaodeImageUrl;
+@property (nonatomic, strong, nullable) FHDetailGaodeImageModel *gaodeImage;//高德地图静态图
 @property (nonatomic, copy , nullable) NSString *areaName;
 @property (nonatomic, copy , nullable) NSString *districtId;
 @property (nonatomic, copy , nullable) NSString *pricingPerSqmV;
@@ -237,6 +238,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong , nullable) FHDisclaimerModel *disclaimer;
 @property (nonatomic, copy, nullable) NSString *reportUrl;
 @property (nonatomic, strong , nullable) FHDetailContactModel *contact;
+@property (nonatomic, strong , nullable) FHDetailContactModel *highlightedRealtor;
 @property (nonatomic, strong , nullable) FHDetailShareInfoModel *shareInfo;
 @property (nonatomic, strong, nullable) FHRentDetailResponseDataUserStatusModel* userStatus;
 @property (nonatomic, assign) NSInteger status;
@@ -244,6 +246,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong , nullable) NSArray<FHHouseTagsModel> *tags;
 @property (nonatomic, strong , nullable) FHRentDetailImShareInfoModel *imShareInfo;
 @property (nonatomic, strong , nullable) NSArray<FHFillFormAgencyListItemModel> *chooseAgencyList;
+@property (nonatomic, strong, nullable) FHClueAssociateInfoModel *middleSubscriptionAssociateInfo;
+@property (nonatomic, strong, nullable) FHClueAssociateInfoModel *highlightedRealtorAssociateInfo;
 
 @end
 

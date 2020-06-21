@@ -23,7 +23,7 @@
 #import <HTSVideoPlay/HTSVideoPageParamHeader.h>
 #import <TTUIWidget/TTNavigationController.h>
 #import <TTBaseLib/TTURLUtils.h>
-#import <ReactiveObjC.h>
+#import "ReactiveObjC.h"
 
 #import "TTFeedDislikeView.h"
 #import "TSVTransitionAnimationManager.h"
@@ -34,10 +34,10 @@
 #import "TTAccountManager.h"
 #import "ExploreListHelper.h"
 #import "AWEVideoConstants.h"
-#import <TTSettingsManager.h>
+#import "TTSettingsManager.h"
 #import "IESVideoPlayer.h"
 #import "AWEVideoConstants.h"
-#import <TSVPrefetchVideoManager.h>
+#import "TSVPrefetchVideoManager.h"
 #import "TTHTSVideoConfiguration.h"
 #import "TTHTSVideoConfiguration.h"
 #import "TTMonitor.h"
@@ -73,7 +73,6 @@
 #import "TSVCategory.h"
 //#import "TSVStoryContainerView.h"
 #import "TSVMonitorManager.h"
-//#import "Bubble-Swift.h"
 #import "FHEnvContext.h"
 #import "TTCategoryStayTrackManager.h"
 #import <TTBaseLib/UIViewAdditions.h>
@@ -81,6 +80,7 @@
 #import <TTArticleBase/SSCommonLogic.h>
 #import <BDTSharedHeaders/SSCommonDefines.h>
 #import <TTBaseLib/TTUIResponderHelper.h>
+#import "FHUserTracker.h"
 
 #define kDefaultDismissDuration 2.0f
 #define kColumnSpacing 1
@@ -1094,7 +1094,9 @@ TTAccountMulticastProtocol
 
 - (void)needRerecordImpressions
 {
-    [self processVisibleCellsImpress];
+    dispatch_async(dispatch_get_main_queue(), ^{
+       [self processVisibleCellsImpress];
+    });
 }
 
 - (void)processVisibleCellsImpress
@@ -1550,7 +1552,8 @@ TTAccountMulticastProtocol
     [traceParams setValue:dictTraceData.shortVideoOriginalData.shortVideo.groupSource forKey:@"group_source"];
     [traceParams setValue:@(dictTraceData.cellType) ? : @"be_null" forKey:@"cell_type"];
 
-    [TTTracker eventV3:@"client_show" params:traceParams];
+//    [BDTrackerProtocol eventV3:@"client_show" params:traceParams];
+    [FHUserTracker writeEvent:@"client_show" params:traceParams];
 }
 
 - (void)eventV3ForRefresh
@@ -1677,7 +1680,7 @@ TTAccountMulticastProtocol
         return;
     }
 
-    NSDictionary *exploreMixedListConsumeTimeStamps = [[context objectForKey:kExploreFetchListConditionKey] objectForKey:kExploreFetchListRefreshOrLoadMoreConsumeTimeStampsKey];
+    NSDictionary *exploreMixedListConsumeTimeStamps = [(NSDictionary *)[context objectForKey:kExploreFetchListConditionKey] objectForKey:kExploreFetchListRefreshOrLoadMoreConsumeTimeStampsKey];
 
     NSMutableDictionary *mutDict = [[NSMutableDictionary alloc] initWithCapacity:3];
 

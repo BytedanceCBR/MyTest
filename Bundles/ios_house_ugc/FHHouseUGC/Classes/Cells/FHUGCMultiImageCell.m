@@ -6,8 +6,7 @@
 //
 
 #import "FHUGCMultiImageCell.h"
-#import <UIImageView+BDWebImage.h>
-#import "FHUGCCellHeaderView.h"
+#import "UIImageView+BDWebImage.h"
 #import "FHUGCCellUserInfoView.h"
 #import "FHUGCCellBottomView.h"
 #import "FHUGCCellMultiImageView.h"
@@ -15,8 +14,9 @@
 #import "TTBaseMacro.h"
 #import "FHUGCCellOriginItemView.h"
 #import "TTRoute.h"
-#import <TTBusinessManager+StringUtils.h>
-#import <UIViewAdditions.h>
+#import "TTBusinessManager+StringUtils.h"
+#import "UIViewAdditions.h"
+#import "FHUGCCellAttachCardView.h"
 
 #define leftMargin 20
 #define rightMargin 20
@@ -27,15 +27,17 @@
 #define guideViewHeight 17
 #define topMargin 20
 #define originViewHeight 80
+#define attachCardViewHeight 57
 
-@interface FHUGCMultiImageCell ()<TTUGCAttributedLabelDelegate>
+@interface FHUGCMultiImageCell ()<TTUGCAsyncLabelDelegate>
 
-@property(nonatomic ,strong) TTUGCAttributedLabel *contentLabel;
+@property(nonatomic ,strong) TTUGCAsyncLabel *contentLabel;
 @property(nonatomic ,strong) FHUGCCellMultiImageView *multiImageView;
 @property(nonatomic ,strong) FHUGCCellUserInfoView *userInfoView;
 @property(nonatomic ,strong) FHUGCCellBottomView *bottomView;
 @property(nonatomic ,strong) FHFeedUGCCellModel *cellModel;
 @property(nonatomic ,strong) FHUGCCellOriginItemView *originView;
+@property(nonatomic ,strong) FHUGCCellAttachCardView *attachCardView;
 @property(nonatomic ,assign) CGFloat imageViewheight;
 
 @end
@@ -64,21 +66,14 @@
 }
 
 - (void)initViews {
-    self.userInfoView = [[FHUGCCellUserInfoView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, 0)];
+    self.userInfoView = [[FHUGCCellUserInfoView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, userInfoViewHeight)];
     __weak typeof(self) wself = self;
     [self.contentView addSubview:_userInfoView];
     
-    self.contentLabel = [[TTUGCAttributedLabel alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width - leftMargin - rightMargin, 0)];
+    self.contentLabel = [[TTUGCAsyncLabel alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width - leftMargin - rightMargin, 0)];
     _contentLabel.numberOfLines = maxLines;
     _contentLabel.layer.masksToBounds = YES;
     _contentLabel.backgroundColor = [UIColor whiteColor];
-    NSDictionary *linkAttributes = @{
-                                     NSForegroundColorAttributeName : [UIColor themeRed3],
-                                     NSFontAttributeName : [UIFont themeFontRegular:16]
-                                     };
-    self.contentLabel.linkAttributes = linkAttributes;
-    self.contentLabel.activeLinkAttributes = linkAttributes;
-    self.contentLabel.inactiveLinkAttributes = linkAttributes;
     _contentLabel.delegate = self;
     [self.contentView addSubview:_contentLabel];
     
@@ -86,7 +81,7 @@
     [self.contentView addSubview:_multiImageView];
     self.imageViewheight = [FHUGCCellMultiImageView viewHeightForCount:3 width:[UIScreen mainScreen].bounds.size.width - leftMargin - rightMargin];
     
-    self.originView = [[FHUGCCellOriginItemView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width - leftMargin - rightMargin, 0)];
+    self.originView = [[FHUGCCellOriginItemView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width - leftMargin - rightMargin, originViewHeight)];
     _originView.hidden = YES;
     _originView.goToLinkBlock = ^(FHFeedUGCCellModel * _Nonnull cellModel, NSURL * _Nonnull url) {
         if(wself.delegate && [wself.delegate respondsToSelector:@selector(gotoLinkUrl:url:)]){
@@ -95,7 +90,11 @@
     };
     [self.contentView addSubview:_originView];
     
-    self.bottomView = [[FHUGCCellBottomView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, 0)];
+    self.attachCardView = [[FHUGCCellAttachCardView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width - leftMargin - rightMargin, attachCardViewHeight)];
+    _attachCardView.hidden = YES;
+    [self.contentView addSubview:_attachCardView];
+    
+    self.bottomView = [[FHUGCCellBottomView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, bottomViewHeight)];
     [_bottomView.commentBtn addTarget:self action:@selector(commentBtnClick) forControlEvents:UIControlEventTouchUpInside];
     [_bottomView.guideView.closeBtn addTarget:self action:@selector(closeGuideView) forControlEvents:UIControlEventTouchUpInside];
     [self.contentView addSubview:_bottomView];
@@ -129,6 +128,11 @@
     self.originView.left = leftMargin;
     self.originView.width = [UIScreen mainScreen].bounds.size.width - leftMargin - rightMargin;
     self.originView.height = originViewHeight;
+    
+    self.attachCardView.top = self.multiImageView.bottom + 10;
+    self.attachCardView.left = leftMargin;
+    self.attachCardView.width = [UIScreen mainScreen].bounds.size.width - leftMargin - rightMargin;
+    self.attachCardView.height = attachCardViewHeight;
 }
 
 - (UILabel *)LabelWithFont:(UIFont *)font textColor:(UIColor *)textColor {
@@ -152,10 +156,7 @@
     self.currentData = data;
     self.cellModel = cellModel;
     //设置userInfo
-    self.userInfoView.cellModel = cellModel;
-    self.userInfoView.userName.text = cellModel.user.name;
-    self.userInfoView.descLabel.attributedText = cellModel.desc;
-    [self.userInfoView.icon bd_setImageWithURL:[NSURL URLWithString:cellModel.user.avatarUrl] placeholder:[UIImage imageNamed:@"fh_mine_avatar"]];
+    [self.userInfoView refreshWithData:cellModel];
     //设置底部
     self.bottomView.cellModel = cellModel;
     
@@ -180,21 +181,36 @@
         self.contentLabel.hidden = NO;
         self.contentLabel.height = cellModel.contentHeight;
         self.multiImageView.top = self.userInfoView.bottom + 20 + cellModel.contentHeight;
-        [FHUGCCellHelper setRichContent:self.contentLabel model:cellModel];
+        [FHUGCCellHelper setAsyncRichContent:self.contentLabel model:cellModel];
     }
     //图片
     [self.multiImageView updateImageView:cellModel.imageList largeImageList:cellModel.largeImageList];
-    //origin
+    
+    UIView *lastView = self.multiImageView;
+    CGFloat topOffset = 10;
+     //origin
     if(cellModel.originItemModel){
         self.originView.hidden = NO;
         [self.originView refreshWithdata:cellModel];
-        self.originView.top = self.multiImageView.bottom + 10;
+        self.originView.top = lastView.bottom + topOffset;
         self.originView.height = cellModel.originItemHeight;
-        self.bottomView.top = self.multiImageView.bottom + cellModel.originItemHeight + 20;
+        topOffset += cellModel.originItemHeight;
+        topOffset += 10;
     }else{
         self.originView.hidden = YES;
-        self.bottomView.top = self.multiImageView.bottom + 10;
     }
+    //attach card
+    if(cellModel.attachCardInfo){
+        self.attachCardView.hidden = NO;
+        [self.attachCardView refreshWithdata:cellModel];
+        self.attachCardView.top = lastView.bottom + topOffset;
+        topOffset += attachCardViewHeight;
+        topOffset += 10;
+    }else{
+        self.attachCardView.hidden = YES;
+    }
+    
+    self.bottomView.top = lastView.bottom + topOffset;
     
     [self showGuideView];
 }
@@ -213,6 +229,10 @@
         
         if(cellModel.originItemModel){
             height += (cellModel.originItemHeight + 10);
+        }
+        
+        if(cellModel.attachCardInfo){
+            height += (attachCardViewHeight + 10);
         }
         
         if(cellModel.isInsertGuideCell){
@@ -268,9 +288,9 @@
     }
 }
 
-#pragma mark - TTUGCAttributedLabelDelegate
+#pragma mark - TTUGCAsyncLabelDelegate
 
-- (void)attributedLabel:(TTUGCAttributedLabel *)label didSelectLinkWithURL:(NSURL *)url {
+- (void)asyncLabel:(TTUGCAsyncLabel *)label didSelectLinkWithURL:(NSURL *)url {
     if([url.absoluteString isEqualToString:defaultTruncationLinkURLString]){
         if(self.delegate && [self.delegate respondsToSelector:@selector(lookAllLinkClicked:cell:)]){
             [self.delegate lookAllLinkClicked:self.cellModel cell:self];

@@ -10,6 +10,7 @@
 #import "FHCommunityFeedListController.h"
 #import "FHNearbyViewController.h"
 #import "FHMyJoinViewController.h"
+#import "FHHouseFindViewController.h"
 
 @interface FHCommunityCollectionCell ()
 
@@ -34,11 +35,8 @@
         _type = type;
         [self initViews];
     }else{
-        if(self.type == FHCommunityCollectionCellTypeNearby || self.type == FHCommunityCollectionCellTypeMyJoin){
-            self.vc.tracerDict = [self traceDic].mutableCopy;
-        }
-//        [self.vc viewWillAppear:NO];
-        
+        self.vc.tracerDict = [self traceDic].mutableCopy;
+
         if(self.type == FHCommunityCollectionCellTypeNearby){
             FHNearbyViewController *vc = (FHNearbyViewController *)self.vc;
             [vc viewWillAppear];
@@ -74,17 +72,9 @@
         FHMyJoinViewController *vc = [[FHMyJoinViewController alloc] init];
         vc.withTips = self.withTips;
         self.vc = vc;
-    }else if(self.type == FHCommunityCollectionCellTypeDiscovery){
-        ArticleTabBarStyleNewsListViewController *ariticleListVC = [[ArticleTabBarStyleNewsListViewController alloc] init];
-        ariticleListVC.isShowTopSearchPanel = NO;
-        self.vc = ariticleListVC;
-    }else{
-        
     }
     
-    if(self.type == FHCommunityCollectionCellTypeNearby || self.type == FHCommunityCollectionCellTypeMyJoin){
-        self.vc.tracerDict = [self traceDic].mutableCopy;
-    }
+    self.vc.tracerDict = [self traceDic].mutableCopy;
     
     if(self.vc){
         self.vc.view.frame = self.bounds;
@@ -96,9 +86,10 @@
     return _vc;
 }
 
-- (void)refreshData:(BOOL)isHead {
+- (void)refreshData:(BOOL)isHead isClick:(BOOL)isClick {
     if([self.vc isKindOfClass:[FHNearbyViewController class]]){
         FHNearbyViewController *vc = (FHNearbyViewController *)self.vc;
+        vc.feedVC.isRefreshTypeClicked = isClick;
         if(isHead){
             [vc.feedVC scrollToTopAndRefreshAllData];
         }else{
@@ -106,6 +97,7 @@
         }
     }else if([self.vc isKindOfClass:[FHMyJoinViewController class]]){
         FHMyJoinViewController *vc = (FHMyJoinViewController *)self.vc;
+        vc.feedListVC.isRefreshTypeClicked = isClick;
         [vc refreshFeedListData:isHead];
     }
 }
@@ -113,6 +105,7 @@
 - (NSDictionary *)traceDic {
     NSString *enterType = self.enterType ? self.enterType : @"default";
     return @{
+             @"origin_from":@"neighborhood_tab",
              @"enter_from":@"neighborhood_tab",
              @"enter_type":self.enterType,
              };

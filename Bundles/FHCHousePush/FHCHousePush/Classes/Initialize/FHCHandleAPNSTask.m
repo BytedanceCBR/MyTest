@@ -7,7 +7,7 @@
 
 #import "FHCHandleAPNSTask.h"
 #import "ArticleAPNsManager.h"
-#import <TTAccountBusiness.h>
+#import "TTAccountBusiness.h"
 //#import "TTDetailContainerViewController.h"
 #import "SSAPNsAlertManager.h"
 //#import "SSADManager.h"
@@ -26,13 +26,16 @@
 #import <TTAppRuntime/NewsBaseDelegate.h>
 #import <TTService/TTDetailContainerViewController.h>
 #import <TTAppRuntime/TTBackgroundModeTask.h>
-#import <TTAdSplashMediator.h>
+#import "TTAdSplashMediator.h"
 #import <TTAppRuntime/SSUserSettingManager.h>
 //#import <TTAppRuntime/TTIntroduceViewTask.h>
 #import <TTAppRuntime/TTStartupTasksTracker.h>
 #import <TTAppRuntime/TTProjectLogicManager.h>
 #import "TTLaunchDefine.h"
-#import <HMDTTMonitor.h>
+#import "HMDTTMonitor.h"
+#import "FHIntroduceManager.h"
+#import <FHHouseBase/FHEnvContext.h>
+#import <BDALog/BDAgileLog.h>
 
 DEC_TASK_N(FHCHandleAPNSTask,FHTaskTypeSerial,TASK_PRIORITY_HIGH+12);
 
@@ -92,11 +95,16 @@ static NSString * const kTTArticleDeviceToken = @"ArticleDeviceToken";
 
 - (void)startWithApplication:(UIApplication *)application options:(NSDictionary *)launchOptions
 {
-    [NewsBaseDelegate startRegisterRemoteNotification];
-    //如果展示开屏广告时候有弹窗延迟弹出
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(splashViewDisappearAnimationDidFinished:) name:@"kTTAdSplashShowFinish" object:nil];
     
     [SharedAppDelegate setIsColdLaunch:YES];
+    
+    if (![[FHEnvContext sharedInstance] hasConfirmPermssionProtocol]) {
+        return;
+    }
+    
+    [NewsBaseDelegate startRegisterRemoteNotification];
+    //如果展示开屏广告时候有弹窗延迟弹出
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(splashViewDisappearAnimationDidFinished:) name:@"kTTAdSplashShowFinish" object:nil];        
     
     if ([TTDeviceHelper OSVersionNumber] < 10.0 && [launchOptions objectForKey:UIApplicationLaunchOptionsRemoteNotificationKey]) {
         double delayInSeconds = 1;
@@ -190,9 +198,9 @@ static NSString * const kTTArticleDeviceToken = @"ArticleDeviceToken";
     [[HMDTTMonitor defaultManager] hmdTrackService:@"push_register_token_result" metric:nil category:@{@"status":@(status)} extra:nil];
 
     [TTBackgroundModeTask reportDeviceTokenByAppLogout];
-#if DEBUG
-    NSLog(@"push_device_token = %@", deviceTokenString);
-#endif
+    
+    BDALOG_INFO(@"push_device_token = %@", deviceTokenString);
+
 }
 
 - (void)application:(UIApplication *)application didFailToRegisterForRemoteNotificationsWithError:(NSError *)error
@@ -249,7 +257,9 @@ static NSString * const kTTArticleDeviceToken = @"ArticleDeviceToken";
         [dict setValue:[userInfo tt_stringValueForKey:@"o_url"]
                 forKey:kSSAPNsAlertManagerSchemaKey];
         [dict setValue:[[[userInfo tt_dictionaryValueForKey:@"aps"]
-                         tt_dictionaryValueForKey:@"alert"] tt_stringValueForKey:@"body"] forKey:kSSAPNsAlertManagerTitleKey];
+                         tt_dictionaryValueForKey:@"alert"] tt_stringValueForKey:@"title"] forKey:kSSAPNsAlertManagerTitleKey];
+        [dict setValue:[[[userInfo tt_dictionaryValueForKey:@"aps"]
+                         tt_dictionaryValueForKey:@"alert"] tt_stringValueForKey:@"body"] forKey:kSSAPNsAlertManagerContentKey];
         [dict setValue:@([userInfo tt_longlongValueForKey:@"id"])
                 forKey:kSSAPNsAlertManagerOldApnsTypeIDKey];
         [dict setValue:[userInfo tt_stringValueForKey:@"rid"]
@@ -259,13 +269,13 @@ static NSString * const kTTArticleDeviceToken = @"ArticleDeviceToken";
         [dict setValue:[userInfo tt_stringValueForKey:@"attachment"]
                 forKey:kSSAPNsAlertManagerAttachmentKey];
         
-        //        //如果有开屏广告正在显示 就滞后显示推送弹窗
+        //        //如果有开屏广告正在显示 就滞后显示推送弹窗, 增加一个引导页显示的条件 by xsm
         //        if(![[SSADManager shareInstance] isSplashADShowed]) {
         //            [[SSAPNsAlertManager sharedManager] showRemoteNotificationAlert:dict];
         //        } else {
         //            [[self class] setRemoteNotificationDict:dict];
         //        }
-        if (![[TTAdSplashMediator shareInstance] isAdShowing]) {
+        if (![[TTAdSplashMediator shareInstance] isAdShowing] && ![FHIntroduceManager sharedInstance].isShowing) {
 //#undef NSLog
 //            NSLog(@"add by zjing for test---notification:%@",userInfo);
             

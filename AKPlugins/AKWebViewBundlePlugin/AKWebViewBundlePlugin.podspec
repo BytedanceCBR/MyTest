@@ -23,22 +23,5 @@ Pod::Spec.new do |s|
   s.resources        = 'Classes/Resources/**/*'
   s.prefix_header_file = 'Classes/TTWebViewBundle-prefix.pch'
 
-  s.dependency 'TTBaseLib'
-  s.dependency 'TTThemed'
-  s.dependency 'TTSettingsManager'
-  s.dependency 'TTNetworkManager', '<3'
-  s.dependency 'TTPlatformBaseLib'
-  s.dependency 'TTTracker'
-  s.dependency 'TTNetBusiness'
-  s.dependency 'TTRexxar'
-  s.dependency 'TTAdModule'
-  s.dependency 'TTImpression'
-  s.dependency 'Masonry'
-  s.dependency 'AKShareServicePlugin'
-  s.dependency 'TTShare/TTShareBasic/TTWeChatShare'
-  s.dependency 'TTShare/TTShareBasic/TTQQShare'
-  s.dependency 'TTShare/TTShareBusiness/TTShareWeChatBusiness'
-  s.dependency 'TTShare/TTShareBusiness/TTShareQQBusiness'
-  s.dependency 'BDTBasePlayer'
   
 end

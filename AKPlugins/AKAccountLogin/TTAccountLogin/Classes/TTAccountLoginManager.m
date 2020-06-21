@@ -9,10 +9,10 @@
 #import "TTAccountLoginManager.h"
 #import "TTAccountNavigationController.h"
 #import "TTAccountPadNavigationController.h"
-#import <TTUIResponderHelper.h>
-#import <TTDeviceHelper.h>
+#import "TTUIResponderHelper.h"
+#import "TTDeviceHelper.h"
 #import "TTAccountLoginConfLogic.h"
-#import <TTSandBoxHelper.h>
+#import "TTSandBoxHelper.h"
 #import <TTAccountSDK/TTAccount+PlatformAuthLogin.h>
 
 
@@ -433,7 +433,7 @@ static BOOL s_loginAlertShowing = NO;
         if ([params tta_stringForKey:@"enter_type"] != nil) {
             [dict setObject:[params tta_stringForKey:@"enter_type"] forKey:@"enter_type"];
         }
-        if ([params tta_stringForKey:@"need_pop_vc"] != nil) {
+        if (params[@"need_pop_vc"] && [params tta_stringForKey:@"need_pop_vc"] != nil) {
             [dict setObject:[params tta_stringForKey:@"need_pop_vc"] forKey:@"need_pop_vc"];
         }
         if (params[@"from_ugc"]) {
@@ -461,7 +461,7 @@ static BOOL s_loginAlertShowing = NO;
         if ([params tta_stringForKey:@"enter_type"] != nil) {
             [dict setObject:[params tta_stringForKey:@"enter_type"] forKey:@"enter_type"];
         }
-        if ([params tta_stringForKey:@"need_pop_vc"] != nil) {
+        if (params[@"need_pop_vc"] && [params tta_stringForKey:@"need_pop_vc"] != nil) {
             [dict setObject:[params tta_stringForKey:@"need_pop_vc"] forKey:@"need_pop_vc"];
         }
         if (params[@"from_ugc"]) {
@@ -472,7 +472,6 @@ static BOOL s_loginAlertShowing = NO;
     TTRouteUserInfo* userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
     [[TTRoute sharedRoute] openURLByPresentViewController:[NSURL URLWithString:@"fschema://flogin"] userInfo:userInfo];
 }
-
 
 + (void)showQuickFLoginVCWithParams:(NSDictionary *)params completeBlock:(TTAccountLoginCompletionBlock)complete
 {

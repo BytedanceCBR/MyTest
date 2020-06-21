@@ -15,7 +15,7 @@
 
 #import "NetworkUtilities.h"
 #import "TTNetworkManager.h"
-#import <TTAccountBusiness.h>
+#import "TTAccountBusiness.h"
 
 @interface WDFetchAnswerContentHelper ()
 
@@ -194,7 +194,7 @@
             [dict setValue:@0 forKey:@"error_type"];
             [dict setValue:@(error.code) forKey:@"status"];
             [dict setValue:error.localizedDescription forKey:@"error_msg"];
-            [TTTracker category:@"answer"
+            [BDTrackerProtocol category:@"answer"
                                  event:@"detail_load"
                                  label:@"error"
                                   dict:dict];
@@ -221,7 +221,7 @@
                 if ([[data objectForKey:@"delete"] integerValue] == 1) {
                     NSMutableDictionary *dict = [NSMutableDictionary dictionary];
                     [dict setValue:answerEntity.ansid forKey:@"value"];
-                    [TTTracker category:@"answer"
+                    [BDTrackerProtocol category:@"answer"
                                          event:@"detail_load"
                                          label:@"delete"
                                           dict:dict];
@@ -255,7 +255,7 @@
         [dict setValue:answerEntity.ansid forKey:@"value"];
         [dict setValue:@1 forKey:@"error_type"];
         [dict setValue:errorTips forKey:@"error_msg"];
-        [TTTracker category:@"answer"
+        [BDTrackerProtocol category:@"answer"
                              event:@"detail_load"
                              label:@"error"
                               dict:dict];

@@ -25,17 +25,17 @@
 #import "TTTrackerWrapper.h"
 #import "ExploreMomentDefine.h"
 #import "UIViewController+Refresh_ErrorHandler.h"
-#import <TTAccountBusiness.h>
+#import "TTAccountBusiness.h"
 #import "TTNavigationController.h"
 
-#import <TTInteractExitHelper.h>
+#import "TTInteractExitHelper.h"
 #import "TTInteractExitHelper.h"
 //#import "TTRedPacketManager.h"
 //#import "TTCertificationConst.h"
-#import <UIView+CustomTimingFunction.h>
+#import "UIView+CustomTimingFunction.h"
 #import "TTPersonalHomeSinglePlatformFollowersInfoModel.h"
 #import <TTVerifyKit/TTVerifyIconHelper.h>
-#import <ExploreMomentDefine_Enums.h>
+#import "ExploreMomentDefine_Enums.h"
 #import "FriendModel.h"
 #import <TTBaseLib/TTUIResponderHelper.h>
 #import <TTThemed/TTThemeManager.h>
@@ -809,7 +809,7 @@ TTAccountMulticastProtocol
 //            status = @"identity";
 //        }
 //        NSDictionary *params = @{@"source": @"homepage", @"status": status};
-//        [TTTracker eventV3:event params:params];
+//        [BDTrackerProtocol eventV3:event params:params];
 //    } else {
 //        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil message:@"本月提交认证过于频繁，请核实信息后下月重试" delegate:nil cancelButtonTitle:@"知道了" otherButtonTitles:nil];
 //        [alert show];

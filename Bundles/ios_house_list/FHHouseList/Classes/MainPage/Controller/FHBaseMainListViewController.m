@@ -12,11 +12,13 @@
 #import <FHHouseBase/FHHouseType.h>
 #import "FHBaseMainListViewModel.h"
 #import <TTBaseLib/UIViewAdditions.h>
-#import "FHHouseListRedirectTipView.h"
 #import <FHHouseBase/FHUserTracker.h>
 #import <TTUIWidget/UIViewController+Track.h>
 #import <TTUIWidget/UIViewController+NavigationBarStyle.h>
 #import <FHHouseBase/FHBaseTableView.h>
+#import "FHMainOldTopView.h"
+#import "FHMainRentTopView.h"
+#import "FHMainListTableView.h"
 
 #define TOP_HOR_PADDING 3
 
@@ -28,10 +30,10 @@
 @property(nonatomic , strong) FHMainListTopView *topView;
 @property(nonatomic , strong, readwrite) UITableView *tableView;
 @property(nonatomic , assign) FHHouseType houseType;
-@property (nonatomic , strong) FHHouseListRedirectTipView *redirectTipView;
 @property(nonatomic , strong) FHBaseMainListViewModel *viewModel;
 @property(nonatomic , strong) FHErrorView *errorView;
 @property (nonatomic , strong) TTRouteParamObj *paramObj;
+@property (nonatomic, assign)   BOOL     isViewDidDisapper;
 
 @property (nonatomic , copy) NSString *associationalWord;// 联想词
 
@@ -76,7 +78,7 @@
 -(UITableView *)tableView
 {
     if (!_tableView) {
-        _tableView = [[FHBaseTableView alloc] init];
+        _tableView = [[FHMainListTableView alloc] init];
         if (@available(iOS 11.0 , *)) {
             _tableView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
             UIEdgeInsets inset = UIEdgeInsetsZero;
@@ -88,6 +90,8 @@
         _tableView.estimatedSectionHeaderHeight = 0;
         _tableView.estimatedSectionFooterHeight = 0;
         _tableView.scrollsToTop = YES;
+        _tableView.bounces = NO;
+        _tableView.keyboardDismissMode = UIScrollViewKeyboardDismissModeOnDrag;
     }
     return _tableView;
 }
@@ -96,8 +100,21 @@
 -(void)initNavbar
 {
     // FHFakeInputNavbarTypeMessageAndMap 二手房大类页显示消息和小红点
-    FHFakeInputNavbarType type = (_houseType == FHHouseTypeSecondHandHouse ? FHFakeInputNavbarTypeMessageAndMap : FHFakeInputNavbarTypeDefault);
+    FHFakeInputNavbarType type ;
+    if (_houseType == FHHouseTypeRentHouse || _houseType == FHHouseTypeNewHouse) {
+        type = FHFakeInputNavbarTypeMessageSingle;
+    }else if(_houseType == FHHouseTypeSecondHandHouse){
+        type = FHFakeInputNavbarTypeMessageAndMap;
+    }else {
+        type = FHFakeInputNavbarTypeDefault;
+    }
+    FHFakeInputNavbarStyle style = FHFakeInputNavbarStyleBorder;
+    if (_houseType == FHHouseTypeSecondHandHouse && [FHMainOldTopView showBanner]) {
+        style = FHFakeInputNavbarStyleDefault;
+    }
+
     _navbar = [[FHFakeInputNavbar alloc] initWithType:type];
+    _navbar.style = style;
     __weak typeof(self) wself = self;
     _navbar.defaultBackAction = ^{
         [wself.navigationController popViewControllerAnimated:YES];
@@ -113,7 +130,6 @@
     _navbar.tapInputBar = ^{
         [wself.viewModel showInputSearch];
     };
-    
     [self.view addSubview:_navbar];
     
 }
@@ -144,10 +160,7 @@
     [self.tableView addSubview:_topView];
     
     [self.containerView addSubview:self.tableView];
-    
-    self.redirectTipView = [[FHHouseListRedirectTipView alloc]initWithFrame:CGRectMake(0, 0, self.view.width, 100)];
-    [self.containerView addSubview:_redirectTipView];
-    
+
     _viewModel.viewController = self;
     _viewModel.navbar = self.navbar;
     _errorView = [[FHErrorView alloc] init];
@@ -172,11 +185,16 @@
     self.tracerModel.categoryName = [_viewModel categoryName];
     [self.viewModel requestData:YES];
     self.tableView.contentOffset = CGPointMake(0, -self.tableView.contentInset.top);
+    self.isViewDidDisapper = NO;
+
 }
 
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
     [self.viewModel refreshMessageDot];
+    [self refreshContentOffset:self.tableView.contentOffset];
+    self.isViewDidDisapper = NO;
+    [self.viewModel viewDidAppear:animated];
 }
 
 -(void)initConstraints
@@ -190,13 +208,13 @@
     
     [self.topContainerView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.right.mas_equalTo(self.view);
-        make.top.mas_equalTo(self.navbar.mas_bottom);
+        make.top.mas_equalTo(0);
         make.height.mas_equalTo(0);
     }];
     
     [self.containerView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.right.bottom.mas_equalTo(self.view);
-        make.top.mas_equalTo(self.navbar.mas_bottom);
+        make.top.mas_equalTo(0);
     }];
     
     [self.tableView mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -212,13 +230,6 @@
         make.bottom.left.right.mas_equalTo(self.containerView);
         make.top.mas_equalTo(self.viewModel.filterPanel.mas_bottom);
     }];
-    
-    [self.redirectTipView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.right.mas_equalTo(self.containerView);
-        make.top.mas_equalTo(0);
-        make.height.mas_equalTo(0);
-    }];
-    
 }
 
 
@@ -237,6 +248,64 @@
     
 }
 
+- (void)viewDidDisappear:(BOOL)animated {
+    [super viewDidDisappear:animated];
+    self.isViewDidDisapper = YES;
+}
+
+- (void)refreshContentOffset:(CGPoint)contentOffset
+{
+    CGFloat alpha = 0;
+    CGFloat offset = 0;
+    CGFloat offsetY = 0;
+    UIStatusBarStyle statusBarStyle = UIStatusBarStyleDefault;
+    UIColor *bgColor = [UIColor whiteColor];
+    if ([self.viewModel.topBannerView isKindOfClass:[FHMainOldTopView class]]) {
+        FHMainOldTopView *oldTopView = (FHMainOldTopView *)self.viewModel.topBannerView;
+        offsetY = self.topView.height + contentOffset.y;
+        if ([FHMainOldTopView showBanner]) {
+            offset = [FHMainOldTopView bannerHeight] - 42 + 10;
+        }else if ([FHMainOldTopView showEntrance]) {
+            offset = [FHMainOldTopView entranceHeight];
+        }else {
+            offset = [FHFakeInputNavbar perferredHeight];
+        }
+        if (contentOffset.y >= 0) {
+            alpha = 1;
+        }else if (offset != 0){
+            CGFloat notiBarHeight = self.viewModel.animateShowNotify ? self.topView.notifyHeight : 0;
+            alpha = (offsetY - notiBarHeight) / offset;
+        }
+        if (alpha >= 0.5 || _navbar.style == FHFakeInputNavbarStyleBorder) {
+            statusBarStyle = UIStatusBarStyleDefault;
+        }else {
+            statusBarStyle = UIStatusBarStyleLightContent;
+        }
+        bgColor = [oldTopView topBackgroundColor];
+    }else if ([self.viewModel.topBannerView isKindOfClass:[FHMainRentTopView class]]) {
+//        if ([FHMainRentTopView showEntrance]) {
+//            offset = [FHMainRentTopView entranceHeight];
+//        }else {
+//            offset = [FHFakeInputNavbar perferredHeight];
+//        }
+        offsetY = self.topView.height + contentOffset.y;
+        offset = [FHFakeInputNavbar perferredHeight];
+
+        if (contentOffset.y >= 0) {
+            alpha = 1;
+        } else {
+            CGFloat notiBarHeight = self.viewModel.animateShowNotify ? self.topView.notifyHeight : 0;
+            alpha = (offsetY - notiBarHeight) / offset;
+        }
+        bgColor = [UIColor themeGray8];
+    }
+    [self.navbar refreshAlpha:alpha];
+    self.navbar.backgroundColor = bgColor;
+    if (!self.isViewDidDisapper) {
+        [[UIApplication sharedApplication]setStatusBarStyle:statusBarStyle];
+    }
+}
+
 #pragma mark - TTUIViewControllerTrackProtocol
 
 - (void)trackEndedByAppWillEnterBackground {
@@ -248,6 +317,17 @@
 - (void)trackStartedByAppWillEnterForground {
     [self tt_resetStayTime];
     self.ttTrackStartTime = [[NSDate date] timeIntervalSince1970];
+    
+    if (self.houseType == FHHouseTypeSecondHandHouse) {
+        NSArray *tableCells = [self.tableView visibleCells];
+        if (tableCells) {
+            [tableCells enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+                    if ([obj respondsToSelector:@selector(resumeVRIcon)]) {
+                        [obj performSelector:@selector(resumeVRIcon)];
+                    }
+            }];
+        }
+    }
 }
 
 -(void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSKeyValueChangeKey,id> *)change context:(void *)context {

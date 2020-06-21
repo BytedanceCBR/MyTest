@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import "AWECommentModel.h"
-#import <SSThemed.h>
+#import "SSThemed.h"
 
 @class AWEVideoCommentCell;
 @protocol AWEVideoCommentCellOperateDelegate<NSObject>

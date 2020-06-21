@@ -19,7 +19,7 @@
 #import "TTProfileFunctionCell.h"
 #import "TTProfileTopFunctionCell.h"
 #import "TTProfileMessageFunctionCell.h"
-#import <TTAccountBusiness.h>
+#import "TTAccountBusiness.h"
 #import "ArticleBadgeManager.h"
 #import "TTSettingMineTabGroup.h"
 #import "TTSettingMineTabManager.h"
@@ -57,7 +57,8 @@
 #import "FHMessageNotificationTipsManager.h"
 #import "FHMessageNotificationMacro.h"
 //#import "TTPLManager.h"
-#import <TTTracker.h>
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
+
 //#import "TTCommonwealManager.h"
 #import "BDTAccountClientManager.h"
 #import "TTAccountBindingMobileViewController.h"
@@ -511,7 +512,7 @@ static NSString *const kTTProfileMessageFunctionCellIdentifier = @"kTTProfileMes
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     TTSettingMineTabEntry *entry = [[self class] entryForIndexPath:indexPath];
     if ([entry.key isEqualToString:@"mine_wallet"]) {
-        [TTTracker eventV3:@"my_wallet_click" params:nil isDoubleSending:NO];
+        [BDTrackerProtocol eventV3:@"my_wallet_click" params:nil isDoubleSending:NO];
     }
     void(^operation)(void) = ^ {
         if (entry && entry.enter) {
@@ -521,7 +522,7 @@ static NSString *const kTTProfileMessageFunctionCellIdentifier = @"kTTProfileMes
                 [TTTrackerWrapper eventV3:@"influence_click" params:@{@"position":@"mine"}];
             }
             if ([entry.key isEqualToString:@"mine_task"]) {
-                [TTTracker eventV3:@"task_page_show" params:nil isDoubleSending:NO];
+                [BDTrackerProtocol eventV3:@"task_page_show" params:nil isDoubleSending:NO];
             }
         }
         

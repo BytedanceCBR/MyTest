@@ -31,9 +31,9 @@
 #import "ExploreDetailNavigationBar.h"
 #import "ExploreSearchViewController.h"
 #import "ExploreMomentDefine_Enums.h"
-#import <Masonry.h>
+#import "Masonry.h"
 #import "UIFont+House.h"
-#import <UIImageView+BDWebImage.h>
+#import "UIImageView+BDWebImage.h"
 #import "UIImage+TTThemeExtension.h"
 #import "SSCommentInputHeader.h"
 #import "TTCommentWriteManager.h"
@@ -74,6 +74,11 @@
         self.isRebuildCommentViewController = NO;
         if(paramObj.allParams[@"begin_show_comment"]) {
             self.beginShowComment = [paramObj.allParams[@"begin_show_comment"] boolValue];
+        }
+        if(paramObj.allParams[@"msg_id"]) {
+            self.msgID = paramObj.allParams[@"msg_id"];
+        } else {
+            
         }
         NSString *report_params = paramObj.allParams[@"report_params"];
         if ([report_params isKindOfClass:[NSString class]]) {
@@ -189,7 +194,10 @@
     _mainScrollView = [[UIScrollView alloc] init];
     [self.view addSubview:_mainScrollView];
     CGFloat navOffset = 65;
-    if (@available(iOS 11.0 , *)) {
+    if (@available(iOS 13.0 , *)) {
+        _mainScrollView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
+        navOffset = 44.f +  [UIApplication sharedApplication].keyWindow.safeAreaInsets.top;
+    } else if (@available(iOS 11.0 , *)) {
         _mainScrollView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
         navOffset = 44.f + self.view.tt_safeAreaInsets.top;
     } else {
@@ -544,7 +552,7 @@
     self.toolbarView.digCountValue = [NSString stringWithFormat:@"%ld",self.digg_count];
     if (self.user_digg == 1) {
         // 点赞
-        self.toolbarView.digCountLabel.textColor = [UIColor themeRed1];
+        self.toolbarView.digCountLabel.textColor = [UIColor themeOrange4];
     } else {
         // 取消点赞
         self.toolbarView.digCountLabel.textColor = [UIColor themeGray1];
@@ -576,8 +584,12 @@
                        options:(TTCommentLoadOptions)options
                    finishBlock:(TTCommentLoadFinishBlock)finishBlock
 {
+    if (self.msgID.length > 0 && [offset integerValue] <= 0) {
+        // 标记需要置顶
+        [self.commentViewController tt_markStickyCellNeedsAnimation];
+    }
     TTCommentDataManager *commentDataManager = [[TTCommentDataManager alloc] init];
-    [commentDataManager startFetchCommentsWithGroupModel:self.groupModel forLoadMode:loadMode  loadMoreOffset:offset loadMoreCount:@(TTCommentDefaultLoadMoreFetchCount) msgID:0 options:options finishBlock:finishBlock];
+    [commentDataManager startFetchCommentsWithGroupModel:self.groupModel forLoadMode:loadMode  loadMoreOffset:offset loadMoreCount:@(TTCommentDefaultLoadMoreFetchCount) msgID:self.msgID options:options finishBlock:finishBlock];
 }
 
 - (SSThemedView *)tt_commentHeaderView
@@ -616,6 +628,11 @@
         [weakSelf p_scrollToCommentIfNeeded];
         weakSelf.hasLoadedComment = YES;
     });
+    
+    // 输入框去除：回复 XXX
+    if ([self.commentViewController respondsToSelector:@selector(tt_clearDefaultReplyCommentModel)]) {
+        [self.commentViewController tt_clearDefaultReplyCommentModel];
+    }
     
     if ([self.commentViewController respondsToSelector:@selector(tt_defaultReplyCommentModel)] && self.commentViewController.tt_defaultReplyCommentModel) {
         NSString *userName = self.commentViewController.tt_defaultReplyCommentModel.userName;
@@ -697,6 +714,7 @@
 //    [mdict setValue:self.detailModel.article forKey:@"group"];
     
     [mdict setValue:@"favorite" forKey:@"categoryID"];
+    mdict[@"extraDic"] = self.tracerDict;
     
     self.wCommentModel = mdict[@"commentModel"];
     if (self.wCommentModel && [self.wCommentModel isKindOfClass:[TTCommentModel class]]) {
@@ -774,6 +792,7 @@
     } extraTrackDict:nil bindVCTrackDict:nil commentRepostWithPreRichSpanText:nil readQuality:qualityModel];
     commentManager.enterFrom = @"feed_detail";
     commentManager.enter_type = @"submit_comment";
+    commentManager.reportParams = self.tracerDict.mutableCopy;
     
     self.commentWriteView = [[FHPostDetailCommentWriteView alloc] initWithCommentManager:commentManager];
     

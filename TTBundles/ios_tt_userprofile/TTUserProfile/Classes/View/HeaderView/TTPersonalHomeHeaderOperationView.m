@@ -11,7 +11,7 @@
 #import "NSStringAdditions.h"
 #import "TTThemeManager.h"
 #import <objc/runtime.h>
-#import <Masonry.h>
+#import "Masonry.h"
 #import <TTBaseLib/TTDeviceUIUtils.h>
 #import <TTBaseLib/UIViewAdditions.h>
 #import <TTPlatformBaseLib/TTTrackerWrapper.h>

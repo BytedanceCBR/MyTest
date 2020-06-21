@@ -6,7 +6,7 @@
 //
 
 #import "FHPostUGCProgressView.h"
-#import <Masonry.h>
+#import "Masonry.h"
 #import "UIColor+Theme.h"
 #import "UIFont+House.h"
 #import "TTForumPostThreadStatusCell.h"
@@ -18,6 +18,8 @@
 #import "TTReachability.h"
 #import "ToastManager.h"
 #import "FHUserTracker.h"
+#import "Masonry.h"
+#import "FHEnvContext.h"
 
 @interface FHPostUGCProgressView ()<UITableViewDelegate,UITableViewDataSource>
 
@@ -86,7 +88,10 @@
     _tableView.delegate = self;
     _tableView.scrollEnabled = NO;
     [_tableView registerClass:[FHPostUGCProgressCell class] forCellReuseIdentifier:@"FHPostUGCProgressCell"];
-    _tableView.frame = self.frame;
+    
+    [self.tableView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.edges.equalTo(self);
+    }];
 }
 
 - (void)updateStatus {
@@ -201,7 +206,11 @@
     
     NSMutableDictionary *tracerDict = @{}.mutableCopy;
     tracerDict[@"element_type"] = @"publish_failed_toast";
-    tracerDict[@"page_type"] = @"my_join_list";
+    if([FHEnvContext isNewDiscovery]){
+        tracerDict[@"page_type"] = @"f_news_recommend";
+    }else{
+        tracerDict[@"page_type"] = @"hot_discuss_feed";
+    }
     tracerDict[@"enter_from"] = @"neighborhood_tab";
     tracerDict[@"card_type"] = @"left";
     
@@ -336,7 +345,11 @@
 - (void)retryBtnClick {
     NSMutableDictionary *tracerDict = @{}.mutableCopy;
     tracerDict[@"element_from"] = @"publish_failed_toast";
-    tracerDict[@"page_type"] = @"my_join_list";
+    if([FHEnvContext isNewDiscovery]){
+        tracerDict[@"page_type"] = @"f_news_recommend";
+    }else{
+        tracerDict[@"page_type"] = @"hot_discuss_feed";
+    }
     tracerDict[@"enter_from"] = @"neighborhood_tab";
     tracerDict[@"card_type"] = @"left";
     tracerDict[@"click_position"] = @"try_again_publish";
@@ -354,7 +367,11 @@
     if (self.statusModel) {
         NSMutableDictionary *tracerDict = @{}.mutableCopy;
         tracerDict[@"element_from"] = @"publish_failed_toast";
-        tracerDict[@"page_type"] = @"my_join_list";
+        if([FHEnvContext isNewDiscovery]){
+            tracerDict[@"page_type"] = @"f_news_recommend";
+        }else{
+            tracerDict[@"page_type"] = @"hot_discuss_feed";
+        }
         tracerDict[@"enter_from"] = @"neighborhood_tab";
         tracerDict[@"card_type"] = @"left";
         tracerDict[@"click_position"] = @"delete_publish";

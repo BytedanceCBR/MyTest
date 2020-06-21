@@ -34,6 +34,7 @@
 #import "FHUGCConfig.h"
 #import "FHUGCCellHelper.h"
 #import "HMDTTMonitor.h"
+#import "FHHouseErrorHubManager.h"
 
 @interface FHPostDetailViewModel ()
 
@@ -79,6 +80,8 @@
     self.forumID = 0;
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(followStateChanged:) name:kFHUGCFollowNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(followListDataChanged:) name:kFHUGCLoadFollowDataFinishedNotification object:nil];
+    // 编辑成功
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(postEditNoti:) name:@"kTTForumPostEditedThreadSuccessNotification" object:nil]; // 编辑发送成功
     return self;
 }
 
@@ -90,6 +93,8 @@
         self.forumID = forumID;
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(followStateChanged:) name:kFHUGCFollowNotification object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(followListDataChanged:) name:kFHUGCLoadFollowDataFinishedNotification object:nil];
+        // 编辑成功
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(postEditNoti:) name:@"kTTForumPostEditedThreadSuccessNotification" object:nil]; // 编辑发送成功
     }
     return self;
 }
@@ -117,6 +122,69 @@
                     currentGroupData.countText = groupData.countText;
                     [self.detailController headerInfoChanged];
                     [self reloadData];
+                }
+            }
+        }
+    }
+}
+
+// 编辑发送成功 - 更新数据
+- (void)postEditNoti:(NSNotification *)noti {
+    if (noti && noti.userInfo) {
+        NSDictionary *userInfo = noti.userInfo;
+        NSString *groupId = userInfo[@"group_id"];
+        if (groupId.length > 0) {
+            __block NSUInteger index = -1;
+            __block BOOL showCommunity = NO;
+            [self.items enumerateObjectsUsingBlock:^(id  _Nonnull cellModel, NSUInteger idx, BOOL * _Nonnull stop) {
+                if ([cellModel isKindOfClass:[FHFeedUGCCellModel class]]) {
+                    if ([((FHFeedUGCCellModel *)cellModel).groupId isEqualToString:groupId]) {
+                        index = idx;
+                        showCommunity = ((FHFeedUGCCellModel *)cellModel).showCommunity;
+                    }
+                }
+            }];
+            // 找到 要更新的数据
+            if (index >= 0 && index < self.items.count) {
+                NSString *thread_cell = userInfo[@"thread_cell"];
+                if (thread_cell && [thread_cell isKindOfClass:[NSString class]]) {
+                    NSError *jsonParseError;
+                    NSData *jsonData = [thread_cell dataUsingEncoding:NSUTF8StringEncoding];
+                    if (jsonData) {
+                        FHFeedUGCContentModel * model = (id<FHBaseModelProtocol>)[FHMainApi generateModel:jsonData class:[FHFeedUGCContentModel class] error:&jsonParseError];
+                        // 网络请求返回
+                        model.isFromDetail = YES;
+                        if (self.shareInfo == nil && model.shareInfo) {
+                            self.shareInfo = model.shareInfo;
+                        }
+                        FHFeedUGCCellModel *cellModel = [FHFeedUGCCellModel modelFromFeedUGCContent:model];
+                        cellModel.isFromDetail = YES;
+                        cellModel.feedVC = self.detailData.feedVC;
+                        cellModel.isStick = self.detailData.isStick;
+                        cellModel.stickStyle = self.detailData.stickStyle;
+                        cellModel.contentDecoration = nil;
+                        if (cellModel.community.socialGroupId.length <= 0) {
+                            cellModel.community = self.detailData.community;
+                        }
+                        cellModel.showCommunity = showCommunity;
+                        cellModel.tracerDic = [self.detailController.tracerDict copy];
+                        if (cellModel) {
+                            self.items[index] = cellModel;
+                        }
+                        // 异步一下 以及重新布局
+                        dispatch_async(dispatch_get_main_queue(), ^{
+                            [self.detailController remove_comment_vc];
+                            [self.tableView reloadData];
+                            [self.detailController re_add_comment_vc];
+                            self.tableView.hidden = NO;
+                            [self.detailController show_comment_view];
+                        });
+                        // 页面布局问题修复
+                        __weak typeof(self) weakSelf = self;
+                        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                            [weakSelf.detailController refresh_page_view];
+                        });
+                    }
                 }
             }
         }
@@ -152,6 +220,7 @@
         if (error) {
             if (error.code == -10001) {
                 // 被删除，空页面已经展示了
+                wSelf.weakShareButton.hidden = YES;
             } else if (wSelf.items.count <= 0) {
                 // 显示空页面
                 [wSelf.detailController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoNetWorkAndRefresh];
@@ -185,7 +254,7 @@
             cellModel.community = self.detailData.community;
         }
         cellModel.tracerDic = [self.detailController.tracerDict copy];
-        if (socialGroupModel && ![socialGroupModel.hasFollow boolValue]) {
+        if (socialGroupModel && ![socialGroupModel.hasFollow boolValue] && ![socialGroupModel.showStatus isEqualToString:@"1"]) {
             // 未关注
             FHPostDetailHeaderModel *headerModel = [[FHPostDetailHeaderModel alloc] init];
             headerModel.socialGroupModel = socialGroupModel;
@@ -199,9 +268,9 @@
             [self.items addObject:grayLine];
             cellModel.showCommunity = NO;
         } else {
-            if (cellModel.community && cellModel.community.name.length > 0 && cellModel.community.socialGroupId.length > 0) {
+            if (cellModel.community && cellModel.community.name.length > 0 && cellModel.community.socialGroupId.length > 0 && ![cellModel.community.showStatus isEqualToString:@"1"]) {
                 cellModel.showCommunity = YES;
-            } else if (socialGroupModel && socialGroupModel.socialGroupId.length > 0 && socialGroupModel.socialGroupName.length > 0) {
+            } else if (socialGroupModel && socialGroupModel.socialGroupId.length > 0 && socialGroupModel.socialGroupName.length > 0 && ![socialGroupModel.showStatus isEqualToString:@"1"]) {
                 // 挽救一下 balabala
                 cellModel.community = [[FHFeedUGCCellCommunityModel alloc] init];
                 cellModel.community.name = socialGroupModel.socialGroupName;
@@ -214,6 +283,14 @@
         if (socialGroupModel) {
             // 更新圈子数据
             [[FHUGCConfig sharedInstance] updateSocialGroupDataWith:socialGroupModel];
+            if (cellModel.community.socialGroupId.length <= 0) {
+                // 赋值 圈子数据 删除的时候需要
+                FHFeedUGCCellCommunityModel *communityModel = [[FHFeedUGCCellCommunityModel alloc] init];
+                communityModel.url = socialGroupModel.announcementUrl;
+                communityModel.socialGroupId = socialGroupModel.socialGroupId;
+                communityModel.name = socialGroupModel.socialGroupName;
+                cellModel.community = communityModel;
+            }
         }
         // 更新点赞以及评论数
         if (cellModel) {
@@ -253,14 +330,30 @@
         if (self.lastPageSocialGroupId.length > 0) {
             [param setValue:self.lastPageSocialGroupId forKey:@"social_group_id"];
         }
+        if(self.threadDetailSource.length > 0){
+            param[@"thread_detail_source"] = self.threadDetailSource;
+        }
         uint64_t startTime = [NSObject currentUnixTime];
         WeakSelf;
         NSString *host = [FHURLSettings baseURL];
         NSString *urlStr = [NSString stringWithFormat:@"%@/f100/ugc/thread",host];
-        [TTUGCRequestManager requestForJSONWithURL:urlStr params:param method:@"GET" needCommonParams:YES callBackWithMonitor:^(NSError *error, id jsonObj, TTUGCRequestMonitorModel *monitorModel) {
+        NSDate *startDate = [NSDate date];
+        [TTUGCRequestManager requestForJSONWithURL:urlStr params:param method:@"GET" needCommonParams:YES callBackWithMonitor:^(NSError *error, id jsonObj, TTHttpResponse *response) {
             StrongSelf;
+            NSDate *backDate = [NSDate date];
             uint64_t endTime = [NSObject currentUnixTime];
             uint64_t total = [NSObject machTimeToSecs:endTime - startTime] * 1000;
+            NSDate *serDate = [NSDate date];
+            FHNetworkMonitorType resultType = FHNetworkMonitorTypeSuccess;
+            NSInteger code = 0;
+            NSString *errMsg = nil;
+            NSMutableDictionary *extraDict = nil;
+            NSDictionary *exceptionDict = nil;
+            NSInteger responseCode = -1;
+            if (response.statusCode) {
+                responseCode = response.statusCode;
+            }
+            NSError *jsonParseError;
             if (!error) {
                 NSDictionary *dataDict = [jsonObj isKindOfClass:[NSDictionary class]]? jsonObj: nil;
                 if ([dataDict tt_longValueForKey:@"err_no"] == 0) {
@@ -271,13 +364,17 @@
                         NSMutableDictionary *metric = @{}.mutableCopy;
                         metric[@"post_id"] = @(self.threadID);
                         [[HMDTTMonitor defaultManager] hmdTrackService:@"ugc_post_detail_error" metric:metric category:@{@"status":@(1)} extra:nil];
+                        
+                        resultType = FHNetworkMonitorTypeBizFailed + 1;
+                        code = 1;
+                        errMsg = @"ugc_post_detail_error:empty";
                     } else {
-                        NSError *jsonParseError;
+                        
                         NSData *jsonData = [dataStr dataUsingEncoding:NSUTF8StringEncoding];
                         if (jsonData) {
                             Class cls = [FHFeedUGCContentModel class];
                             FHFeedUGCContentModel * model = (id<FHBaseModelProtocol>)[FHMainApi generateModel:jsonData class:[FHFeedUGCContentModel class] error:&jsonParseError];
-                            if (model.ugcStatus == 0) {
+                            if (model.ugcStatus && [model.ugcStatus integerValue] == 0) {
                                 // 说明被删除
                                 error = [NSError errorWithDomain:NSURLErrorDomain code:-10001 userInfo:nil];
                                 [self.detailController remove_comment_vc];
@@ -297,11 +394,25 @@
                             // 成功埋点 status = 0 成功（不上报） status = 2：转json失败
                             NSMutableDictionary *metric = @{}.mutableCopy;
                             metric[@"post_id"] = @(self.threadID);
-                            [[HMDTTMonitor defaultManager] hmdTrackService:@"ugc_post_detail_error" metric:metric category:@{@"status":@(2)} extra:nil];
+                            [[HMDTTMonitor defaultManager] hmdTrackService:@"ugc_post_detail_error" metric:metric category:@{@"status":@(2),@"response_code":@(responseCode)} extra:nil];
+                            
+                            resultType = FHNetworkMonitorTypeBizFailed + 2;
+                            code = 2;
+                            errMsg = @"ugc_post_detail_error:json error";
                         }
                     }
                 }
+            } else {
+                code = error.code;
+                resultType = FHNetworkMonitorTypeNetFailed;
             }
+            
+            // 序列化时间
+            serDate = [NSDate date];
+            // 帖子接口成功率
+            [FHMainApi addRequestLog:@"/f100/ugc/thread" startDate:startDate backDate:backDate serializeDate:serDate resultType:resultType errorCode:code errorMsg:errMsg extra:extraDict exceptionDict:exceptionDict responseCode:responseCode];
+            [[FHHouseErrorHubManager sharedInstance] checkRequestResponseWithHost:urlStr requestParams:param responseStatus:response response:jsonObj analysisError:jsonParseError changeModelType:resultType errorHubType:FHErrorHubTypeRequest];
+            
             if (completion) {
                 completion(error,total);
             }

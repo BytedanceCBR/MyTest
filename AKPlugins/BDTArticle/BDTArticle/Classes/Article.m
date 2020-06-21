@@ -14,8 +14,7 @@
 #import "TTFollowManager.h"
 #import "TTBlockManager.h"
 #import "TTAdConstant.h"
-#import <TTAccountBusiness.h>
-#import <Crashlytics/Answers.h>
+#import "TTAccountBusiness.h"
 #import <TTNetworkManager/TTNetworkDefine.h>
 #import <TTSettingsManager/TTSettingsManager.h>
 
@@ -55,7 +54,6 @@
     if (countBeforeClean) {
         static dispatch_once_t onceToken;
         dispatch_once(&onceToken, ^{
-            [Answers logCustomEventWithName:@"news_db" customAttributes:@{@"article_detail_count":countBeforeClean}];
         });
     }
     
@@ -77,11 +75,6 @@
                 
                 NSTimeInterval t2 = CFAbsoluteTimeGetCurrent();
                 
-                [Answers logCustomEventWithName:@"cleanArticleDetail" customAttributes:@{@"threshold":@(threshold),
-                                                                                         @"count1":countBeforeClean,
-                                                                                         @"count2":countAfterClean,
-                                                                                         @"cost":@(t2 - t1),
-                                                                                         @"dbSize":@(dbSize)}];
             }
         }
     }
@@ -229,6 +222,7 @@
                                                             @"showMaxLine",
                                                             @"picDisplayType",
                                                             @"recommendDict",
+                                                            @"happyKnocking",
                                                             @"commoditys",
                                                             @"payStatus",
                                                             @"titleRichSpanJSONString",
@@ -839,6 +833,10 @@
         
         if ([dataDict objectForKey:@"ugc_recommend"]) {
             self.recommendDict = [dataDict dictionaryValueForKey:@"ugc_recommend" defalutValue:nil];
+        }
+        
+        if ([dataDict objectForKey:@"happy_knocking"]) {
+            self.happyKnocking = [dataDict dictionaryValueForKey:@"happy_knocking" defalutValue:nil];
         }
         
         if ([dataDict objectForKey:@"title_image"]) {

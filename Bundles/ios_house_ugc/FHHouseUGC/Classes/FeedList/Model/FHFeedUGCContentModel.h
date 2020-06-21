@@ -1,13 +1,51 @@
 //GENERATED CODE , DON'T EDIT
-#import <JSONModel.h>
+#import "JSONModel.h"
 #import "FHFeedContentModel.h"
 #import "FHUGCShareManager.h"
 NS_ASSUME_NONNULL_BEGIN
+@interface FHFeedUGCContentAttachCardInfoExtraModel : JSONModel
+
+@property (nonatomic, copy , nullable) NSString *groupSource;
+@property (nonatomic, copy , nullable) NSString *imprId;
+@property (nonatomic, copy , nullable) NSString *houseType;
+@property (nonatomic, copy , nullable) NSString *fromGid;
+@property (nonatomic, copy , nullable) NSString *groupId;
+@property (nonatomic, copy , nullable) NSString *event;
+@end
+
+@interface FHFeedUGCContentAttachCardInfoButtonModel : JSONModel
+
+@property (nonatomic, copy , nullable) NSString *name;
+@property (nonatomic, copy , nullable) NSString *schema;
+@end
+
+@interface FHFeedUGCContentAttachCardInfoCoverImageModel : JSONModel
+
+@property (nonatomic, copy , nullable) NSString *url;
+@property (nonatomic, copy , nullable) NSString *imageStyle;
+@property (nonatomic, copy , nullable) NSString *uri;
+@end
+
+@interface FHFeedUGCContentAttachCardInfoModel : JSONModel
+
+@property (nonatomic, copy , nullable) NSString *desc;
+@property (nonatomic, copy , nullable) NSString *cardStyle;
+@property (nonatomic, copy , nullable) NSString *title;
+@property (nonatomic, strong , nullable) FHFeedUGCContentAttachCardInfoButtonModel *button ;
+@property (nonatomic, copy , nullable) NSString *cardType;
+@property (nonatomic, strong , nullable) FHFeedUGCContentAttachCardInfoCoverImageModel *coverImage ;
+@property (nonatomic, copy , nullable) NSString *id;
+@property (nonatomic, copy , nullable) NSString *schema;
+@property (nonatomic, strong , nullable) FHFeedUGCContentAttachCardInfoExtraModel *extra ;
+@property (nonatomic, strong , nullable) FHFeedContentImageListModel *imageModel ;
+@end
+
 @interface FHFeedUGCContentCommunityModel : JSONModel
 
 @property (nonatomic, copy , nullable) NSString *url;
 @property (nonatomic, copy , nullable) NSString *name;
 @property (nonatomic, copy , nullable) NSString *socialGroupId;
+@property (nonatomic, copy , nullable) NSString *showStatus;
 @end
 
 @interface FHFeedUGCContentShareShareCoverModel : JSONModel 
@@ -249,6 +287,59 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *desc;
 @end
 
+@interface FHFeedUGCContentRawDataModel: JSONModel
+@property (nonatomic, strong , nullable) FHFeedContentRawDataOperationModel *operation ;
+@property (nonatomic, strong , nullable) FHFeedContentCommunityModel *community ;
+@property (nonatomic, strong , nullable) FHFeedContentRawDataCommentBaseModel *commentBase ;
+@property (nonatomic, strong , nullable) FHFeedContentRawDataOriginGroupModel *originGroup ;
+@property (nonatomic, strong , nullable) FHFeedContentRawDataOriginCommonContentModel *originCommonContent ;
+@property (nonatomic, strong , nullable) NSArray<FHFeedContentRecommendSocialGroupListModel> *recommendSocialGroupList;
+@property (nonatomic, strong , nullable) NSArray<FHFeedContentRawDataHotTopicListModel> *hotTopicList;
+@property (nonatomic, strong , nullable) FHFeedContentRawDataVoteModel *vote ;
+@property (nonatomic, copy , nullable) NSString *articleSchema;
+@property (nonatomic, copy , nullable) NSString *itemId;
+@property (nonatomic, copy , nullable) NSString *groupId;
+@property (nonatomic, copy , nullable) NSString *originType;
+//视频相关
+@property (nonatomic, copy , nullable) NSString *title;
+@property (nonatomic, copy , nullable) NSString *detailSchema;
+@property (nonatomic, copy , nullable) NSString *titleRichSpan;
+@property (nonatomic, copy , nullable) NSString *createTime;
+@property (nonatomic, strong , nullable) FHFeedContentRawDataVideoModel *video ;
+@property (nonatomic, strong , nullable) FHFeedContentRawDataCommentBaseUserInfoModel *user;
+@property (nonatomic, copy , nullable) NSString *videoContent;
+@property (nonatomic, strong , nullable) FHFeedContentRawDataCommentBaseActionModel *action ;
+@property (nonatomic, strong , nullable) NSArray<FHFeedContentImageListModel> *firstFrameImageList;
+@property (nonatomic, assign)   BOOL       isStick;      // 是否置顶
+@property (nonatomic, assign)   FHFeedContentStickStyle  stickStyle; // 置顶类型：精华或其它
+@property (nonatomic, copy , nullable) NSString *contentDecoration;
+//帖子
+@property (nonatomic, strong , nullable) FHFeedContentRawDataOriginThreadModel *originThread ;
+//小视频
+@property (nonatomic, strong , nullable) FHFeedContentRawDataOriginUgcVideoModel *originUgcVideo ;
+// UGC投票
+@property (nonatomic, strong , nullable) FHUGCVoteInfoVoteInfoModel *voteInfo ;
+// 新
+@property (nonatomic, strong , nullable) NSDictionary *logPb;
+@property (nonatomic, copy , nullable) NSString *commentCount;
+@property (nonatomic, copy , nullable) NSString *readCount;
+@property (nonatomic, copy , nullable) NSString *diggCount;
+@property (nonatomic, copy , nullable) NSString *userDigg;
+@property (nonatomic, copy , nullable) NSString *distance;
+@property (nonatomic, copy , nullable) NSString *distanceInfo;
+// 是否被删除
+@property (nonatomic, copy)     NSString       *status;
+@property (nonatomic, strong , nullable) NSArray<FHFeedContentRawDataHotCellListModel> *hotCellList;
+@property (nonatomic, copy , nullable) NSString *subCellType;
+@property (nonatomic, copy , nullable) NSString *contentRichSpan;
+@property (nonatomic, copy , nullable) NSString *content;
+@property (nonatomic, copy , nullable) NSString *threadId;
+@property (nonatomic, copy , nullable) NSString *schema;
+@property (nonatomic, strong , nullable) NSArray<FHFeedContentImageListModel> *ugcU13CutImageList;
+@property (nonatomic, strong , nullable) NSArray<FHFeedContentImageListModel> *thumbImageList;
+@property (nonatomic, strong , nullable) NSArray<FHFeedContentImageListModel> *largeImageList;
+@end
+
 @interface FHFeedUGCContentModel : JSONModel 
 
 @property (nonatomic, strong , nullable) NSDictionary *logPb;
@@ -334,10 +425,12 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong , nullable) FHFeedUGCContentUgcRecommendModel *ugcRecommend ;  
 @property (nonatomic, strong , nullable) FHFeedUGCContentUserModel *user ;
 @property (nonatomic, strong , nullable) FHFeedUGCContentCommunityModel *community ;
-@property (nonatomic, assign)   NSInteger       ugcStatus;
+@property (nonatomic, copy , nullable)   NSString *       ugcStatus;
 @property (nonatomic, assign)   BOOL       isFromDetail;              // 详情页
 @property (nonatomic, assign)   BOOL       isStick;                   // 是否置顶
 @property (nonatomic, assign)   FHFeedContentStickStyle stickStyle;// 置顶类型：精华或其它
+@property (nonatomic, strong , nullable) FHFeedUGCContentRawDataModel *rawData;
+@property (nonatomic, strong , nullable) FHFeedUGCContentAttachCardInfoModel *attachCardInfo ; 
 
 @end
 

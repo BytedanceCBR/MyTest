@@ -18,12 +18,13 @@
 #import <TTBaseLib/TTBaseMacro.h>
 #import <TTBaseLib/UITextView+TTAdditions.h>
 #import <TTThemed/TTThemeManager.h>
-#import <TTAccountBusiness.h>
+#import "TTAccountBusiness.h"
 #import "TTCommentFunctionView.h"
 #import "TTCommentTransparentView.h"
 #import "TTCommentDetailReplyWriteManager.h"
 #import "TTCommentDefines.h"
 #import "UIColor+Theme.h"
+#import "FHBubbleTipManager.h"
 
 #define PUBLISHBUTTON_WIDTH [TTDeviceUIUtils tt_newPadding:35.f]
 #define PUBLISHBUTTON_HEIGHT [TTDeviceUIUtils tt_newPadding:22.5f]
@@ -115,9 +116,9 @@ static struct timeval kFHCommentTimeval;
     [super layoutSubviews];
     CGFloat bottomSafeInset = self.tt_safeAreaInsets.bottom;
     CGFloat minHeight = [TTDeviceUIUtils tt_newPadding:32 + 10 + 10] + EMOJI_INPUT_VIEW_HEIGHT;
-    if ([TTAccountManager isLogin]){
-        minHeight += [TTDeviceUIUtils tt_newPadding:33];
-    }
+//    if ([TTAccountManager isLogin]){
+//        minHeight += [TTDeviceUIUtils tt_newPadding:33];
+//    }
     if (self.containerView.height <= minHeight){
         self.containerView.height = minHeight + bottomSafeInset;
         self.emojiInputView.top = self.textInputView.bottom;
@@ -449,7 +450,7 @@ static struct timeval kFHCommentTimeval;
 }
 
 - (void)keyboardWillHideNotification:(NSNotification *)notification {
-    if (self.emojiInputViewVisible) {
+    if (self.emojiInputViewVisible || [FHBubbleTipManager shareInstance].isShowingTips) {
         return;
     }
 
@@ -601,6 +602,10 @@ static struct timeval kFHCommentTimeval;
 }
 
 - (void)atAction:(id)sender {
+    self.textViewMediator.traceDict = @{
+        UT_ENTER_FROM: @"mention_page",
+        UT_ENTER_TYPE: @"enter_mention",
+    };
     [self.textViewMediator toolbarDidClickAtButton];
 }
 
@@ -696,7 +701,7 @@ static struct timeval kFHCommentTimeval;
         _publishButton.titleLabel.font = [UIFont boldSystemFontOfSize:[TTDeviceUIUtils tt_newFontSize:16.f]];
         [_publishButton sizeToFit];
         _publishButton.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleTopMargin;
-        _publishButton.titleColorThemeKey = @"red1";
+        _publishButton.titleColorThemeKey = @"orange1";
         _publishButton.disabledTitleColorThemeKey = @"grey4";
         [_publishButton addTarget:self action:@selector(publish:) forControlEvents:UIControlEventTouchUpInside];
         _publishButton.enabled = NO;

@@ -8,7 +8,7 @@
 #import "FHPriceValuationSelectionView.h"
 #import "UIColor+Theme.h"
 #import "UIFont+House.h"
-#import <Masonry.h>
+#import "Masonry.h"
 
 @interface FHPriceValuationSelectionView ()
 
@@ -31,7 +31,7 @@
         _itemPadding = CGRectGetWidth([UIScreen mainScreen].bounds) > 320 ? 12.0f : 8.0f;
         _bgColor = [UIColor whiteColor];
         _textColor = [UIColor colorWithHexString:@"45494d"];
-        _selectedBgColor = [UIColor themeRed1];
+        _selectedBgColor = [UIColor themeOrange4];
         _selectedTextColor = [UIColor whiteColor];
         _font = [UIFont themeFontRegular:14];
     }

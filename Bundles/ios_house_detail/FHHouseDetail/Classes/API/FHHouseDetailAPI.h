@@ -6,11 +6,12 @@
 //
 
 #import <Foundation/Foundation.h>
-#import <TTNetworkManager.h>
+#import "TTNetworkManager.h"
 #import "FHURLSettings.h"
 #import "FHHouseType.h"
 #import "FHMainApi.h"
 #import "FHHouseContactDefines.h"
+#import "FHHouseListBaseItemModel.h"
 
 @class TTHttpTask,FHDetailNewModel,FHDetailNeighborhoodModel,FHDetailOldModel,FHRentDetailResponseModel,FHDetailFloorPanDetailInfoModel,FHDetailFloorPanListResponseModel;
 @class FHDetailRelatedHouseResponseModel,FHDetailRelatedNeighborhoodResponseModel,FHDetailSameNeighborhoodHouseResponseModel,FHDetailRelatedCourtModel,FHDetailNewTimeLineResponseModel,FHDetailNewCoreDetailModel;
@@ -25,28 +26,35 @@ NS_ASSUME_NONNULL_BEGIN
 // 新房详情页请求
 +(TTHttpTask*)requestNewDetail:(NSString*)houseId
                          logPB:(NSDictionary *)logPB
+                     extraInfo:(NSDictionary *)extraInfo
                      completion:(void(^)(FHDetailNewModel * _Nullable model , NSError * _Nullable error))completion;
 
 // 二手房详情页请求
-+(TTHttpTask*)requestOldDetail:(NSString*)houseId
-                       ridcode:(NSString *)ridcode
-                     realtorId:(NSString *)realtorId
-                         logPB:(NSDictionary *)logPB
-                    completion:(void(^)(FHDetailOldModel * _Nullable model , NSError * _Nullable error))completion;
++(TTHttpTask*)requestOldDetail:(NSString *)houseId
+     ridcode:(NSString *)ridcode
+   realtorId:(NSString *)realtorId
+     logPB:(NSDictionary *)logPB
+ extraInfo:(NSDictionary *)extraInfo
+completion:(void(^)(FHDetailOldModel * _Nullable model , NSError * _Nullable error))completion;
 
 // 小区详情页请求
 +(TTHttpTask*)requestNeighborhoodDetail:(NSString*)neighborhoodId
                                   logPB:(NSDictionary *)logPB
                                   query:(NSString*)query
+                              extraInfo:(NSDictionary *)extraInfo
                     completion:(void(^)(FHDetailNeighborhoodModel * _Nullable model , NSError * _Nullable error))completion;
 
 // 租房详情页请求
 +(TTHttpTask*)requestRentDetail:(NSString*)rentCode
+                      extraInfo:(NSDictionary *)extraInfo
                      completion:(void(^)(FHRentDetailResponseModel * _Nullable model , NSError * _Nullable error))completion;
 
 // 租房-周边房源
-+ (TTHttpTask*)requestHouseRentRelated:(NSString*)rentId
-                            completion:(void(^)(FHHouseRentRelatedResponseModel* model , NSError *error))completion;
+//+ (TTHttpTask*)requestHouseRentRelated:(NSString*)rentId
+//                            completion:(void(^)(FHHouseRentRelatedResponseModel* model , NSError *error))completion;
+
++ (TTHttpTask*)requestHouseRentRelated:(NSString*)rentId class:(Class)cls
+completion:(void(^)(id<FHBaseModelProtocol> _Nullable model , NSError *error))completion;
 
 // 租房-同小区房源
 + (TTHttpTask*)requestHouseRentSameNeighborhood:(NSString*)rentId
@@ -84,12 +92,19 @@ NS_ASSUME_NONNULL_BEGIN
                                                              query:(NSString*)query
                                                              count:(NSInteger)count
                                                         completion:(void(^)(FHDetailSameNeighborhoodHouseResponseModel * _Nullable model , NSError * _Nullable error))completion;
+// 二手房-推荐新盘
++(TTHttpTask*)requestOldHouseRecommendedCourtSearch:(NSString*)houseId
+                                             offset:(NSString *)offset
+                                              query:(NSString*)query
+                                              count:(NSInteger)count
+                                         completion:(void(^)(FHListResultHouseModel * _Nullable model , NSError * _Nullable error))completion;
+
 // 新房-周边新盘
 +(TTHttpTask*)requestRelatedFloorSearch:(NSString*)houseId
                                  offset:(NSString *)offset
                                   query:(NSString*)query
                                   count:(NSInteger)count
-                             completion:(void(^)(FHDetailRelatedCourtModel * _Nullable model , NSError * _Nullable error))completion;
+                             completion:(void(^)(FHListResultHouseModel * _Nullable model , NSError * _Nullable error))completion;
 
 // 新房-楼盘动态
 +(TTHttpTask*)requestFloorTimeLineSearch:(NSString*)houseId
@@ -121,6 +136,9 @@ NS_ASSUME_NONNULL_BEGIN
  */
 +(TTHttpTask *)requestPhoneFeedback:(NSString *)houseId houseType:(FHHouseType)houseType realtorId:(NSString *)realtorId imprId:(NSString *)imprId searchId:(NSString *)searchId score:(NSInteger)score requestId:(NSString*) requestId completion:(void (^)(bool succss , NSError *error))completion;
 
+
++ (TTHttpTask *)requestRealtorEvaluationFeedback:(NSString *)targetId targetType:(NSInteger)targetType evaluationType:(NSInteger)evaluationType realtorId:(NSString *)realtorId content:(NSString *)content score:(NSInteger)score tags: (NSArray*)tags completion:(void (^)(bool, NSError * _Nullable))completion;
++ (TTHttpTask *)requestRealtorEvaluationFeedback:(NSString *)targetId targetType:(NSInteger)targetType evaluationType:(NSInteger)evaluationType realtorId:(NSString *)realtorId content:(NSString *)content score:(NSInteger)score tags: (NSArray*)tags from:(NSString *)from completion:(void (^)(bool, NSError * _Nullable))completion;
 @end
 
 

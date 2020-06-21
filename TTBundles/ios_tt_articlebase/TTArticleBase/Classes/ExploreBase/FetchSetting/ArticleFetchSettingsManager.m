@@ -39,7 +39,7 @@
 #import "TTDeviceHelper.h"
 //#import "TTFantasy.h"
 #import "TTRNCommonABTest.h"
-#import "TTCookieManager.h"
+#import "FHCookieManager.h"
 #import "NewsBaseDelegate.h"
 #import "TTDebugRealMonitorManager.h"
 #import "TTCanvasBundleManager.h"
@@ -82,7 +82,7 @@
 #import "SSCommonLogic.h"
 #import "ExploreLogicSetting.h"
 #import <BDUGAccountOnekeyLogin/BDUGOnekeySettingManager.h>
-
+#import "FHLocManager.h"
 
 #define SSFetchSettingsManagerFetchedDateKey @"SSFetchSettingsManagerFetchedDateKey"
 #define kFetchTimeInterval (3 * 60 * 60)
@@ -329,9 +329,16 @@
         [TTInAppPushSettings parseInAppPushSettings:dSettings];
     }
     
-    if ([[dSettings allKeys] containsObject:@"tt_aikan_fe_article_assets"]) {
-        NSString *url = [dSettings tt_stringValueForKey:@"tt_aikan_fe_article_assets"];
+    if ([[dSettings allKeys] containsObject:@"f_fe_article_assets"]) {
+        NSString *url = [dSettings tt_stringValueForKey:@"f_fe_article_assets"];
         [ArticleJSManager downloadAssetsWithUrl:url];
+    }
+    
+    if ([[dSettings allKeys] containsObject:@"f_article_h5_config"]) {
+        NSDictionary *value = [dSettings tt_dictionaryValueForKey:@"f_article_h5_config"];
+        if (value) {
+             [ArticleJSManager shareInstance].feArticleH5Config = [value copy];
+        }
     }
     
     if ([[dSettings allKeys] containsObject:@"tt_local_image_download_setting"]) {
@@ -482,7 +489,7 @@
     }
     [SSCommonLogic setBaiduMapKey:[dSettings tt_stringValueForKey:@"lbs_baidu_key"]];
     
-    [SSCommonLogic setAmapKey:[dSettings tt_stringValueForKey:@"lbs_amap_key"]];
+    [SSCommonLogic setAmapKey:[FHLocManager amapAPIKey]];
     
     if ([dSettings objectForKey:@"use_dns_mapping"]) {
         [SSCommonLogic setEnabledDNSMapping:[[dSettings valueForKey:@"use_dns_mapping"] integerValue]];
@@ -945,7 +952,9 @@
     }
     
     // [[TTLCSServerConfig sharedTTLCSServerConfig] updateEnabledFlag:dSettings];
-    [[TTLCSServerConfig sharedInstance] resetServerConfigEnabled:[dSettings tt_boolValueForKey:kTTLCSServerConfigEnabledKey]];
+    
+    // todo zjing test check 已和高海东确认只要TTKitchen正常获取settings，则不影响
+//    [[TTLCSServerConfig sharedInstance] resetServerConfigEnabled:[dSettings tt_boolValueForKey:kTTLCSServerConfigEnabledKey]];
     
     [[TTWebviewAntiHijackServerConfig sharedTTWebviewAntiHijackServerConfig] updateServerConfig:dSettings];
     
@@ -1074,6 +1083,13 @@
     //    [TTKitchen parseSettings:dSettings];
     // check了下settings里面的参数，目前项目中没有需要更新到TTKitchen的参数，但是还是先保守的保留此逻辑。
     [TTKitchen updateWithDictionary:dSettings];
+    
+    NSString *amapKey = [dSettings tta_stringForKey:@"lbs_amap_key"];
+    if (amapKey.length < 1) {
+        amapKey = [FHLocManager amapAPIKey];
+        [TTKitchen setString:amapKey forKey:@"lbs_amap_key"];
+    }
+    
 
     //头条认证展现配置
     if ([dSettings valueForKey:@"user_verify_info_conf"]) {

@@ -4,9 +4,8 @@
 //
 //  Created by 春晖 on 2019/2/12.
 //
-#if 0
 #import "FHHouseFindViewController.h"
-#import <FHCommonUI/HMSegmentedControl.h>
+#import "HMSegmentedControl.h"
 #import "FHHouseFindFakeSearchBar.h"
 #import <FHCommonUI/FHErrorView.h>
 #import <FHCommonUI/UIFont+House.h>
@@ -106,7 +105,8 @@
 
 -(void)initConstraints
 {
-    CGFloat height = [TTDeviceHelper isIPhoneXDevice] ? 44 : 20;
+//    CGFloat height = [TTDeviceHelper isIPhoneXDevice] ? 44 : 20;
+    CGFloat height = 0;
 //    CGFloat marginX = [TTDeviceHelper isScreenWidthLarge320] ? 45 : 15;
     [_segmentView mas_makeConstraints:^(MASConstraintMaker *make) {
 //        make.left.mas_greaterThanOrEqualTo(self.view).mas_offset(marginX);
@@ -143,7 +143,7 @@
     [_searchButton mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerX.mas_equalTo(self.view);
         make.size.mas_equalTo(CGSizeMake(200, 50));
-        make.bottom.mas_equalTo(self.contentView).offset(-70);
+        make.bottom.mas_equalTo(self.contentView).offset(-21);
     }];
     
 }
@@ -257,4 +257,3 @@
 */
 
 @end
-#endif

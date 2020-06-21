@@ -10,7 +10,7 @@
 #import "TTAdCanvasDefine.h"
 #import "TTAdCanvasViewModel.h"
 #import <Foundation/Foundation.h>
-#import <TTRoute.h>
+#import "TTRoute.h"
 
 @interface TTAdCanvasContainerViewModel : NSObject <TTRouteInitializeProtocol>
 

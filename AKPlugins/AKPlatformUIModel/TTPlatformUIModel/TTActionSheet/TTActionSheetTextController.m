@@ -88,10 +88,10 @@
     self.finishedButton.right = self.inputTextView.right;
     [self.finishedButton setTitle:@"发表" forState:UIControlStateNormal];
     self.finishedButton.clipsToBounds = YES;
-    self.finishedButton.layer.cornerRadius = 6;
+    self.finishedButton.layer.cornerRadius = self.finishedButton.height/2.0;
     [self.finishedButton.titleLabel setFont:[UIFont systemFontOfSize:14]];
     [self.finishedButton setEnabled:YES];
-    [self.finishedButton setBackgroundImage:[UIImage imageWithUIColor:[UIColor colorWithDayColorName:@"ff5869" nightColorName:@"67778b"]] forState:UIControlStateNormal];
+    [self.finishedButton setBackgroundImage:[UIImage imageWithUIColor:[UIColor colorWithDayColorName:@"ff9629" nightColorName:@"67778b"]] forState:UIControlStateNormal];
     CGFloat bottomInset = [TTUIResponderHelper mainWindow].tt_safeAreaInsets.bottom;
     self.navigationController.view.frame = CGRectMake(0, screenHeight - self.finishedButton.bottom - 10 - bottomInset, screenWidth, self.finishedButton.bottom + 10 + bottomInset);
     

@@ -23,6 +23,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 -(CGRect)relayout;
 
+- (void)showFilterCorner:(BOOL)isShow;
+
 @end
 
 NS_ASSUME_NONNULL_END

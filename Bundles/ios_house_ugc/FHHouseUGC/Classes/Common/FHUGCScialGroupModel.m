@@ -36,6 +36,7 @@
     @"followerCount": @"follower_count",
     @"socialGroupId": @"social_group_id",
     @"countText": @"count_text",
+    @"contentText": @"content_text",
     @"socialGroupName": @"social_group_name",
     @"hasFollow": @"has_follow",
     @"operation": @"operation",
@@ -45,6 +46,8 @@
     @"chatStatus": @"chat_status",
     @"shareInfo":@"share_info",
     @"tabInfo": @"tab_info",
+    @"showStatus": @"show_status",
+    @"tagIcon":@"tag_icon"
   };
   return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
      return dict[keyName]?:keyName;

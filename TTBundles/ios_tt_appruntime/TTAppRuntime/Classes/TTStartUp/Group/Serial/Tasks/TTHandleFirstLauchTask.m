@@ -7,7 +7,7 @@
 //
 
 #import "TTHandleFirstLauchTask.h"
-#import <TTAccountBusiness.h>
+#import "TTAccountBusiness.h"
 #import "SSCookieManager.h"
 //#import "FRLogicManager.h"
 #import <TTBaseLib/TTSandBoxHelper.h>

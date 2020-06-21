@@ -16,12 +16,11 @@
 #import "ExploreOrderedData+TTBusiness.h"
 #import "WenDaBaseData.h"
 #import "TTUserData.h"
-#import <TTAccountSDK.h>
+#import "TTAccountSDK.h"
 #import "TTStartupTasksTracker.h"
-#import <TTFriendRelationEntity.h>
+#import "TTFriendRelationEntity.h"
 #import "SSCommonLogic.h"
 #import <TTBaseLib/TTBaseMacro.h>
-#import <Crashlytics/Answers.h>
 
 static NSString *const kTTDBCenterAppVersion = @"kTTDBCenterAppVersion";
 
@@ -109,7 +108,6 @@ TTAccountMulticastProtocol
         if (dbSize > threshold) {
             if (![SSCommonLogic needCleanCoreData]) {
                 [SSCommonLogic setNeedCleanCoreData:YES];
-                [Answers logCustomEventWithName:@"cleanDBBySize" customAttributes:@{@"threshold":@(threshold), @"dbSize":@(dbSize)}];
             }
         }
         else {
@@ -123,7 +121,6 @@ TTAccountMulticastProtocol
                 if (![SSCommonLogic needCleanCoreData]) {
                     [SSCommonLogic setNeedCleanCoreData:YES];
                     if (exception) {
-                        [Answers logCustomEventWithName:@"cleanDBByException" customAttributes:@{@"exception":exception}];
                     }
                 }
             }

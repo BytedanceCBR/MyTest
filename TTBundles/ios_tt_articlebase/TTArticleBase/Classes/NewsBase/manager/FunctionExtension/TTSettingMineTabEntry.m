@@ -8,7 +8,7 @@
 
 #import "TTSettingMineTabEntry.h"
 #import "ArticleBadgeManager.h"
-#import <TTAccountBusiness.h>
+#import "TTAccountBusiness.h"
 #import "SSCommonLogic.h"
 #import "ArticleFetchSettingsManager.h"
 #import "SSWebViewController.h"
@@ -21,7 +21,6 @@
 #import "TTRoute.h"
 
 #import "FHMessageNotificationMacro.h"
-#import <Crashlytics/Crashlytics.h>
 //#import "TTCommonwealManager.h"
 #import "TTURLUtils.h"
 #import "NSDictionary+TTAdditions.h"

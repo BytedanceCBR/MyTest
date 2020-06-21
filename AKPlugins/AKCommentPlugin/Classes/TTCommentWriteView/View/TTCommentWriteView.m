@@ -18,11 +18,12 @@
 #import <TTBaseLib/TTBaseMacro.h>
 #import <TTBaseLib/UITextView+TTAdditions.h>
 #import <TTThemed/TTThemeManager.h>
-#import <TTAccountBusiness.h>
+#import "TTAccountBusiness.h"
 #import "TTCommentFunctionView.h"
 #import "TTCommentTransparentView.h"
 #import "TTCommentDetailReplyWriteManager.h"
 #import "TTCommentDefines.h"
+#import "FHBubbleTipManager.h"
 
 #define PUBLISHBUTTON_WIDTH [TTDeviceUIUtils tt_newPadding:35.f]
 #define PUBLISHBUTTON_HEIGHT [TTDeviceUIUtils tt_newPadding:22.5f]
@@ -114,9 +115,9 @@ static struct timeval commentTimeval;
     [super layoutSubviews];
     CGFloat bottomSafeInset = self.tt_safeAreaInsets.bottom;
     CGFloat minHeight = [TTDeviceUIUtils tt_newPadding:32 + 10 + 10] + EMOJI_INPUT_VIEW_HEIGHT;
-    if ([TTAccountManager isLogin]){
-        minHeight += [TTDeviceUIUtils tt_newPadding:33];
-    }
+//    if ([TTAccountManager isLogin]){
+//        minHeight += [TTDeviceUIUtils tt_newPadding:33];
+//    }
     if (self.containerView.height <= minHeight){
         self.containerView.height = minHeight + bottomSafeInset;
         self.emojiInputView.top = self.textInputView.bottom;
@@ -444,7 +445,7 @@ static struct timeval commentTimeval;
 }
 
 - (void)keyboardWillHideNotification:(NSNotification *)notification {
-    if (self.emojiInputViewVisible) {
+    if (self.emojiInputViewVisible || [FHBubbleTipManager shareInstance].isShowingTips) {
         return;
     }
 
@@ -589,6 +590,10 @@ static struct timeval commentTimeval;
 }
 
 - (void)atAction:(id)sender {
+    self.textViewMediator.traceDict = @{
+        UT_ENTER_FROM: @"mention_page",
+        UT_ENTER_TYPE: @"enter_mention",
+    };
     [self.textViewMediator toolbarDidClickAtButton];
 }
 

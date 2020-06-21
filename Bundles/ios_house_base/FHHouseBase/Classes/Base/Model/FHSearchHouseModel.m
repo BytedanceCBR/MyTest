@@ -7,7 +7,9 @@
 
 #import "FHSearchHouseModel.h"
 #import "FHDetailBaseModel.h"
-
+#import "UIColor+Theme.h"
+#import "UIFont+House.h"
+#import "YYText.h"
 @implementation  FHSearchHouseDataItemsBaseInfoMapModel
 
 + (JSONKeyMapper*)keyMapper
@@ -412,6 +414,8 @@
                            @"fakeReason": @"fake_reason",
                            @"externalInfo": @"external_info",
                            @"skyEyeTag": @"sky_eye_tag",
+                           @"associateInfo": @"associate_info",
+                           @"tagImage": @"tag_image",
                            };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
         return dict[keyName]?:keyName;
@@ -578,7 +582,36 @@
                                    @"neighborhoodName": @"neighborhood_name",
                                    @"neighborhoodPrice": @"neighborhood_price",
                                    @"displayStatusInfo": @"display_status_info",
+                                   @"districtAreaName": @"district_area_name",
                                    @"contactModel": @"realtor_info",
+                                   @"associateInfo": @"associate_info",
+                                   @"realtorType": @"realtor_type",
+                                   @"logPb": @"log_pb",
+                                   };
+    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+        return dict[keyName]?:keyName;
+    }];
+}
+
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+
+@end
+
+@implementation FHHouseReserveAdviserModel
++ (JSONKeyMapper*)keyMapper
+{
+    NSDictionary *dict = @{
+                                   @"tipText": @"tip_text",
+                                   @"realtorType": @"realtor_type",
+                                   @"targetId": @"target_id",
+                                   @"targetName": @"target_name",
+                                   @"districtAreaName": @"district_area_name",
+                                   @"areaPrice": @"area_price",
+                                   @"displayStatusInfo": @"display_status_info",
+                                   @"associateInfo": @"associate_info",
                                    @"logPb": @"log_pb",
                                    };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
@@ -609,7 +642,7 @@
 + (JSONKeyMapper*)keyMapper
 {
     NSDictionary *dict = @{
-
+                           @"buildingSquareMeter": @"building_square_meter",
                            @"logPb": @"log_pb",
                            @"recommendReasons": @"recommend_reasons",
                            @"baseInfo": @"base_info",
@@ -625,7 +658,9 @@
                            @"uploadAt": @"upload_at",
                            @"imprId": @"impr_id",
                            @"vrInfo": @"vr_info",
-
+                           @"contactModel": @"realtor_info",
+                           @"associateInfo": @"associate_info",
+                           
                            @"searchId": @"search_id",
                            @"houseImage": @"house_image",
                            @"houseType": @"house_type",
@@ -642,7 +677,9 @@
                            @"externalInfo": @"external_info",
                            @"skyEyeTag": @"sky_eye_tag",
                            @"advantageDescription":@"advantage_description",
-
+                           @"cellStyles":@"cell_style",
+                           @"tagImage": @"tag_image",
+                           
                            @"pricePerSqmNum": @"price_per_sqm_num",
                            @"pricePerSqmUnit": @"price_per_sqm_unit",
                            @"globalPricing":@"global_pricing",
@@ -667,6 +704,8 @@
                            @"displayStatsInfo": @"display_stats_info",
                            @"dealStatus": @"deal_status",
                            @"dealOpenUrl": @"deal_open_url",
+                           @"reasonTags": @"reason_tags",
+                           @"addrData": @"addr_data",
                            };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
         return dict[keyName]?:keyName;
@@ -678,6 +717,74 @@
     return YES;
 }
 
++ (NSString *)cellIdentifierByHouseType:(FHHouseType)houseType
+{
+    switch (houseType) {
+        case FHHouseTypeNewHouse:
+            return @"FHHouseBaseNewHouseCell";
+            break;
+        case FHHouseTypeSecondHandHouse:
+            return @"FHHouseBaseItemCellSecond";
+            break;
+        case FHHouseTypeRentHouse:
+            return @"FHHouseBaseItemCellRent";
+            break;
+        case FHHouseTypeNeighborhood:
+            return @"FHHouseBaseItemCellNeighborhood";
+            break;
+        default:
+            break;
+    }
+    return @"FHHouseBaseItemCellList";
+}
+
+- (void)setTags:(NSArray<FHHouseTagsModel> *)tags {
+    _tags = tags;
+    if (tags.count >0) {
+            _tagString = [[NSMutableAttributedString alloc]init];
+            for (int m = 0; m<tags.count; m ++) {
+                FHHouseTagsModel *element = (FHHouseTagsModel*)tags[m];
+                NSDictionary * attDic = @{ NSFontAttributeName:[UIFont themeFontRegular:12] ,NSForegroundColorAttributeName:element.textColor?[UIColor colorWithHexStr:element.textColor]:[UIColor themeOrange1]
+                };
+                if (_tagString.length >0) {
+                    CGSize size1 = [self getStringRect:_tagString size:CGSizeMake( [self tagShowMaxWidth], 14)];
+                    CGSize size2 =   [self getStringRect:[[NSAttributedString alloc]initWithString:element.content attributes:attDic] size:CGSizeMake( [self tagShowMaxWidth], 14)];
+                    if (size1.width +size2.width > [self tagShowMaxWidth]) {
+                        break;
+                    }else {
+                        [_tagString appendAttributedString: [[NSAttributedString alloc]initWithString:[NSString stringWithFormat:@" "]  attributes:nil]];
+                        [_tagString appendAttributedString: [[NSAttributedString alloc]initWithString:[NSString stringWithFormat:@" %@ ",element.content]  attributes:attDic]];
+                        NSRange substringRange = [_tagString.string rangeOfString:element.content];
+                        YYTextBorder *border = [YYTextBorder borderWithFillColor:[UIColor colorWithHexStr:element.backgroundColor] cornerRadius:2];
+                        [border setInsets:UIEdgeInsetsMake(0, -4, 0, -4)];
+                        [_tagString yy_setTextBackgroundBorder:border range:substringRange];
+                    }
+                    
+                }else {
+                    _tagString =  [[NSMutableAttributedString alloc]initWithString:[NSString stringWithFormat:@" %@ ",element.content]  attributes:attDic];
+                    YYTextBorder *border = [YYTextBorder borderWithFillColor:[UIColor colorWithHexStr:element.backgroundColor] cornerRadius:2];
+                    [border setInsets:UIEdgeInsetsMake(0, -4, 0, -4)];
+                    NSRange substringRange = [_tagString.string rangeOfString:element.content];
+                    [_tagString yy_setTextBackgroundBorder:border range:substringRange];
+                    CGSize size = [self getStringRect:_tagString size:CGSizeMake( [self tagShowMaxWidth], 14)];
+                    if (size.width > [self tagShowMaxWidth]) {
+                        _tagString = @"";
+                    }
+                }
+            }
+        }
+}
+
+- (CGSize)getStringRect:(NSAttributedString *)aString size:(CGSize )sizes
+{
+    CGRect strSize = [aString boundingRectWithSize:CGSizeMake(sizes.width, sizes.height) options:NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading context:nil];
+    return  CGSizeMake(strSize.size.width, strSize.size.height);
+}
+
+- (CGFloat)tagShowMaxWidth {
+    //屏幕宽度-视图左右间距-mainImage-mainImageLeftMargin-rightMargin
+    return [UIScreen mainScreen].bounds.size.width - 30 - 85 - 12  - 50;
+}
 @end
 
 @implementation FHSearchHouseItemModel (RecommendReason)

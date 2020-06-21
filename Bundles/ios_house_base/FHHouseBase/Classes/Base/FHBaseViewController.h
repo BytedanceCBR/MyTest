@@ -118,6 +118,28 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (void)goBack;
 
+/**
+ * 支持禁止Push跳转（与TopVC是同一个VC以及，参数相同的页面），默认是NO（走之前逻辑）
+ * 当Push来了后，如果当前顶部VC与Push不是同一个或者参数不同（比如和不同的经纪人聊天），则新建页面
+ * 用于判断页面是否是同一个页面
+ * 不需要重写
+ */
+- (BOOL)isSamePageAndParams:(NSURL *)openUrl;
+/**
+ * 子类重载当前页面
+ * 用于判断页面参数是否相同
+ */
+- (BOOL)isOpenUrlParamsSame:(NSDictionary *)queryParams;
+
+
+/// 定制Loading动画
+/// @param inView 展示loading动画的宿主视图
+- (void)showLoading:(UIView *_Nullable)inView;
+
+- (void)showLoading:(UIView *_Nullable)inView offset:(CGPoint)offset;
+
+- (void)hideLoading;
+
 @end
 
 NSHashTable *wrap_weak(NSObject * obj);

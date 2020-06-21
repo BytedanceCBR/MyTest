@@ -494,7 +494,7 @@ static NSInteger kDeleteCommentActionSheetTag = 10;
     }
     else {
         BOOL shouldShow = !comment.replyCount.intValue || show;
-
+        shouldShow = !comment.replyCount.intValue; // 去除置顶的时候弹出键盘
         //钩子分发到业务层
         if (self.delegate && [self.delegate respondsToSelector:@selector(tt_commentViewController:didSelectWithInfo:)]) {
             NSMutableDictionary *baseCondition = [[NSMutableDictionary alloc] init];
@@ -505,7 +505,9 @@ static NSInteger kDeleteCommentActionSheetTag = 10;
             [baseCondition setValue:@(5) forKey:@"source_type"]; // ArticleMomentSourceTypeArticleDetail
             [baseCondition setValue:@(comment.isStick) forKey:@"from_message"];
             [baseCondition setValue:self.serviceID forKey:@"serviceID"]; // serviceID
-            [baseCondition setValue:@(self.fromUGC) forKey:@"fromUGC"]; 
+            [baseCondition setValue:@(self.fromUGC) forKey:@"fromUGC"];
+            NSString *pageType = self.tracerDict[UT_PAGE_TYPE];
+            [baseCondition setValue:pageType forKey:@"enterFrom"];
             [self.delegate tt_commentViewController:self didSelectWithInfo:baseCondition];
         }
     }
@@ -1082,11 +1084,13 @@ static NSInteger kDeleteCommentActionSheetTag = 10;
 #pragma mark - SSImpressionProtocol
 
 - (void)needRerecordImpressions {
-    if (self.enableImpressionRecording && self.hasSelfShown) {
-        for (id cell in [self.commentTableView visibleCells]) {
-            [self _recordImpressionsIfNeedWithCell:cell status:_isCommentShownForNatant? SSImpressionStatusRecording: SSImpressionStatusSuspend];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        if (self.enableImpressionRecording && self.hasSelfShown) {
+            for (id cell in [self.commentTableView visibleCells]) {
+                [self _recordImpressionsIfNeedWithCell:cell status:_isCommentShownForNatant? SSImpressionStatusRecording: SSImpressionStatusSuspend];
+            }
         }
-    }
+    });
 }
 
 - (void)_recordImpressionsIfNeedWithCell:(UITableViewCell *)cell status:(SSImpressionStatus)status {

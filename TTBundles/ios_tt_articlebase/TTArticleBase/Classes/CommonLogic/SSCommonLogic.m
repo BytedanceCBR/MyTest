@@ -23,14 +23,14 @@
 //#import "TTIMManager.h"
 //#import "TTSettingMineTabManager.h"
 
-#import <TTAccountBusiness.h>
-#import <TTAccountMulticastDispatcher.h>
+#import "TTAccountBusiness.h"
+#import "TTAccountMulticastDispatcher.h"
 #import "TTAccountTestSettings.h"
 #import "TTJSBAuthManager.h"
 
 #import "SSInHouseFeatureManager.h"
 #import "TTVSettingsConfiguration.h"
-#import <TTSettingsManager.h>
+#import "TTSettingsManager.h"
 #import <TTBaseLib/TTSandBoxHelper.h>
 
 
@@ -5336,6 +5336,13 @@ static NSString *const kFHSettingsKey = @"kFHSettingsKey";
     return boolOffline ? : NO;
 }
 
+//+ (BOOL)webViewOpenSchemaEnable
+//{
+//    NSDictionary *fhSettings = [self fhSettings];
+//    BOOL boolOffline = [fhSettings tt_boolValueForKey:@"f_webView_open_schema_enable"];
+//    return boolOffline;
+//}
+
 + (NSInteger)configEditProfileEntry
 {
     NSDictionary *fhSettings = [self fhSettings];
@@ -5421,6 +5428,27 @@ static NSString *const kFFeedRefreshStrategy = @"feed_refresh_settings";
 //        }
 //    }
 //    return NO;
+    return YES;
+}
+
++ (BOOL)isForceEnableRealtorConfirmBtn
+{
+    NSDictionary *fhSettings = [self fhSettings];
+    if (fhSettings != nil && [fhSettings objectForKey:@"f_phone_feedback_low_score_submit_enabled"] != nil) {
+        NSInteger info = [[fhSettings objectForKey:@"f_phone_feedback_low_score_submit_enabled"] integerValue];
+        if (info == 1) {
+            return YES;
+        }
+    }
+    return NO;
+}
+
++(BOOL)enableWebViewBlankDetect
+{
+    NSDictionary *fhSettings = [self fhSettings];
+    if (fhSettings && [fhSettings objectForKey:@"enable_webview_blank_detect"]) {
+        return [[fhSettings objectForKey:@"enable_webview_blank_detect"] boolValue];
+    }
     return YES;
 }
 

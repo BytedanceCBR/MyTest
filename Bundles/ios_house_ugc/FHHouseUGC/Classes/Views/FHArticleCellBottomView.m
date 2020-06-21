@@ -6,7 +6,7 @@
 //
 
 #import "FHArticleCellBottomView.h"
-#import <Masonry.h>
+#import "Masonry.h"
 #import "UIColor+Theme.h"
 #import "UIFont+House.h"
 #import "FHFeedOperationView.h"
@@ -18,11 +18,11 @@
 #import "FHUGCConfig.h"
 #import "FHFeedOperationResultModel.h"
 #import "ToastManager.h"
+#import "UIViewAdditions.h"
 
 @interface FHArticleCellBottomView ()
 
 @property(nonatomic ,strong) UIView *bottomSepView;
-@property(nonatomic ,strong) UIImageView *positionImageView;
 
 @end
 
@@ -40,16 +40,16 @@
 - (void)initViews {
     
     self.positionView = [[UIView alloc] init];
-    _positionView.backgroundColor = [[UIColor themeRed3] colorWithAlphaComponent:0.1];
+    _positionView.backgroundColor = [UIColor themeOrange2];
     _positionView.layer.masksToBounds= YES;
     _positionView.layer.cornerRadius = 4;
+    _positionView.userInteractionEnabled = YES;
+    _positionView.hidden = YES;
     [self addSubview:_positionView];
     
-    self.positionImageView = [[UIImageView alloc] init];
-    _positionImageView.image = [UIImage imageNamed:@"fh_ugc_community_icon"];
-    [self.positionView addSubview:_positionImageView];
-    
-    self.position = [self LabelWithFont:[UIFont themeFontRegular:13] textColor:[UIColor themeRed3]];
+    self.position = [self LabelWithFont:[UIFont themeFontRegular:13] textColor:[UIColor themeOrange1]];
+    _position.layer.masksToBounds = YES;
+    _position.backgroundColor = [UIColor themeOrange2];
     [_position sizeToFit];
     [_position setContentHuggingPriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisHorizontal];
     [_position setContentCompressionResistancePriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisHorizontal];
@@ -80,42 +80,58 @@
 }
 
 - (void)initConstraints {
-    [self.positionView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(self).offset(20);
-        make.top.mas_equalTo(self);
-        make.height.mas_equalTo(24);
-    }];
+    self.positionView.top = 0;
+    self.positionView.left = 20;
+    self.positionView.width = 0;
+    self.positionView.height = 24;
     
-    [self.positionImageView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(self.positionView).offset(6);
-        make.centerY.mas_equalTo(self.positionView);
-        make.width.height.mas_equalTo(12);
-    }];
+//    [self.positionView mas_makeConstraints:^(MASConstraintMaker *make) {
+//        make.left.mas_equalTo(self).offset(20);
+//        make.top.mas_equalTo(self);
+//        make.height.mas_equalTo(24);
+//    }];
+//
+//    [self.position mas_makeConstraints:^(MASConstraintMaker *make) {
+//        make.left.mas_equalTo(self.positionView).offset(6);
+//        make.right.mas_equalTo(self.positionView).offset(-6);
+//        make.centerY.mas_equalTo(self.positionView);
+//        make.height.mas_equalTo(18);
+//    }];
     
-    [self.position mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(self.positionImageView.mas_right).offset(2);
-        make.right.mas_equalTo(self.positionView).offset(-6);
-        make.centerY.mas_equalTo(self.positionView);
-        make.height.mas_equalTo(18);
-    }];
+    self.descLabel.left = 20;
+    self.descLabel.centerY = self.positionView.centerY;
+    self.descLabel.height = 24;
+    self.descLabel.width = [UIScreen mainScreen].bounds.size.width - 40 - 20 - 20;
     
-    [self.descLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(self.positionView.mas_right).offset(6);
-        make.centerY.mas_equalTo(self.positionView);
-        make.right.mas_equalTo(self.moreBtn.mas_left).offset(-20);
-    }];
     
-    [self.moreBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.width.height.mas_equalTo(20);
-        make.centerY.mas_equalTo(self.positionView);
-        make.right.mas_equalTo(self).offset(-18);
-    }];
+//    [self.descLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+//        make.left.mas_equalTo(self.positionView.mas_right).offset(6);
+//        make.centerY.mas_equalTo(self.positionView);
+//        make.right.mas_equalTo(self.moreBtn.mas_left).offset(-20);
+//    }];
     
-    [self.bottomSepView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.positionView.mas_bottom).offset(10);
-        make.left.right.mas_equalTo(self);
-        make.height.mas_equalTo(5);
-    }];
+    self.moreBtn.left = self.descLabel.right + 20;
+    self.moreBtn.top = 2;
+    self.moreBtn.height = 20;
+    self.moreBtn.width = 20;
+    
+//    [self.moreBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+//        make.width.height.mas_equalTo(20);
+//        make.centerY.mas_equalTo(self.positionView);
+//        make.right.mas_equalTo(self).offset(-18);
+//    }];
+    
+    self.bottomSepView.left = 0;
+    self.bottomSepView.top = self.positionView.bottom + 10;
+    self.bottomSepView.height = 5;
+    self.bottomSepView.width = [UIScreen mainScreen].bounds.size.width;
+    
+//    [self.bottomSepView mas_makeConstraints:^(MASConstraintMaker *make) {
+//        make.top.mas_equalTo(self.positionView.mas_bottom).offset(10);
+//        make.left.mas_equalTo(self).offset(0);
+//        make.right.mas_equalTo(self).offset(0);
+//        make.height.mas_equalTo(5);
+//    }];
 }
 
 - (UILabel *)LabelWithFont:(UIFont *)font textColor:(UIColor *)textColor {
@@ -130,81 +146,88 @@
     //设置是否显示引导
     if(cellModel.isInsertGuideCell){
         self.guideView.hidden = NO;
-        [self.guideView mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.top.mas_equalTo(self.positionView.mas_bottom);
-            make.left.right.mas_equalTo(self);
-            make.height.mas_equalTo(42);
-        }];
+        
+        self.guideView.top = self.positionView.bottom;
+        self.guideView.left = 0;
+        self.guideView.width = [UIScreen mainScreen].bounds.size.width;
+        self.guideView.height = 42;
+        
+//        [self.guideView mas_makeConstraints:^(MASConstraintMaker *make) {
+//            make.top.mas_equalTo(self.positionView.mas_bottom);
+//            make.left.right.mas_equalTo(self);
+//            make.height.mas_equalTo(42);
+//        }];
     }else{
         self.guideView.hidden = YES;
     }
+    
+    self.moreBtn.hidden = cellModel.hiddenMore;
+    
+    self.bottomSepView.left = cellModel.bottomLineLeftMargin;
+    self.bottomSepView.top = self.positionView.bottom + 10;
+    self.bottomSepView.height = cellModel.bottomLineHeight;
+    self.bottomSepView.width = [UIScreen mainScreen].bounds.size.width - cellModel.bottomLineLeftMargin - cellModel.bottomLineRightMargin;
+    
+//    [self.bottomSepView mas_updateConstraints:^(MASConstraintMaker *make) {
+//        make.top.mas_equalTo(self.positionView.mas_bottom).offset(10);
+//        make.left.mas_equalTo(self).offset(cellModel.bottomLineLeftMargin);
+//        make.right.mas_equalTo(self).offset(-cellModel.bottomLineRightMargin);
+//        make.height.mas_equalTo(cellModel.bottomLineHeight);
+//    }];
 }
 
 - (void)showPositionView:(BOOL)isShow {
     self.positionView.hidden = !isShow;
     if(isShow){
-        [self.descLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
-            make.left.mas_equalTo(self.positionView.mas_right).offset(6);
-            make.centerY.mas_equalTo(self.positionView);
-            make.right.mas_equalTo(self.moreBtn.mas_left).offset(-20);
-        }];
+        
+        self.position.top = 3;
+        self.position.height = 18;
+        self.position.left = 6;
+        [self.position sizeToFit];
+        CGFloat labelWidth = self.position.width;
+        
+        
+        self.positionView.left = 20;
+        self.positionView.width = labelWidth + 12;
+        self.positionView.height = 24;
+            
+        //    [self.positionView mas_makeConstraints:^(MASConstraintMaker *make) {
+        //        make.left.mas_equalTo(self).offset(20);
+        //        make.top.mas_equalTo(self);
+        //        make.height.mas_equalTo(24);
+        //    }];
+        //
+        //    [self.position mas_makeConstraints:^(MASConstraintMaker *make) {
+        //        make.left.mas_equalTo(self.positionView).offset(6);
+        //        make.right.mas_equalTo(self.positionView).offset(-6);
+        //        make.centerY.mas_equalTo(self.positionView);
+        //        make.height.mas_equalTo(18);
+        //    }];
+        
+        
+        self.descLabel.left = self.positionView.right + 6;
+        self.descLabel.centerY = self.positionView.centerY;
+        self.descLabel.height = 24;
+        self.descLabel.width = [UIScreen mainScreen].bounds.size.width - 40 - 20 - 20 - self.positionView.width - 6;
+        
+//        [self.descLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
+//            make.left.mas_equalTo(self.positionView.mas_right).offset(6);
+//            make.centerY.mas_equalTo(self.positionView);
+//            make.right.mas_equalTo(self.moreBtn.mas_left).offset(-20);
+//        }];
     }else{
-        [self.descLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
-            make.left.mas_equalTo(self).offset(20);
-            make.centerY.mas_equalTo(self.positionView);
-            make.right.mas_equalTo(self.moreBtn.mas_left).offset(-20);
-        }];
+        
+        self.descLabel.left = 20;
+        self.descLabel.centerY = self.positionView.centerY;
+        self.descLabel.width = [UIScreen mainScreen].bounds.size.width - 40 - 20 - 20;
+        
+//        [self.descLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
+//            make.left.mas_equalTo(self).offset(20);
+//            make.centerY.mas_equalTo(self.positionView);
+//            make.right.mas_equalTo(self.moreBtn.mas_left).offset(-20);
+//        }];
     }
 }
-
-//- (void)moreOperation {
-//    __weak typeof(self) wself = self;
-//
-//    [self trackClickOptions];
-//    FHFeedOperationView *dislikeView = [[FHFeedOperationView alloc] init];
-//    FHFeedOperationViewModel *viewModel = [[FHFeedOperationViewModel alloc] init];
-//
-//    dislikeView.dislikeTracerBlock = ^{
-//        [wself trackClickReport];
-//    };
-//
-//    if(self.cellModel){
-//        viewModel.groupID = self.cellModel.groupId;
-//        viewModel.categoryID = self.cellModel.categoryId;
-//    }
-//
-//    [dislikeView refreshWithModel:viewModel];
-//    CGPoint point = _moreBtn.center;
-//    [dislikeView showAtPoint:point
-//                    fromView:_moreBtn
-//             didDislikeBlock:^(FHFeedOperationView * _Nonnull view) {
-//                 [wself handleItemselected:view];
-//             }];
-//}
-//
-////文章只处理举报，没有删除
-//- (void)handleItemselected:(FHFeedOperationView *) view {
-//    if(view.selectdWord.type == FHFeedOperationWordTypeReport){
-//        //举报
-//        if(self.deleteCellBlock){
-//            self.deleteCellBlock();
-//        }
-//    }
-//}
-
-//#pragma mark - 埋点
-//
-//- (void)trackClickOptions {
-//    NSMutableDictionary *dict = [self.cellModel.tracerDic mutableCopy];
-//    dict[@"click_position"] = @"feed_more";
-//    TRACK_EVENT(@"click_options", dict);
-//}
-//
-//- (void)trackClickReport {
-//    NSMutableDictionary *dict = [self.cellModel.tracerDic mutableCopy];
-//    dict[@"click_position"] = @"feed_report";
-//    TRACK_EVENT(@"click_report", dict);
-//}
 
 - (void)moreOperation {
     [self trackClickOptions];
@@ -379,28 +402,6 @@
             [[ToastManager manager] showToast:@"删除失败"];
         }
     }];
-    
-    
-//    [FHHouseUGCAPI postDelete:self.cellModel.groupId socialGroupId:self.cellModel.community.socialGroupId enterFrom:self.cellModel.tracerDic[@"enter_from"] pageType:self.cellModel.tracerDic[@"page_type"] completion:^(bool success, NSError * _Nonnull error) {
-//        if(success){
-//            //调用删除接口
-//            if(wself.deleteCellBlock){
-//                wself.deleteCellBlock();
-//            }
-//            //删除帖子成功发送通知
-//            NSMutableDictionary *dic = [NSMutableDictionary dictionary];
-//            if (self.cellModel.community.socialGroupId.length > 0) {
-//                dic[@"social_group_id"] = self.cellModel.community.socialGroupId;
-//            }
-//            if(self.cellModel){
-//                dic[@"cellModel"] = self.cellModel;
-//            }
-//            [[NSNotificationCenter defaultCenter] postNotificationName:kFHUGCDelPostNotification object:nil userInfo:dic];
-//
-//        }else{
-//            [[ToastManager manager] showToast:@"删除失败"];
-//        }
-//    }];
 }
 
 - (void)setOperationSelfLook:(NSString *)operationCode {

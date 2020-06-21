@@ -7,12 +7,15 @@
 
 #import "FHBaseViewController.h"
 #import "FHCommunityFeedListController.h"
+#import "FHNearbyHeaderView.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
 @interface FHNearbyViewController : FHBaseViewController
 
 @property(nonatomic ,strong) FHCommunityFeedListController *feedVC;
+@property(nonatomic, strong) FHNearbyHeaderView *headerView;
+@property(nonatomic, assign) CGFloat headerViewHeight;
 
 - (void)viewWillAppear;
 

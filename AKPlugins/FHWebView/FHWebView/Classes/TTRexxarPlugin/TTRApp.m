@@ -9,7 +9,6 @@
 #import "TTRApp.h"
 #import "TTJSBAuthManager.h"
 #import "TTInstallIDManager.h"
-#import "SmAntiFraud.h"
 
 #import <TTRexxar/TTRexxarNotificationCenter.h>
 #import <TTRexxar/TTRJSBForwarding.h>
@@ -22,13 +21,16 @@
 #import "TTAccount.h"
 #import "TTDeviceHelper.h"
 #import "FHEnvContext.h"
+#import "ArticleJSManager.h"
+#import "SSCommonLogic.h"
+#import "IESFalconManager.h"
+#import "FHIESGeckoManager.h"
 
 extern NSString *const kFHPLoginhoneNumberCacheKey;
 
 @implementation TTRApp
 
 + (void)load {
-    [[TTRJSBForwarding sharedInstance] registeJSBAlias:@"TTRApp.deviceInfo" for:@"deviceInfo"];
     [[TTRJSBForwarding sharedInstance] registeJSBAlias:@"TTRApp.sendNotification" for:@"sendNotification"];
 }
 
@@ -56,7 +58,6 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
     if (URL && [[UIApplication sharedApplication] canOpenURL:URL]) {
         installed = YES;
     }
-    
     callback(TTRJSBMsgSuccess, @{@"installed":@(installed)});
 }
 
@@ -142,6 +143,18 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
     }
 }
 
+- (void)setGeckoWithParam:(NSDictionary *)param callback:(TTRJSBResponse)callback webView:(UIView<TTRexxarEngine> *)webview controller:(UIViewController *)controller
+{
+    BOOL open = [param tt_boolValueForKey:@"open"];
+
+    IESFalconManager.interceptionWKHttpScheme = open;
+    IESFalconManager.interceptionEnable = open;
+          
+    NSString *pattern = @"^(http|https)://.*.(pstatp.com/(toutiao)?|haoduofangs.com/f100/inner|99hdf.com/f100/inner|byteimg.com|byteimg.com)";
+    //        [IESFalconManager registerPattern:pattern forGurdAccessKey:[FHIESGeckoManager getGeckoKey]];
+    [IESFalconManager registerPattern:pattern forGeckoAccessKey:[FHIESGeckoManager getGeckoKey]];
+}
+
 - (void)configWithParam:(NSDictionary *)param callback:(TTRJSBResponse)callback webView:(UIView<TTRexxarEngine> *)webview controller:(UIViewController *)controller {
     NSString *clientID = [param objectForKey:@"client_id"];
     if (isEmptyString(clientID)) {
@@ -156,13 +169,6 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
     }];
 }
 
-- (void)deviceInfoWithParam:(NSDictionary *)param callback:(TTRJSBResponse)callback webView:(UIView<TTRexxarEngine> *)webview controller:(UIViewController *)controller {
-    NSMutableDictionary *deviceInfo = [[[SmAntiFraud shareInstance] getDeviceInfoWithConfiguration:nil] mutableCopy];
-    if (callback) {
-        callback(TTRJSBMsgSuccess, @{@"code": @"1",
-                                     @"data": [deviceInfo copy]});
-    }
-}
 
 - (void)sendNotificationWithParam:(NSDictionary *)param callback:(TTRJSBResponse)callback webView:(UIView<TTRexxarEngine> *)webview controller:(UIViewController *)controller {
     NSString *name = [param tt_stringValueForKey:@"type"];
@@ -200,6 +206,24 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
                                      @"batteryLevel": [NSNumber numberWithFloat:(batteryLevel*100)],
                                      @"timeStyle": [NSNumber numberWithBool:isTimeStyleTwelve],
                                      @"time" :@(timeStamp)});
+    }
+}
+
+- (void)getArticleConfigWithParam:(NSDictionary *)param callback:(TTRJSBResponse)callback webView:(UIView<TTRexxarEngine> *)webview controller:(UIViewController *)controller
+{
+    NSDictionary *dicData = [ArticleJSManager shareInstance].feArticleH5Config;
+    if (dicData && [dicData isKindOfClass:[NSDictionary class]] && dicData[@"article_card_url"]) {
+        NSString *article_card_url = dicData[@"article_card_url"];
+        if (article_card_url == nil) {
+            article_card_url = @"";// 避免crash
+        }
+        if (callback) {
+            callback(TTRJSBMsgSuccess, @{@"code": @"1",@"article_card_url":article_card_url});
+        }
+    } else {
+        if (callback) {
+            callback(TTRJSBMsgFailed, @{@"code": @"0", @"msg": @"fe_article_h5_config 为空"});
+        }
     }
 }
 

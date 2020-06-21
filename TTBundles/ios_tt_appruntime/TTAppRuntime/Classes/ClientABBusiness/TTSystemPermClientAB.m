@@ -9,7 +9,7 @@
 #import <TTABManager/TTABManager.h>
 #import <TTABManager/TTABHelper.h>
 #import <TTDialogDirector/TTDialogDirector+ClientAB.h>
-#import <UIAlertView+Blocks.h>
+#import "UIAlertView+Blocks.h"
 #import <TTBaseLib/TTBaseMacro.h>
 
 

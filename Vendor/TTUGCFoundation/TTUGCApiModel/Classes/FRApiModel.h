@@ -3776,7 +3776,13 @@ FRUgcConcernThreadV3ListRequestModel;
 @property (strong, nonatomic) NSNumber<Optional> *flipchat_sync;
 @property (strong, nonatomic) NSString<Optional> *sdk_params;
 @property (nonatomic, copy)     NSString<Optional>       *social_group_id;
+@property (strong, nonatomic) NSNumber<Optional> *bind_type;
 @property (nonatomic, copy)   NSDictionary<Optional> * extraTrack;
+// 小区点评相关参数
+@property (nonatomic, copy) NSString<Optional> *neighborhoodId; // 小区id
+@property (nonatomic, copy) NSString<Optional> *source;
+@property (nonatomic, copy) NSString<Optional> *neighborhoodTags; // 小区点评标签 json String
+@property (nonatomic, copy) NSString<Optional> *scores; // 小区点评评分 json string
 @end
 
 @interface  FRUgcPublishPostV5CommitResponseModel : JSONModel<TTResponseModelProtocol>

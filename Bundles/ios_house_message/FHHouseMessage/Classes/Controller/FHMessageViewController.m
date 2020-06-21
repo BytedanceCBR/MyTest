@@ -7,7 +7,7 @@
 
 #import "FHMessageViewController.h"
 #import "FHMessageViewModel.h"
-#import <Masonry.h>
+#import "Masonry.h"
 #import "UIViewController+NavbarItem.h"
 #import "UIColor+Theme.h"
 #import "TTReachability.h"
@@ -28,13 +28,14 @@
 #import <FHCHousePush/FHPushMessageTipView.h>
 #import <FHHouseBase/FHBaseTableView.h>
 #import <FHMessageNotificationManager.h>
+#import "FHEnvContext.h"
+#import <FHPopupViewCenter/FHPopupViewManager.h>
 
 @interface FHMessageViewController ()
 
 @property(nonatomic, strong) FHMessageViewModel *viewModel;
 @property(nonatomic, strong) FHPushMessageTipView *pushTipView;
 @property (nonatomic, copy)     NSString       *enter_from;// 外部传入
-
 @end
 
 @implementation FHMessageViewController
@@ -49,7 +50,7 @@
     [self initView];
     [self initConstraints];
     [self initViewModel];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(networkStateChange:) name:kReachabilityChangedNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(networkStateChange:) name:TTReachabilityChangedNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationDidBecomeActive) name:UIApplicationDidBecomeActiveNotification object:nil];
 //     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(userInfoReload) name:KUSER_UPDATE_NOTIFICATION object:nil];
     
@@ -76,10 +77,16 @@
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-//    [self.viewModel viewWillAppear];
+
     [FHBubbleTipManager shareInstance].canShowTip = NO;
     [self startLoadData];
     [self applicationDidBecomeActive];
+}
+
+- (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
+    [[FHPopupViewManager shared] triggerPopupView];
+    [[FHPopupViewManager shared] triggerPendant];
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
@@ -128,7 +135,7 @@
     self.containerView = [[UIView alloc] init];
     [self.view addSubview:_containerView];
     
-    _notNetHeader = [[FHNoNetHeaderView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, 30)];
+    _notNetHeader = [[FHNoNetHeaderView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, 36)];
     if ([TTReachability isNetworkConnected]) {
         [_notNetHeader setHidden:YES];
     } else {
@@ -149,6 +156,9 @@
     _tableView.backgroundColor = [UIColor whiteColor];
     _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     self.automaticallyAdjustsScrollViewInsets = NO;
+    if (@available(iOS 11.0 , *)) {
+          _tableView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
+      }
     
     UIView *headerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 0, 0.01f)];
     _tableView.tableHeaderView = headerView;
@@ -179,7 +189,7 @@
     } else {
         [_notNetHeader setHidden:NO];
         [_notNetHeader mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.height.mas_equalTo(30);
+            make.height.mas_equalTo(36);
         }];
     }
 //    [self.tableView mas_remakeConstraints:^(MASConstraintMaker *make) {
@@ -200,12 +210,11 @@
             bottom += [[[[UIApplication sharedApplication] delegate] window] safeAreaInsets].bottom;
         }
     }
-    
     [self.containerView mas_makeConstraints:^(MASConstraintMaker *make) {
-//        make.top.mas_equalTo(44);
-        if (@available(iOS 11.0, *)) {
-              make.top.mas_equalTo(self.view).offset(44.f + self.view.tt_safeAreaInsets.top);
-//            make.top.mas_equalTo(self.mas_topLayoutGuide).offset(44);
+        if (@available(iOS 13.0, *)) {
+            make.top.mas_equalTo(self.view).offset(44.f + [UIApplication sharedApplication].keyWindow.safeAreaInsets.top);
+        } else if (@available(iOS 11.0, *)) {
+            make.top.mas_equalTo(self.view).offset(44.f + self.view.tt_safeAreaInsets.top);
         } else {
             make.top.mas_equalTo(64);
         }
@@ -217,7 +226,7 @@
         if ([TTReachability isNetworkConnected]) {
             make.height.mas_equalTo(0);
         }else {
-            make.height.mas_equalTo(30);
+            make.height.mas_equalTo(36);
         }
     }];
     BOOL isEnabled = [FHPushAuthorizeManager isMessageTipEnabled];

@@ -6,9 +6,9 @@
 //
 
 #import "FHUGCPostMenuView.h"
-#import <UIColor+Theme.h>
-#import <UIFont+House.h>
-#import <Masonry.h>
+#import "UIColor+Theme.h"
+#import "UIFont+House.h"
+#import "Masonry.h"
 #import "FHCommonDefines.h"
 
 #define ANIMATION_DURATION 0.3
@@ -72,7 +72,7 @@
 - (UILabel *)postTitleLabel {
     if(!_postTitleLabel) {
         _postTitleLabel = [UILabel new];
-        _postTitleLabel.text = @"发图文";
+        _postTitleLabel.text = @"发动态";
         _postTitleLabel.font = [UIFont themeFontSemibold:16];
         _postTitleLabel.textColor = [UIColor themeWhite];
         [_postTitleLabel sizeToFit];

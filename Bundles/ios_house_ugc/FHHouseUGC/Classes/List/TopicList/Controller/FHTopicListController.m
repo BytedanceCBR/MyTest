@@ -12,7 +12,7 @@
 #import "UIScrollView+Refresh.h"
 #import "UIViewAdditions.h"
 #import <TTUIWidget/UIViewController+Track.h>
-#import <FHUserTracker.h>
+#import "FHUserTracker.h"
 
 @interface FHTopicListController () <TTUIViewControllerTrackProtocol>
 @property(nonatomic, strong) UITableView *tableView;
@@ -42,7 +42,7 @@
 }
 
 - (void)initView {
-    [self setTitle:@"小区话题"];
+    [self setTitle:@"热门话题"];
     [self setupDefaultNavBar:YES];
     
     self.tableView = [[UITableView alloc] initWithFrame:self.view.bounds style:UITableViewStylePlain];
@@ -85,7 +85,9 @@
 
 - (void)initConstraints {
     [self.tableView mas_makeConstraints:^(MASConstraintMaker *make) {
-        if (@available(iOS 11.0, *)) {
+        if (@available(iOS 13.0, *)) {
+            make.top.mas_equalTo(self.view).offset(44.f + [UIApplication sharedApplication].keyWindow.safeAreaInsets.top);
+        } else if (@available(iOS 11.0, *)) {
             make.top.mas_equalTo(self.view).offset(44.f + self.view.tt_safeAreaInsets.top);
         } else {
             make.top.mas_equalTo(64);

@@ -40,10 +40,10 @@
 #import "EXTKeyPathCoding.h"
 #import "TTURLUtils.h"
 #import <MBProgressHUD/MBProgressHUD.h>
-#import <TTNavigationController.h>
-#import <UIImage+TTThemeExtension.h>
-#import <TTDeviceHelper.h>
-#import <TTModuleBridge.h>
+#import "TTNavigationController.h"
+#import "UIImage+TTThemeExtension.h"
+#import "TTDeviceHelper.h"
+#import "TTModuleBridge.h"
 #import "AWEVideoConstants.h"
 #import "AWEVideoContainerViewController.h"
 #import "AWEVideoDetailControlOverlayViewController.h"
@@ -54,7 +54,7 @@
 #import "HTSVideoPageParamHeader.h"
 #import "TTImagePreviewAnimateManager.h"
 #import "TSVShortVideoDetailExitManager.h"
-#import <TTInteractExitHelper.h>
+#import "TTInteractExitHelper.h"
 #import <TTBaseLib/TTUIResponderHelper.h>
 #import "UIViewController+TabBarSnapShot.h"
 #import "UIImageView+WebCache.h"
@@ -105,15 +105,15 @@
 #import "TSVPrefetchImageManager.h"
 #import "TSVDetailRouteHelper.h"
 #import "TSVPrefetchVideoManager.h"
-#import <TTAudioSessionManager.h>
+#import "TTAudioSessionManager.h"
 
 #import "ExploreOrderedData.h"
-#import <TTBusinessManager+StringUtils.h>
+#import "TTBusinessManager+StringUtils.h"
 
-#import <FHPostDetailCommentWriteView.h>
+#import "FHPostDetailCommentWriteView.h"
 #import "SSCommonLogic.h"
 #import "SSCommentInputHeader.h"
-#import <FHUserTracker.h>
+#import "FHUserTracker.h"
 
 #define kPostMessageFinishedNotification    @"kPostMessageFinishedNotification"
 
@@ -264,6 +264,7 @@ static const CGFloat kFloatingViewOriginY = 230;
         _ruleID = [params[AWEVideoRuleId] copy];
         _groupSource = [params[VideoGroupSource] copy] ?: @"";
         _showComment = [params[AWEVideoShowComment] copy];
+        
         if (!_showComment) {
             _showComment = [extraParams[AWEVideoShowComment] copy];
         }

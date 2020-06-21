@@ -120,7 +120,7 @@
 
     FHCityMarketBottomBarItem* item = [[FHCityMarketBottomBarItem alloc] init];
     item.titleLabel.text = self.model.bottomText;
-    item.backgroundColor = [UIColor colorWithHexString:@"ff5869"];
+    item.backgroundColor = [UIColor themeOrange4];//[UIColor colorWithHexString:@"ff5869"];
     [item addTarget:self action:@selector(jumpTo) forControlEvents:UIControlEventTouchUpInside];
     [_bottomBarView setBottomBarItems:@[item]];
 

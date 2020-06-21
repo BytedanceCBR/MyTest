@@ -6,9 +6,9 @@
 //
 
 #import "FHDetailMultitemCollectionView.h"
-#import <Masonry.h>
+#import "Masonry.h"
 #import "UIFont+House.h"
-#import <UIImageView+BDWebImage.h>
+#import "UIImageView+BDWebImage.h"
 #import "FHCommonDefines.h"
 #import "FHDetailOldModel.h"
 #import "FHURLSettings.h"
@@ -16,7 +16,7 @@
 #import "UILabel+House.h"
 #import <FHHouseBase/FHBaseCollectionView.h>
 
-@interface FHDetailMultitemCollectionView ()<UICollectionViewDataSource, UICollectionViewDelegate>
+@interface FHDetailMultitemCollectionView ()<UICollectionViewDataSource, UICollectionViewDelegate,FHDetailBaseCollectionCellDelegate>
 
 @property (nonatomic, copy)     NSString       *cellIdentifier;
 @property (nonatomic, strong)   NSMutableDictionary       *houseShowCache;
@@ -77,6 +77,7 @@
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
     FHDetailBaseCollectionCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:self.cellIdentifier forIndexPath:indexPath];
     if (indexPath.row < self.datas.count) {
+        cell.delegate = self;
         [cell refreshWithData:self.datas[indexPath.row]];
     }
     return cell;
@@ -90,8 +91,14 @@
     }
 }
 
+
+
 // house_show埋点
 - (void)collectionView:(UICollectionView *)collectionView willDisplayCell:(UICollectionViewCell *)cell forItemAtIndexPath:(NSIndexPath *)indexPath {
+    if (self.isNewHouseFloorPan && !self.subHouseShowCache.allKeys.count >0) {
+        return;
+    }
+    
     NSString *tempKey = [NSString stringWithFormat:@"%ld_%ld",indexPath.section,indexPath.row];
     if ([self.houseShowCache valueForKey:tempKey]) {
         return;
@@ -103,4 +110,16 @@
     }
 }
 
+- (void )setSubHouseShowCache:(NSMutableDictionary *)subHouseShowCache {
+    _subHouseShowCache = subHouseShowCache;
+    [_houseShowCache addEntriesFromDictionary:subHouseShowCache];
+}
+
+#pragma mark - FHDetailBaseCollectionCellDelegate
+- (void)clickCellItem:(UIView *)itemView onCell:(FHDetailBaseCollectionCell *)cell {
+    NSIndexPath *indexPath = [self.collectionContainer indexPathForCell:cell];
+    if(self.itemClickBlk) {
+        self.itemClickBlk(indexPath.row, itemView, cell);
+    }
+}
 @end

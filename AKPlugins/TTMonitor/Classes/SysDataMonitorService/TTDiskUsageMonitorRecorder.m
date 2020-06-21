@@ -116,7 +116,7 @@ static NSMutableDictionary * directoryList;
     NSString * dirPath = NSHomeDirectory();
     dispatch_async(dispatch_get_global_queue(0, nil), ^{
         long long value = [TTDiskUsageMonitorRecorder folderSizeAtPath:dirPath];
-        if (value>1024*1024*200) {//大于200MB
+        if (value>1024*1024*400) {//大于400MB
             [self getFolderDescriptionIfNeeded];
         }
         [[NSUserDefaults standardUserDefaults] setValue:@(value/(1000*1000)) forKey:@"disk_monitor_value"];

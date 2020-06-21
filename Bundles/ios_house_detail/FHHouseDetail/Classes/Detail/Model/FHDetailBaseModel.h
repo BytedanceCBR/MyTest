@@ -9,11 +9,15 @@
 #import "FHHouseListModel.h"
 #import "FHBaseModelProtocol.h"
 #import "FHHouseType.h"
+#import "FHHouseShadowImageType.h"
 #import <FHHouseBase/FHFillFormAgencyListItemModel.h>
 #import <FHHouseBase/FHImageModel.h>
 #import <FHHouseBase/FHHouseCoreInfoModel.h>
+#import <UIKit/UIKit.h>
 
-@class FHDetailNewDataSmallImageGroupModel;
+@class FHDetailHouseTitleModel;
+@class FHHouseDetailImageGroupModel;
+@class FHClueAssociateInfoModel;
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -38,14 +42,20 @@ NS_ASSUME_NONNULL_BEGIN
 //@end
 
 @interface FHDetailBaseModel : NSObject
-
+@property (nonatomic, assign) FHHouseShdowImageType shadowImageType;
+//是否裁剪阴影图
+@property (nonatomic, assign) FHHouseShdowImageScopeType shdowImageScopeType;
+//根据houseModelType将多个cell分为一个模块
+@property (nonatomic, assign)FHHouseModelType houseModelType;
+@property (nonatomic, strong) UIImage *shadowImage;
 @end
 
 @interface FHDetailPhotoHeaderModel : FHDetailBaseModel
 @property (nonatomic,assign)BOOL isNewHouse;
-@property (nonatomic, strong , nullable) NSArray<FHDetailNewDataSmallImageGroupModel *> *smallImageGroup;
+@property (nonatomic, strong , nullable) NSArray<FHHouseDetailImageGroupModel *> *smallImageGroup;
 @property (nonatomic, strong , nullable) NSArray<FHImageModel *> *houseImage;
 @property (nonatomic, strong , nullable) NSArray<FHImageModel *> *instantHouseImages;//列表页小图
+@property (strong, nonatomic, nullable) FHDetailHouseTitleModel *titleDataModel;//标题，标签模型
 @property (nonatomic, assign) BOOL isInstantData;
 @end
 
@@ -56,6 +66,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *desc;
 @property (nonatomic, copy , nullable) NSString *shareUrl;
 @property (nonatomic, copy , nullable) NSString *title;
+@property (nonatomic, strong, nullable) FHClueAssociateInfoModel *associateInfo;
 @end
 
 @interface FHDetailContactImageTagModel : JSONModel
@@ -74,6 +85,7 @@ typedef NS_ENUM(NSUInteger, FHRealtorCellShowStyle) {
     FHRealtorCellShowStyle0,
     FHRealtorCellShowStyle1,
     FHRealtorCellShowStyle2,
+    FHRealtorCellShowStyle3,
 };
 
 @protocol FHRealtorTag<NSObject>
@@ -83,7 +95,15 @@ typedef NS_ENUM(NSUInteger, FHRealtorCellShowStyle) {
 @property (nonatomic, copy , nullable) NSString *text;
 @property (nonatomic, copy , nullable) NSString *backgroundColor;
 @property (nonatomic, copy , nullable) NSString *fontColor;
+@property (nonatomic, copy , nullable) NSString *borderColor;
 @end
+
+@interface FHClueAssociateInfoModel: JSONModel
+@property (nonatomic, strong, nullable) NSDictionary *imInfo;
+@property (nonatomic, strong, nullable) NSDictionary *phoneInfo;
+@property (nonatomic, strong, nullable) NSDictionary *reportFormInfo;
+@end
+
 
 @protocol FHDetailContactModel<NSObject>
 @end
@@ -97,12 +117,16 @@ typedef NS_ENUM(NSUInteger, FHRealtorCellShowStyle) {
 @property (nonatomic, copy , nullable) NSString *realtorId;
 @property (nonatomic, copy , nullable) NSString *businessLicense;
 @property (nonatomic, copy , nullable) NSString *agencyId;
+@property (nonatomic, copy , nullable) NSString *agencyDescription;
 @property (nonatomic, copy , nullable) NSString *phone;
 @property (nonatomic, copy , nullable) NSString *agencyName;
 @property (nonatomic, copy , nullable) NSString *realtorName;
 @property (nonatomic, copy , nullable) NSString *imOpenUrl;
 @property (nonatomic, copy , nullable) NSString *imLabel;
 @property (nonatomic, copy , nullable) NSString *realtorDetailUrl;
+@property (nonatomic, copy , nullable) NSString *realtorScoreDisplay;
+@property (nonatomic, copy , nullable) NSString *realtorScoreDescription;
+@property (nonatomic, copy , nullable) NSString *realtorDescription;
 @property (nonatomic, assign) NSInteger showRealtorinfo;
 @property (nonatomic, copy , nullable) NSString *callButtonText;
 @property (nonatomic, copy , nullable) NSString *reportButtonText;
@@ -121,6 +145,7 @@ typedef NS_ENUM(NSUInteger, FHRealtorCellShowStyle) {
 
 @property (nonatomic, assign) BOOL isInstantData;//是否是列表页带入的
 @property (nonatomic, strong , nullable) NSDictionary *realtorLogpb;
+
 - (nonnull id)copyWithZone:(nullable NSZone *)zone;
 
 - (void)encodeWithCoder:(nonnull NSCoder *)aCoder;
@@ -240,6 +265,13 @@ typedef NS_ENUM(NSUInteger, FHRealtorCellShowStyle) {
 @protocol FHDetailCommunityEntryActiveInfoModel;
 
 @interface FHDetailCommunityEntryModel : JSONModel
+@property (nonatomic, assign) FHHouseShdowImageType shadowImageType;
+//是否裁剪阴影图
+@property (nonatomic, assign) FHHouseShdowImageScopeType shdowImageScopeType;
+//根据houseModelType将多个cell分为一个模块
+@property (nonatomic, assign)FHHouseModelType houseModelType;
+
+
 @property (nonatomic, copy , nullable) NSString *socialGroupId;
 @property (nonatomic, strong , nullable) FHDetailCommunityEntryActiveCountInfoModel *activeCountInfo;
 @property (nonatomic, strong , nullable) NSArray<FHDetailCommunityEntryActiveInfoModel> *activeInfo;
@@ -247,4 +279,93 @@ typedef NS_ENUM(NSUInteger, FHRealtorCellShowStyle) {
 @property (nonatomic, assign) FHHouseType houseType;
 @property (nonatomic, copy) NSDictionary *logPb;
 @end
+
+@interface FHDetailGaodeImageModel : JSONModel
+@property (nonatomic, copy , nullable) NSString *url;
+@property (nonatomic, assign) NSInteger width;
+@property (nonatomic, assign) NSInteger height;
+@property (nonatomic, copy , nullable) NSString *latRatio;
+@property (nonatomic, copy , nullable) NSString *lngRatio;
+@end
+
+
+@protocol FHVideoHouseVideoVideoInfosModel<NSObject>
+@end
+
+@interface FHVideoHouseVideoVideoInfosModel : JSONModel
+
+@property (nonatomic, copy , nullable) NSString *vid;
+@property (nonatomic, assign) NSInteger imageWidth;
+@property (nonatomic, assign) NSInteger vHeight;
+@property (nonatomic, assign) NSInteger imageHeight;
+@property (nonatomic, assign) NSInteger vWidth;
+@property (nonatomic, copy , nullable) NSString *coverImageUrl;
+@end
+
+
+@interface FHVideoHouseVideoModel : JSONModel
+
+@property (nonatomic, strong , nullable) NSArray<FHVideoHouseVideoVideoInfosModel> *videoInfos;
+@property (nonatomic, copy , nullable) NSString *infoSubTitle;
+@property (nonatomic, copy , nullable) NSString *infoTitle;
+@end
+
+@protocol FHHouseDetailImageListDataModel<NSObject>
+@end
+
+// 房源详情图片类型
+typedef enum : NSInteger {
+    FHDetailHouseImageTypeOther             = 0, // 其他
+    FHDetailHouseImageTypeApartment         = 2, // 户型
+    FHDetailHouseImageTypeLivingroom        = 3, // 客厅
+    FHDetailHouseImageTypeBedroom           = 4, // 卧室
+    FHDetailHouseImageTypeKitchen           = 5, // 厨房
+    FHDetailHouseImageTypeBathroom          = 6, // 卫生间
+    
+    FHDetailHouseImageTypeEffect            = 1001, // 效果图
+    FHDetailHouseImageTypePrototyperoom     = 1002, // 样板间
+    FHDetailHouseImageTypeLocation          = 1003, // 区位
+    FHDetailHouseImageTypeSandbox           = 1004, // 沙盘
+    FHDetailHouseImageTypePeripheral        = 1005, // 周边配套
+    FHDetailHouseImageTypeRealistic         = 1006, // 实景图
+    FHDetailHouseImageTypeBuildingLicenses  = 1007, //楼盘证照
+} FHDetailHouseImageType;
+
+
+typedef NS_ENUM (NSUInteger, FHHouseDetailImageListDataUsedSceneType) {
+    FHHouseDetailImageListDataUsedSceneTypeUnknown = 0,
+    FHHouseDetailImageListDataUsedSceneTypeOld = 1,
+    FHHouseDetailImageListDataUsedSceneTypeNew = 2,
+    FHHouseDetailImageListDataUsedSceneTypeNeighborhood = 3,
+    FHHouseDetailImageListDataUsedSceneTypeRent = 4,
+    FHHouseDetailImageListDataUsedSceneTypeFloorPan = 5
+};
+
+@interface FHHouseDetailImageListDataModel : JSONModel
+
+@property (nonatomic, copy , nullable) NSString *houseImageTypeName;
+@property (nonatomic, assign) FHDetailHouseImageType houseImageType;
+@property (nonatomic, assign) FHHouseDetailImageListDataUsedSceneType usedSceneType; //使用场景，主要区分户型详情，type显示 户型&样板间
+@property (nonatomic, strong , nullable) NSArray<FHImageModel> *houseImageList;
+@property (nonatomic, strong , nullable) NSArray<FHImageModel> *instantHouseImageList;
+@end
+
+
+
+
+@interface FHDetailNewTopBanner : JSONModel
+
+@property (nonatomic, copy , nullable) NSString *businessTag;
+@property (nonatomic, copy , nullable) NSString *advantage;
+
+@end
+
+@interface FHDetailNewUserStatusModel : JSONModel
+
+@property (nonatomic, copy , nullable) NSString *courtOpenSubStatus;
+@property (nonatomic, copy , nullable) NSString *pricingSubStatus;
+@property (nonatomic, assign) NSInteger courtSubStatus;
+@end
+
+
 NS_ASSUME_NONNULL_END

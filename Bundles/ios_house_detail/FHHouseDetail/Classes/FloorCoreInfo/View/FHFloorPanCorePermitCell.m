@@ -1,124 +1,192 @@
 //
 //  FHFloorPanCorePermitCell.m
-//  AFgzipRequestSerializer
+//  FHHouseDetail
 //
-//  Created by 谢飞 on 2019/2/19.
+//  Created by xubinbin on 2020/4/23.
 //
 
 #import "FHFloorPanCorePermitCell.h"
+#import "TTBaseMacro.h"
+#import "TTPhotoScrollViewController.h"
 
-@interface FHFloorPanCorePermitCell ()
+@interface FHFloorPanCorePermitCell()<TTPhotoScrollViewControllerDelegate>
 
-@property (nonatomic, strong) UIView *headerView;
-@property (nonatomic, strong) UIView *listView;
+@property (nonatomic , strong) UIView *containerView;
+@property (nonatomic , strong) NSMutableArray *imageList;
 
 @end
 
 @implementation FHFloorPanCorePermitCell
 
--(instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
+- (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
 {
-    self = [super initWithStyle:style
-                reuseIdentifier:reuseIdentifier];
+    self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
     if (self) {
-       _headerView = [UIView new];
-       [self.contentView addSubview:_headerView];
-        [_headerView mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.top.equalTo(self.contentView).offset(5);
-            make.left.right.equalTo(self.contentView);
-        }];
-        
-       NSArray *nameArray = @[@"预售许可证",@"发证信息",@"绑定信息"];
-        
-       for (NSInteger i = 0; i < [nameArray count]; i++) {
-            NSString *stringName = nameArray[i];
-            UILabel *labelName = [UILabel new];
-            labelName.font = [UIFont themeFontRegular:15];
-            labelName.textColor = [UIColor themeGray3];
-            labelName.textAlignment = NSTextAlignmentCenter;
-            labelName.text = stringName;
-            [_headerView addSubview:labelName];
-           
-           [labelName mas_makeConstraints:^(MASConstraintMaker *make) {
-               make.centerY.equalTo(labelName);
-               make.left.mas_equalTo([UIScreen mainScreen].bounds.size.width / 3 * i);
-               make.width.mas_equalTo([UIScreen mainScreen].bounds.size.width / 3);
-               make.height.mas_equalTo(30);
-           }];
-        }
-        
-        _listView = [UIView new];
-        [self.contentView addSubview:_listView];
-        [_listView mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.top.equalTo(self.headerView.mas_bottom);
-            make.left.right.equalTo(self.contentView);
-            make.bottom.equalTo(self.contentView).offset(-10);
-        }];
+        self.imageList = [NSMutableArray new];
+        [self.contentView addSubview:self.containerView];
+        [self initConstraints];
     }
     return self;
 }
 
-- (void)refreshWithData:(id)data
+- (UIView *)containerView
 {
-    if([data isKindOfClass:[FHFloorPanCorePermitCellModel class]])
-    {
-        
-        NSArray<FHDetailNewCoreDetailDataPermitListModel *>*nameArray = ((FHFloorPanCorePermitCellModel *)data).permitList;
-        
-        for (NSInteger i = 0; i < 3; i++) {
-            FHDetailNewCoreDetailDataPermitListModel *modelItem = (FHDetailNewCoreDetailDataPermitListModel *)nameArray.firstObject;
-            if ([modelItem isKindOfClass:[FHDetailNewCoreDetailDataPermitListModel class]]) {
-                UILabel *labelName = [UILabel new];
-                labelName.font = [UIFont themeFontRegular:15];
-                labelName.textColor = [UIColor themeGray1];
-                labelName.numberOfLines = 0;
-                labelName.textAlignment = NSTextAlignmentCenter;
-                switch (i) {
-                    case 0:
-                        labelName.text = modelItem.permit ? modelItem.permit : @"-";
-                        break;
-                    case 1:
-                        labelName.text = modelItem.permitDate ? modelItem.permitDate : @"-";
-                        break;
-                    case 2:
-                        labelName.text = modelItem.bindBuilding ? modelItem.bindBuilding : @"-";
-                        break;
-                    default:
-                        break;
-                }
-                [_listView addSubview:labelName];
-                
-                [labelName mas_makeConstraints:^(MASConstraintMaker *make) {
-                    make.bottom.top.equalTo(self.listView);
-                    make.left.mas_equalTo([UIScreen mainScreen].bounds.size.width / 3 * i);
-                    make.width.mas_equalTo([UIScreen mainScreen].bounds.size.width / 3);
-                }];
-            }
-        }
+    if (!_containerView) {
+        _containerView = [[UIView alloc] init];
+        _containerView.backgroundColor = [UIColor whiteColor];
+        _containerView.layer.cornerRadius = 10;
+        _containerView.layer.masksToBounds = YES;
     }
-    
-    [_listView mas_remakeConstraints:^(MASConstraintMaker *make) {
-        make.top.equalTo(self.headerView.mas_bottom).offset(30);
-        make.left.right.equalTo(self.contentView);
-        make.bottom.equalTo(self.contentView).offset(-10);
+    return _containerView;
+}
+
+-(void)initConstraints
+{
+    [_containerView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.mas_equalTo(15);
+        make.right.mas_equalTo(-15);
+        make.top.bottom.mas_equalTo(0);
     }];
 }
 
-
-- (void)awakeFromNib {
-    [super awakeFromNib];
-    // Initialization code
+- (void)refreshWithData:(id)data
+{
+    if ([data isKindOfClass:[FHFloorPanCorePermitCellModel class]]) {
+        CGFloat diff = 11.0 / 6;    //根据系统默认行高重新计算布局
+        NSInteger imageIndex = 0;
+        FHFloorPanCorePermitCellModel *model = (FHFloorPanCorePermitCellModel *)data;
+        UIView *previouseView = nil;
+        
+        for (NSInteger i = 0; i < [model.list count]; i++) {
+            UIView *itemContenView = [UIView new];
+            itemContenView.backgroundColor = [UIColor clearColor];
+            FHFloorPanCorePermitCellItemModel *itemModel = model.list[i];
+            UILabel *nameLabel = [UILabel new];
+            nameLabel.numberOfLines = 0;
+            nameLabel.font = [UIFont themeFontRegular:14];
+            nameLabel.textColor = RGB(0xae, 0xad, 0xad);
+            nameLabel.text = itemModel.permitName;
+            
+            [itemContenView addSubview:nameLabel];
+            
+            [nameLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+                make.left.mas_equalTo(31);
+                make.width.mas_equalTo(70);
+                make.top.mas_equalTo(0);
+            }];
+            UILabel *valueLabel = [UILabel new];
+            valueLabel.numberOfLines = 0;
+            valueLabel.font = [UIFont themeFontMedium:14];
+            valueLabel.textColor = [UIColor themeGray2];
+            valueLabel.text = itemModel.permitValue;
+            [itemContenView addSubview:valueLabel];
+            
+            [valueLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+                make.left.equalTo(nameLabel.mas_right).offset(14);
+                make.top.equalTo(nameLabel);
+                make.right.equalTo(itemContenView).offset(-31);
+                make.bottom.equalTo(itemContenView);
+            }];
+            
+            if (i % 3 == 0 && itemModel.image.url.length > 0) {
+                valueLabel.tag = imageIndex;
+                imageIndex++;
+                [self.imageList addObject:itemModel.image];
+                valueLabel.textColor = [UIColor colorWithHexStr:@"ff9629"];
+                valueLabel.userInteractionEnabled = YES;
+                UITapGestureRecognizer *gesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(click:)];
+                [valueLabel addGestureRecognizer:gesture];
+            }
+            [self.contentView addSubview:itemContenView];
+            
+            [itemContenView mas_makeConstraints:^(MASConstraintMaker *make) {
+                if (previouseView) {
+                    if (i % 3 == 0 && i >= 3) {
+                        make.top.equalTo(previouseView.mas_bottom).offset(20 - diff * 2);
+                    }
+                    else {
+                        make.top.equalTo(previouseView.mas_bottom).offset(18 - diff * 2);
+                    }
+                }else
+                {
+                    make.top.equalTo(self.contentView).offset(29 - diff);
+                }
+                if (i == [model.list count] - 1) {
+                    make.bottom.equalTo(self.contentView).offset(-29 + diff);
+                }
+                make.left.right.equalTo(self.contentView);
+            }];
+            previouseView = itemContenView;
+            if (i % 3 == 2 && i != [model.list count] - 1) {
+                UIView *grayline = [[UIView alloc] init];
+                grayline.backgroundColor = [UIColor colorWithHexString:@"f5f5f5"];
+                [self.contentView addSubview:grayline];
+                [grayline mas_makeConstraints:^(MASConstraintMaker *make) {
+                    make.left.mas_equalTo(34);
+                    make.right.mas_equalTo(-34);
+                    make.height.mas_equalTo(0.5);
+                    make.top.equalTo(previouseView.mas_bottom).offset(20);
+                }];
+                previouseView = grayline;
+            }
+        }
+    }
 }
 
-- (void)setSelected:(BOOL)selected animated:(BOOL)animated {
-    [super setSelected:selected animated:animated];
+- (void)click:(UITapGestureRecognizer *)gesture {
+    __weak typeof(self) weakSelf = self;
+    TTPhotoScrollViewController *vc = [[TTPhotoScrollViewController alloc] init];
+    vc.dragToCloseDisabled = YES;
+    vc.mode = PhotosScrollViewSupportDownloadMode;
+    vc.startWithIndex = gesture.view.tag;
+    
+    NSMutableArray *models = [NSMutableArray arrayWithCapacity:_imageList.count];
+    for (FHImageModel *image in _imageList) {
+        NSMutableDictionary *dict = [NSMutableDictionary new];
+        [dict setValue:image.uri forKey:kTTImageURIKey];
+        [dict setValue:image.url forKey:TTImageInfosModelURL];
+        [dict setValue:image.width forKey:kTTImageWidthKey];
+        [dict setValue:image.height forKey:kTTImageHeightKey];
+        NSMutableArray *urlList = [[NSMutableArray alloc] initWithCapacity:image.urlList.count];
+        for (NSString *url in image.urlList) {
+            if (!isEmptyString(url)) {
+                [urlList addObject:@{TTImageInfosModelURL : url}];
+            }
+        }
+        [dict setValue:urlList forKey:kTTImageURLListKey];
+        TTImageInfosModel *model = [[TTImageInfosModel alloc] initWithDictionary:dict];
+        model.imageType = TTImageTypeLarge;
+        [models addObject:model];
+    }
+    vc.imageInfosModels = models;
+    [vc setStartWithIndex:gesture.view.tag];
+    UIImage *placeholder = [UIImage imageNamed:@"default_image"];
+    NSMutableArray *placeholders = [[NSMutableArray alloc] initWithCapacity:_imageList.count];
+    for (NSInteger i = 0 ; i < _imageList.count; i++) {
+        [placeholders addObject:placeholder];
+    }
+    vc.placeholders = placeholders;
+    [vc presentPhotoScrollView];
+    
+}
 
-    // Configure the view for the selected state
+- (void)prepareForReuse
+{
+    [super prepareForReuse];
+    [self.imageList removeAllObjects];
+    for (UIView *view in self.contentView.subviews) {
+        [view removeFromSuperview];
+    }
+    [self.contentView addSubview:self.containerView];
+    [self initConstraints];
 }
 
 @end
 
-@implementation FHFloorPanCorePermitCellModel
+@implementation FHFloorPanCorePermitCellItemModel
 
+@end
+
+@implementation FHFloorPanCorePermitCellModel
 
 @end

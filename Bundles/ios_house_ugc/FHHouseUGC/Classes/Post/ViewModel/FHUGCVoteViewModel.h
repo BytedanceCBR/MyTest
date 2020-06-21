@@ -10,9 +10,12 @@
 NS_ASSUME_NONNULL_BEGIN
 @class FHUGCVotePublishViewController;
 @interface FHUGCVoteViewModel : NSObject
-- (instancetype)initWithTableView:(UITableView *)tableView ViewController:(FHUGCVotePublishViewController *)viewController;
+
+@property (nonatomic, assign, readonly) BOOL isPublishing;
+
+- (instancetype)initWithScrollView:(UIScrollView *)tableView ViewController:(FHUGCVotePublishViewController *)viewController;
+- (void)configModelForSocialGroupId: (NSString *)socialGroupId socialGroupName: (NSString *)socialGroupName hasFollowed:(BOOL)followed;
 - (void)publish;
-- (void)reloadTableView;
 - (BOOL)isEditedVote;
 @end
 

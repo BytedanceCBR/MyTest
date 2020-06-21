@@ -18,6 +18,10 @@
 #import "UIViewController+Refresh_ErrorHandler.h"
 #import "TTReachability.h"
 #import <FHHouseBase/FHBaseTableView.h>
+#import "UIViewController+Track.h"
+#import "TTTabBarItem.h"
+#import "TTTabBarManager.h"
+#import <FHPopupViewCenter/FHPopupViewManager.h>
 
 @interface FHMineViewController ()<UIViewControllerErrorHandler>
 
@@ -30,10 +34,42 @@
 @property (nonatomic, strong) UIButton *settingBtn;
 @property (nonatomic, assign) CGFloat headerViewHeight;
 @property (nonatomic, assign) CGFloat naviBarHeight;
-
 @end
 
 @implementation FHMineViewController
+
+- (instancetype)init {
+    self = [super init];
+    if (self) {
+        [TTAccount addMulticastDelegate:self];
+
+    }
+
+    return self;
+}
+
+- (void)dealloc {
+    [TTAccount removeMulticastDelegate:self];
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
+#pragma mark - TTAccountMulticastProtocol
+
+- (void)onAccountStatusChanged:(TTAccountStatusChangedReasonType)reasonType platform:(NSString *)platformName
+{
+    [self checkMineTabName];
+}
+
+- (void)checkMineTabName {
+    //登录或未登录切换tab的名称
+    TTTabBarItem *tabItem = [[TTTabBarManager sharedTTTabBarManager] tabItemWithIdentifier:kFHouseMineTabKey];
+    if([TTAccount sharedAccount].isLogin){
+        [tabItem setTitle:@"我的"];
+    } else {
+        [tabItem setTitle:@"未登录"];
+    }
+}
+
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -48,7 +84,6 @@
     [self setupHeaderView];
     [self initSignal];
 }
-
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     [self.viewModel updateHeaderView];
@@ -58,6 +93,8 @@
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
     [self refreshContentOffset:self.tableView.contentOffset];
+    [[FHPopupViewManager shared] triggerPopupView];
+    [[FHPopupViewManager shared] triggerPendant];
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
@@ -79,7 +116,7 @@
     self.customNavBarView.seperatorLine.alpha = 0;
     self.customNavBarView.leftBtn.hidden = YES;
     self.customNavBarView.bgView.alpha = 0;
-    self.customNavBarView.bgView.image = [UIImage imageNamed:@"fh_mine_header_bg"];
+    self.customNavBarView.bgView.image = [UIImage imageNamed:@"fh_mine_header_bg_orange"];
     
     self.settingBtn = [[UIButton alloc] init];
     [_settingBtn setBackgroundImage:[UIImage imageNamed:@"fh_mine_setting"] forState:UIControlStateNormal];
@@ -142,6 +179,9 @@
 - (void)initSignal {
     //config改变后需要重新刷新数据
     [[FHEnvContext sharedInstance].configDataReplay subscribeNext:^(id  _Nullable x) {
+//        if([FHEnvContext isSpringHangOpen] && self.springView){
+//            [self.springView show:[FHEnvContext enterTabLogName]];
+//        }
         [self startLoadData];
     }];
 }
@@ -231,6 +271,16 @@
 
 - (BOOL)tt_hasValidateData {
     return self.viewModel.dataList.count == 0 ? NO : YES; //默认会显示空
+}
+
+#pragma mark - TTUIViewControllerTrackProtocol
+
+- (void)trackEndedByAppWillEnterBackground {
+    
+}
+
+- (void)trackStartedByAppWillEnterForground {
+
 }
 
 @end

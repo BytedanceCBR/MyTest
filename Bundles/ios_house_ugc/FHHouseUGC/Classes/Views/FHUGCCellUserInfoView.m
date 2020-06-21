@@ -6,7 +6,7 @@
 //
 
 #import "FHUGCCellUserInfoView.h"
-#import <Masonry.h>
+#import "Masonry.h"
 #import "UIColor+Theme.h"
 #import "UIFont+House.h"
 #import "FHFeedOperationView.h"
@@ -21,25 +21,74 @@
 #import "TTAccountManager.h"
 #import <FHUGCConfig.h>
 #import "FHFeedOperationResultModel.h"
-#import <TTCommentDataManager.h>
+#import "TTCommentDataManager.h"
+#import "TTAssetModel.h"
+#import "UIViewAdditions.h"
+#import "UIImageView+BDWebImage.h"
+#import "FHUGCCellHelper.h"
+
+@interface FHUGCCellUserInfoView()
+
+//@property (nonatomic, assign) FHUGCPostEditState editState;
+//desc文案太长了。这时候会隐藏掉 后面的 内容已编辑 部分 by xsm
+@property (nonatomic, assign) BOOL isDescToLong;
+
+@end
 
 @implementation FHUGCCellUserInfoView
 
 - (instancetype)initWithFrame:(CGRect)frame {
     self = [super initWithFrame:frame];
     if (self) {
+//        self.editState = FHUGCPostEditStateNone;
         [self initViews];
         [self initConstraints];
+        [self setupNoti];
     }
     return self;
 }
 
+- (void)setupNoti {
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(postEditNoti:) name:@"kTTForumBeginPostEditedThreadNotification" object:nil]; // 编辑完成 显示“发送中...”
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(postEditNoti:) name:@"kTTForumPostEditedThreadSuccessNotification" object:nil]; // 编辑发送成功
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(postEditNoti:) name:@"kTTForumPostEditedThreadFailureNotification" object:nil]; // 编辑帖子发送失败
+}
+
+- (void)postEditNoti:(NSNotification *)noti {
+    self.cellModel.editState = FHUGCPostEditStateNone;
+    if (self.cellModel && self.cellModel.cellType == FHUGCFeedListCellTypeUGC) {
+        NSString *notiName = noti.name;
+        NSDictionary *userInfo = noti.userInfo;
+        if (notiName.length > 0 && userInfo) {
+            NSString *groupId = userInfo[@"group_id"];
+            if (groupId.length >0 && [groupId isEqualToString:self.cellModel.groupId]) {
+                // 同一个帖子
+                if ([notiName isEqualToString:@"kTTForumBeginPostEditedThreadNotification"]) {
+                    self.cellModel.editState = FHUGCPostEditStateSending;
+                } else if ([notiName isEqualToString:@"kTTForumPostEditedThreadSuccessNotification"]) {
+                    self.cellModel.editState = FHUGCPostEditStateDone;
+                } else if ([notiName isEqualToString:@"kTTForumPostEditedThreadFailureNotification"]) {
+                    self.cellModel.editState = FHUGCPostEditStateDone;
+                }
+            }
+        }
+    }
+    // 是否显示
+    [self updateEditState];
+}
+
 - (void)initViews {
-    self.icon = [[UIImageView alloc] init];
-    _icon.backgroundColor = [UIColor themeGray7];
+    self.icon = [[TTAsyncCornerImageView alloc] initWithFrame:CGRectMake(20, 0, 40, 40) allowCorner:YES];
+//    _icon.backgroundColor = [UIColor themeGray7];
+    _icon.placeholderName = @"fh_mine_avatar";
+    _icon.cornerRadius = 20;
+//    _icon.imageContentMode = TTImageViewContentModeScaleAspectFill;
     _icon.contentMode = UIViewContentModeScaleAspectFill;
-    _icon.layer.masksToBounds = YES;
-    _icon.layer.cornerRadius = 20;
+//    _icon.layer.masksToBounds = YES;
+//    _icon.layer.cornerRadius = 20;
+    _icon.borderWidth = 1;
+    _icon.borderColor = [UIColor themeGray6];
+    
     [self addSubview:_icon];
     
     _icon.userInteractionEnabled = YES;
@@ -53,8 +102,34 @@
      UITapGestureRecognizer *tap1 = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(goToPersonalHomePage)];
     [_userName addGestureRecognizer:tap1];
     
+    self.userAuthLabel = [self LabelWithFont:[UIFont themeFontRegular:10] textColor:[UIColor colorWithHexStr:@"#929292"]];
+    self.userAuthLabel.layer.borderWidth = 0.5;
+    self.userAuthLabel.layer.borderColor = [UIColor colorWithHexStr:@"#d6d6d6"].CGColor;
+    self.userAuthLabel.layer.cornerRadius = 2;
+    self.userAuthLabel.layer.masksToBounds = YES;
+    self.userAuthLabel.backgroundColor = [UIColor themeGray7];
+    self.userAuthLabel.textAlignment = NSTextAlignmentCenter;
+    [self addSubview:_userAuthLabel];
+    
     self.descLabel = [self LabelWithFont:[UIFont themeFontRegular:12] textColor:[UIColor themeGray3]];
     [self addSubview:_descLabel];
+    
+    self.editLabel = [self LabelWithFont:[UIFont themeFontRegular:12] textColor:[UIColor themeGray3]];
+    self.editLabel.text = @"内容已编辑";
+    self.editLabel.textAlignment = NSTextAlignmentLeft;
+    self.editLabel.userInteractionEnabled = YES;
+    [self addSubview:_editLabel];
+    self.editLabel.hidden = YES;
+    UITapGestureRecognizer *tapGes = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(editButtonOperation)];
+    [self.editLabel addGestureRecognizer:tapGes];
+    
+    self.editingLabel = [self LabelWithFont:[UIFont themeFontRegular:12] textColor:[UIColor themeGray3]];
+    self.editingLabel.text = @"发送中...";
+    self.editingLabel.textAlignment = NSTextAlignmentLeft;
+    self.editingLabel.userInteractionEnabled = NO;
+    [self addSubview:_editingLabel];
+    self.editingLabel.hidden = YES;
+    
     
     self.moreBtn = [[UIButton alloc] init];
     [_moreBtn setImage:[UIImage imageNamed:@"fh_ugc_icon_more"] forState:UIControlStateNormal];
@@ -64,31 +139,108 @@
 }
 
 - (void)initConstraints {
-    [self.icon mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self);
-        make.left.mas_equalTo(self).offset(20);
-        make.width.height.mas_equalTo(40);
-    }];
+    self.icon.top = 0;
+    self.icon.left = 20;
+    self.icon.width = 40;
+    self.icon.height = 40;
     
-    [self.moreBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.centerY.mas_equalTo(self);
-        make.right.mas_equalTo(self).offset(-20);
-        make.width.height.mas_equalTo(20);
-    }];
+    self.userName.top = 0;
+    self.userName.left = self.icon.right + 10;
+    self.userName.width = 100;
+    self.userName.height = 22;
     
-    [self.userName mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.icon);
-        make.left.mas_equalTo(self.icon.mas_right).offset(10);
-        make.width.mas_lessThanOrEqualTo([UIScreen mainScreen].bounds.size.width - 100);
-        make.height.mas_equalTo(22);
-    }];
+    self.moreBtn.top = 10;
+    self.moreBtn.width = 20;
+    self.moreBtn.height = 20;
+    self.moreBtn.left = self.width - self.moreBtn.width - 20;
+
+    self.userAuthLabel.top = 3;
+    self.userAuthLabel.left = self.userName.right + 4;
+    self.userAuthLabel.width = 0;
+    self.userAuthLabel.height = 16;
+
+    CGFloat maxWidth = [UIScreen mainScreen].bounds.size.width - 40 - 40 - 10 - 20 - 10;
+    self.descLabel.top = self.userName.bottom + 1;
+    self.descLabel.left = self.icon.right + 10;
+    self.descLabel.height = 17;
+    self.descLabel.width = maxWidth;
     
-    [self.descLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.bottom.mas_equalTo(self.icon);
-        make.left.mas_equalTo(self.icon.mas_right).offset(10);
-        make.right.mas_equalTo(self.moreBtn.mas_left).offset(-20);
-        make.height.mas_equalTo(17);
-    }];
+    self.editLabel.top = self.descLabel.top - 3;
+    self.editLabel.left = self.descLabel.right + 5;
+    self.editLabel.width = 60;
+    self.editLabel.height = 23;
+    
+    self.editingLabel.top = self.descLabel.top - 3;
+    self.editingLabel.left = self.descLabel.right + 5;
+    self.editingLabel.width = 60;
+    self.editingLabel.height = 23;
+}
+
+- (void)refreshWithData:(FHFeedUGCCellModel *)cellModel {
+    //设置userInfo
+    self.cellModel = cellModel;
+    //图片
+    FHFeedContentImageListModel *imageModel = [[FHFeedContentImageListModel alloc] init];
+    imageModel.url = cellModel.user.avatarUrl;
+    NSMutableArray *urlList = [NSMutableArray array];
+    for (NSInteger i = 0; i < 3; i++) {
+        FHFeedContentImageListUrlListModel *urlListModel = [[FHFeedContentImageListUrlListModel alloc] init];
+        urlListModel.url = cellModel.user.avatarUrl;
+        [urlList addObject:urlListModel];
+    }
+    imageModel.urlList = urlList;
+    
+    if (imageModel && imageModel.url.length > 0) {
+        [self.icon tt_setImageWithURLString:imageModel.url];
+    }else{
+        [self.icon setImage:[UIImage imageNamed:@"fh_mine_avatar"]];
+    }
+
+    self.userName.text = !isEmptyString(cellModel.user.name) ? cellModel.user.name : @"用户";
+    self.userAuthLabel.hidden = self.userAuthLabel.text.length <= 0;
+    [self updateDescLabel];
+    [self updateEditState];
+    [self updateFrame];
+}
+
+- (void)updateMoreBtnWithTitleType {
+    [self.moreBtn setImage:[UIImage imageNamed:@""] forState:UIControlStateNormal];
+    [self.moreBtn setTitle:@"查看更多" forState:UIControlStateNormal];
+    [self.moreBtn setTitleColor:[UIColor themeOrange1] forState:UIControlStateNormal];
+    self.moreBtn.titleLabel.font = [UIFont themeFontRegular:12];
+    
+    self.moreBtn.width = 50;
+    self.moreBtn.left = self.width - self.moreBtn.width - 20;
+    
+    CGFloat maxWidth = [UIScreen mainScreen].bounds.size.width - 40 - 40 - 10 - 20 - 10 - 50;
+    
+    self.descLabel.width = maxWidth;
+    self.editLabel.left = self.descLabel.right + 5;
+    self.editingLabel.left = self.descLabel.right + 5;
+}
+
+- (void)updateFrame {
+    CGSize userNameSize = [self.userName sizeThatFits:CGSizeMake(MAXFLOAT, 22)];
+    self.userName.width = userNameSize.width;
+    
+    CGSize userAuthLabelSize = [self.userAuthLabel sizeThatFits:CGSizeMake(MAXFLOAT, 16)];
+    self.userAuthLabel.width = userAuthLabelSize.width + 10;
+  
+    CGFloat maxUserNameWidth = self.width - 40 - 50 - (self.userAuthLabel.hidden ? 0 : (self.userAuthLabel.width + 9));
+    if(!self.userAuthLabel.hidden){
+        if(self.cellModel.isStick && self.cellModel.stickStyle == FHFeedContentStickStyleGood) {
+            // 置顶加精移动位置
+            if(self.cellModel.isInNeighbourhoodCommentsList){
+                maxUserNameWidth -= 56;
+            }
+        }
+    }
+    
+    if(self.userName.width > maxUserNameWidth){
+        self.userName.width = maxUserNameWidth;
+    }
+    
+    self.userAuthLabel.left = self.userName.right + 4;
 }
 
 - (UILabel *)LabelWithFont:(UIFont *)font textColor:(UIColor *)textColor {
@@ -129,10 +281,66 @@
     if(pageType && [pageType isEqualToString:@"personal_comment_list"]){
         self.moreBtn.hidden = NO;
     }
-    
+}
+
+- (void)updateDescLabel {
+    self.descLabel.attributedText = self.cellModel.desc;
+    CGSize size = [self.descLabel sizeThatFits:CGSizeMake(MAXFLOAT, 17)];
+    CGFloat maxWidth = [UIScreen mainScreen].bounds.size.width - 40 - 40 - 10 - 20 - 10;
+    if(size.width + 15 + 60 <= maxWidth){
+        self.isDescToLong = NO;
+
+        self.descLabel.width = size.width;
+        self.editLabel.left = self.descLabel.right + 5;
+        self.editingLabel.left = self.descLabel.right + 5;
+    }else{
+        self.isDescToLong = YES;
+        
+        self.descLabel.width = maxWidth;
+        self.editLabel.left = self.descLabel.right + 5;
+        self.editingLabel.left = self.descLabel.right + 5;
+    }
+}
+
+- (void)updateEditState {
+    // 编辑按钮
+    if (self.cellModel.hasEdit) {
+        self.editLabel.text = @"内容已编辑";
+    } else {
+        self.editLabel.text = @"";
+    }
+    CGSize size = [self.descLabel sizeThatFits:CGSizeMake(MAXFLOAT, 23)];
+    self.descLabel.width = size.width;
+    // 是否显示
+    if(self.isDescToLong){
+        self.editLabel.hidden = YES;
+        self.editingLabel.hidden = YES;
+    }else{
+        self.editLabel.hidden = !self.cellModel.hasEdit;
+        self.editingLabel.hidden = !(self.cellModel.editState == FHUGCPostEditStateSending);
+    }
+}
+
+// 编辑按钮点击
+- (void)editButtonOperation {
+    [self gotoPostHistory:@"content_has_edit"];
 }
 
 - (void)moreOperation {
+    if (self.cellModel.cellType == FHUGCFeedListCellTypeUGCEncyclopedias) {
+        NSMutableDictionary *guideDict = [NSMutableDictionary dictionary];
+        guideDict[@"origin_from"] = self.cellModel.tracerDic[@"origin_from"];
+        guideDict[@"page_type"] = @"f_news_recommend";
+        guideDict[@"element_type"] = @"encyclopedia";
+        guideDict[@"log_pb"] = self.cellModel.logPb?self.cellModel.logPb:@"br_null";
+        TRACK_EVENT(@"click_more", guideDict);
+        if (!isEmptyString(self.cellModel.allSchema)) {
+            NSURL *openUrl = [NSURL URLWithString:self.cellModel.allSchema];
+            [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:nil];
+        }
+
+        return;
+    }
     [self trackClickOptions];
     __weak typeof(self) wself = self;
     FHFeedOperationView *dislikeView = [[FHFeedOperationView alloc] init];
@@ -168,7 +376,9 @@
         viewModel.isGood = NO;
         viewModel.isTop = NO;
     }
-
+    viewModel.cellType = self.cellModel.cellType;
+    viewModel.hasEdit = self.cellModel.hasEdit;
+    viewModel.groupSource  =self.cellModel.groupSource;
     [dislikeView refreshWithModel:viewModel];
     CGPoint point = _moreBtn.center;
     [dislikeView showAtPoint:point
@@ -176,6 +386,7 @@
              didDislikeBlock:^(FHFeedOperationView * _Nonnull view) {
                  [wself handleItemselected:view];
              }];
+    
 }
 
 - (void)handleItemselected:(FHFeedOperationView *) view {
@@ -256,6 +467,36 @@
             [wself setOperationSelfLook:view.selectdWord.serverType];
         }];
         [self trackConfirmPopupShow:@"own_see_popup_show"];
+    } else if(view.selectdWord.type == FHFeedOperationWordTypeEdit) {
+        [self gotoEditPostVC];
+    } else if(view.selectdWord.type == FHFeedOperationWordTypeEditHistory) {
+        [self gotoPostHistory:@"edit_record_selection"];
+    }
+}
+
+// 帖子编辑历史
+- (void)gotoPostHistory:(NSString *)element_from {
+    if (self.cellModel.cellType == FHUGCFeedListCellTypeUGC) {
+        // 帖子
+        NSMutableDictionary *dict = @{}.mutableCopy;
+        NSMutableDictionary *tracerDict = [self.cellModel.tracerDic mutableCopy];
+        tracerDict[@"click_position"] = @"edit_record";
+        tracerDict[@"enter_type"] = @"be_null";
+        TRACK_EVENT(@"click_edit", tracerDict);
+        
+        NSString *page_type = tracerDict[@"page_type"];
+        if (page_type) {
+            tracerDict[@"enter_from"] = page_type;
+        }
+        tracerDict[@"element_from"] = element_from;
+        [tracerDict removeObjectForKey:@"click_position"];
+        
+        dict[TRACER_KEY] = tracerDict;
+        dict[@"query_id"] = self.cellModel.groupId; // 帖子id
+        TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
+        
+        NSURL *openUrl = [NSURL URLWithString:@"sslocal://ugc_post_history"];
+        [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:userInfo];
     }
 }
 
@@ -443,13 +684,63 @@
 }
 
 - (void)goToPersonalHomePage {
-    if(self.cellModel.user.schema){
+    if(!isEmptyString(self.cellModel.user.schema)){
         NSMutableDictionary *dict = @{}.mutableCopy;
         dict[@"from_page"] = self.cellModel.tracerDic[@"page_type"] ? self.cellModel.tracerDic[@"page_type"] : @"default";
         TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
         NSURL *openUrl = [NSURL URLWithString:self.cellModel.user.schema];
         [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:userInfo];
     }
+}
+
+- (void)gotoEditPostVC {
+    if(self.cellModel.cellType != FHUGCFeedListCellTypeUGC) {
+        return;
+    }
+    if (self.cellModel.editState == FHUGCPostEditStateSending) {
+        // 编辑发送中
+        [[ToastManager manager] showToast:@"帖子编辑中，请稍后"];
+        return;
+    }
+    // 跳转发布器
+    NSMutableDictionary *dic = [NSMutableDictionary new];
+
+    NSMutableDictionary *tracerDict = [self.cellModel.tracerDic mutableCopy];
+    tracerDict[@"click_position"] = @"edit";
+    tracerDict[@"enter_type"] = @"be_null";
+    TRACK_EVENT(@"click_edit", tracerDict);
+    
+    NSString *page_type = tracerDict[@"page_type"];
+    if (page_type) {
+        tracerDict[@"enter_from"] = page_type;
+    }
+    [tracerDict removeObjectForKey:@"click_position"];
+    tracerDict[UT_ENTER_TYPE] = @"click";
+    dic[TRACER_KEY] = tracerDict;
+    
+    // Feed 文本内容传入图文发布器
+    dic[@"post_content"] = self.cellModel.content;
+    dic[@"post_content_rich_span"] = self.cellModel.contentRichSpan;
+        
+    // Feed 图片信息传入图文发布器
+    NSMutableArray *outerInputAssets = [NSMutableArray array];
+    [self.cellModel.imageList enumerateObjectsUsingBlock:^(FHFeedContentImageListModel * _Nonnull imageModel, NSUInteger idx, BOOL * _Nonnull stop) {
+        TTAssetModel *outerAssetModel = [TTAssetModel modelWithImageWidth:imageModel.width height:imageModel.height url:imageModel.url uri:imageModel.uri];
+        [outerInputAssets addObject:outerAssetModel];
+    }];
+    dic[@"outerInputAssets"] = outerInputAssets;
+    
+    // Feed 圈子信息传入图文发布器
+    dic[@"select_group_id"] = self.cellModel.community.socialGroupId;
+    dic[@"select_group_name"] = self.cellModel.community.name;
+    
+    // 是否是来自外部传入编辑
+    dic[@"isOuterEdit"] = @(YES);
+    dic[@"outerPostId"] = self.cellModel.groupId;
+    
+    TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dic];
+    NSURL *url = [NSURL URLWithString:@"sslocal://ugc_post"];
+    [[TTRoute sharedRoute] openURLByPresentViewController:url userInfo:userInfo];
 }
 
 #pragma mark - 埋点

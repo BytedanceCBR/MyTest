@@ -8,14 +8,14 @@
 #import "FHMessageCell.h"
 #import "UIColor+Theme.h"
 #import "UIFont+House.h"
-#import <Masonry.h>
+#import "Masonry.h"
 #import "TTDeviceHelper.h"
 #import "UIImageView+BDWebImage.h"
 #import "TTAccount.h"
 #import "FHChatUserInfoManager.h"
-#import <TTRichSpanText.h>
-#import <TIMOMessage.h>
-#import <TIMMessageStoreBridge.h>
+#import "TTRichSpanText.h"
+#import "TIMOMessage.h"
+#import "TIMMessageStoreBridge.h"
 
 #define CURRENT_CALENDAR [NSCalendar currentCalendar]
 
@@ -76,7 +76,8 @@
     [self.contentView addSubview:_timeLabel];
     
     self.unreadView = [[TTBadgeNumberView alloc] init];
-    self.unreadView.badgeNumberPointSize = 12;
+    //self.unreadView.badgeNumberPointSize = 12;
+    [self.unreadView setBadgeLabelFontSize:12];
     _unreadView.badgeViewStyle = TTBadgeNumberViewStyleDefaultWithBorder;
     [self.contentView addSubview:_unreadView];
 }
@@ -204,7 +205,31 @@
     if (!isEmptyString(draftText)) {
         self.subTitleLabel.attributedText = [self getDraftAttributeString:draftText];
     } else {
-        if (isGroupChat) {
+        if(lastMsg.isRecalled) {
+            NSString *recallHintText = @"撤回了一条消息";
+            __block NSString *roleHintText = @"";
+            
+            BOOL recallUserIsOwner = (lastMsg.recalledUid == conv.owner.userId.longLongValue);
+            BOOL recallMsgSenderIsOwner = (lastMsg.userId == conv.owner.userId.longLongValue);
+        
+            if(lastMsg.isCurrentUser) {
+                if(recallUserIsOwner && !recallMsgSenderIsOwner) {
+                    roleHintText = @"群主";
+                } else{
+                    roleHintText = @"你";
+                }
+            } else {
+                if(recallUserIsOwner && !recallMsgSenderIsOwner) {
+                    roleHintText = @"群主";
+                } else {
+                    [[FHChatUserInfoManager shareInstance] getUserInfoSync:[[NSNumber numberWithLongLong:lastMsg.userId] stringValue] block:^(NSString * _Nonnull userId, FHChatUserInfo * _Nonnull userInfo) {
+                        roleHintText = userInfo.username;
+                    }];
+                }
+            }
+            self.subTitleLabel.text = [NSString stringWithFormat:@"%@ %@", roleHintText, recallHintText];
+        }
+        else if (isGroupChat) {
             NSString *cutStr = [self cutLineBreak:[conv lastMessage]];
             NSNumber *uid =[NSNumber numberWithLongLong: [[[TTAccount sharedAccount] userIdString] longLongValue]];
             if (lastMsg.isCurrentUser || lastMsg.type == ChatMstTypeNotice) {
@@ -254,7 +279,7 @@
 
 -(NSAttributedString*)getAtAttributeString:(NSString*)draft {
     
-    NSMutableAttributedString* attrStr = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"[有人@我]%@", [self cutLineBreak:draft]]];
+    NSMutableAttributedString* attrStr = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"[有人@你]%@", [self cutLineBreak:draft]]];
     NSRange theRange = NSMakeRange(0, 6);
     NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];
     paragraphStyle.lineSpacing = 0;

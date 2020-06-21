@@ -9,7 +9,7 @@
 #import <FHCommonUI/UIColor+Theme.h>
 #import <FHCommonUI/UIFont+House.h>
 #import <FHCommonUI/UIView+House.h>
-#import <Masonry.h>
+#import "Masonry.h"
 #import <FHHouseBase/UIImage+FIconFont.h>
 
 @interface FHPushAuthorizeAlertView ()
@@ -261,8 +261,8 @@
         _submitBtn.titleLabel.font = [UIFont themeFontRegular:16];
         [_submitBtn setTitle:@"打开通知" forState:UIControlStateNormal];
         [_submitBtn setTitle:@"打开通知" forState:UIControlStateHighlighted];
-        _submitBtn.layer.cornerRadius = 4;
-        _submitBtn.backgroundColor = [UIColor themeRed1];
+        _submitBtn.layer.cornerRadius = 20 ; //4;
+        _submitBtn.backgroundColor = [UIColor themeOrange4];
     }
     return _submitBtn;
 }

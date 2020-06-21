@@ -7,7 +7,7 @@
 
 #import <Foundation/Foundation.h>
 #import "FHCommunityFeedListController.h"
-#import <TTHttpTask.h>
+#import "TTHttpTask.h"
 #import "FHUGCCellManager.h"
 #import <FHCommonUI/FHRefreshCustomFooter.h>
 #import "FHUGCBaseCell.h"
@@ -18,8 +18,9 @@
 #import "TSVShortVideoDetailExitManager.h"
 #import "HTSVideoPageParamHeader.h"
 #import "AWEVideoConstants.h"
-#import <TTVFeedListItem.h>
-#import <TTReachability.h>
+#import "TTVFeedListItem.h"
+#import "TTReachability.h"
+#import "FHUGCFeedDetailJumpManager.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -30,6 +31,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic, weak) TTHttpTask *requestTask;
 @property(nonatomic, strong) NSMutableArray *dataList;
 @property(nonatomic, strong) FHUGCCellManager *cellManager;
+@property(nonatomic, strong) FHUGCFeedDetailJumpManager *detailJumpManager;
 @property(nonatomic, strong) FHRefreshCustomFooter *refreshFooter;
 @property(nonatomic, copy) NSString *categoryId;
 @property(nonatomic, strong) FHUGCBaseCell *currentCell;
@@ -70,6 +72,8 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)endDisplay;
 
 - (void)showCustomErrorView:(FHEmptyMaskViewType)type;
+// 更新发帖进度视图
+- (void)updateJoinProgressView;
 
 @end
 

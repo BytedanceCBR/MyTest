@@ -6,6 +6,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "FHDetailBaseModel.h"
 
 typedef NS_ENUM(NSUInteger, FHMultiMediaType) {
     FHMultiMediaTypeVideo, //视频
@@ -23,6 +24,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FHMultiMediaItemModel : NSObject
 
+@property(nonatomic, copy) NSString *pictureTypeName;
+@property(nonatomic, assign) FHDetailHouseImageType pictureType;
 @property(nonatomic, assign) FHMultiMediaType mediaType;
 @property(nonatomic, copy) NSString *groupType;
 @property(nonatomic, assign) FHMultiMediaCellHouseType cellHouseType;
@@ -42,5 +45,6 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic, strong) NSArray<FHMultiMediaItemModel *> *medias;
 @property (nonatomic, assign) BOOL isShowSkyEyeLogo;
 @end
+
 
 NS_ASSUME_NONNULL_END

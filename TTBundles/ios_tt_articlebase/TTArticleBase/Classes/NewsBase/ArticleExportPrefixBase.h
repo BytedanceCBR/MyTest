@@ -34,7 +34,6 @@
 #import "UIButton+TTAdditions.h"
 #import "UITextView+TTAdditions.h"
 #import "TTThemeConst.h"
-#import <Crashlytics/Crashlytics.h>
 
 #import <TTBaseLib/TTBaseMacro.h>
 #import <TTBaseLib/TTDeviceHelper.h>

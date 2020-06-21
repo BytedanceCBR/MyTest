@@ -22,7 +22,7 @@
 #import "FHDetailFloorPanDetailInfoModel.h"
 #import "FHTransactionHistoryModel.h"
 #import <Heimdallr/HMDTTMonitor.h>
-#import <BDAgileLog.h>
+#import "BDAgileLog.h"
 #import <FHHouseBase/FHMainApi.h>
 #import <TTInstallService/TTInstallIDManager.h>
 #import "TTBaseMacro.h"
@@ -38,6 +38,7 @@
 
 +(TTHttpTask*)requestNewDetail:(NSString*)houseId
                          logPB:(NSDictionary *)logPB
+                         extraInfo:(NSDictionary *)extraInfo
                     completion:(void(^)(FHDetailNewModel * _Nullable model , NSError * _Nullable error))completion
 {
     NSString * host = [FHURLSettings baseURL] ?: @"https://i.haoduofangs.com";
@@ -48,7 +49,13 @@
     }
     paramDic[@"court_id"] = houseId ?: @"";
     paramDic[@"house_type"] = @(FHHouseTypeNewHouse);
-    
+    if (extraInfo) {
+        NSData *data = [NSJSONSerialization dataWithJSONObject:extraInfo options:0 error:nil];
+        NSString *string = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+        if (data && string) {
+            paramDic[kFHClueExtraInfo] = string;
+        }
+    }
     return [FHMainApi getRequest:url query:nil params:paramDic jsonClass:[FHDetailNewModel class] completion:^(JSONModel * _Nullable model, NSError * _Nullable error) {
         if (completion) {
             completion((FHDetailNewModel *)model,error);
@@ -60,6 +67,7 @@
                          ridcode:(NSString *)ridcode
                        realtorId:(NSString *)realtorId
                          logPB:(NSDictionary *)logPB
+                     extraInfo:(NSDictionary *)extraInfo
                     completion:(void(^)(FHDetailOldModel * _Nullable model , NSError * _Nullable error))completion
 {
 
@@ -77,7 +85,13 @@
     if (realtorId.length > 0) {
         paramDic[@"realtor_id"] = realtorId;
     }
-    
+    if (extraInfo) {
+        NSData *data = [NSJSONSerialization dataWithJSONObject:extraInfo options:0 error:nil];
+        NSString *string = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+        if (data && string) {
+            paramDic[kFHClueExtraInfo] = string;
+        }
+    }
     return [FHMainApi getRequest:url query:nil params:paramDic jsonClass:[FHDetailOldModel class] completion:^(JSONModel * _Nullable model, NSError * _Nullable error) {
         if (completion) {
             completion(model,error);
@@ -88,6 +102,7 @@
 +(TTHttpTask*)requestNeighborhoodDetail:(NSString*)neighborhoodId
                                   logPB:(NSDictionary *)logPB
                                   query:(NSString*)query
+                              extraInfo:(NSDictionary *)extraInfo
                              completion:(void(^)(FHDetailNeighborhoodModel * _Nullable model , NSError * _Nullable error))completion
 {
     NSString * host = [FHURLSettings baseURL] ?: @"https://i.haoduofangs.com";
@@ -99,6 +114,13 @@
     if ([logPB isKindOfClass:[NSDictionary class]]) {
         [paramDic addEntriesFromDictionary:logPB];
     }
+    if (extraInfo) {
+        NSData *data = [NSJSONSerialization dataWithJSONObject:extraInfo options:0 error:nil];
+        NSString *string = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+        if (data && string) {
+            paramDic[kFHClueExtraInfo] = string;
+        }
+    }
     return [FHMainApi getRequest:url query:nil params:paramDic jsonClass:[FHDetailNeighborhoodModel class] completion:^(JSONModel * _Nullable model, NSError * _Nullable error) {
         if (completion) {
             completion((FHDetailNeighborhoodModel *)model,error);
@@ -108,6 +130,7 @@
 
 // 租房详情页请求
 +(TTHttpTask*)requestRentDetail:(NSString*)rentCode
+                      extraInfo:(NSDictionary *)extraInfo
                      completion:(void(^)(FHRentDetailResponseModel *model , NSError *error))completion {
     
     NSString * host = [FHURLSettings baseURL] ?: @"https://i.haoduofangs.com";
@@ -116,7 +139,13 @@
     if (rentCode.length > 0) {
         paramDic[@"rental_f_code"] = rentCode;
     }
-    
+    if (extraInfo) {
+        NSData *data = [NSJSONSerialization dataWithJSONObject:extraInfo options:0 error:nil];
+        NSString *string = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+        if (data && string) {
+            paramDic[kFHClueExtraInfo] = string;
+        }
+    }
     return [FHMainApi getRequest:url query:nil params:paramDic jsonClass:[FHRentDetailResponseModel class] completion:^(JSONModel * _Nullable model, NSError * _Nullable error) {
         if (completion) {
             completion((FHRentDetailResponseModel *)model,error);
@@ -125,8 +154,8 @@
 }
 
 // 租房-周边房源
-+ (TTHttpTask*)requestHouseRentRelated:(NSString*)rentId
-                            completion:(void(^)(FHHouseRentRelatedResponseModel* model , NSError *error))completion {
++ (TTHttpTask*)requestHouseRentRelated:(NSString*)rentId class:(Class)cls
+                            completion:(void(^)(id<FHBaseModelProtocol> _Nullable model , NSError *error))completion {
     NSString * host = [FHURLSettings baseURL] ?: @"https://i.haoduofangs.com";
     NSString* url = [host stringByAppendingString:@"/f100/api/related_rent"];
     NSMutableDictionary *paramDic = [NSMutableDictionary new];
@@ -137,8 +166,9 @@
     paramDic[CHANNEL_ID] = CHANNEL_ID_RELATED_RENT;
 
     __weak typeof(self)wself = self;
-    return [FHMainApi getRequest:url query:nil params:paramDic jsonClass:[FHHouseRentRelatedResponseModel class] completion:^(JSONModel * _Nullable m, NSError * _Nullable error) {
-        FHHouseRentRelatedResponseModel* model = (FHHouseRentRelatedResponseModel*)m;
+    return [FHMainApi getRequest:url query:nil params:paramDic jsonClass:cls completion:^(JSONModel * _Nullable m, NSError * _Nullable error) {
+//        FHHouseRentRelatedResponseModel* model = (FHHouseRentRelatedResponseModel*)m;
+        id<FHBaseModelProtocol> model = m;
         if (!error && model) {
             if ([model.status isEqualToString:@"0"] && [model.message isEqualToString:@"success"]) {
                 error = nil;
@@ -362,12 +392,33 @@
     
 }
 
+// 二手房-推荐新盘
++(TTHttpTask*)requestOldHouseRecommendedCourtSearch:(NSString*)houseId
+                                 offset:(NSString *)offset
+                                  query:(NSString*)query
+                                  count:(NSInteger)count
+                             completion:(void(^)(FHListResultHouseModel * _Nullable model , NSError * _Nullable error))completion {
+    NSString * host = [FHURLSettings baseURL] ?: @"https://i.haoduofangs.com";
+    NSString* url = [host stringByAppendingFormat:@"/f100/api/related_court?house_id=%@&offset=%@",houseId,offset];
+    NSMutableDictionary *paramDic = [NSMutableDictionary new];
+    if (query.length > 0) {
+        url = [NSString stringWithFormat:@"%@&%@",url,query];
+    }
+    paramDic[CHANNEL_ID] = CHANNEL_ID_RECOMMEND_COURT_OLD;
+    paramDic[@"count"] = @(count);
+    return [FHMainApi getRequest:url query:nil params:paramDic jsonClass:[FHListResultHouseModel class] completion:^(JSONModel * _Nullable model, NSError * _Nullable error) {
+        if (completion) {
+            completion(model,error);
+        }
+    }];
+}
+
 // 新房-周边新盘
 +(TTHttpTask*)requestRelatedFloorSearch:(NSString*)houseId
                                  offset:(NSString *)offset
                                   query:(NSString*)query
                                   count:(NSInteger)count
-                             completion:(void(^)(FHDetailRelatedCourtModel * _Nullable model , NSError * _Nullable error))completion {
+                             completion:(void(^)(FHListResultHouseModel * _Nullable model , NSError * _Nullable error))completion {
     NSString * host = [FHURLSettings baseURL] ?: @"https://i.haoduofangs.com";
     NSString* url = [host stringByAppendingFormat:@"/f100/api/related_court?court_id=%@&offset=%@",houseId,offset];
     NSMutableDictionary *paramDic = [NSMutableDictionary new];
@@ -375,12 +426,11 @@
         url = [NSString stringWithFormat:@"%@&%@",url,query];
     }
     paramDic[CHANNEL_ID] = CHANNEL_ID_RELATED_COURT;
-    return [FHMainApi getRequest:url query:nil params:paramDic jsonClass:[FHDetailRelatedCourtModel class] completion:^(JSONModel * _Nullable model, NSError * _Nullable error) {
+    return [FHMainApi getRequest:url query:nil params:paramDic jsonClass:[FHListResultHouseModel class] completion:^(JSONModel * _Nullable model, NSError * _Nullable error) {
         if (completion) {
             completion(model,error);
         }
     }];
-    
 }
 
 // 新房-楼盘动态
@@ -547,6 +597,46 @@
     if(!isEmptyString(requestId)) {
         param[@"request_id"] = requestId;
     }
+    
+    return [FHMainApi postJsonRequest:path query:nil params:param completion:^(NSDictionary * _Nullable result, NSError * _Nullable error) {
+        BOOL success = NO;
+        if (result) {
+            success = (result[@"status"] && [result[@"status"] integerValue] == 0);
+            if (!success) {
+                error = [NSError errorWithDomain:result[@"message"]?:@"请求失败" code:-1 userInfo:nil];
+            }
+        }
+        if (completion) {
+            completion(success , error);
+        }
+    }];
+}
+
+
++ (TTHttpTask *)requestRealtorEvaluationFeedback:(NSString *)targetId targetType:(NSInteger)targetType evaluationType:(NSInteger)evaluationType realtorId:(NSString *)realtorId content:(NSString *)content score:(NSInteger)score tags: (NSArray*)tags completion:(void (^)(bool, NSError * _Nullable))completion {
+    [self requestRealtorEvaluationFeedback:targetId targetType:targetType evaluationType:evaluationType realtorId:realtorId content:content score:score tags:tags from:nil completion:completion];
+}
++ (TTHttpTask *)requestRealtorEvaluationFeedback:(NSString *)targetId targetType:(NSInteger)targetType evaluationType:(NSInteger)evaluationType realtorId:(NSString *)realtorId content:(NSString *)content score:(NSInteger)score tags: (NSArray*)tags from:(NSString *)from completion:(void (^)(bool, NSError * _Nullable))completion {
+
+    NSString *path = @"/f100/api/associate/realtor_evaluation/assign";
+    NSMutableDictionary *param = [NSMutableDictionary new];
+    if(!isEmptyString(realtorId)){
+        param[@"realtor_id"] = @(realtorId.longLongValue);;
+    }
+    // evaluationType[int]:反馈类型 0:电话后反馈 1:IM反馈
+    if (evaluationType == 1) {
+        param[@"target_id"] = @(targetId.longLongValue);
+        param[@"target_type"] = @(targetType);
+    }else {
+        param[@"house_id"] = @(targetId.longLongValue);
+    }
+    param[@"type"] = @(evaluationType);
+    param[@"score"] = @(score);
+    if(!isEmptyString(content)) {
+        param[@"content"] = content;
+    }
+    param[@"tag_ids"] = tags;
+    param[@"element_from"] = from;
     
     return [FHMainApi postJsonRequest:path query:nil params:param completion:^(NSDictionary * _Nullable result, NSError * _Nullable error) {
         BOOL success = NO;

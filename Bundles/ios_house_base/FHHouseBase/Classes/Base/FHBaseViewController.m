@@ -15,6 +15,10 @@
 #import "TTReachability.h"
 #import "FHErrorView.h"
 #import "UIViewAdditions.h"
+#import "TTProjectLogicManager.h"
+#import "FHIntroduceManager.h"
+#import <FHIntroduceManager.h>
+#import <TTBaseLib/TTDeviceHelper.h>
 
 @interface FHBaseViewController ()<TTRouteInitializeProtocol, UIViewControllerErrorHandler>
 
@@ -24,6 +28,9 @@
 /* 需要移除之前的某个页面 */
 @property (nonatomic, assign)   BOOL       needRemoveLastVC;// fh_needRemoveLastVC_key @(YES)
 @property (nonatomic, copy)     NSArray       *needRemovedVCNameStringArrs; // 类名数组key：fh_needRemoveedVCNamesString_key
+
+
+@property (nonatomic , strong) UIView *loadingView;
 
 @end
 
@@ -89,7 +96,7 @@
     [super viewDidLoad];
     // push过来的页面默认状态栏是隐藏的
     UIApplication *application = [UIApplication sharedApplication];
-    if(application.statusBarHidden){
+    if(application.statusBarHidden && ![FHIntroduceManager sharedInstance].isShowing){
         [application setStatusBarHidden:NO withAnimation:UIStatusBarAnimationNone];
     }
     
@@ -128,7 +135,10 @@
     _emptyView.hidden = YES;
     [self.view addSubview:_emptyView];
     [_emptyView mas_makeConstraints:^(MASConstraintMaker *make) {
-        if (@available(iOS 11.0 , *)) {
+        if (@available(iOS 13.0, *)) {
+            make.left.right.bottom.mas_equalTo(self.view);
+            make.top.mas_equalTo(self.view).offset(44.f + [UIApplication sharedApplication].keyWindow.safeAreaInsets.top);
+        } else if (@available(iOS 11.0 , *)) {
             make.left.right.bottom.mas_equalTo(self.view);
             make.top.mas_equalTo(self.view).offset(44.f + self.view.tt_safeAreaInsets.top);
         } else {
@@ -164,7 +174,12 @@
     CGFloat topInset = _emptyEdgeInsets.top;
     CGFloat bottomInset = _emptyEdgeInsets.bottom;
     [_emptyView mas_updateConstraints:^(MASConstraintMaker *make) {
-        if (@available(iOS 11.0 , *)) {
+        if (@available(iOS 13.0 , *)) {
+            CGFloat appTopInset = [UIApplication sharedApplication].keyWindow.safeAreaInsets.top;
+            make.left.right.mas_equalTo(self.view);
+            make.bottom.mas_equalTo(self.view).offset(-bottomInset);
+            make.top.mas_equalTo(self.view).offset(44.f + appTopInset + topInset);
+        } else if (@available(iOS 11.0 , *)) {
             make.left.right.mas_equalTo(self.view);
             make.bottom.mas_equalTo(self.view).offset(-bottomInset);
             make.top.mas_equalTo(self.view).offset(44.f + self.view.tt_safeAreaInsets.top + topInset);
@@ -195,7 +210,11 @@
         [self.view addSubview:_customNavBarView];
         _customNavBarView.title.text = self.titleName;
         [_customNavBarView mas_makeConstraints:^(MASConstraintMaker *maker) {
-            if (@available(iOS 11.0 , *)) {
+            if (@available(iOS 13.0 , *)) {
+                CGFloat topInset = [UIApplication sharedApplication].keyWindow.safeAreaInsets.top;
+                maker.left.right.top.mas_equalTo(self.view);
+                maker.height.mas_equalTo(44.f + topInset);
+            } else if (@available(iOS 11.0 , *)) {
                 maker.left.right.top.mas_equalTo(self.view);
                 maker.height.mas_equalTo(44.f + self.view.tt_safeAreaInsets.top);
             } else {
@@ -281,6 +300,71 @@
 -(NSString *)categoryName
 {
     return @"be_null";
+}
+
+/**
+ * 支持禁止Push跳转（与TopVC是同一个VC以及，参数相同的页面），默认是NO（走之前逻辑）
+ * 当Push来了后，如果当前顶部VC与Push不是同一个或者参数不同（比如和不同的经纪人聊天），则新建页面
+ * 用于判断页面是否是同一个页面
+ */
+- (BOOL)isSamePageAndParams:(NSURL *)openUrl {
+    if (openUrl && [openUrl isKindOfClass:[NSURL class]]) {
+        NSString *host = openUrl.host;
+        if (host.length > 0) {
+            NSString *result = [[TTProjectLogicManager sharedInstance_tt] logicStringForKey:host];
+            if (result.length > 0) {
+                Class cls = NSClassFromString(result);
+                if ([cls isEqual:[self class]]) {
+                    // 页面相同
+                    NSURLComponents *components = [[NSURLComponents alloc] initWithString:openUrl.absoluteString];
+                    NSMutableDictionary *queryParams = [NSMutableDictionary new];
+                    [components.queryItems enumerateObjectsUsingBlock:^(NSURLQueryItem * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+                        if (obj.name && obj.value) {
+                            queryParams[obj.name] = obj.value;
+                        }
+                    }];
+                    return [self isOpenUrlParamsSame:queryParams];
+                }
+            }
+        }
+    }
+    return NO;
+}
+/**
+ * 子类重载当前页面
+ * 用于判断页面参数是否相同
+ */
+- (BOOL)isOpenUrlParamsSame:(NSDictionary *)queryParams {
+    return NO;
+}
+
+-(UIView *)loadingView
+{
+    if (!_loadingView) {
+        _loadingView = [[UIView alloc] initWithFrame:CGRectZero];
+        _loadingView.backgroundColor = [UIColor whiteColor];
+    }
+    return _loadingView;
+}
+
+-(void)showLoading:(UIView *)inView
+{
+    [self showLoading:inView offset:CGPointZero];
+}
+
+-(void)showLoading:(UIView *)inView offset:(CGPoint)offset
+{
+    if (!inView) {
+        inView = self.view;
+    }
+    [inView addSubview:self.loadingView];
+    _loadingView.frame = inView.bounds;
+    [inView addSubview:_loadingView];
+}
+
+-(void)hideLoading
+{
+    [_loadingView removeFromSuperview];
 }
 
 #pragma mark - UIViewControllerErrorHandler

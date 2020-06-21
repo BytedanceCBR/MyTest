@@ -8,7 +8,7 @@
 #import "FHPriceValuationMoreInfoView.h"
 #import "UIColor+Theme.h"
 #import "UIFont+House.h"
-#import <Masonry.h>
+#import "Masonry.h"
 #import "FHUtils.h"
 
 @interface FHPriceValuationMoreInfoView()
@@ -114,11 +114,11 @@
     [self addSubview:_bottomView];
     
     self.bottomBtn = [[UIButton alloc] init];
-    _bottomBtn.backgroundColor = [UIColor themeRed1];
+    _bottomBtn.backgroundColor = [UIColor themeOrange4];
     [_bottomBtn setTitle:@"确定" forState:UIControlStateNormal];
     [_bottomBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     _bottomBtn.titleLabel.font = [UIFont themeFontRegular:18];
-    _bottomBtn.layer.cornerRadius = 4;
+    _bottomBtn.layer.cornerRadius = 22; //4;
     _bottomBtn.layer.masksToBounds = YES;
     [_bottomBtn addTarget:self action:@selector(confirm) forControlEvents:UIControlEventTouchUpInside];
     [self.bottomView addSubview:_bottomBtn];

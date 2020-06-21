@@ -7,10 +7,11 @@
 
 #import "FHArticleSingleImageCell.h"
 #import "FHArticleCellBottomView.h"
-#import <UIImageView+BDWebImage.h>
+#import "UIImageView+BDWebImage.h"
 #import "FHUGCCellHelper.h"
 #import "TTBaseMacro.h"
-#import <TTImageView+TrafficSave.h>
+#import "UIViewAdditions.h"
+#import "TTImageView+TrafficSave.h"
 
 #define maxLines 3
 #define singleImageViewHeight 90
@@ -20,7 +21,7 @@
 
 @interface FHArticleSingleImageCell ()
 
-@property(nonatomic ,strong) TTUGCAttributedLabel *contentLabel;
+@property(nonatomic ,strong) TTUGCAsyncLabel *contentLabel;
 @property(nonatomic ,strong) TTImageView *singleImageView;
 @property(nonatomic ,strong) FHArticleCellBottomView *bottomView;
 @property(nonatomic ,strong) FHFeedUGCCellModel *cellModel;
@@ -51,7 +52,7 @@
 }
 
 - (void)initViews {
-    self.contentLabel = [[TTUGCAttributedLabel alloc] initWithFrame:CGRectZero];
+    self.contentLabel = [[TTUGCAsyncLabel alloc] initWithFrame:CGRectZero];
     _contentLabel.numberOfLines = maxLines;
     _contentLabel.layer.masksToBounds = YES;
     _contentLabel.backgroundColor = [UIColor whiteColor];
@@ -80,25 +81,20 @@
 }
 
 - (void)initConstraints {
-    [self.contentLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.contentView).offset(topMargin);
-        make.left.mas_equalTo(self.contentView).offset(20);
-        make.right.mas_equalTo(self.singleImageView.mas_left).offset(-15);
-    }];
+    self.contentLabel.top = topMargin;
+    self.contentLabel.left = 20;
+    self.contentLabel.width = [UIScreen mainScreen].bounds.size.width - 40 - 120 - 15;
+    self.contentLabel.height = 0;
+
+    self.singleImageView.top = topMargin;
+    self.singleImageView.left = self.contentLabel.right + 15;
+    self.singleImageView.width = 120;
+    self.singleImageView.height = singleImageViewHeight;
     
-    [self.singleImageView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.contentLabel);
-        make.right.mas_equalTo(self.contentView).offset(-20);
-        make.width.mas_equalTo(120);
-        make.height.mas_equalTo(singleImageViewHeight);
-    }];
-    
-    [self.bottomView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.singleImageView.mas_bottom).offset(10);
-        make.height.mas_equalTo(bottomViewHeight);
-        make.left.right.mas_equalTo(self.contentView);
-        make.bottom.mas_equalTo(self.contentView);
-    }];
+    self.bottomView.top = self.singleImageView.bottom + 10;
+    self.bottomView.left = 0;
+    self.bottomView.width = [UIScreen mainScreen].bounds.size.width;
+    self.bottomView.height = bottomViewHeight;
 }
 
 -(UILabel *)LabelWithFont:(UIFont *)font textColor:(UIColor *)textColor {
@@ -112,17 +108,23 @@
     if (![data isKindOfClass:[FHFeedUGCCellModel class]]) {
         return;
     }
-    self.currentData = data;
     
     FHFeedUGCCellModel *cellModel = (FHFeedUGCCellModel *)data;
-    self.cellModel = cellModel;
+    
+    if(self.currentData == data && !cellModel.ischanged){
+        return;
+    }
+    self.currentData = data;
+    self.cellModel= cellModel;
     //内容
     self.contentLabel.numberOfLines = cellModel.numberOfLines;
     if(isEmptyString(cellModel.title)){
         self.contentLabel.hidden = YES;
+        self.contentLabel.height = 0;
     }else{
         self.contentLabel.hidden = NO;
-        [FHUGCCellHelper setRichContent:self.contentLabel model:cellModel];
+        self.contentLabel.height = cellModel.contentHeight;
+        [FHUGCCellHelper setAsyncRichContent:self.contentLabel model:cellModel];
     }
     
     self.bottomView.cellModel = cellModel;
@@ -133,10 +135,8 @@
     [self.bottomView showPositionView:showCommunity];
     //图片
     FHFeedContentImageListModel *imageModel = [cellModel.imageList firstObject];
-//    if(imageModel){
-//        [self.singleImageView bd_setImageWithURL:[NSURL URLWithString:imageModel.url] placeholder:nil];
-//    }
     if (imageModel && imageModel.url.length > 0) {
+//        [self.singleImageView bd_setImageWithURL:[NSURL URLWithString:imageModel.url] placeholder:nil];
         TTImageInfosModel *imageInfoModel = [FHUGCCellHelper convertTTImageInfosModel:imageModel];
         __weak typeof(self) wSelf = self;
         [self.singleImageView setImageWithModelInTrafficSaveMode:imageInfoModel placeholderImage:nil success:nil failure:^(NSError *error) {
@@ -163,13 +163,9 @@
 
 - (void)showGuideView {
     if(_cellModel.isInsertGuideCell){
-        [self.bottomView mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.height.mas_equalTo(bottomViewHeight + guideViewHeight);
-        }];
+        self.bottomView.height = bottomViewHeight + guideViewHeight;
     }else{
-        [self.bottomView mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.height.mas_equalTo(bottomViewHeight);
-        }];
+        self.bottomView.height = bottomViewHeight;
     }
 }
 

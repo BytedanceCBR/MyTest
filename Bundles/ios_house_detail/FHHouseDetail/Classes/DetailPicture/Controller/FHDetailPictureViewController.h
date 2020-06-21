@@ -12,10 +12,14 @@
 #import "FHVideoViewController.h"
 
 NS_ASSUME_NONNULL_BEGIN
+
+@class FHClueAssociateInfoModel;
+
 // 支持房源图片以及视频相关功能
 @interface FHDetailPictureViewController : FHBaseViewController
 
 @property (nonatomic, weak)     UIViewController       *topVC;
+@property(nonatomic, strong) UIScrollView * photoScrollView;
 /** 当前index */
 @property(nonatomic, assign, readonly)NSInteger currentIndex;
 /** 打开的时候需要展示的index */
@@ -34,6 +38,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic, copy) void (^albumImageBtnClickBlock)(NSInteger index);
 
 @property(nonatomic, copy) void (^albumImageStayBlock)(NSInteger index,NSInteger stayTime);
+/**点击头图的tab栏出现的埋点*/
+@property(nonatomic, copy) void (^topImageClickTabBlock)(NSInteger index);
 
 /** 图片数据 */
 
@@ -41,17 +47,25 @@ NS_ASSUME_NONNULL_BEGIN
 
 /** 详情页数据 */
 @property (nonatomic, copy)     NSString       *houseId;
+@property (nonatomic, assign)     FHHouseType       houseType;
 @property (nonatomic, copy)     NSString       *priceStr;
 @property (nonatomic, copy)     NSString       *infoStr;
 @property (nonatomic, assign)   NSInteger       followStatus;// 收藏状态
+@property (nonatomic, strong, nullable) FHClueAssociateInfoModel *associateInfo;
+
 @property(nonatomic , copy) void (^shareActionBlock)(void);
 @property(nonatomic , copy) void (^collectActionBlock)(BOOL followStatus);
+
+/// 查看全部图片的block，如果没有block，执行默认操作
+@property(nonatomic , copy) void (^allPhotoActionBlock)();
 
 /** 图片URL数组*/
 @property(nonatomic, strong)NSArray * imageURLs; //every item also is array, and it contains url and header infos
 
 /** TTImageInfosModel数组*/
 @property(nonatomic, strong)NSArray * imageInfosModels;
+
+@property(nonatomic, strong)NSArray * smallImageInfosModels;
 
 /** Extended by luohuaqing to support selecting image on preview */
 //@property (nonatomic, assign)PhotosScrollViewMode mode;
@@ -61,8 +75,14 @@ NS_ASSUME_NONNULL_BEGIN
 /** 是否支持长按保存，默认YES */
 @property (nonatomic, assign)BOOL longPressToSave;
 
-/** 是否显示所有按钮，默认YES */
-@property (nonatomic, assign)BOOL isShowAllBtns;
+/** 是否显示底部bottombar以及按钮，默认YES */
+@property (nonatomic, assign)BOOL isShowBottomBar;
+
+/// 头部切换name类型的view是否显示，默认YES
+@property (nonatomic, assign) BOOL isShowSegmentView;
+
+//099户型详情 查看大图新增 title & 售卖 状态字段
+@property (nonatomic, copy) NSString *bottomBarTitle;
 
 // Extended by lizhuoli to support drag down and drag up to close
 

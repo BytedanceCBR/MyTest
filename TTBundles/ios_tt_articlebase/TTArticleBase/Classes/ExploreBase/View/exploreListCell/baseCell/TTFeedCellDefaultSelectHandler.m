@@ -33,7 +33,7 @@
 #import "Article+TTADComputedProperties.h"
 
 #import "ExploreOrderedActionCell.h"
-#import <TTRelevantDurationTracker.h>
+#import "TTRelevantDurationTracker.h"
 
 #import "ExploreOrderedData+TTAd.h"
 #import "SSADEventTracker.h"
@@ -506,7 +506,7 @@
     [params setValue:@(connectionType) forKey:@"nt"];
     [params setValue:@"1" forKey:@"is_ad_event"];
     [params addEntriesFromDictionary:[orderData realTimeAdExtraData:@"embeded_ad" label:@"click" extraData:extraData]];
-    [TTTracker eventV3:@"realtime_click" params:params];
+    [BDTrackerProtocol eventV3:@"realtime_click" params:params];
 }
 
 

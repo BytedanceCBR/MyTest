@@ -7,13 +7,13 @@
 
 #import "FHMessageListSysViewModel.h"
 #import "FHMessageAPI.h"
-#import <UIScrollView+Refresh.h>
+#import "UIScrollView+Refresh.h"
 #import "FHSystemMsgCell.h"
 #import "UIImageView+BDWebImage.h"
 #import "FHUserTracker.h"
 #import "FHSystemMsgModel.h"
 #import "UIViewController+Refresh_ErrorHandler.h"
-#import <TTUGCEmojiParser.h>
+#import "TTUGCEmojiParser.h"
 
 #define kCellId @"FHBSystemMsgCell_id"
 
@@ -180,9 +180,15 @@
     }
     
     NSMutableDictionary *infoDic = @{}.mutableCopy;
-    infoDic[TRACER_KEY] = @{
-        UT_ENTER_TYPE: @"click"
-    };
+    NSMutableDictionary *tracer = @{}.mutableCopy;
+    tracer[@"enter_from"] = [self.viewController categoryName];
+    tracer[@"element_from"] = @"be_null";
+    tracer[@"log_pb"] = model.logPb ? : @"be_null";
+    tracer[@"origin_from"] = [self.viewController originFrom];
+    tracer[@"origin_search_id"] = self.originSearchId;
+
+    tracer[UT_ENTER_TYPE] = @"click";
+    infoDic[TRACER_KEY] = tracer;
     
     TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:infoDic];
     [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];

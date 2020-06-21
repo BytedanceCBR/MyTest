@@ -26,13 +26,14 @@
 #import "UILabel+House.h"
 #import "FHEnvContext.h"
 #import "FHUserTracker.h"
-#import <UIScrollView+Refresh.h>
+#import "UIScrollView+Refresh.h"
 #import "FHFeedOperationView.h"
 #import <FHHouseBase/FHBaseTableView.h>
 #import "SSImpressionManager.h"
 #import "FHUserTracker.h"
 #import "UIViewController+Track.h"
 #import "TTAccountManager.h"
+#import "UIImage+FIconFont.h"
 
 @interface FHTopicDetailViewController ()<UIScrollViewDelegate,TTUIViewControllerTrackProtocol>
 
@@ -163,7 +164,9 @@
 - (void)setupUI {
     self.navOffset = 64;
     CGFloat navOffset = 64;
-    if (@available(iOS 11.0 , *)) {
+    if (@available(iOS 13.0, *)) {
+        navOffset = 44.f + [UIApplication sharedApplication].keyWindow.safeAreaInsets.top;
+    } else if (@available(iOS 11.0 , *)) {
         navOffset = 44.f + self.view.tt_safeAreaInsets.top;
     } else {
         navOffset = 64;
@@ -318,12 +321,15 @@
     UIView *footerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 0, 0.001)];
     _tableView.tableFooterView = footerView;
     
-    _tableView.sectionFooterHeight = 0.0;
-    
-    _tableView.estimatedRowHeight = 0;
+//    _tableView.sectionFooterHeight = 0.0;
+//    
+//    _tableView.estimatedRowHeight = 0;
     
     if (@available(iOS 11.0 , *)) {
         _tableView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
+        _tableView.estimatedRowHeight = 0;
+        _tableView.estimatedSectionFooterHeight = 0;
+        _tableView.estimatedSectionHeaderHeight = 0;
     }
     
     if ([TTDeviceHelper isIPhoneXSeries]) {
@@ -344,13 +350,15 @@
 - (void)setNavBarTransparent:(BOOL)transparent {
     if (!transparent) {
         self.customNavBarView.title.textColor = [UIColor themeGray1];
-        [self.customNavBarView.leftBtn setBackgroundImage:[UIImage imageNamed:@"icon-return"] forState:UIControlStateNormal];
-        [self.customNavBarView.leftBtn setBackgroundImage:[UIImage imageNamed:@"icon-return"] forState:UIControlStateHighlighted];
+        UIImage *blackBackArrowImage = ICON_FONT_IMG(24, @"\U0000e68a", [UIColor themeGray1]);
+        [self.customNavBarView.leftBtn setBackgroundImage:blackBackArrowImage forState:UIControlStateNormal];
+        [self.customNavBarView.leftBtn setBackgroundImage:blackBackArrowImage forState:UIControlStateHighlighted];
         [self.customNavBarView setNaviBarTransparent:NO];
     } else {
         self.customNavBarView.title.textColor = [UIColor whiteColor];
-        [self.customNavBarView.leftBtn setBackgroundImage:[UIImage imageNamed:@"icon-return-white"] forState:UIControlStateNormal];
-        [self.customNavBarView.leftBtn setBackgroundImage:[UIImage imageNamed:@"icon-return-white"] forState:UIControlStateHighlighted];
+        UIImage *whiteBackArrowImage = ICON_FONT_IMG(24, @"\U0000e68a", [UIColor whiteColor]);
+        [self.customNavBarView.leftBtn setBackgroundImage:whiteBackArrowImage forState:UIControlStateNormal];
+        [self.customNavBarView.leftBtn setBackgroundImage:whiteBackArrowImage forState:UIControlStateHighlighted];
         [self.customNavBarView setNaviBarTransparent:YES];
     }
 }
@@ -483,7 +491,26 @@
     NSMutableDictionary *params = [NSMutableDictionary dictionary];
     NSString *page_type = @"topic_detail";
     [params setObject:page_type forKey:@"enter_from"];
-    [params setObject:@"click_publisher" forKey:@"enter_type"];
+    
+    NSString *enter_type = UT_BE_NULL;
+     switch (from) {
+         case FHUGCLoginFrom_POST:
+             enter_type = @"click_publisher_moments";
+             break;
+         case FHUGCLoginFrom_GROUPCHAT:
+             enter_type = @"ugc_member_talk";
+             break;
+         case FHUGCLoginFrom_VOTE:
+             enter_type = @"click_publisher_vote";
+             break;
+         case FHUGCLoginFrom_WENDA:
+             enter_type = @"click_publisher_question";
+             break;
+         default:
+             break;
+     }
+     [params setObject:enter_type forKey:@"enter_type"];
+    
     // 登录成功之后不自己Pop，先进行页面跳转逻辑，再pop
     [params setObject:@(YES) forKey:@"need_pop_vc"];
     params[@"from_ugc"] = @(YES);
@@ -698,19 +725,22 @@
     alpha = fminf(fmaxf(0.0f, alpha), 1.0f);
     if (alpha <= 0.1f) {
         [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
-        [self.customNavBarView.leftBtn setBackgroundImage:[UIImage imageNamed:@"icon-return-white"] forState:UIControlStateNormal];
-        [self.customNavBarView.leftBtn setBackgroundImage:[UIImage imageNamed:@"icon-return-white"] forState:UIControlStateHighlighted];
+        UIImage *whiteBackArrowImage = ICON_FONT_IMG(24, @"\U0000e68a", [UIColor whiteColor]);
+        [self.customNavBarView.leftBtn setBackgroundImage:whiteBackArrowImage forState:UIControlStateNormal];
+        [self.customNavBarView.leftBtn setBackgroundImage:whiteBackArrowImage forState:UIControlStateHighlighted];
         self.titleContainer.hidden = YES;
     } else if (alpha > 0.1f && alpha < 0.9f) {
         [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault];
         self.customNavBarView.title.textColor = [UIColor themeGray1];
-        [self.customNavBarView.leftBtn setBackgroundImage:[UIImage imageNamed:@"icon-return"] forState:UIControlStateNormal];
-        [self.customNavBarView.leftBtn setBackgroundImage:[UIImage imageNamed:@"icon-return"] forState:UIControlStateHighlighted];
+        UIImage *blackBackArrowImage = ICON_FONT_IMG(24, @"\U0000e68a", [UIColor themeGray1]);
+        [self.customNavBarView.leftBtn setBackgroundImage:blackBackArrowImage forState:UIControlStateNormal];
+        [self.customNavBarView.leftBtn setBackgroundImage:blackBackArrowImage forState:UIControlStateHighlighted];
         self.titleContainer.hidden = YES;
     } else {
         [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault];
-        [self.customNavBarView.leftBtn setBackgroundImage:[UIImage imageNamed:@"icon-return"] forState:UIControlStateNormal];
-        [self.customNavBarView.leftBtn setBackgroundImage:[UIImage imageNamed:@"icon-return"] forState:UIControlStateHighlighted];
+        UIImage *blackBackArrowImage = ICON_FONT_IMG(24, @"\U0000e68a", [UIColor themeGray1]);
+        [self.customNavBarView.leftBtn setBackgroundImage:blackBackArrowImage forState:UIControlStateNormal];
+        [self.customNavBarView.leftBtn setBackgroundImage:blackBackArrowImage forState:UIControlStateHighlighted];
         self.titleContainer.hidden = NO;
     }
     [self.customNavBarView refreshAlpha:alpha];

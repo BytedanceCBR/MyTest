@@ -35,7 +35,7 @@ static NSString * const kTTKGMapSearchResultTypeTags = @"types";
     if (isGMapSupported && !isEmptyString(googleMapKey)) {
         NSString *url = [NSString stringWithFormat:@"https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=%f,%f&radius=%ld&language=zh-CN&key=%@", coordinate.latitude, coordinate.longitude, radius, googleMapKey];
 
-        return [TTUGCRequestManager requestForJSONWithURL:url params:nil method:@"GET" needCommonParams:NO callBackWithMonitor:^(NSError *error, id jsonObj, TTUGCRequestMonitorModel *monitorModel) {
+        return [TTUGCRequestManager requestForJSONWithURL:url params:nil method:@"GET" needCommonParams:NO callBackWithMonitor:^(NSError *error, id jsonObj, TTHttpResponse *response) {
             if (completionBlock) {
                 if ([jsonObj isKindOfClass:[NSDictionary class]]) {
                     NSString *continueToken = [jsonObj tt_stringValueForKey:kTTKGMapSearchNextPageToken];
@@ -64,7 +64,7 @@ static NSString * const kTTKGMapSearchResultTypeTags = @"types";
     if (isGMapSupported && !isEmptyString(googleMapKey)) {
         NSString *url = [NSString stringWithFormat:@"https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=%f,%f&radius=%ld&keyword=%@&language=zh-CN&key=%@", coordinate.latitude, coordinate.longitude, radius, [self encodedWithString:keywords], googleMapKey];
 
-        return [TTUGCRequestManager requestForJSONWithURL:url params:nil method:@"GET" needCommonParams:NO callBackWithMonitor:^(NSError *error, id jsonObj, TTUGCRequestMonitorModel *monitorModel) {
+        return [TTUGCRequestManager requestForJSONWithURL:url params:nil method:@"GET" needCommonParams:NO callBackWithMonitor:^(NSError *error, id jsonObj, TTHttpResponse *response) {
             if (completionBlock) {
                 if ([jsonObj isKindOfClass:[NSDictionary class]] && [[jsonObj tt_stringValueForKey:@"status"] isEqualToString:@"OK"]) {
                     NSString *continueToken = [jsonObj tt_stringValueForKey:kTTKGMapSearchNextPageToken];
@@ -102,7 +102,7 @@ static NSString * const kTTKGMapSearchResultTypeTags = @"types";
         
         NSString *url = [NSString stringWithFormat:@"https://maps.googleapis.com/maps/api/place/nearbysearch/json?pagetoken=%@&key=%@", continueToken, googleMapKey];
 
-        return [TTUGCRequestManager requestForJSONWithURL:url params:nil method:@"GET" needCommonParams:NO callBackWithMonitor:^(NSError *error, id jsonObj, TTUGCRequestMonitorModel *monitorModel) {
+        return [TTUGCRequestManager requestForJSONWithURL:url params:nil method:@"GET" needCommonParams:NO callBackWithMonitor:^(NSError *error, id jsonObj, TTHttpResponse *response) {
             if (completionBlock) {
                 if ([jsonObj isKindOfClass:[NSDictionary class]] && [[jsonObj tt_stringValueForKey:@"status"] isEqualToString:@"OK"]) {
                     NSString *continueToken = [jsonObj tt_stringValueForKey:kTTKGMapSearchNextPageToken];

@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 
-#import <SSCommonDefines.h>
+#import "SSCommonDefines.h"
 
 extern NSString * const kIntroductionViewControllerRemovedNotification;
 extern NSString * const kFeedRefreshButtonSettingEnabledNotification;
@@ -1150,6 +1150,7 @@ typedef NS_ENUM(NSInteger, SSCommentType)  {
 + (BOOL)useImageVideoNewApi;
 + (NSInteger)configSwitchTimeDaysCount;
 + (BOOL)configSwitchFWebOffline;
+//+ (BOOL)webViewOpenSchemaEnable;
 + (NSInteger)configEditProfileEntry;
 + (BOOL)useNewSearchTransitionAnimation;
 + (BOOL)useNewSearchTransitionAnimationForVideo;
@@ -1401,7 +1402,11 @@ typedef NS_ENUM(NSInteger, SSCommentType)  {
 + (BOOL)imCanStart;
 //是否禁用详情页秒开
 +(BOOL)disableDetailInstantShow;
+//经纪人评价弹窗是否强制使用
++(BOOL)isForceEnableRealtorConfirmBtn;
 
+//是否允许webview 白屏检测
++(BOOL)enableWebViewBlankDetect;
 
 @end
 

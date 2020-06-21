@@ -9,14 +9,14 @@
 #import "UIColor+Theme.h"
 #import "FHUGCCommentListViewModel.h"
 #import "TTReachability.h"
-#import <UIViewAdditions.h>
+#import "UIViewAdditions.h"
 #import "TTDeviceHelper.h"
-#import <TTRoute.h>
+#import "TTRoute.h"
 #import "TTAccountManager.h"
 #import "TTAccount+Multicast.h"
 #import "FHEnvContext.h"
 #import "FHUserTracker.h"
-#import <UIScrollView+Refresh.h>
+#import "UIScrollView+Refresh.h"
 #import "FHFeedOperationView.h"
 #import <FHHouseBase/FHBaseTableView.h>
 #import "FHUserTracker.h"
@@ -103,7 +103,10 @@
     _tableView.estimatedRowHeight = 0;
     
     if (@available(iOS 11.0 , *)) {
-        self.tableView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
+        _tableView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
+        _tableView.estimatedRowHeight = 0;
+        _tableView.estimatedSectionFooterHeight = 0;
+        _tableView.estimatedSectionHeaderHeight = 0;
     }
     
     if ([TTDeviceHelper isIPhoneXSeries]) {
@@ -190,6 +193,7 @@
     self.tableView.contentInset = inset;
     self.tableView.contentOffset = CGPointMake(0, -inset.top);
     self.notifyCompletionBlock = completion;
+    WeakSelf;
     [self.notifyBarView showMessage:message actionButtonTitle:@"" delayHide:YES duration:1 bgButtonClickAction:nil actionButtonClickBlock:nil didHideBlock:nil willHideBlock:^(ArticleListNotifyBarView *barView, BOOL isImmediately) {
         WeakSelf;
         if(!isImmediately) {

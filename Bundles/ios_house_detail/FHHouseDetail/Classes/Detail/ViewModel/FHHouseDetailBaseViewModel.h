@@ -11,12 +11,14 @@
 #import "FHUserTracker.h"
 #import "FHHouseTypeManager.h"
 #import "FHHouseDetailContactViewModel.h"
-#import <TTReachability.h>
+#import "TTReachability.h"
 #import "FHDetailNavBar.h"
 #import <Heimdallr/HMDTTMonitor.h>
 #import "FHDetailHalfPopLayer.h"
 #import "FHDetailQuestionButton.h"
 #import "FHDetailSocialEntranceView.h"
+#import "FHDetailBottomBar.h"
+
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -42,7 +44,7 @@ extern NSString *const DETAIL_SHOW_POP_LAYER_NOTIFICATION ; //详情页点击显
 @property (nonatomic, copy)     NSString       *source; // 特殊标记，从哪进入的小区详情，比如地图租房列表“rent_detail”，此时小区房源展示租房列表
 @property (nonatomic, strong)   NSDictionary       *listLogPB; // 外部传入的列表页的logPB，详情页大部分埋点都直接用当前埋点数据
 @property(nonatomic , strong) NSMutableDictionary *detailTracerDic; // 详情页基础埋点数据
-@property (nonatomic, weak) FHDetailBottomBarView *bottomBar;
+@property (nonatomic, weak) FHDetailBottomBar *bottomBar;
 @property (nonatomic, weak) FHDetailNavBar *navBar;
 @property (nonatomic, weak) UILabel *bottomStatusBar;
 @property(nonatomic , weak) UITableView *tableView;
@@ -51,6 +53,7 @@ extern NSString *const DETAIL_SHOW_POP_LAYER_NOTIFICATION ; //详情页点击显
 @property (nonatomic, strong)   NSObject       *detailData; // 详情页数据：FHDetailOldDataModel等
 @property (nonatomic, strong) FHHouseDetailContactViewModel *contactViewModel;
 @property(nonatomic , weak) FHDetailQuestionButton *questionBtn;
+@property (nonatomic, strong) NSDictionary *extraInfo;
 
 // 子类实现
 - (void)registerCellClasses;
@@ -69,8 +72,6 @@ extern NSString *const DETAIL_SHOW_POP_LAYER_NOTIFICATION ; //详情页点击显
 // 二级页所需数据
 - (NSDictionary *)subPageParams;
 
-//秒开相关
--(void)handleInstantData:(id)data;
 -(BOOL)currentIsInstantData;
 
 // 埋点相关
