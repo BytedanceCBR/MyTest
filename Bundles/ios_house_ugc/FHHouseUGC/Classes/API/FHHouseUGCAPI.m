@@ -1765,10 +1765,10 @@
     
     NSMutableDictionary *paramDic = [NSMutableDictionary new];
     if (houseId) {
-        paramDic[@"house_id"] = @(houseId.intValue);
+        paramDic[@"house_id"] = @(houseId.integerValue);
     }
     if (houseType.length > 0) {
-       paramDic[@"house_type"] = @(houseType.intValue);
+       paramDic[@"house_type"] = @(houseType.integerValue);
     }
     NSDate *startDate = [NSDate date];
     return [[TTNetworkManager shareInstance] requestForBinaryWithResponse:url params:paramDic method:@"GET" needCommonParams:YES callback:^(NSError *error, id obj, TTHttpResponse *response) {
