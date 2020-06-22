@@ -8,7 +8,7 @@
 #import "FHErrorHubCheckPathHelper.h"
 
 @implementation FHErrorHubCheckPathHelper
-- (NSArray *)FHErrorHubCheckRequestPathList {
++ (NSArray *)FHErrorHubCheckRequestPathList {
     return @[
         @"https://i.haoduofangs.com/f100/api/neighborhood/info", //周边详情页请求
         @"https://i.haoduofangs.com/f100/api/court/info",//新房详情页请求
