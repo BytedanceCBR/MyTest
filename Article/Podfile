@@ -66,8 +66,8 @@ def fhPods
 
     
 #    pod 'ios_house_im' , '0.2.7'
-     pod 'ios_house_im' , :path => '../../../im/2'
-#    pod 'ios_house_im' , :git => 'git@code.byted.org:fproject/ios_house_im.git' , :commit => 'a07d5b75f39f65e955c4a3791216bfdb2d9d7338'
+#     pod 'ios_house_im' , :path => '../../../im/2'
+    pod 'ios_house_im' , :git => 'git@code.byted.org:fproject/ios_house_im.git' , :commit => 'd9024c77352f1c75c0b30da82cbb7688c111f207'
 
 end
 
