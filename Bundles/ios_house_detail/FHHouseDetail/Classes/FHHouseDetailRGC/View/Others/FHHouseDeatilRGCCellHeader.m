@@ -40,7 +40,7 @@
     }];
     [self.nameLab mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.equalTo(self.headerIma.mas_right).offset(10);
-        make.top.equalTo(self.headerIma).offset(1);
+        make.top.equalTo(self.headerIma);
     }];
     
     [self.companyBac mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -73,7 +73,7 @@
     
     [self.infoLab mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.equalTo(self.nameLab);
-        make.bottom.equalTo(self.headerIma.mas_bottom).offset(-1);
+        make.bottom.equalTo(self.headerIma.mas_bottom).offset(2);
         make.right.equalTo(self.iMBtn.mas_left).offset(-20);
     }];
 }
@@ -141,6 +141,7 @@
     if (!_infoLab) {
         UILabel *infoLab = [[UILabel alloc]init];
         infoLab.font = [UIFont themeFontMedium:10];
+        infoLab.baselineAdjustment = UIBaselineAdjustmentAlignCenters;
         infoLab.textColor = [UIColor themeGray3];
         [self addSubview:infoLab];
         _infoLab = infoLab;
@@ -172,8 +173,8 @@
 
 - (void)refreshWithData:(FHFeedUGCCellModel *)cellModel {
     _cellModel = cellModel;
-    if (cellModel.realtor.avatarUrl) {
-        [self.headerIma bd_setImageWithURL:[NSURL URLWithString:cellModel.realtor.avatarUrl]];
+    if (cellModel.realtor.avatarUrl && cellModel.realtor.avatarUrl.length>0 ) {
+        [self.headerIma bd_setImageWithURL:[NSURL URLWithString:cellModel.realtor.avatarUrl] placeholder:[UIImage imageNamed:@"detail_default_avatar"]];
     }
     if (cellModel.realtor.certificationIcon) {
           [self.idIma bd_setImageWithURL:[NSURL URLWithString:cellModel.realtor.certificationIcon]];
