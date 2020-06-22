@@ -321,12 +321,10 @@
             };
             
             itemVC.scrollDidBegin = ^{
-                NSLog(@"xxxx Begin");
                 self.homeViewController.scrollView.scrollEnabled = NO;
             };
             
             itemVC.scrollDidEnd = ^{
-                NSLog(@"xxxx  End");
                 self.homeViewController.scrollView.scrollEnabled = YES;
             };
             
