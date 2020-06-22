@@ -162,7 +162,7 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
 
 - (void)confirmBtnDidClick
 {
-    [self.collectionView endEditing:YES];
+//    [self.collectionView endEditing:YES];
     __weak typeof(self) wself = self;
     [self addClickOptionsLog:@"confirm"];
     
@@ -190,7 +190,7 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
         phoneNumber = self.contactCell.phoneNum;
     }
     if (phoneNumber.length < 1 || ![phoneNumber hasPrefix:@"1"] || phoneNumber.length != 11 || ![self isPureInt:phoneNumber]) {
-        [[ToastManager manager] showToast:@"请填写正确的手机号"];
+        [[ToastManager manager] showToast:@"请输入正确的手机号"];
         return;
     }
     [self storePhoneNumber:phoneNumber];
