@@ -316,10 +316,14 @@
 }
 
 - (void)clickRealtorHeader:(FHFeedUGCCellModel *)cellModel cell:(FHUGCBaseCell *)cell {
-    NSMutableDictionary *dict = [NSMutableDictionary dictionary];
-     dict[@"element_from"] = @"old_detail_related";
-     dict[@"enter_from"] = [self.baseViewModel pageTypeString];
-    [self.realtorPhoneCallModel jump2RealtorDetailWithPhone:cellModel.realtor isPreLoad:NO extra:dict];
+    FHhouseDetailRGCListCellModel *dataModel = (FHhouseDetailRGCListCellModel *)self.currentData;
+    NSDictionary *houseInfo = dataModel.extraDic;
+    if ([houseInfo[@"houseType"] integerValue] == FHHouseTypeSecondHandHouse) {
+        NSMutableDictionary *dict = [NSMutableDictionary dictionary];
+         dict[@"element_from"] = @"old_detail_related";
+         dict[@"enter_from"] = [self.baseViewModel pageTypeString];
+        [self.realtorPhoneCallModel jump2RealtorDetailWithPhone:cellModel.realtor isPreLoad:NO extra:dict];
+    }
 }
 
 - (void)moreButtonClick {

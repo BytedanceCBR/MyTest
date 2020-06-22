@@ -63,7 +63,6 @@
 }
 
 - (void)initUI {
-    [self addDefaultEmptyViewFullScreen];
     [self setupDefaultNavBar:NO];
     UIImage *backimage = ICON_FONT_IMG(24, @"\U0000e68a", [UIColor themeGray1]);
     [self.customNavBarView.leftBtn setBackgroundImage:backimage forState:UIControlStateNormal];
@@ -92,6 +91,7 @@
         self.evaluationHeader.hidden = YES;
         self.mainTable.contentInset = UIEdgeInsetsMake(16, 0, 0, 0);
     }
+    [self addDefaultEmptyViewWithEdgeInsets:UIEdgeInsetsMake(70, 0, 0, 0)];
 }
 
 - (FHDetailEvaluationListViewHeader *)evaluationHeader {

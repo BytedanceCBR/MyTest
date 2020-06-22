@@ -73,7 +73,7 @@
     
     [self.infoLab mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.equalTo(self.nameLab);
-        make.bottom.equalTo(self.headerIma.mas_bottom).offset(-2);
+        make.bottom.equalTo(self.headerIma.mas_bottom).offset(-1);
         make.right.equalTo(self.iMBtn.mas_left).offset(-20);
     }];
 }
@@ -84,6 +84,7 @@
         headerIma.layer.cornerRadius = 17;
         headerIma.layer.masksToBounds = YES;
         headerIma.backgroundColor = [UIColor themeGray7];
+        headerIma.image = [UIImage imageNamed:@"detail_default_avatar"];
         UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(clickImage)];
         [headerIma addGestureRecognizer:tapGesture];
         headerIma.userInteractionEnabled = YES;
@@ -189,7 +190,12 @@
             make.width.mas_offset(0);
         }];
     }
-    self.infoLab.text = [NSString stringWithFormat:@"%@ %@",cellModel.realtor.desc,cellModel.createTime];
+    if (cellModel.realtor.desc) {
+        self.infoLab.text = [NSString stringWithFormat:@"%@ %@",cellModel.realtor.desc,cellModel.createTime];
+    }else {
+        self.infoLab.text = [NSString stringWithFormat:@"%@",cellModel.createTime];
+    }
+    
 }
 
 - (void)imAction:(UIButton *)sender {

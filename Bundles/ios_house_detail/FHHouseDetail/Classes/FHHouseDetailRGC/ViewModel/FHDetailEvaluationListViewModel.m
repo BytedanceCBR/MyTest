@@ -99,6 +99,7 @@
 }
 
 - (void)reloadData {
+    self.listController.emptyView.hidden = YES;
     self.listController.hasValidateData = NO;
     [self requestData:YES first:YES];
 }
@@ -127,13 +128,17 @@
 }
 
 - (void)requestData:(BOOL)isHead first:(BOOL)isFirst {
+    if (self.requestTask) {
+        [self.requestTask cancel];
+        self.listController.isLoadingData = NO;
+    }
+    
     if(self.listController.isLoadingData){
         return;
     }
     NSString *refreshType = @"be_null";
     self.listController.isLoadingData = YES;
     
-
     if(isFirst){
         [self.listController startLoading];
     }
@@ -165,7 +170,7 @@
     if (self.evaluationHeader.selectName) {
          [extraDic setObject:self.evaluationHeader.selectName forKey:@"tab_name"];
     }
-    self.requestTask = [FHHouseUGCAPI requestFeedListWithCategory:self.categoryId behotTime:behotTime loadMore:!isHead listCount:listCount extraDic:extraDic completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
+   TTHttpTask *task = [FHHouseUGCAPI requestFeedListWithCategory:self.categoryId behotTime:behotTime loadMore:!isHead listCount:listCount extraDic:extraDic completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
         wself.listController.isLoadingData = NO;
         FHFeedListModel *feedListModel = (FHFeedListModel *)model;
         wself.feedListModel = feedListModel;
@@ -223,6 +228,7 @@
             });
         }
     }];
+    self.requestTask = task;
 }
 
 - (void)updateTableViewWithMoreData:(BOOL)hasMore {
@@ -395,10 +401,12 @@ if (hasMore) {
 }
 
 - (void)clickRealtorHeader:(FHFeedUGCCellModel *)cellModel cell:(FHUGCBaseCell *)cell {
-    NSMutableDictionary *dict = [NSMutableDictionary dictionary];
-     dict[@"element_from"] = @"old_detail_related";
-     dict[@"enter_from"] = @"realtor_evaluate_list";
-    [self.realtorPhoneCallModel jump2RealtorDetailWithPhone:cellModel.realtor isPreLoad:NO extra:dict];
+    if ([self.houseType integerValue] == FHHouseTypeSecondHandHouse) {
+            NSMutableDictionary *dict = [NSMutableDictionary dictionary];
+         dict[@"element_from"] = @"old_detail_related";
+         dict[@"enter_from"] = @"realtor_evaluate_list";
+        [self.realtorPhoneCallModel jump2RealtorDetailWithPhone:cellModel.realtor isPreLoad:NO extra:dict];
+    }
 }
 
 

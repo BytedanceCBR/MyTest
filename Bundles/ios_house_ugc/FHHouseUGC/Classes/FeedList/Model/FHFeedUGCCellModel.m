@@ -805,7 +805,12 @@
     cellModel.diggCount = model.diggCount;
     cellModel.readCount = model.readCount;
     cellModel.commentCount = model.commentCount;
-    cellModel.createTime =  [FHBusinessManager ugcCustomtimeAndCustomdateStringSince1970:model.createTime.doubleValue type:@"onlyDate"];
+    if (model.createTime) {
+            cellModel.createTime =  [FHBusinessManager ugcCustomtimeAndCustomdateStringSince1970:model.createTime.doubleValue type:@"onlyDate"];
+    }else {
+            cellModel.createTime =  [FHBusinessManager ugcCustomtimeAndCustomdateStringSince1970:model.rawData.createTime.doubleValue type:@"onlyDate"];
+    }
+
     cellModel.userDigg = model.userDigg;
     cellModel.desc = [self generateUGCDesc:model];
     cellModel.groupId = model.threadId.length > 0 ? model.threadId: model.rawData.threadId;
