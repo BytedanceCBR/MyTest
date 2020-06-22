@@ -62,7 +62,8 @@
 
 - (void)initUI {
     [self.mainTable mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.right.bottom.equalTo(self.view);
+        make.left.right.equalTo(self.view);
+        make.bottom.equalTo(self.view);
         make.top.equalTo(self.view);
     }];
     [self initNotifyBarView];
@@ -92,10 +93,7 @@
         }else {
             self.automaticallyAdjustsScrollViewInsets = NO;
         }
-        if ([UIDevice btd_isIPhoneXSeries]) {
-            mainTable.contentInset = UIEdgeInsetsMake(0, 0, 34, 0);
-        }
-        UIView *footerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 0, 0.001)];
+        UIView *footerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 0, 50)];
         mainTable.tableFooterView = footerView;
         [self.view addSubview:mainTable];
         _mainTable = mainTable;

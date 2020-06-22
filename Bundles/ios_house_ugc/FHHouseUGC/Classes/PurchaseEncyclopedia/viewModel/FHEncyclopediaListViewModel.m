@@ -144,7 +144,6 @@
                 wself.refreshFooter.hidden = YES;
             }
             [wself.tableView reloadData];
-            
             NSString *refreshTip = [NSString stringWithFormat:@"已为您更新 %ld 条数据",result.count];
             if (isHead && result.count > 0 && ![refreshTip isEqualToString:@""] && !wself.isRefreshingTip){
                 wself.isRefreshingTip = YES;
@@ -270,7 +269,7 @@
     if (hasMore) {
         [self.tableView.mj_footer endRefreshing];
     }else {
-        [self.refreshFooter setUpNoMoreDataText:@"没有更多信息了" offsetY:-3];
+        [self.refreshFooter setUpNoMoreDataText:@"没有更多信息了" offsetY:-30];
         [self.tableView.mj_footer endRefreshingWithNoMoreData];
     }
 }
