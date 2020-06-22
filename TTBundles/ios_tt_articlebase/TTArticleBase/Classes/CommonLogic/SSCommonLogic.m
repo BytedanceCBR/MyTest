@@ -5453,8 +5453,8 @@ static NSString *const kFFeedRefreshStrategy = @"feed_refresh_settings";
 }
 
 + (BOOL)isFHNewLaunchOptimizeEnabled {
-    BOOL startupOptimizeClose =  [[self fhSettings] tt_boolValueForKey:@"f_startup_optimize_close"];
-    return !startupOptimizeClose;
+    BOOL startupOptimizeOpen = [[self fhSettings] tt_boolValueForKey:@"f_startup_optimize_open"];
+    return startupOptimizeOpen;
 }
 
 @end

@@ -22,7 +22,8 @@ DEC_TASK("TTIESPlayerTask",FHTaskTypeService,TASK_PRIORITY_HIGH+14);
 - (void)startWithApplication:(UIApplication *)application options:(NSDictionary *)launchOptions
 {
     [super startWithApplication:application options:launchOptions];
-    BOOL startupOptimizeClose =  [[self fhSettings] tt_boolValueForKey:@"f_startup_optimize_close"];
+    NSDictionary *s = [self fhSettings];
+    BOOL startupOptimizeClose = ![[self fhSettings] tt_boolValueForKey:@"f_startup_optimize_open"];
     if(startupOptimizeClose){
         [TTHTSVideoConfiguration setup];
     }else{

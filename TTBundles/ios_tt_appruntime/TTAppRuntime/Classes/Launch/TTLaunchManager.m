@@ -159,7 +159,7 @@ static NSDate *preMainDate = nil;
         }
     }
     
-    BOOL startupOptimizeClose = [[self fhSettings] tt_boolValueForKey:@"f_startup_optimize_close"];
+    BOOL startupOptimizeClose = ![[self fhSettings] tt_boolValueForKey:@"f_startup_optimize_open"];
     if(startupOptimizeClose){
         [self updateTaskRecords:taskList];
     }
@@ -189,7 +189,7 @@ static NSDate *preMainDate = nil;
                 });
             });
         } else {
-            BOOL startupOptimizeClose =  [[self fhSettings] tt_boolValueForKey:@"f_startup_optimize_close"];
+            BOOL startupOptimizeClose = ![[self fhSettings] tt_boolValueForKey:@"f_startup_optimize_open"];
             if(startupOptimizeClose){
                 [task setTaskNormal:NO];
             }
