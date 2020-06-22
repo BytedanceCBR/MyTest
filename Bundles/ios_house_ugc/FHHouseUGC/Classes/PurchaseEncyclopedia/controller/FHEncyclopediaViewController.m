@@ -61,6 +61,7 @@
 
 - (void)initNav {
     [self setupDefaultNavBar:NO];
+    self.customNavBarView.seperatorLine.hidden = YES;
     self.customNavBarView.title.text = @"购房百科";
 }
 
