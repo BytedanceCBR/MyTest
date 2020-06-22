@@ -528,6 +528,9 @@
     if (self.houseType == FHHouseTypeNeighborhood || self.houseType == FHHouseTypeSecondHandHouse) {
         params[@"growth_deepevent"] = @(1);
     }
+    if(self.houseType == FHHouseTypeSecondHandHouse){
+        params[@"biz_trace"] = self.houseInfoOriginBizTrace;
+    }
     params[kFHClueExtraInfo] = self.extraInfo;
     [FHUserTracker writeEvent:@"go_detail" params:params];
     
@@ -585,6 +588,7 @@
     params[@"click_position"] = @"house_ask_question";
     params[@"is_im"] = !isEmptyString(contactPhone.imOpenUrl) ? @"1" : @"0";
     params[@"is_call"] =  @"0";
+    params[@"biz_trace"] = contactPhone.bizTrace;
     params[@"is_report"] = @"0";
     params[@"is_online"] = contactPhone.unregistered?@"1":@"0";
     [FHUserTracker writeEvent:@"lead_show" params:params];
@@ -610,6 +614,9 @@
     [params addEntriesFromDictionary:self.detailTracerDic];
     params[@"stay_time"] = [NSNumber numberWithInteger:duration];
     params[kFHClueExtraInfo] = self.extraInfo;
+    if(self.houseType == FHHouseTypeSecondHandHouse){
+        params[@"biz_trace"] = self.houseInfoOriginBizTrace;
+    }
     [FHUserTracker writeEvent:@"stay_page" params:params];
     
 }

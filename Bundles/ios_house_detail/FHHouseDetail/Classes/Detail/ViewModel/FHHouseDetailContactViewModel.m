@@ -320,6 +320,7 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
     [params setValue:[_tracerDict objectForKey:@"origin_from"] forKey:@"origin_from"];
     [params setValue:[_tracerDict objectForKey:@"origin_search_id"] forKey:@"origin_search_id"];
     [params setValue:[_tracerDict objectForKey:@"log_pb"] forKey:@"log_pb"];
+    [params setValue:self.houseInfoBizTrace forKey:@"biz_trace"];
     [params setValue: [[FHEnvContext sharedInstance].messageManager getTotalUnreadMessageCount] >0?@"1":@"0" forKey:@"with_tips"];
       [[FHHouseErrorHubManager sharedInstance] checkBuryingPointWithEvent:@"click_im_message" Params:params errorHubType:FHErrorHubTypeBuryingPoint];
     [BDTrackerProtocol eventV3:@"click_im_message" params:params];
@@ -1117,6 +1118,8 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
     tracerDic[@"realtor_rank"] = @(0);
     tracerDic[@"realtor_position"] = @"detail_button";
     tracerDic[@"realtor_logpb"] = contactPhone.realtorLogpb;
+    tracerDic[@"biz_trace"] = self.houseInfoBizTrace;
+    
     if (_contactPhone.phone.length < 1) {
         [tracerDic setValue:@"0" forKey:@"phone_show"];
     } else {
@@ -1157,6 +1160,7 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
     tracerDic[@"is_call"] = contactPhone.phone.length < 1 ? @"0" : @"1";
     tracerDic[@"is_report"] = contactPhone.isFormReport ? @"1" : @"0";
     tracerDic[@"is_online"] = _contactPhone.unregistered?@"1":@"0";
+    tracerDic[@"biz_trace"] = contactPhone.bizTrace?:@"be_null";
     [FHUserTracker writeEvent:@"lead_show" params:tracerDic];
 }
 

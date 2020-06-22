@@ -546,6 +546,7 @@
             tracerDic[@"realtor_rank"] = @(i);
             tracerDic[@"realtor_position"] = @"detail_related";
             tracerDic[@"realtor_logpb"] = contact.realtorLogpb;
+            tracerDic[@"biz_trace"] = contact.bizTrace;
             if (contact.phone.length < 1) {
                 [tracerDic setValue:@"0" forKey:@"phone_show"];
             } else {

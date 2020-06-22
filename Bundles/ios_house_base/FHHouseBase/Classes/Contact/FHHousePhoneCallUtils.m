@@ -183,6 +183,7 @@ typedef enum : NSUInteger {
     params[@"has_auth"] = @(1);
     params[@"has_associate"] = [NSNumber numberWithInteger:isVirtual];
     params[@"is_dial"] = @(1);
+    params[@"biz_trace"] = phoneAssociate.extraDict[@"biz_trace"] ?:@"be_null";
     params[@"realtor_logpb"] = reportParams[@"realtor_logpb"];
     params[@"growth_deepevent"] = @(1);
     params[@"realtor_position"] = reportParams[@"realtor_position"] ? : @"detail_button";

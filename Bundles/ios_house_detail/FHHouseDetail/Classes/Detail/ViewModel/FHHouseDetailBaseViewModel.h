@@ -54,7 +54,8 @@ extern NSString *const DETAIL_SHOW_POP_LAYER_NOTIFICATION ; //详情页点击显
 @property (nonatomic, strong) FHHouseDetailContactViewModel *contactViewModel;
 @property(nonatomic , weak) FHDetailQuestionButton *questionBtn;
 @property (nonatomic, strong) NSDictionary *extraInfo;
-@property (nonatomic, copy)   NSString* houseInfoBizTrace; // 房源详情通用bizTrace
+@property (nonatomic, copy)   NSString* houseInfoBizTrace; // 房源详情下发通用bizTrace
+@property (nonatomic, strong)   NSString* houseInfoOriginBizTrace; // 房源详情原始bizTrace
 
 // 子类实现
 - (void)registerCellClasses;

@@ -1005,6 +1005,7 @@ static NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
             tracerDict[@"origin_from"] = [self pageTypeString];
             tracerDict[@"origin_search_id"] = self.originSearchId ? : @"be_null";
             tracerDict[@"log_pb"] = [cellModel logPb] ? : @"be_null";
+            tracerDict[@"biz_trace"] = [cellModel bizTrace] ? : @"be_null";
             [tracerDict removeObjectForKey:@"element_from"];
             
             NSMutableDictionary *dic = [tracerDict mutableCopy];

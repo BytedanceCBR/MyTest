@@ -397,6 +397,7 @@ logPB:self.listLogPB extraInfo:self.extraInfo completion:^(FHDetailOldModel * _N
         subscribeModel.tableView = self.tableView;
         subscribeModel.houseModelType = FHHouseModelTypeSubscribe;
         subscribeModel.associateInfo = model.data.middleSubscriptionAssociateInfo;
+        subscribeModel.houseInfoBizTrace = self.houseInfoBizTrace;
         [self.items addObject:subscribeModel];
         
         __weak typeof(self) wSelf = self;
