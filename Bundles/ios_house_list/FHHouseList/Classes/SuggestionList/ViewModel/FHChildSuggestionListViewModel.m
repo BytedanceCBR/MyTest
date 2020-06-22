@@ -565,10 +565,16 @@
 }
 
 //跳转到帮我找房
-- (void)jump2HouseFindPageWithUrl:(NSString *)url {
+- (void)jump2HouseFindPageWithUrl:(NSString *)url from:(NSString *)from {
     if (url.length > 0) {
+        NSDictionary *tracerInfo = @{
+            @"element_from": from.length > 0 ? from : @"be_null",
+            @"enter_from": @"search_detail",
+        };
         NSURL *openUrl = [NSURL URLWithString:url];
-        [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:nil];
+        TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] init];
+        userInfo.allInfo = @{@"tracer": tracerInfo};
+        [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:userInfo];
     }
 }
 
@@ -602,7 +608,7 @@
             //猜你想找增加帮我找房入口
             [headerCell refreshData:self.guessYouWantExtraInfo];
             headerCell.entryTapAction = ^(NSString *url) {
-                [weakSelf jump2HouseFindPageWithUrl:url];
+                [weakSelf jump2HouseFindPageWithUrl:url from:@"driving_find_house_float"];
             };
             return headerCell;
         }
@@ -636,7 +642,7 @@
                 __weak typeof(self) weakSelf = self;
                 FHFindHouseHelperCell *helperCell = (FHFindHouseHelperCell *)[tableView dequeueReusableCellWithIdentifier:@"helperCell" forIndexPath:indexPath];
                 helperCell.cellTapAction = ^(NSString *url) {
-                    [weakSelf jump2HouseFindPageWithUrl:url];
+                    [weakSelf jump2HouseFindPageWithUrl:url from:@"driving_find_house_card"];
                 };
                 [helperCell updateWithData:model];
                 
@@ -834,8 +840,25 @@
                 [FHUserTracker writeEvent:@"hot_word_show" params:tracerDic];
             }
         }
-        //帮我找房埋点
+        //帮我找房浮动按钮埋点
         if ([cell isKindOfClass:[FHSuggestHeaderViewCell class]]) {
+            if (!self.guessYouWantExtraInfo) {
+                return;
+            }
+
+            NSDictionary *tracerDict = @{
+                @"event_type": @"house_app2c_v2",
+                @"page_type": @"search_detail",
+                @"element_type": @"driving_find_house_float",
+            };
+
+            [FHUserTracker writeEvent:@"element_show" params:tracerDict];
+        }
+    } else if (tableView.tag == 2) {
+        // 联想词 associate_word_show 埋点 在 返回数据的地方进行一次性埋点
+        
+        //帮我找房卡片埋点
+        if ([cell isKindOfClass:[FHFindHouseHelperCell class]]) {
             NSDictionary *tracerDict = @{
                 @"event_type": @"house_app2c_v2",
                 @"page_type": @"search_detail",
@@ -844,8 +867,6 @@
             
             [FHUserTracker writeEvent:@"element_show" params:tracerDict];
         }
-    } else if (tableView.tag == 2) {
-        // 联想词 associate_word_show 埋点 在 返回数据的地方进行一次性埋点
     }
 }
 

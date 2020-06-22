@@ -1924,11 +1924,13 @@ extern NSString *const INSTANT_DATA_KEY;
 //跳转到帮我找房
 - (void)jump2HouseFindPageWithUrl:(NSString *)url {
     if (url.length > 0) {
-        NSDictionary *userInfoDict = @{
-            @"enter_from": self.tracerModel.enterFrom.length > 0 ? self.tracerModel.enterFrom : @"be_null",
+        NSDictionary *tracerInfo = @{
+            @"element_from": @"driving_find_house_card",
+            @"enter_from": @"old_list",
         };
         NSURL *openUrl = [NSURL URLWithString:url];
-        TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:userInfoDict];
+        TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] init];
+        userInfo.allInfo = @{@"tracer": tracerInfo};
         [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:userInfo];
     }
 }
@@ -2174,7 +2176,6 @@ extern NSString *const INSTANT_DATA_KEY;
                                  @"event_type":@"house_app2c_v2",
                                  @"page_type":@"old_list",
                                  @"search_id":self.searchId.length > 0 ? self.searchId : @"be_null",
-//                                 @"impr_id":@"",  //拿不到？
                                  @"element_type":@"driving_find_house_card",
                                 };
         [FHUserTracker writeEvent:@"element_show" params:params];
