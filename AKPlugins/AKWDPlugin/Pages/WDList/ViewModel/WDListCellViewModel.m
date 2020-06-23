@@ -163,7 +163,16 @@
         return;
     }
     
-    [[TTRoute sharedRoute] openURLByViewController:[NSURL URLWithString:self.ansEntity.answerSchema] userInfo:nil];
+    NSMutableDictionary *dic = [NSMutableDictionary dictionary];
+    NSMutableDictionary *tracerDic = [NSMutableDictionary dictionary];
+    tracerDic[@"origin_from"] = gdExtJson[@"origin_from"] ?: @"be_null";
+    tracerDic[@"category_name"] = gdExtJson[@"category_name"] ?: @"be_null";
+    tracerDic[@"enter_from"] = @"question";
+    dic[@"tracer"] = tracerDic;
+    
+    TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dic];
+    
+    [[TTRoute sharedRoute] openURLByViewController:[NSURL URLWithString:self.ansEntity.answerSchema] userInfo:userInfo];
     NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithDictionary:gdExtJson];
     [dict setValue:@"answer" forKey:@"label"];
     [dict setValue:self.ansEntity.ansid forKey:@"value"];

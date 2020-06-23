@@ -16,7 +16,7 @@
 #import <UIKit/UIKit.h>
 
 @class FHDetailHouseTitleModel;
-@class FHDetailNewDataSmallImageGroupModel;
+@class FHHouseDetailImageGroupModel;
 @class FHClueAssociateInfoModel;
 
 NS_ASSUME_NONNULL_BEGIN
@@ -52,7 +52,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FHDetailPhotoHeaderModel : FHDetailBaseModel
 @property (nonatomic,assign)BOOL isNewHouse;
-@property (nonatomic, strong , nullable) NSArray<FHDetailNewDataSmallImageGroupModel *> *smallImageGroup;
+@property (nonatomic, strong , nullable) NSArray<FHHouseDetailImageGroupModel *> *smallImageGroup;
 @property (nonatomic, strong , nullable) NSArray<FHImageModel *> *houseImage;
 @property (nonatomic, strong , nullable) NSArray<FHImageModel *> *instantHouseImages;//列表页小图
 @property (strong, nonatomic, nullable) FHDetailHouseTitleModel *titleDataModel;//标题，标签模型
@@ -126,6 +126,7 @@ typedef NS_ENUM(NSUInteger, FHRealtorCellShowStyle) {
 @property (nonatomic, copy , nullable) NSString *realtorDetailUrl;
 @property (nonatomic, copy , nullable) NSString *realtorScoreDisplay;
 @property (nonatomic, copy , nullable) NSString *realtorScoreDescription;
+@property (nonatomic, copy , nullable) NSString *realtorDescription;
 @property (nonatomic, assign) NSInteger showRealtorinfo;
 @property (nonatomic, copy , nullable) NSString *callButtonText;
 @property (nonatomic, copy , nullable) NSString *reportButtonText;

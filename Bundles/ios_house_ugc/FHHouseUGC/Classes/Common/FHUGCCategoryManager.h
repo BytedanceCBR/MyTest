@@ -14,6 +14,7 @@ NS_ASSUME_NONNULL_BEGIN
 #define kUGCCategoryManagerServerLocalCityNameKey   @"kUGCCategoryManagerServerLocalCityNameKey"
 #define kUGCCategoryManagerVersionKey @"kUGCCategoryManagerVersionKey"
 #define kUGCCategoryGotFinishedNotification @"kUGCCategoryGotFinishedNotification"
+#define kUGCLoginTipDisapperNotification @"kUGCLoginTipDisapperNotification"
 
 @interface FHUGCCategoryManager : NSObject
 

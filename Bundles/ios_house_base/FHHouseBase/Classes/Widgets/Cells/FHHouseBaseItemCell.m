@@ -970,7 +970,7 @@
     [_priceLabel configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
         layout.isEnabled = YES;
         layout.right = YGPointValue(rightMargin);
-        layout.marginTop = YGPointValue(28.5);
+        layout.marginTop = YGPointValue(57);
         layout.maxWidth = YGPointValue(YOGA_RIGHT_PRICE_WIDITH + 100);
         layout.position = YGPositionTypeAbsolute;
     }];
@@ -1169,6 +1169,7 @@
             }];
         }
         [self.mainTitleLabel.yoga markDirty];
+        [self.subTitleLabel.yoga markDirty];
         
         //企业担保标签
         [self configTopLeftTagWithTagImages:commonModel.tagImage];
@@ -1514,8 +1515,8 @@
             
             CGSize priceSize = [_priceLabel sizeThatFits:CGSizeMake(SCREEN_WIDTH, 30)];
             [_priceLabel configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
-                if (self.priceLabel.yoga.marginTop.value != 28.5) {
-                    layout.marginTop = YGPointValue(28.5);
+                if (self.priceLabel.yoga.marginTop.value != 57) {
+                    layout.marginTop = YGPointValue(57);
                 }
                 layout.width = YGPointValue(priceSize.width);
 //                layout.maxWidth = YGPointValue(YOGA_RIGHT_PRICE_WIDITH + 20);
@@ -1559,8 +1560,8 @@
             }];
             _priceLabel.font = [UIFont themeFontSemibold:[TTDeviceHelper isScreenWidthLarge320] ? 16 : 15];
             [_priceLabel configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
-                if (self.priceLabel.yoga.marginTop.value != 28.5) {
-                    layout.marginTop = YGPointValue(28.5);
+                if (self.priceLabel.yoga.marginTop.value != 57) {
+                    layout.marginTop = YGPointValue(57);
                 }
                 layout.maxWidth = YGPointValue(YOGA_RIGHT_PRICE_WIDITH + 20);
             }];

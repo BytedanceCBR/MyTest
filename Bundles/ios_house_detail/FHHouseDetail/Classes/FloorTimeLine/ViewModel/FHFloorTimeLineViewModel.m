@@ -86,6 +86,7 @@
                 wSelf.refreshFooter.hidden = NO;
                 wSelf.currentPage ++;
                 [wSelf processDetailData:model];
+                [wSelf.navBar showMessageNumber];
             }else
             {
                 wSelf.detailController.hasValidateData = NO;

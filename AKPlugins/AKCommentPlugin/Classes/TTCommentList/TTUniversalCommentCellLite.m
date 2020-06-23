@@ -434,6 +434,11 @@
 - (BOOL)canBecomeFirstResponder {
     return YES;
 }
+//- (void)panRecognizer:(UIGestureRecognizer*)recognizer {
+//    if (recognizer.state == UIGestureRecognizerStateBegan) {
+//        [self willHideMenu];
+//    }
+//}
 
 - (void)handleLongPress:(UIGestureRecognizer*)recognizer {
     if (recognizer.state == UIGestureRecognizerStateBegan) {
@@ -458,7 +463,12 @@
     [self resetContentLabelBackgroundColor];
 
     UIMenuController *menu = [UIMenuController sharedMenuController];
-    menu.menuItems = self.menuItems;
+    if ([menu isMenuVisible]) {
+        [menu setMenuVisible:NO animated:YES];
+        return;
+    }
+//    UIMenuController *menu = [UIMenuController sharedMenuController];
+//    menu.menuItems = self.menuItems;
 }
 
 - (BOOL)canPerformAction:(SEL)action withSender:(__unused id)sender {
@@ -659,6 +669,12 @@
         [_contentLabel addGestureRecognizer:({
             [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(handleLongPress:)];
         })];
+//        UIPanGestureRecognizer *panGestureRecognizer = [[UIPanGestureRecognizer alloc]initWithTarget:self action:@selector(panRecognizer:)];
+//        panGestureRecognizer.cancelsTouchesInView = NO;
+//        [_contentLabel addGestureRecognizer:panGestureRecognizer];
+//        [_contentLabel addGestureRecognizer:({
+//            [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(panRecognizer:)];
+//        })];
     }
     return _contentLabel;
 }

@@ -623,6 +623,7 @@ NSString *const assertDesc_articleType = @"protocoledArticle must be Article";
     
     self.detailStateStore.state.isBackAction = ![self.navigationController.viewControllers containsObject:self.parentViewController] || [self.navigationController.viewControllers containsObject:self];
     [self.detailStateStore sendAction:TTVDetailEventTypeViewWillDisappear payload:nil];
+    [[NSNotificationCenter defaultCenter] postNotificationName:UIMenuControllerWillHideMenuNotification object:nil];
 }
 
 - (BOOL)shouldContinuePlayVideoWhenback
@@ -1771,6 +1772,7 @@ NSString *const assertDesc_articleType = @"protocoledArticle must be Article";
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView
 {
+    [[NSNotificationCenter defaultCenter] postNotificationName:UIMenuControllerWillHideMenuNotification object:nil];
     if (scrollView == self.ttvContainerScrollView) {
         if (![TTDeviceHelper isPadDevice]) {
             self.topPGCVC.authorView.bottomLine.hidden = (scrollView.contentOffset.y<=0);

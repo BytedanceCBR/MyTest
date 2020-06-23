@@ -114,26 +114,40 @@
 - (void)goToDetail {
     NSString *routeUrl = self.cellModel.originItemModel.openUrl;
     if(routeUrl){
+        TTRouteUserInfo *userInfo = nil;
+        NSMutableDictionary *dict = [NSMutableDictionary dictionary];
         NSURL *openUrl = [NSURL URLWithString:routeUrl];
-        [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:nil];
+        if([openUrl.scheme isEqualToString:@"thread_detail"]){
+            dict[@"origin_from"] = self.cellModel.tracerDic[@"origin_from"];
+            dict[@"category_name"] = self.cellModel.tracerDic[@"category_name"]?:@"be_null";
+            dict[@"enter_from"] = self.cellModel.tracerDic[@"page_type"];
+            dict[@"enter_type"] = @"feed_content_blank";
+            dict[@"rank"] = self.cellModel.tracerDic[@"rank"];
+        }else{
+            NSMutableDictionary *tracerDic = [NSMutableDictionary dictionary];
+            tracerDic[@"origin_from"] = self.cellModel.tracerDic[@"origin_from"] ?: @"be_null";
+            tracerDic[@"enter_from"] = self.cellModel.tracerDic[@"page_type"] ?: @"be_null";
+            tracerDic[@"category_name"] = self.cellModel.tracerDic[@"category_name"] ?: @"be_null";
+            dict[@"tracer"] = tracerDic;
+        }
+        
+        userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
+        [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:userInfo];
     }
 }
 
 - (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
     //这里由于单击和长按都会触发这个方法，长按可能会导致黑屏的问题，所以这个只保留单击跳转，屏蔽长按的情况
     UITouch *touch = [touches anyObject];
-    BOOL hasLongPress = NO;
     
     for (UIGestureRecognizer *gesture in touch.gestureRecognizers) {
-        if([gesture isKindOfClass:[UILongPressGestureRecognizer class]]){
-            hasLongPress = YES;
-            break;
+        NSString *otherGesClsStr = NSStringFromClass([gesture class]);
+        if ([otherGesClsStr isEqualToString:@"UIScrollViewPanGestureRecognizer"] || [otherGesClsStr isEqualToString:@"UIScrollViewDelayedTouchesBeganGestureRecognizer"] || [gesture isKindOfClass:[UILongPressGestureRecognizer class]]) {
+            return;
         }
     }
     
-    if(!hasLongPress){
-        [self goToDetail];
-    }
+    [self goToDetail];
 }
 
 - (void)touchesEnded:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {

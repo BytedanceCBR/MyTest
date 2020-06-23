@@ -18,16 +18,17 @@
 @property (nonatomic, strong) UIImageView *iconView;
 @property (nonatomic, copy) NSString *name;
 @property (nonatomic, strong) NSString *imageName;
-
+@property (assign, nonatomic) FHMineModuleType moduleType;
 @end
 
 @implementation FHMineFavoriteItemView
 
-- (instancetype)initWithName:(NSString *)name imageName:(NSString *)imageName {
+- (instancetype)initWithName:(NSString *)name imageName:(NSString *)imageName  moduletype:(FHMineModuleType )moduleType {
     self = [super initWithFrame:CGRectZero];
     if(self){
         _name = name;
         _imageName = imageName;
+        _moduleType = moduleType;
         [self setupUI];
     }
     return self;
@@ -55,10 +56,11 @@
 }
 
 - (void)initConstaints {
+    CGFloat H = _moduleType == FHMineModuleTypeHouseFocus?56:34;
     [_iconView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerX.mas_equalTo(self);
         make.top.mas_equalTo(10);
-        make.width.height.mas_equalTo(34*(UIScreen.mainScreen.bounds.size.width/375));
+        make.width.height.mas_equalTo(H*(UIScreen.mainScreen.bounds.size.width/375));
     }];
 
     [_nameLabel mas_makeConstraints:^(MASConstraintMaker *make) {

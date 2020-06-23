@@ -6,6 +6,7 @@
 //
 
 #import "FHDetailBaseCell.h"
+#import "FHDetailFloorPanDetailInfoModel.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -14,7 +15,10 @@ NS_ASSUME_NONNULL_BEGIN
 @end
 
 @interface FHFloorPanDetailPropertyListModel : FHDetailBaseModel
+
+@property (nonatomic, copy , nullable) NSString *courtId;
 @property (nonatomic, strong , nullable) NSArray<FHHouseCoreInfoModel> *baseInfo;
+@property (nonatomic, strong , nullable) FHFloorPanDetailInfoModelBaseExtraModel *baseExtra;
 
 @property (nonatomic, weak) FHHouseDetailContactViewModel *contactViewModel;
 
