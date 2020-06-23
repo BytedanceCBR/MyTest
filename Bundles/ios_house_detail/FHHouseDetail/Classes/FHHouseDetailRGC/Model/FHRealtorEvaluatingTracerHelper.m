@@ -17,6 +17,8 @@
     dict[@"group_id"] = itemData.groupId?:@"be_null";
     dict[@"group_source"] = itemData.logPb[@"group_source"]?:@"be_null";
     dict[@"realtor_id"] = itemData.realtor.realtorId?:@"be_null";
+    dict[@"realtor_id"] = itemData.realtor.realtorId?:@"be_null";
+    dict[@"element_type"] = @"realtor_evaluate";
     dict[@"rank"] = [extraDic.allKeys containsObject:@"rank"]?extraDic[@"rank"]:@"be_null";
     dict[@"from_gid"] = [extraDic.allKeys containsObject:@"from_gid"]?extraDic[@"from_gid"]:@"be_null";
     dict[@"log_pb"] = self.tracerModel.logPb?: [extraDic.allKeys containsObject:@"log_pb"]?extraDic[@"log_pb"]:@"be_null";

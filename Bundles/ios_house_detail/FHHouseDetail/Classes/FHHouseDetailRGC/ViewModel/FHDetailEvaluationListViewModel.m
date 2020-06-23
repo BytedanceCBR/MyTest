@@ -370,6 +370,7 @@ if (hasMore) {
     NSInteger index = [self.dataList indexOfObject:cellModel];
     NSMutableDictionary *imExtra = @{}.mutableCopy;
     imExtra[@"realtor_position"] = @"realtor_evaluation";
+    imExtra[@"from_gid"] = cellModel.groupId;
     [self.realtorPhoneCallModel imchatActionWithPhone:cellModel.realtor realtorRank:[NSString stringWithFormat:@"%ld",(long)index] extraDic:imExtra];
 }
 
@@ -379,6 +380,7 @@ if (hasMore) {
     extraDict[@"realtor_rank"] = @"be_null";
     extraDict[@"realtor_logpb"] = cellModel.realtor.realtorLogpb;
     extraDict[@"realtor_position"] = @"realtor_evaluate";
+    extraDict[@"from_gid"] = cellModel.groupId;
     NSDictionary *associateInfoDict = cellModel.realtor.associateInfo.phoneInfo;
     extraDict[kFHAssociateInfo] = associateInfoDict;
     FHAssociatePhoneModel *associatePhone = [[FHAssociatePhoneModel alloc]init];
@@ -432,7 +434,7 @@ if (hasMore) {
 
 - (void)addTabClickOptionTracer {
     NSMutableDictionary *params = self.tracerDic.mutableCopy;
-     [params setObject:self.evaluationHeader.selectName forKey:@"click_position"];
+    [params setObject:self.evaluationHeader.tracerName forKey:@"click_position"];
     [FHUserTracker writeEvent:@"click_options" params:params];
 }
 @end

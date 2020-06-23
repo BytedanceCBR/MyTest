@@ -54,6 +54,7 @@
     reportParams.elementFrom = self.tracerDict[@"element_from"] ? : @"be_null";
     reportParams.originFrom = self.tracerDict[@"origin_from"] ? : @"be_null";
     reportParams.logPb = self.tracerDict[@"log_pb"];
+    reportParams.fromGid = extra[@"from_gid"]?:@"be_null";
     reportParams.originSearchId = self.tracerDict[@"origin_search_id"] ? : @"be_null";
     reportParams.rank = (rank.length > 0) ? rank : (self.tracerDict[@"rank"] ? : @"be_null");
     reportParams.cardType = self.tracerDict[@"card_type"] ? : @"be_null";

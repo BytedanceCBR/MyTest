@@ -148,5 +148,16 @@
     NSDictionary *tabInfo = self.tabInfoArr[index];
     return tabInfo[@"name"];
 }
+
+- (NSString *)tracerName {
+    NSInteger index = 0;
+    for (UIButton *tab in self.tabArr) {
+        if (tab.selected) {
+            index = tab.tag;
+        };
+    };
+    NSDictionary *tabInfo = self.tabInfoArr[index];
+    return tabInfo[@"show_name"];
+}
 @end
 

@@ -12,6 +12,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface FHDetailEvaluationListViewHeader : UIView
 @property (strong, nonatomic) NSArray *tabInfoArr;
 @property (copy, nonatomic, readonly) NSString *selectName;
+@property (copy, nonatomic, readonly) NSString *tracerName;
 @property(nonatomic, copy) void (^headerItemSelectAction)(void);
 @end
 
