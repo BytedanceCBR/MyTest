@@ -802,9 +802,9 @@
     cellModel.content = model.content.length > 0 ? model.content : model.rawData.content;
     cellModel.contentRichSpan = model.contentRichSpan.length > 0 ? model.contentRichSpan : model.rawData.contentRichSpan;
     
-    cellModel.diggCount = model.diggCount;
-    cellModel.readCount = model.readCount;
-    cellModel.commentCount = model.commentCount;
+    cellModel.diggCount =model.diggCount.length>0 ?model.diggCount:model.rawData.diggCount;
+    cellModel.readCount = model.readCount.length>0 ?model.readCount:model.rawData.readCount;
+    cellModel.commentCount = model.commentCount.length>0 ?model.commentCount:model.rawData.commentCount;
     if (model.createTime) {
             cellModel.createTime =  [FHBusinessManager ugcCustomtimeAndCustomdateStringSince1970:model.createTime.doubleValue type:@"onlyDate"];
     }else {
