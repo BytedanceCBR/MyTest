@@ -369,7 +369,7 @@ if (hasMore) {
 - (void)clickRealtorIm:(FHFeedUGCCellModel *)cellModel cell:(FHUGCBaseCell *)cell {
     NSInteger index = [self.dataList indexOfObject:cellModel];
     NSMutableDictionary *imExtra = @{}.mutableCopy;
-    imExtra[@"realtor_position"] = @"realtor_evaluation";
+    imExtra[@"realtor_position"] = @"realtor_evaluate";
     imExtra[@"from_gid"] = cellModel.groupId;
     [self.realtorPhoneCallModel imchatActionWithPhone:cellModel.realtor realtorRank:[NSString stringWithFormat:@"%ld",(long)index] extraDic:imExtra];
 }
