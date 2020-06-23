@@ -11,6 +11,7 @@
 #import "FHDetailDisclaimerCell.h"
 #import "FHFloorCoreInfoViewModel.h"
 #import <FHHouseBase/FHBaseTableView.h>
+#import "FHLynxView.h"
 
 @interface FHFloorMoreCoreInfoViewController () <TTRouteInitializeProtocol>
 
@@ -18,6 +19,7 @@
 @property (nonatomic , strong) FHFloorCoreInfoViewModel *coreInfoListViewModel;
 @property (nonatomic , strong) NSString *courtId;
 @property(nonatomic , strong) FHDetailHouseNameModel *houseNameModel;
+@property(nonatomic, strong) FHLynxView *lynxView;
 
 @end
 
@@ -34,8 +36,12 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-
-    [self setUpinfoListTable];
+    
+    if (YES) {
+        [self setUpLynxView];
+    }else{
+        [self setUpinfoListTable];
+    }
     
     [self addDefaultEmptyViewFullScreen];
     
@@ -73,6 +79,15 @@
         make.bottom.equalTo([self getBottomBar].mas_top);
     }];
     
+}
+
+- (void)setUpLynxView{
+    _lynxView = [[FHLynxView alloc] initWithFrame:CGRectMake(0, [self getNaviBar].frame.size.height, self.view.frame.size.width,self.view.frame.size.height - [self getBottomBar].frame.size.height)];
+    [self.view addSubview:_lynxView];
+    FHLynxViewBaseParams *baesparmas = [[FHLynxViewBaseParams alloc] init];
+    baesparmas.channel = @"lynx_estate_info";
+    baesparmas.bridgePrivate = self;
+    [_lynxView loadLynxWithParams:baesparmas];
 }
 
 /*

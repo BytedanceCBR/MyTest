@@ -123,7 +123,9 @@
                builder.isUIRunningMode = YES;
                builder.config = [[LynxConfig alloc] initWithProvider:LynxConfig.globalConfig.templateProvider];
                [builder.config registerModule:[FHLynxCoreBridge class]];
-               [builder.config registerModule:weakSelf.params.clsPrivate param:weakSelf.params.bridgePrivate];
+               if(weakSelf.params.clsPrivate){
+                  [builder.config registerModule:weakSelf.params.clsPrivate param:weakSelf.params.bridgePrivate];
+               }
           }];
         _lynxView.layoutWidthMode = LynxViewSizeModeExact;
         _lynxView.layoutHeightMode = LynxViewSizeModeUndefined;
