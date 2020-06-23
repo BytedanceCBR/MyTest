@@ -116,7 +116,6 @@
             //            [builder.config registerModule:[FHLynxCoreBridge class]];
             [builder.config registerModule:[FHLynxPageBridge class] param:self];
         }];
-        
         _contentLynxView.layoutWidthMode = LynxViewSizeModeExact;
         _contentLynxView.layoutHeightMode = LynxViewSizeModeUndefined;
         _contentLynxView.preferredLayoutWidth = screenFrame.size.width;
@@ -124,13 +123,8 @@
         _contentLynxView.preferredMaxLayoutHeight = screenFrame.size.height;
         [_contentLynxView triggerLayout];
         [self.contentView addSubview:_contentLynxView];
-        
-        //        NSData *templateData = [NSData dataWithContentsOfURL:[NSURL URLWithString:@"http://10.95.248.197:30334/feedarticlesingleimage/template.js?1590031888301"]];
         NSData *templateData =  [[FHLynxManager sharedInstance] lynxDataForChannel:@"ugc_encyclopedia_lynx_item" templateKey:[FHLynxManager defaultJSFileName] version:0];
-        
-        
         [_contentLynxView loadTemplate:templateData withURL:@"local"];
-        //        [_contentView loadTemplateFromURL:@"http://10.95.248.197:30334/card2/template.js?1589371322410"];
         if (templateData) {
             [self.contentLynxView loadTemplate:templateData withURL:@"local"];
         }
@@ -175,15 +169,10 @@
         if(filterWordsDic[@"name"]){
             [dic setObject:filterWordsDic[@"name"] forKey:@"name"];
         }
-        //           if(infoModel.mutualExclusiveIds){
-        //               [dic setObject:infoModel.mutualExclusiveIds forKey:@"mutual_exclusive_ids"];
-        //           }
         [keywords addObject:dic];
     }
     
     viewModel.keywords = keywords;
-    //       viewModel.groupID = self.cellModel.houseId;
-    //       viewModel.extrasDict = self.homeItemModel.tracerDict;
     [dislikeView refreshWithModel:viewModel];
     [dislikeView showAtPoint:point
                     fromView:self

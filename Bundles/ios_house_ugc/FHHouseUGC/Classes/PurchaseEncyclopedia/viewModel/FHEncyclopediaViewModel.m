@@ -20,8 +20,8 @@
 @property (nonatomic, strong) NSMutableArray *dataList;
 @property (nonatomic, strong) NSDictionary *currentHeaderDic;
 @property (nonatomic, copy) NSString *categoryId;
-@property (nonatomic, copy) NSString *mainIndex;
-@property (nonatomic, copy) NSString *subIndex;
+@property (nonatomic, assign) NSInteger mainIndex;
+@property (nonatomic, assign) NSInteger subIndex;
 
 @property (nonatomic, strong) EncyclopediaDataModel *encyclopediaModel;
 @property(nonatomic, strong)FHUGCencyclopediaTracerHelper *tracerHelper;
@@ -135,35 +135,22 @@
 }
 //头部选择事件
 - (void)selectSegmentWithData:(id)param {
-    __block NSInteger index = 0;
     if ([param isKindOfClass:[NSString class]]) {
         NSDictionary *selectData = [self dictionaryWithJsonString:param];
-        [self.dataList enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-            NSDictionary *data = (NSDictionary *)obj;
-            NSDictionary *selectOption = selectData[@"option"];
-            if ([[NSString stringWithFormat:@"%@",data[@"channel_id"]] isEqualToString:[NSString stringWithFormat:@"%@",selectOption[@"channel_id"]]]) {
-                index = idx;
-            }
-        }];
         if (self.mainIndex == [selectData[@"mainIndex"] intValue]) {
             if (self.subIndex != [selectData[@"subIndex"] intValue]) {
                 [self.tracerHelper trackHeaderSegmentClickOptionsWithString:selectData[@"option"][@"text"]];
             }
         }else {
-            [self.tracerHelper trackHeaderSegmentClickOptions:index+1];
+            [self.tracerHelper trackHeaderSegmentClickOptions:[selectData[@"mainIndex"] intValue]];
         }
+        self.mainIndex = [selectData[@"mainIndex"] intValue];
+        self.subIndex = [selectData[@"subIndex"] intValue];
         self.currentHeaderDic = selectData[@"option"];
         [self.mainCollection reloadData];
-        
-        
     }else {
         return;
     }
-    
-    
-//    NSIndexPath *indexPath = [NSIndexPath indexPathForRow:index inSection:0];
-//     [self.mainCollection scrollToItemAtIndexPath:indexPath atScrollPosition:UICollectionViewScrollPositionLeft animated:NO];
-    
 }
 
 - (NSDictionary *)dictionaryWithJsonString:(NSString *)jsonString
