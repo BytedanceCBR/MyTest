@@ -16,7 +16,9 @@
 #import "TTInteractExitHelper.h"
 #import "FHUGCCellHelper.h"
 #import "UIViewAdditions.h"
-#import "TTImageView+TrafficSave.h"
+//#import "TTImageView+TrafficSave.h"
+//#import "TTImageView.h"
+#import "UIImageView+fhUgcImage.h"
 
 #define itemPadding 4
 #define kMaxCount 9
@@ -26,6 +28,7 @@
 @property(nonatomic, assign) NSInteger count;
 @property(nonatomic, strong) NSMutableArray *imageViewList;
 @property(nonatomic, assign) CGFloat imageWidth;
+@property(nonatomic, assign) CGFloat imageHeight;
 @property(nonatomic, strong) NSArray *largeImageList;
 @property(nonatomic, strong) NSArray *imageList;
 @property(nonatomic, strong) UILabel *infoLabel;
@@ -52,9 +55,10 @@
 
 - (void)initViews {
     for (NSInteger i = 0; i < self.count; i++) {
-        TTImageView *imageView = [[TTImageView alloc] initWithFrame:CGRectZero];
+        UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectZero];
         imageView.clipsToBounds = YES;
-        imageView.imageContentMode = TTImageViewContentModeScaleAspectFill;
+//        imageView.imageContentMode = TTImageViewContentModeScaleAspectFill;
+        imageView.contentMode = UIViewContentModeScaleAspectFill;
         imageView.backgroundColor = [UIColor themeGray6];
         imageView.layer.borderColor = [[UIColor themeGray6] CGColor];
         imageView.layer.borderWidth = 0.5;
@@ -84,6 +88,7 @@
     if(self.count == 1){
         _imageWidth = self.bounds.size.width;
         _viewHeight = self.imageWidth * 9.0f/16.0f;
+        _imageHeight = _viewHeight;
         UIImageView *imageView = [self.imageViewList firstObject];
         
         imageView.top = 0;
@@ -93,6 +98,7 @@
     }else if(self.count == 2){
         _imageWidth = (self.bounds.size.width - itemPadding)/2;
         _viewHeight = self.imageWidth * 124.0f/165.0f;
+        _imageHeight = _viewHeight;
         UIView *firstView = self;
         for (UIImageView *imageView in self.imageViewList) {
             
@@ -110,6 +116,7 @@
         }
     }else if(self.count == 4){
         _imageWidth = (self.bounds.size.width - itemPadding * 2)/3;
+        _imageHeight = _imageWidth;
         _viewHeight = _imageWidth * 2 + itemPadding;
         
         UIView *topView = self;
@@ -127,7 +134,7 @@
         }
     }else if(self.count >= 3){
         _imageWidth = (self.bounds.size.width - itemPadding * 2)/3;
-        
+        _imageHeight = _imageWidth;
         NSInteger row = (self.count - 1)/3;
         _viewHeight = _imageWidth * (row + 1) + itemPadding * row;
         
@@ -158,7 +165,7 @@
     self.largeImageList = largeImageList;
     
     for (NSInteger i = 0; i < self.imageViewList.count; i++) {
-        TTImageView *imageView = self.imageViewList[i];
+        UIImageView *imageView = self.imageViewList[i];
         if(i < imageList.count){
             FHFeedContentImageListModel *imageModel = imageList[i];
             
@@ -171,19 +178,38 @@
                     continue;
                 }
             }
-
-            if (imageModel && imageModel.url.length > 0) {
-//                [imageView bd_setImageWithURL:[NSURL URLWithString:imageModel.url] placeholder:nil];
-                TTImageInfosModel *imageInfoModel = [FHUGCCellHelper convertTTImageInfosModel:imageModel];
-                __weak typeof(imageView) wImageView = imageView;
-                [imageView setImageWithModelInTrafficSaveMode:imageInfoModel placeholderImage:nil success:nil failure:^(NSError *error) {
-                    [wImageView setImage:nil];
-                }];
-            }
+            
             //只对单图做重新布局，多图都是1：1
             if(self.count == 1 && !self.fixedSingleImage){
                 self.viewHeight = self.imageWidth * height/width;
                 imageView.height = self.viewHeight;
+                self.imageHeight = self.viewHeight;
+            }
+
+            if (imageModel && imageModel.url.length > 0) {
+//                [imageView bd_setImageWithURL:[NSURL URLWithString:imageModel.url] placeholder:nil];
+//                TTImageInfosModel *imageInfoModel = [FHUGCCellHelper convertTTImageInfosModel:imageModel];
+//                __weak typeof(imageView) wImageView = imageView;
+//                [imageView setImageWithModelInTrafficSaveMode:imageInfoModel placeholderImage:nil success:nil failure:^(NSError *error) {
+//                    [wImageView setImage:nil];
+//                }];
+//                [imageView.imageView.layer removeAnimationForKey:@"contents"];
+                
+//                [imageView setImageWithModel:imageInfoModel placeholderImage:nil options:SDWebImageRetryFailed success:^(UIImage *image, BOOL cached) {
+//                     if (image) {
+//                         wImageView.imageView.image = image;
+//                     }
+                     
+//                     if(!cached){
+//                         CATransition *transition = [CATransition animation];
+//                         transition.duration = 0.15;
+//                         transition.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut];
+//                         transition.type = kCATransitionFade;
+//                         [wImageView.imageView.layer addAnimation:transition forKey:@"contents"];
+//                     }
+//                 } failure:nil];
+                [imageView fh_setImageWithURL:[NSURL URLWithString:imageModel.url] placeholder:nil];
+                
             }
         }else{
             imageView.hidden = YES;
@@ -218,8 +244,8 @@
         return;
     }
     
-    TTImageView *view = (UIImageView *)tap.view;
-    if (view.imageView.image == nil) {
+    UIImageView *view = (UIImageView *)tap.view;
+    if (view.image == nil) {
         return;
     }
     [self imageTouched:tap.view];
@@ -257,7 +283,7 @@
     [controller setStartWithIndex:sender.tag];
     
     NSMutableArray * frames = [NSMutableArray arrayWithCapacity:9];
-    for (TTImageView *view in self.imageViewList) {
+    for (UIImageView *view in self.imageViewList) {
         CGRect frame = [view convertRect:view.bounds toView:nil];
         [frames addObject:[NSValue valueWithCGRect:frame]];
     }
@@ -274,10 +300,10 @@
     }
     for (NSInteger i = 0; i < picCount; i++) {
         if(i < self.imageViewList.count){
-            TTImageView *view = self.imageViewList[i];
+            UIImageView *view = self.imageViewList[i];
             //  此处需要优化
-            if (view.imageView.image) {
-                [photoObjs addObject:view.imageView.image];
+            if (view.image) {
+                [photoObjs addObject:view.image];
             }
         }
     }
