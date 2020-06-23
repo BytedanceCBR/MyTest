@@ -834,7 +834,9 @@ NSString * const kFHTopSwitchCityLocalKey = @"f_switch_city_top_time_local_key";
         return;
     }
     
-    [self requestCurrentLocation:NO completion:nil];
+    [self requestCurrentLocation:NO completion:^(AMapLocationReGeocode * _Nonnull reGeocode) {
+        
+    }];
 }
 
 @end
