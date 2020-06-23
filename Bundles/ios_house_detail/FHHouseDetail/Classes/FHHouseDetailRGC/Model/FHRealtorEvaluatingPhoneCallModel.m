@@ -43,7 +43,7 @@
     FHAssociateIMModel *associateIMModel = [FHAssociateIMModel new];
     associateIMModel.houseId = self.houseId;
     associateIMModel.houseType = self.houseType;
-    associateIMModel.associateInfo = realtorModel.associateInfo.imInfo[kFHAssociateInfo];
+    associateIMModel.associateInfo = realtorModel.associateInfo;
     NSMutableDictionary *tempExtra = extra.mutableCopy;
     tempExtra[kFHAssociateInfo] = nil;
     extra = tempExtra.copy;
