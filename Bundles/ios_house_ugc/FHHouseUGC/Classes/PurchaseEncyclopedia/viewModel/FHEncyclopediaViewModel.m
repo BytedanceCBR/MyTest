@@ -31,6 +31,7 @@
 - (instancetype)initWithWithController:(FHEncyclopediaViewController *)viewController collectionView:(UICollectionView *)collectionView headerView:(FHEncyclopediaHeader *)header tracerModel:(nonnull FHTracerModel *)tracerModel {
     self = [super init];
     if (self) {
+         [self configTracerHelper];
         self.baseVC = viewController;
         self.mainCollection = collectionView;
         self.encyclopediaHeader = header;
@@ -39,7 +40,6 @@
         self.tracerModel = tracerModel;
         self.categoryId = @"f_house_encyclopedia";
         [self requestHeaderConfig];
-        [self configTracerHelper];
     }
     return self;
 }
