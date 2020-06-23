@@ -579,9 +579,11 @@ NSString *const  SSViewControllerBaseConditionADIDKey = @"SSViewControllerBaseCo
     [self registerKeybordObserver];
     
 #if __has_include(<BDNativeWebComponent/WKWebView+BDNative.h>)
-    WKWebView *wkWebView = [self.ssWebView.ssWebContainer.ssWebView tt_webViewInUse];
-    if ([wkWebView isKindOfClass:[WKWebView class]]) {        
-        [wkWebView enableNative];
+    if ([SSCommonLogic enableWebviewNativeComponent]) {
+        WKWebView *wkWebView = [self.ssWebView.ssWebContainer.ssWebView tt_webViewInUse];
+        if ([wkWebView isKindOfClass:[WKWebView class]]) {
+            [wkWebView enableNative];
+        }
     }
 #endif
 }
