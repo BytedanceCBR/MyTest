@@ -43,6 +43,8 @@
 @property (nonatomic, strong , nullable) NSMutableArray<FHSugSubscribeDataDataItemsModel> *subscribeItems;
 
 @property (nonatomic, assign)   BOOL       hasShowKeyboard;
+@property (nonatomic, assign)   BOOL       hasExposedHouseFindFloatButton;
+@property (nonatomic, assign)   BOOL       hasExposedHouseFindCard;
 
 @end
 
@@ -629,7 +631,7 @@
         
         //服务端会同时下发cardType=9和cardType=16两种类型的卡片数据
         if (self.sugListData.count <= 2) {
-            //XXX: 为支持1.0.1版本帮我找房需求，暂时根据model.cardType字段区分cell，后期需支持混排
+            //TODO: 为支持1.0.1版本帮我找房需求，暂时根据model.cardType字段区分cell，后期需支持混排
             FHSuggestionResponseDataModel *model = self.sugListData[indexPath.row];
             if (model.cardType == 9) {
                 FHHouseListRecommendTipCell *tipCell = (FHHouseListRecommendTipCell *)[tableView dequeueReusableCellWithIdentifier:@"tipcell" forIndexPath:indexPath];
@@ -766,9 +768,9 @@
             if (row < self.sugListData.count) {
                 FHSuggestionResponseDataModel *model = self.sugListData[row];
                 if (model.cardType == 9) {
-                    return 40;
+                    return 60;
                 } else if (model.cardType == 15) {  //帮我找房卡片高度
-                    return 73;
+                    return 93;
                 }
             }
         }
@@ -842,10 +844,13 @@
         }
         //帮我找房浮动按钮埋点
         if ([cell isKindOfClass:[FHSuggestHeaderViewCell class]]) {
-            if (!self.guessYouWantExtraInfo) {
+            if (!self.guessYouWantExtraInfo || self.hasExposedHouseFindFloatButton) {
                 return;
             }
 
+            //帮我找房浮动按钮埋点值上报一次
+            self.hasExposedHouseFindFloatButton = YES;
+            
             NSDictionary *tracerDict = @{
                 @"event_type": @"house_app2c_v2",
                 @"page_type": @"search_detail",
@@ -859,6 +864,13 @@
         
         //帮我找房卡片埋点
         if ([cell isKindOfClass:[FHFindHouseHelperCell class]]) {
+            if (self.hasExposedHouseFindCard) {
+                return;
+            }
+            
+            //帮我找房卡片只曝光一次
+            self.hasExposedHouseFindCard = YES;
+            
             NSDictionary *tracerDict = @{
                 @"event_type": @"house_app2c_v2",
                 @"page_type": @"search_detail",

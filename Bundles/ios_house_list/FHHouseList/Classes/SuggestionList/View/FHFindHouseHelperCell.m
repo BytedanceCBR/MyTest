@@ -48,7 +48,7 @@
     [self.contentView addSubview:_containerView];
     [_containerView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(0);
-        make.bottom.mas_equalTo(0);
+        make.bottom.mas_equalTo(-20);
         make.left.mas_equalTo(15);
         make.right.mas_equalTo(-15);
     }];
@@ -120,7 +120,7 @@
 }
 
 + (CGFloat)heightForData:(id)data {
-    return 73;
+    return 93;
 }
 
 #pragma mark - Action
