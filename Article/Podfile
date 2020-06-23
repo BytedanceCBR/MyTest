@@ -67,7 +67,7 @@ def fhPods
     
 #    pod 'ios_house_im' , '0.2.7'
 #     pod 'ios_house_im' , :path => '../../../im/2'
-    pod 'ios_house_im' , :git => 'git@code.byted.org:fproject/ios_house_im.git' , :commit => 'd9024c77352f1c75c0b30da82cbb7688c111f207'
+    pod 'ios_house_im' , :git => 'git@code.byted.org:fproject/ios_house_im.git' , :commit => 'ab165a369a627a5798d67e2b91d2fee1a5414e0d'
 
 end
 
@@ -507,14 +507,14 @@ def appPods
     #支持自动约束cell缓存高度
     pod_binary 'UITableView+FDTemplateLayoutCell', '1.6'
 
-    pod 'TTIMSDK', '1.0.0-rc.34.1-bugfix', :subspecs => [
-        'IMKit',
+    pod 'TTIMSDK', '1.0.0-rc.34.2-bugfix', :subspecs => [
+        'IMKit_Default',
         'IMKit_WebSocket',
         'IMKit_Core',
-        'Foundation_Plugin_TTNetwork',
+        'Plugin_TTNetwork',
         'Foundation',
         'Feature_WebSocket',
-        'Feature_Essential_PB',
+        'Feature_EssentialPB',
         'Feature_Essential',
         'Feature_Core_Store',
         'Feature_Core_Sender',
@@ -527,7 +527,7 @@ def appPods
         'Feature_Core_Config',
         'Feature_Core_Setting',
         'Feature_Core_ReadReceipt',
-        'Feature_Core',
+        'Feature_Core_Default',
         'Feature_ApplicationStatus',
         'IMSugar_MediaFileUploader',
         'Protocols',
