@@ -261,6 +261,7 @@ if (hasMore) {
             default:
                 break;
         }
+        cellModel.tracerDic = self.tracerDic;
         [resultArray addObject:cellModel];
     }
     return resultArray;

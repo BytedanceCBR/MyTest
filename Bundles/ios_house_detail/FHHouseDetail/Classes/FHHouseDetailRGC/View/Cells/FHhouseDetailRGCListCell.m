@@ -357,6 +357,7 @@
             default:
                 break;
         }
+        model.tracerDic = self.detailTracerDic;
         [dataArr addObject:model];
     }
     contentModel.fHFeedUGCCellModelDataArr = dataArr;
