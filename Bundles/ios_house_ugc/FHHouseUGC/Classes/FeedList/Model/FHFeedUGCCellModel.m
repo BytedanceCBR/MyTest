@@ -727,7 +727,7 @@
         cellModel.imageList = model.rawData.firstFrameImageList;
         cellModel.largeImageList = nil;
         if([model.cellCtrls.cellLayoutStyle isEqualToString:@"10001"]){
-        [FHUGCCellHelper setRichContentWithModel:cellModel width:([UIScreen mainScreen].bounds.size.width - 60) numberOfLines:cellModel.numberOfLines];
+        [FHUGCCellHelper setRichContentWithModel:cellModel width:([UIScreen mainScreen].bounds.size.width - 60) numberOfLines:3];
         }else {
         [FHUGCCellHelper setRichContentWithModel:cellModel width:([UIScreen mainScreen].bounds.size.width - 40) numberOfLines:cellModel.numberOfLines];
         }
