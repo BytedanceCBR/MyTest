@@ -167,7 +167,7 @@ typedef NS_ENUM(NSUInteger,TTTabbarTipViewType){
 - (void)setupEssentialInitialization {
     [self registerNotification];
     
-    if ([SSCommonLogic isNewLaunchOptimizeEnabled]) {
+    if ([SSCommonLogic isFHNewLaunchOptimizeEnabled]) {
         self.tabbarHeight = [TTDeviceHelper isIPhoneXDevice] ? ([TTUIResponderHelper mainWindow].tt_safeAreaInsets.bottom + 49.f) : 49.f;
         self.ttTabBarStyle = @"White";
         self.ttHideNavigationBar = YES;
@@ -207,15 +207,12 @@ typedef NS_ENUM(NSUInteger,TTTabbarTipViewType){
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(changeTabbarIndex:) name:TTArticleTabBarControllerChangeSelectedIndexNotification object:nil];
     //消息通知优化重要的人消息未读提示
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(showMessageNotificationTips:) name:kTTMessageNotificationTipsChangeNotification object:nil];
+//    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(showMessageNotificationTips:) name:kTTMessageNotificationTipsChangeNotification object:nil];
     //ugc小红点控制逻辑
-    if([FHEnvContext isNewDiscovery]){
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(showSecondTabRedDots) name:kFHUGCRecomendTabHasNewNotification object:nil];
-    }else{
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(showSecondTabRedDots) name:kFHUGCFocusTabHasNewNotification object:nil];
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(showSecondTabRedDots) name:kTTMessageNotificationTipsChangeNotification object:nil];
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(showSecondTabRedDots) name:kFHUGCFollowNotification object:nil];
-    }
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(showSecondTabRedDotsNew) name:kFHUGCRecomendTabHasNewNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(showSecondTabRedDots) name:kFHUGCFocusTabHasNewNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(showSecondTabRedDots) name:kTTMessageNotificationTipsChangeNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(showSecondTabRedDots) name:kFHUGCFollowNotification object:nil];
 }
 
 - (void)initTabbarBadge
@@ -231,7 +228,7 @@ typedef NS_ENUM(NSUInteger,TTTabbarTipViewType){
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    if ([SSCommonLogic isNewLaunchOptimizeEnabled]) {
+    if ([SSCommonLogic isFHNewLaunchOptimizeEnabled]) {
         [self setValue:[[TTTabbar alloc] init] forKey:@"tabBar"];
     }
     [self setupEssentialInitialization];
@@ -2110,7 +2107,7 @@ typedef NS_ENUM(NSUInteger,TTTabbarTipViewType){
     return (NSUInteger)lastIndex;
 }
 
-- (void)showSecondTabRedDots {
+- (void)showSecondTabRedDotsNew {
     if([FHEnvContext isNewDiscovery]){
         if(![[self lastTabIdentifier] isEqualToString:kFHouseFindTabKey]){
             BOOL hasNew = [FHUGCConfig sharedInstance].ugcHasNew;
@@ -2120,16 +2117,18 @@ typedef NS_ENUM(NSUInteger,TTTabbarTipViewType){
                 [FHEnvContext hideFindTabRedDots];
             }
         }
-    }else{
-        //判断条件 1、不在邻里tab 2、关注页面有新内容 或者 有关注页面有新消息
-        if(![[self lastTabIdentifier] isEqualToString:kFHouseFindTabKey]){
-            BOOL hasNew = [FHUGCConfig sharedInstance].ugcFocusHasNew;
-            FHUnreadMsgDataUnreadModel *model = [FHMessageNotificationTipsManager sharedManager].tipsModel;
-            if ((model && [model.unread integerValue] > 0) || hasNew) {
-                [FHEnvContext showFindTabRedDots];
-            }else{
-                [FHEnvContext hideFindTabRedDots];
-            }
+    }
+}
+
+- (void)showSecondTabRedDots {
+    //判断条件 1、不在邻里tab 2、关注页面有新内容 或者 有关注页面有新消息
+    if(![[self lastTabIdentifier] isEqualToString:kFHouseFindTabKey]){
+        BOOL hasNew = [FHUGCConfig sharedInstance].ugcFocusHasNew;
+        FHUnreadMsgDataUnreadModel *model = [FHMessageNotificationTipsManager sharedManager].tipsModel;
+        if ((model && [model.unread integerValue] > 0) || hasNew) {
+            [FHEnvContext showFindTabRedDots];
+        }else{
+            [FHEnvContext hideFindTabRedDots];
         }
     }
 }

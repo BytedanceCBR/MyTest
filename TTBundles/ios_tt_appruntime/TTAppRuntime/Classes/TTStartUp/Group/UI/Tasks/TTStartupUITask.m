@@ -46,6 +46,9 @@ DEC_TASK_N(TTStartupUITask,FHTaskTypeUI,TASK_PRIORITY_HIGH);
 
 - (void)startWithApplication:(UIApplication *)application options:(NSDictionary *)launchOptions {
     [super startWithApplication:application options:launchOptions];
+    
+    double before = CFAbsoluteTimeGetCurrent();
+    
     [[self class] makeKeyWindowVisible];
     if ([[TTThemeManager sharedInstance_tt] respondsToSelector:@selector(applyBundleName:)]) {
         [[TTThemeManager sharedInstance_tt] performSelector:@selector(applyBundleName:) withObject:@"FHHouseBase"];
@@ -138,7 +141,7 @@ DEC_TASK_N(TTStartupUITask,FHTaskTypeUI,TASK_PRIORITY_HIGH);
 
 + (void)setRootViewControllerWithStoryboardName:(NSString *)name {
     // TTTabBarController还是先用storyBoard加载，否则tabBar上出飘新提示的时第三个Tab上面容易出现小灰条的问题
-    if([SSCommonLogic isNewLaunchOptimizeEnabled]) {
+    if([SSCommonLogic isFHNewLaunchOptimizeEnabled]) {
         SharedAppDelegate.window.rootViewController = [[TTArticleTabBarController alloc] init];
     } else {
         SharedAppDelegate.window.rootViewController = [[UIStoryboard storyboardWithName:name bundle:nil] instantiateInitialViewController];
