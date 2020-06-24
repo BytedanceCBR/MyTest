@@ -1,16 +1,15 @@
 //
-//  FHUGCCellMultiImageView.h
-//  FHHouseUGC
+//  FHHouseDetailRGCMultiImageView.h
+//  FHHouseDetail
 //
-//  Created by 谢思铭 on 2019/6/4.
+//  Created by liuyu on 2020/6/16.
 //
 
 #import <UIKit/UIKit.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface FHUGCCellMultiImageView : UIView
-
+@interface FHHouseDetailRGCMultiImageView : UIView
 - (instancetype)initWithFrame:(CGRect)frame count:(NSInteger)count;
 
 - (void)updateImageView:(NSArray *)imageList largeImageList:(NSArray *)largeImageList;
@@ -22,7 +21,6 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic, assign) CGFloat viewHeight;
 
 @property (nonatomic, assign) CGFloat useItemPadding;
-
 @end
 
 NS_ASSUME_NONNULL_END

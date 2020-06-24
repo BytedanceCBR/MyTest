@@ -74,6 +74,8 @@ typedef NS_ENUM (NSInteger , FHHouseModelType){
     FHHouseModelTypeNewAccess,
     // 新房详情页优质顾问模块
     FHHouseModelTypeNewAgentList,
+    // 新房详情页顾问点评模块
+    FHHouseModelTypeAgentEvaluationList,
     // 新房详情页位置周边模块
     FHHouseModelTypeNewLocation,
     // UGC社区入口
