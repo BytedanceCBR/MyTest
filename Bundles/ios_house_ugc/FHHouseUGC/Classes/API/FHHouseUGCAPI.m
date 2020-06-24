@@ -256,8 +256,8 @@
     }
     
     if (isFirst) {
-        NSNumber *minBeHotTimeNumber = @(behotTime);
-        paramDic[@"max_behot_time"] = minBeHotTimeNumber;
+        NSNumber *maxBehotTimeNumber = @(behotTime);
+        paramDic[@"max_behot_time"] = maxBehotTimeNumber;
     }else {
         if (loadMore && behotTime) {
              NSNumber *maxBehotTimeNumber = @(behotTime);

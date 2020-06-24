@@ -39,7 +39,6 @@
     [self.segmentView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.top.right.bottom.equalTo(self);
     }];
-    [self segmentView];
 }
 
 - (LynxView *)segmentView {
@@ -59,9 +58,6 @@
              [_segmentView triggerLayout];
              [self addSubview:_segmentView];
         NSData *templateData =  [[FHLynxManager sharedInstance] lynxDataForChannel:@"ugc_encyclopedia_lynx_header" templateKey:[FHLynxManager defaultJSFileName] version:0];
-        [_segmentView loadTemplate:templateData withURL:@"local"];
-//              NSData *templateData = templateData = [NSData dataWithContentsOfURL:[NSURL URLWithString:@"http://10.95.248.197:30334/horizontal-header/template.js?1591263310456"]];
-//            [_segmentView loadTemplate:templateData withURL:@"local"];
               if (templateData) {
                    if (templateData != self.currentTemData) {
                        self.currentTemData = templateData;

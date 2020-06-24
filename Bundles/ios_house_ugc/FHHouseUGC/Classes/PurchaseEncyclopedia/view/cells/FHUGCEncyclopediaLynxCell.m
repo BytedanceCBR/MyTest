@@ -124,7 +124,6 @@
         [_contentLynxView triggerLayout];
         [self.contentView addSubview:_contentLynxView];
         NSData *templateData =  [[FHLynxManager sharedInstance] lynxDataForChannel:@"ugc_encyclopedia_lynx_item" templateKey:[FHLynxManager defaultJSFileName] version:0];
-        [_contentLynxView loadTemplate:templateData withURL:@"local"];
         if (templateData) {
             [self.contentLynxView loadTemplate:templateData withURL:@"local"];
         }

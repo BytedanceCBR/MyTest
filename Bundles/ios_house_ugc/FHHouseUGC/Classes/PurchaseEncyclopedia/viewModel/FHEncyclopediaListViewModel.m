@@ -226,33 +226,7 @@
     return 140;
 }
 
-- (NSArray *)convertModel:(NSArray *)encyclopediaList isHead:(BOOL)isHead {
-    NSMutableArray *resultArray = [[NSMutableArray alloc] init];
-    for (NSDictionary *item in encyclopediaList) {
-        if(item){
-            if(isHead){
-                [resultArray addObject:item];
-                //去重逻辑
-                [self removeDuplicaionModel:item[@"group_id"]];
-            }else{
-                NSInteger index = [self getCellIndex:item];
-                if(index < 0){
-                    [resultArray addObject:item];
-                }
-            }
-        }
-    }
-    return resultArray;
-}
 
-- (void)removeDuplicaionModel:(NSString *)groupId {
-    for (NSDictionary *item in self.dataList) {
-        if([groupId isEqualToString:item[@"group_id"]]){
-            [self.dataList removeObject:item];
-            break;
-        }
-    }
-}
 
 - (NSInteger)getCellIndex:(NSDictionary *)checkItem {
     for (NSInteger i = 0; i < self.dataList.count; i++) {
