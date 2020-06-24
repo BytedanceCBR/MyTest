@@ -220,3 +220,6 @@
 
 //经纪人评测列表页
 "rgc_content_list" = "FHDetailEvaluationListViewController";
+
+//购房百科
+"house_encyclopedia" = "FHEncyclopediaViewController";

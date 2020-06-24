@@ -229,7 +229,7 @@
 //    return [FHMainApi queryData:queryPath params:paramDic class:nil completion:completion];
 }
 
-+ (TTHttpTask *)requestEncyclopediaListWithCategory:(NSString *)category channelid:(NSString *)channelId lastGroupId:(NSString *)lastGroupId behotTime:(double)behotTime loadMore:(BOOL)loadMore listCount:(NSInteger)listCount extraDic:(NSDictionary *)extraDic completion:(void (^ _Nullable)(id <FHBaseModelProtocol> model, NSError *error))completion {
++ (TTHttpTask *)requestEncyclopediaListWithCategory:(NSString *)category channelid:(NSString *)channelId lastGroupId:(NSString *)lastGroupId behotTime:(double)behotTime loadMore:(BOOL)loadMore isFirst:(BOOL)isFirst listCount:(NSInteger)listCount extraDic:(NSDictionary *)extraDic completion:(void (^ _Nullable)(id <FHBaseModelProtocol> model, NSError *error))completion {
 
     NSString *queryPath = [ArticleURLSetting encyclopediaListUrlString];
 
@@ -254,16 +254,20 @@
     if (behotTime) {
         paramDic[@"refer"] = @(1);
     }
-
-    if (loadMore && behotTime) {
+    
+    if (isFirst) {
         NSNumber *maxBehotTimeNumber = @(behotTime);
         paramDic[@"max_behot_time"] = maxBehotTimeNumber;
+    }else {
+        if (loadMore && behotTime) {
+             NSNumber *maxBehotTimeNumber = @(behotTime);
+             paramDic[@"max_behot_time"] = maxBehotTimeNumber;
+         }
+         else {
+             NSNumber *minBeHotTimeNumber = @(behotTime);
+             paramDic[@"min_behot_time"] = minBeHotTimeNumber;
+         }
     }
-    else {
-        NSNumber *minBeHotTimeNumber = @(behotTime);
-        paramDic[@"min_behot_time"] = minBeHotTimeNumber;
-    }
-
     paramDic[@"strict"] = @(0);
     paramDic[@"count"] = @(listCount);
     if (channelId) {
