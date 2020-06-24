@@ -80,14 +80,14 @@ static NSString * const kTTArticleDeviceToken = @"ArticleDeviceToken";
     return @"HanleAPNS";
 }
 
-- (void)setTaskNormal:(BOOL)isNormal {
-    [[NSUserDefaults standardUserDefaults] setBool:isNormal forKey:[@"TTStartupProtect" stringByAppendingString:[self taskIdentifier]]];
-    if (!isNormal) {
-        [[NSUserDefaults standardUserDefaults] setObject:[self taskIdentifier] forKey:@"abnormal_task_identifier"];
-    } else {
-        [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"abnormal_task_identifier"];
-    }
-}
+//- (void)setTaskNormal:(BOOL)isNormal {
+//    [[NSUserDefaults standardUserDefaults] setBool:isNormal forKey:[@"TTStartupProtect" stringByAppendingString:[self taskIdentifier]]];
+//    if (!isNormal) {
+//        [[NSUserDefaults standardUserDefaults] setObject:[self taskIdentifier] forKey:@"abnormal_task_identifier"];
+//    } else {
+//        [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"abnormal_task_identifier"];
+//    }
+//}
 
 - (BOOL)isConcurrent {
     return NO;

@@ -101,6 +101,9 @@
     cell.titleLabel.text = model.displayTitle;
     cell.oldPriceLabel.text = nil;
     cell.oldPriceLabel.attributedText = nil;
+    //1.0.1 修复切换值得买tab后，其他房源的价格依旧展示的bug
+    cell.priceLabel.text = nil;
+    cell.priceLabel.attributedText = nil;
     NSString* roomSpace = nil;
     if ([model.coreInfo count] >= 3) {
         FHHouseCoreInfoModel* value = model.coreInfo[2];

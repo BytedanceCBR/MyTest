@@ -19,6 +19,7 @@
 #import "BDUGLocationDataCollect.h"
 #import "FHEnvContext.h"
 #import "FHLocManager.h"
+
 DEC_TASK("TTLocationStartupTask",FHTaskTypeAfterLaunch,TASK_PRIORITY_HIGH+1);
 
 @implementation TTLocationStartupTask
@@ -53,6 +54,7 @@ DEC_TASK("TTLocationStartupTask",FHTaskTypeAfterLaunch,TASK_PRIORITY_HIGH+1);
 //        [ExploreExtenstionDataHelper saveSharedUserCity:[TTLocationManager sharedManager].city];
 //        [[TTCookieManager sharedManager] updateLocationCookie];
 //    }
+    [[FHLocManager sharedInstance] tryRefreshLocation];
 }
 
 

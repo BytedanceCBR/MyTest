@@ -25,7 +25,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic , weak) id<FHHouseFindLoginDelegate> delegate;
 @property(nonatomic, copy) NSString *phoneNum;
 
-- (void)enableSendVerifyCodeBtn:(BOOL)enabled;
+- (void)showFullPhoneNum:(BOOL)isShow;
 
 @end
 

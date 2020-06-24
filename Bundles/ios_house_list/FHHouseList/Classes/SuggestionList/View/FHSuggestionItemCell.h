@@ -6,6 +6,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "FHSuggestionListModel.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -31,10 +32,20 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
+@interface FHFindHouseHelpEntryView : UIView
+
+@property (nonatomic, copy) void (^jumpButtonAction)(NSString *);
+
+- (void)refreshData:(FHGuessYouWantExtraInfoModel *)data;
+
+@end
+
 @interface FHSuggestHeaderViewCell : UITableViewCell
 
 @property (nonatomic, strong)   UILabel       *label;
-@property (nonatomic, strong)   UIButton       *deleteBtn;
+@property (nonatomic, copy)     void (^entryTapAction)(NSString *);
+
+- (void)refreshData:(FHGuessYouWantExtraInfoModel *)data;
 
 @end
 
