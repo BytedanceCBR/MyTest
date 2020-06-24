@@ -15,6 +15,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic, copy) void (^imClick)(void);
 @property(nonatomic, copy) void (^headerClick)(void);
 @property(nonatomic, copy) void (^phoneCilck)(void);
+@property(nonatomic, copy) void (^headerLicenseBlock)(void);
 @end
 
 NS_ASSUME_NONNULL_END

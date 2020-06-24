@@ -37,6 +37,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)goToVoteDetail:(FHFeedUGCCellModel *)cellModel value:(NSInteger)value;
 
+- (void)clickRealtorHeaderLicense:(FHFeedUGCCellModel *)cellModel cell:(FHUGCBaseCell *)cell;
+
 - (void)clickRealtorIm:(FHFeedUGCCellModel *)cellModel cell:(FHUGCBaseCell *)cell;
 
 - (void)clickRealtorPhone:(FHFeedUGCCellModel *)cellModel cell:(FHUGCBaseCell *)cell;

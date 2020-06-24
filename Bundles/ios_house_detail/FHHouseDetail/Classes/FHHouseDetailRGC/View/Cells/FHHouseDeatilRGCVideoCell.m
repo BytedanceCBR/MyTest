@@ -77,6 +77,9 @@
     self.headerView.headerClick  = ^{
          [weakSelf clickHeader];
     };
+    self.headerView.headerLicenseBlock = ^{
+        [weakSelf clickHeaderLicense];
+    };
     [self.contentContainer addSubview:_headerView];
     
     self.contentLabel = [[TTUGCAsyncLabel alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width - leftMargin - rightMargin - 30, 0)];
@@ -294,6 +297,26 @@
     
 
 //    [self showGuideView];
+}
+
++ (CGFloat)heightForData:(id)data {
+    if([data isKindOfClass:[FHFeedUGCCellModel class]]){
+        FHFeedUGCCellModel *cellModel = (FHFeedUGCCellModel *)data;
+        CGFloat height;
+        if (cellModel.isInRealtorEvaluationList) {
+            height = cellModel.contentHeight  +150 + 30 + 50 + 130;
+        }else {
+            height = cellModel.contentHeight  +150 + 30 + 50 + 90;
+        }
+        return height;
+    }
+    return 44;
+}
+
+- (void)clickHeaderLicense {
+    if(self.delegate && [self.delegate respondsToSelector:@selector(clickRealtorIm:cell:)]){
+        [self.delegate clickRealtorHeaderLicense:self.cellModel cell:self];
+    }
 }
 
 - (void)clickImAction {

@@ -11,16 +11,17 @@
 #import "UIImageView+BDWebImage.h"
 #import "Masonry.h"
 #import "FHRealtorEvaluatingPhoneCallModel.h"
+#import <FHHouseBase/FHCommonDefines.h>
 
 @interface FHHouseDeatilRGCCellHeader ()
 @property (weak, nonatomic) UIImageView *headerIma;
 @property (weak, nonatomic) UILabel *nameLab;
 @property (weak, nonatomic) UIImageView *companyBac;
-@property (weak, nonatomic) UIImageView *idIma;
 @property (weak, nonatomic) UILabel *companyNameLab;
 @property (weak, nonatomic) UILabel *infoLab;
 @property (weak, nonatomic) UIButton *iMBtn;
 @property (weak, nonatomic) UIButton *phoneBtn;
+@property(nonatomic , strong) UIButton *licenceIcon;
 @end
 @implementation FHHouseDeatilRGCCellHeader
 
@@ -53,12 +54,10 @@
         make.right.equalTo(self.companyBac).offset(-5);
         make.centerY.equalTo(self.companyBac);
     }];
-    [self.idIma mas_makeConstraints:^(MASConstraintMaker *make) {
+    [self.licenceIcon mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.equalTo(self.companyBac.mas_right).offset(4);
         make.centerY.equalTo(self.nameLab);
-        make.top.bottom.equalTo(self.companyBac);
-        make.height.mas_offset(16);
-        
+        make.height.width.mas_offset(20);
     }];
     [self.phoneBtn mas_makeConstraints:^(MASConstraintMaker *make) {
         make.right.equalTo(self.mas_right).offset(-8);
@@ -127,15 +126,6 @@
     return _companyNameLab;
 }
 
-- (UIImageView *)idIma {
-    if (!_idIma) {
-        UIImageView *idIma = [[UIImageView alloc]init];
-        idIma.image = [UIImage imageNamed:@""];
-        [self addSubview:idIma];
-        _idIma = idIma;
-    }
-    return _idIma;
-}
 
 - (UILabel *)infoLab {
     if (!_infoLab) {
@@ -175,11 +165,14 @@
     _cellModel = cellModel;
     if (cellModel.realtor.avatarUrl && cellModel.realtor.avatarUrl.length>0 ) {
         [self.headerIma bd_setImageWithURL:[NSURL URLWithString:cellModel.realtor.avatarUrl] placeholder:[UIImage imageNamed:@"detail_default_avatar"]];
+    }else {
+        [self.headerIma setImage:[UIImage imageNamed:@"detail_default_avatar"]];
     }
-    if (cellModel.realtor.certificationIcon) {
-          [self.idIma bd_setImageWithURL:[NSURL URLWithString:cellModel.realtor.certificationIcon]];
-      }
-    
+    if (cellModel.realtor.certificationIcon.length>0) {
+        self.licenceIcon.hidden = NO;
+    }else {
+        self.licenceIcon.hidden = YES;
+    }
     self.nameLab.text = cellModel.realtor.realtorName;
     if (cellModel.realtor.agencyName.length>0) {
         self.companyNameLab.text = cellModel.realtor.agencyName;
@@ -215,5 +208,24 @@
     if (self.phoneCilck) {
         self.phoneCilck();
     }
+}
+
+- (UIButton *)licenceIcon
+{
+    if (!_licenceIcon) {
+        _licenceIcon = [[UIButton alloc]init];
+        UIImage *img = SYS_IMG(@"detail_contact");
+        [_licenceIcon setImage:img forState:UIControlStateNormal];
+        [_licenceIcon setImage:img forState:UIControlStateHighlighted];
+        [_licenceIcon addTarget:self action:@selector(licenseBtnDidClick:) forControlEvents:UIControlEventTouchUpInside];
+        [self addSubview:_licenceIcon];
+    }
+    return _licenceIcon;
+}
+- (void)licenseBtnDidClick:(UIButton *)btn
+{
+//    if (self.headerLicenseBlock) {
+//        self.headerLicenseBlock();
+//    }
 }
 @end

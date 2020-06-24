@@ -75,6 +75,9 @@
     self.headerView.headerClick  = ^{
          [weakSelf clickHeader];
     };
+    self.headerView.headerLicenseBlock = ^{
+        [weakSelf clickHeaderLicense];
+    };
     [self.contentContainer addSubview:_headerView];
     
     self.contentLabel = [[TTUGCAsyncLabel alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width - leftMargin - rightMargin - 30, 0)];
@@ -244,6 +247,26 @@
         if(self.delegate && [self.delegate respondsToSelector:@selector(clickRealtorHeader:cell:)]){
         [self.delegate clickRealtorHeader:self.cellModel cell:self];
     }
+}
+
+- (void)clickHeaderLicense {
+    if(self.delegate && [self.delegate respondsToSelector:@selector(clickRealtorIm:cell:)]){
+        [self.delegate clickRealtorHeaderLicense:self.cellModel cell:self];
+    }
+}
+
++ (CGFloat)heightForData:(id)data {
+    if([data isKindOfClass:[FHFeedUGCCellModel class]]){
+        FHFeedUGCCellModel *cellModel = (FHFeedUGCCellModel *)data;
+        CGFloat height;
+        if (cellModel.isInRealtorEvaluationList) {
+            height =  cellModel.contentHeight  +75 + 30 + 50 + 75;
+        }else {
+            height =  cellModel.contentHeight  +75 + 30 + 50 + 40;
+        }
+        return height;
+    }
+    return 44;
 }
 
 #pragma mark - TTUGCAsyncLabelDelegate

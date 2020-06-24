@@ -17,6 +17,7 @@
 #import "TTAccount.h"
 #import "FHUtils.h"
 #import "NSDictionary+TTAdditions.h"
+#import "TTPhotoScrollViewController.h"
 #define IM_OPEN_URL @"im_open_url"
 @interface FHRealtorEvaluatingPhoneCallModel ()
 @property (nonatomic, assign) FHHouseType houseType; // 房源类型
@@ -327,4 +328,47 @@
         return nil;
     }
 }
+
+//- (void)licenseActionWithPhone:(FHFeedUGCCellRealtorModel *)contactPhone
+//{
+//    NSMutableArray *images = @[].mutableCopy;
+//    NSMutableArray *imageTitles = @[].mutableCopy;
+//
+//    // "营业执照"
+//    if (contactPhone.certificationPage.length > 0) {
+//        TTImageInfosModel *model = [[TTImageInfosModel alloc] initWithURL:contactPhone.certificationPage];
+//        model.imageType = TTImageTypeLarge;
+//        if (model) {
+//            [images addObject:model];
+//        }
+//        [imageTitles addObject:@"营业执照"];
+//    }
+//    // "从业人员信息卡"
+//    if (contactPhone.certificate.length > 0) {
+//        TTImageInfosModel *model = [[TTImageInfosModel alloc] initWithURL:contactPhone.certificate];
+//        model.imageType = TTImageTypeLarge;
+//        if (model) {
+//            [images addObject:model];
+//        }
+//        [imageTitles addObject:@"从业人员信息卡"];
+//    }
+//    if (images.count == 0) {
+//        return;
+//    }
+//
+//    TTPhotoScrollViewController *vc = [[TTPhotoScrollViewController alloc] init];
+//    vc.dragToCloseDisabled = YES;
+//    vc.mode = PhotosScrollViewSupportBrowse;
+//    vc.startWithIndex = 0;
+//    vc.imageInfosModels = images;
+//    vc.imageTitles = imageTitles;
+//
+//    UIImage *placeholder = [UIImage imageNamed:@"default_image"];
+//    NSMutableArray *placeholders = [[NSMutableArray alloc] initWithCapacity:images.count];
+//    for (NSInteger i = 0 ; i < images.count; i++) {
+//        [placeholders addObject:placeholder];
+//    }
+//    vc.placeholders = placeholders;
+//    [vc presentPhotoScrollView];
+//}
 @end

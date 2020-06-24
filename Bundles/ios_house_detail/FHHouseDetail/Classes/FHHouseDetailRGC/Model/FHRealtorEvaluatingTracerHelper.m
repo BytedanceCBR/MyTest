@@ -14,7 +14,8 @@
     dict[@"enter_from"] = self.tracerModel.enterFrom?: @"be_null";
     dict[@"page_type"] = [extraDic.allKeys containsObject:@"page_type"]?extraDic[@"page_type"]:@"be_null";
     dict[@"event_type"] = [self eventType];
-    dict[@"group_id"] = itemData.groupId?:@"be_null";
+//    dict[@"group_id"] = itemData.groupId?:@"be_null";
+    dict[@"group_id"] = [extraDic.allKeys containsObject:@"group_id"]?extraDic[@"group_id"]:@"be_null";
     dict[@"group_source"] = itemData.logPb[@"group_source"]?:@"be_null";
     dict[@"realtor_id"] = itemData.realtor.realtorId?:@"be_null";
     dict[@"realtor_id"] = itemData.realtor.realtorId?:@"be_null";

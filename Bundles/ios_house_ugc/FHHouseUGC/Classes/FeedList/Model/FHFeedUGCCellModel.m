@@ -927,11 +927,11 @@
     } else if(model.rawData.largeImageList.count > 0) {
         cellModel.largeImageList = model.rawData.largeImageList;
     }
-//    if([model.cellCtrls.cellLayoutStyle isEqualToString:@"10001"]){
-//    [FHUGCCellHelper setRichContentWithModel:cellModel width:([UIScreen mainScreen].bounds.size.width - 60) numberOfLines:cellModel.numberOfLines];
-//    }else {
+    if([model.cellCtrls.cellLayoutStyle isEqualToString:@"10001"]){
+    [FHUGCCellHelper setRichContentWithModel:cellModel width:([UIScreen mainScreen].bounds.size.width - 60) numberOfLines:cellModel.numberOfLines];
+    }else {
     [FHUGCCellHelper setRichContentWithModel:cellModel width:([UIScreen mainScreen].bounds.size.width - 40) numberOfLines:cellModel.numberOfLines];
-//    }
+    }
 
     
     if(cellModel.imageList.count == 1){

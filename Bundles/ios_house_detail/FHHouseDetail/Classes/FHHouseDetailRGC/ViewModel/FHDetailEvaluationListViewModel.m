@@ -299,6 +299,8 @@ if (hasMore) {
             NSDictionary  *extraDic = self.tracerDic.mutableCopy;
             [extraDic setValue:[NSString stringWithFormat:@"%ld",(long)indexPath.row] forKey:@"rank"];
             [extraDic setValue:cellModel.logPb forKey:@"log_pb"];
+            [extraDic setValue:cellModel.groupId forKey:@"group_id"];
+            [extraDic setValue:self.houseId forKey:@"from_gid"];
             [self.tracerHelper trackFeedClientShow:self.dataList[indexPath.row] withExtraDic:extraDic];
         }
     }
@@ -318,21 +320,9 @@ if (hasMore) {
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     if(indexPath.row < self.dataList.count){
         FHFeedUGCCellModel *cellModel = self.dataList[indexPath.row];
-        CGFloat contentHeight = 0;
         Class cellClass = [self.cellManager cellClassFromCellViewType:cellModel.cellSubType data:nil];
         if([cellClass isSubclassOfClass:[FHUGCBaseCell class]]) {
-            //图片高+user高 +bottomview 高度
-            switch (cellModel.cellType) {
-                case FHUGCFeedListCellTypeUGC:
-                    contentHeight = cellModel.contentHeight  +75 + 30 + 50 + 75;
-                    break;
-                case FHUGCFeedListCellTypeUGCSmallVideo:
-                    contentHeight = cellModel.contentHeight  +150 + 30 + 50 + 130;
-                    break;
-                default:
-                    break;
-            }
-            return contentHeight;
+            return [cellClass heightForData:cellModel];
         }
     }
     return 100;
@@ -340,22 +330,10 @@ if (hasMore) {
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     FHFeedUGCCellModel *cellModel = self.dataList[indexPath.row];
-    BOOL canOpenURL = NO;
-    if (!canOpenURL && !isEmptyString(cellModel.openUrl)) {
-        NSURL *url = [TTStringHelper URLWithURLString:cellModel.openUrl];
-        if ([[UIApplication sharedApplication] canOpenURL:url]) {
-            canOpenURL = YES;
-            [[UIApplication sharedApplication] openURL:url];
-        }
-        else if([[TTRoute sharedRoute] canOpenURL:url]){
-            canOpenURL = YES;
-            //优先跳转openurl
-            [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:nil];
-        }
-    }else{
-        NSURL *openUrl = [NSURL URLWithString:cellModel.detailScheme];
-        [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:nil];
-    }
+    self.currentCellModel = cellModel;
+    self.currentCell = [tableView cellForRowAtIndexPath:indexPath];
+    self.detailJumpManager.currentCell = self.currentCell;
+    [self.detailJumpManager jumpToDetail:cellModel showComment:NO enterType:@"feed_content_blank"];
 }
 
 - (void)commentClicked:(FHFeedUGCCellModel *)cellModel cell:(nonnull FHUGCBaseCell *)cell {
