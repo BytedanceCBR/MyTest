@@ -43,7 +43,7 @@ def fhPods
     pod 'FHLynxKit' , :path => '../Bundles/ios_common_lynx'
 
 #    pod 'ios_house_filter' , :git => 'git@code.byted.org:fproject/ios_house_filter.git', :commit => '60e9866a118874a07ca697cfbc4155bfa6b3d72c' #:branch => 'feature/develop'filter-triangle-open-highlighted
-    pod 'ios_house_filter' , '1.0.2-bugfix'
+    pod 'ios_house_filter' , '1.0.2.2-bugfix'
 
 
     pod 'FHCommonUI','0.9.0.2.1-bugfix'
@@ -587,6 +587,12 @@ def appPods
     pod 'TikTokOpenPlatformSDK', '3.0.0'
     pod 'objc-geohash', '0.0.3'
     pod 'protobuf_lite', '0.0.1'
+
+    pod 'BDNativeWebComponent','0.1.0',:subspecs => [
+        'Core',
+        'Image'
+#        'Video'
+    ]
 
 end
 

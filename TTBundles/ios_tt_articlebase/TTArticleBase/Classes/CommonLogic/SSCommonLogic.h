@@ -1409,6 +1409,8 @@ typedef NS_ENUM(NSInteger, SSCommentType)  {
 +(BOOL)enableWebViewBlankDetect;
 //是否开启F项目的启动优化 by xsm
 + (BOOL)isFHNewLaunchOptimizeEnabled;
+//是否开启webview components
++(BOOL)enableWebviewNativeComponent;
 
 @end
 

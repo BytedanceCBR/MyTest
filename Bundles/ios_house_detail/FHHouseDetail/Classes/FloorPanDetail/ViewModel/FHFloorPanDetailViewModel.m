@@ -32,13 +32,11 @@
 #import "FHDetailSalesCell.h"
 
 @interface FHFloorPanDetailViewModel()<UITableViewDelegate,UITableViewDataSource>
-
+@property (copy, readwrite, nonatomic) NSString *floorPanId;
 @property (nonatomic , weak) UITableView *infoListTable;
-@property (nonatomic , strong) NSString *floorPanId;
 @property (nonatomic , strong) FHDetailFloorPanDetailInfoModel *currentModel;
 @property(nonatomic , weak) FHHouseDetailSubPageViewController *subPageVC;
 @property (nonatomic, strong)   NSMutableDictionary       *elementShowCaches;
-
 @end
 @implementation FHFloorPanDetailViewModel
 
@@ -130,6 +128,7 @@
         [FHHouseDetailAPI requestFloorPanDetailCoreInfoSearch:_floorPanId completion:^(FHDetailFloorPanDetailInfoModel * _Nullable model, NSError * _Nullable error) {
             if(model.data && !error)
             {
+                [wSelf.navBar showMessageNumber];
                 [wSelf.detailController.emptyView hideEmptyView];
                 wSelf.detailController.hasValidateData = YES;
                 [wSelf processDetailData:model];
@@ -341,6 +340,19 @@
     }
    
     [self.detailController refreshContentOffset:scrollView.contentOffset];
+}
+
+#pragma mark - 埋点
+- (void)addGoDetailLog {
+    NSMutableDictionary *params = @{}.mutableCopy;
+    if (self.detailTracerDic) {
+        [params addEntriesFromDictionary:self.detailTracerDic];
+    }
+    params[kFHClueExtraInfo] = self.extraInfo;
+    if (self.floorPanId.length) {
+        params[@"group_id"] = self.floorPanId;
+    }
+    [FHUserTracker writeEvent:@"go_detail" params:params];
 }
 
 @end
