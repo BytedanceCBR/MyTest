@@ -12,6 +12,7 @@
 #import "FHHouseErrorHubManager.h"
 #import "TTBaseMacro.h"
 #import "ToastManager.h"
+#import "SSNavigationBar.h"
 
 @interface FHHouseErrorHubDebugVC ()<UITableViewDelegate,UITableViewDataSource>
 @property (nonatomic, strong) NSMutableDictionary *dataSource;
@@ -54,13 +55,15 @@
         //        make.bottom.equalTo(self.view).offset([UIDevice btd_isIPhoneXSeries]?-80:-64);
     }];
     [self setupDefaultNavBar:YES];
-    UIBarButtonItem *backItem = [[UIBarButtonItem alloc] initWithTitle:@"返回" style:UIBarButtonItemStylePlain target:self action:@selector(becktToPop)];
+    
+    UIBarButtonItem *backItem = [[UIBarButtonItem alloc] initWithCustomView:[SSNavigationBar navigationBackButtonWithTarget:self action:@selector(becktToPop)]];
     self.navigationItem.leftBarButtonItem = backItem;
-    UIBarButtonItem *rightItem = [[UIBarButtonItem alloc] initWithTitle:@"save 现场" style:UIBarButtonItemStylePlain target:self action:@selector(saveConfigAction)];
+    
+    UIBarButtonItem *rightItem = [[UIBarButtonItem alloc] initWithCustomView:[SSNavigationBar navigationButtonOfOrientation:SSNavigationButtonOrientationOfRight withTitle:@"save 现场" target:self action:@selector(saveConfigAction)]];
     self.navigationItem.rightBarButtonItem = rightItem;
     
     UISwitch *switchs = [[UISwitch alloc]init];
-    switchs.on = ![self errorHubSwitch];
+    switchs.on = [self errorHubSwitch];
     [switchs addTarget:self action:@selector(switchAction:) forControlEvents:UIControlEventValueChanged];
     self.navigationItem.titleView = switchs;
     
@@ -260,7 +263,7 @@
 }
 
 - (void)switchAction:(UISwitch *)switchs {
-    [[NSUserDefaults standardUserDefaults] setBool:!switchs.on forKey:@"_errorHubSwitch"];
+    [[NSUserDefaults standardUserDefaults] setBool:switchs.on forKey:@"_errorHubSwitch"];
 }
 
 - (BOOL)errorHubSwitch {
