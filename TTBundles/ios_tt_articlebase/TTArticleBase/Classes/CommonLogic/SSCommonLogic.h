@@ -1407,6 +1407,8 @@ typedef NS_ENUM(NSInteger, SSCommentType)  {
 
 //是否允许webview 白屏检测
 +(BOOL)enableWebViewBlankDetect;
+//是否开启webview components
++(BOOL)enableWebviewNativeComponent;
 
 @end
 

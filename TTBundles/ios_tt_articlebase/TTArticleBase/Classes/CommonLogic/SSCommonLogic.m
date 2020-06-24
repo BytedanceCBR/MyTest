@@ -5452,6 +5452,15 @@ static NSString *const kFFeedRefreshStrategy = @"feed_refresh_settings";
     return YES;
 }
 
++(BOOL)enableWebviewNativeComponent
+{
+    NSDictionary *fhSettings = [self fhSettings];
+    if (fhSettings && [fhSettings objectForKey:@"enable_webview_native_component"]) {
+        return [[fhSettings objectForKey:@"enable_webview_native_component"] boolValue];
+    }
+    return YES;
+}
+
 @end
 
 
