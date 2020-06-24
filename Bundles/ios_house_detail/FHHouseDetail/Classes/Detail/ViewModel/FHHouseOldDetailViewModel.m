@@ -514,6 +514,7 @@ logPB:self.listLogPB extraInfo:self.extraInfo completion:^(FHDetailOldModel * _N
         FHDetailHouseReviewCommentCellModel * houseReviewCommentModel = [[FHDetailHouseReviewCommentCellModel alloc] init];
         houseReviewCommentModel.tableView = self.tableView;
         houseReviewCommentModel.belongsVC = self.detailController;
+        houseReviewCommentModel.bizTrace = self.houseInfoBizTrace;
         houseReviewCommentModel.houseModelType = FHHouseModelTypeHousingEvaluation;
         houseReviewCommentModel.houseReviewComment = model.data.houseReviewComment;
         houseReviewCommentModel.phoneCallViewModel = [[FHHouseDetailPhoneCallViewModel alloc] initWithHouseType:FHHouseTypeSecondHandHouse houseId:self.houseId];

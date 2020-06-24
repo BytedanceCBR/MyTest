@@ -272,7 +272,9 @@
     associatePhone.realtorId = contact.realtorId;
     associatePhone.searchId = cellModel.searchId;
     associatePhone.imprId = cellModel.imprId;
-
+    if (cellModel.bizTrace) {
+        associatePhone.extraDict = @{@"biz_trace":cellModel.bizTrace};
+    }
     associatePhone.houseType = self.baseViewModel.houseType;
     associatePhone.houseId = self.baseViewModel.houseId;
     associatePhone.showLoading = NO;
