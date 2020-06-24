@@ -183,7 +183,13 @@ YSWebViewNavigationType mapUIWebViewNavigationTypeToYSWebViewNavigationType(UIWe
 }
 
 - (void)configureWKWebView {
-    _webViewWK = [[TTWKWebView alloc] initSharedConfigurationViewWithFrame:self.bounds];
+    
+    //更改configuration 由单例为每次创建，以使得每次能够使用BDNativeComponents
+    WKWebViewConfiguration *configuration = [[WKWebViewConfiguration alloc] init];
+    configuration.userContentController = [[WKUserContentController alloc] init];
+    configuration.processPool = [[WKProcessPool alloc] init];
+    
+    _webViewWK =  [[TTWKWebView alloc] initWithFrame:self.bounds configuration:configuration];//[[TTWKWebView alloc] initSharedConfigurationViewWithFrame:self.bounds];
     _webViewWK.configuration.allowsInlineMediaPlayback = YES;
     _webViewWK.configuration.mediaPlaybackRequiresUserAction = NO;
     _webViewWK.navigationDelegate = self.innerWebViewDelegate;

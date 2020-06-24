@@ -10,6 +10,7 @@
 #import "FHErrorHubMonitor.h"
 #import "TTSandBoxHelper.h"
 #import "FHErrorHubProcotol.h"
+#import "FHErrorHubCheckPathHelper.h"
 @interface FHHouseErrorHubManager()
 @property (strong, nonatomic) NSMutableArray *procotalClassArr;
 @end
@@ -38,7 +39,10 @@
 }
 
 - (void)checkRequestResponseWithHost:(NSString *)host requestParams:(NSDictionary *)params responseStatus:(TTHttpResponse *)responseStatus response:(id)response analysisError:(NSError *)analysisError changeModelType:(FHNetworkMonitorType )type errorHubType:(FHErrorHubType)errorHubType {
-    if (![[self getChannel] isEqualToString:@"local_test"] || [self errorHubSwitch]) {
+    if (![[self getChannel] isEqualToString:@"local_test"] || ![self errorHubSwitch]) {
+        return;
+    }
+    if (![[FHErrorHubCheckPathHelper FHErrorHubCheckRequestPathList] containsObject:host]) {
         return;
     }
     NSInteger status = -1;
@@ -91,7 +95,7 @@
 }
 
 - (void)checkBuryingPointWithEvent:(NSString *)eventName Params:(NSDictionary* )eventParams errorHubType:(FHErrorHubType)errorHubType {
-    if (![[self getChannel] isEqualToString:@"local_test"] || [self errorHubSwitch]) {
+    if (![[self getChannel] isEqualToString:@"local_test"] || ![self errorHubSwitch]) {
         return;
     }
     dispatch_async(dispatch_get_global_queue(0, 0), ^{
@@ -218,7 +222,7 @@
 }
 
 - (void)saveConfigAndSettingsSence {
-    if (![[self getChannel] isEqualToString:@"local_test"] || [self errorHubSwitch]) {
+    if (![[self getChannel] isEqualToString:@"local_test"] || ![self errorHubSwitch]) {
         return;
     }
     dispatch_async(dispatch_get_global_queue(0, 0), ^{

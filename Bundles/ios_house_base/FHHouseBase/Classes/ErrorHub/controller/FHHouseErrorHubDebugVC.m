@@ -60,7 +60,7 @@
     self.navigationItem.rightBarButtonItem = rightItem;
     
     UISwitch *switchs = [[UISwitch alloc]init];
-    switchs.on = ![self errorHubSwitch];
+    switchs.on = [self errorHubSwitch];
     [switchs addTarget:self action:@selector(switchAction:) forControlEvents:UIControlEventValueChanged];
     self.navigationItem.titleView = switchs;
     
@@ -260,7 +260,7 @@
 }
 
 - (void)switchAction:(UISwitch *)switchs {
-    [[NSUserDefaults standardUserDefaults] setBool:!switchs.on forKey:@"_errorHubSwitch"];
+    [[NSUserDefaults standardUserDefaults] setBool:switchs.on forKey:@"_errorHubSwitch"];
 }
 
 - (BOOL)errorHubSwitch {

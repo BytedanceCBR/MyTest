@@ -588,6 +588,12 @@ def appPods
     pod 'objc-geohash', '0.0.3'
     pod 'protobuf_lite', '0.0.1'
 
+    pod 'BDNativeWebComponent','0.1.0',:subspecs => [
+        'Core',
+        'Image'
+#        'Video'
+    ]
+
 end
 
 
