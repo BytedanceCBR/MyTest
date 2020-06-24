@@ -15,6 +15,9 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic, strong) FHTracerModel *tracerModel;
 ///feed_client_show
 - (void)trackFeedClientShow:(FHFeedUGCCellModel *)itemData withExtraDic:(NSDictionary *)extraDic;
+
+///List_feed_client_show
+- (void)trackListFeedClientShow:(FHFeedUGCCellModel *)itemData withExtraDic:(NSDictionary *)extraDic;
 @end
 
 NS_ASSUME_NONNULL_END
