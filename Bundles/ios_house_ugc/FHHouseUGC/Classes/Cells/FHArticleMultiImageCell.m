@@ -11,7 +11,7 @@
 #import "FHUGCCellHelper.h"
 #import "TTBaseMacro.h"
 #import "UIViewAdditions.h"
-#import "TTImageView+TrafficSave.h"
+#import "UIImageView+fhUgcImage.h"
 
 #define maxLines 3
 #define bottomViewHeight 39
@@ -84,9 +84,9 @@
     [self.bottomView.positionView addGestureRecognizer:tap];
     
     for (NSInteger i = 0; i < 3; i++) {
-        TTImageView *imageView = [[TTImageView alloc] initWithFrame:CGRectZero];
+        UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectZero];
         imageView.clipsToBounds = YES;
-        imageView.imageContentMode = TTImageViewContentModeScaleAspectFill;
+        imageView.contentMode = UIViewContentModeScaleAspectFill;
         imageView.backgroundColor = [UIColor themeGray6];
         imageView.layer.borderColor = [[UIColor themeGray6] CGColor];
         imageView.layer.borderWidth = 0.5;
@@ -172,17 +172,12 @@
     if(imageList.count > 0){
         self.imageViewContainer.hidden = NO;
         for (NSInteger i = 0; i < self.imageViewList.count; i++) {
-            TTImageView *imageView = self.imageViewList[i];
+            UIImageView *imageView = self.imageViewList[i];
             if(i < imageList.count){
                 FHFeedContentImageListModel *imageModel = imageList[i];
                 imageView.hidden = NO;
                 if (imageModel && imageModel.url.length > 0) {
-//                    [imageView bd_setImageWithURL:[NSURL URLWithString:imageModel.url] placeholder:nil];
-                    TTImageInfosModel *imageInfoModel = [FHUGCCellHelper convertTTImageInfosModel:imageModel];
-                    __weak typeof(imageView) wImageView = imageView;
-                    [imageView setImageWithModelInTrafficSaveMode:imageInfoModel placeholderImage:nil success:nil failure:^(NSError *error) {
-                        [wImageView setImage:nil];
-                    }];
+                    [imageView fh_setImageWithURL:imageModel.url placeholder:nil];
                 }
             }else{
                 imageView.hidden = YES;

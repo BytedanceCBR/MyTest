@@ -23,11 +23,11 @@
 #import "FHUserTracker.h"
 #import "FHHouseContactDefines.h"
 #import "UIViewAdditions.h"
-#import "TTImageView+TrafficSave.h"
+#import "UIImageView+fhUgcImage.h"
 
 @interface FHUGCCellAttachCardView ()
 
-@property(nonatomic ,strong) TTImageView *iconView;
+@property(nonatomic ,strong) UIImageView *iconView;
 @property(nonatomic ,strong) UILabel *titleLabel;
 @property(nonatomic ,strong) UILabel *descLabel;
 @property(nonatomic ,strong) UIView *spLine;
@@ -56,9 +56,9 @@
     UITapGestureRecognizer* singleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(goToDetail)];
     [self addGestureRecognizer:singleTap];
     
-    self.iconView = [[TTImageView alloc] init];
+    self.iconView = [[UIImageView alloc] init];
     _iconView.backgroundColor = [UIColor whiteColor];
-    _iconView.imageContentMode = TTImageViewContentModeScaleAspectFill;
+    _iconView.contentMode = UIViewContentModeScaleAspectFill;
     _iconView.layer.cornerRadius = 4;
     _iconView.layer.masksToBounds = YES;
     _iconView.clipsToBounds = YES;
@@ -124,14 +124,8 @@
         
         self.cellModel = cellModel;
         
-//        [self.iconView bd_setImageWithURL:[NSURL URLWithString:cellModel.attachCardInfo.coverImage.url] placeholder:nil];
-        
         if (cellModel.attachCardInfo.imageModel && cellModel.attachCardInfo.imageModel.url.length > 0) {
-            TTImageInfosModel *imageInfoModel = [FHUGCCellHelper convertTTImageInfosModel:cellModel.attachCardInfo.imageModel];
-            __weak typeof(self) wSelf = self;
-            [self.iconView setImageWithModelInTrafficSaveMode:imageInfoModel placeholderImage:nil success:nil failure:^(NSError *error) {
-                [wSelf.iconView setImage:nil];
-            }];
+            [self.iconView fh_setImageWithURL:cellModel.attachCardInfo.imageModel.url placeholder:nil];
         }else{
             [self.iconView setImage:nil];
         }
