@@ -23,6 +23,8 @@ static NSString *const kUserDefaultSelectKey = @"userdefaultselect";
 static NSString *const kUserDefaultCityNamePre05_Key = @"currentcitytext"; // 0.5版本之前保存的当前城市名称
 NSString *const kFHPhoneNumberCacheKey = @"phonenumber";
 NSString *const kFHPLoginhoneNumberCacheKey = @"loginPhoneNumber";
+//帮我找房保存的电话号码（单独存放）
+NSString *const kFHFindHousePhoneNumberCacheKey = @"findHousePhoneNumber";
 static NSString *const kFHSubscribeHouseCacheKey = @"subscribeHouse";
 static NSString *const kFHDetailFeedbackCacheKey = @"detailFeedback";
 static NSString *const kFHEpidemicSituationCacheKey = @"EpidemicSituation";
@@ -38,6 +40,7 @@ static NSString *const kFHEpidemicSituationCacheKey = @"EpidemicSituation";
 @property(nonatomic , strong) YYCache *subscribeHouseCache;
 @property(nonatomic , strong) YYCache *detailFeedbackCache;
 @property(nonatomic , strong) YYCache *epidemicSituationCache;
+@property(nonatomic , strong) YYCache *findHousePhoneNumberCache;
 
 @end
 
@@ -255,5 +258,13 @@ static NSString *const kFHEpidemicSituationCacheKey = @"EpidemicSituation";
         _epidemicSituationCache = [YYCache cacheWithName:kFHEpidemicSituationCacheKey];
     }
     return _epidemicSituationCache;
+}
+
+- (YYCache *)findHousePhoneNumberCache
+{
+    if (!_findHousePhoneNumberCache) {
+        _findHousePhoneNumberCache = [YYCache cacheWithName:kFHFindHousePhoneNumberCacheKey];
+    }
+    return _findHousePhoneNumberCache;
 }
 @end

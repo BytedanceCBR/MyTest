@@ -28,7 +28,7 @@ typedef enum : NSInteger {
 @interface FHHouseFindSelectItemModel : NSObject
 
 @property(nonatomic , assign) NSInteger tabId;
-@property(nonatomic , strong) NSMutableSet *selectIndexes;
+@property(nonatomic , strong) NSMutableArray *selectIndexes;
 @property(nonatomic , copy)   NSString *lowerPrice; //输入要允许输入 0000000
 @property(nonatomic , copy)   NSString *higherPrice;
 @property(nonatomic , copy)   NSNumber *rate;
@@ -36,6 +36,7 @@ typedef enum : NSInteger {
 @property(nonatomic , strong) FHSearchFilterConfigOption *configOption;
 
 -(NSString *)selectQuery;
+-(NSString *)selectQueryForFindingHouse;
 
 @end
 

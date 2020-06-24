@@ -480,6 +480,16 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
+// 搜索页/列表页结果为空时展示的帮我找房卡片
+@interface FHSearchFindHouseHelperModel : FHSearchBaseItemModel
+
+@property (nonatomic, copy , nullable) NSString *title;
+@property (nonatomic, copy , nullable) NSString *text;
+@property (nonatomic, copy , nullable) NSString *buttonText;
+@property (nonatomic, copy , nullable) NSString *openUrl;
+
+@end
+
 #pragma mark - zjing 新model
 @interface  FHListSearchHouseDataModel  : JSONModel
 
