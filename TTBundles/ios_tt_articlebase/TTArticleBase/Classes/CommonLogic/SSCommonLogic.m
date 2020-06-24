@@ -5452,6 +5452,11 @@ static NSString *const kFFeedRefreshStrategy = @"feed_refresh_settings";
     return YES;
 }
 
++ (BOOL)isFHNewLaunchOptimizeEnabled {
+    BOOL startupOptimizeOpen = [[self fhSettings] tt_boolValueForKey:@"f_startup_optimize_open"];
+    return startupOptimizeOpen;
+}
+
 +(BOOL)enableWebviewNativeComponent
 {
     NSDictionary *fhSettings = [self fhSettings];

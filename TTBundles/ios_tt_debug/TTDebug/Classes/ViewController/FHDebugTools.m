@@ -23,6 +23,9 @@
     NSDictionary *filters = @{
         @"TTAlphaThemedButton" : @[@"__associated_object"],
         @"SSThemedButton" : @[@"__associated_object"],
+        @"FHLoginViewController" : @[@"textField"],
+        @"FHLoginContainerViewController" : @[@"textField"],
+        @"FHBindContainerViewController" : @[@"textField"],
     };
 
 //    {
