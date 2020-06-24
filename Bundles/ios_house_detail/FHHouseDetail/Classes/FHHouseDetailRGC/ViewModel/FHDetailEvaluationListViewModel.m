@@ -120,6 +120,9 @@
         return;
     }
     NSArray *requestTabListInfoArr = model.data[@"tab_list"];
+    if (requestTabListInfoArr.count == 0) {
+        return;
+    }
     if ([requestTabListInfoArr isEqualToArray:self.evaluationHeader.tabInfoArr]) {
         return;
     }else {
