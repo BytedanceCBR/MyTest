@@ -9,6 +9,7 @@
 #import "TTShareManager.h"
 #import "TTActivitiesManager.h"
 #import "TTShareAdapterSetting.h"
+#import "FHIMShareActivity.h"
 
 @interface  TTShareManager() <TTActivityPanelDelegate>
 
@@ -39,6 +40,18 @@
         return YES;
     } else {
         return NO;
+    }
+}
+
+- (void)updateBizTraceExtraInfo:(NSDictionary *)extraInfo activity:(id <TTActivityProtocol>)activity{
+    TTActivitiesManager *manager = [TTActivitiesManager sharedInstance];
+   id <TTActivityProtocol> activityShow = [manager getActivityByItem:activity];
+    if ([activityShow isKindOfClass:[FHIMShareActivity class]]) {
+        TTActivitiesManager *manager = [TTActivitiesManager sharedInstance];
+        FHIMShareActivity *activityHouse =  (FHIMShareActivity *)activityShow;
+        if (activityHouse) {
+              activityHouse.extraInfo = extraInfo;
+        }
     }
 }
 

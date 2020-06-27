@@ -1222,6 +1222,7 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
             activity.extraInfo = @{@"biz_trace":self.houseInfoBizTrace};
         }
         [TTShareManager addUserDefinedActivity:activity];
+        [self.shareManager updateBizTraceExtraInfo:activity.extraInfo  activity:activity];
     }
     return _shareManager;
 }
