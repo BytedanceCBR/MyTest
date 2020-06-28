@@ -584,6 +584,13 @@
                   self.superScrollEnable = YES;
               }
           }
+          
+          if (self.tableViewV.contentOffset.y < (self.headerHeight + KFHHomeSectionHeight + KFHHomeSearchBarHeight)) {
+              vc.tableView.contentOffset = CGPointMake(0, 0);
+              vc.childScrollEnable = NO;
+          }else{
+              vc.childScrollEnable = YES;
+          }
       }
 }
 
@@ -851,6 +858,8 @@
             
             self.previousHouseType = self.houseType;
         }
+        
+        [self updateIndexChangedScrollStatus];
     }
     
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
@@ -858,12 +867,13 @@
         // 滚动时发出通知
         [[NSNotificationCenter defaultCenter] postNotificationName:@"FHHomeMainDidScrollEnd" object:nil];
     });
+    
 }
 
 - (void)scrollViewDidEndScrollingAnimation:(UIScrollView *)scrollView{
-//    if (scrollView == self.homeViewController.scrollView) {
-//        [[NSNotificationCenter defaultCenter] postNotificationName:@"FHHomeMainDidScrollEnd" object:nil];
-//    }
+    if (scrollView == self.homeViewController.scrollView) {
+        [self updateIndexChangedScrollStatus];
+    }
     [self setUpHomeItemScrollView:YES];
     [[NSNotificationCenter defaultCenter] postNotificationName:@"FHHomeMainDidScrollEnd" object:nil];
 }
