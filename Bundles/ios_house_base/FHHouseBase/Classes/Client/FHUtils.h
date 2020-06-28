@@ -21,6 +21,9 @@ NS_ASSUME_NONNULL_BEGIN
 //字典转json字符串
 + (NSString *)getJsonStrFrom:(NSDictionary *)dic;
 
+//字典转json字符串
++ (NSString *)getJsonStrFromNoEncode:(NSDictionary *)dic;
+
 //字典转key=value字符串
 + (NSString *)getUrlFormStrFromDict:(NSDictionary *)dic andFirstChar:(BOOL)withFirst;
 

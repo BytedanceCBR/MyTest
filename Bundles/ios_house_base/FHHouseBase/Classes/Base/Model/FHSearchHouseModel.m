@@ -698,6 +698,7 @@
                            @"bottomText": @"bottom_text",
                            @"baseInfo": @"base_info",
                            @"coreInfo": @"core_info",
+                           @"bizTrace": @"biz_trace",
 
                            @"gaodeLat": @"gaode_lat",
                            @"gaodeLng": @"gaode_lng",

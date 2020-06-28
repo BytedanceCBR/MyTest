@@ -12,6 +12,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FHIMShareActivity : NSObject<TTActivityProtocol>
 @property (nonatomic, strong) id<TTActivityContentItemProtocol> contentItem;
+@property (nonatomic, strong) NSDictionary *extraInfo;
 @end
 
 NS_ASSUME_NONNULL_END

@@ -20,6 +20,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic, weak, nullable) UITableViewCell *cell;
 @property(nonatomic, weak) UITableView *tableView;
 @property (nonatomic, strong, nullable) FHClueAssociateInfoModel *associateInfo;
+@property(nonatomic, copy) NSString *houseInfoBizTrace;
 
 @end
 

@@ -2009,6 +2009,10 @@ extern NSString *const INSTANT_DATA_KEY;
             dict[@"tracer"] = tracerParam;
              dict[@"house_type"] = @(self.houseType);
             if ([cellModel isKindOfClass:[FHSearchHouseItemModel class]]) {
+                   FHSearchHouseItemModel *model = (FHSearchHouseItemModel *)cellModel;
+                dict[@"biz_trace"] = model.bizTrace;
+            }
+            if ([cellModel isKindOfClass:[FHSearchHouseItemModel class]]) {
                 FHSearchHouseItemModel *model = (FHSearchHouseItemModel *)cellModel;
                 if (model.houseType.integerValue == FHHouseTypeNewHouse) {
                     dict[@"house_type"] = @(model.houseType.integerValue);
@@ -2311,6 +2315,7 @@ extern NSString *const INSTANT_DATA_KEY;
         tracerDict[@"group_id"] = houseModel.id ? : @"be_null";
         tracerDict[@"impr_id"] = houseModel.imprId ? : @"be_null";
         tracerDict[@"log_pb"] = houseModel.logPb ? : @"be_null";
+        tracerDict[@"biz_trace"] = [houseModel bizTrace] ? : @"be_null";
         tracerDict[@"house_type"] = houseModel.houseType.integerValue == FHHouseTypeNewHouse?@"new": ([self houseTypeString] ? : @"be_null");
         tracerDict[@"card_type"] = @"left_pic";
         

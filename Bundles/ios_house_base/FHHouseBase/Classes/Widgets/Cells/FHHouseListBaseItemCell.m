@@ -217,7 +217,7 @@
     }];
     [self.topLeftTagImageView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.top.equalTo(self.mainIma);
-        make.size.mas_equalTo(CGSizeMake(48, 15));
+        make.size.mas_equalTo(CGSizeMake(48, 18));
     }];
 }
 #pragma mark ---------------------- UIInit:初始化控件
@@ -565,7 +565,7 @@
             make.width.mas_equalTo(width > 0.0 ? width : 48);
         }];
         [self.topLeftTagImageView mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.height.mas_equalTo(height > 0.0 ? height : 15);
+            make.height.mas_equalTo(height > 0.0 ? height : 18);
         }];
         
         self.topLeftTagImageView.hidden = NO;

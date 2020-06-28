@@ -18,6 +18,7 @@
 #import <TTReachability/TTReachability.h>
 #import <FHHouseBase/FHHouseContactDefines.h>
 #import <JSONModel/JSONModel.h>
+#import "FHUtils.h"
 
 #define GET @"GET"
 #define POST @"POST"
@@ -33,6 +34,7 @@
                                           phone:(NSString*)phone
                                            from:(NSString*)from
                                            type:(NSNumber*)type
+                                        extraInfo:(nonnull NSDictionary *)extra
                                      completion:(void(^)(FHDetailResponseModel * _Nullable model , NSError * _Nullable error))completion
 {
     NSString * host = [FHURLSettings baseURL] ?: @"https://i.haoduofangs.com";
@@ -56,6 +58,10 @@
         paramDic[@"target_type"] = type;
     }
     paramDic[@"city_id"] = [FHEnvContext getCurrentSelectCityIdFromLocal];
+    
+    if(extra && [extra isKindOfClass:[NSDictionary class]]){
+        paramDic[@"extra_info"] = [FHUtils getJsonStrFromNoEncode:extra];
+    }
 
     return [[TTNetworkManager shareInstance]requestForBinaryWithResponse:url params:paramDic method:@"POST" needCommonParams:YES requestSerializer:[FHPostDataHTTPRequestSerializer class] responseSerializer:[[TTNetworkManager shareInstance]defaultBinaryResponseSerializerClass] autoResume:YES callback:^(NSError *error, id jsonObj, TTHttpResponse *response) {
         FHDetailResponseModel *model = nil;
@@ -101,7 +107,7 @@
                                      agencyList:(NSArray<FHFillFormAgencyListItemModel *> *)agencyList
                                      completion:(void(^)(FHDetailResponseModel * _Nullable model , NSError * _Nullable error))completion
 {
-    [self requestSendPhoneNumbserByHouseId:houseId phone:phone from:from cluePage:nil clueEndpoint:nil targetType:nil agencyList:agencyList completion:completion];
+    [self requestSendPhoneNumbserByHouseId:houseId phone:phone from:from cluePage:nil clueEndpoint:nil targetType:nil extraInfo:nil agencyList:agencyList completion:completion];
 }
 // 详情页线索提交表单
 + (TTHttpTask*)requestSendPhoneNumbserByHouseId:(NSString*)houseId
@@ -110,6 +116,7 @@
                                        cluePage:(NSNumber*)cluePage
                                    clueEndpoint:(NSNumber*)clueEndpoint
                                      targetType:(NSNumber *)targetType
+                                     extraInfo:(nonnull NSDictionary *)extra
                                      agencyList:(NSArray<FHFillFormAgencyListItemModel *> *)agencyList
                                      completion:(void(^)(FHDetailResponseModel * _Nullable model , NSError * _Nullable error))completion
 {
@@ -147,6 +154,11 @@
         }
         paramDic[@"choose_agency_list"] = array;
     }
+    
+    if(extra && [extra isKindOfClass:[NSDictionary class]]){
+        paramDic[@"extra_info"] = [FHUtils getJsonStrFromNoEncode:extra];
+    }
+    
     return [[TTNetworkManager shareInstance]requestForBinaryWithResponse:url params:paramDic method:POST needCommonParams:YES requestSerializer:[FHPostDataHTTPRequestSerializer class] responseSerializer:[[TTNetworkManager shareInstance]defaultBinaryResponseSerializerClass] autoResume:YES callback:^(NSError *error, id jsonObj, TTHttpResponse *response) {
         FHDetailResponseModel *model = nil;
         NSError *jerror = nil;
@@ -191,9 +203,10 @@
                            searchId:(NSString*)searchId
                              imprId:(NSString*)imprId
                                from:(NSString*)fromStr
+                          extraInfo:(nonnull NSDictionary *)extra
                          completion:(void(^)(FHDetailVirtualNumResponseModel * _Nullable model , NSError * _Nullable error))completion
 {
-    [self requestVirtualNumber:realtorId houseId:houseId houseType:houseType searchId:searchId imprId:imprId from:fromStr cluePage:nil clueEndpoint:nil completion:completion];
+    [self requestVirtualNumber:realtorId houseId:houseId houseType:houseType searchId:searchId imprId:imprId from:fromStr cluePage:nil clueEndpoint:nil extraInfo:nil completion:completion];
 }
 
 // 中介转接电话
@@ -205,6 +218,7 @@
                              from:(NSString*)fromStr
                                cluePage:(NSNumber*)cluePage
                                clueEndpoint:(NSNumber*)clueEndpoint
+                          extraInfo:(nonnull NSDictionary *)extra
                          completion:(void(^)(FHDetailVirtualNumResponseModel * _Nullable model , NSError * _Nullable error))completion {
     NSString * host = [FHURLSettings baseURL] ?: @"https://i.haoduofangs.com";
     NSString* url = [host stringByAppendingString:@"/f100/api/virtual_number"];
@@ -228,6 +242,10 @@
         paramDic[@"endpoint"] = clueEndpoint ? clueEndpoint : @(FHClueEndPointTypeC);
     }else if (fromStr.length > 0) {
         paramDic[@"enterfrom"] = fromStr;
+    }
+    
+    if(extra && [extra isKindOfClass:[NSDictionary class]]){
+        paramDic[@"extra_info"] = [FHUtils getJsonStrFromNoEncode:extra];
     }
 
     return [[TTNetworkManager shareInstance]requestForJSONWithResponse:url params:paramDic method:GET needCommonParams:YES callback:^(NSError *error, id jsonObj, TTHttpResponse *response) {
@@ -276,6 +294,7 @@
                          houseType:(FHHouseType)houseType
                           searchId:(NSString*)searchId
                             imprId:(NSString*)imprId
+                         extraInfo:(NSDictionary *)extra
                          completion:(void(^)(FHDetailVirtualNumResponseModel * _Nullable model , NSError * _Nullable error))completion
 {
     NSString * host = [FHURLSettings baseURL] ?: @"https://i.haoduofangs.com";
@@ -300,6 +319,9 @@
         if (data && string) {
             paramDic[@"phone_info"] = string;
         }
+    }
+    if(extra && [extra isKindOfClass:[NSDictionary class]]){
+        paramDic[@"extra_info"] = [FHUtils getJsonStrFromNoEncode:extra];
     }
 
     return [[TTNetworkManager shareInstance]requestForJSONWithResponse:url params:paramDic method:GET needCommonParams:YES callback:^(NSError *error, id jsonObj, TTHttpResponse *response) {
@@ -350,6 +372,7 @@ clueEndpoint:(NSNumber*)clueEndpoint
   targetType:(NSNumber *)targetType
 reportAssociate:(NSDictionary*)reportAssociate
 agencyList:(NSArray<FHFillFormAgencyListItemModel *> *)agencyList
+extraInfo:(NSDictionary *)extra
 completion:(void(^)(FHDetailResponseModel * _Nullable model , NSError * _Nullable error))completion
 {
     NSString * host = [FHURLSettings baseURL] ?: @"https://i.haoduofangs.com";
@@ -387,6 +410,11 @@ completion:(void(^)(FHDetailResponseModel * _Nullable model , NSError * _Nullabl
         paramDic[@"choose_agency_list"] = array;
     }
     paramDic[@"report_form_info"] = reportAssociate;
+    
+    if (extra && [extra
+                  isKindOfClass:[NSDictionary class]]) {
+        paramDic[@"extra_info"] = [FHUtils getJsonStrFromNoEncode:extra];
+    }
 
     return [[TTNetworkManager shareInstance]requestForBinaryWithResponse:url params:paramDic method:POST needCommonParams:YES requestSerializer:[FHPostDataHTTPRequestSerializer class] responseSerializer:[[TTNetworkManager shareInstance]defaultBinaryResponseSerializerClass] autoResume:YES callback:^(NSError *error, id jsonObj, TTHttpResponse *response) {
         FHDetailResponseModel *model = nil;

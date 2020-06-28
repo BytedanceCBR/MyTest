@@ -703,10 +703,16 @@ static NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
     // 滚动时发出通知
-//    [[NSNotificationCenter defaultCenter] postNotificationName:@"FHHomeSubTableViewDidScroll" object:scrollView];
-    if (self.scrollDidScrollCallBack) {
-        self.scrollDidScrollCallBack(scrollView);
-    }
+   if (!_childScrollEnable) {
+       scrollView.contentOffset = CGPointMake(0, 0);
+   }else{
+       if (scrollView.contentOffset.y <= 0) {
+           _childScrollEnable = NO;
+           if (self.scrollDidScrollCallBack) {
+                self.scrollDidScrollCallBack(scrollView,YES);
+          }
+       }
+   }
 }
 
 - (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate
@@ -999,6 +1005,7 @@ static NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
             tracerDict[@"origin_from"] = [self pageTypeString];
             tracerDict[@"origin_search_id"] = self.originSearchId ? : @"be_null";
             tracerDict[@"log_pb"] = [cellModel logPb] ? : @"be_null";
+            tracerDict[@"biz_trace"] = [cellModel bizTrace] ? : @"be_null";
             [tracerDict removeObjectForKey:@"element_from"];
             
             NSMutableDictionary *dic = [tracerDict mutableCopy];
@@ -1079,7 +1086,7 @@ static NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
                                @"tracer": traceParam
                                }.mutableCopy;
         dict[INSTANT_DATA_KEY] = theModel;
-        
+        dict[@"biz_trace"] = theModel.bizTrace;
         NSURL *jumpUrl = nil;
         
         if (houseType == FHHouseTypeSecondHandHouse) {
@@ -1130,7 +1137,7 @@ static NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
         _tableView = [[FHHomeBaseTableView alloc] initWithFrame:CGRectMake(0, 0,  [UIScreen mainScreen].bounds.size.width,[[FHHomeCellHelper sharedInstance] heightForFHHomeListHouseSectionHeight]) style:UITableViewStylePlain];
         _tableView.dataSource = self;
         _tableView.delegate = self;
-        //        _tableView.bounces = NO;
+//        _tableView.bounces = NO;
         //        _tableView.decelerationRate = 0.1;
         _tableView.showsVerticalScrollIndicator = NO;
         _tableView.estimatedRowHeight = 0;
