@@ -225,7 +225,7 @@
         type = @(self.selectedModel.type);
     }
     
-    [FHMainApi requestQuickQuestionByHouseId:houseId phone:self.phoneNum from:@"app_askpage" type:type completion:^(FHDetailResponseModel * _Nullable model, NSError * _Nullable error) {
+    [FHMainApi requestQuickQuestionByHouseId:houseId phone:self.phoneNum from:@"app_askpage" type:type extraInfo:nil completion:^(FHDetailResponseModel * _Nullable model, NSError * _Nullable error) {
         
         if (!wself) {
             return ;

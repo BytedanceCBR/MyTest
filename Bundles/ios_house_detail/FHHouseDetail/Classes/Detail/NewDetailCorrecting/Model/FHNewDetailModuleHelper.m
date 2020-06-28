@@ -25,6 +25,7 @@
     NSMutableArray *floorPlans = [[NSMutableArray alloc]init];
     NSMutableArray *access = [[NSMutableArray alloc]init];
     NSMutableArray *agentlist = [[NSMutableArray alloc]init];
+    NSMutableArray *agentevaluationlist = [[NSMutableArray alloc]init];
     NSMutableArray *locations = [[NSMutableArray alloc]init];
     NSMutableArray *disclaimers = [[NSMutableArray alloc]init];
     NSMutableArray *related = [[NSMutableArray alloc]init];
@@ -48,6 +49,9 @@
                             break;
             case FHHouseModelTypeNewAgentList:
                 [agentlist addObject:obj];
+                break;
+            case FHHouseModelTypeAgentEvaluationList:
+                [agentevaluationlist addObject:obj];
                 break;
             case FHHouseModelTypeNewLocation:
                 [locations addObject:obj];
@@ -85,6 +89,9 @@
     if (agentlist.count > 0) {
         [moduleItems addObject:@{@"agentlist":agentlist}];
     }
+    if (agentevaluationlist.count > 0) {
+        [moduleItems addObject:@{@"agentevaluationlist":agentevaluationlist}];
+    }
     if (locations.count > 0) {
         [moduleItems addObject:@{@"locations":locations}];
     }
@@ -103,7 +110,7 @@
     [moduleItems enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
         NSArray *currentItemArr = obj[[obj allKeys][0]];
 //        单个cell模块
-        if([[obj allKeys] containsObject:@"sales"] || [[obj allKeys] containsObject:@"agentlist"]|| [[obj allKeys] containsObject:@"floorPlans"] || [[obj allKeys] containsObject:@"socialInfo"] || [[obj allKeys] containsObject:@"access"]) {
+        if([[obj allKeys] containsObject:@"sales"] || [[obj allKeys] containsObject:@"agentlist"]|| [[obj allKeys] containsObject:@"agentevaluationlist"]|| [[obj allKeys] containsObject:@"floorPlans"] || [[obj allKeys] containsObject:@"socialInfo"] || [[obj allKeys] containsObject:@"access"]) {
             [currentItemArr enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
                 FHDetailBaseModel *model = (FHDetailBaseModel *)obj;
                 model.shadowImageType = FHHouseShdowImageTypeRound;

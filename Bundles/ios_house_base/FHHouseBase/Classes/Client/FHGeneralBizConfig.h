@@ -13,6 +13,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 extern NSString *const kFHPhoneNumberCacheKey;
 extern NSString *const kFHPLoginhoneNumberCacheKey;
+extern NSString *const kFHFindHousePhoneNumberCacheKey;
 
 @interface FHGeneralBizConfig : NSObject
 @property (nonatomic, strong) FHConfigDataModel *configCache;
@@ -42,6 +43,8 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
 - (YYCache *)detailFeedbackCache;
 //疫情反馈专题底部tabimage
 - (YYCache *)epidemicSituationCache;
+//帮我找房手机号缓存
+- (YYCache *)findHousePhoneNumberCache;
 
 @end
 

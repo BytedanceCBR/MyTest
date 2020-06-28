@@ -307,6 +307,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *createTime;
 @property (nonatomic, strong , nullable) FHFeedContentRawDataVideoModel *video ;
 @property (nonatomic, strong , nullable) FHFeedContentRawDataCommentBaseUserInfoModel *user;
+@property (nonatomic, strong , nullable) FHFeedContentRawDataRealtorModel *realtor;
 @property (nonatomic, copy , nullable) NSString *videoContent;
 @property (nonatomic, strong , nullable) FHFeedContentRawDataCommentBaseActionModel *action ;
 @property (nonatomic, strong , nullable) NSArray<FHFeedContentImageListModel> *firstFrameImageList;
@@ -342,6 +343,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FHFeedUGCContentModel : JSONModel 
 
+@property (nonatomic, strong , nullable) FHFeedContentCellCtrlsModel *cellCtrls ;
 @property (nonatomic, strong , nullable) NSDictionary *logPb;
 @property (nonatomic, copy , nullable) NSString *contentDecoration;
 @property (nonatomic, copy , nullable) NSString *version;
@@ -424,6 +426,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *cellUiType;
 @property (nonatomic, strong , nullable) FHFeedUGCContentUgcRecommendModel *ugcRecommend ;  
 @property (nonatomic, strong , nullable) FHFeedUGCContentUserModel *user ;
+@property (nonatomic, strong , nullable) FHFeedContentRawDataRealtorModel *realtor;
 @property (nonatomic, strong , nullable) FHFeedUGCContentCommunityModel *community ;
 @property (nonatomic, copy , nullable)   NSString *       ugcStatus;
 @property (nonatomic, assign)   BOOL       isFromDetail;              // 详情页

@@ -348,11 +348,16 @@
 
 + (CGFloat)heightForContentLabel:(SSFeedbackModel *)model listViewWidth:(CGFloat)width
 {
-    CGFloat titleLabelWidth = [self widthForContentLabel:model listViewWidth:width];
-    
-    CGFloat height = [TTLabelTextHelper heightOfText:model.content fontSize:ContentLabelFontSize forWidth:titleLabelWidth];
-    
-    return height;
+    @try{
+       CGFloat titleLabelWidth = [self widthForContentLabel:model listViewWidth:width];
+       
+       CGFloat height = [TTLabelTextHelper heightOfText:model.content fontSize:ContentLabelFontSize forWidth:titleLabelWidth];
+       
+       return height;
+   }
+   @catch(NSException *e){
+       return 0;
+   }
 }
 
 + (CGFloat)heightForCreateTimeLabelByModel:(SSFeedbackModel *)model listViewWidth:(CGFloat)width

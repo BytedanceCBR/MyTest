@@ -528,7 +528,7 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
     NSString *houseId = self.houseId;
 //    NSString *from = @"app_renthouse_subscription";\\
     
-    [FHMainApi requestCallReportByHouseId:houseId phone:phoneNum from:nil cluePage:nil clueEndpoint:nil targetType:nil reportAssociate:subscribeModel.associateInfo.reportFormInfo agencyList:nil completion:^(FHDetailResponseModel * _Nullable model, NSError * _Nullable error) {
+    [FHMainApi requestCallReportByHouseId:houseId phone:phoneNum from:nil cluePage:nil clueEndpoint:nil targetType:nil reportAssociate:subscribeModel.associateInfo.reportFormInfo agencyList:nil extraInfo:nil completion:^(FHDetailResponseModel * _Nullable model, NSError * _Nullable error) {
 
 
 //    [FHMainApi requestSendPhoneNumbserByHouseId:houseId phone:phoneNum from:nil cluePage:nil clueEndpoint:nil targetType:nil agencyList:nil completion:^(FHDetailResponseModel * _Nullable model, NSError * _Nullable error) {

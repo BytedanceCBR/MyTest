@@ -317,6 +317,7 @@
     @"rawData": @"raw_data",
     @"threadId": @"thread_id_str",
     @"attachCardInfo": @"attach_card_info",
+    @"cellCtrls":@"cell_ctrls"
   };
   return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
      return dict[keyName]?:keyName;

@@ -23,6 +23,7 @@ typedef void(^FHHouseDetailPhoneCallFailBlock)(NSError *error);
 @property (nonatomic, weak) UIViewController *belongsVC;
 @property (nonatomic, assign) BOOL rnIsUnAvalable;
 @property (nonatomic, assign)   BOOL isEnterIM;
+@property (nonatomic, copy) NSString *houseInfoBizTrace;
 
 - (instancetype)initWithHouseType:(FHHouseType)houseType houseId:(NSString *)houseId;
 - (void)jump2RealtorDetailWithPhone:(FHDetailContactModel *)contactPhone;

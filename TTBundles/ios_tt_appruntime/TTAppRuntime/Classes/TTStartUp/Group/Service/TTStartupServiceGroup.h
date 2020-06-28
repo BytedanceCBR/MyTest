@@ -13,7 +13,7 @@
 typedef NS_ENUM(NSUInteger, TTServiceStartupType) {
     TTServiceStartupTypeMonitor = 0, //监控
     TTServiceStartupTypeCustomUISetting,//自定义UI配置
-    TTServiceStartupTypeCellRegister,//cell注册
+//    TTServiceStartupTypeCellRegister,//cell注册
     TTServiceStartupTypeMapperRegister,//注册schema
     TTServiceStartupTypeAVPlayer,//自研播放器
     TTServiceStartupTypeTimeInterval,//时间间隔设置

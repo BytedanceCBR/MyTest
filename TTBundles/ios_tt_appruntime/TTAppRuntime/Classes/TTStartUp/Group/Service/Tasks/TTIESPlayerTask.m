@@ -8,6 +8,7 @@
 #import "TTIESPlayerTask.h"
 #import "TTHTSVideoConfiguration.h"
 #import "TTLaunchDefine.h"
+#import "NSDictionary+TTAdditions.h"
 
 DEC_TASK("TTIESPlayerTask",FHTaskTypeService,TASK_PRIORITY_HIGH+14);
 
@@ -21,8 +22,23 @@ DEC_TASK("TTIESPlayerTask",FHTaskTypeService,TASK_PRIORITY_HIGH+14);
 - (void)startWithApplication:(UIApplication *)application options:(NSDictionary *)launchOptions
 {
     [super startWithApplication:application options:launchOptions];
-    
-    [TTHTSVideoConfiguration setup];
+    NSDictionary *s = [self fhSettings];
+    BOOL startupOptimizeClose = ![[self fhSettings] tt_boolValueForKey:@"f_startup_optimize_open"];
+    if(startupOptimizeClose){
+        [TTHTSVideoConfiguration setup];
+    }else{
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+            [TTHTSVideoConfiguration setup];
+        });
+    }
+}
+
+- (NSDictionary *)fhSettings {
+    if ([[NSUserDefaults standardUserDefaults] objectForKey:@"kFHSettingsKey"]){
+        return [[NSUserDefaults standardUserDefaults] dictionaryForKey:@"kFHSettingsKey"];
+    } else {
+        return nil;
+    }
 }
 
 @end

@@ -115,7 +115,6 @@ typedef enum : NSUInteger {
     NSString *houseId = associatePhoneModel.houseId;
     FHHouseType houseType = associatePhoneModel.houseType;
     
-    
     if (![TTReachability isNetworkConnected]) {
         [[ToastManager manager] showToast:@"网络异常，请稍后重试!"];
         [self addDetailCallExceptionLog:FHPhoneCallTypeNetFailed extraDict:nil errorCode:0 message:nil];
@@ -127,13 +126,13 @@ typedef enum : NSUInteger {
     }
     
     if (associatePhoneModel.showLoading) {
-        
         NSMutableDictionary *userInfo = @{}.mutableCopy;
         userInfo[@"house_id"] = houseId;
         userInfo[@"show_loading"] = @(1);
         [[NSNotificationCenter defaultCenter]postNotificationName:@"kFHDetailLoadingNotification" object:nil userInfo:userInfo];
     }
-    [FHMainApi requestVirtualNumberWithAssociateInfo:associateInfo realtorId:associatePhoneModel.realtorId houseId:associatePhoneModel.houseId houseType:associatePhoneModel.houseType searchId:associatePhoneModel.searchId imprId:associatePhoneModel.imprId completion:^(FHDetailVirtualNumResponseModel * _Nullable model, NSError * _Nullable error) {
+    [FHMainApi requestVirtualNumberWithAssociateInfo:associateInfo realtorId:associatePhoneModel.realtorId houseId:associatePhoneModel.houseId houseType:associatePhoneModel.houseType searchId:associatePhoneModel.searchId imprId:associatePhoneModel.imprId extraInfo:associatePhoneModel.extraDict
+                                          completion:^(FHDetailVirtualNumResponseModel * _Nullable model, NSError * _Nullable error) {
         
         NSMutableDictionary *userInfo = @{}.mutableCopy;
         userInfo[@"house_id"] = houseId;
@@ -180,10 +179,12 @@ typedef enum : NSUInteger {
     params[@"origin_from"] = reportParams[@"origin_from"] ? : @"be_null";
     params[@"origin_search_id"] = reportParams[@"origin_search_id"] ? : @"be_null";
     params[@"log_pb"] = reportParams[@"log_pb"] ? : @"be_null";
+    params[@"from_gid"] = reportParams[@"from_gid"] ? : @"be_null";
     params[kFHAssociateInfo] = phoneAssociate.associateInfo;
     params[@"has_auth"] = @(1);
     params[@"has_associate"] = [NSNumber numberWithInteger:isVirtual];
     params[@"is_dial"] = @(1);
+    params[@"biz_trace"] = phoneAssociate.extraDict[@"biz_trace"] ?:@"be_null";
     params[@"realtor_logpb"] = reportParams[@"realtor_logpb"];
     params[@"growth_deepevent"] = @(1);
     params[@"realtor_position"] = reportParams[@"realtor_position"] ? : @"detail_button";
