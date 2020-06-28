@@ -412,7 +412,7 @@
     }
     [FHEnvContext sharedInstance].isRefreshFromAlertCitySwitch = NO;
     [FHEnvContext sharedInstance].isRefreshFromCitySwitch = NO;
-    self.tableViewV.scrollEnabled = YES;
+//    self.tableViewV.scrollEnabled = YES;
     [self checkLoadingAndEmpty];
 }
 
@@ -712,7 +712,7 @@
     self.isResetingOffsetZero = NO;
     if (scrollView == self.homeViewController.scrollView) {
         self.isSelectIndex = NO;
-        self.tableViewV.scrollEnabled = NO;
+//        self.tableViewV.scrollEnabled = NO;
           self.previousHouseType = self.houseType;
     
         [[NSNotificationCenter defaultCenter] postNotificationName:@"FHHomeMainDidScrollBegin" object:nil];
@@ -837,7 +837,7 @@
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
     if (scrollView == self.homeViewController.scrollView) {
         self.isSelectIndex = YES;
-        self.tableViewV.scrollEnabled = YES;
+//        self.tableViewV.scrollEnabled = YES;
         
         if (self.previousHouseType != self.houseType) {
             for (FHHomeItemViewController *vc in self.itemsVCArray) {
