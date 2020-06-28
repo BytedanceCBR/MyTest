@@ -497,6 +497,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *subscriptionToast;
 @property (nonatomic, copy , nullable) NSString *reportToast;
 @property (nonatomic, copy , nullable) NSString *reportDoneToast;
+@property (nonatomic, copy , nullable) NSString *bizTrace;
 @property (nonatomic, strong, nullable) FHClueAssociateInfoModel *middleSubscriptionAssociateInfo;
 @property (nonatomic, strong, nullable) FHClueAssociateInfoModel *houseImageAssociateInfo;
 @property (nonatomic, strong, nullable) FHClueAssociateInfoModel *recommendRealtorsAssociateInfo;
