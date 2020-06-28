@@ -39,6 +39,7 @@
 #import <BDTrackerProtocol/BDTrackerProtocol.h>
 #import <TTBaseLib/UIViewAdditions.h>
 #import <TTNetworkManager/TTNetworkManager.h>
+#import "TTADCellHelper.h"
 
 @interface MyCollectionView : UICollectionView
 
@@ -113,6 +114,8 @@ TTFeedCollectionCellDelegate>
 //        [[TTFeedMixedListService sharedInstance] setDefaultConsumer:[[TTFeedDataDefaultConsumer alloc] init]];
         //注册混排列表cell
 //        [ExploreCellHelper registerCellBridge];
+        [ExploreCellHelper registerCellBridge];
+        [TTADCellHelper registerCellViewAndCellDataHelper];
     }
     return self;
 }

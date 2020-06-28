@@ -48,6 +48,9 @@ typedef NS_ENUM(NSInteger, FHUGCFeedListCellSubType)
     FHUGCFeedListCellSubTypeUGCRecommendCircle,                    //推荐圈子
     FHUGCFeedListCellSubTypeUGCEncyclopedias,                      //百科
     FHUGCFeedListCellSubTypeUGCLynx,                               //Lynx卡片
+    //1.0.1j详情页经纪人评测
+    FHUGCFeedListCellSubTypeUGCBrokerImage,                               //详情页经纪人评测t图片
+    FHUGCFeedListCellSubTypeUGCBrokerVideo,                               //详情页经纪人评测视频
 };
 
 typedef NS_ENUM(NSInteger, FHUGCFeedListCellType)

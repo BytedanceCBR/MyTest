@@ -93,8 +93,9 @@
                            @"houseType": @"house_type",
                            @"oldName":@"old_name",
                            @"recallType":@"recall_type",
-                           @"countDisplay":@"count_display"
-
+                           @"countDisplay":@"count_display",
+                           @"cardType": @"card_type",
+                           @"buttonText": @"button_text",
                            };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
         return dict[keyName]?:keyName;
@@ -232,6 +233,37 @@
 @end
 
 @implementation FHGuessYouWantResponseDataModel
+
++ (JSONKeyMapper*)keyMapper
+{
+    NSDictionary *dict = @{
+        @"extraInfo": @"extra_info",
+    };
+    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+        return dict[keyName]?:keyName;
+    }];
+}
+
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+
+@end
+
+@implementation FHGuessYouWantExtraInfoModel
+
++ (JSONKeyMapper*)keyMapper
+{
+    NSDictionary *dict = @{
+        @"backgroundColor": @"background_color",
+        @"textColor": @"text_color",
+        @"openUrl": @"open_url",
+    };
+    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+        return dict[keyName]?:keyName;
+    }];
+}
 
 + (BOOL)propertyIsOptional:(NSString *)propertyName
 {

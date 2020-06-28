@@ -52,6 +52,7 @@
 #import "FHDetailNeighborhoodAssessCell.h"
 #import "FHDetailAccessCellModel.h"
 #import "FHDetailPictureViewController.h"
+#import "FHhouseDetailRGCListCell.h"
 
 @interface FHHouseNewDetailViewModel ()
 
@@ -105,6 +106,9 @@
     [self.tableView registerClass:[FHDetailNewRelatedCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailNewRelatedCellModel class])];
     //楼盘攻略
     [self.tableView registerClass:[FHDetailNeighborhoodAssessCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailAccessCellModel class])];
+    
+    //顾问点评
+    [self.tableView registerClass:[FHhouseDetailRGCListCell class] forCellReuseIdentifier:NSStringFromClass([FHhouseDetailRGCListCellModel class])];
 }
 
 // cell identifier
@@ -668,6 +672,27 @@
         agentListModel.houseType = self.houseType;
         
         [self.items addObject:agentListModel];
+    }
+    
+    //用户房源评价
+    if (model.data.realtorContent.content.data.count > 0) {
+        FHhouseDetailRGCListCellModel *detailRGCListCellModel = [[FHhouseDetailRGCListCellModel alloc] init];
+        detailRGCListCellModel.detailTracerDic = self.detailTracerDic;
+        NSString *searchId = self.listLogPB[@"search_id"];
+        NSString *imprId = self.listLogPB[@"impr_id"];
+        NSDictionary *extraDic = @{
+            @"searchId":searchId,
+            @"imprId":imprId,
+            @"houseId":self.houseId,
+            @"houseType":@(self.houseType),
+            @"channelId":@"f_hosue_wtt"
+        };
+        detailRGCListCellModel.extraDic = extraDic;
+        detailRGCListCellModel.title = model.data.realtorContent.title;
+        detailRGCListCellModel.houseModelType = FHHouseModelTypeAgentEvaluationList;
+        detailRGCListCellModel.count = model.data.realtorContent.content.count;
+        detailRGCListCellModel.contentModel = model.data.realtorContent.content;
+        [self.items addObject:detailRGCListCellModel];
     }
     // UGC社区入口
     if (model.data.socialInfo && model.data.socialInfo.socialGroupInfo && model.data.socialInfo.socialGroupInfo.socialGroupId.length > 0) {

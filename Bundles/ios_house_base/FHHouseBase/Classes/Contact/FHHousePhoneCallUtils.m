@@ -179,6 +179,7 @@ typedef enum : NSUInteger {
     params[@"origin_from"] = reportParams[@"origin_from"] ? : @"be_null";
     params[@"origin_search_id"] = reportParams[@"origin_search_id"] ? : @"be_null";
     params[@"log_pb"] = reportParams[@"log_pb"] ? : @"be_null";
+    params[@"from_gid"] = reportParams[@"from_gid"] ? : @"be_null";
     params[kFHAssociateInfo] = phoneAssociate.associateInfo;
     params[@"has_auth"] = @(1);
     params[@"has_associate"] = [NSNumber numberWithInteger:isVirtual];

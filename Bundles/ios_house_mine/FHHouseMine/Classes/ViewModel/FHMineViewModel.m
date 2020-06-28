@@ -283,6 +283,12 @@
              tracer[@"enter_type"] = @"click";
              //通勤找房
              [[FHCommuteManager sharedInstance] tryEnterCommutePage:model.openUrl logParam:tracer];
+         }else if([model.openUrl containsString:@"house_encyclopedia"]){
+            NSMutableDictionary *tracer = [NSMutableDictionary dictionary];
+            [tracer setValue:@"minetab_tools" forKey:@"origin_from"];
+             TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:tracer];
+             NSURL* url = [NSURL URLWithString:model.openUrl];
+            [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
          }else
          {
              //埋点

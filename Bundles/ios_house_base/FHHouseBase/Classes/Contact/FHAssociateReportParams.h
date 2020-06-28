@@ -51,6 +51,9 @@ NS_ASSUME_NONNULL_BEGIN
 // 选填
 @property(nonatomic, copy) NSString *sourceFrom;
 
+// 帖子/视频id
+@property(nonatomic, copy) NSString *fromGid;
+
 @end
 
 NS_ASSUME_NONNULL_END

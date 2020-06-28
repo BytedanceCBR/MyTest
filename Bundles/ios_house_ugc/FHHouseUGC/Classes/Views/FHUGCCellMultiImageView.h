@@ -21,6 +21,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic, assign) BOOL fixedSingleImage;
 @property(nonatomic, assign) CGFloat viewHeight;
 
+@property (nonatomic, assign) CGFloat useItemPadding;
+
 @end
 
 NS_ASSUME_NONNULL_END
