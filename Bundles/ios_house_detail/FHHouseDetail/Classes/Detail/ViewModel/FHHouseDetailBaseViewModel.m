@@ -532,8 +532,10 @@
         params[@"biz_trace"] = self.houseInfoOriginBizTrace;
     }
     params[kFHClueExtraInfo] = self.extraInfo;
+    if (self.houseId.length) {
+        params[@"group_id"] = self.houseId;
+    }
     [FHUserTracker writeEvent:@"go_detail" params:params];
-    
 }
 
 - (NSDictionary *)subPageParams

@@ -60,6 +60,9 @@ extern NSString * const kFHAllConfigLoadErrorNotice;
 
 + (NSString *)amapAPIKey;
 
+//尝试请求当前位置
+-(void)tryRefreshLocation;
+
 @end
 
 

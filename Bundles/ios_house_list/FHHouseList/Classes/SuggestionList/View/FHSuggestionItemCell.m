@@ -10,8 +10,8 @@
 #import "UIFont+House.h"
 #import "UIColor+Theme.h"
 #import "TTDeviceHelper.h"
+#import "BDWebImage.h"
 #import "FHExtendHotAreaButton.h"
-#import "FHSuggestionListModel.h"
 
 @interface FHSuggestionItemCell ()
 
@@ -244,7 +244,135 @@
 
 @end
 
+@interface FHFindHouseHelpEntryView ()
+
+@property (nonatomic, strong) UIImageView *imageView;
+@property (nonatomic, strong) UILabel *titleLabel;
+
+@property (nonatomic, copy) NSString *openUrl;
+
+@end
+
+@implementation FHFindHouseHelpEntryView
+
+//圆角外观
++ (Class)layerClass {
+    return [CAShapeLayer class];
+}
+
+- (instancetype)init {
+    self = [super init];
+    if (self) {
+        ((CAShapeLayer *)self.layer).fillColor = [UIColor themeWhite].CGColor;
+        
+        [self initViews];
+    }
+    return self;
+}
+
+- (void)layoutSubviews{
+    [super layoutSubviews];
+    UIBezierPath *maskPath = [UIBezierPath bezierPathWithRoundedRect:self.bounds
+                                                   byRoundingCorners:UIRectCornerTopLeft | UIRectCornerBottomLeft
+                                                         cornerRadii:CGSizeMake(21, 21)];
+    ((CAShapeLayer *)self.layer).path = maskPath.CGPath;
+    
+}
+
+- (void)setBackgroundColor:(UIColor *)backgroundColor {
+    ((CAShapeLayer *)self.layer).fillColor = backgroundColor.CGColor;
+}
+
+- (instancetype)initWithFrame:(CGRect)frame {
+    self = [super initWithFrame:frame];
+    if (self) {
+        [self initViews];
+    }
+    
+    return self;
+}
+
+- (void)initViews {
+    self.backgroundColor = [UIColor themeWhite];
+    
+    _imageView = [[UIImageView alloc] init];
+    [self addSubview:_imageView];
+    [_imageView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.size.mas_equalTo(CGSizeMake(20, 21));
+        make.centerY.equalTo(self);
+        make.left.mas_equalTo(22);
+    }];
+    
+    _titleLabel = [[UILabel alloc] init];
+    _titleLabel.font = [UIFont fontWithName:@"PingFangSC-Medium" size:14];
+    _titleLabel.textColor = [UIColor colorWithHexStr:@"ff8f00"];
+    _titleLabel.textAlignment = NSTextAlignmentLeft;
+    [self addSubview:_titleLabel];
+    [_titleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.centerY.equalTo(self);
+        make.height.mas_equalTo(20);
+        make.width.mas_equalTo(60);
+        make.left.equalTo(self.imageView.mas_right).offset(12);
+        make.right.lessThanOrEqualTo(self.mas_right).offset(-5);
+    }];
+    
+    UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapAction:)];
+    [self addGestureRecognizer:tap];
+}
+
+- (void)refreshData:(FHGuessYouWantExtraInfoModel *)data {
+    if (!data || ![data isKindOfClass:[FHGuessYouWantExtraInfoModel class]]) {
+        return;
+    }
+    
+    _openUrl = data.openUrl ?: @"";
+    if (data.backgroundColor) {
+        self.backgroundColor = [UIColor colorWithHexStr:data.backgroundColor];
+    }
+    
+    FHImageModel *imageModel = data.icon;
+    if (imageModel) {
+        NSString *imageUrl = imageModel.url;
+        [_imageView bd_setImageWithURL:[NSURL URLWithString:imageUrl]];
+        
+        CGFloat width = imageModel.width.floatValue;
+        CGFloat height = imageModel.height.floatValue;
+        width = width > 0.0 ? width : 20;
+        height = height > 0.0 ? height : 21;
+        [_imageView mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.size.mas_equalTo(CGSizeMake(width, height));
+            make.centerY.equalTo(self);
+            make.left.mas_equalTo(22);
+        }];
+    }
+    
+    _titleLabel.text = data.text ?: @"";
+    if (data.textColor) {
+        _titleLabel.textColor = [UIColor colorWithHexStr:data.textColor];
+    }
+    [_titleLabel mas_updateConstraints:^(MASConstraintMaker *make) {
+        make.centerY.equalTo(self);
+        make.left.equalTo(self.imageView.mas_right).offset(12);
+        make.right.lessThanOrEqualTo(self.mas_right).offset(-5);
+    }];
+}
+
+- (void)tapAction:(UITapGestureRecognizer *)tap {
+    if (self.jumpButtonAction) {
+        self.jumpButtonAction(self.openUrl);
+    }
+}
+
+@end
+
 // --
+
+@interface FHSuggestHeaderViewCell ()
+
+@property (nonatomic, strong) FHFindHouseHelpEntryView *entryView;
+@property (nonatomic, strong) UIView *shadowView;
+
+@end
 
 @implementation FHSuggestHeaderViewCell
 
@@ -264,11 +392,57 @@
     _label.textColor = [UIColor themeGray1];
     [self.contentView addSubview:_label];
     [_label mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(10);
+//        make.top.mas_equalTo(10);
+        make.centerY.equalTo(self);
         make.left.mas_equalTo(16);
         make.height.mas_equalTo(20);
-        make.bottom.mas_equalTo(self.contentView);
+//        make.bottom.mas_equalTo(self.contentView);
     }];
+    
+    _entryView = [[FHFindHouseHelpEntryView alloc] init];
+    _entryView.hidden = YES;  //默认隐藏
+    __weak typeof(self) weakSelf = self;
+    _entryView.jumpButtonAction = ^(NSString * _Nonnull openUrl) {
+        __strong typeof(weakSelf) strongSelf = weakSelf;
+        
+        if (strongSelf.entryTapAction) {
+            strongSelf.entryTapAction(openUrl);
+        }
+    };
+    [self.contentView addSubview:_entryView];
+    [_entryView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.centerY.equalTo(self);
+        make.size.mas_equalTo(CGSizeMake(134, 42));
+        make.right.mas_equalTo(80);
+    }];
+
+    //添加阴影
+    _entryView.layer.shadowColor = [UIColor themeBlack].CGColor;
+    _entryView.layer.shadowRadius = 3.5;
+    _entryView.layer.shadowOffset = CGSizeZero;
+    _entryView.layer.shadowOpacity = 0.15;
+    
+//    [self layoutIfNeeded];
+}
+
+- (void)refreshData:(FHGuessYouWantExtraInfoModel *)data {
+    if (!data) {
+        self.entryView.hidden = YES;
+        
+        return;
+    }
+    
+    self.entryView.hidden = NO;
+    [self.entryView refreshData:data];
+    
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [UIView animateWithDuration:0.7 animations:^{
+            [_entryView mas_updateConstraints:^(MASConstraintMaker *make) {
+                make.right.offset(0);
+            }];
+            [self layoutIfNeeded];
+        }];
+    });
 }
 
 @end

@@ -739,11 +739,16 @@ extern NSString *const BOE_OPEN_KEY ;
     
     {
         // im相关调试选项
-        STTableViewCellItem *toggleIMConnectionItem = [[STTableViewCellItem alloc] initWithTitle:@"IM强制HTTPS(短连接)，重启生效" target:self action:nil];
+        STTableViewCellItem *toggleIMConnectionItem = [[STTableViewCellItem alloc] initWithTitle:@"IM走短连接(重启生效)" target:self action:nil];
         toggleIMConnectionItem.switchStyle = YES;
         toggleIMConnectionItem.checked = [[NSUserDefaults standardUserDefaults] boolForKey:@"_IM_ShortConnection_Enable_"];
         toggleIMConnectionItem.switchAction = @selector(toggleIMConnection);
         toggleIMConnectionItem.detail = [NSString stringWithFormat:@"https抓包 /message/send  请求，验证是否生效"];
+        
+        STTableViewCellItem *toggleIMReadReceiptRequestItem = [[STTableViewCellItem alloc] initWithTitle:@"IM已读回执请求轮询关闭" target:self action:nil];
+        toggleIMReadReceiptRequestItem.switchStyle = YES;
+        toggleIMReadReceiptRequestItem.checked = [self isIMReadReceiptRequestClosed];
+        toggleIMReadReceiptRequestItem.switchAction = @selector(toggleIMReadReceiptRequest);
         
         STTableViewCellItem *toggleIMFakeTokenItem = [[STTableViewCellItem alloc] initWithTitle:@"模拟IM服务端返回失效Token" target:self action:nil];
         toggleIMFakeTokenItem.switchStyle = YES;
@@ -752,7 +757,7 @@ extern NSString *const BOE_OPEN_KEY ;
         
         STTableViewCellItem *invalidIMToken = [[STTableViewCellItem alloc] initWithTitle:@"IM手动触发token失效更新" target:self action:@selector(triggerIMTokenInvalide)];
         
-        STTableViewSectionItem *section = [[STTableViewSectionItem alloc] initWithSectionTitle:@"IM相关调试选项" items:@[toggleIMConnectionItem, toggleIMFakeTokenItem, invalidIMToken]];
+        STTableViewSectionItem *section = [[STTableViewSectionItem alloc] initWithSectionTitle:@"IM相关调试选项" items:@[toggleIMConnectionItem, toggleIMReadReceiptRequestItem, toggleIMFakeTokenItem, invalidIMToken]];
         
         [dataSource addObject:section];
     }
@@ -778,6 +783,19 @@ extern NSString *const BOE_OPEN_KEY ;
 }
 - (void)triggerIMTokenInvalide {
     [[IMManager shareInstance] invalidTokenForDebug];
+}
+
+- (BOOL)isIMReadReceiptRequestClosed {
+    return [[NSUserDefaults standardUserDefaults] boolForKey:@"_IM_Read_Receipt_Request_Close_"];
+}
+
+- (void)toggleIMReadReceiptRequest {
+    
+    BOOL isCloseReadReceiptReq = [[NSUserDefaults standardUserDefaults] boolForKey:@"_IM_Read_Receipt_Request_Close_"];
+    [[NSUserDefaults standardUserDefaults] setBool:!isCloseReadReceiptReq forKey:@"_IM_Read_Receipt_Request_Close_"];
+    [[NSUserDefaults standardUserDefaults] synchronize];
+    
+    [self.tableView reloadData];
 }
 
 -(void)makeACrash {

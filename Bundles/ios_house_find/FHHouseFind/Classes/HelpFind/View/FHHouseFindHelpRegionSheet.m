@@ -81,7 +81,7 @@
 @property(nonatomic, strong) UIView *topView;
 @property(nonatomic, strong) UIButton *cancelBtn;
 @property(nonatomic, strong) UIButton *finishBtn;
-@property(nonatomic, strong) UITableView *tableView;
+//@property(nonatomic, strong) UITableView *tableView;
 @property(nonatomic, copy, nullable) FHHouseFindRegionCompleteBlock completeBlock;
 @property(nonatomic, copy, nullable) FHHouseFindRegionCancelBlock cancelBlock;
 
@@ -105,10 +105,11 @@
     [self.contentView addSubview:self.topView];
     [self.contentView addSubview:self.cancelBtn];
     [self.contentView addSubview:self.finishBtn];
-    [self.contentView addSubview:self.tableView];
-    [self.tableView registerClass:[FHHouseFindHelpRegionItemCell class] forCellReuseIdentifier:REGION_CELL_ID];
-    self.tableView.dataSource = self;
-    self.tableView.delegate = self;
+    [self.contentView addSubview:self.areaPanel];
+//    [self.contentView addSubview:self.tableView];
+//    [self.tableView registerClass:[FHHouseFindHelpRegionItemCell class] forCellReuseIdentifier:REGION_CELL_ID];
+//    self.tableView.dataSource = self;
+//    self.tableView.delegate = self;
     
     [self.cancelBtn addTarget:self action:@selector(cancelBtnDidClick) forControlEvents:UIControlEventTouchUpInside];
     [self.finishBtn addTarget:self action:@selector(finishBtnDidClick:) forControlEvents:UIControlEventTouchUpInside];
@@ -136,7 +137,12 @@
     if (@available(iOS 11.0, *)) {
         bottomHeight = [UIApplication sharedApplication].delegate.window.tt_safeAreaInsets.bottom;
     }
-    [self.tableView mas_makeConstraints:^(MASConstraintMaker *make) {
+//    [self.tableView mas_makeConstraints:^(MASConstraintMaker *make) {
+//        make.top.mas_equalTo(self.cancelBtn.mas_bottom);
+//        make.left.right.mas_equalTo(0);
+//        make.height.mas_equalTo(REGION_CONTENT_HEIGHT - 42);
+//    }];
+    [self.areaPanel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(self.cancelBtn.mas_bottom);
         make.left.right.mas_equalTo(0);
         make.height.mas_equalTo(REGION_CONTENT_HEIGHT - 42);
@@ -145,8 +151,20 @@
 
 - (void)setTableViewDelegate:(id)tableViewDelegate
 {
-    _tableView.delegate = tableViewDelegate;
-    _tableView.dataSource = tableViewDelegate;
+//    _tableView.delegate = tableViewDelegate;
+//    _tableView.dataSource = tableViewDelegate;
+}
+
+- (void)setNodes:(NSArray<FHFilterNodeModel*>*)nodes {
+    [self.areaPanel setNodes:nodes];
+}
+
+- (void)setSelectedNodes:(NSArray<FHFilterNodeModel *> *)nodes selectedIndexes:(NSArray<NSNumber *> *)selectedIndexes {
+    [self.areaPanel setSelectedNodes:nodes selectedIndexes:selectedIndexes];
+}
+
+- (NSArray<FHFilterNodeModel *> *)selectedNodes {
+    return [self.areaPanel selectedNodes];
 }
 
 - (void)showWithCompleteBlock:(FHHouseFindRegionCompleteBlock)completeBlock cancelBlock:(FHHouseFindRegionCancelBlock)cancelBlock
@@ -154,7 +172,7 @@
     _completeBlock = completeBlock;
     _cancelBlock = cancelBlock;
     
-    [self.tableView reloadData];
+//    [self.tableView reloadData];
     
     _bgView = [[UIView alloc]initWithFrame:[UIScreen mainScreen].bounds];
     _bgView.backgroundColor = [UIColor blackColor];
@@ -237,29 +255,38 @@
 {
     if (!_finishBtn) {
         _finishBtn = [[UIButton alloc]init];
-        [_finishBtn setTitle:@"完成" forState:UIControlStateNormal];
-        [_finishBtn setTitle:@"完成" forState:UIControlStateHighlighted];
+        [_finishBtn setTitle:@"确认" forState:UIControlStateNormal];
+        [_finishBtn setTitle:@"确认" forState:UIControlStateHighlighted];
         [_finishBtn setTitleColor:[UIColor themeOrange1] forState:UIControlStateNormal];
         [_finishBtn setTitleColor:[UIColor themeOrange1] forState:UIControlStateHighlighted];
     }
     return _finishBtn;
 }
 
-- (UITableView *)tableView
-{
-    if (!_tableView) {
-        _tableView = [[UITableView alloc]init];
-        if (@available(iOS 11.0, *)) {
-            _tableView.estimatedRowHeight = 0;
-            _tableView.estimatedSectionHeaderHeight = 0;
-            _tableView.estimatedSectionFooterHeight = 0;
-            _tableView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
-            _tableView.insetsContentViewsToSafeArea = NO;
-        }
-        _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
-        _tableView.backgroundColor = [UIColor whiteColor];
+//- (UITableView *)tableView
+//{
+//    if (!_tableView) {
+//        _tableView = [[UITableView alloc]init];
+//        if (@available(iOS 11.0, *)) {
+//            _tableView.estimatedRowHeight = 0;
+//            _tableView.estimatedSectionHeaderHeight = 0;
+//            _tableView.estimatedSectionFooterHeight = 0;
+//            _tableView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
+//            _tableView.insetsContentViewsToSafeArea = NO;
+//        }
+//        _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+//        _tableView.backgroundColor = [UIColor whiteColor];
+//    }
+//    return _tableView;
+//}
+
+- (FHFindHouseAreaSelectionPanel *)areaPanel {
+    if (!_areaPanel) {
+        _areaPanel = [[FHFindHouseAreaSelectionPanel alloc] init];
+//        _areaPanel.userReactionListener = self;
     }
-    return _tableView;
+    
+    return _areaPanel;
 }
 
 @end

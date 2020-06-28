@@ -131,7 +131,12 @@
 {
     NSString *openUrl = [NSString stringWithFormat:@"sslocal://house_find"];
     NSMutableDictionary *infoDict = @{}.mutableCopy;
-    infoDict[@"tracer"] = self.tracerDict;
+    //帮我找房区分来源
+    NSDictionary *tracerDict = self.tracerDict;
+    if (!tracerDict || !tracerDict.count) {
+        tracerDict = self.paramObj.userInfo.allInfo[@"tracer"];
+    }
+    infoDict[@"tracer"] = tracerDict ?: @{};
     if (dict.count > 0) {
         [infoDict addEntriesFromDictionary:dict];
     }

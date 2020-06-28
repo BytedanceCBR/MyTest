@@ -8,6 +8,7 @@
 #import <Foundation/Foundation.h>
 #import "JSONModel.h"
 #import "FHBaseModelProtocol.h"
+#import "FHImageModel.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -30,6 +31,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, copy , nullable) NSString *status;
 @property (nonatomic, copy , nullable) NSString *recallId;
+
 @property (nonatomic, copy , nullable) NSString *areaId;
 @property (nonatomic, copy , nullable) NSString *neighborhoodName;
 @property (nonatomic, copy , nullable) NSString *wordid;
@@ -77,6 +79,11 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *countDisplay;
 @property (nonatomic, copy , nullable) NSString *tips;
 @property (nonatomic, copy , nullable) NSString *id;
+
+//XXX: 为了支持1.0.1版本帮我找房卡片临时加入几个字段，之后需要支持混排
+@property (nonatomic, assign) NSInteger cardType;
+@property (nonatomic, copy , nullable) NSString *title;
+@property (nonatomic, copy , nullable) NSString *buttonText;
 
 @end
 
@@ -163,8 +170,19 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *id;
 @end
 
+@interface FHGuessYouWantExtraInfoModel : JSONModel
+
+@property (nonatomic, strong, nullable) FHImageModel *icon;
+@property (nonatomic, copy, nullable) NSString *text;
+@property (nonatomic, copy, nullable) NSString *backgroundColor;
+@property (nonatomic, copy, nullable) NSString *textColor;
+@property (nonatomic, copy, nullable) NSString *openUrl;
+
+@end
+
 @interface FHGuessYouWantResponseDataModel : JSONModel
 
+@property (nonatomic, strong , nullable) FHGuessYouWantExtraInfoModel *extraInfo;
 @property (nonatomic, strong , nullable) NSArray<FHGuessYouWantResponseDataDataModel> *data;
 @end
 

@@ -217,6 +217,7 @@ static NSTimeInterval lastTime;
 #if DEBUG
     [TTLaunchManager dumpLaunchDuration];
 #endif
+    
     return result;
 }
     
@@ -297,7 +298,6 @@ static NSTimeInterval lastTime;
     [[TTStartupTasksTracker sharedTracker] cacheInitializeDevLog:@"AppLaunchFinish" params:@{@"wait_time" : @(waitTime)}];
     
     [[NSUserDefaults standardUserDefaults] setValue:[NSNumber numberWithLongLong:[NSObject currentUnixTime]] forKey:@"kTrackTime_didFinishLaunch_end"];
-
     
     return YES;
 }
