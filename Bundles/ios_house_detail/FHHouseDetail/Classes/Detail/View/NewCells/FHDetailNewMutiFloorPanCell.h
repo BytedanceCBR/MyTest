@@ -6,7 +6,6 @@
 //
 
 #import "FHDetailBaseCell.h"
-#import "FHDetailBaseCell.h"
 #import "FHDetailBaseModel.h"
 #import "FHDetailNewModel.h"
 #import "FHDetailTagBackgroundView.h"
