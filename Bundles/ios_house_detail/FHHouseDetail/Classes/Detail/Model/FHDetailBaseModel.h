@@ -139,6 +139,7 @@ typedef NS_ENUM(NSUInteger, FHRealtorCellShowStyle) {
 @property (nonatomic, assign) BOOL isFormReport; //是否包含填表单
 @property (nonatomic, copy , nullable) NSString *searchId;
 @property (nonatomic, copy , nullable) NSString *imprId;
+@property (nonatomic, copy, nullable) NSString *bizTrace;
 
 @property (nonatomic, copy , nullable) NSString *noticeDesc;
 @property (nonatomic, strong , nullable) FHDetailContactImageTagModel *imageTag;

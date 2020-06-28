@@ -33,6 +33,7 @@ NS_ASSUME_NONNULL_BEGIN
 +(TTHttpTask*)requestOldDetail:(NSString *)houseId
      ridcode:(NSString *)ridcode
    realtorId:(NSString *)realtorId
+     bizTrace:(NSString *)bizTrace
      logPB:(NSDictionary *)logPB
  extraInfo:(NSDictionary *)extraInfo
 completion:(void(^)(FHDetailOldModel * _Nullable model , NSError * _Nullable error))completion;

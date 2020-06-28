@@ -1201,6 +1201,7 @@
     dict[@"group_id"] = cellModel.groupId;
     dict[@"rank"] = @(rank);
     dict[@"category_name"] = self.categoryId;
+    dict[@"group_id"] = cellModel.groupId;
     
     if(section < self.dataArray.count && section < self.tabContentModel.count){
         FHFeedContentModel *model = self.tabContentModel[section];

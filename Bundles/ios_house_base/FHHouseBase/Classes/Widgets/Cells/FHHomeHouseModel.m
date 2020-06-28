@@ -441,6 +441,7 @@
         @"dislikeInfo": @"dislike_info",
         @"titleTag": @"title_tag",
         @"reasonTags": @"reason_tags",
+        @"bizTrace": @"biz_trace",
         @"addrData": @"addr_data",
     };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {

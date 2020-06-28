@@ -351,7 +351,7 @@
 
 -(CGFloat)contentSmallImageMaxWidth
 {
-    return  SCREEN_WIDTH - (_isHomePage ? 20 : 5) - YOGA_RIGHT_PRICE_WIDITH - 90; //根据UI图 直接计算出来
+    return  SCREEN_WIDTH - (_isHomePage ? 20 : -40) - YOGA_RIGHT_PRICE_WIDITH - 90; //根据UI图 直接计算出来
 }
 
 -(CGFloat)contentSmallImageTagMaxWidth
@@ -585,7 +585,7 @@
         layout.left = YGPointValue(0);
         layout.top = YGPointValue(0);
         layout.width = YGPointValue(48);
-        layout.height = YGPointValue(16);
+        layout.height = YGPointValue(18);
     }];
     
     [self.houseMainImageBackView configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
@@ -681,7 +681,7 @@
         layout.maxWidth = YGPointValue([self contentSmallImageTagMaxWidth]);
         layout.flexGrow = 0;
     }];
-    CGFloat maxWidth = [self contentSmallImageMaxWidth] - 45;
+    CGFloat maxWidth = [self contentSmallImageMaxWidth] - 70;
     if (_isHomePage) {
         maxWidth = [self contentSmallImageMaxWidth] - 60;
     }
@@ -906,7 +906,7 @@
         layout.flexGrow = 0;
     }];
     
-    CGFloat maxWidth = [self contentSmallImageMaxWidth] - 45;
+    CGFloat maxWidth = [self contentSmallImageMaxWidth] - 70;
     if (_isHomePage) {
         maxWidth = [self contentSmallImageMaxWidth] - 60;
     }
@@ -1387,7 +1387,7 @@
                 _tagLabel.lineBreakMode = NSLineBreakByTruncatingTail;
             }
         }else {
-            CGFloat maxWidth = [self contentSmallImageMaxWidth] - 45;
+            CGFloat maxWidth = [self contentSmallImageMaxWidth] - 70;
             attributeString = [FHSingleImageInfoCellModel newTagsStringWithTagList:commonModel.tags maxWidth:maxWidth];
             _tagLabel.lineBreakMode = NSLineBreakByWordWrapping;
         }
@@ -1968,7 +1968,7 @@
             layout.width = YGPointValue(width > 0.0 ? width : 48);
         }];
         [self.topLeftTagImageView configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
-            layout.height = YGPointValue(height > 0.0 ? height : 15);
+            layout.height = YGPointValue(height > 0.0 ? height : 18);
         }];
         
         self.topLeftTagImageView.hidden = NO;

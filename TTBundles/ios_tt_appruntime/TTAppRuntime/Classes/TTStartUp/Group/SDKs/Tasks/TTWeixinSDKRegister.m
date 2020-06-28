@@ -25,11 +25,13 @@ DEC_TASK("TTWeixinSDKRegister",FHTaskTypeSDKs,TASK_PRIORITY_HIGH);
 - (void)startWithApplication:(UIApplication *)application options:(NSDictionary *)launchOptions {
     [super startWithApplication:application options:launchOptions];
     //注册微信
-    if ([SharedAppDelegate conformsToProtocol:@protocol(TTWeChatSharePayDelegate)]) {
-        [TTWeChatShare sharedWeChatShare].payDelegate = (id<TTWeChatSharePayDelegate>)SharedAppDelegate;
-    }
+    //这里发现没有用到，先注释掉
+//    if ([SharedAppDelegate conformsToProtocol:@protocol(TTWeChatSharePayDelegate)]) {
+//        [TTWeChatShare sharedWeChatShare].payDelegate = (id<TTWeChatSharePayDelegate>)SharedAppDelegate;
+//    }
+    
+    //注册部分耗时0.15ms，基本可以忽略
     [TTShareApiConfig shareRegisterWXApp:[SharedAppDelegate weixinAppID]];
-//    [SSPayManager registerWxAppID:[SharedAppDelegate weixinAppID]];
 }
 
 @end

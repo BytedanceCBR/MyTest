@@ -66,6 +66,7 @@
 +(TTHttpTask*)requestOldDetail:(NSString *)houseId
                          ridcode:(NSString *)ridcode
                        realtorId:(NSString *)realtorId
+                    bizTrace:(NSString *)bizTrace
                          logPB:(NSDictionary *)logPB
                      extraInfo:(NSDictionary *)extraInfo
                     completion:(void(^)(FHDetailOldModel * _Nullable model , NSError * _Nullable error))completion
@@ -84,6 +85,9 @@
     }
     if (realtorId.length > 0) {
         paramDic[@"realtor_id"] = realtorId;
+    }
+    if ([bizTrace isKindOfClass:[NSString class]] && bizTrace.length > 0) {
+        paramDic[@"biz_trace"] = bizTrace;
     }
     if (extraInfo) {
         NSData *data = [NSJSONSerialization dataWithJSONObject:extraInfo options:0 error:nil];
