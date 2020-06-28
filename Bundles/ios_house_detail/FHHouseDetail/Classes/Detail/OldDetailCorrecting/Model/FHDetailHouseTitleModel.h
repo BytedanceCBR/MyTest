@@ -20,6 +20,9 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign) FHHouseType housetype;
 @property (nonatomic, copy , nullable) NSString *businessTag;
 @property (nonatomic, copy , nullable) NSString *advantage;
+//增加是否跳转，默认不支持
+@property (nonatomic, assign) BOOL isCanClick;
+@property (nonatomic, copy , nullable) NSString *clickUrl;
 
 @property (nonatomic, assign) BOOL isFloorPan;
 @property (nonatomic, copy) NSString *Picing;

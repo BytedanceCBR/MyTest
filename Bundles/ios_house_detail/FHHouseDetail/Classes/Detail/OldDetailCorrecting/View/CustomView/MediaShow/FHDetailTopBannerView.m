@@ -12,6 +12,7 @@
 #import <FHCommonUI/UIColor+Theme.h>
 #import "FHUIAdaptation.h"
 #import <ByteDanceKit/UIDevice+BTDAdditions.h>
+#import <TTRoute.h>
 
 @interface FHDetailTopBannerView ()
 @property (nonatomic, strong) UIImageView *shadowImage;
@@ -23,6 +24,8 @@
 @property (nonatomic, strong) UILabel *rightLabel;
 @property (nonatomic, strong) CAShapeLayer *maskLayer;
 @property (nonatomic, strong) CAGradientLayer *gradientLayer;
+@property (nonatomic, copy) NSString *clickUrl;
+
 @end
 
 @implementation FHDetailTopBannerView
@@ -46,6 +49,10 @@
     [self.leftView addSubview:self.leftIcon];
     [self.leftView addSubview:self.leftLabel];
     [self.rightView addSubview:self.rightLabel];
+    
+    self.leftView.userInteractionEnabled = NO;
+    UITapGestureRecognizer* singleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(goToJump)];
+    [self.leftView addGestureRecognizer:singleTap];
 
 //    [self.shadowImage mas_makeConstraints:^(MASConstraintMaker *make) {
 //        make.left.right.top.mas_equalTo(self);
@@ -96,7 +103,7 @@
     }];
 }
 
-- (void)updateWithTitle:(NSString *)title content:(NSString *)content
+- (void)updateWithTitle:(NSString *)title content:(NSString *)content isCanClick:(BOOL)isCanClick clickUrl:(nonnull NSString *)clickUrl
 {
 //    switch (self.housetype) {
 //        case FHHouseTypeSecondHandHouse:
@@ -114,6 +121,9 @@
 //    }
     self.leftLabel.text = title;
     self.rightLabel.text = content;
+    
+    self.leftView.userInteractionEnabled = isCanClick;
+    self.clickUrl = clickUrl;
     
     if (!_maskLayer) {
         CGRect rect = CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width - 30, 40);
@@ -211,6 +221,13 @@
         _rightLabel.numberOfLines = 1;
     }
     return _rightLabel;
+}
+
+- (void)goToJump {
+    if(self.clickUrl.length > 0){
+        NSURL *openUrl = [NSURL URLWithString:self.clickUrl];
+        [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:nil];
+    }
 }
 
 @end

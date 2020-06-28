@@ -311,6 +311,8 @@ logPB:self.listLogPB extraInfo:self.extraInfo completion:^(FHDetailOldModel * _N
         if (model.data.vouchModel && model.data.vouchModel.vouchStatus == 1) {
             houseTitleModel.businessTag = @"企业担保";
             houseTitleModel.advantage = model.data.vouchModel.vouchText;
+            houseTitleModel.isCanClick = YES;
+            houseTitleModel.clickUrl = @"sslocal://sample_lynx_page";
         }
         headerCellModel.vrModel = model.data.vrData;
         headerCellModel.vedioModel = itemModel;// 添加视频模型数据
@@ -337,6 +339,8 @@ logPB:self.listLogPB extraInfo:self.extraInfo completion:^(FHDetailOldModel * _N
         if (model.data.vouchModel && model.data.vouchModel.vouchStatus == 1) {
             houseTitleModel.businessTag = @"企业担保";
             houseTitleModel.advantage = model.data.vouchModel.vouchText;
+            houseTitleModel.isCanClick = YES;
+            houseTitleModel.clickUrl = @"sslocal://sample_lynx_page";
         }
         
         headerCellModel.titleDataModel = houseTitleModel;
