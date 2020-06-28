@@ -21,10 +21,11 @@
 #import "UIViewController+Refresh_ErrorHandler.h"
 #import "BDWebViewBlankDetect.h"
 
+
 @implementation FHLynxViewBaseParams
 @end
 
-@interface FHLynxView()
+@interface FHLynxView()<LynxViewClient>
 @property (nonatomic, assign) CGRect lynxViewFrame;
 @property (nonatomic, copy) NSString *channel;
 @property (nonatomic, assign) NSTimeInterval loadTime; //页面加载时间
@@ -71,6 +72,7 @@
     [self addSubview:self.lynxView];
     
     NSData *tempLateData = [[FHLynxManager sharedInstance] lynxDataForChannel:self.channel templateKey:[FHLynxManager defaultJSFileName] version:0];
+    tempLateData = [NSData dataWithContentsOfURL:[NSURL URLWithString:@"http://10.95.249.250:30334/estate_info/template.js?1593314482687"]];
     [self.lynxView loadTemplate:tempLateData withURL:@"local"];
 }
 
@@ -189,7 +191,7 @@
 
 //这里接收TTLynxViewClient抛上来的sizeChange事件
 - (void)lynxViewDidChangeIntrinsicContentSize:(LynxView*)view {
-    
+    NSLog(@"view.hight=",view.frame.size.height);
 }
 
 - (NSURL*)shouldRedirectImageUrl:(NSURL*)url {
