@@ -479,6 +479,7 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
         tracerDic[@"is_report"] = contactPhone.phone.length < 1 ? @"1" : @"0";
         tracerDic[@"is_online"] = contactPhone.unregistered ? @"1" : @"0";
         tracerDic[@"element_from"] = [self elementFrom];
+        tracerDic[@"biz_trace"] = contactPhone.bizTrace?:@"be_null";
         [FHUserTracker writeEvent:@"lead_show" params:tracerDic];
     }
 }

@@ -66,7 +66,7 @@
 #import "FHDetailPriceChangeNoticeCell.h"
 #import "FHVRPreloadManager.h"
 #import "TTSettingsManager.h"
-
+#import "FHhouseDetailRGCListCell.h"
 extern NSString *const kFHPhoneNumberCacheKey;
 extern NSString *const kFHSubscribeHouseCacheKey;
 extern NSString *const kFHPLoginhoneNumberCacheKey;
@@ -135,6 +135,8 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
     [self.tableView registerClass:[FHDetailNeighborhoodCommentsCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailCommentsCellModel class])];
     //小区攻略
     [self.tableView registerClass:[FHDetailNeighborhoodAssessCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailAccessCellModel class])];
+    //经纪人评测
+    [self.tableView registerClass:[FHhouseDetailRGCListCell class] forCellReuseIdentifier:NSStringFromClass([FHhouseDetailRGCListCellModel class])];
 }
 
 // cell identifier
@@ -144,9 +146,11 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
 }
 // 网络数据请求
 - (void)startLoadData {
+    
     // 详情页数据-Main
     __weak typeof(self) wSelf = self;
-    [FHHouseDetailAPI requestOldDetail:self.houseId ridcode:self.ridcode realtorId:self.realtorId logPB:self.listLogPB extraInfo:self.extraInfo completion:^(FHDetailOldModel * _Nullable model, NSError * _Nullable error) {
+    [FHHouseDetailAPI requestOldDetail:self.houseId ridcode:self.ridcode realtorId:self.realtorId bizTrace:self.detailController.bizTrace
+logPB:self.listLogPB extraInfo:self.extraInfo completion:^(FHDetailOldModel * _Nullable model, NSError * _Nullable error) {
         if (model && error == NULL) {
             if (model.data) {
                 [wSelf processDetailData:model];
@@ -241,6 +245,9 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
     }else {
         contactPhone.isFormReport = YES;
     }
+    self.houseInfoBizTrace = model.data.bizTrace;
+    self.contactViewModel.houseInfoBizTrace = model.data.bizTrace;
+    
     // 添加头滑动图片 && 视频
     if (model.data.houseVideo && model.data.houseVideo.videoInfos.count > 0) {
         hasVideo = YES;
@@ -392,6 +399,7 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
         subscribeModel.tableView = self.tableView;
         subscribeModel.houseModelType = FHHouseModelTypeSubscribe;
         subscribeModel.associateInfo = model.data.middleSubscriptionAssociateInfo;
+        subscribeModel.houseInfoBizTrace = self.houseInfoBizTrace;
         [self.items addObject:subscribeModel];
         
         __weak typeof(self) wSelf = self;
@@ -479,6 +487,7 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
         agentListModel.recommendedRealtors = model.data.recommendedRealtors;
         agentListModel.associateInfo = model.data.recommendRealtorsAssociateInfo;
         agentListModel.phoneCallViewModel = [[FHHouseDetailPhoneCallViewModel alloc] initWithHouseType:FHHouseTypeSecondHandHouse houseId:self.houseId];
+        agentListModel.phoneCallViewModel.houseInfoBizTrace = self.houseInfoBizTrace;
         [agentListModel.phoneCallViewModel generateImParams:self.houseId houseTitle:model.data.title houseCover:imgUrl houseType:houseType  houseDes:houseDes housePrice:price houseAvgPrice:avgPrice];
         agentListModel.phoneCallViewModel.tracerDict = self.detailTracerDic.mutableCopy;
         //        agentListModel.phoneCallViewModel.followUpViewModel = self.contactViewModel.followUpViewModel;
@@ -507,9 +516,11 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
         FHDetailHouseReviewCommentCellModel * houseReviewCommentModel = [[FHDetailHouseReviewCommentCellModel alloc] init];
         houseReviewCommentModel.tableView = self.tableView;
         houseReviewCommentModel.belongsVC = self.detailController;
+        houseReviewCommentModel.bizTrace = self.houseInfoBizTrace;
         houseReviewCommentModel.houseModelType = FHHouseModelTypeHousingEvaluation;
         houseReviewCommentModel.houseReviewComment = model.data.houseReviewComment;
         houseReviewCommentModel.phoneCallViewModel = [[FHHouseDetailPhoneCallViewModel alloc] initWithHouseType:FHHouseTypeSecondHandHouse houseId:self.houseId];
+        houseReviewCommentModel.phoneCallViewModel.houseInfoBizTrace = self.houseInfoBizTrace;
         [houseReviewCommentModel.phoneCallViewModel generateImParams:self.houseId houseTitle:model.data.title houseCover:imgUrl houseType:houseType  houseDes:houseDes housePrice:price houseAvgPrice:avgPrice];
         houseReviewCommentModel.phoneCallViewModel.tracerDict = self.detailTracerDic.mutableCopy;
         houseReviewCommentModel.searchId = searchId;
@@ -527,6 +538,28 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
         userHouseCommentModel.houseModelType = FHHouseModelTypeHousingEvaluation;
         userHouseCommentModel.userComments = model.data.userHouseComments;
         [self.items addObject:userHouseCommentModel];
+    }
+    
+    //经纪人评测
+    if (model.data.realtorContent.content.data.count > 0) {
+        FHhouseDetailRGCListCellModel *detailRGCListCellModel = [[FHhouseDetailRGCListCellModel alloc] init];
+        detailRGCListCellModel.detailTracerDic = self.detailTracerDic;
+        NSString *searchId = self.listLogPB[@"search_id"];
+        NSString *imprId = self.listLogPB[@"impr_id"];
+        NSDictionary *extraDic = @{
+            @"searchId":searchId,
+            @"imprId":imprId,
+            @"houseId":self.houseId,
+            @"houseType":@(self.houseType),
+            @"channelId":@"f_hosue_wtt"
+        };
+        detailRGCListCellModel.extraDic = extraDic;
+        detailRGCListCellModel.title = model.data.realtorContent.title;
+        detailRGCListCellModel.count = model.data.realtorContent.content.count;
+        detailRGCListCellModel.houseModelType = FHHouseModelTypeHousingEvaluation;
+        detailRGCListCellModel.contentModel = model.data.realtorContent.content;
+        detailRGCListCellModel.belongsVC = self.detailController;
+        [self.items addObject:detailRGCListCellModel];
     }
     
     BOOL hasOtherNeighborhoodInfo = NO;
@@ -880,8 +913,13 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
     }
     NSString *houseId = self.houseId;
     NSString *from = @"app_oldhouse_subscription";
+    NSDictionary *extraInfo = nil;
+    
+    if (self.houseInfoBizTrace) {
+        extraInfo = @{@"biz_trace":self.houseInfoBizTrace};
+    }
 
-    [FHMainApi requestCallReportByHouseId:houseId phone:phoneNum from:nil cluePage:nil clueEndpoint:nil targetType:nil reportAssociate:subscribeModel.associateInfo.reportFormInfo agencyList:nil completion:^(FHDetailResponseModel * _Nullable model, NSError * _Nullable error) {
+    [FHMainApi requestCallReportByHouseId:houseId phone:phoneNum from:nil cluePage:nil clueEndpoint:nil targetType:nil reportAssociate:subscribeModel.associateInfo.reportFormInfo agencyList:nil extraInfo:extraInfo completion:^(FHDetailResponseModel * _Nullable model, NSError * _Nullable error) {
 
 //    [FHMainApi requestSendPhoneNumbserByHouseId:houseId phone:phoneNum from:from cluePage:nil clueEndpoint:nil targetType:nil agencyList:nil completion:^(FHDetailResponseModel * _Nullable model, NSError * _Nullable error) {
         
@@ -948,7 +986,6 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
     if ([data isKindOfClass:[FHSearchHouseDataItemsModel class]]) {
         FHSearchHouseDataItemsModel *item = (FHSearchHouseDataItemsModel *)data;
         return  item.houseImage;
-        
     }else if ([data isKindOfClass:[FHHomeHouseDataItemsModel class]]){
         FHHomeHouseDataItemsModel *item = (FHHomeHouseDataItemsModel *)data;
         return item.houseImage;

@@ -165,7 +165,7 @@
         [self addSubview:_maskTitleLabel];
 //        [self addSubview:_bottomSelectView];
         
-        if (![SSCommonLogic isNewLaunchOptimizeEnabled]) {
+        if (![SSCommonLogic isFHNewLaunchOptimizeEnabled]) {
             [_maskTitleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
                 make.edges.equalTo(self);
             }];
@@ -286,7 +286,7 @@
 - (void)layoutSubviews
 {
     [super layoutSubviews];
-    if ([SSCommonLogic isNewLaunchOptimizeEnabled]) {
+    if ([SSCommonLogic isFHNewLaunchOptimizeEnabled]) {
         _titleLabel.bounds = self.bounds;
         _titleLabel.center = CGPointMake(CGRectGetWidth(self.bounds) / 2, CGRectGetHeight(self.bounds) / 2);
         _maskTitleLabel.bounds = self.bounds;
@@ -1022,7 +1022,7 @@ static BOOL bNeedTrackFollowCategoryBadgeLog = YES;
 
 - (void)refreshSelectorView
 {
-    if ([SSCommonLogic isNewLaunchOptimizeEnabled]) {
+    if ([SSCommonLogic isFHNewLaunchOptimizeEnabled]) {
         //启动首次调用时，width和height为0，此时不计算SelectorView，节约启动时间
         if (self.width == 0 || self.height == 0) {
             return;

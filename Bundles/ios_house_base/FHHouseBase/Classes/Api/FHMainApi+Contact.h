@@ -29,6 +29,7 @@ typedef NS_ENUM(NSUInteger, FHClueErrorType) {
                                        phone:(NSString*)phone
                                         from:(NSString*)from
                                         type:(NSNumber*)type
+                                  extraInfo:(NSDictionary*)extra
                                   completion:(void(^)(FHDetailResponseModel * _Nullable model , NSError * _Nullable error))completion;
 
 // 详情页线索提交表单
@@ -38,6 +39,7 @@ typedef NS_ENUM(NSUInteger, FHClueErrorType) {
                                        cluePage:(NSNumber*)cluePage
                                    clueEndpoint:(NSNumber*)clueEndpoint
                                      targetType:(NSNumber *)targetType
+                                    extraInfo:(NSDictionary*)extra
                                      agencyList:(NSArray<FHFillFormAgencyListItemModel *> *)agencyList
                                      completion:(void(^)(FHDetailResponseModel * _Nullable model , NSError * _Nullable error))completion;
 
@@ -49,6 +51,7 @@ typedef NS_ENUM(NSUInteger, FHClueErrorType) {
                            searchId:(NSString*)searchId
                              imprId:(NSString*)imprId
                                from:(NSString*)fromStr
+                            extraInfo:(NSDictionary*)extra
                          completion:(void(^)(FHDetailVirtualNumResponseModel * _Nullable model , NSError * _Nullable error))completion; //DEPRECATED_MSG_ATTRIBUTE("建议用带cluePage的方法，后续不直接用from了");
 
 + (TTHttpTask*)requestVirtualNumber:(NSString*)realtorId
@@ -59,6 +62,7 @@ typedef NS_ENUM(NSUInteger, FHClueErrorType) {
                                from:(NSString*)fromStr
                            cluePage:(NSNumber*)cluePage
                        clueEndpoint:(NSNumber*)clueEndpoint
+                          extraInfo:(NSDictionary*)extra
                          completion:(void(^)(FHDetailVirtualNumResponseModel * _Nullable model , NSError * _Nullable error))completion;
 
 #pragma mark - associate refactor
@@ -68,6 +72,7 @@ typedef NS_ENUM(NSUInteger, FHClueErrorType) {
                           houseType:(FHHouseType)houseType
                            searchId:(NSString*)searchId
                              imprId:(NSString*)imprId
+                         extraInfo:(NSDictionary*)extra
                          completion:(void(^)(FHDetailVirtualNumResponseModel * _Nullable model , NSError * _Nullable error))completion;
 // 详情页线索提交表单
 + (TTHttpTask*)requestCallReportByHouseId:(NSString*)houseId
@@ -78,6 +83,7 @@ clueEndpoint:(NSNumber*)clueEndpoint
   targetType:(NSNumber *)targetType
 reportAssociate:(NSDictionary*)reportAssociate
 agencyList:(NSArray<FHFillFormAgencyListItemModel *> *)agencyList
+extraInfo:(NSDictionary*)extra
 completion:(void(^)(FHDetailResponseModel * _Nullable model , NSError * _Nullable error))completion;
 
 // 房源关注

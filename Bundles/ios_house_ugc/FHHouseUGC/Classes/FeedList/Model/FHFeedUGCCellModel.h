@@ -14,7 +14,7 @@
 #import "TTVFeedItem+Extension.h"
 #import "TTVFeedListItem.h"
 #import "FHUGCScialGroupModel.h"
-
+#import "FHDetailBaseModel.h"
 @class FHCommunityFeedListController;
 
 NS_ASSUME_NONNULL_BEGIN
@@ -36,6 +36,21 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *schema;
 @property (nonatomic, copy , nullable) NSString *userAuthInfo;
 
+@end
+
+@interface FHFeedUGCCellRealtorModel : NSObject
+
+@property (nonatomic, copy , nullable) NSString *agencyName;
+@property (nonatomic, copy , nullable) NSString *avatarUrl;
+@property (nonatomic, copy , nullable) NSString *certificationIcon;
+@property (nonatomic, copy , nullable) NSString *certificationPage;
+@property (nonatomic, copy , nullable) NSString *chatOpenurl;
+@property (nonatomic, copy , nullable) NSString *desc;
+@property (nonatomic, copy , nullable) NSString *mainPageInfo;
+@property (nonatomic, copy , nullable) NSString *realtorId;
+@property (nonatomic, copy , nullable) NSString *realtorName;
+@property (nonatomic, copy , nullable) NSDictionary *realtorLogpb;
+@property (nonatomic, strong) FHClueAssociateInfoModel *associateInfo; // 线索相关参数
 @end
 
 @interface FHFeedUGCOriginItemModel : NSObject
@@ -93,7 +108,9 @@ typedef NS_ENUM(NSUInteger, FHFeedUGCDiggType) {
 @property (nonatomic, strong , nullable) NSArray<FHFeedContentImageListModel *> *largeImageList;
 //帖子相关
 @property (nonatomic, strong , nullable) FHFeedUGCCellUserModel *user ;
+@property (nonatomic, strong , nullable) FHFeedUGCCellRealtorModel*realtor ;
 @property (nonatomic, copy , nullable) NSString *diggCount;
+@property (nonatomic, copy , nullable) NSString *createTime;
 @property (nonatomic, copy , nullable) NSString *readCount;
 @property (nonatomic, copy , nullable) NSString *userDigg;
 @property (nonatomic, assign) FHFeedUGCDiggType lastUserDiggType; // 上一次点赞操作的类型
@@ -218,6 +235,10 @@ typedef NS_ENUM(NSUInteger, FHFeedUGCDiggType) {
 //查看全部
 @property (nonatomic, copy , nullable) NSString *allSchema;
 
+//1.0.1rgc 经纪人位置
+@property (nonatomic, assign) NSInteger realtorIndex;
+//1.0.1rgc 是否在列表页展示
+@property (nonatomic, assign) BOOL isInRealtorEvaluationList;
 @property (nonatomic, strong , nullable) NSDictionary *lynxData;
 
 + (FHFeedContentModel *)contentModelFromFeedContent:(NSString *)content;

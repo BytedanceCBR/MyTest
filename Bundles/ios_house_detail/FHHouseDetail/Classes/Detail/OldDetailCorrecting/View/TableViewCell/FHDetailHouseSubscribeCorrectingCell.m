@@ -277,6 +277,7 @@ extern NSString *const kFHPhoneNumberCacheKey;
         tracerDic[@"position"] = @"card";
         tracerDic[@"growth_deepevent"] = @(1);
         tracerDic[kFHAssociateInfo] = model.associateInfo.reportFormInfo;
+        tracerDic[@"biz_trace"] = model.houseInfoBizTrace;
         [FHUserTracker writeEvent:@"click_confirm" params:tracerDic];
         
         if(self.subscribeBlock){
