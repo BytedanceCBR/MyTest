@@ -19,10 +19,8 @@
 #import <TTAccountSDK/TTAccount.h>
 #import <FHHouseBase/FHHouseIMClueHelper.h>
 #import "FHEnvContext.h"
-//242+34
-#define ITEM_HEIGHT 276
-#define ITEM_BOTTOM_HEIGHT 45
-#define ITEM_WIDTH  184
+
+#define ITEM_WIDTH  120
 
 @interface FHDetailNewMutiFloorPanCell ()<FHDetailScrollViewDidScrollProtocol>
 
@@ -88,14 +86,14 @@
             self.headerView.label.text = @"户型介绍";
         }
         self.headerView.isShowLoadMore = model.hasMore;
-        CGFloat itemHeight = ITEM_HEIGHT;
+        CGFloat itemHeight = 190;
         if (hasIM) {
-            itemHeight = ITEM_HEIGHT + ITEM_BOTTOM_HEIGHT;
+            itemHeight = 190 + 30;
         }
         UICollectionViewFlowLayout *flowLayout = [[UICollectionViewFlowLayout alloc] init];
-        flowLayout.sectionInset = UIEdgeInsetsMake(0, 15, 0, 15);
+        flowLayout.sectionInset = UIEdgeInsetsMake(0, 16, 0, 16);
         flowLayout.itemSize = CGSizeMake(ITEM_WIDTH, itemHeight);
-        flowLayout.minimumLineSpacing = 10;
+        flowLayout.minimumLineSpacing = 16;
         flowLayout.scrollDirection = UICollectionViewScrollDirectionHorizontal;
         NSString *identifier = NSStringFromClass([FHDetailNewMutiFloorPanCollectionCell class]);
         _colView = [[FHDetailMultitemCollectionView alloc] initWithFlowLayout:flowLayout viewHeight:itemHeight cellIdentifier:identifier cellCls:[FHDetailNewMutiFloorPanCollectionCell class] datas:model.list];
@@ -372,18 +370,21 @@
             }
         }
         self.consultDetailButton.hidden = model.imOpenUrl.length > 0 ? NO : YES;
-        self.spaceLabel.text = [NSString stringWithFormat:@"建面 %@ 朝向 %@",model.squaremeter,model.facingDirection];
-        self.priceLabel.text = model.pricing;
+//        self.spaceLabel.text = [NSString stringWithFormat:@"%@ %@",model.squaremeter,model.facingDirection];
+        
         NSMutableArray *tagArr = [NSMutableArray array];
-        self.descLabel.text = model.title;
-        [self.descLabel sizeToFit];
-        CGSize itemSize = [self.descLabel sizeThatFits:CGSizeMake([UIScreen mainScreen].bounds.size.width, [UIFont themeFontMedium:16].lineHeight)];
+        self.descLabel.text = [NSString stringWithFormat:@"%@ %@",model.title,model.squaremeter];;
+        
+        self.priceLabel.text = model.pricing;
+        [self.priceLabel sizeToFit];
+        CGSize itemSize = [self.priceLabel sizeThatFits:CGSizeMake([UIScreen mainScreen].bounds.size.width, [UIFont themeFontSemibold:16].lineHeight)];
         CGFloat width = itemSize.width;
         
-        [self.descLabel mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.width.mas_equalTo(width);
-        }];
-        [self.tagBacView refreshWithTags:model.tags withNum:model.tags.count withMaxLen:ITEM_WIDTH - width - 4];
+//        [self.descLabel mas_updateConstraints:^(MASConstraintMaker *make) {
+//            make.width.mas_equalTo(width);
+//        }];
+        //1.0.2 需求缩小户型图大小，横屏查看2.5个左右，不能显示更多tag
+        [self.tagBacView refreshWithTags:model.tags withNum:1 withMaxLen:ITEM_WIDTH - width - 4];
     }
     [self layoutIfNeeded];
 }
@@ -392,82 +393,82 @@
     
     _iconView = [[UIView alloc]init];
     _iconView.layer.borderWidth = 0.5;
-    _iconView.layer.borderColor = [[UIColor colorWithHexString:@"#ededed"] CGColor];
+    _iconView.layer.borderColor = [[UIColor themeGray6] CGColor];
     _iconView.layer.cornerRadius = 10.0;
-     _iconView.layer.masksToBounds = YES;
+    _iconView.layer.masksToBounds = YES;
+    self.iconView.backgroundColor = [UIColor whiteColor];
     [self addSubview:_iconView];
-
-    _icon = [[UIImageView alloc] init];
-    _icon.image = [UIImage imageNamed:@"detail_new_floorpan_default"];
-    [_iconView addSubview:_icon];
-    _icon.contentMode = UIViewContentModeScaleAspectFill;
-
-    _descLabel = [UILabel createLabel:@"" textColor:@"" fontSize:16];
-    _descLabel.font = [UIFont themeFontMedium:16];
-    _descLabel.textColor = [UIColor themeGray1];
-    [self addSubview:_descLabel];
-    
-    _tagBacView = [[FHDetailTagBackgroundView alloc] initWithLabelHeight:16.0 withCornerRadius:2.0];
-    [_tagBacView setMarginWithTagMargin:4.0 withInsideMargin:4.0];
-    _tagBacView.textFont = [UIFont themeFontMedium:10.0];
-    [self addSubview:_tagBacView];
-    
-    _spaceLabel = [UILabel createLabel:@"" textColor:@"" fontSize:12];
-    _spaceLabel.textColor = [UIColor themeGray3];
-    [self addSubview:_spaceLabel];
-    
-    _priceLabel = [UILabel createLabel:@"" textColor:@"" fontSize:19];
-    _priceLabel.textColor = [UIColor themeOrange1];
-    _priceLabel.font = [UIFont themeFontSemibold:16];
-    [self addSubview:_priceLabel];
-    
-    _consultDetailButton = [[UIButton alloc] init];
-    [_consultDetailButton setTitle:@"一键咨询户型详情" forState:UIControlStateNormal];
-    [_consultDetailButton setTitleColor:[UIColor themeOrange4] forState:UIControlStateNormal];
-    _consultDetailButton.titleLabel.font = [UIFont themeFontMedium:14];
-    _consultDetailButton.backgroundColor = [UIColor colorWithHexStr:@"#FFF8EF"];
-    _consultDetailButton.layer.masksToBounds = YES;
-    _consultDetailButton.layer.cornerRadius = 16;
-    [_consultDetailButton addTarget:self action:@selector(consultDetailButtonAction:) forControlEvents:UIControlEventTouchUpInside];
-    [self addSubview:_consultDetailButton];
-    _consultDetailButton.hidden = YES;
-    
     [self.iconView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(self.contentView);
         make.left.right.equalTo(self.contentView);
         make.width.height.mas_equalTo(ITEM_WIDTH);
     }];
+    
+    _icon = [[UIImageView alloc] init];
+    _icon.image = [UIImage imageNamed:@"detail_new_floorpan_default"];
+    [_iconView addSubview:_icon];
+    _icon.contentMode = UIViewContentModeScaleAspectFill;
     [self.icon mas_makeConstraints:^(MASConstraintMaker *make) {
         make.center.equalTo(self.iconView);
         make.width.height.equalTo(self.iconView);
     }];
+    
+    _descLabel = [[UILabel alloc] init];
+    _descLabel.font = [UIFont themeFontMedium:14];
+    _descLabel.textColor = [UIColor themeGray1];
+    [self addSubview:_descLabel];
     [self.descLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.equalTo(self.iconView.mas_bottom).mas_offset(10);
+        make.top.equalTo(self.iconView.mas_bottom).mas_offset(8);
         make.left.equalTo(self.contentView);
-        make.height.mas_equalTo(20);
-        make.width.mas_equalTo(0);
+        make.height.mas_equalTo(19);
+//        make.width.mas_equalTo(0);
     }];
-    [self.tagBacView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(self.descLabel.mas_right).offset(4);
-        make.right.mas_equalTo(self.iconView);
-        make.centerY.mas_equalTo(self.descLabel);
+    
+//    _spaceLabel = [UILabel createLabel:@"" textColor:@"" fontSize:12];
+//    _spaceLabel.textColor = [UIColor themeGray3];
+//    [self addSubview:_spaceLabel];
+//    [self.spaceLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+//        make.top.equalTo(self.descLabel.mas_bottom).offset(7);
+//        make.left.equalTo(self.descLabel);
+//        make.right.equalTo(self.contentView);
+//        make.height.mas_equalTo(15);
+//    }];
+    
+    _priceLabel = [[UILabel alloc] init];
+    _priceLabel.textColor = [UIColor themeOrange1];
+    _priceLabel.font = [UIFont themeFontRegular:14];
+    [self addSubview:_priceLabel];
+    [self.priceLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.mas_equalTo(self.descLabel.mas_bottom).offset(6);
+        make.left.equalTo(self.contentView);
         make.height.mas_equalTo(16);
     }];
-    [self.spaceLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.equalTo(self.descLabel.mas_bottom).offset(7);
-        make.left.equalTo(self.descLabel);
-        make.right.equalTo(self.contentView);
-        make.height.mas_equalTo(15);
+    
+    _tagBacView = [[FHDetailTagBackgroundView alloc] initWithLabelHeight:16.0 withCornerRadius:2.0];
+    [_tagBacView setMarginWithTagMargin:4.0 withInsideMargin:4.0];
+    _tagBacView.textFont = [UIFont themeFontMedium:10.0];
+    [self addSubview:_tagBacView];
+    [self.tagBacView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.mas_equalTo(self.priceLabel.mas_right).offset(4);
+        make.right.mas_equalTo(self.iconView);
+        make.centerY.mas_equalTo(self.priceLabel);
+        make.height.mas_equalTo(16);
     }];
-    [self.priceLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.spaceLabel.mas_bottom).offset(8);
-        make.left.right.equalTo(self.contentView);
-        make.height.mas_equalTo(20);
-    }];
+    
+    _consultDetailButton = [[UIButton alloc] init];
+    [_consultDetailButton setTitle:@"咨询户型" forState:UIControlStateNormal];
+    [_consultDetailButton setTitleColor:[UIColor colorWithHexString:@"ff9629"] forState:UIControlStateNormal];
+    _consultDetailButton.titleLabel.font = [UIFont themeFontMedium:12];
+    _consultDetailButton.backgroundColor = [UIColor colorWithHexString:@"#fff8ef"];
+    _consultDetailButton.layer.masksToBounds = YES;
+    _consultDetailButton.layer.cornerRadius = 14;
+    [_consultDetailButton addTarget:self action:@selector(consultDetailButtonAction:) forControlEvents:UIControlEventTouchUpInside];
+    [self addSubview:_consultDetailButton];
+    _consultDetailButton.hidden = YES;
     [self.consultDetailButton mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.equalTo(self.priceLabel.mas_bottom).offset(16);
+        make.top.equalTo(self.priceLabel.mas_bottom).offset(12);
         make.left.right.equalTo(self.contentView);
-        make.height.mas_equalTo(32);
+        make.height.mas_equalTo(28);
     }];
 }
 
