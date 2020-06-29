@@ -171,6 +171,20 @@
     if (dataDict && dataDict[@"data"]) {
         lynxParams[@"estate_info"] = dataDict[@"data"];
     }
+    
+    if (_houseNameModel) {
+        NSMutableDictionary *court_info = [NSMutableDictionary new];
+        [court_info setValue:_houseNameModel.name forKey:@"title"];
+        [court_info setValue:_houseNameModel.aliasName forKey:@"alias"];
+        NSMutableArray *tagArray = [NSMutableArray new];
+        [_houseNameModel.tags enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+            if ([obj isKindOfClass:[JSONModel class]]) {
+                [tagArray addObject:[(JSONModel *)obj toDictionary]];
+            }
+        }];
+        [court_info setValue:tagArray forKey:@"tags"];
+        lynxParams[@"court_info"] = court_info;
+    }
     CGRect screenFrame = [UIScreen mainScreen].bounds;
     [lynxParams setValue:@(screenFrame.size.height - top) forKey:@"display_height"];
 
