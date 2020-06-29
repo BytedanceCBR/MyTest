@@ -17,6 +17,7 @@
 #import "FHDetailGrayLineCell.h"
 #import "FHOldDetailDisclaimerCell.h"
 #import "FHFloorPanCorePermitCell.h"
+#import "UIDevice+BTDAdditions.h"
 
 @interface FHFloorCoreInfoViewModel()<UITableViewDelegate,UITableViewDataSource>
 
@@ -143,10 +144,16 @@
         [FHHouseDetailAPI requestFloorCoreInfoSearch:_courtId completion:^(FHDetailNewCoreDetailModel * _Nullable model, NSError * _Nullable error) {
             if(model.data && !error)
             {
+             
                 [wSelf.detailController.emptyView hideEmptyView];
                 wSelf.detailController.hasValidateData = YES;
-                [wSelf processDetailData:model];
-                [wSelf.navBar showMessageNumber];
+                
+                if (wSelf.lynxView) {
+                     [wSelf updateLynxViewInfo:model];
+                }else{
+                    [wSelf processDetailData:model];
+                    [wSelf.navBar showMessageNumber];
+                }
             }else
             {
                 wSelf.detailController.hasValidateData = NO;
@@ -154,6 +161,33 @@
             }
         }];
     }
+}
+
+- (void)updateLynxViewInfo:(FHDetailNewCoreDetailModel *)model{
+    NSMutableDictionary *lynxParams = [NSMutableDictionary new];
+    NSMutableDictionary *dataDict = [model toDictionary];
+    CGFloat top = [self getSafeTop];
+
+    if (dataDict && dataDict[@"data"]) {
+        lynxParams[@"estate_info"] = dataDict[@"data"];
+    }
+    CGRect screenFrame = [UIScreen mainScreen].bounds;
+    [lynxParams setValue:@(screenFrame.size.height - top) forKey:@"display_height"];
+
+    [self.lynxView updateData:lynxParams];
+    
+}
+
+- (CGFloat)getSafeTop{
+    CGFloat top = 0;
+         if (@available(iOS 13.0 , *)) {
+           top = 44.f + [UIApplication sharedApplication].keyWindow.safeAreaInsets.top;
+         } else if (@available(iOS 11.0 , *) && [UIDevice btd_isIPhoneXSeries]) {
+           top = 84;
+         } else {
+           top = 65;
+         }
+    return top;
 }
 
 - (NSString *)checkPValueStr:(NSString *)str
