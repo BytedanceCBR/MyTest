@@ -36,34 +36,37 @@
 
 //保存数据
 + (void)addLogWithData:(id)Data logType:(FHErrorHubType)errorHubType {
-    NSMutableArray *dataArr = [self loadDataFromLocalDataWithType:errorHubType].mutableCopy;
-    switch (errorHubType) {
-        case FHErrorHubTypeRequest:
-            if (dataArr.count>9) {
-                [dataArr removeObjectAtIndex:0];
+    dispatch_barrier_async(dispatch_queue_create("rw_queue", DISPATCH_QUEUE_CONCURRENT), ^{
+        NSMutableArray *dataArr = [self loadDataFromLocalDataWithType:errorHubType].mutableCopy;
+        switch (errorHubType) {
+            case FHErrorHubTypeRequest:
+                if (dataArr.count>9) {
+                    [dataArr removeObjectAtIndex:0];
+                    [dataArr addObject:Data];
+                }else {
+                    [dataArr addObject:Data];
+                }
+                break;
+            case FHErrorHubTypeBuryingPoint:
                 [dataArr addObject:Data];
-            }else {
+                break;
+            case FHErrorHubTypeConfig:
                 [dataArr addObject:Data];
-            }
-            break;
-        case FHErrorHubTypeBuryingPoint:
-            [dataArr addObject:Data];
-            break;
-        case FHErrorHubTypeConfig:
-            [dataArr addObject:Data];
-            break;
-        case FHErrorHubTypeShare:
-            [dataArr removeAllObjects];
-            [dataArr addObject:Data];
-            break;
-        case FHErrorHubTypeCustom:
-            [dataArr addObject:Data];
-            break;
-            break;
-    }
-    NSDictionary *errorInfo = @{@"error_hub":dataArr};
-    NSData *errordata = [NSJSONSerialization dataWithJSONObject:errorInfo options:0 error:NULL];
-    [errordata writeToFile:[self localDataPathWithType:errorHubType] atomically:YES];
+                break;
+            case FHErrorHubTypeShare:
+                [dataArr removeAllObjects];
+                [dataArr addObject:Data];
+                break;
+            case FHErrorHubTypeCustom:
+                [dataArr addObject:Data];
+                break;
+                break;
+        }
+        NSDictionary *errorInfo = @{@"error_hub":dataArr};
+        NSData *errordata = [NSJSONSerialization dataWithJSONObject:errorInfo options:0 error:NULL];
+        [errordata writeToFile:[self localDataPathWithType:errorHubType] atomically:YES];
+    });
+    
 }
 
 //通过类型读取数据
@@ -111,11 +114,13 @@
 }
 
 + (void)removeLogWithData:(NSDictionary *)data logType:(FHErrorHubType)errorHubType {
-    NSMutableArray  *dataArr = [self loadDataFromLocalDataWithType:errorHubType].mutableCopy;
-    [dataArr removeObject:data];
-    NSDictionary *errorInfo = @{@"error_hub":dataArr};
-    NSData *errordata = [NSJSONSerialization dataWithJSONObject:errorInfo options:0 error:NULL];
-    [errordata writeToFile:[self localDataPathWithType:errorHubType] atomically:YES];
+    dispatch_barrier_async(dispatch_queue_create("rw_queue", DISPATCH_QUEUE_CONCURRENT), ^{
+        NSMutableArray  *dataArr = [self loadDataFromLocalDataWithType:errorHubType].mutableCopy;
+        [dataArr removeObject:data];
+        NSDictionary *errorInfo = @{@"error_hub":dataArr};
+        NSData *errordata = [NSJSONSerialization dataWithJSONObject:errorInfo options:0 error:NULL];
+        [errordata writeToFile:[self localDataPathWithType:errorHubType] atomically:YES];
+    });
 }
 
 @end
