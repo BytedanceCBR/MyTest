@@ -147,12 +147,11 @@
              
                 [wSelf.detailController.emptyView hideEmptyView];
                 wSelf.detailController.hasValidateData = YES;
-                
+                [wSelf processDetailData:model];
+                [wSelf.navBar showMessageNumber];
+
                 if (wSelf.lynxView) {
                      [wSelf updateLynxViewInfo:model];
-                }else{
-                    [wSelf processDetailData:model];
-                    [wSelf.navBar showMessageNumber];
                 }
             }else
             {
@@ -186,7 +185,7 @@
         lynxParams[@"court_info"] = court_info;
     }
     CGRect screenFrame = [UIScreen mainScreen].bounds;
-    [lynxParams setValue:@(screenFrame.size.height - top) forKey:@"display_height"];
+    [lynxParams setValue:@(screenFrame.size.height - top - 80 - [self getSafeBottom]) forKey:@"display_height"];
 
     [self.lynxView updateData:lynxParams];
     
@@ -202,6 +201,18 @@
            top = 65;
          }
     return top;
+}
+
+- (CGFloat)getSafeBottom{
+    CGFloat safeBottomPandding = 0;
+    if (@available(iOS 11.0, *)) {
+        safeBottomPandding = [UIApplication sharedApplication].delegate.window.safeAreaInsets.bottom;
+    }else{
+        if ([UIDevice btd_isIPhoneXSeries]) {
+            return 20;
+        }
+    }
+    return safeBottomPandding;
 }
 
 - (NSString *)checkPValueStr:(NSString *)str
@@ -281,8 +292,11 @@
     self.contactViewModel.highlightedRealtorAssociateInfo = model.data.highlightedRealtorAssociateInfo;
     self.bottomBar.hidden = NO;
 
-    [_infoListTable reloadData];
-    _infoListTable.contentOffset = CGPointMake(0, -15);
+    if (_infoListTable) {
+        [_infoListTable reloadData];
+        _infoListTable.contentOffset = CGPointMake(0, -15);
+    }
+
 }
 
 - (FHFloorPanCorePropertyCellModel *)createWaterInfoModel:(FHDetailNewCoreDetailModel *)model

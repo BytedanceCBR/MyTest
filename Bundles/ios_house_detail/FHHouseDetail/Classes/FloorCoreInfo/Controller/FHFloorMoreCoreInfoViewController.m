@@ -83,7 +83,7 @@
 }
 
 - (void)setUpLynxView{
-    _lynxView = [[FHLynxView alloc] initWithFrame:CGRectMake(0, [self getNaviBar].frame.size.height, self.view.frame.size.width,self.view.frame.size.height - [self getBottomBar].frame.size.height)];
+    _lynxView = [[FHLynxView alloc] initWithFrame:CGRectMake(0, [self getNaviBar].frame.size.height, self.view.frame.size.width,self.view.frame.size.height - 80 - [self getNaviBar].frame.size.height - [self.coreInfoListViewModel getSafeTop]  - [self.coreInfoListViewModel getSafeBottom])];
     [self.view addSubview:_lynxView];
     FHLynxViewBaseParams *baesparmas = [[FHLynxViewBaseParams alloc] init];
     baesparmas.channel = @"lynx_estate_info";

@@ -20,6 +20,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)startLoadData;
 
+- (CGFloat)getSafeTop;
+- (CGFloat)getSafeBottom;
 @end
 
 NS_ASSUME_NONNULL_END
