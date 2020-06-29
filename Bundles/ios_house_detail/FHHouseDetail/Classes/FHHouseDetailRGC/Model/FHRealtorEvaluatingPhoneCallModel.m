@@ -45,8 +45,12 @@
     associateIMModel.houseId = self.houseId;
     associateIMModel.houseType = self.houseType;
     associateIMModel.associateInfo = realtorModel.associateInfo;
+    if (extra && extra[@"bizTrace"]) {
+        associateIMModel.extraInfo = @{@"biz_trace":extra[@"bizTrace"]};
+    }
     NSMutableDictionary *tempExtra = extra.mutableCopy;
     tempExtra[kFHAssociateInfo] = nil;
+    tempExtra[@"bizTrace"] = nil;
     extra = tempExtra.copy;
     
     // IM 相关埋点上报参数
@@ -93,6 +97,7 @@
 }
 
 - (void)phoneChatActionWithAssociateModel:(FHAssociatePhoneModel *)associatePhoneModel {
+    
     [FHHousePhoneCallUtils callWithAssociatePhoneModel:associatePhoneModel completion:^(BOOL success, NSError * _Nonnull error, FHDetailVirtualNumModel * _Nonnull virtualPhoneNumberModel) {
     }];
 }
