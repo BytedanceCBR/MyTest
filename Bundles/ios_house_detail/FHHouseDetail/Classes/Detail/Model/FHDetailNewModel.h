@@ -237,6 +237,41 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
+/**
+ - title模块标题，类型string
+ - button_text按钮文案，类型string
+ - building_name_text楼栋名称文案，类型string
+ - layer_text层数文案，类型string
+ - family户数文案，类型string
+ - list ，类型list of dict
+   - name楼栋名称，类型string
+   - layers层数，类型string
+   - family户数，类型string
+ */
+
+@protocol FHDetailNewBuildingListItem <NSObject>
+@end
+
+@interface FHDetailNewBuildingListItem : JSONModel
+
+@property (nonatomic, copy, nullable) NSString *name;
+@property (nonatomic, copy, nullable) NSString *layers;
+@property (nonatomic, copy, nullable) NSString *family;
+
+@end
+
+@interface FHDetailNewBuildingInfoModel : JSONModel
+
+@property (nonatomic, copy, nullable) NSString *title;
+@property (nonatomic, copy, nullable) NSString *buttonText;
+@property (nonatomic, copy, nullable) NSString *buildingNameText;
+@property (nonatomic, copy, nullable) NSString *layerText;
+@property (nonatomic, copy, nullable) NSString *family;
+@property (nonatomic, strong , nullable) NSArray<FHDetailNewBuildingListItem> *list;
+
+@end
+
+
 
 
 @interface FHDetailNewDataModel : JSONModel
@@ -283,6 +318,8 @@ NS_ASSUME_NONNULL_BEGIN
 //1.0.0 新增楼盘相册页线索
 @property (nonatomic, strong , nullable) FHClueAssociateInfoModel *imageAlbumAssociateInfo;
 
+//1.0.2 新增楼盘楼栋信息
+@property (nonatomic, strong, nullable) FHDetailNewBuildingInfoModel *buildingInfo;
 @end
 
 @interface FHDetailNewTimeLineDataModel : JSONModel

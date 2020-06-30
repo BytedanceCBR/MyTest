@@ -82,10 +82,18 @@
         }
         if (model.totalNumber.length > 0) {
             self.headerView.label.text = [NSString stringWithFormat:@"户型介绍（%@）",model.totalNumber];
-        }else {
+            if (model.totalNumber.integerValue > 3) {
+                self.headerView.isShowLoadMore = YES;
+                self.headerView.userInteractionEnabled = YES;
+            } else {
+                self.headerView.isShowLoadMore = NO;
+                self.headerView.userInteractionEnabled = NO;
+            }
+        } else {
             self.headerView.label.text = @"户型介绍";
+            self.headerView.isShowLoadMore = NO;
+            self.headerView.userInteractionEnabled = NO;
         }
-        self.headerView.isShowLoadMore = model.hasMore;
         CGFloat itemHeight = 190;
         if (hasIM) {
             itemHeight = 190 + 30;
@@ -198,7 +206,7 @@
     FHDetailNewMutiFloorPanCellModel *currentModel = (FHDetailNewMutiFloorPanCellModel *)self.currentData;
     FHDetailNewDataFloorpanListModel *model = currentModel.floorPanList;
 
-    if ([model isKindOfClass:[FHDetailNewDataFloorpanListModel class]] && model.hasMore) {
+    if ([model isKindOfClass:[FHDetailNewDataFloorpanListModel class]]) {
         NSMutableDictionary *infoDict = [NSMutableDictionary new];
         [infoDict setValue:model.list forKey:@"court_id"];
         [infoDict addEntriesFromDictionary:[self.baseViewModel subPageParams]];

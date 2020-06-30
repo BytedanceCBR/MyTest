@@ -337,6 +337,51 @@
 }
 @end
 
+@implementation FHDetailNewBuildingListItem
+
++ (JSONKeyMapper*)keyMapper
+{
+    NSDictionary *dict = @{
+                           @"name": @"name",
+                           @"layers": @"layers",
+                           @"family": @"family"
+                           };
+    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+        return dict[keyName]?:keyName;
+    }];
+}
+
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+
+@end
+
+@implementation FHDetailNewBuildingInfoModel
+
++ (JSONKeyMapper*)keyMapper
+{
+    NSDictionary *dict = @{
+                           @"title": @"title",
+                           @"buttonText": @"button_text",
+                           @"buildingNameText": @"building_name_text",
+                           @"layerText": @"layer_text",
+                           @"family": @"family",
+                           @"list": @"list"
+                           };
+    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+        return dict[keyName]?:keyName;
+    }];
+}
+
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+
+@end
+
 @implementation FHDetailNewDataModel
 + (JSONKeyMapper*)keyMapper
 {
@@ -371,7 +416,8 @@
                            @"highlightedRealtorAssociateInfo":@"highlighted_realtor_associate_info",
                            @"isShowTopImageTab": @"is_show_top_image_tab",
                            @"imageAlbumAssociateInfo": @"image_album_associate_info",
-                           @"realtorContent":@"realtor_content"
+                           @"realtorContent": @"realtor_content",
+                           @"buildingInfo": @"building_info"
                            };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
         return dict[keyName]?:keyName;
