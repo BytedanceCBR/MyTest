@@ -1481,6 +1481,10 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
 #pragma mark - sidebar
 -(void)tryUpdateSideBar
 {
+    if (self.showMode == FHMapSearchShowModeHalfHouseList) {
+        //半屏列表 不更新sidebar
+        return;
+    }
     CGFloat zoomLevel = self.mapView.zoomLevel;
     BOOL showCircle = (self.configModel.houseType == FHHouseTypeSecondHandHouse) && (zoomLevel >= 13);
     NSArray *types = nil;
