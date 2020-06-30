@@ -585,7 +585,7 @@
         layout.left = YGPointValue(0);
         layout.top = YGPointValue(0);
         layout.width = YGPointValue(48);
-        layout.height = YGPointValue(16);
+        layout.height = YGPointValue(18);
     }];
     
     [self.houseMainImageBackView configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
@@ -1968,7 +1968,7 @@
             layout.width = YGPointValue(width > 0.0 ? width : 48);
         }];
         [self.topLeftTagImageView configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
-            layout.height = YGPointValue(height > 0.0 ? height : 15);
+            layout.height = YGPointValue(height > 0.0 ? height : 18);
         }];
         
         self.topLeftTagImageView.hidden = NO;

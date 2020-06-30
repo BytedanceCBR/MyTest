@@ -353,6 +353,10 @@
             if ([element_type isEqualToString:@"recommend_new"]) {
                 tracerDic[@"event_tracking_id"] = @"234883";
             }
+            if ([element_type isEqualToString:@"report"]) {
+                tracerDic[@"biz_trace"] = self.houseInfoBizTrace;
+            }
+            
             [FHUserTracker writeEvent:@"element_show" params:tracerDic];
             [[FHHouseErrorHubManager sharedInstance] checkBuryingPointWithEvent:@"element_show" Params:tracerDic errorHubType:FHErrorHubTypeBuryingPoint];
         }

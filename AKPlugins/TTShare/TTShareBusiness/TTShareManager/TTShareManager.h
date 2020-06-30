@@ -67,4 +67,6 @@
 
 - (void)setPanelClassName:(NSString *)panelClassName;
 
+- (void)updateBizTraceExtraInfo:(NSDictionary *)extraInfo activity:(id <TTActivityProtocol>)activity;
+
 @end

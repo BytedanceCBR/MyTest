@@ -38,6 +38,7 @@
 @property (nonatomic, strong) FHIMShareUserListViewModel* listViewModel;
 @property (nonatomic, strong) FHIMShareAlertView* alertView;
 @property (nonatomic, strong) FHDetailImShareInfoModel *shareInfo;
+@property (nonatomic, strong) NSDictionary *extrInfo;
 @end
 
 @implementation FHIMSharedUserListViewController
@@ -46,6 +47,7 @@
     self = [super initWithRouteParamObj:paramObj];
     if (self) {
         self.shareInfo = paramObj.allParams[@"shareInfo"];
+        _extrInfo = paramObj.allParams[@"extra_info"];
         _lastModify = 0;
         _rowIndex = NSUIntegerMax;
         self.listViewModel = [[FHIMShareUserListViewModel alloc] init];
@@ -217,7 +219,9 @@
     associateIMModel.houseId = queryParams[@"house_id"];
     associateIMModel.houseType = queryParams[@"house_type"];
     associateIMModel.associateInfo = self.shareInfo.associateInfo;
-
+    if (_extrInfo) {
+      associateIMModel.extraInfo = _extrInfo;
+    }
     // IM 相关埋点上报参数
     FHAssociateReportParams *reportParams = [FHAssociateReportParams new];
     reportParams.enterFrom = self.tracerDict[@"enter_from"] ? : @"be_null";
