@@ -227,6 +227,7 @@
                     }];
                 }
             }
+            self.subTitleLabel.attributedText = nil;
             self.subTitleLabel.text = [NSString stringWithFormat:@"%@ %@", roleHintText, recallHintText];
         }
         else if (isGroupChat) {
@@ -236,6 +237,7 @@
                 if ([lastMsg.mentionedUsers containsObject:uid] && ![self lastMsgHasReadInConversation:conv]) {
                     self.subTitleLabel.attributedText = [self getAtAttributeString:cutStr];;
                 } else {
+                    self.subTitleLabel.attributedText = nil;
                     self.subTitleLabel.text = cutStr;
                 }
             } else {
@@ -244,6 +246,7 @@
                     if ([lastMsg.mentionedUsers containsObject:uid] && ![self lastMsgHasReadInConversation:conv]) {
                         self.subTitleLabel.attributedText = [self getAtAttributeString:tipMsg];;
                     } else {
+                        self.subTitleLabel.attributedText = nil;
                          self.subTitleLabel.text = tipMsg;
                     }
                 }];
