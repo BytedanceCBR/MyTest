@@ -249,7 +249,16 @@
                 }];
             }
         } else {
-            self.subTitleLabel.text = [self cutLineBreak:[conv lastMessage]];
+            NSString *lastMessage = [conv lastMessage];
+            NSRange range = [lastMessage rangeOfString:@"[语音]"];
+            if(range.location == NSNotFound) {
+                self.subTitleLabel.attributedText = nil;
+                self.subTitleLabel.text = [self cutLineBreak:lastMessage];
+            } else {
+                NSMutableAttributedString *attributeLastMessage = [[NSMutableAttributedString alloc] initWithString:lastMessage];
+                [attributeLastMessage addAttributes:@{NSForegroundColorAttributeName: [UIColor colorWithHexStr:@"FE5500"], NSFontAttributeName:self.subTitleLabel.font} range:range];
+                self.subTitleLabel.attributedText = attributeLastMessage;
+            }
         }
     }
     
