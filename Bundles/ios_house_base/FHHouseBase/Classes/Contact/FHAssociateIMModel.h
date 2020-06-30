@@ -20,6 +20,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong) FHAssociateReportParams *reportParams; // 埋点参数
 @property (nonatomic, copy) NSString *imOpenUrl;
 @property (nonatomic, copy) FHASSOCIATEIMCALLBACKBLOCK slientFollowCallbackBlock; // 静默关注回调Block
+@property (nonatomic, strong) NSDictionary *extraInfo;//biz_trace等扩展
 
 #pragma mark 必填 
 @property (nonatomic, assign) FHHouseType houseType; // 房源类型

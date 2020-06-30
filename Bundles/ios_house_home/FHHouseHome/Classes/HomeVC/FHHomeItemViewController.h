@@ -30,6 +30,7 @@ static const NSUInteger kFHHomeHouseTypeHouseSection = 1;
 @property (nonatomic, assign) BOOL showRequestErrorView;
 @property (nonatomic, assign) BOOL showDislikeNoDataView;
 @property (nonatomic, assign) BOOL showPlaceHolder;
+@property (nonatomic, assign) BOOL childScrollEnable;
 @property (nonatomic, assign) BOOL isOriginShowSelf;//当前显示的是不是自己这个类型的房源
 @property (nonatomic , strong) FHTracerModel *tracerModel;
 @property (nonatomic, assign) TTReloadType reloadType; //当前enterType，用于enter_category
@@ -47,7 +48,7 @@ static const NSUInteger kFHHomeHouseTypeHouseSection = 1;
 @property (nonatomic, copy) void (^requestNetworkUnAvalableRetryCallBack)(void);
 @property (nonatomic, copy) void (^scrollDidEnd)(void);
 @property (nonatomic, copy) void (^scrollDidBegin)(void);
-@property (nonatomic, copy) void (^scrollDidScrollCallBack)(UIScrollView *currentTable);
+@property (nonatomic, copy) void (^scrollDidScrollCallBack)(UIScrollView *currentTable,BOOL isSuperCanScroll);
 
 
 - (instancetype)initItemWith:(FHHomeListViewModel *)listModel;

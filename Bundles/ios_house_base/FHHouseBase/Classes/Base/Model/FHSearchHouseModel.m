@@ -698,6 +698,7 @@
                            @"bottomText": @"bottom_text",
                            @"baseInfo": @"base_info",
                            @"coreInfo": @"core_info",
+                           @"bizTrace": @"biz_trace",
 
                            @"gaodeLat": @"gaode_lat",
                            @"gaodeLng": @"gaode_lng",
@@ -844,3 +845,23 @@
 
 @end
 
+@implementation FHSearchFindHouseHelperModel
+
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+
++ (JSONKeyMapper*)keyMapper
+{
+    NSDictionary *dict = @{
+                           @"cardType": @"card_type",
+                           @"buttonText": @"button_text",
+                           @"openUrl": @"open_url",
+                           };
+    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+        return dict[keyName]?:keyName;
+    }];
+}
+
+@end

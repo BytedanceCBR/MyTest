@@ -28,8 +28,8 @@
         self.noDataTipLabel = [[UILabel alloc] init];
         self.noDataTipLabel.textAlignment = NSTextAlignmentCenter;
         [self.contentView addSubview:self.noDataTipLabel];
-        self.noDataTipLabel.font = [UIFont themeFontMedium:14];
-        self.noDataTipLabel.textColor = [UIColor themeGray4];
+        self.noDataTipLabel.font = [UIFont themeFontRegular:14];
+        self.noDataTipLabel.textColor = [UIColor themeGray3];
         [self.contentView addSubview:self.leftLine];
         [self.contentView addSubview:self.rightLine];
         [self initConstraints];
@@ -57,7 +57,7 @@
 
 + (CGFloat)heightForData:(id)data
 {
-    return 40;
+    return 60;
 }
 
 - (void)initConstraints {

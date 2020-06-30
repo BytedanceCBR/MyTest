@@ -244,9 +244,9 @@ static NSMutableArray  * _Nullable identifierArr;
 - (CGFloat)heightForFHHomeListHouseSectionHeight
 {
     CGFloat padding = 0;
-    if ([[FHEnvContext sharedInstance] getConfigFromCache].houseTypeList.count <= 1) {
-        padding = 90;
-    }
+//    if ([[FHEnvContext sharedInstance] getConfigFromCache].houseTypeList.count <= 1) {
+//        padding = 90;
+//    }
     // 108: topbar   49:tahbar  45:sectionHeader
     if ([TTDeviceHelper isIPhoneXSeries]) {
         return MAIN_SCREENH_HEIGHT - 108 - 49  + padding;
@@ -383,7 +383,7 @@ static NSMutableArray  * _Nullable identifierArr;
                 //通勤找房
                 [[FHCommuteManager sharedInstance] tryEnterCommutePage:itemModel.openUrl logParam:dictTrace];
             }else{
-                 [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
+                    [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
             }
         }
     };

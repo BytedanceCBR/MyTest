@@ -130,8 +130,11 @@
 
 - (void)dataLoaded:(FHUnreadMsgModel *)unreadMsg error:(NSError *)error ugcUnread:(FHUnreadMsgDataUnreadModel *)ugcUnread {
     
-    NSArray<IMConversation *> *allConversations = [[IMManager shareInstance].chatService allConversations];
-    [_combiner resetConversations:allConversations];
+    BOOL isLogin = [IMManager shareInstance].isClientLogin;
+    if(isLogin) {
+        NSArray<IMConversation *> *allConversations = [[IMManager shareInstance].chatService allConversations];
+        [_combiner resetConversations:allConversations];
+    };
     
     if (self.isFirstLoad) {
         [self.viewController endLoading];

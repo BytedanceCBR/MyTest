@@ -691,6 +691,34 @@
 }
 @end
 
+
+@implementation FHFeedContentRawDataRealtorModel
++ (JSONKeyMapper*)keyMapper
+{
+    NSDictionary *dict = @{
+                           @"agencyName": @"agency_name",
+                           @"avatarUrl": @"avatar_url",
+                           @"certificationIcon": @"certification_icon",
+                           @"certificationPage": @"certification_page",
+                           @"chatOpenurl": @"chat_openurl",
+                           @"desc": @"desc",
+                           @"mainPageInfo": @"main_page_info",
+                           @"realtorId": @"realtor_id",
+                           @"realtorName": @"realtor_name",
+                           @"associateInfo": @"associate_info",
+                           @"realtorLogpb":@"realtor_log_pb"
+                           };
+    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+        return dict[keyName]?:keyName;
+    }];
+}
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+@end
+
+
 @implementation FHFeedContentRawDataOriginCommonContentUserInfoModel
 + (JSONKeyMapper*)keyMapper
 {

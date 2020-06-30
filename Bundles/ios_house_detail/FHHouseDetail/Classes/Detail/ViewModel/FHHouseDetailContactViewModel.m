@@ -320,6 +320,7 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
     [params setValue:[_tracerDict objectForKey:@"origin_from"] forKey:@"origin_from"];
     [params setValue:[_tracerDict objectForKey:@"origin_search_id"] forKey:@"origin_search_id"];
     [params setValue:[_tracerDict objectForKey:@"log_pb"] forKey:@"log_pb"];
+    [params setValue:self.houseInfoBizTrace forKey:@"biz_trace"];
     [params setValue: [[FHEnvContext sharedInstance].messageManager getTotalUnreadMessageCount] >0?@"1":@"0" forKey:@"with_tips"];
       [[FHHouseErrorHubManager sharedInstance] checkBuryingPointWithEvent:@"click_im_message" Params:params errorHubType:FHErrorHubTypeBuryingPoint];
     [BDTrackerProtocol eventV3:@"click_im_message" params:params];
@@ -423,6 +424,7 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
 }
 
 - (void)generateImParams:(NSString *)houseId houseTitle:(NSString *)houseTitle houseCover:(NSString *)houseCover houseType:(NSString *)houseType houseDes:(NSString *)houseDes housePrice:(NSString *)housePrice houseAvgPrice:(NSString *)houseAvgPrice {
+    _phoneCallViewModel.houseInfoBizTrace = self.houseInfoBizTrace;
     [self.phoneCallViewModel generateImParams:houseId houseTitle:houseTitle houseCover:houseCover houseType:houseType houseDes:houseDes housePrice:housePrice houseAvgPrice:houseAvgPrice];
 }
 
@@ -490,6 +492,14 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
         associatePhone.imprId = self.imprId;
         associatePhone.showLoading = YES;
         associatePhone.realtorId = self.contactPhone.realtorId;
+        //如果是底部展位用自己的biz_trace，其余用详情页的biz_trace
+        if (self.contactPhone.bizTrace && extraDict[@"position"] && [extraDict[@"position"] isEqualToString:@"button"]) {
+            associatePhone.extraDict = @{@"biz_trace":self.contactPhone.bizTrace};
+        }else{
+            if(self.houseInfoBizTrace){
+                associatePhone.extraDict = @{@"biz_trace":self.houseInfoBizTrace};
+            }
+        }
         // 拨打电话
         [self callActionWithAssociatePhone:associatePhone];
     }
@@ -636,6 +646,9 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
     associateReport.reportParams = reportParamsDict;
     associateReport.associateInfo = associateInfoDict;
     associateReport.chooseAgencyList = self.chooseAgencyList;
+    if (self.houseInfoBizTrace) {
+        associateReport.extraInfo = @{@"biz_trace":self.houseInfoBizTrace};
+    }
     [FHHouseFillFormHelper fillFormActionWithAssociateReportModel:associateReport];
     
 }
@@ -1105,6 +1118,8 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
     tracerDic[@"realtor_rank"] = @(0);
     tracerDic[@"realtor_position"] = @"detail_button";
     tracerDic[@"realtor_logpb"] = contactPhone.realtorLogpb;
+    tracerDic[@"biz_trace"] = self.houseInfoBizTrace;
+    
     if (_contactPhone.phone.length < 1) {
         [tracerDic setValue:@"0" forKey:@"phone_show"];
     } else {
@@ -1145,6 +1160,7 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
     tracerDic[@"is_call"] = contactPhone.phone.length < 1 ? @"0" : @"1";
     tracerDic[@"is_report"] = contactPhone.isFormReport ? @"1" : @"0";
     tracerDic[@"is_online"] = _contactPhone.unregistered?@"1":@"0";
+    tracerDic[@"biz_trace"] = contactPhone.bizTrace?:@"be_null";
     [FHUserTracker writeEvent:@"lead_show" params:tracerDic];
 }
 
@@ -1202,7 +1218,11 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
         _shareManager = [[TTShareManager alloc]init];
         _shareManager.delegate = self;
         FHIMShareActivity* activity = [[FHIMShareActivity alloc] init];
+        if (self.houseInfoBizTrace) {
+            activity.extraInfo = @{@"biz_trace":self.houseInfoBizTrace};
+        }
         [TTShareManager addUserDefinedActivity:activity];
+        [self.shareManager updateBizTraceExtraInfo:activity.extraInfo  activity:activity];
     }
     return _shareManager;
 }

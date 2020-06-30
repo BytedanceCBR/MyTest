@@ -33,22 +33,34 @@
 {
     self = [super initWithCoder:coder];
     if (self) {
-        UIVisualEffectView *frost = [[UIVisualEffectView alloc]initWithEffect:[UIBlurEffect effectWithStyle:UIBlurEffectStyleExtraLight]];
-        CGRect rect = self.bounds;
-        frost.frame = CGRectMake(rect.origin.x, rect.origin.y, rect.size.width, kTTTabBarHeight);
-        frost.autoresizingMask = UIViewAutoresizingFlexibleWidth;
-        [self insertSubview:frost atIndex:0];
-        
-        if ([TTDeviceHelper isIPhoneXDevice]) {
-
-            UIView *bg = [[UIView alloc]initWithFrame:frost.bounds];
-            bg.width = [UIScreen mainScreen].bounds.size.width;
-            bg.backgroundColor = [UIColor colorWithWhite:1 alpha:0.4];
-            [self insertSubview:bg atIndex:1];
-        }
-
+        [self customInit];
     }
     return self;
+}
+
+- (instancetype)init
+{
+    self = [super init];
+    if (self) {
+        [self customInit];
+    }
+    return self;
+}
+
+- (void)customInit {
+    UIVisualEffectView *frost = [[UIVisualEffectView alloc]initWithEffect:[UIBlurEffect effectWithStyle:UIBlurEffectStyleExtraLight]];
+    CGRect rect = self.bounds;
+    frost.frame = CGRectMake(rect.origin.x, rect.origin.y, rect.size.width, kTTTabBarHeight);
+    frost.autoresizingMask = UIViewAutoresizingFlexibleWidth;
+    [self insertSubview:frost atIndex:0];
+    
+    if ([TTDeviceHelper isIPhoneXDevice]) {
+
+        UIView *bg = [[UIView alloc]initWithFrame:frost.bounds];
+        bg.width = [UIScreen mainScreen].bounds.size.width;
+        bg.backgroundColor = [UIColor colorWithWhite:1 alpha:0.4];
+        [self insertSubview:bg atIndex:1];
+    }
 }
 
 #pragma mark - Layout

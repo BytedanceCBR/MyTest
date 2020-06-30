@@ -599,9 +599,11 @@
             }
         }
     }else{
-        self.viewModel.currentTabIndex = 0;
-        NSIndexPath *indexPath = [NSIndexPath indexPathForRow:0 inSection:0];
-        [self.collectionView scrollToItemAtIndexPath:indexPath atScrollPosition:UICollectionViewScrollPositionLeft animated:NO];
+        if([FHEnvContext isNewDiscovery]){
+            self.viewModel.currentTabIndex = 0;
+            NSIndexPath *indexPath = [NSIndexPath indexPathForRow:0 inSection:0];
+            [self.collectionView scrollToItemAtIndexPath:indexPath atScrollPosition:UICollectionViewScrollPositionLeft animated:NO];
+        }
     }
 }
 

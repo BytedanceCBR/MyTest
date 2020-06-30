@@ -263,6 +263,10 @@
         associatePhone.houseId = self.baseViewModel.houseId;
         associatePhone.showLoading = NO;
         
+        if (contact.bizTrace) {
+            associatePhone.extraDict = @{@"biz_trace":contact.bizTrace};
+        }
+        
         //        FHHouseContactConfigModel *contactConfig = [[FHHouseContactConfigModel alloc]initWithDictionary:extraDict error:nil];
 //        contactConfig.houseType = self.baseViewModel.houseType;
 //        contactConfig.houseId = self.baseViewModel.houseId;
@@ -542,6 +546,7 @@
             tracerDic[@"realtor_rank"] = @(i);
             tracerDic[@"realtor_position"] = @"detail_related";
             tracerDic[@"realtor_logpb"] = contact.realtorLogpb;
+            tracerDic[@"biz_trace"] = contact.bizTrace;
             if (contact.phone.length < 1) {
                 [tracerDic setValue:@"0" forKey:@"phone_show"];
             } else {

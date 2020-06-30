@@ -5452,6 +5452,21 @@ static NSString *const kFFeedRefreshStrategy = @"feed_refresh_settings";
     return YES;
 }
 
++ (BOOL)isFHNewLaunchOptimizeEnabled {
+//    BOOL startupOptimizeOpen = [[self fhSettings] tt_boolValueForKey:@"f_startup_optimize_open"];
+    //由于在ios12中进入圈子以后会出现一个空白，所以暂时关闭这项优化
+    return NO;
+}
+
++(BOOL)enableWebviewNativeComponent
+{
+    NSDictionary *fhSettings = [self fhSettings];
+    if (fhSettings && [fhSettings objectForKey:@"enable_webview_native_component"]) {
+        return [[fhSettings objectForKey:@"enable_webview_native_component"] boolValue];
+    }
+    return YES;
+}
+
 @end
 
 

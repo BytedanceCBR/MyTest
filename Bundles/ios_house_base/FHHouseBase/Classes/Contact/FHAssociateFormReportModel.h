@@ -18,6 +18,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, strong) NSDictionary *associateInfo; // 线索相关参数
 @property (nonatomic, strong) NSDictionary *reportParams; // 埋点参数
+@property (nonatomic, strong) NSDictionary *extraInfo; // biz_trace等参数
 
 #pragma mark 必填
 @property (nonatomic, assign) FHHouseType houseType; // 房源类型
