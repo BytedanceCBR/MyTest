@@ -203,7 +203,7 @@
     if (indexPath.row == 0) {
         return 92;
     }
-    return 82;
+    return 96;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
