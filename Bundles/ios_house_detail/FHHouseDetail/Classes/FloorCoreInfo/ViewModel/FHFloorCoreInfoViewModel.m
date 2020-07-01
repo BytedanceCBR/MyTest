@@ -186,6 +186,7 @@
     }
     CGRect screenFrame = [UIScreen mainScreen].bounds;
     [lynxParams setValue:@(screenFrame.size.height - top - 80 - [self getSafeBottom]) forKey:@"display_height"];
+    [lynxParams setValue:@(_houseNameModel.tags.count) forKey:@"tags_size"];
 
     [self.lynxView updateData:lynxParams];
     

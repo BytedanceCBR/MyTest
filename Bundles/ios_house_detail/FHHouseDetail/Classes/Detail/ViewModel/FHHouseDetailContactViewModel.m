@@ -1218,7 +1218,11 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
         _shareManager = [[TTShareManager alloc]init];
         _shareManager.delegate = self;
         FHIMShareActivity* activity = [[FHIMShareActivity alloc] init];
+        if (self.houseInfoBizTrace) {
+            activity.extraInfo = @{@"biz_trace":self.houseInfoBizTrace};
+        }
         [TTShareManager addUserDefinedActivity:activity];
+        [self.shareManager updateBizTraceExtraInfo:activity.extraInfo  activity:activity];
     }
     return _shareManager;
 }
