@@ -147,6 +147,7 @@
         make.height.mas_equalTo(16);
         make.left.mas_equalTo(self.scoreLabel.mas_right).offset(4);
         make.centerY.mas_equalTo(self.scoreLabel.mas_centerY);
+        make.width.mas_lessThanOrEqualTo(118);
         make.right.mas_lessThanOrEqualTo(self.timeLabel.mas_left).offset(-4);
     }];
     
