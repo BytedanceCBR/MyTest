@@ -312,7 +312,7 @@ logPB:self.listLogPB extraInfo:self.extraInfo completion:^(FHDetailOldModel * _N
             houseTitleModel.businessTag = @"企业担保";
             houseTitleModel.advantage = model.data.vouchModel.vouchText;
             houseTitleModel.isCanClick = YES;
-            houseTitleModel.clickUrl = @"sslocal://sample_lynx_page";
+            houseTitleModel.clickUrl = @"sslocal://enterprise_guarantee?channel=lynx_enterprise_guarantee";
         }
         headerCellModel.vrModel = model.data.vrData;
         headerCellModel.vedioModel = itemModel;// 添加视频模型数据
@@ -340,7 +340,7 @@ logPB:self.listLogPB extraInfo:self.extraInfo completion:^(FHDetailOldModel * _N
             houseTitleModel.businessTag = @"企业担保";
             houseTitleModel.advantage = model.data.vouchModel.vouchText;
             houseTitleModel.isCanClick = YES;
-            houseTitleModel.clickUrl = @"sslocal://sample_lynx_page";
+            houseTitleModel.clickUrl = @"sslocal://enterprise_guarantee?channel=lynx_enterprise_guarantee";
         }
         
         headerCellModel.titleDataModel = houseTitleModel;

@@ -50,9 +50,9 @@
     [self.leftView addSubview:self.leftLabel];
     [self.rightView addSubview:self.rightLabel];
     
-    self.leftView.userInteractionEnabled = NO;
+    self.containerView.userInteractionEnabled = NO;
     UITapGestureRecognizer* singleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(goToJump)];
-    [self.leftView addGestureRecognizer:singleTap];
+    [self.containerView addGestureRecognizer:singleTap];
 
 //    [self.shadowImage mas_makeConstraints:^(MASConstraintMaker *make) {
 //        make.left.right.top.mas_equalTo(self);
@@ -122,7 +122,7 @@
     self.leftLabel.text = title;
     self.rightLabel.text = content;
     
-    self.leftView.userInteractionEnabled = isCanClick;
+    self.containerView.userInteractionEnabled = isCanClick;
     self.clickUrl = clickUrl;
     
     if (!_maskLayer) {

@@ -23,7 +23,7 @@
 #import "BDWebViewBlankDetect.h"
 
 @interface FHLynxViewController ()<LynxViewClient>
-@property (nonatomic, assign) NSTimeInterval loadTime; //页面加载时间
+@property(nonatomic, assign) NSTimeInterval loadTime; //页面加载时间
 @property(nonatomic ,strong) NSData *currentTemData;
 @property(nonatomic ,strong) NSString *titleStr;
 @property(nonatomic ,strong) NSString *channelName;
@@ -65,8 +65,12 @@
             
           _requestParams = paramObj.allParams[@"request_params"];
           _reportParams = paramObj.allParams[@"report_params"];
-
+            
           NSData *templateData =  [[FHLynxManager sharedInstance] lynxDataForChannel:channelName templateKey:[FHLynxManager defaultJSFileName] version:0];
+          // 测试时使用
+//            templateData = [NSData dataWithContentsOfURL:[NSURL URLWithString:@"http://10.95.248.183:30334/card2/template.js?1593590670266"]];
+            
+            
           NSMutableDictionary *dataParams = [NSMutableDictionary new];
     
             
@@ -86,6 +90,8 @@
                     
                     NSMutableDictionary *dataCommonparmas = [self getCommonParams];
                     [dataParams setValue:dataCommonparmas forKey:@"common_params"];
+                    NSMutableDictionary *dataAddtionParmas = [self getAddtionParams];
+                    [dataParams setValue:dataAddtionParmas forKey:@"addtion_params"];
                     
                     NSData *jsonData = [NSJSONSerialization dataWithJSONObject:dataParams options:0 error:0];
                     NSString *dataStr = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
@@ -105,9 +111,9 @@
     [super viewDidLoad];
     
 
-    [self setupDefaultNavBar:YES];
+    [self setupDefaultNavBar:NO];
     
-    self.title = _titleStr;
+    self.customNavBarView.title.text = _titleStr;
     
  
     [self tt_startUpdate];
@@ -327,23 +333,28 @@
     return top;
 }
 
+//子类复写，默认为nil
+- (NSMutableDictionary *)getAddtionParams{
+    return nil;
+}
+
 - (NSMutableDictionary *)getCommonParams{
-       CGRect screenFrame = [UIScreen mainScreen].bounds;
-      CGFloat top = [self getSafeTop];
+    CGRect screenFrame = [UIScreen mainScreen].bounds;
+    CGFloat top = [self getSafeTop];
     
-      NSMutableDictionary *dataCommonparmas = [NSMutableDictionary new];
-      [dataCommonparmas setValue:@(screenFrame.size.height - top) forKey:@"display_height"];
-      [dataCommonparmas setValue:@(screenFrame.size.width) forKey:@"display_width"];
-      [dataCommonparmas setValue:@([UIDevice btd_isIPhoneXSeries]) forKey:@"iOS_iPhoneXSeries"];
-      [dataCommonparmas setValue:_channelName forKey:@"app_channel"];
-      [dataCommonparmas setValue:@(top) forKey:@"status_bar_height"];
-      NSString * buildVersionRaw = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"UPDATE_VERSION_CODE"];
-      [dataCommonparmas setValue:buildVersionRaw forKey:@"update_version_code"];
-      [dataCommonparmas setValue:[[TTInstallIDManager sharedInstance] deviceID] forKey:@"device_id"];
-      [dataCommonparmas setValue:@"iOS" forKey:@"platform"];
-      [dataCommonparmas setValue:@"f100" forKey:@"app_name"];
-      [dataCommonparmas setValue:@(screenFrame.size.height) forKey:@"screen_height"];
-      [dataCommonparmas setValue:@(screenFrame.size.width) forKey:@"screen_width"];
+    NSMutableDictionary *dataCommonparmas = [NSMutableDictionary new];
+    [dataCommonparmas setValue:@(screenFrame.size.height - top) forKey:@"display_height"];
+    [dataCommonparmas setValue:@(screenFrame.size.width) forKey:@"display_width"];
+    [dataCommonparmas setValue:@([UIDevice btd_isIPhoneXSeries]) forKey:@"iOS_iPhoneXSeries"];
+    [dataCommonparmas setValue:_channelName forKey:@"app_channel"];
+    [dataCommonparmas setValue:@(top) forKey:@"status_bar_height"];
+    NSString * buildVersionRaw = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"UPDATE_VERSION_CODE"];
+    [dataCommonparmas setValue:buildVersionRaw forKey:@"update_version_code"];
+    [dataCommonparmas setValue:[[TTInstallIDManager sharedInstance] deviceID] forKey:@"device_id"];
+    [dataCommonparmas setValue:@"iOS" forKey:@"platform"];
+    [dataCommonparmas setValue:@"f100" forKey:@"app_name"];
+    [dataCommonparmas setValue:@(screenFrame.size.height) forKey:@"screen_height"];
+    [dataCommonparmas setValue:@(screenFrame.size.width) forKey:@"screen_width"];
     
     return dataCommonparmas;
 }
