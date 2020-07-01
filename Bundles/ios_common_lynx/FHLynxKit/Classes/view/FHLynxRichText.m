@@ -16,7 +16,7 @@
 #import "YYLabel.h"
 #import "NSAttributedString+YYText.h"
 
-@interface FHLynxRichText()
+@interface FHLynxRichText()<UITextViewDelegate>
 
 @property(nonatomic, strong) NSMutableAttributedString * attrStr;
 @property(nonatomic, strong) UIColor *spanColor;
@@ -33,11 +33,11 @@ LYNX_REGISTER_UI("f-rich-text")
 
 - (UIView *)createView
 {
-    YYLabel *textView = [[YYLabel alloc] init];
-    [textView setNumberOfLines:0];
+    UITextView *textView = [[UITextView alloc] init];
+//    [textView setNumberOfLines:0];
     textView.userInteractionEnabled = YES;
     _spanColor = [UIColor themeOrange1];
-    [[self view] setBackgroundColor:[UIColor themeRed2]];
+    [[self view] setBackgroundColor:[UIColor redColor]];
     return textView;
 }
 
@@ -92,23 +92,58 @@ LYNX_PROP_SETTER("font-size", setFontSize, CGFloat)
                         NSNumber* end = (NSNumber *)span.highlightRange.lastObject;
                         NSUInteger length = end.intValue - start.intValue;
                         NSRange range = NSMakeRange(start.intValue, length);
-//                        [_attrStr addAttribute:NSForegroundColorAttributeName value:_spanColor range:range];
-                        [_attrStr yy_setTextHighlightRange:range color:_spanColor backgroundColor:nil tapAction:^(UIView * _Nonnull containerView, NSAttributedString * _Nonnull text, NSRange range, CGRect rect) {
-                            NSURL *URL = [NSURL URLWithString:span.linkUrl];
-                            if ([[TTRoute sharedRoute] canOpenURL:URL]) {
-                                [[TTRoute sharedRoute] openURLByPushViewController:URL userInfo:nil];
-                            }
-                        }];
+//                        [_attrStr addAttributes:NSLinkAttributeName range:range];
+                         [_attrStr addAttribute:NSLinkAttributeName
+                                                         value:span.linkUrl
+                                                  range:range];
+                        [_attrStr addAttribute:NSForegroundColorAttributeName value:_spanColor range:range];
+//                        [_attrStr yy_setTextHighlightRange:range color:_spanColor backgroundColor:nil tapAction:^(UIView * _Nonnull containerView, NSAttributedString * _Nonnull text, NSRange range, CGRect rect) {
+//                            NSURL *URL = [NSURL URLWithString:span.linkUrl];
+//                            if ([[TTRoute sharedRoute] canOpenURL:URL]) {
+//                                [[TTRoute sharedRoute] openURLByPushViewController:URL userInfo:nil];
+//                            }
+//                        }];
                     }
                 }
             }];
             _attrStr.yy_font = _font;
         }
-    
+        
+//        [[self view] addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(testAction)]];
         [self view].attributedText = _attrStr;
+        [self view].delegate = self;
+        [self view].editable = NO;        //必须禁止输入，否则点击将弹出输入键盘
+        [self view].scrollEnabled = NO;
+        [self view].userInteractionEnabled = YES;
+        [[self view] setBackgroundColor:[UIColor clearColor]];
+
+
+//        [self.view setTextTapAction:^(UIView * _Nonnull containerView, NSAttributedString * _Nonnull text, NSRange range, CGRect rect) {
+//
+//        }];
         [self view].textAlignment = _alignment;
     }
 }
+
+- (void)longBangClick
+{
+    
+}
+
+-(BOOL)textView:(UITextView *)textView shouldInteractWithURL:(NSURL *)URL inRange:(NSRange)characterRange{
+    if (URL) {
+        [[TTRoute sharedRoute] openURLByViewController:URL userInfo:nil];
+    }
+//    NSRange range = [@"1.您可能很久未更新最新数据导致图表有误，请及时刷新;\n以上分析根据公积金官网数据统计分析所得，可能存在有误。" rangeOfString:@"刷新"];
+//    if (NSEqualRanges(characterRange, range)) {
+//        NSLog(@"设置您的自定义事件");
+////        if (self.refreshAccountBlock) {
+////            self.refreshAccountBlock();
+////        }
+//    }
+    return NO;
+}
+
 
 - (void)updateFrame:(CGRect)frame withPadding:(UIEdgeInsets)padding border:(UIEdgeInsets)border withLayoutAnimation:(BOOL)with
 {

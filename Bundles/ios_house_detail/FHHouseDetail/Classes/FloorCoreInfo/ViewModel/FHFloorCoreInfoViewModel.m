@@ -18,6 +18,7 @@
 #import "FHOldDetailDisclaimerCell.h"
 #import "FHFloorPanCorePermitCell.h"
 #import "UIDevice+BTDAdditions.h"
+#import <TTInstallIDManager.h>
 
 @interface FHFloorCoreInfoViewModel()<UITableViewDelegate,UITableViewDataSource>
 
@@ -164,6 +165,7 @@
 
 - (void)updateLynxViewInfo:(FHDetailNewCoreDetailModel *)model{
     NSMutableDictionary *lynxParams = [NSMutableDictionary new];
+    NSMutableDictionary *lynxParamsAll = [NSMutableDictionary new];
     NSMutableDictionary *dataDict = [model toDictionary];
     CGFloat top = [self getSafeTop];
 
@@ -184,11 +186,33 @@
         [court_info setValue:tagArray forKey:@"tags"];
         lynxParams[@"court_info"] = court_info;
     }
-    CGRect screenFrame = [UIScreen mainScreen].bounds;
-    [lynxParams setValue:@(screenFrame.size.height - top - 80 - [self getSafeBottom]) forKey:@"display_height"];
-    [lynxParams setValue:@(_houseNameModel.tags.count) forKey:@"tags_size"];
+    
+    
+    [lynxParams setValue:@(model.data.permitList.count) forKey:@"permit_list_size"];
 
-    [self.lynxView updateData:lynxParams];
+    if (model.data.permitList.count > 0) {
+        [lynxParams setValue:@(_houseNameModel.tags.count) forKey:@"tags_size"];
+
+    }
+    CGRect screenFrame = [UIScreen mainScreen].bounds;
+  
+    
+    
+    
+    [lynxParamsAll setValue:lynxParams forKey:@"request_params"];
+    [lynxParamsAll setValue:[self getCommonParams] forKey:@"common_params"];
+
+    [lynxParamsAll setValue:@(_houseNameModel.tags.count) forKey:@"tags_size"];
+    
+//    [lynxParams setValue:@(model.data.disclaimer.count) forKey:@"tags_size"];
+
+//
+//    if ([model.data.disclaimer isKindOfClass:[JSONModel class]] ) {
+//        [lynxParams setValue:[model.data.disclaimer toDictionary] forKey:@"tags_size"];
+//    }
+    
+
+    [self.lynxView updateData:lynxParamsAll];
     
 }
 
@@ -214,6 +238,27 @@
         }
     }
     return safeBottomPandding;
+}
+
+- (NSMutableDictionary *)getCommonParams{
+       CGRect screenFrame = [UIScreen mainScreen].bounds;
+      CGFloat top = [self getSafeTop];
+    
+      NSMutableDictionary *dataCommonparmas = [NSMutableDictionary new];
+    
+      [dataCommonparmas setValue:@(screenFrame.size.height - top - 80 - [self getSafeBottom]) forKey:@"display_height"];
+      [dataCommonparmas setValue:@(screenFrame.size.width) forKey:@"display_width"];
+      [dataCommonparmas setValue:@([UIDevice btd_isIPhoneXSeries]) forKey:@"iOS_iPhoneXSeries"];
+      [dataCommonparmas setValue:@(top) forKey:@"status_bar_height"];
+      NSString * buildVersionRaw = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"UPDATE_VERSION_CODE"];
+      [dataCommonparmas setValue:buildVersionRaw forKey:@"update_version_code"];
+      [dataCommonparmas setValue:[[TTInstallIDManager sharedInstance] deviceID] forKey:@"device_id"];
+      [dataCommonparmas setValue:@"iOS" forKey:@"platform"];
+      [dataCommonparmas setValue:@"f100" forKey:@"app_name"];
+      [dataCommonparmas setValue:@(screenFrame.size.height) forKey:@"screen_height"];
+      [dataCommonparmas setValue:@(screenFrame.size.width) forKey:@"screen_width"];
+    
+    return dataCommonparmas;
 }
 
 - (NSString *)checkPValueStr:(NSString *)str
