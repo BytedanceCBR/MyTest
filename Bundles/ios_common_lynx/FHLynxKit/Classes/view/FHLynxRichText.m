@@ -109,7 +109,7 @@ LYNX_PROP_SETTER("font-size", setFontSize, CGFloat)
             _attrStr.yy_font = _font;
         }
         
-//        [[self view] addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(testAction)]];
+        [_attrStr addAttribute:NSFontAttributeName value:_font range:NSMakeRange(0, _attrStr.length)];
         [self view].attributedText = _attrStr;
         [self view].delegate = self;
         [self view].editable = NO;        //必须禁止输入，否则点击将弹出输入键盘
