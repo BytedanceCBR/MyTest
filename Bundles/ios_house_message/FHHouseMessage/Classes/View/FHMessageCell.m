@@ -167,6 +167,7 @@
 - (void)updateWithModel:(FHUnreadMsgDataUnreadModel *)model
 {
     self.titleLabel.text = model.title;
+    self.subTitleLabel.attributedText = nil;
     self.subTitleLabel.text = model.content;
     NSDate* date = [[NSDate alloc] initWithTimeIntervalSince1970:[model.timestamp doubleValue]];
     self.timeLabel.text = [self timeLabelByDate:date];
