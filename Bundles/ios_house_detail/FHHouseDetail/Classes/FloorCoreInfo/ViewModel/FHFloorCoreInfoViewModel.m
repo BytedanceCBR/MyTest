@@ -188,7 +188,16 @@
     }
     
     
-    [lynxParams setValue:@(model.data.permitList.count) forKey:@"permit_list_size"];
+    if (model.data.permitList) {
+        NSMutableArray *permistList = [NSMutableArray new];
+        [model.data.permitList enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+            if ([obj isKindOfClass:[JSONModel class]]) {
+                [permistList addObject:[(JSONModel *)obj toDictionary]];
+            }
+        }];
+        [lynxParams setValue:permistList forKey:@"permit_list"];
+    }
+    
 
     if (model.data.permitList.count > 0) {
         [lynxParams setValue:@(_houseNameModel.tags.count) forKey:@"tags_size"];
@@ -205,7 +214,8 @@
     }
     [lynxParamsAll setValue:lynxParams forKey:@"request_params"];
     [lynxParamsAll setValue:[self getCommonParams] forKey:@"common_params"];
-    
+    [lynxParamsAll setValue:@(model.data.permitList.count) forKey:@"permit_list_size"];
+
       
     [lynxParamsAll setValue:@(_houseNameModel.tags.count) forKey:@"tags_size"];
     
