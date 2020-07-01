@@ -1,7 +1,7 @@
 [
   {
     "event": "click_call",
-    "event_id": "",
+    "event_id": "12",
     "description": "点击“打电话”",
     "params":[
       {
@@ -100,7 +100,7 @@
     ]
   },{
         "event": "click_im",
-        "event_id": "",
+        "event_id": "34",
         "description": "点击在线聊/联系经纪人",
         "params": [
             {
@@ -212,7 +212,7 @@
         ]
     },{
         "event": "click_confirm",
-        "event_id": "",
+        "event_id": "111",
         "description": "点击提交手机号",
         "params": [
             {
@@ -285,7 +285,7 @@
         ]
     },{
         "event": "go_detail",
-        "event_id": "",
+        "event_id": "222",
         "description": "进入房源详情页",
         "params": [
             {
@@ -333,7 +333,7 @@
         ]
     },{
         "event": "house_show",
-        "event_id": "",
+        "event_id": "444",
         "description": "房源卡片展现",
         "params": [
             {
@@ -444,7 +444,7 @@
         ]
     },{
         "event": "client_show",
-        "event_id": "",
+        "event_id": "555",
         "description": "文章展现",
         "params": [
             {
@@ -501,7 +501,7 @@
         ]
     },{
         "event": "inform_show",
-        "event_id": "",
+        "event_id": "666",
         "description": "表单输入框展现",
         "params": [
             {
