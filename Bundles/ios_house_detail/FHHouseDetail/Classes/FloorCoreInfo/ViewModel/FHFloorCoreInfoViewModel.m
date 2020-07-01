@@ -19,7 +19,7 @@
 #import "FHFloorPanCorePermitCell.h"
 #import "UIDevice+BTDAdditions.h"
 #import <TTInstallIDManager.h>
-
+#import "FHUtils.h"
 @interface FHFloorCoreInfoViewModel()<UITableViewDelegate,UITableViewDataSource>
 
 @property (nonatomic , weak) UITableView *infoListTable;
@@ -194,22 +194,25 @@
         [lynxParams setValue:@(_houseNameModel.tags.count) forKey:@"tags_size"];
 
     }
+    
+  
     CGRect screenFrame = [UIScreen mainScreen].bounds;
   
     
     
-    
+    if ([model.data.disclaimer isKindOfClass:[JSONModel class]] ) {
+        [lynxParams setValue:[FHUtils getJsonStrFromNoEncode:[model.data.disclaimer toDictionary]] forKey:@"estate_info_disclaimer"];
+    }
     [lynxParamsAll setValue:lynxParams forKey:@"request_params"];
     [lynxParamsAll setValue:[self getCommonParams] forKey:@"common_params"];
-
+    
+      
     [lynxParamsAll setValue:@(_houseNameModel.tags.count) forKey:@"tags_size"];
     
 //    [lynxParams setValue:@(model.data.disclaimer.count) forKey:@"tags_size"];
 
 //
-//    if ([model.data.disclaimer isKindOfClass:[JSONModel class]] ) {
-//        [lynxParams setValue:[model.data.disclaimer toDictionary] forKey:@"tags_size"];
-//    }
+   
     
 
     [self.lynxView updateData:lynxParamsAll];

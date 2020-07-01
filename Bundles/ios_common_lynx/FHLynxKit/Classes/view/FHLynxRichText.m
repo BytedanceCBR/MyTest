@@ -96,7 +96,8 @@ LYNX_PROP_SETTER("font-size", setFontSize, CGFloat)
                          [_attrStr addAttribute:NSLinkAttributeName
                                                          value:span.linkUrl
                                                   range:range];
-                        [_attrStr addAttribute:NSForegroundColorAttributeName value:_spanColor range:range];
+                       
+                        [_attrStr addAttribute:NSForegroundColorAttributeName value:[UIColor redColor] range:range];
 //                        [_attrStr yy_setTextHighlightRange:range color:_spanColor backgroundColor:nil tapAction:^(UIView * _Nonnull containerView, NSAttributedString * _Nonnull text, NSRange range, CGRect rect) {
 //                            NSURL *URL = [NSURL URLWithString:span.linkUrl];
 //                            if ([[TTRoute sharedRoute] canOpenURL:URL]) {
@@ -108,8 +109,9 @@ LYNX_PROP_SETTER("font-size", setFontSize, CGFloat)
             }];
             _attrStr.yy_font = _font;
         }
-        
-        [_attrStr addAttribute:NSFontAttributeName value:_font range:NSMakeRange(0, _attrStr.length)];
+        if (_font) {
+            [_attrStr addAttribute:NSFontAttributeName value:_font range:NSMakeRange(0, _attrStr.length)];
+        }
         [self view].attributedText = _attrStr;
         [self view].delegate = self;
         [self view].editable = NO;        //必须禁止输入，否则点击将弹出输入键盘
@@ -121,6 +123,9 @@ LYNX_PROP_SETTER("font-size", setFontSize, CGFloat)
 //        [self.view setTextTapAction:^(UIView * _Nonnull containerView, NSAttributedString * _Nonnull text, NSRange range, CGRect rect) {
 //
 //        }];
+        if (_spanColor) {
+            [self view].linkTextAttributes = @{NSForegroundColorAttributeName:_spanColor};
+        }
         [self view].textAlignment = _alignment;
     }
 }
