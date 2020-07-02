@@ -232,14 +232,24 @@
             self.subTitleLabel.text = [NSString stringWithFormat:@"%@ %@", roleHintText, recallHintText];
         }
         else if (isGroupChat) {
-            NSString *cutStr = [self cutLineBreak:[conv lastMessage]];
+            NSString *lastMessage = [conv lastMessage];
+            NSString *cutStr = [self cutLineBreak:lastMessage];
+            
+            
             NSNumber *uid =[NSNumber numberWithLongLong: [[[TTAccount sharedAccount] userIdString] longLongValue]];
             if (lastMsg.isCurrentUser || lastMsg.type == ChatMstTypeNotice) {
                 if ([lastMsg.mentionedUsers containsObject:uid] && ![self lastMsgHasReadInConversation:conv]) {
                     self.subTitleLabel.attributedText = [self getAtAttributeString:cutStr];;
                 } else {
-                    self.subTitleLabel.attributedText = nil;
-                    self.subTitleLabel.text = cutStr;
+                    NSRange range = [cutStr rangeOfString:@"[语音]"];
+                    if(range.location == NSNotFound) {
+                        self.subTitleLabel.attributedText = nil;
+                        self.subTitleLabel.text = cutStr;
+                    } else {
+                        NSMutableAttributedString *attributeLastMessage = [[NSMutableAttributedString alloc] initWithString:cutStr];
+                        [attributeLastMessage addAttributes:@{NSForegroundColorAttributeName: [UIColor colorWithHexStr:@"FE5500"], NSFontAttributeName:self.subTitleLabel.font} range:range];
+                        self.subTitleLabel.attributedText = attributeLastMessage;
+                    }
                 }
             } else {
                 [[FHChatUserInfoManager shareInstance] getUserInfoSync:[[NSNumber numberWithLongLong:lastMsg.userId] stringValue] block:^(NSString * _Nonnull userId, FHChatUserInfo * _Nonnull userInfo) {
@@ -247,8 +257,15 @@
                     if ([lastMsg.mentionedUsers containsObject:uid] && ![self lastMsgHasReadInConversation:conv]) {
                         self.subTitleLabel.attributedText = [self getAtAttributeString:tipMsg];;
                     } else {
-                        self.subTitleLabel.attributedText = nil;
-                         self.subTitleLabel.text = tipMsg;
+                        NSRange range = [tipMsg rangeOfString:@"[语音]"];
+                        if(range.location == NSNotFound) {
+                            self.subTitleLabel.attributedText = nil;
+                            self.subTitleLabel.text = tipMsg;
+                        } else {
+                            NSMutableAttributedString *attributeLastMessage = [[NSMutableAttributedString alloc] initWithString:tipMsg];
+                            [attributeLastMessage addAttributes:@{NSForegroundColorAttributeName: [UIColor colorWithHexStr:@"FE5500"], NSFontAttributeName:self.subTitleLabel.font} range:range];
+                            self.subTitleLabel.attributedText = attributeLastMessage;
+                        }
                     }
                 }];
             }
