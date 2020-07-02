@@ -115,6 +115,7 @@
 "floor_coreinfo_detail"        = "FHFloorMoreCoreInfoViewController";
 "floor_timeline_detail"        = "FHFloorTimeLineViewController";
 "neighborhood_sales_list"        = "FHTransactionHistoryController";
+"new_building_detail"   = "FHBuildingDetailViewController";
 
 "test_detail"           = "FHHouseDetailViewController";
 

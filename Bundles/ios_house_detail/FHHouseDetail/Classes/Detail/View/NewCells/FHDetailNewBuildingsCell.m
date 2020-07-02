@@ -223,7 +223,33 @@
 
 //进入楼栋详情页
 - (void)moreButtonAction:(id)sender {
+    if (!self.baseViewModel.houseId.length) {
+        return;
+    }
+    NSMutableDictionary *traceParam = [NSMutableDictionary dictionary];
+    traceParam[@"enter_from"] = @"new_detail";
+//    traceParam[@"log_pb"] = floorPanInfoModel.logPb;
+    traceParam[@"origin_from"] = self.baseViewModel.detailTracerDic[@"origin_from"];
+    traceParam[@"card_type"] = @"left_pic";
+//    traceParam[@"rank"] = @(floorPanInfoModel.index);
+    traceParam[@"origin_search_id"] = self.baseViewModel.detailTracerDic[@"origin_search_id"];
+    traceParam[@"element_from"] = @"house_model";
     
+//    NSDictionary *dict = @{@"house_id":self.baseViewModel.houseId?:@"",
+//                           @"tracer": traceParam
+//                           };
+    
+    NSMutableDictionary *infoDict = [NSMutableDictionary dictionaryWithDictionary:nil];
+//    infoDict[@"house_type"] = @(1);
+//    [infoDict setValue:floorPanInfoModel.id forKey:@"floor_plan_id"];
+    NSMutableDictionary *subPageParams = [self.baseViewModel subPageParams];
+    subPageParams[@"contact_phone"] = nil;
+    [infoDict addEntriesFromDictionary:subPageParams];
+    infoDict[@"tracer"] = traceParam;
+    infoDict[@"house_id"] = self.baseViewModel.houseId?:@"";
+    TTRouteUserInfo *info = [[TTRouteUserInfo alloc] initWithInfo:infoDict];
+
+    [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:@"sslocal://new_building_detail"] userInfo:info];
 }
 
 @end
