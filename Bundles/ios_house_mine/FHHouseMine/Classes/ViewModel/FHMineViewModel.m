@@ -21,6 +21,7 @@
 #import "FHMineMutiItemCell.h"
 #import "FHCommuteManager.h"
 #import "FHEnvContext.h"
+#import "FHUtils.h"
 
 #define mutiItemCellId @"mutiItemCellId"
 
@@ -303,7 +304,7 @@
              TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
              
              NSURL* url = [NSURL URLWithString:model.openUrl];
-             if(model.openUrl && [model.openUrl containsString:@"slocal://myFocus"]){
+             if(model.openUrl && [model.openUrl containsString:@"slocal://myFocus"] &&  [FHUtils getSettingEnableBooleanForKey:@"f_login_before_house_subscribe"]){
                  NSString *clickTrackDic = @{
                          @"click_type":@"login",
                          @"page_type":@"minetab"
