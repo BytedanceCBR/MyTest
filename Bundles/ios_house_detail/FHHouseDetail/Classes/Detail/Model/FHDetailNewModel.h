@@ -11,6 +11,7 @@
 #import "FHHouseNewsSocialModel.h"
 #import "FHHouseBaseInfoModel.h"
 #import "FHDetailOldModel.h"
+#import <FHHouseBase/FHSaleStatusModel.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -24,7 +25,6 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *houseType;
 
 @end
-
 
 @protocol FHDetailNewDataGlobalPricingListModel<NSObject>
 @end
@@ -73,26 +73,6 @@ NS_ASSUME_NONNULL_BEGIN
 @protocol FHDetailNewDataFloorpanListListModel<NSObject>
 @end
 
-@interface FHDetailNewDataFloorpanListListSaleStatusModel : JSONModel
-
-@property (nonatomic, copy , nullable) NSString *content;
-@property (nonatomic, copy , nullable) NSString *backgroundColor;
-@property (nonatomic, copy , nullable) NSString *id;
-@property (nonatomic, copy , nullable) NSString *textColor;
-@end
-
-@protocol FHDetailNewDataFloorpanListListImagesModel<NSObject>
-@end
-
-@interface FHDetailNewDataFloorpanListListImagesModel : JSONModel
-
-@property (nonatomic, copy , nullable) NSString *url;
-@property (nonatomic, copy , nullable) NSString *width;
-@property (nonatomic, strong , nullable) NSArray *urlList;
-@property (nonatomic, copy , nullable) NSString *uri;
-@property (nonatomic, copy , nullable) NSString *height;
-@end
-
 @interface FHDetailNewDataFloorpanListListModel : JSONModel
 
 @property (nonatomic, copy , nullable) NSString *pricing;
@@ -100,14 +80,14 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong , nullable) NSDictionary *logPb;
 @property (nonatomic, copy , nullable) NSString *roomCount;
 @property (nonatomic, copy , nullable) NSString *title;
-@property (nonatomic, strong , nullable) FHDetailNewDataFloorpanListListSaleStatusModel *saleStatus ;
+@property (nonatomic, strong , nullable) FHSaleStatusModel *saleStatus ;
 @property (nonatomic, strong , nullable) NSArray<FHHouseTagsModel> *tags;
 @property (nonatomic, copy , nullable) NSString *id;
 @property (nonatomic, copy , nullable) NSString *pricingPerSqm;
 @property (nonatomic, copy , nullable) NSString *squaremeter;
 @property (nonatomic, copy , nullable) NSString *imprId;
 @property (nonatomic, copy , nullable) NSString *groupId;
-@property (nonatomic, strong , nullable) NSArray<FHDetailNewDataFloorpanListListImagesModel> *images;
+@property (nonatomic, strong , nullable) NSArray<FHImageModel> *images;
 @property (nonatomic, copy , nullable) NSString *searchId;
 @property (nonatomic, assign) NSInteger index;
 @property (nonatomic, copy , nullable) NSString *facingDirection;
@@ -123,21 +103,10 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong , nullable) NSArray<FHDetailNewDataFloorpanListListModel> *list;
 @property (nonatomic, copy , nullable) NSString *courtId;
 @property (nonatomic, copy , nullable) NSString *totalNumber;
-//@property (nonatomic, strong , nullable) FHDetailNewDataCoreInfoSaleStatusModel *saleStatus ;
 @property (nonatomic, strong , nullable) FHDetailContactModel *highlightedRealtor;
 @property (nonatomic, strong , nullable) NSArray<FHFillFormAgencyListItemModel> *chooseAgencyList;
 @property (nonatomic, strong , nullable) FHDetailContactModel *contact;
 @property (nonatomic, strong , nullable)  FHClueAssociateInfoModel *highlightedRealtorAssociateInfo;
-
-@end
-
-@interface FHDetailNewDataCoreInfoSaleStatusModel : JSONModel
-
-@property (nonatomic, copy , nullable) NSString *content;
-@property (nonatomic, copy , nullable) NSString *backgroundColor;
-@property (nonatomic, copy , nullable) NSString *id;
-@property (nonatomic, copy , nullable) NSString *textColor;
-@property (nonatomic, assign) NSInteger index;
 
 @end
 
@@ -151,7 +120,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *gaodeImageUrl;
 @property (nonatomic, strong, nullable) FHDetailGaodeImageModel *gaodeImage;//高德地图静态图
 @property (nonatomic, copy , nullable) NSString *cityId;
-@property (nonatomic, strong , nullable) FHDetailNewDataCoreInfoSaleStatusModel *saleStatus ;
+@property (nonatomic, strong , nullable) FHSaleStatusModel *saleStatus ;
 @property (nonatomic, copy , nullable) NSString *properyType;
 @property (nonatomic, copy , nullable) NSString *districtId;
 @property (nonatomic, copy , nullable) NSString *pricingPerSqm;

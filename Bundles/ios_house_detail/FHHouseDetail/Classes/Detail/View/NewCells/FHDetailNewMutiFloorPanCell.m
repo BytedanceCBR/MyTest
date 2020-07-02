@@ -363,7 +363,7 @@
     [self.tagBacView removeAllTag];
     if (model) {
         if (model.images.count > 0) {
-            FHDetailNewDataFloorpanListListImagesModel *imageModel = model.images.firstObject;
+            FHImageModel *imageModel = model.images.firstObject;
             NSString *urlStr = imageModel.url;
             if ([urlStr length] > 0) {
                 WeakSelf;

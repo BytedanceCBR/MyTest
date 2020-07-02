@@ -201,8 +201,8 @@
             self.priceLabel.attributedText = noteStr;
         }
     
-        if ([model.images.firstObject isKindOfClass:[FHDetailNewDataFloorpanListListImagesModel class]]) {
-            FHDetailNewDataFloorpanListListImagesModel *imageModel = (FHDetailNewDataFloorpanListListImagesModel *)model.images.firstObject;
+        if ([model.images.firstObject isKindOfClass:[FHImageModel class]]) {
+            FHImageModel *imageModel = (FHImageModel *)model.images.firstObject;
             if (imageModel.url) {
                 NSURL *urlImage = [NSURL URLWithString:imageModel.url];
                 if ([urlImage isKindOfClass:[NSURL class]]) {
