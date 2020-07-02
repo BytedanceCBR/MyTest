@@ -101,7 +101,7 @@
           }
         }
         
-        [self.view addSubview:_lynxView];
+//        [self.view addSubview:_lynxView];
     }
     return self;
 }
@@ -110,7 +110,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-
+    [self.view addSubview:_lynxView];
     [self setupDefaultNavBar:NO];
     
     self.customNavBarView.title.text = _titleStr;

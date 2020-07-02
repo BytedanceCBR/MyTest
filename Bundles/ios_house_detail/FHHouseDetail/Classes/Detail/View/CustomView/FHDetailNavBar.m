@@ -518,6 +518,9 @@
 
 - (void)goToJump {
     NSString *url = @"sslocal://enterprise_guarantee?channel=lynx_enterprise_guarantee";
+    if(self.pageType.length > 0){
+        url = [url stringByAppendingFormat:@"&enter_from=%@",self.pageType];
+    }
     if(url.length > 0){
         NSURL *openUrl = [NSURL URLWithString:url];
         [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:nil];
