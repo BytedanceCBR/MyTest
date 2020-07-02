@@ -303,6 +303,26 @@
              TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
              
              NSURL* url = [NSURL URLWithString:model.openUrl];
+             if(model.openUrl && [model.openUrl containsString:@"slocal://myFocus"]){
+                 NSString *clickTrackDic = @{
+                         @"click_type":@"login",
+                         @"page_type":@"minetab"
+                     };
+                 TRACK_EVENT(@"click_minetab", clickTrackDic);
+                 
+                 NSMutableDictionary *dict = @{}.mutableCopy;
+                 dict[@"isCheckUGCADUser"] = @(1);
+                 dict[TRACER_KEY] = @{
+                     @"enter_from": @"minetab",
+                     @"enter_method": @"click_favorite",
+                     @"enter_type": @"login",
+                     @"trigger": @"user"
+                 };
+                 TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
+                 
+                 NSURL* url = [NSURL URLWithString:@"snssdk1370://flogin"];
+                 [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
+             }
              [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
          }
      }else{

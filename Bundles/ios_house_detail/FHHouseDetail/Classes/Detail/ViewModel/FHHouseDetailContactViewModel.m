@@ -61,6 +61,7 @@
 #import "FHDetailNewCoreDetailModel.h"
 #import "FHFloorPanListViewController.h"
 #import "FHDetailRentModel.h"
+#import "TTAccountLoginManager.h"
 
 NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
 
@@ -228,9 +229,30 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
     configModel.houseType = self.houseType;
     configModel.followId = self.houseId;
     configModel.actionType = self.houseType;
-    
-    [FHHouseFollowUpHelper followHouseWithConfigModel:configModel];
+    if (![TTAccount sharedAccount].isLogin) {
+        NSMutableDictionary *params = [NSMutableDictionary dictionary];
+        NSString *page_type = self.tracerDict[@"page_type"] ?: @"be_null";
+        [params setObject:page_type forKey:@"enter_from"];
+        [params setObject:@"click_favorite" forKey:@"enter_type"];
+        [params setObject:@"click_favorite" forKey:@"enter_method"];
+        // 登录成功之后不自己Pop，先进行页面跳转逻辑，再pop
+        [params setObject:@(YES) forKey:@"need_pop_vc"];
+        __weak typeof(self) wSelf = self;
+        [TTAccountLoginManager showAlertFLoginVCWithParams:params completeBlock:^(TTAccountAlertCompletionEventType type, NSString * _Nullable phoneNum) {
+            if (type == TTAccountAlertCompletionEventTypeDone) {
+                // 登录成功
+                if ([TTAccountManager isLogin]) {
+                    [FHHouseFollowUpHelper followHouseWithConfigModel:configModel];
+                }
+            }
+        }];
+    }else{
+        [FHHouseFollowUpHelper followHouseWithConfigModel:configModel];
+    }
+  
 }
+
+
 
 - (void)cancelFollowAction
 {
