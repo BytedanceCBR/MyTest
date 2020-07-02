@@ -72,7 +72,7 @@
     [self addSubview:self.lynxView];
     
     NSData *tempLateData = [[FHLynxManager sharedInstance] lynxDataForChannel:self.channel templateKey:[FHLynxManager defaultJSFileName] version:0];
-    tempLateData = [NSData dataWithContentsOfURL:[NSURL URLWithString:@"http://192.168.3.47:30334/estate_info/template.js?1593506237041"]];
+    tempLateData = [NSData dataWithContentsOfURL:[NSURL URLWithString:@"http://10.95.248.135:30334/estate_info/template.js?1593600307438"]];
     [self.lynxView loadTemplate:tempLateData withURL:@"local"];
 }
 

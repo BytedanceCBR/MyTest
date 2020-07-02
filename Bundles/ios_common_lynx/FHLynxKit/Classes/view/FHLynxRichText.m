@@ -108,6 +108,7 @@ LYNX_PROP_SETTER("font-size", setFontSize, CGFloat)
                 }
             }];
             _attrStr.yy_font = _font;
+            [self view].linkTextAttributes = @{NSForegroundColorAttributeName: _spanColor};
         }
         if (_font) {
             [_attrStr addAttribute:NSFontAttributeName value:_font range:NSMakeRange(0, _attrStr.length)];
