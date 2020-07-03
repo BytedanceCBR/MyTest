@@ -322,16 +322,21 @@
         }
     }
     
-    if (!isEmptyString(conv.realtorScore)) {
-        self.scoreLabel.hidden = NO;
-        self.scoreLabel.text = conv.realtorScore;
+    if (conv.type == IMConversationType1to1Chat) {
+        if (!isEmptyString(conv.realtorScore)) {
+            self.scoreLabel.hidden = NO;
+            self.scoreLabel.text = conv.realtorScore;
+        } else {
+            self.scoreLabel.hidden = YES;
+        }
+        if (!isEmptyString(conv.companyName)) {
+            self.companyLabel.hidden = NO;
+            self.companyLabel.text = conv.companyName;
+        } else {
+            self.companyLabel.hidden = YES;
+        }
     } else {
         self.scoreLabel.hidden = YES;
-    }
-    if (!isEmptyString(conv.companyName)) {
-        self.companyLabel.hidden = NO;
-        self.companyLabel.text = conv.companyName;
-    } else {
         self.companyLabel.hidden = YES;
     }
 
