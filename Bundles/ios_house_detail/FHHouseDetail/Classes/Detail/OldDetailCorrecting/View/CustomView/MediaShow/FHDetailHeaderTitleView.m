@@ -145,7 +145,7 @@
     label.layer.cornerRadius = 1;
     label.layer.masksToBounds = YES;
     label.text = text;
-    label.font = [UIFont themeFontMedium:12];
+    label.font = [UIFont themeFontRegular:12];
     return label;
 }
 
