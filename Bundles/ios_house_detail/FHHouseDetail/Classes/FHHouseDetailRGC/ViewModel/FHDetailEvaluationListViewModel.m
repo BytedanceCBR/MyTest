@@ -252,14 +252,13 @@ if (hasMore) {
         cellModel.categoryId = self.categoryId;
         cellModel.tableView = self.tableView;
         cellModel.enterFrom = [self.listController categoryName];
+        cellModel.isShowLineView = NO;
         switch (cellModel.cellType) {
             case FHUGCFeedListCellTypeUGC:
                 cellModel.cellSubType = FHUGCFeedListCellSubTypeUGCBrokerImage;
-//                contentHeight = model.contentHeight  +75 + 20 + 50 +contentHeight + 30;
                 break;
             case FHUGCFeedListCellTypeUGCSmallVideo:
                 cellModel.cellSubType = FHUGCFeedListCellSubTypeUGCBrokerVideo;
-//                contentHeight = model.contentHeight  +150 + 20 + 50 +contentHeight + 45;
                 break;
             default:
                 break;

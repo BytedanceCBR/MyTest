@@ -32,6 +32,7 @@
 @property (strong ,nonatomic) FHUGCCellUserInfoView *userInfoView;
 @property (nonatomic ,assign) CGFloat imageViewheight;
 @property(nonatomic ,strong) FHFeedUGCCellModel *cellModel;
+@property (strong ,nonatomic) FHUGCCellUserInfoView *lineView;
 
 @end
 @implementation FHHouseDeatilRGCImageCell
@@ -98,6 +99,10 @@
     _bottomView.marginRight = 8;
     _bottomView.paddingLike = 30;
     [self.contentContainer addSubview:_bottomView];
+    
+    self.lineView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width- leftMargin - rightMargin -30, .5)];
+    self.lineView.backgroundColor = [UIColor themeGray6];
+    [self.contentContainer addSubview:self.lineView];
 }
 
 - (void)initConstraints {
@@ -141,6 +146,11 @@
     self.bottomView.width = [UIScreen mainScreen].bounds.size.width- leftMargin - rightMargin ;
     self.bottomView.height = bottomViewHeight;
     
+    self.lineView.top = self.multiImageView.bottom + 30;
+    self.lineView.left = leftMargin;
+    self.lineView.width = [UIScreen mainScreen].bounds.size.width- leftMargin - rightMargin -30 ;
+    self.lineView.height = 0.5;
+    
     if(isEmptyString(cellModel.content)){
           self.contentLabel.hidden = YES;
           self.contentLabel.height = 0;
@@ -158,6 +168,7 @@
     UIView *lastView = self.multiImageView;
     CGFloat topOffset = 15;
     self.bottomView.top = lastView.bottom + topOffset;
+    self.lineView.top = lastView.bottom + 30;
     //
     //    self.originView.top = self.multiImageView.bottom + 10;
     //    self.originView.left = leftMargin;
@@ -210,8 +221,9 @@
     
     [self initConstraints];
     
-  
-
+    self.bottomView.hidden = !cellModel.isInRealtorEvaluationList;
+    
+    self.lineView.hidden = cellModel.isInRealtorEvaluationList || !cellModel.isShowLineView;
 }
 
 // 评论点击

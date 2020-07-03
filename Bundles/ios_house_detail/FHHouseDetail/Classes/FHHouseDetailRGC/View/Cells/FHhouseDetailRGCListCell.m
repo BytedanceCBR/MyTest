@@ -345,14 +345,15 @@
         NSString *content = contentModel.data[m];
         FHFeedUGCCellModel *model = [FHFeedUGCCellModel modelFromFeed:content];
         model.realtorIndex = m;
+        model.isShowLineView = m < contentModel.data.count -1;
         switch (model.cellType) {
             case FHUGCFeedListCellTypeUGC:
                 model.cellSubType = FHUGCFeedListCellSubTypeUGCBrokerImage;
-                contentHeight = model.contentHeight  +75 + 30 + 50 +contentHeight + 40;
+                contentHeight = model.contentHeight  +75 + 30 + 30 +contentHeight + 40;
                 break;
             case FHUGCFeedListCellTypeUGCSmallVideo:
                 model.cellSubType = FHUGCFeedListCellSubTypeUGCBrokerVideo;
-                contentHeight = model.contentHeight  +150 + 30 + 50 +contentHeight + 90;
+                contentHeight = model.contentHeight  +150 + 30 + 30 +contentHeight + 90;
                 break;
             default:
                 break;
