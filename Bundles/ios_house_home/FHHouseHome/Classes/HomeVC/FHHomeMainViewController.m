@@ -166,7 +166,11 @@ static NSString * const kFUGCPrefixStr = @"fugc";
     }
     if (_firstLanchCanShowLogin ) {
            if (!self.isShowLoginTip) {
-             self.loginTipview =  [FHLoginTipView showLoginTipViewInView:self.containerView navbarHeight:kNavigationBarHeight withTracerDic:self.tracerDict];
+    //获取状态栏的rect
+        CGRect statusRect = [[UIApplication sharedApplication] statusBarFrame];
+       //获取导航栏的rect
+        CGRect navRect = self.navigationController.navigationBar.frame;
+             self.loginTipview =  [FHLoginTipView showLoginTipViewInView:self.containerView navbarHeight:statusRect.size.height+navRect.size.height withTracerDic:self.tracerDict];
              self.isShowLoginTip = YES;
              self.loginTipview.type = FHLoginTipViewtTypeMain;
          }else {
