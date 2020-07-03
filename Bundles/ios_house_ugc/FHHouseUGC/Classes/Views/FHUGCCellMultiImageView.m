@@ -208,7 +208,8 @@
 //                         [wImageView.imageView.layer addAnimation:transition forKey:@"contents"];
 //                     }
 //                 } failure:nil];
-                [imageView fh_setImageWithURL:[NSURL URLWithString:imageModel.url] placeholder:nil];
+//                [imageView fh_setImageWithURL:[NSURL URLWithString:imageModel.url] placeholder:nil];
+                [imageView fh_setImageWithURLStringInTrafficSaveMode:imageModel.url placeholder:nil];
                 
             }
         }else{

@@ -136,7 +136,7 @@
     //图片
     FHFeedContentImageListModel *imageModel = [cellModel.imageList firstObject];
     if (imageModel && imageModel.url.length > 0) {
-        [self.singleImageView fh_setImageWithURL:imageModel.url placeholder:nil];
+        [self.singleImageView fh_setImageWithURLStringInTrafficSaveMode:imageModel.url placeholder:nil];
     }
     
     [self showGuideView];

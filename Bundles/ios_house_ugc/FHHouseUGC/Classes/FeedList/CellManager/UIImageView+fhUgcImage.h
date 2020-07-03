@@ -14,6 +14,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (nullable BDWebImageRequest *)fh_setImageWithURL:(nonnull NSURL *)imageURL placeholder:(nullable UIImage *)placeholder;
 
+- (void)fh_setImageWithURLStringInTrafficSaveMode:(NSString *)URLString placeholder:(nullable UIImage *)placeholder;
+
 @end
 
 NS_ASSUME_NONNULL_END

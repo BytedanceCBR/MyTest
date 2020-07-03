@@ -177,7 +177,7 @@
                 FHFeedContentImageListModel *imageModel = imageList[i];
                 imageView.hidden = NO;
                 if (imageModel && imageModel.url.length > 0) {
-                    [imageView fh_setImageWithURL:imageModel.url placeholder:nil];
+                    [imageView fh_setImageWithURLStringInTrafficSaveMode:imageModel.url placeholder:nil];
                 }
             }else{
                 imageView.hidden = YES;
