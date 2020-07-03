@@ -7,15 +7,35 @@
 
 #import "FHBuildingDetailModel.h"
 
+@implementation FHBuildingDetailRelatedFloorpanModel
+
++ (JSONKeyMapper*)keyMapper {
+    NSDictionary *dict = @{
+                           @"id": @"id",
+                           @"name": @"name",
+                           @"facingDirection": @"facing_direction",
+                           @"pricing": @"pricing",
+                           @"squaremeter": @"squaremeter",
+                           @"images": @"images",
+                           @"tags": @"tags",
+                           };
+    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+        return dict[keyName]?:keyName;
+    }];
+}
+
++ (BOOL)propertyIsOptional:(NSString *)propertyName {
+    return YES;
+}
+
+@end
+
 @implementation FHBuildingDetailRelatedFloorpanListModel
 
 + (JSONKeyMapper*)keyMapper {
     NSDictionary *dict = @{
-                           @"buildingID": @"id",
-                           @"name": @"name",
-                           @"saleStatus": @"sale_status",
-                           @"baseInfo": @"base_info",
-                           @"relatedFloorplanList": @"related_floorplan",
+                           @"title": @"title",
+                           @"list": @"list",
                            };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
         return dict[keyName]?:keyName;

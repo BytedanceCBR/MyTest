@@ -13,7 +13,7 @@
 #import "UIViewController+Track.h"
 #import <FHHouseBase/TTDeviceHelper+FHHouse.h>
 #import <FHHouseBase/FHBaseCollectionView.h>
-#import "FHPictureListTitleCollectionView.h"
+#import "FHDetailSectionTitleCollectionView.h"
 #import "FHDetailPictureTitleView.h"
 #import "FHLoadingButton.h"
 #import <FHHouseBase/UIImage+FIconFont.h>
@@ -189,7 +189,7 @@
     [_collectionView registerClass:[FHFloorPanPicCollectionCell class] forCellWithReuseIdentifier:NSStringFromClass([FHFloorPanPicCollectionCell class])];
     
     //注册headerView  此处的ReuseIdentifier 必须和 cellForItemAtIndexPath 方法中 一致  均为reusableView
-    [_collectionView registerClass:[FHPictureListTitleCollectionView class] forSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:NSStringFromClass([FHPictureListTitleCollectionView class])];
+    [_collectionView registerClass:[FHDetailSectionTitleCollectionView class] forSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:NSStringFromClass([FHDetailSectionTitleCollectionView class])];
     //设置代理
     _collectionView.delegate = self;
     _collectionView.dataSource = self;
@@ -495,7 +495,7 @@
 {
     UICollectionReusableView *reusableView = nil;
     if ([kind isEqualToString:UICollectionElementKindSectionHeader]) {
-        FHPictureListTitleCollectionView *titleView = (FHPictureListTitleCollectionView *)[collectionView dequeueReusableSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:NSStringFromClass([FHPictureListTitleCollectionView class]) forIndexPath:indexPath];
+        FHDetailSectionTitleCollectionView *titleView = (FHDetailSectionTitleCollectionView *)[collectionView dequeueReusableSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:NSStringFromClass([FHDetailSectionTitleCollectionView class]) forIndexPath:indexPath];
         if (self.pictsArray.count > indexPath.section) {
 
            FHHouseDetailImageGroupModel *groupModel = self.pictsArray[indexPath.section];

@@ -13,12 +13,24 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@protocol FHBuildingDetailRelatedFloorpanListModel <NSObject>
+@protocol FHBuildingDetailRelatedFloorpanModel <NSObject>
+@end
+
+@interface FHBuildingDetailRelatedFloorpanModel : JSONModel
+
+@property (nonatomic, copy , nullable) NSString *id;
+@property (nonatomic, copy, nullable) NSString *name;
+@property (nonatomic, copy, nullable) NSString *facingDirection;
+@property (nonatomic, copy, nullable) NSString *squaremeter;
+@property (nonatomic, copy, nullable) NSString *pricing;
+@property (nonatomic, strong , nullable) NSArray<FHImageModel> *images;
+@property (nonatomic, strong , nullable) NSArray<FHHouseTagsModel> *tags;
 @end
 
 @interface FHBuildingDetailRelatedFloorpanListModel : JSONModel
-@property (nonatomic, copy , nullable) NSString *id;
+
 @property (nonatomic, copy , nullable) NSString *title;
+@property (nonatomic, copy, nullable) NSArray<FHBuildingDetailRelatedFloorpanModel> *list;
 @end
 
 @protocol FHBuildingDetailDataItemModel<NSObject>
@@ -36,7 +48,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong , nullable) NSArray<FHHouseBaseInfoModel> *baseInfo;
 
 /// 关联户型列表
-@property (nonatomic, copy, nullable) NSArray<FHBuildingDetailRelatedFloorpanListModel> *relatedFloorplanList;
+@property (nonatomic, copy, nullable) FHBuildingDetailRelatedFloorpanListModel *relatedFloorplanList;
 @end
 
 @interface FHBuildingDetailDataModel : JSONModel
