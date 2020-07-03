@@ -324,7 +324,6 @@
 - (void)imAction:(NSURL *)openUrl {
     FHFeedUGCContentAttachCardInfoExtraModel *extra = self.cellModel.attachCardInfo.extra;
     NSMutableDictionary *imExtra = @{}.mutableCopy;
-    imExtra[@"realtor_position"] = @"realtor_evaluate";
     imExtra[@"from_gid"] = extra.fromGid;
     self.realtorModel.chatOpenurl = openUrl.absoluteString;
     [self.realtorPhoneCallModel imchatActionWithPhone:self.realtorModel realtorRank:@"0" extraDic:self.cellModel.tracerDic];

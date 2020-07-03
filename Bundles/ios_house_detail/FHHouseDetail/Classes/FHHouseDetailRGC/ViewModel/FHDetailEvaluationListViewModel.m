@@ -378,6 +378,10 @@ if (hasMore) {
     [self.realtorPhoneCallModel phoneChatActionWithAssociateModel:associatePhone];
 }
 
+- (void)goToCommunityDetail:(FHFeedUGCCellModel *)cellModel {
+    [self.detailJumpManager goToCommunityDetail:cellModel];
+}
+
 - (void)lookAllLinkClicked:(FHFeedUGCCellModel *)cellModel cell:(nonnull FHUGCBaseCell *)cell {
     self.currentCellModel = cellModel;
     self.currentCell = cell;

@@ -216,6 +216,9 @@
         [self.bottomView.commentBtn setTitle:[TTBusinessManager formatCommentCount:commentCount] forState:UIControlStateNormal];
     }
     [self.bottomView updateLikeState:cellModel.diggCount userDigg:cellModel.userDigg];
+    
+    UITapGestureRecognizer* tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(goToCommunityDetail:)];
+    [self.bottomView.positionView addGestureRecognizer:tap];
     //内容
     self.contentLabel.numberOfLines = cellModel.numberOfLines;
     
@@ -224,6 +227,7 @@
     self.bottomView.hidden = !cellModel.isInRealtorEvaluationList;
     
     self.lineView.hidden = cellModel.isInRealtorEvaluationList || !cellModel.isShowLineView;
+    
 }
 
 // 评论点击
