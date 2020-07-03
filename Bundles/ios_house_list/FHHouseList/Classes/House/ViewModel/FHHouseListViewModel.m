@@ -90,6 +90,7 @@ extern NSString *const INSTANT_DATA_KEY;
 @property(nonatomic , assign) BOOL showRealHouseTop;
 @property(nonatomic , assign) BOOL showFakeHouseTop;
 @property(nonatomic , assign) BOOL lastHasMore;
+@property(nonatomic , assign) BOOL isHasFilterCondition;
 
 
 @property (nonatomic , assign) BOOL isRefresh;
@@ -1220,6 +1221,12 @@ extern NSString *const INSTANT_DATA_KEY;
         
         allQuery = self.getAllQueryString();
     }
+    
+    if (condition.length > 0) {
+        self.isHasFilterCondition = YES;
+    }else{
+        self.isHasFilterCondition = NO;
+    }
 
 //    if ([self.condition isEqualToString:allQuery]) {
 //        return;
@@ -2075,8 +2082,13 @@ extern NSString *const INSTANT_DATA_KEY;
         tracerDict[@"element_type"] = @"neighborhood_expert_card";
         tracerDict[@"house_type"] = @"neighborhood";
     }else{
-        tracerDict[@"element_type"] = @"area_expert_card";
-        tracerDict[@"house_type"] = @"area";
+        if (self.isHasFilterCondition) {
+            tracerDict[@"element_type"] = @"area_expert_card";
+            tracerDict[@"house_type"] = @"area";
+        }else{
+            tracerDict[@"element_type"] = @"neighborhood_expert_card";
+            tracerDict[@"house_type"] = @"neighborhood";
+        }
     }
     
     [FHUserTracker writeEvent:@"lead_show" params:tracerDict];

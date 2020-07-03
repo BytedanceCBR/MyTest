@@ -243,6 +243,8 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
                 // 登录成功
                 if ([TTAccountManager isLogin]) {
                     [FHHouseFollowUpHelper followHouseWithConfigModel:configModel];
+                }else{
+                    [[ToastManager manager] showToast:@"需要先登录才能进行操作哦"];
                 }
             }
         }];

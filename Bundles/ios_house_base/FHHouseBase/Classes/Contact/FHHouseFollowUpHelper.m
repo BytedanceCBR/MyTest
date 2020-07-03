@@ -39,8 +39,7 @@ NSString *const kFHToastCountKey = @"kFHToastCountKey";
 
 + (void)silentFollowHouseWithConfigModel:(FHHouseFollowUpConfigModel *)configModel
 {
-    //todo xiefei
-       [self silentFollowHouseWithConfigModel:configModel completionBlock:nil];
+    [self silentFollowHouseWithConfigModel:configModel completionBlock:nil];
 }
 
 + (void)silentFollowHouseWithConfigModel:(FHHouseFollowUpConfigModel *)configModel completionBlock:(void(^)(BOOL isSuccess))completionBlock
