@@ -160,7 +160,7 @@
     [self.subTitleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(self.iconView.mas_right).offset(12);
         make.right.mas_equalTo(self.muteImageView.mas_left).offset(-5);
-        make.top.mas_equalTo(self.titleLabel.mas_bottom).offset(6);
+        make.top.mas_equalTo(self.titleLabel.mas_bottom).offset(4);
         make.height.mas_equalTo(20);
     }];
     
