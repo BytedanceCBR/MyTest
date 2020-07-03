@@ -11,6 +11,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FHhouseDetailRGCListCellModel : FHDetailBaseModel
 @property (copy, nonatomic) NSString *title;
+@property (copy, nonatomic) NSString *houseInfoBizTrace;
 @property (nonatomic, strong) NSNumber *count;
 @property (strong, nonatomic) FHDetailBrokerContentModel *contentModel;
 @property (assign, nonatomic) CGFloat cellHeight;
