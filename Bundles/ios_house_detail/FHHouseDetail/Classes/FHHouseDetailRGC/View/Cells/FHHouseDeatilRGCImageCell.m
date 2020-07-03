@@ -136,7 +136,7 @@
     self.contentLabel.width = [UIScreen mainScreen].bounds.size.width - leftMargin - rightMargin -30;
     self.contentLabel.height = 0;
     
-    self.multiImageView.top = self.userInfoView.bottom + 10;
+    self.multiImageView.top = self.userInfoView.bottom + 7;
     self.multiImageView.left = leftMargin;
     self.multiImageView.width = [UIScreen mainScreen].bounds.size.width - leftMargin - rightMargin -30;
     self.multiImageView.height = self.imageViewheight;
@@ -272,7 +272,7 @@
         FHFeedUGCCellModel *cellModel = (FHFeedUGCCellModel *)data;
         CGFloat height;
         if (cellModel.isInRealtorEvaluationList) {
-            height =  cellModel.contentHeight  +75 + 30 + 50 + 75;
+            height =  cellModel.contentHeight  +75 + 22 + 50 + 75;
         }else {
             height =  cellModel.contentHeight  +75 + 30 + 50 + 40;
         }

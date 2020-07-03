@@ -353,13 +353,15 @@
                 break;
             case FHUGCFeedListCellTypeUGCSmallVideo:
                 model.cellSubType = FHUGCFeedListCellSubTypeUGCBrokerVideo;
-                contentHeight = model.contentHeight  +150 + 30 + 30 +contentHeight + 90;
+                contentHeight = model.contentHeight  +150 + 10 + 30 +contentHeight + 90;
                 break;
             default:
                 break;
         }
         model.tracerDic = self.detailTracerDic;
-        [dataArr addObject:model];
+        if (model) {
+            [dataArr addObject:model];
+        }
     }
     contentModel.fHFeedUGCCellModelDataArr = dataArr;
     self.cellHeight = contentHeight;

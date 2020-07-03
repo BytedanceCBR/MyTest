@@ -182,7 +182,7 @@
     self.headerView.width = [UIScreen mainScreen].bounds.size.width - leftMargin - rightMargin;
     self.headerView.height = userInfoViewHeight;
     
-    self.contentLabel.top = self.userInfoView.bottom + 15;
+    self.contentLabel.top = self.userInfoView.bottom + 7;
     self.contentLabel.left = leftMargin;
     self.contentLabel.width = [UIScreen mainScreen].bounds.size.width - leftMargin - rightMargin -30;
     self.contentLabel.height = 0;
@@ -309,9 +309,9 @@
         FHFeedUGCCellModel *cellModel = (FHFeedUGCCellModel *)data;
         CGFloat height;
         if (cellModel.isInRealtorEvaluationList) {
-            height = cellModel.contentHeight  +150 + 30 + 50 + 130;
+            height = cellModel.contentHeight  +150 + 22 + 50 + 130;
         }else {
-            height = cellModel.contentHeight  +150 + 30 + 50 + 90;
+            height = cellModel.contentHeight  +150 + 10 + 50 + 90;
         }
         return height;
     }

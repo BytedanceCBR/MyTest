@@ -264,7 +264,9 @@ if (hasMore) {
                 break;
         }
         cellModel.tracerDic = self.tracerDic;
-        [resultArray addObject:cellModel];
+        if (cellModel) {
+            [resultArray addObject:cellModel];
+        }
     }
     return resultArray;
 }
