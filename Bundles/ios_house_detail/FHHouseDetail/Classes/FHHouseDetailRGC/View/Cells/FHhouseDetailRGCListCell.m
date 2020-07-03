@@ -269,6 +269,10 @@
     NSMutableDictionary *imExtra = @{}.mutableCopy;
     imExtra[@"realtor_position"] = @"realtor_evaluate";
     imExtra[@"from_gid"] = cellModel.groupId;
+    if ([self.currentData isKindOfClass:[FHhouseDetailRGCListCellModel class]]) {
+        FHhouseDetailRGCListCellModel *cellModel = (FHhouseDetailRGCListCellModel *)self.currentData;
+       imExtra[@"bizTrace"] = cellModel.houseInfoBizTrace;
+    }
     [self.realtorPhoneCallModel imchatActionWithPhone:cellModel.realtor realtorRank:[NSString stringWithFormat:@"%ld",(long)index] extraDic:imExtra];
 }
 
@@ -292,6 +296,12 @@
     associatePhone.houseType = [NSString  stringWithFormat:@"%@",houseInfo[@"houseType"]].intValue;
     associatePhone.houseId = houseInfo[@"houseId"];
     associatePhone.showLoading = NO;
+    if ([self.currentData isKindOfClass:[FHhouseDetailRGCListCellModel class]]) {
+          FHhouseDetailRGCListCellModel *cellModel = (FHhouseDetailRGCListCellModel *)self.currentData;
+        if (cellModel.houseInfoBizTrace) {
+            associatePhone.extraDict = @{@"biz_trace":cellModel.houseInfoBizTrace};
+        }
+      }
     [self.realtorPhoneCallModel phoneChatActionWithAssociateModel:associatePhone];
 }
 
