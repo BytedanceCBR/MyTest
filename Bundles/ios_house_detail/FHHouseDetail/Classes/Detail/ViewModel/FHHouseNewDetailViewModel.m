@@ -53,6 +53,7 @@
 #import "FHDetailAccessCellModel.h"
 #import "FHDetailPictureViewController.h"
 #import "FHhouseDetailRGCListCell.h"
+#import "TTAccountManager.h"
 
 @interface FHHouseNewDetailViewModel ()
 
@@ -902,6 +903,15 @@
     param[@"click_position"] = position;
     
     TRACK_EVENT(@"click_options", param);
+}
+
+- (void)vc_viewDidAppear:(BOOL)animated
+{
+    [super vc_viewDidAppear:animated];
+    if (self.contactViewModel.isShowLogin && ![TTAccountManager isLogin]) {
+        [[ToastManager manager] showToast:@"需要先登录才能进行操作哦"];
+        self.contactViewModel.isShowLogin = NO;
+    }
 }
 
 - (BOOL)isMissTitle
