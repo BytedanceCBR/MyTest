@@ -319,17 +319,18 @@
                 [params setObject:@"user" forKey:@"trigger"];
                 // 登录成功之后不自己Pop，先进行页面跳转逻辑，再pop
                 [params setObject:@(YES) forKey:@"need_pop_vc"];
-                 
+                 self.isShowLogIn = YES;
                  __weak typeof(self) wSelf = self;
                   [TTAccountLoginManager showAlertFLoginVCWithParams:params completeBlock:^(TTAccountAlertCompletionEventType type, NSString * _Nullable phoneNum) {
                       if (type == TTAccountAlertCompletionEventTypeDone) {
                           // 登录成功
                           if ([TTAccountManager isLogin]) {
+                              wSelf.isShowLogIn = NO;
                               dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
                                    [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
                                });
                           }else{
-                              [[ToastManager manager] showToast:@"需要先登录才能进行操作哦"];
+//                              [[ToastManager manager] showToast:@"需要先登录才能进行操作哦"];
                           }
                       }
                   }];

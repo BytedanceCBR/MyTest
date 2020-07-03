@@ -238,13 +238,15 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
         // 登录成功之后不自己Pop，先进行页面跳转逻辑，再pop
         [params setObject:@(YES) forKey:@"need_pop_vc"];
         __weak typeof(self) wSelf = self;
+        self.isShowLogin = YES;
         [TTAccountLoginManager showAlertFLoginVCWithParams:params completeBlock:^(TTAccountAlertCompletionEventType type, NSString * _Nullable phoneNum) {
             if (type == TTAccountAlertCompletionEventTypeDone) {
                 // 登录成功
                 if ([TTAccountManager isLogin]) {
+                    wSelf.isShowLogin = NO;
                     [FHHouseFollowUpHelper followHouseWithConfigModel:configModel];
                 }else{
-                    [[ToastManager manager] showToast:@"需要先登录才能进行操作哦"];
+//                    [[ToastManager manager] showToast:@"需要先登录才能进行操作哦"];
                 }
             }
         }];
