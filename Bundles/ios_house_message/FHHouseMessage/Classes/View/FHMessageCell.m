@@ -243,6 +243,8 @@
         self.msgStateView.hidden = YES;
         [self updateLayoutForMsgState:ChatMsgStateSuccess isMute:NO];
     }
+    self.scoreLabel.hidden = YES;
+    self.companyLabel.hidden = YES;
 }
 
 - (void)updateWithChat:(IMConversation*)conversation {
