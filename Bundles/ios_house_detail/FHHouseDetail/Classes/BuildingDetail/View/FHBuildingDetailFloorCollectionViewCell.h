@@ -10,7 +10,7 @@
 NS_ASSUME_NONNULL_BEGIN
 //楼栋详情页关联户型
 @interface FHBuildingDetailFloorCollectionViewCell : FHDetailBaseCollectionCell
-
+@property (nonatomic , strong) UIView *bottomLine;
 @end
 
 NS_ASSUME_NONNULL_END

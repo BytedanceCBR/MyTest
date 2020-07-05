@@ -6,6 +6,7 @@
 //
 
 #import "FHDetailBaseCell.h"
+#import "FHBuildingSectionModel.h"
 
 NS_ASSUME_NONNULL_BEGIN
 

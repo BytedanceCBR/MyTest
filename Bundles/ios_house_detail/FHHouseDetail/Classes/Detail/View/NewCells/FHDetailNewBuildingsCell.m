@@ -33,6 +33,16 @@
     return self;
 }
 
+- (NSString *)elementTypeString:(FHHouseType)houseType {
+    switch (houseType) {
+        case FHHouseTypeNewHouse:
+               return @"building";
+        default:
+            break;
+    }
+    return @"be_null";
+}
+
 - (void)setupUI {
     [self.shadowImage mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.right.equalTo(self);
@@ -226,14 +236,16 @@
     if (!self.baseViewModel.houseId.length) {
         return;
     }
+    
     NSMutableDictionary *traceParam = [NSMutableDictionary dictionary];
     traceParam[@"enter_from"] = @"new_detail";
-//    traceParam[@"log_pb"] = floorPanInfoModel.logPb;
+    traceParam[@"log_pb"] = self.baseViewModel.detailTracerDic[@"logPb"];
     traceParam[@"origin_from"] = self.baseViewModel.detailTracerDic[@"origin_from"];
     traceParam[@"card_type"] = @"left_pic";
 //    traceParam[@"rank"] = @(floorPanInfoModel.index);
     traceParam[@"origin_search_id"] = self.baseViewModel.detailTracerDic[@"origin_search_id"];
-    traceParam[@"element_from"] = @"house_model";
+    traceParam[@"element_from"] = @"building";
+    traceParam[@"page_type"] = @"building_detail";
     
 //    NSDictionary *dict = @{@"house_id":self.baseViewModel.houseId?:@"",
 //                           @"tracer": traceParam
@@ -247,6 +259,10 @@
     [infoDict addEntriesFromDictionary:subPageParams];
     infoDict[@"tracer"] = traceParam;
     infoDict[@"house_id"] = self.baseViewModel.houseId?:@"";
+    if (self.baseViewModel.contactViewModel) {
+        infoDict[@"contactViewModel"] = self.baseViewModel.contactViewModel;
+    }
+    
     TTRouteUserInfo *info = [[TTRouteUserInfo alloc] initWithInfo:infoDict];
 
     [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:@"sslocal://new_building_detail"] userInfo:info];

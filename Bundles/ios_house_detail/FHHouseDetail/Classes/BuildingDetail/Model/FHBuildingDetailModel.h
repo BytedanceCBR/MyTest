@@ -19,7 +19,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface FHBuildingDetailRelatedFloorpanModel : JSONModel
 
 @property (nonatomic, copy , nullable) NSString *id;
-@property (nonatomic, copy, nullable) NSString *name;
+@property (nonatomic, copy, nullable) NSString *title;
 @property (nonatomic, copy, nullable) NSString *facingDirection;
 @property (nonatomic, copy, nullable) NSString *squaremeter;
 @property (nonatomic, copy, nullable) NSString *pricing;

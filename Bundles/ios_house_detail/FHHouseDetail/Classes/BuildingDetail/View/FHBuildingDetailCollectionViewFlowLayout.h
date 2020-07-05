@@ -9,7 +9,11 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+@class FHBuildingDetailDataItemModel;
+
 @interface FHBuildingDetailCollectionViewFlowLayout : UICollectionViewFlowLayout
+
+@property (nonatomic, strong) FHBuildingDetailDataItemModel *model;
 
 @end
 

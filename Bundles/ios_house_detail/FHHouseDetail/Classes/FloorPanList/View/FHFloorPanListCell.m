@@ -19,9 +19,7 @@
 @property (nonatomic, strong) FHDetailTagBackgroundView        *tagBacView;
 @property (nonatomic , strong) UIButton *mapMaskBtn;
 @property (nonatomic , strong) UIView *statusBGView;
-@property (nonatomic , strong) UILabel *statusLabel;
 @property (nonatomic , strong) UIView *topLine;
-@property (nonatomic , strong) UIView *emptyView;
 @property (nonatomic , strong) UIView *cellBackView;
 @end
 
