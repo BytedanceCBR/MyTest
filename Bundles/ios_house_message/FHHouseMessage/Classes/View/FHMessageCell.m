@@ -241,14 +241,11 @@
                 if ([lastMsg.mentionedUsers containsObject:uid] && ![self lastMsgHasReadInConversation:conv]) {
                     self.subTitleLabel.attributedText = [self getAtAttributeString:cutStr];;
                 } else {
-                    NSRange range = [cutStr rangeOfString:@"[语音]"];
-                    if(range.location == NSNotFound) {
+                    if([conv lastChatMsg].type != ChatMsgTypeVoiceSegment) {
                         self.subTitleLabel.attributedText = nil;
                         self.subTitleLabel.text = cutStr;
                     } else {
-                        NSMutableAttributedString *attributeLastMessage = [[NSMutableAttributedString alloc] initWithString:cutStr];
-                        [attributeLastMessage addAttributes:@{NSForegroundColorAttributeName: [UIColor colorWithHexStr:@"FE5500"], NSFontAttributeName:self.subTitleLabel.font} range:range];
-                        self.subTitleLabel.attributedText = attributeLastMessage;
+                        [self processVoiceLastMessage:conv lastMessage:cutStr];
                     }
                 }
             } else {
@@ -257,35 +254,43 @@
                     if ([lastMsg.mentionedUsers containsObject:uid] && ![self lastMsgHasReadInConversation:conv]) {
                         self.subTitleLabel.attributedText = [self getAtAttributeString:tipMsg];;
                     } else {
-                        NSRange range = [tipMsg rangeOfString:@"[语音]"];
-                        if(range.location == NSNotFound) {
+                        
+                        if([conv lastChatMsg].type != ChatMsgTypeVoiceSegment) {
                             self.subTitleLabel.attributedText = nil;
                             self.subTitleLabel.text = tipMsg;
                         } else {
-                            NSMutableAttributedString *attributeLastMessage = [[NSMutableAttributedString alloc] initWithString:tipMsg];
-                            [attributeLastMessage addAttributes:@{NSForegroundColorAttributeName: [UIColor colorWithHexStr:@"FE5500"], NSFontAttributeName:self.subTitleLabel.font} range:range];
-                            self.subTitleLabel.attributedText = attributeLastMessage;
+                            [self processVoiceLastMessage:conv lastMessage:tipMsg];
                         }
                     }
                 }];
             }
         } else {
             NSString *lastMessage = [conv lastMessage];
-            NSRange range = [lastMessage rangeOfString:@"[语音]"];
-            if(range.location == NSNotFound) {
+            if([conv lastChatMsg].type != ChatMsgTypeVoiceSegment) {
                 self.subTitleLabel.attributedText = nil;
                 self.subTitleLabel.text = [self cutLineBreak:lastMessage];
             } else {
-                NSMutableAttributedString *attributeLastMessage = [[NSMutableAttributedString alloc] initWithString:lastMessage];
-                [attributeLastMessage addAttributes:@{NSForegroundColorAttributeName: [UIColor colorWithHexStr:@"FE5500"], NSFontAttributeName:self.subTitleLabel.font} range:range];
-                self.subTitleLabel.attributedText = attributeLastMessage;
+                [self processVoiceLastMessage:conv lastMessage:lastMessage];
             }
         }
     }
-    
-
     [self displaySendState:lastMsg];
     self.timeLabel.text = [self timeLabelByDate:conv.updatedAt];
+}
+- (void)processVoiceLastMessage:(IMConversation *)conv lastMessage:(NSString *)lastMessage {
+        NSRange range = [lastMessage rangeOfString:@"[语音]"];
+        NSMutableAttributedString *attributeLastMessage = [[NSMutableAttributedString alloc] initWithString:lastMessage];
+        UIColor *attributeColor = [self isLastVoiceMessageReadByCurrentUser:conv] ? [UIColor themeGray3] : [UIColor colorWithHexStr:@"FE5500"];
+        [attributeLastMessage addAttributes:@{NSForegroundColorAttributeName: attributeColor, NSFontAttributeName:self.subTitleLabel.font} range:range];
+        self.subTitleLabel.attributedText = attributeLastMessage;
+}
+- (BOOL)isLastVoiceMessageReadByCurrentUser:(IMConversation *)conv {
+    BOOL ret = NO;
+    ChatMsg *lastMsg = [conv lastChatMsg];
+    if(lastMsg.type == ChatMsgTypeVoiceSegment && (lastMsg.isCurrentUser || lastMsg.isReadByCurrentUser)) {
+        ret = YES;
+    }
+    return ret;
 }
 
 -(BOOL)lastMsgHasReadInConversation:(IMConversation *)conv {
