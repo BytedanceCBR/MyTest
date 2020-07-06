@@ -113,38 +113,6 @@
 }
 
 - (void)initConstraints {
-//    [self.positionView mas_makeConstraints:^(MASConstraintMaker *make) {
-//        make.left.mas_equalTo(self).offset(20);
-//        make.top.mas_equalTo(self);
-//        make.height.mas_equalTo(24);
-//    }];
-//
-//    [self.position mas_makeConstraints:^(MASConstraintMaker *make) {
-//        make.left.mas_equalTo(self.positionView).offset(6);
-//        make.right.mas_equalTo(self.positionView).offset(-6);
-//        make.centerY.mas_equalTo(self.positionView);
-//        make.height.mas_equalTo(18);
-//    }];
-//
-//    [self.likeBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-//        make.top.mas_equalTo(self).offset(2);
-//        make.right.mas_equalTo(self).offset(-20);
-//        make.height.mas_equalTo(24);
-//    }];
-//
-//    [self.commentBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-//        make.top.mas_equalTo(self).offset(2);
-//        make.right.mas_equalTo(self.likeBtn.mas_left).offset(-20);
-//        make.height.mas_equalTo(24);
-//    }];
-//
-//    [self.bottomSepView mas_makeConstraints:^(MASConstraintMaker *make) {
-//        make.top.mas_equalTo(self.positionView.mas_bottom).offset(20);
-//        make.left.mas_equalTo(self).offset(0);
-//        make.right.mas_equalTo(self).offset(0);
-//        make.height.mas_equalTo(5);
-//    }];
-    
     self.positionView.top = 0;
     self.positionView.left = 20;
     self.positionView.width = 0;
@@ -207,11 +175,6 @@
         self.guideView.left = 0;
         self.guideView.width = self.bounds.size.width;
         self.guideView.height = 42;
-//        [self.guideView mas_makeConstraints:^(MASConstraintMaker *make) {
-//            make.top.mas_equalTo(self.positionView.mas_bottom);
-//            make.left.right.mas_equalTo(self);
-//            make.height.mas_equalTo(42);
-//        }];
     }else{
         self.guideView.hidden = YES;
     }
@@ -220,13 +183,6 @@
     self.bottomSepView.top = self.positionView.bottom + 20;
     self.bottomSepView.height = cellModel.bottomLineHeight;
     self.bottomSepView.width = self.bounds.size.width - cellModel.bottomLineLeftMargin - cellModel.bottomLineRightMargin;
-    
-//    [self.bottomSepView mas_updateConstraints:^(MASConstraintMaker *make) {
-//        make.top.mas_equalTo(self.positionView.mas_bottom).offset(20);
-//        make.left.mas_equalTo(self).offset(cellModel.bottomLineLeftMargin);
-//        make.right.mas_equalTo(self).offset(-cellModel.bottomLineRightMargin);
-//        make.height.mas_equalTo(cellModel.bottomLineHeight);
-//    }];
 }
 
 - (UILabel *)LabelWithFont:(UIFont *)font textColor:(UIColor *)textColor {
@@ -330,7 +286,7 @@
     }
     
     [self trackClickLike];
-    //    // 刷新UI
+    //刷新UI
     NSInteger user_digg = [self.cellModel.userDigg integerValue] == 0 ? 1 : 0;
 
     NSMutableDictionary *dict = [NSMutableDictionary new];

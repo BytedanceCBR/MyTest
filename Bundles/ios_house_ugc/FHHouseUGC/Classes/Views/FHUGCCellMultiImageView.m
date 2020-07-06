@@ -9,15 +9,12 @@
 #import "UIColor+Theme.h"
 #import "UIFont+House.h"
 #import "Masonry.h"
-#import "UIImageView+BDWebImage.h"
 #import "FHFeedUGCCellModel.h"
 #import "TTPhotoScrollViewController.h"
 #import "TTBaseMacro.h"
 #import "TTInteractExitHelper.h"
 #import "FHUGCCellHelper.h"
 #import "UIViewAdditions.h"
-//#import "TTImageView+TrafficSave.h"
-//#import "TTImageView.h"
 #import "UIImageView+fhUgcImage.h"
 
 #define itemPadding 4
@@ -57,7 +54,6 @@
     for (NSInteger i = 0; i < self.count; i++) {
         UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectZero];
         imageView.clipsToBounds = YES;
-//        imageView.imageContentMode = TTImageViewContentModeScaleAspectFill;
         imageView.contentMode = UIViewContentModeScaleAspectFill;
         imageView.backgroundColor = [UIColor themeGray6];
         imageView.layer.borderColor = [[UIColor themeGray6] CGColor];
@@ -187,28 +183,6 @@
             }
 
             if (imageModel && imageModel.url.length > 0) {
-//                [imageView bd_setImageWithURL:[NSURL URLWithString:imageModel.url] placeholder:nil];
-//                TTImageInfosModel *imageInfoModel = [FHUGCCellHelper convertTTImageInfosModel:imageModel];
-//                __weak typeof(imageView) wImageView = imageView;
-//                [imageView setImageWithModelInTrafficSaveMode:imageInfoModel placeholderImage:nil success:nil failure:^(NSError *error) {
-//                    [wImageView setImage:nil];
-//                }];
-//                [imageView.imageView.layer removeAnimationForKey:@"contents"];
-                
-//                [imageView setImageWithModel:imageInfoModel placeholderImage:nil options:SDWebImageRetryFailed success:^(UIImage *image, BOOL cached) {
-//                     if (image) {
-//                         wImageView.imageView.image = image;
-//                     }
-                     
-//                     if(!cached){
-//                         CATransition *transition = [CATransition animation];
-//                         transition.duration = 0.15;
-//                         transition.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut];
-//                         transition.type = kCATransitionFade;
-//                         [wImageView.imageView.layer addAnimation:transition forKey:@"contents"];
-//                     }
-//                 } failure:nil];
-//                [imageView fh_setImageWithURL:[NSURL URLWithString:imageModel.url] placeholder:nil];
                 [imageView fh_setImageWithURLStringInTrafficSaveMode:imageModel.url placeholder:nil];
                 
             }

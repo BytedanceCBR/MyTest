@@ -84,6 +84,7 @@
     
     self.singleImageView = [[FHUGCCellMultiImageView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width - leftMargin - rightMargin, 0) count:1];
     _singleImageView.hidden = YES;
+    _singleImageView.fixedSingleImage = YES;
     [self.contentView addSubview:_singleImageView];
     
     self.originView = [[FHUGCCellOriginItemView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width - leftMargin - rightMargin, originViewHeight)];
@@ -193,6 +194,7 @@
         self.contentLabel.height = cellModel.contentHeight;
         [FHUGCCellHelper setAsyncRichContent:self.contentLabel model:cellModel];
         self.multiImageView.top = self.userInfoView.bottom + 20 + cellModel.contentHeight;
+        self.singleImageView.top = self.userInfoView.bottom + 20 + cellModel.contentHeight;
     }
     
     UIView *lastView = self.contentLabel;
@@ -201,13 +203,17 @@
     if(cellModel.imageList.count > 1){
         lastView = self.multiImageView;
         self.multiImageView.hidden = NO;
-        self.multiImageView.top = self.userInfoView.bottom + 10;
+        self.singleImageView.hidden = YES;
         [self.multiImageView updateImageView:cellModel.imageList largeImageList:cellModel.largeImageList];
     }else if(cellModel.imageList.count == 1){
-        lastView = self.multiImageView;
-        [self.multiImageView updateImageView:cellModel.imageList largeImageList:cellModel.largeImageList];
+        lastView = self.singleImageView;
+        self.multiImageView.hidden = YES;
+        self.singleImageView.hidden = NO;
+        [self.singleImageView updateImageView:cellModel.imageList largeImageList:cellModel.largeImageList];
     }else{
         lastView = self.contentLabel;
+        self.multiImageView.hidden = YES;
+        self.singleImageView.hidden = YES;
     }
 //    [self.multiImageView updateImageView:cellModel.imageList largeImageList:cellModel.largeImageList];
     
@@ -241,7 +247,11 @@
 + (CGFloat)heightForData:(id)data {
     if([data isKindOfClass:[FHFeedUGCCellModel class]]){
         FHFeedUGCCellModel *cellModel = (FHFeedUGCCellModel *)data;
-        CGFloat height = cellModel.contentHeight + userInfoViewHeight + bottomViewHeight + topMargin + 20;
+        CGFloat height = userInfoViewHeight + bottomViewHeight + topMargin + 10;
+        
+        if(!isEmptyString(cellModel.content)){
+            height += (cellModel.contentHeight + 10);
+        }
         
         if(cellModel.imageList.count > 1){
             CGFloat imageViewheight = [FHUGCCellMultiImageView viewHeightForCount:3 width:[UIScreen mainScreen].bounds.size.width - leftMargin - rightMargin];

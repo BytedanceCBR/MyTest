@@ -32,7 +32,6 @@
     UIImage *image = imageData[@"image"];
     BDWebImageResultFrom from = [imageData[@"from"] integerValue];
     
-    
     if(image){
         self.image = image;
     }

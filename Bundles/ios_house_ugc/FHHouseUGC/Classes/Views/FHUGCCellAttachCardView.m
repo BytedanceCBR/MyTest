@@ -15,12 +15,10 @@
 #import "TTAccountManager.h"
 #import "UIButton+TTAdditions.h"
 #import "FHUserTracker.h"
-#import "UIImageView+BDWebImage.h"
 #import "TTRoute.h"
 #import "JSONAdditions.h"
 #import "FHUGCCellHelper.h"
 #import "TTSettingsManager.h"
-#import "FHUserTracker.h"
 #import "FHHouseContactDefines.h"
 #import "UIViewAdditions.h"
 #import "UIImageView+fhUgcImage.h"
@@ -125,7 +123,7 @@
         self.cellModel = cellModel;
         
         if (cellModel.attachCardInfo.imageModel && cellModel.attachCardInfo.imageModel.url.length > 0) {
-            [self.iconView fh_setImageWithURL:cellModel.attachCardInfo.imageModel.url placeholder:nil];
+            [self.iconView fh_setImageWithURLStringInTrafficSaveMode:cellModel.attachCardInfo.imageModel.url placeholder:nil];
         }else{
             [self.iconView setImage:nil];
         }
