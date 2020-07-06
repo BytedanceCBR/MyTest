@@ -222,7 +222,7 @@
         contactPhone = model.data.contact;
         contactPhone.unregistered = YES;
     }
-    contactPhone.isFormReport = contactPhone.enablePhone;
+    contactPhone.isFormReport = !contactPhone.enablePhone;
     self.contactViewModel.contactPhone = contactPhone;
     self.contactViewModel.followStatus = model.data.userStatus.courtSubStatus;
     self.contactViewModel.chooseAgencyList = model.data.chooseAgencyList;

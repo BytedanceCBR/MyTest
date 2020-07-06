@@ -188,7 +188,7 @@
         contactPhone.unregistered = YES;
     }
     contactPhone.isInstantData = model.isInstantData;
-    contactPhone.isFormReport = contactPhone.enablePhone;
+    contactPhone.isFormReport = !contactPhone.enablePhone;
     self.contactViewModel.contactPhone = contactPhone;
     self.contactViewModel.shareInfo = model.data.shareInfo;
 //    self.contactViewModel.followStatus = model.data.userStatus.houseSubStatus;
