@@ -565,6 +565,9 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
         if (extraDict[@"page_type"]) {
             imExtra[@"page_type"] = extraDict[@"page_type"];
         }
+        if (extraDict[@"event_tracking_id"]) {
+            imExtra[@"event_tracking_id"] = extraDict[@"event_tracking_id"];
+        }
     }
     [self.phoneCallViewModel imchatActionWithPhone:self.contactPhone realtorRank:@"0" extraDic:imExtra];
 }

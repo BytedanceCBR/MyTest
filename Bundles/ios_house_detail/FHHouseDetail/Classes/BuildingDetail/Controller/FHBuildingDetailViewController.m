@@ -291,7 +291,7 @@
             @"element_from":@"building"
         }.mutableCopy;
         [extraDic addEntriesFromDictionary:self.tracerDict];
-        
+        extraDic[@"event_tracking_id"] = @"70832";
 //        extraDic[@"from"] = @"app_newhouse_property_picture";
 //        if (cluePage) {
 //            extraDic[kFHCluePage] = cluePage;
@@ -317,6 +317,7 @@
         extraDic[@"position"] = @"online";
         extraDic[@"element_from"] = @"building";
         extraDic[@"from"] = @"app_newhouse_property_picture";
+        extraDic[@"event_tracking_id"] = @"70831";
         // 头图im入口线索透传
         if(self.viewModel.buildingDetailModel.data.associateInfo) {
             extraDic[kFHAssociateInfo] = self.viewModel.buildingDetailModel.data.associateInfo;
@@ -427,7 +428,7 @@
         }
         case FHBuildingSectionTypeFloor: {
             //动态调整
-            return CGSizeMake(width - 15 * 2, 115);
+            return CGSizeMake(width - 15 * 2, 106);
             break;
         }
         case FHBuildingSectionTypeEmpty:
@@ -462,7 +463,7 @@
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout referenceSizeForHeaderInSection:(NSInteger)section {
     FHBuildingSectionModel *sectionModel = self.viewModel.items[section];
     if (sectionModel.sectionTitle.length) {
-        return CGSizeMake(CGRectGetWidth(collectionView.frame), 23 + 15 * 2);
+        return CGSizeMake(CGRectGetWidth(collectionView.frame), 23 + 5 * 2);
     }
     return CGSizeZero;
 }
@@ -530,6 +531,7 @@
     if (self.houseId.length) {
         params[@"group_id"] = self.houseId;
     }
+    params[@"event_tracking_id"] = @"70828";
     [FHUserTracker writeEvent:@"go_detail" params:params];
 }
 
@@ -542,6 +544,7 @@
         tracerDic[@"is_report"] = contactPhone.phone.length < 1 ? @"1" : @"0";
         tracerDic[@"is_online"] = contactPhone.unregistered ? @"1" : @"0";
         tracerDic[@"element_from"] = @"building";
+        tracerDic[@"event_tracking_id"] = @"70830";
         TRACK_EVENT(@"lead_show", tracerDic);
     }
 }

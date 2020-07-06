@@ -46,7 +46,7 @@
         [self.contentView addSubview:self.nameLabel];
         [self.nameLabel mas_makeConstraints:^(MASConstraintMaker *make) {
             make.left.mas_equalTo(self.coverImageView.mas_right).offset(13);
-            make.top.mas_equalTo(self.coverImageView.mas_top);
+            make.top.mas_equalTo(20);
             make.height.mas_equalTo(19);
         }];
         
@@ -107,7 +107,7 @@
         self.priceLabel.text = model.pricing;
         if ([model.squaremeter isKindOfClass:[NSString class]]) {
             if (model.squaremeter.length > 0) {
-                NSString *roomSpace = [NSString stringWithFormat:@"建面 %@",model.squaremeter];
+                NSString *roomSpace = [NSString stringWithFormat:@"%@",model.squaremeter];
                 if (model.facingDirection.length > 0) {
                     self.roomSpaceLabel.text = [NSString stringWithFormat:@"%@ | %@", roomSpace, model.facingDirection];
                 } else {
@@ -134,9 +134,20 @@
             }
         }
         
-        [self.tagBacView refreshWithTags:model.tags withNum:model.tags.count withMaxLen:CGRectGetWidth(self.contentView.bounds) - 16 - 66 - 13 - 16];
+        if (model.tags.count) {
+            self.tagBacView.hidden = NO;
+            [self.tagBacView refreshWithTags:model.tags withNum:model.tags.count withMaxLen:CGRectGetWidth(self.contentView.bounds) - 16 - 66 - 13 - 16];
+            [self.nameLabel mas_updateConstraints:^(MASConstraintMaker *make) {
+                make.top.mas_equalTo(20);
+            }];
+        } else {
+            self.tagBacView.hidden = YES;
+            [self.nameLabel mas_updateConstraints:^(MASConstraintMaker *make) {
+                make.top.mas_equalTo(20 + 12);
+            }];
+        }
+        [self setNeedsLayout];
     }
-    
 }
 
 @end
