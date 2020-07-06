@@ -28,6 +28,8 @@
 #import "FHUGCRecommendCircleCell.h"
 #import "FHUGCEncyclopediasCell.h"
 #import "FHUGCLynxCommonCell.h"
+#import "FHArticleCell.h"
+#import "FHUGCPostCell.h"
 
 @interface FHUGCCellManager ()
 
@@ -50,9 +52,11 @@
                                 @"FHUGCPureTitleCell",
                                 @"FHUGCSingleImageCell",
                                 @"FHUGCMultiImageCell",
+                                @"FHUGCPostCell",
                                 @"FHArticlePureTitleCell",
                                 @"FHArticleSingleImageCell",
                                 @"FHArticleMultiImageCell",
+                                @"FHArticleCell",
                                 @"FHUGCRecommendCell",
                                 @"FHUGCLynxBannerCell",
                                 @"FHUGCBannerCell",
@@ -84,6 +88,9 @@
         case FHUGCFeedListCellSubTypePureTitle:
             return [FHUGCPureTitleCell class];
             
+        case FHUGCFeedListCellSubTypePost:
+            return [FHUGCPostCell class];
+            
         case FHUGCFeedListCellSubTypeSingleImage:
             return [FHUGCSingleImageCell class];
             
@@ -98,6 +105,9 @@
             
         case FHUGCFeedListCellSubTypeArticleMultiImage:
             return [FHArticleMultiImageCell class];
+            
+        case FHUGCFeedListCellSubTypeArticle:
+            return [FHArticleCell class];
             
         case FHUGCFeedListCellSubTypeUGCRecommend:
             return [FHUGCRecommendCell class];
@@ -141,8 +151,6 @@
         default:
             break;
     }
-    
-    
     
     return [FHUGCPureTitleCell class];
 }

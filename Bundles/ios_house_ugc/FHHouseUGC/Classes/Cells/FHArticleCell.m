@@ -1,13 +1,12 @@
 //
-//  FHUGCPureTitleCell.m
+//  FHArticleCell.m
 //  FHHouseUGC
 //
-//  Created by 谢思铭 on 2019/6/3.
+//  Created by 谢思铭 on 2020/7/6.
 //
 
-#import "FHArticleMultiImageCell.h"
+#import "FHArticleCell.h"
 #import "FHArticleCellBottomView.h"
-#import "UIImageView+BDWebImage.h"
 #import "FHUGCCellHelper.h"
 #import "TTBaseMacro.h"
 #import "UIViewAdditions.h"
@@ -17,16 +16,17 @@
 #define bottomViewHeight 39
 #define guideViewHeight 27
 #define topMargin 15
-
+#define singleImageViewHeight 90
 #define leftMargin 20
 #define rightMargin 20
 #define imagePadding 4
 
-@interface FHArticleMultiImageCell ()
+@interface FHArticleCell ()
 
 @property(nonatomic ,strong) TTUGCAsyncLabel *contentLabel;
 @property(nonatomic ,strong) NSMutableArray *imageViewList;
 @property(nonatomic ,strong) UIView *imageViewContainer;
+@property(nonatomic ,strong) UIImageView *singleImageView;
 @property(nonatomic ,strong) FHArticleCellBottomView *bottomView;
 @property(nonatomic ,assign) CGFloat imageWidth;
 @property(nonatomic ,assign) CGFloat imageHeight;
@@ -34,7 +34,7 @@
 
 @end
 
-@implementation FHArticleMultiImageCell
+@implementation FHArticleCell
 
 - (void)awakeFromNib {
     [super awakeFromNib];
@@ -67,6 +67,18 @@
     _contentLabel.layer.masksToBounds = YES;
     _contentLabel.backgroundColor = [UIColor whiteColor];
     [self.contentView addSubview:_contentLabel];
+    
+    //单图
+    self.singleImageView = [[UIImageView alloc] initWithFrame:CGRectZero];
+    _singleImageView.hidden = YES;
+    _singleImageView.clipsToBounds = YES;
+    _singleImageView.contentMode = UIViewContentModeScaleAspectFill;
+    _singleImageView.backgroundColor = [UIColor themeGray6];
+    _singleImageView.layer.borderColor = [[UIColor themeGray6] CGColor];
+    _singleImageView.layer.borderWidth = 0.5;
+    _singleImageView.layer.masksToBounds = YES;
+    _singleImageView.layer.cornerRadius = 4;
+    [self.contentView addSubview:_singleImageView];
     
     self.imageViewContainer = [[UIView alloc] init];
     _imageViewContainer.hidden = YES;
@@ -104,6 +116,11 @@
     self.contentLabel.left = leftMargin;
     self.contentLabel.width = [UIScreen mainScreen].bounds.size.width - leftMargin - rightMargin;
     self.contentLabel.height = 0;
+    
+    self.singleImageView.top = topMargin;
+    self.singleImageView.left = self.contentLabel.right + 15;
+    self.singleImageView.width = 120;
+    self.singleImageView.height = singleImageViewHeight;
     
     self.imageViewContainer.top = self.contentLabel.bottom + 10;
     self.imageViewContainer.left = leftMargin;
@@ -154,7 +171,7 @@
     if(isEmptyString(cellModel.title)){
         self.contentLabel.hidden = YES;
         self.contentLabel.height = 0;
-        self.imageViewContainer.top = self.contentLabel.bottom;
+        self.imageViewContainer.top = self.contentLabel.bottom + 10;
     }else{
         self.contentLabel.hidden = NO;
         self.contentLabel.height = cellModel.contentHeight;
@@ -169,8 +186,9 @@
     [self.bottomView showPositionView:showCommunity];
     //图片
     NSArray *imageList = cellModel.imageList;
-    if(imageList.count > 0){
+    if(imageList.count > 1){
         self.imageViewContainer.hidden = NO;
+        self.singleImageView.hidden = YES;
         for (NSInteger i = 0; i < self.imageViewList.count; i++) {
             UIImageView *imageView = self.imageViewList[i];
             if(i < imageList.count){
@@ -183,9 +201,24 @@
                 imageView.hidden = YES;
             }
         }
+        self.contentLabel.width = [UIScreen mainScreen].bounds.size.width - leftMargin - rightMargin;
         self.bottomView.top = self.imageViewContainer.bottom + 10;
+    }else if(imageList.count == 1){
+        self.imageViewContainer.hidden = YES;
+        self.singleImageView.hidden = NO;
+        //图片
+        FHFeedContentImageListModel *imageModel = [cellModel.imageList firstObject];
+        if (imageModel && imageModel.url.length > 0) {
+            [self.singleImageView fh_setImageWithURLStringInTrafficSaveMode:imageModel.url placeholder:nil];
+        }
+        
+        self.contentLabel.width = [UIScreen mainScreen].bounds.size.width - leftMargin - rightMargin - 120 - 15;
+        self.singleImageView.left = self.contentLabel.right + 15;
+        self.bottomView.top = self.singleImageView.bottom + 10;
     }else{
         self.imageViewContainer.hidden = YES;
+        self.singleImageView.hidden = YES;
+        self.contentLabel.width = [UIScreen mainScreen].bounds.size.width - leftMargin - rightMargin;
         self.bottomView.top = self.contentLabel.bottom + 10;
     }
     
@@ -197,9 +230,11 @@
         FHFeedUGCCellModel *cellModel = (FHFeedUGCCellModel *)data;
         CGFloat height = cellModel.contentHeight + bottomViewHeight + topMargin + 10;
         
-        if(cellModel.imageList.count > 0){
+        if(cellModel.imageList.count > 1){
             CGFloat imageViewHeight = ([UIScreen mainScreen].bounds.size.width - leftMargin - rightMargin - imagePadding * 2)/3 * 82.0f/109.0f;
             height += (imageViewHeight + 10);
+        }else if(cellModel.imageList.count == 1){
+            height = singleImageViewHeight + bottomViewHeight + topMargin + 10;
         }
         
         if(cellModel.isInsertGuideCell){
@@ -249,4 +284,3 @@
 }
 
 @end
-
