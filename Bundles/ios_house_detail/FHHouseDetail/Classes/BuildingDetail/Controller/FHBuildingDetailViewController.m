@@ -38,6 +38,7 @@
 @property (nonatomic, strong) FHHouseDetailContactViewModel *contactViewModel;
 
 @property (nonatomic) BOOL shouldReloadAnimated;
+@property (nonatomic, strong) NSMutableArray *showHouseCache;
 @end
 
 @implementation FHBuildingDetailViewController
@@ -287,7 +288,7 @@
 
         NSMutableDictionary *extraDic = @{
             @"realtor_position":@"phone_button",
-            @"position":@"report_button",
+//            @"position":@"report_button",
             @"element_from":@"building"
         }.mutableCopy;
         [extraDic addEntriesFromDictionary:self.tracerDict];
@@ -313,8 +314,8 @@
     if (self.contactViewModel) {
         NSMutableDictionary *extraDic = @{}.mutableCopy;
         [extraDic addEntriesFromDictionary:self.tracerDict];
-        extraDic[@"realtor_position"] = @"online";
-        extraDic[@"position"] = @"online";
+        extraDic[@"realtor_position"] = @"phone_button";
+//        extraDic[@"position"] = @"online";
         extraDic[@"element_from"] = @"building";
         extraDic[@"from"] = @"app_newhouse_property_picture";
         extraDic[@"event_tracking_id"] = @"70831";
@@ -473,12 +474,9 @@
 - (void)collectionView:(UICollectionView *)collectionView willDisplayCell:(UICollectionViewCell *)cell forItemAtIndexPath:(NSIndexPath *)indexPath {
     if ([cell isKindOfClass:[FHBuildingDetailFloorCollectionViewCell class]]) {
         // 上报埋点
-//        NSMutableDictionary *tracerDic = self.tracerDict.mutableCopy;
-//        [tracerDic addEntriesFromDictionary:houseShowDict];
-//        [tracerDic removeObjectForKey:@"element_from"];
-//        tracerDic[@"group_id"]
-//        tracerDic[@"house_type"] = @"house_model";
-//        [FHUserTracker writeEvent:@"house_show" params:tracerDic];
+        FHBuildingDetailDataItemModel *model = self.viewModel.buildingDetailModel.data.buildingList[self.currentSelectIndex];
+        FHBuildingDetailRelatedFloorpanModel *floorpan = model.relatedFloorplanList.list[indexPath.row];
+        [self addHouseShow:floorpan.id];
     }
 }
 
@@ -547,6 +545,28 @@
         tracerDic[@"event_tracking_id"] = @"70830";
         TRACK_EVENT(@"lead_show", tracerDic);
     }
+}
+
+- (NSMutableArray *)showHouseCache {
+    if (!_showHouseCache) {
+        _showHouseCache = [NSMutableArray array];
+    }
+    return _showHouseCache;
+}
+
+- (void)addHouseShow:(NSString *)group_id {
+    if (!group_id) {
+        return;
+    }
+    if ([self.showHouseCache containsObject:group_id]) {
+        return;
+    }
+    [self.showHouseCache addObject:group_id];
+    NSMutableDictionary *tracerDic = self.tracerDict.mutableCopy;
+    tracerDic[@"house_type"] = @"house_model";
+    tracerDic[@"event_tracking_id"] = @"70833";
+    tracerDic[@"group_id"] = group_id?:@"";
+    TRACK_EVENT(@"house_show", tracerDic);
 }
 
 @end

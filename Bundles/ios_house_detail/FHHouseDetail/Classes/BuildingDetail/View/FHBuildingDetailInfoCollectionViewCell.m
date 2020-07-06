@@ -131,8 +131,6 @@ CGFloat const FHBuildingDetailInfoListCellMinimumLineSpacing = 25 + 12;
 
 }
 
-
-
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView{
     CGPoint contentOffset = CGPointMake(self.collectionView.contentOffset.x + CGRectGetMidX(self.contentView.bounds), CGRectGetMidY(self.contentView.bounds));
     NSIndexPath *indexPath = [self.collectionView indexPathForItemAtPoint:contentOffset];

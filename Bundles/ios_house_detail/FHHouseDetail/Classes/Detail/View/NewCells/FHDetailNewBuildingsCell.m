@@ -139,7 +139,7 @@
             [nameValueLabel mas_makeConstraints:^(MASConstraintMaker *make) {
                 make.left.mas_equalTo(0);
                 make.top.mas_equalTo(15);
-                make.width.mas_equalTo(itemWidth);
+                make.width.mas_equalTo(itemView.mas_width).multipliedBy(0.33);
             }];
             
             UILabel *layerValueLabel = [self buildingValueLabel];
