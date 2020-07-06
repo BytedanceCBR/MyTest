@@ -12,6 +12,7 @@
 #import "FHFloorCoreInfoViewModel.h"
 #import <FHHouseBase/FHBaseTableView.h>
 #import "FHLynxView.h"
+#import "FHLynxManager.h"
 
 @interface FHFloorMoreCoreInfoViewController () <TTRouteInitializeProtocol>
 
@@ -37,7 +38,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    if (YES) {
+    if ([[FHLynxManager sharedInstance] checkChannelTemplateIsAvalable:@"lynx_estate_info" templateKey:@"0"]) {
         [self setUpLynxView];
     }else{
         [self setUpinfoListTable];
