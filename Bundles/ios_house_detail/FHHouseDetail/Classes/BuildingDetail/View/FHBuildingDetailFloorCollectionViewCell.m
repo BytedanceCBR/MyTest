@@ -126,11 +126,14 @@
             FHImageModel *imageModel = (FHImageModel *)model.images.firstObject;
             if (imageModel.url) {
                 NSURL *urlImage = [NSURL URLWithString:imageModel.url];
-                if ([urlImage isKindOfClass:[NSURL class]]) {
-                    [self.coverImageView bd_setImageWithURL:urlImage placeholder:[UIImage imageNamed:@"default_image"]];
-                }else {
-                    self.coverImageView.image = [UIImage imageNamed:@"default_image"];
-                }
+                __weak typeof(self) weakSelf = self;
+                [[BDWebImageManager sharedManager] requestImage:urlImage options:BDImageRequestHighPriority complete:^(BDWebImageRequest *request, UIImage *image, NSData *data, NSError *error, BDWebImageResultFrom from) {
+                    __strong typeof(weakSelf) strongSelf = weakSelf;
+                    if (!error && image) {
+                        strongSelf.coverImageView.image = image;
+                        strongSelf.coverImageView.contentMode = UIViewContentModeScaleAspectFit;
+                    }
+                }];
             }
         }
         

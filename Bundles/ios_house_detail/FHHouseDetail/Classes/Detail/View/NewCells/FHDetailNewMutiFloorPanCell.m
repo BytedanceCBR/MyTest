@@ -381,7 +381,9 @@
 //        self.spaceLabel.text = [NSString stringWithFormat:@"%@ %@",model.squaremeter,model.facingDirection];
         
         NSMutableArray *tagArr = [NSMutableArray array];
-        self.descLabel.text = [NSString stringWithFormat:@"%@ %@",model.title,model.squaremeter];;
+//        self.titleLabel.text = [NSString stringWithFormat:@"%@ %@",model.title,model.squaremeter];;
+        self.titleLabel.text = model.title;
+        self.spaceLabel.text = model.squaremeter;
         
         self.priceLabel.text = model.pricing;
         [self.priceLabel sizeToFit];
@@ -421,33 +423,38 @@
         make.width.height.equalTo(self.iconView);
     }];
     
-    _descLabel = [[UILabel alloc] init];
-    _descLabel.font = [UIFont themeFontMedium:14];
-    _descLabel.textColor = [UIColor themeGray1];
-    [self addSubview:_descLabel];
-    [self.descLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+    _titleLabel = [[UILabel alloc] init];
+    _titleLabel.font = [UIFont themeFontMedium:14];
+    _titleLabel.textColor = [UIColor themeGray1];
+    [_titleLabel setContentCompressionResistancePriority:UILayoutPriorityDefaultLow forAxis:UILayoutConstraintAxisHorizontal];
+    [self addSubview:_titleLabel];
+    
+    _spaceLabel = [[UILabel alloc] init];;
+    _spaceLabel.font = [UIFont themeFontMedium:14];
+    _spaceLabel.textColor = [UIColor themeGray1];
+    [_spaceLabel setContentCompressionResistancePriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisHorizontal];
+    [self addSubview:_spaceLabel];
+    
+    [self.titleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(self.iconView.mas_bottom).mas_offset(8);
         make.left.equalTo(self.contentView);
         make.height.mas_equalTo(19);
 //        make.width.mas_equalTo(0);
     }];
     
-//    _spaceLabel = [UILabel createLabel:@"" textColor:@"" fontSize:12];
-//    _spaceLabel.textColor = [UIColor themeGray3];
-//    [self addSubview:_spaceLabel];
-//    [self.spaceLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-//        make.top.equalTo(self.descLabel.mas_bottom).offset(7);
-//        make.left.equalTo(self.descLabel);
-//        make.right.equalTo(self.contentView);
-//        make.height.mas_equalTo(15);
-//    }];
+    [self.spaceLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.equalTo(self.titleLabel.mas_top);
+        make.left.equalTo(self.titleLabel.mas_right).mas_offset(2);
+        make.right.equalTo(self.contentView);
+        make.height.mas_equalTo(self.titleLabel.mas_height);
+    }];
     
     _priceLabel = [[UILabel alloc] init];
     _priceLabel.textColor = [UIColor themeOrange1];
     _priceLabel.font = [UIFont themeFontRegular:14];
     [self addSubview:_priceLabel];
     [self.priceLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.descLabel.mas_bottom).offset(6);
+        make.top.mas_equalTo(self.titleLabel.mas_bottom).offset(6);
         make.left.equalTo(self.contentView);
         make.height.mas_equalTo(16);
     }];

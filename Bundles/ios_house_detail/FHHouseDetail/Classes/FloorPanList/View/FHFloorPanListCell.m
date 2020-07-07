@@ -7,9 +7,9 @@
 
 #import "FHFloorPanListCell.h"
 #import "FHDetailNewModel.h"
-#import "BDWebImage.h"
 #import "FHDetailTagBackgroundView.h"
 #import "FHCommonDefines.h"
+#import <BDWebImage/BDWebImage.h>
 
 @interface FHFloorPanListCell ()
 @property (nonatomic , strong) UIImageView *iconView;
@@ -195,12 +195,14 @@
             FHImageModel *imageModel = (FHImageModel *)model.images.firstObject;
             if (imageModel.url) {
                 NSURL *urlImage = [NSURL URLWithString:imageModel.url];
-                if ([urlImage isKindOfClass:[NSURL class]]) {
-                    [self.iconView bd_setImageWithURL:urlImage placeholder:[UIImage imageNamed:@"default_image"]];
-                }else
-                {
-                    _iconView.image = [UIImage imageNamed:@"default_image"];
-                }
+                WeakSelf;
+                [[BDWebImageManager sharedManager] requestImage:urlImage options:BDImageRequestHighPriority complete:^(BDWebImageRequest *request, UIImage *image, NSData *data, NSError *error, BDWebImageResultFrom from) {
+                    StrongSelf;
+                    if (!error && image) {
+                        self.iconView.image = image;
+                        self.iconView.contentMode = UIViewContentModeScaleAspectFit;
+                    }
+                }];
             }
         }
         if (model.tags.count) {
