@@ -27,7 +27,6 @@
 @property (nonatomic, strong)   NSMutableDictionary       *homePageRollDic;
 @property (nonatomic, strong) UIView *topView;
 @property (nonatomic, strong) UIView *containerView;
-@property (nonatomic, strong) FHSuggestionCollectionView *collectionView;
 
 @end
 
