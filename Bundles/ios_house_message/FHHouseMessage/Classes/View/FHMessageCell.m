@@ -215,7 +215,7 @@
         } else {
             make.right.mas_equalTo(self.backView.mas_right).offset(-16);
         }
-        make.top.mas_equalTo(self.titleLabel.mas_bottom).offset(6);
+        make.top.mas_equalTo(self.titleLabel.mas_bottom).offset(4);
         make.height.mas_equalTo(20);
     }];
 }
