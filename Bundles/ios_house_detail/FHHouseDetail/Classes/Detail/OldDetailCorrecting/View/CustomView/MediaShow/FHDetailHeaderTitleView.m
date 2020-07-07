@@ -449,15 +449,15 @@
                                                                  NSFontAttributeName: [UIFont themeFontRegular:12]
                                                                  }];
         UILabel *label = nil;
-        if(model.housetype == FHHouseTypeSecondHandHouse){
+//        if(model.housetype == FHHouseTypeSecondHandHouse){
             UIColor *tagBacColor = idx == 0 ?[UIColor colorWithHexString:@"#ffeee5"]:[UIColor colorWithHexString:@"#f5f5f5"];
             UIColor *tagTextColor = idx == 0 ?[UIColor colorWithHexString:@"#fe5500"]:[UIColor colorWithHexString:@"#333333"];
             label = [self createLabelWithTextForSecondHouse:tagModel.content bacColor:tagBacColor  textColor:tagTextColor];
-        }else{
-            UIColor *tagBacColor = idx == 0 ?[UIColor colorWithHexString:@"#FFEAD3"]:[UIColor colorWithHexString:@"#F2F1EF"];
-            UIColor *tagTextColor = idx == 0 ?[UIColor colorWithHexString:@"#ff9300"]:[UIColor colorWithHexString:@"#a49a92"];
-            label = [self createLabelWithText:tagModel.content bacColor:tagBacColor  textColor:tagTextColor];
-        }
+//        }else{
+//        UIColor *tagBacColor = idx == 0 ?[UIColor colorWithHexString:@"#FFEAD3"]:[UIColor colorWithHexString:@"#F2F1EF"];
+//        UIColor *tagTextColor = idx == 0 ?[UIColor colorWithHexString:@"#ff9300"]:[UIColor colorWithHexString:@"#a49a92"];
+//        label = [self createLabelWithText:tagModel.content bacColor:tagBacColor  textColor:tagTextColor];
+//        }
                 
         CGFloat inset = 10;
         if (self.model.housetype == FHHouseTypeNewHouse) {
