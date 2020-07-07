@@ -437,10 +437,7 @@
 }
 
 -(NSString*)timeWithYesterdayTime:(NSDate*)date {
-    NSDateFormatter* formatter = [[NSDateFormatter alloc] init];
-    formatter.dateFormat = @"HH:mm";
-
-    return [NSString stringWithFormat:@"昨天 %@", [formatter stringFromDate:date]];
+    return @"昨天";
 }
 
 -(NSString*)longTimeLabel:(NSDate*)date {
