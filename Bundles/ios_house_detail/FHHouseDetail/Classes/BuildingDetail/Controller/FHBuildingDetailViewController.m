@@ -96,6 +96,8 @@
     self.view.backgroundColor = [UIColor themeGray7];
     [self setupNavbar];
     [self setupUI];
+    
+    [self addDefaultEmptyViewFullScreen];
 
     self.currentSelectIndex = 0;
     self.viewModel = [[FHBuildingDetailViewModel alloc] initWithController:self];
@@ -233,6 +235,11 @@
     [super endLoading];
 }
 
+- (void)retryLoadData {
+    // 重新加载数据
+    [self.viewModel startLoadData];
+}
+
 - (void)reloadData {
     NSMutableArray <FHBuildingSectionModel *>*items = [NSMutableArray array];
     
@@ -287,7 +294,7 @@
     if (self.contactViewModel) {
 
         NSMutableDictionary *extraDic = @{
-            @"realtor_position":@"phone_button",
+            @"realtor_position":@"detail_button",
 //            @"position":@"report_button",
             @"element_from":@"building"
         }.mutableCopy;
@@ -314,7 +321,7 @@
     if (self.contactViewModel) {
         NSMutableDictionary *extraDic = @{}.mutableCopy;
         [extraDic addEntriesFromDictionary:self.tracerDict];
-        extraDic[@"realtor_position"] = @"phone_button";
+        extraDic[@"realtor_position"] = @"detail_button";
 //        extraDic[@"position"] = @"online";
         extraDic[@"element_from"] = @"building";
         extraDic[@"from"] = @"app_newhouse_property_picture";
@@ -513,6 +520,19 @@
 #pragma mark - TTUIViewControllerTrackProtocol
 
 - (void)trackEndedByAppWillEnterBackground {
+//    [self.coreInfoListViewModel addStayPageLog:self.ttTrackStayTime];
+    NSTimeInterval duration = self.ttTrackStayTime * 1000.0;
+    if (duration == 0) {//当前页面没有在展示过
+        return;
+    }
+    NSMutableDictionary *params = @{}.mutableCopy;
+    [params addEntriesFromDictionary:self.tracerDict];
+    params[@"stay_time"] = [NSNumber numberWithInteger:duration];
+//    params[kFHClueExtraInfo] = self.extraInfo;
+//    if(self.houseType == FHHouseTypeSecondHandHouse){
+//        params[@"biz_trace"] = self.houseInfoOriginBizTrace;
+//    }
+    [FHUserTracker writeEvent:@"stay_page" params:params];
     [self tt_resetStayTime];
 }
 

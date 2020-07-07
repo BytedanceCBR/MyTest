@@ -82,7 +82,7 @@
         }
         if (model.totalNumber.length > 0) {
             self.headerView.label.text = [NSString stringWithFormat:@"户型介绍（%@）",model.totalNumber];
-            if (model.totalNumber.integerValue > 3) {
+            if (model.totalNumber.integerValue >= 3) {
                 self.headerView.isShowLoadMore = YES;
                 self.headerView.userInteractionEnabled = YES;
             } else {

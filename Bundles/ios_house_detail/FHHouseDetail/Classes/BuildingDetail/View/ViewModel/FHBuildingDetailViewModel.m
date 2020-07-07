@@ -28,7 +28,7 @@
 
 - (void)startLoadData {
     if (![TTReachability isNetworkConnected]) {
-        [self.buildingVC.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoNetWorkNotRefresh];
+        [self.buildingVC.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoNetWorkAndRefresh];
         return;
     }
     [self.buildingVC startLoading];
