@@ -137,6 +137,18 @@
     return label;
 }
 
+- (UILabel *)createLabelWithTextForSecondHouse:(NSString *)text bacColor:(UIColor *)bacColor textColor:(UIColor *)textColor{
+    UILabel *label = [[UILabel alloc]init];
+    label.textAlignment = NSTextAlignmentCenter;
+    label.backgroundColor = bacColor;
+    label.textColor = textColor;
+    label.layer.cornerRadius = 1;
+    label.layer.masksToBounds = YES;
+    label.text = text;
+    label.font = [UIFont themeFontRegular:12];
+    return label;
+}
+
 - (UIControl *)priceAskView {
     if (!_priceAskView) {
         UIControl *priceAskView = [[UIControl alloc] init];
@@ -436,9 +448,11 @@
         CGSize itemSize = [tagModel.content sizeWithAttributes:@{
                                                                  NSFontAttributeName: [UIFont themeFontRegular:12]
                                                                  }];
-        UIColor *tagBacColor = idx == 0 ?[UIColor colorWithHexString:@"#FFEAD3"]:[UIColor colorWithHexString:@"#F2F1EF"];
-        UIColor *tagTextColor = idx == 0 ?[UIColor colorWithHexString:@"#ff9300"]:[UIColor colorWithHexString:@"#a49a92"];
-        UILabel *label = [self createLabelWithText:tagModel.content bacColor:tagBacColor  textColor:tagTextColor];
+        UILabel *label = nil;
+        UIColor *tagBacColor = idx == 0 ?[UIColor colorWithHexString:@"#ffeee5"]:[UIColor colorWithHexString:@"#f5f5f5"];
+        UIColor *tagTextColor = idx == 0 ?[UIColor colorWithHexString:@"#fe5500"]:[UIColor colorWithHexString:@"#333333"];
+        label = [self createLabelWithTextForSecondHouse:tagModel.content bacColor:tagBacColor  textColor:tagTextColor];
+
                 
         CGFloat inset = 10;
         if (self.model.housetype == FHHouseTypeNewHouse) {

@@ -7,9 +7,9 @@
 
 #import "FHFloorPanListCell.h"
 #import "FHDetailNewModel.h"
-#import "BDWebImage.h"
 #import "FHDetailTagBackgroundView.h"
 #import "FHCommonDefines.h"
+#import <BDWebImage/BDWebImage.h>
 
 @interface FHFloorPanListCell ()
 @property (nonatomic , strong) UIImageView *iconView;
@@ -19,9 +19,7 @@
 @property (nonatomic, strong) FHDetailTagBackgroundView        *tagBacView;
 @property (nonatomic , strong) UIButton *mapMaskBtn;
 @property (nonatomic , strong) UIView *statusBGView;
-@property (nonatomic , strong) UILabel *statusLabel;
 @property (nonatomic , strong) UIView *topLine;
-@property (nonatomic , strong) UIView *emptyView;
 @property (nonatomic , strong) UIView *cellBackView;
 @end
 
@@ -61,7 +59,7 @@
         }];
         
         _nameLabel = [UILabel new];
-        _nameLabel.font = [UIFont themeFontMedium:16];
+        _nameLabel.font = [UIFont themeFontSemibold:16];
         _nameLabel.textColor = RGB(0x4a, 0x4a, 0x4a);
         _nameLabel.textAlignment = NSTextAlignmentLeft;
         [_nameLabel setContentHuggingPriority:UILayoutPriorityDefaultHigh forAxis:UILayoutConstraintAxisHorizontal];
@@ -80,7 +78,7 @@
         [self.contentView addSubview:_priceLabel];
         [_priceLabel mas_makeConstraints:^(MASConstraintMaker *make) {
             make.right.mas_equalTo(-31);
-            make.top.mas_equalTo(20);
+            make.centerY.mas_equalTo(self.nameLabel.mas_centerY);
             make.height.mas_equalTo(19);
             make.left.mas_equalTo(self.nameLabel.mas_right);
         }];
@@ -96,31 +94,23 @@
             make.right.mas_equalTo(-15);
             make.height.mas_equalTo(14);
         }];
-
-
         
         _tagBacView = [[FHDetailTagBackgroundView alloc] initWithLabelHeight:16.0 withCornerRadius:2.0];
         [_tagBacView setMarginWithTagMargin:4.0 withInsideMargin:4.0];
         _tagBacView.textFont = [UIFont themeFontMedium:10.0];
         [self.contentView addSubview:_tagBacView];
-        [self.cellBackView mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.left.mas_equalTo(15);
-            make.right.mas_equalTo(-15);
-            make.top.bottom.mas_equalTo(0);
-        }];
-        
-        
-        
-
-
-
         [_tagBacView mas_makeConstraints:^(MASConstraintMaker *make) {
             make.left.mas_equalTo(_iconView.mas_right).offset(13);
             make.right.mas_equalTo(-31);
             make.height.mas_equalTo(16);
             make.bottom.mas_equalTo(_iconView);
         }];
-
+        
+        [self.cellBackView mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.left.mas_equalTo(15);
+            make.right.mas_equalTo(-15);
+            make.top.bottom.mas_equalTo(0);
+        }];
     }
     return self;
 }
@@ -192,28 +182,42 @@
         if (model.displayPrice.length > 0) {
             NSString *displayPrice = model.displayPrice;
             self.priceLabel.text = displayPrice;
-            NSMutableAttributedString *noteStr = [[NSMutableAttributedString alloc] initWithString:self.priceLabel.text];
-            NSRange range = [displayPrice rangeOfString:pricing];
-            
-            if (range.location != NSNotFound) {
-                [noteStr addAttribute:NSFontAttributeName value:[UIFont themeFontSemibold:16] range:range];
-            }
-            self.priceLabel.attributedText = noteStr;
+//            NSMutableAttributedString *noteStr = [[NSMutableAttributedString alloc] initWithString:self.priceLabel.text];
+//            NSRange range = [displayPrice rangeOfString:pricing];
+//
+//            if (range.location != NSNotFound) {
+//                [noteStr addAttribute:NSFontAttributeName value:[UIFont themeFontSemibold:16] range:range];
+//            }
+//            self.priceLabel.attributedText = noteStr;
         }
     
-        if ([model.images.firstObject isKindOfClass:[FHDetailNewDataFloorpanListListImagesModel class]]) {
-            FHDetailNewDataFloorpanListListImagesModel *imageModel = (FHDetailNewDataFloorpanListListImagesModel *)model.images.firstObject;
+        if ([model.images.firstObject isKindOfClass:[FHImageModel class]]) {
+            FHImageModel *imageModel = (FHImageModel *)model.images.firstObject;
             if (imageModel.url) {
                 NSURL *urlImage = [NSURL URLWithString:imageModel.url];
-                if ([urlImage isKindOfClass:[NSURL class]]) {
-                    [self.iconView bd_setImageWithURL:urlImage placeholder:[UIImage imageNamed:@"default_image"]];
-                }else
-                {
-                    _iconView.image = [UIImage imageNamed:@"default_image"];
-                }
+                WeakSelf;
+                [[BDWebImageManager sharedManager] requestImage:urlImage options:BDImageRequestHighPriority complete:^(BDWebImageRequest *request, UIImage *image, NSData *data, NSError *error, BDWebImageResultFrom from) {
+                    StrongSelf;
+                    if (!error && image) {
+                        self.iconView.image = image;
+                        self.iconView.contentMode = UIViewContentModeScaleAspectFit;
+                    }
+                }];
             }
         }
-        [self.tagBacView refreshWithTags:model.tags withNum:model.tags.count withMaxLen:SCREEN_WIDTH - 31 - 66 - 13 - 31];
+        if (model.tags.count) {
+            self.tagBacView.hidden = NO;
+            [self.tagBacView refreshWithTags:model.tags withNum:model.tags.count withMaxLen:SCREEN_WIDTH - 31 - 66 - 13 - 31];
+            [self.nameLabel mas_updateConstraints:^(MASConstraintMaker *make) {
+                make.top.mas_equalTo(20);
+            }];
+        } else {
+            self.tagBacView.hidden = YES;
+            [self.nameLabel mas_updateConstraints:^(MASConstraintMaker *make) {
+                make.top.mas_equalTo(20 + 12);
+            }];
+        }
+
     }
     [self layoutIfNeeded];
 }

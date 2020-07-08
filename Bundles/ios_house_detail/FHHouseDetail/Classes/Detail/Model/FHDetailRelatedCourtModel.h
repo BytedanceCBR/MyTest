@@ -1,5 +1,7 @@
 //GENERATED CODE , DON'T EDIT
 #import "JSONModel.h"
+#import <FHHouseBase/FHSaleStatusModel.h>
+
 NS_ASSUME_NONNULL_BEGIN
 @protocol FHDetailRelatedCourtDataItemsModel<NSObject>
 @end
@@ -71,14 +73,6 @@ NS_ASSUME_NONNULL_BEGIN
 @protocol FHDetailRelatedCourtDataItemsFloorpanListListModel<NSObject>
 @end
 
-@interface FHDetailRelatedCourtDataItemsFloorpanListListSaleStatusModel : JSONModel 
-
-@property (nonatomic, copy , nullable) NSString *content;
-@property (nonatomic, copy , nullable) NSString *backgroundColor;
-@property (nonatomic, copy , nullable) NSString *id;
-@property (nonatomic, copy , nullable) NSString *textColor;
-@end
-
 @protocol FHDetailRelatedCourtDataItemsFloorpanListListImagesModel<NSObject>
 @end
 
@@ -96,7 +90,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong , nullable) NSDictionary *logPb;
 @property (nonatomic, copy , nullable) NSString *roomCount;
 @property (nonatomic, copy , nullable) NSString *title;
-@property (nonatomic, strong , nullable) FHDetailRelatedCourtDataItemsFloorpanListListSaleStatusModel *saleStatus ;  
+@property (nonatomic, strong , nullable) FHSaleStatusModel *saleStatus ;  
 @property (nonatomic, copy , nullable) NSString *id;
 @property (nonatomic, copy , nullable) NSString *pricingPerSqm;
 @property (nonatomic, copy , nullable) NSString *squaremeter;

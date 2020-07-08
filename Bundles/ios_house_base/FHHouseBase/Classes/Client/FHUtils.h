@@ -55,6 +55,9 @@ NS_ASSUME_NONNULL_BEGIN
         andCornerRadius:(CGFloat)cornerRadius;
 
 + (UIImage*)createImageWithColor:(UIColor*)color;
+
++ (BOOL)getSettingEnableBooleanForKey:(NSString *)key;
+
 @end
 
 NS_ASSUME_NONNULL_END

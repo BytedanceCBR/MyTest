@@ -240,6 +240,7 @@ typedef NS_ENUM(NSUInteger, FHFeedUGCDiggType) {
 //1.0.1rgc 是否在列表页展示
 @property (nonatomic, assign) BOOL isInRealtorEvaluationList;
 @property (nonatomic, strong , nullable) NSDictionary *lynxData;
+@property (nonatomic, assign) BOOL isShowLineView;
 
 + (FHFeedContentModel *)contentModelFromFeedContent:(NSString *)content;
 

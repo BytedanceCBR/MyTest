@@ -2408,7 +2408,7 @@ extern NSString *const INSTANT_DATA_KEY;
     tracerDict[@"log_pb"] = cellModel.logPb ? : UT_BE_NULL;
     
     tracerDict[@"is_im"] = cellModel.contactModel.imOpenUrl.length > 0 ? @(1) : @(0);
-    tracerDict[@"is_call"] = cellModel.contactModel.phone.length < 1 ? @(0) : @(1);
+    tracerDict[@"is_call"] = cellModel.contactModel.enablePhone ? @(1) : @(0);
     tracerDict[@"is_report"] = @(0);
     tracerDict[@"is_online"] = cellModel.contactModel.unregistered ? @(0) : @(1);
     
