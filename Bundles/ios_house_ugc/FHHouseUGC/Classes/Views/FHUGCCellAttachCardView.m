@@ -327,6 +327,7 @@
     imExtra[@"from_gid"] = extra.fromGid;
     imExtra[@"house_type"] = extra.houseType;
     imExtra[@"group_id"] = extra.groupId;
+    imExtra[@"log_pb"] = @"";
     self.realtorModel.chatOpenurl = openUrl.absoluteString;
     [self.realtorPhoneCallModel imchatActionWithPhone:self.realtorModel realtorRank:@"0" extraDic:imExtra];
 }

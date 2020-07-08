@@ -364,7 +364,7 @@
             case FHUGCFeedListCellTypeUGC:
                 model.cellSubType = FHUGCFeedListCellSubTypeUGCBrokerImage;
                 ///内容高度 + 图片高度 + 距离顶部高度 + 底部高度
-                contentHeight = model.contentHeight  +75 + 30 + 40 +contentHeight + 40;
+                contentHeight = model.contentHeight  + (model.imageList.count == 0?0:75 + 30) + 40 +contentHeight + 40;
                 break;
             case FHUGCFeedListCellTypeUGCSmallVideo:
                 model.cellSubType = FHUGCFeedListCellSubTypeUGCBrokerVideo;

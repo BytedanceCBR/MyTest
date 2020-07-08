@@ -165,7 +165,7 @@
     //图片
     [self.multiImageView updateImageView:cellModel.imageList largeImageList:cellModel.largeImageList];
     
-    UIView *lastView = self.multiImageView;
+    UIView *lastView = cellModel.imageList.count == 0?self.contentLabel:self.multiImageView;
     CGFloat topOffset = 15;
     self.bottomView.top = lastView.bottom + topOffset;
     self.lineView.top = lastView.bottom + 30;
@@ -276,9 +276,9 @@
         FHFeedUGCCellModel *cellModel = (FHFeedUGCCellModel *)data;
         CGFloat height;
         if (cellModel.isInRealtorEvaluationList) {
-            height =  cellModel.contentHeight  +75 + 22 + 50 + 85;
+            height =  cellModel.contentHeight  +(cellModel.imageList.count == 0?15:75+ 22)  + 50 + 85;
         }else {
-            height =  cellModel.contentHeight  +75 + 30 + 50 + 40;
+            height =  cellModel.contentHeight  +(cellModel.imageList.count == 0?0:75+ 30)  + 50 + 40;
         }
         return height;
     }
