@@ -252,20 +252,21 @@ if (hasMore) {
         cellModel.categoryId = self.categoryId;
         cellModel.tableView = self.tableView;
         cellModel.enterFrom = [self.listController categoryName];
+        cellModel.isShowLineView = NO;
         switch (cellModel.cellType) {
             case FHUGCFeedListCellTypeUGC:
                 cellModel.cellSubType = FHUGCFeedListCellSubTypeUGCBrokerImage;
-//                contentHeight = model.contentHeight  +75 + 20 + 50 +contentHeight + 30;
                 break;
             case FHUGCFeedListCellTypeUGCSmallVideo:
                 cellModel.cellSubType = FHUGCFeedListCellSubTypeUGCBrokerVideo;
-//                contentHeight = model.contentHeight  +150 + 20 + 50 +contentHeight + 45;
                 break;
             default:
                 break;
         }
         cellModel.tracerDic = self.tracerDic;
-        [resultArray addObject:cellModel];
+        if (cellModel) {
+            [resultArray addObject:cellModel];
+        }
     }
     return resultArray;
 }
@@ -375,6 +376,10 @@ if (hasMore) {
     associatePhone.houseId = self.houseId;
     associatePhone.showLoading = NO;
     [self.realtorPhoneCallModel phoneChatActionWithAssociateModel:associatePhone];
+}
+
+- (void)goToCommunityDetail:(FHFeedUGCCellModel *)cellModel {
+    [self.detailJumpManager goToCommunityDetail:cellModel];
 }
 
 - (void)lookAllLinkClicked:(FHFeedUGCCellModel *)cellModel cell:(nonnull FHUGCBaseCell *)cell {

@@ -12,6 +12,7 @@
 #import "FHHouseTagsModel.h"
 #import "FHRentFacilitiesModel.h"
 #import "FHSearchHouseModel.h"
+#import "FHSaleStatusModel.h"
 
 @class FHHouseItemHouseVideo;
 
@@ -146,17 +147,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
-
-@interface  FHHomeHouseDataItemsFloorpanListListSaleStatusModel  : JSONModel
-
-@property (nonatomic, copy , nullable) NSString *content;
-@property (nonatomic, copy , nullable) NSString *backgroundColor;
-@property (nonatomic, copy , nullable) NSString *id;
-@property (nonatomic, copy , nullable) NSString *textColor;
-
-@end
-
-
 @protocol FHHomeHouseDataItemsFloorpanListListImagesModel<NSObject>
 
 @end
@@ -177,7 +167,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, strong , nullable) NSDictionary *logPb ;
 @property (nonatomic, copy , nullable) NSString *title;
-@property (nonatomic, strong , nullable) FHHomeHouseDataItemsFloorpanListListSaleStatusModel *saleStatus ;
+@property (nonatomic, strong , nullable) FHSaleStatusModel *saleStatus ;
 @property (nonatomic, copy , nullable) NSString *pricingPerSqm;
 @property (nonatomic, copy , nullable) NSString *squaremeter;
 @property (nonatomic, copy , nullable) NSString *roomCount;
@@ -195,22 +185,11 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
-
-@interface  FHHomeHouseDataItemsCoreInfoSaleStatusModel  : JSONModel
-
-@property (nonatomic, copy , nullable) NSString *content;
-@property (nonatomic, copy , nullable) NSString *backgroundColor;
-@property (nonatomic, copy , nullable) NSString *id;
-@property (nonatomic, copy , nullable) NSString *textColor;
-
-@end
-
-
 @interface  FHHomeHouseDataItemsCoreInfoModel  : JSONModel
 
 @property (nonatomic, copy , nullable) NSString *courtAddress;
 @property (nonatomic, copy , nullable) NSString *name;
-@property (nonatomic, strong , nullable) FHHomeHouseDataItemsCoreInfoSaleStatusModel *saleStatus ;
+@property (nonatomic, strong , nullable) FHSaleStatusModel *saleStatus ;
 //@property (nonatomic)         typename<Optional>* properyType;
 @property (nonatomic, copy , nullable) NSString *pricingPerSqm;
 @property (nonatomic, copy , nullable) NSString *gaodeLng;

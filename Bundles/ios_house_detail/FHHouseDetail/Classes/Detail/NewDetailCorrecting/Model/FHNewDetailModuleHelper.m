@@ -31,6 +31,7 @@
     NSMutableArray *related = [[NSMutableArray alloc]init];
     NSMutableArray *socialInfo = [[NSMutableArray alloc]init];
     NSMutableArray *timelines = [[NSMutableArray alloc]init];
+    NSMutableArray *buildings = [NSMutableArray arrayWithCapacity:1];
 
     [moduleArr enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
         FHDetailBaseModel *model = (FHDetailBaseModel *)obj;
@@ -45,8 +46,8 @@
                 [floorPlans addObject:obj];
                 break;
             case FHHouseModelTypeNewAccess:
-                            [access addObject:obj];
-                            break;
+                [access addObject:obj];
+                break;
             case FHHouseModelTypeNewAgentList:
                 [agentlist addObject:obj];
                 break;
@@ -65,9 +66,11 @@
             case FHHouseModelTypeNewSocialInfo:
                 [socialInfo addObject:obj];
                 break;
-                
             case FHHouseModelTypeNewTimeline:
                 [timelines addObject:obj];
+                break;
+            case FHHouseModelTypeNewBuildingInfo:
+                [buildings addObject:obj];
                 break;
             default:
                 break;
@@ -95,6 +98,9 @@
     if (locations.count > 0) {
         [moduleItems addObject:@{@"locations":locations}];
     }
+    if (buildings.count) {
+        [moduleItems addObject:@{@"buildings":buildings}];
+    }
     if (related.count > 0) {
         [moduleItems addObject:@{@"related":related}];
     }
@@ -107,10 +113,14 @@
     if (timelines.count > 0) {
         [moduleItems addObject:@{@"timelines":timelines}];
     }
-    [moduleItems enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-        NSArray *currentItemArr = obj[[obj allKeys][0]];
+
+    [moduleItems enumerateObjectsUsingBlock:^(NSDictionary *obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        NSArray *currentItemArr = obj.allValues.firstObject;
+        if (!currentItemArr || ![currentItemArr isKindOfClass:[NSArray class]] || !currentItemArr.count) {
+            return;
+        }
 //        单个cell模块
-        if([[obj allKeys] containsObject:@"sales"] || [[obj allKeys] containsObject:@"agentlist"]|| [[obj allKeys] containsObject:@"agentevaluationlist"]|| [[obj allKeys] containsObject:@"floorPlans"] || [[obj allKeys] containsObject:@"socialInfo"] || [[obj allKeys] containsObject:@"access"]) {
+        if([[obj allKeys] containsObject:@"sales"] || [[obj allKeys] containsObject:@"agentlist"]|| [[obj allKeys] containsObject:@"agentevaluationlist"]|| [[obj allKeys] containsObject:@"floorPlans"] || [[obj allKeys] containsObject:@"socialInfo"] || [[obj allKeys] containsObject:@"access"] || [[obj allKeys] containsObject:@"buildings"]) {
             [currentItemArr enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
                 FHDetailBaseModel *model = (FHDetailBaseModel *)obj;
                 model.shadowImageType = FHHouseShdowImageTypeRound;

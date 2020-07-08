@@ -70,8 +70,8 @@ static MAMapView *kFHPageMapView = nil;
         self.ttTrackStayEnable = YES;
         _traceDict =[NSMutableDictionary dictionaryWithDictionary:paramObj.allParams[@"tracer"]];
         
-        if ([userInfo.allInfo objectForKey:@"latitude"] && [userInfo.allInfo objectForKey:@"longitude"]) {
-            self.centerPoint = CLLocationCoordinate2DMake([[userInfo.allInfo objectForKey:@"latitude"] floatValue], [[userInfo.allInfo objectForKey:@"longitude"] floatValue]);
+        if ([paramObj.allParams objectForKey:@"latitude"] && [paramObj.allParams objectForKey:@"longitude"]) {
+            self.centerPoint = CLLocationCoordinate2DMake([[paramObj.allParams objectForKey:@"latitude"] floatValue], [[paramObj.allParams objectForKey:@"longitude"] floatValue]);
         }
         
         if ([[userInfo.allInfo objectForKey:@"category"] isKindOfClass:[NSString class]]) {

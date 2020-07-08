@@ -312,7 +312,7 @@ static NSString * const kFHLynxEnableControlKey = @"lynx_enable";
 }
 
 - (NSArray<NSString *> *)allLocalChannelsArray{
-    return @[@"ugc_operation",@"lynx_common_question",@"ugc_encyclopedia_lynx_item",@"ugc_encyclopedia_lynx_header",@"lynx_realtor_card"];
+    return @[@"ugc_operation",@"lynx_common_question",@"ugc_encyclopedia_lynx_item",@"ugc_encyclopedia_lynx_header",@"lynx_realtor_card",@"lynx_enterprise_guarantee",@"lynx_estate_info"];
 }
 
 - (NSArray<NSString *> *)allConfigChannelsArray{
