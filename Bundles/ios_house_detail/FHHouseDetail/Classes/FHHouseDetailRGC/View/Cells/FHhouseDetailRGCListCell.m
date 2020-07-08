@@ -363,11 +363,13 @@
         switch (model.cellType) {
             case FHUGCFeedListCellTypeUGC:
                 model.cellSubType = FHUGCFeedListCellSubTypeUGCBrokerImage;
-                contentHeight = model.contentHeight  +75 + 30 + 30 +contentHeight + 40;
+                ///内容高度 + 图片高度 + 距离顶部高度 + 底部高度
+                contentHeight = model.contentHeight  +75 + 30 + 40 +contentHeight + 40;
                 break;
             case FHUGCFeedListCellTypeUGCSmallVideo:
                 model.cellSubType = FHUGCFeedListCellSubTypeUGCBrokerVideo;
-                contentHeight = model.contentHeight  +150 + 10 + 30 +contentHeight + 90;
+                ///内容高度 + 视频高度 + 距离顶部高度 + 底部高度
+                contentHeight = model.contentHeight  +150 + 10 + 40 +contentHeight + 90;
                 break;
             default:
                 break;

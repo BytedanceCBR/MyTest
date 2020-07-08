@@ -276,7 +276,7 @@
         FHFeedUGCCellModel *cellModel = (FHFeedUGCCellModel *)data;
         CGFloat height;
         if (cellModel.isInRealtorEvaluationList) {
-            height =  cellModel.contentHeight  +75 + 22 + 50 + 75;
+            height =  cellModel.contentHeight  +75 + 22 + 50 + 85;
         }else {
             height =  cellModel.contentHeight  +75 + 30 + 50 + 40;
         }
