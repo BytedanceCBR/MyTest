@@ -21,6 +21,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, assign)   NSInteger         type;// 1：二手房，租房 2：新房
 @property (nonatomic, copy)     NSString       *name;
+@property (nonatomic, copy)     NSString       *title;
 @property (nonatomic, copy)     NSString       *aliasName;
 @property (nonatomic, strong)   NSArray       *tags;// FHSearchHouseDataItemsTagsModel item类型
 @property (nonatomic, assign)   BOOL         isHiddenLine;// 是否显示线

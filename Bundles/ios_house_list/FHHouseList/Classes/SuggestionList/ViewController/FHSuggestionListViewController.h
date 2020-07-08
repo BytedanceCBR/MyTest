@@ -11,6 +11,7 @@
 #import "FHHouseSuggestionDelegate.h"
 #import "HMSegmentedControl.h"
 #import "FHSuggestionSearchBar.h"
+#import "FHSuggestionCollectionView.h"
 
 typedef enum : NSUInteger {
     FHEnterSuggestionTypeDefault       =   0,// H5
@@ -32,6 +33,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong)     NSMutableArray *houseTypeArray;
 @property (nonatomic, assign)     FHHouseType       houseType;
 @property (nonatomic, strong)     TTRouteParamObj *paramObj;
+@property (nonatomic, strong)     FHSuggestionCollectionView *collectionView;
 
 - (void)requestDeleteHistory;
 

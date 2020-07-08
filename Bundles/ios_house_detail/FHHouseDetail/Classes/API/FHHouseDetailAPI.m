@@ -27,6 +27,7 @@
 #import <TTInstallService/TTInstallIDManager.h>
 #import "TTBaseMacro.h"
 #import <FHHouseBase/FHSearchChannelTypes.h>
+#import "FHBuildingDetailModel.h"
 
 #define GET @"GET"
 #define POST @"POST"
@@ -652,6 +653,21 @@
         }
         if (completion) {
             completion(success , error);
+        }
+    }];
+}
+
+//1.0.2 楼栋详情
++(TTHttpTask*)requestBuildingDetail:(NSString*)courtId
+                         completion:(void(^)(FHBuildingDetailModel * _Nullable model , NSError * _Nullable error))completion {
+    if (!courtId.length) {
+        return nil;
+    }
+    NSString * host = [FHURLSettings baseURL] ?: @"https://i.haoduofangs.com";
+    NSString* url = [host stringByAppendingFormat:[NSString stringWithFormat:@"/f100/api/building/info"]];
+    return [FHMainApi getRequest:url query:nil params:@{@"court_id": courtId?:@""} jsonClass:[FHBuildingDetailModel class] completion:^(JSONModel * _Nullable model, NSError * _Nullable error) {
+        if (completion) {
+            completion(model,error);
         }
     }];
 }

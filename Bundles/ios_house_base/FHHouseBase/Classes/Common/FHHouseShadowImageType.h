@@ -91,6 +91,8 @@ typedef NS_ENUM (NSInteger , FHHouseModelType){
     FHFloorPanHouseModelTypeNewSales,
     // 户型详情页户型模块
     FHFloorPanHouseModelTypeFloorPlan,
+    // 楼盘楼栋信息
+    FHHouseModelTypeNewBuildingInfo,
     
 };
 
