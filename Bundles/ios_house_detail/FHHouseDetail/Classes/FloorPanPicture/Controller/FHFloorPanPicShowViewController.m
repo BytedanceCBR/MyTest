@@ -396,14 +396,9 @@
 //        if (cluePage) {
 //            extraDic[kFHCluePage] = cluePage;
 //        }
-        NSDictionary *associateInfoDict = nil;
         FHDetailContactModel *contactPhone = self.contactViewModel.contactPhone;
-        if (contactPhone.phone.length > 0) {
-            associateInfoDict = self.associateInfo.phoneInfo;
-        }else {
-            associateInfoDict = self.associateInfo.reportFormInfo;
-        }
-        extraDic[kFHAssociateInfo] = associateInfoDict;
+        NSDictionary *associateInfoDict = contactPhone.enablePhone ? self.associateInfo.phoneInfo : self.associateInfo.reportFormInfo;
+        extraDic[kFHAssociateInfo] = associateInfoDict?:@{};
         [self.contactViewModel contactActionWithExtraDict:extraDic];
     }
 }
@@ -606,8 +601,8 @@
     if (dic && [dic isKindOfClass:[NSDictionary class]]) {
         NSMutableDictionary *tracerDic = dic.mutableCopy;
         tracerDic[@"is_im"] = contactPhone.imOpenUrl.length ? @"1" : @"0";
-        tracerDic[@"is_call"] = contactPhone.phone.length < 1 ? @"0" : @"1";
-        tracerDic[@"is_report"] = contactPhone.phone.length < 1 ? @"1" : @"0";
+        tracerDic[@"is_call"] = contactPhone.enablePhone ? @"1" : @"0";
+        tracerDic[@"is_report"] = contactPhone.enablePhone ? @"0" : @"1";
         tracerDic[@"is_online"] = contactPhone.unregistered ? @"1" : @"0";
         tracerDic[@"element_from"] = [self elementFrom];
         TRACK_EVENT(@"lead_show", tracerDic);

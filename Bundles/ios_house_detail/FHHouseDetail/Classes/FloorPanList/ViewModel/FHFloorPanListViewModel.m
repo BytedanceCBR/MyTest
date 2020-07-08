@@ -207,11 +207,7 @@ static const NSString *kDefaultTopFilterStatus = @"-1";
         contactPhone = model.data.contact;
         contactPhone.unregistered = YES;
     }
-    if (contactPhone.phone.length > 0) {
-        contactPhone.isFormReport = NO;
-    }else {
-        contactPhone.isFormReport = YES;
-    }
+    contactPhone.isFormReport = !contactPhone.enablePhone;
     self.contactViewModel.contactPhone = contactPhone;
     self.contactViewModel.followStatus = model.data.userStatus.courtSubStatus;
     self.contactViewModel.chooseAgencyList = model.data.chooseAgencyList;

@@ -408,11 +408,7 @@
     }else {
         contactPhone = model.data.contact;
     }
-    if (contactPhone.phone.length > 0) {
-        contactPhone.isFormReport = NO;
-    }else {
-        contactPhone.isFormReport = YES;
-    }
+    contactPhone.isFormReport = !contactPhone.enablePhone;
     self.contactViewModel.contactPhone = contactPhone;
     self.contactViewModel.shareInfo = model.data.shareInfo;
     self.contactViewModel.followStatus = model.data.userStatus.courtSubStatus;
