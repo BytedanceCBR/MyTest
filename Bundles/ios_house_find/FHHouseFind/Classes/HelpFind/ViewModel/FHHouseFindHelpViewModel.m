@@ -1,4 +1,4 @@
-//
+
 //  FHHouseFindHelpViewModel.m
 //  FHHouseFind
 //
@@ -29,6 +29,9 @@
 #import <TTBaseLib/TTDeviceHelper.h>
 #import <FHHouseBase/FHCommonDefines.h>
 #import <FHHouseMine/FHLoginDefine.h>
+#import "FHFindHouseAreaSelectionPanel.h"
+#import "FHFilterModelParser.h"
+#import "AreaSelectionTableViewVM.h"
 
 #define HELP_HEADER_ID @"header_id"
 #define HELP_ITEM_HOR_MARGIN 20
@@ -63,16 +66,18 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
 @property (nonatomic , strong) FHSearchFilterConfigItem *roomConfigItem;
 
 @property (nonatomic , strong) FHHouseFindSelectItemModel *selectRegionItem;
+@property (nonatomic , strong) FHHouseFindHelpRegionSheet *regionSheet;
 
 @property (nonatomic , weak) FHHouseFindHelpContactCell *contactCell;
 @property (nonatomic , weak) FHHouseFindHelpSubmitCell *commitCell;
 @property (nonatomic , weak) UITextField *activeTextField;
 
-@property(nonatomic , assign) BOOL isRequestingSMS;
-@property(nonatomic , strong) NSTimer *timer;
-@property(nonatomic , assign) NSInteger verifyCodeRetryTime;
-//是否重新是重新发送验证码
-@property(nonatomic , assign) BOOL isVerifyCodeRetry;
+//1.0.1版本帮我找房优化需求去掉了验证码逻辑
+//@property(nonatomic , assign) BOOL isRequestingSMS;
+//@property(nonatomic , strong) NSTimer *timer;
+//@property(nonatomic , assign) NSInteger verifyCodeRetryTime;
+////是否重新是重新发送验证码
+//@property(nonatomic , assign) BOOL isVerifyCodeRetry;
 @property(nonatomic , assign) CGPoint lastContentOffset;
 @property(nonatomic , assign) BOOL isKeyboardShow;
 
@@ -157,7 +162,7 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
 
 - (void)confirmBtnDidClick
 {
-    [self.collectionView endEditing:YES];
+//    [self.collectionView endEditing:YES];
     __weak typeof(self) wself = self;
     [self addClickOptionsLog:@"confirm"];
     
@@ -179,58 +184,61 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
         return;
     }
     
-    if([TTAccount sharedAccount].isLogin){
+    NSString *phoneNumber = self.contactCell.phoneInput.text;
+    //包含*说明没有编辑过电话号码，直接取真实的手机号
+    if ([phoneNumber containsString:@"*"]) {
+        phoneNumber = self.contactCell.phoneNum;
+    }
+    if (phoneNumber.length < 1 || ![phoneNumber hasPrefix:@"1"] || phoneNumber.length != 11 || ![self isPureInt:phoneNumber]) {
+        [[ToastManager manager] showToast:@"请输入正确的手机号"];
+        return;
+    }
+    [self storePhoneNumber:phoneNumber];
+    
+//    if([TTAccount sharedAccount].isLogin){
         [self submitAction];
         return;
-    }
-    [self addClickLoginLog];
+//    }
+//    [self addClickLoginLog];
 
-    NSString *phoneNumber = self.contactCell.phoneInput.text;
-    NSString *smsCode = self.contactCell.varifyCodeInput.text;
+//    NSString *phoneNumber = self.contactCell.phoneInput.text;
+//    NSString *smsCode = self.contactCell.varifyCodeInput.text;
     
-    if (phoneNumber.length < 1) {
-        [[ToastManager manager] showToast:@"请填写并验证手机号"];
-        return;
-    }
-    if(![phoneNumber hasPrefix:@"1"] || phoneNumber.length != 11 || ![self isPureInt:phoneNumber]){
-        [[ToastManager manager] showToast:@"手机号错误"];
-        return;
-    }
-    if (![TTReachability isNetworkConnected]) {
-        [[ToastManager manager] showToast:@"网络错误"];
-        return;
-    }
-    if(smsCode.length == 0){
-        [[ToastManager manager] showToast:@"验证码为空"];
-        return;
-    }
+//    if (![TTReachability isNetworkConnected]) {
+//        [[ToastManager manager] showToast:@"网络错误"];
+//        return;
+//    }
+//    if(smsCode.length == 0){
+//        [[ToastManager manager] showToast:@"验证码为空"];
+//        return;
+//    }
     
-    if (![TTReachability isNetworkConnected]) {
-        [[ToastManager manager] showToast:@"网络异常"];
-        return;
-    }
-    //添加抖音 submit 埋点
-    NSMutableDictionary *trackerDict = [self.viewController tracerDict].mutableCopy;
-    trackerDict[@"enter_from"] = @"driving_find_house";
-    trackerDict[@"login_method"] = @"phone_sms";
-    trackerDict[@"enter_method"] = @"click";
-    [FHLoginTrackHelper loginSubmit:trackerDict];
-    [self requestQuickLogin:phoneNumber smsCode:smsCode completion:^(UIImage * _Nonnull captchaImage, NSNumber * _Nonnull newUser, NSError * _Nonnull error) {
-        //添加抖音 result 埋点
-        [FHLoginTrackHelper loginResult:trackerDict error:error];
-        if(!error){
-            //记录上一次登录成功的行为
-            [[NSUserDefaults standardUserDefaults] setObject:@"phone_sms" forKey:FHLoginTrackLastLoginMethodKey];
-            [[NSUserDefaults standardUserDefaults] synchronize];
-            YYCache *sendPhoneNumberCache = [[FHEnvContext sharedInstance].generalBizConfig sendPhoneNumberCache];
-//            [sendPhoneNumberCache setObject:phoneNumber forKey:kFHPhoneNumberCacheKey];
-            [sendPhoneNumberCache setObject:phoneNumber forKey:kFHPLoginhoneNumberCacheKey];
-            [wself submitAction];
-        }else{
-            NSString *errorMessage = [wself errorMessageByErrorCode:error];
-            [[ToastManager manager] showToast:errorMessage];
-        }
-    }];
+//    if (![TTReachability isNetworkConnected]) {
+//        [[ToastManager manager] showToast:@"网络异常"];
+//        return;
+//    }
+//    //添加抖音 submit 埋点
+//    NSMutableDictionary *trackerDict = [self.viewController tracerDict].mutableCopy;
+//    trackerDict[@"enter_from"] = @"driving_find_house";
+//    trackerDict[@"login_method"] = @"phone_sms";
+//    trackerDict[@"enter_method"] = @"click";
+//    [FHLoginTrackHelper loginSubmit:trackerDict];
+//    [self requestQuickLogin:phoneNumber smsCode:smsCode completion:^(UIImage * _Nonnull captchaImage, NSNumber * _Nonnull newUser, NSError * _Nonnull error) {
+//        //添加抖音 result 埋点
+//        [FHLoginTrackHelper loginResult:trackerDict error:error];
+//        if(!error){
+//            //记录上一次登录成功的行为
+//            [[NSUserDefaults standardUserDefaults] setObject:@"phone_sms" forKey:FHLoginTrackLastLoginMethodKey];
+//            [[NSUserDefaults standardUserDefaults] synchronize];
+//            YYCache *sendPhoneNumberCache = [[FHEnvContext sharedInstance].generalBizConfig sendPhoneNumberCache];
+////            [sendPhoneNumberCache setObject:phoneNumber forKey:kFHPhoneNumberCacheKey];
+//            [sendPhoneNumberCache setObject:phoneNumber forKey:kFHPLoginhoneNumberCacheKey];
+//            [wself submitAction];
+//        }else{
+//            NSString *errorMessage = [wself errorMessageByErrorCode:error];
+//            [[ToastManager manager] showToast:errorMessage];
+//        }
+//    }];
 }
 #pragma mark 提交选项
 - (void)submitAction
@@ -241,7 +249,7 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
     NSMutableString *query = [NSMutableString new];
     if (selectModel.items.count > 0) {
         for (FHHouseFindSelectItemModel *item in selectModel.items ) {
-            NSString *q = [item selectQuery];
+            NSString *q = [item selectQueryForFindingHouse];
             if (!q) {
 #if DEBUG
                 NSLog(@"WARNING select query is nil for item : %@",item);
@@ -386,19 +394,109 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
     } else {
         // Fallback on earlier versions
     }
+    NSArray<FHFilterNodeModel*> *configs = [self.class convertConfigItemsToModel:@[model.items.lastObject.configOption]];
     __weak typeof(self)wself = self;
     frame.size.height = REGION_CONTENT_HEIGHT + bottomHeight;
-    FHHouseFindHelpRegionSheet *sheet = [[FHHouseFindHelpRegionSheet alloc]initWithFrame:frame];
-    sheet.tableViewDelegate = self;
-    [sheet showWithCompleteBlock:^{
+    _regionSheet = [[FHHouseFindHelpRegionSheet alloc]initWithFrame:frame];
+    if (selectItem.selectIndexes.count > 0) {
+        [_regionSheet setSelectedNodes:configs selectedIndexes:selectItem.selectIndexes];
+    } else {
+        [_regionSheet setNodes:configs];
+    }
+    [_regionSheet showWithCompleteBlock:^{
         [wself updateRegionItem:section];
     } cancelBlock:^{
-        
+
     }];
+}
+
++ (NSArray<FHFilterNodeModel *> *)convertConfigItemsToModel:(NSArray<FHSearchFilterConfigOption *> *)items {
+    NSMutableArray<FHFilterNodeModel*>* result = [[NSMutableArray alloc] initWithCapacity:[items count]];
+    [items enumerateObjectsUsingBlock:^(FHSearchFilterConfigOption * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        FHFilterNodeModel* model = [self convertConfigItemToModel:obj];
+        [result addObject:model];
+    }];
+    return result;
+}
+
++ (FHFilterNodeModel *)convertConfigItemToModel:(FHSearchFilterConfigOption *)item {
+    FHFilterNodeModel* model = [[FHFilterNodeModel alloc] init];
+    model.label = item.text;
+    model.isSupportMulti = item.supportMulti;
+    if ([item.options count] > 0) {
+        model.children = [self convertConfigOptionsToModel:item.options
+                                              supportMutli:item.supportMulti
+                                                withParent:model];
+    } else {
+        model.children = nil;
+    }
+    return model;
+}
+
+
++ (NSArray<FHFilterNodeModel *> *)convertConfigOptionsToModel:(NSArray<FHSearchFilterConfigOption *> *)options
+                                                 supportMutli:(NSNumber*)supportNutli
+                                                   withParent:(FHFilterNodeModel*)model {
+    NSMutableArray<FHFilterNodeModel*>* result = [[NSMutableArray alloc] init];
+    [options enumerateObjectsUsingBlock:^(FHSearchFilterConfigOption * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        FHFilterNodeModel* mm = [self convertConfigOptionToModel:obj
+                                                    supportMutli:supportNutli ? supportNutli : obj.supportMulti
+                                                      withParent:model];
+        [result addObject:mm];
+    }];
+    return result;
+}
+
++ (FHFilterNodeModel *)convertConfigOptionToModel:(FHSearchFilterConfigOption *)option
+                                     supportMutli:(NSNumber*)supportNutli
+                                       withParent:(FHFilterNodeModel*)model {
+    FHFilterNodeModel* result = [[FHFilterNodeModel alloc] init];
+    result.label = option.text;
+    result.rankType = option.rankType;
+    result.isEmpty = [option.isEmpty integerValue];
+    result.isNoLimit = [option.isNoLimit integerValue];
+    result.value = option.value;
+    result.key = option.type;
+    result.parent = model;
+    result.rate = model.rate;
+    result.isSupportMulti = supportNutli ? [supportNutli boolValue] : [option.supportMulti boolValue];
+    result.children = [self convertConfigOptionsToModel:option.options supportMutli:supportNutli withParent:result];
+    return result;
+}
+
+- (NSString*)getFilterLabelForSelectedNodes:(NSArray<FHFilterNodeModel*>*)nodes {
+    if (nodes == nil || [nodes count] == 0) {
+        return nil;
+    } else if ([nodes count] == 1) {
+        return [nodes firstObject].label;
+    }
+    
+    return nil;
 }
 
 - (void)updateRegionItem:(NSInteger)section
 {
+    NSArray *VMs = self.regionSheet.areaPanel.selectionViewModels;
+    [_selectRegionItem.selectIndexes removeAllObjects];
+    [VMs enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        AreaSelectionTableViewVM *viewModel = (AreaSelectionTableViewVM *)obj;
+        if (viewModel.selectedIndexPath.count > 0) {
+            //区域选择控件不支持多选，所以indexPath取数组中的第一个就可以
+            NSIndexPath *indexPath = [viewModel.selectedIndexPath allObjects].firstObject;
+            [_selectRegionItem.selectIndexes addObject:@(indexPath.row)];
+        }
+    }];
+    
+    //重置后只选择未选择“行政区”以及“区域”
+   if (_selectRegionItem.selectIndexes.count == 2) {
+       NSNumber *index0 = _selectRegionItem.selectIndexes[0];
+       NSNumber *index1 = _selectRegionItem.selectIndexes[1];
+       if (index0.integerValue == 0 && index1.integerValue == 0) {
+           [[ToastManager manager] showToast:@"请选择意向区域"];
+           return;
+       }
+   }
+    
     FHHouseType ht = _houseType;
     FHHouseFindSelectModel *model = [self selectModelWithType:ht];
     FHHouseFindSelectItemModel *selectItem = [model selectItemWithTabId:FHSearchTabIdTypeRegion];
@@ -440,6 +538,7 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
     
     FHSearchFilterConfigOption *options = [item.options firstObject];
     NSString *optionType = options.type;
+    NSMutableArray *optionTypes = [NSMutableArray array];  //帮我找房多级区域选择
     FHHouseFindSelectItemModel *selectItem = [model selectItemWithTabId:[item.tabId integerValue]];
     if (!selectItem) {
         selectItem = [model makeItemWithTabId:item.tabId.integerValue];
@@ -448,13 +547,22 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
         selectItem.configOption = [item.options firstObject];
     }
     if (item.tabId.integerValue == FHSearchTabIdTypeRegion && options.options.count > 0) {
-        for (FHSearchFilterConfigOption *subOptions in options.options) {
-            if (![subOptions.type isEqualToString:@"empty"]) {
-                optionType = subOptions.type;
-                break;
-            }
-        }
+//        for (FHSearchFilterConfigOption *subOptions in options.options) {
+//            if (![subOptions.type isEqualToString:@"empty"]) {
+//                optionType = subOptions.type;
+//                break;
+//            }
+//        }
+        //1.0.1版本帮我找房优化需求，此处为支持多级区域选择改动较大，逻辑独立处理
+        [self configAreaMultiSelectionWithOptionTypes:optionTypes
+                                              options:options
+                                                model:model
+                                               params:params
+                                                 item:item
+                                           selectItem:selectItem];
+        return;
     }
+    
     __block id priceItem = nil;
     __block NSNumber *rate = nil;
     [params enumerateKeysAndObjectsUsingBlock:^(NSString *key, id _Nonnull obj, BOOL * _Nonnull stop) {
@@ -506,6 +614,95 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
         [self fillPriceItem:item selectItem:selectItem priceItem:priceItem rate:rate];
         //        NSLog(@"zjing %@",selectItem);
     }
+}
+
+- (void)configAreaMultiSelectionWithOptionTypes:(NSMutableArray *)optionTypes
+                                        options:(FHSearchFilterConfigOption *)options
+                                          model:(FHHouseFindSelectModel *)model
+                                         params:(NSDictionary *)params
+                                           item:(FHSearchFilterConfigItem *)item
+                                     selectItem:(FHHouseFindSelectItemModel *)selectItem {
+    //加入region级type（区域）
+    [optionTypes addObject:options.type];
+    
+    //遍历disrict级type（行政区）
+    [options.options enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        FHSearchFilterConfigOption *currentOption = (FHSearchFilterConfigOption *)obj;
+        if ([currentOption.type isEqualToString:@"empty"] || [optionTypes containsObject:currentOption.type]) {
+            return;
+        }
+        
+        //加入不存在的type
+        if (![optionTypes containsObject:currentOption.type]) {
+            [optionTypes addObject:currentOption.type];
+        }
+        
+        //遍历area级type（商圈）
+        [currentOption.options enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+            FHSearchFilterConfigOption *currentOption = (FHSearchFilterConfigOption *)obj;
+            if ([currentOption.type isEqualToString:@"empty"] || [optionTypes containsObject:currentOption.type]) {
+                return;
+            }
+            
+            //加入不存在的type
+            if (![optionTypes containsObject:currentOption.type]) {
+                [optionTypes addObject:currentOption.type];
+            }
+        }];
+    }];
+    
+    //把region写死，默认插到第一个位置
+    [model addSelecteItem:selectItem withIndex:0];
+    
+    //帮我找房区域选择支持多级，因此需要重新实现逻辑
+    __block NSArray *currentOptions = options.options;
+    [params enumerateKeysAndObjectsUsingBlock:^(NSString *key, id _Nonnull obj, BOOL * _Nonnull stop) {
+        if (![self isValidKey:key inTypes:optionTypes]) {
+            return;
+        }
+        
+        if ([obj isKindOfClass:[NSArray class]]) {
+            NSArray* items = (NSArray*)obj;
+            
+            [items enumerateObjectsUsingBlock:^(NSString *it, NSUInteger idx, BOOL * _Nonnull stop) {
+                //遍历area
+                for (NSInteger index = 0; index < currentOptions.count; index++) {
+                    FHSearchFilterConfigOption *option = currentOptions[index];
+                    if (![it isEqualToString:option.value]) {
+                        continue;
+                    }
+                    if (item.tabId.integerValue == FHSearchTabIdTypeRegion) {
+                        FHSearchFilterConfigOption *op = nil;
+                        if (item.options.count > 0) {
+                            op = [item.options firstObject];
+                        }
+                        if ([op.supportMulti boolValue]) {
+                            [model addSelecteItem:selectItem withIndex:index];
+                            currentOptions = option.options;
+                            *stop = YES;
+                        }
+                    }
+                }
+            }];
+        }
+    }];
+    
+    //如果selectIndexes只有两个值，说明没有包含商圈area，此处添加一个0代表“不限”选项
+    if (selectItem.selectIndexes.count == 2) {
+        [model addSelecteItem:selectItem withIndex:0];
+    }
+}
+
+- (BOOL)isValidKey:(NSString *)key inTypes:(NSArray *)types {
+    __block BOOL hasThisKey = NO;
+    [types enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        if ([key hasPrefix:obj]) {
+            hasThisKey = YES;
+            *stop = YES;
+        }
+    }];
+    
+    return hasThisKey;
 }
 
 - (void)selectDefaultItems
@@ -577,6 +774,27 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
             selectItem.higherPrice = [NSString stringWithFormat:@"%ld",higherPrice];
         }
     }
+}
+
+//手机号单独保存，不复用表单的缓存
+- (NSString *)loadPhoneNumber {
+    YYCache *findHousePhoneNumberCache = [[FHEnvContext sharedInstance].generalBizConfig findHousePhoneNumberCache];
+    id phoneCache = [findHousePhoneNumberCache objectForKey:kFHFindHousePhoneNumberCacheKey];
+    
+    NSString *phoneNum = nil;
+    if ([phoneCache isKindOfClass:[NSString class]]) {
+        NSString *cacheNum = (NSString *)phoneCache;
+        if (cacheNum.length > 0) {
+            phoneNum = cacheNum;
+        }
+    }
+   
+    return phoneNum;
+}
+
+- (BOOL)storePhoneNumber:(NSString *)phoneNumber {
+    YYCache *findHousePhoneNumberCache = [[FHEnvContext sharedInstance].generalBizConfig findHousePhoneNumberCache];
+    [findHousePhoneNumberCache setObject:phoneNumber ?: @"" forKey:kFHFindHousePhoneNumberCacheKey];
 }
 
 #pragma mark - price cell delegate
@@ -710,20 +928,27 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
             
             FHHouseFindHelpRegionCell *pcell = [collectionView dequeueReusableCellWithReuseIdentifier:HELP_REGION_CELL_ID forIndexPath:indexPath];
             FHHouseFindSelectItemModel *selectItem = [model selectItemWithTabId:[item.tabId integerValue]];
-            FHSearchFilterConfigOption *options = [item.options firstObject];
+            NSArray<FHSearchFilterConfigOption *> *options = item.options;
             NSMutableString *titleString = [NSMutableString stringWithString:@""];
-            
-            NSSortDescriptor *sort = [NSSortDescriptor sortDescriptorWithKey:@"description" ascending:YES];
-            NSMutableArray *itemsArray = [selectItem.selectIndexes sortedArrayUsingDescriptors:[NSArray arrayWithObject:sort]];
+            __block NSArray<FHSearchFilterConfigOption *> *filterOptions = options;
+            NSMutableArray *itemsArray = selectItem.selectIndexes.mutableCopy;
             [itemsArray enumerateObjectsUsingBlock:^(NSNumber *obj, NSUInteger idx, BOOL * _Nonnull stop) {
                 
-                if (obj.integerValue < options.options.count) {
-                    FHSearchFilterConfigOption *itemOption = options.options[obj.integerValue];
+                if (!filterOptions) {
+                    *stop = YES;
+                    return;
+                }
+                
+                NSInteger optionIndex = obj.integerValue;
+                if (optionIndex < filterOptions.count) {
+                    FHSearchFilterConfigOption *itemOption = filterOptions[optionIndex];
                     if (idx == 0) {
                         [titleString appendString:itemOption.text];
                     }else {
                         [titleString appendString:[NSString stringWithFormat:@"/%@",itemOption.text]];
                     }
+                    
+                    filterOptions = filterOptions[optionIndex].options;
                 }
             }];
             [pcell updateWithTitle:titleString];
@@ -755,17 +980,19 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
         
         FHHouseFindHelpContactCell *pcell = [collectionView dequeueReusableCellWithReuseIdentifier:HELP_CONTACT_CELL_ID forIndexPath:indexPath];
         pcell.phoneInput.delegate = self;
-        pcell.varifyCodeInput.delegate = self;
+//        pcell.varifyCodeInput.delegate = self;
         pcell.delegate = self;
         self.contactCell = pcell;
+        pcell.phoneNum = [self loadPhoneNumber];
+        [pcell showFullPhoneNum:NO];
         
-        if([TTAccount sharedAccount].isLogin){
-            
-            TTAccountUserEntity *userInfo = [TTAccount sharedAccount].user;
-            pcell.phoneNum = userInfo.mobile;
-        }else {
-            pcell.phoneNum = nil;
-        }
+//        if([TTAccount sharedAccount].isLogin){
+//
+//            TTAccountUserEntity *userInfo = [TTAccount sharedAccount].user;
+//            pcell.phoneNum = userInfo.mobile;
+//        }else {
+//            pcell.phoneNum = nil;
+//        }
         return pcell;
     }
     FHHouseFindHelpSubmitCell *pcell = [collectionView dequeueReusableCellWithReuseIdentifier:HELP_SUBMIT_CELL_ID forIndexPath:indexPath];
@@ -826,7 +1053,7 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
         if([TTAccount sharedAccount].isLogin){
             return CGSizeMake(collectionView.frame.size.width, 90);
         }
-        return CGSizeMake(collectionView.frame.size.width, 174);
+        return CGSizeMake(collectionView.frame.size.width, 107);
     }
     return CGSizeMake(collectionView.frame.size.width, 60);
 }
@@ -1130,7 +1357,7 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
 {
     UITextField *textField = (UITextField *)notification.object;
 
-    if (textField != self.contactCell.phoneInput && textField != self.contactCell.varifyCodeInput) {
+    if (textField != self.contactCell.phoneInput/* && textField != self.contactCell.varifyCodeInput*/) {
         [self resetPriceSelectItems];
         return;
     }
@@ -1140,14 +1367,15 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
         limit = 11;
         
         //设置登录和获取验证码是否可点击
-        if(text.length > 0){
-            [self setVerifyCodeButtonAndConfirmBtnEnabled:YES];
-        }else{
-            [self setVerifyCodeButtonAndConfirmBtnEnabled:NO];
-        }
-    }else if(textField == self.contactCell.varifyCodeInput) {
-        limit = 6;
+//        if(text.length > 0){
+//            [self setVerifyCodeButtonAndConfirmBtnEnabled:YES];
+//        }else{
+//            [self setVerifyCodeButtonAndConfirmBtnEnabled:NO];
+//        }
     }
+//    else if(textField == self.contactCell.varifyCodeInput) {
+//        limit = 6;
+//    }
     
     if(text.length > limit) {
         textField.text = [text substringToIndex:limit];
@@ -1156,6 +1384,15 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
 
 - (void)textFieldDidBeginEditing:(UITextField *)textField
 {
+    if (textField == self.contactCell.phoneInput) {
+        //明文展示或者内容为空时不用读缓存
+        if (![self.contactCell.phoneInput.text containsString:@"*"]) {
+            self.activeTextField = textField;
+            return;
+        }
+        [self.contactCell showFullPhoneNum:YES];
+    }
+    
     self.activeTextField = textField;
 }
 
@@ -1164,53 +1401,53 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
     self.activeTextField = nil;
 }
 
-- (void)sendVerifyCode
-{
-    [self.collectionView endEditing:YES];
-    __weak typeof(self) weakSelf = self;
-    NSString *phoneNumber = self.contactCell.phoneInput.text;
-    
-    if(![phoneNumber hasPrefix:@"1"] || phoneNumber.length != 11 || ![self isPureInt:phoneNumber]){
-        [[ToastManager manager] showToast:@"手机号错误"];
-        return;
-    }
-    
-    if (![TTReachability isNetworkConnected]) {
-        [[ToastManager manager] showToast:@"网络错误"];
-        return;
-    }
-    
-    if(self.isRequestingSMS){
-        return;
-    }
-    
-    self.isRequestingSMS = YES;
-    [[ToastManager manager] showToast:@"正在获取验证码"];
-    
-    __weak typeof(self)wself = self;
-    [self requestSendVerifyCode:phoneNumber completion:^(NSNumber * _Nonnull retryTime, UIImage * _Nonnull captchaImage, NSError * _Nonnull error) {
-        wself.isRequestingSMS = NO;
-        if(!error){
-            [wself blockRequestSendMessage:[retryTime integerValue]];
-            [[ToastManager manager] showToast:@"短信验证码发送成功"];
-            wself.isVerifyCodeRetry = YES;
-        }else{
-            NSString *errorMessage = [wself errorMessageByErrorCode:error];
-            [[ToastManager manager] showToast:errorMessage];
-        }
-    }];
-}
+//- (void)sendVerifyCode
+//{
+//    [self.collectionView endEditing:YES];
+//    __weak typeof(self) weakSelf = self;
+//    NSString *phoneNumber = self.contactCell.phoneInput.text;
+//
+//    if(![phoneNumber hasPrefix:@"1"] || phoneNumber.length != 11 || ![self isPureInt:phoneNumber]){
+//        [[ToastManager manager] showToast:@"手机号错误"];
+//        return;
+//    }
+//
+//    if (![TTReachability isNetworkConnected]) {
+//        [[ToastManager manager] showToast:@"网络错误"];
+//        return;
+//    }
+//
+//    if(self.isRequestingSMS){
+//        return;
+//    }
+//
+//    self.isRequestingSMS = YES;
+//    [[ToastManager manager] showToast:@"正在获取验证码"];
+//
+//    __weak typeof(self)wself = self;
+//    [self requestSendVerifyCode:phoneNumber completion:^(NSNumber * _Nonnull retryTime, UIImage * _Nonnull captchaImage, NSError * _Nonnull error) {
+//        wself.isRequestingSMS = NO;
+//        if(!error){
+//            [wself blockRequestSendMessage:[retryTime integerValue]];
+//            [[ToastManager manager] showToast:@"短信验证码发送成功"];
+//            wself.isVerifyCodeRetry = YES;
+//        }else{
+//            NSString *errorMessage = [wself errorMessageByErrorCode:error];
+//            [[ToastManager manager] showToast:errorMessage];
+//        }
+//    }];
+//}
 
-- (void)blockRequestSendMessage:(NSInteger)retryTime
-{
-    self.verifyCodeRetryTime = retryTime;
-    [self startTimer];
-}
+//- (void)blockRequestSendMessage:(NSInteger)retryTime
+//{
+//    self.verifyCodeRetryTime = retryTime;
+//    [self startTimer];
+//}
 
-- (void)setVerifyCodeButtonAndConfirmBtnEnabled:(BOOL)enabled
-{
-    [self.contactCell enableSendVerifyCodeBtn:(enabled && self.verifyCodeRetryTime <= 0)];
-}
+//- (void)setVerifyCodeButtonAndConfirmBtnEnabled:(BOOL)enabled
+//{
+//    [self.contactCell enableSendVerifyCodeBtn:(enabled && self.verifyCodeRetryTime <= 0)];
+//}
 
 - (BOOL)isPureInt:(NSString *)str
 {
@@ -1246,46 +1483,46 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
     }
 }
 
-- (void)setVerifyCodeButtonCountDown
-{
-    if(self.verifyCodeRetryTime < 0){
-        self.verifyCodeRetryTime = 0;
-    }
-    
-    if(self.verifyCodeRetryTime == 0){
-        [self stopTimer];
-        [self.contactCell.sendVerifyCodeBtn setTitle:@"重新发送" forState:UIControlStateNormal];
-        [self.contactCell.sendVerifyCodeBtn setTitle:@"重新发送" forState:UIControlStateHighlighted];
-        [self.contactCell.sendVerifyCodeBtn setTitle:@"重新发送" forState:UIControlStateDisabled];
-        self.contactCell.sendVerifyCodeBtn.enabled = (self.contactCell.phoneInput.text.length > 0);
-        self.isRequestingSMS = NO;
-    }else{
-        self.contactCell.sendVerifyCodeBtn.enabled = NO;
-        [self.contactCell.sendVerifyCodeBtn setTitle:[NSString stringWithFormat:@"重新发送(%lis)",(long)self.verifyCodeRetryTime] forState:UIControlStateDisabled];
-    }
-    self.verifyCodeRetryTime--;
-}
+//- (void)setVerifyCodeButtonCountDown
+//{
+//    if(self.verifyCodeRetryTime < 0){
+//        self.verifyCodeRetryTime = 0;
+//    }
+//
+//    if(self.verifyCodeRetryTime == 0){
+//        [self stopTimer];
+//        [self.contactCell.sendVerifyCodeBtn setTitle:@"重新发送" forState:UIControlStateNormal];
+//        [self.contactCell.sendVerifyCodeBtn setTitle:@"重新发送" forState:UIControlStateHighlighted];
+//        [self.contactCell.sendVerifyCodeBtn setTitle:@"重新发送" forState:UIControlStateDisabled];
+//        self.contactCell.sendVerifyCodeBtn.enabled = (self.contactCell.phoneInput.text.length > 0);
+//        self.isRequestingSMS = NO;
+//    }else{
+//        self.contactCell.sendVerifyCodeBtn.enabled = NO;
+//        [self.contactCell.sendVerifyCodeBtn setTitle:[NSString stringWithFormat:@"重新发送(%lis)",(long)self.verifyCodeRetryTime] forState:UIControlStateDisabled];
+//    }
+//    self.verifyCodeRetryTime--;
+//}
 
-- (void)startTimer
-{
-    if(_timer){
-        [self stopTimer];
-    }
-    [self.timer fire];
-}
-
-- (void)stopTimer {
-    [_timer invalidate];
-    _timer = nil;
-}
-
-- (NSTimer *)timer {
-    if(!_timer){
-        _timer  =  [NSTimer timerWithTimeInterval:1 target:self selector:@selector(setVerifyCodeButtonCountDown) userInfo:nil repeats:YES];
-        [[NSRunLoop mainRunLoop] addTimer:_timer forMode:NSRunLoopCommonModes];
-    }
-    return _timer;
-}
+//- (void)startTimer
+//{
+//    if(_timer){
+//        [self stopTimer];
+//    }
+//    [self.timer fire];
+//}
+//
+//- (void)stopTimer {
+//    [_timer invalidate];
+//    _timer = nil;
+//}
+//
+//- (NSTimer *)timer {
+//    if(!_timer){
+//        _timer  =  [NSTimer timerWithTimeInterval:1 target:self selector:@selector(setVerifyCodeButtonCountDown) userInfo:nil repeats:YES];
+//        [[NSRunLoop mainRunLoop] addTimer:_timer forMode:NSRunLoopCommonModes];
+//    }
+//    return _timer;
+//}
 
 #pragma mark - 埋点相关
 
@@ -1294,6 +1531,7 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
 {
     NSMutableDictionary *params = @{}.mutableCopy;
     params[@"enter_from"] = self.tracerDict[@"enter_from"] ? : @"be_null";
+    params[@"element_from"] = self.tracerDict[@"element_from"] ?: @"be_null";
     params[@"page_type"] = [self pageTypeString];
     [FHUserTracker writeEvent:@"go_detail" params:params];
 }

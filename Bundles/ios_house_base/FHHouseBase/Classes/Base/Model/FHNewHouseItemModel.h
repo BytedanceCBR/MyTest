@@ -10,6 +10,7 @@
 #import "FHBaseModelProtocol.h"
 #import "FHHouseListModel.h"
 #import "FHDetailBaseModel.h"
+#import "FHSaleStatusModel.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -24,20 +25,11 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
-@interface  FHNewHouseItemCoreInfoSaleStatusModel  : JSONModel
-
-@property (nonatomic, copy , nullable) NSString *content;
-@property (nonatomic, copy , nullable) NSString *backgroundColor;
-@property (nonatomic, copy , nullable) NSString *id;
-@property (nonatomic, copy , nullable) NSString *textColor;
-
-@end
-
 @interface  FHNewHouseItemCoreInfoModel  : JSONModel
 
 @property (nonatomic, copy , nullable) NSString *courtAddress;
 @property (nonatomic, copy , nullable) NSString *name;
-@property (nonatomic, strong , nullable) FHNewHouseItemCoreInfoSaleStatusModel *saleStatus ;
+@property (nonatomic, strong , nullable) FHSaleStatusModel *saleStatus;
 @property (nonatomic, strong , nullable) FHNewHouseItemCoreInfoProperyTypeModel *properyType ;
 @property (nonatomic, copy , nullable) NSString *pricingPerSqm;
 @property (nonatomic, copy , nullable) NSString *gaodeLng;

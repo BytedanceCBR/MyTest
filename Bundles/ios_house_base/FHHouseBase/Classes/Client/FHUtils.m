@@ -6,6 +6,8 @@
 //
 
 #import "FHUtils.h"
+#import "NSDictionary+TTAdditions.h"
+#import "TTSettingsManager.h"
 
 @implementation FHUtils
 
@@ -41,6 +43,20 @@
         return temp;
     }
     return @"";
+}
+
++ (NSString *)getJsonStrFromNoEncode:(NSDictionary *)dic{
+    if (![dic isKindOfClass:[NSDictionary class]]) {
+          return @"";
+      }
+      
+      NSError *error = nil;
+      NSData *data = [NSJSONSerialization dataWithJSONObject:dic options:NSJSONReadingAllowFragments error:&error];
+      if (data && !error) {
+          NSString *temp = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+          return temp;
+      }
+      return @"";
 }
 
 + (NSDictionary *)dictionaryWithJsonString:(NSString *)jsonString
@@ -218,4 +234,8 @@
     return image;
 }
 
++(BOOL)getSettingEnableBooleanForKey:(NSString *)key{
+    NSDictionary *fhSettings= [[TTSettingsManager sharedManager] settingForKey:@"f_settings" defaultValue:@{} freeze:YES];
+    return [fhSettings tt_boolValueForKey:key];
+}
 @end

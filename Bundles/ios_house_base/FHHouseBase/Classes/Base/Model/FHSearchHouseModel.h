@@ -442,6 +442,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign) BOOL dealStatus;
 @property (nonatomic, copy , nullable) NSString *dealOpenUrl;
 
+@property (nonatomic, copy , nullable) NSString *bizTrace;
+
 @property (nonatomic, assign) BOOL isRecommendCell;
 @property (nonatomic, assign) BOOL isLastCell;
 @property (nonatomic, strong , nullable) NSArray<FHHouseTagsModel> *reasonTags;
@@ -477,6 +479,16 @@ NS_ASSUME_NONNULL_BEGIN
 @interface FHSearchGuessYouWantContentModel : FHSearchBaseItemModel
 
 @property (nonatomic, copy , nullable) NSString *text;
+
+@end
+
+// 搜索页/列表页结果为空时展示的帮我找房卡片
+@interface FHSearchFindHouseHelperModel : FHSearchBaseItemModel
+
+@property (nonatomic, copy , nullable) NSString *title;
+@property (nonatomic, copy , nullable) NSString *text;
+@property (nonatomic, copy , nullable) NSString *buttonText;
+@property (nonatomic, copy , nullable) NSString *openUrl;
 
 @end
 

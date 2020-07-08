@@ -11,6 +11,7 @@
 #import "FHHouseNewsSocialModel.h"
 #import "FHHouseBaseInfoModel.h"
 #import "FHDetailOldModel.h"
+#import <FHHouseBase/FHSaleStatusModel.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -24,7 +25,6 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *houseType;
 
 @end
-
 
 @protocol FHDetailNewDataGlobalPricingListModel<NSObject>
 @end
@@ -73,26 +73,6 @@ NS_ASSUME_NONNULL_BEGIN
 @protocol FHDetailNewDataFloorpanListListModel<NSObject>
 @end
 
-@interface FHDetailNewDataFloorpanListListSaleStatusModel : JSONModel
-
-@property (nonatomic, copy , nullable) NSString *content;
-@property (nonatomic, copy , nullable) NSString *backgroundColor;
-@property (nonatomic, copy , nullable) NSString *id;
-@property (nonatomic, copy , nullable) NSString *textColor;
-@end
-
-@protocol FHDetailNewDataFloorpanListListImagesModel<NSObject>
-@end
-
-@interface FHDetailNewDataFloorpanListListImagesModel : JSONModel
-
-@property (nonatomic, copy , nullable) NSString *url;
-@property (nonatomic, copy , nullable) NSString *width;
-@property (nonatomic, strong , nullable) NSArray *urlList;
-@property (nonatomic, copy , nullable) NSString *uri;
-@property (nonatomic, copy , nullable) NSString *height;
-@end
-
 @interface FHDetailNewDataFloorpanListListModel : JSONModel
 
 @property (nonatomic, copy , nullable) NSString *pricing;
@@ -100,14 +80,14 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong , nullable) NSDictionary *logPb;
 @property (nonatomic, copy , nullable) NSString *roomCount;
 @property (nonatomic, copy , nullable) NSString *title;
-@property (nonatomic, strong , nullable) FHDetailNewDataFloorpanListListSaleStatusModel *saleStatus ;
+@property (nonatomic, strong , nullable) FHSaleStatusModel *saleStatus ;
 @property (nonatomic, strong , nullable) NSArray<FHHouseTagsModel> *tags;
 @property (nonatomic, copy , nullable) NSString *id;
 @property (nonatomic, copy , nullable) NSString *pricingPerSqm;
 @property (nonatomic, copy , nullable) NSString *squaremeter;
 @property (nonatomic, copy , nullable) NSString *imprId;
 @property (nonatomic, copy , nullable) NSString *groupId;
-@property (nonatomic, strong , nullable) NSArray<FHDetailNewDataFloorpanListListImagesModel> *images;
+@property (nonatomic, strong , nullable) NSArray<FHImageModel> *images;
 @property (nonatomic, copy , nullable) NSString *searchId;
 @property (nonatomic, assign) NSInteger index;
 @property (nonatomic, copy , nullable) NSString *facingDirection;
@@ -123,21 +103,10 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong , nullable) NSArray<FHDetailNewDataFloorpanListListModel> *list;
 @property (nonatomic, copy , nullable) NSString *courtId;
 @property (nonatomic, copy , nullable) NSString *totalNumber;
-//@property (nonatomic, strong , nullable) FHDetailNewDataCoreInfoSaleStatusModel *saleStatus ;
 @property (nonatomic, strong , nullable) FHDetailContactModel *highlightedRealtor;
 @property (nonatomic, strong , nullable) NSArray<FHFillFormAgencyListItemModel> *chooseAgencyList;
 @property (nonatomic, strong , nullable) FHDetailContactModel *contact;
 @property (nonatomic, strong , nullable)  FHClueAssociateInfoModel *highlightedRealtorAssociateInfo;
-
-@end
-
-@interface FHDetailNewDataCoreInfoSaleStatusModel : JSONModel
-
-@property (nonatomic, copy , nullable) NSString *content;
-@property (nonatomic, copy , nullable) NSString *backgroundColor;
-@property (nonatomic, copy , nullable) NSString *id;
-@property (nonatomic, copy , nullable) NSString *textColor;
-@property (nonatomic, assign) NSInteger index;
 
 @end
 
@@ -151,7 +120,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *gaodeImageUrl;
 @property (nonatomic, strong, nullable) FHDetailGaodeImageModel *gaodeImage;//高德地图静态图
 @property (nonatomic, copy , nullable) NSString *cityId;
-@property (nonatomic, strong , nullable) FHDetailNewDataCoreInfoSaleStatusModel *saleStatus ;
+@property (nonatomic, strong , nullable) FHSaleStatusModel *saleStatus ;
 @property (nonatomic, copy , nullable) NSString *properyType;
 @property (nonatomic, copy , nullable) NSString *districtId;
 @property (nonatomic, copy , nullable) NSString *pricingPerSqm;
@@ -237,6 +206,41 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
+/**
+ - title模块标题，类型string
+ - button_text按钮文案，类型string
+ - building_name_text楼栋名称文案，类型string
+ - layer_text层数文案，类型string
+ - family户数文案，类型string
+ - list ，类型list of dict
+   - name楼栋名称，类型string
+   - layers层数，类型string
+   - family户数，类型string
+ */
+
+@protocol FHDetailNewBuildingListItem <NSObject>
+@end
+
+@interface FHDetailNewBuildingListItem : JSONModel
+
+@property (nonatomic, copy, nullable) NSString *name;
+@property (nonatomic, copy, nullable) NSString *layers;
+@property (nonatomic, copy, nullable) NSString *family;
+
+@end
+
+@interface FHDetailNewBuildingInfoModel : JSONModel
+
+@property (nonatomic, copy, nullable) NSString *title;
+@property (nonatomic, copy, nullable) NSString *buttonText;
+@property (nonatomic, copy, nullable) NSString *buildingNameText;
+@property (nonatomic, copy, nullable) NSString *layerText;
+@property (nonatomic, copy, nullable) NSString *family;
+@property (nonatomic, strong , nullable) NSArray<FHDetailNewBuildingListItem> *list;
+
+@end
+
+
 
 
 @interface FHDetailNewDataModel : JSONModel
@@ -258,6 +262,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong , nullable) NSArray<FHFillFormAgencyListItemModel> *chooseAgencyList;
 @property (nonatomic, strong , nullable) FHHouseNewsSocialModel *socialInfo ;
 @property (nonatomic, strong , nullable) NSArray<FHDetailContactModel> *recommendedRealtors;
+//1.0.1经纪人评测模块
+@property (nonatomic, strong , nullable) FHDetailBrokerEvaluationModel *realtorContent;
 @property (nonatomic, copy , nullable) NSString *recommendedRealtorsTitle; // 推荐经纪人标题文案
 @property (nonatomic, copy , nullable) NSString *recommendedRealtorsSubTitle; // 推荐经纪人副标题文案
 @property (nonatomic, strong , nullable) FHVideoHouseVideoModel *houseVideo ;
@@ -281,6 +287,8 @@ NS_ASSUME_NONNULL_BEGIN
 //1.0.0 新增楼盘相册页线索
 @property (nonatomic, strong , nullable) FHClueAssociateInfoModel *imageAlbumAssociateInfo;
 
+//1.0.2 新增楼盘楼栋信息
+@property (nonatomic, strong, nullable) FHDetailNewBuildingInfoModel *buildingInfo;
 @end
 
 @interface FHDetailNewTimeLineDataModel : JSONModel

@@ -53,7 +53,7 @@
     _headerView.label.text = @"经纪人带看房评";
     [self.contentView addSubview:_headerView];
     [self.headerView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.shadowImage).offset(42);
+        make.top.mas_equalTo(self.shadowImage).offset(30);
         make.right.mas_equalTo(self.contentView).offset(-15);
         make.left.mas_equalTo(self.contentView).offset(15);
         make.height.mas_equalTo(46);
@@ -62,7 +62,7 @@
     _containerView.clipsToBounds = YES;
     [self.contentView addSubview:_containerView];
     [_containerView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.headerView.mas_bottom).offset(2);
+        make.top.mas_equalTo(self.headerView.mas_bottom).offset(10);
         make.left.mas_equalTo(self.contentView).mas_offset(15);
         make.right.mas_equalTo(self.contentView).mas_offset(-15);
         make.height.mas_equalTo(0);
@@ -272,7 +272,9 @@
     associatePhone.realtorId = contact.realtorId;
     associatePhone.searchId = cellModel.searchId;
     associatePhone.imprId = cellModel.imprId;
-
+    if (cellModel.bizTrace) {
+        associatePhone.extraDict = @{@"biz_trace":cellModel.bizTrace};
+    }
     associatePhone.houseType = self.baseViewModel.houseType;
     associatePhone.houseId = self.baseViewModel.houseId;
     associatePhone.showLoading = NO;

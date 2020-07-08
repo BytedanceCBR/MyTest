@@ -191,8 +191,8 @@
 - (UILabel *)LabelWithFont:(UIFont *)font textColor:(UIColor *)textColor {
     UILabel *label = [[UILabel alloc] init];
     label.font = font;
-    label.backgroundColor = [UIColor themeGray7];
-    label.layer.masksToBounds = YES;
+//    label.backgroundColor = [UIColor themeGray7];
+//    label.layer.masksToBounds = YES;
     label.textColor = textColor;
     return label;
 }

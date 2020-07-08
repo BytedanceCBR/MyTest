@@ -216,7 +216,7 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
         return;
     }
     NSArray *selectAgencyList = [alertView selectAgencyList] ? : associateReport.chooseAgencyList;
-    [FHMainApi requestCallReportByHouseId:associateReport.houseId phone:phone from:nil cluePage:nil clueEndpoint:nil targetType:nil reportAssociate:associateReport.associateInfo agencyList:selectAgencyList completion:^(FHDetailResponseModel * _Nullable model, NSError * _Nullable error) {
+    [FHMainApi requestCallReportByHouseId:associateReport.houseId phone:phone from:nil cluePage:nil clueEndpoint:nil targetType:nil reportAssociate:associateReport.associateInfo agencyList:selectAgencyList extraInfo:associateReport.extraInfo completion:^(FHDetailResponseModel * _Nullable model, NSError * _Nullable error) {
 
         if (model.status.integerValue == 0 && !error) {
             YYCache *sendPhoneNumberCache = [[FHEnvContext sharedInstance].generalBizConfig sendPhoneNumberCache];
@@ -284,6 +284,9 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
     params[@"growth_deepevent"] = @(1);
 
     params[@"item_id"] = reportParams[@"item_id"] ? : @"be_null";
+    if (reportParams[@"event_tracking_id"]) {
+        params[@"event_tracking_id"] = reportParams[@"event_tracking_id"];
+    }
 
     [FHUserTracker writeEvent:@"inform_show" params:params];
 }
@@ -316,6 +319,9 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
     }
     params[@"agency_list"] = dict.count > 0 ? dict : @"be_null";
     params[@"growth_deepevent"] = @(1);
+    if (reportParams[@"event_tracking_id"]) {
+        params[@"event_tracking_id"] = reportParams[@"event_tracking_id"];
+    }
     [FHUserTracker writeEvent:@"click_confirm" params:params];
 }
 

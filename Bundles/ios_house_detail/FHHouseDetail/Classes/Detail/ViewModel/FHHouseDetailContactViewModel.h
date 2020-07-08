@@ -34,6 +34,7 @@ typedef enum : NSUInteger {
 @property(nonatomic , strong) NSDictionary *tracerDict; // 详情页基础埋点数据
 @property (nonatomic, weak) UIViewController *belongsVC;
 @property (nonatomic, assign)   BOOL       showenOnline;// 是否显示在线联系，默认不显示
+@property (nonatomic, assign)   BOOL       isShowLogin;// 是否显示登录
 @property (nonatomic, copy)     NSString       *onLineName;// 在线联系 名称
 @property (nonatomic, copy)     NSString       *phoneCallName;// 电话咨询 或者 询底价 名称
 //@property (nonatomic, copy, nullable) NSString *customHouseId;// floor_plan_detail:floor_plan_id
@@ -48,6 +49,8 @@ typedef enum : NSUInteger {
 @property (nonatomic, assign)   BOOL  needRefetchSocialGroupData;// 进入下个页面返回 是否需要重新拉取圈子数据
 @property (nonatomic, assign)   FHUGCCommunityLoginType       ugcLoginType; // 1：community_member_talk(底部群聊入口), 2：community_tip(群聊引导弹窗)
 @property (nonatomic, strong , nullable) FHClueAssociateInfoModel *highlightedRealtorAssociateInfo;
+@property (nonatomic, copy)     NSString       *houseInfoBizTrace;// 详情页请求返回通用bizTrace
+@property (nonatomic, strong)   NSString* houseInfoOriginBizTrace; // schema房源详情原始bizTrace
 
 
 - (instancetype)initWithNavBar:(FHDetailNavBar *)navBar bottomBar:(FHDetailBottomBar *)bottomBar;

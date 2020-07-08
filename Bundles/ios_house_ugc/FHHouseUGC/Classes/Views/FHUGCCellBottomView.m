@@ -211,8 +211,15 @@
 - (void)updateFrame {
     [self.commentBtn sizeToFit];
     [self.likeBtn sizeToFit];
-    self.commentBtn.left = self.width - 20 - self.likeBtn.width - 20 - self.commentBtn.width;
-    self.likeBtn.left = self.commentBtn.right + 20;
+    if (self.paddingLike >0 && self.marginRight >0) {
+        self.commentBtn.left = self.width - self.marginRight - self.likeBtn.width - self.paddingLike - self.commentBtn.width;
+        self.likeBtn.left = self.commentBtn.right + self.paddingLike;
+    }else {
+       self.commentBtn.left = self.width - 20 - self.likeBtn.width - 20 - self.commentBtn.width;
+        self.likeBtn.left = self.commentBtn.right + 20;
+    }
+    
+    
 }
 
 - (void)updateLikeState:(NSString *)diggCount userDigg:(NSString *)userDigg {

@@ -338,6 +338,13 @@ DEC_TASK("FHIMStartupTask",FHTaskTypeSerial,TASK_PRIORITY_HIGH+16);
     ret = isFakeToken;
     return ret;
 }
+
+- (BOOL)isEnableIMReadReceiptRequestClosed {
+    BOOL ret = NO;
+    BOOL isIMReadReceiptRequestClosed =  [[NSUserDefaults standardUserDefaults] boolForKey:@"_IM_Read_Receipt_Request_Close_"];
+    ret = isIMReadReceiptRequestClosed;
+    return ret;
+}
 @end
 
 @implementation FHIMStartupTask

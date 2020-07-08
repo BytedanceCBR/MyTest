@@ -103,6 +103,7 @@
         report_params[UT_ENTER_FROM] = report_params[UT_PAGE_TYPE];
         userInfoDict[@"report_params"] = report_params;
         userInfoDict[@"associate_info"] = associateIM.associateInfo.imInfo?:@{}; // 只传入im_info即可
+        userInfoDict[@"extra_info"] = associateIM.extraInfo;
         TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:userInfoDict];
         [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:userInfo];
         
@@ -160,6 +161,7 @@
     dict[@"realtor_position"] = reportParams.realtorPosition ? : @"be_null";
     dict[@"realtor_logpb"] = reportParams.realtorLogpb;
     dict[@"growth_deepevent"] = @(1);
+    dict[@"biz_trace"] = associateIM.extraInfo[@"biz_trace"] ? : @"be_null";
     dict[@"source_from"] = reportParams.sourceFrom;
     dict[@"associate_info"] = associateIM.associateInfo.imInfo?:@{}; // 只传im_info即可
     

@@ -332,6 +332,9 @@
         case FHSearchCardTypeReserveAdviser:
             itemModel = [[FHHouseReserveAdviserModel alloc]initWithDictionary:itemDict error:&jerror];
             break;
+        case FHSearchCardTypeFindHouseHelper:
+            itemModel = [[FHSearchFindHouseHelperModel alloc]initWithDictionary:itemDict error:&jerror];
+            break;
         default:
             break;
     }
@@ -552,6 +555,7 @@
     paramDic[@"city_id"] = @(cityId);
     paramDic[@"house_type"] = @(houseType);
     paramDic[@"source"] = @"app";
+    paramDic[@"channel_id"] = @(94349554657);  //首页搜索增加channel_id用来区分帮我找房来源
     if (query.length > 0) {
         paramDic[@"query"] = query;
     }

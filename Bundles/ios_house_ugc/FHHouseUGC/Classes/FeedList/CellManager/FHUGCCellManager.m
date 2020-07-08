@@ -23,6 +23,8 @@
 #import "FHUGCLynxCommonCell.h"
 #import "FHArticleCell.h"
 #import "FHUGCPostCell.h"
+#import "FHHouseDeatilRGCImageCell.h"
+#import "FHHouseDeatilRGCVideoCell.h"
 
 @interface FHUGCCellManager ()
 
@@ -58,6 +60,8 @@
                                 @"FHUGCRecommendCircleCell",
                                 @"FHUGCEncyclopediasCell",
                                 @"FHUGCLynxCommonCell",
+                                @"FHHouseDeatilRGCImageCell",
+                                @"FHHouseDeatilRGCVideoCell"
                                 //可扩展
                                  ];
 }
@@ -79,7 +83,7 @@
             
         case FHUGCFeedListCellSubTypeUGCRecommend:
             return [FHUGCRecommendCell class];
-
+            
         case FHUGCFeedListCellSubTypeUGCBanner:
             return [[FHLynxManager sharedInstance] checkChannelTemplateIsAvalable:kFHLynxUGCOperationChannel templateKey:[FHLynxManager defaultJSFileName]] ? [FHUGCLynxBannerCell class] : [FHUGCBannerCell class];
             
@@ -94,7 +98,7 @@
             
         case FHUGCFeedListCellSubTypeUGCSmallVideo:
             return [FHUGCSmallVideoCell class];
-        
+            
         case FHUGCFeedListCellSubTypeUGCVoteDetail:
             return [FHUGCVoteDetailCell class];
             
@@ -116,6 +120,15 @@
         case FHUGCFeedListCellSubTypeUGCLynx:
             
             return [FHUGCLynxCommonCell class];
+        case FHUGCFeedListCellSubTypeUGCBrokerImage:
+            
+            return [FHHouseDeatilRGCImageCell class];
+            
+            case FHUGCFeedListCellSubTypeUGCBrokerVideo:
+                
+                return [FHHouseDeatilRGCVideoCell class];
+            
+            
         default:
             break;
     }
