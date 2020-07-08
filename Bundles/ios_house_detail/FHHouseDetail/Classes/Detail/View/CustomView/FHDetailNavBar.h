@@ -33,7 +33,8 @@ typedef enum : NSUInteger {
 
 //100 版本企业担保 对header的样式修改
 - (void)configureVouchStyle;
-@property (nonatomic, assign) BOOL isForVouch; //如果是企业担保
+@property(nonatomic, assign) BOOL isForVouch; //如果是企业担保
+@property(nonatomic, copy) NSString *pageType;
 
 @end
 
