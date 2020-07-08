@@ -118,16 +118,13 @@
             return [FHUGCEncyclopediasCell class];
             
         case FHUGCFeedListCellSubTypeUGCLynx:
-            
             return [FHUGCLynxCommonCell class];
-        case FHUGCFeedListCellSubTypeUGCBrokerImage:
             
+        case FHUGCFeedListCellSubTypeUGCBrokerImage:
             return [FHHouseDeatilRGCImageCell class];
             
-            case FHUGCFeedListCellSubTypeUGCBrokerVideo:
-                
-                return [FHHouseDeatilRGCVideoCell class];
-            
+        case FHUGCFeedListCellSubTypeUGCBrokerVideo:
+            return [FHHouseDeatilRGCVideoCell class];
             
         default:
             break;
