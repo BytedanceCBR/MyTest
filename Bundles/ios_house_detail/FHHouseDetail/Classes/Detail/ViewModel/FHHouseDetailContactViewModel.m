@@ -361,7 +361,9 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
     self.onLineName = chatTitle;
     self.phoneCallName = contactTitle;
     [self.bottomBar refreshBottomBar:contactPhone contactTitle:contactTitle chatTitle:chatTitle];
-    self.showenOnline = self.bottomBar.showIM;// 显示在线联系（详情图册页面）
+    if (self.bottomBar) {
+        self.showenOnline = self.bottomBar.showIM;// 显示在线联系（详情图册页面）
+    }
     if (!contactPhone.isInstantData) {
         //非列表页带入数据才报埋点
         [self tryTraceImElementShow];

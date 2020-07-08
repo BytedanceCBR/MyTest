@@ -241,6 +241,7 @@ CGFloat const FHBuildingDetailInfoListCellMinimumLineSpacing = 25 + 12;
             [infosView addObject:row1];
             [row1 mas_makeConstraints:^(MASConstraintMaker *make) {
                 make.left.mas_equalTo(0);
+                make.top.mas_equalTo(0);
                 make.width.mas_equalTo(stackItemView.mas_width).with.multipliedBy(0.5);
                 make.height.mas_equalTo(stackItemView);
             }];
@@ -250,6 +251,7 @@ CGFloat const FHBuildingDetailInfoListCellMinimumLineSpacing = 25 + 12;
             [infosView addObject:row2];
             [row2 mas_makeConstraints:^(MASConstraintMaker *make) {
                 make.left.mas_equalTo(row1.mas_right);
+                make.top.mas_equalTo(0);
                 make.width.mas_equalTo(row1);
                 make.height.mas_equalTo(row1);
             }];

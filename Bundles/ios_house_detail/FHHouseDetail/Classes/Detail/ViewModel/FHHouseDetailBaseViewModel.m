@@ -357,7 +357,7 @@
                 tracerDic[@"biz_trace"] = self.houseInfoBizTrace;
             }
             if ([element_type isEqualToString:@"building"]) {
-                tracerDic[@"event_tracking_id"] = @"70827";
+                tracerDic[@"event_tracking_id"] = @"70949";
             }
             
             [FHUserTracker writeEvent:@"element_show" params:tracerDic];

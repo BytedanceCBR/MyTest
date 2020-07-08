@@ -394,7 +394,7 @@
 //            make.width.mas_equalTo(width);
 //        }];
         //1.0.2 需求缩小户型图大小，横屏查看2.5个左右，不能显示更多tag
-        [self.tagBacView refreshWithTags:model.tags withNum:1 withMaxLen:ITEM_WIDTH - width - 4];
+        [self.tagBacView refreshWithTags:model.tags withNum:model.tags.count withMaxLen:ITEM_WIDTH - width - 4];
     }
     [self layoutIfNeeded];
 }

@@ -18,6 +18,7 @@
                            @"squaremeter": @"squaremeter",
                            @"images": @"images",
                            @"tags": @"tags",
+                           @"logPb": @"log_pb",
                            };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
         return dict[keyName]?:keyName;
@@ -75,6 +76,7 @@
     NSDictionary *dict = @{
                            @"buildingList": @"building_list",
                            @"associateInfo": @"associate_info",
+                           @"highlightedRealtor": @"highlighted_realtor",
                            };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
         return dict[keyName]?:keyName;

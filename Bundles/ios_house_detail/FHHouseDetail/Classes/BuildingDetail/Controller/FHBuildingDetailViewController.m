@@ -49,8 +49,18 @@
         if (paramObj.allParams[@"house_id"]) {
             self.houseId = paramObj.allParams[@"house_id"];
         }
+
+        self.contactViewModel = [[FHHouseDetailContactViewModel alloc] initWithNavBar:nil bottomBar:nil houseType:FHHouseTypeNewHouse houseId:self.houseId];
+        self.contactViewModel.tracerDict = self.tracerDict.mutableCopy;
         if (paramObj.allParams[@"contactViewModel"]) {
-            self.contactViewModel = paramObj.allParams[@"contactViewModel"];
+            FHHouseDetailContactViewModel *contactViewModel = paramObj.allParams[@"contactViewModel"];
+            FHDetailContactModel *contactPhone = contactViewModel.contactPhone;
+            contactPhone.isInstantData = YES;
+            self.contactViewModel.contactPhone = contactPhone;
+            self.contactViewModel.showenOnline = contactViewModel.showenOnline;
+            self.contactViewModel.phoneCallName = contactViewModel.phoneCallName;
+            self.contactViewModel.onLineName = contactViewModel.onLineName;
+            self.contactViewModel.toast = contactViewModel.toast;
         }
     }
     return self;
@@ -102,8 +112,15 @@
     self.currentSelectIndex = 0;
     self.viewModel = [[FHBuildingDetailViewModel alloc] initWithController:self];
     self.viewModel.houseId = self.houseId;
+//    self.viewModel
     [self.viewModel startLoadData];
     [self addGoDetailLog];
+}
+
+- (void)viewDidDisappear:(BOOL)animated {
+    [super viewDidDisappear:animated];
+    [self addStayPageLog];
+    [self tt_resetStayTime];
 }
 
 - (void)viewWillLayoutSubviews
@@ -154,76 +171,84 @@
     [self.collectionView registerClass:[FHBuildingDetailFloorCollectionViewCell class] forCellWithReuseIdentifier:NSStringFromClass([FHBuildingDetailFloorCollectionViewCell class])];
     [self.collectionView registerClass:[FHBuildingDetailEmptyFloorCollectionViewCell class] forCellWithReuseIdentifier:NSStringFromClass([FHBuildingDetailEmptyFloorCollectionViewCell class])];
     [self.collectionView registerClass:[FHDetailSectionTitleCollectionView class] forSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:NSStringFromClass([FHDetailSectionTitleCollectionView class])];
+}
+
+- (void)refreshBottomBar {
+    // lead_show 埋点
+    [self addLeadShowLog:self.contactViewModel.contactPhone baseParams:self.tracerDict];
+
+    if (!self.contactViewModel) {
+        if (self.bottomBar) {
+            [self.bottomBar removeFromSuperview];
+            self.bottomBar = nil;
+        }
+        return;
+    }
+    self.bottomBar = [[UIView alloc] initWithFrame:CGRectMake(0, CGRectGetHeight(self.view.bounds) - 64, CGRectGetWidth(self.view.bounds), 64)];
+    self.bottomBar.backgroundColor = [UIColor whiteColor];
+    [self.view addSubview:self.bottomBar];
+    [self.bottomBar mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.right.mas_equalTo(0);
+        make.height.mas_equalTo(64);
+        make.bottom.mas_equalTo(0);
+    }];
     
-    if (self.contactViewModel) {
-        // lead_show 埋点
-        [self addLeadShowLog:self.contactViewModel.contactPhone baseParams:self.tracerDict];
-        self.bottomBar = [[UIView alloc] initWithFrame:CGRectMake(0, CGRectGetHeight(self.view.bounds) - 64, CGRectGetWidth(self.view.bounds), 64)];
-        self.bottomBar.backgroundColor = [UIColor whiteColor];
-        [self.view addSubview:self.bottomBar];
-        [self.bottomBar mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.left.right.mas_equalTo(0);
-            make.height.mas_equalTo(64);
-            make.bottom.mas_equalTo(0);
+    BOOL showenOnline = self.contactViewModel.showenOnline;
+    CGFloat itemWidth = CGRectGetWidth(self.view.bounds) - 30;
+    if (showenOnline) {
+        itemWidth = (itemWidth - 13) / 2.0;
+        // 在线联系
+        NSString *title = @"在线联系";
+        if (self.contactViewModel.onLineName.length > 0) {
+            title = self.contactViewModel.onLineName;
+        }
+        NSMutableAttributedString *buttonTitle = [[NSMutableAttributedString alloc] initWithString:title?:@"" attributes:@{NSFontAttributeName : [UIFont themeFontRegular:16], NSForegroundColorAttributeName : [UIColor whiteColor]}];
+        //            [buttonTitle appendAttributedString:[[NSAttributedString alloc] initWithString:@"\n线上联系更方便" attributes:@{NSFontAttributeName : [UIFont themeFontRegular:10], NSForegroundColorAttributeName : [UIColor whiteColor]}]];
+        self.onlineBtn.titleLabel.numberOfLines = 0;
+        [self.onlineBtn setAttributedTitle:buttonTitle.copy forState:UIControlStateNormal];
+        
+        [self.bottomBar addSubview:self.onlineBtn];
+        [self.onlineBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.left.mas_equalTo(15);
+            make.top.mas_equalTo(12);
+            make.width.mas_equalTo(itemWidth);
+            make.height.mas_equalTo(40);
         }];
         
-        BOOL showenOnline = self.contactViewModel.showenOnline;
-        CGFloat itemWidth = CGRectGetWidth(self.view.bounds) - 30;
-        if (showenOnline) {
-            itemWidth = (itemWidth - 13) / 2.0;
-            // 在线联系
-            NSString *title = @"在线联系";
-            if (self.contactViewModel.onLineName.length > 0) {
-                title = self.contactViewModel.onLineName;
-            }
-            NSMutableAttributedString *buttonTitle = [[NSMutableAttributedString alloc] initWithString:title?:@"" attributes:@{NSFontAttributeName : [UIFont themeFontRegular:16], NSForegroundColorAttributeName : [UIColor whiteColor]}];
-//            [buttonTitle appendAttributedString:[[NSAttributedString alloc] initWithString:@"\n线上联系更方便" attributes:@{NSFontAttributeName : [UIFont themeFontRegular:10], NSForegroundColorAttributeName : [UIColor whiteColor]}]];
-            self.onlineBtn.titleLabel.numberOfLines = 0;
-            [self.onlineBtn setAttributedTitle:buttonTitle.copy forState:UIControlStateNormal];
-
-            [self.bottomBar addSubview:self.onlineBtn];
-            [self.onlineBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-                make.left.mas_equalTo(15);
-                make.top.mas_equalTo(12);
-                make.width.mas_equalTo(itemWidth);
-                make.height.mas_equalTo(40);
-            }];
-            
-            // 电话咨询
-            NSString *photoTitle = @"电话咨询";
-            if (self.contactViewModel.phoneCallName.length > 0) {
-                photoTitle = self.contactViewModel.phoneCallName;
-            }
-            NSMutableAttributedString *buttonPhoneTitle = [[NSMutableAttributedString alloc] initWithString:photoTitle?:@"" attributes:@{NSFontAttributeName : [UIFont themeFontRegular:16], NSForegroundColorAttributeName : [UIColor whiteColor]}];
-//            [buttonPhoneTitle appendAttributedString:[[NSAttributedString alloc] initWithString:@"\n隐私保护更安全" attributes:@{NSFontAttributeName : [UIFont themeFontRegular:10], NSForegroundColorAttributeName : [UIColor whiteColor]}]];
-            self.contactBtn.titleLabel.numberOfLines = 0;
-            [self.contactBtn setAttributedTitle:buttonPhoneTitle.copy forState:UIControlStateNormal];
-            [self.bottomBar addSubview:self.contactBtn];
-            [self.contactBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-                make.right.mas_equalTo(-16);
-                make.top.mas_equalTo(self.onlineBtn.mas_top);
-                make.width.mas_equalTo(self.onlineBtn.mas_width);
-                make.height.mas_equalTo(self.onlineBtn.mas_height);
-            }];
-        } else {
-            // 电话咨询
-            NSString *photoTitle = @"电话咨询";
-            if (self.contactViewModel.phoneCallName.length > 0) {
-                photoTitle = self.contactViewModel.phoneCallName;
-            }
-            NSMutableAttributedString *buttonPhoneTitle = [[NSMutableAttributedString alloc] initWithString:photoTitle?:@"" attributes:@{NSFontAttributeName : [UIFont themeFontRegular:16], NSForegroundColorAttributeName : [UIColor whiteColor]}];
-//            [buttonPhoneTitle appendAttributedString:[[NSAttributedString alloc] initWithString:@"\n隐私保护更安全" attributes:@{NSFontAttributeName : [UIFont themeFontRegular:10], NSForegroundColorAttributeName : [UIColor whiteColor]}]];
-            self.contactBtn.titleLabel.numberOfLines = 0;
-            [self.contactBtn setAttributedTitle:buttonPhoneTitle.copy forState:UIControlStateNormal];
-            self.contactBtn.backgroundColor = [UIColor colorWithHexStr:@"#ff9629"];
-            [self.bottomBar addSubview:self.contactBtn];
-            [self.contactBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-                make.left.mas_equalTo(15);
-                make.top.mas_equalTo(12);
-                make.width.mas_equalTo(itemWidth);
-                make.height.mas_equalTo(40);
-            }];
+        // 电话咨询
+        NSString *photoTitle = @"电话咨询";
+        if (self.contactViewModel.phoneCallName.length > 0) {
+            photoTitle = self.contactViewModel.phoneCallName;
         }
+        NSMutableAttributedString *buttonPhoneTitle = [[NSMutableAttributedString alloc] initWithString:photoTitle?:@"" attributes:@{NSFontAttributeName : [UIFont themeFontRegular:16], NSForegroundColorAttributeName : [UIColor whiteColor]}];
+        //            [buttonPhoneTitle appendAttributedString:[[NSAttributedString alloc] initWithString:@"\n隐私保护更安全" attributes:@{NSFontAttributeName : [UIFont themeFontRegular:10], NSForegroundColorAttributeName : [UIColor whiteColor]}]];
+        self.contactBtn.titleLabel.numberOfLines = 0;
+        [self.contactBtn setAttributedTitle:buttonPhoneTitle.copy forState:UIControlStateNormal];
+        [self.bottomBar addSubview:self.contactBtn];
+        [self.contactBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.right.mas_equalTo(-16);
+            make.top.mas_equalTo(self.onlineBtn.mas_top);
+            make.width.mas_equalTo(self.onlineBtn.mas_width);
+            make.height.mas_equalTo(self.onlineBtn.mas_height);
+        }];
+    } else {
+        // 电话咨询
+        NSString *photoTitle = @"电话咨询";
+        if (self.contactViewModel.phoneCallName.length > 0) {
+            photoTitle = self.contactViewModel.phoneCallName;
+        }
+        NSMutableAttributedString *buttonPhoneTitle = [[NSMutableAttributedString alloc] initWithString:photoTitle?:@"" attributes:@{NSFontAttributeName : [UIFont themeFontRegular:16], NSForegroundColorAttributeName : [UIColor whiteColor]}];
+        //            [buttonPhoneTitle appendAttributedString:[[NSAttributedString alloc] initWithString:@"\n隐私保护更安全" attributes:@{NSFontAttributeName : [UIFont themeFontRegular:10], NSForegroundColorAttributeName : [UIColor whiteColor]}]];
+        self.contactBtn.titleLabel.numberOfLines = 0;
+        [self.contactBtn setAttributedTitle:buttonPhoneTitle.copy forState:UIControlStateNormal];
+        self.contactBtn.backgroundColor = [UIColor colorWithHexStr:@"#ff9629"];
+        [self.bottomBar addSubview:self.contactBtn];
+        [self.contactBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.left.mas_equalTo(15);
+            make.top.mas_equalTo(12);
+            make.width.mas_equalTo(itemWidth);
+            make.height.mas_equalTo(40);
+        }];
     }
 }
 
@@ -241,6 +266,24 @@
 }
 
 - (void)reloadData {
+    FHDetailContactModel *contactPhone = nil;
+    
+    if (self.viewModel.buildingDetailModel.data.highlightedRealtor) {
+        contactPhone = self.viewModel.buildingDetailModel.data.highlightedRealtor;
+        contactPhone.isInstantData = YES;
+    }
+//    else {
+//        contactPhone = model.data.contact;
+//    }
+    if (contactPhone.phone.length > 0) {
+        contactPhone.isFormReport = NO;
+    }else {
+        contactPhone.isFormReport = YES;
+    }
+    self.contactViewModel.contactPhone = contactPhone;
+    
+    [self refreshBottomBar];
+    
     NSMutableArray <FHBuildingSectionModel *>*items = [NSMutableArray array];
     
     if (self.viewModel.buildingDetailModel.data.buildingList.count > self.currentSelectIndex) {
@@ -299,7 +342,7 @@
             @"element_from":@"building"
         }.mutableCopy;
         [extraDic addEntriesFromDictionary:self.tracerDict];
-        extraDic[@"event_tracking_id"] = @"70832";
+//        extraDic[@"event_tracking_id"] = @"70832";
 //        extraDic[@"from"] = @"app_newhouse_property_picture";
 //        if (cluePage) {
 //            extraDic[kFHCluePage] = cluePage;
@@ -495,7 +538,7 @@
         NSMutableDictionary *traceParam = [NSMutableDictionary new];
         [traceParam addEntriesFromDictionary:self.tracerDict];
         traceParam[@"enter_from"] = @"building_detail";
-        traceParam[@"log_pb"] = self.tracerDict[@"log_pb"];
+        traceParam[@"log_pb"] = floorModel.logPb?:self.tracerDict[@"log_pb"];
 //            traceParam[@"origin_from"] = self.baseViewModel.detailTracerDic[@"origin_from"];
 //        traceParam[@"card_type"] = @"left_pic";
         traceParam[@"rank"] = @(indexPath.row);
@@ -521,19 +564,7 @@
 
 - (void)trackEndedByAppWillEnterBackground {
 //    [self.coreInfoListViewModel addStayPageLog:self.ttTrackStayTime];
-    NSTimeInterval duration = self.ttTrackStayTime * 1000.0;
-    if (duration == 0) {//当前页面没有在展示过
-        return;
-    }
-    NSMutableDictionary *params = @{}.mutableCopy;
-    [params addEntriesFromDictionary:self.tracerDict];
-    params[@"stay_time"] = [NSNumber numberWithInteger:duration];
-//    params[kFHClueExtraInfo] = self.extraInfo;
-//    if(self.houseType == FHHouseTypeSecondHandHouse){
-//        params[@"biz_trace"] = self.houseInfoOriginBizTrace;
-//    }
-    [FHUserTracker writeEvent:@"stay_page" params:params];
-    [self tt_resetStayTime];
+    [self addStayPageLog];
 }
 
 - (void)trackStartedByAppWillEnterForground {
@@ -549,7 +580,7 @@
     if (self.houseId.length) {
         params[@"group_id"] = self.houseId;
     }
-    params[@"event_tracking_id"] = @"70828";
+    params[@"event_tracking_id"] = @"70950";
     [FHUserTracker writeEvent:@"go_detail" params:params];
 }
 
@@ -562,7 +593,7 @@
         tracerDic[@"is_report"] = contactPhone.phone.length < 1 ? @"1" : @"0";
         tracerDic[@"is_online"] = contactPhone.unregistered ? @"1" : @"0";
         tracerDic[@"element_from"] = @"building";
-        tracerDic[@"event_tracking_id"] = @"70830";
+        tracerDic[@"event_tracking_id"] = @"70952";
         TRACK_EVENT(@"lead_show", tracerDic);
     }
 }
@@ -584,9 +615,24 @@
     [self.showHouseCache addObject:group_id];
     NSMutableDictionary *tracerDic = self.tracerDict.mutableCopy;
     tracerDic[@"house_type"] = @"house_model";
-    tracerDic[@"event_tracking_id"] = @"70833";
+    tracerDic[@"event_tracking_id"] = @"70955";
     tracerDic[@"group_id"] = group_id?:@"";
     TRACK_EVENT(@"house_show", tracerDic);
+}
+
+- (void)addStayPageLog {
+    NSTimeInterval duration = self.ttTrackStayTime * 1000.0;
+    if (duration == 0) {//当前页面没有在展示过
+        return;
+    }
+    NSMutableDictionary *params = @{}.mutableCopy;
+    [params addEntriesFromDictionary:self.tracerDict];
+    params[@"stay_time"] = [NSNumber numberWithInteger:duration];
+    //    params[kFHClueExtraInfo] = self.extraInfo;
+    //    if(self.houseType == FHHouseTypeSecondHandHouse){
+    //        params[@"biz_trace"] = self.houseInfoOriginBizTrace;
+    //    }
+    [FHUserTracker writeEvent:@"stay_page" params:params];
 }
 
 @end

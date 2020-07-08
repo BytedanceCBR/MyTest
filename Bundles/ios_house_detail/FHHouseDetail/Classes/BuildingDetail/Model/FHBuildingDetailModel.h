@@ -23,8 +23,9 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy, nullable) NSString *facingDirection;
 @property (nonatomic, copy, nullable) NSString *squaremeter;
 @property (nonatomic, copy, nullable) NSString *pricing;
-@property (nonatomic, strong , nullable) NSArray<FHImageModel> *images;
-@property (nonatomic, strong , nullable) NSArray<FHHouseTagsModel> *tags;
+@property (nonatomic, copy , nullable) NSArray<FHImageModel> *images;
+@property (nonatomic, copy , nullable) NSArray<FHHouseTagsModel> *tags;
+@property (nonatomic, copy , nullable) NSDictionary *logPb;
 @end
 
 @interface FHBuildingDetailRelatedFloorpanListModel : JSONModel
@@ -55,6 +56,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, strong , nullable) FHClueAssociateInfoModel *associateInfo;
 @property (nonatomic, strong , nullable) NSArray<FHBuildingDetailDataItemModel> *buildingList;
+@property (nonatomic, strong , nullable) FHDetailContactModel *highlightedRealtor;
 @end
 
 @interface FHBuildingDetailModel : JSONModel
