@@ -97,7 +97,6 @@ extern NSString *const kTTAppseeEnableKey;
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     /// 注意，这里必须初始化这个Manager.勿删
-    
     [self initWebViewCommonQueryStatus];
     [[TTLaunchTracer shareInstance] setLaunchFrom:TTAPPLaunchFromInitialState];
 

@@ -2,6 +2,7 @@
 #import "JSONModel.h"
 #import "FHUGCVoteInfoModel.h"
 #import "FHUGCScialGroupModel.h"
+#import "FHDetailBaseModel.h"
 NS_ASSUME_NONNULL_BEGIN
 
 typedef NS_ENUM(NSUInteger, FHFeedContentStickStyle) {
@@ -200,6 +201,21 @@ typedef NS_ENUM(NSUInteger, FHFeedContentStickStyle) {
 
 @property (nonatomic, strong , nullable) FHFeedContentRawDataCommentBaseUserInfoModel *info ;
 @property (nonatomic, strong , nullable) FHFeedContentRawDataCommentBaseUserBlockModel *block ;
+@end
+
+@interface FHFeedContentRawDataRealtorModel : JSONModel
+
+@property (nonatomic, copy , nullable) NSString *agencyName;
+@property (nonatomic, copy , nullable) NSString *avatarUrl;
+@property (nonatomic, copy , nullable) NSString *certificationIcon;
+@property (nonatomic, copy , nullable) NSString *certificationPage;
+@property (nonatomic, copy , nullable) NSString *chatOpenurl;
+@property (nonatomic, copy , nullable) NSString *desc;
+@property (nonatomic, copy , nullable) NSString *mainPageInfo;
+@property (nonatomic, copy , nullable) NSString *realtorId;
+@property (nonatomic, copy , nullable) NSString *realtorName;
+@property (nonatomic, strong,nullable) FHClueAssociateInfoModel *associateInfo; // 线索相关参数
+@property (nonatomic, copy , nullable) NSDictionary *realtorLogpb;
 @end
 
 @protocol FHFeedContentRecommendSocialGroupListModel<NSObject>
@@ -655,6 +671,7 @@ typedef NS_ENUM(NSUInteger, FHFeedContentStickStyle) {
 @property (nonatomic, copy , nullable) NSString *createTime;
 @property (nonatomic, strong , nullable) FHFeedContentRawDataVideoModel *video ;
 @property (nonatomic, strong , nullable) FHFeedContentRawDataCommentBaseUserModel *user ;
+@property (nonatomic, strong , nullable) FHFeedContentRawDataRealtorModel *realtor;
 @property (nonatomic, copy , nullable) NSString *videoContent;
 @property (nonatomic, strong , nullable) FHFeedContentRawDataCommentBaseActionModel *action ;
 @property (nonatomic, strong , nullable) NSArray<FHFeedContentImageListModel> *firstFrameImageList;

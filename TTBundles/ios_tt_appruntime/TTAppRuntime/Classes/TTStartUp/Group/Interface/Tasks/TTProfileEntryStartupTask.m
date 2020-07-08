@@ -23,7 +23,7 @@ DEC_TASK("TTProfileEntryStartupTask",FHTaskTypeInterface,TASK_PRIORITY_HIGH+10);
 - (void)startWithApplication:(UIApplication *)application options:(NSDictionary *)launchOptions
 {
     // 我的页面入口的Cell Entry管理单例
-    [TTSettingMineTabManager sharedInstance_tt];
+//    [TTSettingMineTabManager sharedInstance_tt];
     // PGCAccountManager初始化的时机必须足够早
     [PGCAccountManager shareManager];
 }

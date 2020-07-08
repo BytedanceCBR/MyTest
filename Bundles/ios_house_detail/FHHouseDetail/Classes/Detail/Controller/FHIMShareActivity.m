@@ -31,7 +31,7 @@
         NSMutableDictionary* dict = [NSMutableDictionary dictionary];
         dict[@"shareInfo"] = item.imShareInfo;
         dict[@"tracer"] = item.tracer;
-
+        dict[@"extra_info"] = self.extraInfo;
         TTRouteUserInfo* info = [[TTRouteUserInfo alloc] initWithInfo:dict];
 
         [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:item.imShareInfo.shareUrl]

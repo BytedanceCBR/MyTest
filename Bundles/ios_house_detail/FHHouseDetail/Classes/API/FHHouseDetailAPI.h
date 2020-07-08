@@ -13,11 +13,13 @@
 #import "FHHouseContactDefines.h"
 #import "FHHouseListBaseItemModel.h"
 
+
 @class TTHttpTask,FHDetailNewModel,FHDetailNeighborhoodModel,FHDetailOldModel,FHRentDetailResponseModel,FHDetailFloorPanDetailInfoModel,FHDetailFloorPanListResponseModel;
 @class FHDetailRelatedHouseResponseModel,FHDetailRelatedNeighborhoodResponseModel,FHDetailSameNeighborhoodHouseResponseModel,FHDetailRelatedCourtModel,FHDetailNewTimeLineResponseModel,FHDetailNewCoreDetailModel;
 @class FHHouseRentRelatedResponseModel,FHRentSameNeighborhoodResponseModel;
 @class FHDetailResponseModel,FHDetailVirtualNumResponseModel,FHDetailUserFollowResponseModel;
 @class FHTransactionHistoryModel;
+@class FHBuildingDetailModel;
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -33,6 +35,7 @@ NS_ASSUME_NONNULL_BEGIN
 +(TTHttpTask*)requestOldDetail:(NSString *)houseId
      ridcode:(NSString *)ridcode
    realtorId:(NSString *)realtorId
+     bizTrace:(NSString *)bizTrace
      logPB:(NSDictionary *)logPB
  extraInfo:(NSDictionary *)extraInfo
 completion:(void(^)(FHDetailOldModel * _Nullable model , NSError * _Nullable error))completion;
@@ -139,6 +142,10 @@ completion:(void(^)(id<FHBaseModelProtocol> _Nullable model , NSError *error))co
 
 + (TTHttpTask *)requestRealtorEvaluationFeedback:(NSString *)targetId targetType:(NSInteger)targetType evaluationType:(NSInteger)evaluationType realtorId:(NSString *)realtorId content:(NSString *)content score:(NSInteger)score tags: (NSArray*)tags completion:(void (^)(bool, NSError * _Nullable))completion;
 + (TTHttpTask *)requestRealtorEvaluationFeedback:(NSString *)targetId targetType:(NSInteger)targetType evaluationType:(NSInteger)evaluationType realtorId:(NSString *)realtorId content:(NSString *)content score:(NSInteger)score tags: (NSArray*)tags from:(NSString *)from completion:(void (^)(bool, NSError * _Nullable))completion;
+
+//1.0.2 楼栋详情 
++(TTHttpTask*)requestBuildingDetail:(NSString*)courtId
+                         completion:(void(^)(FHBuildingDetailModel * _Nullable model , NSError * _Nullable error))completion;
 @end
 
 

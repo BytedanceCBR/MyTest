@@ -263,6 +263,10 @@
         associatePhone.houseId = self.baseViewModel.houseId;
         associatePhone.showLoading = NO;
         
+        if (contact.bizTrace) {
+            associatePhone.extraDict = @{@"biz_trace":contact.bizTrace};
+        }
+        
         //        FHHouseContactConfigModel *contactConfig = [[FHHouseContactConfigModel alloc]initWithDictionary:extraDict error:nil];
 //        contactConfig.houseType = self.baseViewModel.houseType;
 //        contactConfig.houseId = self.baseViewModel.houseId;
@@ -542,11 +546,8 @@
             tracerDic[@"realtor_rank"] = @(i);
             tracerDic[@"realtor_position"] = @"detail_related";
             tracerDic[@"realtor_logpb"] = contact.realtorLogpb;
-            if (contact.phone.length < 1) {
-                [tracerDic setValue:@"0" forKey:@"phone_show"];
-            } else {
-                [tracerDic setValue:@"1" forKey:@"phone_show"];
-            }
+            tracerDic[@"biz_trace"] = contact.bizTrace;
+            [tracerDic setValue:contact.enablePhone ? @"1" : @"0" forKey:@"phone_show"];
             if (![@"" isEqualToString:contact.imOpenUrl] && contact.imOpenUrl != nil) {
                 [tracerDic setValue:@"1" forKey:@"im_show"];
             } else {

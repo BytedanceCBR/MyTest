@@ -118,7 +118,10 @@ typedef NS_ENUM(NSUInteger, FHRealtorCellShowStyle) {
 @property (nonatomic, copy , nullable) NSString *businessLicense;
 @property (nonatomic, copy , nullable) NSString *agencyId;
 @property (nonatomic, copy , nullable) NSString *agencyDescription;
-@property (nonatomic, copy , nullable) NSString *phone;
+
+//1.0.2 技术需求：明文手机号隐藏
+//@property (nonatomic, copy , nullable) NSString *phone;
+@property (nonatomic, assign) BOOL enablePhone;
 @property (nonatomic, copy , nullable) NSString *agencyName;
 @property (nonatomic, copy , nullable) NSString *realtorName;
 @property (nonatomic, copy , nullable) NSString *imOpenUrl;
@@ -139,6 +142,7 @@ typedef NS_ENUM(NSUInteger, FHRealtorCellShowStyle) {
 @property (nonatomic, assign) BOOL isFormReport; //是否包含填表单
 @property (nonatomic, copy , nullable) NSString *searchId;
 @property (nonatomic, copy , nullable) NSString *imprId;
+@property (nonatomic, copy, nullable) NSString *bizTrace;
 
 @property (nonatomic, copy , nullable) NSString *noticeDesc;
 @property (nonatomic, strong , nullable) FHDetailContactImageTagModel *imageTag;

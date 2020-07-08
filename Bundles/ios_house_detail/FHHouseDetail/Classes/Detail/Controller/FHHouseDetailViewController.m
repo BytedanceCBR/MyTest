@@ -76,6 +76,7 @@
         self.houseType = [paramObj.allParams[@"house_type"] integerValue];
         self.ridcode = paramObj.allParams[@"ridcode"];
         self.realtorId = paramObj.allParams[@"realtor_id"];
+        self.bizTrace = paramObj.allParams[@"biz_trace"];
         
         NSObject *extraInfo = paramObj.allParams[kFHClueExtraInfo];
         if ([extraInfo isKindOfClass:[NSString class]]) {
@@ -313,6 +314,7 @@
 - (void)setupUI {
     [self configTableView];
     self.viewModel = [FHHouseDetailBaseViewModel createDetailViewModelWithHouseType:self.houseType withController:self tableView:_tableView];
+    self.viewModel.houseInfoOriginBizTrace = self.bizTrace;
     self.viewModel.houseId = self.houseId;
     self.viewModel.ridcode = self.ridcode;
     self.viewModel.realtorId = self.realtorId;
@@ -367,7 +369,8 @@
     self.viewModel.contactViewModel.imprId = self.imprId;
     self.viewModel.contactViewModel.tracerDict = [self makeDetailTracerData];
     self.viewModel.contactViewModel.belongsVC = self;
-    
+    self.viewModel.contactViewModel.houseInfoOriginBizTrace = self.bizTrace;
+
     [self.view addSubview:self.questionBtn];
     self.viewModel.questionBtn = self.questionBtn;
     self.questionBtn.hidden = YES;

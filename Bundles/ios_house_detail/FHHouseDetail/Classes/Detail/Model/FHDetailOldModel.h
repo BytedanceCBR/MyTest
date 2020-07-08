@@ -9,6 +9,7 @@
 #import "JSONModel.h"
 #import "FHDetailBaseModel.h"
 #import "FHDetailNeighborhoodModel.h"
+#import "FHDetailBrokerEvaluationModel.h"
 #import <FHHouseBase/FHImageModel.h>
 #import <FHHouseBase/FHHouseCoreInfoModel.h>
 #import <FHHouseBase/FHHouseBaseInfoModel.h>
@@ -496,6 +497,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *subscriptionToast;
 @property (nonatomic, copy , nullable) NSString *reportToast;
 @property (nonatomic, copy , nullable) NSString *reportDoneToast;
+@property (nonatomic, copy , nullable) NSString *bizTrace;
 @property (nonatomic, strong, nullable) FHClueAssociateInfoModel *middleSubscriptionAssociateInfo;
 @property (nonatomic, strong, nullable) FHClueAssociateInfoModel *houseImageAssociateInfo;
 @property (nonatomic, strong, nullable) FHClueAssociateInfoModel *recommendRealtorsAssociateInfo;
@@ -504,6 +506,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong , nullable) FHDetailNeighborhoodDataQuestionModel *question;
 @property (nonatomic, strong , nullable) FHDetailNeighborhoodDataCommentsModel *comments;
 @property (nonatomic, strong , nullable) FHDetailNeighborhoodDataStrategyModel *strategy;
+//1.0.1经纪人评测模块
+@property (nonatomic, strong , nullable) FHDetailBrokerEvaluationModel *realtorContent;
 
 /// 1.0.0 新增企业担保相关字段
 @property (nonatomic, strong) FHDetailOldVouchModel *vouchModel;

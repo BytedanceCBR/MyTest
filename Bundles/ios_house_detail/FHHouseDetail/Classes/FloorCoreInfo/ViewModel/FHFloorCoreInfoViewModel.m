@@ -17,7 +17,9 @@
 #import "FHDetailGrayLineCell.h"
 #import "FHOldDetailDisclaimerCell.h"
 #import "FHFloorPanCorePermitCell.h"
-
+#import "UIDevice+BTDAdditions.h"
+#import <TTInstallIDManager.h>
+#import "FHUtils.h"
 @interface FHFloorCoreInfoViewModel()<UITableViewDelegate,UITableViewDataSource>
 
 @property (nonatomic , weak) UITableView *infoListTable;
@@ -143,10 +145,15 @@
         [FHHouseDetailAPI requestFloorCoreInfoSearch:_courtId completion:^(FHDetailNewCoreDetailModel * _Nullable model, NSError * _Nullable error) {
             if(model.data && !error)
             {
+             
                 [wSelf.detailController.emptyView hideEmptyView];
                 wSelf.detailController.hasValidateData = YES;
                 [wSelf processDetailData:model];
                 [wSelf.navBar showMessageNumber];
+
+                if (wSelf.lynxView) {
+                     [wSelf updateLynxViewInfo:model];
+                }
             }else
             {
                 wSelf.detailController.hasValidateData = NO;
@@ -154,6 +161,117 @@
             }
         }];
     }
+}
+
+- (void)updateLynxViewInfo:(FHDetailNewCoreDetailModel *)model{
+    NSMutableDictionary *lynxParams = [NSMutableDictionary new];
+    NSMutableDictionary *lynxParamsAll = [NSMutableDictionary new];
+    NSMutableDictionary *dataDict = [model toDictionary];
+    CGFloat top = [self getSafeTop];
+
+    if (dataDict && dataDict[@"data"]) {
+        lynxParams[@"estate_info"] = dataDict[@"data"];
+    }
+    
+    if (_houseNameModel) {
+        NSMutableDictionary *court_info = [NSMutableDictionary new];
+        [court_info setValue:_houseNameModel.name forKey:@"title"];
+        [court_info setValue:_houseNameModel.aliasName forKey:@"alias"];
+        NSMutableArray *tagArray = [NSMutableArray new];
+        [_houseNameModel.tags enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+            if ([obj isKindOfClass:[JSONModel class]]) {
+                [tagArray addObject:[(JSONModel *)obj toDictionary]];
+            }
+        }];
+        [court_info setValue:tagArray forKey:@"tags"];
+        lynxParams[@"court_info"] = court_info;
+    }
+    
+    
+    if (model.data.permitList) {
+        NSMutableArray *permistList = [NSMutableArray new];
+        [model.data.permitList enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+            if ([obj isKindOfClass:[JSONModel class]]) {
+                [permistList addObject:[(JSONModel *)obj toDictionary]];
+            }
+        }];
+        [lynxParams setValue:permistList forKey:@"permit_list"];
+    }
+    
+
+    if (model.data.permitList.count > 0) {
+        [lynxParams setValue:@(_houseNameModel.tags.count) forKey:@"tags_size"];
+
+    }
+    
+  
+    CGRect screenFrame = [UIScreen mainScreen].bounds;
+  
+    
+    
+    if ([model.data.disclaimer isKindOfClass:[JSONModel class]] ) {
+        [lynxParams setValue:[FHUtils getJsonStrFromNoEncode:[model.data.disclaimer toDictionary]] forKey:@"estate_info_disclaimer"];
+    }
+    [lynxParamsAll setValue:lynxParams forKey:@"request_params"];
+    [lynxParamsAll setValue:[self getCommonParams] forKey:@"common_params"];
+    [lynxParamsAll setValue:@(model.data.permitList.count) forKey:@"permit_list_size"];
+
+      
+    [lynxParamsAll setValue:@(_houseNameModel.tags.count) forKey:@"tags_size"];
+    
+//    [lynxParams setValue:@(model.data.disclaimer.count) forKey:@"tags_size"];
+
+//
+   
+    
+
+    [self.lynxView updateData:lynxParamsAll];
+    
+}
+
+- (CGFloat)getSafeTop{
+    CGFloat top = 0;
+         if (@available(iOS 13.0 , *)) {
+           top = 44.f + [UIApplication sharedApplication].keyWindow.safeAreaInsets.top;
+         } else if (@available(iOS 11.0 , *) && [UIDevice btd_isIPhoneXSeries]) {
+           top = 84;
+         } else {
+           top = 65;
+         }
+    return top;
+}
+
+- (CGFloat)getSafeBottom{
+    CGFloat safeBottomPandding = 0;
+    if (@available(iOS 11.0, *)) {
+        safeBottomPandding = [UIApplication sharedApplication].delegate.window.safeAreaInsets.bottom;
+    }else{
+        if ([UIDevice btd_isIPhoneXSeries]) {
+            return 20;
+        }
+    }
+    return safeBottomPandding;
+}
+
+- (NSMutableDictionary *)getCommonParams{
+       CGRect screenFrame = [UIScreen mainScreen].bounds;
+      CGFloat top = [self getSafeTop];
+    
+      NSMutableDictionary *dataCommonparmas = [NSMutableDictionary new];
+    
+      [dataCommonparmas setValue:@(screenFrame.size.height - top - 80 - [self getSafeBottom]) forKey:@"display_height"];
+      [dataCommonparmas setValue:@(screenFrame.size.width) forKey:@"display_width"];
+      [dataCommonparmas setValue:@([UIDevice btd_isIPhoneXSeries]) forKey:@"iOS_iPhoneXSeries"];
+      [dataCommonparmas setValue:@(top) forKey:@"status_bar_height"];
+      NSString * buildVersionRaw = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"UPDATE_VERSION_CODE"];
+      [dataCommonparmas setValue:buildVersionRaw forKey:@"update_version_code"];
+      [dataCommonparmas setValue:[[TTInstallIDManager sharedInstance] deviceID] forKey:@"device_id"];
+      [dataCommonparmas setValue:@"iOS" forKey:@"platform"];
+      [dataCommonparmas setValue:@"f100" forKey:@"app_name"];
+      [dataCommonparmas setValue:@(screenFrame.size.height) forKey:@"screen_height"];
+      [dataCommonparmas setValue:@(screenFrame.size.width) forKey:@"screen_width"];
+    
+    return dataCommonparmas;
 }
 
 - (NSString *)checkPValueStr:(NSString *)str
@@ -222,19 +340,18 @@
         contactPhone = model.data.contact;
         contactPhone.unregistered = YES;
     }
-    if (contactPhone.phone.length > 0) {
-        contactPhone.isFormReport = NO;
-    }else {
-        contactPhone.isFormReport = YES;
-    }
+    contactPhone.isFormReport = !contactPhone.enablePhone;
     self.contactViewModel.contactPhone = contactPhone;
     self.contactViewModel.followStatus = model.data.userStatus.courtSubStatus;
     self.contactViewModel.chooseAgencyList = model.data.chooseAgencyList;
     self.contactViewModel.highlightedRealtorAssociateInfo = model.data.highlightedRealtorAssociateInfo;
     self.bottomBar.hidden = NO;
 
-    [_infoListTable reloadData];
-    _infoListTable.contentOffset = CGPointMake(0, -15);
+    if (_infoListTable) {
+        [_infoListTable reloadData];
+        _infoListTable.contentOffset = CGPointMake(0, -15);
+    }
+
 }
 
 - (FHFloorPanCorePropertyCellModel *)createWaterInfoModel:(FHDetailNewCoreDetailModel *)model

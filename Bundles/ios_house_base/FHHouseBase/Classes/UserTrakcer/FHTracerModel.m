@@ -92,6 +92,7 @@
         model.categoryName = dicParams[@"category_name"];
         model.searchId = dicParams[@"search_id"];
         model.originSearchId = dicParams[@"origin_search_id"];
+        
         // log_pb特殊处理
         if (model) {
             id logPb = dicParams[@"log_pb"];

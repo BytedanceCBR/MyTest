@@ -442,7 +442,7 @@ extern NSString *const kFHPhoneNumberCacheKey;
     }
 
     __weak typeof(self) wself = self;
-    [FHMainApi requestCallReportByHouseId:nil phone:phoneNum from:nil cluePage:nil clueEndpoint:nil targetType:nil reportAssociate:self.modelData.associateInfo.reportFormInfo agencyList:nil completion:^(FHDetailResponseModel * _Nullable model, NSError * _Nullable error) {
+    [FHMainApi requestCallReportByHouseId:nil phone:phoneNum from:nil cluePage:nil clueEndpoint:nil targetType:nil reportAssociate:self.modelData.associateInfo.reportFormInfo agencyList:nil extraInfo:nil completion:^(FHDetailResponseModel * _Nullable model, NSError * _Nullable error) {
 
         if (model.status.integerValue == 0 && !error) {
             if(wself.modelData.subscribeCache && wself.modelData.targetId){

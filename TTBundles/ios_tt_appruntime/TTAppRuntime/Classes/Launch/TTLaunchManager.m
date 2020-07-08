@@ -14,7 +14,7 @@
 #import <sys/sysctl.h>
 #import <mach/mach.h>
 #import "SSCommonLogic.h"
-
+#import "NSDictionary+TTAdditions.h"
 
 static NSDate *preMainDate = nil;
 
@@ -159,7 +159,10 @@ static NSDate *preMainDate = nil;
         }
     }
     
-    [self updateTaskRecords:taskList];
+    BOOL startupOptimizeClose = ![[self fhSettings] tt_boolValueForKey:@"f_startup_optimize_open"];
+    if(startupOptimizeClose){
+        [self updateTaskRecords:taskList];
+    }
 #ifndef DEBUG
     NSLog(@"[LAUNCH] tasks takes %f S ",[[NSDate date]timeIntervalSinceDate:s]);
 #endif
@@ -172,7 +175,7 @@ static NSDate *preMainDate = nil;
     if (![taskClass isSubclassOfClass:[TTStartupTask class]]) {
         return nil;
     }
-    
+     
     TTStartupTask *task = [[taskClass alloc] init];
     if ([task shouldExecuteForApplication:application options:options]) {
         if ([self isConcurrentFotType:headerInfo->type] || [task isConcurrent]) {
@@ -186,9 +189,14 @@ static NSDate *preMainDate = nil;
                 });
             });
         } else {
-            [task setTaskNormal:NO];
+            BOOL startupOptimizeClose = ![[self fhSettings] tt_boolValueForKey:@"f_startup_optimize_open"];
+            if(startupOptimizeClose){
+                [task setTaskNormal:NO];
+            }
             [task startAndTrackWithApplication:application options:options];
-            [task setTaskNormal:YES];
+            if(startupOptimizeClose){
+                [task setTaskNormal:YES];
+            }
         }
         [SharedAppDelegate trackCurrentIntervalInMainThreadWithTag:[task taskIdentifier]];
     }
@@ -212,7 +220,7 @@ static NSDate *preMainDate = nil;
 
 -(void)updateTaskRecords:(NSArray *)tasks
 {
-    if ([SSCommonLogic isNewLaunchOptimizeEnabled]) {
+    if ([SSCommonLogic isFHNewLaunchOptimizeEnabled]) {
         for(TTStartupTask *task in tasks){
             NSString *key = [TTStartupProtectPrefix stringByAppendingString:[task taskIdentifier]];
             if (![[NSUserDefaults standardUserDefaults] objectForKey:key]) {
@@ -258,6 +266,14 @@ static NSDate *preMainDate = nil;
     NSLog(@"[LAUNCH] whole launch takes: %f ms",(nowTS - laucnhTS));
     if(preMainDate){
         NSLog(@"[LAUNCH] after main launch takes: %f ms",nowTS - [preMainDate timeIntervalSince1970]*1000);
+    }
+}
+
+- (NSDictionary *)fhSettings {
+    if ([[NSUserDefaults standardUserDefaults] objectForKey:@"kFHSettingsKey"]){
+        return [[NSUserDefaults standardUserDefaults] dictionaryForKey:@"kFHSettingsKey"];
+    } else {
+        return nil;
     }
 }
 
