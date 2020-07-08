@@ -323,10 +323,12 @@
 
 - (void)imAction:(NSURL *)openUrl {
     FHFeedUGCContentAttachCardInfoExtraModel *extra = self.cellModel.attachCardInfo.extra;
-    NSMutableDictionary *imExtra = @{}.mutableCopy;
+    NSMutableDictionary *imExtra = self.cellModel.tracerDic.mutableCopy;
     imExtra[@"from_gid"] = extra.fromGid;
+    imExtra[@"house_type"] = extra.houseType;
+    imExtra[@"group_id"] = extra.groupId;
     self.realtorModel.chatOpenurl = openUrl.absoluteString;
-    [self.realtorPhoneCallModel imchatActionWithPhone:self.realtorModel realtorRank:@"0" extraDic:self.cellModel.tracerDic];
+    [self.realtorPhoneCallModel imchatActionWithPhone:self.realtorModel realtorRank:@"0" extraDic:imExtra];
 }
 
 - (void)addClickIM:(TTRouteParamObj *)obj {

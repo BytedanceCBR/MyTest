@@ -84,6 +84,7 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
     // IM 相关埋点上报参数
     FHAssociateReportParams *reportParams = [FHAssociateReportParams new];
     reportParams.enterFrom = self.tracerDict[@"enter_from"] ? : @"be_null";
+    reportParams.houseType = self.tracerDict[@"house_type"] ? : @"be_null";
     reportParams.elementFrom = self.tracerDict[@"element_from"] ? : @"be_null";
     reportParams.originFrom = self.tracerDict[@"origin_from"] ? : @"be_null";
     reportParams.logPb = self.tracerDict[@"log_pb"];
@@ -98,6 +99,7 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
     reportParams.extra = extra;
     reportParams.realtorPosition = extra[@"realtor_position"];
     reportParams.searchId = self.tracerDict[@"search_id"] ? : @"be_null";
+    reportParams.fromGid = self.tracerDict[@"from_gid"] ? : @"be_null";
     
     if(self.tracerDict[@"group_id"]) {
         reportParams.groupId = self.tracerDict[@"group_id"];
