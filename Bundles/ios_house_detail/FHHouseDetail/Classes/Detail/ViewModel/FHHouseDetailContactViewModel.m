@@ -387,7 +387,9 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
     self.onLineName = chatTitle;
     self.phoneCallName = contactTitle;
     [self.bottomBar refreshBottomBar:contactPhone contactTitle:contactTitle chatTitle:chatTitle];
-    self.showenOnline = self.bottomBar.showIM;// 显示在线联系（详情图册页面）
+    if (self.bottomBar) {
+        self.showenOnline = self.bottomBar.showIM;// 显示在线联系（详情图册页面）
+    }
     if (!contactPhone.isInstantData) {
         //非列表页带入数据才报埋点
         [self tryTraceImElementShow];
@@ -579,6 +581,15 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
         //100 户型详情页新增 click_position
         if (extraDict[@"click_position"]) {
             imExtra[@"click_position"] = extraDict[@"click_position"];
+        }
+        if (extraDict[@"enter_from"]) {
+            imExtra[@"enter_from"] = extraDict[@"enter_from"];
+        }
+        if (extraDict[@"page_type"]) {
+            imExtra[@"page_type"] = extraDict[@"page_type"];
+        }
+        if (extraDict[@"event_tracking_id"]) {
+            imExtra[@"event_tracking_id"] = extraDict[@"event_tracking_id"];
         }
     }
     [self.phoneCallViewModel imchatActionWithPhone:self.contactPhone realtorRank:@"0" extraDic:imExtra];

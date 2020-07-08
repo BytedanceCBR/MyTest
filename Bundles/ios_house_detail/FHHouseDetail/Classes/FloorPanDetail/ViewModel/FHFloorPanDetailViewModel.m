@@ -118,7 +118,7 @@
 - (void)startLoadData
 {
     if (![TTReachability isNetworkConnected]) {
-        [self.detailController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoNetWorkNotRefresh];
+        [self.detailController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoNetWorkAndRefresh];
         return;
     }
     if (_floorPanId) {

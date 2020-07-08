@@ -27,6 +27,7 @@
 #import "WDDefines.h"
 #import "TTAccountLoginManager.h"
 #import "TTAccountManager.h"
+#import "UIDevice+BTDAdditions.h"
 
 static NSString * const kFUGCPrefixStr = @"fugc";
 
@@ -165,19 +166,22 @@ static NSString * const kFUGCPrefixStr = @"fugc";
         _firstLanchCanShowLogin = YES;
     }
     if (_firstLanchCanShowLogin ) {
-           if (!self.isShowLoginTip) {
-             self.loginTipview =  [FHLoginTipView showLoginTipViewInView:self.containerView navbarHeight:kNavigationBarHeight withTracerDic:self.tracerDict];
-             self.isShowLoginTip = YES;
-             self.loginTipview.type = FHLoginTipViewtTypeMain;
-         }else {
-             if (self.loginTipview) {
-                 if ([TTAccount sharedAccount].isLogin) {
-                     [self.loginTipview removeFromSuperview];
-                 }else {
-                     [self.loginTipview startTimer];
-                 }
-             }
-         }
+        if (!self.isShowLoginTip) {
+            CGFloat statusBarHeight =  ((![[UIApplication sharedApplication] isStatusBarHidden]) ? [[UIApplication sharedApplication] statusBarFrame].size.height : ([UIDevice btd_isIPhoneXSeries]?44.f:20.f));
+               //获取导航栏的rect
+                CGRect navRect = self.navigationController.navigationBar.frame;
+            self.loginTipview =  [FHLoginTipView showLoginTipViewInView:self.containerView navbarHeight:navRect.size.height+statusBarHeight withTracerDic:self.tracerDict];
+            self.isShowLoginTip = YES;
+            self.loginTipview.type = FHLoginTipViewtTypeMain;
+        }else {
+            if (self.loginTipview) {
+                if ([TTAccount sharedAccount].isLogin) {
+                    [self.loginTipview removeFromSuperview];
+                }else {
+                    [self.loginTipview startTimer];
+                }
+            }
+        }
     }
 }
 

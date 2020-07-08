@@ -53,6 +53,7 @@
 #import "FHDetailAccessCellModel.h"
 #import "FHDetailPictureViewController.h"
 #import "FHhouseDetailRGCListCell.h"
+#import "FHDetailNewBuildingsCell.h"
 #import "TTAccountManager.h"
 
 @interface FHHouseNewDetailViewModel ()
@@ -110,6 +111,8 @@
     
     //顾问点评
     [self.tableView registerClass:[FHhouseDetailRGCListCell class] forCellReuseIdentifier:NSStringFromClass([FHhouseDetailRGCListCellModel class])];
+    
+    [self.tableView registerClass:[FHDetailNewBuildingsCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailNewBuildingsCellModel class])];
 }
 
 // cell identifier
@@ -760,6 +763,14 @@
         [params setValue:model.data.coreInfo.name forKey:@"name"];
         
         [[HMDTTMonitor defaultManager] hmdTrackService:eventName metric:nil category:cat extra:params];
+    }
+    
+    //楼栋信息
+    if (model.data.buildingInfo && model.data.buildingInfo.list.count) {
+        FHDetailNewBuildingsCellModel *buildingCellModel = [[FHDetailNewBuildingsCellModel alloc] init];
+        buildingCellModel.houseModelType = FHHouseModelTypeNewBuildingInfo;
+        buildingCellModel.buildingInfo = model.data.buildingInfo;
+        [self.items addObject:buildingCellModel];
     }
     
     //    //周边配套
