@@ -34,6 +34,7 @@
 @property(nonatomic, assign) NSInteger currentCityId;
 @property(nonatomic, assign) NSTimeInterval enterTabTimestamp;
 @property(nonatomic, assign) BOOL noNeedAddEnterCategorylog;
+@property(nonatomic, assign) UIEdgeInsets originContentInset;
 
 @end
 
@@ -286,6 +287,7 @@
 }
 
 - (void)showNotify:(NSString *)message completion:(void(^)())completion {
+    self.originContentInset = self.tableView.contentInset;
     UIEdgeInsets inset = self.tableView.contentInset;
     inset.top = self.notifyBarView.height;
     self.tableView.contentInset = inset;
@@ -305,14 +307,11 @@
 
 - (void)hideIfNeeds {
     [UIView animateWithDuration:0.3 animations:^{
-        if ([TTDeviceHelper isIPhoneXDevice]) {
-            self.tableView.contentInset = UIEdgeInsetsMake(0, 0, 34, 0);
-        }else{
-            self.tableView.contentInset = UIEdgeInsetsZero;
-        }
+        self.tableView.contentInset = self.originContentInset;
         self.tableView.originContentInset = UIEdgeInsetsMake(0.0f, 0.0f, 0.0f, 0.0f);
         
     }completion:^(BOOL finished) {
+        self.tableView.originContentInset = self.originContentInset;
         if (self.notifyCompletionBlock) {
             self.notifyCompletionBlock();
         }
