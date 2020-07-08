@@ -11,7 +11,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FHDetailTopBannerView : UIView
 
-- (void)updateWithTitle:(NSString *)title content:(NSString *)content;
+- (void)updateWithTitle:(NSString *)title content:(NSString *)content isCanClick:(BOOL)isCanClick clickUrl:(NSString *)clickUrl;
 
 @end
 

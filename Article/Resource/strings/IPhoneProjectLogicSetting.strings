@@ -121,6 +121,7 @@
 
 "react" = "FHRNBaseViewController";
 "sample_lynx_page" = "FHLynxViewController";
+"enterprise_guarantee" = "FHEnterpriseGuaranteeController";
 
 //im 单聊
 "open_single_chat" = "ChatRootViewController";
