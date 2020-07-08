@@ -314,6 +314,9 @@
             
             self.vouchView.hidden = NO;
             self.gradientLayer.hidden = NO;
+            self.messageDotNumber.backgroundColor = [UIColor whiteColor];
+            self.messageDotNumber.textColor = [UIColor themeOrange1];
+
         } else {
             [_backBtn setImage:self.backBlackImage forState:UIControlStateNormal];
             [_backBtn setImage:self.backBlackImage forState:UIControlStateHighlighted];
@@ -324,6 +327,8 @@
             [_shareBtn setImage:self.shareBlackImage forState:UIControlStateHighlighted];
             [_messageBtn setImage:self.messageBlackImage forState:UIControlStateNormal];
             [_messageBtn setImage:self.messageBlackImage forState:UIControlStateHighlighted];
+            self.messageDotNumber.backgroundColor = [UIColor themeOrange1];
+            self.messageDotNumber.textColor = [UIColor whiteColor];
         }
         
     }else {
@@ -337,6 +342,8 @@
         [_shareBtn setImage:self.shareWhiteImage forState:UIControlStateHighlighted];
         [_messageBtn setImage:self.messageWhiteImage forState:UIControlStateNormal];
         [_messageBtn setImage:self.messageWhiteImage forState:UIControlStateHighlighted];
+        self.messageDotNumber.backgroundColor = [UIColor themeOrange1];
+        self.messageDotNumber.textColor = [UIColor whiteColor];
         if (self.isForVouch) {
             self.vouchView.hidden = YES;
             self.gradientLayer.hidden = YES;

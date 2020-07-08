@@ -476,7 +476,7 @@ def appPods
     pod_binary 'YYWebImage', '1.0.4'
     pod_binary 'libwebp' , '0.6.1'
     pod_binary 'TTTAttributedLabel', '1.13.3'
-    pod_binary 'UMengAnalytics', '4.1.4'
+
     pod_binary 'JSONModel','1.7.0-private'
     # pod_binary 'Fabric','1.10.2'
     pod_binary 'MJExtension', '3.0.12'
@@ -711,7 +711,7 @@ post_install do |installer|
           '${PODS_ROOT}/TTABManager',
           '${PODS_ROOT}/TTNetBusiness/ios',
           '${PODS_ROOT}/TencentQQSDK/TencentQQSDK/Classes',
-          '${PODS_ROOT}/UMengAnalytics/umsdk_IOS_analyics_idfa_v4.1.4',
+
           '${PODS_ROOT}/Quaterback/BDDynamically/Frameworks/News/Release',
           ]
         end

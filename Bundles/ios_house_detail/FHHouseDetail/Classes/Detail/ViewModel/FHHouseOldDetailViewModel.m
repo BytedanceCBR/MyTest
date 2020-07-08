@@ -559,9 +559,10 @@ logPB:self.listLogPB extraInfo:self.extraInfo completion:^(FHDetailOldModel * _N
         detailRGCListCellModel.detailTracerDic = self.detailTracerDic;
         NSString *searchId = self.listLogPB[@"search_id"];
         NSString *imprId = self.listLogPB[@"impr_id"];
+        detailRGCListCellModel.houseInfoBizTrace = self.houseInfoBizTrace;
         NSDictionary *extraDic = @{
-            @"searchId":searchId,
-            @"imprId":imprId,
+            @"searchId":searchId?:@"be_null",
+            @"imprId":imprId?:@"be_null",
             @"houseId":self.houseId,
             @"houseType":@(self.houseType),
             @"channelId":@"f_hosue_wtt"
