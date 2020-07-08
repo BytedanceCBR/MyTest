@@ -80,9 +80,7 @@
         @weakify(self)
         [[[[NSNotificationCenter defaultCenter] rac_addObserverForName:KUSER_UPDATE_NOTIFICATION object:nil] throttle:2] subscribeNext:^(NSNotification *_Nullable x) {
             @strongify(self)
-            NSArray<IMConversation *> *allConversations = [[IMManager shareInstance].chatService allConversations];
-            [_combiner resetConversations:allConversations];
-            [self.tableView reloadData];
+            [self refreshConversationList];
         }];
         [[[[NSNotificationCenter defaultCenter] rac_addObserverForName:kTTMessageNotificationTipsChangeNotification object:nil] throttle:2] subscribeNext:^(NSNotification *_Nullable x) {
             @strongify(self)
@@ -94,6 +92,12 @@
         }];
     }
     return self;
+}
+
+- (void)refreshConversationList {
+    NSArray<IMConversation *> *allConversations = [[IMManager shareInstance].chatService allConversations];
+    [_combiner resetConversations:allConversations];
+    [self.tableView reloadData];
 }
 
 - (void)setPageType:(NSString *)pageType {
