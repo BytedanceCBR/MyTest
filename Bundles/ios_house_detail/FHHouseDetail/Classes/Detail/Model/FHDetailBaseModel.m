@@ -159,6 +159,7 @@
                            @"realtorEvaluate":@"realtor_evaluate",
                            @"realtorScoreDisplay":@"realtor_score_display",
                            @"realtorScoreDescription":@"realtor_score_description",
+                           @"enablePhone": @"enable_phone",
                            };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
         return dict[keyName]?:keyName;

@@ -547,11 +547,7 @@
             tracerDic[@"realtor_position"] = @"detail_related";
             tracerDic[@"realtor_logpb"] = contact.realtorLogpb;
             tracerDic[@"biz_trace"] = contact.bizTrace;
-            if (contact.phone.length < 1) {
-                [tracerDic setValue:@"0" forKey:@"phone_show"];
-            } else {
-                [tracerDic setValue:@"1" forKey:@"phone_show"];
-            }
+            [tracerDic setValue:contact.enablePhone ? @"1" : @"0" forKey:@"phone_show"];
             if (![@"" isEqualToString:contact.imOpenUrl] && contact.imOpenUrl != nil) {
                 [tracerDic setValue:@"1" forKey:@"im_show"];
             } else {

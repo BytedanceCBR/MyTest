@@ -248,8 +248,7 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
         contactPhone = model.data.contact;
         contactPhone.unregistered = YES;
     }
-    if (contactPhone.phone.length > 0) {
-        
+    if (contactPhone.enablePhone) {
         if ([self isShowSubscribe]) {
             contactPhone.isFormReport = YES;
         }else {

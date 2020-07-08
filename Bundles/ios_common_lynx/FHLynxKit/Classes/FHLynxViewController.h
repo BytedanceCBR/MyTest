@@ -15,6 +15,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic, strong) LynxView* lynxView;
 
 - (void)updateStatusPage:(NSNumber *)status;
+//子类复写，追加的参数
+- (NSMutableDictionary *)getAddtionParams;
 
 @end
 

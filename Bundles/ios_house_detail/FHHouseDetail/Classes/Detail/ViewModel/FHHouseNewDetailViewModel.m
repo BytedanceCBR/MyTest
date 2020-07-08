@@ -409,11 +409,7 @@
     }else {
         contactPhone = model.data.contact;
     }
-    if (contactPhone.phone.length > 0) {
-        contactPhone.isFormReport = NO;
-    }else {
-        contactPhone.isFormReport = YES;
-    }
+    contactPhone.isFormReport = !contactPhone.enablePhone;
     self.contactViewModel.contactPhone = contactPhone;
     self.contactViewModel.shareInfo = model.data.shareInfo;
     self.contactViewModel.followStatus = model.data.userStatus.courtSubStatus;
@@ -682,8 +678,8 @@
         NSString *searchId = self.listLogPB[@"search_id"];
         NSString *imprId = self.listLogPB[@"impr_id"];
         NSDictionary *extraDic = @{
-            @"searchId":searchId,
-            @"imprId":imprId,
+            @"searchId":searchId?:@"be_null",
+            @"imprId":imprId?:@"be_null",
             @"houseId":self.houseId,
             @"houseType":@(self.houseType),
             @"channelId":@"f_hosue_wtt"

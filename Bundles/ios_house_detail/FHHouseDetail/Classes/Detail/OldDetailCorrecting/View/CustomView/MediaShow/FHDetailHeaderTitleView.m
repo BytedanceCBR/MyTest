@@ -332,7 +332,7 @@
         case FHHouseTypeNewHouse:{
             if (model.businessTag.length > 0 && model.advantage.length > 0) {
                 topHeight = 40;
-                [self.topBanner updateWithTitle:model.businessTag content:model.advantage];
+                [self.topBanner updateWithTitle:model.businessTag content:model.advantage isCanClick:model.isCanClick clickUrl:model.clickUrl];
             }
             self.topBanner.hidden = (topHeight <= 0);
             [self.topBanner mas_updateConstraints:^(MASConstraintMaker *make) {
@@ -400,7 +400,7 @@
         case FHHouseTypeSecondHandHouse:{
             if (model.businessTag.length > 0 && model.advantage.length > 0) {
                 topHeight = 40;
-                [self.topBanner updateWithTitle:model.businessTag content:model.advantage];
+                [self.topBanner updateWithTitle:model.businessTag content:model.advantage isCanClick:model.isCanClick clickUrl:model.clickUrl];
             }
             self.topBanner.hidden = (topHeight <= 0);
             [self.topBanner mas_updateConstraints:^(MASConstraintMaker *make) {
