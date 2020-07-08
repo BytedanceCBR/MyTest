@@ -61,7 +61,8 @@
 #import "FHDetailNewCoreDetailModel.h"
 #import "FHFloorPanListViewController.h"
 #import "FHDetailRentModel.h"
-
+#import "TTAccountLoginManager.h"
+#import "FHUtils.h"
 NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
 
 @interface FHHouseDetailContactViewModel () <TTShareManagerDelegate>
@@ -228,9 +229,34 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
     configModel.houseType = self.houseType;
     configModel.followId = self.houseId;
     configModel.actionType = self.houseType;
-    
-    [FHHouseFollowUpHelper followHouseWithConfigModel:configModel];
+    if (![TTAccount sharedAccount].isLogin && [FHUtils getSettingEnableBooleanForKey:@"f_login_before_house_subscribe"]) {
+        NSMutableDictionary *params = [NSMutableDictionary dictionary];
+        NSString *page_type = self.tracerDict[@"page_type"] ?: @"be_null";
+        [params setObject:page_type forKey:@"enter_from"];
+        [params setObject:@"click_favorite" forKey:@"enter_type"];
+        [params setObject:@"click_favorite" forKey:@"enter_method"];
+        // 登录成功之后不自己Pop，先进行页面跳转逻辑，再pop
+        [params setObject:@(YES) forKey:@"need_pop_vc"];
+        __weak typeof(self) wSelf = self;
+        self.isShowLogin = YES;
+        [TTAccountLoginManager showAlertFLoginVCWithParams:params completeBlock:^(TTAccountAlertCompletionEventType type, NSString * _Nullable phoneNum) {
+            if (type == TTAccountAlertCompletionEventTypeDone) {
+                // 登录成功
+                if ([TTAccountManager isLogin]) {
+                    wSelf.isShowLogin = NO;
+                    [FHHouseFollowUpHelper followHouseWithConfigModel:configModel];
+                }else{
+//                    [[ToastManager manager] showToast:@"需要先登录才能进行操作哦"];
+                }
+            }
+        }];
+    }else{
+        [FHHouseFollowUpHelper followHouseWithConfigModel:configModel];
+    }
+  
 }
+
+
 
 - (void)cancelFollowAction
 {
@@ -346,7 +372,7 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
         chatTitle = contactPhone.imLabel;
     }
     
-    if (contactPhone.phone.length < 1) {
+    if (!contactPhone.enablePhone) {
         if (self.houseType == FHHouseTypeNeighborhood) {
             contactTitle = @"咨询经纪人";
         }else {
@@ -361,7 +387,9 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
     self.onLineName = chatTitle;
     self.phoneCallName = contactTitle;
     [self.bottomBar refreshBottomBar:contactPhone contactTitle:contactTitle chatTitle:chatTitle];
-    self.showenOnline = self.bottomBar.showIM;// 显示在线联系（详情图册页面）
+    if (self.bottomBar) {
+        self.showenOnline = self.bottomBar.showIM;// 显示在线联系（详情图册页面）
+    }
     if (!contactPhone.isInstantData) {
         //非列表页带入数据才报埋点
         [self tryTraceImElementShow];
@@ -449,13 +477,8 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
 - (void)contactAction
 {
     NSMutableDictionary *extraDict = @{}.mutableCopy;
-    NSDictionary *associateInfoDict = nil;
-    if (self.contactPhone.phone.length > 0) {
-        associateInfoDict = self.highlightedRealtorAssociateInfo.phoneInfo;
-    }else {
-        associateInfoDict = self.highlightedRealtorAssociateInfo.reportFormInfo;
-    }
-    extraDict[kFHAssociateInfo] = associateInfoDict;
+    NSDictionary *associateInfoDict = self.contactPhone.enablePhone ? self.highlightedRealtorAssociateInfo.phoneInfo : self.highlightedRealtorAssociateInfo.reportFormInfo;
+    extraDict[kFHAssociateInfo] = associateInfoDict?:@{};
     extraDict[@"position"] = @"button";
     [self contactActionWithExtraDict:extraDict];
 }
@@ -472,7 +495,7 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
     if (extraDict.count > 0) {
         [reportParamsDict addEntriesFromDictionary:extraDict];
     }
-    if (self.contactPhone.phone.length < 1) {
+    if (!self.contactPhone.enablePhone) {
         // 填表单
         NSMutableDictionary *associateParamDict = @{}.mutableCopy;
         associateParamDict[kFHReportParams] = reportParamsDict;
@@ -558,6 +581,15 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
         //100 户型详情页新增 click_position
         if (extraDict[@"click_position"]) {
             imExtra[@"click_position"] = extraDict[@"click_position"];
+        }
+        if (extraDict[@"enter_from"]) {
+            imExtra[@"enter_from"] = extraDict[@"enter_from"];
+        }
+        if (extraDict[@"page_type"]) {
+            imExtra[@"page_type"] = extraDict[@"page_type"];
+        }
+        if (extraDict[@"event_tracking_id"]) {
+            imExtra[@"event_tracking_id"] = extraDict[@"event_tracking_id"];
         }
     }
     [self.phoneCallViewModel imchatActionWithPhone:self.contactPhone realtorRank:@"0" extraDic:imExtra];
@@ -1119,12 +1151,7 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
     tracerDic[@"realtor_position"] = @"detail_button";
     tracerDic[@"realtor_logpb"] = contactPhone.realtorLogpb;
     tracerDic[@"biz_trace"] = self.houseInfoBizTrace;
-    
-    if (_contactPhone.phone.length < 1) {
-        [tracerDic setValue:@"0" forKey:@"phone_show"];
-    } else {
-        [tracerDic setValue:@"1" forKey:@"phone_show"];
-    }
+    [tracerDic setValue:_contactPhone.enablePhone? @"1" : @"0" forKey:@"phone_show"];
     if (!isEmptyString(_contactPhone.imOpenUrl)) {
         [tracerDic setValue:@"1" forKey:@"im_show"];
     } else {
@@ -1157,7 +1184,7 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
 {
     NSMutableDictionary *tracerDic = [self baseParams].mutableCopy;
     tracerDic[@"is_im"] = !isEmptyString(contactPhone.imOpenUrl) ? @"1" : @"0";
-    tracerDic[@"is_call"] = contactPhone.phone.length < 1 ? @"0" : @"1";
+    tracerDic[@"is_call"] = contactPhone.enablePhone ? @"1" : @"0";
     tracerDic[@"is_report"] = contactPhone.isFormReport ? @"1" : @"0";
     tracerDic[@"is_online"] = _contactPhone.unregistered?@"1":@"0";
     tracerDic[@"biz_trace"] = contactPhone.bizTrace?:@"be_null";
