@@ -233,6 +233,7 @@
 - (void)updateWithModel:(FHUnreadMsgDataUnreadModel *)model
 {
     self.titleLabel.text = model.title;
+    self.subTitleLabel.attributedText = nil;
     self.subTitleLabel.text = model.content;
     NSDate* date = [[NSDate alloc] initWithTimeIntervalSince1970:[model.timestamp doubleValue]];
     self.timeLabel.text = [self timeLabelByDate:date];
@@ -298,16 +299,25 @@
                     }];
                 }
             }
+            self.subTitleLabel.attributedText = nil;
             self.subTitleLabel.text = [NSString stringWithFormat:@"%@ %@", roleHintText, recallHintText];
         }
         else if (isGroupChat) {
-            NSString *cutStr = [self cutLineBreak:[conv lastMessage]];
+            NSString *lastMessage = [conv lastMessage];
+            NSString *cutStr = [self cutLineBreak:lastMessage];
+            
+            
             NSNumber *uid =[NSNumber numberWithLongLong: [[[TTAccount sharedAccount] userIdString] longLongValue]];
             if (lastMsg.isCurrentUser || lastMsg.type == ChatMstTypeNotice) {
                 if ([lastMsg.mentionedUsers containsObject:uid] && ![self lastMsgHasReadInConversation:conv]) {
                     self.subTitleLabel.attributedText = [self getAtAttributeString:cutStr];;
                 } else {
-                    self.subTitleLabel.text = cutStr;
+                    if([conv lastChatMsg].type != ChatMsgTypeVoiceSegment) {
+                        self.subTitleLabel.attributedText = nil;
+                        self.subTitleLabel.text = cutStr;
+                    } else {
+                        [self processVoiceLastMessage:conv lastMessage:cutStr];
+                    }
                 }
             } else {
                 [[FHChatUserInfoManager shareInstance] getUserInfoSync:[[NSNumber numberWithLongLong:lastMsg.userId] stringValue] block:^(NSString * _Nonnull userId, FHChatUserInfo * _Nonnull userInfo) {
@@ -315,12 +325,24 @@
                     if ([lastMsg.mentionedUsers containsObject:uid] && ![self lastMsgHasReadInConversation:conv]) {
                         self.subTitleLabel.attributedText = [self getAtAttributeString:tipMsg];;
                     } else {
-                         self.subTitleLabel.text = tipMsg;
+                        
+                        if([conv lastChatMsg].type != ChatMsgTypeVoiceSegment) {
+                            self.subTitleLabel.attributedText = nil;
+                            self.subTitleLabel.text = tipMsg;
+                        } else {
+                            [self processVoiceLastMessage:conv lastMessage:tipMsg];
+                        }
                     }
                 }];
             }
         } else {
-            self.subTitleLabel.text = [self cutLineBreak:[conv lastMessage]];
+            NSString *lastMessage = [conv lastMessage];
+            if([conv lastChatMsg].type != ChatMsgTypeVoiceSegment) {
+                self.subTitleLabel.attributedText = nil;
+                self.subTitleLabel.text = [self cutLineBreak:lastMessage];
+            } else {
+                [self processVoiceLastMessage:conv lastMessage:lastMessage];
+            }
         }
     }
     
@@ -344,6 +366,21 @@
 
     [self displaySendState:lastMsg isMute:conv.mute];
     self.timeLabel.text = [self timeLabelByDate:conv.updatedAt];
+}
+- (void)processVoiceLastMessage:(IMConversation *)conv lastMessage:(NSString *)lastMessage {
+        NSRange range = [lastMessage rangeOfString:@"[语音]"];
+        NSMutableAttributedString *attributeLastMessage = [[NSMutableAttributedString alloc] initWithString:lastMessage];
+        UIColor *attributeColor = [self isLastVoiceMessageReadByCurrentUser:conv] ? [UIColor themeGray3] : [UIColor colorWithHexStr:@"FE5500"];
+        [attributeLastMessage addAttributes:@{NSForegroundColorAttributeName: attributeColor, NSFontAttributeName:self.subTitleLabel.font} range:range];
+        self.subTitleLabel.attributedText = attributeLastMessage;
+}
+- (BOOL)isLastVoiceMessageReadByCurrentUser:(IMConversation *)conv {
+    BOOL ret = NO;
+    ChatMsg *lastMsg = [conv lastChatMsg];
+    if(lastMsg.type == ChatMsgTypeVoiceSegment && (lastMsg.isCurrentUser || lastMsg.isReadByCurrentUser)) {
+        ret = YES;
+    }
+    return ret;
 }
 
 -(BOOL)lastMsgHasReadInConversation:(IMConversation *)conv {

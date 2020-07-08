@@ -345,6 +345,9 @@ DEC_TASK("FHIMStartupTask",FHTaskTypeSerial,TASK_PRIORITY_HIGH+16);
     ret = isIMReadReceiptRequestClosed;
     return ret;
 }
+- (BOOL)isEnableRecordVoiceSegment {
+    return [SSCommonLogic enableRecordVoiceSegment];
+}
 @end
 
 @implementation FHIMStartupTask
