@@ -216,7 +216,6 @@
                 
                  [[SSADEventTracker sharedManager] trackEventWithOrderedData:self.orderdata label:@"click_image" eventName:@"embeded_ad" extra:extraData duration:0];
             }
-            
         }
     }
 }

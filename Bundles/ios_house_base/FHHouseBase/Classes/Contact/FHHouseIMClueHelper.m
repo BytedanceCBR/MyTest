@@ -164,6 +164,9 @@
     dict[@"biz_trace"] = associateIM.extraInfo[@"biz_trace"] ? : @"be_null";
     dict[@"source_from"] = reportParams.sourceFrom;
     dict[@"associate_info"] = associateIM.associateInfo.imInfo?:@{}; // 只传im_info即可
+    dict[@"group_id"] = reportParams.groupId ? : @"be_null";
+    dict[@"house_type"] = reportParams.houseType ? : @"be_null";
+    dict[@"from_gid"] = reportParams.fromGid ? : @"be_null";
     
     if(reportParams.extra) {
         [dict addEntriesFromDictionary:reportParams.extra];
