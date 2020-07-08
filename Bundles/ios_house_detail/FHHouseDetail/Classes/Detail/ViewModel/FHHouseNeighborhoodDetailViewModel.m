@@ -52,6 +52,7 @@
 #import "FHDetailNeighborhoodHouseRentCell.h"
 #import "FHDetailNeighborhoodHouseStatusModel.h"
 #import "FHDetailSurroundingAreaCell.h"
+#import "TTAccountManager.h"
 
 @interface FHHouseNeighborhoodDetailViewModel ()
 
@@ -165,6 +166,15 @@
         return item.images;
     }
     return nil;
+}
+
+- (void)vc_viewDidAppear:(BOOL)animated
+{
+    [super vc_viewDidAppear:animated];
+    if (self.contactViewModel.isShowLogin && ![TTAccountManager isLogin]) {
+        [[ToastManager manager] showToast:@"需要先登录才能进行操作哦"];
+        self.contactViewModel.isShowLogin = NO;
+    }
 }
 
 -(BOOL)currentIsInstantData

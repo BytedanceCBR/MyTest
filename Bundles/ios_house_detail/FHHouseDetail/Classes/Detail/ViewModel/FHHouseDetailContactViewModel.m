@@ -61,7 +61,8 @@
 #import "FHDetailNewCoreDetailModel.h"
 #import "FHFloorPanListViewController.h"
 #import "FHDetailRentModel.h"
-
+#import "TTAccountLoginManager.h"
+#import "FHUtils.h"
 NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
 
 @interface FHHouseDetailContactViewModel () <TTShareManagerDelegate>
@@ -228,9 +229,34 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
     configModel.houseType = self.houseType;
     configModel.followId = self.houseId;
     configModel.actionType = self.houseType;
-    
-    [FHHouseFollowUpHelper followHouseWithConfigModel:configModel];
+    if (![TTAccount sharedAccount].isLogin && [FHUtils getSettingEnableBooleanForKey:@"f_login_before_house_subscribe"]) {
+        NSMutableDictionary *params = [NSMutableDictionary dictionary];
+        NSString *page_type = self.tracerDict[@"page_type"] ?: @"be_null";
+        [params setObject:page_type forKey:@"enter_from"];
+        [params setObject:@"click_favorite" forKey:@"enter_type"];
+        [params setObject:@"click_favorite" forKey:@"enter_method"];
+        // 登录成功之后不自己Pop，先进行页面跳转逻辑，再pop
+        [params setObject:@(YES) forKey:@"need_pop_vc"];
+        __weak typeof(self) wSelf = self;
+        self.isShowLogin = YES;
+        [TTAccountLoginManager showAlertFLoginVCWithParams:params completeBlock:^(TTAccountAlertCompletionEventType type, NSString * _Nullable phoneNum) {
+            if (type == TTAccountAlertCompletionEventTypeDone) {
+                // 登录成功
+                if ([TTAccountManager isLogin]) {
+                    wSelf.isShowLogin = NO;
+                    [FHHouseFollowUpHelper followHouseWithConfigModel:configModel];
+                }else{
+//                    [[ToastManager manager] showToast:@"需要先登录才能进行操作哦"];
+                }
+            }
+        }];
+    }else{
+        [FHHouseFollowUpHelper followHouseWithConfigModel:configModel];
+    }
+  
 }
+
+
 
 - (void)cancelFollowAction
 {

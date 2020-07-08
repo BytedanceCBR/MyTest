@@ -67,6 +67,8 @@
 #import "FHVRPreloadManager.h"
 #import "TTSettingsManager.h"
 #import "FHhouseDetailRGCListCell.h"
+#import "TTAccountManager.h"
+
 extern NSString *const kFHPhoneNumberCacheKey;
 extern NSString *const kFHSubscribeHouseCacheKey;
 extern NSString *const kFHPLoginhoneNumberCacheKey;
@@ -786,6 +788,13 @@ logPB:self.listLogPB extraInfo:self.extraInfo completion:^(FHDetailOldModel * _N
 {
     [super vc_viewDidAppear:animated];
     [self.agentListModel.phoneCallViewModel vc_viewDidAppear:animated];
+    
+    
+    if (self.contactViewModel.isShowLogin && ![TTAccountManager isLogin]) {
+        [[ToastManager manager] showToast:@"需要先登录才能进行操作哦"];
+        self.contactViewModel.isShowLogin = NO;
+    }
+    
 }
 
 // 周边数据请求，当网络请求都返回后刷新数据

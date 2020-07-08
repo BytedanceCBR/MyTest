@@ -20,6 +20,7 @@
 #import <FHCHousePush/FHPushAuthorizeManager.h>
 #import "FHUGCConfig.h"
 #import "TTAccountManager.h"
+#import "FHUtils.h"
 
 NSString *const kFHDetailFollowUpNotification = @"follow_up_did_changed";
 NSString *const kFHToastCountKey = @"kFHToastCountKey";
@@ -43,6 +44,11 @@ NSString *const kFHToastCountKey = @"kFHToastCountKey";
 
 + (void)silentFollowHouseWithConfigModel:(FHHouseFollowUpConfigModel *)configModel completionBlock:(void(^)(BOOL isSuccess))completionBlock
 {
+    
+    if ([FHUtils getSettingEnableBooleanForKey:@"f_login_before_house_subscribe"]) {
+        return;
+    }
+    
     if (![TTReachability isNetworkConnected]) {
         if (completionBlock) {
             completionBlock(NO);

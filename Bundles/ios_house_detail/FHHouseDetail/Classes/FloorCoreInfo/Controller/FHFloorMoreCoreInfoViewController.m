@@ -11,6 +11,8 @@
 #import "FHDetailDisclaimerCell.h"
 #import "FHFloorCoreInfoViewModel.h"
 #import <FHHouseBase/FHBaseTableView.h>
+#import "FHLynxView.h"
+#import "FHLynxManager.h"
 
 @interface FHFloorMoreCoreInfoViewController () <TTRouteInitializeProtocol>
 
@@ -18,6 +20,7 @@
 @property (nonatomic , strong) FHFloorCoreInfoViewModel *coreInfoListViewModel;
 @property (nonatomic , strong) NSString *courtId;
 @property(nonatomic , strong) FHDetailHouseNameModel *houseNameModel;
+@property(nonatomic, strong) FHLynxView *lynxView;
 
 @end
 
@@ -34,12 +37,17 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-
-    [self setUpinfoListTable];
+    
+    if ([[FHLynxManager sharedInstance] checkChannelTemplateIsAvalable:@"lynx_estate_info" templateKey:@"0"]) {
+        [self setUpLynxView];
+    }else{
+        [self setUpinfoListTable];
+    }
     
     [self addDefaultEmptyViewFullScreen];
     
     _coreInfoListViewModel = [[FHFloorCoreInfoViewModel alloc] initWithController:self tableView:_infoListTable courtId:_courtId houseNameModel:_houseNameModel];
+    _coreInfoListViewModel.lynxView = self.lynxView;
     _coreInfoListViewModel.navBar = [self getNaviBar];
     self.viewModel = self.coreInfoListViewModel; // IM线索使用，不可以删除
     
@@ -73,6 +81,15 @@
         make.bottom.equalTo([self getBottomBar].mas_top);
     }];
     
+}
+
+- (void)setUpLynxView{
+    _lynxView = [[FHLynxView alloc] initWithFrame:CGRectMake(0, [self getNaviBar].frame.size.height, self.view.frame.size.width,self.view.frame.size.height - 80 - [self getNaviBar].frame.size.height - [self.coreInfoListViewModel getSafeTop]  - [self.coreInfoListViewModel getSafeBottom])];
+    [self.view addSubview:_lynxView];
+    FHLynxViewBaseParams *baesparmas = [[FHLynxViewBaseParams alloc] init];
+    baesparmas.channel = @"lynx_estate_info";
+    baesparmas.bridgePrivate = self;
+    [_lynxView loadLynxWithParams:baesparmas];
 }
 
 /*

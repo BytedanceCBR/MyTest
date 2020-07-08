@@ -78,7 +78,7 @@ static NSInteger kGetLightRequestRetryCount = 3;
     
     if (![FHEnvContext isNetworkConnected])
     {
-        [[ToastManager manager] showToast:@"网络错误"];
+        [[ToastManager manager] showToast:@"网络异常"];
         return;
     }
     
