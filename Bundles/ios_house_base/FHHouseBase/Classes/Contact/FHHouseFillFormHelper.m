@@ -284,6 +284,9 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
     params[@"growth_deepevent"] = @(1);
 
     params[@"item_id"] = reportParams[@"item_id"] ? : @"be_null";
+    if (reportParams[@"event_tracking_id"]) {
+        params[@"event_tracking_id"] = reportParams[@"event_tracking_id"];
+    }
 
     [FHUserTracker writeEvent:@"inform_show" params:params];
 }
@@ -316,6 +319,9 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
     }
     params[@"agency_list"] = dict.count > 0 ? dict : @"be_null";
     params[@"growth_deepevent"] = @(1);
+    if (reportParams[@"event_tracking_id"]) {
+        params[@"event_tracking_id"] = reportParams[@"event_tracking_id"];
+    }
     [FHUserTracker writeEvent:@"click_confirm" params:params];
 }
 

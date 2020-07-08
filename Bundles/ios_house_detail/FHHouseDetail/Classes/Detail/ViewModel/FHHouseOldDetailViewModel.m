@@ -67,6 +67,8 @@
 #import "FHVRPreloadManager.h"
 #import "TTSettingsManager.h"
 #import "FHhouseDetailRGCListCell.h"
+#import "TTAccountManager.h"
+
 extern NSString *const kFHPhoneNumberCacheKey;
 extern NSString *const kFHSubscribeHouseCacheKey;
 extern NSString *const kFHPLoginhoneNumberCacheKey;
@@ -221,6 +223,7 @@ logPB:self.listLogPB extraInfo:self.extraInfo completion:^(FHDetailOldModel * _N
         [self addDetailCoreInfoExcetionLog];
     }
     if (model.data.vouchModel && model.data.vouchModel.vouchStatus == 1) {
+        self.navBar.pageType = [self pageTypeString];
         [self.navBar configureVouchStyle];
     }
     // 清空数据源
@@ -235,8 +238,7 @@ logPB:self.listLogPB extraInfo:self.extraInfo completion:^(FHDetailOldModel * _N
         contactPhone = model.data.contact;
         contactPhone.unregistered = YES;
     }
-    if (contactPhone.phone.length > 0) {
-        
+    if (contactPhone.enablePhone) {
         if ([self isShowSubscribe]) {
             contactPhone.isFormReport = YES;
         }else {
@@ -311,6 +313,12 @@ logPB:self.listLogPB extraInfo:self.extraInfo completion:^(FHDetailOldModel * _N
         if (model.data.vouchModel && model.data.vouchModel.vouchStatus == 1) {
             houseTitleModel.businessTag = @"企业担保";
             houseTitleModel.advantage = model.data.vouchModel.vouchText;
+            houseTitleModel.isCanClick = YES;
+            NSString *url = @"sslocal://enterprise_guarantee?channel=lynx_enterprise_guarantee";
+            if([self pageTypeString].length > 0){
+                url = [url stringByAppendingFormat:@"&enter_from=%@",[self pageTypeString]];
+            }
+            houseTitleModel.clickUrl = url;
         }
         headerCellModel.vrModel = model.data.vrData;
         headerCellModel.vedioModel = itemModel;// 添加视频模型数据
@@ -337,6 +345,12 @@ logPB:self.listLogPB extraInfo:self.extraInfo completion:^(FHDetailOldModel * _N
         if (model.data.vouchModel && model.data.vouchModel.vouchStatus == 1) {
             houseTitleModel.businessTag = @"企业担保";
             houseTitleModel.advantage = model.data.vouchModel.vouchText;
+            houseTitleModel.isCanClick = YES;
+            NSString *url = @"sslocal://enterprise_guarantee?channel=lynx_enterprise_guarantee";
+            if([self pageTypeString].length > 0){
+                url = [url stringByAppendingFormat:@"&enter_from=%@",[self pageTypeString]];
+            }
+            houseTitleModel.clickUrl = url;
         }
         
         headerCellModel.titleDataModel = houseTitleModel;
@@ -774,6 +788,13 @@ logPB:self.listLogPB extraInfo:self.extraInfo completion:^(FHDetailOldModel * _N
 {
     [super vc_viewDidAppear:animated];
     [self.agentListModel.phoneCallViewModel vc_viewDidAppear:animated];
+    
+    
+    if (self.contactViewModel.isShowLogin && ![TTAccountManager isLogin]) {
+        [[ToastManager manager] showToast:@"需要先登录才能进行操作哦"];
+        self.contactViewModel.isShowLogin = NO;
+    }
+    
 }
 
 // 周边数据请求，当网络请求都返回后刷新数据

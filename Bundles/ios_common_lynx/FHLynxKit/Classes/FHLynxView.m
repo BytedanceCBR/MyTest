@@ -21,10 +21,11 @@
 #import "UIViewController+Refresh_ErrorHandler.h"
 #import "BDWebViewBlankDetect.h"
 
+
 @implementation FHLynxViewBaseParams
 @end
 
-@interface FHLynxView()
+@interface FHLynxView()<LynxViewClient>
 @property (nonatomic, assign) CGRect lynxViewFrame;
 @property (nonatomic, copy) NSString *channel;
 @property (nonatomic, assign) NSTimeInterval loadTime; //页面加载时间
@@ -123,7 +124,9 @@
                builder.isUIRunningMode = YES;
                builder.config = [[LynxConfig alloc] initWithProvider:LynxConfig.globalConfig.templateProvider];
                [builder.config registerModule:[FHLynxCoreBridge class]];
-               [builder.config registerModule:weakSelf.params.clsPrivate param:weakSelf.params.bridgePrivate];
+               if(weakSelf.params.clsPrivate){
+                  [builder.config registerModule:weakSelf.params.clsPrivate param:weakSelf.params.bridgePrivate];
+               }
           }];
         _lynxView.layoutWidthMode = LynxViewSizeModeExact;
         _lynxView.layoutHeightMode = LynxViewSizeModeUndefined;
@@ -187,7 +190,7 @@
 
 //这里接收TTLynxViewClient抛上来的sizeChange事件
 - (void)lynxViewDidChangeIntrinsicContentSize:(LynxView*)view {
-    
+    NSLog(@"view.hight=",view.frame.size.height);
 }
 
 - (NSURL*)shouldRedirectImageUrl:(NSURL*)url {

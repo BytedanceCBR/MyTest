@@ -7,8 +7,7 @@
 
 #import "FHDetailBaseCell.h"
 #import "FHDetailBaseModel.h"
-
-@class FHDetailNewDataCoreInfoSaleStatusModel;
+#import <FHHouseBase/FHSaleStatusModel.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -22,7 +21,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy)     NSString       *title;
 @property (nonatomic, copy)     NSString       *pricing;
 @property (nonatomic, copy)     NSString       *pricingPerSqm;
-@property (nonatomic, copy)     FHDetailNewDataCoreInfoSaleStatusModel       *saleStatus;
+@property (nonatomic, copy)     FHSaleStatusModel       *saleStatus;
 
 @end
 NS_ASSUME_NONNULL_END
