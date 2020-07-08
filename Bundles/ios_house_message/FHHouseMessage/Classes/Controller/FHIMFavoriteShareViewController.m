@@ -379,7 +379,7 @@
     trace[@"conversation_id"] = self.shareViewModel.conversactionId ? : @"";
     trace[@"log_pb"] = @"be_null";
     trace[@"send_total"] = @([self.shareViewModel.selectedItems count]);
-    [[FHHouseErrorHubManager sharedInstance] checkBuryingPointWithEvent:@"click_send" Params:trace errorHubType:FHErrorHubTypeBuryingPoint];
+    [[FHHouseErrorHubManager sharedInstance] checkBuryingPointWithEvent:@"click_send" Params:trace];
     [BDTrackerProtocol eventV3:@"click_send" params:trace];
 }
 

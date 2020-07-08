@@ -46,11 +46,12 @@
 
 + (BOOL)fh_isInHouseApp
 {
-    NSRange isRange = [[TTSandBoxHelper bundleIdentifier] rangeOfString:@"fp1" options:NSCaseInsensitiveSearch];
-    if (isRange.location != NSNotFound) {
-        return YES;
-    }
-    return NO;
+    return YES;
+//    NSRange isRange = [[TTSandBoxHelper bundleIdentifier] rangeOfString:@"fp1" options:NSCaseInsensitiveSearch];
+//    if (isRange.location != NSNotFound) {
+//        return YES;
+//    }
+//    return NO;
 }
 
 + (NSString *)fhBuildVersion

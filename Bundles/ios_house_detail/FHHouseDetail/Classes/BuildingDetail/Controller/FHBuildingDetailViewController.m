@@ -275,7 +275,7 @@
 //    else {
 //        contactPhone = model.data.contact;
 //    }
-    if (contactPhone.phone.length > 0) {
+    if (contactPhone.enablePhone) {
         contactPhone.isFormReport = NO;
     }else {
         contactPhone.isFormReport = YES;
@@ -349,7 +349,7 @@
 //        }
         NSDictionary *associateInfoDict = nil;
         FHDetailContactModel *contactPhone = self.contactViewModel.contactPhone;
-        if (contactPhone.phone.length > 0) {
+        if (contactPhone.enablePhone) {
             associateInfoDict = self.viewModel.buildingDetailModel.data.associateInfo.phoneInfo;
         }else {
             associateInfoDict = self.viewModel.buildingDetailModel.data.associateInfo.reportFormInfo;
@@ -589,8 +589,8 @@
     if (dic && [dic isKindOfClass:[NSDictionary class]]) {
         NSMutableDictionary *tracerDic = dic.mutableCopy;
         tracerDic[@"is_im"] = contactPhone.imOpenUrl.length ? @"1" : @"0";
-        tracerDic[@"is_call"] = contactPhone.phone.length < 1 ? @"0" : @"1";
-        tracerDic[@"is_report"] = contactPhone.phone.length < 1 ? @"1" : @"0";
+        tracerDic[@"is_call"] = contactPhone.enablePhone  ? @"0" : @"1";
+        tracerDic[@"is_report"] = contactPhone.enablePhone ? @"1" : @"0";
         tracerDic[@"is_online"] = contactPhone.unregistered ? @"1" : @"0";
         tracerDic[@"element_from"] = @"building";
         tracerDic[@"event_tracking_id"] = @"70952";

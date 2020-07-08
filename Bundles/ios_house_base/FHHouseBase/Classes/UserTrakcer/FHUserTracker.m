@@ -33,7 +33,7 @@
     
     NSMutableDictionary *params = [NSMutableDictionary dictionaryWithDictionary:param];
     [params addEntriesFromDictionary:[self basicParam]];
-    [[FHHouseErrorHubManager sharedInstance] checkBuryingPointWithEvent:event Params:params errorHubType:FHErrorHubTypeBuryingPoint];
+    [[FHHouseErrorHubManager sharedInstance] checkBuryingPointWithEvent:event Params:params];
     [BDTrackerProtocol eventV3:event params:params];
 }
 
@@ -44,7 +44,7 @@
     }    
     NSMutableDictionary *param = [model logDict];
     [param addEntriesFromDictionary:[self basicParam]];
-      [[FHHouseErrorHubManager sharedInstance] checkBuryingPointWithEvent:event Params:param errorHubType:FHErrorHubTypeBuryingPoint];
+      [[FHHouseErrorHubManager sharedInstance] checkBuryingPointWithEvent:event Params:param];
     [BDTrackerProtocol eventV3:event params:param];
 }
 
