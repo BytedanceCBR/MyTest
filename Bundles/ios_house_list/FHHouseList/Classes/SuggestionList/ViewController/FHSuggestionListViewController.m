@@ -221,12 +221,14 @@
     self.viewModel.segmentControl = _segmentControl;
     [self bindTopIndexChanged];
     [self.topView addSubview:_segmentControl];
+    NSInteger count = _segmentControl.sectionTitles.count;
+    float tabMargin = ([UIScreen mainScreen].bounds.size.width - (count - 1) * 32 - count * 36 - 18) / 2;
     [_segmentControl mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerX.equalTo(_topView);
         make.height.mas_equalTo(44);
         make.bottom.mas_equalTo(-60);
-        make.left.mas_equalTo(50);
-        make.right.mas_equalTo(-50);
+        make.left.mas_equalTo(tabMargin);
+        make.right.mas_equalTo(-tabMargin);
     }];
 }
 
