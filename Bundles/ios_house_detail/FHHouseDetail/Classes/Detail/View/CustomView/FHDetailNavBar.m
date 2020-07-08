@@ -12,6 +12,7 @@
 #import "TTDeviceHelper.h"
 #import <ReactiveObjC/ReactiveObjC.h>
 #import <FHHouseBase/UIImage+FIconFont.h>
+#import <TTRoute.h>
 
 @interface FHDetailNavBar ()
 
@@ -40,6 +41,7 @@
 @property(nonatomic , strong) UIImage *shareWhiteImage;
 @property(nonatomic , strong) UIImage *messageBlackImage;
 @property(nonatomic , strong) UIImage *messageWhiteImage;
+
 @end
 
 @implementation FHDetailNavBar
@@ -122,6 +124,9 @@
     if (!_vouchView) {
         self.vouchView = [[UIView alloc] init];
         [self.bgView addSubview:self.vouchView];
+        
+        UITapGestureRecognizer* singleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(goToJump)];
+        [self.vouchView addGestureRecognizer:singleTap];
         
         UIImageView *vouchIconImageView = [[UIImageView alloc] init];
         vouchIconImageView.image = [UIImage imageNamed:@"detail_header_top_icon"];
@@ -309,6 +314,9 @@
             
             self.vouchView.hidden = NO;
             self.gradientLayer.hidden = NO;
+            self.messageDotNumber.backgroundColor = [UIColor whiteColor];
+            self.messageDotNumber.textColor = [UIColor themeOrange1];
+
         } else {
             [_backBtn setImage:self.backBlackImage forState:UIControlStateNormal];
             [_backBtn setImage:self.backBlackImage forState:UIControlStateHighlighted];
@@ -319,6 +327,8 @@
             [_shareBtn setImage:self.shareBlackImage forState:UIControlStateHighlighted];
             [_messageBtn setImage:self.messageBlackImage forState:UIControlStateNormal];
             [_messageBtn setImage:self.messageBlackImage forState:UIControlStateHighlighted];
+            self.messageDotNumber.backgroundColor = [UIColor themeOrange1];
+            self.messageDotNumber.textColor = [UIColor whiteColor];
         }
         
     }else {
@@ -332,6 +342,8 @@
         [_shareBtn setImage:self.shareWhiteImage forState:UIControlStateHighlighted];
         [_messageBtn setImage:self.messageWhiteImage forState:UIControlStateNormal];
         [_messageBtn setImage:self.messageWhiteImage forState:UIControlStateHighlighted];
+        self.messageDotNumber.backgroundColor = [UIColor themeOrange1];
+        self.messageDotNumber.textColor = [UIColor whiteColor];
         if (self.isForVouch) {
             self.vouchView.hidden = YES;
             self.gradientLayer.hidden = YES;
@@ -508,6 +520,17 @@
 - (void)showMessageNumber {
     if (self.messageDotNumber.text.length>0) {
         self.messageDotNumber.hidden = NO;
+    }
+}
+
+- (void)goToJump {
+    NSString *url = @"sslocal://enterprise_guarantee?channel=lynx_enterprise_guarantee";
+    if(self.pageType.length > 0){
+        url = [url stringByAppendingFormat:@"&enter_from=%@",self.pageType];
+    }
+    if(url.length > 0){
+        NSURL *openUrl = [NSURL URLWithString:url];
+        [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:nil];
     }
 }
 

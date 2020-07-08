@@ -272,6 +272,7 @@
     traceParam[@"enter_type"] = enterType ? enterType : @"be_null";
     traceParam[@"rank"] = cellModel.tracerDic[@"rank"];
     traceParam[@"log_pb"] = cellModel.logPb;
+    dict[@"data"] = cellModel;
     dict[@"tracer"] = traceParam;
     dict[@"social_group_id"] = cellModel.community.socialGroupId ?: @"";
     TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];

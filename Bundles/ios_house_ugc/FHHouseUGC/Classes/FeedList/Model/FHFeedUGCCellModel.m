@@ -107,6 +107,10 @@
         }
     }else if([content isKindOfClass:[NSDictionary class]]){
         dic = content;
+        NSAssert([NSJSONSerialization isValidJSONObject:dic], @"数据异常，一定要跟踪到");
+        if (![NSJSONSerialization isValidJSONObject:dic]) {
+            return nil;
+        }
         jsonStr = [dic tt_JSONRepresentation];
         jsonData = [jsonStr dataUsingEncoding:NSUTF8StringEncoding];
     }else{

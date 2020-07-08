@@ -53,6 +53,8 @@
 #import "FHDetailAccessCellModel.h"
 #import "FHDetailPictureViewController.h"
 #import "FHhouseDetailRGCListCell.h"
+#import "FHDetailNewBuildingsCell.h"
+#import "TTAccountManager.h"
 
 @interface FHHouseNewDetailViewModel ()
 
@@ -109,6 +111,8 @@
     
     //顾问点评
     [self.tableView registerClass:[FHhouseDetailRGCListCell class] forCellReuseIdentifier:NSStringFromClass([FHhouseDetailRGCListCellModel class])];
+    
+    [self.tableView registerClass:[FHDetailNewBuildingsCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailNewBuildingsCellModel class])];
 }
 
 // cell identifier
@@ -408,11 +412,7 @@
     }else {
         contactPhone = model.data.contact;
     }
-    if (contactPhone.phone.length > 0) {
-        contactPhone.isFormReport = NO;
-    }else {
-        contactPhone.isFormReport = YES;
-    }
+    contactPhone.isFormReport = !contactPhone.enablePhone;
     self.contactViewModel.contactPhone = contactPhone;
     self.contactViewModel.shareInfo = model.data.shareInfo;
     self.contactViewModel.followStatus = model.data.userStatus.courtSubStatus;
@@ -681,8 +681,8 @@
         NSString *searchId = self.listLogPB[@"search_id"];
         NSString *imprId = self.listLogPB[@"impr_id"];
         NSDictionary *extraDic = @{
-            @"searchId":searchId,
-            @"imprId":imprId,
+            @"searchId":searchId?:@"be_null",
+            @"imprId":imprId?:@"be_null",
             @"houseId":self.houseId,
             @"houseType":@(self.houseType),
             @"channelId":@"f_hosue_wtt"
@@ -763,6 +763,14 @@
         [params setValue:model.data.coreInfo.name forKey:@"name"];
         
         [[HMDTTMonitor defaultManager] hmdTrackService:eventName metric:nil category:cat extra:params];
+    }
+    
+    //楼栋信息
+    if (model.data.buildingInfo && model.data.buildingInfo.list.count) {
+        FHDetailNewBuildingsCellModel *buildingCellModel = [[FHDetailNewBuildingsCellModel alloc] init];
+        buildingCellModel.houseModelType = FHHouseModelTypeNewBuildingInfo;
+        buildingCellModel.buildingInfo = model.data.buildingInfo;
+        [self.items addObject:buildingCellModel];
     }
     
     //    //周边配套
@@ -902,6 +910,15 @@
     param[@"click_position"] = position;
     
     TRACK_EVENT(@"click_options", param);
+}
+
+- (void)vc_viewDidAppear:(BOOL)animated
+{
+    [super vc_viewDidAppear:animated];
+    if (self.contactViewModel.isShowLogin && ![TTAccountManager isLogin]) {
+        [[ToastManager manager] showToast:@"需要先登录才能进行操作哦"];
+        self.contactViewModel.isShowLogin = NO;
+    }
 }
 
 - (BOOL)isMissTitle

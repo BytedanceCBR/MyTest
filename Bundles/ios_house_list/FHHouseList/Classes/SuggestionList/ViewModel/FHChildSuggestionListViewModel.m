@@ -884,6 +884,7 @@
 
 - (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView {
     // 开始拖拽滑动时，收起键盘
+    self.listController.fatherVC.collectionView.scrollEnabled = NO;
     [[[UIApplication sharedApplication] keyWindow] endEditing:YES];
 }
 

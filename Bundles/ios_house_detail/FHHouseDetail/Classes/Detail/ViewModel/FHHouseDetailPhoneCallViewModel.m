@@ -66,7 +66,7 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
     associateIMModel.associateInfo = extra[kFHAssociateInfo];
     BOOL isUseContactBizTrace = [extra[@"realtor_position"] isEqualToString:@"detail_button"] || [extra[@"realtor_position"] isEqualToString:@"detail_related"];
     if (contactPhone.bizTrace && [extra isKindOfClass:[NSDictionary class]] && isUseContactBizTrace) {
-        if(extra[@"source_from"] && [extra[@"source_from"] isEqualToString:@"education_type"]){\
+        if(extra[@"source_from"] && [extra[@"source_from"] isEqualToString:@"education_type"]){
             associateIMModel.extraInfo = @{@"biz_trace":self.houseInfoBizTrace};
         }else{
             associateIMModel.extraInfo = @{@"biz_trace":contactPhone.bizTrace};
@@ -84,11 +84,12 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
     // IM 相关埋点上报参数
     FHAssociateReportParams *reportParams = [FHAssociateReportParams new];
     reportParams.enterFrom = self.tracerDict[@"enter_from"] ? : @"be_null";
+    reportParams.houseType = self.tracerDict[@"house_type"] ? : @"be_null";
     reportParams.elementFrom = self.tracerDict[@"element_from"] ? : @"be_null";
     reportParams.originFrom = self.tracerDict[@"origin_from"] ? : @"be_null";
     reportParams.logPb = self.tracerDict[@"log_pb"];
     reportParams.originSearchId = self.tracerDict[@"origin_search_id"] ? : @"be_null";
-    reportParams.rank = (rank.length > 0) ? rank : (self.tracerDict[@"rank"] ? : @"be_null");
+    reportParams.rank = self.tracerDict[@"rank"] ? : @"be_null";
     reportParams.cardType = self.tracerDict[@"card_type"] ? : @"be_null";
     reportParams.pageType = self.tracerDict[@"page_type"] ?: @"be_null";
     reportParams.realtorId = contactPhone.realtorId;
@@ -98,6 +99,7 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
     reportParams.extra = extra;
     reportParams.realtorPosition = extra[@"realtor_position"];
     reportParams.searchId = self.tracerDict[@"search_id"] ? : @"be_null";
+    reportParams.fromGid = self.tracerDict[@"from_gid"] ? : @"be_null";
     
     if(self.tracerDict[@"group_id"]) {
         reportParams.groupId = self.tracerDict[@"group_id"];
