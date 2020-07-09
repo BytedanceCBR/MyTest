@@ -6,6 +6,8 @@
 //
 
 #import "FHUtils.h"
+#import "NSDictionary+TTAdditions.h"
+#import "TTSettingsManager.h"
 
 @implementation FHUtils
 
@@ -232,4 +234,8 @@
     return image;
 }
 
++(BOOL)getSettingEnableBooleanForKey:(NSString *)key{
+    NSDictionary *fhSettings= [[TTSettingsManager sharedManager] settingForKey:@"f_settings" defaultValue:@{} freeze:YES];
+    return [fhSettings tt_boolValueForKey:key];
+}
 @end

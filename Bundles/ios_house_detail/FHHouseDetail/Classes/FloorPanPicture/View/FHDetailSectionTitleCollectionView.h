@@ -9,7 +9,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface FHPictureListTitleCollectionView : UICollectionReusableView
+@interface FHDetailSectionTitleCollectionView : UICollectionReusableView
 
 @property (nonatomic, strong) UILabel *titleLabel;
 

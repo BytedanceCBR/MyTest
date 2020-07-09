@@ -331,6 +331,10 @@
     }
 }
 
+- (void)goToCommunityDetail:(FHFeedUGCCellModel *)cellModel {
+    [self.detailJumpManager goToCommunityDetail:cellModel];
+}
+
 - (void)lookAllLinkClicked:(FHFeedUGCCellModel *)cellModel cell:(nonnull FHUGCBaseCell *)cell {
     self.currentCellModel = cellModel;
     self.currentCell = cell;
@@ -355,20 +359,25 @@
         NSString *content = contentModel.data[m];
         FHFeedUGCCellModel *model = [FHFeedUGCCellModel modelFromFeed:content];
         model.realtorIndex = m;
+        model.isShowLineView = m < contentModel.data.count -1;
         switch (model.cellType) {
             case FHUGCFeedListCellTypeUGC:
                 model.cellSubType = FHUGCFeedListCellSubTypeUGCBrokerImage;
-                contentHeight = model.contentHeight  +75 + 30 + 50 +contentHeight + 40;
+                ///内容高度 + 图片高度 + 距离顶部高度 + 底部高度
+                contentHeight = model.contentHeight  + (model.imageList.count == 0?0:75 + 30) + 40 +contentHeight + 40;
                 break;
             case FHUGCFeedListCellTypeUGCSmallVideo:
                 model.cellSubType = FHUGCFeedListCellSubTypeUGCBrokerVideo;
-                contentHeight = model.contentHeight  +150 + 30 + 50 +contentHeight + 90;
+                ///内容高度 + 视频高度 + 距离顶部高度 + 底部高度
+                contentHeight = model.contentHeight  +150 + 10 + 40 +contentHeight + 90;
                 break;
             default:
                 break;
         }
         model.tracerDic = self.detailTracerDic;
-        [dataArr addObject:model];
+        if (model) {
+            [dataArr addObject:model];
+        }
     }
     contentModel.fHFeedUGCCellModelDataArr = dataArr;
     self.cellHeight = contentHeight;

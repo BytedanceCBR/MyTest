@@ -89,7 +89,7 @@
 - (void)setupUI {
     
     NSString *login_suggest_method = @"";
-    NSMutableDictionary *tracerDict = [self.tracerModel logDict].mutableCopy;
+    NSMutableDictionary *tracerDict = self.tracerDict.mutableCopy;
     switch (self.viewType) {
         case FHLoginViewTypeOneKey: {
             tracerDict[@"carrier_one_click_show"] = @(1);
