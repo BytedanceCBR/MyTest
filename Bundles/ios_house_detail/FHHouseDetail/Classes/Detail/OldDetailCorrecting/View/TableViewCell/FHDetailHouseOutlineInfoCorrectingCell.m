@@ -20,6 +20,7 @@
 #import "TTAccountManager.h"
 #import "TTSandBoxHelper.h"
 #import "FHDetailFoldViewButton.h"
+#import "FHDetailFeedbackButton.h"
 
 #define foldHeight 367 //当文本高度+标题高度（36）+headerView高度（52+18）>367折叠
 
@@ -29,7 +30,7 @@
 @property (nonatomic, weak) FHDetailFoldViewButton *foldButton;
 @property (nonatomic, weak) UIView *containerView;
 @property (nonatomic, weak) UIImageView *shadowImage;
-@property (nonatomic, weak) UIButton *infoButton;
+@property (nonatomic, weak) FHDetailFeedbackButton *infoButton;
 @property (nonatomic, assign) CGFloat contentHeight;
 @property(nonatomic, weak) UIView *bottomGradientView;
 @property (nonatomic, strong) NSMutableArray *itemsArr;
@@ -77,6 +78,8 @@
         }];
     }
     _infoButton.hidden = model.hideReport;
+    FHDetailOldDataModel *ershouData = [(FHDetailOldModel *)model.baseViewModel.detailData data];
+    [self.infoButton updateWithDetailTracerDic:self.baseViewModel.detailTracerDic.copy listLogPB:self.baseViewModel.listLogPB jsonDic:[ershouData toDictionary]  reportUrl:model.houseOverreview.reportUrl];
     _contentHeight = 70; //header高度
     __block UIView *lastView = self.containerView;
     if (model.houseOverreview.list.count > 0) {
@@ -169,20 +172,11 @@
     return _headerView;
 }
 
-- (UIButton *)infoButton {
+- (FHDetailFeedbackButton *)infoButton {
     if (!_infoButton) {
-        UIButton *infoButton = [[UIButton alloc] init];
-        [infoButton setImage:[UIImage imageNamed:@"reportimage"] forState:UIControlStateNormal];
-        [infoButton setTitle:@"举报" forState:UIControlStateNormal];
-        NSAttributedString *attriStr = [[NSAttributedString alloc] initWithString:@"举报" attributes:@{
-                                                                                                     NSFontAttributeName:[UIFont themeFontRegular:12],
-                                                                                                     NSForegroundColorAttributeName:[UIColor themeGray3]
-                                                                                                     }];
-        [infoButton setAttributedTitle:attriStr forState:UIControlStateNormal];
-         [infoButton addTarget:self action:@selector(feedBackButtonClick:) forControlEvents:UIControlEventTouchUpInside];
-        infoButton.titleEdgeInsets = UIEdgeInsetsMake(0, 5, 0, -5);
-        [self.headerView addSubview:infoButton];
-        _infoButton = infoButton;
+        FHDetailFeedbackButton *button = [[FHDetailFeedbackButton alloc] init];
+        [self.headerView addSubview:button];
+        _infoButton = button;
     }
     return _infoButton;
 }
@@ -265,38 +259,26 @@
     }];
 
 }
-
-- (void)feedBackButtonClick:(UIButton *)button {
-    NSMutableDictionary *tracerDic = self.baseViewModel.detailTracerDic.mutableCopy;
-    tracerDic[@"log_pb"] = self.baseViewModel.listLogPB ? self.baseViewModel.listLogPB : @"be_null";
-    [FHUserTracker writeEvent:@"click_feedback" params:tracerDic];
-//    if ([TTAccountManager isLogin]) {
-        [self gotoReportVC];
-//    } else {
-//        [self gotoLogin];
-//    }
-}
-
-- (void)gotoLogin {
-    NSMutableDictionary *params = [NSMutableDictionary dictionary];
-    [params setObject:@"old_feedback" forKey:@"enter_from"];
-    [params setObject:@"feedback" forKey:@"enter_type"];
-    // 登录成功之后不自己Pop，先进行页面跳转逻辑，再pop
-    [params setObject:@(NO) forKey:@"need_pop_vc"];
-    __weak typeof(self) wSelf = self;
-    [TTAccountLoginManager showAlertFLoginVCWithParams:params completeBlock:^(TTAccountAlertCompletionEventType type, NSString * _Nullable phoneNum) {
-        if (type == TTAccountAlertCompletionEventTypeDone) {
-            // 登录成功
-            if ([TTAccountManager isLogin]) {
-                [wSelf gotoReportVC];
-            }
-            // 移除登录页面
-            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.7 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                [wSelf delayRemoveLoginVC];
-            });
-        }
-    }];
-}
+//- (void)gotoLogin {
+//    NSMutableDictionary *params = [NSMutableDictionary dictionary];
+//    [params setObject:@"old_feedback" forKey:@"enter_from"];
+//    [params setObject:@"feedback" forKey:@"enter_type"];
+//    // 登录成功之后不自己Pop，先进行页面跳转逻辑，再pop
+//    [params setObject:@(NO) forKey:@"need_pop_vc"];
+//    __weak typeof(self) wSelf = self;
+//    [TTAccountLoginManager showAlertFLoginVCWithParams:params completeBlock:^(TTAccountAlertCompletionEventType type, NSString * _Nullable phoneNum) {
+//        if (type == TTAccountAlertCompletionEventTypeDone) {
+//            // 登录成功
+//            if ([TTAccountManager isLogin]) {
+//                [wSelf gotoReportVC];
+//            }
+//            // 移除登录页面
+//            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.7 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+//                [wSelf delayRemoveLoginVC];
+//            });
+//        }
+//    }];
+//}
 
 - (void)foldButtonClick:(UIButton *)btn {
     FHDetailHouseOutlineInfoCorrectingModel *model = (FHDetailHouseOutlineInfoCorrectingModel *)self.currentData;
@@ -332,35 +314,6 @@
         }
     }
 }
-
-// 二手房-房源问题反馈
-- (void)gotoReportVC {
-    FHDetailHouseOutlineInfoCorrectingModel *model = (FHDetailHouseOutlineInfoCorrectingModel *)self.currentData;
-    FHDetailOldDataModel *ershouData = [(FHDetailOldModel *)model.baseViewModel.detailData data];
-    NSDictionary *jsonDic = [ershouData toDictionary];
-    if (model && model.houseOverreview.reportUrl.length > 0 && jsonDic) {
-        
-        NSString *openUrl = @"sslocal://webview";
-        NSDictionary *pageData = @{@"data":jsonDic};
-        NSDictionary *commonParams = [[FHEnvContext sharedInstance] getRequestCommonParams];
-        if (commonParams == nil) {
-            commonParams = @{};
-        }
-        NSDictionary *commonParamsData = @{@"data":commonParams};
-        NSDictionary *jsParams = @{@"requestPageData":pageData,
-                                   @"getNetCommonParams":commonParamsData
-                                   };
-        NSString * host = [FHURLSettings baseURL] ?: @"https://i.haoduofangs.com";
-        if ([TTSandBoxHelper isInHouseApp] && [[NSUserDefaults standardUserDefaults]boolForKey:@"BOE_OPEN_KEY"]) {
-            host = @"http://i.haoduofangs.com.boe-gateway.byted.org";
-        }
-        NSString *urlStr = [NSString stringWithFormat:@"%@%@",host,model.houseOverreview.reportUrl];
-        NSDictionary *info = @{@"url":urlStr,@"fhJSParams":jsParams,@"title":@"房源问题反馈"};
-        TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:info];
-        [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:openUrl] userInfo:userInfo];
-    }
-}
-
 - (NSString *)elementTypeString:(FHHouseType)houseType {
     return @"house_info";
 }

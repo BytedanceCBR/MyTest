@@ -13,6 +13,7 @@
 #import "UILabel+House.h"
 #import "UIColor+Theme.h"
 #import "FHDetailTopBannerView.h"
+#import "FHDetailFeedbackButton.h"
 #import <FHHouseBase/UIImage+FIconFont.h>
 
 @interface FHDetailHeaderTitleView ()
@@ -23,6 +24,7 @@
 @property (nonatomic, weak) UILabel *addressLab;
 @property (nonatomic, weak) UILabel *totalPirce;//仅户型详情页x展示
 @property (nonatomic, weak) UIControl *priceAskView;
+@property (nonatomic, weak) FHDetailFeedbackButton *infoButton;
 
 @property (nonatomic, strong) FHDetailTopBannerView *topBanner;
 
@@ -100,6 +102,15 @@
         _addressLab = addressLab;
     }
     return _addressLab;
+}
+
+- (FHDetailFeedbackButton *)infoButton {
+    if (!_infoButton) {
+        FHDetailFeedbackButton *button = [[FHDetailFeedbackButton alloc] init];
+        [self addSubview:button];
+        _infoButton = button;
+    }
+    return _infoButton;
 }
 
 - (UIButton *)mapBtn {
@@ -413,6 +424,16 @@
                 make.top.mas_equalTo(self.topBanner.mas_bottom).mas_offset(30);
                 make.height.mas_offset(tagHeight);
             }];
+            //1.0.3把反馈按钮移到此处
+            [self.infoButton mas_makeConstraints:^(MASConstraintMaker *make) {
+                make.centerY.mas_equalTo(self.tagBacView);
+                make.height.mas_equalTo(16);
+                make.right.mas_equalTo(-31);
+                make.width.mas_equalTo(46);
+            }];
+            FHDetailOldDataModel *ershouData = [(FHDetailOldModel *)self.baseViewModel.detailData data];
+            [self.infoButton updateWithDetailTracerDic:self.baseViewModel.detailTracerDic.copy listLogPB:self.baseViewModel.listLogPB jsonDic:[ershouData toDictionary]  reportUrl:model.reportUrl];
+            
             [self.nameLabel mas_makeConstraints:^(MASConstraintMaker *make) {
                 make.left.mas_equalTo(self).offset(31);
                 make.right.mas_equalTo(self).offset(-35);
@@ -461,6 +482,9 @@
         CGFloat itemWidth = itemSize.width + 18;
         maxWidth += itemWidth + inset;
         CGFloat tagWidth = [UIScreen mainScreen].bounds.size.width - 30;
+        if (model.housetype == FHHouseTypeSecondHandHouse) {
+            tagWidth -= 46;
+        }
         if (maxWidth >= tagWidth) {
             *stop = YES;
         }else {
