@@ -359,9 +359,9 @@
             if ([element_type isEqualToString:@"building"]) {
                 tracerDic[@"event_tracking_id"] = @"70949";
             }
-            
+//            tracerDic[@"event_id"] = @"70949";
             [FHUserTracker writeEvent:@"element_show" params:tracerDic];
-            [[FHHouseErrorHubManager sharedInstance] checkBuryingPointWithEvent:@"element_show" Params:tracerDic errorHubType:FHErrorHubTypeBuryingPoint];
+            [[FHHouseErrorHubManager sharedInstance] checkBuryingPointWithEvent:@"element_show" Params:tracerDic];
         }
         NSArray *element_array = [tempCell elementTypeStringArray:self.houseType];
         if (element_array.count > 0) {
