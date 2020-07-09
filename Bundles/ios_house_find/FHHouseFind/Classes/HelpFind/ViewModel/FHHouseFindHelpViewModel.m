@@ -263,9 +263,9 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
         }
     }
     //    NSLog(@"zjing query : %@",query);
-    YYCache *sendPhoneNumberCache = [[FHEnvContext sharedInstance].generalBizConfig sendPhoneNumberCache];
+    YYCache *sendPhoneNumberCache = [[FHEnvContext sharedInstance].generalBizConfig findHousePhoneNumberCache];
     
-    NSString *phoneNum = [sendPhoneNumberCache objectForKey:kFHPLoginhoneNumberCacheKey];
+    NSString *phoneNum = [sendPhoneNumberCache objectForKey:kFHFindHousePhoneNumberCacheKey];
     if (phoneNum.length < 1) {
         TTAccountUserEntity *userInfo = [TTAccount sharedAccount].user;
         phoneNum = userInfo.mobile;
