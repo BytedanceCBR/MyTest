@@ -66,7 +66,8 @@ def fhPods
     pod 'ios_house_im' , '0.2.12'
 #     pod 'ios_house_im' , :path => '../../../im/3'
 #    pod 'ios_house_im' , :git => 'git@code.byted.org:fproject/ios_house_im.git' , :commit => '2c5df6e99b285a43a98faa672cab41c449ffa202'
-    pod 'FHErrorHubManager', :git => 'git@code.byted.org:fproject/FHErrorHubManager.git' , :commit => '085816331a90f2c83051890c83b9ae95cba82bdd'
+#    pod 'FHErrorHubManager', :git => 'git@code.byted.org:fproject/FHErrorHubManager.git' , :commit => '085816331a90f2c83051890c83b9ae95cba82bdd'
+pod 'FHErrorHubManager', :path => '../../FHErrorHubManager'
 end
 
 def appDevelopPods
@@ -620,7 +621,7 @@ target 'NewsLiteInHouse' do
 end
 
 target 'f100' do
-    testPods
+#    testPods
     fhPods
     appPods
     appDevelopPods
