@@ -94,6 +94,9 @@
             }
             self.suspendSearchBar.searchTitles = titleArrays;
             self.suspendSearchBar.rollDatas = listData;
+        }else{
+            self.suspendSearchBar.searchTitles = @[];
+            self.suspendSearchBar.rollDatas = @[];
         }
     }];
 }
