@@ -66,7 +66,7 @@ def fhPods
     pod 'ios_house_im' , '0.2.12'
 #     pod 'ios_house_im' , :path => '../../../im/3'
 #    pod 'ios_house_im' , :git => 'git@code.byted.org:fproject/ios_house_im.git' , :commit => '2c5df6e99b285a43a98faa672cab41c449ffa202'
-    pod 'FHErrorHubManager', '1.0.7'
+    pod 'FHErrorHubManager', :git => 'git@code.byted.org:fproject/ios_house_im.git' , :commit => '2c5df6e99b285a43a98faa672cab41c449ffa202'
 end
 
 def appDevelopPods
