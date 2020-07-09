@@ -47,6 +47,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy) NSString *realtorPosition;
 @property (nonatomic, copy) NSString *conversationId;
 @property(nonatomic ,copy) NSString *position;
+@property(nonatomic ,copy) NSString *houseType;
+
 
 // 选填
 @property(nonatomic, copy) NSString *sourceFrom;

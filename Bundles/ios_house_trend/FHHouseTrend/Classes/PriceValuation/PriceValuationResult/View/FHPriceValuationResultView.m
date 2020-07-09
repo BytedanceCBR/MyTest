@@ -428,7 +428,7 @@
 
 - (void)updateView:(FHPriceValuationEvaluateModel *)model infoModel:(FHPriceValuationHistoryDataHistoryHouseListHouseInfoHouseInfoDictModel *)infoModel {
     if(model){
-        NSString *priceStr = [NSString stringWithFormat:@"%.0f",round([model.data.estimatePrice doubleValue]/self.unitPerSquare)];
+        NSString *priceStr = [NSString stringWithFormat:@"%.0f",round([model.data.estimatePrice doubleValue]/(100 * 10000.0))];
         self.priceLabel.attributedText = [self getPriceStr:priceStr];
         self.avgPriceLabel.attributedText = [self getAtributeStr:@"房屋均价 " content:model.data.estimatePricingPersqmStr];
         self.toLastMonthLabel.attributedText = [self getAtributeStr:@"环比上月 " content:model.data.estimatePriceRateStr];

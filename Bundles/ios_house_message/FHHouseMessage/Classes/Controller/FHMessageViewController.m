@@ -85,6 +85,7 @@
 
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
+    [self.viewModel refreshConversationList];
     [[FHPopupViewManager shared] triggerPopupView];
     [[FHPopupViewManager shared] triggerPendant];
 }
@@ -125,6 +126,11 @@
     [self setupDefaultNavBar:NO];
     self.customNavBarView.leftBtn.hidden = [self leftActionHidden];
     self.customNavBarView.title.text = @"消息";
+    //消息列表页UI改版
+    self.customNavBarView.title.font = [UIFont themeFontSemibold:18];
+    self.customNavBarView.bgView.hidden = YES;
+    self.customNavBarView.seperatorLine.hidden = YES;
+    self.customNavBarView.backgroundColor = [UIColor themeGray7];
 }
 
 - (BOOL)leftActionHidden {
@@ -153,8 +159,9 @@
     }];
 
     _tableView = [[FHBaseTableView alloc] init];
-    _tableView.backgroundColor = [UIColor whiteColor];
+    _tableView.backgroundColor = [UIColor themeGray7];
     _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+    _tableView.contentInset = UIEdgeInsetsMake(12, 0, 0, 0);
     self.automaticallyAdjustsScrollViewInsets = NO;
     if (@available(iOS 11.0 , *)) {
           _tableView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
