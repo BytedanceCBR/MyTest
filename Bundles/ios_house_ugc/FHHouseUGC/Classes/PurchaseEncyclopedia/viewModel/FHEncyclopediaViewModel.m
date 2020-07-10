@@ -13,7 +13,6 @@
 #import "UIViewAdditions.h"
 #import "UIDevice+BTDAdditions.h"
 #import "FHUGCencyclopediaTracerHelper.h"
-#import "TTReachability.h"
 @interface FHEncyclopediaViewModel()<UICollectionViewDelegate,UICollectionViewDataSource,FHEncyclopediaHeaderDelegate>
 @property (weak, nonatomic) FHEncyclopediaViewController *baseVC;
 @property (weak, nonatomic) UICollectionView *mainCollection;
@@ -37,10 +36,6 @@
         self.mainCollection = collectionView;
         self.encyclopediaHeader = header;
         self.encyclopediaHeader.delegate = self;
-        __weak typeof(self)Ws = self;
-        self.baseVC.emptyView.retryBlock = ^{
-           [Ws requestHeaderConfig];
-        };
         self.currentTabIndex = 0;
         self.tracerModel = tracerModel;
         self.categoryId = @"f_house_encyclopedia";
@@ -63,10 +58,6 @@
 }
 
 - (void)requestHeaderConfig {
-    if (![TTReachability isNetworkConnected]) {
-         [self.baseVC.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoNetWorkAndRefresh];
-    }
-    
     NSMutableDictionary *extraDic = [NSMutableDictionary dictionary];
     NSString *fCityId = [FHEnvContext getCurrentSelectCityIdFromLocal];
     if(fCityId){
