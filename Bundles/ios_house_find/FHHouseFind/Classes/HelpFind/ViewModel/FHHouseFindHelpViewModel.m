@@ -1021,7 +1021,7 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
         [attributedString appendAttributedString:[[NSMutableAttributedString alloc] initWithString:@"(必填)" attributes:@{NSFontAttributeName:[UIFont themeFontRegular:14], NSForegroundColorAttributeName:[UIColor themeGray4]}]];
         [headerView updateAttrTitle:attributedString showDelete:NO];
     }else {
-        [headerView updateTitle:@"您的联系方式？" showDelete:NO];
+        [headerView updateTitle:@"您的联系方式是？" showDelete:NO];
     }
     return headerView;
 }
