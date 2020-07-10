@@ -21,6 +21,7 @@
 #import "FHLynxPageBridge.h"
 #import "UIViewController+Refresh_ErrorHandler.h"
 #import "BDWebViewBlankDetect.h"
+#import "FHUtils.h"
 
 @interface FHLynxViewController ()<LynxViewClient>
 @property(nonatomic, assign) NSTimeInterval loadTime; //页面加载时间
@@ -66,11 +67,11 @@
           _requestParams = paramObj.allParams[@"request_params"];
           _reportParams = paramObj.allParams[@"report_params"];
             
+        
+            
           NSData *templateData =  [[FHLynxManager sharedInstance] lynxDataForChannel:channelName templateKey:[FHLynxManager defaultJSFileName] version:0];
           // 测试时使用
 //            templateData = [NSData dataWithContentsOfURL:[NSURL URLWithString:@"http://10.95.248.183:30334/card2/template.js?1593590670266"]];
-            
-            
           NSMutableDictionary *dataParams = [NSMutableDictionary new];
     
             
@@ -80,6 +81,13 @@
     
           [dataParams setValue:_requestParams forKey:@"request_params"];
           [dataParams setValue:_reportParams forKey:@"report_params"];
+            
+          if ([_reportParams isKindOfClass:[NSString class]]) {
+            NSDictionary *reportParamsDict = [FHUtils dictionaryWithJsonString:_reportParams];
+            if ([reportParamsDict isKindOfClass:[NSDictionary class]]) {
+                [dataParams setValue:reportParamsDict forKey:@"report_params"];
+            }
+          }
 
           if (templateData) {
                 if (templateData != self.currentTemData) {
