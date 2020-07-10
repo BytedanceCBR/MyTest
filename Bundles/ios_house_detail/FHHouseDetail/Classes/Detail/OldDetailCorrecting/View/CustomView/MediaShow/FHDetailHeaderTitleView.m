@@ -24,7 +24,7 @@
 @property (nonatomic, weak) UILabel *addressLab;
 @property (nonatomic, weak) UILabel *totalPirce;//仅户型详情页x展示
 @property (nonatomic, weak) UIControl *priceAskView;
-@property (nonatomic, weak) FHDetailFeedbackButton *infoButton;
+@property (nonatomic, weak) FHDetailFeedbackButton *feedbackButton;
 
 @property (nonatomic, strong) FHDetailTopBannerView *topBanner;
 
@@ -104,13 +104,13 @@
     return _addressLab;
 }
 
-- (FHDetailFeedbackButton *)infoButton {
-    if (!_infoButton) {
+- (FHDetailFeedbackButton *)feedbackButton {
+    if (!_feedbackButton) {
         FHDetailFeedbackButton *button = [[FHDetailFeedbackButton alloc] init];
         [self addSubview:button];
-        _infoButton = button;
+        _feedbackButton = button;
     }
-    return _infoButton;
+    return _feedbackButton;
 }
 
 - (UIButton *)mapBtn {
@@ -153,7 +153,7 @@
     label.textAlignment = NSTextAlignmentCenter;
     label.backgroundColor = bacColor;
     label.textColor = textColor;
-    label.layer.cornerRadius = 1;
+    label.layer.cornerRadius = 2;
     label.layer.masksToBounds = YES;
     label.text = text;
     label.font = [UIFont themeFontRegular:12];
@@ -425,14 +425,14 @@
                 make.height.mas_offset(tagHeight);
             }];
             //1.0.3把反馈按钮移到此处
-            [self.infoButton mas_makeConstraints:^(MASConstraintMaker *make) {
+            [self.feedbackButton mas_makeConstraints:^(MASConstraintMaker *make) {
                 make.centerY.mas_equalTo(self.tagBacView);
                 make.height.mas_equalTo(16);
                 make.right.mas_equalTo(-31);
                 make.width.mas_equalTo(46);
             }];
             FHDetailOldDataModel *ershouData = [(FHDetailOldModel *)self.baseViewModel.detailData data];
-            [self.infoButton updateWithDetailTracerDic:self.baseViewModel.detailTracerDic.copy listLogPB:self.baseViewModel.listLogPB jsonDic:[ershouData toDictionary]  reportUrl:model.reportUrl];
+            [self.feedbackButton updateWithDetailTracerDic:self.baseViewModel.detailTracerDic.copy listLogPB:self.baseViewModel.listLogPB jsonDic:[ershouData toDictionary]  reportUrl:model.reportUrl];
             
             [self.nameLabel mas_makeConstraints:^(MASConstraintMaker *make) {
                 make.left.mas_equalTo(self).offset(31);
