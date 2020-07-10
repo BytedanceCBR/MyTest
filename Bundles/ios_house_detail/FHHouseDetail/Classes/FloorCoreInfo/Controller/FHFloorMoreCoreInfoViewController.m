@@ -90,6 +90,8 @@
     baesparmas.channel = @"lynx_estate_info";
     baesparmas.bridgePrivate = self;
     [_lynxView loadLynxWithParams:baesparmas];
+    
+    _lynxView.hidden = YES;
 }
 
 /*
