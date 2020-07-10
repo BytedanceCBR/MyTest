@@ -142,7 +142,7 @@
     label.textAlignment = NSTextAlignmentCenter;
     label.backgroundColor = bacColor;
     label.textColor = textColor;
-    label.layer.cornerRadius = 1;
+    label.layer.cornerRadius = 2;
     label.layer.masksToBounds = YES;
     label.text = text;
     label.font = [UIFont themeFontRegular:12];
