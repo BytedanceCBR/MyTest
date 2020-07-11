@@ -6,8 +6,6 @@
 //
 
 #import "FHErrorHubManagerUtil.h"
-#include <objc/runtime.h>
-#include <objc/message.h>
 #import "TTSandBoxHelper.h"
 
 @implementation FHErrorHubManagerUtil
@@ -15,7 +13,8 @@
     if (![[self getChannel] isEqualToString:@"local_test"] || ![self errorHubSwitch]) {
         return;
     }
-    NSObject <FHErrorHubManagerProtocol>*errorhub = objc_msgSend(objc_getClass("FHHouseErrorHubManager"),sel_registerName("sharedInstance"));
+    Class cls = NSClassFromString(@"FHHouseErrorHubManager");
+    NSObject <FHErrorHubManagerProtocol>*errorhub = [cls performSelector:@selector(sharedInstance)];
     [errorhub checkRequestResponseWithHost:host requestParams:params responseStatus:responseStatus response:response analysisError:analysisError changeModelType:type errorHubType:errorHubType];
 }
 
@@ -23,7 +22,8 @@
     if (![[self getChannel] isEqualToString:@"local_test"] || ![self errorHubSwitch]) {
         return;
     }
-    NSObject <FHErrorHubManagerProtocol>*errorhub = objc_msgSend(objc_getClass("FHHouseErrorHubManager"),sel_registerName("sharedInstance"));
+    Class cls = NSClassFromString(@"FHHouseErrorHubManager");
+    NSObject <FHErrorHubManagerProtocol>*errorhub = [cls performSelector:@selector(sharedInstance)];
     [errorhub checkBuryingPointWithEvent:eventName Params:eventParams];
 }
 

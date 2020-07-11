@@ -66,9 +66,6 @@ def fhPods
     pod 'ios_house_im' , '0.2.12'
 #     pod 'ios_house_im' , :path => '../../../im/3'
 #    pod 'ios_house_im' , :git => 'git@code.byted.org:fproject/ios_house_im.git' , :commit => '2c5df6e99b285a43a98faa672cab41c449ffa202'
-#    pod 'FHErrorHubManager', :git => 'git@code.byted.org:fproject/FHErrorHubManager.git' , :commit => '085816331a90f2c83051890c83b9ae95cba82bdd'
-#pod 'FHErrorHubManager', :path => '../../FHErrorHubManager'
-pod 'FHErrorHubManager', '1.0.8'
 end
 
 def appDevelopPods
@@ -600,6 +597,7 @@ end
 
 def testPods
     pod 'BDSSOAuthSDK' ,  '1.1.1-alpha.6'
+    
     pod_binary 'TTDebugAssistant', '0.2.33'
     pod_binary 'FLEX', '3.1.2'#, :configurations=>['Debug']
 #    pod_source 'BDNetworkDevMonitor', '0.1.6'
@@ -610,6 +608,9 @@ def testPods
     ]
     pod_binary 'FBRetainCycleDetector','0.1.5-alpha.3'
     pod 'LookinServer', :configurations => ['Debug']
+    #    pod 'FHErrorHubManager', :git => 'git@code.byted.org:fproject/FHErrorHubManager.git' , :commit => '085816331a90f2c83051890c83b9ae95cba82bdd'
+    #pod 'FHErrorHubManager', :path => '../../FHErrorHubManager'
+    pod 'FHErrorHubManager', '1.0.8'
 end
 
 target 'NewsLiteInHouse' do
