@@ -6,7 +6,7 @@
 //
 
 #import "FHUserTracker.h"
-#import "FHHouseErrorHubManager.h"
+#import "FHErrorHubManagerUtil.h"
 #import <BDTrackerProtocol/BDTrackerProtocol.h>
 #import "FHEnvContext.h"
 
@@ -24,7 +24,7 @@
     if(currentCityId.length > 0){
         basic[@"f_current_city_id"] = currentCityId;
     }
-
+    
     return [basic copy];
 }
 
@@ -33,7 +33,8 @@
     
     NSMutableDictionary *params = [NSMutableDictionary dictionaryWithDictionary:param];
     [params addEntriesFromDictionary:[self basicParam]];
-    [[FHHouseErrorHubManager sharedInstance] checkBuryingPointWithEvent:event Params:params];
+    FHErrorHubManagerUtil *ErrorHub = [[FHErrorHubManagerUtil alloc]init];
+    [ErrorHub checkBuryingPointWithEvent:event Params:params];
     [BDTrackerProtocol eventV3:event params:params];
 }
 
@@ -44,8 +45,8 @@
     }    
     NSMutableDictionary *param = [model logDict];
     [param addEntriesFromDictionary:[self basicParam]];
-      [[FHHouseErrorHubManager sharedInstance] checkBuryingPointWithEvent:event Params:param];
-    [BDTrackerProtocol eventV3:event params:param];
+    FHErrorHubManagerUtil *ErrorHub = [[FHErrorHubManagerUtil alloc]init];
+    [ErrorHub checkBuryingPointWithEvent:event Params:param];
 }
 
 @end

@@ -34,7 +34,7 @@
 #import "FHUGCConfig.h"
 #import "FHUGCCellHelper.h"
 #import "HMDTTMonitor.h"
-#import "FHHouseErrorHubManager.h"
+#import "FHErrorHubManagerUtil.h"
 
 @interface FHPostDetailViewModel ()
 
@@ -411,7 +411,9 @@
             serDate = [NSDate date];
             // 帖子接口成功率
             [FHMainApi addRequestLog:@"/f100/ugc/thread" startDate:startDate backDate:backDate serializeDate:serDate resultType:resultType errorCode:code errorMsg:errMsg extra:extraDict exceptionDict:exceptionDict responseCode:responseCode];
-            [[FHHouseErrorHubManager sharedInstance] checkRequestResponseWithHost:urlStr requestParams:param responseStatus:response response:jsonObj analysisError:jsonParseError changeModelType:resultType errorHubType:FHErrorHubTypeRequest];
+            FHErrorHubManagerUtil *errorHubUtil = [[FHErrorHubManagerUtil alloc]init];
+             [errorHubUtil checkRequestResponseWithHost:urlStr requestParams:param responseStatus:response response:jsonObj analysisError:jsonParseError changeModelType:resultType errorHubType:1];
+//            [[FHHouseErrorHubManager sharedInstance] checkRequestResponseWithHost:urlStr requestParams:param responseStatus:response response:jsonObj analysisError:jsonParseError changeModelType:resultType errorHubType:FHErrorHubTypeRequest];
             
             if (completion) {
                 completion(error,total);
