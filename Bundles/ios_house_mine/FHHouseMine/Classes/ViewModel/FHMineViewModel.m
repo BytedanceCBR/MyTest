@@ -21,6 +21,7 @@
 #import "FHMineMutiItemCell.h"
 #import "FHCommuteManager.h"
 #import "FHEnvContext.h"
+#import "FHUtils.h"
 
 #define mutiItemCellId @"mutiItemCellId"
 
@@ -303,7 +304,43 @@
              TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
              
              NSURL* url = [NSURL URLWithString:model.openUrl];
-             [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
+             if(model.openUrl && [model.openUrl containsString:@"slocal://myFocus"] && [FHUtils getSettingEnableBooleanForKey:@"f_login_before_house_subscribe"] && ![TTAccountManager isLogin]){
+                 NSString *clickTrackDic = @{
+                         @"click_type":@"login",
+                         @"page_type":@"minetab"
+                     };
+                 TRACK_EVENT(@"click_minetab", clickTrackDic);
+                                  
+                 NSMutableDictionary *params = [NSMutableDictionary dictionary];
+                NSString *page_type = @"minetab";
+                [params setObject:page_type forKey:@"enter_from"];
+                [params setObject:@"click_favorite" forKey:@"enter_type"];
+                [params setObject:@"click_favorite" forKey:@"enter_method"];
+                [params setObject:@"user" forKey:@"trigger"];
+                // 登录成功之后不自己Pop，先进行页面跳转逻辑，再pop
+                [params setObject:@(YES) forKey:@"need_pop_vc"];
+                 self.isShowLogIn = YES;
+                 __weak typeof(self) wSelf = self;
+                  [TTAccountLoginManager showAlertFLoginVCWithParams:params completeBlock:^(TTAccountAlertCompletionEventType type, NSString * _Nullable phoneNum) {
+                      if (type == TTAccountAlertCompletionEventTypeDone) {
+                          // 登录成功
+                          if ([TTAccountManager isLogin]) {
+                              wSelf.isShowLogIn = NO;
+                              dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                                   [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
+                               });
+                          }else{
+//                              [[ToastManager manager] showToast:@"需要先登录才能进行操作哦"];
+                          }
+                      }
+                  }];
+//                 TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
+//
+//                 NSURL* url = [NSURL URLWithString:@"snssdk1370://flogin"];
+//                 [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
+             }else{
+                 [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
+             }
          }
      }else{
          [[ToastManager manager] showToast:@"网络异常"];

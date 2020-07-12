@@ -452,7 +452,7 @@ static const NSUInteger kFHHomeHeaderViewSectionHeight = 35;
         [noDataErrorView showEmptyWithTip:@"没有找到符合要求的二手房源" errorImageName:@"group-9"
                                 showRetry:YES];
         noDataErrorView.retryButton.userInteractionEnabled = YES;
-        [noDataErrorView.retryButton setTitle:@"查看其他房源" forState:UIControlStateNormal];
+        [noDataErrorView.retryButton setTitle:@"查看其它房源" forState:UIControlStateNormal];
         [noDataErrorView.retryButton mas_updateConstraints:^(MASConstraintMaker *make) {
             make.size.mas_equalTo(CGSizeMake(104, 30));
         }];

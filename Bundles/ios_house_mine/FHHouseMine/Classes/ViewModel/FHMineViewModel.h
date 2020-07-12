@@ -14,6 +14,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface FHMineViewModel : NSObject
 
 @property(nonatomic, strong) NSMutableArray *dataList;
+@property(nonatomic, assign) BOOL isShowLogIn;
 
 - (instancetype)initWithTableView:(UITableView *)tableView controller:(FHMineViewController *)viewController;
 

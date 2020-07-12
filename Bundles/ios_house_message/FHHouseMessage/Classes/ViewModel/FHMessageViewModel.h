@@ -30,6 +30,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)setEnterFrom:(NSString *)enterFrom;
 
+- (void)refreshConversationList;
 @end
 
 NS_ASSUME_NONNULL_END

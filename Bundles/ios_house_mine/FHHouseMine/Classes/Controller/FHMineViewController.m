@@ -22,6 +22,7 @@
 #import "TTTabBarItem.h"
 #import "TTTabBarManager.h"
 #import <FHPopupViewCenter/FHPopupViewManager.h>
+#import "ToastManager.h"
 
 @interface FHMineViewController ()<UIViewControllerErrorHandler>
 
@@ -95,6 +96,12 @@
     [self refreshContentOffset:self.tableView.contentOffset];
     [[FHPopupViewManager shared] triggerPopupView];
     [[FHPopupViewManager shared] triggerPendant];
+    
+    
+    if (self.viewModel.isShowLogIn && ![TTAccountManager isLogin]) {
+        [[ToastManager manager] showToast:@"需要先登录才能进行操作哦"];
+        self.viewModel.isShowLogIn = NO;
+    }
 }
 
 - (void)viewWillDisappear:(BOOL)animated {

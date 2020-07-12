@@ -1411,7 +1411,8 @@ typedef NS_ENUM(NSInteger, SSCommentType)  {
 + (BOOL)isFHNewLaunchOptimizeEnabled;
 //是否开启webview components
 +(BOOL)enableWebviewNativeComponent;
-
+//是否开启语音消息
++ (BOOL)enableRecordVoiceSegment;
 @end
 
 

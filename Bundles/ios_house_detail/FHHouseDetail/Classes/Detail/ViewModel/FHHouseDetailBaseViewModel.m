@@ -356,6 +356,9 @@
             if ([element_type isEqualToString:@"report"]) {
                 tracerDic[@"biz_trace"] = self.houseInfoBizTrace;
             }
+            if ([element_type isEqualToString:@"building"]) {
+                tracerDic[@"event_tracking_id"] = @"70949";
+            }
             
             [FHUserTracker writeEvent:@"element_show" params:tracerDic];
             [[FHHouseErrorHubManager sharedInstance] checkBuryingPointWithEvent:@"element_show" Params:tracerDic errorHubType:FHErrorHubTypeBuryingPoint];

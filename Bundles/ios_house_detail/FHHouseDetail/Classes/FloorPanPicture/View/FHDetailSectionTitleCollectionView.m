@@ -5,12 +5,12 @@
 //  Created by bytedance on 2020/5/21.
 //
 
-#import "FHPictureListTitleCollectionView.h"
+#import "FHDetailSectionTitleCollectionView.h"
 #import <FHCommonUI/UIColor+Theme.h>
 #import <FHCommonUI/UIFont+House.h>
 #import <Masonry/Masonry.h>
 
-@implementation FHPictureListTitleCollectionView
+@implementation FHDetailSectionTitleCollectionView
 
 - (instancetype)initWithFrame:(CGRect)frame {
     if (self = [super initWithFrame:frame]) {
