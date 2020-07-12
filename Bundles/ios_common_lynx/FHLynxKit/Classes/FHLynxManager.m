@@ -35,6 +35,7 @@ static NSString * const kFHLynxEnableControlKey = @"lynx_enable";
 @property (nonatomic, assign) BOOL isRetryingSync;
 @property (atomic, strong) NSMutableArray *activeChannels;
 @property (atomic, strong) NSMutableArray *deprecatedChannels;
+@property (nonatomic, strong) NSMutableArray* needUpdateCacheArray;
 
 @end
 
@@ -49,6 +50,7 @@ static NSString * const kFHLynxEnableControlKey = @"lynx_enable";
         _lynx_io_queue = dispatch_queue_create("com.bytedance.fh_lynx_manager.lynx_io_queue", DISPATCH_QUEUE_SERIAL);
         _templateCache = [NSMutableDictionary dictionary];
         _totalConfigDict = [NSMutableDictionary dictionary];
+        _needUpdateCacheArray = [NSMutableArray new];
         pthread_mutex_init(&_configDictLock, NULL);
     }
     return self;
@@ -67,6 +69,14 @@ static NSString * const kFHLynxEnableControlKey = @"lynx_enable";
 - (NSData *)lynxDataForChannel:(NSString *)channel templateKey:(NSString *)templateKey version:(NSUInteger)version {
     NSString *cacheKey = [self cacheKeyForChannel:channel templateKey:templateKey version:0];
     __block NSData *data = [self.templateCache objectForKey:cacheKey];
+    
+    //如果启动的时候读取的是工程内置的,则在使用的时候再取一次gecko下载的
+    if ([self.needUpdateCacheArray containsObject:channel]) {
+        data = [self getGeckoFileDataWithChannel:channel fileName:[FHLynxManager defaultJSFileName]];
+        if (data) {
+            [self cacheData:data andChannel:channel];
+        }
+    }
     
     if (!data) {
         NSNumber *costTime = @(0);
@@ -114,6 +124,9 @@ static NSString * const kFHLynxEnableControlKey = @"lynx_enable";
                 NSString *path = [NSString stringWithFormat:@"LynxLocalChannels/%@/%@",channel,[FHLynxManager defaultJSFileName]];
                 NSString *templatePath = [[NSBundle mainBundle] pathForResource:path ofType:@""];
                 data = [NSData dataWithContentsOfFile:templatePath];
+                if (data) {
+                    [self.needUpdateCacheArray addObject:channel];
+                }
 //                [self syncAllChannel];
             }
             if (data) {
