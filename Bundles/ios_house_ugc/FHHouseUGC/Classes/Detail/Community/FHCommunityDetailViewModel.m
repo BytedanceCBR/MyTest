@@ -36,6 +36,7 @@
 #import "TTUGCDefine.h"
 #import <FHUGCCategoryHelper.h>
 #import "UIImage+FIconFont.h"
+#import "BTDResponder.h"
 
 #define kSegmentViewHeight 52
 
@@ -736,7 +737,9 @@
     UIImage *blackBackArrowImage = ICON_FONT_IMG(24, @"\U0000e68a", [UIColor themeGray1]);
     alpha = fminf(fmaxf(0.0f, alpha), 1.0f);
     if (alpha <= 0.1f) {
-        [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
+        if([BTDResponder isTopViewController:self.viewController]){
+            [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
+        }
         [self.viewController.customNavBarView.leftBtn setBackgroundImage:whiteBackArrowImage forState:UIControlStateNormal];
         [self.viewController.customNavBarView.leftBtn setBackgroundImage:whiteBackArrowImage forState:UIControlStateHighlighted];
         self.viewController.titleContainer.hidden = YES;
