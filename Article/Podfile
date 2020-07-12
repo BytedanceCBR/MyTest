@@ -33,6 +33,7 @@ def fhPods
     pod 'FHHouseFind' , :path => '../Bundles/ios_house_find'
     pod 'FHHouseMine' , :path => '../Bundles/ios_house_mine'
     pod 'FHHouseEpidemicSituation', :path => '../Bundles/ios_house_esituation'
+    pod 'FHHouseRealtorDetail', :path => '../Bundles/ios_house_realtordetail'
     pod 'FHHouseUGC' , :path => '../Bundles/ios_house_ugc'
     pod 'FHHouseTrend' , :path => '../Bundles/ios_house_trend'
     pod 'FHCHousePush' , :path => '../Bundles/FHCHousePush'#,:git => 'git@code.byted.org:fproject/FHCHousePush.git' , :branch => 'feature/develop'

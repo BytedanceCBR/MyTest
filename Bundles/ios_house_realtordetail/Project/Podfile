@@ -1,0 +1,73 @@
+source 'git@code.byted.org:iOS_Library/publicthird_binary_repo.git'
+source 'git@code.byted.org:iOS_Library/publicthird_source_repo.git'
+source 'git@code.byted.org:iOS_Library/privatethird_binary_repo.git'
+source 'git@code.byted.org:iOS_Library/privatethird_source_repo.git'
+source 'git@code.byted.org:iOS_Library/toutiao_binary_repo.git'
+source 'git@code.byted.org:iOS_Library/toutiao_source_repo.git'
+source 'git@code.byted.org:TTVideo/ttvideo-pods.git'
+source 'git@code.byted.org:ugc/UGCSpecs.git'
+
+platform :ios, '8.0'
+
+target 'FHHouseRealtorDetail' do
+  pod 'FHHouseRealtorDetail', :path => '../'
+  pod 'BDStartUp', :path => './BDStartUp'
+  
+  #summary -> 获取用户首次安装后的一些信息，如installID、deviceID 
+  pod 'TTInstallService', '1.0.0.6'
+  
+  target 'FHHouseRealtorDetail_Tests' do
+    inherit! :search_paths
+  end
+end
+
+
+post_install do |installer|
+    
+    installer.aggregate_targets.each do |target|
+        copy_pods_resources_path = "Pods/Target Support Files/#{target.name}/#{target.name}-resources.sh"
+        string_to_replace = '--compile "${BUILT_PRODUCTS_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}"'
+        assets_compile_with_app_icon_arguments = '--compile "${BUILT_PRODUCTS_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}" --app-icon "${ASSETCATALOG_COMPILER_APPICON_NAME}" --output-partial-info-plist "${BUILD_DIR}/assetcatalog_generated_info.plist"'
+        text = File.read(copy_pods_resources_path)
+        new_contents = text.gsub(string_to_replace, assets_compile_with_app_icon_arguments)
+        File.open(copy_pods_resources_path, "w") {|file| file.puts new_contents }
+    end
+    
+    PREPROCESSOR_DEFINITIONS = ['$(inherited)']
+    installer.pods_project.targets.each do |target|
+        target.build_configurations.each do |config|
+            config.build_settings['WARNING_CFLAGS'] ||= ['$(inherited)', '-Wno-documentation']
+        end
+        
+        PREPROCESSOR_DEFINITIONS << "BD_" + target.name + "=1"
+    end
+
+    installer.pods_project.targets.each do |target|
+        if target.name == "BDStartUp"
+            target.build_configurations.each do |config|
+                config.build_settings['GCC_PREPROCESSOR_DEFINITIONS'] ||= PREPROCESSOR_DEFINITIONS
+            end
+        end
+    end
+        cmd="
+    dir=\"`pwd`/Pods/Headers/Public\"
+    cd $dir
+    for pod in `ls -1`
+        do
+            cd $pod
+            inner=`ls -1`
+            if [ \"$pod\" == \"$inner\" ] || [ -d \"$pod\" ]  && [ \"$pod\" != \"Crashlytics\" ]
+                then
+                mv $inner/* ./
+                rm -rf $inner
+                for file in `ls -1`
+                    do
+                        followPath=`ls -l \"$file\" | awk -F ' ../' '{print $2}'`
+                        ln -fs \"$followPath\" \"$file\"
+                        done
+                        fi
+                        cd $dir
+                        done
+                        "
+                        system(cmd)
+end
