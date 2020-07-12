@@ -7,16 +7,20 @@
 
 #import "FHBrowsingHistoryViewController.h"
 #import "FHSuggestionCollectionView.h"
-#import "SSNavigationBar.h"
-#import <TTBaseLib/TTUIResponderHelper.h>
 #import "TTDeviceHelper.h"
 #import "HMSegmentedControl.h"
+#import "FHBrowsingHistoryViewModel.h"
+#import "FHEnvContext.h"
+#import "FHHouseType.h"
+
+#define kHouseTypeCount 4
 
 @interface FHBrowsingHistoryViewController ()
 
 @property (nonatomic, strong) FHSuggestionCollectionView *collectionView;
 @property (nonatomic, strong) UIView *topView;
-@property (nonatomic, strong)     HMSegmentedControl *segmentControl;
+@property (nonatomic, strong) UIView *containerView;
+@property (nonatomic, strong) FHBrowsingHistoryViewModel *viewModel;
 
 @end
 
@@ -33,15 +37,15 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     //self.automaticallyAdjustsScrollViewInsets = NO;
-    [self setupUI];
+    self.houseTypeArray = [[NSMutableArray alloc] init];
     self.title = @"浏览历史";
     [self setupDefaultNavBar:NO];
-    
+    [self houseTypeConfig];
+    [self setupUI];
+    self.viewModel = [[FHBrowsingHistoryViewModel alloc] initWithController:self andCollectionView:self.collectionView];
 }
 
-
-
-- (void) setupUI {
+- (void)setupUI {
     self.topView = [[UIView alloc] init];
     self.topView.backgroundColor = [UIColor whiteColor];
     [self.view addSubview:_topView];
@@ -54,6 +58,32 @@
     }];
     [self setupSegmentedControl];
     
+    self.containerView = [[UIView alloc] init];
+    [self.view addSubview:_containerView];
+    [self.containerView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.right.bottom.mas_equalTo(0);
+        make.top.mas_equalTo(self.topView.mas_bottom);
+    }];
+    
+    //1.初始化layout
+    UICollectionViewFlowLayout *layout = [[UICollectionViewFlowLayout alloc] init];
+    layout.itemSize = CGSizeMake([[UIScreen mainScreen] bounds].size.width, [[UIScreen mainScreen] bounds].size.height - naviHeight - 44);
+    //设置collectionView滚动方向
+    [layout setScrollDirection:UICollectionViewScrollDirectionHorizontal];
+    layout.minimumLineSpacing = 0;
+    layout.minimumInteritemSpacing = 0;
+    //2.初始化collectionView
+    self.collectionView = [[FHSuggestionCollectionView alloc] initWithFrame:CGRectZero collectionViewLayout:layout];
+    _collectionView.allowsSelection = NO;
+    _collectionView.pagingEnabled = YES;
+    _collectionView.bounces = NO;
+    _collectionView.scrollEnabled = YES;
+    _collectionView.showsHorizontalScrollIndicator = NO;
+    _collectionView.backgroundColor = [UIColor themeGray7];
+    [self.containerView addSubview:_collectionView];
+    [self.collectionView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.right.top.bottom.mas_equalTo(0);
+    }];
 }
 
 -(NSArray *)getSegmentTitles {
@@ -90,6 +120,30 @@
         make.left.mas_equalTo(tabMargin);
         make.right.mas_equalTo(-tabMargin);
     }];
+    
+    WeakSelf;
+    _segmentControl.indexChangeBlock = ^(NSInteger index) {
+        StrongSelf;
+        if (index >= 0 && index < kHouseTypeCount) {
+            self.houseType = [self.houseTypeArray[index] integerValue];
+        }
+    };
+}
+
+- (void)setHouseType:(FHHouseType)houseType {
+    if (_houseType == houseType) {
+        return;
+    }
+    _houseType = houseType;
+    self.viewModel.currentTabIndex = _segmentControl.selectedSegmentIndex;
+    //[self.collectionView layoutIfNeeded];
+}
+
+- (void)houseTypeConfig {
+    [self.houseTypeArray addObject:[NSNumber numberWithInt: FHHouseTypeSecondHandHouse]];
+    [self.houseTypeArray addObject:[NSNumber numberWithInt: FHHouseTypeNewHouse]];
+    [self.houseTypeArray addObject:[NSNumber numberWithInt: FHHouseTypeRentHouse]];
+    [self.houseTypeArray addObject:[NSNumber numberWithInt: FHHouseTypeNeighborhood]];
 }
 
 @end
