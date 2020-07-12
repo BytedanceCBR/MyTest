@@ -4,6 +4,8 @@ gem 'bd_pod_extentions'
 require 'bd_pod_extentions'
 install! 'cocoapods', :warn_for_multiple_pod_sources => false,:deterministic_uuids => false
 
+showCode!
+
 # 用于开启Pods的源码与二进制快速转化服务
 plugin 'cocoapods-bytedance-transform'
 # 用于开启依赖解析加速的服务，传true表示使用，false表示不使用
@@ -389,15 +391,17 @@ def appPods
     pod_binary 'TTEntityBase', '0.2.4'
     #--- 图片库 --
     pod_binary 'TTImage', '0.8.4'
-    pod_binary 'BDWebImage', '1.0.21',:subspecs => [
-    'Core',
-    'Decoder',
-    'Download',
-    'Download/Chromium',
-    'Download/DownloadBase',
-    'Download/URLSession',
-    'SDAdapter',
-    'Monitor'
+    pod_binary 'BDWebImage','1.2.3',:subspecs => [
+       'Core',
+       'Decoder',
+       'Download',
+       'Download/Chromium',
+       'Download/DownloadBase',
+       'Download/URLSession',
+       'Monitor',
+       'Monitor/Heimdallr',
+       'Monitor/TTMonitor',
+       'SDInterface'
     ]
     pod_binary 'MMKV', '1.0.23'
 
