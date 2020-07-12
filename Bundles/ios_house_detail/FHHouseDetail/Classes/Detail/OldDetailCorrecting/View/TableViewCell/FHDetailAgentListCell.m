@@ -500,7 +500,7 @@
             showHeight = showHeight + 76;
         };
         if (UIScreen.mainScreen.bounds.size.height - point.y>showHeight) {
-            NSInteger showCount = model.isFold ? MIN(m, 3):MIN(model.recommendedRealtors.count, m);
+            NSInteger showCount = model.isFold ? MIN(m, 2):MIN(model.recommendedRealtors.count, m);
             [self tracerRealtorShowToIndex:showCount];
         };
     }
@@ -508,7 +508,7 @@
 
 -(void)addRealtorShowLog{
     FHDetailAgentListModel *model = (FHDetailAgentListModel *) self.currentData;
-    NSInteger showCount = model.isFold ? MIN(model.recommendedRealtors.count, 3): model.recommendedRealtors.count;
+    NSInteger showCount = model.isFold ? MIN(model.recommendedRealtors.count, 2): model.recommendedRealtors.count;
     [self tracerRealtorShowToIndex:showCount];
 }
 
