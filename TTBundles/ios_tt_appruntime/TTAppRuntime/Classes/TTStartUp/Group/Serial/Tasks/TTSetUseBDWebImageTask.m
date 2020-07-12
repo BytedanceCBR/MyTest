@@ -9,6 +9,7 @@
 #import "TTSettingsManager.h"
 #import <BDWebImage/SDWebImageAdapter.h>
 #import "TTLaunchDefine.h"
+#import <BDWebImage/BDWebImageRequest.h>
 
 DEC_TASK("TTSetUseBDWebImageTask",FHTaskTypeSerial,TASK_PRIORITY_HIGH+9);
 
@@ -25,6 +26,8 @@ DEC_TASK("TTSetUseBDWebImageTask",FHTaskTypeSerial,TASK_PRIORITY_HIGH+9);
 #pragma mark - UIApplicationDelegate Method
 - (void)startWithApplication:(UIApplication *)application options:(NSDictionary *)launchOptions {
     [SDWebImageAdapter setUseBDWebImage:[self isBDWebImageEnable]];
+    
+    [BDWebImageRequest setIsMonitorLargeImage:YES];
 }
 
 - (BOOL)isBDWebImageEnable {

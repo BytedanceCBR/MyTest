@@ -391,7 +391,7 @@ def appPods
     pod_binary 'TTEntityBase', '0.2.4'
     #--- 图片库 --
     pod_binary 'TTImage', '0.8.4'
-    pod_binary 'BDWebImage','1.2.3',:subspecs => [
+    pod_binary 'BDWebImage','1.2.6',:subspecs => [
        'Core',
        'Decoder',
        'Download',
@@ -401,6 +401,7 @@ def appPods
        'Monitor',
        'Monitor/Heimdallr',
        'Monitor/TTMonitor',
+       'SDAdapter',
        'SDInterface'
     ]
     pod_binary 'MMKV', '1.0.23'
