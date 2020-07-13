@@ -92,13 +92,13 @@
                 textColor = [UIColor whiteColor];
             }
                 break;
-//            case FHHouseAnnotationTypeOverSelected:
-//            {
-//                bgImageName = @"mapsearch_annotation_bg_grayRed";
-//                arrowImageName = @"mapsearch_annotation_arrow_grayRed";
-//                textColor = [UIColor whiteColor];
-//            }
-//                break;
+            case FHHouseAnnotationTypeOverSelected:
+            {
+                bgImageName = @"mapsearch_annotation_bg_grayRed";
+                arrowImageName = @"mapsearch_annotation_arrow_grayRed";
+                textColor = [UIColor whiteColor];
+            }
+                break;
                 
             default:
             {

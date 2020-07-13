@@ -38,7 +38,7 @@
         self.layer.contents = (id)[bgImg CGImage];
         
         UIFont *font = [UIFont systemFontOfSize:12];
-        UIColor *textColor = [UIColor themeGray1];
+        UIColor *textColor = [UIColor whiteColor];
         _nameLabel = [[UILabel alloc] initWithFrame:CGRectMake(20, 34, MAX_WIDTH, 17)];
         _nameLabel.font = font;
         _nameLabel.textColor = textColor;
