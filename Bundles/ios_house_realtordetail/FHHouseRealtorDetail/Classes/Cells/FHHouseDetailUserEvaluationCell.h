@@ -15,8 +15,4 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
-#pragma mark -  CollectionCell
-@interface FHHouseDetailUserEvaluationCollectionCell : FHDetailBaseCollectionCell
-
-@end
 NS_ASSUME_NONNULL_END
