@@ -310,7 +310,7 @@ logPB:self.listLogPB extraInfo:self.extraInfo completion:^(FHDetailOldModel * _N
         houseTitleModel.housetype = self.houseType;
         houseTitleModel.titleStr = model.data.title;
         houseTitleModel.tags = model.data.tags;
-        houseTitleModel.reportUrl = model.data.houseOverreview.reportUrl;
+        houseTitleModel.reportUrl = model.data.reportUrl;
         if (model.data.vouchModel && model.data.vouchModel.vouchStatus == 1) {
             houseTitleModel.businessTag = @"企业担保";
             houseTitleModel.advantage = model.data.vouchModel.vouchText;
@@ -344,7 +344,7 @@ logPB:self.listLogPB extraInfo:self.extraInfo completion:^(FHDetailOldModel * _N
         houseTitleModel.housetype = self.houseType;
         houseTitleModel.titleStr = model.data.title;
         houseTitleModel.tags = model.data.tags;
-        houseTitleModel.reportUrl = model.data.houseOverreview.reportUrl;
+        houseTitleModel.reportUrl = model.data.reportUrl;
         if (model.data.vouchModel && model.data.vouchModel.vouchStatus == 1) {
             houseTitleModel.businessTag = @"企业担保";
             houseTitleModel.advantage = model.data.vouchModel.vouchText;

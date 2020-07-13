@@ -511,6 +511,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 /// 1.0.0 新增企业担保相关字段
 @property (nonatomic, strong) FHDetailOldVouchModel *vouchModel;
+//1.0.3将举报按钮从房源概括提出来
+@property (nonatomic, copy , nullable) NSString *reportUrl;
 @end
 
 @interface FHDetailOldModel : JSONModel
