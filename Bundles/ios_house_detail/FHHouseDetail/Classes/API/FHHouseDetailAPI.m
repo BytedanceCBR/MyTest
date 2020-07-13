@@ -174,19 +174,6 @@
     return [FHMainApi getRequest:url query:nil params:paramDic jsonClass:cls completion:^(JSONModel * _Nullable m, NSError * _Nullable error) {
 //        FHHouseRentRelatedResponseModel* model = (FHHouseRentRelatedResponseModel*)m;
         id<FHBaseModelProtocol> model = m;
-        if (!error && model) {
-            if ([model.status isEqualToString:@"0"] && [model.message isEqualToString:@"success"]) {
-                error = nil;
-            }else {
-                error = [NSError errorWithDomain:model.message?:DEFULT_ERROR code:[model.status integerValue] userInfo:nil];
-                [wself addDetailRelatedRequestFailedLog:@"/f100/api/related_rent" houseId:rentId status:model.status message:model.message userInfo:nil];
-            }
-        }else if(model != nil) {
-            error = [NSError errorWithDomain:model.message?:DEFULT_ERROR code:[model.status integerValue] userInfo:nil];
-            [wself addDetailRelatedRequestFailedLog:@"/f100/api/related_rent" houseId:rentId status:model.status message:model.message userInfo:nil];
-        }else {
-            [wself addDetailRelatedRequestFailedLog:@"/f100/api/related_rent" houseId:rentId status:[NSString stringWithFormat:@"%ld",error.code] message:error.localizedDescription userInfo:error.userInfo];
-        }
         if (completion) {
             completion(model,error);
         }
@@ -211,19 +198,6 @@
     __weak typeof(self)wself = self;
     return [FHMainApi getRequest:url query:nil params:paramDic jsonClass:[FHRentSameNeighborhoodResponseModel class] completion:^(JSONModel * _Nullable m, NSError * _Nullable error) {
         FHRentSameNeighborhoodResponseModel* model = (FHRentSameNeighborhoodResponseModel*)m ;
-        if (!error && model) {
-            if ([model.status isEqualToString:@"0"] && [model.message isEqualToString:@"success"]) {
-                error = nil;
-            }else {
-                error = [NSError errorWithDomain:model.message?:DEFULT_ERROR code:[model.status integerValue] userInfo:nil];
-                [wself addDetailRelatedRequestFailedLog:@"/f100/api/same_neighborhood_rent" houseId:rentId status:model.status message:model.message userInfo:nil];
-            }
-        }else if(model != nil) {
-            error = [NSError errorWithDomain:model.message?:DEFULT_ERROR code:[model.status integerValue] userInfo:nil];
-            [wself addDetailRelatedRequestFailedLog:@"/f100/api/same_neighborhood_rent" houseId:rentId status:model.status message:model.message userInfo:nil];
-        }else {
-            [wself addDetailRelatedRequestFailedLog:@"/f100/api/same_neighborhood_rent" houseId:rentId status:[NSString stringWithFormat:@"%ld",error.code] message:error.localizedDescription userInfo:error.userInfo];
-        }
         if (completion) {
             completion(model,error);
         }
@@ -252,19 +226,6 @@
     __weak typeof(self)wself = self;
     return [FHMainApi getRequest:url query:nil params:paramDic jsonClass:[FHDetailRelatedHouseResponseModel class] completion:^(JSONModel * _Nullable m, NSError * _Nullable error) {
         FHDetailRelatedHouseResponseModel *model = (FHDetailRelatedHouseResponseModel *)m;
-        if (!error && model) {
-            if ([model.status isEqualToString:@"0"] && [model.message isEqualToString:@"success"]) {
-                error = nil;
-            }else {
-                error = [NSError errorWithDomain:model.message?:DEFULT_ERROR code:[model.status integerValue] userInfo:nil];
-                [wself addDetailRelatedRequestFailedLog:@"/f100/api/related_house" houseId:houseId status:model.status message:model.message userInfo:nil];
-            }
-        }else if(model != nil) {
-            error = [NSError errorWithDomain:model.message?:DEFULT_ERROR code:[model.status integerValue] userInfo:nil];
-            [wself addDetailRelatedRequestFailedLog:@"/f100/api/related_house" houseId:houseId status:model.status message:model.message userInfo:nil];
-        }else {
-            [wself addDetailRelatedRequestFailedLog:@"/f100/api/related_house" houseId:houseId status:[NSString stringWithFormat:@"%ld",error.code] message:error.localizedDescription userInfo:error.userInfo];
-        }
         if (completion) {
             completion(model,error);
         }
@@ -296,19 +257,6 @@
     
     return [FHMainApi getRequest:url query:nil params:paramDic jsonClass:[FHDetailRelatedNeighborhoodResponseModel class] completion:^(JSONModel * _Nullable m, NSError * _Nullable error) {
         FHDetailRelatedNeighborhoodResponseModel *model = (FHDetailRelatedNeighborhoodResponseModel *)m;
-        if (!error && model) {
-            if ([model.status isEqualToString:@"0"] && [model.message isEqualToString:@"success"]) {
-                error = nil;
-            }else {
-                error = [NSError errorWithDomain:model.message?:DEFULT_ERROR code:[model.status integerValue] userInfo:nil];
-                [wself addDetailRelatedRequestFailedLog:@"/f100/api/related_neighborhood" houseId:neighborhoodId status:model.status message:model.message userInfo:nil];
-            }
-        }else if(model != nil) {
-            error = [NSError errorWithDomain:model.message?:DEFULT_ERROR code:[model.status integerValue] userInfo:nil];
-            [wself addDetailRelatedRequestFailedLog:@"/f100/api/related_neighborhood" houseId:neighborhoodId status:model.status message:model.message userInfo:nil];
-        }else {
-            [wself addDetailRelatedRequestFailedLog:@"/f100/api/related_neighborhood" houseId:neighborhoodId status:[NSString stringWithFormat:@"%ld",error.code] message:error.localizedDescription userInfo:error.userInfo];
-        }
         if (completion) {
             completion(model,error);
         }
@@ -375,19 +323,7 @@
     __weak typeof(self)wself = self;
     return [FHMainApi getRequest:url query:nil params:paramDic jsonClass:[FHDetailSameNeighborhoodHouseResponseModel class] completion:^(JSONModel * _Nullable m, NSError * _Nullable error) {
         FHDetailSameNeighborhoodHouseResponseModel *model = (FHDetailSameNeighborhoodHouseResponseModel *)m;
-        if (!error && model) {
-            if ([model.status isEqualToString:@"0"] && [model.message isEqualToString:@"success"]) {
-                error = nil;
-            }else {
-                error = [NSError errorWithDomain:model.message?:DEFULT_ERROR code:[model.status integerValue] userInfo:nil];
-                [wself addDetailRelatedRequestFailedLog:@"/f100/api/same_neighborhood_house" houseId:neighborhoodId status:model.status message:model.message userInfo:nil];
-            }
-        }else if(model != nil) {
-            error = [NSError errorWithDomain:model.message?:DEFULT_ERROR code:[model.status integerValue] userInfo:nil];
-            [wself addDetailRelatedRequestFailedLog:@"/f100/api/same_neighborhood_house" houseId:neighborhoodId status:model.status message:model.message userInfo:nil];
-        }else {
-            [wself addDetailRelatedRequestFailedLog:@"/f100/api/same_neighborhood_house" houseId:neighborhoodId status:[NSString stringWithFormat:@"%ld",error.code] message:error.localizedDescription userInfo:error.userInfo];
-        }
+
         if (completion) {
             dispatch_async(dispatch_get_main_queue(), ^{
                 completion(model,error);
@@ -522,21 +458,6 @@
             completion(model,error);
         }
     }];    
-}
-
-
-+ (void)addDetailRelatedRequestFailedLog:(NSString *)urlStr houseId:(NSString *)houseId status:(NSString *)status message:(NSString *)message userInfo:(NSDictionary *)userInfo
-{
-    NSMutableDictionary *attr = @{}.mutableCopy;
-    attr[@"message"] = message;
-    attr[@"house_id"] = houseId;
-    attr[@"url"] = urlStr;
-    // 字符串超长会有问题，鉴于这个log意义不大，先不加
-//    if (userInfo.count > 0 && [userInfo valueForKey:@"NSErrorFailingURLKey"]) {
-//        NSString *str =[NSString stringWithFormat:@"%@",[userInfo valueForKey:@"NSErrorFailingURLKey"]];
-//        BDALOG_WARN_TAG(@"house_detail",str);
-//    }
-    [[HMDTTMonitor defaultManager]hmdTrackService:@"detail_request_related_failed" status:status.integerValue extra:attr];
 }
 
 /*
