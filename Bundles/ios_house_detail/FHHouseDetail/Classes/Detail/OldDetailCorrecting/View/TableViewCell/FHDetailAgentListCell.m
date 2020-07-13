@@ -491,7 +491,7 @@
 - (void)fhDetail_scrollViewDidScroll:(UIView *)vcParentView {
     CGPoint point = [self convertPoint:CGPointZero toView:vcParentView];
     FHDetailAgentListModel *model = (FHDetailAgentListModel *) self.currentData;
-    __block CGFloat showHeight = 0;
+    CGFloat showHeight = 0;
     for (int m = 0; m <model.recommendedRealtors.count; m++) {
         FHDetailContactModel *showModel = model.recommendedRealtors[m];
         if (showModel.realtorScoreDisplay.length>0 && showModel.realtorScoreDescription.length>0&&showModel.realtorTags.count >0) {
@@ -500,7 +500,7 @@
             showHeight = showHeight + 76;
         };
         if (UIScreen.mainScreen.bounds.size.height - point.y>showHeight) {
-            NSInteger showCount = model.isFold ? MIN(m, 3):MIN(model.recommendedRealtors.count, m);
+            NSInteger showCount = model.isFold ? MIN(m, 2):MIN(model.recommendedRealtors.count, m);
             [self tracerRealtorShowToIndex:showCount];
         };
     }
@@ -508,7 +508,7 @@
 
 -(void)addRealtorShowLog{
     FHDetailAgentListModel *model = (FHDetailAgentListModel *) self.currentData;
-    NSInteger showCount = model.isFold ? MIN(model.recommendedRealtors.count, 3): model.recommendedRealtors.count;
+    NSInteger showCount = model.isFold ? MIN(model.recommendedRealtors.count, 2): model.recommendedRealtors.count;
     [self tracerRealtorShowToIndex:showCount];
 }
 
@@ -531,7 +531,7 @@
 }
 
 - (void)tracerRealtorShowToIndex:(NSInteger)index {
-    for (int i = 0; i< index; i++) {
+    for (int i = 0; i <= index; i++) {
         NSString *cahceKey = [NSString stringWithFormat:@"%d",i];
         if (self.tracerDicCache[cahceKey]) {
             continue;
@@ -555,7 +555,7 @@
             }
             // 移除字段
             [tracerDic removeObjectsForKeys:@[@"card_type",@"element_from",@"search_id"]];
-            [FHUserTracker  writeEvent:@"realtor_show" params:tracerDic];
+            [FHUserTracker writeEvent:@"realtor_show" params:tracerDic];
         }
     }
 }
