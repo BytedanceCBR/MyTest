@@ -226,3 +226,6 @@
 
 //购房百科
 "house_encyclopedia" = "FHEncyclopediaViewController";
+
+//首页
+"main_page" = "FHHomeMainViewController";

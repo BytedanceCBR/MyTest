@@ -23,6 +23,7 @@
         [_vc.view mas_makeConstraints:^(MASConstraintMaker *make) {
             make.edges.mas_equalTo(self.contentView);
         }];
+        _vc.houseType = houseType;
     }
 }
 

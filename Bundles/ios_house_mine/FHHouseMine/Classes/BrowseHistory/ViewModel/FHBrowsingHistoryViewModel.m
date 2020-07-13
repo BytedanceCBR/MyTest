@@ -31,7 +31,6 @@
         self.collectionView = collectionView;
         collectionView.delegate = self;
         collectionView.dataSource = self;
-        [self.collectionView registerClass:[FHBrowsingHistoryCollectionViewCell class] forCellWithReuseIdentifier:NSStringFromClass([FHBrowsingHistoryCollectionViewCell class])];
     }
     return self;
 }
@@ -48,7 +47,7 @@
 - (void)initCellWithIndex:(NSInteger)index andRowStr:(NSString *)rowStr {
     if (index < self.viewController.houseTypeArray.count && index >= 0 && self.cellDict[rowStr]) {
         FHBrowsingHistoryCollectionViewCell *cell = self.cellDict[rowStr];
-        [cell refreshData:self.viewController.paramObj andHouseType:self.viewController.houseTypeArray[index]];
+        [cell refreshData:self.viewController.paramObj andHouseType:[self.viewController.houseTypeArray[index] integerValue]];
     }
 }
 
@@ -80,8 +79,11 @@
         if (self.cellDict[rowStr]) {
             cell = self.cellDict[rowStr];
         } else {
-            NSString *identifier = NSStringFromClass([FHBrowsingHistoryCollectionViewCell class]);
-            cell = (FHBrowsingHistoryCollectionViewCell *)[collectionView dequeueReusableCellWithReuseIdentifier:identifier forIndexPath:indexPath];
+            NSString *cellIdentifier = NSStringFromClass([FHBrowsingHistoryCollectionViewCell class]);
+            
+            cellIdentifier = [NSString stringWithFormat:@"%@_%ld", cellIdentifier, row];
+            [collectionView registerClass:[FHBrowsingHistoryCollectionViewCell class] forCellWithReuseIdentifier:cellIdentifier];
+            cell = (FHBrowsingHistoryCollectionViewCell *)[collectionView dequeueReusableCellWithReuseIdentifier:cellIdentifier forIndexPath:indexPath];
         }
         return cell;
     }
