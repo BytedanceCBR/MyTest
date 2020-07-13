@@ -334,7 +334,7 @@
 
         NSMutableDictionary *extraDic = @{
             @"realtor_position":@"detail_button",
-//            @"position":@"report_button",
+            @"position":@"report_button",
             @"element_from":@"building"
         }.mutableCopy;
         [extraDic addEntriesFromDictionary:self.tracerDict];

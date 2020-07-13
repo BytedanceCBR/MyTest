@@ -227,6 +227,10 @@
 
     [self.lynxView updateData:lynxParamsAll];
     
+    //延迟显示
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        self.lynxView.hidden = NO;
+    });
 }
 
 - (CGFloat)getSafeTop{
