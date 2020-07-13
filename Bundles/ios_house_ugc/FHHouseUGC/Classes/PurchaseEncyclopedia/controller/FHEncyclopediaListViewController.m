@@ -46,14 +46,8 @@
 }
 
 - (void)startLoadData {
-    if ([TTReachability isNetworkConnected]) {
         _viewModel.channel_id = self.channel_id;
         [_viewModel requestData:YES first:YES];
-    }else {
-        if(!self.hasValidateData){
-            [self.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoNetWorkAndRefresh];
-        }
-    }
 }
 
 - (void)initViewModel {
