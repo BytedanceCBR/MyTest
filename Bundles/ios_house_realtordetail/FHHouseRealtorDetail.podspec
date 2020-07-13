@@ -19,6 +19,8 @@ Pod::Spec.new do |s|
 
   s.source_files = 'FHHouseRealtorDetail/Classes/**/*.{h,m}'
   
+  s.resources = ['FHHouseRealtorDetail/Assets/*.xcassets','FHHouseRealtorDetail/Assets/*.jpg']
+  
   # s.resource_bundles = {
   #   'FHHouseRealtorDetail' => ['FHHouseRealtorDetail/Assets/*.png']
   # }

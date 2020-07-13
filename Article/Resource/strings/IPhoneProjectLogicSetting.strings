@@ -225,3 +225,6 @@
 
 //购房百科
 "house_encyclopedia" = "FHEncyclopediaViewController";
+
+//经纪人主页
+"realtor_detail" = "FHHouseRealtorDetailController";
