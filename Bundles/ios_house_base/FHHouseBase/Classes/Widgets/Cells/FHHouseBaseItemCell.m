@@ -28,6 +28,7 @@
 #import <lottie-ios/Lottie/LOTAnimationView.h>
 #import "UIColor+Theme.h"
 #import "FHShadowView.h"
+#import <UIDevice+BTDAdditions.h>
 
 #define MAIN_NORMAL_TOP     10
 #define MAIN_FIRST_TOP      20
@@ -685,6 +686,7 @@
     if (_isHomePage) {
         maxWidth = [self contentSmallImageMaxWidth] - 60;
     }
+    
     [_tagLabel configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
         layout.isEnabled = YES;
         layout.marginTop = YGPointValue(8);
@@ -1096,7 +1098,7 @@
         FHImageModel *imageModel = commonModel.houseImage.firstObject;
         [self updateMainImageWithUrl:imageModel.url];
         self.subTitleLabel.text = commonModel.displaySubtitle;
-        
+
         _priceLabel.font = [UIFont themeFontSemibold:[TTDeviceHelper isScreenWidthLarge320] ? 16 : 15];
         _pricePerSqmLabel.textColor = [UIColor themeGray1];
         _pricePerSqmLabel.font = [UIFont themeFontRegular:12];
@@ -1468,6 +1470,11 @@
                 [self.mainTitleLabel configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
                     layout.maxWidth = YGPointValue([self contentSmallImageMaxWidth] - 20);
                 }];
+                
+                [self.subTitleLabel configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
+                    layout.maxWidth = YGPointValue([self contentSmallImageMaxWidth] - 73);
+                }];
+                
                 self.tagTitleLabel.text = commonModel.houseTitleTag.text;
                 self.tagTitleLabel.backgroundColor = [UIColor colorWithHexString:commonModel.houseTitleTag.backgroundColor];
                 self.tagTitleLabel.textColor = [UIColor colorWithHexString:commonModel.houseTitleTag.textColor];
@@ -1477,8 +1484,13 @@
                 [self.mainTitleLabel configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
                     layout.maxWidth = YGPointValue([self contentSmallImageMaxWidth]);
                 }];
+                
+                [self.subTitleLabel configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
+                    layout.maxWidth = YGPointValue([self contentSmallImageMaxWidth] - 73);
+                }];
             }
             [self.mainTitleLabel.yoga markDirty];
+            [self.subTitleLabel.yoga markDirty];
             [self updateSamllTitlesLayout:attributeString.length > 0];
             
             //企业担保标签，tag_image字段下发

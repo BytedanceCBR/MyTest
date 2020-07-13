@@ -72,9 +72,11 @@ static NSString * const kFHLynxEnableControlKey = @"lynx_enable";
     
     //如果启动的时候读取的是工程内置的,则在使用的时候再取一次gecko下载的
     if ([self.needUpdateCacheArray containsObject:channel]) {
-        data = [self getGeckoFileDataWithChannel:channel fileName:[FHLynxManager defaultJSFileName]];
-        if (data) {
-            [self cacheData:data andChannel:channel];
+        NSData * dataFromGecko = [self getGeckoFileDataWithChannel:channel fileName:[FHLynxManager defaultJSFileName]];
+        //如果gecko能读到,则替换成gekco的
+        if (dataFromGecko) {
+            [self cacheData:dataFromGecko andChannel:channel];
+            data = dataFromGecko;
         }
     }
     
@@ -97,9 +99,9 @@ static NSString * const kFHLynxEnableControlKey = @"lynx_enable";
 {
     NSMutableDictionary * paramsExtra = [NSMutableDictionary new];
     [paramsExtra setValue:[[TTInstallIDManager sharedInstance] deviceID] forKey:@"device_id"];
-     NSMutableDictionary *uploadParams = [NSMutableDictionary new];
-     [uploadParams setValue:status forKey:@"error"];
-     [[HMDTTMonitor defaultManager] hmdTrackService:@"lynx_template_data_source" status:[status integerValue] extra:paramsExtra];
+    NSMutableDictionary *uploadParams = [NSMutableDictionary new];
+    [uploadParams setValue:status forKey:@"error"];
+    [[HMDTTMonitor defaultManager] hmdTrackService:@"lynx_template_data_source" status:[status integerValue] extra:paramsExtra];
 }
      
 

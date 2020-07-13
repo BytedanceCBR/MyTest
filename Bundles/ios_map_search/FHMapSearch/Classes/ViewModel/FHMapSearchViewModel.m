@@ -694,7 +694,8 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
         if (showTip && wself.showMode == FHMapSearchShowModeMap) {
             NSString *tip = model.tips;
             if (tip) {
-                CGFloat topY = [wself.viewController topBarBottom] + 14 ;
+//                CGFloat topY = [wself.viewController topBarBottom] + 14 ;
+                CGFloat topY = [UIScreen mainScreen].bounds.size.height - 100;
                 [wself.tipView showIn:wself.viewController.view at:CGPointMake(wself.viewController.view.width/2, topY) content:tip duration:kTipDuration above:wself.viewController.navBarView];
             }
         }
