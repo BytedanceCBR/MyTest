@@ -17,6 +17,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong) NSMutableArray *houseTypeArray;
 @property (nonatomic, assign) FHHouseType    houseType;
 @property (nonatomic, strong) HMSegmentedControl *segmentControl;
+@property (nonatomic, strong) TTRouteParamObj *paramObj;
 @end
 
 NS_ASSUME_NONNULL_END

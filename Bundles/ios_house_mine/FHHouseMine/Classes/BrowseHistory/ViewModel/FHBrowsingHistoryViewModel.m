@@ -10,15 +10,11 @@
 #import "FHSuggestionCollectionView.h"
 #import "FHBrowsingHistoryCollectionViewCell.h"
 
-#define random(r, g, b, a) [UIColor colorWithRed:(r)/255.0 green:(g)/255.0 blue:(b)/255.0 alpha:(a)/255.0]
-
-#define randomColor random(arc4random_uniform(256), arc4random_uniform(256), arc4random_uniform(256), arc4random_uniform(256))
-
-
 @interface FHBrowsingHistoryViewModel()<UICollectionViewDelegate, UICollectionViewDataSource>
 
 @property (nonatomic, weak) FHBrowsingHistoryViewController *viewController;
 @property (nonatomic, weak) FHSuggestionCollectionView *collectionView;
+@property (nonatomic, strong) NSMutableDictionary *cellDict;
 @property (nonatomic, assign) CGPoint beginOffSet;
 @property (nonatomic, assign) CGFloat oldX;
 
@@ -29,7 +25,8 @@
 - (instancetype)initWithController:(FHBrowsingHistoryViewController *)viewController andCollectionView:(FHSuggestionCollectionView *)collectionView {
     self = [super init];
     if (self) {
-        _currentTabIndex = -1;
+        self.currentTabIndex = -1;
+        self.cellDict = [[NSMutableDictionary alloc] init];
         self.viewController = viewController;
         self.collectionView = collectionView;
         collectionView.delegate = self;
@@ -48,24 +45,46 @@
     }
 }
 
+- (void)initCellWithIndex:(NSInteger)index andRowStr:(NSString *)rowStr {
+    if (index < self.viewController.houseTypeArray.count && index >= 0 && self.cellDict[rowStr]) {
+        FHBrowsingHistoryCollectionViewCell *cell = self.cellDict[rowStr];
+        [cell refreshData:self.viewController.paramObj andHouseType:self.viewController.houseTypeArray[index]];
+    }
+}
+
 #pragma mark - UICollectionViewDelegate
 - (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView {
     return 1;
 }
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
-    return 4;
+    return self.viewController.houseTypeArray.count;
 }
 
 - (void)collectionView:(UICollectionView *)collectionView willDisplayCell:(UICollectionViewCell *)cell forItemAtIndexPath:(NSIndexPath *)indexPath {
-    
+    if ([cell isKindOfClass:[FHBrowsingHistoryCollectionViewCell class]]) {
+        NSInteger row = indexPath.item;
+        NSString *rowStr = [NSString stringWithFormat:@"%ld", row];
+        if (!self.cellDict[rowStr]) {
+            self.cellDict[rowStr] = cell;
+            [self initCellWithIndex:row andRowStr:rowStr];
+        }
+    }
 }
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
-    NSString *identifier = NSStringFromClass([FHBrowsingHistoryCollectionViewCell class]);
-    FHBrowsingHistoryCollectionViewCell *cell = (FHBrowsingHistoryCollectionViewCell *)[collectionView dequeueReusableCellWithReuseIdentifier:identifier forIndexPath:indexPath];
-    cell.backgroundColor = randomColor;
-    return cell;
+    NSInteger row = indexPath.item;
+    FHBrowsingHistoryCollectionViewCell *cell = NULL;
+    if (row >= 0 && row < self.viewController.houseTypeArray.count) {
+        NSString *rowStr = [NSString stringWithFormat:@"%ld", row];
+        if (self.cellDict[rowStr]) {
+            cell = self.cellDict[rowStr];
+        } else {
+            NSString *identifier = NSStringFromClass([FHBrowsingHistoryCollectionViewCell class]);
+            cell = (FHBrowsingHistoryCollectionViewCell *)[collectionView dequeueReusableCellWithReuseIdentifier:identifier forIndexPath:indexPath];
+        }
+        return cell;
+    }
     return [[UICollectionViewCell alloc] init];
 }
 
