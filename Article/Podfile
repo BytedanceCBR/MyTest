@@ -610,7 +610,7 @@ def testPods
     pod 'LookinServer', :configurations => ['Debug']
     #    pod 'FHErrorHubManager', :git => 'git@code.byted.org:fproject/FHErrorHubManager.git' , :commit => '085816331a90f2c83051890c83b9ae95cba82bdd'
     #pod 'FHErrorHubManager', :path => '../../FHErrorHubManager'
-    pod 'FHErrorHubManager', '1.0.8'
+    pod 'FHErrorHubManager', '1.0.9'
 end
 
 target 'NewsLiteInHouse' do
