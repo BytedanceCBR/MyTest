@@ -57,7 +57,7 @@
         _subwayItem = [self itemViewWithType:FHMapSearchSideBarItemTypeSubway];
         _circleItem = [self itemViewWithType:FHMapSearchSideBarItemTypeCircle];
         _filterItem = [self itemViewWithType:FHMapSearchSideBarItemTypeFilter];
-        _listItem   = [self itemViewWithType:FHMapSearchSideBarItemTypeList];
+//        _listItem   = [self itemViewWithType:FHMapSearchSideBarItemTypeList];
         
         
         _listItem.bottomLine.hidden = YES;
@@ -65,7 +65,7 @@
         [_contentView addSubview:_subwayItem];
         [_contentView addSubview:_circleItem];
         [_contentView addSubview:_filterItem];
-        [_contentView addSubview:_listItem];
+//        [_contentView addSubview:_listItem];
         
         
         CALayer *layer = self.layer;
@@ -94,7 +94,7 @@
                                    @(FHMapSearchSideBarItemTypeSubway):self.subwayItem,
                                    @(FHMapSearchSideBarItemTypeCircle):self.circleItem,
                                    @(FHMapSearchSideBarItemTypeFilter):self.filterItem,
-                                   @(FHMapSearchSideBarItemTypeList):self.listItem,
+//                                   @(FHMapSearchSideBarItemTypeList):self.listItem,
                                    }.mutableCopy;
     
     NSMutableArray *items = [[NSMutableArray alloc] initWithCapacity:types.count];

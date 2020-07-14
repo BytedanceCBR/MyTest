@@ -1505,7 +1505,7 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
         }
         
         [showTyeps addObject:@(FHMapSearchSideBarItemTypeFilter)];
-        [showTyeps addObject:@(FHMapSearchSideBarItemTypeList)];
+//        [showTyeps addObject:@(FHMapSearchSideBarItemTypeList)];
         
         types = showTyeps;
         
