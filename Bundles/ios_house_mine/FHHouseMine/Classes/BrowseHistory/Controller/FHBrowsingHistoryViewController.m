@@ -86,6 +86,18 @@
     }];
 }
 
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+}
+
+- (void)viewWillDisappear:(BOOL)animated {
+    [super viewWillDisappear:animated];
+}
+
+- (void)viewDidDisappear:(BOOL)animated {
+    [super viewDidDisappear:animated];
+}
+
 -(NSArray *)getSegmentTitles {
     NSArray *items = @[@"二手房", @"新房", @"租房", @"小区"];
     return items;
@@ -144,6 +156,11 @@
     [self.houseTypeArray addObject:[NSNumber numberWithInt: FHHouseTypeNewHouse]];
     [self.houseTypeArray addObject:[NSNumber numberWithInt: FHHouseTypeRentHouse]];
     [self.houseTypeArray addObject:[NSNumber numberWithInt: FHHouseTypeNeighborhood]];
+}
+
+- (void)dealloc
+{
+    
 }
 
 @end

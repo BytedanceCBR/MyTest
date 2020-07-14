@@ -16,13 +16,14 @@
 
 @implementation FHBrowsingHistoryCollectionViewCell
 
-- (void)refreshData:(id)data andHouseType:(FHHouseType)houseType {
+- (void)refreshData:(id)data andHouseType:(FHHouseType)houseType andVC:(nonnull FHBrowsingHistoryViewController *)vc{
     if (!_vc) {
         _vc = [[FHChildBrowsingHistoryViewController alloc] initWithRouteParamObj:data];
         [self.contentView addSubview:_vc.view];
         [_vc.view mas_makeConstraints:^(MASConstraintMaker *make) {
             make.edges.mas_equalTo(self.contentView);
         }];
+        _vc.fatherVC = vc;
         _vc.houseType = houseType;
     }
 }

@@ -8,6 +8,8 @@
 #import "FHChildBrowsingHistoryViewController.h"
 #import "FHBrowsingHistoryEmptyView.h"
 #import "Masonry.h"
+#import "FHHomeConfigManager.h"
+#import "FHEnvContext.h"
 
 @interface FHChildBrowsingHistoryViewController()<FHBrowsingHistoryEmptyViewDelegate>
 
@@ -31,6 +33,18 @@
     
 }
 
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+}
+
+- (void)viewWillDisappear:(BOOL)animated {
+    [super viewWillDisappear:animated];
+}
+
+- (void)viewDidDisappear:(BOOL)animated {
+    [super viewDidDisappear:animated];
+}
+
 - (void)setHouseType:(FHHouseType)houseType {
     _houseType = houseType;
     self.emptyView.houseType = houseType;
@@ -47,6 +61,12 @@
 
 #pragma mark - FHBrowsingHistoryEmptyViewDelegate
 - (void)clickFindHouse:(FHHouseType)houseType {
+    NSArray *houseTypeList = [[FHEnvContext sharedInstance] getConfigFromCache].houseTypeList;
+    NSNumber *houseTypeNum = [NSNumber numberWithInteger:houseType];
+    if (![houseTypeList containsObject:houseTypeNum]) {
+        [self popToMainPage];
+        return;
+    }
     
     NSMutableDictionary *dictTrace = [NSMutableDictionary new];
     [dictTrace setValue:@"maintab" forKey:@"enter_from"];
@@ -55,26 +75,39 @@
     [dictTrace setValue:@"be_null" forKey:@"origin_from"];
     NSDictionary *userInfoDict = @{@"tracer":dictTrace};
     TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:userInfoDict];
-    NSURL *secondHandHouseUrl = [NSURL URLWithString:@"sslocal://second_house_main"];
-    NSURL *rentHouseUrl = [NSURL URLWithString:@"sslocal://rent_main"];
-    NSURL *newHouseUrl = [NSURL URLWithString:@"sslocal://house_list?house_type=1"];
-    NSURL *neighborhoodUrl = [NSURL URLWithString:@"sslocal://main_page"];
     
+    NSString *urlStr = @"";
     switch (houseType) {
         case FHHouseTypeSecondHandHouse:
-           [[TTRoute sharedRoute] openURLByPushViewController:secondHandHouseUrl userInfo:userInfo];
+            urlStr = @"sslocal://second_house_main";
             break;
         case FHHouseTypeRentHouse:
-            [[TTRoute sharedRoute] openURLByPushViewController:rentHouseUrl userInfo:userInfo];
+            urlStr = @"sslocal://rent_main";
             break;
         case FHHouseTypeNewHouse:
-            [[TTRoute sharedRoute] openURLByPushViewController:newHouseUrl userInfo:userInfo];
+            urlStr = @"sslocal://house_list?house_type=1";
             break;
         case FHHouseTypeNeighborhood:
-            [[TTRoute sharedRoute] openURLByPushViewController:neighborhoodUrl userInfo:userInfo];
-            break;
+            [self popToMainPage];
+            return;
         default:
             break;
     }
+    if (![urlStr isEqualToString:@""]) {
+        NSURL *url = [NSURL URLWithString:urlStr];
+        [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
+    }
+}
+
+- (void)popToMainPage {
+    [self.fatherVC.navigationController popToRootViewControllerAnimated:YES];
+    if (![[FHHomeConfigManager sharedInstance].fhHomeBridgeInstance isCurrentTabFirst]) {
+        [[FHHomeConfigManager sharedInstance].fhHomeBridgeInstance jumpToTabbarFirst];
+    }
+}
+
+- (void)dealloc
+{
+    
 }
 @end

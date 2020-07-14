@@ -47,7 +47,8 @@
 - (void)initCellWithIndex:(NSInteger)index andRowStr:(NSString *)rowStr {
     if (index < self.viewController.houseTypeArray.count && index >= 0 && self.cellDict[rowStr]) {
         FHBrowsingHistoryCollectionViewCell *cell = self.cellDict[rowStr];
-        [cell refreshData:self.viewController.paramObj andHouseType:[self.viewController.houseTypeArray[index] integerValue]];
+        [cell refreshData:self.viewController.paramObj andHouseType:[self.viewController.houseTypeArray[index] integerValue] andVC:self.viewController];
+        
     }
 }
 
