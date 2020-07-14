@@ -70,7 +70,7 @@
     
     [self.findHouseButton mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerX.mas_equalTo(self);
-        make.top.mas_equalTo(self.emptyLabel).offset(50);
+        make.top.mas_equalTo(self.emptyLabel.mas_bottom).offset(50);
         make.height.mas_equalTo(40);
         make.width.mas_equalTo(120);
     }];

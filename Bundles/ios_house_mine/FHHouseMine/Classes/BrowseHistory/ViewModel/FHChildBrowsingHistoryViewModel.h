@@ -6,10 +6,19 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "FHChildBrowsingHistoryViewController.h"
+#import "FHBrowsingHistoryEmptyView.h"
+#import "FHHouseType.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
 @interface FHChildBrowsingHistoryViewModel : NSObject
+
+- (instancetype)initWithViewController:(FHChildBrowsingHistoryViewController *)viewController tableView:(UITableView *)tableView emptyView:(FHBrowsingHistoryEmptyView *)emptyView;
+
+- (void)requestData:(BOOL)isHead;
+
+@property (nonatomic, assign) FHHouseType houseType;
 
 @end
 

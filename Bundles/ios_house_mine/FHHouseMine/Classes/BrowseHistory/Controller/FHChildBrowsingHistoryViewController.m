@@ -8,12 +8,14 @@
 #import "FHChildBrowsingHistoryViewController.h"
 #import "FHBrowsingHistoryEmptyView.h"
 #import "Masonry.h"
-#import "FHHomeConfigManager.h"
-#import "FHEnvContext.h"
+#import "FHChildBrowsingHistoryViewModel.h"
+#import "TTDeviceHelper.h"
 
-@interface FHChildBrowsingHistoryViewController()<FHBrowsingHistoryEmptyViewDelegate>
+@interface FHChildBrowsingHistoryViewController()
 
-@property (nonatomic, strong) FHBrowsingHistoryEmptyView *emptyView;;
+@property (nonatomic, strong) FHBrowsingHistoryEmptyView *emptyView;
+@property (nonatomic, strong) FHChildBrowsingHistoryViewModel *viewModel;
+@property (nonatomic, strong) UITableView *tableView;
 
 @end
 
@@ -30,6 +32,8 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     [self setupUI];
+    self.viewModel = [[FHChildBrowsingHistoryViewModel alloc] initWithViewController:self tableView:self.tableView emptyView:self.emptyView];
+    
     
 }
 
@@ -48,6 +52,9 @@
 - (void)setHouseType:(FHHouseType)houseType {
     _houseType = houseType;
     self.emptyView.houseType = houseType;
+    self.viewModel.houseType = houseType;
+    [self.viewModel requestData:YES];
+    
 }
 
 - (void)setupUI {
@@ -57,53 +64,19 @@
     [self.emptyView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.edges.mas_equalTo(self.view);
     }];
-}
-
-#pragma mark - FHBrowsingHistoryEmptyViewDelegate
-- (void)clickFindHouse:(FHHouseType)houseType {
-    NSArray *houseTypeList = [[FHEnvContext sharedInstance] getConfigFromCache].houseTypeList;
-    NSNumber *houseTypeNum = [NSNumber numberWithInteger:houseType];
-    if (![houseTypeList containsObject:houseTypeNum]) {
-        [self popToMainPage];
-        return;
-    }
+    //self.emptyView.hidden = YES;
     
-    NSMutableDictionary *dictTrace = [NSMutableDictionary new];
-    [dictTrace setValue:@"maintab" forKey:@"enter_from"];
-    [dictTrace setValue:@"maintab_icon" forKey:@"element_from"];
-    [dictTrace setValue:@"click" forKey:@"enter_type"];
-    [dictTrace setValue:@"be_null" forKey:@"origin_from"];
-    NSDictionary *userInfoDict = @{@"tracer":dictTrace};
-    TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:userInfoDict];
-    
-    NSString *urlStr = @"";
-    switch (houseType) {
-        case FHHouseTypeSecondHandHouse:
-            urlStr = @"sslocal://second_house_main";
-            break;
-        case FHHouseTypeRentHouse:
-            urlStr = @"sslocal://rent_main";
-            break;
-        case FHHouseTypeNewHouse:
-            urlStr = @"sslocal://house_list?house_type=1";
-            break;
-        case FHHouseTypeNeighborhood:
-            [self popToMainPage];
-            return;
-        default:
-            break;
+    BOOL isIphoneX = [TTDeviceHelper isIPhoneXDevice];
+    self.tableView = [[UITableView alloc] init];
+    self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+    if (isIphoneX) {
+        self.tableView.contentInset = UIEdgeInsetsMake(0, 0, 34, 0);
     }
-    if (![urlStr isEqualToString:@""]) {
-        NSURL *url = [NSURL URLWithString:urlStr];
-        [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
-    }
-}
-
-- (void)popToMainPage {
-    [self.fatherVC.navigationController popToRootViewControllerAnimated:YES];
-    if (![[FHHomeConfigManager sharedInstance].fhHomeBridgeInstance isCurrentTabFirst]) {
-        [[FHHomeConfigManager sharedInstance].fhHomeBridgeInstance jumpToTabbarFirst];
-    }
+    [self.view addSubview:self.tableView];
+    [self.tableView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.edges.mas_equalTo(self.view);
+    }];
+    self.tableView.hidden = YES;
 }
 
 - (void)dealloc
