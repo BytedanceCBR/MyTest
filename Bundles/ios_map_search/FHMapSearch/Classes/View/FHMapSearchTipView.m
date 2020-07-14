@@ -38,10 +38,16 @@
         _tipLabel.textColor = [UIColor themeGray1];
         [self addSubview:_tipLabel];
         
-        UIImage *img = SYS_IMG(@"mapsearch_round_white_bg");
-        img = [img resizableImageWithCapInsets:UIEdgeInsetsMake(40, 40, 40, 40)];
-        self.layer.contents = (id)[img CGImage];
+//        UIImage *img = SYS_IMG(@"mapsearch_round_white_bg");
+//        img = [img resizableImageWithCapInsets:UIEdgeInsetsMake(40, 40, 40, 40)];
+//        self.layer.contents = (id)[img CGImage];
+        self.backgroundColor = [UIColor whiteColor];
         
+        self.layer.cornerRadius = 5;
+        self.layer.masksToBounds = YES;
+        self.layer.borderColor = [UIColor themeOrange1].CGColor;
+        self.layer.borderWidth = 0.6;
+
 //        self.backgroundColor = [UIColor themeRed2];
 //
 //        self.layer.cornerRadius = 20;

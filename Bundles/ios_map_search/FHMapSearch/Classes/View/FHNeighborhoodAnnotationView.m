@@ -113,7 +113,7 @@
         img = [self resizeableImage:img];
         _backgroundView.image = img;
         _arrowView.image = [UIImage imageNamed:arrowImageName];
-        _contentLabel.textColor = textColor;
+        _contentLabel.textColor = [UIColor whiteColor];
     }
 }
 
@@ -123,7 +123,7 @@
     self.backgroundView.frame = self.bounds;
     CGFloat arrowWidth = 7;
     self.arrowView.frame = CGRectMake(self.width/2-arrowWidth/2, 42-arrowWidth/2, arrowWidth, arrowWidth);
-    self.contentLabel.frame = CGRectMake(30, 21, self.width-60, 17);
+    self.contentLabel.frame = CGRectMake(30, 24, self.width-60, 17);
 }
 
 //-(void)willMoveToSuperview:(UIView *)newSuperview

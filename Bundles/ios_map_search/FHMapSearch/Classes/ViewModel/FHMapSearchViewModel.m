@@ -1268,14 +1268,15 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
         MACircleRenderer *accuracyCircleRenderer = [[MACircleRenderer alloc] initWithCircle:overlay];
 //        accuracyCircleRenderer.lineWidth    = 1.f;
 //        accuracyCircleRenderer.strokeColor  = RGB(41, 156 ,255 );
-        accuracyCircleRenderer.fillColor    = [[UIColor themeRed1] colorWithAlphaComponent:0.3];
+        accuracyCircleRenderer.fillColor = RGBA(0xfe, 0x55, 0x00,0.3);
+//        accuracyCircleRenderer.fillColor    = [[UIColor themeRed1] colorWithAlphaComponent:0.3];
         return accuracyCircleRenderer;
     } else if ([overlay isKindOfClass:[MAPolygon class]]) {
         
         MAPolygonRenderer *polygonRenderer = [[MAPolygonRenderer alloc] initWithPolygon:overlay];
-        polygonRenderer.lineWidth   = 6.f;
-        polygonRenderer.strokeColor = [UIColor themeOrange4];
-        polygonRenderer.fillColor   = RGBA(0xff, 0x96, 0x29,0.1);
+        polygonRenderer.lineWidth   = 10.f;
+        polygonRenderer.strokeColor = [UIColor themeOrange1];
+        polygonRenderer.fillColor   = RGBA(0xfe, 0x55, 0x00,0.1);
         
         return polygonRenderer;
     }else if ([overlay isKindOfClass:[MAPolyline class]]){
