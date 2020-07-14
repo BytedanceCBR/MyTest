@@ -152,7 +152,6 @@
     
     FHUGCMyInterestedController *vc =[[FHUGCMyInterestedController alloc] init];
     vc.type = FHUGCMyInterestedTypeEmpty;
-    vc.isNewDiscovery = self.isNewDiscovery;
     vc.tracerDict = @{
                       @"enter_from":@"neighborhood_tab"
                       };
@@ -167,8 +166,8 @@
 
 - (FHMyJoinNeighbourhoodView *)neighbourhoodView {
     if(!_neighbourhoodView){
-        _neighbourhoodViewHeight = self.isNewDiscovery ? 144 : 194;
-        _neighbourhoodView = [[FHMyJoinNeighbourhoodView alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, _neighbourhoodViewHeight) isNewDiscovery:self.isNewDiscovery];
+        _neighbourhoodViewHeight = 144;
+        _neighbourhoodView = [[FHMyJoinNeighbourhoodView alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, _neighbourhoodViewHeight)];
         
         NSMutableDictionary *tracerDict = [NSMutableDictionary dictionary];
         [tracerDict addEntriesFromDictionary:self.tracerDict];

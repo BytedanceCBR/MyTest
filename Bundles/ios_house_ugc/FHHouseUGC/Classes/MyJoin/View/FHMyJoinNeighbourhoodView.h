@@ -23,10 +23,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic, strong) FHUGCMessageView *messageView;
 @property(nonatomic, strong) FHUGCSearchView *searchView;
 @property(nonatomic , weak) id<FHMyJoinNeighbourhoodViewDelegate> delegate;
-//新的发现页面
-@property(nonatomic, assign) BOOL isNewDiscovery;
 
-- (instancetype)initWithFrame:(CGRect)frame isNewDiscovery:(BOOL)isNewDiscovery;
+- (instancetype)initWithFrame:(CGRect)frame;
 
 @end
 

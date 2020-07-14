@@ -34,13 +34,13 @@
 
 @implementation FHPostUGCProgressView
 
-+ (instancetype)sharedInstance {
-    static FHPostUGCProgressView *_sharedInstance = nil;
-    if (!_sharedInstance){
-        _sharedInstance = [[FHPostUGCProgressView alloc] initWithFrame:CGRectZero];
-    }
-    return _sharedInstance;
-}
+//+ (instancetype)sharedInstance {
+//    static FHPostUGCProgressView *_sharedInstance = nil;
+//    if (!_sharedInstance){
+//        _sharedInstance = [[FHPostUGCProgressView alloc] initWithFrame:CGRectZero];
+//    }
+//    return _sharedInstance;
+//}
 
 - (instancetype)initWithFrame:(CGRect)frame
 {
@@ -48,6 +48,10 @@
     if (self) {
         self.backgroundColor = [UIColor redColor];
         self.houseShowTracerDic = [NSMutableDictionary new];
+        
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(loadStatusModelsWithCompletion) name:kLoadStatusModelsWithCompletionNotification object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updatePostData) name:kUpdatePostDataNotification object:nil];
+        
         [self setupData];
         [self setupUI];
         __weak typeof(self) weakSelf = self;
@@ -78,6 +82,12 @@
     self.hidden = _ugc_viewHeight <= 0;
     if (_ugc_viewHeight > 0) {
         [self.tableView reloadData];
+    }
+}
+
+- (void)loadStatusModelsWithCompletion {
+    if(self.refreshViewBlk){
+        self.refreshViewBlk();
     }
 }
 

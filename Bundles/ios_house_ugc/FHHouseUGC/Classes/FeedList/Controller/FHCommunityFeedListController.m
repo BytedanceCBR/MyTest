@@ -35,6 +35,7 @@
 @property(nonatomic, assign) NSTimeInterval enterTabTimestamp;
 @property(nonatomic, assign) BOOL noNeedAddEnterCategorylog;
 @property(nonatomic, assign) UIEdgeInsets originContentInset;
+@property(nonatomic, assign) BOOL alreadySetContentInset;
 
 @end
 
@@ -287,10 +288,10 @@
 }
 
 - (void)showNotify:(NSString *)message completion:(void(^)())completion {
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
+    if(!self.alreadySetContentInset){
         self.originContentInset = self.tableView.contentInset;
-    });
+        self.alreadySetContentInset = YES;
+    }
     UIEdgeInsets inset = self.tableView.contentInset;
     inset.top = self.notifyBarView.height;
     self.tableView.contentInset = inset;

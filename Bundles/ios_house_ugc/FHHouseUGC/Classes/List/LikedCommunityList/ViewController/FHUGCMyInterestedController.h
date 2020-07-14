@@ -14,8 +14,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property(nonatomic, assign) FHUGCMyInterestedType type;
 @property(nonatomic, assign) BOOL forbidGoToDetail;
-//新的发现页面
-@property(nonatomic, assign) BOOL isNewDiscovery;
 
 - (void)viewWillAppear;
 - (void)viewWillDisappear;

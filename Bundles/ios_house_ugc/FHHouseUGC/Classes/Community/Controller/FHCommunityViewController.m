@@ -219,14 +219,14 @@
     _bottomLineView.backgroundColor = [UIColor themeGray6];
     [self.topView addSubview:_bottomLineView];
 
-    self.searchBtn = [[UIButton alloc] init];
-    [_searchBtn setImage: ICON_FONT_IMG(24, @"\U0000e675", [UIColor blackColor]) forState:UIControlStateNormal];//fh_ugc_search
-    _searchBtn.hitTestEdgeInsets = UIEdgeInsetsMake(-10, -10, -10, -10);
-    [_searchBtn addTarget:self action:@selector(goToSearch) forControlEvents:UIControlEventTouchUpInside];
-    if(self.isNewDiscovery){
-        _searchBtn.hidden = YES;
-    }
-    [self.topView addSubview:_searchBtn];
+//    self.searchBtn = [[UIButton alloc] init];
+//    [_searchBtn setImage: ICON_FONT_IMG(24, @"\U0000e675", [UIColor blackColor]) forState:UIControlStateNormal];//fh_ugc_search
+//    _searchBtn.hitTestEdgeInsets = UIEdgeInsetsMake(-10, -10, -10, -10);
+//    [_searchBtn addTarget:self action:@selector(goToSearch) forControlEvents:UIControlEventTouchUpInside];
+//    if(self.isNewDiscovery){
+//        _searchBtn.hidden = YES;
+//    }
+//    [self.topView addSubview:_searchBtn];
 
     self.containerView = [[UIView alloc] init];
     [self.view addSubview:_containerView];
@@ -424,7 +424,7 @@
     }
     
     _segmentControl = [[HMSegmentedControl alloc] initWithSectionTitles:[self getSegmentTitles]];
-
+    
     NSDictionary *titleTextAttributes = @{NSFontAttributeName: [UIFont themeFontRegular:16],
             NSForegroundColorAttributeName: [UIColor themeGray1]};
     _segmentControl.titleTextAttributes = titleTextAttributes;
@@ -444,6 +444,7 @@
     _segmentControl.selectionIndicatorCornerRadius = 2.0f;
     _segmentControl.shouldFixedSelectPosition = YES;
     _segmentControl.selectionIndicatorColor = [UIColor colorWithHexStr:@"#ff9629"];
+    _segmentControl.bounces = NO;
     
     [self.topView addSubview:_segmentControl];
 
@@ -517,11 +518,11 @@
         make.height.mas_equalTo(44);
     }];
 
-    [self.searchBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.centerY.mas_equalTo(self.topView).offset(-5);
-        make.right.mas_equalTo(self.topView).offset(-20);
-        make.width.height.mas_equalTo(24);
-    }];
+//    [self.searchBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+//        make.centerY.mas_equalTo(self.topView).offset(-5);
+//        make.right.mas_equalTo(self.topView).offset(-20);
+//        make.width.height.mas_equalTo(24);
+//    }];
 
     [self.bottomLineView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.bottom.right.equalTo(self.topView);

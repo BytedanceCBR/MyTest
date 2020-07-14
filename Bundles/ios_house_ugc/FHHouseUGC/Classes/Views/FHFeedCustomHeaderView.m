@@ -27,7 +27,7 @@
 - (void)initViews {
     self.backgroundColor = [UIColor whiteColor];
     if(_addProgressView){
-        self.progressView = [FHPostUGCProgressView sharedInstance];
+        self.progressView = [[FHPostUGCProgressView alloc] initWithFrame:CGRectZero];
         self.progressView.isNewDiscovery = YES;
         [self addSubview:self.progressView];
     }

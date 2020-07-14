@@ -208,11 +208,7 @@
 
 - (FHNearbyHeaderView *)headerView {
     if(!_headerView){
-        if(self.isNewDiscovery){
-            _headerViewHeight = 49.0f;
-        }else{
-            _headerViewHeight = 0.001f;
-        }
+        _headerViewHeight = 49.0f;
         _headerView = [[FHNearbyHeaderView alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, _headerViewHeight) isNewDiscovery:self.isNewDiscovery];
         
         NSMutableDictionary *tracerDict = [NSMutableDictionary dictionary];
@@ -220,7 +216,7 @@
         tracerDict[@"page_type"] = @"hot_discuss_feed";
         _headerView.searchView.tracerDict = tracerDict;
         
-        _headerView.searchView.hidden = !self.isNewDiscovery;
+        _headerView.searchView.hidden = NO;
         _headerView.hidden = YES;
     }
     return _headerView;
