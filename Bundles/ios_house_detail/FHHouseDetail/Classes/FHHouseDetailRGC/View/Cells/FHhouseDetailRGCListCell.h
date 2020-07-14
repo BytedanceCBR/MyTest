@@ -13,7 +13,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (copy, nonatomic) NSString *title;
 @property (copy, nonatomic) NSString *houseInfoBizTrace;
 @property (nonatomic, strong) NSNumber *count;
-@property (strong, nonatomic) FHDetailBrokerContentModel *contentModel;
+@property (copy, nonatomic) FHDetailBrokerContentModel *contentModel;
 @property (assign, nonatomic) CGFloat cellHeight;
 @property (strong, nonatomic) NSDictionary *extraDic;
 @property(nonatomic , strong) NSMutableDictionary *detailTracerDic; // 详情页基础埋点数据
