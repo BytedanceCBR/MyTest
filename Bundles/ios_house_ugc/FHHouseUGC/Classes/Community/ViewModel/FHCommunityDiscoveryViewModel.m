@@ -190,37 +190,42 @@
 
 //设置每个item的尺寸
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath {
-    CGFloat bottom = 49;
-    if (@available(iOS 11.0, *)) {
-        bottom += [[[[UIApplication sharedApplication] delegate] window] safeAreaInsets].bottom;
-    }
-    
-    CGFloat top = 0;
-    CGFloat safeTop = 0;
-    if (@available(iOS 11.0, *)) {
-        safeTop = self.viewController.view.tt_safeAreaInsets.top;
-    }
-    if (safeTop > 0) {
-        top += safeTop;
-    } else {
-        if([[UIApplication sharedApplication] statusBarFrame].size.height > 0){
-            top += [[UIApplication sharedApplication] statusBarFrame].size.height;
-        }else{
-            if([TTDeviceHelper isIPhoneXSeries]){
-                top += 44;
+    if(self.viewController.isNewDiscovery){
+        [collectionView layoutIfNeeded];
+        return collectionView.frame.size;
+    }else{
+        CGFloat bottom = 49;
+        if (@available(iOS 11.0, *)) {
+            bottom += [[[[UIApplication sharedApplication] delegate] window] safeAreaInsets].bottom;
+        }
+        
+        CGFloat top = 0;
+        CGFloat safeTop = 0;
+        if (@available(iOS 11.0, *)) {
+            safeTop = self.viewController.view.tt_safeAreaInsets.top;
+        }
+        if (safeTop > 0) {
+            top += safeTop;
+        } else {
+            if([[UIApplication sharedApplication] statusBarFrame].size.height > 0){
+                top += [[UIApplication sharedApplication] statusBarFrame].size.height;
             }else{
-                top += 20;
+                if([TTDeviceHelper isIPhoneXSeries]){
+                    top += 44;
+                }else{
+                    top += 20;
+                }
             }
         }
+        
+        if(self.viewController.isUgcOpen){
+            top += 44;
+        }
+        
+        CGSize size = CGSizeMake([UIScreen mainScreen].bounds.size.width, [UIScreen mainScreen].bounds.size.height - top - bottom);
+        
+        return size;
     }
-    
-    if(self.viewController.isUgcOpen){
-        top += 44;
-    }
-    
-    CGSize size = CGSizeMake([UIScreen mainScreen].bounds.size.width, [UIScreen mainScreen].bounds.size.height - top - bottom);
-    
-    return size;
 }
 
 #pragma mark - UIScrollViewDelegate

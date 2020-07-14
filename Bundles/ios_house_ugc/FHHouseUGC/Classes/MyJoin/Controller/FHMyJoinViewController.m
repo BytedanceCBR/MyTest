@@ -119,6 +119,7 @@
     
     FHCommunityFeedListController *vc = [[FHCommunityFeedListController alloc] init];
     vc.listType = FHCommunityFeedListTypeMyJoin;
+    vc.isNewDiscovery = self.isNewDiscovery;
     vc.showErrorView = NO;
     vc.tableHeaderView = self.neighbourhoodView;
     vc.tracerDict = [self.tracerDict mutableCopy];
@@ -151,6 +152,7 @@
     
     FHUGCMyInterestedController *vc =[[FHUGCMyInterestedController alloc] init];
     vc.type = FHUGCMyInterestedTypeEmpty;
+    vc.isNewDiscovery = self.isNewDiscovery;
     vc.tracerDict = @{
                       @"enter_from":@"neighborhood_tab"
                       };
@@ -165,8 +167,8 @@
 
 - (FHMyJoinNeighbourhoodView *)neighbourhoodView {
     if(!_neighbourhoodView){
-        _neighbourhoodViewHeight = [FHEnvContext isNewDiscovery] ? 144 : 194;
-        _neighbourhoodView = [[FHMyJoinNeighbourhoodView alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, _neighbourhoodViewHeight)];
+        _neighbourhoodViewHeight = self.isNewDiscovery ? 144 : 194;
+        _neighbourhoodView = [[FHMyJoinNeighbourhoodView alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, _neighbourhoodViewHeight) isNewDiscovery:self.isNewDiscovery];
         
         NSMutableDictionary *tracerDict = [NSMutableDictionary dictionary];
         [tracerDict addEntriesFromDictionary:self.tracerDict];

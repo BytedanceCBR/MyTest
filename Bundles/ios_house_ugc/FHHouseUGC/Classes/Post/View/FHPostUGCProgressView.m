@@ -145,6 +145,7 @@
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     FHPostUGCProgressCell *cell = (FHPostUGCProgressCell *)[tableView dequeueReusableCellWithIdentifier:@"FHPostUGCProgressCell" forIndexPath:indexPath];
+    cell.isNewDiscovery = self.isNewDiscovery;
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
     
     NSInteger row = indexPath.row;
@@ -206,7 +207,7 @@
     
     NSMutableDictionary *tracerDict = @{}.mutableCopy;
     tracerDict[@"element_type"] = @"publish_failed_toast";
-    if([FHEnvContext isNewDiscovery]){
+    if(self.isNewDiscovery){
         tracerDict[@"page_type"] = @"f_news_recommend";
     }else{
         tracerDict[@"page_type"] = @"hot_discuss_feed";
@@ -345,7 +346,7 @@
 - (void)retryBtnClick {
     NSMutableDictionary *tracerDict = @{}.mutableCopy;
     tracerDict[@"element_from"] = @"publish_failed_toast";
-    if([FHEnvContext isNewDiscovery]){
+    if(self.isNewDiscovery){
         tracerDict[@"page_type"] = @"f_news_recommend";
     }else{
         tracerDict[@"page_type"] = @"hot_discuss_feed";
@@ -367,7 +368,7 @@
     if (self.statusModel) {
         NSMutableDictionary *tracerDict = @{}.mutableCopy;
         tracerDict[@"element_from"] = @"publish_failed_toast";
-        if([FHEnvContext isNewDiscovery]){
+        if(self.isNewDiscovery){
             tracerDict[@"page_type"] = @"f_news_recommend";
         }else{
             tracerDict[@"page_type"] = @"hot_discuss_feed";

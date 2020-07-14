@@ -10,19 +10,19 @@
 
 @implementation FHNearbyHeaderView
 
-- (instancetype)initWithFrame:(CGRect)frame {
+- (instancetype)initWithFrame:(CGRect)frame isNewDiscovery:(BOOL)isNewDiscovery {
     self = [super initWithFrame:frame];
     if (self) {
-        [self initViews];
+        [self initViews:isNewDiscovery];
         [self initConstraints];
     }
     return self;
 }
 
-- (void)initViews {
+- (void)initViews:(BOOL)isNewDiscovery {
     self.backgroundColor = [UIColor whiteColor];
     
-    if([FHEnvContext isNewDiscovery]){
+    if(isNewDiscovery){
         self.searchView = [[FHUGCSearchView alloc] initWithFrame:CGRectZero];
         _searchView.backgroundColor = [UIColor themeGray7];
         _searchView.hidden = YES;

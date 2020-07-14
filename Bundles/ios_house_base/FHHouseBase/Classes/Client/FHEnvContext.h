@@ -260,6 +260,11 @@ NS_ASSUME_NONNULL_BEGIN
 + (BOOL)isNewDiscovery;
 
 /*
+是否首页替换为新发现，默认NO
+ */
++ (BOOL)isHomeNewDiscovery;
+
+/*
 判断开启首次安装用户引导，默认YES
  */
 + (BOOL)isIntroduceOpen;

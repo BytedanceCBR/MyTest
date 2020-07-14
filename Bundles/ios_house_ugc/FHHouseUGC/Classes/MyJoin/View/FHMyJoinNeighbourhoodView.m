@@ -23,9 +23,10 @@
 
 @implementation FHMyJoinNeighbourhoodView
 
-- (instancetype)initWithFrame:(CGRect)frame {
+- (instancetype)initWithFrame:(CGRect)frame isNewDiscovery:(BOOL)isNewDiscovery {
     self = [super initWithFrame:frame];
     if (self) {
+        self.isNewDiscovery = isNewDiscovery;
         [self initViews];
         [self initConstraints];
         [self trackElementShow];
@@ -56,7 +57,7 @@
     _bottomSepView.hidden = YES;
     [self addSubview:_bottomSepView];
     
-    if([FHEnvContext isNewDiscovery]){
+    if(self.isNewDiscovery){
         self.backgroundColor = [UIColor whiteColor];
         _headerView.hidden = YES;
         _searchView.hidden = NO;
@@ -69,7 +70,7 @@
     flowLayout.sectionInset = UIEdgeInsetsMake(0, 20, 0, 0);
     flowLayout.minimumLineSpacing = 8;
     flowLayout.scrollDirection = UICollectionViewScrollDirectionHorizontal;
-    if([FHEnvContext isNewDiscovery]){
+    if(self.isNewDiscovery){
         flowLayout.sectionInset = UIEdgeInsetsMake(0, 20, 0, 20);
         flowLayout.minimumLineSpacing = 4;
     }
@@ -80,7 +81,7 @@
     _collectionView.backgroundColor = [UIColor themeGray7];
     [self addSubview:_collectionView];
     
-    if([FHEnvContext isNewDiscovery]){
+    if(self.isNewDiscovery){
         _collectionView.backgroundColor = [UIColor whiteColor];
     }
 }
@@ -111,7 +112,7 @@
         make.height.mas_equalTo(5);
     }];
     
-    if([FHEnvContext isNewDiscovery]){
+    if(self.isNewDiscovery){
         [_collectionView mas_makeConstraints:^(MASConstraintMaker *make) {
             make.top.mas_equalTo(self.searchView.mas_bottom).offset(15);
             make.left.right.mas_equalTo(self);

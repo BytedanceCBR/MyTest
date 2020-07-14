@@ -18,6 +18,9 @@ NS_ASSUME_NONNULL_BEGIN
 // 刷新视图闭包
 @property (nonatomic, copy)     dispatch_block_t      refreshViewBlk;
 
+//新的发现页面
+@property(nonatomic, assign) BOOL isNewDiscovery;
+
 // 视图高度
 - (CGFloat)viewHeight;
 
@@ -27,6 +30,9 @@ NS_ASSUME_NONNULL_BEGIN
 @end
 
 @interface FHPostUGCProgressCell : FHUGCBaseCell
+
+//新的发现页面
+@property(nonatomic, assign) BOOL isNewDiscovery;
 
 @end
 

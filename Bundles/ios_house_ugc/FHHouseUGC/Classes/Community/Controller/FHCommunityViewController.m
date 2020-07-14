@@ -48,8 +48,6 @@
 //@property(nonatomic, strong) FHUGCGuideView *guideView;
 @property(nonatomic, assign) BOOL hasShowDots;
 @property(nonatomic, assign) BOOL alreadyShowGuide;
-//新的发现页面
-@property(nonatomic, assign) BOOL isNewDiscovery;
 @property(nonatomic, assign) BOOL isFirstLoad;
 @property(nonatomic, strong) FHUGCPostMenuView *publishMenuView;
 @property (nonatomic, assign) BOOL isShowLoginTip;
@@ -62,7 +60,6 @@
     // Do any additional setup after loading the view.
     self.automaticallyAdjustsScrollViewInsets = NO;
     //test
-    self.isNewDiscovery = [FHEnvContext isNewDiscovery];
     self.hasShowDots = NO;
     self.isUgcOpen = [FHEnvContext isUGCOpen];
     self.categorys = [[FHUGCCategoryManager sharedManager].allCategories copy];
@@ -97,9 +94,9 @@
             [self initViewModel];
         }
         
-        if(![FHEnvContext isNewDiscovery] && self.isNewDiscovery != [FHEnvContext isNewDiscovery]){
-            [self updateSegmentView];
-        }
+//        if(![FHEnvContext isNewDiscovery] && self.isNewDiscovery != [FHEnvContext isNewDiscovery]){
+//            [self updateSegmentView];
+//        }
         
         self.segmentControl.sectionTitles = [self getSegmentTitles];
     }];
@@ -191,7 +188,7 @@
 }
 
 - (void)hideRedPoint {
-    if([FHEnvContext isNewDiscovery]){
+    if(self.isNewDiscovery){
         NSInteger index = [[FHUGCCategoryManager sharedManager] getCategoryIndex:@"f_ugc_neighbor"];
         if(self.viewModel.currentTabIndex == index && self.hasFocusTips){
             self.hasFocusTips = NO;
@@ -279,7 +276,7 @@
     if(self.isUgcOpen){
         //去掉邻里tab的红点
         [FHEnvContext hideFindTabRedDots];
-        if([FHEnvContext isNewDiscovery]){
+        if(self.isNewDiscovery){
             NSInteger index = [[FHUGCCategoryManager sharedManager] getCategoryIndex:@"f_ugc_neighbor"];
             //去掉圈子红点的同时刷新tab
             if(self.viewModel.currentTabIndex == index && [FHUGCConfig sharedInstance].ugcCommunityHasNew){
@@ -303,7 +300,7 @@
     }
     
     //关注tab，没有关注时需要隐藏关注按钮
-    if(![FHEnvContext isNewDiscovery]){
+    if(!self.isNewDiscovery){
         if(self.viewModel.currentTabIndex == 0 && [FHUGCConfig sharedInstance].followList.count <= 0){
             self.publishBtn.hidden = YES;
         }else{
@@ -508,6 +505,11 @@
             }
         }
     }
+    
+    if(self.isNewDiscovery){
+        top = 0;
+        bottom = 0;
+    }
 
     [self.topView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(self.view).offset(top);
@@ -525,23 +527,6 @@
         make.left.bottom.right.equalTo(self.topView);
         make.height.mas_equalTo(TTDeviceHelper.ssOnePixel);
     }];
-    
-//    CGFloat segmentContentWidth = [self.segmentControl totalSegmentedControlWidth];
-//
-//    if(self.isNewDiscovery && segmentContentWidth >= SCREEN_WIDTH){
-//        [self.segmentControl mas_makeConstraints:^(MASConstraintMaker *make) {
-//            make.left.right.mas_equalTo(self.topView);
-//            make.height.mas_equalTo(44);
-//            make.bottom.mas_equalTo(self.topView).offset(-8);
-//        }];
-//    }else{
-//        [self.segmentControl mas_makeConstraints:^(MASConstraintMaker *make) {
-//            make.centerX.mas_equalTo(self.topView);
-//            make.width.mas_equalTo(segmentContentWidth);
-//            make.height.mas_equalTo(44);
-//            make.bottom.mas_equalTo(self.topView).offset(-8);
-//        }];
-//    }
     
     [self.containerView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(self.topView.mas_bottom);
@@ -569,16 +554,16 @@
 
 - (void)updateSegmentView {
     BOOL same = [[FHUGCCategoryManager sharedManager] isSameCategory:self.categorys];
-    if(self.isNewDiscovery != [FHEnvContext isNewDiscovery] || !same){
-        if(self.isNewDiscovery != [FHEnvContext isNewDiscovery]){
-            self.isNewDiscovery = [FHEnvContext isNewDiscovery];
-            [self initViewModel];
-            if(self.isNewDiscovery){
-                [self setupDiscoverySetmentedControl];
-            }else{
-                [self setupSetmentedControl];
-            }
-        }else{
+    if(!same){
+//        if(self.isNewDiscovery != [FHEnvContext isNewDiscovery]){
+//            self.isNewDiscovery = [FHEnvContext isNewDiscovery];
+//            [self initViewModel];
+//            if(self.isNewDiscovery){
+//                [self setupDiscoverySetmentedControl];
+//            }else{
+//                [self setupSetmentedControl];
+//            }
+//        }else{
             [self initViewModel];
             self.segmentControl.selectedSegmentIndex = self.viewModel.currentTabIndex;
             self.segmentControl.sectionTitles = [self getSegmentTitles];
@@ -597,9 +582,9 @@
                     make.bottom.mas_equalTo(self.topView).offset(-8);
                 }];
             }
-        }
+//        }
     }else{
-        if([FHEnvContext isNewDiscovery]){
+        if(self.isNewDiscovery){
             self.viewModel.currentTabIndex = 0;
             NSIndexPath *indexPath = [NSIndexPath indexPathForRow:0 inSection:0];
             [self.collectionView scrollToItemAtIndexPath:indexPath atScrollPosition:UICollectionViewScrollPositionLeft animated:NO];
@@ -612,7 +597,7 @@
 }
 
 - (void)changeTab {
-    if([FHEnvContext isNewDiscovery]){
+    if(self.isNewDiscovery){
         NSInteger index = [[FHUGCCategoryManager sharedManager] getCategoryIndex:@"f_news_recommend"];
         if (self.navigationController.viewControllers.count <= 1) {
             [self.viewModel changeTab:index];

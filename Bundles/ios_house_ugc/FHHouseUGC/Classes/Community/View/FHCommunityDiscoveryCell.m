@@ -72,14 +72,17 @@
     
     if(_cellModel.type == FHCommunityCollectionCellTypeNearby){
         FHNearbyViewController *vc = [[FHNearbyViewController alloc] init];
+        vc.isNewDiscovery = YES;
         self.vc = vc;
     }else if(_cellModel.type == FHCommunityCollectionCellTypeMyJoin){
         FHMyJoinViewController *vc = [[FHMyJoinViewController alloc] init];
         vc.withTips = self.withTips;
+        vc.isNewDiscovery = YES;
         self.vc = vc;
     }else if(_cellModel.type == FHCommunityCollectionCellTypeCustom){
         FHCommunityFeedListController *vc = [[FHCommunityFeedListController alloc] init];
         vc.listType = FHCommunityFeedListTypeCustom;
+        vc.isNewDiscovery = YES;
         vc.category = _cellModel.category;
         vc.needReportEnterCategory = YES;
         if([_cellModel.category isEqualToString:@"f_news_recommend"]){

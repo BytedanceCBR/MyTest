@@ -53,7 +53,7 @@
         _collectionView.delegate = self;
         _messageViewHeight = 0;
 
-        if([FHEnvContext isNewDiscovery]){
+        if(self.viewController.isNewDiscovery){
             _maxFollowItem = 3;
             [_collectionView registerClass:[FHMyJoinCommnityCell class] forCellWithReuseIdentifier:cellId];
         }else{
@@ -100,7 +100,7 @@
 - (void)requestData {
     [self.dataList removeAllObjects];
     [self.clientShowDict removeAllObjects];
-    if([FHEnvContext isNewDiscovery]){
+    if(self.viewController.isNewDiscovery){
         [self addAllItem];
         if([[FHUGCConfig sharedInstance] followList].count > _maxFollowItem){
             NSArray *followList = [[FHUGCConfig sharedInstance] followList];
@@ -126,7 +126,7 @@
 - (void)addAllItem {
     FHUGCScialGroupDataModel *model = [[FHUGCScialGroupDataModel alloc] init];
     model.socialGroupId = @"-1";
-    if([FHEnvContext isNewDiscovery]){
+    if(self.viewController.isNewDiscovery){
         model.socialGroupName = @"全部圈子";
         model.countText = @"发现精彩社区";
     }
@@ -213,7 +213,7 @@
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
     NSString *reuseId = cellId;
-    if((indexPath.row == self.dataList.count - 1) && ![FHEnvContext isNewDiscovery]){
+    if((indexPath.row == self.dataList.count - 1) && !self.viewController.isNewDiscovery){
         reuseId = allCellId;
     }
 
@@ -222,7 +222,7 @@
         [cell refreshWithData:self.dataList[indexPath.row]];
     }
     
-    if((indexPath.row == self.dataList.count - 1) && ![FHEnvContext isNewDiscovery]){
+    if((indexPath.row == self.dataList.count - 1) && !self.viewController.isNewDiscovery){
         self.allCell = (FHMyJoinAllNeighbourhoodCell *)cell;
     }
     
@@ -257,7 +257,7 @@
 }
 
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath {
-    if([FHEnvContext isNewDiscovery]){
+    if(self.viewController.isNewDiscovery){
         return CGSizeMake(120, 60);
     }else{
         //最后一个为全部
@@ -279,7 +279,7 @@
 #pragma mark - UIScrollViewDelegate
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
-    if(scrollView == self.collectionView && ![FHEnvContext isNewDiscovery]){
+    if(scrollView == self.collectionView && !self.viewController.isNewDiscovery){
         CGFloat diff = 0;
         if(scrollView.contentSize.width <= [UIScreen mainScreen].bounds.size.width){
             diff = scrollView.contentOffset.x - self.beiginOffset;
@@ -291,7 +291,7 @@
 }
 
 - (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate {
-    if(scrollView == self.collectionView && ![FHEnvContext isNewDiscovery]){
+    if(scrollView == self.collectionView && !self.viewController.isNewDiscovery){
         CGFloat diff = 0;
         if(scrollView.contentSize.width <= [UIScreen mainScreen].bounds.size.width){
             diff = scrollView.contentOffset.x - self.beiginOffset;
@@ -305,7 +305,7 @@
 }
 
 - (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView {
-    if(scrollView == self.collectionView && ![FHEnvContext isNewDiscovery]){
+    if(scrollView == self.collectionView && !self.viewController.isNewDiscovery){
         self.beiginOffset = scrollView.contentOffset.x;
     }
 }

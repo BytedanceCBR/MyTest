@@ -46,7 +46,7 @@
     if (self) {
         self.dataList = [[NSMutableArray alloc] init];
         [self configTableView];
-        if(![FHEnvContext isNewDiscovery]){
+        if(!viewController.isNewDiscovery){
             // 发帖成功
             [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(postThreadSuccess:) name:kTTForumPostThreadSuccessNotification object:nil];
         }

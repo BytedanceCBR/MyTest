@@ -209,7 +209,7 @@ typedef NS_ENUM(NSUInteger,TTTabbarTipViewType){
     //消息通知优化重要的人消息未读提示
 //    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(showMessageNotificationTips:) name:kTTMessageNotificationTipsChangeNotification object:nil];
     //ugc小红点控制逻辑
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(showSecondTabRedDotsNew) name:kFHUGCRecomendTabHasNewNotification object:nil];
+//    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(showSecondTabRedDotsNew) name:kFHUGCRecomendTabHasNewNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(showSecondTabRedDots) name:kFHUGCFocusTabHasNewNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(showSecondTabRedDots) name:kTTMessageNotificationTipsChangeNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(showSecondTabRedDots) name:kFHUGCFollowNotification object:nil];
@@ -2107,18 +2107,18 @@ typedef NS_ENUM(NSUInteger,TTTabbarTipViewType){
     return (NSUInteger)lastIndex;
 }
 
-- (void)showSecondTabRedDotsNew {
-    if([FHEnvContext isNewDiscovery]){
-        if(![[self lastTabIdentifier] isEqualToString:kFHouseFindTabKey]){
-            BOOL hasNew = [FHUGCConfig sharedInstance].ugcHasNew;
-            if (hasNew) {
-                [FHEnvContext showFindTabRedDots];
-            }else{
-                [FHEnvContext hideFindTabRedDots];
-            }
-        }
-    }
-}
+//- (void)showSecondTabRedDotsNew {
+//    if([FHEnvContext isNewDiscovery]){
+//        if(![[self lastTabIdentifier] isEqualToString:kFHouseFindTabKey]){
+//            BOOL hasNew = [FHUGCConfig sharedInstance].ugcHasNew;
+//            if (hasNew) {
+//                [FHEnvContext showFindTabRedDots];
+//            }else{
+//                [FHEnvContext hideFindTabRedDots];
+//            }
+//        }
+//    }
+//}
 
 - (void)showSecondTabRedDots {
     //判断条件 1、不在邻里tab 2、关注页面有新内容 或者 有关注页面有新消息

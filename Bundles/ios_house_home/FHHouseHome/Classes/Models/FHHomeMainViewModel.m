@@ -12,11 +12,12 @@
 #import "FHEnvContext.h"
 #import "ArticleTabbarStyleNewsListViewController.h"
 #import "FHHomeViewController.h"
+#import "FHCommunityViewController.h"
 
 @interface FHHomeMainViewModel()<UICollectionViewDelegate,UICollectionViewDataSource>
 @property(nonatomic , strong) UICollectionView *collectionView;
 @property(nonatomic , weak) FHHomeMainViewController *viewController;
-@property(nonatomic , weak) ArticleTabBarStyleNewsListViewController *articleListVC;
+@property(nonatomic , weak) id feedListVC;
 @property(nonatomic , weak) FHHomeViewController *homeListVC;
 @property(nonatomic , strong) NSMutableArray *dataArray;
 @property(nonatomic , assign) CGPoint beginOffSet;
@@ -37,15 +38,26 @@
         collectionView.dataSource = self;
         self.viewController = (FHHomeMainViewController *)viewController;
         
-        [self resetCollectionOffset];
+//        if([[FHEnvContext sharedInstance] isRefreshFromCitySwitch]){
+            [self resetCollectionOffset];
+//        }
     }
     return self;
 }
 
 - (void)resetCollectionOffset
 {
-    NSIndexPath *indexPath = [NSIndexPath indexPathForRow:0 inSection:0];
+    if([[FHEnvContext sharedInstance] isRefreshFromCitySwitch]){
+        self.viewController.currentTabIndex = 0;
+    }
+    NSInteger row = self.viewController.currentTabIndex;
+    NSIndexPath *indexPath = [NSIndexPath indexPathForRow:row inSection:0];
     if ([self.collectionView numberOfItemsInSection:0] > 0) {
+        self.viewController.topView.segmentControl.selectedSegmentIndex = self.viewController.currentTabIndex;
+        [self.viewController.topView changeBackColor:row];
+        if (row == 1) {
+            [self.viewController changeTopStatusShowHouse:NO];
+        }
         [self.collectionView scrollToItemAtIndexPath:indexPath atScrollPosition:UICollectionViewScrollPositionLeft animated:NO];
     }
 }
@@ -53,7 +65,7 @@
 - (void)resetDataArray
 {
     if ([FHEnvContext isCurrentCityNormalOpen]) {
-        self.dataArray = [FHEnvContext isNewDiscovery] ? @[@(kFHHomeMainCellTypeHouse)] : @[@(kFHHomeMainCellTypeHouse),@(kFHHomeMainCellTypeFeed)];
+        self.dataArray = @[@(kFHHomeMainCellTypeHouse),@(kFHHomeMainCellTypeFeed)];
     }else
     {
         self.dataArray = @[@(kFHHomeMainCellTypeFeed)];
@@ -97,8 +109,8 @@
         [self.viewController addChildViewController:cell.contentVC];
     }
     
-    if ([cell.contentVC isKindOfClass:[ArticleTabBarStyleNewsListViewController class]]) {
-        self.articleListVC = cell.contentVC;
+    if ([cell.contentVC isKindOfClass:[ArticleTabBarStyleNewsListViewController class]] || [cell.contentVC isKindOfClass:[FHCommunityViewController class]]) {
+        self.feedListVC = cell.contentVC;
     }
     
     if ([cell.contentVC isKindOfClass:[FHHomeViewController class]]) {
@@ -116,7 +128,7 @@
 #pragma mark - UIScrollViewDelegate
 
 - (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView {
-    self.beginOffSet = CGPointMake(self.currentIndex * [UIScreen mainScreen].bounds.size.width, scrollView.contentOffset.y);
+    self.beginOffSet = CGPointMake(self.viewController.currentTabIndex * [UIScreen mainScreen].bounds.size.width, scrollView.contentOffset.y);
     self.oldX = scrollView.contentOffset.x;
 }
 
@@ -146,8 +158,8 @@
     [self.homeListVC.topBar changeBackColor:(scrollView.contentOffset.x / [UIScreen mainScreen].bounds.size.width) > 0.5 ? 1 : 0];
 
     if(tabIndex != self.viewController.topView.segmentControl.selectedSegmentIndex){
-        self.currentIndex = tabIndex;
-        self.viewController.topView.segmentControl.selectedSegmentIndex = self.currentIndex;
+        self.viewController.currentTabIndex = tabIndex;
+        self.viewController.topView.segmentControl.selectedSegmentIndex = tabIndex;
         
 
         [FHEnvContext sharedInstance].isShowingHomeHouseFind = (tabIndex == 0);
@@ -157,7 +169,7 @@
         if(scrollView.contentOffset.x < 0 || scrollView.contentOffset.x > [UIScreen mainScreen].bounds.size.width * (self.viewController.topView.segmentControl.sectionTitles.count - 1)){
             return;
         }
-        self.currentIndex = tabIndex;
+        self.viewController.currentTabIndex = tabIndex;
         
         CGFloat value = scrollDistance/[UIScreen mainScreen].bounds.size.width;
         [self.viewController.topView.segmentControl setScrollValue:value isDirectionLeft:diff < 0];
@@ -181,7 +193,7 @@
     }else
     {
         //切换城市补报
-        if (!self.articleListVC) {
+        if (!self.feedListVC) {
               NSMutableDictionary *traceDict = [NSMutableDictionary new];
              if (enterType == FHHomeMainTraceEnterTypeClick) {
                  [traceDict setValue:@"click" forKey:@"enter_type"];
@@ -198,7 +210,10 @@
                                  forKey:@"category_name"];
              [FHEnvContext recordEvent:traceDict andEventKey:@"enter_category"];
         }else{
-           [self.articleListVC viewAppearForEnterType:enterType];
+            if ([self.feedListVC isKindOfClass:[ArticleTabBarStyleNewsListViewController class]]) {
+                ArticleTabBarStyleNewsListViewController *articleListVC = (ArticleTabBarStyleNewsListViewController *)self.feedListVC;
+                [articleListVC viewAppearForEnterType:enterType];
+            }
         }
     }
 }
@@ -209,7 +224,10 @@
         [[NSNotificationCenter defaultCenter] postNotificationName:@"FHHomeItemVCStayCategory" object:@(enterType)];
     }else
     {
-        [self.articleListVC viewDisAppearForEnterType:enterType];
+        if ([self.feedListVC isKindOfClass:[ArticleTabBarStyleNewsListViewController class]]) {
+            ArticleTabBarStyleNewsListViewController *articleListVC = (ArticleTabBarStyleNewsListViewController *)self.feedListVC;
+            [articleListVC viewDisAppearForEnterType:enterType];
+        }
     }
 }
 

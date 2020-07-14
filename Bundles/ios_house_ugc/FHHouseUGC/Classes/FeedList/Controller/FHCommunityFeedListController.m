@@ -287,7 +287,10 @@
 }
 
 - (void)showNotify:(NSString *)message completion:(void(^)())completion {
-    self.originContentInset = self.tableView.contentInset;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        self.originContentInset = self.tableView.contentInset;
+    });
     UIEdgeInsets inset = self.tableView.contentInset;
     inset.top = self.notifyBarView.height;
     self.tableView.contentInset = inset;

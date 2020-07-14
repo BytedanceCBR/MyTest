@@ -81,7 +81,7 @@
     
     UIView *headerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 0, 0.001)];
     if(self.type == FHUGCMyInterestedTypeEmpty){
-        if([FHEnvContext isNewDiscovery]){
+        if(self.isNewDiscovery){
             headerView = [self emptyHeaderViewDiscovery];
         }else{
             headerView = [self emptyHeaderView];
