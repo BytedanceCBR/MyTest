@@ -434,10 +434,32 @@ static NSString * const kTTAPNsImportanceKey = @"important";
             }
 
 //            NSURL *handledOpenURL = [TTStringHelper URLWithURLString:openURL];
+            //1.03 push添加origin_from埋点
+            NSMutableDictionary *info =  [NSMutableDictionary new];
+            [info setValue:@(1) forKey:@"isFromPush"];
+
+            NSMutableDictionary *tracerDict = [NSMutableDictionary dictionaryWithDictionary:@{ @"enter_from": @"push",
+                                                                                               @"enter_type": @"click",
+                                                                                               @"element_from": @"be_null",
+                                                                                               @"rank": @"be_null",
+                                                                                               @"card_type": @"be_null",
+                                                                                               @"origin_from": @"push",
+                                                                                               @"origin_search_id": @"be_null"
+            } ];
+            if ([paramObj.queryParams.allKeys containsObject:@"origin_from"]) {
+                NSString *value = [paramObj.queryParams objectForKey:@"origin_from"];
+                if (value != nil) {
+                    [tracerDict setValue:value forKey:@"origin_from"];
+                } else {
+                    [tracerDict setValue:@"push" forKey:@"origin_from"];
+                }
+            }
+            [info setValue:tracerDict forKey:@"tracer"];
+            TTRouteUserInfo* userInfo = [[TTRouteUserInfo alloc] initWithInfo:info.copy];
             if ([[openURL host] isEqualToString:@"main"]) {
                 NSString * str = [schemaString stringByAppendingString:@"&needToRoot=1"];
                 openURL = [TTStringHelper URLWithURLString:str];
-                [[TTRoute sharedRoute] openURL:openURL userInfo:nil objHandler:nil];
+                [[TTRoute sharedRoute] openURL:openURL userInfo:userInfo objHandler:nil];
 //                TTRouteParamObj* obj = [[TTRoute sharedRoute] routeParamObjWithURL:openURL];
 //                NSDictionary* params = [obj queryParams];
 //                if (params != nil) {
@@ -459,21 +481,11 @@ static NSString * const kTTAPNsImportanceKey = @"important";
                     }
                 }
                  */
-                NSDictionary* info = @{@"isFromPush": @(1),
-                                       @"tracer":@{@"enter_from": @"push",
-                                                   @"enter_type": @"click",
-                                                   @"element_from": @"be_null",
-                                                   @"rank": @"be_null",
-                                                   @"card_type": @"be_null",
-                                                   @"origin_from": @"push",
-                                                   @"origin_search_id": @"be_null"
-//                                                   @"group_id": paramObj.allParams[@"group_id"],
-                                                   }};
                 id<FHHouseEnvContextBridge> envBridge = [[FHHouseBridgeManager sharedInstance] envContextBridge];
                 [envBridge setTraceValue:@"push" forKey:@"origin_from"];
                 [envBridge setTraceValue:@"be_null" forKey:@"origin_search_id"];
                 
-                TTRouteUserInfo* userInfo = [[TTRouteUserInfo alloc] initWithInfo:info];
+                
                 [[TTRoute sharedRoute] openURLByPushViewController:openURL userInfo:userInfo];
             }
             

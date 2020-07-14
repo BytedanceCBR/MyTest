@@ -189,12 +189,31 @@ static APNsManager *_sharedManager = nil;
 
             NSURL *handledOpenURL = [TTStringHelper URLWithURLString:openURL];
             
-            [FHEnvContext sharedInstance].refreshConfigRequestType = @"link_launch";
+        [FHEnvContext sharedInstance].refreshConfigRequestType = @"link_launch";
+        NSMutableDictionary *info =  [NSMutableDictionary new];
+        [info setValue:@(1) forKey:@"isFromPush"];
 
+        NSMutableDictionary *tracerDict = [NSMutableDictionary dictionaryWithDictionary:@{ @"enter_from": @"push",
+                                                                                           @"enter_type": @"click",
+                                                                                           @"element_from": @"be_null",
+                                                                                           @"rank": @"be_null",
+                                                                                           @"card_type": @"be_null",
+                                                                                           @"origin_from": @"push",
+                                                                                           @"origin_search_id": @"be_null" } ];
+        if ([paramObj.queryParams.allKeys containsObject:@"origin_from"]) {
+            NSString *value = [paramObj.queryParams objectForKey:@"origin_from"];
+            if (value != nil) {
+                [tracerDict setValue:value forKey:@"origin_from"];
+            } else {
+                [tracerDict setValue:@"push" forKey:@"origin_from"];
+            }
+        }
+        [info setValue:tracerDict forKey:@"tracer"];
+        TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:info.copy];
             if ([[handledOpenURL host] isEqualToString:@"main"]) {
                 NSString * str = [openURL stringByAppendingString:@"&needToRoot=0"];
                 handledOpenURL = [TTStringHelper URLWithURLString:str];
-                [[TTRoute sharedRoute] openURL:handledOpenURL userInfo:nil objHandler:nil];
+                [[TTRoute sharedRoute] openURL:handledOpenURL userInfo:userInfo objHandler:nil];
 //                TTRouteParamObj* obj = [[TTRoute sharedRoute] routeParamObjWithURL:handledOpenURL];
 //                NSDictionary* params = [obj queryParams];
 //                if (params != nil) {
@@ -221,17 +240,7 @@ static APNsManager *_sharedManager = nil;
                 [envBridge setTraceValue:@"push" forKey:@"origin_from"];
                 [envBridge setTraceValue:@"be_null" forKey:@"origin_search_id"];
                 
-                NSDictionary* info = @{@"isFromPush": @(1),
-                                       @"tracer":@{@"enter_from": @"push",
-                                                   @"enter_type": @"click",
-                                                   @"element_from": @"be_null",
-                                                   @"rank": @"be_null",
-                                                   @"card_type": @"be_null",
-                                                   @"origin_from": @"push",
-                                                   @"origin_search_id": @"be_null"
-//                                                   @"group_id": paramObj.allParams[@"group_id"],
-                                                   }};
-                TTRouteUserInfo* userInfo = [[TTRouteUserInfo alloc] initWithInfo:info];
+
                 float fSystemVersion = [[UIDevice currentDevice].systemVersion floatValue];
                 if (fSystemVersion >= 10.0 && fSystemVersion < 11.0) { // 10.0
                     userInfo.animated = @(0);

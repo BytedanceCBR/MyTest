@@ -72,19 +72,46 @@
             for (NSInteger i = 0; i < jumpList.count; i++) {
                 NSString *urlStr = jumpList[i];
                 if(!isEmptyString(urlStr)){
+                    TTRouteUserInfo* userInfo = nil;
                     NSURL *url = [NSURL URLWithString:urlStr];
                     if(i == jumpList.count - 1){
-                        [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:nil];
+                        [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:[self getTracerFromUrl:url withParams:params]];
                     }else{
-                        [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:nil pushHandler:^(UINavigationController *nav, TTRouteObject *routeObj) {
+                        [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:[self getTracerFromUrl:url withParams:params] pushHandler:^(UINavigationController *nav, TTRouteObject *routeObj) {
                             [nav pushViewController:routeObj.instance animated:NO];
                         }];
-                        
                     }
                 }
             }
         }
     }
+}
+
+- (TTRouteUserInfo *)getTracerFromUrl:(NSURL *)url withParams:(NSDictionary *)params{
+    TTRouteUserInfo* userInfo = nil;
+    if (params[@"isFromPush"]) {
+        TTRouteParamObj *paramObj = [[TTRoute sharedRoute] routeParamObjWithURL:url];
+        NSMutableDictionary *info =  [NSMutableDictionary new];
+        NSMutableDictionary *tracerDict = [NSMutableDictionary dictionaryWithDictionary:@{ @"enter_from": @"push",
+                                                                                           @"enter_type": @"click",
+                                                                                           @"element_from": @"be_null",
+                                                                                           @"rank": @"be_null",
+                                                                                           @"card_type": @"be_null",
+                                                                                           @"origin_from": @"push",
+                                                                                           @"origin_search_id": @"be_null"
+        } ];
+        if ([paramObj.queryParams.allKeys containsObject:@"origin_from"]) {
+            NSString *value = [paramObj.queryParams objectForKey:@"origin_from"];
+            if (value != nil) {
+                [tracerDict setValue:value forKey:@"origin_from"];
+            } else {
+                [tracerDict setValue:@"push" forKey:@"origin_from"];
+            }
+        }
+        [info setValue:tracerDict forKey:@"tracer"];
+        userInfo = [[TTRouteUserInfo alloc] initWithInfo:info.copy];
+    }
+    return userInfo;
 }
 
 //是否在4个tab的根vc页面
