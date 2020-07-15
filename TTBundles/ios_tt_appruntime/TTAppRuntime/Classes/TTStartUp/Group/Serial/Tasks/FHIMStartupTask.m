@@ -348,6 +348,9 @@ DEC_TASK("FHIMStartupTask",FHTaskTypeSerial,TASK_PRIORITY_HIGH+16);
 - (BOOL)isEnableRecordVoiceSegment {
     return [SSCommonLogic enableRecordVoiceSegment];
 }
+- (BOOL)isEnableIMOnlineMonitorLogic {
+    return [SSCommonLogic enableIMOnlineMonitorLogic];
+}
 @end
 
 @implementation FHIMStartupTask
