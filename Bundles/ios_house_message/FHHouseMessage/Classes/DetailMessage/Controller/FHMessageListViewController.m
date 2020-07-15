@@ -112,8 +112,7 @@
         }
     }
     NSString *origin_from = [self.tracerDict tt_stringValueForKey:@"origin_from"];
-    BOOL isFromPush =  [self.tracerDict tt_boolValueForKey:@"isFromPush"];
-    if (isFromPush && (origin_from.length > 0)) {
+    if ((origin_from.length > 0)) {
         originFrom = origin_from;
     }
     return originFrom;
