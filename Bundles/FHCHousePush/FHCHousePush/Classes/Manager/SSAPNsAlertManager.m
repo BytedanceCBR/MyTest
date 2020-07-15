@@ -450,8 +450,6 @@ static NSString * const kTTAPNsImportanceKey = @"important";
                 NSString *value = [paramObj.queryParams objectForKey:@"origin_from"];
                 if (value != nil) {
                     [tracerDict setValue:value forKey:@"origin_from"];
-                } else {
-                    [tracerDict setValue:@"push" forKey:@"origin_from"];
                 }
             }
             [info setValue:tracerDict forKey:@"tracer"];

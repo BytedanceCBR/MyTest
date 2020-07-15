@@ -15,6 +15,7 @@
 #import "JSONAdditions.h"
 #import "TTArticleTabBarController.h"
 #import "FHEnvContext.h"
+#import "NSDictionary+TTAdditions.h"
 
 @interface FHHomeSchemaObject()<TTRouteInitializeProtocol>
 
@@ -86,12 +87,14 @@
         }
     }
 }
-
+//1.0.3 push进来的页面添加origin_from字段
 - (TTRouteUserInfo *)getTracerFromUrl:(NSURL *)url withParams:(NSDictionary *)params{
     TTRouteUserInfo* userInfo = nil;
-    if (params[@"isFromPush"]) {
+    BOOL isFromPush =  [params tt_boolValueForKey:@"isFromPush"];
+    if (isFromPush) {
         TTRouteParamObj *paramObj = [[TTRoute sharedRoute] routeParamObjWithURL:url];
         NSMutableDictionary *info =  [NSMutableDictionary new];
+        [info setValue:@(1) forKey:@"isFromPush"];
         NSMutableDictionary *tracerDict = [NSMutableDictionary dictionaryWithDictionary:@{ @"enter_from": @"push",
                                                                                            @"enter_type": @"click",
                                                                                            @"element_from": @"be_null",
@@ -104,8 +107,6 @@
             NSString *value = [paramObj.queryParams objectForKey:@"origin_from"];
             if (value != nil) {
                 [tracerDict setValue:value forKey:@"origin_from"];
-            } else {
-                [tracerDict setValue:@"push" forKey:@"origin_from"];
             }
         }
         [info setValue:tracerDict forKey:@"tracer"];
