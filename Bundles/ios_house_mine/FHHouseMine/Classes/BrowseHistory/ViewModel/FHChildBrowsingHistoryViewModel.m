@@ -18,6 +18,8 @@
 #import "FHSearchBaseItemModel.h"
 #import "FHHouseBaseItemCell.h"
 #import "FHBrowsingHistoryContentCell.h"
+#import <FHCommonUI/FHRefreshCustomFooter.h>
+#import "FHHouseBaseNewHouseCell.h"
 
 @interface FHChildBrowsingHistoryViewModel()<FHBrowsingHistoryEmptyViewDelegate, UITableViewDelegate, UITableViewDataSource>
 
@@ -26,6 +28,7 @@
 @property (nonatomic, weak) UITableView *tableView;
 @property (nonatomic, weak) TTHttpTask *requestTask;
 @property (nonatomic, strong) NSMutableArray *historyList;
+@property (nonatomic, assign) NSInteger offset;
 
 @end
 
@@ -42,6 +45,14 @@
         tableView.delegate = self;
         tableView.dataSource = self;
         [self registerCellClasses];
+        
+        __weak typeof(self) wself = self;
+        FHRefreshCustomFooter *footer = [FHRefreshCustomFooter footerWithRefreshingBlock:^{
+            [wself requestData:NO];
+        }];
+        self.tableView.mj_footer = footer;
+        [footer setUpNoMoreDataText:@"没有更多信息了"];
+        footer.hidden = YES;
     }
     return self;
 }
@@ -51,7 +62,7 @@
     [_tableView registerClass:[FHHouseBaseItemCell class] forCellReuseIdentifier:[FHSearchHouseItemModel cellIdentifierByHouseType:FHHouseTypeSecondHandHouse]];
     [_tableView registerClass:[FHHouseBaseItemCell class] forCellReuseIdentifier:[FHSearchHouseItemModel cellIdentifierByHouseType:FHHouseTypeRentHouse]];
     [_tableView registerClass:[FHHouseBaseItemCell class] forCellReuseIdentifier:[FHSearchHouseItemModel cellIdentifierByHouseType:FHHouseTypeNeighborhood]];
-    [_tableView registerClass:[FHHouseBaseItemCell class] forCellReuseIdentifier:[FHSearchHouseItemModel cellIdentifierByHouseType:FHHouseTypeNewHouse]];
+    [_tableView registerClass:[FHHouseBaseNewHouseCell class] forCellReuseIdentifier:@"FHHouseBaseNewHouseCell"];
     [_tableView registerClass:[FHBrowsingHistoryContentCell class] forCellReuseIdentifier:@"FHBrowsingHistoryContentCell"];
 }
 
@@ -73,6 +84,7 @@
     if (model) {
         NSMutableArray *items = @[].mutableCopy;
         FHBrowseHistoryHouseDataModel *historyModel = ((FHBrowseHistoryHouseResultModel *)model).data;
+        self.offset = historyModel.offset;
         if (historyModel.historyItems.count > 0) {
             [items addObjectsFromArray:historyModel.historyItems];
         }
@@ -85,6 +97,16 @@
         self.emptyView.hidden = YES;
         self.tableView.hidden = NO;
         [self.tableView reloadData];
+        if (self.historyList.count > 10) {
+            self.tableView.mj_footer.hidden = NO;
+        } else {
+            self.tableView.mj_footer.hidden = YES;
+        }
+        if (!historyModel.hasMore) {
+            [self.tableView.mj_footer endRefreshingWithNoMoreData];
+        } else {
+            [self.tableView.mj_footer endRefreshing];
+        }
     }
 }
 
@@ -123,6 +145,10 @@
 
 - (Class)cellClassForEntity:(id)model {
     if ([model isKindOfClass:[FHSearchHouseItemModel class]]) {
+        FHSearchHouseItemModel *houseModel = (FHSearchHouseItemModel *)model;
+        if (houseModel.houseType.integerValue == FHHouseTypeNewHouse) {
+            return [FHHouseBaseNewHouseCell class];
+        }
         return [FHHouseBaseItemCell class];
     } else if ([model isKindOfClass:[FHBrowseHistoryContentModel class]]) {
         return [FHBrowsingHistoryContentCell class];
@@ -135,6 +161,9 @@
         return @"FHBrowsingHistoryContentCell";
     } else if ([model isKindOfClass:[FHSearchHouseItemModel class]]) {
         FHSearchHouseItemModel *houseModel = (FHSearchHouseItemModel *)model;
+        if (houseModel.houseType.integerValue == FHHouseTypeNewHouse) {
+            return @"FHHouseBaseNewHouseCell";
+        }
         return [FHSearchHouseItemModel cellIdentifierByHouseType:houseModel.houseType.integerValue];
     }
     return @"";
@@ -199,6 +228,21 @@
     return 88;
 }
 
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    NSInteger row = indexPath.row;
+    if (row >= 0 && row < _historyList.count) {
+        id cellModel = _historyList[row];
+        if ([cellModel isKindOfClass:[FHSearchHouseItemModel class]]) {
+            [self showHouseDetail:cellModel atIndex:row];
+        }
+    }
+}
+
+- (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView {
+    // 开始拖拽滑动时，收起键盘
+    self.viewController.fatherVC.collectionView.scrollEnabled = NO;
+}
+
 #pragma mark - FHBrowsingHistoryEmptyViewDelegate
 - (void)clickFindHouse:(FHHouseType)houseType {
     NSArray *houseTypeList = [[FHEnvContext sharedInstance] getConfigFromCache].houseTypeList;
@@ -241,8 +285,19 @@
     }
 }
 
+-(void)showHouseDetail:(id)cellModel atIndex:(NSInteger *)index {
+    NSString *logPb = @"";
+    NSMutableDictionary *tracerParam = [NSMutableDictionary dictionary];
+    NSString *urlStr = nil;
+    tracerParam[@"card_type"] = @"left_pic";
+    if ([cellModel isKindOfClass:[FHSearchHouseItemModel class]]) {
+        
+    }
+    
+}
+
 - (void)popToMainPage {
-    [self.viewController.fatherVC.navigationController popToRootViewControllerAnimated:YES];
+    [self.viewController.navigationController popToRootViewControllerAnimated:YES];
     if (![[FHHomeConfigManager sharedInstance].fhHomeBridgeInstance isCurrentTabFirst]) {
         [[FHHomeConfigManager sharedInstance].fhHomeBridgeInstance jumpToTabbarFirst];
     }

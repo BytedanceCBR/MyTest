@@ -9,15 +9,18 @@
 #import "FHHouseType.h"
 #import "FHBaseViewController.h"
 #import "HMSegmentedControl.h"
+#import "FHSuggestionCollectionView.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
 @interface FHBrowsingHistoryViewController : FHBaseViewController
 
+@property (nonatomic, strong) FHSuggestionCollectionView *collectionView;
 @property (nonatomic, strong) NSMutableArray *houseTypeArray;
 @property (nonatomic, assign) FHHouseType    houseType;
 @property (nonatomic, strong) HMSegmentedControl *segmentControl;
 @property (nonatomic, strong) TTRouteParamObj *paramObj;
+
 @end
 
 NS_ASSUME_NONNULL_END

@@ -5,7 +5,6 @@
 //  Created by wangxinyu on 2020/7/10.
 //
 
-#import "FHBrowsingHistoryViewController.h"
 #import "FHSuggestionCollectionView.h"
 #import "TTDeviceHelper.h"
 #import "HMSegmentedControl.h"
@@ -17,7 +16,6 @@
 
 @interface FHBrowsingHistoryViewController ()
 
-@property (nonatomic, strong) FHSuggestionCollectionView *collectionView;
 @property (nonatomic, strong) UIView *topView;
 @property (nonatomic, strong) UIView *containerView;
 @property (nonatomic, strong) FHBrowsingHistoryViewModel *viewModel;
