@@ -595,7 +595,7 @@ def appPods
 #        'Video'
     ]
     
-#    pod_source 'BaiduMapKit', '5.3.0'
+    pod 'BaiduMapKit', '5.4.0'
 end
 
 
