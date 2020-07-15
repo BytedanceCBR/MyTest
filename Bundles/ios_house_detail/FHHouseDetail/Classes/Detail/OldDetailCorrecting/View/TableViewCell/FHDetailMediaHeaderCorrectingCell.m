@@ -203,7 +203,7 @@
     NSArray *houseImageDict = ((FHDetailMediaHeaderCorrectingModel *)self.currentData).houseImageDictList;
     FHMultiMediaItemModel *vedioModel = ((FHDetailMediaHeaderCorrectingModel *)self.currentData).vedioModel;
     FHDetailHouseVRDataModel *vrModel = ((FHDetailMediaHeaderCorrectingModel *)self.currentData).vrModel;
-    
+    FHMultiMediaItemModel *baiduPanoramaModel = ((FHDetailMediaHeaderCorrectingModel *)self.currentData).baiduPanoramaModel;
     if (vrModel && [vrModel isKindOfClass:[FHDetailHouseVRDataModel class]] && vrModel.hasVr) {
         FHMultiMediaItemModel *itemModelVR = [[FHMultiMediaItemModel alloc] init];
         itemModelVR.mediaType = FHMultiMediaTypeVRPicture;
@@ -260,6 +260,10 @@
             }
             index++;
         }
+    }
+    
+    if (baiduPanoramaModel && baiduPanoramaModel.imageUrl.length > 0) {
+        [itemArray addObject:baiduPanoramaModel];
     }
     
     self.model.medias = itemArray;
@@ -769,6 +773,12 @@
     // 图片逻辑
     if (index >= 0 && index < (self.imageList.count + self.vedioCount)) {
         [self showImagesWithCurrentIndex:index];
+        return;
+    }
+    //vr
+    FHMultiMediaItemModel *itemModel = _model.medias[index];
+    if (itemModel.mediaType == FHMultiMediaTypeBaiduPanorama && itemModel.imageUrl.length) {
+        //进入百度街景
     }
 }
 

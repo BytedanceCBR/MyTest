@@ -20,5 +20,6 @@ Pod::Spec.new do |s|
 
   # s.public_header_files = 'Pod/Classes/**/*.h'
   # s.frameworks = 'UIKit', 'MapKit'
-  # s.dependency 'TTKitchen'
+  s.vendored_frameworks = 'FHMapSearch/BaiduMapKit/*.framework'
+#  s.dependency 'BaiduMapKit', '5.3.0'
 end

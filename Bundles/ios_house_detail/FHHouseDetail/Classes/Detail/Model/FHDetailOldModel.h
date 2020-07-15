@@ -92,6 +92,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong , nullable) FHDetailOldDataNeighborhoodInfoSchoolConsult *schoolConsult;
 @property (nonatomic, strong , nullable) NSArray<FHImageModel> *neighborhoodImage;
 
+/// 1.0.3 新增百度街景标志位，length > 0 支持街景
+@property (nonatomic, copy, nullable) NSString *baiduPanoramaUrl;
 @end
 
 @interface FHDetailOldDataNeighborEvalModel : JSONModel
