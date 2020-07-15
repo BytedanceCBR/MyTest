@@ -88,3 +88,11 @@
 }
 
 @end
+
+@implementation FHBrowseHistoryContentModel
+
++ (BOOL)propertyIsOptional:(NSString *)propertyName {
+    return YES;
+}
+
+@end

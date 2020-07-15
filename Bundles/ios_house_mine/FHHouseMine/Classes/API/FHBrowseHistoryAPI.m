@@ -28,6 +28,10 @@
 
 #pragma mark - Public API
 
++ (TTHttpTask *)requestBrowseHistoryWithCount:(NSInteger)count houseType:(FHHouseType)houseType offset:(NSInteger)offset class:(Class)cls completion:(void (^)(id<FHBaseModelProtocol> _Nonnull, NSError * _Nonnull))completion {
+    return [self requestBrowseHistoryWithHouseType:houseType count:count offset:offset class:cls completion:completion];
+}
+
 + (TTHttpTask *)requestNewHouseBrowseHistoryWithCount:(NSInteger)count offset:(NSInteger)offset class:(Class)cls completion:(void (^ _Nullable)(id <FHBaseModelProtocol> model, NSError *error))completion {
     
     return [self requestBrowseHistoryWithHouseType:FHBrowseHistoryTypeNew count:count offset:offset class:cls completion:completion];

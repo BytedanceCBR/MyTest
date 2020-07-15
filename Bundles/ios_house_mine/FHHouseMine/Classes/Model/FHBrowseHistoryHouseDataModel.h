@@ -7,6 +7,7 @@
 
 #import "JSONModel.h"
 #import "FHBaseModelProtocol.h"
+#import "FHSearchHouseModel.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -23,6 +24,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign) NSInteger offset;
 @property (nonatomic, copy, nullable) NSString *total;
 @property (nonatomic, copy, nullable) NSString *searchId;
+//@property (nonatomic, strong, nullable) NSArray<FHSearchBaseItemModel *> items;
 @property (nonatomic, strong, nullable) NSArray<FHHouseListBaseItemModel *> *historyItems;
 
 @end
@@ -83,6 +85,12 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy, nullable) NSString *status;
 @property (nonatomic, copy, nullable) NSString *message;
 @property (nonatomic, strong, nullable) FHBrowseHistoryHouseDataModel *data;
+
+@end
+
+@interface FHBrowseHistoryContentModel : FHSearchBaseItemModel
+
+@property (nonatomic, copy, nullable) NSString *text;
 
 @end
 

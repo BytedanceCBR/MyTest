@@ -13,14 +13,19 @@
 #import <TTNetworkManager/TTHttpTask.h>
 #import "FHBrowseHistoryAPI.h"
 #import "FHBrowseHistoryHouseDataModel.h"
+#import "FHDetailNeighborhoodModel.h"
+#import <TTBaseLib/NSDictionary+TTAdditions.h>
+#import "FHSearchBaseItemModel.h"
+#import "FHHouseBaseItemCell.h"
+#import "FHBrowsingHistoryContentCell.h"
 
 @interface FHChildBrowsingHistoryViewModel()<FHBrowsingHistoryEmptyViewDelegate, UITableViewDelegate, UITableViewDataSource>
 
 @property (nonatomic, weak) FHChildBrowsingHistoryViewController *viewController;
 @property (nonatomic, weak) FHBrowsingHistoryEmptyView *emptyView;
 @property (nonatomic, weak) UITableView *tableView;
-@property(nonatomic , weak) TTHttpTask *requestTask;
-@property(nonatomic , strong) NSMutableArray *houseList;
+@property (nonatomic, weak) TTHttpTask *requestTask;
+@property (nonatomic, strong) NSMutableArray *historyList;
 
 @end
 
@@ -29,33 +34,110 @@
 - (instancetype)initWithViewController:(FHChildBrowsingHistoryViewController *)viewController tableView:(UITableView *)tableView emptyView:(FHBrowsingHistoryEmptyView *)emptyView {
     self = [super init];
     if (self) {
-        self.houseList = [[NSMutableArray alloc] init];
+        self.historyList = [[NSMutableArray alloc] init];
         self.viewController = viewController;
         self.emptyView = emptyView;
         self.tableView = tableView;
         emptyView.delegate = self;
         tableView.delegate = self;
         tableView.dataSource = self;
+        [self registerCellClasses];
     }
     return self;
+}
+
+- (void)registerCellClasses {
+    [_tableView registerClass:[FHHouseBaseItemCell class] forCellReuseIdentifier:@"FHHouseBaseItemCellList"];
+    [_tableView registerClass:[FHHouseBaseItemCell class] forCellReuseIdentifier:[FHSearchHouseItemModel cellIdentifierByHouseType:FHHouseTypeSecondHandHouse]];
+    [_tableView registerClass:[FHHouseBaseItemCell class] forCellReuseIdentifier:[FHSearchHouseItemModel cellIdentifierByHouseType:FHHouseTypeRentHouse]];
+    [_tableView registerClass:[FHHouseBaseItemCell class] forCellReuseIdentifier:[FHSearchHouseItemModel cellIdentifierByHouseType:FHHouseTypeNeighborhood]];
+    [_tableView registerClass:[FHHouseBaseItemCell class] forCellReuseIdentifier:[FHSearchHouseItemModel cellIdentifierByHouseType:FHHouseTypeNewHouse]];
+    [_tableView registerClass:[FHBrowsingHistoryContentCell class] forCellReuseIdentifier:@"FHBrowsingHistoryContentCell"];
 }
 
 - (void)requestData:(BOOL)isHead {
     [_requestTask cancel];
     NSInteger offset = 0;
     if (!isHead) {
-        offset = _houseList.count;
+        offset = _historyList.count;
     }
     __weak typeof(self) wself = self;
-    self.requestTask = [FHBrowseHistoryAPI requestOldHouseBrowseHistoryWithCount:20 offset:offset class:([FHBrowseHistoryHouseResultModel class]) completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
+    self.requestTask = [FHBrowseHistoryAPI requestBrowseHistoryWithCount:20 houseType:self.houseType offset:offset class:([FHBrowseHistoryHouseResultModel class]) completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
         if (!error) {
             [wself processData:model];
         }
     }];
 }
 
-- (void)processData:(id)data {
-    
+- (void)processData:(id)model {
+    if (model) {
+        NSMutableArray *items = @[].mutableCopy;
+        FHBrowseHistoryHouseDataModel *historyModel = ((FHBrowseHistoryHouseResultModel *)model).data;
+        if (historyModel.historyItems.count > 0) {
+            [items addObjectsFromArray:historyModel.historyItems];
+        }
+        [items enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+            if ([obj isKindOfClass:[NSDictionary class]]) {
+                id item = [self historyItemModelByDict:obj];
+                [self.historyList addObject:item];
+            }
+        }];
+        self.emptyView.hidden = YES;
+        self.tableView.hidden = NO;
+        [self.tableView reloadData];
+    }
+}
+
+- (id)historyItemModelByDict:(NSDictionary *)itemDict {
+    NSInteger cardType = -1;
+    cardType = [itemDict tt_integerValueForKey:@"card_type"];
+    if (cardType == 0 || cardType == -1) {
+        cardType = [itemDict tt_integerValueForKey:@"house_type"];
+    }
+    id itemModel = nil;
+    NSError *jerror = nil;
+    switch (cardType) {
+        case FHSearchCardTypeNewHouse:
+            itemModel = [[FHSearchHouseItemModel alloc]initWithDictionary:itemDict error:&jerror];
+            break;
+        case FHSearchCardTypeSecondHouse:
+            itemModel = [[FHSearchHouseItemModel alloc]initWithDictionary:itemDict error:&jerror];
+            break;
+        case FHSearchCardTypeRentHouse:
+            itemModel = [[FHSearchHouseItemModel alloc]initWithDictionary:itemDict error:&jerror];
+            break;
+        case FHSearchCardTypeNeighborhood:
+            itemModel = [[FHSearchHouseItemModel alloc]initWithDictionary:itemDict error:&jerror];
+            break;
+        case FHSearchCardTypeBrowseHistoryTip:
+            itemModel = [[FHBrowseHistoryContentModel alloc] initWithDictionary:itemDict error:&jerror];
+            break;
+        default:
+            break;
+    }
+    if (jerror) {
+        NSLog(@"error");
+    }
+    return itemModel;
+}
+
+- (Class)cellClassForEntity:(id)model {
+    if ([model isKindOfClass:[FHSearchHouseItemModel class]]) {
+        return [FHHouseBaseItemCell class];
+    } else if ([model isKindOfClass:[FHBrowseHistoryContentModel class]]) {
+        return [FHBrowsingHistoryContentCell class];
+    }
+    return [FHListBaseCell class];
+}
+
+- (NSString *)cellIdentifierForEntity:(id)model {
+    if ([model isKindOfClass:[FHBrowseHistoryContentModel class]]) {
+        return @"FHBrowsingHistoryContentCell";
+    } else if ([model isKindOfClass:[FHSearchHouseItemModel class]]) {
+        FHSearchHouseItemModel *houseModel = (FHSearchHouseItemModel *)model;
+        return [FHSearchHouseItemModel cellIdentifierByHouseType:houseModel.houseType.integerValue];
+    }
+    return @"";
 }
 
 #pragma mark UITableViewDelegate
@@ -65,12 +147,56 @@
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return 0;
+    return _historyList.count;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    
+    NSInteger row = indexPath.row;
+    if (row >= 0 && row < _historyList.count) {
+        BOOL isLastCell = NO;
+        BOOL isFirstCell = NO;
+        id data = _historyList[row];
+        NSString *identifier = [self cellIdentifierForEntity:data];
+        if (identifier.length > 0) {
+             FHListBaseCell *cell = (FHListBaseCell *)[tableView dequeueReusableCellWithIdentifier:identifier];
+            [cell refreshWithData:data];
+            return cell;
+        }
+    }
     return [[UITableViewCell alloc] init];
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
+    
+    NSInteger row = indexPath.row;
+    if (row >= 0 && row < _historyList.count) {
+        BOOL isFirstCell = NO;
+        BOOL isLastCell = NO;
+        id data = _historyList[row];
+        if (indexPath.row == self.historyList.count - 1) {
+            isLastCell = YES;
+        }
+        if (indexPath.row == 0) {
+            isFirstCell = YES;
+        }
+        id cellClass = [self cellClassForEntity:data];
+        if ([data isKindOfClass:[FHBrowseHistoryContentModel class]]) {
+            return 40;
+        } else if ([data isKindOfClass:[FHSearchHouseItemModel class]]) {
+            FHSearchHouseItemModel *item = (FHSearchHouseItemModel *)data;
+            item.isLastCell = isLastCell;
+            if ((item.houseType.integerValue == FHHouseTypeRentHouse || item.houseType.integerValue == FHHouseTypeNeighborhood) && isFirstCell) {
+                item.topMargin = 10;
+            }else {
+                item.topMargin = 0;
+            }
+            data = item;
+        }
+        if ([[cellClass class]respondsToSelector:@selector(heightForData:)]) {
+            return [[cellClass class] heightForData:data];
+        }
+    }
+    return 88;
 }
 
 #pragma mark - FHBrowsingHistoryEmptyViewDelegate

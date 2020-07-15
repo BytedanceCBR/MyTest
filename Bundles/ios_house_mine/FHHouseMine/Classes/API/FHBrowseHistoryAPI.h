@@ -8,6 +8,7 @@
 #import <Foundation/Foundation.h>
 #import "TTNetworkManager.h"
 #import "FHMainApi.h"
+#import "FHHouseType.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -19,6 +20,8 @@ typedef NS_ENUM(NSInteger, FHBrowseHistoryType) {
 };
 
 @interface FHBrowseHistoryAPI : NSObject
+
++ (TTHttpTask *)requestBrowseHistoryWithCount:(NSInteger)count houseType:(FHHouseType)houseType offset:(NSInteger)offset class:(Class)cls completion:(void (^ _Nullable)(id <FHBaseModelProtocol> model, NSError *error))completion;
 
 /**
  请求新房历史浏览数据
