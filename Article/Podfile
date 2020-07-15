@@ -595,7 +595,7 @@ def appPods
 #        'Video'
     ]
     
-    pod 'BaiduMapKit', '5.4.0'
+    pod 'BaiduMapKit', :path => '../Bundles/BaiduMapKit'
 end
 
 
