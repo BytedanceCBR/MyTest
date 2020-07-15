@@ -157,14 +157,14 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
     }
     [self selectDefaultItems];
     [self.collectionView reloadData];
-    [self addClickOptionsLog:@"reset"];
+    [self addClickLogWithEvent:@"click_options" position:@"reset"];
 }
 
 - (void)confirmBtnDidClick
 {
 //    [self.collectionView endEditing:YES];
     __weak typeof(self) wself = self;
-    [self addClickOptionsLog:@"confirm"];
+    [self addClickLogWithEvent:@"click_confirm" position:nil];
     
     FHHouseType ht = _houseType;
     FHHouseFindSelectModel *model = [self selectModelWithType:ht];
@@ -1548,13 +1548,19 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
     [FHUserTracker writeEvent:@"click_login" params:params];
 }
 
-- (void)addClickOptionsLog:(NSString *)position
+- (void)addClickLogWithEvent:(NSString *)event position:(NSString *)position
 {
+    NSString *eventStr = event ?: @"click_options";
     NSMutableDictionary *params = @{}.mutableCopy;
+    //所有帮我找房origin_from都是find_icon
+    params[@"origin_from"] = @"find_icon";
     params[@"enter_from"] = self.tracerDict[@"enter_from"] ? : @"be_null";
     params[@"page_type"] = [self pageTypeString];
-    params[@"click_position"] = position;
-    [FHUserTracker writeEvent:@"click_options" params:params];
+    if (position.length > 0) {
+        params[@"click_position"] = position;
+    }
+    
+    [FHUserTracker writeEvent:event params:params];
 }
 
 - (NSString *)pageTypeString
