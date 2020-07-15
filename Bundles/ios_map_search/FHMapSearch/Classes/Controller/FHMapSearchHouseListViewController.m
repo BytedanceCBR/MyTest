@@ -70,7 +70,12 @@
         make.left.right.top.mas_equalTo(self.view);
         make.height.mas_equalTo(14);
     }];
+    self.view.layer.masksToBounds = YES;
 
+    UIBezierPath *maskPath = [UIBezierPath bezierPathWithRoundedRect:self.view.bounds byRoundingCorners:UIRectCornerTopLeft | UIRectCornerTopRight cornerRadii:CGSizeMake(20, 20)];
+     CAShapeLayer *layer = [[CAShapeLayer alloc]init];
+     layer.path = maskPath.CGPath;
+     self.view.layer.mask = layer;
     
     [self.view addSubview:_tableView];
     
