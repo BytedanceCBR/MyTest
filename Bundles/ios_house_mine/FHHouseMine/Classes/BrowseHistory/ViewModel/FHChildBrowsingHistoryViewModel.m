@@ -89,7 +89,6 @@
     [dictTrace setValue:@"be_null" forKey:@"origin_from"];
     NSDictionary *userInfoDict = @{@"tracer":dictTrace};
     TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:userInfoDict];
-    
     NSString *urlStr = @"";
     switch (houseType) {
         case FHHouseTypeSecondHandHouse:
@@ -102,14 +101,17 @@
             urlStr = @"sslocal://house_list?house_type=1";
             break;
         case FHHouseTypeNeighborhood:
-            [self popToMainPage];
-            return;
+            urlStr = @"sslocal://main?select_tab=tab_stream";
+            break;
         default:
+            urlStr = @"sslocal://main?select_tab=tab_stream";
             break;
     }
-    if (![urlStr isEqualToString:@""]) {
-        NSURL *url = [NSURL URLWithString:urlStr];
+    NSURL *url = [NSURL URLWithString:urlStr];
+    if (![urlStr isEqualToString:@"sslocal://main?select_tab=tab_stream"]) {
         [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
+    } else {
+        [[TTRoute sharedRoute] openURLByViewController:url userInfo:userInfo];
     }
 }
 
