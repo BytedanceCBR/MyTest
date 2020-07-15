@@ -22,7 +22,8 @@ Pod::Spec.new do |s|
 
   # s.exclude_files = "Classes/Exclude"
 
-  # s.public_header_files = 'Classes/*.h','Classes/*.h'
+  s.source_files = 'BaiduMapKit/*.framework/Headers/*.{h}'
+  s.public_header_files = 'BaiduMapKit/*.framework/Headers/*.h'
 
   s.resources = 'BaiduMapKit/*.framework/*.bundle'
   s.vendored_frameworks = 'BaiduMapKit/*.framework'

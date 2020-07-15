@@ -6,12 +6,13 @@
 //
 
 #import "FHBaiduPanoramaViewController.h"
-#import <BaiduPanoSDK/BaiduPanoramaView.h>
+#import "BaiduPanoramaView.h"
+//#import <<#header#>>
 //#import <<#header#>>
 
 @interface FHBaiduPanoramaViewController ()
 
-//@property (nonatomic, strong)
+@property (nonatomic, strong) BaiduPanoramaView *panoramaView;
 
 @end
 
