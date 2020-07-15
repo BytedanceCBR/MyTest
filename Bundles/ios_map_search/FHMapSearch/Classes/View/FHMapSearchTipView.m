@@ -33,7 +33,7 @@
 //        [self addSubview:frost];
         
         _tipLabel = [[UILabel alloc] init];
-        _tipLabel.font = [UIFont themeFontRegular:12];
+        _tipLabel.font = [UIFont themeFontMedium:16];
         _tipLabel.textAlignment = NSTextAlignmentCenter;
         _tipLabel.textColor = [UIColor themeGray1];
         [self addSubview:_tipLabel];
