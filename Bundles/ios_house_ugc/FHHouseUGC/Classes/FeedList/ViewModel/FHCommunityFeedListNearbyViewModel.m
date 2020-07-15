@@ -412,6 +412,11 @@
             cellModel.tableView = self.tableView;
             cellModel.categoryId = self.categoryId;
             cellModel.feedVC = self.viewController;
+            
+            if(self.dataList.count == 0){
+                [self updateTableViewWithMoreData:self.tableView.hasMore];
+                [self.viewController.emptyView hideEmptyView];
+            }
             // 插入在置顶贴的下方
             [self.dataList insertObject:cellModel atIndex:index];
             [self.tableView reloadData];

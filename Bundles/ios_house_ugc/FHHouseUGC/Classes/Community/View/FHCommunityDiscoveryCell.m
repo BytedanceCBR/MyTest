@@ -85,9 +85,6 @@
         vc.isNewDiscovery = YES;
         vc.category = _cellModel.category;
         vc.needReportEnterCategory = YES;
-        if([_cellModel.category isEqualToString:@"f_news_recommend"]){
-            vc.isInsertFeedWhenPublish = YES;
-        }
         self.vc = vc;
     }
     

@@ -43,6 +43,7 @@
 #import "FHLynxManager.h"
 #import "FHUGCCategoryManager.h"
 #import "FHUserTracker.h"
+#import "BDABTestManager.h"
 
 #define kFHHouseMixedCategoryID   @"f_house_news" // 推荐频道
 
@@ -1146,7 +1147,12 @@ static NSInteger kGetLightRequestRetryCount = 3;
 }
 
 + (BOOL)isHomeNewDiscovery {
-    return YES;
+    id res = [BDABTestManager getExperimentValueForKey:@"f_find_revision_v103" withExposure:YES];
+    if ([res isKindOfClass:[NSNumber class]]) {
+        BOOL isHomeNewDiscovery = [(NSNumber *)res boolValue];
+        return isHomeNewDiscovery;
+    }
+    return NO;
 }
 
 + (BOOL)isIntroduceOpen {

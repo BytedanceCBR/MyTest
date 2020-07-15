@@ -231,7 +231,9 @@
     self.containerView = [[UIView alloc] init];
     [self.view addSubview:_containerView];
     
-    [self initPublishBtn];
+    if(!self.isNewDiscovery){
+        [self initPublishBtn];
+    }
 }
 - (void)initLoginTipView {
     if (!self.isShowLoginTip) {
@@ -598,12 +600,7 @@
 }
 
 - (void)changeTab {
-    if(self.isNewDiscovery){
-        NSInteger index = [[FHUGCCategoryManager sharedManager] getCategoryIndex:@"f_news_recommend"];
-        if (self.navigationController.viewControllers.count <= 1) {
-            [self.viewModel changeTab:index];
-        }
-    }else{
+    if(!self.isNewDiscovery){
         if (self.navigationController.viewControllers.count <= 1) {
             [self.viewModel changeTab:1];
         }
