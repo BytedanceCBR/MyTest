@@ -10,6 +10,9 @@
 		1463BBA9E3DCC925B4FEE0F2 /* libPods-com.f100.client.FHNotificationServiceExtension.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 463126C447392DFA6D0E387F /* libPods-com.f100.client.FHNotificationServiceExtension.a */; };
 		170182F724597A3F00334E1B /* buryingPointCheck.json in Resources */ = {isa = PBXBuildFile; fileRef = 170182F624597A3F00334E1B /* buryingPointCheck.json */; };
 		170182F824597A3F00334E1B /* buryingPointCheck.json in Resources */ = {isa = PBXBuildFile; fileRef = 170182F624597A3F00334E1B /* buryingPointCheck.json */; };
+		2B1A0B4C24C053C3009D40FF /* F100BaiduMapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2B1A0B4B24C053C2009D40FF /* F100BaiduMapKit.framework */; };
+		2B1A0B4E24C053C9009D40FF /* F100BaiduMapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2B1A0B4B24C053C2009D40FF /* F100BaiduMapKit.framework */; };
+		2B1A0B4F24C053C9009D40FF /* F100BaiduMapKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 2B1A0B4B24C053C2009D40FF /* F100BaiduMapKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		3D2F39962270545700AE567D /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 3D2F398A2270545700AE567D /* InfoPlist.strings */; };
 		3D2F39982270545700AE567D /* TargetLogicSetting.strings in Resources */ = {isa = PBXBuildFile; fileRef = 3D2F398E2270545700AE567D /* TargetLogicSetting.strings */; };
 		3D2F399A2270545700AE567D /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D2F39912270545700AE567D /* main.m */; };
@@ -227,6 +230,17 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
+		2B1A0A7624C04B61009D40FF /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				2B1A0B4F24C053C9009D40FF /* F100BaiduMapKit.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		B373CF062174587A008F9905 /* Embed App Extensions */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
@@ -278,6 +292,7 @@
 		0695AFD018EEEEE50009444F /* ImageIO.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ImageIO.framework; path = System/Library/Frameworks/ImageIO.framework; sourceTree = SDKROOT; };
 		170182F624597A3F00334E1B /* buryingPointCheck.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = buryingPointCheck.json; sourceTree = "<group>"; };
 		2217C766FCBF2A4BB412EB2B /* Pods-f100.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-f100.release.xcconfig"; path = "Pods/Target Support Files/Pods-f100/Pods-f100.release.xcconfig"; sourceTree = "<group>"; };
+		2B1A0B4B24C053C2009D40FF /* F100BaiduMapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = F100BaiduMapKit.framework; path = ../Bundles/BaiduMapKit/BaiduMapKit/F100BaiduMapKit.framework; sourceTree = "<group>"; };
 		2D33175D1F30AE6D009D2936 /* PushNotification.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = PushNotification.xcassets; sourceTree = "<group>"; };
 		2E14CCE61FE007BD0093E05D /* sound1.caf */ = {isa = PBXFileReference; lastKnownFileType = file; path = sound1.caf; sourceTree = "<group>"; };
 		2E14CCE71FE007BE0093E05D /* sound3.caf */ = {isa = PBXFileReference; lastKnownFileType = file; path = sound3.caf; sourceTree = "<group>"; };
@@ -459,6 +474,7 @@
 				B373CEEB2174587A008F9905 /* StoreKit.framework in Frameworks */,
 				B373CEEC2174587A008F9905 /* AVFoundation.framework in Frameworks */,
 				B373CEED2174587A008F9905 /* libz.dylib in Frameworks */,
+				2B1A0B4E24C053C9009D40FF /* F100BaiduMapKit.framework in Frameworks */,
 				B373CEEE2174587A008F9905 /* AdSupport.framework in Frameworks */,
 				B373CEEF2174587A008F9905 /* MapKit.framework in Frameworks */,
 				B373CEF02174587A008F9905 /* CoreLocation.framework in Frameworks */,
@@ -513,6 +529,7 @@
 				FEFA5A46205FB1A8001F50D8 /* libz.1.2.5.dylib in Frameworks */,
 				FEFA5A49205FB1A8001F50D8 /* libsqlite3.0.dylib in Frameworks */,
 				FEFA5A4A205FB1A8001F50D8 /* SystemConfiguration.framework in Frameworks */,
+				2B1A0B4C24C053C3009D40FF /* F100BaiduMapKit.framework in Frameworks */,
 				FEFA5A4B205FB1A8001F50D8 /* MobileCoreServices.framework in Frameworks */,
 				FEFA5A4C205FB1A8001F50D8 /* UIKit.framework in Frameworks */,
 				FEFA5A4D205FB1A8001F50D8 /* Foundation.framework in Frameworks */,
@@ -571,6 +588,7 @@
 		3AA5028315876A1F00EB27FA /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				2B1A0B4B24C053C2009D40FF /* F100BaiduMapKit.framework */,
 				3D741F2E2255FF5D00E62B4C /* AddressBookUI.framework */,
 				4EB6EE50212A823B00EC2148 /* StoreKit.framework */,
 				D013795E1DFE8BEF0020C6BD /* libresolv.tbd */,
@@ -877,6 +895,7 @@
 				B373CF092174587A008F9905 /* Embed Watch Content */,
 				3D396439219ACED0002E9010 /* ShellScript */,
 				FCC852F64C0273F226C6A461 /* [CP] Copy Pods Resources */,
+				2B1A0A7624C04B61009D40FF /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -1824,7 +1843,10 @@
 				DEVELOPMENT_TEAM = 7HSS6X2323;
 				ENABLE_BITCODE = NO;
 				EXCLUDED_SOURCE_FILE_NAMES = "";
-				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"/Users/bytedance/Workspace/ByteDance/feature:newhouse_content_added/ios_bubble/Bundles/BaiduMapKit/**",
+				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "News/News-Prefix.pch";
 				GCC_PREPROCESSOR_DEFINITIONS = (
@@ -1856,6 +1878,7 @@
 					"\"${PODS_ROOT}/Headers/Public/libwebp\"",
 					"\"$(SRCROOT)/../Components/TTVideo/Pod\"/**",
 					"\"$(SRCROOT)/../Components/TTLive/TTLive/TTlive\"/**",
+					"/Users/bytedance/Workspace/ByteDance/feature:newhouse_content_added/ios_bubble/Bundles/BaiduMapKit/BaiduMapKit/F100BaiduMapKit.framework/Headers/**",
 				);
 				INFOPLIST_FILE = "News/News-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
@@ -1919,7 +1942,10 @@
 					"Stub_*",
 					TTFastScrollingAlert,
 				);
-				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"/Users/bytedance/Workspace/ByteDance/feature:newhouse_content_added/ios_bubble/Bundles/BaiduMapKit/**",
+				);
 				GCC_OPTIMIZATION_LEVEL = s;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "News/News-Prefix.pch";
@@ -1950,6 +1976,7 @@
 					"\"${PODS_ROOT}/Headers/Public/libwebp\"",
 					"\"$(SRCROOT)/../Components/TTVideo/Pod\"/**",
 					"\"$(SRCROOT)/../Components/TTLive/TTLive/TTlive\"/**",
+					"/Users/bytedance/Workspace/ByteDance/feature:newhouse_content_added/ios_bubble/Bundles/BaiduMapKit/BaiduMapKit/F100BaiduMapKit.framework/Headers/**",
 				);
 				INFOPLIST_FILE = "News/News-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
