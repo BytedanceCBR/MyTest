@@ -10,10 +10,12 @@
 #import "Masonry.h"
 #import "FHChildBrowsingHistoryViewModel.h"
 #import "TTDeviceHelper.h"
+#import <FHHouseBase/FHBaseTableView.h>
+#import "FHEnvContext.h"
 
 @interface FHChildBrowsingHistoryViewController()
 
-@property (nonatomic, strong) FHBrowsingHistoryEmptyView *emptyView;
+@property (nonatomic, strong) FHBrowsingHistoryEmptyView *findHouseView;
 @property (nonatomic, strong) FHChildBrowsingHistoryViewModel *viewModel;
 @property (nonatomic, strong) UITableView *tableView;
 
@@ -32,9 +34,13 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     [self setupUI];
-    self.viewModel = [[FHChildBrowsingHistoryViewModel alloc] initWithViewController:self tableView:self.tableView emptyView:self.emptyView];
+    [self addDefaultEmptyViewFullScreen];
+    self.viewModel = [[FHChildBrowsingHistoryViewModel alloc] initWithViewController:self tableView:self.tableView emptyView:self.findHouseView];
     
-    
+}
+
+- (void)retryLoadData {
+    [self.viewModel requestData:YES];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -51,32 +57,55 @@
 
 - (void)setHouseType:(FHHouseType)houseType {
     _houseType = houseType;
-    self.emptyView.houseType = houseType;
+    self.findHouseView.houseType = houseType;
     self.viewModel.houseType = houseType;
-    [self.viewModel requestData:YES];
-    
+    [self requestBrowsingHistoryData];
+}
+
+- (void)requestBrowsingHistoryData {
+    if (![FHEnvContext isNetworkConnected]) {
+        [self.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoNetWorkAndRefresh];
+    } else {
+        [self startLoading];
+        [self.viewModel requestData:YES];
+    }
 }
 
 - (void)setupUI {
-    self.emptyView = [[FHBrowsingHistoryEmptyView alloc] init];
-    self.emptyView.delegate = self;
+    self.findHouseView = [[FHBrowsingHistoryEmptyView alloc] init];
+    self.findHouseView.delegate = self;
     [self.view addSubview:self.emptyView];
     [self.emptyView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.edges.mas_equalTo(self.view);
     }];
-    //self.emptyView.hidden = YES;
     
-    BOOL isIphoneX = [TTDeviceHelper isIPhoneXDevice];
-    self.tableView = [[UITableView alloc] init];
-    self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
-    if (isIphoneX) {
-        self.tableView.contentInset = UIEdgeInsetsMake(0, 0, 34, 0);
-    }
     [self.view addSubview:self.tableView];
     [self.tableView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.edges.mas_equalTo(self.view);
     }];
     self.tableView.hidden = YES;
+}
+
+#pragma mark - lazy load
+
+-(UITableView *)tableView {
+    if (!_tableView) {
+        
+        _tableView = [[FHBaseTableView alloc] initWithFrame:self.view.bounds];
+        if (@available(iOS 11.0, *)) {
+            _tableView.estimatedRowHeight = 0;
+            _tableView.estimatedSectionHeaderHeight = 0;
+            _tableView.estimatedSectionFooterHeight = 0;
+            _tableView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
+        }
+        if ([TTDeviceHelper isIPhoneXDevice]) {
+            _tableView.contentInset = UIEdgeInsetsMake(0, 0, 34, 0);
+        }
+        _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+        _tableView.showsVerticalScrollIndicator = NO;
+        _tableView.keyboardDismissMode = UIScrollViewKeyboardDismissModeOnDrag;
+    }
+    return _tableView;
 }
 
 - (void)dealloc

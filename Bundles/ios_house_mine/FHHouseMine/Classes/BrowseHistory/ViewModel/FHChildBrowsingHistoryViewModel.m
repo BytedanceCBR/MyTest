@@ -20,11 +20,13 @@
 #import "FHBrowsingHistoryContentCell.h"
 #import <FHCommonUI/FHRefreshCustomFooter.h>
 #import "FHHouseBaseNewHouseCell.h"
+#import "FHEnvContext.h"
+#import <FHHouseBase/FHMainManager+Toast.h>
 
 @interface FHChildBrowsingHistoryViewModel()<FHBrowsingHistoryEmptyViewDelegate, UITableViewDelegate, UITableViewDataSource>
 
 @property (nonatomic, weak) FHChildBrowsingHistoryViewController *viewController;
-@property (nonatomic, weak) FHBrowsingHistoryEmptyView *emptyView;
+@property (nonatomic, weak) FHBrowsingHistoryEmptyView *findHouseView;
 @property (nonatomic, weak) UITableView *tableView;
 @property (nonatomic, weak) TTHttpTask *requestTask;
 @property (nonatomic, strong) NSMutableArray *historyList;
@@ -39,7 +41,7 @@
     if (self) {
         self.historyList = [[NSMutableArray alloc] init];
         self.viewController = viewController;
-        self.emptyView = emptyView;
+        self.findHouseView = emptyView;
         self.tableView = tableView;
         emptyView.delegate = self;
         tableView.delegate = self;
@@ -67,6 +69,10 @@
 }
 
 - (void)requestData:(BOOL)isHead {
+    if (![FHEnvContext isNetworkConnected]) {
+        [self processErrorWithIsHead:isHead];
+        return;
+    }
     [_requestTask cancel];
     NSInteger offset = 0;
     if (!isHead) {
@@ -74,14 +80,27 @@
     }
     __weak typeof(self) wself = self;
     self.requestTask = [FHBrowseHistoryAPI requestBrowseHistoryWithCount:20 houseType:self.houseType offset:offset class:([FHBrowseHistoryHouseResultModel class]) completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
+        [wself.viewController endLoading];
         if (!error) {
             [wself processData:model];
+        } else {
+            [wself processErrorWithIsHead:isHead];
         }
     }];
 }
 
+- (void)processErrorWithIsHead:(BOOL)isHead {
+    if (isHead) {
+        [self.viewController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoNetWorkAndRefresh];
+    } else {
+        [[FHMainManager sharedInstance] showToast:@"网络异常" duration:1];
+        [self.tableView.mj_footer endRefreshing];
+    }
+}
+
 - (void)processData:(id)model {
     if (model) {
+        [self.viewController.emptyView hideEmptyView];
         NSMutableArray *items = @[].mutableCopy;
         FHBrowseHistoryHouseDataModel *historyModel = ((FHBrowseHistoryHouseResultModel *)model).data;
         self.offset = historyModel.offset;
@@ -94,18 +113,20 @@
                 [self.historyList addObject:item];
             }
         }];
-        self.emptyView.hidden = YES;
-        self.tableView.hidden = NO;
-        [self.tableView reloadData];
-        if (self.historyList.count > 10) {
-            self.tableView.mj_footer.hidden = NO;
-        } else {
-            self.tableView.mj_footer.hidden = YES;
-        }
-        if (!historyModel.hasMore) {
-            [self.tableView.mj_footer endRefreshingWithNoMoreData];
-        } else {
-            [self.tableView.mj_footer endRefreshing];
+        if (_historyList.count > 0) {
+            self.findHouseView.hidden = YES;
+            self.tableView.hidden = NO;
+            [self.tableView reloadData];
+            if (self.historyList.count > 10) {
+                self.tableView.mj_footer.hidden = NO;
+            } else {
+                self.tableView.mj_footer.hidden = YES;
+            }
+            if (!historyModel.hasMore) {
+                [self.tableView.mj_footer endRefreshingWithNoMoreData];
+            } else {
+                [self.tableView.mj_footer endRefreshing];
+            }
         }
     }
 }
