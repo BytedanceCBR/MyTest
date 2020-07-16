@@ -52,10 +52,6 @@
 
 @end
 
-@implementation FHHouseRealtorTitleModel
-
-@end
-
 @implementation FHHouseRealtorDetailModel
 + (BOOL)propertyIsOptional:(NSString *)propertyName
 {
@@ -118,11 +114,12 @@
     return YES;
 }
 @end
-@implementation FHHouseRealtorDetailrRgcTabModel
+@implementation FHHouseRealtorDetailRgcTabModel
 + (JSONKeyMapper*)keyMapper
 {
     NSDictionary *dict = @{
             @"showName": @"show_name",
+            @"tabName":@"tab_name",
     };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
         return dict[keyName]?:keyName;

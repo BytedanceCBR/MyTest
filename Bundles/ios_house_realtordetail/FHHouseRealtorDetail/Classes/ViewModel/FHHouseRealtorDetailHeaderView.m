@@ -1,11 +1,11 @@
 //
-//  FHHouseRealtorInfoCell.m
+//  FHHouseRealtorDetailHeaderView.m
 //  FHHouseRealtorDetail
 //
-//  Created by liuyu on 2020/7/12.
+//  Created by liuyu on 2020/7/14.
 //
 
-#import "FHHouseRealtorInfoCell.h"
+#import "FHHouseRealtorDetailHeaderView.h"
 #import <Lynx/LynxView.h>
 #import "Masonry.h"
 #import "FLynxWikiHeaderBridge.h"
@@ -15,18 +15,21 @@
 #import "FHIESGeckoManager.h"
 #import "SDWebImageManager.h"
 #import "UIColor+Theme.h"
+#import "LynxEnv.h"
 #import <BDWebImage/UIImageView+BDWebImage.h>
-@interface FHHouseRealtorInfoCell ()
+#import "FHHouseRealtorDetailInfoModel.h"
+@interface FHHouseRealtorDetailHeaderView ()
 @property (weak, nonatomic)LynxView *realtorInfoView;
 @property(nonatomic ,strong) NSData *currentTemData;
 @property (strong, nonatomic) UIImage *placeholderImage;
 @end
-@implementation FHHouseRealtorInfoCell
+@implementation FHHouseRealtorDetailHeaderView
 
-- (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
-    self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
-    if (self) {
-        [self createUI];
+- (instancetype)initWithFrame:(CGRect)frame {
+    self = [super initWithFrame:frame];
+    if(self) {
+//        [self createUI];
+        self.backgroundColor = [UIColor yellowColor];
     }
     return self;
 }
@@ -42,8 +45,7 @@
         CGRect screenFrame = [UIScreen mainScreen].bounds;
         LynxView *realtorInfoView = [[LynxView alloc] initWithBuilderBlock:^(LynxViewBuilder* builder) {
             builder.isUIRunningMode = YES;
-            builder.config = [[LynxConfig alloc] initWithProvider:LynxConfig.globalConfig.templateProvider];
-            //                    [builder.config registerModule:[FHLynxCoreBridge class]];
+            builder.config = [[LynxConfig alloc] initWithProvider:[LynxEnv sharedInstance].config.templateProvider];
             [builder.config registerModule:[FLynxWikiHeaderBridge class] param:self];
         }];
         realtorInfoView.layoutWidthMode = LynxViewSizeModeExact;
@@ -53,8 +55,7 @@
         realtorInfoView.preferredMaxLayoutHeight = screenFrame.size.height;
         [realtorInfoView triggerLayout];
         [self addSubview:realtorInfoView];
-        
-        NSData *templateData =  [[FHLynxManager sharedInstance] lynxDataForChannel:@"ugc_encyclopedia_lynx_header" templateKey:[FHLynxManager defaultJSFileName] version:0];
+        NSData *templateData =  [[FHLynxManager sharedInstance] lynxDataForChannel:@"lynx_realtor_detail_header" templateKey:[FHLynxManager defaultJSFileName] version:0];
         if (templateData) {
             if (templateData != self.currentTemData) {
                 self.currentTemData = templateData;

@@ -6,11 +6,17 @@
 //
 
 #import "JSONModel.h"
-#import "FHHouseRealtorDetailProtocol.h"
 #import "FHDetailBaseModel.h"
 NS_ASSUME_NONNULL_BEGIN
 
-@interface FHHouseRealtorDetailInfoModel : JSONModel<FHHouseRealtorDetailProtocol>
+
+
+@interface FHHouseRealtorDetailrRgcModel: NSObject
+
+@end
+
+
+@interface FHHouseRealtorDetailInfoModel : JSONModel
 ///电话, string
 @property (nonatomic, copy, nullable) NSString *phone;
 ///姓名, string
@@ -29,7 +35,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong, nullable) NSDictionary *imageTag;
 @end
 
-@protocol FHHouseRealtorDetailUserEvaluationItemTagModel <NSObject>
+@protocol FHHouseRealtorDetailUserEvaluationItemTagModel
 
 @end
 @interface FHHouseRealtorDetailUserEvaluationItemTagModel : JSONModel
@@ -43,7 +49,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy, nullable) NSString *textColor;
 @end
 
-@protocol FHHouseRealtorDetailUserEvaluationItemModel <NSObject>
+@protocol FHHouseRealtorDetailUserEvaluationItemModel
 
 @end
 @interface FHHouseRealtorDetailUserEvaluationItemModel : JSONModel
@@ -68,14 +74,17 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong, nullable) NSDictionary *houseImage;
 @end
 
-@interface FHHouseRealtorDetailrRgcTabModel: JSONModel
+@protocol FHHouseRealtorDetailRgcTabModel
+@end
+@interface FHHouseRealtorDetailRgcTabModel: JSONModel
 ///客户端可展示便签 （eg微头条、小视频）
 @property (nonatomic, copy, nullable) NSString *showName;
-@property (nonatomic, copy, nullable) NSString *name;
-@property (nonatomic, assign) NSInteger *count;
+@property (nonatomic, copy, nullable) NSString *tabName;
+@property (nonatomic, copy, nullable) NSString *count;
+@property (nonatomic, assign) BOOL isDefault;
 @end
 
-@interface FHHouseRealtorDetailUserEvaluationModel : JSONModel<FHHouseRealtorDetailProtocol>
+@interface FHHouseRealtorDetailUserEvaluationModel : JSONModel
 ///是否展示该模块 bool，true:展示
 @property (nonatomic, assign) BOOL isShow;
 ///评价人数 string xx人
@@ -84,15 +93,6 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign, nullable) BOOL *hasMore;
 ///经纪人服务分详情
 @property (nonatomic, strong, nullable) NSArray <FHHouseRealtorDetailUserEvaluationItemModel>*commentInfo;
-@end
-
-@interface FHHouseRealtorDetailrRgcModel: NSObject<FHHouseRealtorDetailProtocol>
-
-@end
-
-@interface FHHouseRealtorTitleModel : NSObject<FHHouseRealtorDetailProtocol>
-@property (copy, nonatomic)NSString *title;
-
 @end
 
 @interface FHHouseRealtorDetailScoreModel : JSONModel
@@ -121,8 +121,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy, nullable) NSString *chatOpenUrl;
 ///经纪人店铺模块信息
 @property (nonatomic, strong, nullable) FHHouseRealtorDetailShopModel *realtorShop;
-///经纪人rgc Tab内容
-@property (nonatomic, strong, nullable) FHHouseRealtorDetailrRgcTabModel *ugcTabList;
+/////经纪人rgc Tab内容
+@property (nonatomic, strong, nullable) NSArray <FHHouseRealtorDetailRgcTabModel>*ugcTabList;
 @end
 
 @interface FHHouseRealtorDetailModel : JSONModel

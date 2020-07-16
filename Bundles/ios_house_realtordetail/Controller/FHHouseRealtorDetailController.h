@@ -5,11 +5,11 @@
 //  Created by liuyu on 2020/7/12.
 //
 
-#import "FHBaseViewController.h"
+#import "FHHouseRealtorDetailBaseViewController.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface FHHouseRealtorDetailController : FHBaseViewController
+@interface FHHouseRealtorDetailController : FHHouseRealtorDetailBaseViewController
 
 @end
 

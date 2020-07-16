@@ -227,4 +227,4 @@
 "house_encyclopedia" = "FHEncyclopediaViewController";
 
 //经纪人主页
-"realtor_detail" = "FHHouseRealtorDetailController";
+"realtor_detail" = "FHHouseRealtorDetailVC";

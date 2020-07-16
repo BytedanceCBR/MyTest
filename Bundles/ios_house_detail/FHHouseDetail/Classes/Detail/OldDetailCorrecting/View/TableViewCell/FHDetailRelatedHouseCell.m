@@ -244,7 +244,8 @@
         tracerDic[@"element_from"] = @"related";
         tracerDic[@"enter_from"] = @"old_detail";
         TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:@{@"tracer":tracerDic,@"house_type":@(FHHouseTypeSecondHandHouse)}];
-        NSString * urlStr = [NSString stringWithFormat:@"sslocal://old_house_detail?house_id=%@",dataItem.hid];
+//        NSString * urlStr = [NSString stringWithFormat:@"sslocal://old_house_detail?house_id=%@",dataItem.hid];
+        NSString * urlStr = [NSString stringWithFormat:@"sslocal://realtor_detail"];
         if (urlStr.length > 0) {
             NSURL *url = [NSURL URLWithString:urlStr];
             [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
