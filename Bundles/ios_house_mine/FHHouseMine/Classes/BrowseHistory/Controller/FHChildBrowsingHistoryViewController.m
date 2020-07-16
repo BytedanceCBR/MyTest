@@ -26,6 +26,8 @@
 - (instancetype)initWithRouteParamObj:(TTRouteParamObj *)paramObj {
     self = [super initWithRouteParamObj:paramObj];
     if (self) {
+        self.tracerDict[@"origin_from"] = @"minetab_service";
+        self.tracerDict[@"enter_from"] = @"minetab";
         
     }
     return self;
@@ -36,7 +38,6 @@
     [self setupUI];
     [self addDefaultEmptyViewFullScreen];
     self.viewModel = [[FHChildBrowsingHistoryViewModel alloc] initWithViewController:self tableView:self.tableView emptyView:self.findHouseView];
-    
 }
 
 - (void)retryLoadData {

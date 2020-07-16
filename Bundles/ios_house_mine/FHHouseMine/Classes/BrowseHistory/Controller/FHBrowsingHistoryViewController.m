@@ -11,8 +11,10 @@
 #import "FHBrowsingHistoryViewModel.h"
 #import "FHEnvContext.h"
 #import "FHHouseType.h"
-
-#define kHouseTypeCount 4
+#import "FHUserTracker.h"
+#import <FHHouseBase/FHBaseTableView.h>
+#import "UIViewAdditions.h"
+#import "UIViewController+Track.h"
 
 @interface FHBrowsingHistoryViewController ()
 
@@ -27,7 +29,10 @@
 - (instancetype)initWithRouteParamObj:(TTRouteParamObj *)paramObj {
     self = [super initWithRouteParamObj:paramObj];
     if (self) {
-        
+        self.paramObj = paramObj;
+        self.ttTrackStayEnable = YES;
+        self.tracerDict[@"origin_from"] = @"maintab_service";
+        self.tracerDict[@"enter_from"] = @"minetab";
     }
     return self;
 }
@@ -41,6 +46,8 @@
     [self houseTypeConfig];
     [self setupUI];
     self.viewModel = [[FHBrowsingHistoryViewModel alloc] initWithController:self andCollectionView:self.collectionView];
+    [self.viewModel addGoDetailLog];
+    
 }
 
 - (void)setupUI {
@@ -134,7 +141,7 @@
     WeakSelf;
     _segmentControl.indexChangeBlock = ^(NSInteger index) {
         StrongSelf;
-        if (index >= 0 && index < kHouseTypeCount) {
+        if (index >= 0 && index < 4) {
             self.houseType = [self.houseTypeArray[index] integerValue];
         }
     };
@@ -146,7 +153,6 @@
     }
     _houseType = houseType;
     self.viewModel.currentTabIndex = _segmentControl.selectedSegmentIndex;
-    //[self.collectionView layoutIfNeeded];
 }
 
 - (void)houseTypeConfig {

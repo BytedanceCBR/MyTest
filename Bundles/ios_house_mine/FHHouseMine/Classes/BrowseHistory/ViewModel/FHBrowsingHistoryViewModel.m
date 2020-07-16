@@ -9,6 +9,7 @@
 #import "FHBrowsingHistoryViewController.h"
 #import "FHSuggestionCollectionView.h"
 #import "FHBrowsingHistoryCollectionViewCell.h"
+#import "FHUserTracker.h"
 
 @interface FHBrowsingHistoryViewModel()<UICollectionViewDelegate, UICollectionViewDataSource>
 
@@ -120,4 +121,14 @@
     }
     _oldX = scrollView.contentOffset.x;
 }
+
+#pragma mark - 埋点
+
+- (void)addGoDetailLog {
+    NSMutableDictionary *params = @{}.mutableCopy;
+    [params addEntriesFromDictionary:self.viewController.tracerDict];
+    params[@"page_type"] = @"history_visit";
+    [FHUserTracker writeEvent:@"go_detail" params:params];
+}
+
 @end

@@ -22,6 +22,8 @@
 #import "FHHouseBaseNewHouseCell.h"
 #import "FHEnvContext.h"
 #import <FHHouseBase/FHMainManager+Toast.h>
+#import "FHUserTracker.h"
+#import <FHHouseBase/FHUserTrackerDefine.h>
 
 @interface FHChildBrowsingHistoryViewModel()<FHBrowsingHistoryEmptyViewDelegate, UITableViewDelegate, UITableViewDataSource>
 
@@ -31,6 +33,8 @@
 @property (nonatomic, weak) TTHttpTask *requestTask;
 @property (nonatomic, strong) NSMutableArray *historyList;
 @property (nonatomic, assign) NSInteger offset;
+@property (nonatomic, strong) NSMutableDictionary *tracerDictRecord;
+@property (nonatomic, assign) BOOL isEnterCategory;
 
 @end
 
@@ -39,6 +43,8 @@
 - (instancetype)initWithViewController:(FHChildBrowsingHistoryViewController *)viewController tableView:(UITableView *)tableView emptyView:(FHBrowsingHistoryEmptyView *)emptyView {
     self = [super init];
     if (self) {
+        self.isEnterCategory = YES;
+        self.tracerDictRecord = [[NSMutableDictionary alloc] init];
         self.historyList = [[NSMutableArray alloc] init];
         self.viewController = viewController;
         self.findHouseView = emptyView;
@@ -101,6 +107,10 @@
 - (void)processData:(id)model {
     if (model) {
         [self.viewController.emptyView hideEmptyView];
+        if (self.isEnterCategory) {
+            [self addEnterLog];
+            self.isEnterCategory = NO;
+        }
         NSMutableArray *items = @[].mutableCopy;
         FHBrowseHistoryHouseDataModel *historyModel = ((FHBrowseHistoryHouseResultModel *)model).data;
         self.offset = historyModel.offset;
@@ -258,18 +268,29 @@
     if (row >= 0 && row < _historyList.count) {
         id cellModel = _historyList[row];
         if ([cellModel isKindOfClass:[FHSearchHouseItemModel class]]) {
-            [self showHouseDetail:cellModel atIndex:row];
+        }
+    }
+}
+
+- (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
+    NSInteger row = indexPath.row;
+    if (row >= 0 && row < _historyList.count) {
+        id cellModel = _historyList[row];
+        if ([cellModel isKindOfClass:[FHSearchHouseItemModel class]]) {
+            [self addHouseShowLog:cellModel withRank:row];
         }
     }
 }
 
 - (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView {
-    // 开始拖拽滑动时，收起键盘
+    // 开始滑动时, 禁止collectionView滑动
     self.viewController.fatherVC.collectionView.scrollEnabled = NO;
 }
 
 #pragma mark - FHBrowsingHistoryEmptyViewDelegate
+
 - (void)clickFindHouse:(FHHouseType)houseType {
+    [self addClickOptionLog];
     NSArray *houseTypeList = [[FHEnvContext sharedInstance] getConfigFromCache].houseTypeList;
     NSNumber *houseTypeNum = [NSNumber numberWithInteger:houseType];
     if (![houseTypeList containsObject:houseTypeNum]) {
@@ -310,21 +331,82 @@
     }
 }
 
--(void)showHouseDetail:(id)cellModel atIndex:(NSInteger *)index {
-    NSString *logPb = @"";
-    NSMutableDictionary *tracerParam = [NSMutableDictionary dictionary];
-    NSString *urlStr = nil;
-    tracerParam[@"card_type"] = @"left_pic";
-    if ([cellModel isKindOfClass:[FHSearchHouseItemModel class]]) {
-        
-    }
-    
-}
-
 - (void)popToMainPage {
     [self.viewController.navigationController popToRootViewControllerAnimated:YES];
     if (![[FHHomeConfigManager sharedInstance].fhHomeBridgeInstance isCurrentTabFirst]) {
         [[FHHomeConfigManager sharedInstance].fhHomeBridgeInstance jumpToTabbarFirst];
+    }
+}
+
+#pragma mark - 埋点
+
+- (void)addEnterLog {
+    NSMutableDictionary *params = @{}.mutableCopy;
+    [params addEntriesFromDictionary:self.viewController.tracerDict];
+    params[UT_CATEGORY_NAME] = [self getPageType:self.houseType];
+    params[UT_ORIGIN_SEARCH_ID] = @"";
+    params[UT_SEARCH_ID] = @"";
+    TRACK_EVENT(@"enter_category", params);
+}
+
+- (void)addClickOptionLog {
+    NSMutableDictionary *params = @{}.mutableCopy;
+    params[UT_ORIGIN_FROM] = self.viewController.tracerDict[UT_ORIGIN_FROM] ?: @"be_null";
+    params[UT_PAGE_TYPE] = [self getPageType:self.houseType];
+    params[UT_CLICK_POSITION] = @"去挑好房";
+    TRACK_EVENT(@"click_options", params);
+}
+
+-(void)addHouseShowLog:(FHSearchBaseItemModel *)cellModel withRank: (NSInteger)rank {
+    NSString *recordKey = [NSString stringWithFormat:@"%ld",rank];
+    if (self.tracerDictRecord[recordKey]) {
+        return;
+    }
+    if ([cellModel isKindOfClass:[FHSearchHouseItemModel class]]) {
+        NSMutableDictionary *params = @{}.mutableCopy;
+        [params addEntriesFromDictionary:self.viewController.tracerDict];
+        FHSearchHouseItemModel *model = (FHSearchHouseItemModel *)cellModel;
+        self.tracerDictRecord[recordKey] = @(YES);
+        
+        params[UT_PAGE_TYPE] = [self getPageType:self.houseType];
+        params[UT_ORIGIN_SEARCH_ID] = @"";
+        params[UT_SEARCH_ID] = @"";
+        params[@"impr_id"] = model.imprId;
+        params[UT_RANK] = @(rank);
+        params[UT_GROUP_ID] = @"";
+        params[UT_HOUSE_TYPE] = [self getHouseType:self.houseType];
+        params[@"log_pb"] = model.logPb;
+        TRACK_EVENT(@"house_show", params);
+    }
+}
+
+- (NSString *)getPageType:(FHHouseType)houseType {
+    switch (houseType) {
+        case FHHouseTypeNewHouse:
+            return @"history_new_list";
+        case FHHouseTypeSecondHandHouse:
+            return @"history_old_list";
+        case FHHouseTypeRentHouse:
+            return @"history_rent_list";
+        case FHHouseTypeNeighborhood:
+            return @"history_neighborhood_list";
+        default:
+            return @"";
+    }
+}
+
+- (NSString *)getHouseType:(FHHouseType)houseType {
+    switch (houseType) {
+        case FHHouseTypeNewHouse:
+            return @"new";
+        case FHHouseTypeSecondHandHouse:
+            return @"old";
+        case FHHouseTypeRentHouse:
+            return @"rent";
+        case FHHouseTypeNeighborhood:
+            return @"neighborhood";
+        default:
+            return @"";
     }
 }
 

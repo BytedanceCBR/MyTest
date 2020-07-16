@@ -13,8 +13,8 @@
 
 @property (nonatomic, assign) NSInteger currentTabIndex;
 
--(instancetype)initWithController:(FHBrowsingHistoryViewController *)viewController andCollectionView:(FHSuggestionCollectionView *)collectionView;
-
+- (instancetype)initWithController:(FHBrowsingHistoryViewController *)viewController andCollectionView:(FHSuggestionCollectionView *)collectionView;
+- (void)addGoDetailLog;
 @end
 
 
