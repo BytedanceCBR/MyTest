@@ -117,6 +117,7 @@
                         }];
                         NSURL *URL = [NSURL URLWithString:@"sslocal://flogin"];
                         NSMutableDictionary *params = [NSMutableDictionary dictionary];
+                        params[@"ttDisableDragBack"] = @(YES);
                         TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:params];
                         [[TTRoute sharedRoute] openURLByPushViewController:URL userInfo:userInfo];
                     }
