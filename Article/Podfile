@@ -595,6 +595,8 @@ def appPods
         'Image'
 #        'Video'
     ]
+    
+    pod_binary 'BDXElement', '1.0.0', :subspecs=> ['Core', 'ScrollView', 'ImpressionView']
 
 end
 
