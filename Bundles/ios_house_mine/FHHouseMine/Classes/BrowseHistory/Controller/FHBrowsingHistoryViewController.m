@@ -141,7 +141,7 @@
     WeakSelf;
     _segmentControl.indexChangeBlock = ^(NSInteger index) {
         StrongSelf;
-        if (index >= 0 && index < 4) {
+        if (index >= 0 && index < self.houseTypeArray.count) {
             self.houseType = [self.houseTypeArray[index] integerValue];
         }
     };

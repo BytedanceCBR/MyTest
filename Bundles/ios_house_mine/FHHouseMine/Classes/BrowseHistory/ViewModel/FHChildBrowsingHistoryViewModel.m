@@ -86,10 +86,10 @@
     [_requestTask cancel];
     NSInteger offset = 0;
     if (!isHead) {
-        offset = _historyList.count;
+        offset = _offset;
     }
     __weak typeof(self) wself = self;
-    self.requestTask = [FHBrowseHistoryAPI requestBrowseHistoryWithCount:20 houseType:self.houseType offset:offset class:([FHBrowseHistoryHouseResultModel class]) completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
+    self.requestTask = [FHBrowseHistoryAPI requestBrowseHistoryWithCount:10 houseType:self.houseType offset:offset class:([FHBrowseHistoryHouseResultModel class]) completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
         [wself.viewController endLoading];
         if (!error) {
             [wself processData:model];
