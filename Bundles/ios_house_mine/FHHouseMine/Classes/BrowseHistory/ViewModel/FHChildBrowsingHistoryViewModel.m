@@ -188,6 +188,10 @@
         NSString *identifier = [self cellIdentifierForEntity:data];
         if (identifier.length > 0) {
              FHListBaseCell *cell = (FHListBaseCell *)[tableView dequeueReusableCellWithIdentifier:identifier];
+            if ([cell isKindOfClass:[FHHouseBaseNewHouseCell class]]) {
+                FHHouseBaseNewHouseCell *theCell = (FHHouseBaseNewHouseCell *)cell;
+                [theCell updateHouseListNewHouseCellModel:data];
+            }
             [cell refreshWithData:data];
             return cell;
         }
