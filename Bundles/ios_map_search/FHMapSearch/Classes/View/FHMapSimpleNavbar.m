@@ -77,7 +77,7 @@
 }
 
 -(void)rightBtnClick:(id)sender{
-    NSMutableDictionary *tracerParams = [NSMutableDictionary new];
+     NSMutableDictionary *tracerParams = [NSMutableDictionary new];
      tracerParams[@"enter_type"] = @"click";
      tracerParams[@"element_from"] = @"map_search";
      tracerParams[@"enter_from"] = @"map_search";
@@ -134,8 +134,13 @@
     UIImage *img = nil;
     if(type == FHMapSimpleNavbarTypeClose){
         img = ICON_FONT_IMG(24, @"\U0000e673",[UIColor themeGray1]);
+    }else if(type == FHMapSimpleNavbarTypeDrawLine){
+        img = ICON_FONT_IMG(24, @"\U0000e673",[UIColor themeGray1]);
+        [_rightButton setImage:[UIImage imageNamed:@"draw_line_btn"] forState:UIControlStateNormal];
     }else{
         img = ICON_FONT_IMG(22, @"\U0000e68a",[UIColor themeGray1]);
+        UIImage *searImg = ICON_FONT_IMG(24, @"\U0000e675",[UIColor themeGray1]);
+        [_rightButton setImage:searImg forState:UIControlStateNormal];
     }
 
     [self.backButton setImage:img forState:UIControlStateNormal];

@@ -15,7 +15,7 @@
 @interface FHMapSearchBottomBar ()
 
 //@property(nonatomic , strong) UIButton *closeButton;
-@property(nonatomic , strong) UIControl *drawLineBgView;
+@property(nonatomic , strong) UIView *drawLineBgView;
 @property(nonatomic , strong) UILabel *drawLineLabel;
 @property(nonatomic , strong) UIView *verticalLine;
 @property(nonatomic , strong) UILabel *drawTitleLineLabel;
@@ -56,9 +56,12 @@
 //    img = [img resizableImageWithCapInsets:UIEdgeInsetsMake(15, 15, 15, 15)];
 //    UIImage *searchTopIcon = SYS_IMG(@"map_search_top_icon");
     
-    _drawLineBgView = [[UIControl alloc] init];
+    _drawLineBgView = [[UIView alloc] init];
 //    _drawLineBgView.layer.contents = (id)[img CGImage];
-    [_drawLineBgView addTarget:self action:@selector(onDrawLineInfo) forControlEvents:UIControlEventTouchUpInside];
+//    [_drawLineBgView addTarget:self action:@selector(onDrawLineInfo) forControlEvents:UIControlEventTouchUpInside];
+    UITapGestureRecognizer *tapGest = [[UITapGestureRecognizer alloc] initWithTarget:self
+                                                                              action:@selector(onDrawLineInfo)];
+    [_drawLineBgView addGestureRecognizer:tapGest];
     _drawLineBgView.layer.masksToBounds = YES;
     _drawLineBgView.layer.cornerRadius = 26;
     _drawLineBgView.layer.borderWidth = 0.6;
@@ -128,52 +131,49 @@
     
     [_drawLineBgView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerX.mas_equalTo(self);
-        make.width.mas_equalTo(180);
         make.top.mas_equalTo(self).offset(0);
+        make.width.mas_equalTo(180);
         make.bottom.mas_equalTo(self).offset(0);
-        make.right.mas_equalTo(self.drawLineIndicator.mas_right).offset(20);
     }];
     
     [_topIconImage mas_makeConstraints:^(MASConstraintMaker *make) {
-          make.left.mas_equalTo(self.drawLineBgView).offset(10);
-          make.centerY.mas_equalTo(self.drawLineBgView);
-          make.size.mas_equalTo(CGSizeMake(21, 21));
+      make.left.mas_equalTo(self.drawLineBgView).offset(15);
+      make.centerY.mas_equalTo(self.drawLineBgView);
+      make.width.mas_equalTo(21);
+      make.height.mas_equalTo(21);
     }];
     
+    [_verticalLine mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.mas_equalTo(self.drawLineBgView).offset(8);
+        make.left.mas_equalTo(41);
+        make.width.mas_equalTo(1);
+        make.height.mas_equalTo(36);
+    }];
     
     [_drawTitleLineLabel mas_makeConstraints:^(MASConstraintMaker *make) {
        make.top.mas_equalTo(self.drawLineBgView).offset(0);
-       make.centerX.mas_equalTo(self.drawLineBgView).offset(3);
+       make.left.mas_equalTo(50);
 //       make.width.mas_equalTo(160);
        make.height.mas_equalTo(26);
 //       make.left.mas_equalTo(43);
     }];
     
-    [_verticalLine mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.drawLineBgView).offset(8);
-        make.left.mas_equalTo(self.topIconImage.mas_right).offset(3);
-        make.width.mas_equalTo(1);
-        make.height.mas_equalTo(36);
-    }];
     
     [_drawLineLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(self.drawTitleLineLabel.mas_bottom).offset(0);
-        make.width.mas_equalTo(120);
+        make.width.mas_equalTo(110);
         make.height.mas_equalTo(26);
-        make.left.mas_equalTo(43);
+        make.left.mas_equalTo(50);
     }];
-    
 
     
     [_drawLineIndicator mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.right.mas_equalTo(self.drawLineBgView).offset(0);
+        make.right.mas_equalTo(self.drawLineBgView).offset(-15);
         make.centerY.mas_equalTo(self.drawLineBgView);
         make.size.mas_equalTo(CGSizeMake(18, 18));
     }];
     
-    
 
-    
 //    //TODO: add subway
 //    [_subwayBgView mas_makeConstraints:^(MASConstraintMaker *make) {
 //        make.left.mas_equalTo(self).offset(88);
@@ -222,33 +222,33 @@
     
     
 //    [_drawLineLabel sizeToFit];
-    CGFloat padding = 46 ; //左右间距 箭头
-    if (showIndicator) {
-        padding += 24;
-    }
+//    CGFloat padding = 46 ; //左右间距 箭头
+//    if (showIndicator) {
+//        padding += 24;
+//    }
 
     self.drawLineIndicator.hidden = !showIndicator;
-    CGFloat width = MIN(_drawLineLabel.width, (SCREEN_WIDTH - padding));
-    CGFloat left = (SCREEN_WIDTH - width - padding)/2;
+//    CGFloat width = MIN(_drawLineLabel.width, (SCREEN_WIDTH - padding));
+//    CGFloat left = (SCREEN_WIDTH - width - padding)/2;
 
 //    [_drawLineLabel mas_updateConstraints:^(MASConstraintMaker *make) {
 //        make.width.mas_equalTo(90);
 //        make.height.mas_equalTo(52);
 //    }];
-    [_drawLineBgView mas_updateConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(left);
-    }];
+//    [_drawLineBgView mas_updateConstraints:^(MASConstraintMaker *make) {
+//        make.left.mas_equalTo(left);
+//    }];
     
     if (showIndicator) {
         [_drawLineBgView mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.right.mas_equalTo(self.drawLineIndicator.mas_right).offset(10);
+            make.width.mas_equalTo(180);
         }];
     }else{
         [_drawLineBgView mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.right.mas_equalTo(self.drawLineIndicator.mas_right).offset(2);
+            make.width.mas_equalTo(160);
         }];
     }
-        
+//
     _drawLineBgView.hidden = NO;
     
 }

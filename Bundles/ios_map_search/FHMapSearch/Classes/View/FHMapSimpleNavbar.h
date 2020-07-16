@@ -12,6 +12,7 @@ NS_ASSUME_NONNULL_BEGIN
 typedef NS_ENUM(NSInteger , FHMapSimpleNavbarType) {
     FHMapSimpleNavbarTypeBack = 0 ,
     FHMapSimpleNavbarTypeClose,
+    FHMapSimpleNavbarTypeDrawLine,
 };
 
 @interface FHMapSimpleNavbar : UIView

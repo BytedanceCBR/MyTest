@@ -229,7 +229,10 @@
     _simpleNavBar.backActionBlock = ^(FHMapSimpleNavbarType type) {
         if (type == FHMapSimpleNavbarTypeClose) {
             [wself.viewModel exitCurrentMode];
-        }else{
+        }else if(type == FHMapSimpleNavbarTypeDrawLine){
+            [wself.viewModel exitCurrentMode];
+        }
+        else{
             [wself backAction];
         }
     };
@@ -403,7 +406,7 @@
 {
     self.title =  self.viewModel.navTitle ;
     [self.simpleNavBar setTitle:self.title];
-    self.simpleNavBar.type = (FHMapSearchShowModeMap == mode ? FHMapSimpleNavbarTypeBack : FHMapSimpleNavbarTypeClose);
+    self.simpleNavBar.type = (mode == FHMapSearchShowModeDrawLine ? FHMapSimpleNavbarTypeDrawLine : (FHMapSearchShowModeMap == mode ? FHMapSimpleNavbarTypeBack : FHMapSimpleNavbarTypeClose));
 }
 
 -(void)showNavTopViews:(CGFloat)ratio animated:(BOOL)animated
