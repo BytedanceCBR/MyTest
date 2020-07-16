@@ -29,7 +29,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
 //    [self createUI];
-//    [self createModel];
+    [self createModel];
 }
 
 - (void)createUI {
@@ -44,7 +44,7 @@
 }
 
 - (void)createModel {
-//    _viewModel = [[FHHouseRealtorDetailViewModel alloc]initWithController:self tableView:self.tableview];
+    _viewModel = [[FHHouseRealtorDetailViewModel alloc]initWithController:self tableView:self.tableView];
 //    _view
     
 }
@@ -53,12 +53,12 @@
     
 }
 
-- (FHHouseRealtorDetailHeaderView *)header {
-    if (!_header) {
-        _header = [[FHHouseRealtorDetailHeaderView alloc]initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width,425)];
-    }
-    return _header;
-}
+//- (FHHouseRealtorDetailHeaderView *)header {
+//    if (!_header) {
+//        _header = [[FHHouseRealtorDetailHeaderView alloc]initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width,425)];
+//    }
+//    return _header;
+//}
 
 
 @end

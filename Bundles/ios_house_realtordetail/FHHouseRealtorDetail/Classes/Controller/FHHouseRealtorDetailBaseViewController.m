@@ -17,30 +17,24 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    [self.tableView setFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, 800)];
+    [self initTableView];
     self.tableView.backgroundColor = [UIColor redColor];
-    // Do any additional setup after loading the view.
 }
 
-- (UITableView *)tableView {
-    if (!_tableView) {
-         UITableView *mainTable = [[FHBaseTableView alloc] initWithFrame:CGRectZero style:UITableViewStylePlain];
-           mainTable.keyboardDismissMode = UIScrollViewKeyboardDismissModeOnDrag;
-           mainTable.separatorStyle = UITableViewCellSeparatorStyleNone;
-//           UITapGestureRecognizer *tapGesturRecognizer=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(tapAction:)];
-//           tapGesturRecognizer.cancelsTouchesInView = NO;
-//           tapGesturRecognizer.delegate = self;
-//           [_mainTable addGestureRecognizer:tapGesturRecognizer];
-           if (@available(iOS 11.0 , *)) {
-               mainTable.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
-           }
-           mainTable.estimatedRowHeight = UITableViewAutomaticDimension;
-           mainTable.estimatedSectionFooterHeight = 0;
-           mainTable.estimatedSectionHeaderHeight = 0;
-        [self.view addSubview:mainTable];
-        _tableView = mainTable;
+- (void)initTableView {
+    _tableView = [[FHBaseTableView alloc] initWithFrame:CGRectZero style:UITableViewStylePlain];
+    _tableView.keyboardDismissMode = UIScrollViewKeyboardDismissModeOnDrag;
+    _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+    if (@available(iOS 11.0 , *)) {
+        _tableView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
     }
-    return _tableView;
+    _tableView.estimatedRowHeight = UITableViewAutomaticDimension;
+    _tableView.estimatedSectionFooterHeight = 0;
+    _tableView.estimatedSectionHeaderHeight = 0;
+    [self.view addSubview:_tableView];
+    [_tableView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.edges.mas_equalTo(self.view);
+    }];
 }
 
 @end

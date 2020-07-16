@@ -191,7 +191,6 @@
 
 - (void)initViewModel {
     self.viewModel = [[FHHouseRealtorDetailVM alloc] initWithController:self tracerDict:self.tracerDict];
-    self.viewModel.shareButton = self.shareButton;
     [self.viewModel addGoDetailLog];
     [self.viewModel updateNavBarWithAlpha:self.customNavBarView.bgView.alpha];
     [self.viewModel requestDataWithRealtorId:@"" refreshFeed:YES];

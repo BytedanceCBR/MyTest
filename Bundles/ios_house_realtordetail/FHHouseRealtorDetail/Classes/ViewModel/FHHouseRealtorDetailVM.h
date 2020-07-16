@@ -14,8 +14,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FHHouseRealtorDetailVM : NSObject
 @property (nonatomic , strong) NSMutableDictionary *tracerDict;
-@property (nonatomic, weak)     UIButton       *shareButton;
-@property (nonatomic, strong)   FHUGCShareInfoModel *shareInfo;// 分享信息，服务端返回
 @property (nonatomic, copy)     NSDictionary       *shareTracerDict;// 分享埋点数据
 
 - (instancetype)initWithController:(FHHouseRealtorDetailVC *)viewController tracerDict:(NSDictionary*)tracerDict;

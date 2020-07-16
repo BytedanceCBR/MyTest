@@ -122,6 +122,7 @@
     [FHMainApi requestRealtorHomePage:parmas completion:^(FHHouseRealtorDetailModel * _Nonnull model, NSError * _Nonnull error) {
         if (model && error == NULL) {
             if (model.data) {
+                [wSelf updateUIWithData];
                 [wSelf processDetailData:model];
             }
         }
@@ -150,7 +151,7 @@
 //            if(isFollowed == NO) {
 //
 //            }
-//            [wself updateUIWithData:responseModel.data];
+//
 //            if (responseModel.data) {
 //                // 更新圈子数据
 //                [[FHUGCConfig sharedInstance] updateSocialGroupDataWith:responseModel.data];
@@ -265,7 +266,7 @@
 - (void)createFeedListController:(NSString *)tabName {
     
     if (![tabName isEqualToString:@"房源"]) {
-        FHHouseRealtorDetailBaseViewController *realtorDetailController =  [[FHHouseRealtorDetailBaseViewController alloc]init];
+        FHHouseRealtorDetailController *realtorDetailController =  [[FHHouseRealtorDetailController alloc]init];
         [self.subVCs addObject:realtorDetailController];
     }
     
@@ -322,20 +323,17 @@
         [self.viewController.customNavBarView.leftBtn setBackgroundImage:whiteBackArrowImage forState:UIControlStateNormal];
         [self.viewController.customNavBarView.leftBtn setBackgroundImage:whiteBackArrowImage forState:UIControlStateHighlighted];
         self.viewController.titleContainer.hidden = YES;
-        self.shareButton.hidden = NO;
     } else if (alpha > 0.1f && alpha < 0.9f) {
         [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault];
         self.viewController.customNavBarView.title.textColor = [UIColor themeGray1];
         [self.viewController.customNavBarView.leftBtn setBackgroundImage:blackBackArrowImage forState:UIControlStateNormal];
         [self.viewController.customNavBarView.leftBtn setBackgroundImage:blackBackArrowImage forState:UIControlStateHighlighted];
         self.viewController.titleContainer.hidden = YES;
-        self.shareButton.hidden = NO;
     } else {
         [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault];
         [self.viewController.customNavBarView.leftBtn setBackgroundImage:blackBackArrowImage forState:UIControlStateNormal];
         [self.viewController.customNavBarView.leftBtn setBackgroundImage:blackBackArrowImage forState:UIControlStateHighlighted];
         self.viewController.titleContainer.hidden = NO;
-        self.shareButton.hidden = YES;
     }
     if(self.viewController.emptyView.hidden == NO) {
         [self.viewController.customNavBarView.leftBtn setBackgroundImage:blackBackArrowImage forState:UIControlStateNormal];
@@ -350,8 +348,8 @@
 }
 
 
-- (void)updateUIWithData:(FHUGCScialGroupDataModel *)data {
-    
+- (void)updateUIWithData {
+        [self.pagingView reloadHeaderViewHeight:self.viewController.headerView.height];
 }
 
 #pragma UIScrollViewDelegate
@@ -453,18 +451,16 @@
 }
 
 - (void)pagingView:(TTHorizontalPagingView *)pagingView didSwitchIndex:(NSInteger)aIndex to:(NSInteger)toIndex {
-    //前面的消失
-    if(aIndex < self.subVCs.count && !self.isFirstEnter){
-        FHHouseRealtorDetailBaseViewController *feedVC = self.subVCs[aIndex];
-//        [feedVC viewWillDisappear];
-    }
-    //新的展现
-    if(toIndex < self.subVCs.count){
-        FHHouseRealtorDetailBaseViewController *feedVC = self.subVCs[toIndex];
-        [self.viewController addChildViewController:feedVC];
-        [feedVC didMoveToParentViewController:self.viewController];
-//        [feedVC viewWillAppear];
-    }
+//    //前面的消失
+//    if(aIndex < self.subVCs.count && !self.isFirstEnter){
+//        FHHouseRealtorDetailBaseViewController *feedVC = self.subVCs[aIndex];
+//    }
+//    //新的展现
+//    if(toIndex < self.subVCs.count){
+//        FHHouseRealtorDetailBaseViewController *feedVC = self.subVCs[toIndex];
+//        [self.viewController addChildViewController:feedVC];
+//        [feedVC didMoveToParentViewController:self.viewController];
+//    }
 }
 
 - (UIView *)viewForHeaderInPagingView {
