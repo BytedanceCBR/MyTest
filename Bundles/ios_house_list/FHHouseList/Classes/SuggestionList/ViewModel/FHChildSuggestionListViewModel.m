@@ -569,9 +569,12 @@
 //跳转到帮我找房
 - (void)jump2HouseFindPageWithUrl:(NSString *)url from:(NSString *)from {
     if (url.length > 0) {
+        //帮我找房埋点修正需要增加origin_from字段
+        NSString *originFrom = self.listController.tracerDict[@"origin_from"] ?: @"be_null";
         NSDictionary *tracerInfo = @{
             @"element_from": from.length > 0 ? from : @"be_null",
             @"enter_from": @"search_detail",
+            @"origin_from":  originFrom,
         };
         NSURL *openUrl = [NSURL URLWithString:url];
         TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] init];

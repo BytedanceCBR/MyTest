@@ -1552,8 +1552,7 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
 {
     NSString *eventStr = event ?: @"click_options";
     NSMutableDictionary *params = @{}.mutableCopy;
-    //所有帮我找房origin_from都是find_icon
-    params[@"origin_from"] = @"find_icon";
+    params[@"origin_from"] = self.tracerDict[@"origin_from"] ?: @"be_null";
     params[@"enter_from"] = self.tracerDict[@"enter_from"] ? : @"be_null";
     params[@"page_type"] = [self pageTypeString];
     if (position.length > 0) {
