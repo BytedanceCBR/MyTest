@@ -245,4 +245,14 @@
     [self.view bringSubviewToFront:self.customNavBarView];
 }
 
+
+- (void)supportCarrierLogin:(void (^)(BOOL))completion {
+    if(completion) {
+        completion(YES);
+    }
+}
+
+- (void)showHalfLogin:(UIViewController *)vc {
+    [[ToastManager manager] showToast:@"展示半屏登录"];
+}
 @end
