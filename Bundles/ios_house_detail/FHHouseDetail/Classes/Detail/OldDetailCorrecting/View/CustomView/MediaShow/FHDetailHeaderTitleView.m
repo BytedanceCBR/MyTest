@@ -479,7 +479,7 @@
         if (self.model.housetype == FHHouseTypeNewHouse) {
             inset = 4;
         }
-        CGFloat itemWidth = itemSize.width + 18;
+        CGFloat itemWidth = itemSize.width + 10;
         maxWidth += itemWidth + inset;
         CGFloat tagWidth = [UIScreen mainScreen].bounds.size.width - 30;
         if (model.housetype == FHHouseTypeSecondHandHouse) {
