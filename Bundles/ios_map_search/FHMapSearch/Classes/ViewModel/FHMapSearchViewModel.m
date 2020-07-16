@@ -681,7 +681,7 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
                     SHOW_TOAST(@"网络异常");
                 }
                 strongSelf->onSaleHouseCount = 0;
-                [strongSelf.bottomBar showDrawLine:@"区域内共找到0套房源" showIndicator:NO];
+                [strongSelf.bottomBar showDrawLine:@"0套房源" withNum:0 showIndicator:NO];
                 [[FHMainManager sharedInstance] showToast:@"房源请求失败" duration:2];
                 if ([TTReachability isNetworkConnected]) {
                     [[HMDTTMonitor defaultManager] hmdTrackService:@"map_house_request_failed" attributes:@{@"message":error.domain?:@""}];
@@ -728,7 +728,7 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
             [wself addEnterMapLog];
         }
         if (wself.showMode == FHMapSearchShowModeDrawLine) {
-            [wself.bottomBar showDrawLine:[NSString stringWithFormat:@"区域内共找到%ld套房源",strongSelf->onSaleHouseCount] showIndicator:strongSelf->onSaleHouseCount > 0];
+            [wself.bottomBar showDrawLine:[NSString stringWithFormat:@"%ld套房源",strongSelf->onSaleHouseCount] withNum:strongSelf->onSaleHouseCount showIndicator:strongSelf->onSaleHouseCount > 0];
         }
         //handle open url
         [wself updateBubble:model.mapFindHouseOpenUrl];
@@ -1864,7 +1864,7 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
     }else{
         SHOW_TOAST(@"网络异常");
         self->onSaleHouseCount = 0;
-        [self.bottomBar showDrawLine:@"区域内共找到0套房源" showIndicator:NO];
+        [self.bottomBar showDrawLine:@"0套房源" withNum:0 showIndicator:NO];
     }
     
 }

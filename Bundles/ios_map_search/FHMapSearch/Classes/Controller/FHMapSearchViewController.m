@@ -376,12 +376,12 @@
         make.height.mas_equalTo(TOP_INFO_BAR_HEIGHT);
     }];
     
-    CGFloat bottomMargin = -(31+bottomSafeInset);
+    CGFloat topInset = 66 + topSafeInset;
     
     [self.bottomBar mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.right.mas_equalTo(self.view);
-        make.bottom.mas_equalTo(self.view).offset(bottomMargin);
-        make.height.mas_equalTo(58);
+        make.top.mas_equalTo(self.view).offset(topInset);
+        make.height.mas_equalTo(52);
     }];    
 }
 
