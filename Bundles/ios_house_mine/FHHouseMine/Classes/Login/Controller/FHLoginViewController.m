@@ -16,6 +16,89 @@
 #import "TTAccountLoginManager.h"
 #import "TTAccountManager.h"
 #import "ToastManager.h"
+#import "UIView+Utils.h"
+
+
+#define SCREEN_WIDTH    [UIScreen mainScreen].bounds.size.width
+#define SCREEN_HEIGHT   [UIScreen mainScreen].bounds.size.height
+#define ANIMATION_DURATION  0.25
+#define LOGIN_HALF_VIEW_HEIGHT  ((479.0 / 667.0) * SCREEN_HEIGHT)
+
+@interface FHLoginHalfView : UIView
+
+@property (nonatomic, strong) FHOneKeyLoginView *oneKeyLoginView;
+
+- (void)show;
+- (void)dismiss;
+@end
+
+@implementation FHLoginHalfView
+
+- (FHOneKeyLoginView *)oneKeyLoginView {
+    if(!_oneKeyLoginView) {
+        _oneKeyLoginView = [[FHOneKeyLoginView alloc] initWithFrame:CGRectMake(0, SCREEN_HEIGHT, SCREEN_WIDTH, LOGIN_HALF_VIEW_HEIGHT)];
+        _oneKeyLoginView.backgroundColor = [UIColor themeWhite];
+        
+        UIBezierPath *maskPath = [UIBezierPath bezierPathWithRoundedRect:_oneKeyLoginView.bounds byRoundingCorners:UIRectCornerTopLeft | UIRectCornerTopRight cornerRadii:CGSizeMake(10, 10)];
+        CAShapeLayer *maskLayer = [[CAShapeLayer alloc] init];
+        maskLayer.frame = _oneKeyLoginView.bounds;
+        maskLayer.path = maskPath.CGPath;
+        _oneKeyLoginView.layer.mask = maskLayer;
+        
+        
+        UIButton *closeBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+        [closeBtn setImage:[UIImage imageNamed:@"douyin_login_close"] forState:UIControlStateNormal];
+        closeBtn.frame = CGRectMake(15, 15, 24, 24);
+        [closeBtn addTarget:self action:@selector(dismiss) forControlEvents:UIControlEventTouchUpInside];
+        [_oneKeyLoginView addSubview:closeBtn];
+        
+    }
+    return _oneKeyLoginView;
+}
+
+- (instancetype)initWithFrame:(CGRect)frame {
+    if(self = [super initWithFrame:frame]) {
+        self.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0.3];
+        UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(dismiss)];
+        [self addGestureRecognizer:tap];
+        
+        [self addSubview:self.oneKeyLoginView];
+    }
+    return self;
+}
+
+- (void)show {
+        
+    UIView *keyWindow = [UIView keyWindow];
+    [keyWindow addSubview:self];
+        
+    CGRect frame = self.oneKeyLoginView.frame;
+    frame.origin.y = SCREEN_HEIGHT;
+    self.oneKeyLoginView.frame = frame;
+    self.alpha = 0.0f;
+    [UIView animateWithDuration:ANIMATION_DURATION animations:^{
+        self.alpha = 1.0f;
+        CGRect frame = self.oneKeyLoginView.frame;
+        frame.origin.y = SCREEN_HEIGHT - self.oneKeyLoginView.size.height;
+        self.oneKeyLoginView.frame = frame;
+    }];
+}
+
+- (void)dismiss {
+    self.alpha = 1.0f;
+    CGRect frame = self.oneKeyLoginView.frame;
+    frame.origin.y = SCREEN_HEIGHT - self.oneKeyLoginView.size.height;
+    self.oneKeyLoginView.frame = frame;
+    [UIView animateWithDuration:ANIMATION_DURATION animations:^{
+        CGRect frame = self.oneKeyLoginView.frame;
+        frame.origin.y = SCREEN_HEIGHT;
+        self.oneKeyLoginView.frame = frame;
+        self.alpha = 0.0f;
+    } completion:^(BOOL finished) {
+        [self removeFromSuperview];
+    }];
+}
+@end
 
 @interface FHLoginViewController ()<TTRouteInitializeProtocol>
 
@@ -30,6 +113,8 @@
 @property (nonatomic, assign)   BOOL       present;
 @property (nonatomic, assign)   BOOL       isFromMineTab;
 @property (nonatomic, weak) UITextField *textField;
+
+@property (nonatomic, strong) FHLoginHalfView *halfLoginView;
 @end
 
 @implementation FHLoginViewController
@@ -245,7 +330,7 @@
     [self.view bringSubviewToFront:self.customNavBarView];
 }
 
-
+#pragma mark - 半屏登录页面
 - (void)supportCarrierLogin:(void (^)(BOOL))completion {
     if (!completion) {
         return;
@@ -261,6 +346,14 @@
 
 - (void)showHalfLogin:(UIViewController *)vc {
     self.present = YES;
-    [[ToastManager manager] showToast:@"展示半屏登录"];
+    [self.onekeyLoginView updateOneKeyLoginWithPhone:self.viewModel.mobileNumber service:[self.viewModel serviceName] protocol:[self.viewModel protocolAttrTextByIsOneKeyLoginViewType:FHLoginViewTypeOneKey] showDouyinIcon:NO];
+    [self.halfLoginView show];
+}
+
+- (FHLoginHalfView *)halfLoginView {
+    if(!_halfLoginView) {
+        _halfLoginView = [[FHLoginHalfView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT)];
+    }
+    return _halfLoginView;
 }
 @end
