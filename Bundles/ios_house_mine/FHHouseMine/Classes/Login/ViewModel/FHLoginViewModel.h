@@ -13,6 +13,25 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+@interface FHLoginSharedModel : NSObject
+
++ (instancetype)sharedModel;
+
+@property (nonatomic, assign) BOOL hasPushedLoginProcess;
+@property (nonatomic, assign) BOOL hasRequestedApis;
+
+- (void)loadOneKayAndDouyinConfigs:(void (^)(void))completion;
+
+@property (nonatomic, assign) BOOL disableDouyinOneClickLoginSetting;
+@property (nonatomic, assign) BOOL disableDouyinIconLoginSetting;
+
+@property (nonatomic, assign) BOOL isOneKeyLogin;
+@property (nonatomic, copy) NSString *mobileNumber;
+@property (nonatomic, assign) BOOL *douyinCanQucikLogin;
+
+
+@end
+
 @interface FHLoginViewModel : NSObject<FHLoginViewDelegate>
 
 - (instancetype)initWithController:(FHLoginViewController *)viewController;

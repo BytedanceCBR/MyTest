@@ -41,22 +41,7 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
 
 NSString * const kFHLoginSIMStatusChangeNotification = @"kFHLoginSIMStatusChangeNotification";
 
-@interface FHLoginSharedModel : NSObject
-
-+ (instancetype)sharedModel;
-
-@property (nonatomic, assign) BOOL hasPushedLoginProcess;
-@property (nonatomic, assign) BOOL hasRequestedApis;
-
-- (void)loadOneKayAndDouyinConfigs:(void (^)(void))completion;
-
-@property (nonatomic, assign) BOOL disableDouyinOneClickLoginSetting;
-@property (nonatomic, assign) BOOL disableDouyinIconLoginSetting;
-
-@property (nonatomic, assign) BOOL isOneKeyLogin;
-@property (nonatomic, copy) NSString *mobileNumber;
-@property (nonatomic, assign) BOOL *douyinCanQucikLogin;
-
+@interface FHLoginSharedModel ()
 @property (nonatomic, strong) CTTelephonyNetworkInfo *telephoneInfo;
 @end
 

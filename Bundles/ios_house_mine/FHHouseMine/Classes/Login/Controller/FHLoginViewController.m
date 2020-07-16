@@ -247,12 +247,20 @@
 
 
 - (void)supportCarrierLogin:(void (^)(BOOL))completion {
-    if(completion) {
-        completion(YES);
+    if (!completion) {
+        return;
+    }
+    if ([FHLoginSharedModel sharedModel].hasRequestedApis) {
+        completion([FHLoginSharedModel sharedModel].isOneKeyLogin);
+    } else {
+        [[FHLoginSharedModel sharedModel] loadOneKayAndDouyinConfigs:^{
+            completion([FHLoginSharedModel sharedModel].isOneKeyLogin);
+        }];
     }
 }
 
 - (void)showHalfLogin:(UIViewController *)vc {
+    self.present = YES;
     [[ToastManager manager] showToast:@"展示半屏登录"];
 }
 @end
