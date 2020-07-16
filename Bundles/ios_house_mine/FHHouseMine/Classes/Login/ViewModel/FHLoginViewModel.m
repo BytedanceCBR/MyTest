@@ -282,7 +282,6 @@ static FHLoginSharedModel *_sharedModel = nil;
         if ([res isKindOfClass:[NSNumber class]]) {
             _processType = [(NSNumber *)res integerValue];
         }
-//        NSLog(@"BDClientABTest f_douyin_login_type is %@",res);
         [self addObserver];
     }
     return self;

@@ -105,7 +105,33 @@
         userInfoDict[@"associate_info"] = associateIM.associateInfo.imInfo?:@{}; // 只传入im_info即可
         userInfoDict[@"extra_info"] = associateIM.extraInfo;
         TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:userInfoDict];
-        [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:userInfo];
+        
+        NSNumber *loginSchema = associateIM.reportParams.extra[kFHIMLoginSchema];
+        if(loginSchema) {
+            switch (loginSchema.integerValue) {
+                case 1:
+                {
+                    if(![TTAccount sharedAccount].isLogin) {
+                        [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:userInfo pushHandler:^(UINavigationController *nav, TTRouteObject *routeObj) {
+                            [nav pushViewController:routeObj.instance animated:NO];
+                        }];
+                        NSURL *URL = [NSURL URLWithString:@"sslocal://flogin"];
+                        NSMutableDictionary *params = [NSMutableDictionary dictionary];
+                        TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:params];
+                        [[TTRoute sharedRoute] openURLByPushViewController:URL userInfo:userInfo];
+                    }
+                    else {
+                        [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:userInfo];
+                    }
+                }
+                    break;
+                default:
+                {
+                    [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:userInfo];
+                }
+                    break;
+            }
+        }
         
         // 静默关注处理
         [self silentFollowHouseWithAssociateIM:associateIM];

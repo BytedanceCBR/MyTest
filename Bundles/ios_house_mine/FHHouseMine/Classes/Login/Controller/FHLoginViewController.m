@@ -136,6 +136,7 @@
     __weak typeof(self) weakSelf = self;
     [self.customNavBarView setLeftButtonBlock:^{
         [weakSelf cancelLoginAction];
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"kFHLoginViewControllerCancelLoginActionNotification" object:nil];
     }];
 }
 
