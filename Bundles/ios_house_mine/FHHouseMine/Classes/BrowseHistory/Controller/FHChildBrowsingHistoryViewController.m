@@ -35,8 +35,8 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    [self setupUI];
     [self addDefaultEmptyViewFullScreen];
+    [self setupUI];
     self.viewModel = [[FHChildBrowsingHistoryViewModel alloc] initWithViewController:self tableView:self.tableView emptyView:self.findHouseView];
 }
 
@@ -74,9 +74,9 @@
 
 - (void)setupUI {
     self.findHouseView = [[FHBrowsingHistoryEmptyView alloc] init];
-    self.findHouseView.delegate = self;
-    [self.view addSubview:self.emptyView];
-    [self.emptyView mas_makeConstraints:^(MASConstraintMaker *make) {
+    self.findHouseView.hidden = YES;
+    [self.view addSubview:self.findHouseView];
+    [self.findHouseView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.edges.mas_equalTo(self.view);
     }];
     

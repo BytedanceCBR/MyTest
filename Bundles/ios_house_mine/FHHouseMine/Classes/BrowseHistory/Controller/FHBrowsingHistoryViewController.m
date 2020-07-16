@@ -31,7 +31,7 @@
     if (self) {
         self.paramObj = paramObj;
         self.ttTrackStayEnable = YES;
-        self.tracerDict[@"origin_from"] = @"maintab_service";
+        self.tracerDict[@"origin_from"] = @"minetab_service";
         self.tracerDict[@"enter_from"] = @"minetab";
     }
     return self;
@@ -129,7 +129,7 @@
     [_segmentControl setBackgroundColor:[UIColor clearColor]];
     [self.topView addSubview:_segmentControl];
     NSInteger count = _segmentControl.sectionTitles.count;
-    float tabMargin = ([UIScreen mainScreen].bounds.size.width - (count - 1) * 32 - count * 36 - 18) / 2;
+    float tabMargin = ([UIScreen mainScreen].bounds.size.width - (count - 1) * 32 - count * 32 - 22) / 2;
     [_segmentControl mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerX.equalTo(_topView);
         make.height.mas_equalTo(44);

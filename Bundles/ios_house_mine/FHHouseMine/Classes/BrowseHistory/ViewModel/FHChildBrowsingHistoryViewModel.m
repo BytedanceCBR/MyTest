@@ -35,6 +35,9 @@
 @property (nonatomic, assign) NSInteger offset;
 @property (nonatomic, strong) NSMutableDictionary *tracerDictRecord;
 @property (nonatomic, assign) BOOL isEnterCategory;
+@property (nonatomic, strong) NSString *searchId;
+@property (nonatomic, strong) NSString *originSearchId;
+@property (nonatomic, assign) BOOL isFirstRequest;
 
 @end
 
@@ -43,6 +46,7 @@
 - (instancetype)initWithViewController:(FHChildBrowsingHistoryViewController *)viewController tableView:(UITableView *)tableView emptyView:(FHBrowsingHistoryEmptyView *)emptyView {
     self = [super init];
     if (self) {
+        self.isFirstRequest = YES;
         self.isEnterCategory = YES;
         self.tracerDictRecord = [[NSMutableDictionary alloc] init];
         self.historyList = [[NSMutableArray alloc] init];
@@ -107,13 +111,20 @@
 - (void)processData:(id)model {
     if (model) {
         [self.viewController.emptyView hideEmptyView];
+        NSMutableArray *items = @[].mutableCopy;
+        FHBrowseHistoryHouseDataModel *historyModel = ((FHBrowseHistoryHouseResultModel *)model).data;
+        self.offset = historyModel.offset;
+        if (historyModel.searchId.length > 0) {
+            self.searchId = historyModel.searchId;
+        }
+        if (_isFirstRequest && self.searchId.length > 0) {
+            self.isFirstRequest = NO;
+            self.originSearchId = self.searchId;
+        }
         if (self.isEnterCategory) {
             [self addEnterLog];
             self.isEnterCategory = NO;
         }
-        NSMutableArray *items = @[].mutableCopy;
-        FHBrowseHistoryHouseDataModel *historyModel = ((FHBrowseHistoryHouseResultModel *)model).data;
-        self.offset = historyModel.offset;
         if (historyModel.historyItems.count > 0) {
             [items addObjectsFromArray:historyModel.historyItems];
         }
@@ -137,6 +148,10 @@
             } else {
                 [self.tableView.mj_footer endRefreshing];
             }
+        } else {
+            self.findHouseView.hidden = NO;
+            self.tableView.hidden = YES;
+            [self.viewController.emptyView setHidden:YES];
         }
     }
 }
@@ -268,6 +283,7 @@
     if (row >= 0 && row < _historyList.count) {
         id cellModel = _historyList[row];
         if ([cellModel isKindOfClass:[FHSearchHouseItemModel class]]) {
+            [self showHouseDetail:cellModel atIndex:row];
         }
     }
 }
@@ -338,20 +354,55 @@
     }
 }
 
+-(void)showHouseDetail:(id)cellModel atIndex:(NSInteger)index {
+    if ([cellModel isKindOfClass:[FHSearchHouseItemModel class]]) {
+        FHSearchHouseItemModel *model = (FHSearchHouseItemModel *)cellModel;
+        NSMutableDictionary *params = [NSMutableDictionary dictionary];
+        NSString *urlStr = nil;
+        params[@"card_type"] = @"left_pic";
+        params[UT_ENTER_FROM] = [self getPageType:self.houseType];
+        params[UT_RANK] = @(index);
+        switch (self.houseType) {
+            case FHHouseTypeRentHouse:
+                urlStr = [NSString stringWithFormat:@"fschema://rent_detail?house_id=%@",  model.id];
+                break;
+            case FHHouseTypeSecondHandHouse:
+                urlStr = [NSString stringWithFormat:@"sslocal://old_house_detail?house_id=%@", model.id];
+                break;;
+            case FHHouseTypeNewHouse:
+                urlStr = [NSString stringWithFormat:@"sslocal://new_house_detail?court_id=%@", model.id];
+                break;
+            case FHHouseTypeNeighborhood:
+                urlStr = [NSString stringWithFormat:@"sslocal://neighborhood_detail?neighborhood_id=%@", model.id];
+                break;
+            default:
+                break;
+        }
+        if (urlStr) {
+            NSURL *url = [NSURL URLWithString:urlStr];
+            NSMutableDictionary *dict = [NSMutableDictionary new];
+            dict[@"tracer"] = params;
+            dict[@"house_type"] = @(self.houseType);
+            TTRouteUserInfo* userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
+            [[TTRoute sharedRoute] openURLByViewController:url userInfo: userInfo];
+        }
+    }
+}
+
 #pragma mark - 埋点
 
 - (void)addEnterLog {
     NSMutableDictionary *params = @{}.mutableCopy;
     [params addEntriesFromDictionary:self.viewController.tracerDict];
     params[UT_CATEGORY_NAME] = [self getPageType:self.houseType];
-    params[UT_ORIGIN_SEARCH_ID] = @"";
-    params[UT_SEARCH_ID] = @"";
+    params[UT_ORIGIN_SEARCH_ID] = self.originSearchId ? : @"be_null";
+    params[UT_SEARCH_ID] = self.searchId ? : @"be_null";
     TRACK_EVENT(@"enter_category", params);
 }
 
 - (void)addClickOptionLog {
     NSMutableDictionary *params = @{}.mutableCopy;
-    params[UT_ORIGIN_FROM] = self.viewController.tracerDict[UT_ORIGIN_FROM] ?: @"be_null";
+    params[UT_ORIGIN_FROM] = self.searchId ? : @"be_null";
     params[UT_PAGE_TYPE] = [self getPageType:self.houseType];
     params[UT_CLICK_POSITION] = @"去挑好房";
     TRACK_EVENT(@"click_options", params);
@@ -368,12 +419,12 @@
         FHSearchHouseItemModel *model = (FHSearchHouseItemModel *)cellModel;
         self.tracerDictRecord[recordKey] = @(YES);
         
+        
         params[UT_PAGE_TYPE] = [self getPageType:self.houseType];
-        params[UT_ORIGIN_SEARCH_ID] = @"";
-        params[UT_SEARCH_ID] = @"";
+        params[UT_ORIGIN_SEARCH_ID] = self.originSearchId ? : @"be_null";
+        params[UT_SEARCH_ID] = self.searchId ? : @"be_null";
         params[@"impr_id"] = model.imprId;
         params[UT_RANK] = @(rank);
-        params[UT_GROUP_ID] = @"";
         params[UT_HOUSE_TYPE] = [self getHouseType:self.houseType];
         params[@"log_pb"] = model.logPb;
         TRACK_EVENT(@"house_show", params);
