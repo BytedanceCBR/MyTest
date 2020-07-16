@@ -133,6 +133,11 @@
             }
         }
         
+        // 非AB实验时
+        else {
+            [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:userInfo];
+        }
+        
         // 静默关注处理
         [self silentFollowHouseWithAssociateIM:associateIM];
     }
