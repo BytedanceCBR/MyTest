@@ -43,10 +43,7 @@
     NSMutableAttributedString *attriStr = [[NSMutableAttributedString alloc] initWithString:@"举报" attributes:@{
                                         NSFontAttributeName: [UIFont themeFontRegular:12],
                                         NSForegroundColorAttributeName: [UIColor themeGray3],
-                                        NSKernAttributeName:@(1.7),
     }];
-    NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];
-    [attriStr addAttribute:NSParagraphStyleAttributeName value:paragraphStyle range:NSMakeRange(0, [self.titleLabel.text length])];
     [self setAttributedTitle:attriStr forState:UIControlStateNormal];
     [self addTarget:self action:@selector(feedBackButtonClick:) forControlEvents:UIControlEventTouchUpInside];
     self.titleEdgeInsets = UIEdgeInsetsMake(0, 3, 0, 0);
