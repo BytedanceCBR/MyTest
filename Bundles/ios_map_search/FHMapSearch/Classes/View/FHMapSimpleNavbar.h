@@ -22,6 +22,7 @@ typedef NS_ENUM(NSInteger , FHMapSimpleNavbarType) {
 @property(nonatomic , strong) NSString *title;
 
 @property(nonatomic , copy) void (^backActionBlock)(FHMapSimpleNavbarType type);
+@property(nonatomic , copy) void (^rightActionBlock)(FHMapSimpleNavbarType type);
 
 -(CGFloat)titleBottom;
 

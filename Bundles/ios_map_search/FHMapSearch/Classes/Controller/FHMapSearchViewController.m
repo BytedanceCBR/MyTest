@@ -236,6 +236,11 @@
             [wself backAction];
         }
     };
+    _simpleNavBar.rightActionBlock = ^(FHMapSimpleNavbarType type) {
+        if(type == FHMapSimpleNavbarTypeDrawLine){
+            [wself.viewModel reDrawMapCircle];
+        }
+    };
     [self.view addSubview:_simpleNavBar];
 }
 
@@ -383,7 +388,7 @@
     
     [self.bottomBar mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.right.mas_equalTo(self.view);
-        make.top.mas_equalTo(self.view).offset(topInset);
+        make.top.mas_equalTo(self.view).offset(self.view.frame.size.height - 100);
         make.height.mas_equalTo(52);
     }];    
 }

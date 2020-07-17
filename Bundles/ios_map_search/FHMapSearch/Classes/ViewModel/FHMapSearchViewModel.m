@@ -43,6 +43,8 @@
 #import "FHMapAreaHouseListViewController.h"
 #import <FHHouseBase/FHSearchChannelTypes.h>
 #import <TTUIWidget/TTNavigationController.h>
+#import "FHHouseOpenURLUtil.h"
+#import <NSDictionary+TTAdditions.h>
 
 #define kTipDuration 3
 
@@ -730,8 +732,18 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
         if (wself.showMode == FHMapSearchShowModeDrawLine) {
             [wself.bottomBar showDrawLine:[NSString stringWithFormat:@"%ld套房源",strongSelf->onSaleHouseCount] withNum:strongSelf->onSaleHouseCount showIndicator:strongSelf->onSaleHouseCount > 0];
         }
+        NSDictionary *urlParams = [FHHouseOpenURLUtil queryDict:model.mapFindHouseOpenUrl];
+         CLLocationCoordinate2D moveCenter = CLLocationCoordinate2DMake([urlParams tt_floatValueForKey:@"center_latitude"], [urlParams tt_floatValueForKey:@"center_longitude"]);
+        CGFloat zoomLevel = [urlParams tt_floatValueForKey:@"resize_level"];
+        
         //handle open url
         [wself updateBubble:model.mapFindHouseOpenUrl];
+        
+        if (moveCenter.latitude != 0 && moveCenter.longitude != 0 && zoomLevel) {
+            [self.mapView setCenterCoordinate:moveCenter animated:YES];
+            [self.mapView setZoomLevel:zoomLevel animated:YES]; //atP
+        }
+
     }];
     _requestMapLevel = _mapView.zoomLevel;
     _requestHouseTask = task;
@@ -1982,6 +1994,12 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
         self.drawMaskView.hidden = NO;
     }];
     [[NSUserDefaults standardUserDefaults] setBool:YES forKey:showedGuide];
+}
+
+-(void)reDrawMapCircle
+{
+    [self.mapView removeOverlay:self.drawLayer];
+    [self chooseDrawLine];
 }
 
 //退出画圈找房

@@ -73,6 +73,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 -(void)showFilterForAreaHouseList;
 
+-(void)reDrawMapCircle;
+
 @end
 
 NS_ASSUME_NONNULL_END
