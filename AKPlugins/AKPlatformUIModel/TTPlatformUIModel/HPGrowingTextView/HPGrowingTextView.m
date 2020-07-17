@@ -693,7 +693,28 @@
 - (BOOL)textView:(UITextView *)textView shouldInteractWithTextAttachment:(NSTextAttachment *)textAttachment inRange:(NSRange)characterRange interaction:(UITextItemInteraction)interaction  API_AVAILABLE(ios(10.0)) {
     switch (interaction) {
         case UITextItemInteractionInvokeDefaultAction:
-            return YES;
+        {
+            // iOS 13 兼容性问题: https://stackoverflow.com/questions/58189447/ios-13-1-uitextview-delegate-method-shouldinteract-called-when-scrolling-on-atta
+            __block BOOL isTapEnd = NO;
+            [textView.gestureRecognizers enumerateObjectsUsingBlock:^(__kindof UIGestureRecognizer * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+                if([obj isKindOfClass:UITapGestureRecognizer.class]) {
+                    UITapGestureRecognizer *tap = (UITapGestureRecognizer *)obj;
+                    if(tap.state == UIGestureRecognizerStateEnded) {
+                        [textView becomeFirstResponder];
+                        
+                        NSRange range;
+                        range.location = textView.text.length;
+                        range.length = 0;
+                        textView.selectedRange = range;
+                        [textView scrollRangeToVisible:range];
+                        
+                        *stop = YES;
+                        isTapEnd = YES;
+                    }
+                }
+            }];
+            return !isTapEnd;
+        }
             break;
         default:
             return NO;

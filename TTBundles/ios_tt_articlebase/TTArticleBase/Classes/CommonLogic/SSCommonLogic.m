@@ -5467,6 +5467,14 @@ static NSString *const kFFeedRefreshStrategy = @"feed_refresh_settings";
     return YES;
 }
 
++ (BOOL)enableRecordVoiceSegment {
+    NSDictionary *fhSettings = [self fhSettings];
+    if (fhSettings != nil && [fhSettings objectForKey:@"f_im_voice_message_enable"] != nil) {
+        BOOL showBtn = [[fhSettings objectForKey:@"f_im_voice_message_enable"] boolValue];
+        return showBtn;
+    }
+    return NO;
+}
 @end
 
 
