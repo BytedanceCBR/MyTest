@@ -42,11 +42,11 @@
     self.emptyLabel.text = @"暂无浏览历史";
     self.emptyLabel.font = [UIFont themeFontRegular:14];
     self.emptyLabel.textColor = [UIColor themeGray3];
-    [self.emptyLabel sizeToFit];
+    //[self.emptyLabel sizeToFit];
     [self addSubview:_emptyLabel];
     
     self.findHouseButton = [[UIButton alloc] init];
-    self.findHouseButton.layer.cornerRadius = 22;
+    self.findHouseButton.layer.cornerRadius = 20;
     self.findHouseButton.backgroundColor = [UIColor colorWithHexStr:@"#ff9629"];
     [self.findHouseButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     [self.findHouseButton setTitle:@"去挑好房" forState:UIControlStateNormal];
@@ -59,7 +59,7 @@
     [self.emptyImageView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerX.mas_equalTo(self);
         make.height.width.mas_equalTo(126);
-        make.top.mas_equalTo(100);
+        make.top.mas_equalTo(108);
     }];
     
     [self.emptyLabel mas_makeConstraints:^(MASConstraintMaker *make) {

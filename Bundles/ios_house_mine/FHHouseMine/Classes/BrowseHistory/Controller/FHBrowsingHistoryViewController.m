@@ -15,6 +15,8 @@
 #import <FHHouseBase/FHBaseTableView.h>
 #import "UIViewAdditions.h"
 #import "UIViewController+Track.h"
+#import "FHFakeInputNavbar.h"
+#import <FHHouseBase/UIImage+FIconFont.h>
 
 static const float kSegementedOneWidth = 50;
 
@@ -23,6 +25,7 @@ static const float kSegementedOneWidth = 50;
 @property (nonatomic, strong) UIView *topView;
 @property (nonatomic, strong) UIView *containerView;
 @property (nonatomic, strong) FHBrowsingHistoryViewModel *viewModel;
+@property (nonatomic, strong) FHFakeInputNavbar *navbar;
 
 @end
 
@@ -33,8 +36,6 @@ static const float kSegementedOneWidth = 50;
     if (self) {
         self.paramObj = paramObj;
         self.ttTrackStayEnable = YES;
-        self.tracerDict[@"origin_from"] = @"minetab_service";
-        self.tracerDict[@"enter_from"] = @"minetab";
     }
     return self;
 }
@@ -44,11 +45,14 @@ static const float kSegementedOneWidth = 50;
     //self.automaticallyAdjustsScrollViewInsets = NO;
     self.houseTypeArray = [[NSMutableArray alloc] init];
     self.title = @"浏览历史";
-    [self setupDefaultNavBar:NO];
     [self houseTypeConfig];
     [self setupUI];
     self.viewModel = [[FHBrowsingHistoryViewModel alloc] initWithController:self andCollectionView:self.collectionView];
     [self.viewModel addGoDetailLog];
+    [self setupDefaultNavBar:NO];
+    [self.customNavBarView.leftBtn setBackgroundImage:ICON_FONT_IMG(24, @"\U0000e68a", [UIColor themeGray1]) forState:UIControlStateNormal];
+    [self.customNavBarView.leftBtn setBackgroundImage:ICON_FONT_IMG(24, @"\U0000e68a", [UIColor themeGray1]) forState:UIControlStateHighlighted];
+    self.customNavBarView.seperatorLine.hidden = YES;
     
 }
 

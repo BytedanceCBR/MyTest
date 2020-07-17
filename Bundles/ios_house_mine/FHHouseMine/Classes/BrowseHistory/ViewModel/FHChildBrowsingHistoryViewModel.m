@@ -24,6 +24,7 @@
 #import <FHHouseBase/FHMainManager+Toast.h>
 #import "FHUserTracker.h"
 #import <FHHouseBase/FHUserTrackerDefine.h>
+#import "UIViewController+TTMovieUtil.h"
 
 @interface FHChildBrowsingHistoryViewModel()<FHBrowsingHistoryEmptyViewDelegate, UITableViewDelegate, UITableViewDataSource>
 
@@ -319,15 +320,9 @@
     NSArray *houseTypeList = [[FHEnvContext sharedInstance] getConfigFromCache].houseTypeList;
     NSNumber *houseTypeNum = [NSNumber numberWithInteger:houseType];
     if (![houseTypeList containsObject:houseTypeNum]) {
-        [self popToMainPage];
-        return;
+        houseType = -1;
     }
-    
     NSMutableDictionary *dictTrace = [NSMutableDictionary new];
-    [dictTrace setValue:@"maintab" forKey:@"enter_from"];
-    [dictTrace setValue:@"maintab_icon" forKey:@"element_from"];
-    [dictTrace setValue:@"click" forKey:@"enter_type"];
-    [dictTrace setValue:@"be_null" forKey:@"origin_from"];
     NSDictionary *userInfoDict = @{@"tracer":dictTrace};
     TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:userInfoDict];
     NSString *urlStr = @"";
@@ -352,14 +347,9 @@
     if (![urlStr isEqualToString:@"sslocal://main?select_tab=tab_stream"]) {
         [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
     } else {
-        [[TTRoute sharedRoute] openURLByViewController:url userInfo:userInfo];
-    }
-}
-
-- (void)popToMainPage {
-    [self.viewController.navigationController popToRootViewControllerAnimated:YES];
-    if (![[FHHomeConfigManager sharedInstance].fhHomeBridgeInstance isCurrentTabFirst]) {
-        [[FHHomeConfigManager sharedInstance].fhHomeBridgeInstance jumpToTabbarFirst];
+        [[TTRoute sharedRoute] openURL:url userInfo:userInfo objHandler:^(TTRouteObject *routeObj) {
+            
+        }];
     }
 }
 

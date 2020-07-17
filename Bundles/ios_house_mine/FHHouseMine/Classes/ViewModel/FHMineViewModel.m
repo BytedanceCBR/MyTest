@@ -236,7 +236,16 @@
     TRACK_EVENT(@"click_minetab", clickTrackDic);
     
     NSURL* url = [NSURL URLWithString:model.openUrl];
-    [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:nil];
+    
+    NSDictionary *dict = @{
+        @"tracer":@{
+                @"origin_from":@"minetab_service",
+                @"enter_from":@"minetab"
+                
+        }};
+    TTRouteUserInfo *info = [[TTRouteUserInfo alloc] initWithInfo:dict];
+
+    [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:info];
 }
 
 
