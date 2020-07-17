@@ -96,7 +96,7 @@
         
     }
     [requestDictonary setValue:@(10) forKey:@"count"];
-    [requestDictonary setValue:@"3021100461591229" forKey:@"realtor_id"];
+    [requestDictonary setValue:self.realtorInfo[@"realtor_id"] forKey:@"realtor_id"];
     requestDictonary[CHANNEL_ID] = CHANNEL_ID_REALTOR_DETAIL_HOUSE;
     self.requestTask = nil;
     self.requestTask = [FHMainApi requestRealtorHomeRecommend:requestDictonary completion:^(FHHomeHouseModel * _Nonnull model, NSError * _Nonnull error) {

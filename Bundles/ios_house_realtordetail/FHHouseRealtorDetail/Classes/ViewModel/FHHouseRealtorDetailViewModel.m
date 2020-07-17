@@ -113,18 +113,15 @@
     if(fCityId){
         [extraDic setObject:fCityId forKey:@"f_city_id"];
     }
-    //    if (self.houseId) {
-    //        [extraDic setObject:self.houseId forKey:@"house_id"];
-    [extraDic setObject:@"6759777706138665224" forKey:@"house_id"];
-    //    }
-    //    if (self.houseType) {
-    //         [extraDic setObject:self.houseType forKey:@"house_type"];
-    [extraDic setObject:@"2" forKey:@"house_type"];
-    //    }
-    //    if (self.evaluationHeader.selectName) {
-    [extraDic setObject:@"video" forKey:@"tab_name"];
-    //         [extraDic setObject:self.evaluationHeader.selectName forKey:@"tab_name"];
-    //    }
+    if (self.realtorInfo[@"house_id"]) {
+        [extraDic setObject:self.realtorInfo[@"house_id"] forKey:@"house_id"];
+    }
+    if (self.realtorInfo[@"house_type"]) {
+        [extraDic setObject:self.realtorInfo[@"house_type"] forKey:@"house_type"];
+    }
+    if (self.realtorInfo[@"tab_name"]) {
+        [extraDic setObject:self.realtorInfo[@"tab_name"] forKey:@"tab_name"];
+    }
     self.categoryId = @"f_realtor_profile";
     TTHttpTask *task = [FHHouseUGCAPI requestFeedListWithCategory:self.categoryId behotTime:behotTime loadMore:!isHead listCount:listCount extraDic:extraDic completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
         wself.detailController.isLoadingData = NO;
@@ -138,7 +135,7 @@
         }
         if (error) {
             //TODO: show handle error
-             [self reloadTableViewData];
+            [self reloadTableViewData];
             if(isFirst){
                 [wself.detailController endLoading];
                 if(error.code != -999){
@@ -311,14 +308,14 @@
             [self.tableView reloadData];
         }
     }else{
-    [self.errorView showEmptyWithTip:@"暂无内容" errorImageName:kFHErrorMaskNetWorkErrorImageName showRetry:NO];
-    UIView *tableFooterView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, self.detailController.errorViewHeight)];
-    tableFooterView.backgroundColor = [UIColor whiteColor];
-    [tableFooterView addSubview:self.errorView];
-    self.tableView.tableFooterView = tableFooterView;
-    self.refreshFooter.hidden = YES;
-    self.tableView.backgroundColor = [UIColor whiteColor];
-    [self.tableView reloadData];
+        [self.errorView showEmptyWithTip:@"暂无内容" errorImageName:kFHErrorMaskNetWorkErrorImageName showRetry:NO];
+        UIView *tableFooterView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, self.detailController.errorViewHeight)];
+        tableFooterView.backgroundColor = [UIColor whiteColor];
+        [tableFooterView addSubview:self.errorView];
+        self.tableView.tableFooterView = tableFooterView;
+        self.refreshFooter.hidden = YES;
+        self.tableView.backgroundColor = [UIColor whiteColor];
+        [self.tableView reloadData];
     }
 }
 - (FHErrorView *)errorView {
@@ -337,7 +334,7 @@
 }
 
 - (void)commentClicked:(FHFeedUGCCellModel *)cellModel cell:(nonnull FHUGCBaseCell *)cell {
-//    [self trackClickComment:cellModel];
+    //    [self trackClickComment:cellModel];
     self.currentCellModel = cellModel;
     self.currentCell = cell;
     self.detailJumpManager.currentCell = self.currentCell;

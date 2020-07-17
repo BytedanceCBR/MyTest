@@ -43,7 +43,9 @@
 }
 
 - (void)createModel {
-    _viewModel = [[FHHouseRealtorDetailViewModel alloc]initWithController:self tableView:self.tableView realtorInfo:self.realtorInfo];
+    NSMutableDictionary *dic = self.realtorInfo.mutableCopy;
+    [dic setObject:self.tabName forKey:@"tab_name"];
+    _viewModel = [[FHHouseRealtorDetailViewModel alloc]initWithController:self tableView:self.tableView realtorInfo:dic];
 }
 
 - (void)createTracerDic:(NSDictionary *)dic {
