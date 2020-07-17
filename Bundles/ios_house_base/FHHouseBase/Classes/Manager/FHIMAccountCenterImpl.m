@@ -49,18 +49,21 @@
     }];
 }
 
-- (void)popupHalfLoginIfNeed:(UIViewController *)vc {
-    NSURL *URL = [NSURL URLWithString:@"sslocal://flogin"];
-    NSMutableDictionary *params = [NSMutableDictionary dictionary];
-    TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:params];
-    TTRouteObject *routeObj = [[TTRoute sharedRoute] routeObjWithOpenURL:URL userInfo:userInfo];
-    FHLoginViewController *loginVC = routeObj.instance;
-    
-    [loginVC supportCarrierLogin:^(BOOL isSupport) {
-        if(isSupport) {
-            [loginVC showHalfLogin:vc];
-        }
-    }];
+- (void)popupHalfLoginIfNeed:(UIViewController *)vc params:(NSDictionary *)dict{
+    if(![TTAccount sharedAccount].isLogin) {
+        NSURL *URL = [NSURL URLWithString:@"sslocal://flogin"];
+        NSMutableDictionary *params = [NSMutableDictionary dictionary];
+        [params addEntriesFromDictionary:dict];
+        TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:params];
+        TTRouteObject *routeObj = [[TTRoute sharedRoute] routeObjWithOpenURL:URL userInfo:userInfo];
+        FHLoginViewController *loginVC = routeObj.instance;
+        
+        [loginVC supportCarrierLogin:^(BOOL isSupport) {
+            if(isSupport) {
+                [loginVC showHalfLogin:vc];
+            }
+        }];
+    }
 }
 
 -(void)registerAccountStatusListener:(id<AccountStatusListener>)listener {

@@ -18,6 +18,7 @@
 #import "ToastManager.h"
 #import "UIView+Utils.h"
 #import "TTUIResponderHelper.h"
+#import "FHIMFrequencyControlManager.h"
 
 #define SCREEN_WIDTH    [UIScreen mainScreen].bounds.size.width
 #define SCREEN_HEIGHT   [UIScreen mainScreen].bounds.size.height
@@ -27,6 +28,7 @@
 @interface FHLoginHalfView : UIView<FHLoginViewDelegate>
 
 @property (nonatomic, strong) FHOneKeyLoginView *oneKeyLoginView;
+@property (nonatomic, strong) UIButton *bgDismissButton;
 @property (nonatomic, strong) UIView *animationContainerView;
 @property (nonatomic, weak)  FHLoginViewController *viewController;
 
@@ -36,10 +38,25 @@
 
 @implementation FHLoginHalfView
 
+- (UIButton *)bgDismissButton {
+    if(!_bgDismissButton) {
+        _bgDismissButton = [UIButton buttonWithType:UIButtonTypeCustom];
+        _bgDismissButton.frame = CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT - self.animationContainerView.height);
+        [_bgDismissButton addTarget:self action:@selector(dismiss) forControlEvents:UIControlEventTouchUpInside];
+    }
+    return _bgDismissButton;
+}
+
 - (UIView *)animationContainerView {
     if(!_animationContainerView) {
         _animationContainerView = [[UIView alloc] initWithFrame:CGRectMake(0, SCREEN_HEIGHT, SCREEN_WIDTH, LOGIN_HALF_VIEW_HEIGHT + [TTUIResponderHelper mainWindow].safeAreaInsets.bottom)];
         _animationContainerView.backgroundColor = [UIColor themeWhite];
+        
+        UIBezierPath *maskPath = [UIBezierPath bezierPathWithRoundedRect:_animationContainerView.bounds byRoundingCorners:UIRectCornerTopLeft | UIRectCornerTopRight cornerRadii:CGSizeMake(10, 10)];
+        CAShapeLayer *maskLayer = [[CAShapeLayer alloc] init];
+        maskLayer.frame = _animationContainerView.bounds;
+        maskLayer.path = maskPath.CGPath;
+        _animationContainerView.layer.mask = maskLayer;
     }
     return _animationContainerView;
 }
@@ -48,17 +65,10 @@
     if(!_oneKeyLoginView) {
         _oneKeyLoginView = [[FHOneKeyLoginView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, LOGIN_HALF_VIEW_HEIGHT) isHalfLogin:YES];
         
-        UIBezierPath *maskPath = [UIBezierPath bezierPathWithRoundedRect:_oneKeyLoginView.bounds byRoundingCorners:UIRectCornerTopLeft | UIRectCornerTopRight cornerRadii:CGSizeMake(10, 10)];
-        CAShapeLayer *maskLayer = [[CAShapeLayer alloc] init];
-        maskLayer.frame = _oneKeyLoginView.bounds;
-        maskLayer.path = maskPath.CGPath;
-        _oneKeyLoginView.layer.mask = maskLayer;
-        
-        
         UIButton *closeBtn = [UIButton buttonWithType:UIButtonTypeCustom];
         [closeBtn setImage:[UIImage imageNamed:@"douyin_login_close"] forState:UIControlStateNormal];
         closeBtn.frame = CGRectMake(0, 0, 54, 54);
-        [closeBtn addTarget:self action:@selector(dismiss) forControlEvents:UIControlEventTouchUpInside];
+        [closeBtn addTarget:self action:@selector(closeBtnAction:) forControlEvents:UIControlEventTouchUpInside];
         [_oneKeyLoginView addSubview:closeBtn];
         
         _oneKeyLoginView.delegate = self;
@@ -67,10 +77,17 @@
     return _oneKeyLoginView;
 }
 
+- (void)closeBtnAction:(UIButton *)sender {
+    // 设置单日单用户触发一次频率控制
+    [[FHIMFrequencyControlManager shared] triggerForKey:kFHIM_HALF_LOGIN_VIEW_SHOW];
+    [self dismiss];
+}
+
 - (instancetype)initWithFrame:(CGRect)frame {
     if(self = [super initWithFrame:frame]) {
         self.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0.3];
         [self.animationContainerView addSubview:self.oneKeyLoginView];
+        [self addSubview:self.bgDismissButton];
         [self addSubview:self.animationContainerView];
     }
     return self;
@@ -92,6 +109,17 @@
         frame.origin.y = SCREEN_HEIGHT - self.animationContainerView.size.height;
         self.animationContainerView.frame = frame;
     }];
+    [self traceOneKeyLoginShow];
+}
+
+- (void)traceOneKeyLoginShow {
+    NSMutableDictionary *tracerDict = [self.viewController tracerDict].mutableCopy;
+    NSString *login_suggest_method = @"one_click";
+    tracerDict[@"login_suggest_method"] = login_suggest_method;
+    tracerDict[@"carrier_one_click_show"] = @(1);
+    [FHLoginTrackHelper loginShow:tracerDict];
+    [[NSUserDefaults standardUserDefaults] setObject:login_suggest_method forKey:FHLoginTrackLoginSuggestMethodKey];
+    [[NSUserDefaults standardUserDefaults] synchronize];
 }
 
 - (void)dismiss {
@@ -137,7 +165,7 @@
 }
 
 - (void)handleLoginError:(NSError *)error {
-    NSString *errorMessage = @"啊哦，服务器开小差了";
+    NSString *errorMessage = @"需要先登录才能进行操作哦";
     [[ToastManager manager] showToast:errorMessage];
 }
 @end
@@ -268,7 +296,6 @@
     __weak typeof(self) weakSelf = self;
     [self.customNavBarView setLeftButtonBlock:^{
         [weakSelf cancelLoginAction];
-        [[NSNotificationCenter defaultCenter] postNotificationName:@"kFHLoginViewControllerCancelLoginActionNotification" object:nil];
     }];
 }
 
