@@ -144,6 +144,21 @@
     return 1;
 }
 
+- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
+    return 44;
+}
+
+- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
+    UIView *view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, 44)];
+    UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(15, 0, view.width - 30, 28)];
+    label.textColor = [UIColor themeGray1];
+    label.font = [UIFont themeFontMedium:20];
+    label.text = @"热卖房源(10)";
+    [view addSubview:label];
+    
+    return view;
+}
+
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     return self.dataList.count;
 }

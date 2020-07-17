@@ -15,6 +15,8 @@
 #import "UIViewController+NavigationBarStyle.h"
 #import "UIImage+FIconFont.h"
 #import "FHRealtorDetailBottomBar.h"
+#import "UIViewAdditions.h"
+
 @interface FHHouseRealtorShopVC ()
 @property (strong, nonatomic)UITableView *tableView;
 @property (strong, nonatomic) FHHouseRealtorShopVM *viewModel;
@@ -81,7 +83,7 @@
 }
 
 - (void)initTableView {
-    _tableView = [[FHBaseTableView alloc] initWithFrame:CGRectZero style:UITableViewStylePlain];
+    _tableView = [[FHBaseTableView alloc] initWithFrame:CGRectZero style:UITableViewStyleGrouped];
     _tableView.keyboardDismissMode = UIScrollViewKeyboardDismissModeOnDrag;
     _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     _tableView.backgroundColor = [UIColor colorWithHexStr:@"#f8f8f8"];
@@ -99,12 +101,14 @@
 }
 
 - (void)initHeaderView {
-    CGFloat headerBackNormalHeight = 470;
+    CGFloat headerBackNormalHeight = 420;
     CGFloat headerBackXSeriesHeight = headerBackNormalHeight + 24; //刘海平多出24
     CGFloat height = [UIDevice btd_isIPhoneXSeries] ? headerBackXSeriesHeight : headerBackNormalHeight + 40;
     self.headerView = [[FHHouseRealtorDetailHeaderView alloc]initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, height)];
+    
     self.headerView.channel = @"lynx_realtor_shop_header";
-        self.headerView.bacImageName = @"shop_header";
+    self.headerView.bacImageName = @"shop_header";
+    self.headerView.height = self.headerView.viewHeight;
 }
 
 - (void)setNavBar {

@@ -152,6 +152,9 @@
             self.currentTemData = templateData;
             [self.realtorInfoView loadTemplate:templateData withURL:@"local"];
         }
+        
+        CGFloat statusBarHeight =  ((![[UIApplication sharedApplication] isStatusBarHidden]) ? [[UIApplication sharedApplication] statusBarFrame].size.height : ([UIDevice btd_isIPhoneXSeries]?44.f:20.f));
+        self.viewHeight = [self.realtorInfoView intrinsicContentSize].height + statusBarHeight + 44;
     }
 }
 
