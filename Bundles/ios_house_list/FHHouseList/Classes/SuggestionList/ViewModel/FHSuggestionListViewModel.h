@@ -18,6 +18,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign)   NSInteger       associatedCount;
 @property (nonatomic, weak)   HMSegmentedControl *segmentControl;
 @property (nonatomic, assign) NSInteger currentTabIndex;
+@property (nonatomic, assign) CGFloat keyboardHeight;
+@property (nonatomic, assign) BOOL isTrackerCacheDisabled;
 
 -(instancetype)initWithController:(FHSuggestionListViewController *)viewController;
 
