@@ -1,14 +1,13 @@
 //
-//  FHHouseRealtorDetailHeaderView.m
+//  FHHouseUserCommentsCell.m
 //  FHHouseRealtorDetail
 //
-//  Created by liuyu on 2020/7/14.
+//  Created by liuyu on 2020/7/17.
 //
 
-#import "FHHouseRealtorDetailHeaderView.h"
+#import "FHHouseUserCommentsCell.h"
 #import <Lynx/LynxView.h>
 #import "Masonry.h"
-#import "FLynxWikiHeaderBridge.h"
 #import "FHLynxManager.h"
 #import "NSObject+YYModel.h"
 #import "IESGeckoKit.h"
@@ -19,61 +18,66 @@
 #import <BDWebImage/UIImageView+BDWebImage.h>
 #import "FHHouseRealtorDetailInfoModel.h"
 #import "UIDevice+BTDAdditions.h"
-@interface FHHouseRealtorDetailHeaderView ()
-@property (weak, nonatomic)LynxView *realtorInfoView;
+#import "FLynxWikiHeaderBridge.h"
+@interface FHHouseUserCommentsCell()
+@property (weak, nonatomic)LynxView *infoView;
 @property(nonatomic ,strong) NSData *currentTemData;
 @property (strong, nonatomic) UIImage *placeholderImage;
 @property (weak, nonatomic) UIImageView *headerIma;
 @end
-@implementation FHHouseRealtorDetailHeaderView
-
-- (instancetype)initWithFrame:(CGRect)frame {
-    self = [super initWithFrame:frame];
-    if(self) {
+@implementation FHHouseUserCommentsCell
+- (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
+    self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
+    if (self) {
         [self createUI];
-        self.backgroundColor = [UIColor colorWithHexStr:@"#f8f8f8"];
     }
     return self;
 }
-
-
 - (void)createUI {
-    
-    CGFloat statusBarHeight =  ((![[UIApplication sharedApplication] isStatusBarHidden]) ? [[UIApplication sharedApplication] statusBarFrame].size.height : ([UIDevice btd_isIPhoneXSeries]?44.f:20.f));
-    [self.headerIma mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.top.right.equalTo(self);
-        make.height.mas_offset(164);
-    }];
-    [self.realtorInfoView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.right.bottom.equalTo(self);
-        make.top.equalTo(self).offset(statusBarHeight+44);
+    [self.infoView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.edges.equalTo(self);
     }];
 }
 
-- (LynxView *)realtorInfoView {
-    if (!_realtorInfoView) {
+- (void)refreshWithData:(id)data {
+    if (self.currentData == data ) {
+        return;
+    }
+    self.currentData = data;
+    [self updateModel:data];
+}
+- (LynxView *)infoView {
+    if (!_infoView) {
         CGRect screenFrame = [UIScreen mainScreen].bounds;
-        LynxView *realtorInfoView = [[LynxView alloc] initWithBuilderBlock:^(LynxViewBuilder* builder) {
+        LynxView *infoView = [[LynxView alloc] initWithBuilderBlock:^(LynxViewBuilder* builder) {
             builder.isUIRunningMode = YES;
             builder.config = [[LynxConfig alloc] initWithProvider:[LynxEnv sharedInstance].config.templateProvider];
             [builder.config registerModule:[FHLynxCoreBridge class] param:self];
         }];
-        realtorInfoView.layoutWidthMode = LynxViewSizeModeExact;
-        realtorInfoView.layoutHeightMode = LynxViewSizeModeUndefined;
-        realtorInfoView.preferredLayoutWidth = screenFrame.size.width;
-        realtorInfoView.client = self;
-        realtorInfoView.preferredMaxLayoutHeight = screenFrame.size.height;
-        [realtorInfoView triggerLayout];
-        [self addSubview:realtorInfoView];
-        _realtorInfoView = realtorInfoView;
+        infoView.layoutWidthMode = LynxViewSizeModeExact;
+        infoView.layoutHeightMode = LynxViewSizeModeUndefined;
+        infoView.preferredLayoutWidth = screenFrame.size.width;
+        infoView.client = self;
+        infoView.preferredMaxLayoutHeight = screenFrame.size.height;
+        [infoView triggerLayout];
+        [self addSubview:infoView];
+        NSData *templateData =  [[FHLynxManager sharedInstance] lynxDataForChannel:@"lynx_evaluation_item" templateKey:[FHLynxManager defaultJSFileName] version:0];
+        //        NSData *templateData = [NSData dataWithContentsOfURL:[NSURL URLWithString:@"http://10.95.248.194:30334/realtor_detail_header/template.js?1594963282405"]];
+        if (templateData) {
+            if (templateData != self.currentTemData) {
+                self.currentTemData = templateData;
+                [infoView loadTemplate:templateData withURL:@"local"];
+            }
+        }
+        _infoView = infoView;
     }
-    return _realtorInfoView;
+    return _infoView;
 }
 
-- (void)updateModel:(FHHouseRealtorDetailInfoModel *)model {
-    NSString *lynxData = [model yy_modelToJSONString];
-    [_realtorInfoView updateDataWithString:lynxData];
-    
+
+- (void)updateModel:(NSDictionary *)dic {
+    NSString *lynxData = [dic yy_modelToJSONString];
+    [_infoView updateDataWithString:lynxData];
 }
 
 - (UIImageView *)headerIma {
@@ -142,21 +146,7 @@
         }];
     }
 }
+@end
+@implementation FHHouseUserCommentsModel
 
-- (void)setChannel:(NSString *)channel {
-    _channel = channel;
-    NSData *templateData =  [[FHLynxManager sharedInstance] lynxDataForChannel:_channel templateKey:[FHLynxManager defaultJSFileName] version:0];
-    //        NSData *templateData = [NSData dataWithContentsOfURL:[NSURL URLWithString:@"http://10.95.248.194:30334/realtor_detail_header/template.js?1594963282405"]];
-    if (templateData) {
-        if (templateData != self.currentTemData) {
-            self.currentTemData = templateData;
-            [self.realtorInfoView loadTemplate:templateData withURL:@"local"];
-        }
-    }
-}
-
-- (void)setBacImageName:(NSString *)bacImageName {
-    _bacImageName = bacImageName;
-    self.headerIma.image = [UIImage imageNamed:_bacImageName];
-}
 @end

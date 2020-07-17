@@ -227,4 +227,10 @@
 "house_encyclopedia" = "FHEncyclopediaViewController";
 
 //经纪人主页
-"realtor_detail" = "FHHouseRealtorDetailVC";
+"new_realtor_detail" = "FHHouseRealtorDetailVC";
+
+//经纪人店铺
+"realtor_shop_detail" = "FHHouseRealtorShopVC";
+
+//经纪人主页评论
+"realtor_evaluation" = "FHHouseUserCommentsVC";

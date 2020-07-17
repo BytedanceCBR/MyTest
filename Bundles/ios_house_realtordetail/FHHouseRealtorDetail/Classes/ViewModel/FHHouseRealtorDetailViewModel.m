@@ -13,18 +13,36 @@
 #import "UIScrollView+Refresh.h"
 #import "FHRefreshCustomFooter.h"
 #import "FHHouseRealtorDetailInfoModel.h"
-#import "FHHouseRealtorDetailStatusModel.h"
+#import "FHUGCCellManager.h"
+#import "FHFeedUGCCellModel.h"
+#import "FHUGCBaseCell.h"
+#import "TTHttpTask.h"
+#import "FHEnvContext.h"
+#import "FHHouseUGCAPI.h"
+#import "FHFeedListModel.h"
+#import "UIViewAdditions.h"
+#import "FHUGCFeedDetailJumpManager.h"
+
 @interface FHHouseRealtorDetailViewModel()<UITableViewDelegate,UITableViewDataSource>
 @property(nonatomic , weak) UITableView *tableView;
 @property(nonatomic , weak) FHHouseRealtorDetailController *detailController;
-@property(nonatomic, strong) FHHouseRealtorDetailRgcTabView *rgcTab;
-@property(nonatomic, strong) NSMutableArray *dataArr;
-@property(nonatomic, assign) CGFloat currentCelleHeight;
-@property(nonatomic, assign) NSInteger currentIndex;
+@property(nonatomic, strong) FHErrorView *errorView;
+@property(nonatomic, strong) NSMutableArray *dataList;
+@property (nonatomic , strong) FHUGCCellManager *cellManager;
+@property(nonatomic, weak)TTHttpTask *requestTask;
 @property(nonatomic, strong)FHRefreshCustomFooter *refreshFooter;
+@property(nonatomic, strong) FHFeedListModel *feedListModel;
+@property(nonatomic, strong) FHUGCBaseCell *currentCell;
+@property(nonatomic, strong) FHFeedUGCCellModel *currentCellModel;
+@property(nonatomic, strong) FHUGCFeedDetailJumpManager *detailJumpManager;
+
+@property (copy, nonatomic) NSString *houseType;
+@property (copy, nonatomic) NSString *houseId;
+@property(nonatomic, copy)NSString *categoryId;
+@property(strong, strong)NSDictionary *realtorInfo ;
 @end
 @implementation FHHouseRealtorDetailViewModel
-- (instancetype)initWithController:(FHHouseRealtorDetailController *)viewController tableView:(UITableView *)tableView {
+- (instancetype)initWithController:(FHHouseRealtorDetailController *)viewController tableView:(UITableView *)tableView realtorInfo:(NSDictionary *)realtorInfo {
     self = [super init];
     if (self) {
         //        _detailTracerDic = [NSMutableDictionary new];
@@ -38,86 +56,176 @@
         //        self.houseType = houseType;
         self.detailController = viewController;
         self.tableView = tableView;
+        self.realtorInfo = realtorInfo;
         //        self.tableView.backgroundColor = [UIColor themeGray7];
         [self configTableView];
-        [self requestData];
+        self.detailJumpManager = [[FHUGCFeedDetailJumpManager alloc] init];
+        self.detailJumpManager.refer = 1;
+        [self requestData:YES first:YES];
     }
     return self;
 }
 
-
-- (void)requestData {
-    NSMutableDictionary *parmas= [NSMutableDictionary new];
-    [parmas setValue:@"3021100461591229" forKey:@"realtor_id"];
-    // 详情页数据-Main
-    __weak typeof(self) wSelf = self;
-    [FHMainApi requestRealtorHomePage:parmas completion:^(FHHouseRealtorDetailModel * _Nonnull model, NSError * _Nonnull error) {
-        if (model && error == NULL) {
-            if (model.data) {
-                [wSelf processDetailData:model];
+- (CGFloat)getVisibleHeight:(NSInteger)maxCount {
+    CGFloat height = 0;
+    if(self.dataList.count <= maxCount){
+        for (FHFeedUGCCellModel *cellModel in self.dataList) {
+            Class cellClass = [self.cellManager cellClassFromCellViewType:cellModel.cellSubType data:nil];
+            if([cellClass isSubclassOfClass:[FHUGCBaseCell class]]) {
+                height += [cellClass heightForData:cellModel];
             }
         }
-    }];
-}
-
-- (void)processDetailData:(FHHouseRealtorDetailModel *)model {
-    NSMutableArray *rgcTabList = model.data.ugcTabList.mutableCopy;
-    FHHouseRealtorDetailRgcTabModel *models =  [[FHHouseRealtorDetailRgcTabModel alloc]init];
-    models.showName = @"房源";
-    models.tabName = @"house";
-    [rgcTabList insertObject:models atIndex:0];
-    [self createListStatuaModel:rgcTabList];
-    if (rgcTabList.count > 0) {
-        FHHouseRealtorDetailRGCCellModel *rgcModel = [[FHHouseRealtorDetailRGCCellModel alloc]init];
-        rgcModel.tabDataArray = [rgcTabList copy];
-        [self.dataArr addObject:rgcModel];
-    };
-    self.rgcTab.tabInfoArr = rgcTabList;
-    [self.tableView reloadData];
-}
-
-- (void)createListStatuaModel:(NSArray *)array {
-    NSMutableArray *statusArr = @[].mutableCopy;
-    for (int m = 0; m <array.count; m++) {
-        FHHouseRealtorDetailStatus *statusIndex =  [[FHHouseRealtorDetailStatus alloc]init];
-        statusIndex.cellHeight = 1;
-        statusIndex.hasMore = YES;
-        [statusArr addObject:statusIndex];
     }
-    [FHHouseRealtorDetailStatusModel sharedInstance].statusArray = [statusArr copy];
+    return height;
+}
+
+- (void)requestData:(BOOL)isHead first:(BOOL)isFirst {
+    if (self.requestTask) {
+        [self.requestTask cancel];
+        self.detailController.isLoadingData = NO;
+    }
+    //
+    if(self.detailController.isLoadingData){
+        return;
+    }
+    NSString *refreshType = @"be_null";
+    //    self.detailController.isLoadingData = YES;
+    
+    //    if(isFirst){
+    //        [self.detailController startLoading];
+    //    }
+    __weak typeof(self) wself = self;
+    NSInteger listCount = self.dataList.count;
+    if(isFirst){
+        listCount = 0;
+    }
+    double behotTime = 0;
+    if(!isHead && listCount > 0){
+        FHFeedUGCCellModel *cellModel = [self.dataList lastObject];
+        behotTime = [cellModel.behotTime doubleValue];
+    }
+    if(isHead && listCount > 0){
+        FHFeedUGCCellModel *cellModel = [self.dataList firstObject];
+        behotTime = [cellModel.behotTime doubleValue];
+    }
+    NSMutableDictionary *extraDic = [NSMutableDictionary dictionary];
+    NSString *fCityId = [FHEnvContext getCurrentSelectCityIdFromLocal];
+    if(fCityId){
+        [extraDic setObject:fCityId forKey:@"f_city_id"];
+    }
+    //    if (self.houseId) {
+    //        [extraDic setObject:self.houseId forKey:@"house_id"];
+    [extraDic setObject:@"6759777706138665224" forKey:@"house_id"];
+    //    }
+    //    if (self.houseType) {
+    //         [extraDic setObject:self.houseType forKey:@"house_type"];
+    [extraDic setObject:@"2" forKey:@"house_type"];
+    //    }
+    //    if (self.evaluationHeader.selectName) {
+    [extraDic setObject:@"video" forKey:@"tab_name"];
+    //         [extraDic setObject:self.evaluationHeader.selectName forKey:@"tab_name"];
+    //    }
+    self.categoryId = @"f_realtor_profile";
+    TTHttpTask *task = [FHHouseUGCAPI requestFeedListWithCategory:self.categoryId behotTime:behotTime loadMore:!isHead listCount:listCount extraDic:extraDic completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
+        wself.detailController.isLoadingData = NO;
+        FHFeedListModel *feedListModel = (FHFeedListModel *)model;
+        wself.feedListModel = feedListModel;
+        if (!wself) {
+            if(isFirst){
+                [wself.detailController endLoading];
+            }
+            return;
+        }
+        if (error) {
+            //TODO: show handle error
+             [self reloadTableViewData];
+            if(isFirst){
+                [wself.detailController endLoading];
+                if(error.code != -999){
+                    wself.refreshFooter.hidden = YES;
+                }
+            }else{
+                wself.refreshFooter.hidden = YES;
+                [[ToastManager manager] showToast:@"网络异常"];
+                [wself updateTableViewWithMoreData:YES];
+            }
+            return;
+        }
+        if(model){
+            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
+                NSArray *resultArr = [self convertModel:feedListModel.data];
+                if(isHead && feedListModel.hasMore){
+                    [wself.dataList removeAllObjects];
+                }
+                if(isHead){
+                    [wself.dataList removeAllObjects];
+                    [wself.dataList addObjectsFromArray:resultArr];
+                }else{
+                    [wself.dataList addObjectsFromArray:resultArr];
+                }
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    if(isHead){
+                        wself.tableView.hasMore = YES;
+                    }else {
+                        wself.tableView.hasMore = feedListModel.hasMore;
+                    }
+                    wself.detailController.hasValidateData = wself.dataList.count > 0;
+                    if(wself.dataList.count > 0){
+                        [wself updateTableViewWithMoreData:wself.tableView.hasMore];
+                        [wself.detailController.emptyView hideEmptyView];
+                    }
+                    [self reloadTableViewData];
+                });
+            });
+        }
+    }];
+    //    self.requestTask = task;
+}
+- (NSArray *)convertModel:(NSArray *)feedList{
+    NSMutableArray *resultArray = [[NSMutableArray alloc] init];
+    for (FHFeedListDataModel *itemModel in feedList) {
+        FHFeedUGCCellModel *cellModel = [FHFeedUGCCellModel modelFromFeed:itemModel.content];
+        cellModel.isHiddenConnectBtn = YES;
+        cellModel.isInRealtorEvaluationList = YES;
+        cellModel.categoryId = self.categoryId;
+        cellModel.tableView = self.tableView;
+        cellModel.enterFrom = [self.detailController categoryName];
+        cellModel.isShowLineView = NO;
+        switch (cellModel.cellType) {
+            case FHUGCFeedListCellTypeUGC:
+                cellModel.cellSubType = FHUGCFeedListCellSubTypeUGCBrokerImage;
+                break;
+            case FHUGCFeedListCellTypeUGCSmallVideo:
+                cellModel.cellSubType = FHUGCFeedListCellSubTypeUGCBrokerVideo;
+                break;
+            default:
+                break;
+        }
+        //        cellModel.tracerDic = self.tracerDic;
+        if (cellModel) {
+            [resultArray addObject:cellModel];
+        }
+    }
+    return resultArray;
 }
 
 - (void)configTableView
 {
     _tableView.delegate = self;
     _tableView.dataSource = self;
-    //    _tableView.backgroundColor = [UIColor colorWithRed:252 green:252 blue:252 alpha:1];
-    //    self.detailController.view.backgroundColor = [UIColor redColor];
     [self registerCellClasses];
     __weak typeof(self) wself = self;
-    
     self.refreshFooter = [FHRefreshCustomFooter footerWithRefreshingBlock:^{
-        NSIndexPath *index = [NSIndexPath indexPathForRow:0 inSection:0];
-        FHHouseRealtorDetailBaseCell*cell = [wself.tableView cellForRowAtIndexPath:index];
-        [cell requestData:NO first:NO];
+        [self requestData:NO first:NO];
     }];
     self.tableView.mj_footer = self.refreshFooter;
 }
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
-
-}
-
-- (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView {
-        if (scrollView.contentOffset.y>425) {
     
-        }
-    self.tableView.scrollEnabled = NO;
 }
+
 - (void)updateTableViewWithMoreData:(BOOL)hasMore {
-    
-    
-    
     self.tableView.mj_footer.hidden = NO;
     if (hasMore) {
         [self.tableView.mj_footer endRefreshing];
@@ -128,110 +236,161 @@
 }
 
 - (void)registerCellClasses {
-    [self.tableView registerClass:[FHHouseRealtorDetailRGCCell class] forCellReuseIdentifier:@"FHHouseRealtorDetailRGCCellModel"];
+    self.cellManager = [[FHUGCCellManager alloc] init];
+    [self.cellManager registerAllCell:self.tableView];
 }
 
-- (NSMutableArray *)dataArr {
-    if (!_dataArr) {
-        NSMutableArray *dataArr = [[NSMutableArray alloc]init];
-        _dataArr = dataArr;
+- (NSMutableArray *)dataList {
+    if (!_dataList) {
+        NSMutableArray *dataList = [[NSMutableArray alloc]init];
+        _dataList = dataList;
     }
-    return _dataArr;
+    return _dataList;
 }
 
 
-#pragma mark - UITableViewDelegate UITableViewDataSource
+#pragma mark - UITableViewDataSource
 
-- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-    return 1;
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+    return [self.dataList count];
 }
 
--(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
-{
-    return self.dataArr.count;
-}
-
--(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    NSInteger row = indexPath.row;
-    if (row >= 0 && row < self.dataArr.count) {
-        FHHouseRealtorDetailBaseCellModel *dataModel = self.dataArr[row];
-        NSString *identifier = NSStringFromClass([dataModel class]);//[self cellIdentifierForEntity:data];
-        if (identifier.length > 0) {
-            FHHouseRealtorDetailBaseCell*cell = [tableView dequeueReusableCellWithIdentifier:identifier];
-            __weak typeof(self)Ws = self;
-            cell.cellRefreshComplete = ^() {
-                [Ws reloadRowHeight];
-            };
-            
-            if (cell) {
-                [cell refreshWithData:dataModel];
-                return cell;
-            }else{
-                NSLog(@"nil cell for data: %@",dataModel);
-            }
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+    if(indexPath.row < self.dataList.count){
+        FHFeedUGCCellModel *cellModel = self.dataList[indexPath.row];
+        NSString *cellIdentifier = NSStringFromClass([self.cellManager cellClassFromCellViewType:cellModel.cellSubType data:nil]);
+        FHUGCBaseCell *cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
+        if (cell == nil) {
+            Class cellClass = NSClassFromString(cellIdentifier);
+            cell = [[cellClass alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
+            cell.selectionStyle = UITableViewCellSelectionStyleNone;
         }
+        cell.delegate = self;
+        if(indexPath.row < self.dataList.count){
+            [cell refreshWithData:cellModel];
+        }
+        return cell;
     }
-    return [[FHHouseRealtorDetailBaseCell alloc] init];
+    return [[FHUGCBaseCell alloc] init];
 }
 
--(CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
-{
-    return 44;
-}
-
--(CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section
-{
-    return CGFLOAT_MIN;
-}
-
--(UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
-{
-    if (!_rgcTab) {
-        __weak typeof(self)WS = self;
-        FHHouseRealtorDetailRgcTabView *rgcTab = [[FHHouseRealtorDetailRgcTabView alloc]initWithFrame:CGRectMake(0, 0, tableView.frame.size.width, 44)];
-        
-        rgcTab.headerItemSelectAction = ^(NSInteger index) {
-             [WS selectSectionHeader:index];
-        };
-        _rgcTab = rgcTab;
-    }
-    return _rgcTab;
-}
-
-- (void)selectSectionHeader:(NSInteger )index {
-    [FHHouseRealtorDetailStatusModel sharedInstance].currentIndex = index;
-    NSIndexPath *indexPath = [NSIndexPath indexPathForItem:0 inSection:0];
-    FHHouseRealtorDetailRGCCell *rgcCell = [self.tableView cellForRowAtIndexPath:indexPath];
-    if (rgcCell) {
-        NSIndexPath *collectionIndex = [NSIndexPath indexPathForItem:index inSection:0];
-        [rgcCell.collection.collectionContainer scrollToItemAtIndexPath:collectionIndex atScrollPosition:UICollectionViewScrollPositionNone animated:YES];
-        [self reloadRowHeight];
-    }
-}
-- (void)reloadRowHeight {
-    // 获取主队列
-    dispatch_queue_t mainQueue = dispatch_get_main_queue();
-    dispatch_async(mainQueue, ^{
-        [self.tableView reloadData];
-        self.refreshFooter.hidden = [FHHouseRealtorDetailStatusModel sharedInstance].currentRealtorDetailStatus.isHiddenFooterRefish;
-        [self updateTableViewWithMoreData:[FHHouseRealtorDetailStatusModel sharedInstance].currentRealtorDetailStatus.hasMore];
-    });
-}
+#pragma mark - UITableViewDelegate
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-    return [FHHouseRealtorDetailStatusModel sharedInstance].currentCellHeight;
+    if(indexPath.row < self.dataList.count){
+        FHFeedUGCCellModel *cellModel = self.dataList[indexPath.row];
+        Class cellClass = [self.cellManager cellClassFromCellViewType:cellModel.cellSubType data:nil];
+        if([cellClass isSubclassOfClass:[FHUGCBaseCell class]]) {
+            return [cellClass heightForData:cellModel];
+        }
+    }
+    return 100;
 }
 
-
--(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    [tableView deselectRowAtIndexPath:indexPath animated:YES];
-    FHHouseRealtorDetailBaseCell*cell = [tableView cellForRowAtIndexPath:indexPath];
-    if (cell.didClickCellBlk) {
-        cell.didClickCellBlk();
+- (void)reloadTableViewData {
+    if(self.dataList.count > 0){
+        [self updateTableViewWithMoreData:self.tableView.hasMore];
+        self.tableView.backgroundColor = [UIColor themeGray7];
+        
+        CGFloat height = [self getVisibleHeight:5];
+        if(height < self.detailController.errorViewHeight && height > 0 && self.detailController.errorViewHeight > 0){
+            [self.tableView reloadData];
+            CGFloat refreshFooterBottomHeight = self.tableView.mj_footer.height;
+            if ([TTDeviceHelper isIPhoneXSeries]) {
+                refreshFooterBottomHeight += 34;
+            }
+            //设置footer来占位
+            UIView *tableFooterView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, self.detailController.errorViewHeight - height - refreshFooterBottomHeight)];
+            tableFooterView.backgroundColor = [UIColor clearColor];
+            self.tableView.tableFooterView = tableFooterView;
+            //            //修改footer的位置回到cell下方，不修改会在tableFooterView的下方
+            //            self.tableView.mj_footer.mj_y -= tableFooterView.height;
+            //            self.tableView.mj_footer.hidden = NO;
+        }else{
+            self.tableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width,0.001)];
+            [self.tableView reloadData];
+        }
+    }else{
+    [self.errorView showEmptyWithTip:@"暂无内容" errorImageName:kFHErrorMaskNetWorkErrorImageName showRetry:NO];
+    UIView *tableFooterView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, self.detailController.errorViewHeight)];
+    tableFooterView.backgroundColor = [UIColor whiteColor];
+    [tableFooterView addSubview:self.errorView];
+    self.tableView.tableFooterView = tableFooterView;
+    self.refreshFooter.hidden = YES;
+    self.tableView.backgroundColor = [UIColor whiteColor];
+    [self.tableView reloadData];
     }
 }
+- (FHErrorView *)errorView {
+    if(!_errorView){
+        _errorView = [[FHErrorView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, 400)];
+    }
+    return _errorView;
+}
 
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    FHFeedUGCCellModel *cellModel = self.dataList[indexPath.row];
+    self.currentCellModel = cellModel;
+    self.currentCell = [tableView cellForRowAtIndexPath:indexPath];
+    self.detailJumpManager.currentCell = self.currentCell;
+    [self.detailJumpManager jumpToDetail:cellModel showComment:NO enterType:@"feed_content_blank"];
+}
+
+- (void)commentClicked:(FHFeedUGCCellModel *)cellModel cell:(nonnull FHUGCBaseCell *)cell {
+//    [self trackClickComment:cellModel];
+    self.currentCellModel = cellModel;
+    self.currentCell = cell;
+    self.detailJumpManager.currentCell = self.currentCell;
+    [self.detailJumpManager jumpToDetail:cellModel showComment:YES enterType:@"feed_comment"];
+}
+
+//- (void)clickRealtorIm:(FHFeedUGCCellModel *)cellModel cell:(FHUGCBaseCell *)cell {
+//    NSInteger index = [self.dataList indexOfObject:cellModel];
+//    NSMutableDictionary *imExtra = @{}.mutableCopy;
+//    imExtra[@"realtor_position"] = @"realtor_evaluate";
+//    imExtra[@"from_gid"] = cellModel.groupId;
+//    [self.realtorPhoneCallModel imchatActionWithPhone:cellModel.realtor realtorRank:[NSString stringWithFormat:@"%ld",(long)index] extraDic:imExtra];
+//}
+
+//- (void)clickRealtorPhone:(FHFeedUGCCellModel *)cellModel cell:(FHUGCBaseCell *)cell {
+//     NSMutableDictionary *extraDict = self.tracerDic.mutableCopy;
+//    extraDict[@"realtor_id"] = cellModel.realtor.realtorId;
+//    extraDict[@"realtor_rank"] = @"be_null";
+//    extraDict[@"realtor_logpb"] = cellModel.realtor.realtorLogpb;
+//    extraDict[@"realtor_position"] = @"realtor_evaluate";
+//    extraDict[@"from_gid"] = cellModel.groupId;
+//    NSDictionary *associateInfoDict = cellModel.realtor.associateInfo.phoneInfo;
+//    extraDict[kFHAssociateInfo] = associateInfoDict;
+//    FHAssociatePhoneModel *associatePhone = [[FHAssociatePhoneModel alloc]init];
+//    associatePhone.reportParams = extraDict;
+//    associatePhone.associateInfo = associateInfoDict;
+//    associatePhone.realtorId = cellModel.realtor.realtorId;
+//    associatePhone.searchId = self.tracerDic[@"log_pb"][@"search_id"];
+//    associatePhone.imprId = self.tracerDic[@"log_pb"][@"impr_id"];
+//    associatePhone.houseType =self.houseType.integerValue;
+//    associatePhone.houseId = self.houseId;
+//    associatePhone.showLoading = NO;
+//    [self.realtorPhoneCallModel phoneChatActionWithAssociateModel:associatePhone];
+//}
+
+- (void)goToCommunityDetail:(FHFeedUGCCellModel *)cellModel {
+    [self.detailJumpManager goToCommunityDetail:cellModel];
+}
+
+- (void)lookAllLinkClicked:(FHFeedUGCCellModel *)cellModel cell:(nonnull FHUGCBaseCell *)cell {
+    self.currentCellModel = cellModel;
+    self.currentCell = cell;
+    self.detailJumpManager.currentCell = self.currentCell;
+    [self.detailJumpManager jumpToDetail:cellModel showComment:NO enterType:@"feed_content_blank"];
+}
+
+//- (void)clickRealtorHeader:(FHFeedUGCCellModel *)cellModel cell:(FHUGCBaseCell *)cell {
+//    if ([self.houseType integerValue] == FHHouseTypeSecondHandHouse) {
+//            NSMutableDictionary *dict = [NSMutableDictionary dictionary];
+//         dict[@"element_from"] = @"old_detail_related";
+//         dict[@"enter_from"] = @"realtor_evaluate_list";
+//        [self.realtorPhoneCallModel jump2RealtorDetailWithPhone:cellModel.realtor isPreLoad:NO extra:dict];
+//    }
+//}
 
 @end

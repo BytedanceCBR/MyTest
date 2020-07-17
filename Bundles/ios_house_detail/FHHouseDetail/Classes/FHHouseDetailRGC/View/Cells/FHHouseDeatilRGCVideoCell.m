@@ -301,7 +301,7 @@
     // [self.timeLabel sizeToFit];
     [self.timeLabel layoutIfNeeded];
     [self layoutViews];
-    
+    [self.headerView hiddenConnectBtn:cellModel.isHiddenConnectBtn];
 
 //    [self showGuideView];
 }

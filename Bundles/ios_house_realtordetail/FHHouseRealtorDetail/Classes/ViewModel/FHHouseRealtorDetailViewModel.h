@@ -11,12 +11,11 @@
 #import "FHHouseRealtorDetailInfoModel.h"
 #import "FHHouseRealtorDetailBaseCell.h"
 #import "FHHouseRealtorDetailBaseCellModel.h"
-#import "FHHouseRealtorDetailRgcTabView.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
 @interface FHHouseRealtorDetailViewModel : NSObject
-- (instancetype)initWithController:(FHHouseRealtorDetailController *)viewController tableView:(UITableView *)tableView;
+- (instancetype)initWithController:(FHHouseRealtorDetailController *)viewController tableView:(UITableView *)tableView realtorInfo:(NSDictionary *)realtorInfo;
 @end
 
 NS_ASSUME_NONNULL_END

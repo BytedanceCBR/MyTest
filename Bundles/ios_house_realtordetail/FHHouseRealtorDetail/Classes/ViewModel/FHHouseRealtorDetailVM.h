@@ -16,7 +16,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic , strong) NSMutableDictionary *tracerDict;
 @property (nonatomic, copy)     NSDictionary       *shareTracerDict;// 分享埋点数据
 
-- (instancetype)initWithController:(FHHouseRealtorDetailVC *)viewController tracerDict:(NSDictionary*)tracerDict;
+- (instancetype)initWithController:(FHHouseRealtorDetailVC *)viewController tracerDict:(NSDictionary*)tracerDict realtorInfo:(NSDictionary *)realtorInfo;
 
 - (void)requestDataWithRealtorId:(NSString *)realtorId refreshFeed:(BOOL)refreshFeed;
 

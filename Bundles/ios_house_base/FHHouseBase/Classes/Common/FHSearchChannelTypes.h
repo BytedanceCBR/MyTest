@@ -44,6 +44,8 @@ extern NSString const *CHANNEL_ID_HELP_ME_FIND_HOUSE; // 帮我找房
 extern NSString const *CHANNEL_ID_SUBWAY_HOUSE_HOUSE_LIST; // 地铁找房房源列表
 extern NSString const *CHANNEL_ID_MAP_FIND_RENT; //租房地图找房列表页
 
+extern NSString const *CHANNEL_ID_REALTOR_DETAIL_HOUSE; //租房地图找房列表页
+
 //r.GET("/f100/api/recommend", views.Recommend)✅
 //r.GET("/f100/api/v2/recommend", views.RecommendV2)✅
 //r.GET("/f100/api/search_rent", views.SearchRent)

@@ -35,7 +35,8 @@
 #import <FHUGCCategoryHelper.h>
 #import "UIImage+FIconFont.h"
 #import "FHHouseRealtorDetailBaseViewController.h"
-#define kSegmentViewHeight 52
+#import "FHHouseRealtorDetailHouseVC.h"
+#define kSegmentViewHeight 44
 @interface FHHouseRealtorDetailVM () <TTHorizontalPagingViewDelegate>
 
 @property (nonatomic, weak) FHHouseRealtorDetailVC *viewController;
@@ -47,7 +48,9 @@
 @property (nonatomic, strong) NSMutableArray *segmentTitles;
 @property (nonatomic, copy) NSString *currentSegmentType;
 @property (nonatomic, copy) NSString *defaultType;
+@property (nonatomic, strong) NSDictionary *realtorInfo;
 @property (nonatomic, assign) NSInteger selectedIndex;
+@property (nonatomic, strong) NSMutableArray *ugcTabList;
 //精华tab的index，默认是-1
 @property (nonatomic, assign) NSInteger essenceIndex;
 @property (nonatomic, assign) BOOL isFirstEnter;
@@ -56,7 +59,7 @@
 @property (nonatomic) BOOL shouldShowUGcGuide;
 @end
 @implementation FHHouseRealtorDetailVM
-- (instancetype)initWithController:(FHHouseRealtorDetailVC *)viewController tracerDict:(NSDictionary*)tracerDict {
+- (instancetype)initWithController:(FHHouseRealtorDetailVC *)viewController tracerDict:(NSDictionary*)tracerDict realtorInfo:(NSDictionary *)realtorInfo {
     self = [super init];
     if (self) {
         self.tracerDict = tracerDict.mutableCopy;
@@ -67,6 +70,7 @@
         self.isFirstEnter = YES;
         self.viewController.segmentView.delegate = self;
         self.essenceIndex = -1;
+        self.realtorInfo = realtorInfo;
         
         // 分享埋点
         NSMutableDictionary *params = [NSMutableDictionary dictionary];
@@ -116,92 +120,34 @@
         return;
     }
     NSMutableDictionary *parmas= [NSMutableDictionary new];
-    [parmas setValue:@"3021100461591229" forKey:@"realtor_id"];
+    [parmas setValue:realtorId forKey:@"realtor_id"];
     // 详情页数据-Main
     __weak typeof(self) wSelf = self;
     [FHMainApi requestRealtorHomePage:parmas completion:^(FHHouseRealtorDetailModel * _Nonnull model, NSError * _Nonnull error) {
         if (model && error == NULL) {
             if (model.data) {
-                [wSelf updateUIWithData];
+//                [wSelf updateUIWithData];
                 [wSelf processDetailData:model];
             }
         }
     }];
-//    WeakSelf;
-//    [FHHouseUGCAPI requestCommunityDetail:self.viewController.communityId tabName:self.viewController.tabName class:FHUGCScialGroupModel.class completion:^(id <FHBaseModelProtocol> model, NSError *error) {
-//        StrongSelf;
-//
-//        [_viewController tt_endUpdataData];
-//        if(userPull){
-//            [self endRefreshing];
-//        }
-//
-//        if(error){
-//            [self onNetworError:showEmptyIfFailed showToast:showToast];
-//        }
-//
-//        // 根据basicInfo接口成功失败决定是否显示群聊入口按钮
-//        BOOL isHidden = (error != nil);
-//
-//
-//        if (model) {
-//            FHUGCScialGroupModel *responseModel = (FHUGCScialGroupModel *)model;
-//            self.socialGroupModel = responseModel;
-//            BOOL isFollowed = [responseModel.data.hasFollow boolValue];
-//            if(isFollowed == NO) {
-//
-//            }
-//
-//            if (responseModel.data) {
-//                // 更新圈子数据
-//                [[FHUGCConfig sharedInstance] updateSocialGroupDataWith:responseModel.data];
-//                if(self.isFirstEnter){
-//                    //初始化segment
-//                    [self initSegment];
-//                    //初始化vc
-//                    [self initSubVC];
-//                }else{
-//                    [self updateVC];
-//                }
-//
-//                if (refreshFeed) {
-//                    [self.feedListController startLoadData:YES];
-//                }
-//            }
-//
-//            [self updateNavBarWithAlpha:self.viewController.customNavBarView.bgView.alpha];
-//        }
-//    }];
 }
 
 - (void)processDetailData:(FHHouseRealtorDetailModel *)model {
     self.data = model.data;
     if(self.isFirstEnter){
            //初始化segment
-        NSMutableArray *rgcTabList = model.data.ugcTabList.mutableCopy;
+        self.ugcTabList = model.data.ugcTabList.mutableCopy;
         FHHouseRealtorDetailRgcTabModel *models =  [[FHHouseRealtorDetailRgcTabModel alloc]init];
         models.showName = @"房源";
         models.tabName = @"house";
-        [rgcTabList insertObject:models atIndex:0];
-        [self initSegmentWithTabInfoArr:rgcTabList];
+        [self.ugcTabList insertObject:models atIndex:0];
+        [self initSegmentWithTabInfoArr:self.ugcTabList];
            //初始化vc
-           [self initSubVCinitWithTabInfoArr:rgcTabList];
+           [self initSubVCinitWithTabInfoArr:self.ugcTabList];
        }else{
            [self updateVC];
        }
-//    NSMutableArray *rgcTabList = model.data.ugcTabList.mutableCopy;
-//    FHHouseRealtorDetailRgcTabModel *models =  [[FHHouseRealtorDetailRgcTabModel alloc]init];
-//    models.showName = @"房源";
-//    models.name = @"house";
-//    [rgcTabList insertObject:models atIndex:0];
-//    [self createListStatuaModel:rgcTabList];
-//    if (rgcTabList.count > 0) {
-//        FHHouseRealtorDetailRGCCellModel *rgcModel = [[FHHouseRealtorDetailRGCCellModel alloc]init];
-//        rgcModel.tabDataArray = [rgcTabList copy];
-//        [self.dataArr addObject:rgcModel];
-//    };
-//    self.rgcTab.tabInfoArr = rgcTabList;
-//    [self.tableView reloadData];
 }
 
 -(void)onNetworError:(BOOL)showEmpty showToast:(BOOL)showToast{
@@ -219,7 +165,7 @@
 - (void)initSegmentWithTabInfoArr:(NSArray *)tabListArr {
     NSMutableArray *titles = [NSMutableArray array];
     NSInteger selectedIndex = 0;
-    if(tabListArr && tabListArr.count > 1) {
+    if(tabListArr && tabListArr.count > 0) {
         for(NSInteger i = 0;i < tabListArr.count;i++) {
             FHHouseRealtorDetailRgcTabModel *item = tabListArr[i];
             if(!isEmptyString(item.showName)) {
@@ -235,6 +181,7 @@
                 self.defaultType = item.tabName;
             }
         }
+        self.viewController.segmentView.hidden = NO;
     }else{
         self.viewController.segmentView.hidden = YES;
     }
@@ -247,56 +194,55 @@
 - (void)initSubVCinitWithTabInfoArr:(NSArray *)tabListArr {
     [self.subVCs removeAllObjects];
     
-    if(tabListArr && tabListArr.count > 1) {
+    if(tabListArr && tabListArr.count > 0) {
         for(NSInteger i = 0;i < tabListArr.count;i++) {
             FHHouseRealtorDetailRgcTabModel *item = tabListArr[i];
-            if(!isEmptyString(item.showName) && !isEmptyString(item.tabName)) {
-                [self createFeedListController:item.showName];
+            if(!isEmptyString(item.showName)) {
+                [self createFeedListController:item.showName requestName:item.tabName];
             }
         }
     }else{
-        [self createFeedListController:nil];
+        [self createFeedListController:nil requestName:nil];
     }
     
     self.pagingView.delegate = self;
     //放到最下面
     [self.viewController.view insertSubview:self.pagingView atIndex:0];
+    [self.pagingView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.right.left.equalTo(self.viewController.view);
+         if (@available(iOS 11.0, *)) {
+               make.bottom.mas_equalTo(self.viewController.view.mas_bottom).mas_offset(-[UIApplication sharedApplication].delegate.window.safeAreaInsets.bottom -64);
+           }else {
+               make.bottom.mas_equalTo(-64);
+           }
+    }];
 }
 
-- (void)createFeedListController:(NSString *)tabName {
-    
+- (void)createFeedListController:(NSString *)tabName requestName:(NSString *)name {
     if (![tabName isEqualToString:@"房源"]) {
         FHHouseRealtorDetailController *realtorDetailController =  [[FHHouseRealtorDetailController alloc]init];
+        realtorDetailController.tabName =
+        realtorDetailController.realtorInfo = self.realtorInfo;
+        realtorDetailController.tabName = name;
+        //错误页高度
+        if(self.ugcTabList && self.ugcTabList.count > 0){
+            CGFloat errorViewHeight = [UIScreen mainScreen].bounds.size.height - self.viewController.customNavBarView.height;
+            errorViewHeight -= kSegmentViewHeight;
+            realtorDetailController.errorViewHeight = errorViewHeight;
+        }
         [self.subVCs addObject:realtorDetailController];
+    }else {
+        FHHouseRealtorDetailHouseVC *realtorDetailController =  [[FHHouseRealtorDetailHouseVC alloc]init];
+        realtorDetailController.realtorInfo = self.realtorInfo;
+        realtorDetailController.tabName = name;
+              //错误页高度
+              if(self.ugcTabList && self.ugcTabList.count > 0){
+                  CGFloat errorViewHeight = [UIScreen mainScreen].bounds.size.height - self.viewController.customNavBarView.height;
+                  errorViewHeight -= kSegmentViewHeight;
+                  realtorDetailController.errorViewHeight = errorViewHeight;
+              }
+              [self.subVCs addObject:realtorDetailController];
     }
-    
-
-    
-//    WeakSelf;
-//    FHCommunityFeedListController *feedListController = [[FHCommunityFeedListController alloc] init];
-//    feedListController.tableViewNeedPullDown = NO;
-//    feedListController.showErrorView = NO;
-//    feedListController.scrollViewDelegate = self;
-//    feedListController.listType = FHCommunityFeedListTypePostDetail;
-//    feedListController.forumId = self.viewController.communityId;
-//    feedListController.tracerDict = self.viewController.tracerDict;
-//    feedListController.tabName = tabName;
-//    feedListController.isResetStatusBar = NO;
-//    //错误页高度
-//    if(self.socialGroupModel.data.tabInfo && self.socialGroupModel.data.tabInfo.count > 1){
-//        CGFloat errorViewHeight = [UIScreen mainScreen].bounds.size.height - self.viewController.customNavBarView.height;
-//        errorViewHeight -= kSegmentViewHeight;
-//        feedListController.errorViewHeight = errorViewHeight;
-//    }
-//    feedListController.notLoadDataWhenEmpty = YES;
-//    feedListController.beforeInsertPostBlock = ^{
-//        //如果是多tab，并且当前不在全部tab，这个时候要先切tab
-//        if(wself.selectedIndex != 0){
-//            wself.isFirstEnter = YES;
-//            wself.viewController.segmentView.selectedIndex = 0;
-//        }
-//    };
- 
 }
 
 - (void)updateVC {
@@ -323,6 +269,7 @@
         [self.viewController.customNavBarView.leftBtn setBackgroundImage:whiteBackArrowImage forState:UIControlStateNormal];
         [self.viewController.customNavBarView.leftBtn setBackgroundImage:whiteBackArrowImage forState:UIControlStateHighlighted];
         self.viewController.titleContainer.hidden = YES;
+        self.viewController.customNavBarView.title.textColor = [UIColor whiteColor];
     } else if (alpha > 0.1f && alpha < 0.9f) {
         [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault];
         self.viewController.customNavBarView.title.textColor = [UIColor themeGray1];
@@ -348,30 +295,20 @@
 }
 
 
-- (void)updateUIWithData {
-        [self.pagingView reloadHeaderViewHeight:self.viewController.headerView.height];
-}
+//- (void)updateUIWithData {
+//        [self.pagingView reloadHeaderViewHeight:self.viewController.headerView.height];
+//}
 
 #pragma UIScrollViewDelegate
 
-- (void)scrollViewDidScroll:(UIScrollView *)scrollView {
-//    [self refreshContentOffset:scrollView.contentOffset];
-//    [self.viewController.headerView updateWhenScrolledWithContentOffset:scrollView.contentOffset isScrollTop:NO];
-//    if(scrollView.contentOffset.y < 0){
-//        CGFloat alpha = self.refreshHeader.mj_h <= 0 ? 0.0f : fminf(1.0f,fabsf(scrollView.contentOffset.y / self.refreshHeader.mj_h));
-//        self.refreshHeader.alpha = alpha;
-//    }else{
-//        self.refreshHeader.alpha = 0;
-//    }
-}
 
-- (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate {
-    if(decelerate){
-        CGFloat delta = self.pagingView.currentContentViewTopInset + scrollView.contentOffset.y;
-        if(delta <= -50){
-        }
-    }
-}
+//- (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate {
+//    if(decelerate){
+//        CGFloat delta = self.pagingView.currentContentViewTopInset + scrollView.contentOffset.y;
+//        if(delta <= -50){
+//        }
+//    }
+//}
 
 - (void)addGoDetailLog {
     NSMutableDictionary *params = [NSMutableDictionary dictionary];
@@ -451,16 +388,16 @@
 }
 
 - (void)pagingView:(TTHorizontalPagingView *)pagingView didSwitchIndex:(NSInteger)aIndex to:(NSInteger)toIndex {
-//    //前面的消失
-//    if(aIndex < self.subVCs.count && !self.isFirstEnter){
-//        FHHouseRealtorDetailBaseViewController *feedVC = self.subVCs[aIndex];
-//    }
-//    //新的展现
-//    if(toIndex < self.subVCs.count){
-//        FHHouseRealtorDetailBaseViewController *feedVC = self.subVCs[toIndex];
-//        [self.viewController addChildViewController:feedVC];
-//        [feedVC didMoveToParentViewController:self.viewController];
-//    }
+    //前面的消失
+    if(aIndex < self.subVCs.count && !self.isFirstEnter){
+        FHHouseRealtorDetailBaseViewController *feedVC = self.subVCs[aIndex];
+    }
+    //新的展现
+    if(toIndex < self.subVCs.count){
+        FHHouseRealtorDetailBaseViewController *feedVC = self.subVCs[toIndex];
+        [self.viewController addChildViewController:feedVC];
+        [feedVC didMoveToParentViewController:self.viewController];
+    }
 }
 
 - (UIView *)viewForHeaderInPagingView {

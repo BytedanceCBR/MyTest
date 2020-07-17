@@ -15,9 +15,7 @@
 #import "UILabel+House.h"
 #import <FHHouseBase/FHBaseCollectionView.h>
 #import "FHHouseRealtorDetailBaseCell.h"
-#import "FHHouseRealtorDetailRgcCollectionCell.h"
 #import "FHHouseRealtorDetailHouseCollectionCell.h"
-#import "FHHouseRealtorDetailStatusModel.h"
 @interface FHHouseRealtorDetailitemCollectionView ()<UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout>
 
 @property (nonatomic, copy)     NSString       *cellIdentifier;
@@ -83,8 +81,6 @@
     NSString *identifier=[NSString stringWithFormat:@"%ld%ld",(long)indexPath.section,(long)indexPath.row];
     if ([data isKindOfClass:[FHHouseRealtorDetailHouseCollectionModel class]]) {
         [collectionView registerClass:[FHHouseRealtorDetailHouseCollectionCell class] forCellWithReuseIdentifier:identifier];
-    }else {
-        [collectionView registerClass:[FHHouseRealtorDetailRgcCollectionCell class] forCellWithReuseIdentifier:identifier];
     }
     if (identifier.length > 0) {
         __weak typeof(self)WS = self;
@@ -110,9 +106,9 @@
 }
 
 - (void)requestData:(BOOL)isHead first:(BOOL)isFirst {
-    NSIndexPath *index = [NSIndexPath indexPathForRow:[FHHouseRealtorDetailStatusModel sharedInstance].currentIndex inSection:0];
-    FHHouseRealtorDetailCollectionCell *cell = (FHHouseRealtorDetailCollectionCell*)[self.collectionContainer cellForItemAtIndexPath:index];
-    [cell requestData:isHead first:isFirst];
+//    NSIndexPath *index = [NSIndexPath indexPathForRow:[FHHouseRealtorDetailStatusModel sharedInstance].currentIndex inSection:0];
+//    FHHouseRealtorDetailCollectionCell *cell = (FHHouseRealtorDetailCollectionCell*)[self.collectionContainer cellForItemAtIndexPath:index];
+//    [cell requestData:isHead first:isFirst];
 }
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
@@ -136,6 +132,6 @@
     }
 }
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath {
-    return CGSizeMake([UIScreen mainScreen].bounds.size.width,  [FHHouseRealtorDetailStatusModel sharedInstance].currentCellHeight);
+    return CGSizeMake([UIScreen mainScreen].bounds.size.width,  500);
 }
 @end

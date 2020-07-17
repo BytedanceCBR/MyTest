@@ -18,13 +18,14 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     [self initTableView];
-    self.tableView.backgroundColor = [UIColor redColor];
+    self.view.backgroundColor = [UIColor clearColor];
 }
 
 - (void)initTableView {
     _tableView = [[FHBaseTableView alloc] initWithFrame:CGRectZero style:UITableViewStylePlain];
     _tableView.keyboardDismissMode = UIScrollViewKeyboardDismissModeOnDrag;
     _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+    _tableView.backgroundColor = [UIColor colorWithHexStr:@"#f8f8f8"];
     if (@available(iOS 11.0 , *)) {
         _tableView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
     }
@@ -36,5 +37,4 @@
         make.edges.mas_equalTo(self.view);
     }];
 }
-
 @end

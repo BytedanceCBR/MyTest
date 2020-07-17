@@ -1603,6 +1603,27 @@
     }
 }
 
+-(void)refreshIndexCorner:(BOOL)isFirst withLast:(BOOL)isLast
+{
+    if (isFirst) {
+        UIBezierPath *maskPath = [UIBezierPath bezierPathWithRoundedRect:self.houseCellBackView.bounds byRoundingCorners:UIRectCornerTopLeft | UIRectCornerTopRight cornerRadii:CGSizeMake(15, 15)];
+        CAShapeLayer *maskLayer = [[CAShapeLayer alloc] init];
+        maskLayer.frame = self.houseCellBackView.bounds;
+        maskLayer.path = maskPath.CGPath;
+        self.houseCellBackView.layer.mask = maskLayer;
+    } else if (isLast){
+                UIBezierPath *maskPath = [UIBezierPath bezierPathWithRoundedRect:self.houseCellBackView.bounds byRoundingCorners:UIRectCornerBottomLeft | UIRectCornerBottomRight cornerRadii:CGSizeMake(15, 15)];
+        CAShapeLayer *maskLayer = [[CAShapeLayer alloc] init];
+        maskLayer.frame = self.houseCellBackView.bounds;
+        maskLayer.path = maskPath.CGPath;
+        self.houseCellBackView.layer.mask = maskLayer;
+    }else
+    {
+        self.houseCellBackView.layer.mask = nil;
+    }
+}
+
+
 - (void)updateBottomText:(NSDictionary *)bottomText
 {
     if (![bottomText isKindOfClass:[NSDictionary class]]) {
@@ -2103,5 +2124,8 @@
     }
 }
 
+- (void)hiddenCloseBtn {
+    self.closeBtn.hidden = YES;
+}
 
 @end

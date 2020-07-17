@@ -8,10 +8,8 @@
 #import "FHHouseRealtorDetailRGCCell.h"
 #import "FHHouseRealtorDetailBaseCellModel.h"
 #import "Masonry.h"
-#import "FHHouseRealtorDetailStatusModel.h"
 
 #import "FHHouseRealtorDetailHouseCollectionCell.h"
-#import "FHHouseRealtorDetailRgcCollectionCell.h"
 #import "FHHouseRealtorDetailInfoModel.h"
 @interface FHHouseRealtorDetailRGCCell()
 @property (nonatomic, weak)UIView *containerView;
@@ -42,11 +40,11 @@
                     model.count = tabModel.count;
                     [dataArr addObject:model];
                 }else {
-                    FHHouseRealtorDetailRgcCollectionModel *model = [[FHHouseRealtorDetailRgcCollectionModel alloc]init];
-                    model.showName = tabModel.showName;
-                    model.name = tabModel.tabName;
-                    model.count = tabModel.count;
-                    [dataArr addObject:model];
+//                    FHHouseRealtorDetailRgcCollectionModel *model = [[FHHouseRealtorDetailRgcCollectionModel alloc]init];
+//                    model.showName = tabModel.showName;
+//                    model.name = tabModel.tabName;
+//                    model.count = tabModel.count;
+//                    [dataArr addObject:model];
                 }
             }
         };
@@ -78,16 +76,6 @@
 }
 
 - (void)layoutcollection {
-    NSInteger index = [FHHouseRealtorDetailStatusModel sharedInstance].currentIndex;
-    CGFloat f = [FHHouseRealtorDetailStatusModel sharedInstance].currentCellHeight;
-    // 获取主队列
-    dispatch_queue_t mainQueue = dispatch_get_main_queue();
-    dispatch_async(mainQueue, ^{
-           [_collection mas_remakeConstraints:^(MASConstraintMaker *make) {
-            make.edges.equalTo(self.containerView);
-            make.height.mas_offset( [FHHouseRealtorDetailStatusModel sharedInstance].currentCellHeight);
-        }];
-    });
 
 }
 
