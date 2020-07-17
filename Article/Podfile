@@ -506,7 +506,8 @@ def appPods
     #支持自动约束cell缓存高度
     pod_binary 'UITableView+FDTemplateLayoutCell', '1.6'
 
-    pod 'TTIMSDK', '1.0.0-rc.34.2-bugfix', :subspecs => [
+    #pod 'TTIMSDK', '1.0.0-rc.34.2-bugfix', :subspecs => [
+    pod 'TTIMSDK', :git => 'https://code.byted.org/im/TIMSDK.git', :branch => 'yang_branchf', :subspecs => [
         'IMKit_Default',
         'IMKit_WebSocket',
         'IMKit_Core',
