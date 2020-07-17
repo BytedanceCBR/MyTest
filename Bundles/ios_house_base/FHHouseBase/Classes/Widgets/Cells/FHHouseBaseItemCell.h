@@ -52,7 +52,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)resumeVRIcon;
 
-- (void)updateHouseStatus;
+- (void)updateHouseStatus:(id)data;
 
 @end
 

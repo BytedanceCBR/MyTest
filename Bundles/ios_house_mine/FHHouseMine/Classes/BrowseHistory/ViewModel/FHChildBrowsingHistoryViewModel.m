@@ -241,18 +241,13 @@
             if ([cell isKindOfClass:[FHHouseBaseNewHouseCell class]]) {
                 FHHouseBaseNewHouseCell *theCell = (FHHouseBaseNewHouseCell *)cell;
                 [theCell updateHouseListNewHouseCellModel:data];
-                if (houseModel.houseStatus.integerValue != 0) {
-                   [theCell updateHouseStatus];
-                }
+                [theCell updateHouseStatus:data];
             }
             [cell refreshWithData:data];
             if ([cell isKindOfClass:[FHHouseBaseItemCell class]]) {
                 FHHouseBaseItemCell *theCell = (FHHouseBaseItemCell *)cell;
-               if (houseModel.houseStatus.integerValue != 0) {
-                   [theCell updateHouseStatus];
-                }
+                [theCell updateHouseStatus:data];
             }
-            
             return cell;
         }
     }

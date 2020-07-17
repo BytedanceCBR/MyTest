@@ -117,7 +117,7 @@ static const float kSegementedOneWidth = 50;
     _segmentControl.titleTextAttributes = titleTextAttributes;
     NSDictionary *selectedTitleTextAttributes = @{NSFontAttributeName: [UIFont themeFontSemibold:16],
                                                   NSForegroundColorAttributeName: [UIColor themeGray1]};
-    //_segmentControl.selectionIndicatorEdgeInsets = UIEdgeInsetsMake(3, 0, -3, 0);
+    _segmentControl.selectionIndicatorEdgeInsets = UIEdgeInsetsMake(3, 0, 0, 0);
     _segmentControl.selectedTitleTextAttributes = selectedTitleTextAttributes;
     _segmentControl.selectionStyle = HMSegmentedControlSelectionStyleTextWidthStripe;
     _segmentControl.segmentWidthStyle = HMSegmentedControlSegmentWidthStyleDynamic;
@@ -126,6 +126,7 @@ static const float kSegementedOneWidth = 50;
     _segmentControl.selectionIndicatorLocation = HMSegmentedControlSelectionIndicatorLocationDown;
     _segmentControl.selectionIndicatorWidth = 20.0f;
     _segmentControl.selectionIndicatorHeight = 4.0f;
+    
     _segmentControl.selectionIndicatorCornerRadius = 2.0f;
     _segmentControl.selectionIndicatorColor = [UIColor colorWithHexStr:@"#ff9629"];
     [_segmentControl setBackgroundColor:[UIColor clearColor]];
