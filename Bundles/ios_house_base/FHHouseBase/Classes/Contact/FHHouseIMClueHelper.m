@@ -132,9 +132,7 @@
         NSInteger loginType = loginSchema.integerValue;
         if(loginType == 1) {
             loginFullPageBlock();
-        } else if(loginType == 2 && ![[FHIMFrequencyControlManager shared] isValidForKey:kFHIM_HALF_LOGIN_VIEW_SHOW limitCount:1]) {
-            loginFullPageBlock();
-        }
+        } 
         else {
             [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:userInfo];
         }

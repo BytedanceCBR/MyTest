@@ -68,19 +68,13 @@
         UIButton *closeBtn = [UIButton buttonWithType:UIButtonTypeCustom];
         [closeBtn setImage:[UIImage imageNamed:@"douyin_login_close"] forState:UIControlStateNormal];
         closeBtn.frame = CGRectMake(0, 0, 54, 54);
-        [closeBtn addTarget:self action:@selector(closeBtnAction:) forControlEvents:UIControlEventTouchUpInside];
+        [closeBtn addTarget:self action:@selector(dismiss) forControlEvents:UIControlEventTouchUpInside];
         [_oneKeyLoginView addSubview:closeBtn];
         
         _oneKeyLoginView.delegate = self;
         
     }
     return _oneKeyLoginView;
-}
-
-- (void)closeBtnAction:(UIButton *)sender {
-    // 设置单日单用户触发一次频率控制
-    [[FHIMFrequencyControlManager shared] triggerForKey:kFHIM_HALF_LOGIN_VIEW_SHOW];
-    [self dismiss];
 }
 
 - (instancetype)initWithFrame:(CGRect)frame {
@@ -134,6 +128,7 @@
         self.alpha = 0.0f;
     } completion:^(BOOL finished) {
         [self removeFromSuperview];
+        [self.class showToastWhenLoginFailedOrCancel];
     }];
 }
 
@@ -165,8 +160,14 @@
 }
 
 - (void)handleLoginError:(NSError *)error {
-    NSString *errorMessage = @"需要先登录才能进行操作哦";
-    [[ToastManager manager] showToast:errorMessage];
+    [self.class showToastWhenLoginFailedOrCancel];
+}
+
++ (void)showToastWhenLoginFailedOrCancel {
+    if(![TTAccount sharedAccount].isLogin) {
+        NSString *errorMessage = @"需要先登录才能进行操作哦";
+        [[ToastManager manager] showToast:errorMessage];
+    }
 }
 @end
 
@@ -296,6 +297,10 @@
     __weak typeof(self) weakSelf = self;
     [self.customNavBarView setLeftButtonBlock:^{
         [weakSelf cancelLoginAction];
+        
+        if([self.tracerModel.enterFrom isEqualToString:@"conversation_detail"]) {
+            [FHLoginHalfView showToastWhenLoginFailedOrCancel];
+        }
     }];
 }
 
