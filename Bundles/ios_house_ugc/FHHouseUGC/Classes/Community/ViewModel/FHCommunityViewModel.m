@@ -140,8 +140,7 @@
             cell.withTips = NO;
         }
         
-        cell.type = [self.dataArray[self.currentTabIndex] integerValue];
-        
+        [cell setType:[self.dataArray[self.currentTabIndex] integerValue] tracerDict:self.viewController.tracerDict];
         //在进入之前报一下上一次tab的埋点
         if(_lastCell && _lastCell != cell){
             [_lastCell cellDisappear];

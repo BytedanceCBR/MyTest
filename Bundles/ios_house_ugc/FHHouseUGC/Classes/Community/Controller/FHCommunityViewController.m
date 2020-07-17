@@ -265,7 +265,9 @@
     if (self.loginTipview) {
          [self.loginTipview pauseTimer];
     }
-    [self addStayCategoryLog:self.stayTime];
+    if(!self.isNewDiscovery){
+        [self addStayCategoryLog:self.stayTime];
+    }
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -800,6 +802,30 @@
     reportParams[@"origin_from"] = @"community_search";
     reportParams[@"origin_search_id"] = self.tracerDict[@"origin_search_id"] ?: @"be_null";
     [FHUserTracker writeEvent:@"click_community_search" params:reportParams];
+}
+
+- (void)viewAppearForEnterType:(NSInteger)enterType
+{
+    self.stayTime = [[NSDate date] timeIntervalSince1970];
+    NSMutableDictionary *tracerDict = [NSMutableDictionary new];
+    tracerDict[@"enter_type"] = @(enterType);
+    tracerDict[@"enter_from"] = self.tracerDict[@"enter_from"] ?: @"be_null";
+    tracerDict[@"category_name"] = self.tracerDict[@"category_name"] ?: @"be_null";
+    [FHEnvContext recordEvent:tracerDict andEventKey:@"enter_category"];
+}
+
+- (void)viewDisAppearForEnterType:(NSInteger)enterType
+{
+    NSMutableDictionary *tracerDict = [NSMutableDictionary new];
+    NSTimeInterval duration = ([[NSDate date] timeIntervalSince1970] - self.stayTime) * 1000.0;
+    tracerDict[@"enter_type"] = @(enterType);
+    tracerDict[@"enter_from"] = self.tracerDict[@"enter_from"] ?: @"be_null";
+    tracerDict[@"category_name"] = self.tracerDict[@"category_name"] ?: @"be_null";
+    tracerDict[@"stay_time"] = @((int) duration);
+
+    if (((int) duration) > 0) {
+        [FHEnvContext recordEvent:tracerDict andEventKey:@"stay_category"];
+    }
 }
 
 #pragma mark - TTUIViewControllerTrackProtocol

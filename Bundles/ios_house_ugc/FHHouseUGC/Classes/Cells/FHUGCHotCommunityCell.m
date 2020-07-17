@@ -261,7 +261,7 @@
         tracerDict[@"origin_from"] = self.cellModel.tracerDic[UT_ORIGIN_FROM] ?: @"be_null";
         tracerDict[@"rank"] = @(rank);
         if(model.id){
-            tracerDict[@"group_id"] = model.id;
+            tracerDict[@"social_group_id"] = model.id;
         }
         if(model.logPb){
             tracerDict[@"log_pb"] = model.logPb;

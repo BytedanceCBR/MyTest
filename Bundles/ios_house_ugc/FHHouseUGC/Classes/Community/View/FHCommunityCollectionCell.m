@@ -30,12 +30,13 @@
     return self;
 }
 
-- (void)setType:(FHCommunityCollectionCellType)type {
+- (void)setType:(FHCommunityCollectionCellType)type tracerDict:(nonnull NSDictionary *)tracerDic {
     if(_type != type){
         _type = type;
+        _tracerDic = tracerDic;
         [self initViews];
     }else{
-        self.vc.tracerDict = [self traceDic].mutableCopy;
+        self.vc.tracerDict = [self tracerDict].mutableCopy;
 
         if(self.type == FHCommunityCollectionCellTypeNearby){
             FHNearbyViewController *vc = (FHNearbyViewController *)self.vc;
@@ -74,7 +75,7 @@
         self.vc = vc;
     }
     
-    self.vc.tracerDict = [self traceDic].mutableCopy;
+    self.vc.tracerDict = [self tracerDict].mutableCopy;
     
     if(self.vc){
         self.vc.view.frame = self.bounds;
@@ -102,12 +103,14 @@
     }
 }
 
-- (NSDictionary *)traceDic {
+- (NSDictionary *)tracerDict {
     NSString *enterType = self.enterType ? self.enterType : @"default";
+    NSString *originFrom = self.tracerDic[@"origin_from"] ?: @"be_null";
+    NSString *enterFrom = self.tracerDic[@"origin_from"] ?: @"be_null";
     return @{
-             @"origin_from":@"neighborhood_tab",
-             @"enter_from":@"neighborhood_tab",
-             @"enter_type":self.enterType,
+             @"origin_from":originFrom,
+             @"enter_from":enterFrom,
+             @"enter_type":enterType,
              };
 }
 

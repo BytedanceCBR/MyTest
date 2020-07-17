@@ -687,6 +687,7 @@
     if(!isEmptyString(self.cellModel.user.schema)){
         NSMutableDictionary *dict = @{}.mutableCopy;
         dict[@"from_page"] = self.cellModel.tracerDic[@"page_type"] ? self.cellModel.tracerDic[@"page_type"] : @"default";
+        dict[@"origin_from"] = self.cellModel.tracerDic[@"origin_from"] ?: @"be_null";
         TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
         NSURL *openUrl = [NSURL URLWithString:self.cellModel.user.schema];
         [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:userInfo];

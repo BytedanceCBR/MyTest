@@ -205,14 +205,18 @@
              [traceDict setValue:@"maintab" forKey:@"enter_from"];
              [traceDict setValue:@"discover_stream" forKey:@"category_name"];
              [FHEnvContext recordEvent:traceDict andEventKey:@"enter_category"];
-            
-             [traceDict setValue:@"f_house_news"
+            if(![FHEnvContext isHomeNewDiscovery]){
+                [traceDict setValue:@"f_house_news"
                                  forKey:@"category_name"];
-             [FHEnvContext recordEvent:traceDict andEventKey:@"enter_category"];
+                [FHEnvContext recordEvent:traceDict andEventKey:@"enter_category"];
+            }
         }else{
             if ([self.feedListVC isKindOfClass:[ArticleTabBarStyleNewsListViewController class]]) {
                 ArticleTabBarStyleNewsListViewController *articleListVC = (ArticleTabBarStyleNewsListViewController *)self.feedListVC;
                 [articleListVC viewAppearForEnterType:enterType];
+            }else if ([self.feedListVC isKindOfClass:[FHCommunityViewController class]]) {
+                FHCommunityViewController *vc = (FHCommunityViewController *)self.feedListVC;
+                [vc viewAppearForEnterType:enterType];
             }
         }
     }
@@ -227,6 +231,9 @@
         if ([self.feedListVC isKindOfClass:[ArticleTabBarStyleNewsListViewController class]]) {
             ArticleTabBarStyleNewsListViewController *articleListVC = (ArticleTabBarStyleNewsListViewController *)self.feedListVC;
             [articleListVC viewDisAppearForEnterType:enterType];
+        }else if ([self.feedListVC isKindOfClass:[FHCommunityViewController class]]) {
+            FHCommunityViewController *vc = (FHCommunityViewController *)self.feedListVC;
+            [vc viewDisAppearForEnterType:enterType];
         }
     }
 }

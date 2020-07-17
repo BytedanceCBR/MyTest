@@ -67,6 +67,7 @@
         if(category && category.name.length > 0 && category.category.length > 0){
             [self.cellArray addObject:[NSNull null]];
             FHCommunityDiscoveryCellModel *cellModel = [FHCommunityDiscoveryCellModel cellModelForCategory:category];
+            cellModel.tracerDict = self.viewController.tracerDict;
             [dataArray addObject:cellModel];
         }
     }

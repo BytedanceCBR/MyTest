@@ -451,6 +451,11 @@ static NSInteger kGetLightRequestRetryCount = 3;
 {
     if (kIsNSString(traceKey) && kIsNSDictionary(params)) {
         NSMutableDictionary *pramsDict = [[NSMutableDictionary alloc] initWithDictionary:params];
+        
+        if([params[@"category_name"] isEqualToString:@"f_house_news"]){
+            NSLog(@"11");
+        }
+        
         [FHUserTracker writeEvent:traceKey params:pramsDict];
     }
 }

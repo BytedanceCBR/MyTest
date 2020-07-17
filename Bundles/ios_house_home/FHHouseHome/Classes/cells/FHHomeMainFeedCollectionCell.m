@@ -34,6 +34,12 @@
 - (void)addCommunityVC {
     FHCommunityViewController *vc = [[FHCommunityViewController alloc] init];
     vc.isNewDiscovery = YES;
+    vc.tracerDict = @{
+        @"origin_from":@"discover_stream",
+        @"enter_from":@"maintab",
+        @"category_name":@"discover_stream"
+    };
+    
     self.contentVC = vc;
     vc.view.frame = self.bounds;
     [self.contentView addSubview:vc.view];

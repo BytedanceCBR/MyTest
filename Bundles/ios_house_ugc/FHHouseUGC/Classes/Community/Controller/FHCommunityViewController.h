@@ -27,6 +27,8 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)hideGuideView;
 - (void)hideRedPoint;
 - (void)updateSpringView;
+- (void)viewAppearForEnterType:(NSInteger)enterType;
+- (void)viewDisAppearForEnterType:(NSInteger)enterType;
 
 @end
 
