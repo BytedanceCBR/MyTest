@@ -117,8 +117,7 @@ static FHLoginSharedModel *_sharedModel = nil;
     self.hasRequestedApis = NO;
     dispatch_group_t group = dispatch_group_create();
     dispatch_group_enter(group);
-    dispatch_group_async(group, dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         BOOL disableOneKeyLogin = [self getOneKeyLoginSwitchOff];
         if (disableOneKeyLogin) {
             self.isOneKeyLogin = NO;
@@ -144,9 +143,10 @@ static FHLoginSharedModel *_sharedModel = nil;
             dispatch_group_leave(group);
         }];
     });
+
     
     dispatch_group_enter(group);
-    dispatch_group_async(group, dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         
         dispatch_sync(dispatch_get_main_queue(), ^{
             self.douyinCanQucikLogin = [TTAccount isDouyinInstalledSupportBindMobile];
