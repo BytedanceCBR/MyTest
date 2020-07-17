@@ -507,31 +507,32 @@ def appPods
     pod_binary 'UITableView+FDTemplateLayoutCell', '1.6'
 
 #    pod 'TTIMSDK', '1.0.0-rc.34.2-bugfix', :subspecs => [
-#        'IMKit_Default',
-#        'IMKit_WebSocket',
-#        'IMKit_Core',
-#        'Plugin_TTNetwork',
-#        'Foundation',
-#        'Feature_WebSocket',
-#        'Feature_EssentialPB',
-#        'Feature_Essential',
-#        'Feature_Core_Store',
-#        'Feature_Core_Sender',
-#        'Feature_Core_Puller',
-#        'Feature_Core_Notifier',
-#        'Feature_Core_Logger',
-#        'Feature_Core_ErrorHandler',
-#        'Feature_Core_CurrentUser',
-#        'Feature_Core_ConversationInfo',
-#        'Feature_Core_Config',
-#        'Feature_Core_Setting',
-#        'Feature_Core_ReadReceipt',
-#        'Feature_Core_Default',
-#        'Feature_ApplicationStatus',
-#        'IMSugar_MediaFileUploader',
-#        'Protocols',
-#        'Bridges'
-#    ]
+    pod 'TTIMSDK', :git => 'https://code.byted.org/im/TIMSDK.git', :branch => 'yang_branchf', :subspecs => [
+        'IMKit_Default',
+        'IMKit_WebSocket',
+        'IMKit_Core',
+        'Plugin_TTNetwork',
+        'Foundation',
+        'Feature_WebSocket',
+        'Feature_EssentialPB',
+        'Feature_Essential',
+        'Feature_Core_Store',
+        'Feature_Core_Sender',
+        'Feature_Core_Puller',
+        'Feature_Core_Notifier',
+        'Feature_Core_Logger',
+        'Feature_Core_ErrorHandler',
+        'Feature_Core_CurrentUser',
+        'Feature_Core_ConversationInfo',
+        'Feature_Core_Config',
+        'Feature_Core_Setting',
+        'Feature_Core_ReadReceipt',
+        'Feature_Core_Default',
+        'Feature_ApplicationStatus',
+        'IMSugar_MediaFileUploader',
+        'Protocols',
+        'Bridges'
+    ]
     
     pod_binary 'IGListKit','3.4.0'
     pod_binary 'Bolts', '1.9.0'
