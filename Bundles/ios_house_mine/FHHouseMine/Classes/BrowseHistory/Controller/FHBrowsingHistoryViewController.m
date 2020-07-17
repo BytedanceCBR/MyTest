@@ -16,6 +16,8 @@
 #import "UIViewAdditions.h"
 #import "UIViewController+Track.h"
 
+static const float kSegementedOneWidth = 50;
+
 @interface FHBrowsingHistoryViewController ()
 
 @property (nonatomic, strong) UIView *topView;
@@ -113,29 +115,26 @@
     NSDictionary *titleTextAttributes = @{NSFontAttributeName: [UIFont themeFontRegular:16],
                                           NSForegroundColorAttributeName: [UIColor themeGray1]};
     _segmentControl.titleTextAttributes = titleTextAttributes;
-    NSDictionary *selectedTitleTextAttributes = @{NSFontAttributeName: [UIFont themeFontSemibold:18],
+    NSDictionary *selectedTitleTextAttributes = @{NSFontAttributeName: [UIFont themeFontSemibold:16],
                                                   NSForegroundColorAttributeName: [UIColor themeGray1]};
+    //_segmentControl.selectionIndicatorEdgeInsets = UIEdgeInsetsMake(3, 0, -3, 0);
     _segmentControl.selectedTitleTextAttributes = selectedTitleTextAttributes;
     _segmentControl.selectionStyle = HMSegmentedControlSelectionStyleTextWidthStripe;
-    _segmentControl.segmentWidthStyle = HMSegmentedControlSegmentWidthStyleFixed;
+    _segmentControl.segmentWidthStyle = HMSegmentedControlSegmentWidthStyleDynamic;
     _segmentControl.isNeedNetworkCheck = NO;
-    _segmentControl.segmentEdgeInset = UIEdgeInsetsMake(5, 0, 5, 0);
+    _segmentControl.segmentEdgeInset = UIEdgeInsetsMake(5, 14, 5, 14);
     _segmentControl.selectionIndicatorLocation = HMSegmentedControlSelectionIndicatorLocationDown;
     _segmentControl.selectionIndicatorWidth = 20.0f;
     _segmentControl.selectionIndicatorHeight = 4.0f;
     _segmentControl.selectionIndicatorCornerRadius = 2.0f;
-    _segmentControl.selectionIndicatorEdgeInsets = UIEdgeInsetsMake(0, 0, -3, 0);
     _segmentControl.selectionIndicatorColor = [UIColor colorWithHexStr:@"#ff9629"];
     [_segmentControl setBackgroundColor:[UIColor clearColor]];
     [self.topView addSubview:_segmentControl];
-    NSInteger count = _segmentControl.sectionTitles.count;
-    float tabMargin = ([UIScreen mainScreen].bounds.size.width - (count - 1) * 32 - count * 32 - 22) / 2;
     [_segmentControl mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerX.equalTo(_topView);
         make.height.mas_equalTo(44);
         make.bottom.mas_equalTo(0);
-        make.left.mas_equalTo(tabMargin);
-        make.right.mas_equalTo(-tabMargin);
+        make.width.mas_equalTo((kSegementedOneWidth + 16) * self.houseTypeArray.count);
     }];
     
     WeakSelf;

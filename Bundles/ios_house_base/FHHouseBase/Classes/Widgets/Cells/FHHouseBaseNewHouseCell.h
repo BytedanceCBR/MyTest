@@ -44,6 +44,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (CGFloat)heightForData:(id)data;
 
+- (void)updateHouseStatus;
+
 @end
 
 NS_ASSUME_NONNULL_END

@@ -24,6 +24,7 @@
 #import <lottie-ios/Lottie/LOTAnimationView.h>
 #import "UIColor+Theme.h"
 #import "FHSearchHouseModel.h"
+#import "Masonry.h"
 
 #define MAIN_NORMAL_TOP     10
 #define MAIN_FIRST_TOP      20
@@ -82,6 +83,8 @@
 @property (nonatomic, strong) LOTAnimationView *vrLoadingView;
 @property(nonatomic, strong) FHCornerItemLabel *tagTitleLabel; //降 新 榜等标签
 @property(nonatomic, strong) FHHouseRecommendReasonView *recReasonView; //榜单
+@property(nonatomic, strong) UIView *opView; //蒙层
+@property(nonatomic, strong) UILabel *offShelfLabel; //下架
 
 @end
 
@@ -860,6 +863,34 @@
     self.tagLabel.text = [NSString stringWithFormat:@"%@",sourceStr];
     self.tagLabel.textColor = [UIColor themeGray3];
     self.tagLabel.font = [UIFont themeFontRegular:12];
+}
+
+- (void)updateHouseStatus {
+    if (self.opView) {
+        [self.opView removeFromSuperview];
+        self.opView = nil;
+    }
+    if (self.offShelfLabel) {
+        [self.offShelfLabel removeFromSuperview];
+        self.offShelfLabel = nil;
+    }
+    self.opView = [[UIView alloc] init];
+    [self.opView setBackgroundColor:[UIColor colorWithRed:170.0/255 green:170.0/255 blue:170.0/255 alpha:0.8]];
+    [self.opView setFrame:CGRectMake(0, 0, self.mainImageView.frame.size.width, self.mainImageView.frame.size.height)];
+    self.opView.layer.shadowOffset = CGSizeMake(4, 6);
+    self.opView.layer.cornerRadius = 4;
+    self.opView.clipsToBounds = YES;
+    self.opView.layer.shadowColor = [[UIColor colorWithRed:0 green:0 blue:0 alpha:0.1] CGColor];
+    [self.mainImageView addSubview:_opView];
+    
+    self.offShelfLabel = [[UILabel alloc] init];
+    self.offShelfLabel.text = @"已下架";
+    self.offShelfLabel.font = [UIFont themeFontSemibold:14];
+    self.offShelfLabel.textColor = [UIColor whiteColor];
+    [self.mainImageView addSubview:_offShelfLabel];
+    [self.offShelfLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.center.equalTo(self.mainImageView);
+    }];
 }
 
 -(void)hideRecommendReason

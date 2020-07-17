@@ -234,11 +234,25 @@
         NSString *identifier = [self cellIdentifierForEntity:data];
         if (identifier.length > 0) {
              FHListBaseCell *cell = (FHListBaseCell *)[tableView dequeueReusableCellWithIdentifier:identifier];
+            FHSearchHouseItemModel *houseModel = nil;
+            if ([data isKindOfClass:[FHSearchHouseItemModel class]]) {
+                houseModel = (FHSearchHouseItemModel *)data;
+            }
             if ([cell isKindOfClass:[FHHouseBaseNewHouseCell class]]) {
                 FHHouseBaseNewHouseCell *theCell = (FHHouseBaseNewHouseCell *)cell;
                 [theCell updateHouseListNewHouseCellModel:data];
+                if (houseModel.houseStatus.integerValue != 0) {
+                   [theCell updateHouseStatus];
+                }
             }
             [cell refreshWithData:data];
+            if ([cell isKindOfClass:[FHHouseBaseItemCell class]]) {
+                FHHouseBaseItemCell *theCell = (FHHouseBaseItemCell *)cell;
+               if (houseModel.houseStatus.integerValue != 0) {
+                   [theCell updateHouseStatus];
+                }
+            }
+            
             return cell;
         }
     }

@@ -58,7 +58,7 @@
 {
     [self.emptyImageView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerX.mas_equalTo(self);
-        make.height.width.mas_equalTo(115);
+        make.height.width.mas_equalTo(126);
         make.top.mas_equalTo(100);
     }];
     
