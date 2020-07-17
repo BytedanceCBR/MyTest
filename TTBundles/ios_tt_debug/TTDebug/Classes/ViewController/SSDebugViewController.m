@@ -511,7 +511,9 @@ extern NSString *const BOE_OPEN_KEY ;
         itemfb.switchAction = @selector(_testVideoFacebookActionFired:);
         self.itemFacebook = itemfb;
         
-        STTableViewSectionItem *section4 = [[STTableViewSectionItem alloc] initWithSectionTitle:@"读取用户设置" items:@[item40, item41 ,itemfb]];
+        STTableViewCellItem *item42 = [[STTableViewCellItem alloc] initWithTitle:@"清除所有NSUserDefaults" target:self action:@selector(_clearAllNSUserDefaults)];
+        
+        STTableViewSectionItem *section4 = [[STTableViewSectionItem alloc] initWithSectionTitle:@"读取用户设置" items:@[item40,item42,item41,itemfb]];
         [dataSource addObject:section4];
         self.item41 = item41;
     }
@@ -1478,6 +1480,12 @@ extern NSString *const BOE_OPEN_KEY ;
 - (NSInteger)_fontSizeForCellSubtitle
 {
     return [[NSUserDefaults standardUserDefaults] integerForKey:@"cellSubtitleFontSize"];
+}
+
+
+- (void)_clearAllNSUserDefaults {
+    NSString *appDomainStr = [[NSBundle mainBundle] bundleIdentifier];
+    [[NSUserDefaults standardUserDefaults] removePersistentDomainForName:appDomainStr];
 }
 
 #pragma mark - WKWebView switch setting
