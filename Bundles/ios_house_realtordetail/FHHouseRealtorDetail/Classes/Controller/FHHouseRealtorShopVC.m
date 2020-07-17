@@ -101,10 +101,7 @@
 }
 
 - (void)initHeaderView {
-    CGFloat headerBackNormalHeight = 420;
-    CGFloat headerBackXSeriesHeight = headerBackNormalHeight + 24; //刘海平多出24
-    CGFloat height = [UIDevice btd_isIPhoneXSeries] ? headerBackXSeriesHeight : headerBackNormalHeight + 40;
-    self.headerView = [[FHHouseRealtorDetailHeaderView alloc]initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, height)];
+    self.headerView = [[FHHouseRealtorDetailHeaderView alloc]initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, 0)];
     
     self.headerView.channel = @"lynx_realtor_shop_header";
     self.headerView.bacImageName = @"shop_header";
