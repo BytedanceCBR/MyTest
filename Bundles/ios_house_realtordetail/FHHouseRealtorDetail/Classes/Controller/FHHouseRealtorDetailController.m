@@ -16,30 +16,10 @@
 
 @implementation FHHouseRealtorDetailController
 
-- (instancetype)initWithRouteParamObj:(nullable TTRouteParamObj *)paramObj
-{
-    self = [super initWithRouteParamObj:paramObj];
-    if (self) {
-        [self createTracerDic:paramObj.allParams];
-    }
-    return self;
-}
-
 - (void)viewDidLoad {
     [super viewDidLoad];
-//    [self createUI];
     [self createModel];
-}
-
-- (void)createUI {
-//    CGFloat statusBarHeight =  ((![[UIApplication sharedApplication] isStatusBarHidden]) ? [[UIApplication sharedApplication] statusBarFrame].size.height : ([UIDevice btd_isIPhoneXSeries]?44.f:20.f));
-//       //获取导航栏的rect
-//    CGRect navRect = self.navigationController.navigationBar.frame;
-//    [self.mainTable mas_makeConstraints:^(MASConstraintMaker *make) {
-//        make.edges.mas_equalTo(UIEdgeInsetsMake(statusBarHeight+navRect.size.height, 0, 0, 0));
-//    }];
-//    [self setupDefaultNavBar:YES];
-//    self.title = @"经纪人主页";
+    [self createTracerDic];
 }
 
 - (void)createModel {
@@ -48,8 +28,9 @@
     _viewModel = [[FHHouseRealtorDetailViewModel alloc]initWithController:self tableView:self.tableView realtorInfo:dic];
 }
 
-- (void)createTracerDic:(NSDictionary *)dic {
-    
+- (void)createTracerDic {
+    NSMutableDictionary *dic = self.tracerDict.mutableCopy;
 }
+
 
 @end

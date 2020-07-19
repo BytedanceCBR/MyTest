@@ -6,7 +6,6 @@
 //
 
 #import "FHHouseRealtorDetailViewModel.h"
-#import "FHHouseRealtorDetailRGCCell.h"
 #import "FHHouseRealtorDetailInfoModel.h"
 #import "FHHouseRealtorDetailBaseCell.h"
 #import "FHMainApi.h"
@@ -22,6 +21,9 @@
 #import "FHFeedListModel.h"
 #import "UIViewAdditions.h"
 #import "FHUGCFeedDetailJumpManager.h"
+#import "ToastManager.h"
+#import "FHHouseBaseItemCell.h"
+#import "FHHouseRealtorDetailPlaceCell.h"
 
 @interface FHHouseRealtorDetailViewModel()<UITableViewDelegate,UITableViewDataSource>
 @property(nonatomic , weak) UITableView *tableView;
@@ -211,6 +213,7 @@
     _tableView.delegate = self;
     _tableView.dataSource = self;
     [self registerCellClasses];
+    [self.tableView registerClass:[FHHouseRealtorDetailPlaceCell class] forCellReuseIdentifier:@"FHHouseRealtorDetailPlaceCell"];
     __weak typeof(self) wself = self;
     self.refreshFooter = [FHRefreshCustomFooter footerWithRefreshingBlock:^{
         [self requestData:NO first:NO];
@@ -249,32 +252,44 @@
 #pragma mark - UITableViewDataSource
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return [self.dataList count];
+    return self.dataList.count>0?self.dataList.count+1:self.dataList.count;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    if(indexPath.row < self.dataList.count){
-        FHFeedUGCCellModel *cellModel = self.dataList[indexPath.row];
-        NSString *cellIdentifier = NSStringFromClass([self.cellManager cellClassFromCellViewType:cellModel.cellSubType data:nil]);
-        FHUGCBaseCell *cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
-        if (cell == nil) {
-            Class cellClass = NSClassFromString(cellIdentifier);
-            cell = [[cellClass alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
-            cell.selectionStyle = UITableViewCellSelectionStyleNone;
+    if (indexPath.row == 0) {
+         NSString *identifier = @"FHHouseRealtorDetailPlaceCell";
+         FHHouseBaseItemCell *cell = [tableView dequeueReusableCellWithIdentifier:identifier];
+        [cell.contentView setBackgroundColor:[UIColor colorWithHexStr:@"#f8f8f8"]];
+         return cell;
+    }else {
+        if(indexPath.row < self.dataList.count + 1){
+            FHFeedUGCCellModel *cellModel = self.dataList[indexPath.row];
+            NSString *cellIdentifier = NSStringFromClass([self.cellManager cellClassFromCellViewType:cellModel.cellSubType data:nil]);
+            FHUGCBaseCell *cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
+            if (cell == nil) {
+                Class cellClass = NSClassFromString(cellIdentifier);
+                cell = [[cellClass alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
+                cell.selectionStyle = UITableViewCellSelectionStyleNone;
+            }
+            cell.delegate = self;
+            if(indexPath.row < self.dataList.count){
+                [cell refreshWithData:cellModel];
+            }
+            return cell;
         }
-        cell.delegate = self;
-        if(indexPath.row < self.dataList.count){
-            [cell refreshWithData:cellModel];
-        }
-        return cell;
     }
+
     return [[FHUGCBaseCell alloc] init];
 }
 
 #pragma mark - UITableViewDelegate
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-    if(indexPath.row < self.dataList.count){
+    if (indexPath.row == 0) {
+        return 10;
+    }
+    
+    if(indexPath.row < self.dataList.count + 1){
         FHFeedUGCCellModel *cellModel = self.dataList[indexPath.row];
         Class cellClass = [self.cellManager cellClassFromCellViewType:cellModel.cellSubType data:nil];
         if([cellClass isSubclassOfClass:[FHUGCBaseCell class]]) {
@@ -283,6 +298,10 @@
     }
     return 100;
 }
+//
+//- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
+//    return 10;
+//}
 
 - (void)reloadTableViewData {
     if(self.dataList.count > 0){
@@ -320,13 +339,16 @@
 }
 - (FHErrorView *)errorView {
     if(!_errorView){
-        _errorView = [[FHErrorView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, 400)];
+        _errorView = [[FHErrorView alloc] initWithFrame:CGRectMake(0, 10, [UIScreen mainScreen].bounds.size.width, 400)];
     }
     return _errorView;
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    FHFeedUGCCellModel *cellModel = self.dataList[indexPath.row];
+    if (indexPath.row == 0) {
+        return;
+    }
+    FHFeedUGCCellModel *cellModel = self.dataList[indexPath.row - 1];
     self.currentCellModel = cellModel;
     self.currentCell = [tableView cellForRowAtIndexPath:indexPath];
     self.detailJumpManager.currentCell = self.currentCell;

@@ -10,7 +10,7 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @interface FHHouseRealtorDetailController : FHHouseRealtorDetailBaseViewController
-
+@property(nonatomic , strong) NSMutableDictionary *tracerDict;
 @end
 
 NS_ASSUME_NONNULL_END

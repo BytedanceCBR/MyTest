@@ -90,7 +90,7 @@ NS_ASSUME_NONNULL_BEGIN
 ///评价人数 string xx人
 @property (nonatomic, copy, nullable) NSString *evaCount;
 ///bool  满足条件评论数量 >5为true  否则为false
-@property (nonatomic, assign, nullable) BOOL *hasMore;
+@property (nonatomic, assign) BOOL hasMore;
 ///经纪人服务分详情
 @property (nonatomic, strong, nullable) NSArray <FHHouseRealtorDetailUserEvaluationItemModel>*commentInfo;
 @end
@@ -112,15 +112,15 @@ NS_ASSUME_NONNULL_BEGIN
 ///如果为空串，则主页不展示认证信息入口
 @property (nonatomic, copy, nullable) NSString *certificationIcon;
 ///经纪人服务分详情
-@property (nonatomic, strong, nullable) FHHouseRealtorDetailScoreModel *scoreInfo;
+@property (nonatomic, strong, nullable) NSDictionary *scoreInfo;
 ///用户评价信息
-@property (nonatomic, strong, nullable) FHHouseRealtorDetailUserEvaluationModel *evaluation;
+@property (nonatomic, strong, nullable) NSDictionary *evaluation;
 ///经纪人信息
-@property (nonatomic, strong, nullable) FHHouseRealtorDetailInfoModel *realtor;
+@property (nonatomic, strong, nullable) NSDictionary *realtor;
 ///类型 string，跳转im的schema
 @property (nonatomic, copy, nullable) NSString *chatOpenUrl;
 ///经纪人店铺模块信息
-@property (nonatomic, strong, nullable) FHHouseRealtorDetailShopModel *realtorShop;
+@property (nonatomic, strong, nullable) NSDictionary *realtorShop;
 /////经纪人rgc Tab内容
 @property (nonatomic, strong, nullable) NSArray <FHHouseRealtorDetailRgcTabModel>*ugcTabList;
 @end
@@ -129,6 +129,27 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *status;
 @property (nonatomic, copy , nullable) NSString *message;
 @property (nonatomic, strong , nullable) FHHouseRealtorDetailDataModel *data ;
+@end
+
+@interface FHHouseRealtorShopModel : JSONModel
+@property (nonatomic, strong, nullable) FHClueAssociateInfoModel *associateInfo;
+///经纪人认证信息页面schema
+@property (nonatomic, copy, nullable) NSString *certificationPage;
+///如果为空串，则主页不展示认证信息入口
+@property (nonatomic, copy, nullable) NSString *certificationIcon;
+///经纪人信息
+@property (nonatomic, copy, nullable) NSString *chatOpenUrl;
+@property (nonatomic, strong, nullable) NSDictionary *realtor;
+@property (nonatomic, strong, nullable) NSDictionary *topNeighborhood;
+@property (nonatomic, strong, nullable) NSDictionary *houseImage;
+@property (nonatomic, copy, nullable) NSString *houseCount;
+
+@end
+
+@interface FHHouseRealtorShopDetailModel : JSONModel
+@property (nonatomic, copy , nullable) NSString *status;
+@property (nonatomic, copy , nullable) NSString *message;
+@property (nonatomic, strong , nullable) FHHouseRealtorShopModel *data ;
 @end
 
 NS_ASSUME_NONNULL_END

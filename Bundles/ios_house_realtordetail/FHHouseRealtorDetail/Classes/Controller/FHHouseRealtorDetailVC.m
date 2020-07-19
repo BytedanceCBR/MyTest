@@ -20,12 +20,12 @@
 #import "UIViewController+NavigationBarStyle.h"
 #import "UIImage+FIconFont.h"
 #import "FHRealtorDetailBottomBar.h"
+#import "FHLynxManager.h"
 @interface FHHouseRealtorDetailVC ()<TTUIViewControllerTrackProtocol>
 @property (nonatomic, strong) FHHouseRealtorDetailVM *viewModel;
 @property (nonatomic, strong) UIImage *shareWhiteImage;
 @property (nonatomic, strong) UIButton *shareButton;// 分享
 @property (nonatomic, strong) UIView *bottomMaskView;
-@property (nonatomic, strong) FHUGCPostMenuView *publishMenuView;
 @property (nonatomic, strong) FHRealtorDetailBottomBar *bottomBar;
 @property (nonatomic, strong )NSDictionary *realtorDetailInfo;
 @end
@@ -40,53 +40,8 @@
         self.tabName = paramObj.allParams[@"tab_name"];
         self.realtorDetailInfo = paramObj.allParams;
         // 取链接中的埋点数据
-        NSDictionary *params = paramObj.allParams;
-        NSString *enter_from = params[@"enter_from"];
-        if (enter_from.length > 0) {
-            self.tracerDict[@"enter_from"] = enter_from;
-        }
-        NSString *enter_type = params[@"enter_type"];
-        if (enter_type.length > 0) {
-            self.tracerDict[@"enter_type"] = enter_type;
-        }
-        NSString *element_from = params[@"element_from"];
-        if (element_from.length > 0) {
-            self.tracerDict[@"element_from"] = element_from;
-        }
-        NSString *group_id = params[@"group_id"];
-        if (group_id.length > 0) {
-            self.tracerDict[@"group_id"] = group_id;
-        }
+        self.tracerDict = paramObj.allParams[@"trace"];
         self.tracerDict[@"page_type"] = [self pageType];
-        
-        NSString *log_pb_str = params[@"log_pb"];
-        if ([log_pb_str isKindOfClass:[NSString class]] && log_pb_str.length > 0) {
-            NSData *jsonData = [log_pb_str dataUsingEncoding:NSUTF8StringEncoding];
-            NSError *err = nil;
-            NSDictionary *dic = nil;
-            @try {
-                dic = [NSJSONSerialization JSONObjectWithData:jsonData
-                                                      options:NSJSONReadingMutableContainers
-                                                        error:&err];
-            } @catch (NSException *exception) {
-                
-            } @finally {
-                
-            }
-            if (!err && [dic isKindOfClass:[NSDictionary class]] && dic.count > 0) {
-                self.tracerDict[@"log_pb"] = dic;
-            }
-        }
-        //logPb 增加social_group_id
-        NSDictionary *temp_log_pb = self.tracerDict[@"log_pb"];
-        if (self.communityId.length > 0) {
-            NSMutableDictionary *mutLogPb = [NSMutableDictionary new];
-            if ([temp_log_pb isKindOfClass:[NSDictionary class]]) {
-                [mutLogPb addEntriesFromDictionary:temp_log_pb];
-            }
-            mutLogPb[@"social_group_id"] = self.communityId;
-            self.tracerDict[@"log_pb"] = mutLogPb;
-        }
     }
     return self;
 }
@@ -108,7 +63,6 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.automaticallyAdjustsScrollViewInsets = NO;
-    
     [self initNavBar];
     [self initView];
     [self initConstrains];
@@ -140,10 +94,16 @@
 }
 
 - (void)initView {
+
     [self initHeaderView];
     [self initSegmentView];
     [self addDefaultEmptyViewFullScreen];
     [self initBottomBar];
+}
+
+- (void)showBottomBar:(BOOL)show {
+    self.bottomBar.hidden = !show;
+    self.bottomMaskView.hidden = !show;
 }
 
 - (void)initBottomBar {
@@ -165,20 +125,33 @@
         make.top.mas_equalTo(self.bottomBar.mas_top);
         make.left.right.bottom.mas_equalTo(self.view);
     }];
+    [self showBottomBar:NO];
 }
 
 - (void)initHeaderView {
-    CGFloat headerBackNormalHeight = 470;
+    CGFloat headerBackNormalHeight = 440;
     CGFloat headerBackXSeriesHeight = headerBackNormalHeight + 44; //刘海平多出24
     CGFloat height = [UIDevice btd_isIPhoneXSeries] ? headerBackXSeriesHeight : headerBackNormalHeight + 40;
     self.headerView = [[FHHouseRealtorDetailHeaderView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, height)];
     self.headerView.controller = self;
     self.headerView.channel = @"lynx_realtor_detail_header";
     self.headerView.bacImageName = @"realtor_header";
+//    self.headerView.channel = @"http://192.168.50.221:30334/lynx_realtor_detail_header/template.js?1595163180304";
+    
+    
+//        self.headerView = [[FHHouseRealtorDetailHeaderView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, 0)];
+//        self.headerView.controller = self;
+////        self.headerView.channel = @"lynx_realtor_detail_header";
+//        self.headerView.channel = @"http://192.168.50.221:30334/lynx_realtor_detail_header/template.js?1595139974768";
+//        self.headerView.bacImageName = @"realtor_header";
+//        self.headerView.height = self.headerView.viewHeight;
+
 }
 
 - (void)initSegmentView {
     self.segmentView = [[FHCommunityDetailSegmentView alloc] init];
+    self.segmentView.underLinePaddingToLab = 35;
+    self.segmentView.underLineWidth = 20;
     [_segmentView setUpTitleEffect:^(NSString *__autoreleasing *titleScrollViewColorKey, NSString *__autoreleasing *norColorKey, NSString *__autoreleasing *selColorKey, UIFont *__autoreleasing *titleFont, UIFont *__autoreleasing *selectedTitleFont) {
         *titleScrollViewColorKey  = @"Background21",
         *norColorKey = @"grey3"; //
@@ -186,15 +159,16 @@
         *titleFont = [UIFont themeFontRegular:16];
         *selectedTitleFont = [UIFont themeFontSemibold:16];
     }];
-//    [_segmentView setUpUnderLineEffect:^(BOOL *isUnderLineDelayScroll, CGFloat *underLineH, NSString *__autoreleasing *underLineColorKey, BOOL *isUnderLineEqualTitleWidth) {
-//        *isUnderLineDelayScroll = NO;
-//        *underLineH = 4;
-//        *underLineColorKey = @"orange4";
-//        *isUnderLineEqualTitleWidth = YES;
-//    }];
+    [_segmentView setUpUnderLineEffect:^(BOOL *isUnderLineDelayScroll, CGFloat *underLineH, NSString *__autoreleasing *underLineColorKey, BOOL *isUnderLineEqualTitleWidth) {
+        *isUnderLineDelayScroll = NO;
+        *underLineH = 4;
+        *underLineColorKey = @"orange4";
+        *isUnderLineEqualTitleWidth = YES;
+    }];
     _segmentView.backgroundColor = [UIColor colorWithHexStr:@"#f8f8f8"];
     _segmentView.bottomLine.hidden = YES;
     _segmentView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
+    [_segmentView setUnderLineLayer:2];
 }
 
 - (void)initConstrains {
@@ -210,10 +184,15 @@
 }
 
 - (void)initViewModel {
-    self.viewModel = [[FHHouseRealtorDetailVM alloc] initWithController:self tracerDict:self.tracerDict realtorInfo:self.realtorDetailInfo];
-    [self.viewModel addGoDetailLog];
-    [self.viewModel updateNavBarWithAlpha:self.customNavBarView.bgView.alpha];
-    [self.viewModel requestDataWithRealtorId:self.realtorDetailInfo[@"realtor_id"] refreshFeed:YES];
+    NSData *templateData =  [[FHLynxManager sharedInstance] lynxDataForChannel:@"lynx_realtor_detail_header" templateKey:[FHLynxManager defaultJSFileName] version:0];
+    if (!templateData) {
+        [self.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoData];
+    }else {
+        self.viewModel = [[FHHouseRealtorDetailVM alloc] initWithController:self tracerDict:self.tracerDict realtorInfo:self.realtorDetailInfo bottomBar:self.bottomBar];
+        [self.viewModel addGoDetailLog];
+        [self.viewModel updateNavBarWithAlpha:self.customNavBarView.bgView.alpha];
+        [self.viewModel requestDataWithRealtorId:self.realtorDetailInfo[@"realtor_id"] refreshFeed:YES];
+    }
 }
 
 - (void)retryLoadData {

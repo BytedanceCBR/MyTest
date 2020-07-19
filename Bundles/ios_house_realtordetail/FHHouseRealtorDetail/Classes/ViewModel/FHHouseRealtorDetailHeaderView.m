@@ -146,7 +146,7 @@
 - (void)setChannel:(NSString *)channel {
     _channel = channel;
     NSData *templateData =  [[FHLynxManager sharedInstance] lynxDataForChannel:_channel templateKey:[FHLynxManager defaultJSFileName] version:0];
-    //        NSData *templateData = [NSData dataWithContentsOfURL:[NSURL URLWithString:@"http://10.95.248.194:30334/realtor_detail_header/template.js?1594963282405"]];
+//            NSData *templateData = [NSData dataWithContentsOfURL:[NSURL URLWithString:_channel]];
     if (templateData) {
         if (templateData != self.currentTemData) {
             self.currentTemData = templateData;
@@ -161,5 +161,15 @@
 - (void)setBacImageName:(NSString *)bacImageName {
     _bacImageName = bacImageName;
     self.headerIma.image = [UIImage imageNamed:_bacImageName];
+}
+
+- (void)setBacImageUrl:(NSString *)bacImageUrl {
+    _bacImageUrl = bacImageUrl;
+    [self.headerIma bd_setImageWithURL:[NSURL URLWithString:bacImageUrl]];
+}
+
+- (void)reloadDataWithDic:(NSDictionary *)dic {
+        NSString *lynxData = [dic yy_modelToJSONString];
+    [_realtorInfoView updateDataWithString:lynxData];
 }
 @end

@@ -7,10 +7,8 @@
 
 #import <Foundation/Foundation.h>
 #import "FHHouseRealtorDetailController.h"
-#import "FHHouseRealtorDetailRGCCell.h"
 #import "FHHouseRealtorDetailInfoModel.h"
 #import "FHHouseRealtorDetailBaseCell.h"
-#import "FHHouseRealtorDetailBaseCellModel.h"
 
 NS_ASSUME_NONNULL_BEGIN
 

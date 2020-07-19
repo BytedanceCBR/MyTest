@@ -149,4 +149,43 @@
 }
 @end
 
+@implementation FHHouseRealtorShopModel
++ (JSONKeyMapper*)keyMapper
+{
+    NSDictionary *dict = @{
+            @"associateInfo": @"realtor_shop_associate_info",
+            @"certificationPage": @"certification_page",
+            @"certificationIcon": @"certification_icon",
+            @"topNeighborhood": @"top_neighborhood",
+            @"chatOpenUrl": @"chat_open_url",
+            @"houseImage": @"house_image",
+            @"houseCount": @"house_count"
+    };
+    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+        return dict[keyName]?:keyName;
+    }];
+}
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+@end
+
+@implementation FHHouseRealtorShopDetailModel
++ (JSONKeyMapper*)keyMapper
+{
+    NSDictionary *dict = @{
+            @"isShow": @"is_show",
+            @"houseCount": @"house_count",
+            @"houseImage": @"house_image",
+    };
+    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+        return dict[keyName]?:keyName;
+    }];
+}
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+@end
 

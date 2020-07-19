@@ -162,6 +162,10 @@ typedef NS_ENUM(NSInteger , FHNetworkMonitorType) {
 +(TTHttpTask *)requestRealtorHomeRecommend:(NSDictionary *_Nullable)param completion:(void(^_Nullable)(FHHomeHouseModel *model, NSError *error))completion;
 
 +(TTHttpTask *)requestRealtorUserCommon:(NSDictionary *_Nullable)param completion:(void(^_Nullable)(FHHouseRealtorUserCommentDataModel *model, NSError *error))completion;
+
++(TTHttpTask *)requestRealtorShop:(NSDictionary *_Nullable)param completion:(void(^_Nullable)(FHHouseRealtorShopDetailModel *model, NSError *error))completion;
+
+
 +(void)addRequestLog:(NSString *)path startDate:(NSDate *)startData backDate:(NSDate *)backDate serializeDate:(NSDate *)serializeDate resultType:(FHNetworkMonitorType)type errorCode:(NSInteger)errorCode errorMsg:(NSString *)errorMsg extra:(NSDictionary *)extraDict responseCode:(NSInteger)responseCode;
 +(void)addRequestLog:(NSString *)path startDate:(NSDate *)startData backDate:(NSDate *)backDate serializeDate:(NSDate *)serializeDate resultType:(FHNetworkMonitorType)type errorCode:(NSInteger)errorCode errorMsg:(NSString *)errorMsg extra:(NSDictionary *)extraDict exceptionDict:(NSDictionary *)exceptionDict responseCode:(NSInteger)responseCode;
 

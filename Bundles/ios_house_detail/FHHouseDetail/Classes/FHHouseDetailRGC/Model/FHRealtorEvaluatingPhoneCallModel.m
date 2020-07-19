@@ -30,8 +30,10 @@
 {
     self = [super init];
     if (self) {
-        _houseType = houseType;
-        _houseId = houseId;
+        if (houseType &&houseId ) {
+            _houseType = houseType;
+            _houseId = houseId;
+        }
         _rnIsUnAvalable = NO;
     }
     return self;
@@ -42,8 +44,10 @@
     
     // IM 透传数据模型
     FHAssociateIMModel *associateIMModel = [FHAssociateIMModel new];
-    associateIMModel.houseId = self.houseId;
-    associateIMModel.houseType = self.houseType;
+    if (self.houseType && self.houseId) {
+        associateIMModel.houseId = self.houseId;
+        associateIMModel.houseType = self.houseType;
+    }
     associateIMModel.associateInfo = realtorModel.associateInfo;
     if (extra && extra[@"bizTrace"]) {
         associateIMModel.extraInfo = @{@"biz_trace":extra[@"bizTrace"]};
@@ -153,8 +157,10 @@
       info[@"realtor_id"] = contactPhone.realtorId;
       info[@"delegate"] = self;
       info[@"trace"] = self.tracerDict;
-      info[@"house_id"] = _houseId;
-      info[@"house_type"] = @(_houseType);
+    if (self.houseId && self.houseType) {
+        info[@"house_id"] = _houseId;
+        info[@"house_type"] = @(_houseType);
+    }
       TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:info];
       TTRouteObject *routeObj = [[TTRoute sharedRoute] routeObjWithOpenURL:openUrl userInfo:userInfo];
       return routeObj;

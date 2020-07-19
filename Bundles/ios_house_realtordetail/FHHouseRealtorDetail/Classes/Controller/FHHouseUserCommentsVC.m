@@ -26,7 +26,7 @@
     [self createModel];
     [self addDefaultEmptyViewFullScreen];
     [self setupDefaultNavBar:NO];
-    self.customNavBarView.title = @"用户评价";
+    self.customNavBarView.title.text = @"用户评价";
     [self initFrame];
 }
 
@@ -35,6 +35,7 @@
         make.top.equalTo(self.customNavBarView.mas_bottom);
         make.left.bottom.right.mas_equalTo(self.view);
     }];
+    
 }
 
 - (void)initTableView {

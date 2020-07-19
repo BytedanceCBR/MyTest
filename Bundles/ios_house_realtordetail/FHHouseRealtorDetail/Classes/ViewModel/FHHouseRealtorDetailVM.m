@@ -36,6 +36,8 @@
 #import "UIImage+FIconFont.h"
 #import "FHHouseRealtorDetailBaseViewController.h"
 #import "FHHouseRealtorDetailHouseVC.h"
+#import "UIDevice+BTDAdditions.h"
+#import "FHRealtorEvaluatingPhoneCallModel.h"
 #define kSegmentViewHeight 44
 @interface FHHouseRealtorDetailVM () <TTHorizontalPagingViewDelegate>
 
@@ -44,6 +46,8 @@
 @property (nonatomic, assign) BOOL isViewAppear;
 @property (nonatomic, strong) TTHorizontalPagingView *pagingView;
 @property (nonatomic, strong) FHHouseRealtorDetailDataModel *data;
+@property (nonatomic, strong) FHRealtorDetailBottomBar *bottomBar;
+@property(nonatomic, strong) FHRealtorEvaluatingPhoneCallModel *realtorPhoneCallModel;
 @property (nonatomic, strong) NSMutableArray *subVCs;
 @property (nonatomic, strong) NSMutableArray *segmentTitles;
 @property (nonatomic, copy) NSString *currentSegmentType;
@@ -51,36 +55,34 @@
 @property (nonatomic, strong) NSDictionary *realtorInfo;
 @property (nonatomic, assign) NSInteger selectedIndex;
 @property (nonatomic, strong) NSMutableArray *ugcTabList;
-//精华tab的index，默认是-1
-@property (nonatomic, assign) NSInteger essenceIndex;
 @property (nonatomic, assign) BOOL isFirstEnter;
 
 //@property (nonatomic, strong) FHUGCGuideView *guideView;
 @property (nonatomic) BOOL shouldShowUGcGuide;
 @end
 @implementation FHHouseRealtorDetailVM
-- (instancetype)initWithController:(FHHouseRealtorDetailVC *)viewController tracerDict:(NSDictionary*)tracerDict realtorInfo:(NSDictionary *)realtorInfo {
+- (instancetype)initWithController:(FHHouseRealtorDetailVC *)viewController tracerDict:(NSDictionary*)tracerDict realtorInfo:(NSDictionary *)realtorInfo bottomBar:(FHRealtorDetailBottomBar *)bottomBar {
     self = [super init];
     if (self) {
         self.tracerDict = tracerDict.mutableCopy;
         self.viewController = viewController;
+        self.bottomBar = bottomBar;
+        self.realtorPhoneCallModel = [[FHRealtorEvaluatingPhoneCallModel alloc]initWithHouseType:[NSString stringWithFormat:@"%@",realtorInfo[@"house_type"]].intValue houseId:realtorInfo[@"house_id"]];
+        self.realtorPhoneCallModel.tracerDict = tracerDict;
+        self.realtorPhoneCallModel.belongsVC = viewController;
         [self initView];
         self.shouldShowUGcGuide = YES;
         self.isViewAppear = YES;
         self.isFirstEnter = YES;
         self.viewController.segmentView.delegate = self;
-        self.essenceIndex = -1;
         self.realtorInfo = realtorInfo;
-        
-        // 分享埋点
-        NSMutableDictionary *params = [NSMutableDictionary dictionary];
-        params[@"enter_from"] = self.tracerDict[@"enter_from"] ?: @"be_null";
-        params[@"enter_type"] = self.tracerDict[@"enter_type"] ?: @"be_null";
-        params[@"log_pb"] = self.tracerDict[@"log_pb"] ?: @"be_null";
-        params[@"rank"] = self.tracerDict[@"rank"] ?: @"be_null";
-        params[@"page_type"] = self.tracerDict[@"page_type"] ?: @"be_null";
-        self.shareTracerDict = [params copy];
-        
+        __weak typeof(self)ws = self;
+        self.bottomBar.imAction = ^{
+            [ws imAction];
+        };
+        self.bottomBar.phoneAction = ^{
+            [ws phoneAction];
+        };
         self.subVCs = [NSMutableArray array];
     }
     return self;
@@ -126,15 +128,24 @@
     [FHMainApi requestRealtorHomePage:parmas completion:^(FHHouseRealtorDetailModel * _Nonnull model, NSError * _Nonnull error) {
         if (model && error == NULL) {
             if (model.data) {
+                self.viewController.emptyView.hidden = YES;
 //                [wSelf updateUIWithData];
                 [wSelf processDetailData:model];
+                
+            }else {
+                [self.viewController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoData];
             }
         }
     }];
 }
 
 - (void)processDetailData:(FHHouseRealtorDetailModel *)model {
+    [self.viewController showBottomBar:YES];
     self.data = model.data;
+    NSArray *commentInfo = model.data.evaluation[@"comment_info"];
+    if (commentInfo.count == 0) {
+        [self updateUIWithData];
+    }
     if(self.isFirstEnter){
            //初始化segment
         self.ugcTabList = model.data.ugcTabList.mutableCopy;
@@ -145,9 +156,19 @@
         [self initSegmentWithTabInfoArr:self.ugcTabList];
            //初始化vc
            [self initSubVCinitWithTabInfoArr:self.ugcTabList];
-       }else{
-           [self updateVC];
        }
+    NSMutableDictionary *dic = @{}.mutableCopy;
+    [dic setObject:model.data.realtor?:@""forKey:@"realtor"];
+    [dic setObject:model.data.evaluation?:@"" forKey:@"evaluation"];
+    [dic setObject:model.data.scoreInfo?:@"" forKey:@"score_info"];
+    [dic setObject:model.data.realtorShop?:@"" forKey:@"realtor_shop"];
+    [dic setObject:model.data.certificationIcon?:@"" forKey:@"certification_icon"];
+    [dic setObject:model.data.certificationPage?:@"" forKey:@"certification_page"];
+    [dic setObject:@{@"realtor_id":self.realtorInfo[@"realtor_id"]?:@"",@"screen_width":@([UIScreen mainScreen].bounds.size.width)} forKey:@"common_params"];
+//    [dic setObject:@{} forKey:@"report_params"]
+//    
+//    NSString *lynxData = [dic yy_modelToJSONString];
+    [self.viewController.headerView reloadDataWithDic:dic];
 }
 
 -(void)onNetworError:(BOOL)showEmpty showToast:(BOOL)showToast{
@@ -171,17 +192,7 @@
             if(!isEmptyString(item.showName)) {
                 [titles addObject:item.showName];
             }
-            //这里记录一下精华tab的index,为了后面加精和取消加精时候，可以标记vc刷新
-            if([item.tabName isEqualToString:tabEssence]){
-                self.essenceIndex = i;
-            }
-            if(i == 0) {
-                selectedIndex = i;
-                self.currentSegmentType = item.tabName;
-                self.defaultType = item.tabName;
-            }
         }
-        self.viewController.segmentView.hidden = NO;
     }else{
         self.viewController.segmentView.hidden = YES;
     }
@@ -221,8 +232,8 @@
 - (void)createFeedListController:(NSString *)tabName requestName:(NSString *)name {
     if (![tabName isEqualToString:@"房源"]) {
         FHHouseRealtorDetailController *realtorDetailController =  [[FHHouseRealtorDetailController alloc]init];
-        realtorDetailController.tabName =
         realtorDetailController.realtorInfo = self.realtorInfo;
+        realtorDetailController.tracerDict = self.tracerDict;
         realtorDetailController.tabName = name;
         //错误页高度
         if(self.ugcTabList && self.ugcTabList.count > 0){
@@ -234,6 +245,7 @@
     }else {
         FHHouseRealtorDetailHouseVC *realtorDetailController =  [[FHHouseRealtorDetailHouseVC alloc]init];
         realtorDetailController.realtorInfo = self.realtorInfo;
+        realtorDetailController.tracerDict = self.tracerDict;
         realtorDetailController.tabName = name;
               //错误页高度
               if(self.ugcTabList && self.ugcTabList.count > 0){
@@ -243,11 +255,6 @@
               }
               [self.subVCs addObject:realtorDetailController];
     }
-}
-
-- (void)updateVC {
-//    for (FHCommunityFeedListController *feedListController in self.subVCs) {
-//    }
 }
 
 
@@ -287,28 +294,16 @@
         [self.viewController.customNavBarView.leftBtn setBackgroundImage:blackBackArrowImage forState:UIControlStateHighlighted];
     }
     [self.viewController.customNavBarView refreshAlpha:alpha];
-
-//    NSMutableArray *tabArray = [self.socialGroupModel.data.tabInfo mutableCopy];
-//    if(tabArray && tabArray.count > 1) {
-//        self.viewController.customNavBarView.seperatorLine.hidden = YES;
-//    }
 }
 
 
-//- (void)updateUIWithData {
-//        [self.pagingView reloadHeaderViewHeight:self.viewController.headerView.height];
-//}
+- (void)updateUIWithData {
+    self.viewController.headerView.height = 310;
+    [self.pagingView reloadHeaderViewHeight:310];
+}
 
 #pragma UIScrollViewDelegate
 
-
-//- (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate {
-//    if(decelerate){
-//        CGFloat delta = self.pagingView.currentContentViewTopInset + scrollView.contentOffset.y;
-//        if(delta <= -50){
-//        }
-//    }
-//}
 
 - (void)addGoDetailLog {
     NSMutableDictionary *params = [NSMutableDictionary dictionary];
@@ -423,6 +418,24 @@
 
 - (void)pagingView:(TTHorizontalPagingView *)pagingView scrollTopOffset:(CGFloat)offset {
     CGFloat delta = self.pagingView.currentContentViewTopInset + offset;
+    CGFloat navBarH = [UIDevice btd_isIPhoneXSeries]?84:64;
+    if ((delta + navBarH) >self.pagingView.headerViewHeight || (delta + navBarH) == self.pagingView.headerViewHeight) {
+        [self.viewController.segmentView setUpTitleEffect:^(NSString *__autoreleasing *titleScrollViewColorKey, NSString *__autoreleasing *norColorKey, NSString *__autoreleasing *selColorKey, UIFont *__autoreleasing *titleFont, UIFont *__autoreleasing *selectedTitleFont) {
+            *titleScrollViewColorKey  = @"Background4",
+            *norColorKey = @"grey3"; //
+            *selColorKey = @"grey1";//grey1
+            *titleFont = [UIFont themeFontRegular:16];
+            *selectedTitleFont = [UIFont themeFontSemibold:16];
+        }];
+    }else {
+            [self.viewController.segmentView setUpTitleEffect:^(NSString *__autoreleasing *titleScrollViewColorKey, NSString *__autoreleasing *norColorKey, NSString *__autoreleasing *selColorKey, UIFont *__autoreleasing *titleFont, UIFont *__autoreleasing *selectedTitleFont) {
+            *titleScrollViewColorKey  = @"Background21",
+            *norColorKey = @"grey3"; //
+            *selColorKey = @"grey1";//grey1
+            *titleFont = [UIFont themeFontRegular:16];
+            *selectedTitleFont = [UIFont themeFontSemibold:16];
+        }];
+    }
     UIScrollView *scrollView = pagingView.currentContentView;
     [self refreshContentOffset:delta];
 }
@@ -464,5 +477,43 @@
 //        [self addClickOptionsLog:position];
         [self.pagingView scrollToIndex:toIndex withAnimation:YES];
     }
+}
+
+
+- (void)imAction{
+    FHFeedUGCCellRealtorModel *realtorModel =  [[FHFeedUGCCellRealtorModel alloc]init];
+    realtorModel.associateInfo = [self.data.associateInfo copy];
+    realtorModel.realtorId = self.realtorInfo[@"realtor_id"];
+    realtorModel.chatOpenurl = self.data.chatOpenUrl;
+    realtorModel.realtorLogpb = @"";
+    [self.realtorPhoneCallModel imchatActionWithPhone:realtorModel realtorRank:0 extraDic:self.tracerDict];
+}
+
+- (void)phoneAction{
+//     NSDictionary *houseInfo = dataModel.extraDic;
+     NSMutableDictionary *extraDict = self.tracerDict.mutableCopy;
+     extraDict[@"realtor_id"] = self.realtorInfo[@"realtor_id"];
+     extraDict[@"realtor_rank"] = @"be_null";
+     extraDict[@"realtor_logpb"] = @"be_null";
+     extraDict[@"realtor_position"] = @"realtor_evaluate";
+//     extraDict[@"from_gid"] = cellModel.groupId;
+     NSDictionary *associateInfoDict = self.data.associateInfo.phoneInfo;
+     extraDict[kFHAssociateInfo] = associateInfoDict;
+     FHAssociatePhoneModel *associatePhone = [[FHAssociatePhoneModel alloc]init];
+     associatePhone.reportParams = extraDict;
+     associatePhone.associateInfo = associateInfoDict;
+     associatePhone.realtorId = self.realtorInfo[@"realtor_id"];
+//     associatePhone.searchId = houseInfo[@"searchId"];
+//     associatePhone.imprId = houseInfo[@"imprId"];
+     associatePhone.houseType = [NSString  stringWithFormat:@"%@",self.realtorInfo[@"house_type"]].intValue;
+     associatePhone.houseId = self.realtorInfo[@"house_id"];
+//     associatePhone.showLoading = NO;
+//     if ([self.currentData isKindOfClass:[FHhouseDetailRGCListCellModel class]]) {
+//           FHhouseDetailRGCListCellModel *cellModel = (FHhouseDetailRGCListCellModel *)self.currentData;
+//         if (cellModel.houseInfoBizTrace) {
+//             associatePhone.extraDict = @{@"biz_trace":cellModel.houseInfoBizTrace};
+//         }
+//       }
+     [self.realtorPhoneCallModel phoneChatActionWithAssociateModel:associatePhone];
 }
 @end

@@ -67,6 +67,7 @@
         _contactBtn.layer.shadowOpacity = .2;
         _contactBtn.layer.shadowRadius = 6;
         _contactBtn.backgroundColor =[UIColor colorWithHexStr:@"#fe5500"];
+        [_contactBtn addTarget:self action:@selector(clickPhone:) forControlEvents:UIControlEventTouchDown];
      
     }
     return _contactBtn;
@@ -90,8 +91,20 @@
         [_imChatBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateHighlighted];
         [_imChatBtn setTitle:@"在线联系" forState:UIControlStateNormal];
         [_imChatBtn setTitle:@"在线联系" forState:UIControlStateHighlighted];
-
+        [_imChatBtn addTarget:self action:@selector(clickIm:) forControlEvents:UIControlEventTouchDown];
     }
     return _imChatBtn;
+}
+
+- (void)clickIm:(UIButton *)sender {
+    if (self.imAction) {
+        self.imAction();
+    }
+}
+
+- (void)clickPhone:(UIButton *)sender {
+    if (self.phoneAction) {
+        self.phoneAction();
+    }
 }
 @end

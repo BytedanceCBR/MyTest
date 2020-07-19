@@ -16,6 +16,7 @@
 #import "UIScrollView+Refresh.h"
 #import "ToastManager.h"
 #import "FHHouseBaseItemCell.h"
+#import "FHHouseRealtorDetailPlaceCell.h"
 @interface FHHouseRealtorDetailHouseViewModel ()<UITableViewDelegate,UITableViewDataSource>
 @property(nonatomic, weak)TTHttpTask *requestTask;
 @property(nonatomic, strong)FHRefreshCustomFooter *refreshFooter;
@@ -64,6 +65,7 @@
 }
 
 - (void)registerCellClasses {
+        [self.tableView registerClass:[FHHouseRealtorDetailPlaceCell class] forCellReuseIdentifier:@"FHHouseRealtorDetailPlaceCell"];
         [self.tableView registerClass:[FHHouseBaseItemCell class] forCellReuseIdentifier:@"FHHomeSmallImageItemCell"];
 }
 
@@ -190,28 +192,41 @@
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return self.dataList.count;
+    
+    return self.dataList.count>0?self.dataList.count+1:self.dataList.count;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-        return 86;
+    if (indexPath.row == 0) {
+        return 10;
+    }else {
+      return 86;
+    }
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    //to do 房源cell
-    NSString *identifier = @"FHHomeSmallImageItemCell";
-    FHHouseBaseItemCell *cell = [tableView dequeueReusableCellWithIdentifier:identifier];
-    cell.delegate = self;
-    if (indexPath.row < self.dataList.count) {
-        JSONModel *model = self.dataList[indexPath.row];
-        [cell refreshTopMargin:([UIDevice btd_isIPhoneXSeries]) ? 4 : 0];
-        [cell updateHomeSmallImageHouseCellModel:model andType:FHHouseTypeSecondHandHouse];
-        [cell hiddenCloseBtn];
+    if (indexPath.row == 0) {
+                //to do 房源cell
+        NSString *identifier = @"FHHouseRealtorDetailPlaceCell";
+        FHHouseBaseItemCell *cell = [tableView dequeueReusableCellWithIdentifier:identifier];
+       [cell.contentView setBackgroundColor:[UIColor colorWithHexStr:@"#f8f8f8"]];
+        return cell;
+    }else {
+        //to do 房源cell
+        NSString *identifier = @"FHHomeSmallImageItemCell";
+        FHHouseBaseItemCell *cell = [tableView dequeueReusableCellWithIdentifier:identifier];
+        cell.delegate = self;
+        if (indexPath.row < self.dataList.count) {
+            JSONModel *model = self.dataList[indexPath.row];
+            [cell refreshTopMargin:([UIDevice btd_isIPhoneXSeries]) ? 4 : 0];
+            [cell updateHomeSmallImageHouseCellModel:model andType:FHHouseTypeSecondHandHouse];
+            [cell hiddenCloseBtn];
+        }
+        [cell refreshIndexCorner:(indexPath.row == 1) withLast:(indexPath.row == (self.dataList.count))];
+        [cell.contentView setBackgroundColor:[UIColor colorWithHexStr:@"#f8f8f8"]];
+        return cell;
     }
-    [cell refreshIndexCorner:(indexPath.row == 0) withLast:(indexPath.row == (self.dataList.count - 1))];
-    [cell.contentView setBackgroundColor:[UIColor themeHomeColor]];
-    return cell;
 }
 
 - (NSMutableArray *)dataList {
@@ -224,15 +239,18 @@
 
 - (FHErrorView *)errorView {
     if(!_errorView){
-        _errorView = [[FHErrorView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, 400)];
+        _errorView = [[FHErrorView alloc] initWithFrame:CGRectMake(10, 0, [UIScreen mainScreen].bounds.size.width, 400)];
     }
     return _errorView;
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    if (self.dataList.count>indexPath.row) {
-        [self jumpToDetailPage:indexPath];
+    if (indexPath.row >0) {
+            NSIndexPath *index = [NSIndexPath indexPathForRow:indexPath.row -1 inSection:indexPath.section];
+        if (self.dataList.count>indexPath.row) {
+            [self jumpToDetailPage:index];
+        }
     }
 }
 #pragma mark - 详情页跳转
