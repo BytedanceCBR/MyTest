@@ -27,6 +27,7 @@
 #import "FHDetailMapView.h"
 #import "FHFakeInputNavbar.h"
 #import "UIImage+FIconFont.h"
+#import <ByteDanceKit/NSDictionary+BTDAdditions.h>
 
 static NSInteger const kBottomBarTagValue = 100;
 static NSInteger const kBottomButtonLabelTagValue = 1000;
@@ -55,7 +56,8 @@ static MAMapView *kFHPageMapView = nil;
 @property (nonatomic , strong) MACircle *locationCircle;
 @property (nonatomic , strong) NSString *titleStr;
 @property (nonatomic, weak)     UIScrollView       *bottomScrollView;
-
+@property (nonatomic, copy) NSString *baiduPanoramaUrl;
+@property (nonatomic , strong) FHMyMAAnnotation *baiduPanoAnnotation;
 @end
 
 @implementation FHDetailMapPageViewController
@@ -80,6 +82,10 @@ static MAMapView *kFHPageMapView = nil;
         
         if ([[userInfo.allInfo objectForKey:@"title"] isKindOfClass:[NSString class]]) {
             self.titleStr = [userInfo.allInfo objectForKey:@"title"];
+        }
+        
+        if (paramObj.allParams[@"baiduPanoramaUrl"]) {
+            self.baiduPanoramaUrl = [paramObj.allParams btd_stringValueForKey:@"baiduPanoramaUrl"];
         }
         
     }
@@ -314,6 +320,7 @@ static MAMapView *kFHPageMapView = nil;
 - (void)cleanAllAnnotations
 {
     [self.mapView removeAnnotation:self.pointCenterAnnotation];
+    [self.mapView removeAnnotation:self.baiduPanoAnnotation];
     [self.mapView removeAnnotations:self.poiAnnotations];
     [self.poiAnnotations removeAllObjects];
 }
@@ -519,6 +526,15 @@ static MAMapView *kFHPageMapView = nil;
     [self.mapView addAnnotation:userAnna];
     self.pointCenterAnnotation = userAnna;
     
+    if (self.baiduPanoramaUrl.length) {
+        FHMyMAAnnotation *baiduPanoAnnotation = [[FHMyMAAnnotation alloc] init];
+        baiduPanoAnnotation.type = @"baiduPano";
+        baiduPanoAnnotation.coordinate = self.centerPoint;
+        [self.mapView addAnnotation:baiduPanoAnnotation];
+        self.baiduPanoAnnotation = baiduPanoAnnotation;
+    }
+    
+    
     // PM 确认 不进行缩放
 //    [self.mapView showAnnotations:self.mapView.annotations edgePadding:UIEdgeInsetsMake(20, 20, 20, 20) animated:NO];
 }
@@ -587,9 +603,22 @@ static MAMapView *kFHPageMapView = nil;
         NSInteger indexValue = [self.nameArray indexOfObject:category];
         UIImage *image = [UIImage imageNamed:self.iconImageArray[indexValue]];
         return image;
-    }else
-    {
+    } else if ([category isEqualToString:@"baiduPano"]) {
+        UIImage *image = [UIImage imageNamed:@"baidu_panorama_entrance_icon"];
+        return image;
+    } else {
         return [UIImage imageNamed:@"detail_map_loc_annotation"];
+    }
+}
+
+- (void)pushBaiduPano {
+    if (CLLocationCoordinate2DIsValid(self.centerPoint)) {
+        NSMutableDictionary *tracerDict = self.traceDict.mutableCopy;
+        NSMutableDictionary *param = [NSMutableDictionary new];
+        param[TRACER_KEY] = tracerDict.copy;
+        param[@"gaodeLat"] = [@(self.centerPoint.latitude) stringValue];
+        param[@"gaodeLon"] = [@(self.centerPoint.longitude) stringValue];
+        [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:[NSString stringWithFormat:@"sslocal://baidu_panorama_detail"]] userInfo:TTRouteUserInfoWithDict(param)];
     }
 }
 
@@ -603,17 +632,26 @@ static MAMapView *kFHPageMapView = nil;
         if (annotationV == nil) {
             annotationV = [[MAAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:pointResueseIdetifier];
         }
-        
         annotationV.image = [self getIconImageFromCategory:((FHMyMAAnnotation *)annotation).type];
-        annotationV.centerOffset = CGPointMake(0, -10);
-        annotationV.canShowCallout = true;
+        if ([[(FHMyMAAnnotation *)annotation type] isEqualToString:@"baiduPano"]) {
+            annotationV.centerOffset = CGPointMake(0, -50);
+            annotationV.canShowCallout = NO;
+            [annotationV addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(pushBaiduPano)]];
+        } else {
+            annotationV.centerOffset = CGPointMake(0, -10);
+            annotationV.canShowCallout = YES;
+            if (annotationV.gestureRecognizers.count) {
+                for (UIGestureRecognizer *gesture in annotationV.gestureRecognizers) {
+                    [annotationV removeGestureRecognizer:gesture];
+                }
+            }
+        }
         
         return annotationV ? annotationV : [[MAAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:@"default"];
     }
     
     return [[MAAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:@"default"];
 }
-
 
 - (MAOverlayRenderer *)mapView:(MAMapView *)mapView rendererForOverlay:(id <MAOverlay>)overlay
 {

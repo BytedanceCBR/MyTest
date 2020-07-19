@@ -10,13 +10,13 @@
 #import <CoreGraphics/CoreGraphics.h>
 #import <UIKit/UIKit.h>
 #import <CoreLocation/CoreLocation.h>
-typedef struct MecatorPoint
-{
-    double x;
-    double y;
-    MecatorPoint():x(0.0), y(0.0) {}
-    MecatorPoint(double dx, double dy):x(dx), y(dy) {}
-}MECATORPOINT, *BPMECATORPOINT;
+//typedef struct MecatorPoint
+//{
+//    double x;
+//    double y;
+//    MecatorPoint():x(0.0), y(0.0) {}
+//    MecatorPoint(double dx, double dy):x(dx), y(dy) {}
+//}MECATORPOINT, *BPMECATORPOINT;
 
 typedef enum : NSUInteger {
     COOR_TYPE_BDLL = 1,//百度坐标
@@ -27,7 +27,7 @@ typedef enum : NSUInteger {
 
 @interface BaiduPanoUtils : NSObject
 
-+ (MECATORPOINT)getMcWithLon:(double)lon lat:(double)lat;
+//+ (MECATORPOINT)getMcWithLon:(double)lon lat:(double)lat;
 + (const char *)convertUIImageToBitmapRGBA8:(UIImage *)image;
 + (CLLocationCoordinate2D)baiduCoorEncryptLon:(double)lon lat:(double)lat coorType:(COOR_TYPE)type;
 + (unsigned long) hexFromUIColor: (UIColor*) color;

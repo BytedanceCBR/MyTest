@@ -779,6 +779,37 @@
     FHMultiMediaItemModel *itemModel = _model.medias[index];
     if (itemModel.mediaType == FHMultiMediaTypeBaiduPanorama && itemModel.imageUrl.length) {
         //进入百度街景
+        //shceme baidu_panorama_detail
+        NSMutableDictionary *tracerDict = self.baseViewModel.detailTracerDic.mutableCopy;
+        NSMutableDictionary *param = [NSMutableDictionary new];
+        param[TRACER_KEY] = tracerDict.copy;
+        
+        NSString *gaodeLat = nil;
+        NSString *gaodeLon = nil;
+        // 获取图片需要的房源信息数据
+        if ([self.baseViewModel.detailData isKindOfClass:[FHDetailOldModel class]]) {
+            // 二手房数据
+            FHDetailOldModel *model = (FHDetailOldModel *)self.baseViewModel.detailData;
+            gaodeLat = model.data.neighborhoodInfo.gaodeLat;
+            gaodeLon = model.data.neighborhoodInfo.gaodeLng;
+
+        }else if ([self.baseViewModel.detailData isKindOfClass:[FHDetailNewModel class]]) {
+            FHDetailNewModel *model = (FHDetailNewModel *)self.baseViewModel.detailData;
+            gaodeLat = model.data.coreInfo.gaodeLat;
+            gaodeLon = model.data.coreInfo.gaodeLng;
+        }else if ([self.baseViewModel.detailData isKindOfClass:[FHDetailNeighborhoodModel class]]) {
+            FHDetailNeighborhoodModel *model = (FHDetailNeighborhoodModel *)self.baseViewModel.detailData;
+            gaodeLat = model.data.neighborhoodInfo.gaodeLat;
+            gaodeLon = model.data.neighborhoodInfo.gaodeLng;
+        } else if ([self.baseViewModel.detailData isKindOfClass:[FHDetailFloorPanDetailInfoModel class]]) {
+            //户型详情
+//            FHDetailFloorPanDetailInfoModel *model = (FHDetailFloorPanDetailInfoModel *)self.baseViewModel.detailData;
+        }
+        if (gaodeLat.length && gaodeLon.length) {
+            param[@"gaodeLat"] = gaodeLat;
+            param[@"gaodeLon"] = gaodeLon;
+            [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:[NSString stringWithFormat:@"sslocal://baidu_panorama_detail"]] userInfo:TTRouteUserInfoWithDict(param)];
+        }
     }
 }
 

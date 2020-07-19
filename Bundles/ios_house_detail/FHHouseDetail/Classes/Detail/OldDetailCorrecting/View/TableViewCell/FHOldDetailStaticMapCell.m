@@ -33,6 +33,8 @@
 @property(nonatomic, weak) UIImageView *shadowImage;
 @property(nonatomic, strong) UIView *bottomGradientView;
 
+@property (nonatomic, strong) UIButton *baiduPanoButton;
+
 //data
 @property(nonatomic, assign) NSString *curCategory;
 @property(nonatomic, assign) CLLocationCoordinate2D centerPoint;
@@ -151,6 +153,9 @@
     self.locationList.frame = CGRectMake(15, self.mapMaskBtn.bottom + 10, self.cellWidth, 40);
     self.emptyInfoLabel.frame = CGRectMake(0, 10, self.locationList.width, 20);
     self.mapMaskBtnLocation.frame = self.locationList.frame;
+    [self.baiduPanoButton mas_updateConstraints:^(MASConstraintMaker *make) {
+        make.top.mas_equalTo(CGRectGetMinY(mapFrame) + mapHeight / 2);
+    }];
     
     CGFloat cellHeight = self.locationList.bottom;
     [self.backView mas_updateConstraints:^(MASConstraintMaker *make) {
@@ -238,6 +243,18 @@
     
     [_mapMaskBtn setBackgroundColor:[UIColor clearColor]];
     [_mapMaskBtn addTarget:self action:@selector(mapMaskBtnClick:) forControlEvents:UIControlEventTouchUpInside];
+    
+    if (!self.baiduPanoButton) {
+        self.baiduPanoButton = [UIButton buttonWithType:UIButtonTypeCustom];
+        [self.baiduPanoButton setImage:[UIImage imageNamed:@"baidu_panorama_entrance_icon"] forState:UIControlStateNormal];
+        [self.baiduPanoButton addTarget:self action:@selector(baiduPanoButtonAction) forControlEvents:UIControlEventTouchUpInside];
+        [self.contentView addSubview:self.baiduPanoButton];
+        [self.baiduPanoButton mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.size.mas_equalTo(CGSizeMake(40, 40));
+            make.right.mas_equalTo(-31);
+            make.top.mas_equalTo(0);
+        }];
+    }
 }
 
 - (void)takeSnapWith:(NSString *)category annotations:(NSArray<id <MAAnnotation>> *)annotations {
@@ -297,6 +314,9 @@
     [infoDict setValue:latitudeNum forKey:@"latitude"];
     [infoDict setValue:longitudeNum forKey:@"longitude"];
     [infoDict setValue:dataModel.mapCentertitle forKey:@"title"];
+    if (dataModel.baiduPanoramaUrl.length) {
+        infoDict[@"baiduPanoramaUrl"] = dataModel.baiduPanoramaUrl;
+    }
     
     NSMutableDictionary *tracer = [NSMutableDictionary dictionaryWithDictionary:self.baseViewModel.detailTracerDic];
     if (sender == _mapMaskBtnLocation) {
@@ -313,6 +333,19 @@
     
     TTRouteUserInfo *info = [[TTRouteUserInfo alloc] initWithInfo:infoDict];
     [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:@"sslocal://fh_map_detail"] userInfo:info];
+}
+
+- (void)baiduPanoButtonAction {
+    FHDetailStaticMapCellModel *dataModel = (FHDetailStaticMapCellModel *) self.currentData;
+    NSMutableDictionary *tracerDict = self.baseViewModel.detailTracerDic.mutableCopy;
+    NSMutableDictionary *param = [NSMutableDictionary new];
+    param[TRACER_KEY] = tracerDict.copy;
+    
+    if (dataModel.gaodeLat.length && dataModel.gaodeLng.length) {
+        param[@"gaodeLat"] = dataModel.gaodeLat;
+        param[@"gaodeLon"] = dataModel.gaodeLng;
+        [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:[NSString stringWithFormat:@"sslocal://baidu_panorama_detail"]] userInfo:TTRouteUserInfoWithDict(param)];
+    }
 }
 
 - (void)refreshWithData:(id)data {
@@ -347,6 +380,8 @@
 
 - (void)refreshWithDataPoiDetail {
     FHDetailStaticMapCellModel *dataModel = (FHDetailStaticMapCellModel *) self.currentData;
+    
+    self.baiduPanoButton.hidden = !dataModel.baiduPanoramaUrl.length;
     if (!dataModel.useNativeMap) {
         if (!dataModel.staticImage || isEmptyString(dataModel.staticImage.url) || isEmptyString(dataModel.staticImage.latRatio) || isEmptyString(dataModel.staticImage.lngRatio)) {
             NSString *message = !dataModel.staticImage ? @"static_image_null" : @"bad_static_image";
