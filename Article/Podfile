@@ -33,6 +33,7 @@ def fhPods
     pod 'FHHouseFind' , :path => '../Bundles/ios_house_find'
     pod 'FHHouseMine' , :path => '../Bundles/ios_house_mine'
     pod 'FHHouseEpidemicSituation', :path => '../Bundles/ios_house_esituation'
+    pod 'FHHouseRealtorDetail', :path => '../Bundles/ios_house_realtordetail'
     pod 'FHHouseUGC' , :path => '../Bundles/ios_house_ugc'
     pod 'FHHouseTrend' , :path => '../Bundles/ios_house_trend'
     pod 'FHCHousePush' , :path => '../Bundles/FHCHousePush'#,:git => 'git@code.byted.org:fproject/FHCHousePush.git' , :branch => 'feature/develop'
@@ -416,7 +417,7 @@ def appPods
       'Data',
     ]
     
-    pod 'Lynx','1.0.12',:subspecs =>[
+    pod 'Lynx','1.0.49',:subspecs =>[
     'Framework',
 #    'InspectorFramework',
     'Native',
@@ -594,6 +595,8 @@ def appPods
         'Image'
 #        'Video'
     ]
+    
+    pod_binary 'BDXElement', '1.0.0', :subspecs=> ['Core', 'ScrollView', 'ImpressionView']
 
 end
 

@@ -42,8 +42,6 @@
 @property(nonatomic, strong) FHRealtorEvaluatingPhoneCallModel *realtorPhoneCallModel;
 @property (copy, nonatomic) NSString *houseType;
 @property (copy, nonatomic) NSString *houseId;
-
-
 @end
 @implementation FHDetailEvaluationListViewModel
 - (instancetype)initWithController:(FHDetailEvaluationListViewController *)viewController tableView:(UITableView *)table headerView:(FHDetailEvaluationListViewHeader *)header userInfo:(NSDictionary *)userInfo {

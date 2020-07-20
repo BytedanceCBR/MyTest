@@ -132,6 +132,8 @@ IB_DESIGNABLE
  */
 @property (readonly, nonatomic, strong) NSArray *links;
 
+@property (readwrite, nonatomic, strong) TTUGCAttributedLabelLink *activeLink;
+
 /**
  A dictionary containing the default `NSAttributedString` attributes to be applied to links detected or manually added to the label text. The default link style is blue and underlined.
  

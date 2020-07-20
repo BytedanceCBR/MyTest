@@ -228,4 +228,8 @@
 //        self.headerLicenseBlock();
 //    }
 }
+- (void)hiddenConnectBtn:(BOOL)hidden {
+    self.phoneBtn.hidden = hidden;
+    self.iMBtn.hidden = hidden;
+}
 @end
