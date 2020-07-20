@@ -135,6 +135,8 @@
             }else {
                 [self.viewController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoData];
             }
+        }else {
+               [self.viewController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoData];
         }
     }];
 }
