@@ -12,28 +12,15 @@
 @end
 
 @implementation FHHouseRealtorDetailHouseVC
-- (instancetype)initWithRouteParamObj:(nullable TTRouteParamObj *)paramObj
-{
-    self = [super initWithRouteParamObj:paramObj];
-    if (self) {
-        [self createTracerDic:paramObj.allParams];
-    }
-    return self;
-}
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-//    [self createUI];
     [self createModel];
 }
 
 - (void)createModel {
     NSMutableDictionary *dic = self.realtorInfo.mutableCopy;
     [dic setObject:self.tabName forKey:@"tab_name"];
-    _viewModel = [[FHHouseRealtorDetailHouseViewModel alloc]initWithController:self tableView:self.tableView realtorInfo:dic];
-}
-
-- (void)createTracerDic:(NSDictionary *)dic {
-    
+    _viewModel = [[FHHouseRealtorDetailHouseViewModel alloc]initWithController:self tableView:self.tableView realtorInfo:dic tracerDic:self.tracerDict];
 }
 @end

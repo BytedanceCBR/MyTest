@@ -323,6 +323,7 @@
 - (void)addGoDetailLog {
     NSMutableDictionary *params = [NSMutableDictionary dictionary];
     params[@"origin_from"] = self.tracerDict[@"origin_from"] ?: @"be_null";
+    params[@"event_type"] = @"house_app2c_v2";
     params[@"enter_from"] = self.tracerDict[@"enter_from"] ?: @"be_null";
     params[@"enter_type"] = self.tracerDict[@"enter_type"] ?: @"click";
     params[@"log_pb"] = self.tracerDict[@"log_pb"] ?: @"be_null";
@@ -330,7 +331,7 @@
     params[@"page_type"] = self.tracerDict[@"page_type"] ?: @"be_null";
     params[@"group_id"] = self.tracerDict[@"group_id"] ?: @"be_null";
     params[@"element_from"] = self.tracerDict[@"element_from"] ?: @"be_null";
-    [FHUserTracker writeEvent:@"go_detail_community" params:params];
+    [FHUserTracker writeEvent:@"go_detail" params:params];
 }
 
 - (void)addStayPageLog:(NSTimeInterval)stayTime {
@@ -510,8 +511,8 @@
      extraDict[@"realtor_id"] = self.realtorInfo[@"realtor_id"];
      extraDict[@"realtor_rank"] = @"be_null";
      extraDict[@"realtor_logpb"] = @"be_null";
-     extraDict[@"realtor_position"] = @"realtor_evaluate";
-//     extraDict[@"from_gid"] = cellModel.groupId;
+     extraDict[@"realtor_position"] = @"realtor_realtorDetail";
+    extraDict[@"log_pb"] = extraDict[@"log_pb"]?:@"be_null";
      NSDictionary *associateInfoDict = self.data.associateInfo.phoneInfo;
      extraDict[kFHAssociateInfo] = associateInfoDict;
      FHAssociatePhoneModel *associatePhone = [[FHAssociatePhoneModel alloc]init];
@@ -522,13 +523,6 @@
 //     associatePhone.imprId = houseInfo[@"imprId"];
      associatePhone.houseType = [NSString  stringWithFormat:@"%@",self.realtorInfo[@"house_type"]].intValue;
      associatePhone.houseId = self.realtorInfo[@"house_id"];
-//     associatePhone.showLoading = NO;
-//     if ([self.currentData isKindOfClass:[FHhouseDetailRGCListCellModel class]]) {
-//           FHhouseDetailRGCListCellModel *cellModel = (FHhouseDetailRGCListCellModel *)self.currentData;
-//         if (cellModel.houseInfoBizTrace) {
-//             associatePhone.extraDict = @{@"biz_trace":cellModel.houseInfoBizTrace};
-//         }
-//       }
      [self.realtorPhoneCallModel phoneChatActionWithAssociateModel:associatePhone];
 }
 @end

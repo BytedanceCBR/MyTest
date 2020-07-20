@@ -209,7 +209,7 @@
 }
 
 - (NSString *)pageType {
-    return @"community_group_detail";
+    return @"realtor_detail";
 }
 
 #pragma mark - 埋点

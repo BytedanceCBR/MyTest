@@ -19,7 +19,9 @@
 #import "FHHouseRealtorDetailPlaceCell.h"
 @interface FHHouseRealtorDetailHouseViewModel ()<UITableViewDelegate,UITableViewDataSource>
 @property(nonatomic, weak)TTHttpTask *requestTask;
+@property(nonatomic,strong)NSDictionary *tracerDic;
 @property(nonatomic, strong)FHRefreshCustomFooter *refreshFooter;
+@property (nonatomic, strong) NSMutableArray *showHouseCache;
 @property(nonatomic , weak) UITableView *tableView;
 @property(nonatomic , weak) FHHouseRealtorDetailHouseVC *detailController;
 @property(nonatomic, strong) FHErrorView *errorView;
@@ -30,7 +32,7 @@
 @property(strong, strong)NSDictionary *realtorInfo ;
 @end
 @implementation FHHouseRealtorDetailHouseViewModel
-- (instancetype)initWithController:(FHHouseRealtorDetailHouseVC *)viewController tableView:(UITableView *)tableView realtorInfo:(NSDictionary *)realtorInfo {
+- (instancetype)initWithController:(FHHouseRealtorDetailHouseVC *)viewController tableView:(UITableView *)tableView realtorInfo:(NSDictionary *)realtorInfo tracerDic:(NSDictionary *)tracerDic {
     self = [super init];
     if (self) {
         //        _detailTracerDic = [NSMutableDictionary new];
@@ -42,6 +44,7 @@
         //        _weakedCellTable = [NSHashTable hashTableWithOptions:NSPointerFunctionsWeakMemory];
         //        _weakedVCLifeCycleCellTable = [NSHashTable hashTableWithOptions:NSPointerFunctionsWeakMemory];
         //        self.houseType = houseType;
+        self.tracerDic = tracerDic;
         self.detailController = viewController;
         self.tableView = tableView;
         self.realtorInfo = realtorInfo;
@@ -217,8 +220,8 @@
         NSString *identifier = @"FHHomeSmallImageItemCell";
         FHHouseBaseItemCell *cell = [tableView dequeueReusableCellWithIdentifier:identifier];
         cell.delegate = self;
-        if (indexPath.row < self.dataList.count) {
-            JSONModel *model = self.dataList[indexPath.row];
+        if (indexPath.row < self.dataList.count -1) {
+            JSONModel *model = self.dataList[indexPath.row -1];
             [cell refreshTopMargin:([UIDevice btd_isIPhoneXSeries]) ? 4 : 0];
             [cell updateHomeSmallImageHouseCellModel:model andType:FHHouseTypeSecondHandHouse];
             [cell hiddenCloseBtn];
@@ -248,7 +251,7 @@
 {
     if (indexPath.row >0) {
             NSIndexPath *index = [NSIndexPath indexPathForRow:indexPath.row -1 inSection:indexPath.section];
-        if (self.dataList.count>indexPath.row) {
+        if (self.dataList.count + 1>indexPath.row) {
             [self jumpToDetailPage:index];
         }
     }
@@ -282,5 +285,34 @@
             [[TTRoute sharedRoute] openURLByPushViewController:jumpUrl userInfo:userInfo];
         }
     }
+}
+
+- (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
+    if ([cell isKindOfClass:[FHHouseBaseItemCell class]]) {
+        FHHomeHouseDataItemsModel *model = self.dataList[indexPath.row -1];
+        [self addHouseShow:model ];
+    }
+}
+
+- (NSMutableArray *)showHouseCache {
+    if (!_showHouseCache) {
+        _showHouseCache = [NSMutableArray array];
+    }
+    return _showHouseCache;
+}
+
+- (void)addHouseShow:(FHHomeHouseDataItemsModel *)model {
+    if (!model.id) {
+        return;
+    }
+    if ([self.showHouseCache containsObject:model.id]) {
+        return;
+    }
+    [self.showHouseCache addObject:model.id];
+    NSMutableDictionary *tracerDic = self.tracerDic.mutableCopy;
+    tracerDic[@"house_type"] = @"old";
+    tracerDic[@"log_pb"] = model.logPb?:@"be_null";
+    tracerDic[@"group_id"] = model.id;
+    TRACK_EVENT(@"house_show", tracerDic);
 }
 @end
