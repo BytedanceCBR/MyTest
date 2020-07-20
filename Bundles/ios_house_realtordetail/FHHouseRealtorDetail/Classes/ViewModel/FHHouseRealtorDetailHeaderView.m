@@ -146,7 +146,7 @@
 - (void)setChannel:(NSString *)channel {
     _channel = channel;
     NSData *templateData =  [[FHLynxManager sharedInstance] lynxDataForChannel:_channel templateKey:[FHLynxManager defaultJSFileName] version:0];
-//            NSData *templateData = [NSData dataWithContentsOfURL:[NSURL URLWithString:_channel]];
+//            NSData *templateData = [NSData dataWithContentsOfURL:[NSURL URLWithString:@"http://10.95.248.194:30334/lynx_realtor_detail_header/template.js?1595246822882"]];
     if (templateData) {
         if (templateData != self.currentTemData) {
             self.currentTemData = templateData;

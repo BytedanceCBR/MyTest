@@ -101,7 +101,7 @@
     if (model.data.realtor) {
         NSString *realtorName = model.data.realtor[@"realtor_name"];
         if (realtorName && realtorName.length>0) {
-            self.detailController.customNavBarView.title.text = [NSString stringWithFormat:@"%@的店铺",model.data.realtor[@"realtor_name"]];
+            self.detailController.customNavBarView.title.text = [NSString stringWithFormat:@"%@店铺",model.data.realtor[@"realtor_name"]];
         }
     }
 }
@@ -115,11 +115,8 @@
     [dic setObject:model.data.certificationIcon?:@"" forKey:@"certification_icon"];
     [dic setObject:model.data.certificationPage?:@"" forKey:@"certification_page"];
     [dic setObject:@{@"realtor_id":self.realtorInfo[@"realtor_id"]?:@"",@"screen_width":@([UIScreen mainScreen].bounds.size.width)} forKey:@"common_params"];
-    //    [dic setObject:@{} forKey:@"report_params"]
-    //
-    //    NSString *lynxData = [dic yy_modelToJSONString];
+     [dic setObject:self.tracerDict forKey:@"report_params"];
     [self.detailController.headerView reloadDataWithDic:dic];
-    
     if (model.data.houseImage) {
         NSString *imageUrl = model.data.houseImage[@"url"];
         if (imageUrl.length>0) {
@@ -130,7 +127,6 @@
 
 -(void)onNetworError:(BOOL)showEmpty showToast:(BOOL)showToast{
     if(showEmpty){
-        self.detailController.view.hidden = YES;
         [self.detailController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoNetWorkAndRefresh];
     }
     if(showToast){
@@ -263,7 +259,7 @@
     if (hasMore) {
         [self.tableView.mj_footer endRefreshing];
     }else {
-        [self.refreshFooter setUpNoMoreDataText:@"我是有底线的" offsetY:-3];
+        [self.refreshFooter setUpNoMoreDataText:@"- 我是有底线的哟 -" offsetY:-3];
         [self.tableView.mj_footer endRefreshingWithNoMoreData];
     }
 }

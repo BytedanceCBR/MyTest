@@ -12,6 +12,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FHHouseRealtorShopVM : NSObject
 - (instancetype)initWithController:(FHHouseRealtorShopVC *)viewController tableView:(UITableView *)tableView realtorDic:(NSDictionary *)realtorDic bottomBar:(FHRealtorDetailBottomBar *)bottomBar;
+- (void)requestRealtorShop;
 @end
 
 NS_ASSUME_NONNULL_END

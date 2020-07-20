@@ -37,6 +37,8 @@
 @property(nonatomic, strong) FHUGCBaseCell *currentCell;
 @property(nonatomic, strong) FHFeedUGCCellModel *currentCellModel;
 @property(nonatomic, strong) FHUGCFeedDetailJumpManager *detailJumpManager;
+@property (nonatomic, strong) NSMutableArray *showHouseCache;
+@property(nonatomic,strong)NSDictionary *tracerDic;
 
 @property (copy, nonatomic) NSString *houseType;
 @property (copy, nonatomic) NSString *houseId;
@@ -44,7 +46,7 @@
 @property(strong, strong)NSDictionary *realtorInfo ;
 @end
 @implementation FHHouseRealtorDetailViewModel
-- (instancetype)initWithController:(FHHouseRealtorDetailController *)viewController tableView:(UITableView *)tableView realtorInfo:(NSDictionary *)realtorInfo {
+- (instancetype)initWithController:(FHHouseRealtorDetailController *)viewController tableView:(UITableView *)tableView realtorInfo:(NSDictionary *)realtorInfo tracerDic:(NSDictionary *)tracerDic {
     self = [super init];
     if (self) {
         //        _detailTracerDic = [NSMutableDictionary new];
@@ -56,6 +58,7 @@
         //        _weakedCellTable = [NSHashTable hashTableWithOptions:NSPointerFunctionsWeakMemory];
         //        _weakedVCLifeCycleCellTable = [NSHashTable hashTableWithOptions:NSPointerFunctionsWeakMemory];
         //        self.houseType = houseType;
+         self.tracerDic = tracerDic;
         self.detailController = viewController;
         self.tableView = tableView;
         self.realtorInfo = realtorInfo;
@@ -233,7 +236,7 @@
     if (hasMore) {
         [self.tableView.mj_footer endRefreshing];
     }else {
-        [self.refreshFooter setUpNoMoreDataText:@"我是有底线的" offsetY:-3];
+        [self.refreshFooter setUpNoMoreDataText:@"- 我是有底线的哟 -" offsetY:-3];
         [self.tableView.mj_footer endRefreshingWithNoMoreData];
     }
 }
@@ -283,6 +286,13 @@
     }
 
     return [[FHUGCBaseCell alloc] init];
+}
+
+- (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
+    if(indexPath.row < self.dataList.count + 1){
+        FHFeedUGCCellModel *cellModel = self.dataList[indexPath.row -1];
+        [self trackFeedClientShow:cellModel withExtraDic:self.tracerDic];
+    }
 }
 
 #pragma mark - UITableViewDelegate
@@ -414,5 +424,39 @@
 //        [self.realtorPhoneCallModel jump2RealtorDetailWithPhone:cellModel.realtor isPreLoad:NO extra:dict];
 //    }
 //}
+- (void)trackFeedClientShow:(FHFeedUGCCellModel *)itemData withExtraDic:(NSDictionary *)extraDic{
+    if (!itemData.groupId) {
+        return;
+    }
+    if ([self.showHouseCache containsObject:itemData.groupId]) {
+        return;
+    }
+    [self.showHouseCache addObject:itemData.groupId];
+      NSMutableDictionary *dict = [NSMutableDictionary dictionary];
+        dict[@"origin_from"] = [extraDic.allKeys containsObject:@"origin_from"]?extraDic[@"origin_from"]:@"be_null";
+        dict[@"enter_from"] =  [extraDic.allKeys containsObject:@"enter_from"]?extraDic[@"enter_from"]:@"be_null";
+        dict[@"page_type"] = [extraDic.allKeys containsObject:@"page_type"]?extraDic[@"page_type"]:@"be_null";
+        dict[@"event_type"] = [self eventType];
+    //    dict[@"group_id"] = itemData.groupId?:@"be_null";
+        dict[@"group_id"] = [extraDic.allKeys containsObject:@"group_id"]?extraDic[@"group_id"]:@"be_null";
+        dict[@"group_source"] = itemData.logPb[@"group_source"]?:@"be_null";
+        dict[@"realtor_id"] = itemData.realtor.realtorId?:@"be_null";
+        dict[@"realtor_id"] = itemData.realtor.realtorId?:@"be_null";
+        dict[@"element_type"] = @"realtor_evaluate";
+        dict[@"rank"] = [extraDic.allKeys containsObject:@"rank"]?extraDic[@"rank"]:@"be_null";
+        dict[@"from_gid"] = [extraDic.allKeys containsObject:@"from_gid"]?extraDic[@"from_gid"]:@"be_null";
+        dict[@"log_pb"] =  [extraDic.allKeys containsObject:@"log_pb"]?extraDic[@"log_pb"]:@"be_null";
+        TRACK_EVENT(@"feed_client_show", dict);
+}
 
+- (NSString*)eventType {
+    return @"house_app2c_v2";
+}
+
+- (NSMutableArray *)showHouseCache {
+    if (!_showHouseCache) {
+        _showHouseCache = [NSMutableArray array];
+    }
+    return _showHouseCache;
+}
 @end

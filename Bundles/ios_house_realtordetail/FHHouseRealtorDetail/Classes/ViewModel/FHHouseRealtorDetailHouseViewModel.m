@@ -111,10 +111,9 @@
             //TODO: show handle error
             if(isFirst){
                 if(error.code != -999){
-                    wself.refreshFooter.hidden = YES;
+                     [wself updateTableViewWithMoreData:YES];
                 }
             }else{
-                wself.refreshFooter.hidden = YES;
                 [[ToastManager manager] showToast:@"网络异常"];
                 [wself updateTableViewWithMoreData:YES];
             }
@@ -122,7 +121,7 @@
             return;
         }
         if (model.data.items.count > 0) {
-            [wself updateTableViewWithMoreData:wself.tableView.hasMore];
+            [wself updateTableViewWithMoreData:model.data.hasMore];
             if (isFirst) {
                       self.dataList = [NSMutableArray arrayWithArray:model.data.items];
                       self.lastOffset = model.data.items.count;
@@ -146,7 +145,7 @@
 
 - (void)reloadTableViewData {
     if(self.dataList.count > 0){
-        [self updateTableViewWithMoreData:self.tableView.hasMore];
+//        [self updateTableViewWithMoreData:self.tableView.hasMore];
         self.tableView.backgroundColor = [UIColor themeGray7];
         
         CGFloat height = [self getVisibleHeight:10];
@@ -184,7 +183,7 @@
     if (hasMore) {
         [self.tableView.mj_footer endRefreshing];
     }else {
-        [self.refreshFooter setUpNoMoreDataText:@"我是有底线的" offsetY:-3];
+        [self.refreshFooter setUpNoMoreDataText:@"- 我是有底线的哟 -" offsetY:-3];
         [self.tableView.mj_footer endRefreshingWithNoMoreData];
     }
 }
@@ -220,7 +219,7 @@
         NSString *identifier = @"FHHomeSmallImageItemCell";
         FHHouseBaseItemCell *cell = [tableView dequeueReusableCellWithIdentifier:identifier];
         cell.delegate = self;
-        if (indexPath.row < self.dataList.count -1) {
+        if (indexPath.row < self.dataList.count +1) {
             JSONModel *model = self.dataList[indexPath.row -1];
             [cell refreshTopMargin:([UIDevice btd_isIPhoneXSeries]) ? 4 : 0];
             [cell updateHomeSmallImageHouseCellModel:model andType:FHHouseTypeSecondHandHouse];

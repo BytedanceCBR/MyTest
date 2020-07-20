@@ -39,6 +39,7 @@
 #import "UIDevice+BTDAdditions.h"
 #import "FHRealtorEvaluatingPhoneCallModel.h"
 #import "TTURLUtils.h"
+#import "NSObject+YYModel.h"
 #define kSegmentViewHeight 44
 @interface FHHouseRealtorDetailVM () <TTHorizontalPagingViewDelegate>
 
@@ -183,12 +184,23 @@
     [dic setObject:model.data.certificationIcon?:@"" forKey:@"certification_icon"];
     [dic setObject:model.data.certificationPage?:@"" forKey:@"certification_page"];
     [dic setObject:@{@"realtor_id":self.realtorInfo[@"realtor_id"]?:@"",@"screen_width":@([UIScreen mainScreen].bounds.size.width)} forKey:@"common_params"];
+//    if (self.tracerDict) {
+//        NSString *lynxReortParams= [self.tracerDict yy_modelToJSONString];
+//            lynxReortParams = [lynxReortParams stringByAddingPercentEncodingWithAllowedCharacters:NSCharacterSet.URLQueryAllowedCharacterSet];
+//            
+//            NSString *unencodedString = lynxReortParams;
+//            NSString *encodedString = (NSString *)CFBridgingRelease(CFURLCreateStringByAddingPercentEscapes(kCFAllocatorDefault,
+//                                                                                                            (CFStringRef)unencodedString,
+//                                                                                                            NULL,
+//                                                                                                            (CFStringRef)@"!*'();:@&=+$,/?%#[]",
+//                                                                                                            kCFStringEncodingUTF8));
+//         [dic setObject:lynxReortParams forKey:@"report_params"];
+//        }
     [self.viewController.headerView reloadDataWithDic:dic];
 }
 
 -(void)onNetworError:(BOOL)showEmpty showToast:(BOOL)showToast{
     if(showEmpty){
-        self.feedListController.view.hidden = YES;
         [self.viewController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoNetWorkAndRefresh];
     }
     if(showToast){
@@ -211,8 +223,9 @@
     }else{
         self.viewController.segmentView.hidden = YES;
     }
-    self.selectedIndex = selectedIndex;
-    self.viewController.segmentView.selectedIndex = selectedIndex;
+    if (tabListArr && tabListArr.count>1) {
+            self.viewController.segmentView.selectedIndex = 0;
+    }
     self.viewController.segmentView.titles = titles;
     self.segmentTitles = titles;
 }
@@ -406,7 +419,7 @@
     //新的展现
     if(toIndex < self.subVCs.count){
         FHHouseRealtorDetailBaseViewController *feedVC = self.subVCs[toIndex];
-        [self.viewController addChildViewController:feedVC];
+         [self.viewController addChildViewController:feedVC];
         [feedVC didMoveToParentViewController:self.viewController];
     }
 }

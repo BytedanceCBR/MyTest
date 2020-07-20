@@ -19,6 +19,15 @@
 @end
 
 @implementation FHHouseUserCommentsVC
+- (instancetype)initWithRouteParamObj:(nullable TTRouteParamObj *)paramObj
+{
+    self = [super initWithRouteParamObj:paramObj];
+    if (self) {
+        [self createTracerDic:paramObj.allParams];
+//        self.realtorInfoDic = paramObj.allParams.mutableCopy;
+    }
+    return self;
+}
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -57,4 +66,7 @@
     _viewModel = [[FHHouseUserCommentsVM alloc]initWithController:self tableView:self.tableView];
 }
 
+- (void)createTracerDic:(NSDictionary *)dic {
+    
+}
 @end

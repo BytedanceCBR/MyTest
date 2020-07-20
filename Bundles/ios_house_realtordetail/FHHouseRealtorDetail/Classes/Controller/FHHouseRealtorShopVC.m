@@ -47,8 +47,8 @@
     [self initTableView];
     [self initFrame];
     [self setNavBar];
-    [self addDefaultEmptyViewFullScreen];
     [self initBottomBar];
+    [self addDefaultEmptyViewFullScreen];
      [self createModel];
 }
 
@@ -62,6 +62,10 @@
 
 - (void)createModel {
     _viewModel = [[FHHouseRealtorShopVM alloc]initWithController:self tableView:self.tableView realtorDic:self.realtorInfoDic.copy bottomBar:self.bottomBar];
+}
+
+- (void)retryLoadData {
+    [self.viewModel requestRealtorShop];
 }
 
 - (void)createTracerDic:(NSDictionary *)dic {

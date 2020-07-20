@@ -129,7 +129,7 @@
 }
 
 - (void)initHeaderView {
-    CGFloat headerBackNormalHeight = 420;
+    CGFloat headerBackNormalHeight = 425;
     CGFloat headerBackXSeriesHeight = headerBackNormalHeight + 44; //刘海平多出24
     CGFloat height = [UIDevice btd_isIPhoneXSeries] ? headerBackXSeriesHeight : headerBackNormalHeight + 40;
     self.headerView = [[FHHouseRealtorDetailHeaderView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, height)];
