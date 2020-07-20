@@ -417,7 +417,7 @@ def appPods
       'Data',
     ]
     
-    pod 'Lynx','1.0.12',:subspecs =>[
+    pod 'Lynx','1.0.49',:subspecs =>[
     'Framework',
 #    'InspectorFramework',
     'Native',

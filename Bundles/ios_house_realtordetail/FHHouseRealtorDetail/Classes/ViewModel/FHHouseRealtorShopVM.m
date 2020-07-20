@@ -109,6 +109,7 @@
 - (void)prossHeaderData:(FHHouseRealtorShopDetailModel *)model {
     NSMutableDictionary *dic = @{}.mutableCopy;
     [dic setObject:model.data.realtor ?:@""forKey:@"realtor"];
+    [dic setObject:model.data.houseCount ?:@""forKey:@"house_count"];
     [dic setObject:model.data.chatOpenUrl?:@"" forKey:@"chat_open_url"];
     [dic setObject:model.data.topNeighborhood?:@"" forKey:@"top_neighborhood"];
     [dic setObject:model.data.certificationIcon?:@"" forKey:@"certification_icon"];
@@ -217,7 +218,7 @@
         
     }
     [requestDictonary setValue:@(10) forKey:@"count"];
-    [requestDictonary setValue:@"3021100461591229" forKey:@"realtor_id"];
+    [requestDictonary setValue:self.realtorInfo[@"realtor_id"]?:@"" forKey:@"realtor_id"];
     requestDictonary[CHANNEL_ID] = CHANNEL_ID_REALTOR_DETAIL_HOUSE;
     self.requestTask = nil;
     self.requestTask = [FHMainApi requestRealtorHomeRecommend:requestDictonary completion:^(FHHomeHouseModel * _Nonnull model, NSError * _Nonnull error) {

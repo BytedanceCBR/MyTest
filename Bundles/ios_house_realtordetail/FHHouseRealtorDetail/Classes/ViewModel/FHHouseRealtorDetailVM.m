@@ -38,6 +38,7 @@
 #import "FHHouseRealtorDetailHouseVC.h"
 #import "UIDevice+BTDAdditions.h"
 #import "FHRealtorEvaluatingPhoneCallModel.h"
+#import "TTURLUtils.h"
 #define kSegmentViewHeight 44
 @interface FHHouseRealtorDetailVM () <TTHorizontalPagingViewDelegate>
 
@@ -160,16 +161,28 @@
            [self initSubVCinitWithTabInfoArr:self.ugcTabList];
        }
     NSMutableDictionary *dic = @{}.mutableCopy;
+    NSMutableDictionary *dicm = model.data.scoreInfo.mutableCopy;
+    if (dicm && [dicm.allKeys containsObject:@"open_url"]) {
+        NSString *openUrl = dicm[@"open_url"];
+        openUrl = [openUrl stringByAddingPercentEncodingWithAllowedCharacters:NSCharacterSet.URLQueryAllowedCharacterSet];
+        
+        NSString *unencodedString = openUrl;
+        NSString *encodedString = (NSString *)CFBridgingRelease(CFURLCreateStringByAddingPercentEscapes(kCFAllocatorDefault,
+                                                                                                        (CFStringRef)unencodedString,
+                                                                                                        NULL,
+                                                                                                        (CFStringRef)@"!*'();:@&=+$,/?%#[]",
+                                                                                                        kCFStringEncodingUTF8));
+        NSString *urlStr = [NSString stringWithFormat:@"sslocal://webview?url=%@",encodedString];
+        NSURL *url = [TTURLUtils URLWithString:urlStr];
+        [dicm setObject:urlStr forKey:@"open_url"];
+    }
     [dic setObject:model.data.realtor?:@""forKey:@"realtor"];
     [dic setObject:model.data.evaluation?:@"" forKey:@"evaluation"];
-    [dic setObject:model.data.scoreInfo?:@"" forKey:@"score_info"];
+    [dic setObject:dicm?:@"" forKey:@"score_info"];
     [dic setObject:model.data.realtorShop?:@"" forKey:@"realtor_shop"];
     [dic setObject:model.data.certificationIcon?:@"" forKey:@"certification_icon"];
     [dic setObject:model.data.certificationPage?:@"" forKey:@"certification_page"];
     [dic setObject:@{@"realtor_id":self.realtorInfo[@"realtor_id"]?:@"",@"screen_width":@([UIScreen mainScreen].bounds.size.width)} forKey:@"common_params"];
-//    [dic setObject:@{} forKey:@"report_params"]
-//    
-//    NSString *lynxData = [dic yy_modelToJSONString];
     [self.viewController.headerView reloadDataWithDic:dic];
 }
 

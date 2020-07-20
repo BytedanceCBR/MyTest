@@ -158,6 +158,11 @@
     }
 }
 
+- (void)lynxView:(LynxView*)view didLoadFinishedWithUrl:(NSString*)url {
+    CGFloat statusBarHeight =  ((![[UIApplication sharedApplication] isStatusBarHidden]) ? [[UIApplication sharedApplication] statusBarFrame].size.height : ([UIDevice btd_isIPhoneXSeries]?44.f:20.f));
+    self.viewHeight = [self.realtorInfoView intrinsicContentSize].height + statusBarHeight + 44;
+}
+
 - (void)setBacImageName:(NSString *)bacImageName {
     _bacImageName = bacImageName;
     self.headerIma.image = [UIImage imageNamed:_bacImageName];

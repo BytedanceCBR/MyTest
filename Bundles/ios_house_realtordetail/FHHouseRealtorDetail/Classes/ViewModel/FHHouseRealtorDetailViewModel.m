@@ -124,6 +124,9 @@
     if (self.realtorInfo[@"tab_name"]) {
         [extraDic setObject:self.realtorInfo[@"tab_name"] forKey:@"tab_name"];
     }
+    if (self.realtorInfo[@"realtor_id"]) {
+        [extraDic setObject:self.realtorInfo[@"realtor_id"] forKey:@"realtor_id"];
+    }
     self.categoryId = @"f_realtor_profile";
     TTHttpTask *task = [FHHouseUGCAPI requestFeedListWithCategory:self.categoryId behotTime:behotTime loadMore:!isHead listCount:listCount extraDic:extraDic completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
         wself.detailController.isLoadingData = NO;
@@ -216,7 +219,7 @@
     [self.tableView registerClass:[FHHouseRealtorDetailPlaceCell class] forCellReuseIdentifier:@"FHHouseRealtorDetailPlaceCell"];
     __weak typeof(self) wself = self;
     self.refreshFooter = [FHRefreshCustomFooter footerWithRefreshingBlock:^{
-        [self requestData:NO first:NO];
+        [wself requestData:NO first:NO];
     }];
     self.tableView.mj_footer = self.refreshFooter;
 }
@@ -263,7 +266,7 @@
          return cell;
     }else {
         if(indexPath.row < self.dataList.count + 1){
-            FHFeedUGCCellModel *cellModel = self.dataList[indexPath.row];
+            FHFeedUGCCellModel *cellModel = self.dataList[indexPath.row -1];
             NSString *cellIdentifier = NSStringFromClass([self.cellManager cellClassFromCellViewType:cellModel.cellSubType data:nil]);
             FHUGCBaseCell *cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
             if (cell == nil) {
@@ -272,7 +275,7 @@
                 cell.selectionStyle = UITableViewCellSelectionStyleNone;
             }
             cell.delegate = self;
-            if(indexPath.row < self.dataList.count){
+            if(indexPath.row < self.dataList.count +1){
                 [cell refreshWithData:cellModel];
             }
             return cell;
@@ -290,7 +293,7 @@
     }
     
     if(indexPath.row < self.dataList.count + 1){
-        FHFeedUGCCellModel *cellModel = self.dataList[indexPath.row];
+        FHFeedUGCCellModel *cellModel = self.dataList[indexPath.row -1];
         Class cellClass = [self.cellManager cellClassFromCellViewType:cellModel.cellSubType data:nil];
         if([cellClass isSubclassOfClass:[FHUGCBaseCell class]]) {
             return [cellClass heightForData:cellModel];
