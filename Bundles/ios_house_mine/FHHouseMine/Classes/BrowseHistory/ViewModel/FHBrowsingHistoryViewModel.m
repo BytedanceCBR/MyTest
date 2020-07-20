@@ -53,6 +53,14 @@
     }
 }
 
+- (void)updateSubVCTrackStatus {
+    NSString *rowStr = [NSString stringWithFormat:@"%ld", _currentTabIndex];
+    FHBrowsingHistoryCollectionViewCell *cell = _cellDict[rowStr];
+    if (cell) {
+        [cell updateTrackStatu];
+    }
+}
+
 #pragma mark - UICollectionViewDelegate
 - (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView {
     return 1;

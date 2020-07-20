@@ -15,6 +15,7 @@
 
 - (instancetype)initWithController:(FHBrowsingHistoryViewController *)viewController andCollectionView:(FHSuggestionCollectionView *)collectionView;
 - (void)addGoDetailLog;
+- (void)updateSubVCTrackStatus;
 @end
 
 

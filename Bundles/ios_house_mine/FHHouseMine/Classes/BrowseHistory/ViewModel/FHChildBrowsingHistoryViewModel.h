@@ -17,7 +17,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (instancetype)initWithViewController:(FHChildBrowsingHistoryViewController *)viewController tableView:(UITableView *)tableView emptyView:(FHBrowsingHistoryEmptyView *)emptyView;
 
 - (void)requestData:(BOOL)isHead;
-
+- (void)updateEnterLog;
 @property (nonatomic, assign) FHHouseType houseType;
 
 @end

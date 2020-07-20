@@ -26,6 +26,7 @@
 - (instancetype)initWithRouteParamObj:(TTRouteParamObj *)paramObj {
     self = [super initWithRouteParamObj:paramObj];
     if (self) {
+        _isCanTrack = NO;
         self.tracerDict[@"origin_from"] = @"minetab_service";
         self.tracerDict[@"enter_from"] = @"minetab";
         
@@ -61,6 +62,14 @@
     self.findHouseView.houseType = houseType;
     self.viewModel.houseType = houseType;
     [self requestBrowsingHistoryData];
+}
+
+- (void)setIsCanTrack:(BOOL)isCanTrack {
+    if (isCanTrack && !_isCanTrack) {
+        _isCanTrack = isCanTrack;
+        [self.tableView reloadData];
+        [self.viewModel updateEnterLog];
+    }
 }
 
 - (void)requestBrowsingHistoryData {

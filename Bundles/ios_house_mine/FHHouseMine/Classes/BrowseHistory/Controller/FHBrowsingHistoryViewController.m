@@ -34,6 +34,7 @@ static const float kSegementedOneWidth = 50;
 - (instancetype)initWithRouteParamObj:(TTRouteParamObj *)paramObj {
     self = [super initWithRouteParamObj:paramObj];
     if (self) {
+        _houseType = -1;
         self.paramObj = paramObj;
         self.ttTrackStayEnable = YES;
     }
@@ -42,21 +43,25 @@ static const float kSegementedOneWidth = 50;
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    //self.automaticallyAdjustsScrollViewInsets = NO;
+    self.automaticallyAdjustsScrollViewInsets = NO;
     self.houseTypeArray = [[NSMutableArray alloc] init];
-    self.title = @"浏览历史";
     [self houseTypeConfig];
     [self setupUI];
     self.viewModel = [[FHBrowsingHistoryViewModel alloc] initWithController:self andCollectionView:self.collectionView];
     [self.viewModel addGoDetailLog];
+    self.houseType = FHHouseTypeSecondHandHouse;
+}
+
+- (void)initNav {
+    self.title = @"浏览历史";
     [self setupDefaultNavBar:NO];
     [self.customNavBarView.leftBtn setBackgroundImage:ICON_FONT_IMG(24, @"\U0000e68a", [UIColor themeGray1]) forState:UIControlStateNormal];
     [self.customNavBarView.leftBtn setBackgroundImage:ICON_FONT_IMG(24, @"\U0000e68a", [UIColor themeGray1]) forState:UIControlStateHighlighted];
     self.customNavBarView.seperatorLine.hidden = YES;
-    
 }
 
 - (void)setupUI {
+    [self initNav];
     self.topView = [[UIView alloc] init];
     self.topView.backgroundColor = [UIColor whiteColor];
     [self.view addSubview:_topView];
@@ -157,6 +162,7 @@ static const float kSegementedOneWidth = 50;
     }
     _houseType = houseType;
     self.viewModel.currentTabIndex = _segmentControl.selectedSegmentIndex;
+    [self.viewModel updateSubVCTrackStatus];
 }
 
 - (void)houseTypeConfig {

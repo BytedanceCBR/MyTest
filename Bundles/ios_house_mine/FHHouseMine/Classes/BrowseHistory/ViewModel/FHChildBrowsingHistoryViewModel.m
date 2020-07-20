@@ -122,10 +122,7 @@
             self.isFirstRequest = NO;
             self.originSearchId = self.searchId;
         }
-        if (self.isEnterCategory) {
-            [self addEnterLog];
-            self.isEnterCategory = NO;
-        }
+        [self updateEnterLog];
         if (historyModel.historyItems.count > 0) {
             [items addObjectsFromArray:historyModel.historyItems];
         }
@@ -154,6 +151,13 @@
             self.tableView.hidden = YES;
             [self.viewController.emptyView setHidden:YES];
         }
+    }
+}
+
+- (void)updateEnterLog {
+    if (self.isEnterCategory && self.viewController.isCanTrack) {
+        [self addEnterLog];
+        self.isEnterCategory = NO;
     }
 }
 
@@ -411,7 +415,7 @@
 
 -(void)addHouseShowLog:(FHSearchBaseItemModel *)cellModel withRank: (NSInteger)rank {
     NSString *recordKey = [NSString stringWithFormat:@"%ld",rank];
-    if (self.tracerDictRecord[recordKey]) {
+    if (self.tracerDictRecord[recordKey] || !self.viewController.isCanTrack) {
         return;
     }
     if ([cellModel isKindOfClass:[FHSearchHouseItemModel class]]) {

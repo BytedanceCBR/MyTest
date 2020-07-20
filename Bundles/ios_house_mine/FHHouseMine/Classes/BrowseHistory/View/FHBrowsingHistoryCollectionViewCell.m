@@ -28,4 +28,10 @@
     }
 }
 
+- (void)updateTrackStatu {
+    if (_vc) {
+        _vc.isCanTrack = YES;
+    }
+}
+
 @end
