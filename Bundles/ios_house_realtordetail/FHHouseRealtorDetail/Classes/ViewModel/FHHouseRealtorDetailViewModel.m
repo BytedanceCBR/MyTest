@@ -289,7 +289,7 @@
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     if (indexPath.row == 0) {
-        return 10;
+        return 15;
     }
     
     if(indexPath.row < self.dataList.count + 1){
@@ -342,7 +342,7 @@
 }
 - (FHErrorView *)errorView {
     if(!_errorView){
-        _errorView = [[FHErrorView alloc] initWithFrame:CGRectMake(0, 10, [UIScreen mainScreen].bounds.size.width, 400)];
+        _errorView = [[FHErrorView alloc] initWithFrame:CGRectMake(0, 10, [UIScreen mainScreen].bounds.size.width, 500)];
     }
     return _errorView;
 }

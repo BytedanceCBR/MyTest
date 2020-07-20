@@ -199,7 +199,7 @@
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     if (indexPath.row == 0) {
-        return 10;
+        return 15;
     }else {
       return 86;
     }
@@ -239,7 +239,7 @@
 
 - (FHErrorView *)errorView {
     if(!_errorView){
-        _errorView = [[FHErrorView alloc] initWithFrame:CGRectMake(10, 0, [UIScreen mainScreen].bounds.size.width, 400)];
+        _errorView = [[FHErrorView alloc] initWithFrame:CGRectMake(10, 0, [UIScreen mainScreen].bounds.size.width, 500)];
     }
     return _errorView;
 }

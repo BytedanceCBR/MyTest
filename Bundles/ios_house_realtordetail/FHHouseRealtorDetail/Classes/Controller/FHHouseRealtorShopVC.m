@@ -130,6 +130,7 @@
         [self.customNavBarView.leftBtn setBackgroundImage:whiteBackArrowImage forState:UIControlStateNormal];
         [self.customNavBarView.leftBtn setBackgroundImage:whiteBackArrowImage forState:UIControlStateHighlighted];
         [self.customNavBarView setNaviBarTransparent:YES];
+    self.customNavBarView.seperatorLine.hidden = YES;
 }
 
 @end
