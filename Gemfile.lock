@@ -1,10 +1,3 @@
-GIT
-  remote: https://github.com/larskanis/sqlite3-ruby
-  revision: 1027509079176fcc4088dcc7638101cde617cf16
-  branch: add-gemspec
-  specs:
-    sqlite3 (1.3.13.20180326210955)
-
 GEM
   remote: https://rubygems.byted.org/
   specs:
@@ -88,7 +81,6 @@ DEPENDENCIES
   cocoapods (= 1.7.4)
   cocoapods-BDTransform (~> 5.0)
   cocoapods-xcode-patch (~> 0.1)
-  sqlite3!
 
 BUNDLED WITH
    2.1.4

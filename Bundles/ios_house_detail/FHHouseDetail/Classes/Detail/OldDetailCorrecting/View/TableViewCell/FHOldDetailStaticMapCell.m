@@ -154,7 +154,7 @@
     self.emptyInfoLabel.frame = CGRectMake(0, 10, self.locationList.width, 20);
     self.mapMaskBtnLocation.frame = self.locationList.frame;
     [self.baiduPanoButton mas_updateConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(CGRectGetMinY(mapFrame) + mapHeight / 2);
+        make.top.mas_equalTo(CGRectGetMinY(mapFrame) + mapHeight - 40 - 8);
     }];
     
     CGFloat cellHeight = self.locationList.bottom;
@@ -251,7 +251,7 @@
         [self.contentView addSubview:self.baiduPanoButton];
         [self.baiduPanoButton mas_makeConstraints:^(MASConstraintMaker *make) {
             make.size.mas_equalTo(CGSizeMake(40, 40));
-            make.right.mas_equalTo(-31);
+            make.right.mas_equalTo(-23);
             make.top.mas_equalTo(0);
         }];
     }

@@ -19,63 +19,8 @@
 #import <ByteDanceKit/UIView+BTDAdditions.h>
 #import <objc/runtime.h>
 #import <TTUIWidget/UIViewController+NavigationBarStyle.h>
-
-BOOL ClassSwizzle(Class aClass, SEL originalSelector, SEL swizzleSelector){
-    
-    Method originalMethod = class_getInstanceMethod(aClass, originalSelector);
-    Method swizzleMethod = class_getInstanceMethod(aClass, swizzleSelector);
-    if (class_addMethod(aClass, originalSelector, method_getImplementation(swizzleMethod), method_getTypeEncoding(swizzleMethod))) {
-        class_replaceMethod(aClass, swizzleSelector, method_getImplementation(originalMethod), method_getTypeEncoding(originalMethod));
-    } else {
-        method_exchangeImplementations(originalMethod, swizzleMethod);
-    }
-    return YES;
-}
-
-@interface BaiduPanoramaView (getLocation)
-
-@end
-
-@implementation BaiduPanoramaView (getLocation)
-
-/**
- + (void)swizzleViewWillAppear
- {
-     static const void *key = &key;
-     SEL selector = NSSelectorFromString(@"setPanoramaWithLon: lat:");
-     [RSSwizzle swizzleInstanceMethod:selector inClass:[BaiduPanoramaView class] newImpFactory:^id(RSSwizzleInfo *swizzleInfo) {
-         return ^void(__unsafe_unretained id self,BOOL animated){
-             NSLog(@"setPanoramaWithLon %@ %@",NSStringFromSelector(selector),NSStringFromClass([self class]));
-             
-             void (*originalIMP)(__unsafe_unretained id, SEL);
-             originalIMP = (__typeof(originalIMP))[swizzleInfo getOriginalImplementation];
-             originalIMP(self,selector);
-         };
-     } mode:RSSwizzleModeOncePerClassAndSuperclasses key:key];
- }
- */
-
-+ (void)initialize {
-    [super initialize];
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        ClassSwizzle([BaiduPanoramaView class], @selector(fh_setPanoramaWithLon:lat:), @selector(setPanoramaWithLon:lat:));
-//        ClassSwizzle([BaiduPanoramaView class], @selector(fh_setPanoramaWithLon:lat:), @selector(setPanoramaWithLon:lat:));
-    });
-}
-
-/**
- * @abstract 切换全景场景至指定的地理坐标
- * @param lon 百度地理坐标经度
- * @param lat 百度地理坐标纬度
- */
-- (void)fh_setPanoramaWithLon:(double)lon lat:(double)lat {
-    NSLog(@"fh_setPanoramaWithLon %f %f",lon,lat);
-    [self fh_setPanoramaWithLon:lon lat:lat];
-}
-
-@end
-
+#import "UIViewController+Track.h"
+#import <FHHouseBase/FHUserTracker.h>
 
 @interface FHBaiduPanoramaViewController ()<BMKGeneralDelegate,BMKMapViewDelegate,BaiduPanoramaViewDelegate,BMKPoiSearchDelegate,BMKGeoCodeSearchDelegate>
 
@@ -100,6 +45,8 @@ BOOL ClassSwizzle(Class aClass, SEL originalSelector, SEL swizzleSelector){
 @property (nonatomic, strong) UIImage *gradientImage;
 
 @property (nonatomic, strong) NSMutableArray *overlays;
+@property (nonatomic, strong) NSMutableArray *filterPoiList;
+@property (nonatomic, strong) NSMutableDictionary *limitDict;
 
 @property (nonatomic) BOOL isZoomMapAnimation;
 
@@ -134,15 +81,23 @@ BOOL ClassSwizzle(Class aClass, SEL originalSelector, SEL swizzleSelector){
         }
         
         self.point = [BaiduPanoUtils baiduCoorEncryptLon:self.gaodeLon lat:self.gaodeLat coorType:COOR_TYPE_COMMON];
+        [self addGoDetailLog];
     }
     return self;
 }
 
 - (NSMutableArray *)overlays {
     if (!_overlays) {
-        _overlays = [NSMutableArray arrayWithCapacity:20];
+        _overlays = [NSMutableArray array];
     }
     return _overlays;
+}
+
+- (NSMutableArray *)filterPoiList {
+    if (!_filterPoiList) {
+        _filterPoiList = [NSMutableArray array];
+    }
+    return _filterPoiList;
 }
 
 - (void)setupMapManager {
@@ -338,12 +293,16 @@ BOOL ClassSwizzle(Class aClass, SEL originalSelector, SEL swizzleSelector){
     self.headingButton.userInteractionEnabled = NO;
     CGFloat width = CGRectGetWidth(self.view.bounds);
     self.isZoomMapAnimation = YES;
+    CGFloat bottomInset = 0;
+    if (@available(iOS 11.0, *)) {
+        bottomInset = [UIApplication sharedApplication].keyWindow.safeAreaInsets.bottom;
+    }
     [UIView animateWithDuration:0.3 animations:^{
         [self.mapView mas_updateConstraints:^(MASConstraintMaker *make) {
             make.left.mas_equalTo(0);
             make.bottom.mas_equalTo(0);
             make.width.mas_equalTo(width);
-            make.height.mas_equalTo(120);
+            make.height.mas_equalTo(120 + bottomInset);
         }];
         self.mapView.layer.cornerRadius = .0;
         self.zoomButton.hidden = NO;
@@ -361,7 +320,7 @@ BOOL ClassSwizzle(Class aClass, SEL originalSelector, SEL swizzleSelector){
     [self.panoramaView setPoiOverlayHidden:self.overlayButton.selected];
 }
 
-- (void)searchCurrentPOI {
+- (void)searchCurrentPOIPageIndex:(NSUInteger )pageIndex {
     /**
     
     radius 1000
@@ -372,6 +331,17 @@ BOOL ClassSwizzle(Class aClass, SEL originalSelector, SEL swizzleSelector){
      
      //@"银行",@"公交",@"地铁",@"教育",@"医院",@"商场",@"小区"
     */
+    if (pageIndex == 0) {
+        [self.filterPoiList removeAllObjects];
+        self.limitDict = @{@"银行": @(0),
+                           @"公交": @(0),
+                           @"地铁": @(0),
+                           @"教育": @(0),
+                           @"医院": @(0),
+                           @"商场": @(0),
+                           @"小区": @(0)}.mutableCopy;
+    }
+    
     BMKPoiSearch *poiSearch = [[BMKPoiSearch alloc] init];
     poiSearch.delegate = self;
     BMKPOINearbySearchOption *option = [[BMKPOINearbySearchOption alloc] init];
@@ -380,7 +350,7 @@ BOOL ClassSwizzle(Class aClass, SEL originalSelector, SEL swizzleSelector){
     option.radius = 1000;
     option.isRadiusLimit = YES;
     option.scope = BMK_POI_SCOPE_DETAIL_INFORMATION;
-    option.pageIndex = 0;
+    option.pageIndex = pageIndex;
     option.pageSize = 20;
     [poiSearch poiSearchNearBy:option];
     
@@ -399,56 +369,87 @@ static NSInteger overlayIndex = 0;
 - (void)handlePoiResult:(BMKPOISearchResult *)poiResult{
 //(NSArray<BMKPoiInfo *>)poiInfoList{
 //    poiResult.poiInfoList
-    NSMutableDictionary *limitDict = @{@"银行": @(0),
-                                       @"公交": @(0),
-                                       @"地铁": @(0),
-                                       @"教育": @(0),
-                                       @"医院": @(0),
-                                       @"商场": @(0),
-                                       @"小区": @(0)}.mutableCopy;
-    
-    NSMutableArray *filterPoiList = [NSMutableArray array];
-    
-    for (BMKPoiInfo *poiInfo in poiResult.poiInfoList) {
-        NSString *name = poiInfo.name;
-        if (poiInfo.hasDetailInfo) {
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
+        for (BMKPoiInfo *poiInfo in poiResult.poiInfoList) {
+            if (!poiInfo.hasDetailInfo) {
+                continue;
+            }
             BMKPOIDetailInfo *detailInfo = poiInfo.detailInfo;
             NSString *type = detailInfo.type;
             if ([detailInfo.tag containsString:@"atm"]) {
                 continue;
             }
             if (!detailInfo.tag.length) {
-                [filterPoiList addObject:poiInfo];
+//                [self.filterPoiList addObject:poiInfo];
                 continue;
             }
-            if (limitDict[detailInfo.tag]) {
-                NSInteger limit = [[limitDict objectForKey:detailInfo.tag] integerValue];
+            NSString *name = poiInfo.name;
+            NSString *typeName = nil;
+            //tag
+            if ([detailInfo.tag containsString:@"银行"]) {
+                typeName = @"银行";
+            } else if ([detailInfo.tag containsString:@"地铁"]) {
+                typeName = @"地铁";
+            } else if ([detailInfo.tag containsString:@"住宅"]) {
+                typeName = @"小区";
+            }
+            //type
+            if (!typeName.length) {
+                if ([detailInfo.type isEqualToString:@"education"]) {
+                    typeName = @"教育";
+                } else if ([detailInfo.type isEqualToString:@"hospital"]) {
+                    typeName = @"医院";
+                } else if ([detailInfo.type isEqualToString:@"shopping"]) {
+                    typeName = @"商场";
+                } else if ([detailInfo.type isEqualToString:@"house"]) {
+                    typeName = @"小区";
+                }
+            }
+            
+            if (!typeName.length) {
+                continue;
+            }
+            if (self.limitDict[typeName]) {
+                NSInteger limit = [[self.limitDict objectForKey:typeName] integerValue];
                 if (limit < 3) {
-                    [filterPoiList addObject:poiInfo];
+                    [self.filterPoiList addObject:poiInfo];
                     limit += 1;
-                    limitDict[detailInfo.tag] = @(limit);
+                    self.limitDict[typeName] = @(limit);
                 }
             } else {
-                [filterPoiList addObject:poiInfo];
-                limitDict[detailInfo.tag] = @(1);
+                [self.filterPoiList addObject:poiInfo];
+                self.limitDict[typeName] = @(1);
             }
+            
         }
-    }
-    
-    if (!filterPoiList.count) {
-        return;
-    }
-    
+        
+        if (poiResult.curPageIndex == 0) {
+            [self searchCurrentPOIPageIndex:1];
+        } else if (poiResult.curPageIndex == 1) {
+            [self searchCurrentPOIPageIndex:2];
+        } else if (poiResult.curPageIndex == 2) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [self addOverlays];
+            });
+        }
+    });
+}
+
+- (void)addOverlays {
     [self.panoramaView removeAllOverlay];
     [self.overlays removeAllObjects];
     
-    for (BMKPoiInfo *poiInfo in filterPoiList) {
+    for (BMKPoiInfo *poiInfo in self.filterPoiList) {
         NSString *name = poiInfo.name;
         if (!poiInfo.detailInfo) {
             continue;
         }
         BMKPOIDetailInfo *detailInfo = poiInfo.detailInfo;
         NSInteger distance = detailInfo.distance;
+        
+        if (distance < 10) {
+            continue;
+        }
         NSString *imageName = nil;
         //tag
         if ([detailInfo.tag containsString:@"银行"]) {
@@ -482,26 +483,68 @@ static NSInteger overlayIndex = 0;
         overlay.overlayKey = [@(overlayIndex) stringValue];
         overlay.type = BaiduPanoOverlayTypeImage;
         overlay.coordinate = poiInfo.pt;
-        overlay.height = 100;
+        overlay.height = -50;
         overlay.size = CGSizeMake(137, 51);
         overlay.image = image;
+        double overlayAngle = [self getBearingWithLat1:self.point.latitude whitLng1:self.point.longitude whitLat2:overlay.coordinate.latitude whitLng2:overlay.coordinate.longitude];
+        BOOL ignore = NO;
+        for (BaiduPanoImageOverlay *item in self.overlays) {
+            double itemAngle = [self getBearingWithLat1:self.point.latitude whitLng1:self.point.longitude whitLat2:item.coordinate.latitude whitLng2:item.coordinate.longitude];
+            if (overlayAngle >= 0 && itemAngle >= 0 || overlayAngle < 0 && itemAngle < 0) {
+                if (abs(abs(overlayAngle) - abs(itemAngle)) < 15) {
+                    overlay.height += 100;
+                }
+            } else if (abs(overlayAngle - itemAngle) < 15 || abs(overlayAngle - itemAngle) > 165) {
+                overlay.height += 100;
+            }
+            if (overlay.height > 300) {
+                ignore = YES;
+            }
+        }
+        if (ignore) {
+            continue;
+        }
         [self.overlays addObject:overlay];
         [self.panoramaView addOverlay:overlay];
-
-//        BaiduPanoImageOverlay *imageOverlay = [[BaiduPanoImageOverlay alloc] init];
-//        imageOverlay.overlayKey = @"54321";
-//        imageOverlay.coordinate = CLLocationCoordinate2DMake(39.911402, 116.403939);
-//        imageOverlay.height         = -50;//单位为 m
-//        imageOverlay.size = CGSizeMake(153, 69);
-//        imageOverlay.image = image;
-//        [self.panoramaView addOverlay:imageOverlay];
-//        break;
     }
+}
+
+//两个经纬度之间的角度
+-(double)getBearingWithLat1:(double)lat1 whitLng1:(double)lng1 whitLat2:(double)lat2 whitLng2:(double)lng2{
     
+    double d = 0;
+    double radLat1 =  [self radian:lat1];
+    double radLat2 =  [self radian:lat2];
+    double radLng1 = [self radian:lng1];
+    double radLng2 =  [self radian:lng2];
+    d = sin(radLat1)*sin(radLat2)+cos(radLat1)*cos(radLat2)*cos(radLng2-radLng1);
+    d = sqrt(1-d*d);
+    d = cos(radLat2)*sin(radLng2-radLng1)/d;
+    d = [self angle:asin(d)];
+    return d;
+}
+//根据角度计算弧度
+-(double)radian:(double)d{
+    
+    return d * M_PI/180.0;
+}
+//根据弧度计算角度
+-(double)angle:(double)r{
+    
+    return r * 180/M_PI;
 }
 
 - (UIImage *)imageWithName:(NSString *)name icon:(UIImage *)icon distance:( NSInteger )distance {
-    UIView *overlayView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 137, 51)];
+    
+    CGFloat titleWidth = 137 - 44 - 10;
+    CGFloat titleCalculateWidth = [name btd_widthWithFont:[UIFont themeFontMedium:12] height:17];
+    
+    CGFloat totalWidth = 137;
+    if (titleCalculateWidth > titleWidth) {
+        totalWidth += (titleCalculateWidth - titleWidth);
+    }
+    
+    UIView *overlayView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, totalWidth, 51)];
     overlayView.layer.opaque = NO;
     overlayView.layer.cornerRadius = 4.0;
     overlayView.layer.masksToBounds = YES;
@@ -517,7 +560,7 @@ static NSInteger overlayIndex = 0;
     gradientImageView.image = self.gradientImage;
     [overlayView addSubview:gradientImageView];
     
-    UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(44, 10, 137 - 44 - 10, 17)];
+    UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(44, 10, totalWidth - 44 - 10, 17)];
     titleLabel.textColor = [UIColor themeWhite];
     titleLabel.font = [UIFont themeFontMedium:12];
     titleLabel.textAlignment = NSTextAlignmentLeft;
@@ -586,7 +629,7 @@ static NSInteger overlayIndex = 0;
  */
 - (void)panoramaDidLoad:(BaiduPanoramaView *)panoramaView descreption:(NSString *)jsonStr {
     NSLog(@"baidu_panoramaDidLoad");
-    [self searchCurrentPOI];
+    [self searchCurrentPOIPageIndex:0];
     self.lastPoint = kCLLocationCoordinate2DInvalid;
     
     if (jsonStr.length) {
@@ -908,8 +951,19 @@ static NSInteger overlayIndex = 0;
  */
 - (void)onGetReverseGeoCodeResult:(BMKGeoCodeSearch *)searcher result:(BMKReverseGeoCodeSearchResult *)result errorCode:(BMKSearchErrorCode)error {
     NSLog(@"baidu_onGetReverseGeoCodeResult: %@ %@ %@ %@",result.address,result.businessCircle,result.addressDetail.streetName,result.sematicDescription);
-    if (result.addressDetail.streetName) {
+    if (result.addressDetail.streetName.length) {
         self.customNavBarView.title.text = result.addressDetail.streetName;
+    } else {
+        self.customNavBarView.title.text = @"未知路段";
     }
+}
+
+#pragma mark - 埋点
+- (void)addGoDetailLog {
+    NSMutableDictionary *params = [NSMutableDictionary dictionary];
+    [params addEntriesFromDictionary:self.tracerDict];
+    params[@"page_type"] = @"street_mapping";
+    params[@"event_tracking_id"] = @"70950";
+    [FHUserTracker writeEvent:@"go_detail" params:params];
 }
 @end

@@ -12,8 +12,6 @@
 		170182F824597A3F00334E1B /* buryingPointCheck.json in Resources */ = {isa = PBXBuildFile; fileRef = 170182F624597A3F00334E1B /* buryingPointCheck.json */; };
 		2B1A0B4E24C053C9009D40FF /* F100BaiduMapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2B1A0B4B24C053C2009D40FF /* F100BaiduMapKit.framework */; };
 		2B1A0B4F24C053C9009D40FF /* F100BaiduMapKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 2B1A0B4B24C053C2009D40FF /* F100BaiduMapKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		2B53A10D24C5787300923B3C /* libsqlite3.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 2B53A10C24C5787200923B3C /* libsqlite3.tbd */; };
-		2B53A10E24C58F2B00923B3C /* libsqlite3.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 2B53A10C24C5787200923B3C /* libsqlite3.tbd */; };
 		2B832F3524C53D60008FD142 /* F100BaiduMapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2B1A0B4B24C053C2009D40FF /* F100BaiduMapKit.framework */; };
 		2B832F3624C53D60008FD142 /* F100BaiduMapKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 2B1A0B4B24C053C2009D40FF /* F100BaiduMapKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		3D2F39962270545700AE567D /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 3D2F398A2270545700AE567D /* InfoPlist.strings */; };
@@ -474,7 +472,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2B53A10E24C58F2B00923B3C /* libsqlite3.tbd in Frameworks */,
 				3D741F2F2255FF5D00E62B4C /* AddressBookUI.framework in Frameworks */,
 				B373CEDC2174587A008F9905 /* libresolv.tbd in Frameworks */,
 				B373CEDD2174587A008F9905 /* libbz2.tbd in Frameworks */,
@@ -518,7 +515,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2B53A10D24C5787300923B3C /* libsqlite3.tbd in Frameworks */,
 				3D741F302255FF7200E62B4C /* AddressBookUI.framework in Frameworks */,
 				FEFA5A26205FB1A8001F50D8 /* libresolv.tbd in Frameworks */,
 				FEFA5A27205FB1A8001F50D8 /* libbz2.tbd in Frameworks */,
