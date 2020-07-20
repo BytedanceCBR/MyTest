@@ -1858,7 +1858,7 @@
 				EXCLUDED_SOURCE_FILE_NAMES = "";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					"/Users/bytedance/Workspace/ByteDance/feature:newhouse_content_added/ios_bubble/Bundles/BaiduMapKit/**",
+					"$(SRCROOT)/../Bundles/BaiduMapKit/**",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "News/News-Prefix.pch";
@@ -1891,7 +1891,6 @@
 					"\"${PODS_ROOT}/Headers/Public/libwebp\"",
 					"\"$(SRCROOT)/../Components/TTVideo/Pod\"/**",
 					"\"$(SRCROOT)/../Components/TTLive/TTLive/TTlive\"/**",
-					"/Users/bytedance/Workspace/ByteDance/feature:newhouse_content_added/ios_bubble/Bundles/BaiduMapKit/BaiduMapKit/F100BaiduMapKit.framework/Headers/**",
 				);
 				INFOPLIST_FILE = "News/News-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
@@ -1957,7 +1956,7 @@
 				);
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					"/Users/bytedance/Workspace/ByteDance/feature:newhouse_content_added/ios_bubble/Bundles/BaiduMapKit/**",
+					"$(SRCROOT)/../Bundles/BaiduMapKit/**",
 				);
 				GCC_OPTIMIZATION_LEVEL = s;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -1989,7 +1988,6 @@
 					"\"${PODS_ROOT}/Headers/Public/libwebp\"",
 					"\"$(SRCROOT)/../Components/TTVideo/Pod\"/**",
 					"\"$(SRCROOT)/../Components/TTLive/TTLive/TTlive\"/**",
-					"/Users/bytedance/Workspace/ByteDance/feature:newhouse_content_added/ios_bubble/Bundles/BaiduMapKit/BaiduMapKit/F100BaiduMapKit.framework/Headers/**",
 				);
 				INFOPLIST_FILE = "News/News-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
@@ -2046,7 +2044,10 @@
 				DEVELOPMENT_TEAM = X46375UBYG;
 				ENABLE_BITCODE = NO;
 				EXCLUDED_SOURCE_FILE_NAMES = "";
-				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(SRCROOT)/../Bundles/BaiduMapKit/**",
+				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "News/News-Prefix.pch";
 				GCC_PREPROCESSOR_DEFINITIONS = (
@@ -2143,7 +2144,10 @@
 					"Stub_*",
 					TTFastScrollingAlert,
 				);
-				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(SRCROOT)/../Bundles/BaiduMapKit/**",
+				);
 				GCC_OPTIMIZATION_LEVEL = s;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "News/News-Prefix.pch";
