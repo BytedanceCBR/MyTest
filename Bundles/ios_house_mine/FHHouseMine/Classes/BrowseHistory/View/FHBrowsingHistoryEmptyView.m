@@ -9,8 +9,6 @@
 #import "UIColor+Theme.h"
 #import <FHCommonUI/UIFont+House.h>
 #import "Masonry.h"
-//#import "FHHouseType.h"
-
 
 @interface FHBrowsingHistoryEmptyView()<FHBrowsingHistoryEmptyViewDelegate>
 
@@ -42,7 +40,6 @@
     self.emptyLabel.text = @"暂无浏览历史";
     self.emptyLabel.font = [UIFont themeFontRegular:14];
     self.emptyLabel.textColor = [UIColor themeGray3];
-    //[self.emptyLabel sizeToFit];
     [self addSubview:_emptyLabel];
     
     self.findHouseButton = [[UIButton alloc] init];

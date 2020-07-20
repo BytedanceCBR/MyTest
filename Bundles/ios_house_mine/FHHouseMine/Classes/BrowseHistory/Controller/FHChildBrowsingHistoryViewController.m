@@ -85,7 +85,6 @@
     [self.findHouseView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.edges.mas_equalTo(self.view);
     }];
-    
     [self.view addSubview:self.tableView];
     [self.tableView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.edges.mas_equalTo(self.view);
@@ -97,7 +96,6 @@
 
 -(UITableView *)tableView {
     if (!_tableView) {
-        
         _tableView = [[FHBaseTableView alloc] initWithFrame:self.view.bounds];
         if (@available(iOS 11.0, *)) {
             _tableView.estimatedRowHeight = 0;
