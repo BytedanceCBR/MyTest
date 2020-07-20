@@ -195,9 +195,14 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
     }
     [self storePhoneNumber:phoneNumber];
     
-//    if([TTAccount sharedAccount].isLogin){
-        [self submitAction];
+    if (![self submitActionWithPhoneNumber:phoneNumber]) {
+        [[ToastManager manager] showToast:@"请输入正确的手机号"];
         return;
+    }
+    
+//    if([TTAccount sharedAccount].isLogin){
+//        [self submitAction];
+//        return;
 //    }
 //    [self addClickLoginLog];
 
@@ -241,8 +246,12 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
 //    }];
 }
 #pragma mark 提交选项
-- (void)submitAction
+- (BOOL)submitActionWithPhoneNumber:(NSString *)phoneNumber
 {
+    if (phoneNumber.length < 1) {
+        return NO;
+    }
+    
     __weak typeof(self)wself = self;
     FHHouseType ht = _houseType;
     FHHouseFindSelectModel *selectModel = [self selectModelWithType:ht];
@@ -262,19 +271,12 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
             [query appendString:q];
         }
     }
-    //    NSLog(@"zjing query : %@",query);
-    YYCache *sendPhoneNumberCache = [[FHEnvContext sharedInstance].generalBizConfig sendPhoneNumberCache];
     
-    NSString *phoneNum = [sendPhoneNumberCache objectForKey:kFHPLoginhoneNumberCacheKey];
-    if (phoneNum.length < 1) {
-        TTAccountUserEntity *userInfo = [TTAccount sharedAccount].user;
-        phoneNum = userInfo.mobile;
-    }
     if (![TTReachability isNetworkConnected]) {
         [[ToastManager manager] showToast:@"网络异常"];
-        return;
+        return YES;
     }
-    [FHMainApi saveHFHelpFindByHouseType:[NSString stringWithFormat:@"%ld",_houseType] query:query phoneNum:phoneNum completion:^(FHHouseFindRecommendModel * _Nonnull model, NSError * _Nonnull error) {
+    [FHMainApi saveHFHelpFindByHouseType:[NSString stringWithFormat:@"%ld",_houseType] query:query phoneNum:phoneNumber completion:^(FHHouseFindRecommendModel * _Nonnull model, NSError * _Nonnull error) {
         if (model && error == NULL) {
             if (model.data) {
                 wself.recommendModel = model.data;
@@ -285,6 +287,8 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
             [[ToastManager manager]showToast:message];
         }
     }];
+    
+    return YES;
 }
 
 - (void)jump2HouseFindResultPage:(NSDictionary *)recommendDict
@@ -1017,7 +1021,7 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
         [attributedString appendAttributedString:[[NSMutableAttributedString alloc] initWithString:@"(必填)" attributes:@{NSFontAttributeName:[UIFont themeFontRegular:14], NSForegroundColorAttributeName:[UIColor themeGray4]}]];
         [headerView updateAttrTitle:attributedString showDelete:NO];
     }else {
-        [headerView updateTitle:@"您的联系方式？" showDelete:NO];
+        [headerView updateTitle:@"您的联系方式是？" showDelete:NO];
     }
     return headerView;
 }
