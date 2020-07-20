@@ -323,6 +323,8 @@
         houseType = -1;
     }
     NSMutableDictionary *dictTrace = [NSMutableDictionary new];
+    dictTrace[@"page_type"] = [self getPageType:self.houseType];
+    dictTrace[@"origin_from"] = self.viewController.tracerDict[@"origin_from"] ? : @"be_null";
     NSDictionary *userInfoDict = @{@"tracer":dictTrace};
     TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:userInfoDict];
     NSString *urlStr = @"";
@@ -401,7 +403,7 @@
 
 - (void)addClickOptionLog {
     NSMutableDictionary *params = @{}.mutableCopy;
-    params[UT_ORIGIN_FROM] = self.searchId ? : @"be_null";
+    params[UT_ORIGIN_FROM] = self.viewController.tracerDict[@"origin_from"] ? : @"be_null";
     params[UT_PAGE_TYPE] = [self getPageType:self.houseType];
     params[UT_CLICK_POSITION] = @"去挑好房";
     TRACK_EVENT(@"click_options", params);
