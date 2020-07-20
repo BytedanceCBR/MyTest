@@ -168,6 +168,14 @@
     if (index < 0) {
         return NO;
     }
+    //非首次进入，根据键盘高度判断是否可以发送
+    if (!self.isFirstShow) {
+        if ([self fatherVC].keyboardHeight > 0) {
+            return NO;
+        } else {
+            return YES;
+        }
+    }
     
     //目前只有一个section，第一个cell是“猜你想找”
     NSIndexPath *indexPath = [NSIndexPath indexPathForRow:index+1 inSection:0];
