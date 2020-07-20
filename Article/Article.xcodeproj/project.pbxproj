@@ -12,6 +12,7 @@
 		170182F824597A3F00334E1B /* buryingPointCheck.json in Resources */ = {isa = PBXBuildFile; fileRef = 170182F624597A3F00334E1B /* buryingPointCheck.json */; };
 		2B1A0B4E24C053C9009D40FF /* F100BaiduMapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2B1A0B4B24C053C2009D40FF /* F100BaiduMapKit.framework */; };
 		2B1A0B4F24C053C9009D40FF /* F100BaiduMapKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 2B1A0B4B24C053C2009D40FF /* F100BaiduMapKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		2B53A10D24C5787300923B3C /* libsqlite3.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 2B53A10C24C5787200923B3C /* libsqlite3.tbd */; };
 		2B832F3524C53D60008FD142 /* F100BaiduMapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2B1A0B4B24C053C2009D40FF /* F100BaiduMapKit.framework */; };
 		2B832F3624C53D60008FD142 /* F100BaiduMapKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 2B1A0B4B24C053C2009D40FF /* F100BaiduMapKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		3D2F39962270545700AE567D /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 3D2F398A2270545700AE567D /* InfoPlist.strings */; };
@@ -305,6 +306,7 @@
 		170182F624597A3F00334E1B /* buryingPointCheck.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = buryingPointCheck.json; sourceTree = "<group>"; };
 		2217C766FCBF2A4BB412EB2B /* Pods-f100.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-f100.release.xcconfig"; path = "Pods/Target Support Files/Pods-f100/Pods-f100.release.xcconfig"; sourceTree = "<group>"; };
 		2B1A0B4B24C053C2009D40FF /* F100BaiduMapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = F100BaiduMapKit.framework; path = ../Bundles/BaiduMapKit/BaiduMapKit/F100BaiduMapKit.framework; sourceTree = "<group>"; };
+		2B53A10C24C5787200923B3C /* libsqlite3.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.tbd; path = usr/lib/libsqlite3.tbd; sourceTree = SDKROOT; };
 		2D33175D1F30AE6D009D2936 /* PushNotification.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = PushNotification.xcassets; sourceTree = "<group>"; };
 		2E14CCE61FE007BD0093E05D /* sound1.caf */ = {isa = PBXFileReference; lastKnownFileType = file; path = sound1.caf; sourceTree = "<group>"; };
 		2E14CCE71FE007BE0093E05D /* sound3.caf */ = {isa = PBXFileReference; lastKnownFileType = file; path = sound3.caf; sourceTree = "<group>"; };
@@ -514,6 +516,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2B53A10D24C5787300923B3C /* libsqlite3.tbd in Frameworks */,
 				3D741F302255FF7200E62B4C /* AddressBookUI.framework in Frameworks */,
 				FEFA5A26205FB1A8001F50D8 /* libresolv.tbd in Frameworks */,
 				FEFA5A27205FB1A8001F50D8 /* libbz2.tbd in Frameworks */,
@@ -600,6 +603,7 @@
 		3AA5028315876A1F00EB27FA /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				2B53A10C24C5787200923B3C /* libsqlite3.tbd */,
 				2B1A0B4B24C053C2009D40FF /* F100BaiduMapKit.framework */,
 				3D741F2E2255FF5D00E62B4C /* AddressBookUI.framework */,
 				4EB6EE50212A823B00EC2148 /* StoreKit.framework */,

@@ -14,6 +14,7 @@
 #import "BMKUtilsComponent.h"
 #import "TTSandBoxHelper.h"
 #import <ByteDanceKit/NSDictionary+BTDAdditions.h>
+#import <ByteDanceKit/NSString+BTDAdditions.h>
 #import <FHHouseBase/UIImage+FIconFont.h>
 #import <ByteDanceKit/UIView+BTDAdditions.h>
 #import <objc/runtime.h>
@@ -587,6 +588,20 @@ static NSInteger overlayIndex = 0;
     NSLog(@"baidu_panoramaDidLoad");
     [self searchCurrentPOI];
     self.lastPoint = kCLLocationCoordinate2DInvalid;
+    
+    if (jsonStr.length) {
+        NSDictionary *jsonDict = [jsonStr btd_jsonDictionary];
+        if (jsonDict[@"X"] && jsonDict[@"Y"]) {
+            double lon = [jsonDict btd_doubleValueForKey:@"X"]/100.0;
+            double lat = [jsonDict btd_doubleValueForKey:@"Y"]/100.0;
+            self.point = [BaiduPanoUtils baiduCoorEncryptLon:lon lat:lat coorType:COOR_TYPE_BDMC];
+            if (CLLocationCoordinate2DIsValid(self.point)) {
+                self.isZoomMapAnimation = YES;
+                [self.mapView setCenterCoordinate:self.point animated:YES];
+            }
+        }
+        
+    }
 }
 
 /**
@@ -600,6 +615,7 @@ static NSInteger overlayIndex = 0;
     if (CLLocationCoordinate2DIsValid(self.lastPoint)) {
         self.point = self.lastPoint;
         self.lastPoint = kCLLocationCoordinate2DInvalid;
+        self.isZoomMapAnimation = YES;
         [self.mapView setCenterCoordinate:self.point animated:YES];
         [self.panoramaView setPanoramaWithLon:self.point.longitude lat:self.point.latitude];
     }
@@ -618,6 +634,7 @@ static NSInteger overlayIndex = 0;
         if ([overlay.overlayKey isEqualToString:overlayId]) {
             self.lastPoint = self.point;
             self.point = overlay.coordinate;
+            self.isZoomMapAnimation = YES;
             [self.mapView setCenterCoordinate:self.point animated:YES];
             [self.panoramaView setPanoramaWithLon:self.point.longitude lat:self.point.latitude];
             break;
@@ -708,6 +725,7 @@ static NSInteger overlayIndex = 0;
  */
 - (void)mapView:(BMKMapView *)mapView regionDidChangeAnimated:(BOOL)animated reason:(BMKRegionChangeReason)reason {
     if (self.isZoomMapAnimation) {
+        self.isZoomMapAnimation = NO;
         return;
     }
     [self.panoramaView setPanoramaWithLon:mapView.centerCoordinate.longitude lat:mapView.centerCoordinate.latitude];
