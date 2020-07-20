@@ -59,6 +59,7 @@ BOOL ClassSwizzle(Class aClass, SEL originalSelector, SEL swizzleSelector){
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         ClassSwizzle([BaiduPanoramaView class], @selector(fh_setPanoramaWithLon:lat:), @selector(setPanoramaWithLon:lat:));
+//        ClassSwizzle([BaiduPanoramaView class], @selector(fh_setPanoramaWithLon:lat:), @selector(setPanoramaWithLon:lat:));
     });
 }
 
@@ -286,6 +287,7 @@ BOOL ClassSwizzle(Class aClass, SEL originalSelector, SEL swizzleSelector){
     zoomButton.backgroundColor = [UIColor clearColor];
     [zoomButton setImage:[UIImage imageNamed:@"baidu_panorama_scale_icon"] forState:UIControlStateNormal];
     [zoomButton addTarget:self action:@selector(zoomButtonAction) forControlEvents:UIControlEventTouchUpInside];
+    zoomButton.alpha = 0;
     [self.mapView addSubview:zoomButton];
     self.zoomButton = zoomButton;
     [self.zoomButton mas_makeConstraints:^(MASConstraintMaker *make) {
