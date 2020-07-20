@@ -10,9 +10,10 @@
 		1463BBA9E3DCC925B4FEE0F2 /* libPods-com.f100.client.FHNotificationServiceExtension.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 463126C447392DFA6D0E387F /* libPods-com.f100.client.FHNotificationServiceExtension.a */; };
 		170182F724597A3F00334E1B /* buryingPointCheck.json in Resources */ = {isa = PBXBuildFile; fileRef = 170182F624597A3F00334E1B /* buryingPointCheck.json */; };
 		170182F824597A3F00334E1B /* buryingPointCheck.json in Resources */ = {isa = PBXBuildFile; fileRef = 170182F624597A3F00334E1B /* buryingPointCheck.json */; };
-		2B1A0B4C24C053C3009D40FF /* F100BaiduMapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2B1A0B4B24C053C2009D40FF /* F100BaiduMapKit.framework */; };
 		2B1A0B4E24C053C9009D40FF /* F100BaiduMapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2B1A0B4B24C053C2009D40FF /* F100BaiduMapKit.framework */; };
 		2B1A0B4F24C053C9009D40FF /* F100BaiduMapKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 2B1A0B4B24C053C2009D40FF /* F100BaiduMapKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		2B832F3524C53D60008FD142 /* F100BaiduMapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2B1A0B4B24C053C2009D40FF /* F100BaiduMapKit.framework */; };
+		2B832F3624C53D60008FD142 /* F100BaiduMapKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 2B1A0B4B24C053C2009D40FF /* F100BaiduMapKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		3D2F39962270545700AE567D /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 3D2F398A2270545700AE567D /* InfoPlist.strings */; };
 		3D2F39982270545700AE567D /* TargetLogicSetting.strings in Resources */ = {isa = PBXBuildFile; fileRef = 3D2F398E2270545700AE567D /* TargetLogicSetting.strings */; };
 		3D2F399A2270545700AE567D /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D2F39912270545700AE567D /* main.m */; };
@@ -237,6 +238,17 @@
 			dstSubfolderSpec = 10;
 			files = (
 				2B1A0B4F24C053C9009D40FF /* F100BaiduMapKit.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		2B832F3724C53D60008FD142 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				2B832F3624C53D60008FD142 /* F100BaiduMapKit.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -529,7 +541,7 @@
 				FEFA5A46205FB1A8001F50D8 /* libz.1.2.5.dylib in Frameworks */,
 				FEFA5A49205FB1A8001F50D8 /* libsqlite3.0.dylib in Frameworks */,
 				FEFA5A4A205FB1A8001F50D8 /* SystemConfiguration.framework in Frameworks */,
-				2B1A0B4C24C053C3009D40FF /* F100BaiduMapKit.framework in Frameworks */,
+				2B832F3524C53D60008FD142 /* F100BaiduMapKit.framework in Frameworks */,
 				FEFA5A4B205FB1A8001F50D8 /* MobileCoreServices.framework in Frameworks */,
 				FEFA5A4C205FB1A8001F50D8 /* UIKit.framework in Frameworks */,
 				FEFA5A4D205FB1A8001F50D8 /* Foundation.framework in Frameworks */,
@@ -924,6 +936,7 @@
 				3D39643A219ACF07002E9010 /* ShellScript */,
 				8A48766275BDF55FC225ABAF /* [CP] Copy Pods Resources */,
 				5C1EEBCFB4B71EEF47580257 /* [CP] Embed Pods Frameworks */,
+				2B832F3724C53D60008FD142 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);

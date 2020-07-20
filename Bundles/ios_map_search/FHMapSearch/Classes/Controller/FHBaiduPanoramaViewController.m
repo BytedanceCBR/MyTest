@@ -472,6 +472,8 @@ static NSInteger overlayIndex = 0;
             continue;
         }
         overlayIndex += 1;
+        
+        //重叠问题，添加到全景上以后，后续的点都要与前面的比对，有重复的height 增加
         UIImage *image = [self imageWithName:name icon:[UIImage imageNamed:imageName] distance:distance];
         BaiduPanoImageOverlay *overlay = [[BaiduPanoImageOverlay alloc] init];
         overlay.overlayKey = [@(overlayIndex) stringValue];
