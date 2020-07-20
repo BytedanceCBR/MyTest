@@ -877,6 +877,7 @@
 				B373CF092174587A008F9905 /* Embed Watch Content */,
 				3D396439219ACED0002E9010 /* ShellScript */,
 				FCC852F64C0273F226C6A461 /* [CP] Copy Pods Resources */,
+				61C60288D06486DFDE078DAD /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -1220,6 +1221,23 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-NewsLiteInHouse/Pods-NewsLiteInHouse-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		61C60288D06486DFDE078DAD /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-f100/Pods-f100-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-f100/Pods-f100-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-f100/Pods-f100-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		7E9889E73A9558BC1C4F8F9F /* [CP-User] sgmpreaction */ = {

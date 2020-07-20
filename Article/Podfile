@@ -505,8 +505,10 @@ def appPods
     
     #支持自动约束cell缓存高度
     pod_binary 'UITableView+FDTemplateLayoutCell', '1.6'
-
-#    pod 'TTIMSDK', '1.0.0-rc.34.2-bugfix', :subspecs => [
+    
+    #IMSDK升级，分支依赖方式
+    pod 'lz4', '1.0.1'
+    pod 'ByteRtcSDK', '2.6.11'
     pod 'TTIMSDK', :git => 'https://code.byted.org/im/TIMSDK.git', :branch => 'yang_branchf', :subspecs => [
         'IMKit_Default',
         'IMKit_WebSocket',
@@ -528,8 +530,10 @@ def appPods
         'Feature_Core_Setting',
         'Feature_Core_ReadReceipt',
         'Feature_Core_Default',
+        'Feature_Core_BroadCast',
         'Feature_ApplicationStatus',
         'IMSugar_MediaFileUploader',
+        'IMSugar_RTCVideo',
         'Protocols',
         'Bridges'
     ]
@@ -713,8 +717,8 @@ post_install do |installer|
           '${PODS_ROOT}/TTABManager',
           '${PODS_ROOT}/TTNetBusiness/ios',
           '${PODS_ROOT}/TencentQQSDK/TencentQQSDK/Classes',
-
           '${PODS_ROOT}/Quaterback/BDDynamically/Frameworks/News/Release',
+          '${PODS_ROOT}/ByteRtcSDK'
           ]
         end
 
