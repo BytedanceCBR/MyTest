@@ -27,9 +27,6 @@
     self = [super initWithRouteParamObj:paramObj];
     if (self) {
         _isCanTrack = NO;
-        self.tracerDict[@"origin_from"] = @"minetab_service";
-        self.tracerDict[@"enter_from"] = @"minetab";
-        
     }
     return self;
 }

@@ -39,6 +39,7 @@
 @property (nonatomic, strong) NSString *searchId;
 @property (nonatomic, strong) NSString *originSearchId;
 @property (nonatomic, assign) BOOL isFirstRequest;
+@property (nonatomic, assign) BOOL isCanEnterCategory;
 
 @end
 
@@ -47,10 +48,7 @@
 - (instancetype)initWithViewController:(FHChildBrowsingHistoryViewController *)viewController tableView:(UITableView *)tableView emptyView:(FHBrowsingHistoryEmptyView *)emptyView {
     self = [super init];
     if (self) {
-        self.isFirstRequest = YES;
-        self.isEnterCategory = YES;
-        self.tracerDictRecord = [[NSMutableDictionary alloc] init];
-        self.historyList = [[NSMutableArray alloc] init];
+        [self initWithData];
         self.viewController = viewController;
         self.findHouseView = emptyView;
         self.tableView = tableView;
@@ -68,6 +66,14 @@
         footer.hidden = YES;
     }
     return self;
+}
+
+- (void)initWithData {
+    self.isCanEnterCategory = NO;
+    self.isFirstRequest = YES;
+    self.isEnterCategory = YES;
+    self.tracerDictRecord = [[NSMutableDictionary alloc] init];
+    self.historyList = [[NSMutableArray alloc] init];
 }
 
 - (void)registerCellClasses {
@@ -118,6 +124,7 @@
         if (historyModel.searchId.length > 0) {
             self.searchId = historyModel.searchId;
         }
+        self.isCanEnterCategory = YES;
         if (_isFirstRequest && self.searchId.length > 0) {
             self.isFirstRequest = NO;
             self.originSearchId = self.searchId;
@@ -155,7 +162,7 @@
 }
 
 - (void)updateEnterLog {
-    if (self.isEnterCategory && self.viewController.isCanTrack) {
+    if (self.isEnterCategory && self.viewController.isCanTrack && self.isCanEnterCategory) {
         [self addEnterLog];
         self.isEnterCategory = NO;
     }
@@ -187,9 +194,6 @@
             break;
         default:
             break;
-    }
-    if (jerror) {
-        NSLog(@"error");
     }
     return itemModel;
 }

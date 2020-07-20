@@ -234,18 +234,8 @@
         @"page_type":@"minetab",
     };
     TRACK_EVENT(@"click_minetab", clickTrackDic);
-    
     NSURL* url = [NSURL URLWithString:model.openUrl];
-    
-    NSDictionary *dict = @{
-        @"tracer":@{
-                @"origin_from":@"minetab_service",
-                @"enter_from":@"minetab"
-                
-        }};
-    TTRouteUserInfo *info = [[TTRouteUserInfo alloc] initWithInfo:dict];
-
-    [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:info];
+    [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:nil];
 }
 
 
@@ -347,6 +337,17 @@
 //
 //                 NSURL* url = [NSURL URLWithString:@"snssdk1370://flogin"];
 //                 [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
+             } else if (model.openUrl && [model.openUrl containsString:@"browse_history"]) {
+                 NSMutableDictionary *browseHistoryDict = [NSMutableDictionary dictionary];
+                 NSMutableDictionary *browseHistoryTracer = [NSMutableDictionary dictionary];
+                 if (model.reportParams) {
+                     [browseHistoryTracer addEntriesFromDictionary:model.reportParams];
+                 }
+                 browseHistoryTracer[@"origin_from"] = @"minetab_service";
+                 browseHistoryTracer[@"enter_type"] = @"click";
+                 browseHistoryDict[@"tracer"] = browseHistoryTracer;
+                 TTRouteUserInfo *browseHistoryUserInfo = [[TTRouteUserInfo alloc] initWithInfo:browseHistoryDict];
+                 [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:browseHistoryUserInfo];
              }else{
                  [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
              }

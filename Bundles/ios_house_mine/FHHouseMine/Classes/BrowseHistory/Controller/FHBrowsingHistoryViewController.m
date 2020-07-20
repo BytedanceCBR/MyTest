@@ -57,7 +57,7 @@ static const float kSegementedOneWidth = 50;
     [self setupDefaultNavBar:NO];
     [self.customNavBarView.leftBtn setBackgroundImage:ICON_FONT_IMG(24, @"\U0000e68a", [UIColor themeGray1]) forState:UIControlStateNormal];
     [self.customNavBarView.leftBtn setBackgroundImage:ICON_FONT_IMG(24, @"\U0000e68a", [UIColor themeGray1]) forState:UIControlStateHighlighted];
-    self.customNavBarView.seperatorLine.hidden = YES;
+    self.customNavBarView.seperatorLine.hidden = NO;
 }
 
 - (void)setupUI {
@@ -162,6 +162,7 @@ static const float kSegementedOneWidth = 50;
     }
     _houseType = houseType;
     self.viewModel.currentTabIndex = _segmentControl.selectedSegmentIndex;
+    [self.collectionView layoutIfNeeded];
     [self.viewModel updateSubVCTrackStatus];
 }
 
