@@ -8,6 +8,7 @@ gem 'bd_pod_extentions', '6.3.0'
 gem 'cocoapods-BDTransform', '~> 5.0'
 # 修复CocoaPods和Xcode 11兼容问题
 gem 'cocoapods-xcode-patch', '~> 0.1'
+gem 'sqlite3', git: "https://github.com/larskanis/sqlite3-ruby", branch: "add-gemspec"
 
 
 # CI专用的gem，本地RD不需要
