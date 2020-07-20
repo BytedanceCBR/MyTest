@@ -75,7 +75,7 @@ static NSString * const kFHLynxEnableControlKey = @"lynx_enable";
         //没有的话同步读，用磁盘io的串行队列
         dispatch_sync(self.lynx_io_queue, ^{
             data = [self getGeckoFileDataWithChannel:channel fileName:[FHLynxManager defaultJSFileName]];
-            if (data) {
+            if (data) {  
                 [self cacheData:data andChannel:channel];
             }
         });

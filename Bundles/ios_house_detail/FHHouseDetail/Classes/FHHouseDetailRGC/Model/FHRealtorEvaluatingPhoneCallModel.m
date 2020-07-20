@@ -156,7 +156,7 @@
       info[@"title"] = @"经纪人主页";
       info[@"realtor_id"] = contactPhone.realtorId;
       info[@"delegate"] = self;
-      info[@"trace"] = self.tracerDict;
+      info[@"tracer"] = self.tracerDict;
     if (self.houseId && self.houseType) {
         info[@"house_id"] = _houseId;
         info[@"house_type"] = @(_houseType);

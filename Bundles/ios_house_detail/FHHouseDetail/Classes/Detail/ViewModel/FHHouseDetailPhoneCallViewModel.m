@@ -259,7 +259,7 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
         info[@"title"] = @"经纪人主页";
         info[@"realtor_id"] = contactPhone.realtorId;
         info[@"delegate"] = self;
-        info[@"trace"] = self.tracerDict;
+        info[@"tracer"] = self.tracerDict;
         info[@"house_id"] = _houseId;
         info[@"house_type"] = @(_houseType);
         TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:info];

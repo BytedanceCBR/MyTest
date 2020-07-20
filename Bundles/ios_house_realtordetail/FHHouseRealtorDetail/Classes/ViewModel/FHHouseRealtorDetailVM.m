@@ -424,7 +424,7 @@
 
 - (CGFloat)heightForSegmentInPagingView {
     NSMutableArray *tabArray = [self.ugcTabList mutableCopy];
-    if(tabArray && tabArray.count > 0) {
+    if(tabArray && tabArray.count > 1) {
         return kSegmentViewHeight;
     }else{
         return 0;

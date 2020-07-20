@@ -39,8 +39,8 @@
         self.communityId = paramObj.allParams[@"community_id"];
         self.tabName = paramObj.allParams[@"tab_name"];
         self.realtorDetailInfo = paramObj.allParams;
-        // 取链接中的埋点数据
-        self.tracerDict = paramObj.allParams[@"trace"];
+//        // 取链接中的埋点数据
+//        self.tracerDict = paramObj.allParams[@"tracer"];
         self.tracerDict[@"page_type"] = [self pageType];
     }
     return self;
@@ -129,7 +129,7 @@
 }
 
 - (void)initHeaderView {
-    CGFloat headerBackNormalHeight = 440;
+    CGFloat headerBackNormalHeight = 420;
     CGFloat headerBackXSeriesHeight = headerBackNormalHeight + 44; //刘海平多出24
     CGFloat height = [UIDevice btd_isIPhoneXSeries] ? headerBackXSeriesHeight : headerBackNormalHeight + 40;
     self.headerView = [[FHHouseRealtorDetailHeaderView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, height)];
