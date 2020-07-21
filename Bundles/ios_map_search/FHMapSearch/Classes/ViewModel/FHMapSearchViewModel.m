@@ -45,6 +45,7 @@
 #import <TTUIWidget/TTNavigationController.h>
 #import "FHHouseOpenURLUtil.h"
 #import <NSDictionary+TTAdditions.h>
+#import "FHMapSimpleNavbar.h"
 
 #define kTipDuration 3
 
@@ -1514,6 +1515,10 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
         if (showCircle) {
             //增加画圈显示
             [showTyeps addObject:@(FHMapSearchSideBarItemTypeCircle)];
+        }
+        
+        if(self.showMode == FHMapSearchShowModeDrawLine){
+            [self.simpleNavBar updateCicleBtn:showCircle];
         }
         
         [showTyeps addObject:@(FHMapSearchSideBarItemTypeFilter)];

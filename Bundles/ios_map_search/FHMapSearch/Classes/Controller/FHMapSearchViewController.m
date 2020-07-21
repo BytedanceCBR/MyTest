@@ -281,6 +281,7 @@
     _viewModel.sideBar = self.sideBar;
     _viewModel.topInfoBar = self.topInfoBar;
     _viewModel.tipView = self.tipView;
+    _viewModel.simpleNavBar = self.simpleNavBar;
     
     self.title = _viewModel.navTitle;
     [self.simpleNavBar setTitle:self.title];

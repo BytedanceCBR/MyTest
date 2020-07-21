@@ -26,6 +26,8 @@ typedef NS_ENUM(NSInteger , FHMapSimpleNavbarType) {
 
 -(CGFloat)titleBottom;
 
+- (void)updateCicleBtn:(BOOL)isShowCircle;
+
 @end
 
 NS_ASSUME_NONNULL_END
