@@ -56,7 +56,7 @@
 }
 
 - (void)createModel {
-    _viewModel = [[FHHouseRealtorShopVM alloc]initWithController:self tableView:self.tableView realtorDic:self.realtorInfoDic.copy bottomBar:self.bottomBar];
+    _viewModel = [[FHHouseRealtorShopVM alloc]initWithController:self tableView:self.tableView realtorDic:self.realtorInfoDic.copy bottomBar:self.bottomBar tracerDic:self.tracerDict];
 }
 
 - (void)retryLoadData {
