@@ -101,8 +101,8 @@
         [self addSubview:_agreementLabel];
         [self.agreementLabel mas_makeConstraints:^(MASConstraintMaker *make) {
             make.bottom.mas_equalTo(-20);
-            make.left.mas_equalTo(30);
-            make.right.mas_equalTo(-30);
+            make.left.mas_equalTo(20);
+            make.right.mas_equalTo(-20);
             make.height.mas_equalTo(0);
         }];
     }
