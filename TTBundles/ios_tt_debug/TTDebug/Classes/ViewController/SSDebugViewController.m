@@ -759,7 +759,12 @@ extern NSString *const BOE_OPEN_KEY ;
         
         STTableViewCellItem *invalidIMToken = [[STTableViewCellItem alloc] initWithTitle:@"IM手动触发token失效更新" target:self action:@selector(triggerIMTokenInvalide)];
         
-        STTableViewSectionItem *section = [[STTableViewSectionItem alloc] initWithSectionTitle:@"IM相关调试选项" items:@[toggleIMConnectionItem, toggleIMReadReceiptRequestItem, toggleIMFakeTokenItem, invalidIMToken]];
+        STTableViewCellItem *frequenceControlDisable = [[STTableViewCellItem alloc] initWithTitle:@"IM房源卡片自动文本频控关闭" target:self action:nil];
+        frequenceControlDisable.switchStyle = YES;
+        frequenceControlDisable.checked = [[NSUserDefaults standardUserDefaults] boolForKey:@"_IM_Frequenct_Control_Disable_"];
+        frequenceControlDisable.switchAction = @selector(toggleIMFrequencyControlDisable);
+        
+        STTableViewSectionItem *section = [[STTableViewSectionItem alloc] initWithSectionTitle:@"IM相关调试选项" items:@[toggleIMConnectionItem, toggleIMReadReceiptRequestItem, toggleIMFakeTokenItem, invalidIMToken, frequenceControlDisable]];
         
         [dataSource addObject:section];
     }
@@ -782,6 +787,12 @@ extern NSString *const BOE_OPEN_KEY ;
     if(!isFakeTokenEnable) {
         [self triggerIMTokenInvalide];
     }
+}
+
+- (void)toggleIMFrequencyControlDisable {
+    BOOL isDisableIMFrequenceControl = [[NSUserDefaults standardUserDefaults] boolForKey:@"_IM_Frequenct_Control_Disable_"];
+    [[NSUserDefaults standardUserDefaults] setBool:!isDisableIMFrequenceControl forKey:@"_IM_Frequenct_Control_Disable_"];
+    [[NSUserDefaults standardUserDefaults] synchronize];
 }
 - (void)triggerIMTokenInvalide {
     [[IMManager shareInstance] invalidTokenForDebug];
