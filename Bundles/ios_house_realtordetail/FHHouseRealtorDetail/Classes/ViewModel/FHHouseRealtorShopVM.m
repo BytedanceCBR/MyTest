@@ -19,6 +19,7 @@
 #import "TTReachability.h"
 #import "UIImage+FIconFont.h"
 #import "FHRealtorEvaluatingPhoneCallModel.h"
+#import "NSObject+YYModel.h"
 @interface FHHouseRealtorShopVM ()<UITableViewDelegate,UITableViewDataSource>
 @property(nonatomic, weak)TTHttpTask *requestTask;
 @property(nonatomic , weak) UITableView *tableView;
@@ -41,7 +42,7 @@
     if (self) {
         self.detailController = viewController;
             self.bottomBar = bottomBar;
-        self.tracerDict = @{};
+        self.tracerDict = tracer;
         self.tableView = tableView;
         self.realtorPhoneCallModel = [[FHRealtorEvaluatingPhoneCallModel alloc]initWithHouseType:nil houseId:nil];
         self.realtorPhoneCallModel.tracerDict = tracer;
@@ -105,7 +106,18 @@
     [dic setObject:model.data.certificationIcon?:@"" forKey:@"certification_icon"];
     [dic setObject:model.data.certificationPage?:@"" forKey:@"certification_page"];
     [dic setObject:@{@"realtor_id":self.realtorInfo[@"realtor_id"]?:@"",@"screen_width":@([UIScreen mainScreen].bounds.size.width)} forKey:@"common_params"];
-     [dic setObject:self.tracerDict forKey:@"report_params"];
+    if (self.tracerDict) {
+         NSString *lynxReortParams= [self.tracerDict yy_modelToJSONString];
+             lynxReortParams = [lynxReortParams stringByAddingPercentEncodingWithAllowedCharacters:NSCharacterSet.URLQueryAllowedCharacterSet];
+             
+             NSString *unencodedString = lynxReortParams;
+             NSString *encodedString = (NSString *)CFBridgingRelease(CFURLCreateStringByAddingPercentEscapes(kCFAllocatorDefault,
+                                                                                                             (CFStringRef)unencodedString,
+                                                                                                             NULL,
+                                                                                                             (CFStringRef)@"!*'();:@&=+$,/?%#[]",
+                                                                                                             kCFStringEncodingUTF8));
+          [dic setObject:lynxReortParams forKey:@"report_params"];
+         }
     [self.detailController.headerView reloadDataWithDic:dic];
     if (model.data.houseImage) {
         NSString *imageUrl = model.data.houseImage[@"url"];

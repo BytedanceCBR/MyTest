@@ -184,7 +184,7 @@
     if (![commentDic.allKeys containsObject:@"id"]) {
         return;
     }
-    NSString *commentId = commentDic[@"id"];
+    NSString *commentId = [NSString stringWithFormat:@"%@",commentDic[@"id"]];
     if (commentId.length >0) {
         
         if ([self.showCommentCache containsObject:commentId]) {
