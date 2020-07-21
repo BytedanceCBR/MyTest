@@ -263,17 +263,12 @@
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-    
     NSInteger row = indexPath.row;
     if (row >= 0 && row < _historyList.count) {
-        BOOL isFirstCell = NO;
         BOOL isLastCell = NO;
         id data = _historyList[row];
         if (indexPath.row == self.historyList.count - 1) {
             isLastCell = YES;
-        }
-        if (indexPath.row == 0) {
-            isFirstCell = YES;
         }
         id cellClass = [self cellClassForEntity:data];
         if ([data isKindOfClass:[FHBrowseHistoryContentModel class]]) {
@@ -281,11 +276,7 @@
         } else if ([data isKindOfClass:[FHSearchHouseItemModel class]]) {
             FHSearchHouseItemModel *item = (FHSearchHouseItemModel *)data;
             item.isLastCell = isLastCell;
-            if ((item.houseType.integerValue == FHHouseTypeRentHouse || item.houseType.integerValue == FHHouseTypeNeighborhood) && isFirstCell) {
-                item.topMargin = 10;
-            }else {
-                item.topMargin = 0;
-            }
+            item.topMargin = 0;
             data = item;
         }
         if ([[cellClass class]respondsToSelector:@selector(heightForData:)]) {
@@ -330,8 +321,8 @@
         houseType = -1;
     }
     NSMutableDictionary *dictTrace = [NSMutableDictionary new];
-    dictTrace[@"enter_from"] = [self getPageType:self.houseType];
-    dictTrace[@"origin_from"] = self.viewController.tracerDict[@"origin_from"] ? : @"be_null";
+    dictTrace[UT_ENTER_FROM] = [self getPageType:self.houseType];
+    dictTrace[UT_ORIGIN_FROM] = self.viewController.tracerDict[@"origin_from"] ? : @"be_null";
     NSDictionary *userInfoDict = @{@"tracer":dictTrace};
     TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:userInfoDict];
     NSString *urlStr = @"";
@@ -426,12 +417,10 @@
         [params addEntriesFromDictionary:self.viewController.tracerDict];
         FHSearchHouseItemModel *model = (FHSearchHouseItemModel *)cellModel;
         self.tracerDictRecord[recordKey] = @(YES);
-        
-        
         params[UT_PAGE_TYPE] = [self getPageType:self.houseType];
         params[UT_ORIGIN_SEARCH_ID] = self.originSearchId ? : @"be_null";
         params[UT_SEARCH_ID] = self.searchId ? : @"be_null";
-        params[@"impr_id"] = model.imprId;
+        params[@"impr_id"] = model.imprId ? : @"be_null";
         params[UT_RANK] = @(rank);
         params[UT_HOUSE_TYPE] = [self getHouseType:self.houseType];
         params[@"log_pb"] = model.logPb;
