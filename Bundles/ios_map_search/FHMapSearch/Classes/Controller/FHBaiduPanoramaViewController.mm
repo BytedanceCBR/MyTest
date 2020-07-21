@@ -39,6 +39,7 @@
 @property (nonatomic) double gaodeLat;
 @property (nonatomic) double gaodeLon;
 
+@property (nonatomic) CLLocationCoordinate2D firstLoadPoint;
 @property (nonatomic) CLLocationCoordinate2D point;
 @property (nonatomic) CLLocationCoordinate2D lastPoint;
 
@@ -53,6 +54,8 @@
 @property (nonatomic, assign) UIStatusBarStyle lastStatusBarStyle;
 
 @property (nonatomic, strong) dispatch_queue_t serialQueue;
+
+@property (nonatomic, strong) BaiduPanoImageOverlay *selectOverlay;
 
 @end
 
@@ -82,6 +85,7 @@
             self.gaodeLon = [paramObj.allParams btd_doubleValueForKey:@"gaodeLon"];
         }
         
+        self.firstLoadPoint = kCLLocationCoordinate2DInvalid;
         self.point = [BaiduPanoUtils baiduCoorEncryptLon:self.gaodeLon lat:self.gaodeLat coorType:COOR_TYPE_COMMON];
         self.serialQueue = dispatch_queue_create("baidu_pano_serial_queue", DISPATCH_QUEUE_SERIAL);
         [self addGoDetailLog];
@@ -203,7 +207,7 @@
     self.mapView.rotateEnabled = NO;
 //    self.mapView.overlookEnabled = NO;
 //    self.mapView.showMapScaleBar = NO;
-    self.mapView.zoomLevel = 16;
+    self.mapView.zoomLevel = 18;
     [self.mapView setMapType:BMKMapTypeStandard];
     self.mapView.layer.masksToBounds = YES;
     self.mapView.layer.cornerRadius = 4.0;
@@ -268,7 +272,12 @@
 
 #pragma mark - Action
 - (void)originPositionButtonAction {
+    double distance = [self distanceBetweenOrderBy:self.firstLoadPoint other:self.point];
+    if (distance < 1.0) {
+        return;
+    }
     self.point = [BaiduPanoUtils baiduCoorEncryptLon:self.gaodeLon lat:self.gaodeLat coorType:COOR_TYPE_COMMON];
+    self.mapView.zoomLevel = 18;
     [self.mapView setCenterCoordinate:self.point animated:YES];
     [self.panoramaView setPanoramaWithLon:self.point.longitude lat:self.point.latitude];
 }
@@ -339,15 +348,14 @@
     [self.filterPoiList removeAllObjects];
     [self.panoramaView removeAllOverlay];
     [self.overlays removeAllObjects];
-    self.limitDict = @{@"银行": @(0),
-                       @"公交": @(0),
+    self.limitDict = @{@"公交": @(0),
                        @"地铁": @(0),
                        @"教育": @(0),
                        @"医院": @(0),
                        @"商场": @(0),
                        @"小区": @(0)}.mutableCopy;
     
-    for (NSString *keyword in @[@"银行",@"公交",@"地铁",@"教育",@"医院",@"商场",@"小区"]) {
+    for (NSString *keyword in @[@"公交",@"地铁",@"教育",@"医院",@"商场",@"小区"]) {
         BMKPoiSearch *poiSearch = [[BMKPoiSearch alloc] init];
         poiSearch.delegate = self;
         BMKPOINearbySearchOption *option = [[BMKPOINearbySearchOption alloc] init];
@@ -357,26 +365,25 @@
         option.isRadiusLimit = YES;
         option.scope = BMK_POI_SCOPE_DETAIL_INFORMATION;
         option.pageIndex = 0;
-        option.pageSize = 10;
+        option.pageSize = 20;
         [poiSearch poiSearchNearBy:option];
     }
-    BMKGeoCodeSearch *geoSearch = [[BMKGeoCodeSearch alloc] init];
-    geoSearch.delegate = self;
-    BMKReverseGeoCodeSearchOption *geoSearchOption = [[BMKReverseGeoCodeSearchOption alloc] init];
-    geoSearchOption.location = self.point;
-    geoSearchOption.isLatestAdmin = YES;
-    geoSearchOption.pageSize = 1;
-    geoSearchOption.pageNum = 0;
-    [geoSearch reverseGeoCode:geoSearchOption];
+    
+    if (!self.selectOverlay) {
+        BMKGeoCodeSearch *geoSearch = [[BMKGeoCodeSearch alloc] init];
+        geoSearch.delegate = self;
+        BMKReverseGeoCodeSearchOption *geoSearchOption = [[BMKReverseGeoCodeSearchOption alloc] init];
+        geoSearchOption.location = self.point;
+        geoSearchOption.isLatestAdmin = YES;
+        geoSearchOption.pageSize = 1;
+        geoSearchOption.pageNum = 0;
+        [geoSearch reverseGeoCode:geoSearchOption];
+    }
 }
 
 static NSInteger overlayIndex = 0;
 
 - (void)handlePoiResult:(BMKPOISearchResult *)poiResult{
-//(NSArray<BMKPoiInfo *>)poiInfoList{
-//    poiResult.poiInfoList
-
-
     dispatch_async(self.serialQueue, ^{
         NSMutableArray *filterArray = [NSMutableArray array];
         for (BMKPoiInfo *poiInfo in poiResult.poiInfoList) {
@@ -395,9 +402,10 @@ static NSInteger overlayIndex = 0;
             NSString *name = poiInfo.name;
             NSString *typeName = nil;
             //tag
-            if ([detailInfo.tag containsString:@"银行"]) {
-                typeName = @"银行";
-            } else if ([detailInfo.tag containsString:@"地铁"]) {
+//            if ([detailInfo.tag containsString:@"银行"]) {
+//                typeName = @"银行";
+//            } else
+            if ([detailInfo.tag containsString:@"地铁"]) {
                 typeName = @"地铁";
             } else if ([detailInfo.tag containsString:@"住宅"]) {
                 typeName = @"小区";
@@ -497,46 +505,45 @@ static NSInteger overlayIndex = 0;
         overlay.overlayKey = [@(overlayIndex) stringValue];
         overlay.type = BaiduPanoOverlayTypeImage;
         overlay.coordinate = poiInfo.pt;
-        overlay.height = -50;
+        overlay.height = 0;
         overlay.size = image.size;
         overlay.image = image;
-        double overlayAngle = [self getBearingWithLat1:self.point.latitude whitLng1:self.point.longitude whitLat2:overlay.coordinate.latitude whitLng2:overlay.coordinate.longitude];
-        BOOL ignore = NO;
+        double overlayAngle = [self computeAzimuthBy:self.point other:overlay.coordinate];
+//        BOOL ignore = NO;
         for (BaiduPanoImageOverlay *item in self.overlays) {
-            double itemAngle = [self getBearingWithLat1:self.point.latitude whitLng1:self.point.longitude whitLat2:item.coordinate.latitude whitLng2:item.coordinate.longitude];
-            if (overlayAngle >= 0 && itemAngle >= 0 || overlayAngle < 0 && itemAngle < 0) {
-                if (abs(abs(overlayAngle) - abs(itemAngle)) < 15) {
-                    overlay.height += 100;
-                }
-            } else if (abs(overlayAngle - itemAngle) < 15 || abs(overlayAngle - itemAngle) > 165) {
-                overlay.height += 100;
+            double itemAngle = [self computeAzimuthBy:self.point other:item.coordinate];
+            double distance = [self distanceBetweenOrderBy:self.point other:item.coordinate];
+            CGFloat heightRate = 150 / 1000.0 * distance;
+            if (abs(overlayAngle - itemAngle) < 15) {
+                overlay.height += heightRate;
             }
-            if (overlay.height > 300) {
-                ignore = YES;
-            }
+
+//            if (overlay.height > 300) {
+//                ignore = YES;
+//            }
         }
-        if (ignore) {
-            continue;
-        }
+//        if (ignore) {
+//            continue;
+//        }
         [self.overlays addObject:overlay];
         [self.panoramaView addOverlay:overlay];
     }
 }
 
 //两个经纬度之间的角度
--(double)getBearingWithLat1:(double)lat1 whitLng1:(double)lng1 whitLat2:(double)lat2 whitLng2:(double)lng2{
-    
-    double d = 0;
-    double radLat1 =  [self radian:lat1];
-    double radLat2 =  [self radian:lat2];
-    double radLng1 = [self radian:lng1];
-    double radLng2 =  [self radian:lng2];
-    d = sin(radLat1)*sin(radLat2)+cos(radLat1)*cos(radLat2)*cos(radLng2-radLng1);
-    d = sqrt(1-d*d);
-    d = cos(radLat2)*sin(radLng2-radLng1)/d;
-    d = [self angle:asin(d)];
-    return d;
-}
+//- (double)getBearingWithLat1:(double)lat1 whitLng1:(double)lng1 whitLat2:(double)lat2 whitLng2:(double)lng2{
+//
+//    double d = 0;
+//    double radLat1 =  [self radian:lat1];
+//    double radLat2 =  [self radian:lat2];
+//    double radLng1 = [self radian:lng1];
+//    double radLng2 =  [self radian:lng2];
+//    d = sin(radLat1)*sin(radLat2)+cos(radLat1)*cos(radLat2)*cos(radLng2-radLng1);
+//    d = sqrt(1-d*d);
+//    d = cos(radLat2)*sin(radLng2-radLng1)/d;
+//    d = [self angle:asin(d)];
+//    return d;
+//}
 //根据角度计算弧度
 -(double)radian:(double)d{
     
@@ -546,6 +553,56 @@ static NSInteger overlayIndex = 0;
 -(double)angle:(double)r{
     
     return r * 180/M_PI;
+}
+
+-(double)distanceBetweenOrderBy:(CLLocationCoordinate2D ) point other:(CLLocationCoordinate2D) otherPoint {
+    CLLocation *curLocation = [[CLLocation alloc] initWithLatitude:point.latitude longitude:point.longitude];
+    CLLocation *otherLocation = [[CLLocation alloc] initWithLatitude:otherPoint.latitude longitude:otherPoint.longitude];
+    double distance  = [curLocation distanceFromLocation:otherLocation];
+    return distance;
+}
+
+- (double)computeAzimuthBy:(CLLocationCoordinate2D ) point other:(CLLocationCoordinate2D) otherPoint {
+    double lat1 = point.latitude, lon1 = point.longitude, lat2 = otherPoint.latitude,
+            lon2 = otherPoint.longitude;
+    double result = 0.0;
+
+    int ilat1 = (int) (0.50 + lat1 * 360000.0);
+    int ilat2 = (int) (0.50 + lat2 * 360000.0);
+    int ilon1 = (int) (0.50 + lon1 * 360000.0);
+    int ilon2 = (int) (0.50 + lon2 * 360000.0);
+//
+//    lat1 = Math.toRadians(lat1);
+//    lon1 = Math.toRadians(lon1);
+//    lat2 = Math.toRadians(lat2);
+//    lon2 = Math.toRadians(lon2);
+    lat1 =  [self radian:lat1];
+    lat2 =  [self radian:lat2];
+    lon1 = [self radian:lon1];
+    lon2 =  [self radian:lon2];
+
+    if ((ilat1 == ilat2) && (ilon1 == ilon2)) {
+        return result;
+    } else if (ilon1 == ilon2) {
+        if (ilat1 > ilat2)
+            result = 180.0;
+    } else {
+        double c = acos(sin(lat2) * sin(lat1) + cos(lat2)
+                        * cos(lat1) * cos((lon2 - lon1)));
+        double A = asin(cos(lat2) * sin((lon2 - lon1))
+                / sin(c));
+//        result = Math.toDegrees(A);
+        result = [self angle:A];
+        if ((ilat2 > ilat1) && (ilon2 > ilon1)) {
+        } else if ((ilat2 < ilat1) && (ilon2 < ilon1)) {
+            result = 180.0 - result;
+        } else if ((ilat2 < ilat1) && (ilon2 > ilon1)) {
+            result = 180.0 - result;
+        } else if ((ilat2 > ilat1) && (ilon2 < ilon1)) {
+            result += 360.0;
+        }
+    }
+    return result;
 }
 
 - (UIImage *)imageWithName:(NSString *)name icon:(UIImage *)icon distance:( NSInteger )distance {
@@ -652,12 +709,29 @@ static NSInteger overlayIndex = 0;
             double lon = [jsonDict btd_doubleValueForKey:@"X"]/100.0;
             double lat = [jsonDict btd_doubleValueForKey:@"Y"]/100.0;
             self.point = [BaiduPanoUtils baiduCoorEncryptLon:lon lat:lat coorType:COOR_TYPE_BDMC];
+            if (self.selectOverlay) {
+                BaiduPanoImageOverlay *overlay = [[BaiduPanoImageOverlay alloc] init];
+                overlay.overlayKey = [@(overlayIndex) stringValue];
+                overlay.type = BaiduPanoOverlayTypeImage;
+                overlay.coordinate = self.selectOverlay.coordinate;
+                overlay.height = 0;
+                overlay.size = self.selectOverlay.size;
+                overlay.image = self.selectOverlay.image;
+                [self.overlays addObject:overlay];
+                [self.panoramaView addOverlay:overlay];
+                self.selectOverlay = nil;
+                
+                double overlayHeading = [self computeAzimuthBy:self.point other:overlay.coordinate];
+                [self.panoramaView setPanoramaHeading:overlayHeading];
+            }
             if (CLLocationCoordinate2DIsValid(self.point)) {
+                if (!CLLocationCoordinate2DIsValid(self.firstLoadPoint)) {
+                    self.firstLoadPoint = self.point;
+                }
                 self.isZoomMapAnimation = YES;
                 [self.mapView setCenterCoordinate:self.point animated:YES];
             }
         }
-        
     }
 }
 
@@ -669,6 +743,7 @@ static NSInteger overlayIndex = 0;
  */
 - (void)panoramaLoadFailed:(BaiduPanoramaView *)panoramaView error:(NSError *)error {
     NSLog(@"baidu_panoramaLoadFailed error:%@",error);
+    self.selectOverlay = nil;
     if (CLLocationCoordinate2DIsValid(self.lastPoint)) {
         self.point = self.lastPoint;
         self.lastPoint = kCLLocationCoordinate2DInvalid;
@@ -687,8 +762,9 @@ static NSInteger overlayIndex = 0;
     if (!self.overlays.count) {
         return;
     }
-    for (BaiduPanoOverlay *overlay in self.overlays) {
+    for (BaiduPanoImageOverlay *overlay in self.overlays) {
         if ([overlay.overlayKey isEqualToString:overlayId]) {
+            self.selectOverlay = overlay;
             self.lastPoint = self.point;
             self.point = overlay.coordinate;
             self.isZoomMapAnimation = YES;
@@ -701,11 +777,11 @@ static NSInteger overlayIndex = 0;
 
 //panoEngine
 - (void)panoramaView:(BaiduPanoramaView *)panoramaView didReceivedMessage:(NSDictionary *)dict {
-    NSLog(@"baidu_panoramaViewdidReceivedMessage:%@",dict);
+//    NSLog(@"baidu_panoramaViewdidReceivedMessage:%@",dict);
     //全景拖动回调
     CGFloat heading = [panoramaView getPanoramaHeading];
     self.headingButton.transform = CGAffineTransformMakeRotation(heading * (M_PI /180.0f));
-    NSLog(@"baidu_panoramaViewdidReceivedMessage_heading:%f",heading);
+//    NSLog(@"baidu_panoramaViewdidReceivedMessage_heading:%f",heading);
 }
 
 /// MapView的Delegate，mapView通过此类来通知用户对应的事件
@@ -715,7 +791,7 @@ static NSInteger overlayIndex = 0;
  *@param mapView 地图View
  */
 - (void)mapViewDidFinishLoading:(BMKMapView *)mapView {
-    NSLog(@"baidu_mapViewDidFinishLoading");
+//    NSLog(@"baidu_mapViewDidFinishLoading");
 }
 
 /**
@@ -724,7 +800,7 @@ static NSInteger overlayIndex = 0;
  *@param error 错误码
 */
 - (void)mapViewDidRenderValidData:(BMKMapView *)mapView withError:(NSError *)error {
-    NSLog(@"baidu_mapViewDidRenderValidData");
+//    NSLog(@"baidu_mapViewDidRenderValidData");
 }
 
 /**
@@ -769,7 +845,7 @@ static NSInteger overlayIndex = 0;
  *@param animated 是否动画
  */
 - (void)mapView:(BMKMapView *)mapView regionDidChangeAnimated:(BOOL)animated {
-    NSLog(@"baidu_mapView_regionDidChangeAnimated");
+//    NSLog(@"baidu_mapView_regionDidChangeAnimated");
 //    拿到地图更改的经纬度 更新全景视图，如果全景视图更新失败，回到原来位置
     
 }
@@ -785,6 +861,7 @@ static NSInteger overlayIndex = 0;
         self.isZoomMapAnimation = NO;
         return;
     }
+    self.lastPoint = self.point;
     [self.panoramaView setPanoramaWithLon:mapView.centerCoordinate.longitude lat:mapView.centerCoordinate.latitude];
 }
 
@@ -925,7 +1002,7 @@ static NSInteger overlayIndex = 0;
  *@param errorCode 错误号，@see BMKSearchErrorCode
  */
 - (void)onGetPoiResult:(BMKPoiSearch*)searcher result:(BMKPOISearchResult*)poiResult errorCode:(BMKSearchErrorCode)errorCode {
-    NSLog(@"baidu_onGetPoiResult");
+//    NSLog(@"baidu_onGetPoiResult");
     [self handlePoiResult:poiResult];
     if (errorCode != BMK_SEARCH_NO_ERROR) {
         //上报"api_error"
@@ -939,7 +1016,7 @@ static NSInteger overlayIndex = 0;
  *@param errorCode 错误号，@see BMKSearchErrorCode
  */
 - (void)onGetPoiDetailResult:(BMKPoiSearch*)searcher result:(BMKPOIDetailSearchResult*)poiDetailResult errorCode:(BMKSearchErrorCode)errorCode {
-    NSLog(@"baidu_onGetPoiDetailResult");
+//    NSLog(@"baidu_onGetPoiDetailResult");
 }
 
 /**
@@ -967,12 +1044,14 @@ static NSInteger overlayIndex = 0;
  *@param error 错误号，@see BMKSearchErrorCode
  */
 - (void)onGetReverseGeoCodeResult:(BMKGeoCodeSearch *)searcher result:(BMKReverseGeoCodeSearchResult *)result errorCode:(BMKSearchErrorCode)error {
-    NSLog(@"baidu_onGetReverseGeoCodeResult: %@ %@ %@ %@",result.address,result.businessCircle,result.addressDetail.streetName,result.sematicDescription);
-    if (result.addressDetail.streetName.length) {
-        self.customNavBarView.title.text = result.addressDetail.streetName;
-    } else {
-        self.customNavBarView.title.text = @"未知路段";
-    }
+//    NSLog(@"baidu_onGetReverseGeoCodeResult: %@ %@ %@ %@",result.address,result.businessCircle,result.addressDetail.streetName,result.sematicDescription);
+    dispatch_async(dispatch_get_main_queue(), ^{
+        if (result.addressDetail.streetName.length) {
+            self.customNavBarView.title.text = result.addressDetail.streetName;
+        } else {
+            self.customNavBarView.title.text = @"未知路段";
+        }
+    });
 }
 
 #pragma mark - 埋点
