@@ -25,23 +25,19 @@
 @property(nonatomic, strong) NSMutableArray *dataList;
 @property (nonatomic, assign) NSInteger lastOffset;
 @property (nonatomic, strong) NSString *currentSearchId;
+@property (nonatomic, strong) NSDictionary *realtorInfo;
+@property (nonatomic, strong) NSDictionary *tracerDic;
+@property (nonatomic, strong) NSMutableArray *showCommentCache;
 @end
 @implementation FHHouseUserCommentsVM
-- (instancetype)initWithController:(FHHouseUserCommentsVC *)viewController tableView:(UITableView *)tableView {
+- (instancetype)initWithController:(FHHouseUserCommentsVC *)viewController tableView:(UITableView *)tableView tracerDic:(NSDictionary *)tracerDic realtorInfo:(NSDictionary *)realtorInfo {
         self = [super init];
         if (self) {
-            //        _detailTracerDic = [NSMutableDictionary new];
-            //        _items = [NSMutableArray new];
-            //        _cellHeightCaches = [NSMutableDictionary new];
-            //        _elementShowCaches = [NSMutableDictionary new];
-            //        _elementShdowGroup = [NSMutableDictionary new];
-            //        _lastPointOffset = CGPointZero;
-            //        _weakedCellTable = [NSHashTable hashTableWithOptions:NSPointerFunctionsWeakMemory];
-            //        _weakedVCLifeCycleCellTable = [NSHashTable hashTableWithOptions:NSPointerFunctionsWeakMemory];
-            //        self.houseType = houseType;
             self.detailController = viewController;
             self.tableView = tableView;
-            //        self.tableView.backgroundColor = [UIColor themeGray7];
+            self.realtorInfo = realtorInfo;
+            self.tracerDic = tracerDic;
+            [self addEnterCategoryLog];
             [self configTableView];
             [self requestData:YES first:YES];
         }
@@ -90,7 +86,7 @@
         
     }
     [requestDictonary setValue:@(10) forKey:@"count"];
-    [requestDictonary setValue:@"3021100461591229" forKey:@"realtor_id"];
+    [requestDictonary setValue:self.realtorInfo[@"realtor_id"]?:@"" forKey:@"realtor_id"];
     requestDictonary[CHANNEL_ID] = CHANNEL_ID_REALTOR_DETAIL_HOUSE;
     self.requestTask = nil;
     self.requestTask = [FHMainApi requestRealtorUserCommon:requestDictonary completion:^(FHHouseRealtorUserCommentDataModel * _Nonnull model, NSError * _Nonnull error) {
@@ -144,6 +140,11 @@
         return UITableViewAutomaticDimension;
 }
 
+- (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
+        NSDictionary *commentDic = self.dataList[indexPath.row];
+        [self addCommentShow:commentDic];
+}
+
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     //to do 房源cell
     NSString *identifier = @"FHHouseUserCommentsCell";
@@ -158,6 +159,46 @@
         _dataList = dataList;
     }
     return _dataList;
+}
+
+- (void)addEnterCategoryLog {
+    NSMutableDictionary *tracerDict = self.tracerDic.mutableCopy;
+    [tracerDict setObject:[self categoryName] forKey:@"category_name"];
+    [tracerDict setObject:@"house_app2c_v2" forKey:@"event_type"];
+    [tracerDict setObject:self.realtorInfo[@"realtor_id"] forKey:@"realtor_id"];
+    TRACK_EVENT(@"enter_category", tracerDict);
+}
+
+- (NSString *)categoryName {
+    return @"user_comment_list";
+}
+
+- (NSMutableArray *)showCommentCache {
+    if (!_showCommentCache) {
+        _showCommentCache = [NSMutableArray array];
+    }
+    return _showCommentCache;
+}
+
+- (void)addCommentShow:(NSDictionary *)commentDic {
+    if (![commentDic.allKeys containsObject:@"id"]) {
+        return;
+    }
+    NSString *commentId = commentDic[@"id"];
+    if (commentId.length >0) {
+        
+        if ([self.showCommentCache containsObject:commentId]) {
+            return;
+        }
+        
+    [self.showCommentCache addObject:commentId];
+        NSMutableDictionary *tracerDic = self.tracerDic.mutableCopy;
+        [tracerDic setObject:[self categoryName] forKey:@"category_name"];
+        [tracerDic setObject:@"house_app2c_v2" forKey:@"event_type"];
+        [tracerDic setObject:self.realtorInfo[@"realtor_id"] forKey:@"realtor_id"];
+        [tracerDic setObject:commentId forKey:@"comment_id"];
+        TRACK_EVENT(@"user_comment_show", tracerDic);
+    }
 }
 
 @end

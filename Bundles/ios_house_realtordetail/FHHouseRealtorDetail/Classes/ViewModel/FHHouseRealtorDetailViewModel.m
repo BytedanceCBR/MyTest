@@ -118,12 +118,6 @@
     if(fCityId){
         [extraDic setObject:fCityId forKey:@"f_city_id"];
     }
-    if (self.realtorInfo[@"house_id"]) {
-        [extraDic setObject:self.realtorInfo[@"house_id"] forKey:@"house_id"];
-    }
-    if (self.realtorInfo[@"house_type"]) {
-        [extraDic setObject:self.realtorInfo[@"house_type"] forKey:@"house_type"];
-    }
     if (self.realtorInfo[@"tab_name"]) {
         [extraDic setObject:self.realtorInfo[@"tab_name"] forKey:@"tab_name"];
     }
@@ -329,7 +323,7 @@
                 refreshFooterBottomHeight += 34;
             }
             //设置footer来占位
-            UIView *tableFooterView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, self.detailController.errorViewHeight - height - refreshFooterBottomHeight)];
+            UIView *tableFooterView = [[UIView alloc] initWithFrame:CGRectMake(0, 15, [UIScreen mainScreen].bounds.size.width, self.detailController.errorViewHeight - height - refreshFooterBottomHeight)];
             tableFooterView.backgroundColor = [UIColor clearColor];
             self.tableView.tableFooterView = tableFooterView;
             //            //修改footer的位置回到cell下方，不修改会在tableFooterView的下方
@@ -352,7 +346,7 @@
 }
 - (FHErrorView *)errorView {
     if(!_errorView){
-        _errorView = [[FHErrorView alloc] initWithFrame:CGRectMake(0, 10, [UIScreen mainScreen].bounds.size.width, 500)];
+        _errorView = [[FHErrorView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, 500)];
     }
     return _errorView;
 }

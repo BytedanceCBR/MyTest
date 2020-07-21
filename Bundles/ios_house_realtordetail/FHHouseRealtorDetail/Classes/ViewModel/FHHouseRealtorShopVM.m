@@ -36,25 +36,15 @@
 @property (nonatomic , strong) NSMutableDictionary *tracerDict;
 @end
 @implementation FHHouseRealtorShopVM
-- (instancetype)initWithController:(FHHouseRealtorShopVC *)viewController tableView:(UITableView *)tableView realtorDic:(NSDictionary *)realtorDic bottomBar:(FHRealtorDetailBottomBar *)bottomBar {
+- (instancetype)initWithController:(FHHouseRealtorShopVC *)viewController tableView:(UITableView *)tableView realtorDic:(NSDictionary *)realtorDic bottomBar:(FHRealtorDetailBottomBar *)bottomBar tracerDic:(NSDictionary *)tracer {
     self = [super init];
     if (self) {
-        //        _detailTracerDic = [NSMutableDictionary new];
-        //        _items = [NSMutableArray new];
-        //        _cellHeightCaches = [NSMutableDictionary new];
-        //        _elementShowCaches = [NSMutableDictionary new];
-        //        _elementShdowGroup = [NSMutableDictionary new];
-        //        _lastPointOffset = CGPointZero;
-        //        _weakedCellTable = [NSHashTable hashTableWithOptions:NSPointerFunctionsWeakMemory];
-        //        _weakedVCLifeCycleCellTable = [NSHashTable hashTableWithOptions:NSPointerFunctionsWeakMemory];
-        //        self.houseType = houseType;
         self.detailController = viewController;
             self.bottomBar = bottomBar;
         self.tracerDict = @{};
         self.tableView = tableView;
         self.realtorPhoneCallModel = [[FHRealtorEvaluatingPhoneCallModel alloc]initWithHouseType:nil houseId:nil];
-//        self.realtorPhoneCallModel.tracerDict = tracerDict;
-        self.realtorPhoneCallModel.tracerDict = @{};
+        self.realtorPhoneCallModel.tracerDict = tracer;
         self.realtorPhoneCallModel.belongsVC = viewController;
         __weak typeof(self)ws = self;
           self.bottomBar.imAction = ^{

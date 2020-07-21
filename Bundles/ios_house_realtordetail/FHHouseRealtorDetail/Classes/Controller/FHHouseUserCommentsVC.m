@@ -16,6 +16,7 @@
 @interface FHHouseUserCommentsVC ()
 @property (strong, nonatomic)UITableView *tableView;
 @property (strong, nonatomic) FHHouseUserCommentsVM *viewModel;
+@property (strong, nonatomic) NSMutableDictionary *realtorDic;
 @end
 
 @implementation FHHouseUserCommentsVC
@@ -63,10 +64,38 @@
 }
 
 - (void)createModel {
-    _viewModel = [[FHHouseUserCommentsVM alloc]initWithController:self tableView:self.tableView];
+    _viewModel = [[FHHouseUserCommentsVM alloc]initWithController:self tableView:self.tableView tracerDic:self.tracerDict realtorInfo:self.realtorDic];
 }
 
 - (void)createTracerDic:(NSDictionary *)dic {
-    
+    NSLog(@"%@",self.tracerDict);
+    self.realtorDic = @{}.mutableCopy;
+    [self.realtorDic setObject:dic[@"realtor_id"] forKey:@"realtor_id"];
+    NSString *reportParams = dic[@"report_params"];
+    NSDictionary *reoprtParam = [self dictionaryWithJsonString:reportParams];
+    self.tracerDict  = [[NSMutableDictionary alloc]init];
+    [self.tracerDict addEntriesFromDictionary:reoprtParam];
+    [self.tracerDict setObject:@"" forKey:@"pagetype"];
+    [self.tracerDict setObject:dic[@"enter_from"] forKey:@"enter_from"];
 }
+
+- (NSDictionary *)dictionaryWithJsonString:(NSString *)jsonString
+{
+    if (jsonString == nil) {
+        return nil;
+    }
+
+    NSData *jsonData = [jsonString dataUsingEncoding:NSUTF8StringEncoding];
+    NSError *err;
+    NSDictionary *dic = [NSJSONSerialization JSONObjectWithData:jsonData
+                                                        options:NSJSONReadingMutableContainers
+                                                          error:&err];
+    if(err)
+    {
+        NSLog(@"json解析失败：%@",err);
+        return nil;
+    }
+    return dic;
+}
+
 @end

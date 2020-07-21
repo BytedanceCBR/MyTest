@@ -35,11 +35,6 @@
     }
     return self;
 }
-//queryParams:
-//{
-//    "realtor_id" = undefined;
-//    "report_params" = undefined;
-//}
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -69,7 +64,13 @@
 }
 
 - (void)createTracerDic:(NSDictionary *)dic {
-    
+      NSLog(@"%@",self.tracerDict);
+      NSString *reportParams = dic[@"report_params"];
+      NSDictionary *reoprtParam = [self dictionaryWithJsonString:reportParams];
+      self.tracerDict  = [[NSMutableDictionary alloc]init];
+      [self.tracerDict addEntriesFromDictionary:reoprtParam];
+      [self.tracerDict setObject:[self pageType] forKey:@"pagetype"];
+      [self.tracerDict setObject:dic[@"enter_from"] forKey:@"enter_from"];
 }
 
 - (void)initBottomBar {
@@ -137,4 +138,26 @@
     self.customNavBarView.seperatorLine.hidden = YES;
 }
 
+- (NSString *)pageType {
+    return @"realtor_store";
+}
+
+- (NSDictionary *)dictionaryWithJsonString:(NSString *)jsonString
+{
+    if (jsonString == nil) {
+        return nil;
+    }
+
+    NSData *jsonData = [jsonString dataUsingEncoding:NSUTF8StringEncoding];
+    NSError *err;
+    NSDictionary *dic = [NSJSONSerialization JSONObjectWithData:jsonData
+                                                        options:NSJSONReadingMutableContainers
+                                                          error:&err];
+    if(err)
+    {
+        NSLog(@"json解析失败：%@",err);
+        return nil;
+    }
+    return dic;
+}
 @end
