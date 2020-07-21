@@ -119,7 +119,6 @@
                 // 登录页盖在上一层
                 NSURL *URL = [NSURL URLWithString:@"sslocal://flogin"];
                 NSMutableDictionary *params = [NSMutableDictionary dictionary];
-                params[@"ttDisableDragBack"] = @(YES);
                 params[@"enter_type"] = @"click_im";
                 params[@"enter_from"] = @"conversation_detail";
                 TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:params];
