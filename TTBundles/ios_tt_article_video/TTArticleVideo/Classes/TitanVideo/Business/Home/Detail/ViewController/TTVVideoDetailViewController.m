@@ -366,12 +366,13 @@ NSString *const assertDesc_articleType = @"protocoledArticle must be Article";
     [self.detailStateStore.state setDetailModel:self.detailModel];
     self.detailStateStore.state.entity.categoryId = self.detailModel.categoryID;
     self.detailStateStore.state.entity.clickLabel = self.detailModel.clickLabel;
+    self.detailStateStore.state.enterFrom = self.detailModel.reportParams[@"enter_from"] ?: @"be_null";
     if (self.detailModel.logPb) {
         self.detailStateStore.state.logPb = self.detailModel.logPb;
     }else{
         self.detailStateStore.state.logPb = self.detailModel.gdExtJsonDict[@"log_pb"];
     }
-    self.detailStateStore.state.enterFrom = [self enterFromString];
+//    self.detailStateStore.state.enterFrom = [self enterFromString];
     self.detailStateStore.state.categoryName = [self categoryName];
     self.detailStateStore.state.authorId = [self.detailModel.article.userInfo ttgc_contentID];
     self.detailStateStore.state.rawAdData = self.detailModel.orderedData.raw_ad_data;

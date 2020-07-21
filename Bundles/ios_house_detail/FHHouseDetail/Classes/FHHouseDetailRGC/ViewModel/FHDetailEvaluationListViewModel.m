@@ -306,7 +306,7 @@ if (hasMore) {
             [extraDic setValue:cellModel.logPb forKey:@"log_pb"];
             [extraDic setValue:cellModel.groupId forKey:@"group_id"];
             [extraDic setValue:self.houseId forKey:@"from_gid"];
-            [self.tracerHelper trackListFeedClientShow:self.dataList[indexPath.row] withExtraDic:extraDic];
+            [self.tracerHelper trackFeedClientShow:self.dataList[indexPath.row] withExtraDic:extraDic];
         }
     }
 }

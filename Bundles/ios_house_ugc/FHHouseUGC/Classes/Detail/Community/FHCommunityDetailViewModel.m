@@ -1126,7 +1126,7 @@
     params[@"social_group_id"] = self.tracerDict[@"group_id"] ?: @"be_null";
     params[@"element_from"] = self.tracerDict[@"element_from"] ?: @"be_null";
     params[@"stay_time"] = [NSNumber numberWithInteger:duration];
-    [FHUserTracker writeEvent:@"stay_page_community" params:params];
+    [FHUserTracker writeEvent:@"stay_page" params:params];
 }
 
 - (void)addPublicationsShowLog {

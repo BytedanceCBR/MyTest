@@ -503,19 +503,24 @@
 
 - (NSMutableDictionary *)trackDict:(FHFeedUGCCellModel *)cellModel rank:(NSInteger)rank {
     NSMutableDictionary *dict = [NSMutableDictionary dictionary];
+    dict[@"origin_from"] = self.viewController.tracerDict[@"origin_from"];
     dict[@"enter_from"] = self.viewController.tracerDict[@"enter_from"];
     dict[@"page_type"] = [self pageType];
     dict[@"log_pb"] = cellModel.logPb;
     dict[@"rank"] = @(rank);
     dict[@"category_name"] = self.categoryId;
+    if([self.viewController isKindOfClass:[FHNeighbourhoodCommentsController class]]){
+        FHNeighbourhoodCommentsController *vc = (FHNeighbourhoodCommentsController *)self.viewController;
+        dict[@"from_gid"] = vc.neighborhoodId;
+    }
     
-    dict[@"comment_id"] = cellModel.groupId;
+    dict[@"group_id"] = cellModel.groupId;
     
     if(cellModel.logPb[@"impr_id"]){
         dict[@"impr_id"] = cellModel.logPb[@"impr_id"];
     }
     if(cellModel.logPb[@"group_source"]){
-        dict[@"impr_id"] = cellModel.logPb[@"group_source"];
+        dict[@"group_source"] = cellModel.logPb[@"group_source"];
     }
     
     return dict;

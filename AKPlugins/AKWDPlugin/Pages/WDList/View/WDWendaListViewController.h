@@ -34,6 +34,8 @@
 
 @property (nonatomic, assign) BOOL adjustPosition;
 @property (nonatomic, assign) BOOL listViewHasScroll;
+@property (nonatomic, strong) NSDictionary *goDetailDict;
+@property (nonatomic, strong) NSMutableDictionary *clientShowDict;
 
 - (instancetype)initWithQuestionID:(NSString *)qID
                      baseCondition:(NSDictionary *)baseCondition

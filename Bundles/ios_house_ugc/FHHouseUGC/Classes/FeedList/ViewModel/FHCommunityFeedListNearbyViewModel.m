@@ -813,7 +813,7 @@
         dict[@"impr_id"] = cellModel.logPb[@"impr_id"];
     }
     if(cellModel.logPb[@"group_source"]){
-        dict[@"impr_id"] = cellModel.logPb[@"group_source"];
+        dict[@"group_source"] = cellModel.logPb[@"group_source"];
     }
     
     return dict;

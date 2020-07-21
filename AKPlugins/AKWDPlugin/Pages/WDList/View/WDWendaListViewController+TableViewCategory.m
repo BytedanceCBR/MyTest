@@ -26,6 +26,7 @@
 //Router
 #import "WDListCellRouterCenter.h"
 #import <BDTrackerProtocol/BDTrackerProtocol.h>
+#import "FHUserTracker.h"
 
 @implementation WDWendaListViewController(TableViewCategory)
 
@@ -185,6 +186,21 @@
         [params setValue:@(isLightAnswer) forKey:@"is_light_answer"];
         NSDictionary *uInfo = @{@"modelExtra":params};
         
+        //上报埋点
+        if (!self.clientShowDict) {
+            self.clientShowDict = [NSMutableDictionary new];
+        }
+        
+        NSString *groupId = answerEntity.ansid;
+        if(groupId){
+            if (self.clientShowDict[groupId]) {
+                return;
+            }
+            
+            self.clientShowDict[groupId] = @(indexPath.row);
+            [self trackClientShow:answerEntity rank:indexPath.row];
+        }
+        
         //impression
         if (!isEmptyString(answerEntity.ansid)) {
             SSImpressionStatus status = SSImpressionStatusSuspend;
@@ -257,6 +273,14 @@
 - (void)scrollViewWillEndDragging:(UIScrollView *)scrollView withVelocity:(CGPoint)velocity targetContentOffset:(inout CGPoint *)targetContentOffset
 {
     self.listViewHasScroll = YES;
+}
+
+- (void)trackClientShow:(WDAnswerEntity *)answerEntity rank:(NSInteger)rank {
+    NSMutableDictionary *dict = [self.goDetailDict mutableCopy];
+    dict[@"question_id"] = dict[@"qid"];
+    dict[@"group_id"] = answerEntity.ansid;
+    dict[@"rank"] = @(rank);
+    TRACK_EVENT(@"feed_client_show", dict);
 }
 
 #pragma mark - WDLoadMoreCellDelegate

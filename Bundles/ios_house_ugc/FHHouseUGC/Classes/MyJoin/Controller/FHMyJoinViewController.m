@@ -152,9 +152,7 @@
     
     FHUGCMyInterestedController *vc =[[FHUGCMyInterestedController alloc] init];
     vc.type = FHUGCMyInterestedTypeEmpty;
-    vc.tracerDict = @{
-                      @"enter_from":@"neighborhood_tab"
-                      };
+    vc.tracerDict = self.tracerDict;
     vc.view.frame = self.view.bounds;
     [self addChildViewController:vc];
     [self.view addSubview:vc.view];

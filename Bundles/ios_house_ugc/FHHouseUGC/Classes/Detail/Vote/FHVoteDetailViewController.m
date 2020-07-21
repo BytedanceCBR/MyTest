@@ -83,6 +83,9 @@
         if (element_from.length > 0) {
             self.tracerDict[@"element_from"] = element_from;
         }
+        if(self.voteId > 0){
+            self.tracerDict[@"group_id"] = @(self.voteId);
+        }
         NSString *log_pb_str = params[@"log_pb"];
         if ([log_pb_str isKindOfClass:[NSString class]] && log_pb_str.length > 0) {
             NSData *jsonData = [log_pb_str dataUsingEncoding:NSUTF8StringEncoding];
@@ -118,6 +121,15 @@
             mutLogPb[@"social_group_id"] = self.lastPageSocialGroupId;
             self.tracerDict[@"log_pb"] = mutLogPb;
         }
+        
+        if(self.tracerDict[@"log_pb"][@"impr_id"]){
+            self.tracerDict[@"impr_id"] = self.tracerDict[@"log_pb"][@"impr_id"];
+        }
+        
+        if(self.tracerDict[@"log_pb"][@"group_source"]){
+            self.tracerDict[@"group_source"] = self.tracerDict[@"log_pb"][@"group_source"];
+        }
+        
     }
     return self;
 }

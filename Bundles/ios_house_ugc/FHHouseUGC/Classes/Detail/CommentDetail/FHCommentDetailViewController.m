@@ -31,6 +31,7 @@
 #import "FHUGCFollowButton.h"
 #import "FHCommonDefines.h"
 #import "FHFeedOperationView.h"
+#import "FHUtils.h"
 
 @interface FHCommentDetailViewController ()
 
@@ -66,6 +67,26 @@
             }
             // 列表页数据
             self.detailData = params[@"data"];
+            
+            id logPb = self.tracerDict[@"log_pb"];
+            NSDictionary *logPbDic = nil;
+            if([logPb isKindOfClass:[NSDictionary class]]){
+                logPbDic = logPb;
+            }else if([logPb isKindOfClass:[NSString class]]){
+                logPbDic = [FHUtils dictionaryWithJsonString:logPb];
+            }
+            
+            if(logPbDic[@"group_id"]){
+                self.tracerDict[@"group_id"] = logPbDic[@"group_id"];
+            }
+            
+            if(logPbDic[@"impr_id"]){
+                self.tracerDict[@"impr_id"] = logPbDic[@"impr_id"];
+            }
+            
+            if(logPbDic[@"group_source"]){
+                self.tracerDict[@"group_source"] = logPbDic[@"group_source"];
+            }
         }
     }
     return self;

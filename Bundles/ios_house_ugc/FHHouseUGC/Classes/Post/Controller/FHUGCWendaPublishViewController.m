@@ -712,6 +712,7 @@
     traceParam[UT_ELEMENT_FROM] = @"select_like_publisher_neighborhood";
     traceParam[UT_ENTER_FROM] = [self pageType];
     traceParam[UT_ENTER_TYPE] = @"click";
+    traceParam[UT_ORIGIN_FROM] = self.tracerDict[UT_ORIGIN_FROM] ?: @"be_null";
     dict[TRACER_KEY] = traceParam;
     TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
     NSURL *openUrl = [NSURL URLWithString:@"sslocal://ugc_community_list"];

@@ -129,7 +129,8 @@
     NSMutableDictionary *tracerDict = [NSMutableDictionary dictionary];
     [tracerDict addEntriesFromDictionary:self.tracerDict];
     tracerDict[@"page_type"] = @"my_join_feed";
-    tracerDict[@"origin_from"] = @"neighborhood_tab";
+    tracerDict[@"enter_from"] = self.tracerDict[@"enter_from"] ?: @"be_null";
+    tracerDict[@"origin_from"] = self.tracerDict[@"origin_from"] ?: @"be_null";
     searchView.tracerDict = tracerDict;
     [headerView addSubview:searchView];
     

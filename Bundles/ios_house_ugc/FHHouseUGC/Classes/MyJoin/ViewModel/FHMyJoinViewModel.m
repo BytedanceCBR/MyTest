@@ -253,6 +253,7 @@
     dict[@"select_district_tab"] = @(FHUGCCommunityDistrictTabIdFollow);
     NSMutableDictionary *traceParam = @{}.mutableCopy;
     traceParam[@"enter_type"] = enterType;
+    traceParam[@"origin_from"] = self.viewController.tracerDict[@"origin_from"] ?: @"be_null";
     traceParam[@"enter_from"] = [self pageType];
     traceParam[@"element_from"] = @"my_joined_neighborhood";
     dict[TRACER_KEY] = traceParam;

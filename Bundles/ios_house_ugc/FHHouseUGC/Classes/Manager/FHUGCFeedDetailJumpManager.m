@@ -76,6 +76,12 @@
             tracerDic[@"origin_from"] = cellModel.tracerDic[@"origin_from"] ?: @"be_null";
             tracerDic[@"enter_from"] = cellModel.tracerDic[@"page_type"] ?: @"be_null";
             tracerDic[@"category_name"] = cellModel.tracerDic[@"category_name"] ?: @"be_null";
+            if(!isEmptyString(cellModel.community.socialGroupId)){
+                tracerDic[@"social_group_id"] = cellModel.community.socialGroupId;
+            }
+            if(cellModel.tracerDic[@"concern_id"]){
+                tracerDic[@"concern_id"] = cellModel.tracerDic[@"concern_id"];
+            }
             dict[@"tracer"] = tracerDic;
             
             TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
@@ -116,9 +122,15 @@
     traceParam[@"origin_from"] = cellModel.tracerDic[@"origin_from"];
     traceParam[@"enter_from"] = cellModel.tracerDic[@"page_type"];
     traceParam[@"enter_type"] = enterType ? enterType : @"be_null";
+    traceParam[@"element_from"] = cellModel.tracerDic[@"element_from"];
     traceParam[@"rank"] = cellModel.tracerDic[@"rank"];
     traceParam[@"log_pb"] = cellModel.logPb;
-    traceParam[@"community_id"] = cellModel.community.socialGroupId ?: @"";
+    if(!isEmptyString(cellModel.community.socialGroupId)){
+        traceParam[@"social_group_id"] = cellModel.community.socialGroupId;
+    }
+    if(cellModel.tracerDic[@"concern_id"]){
+        traceParam[@"concern_id"] = cellModel.tracerDic[@"concern_id"];
+    }
     traceParam[@"category_name"] = cellModel.tracerDic[@"category_name"]?:@"be_null";
     dict[@"tracer"] = traceParam;
     
@@ -179,15 +191,22 @@
     NSMutableDictionary *dict = [NSMutableDictionary new];
     
     NSMutableDictionary *traceParam = @{}.mutableCopy;
+    traceParam[@"origin_from"] = cellModel.tracerDic[@"origin_from"] ?: @"be_null";
     traceParam[@"enter_from"] = cellModel.tracerDic[@"page_type"] ?: @"be_null";
     traceParam[@"enter_type"] = enterType ? enterType : @"be_null";
     traceParam[@"rank"] = cellModel.tracerDic[@"rank"];
     traceParam[@"log_pb"] = cellModel.logPb;
     traceParam[@"category_name"] = cellModel.tracerDic[@"category_name"]?:@"be_null";
+    if(!isEmptyString(cellModel.community.socialGroupId)){
+        traceParam[@"social_group_id"] = cellModel.community.socialGroupId;
+        dict[@"social_group_id"] = cellModel.community.socialGroupId;
+    }
+    if(cellModel.tracerDic[@"concern_id"]){
+        traceParam[@"concern_id"] = cellModel.tracerDic[@"concern_id"];
+    }
     dict[@"tracer"] = traceParam;
     dict[@"data"] = cellModel;
     dict[@"begin_show_comment"] = showComment ? @"1" : @"0";
-    dict[@"social_group_id"] = cellModel.community.socialGroupId ?: @"";
     TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
     NSURL *openUrl = [NSURL URLWithString:cellModel.openUrl];
     [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:userInfo];
@@ -200,6 +219,13 @@
     tracerDic[@"origin_from"] = cellModel.tracerDic[@"origin_from"] ?: @"be_null";
     tracerDic[@"enter_from"] = cellModel.tracerDic[@"page_type"] ?: @"be_null";
     tracerDic[@"category_name"] = cellModel.tracerDic[@"category_name"] ?: @"be_null";
+    tracerDic[@"element_from"] = cellModel.tracerDic[@"element_from"];
+    if(!isEmptyString(cellModel.community.socialGroupId)){
+        tracerDic[@"social_group_id"] = cellModel.community.socialGroupId;
+    }
+    if(cellModel.tracerDic[@"concern_id"]){
+        tracerDic[@"concern_id"] = cellModel.tracerDic[@"concern_id"];
+    }
     dict[@"tracer"] = tracerDic;
     
     TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
@@ -255,6 +281,12 @@
         tracerDic[@"page_type"] = @"small_video_detail";
         tracerDic[@"enter_type"] = enterType;
         tracerDic[@"enter_from"] = cellModel.tracerDic[@"page_type"];
+        if(!isEmptyString(cellModel.community.socialGroupId)){
+            tracerDic[@"social_group_id"] = cellModel.community.socialGroupId;
+        }
+        if(cellModel.tracerDic[@"concern_id"]){
+            tracerDic[@"concern_id"] = cellModel.tracerDic[@"concern_id"];
+        }
         [info setValue:tracerDic forKey:@"extraDic"];
     }
     
@@ -272,9 +304,14 @@
     traceParam[@"enter_type"] = enterType ? enterType : @"be_null";
     traceParam[@"rank"] = cellModel.tracerDic[@"rank"];
     traceParam[@"log_pb"] = cellModel.logPb;
+    if(cellModel.tracerDic[@"concern_id"]){
+        traceParam[@"concern_id"] = cellModel.tracerDic[@"concern_id"];
+    }
     dict[@"data"] = cellModel;
     dict[@"tracer"] = traceParam;
-    dict[@"social_group_id"] = cellModel.community.socialGroupId ?: @"";
+    if(!isEmptyString(cellModel.community.socialGroupId)){
+        dict[@"social_group_id"] = cellModel.community.socialGroupId;
+    }
     TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
     NSURL *openUrl = [NSURL URLWithString:cellModel.openUrl];
     [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:userInfo];

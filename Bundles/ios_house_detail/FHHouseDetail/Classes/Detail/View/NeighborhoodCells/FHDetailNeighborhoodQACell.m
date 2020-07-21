@@ -18,6 +18,8 @@
 #import "TTAccountManager.h"
 #import "TTStringHelper.h"
 #import "FHUGCCellManager.h"
+#import "FHUtils.h"
+#import "FHUGCFeedDetailJumpManager.h"
 
 #define cellId @"cellId"
 
@@ -31,6 +33,8 @@
 @property(nonatomic , strong) UILabel *titleLabel;
 @property(nonatomic , strong) UIButton *questionBtn;
 @property(nonatomic , strong) FHUGCCellManager *cellManager;
+@property(nonatomic , strong) NSMutableDictionary *clientShowDict;
+@property(nonatomic , strong) FHUGCFeedDetailJumpManager *detailJumpManager;
 
 @end
 
@@ -92,6 +96,9 @@
     
     self.cellManager = [[FHUGCCellManager alloc] init];
     [self.cellManager registerAllCell:_tableView];
+    
+    self.detailJumpManager = [[FHUGCFeedDetailJumpManager alloc] init];
+    self.detailJumpManager.refer = 1;
     
     self.titleView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width - 60, 65)];
     
@@ -291,12 +298,66 @@
 
 #pragma mark - UITableViewDataSource
 
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return [self.dataList count];
+- (void)traceFeedClientShowWithIndexPath: (NSIndexPath *)indexPath {
+    if(indexPath.row < self.dataList.count){
+        FHFeedUGCCellModel *cellModel = self.dataList[indexPath.row];
+        
+        if (!self.clientShowDict) {
+            self.clientShowDict = [NSMutableDictionary new];
+        }
+        
+        NSString *groupId = cellModel.groupId;
+        if(groupId){
+            if (self.clientShowDict[groupId]) {
+                return;
+            }
+            
+            self.clientShowDict[groupId] = @(indexPath.row);
+            
+            NSMutableDictionary *dict = [NSMutableDictionary dictionary];
+            dict[UT_ENTER_FROM] = self.baseViewModel.detailTracerDic[UT_ENTER_FROM]?: UT_BE_NULL;
+            dict[UT_ORIGIN_FROM] = self.baseViewModel.detailTracerDic[UT_ORIGIN_FROM]?:UT_BE_NULL;
+            dict[UT_PAGE_TYPE] = [self.baseViewModel pageTypeString];
+            dict[UT_LOG_PB] = cellModel.logPb;
+            dict[UT_ELEMENT_TYPE] = [self elementTypeString:FHHouseTypeNeighborhood];
+            dict[@"rank"] = @(indexPath.row);
+            dict[@"group_id"] = cellModel.groupId;
+            dict[@"from_gid"] = self.baseViewModel.houseId;
+            
+            id logPb = dict[@"log_pb"];
+            NSDictionary *logPbDic = nil;
+            if([logPb isKindOfClass:[NSDictionary class]]){
+                logPbDic = logPb;
+            }else if([logPb isKindOfClass:[NSString class]]){
+                logPbDic = [FHUtils dictionaryWithJsonString:logPb];
+            }
+            
+            if(logPbDic[@"impr_id"]){
+                dict[@"impr_id"] = logPbDic[@"impr_id"];
+            }
+            
+            if(logPbDic[@"group_source"]){
+                dict[@"group_source"] = logPbDic[@"group_source"];
+            }
+            
+            TRACK_EVENT(@"feed_client_show", dict);
+        }
+    }
 }
 
-- (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
+- (void)fh_willDisplayCell  {
+    [super fh_willDisplayCell];
+    
+    if(self.dataList.count > 0) {
+        for(int i = 0; i < self.dataList.count; i++) {
+            NSIndexPath *indexPath = [NSIndexPath indexPathForRow:i inSection:0];
+            [self traceFeedClientShowWithIndexPath:indexPath];
+        }
+    }
+}
 
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+    return [self.dataList count];
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -386,22 +447,24 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     FHFeedUGCCellModel *cellModel = self.dataList[indexPath.row];
-    BOOL canOpenURL = NO;
-    if (!canOpenURL && !isEmptyString(cellModel.openUrl)) {
-        NSURL *url = [TTStringHelper URLWithURLString:cellModel.openUrl];
-        if ([[UIApplication sharedApplication] canOpenURL:url]) {
-            canOpenURL = YES;
-            [[UIApplication sharedApplication] openURL:url];
-        }
-        else if([[TTRoute sharedRoute] canOpenURL:url]){
-            canOpenURL = YES;
-            //优先跳转openurl
-            [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:nil];
-        }
-    }else{
-        NSURL *openUrl = [NSURL URLWithString:cellModel.detailScheme];
-        [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:nil];
-    }
+//    BOOL canOpenURL = NO;
+//    if (!canOpenURL && !isEmptyString(cellModel.openUrl)) {
+//        NSURL *url = [TTStringHelper URLWithURLString:cellModel.openUrl];
+//        if ([[UIApplication sharedApplication] canOpenURL:url]) {
+//            canOpenURL = YES;
+//            [[UIApplication sharedApplication] openURL:url];
+//        }
+//        else if([[TTRoute sharedRoute] canOpenURL:url]){
+//            canOpenURL = YES;
+//            //优先跳转openurl
+//            [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:nil];
+//        }
+//    }else{
+//        NSURL *openUrl = [NSURL URLWithString:cellModel.detailScheme];
+//        [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:nil];
+//    }
+     [self.detailJumpManager jumpToDetail:cellModel showComment:NO enterType:@"feed_content_blank"];
+    
 }
 
 @end

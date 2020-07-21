@@ -714,17 +714,19 @@
 
 - (NSMutableDictionary *)trackDict:(FHFeedUGCCellModel *)cellModel rank:(NSInteger)rank {
     NSMutableDictionary *dict = [NSMutableDictionary dictionary];
+    dict[@"origin_from"] = self.detailController.tracerDict[@"origin_from"] ?: @"be_null";
     dict[@"enter_from"] = self.enter_from.length > 0 ? self.enter_from : [self pageType];// 这个埋点是上个页面从哪来
     dict[@"page_type"] = [self pageType];
     dict[@"log_pb"] = cellModel.logPb;
     dict[@"rank"] = @(rank);
     dict[@"category_name"] = self.categoryName;
     dict[@"group_id"] = cellModel.groupId;
+    dict[@"concern_id"] = [NSString stringWithFormat:@"%i",self.cid];
     if(cellModel.logPb[@"impr_id"]){
         dict[@"impr_id"] = cellModel.logPb[@"impr_id"];
     }
     if(cellModel.logPb[@"group_source"]){
-        dict[@"impr_id"] = cellModel.logPb[@"group_source"];
+        dict[@"group_source"] = cellModel.logPb[@"group_source"];
     }
     
     return dict;

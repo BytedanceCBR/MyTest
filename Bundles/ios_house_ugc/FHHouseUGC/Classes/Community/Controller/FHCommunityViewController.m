@@ -635,7 +635,7 @@
     [self gotoPostThreadVC];
     
     NSMutableDictionary *params = @{}.mutableCopy;
-    params[UT_ORIGIN_FROM] = @"neighborhood_tab";
+    params[UT_ORIGIN_FROM] = self.tracerDict[UT_ORIGIN_FROM] ?: @"be_null";
     params[UT_ELEMENT_TYPE] = @"feed_icon";
     params[UT_PAGE_TYPE] = [self.viewModel pageType];
     TRACK_EVENT(@"click_options", params);
@@ -643,7 +643,7 @@
 
 - (void)gotoVotePublish {
     NSMutableDictionary *params = @{}.mutableCopy;
-    params[UT_ORIGIN_FROM] = @"neighborhood_tab";
+    params[UT_ORIGIN_FROM] = self.tracerDict[UT_ORIGIN_FROM] ?: @"be_null";
     params[UT_ELEMENT_TYPE] = @"vote_icon";
     params[UT_PAGE_TYPE] = [self.viewModel pageType];
     TRACK_EVENT(@"click_options", params);
@@ -657,7 +657,7 @@
 
 - (void)gotoWendaPublish {
     NSMutableDictionary *params = @{}.mutableCopy;
-    params[UT_ORIGIN_FROM] = @"neighborhood_tab";
+    params[UT_ORIGIN_FROM] = self.tracerDict[UT_ORIGIN_FROM] ?: @"be_null";
     params[UT_ELEMENT_TYPE] = @"question_icon";
     params[UT_PAGE_TYPE] = [self.viewModel pageType];
     TRACK_EVENT(@"click_options", params);
@@ -743,6 +743,7 @@
     NSMutableDictionary *dict = @{}.mutableCopy;
     NSMutableDictionary *tracerDict = @{}.mutableCopy;
     tracerDict[UT_ENTER_FROM] = [self.viewModel pageType];
+    tracerDict[UT_ORIGIN_FROM] = self.tracerDict[UT_ORIGIN_FROM] ?: @"be_null";
     dict[TRACER_KEY] = tracerDict;
     TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
     [[TTRoute sharedRoute] openURLByPresentViewController:components.URL userInfo:userInfo];
@@ -753,6 +754,7 @@
     NSMutableDictionary *dict = @{}.mutableCopy;
     NSMutableDictionary *tracerDict = @{}.mutableCopy;
     tracerDict[UT_ENTER_FROM] = [self.viewModel pageType];
+    tracerDict[UT_ORIGIN_FROM] = self.tracerDict[UT_ORIGIN_FROM] ?: @"be_null";
     dict[TRACER_KEY] = tracerDict;
     TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
     [[TTRoute sharedRoute] openURLByPresentViewController:components.URL userInfo:userInfo];
@@ -772,6 +774,7 @@
     NSMutableDictionary *dict = @{}.mutableCopy;
     traceParam[@"page_type"] = @"feed_publisher";
     traceParam[@"enter_from"] = page_type;
+    traceParam[UT_ORIGIN_FROM] = self.tracerDict[UT_ORIGIN_FROM] ?: @"be_null";
     dict[TRACER_KEY] = traceParam;
     dict[VCTITLE_KEY] = @"发帖";
     TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
@@ -781,28 +784,27 @@
 }
 
 //进入搜索页
-- (void)goToSearch {
-//    [self hideGuideView];
-    [self addGoToSearchLog];
-    NSString *routeUrl = @"sslocal://ugc_search_list";
-    NSURL *openUrl = [NSURL URLWithString:routeUrl];
-    NSMutableDictionary *paramDic = [NSMutableDictionary dictionary];
-    NSMutableDictionary* searchTracerDict = [NSMutableDictionary dictionary];
-    searchTracerDict[@"element_type"] = @"community_group";
-    searchTracerDict[@"enter_from"] = @"neighborhood_tab";
-    searchTracerDict[@"origin_from"] = @"neighborhood_tab";
-    paramDic[@"tracer"] = searchTracerDict;
-    TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:paramDic];
-    [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:userInfo];
-}
-
-- (void)addGoToSearchLog {
-    NSMutableDictionary *reportParams = [NSMutableDictionary dictionary];
-    reportParams[@"page_type"] = @"neighborhood_tab";
-    reportParams[@"origin_from"] = @"community_search";
-    reportParams[@"origin_search_id"] = self.tracerDict[@"origin_search_id"] ?: @"be_null";
-    [FHUserTracker writeEvent:@"click_community_search" params:reportParams];
-}
+//- (void)goToSearch {
+//    [self addGoToSearchLog];
+//    NSString *routeUrl = @"sslocal://ugc_search_list";
+//    NSURL *openUrl = [NSURL URLWithString:routeUrl];
+//    NSMutableDictionary *paramDic = [NSMutableDictionary dictionary];
+//    NSMutableDictionary* searchTracerDict = [NSMutableDictionary dictionary];
+//    searchTracerDict[@"element_type"] = @"community_group";
+//    searchTracerDict[@"enter_from"] = @"neighborhood_tab";
+//    searchTracerDict[@"origin_from"] = @"neighborhood_tab";
+//    paramDic[@"tracer"] = searchTracerDict;
+//    TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:paramDic];
+//    [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:userInfo];
+//}
+//
+//- (void)addGoToSearchLog {
+//    NSMutableDictionary *reportParams = [NSMutableDictionary dictionary];
+//    reportParams[@"page_type"] = @"neighborhood_tab";
+//    reportParams[@"origin_from"] = @"community_search";
+//    reportParams[@"origin_search_id"] = self.tracerDict[@"origin_search_id"] ?: @"be_null";
+//    [FHUserTracker writeEvent:@"click_community_search" params:reportParams];
+//}
 
 - (void)viewAppearForEnterType:(NSInteger)enterType
 {

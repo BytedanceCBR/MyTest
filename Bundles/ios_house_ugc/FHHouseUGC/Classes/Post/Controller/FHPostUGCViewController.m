@@ -715,6 +715,7 @@ static NSInteger const kMaxPostImageCount = 9;
     NSMutableDictionary *traceParam = @{}.mutableCopy;
     traceParam[@"enter_type"] = @"click";
     traceParam[@"enter_from"] = @"feed_publisher";
+    traceParam[@"origin_from"] = self.tracerDict[@"origin_from"] ?: @"be_null";
     traceParam[@"element_from"] = @"select_like_publisher_neighborhood";
     dict[TRACER_KEY] = traceParam;
     TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
