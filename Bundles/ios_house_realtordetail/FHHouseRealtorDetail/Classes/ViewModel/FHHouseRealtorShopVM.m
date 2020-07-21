@@ -436,6 +436,7 @@
     tracerDic[@"house_type"] = @"old";
     tracerDic[@"log_pb"] = model.logPb?:@"be_null";
     tracerDic[@"group_id"] = model.id;
+    tracerDic[@"element_type"] = @"hot_house";
     TRACK_EVENT(@"house_show", tracerDic);
 }
 @end
