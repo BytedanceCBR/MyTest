@@ -166,6 +166,10 @@
         _locationButton.backgroundColor = [UIColor clearColor];
         [_locationButton addTarget:self action:@selector(locationAction) forControlEvents:UIControlEventTouchUpInside];
         _locationButton.hidden = YES;
+//        _locationButton.layer.masksToBounds = YES;
+//        _locationButton.layer.cornerRadius = 4;
+//        _locationButton.layer.borderColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:0.3].CGColor;
+//        _locationButton.layer.borderWidth = 0.5;
     }
     return _locationButton;
 }
@@ -366,14 +370,14 @@
     if (self.locationButton.superview) {
         [self.locationButton mas_makeConstraints:^(MASConstraintMaker *make) {
             make.right.mas_equalTo(-7);
-            make.bottom.mas_equalTo(self.view).offset(-(26+bottomSafeInset));
+            make.bottom.mas_equalTo(self.view).offset(-(66+bottomSafeInset));
             make.size.mas_equalTo(CGSizeMake(44, 44));
         }];
     }
 
     [self.sideBar mas_makeConstraints:^(MASConstraintMaker *make) {
         make.right.mas_equalTo(-11);
-        make.bottom.mas_equalTo(self.view).offset(-(96+bottomSafeInset));
+        make.bottom.mas_equalTo(self.view).offset(-(136+bottomSafeInset));
         make.width.mas_equalTo(36);
     }];
     

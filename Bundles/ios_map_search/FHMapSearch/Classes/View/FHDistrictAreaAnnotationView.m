@@ -31,7 +31,7 @@
                      reuseIdentifier:reuseIdentifier];
     if (self) {
         
-        int width = 105;
+        int width = 80;
         
         self.frame = CGRectMake(0, 0, width, width);
         UIImage *bgImg = SYS_IMG(@"mapsearch_area_bg");
@@ -39,12 +39,12 @@
         
         UIFont *font = [UIFont systemFontOfSize:12];
         UIColor *textColor = [UIColor whiteColor];
-        _nameLabel = [[UILabel alloc] initWithFrame:CGRectMake(20, 34, MAX_WIDTH, 17)];
+        _nameLabel = [[UILabel alloc] initWithFrame:CGRectMake(7, 23, MAX_WIDTH, 17)];
         _nameLabel.font = font;
         _nameLabel.textColor = textColor;
         _nameLabel.textAlignment = NSTextAlignmentCenter;
 
-        _descLabel = [[UILabel alloc]initWithFrame:CGRectMake(20, 50, MAX_WIDTH, 17)];
+        _descLabel = [[UILabel alloc]initWithFrame:CGRectMake(7, 40, MAX_WIDTH, 17)];
         _descLabel.font = font;
         _descLabel.textColor = textColor;
         _descLabel.textAlignment = NSTextAlignmentCenter;

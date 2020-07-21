@@ -151,10 +151,10 @@
     }];
     
     [_drawTitleLineLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-       make.top.mas_equalTo(self.drawLineBgView).offset(0);
+       make.top.mas_equalTo(self.drawLineBgView).offset(3);
        make.left.mas_equalTo(50);
 //       make.width.mas_equalTo(160);
-       make.height.mas_equalTo(26);
+       make.height.mas_equalTo(23);
 //       make.left.mas_equalTo(43);
     }];
     
@@ -162,7 +162,7 @@
     [_drawLineLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(self.drawTitleLineLabel.mas_bottom).offset(0);
         make.width.mas_equalTo(110);
-        make.height.mas_equalTo(26);
+        make.height.mas_equalTo(23);
         make.left.mas_equalTo(50);
     }];
 
@@ -214,7 +214,7 @@
       } range:numRange];
       
     _drawLineLabel.attributedText = contentAttr;
-     _drawTitleLineLabel.text = @"区域内共找到:";
+     _drawTitleLineLabel.text = @"区域内共找到：";
 //    content = @"区域内共找到20000000123452000000012345套房源";
 //    _drawLineLabel.text = content;
 //    _subwayBgView.hidden = YES;

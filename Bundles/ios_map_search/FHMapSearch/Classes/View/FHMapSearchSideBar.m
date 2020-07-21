@@ -51,7 +51,8 @@
         _contentView.layer.masksToBounds = YES;
         _contentView.backgroundColor = [UIColor whiteColor];
         _contentView.autoresizingMask = UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight;
-        
+        _contentView.layer.borderWidth = 0.5;
+        _contentView.layer.borderColor = [UIColor colorWithRed:0.0 green:0.0 blue:0.0 alpha:0.3].CGColor;
         [self addSubview:_contentView];
         
         _subwayItem = [self itemViewWithType:FHMapSearchSideBarItemTypeSubway];
