@@ -41,8 +41,9 @@
         self.realtorDetailInfo = paramObj.allParams;
 //        // 取链接中的埋点数据
 //        self.tracerDict = paramObj.allParams[@"tracer"];
-        self.tracerDict[@"page_type"] = [self pageType];
         self.tracerDict[@"enter_from"] =  self.tracerDict[@"page_type"];
+        self.tracerDict[@"page_type"] = [self pageType];
+
     }
     return self;
 }
