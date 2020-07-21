@@ -226,7 +226,7 @@
         }
         if (model.data.items.count > 0) {
             self.detailController.emptyView.hidden = YES;
-            [wself updateTableViewWithMoreData:wself.tableView.hasMore];
+            [wself updateTableViewWithMoreData:model.data.hasMore];
             if (isFirst) {
                 self.dataList = [NSMutableArray arrayWithArray:model.data.items];
                 self.lastOffset = model.data.items.count;

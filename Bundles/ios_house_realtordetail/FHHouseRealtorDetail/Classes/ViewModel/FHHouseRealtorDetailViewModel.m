@@ -283,6 +283,9 @@
 }
 
 - (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
+    if (indexPath.row == 0) {
+        return;
+    }
     if(indexPath.row < self.dataList.count + 1){
         FHFeedUGCCellModel *cellModel = self.dataList[indexPath.row -1];
         [self trackFeedClientShow:cellModel withExtraDic:self.tracerDic];
