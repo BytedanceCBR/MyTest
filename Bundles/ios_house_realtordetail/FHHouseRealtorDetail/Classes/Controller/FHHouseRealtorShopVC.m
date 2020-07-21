@@ -69,7 +69,7 @@
       NSDictionary *reoprtParam = [self dictionaryWithJsonString:reportParams];
       self.tracerDict  = [[NSMutableDictionary alloc]init];
       [self.tracerDict addEntriesFromDictionary:reoprtParam];
-      [self.tracerDict setObject:[self pageType] forKey:@"pagetype"];
+      [self.tracerDict setObject:[self pageType] forKey:@"page_type"];
       [self.tracerDict setObject:dic[@"enter_from"] forKey:@"enter_from"];
 }
 

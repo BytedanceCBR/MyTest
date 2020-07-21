@@ -20,12 +20,14 @@
 #import "UIImage+FIconFont.h"
 #import "FHRealtorEvaluatingPhoneCallModel.h"
 #import "NSObject+YYModel.h"
+#import "FHUserTracker.h"
 @interface FHHouseRealtorShopVM ()<UITableViewDelegate,UITableViewDataSource>
 @property(nonatomic, weak)TTHttpTask *requestTask;
 @property(nonatomic , weak) UITableView *tableView;
 @property(nonatomic , weak) FHHouseRealtorShopVC *detailController;
 @property (nonatomic, strong) FHHouseRealtorShopModel *data;
 @property(nonatomic, strong)FHRefreshCustomFooter *refreshFooter;
+@property (nonatomic, strong) NSMutableArray *showHouseCache;
 @property (nonatomic, strong) FHRealtorDetailBottomBar *bottomBar;
 @property(nonatomic, strong) FHRealtorEvaluatingPhoneCallModel *realtorPhoneCallModel;
 @property(nonatomic, strong) NSMutableArray *dataList;
@@ -44,6 +46,7 @@
             self.bottomBar = bottomBar;
         self.tracerDict = tracer;
         self.tableView = tableView;
+        [self addGoDetailLog];
         self.realtorPhoneCallModel = [[FHRealtorEvaluatingPhoneCallModel alloc]initWithHouseType:nil houseId:nil];
         self.realtorPhoneCallModel.tracerDict = tracer;
         self.realtorPhoneCallModel.belongsVC = viewController;
@@ -366,6 +369,13 @@
     [self.realtorPhoneCallModel imchatActionWithPhone:realtorModel realtorRank:0 extraDic:self.tracerDict];
 }
 
+- (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
+    if ([cell isKindOfClass:[FHHouseBaseItemCell class]]) {
+        FHHomeHouseDataItemsModel *model = self.dataList[indexPath.row];
+        [self addHouseShow:model ];
+    }
+}
+
 - (void)phoneAction{
 //     NSDictionary *houseInfo = dataModel.extraDic;
      NSMutableDictionary *extraDict = self.tracerDict.mutableCopy;
@@ -390,5 +400,42 @@
 //         }
 //       }
      [self.realtorPhoneCallModel phoneChatActionWithAssociateModel:associatePhone];
+}
+
+- (void)addGoDetailLog {
+    NSMutableDictionary *params = [NSMutableDictionary dictionary];
+    params[@"origin_from"] = self.tracerDict[@"origin_from"] ?: @"be_null";
+    params[@"event_type"] = @"house_app2c_v2";
+    params[@"enter_from"] = self.tracerDict[@"enter_from"] ?: @"be_null";
+    params[@"enter_type"] = self.tracerDict[@"enter_type"] ?: @"click";
+    params[@"log_pb"] = self.tracerDict[@"log_pb"] ?: @"be_null";
+    params[@"rank"] = self.tracerDict[@"rank"] ?: @"be_null";
+    params[@"page_type"] = self.tracerDict[@"page_type"] ?: @"be_null";
+    params[@"group_id"] = self.tracerDict[@"group_id"] ?: @"be_null";
+    params[@"element_from"] = self.tracerDict[@"element_from"] ?: @"be_null";
+    params[@"realtor_id"] = self.realtorInfo[@"realtor_id"] ?: @"be_null";
+    [FHUserTracker writeEvent:@"go_detail" params:params];
+}
+
+- (NSMutableArray *)showHouseCache {
+    if (!_showHouseCache) {
+        _showHouseCache = [NSMutableArray array];
+    }
+    return _showHouseCache;
+}
+
+- (void)addHouseShow:(FHHomeHouseDataItemsModel *)model {
+    if (!model.id) {
+        return;
+    }
+    if ([self.showHouseCache containsObject:model.id]) {
+        return;
+    }
+    [self.showHouseCache addObject:model.id];
+    NSMutableDictionary *tracerDic = self.tracerDict.mutableCopy;
+    tracerDic[@"house_type"] = @"old";
+    tracerDic[@"log_pb"] = model.logPb?:@"be_null";
+    tracerDic[@"group_id"] = model.id;
+    TRACK_EVENT(@"house_show", tracerDic);
 }
 @end

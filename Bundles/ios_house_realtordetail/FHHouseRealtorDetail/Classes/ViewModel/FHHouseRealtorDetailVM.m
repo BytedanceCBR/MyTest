@@ -155,7 +155,7 @@
         self.ugcTabList = model.data.ugcTabList.mutableCopy;
         FHHouseRealtorDetailRgcTabModel *models =  [[FHHouseRealtorDetailRgcTabModel alloc]init];
         models.showName = @"房源";
-        models.tabName = @"house";
+        models.tabName = @"house_list";
         [self.ugcTabList insertObject:models atIndex:0];
         [self initSegmentWithTabInfoArr:self.ugcTabList];
            //初始化vc
@@ -226,7 +226,8 @@
         self.viewController.segmentView.hidden = YES;
     }
     if (tabListArr && tabListArr.count>1) {
-            self.viewController.segmentView.selectedIndex = 0;
+            self.viewController.segmentView.selectedIndex = 1;
+             [self addEnterCategoryLog:@"realtor_all_list"];
     }
     self.viewController.segmentView.titles = titles;
     self.segmentTitles = titles;
@@ -500,13 +501,13 @@
     } else {
         //上报埋点
         NSString *position = @"be_null";
-//        if(toIndex < self.socialGroupModel.data.tabInfo.count){
-//            FHUGCScialGroupDataTabInfoModel *tabModel = self.socialGroupModel.data.tabInfo[toIndex];
-//            if(tabModel.tabName){
-//                position = [NSString stringWithFormat:@"%@_list",tabModel.tabName];
-//            }
-//        }
-//        [self addClickOptionsLog:position];
+        if(toIndex < self.ugcTabList.count){
+            FHHouseRealtorDetailRgcTabModel *tabModel = self.ugcTabList[toIndex];
+            if(tabModel.tabName){
+                position = [NSString stringWithFormat:@"%@",tabModel.tabName];
+            }
+        }
+        [self addEnterCategoryLog:position];
         [self.pagingView scrollToIndex:toIndex withAnimation:YES];
     }
 }
@@ -540,5 +541,13 @@
      associatePhone.houseType = [NSString  stringWithFormat:@"%@",self.realtorInfo[@"house_type"]].intValue;
      associatePhone.houseId = self.realtorInfo[@"house_id"];
      [self.realtorPhoneCallModel phoneChatActionWithAssociateModel:associatePhone];
+}
+
+- (void)addEnterCategoryLog:(NSString *)categoryName {
+    NSMutableDictionary *tracerDict = self.tracerDict.mutableCopy;
+    [tracerDict setObject:categoryName forKey:@"category_name"];
+    [tracerDict setObject:@"house_app2c_v2" forKey:@"event_type"];
+    [tracerDict setObject:self.realtorInfo[@"realtor_id"] forKey:@"realtor_id"];
+    TRACK_EVENT(@"enter_category", tracerDict);
 }
 @end
