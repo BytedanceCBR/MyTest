@@ -47,11 +47,18 @@
     return _bgDismissButton;
 }
 
+- (CGFloat)safeAreaBottom {
+    CGFloat ret = 0;
+    if(@available(iOS 11.0, *)) {
+        ret = [TTUIResponderHelper mainWindow].safeAreaInsets.bottom;
+    }
+    return ret;
+}
+
 - (UIView *)animationContainerView {
     if(!_animationContainerView) {
-        _animationContainerView = [[UIView alloc] initWithFrame:CGRectMake(0, SCREEN_HEIGHT, SCREEN_WIDTH, LOGIN_HALF_VIEW_HEIGHT + [TTUIResponderHelper mainWindow].safeAreaInsets.bottom)];
+        _animationContainerView = [[UIView alloc] initWithFrame:CGRectMake(0, SCREEN_HEIGHT, SCREEN_WIDTH, LOGIN_HALF_VIEW_HEIGHT + [self safeAreaBottom])];
         _animationContainerView.backgroundColor = [UIColor themeWhite];
-        NSLog(@"+++SCREEN_HEIGHT: %@, safeAreaInset.bottom: %@",@(SCREEN_HEIGHT), @([TTUIResponderHelper mainWindow].safeAreaInsets.bottom));
         UIBezierPath *maskPath = [UIBezierPath bezierPathWithRoundedRect:_animationContainerView.bounds byRoundingCorners:UIRectCornerTopLeft | UIRectCornerTopRight cornerRadii:CGSizeMake(10, 10)];
         CAShapeLayer *maskLayer = [[CAShapeLayer alloc] init];
         maskLayer.frame = _animationContainerView.bounds;
@@ -102,7 +109,6 @@
         CGRect frame = self.animationContainerView.frame;
         frame.origin.y = SCREEN_HEIGHT - self.animationContainerView.size.height;
         self.animationContainerView.frame = frame;
-        NSLog(@"+++animationContainerView.origin.y: %@",@(frame.origin.y));
     }];
     [self traceOneKeyLoginShow];
 }
@@ -422,8 +428,6 @@
             completion([FHLoginSharedModel sharedModel].isOneKeyLogin);
         }];
     }
-    
-    NSLog(@"+++isOneKeyLogin: %@",@([FHLoginSharedModel sharedModel].isOneKeyLogin));
 }
 
 - (void)showHalfLogin:(UIViewController *)vc {
