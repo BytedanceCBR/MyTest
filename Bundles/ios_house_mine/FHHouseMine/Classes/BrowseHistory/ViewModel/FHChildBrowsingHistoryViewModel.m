@@ -77,7 +77,6 @@
 }
 
 - (void)registerCellClasses {
-    [_tableView registerClass:[FHHouseBaseItemCell class] forCellReuseIdentifier:@"FHHouseBaseItemCellList"];
     [_tableView registerClass:[FHHouseBaseItemCell class] forCellReuseIdentifier:[FHSearchHouseItemModel cellIdentifierByHouseType:FHHouseTypeSecondHandHouse]];
     [_tableView registerClass:[FHHouseBaseItemCell class] forCellReuseIdentifier:[FHSearchHouseItemModel cellIdentifierByHouseType:FHHouseTypeRentHouse]];
     [_tableView registerClass:[FHHouseBaseItemCell class] forCellReuseIdentifier:[FHSearchHouseItemModel cellIdentifierByHouseType:FHHouseTypeNeighborhood]];
@@ -357,7 +356,7 @@
     if (![urlStr isEqualToString:@"sslocal://main?select_tab=tab_stream"]) {
         [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
     } else {
-        [[TTRoute sharedRoute] openURL:url userInfo:userInfo objHandler:^(TTRouteObject *routeObj) {
+        [[TTRoute sharedRoute] openURL:url userInfo:nil objHandler:^(TTRouteObject *routeObj) {
             
         }];
     }

@@ -13,6 +13,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+//结构参照搜索中间页
 @interface FHBrowsingHistoryViewController : FHBaseViewController
 
 @property (nonatomic, strong) FHSuggestionCollectionView *collectionView;

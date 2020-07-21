@@ -52,7 +52,7 @@ static const float kSegementedOneWidth = 50;
     self.houseType = FHHouseTypeSecondHandHouse;
 }
 
-- (void)initNav {
+- (void)initNavBar {
     self.title = @"浏览历史";
     [self setupDefaultNavBar:NO];
     [self.customNavBarView.leftBtn setBackgroundImage:ICON_FONT_IMG(24, @"\U0000e68a", [UIColor themeGray1]) forState:UIControlStateNormal];
@@ -61,7 +61,7 @@ static const float kSegementedOneWidth = 50;
 }
 
 - (void)setupUI {
-    [self initNav];
+    [self initNavBar];
     self.topView = [[UIView alloc] init];
     self.topView.backgroundColor = [UIColor whiteColor];
     [self.view addSubview:_topView];
