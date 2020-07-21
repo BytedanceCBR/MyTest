@@ -91,32 +91,32 @@
 }
 
 - (void)updateCicleBtn:(BOOL)isShowCircle{
-    _isShowCircle = isShowCircle;
-    UIImage *img = nil;
-    if(_type == FHMapSimpleNavbarTypeClose){
-        img = ICON_FONT_IMG(24, @"\U0000e673",[UIColor themeGray1]);
-        _rightTitleLabel.hidden = YES;
-    }else if(_type == FHMapSimpleNavbarTypeDrawLine && isShowCircle){
-        img = ICON_FONT_IMG(24, @"\U0000e673",[UIColor themeGray1]);
-        [_rightButton setImage:[UIImage imageNamed:@"draw_line_btn"] forState:UIControlStateNormal];
-        [_rightButton mas_updateConstraints:^(MASConstraintMaker *make) {
-           make.right.equalTo(self).offset(-48);
-        }];
-        _rightTitleLabel.hidden = NO;
-    }else{
-        img = ICON_FONT_IMG(22, @"\U0000e68a",[UIColor themeGray1]);
-        UIImage *searImg = ICON_FONT_IMG(24, @"\U0000e675",[UIColor themeGray1]);
-        [_rightButton setImage:searImg forState:UIControlStateNormal];
-        [_rightButton mas_updateConstraints:^(MASConstraintMaker *make) {
-           make.right.equalTo(self).offset(-18);
-        }];
-        _rightTitleLabel.hidden = YES;
-    }
+//    _isShowCircle = isShowCircle;
+//    UIImage *img = nil;
+//    if(_type == FHMapSimpleNavbarTypeClose){
+//        img = ICON_FONT_IMG(24, @"\U0000e673",[UIColor themeGray1]);
+//        _rightTitleLabel.hidden = YES;
+//    }else if(_type == FHMapSimpleNavbarTypeDrawLine && isShowCircle){
+//        img = ICON_FONT_IMG(24, @"\U0000e673",[UIColor themeGray1]);
+//        [_rightButton setImage:[UIImage imageNamed:@"draw_line_btn"] forState:UIControlStateNormal];
+//        [_rightButton mas_updateConstraints:^(MASConstraintMaker *make) {
+//           make.right.equalTo(self).offset(-48);
+//        }];
+//        _rightTitleLabel.hidden = NO;
+//    }else{
+//        img = ICON_FONT_IMG(22, @"\U0000e68a",[UIColor themeGray1]);
+//        UIImage *searImg = ICON_FONT_IMG(24, @"\U0000e675",[UIColor themeGray1]);
+//        [_rightButton setImage:searImg forState:UIControlStateNormal];
+//        [_rightButton mas_updateConstraints:^(MASConstraintMaker *make) {
+//           make.right.equalTo(self).offset(-18);
+//        }];
+//        _rightTitleLabel.hidden = YES;
+//    }
 
 }
 
 -(void)rightBtnClick:(id)sender{
-    if(self.type == FHMapSimpleNavbarTypeDrawLine && _isShowCircle){
+    if(self.type == FHMapSimpleNavbarTypeDrawLine){
         NSMutableDictionary *tracerParams = [NSMutableDictionary new];
         tracerParams[@"page_type"] = @"map_search_detail";
         [FHUserTracker writeEvent:@"click_search" params:tracerParams];

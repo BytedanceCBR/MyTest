@@ -2003,6 +2003,13 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
 
 -(void)reDrawMapCircle
 {
+    CGFloat zoomLevel = self.mapView.zoomLevel;
+    BOOL showCircle = (self.configModel.houseType == FHHouseTypeSecondHandHouse) && (zoomLevel >= 13);
+    if (!showCircle) {
+        [[ToastManager manager] showToast:@"请放大地图后使用画圈找房"];
+        return;
+    }
+    
     [self.mapView removeOverlay:self.drawLayer];
     [self chooseDrawLine];
 }
