@@ -25,6 +25,7 @@
 @property(nonatomic , strong) UILabel *titleLabel;
 @property(nonatomic , strong) UILabel *rightTitleLabel;
 @property(nonatomic , strong) CALayer *bgLayer;
+@property(nonatomic , assign) BOOL isShowCircle;
 
 @end
 
@@ -90,6 +91,7 @@
 }
 
 - (void)updateCicleBtn:(BOOL)isShowCircle{
+    _isShowCircle = isShowCircle;
     UIImage *img = nil;
     if(_type == FHMapSimpleNavbarTypeClose){
         img = ICON_FONT_IMG(24, @"\U0000e673",[UIColor themeGray1]);
@@ -114,7 +116,7 @@
 }
 
 -(void)rightBtnClick:(id)sender{
-    if(self.type == FHMapSimpleNavbarTypeDrawLine){
+    if(self.type == FHMapSimpleNavbarTypeDrawLine && _isShowCircle){
         NSMutableDictionary *tracerParams = [NSMutableDictionary new];
         tracerParams[@"page_type"] = @"map_search_detail";
         [FHUserTracker writeEvent:@"click_search" params:tracerParams];
@@ -186,7 +188,8 @@
     _rightTitleLabel.hidden = YES;
 
     _type = type;
-    
+    _isShowCircle = NO;
+
     UIImage *img = nil;
     if(type == FHMapSimpleNavbarTypeClose){
         img = ICON_FONT_IMG(24, @"\U0000e673",[UIColor themeGray1]);
@@ -198,6 +201,7 @@
            make.right.equalTo(self).offset(-48);
         }];
         _rightTitleLabel.hidden = NO;
+        _isShowCircle = YES;
     }else{
         img = ICON_FONT_IMG(22, @"\U0000e68a",[UIColor themeGray1]);
         UIImage *searImg = ICON_FONT_IMG(24, @"\U0000e675",[UIColor themeGray1]);
