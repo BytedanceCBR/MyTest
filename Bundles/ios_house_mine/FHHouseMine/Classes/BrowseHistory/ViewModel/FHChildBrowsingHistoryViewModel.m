@@ -330,7 +330,7 @@
         houseType = -1;
     }
     NSMutableDictionary *dictTrace = [NSMutableDictionary new];
-    dictTrace[@"page_type"] = [self getPageType:self.houseType];
+    dictTrace[@"enter_from"] = [self getPageType:self.houseType];
     dictTrace[@"origin_from"] = self.viewController.tracerDict[@"origin_from"] ? : @"be_null";
     NSDictionary *userInfoDict = @{@"tracer":dictTrace};
     TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:userInfoDict];
