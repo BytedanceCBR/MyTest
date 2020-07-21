@@ -30,3 +30,22 @@
 }
 @end
 
+@implementation FHHouseRealtorUserCommentItemModel
++ (JSONKeyMapper*)keyMapper
+{
+    NSDictionary *dict = @{
+            @"avatarUrl": @"avatar_url",
+            @"scoreCount": @"score_count",
+            @"layoutStyle": @"layout_style",
+    };
+    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+        return dict[keyName]?:keyName;
+    }];
+}
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+@end
+
+

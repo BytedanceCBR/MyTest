@@ -185,17 +185,18 @@
     [dic setObject:model.data.certificationIcon?:@"" forKey:@"certification_icon"];
     [dic setObject:model.data.certificationPage?:@"" forKey:@"certification_page"];
     [dic setObject:@{@"realtor_id":self.realtorInfo[@"realtor_id"]?:@"",@"screen_width":@([UIScreen mainScreen].bounds.size.width)} forKey:@"common_params"];
+    [dic setObject:self.tracerDict?:@"" forKey:@"report_params"];
     if (self.tracerDict) {
         NSString *lynxReortParams= [self.tracerDict yy_modelToJSONString];
             lynxReortParams = [lynxReortParams stringByAddingPercentEncodingWithAllowedCharacters:NSCharacterSet.URLQueryAllowedCharacterSet];
-            
+
             NSString *unencodedString = lynxReortParams;
             NSString *encodedString = (NSString *)CFBridgingRelease(CFURLCreateStringByAddingPercentEscapes(kCFAllocatorDefault,
                                                                                                             (CFStringRef)unencodedString,
                                                                                                             NULL,
                                                                                                             (CFStringRef)@"!*'();:@&=+$,/?%#[]",
                                                                                                             kCFStringEncodingUTF8));
-         [dic setObject:lynxReortParams forKey:@"report_params"];
+         [dic setObject:lynxReortParams forKey:@"encoded_report_params"];
         }
     [self.viewController.headerView reloadDataWithDic:dic];
 }
@@ -345,6 +346,7 @@
     params[@"page_type"] = self.tracerDict[@"page_type"] ?: @"be_null";
     params[@"group_id"] = self.tracerDict[@"group_id"] ?: @"be_null";
     params[@"element_from"] = self.tracerDict[@"element_from"] ?: @"be_null";
+    params[@"realtor_id"] = self.realtorInfo[@"realtor_id"] ?: @"be_null";
     [FHUserTracker writeEvent:@"go_detail" params:params];
 }
 

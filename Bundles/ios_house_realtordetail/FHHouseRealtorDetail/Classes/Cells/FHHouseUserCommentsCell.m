@@ -24,6 +24,7 @@
 @property(nonatomic ,strong) NSData *currentTemData;
 @property (strong, nonatomic) UIImage *placeholderImage;
 @property (weak, nonatomic) UIImageView *headerIma;
+@property (assign, nonatomic) CGFloat cellHeights;
 @end
 @implementation FHHouseUserCommentsCell
 - (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
@@ -41,7 +42,7 @@
 }
 
 - (void)refreshWithData:(id)data {
-    if (self.currentData == data ) {
+    if (self.currentData == data  || ![data isKindOfClass:[FHHouseRealtorUserCommentItemModel class]]) {
         return;
     }
     self.currentData = data;
@@ -70,15 +71,30 @@
                 [infoView loadTemplate:templateData withURL:@"local"];
             }
         }
+        
         _infoView = infoView;
     }
     return _infoView;
 }
 
+- (CGFloat)cellHeight{
+    if (self.cellHeights) {
+        return self.cellHeights;
+    }
+    return 44;
+}
 
-- (void)updateModel:(NSDictionary *)dic {
-    NSString *lynxData = [dic yy_modelToJSONString];
+//这里接收TTLynxViewClient抛上来的sizeChange事件
+- (void)lynxViewDidChangeIntrinsicContentSize:(LynxView*)view {
+    NSLog(@"%@",view.frame.size);
+    NSLog(@"%@",view.frame.size);
+}
+
+
+- (void)updateModel:(FHHouseRealtorUserCommentItemModel *)model {
+    NSString *lynxData = [model yy_modelToJSONString];
     [_infoView updateDataWithString:lynxData];
+    self.cellHeights = [_infoView intrinsicContentSize].height;
 }
 
 - (UIImageView *)headerIma {
@@ -148,6 +164,7 @@
     }
 }
 @end
+
 @implementation FHHouseUserCommentsModel
 
 @end

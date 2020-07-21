@@ -107,7 +107,7 @@
             return;
         }
         if (model.data.commentInfo.count > 0) {
-            [wself updateTableViewWithMoreData:wself.tableView.hasMore];
+            [wself updateTableViewWithMoreData:model.data.hasMore];
                 [self.dataList addObjectsFromArray:model.data.commentInfo];
                 self.lastOffset = model.data.offset;
             [self.tableView reloadData];
@@ -137,19 +137,27 @@
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-        return UITableViewAutomaticDimension;
+     FHHouseRealtorUserCommentItemModel *item = self.dataList[indexPath.row];
+
+    if (item.cellHeight) {
+        return item.cellHeight;
+    }
+        return 44;
 }
 
 - (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
-        NSDictionary *commentDic = self.dataList[indexPath.row];
-        [self addCommentShow:commentDic];
+        FHHouseRealtorUserCommentItemModel *item = self.dataList[indexPath.row];
+        [self addCommentShow:item];
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     //to do 房源cell
     NSString *identifier = @"FHHouseUserCommentsCell";
     FHHouseUserCommentsCell *cell = [tableView dequeueReusableCellWithIdentifier:identifier];
-    [cell refreshWithData:self.dataList[indexPath.row]];
+      FHHouseRealtorUserCommentItemModel *item = self.dataList[indexPath.row];
+    [cell refreshWithData:item];
+    CGFloat cellHeight = [cell cellHeight];
+    item.cellHeight = cellHeight;
     return cell;
 }
 
@@ -180,25 +188,21 @@
     return _showCommentCache;
 }
 
-- (void)addCommentShow:(NSDictionary *)commentDic {
-    if (![commentDic.allKeys containsObject:@"id"]) {
+- (void)addCommentShow:(FHHouseRealtorUserCommentItemModel *)item {
+    if (!item.id) {
         return;
     }
-    NSString *commentId = [NSString stringWithFormat:@"%@",commentDic[@"id"]];
-    if (commentId.length >0) {
-        
-        if ([self.showCommentCache containsObject:commentId]) {
+        if ([self.showCommentCache containsObject:item.id]) {
             return;
         }
         
-    [self.showCommentCache addObject:commentId];
+    [self.showCommentCache addObject:item.id];
         NSMutableDictionary *tracerDic = self.tracerDic.mutableCopy;
         [tracerDic setObject:[self categoryName] forKey:@"category_name"];
         [tracerDic setObject:@"house_app2c_v2" forKey:@"event_type"];
         [tracerDic setObject:self.realtorInfo[@"realtor_id"] forKey:@"realtor_id"];
-        [tracerDic setObject:commentId forKey:@"comment_id"];
+        [tracerDic setObject:item.id forKey:@"comment_id"];
         TRACK_EVENT(@"user_comment_show", tracerDic);
-    }
 }
 
 @end

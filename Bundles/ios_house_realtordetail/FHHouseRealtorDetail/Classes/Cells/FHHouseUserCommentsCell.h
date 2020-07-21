@@ -6,11 +6,11 @@
 //
 
 #import "FHDetailBaseCell.h"
-
+#import "FHHouseRealtorUserCommentDataModel.h"
 NS_ASSUME_NONNULL_BEGIN
 
 @interface FHHouseUserCommentsCell : FHDetailBaseCell
-
+- (CGFloat)cellHeight;
 @end
 
 @interface FHHouseUserCommentsModel : NSObject

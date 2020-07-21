@@ -6,12 +6,27 @@
 //
 
 #import "JSONModel.h"
-
+@class FHHouseUserCommentsCell;
 NS_ASSUME_NONNULL_BEGIN
+@protocol FHHouseRealtorUserCommentItemModel <NSObject>
+
+@end
+@interface FHHouseRealtorUserCommentItemModel : JSONModel
+@property (assign, nonatomic) CGFloat cellHeight;
+@property (copy, nonatomic, nullable) NSString *id;
+@property (copy, nonatomic, nullable) NSString *avatarUrl;
+@property (strong, nonatomic, nullable) NSDictionary *tags;
+@property (copy, nonatomic, nullable) NSString *score;
+@property (copy, nonatomic, nullable) NSString *scoreCount;
+@property (copy, nonatomic, nullable) NSString *time;
+@property (copy, nonatomic, nullable) NSString *content;
+@property (copy, nonatomic, nullable) NSString *layout_style;
+@end
+
 @interface FHHouseRealtorUserCommentModel : JSONModel
 @property (nonatomic, assign ) NSInteger offset;
 @property (nonatomic, assign ) BOOL hasMore;
-@property (nonatomic, strong , nullable) NSArray *commentInfo;
+@property (nonatomic, strong , nullable) NSArray <FHHouseRealtorUserCommentItemModel>*commentInfo;
 @end
 
 @interface FHHouseRealtorUserCommentDataModel : JSONModel

@@ -168,9 +168,8 @@
                     }else {
                         wself.tableView.hasMore = feedListModel.hasMore;
                     }
-                    wself.detailController.hasValidateData = wself.dataList.count > 0;
                     if(wself.dataList.count > 0){
-                        [wself updateTableViewWithMoreData:wself.tableView.hasMore];
+                        [wself updateTableViewWithMoreData:feedListModel.hasMore];
                         [wself.detailController.emptyView hideEmptyView];
                     }
                     [self reloadTableViewData];
@@ -315,7 +314,6 @@
 
 - (void)reloadTableViewData {
     if(self.dataList.count > 0){
-        [self updateTableViewWithMoreData:self.tableView.hasMore];
         self.tableView.backgroundColor = [UIColor themeGray7];
         
         CGFloat height = [self getVisibleHeight:5];
