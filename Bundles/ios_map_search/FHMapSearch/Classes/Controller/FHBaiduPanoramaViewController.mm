@@ -52,6 +52,8 @@
 
 @property (nonatomic, assign) UIStatusBarStyle lastStatusBarStyle;
 
+@property (nonatomic, strong) dispatch_queue_t serialQueue;
+
 @end
 
 @implementation FHBaiduPanoramaViewController
@@ -81,6 +83,7 @@
         }
         
         self.point = [BaiduPanoUtils baiduCoorEncryptLon:self.gaodeLon lat:self.gaodeLat coorType:COOR_TYPE_COMMON];
+        self.serialQueue = dispatch_queue_create("baidu_pano_serial_queue", DISPATCH_QUEUE_SERIAL);
         [self addGoDetailLog];
     }
     return self;
@@ -195,12 +198,13 @@
     self.mapView = [[BMKMapView alloc] initWithFrame:CGRectMake(0, CGRectGetHeight(self.view.bounds)-120, CGRectGetWidth(self.view.bounds), 120)];
     self.mapView.delegate = self;
     self.mapView.centerCoordinate = self.point;
-    self.mapView.buildingsEnabled = NO;
-    self.mapView.showMapPoi = NO;
+//    self.mapView.buildingsEnabled = NO;
+//    self.mapView.showMapPoi = NO;
     self.mapView.rotateEnabled = NO;
-    self.mapView.overlookEnabled = NO;
-    self.mapView.showMapScaleBar = NO;
+//    self.mapView.overlookEnabled = NO;
+//    self.mapView.showMapScaleBar = NO;
     self.mapView.zoomLevel = 16;
+    [self.mapView setMapType:BMKMapTypeStandard];
     self.mapView.layer.masksToBounds = YES;
     self.mapView.layer.cornerRadius = 4.0;
     [self.view addSubview:self.mapView];
@@ -320,7 +324,7 @@
     [self.panoramaView setPoiOverlayHidden:self.overlayButton.selected];
 }
 
-- (void)searchCurrentPOIPageIndex:(NSUInteger )pageIndex {
+- (void)searchCurrentPOI {
     /**
     
     radius 1000
@@ -331,29 +335,31 @@
      
      //@"银行",@"公交",@"地铁",@"教育",@"医院",@"商场",@"小区"
     */
-    if (pageIndex == 0) {
-        [self.filterPoiList removeAllObjects];
-        self.limitDict = @{@"银行": @(0),
-                           @"公交": @(0),
-                           @"地铁": @(0),
-                           @"教育": @(0),
-                           @"医院": @(0),
-                           @"商场": @(0),
-                           @"小区": @(0)}.mutableCopy;
+
+    [self.filterPoiList removeAllObjects];
+    [self.panoramaView removeAllOverlay];
+    [self.overlays removeAllObjects];
+    self.limitDict = @{@"银行": @(0),
+                       @"公交": @(0),
+                       @"地铁": @(0),
+                       @"教育": @(0),
+                       @"医院": @(0),
+                       @"商场": @(0),
+                       @"小区": @(0)}.mutableCopy;
+    
+    for (NSString *keyword in @[@"银行",@"公交",@"地铁",@"教育",@"医院",@"商场",@"小区"]) {
+        BMKPoiSearch *poiSearch = [[BMKPoiSearch alloc] init];
+        poiSearch.delegate = self;
+        BMKPOINearbySearchOption *option = [[BMKPOINearbySearchOption alloc] init];
+        option.keywords = @[keyword];
+        option.location = self.point;
+        option.radius = 1000;
+        option.isRadiusLimit = YES;
+        option.scope = BMK_POI_SCOPE_DETAIL_INFORMATION;
+        option.pageIndex = 0;
+        option.pageSize = 10;
+        [poiSearch poiSearchNearBy:option];
     }
-    
-    BMKPoiSearch *poiSearch = [[BMKPoiSearch alloc] init];
-    poiSearch.delegate = self;
-    BMKPOINearbySearchOption *option = [[BMKPOINearbySearchOption alloc] init];
-    option.keywords = @[@"银行",@"公交",@"地铁",@"教育",@"医院",@"商场",@"小区"];
-    option.location = self.point;
-    option.radius = 1000;
-    option.isRadiusLimit = YES;
-    option.scope = BMK_POI_SCOPE_DETAIL_INFORMATION;
-    option.pageIndex = pageIndex;
-    option.pageSize = 20;
-    [poiSearch poiSearchNearBy:option];
-    
     BMKGeoCodeSearch *geoSearch = [[BMKGeoCodeSearch alloc] init];
     geoSearch.delegate = self;
     BMKReverseGeoCodeSearchOption *geoSearchOption = [[BMKReverseGeoCodeSearchOption alloc] init];
@@ -369,7 +375,10 @@ static NSInteger overlayIndex = 0;
 - (void)handlePoiResult:(BMKPOISearchResult *)poiResult{
 //(NSArray<BMKPoiInfo *>)poiInfoList{
 //    poiResult.poiInfoList
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
+
+
+    dispatch_async(self.serialQueue, ^{
+        NSMutableArray *filterArray = [NSMutableArray array];
         for (BMKPoiInfo *poiInfo in poiResult.poiInfoList) {
             if (!poiInfo.hasDetailInfo) {
                 continue;
@@ -380,7 +389,7 @@ static NSInteger overlayIndex = 0;
                 continue;
             }
             if (!detailInfo.tag.length) {
-//                [self.filterPoiList addObject:poiInfo];
+                //                [self.filterPoiList addObject:poiInfo];
                 continue;
             }
             NSString *name = poiInfo.name;
@@ -411,35 +420,40 @@ static NSInteger overlayIndex = 0;
             }
             if (self.limitDict[typeName]) {
                 NSInteger limit = [[self.limitDict objectForKey:typeName] integerValue];
-                if (limit < 3) {
-                    [self.filterPoiList addObject:poiInfo];
-                    limit += 1;
-                    self.limitDict[typeName] = @(limit);
+                if (limit >= 3) {
+                    continue;
                 }
+                //名称去重
+                __block NSUInteger index = NSNotFound;
+                [self.filterPoiList enumerateObjectsUsingBlock:^(BMKPoiInfo * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+                    if ([obj.name isEqualToString:poiInfo.name]) {
+                        index = idx;
+                        *stop = YES;
+                    }
+                }];
+                if (index != NSNotFound) {
+                    continue;
+                }
+                [self.filterPoiList addObject:poiInfo];
+                [filterArray addObject:poiInfo];
+                limit += 1;
+                self.limitDict[typeName] = @(limit);
             } else {
                 [self.filterPoiList addObject:poiInfo];
                 self.limitDict[typeName] = @(1);
+                [filterArray addObject:poiInfo];
             }
-            
         }
-        
-        if (poiResult.curPageIndex == 0) {
-            [self searchCurrentPOIPageIndex:1];
-        } else if (poiResult.curPageIndex == 1) {
-            [self searchCurrentPOIPageIndex:2];
-        } else if (poiResult.curPageIndex == 2) {
+        if (filterArray.count) {
             dispatch_async(dispatch_get_main_queue(), ^{
-                [self addOverlays];
+                [self addOverlays:filterArray.copy];
             });
         }
     });
 }
 
-- (void)addOverlays {
-    [self.panoramaView removeAllOverlay];
-    [self.overlays removeAllObjects];
-    
-    for (BMKPoiInfo *poiInfo in self.filterPoiList) {
+- (void)addOverlays:(NSArray *)overlays {
+    for (BMKPoiInfo *poiInfo in overlays) {
         NSString *name = poiInfo.name;
         if (!poiInfo.detailInfo) {
             continue;
@@ -484,7 +498,7 @@ static NSInteger overlayIndex = 0;
         overlay.type = BaiduPanoOverlayTypeImage;
         overlay.coordinate = poiInfo.pt;
         overlay.height = -50;
-        overlay.size = CGSizeMake(137, 51);
+        overlay.size = image.size;
         overlay.image = image;
         double overlayAngle = [self getBearingWithLat1:self.point.latitude whitLng1:self.point.longitude whitLat2:overlay.coordinate.latitude whitLng2:overlay.coordinate.longitude];
         BOOL ignore = NO;
@@ -629,7 +643,7 @@ static NSInteger overlayIndex = 0;
  */
 - (void)panoramaDidLoad:(BaiduPanoramaView *)panoramaView descreption:(NSString *)jsonStr {
     NSLog(@"baidu_panoramaDidLoad");
-    [self searchCurrentPOIPageIndex:0];
+    [self searchCurrentPOI];
     self.lastPoint = kCLLocationCoordinate2DInvalid;
     
     if (jsonStr.length) {
@@ -913,6 +927,9 @@ static NSInteger overlayIndex = 0;
 - (void)onGetPoiResult:(BMKPoiSearch*)searcher result:(BMKPOISearchResult*)poiResult errorCode:(BMKSearchErrorCode)errorCode {
     NSLog(@"baidu_onGetPoiResult");
     [self handlePoiResult:poiResult];
+    if (errorCode != BMK_SEARCH_NO_ERROR) {
+        //上报"api_error"
+    }
 }
 
 /**
