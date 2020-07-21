@@ -15,7 +15,7 @@
 #import "JSONAdditions.h"
 #import "TTArticleTabBarController.h"
 #import "FHEnvContext.h"
-#import "NSDictionary+TTAdditions.h"
+#import "NSDictionary+BTDAdditions.h"
 
 @interface FHHomeSchemaObject()<TTRouteInitializeProtocol>
 
@@ -90,7 +90,7 @@
 //1.0.3 push进来的页面添加origin_from字段
 - (TTRouteUserInfo *)getTracerFromUrl:(NSURL *)url withParams:(NSDictionary *)params{
     TTRouteUserInfo* userInfo = nil;
-    BOOL isFromPush =  [params tt_boolValueForKey:@"isFromPush"];
+    BOOL isFromPush =  [params btd_boolValueForKey:@"isFromPush"];
     if (isFromPush) {
         TTRouteParamObj *paramObj = [[TTRoute sharedRoute] routeParamObjWithURL:url];
         NSMutableDictionary *info =  [NSMutableDictionary new];
