@@ -13,6 +13,7 @@
 #import <FHHouseBase/UIImage+FIconFont.h>
 #import <FHHouseType.h>
 #import <TTRoute.h>
+#import <FHUserTracker.h>
 
 #define BTN_WIDTH  24
 #define BG_LAYER_HEIGHT 100
@@ -90,6 +91,10 @@
 
 -(void)rightBtnClick:(id)sender{
     if(self.type == FHMapSimpleNavbarTypeDrawLine){
+        NSMutableDictionary *tracerParams = [NSMutableDictionary new];
+        tracerParams[@"page_type"] = @"map_search_detail";
+        [FHUserTracker writeEvent:@"click_search" params:tracerParams];
+        
         if (self.rightActionBlock) {
             self.rightActionBlock(FHMapSimpleNavbarTypeDrawLine);
         }

@@ -370,14 +370,14 @@
     if (self.locationButton.superview) {
         [self.locationButton mas_makeConstraints:^(MASConstraintMaker *make) {
             make.right.mas_equalTo(-7);
-            make.bottom.mas_equalTo(self.view).offset(-(66+bottomSafeInset));
+            make.bottom.mas_equalTo(self.view).offset(-(106+bottomSafeInset));
             make.size.mas_equalTo(CGSizeMake(44, 44));
         }];
     }
 
     [self.sideBar mas_makeConstraints:^(MASConstraintMaker *make) {
         make.right.mas_equalTo(-11);
-        make.bottom.mas_equalTo(self.view).offset(-(136+bottomSafeInset));
+        make.bottom.mas_equalTo(self.view).offset(-(176+bottomSafeInset));
         make.width.mas_equalTo(36);
     }];
     
