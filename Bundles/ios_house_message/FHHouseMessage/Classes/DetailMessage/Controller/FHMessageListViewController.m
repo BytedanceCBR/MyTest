@@ -20,6 +20,7 @@
 #import "UIViewController+Refresh_ErrorHandler.h"
 #import "UIViewController+Track.h"
 #import <FHHouseBase/FHBaseTableView.h>
+#import "NSDictionary+TTAdditions.h"
 
 @interface FHMessageListViewController ()<TTRouteInitializeProtocol,UIViewControllerErrorHandler>
 
@@ -109,6 +110,10 @@
             default:
                 break;
         }
+    }
+    NSString *origin_from = [self.tracerDict tt_stringValueForKey:@"origin_from"];
+    if ((origin_from.length > 0)) {
+        originFrom = origin_from;
     }
     return originFrom;
 }
