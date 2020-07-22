@@ -261,16 +261,8 @@
         FHHomeHouseDataItemsModel *theModel = self.dataList[indexPath.row];
         
         NSMutableDictionary *traceParam = [NSMutableDictionary new];
-//        traceParam[@"enter_from"] = [self pageTypeString];
-//        traceParam[@"log_pb"] = theModel.logPb;
-//        traceParam[@"origin_from"] = [self pageTypeString];
-//        traceParam[@"card_type"] = @"left_pic";
-//        traceParam[@"rank"] = [self getRankFromHouseId:theModel.idx indexPath:indexPath];
-//        traceParam[@"origin_search_id"] = self.originSearchId ? : @"be_null";
-//        traceParam[@"element_from"] = @"maintab_list";
-//        traceParam[@"enter_from"] = @"maintab";
-        
-                
+        [traceParam addEntriesFromDictionary:self.tracerDic];
+        [traceParam setObject:traceParam[@"page_type"] forKey:@"enter_from"];
         NSMutableDictionary *dict = @{@"house_type":@(2),
                                @"tracer": traceParam
                                }.mutableCopy;

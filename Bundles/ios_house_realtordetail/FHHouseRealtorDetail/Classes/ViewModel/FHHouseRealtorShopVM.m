@@ -352,8 +352,8 @@
         //        traceParam[@"origin_search_id"] = self.originSearchId ? : @"be_null";
         //        traceParam[@"element_from"] = @"maintab_list";
         //        traceParam[@"enter_from"] = @"maintab";
-        
-        
+        [traceParam addEntriesFromDictionary:self.tracerDict];
+        [traceParam setObject:traceParam[@"page_type"] forKey:@"enter_from"];
         NSMutableDictionary *dict = @{@"house_type":@(2),
                                       @"tracer": traceParam
         }.mutableCopy;
@@ -450,7 +450,7 @@
 }
 - (void)refNav {
     UIImage *whiteBackArrowImage = ICON_FONT_IMG(24, @"\U0000e68a", [UIColor whiteColor]);
-    self.detailController.customNavBarView.title.text = [UIColor whiteColor];
+    self.detailController.customNavBarView.title.textColor = [UIColor whiteColor];
     [self.detailController.customNavBarView.leftBtn setBackgroundImage:whiteBackArrowImage forState:UIControlStateNormal];
     [self.detailController.customNavBarView.leftBtn setBackgroundImage:whiteBackArrowImage forState:UIControlStateHighlighted];
     [self.detailController.customNavBarView setNaviBarTransparent:YES];

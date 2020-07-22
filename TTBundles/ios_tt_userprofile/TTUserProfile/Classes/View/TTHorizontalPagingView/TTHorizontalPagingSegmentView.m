@@ -258,15 +258,15 @@
     
     // 点击时候需要动画
     [UIView animateWithDuration:0.25 animations:^{
-        if (_underLineWidth >0) {
-            self.underLine.width = _underLineWidth;
-        }else {
-            if (_isUnderLineEqualTitleWidth) {
-                self.underLine.width = titleBounds.size.width;
-            } else {
-                self.underLine.width = selectedLabel.width;
-            }
-        }
+//        if (_underLineWidth >0) {
+//            self.underLine.width = _underLineWidth;
+//        }else {
+//            if (_isUnderLineEqualTitleWidth) {
+//                self.underLine.width = titleBounds.size.width;
+//            } else {
+//                self.underLine.width = selectedLabel.width;
+//            }
+//        }
         self.underLine.centerX = selectedLabel.centerX;
     }];
 }

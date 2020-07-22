@@ -101,13 +101,16 @@
         listCount = 0;
     }
     double behotTime = 0;
+    NSString *lastGroupId = nil;
     if(!isHead && listCount > 0){
         FHFeedUGCCellModel *cellModel = [self.dataList lastObject];
         behotTime = [cellModel.behotTime doubleValue];
+        lastGroupId = cellModel.groupId;
     }
     if(isHead && listCount > 0){
         FHFeedUGCCellModel *cellModel = [self.dataList firstObject];
         behotTime = [cellModel.behotTime doubleValue];
+        lastGroupId = cellModel.groupId;
     }
     NSMutableDictionary *extraDic = [NSMutableDictionary dictionary];
     NSString *fCityId = [FHEnvContext getCurrentSelectCityIdFromLocal];
@@ -119,6 +122,9 @@
     }
     if (self.realtorInfo[@"realtor_id"]) {
         [extraDic setObject:self.realtorInfo[@"realtor_id"] forKey:@"realtor_id"];
+    }
+    if(lastGroupId){
+        [extraDic setObject:lastGroupId forKey:@"last_group_id"];
     }
     self.categoryId = @"f_realtor_profile";
     TTHttpTask *task = [FHHouseUGCAPI requestFeedListWithCategory:self.categoryId behotTime:behotTime loadMore:!isHead listCount:listCount extraDic:extraDic completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {

@@ -52,6 +52,7 @@
         [wself requestData:NO first:NO];
     }];
     self.tableView.mj_footer = self.refreshFooter;
+    self.tableView.mj_footer.hidden = YES;
 }
 - (void)registerCellClasses {
         [self.tableView registerClass:[FHHouseUserCommentsCell class] forCellReuseIdentifier:@"FHHouseUserCommentsCell"];

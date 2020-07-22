@@ -33,11 +33,11 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     [self initTableView];
-    [self createModel];
-    [self addDefaultEmptyViewFullScreen];
     [self setupDefaultNavBar:NO];
     self.customNavBarView.title.text = @"用户评价";
     [self initFrame];
+    [self addDefaultEmptyViewFullScreen];
+     [self createModel];
 }
 
 - (void)initFrame {
@@ -53,7 +53,7 @@
     _tableView.keyboardDismissMode = UIScrollViewKeyboardDismissModeOnDrag;
     _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     _tableView.backgroundColor = [UIColor colorWithHexStr:@"#f8f8f8"];
-    _tableView.contentInset = UIEdgeInsetsMake(15, 0, 0, 0);
+    _tableView.contentInset = UIEdgeInsetsMake(0, 0, 0, 0);
     if (@available(iOS 11.0 , *)) {
         _tableView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
     }
