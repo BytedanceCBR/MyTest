@@ -65,9 +65,9 @@ def fhPods
     # 'DelegateForC'
     #]
 
-    pod 'ios_house_im' , '0.2.14-rc.5'
-#     pod 'ios_house_im' , :path => '../../../im/2'
-#    pod 'ios_house_im' , :git => 'git@code.byted.org:fproject/ios_house_im.git' , :commit => 'bf25504a1e53e336c67ce5cd20645320e3d9d3d4'
+#    pod 'ios_house_im' , '0.2.14-rc.5'
+#     pod 'ios_house_im' , :path => '../../ios_house_im'
+    pod 'ios_house_im' , :git => 'git@code.byted.org:fproject/ios_house_im.git' , :commit => 'dc06eace35ecb941f03ce55b2e57eccfcf340a9a'
 
 end
 
@@ -417,7 +417,7 @@ def appPods
       'Data',
     ]
     
-    pod 'Lynx','1.0.49',:subspecs =>[
+    pod 'Lynx','1.0.52',:subspecs =>[
     'Framework',
 #    'InspectorFramework',
     'Native',
