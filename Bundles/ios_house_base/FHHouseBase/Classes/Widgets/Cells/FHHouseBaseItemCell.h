@@ -42,6 +42,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 -(void)refreshIndexCorner:(BOOL)isFirst andLast:(BOOL)isLast;
 
+-(void)refreshIndexCorner:(BOOL)isFirst withLast:(BOOL)isLast;
+
 -(void)updateHomeSmallImageHouseCellModel:(FHHomeHouseDataItemsModel *)commonModel andType:(FHHouseType)houseType;
 
 +(CGFloat)recommendReasonHeight;
@@ -52,6 +54,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)resumeVRIcon;
 
+- (void)hiddenCloseBtn;
 - (void)updateHouseStatus:(id)data;
 
 @end

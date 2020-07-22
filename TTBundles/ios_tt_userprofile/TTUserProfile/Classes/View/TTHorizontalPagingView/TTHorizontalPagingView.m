@@ -374,9 +374,9 @@ static void *TTHorizontalPagingViewSettingInset = &TTHorizontalPagingViewSetting
         
         if(!inset) {
             CGFloat height = self.headerShowHeight;
-            if(!indexPath.row){
-                height = self.headerViewHeight;
-            }
+//            if(!indexPath.row){
+//                height = self.headerViewHeight;
+//            }
             CGFloat initHeader = height <= self.segmentTopSpace ? self.segmentTopSpace : height;
             CGFloat distance = initHeader + self.segmentViewHeight;
             

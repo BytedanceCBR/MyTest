@@ -809,7 +809,7 @@
             }
         }
     }
-    
+
     for (UIView *view in self.movieViews) {
         if ([view isKindOfClass:[TTVPlayVideo class]]) {
             TTVPlayVideo *movieView = (TTVPlayVideo *)view;
