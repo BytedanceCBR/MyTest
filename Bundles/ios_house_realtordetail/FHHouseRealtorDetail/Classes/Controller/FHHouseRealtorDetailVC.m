@@ -47,20 +47,6 @@
     }
     return self;
 }
-// 重载方法
-- (BOOL)isOpenUrlParamsSame:(NSDictionary *)queryParams {
-    /*
-    if (queryParams.count > 0) {
-        NSString *queryId = queryParams[@"community_id"];
-        NSString *queryIdStr = [NSString stringWithFormat:@"%@",queryId];
-        NSString *currentIdStr = [NSString stringWithFormat:@"%@",self.communityId];
-        if (queryIdStr.length > 0 && [queryIdStr isEqualToString:currentIdStr]) {
-            return YES;
-        }
-    }
-     */
-    return NO;
-}
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -131,10 +117,10 @@
 }
 
 - (void)initHeaderView {
-    CGFloat headerBackNormalHeight = 425;
+    CGFloat headerBackNormalHeight = 400;
     CGFloat headerBackXSeriesHeight = headerBackNormalHeight + 44; //刘海平多出24
     CGFloat height = [UIDevice btd_isIPhoneXSeries] ? headerBackXSeriesHeight : headerBackNormalHeight + 40;
-    self.headerView = [[FHHouseRealtorDetailHeaderView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, height)];
+    self.headerView = [[FHHouseRealtorDetailHeaderView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, headerBackXSeriesHeight)];
     self.headerView.controller = self;
     self.headerView.channel = @"lynx_realtor_detail_header";
     self.headerView.bacImageName = @"realtor_header";
@@ -183,6 +169,7 @@
         [self.customNavBarView.leftBtn setBackgroundImage:whiteBackArrowImage forState:UIControlStateNormal];
         [self.customNavBarView.leftBtn setBackgroundImage:whiteBackArrowImage forState:UIControlStateHighlighted];
         [self.customNavBarView setNaviBarTransparent:YES];
+    self.customNavBarView.seperatorLine.hidden = YES;
 }
 
 - (void)initViewModel {

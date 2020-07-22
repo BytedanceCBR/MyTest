@@ -74,6 +74,13 @@
 }
 
 - (void)requestData:(BOOL)isHead first:(BOOL)isFirst {
+    
+    if (![TTReachability isNetworkConnected]) {
+        [self showErrorViewNoNetWork];
+        return;
+    }
+    
+    
     if (self.requestTask) {
         [self.requestTask cancel];
         self.detailController.isLoadingData = NO;
@@ -201,6 +208,7 @@
         [wself requestData:NO first:NO];
     }];
     self.tableView.mj_footer = self.refreshFooter;
+    self.tableView.mj_footer.hidden = YES;
 }
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
@@ -299,7 +307,7 @@
     if(self.dataList.count > 0){
         self.tableView.backgroundColor = [UIColor themeGray7];
         
-        CGFloat height = [self getVisibleHeight:self.dataList.count];
+        CGFloat height = [self getVisibleHeight:5];
         if(height < self.detailController.errorViewHeight && height > 0 && self.detailController.errorViewHeight > 0){
             [self.tableView reloadData];
             CGFloat refreshFooterBottomHeight = self.tableView.mj_footer.height;
@@ -310,9 +318,6 @@
             UIView *tableFooterView = [[UIView alloc] initWithFrame:CGRectMake(0, 15, [UIScreen mainScreen].bounds.size.width, self.detailController.errorViewHeight - height - refreshFooterBottomHeight)];
             tableFooterView.backgroundColor = [UIColor clearColor];
             self.tableView.tableFooterView = tableFooterView;
-                        //修改footer的位置回到cell下方，不修改会在tableFooterView的下方
-                        self.tableView.mj_footer.mj_y -= tableFooterView.height;
-                        self.tableView.mj_footer.hidden = NO;
         }else{
             self.tableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width,0.001)];
             [self.tableView reloadData];
@@ -328,9 +333,14 @@
         [self.tableView reloadData];
     }
 }
+
 - (FHErrorView *)errorView {
     if(!_errorView){
+        __weak typeof(self)ws = self;
         _errorView = [[FHErrorView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, 500)];
+        _errorView.retryBlock = ^{
+            [ws requestData:YES first:YES];
+        };
     }
     return _errorView;
 }
@@ -387,6 +397,11 @@
     [self.detailJumpManager goToCommunityDetail:cellModel];
 }
 
+- (void)gotoLinkUrl:(FHFeedUGCCellModel *)cellModel url:(NSURL *)url {
+    // PM要求点富文本链接也进入详情页
+    [self lookAllLinkClicked:cellModel cell:nil];
+}
+
 - (void)lookAllLinkClicked:(FHFeedUGCCellModel *)cellModel cell:(nonnull FHUGCBaseCell *)cell {
     self.currentCellModel = cellModel;
     self.currentCell = cell;
@@ -436,5 +451,16 @@
         _showHouseCache = [NSMutableArray array];
     }
     return _showHouseCache;
+}
+
+- (void)showErrorViewNoNetWork {
+    [self.errorView showEmptyWithTip:@"网络异常" errorImageName:kFHErrorMaskNoNetWorkImageName showRetry:YES];
+    UIView *tableFooterView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, self.detailController.errorViewHeight)];
+    tableFooterView.backgroundColor = [UIColor whiteColor];
+    [tableFooterView addSubview:self.errorView];
+    self.tableView.tableFooterView = tableFooterView;
+    self.refreshFooter.hidden = YES;
+    self.tableView.backgroundColor = [UIColor whiteColor];
+    [self.tableView reloadData];
 }
 @end

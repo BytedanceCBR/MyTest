@@ -60,7 +60,7 @@
         //        self.tableView.backgroundColor = [UIColor themeGray7];
         self.realtorInfo = realtorDic;
         self.houseTotal = @"热卖房源";
-        [self configTableView];
+       
         [self requestRealtorShop];
         //
     }
@@ -79,6 +79,7 @@
     [FHMainApi requestRealtorShop:parmas completion:^(FHHouseRealtorShopDetailModel * _Nonnull model, NSError * _Nonnull error) {
         if (model && error == NULL) {
             if (model.data) {
+                 [self configTableView];
                 self.data = model.data;
                 [self requestData:YES first:YES];
                 [self loadDataForShop:model];
@@ -123,17 +124,25 @@
           [dic setObject:lynxReortParams forKey:@"encoded_report_params"];
          }
     [self.detailController.headerView reloadDataWithDic:dic];
+    self.detailController.headerView.height = self.detailController.headerView.viewHeight;
+     self.tableView.tableHeaderView = self.detailController.headerView;
     if (model.data.houseImage) {
         NSString *imageUrl = model.data.houseImage[@"url"];
         if (imageUrl.length>0) {
             self.detailController.headerView.bacImageUrl = imageUrl;
         }
     }
+    [self refNav];
 }
 
 -(void)onNetworError:(BOOL)showEmpty showToast:(BOOL)showToast{
     if(showEmpty){
         [self.detailController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoNetWorkAndRefresh];
+        UIImage *whiteBackArrowImage = ICON_FONT_IMG(24, @"\U0000e68a", [UIColor blackColor]);
+        self.detailController.customNavBarView.title.text = [UIColor blackColor];
+        [self.detailController.customNavBarView.leftBtn setBackgroundImage:whiteBackArrowImage forState:UIControlStateNormal];
+        [self.detailController.customNavBarView.leftBtn setBackgroundImage:whiteBackArrowImage forState:UIControlStateHighlighted];
+        [self.detailController.customNavBarView setNaviBarTransparent:NO];
     }
     if(showToast){
         [[ToastManager manager] showToast:@"网络异常"];
@@ -438,5 +447,12 @@
     tracerDic[@"group_id"] = model.id;
     tracerDic[@"element_type"] = @"hot_house";
     TRACK_EVENT(@"house_show", tracerDic);
+}
+- (void)refNav {
+    UIImage *whiteBackArrowImage = ICON_FONT_IMG(24, @"\U0000e68a", [UIColor whiteColor]);
+    self.detailController.customNavBarView.title.text = [UIColor whiteColor];
+    [self.detailController.customNavBarView.leftBtn setBackgroundImage:whiteBackArrowImage forState:UIControlStateNormal];
+    [self.detailController.customNavBarView.leftBtn setBackgroundImage:whiteBackArrowImage forState:UIControlStateHighlighted];
+    [self.detailController.customNavBarView setNaviBarTransparent:YES];
 }
 @end

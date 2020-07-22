@@ -148,7 +148,7 @@
 //        [self updateTableViewWithMoreData:self.tableView.hasMore];
         self.tableView.backgroundColor = [UIColor themeGray7];
         
-        CGFloat height = [self getVisibleHeight:self.dataList.count];
+        CGFloat height = [self getVisibleHeight:10];
         if(height < self.detailController.errorViewHeight && height > 0 && self.detailController.errorViewHeight > 0){
             [self.tableView reloadData];
             CGFloat refreshFooterBottomHeight = self.tableView.mj_footer.height;

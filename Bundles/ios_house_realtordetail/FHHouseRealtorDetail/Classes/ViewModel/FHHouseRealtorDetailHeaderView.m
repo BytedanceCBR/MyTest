@@ -24,12 +24,15 @@
 @property(nonatomic ,strong) NSData *currentTemData;
 @property (strong, nonatomic) UIImage *placeholderImage;
 @property (weak, nonatomic) UIImageView *headerIma;
-@end
+@property (weak, nonatomic) UIView *headerMaskView;
+@property (assign, nonatomic) CGFloat navHeight;
+ @end
 @implementation FHHouseRealtorDetailHeaderView
 
 - (instancetype)initWithFrame:(CGRect)frame {
     self = [super initWithFrame:frame];
     if(self) {
+        self.navHeight =   ((![[UIApplication sharedApplication] isStatusBarHidden]) ? [[UIApplication sharedApplication] statusBarFrame].size.height : ([UIDevice btd_isIPhoneXSeries]?44.f:20.f));
         [self createUI];
         self.backgroundColor = [UIColor colorWithHexStr:@"#f8f8f8"];
     }
@@ -38,15 +41,16 @@
 
 
 - (void)createUI {
-    
-    CGFloat statusBarHeight =  ((![[UIApplication sharedApplication] isStatusBarHidden]) ? [[UIApplication sharedApplication] statusBarFrame].size.height : ([UIDevice btd_isIPhoneXSeries]?44.f:20.f));
     [self.headerIma mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.top.right.equalTo(self);
         make.height.mas_offset(164);
     }];
+    [self.headerMaskView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.edges.equalTo(self.headerIma);
+    }];
     [self.realtorInfoView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.right.bottom.equalTo(self);
-        make.top.equalTo(self).offset(statusBarHeight+44);
+        make.top.equalTo(self).offset(self.navHeight+44);
     }];
 }
 
@@ -70,10 +74,27 @@
     return _realtorInfoView;
 }
 
+- (UIView *)headerMaskView {
+    if (!_headerMaskView) {
+        UIView *headerMaskView = [[UIView alloc]init];
+        headerMaskView.backgroundColor = [[UIColor blackColor]colorWithAlphaComponent:0.2];
+        [self.headerIma addSubview:headerMaskView];
+        _headerMaskView = headerMaskView;
+    }
+    return _headerMaskView;
+}
 - (void)updateModel:(FHHouseRealtorDetailInfoModel *)model {
     NSString *lynxData = [model yy_modelToJSONString];
-    [_realtorInfoView updateDataWithString:lynxData];
-    
+    NSData *templateData =  [[FHLynxManager sharedInstance] lynxDataForChannel:_channel templateKey:[FHLynxManager defaultJSFileName] version:0];
+    if (templateData) {
+        if (templateData != self.currentTemData) {
+            self.currentTemData = templateData;
+            LynxTemplateData *tem = [[LynxTemplateData alloc]initWithJson:lynxData];
+            [self.realtorInfoView loadTemplate:templateData withURL:@"local" initData:tem];
+        //使用segments时小数触发计算错误
+        self.viewHeight = ceil([self.realtorInfoView intrinsicContentSize].height + self.navHeight + 44);
+    }
+}
 }
 
 - (UIImageView *)headerIma {
@@ -145,24 +166,21 @@
 
 - (void)setChannel:(NSString *)channel {
     _channel = channel;
-    NSData *templateData =  [[FHLynxManager sharedInstance] lynxDataForChannel:_channel templateKey:[FHLynxManager defaultJSFileName] version:0];
-//            NSData *templateData = [NSData dataWithContentsOfURL:[NSURL URLWithString:@"http://10.95.248.194:30334/lynx_realtor_detail_header/template.js?1595246822882"]];
-    if (templateData) {
-        if (templateData != self.currentTemData) {
-            self.currentTemData = templateData;
-            [self.realtorInfoView loadTemplate:templateData withURL:@"local"];
-        }
-        
-        CGFloat statusBarHeight =  ((![[UIApplication sharedApplication] isStatusBarHidden]) ? [[UIApplication sharedApplication] statusBarFrame].size.height : ([UIDevice btd_isIPhoneXSeries]?44.f:20.f));
-        self.viewHeight = [self.realtorInfoView intrinsicContentSize].height + statusBarHeight + 44;
+    if ([_channel isEqualToString:@"lynx_realtor_detail_header"]) {
+        self.headerMaskView.hidden = YES;
+    }else {
+        [self.realtorInfoView mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.top.equalTo(self).offset(self.navHeight+56);
+        }];
+        self.headerMaskView.hidden = NO;
     }
 }
 
-- (void)lynxView:(LynxView*)view didLoadFinishedWithUrl:(NSString*)url {
-    CGFloat statusBarHeight =  ((![[UIApplication sharedApplication] isStatusBarHidden]) ? [[UIApplication sharedApplication] statusBarFrame].size.height : ([UIDevice btd_isIPhoneXSeries]?44.f:20.f));
-    self.viewHeight = [self.realtorInfoView intrinsicContentSize].height + statusBarHeight + 44;
-    NSLog(@"666");
-}
+//- (void)lynxView:(LynxView*)view didLoadFinishedWithUrl:(NSString*)url {
+//    CGFloat statusBarHeight =  ((![[UIApplication sharedApplication] isStatusBarHidden]) ? [[UIApplication sharedApplication] statusBarFrame].size.height : ([UIDevice btd_isIPhoneXSeries]?44.f:20.f));
+//    self.viewHeight = [self.realtorInfoView intrinsicContentSize].height + statusBarHeight + 44;
+//    NSLog(@"666");
+//}
 
 - (void)setBacImageName:(NSString *)bacImageName {
     _bacImageName = bacImageName;
@@ -175,7 +193,15 @@
 }
 
 - (void)reloadDataWithDic:(NSDictionary *)dic {
-        NSString *lynxData = [dic yy_modelToJSONString];
-    [_realtorInfoView updateDataWithString:lynxData];
+    NSString *lynxData = [dic yy_modelToJSONString];
+    NSData *templateData =  [[FHLynxManager sharedInstance] lynxDataForChannel:_channel templateKey:[FHLynxManager defaultJSFileName] version:0];
+    if (templateData) {
+        if (templateData != self.currentTemData) {
+            self.currentTemData = templateData;
+            LynxTemplateData *tem = [[LynxTemplateData alloc]initWithJson:lynxData];
+            [self.realtorInfoView loadTemplate:templateData withURL:@"local" initData:tem];
+        }
+        self.viewHeight = ceil([self.realtorInfoView intrinsicContentSize].height + self.navHeight + 56);
+    }
 }
 @end

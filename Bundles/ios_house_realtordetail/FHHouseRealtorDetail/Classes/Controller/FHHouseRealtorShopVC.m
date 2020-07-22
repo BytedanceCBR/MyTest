@@ -43,7 +43,7 @@
     [self initFrame];
     [self setNavBar];
     [self initBottomBar];
-    [self addDefaultEmptyViewFullScreen];
+    [self addDefaultEmptyViewWithEdgeInsets:UIEdgeInsetsMake(0, 0, 0, 0)];
      [self createModel];
 }
 
@@ -105,7 +105,6 @@
     _tableView.estimatedRowHeight = UITableViewAutomaticDimension;
     _tableView.estimatedSectionFooterHeight = 0;
     _tableView.estimatedSectionHeaderHeight = 0;
-    _tableView.tableHeaderView = self.headerView;
     [self.view addSubview:_tableView];
     [_tableView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.left.right.equalTo(self.view);
@@ -123,19 +122,12 @@
     self.headerView.channel = @"lynx_realtor_shop_header";
 //    self.headerView.channel = @"http://192.168.50.221:30334/lynx_realtor_shop_header/template.js?1595163180304";
 //    self.headerView.bacImageName = @"realtor_header";
-    self.headerView.height = self.headerView.viewHeight;
     self.headerView.bacImageName = @"realtor_header";
 }
 
 - (void)setNavBar {
     [self setupDefaultNavBar:NO];
         self.customNavBarView.title.text = @"经纪人店铺";
-        self.customNavBarView.title.textColor = [UIColor whiteColor];
-        UIImage *whiteBackArrowImage = ICON_FONT_IMG(24, @"\U0000e68a", [UIColor whiteColor]);
-        [self.customNavBarView.leftBtn setBackgroundImage:whiteBackArrowImage forState:UIControlStateNormal];
-        [self.customNavBarView.leftBtn setBackgroundImage:whiteBackArrowImage forState:UIControlStateHighlighted];
-        [self.customNavBarView setNaviBarTransparent:YES];
-    self.customNavBarView.seperatorLine.hidden = YES;
 }
 
 - (NSString *)pageType {

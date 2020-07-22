@@ -264,6 +264,11 @@
     [self.detailJumpManager jumpToDetail:cellModel showComment:YES enterType:@"feed_comment"];
 }
 
+- (void)gotoLinkUrl:(FHFeedUGCCellModel *)cellModel url:(NSURL *)url {
+    // PM要求点富文本链接也进入详情页
+    [self lookAllLinkClicked:cellModel cell:nil];
+}
+
 - (void)clickRealtorIm:(FHFeedUGCCellModel *)cellModel cell:(FHUGCBaseCell *)cell {
     NSInteger index = [self.dataList indexOfObject:cellModel];
     NSMutableDictionary *imExtra = @{}.mutableCopy;

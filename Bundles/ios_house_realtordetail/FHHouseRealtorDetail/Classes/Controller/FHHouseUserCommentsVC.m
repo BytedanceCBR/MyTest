@@ -67,6 +67,10 @@
     _viewModel = [[FHHouseUserCommentsVM alloc]initWithController:self tableView:self.tableView tracerDic:self.tracerDict realtorInfo:self.realtorDic];
 }
 
+- (void)retryLoadData {
+    [_viewModel requestData:YES first:YES];
+}
+
 - (void)createTracerDic:(NSDictionary *)dic {
     NSLog(@"%@",self.tracerDict);
     self.realtorDic = @{}.mutableCopy;

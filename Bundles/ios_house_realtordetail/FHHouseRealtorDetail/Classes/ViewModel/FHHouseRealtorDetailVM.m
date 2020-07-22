@@ -91,17 +91,15 @@
 }
 
 - (void)initView {
-}
-
     
-
+}
 
 - (void)dealloc {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 - (void)viewWillAppear {
-
+    
 }
 
 - (void)viewDidAppear {
@@ -114,7 +112,7 @@
 }
 
 - (void)endRefreshing {
-  
+    
 }
 
 - (void)requestDataWithRealtorId:(NSString *)realtorId refreshFeed:(BOOL)refreshFeed {
@@ -131,14 +129,14 @@
         if (model && error == NULL) {
             if (model.data) {
                 self.viewController.emptyView.hidden = YES;
-//                [wSelf updateUIWithData];
+                //                [wSelf updateUIWithData];
                 [wSelf processDetailData:model];
                 
             }else {
                 [self.viewController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoData];
             }
         }else {
-               [self.viewController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoData];
+            [self.viewController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoData];
         }
     }];
 }
@@ -151,54 +149,61 @@
         [self updateUIWithData];
     }
     if(self.isFirstEnter){
-           //初始化segment
+        //初始化segment
         self.ugcTabList = model.data.ugcTabList.mutableCopy;
         FHHouseRealtorDetailRgcTabModel *models =  [[FHHouseRealtorDetailRgcTabModel alloc]init];
         models.showName = @"房源";
         models.tabName = @"house_list";
         [self.ugcTabList insertObject:models atIndex:0];
-        [self initSegmentWithTabInfoArr:self.ugcTabList];
-           //初始化vc
-           [self initSubVCinitWithTabInfoArr:self.ugcTabList];
-       }
-    NSMutableDictionary *dic = @{}.mutableCopy;
-    NSMutableDictionary *dicm = model.data.scoreInfo.mutableCopy;
-    if (dicm && [dicm.allKeys containsObject:@"open_url"]) {
-        NSString *openUrl = dicm[@"open_url"];
-        openUrl = [openUrl stringByAddingPercentEncodingWithAllowedCharacters:NSCharacterSet.URLQueryAllowedCharacterSet];
-        
-        NSString *unencodedString = openUrl;
-        NSString *encodedString = (NSString *)CFBridgingRelease(CFURLCreateStringByAddingPercentEscapes(kCFAllocatorDefault,
-                                                                                                        (CFStringRef)unencodedString,
-                                                                                                        NULL,
-                                                                                                        (CFStringRef)@"!*'();:@&=+$,/?%#[]",
-                                                                                                        kCFStringEncodingUTF8));
-        NSString *urlStr = [NSString stringWithFormat:@"sslocal://webview?url=%@",encodedString];
-        NSURL *url = [TTURLUtils URLWithString:urlStr];
-        [dicm setObject:urlStr forKey:@"open_url"];
-    }
-    [dic setObject:model.data.realtor?:@""forKey:@"realtor"];
-    [dic setObject:model.data.evaluation?:@"" forKey:@"evaluation"];
-    NSArray *array  = model.data.evaluation[@"comment_info"];
-    [dic setObject:dicm?:@"" forKey:@"score_info"];
-    [dic setObject:model.data.realtorShop?:@"" forKey:@"realtor_shop"];
-    [dic setObject:model.data.certificationIcon?:@"" forKey:@"certification_icon"];
-    [dic setObject:model.data.certificationPage?:@"" forKey:@"certification_page"];
-    [dic setObject:@{@"realtor_id":self.realtorInfo[@"realtor_id"]?:@"",@"screen_width":@([UIScreen mainScreen].bounds.size.width)} forKey:@"common_params"];
-    [dic setObject:self.tracerDict?:@"" forKey:@"report_params"];
-    if (self.tracerDict) {
-        NSString *lynxReortParams= [self.tracerDict yy_modelToJSONString];
+        NSMutableDictionary *dic = @{}.mutableCopy;
+        NSMutableDictionary *dicm = model.data.scoreInfo.mutableCopy;
+        if (dicm && [dicm.allKeys containsObject:@"open_url"]) {
+            NSString *openUrl = dicm[@"open_url"];
+            openUrl = [openUrl stringByAddingPercentEncodingWithAllowedCharacters:NSCharacterSet.URLQueryAllowedCharacterSet];
+            
+            NSString *unencodedString = openUrl;
+            NSString *encodedString = (NSString *)CFBridgingRelease(CFURLCreateStringByAddingPercentEscapes(kCFAllocatorDefault,
+                                                                                                            (CFStringRef)unencodedString,
+                                                                                                            NULL,
+                                                                                                            (CFStringRef)@"!*'();:@&=+$,/?%#[]",
+                                                                                                            kCFStringEncodingUTF8));
+            NSString *urlStr = [NSString stringWithFormat:@"sslocal://webview?url=%@",encodedString];
+            NSURL *url = [TTURLUtils URLWithString:urlStr];
+            [dicm setObject:urlStr forKey:@"open_url"];
+        }
+        [dic setObject:model.data.realtor?:@""forKey:@"realtor"];
+        [dic setObject:model.data.evaluation?:@"" forKey:@"evaluation"];
+        NSArray *array  = model.data.evaluation[@"comment_info"];
+        [dic setObject:dicm?:@"" forKey:@"score_info"];
+        [dic setObject:model.data.realtorShop?:@"" forKey:@"realtor_shop"];
+        [dic setObject:model.data.certificationIcon?:@"" forKey:@"certification_icon"];
+        [dic setObject:model.data.certificationPage?:@"" forKey:@"certification_page"];
+        [dic setObject:@{@"realtor_id":self.realtorInfo[@"realtor_id"]?:@"",@"screen_width":@([UIScreen mainScreen].bounds.size.width)} forKey:@"common_params"];
+        [dic setObject:self.tracerDict?:@"" forKey:@"report_params"];
+        if (self.tracerDict) {
+            NSString *lynxReortParams= [self.tracerDict yy_modelToJSONString];
             lynxReortParams = [lynxReortParams stringByAddingPercentEncodingWithAllowedCharacters:NSCharacterSet.URLQueryAllowedCharacterSet];
-
+            
             NSString *unencodedString = lynxReortParams;
             NSString *encodedString = (NSString *)CFBridgingRelease(CFURLCreateStringByAddingPercentEscapes(kCFAllocatorDefault,
                                                                                                             (CFStringRef)unencodedString,
                                                                                                             NULL,
                                                                                                             (CFStringRef)@"!*'();:@&=+$,/?%#[]",
                                                                                                             kCFStringEncodingUTF8));
-         [dic setObject:lynxReortParams forKey:@"encoded_report_params"];
+            [dic setObject:lynxReortParams forKey:@"encoded_report_params"];
         }
-    [self.viewController.headerView reloadDataWithDic:dic];
+        [self.viewController.headerView reloadDataWithDic:dic];
+        self.viewController.headerView.height = self.viewController.headerView.viewHeight;
+        
+        
+        [self initSegmentWithTabInfoArr:self.ugcTabList];
+        //初始化vc
+        [self initSubVCinitWithTabInfoArr:self.ugcTabList];
+    }
+    //    NSLog(@"%@",self.viewController.headerView.viewHeight);
+    //    [self.pagingView reloadHeaderViewHeight:self.viewController.headerView.viewHeight];
+    //    [self.viewController.headerView setNeedsLayout];
+    //    [self.viewController.headerView layoutIfNeeded];
 }
 
 -(void)onNetworError:(BOOL)showEmpty showToast:(BOOL)showToast{
@@ -225,8 +230,8 @@
         self.viewController.segmentView.hidden = YES;
     }
     if (tabListArr && tabListArr.count>1) {
-            self.viewController.segmentView.selectedIndex = 1;
-             [self addEnterCategoryLog:@"realtor_all_list"];
+        self.viewController.segmentView.selectedIndex = 1;
+        [self addEnterCategoryLog:@"realtor_all_list"];
     }
     self.viewController.segmentView.titles = titles;
     self.segmentTitles = titles;
@@ -250,12 +255,12 @@
     //放到最下面
     [self.viewController.view insertSubview:self.pagingView atIndex:0];
     [self.pagingView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.right.left.equalTo(self.viewController.view);
-         if (@available(iOS 11.0, *)) {
-               make.bottom.mas_equalTo(self.viewController.view.mas_bottom).mas_offset(-[UIApplication sharedApplication].delegate.window.safeAreaInsets.bottom -64);
-           }else {
-               make.bottom.mas_equalTo(-64);
-           }
+        make.top.right.left.bottom.equalTo(self.viewController.view);
+        if (@available(iOS 11.0, *)) {
+            make.bottom.mas_equalTo(self.viewController.view.mas_bottom).mas_offset(-[UIApplication sharedApplication].delegate.window.safeAreaInsets.bottom -64);
+        }else {
+            make.bottom.mas_equalTo(-64);
+        }
     }];
 }
 
@@ -277,13 +282,13 @@
         realtorDetailController.realtorInfo = self.realtorInfo;
         realtorDetailController.tracerDict = self.tracerDict;
         realtorDetailController.tabName = name;
-              //错误页高度
-              if(self.ugcTabList && self.ugcTabList.count > 0){
-                  CGFloat errorViewHeight = [UIScreen mainScreen].bounds.size.height - self.viewController.customNavBarView.height;
-                  errorViewHeight -= kSegmentViewHeight;
-                  realtorDetailController.errorViewHeight = errorViewHeight;
-              }
-              [self.subVCs addObject:realtorDetailController];
+        //错误页高度
+        if(self.ugcTabList && self.ugcTabList.count > 0){
+            CGFloat errorViewHeight = [UIScreen mainScreen].bounds.size.height - self.viewController.customNavBarView.height;
+            errorViewHeight -= kSegmentViewHeight;
+            realtorDetailController.errorViewHeight = errorViewHeight;
+        }
+        [self.subVCs addObject:realtorDetailController];
     }
 }
 
@@ -328,8 +333,8 @@
 
 
 - (void)updateUIWithData {
-    self.viewController.headerView.height = 310;
-    [self.pagingView reloadHeaderViewHeight:310];
+//    self.viewController.headerView.height = 310;
+//    [self.pagingView reloadHeaderViewHeight:310];
 }
 
 #pragma UIScrollViewDelegate
@@ -421,7 +426,7 @@
     //新的展现
     if(toIndex < self.subVCs.count){
         FHHouseRealtorDetailBaseViewController *feedVC = self.subVCs[toIndex];
-         [self.viewController addChildViewController:feedVC];
+        [self.viewController addChildViewController:feedVC];
         [feedVC didMoveToParentViewController:self.viewController];
     }
 }
@@ -459,7 +464,7 @@
             *selectedTitleFont = [UIFont themeFontSemibold:16];
         }];
     }else {
-            [self.viewController.segmentView setUpTitleEffect:^(NSString *__autoreleasing *titleScrollViewColorKey, NSString *__autoreleasing *norColorKey, NSString *__autoreleasing *selColorKey, UIFont *__autoreleasing *titleFont, UIFont *__autoreleasing *selectedTitleFont) {
+        [self.viewController.segmentView setUpTitleEffect:^(NSString *__autoreleasing *titleScrollViewColorKey, NSString *__autoreleasing *norColorKey, NSString *__autoreleasing *selColorKey, UIFont *__autoreleasing *titleFont, UIFont *__autoreleasing *selectedTitleFont) {
             *titleScrollViewColorKey  = @"Background21",
             *norColorKey = @"grey3"; //
             *selColorKey = @"grey1";//grey1
@@ -474,7 +479,7 @@
 - (void)pagingView:(TTHorizontalPagingView *)pagingView scrollViewDidEndDraggingOffset:(CGFloat)offset {
     CGFloat delta = self.pagingView.currentContentViewTopInset + offset;
     if(delta <= -50){
-    
+        
     }
 }
 
@@ -521,24 +526,24 @@
 }
 
 - (void)phoneAction{
-//     NSDictionary *houseInfo = dataModel.extraDic;
-     NSMutableDictionary *extraDict = self.tracerDict.mutableCopy;
-     extraDict[@"realtor_id"] = self.realtorInfo[@"realtor_id"];
-     extraDict[@"realtor_rank"] = @"be_null";
-     extraDict[@"realtor_logpb"] = @"be_null";
-     extraDict[@"realtor_position"] = @"realtor_realtorDetail";
+    //     NSDictionary *houseInfo = dataModel.extraDic;
+    NSMutableDictionary *extraDict = self.tracerDict.mutableCopy;
+    extraDict[@"realtor_id"] = self.realtorInfo[@"realtor_id"];
+    extraDict[@"realtor_rank"] = @"be_null";
+    extraDict[@"realtor_logpb"] = @"be_null";
+    extraDict[@"realtor_position"] = @"realtor_realtorDetail";
     extraDict[@"log_pb"] = extraDict[@"log_pb"]?:@"be_null";
-     NSDictionary *associateInfoDict = self.data.associateInfo.phoneInfo;
-     extraDict[kFHAssociateInfo] = associateInfoDict;
-     FHAssociatePhoneModel *associatePhone = [[FHAssociatePhoneModel alloc]init];
-     associatePhone.reportParams = extraDict;
-     associatePhone.associateInfo = associateInfoDict;
-     associatePhone.realtorId = self.realtorInfo[@"realtor_id"];
-//     associatePhone.searchId = houseInfo[@"searchId"];
-//     associatePhone.imprId = houseInfo[@"imprId"];
-     associatePhone.houseType = [NSString  stringWithFormat:@"%@",self.realtorInfo[@"house_type"]].intValue;
-     associatePhone.houseId = self.realtorInfo[@"house_id"];
-     [self.realtorPhoneCallModel phoneChatActionWithAssociateModel:associatePhone];
+    NSDictionary *associateInfoDict = self.data.associateInfo.phoneInfo;
+    extraDict[kFHAssociateInfo] = associateInfoDict;
+    FHAssociatePhoneModel *associatePhone = [[FHAssociatePhoneModel alloc]init];
+    associatePhone.reportParams = extraDict;
+    associatePhone.associateInfo = associateInfoDict;
+    associatePhone.realtorId = self.realtorInfo[@"realtor_id"];
+    //     associatePhone.searchId = houseInfo[@"searchId"];
+    //     associatePhone.imprId = houseInfo[@"imprId"];
+    associatePhone.houseType = [NSString  stringWithFormat:@"%@",self.realtorInfo[@"house_type"]].intValue;
+    associatePhone.houseId = self.realtorInfo[@"house_id"];
+    [self.realtorPhoneCallModel phoneChatActionWithAssociateModel:associatePhone];
 }
 
 - (void)addEnterCategoryLog:(NSString *)categoryName {

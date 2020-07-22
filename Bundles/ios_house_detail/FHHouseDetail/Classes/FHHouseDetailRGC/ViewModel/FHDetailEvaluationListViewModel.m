@@ -387,6 +387,12 @@ if (hasMore) {
     [self.detailJumpManager jumpToDetail:cellModel showComment:NO enterType:@"feed_content_blank"];
 }
 
+- (void)gotoLinkUrl:(FHFeedUGCCellModel *)cellModel url:(NSURL *)url {
+    // PM要求点富文本链接也进入详情页
+    [self lookAllLinkClicked:cellModel cell:nil];
+}
+
+
 - (void)clickRealtorHeader:(FHFeedUGCCellModel *)cellModel cell:(FHUGCBaseCell *)cell {
     if ([self.houseType integerValue] == FHHouseTypeSecondHandHouse) {
             NSMutableDictionary *dict = [NSMutableDictionary dictionary];

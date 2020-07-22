@@ -58,6 +58,11 @@
 }
 
 - (void)requestData:(BOOL)isHead first:(BOOL)isFirst {
+    if (![TTReachability isNetworkConnected]) {
+        [self onNetworError:YES showToast:YES];
+        return;
+    }
+    
     if (self.requestTask) {
         [self.requestTask cancel];
         self.detailController.isLoadingData = NO;
@@ -121,8 +126,17 @@
     if (hasMore) {
         [self.tableView.mj_footer endRefreshing];
     }else {
-        [self.refreshFooter setUpNoMoreDataText:@"- 我是有底线的哟 -" offsetY:-3];
+        [self.refreshFooter setUpNoMoreDataText:@"- 我是有底线的哟 -" offsetY:0];
         [self.tableView.mj_footer endRefreshingWithNoMoreData];
+    }
+}
+
+-(void)onNetworError:(BOOL)showEmpty showToast:(BOOL)showToast{
+    if(showEmpty){
+        [self.detailController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoNetWorkAndRefresh];
+    }
+    if(showToast){
+        [[ToastManager manager] showToast:@"网络异常"];
     }
 }
 
