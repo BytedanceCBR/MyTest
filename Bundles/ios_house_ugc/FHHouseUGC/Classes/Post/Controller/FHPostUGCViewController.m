@@ -1798,33 +1798,12 @@ static NSInteger const kMaxPostImageCount = 9;
 }
 
 - (void)addGoDetailLog {
-    if(self.isOuterEdit) {
-        NSMutableDictionary *param = @{}.mutableCopy;
-        param[UT_PAGE_TYPE] = @"feed_publisher";
-        param[UT_LOG_PB] = self.tracerModel.logPb;
-        param[UT_ENTER_FROM] = self.tracerModel.enterFrom;
-        param[UT_ENTER_TYPE] = self.tracerModel.enterType;
-        TRACK_EVENT(UT_GO_DETAIL, param);
-    }
-    
-    if(self.neighborhoodId.length > 0) {
-        NSMutableDictionary *param = @{}.mutableCopy;
-        param[UT_PAGE_TYPE] = @"feed_publisher";
-        param[UT_LOG_PB] = self.tracerModel.logPb;
-        param[@"group_id"] = self.neighborhoodId;
-        param[UT_ELEMENT_FROM] = self.tracerModel.elementFrom;
-        param[UT_ENTER_FROM] = self.tracerModel.enterFrom;
-        TRACK_EVENT(UT_GO_DETAIL, param);
-    }else if(self.groupId.length > 0){
-        NSMutableDictionary *param = @{}.mutableCopy;
-        param[UT_PAGE_TYPE] = @"feed_publisher";
-        param[UT_LOG_PB] = self.tracerDict[UT_LOG_PB];
-        param[@"group_id"] = self.groupId;
-        param[UT_ELEMENT_FROM] = self.tracerDict[UT_ELEMENT_FROM];
-        param[UT_ENTER_FROM] = self.tracerDict[UT_ENTER_FROM];
-        param[UT_ENTER_TYPE] = @"click";
-        TRACK_EVENT(UT_GO_DETAIL, param);
-    }
+    NSMutableDictionary *param = @{}.mutableCopy;
+    param[UT_PAGE_TYPE] = @"feed_publisher";
+    param[UT_LOG_PB] = self.tracerDict[UT_LOG_PB];
+    param[UT_ELEMENT_FROM] = self.tracerDict[UT_ELEMENT_FROM];
+    param[UT_ENTER_FROM] = self.tracerDict[UT_ENTER_FROM];
+    TRACK_EVENT(UT_GO_DETAIL, param);
 }
 
 #pragma mark - FHUGCToolbarDelegate
