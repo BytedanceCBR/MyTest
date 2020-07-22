@@ -123,9 +123,9 @@
         }
     }else{
         
-        NSMutableDictionary *tracerParams = [NSMutableDictionary new];
-         tracerParams[@"page_type"] = @"map_search_detail";
-         [FHUserTracker writeEvent:@"click_search" params:tracerParams];
+        NSMutableDictionary *tracerParamsClick = [NSMutableDictionary new];
+        tracerParamsClick[@"page_type"] = @"map_search_detail";
+        [FHUserTracker writeEvent:@"click_search" params:tracerParamsClick];
              
         
         
