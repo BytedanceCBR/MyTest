@@ -16,12 +16,13 @@
 #import "FHMapSearchWayChooseView.h"
 #import "FHMapSearchInfoTopBar.h"
 #import "FHMapSearchSideBar.h"
-
+@class FHMapSimpleNavbar;
 @class FHMapSearchViewController;
+@class FHMapDrawMaskView;
+
 //@protocol HouseFilterViewModelDelegate;
 
 NS_ASSUME_NONNULL_BEGIN
-@class FHMapDrawMaskView;
 @interface FHMapSearchViewModel : NSObject <MAMapViewDelegate, FHConditionFilterViewModelDelegate,FHMapSearchBottomBarDelegate>
 
 @property(nonatomic , weak) FHMapSearchViewController *viewController;
@@ -38,6 +39,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic , copy) void (^resetConditionBlock)(NSDictionary *condition);
 @property(nonatomic , copy) NSString *_Nullable (^conditionNoneFilterBlock)(NSDictionary *params);//获取非过滤器显示的过滤条件
 @property(nonatomic , copy) NSString *_Nullable (^getFilterConditionBlock)();
+@property(nonatomic , weak) FHMapSimpleNavbar *simpleNavBar;
 
 -(instancetype)initWithConfigModel:(FHMapSearchConfigModel *)configModel viewController:(FHMapSearchViewController *)viewController;
 
@@ -72,6 +74,8 @@ NS_ASSUME_NONNULL_BEGIN
 -(void)hideAreaHouseList;
 
 -(void)showFilterForAreaHouseList;
+
+-(void)reDrawMapCircle;
 
 @end
 

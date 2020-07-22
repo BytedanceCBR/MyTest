@@ -92,13 +92,13 @@
                 textColor = [UIColor whiteColor];
             }
                 break;
-//            case FHHouseAnnotationTypeOverSelected:
-//            {
-//                bgImageName = @"mapsearch_annotation_bg_grayRed";
-//                arrowImageName = @"mapsearch_annotation_arrow_grayRed";
-//                textColor = [UIColor whiteColor];
-//            }
-//                break;
+            case FHHouseAnnotationTypeOverSelected:
+            {
+                bgImageName = @"mapsearch_annotation_bg_grayRed";
+                arrowImageName = @"mapsearch_annotation_arrow_grayRed";
+                textColor = [UIColor whiteColor];
+            }
+                break;
                 
             default:
             {
@@ -113,7 +113,7 @@
         img = [self resizeableImage:img];
         _backgroundView.image = img;
         _arrowView.image = [UIImage imageNamed:arrowImageName];
-        _contentLabel.textColor = textColor;
+        _contentLabel.textColor = [UIColor whiteColor];
     }
 }
 
@@ -122,8 +122,8 @@
     [super layoutSubviews];
     self.backgroundView.frame = self.bounds;
     CGFloat arrowWidth = 7;
-    self.arrowView.frame = CGRectMake(self.width/2-arrowWidth/2, 42-arrowWidth/2, arrowWidth, arrowWidth);
-    self.contentLabel.frame = CGRectMake(30, 21, self.width-60, 17);
+    self.arrowView.frame = CGRectMake(self.width/2-arrowWidth/2, 45-arrowWidth/2, arrowWidth, arrowWidth);
+    self.contentLabel.frame = CGRectMake(30, 23, self.width-60, 17);
 }
 
 //-(void)willMoveToSuperview:(UIView *)newSuperview

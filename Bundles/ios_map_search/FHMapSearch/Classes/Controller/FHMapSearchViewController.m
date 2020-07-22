@@ -167,6 +167,10 @@
         _locationButton.backgroundColor = [UIColor clearColor];
         [_locationButton addTarget:self action:@selector(locationAction) forControlEvents:UIControlEventTouchUpInside];
         _locationButton.hidden = YES;
+//        _locationButton.layer.masksToBounds = YES;
+//        _locationButton.layer.cornerRadius = 4;
+//        _locationButton.layer.borderColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:0.3].CGColor;
+//        _locationButton.layer.borderWidth = 0.5;
     }
     return _locationButton;
 }
@@ -230,8 +234,16 @@
     _simpleNavBar.backActionBlock = ^(FHMapSimpleNavbarType type) {
         if (type == FHMapSimpleNavbarTypeClose) {
             [wself.viewModel exitCurrentMode];
-        }else{
+        }else if(type == FHMapSimpleNavbarTypeDrawLine){
+            [wself.viewModel exitCurrentMode];
+        }
+        else{
             [wself backAction];
+        }
+    };
+    _simpleNavBar.rightActionBlock = ^(FHMapSimpleNavbarType type) {
+        if(type == FHMapSimpleNavbarTypeDrawLine){
+            [wself.viewModel reDrawMapCircle];
         }
     };
     [self.view addSubview:_simpleNavBar];
@@ -270,6 +282,7 @@
     _viewModel.sideBar = self.sideBar;
     _viewModel.topInfoBar = self.topInfoBar;
     _viewModel.tipView = self.tipView;
+    _viewModel.simpleNavBar = self.simpleNavBar;
     
     self.title = _viewModel.navTitle;
     [self.simpleNavBar setTitle:self.title];
@@ -359,14 +372,14 @@
     if (self.locationButton.superview) {
         [self.locationButton mas_makeConstraints:^(MASConstraintMaker *make) {
             make.right.mas_equalTo(-7);
-            make.bottom.mas_equalTo(self.view).offset(-(26+bottomSafeInset));
+            make.bottom.mas_equalTo(self.view).offset(-(106+bottomSafeInset));
             make.size.mas_equalTo(CGSizeMake(44, 44));
         }];
     }
 
     [self.sideBar mas_makeConstraints:^(MASConstraintMaker *make) {
         make.right.mas_equalTo(-11);
-        make.bottom.mas_equalTo(self.view).offset(-(96+bottomSafeInset));
+        make.bottom.mas_equalTo(self.view).offset(-(176+bottomSafeInset));
         make.width.mas_equalTo(36);
     }];
     
@@ -377,12 +390,12 @@
         make.height.mas_equalTo(TOP_INFO_BAR_HEIGHT);
     }];
     
-    CGFloat bottomMargin = -(31+bottomSafeInset);
+    CGFloat topInset = 66 + topSafeInset;
     
     [self.bottomBar mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.right.mas_equalTo(self.view);
-        make.bottom.mas_equalTo(self.view).offset(bottomMargin);
-        make.height.mas_equalTo(58);
+        make.top.mas_equalTo(self.view).offset(self.view.frame.size.height - 100);
+        make.height.mas_equalTo(52);
     }];    
 }
 
@@ -404,7 +417,7 @@
 {
     self.title =  self.viewModel.navTitle ;
     [self.simpleNavBar setTitle:self.title];
-    self.simpleNavBar.type = (FHMapSearchShowModeMap == mode ? FHMapSimpleNavbarTypeBack : FHMapSimpleNavbarTypeClose);
+    self.simpleNavBar.type = (mode == FHMapSearchShowModeDrawLine ? FHMapSimpleNavbarTypeDrawLine : (FHMapSearchShowModeMap == mode ? FHMapSimpleNavbarTypeBack : FHMapSimpleNavbarTypeClose));
 }
 
 -(void)showNavTopViews:(CGFloat)ratio animated:(BOOL)animated

@@ -15,9 +15,12 @@
 @interface FHMapSearchBottomBar ()
 
 //@property(nonatomic , strong) UIButton *closeButton;
-@property(nonatomic , strong) UIControl *drawLineBgView;
+@property(nonatomic , strong) UIView *drawLineBgView;
 @property(nonatomic , strong) UILabel *drawLineLabel;
+@property(nonatomic , strong) UIView *verticalLine;
+@property(nonatomic , strong) UILabel *drawTitleLineLabel;
 @property(nonatomic , strong) UIImageView *drawLineIndicator;
+@property(nonatomic , strong) UIImageView *topIconImage;
 
 //@property(nonatomic , strong) UIControl *subwayBgView;
 //@property(nonatomic , strong) UIImageView *subwayIconView;
@@ -49,21 +52,42 @@
 
 -(void)initDrawLines
 {
-    UIImage *img = SYS_IMG(@"mapsearch_round_white_bg");
-    img = [img resizableImageWithCapInsets:UIEdgeInsetsMake(15, 15, 15, 15)];
+//    UIImage *img = SYS_IMG(@"mapsearch_round_white_bg");
+//    img = [img resizableImageWithCapInsets:UIEdgeInsetsMake(15, 15, 15, 15)];
+//    UIImage *searchTopIcon = SYS_IMG(@"map_search_top_icon");
     
-    _drawLineBgView = [[UIControl alloc] init];
-    _drawLineBgView.layer.contents = (id)[img CGImage];
-    [_drawLineBgView addTarget:self action:@selector(onDrawLineInfo) forControlEvents:UIControlEventTouchUpInside];
-    
+    _drawLineBgView = [[UIView alloc] init];
+//    _drawLineBgView.layer.contents = (id)[img CGImage];
+//    [_drawLineBgView addTarget:self action:@selector(onDrawLineInfo) forControlEvents:UIControlEventTouchUpInside];
+    UITapGestureRecognizer *tapGest = [[UITapGestureRecognizer alloc] initWithTarget:self
+                                                                              action:@selector(onDrawLineInfo)];
+    [_drawLineBgView addGestureRecognizer:tapGest];
+    _drawLineBgView.layer.masksToBounds = YES;
+    _drawLineBgView.layer.cornerRadius = 26;
+    _drawLineBgView.layer.borderWidth = 0.6;
+    _drawLineBgView.layer.borderColor = [UIColor themeOrange1].CGColor;
+    [_drawLineBgView setBackgroundColor:[UIColor whiteColor]];
+
     _drawLineLabel = [[UILabel alloc]init];
     _drawLineLabel.font = [UIFont themeFontRegular:14];
     _drawLineLabel.textColor = [UIColor themeGray1];
     
-    _drawLineIndicator = [[UIImageView alloc] initWithImage:SYS_IMG(@"mapsearch_indicator")];
+    _verticalLine = [UIView new];
+    [_verticalLine setBackgroundColor:[UIColor colorWithRed:0 green:0 blue:0 alpha:0.1]];
     
+    _drawTitleLineLabel = [[UILabel alloc] init];
+    _drawTitleLineLabel.font = [UIFont themeFontRegular:14];
+    _drawTitleLineLabel.textColor = [UIColor themeGray1];
+//    [_drawTitleLineLabel setBackgroundColor:[UIColor redColor]];
+    
+    _drawLineIndicator = [[UIImageView alloc] initWithImage:SYS_IMG(@"mapsearch_indicator")];
+    _topIconImage = [[UIImageView alloc] initWithImage:SYS_IMG(@"map_search_top_icon")];
+    [_drawLineBgView addSubview:_topIconImage];
+    [_drawLineBgView addSubview:_verticalLine];
+    [_drawLineBgView addSubview:_drawTitleLineLabel];
     [_drawLineBgView addSubview:_drawLineLabel];
     [_drawLineBgView addSubview:_drawLineIndicator];
+    
     
     [self addSubview:_drawLineBgView];
     
@@ -106,24 +130,50 @@
 //    CGFloat centerXOffset = smallScreen?20:0;
     
     [_drawLineBgView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(self).offset(88);
-//        make.width.mas_equalTo(200);
+        make.centerX.mas_equalTo(self);
         make.top.mas_equalTo(self).offset(0);
+        make.width.mas_equalTo(180);
         make.bottom.mas_equalTo(self).offset(0);
-        make.right.mas_equalTo(self.drawLineIndicator.mas_right).offset(20);
     }];
+    
+    [_topIconImage mas_makeConstraints:^(MASConstraintMaker *make) {
+      make.left.mas_equalTo(self.drawLineBgView).offset(15);
+      make.centerY.mas_equalTo(self.drawLineBgView);
+      make.width.mas_equalTo(21);
+      make.height.mas_equalTo(21);
+    }];
+    
+    [_verticalLine mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.mas_equalTo(self.drawLineBgView).offset(8);
+        make.left.mas_equalTo(41);
+        make.width.mas_equalTo(1);
+        make.height.mas_equalTo(36);
+    }];
+    
+    [_drawTitleLineLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+       make.top.mas_equalTo(self.drawLineBgView).offset(3);
+       make.left.mas_equalTo(50);
+//       make.width.mas_equalTo(160);
+       make.height.mas_equalTo(23);
+//       make.left.mas_equalTo(43);
+    }];
+    
     
     [_drawLineLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.centerY.mas_equalTo(self.drawLineBgView).offset(-2);
-        make.left.mas_equalTo(26);
+        make.top.mas_equalTo(self.drawTitleLineLabel.mas_bottom).offset(0);
+        make.width.mas_equalTo(110);
+        make.height.mas_equalTo(23);
+        make.left.mas_equalTo(50);
     }];
+
     
     [_drawLineIndicator mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(self.drawLineLabel.mas_right).offset(6);
-        make.centerY.mas_equalTo(self.drawLineLabel);
+        make.right.mas_equalTo(self.drawLineBgView).offset(-15);
+        make.centerY.mas_equalTo(self.drawLineBgView);
         make.size.mas_equalTo(CGSizeMake(18, 18));
     }];
     
+
 //    //TODO: add subway
 //    [_subwayBgView mas_makeConstraints:^(MASConstraintMaker *make) {
 //        make.left.mas_equalTo(self).offset(88);
@@ -151,39 +201,54 @@
     _drawLineBgView.hidden = YES;
 }
 
--(void)showDrawLine:(NSString *)content showIndicator:(BOOL)showIndicator
+-(void)showDrawLine:(NSString *)content withNum:(NSInteger)num showIndicator:(BOOL)showIndicator
 {
+      NSMutableAttributedString * contentAttr = [[NSMutableAttributedString alloc] initWithString:content attributes:@{
+            NSForegroundColorAttributeName:[UIColor themeGray1],
+            NSFontAttributeName:[UIFont themeFontRegular:14]
+      }];
+      NSRange numRange = [content rangeOfString:[NSString stringWithFormat:@"%ld",num]];
+      [contentAttr addAttributes:@{
+          NSForegroundColorAttributeName:[UIColor themeRed4],
+          NSFontAttributeName:[UIFont themeFontSemibold:14]
+      } range:numRange];
+      
+    _drawLineLabel.attributedText = contentAttr;
+     _drawTitleLineLabel.text = @"区域内共找到：";
 //    content = @"区域内共找到20000000123452000000012345套房源";
-    _drawLineLabel.text = content;
+//    _drawLineLabel.text = content;
 //    _subwayBgView.hidden = YES;
     
-    [_drawLineLabel sizeToFit];
-    CGFloat padding = 46 ; //左右间距 箭头
-    if (showIndicator) {
-        padding += 24;
-    }
+    
+    
+//    [_drawLineLabel sizeToFit];
+//    CGFloat padding = 46 ; //左右间距 箭头
+//    if (showIndicator) {
+//        padding += 24;
+//    }
 
     self.drawLineIndicator.hidden = !showIndicator;
-    CGFloat width = MIN(_drawLineLabel.width, (SCREEN_WIDTH - padding));
-    CGFloat left = (SCREEN_WIDTH - width - padding)/2;
+//    CGFloat width = MIN(_drawLineLabel.width, (SCREEN_WIDTH - padding));
+//    CGFloat left = (SCREEN_WIDTH - width - padding)/2;
 
-    [_drawLineLabel mas_updateConstraints:^(MASConstraintMaker *make) {
-        make.width.mas_equalTo(width);
-    }];
-    [_drawLineBgView mas_updateConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(left);
-    }];
+//    [_drawLineLabel mas_updateConstraints:^(MASConstraintMaker *make) {
+//        make.width.mas_equalTo(90);
+//        make.height.mas_equalTo(52);
+//    }];
+//    [_drawLineBgView mas_updateConstraints:^(MASConstraintMaker *make) {
+//        make.left.mas_equalTo(left);
+//    }];
     
     if (showIndicator) {
         [_drawLineBgView mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.right.mas_equalTo(self.drawLineIndicator.mas_right).offset(20);
+            make.width.mas_equalTo(180);
         }];
     }else{
         [_drawLineBgView mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.right.mas_equalTo(self.drawLineIndicator.mas_right).offset(2);
+            make.width.mas_equalTo(160);
         }];
     }
-        
+//
     _drawLineBgView.hidden = NO;
     
 }
