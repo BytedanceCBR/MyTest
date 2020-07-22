@@ -43,7 +43,6 @@ typedef void(^TTCustomAction)();
 @end
 
 @protocol TTActivityContentItemSelectedProtocol <TTActivityContentItemProtocol>
-
 //考虑Button的select状态和计数
 @property (nonatomic, assign) BOOL selected;
 

@@ -35,6 +35,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 //100 户型详情增加咨询样式
 @property (nonatomic, strong , nullable) FHFloorPanDetailInfoModelPriceConsultModel *priceConsult;
+//103 反馈按钮移到标签栏
+@property (nonatomic, copy , nullable) NSString *reportUrl;
+
 @end
 
 NS_ASSUME_NONNULL_END

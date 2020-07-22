@@ -127,6 +127,7 @@
                            @"useSchoolIm": @"use_school_im",
                            @"schoolConsult": @"school_consult",
                            @"gaodeImage": @"gaode_image",
+                           @"baiduPanoramaUrl": @"baidu_panorama_url"
                            };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
         return dict[keyName]?:keyName;
@@ -687,7 +688,8 @@
                            @"priceChangeNotice":@"price_change_notice",
                            @"downPaymentInfo":@"down_payment_info",
                            @"vouchModel":@"vouch_info",
-                           @"realtorContent":@"realtor_content"
+                           @"realtorContent":@"realtor_content",
+                           @"reportUrl":@"report_url"
                            };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
         return dict[keyName]?:keyName;

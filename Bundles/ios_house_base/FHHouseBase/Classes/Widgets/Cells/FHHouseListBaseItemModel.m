@@ -14,7 +14,7 @@
 + (JSONKeyMapper*)keyMapper
 {
     NSDictionary *dict = @{
-        
+        @"houseStatus":@"house_status",
         @"logPb": @"log_pb",
         @"recommendReasons": @"recommend_reasons",
         @"baseInfo": @"base_info",

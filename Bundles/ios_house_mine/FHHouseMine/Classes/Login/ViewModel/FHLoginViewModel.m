@@ -41,22 +41,7 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
 
 NSString * const kFHLoginSIMStatusChangeNotification = @"kFHLoginSIMStatusChangeNotification";
 
-@interface FHLoginSharedModel : NSObject
-
-+ (instancetype)sharedModel;
-
-@property (nonatomic, assign) BOOL hasPushedLoginProcess;
-@property (nonatomic, assign) BOOL hasRequestedApis;
-
-- (void)loadOneKayAndDouyinConfigs:(void (^)(void))completion;
-
-@property (nonatomic, assign) BOOL disableDouyinOneClickLoginSetting;
-@property (nonatomic, assign) BOOL disableDouyinIconLoginSetting;
-
-@property (nonatomic, assign) BOOL isOneKeyLogin;
-@property (nonatomic, copy) NSString *mobileNumber;
-@property (nonatomic, assign) BOOL *douyinCanQucikLogin;
-
+@interface FHLoginSharedModel ()
 @property (nonatomic, strong) CTTelephonyNetworkInfo *telephoneInfo;
 @end
 
@@ -132,8 +117,7 @@ static FHLoginSharedModel *_sharedModel = nil;
     self.hasRequestedApis = NO;
     dispatch_group_t group = dispatch_group_create();
     dispatch_group_enter(group);
-    dispatch_group_async(group, dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         BOOL disableOneKeyLogin = [self getOneKeyLoginSwitchOff];
         if (disableOneKeyLogin) {
             self.isOneKeyLogin = NO;
@@ -159,9 +143,10 @@ static FHLoginSharedModel *_sharedModel = nil;
             dispatch_group_leave(group);
         }];
     });
+
     
     dispatch_group_enter(group);
-    dispatch_group_async(group, dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         
         dispatch_sync(dispatch_get_main_queue(), ^{
             self.douyinCanQucikLogin = [TTAccount isDouyinInstalledSupportBindMobile];
@@ -276,13 +261,7 @@ static FHLoginSharedModel *_sharedModel = nil;
         [FHLoginSharedModel sharedModel].hasPushedLoginProcess = YES;
         _needPopVC = YES;
         _isNeedCheckUGCAdUser = NO;
-        _processType = FHLoginProcessOrigin;
         _viewController = viewController;
-        id res = [BDABTestManager getExperimentValueForKey:@"f_douyin_login_type" withExposure:YES];
-        if ([res isKindOfClass:[NSNumber class]]) {
-            _processType = [(NSNumber *)res integerValue];
-        }
-//        NSLog(@"BDClientABTest f_douyin_login_type is %@",res);
         [self addObserver];
     }
     return self;
@@ -437,36 +416,13 @@ static FHLoginSharedModel *_sharedModel = nil;
 }
 
 - (void)updateViewType {
-    //判断 self.processType
     FHLoginViewType viewType = FHLoginViewTypeOneKey;
-    switch (self.processType) {
-        case FHLoginProcessOrigin:
-            if ([FHLoginSharedModel sharedModel].isOneKeyLogin) {
-                viewType = FHLoginViewTypeOneKey;
-            } else {
-                viewType = FHLoginViewTypeMobile;
-            }
-            break;
-        case FHLoginProcessTestA:
-            if ([FHLoginSharedModel sharedModel].isOneKeyLogin) {
-                viewType = FHLoginViewTypeOneKey;
-            } else if([FHLoginSharedModel sharedModel].douyinCanQucikLogin && ![FHLoginSharedModel sharedModel].disableDouyinOneClickLoginSetting) {
-                viewType = FHLoginViewTypeDouYin;
-            } else {
-                viewType = FHLoginViewTypeMobile;
-            }
-            break;
-        case FHLoginProcessTestB:
-            if ([FHLoginSharedModel sharedModel].douyinCanQucikLogin && ![FHLoginSharedModel sharedModel].disableDouyinOneClickLoginSetting) {
-                viewType = FHLoginViewTypeDouYin;
-            } else if([FHLoginSharedModel sharedModel].isOneKeyLogin) {
-                viewType = FHLoginViewTypeOneKey;
-            } else {
-                viewType = FHLoginViewTypeMobile;
-            }
-            break;
-        default:
-            break;
+    if ([FHLoginSharedModel sharedModel].isOneKeyLogin) {
+        viewType = FHLoginViewTypeOneKey;
+    } else if([FHLoginSharedModel sharedModel].douyinCanQucikLogin && ![FHLoginSharedModel sharedModel].disableDouyinOneClickLoginSetting) {
+        viewType = FHLoginViewTypeDouYin;
+    } else {
+        viewType = FHLoginViewTypeMobile;
     }
     self.currentViewType = viewType;
     if (self.loginViewViewTypeChanged) {
@@ -526,12 +482,8 @@ static FHLoginSharedModel *_sharedModel = nil;
 }
 
 - (BOOL)shouldShowDouyinIcon {
-    if (self.processType == FHLoginProcessOrigin) {
+    if ([FHLoginSharedModel sharedModel].disableDouyinIconLoginSetting) {
         return NO;
-    }else {
-        if ([FHLoginSharedModel sharedModel].disableDouyinIconLoginSetting) {
-            return NO;
-        }
     }
     return YES;
 }
@@ -581,7 +533,7 @@ static FHLoginSharedModel *_sharedModel = nil;
 }
 
 #pragma mark - 运营商一键登录
-- (NSString *)serviceName {
++ (NSString *)serviceName {
     NSString *service = [TTAccount sharedAccount].service;
     if ([service isEqualToString:TTAccountMobile]) {
         return @"中国移动认证";
@@ -623,76 +575,15 @@ static FHLoginSharedModel *_sharedModel = nil;
 //            [attrText yy_setTextUnderline:decoration range:userProtocolRange];
 //            [attrText yy_setTextUnderline:decoration range:privacyRange];
             [attrText yy_setTextHighlightRange:userProtocolRange color:linkTextColor backgroundColor:nil tapAction:^(UIView *_Nonnull containerView, NSAttributedString *_Nonnull text, NSRange range, CGRect rect) {
-                [wself goToUserProtocol];
+                [FHLoginViewModel goToUserProtocol];
             }];
             [attrText yy_setTextHighlightRange:privacyRange color:linkTextColor backgroundColor:nil tapAction:^(UIView *_Nonnull containerView, NSAttributedString *_Nonnull text, NSRange range, CGRect rect) {
-                [wself goToSecretProtocol];
+                [FHLoginViewModel goToSecretProtocol];
             }];
             break;
         }
         case FHLoginViewTypeOneKey:{
-            if ([[TTAccount sharedAccount].service isEqualToString:TTAccountMobile]) {
-                attrText = [[NSMutableAttributedString alloc] initWithString:@"登录即同意 《中国移动认证服务条款》以及\n《幸福里用户协议》和《隐私政策》"];
-                serviceRange = [attrText.string rangeOfString:@"中国移动认证服务条款"];
-                if (serviceRange.location == NSNotFound) {
-                    serviceRange = NSMakeRange(7, 10);
-                }
-                userProtocolRange = [attrText.string rangeOfString:@"幸福里用户协议"];
-                if (userProtocolRange.location == NSNotFound) {
-                    userProtocolRange = NSMakeRange(21, 7);
-                }
-                privacyRange = [attrText.string rangeOfString:@"隐私政策"];
-                if (privacyRange.location == NSNotFound) {
-                    privacyRange = NSMakeRange(31, 4);
-                }
-                urlStr = [NSString stringWithFormat:@"https://wap.cmpassport.com/resources/html/contract.html"];
-            } else if ([[TTAccount sharedAccount].service isEqualToString:TTAccountTelecom]) {
-                attrText = [[NSMutableAttributedString alloc] initWithString:@"登录即同意 《中国电信认证服务协议》以及\n《幸福里用户协议》和《隐私政策》"];
-                serviceRange = [attrText.string rangeOfString:@"中国电信认证服务协议"];
-                if (serviceRange.location == NSNotFound) {
-                    serviceRange = NSMakeRange(7, 10);
-                }
-                userProtocolRange = [attrText.string rangeOfString:@"幸福里用户协议"];
-                if (userProtocolRange.location == NSNotFound) {
-                    userProtocolRange = NSMakeRange(21, 7);
-                }
-                privacyRange = [attrText.string rangeOfString:@"隐私政策"];
-                if (privacyRange.location == NSNotFound) {
-                    privacyRange = NSMakeRange(31, 4);
-                }
-                urlStr = [NSString stringWithFormat:@"https://e.189.cn/sdk/agreement/detail.do?hidetop=true"];
-            } else if ([[TTAccount sharedAccount].service isEqualToString:TTAccountUnion]) {
-                attrText = [[NSMutableAttributedString alloc] initWithString:@"登录即同意 《中国联通服务与隐私协议》以及\n《幸福里用户协议》和《隐私政策》"];
-                serviceRange = [attrText.string rangeOfString:@"中国联通服务与隐私协议"];
-                if (serviceRange.location == NSNotFound) {
-                    serviceRange = NSMakeRange(7, 11);
-                }
-                userProtocolRange = [attrText.string rangeOfString:@"幸福里用户协议"];
-                if (userProtocolRange.location == NSNotFound) {
-                    userProtocolRange = NSMakeRange(22, 7);
-                }
-                privacyRange = [attrText.string rangeOfString:@"隐私政策"];
-                if (privacyRange.location == NSNotFound) {
-                    privacyRange = NSMakeRange(32, 4);
-                }
-                urlStr = [NSString stringWithFormat:@"https://opencloud.wostore.cn/authz/resource/html/disclaimer.html?fromsdk=true"];
-            }
-            [attrText addAttributes:commonTextStyle range:NSMakeRange(0, attrText.length)];
-            [attrText yy_setAlignment:NSTextAlignmentCenter range:NSMakeRange(0, attrText.length)];
-//            YYTextDecoration *decoration = [YYTextDecoration decorationWithStyle:YYTextLineStyleSingle];
-//            [attrText yy_setTextUnderline:decoration range:serviceRange];
-//            [attrText yy_setTextUnderline:decoration range:userProtocolRange];
-//            [attrText yy_setTextUnderline:decoration range:privacyRange];
-            
-            [attrText yy_setTextHighlightRange:serviceRange color:linkTextColor backgroundColor:nil tapAction:^(UIView *_Nonnull containerView, NSAttributedString *_Nonnull text, NSRange range, CGRect rect) {
-                [wself goToServiceProtocol:urlStr];
-            }];
-            [attrText yy_setTextHighlightRange:userProtocolRange color:linkTextColor backgroundColor:nil tapAction:^(UIView *_Nonnull containerView, NSAttributedString *_Nonnull text, NSRange range, CGRect rect) {
-                [wself goToUserProtocol];
-            }];
-            [attrText yy_setTextHighlightRange:privacyRange color:linkTextColor backgroundColor:nil tapAction:^(UIView *_Nonnull containerView, NSAttributedString *_Nonnull text, NSRange range, CGRect rect) {
-                [wself goToSecretProtocol];
-            }];
+            attrText = [self.class protocolAttrTextForOneKeyLoginViewType];
             break;
         }
         case FHLoginViewTypeMobile:{
@@ -706,14 +597,11 @@ static FHLoginSharedModel *_sharedModel = nil;
             if (privacyRange.location == NSNotFound) {
                 privacyRange = NSMakeRange(17, 4);
             }
-//            YYTextDecoration *decoration = [YYTextDecoration decorationWithStyle:YYTextLineStyleSingle];
-//            [attrText yy_setTextUnderline:decoration range:userProtocolRange];
-//            [attrText yy_setTextUnderline:decoration range:privacyRange];
             [attrText yy_setTextHighlightRange:userProtocolRange color:linkTextColor backgroundColor:nil tapAction:^(UIView *_Nonnull containerView, NSAttributedString *_Nonnull text, NSRange range, CGRect rect) {
-                [wself goToUserProtocol];
+                [FHLoginViewModel goToUserProtocol];
             }];
             [attrText yy_setTextHighlightRange:privacyRange color:linkTextColor backgroundColor:nil tapAction:^(UIView *_Nonnull containerView, NSAttributedString *_Nonnull text, NSRange range, CGRect rect) {
-                [wself goToSecretProtocol];
+                [FHLoginViewModel goToSecretProtocol];
             }];
             break;
         }
@@ -721,6 +609,76 @@ static FHLoginSharedModel *_sharedModel = nil;
             break;
     }
     return attrText.copy;
+}
++ (NSMutableAttributedString *)protocolAttrTextForOneKeyLoginViewType {
+    NSMutableAttributedString *attrText = [NSMutableAttributedString new];
+    NSRange serviceRange;
+    NSRange userProtocolRange;
+    NSRange privacyRange;
+    NSString *urlStr = nil;
+    NSDictionary *commonTextStyle = @{
+                                      NSFontAttributeName: [UIFont themeFontRegular:13],
+                                      NSForegroundColorAttributeName: [UIColor themeGray3],
+                                      };
+    UIColor *linkTextColor = [UIColor themeGray2];
+    if ([[TTAccount sharedAccount].service isEqualToString:TTAccountMobile]) {
+        attrText = [[NSMutableAttributedString alloc] initWithString:@"登录即同意 《中国移动认证服务条款》以及\n《幸福里用户协议》和《隐私政策》"];
+        serviceRange = [attrText.string rangeOfString:@"中国移动认证服务条款"];
+        if (serviceRange.location == NSNotFound) {
+            serviceRange = NSMakeRange(7, 10);
+        }
+        userProtocolRange = [attrText.string rangeOfString:@"幸福里用户协议"];
+        if (userProtocolRange.location == NSNotFound) {
+            userProtocolRange = NSMakeRange(21, 7);
+        }
+        privacyRange = [attrText.string rangeOfString:@"隐私政策"];
+        if (privacyRange.location == NSNotFound) {
+            privacyRange = NSMakeRange(31, 4);
+        }
+        urlStr = [NSString stringWithFormat:@"https://wap.cmpassport.com/resources/html/contract.html"];
+    } else if ([[TTAccount sharedAccount].service isEqualToString:TTAccountTelecom]) {
+        attrText = [[NSMutableAttributedString alloc] initWithString:@"登录即同意 《中国电信认证服务协议》以及\n《幸福里用户协议》和《隐私政策》"];
+        serviceRange = [attrText.string rangeOfString:@"中国电信认证服务协议"];
+        if (serviceRange.location == NSNotFound) {
+            serviceRange = NSMakeRange(7, 10);
+        }
+        userProtocolRange = [attrText.string rangeOfString:@"幸福里用户协议"];
+        if (userProtocolRange.location == NSNotFound) {
+            userProtocolRange = NSMakeRange(21, 7);
+        }
+        privacyRange = [attrText.string rangeOfString:@"隐私政策"];
+        if (privacyRange.location == NSNotFound) {
+            privacyRange = NSMakeRange(31, 4);
+        }
+        urlStr = [NSString stringWithFormat:@"https://e.189.cn/sdk/agreement/detail.do?hidetop=true"];
+    } else if ([[TTAccount sharedAccount].service isEqualToString:TTAccountUnion]) {
+        attrText = [[NSMutableAttributedString alloc] initWithString:@"登录即同意 《中国联通服务与隐私协议》以及\n《幸福里用户协议》和《隐私政策》"];
+        serviceRange = [attrText.string rangeOfString:@"中国联通服务与隐私协议"];
+        if (serviceRange.location == NSNotFound) {
+            serviceRange = NSMakeRange(7, 11);
+        }
+        userProtocolRange = [attrText.string rangeOfString:@"幸福里用户协议"];
+        if (userProtocolRange.location == NSNotFound) {
+            userProtocolRange = NSMakeRange(22, 7);
+        }
+        privacyRange = [attrText.string rangeOfString:@"隐私政策"];
+        if (privacyRange.location == NSNotFound) {
+            privacyRange = NSMakeRange(32, 4);
+        }
+        urlStr = [NSString stringWithFormat:@"https://opencloud.wostore.cn/authz/resource/html/disclaimer.html?fromsdk=true"];
+    }
+    [attrText addAttributes:commonTextStyle range:NSMakeRange(0, attrText.length)];
+    [attrText yy_setAlignment:NSTextAlignmentCenter range:NSMakeRange(0, attrText.length)];
+    [attrText yy_setTextHighlightRange:serviceRange color:linkTextColor backgroundColor:nil tapAction:^(UIView *_Nonnull containerView, NSAttributedString *_Nonnull text, NSRange range, CGRect rect) {
+        [FHLoginViewModel goToServiceProtocol:urlStr];
+    }];
+    [attrText yy_setTextHighlightRange:userProtocolRange color:linkTextColor backgroundColor:nil tapAction:^(UIView *_Nonnull containerView, NSAttributedString *_Nonnull text, NSRange range, CGRect rect) {
+        [FHLoginViewModel goToUserProtocol];
+    }];
+    [attrText yy_setTextHighlightRange:privacyRange color:linkTextColor backgroundColor:nil tapAction:^(UIView *_Nonnull containerView, NSAttributedString *_Nonnull text, NSRange range, CGRect rect) {
+        [FHLoginViewModel goToSecretProtocol];
+    }];
+    return attrText;
 }
 
 #pragma mark - FHLoginViewDelegate
@@ -743,13 +701,13 @@ static FHLoginSharedModel *_sharedModel = nil;
     [self sendVerifyCodeWithCaptcha:nil needPushVerifyCodeView:needPush isForBindMobile:isForBindMobile];
 }
 
-- (void)goToUserProtocol {
++ (void)goToUserProtocol {
     NSString *urlStr = [NSString stringWithFormat:@"sslocal://webview?url=%@/f100/download/user_agreement.html&title=幸福里用户协议&hide_more=1",[FHMineAPI host]];
     NSURL* url = [NSURL URLWithString:[urlStr stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
     [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:nil];
 }
 
-- (void)goToSecretProtocol {
++ (void)goToSecretProtocol {
     NSString *urlStr = [NSString stringWithFormat:@"sslocal://webview?url=%@/f100/download/private_policy.html&title=隐私政策&hide_more=1",[FHMineAPI host]];
     NSURL* url = [NSURL URLWithString:[urlStr stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
     [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:nil];
@@ -1122,7 +1080,7 @@ static FHLoginSharedModel *_sharedModel = nil;
     }
 }
 
-- (void)goToServiceProtocol:(NSString *)urlStr {
++ (void)goToServiceProtocol:(NSString *)urlStr {
     NSURL* url = [NSURL URLWithString:[NSString stringWithFormat:@"sslocal://webview?url=%@",urlStr]];
     NSString *title = @"";
     if ([[TTAccount sharedAccount].service isEqualToString:TTAccountMobile]) {

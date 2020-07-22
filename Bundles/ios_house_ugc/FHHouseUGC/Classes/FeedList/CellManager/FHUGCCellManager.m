@@ -6,13 +6,6 @@
 //
 
 #import "FHUGCCellManager.h"
-
-#import "FHUGCPureTitleCell.h"
-#import "FHUGCSingleImageCell.h"
-#import "FHUGCMultiImageCell.h"
-#import "FHArticlePureTitleCell.h"
-#import "FHArticleSingleImageCell.h"
-#import "FHArticleMultiImageCell.h"
 #import "FHUGCRecommendCell.h"
 #import "FHUGCBannerCell.h"
 #import "FHUGCHotTopicCell.h"
@@ -28,6 +21,8 @@
 #import "FHUGCRecommendCircleCell.h"
 #import "FHUGCEncyclopediasCell.h"
 #import "FHUGCLynxCommonCell.h"
+#import "FHArticleCell.h"
+#import "FHUGCPostCell.h"
 #import "FHHouseDeatilRGCImageCell.h"
 #import "FHHouseDeatilRGCVideoCell.h"
 
@@ -49,30 +44,26 @@
 
 - (void)initSupportCellTypeList {
     self.supportCellTypeList = @[
-        @"FHUGCPureTitleCell",
-        @"FHUGCSingleImageCell",
-        @"FHUGCMultiImageCell",
-        @"FHArticlePureTitleCell",
-        @"FHArticleSingleImageCell",
-        @"FHArticleMultiImageCell",
-        @"FHUGCRecommendCell",
-        @"FHUGCLynxBannerCell",
-        @"FHUGCBannerCell",
-        @"FHUGCHotTopicCell",
-        @"FHUGCVoteCell",
-        @"FHUGCVideoCell",
-        @"FHUGCSmallVideoCell",
-        @"FHUGCVoteDetailCell",
-        @"FHUGCHotCommunityCell",
-        @"FHNeighbourhoodQuestionCell",
-        @"FHNeighbourhoodCommentCell",
-        @"FHUGCRecommendCircleCell",
-        @"FHUGCEncyclopediasCell",
-        @"FHUGCLynxCommonCell",
-        @"FHHouseDeatilRGCImageCell",
-        @"FHHouseDeatilRGCVideoCell"
-        //可扩展
-    ];
+                                @"FHUGCPostCell",
+                                @"FHArticleCell",
+                                @"FHUGCRecommendCell",
+                                @"FHUGCLynxBannerCell",
+                                @"FHUGCBannerCell",
+                                @"FHUGCHotTopicCell",
+                                @"FHUGCVoteCell",
+                                @"FHUGCVideoCell",
+                                @"FHUGCSmallVideoCell",
+                                @"FHUGCVoteDetailCell",
+                                @"FHUGCHotCommunityCell",
+                                @"FHNeighbourhoodQuestionCell",
+                                @"FHNeighbourhoodCommentCell",
+                                @"FHUGCRecommendCircleCell",
+                                @"FHUGCEncyclopediasCell",
+                                @"FHUGCLynxCommonCell",
+                                @"FHHouseDeatilRGCImageCell",
+                                @"FHHouseDeatilRGCVideoCell"
+                                //可扩展
+                                 ];
 }
 
 - (void)registerAllCell:(UITableView *)tableView {
@@ -84,24 +75,11 @@
 - (Class)cellClassFromCellViewType:(FHUGCFeedListCellSubType)cellType data:(nullable id)data {
     //这里这样写是为了以后一个key可能对应不同cell的变化
     switch (cellType) {
+        case FHUGCFeedListCellSubTypePost:
+            return [FHUGCPostCell class];
             
-        case FHUGCFeedListCellSubTypePureTitle:
-            return [FHUGCPureTitleCell class];
-            
-        case FHUGCFeedListCellSubTypeSingleImage:
-            return [FHUGCSingleImageCell class];
-            
-        case FHUGCFeedListCellSubTypeMultiImage:
-            return [FHUGCMultiImageCell class];
-            
-        case FHUGCFeedListCellSubTypeArticlePureTitle:
-            return [FHArticlePureTitleCell class];
-            
-        case FHUGCFeedListCellSubTypeArticleSingleImage:
-            return [FHArticleSingleImageCell class];
-            
-        case FHUGCFeedListCellSubTypeArticleMultiImage:
-            return [FHArticleMultiImageCell class];
+        case FHUGCFeedListCellSubTypeArticle:
+            return [FHArticleCell class];
             
         case FHUGCFeedListCellSubTypeUGCRecommend:
             return [FHUGCRecommendCell class];
@@ -140,24 +118,19 @@
             return [FHUGCEncyclopediasCell class];
             
         case FHUGCFeedListCellSubTypeUGCLynx:
-            
             return [FHUGCLynxCommonCell class];
-        case FHUGCFeedListCellSubTypeUGCBrokerImage:
             
+        case FHUGCFeedListCellSubTypeUGCBrokerImage:
             return [FHHouseDeatilRGCImageCell class];
             
-            case FHUGCFeedListCellSubTypeUGCBrokerVideo:
-                
-                return [FHHouseDeatilRGCVideoCell class];
-            
+        case FHUGCFeedListCellSubTypeUGCBrokerVideo:
+            return [FHHouseDeatilRGCVideoCell class];
             
         default:
             break;
     }
     
-    
-    
-    return [FHUGCPureTitleCell class];
+    return [FHUGCPostCell class];
 }
 
 + (SSImpressionModelType)impressModelTypeWithCellType:(FHUGCFeedListCellType)cellType {

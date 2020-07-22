@@ -31,6 +31,15 @@ typedef enum {
 @property (nonatomic, assign) BOOL isSwitching;
 //item间隔距离
 @property (nonatomic, assign) CGFloat intervalPadding;
+
+//下划线圆角
+- (void)setUnderLineLayer:(CGFloat)cornerRadius;
+
+//下划线距离
+@property (nonatomic, assign) CGFloat underLinePaddingToLab;
+
+//下划线宽度
+@property (nonatomic, assign) CGFloat underLineWidth;
 /**
  一次性设置素有字体属性
 

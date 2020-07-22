@@ -14,7 +14,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property(nonatomic , weak) id<FHMapSearchBottomBarDelegate> delegate;
 
--(void)showDrawLine:(NSString *)content showIndicator:(BOOL)showIndicator;
+-(void)showDrawLine:(NSString *)content withNum:(NSInteger)num showIndicator:(BOOL)showIndicator;
 
 //-(void)showSubway:(NSString *)line;
 

@@ -42,6 +42,8 @@ NSString const *CHANNEL_ID_HELP_ME_FIND_HOUSE = @"94349538586"; // 帮我找房
 NSString const *CHANNEL_ID_SUBWAY_HOUSE_HOUSE_LIST = @"94349538945"; // 地铁找房房源列表
 NSString const *CHANNEL_ID_MAP_FIND_RENT = @"94349538463"; //租房地图找房列表页
 
+NSString const *CHANNEL_ID_REALTOR_DETAIL_HOUSE = @"94349555127"; // ✅ 经纪人主页推荐房源
+
 @implementation FHSearchChannelTypes
 
 @end
