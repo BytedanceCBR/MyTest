@@ -34,12 +34,12 @@
 @property (nonatomic, weak) TTHttpTask *requestTask;
 @property (nonatomic, strong) NSMutableArray *historyList;
 @property (nonatomic, assign) NSInteger offset;
-@property (nonatomic, strong) NSMutableDictionary *tracerDictRecord;
-@property (nonatomic, assign) BOOL isEnterCategory;
+@property (nonatomic, strong) NSMutableDictionary *tracerDictRecord; //house_show埋点去重
+@property (nonatomic, assign) BOOL isEnterCategory; //是否已经上报enter_category埋点，只进行一次上报
 @property (nonatomic, strong) NSString *searchId;
 @property (nonatomic, strong) NSString *originSearchId;
-@property (nonatomic, assign) BOOL isFirstRequest;
-@property (nonatomic, assign) BOOL isCanEnterCategory;
+@property (nonatomic, assign) BOOL isFirstRequest; //是否第一次请求数据并且有search_id
+@property (nonatomic, assign) BOOL isCanEnterCategory; //是否可以enter_category埋点，第一次成功加载数据时为YES
 
 @end
 
@@ -56,7 +56,6 @@
         tableView.delegate = self;
         tableView.dataSource = self;
         [self registerCellClasses];
-        
         __weak typeof(self) wself = self;
         FHRefreshCustomFooter *footer = [FHRefreshCustomFooter footerWithRefreshingBlock:^{
             [wself requestData:NO];
@@ -337,6 +336,7 @@
             urlStr = @"sslocal://house_list?house_type=1";
             break;
         case FHHouseTypeNeighborhood:
+            //跳转首页
             urlStr = @"sslocal://main?select_tab=tab_stream";
             break;
         default:

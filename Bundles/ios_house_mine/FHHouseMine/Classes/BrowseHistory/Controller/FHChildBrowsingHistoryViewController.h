@@ -15,7 +15,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, assign) FHHouseType houseType;
 @property (nonatomic, weak) FHBrowsingHistoryViewController *fatherVC;
-@property (nonatomic, assign) BOOL isCanTrack;
+@property (nonatomic, assign) BOOL isCanTrack; //是否可以埋点
 
 @end
 

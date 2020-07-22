@@ -15,7 +15,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)refreshData:(id)data andHouseType:(FHHouseType)houseType andVC:(FHBrowsingHistoryViewController *)vc;
 
-- (void)updateTrackStatu;
+- (void)updateTrackStatus;
 
 @end
 

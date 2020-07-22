@@ -32,24 +32,4 @@
     return [self requestBrowseHistoryWithHouseType:houseType count:count offset:offset class:cls completion:completion];
 }
 
-+ (TTHttpTask *)requestNewHouseBrowseHistoryWithCount:(NSInteger)count offset:(NSInteger)offset class:(Class)cls completion:(void (^ _Nullable)(id <FHBaseModelProtocol> model, NSError *error))completion {
-    
-    return [self requestBrowseHistoryWithHouseType:FHBrowseHistoryTypeNew count:count offset:offset class:cls completion:completion];
-}
-
-+ (TTHttpTask *)requestOldHouseBrowseHistoryWithCount:(NSInteger)count offset:(NSInteger)offset class:(Class)cls completion:(void (^ _Nullable)(id <FHBaseModelProtocol> model, NSError *error))completion {
-    
-    return [self requestBrowseHistoryWithHouseType:FHBrowseHistoryTypeOld count:count offset:offset class:cls completion:completion];
-}
-
-+ (TTHttpTask *)requestRentHouseBrowseHistoryWithCount:(NSInteger)count offset:(NSInteger)offset class:(Class)cls completion:(void (^ _Nullable)(id <FHBaseModelProtocol> model, NSError *error))completion {
-    
-    return [self requestBrowseHistoryWithHouseType:FHBrowseHistoryTypeRent count:count offset:offset class:cls completion:completion];
-}
-
-+ (TTHttpTask *)requestNeighborhoodBrowseHistoryWithCount:(NSInteger)count offset:(NSInteger)offset class:(Class)cls completion:(void (^ _Nullable)(id <FHBaseModelProtocol> model, NSError *error))completion {
-    
-    return [self requestBrowseHistoryWithHouseType:FHBrowseHistoryTypeNeighborhood count:count offset:offset class:cls completion:completion];
-}
-
 @end

@@ -15,7 +15,7 @@
 
 @property (nonatomic, weak) FHBrowsingHistoryViewController *viewController;
 @property (nonatomic, weak) FHSuggestionCollectionView *collectionView;
-@property (nonatomic, strong) NSMutableDictionary *cellDict;
+@property (nonatomic, strong) NSMutableDictionary *cellDict; //记录cell
 @property (nonatomic, assign) CGPoint beginOffSet;
 @property (nonatomic, assign) CGFloat oldX;
 
@@ -49,7 +49,6 @@
     if (index < self.viewController.houseTypeArray.count && index >= 0 && self.cellDict[rowStr]) {
         FHBrowsingHistoryCollectionViewCell *cell = self.cellDict[rowStr];
         [cell refreshData:self.viewController.paramObj andHouseType:[self.viewController.houseTypeArray[index] integerValue] andVC:self.viewController];
-        
     }
 }
 
@@ -57,7 +56,8 @@
     NSString *rowStr = [NSString stringWithFormat:@"%ld", _currentTabIndex];
     FHBrowsingHistoryCollectionViewCell *cell = _cellDict[rowStr];
     if (cell) {
-        [cell updateTrackStatu];
+        //子vc可以开始埋点
+        [cell updateTrackStatus];
     }
 }
 
@@ -76,6 +76,7 @@
         NSString *rowStr = [NSString stringWithFormat:@"%ld", row];
         if (!self.cellDict[rowStr]) {
             self.cellDict[rowStr] = cell;
+            //初始化子vc
             [self initCellWithIndex:row andRowStr:rowStr];
         }
     }
@@ -90,8 +91,8 @@
             cell = self.cellDict[rowStr];
         } else {
             NSString *cellIdentifier = NSStringFromClass([FHBrowsingHistoryCollectionViewCell class]);
-            
             cellIdentifier = [NSString stringWithFormat:@"%@_%ld", cellIdentifier, row];
+            //解决cell复用问题
             [collectionView registerClass:[FHBrowsingHistoryCollectionViewCell class] forCellWithReuseIdentifier:cellIdentifier];
             cell = (FHBrowsingHistoryCollectionViewCell *)[collectionView dequeueReusableCellWithReuseIdentifier:cellIdentifier forIndexPath:indexPath];
         }
@@ -103,10 +104,12 @@
 #pragma mark - UIScrollViewDelegate
 
 - (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView {
+    //记录开始测滑时位置
     self.beginOffSet = CGPointMake(self.currentTabIndex * [UIScreen mainScreen].bounds.size.width, scrollView.contentOffset.y);
     self.oldX = scrollView.contentOffset.x;
 }
 
+// 计算侧滑距离
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView
 {
     CGFloat tabIndex = scrollView.contentOffset.x / [UIScreen mainScreen].bounds.size.width;
@@ -118,12 +121,13 @@
         tabIndex = ceilf(tabIndex);
     }
     NSInteger index = (int)tabIndex;
-    if (tabIndex != self.viewController.segmentControl.selectedSegmentIndex) {
+    if (index != self.viewController.segmentControl.selectedSegmentIndex) {
+        //切换tab
         self.currentTabIndex = index;
         self.viewController.segmentControl.selectedSegmentIndex = index;
         self.viewController.houseType = [self.viewController.houseTypeArray[index] integerValue];
     } else {
-        //加载数据
+        //移动tab下面光标
         CGFloat value = scrollDistance/[UIScreen mainScreen].bounds.size.width;
         [self.viewController.segmentControl setScrollValue:value isDirectionLeft:diff < 0];
     }

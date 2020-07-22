@@ -65,6 +65,7 @@
     if (isCanTrack && !_isCanTrack) {
         _isCanTrack = isCanTrack;
         [self.tableView reloadData];
+        //开始enter_category埋点
         [self.viewModel updateEnterLog];
     }
 }

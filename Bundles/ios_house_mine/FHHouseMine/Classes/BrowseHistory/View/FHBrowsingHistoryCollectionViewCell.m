@@ -28,7 +28,7 @@
     }
 }
 
-- (void)updateTrackStatu {
+- (void)updateTrackStatus {
     if (_vc) {
         _vc.isCanTrack = YES;
     }
