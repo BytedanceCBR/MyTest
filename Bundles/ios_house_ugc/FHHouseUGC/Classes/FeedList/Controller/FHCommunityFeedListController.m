@@ -344,9 +344,9 @@
 
 // 帐号切换
 - (void)onAccountStatusChanged:(TTAccountStatusChangedReasonType)reasonType platform:(NSString *)platformName {
-    if(self.listType == FHCommunityFeedListTypeNearby || self.listType == FHCommunityFeedListTypeMyJoin) {
-        self.needReloadData = YES;
-    }
+//    if(self.listType == FHCommunityFeedListTypeNearby || self.listType == FHCommunityFeedListTypeMyJoin) {
+//        self.needReloadData = YES;
+//    }
 }
 
 #pragma mark - SSImpressionProtocol

@@ -1854,16 +1854,16 @@ NSString *const assertDesc_articleType = @"protocoledArticle must be Article";
     }
     [params setValue:[self categoryName] forKey:@"category_name"];
     [params setValue:[FHTraceEventUtils generateEnterfrom:[self categoryName]] forKey:@"enter_from"];
-    [params setValue:position forKey:@"position"];
+    [params setValue:position forKey:@"click_position"];
     
     if(self.detailModel.reportParams.count > 0){
         [params addEntriesFromDictionary:self.detailModel.reportParams];
     }
     
     if (isDigg) {
-        [TTTrackerWrapper eventV3:@"rt_like" params:params];
+        [TTTrackerWrapper eventV3:@"click_like" params:params];
     }else{
-        [TTTrackerWrapper eventV3:@"rt_unlike" params:params];
+        [TTTrackerWrapper eventV3:@"click_dislike" params:params];
     }
 }
 

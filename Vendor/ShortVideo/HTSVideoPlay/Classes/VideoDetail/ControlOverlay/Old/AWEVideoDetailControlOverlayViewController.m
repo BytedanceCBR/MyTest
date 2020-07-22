@@ -965,16 +965,16 @@ static const CGFloat kCheckChallengeButtonLeftPadding = 28;
     
     NSString *eventName;
     if (!self.model.userDigg) {
-        eventName = @"rt_like";
+        eventName = @"click_like";
     } else {
-        eventName = @"rt_unlike";
+        eventName = @"click_dislike";
     }
     [AWEVideoDetailTracker trackEvent:eventName
                                 model:self.model
                       commonParameter:self.commonTrackingParameter
                        extraParameter:@{
                                         @"user_id": self.model.author.userID ?: @"",
-                                        @"position": @"detail",
+                                        @"position": @"feed_detail",
                                         }];
 
     if (!self.model.userDigg) {

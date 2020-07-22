@@ -2650,8 +2650,7 @@
         [params setValue:model.userID.stringValue forKey:@"user_id"];
         [params setValue:self.detailModel.orderedData.logPb forKey:@"log_pb"];
         [params setValue:self.detailModel.orderedData.categoryID forKey:@"category_name"];
-        [params setValue:@"comment" forKey:@"position"];
-        [params setValue:@"feed_dislike" forKey:@"click_position"];
+        [params setValue:@"comment" forKey:@"click_position"];
         
         if([self.detailModel.reportParams isKindOfClass:[NSDictionary class]]){
             [params addEntriesFromDictionary:self.detailModel.reportParams];
@@ -2661,9 +2660,7 @@
             }
         }
         
-//        [params setValue:self.detailModel.clickLabel forKey:@"enter_from"];
-        
-        [TTTrackerWrapper eventV3:@"rt_unlike" params:params];
+        [TTTrackerWrapper eventV3:@"click_dislike" params:params];
     } else {
         NSMutableDictionary *params = [[NSMutableDictionary alloc] initWithCapacity:5];
         [params setValue:@"house_app2c_v2" forKey:@"event_type"];
@@ -2673,8 +2670,7 @@
 //        [params setValue:model.userID.stringValue forKey:@"user_id"];
         [params setValue:self.detailModel.orderedData.logPb forKey:@"log_pb"];
         [params setValue:self.detailModel.orderedData.categoryID forKey:@"category_name"];
-        [params setValue:@"comment" forKey:@"position"];
-        [params setValue:@"feed_like" forKey:@"click_position"];
+        [params setValue:@"comment" forKey:@"click_position"];
         
         if([self.detailModel.reportParams isKindOfClass:[NSDictionary class]]){
             [params addEntriesFromDictionary:self.detailModel.reportParams];
@@ -2684,9 +2680,7 @@
             }
         }
         
-//        [params setValue:[FHTraceEventUtils generateEnterfrom:self.detailModel.orderedData.categoryID] forKey:@"enter_from"];
-        
-        [TTTrackerWrapper eventV3:@"rt_like" params:params];
+        [TTTrackerWrapper eventV3:@"click_like" params:params];
     }
 }
 

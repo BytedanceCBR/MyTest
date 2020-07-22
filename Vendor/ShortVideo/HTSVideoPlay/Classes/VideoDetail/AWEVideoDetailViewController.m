@@ -1879,11 +1879,15 @@ static const CGFloat kFloatingViewOriginY = 230;
 
 - (void)commentCell:(AWEVideoCommentCell *)cell didClickLikeWithModel:(AWECommentModel *)commentModel
 {
-    NSString *eventName = commentModel.userDigg ? @"rt_unlike" : @"rt_like";
+    NSString *eventName = commentModel.userDigg ? @"click_dislike" : @"click_like";
+    NSString *position = @"comment";
+    if(commentModel.replyToComment){
+        position = @"relpy";
+    }
     [AWEVideoDetailTracker trackEvent:eventName
                                 model:self.model
                       commonParameter:self.commonTrackingParameter
-                       extraParameter:@{@"position": @"reply",
+                       extraParameter:@{@"click_position": position,
                                         @"comment_id": [commentModel.id stringValue]}];
 
     if ([self alertIfNotValid]) {
