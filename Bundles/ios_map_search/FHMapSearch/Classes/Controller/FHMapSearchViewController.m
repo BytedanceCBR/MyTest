@@ -36,6 +36,7 @@
 #import "FHMapSearchSideBar.h"
 #import <TTReachability/TTReachability.h>
 
+
 #define kTapDistrictZoomLevel  16
 #define kFilterBarHeight 44
 #define TOP_INFO_BAR_HEIGHT 45
