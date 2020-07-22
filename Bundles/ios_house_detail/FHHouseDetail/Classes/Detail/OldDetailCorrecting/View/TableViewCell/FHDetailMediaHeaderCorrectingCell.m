@@ -89,8 +89,8 @@
     self.currentData = data;
     [self generateModel];
     self.mediaView.isShowTopImageTab = [(FHDetailMediaHeaderCorrectingModel *)self.currentData isShowTopImageTab];
-    [self.mediaView updateModel:self.model withTitleModel: ((FHDetailMediaHeaderCorrectingModel *)self.currentData).titleDataModel];
     self.mediaView.baseViewModel = self.baseViewModel;
+    [self.mediaView updateModel:self.model withTitleModel: ((FHDetailMediaHeaderCorrectingModel *)self.currentData).titleDataModel];
     //有视频才传入埋点
     if(self.vedioCount > 0){
         self.mediaView.tracerDic = [self tracerDic];
