@@ -117,14 +117,18 @@
 
 -(void)rightBtnClick:(id)sender{
     if(self.type == FHMapSimpleNavbarTypeDrawLine){
-        NSMutableDictionary *tracerParams = [NSMutableDictionary new];
-        tracerParams[@"page_type"] = @"map_search_detail";
-        [FHUserTracker writeEvent:@"click_search" params:tracerParams];
-        
+     
         if (self.rightActionBlock) {
             self.rightActionBlock(FHMapSimpleNavbarTypeDrawLine);
         }
     }else{
+        
+        NSMutableDictionary *tracerParams = [NSMutableDictionary new];
+         tracerParams[@"page_type"] = @"map_search_detail";
+         [FHUserTracker writeEvent:@"click_search" params:tracerParams];
+             
+        
+        
         NSMutableDictionary *tracerParams = [NSMutableDictionary new];
         tracerParams[@"enter_type"] = @"click";
         tracerParams[@"element_from"] = @"map_search";
