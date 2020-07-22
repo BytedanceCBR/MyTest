@@ -511,7 +511,9 @@ extern NSString *const BOE_OPEN_KEY ;
         itemfb.switchAction = @selector(_testVideoFacebookActionFired:);
         self.itemFacebook = itemfb;
         
-        STTableViewSectionItem *section4 = [[STTableViewSectionItem alloc] initWithSectionTitle:@"读取用户设置" items:@[item40, item41 ,itemfb]];
+        STTableViewCellItem *item42 = [[STTableViewCellItem alloc] initWithTitle:@"清除所有NSUserDefaults" target:self action:@selector(_clearAllNSUserDefaults)];
+        
+        STTableViewSectionItem *section4 = [[STTableViewSectionItem alloc] initWithSectionTitle:@"读取用户设置" items:@[item40,item42,item41,itemfb]];
         [dataSource addObject:section4];
         self.item41 = item41;
     }
@@ -757,7 +759,12 @@ extern NSString *const BOE_OPEN_KEY ;
         
         STTableViewCellItem *invalidIMToken = [[STTableViewCellItem alloc] initWithTitle:@"IM手动触发token失效更新" target:self action:@selector(triggerIMTokenInvalide)];
         
-        STTableViewSectionItem *section = [[STTableViewSectionItem alloc] initWithSectionTitle:@"IM相关调试选项" items:@[toggleIMConnectionItem, toggleIMReadReceiptRequestItem, toggleIMFakeTokenItem, invalidIMToken]];
+        STTableViewCellItem *frequenceControlDisable = [[STTableViewCellItem alloc] initWithTitle:@"IM房源卡片自动文本频控关闭" target:self action:nil];
+        frequenceControlDisable.switchStyle = YES;
+        frequenceControlDisable.checked = [[NSUserDefaults standardUserDefaults] boolForKey:@"_IM_Frequenct_Control_Disable_"];
+        frequenceControlDisable.switchAction = @selector(toggleIMFrequencyControlDisable);
+        
+        STTableViewSectionItem *section = [[STTableViewSectionItem alloc] initWithSectionTitle:@"IM相关调试选项" items:@[toggleIMConnectionItem, toggleIMReadReceiptRequestItem, toggleIMFakeTokenItem, invalidIMToken, frequenceControlDisable]];
         
         [dataSource addObject:section];
     }
@@ -780,6 +787,12 @@ extern NSString *const BOE_OPEN_KEY ;
     if(!isFakeTokenEnable) {
         [self triggerIMTokenInvalide];
     }
+}
+
+- (void)toggleIMFrequencyControlDisable {
+    BOOL isDisableIMFrequenceControl = [[NSUserDefaults standardUserDefaults] boolForKey:@"_IM_Frequenct_Control_Disable_"];
+    [[NSUserDefaults standardUserDefaults] setBool:!isDisableIMFrequenceControl forKey:@"_IM_Frequenct_Control_Disable_"];
+    [[NSUserDefaults standardUserDefaults] synchronize];
 }
 - (void)triggerIMTokenInvalide {
     [[IMManager shareInstance] invalidTokenForDebug];
@@ -1478,6 +1491,12 @@ extern NSString *const BOE_OPEN_KEY ;
 - (NSInteger)_fontSizeForCellSubtitle
 {
     return [[NSUserDefaults standardUserDefaults] integerForKey:@"cellSubtitleFontSize"];
+}
+
+
+- (void)_clearAllNSUserDefaults {
+    NSString *appDomainStr = [[NSBundle mainBundle] bundleIdentifier];
+    [[NSUserDefaults standardUserDefaults] removePersistentDomainForName:appDomainStr];
 }
 
 #pragma mark - WKWebView switch setting

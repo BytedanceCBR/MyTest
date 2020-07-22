@@ -105,8 +105,37 @@
         userInfoDict[@"associate_info"] = associateIM.associateInfo.imInfo?:@{}; // 只传入im_info即可
         userInfoDict[@"extra_info"] = associateIM.extraInfo;
         TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:userInfoDict];
-        [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:userInfo];
         
+        
+        // ab实验: f_im_login_type  https://data.bytedance.net/libra/flight/449156
+        NSNumber *loginSchema = associateIM.reportParams.extra[kFHIMLoginSchema];
+        void (^loginFullPageBlock)(void) = ^() {
+            if(![TTAccount sharedAccount].isLogin) {
+                //先弹IM会话页
+                [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:userInfo pushHandler:^(UINavigationController *nav, TTRouteObject *routeObj) {
+                    [nav pushViewController:routeObj.instance animated:NO];
+                }];
+                // 登录页盖在上一层
+                NSURL *URL = [NSURL URLWithString:@"sslocal://flogin"];
+                NSMutableDictionary *params = [NSMutableDictionary dictionary];
+                params[@"ttDisableDragBack"] = @(YES);
+                params[@"enter_type"] = @"click_im";
+                params[@"enter_from"] = @"conversation_detail";
+                TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:params];
+                [[TTRoute sharedRoute] openURLByPushViewController:URL userInfo:userInfo];
+            }
+            else {
+                [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:userInfo];
+            }
+        };
+        NSInteger loginType = loginSchema.integerValue;
+        if(loginType == 1) {
+            loginFullPageBlock();
+        } 
+        else {
+            [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:userInfo];
+        }
+
         // 静默关注处理
         [self silentFollowHouseWithAssociateIM:associateIM];
     }

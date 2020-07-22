@@ -21,13 +21,20 @@
 @property (nonatomic, strong) UIButton *confirmButton;
 @property (nonatomic, strong) YYLabel *agreementLabel;
 @property (nonatomic, strong) UIStackView *stackView;
-
+@property (nonatomic, assign) BOOL isHalfLogin;
 @end
 
 @implementation FHOneKeyLoginView
 
 - (instancetype)initWithFrame:(CGRect)frame {
-    if (self = [super initWithFrame:frame]) {
+    if (self = [self initWithFrame:frame isHalfLogin:NO]) {
+    }
+    return self;
+}
+
+- (instancetype)initWithFrame:(CGRect)frame isHalfLogin:(BOOL)isHalfLogin {
+    if(self = [super initWithFrame:frame]) {
+        self.isHalfLogin = isHalfLogin;
         
         UIImageView *topImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"douyin_login_bg_top"]];
         [self addSubview:topImageView];
@@ -45,7 +52,10 @@
         [self addSubview:logoImageView];
         [logoImageView mas_makeConstraints:^(MASConstraintMaker *make) {
             make.centerX.mas_equalTo(self);
-            make.top.mas_equalTo(94);
+            make.top.mas_equalTo(self.isHalfLogin ? 80 : 94);
+            if(self.isHalfLogin) {
+                make.height.mas_equalTo(47);
+            }
         }];
         
         self.phoneNumberLabel = [[UILabel alloc] init];
@@ -54,7 +64,7 @@
         [self addSubview:self.phoneNumberLabel];
         [self.phoneNumberLabel mas_makeConstraints:^(MASConstraintMaker *make) {
             make.centerX.mas_equalTo(self);
-            make.top.mas_equalTo(logoImageView.mas_bottom).mas_offset(90);
+            make.top.mas_equalTo(logoImageView.mas_bottom).mas_offset(self.isHalfLogin ? 80 : 90);
             make.height.mas_equalTo(42);
         }];
         
@@ -91,15 +101,19 @@
         [self addSubview:_agreementLabel];
         [self.agreementLabel mas_makeConstraints:^(MASConstraintMaker *make) {
             make.bottom.mas_equalTo(-20);
-            make.left.mas_equalTo(30);
-            make.right.mas_equalTo(-30);
+            make.left.mas_equalTo(20);
+            make.right.mas_equalTo(-20);
             make.height.mas_equalTo(0);
         }];
     }
     return self;
 }
 
-- (void)updateOneKeyLoginWithPhone:(NSString *)phoneNum service:(NSString *)service protocol:(NSAttributedString *)protocol showDouyinIcon:(BOOL )showDouyinIcon{
+- (void)updateOneKeyLoginWithPhone:(NSString *)phoneNum service:(NSString *)service protocol:(NSAttributedString *)protocol showDouyinIcon:(BOOL )showDouyinIcon {
+    [self updateOneKeyLoginWithPhone:phoneNum service:service protocol:protocol showDouyinIcon:showDouyinIcon showCodeLoginBtn:YES];
+}
+
+- (void)updateOneKeyLoginWithPhone:(NSString *)phoneNum service:(NSString *)service protocol:(NSAttributedString *)protocol showDouyinIcon:(BOOL )showDouyinIcon showCodeLoginBtn:(BOOL)showCode {
     if (phoneNum.length >= 11) {
         self.phoneNumberLabel.text = [NSString stringWithFormat:@"%@ **** %@",[phoneNum substringWithRange:NSMakeRange(0, 3)],[phoneNum substringWithRange:NSMakeRange(7, 4)]];
     } else {
@@ -122,14 +136,16 @@
         
         CGFloat stackViewWidth = 0;
         
-        UIButton *codeLoginButton = [UIButton buttonWithType:UIButtonTypeCustom];
-        [codeLoginButton setImage:[UIImage imageNamed:@"login_mobile_icon"] forState:UIControlStateNormal];
-        [codeLoginButton addTarget:self action:@selector(codeLoginAction) forControlEvents:UIControlEventTouchUpInside];
-        [codeLoginButton mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.size.mas_equalTo(CGSizeMake(38, 38));
-        }];
-        [self.stackView addArrangedSubview:codeLoginButton];
-        stackViewWidth += 38;
+        if(showCode) {
+            UIButton *codeLoginButton = [UIButton buttonWithType:UIButtonTypeCustom];
+            [codeLoginButton setImage:[UIImage imageNamed:@"login_mobile_icon"] forState:UIControlStateNormal];
+            [codeLoginButton addTarget:self action:@selector(codeLoginAction) forControlEvents:UIControlEventTouchUpInside];
+            [codeLoginButton mas_makeConstraints:^(MASConstraintMaker *make) {
+                make.size.mas_equalTo(CGSizeMake(38, 38));
+            }];
+            [self.stackView addArrangedSubview:codeLoginButton];
+            stackViewWidth += 38;
+        }
         
         if (showDouyinIcon) {
             

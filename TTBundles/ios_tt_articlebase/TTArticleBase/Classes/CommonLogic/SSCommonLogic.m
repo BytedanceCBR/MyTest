@@ -5475,6 +5475,14 @@ static NSString *const kFFeedRefreshStrategy = @"feed_refresh_settings";
     }
     return NO;
 }
++ (BOOL)enableIMOnlineMonitorLogic {
+    NSDictionary *fhSettings = [self fhSettings];
+    if (fhSettings != nil && [fhSettings objectForKey:@"f_im_online_monitor_logic_enable"] != nil) {
+        BOOL isEnable = [[fhSettings objectForKey:@"f_im_online_monitor_logic_enable"] boolValue];
+        return isEnable;
+    }
+    return NO;
+}
 @end
 
 

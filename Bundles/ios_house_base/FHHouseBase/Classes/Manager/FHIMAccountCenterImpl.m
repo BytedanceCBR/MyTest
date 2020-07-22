@@ -10,6 +10,7 @@
 #import "TTAccount+Multicast.h"
 #import "TIMMulticastDelegate.h"
 #import "TTAccountLoginManager.h"
+#import "FHLoginViewController.h"
 
 @interface FHIMAccountCenterImpl ()<TTAccountMulticastProtocol>
 {
@@ -48,6 +49,23 @@
     }];
 }
 
+- (void)popupHalfLoginIfNeed:(UIViewController *)vc params:(NSDictionary *)dict{
+    if(![TTAccount sharedAccount].isLogin) {
+        NSURL *URL = [NSURL URLWithString:@"sslocal://flogin"];
+        NSMutableDictionary *params = [NSMutableDictionary dictionary];
+        [params addEntriesFromDictionary:dict];
+        TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:params];
+        TTRouteObject *routeObj = [[TTRoute sharedRoute] routeObjWithOpenURL:URL userInfo:userInfo];
+        FHLoginViewController *loginVC = routeObj.instance;
+        
+        [loginVC supportCarrierLogin:^(BOOL isSupport) {
+            if(isSupport) {
+                [loginVC showHalfLogin:vc];
+            }
+        }];
+    }
+}
+
 -(void)registerAccountStatusListener:(id<AccountStatusListener>)listener {
     [_observerMulticast addWeakDelegate:listener onQueue:dispatch_get_main_queue()];
 }
@@ -81,5 +99,4 @@
     id<AccountStatusListener> listener = _observerMulticast;
     [listener didLogout];
 }
-
 @end

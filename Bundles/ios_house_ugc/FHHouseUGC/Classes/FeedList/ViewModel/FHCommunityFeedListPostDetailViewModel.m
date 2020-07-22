@@ -299,54 +299,108 @@
         }
         
         if(model){
-            if(isHead){
-                [wself.dataList removeAllObjects];
-            }
-            
-            wself.tableView.hasMore = feedListModel.hasMore;
-            
-            NSArray *result = [wself convertModel:feedListModel.data isHead:isHead];
-            
-            if(isFirst){
-                [wself.clientShowDict removeAllObjects];
-                [wself.dataList removeAllObjects];
-            }
-            if(isHead){
-                // JOKER: 头部插入时，旧数据的置顶全部取消，以新数据中的置顶贴子为准
-                [wself.dataList enumerateObjectsUsingBlock:^(FHFeedUGCCellModel *  _Nonnull cellModel, NSUInteger idx, BOOL * _Nonnull stop) {
-                    cellModel.isStick = NO;
-                }];
-                // 头部插入新数据
-                [wself.dataList insertObjects:result atIndexes:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, result.count)]];
-            }else{
-                [wself.dataList addObjectsFromArray:result];
-            }
-            
-            //第一次拉取数据过少时，在多拉一次loadmore
-            if(self.dataList.count > 0 && self.dataList.count < 5 && self.tableView.hasMore && self.retryCount < 1){
-                self.retryCount += 1;
-                [self requestData:NO first:NO];
-                return;
-            }
-        
-            wself.viewController.hasValidateData = wself.dataList.count > 0;
-            [wself reloadTableViewData];
-            
-            if(wself.viewController.requestSuccess){
-                wself.viewController.requestSuccess(wself.viewController.hasValidateData);
-            }
-            
-            NSString *refreshTip = feedListModel.tips.displayInfo;
-            if (isHead && wself.dataList.count > 0 && ![refreshTip isEqualToString:@""] && wself.viewController.tableViewNeedPullDown && !wself.isRefreshingTip){
-                wself.isRefreshingTip = YES;
-                [wself.viewController showNotify:refreshTip completion:^{
-                    dispatch_async(dispatch_get_main_queue(), ^{
-                        wself.isRefreshingTip = NO;
-                    });
-                }];
-                [wself.tableView scrollRectToVisible:CGRectMake(0, 0, 1, 1) animated:NO];
-            }
+            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
+                if(isHead){
+                    [wself.dataList removeAllObjects];
+                }
+                
+                wself.tableView.hasMore = feedListModel.hasMore;
+                
+                NSArray *result = [wself convertModel:feedListModel.data isHead:isHead];
+                
+                if(isFirst){
+                    [wself.clientShowDict removeAllObjects];
+                    [wself.dataList removeAllObjects];
+                }
+                if(isHead){
+                    // JOKER: 头部插入时，旧数据的置顶全部取消，以新数据中的置顶贴子为准
+                    [wself.dataList enumerateObjectsUsingBlock:^(FHFeedUGCCellModel *  _Nonnull cellModel, NSUInteger idx, BOOL * _Nonnull stop) {
+                        cellModel.isStick = NO;
+                    }];
+                    // 头部插入新数据
+                    [wself.dataList insertObjects:result atIndexes:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, result.count)]];
+                }else{
+                    [wself.dataList addObjectsFromArray:result];
+                }
+                
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    //第一次拉取数据过少时，在多拉一次loadmore
+                    if(self.dataList.count > 0 && self.dataList.count < 5 && self.tableView.hasMore && self.retryCount < 1){
+                        self.retryCount += 1;
+                        [self requestData:NO first:NO];
+                        return;
+                    }
+                    
+                    wself.viewController.hasValidateData = wself.dataList.count > 0;
+                    [wself reloadTableViewData];
+                    
+                    if(wself.viewController.requestSuccess){
+                        wself.viewController.requestSuccess(wself.viewController.hasValidateData);
+                    }
+                        
+                    NSString *refreshTip = feedListModel.tips.displayInfo;
+                    if (isHead && wself.dataList.count > 0 && ![refreshTip isEqualToString:@""] && wself.viewController.tableViewNeedPullDown && !wself.isRefreshingTip){
+                        wself.isRefreshingTip = YES;
+                        [wself.viewController showNotify:refreshTip completion:^{
+                            dispatch_async(dispatch_get_main_queue(), ^{
+                                wself.isRefreshingTip = NO;
+                            });
+                        }];
+                        [wself.tableView scrollRectToVisible:CGRectMake(0, 0, 1, 1) animated:NO];
+                    }
+                });
+            });
         }
+        
+//        if(model){
+//            if(isHead){
+//                [wself.dataList removeAllObjects];
+//            }
+//            
+//            wself.tableView.hasMore = feedListModel.hasMore;
+//            
+//            NSArray *result = [wself convertModel:feedListModel.data isHead:isHead];
+//            
+//            if(isFirst){
+//                [wself.clientShowDict removeAllObjects];
+//                [wself.dataList removeAllObjects];
+//            }
+//            if(isHead){
+//                // JOKER: 头部插入时，旧数据的置顶全部取消，以新数据中的置顶贴子为准
+//                [wself.dataList enumerateObjectsUsingBlock:^(FHFeedUGCCellModel *  _Nonnull cellModel, NSUInteger idx, BOOL * _Nonnull stop) {
+//                    cellModel.isStick = NO;
+//                }];
+//                // 头部插入新数据
+//                [wself.dataList insertObjects:result atIndexes:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, result.count)]];
+//            }else{
+//                [wself.dataList addObjectsFromArray:result];
+//            }
+//            
+//            //第一次拉取数据过少时，在多拉一次loadmore
+//            if(self.dataList.count > 0 && self.dataList.count < 5 && self.tableView.hasMore && self.retryCount < 1){
+//                self.retryCount += 1;
+//                [self requestData:NO first:NO];
+//                return;
+//            }
+//        
+//            wself.viewController.hasValidateData = wself.dataList.count > 0;
+//            [wself reloadTableViewData];
+//            
+//            if(wself.viewController.requestSuccess){
+//                wself.viewController.requestSuccess(wself.viewController.hasValidateData);
+//            }
+//            
+//            NSString *refreshTip = feedListModel.tips.displayInfo;
+//            if (isHead && wself.dataList.count > 0 && ![refreshTip isEqualToString:@""] && wself.viewController.tableViewNeedPullDown && !wself.isRefreshingTip){
+//                wself.isRefreshingTip = YES;
+//                [wself.viewController showNotify:refreshTip completion:^{
+//                    dispatch_async(dispatch_get_main_queue(), ^{
+//                        wself.isRefreshingTip = NO;
+//                    });
+//                }];
+//                [wself.tableView scrollRectToVisible:CGRectMake(0, 0, 1, 1) animated:NO];
+//            }
+//        }
     }];
 }
 

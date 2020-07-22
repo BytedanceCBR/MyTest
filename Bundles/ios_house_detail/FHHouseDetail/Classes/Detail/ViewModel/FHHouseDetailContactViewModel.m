@@ -63,6 +63,8 @@
 #import "FHDetailRentModel.h"
 #import "TTAccountLoginManager.h"
 #import "FHUtils.h"
+#import "BDABTestManager.h"
+
 NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
 
 @interface FHHouseDetailContactViewModel () <TTShareManagerDelegate>
@@ -591,6 +593,9 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
         if (extraDict[@"event_tracking_id"]) {
             imExtra[@"event_tracking_id"] = extraDict[@"event_tracking_id"];
         }
+        if(extraDict[kFHIMLoginSchema]) {
+            imExtra[kFHIMLoginSchema] = extraDict[kFHIMLoginSchema];
+        }
     }
     [self.phoneCallViewModel imchatActionWithPhone:self.contactPhone realtorRank:@"0" extraDic:imExtra];
 }
@@ -730,6 +735,7 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
                     FHDetailOldModel *detailOldModel = (FHDetailOldModel *)detailData;
                     if(detailOldModel.data.highlightedRealtorAssociateInfo) {
                         extraDic[kFHAssociateInfo] = detailOldModel.data.highlightedRealtorAssociateInfo;
+                        extraDic[kFHIMLoginSchema] = [BDABTestManager getExperimentValueForKey:@"f_im_login_type" withExposure:YES];
                     }
                 }
             }

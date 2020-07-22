@@ -339,6 +339,13 @@ DEC_TASK("FHIMStartupTask",FHTaskTypeSerial,TASK_PRIORITY_HIGH+16);
     return ret;
 }
 
+- (BOOL)isIMFrequenceControlDisable {
+    BOOL ret = NO;
+    BOOL isIMFrequenceControlDisable = [[NSUserDefaults standardUserDefaults] boolForKey:@"_IM_Frequenct_Control_Disable_"];
+    ret = isIMFrequenceControlDisable;
+    return ret;
+}
+
 - (BOOL)isEnableIMReadReceiptRequestClosed {
     BOOL ret = NO;
     BOOL isIMReadReceiptRequestClosed =  [[NSUserDefaults standardUserDefaults] boolForKey:@"_IM_Read_Receipt_Request_Close_"];
@@ -347,6 +354,9 @@ DEC_TASK("FHIMStartupTask",FHTaskTypeSerial,TASK_PRIORITY_HIGH+16);
 }
 - (BOOL)isEnableRecordVoiceSegment {
     return [SSCommonLogic enableRecordVoiceSegment];
+}
+- (BOOL)isEnableIMOnlineMonitorLogic {
+    return [SSCommonLogic enableIMOnlineMonitorLogic];
 }
 @end
 

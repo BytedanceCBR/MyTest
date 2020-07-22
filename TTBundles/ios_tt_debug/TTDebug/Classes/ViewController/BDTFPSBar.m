@@ -9,6 +9,8 @@
 
 #import "BDTFPSBar.h"
 #import <BDALog/BDAgileLog.h>
+#import "TTDeviceHelper.h"
+#import "UIViewAdditions.h"
 
 #define default_timeConsumeLimit 0.3
 
@@ -52,7 +54,27 @@
 - (instancetype)init
 {
     CGRect rect = [[UIScreen mainScreen] applicationFrame];
-    self = [super initWithFrame:CGRectMake(0, 0, rect.size.width, 20)];
+    CGFloat top = 0;
+    CGFloat safeTop = 0;
+    if (@available(iOS 13.0 , *)) {
+        safeTop = [UIApplication sharedApplication].keyWindow.safeAreaInsets.top;
+    } else if (@available(iOS 11.0, *)) {
+        safeTop = self.tt_safeAreaInsets.top;
+    }
+    if (safeTop > 0) {
+        top += safeTop;
+    } else {
+        if([[UIApplication sharedApplication] statusBarFrame].size.height > 0){
+            top += [[UIApplication sharedApplication] statusBarFrame].size.height;
+        }else{
+            if([TTDeviceHelper isIPhoneXSeries]){
+                top += 44;
+            }else{
+                top += 20;
+            }
+        }
+    }
+    self = [super initWithFrame:CGRectMake(0, 0, rect.size.width, top + 10)];
     if (self) {
         [self setWindowLevel:UIWindowLevelStatusBar + 1.0f];
         [self setBackgroundColor:[UIColor blackColor]];
@@ -86,7 +108,7 @@
 {
     if (!_fpsLayer) {
         _fpsLayer = [CATextLayer layer];
-        [_fpsLayer setFrame:CGRectMake(5.0f, 0, self.frame.size.width / 2 - 5, self.frame.size.height)];
+        [_fpsLayer setFrame:CGRectMake(5.0f, self.frame.size.height - 20, self.frame.size.width / 2 - 5, 20)];
         [_fpsLayer setFontSize:14.0f];
         [_fpsLayer setForegroundColor:[UIColor redColor].CGColor];
         [_fpsLayer setContentsScale:[UIScreen mainScreen].scale];
