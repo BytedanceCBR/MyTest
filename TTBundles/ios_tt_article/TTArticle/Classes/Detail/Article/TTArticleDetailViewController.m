@@ -2280,13 +2280,18 @@
 //    }
     
     [dic setValue:self.detailModel.article.groupModel.groupID forKey:@"group_id"];
-
     [dic setValue:enterFrom forKey:@"enter_from"];
     if (![@"push" isEqualToString: enterFrom]) {
         [dic setValue:[self categoryName] forKey:@"category_name"];
     }
     [dic setValue:self.detailModel.logPb == nil ? @"be_null" : self.detailModel.logPb forKey:@"log_pb"];
 //    [[EnvContext shared].tracer writeEvent:@"go_detail" params:dic];
+    
+    if(!self.detailModel.reportParams){
+        NSMutableDictionary *reportParams = [NSMutableDictionary dictionary];
+        reportParams[@"page_type"] = @"article_detail";
+        self.detailModel.reportParams = [reportParams copy];
+    }
 
     if([self.detailModel.reportParams isKindOfClass:[NSDictionary class]])
     {
