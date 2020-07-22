@@ -251,8 +251,14 @@
         StrongSelf;
         if (index >= 0 && index < self.houseTypeArray.count) {
             self.houseType = [self.houseTypeArray[index] integerValue];
+            
+            [self notifyHouseTypeChanged:self.houseType];
         }
     };
+}
+
+- (void)notifyHouseTypeChanged:(FHHouseType)houseType {
+    [[NSNotificationCenter defaultCenter] postNotificationName:kFHSuggestionHouseTypeDidChanged object:@(houseType)];
 }
 
 -(NSArray *)getSegmentTitles

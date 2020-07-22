@@ -46,6 +46,10 @@
 @property (nonatomic, assign)   BOOL       hasExposedHouseFindFloatButton;
 @property (nonatomic, assign)   BOOL       hasExposedHouseFindCard;
 
+//键盘遮挡猜你想搜cell影响埋点上报准确性
+@property (nonatomic, strong) NSMutableArray *trackerCacheArr;
+@property (nonatomic, assign) BOOL isFirstShow;  //标记是否是首次进入页面
+
 @end
 
 @implementation FHChildSuggestionListViewModel
@@ -62,9 +66,11 @@
         self.hasShowKeyboard = NO;
         self.sectionHeaderView = [[UIView alloc] init];
         self.sectionHeaderView.backgroundColor = [UIColor whiteColor];
+        self.isFirstShow = YES;
         [self setupSubscribeView];
         [self setupHistoryView];
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(sugSubscribeNoti:) name:@"kFHSugSubscribeNotificationName" object:nil];
+        [self initNotification];
+        [self startCachingTracker];
     }
     return self;
 }
@@ -105,6 +111,85 @@
             [wself reloadHistoryTableView];
         });
     }
+}
+
+- (void)viewWillDisappear {
+    //页面关闭时，如果键盘仍在存在则清空缓存
+    if (![self fatherVC].isTrackerCacheDisabled) {
+        [self.trackerCacheArr removeAllObjects];
+    }
+}
+
+- (void)initNotification {
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHideNotifiction:) name:kFHSuggestionKeyboardWillHideNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(houseTypeDidChanged:) name:kFHSuggestionHouseTypeDidChanged object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(sugSubscribeNoti:) name:@"kFHSugSubscribeNotificationName" object:nil];
+}
+
+- (void)startCachingTracker {
+    if (![self fatherVC].isTrackerCacheDisabled) {
+        //缓存的埋点在进入页面延时1秒后尝试上报
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            [self sendEventTrackerInCache];
+            self.isFirstShow = NO;
+        });
+    }
+}
+
+- (void)sendEventTrackerInCache {
+    NSInteger totalCount = self.trackerCacheArr.count;
+    for (NSInteger i = totalCount-1; i >= 0; i--) {
+        if (![self shouldSendAtIndex:i]) {
+            continue;
+        }
+        
+        NSDictionary *tracerDic = [self.trackerCacheArr objectAtIndex:i];
+        if (tracerDic && [tracerDic isKindOfClass:[NSDictionary class]]) {
+            [FHUserTracker writeEvent:@"hot_word_show" params:tracerDic];
+            
+            [self.trackerCacheArr removeObjectAtIndex:i];
+        }
+    }
+}
+
+- (void)sendAllEvent {
+    NSInteger totalCount = self.trackerCacheArr.count;
+    for (NSInteger i = totalCount-1; i >= 0; i--) {
+        NSDictionary *tracerDic = [self.trackerCacheArr objectAtIndex:i];
+        if (tracerDic && [tracerDic isKindOfClass:[NSDictionary class]]) {
+            [FHUserTracker writeEvent:@"hot_word_show" params:tracerDic];
+            
+            [self.trackerCacheArr removeObjectAtIndex:i];
+        }
+    }
+}
+
+- (BOOL)shouldSendAtIndex:(NSInteger)index {
+    if (index < 0) {
+        return NO;
+    }
+    //非首次进入，根据键盘高度判断是否可以发送
+    if (!self.isFirstShow) {
+        if ([self fatherVC].keyboardHeight > 0) {
+            return NO;
+        } else {
+            return YES;
+        }
+    }
+    
+    //目前只有一个section，第一个cell是“猜你想找”
+    NSIndexPath *indexPath = [NSIndexPath indexPathForRow:index+1 inSection:0];
+    FHGuessYouWantCell *cell = [self.listController.historyTableView cellForRowAtIndexPath:indexPath];
+    if (cell) {
+        CGRect cellFrame = cell.frame;
+        //如果得到的cell上边沿低于键盘的高度，那么暂时缓存，待键盘消失再上报埋点
+        CGFloat keyboardHeight = [self fatherVC].keyboardHeight;
+        if (cellFrame.origin.y >= self.listController.historyTableView.frame.size.height - keyboardHeight) {
+            return NO;
+        }
+    }
+    
+    return YES;
 }
 
 - (void)dealloc
@@ -569,15 +654,48 @@
 //跳转到帮我找房
 - (void)jump2HouseFindPageWithUrl:(NSString *)url from:(NSString *)from {
     if (url.length > 0) {
+        //帮我找房埋点修正需要增加origin_from字段
+        NSString *originFrom = self.listController.tracerDict[@"origin_from"] ?: @"be_null";
         NSDictionary *tracerInfo = @{
             @"element_from": from.length > 0 ? from : @"be_null",
             @"enter_from": @"search_detail",
+            @"origin_from":  originFrom,
         };
         NSURL *openUrl = [NSURL URLWithString:url];
         TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] init];
         userInfo.allInfo = @{@"tracer": tracerInfo};
         [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:userInfo];
     }
+}
+
+#pragma mark - Action
+
+- (void)keyboardWillHideNotifiction:(NSNotification *)notification {
+    NSNumber *value = notification.object;
+    if (value) {
+        NSInteger houseType = [value integerValue];
+        if ((FHHouseType)houseType == self.houseType) {
+            [self sendAllEvent];
+        }
+    }
+}
+
+- (void)houseTypeDidChanged:(NSNotification *)notification {
+    if (self.isFirstShow) {
+        return;
+    }
+    
+    NSNumber *value = notification.object;
+    if (value) {
+        NSInteger houseType = [value integerValue];
+        if ((FHHouseType)houseType == self.houseType) {
+            [self sendEventTrackerInCache];
+        }
+    }
+}
+
+- (FHSuggestionListViewController *)fatherVC {
+    return self.listController.fatherVC;
 }
 
 #pragma mark - tableview delegate
@@ -839,7 +957,12 @@
                 
                 tracerDic[@"recommend_reason"] = model.recommendReason ? [model.recommendReason toDictionary] : @"be_null";
                 
-                [FHUserTracker writeEvent:@"hot_word_show" params:tracerDic];
+                //有键盘遮挡时，先缓存埋点
+                if (![self fatherVC].isTrackerCacheDisabled || self.isFirstShow) {
+                    [self.trackerCacheArr addObject:tracerDic];
+                } else {
+                    [FHUserTracker writeEvent:@"hot_word_show" params:tracerDic];
+                }
             }
         }
         //帮我找房浮动按钮埋点
@@ -1155,6 +1278,14 @@
             }
         }
     }];
+}
+
+- (NSMutableArray *)trackerCacheArr {
+    if (!_trackerCacheArr) {
+        _trackerCacheArr = [[NSMutableArray alloc] init];
+    }
+    
+    return _trackerCacheArr;;
 }
 
 @end
