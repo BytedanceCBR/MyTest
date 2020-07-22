@@ -10,7 +10,6 @@
 #import "FHUserTracker.h"
 #import <TTAccountSDK/TTAccount.h>
 #import <TTRoute/TTRoute.h>
-#import "FHIMFrequencyControlManager.h"
 
 @implementation FHHouseIMClueHelper
 
