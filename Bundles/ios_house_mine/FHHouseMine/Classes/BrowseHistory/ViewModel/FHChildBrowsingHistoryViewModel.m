@@ -361,6 +361,8 @@
         params[@"card_type"] = @"left_pic";
         params[UT_ENTER_FROM] = [self getPageType:self.houseType];
         params[UT_ORIGIN_FROM] = self.viewController.tracerDict[UT_ORIGIN_FROM] ?: @"be_null";
+        params[UT_SEARCH_ID] = self.searchId ?: @"be_null";
+        params[UT_LOG_PB] = model.logPb;
         params[UT_RANK] = @(index);
         switch (self.houseType) {
             case FHHouseTypeRentHouse:

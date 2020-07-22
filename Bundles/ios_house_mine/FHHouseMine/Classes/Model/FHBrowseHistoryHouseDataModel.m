@@ -35,25 +35,6 @@
 
 @end
 
-@implementation FHBrowseHistoryRentDataModel
-
-+ (JSONKeyMapper*)keyMapper {
-    NSDictionary *dict = @{
-        @"hasMore": @"has_more",
-        @"searchId": @"search_id",
-        @"historyItems": @"history_items",
-    };
-    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
-        return dict[keyName]?:keyName;
-    }];
-}
-
-+ (BOOL)propertyIsOptional:(NSString *)propertyName {
-    return YES;
-}
-
-@end
-
 @implementation FHBrowseHistoryContentModel
 
 + (BOOL)propertyIsOptional:(NSString *)propertyName {
