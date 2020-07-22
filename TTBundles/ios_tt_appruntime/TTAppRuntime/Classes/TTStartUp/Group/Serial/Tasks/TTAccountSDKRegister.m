@@ -24,6 +24,7 @@
 //#import <BDSDKApi+CompanyProduct.h>
 #import "TTLaunchDefine.h"
 #import <TTSettingsManager/TTSettingsManager+Private.h>
+#import "FHEnvContext.h"
 
 DEC_TASK("TTAccountSDKRegister",FHTaskTypeSerial,TASK_PRIORITY_HIGH+5);
 
@@ -83,11 +84,16 @@ DEC_TASK("TTAccountSDKRegister",FHTaskTypeSerial,TASK_PRIORITY_HIGH+5);
      前后台切换时是否自动同步用户信息 [Default is NO]；策略是：当前是登录状态，则首次启动或从后台到前台时同步。该接口有session续期的功能，开启后，能在前后台切换时进行session续期，否则可能session 到期后的异常掉线。
      */
     [TTAccount accountConf].autoSynchronizeUserInfo = YES;
-    // x_tt_token 长票据功能是否可用,默认开启，可以配置一个开关，控制是否开启
-    [TTAccount accountConf].isXTTTokenActive = NO;
-    // x_tt_token 长票据功能轮询间隔，默认 10 min
-//    [TTAccount accountConf].tokenPollingInterveral = TTATokenPollingInterveralTen;
-    // 设置需要票据的域名（必须）
+    if([FHEnvContext isLongShortTicketOpen]){
+        // x_tt_token 长票据功能是否可用,默认开启，可以配置一个开关，控制是否开启
+        [TTAccount accountConf].isXTTTokenActive = YES;
+        // x_tt_token 长票据功能轮询间隔，默认 10 min
+        [TTAccount accountConf].tokenPollingInterveral = TTATokenPollingInterveralTen;
+    }else{
+        [TTAccount accountConf].isXTTTokenActive = NO;
+    }
+    
+    // 设置需要票据的域名
 //    NSArray *domainWhiteList = @[@".haoduofangs.com"];
 //    [TTAccount accountConf].needTokenDomins = domainWhiteList;
     [TTAccount accountConf].multiThreadSafeEnabled = [TTAccountTestSettings threadSafeSupported];
