@@ -13,6 +13,7 @@
 #define kFHAssociateInfo @"associate_info"
 #define kFHReportParams @"report_params"
 #define kFHClueExtraInfo @"extra_info"
+#define kFHIMLoginSchema @"im_login_schema"
 
 typedef enum : NSUInteger {
     FHFollowActionTypeNew = 1,

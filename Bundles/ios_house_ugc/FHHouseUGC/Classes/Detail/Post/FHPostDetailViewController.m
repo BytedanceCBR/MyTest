@@ -181,11 +181,12 @@
 - (void)viewDidDisappear:(BOOL)animated {
     [super viewDidDisappear:animated];
     self.isViewAppearing = NO;
+    [self addReadPct];
 }
 
 - (void)dealloc
 {
-    [self addReadPct];
+    
 }
 
 - (void)setupDetailNaviBar {

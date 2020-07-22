@@ -237,7 +237,7 @@ self.tableView.mj_footer.hidden = NO;
 if (hasMore) {
     [self.tableView.mj_footer endRefreshing];
 }else {
-    [self.refreshFooter setUpNoMoreDataText:@"我是有底线的" offsetY:-3];
+    [self.refreshFooter setUpNoMoreDataText:@"- 我是有底线的哟 -  " offsetY:-3];
     [self.tableView.mj_footer endRefreshingWithNoMoreData];
 }
 }
