@@ -133,6 +133,9 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *aliasName; // todo zjing 废弃
 @property (nonatomic, copy , nullable) NSString *id;
 @property (nonatomic, copy , nullable) NSString *dataSourceId;
+
+/// 1.0.3 新增百度街景标志位，length > 0 支持街景
+@property (nonatomic, copy, nullable) NSString *baiduPanoramaUrl;
 @end
 
 @protocol FHDetailNewDataDisclaimerRichTextModel<NSObject>

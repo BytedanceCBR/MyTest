@@ -786,6 +786,7 @@
         return;
     }
     
+    
     NSMutableDictionary *param = [self logBaseParams];
     param[@"stay_time"] = [NSNumber numberWithInteger:duration*1000];
 

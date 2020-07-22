@@ -182,6 +182,7 @@
                            @"searchId": @"search_id",
                            @"gaodeImageUrl": @"gaode_image_url",
                            @"gaodeImage": @"gaode_image",
+                           @"baiduPanoramaUrl": @"baidu_panorama_url",
                            };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
         return dict[keyName]?:keyName;

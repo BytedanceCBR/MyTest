@@ -55,6 +55,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)resumeVRIcon;
 
 - (void)hiddenCloseBtn;
+- (void)updateHouseStatus:(id)data;
 
 @end
 

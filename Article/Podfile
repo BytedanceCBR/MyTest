@@ -597,7 +597,6 @@ def appPods
     ]
     
     pod_binary 'BDXElement', '1.0.0', :subspecs=> ['Core', 'ScrollView', 'ImpressionView']
-
 end
 
 
@@ -723,6 +722,11 @@ post_install do |installer|
         if target.name == "FHRNKit" || target.name == "TTDebug"
           target.build_configurations.each do |config|
             config.build_settings['HEADER_SEARCH_PATHS'] ||= ['$(inherited)','${PODS_ROOT}/Headers/Public/React']
+          end
+        end
+        if target.name == "FHMapSearch"
+          target.build_configurations.each do |config|
+            config.build_settings['HEADER_SEARCH_PATHS'] ||= ['$(inherited)','${PODS_ROOT}/../Bundles/BaiduMapKit/BaiduMapKit/**']
           end
         end
     end
