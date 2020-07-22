@@ -739,6 +739,7 @@
     //地图
     if(model.data.coreInfo.gaodeLat && model.data.coreInfo.gaodeLng){
         FHDetailStaticMapCellModel *staticMapModel = [[FHDetailStaticMapCellModel alloc] init];
+        staticMapModel.baiduPanoramaUrl = model.data.coreInfo.baiduPanoramaUrl;
         staticMapModel.mapCentertitle = model.data.coreInfo.name;
         staticMapModel.gaodeLat = model.data.coreInfo.gaodeLat;
         staticMapModel.gaodeLng = model.data.coreInfo.gaodeLng;

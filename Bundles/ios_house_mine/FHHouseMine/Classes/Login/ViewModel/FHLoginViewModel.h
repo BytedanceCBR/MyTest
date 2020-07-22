@@ -36,7 +36,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (instancetype)initWithController:(FHLoginViewController *)viewController;
 
-@property (nonatomic, assign) FHLoginProcessType processType;
 @property (nonatomic, strong) TTAcountFLoginDelegate *loginDelegate;
 @property (nonatomic, assign) BOOL needPopVC;
 @property (nonatomic, assign) BOOL present;

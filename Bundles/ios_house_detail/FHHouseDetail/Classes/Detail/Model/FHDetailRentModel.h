@@ -77,6 +77,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *imprId;
 @property (nonatomic, strong, nullable) FHRentDetailResponseDataEvaluationInfo* evaluationInfo;
 @property (nonatomic, strong , nullable) NSArray<FHDetailDataNeighborhoodInfoSchoolItemModel> *schoolDictList;
+/// 1.0.3 新增百度街景标志位，length > 0 支持街景
+@property (nonatomic, copy, nullable) NSString *baiduPanoramaUrl;
 
 @end
 

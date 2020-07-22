@@ -594,7 +594,8 @@ def appPods
         'Image'
 #        'Video'
     ]
-
+    
+#    pod 'BaiduMapKit', :path => '../Bundles/BaiduMapKit'
 end
 
 
@@ -720,6 +721,11 @@ post_install do |installer|
         if target.name == "FHRNKit" || target.name == "TTDebug"
           target.build_configurations.each do |config|
             config.build_settings['HEADER_SEARCH_PATHS'] ||= ['$(inherited)','${PODS_ROOT}/Headers/Public/React']
+          end
+        end
+        if target.name == "FHMapSearch"
+          target.build_configurations.each do |config|
+            config.build_settings['HEADER_SEARCH_PATHS'] ||= ['$(inherited)','${PODS_ROOT}/../Bundles/BaiduMapKit/BaiduMapKit/**']
           end
         end
     end

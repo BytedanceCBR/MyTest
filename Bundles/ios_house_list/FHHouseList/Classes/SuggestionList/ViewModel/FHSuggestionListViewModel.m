@@ -173,7 +173,7 @@
         tabIndex = ceilf(tabIndex);
     }
     NSInteger index = (int)tabIndex;
-    if (tabIndex != self.listController.segmentControl.selectedSegmentIndex) {
+    if (index != self.listController.segmentControl.selectedSegmentIndex) {
         self.currentTabIndex = index;
         self.listController.segmentControl.selectedSegmentIndex = index;
         self.listController.houseType = [self.listController.houseTypeArray[index] integerValue];
