@@ -71,35 +71,15 @@
     self.rankLabel.width = 8;
     self.rankLabel.height = 21;
     
-//    [self.rankLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-//        make.top.mas_equalTo(self.contentView);
-//        make.left.mas_equalTo(self.contentView).offset(16);
-//        make.width.mas_equalTo(8);
-//        make.height.mas_equalTo(21);
-//    }];
     self.titleLabel.top = 0;
     self.titleLabel.left = self.rankLabel.right + 5;
     self.titleLabel.width = [UIScreen mainScreen].bounds.size.width/2 - 4 - 15 - self.titleLabel.left;
     self.titleLabel.height = 21;
-//
-//    [self.titleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-//        make.top.mas_equalTo(self.contentView);
-//        make.left.mas_equalTo(self.rankLabel.mas_right).offset(5);
-//        make.right.mas_equalTo(self.contentView).offset(-15);
-//        make.height.mas_equalTo(21);
-//    }];
-    
+
     self.descLabel.top = self.titleLabel.bottom;
     self.descLabel.left = self.titleLabel.left;
     self.descLabel.width = self.titleLabel.width;
     self.descLabel.height = 17;
-//
-//    [self.descLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-//        make.top.mas_equalTo(self.titleLabel.mas_bottom);
-//        make.left.mas_equalTo(self.titleLabel);
-//        make.right.mas_equalTo(self.titleLabel);
-//        make.height.mas_equalTo(17);
-//    }];
 }
 
 - (UILabel *)LabelWithFont:(UIFont *)font textColor:(UIColor *)textColor {

@@ -292,6 +292,7 @@
             cellModel.cellSubType = FHUGCFeedListCellSubTypeUGCVideo;
         }else{
             //文章
+            cellModel.cellSubType = FHUGCFeedListCellSubTypeArticle;
             cellModel.title = model.title;
             cellModel.openUrl = model.openUrl;
             cellModel.numberOfLines = 3;
@@ -323,14 +324,6 @@
             cellModel.largeImageList = model.largeImageList;
             
             if(cellModel.imageList.count == 1){
-                cellModel.cellSubType = FHUGCFeedListCellSubTypeArticleSingleImage;
-            }else if(cellModel.imageList.count > 1){
-                cellModel.cellSubType = FHUGCFeedListCellSubTypeArticleMultiImage;
-            }else{
-                cellModel.cellSubType = FHUGCFeedListCellSubTypeArticlePureTitle;
-            }
-            
-            if(cellModel.cellSubType == FHUGCFeedListCellSubTypeArticleSingleImage){
                 [FHUGCCellHelper setArticleRichContentWithModel:cellModel width:([UIScreen mainScreen].bounds.size.width - 40 - 120 - 15)];
             }else{
                 [FHUGCCellHelper setArticleRichContentWithModel:cellModel width:([UIScreen mainScreen].bounds.size.width - 40)];
@@ -338,6 +331,7 @@
         }
     }
     else if(cellModel.cellType == FHUGCFeedListCellTypeQuestion){
+        cellModel.cellSubType = FHUGCFeedListCellSubTypeArticle;
         // 发布用户的信息
         FHFeedUGCCellUserModel *user = [[FHFeedUGCCellUserModel alloc] init];
         user.name = model.rawData.content.user.uname;
@@ -365,8 +359,6 @@
             cellModel.numberOfLines = 0;
         }
         
-        [FHUGCCellHelper setArticleRichContentWithModel:cellModel width:([UIScreen mainScreen].bounds.size.width - 40)];
-        
         if(model.sourceDesc){
             cellModel.desc = [[NSMutableAttributedString alloc] initWithString:model.sourceDesc];
         }else if(model.rawData.content.extra.answerCount){
@@ -374,11 +366,9 @@
         }
         
         if(cellModel.imageList.count == 1){
-            cellModel.cellSubType = FHUGCFeedListCellSubTypeArticleSingleImage;
-        }else if(cellModel.imageList.count > 1){
-            cellModel.cellSubType = FHUGCFeedListCellSubTypeArticleMultiImage;
+            [FHUGCCellHelper setArticleRichContentWithModel:cellModel width:([UIScreen mainScreen].bounds.size.width - 40 - 120 - 15)];
         }else{
-            cellModel.cellSubType = FHUGCFeedListCellSubTypeArticlePureTitle;
+            [FHUGCCellHelper setArticleRichContentWithModel:cellModel width:([UIScreen mainScreen].bounds.size.width - 40)];
         }
         
         //小区问答数据处理
@@ -389,13 +379,9 @@
             cellModel.answerCountText = model.rawData.content.extra.answerCount;
             cellModel.answerCount = [model.rawData.content.question.niceAnsCount integerValue] + [model.rawData.content.question.normalAnsCount integerValue];
         }
-        
-        //小区问答数据处理
-        //        cellModel.cellSubType = FHUGCFeedListCellSubTypeUGCNeighbourhoodQuestion;
-        //        cellModel.questionStr = @"语雀是一款优雅高效的在线文档编辑";
-        //        cellModel.answerStr = @"AntV 是蚂蚁金服全新一代AntV 是蚂蚁金服全新一代AntV 是蚂蚁金服全新一代AntV 是蚂蚁金服全新一代AntV 是蚂蚁金服全新一代AntV 是蚂蚁金服全新一代AntV 是蚂蚁金服全新一代AntV 是蚂蚁金服全新一代AntV 是蚂蚁金服全新一代AntV 是蚂蚁金服全新一代";
     }
     else if(cellModel.cellType == FHUGCFeedListCellTypeAnswer){
+        cellModel.cellSubType = FHUGCFeedListCellSubTypePost;
         cellModel.groupId = model.rawData.groupId;
         cellModel.content = model.rawData.content.answer.abstractText;
         cellModel.openUrl = model.rawData.content.answer.answerDetailSchema;
@@ -432,14 +418,6 @@
             [FHUGCCellHelper setOriginContentAttributeString:cellModel width:([UIScreen mainScreen].bounds.size.width - 60) numberOfLines:2];
         }
         
-        if(cellModel.imageList.count == 1){
-            cellModel.cellSubType = FHUGCFeedListCellSubTypeSingleImage;
-        }else if(cellModel.imageList.count > 1){
-            cellModel.cellSubType = FHUGCFeedListCellSubTypeMultiImage;
-        }else{
-            cellModel.cellSubType = FHUGCFeedListCellSubTypePureTitle;
-            cellModel.numberOfLines = 3;
-        }
         if (model.isFromDetail) {
             cellModel.numberOfLines = 0;
         }
@@ -457,6 +435,7 @@
         }
     }
     else if(cellModel.cellType == FHUGCFeedListCellTypeArticleComment || cellModel.cellType == FHUGCFeedListCellTypeArticleComment2){
+        cellModel.cellSubType = FHUGCFeedListCellSubTypePost;
         cellModel.groupId = model.rawData.commentBase.id;
         cellModel.content = model.rawData.commentBase.content;
         cellModel.contentRichSpan = model.rawData.commentBase.contentRichSpan;
@@ -520,17 +499,14 @@
             cellModel.originItemHeight = 80;
         }
         
-        if(cellModel.imageList.count == 1){
-            cellModel.cellSubType = FHUGCFeedListCellSubTypeSingleImage;
-        }else if(cellModel.imageList.count > 1){
-            cellModel.cellSubType = FHUGCFeedListCellSubTypeMultiImage;
-        }else{
-            cellModel.cellSubType = FHUGCFeedListCellSubTypePureTitle;
+        if(cellModel.imageList.count <= 0){
             cellModel.numberOfLines = 5;
         }
+        
         if (model.isFromDetail) {
             cellModel.numberOfLines = 0;
         }
+        
         [FHUGCCellHelper setRichContentWithModel:cellModel width:([UIScreen mainScreen].bounds.size.width - 40) numberOfLines:cellModel.numberOfLines];
         
     }
@@ -780,6 +756,7 @@
     FHFeedUGCCellModel *cellModel = [[FHFeedUGCCellModel alloc] init];
     cellModel.originData = model;
     cellModel.cellType = [model.cellType integerValue];
+    cellModel.cellSubType = FHUGCFeedListCellSubTypePost;
     cellModel.title = model.title;
     cellModel.behotTime = model.behotTime;
     
@@ -937,14 +914,6 @@
     [FHUGCCellHelper setRichContentWithModel:cellModel width:([UIScreen mainScreen].bounds.size.width - 40) numberOfLines:cellModel.numberOfLines];
     }
 
-    
-    if(cellModel.imageList.count == 1){
-        cellModel.cellSubType = FHUGCFeedListCellSubTypeSingleImage;
-    }else if(cellModel.imageList.count > 1){
-        cellModel.cellSubType = FHUGCFeedListCellSubTypeMultiImage;
-    }else{
-        cellModel.cellSubType = FHUGCFeedListCellSubTypePureTitle;
-    }
     
     return cellModel;
 }
