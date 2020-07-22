@@ -1931,10 +1931,13 @@ extern NSString *const INSTANT_DATA_KEY;
 
 //跳转到帮我找房
 - (void)jump2HouseFindPageWithUrl:(NSString *)url {
+    //帮我找房埋点修正需要origin_from字段
+    NSString *originFrom = self.tracerModel.originFrom ?: @"be_null";
     if (url.length > 0) {
         NSDictionary *tracerInfo = @{
             @"element_from": @"driving_find_house_card",
             @"enter_from": @"old_list",
+            @"origin_from": originFrom,
         };
         NSURL *openUrl = [NSURL URLWithString:url];
         TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] init];
