@@ -432,7 +432,7 @@
                 make.width.mas_equalTo(46);
             }];
             FHDetailOldDataModel *ershouData = [(FHDetailOldModel *)self.baseViewModel.detailData data];
-            [self.feedbackButton updateWithDetailTracerDic:self.baseViewModel.detailTracerDic.copy listLogPB:self.baseViewModel.listLogPB jsonDic:[ershouData toDictionary]  reportUrl:model.reportUrl];
+            [self.feedbackButton updateWithDetailTracerDic:self.baseViewModel.detailTracerDic.copy listLogPB:self.baseViewModel.listLogPB houseData:ershouData reportUrl:model.reportUrl];
             
             [self.nameLabel mas_makeConstraints:^(MASConstraintMaker *make) {
                 make.left.mas_equalTo(self).offset(31);

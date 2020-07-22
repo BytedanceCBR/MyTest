@@ -79,7 +79,7 @@
     }
     _infoButton.hidden = model.hideReport;
     FHDetailOldDataModel *ershouData = [(FHDetailOldModel *)model.baseViewModel.detailData data];
-    [self.infoButton updateWithDetailTracerDic:self.baseViewModel.detailTracerDic.copy listLogPB:self.baseViewModel.listLogPB jsonDic:[ershouData toDictionary]  reportUrl:model.houseOverreview.reportUrl];
+    [self.infoButton updateWithDetailTracerDic:self.baseViewModel.detailTracerDic.copy listLogPB:self.baseViewModel.listLogPB houseData:ershouData reportUrl:model.houseOverreview.reportUrl];
     _contentHeight = 70; //header高度
     __block UIView *lastView = self.containerView;
     if (model.houseOverreview.list.count > 0) {

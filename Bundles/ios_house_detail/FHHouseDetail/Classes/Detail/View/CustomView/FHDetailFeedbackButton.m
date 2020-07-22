@@ -16,13 +16,15 @@
 #import "TTSandBoxHelper.h"
 #import "TTRouteDefine.h"
 #import "TTRoute.h"
+#import "FHDetailOldModel.h"
+#import "NSDictionary+BTDAdditions.h"
 
 @interface FHDetailFeedbackButton ()
 
 @property (nonatomic, strong) NSDictionary *detailTracerDic;
 @property (nonatomic, strong) NSDictionary *listLogPB;
 @property (nonatomic, copy)   NSString *reportUrl;
-@property (nonatomic, strong) NSDictionary *jsonDic;
+@property (nonatomic, strong) FHDetailOldDataModel *ershouData;
 
 @end
 
@@ -57,34 +59,49 @@
     [self gotoReportVC];
 }
 
-- (void)updateWithDetailTracerDic:(NSDictionary *)detailTracerDic listLogPB:(NSDictionary *)listLogPB jsonDic:(NSDictionary *)jsonDic reportUrl:(NSString *)reportUrl {
+- (void)updateWithDetailTracerDic:(NSDictionary *)detailTracerDic listLogPB:(NSDictionary *)listLogPB houseData:(FHDetailOldModel *)houseData reportUrl:(NSString *)reportUrl {
     self.detailTracerDic = detailTracerDic;
     self.listLogPB = listLogPB;
-    self.jsonDic = jsonDic;
+    self.ershouData = houseData;
     self.reportUrl = reportUrl;
 }
 
 // 二手房-房源问题反馈
 - (void)gotoReportVC {
-    if (self.reportUrl.length > 0 && self.jsonDic) {
+    if (self.reportUrl.length > 0) {
         NSString *openUrl = @"sslocal://webview";
-        NSDictionary *pageData = @{ @"data": self.jsonDic };
         NSDictionary *commonParams = [[FHEnvContext sharedInstance] getRequestCommonParams];
         if (commonParams == nil) {
             commonParams = @{};
         }
         NSDictionary *commonParamsData = @{ @"data": commonParams };
-        NSDictionary *jsParams = @{ @"requestPageData": pageData,
+        NSDictionary *jsParams = @{
                                     @"getNetCommonParams": commonParamsData };
         NSString *host = [FHURLSettings baseURL] ? : @"https://i.haoduofangs.com";
         if ([TTSandBoxHelper isInHouseApp] && [[NSUserDefaults standardUserDefaults]boolForKey:@"BOE_OPEN_KEY"]) {
             host = @"http://i.haoduofangs.com.boe-gateway.byted.org";
         }
-        NSString *urlStr = [NSString stringWithFormat:@"%@%@", host, self.reportUrl];
-        NSDictionary *info = @{ @"url": urlStr, @"fhJSParams": jsParams, @"title": @"房源问题反馈" };
+        NSMutableString *urlStr = [NSMutableString stringWithFormat:@"%@%@", host, self.reportUrl];
+
+        [urlStr appendFormat:@"&%@=%@",@"report_params",[[self getReportParams] btd_jsonStringEncoded]];
+        
+        NSDictionary *info = @{ @"url": urlStr.copy, @"fhJSParams": jsParams, @"title": @"房源问题反馈" };
         TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:info];
         [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:openUrl] userInfo:userInfo];
     }
+}
+//获取透传给前端的数据
+- (NSDictionary *)getReportParams {
+    NSMutableDictionary *reportParams = [NSMutableDictionary new];
+    reportParams[@"realtor_id"] = self.ershouData.highlightedRealtor.realtorId ?: @"be_null";
+    reportParams[UT_EVENT_TYPE] = @"house_app2c_v2";
+    reportParams[UT_ENTER_FROM] = self.detailTracerDic[UT_ENTER_FROM] ?:@"be_null";
+    reportParams[UT_ELEMENT_FROM] = self.detailTracerDic[UT_ELEMENT_FROM] ?:@"be_null";
+    reportParams[UT_LOG_PB] = self.detailTracerDic[UT_LOG_PB] ?:@"be_null";
+    reportParams[UT_RANK] = self.detailTracerDic[UT_RANK] ?:@"be_null";
+    reportParams[UT_ORIGIN_FROM] = self.detailTracerDic[UT_ORIGIN_FROM] ?:@"be_null";
+    reportParams[UT_SEARCH_ID] = self.detailTracerDic[UT_SEARCH_ID] ?:@"be_null";
+    return reportParams.copy;
 }
 
 @end
