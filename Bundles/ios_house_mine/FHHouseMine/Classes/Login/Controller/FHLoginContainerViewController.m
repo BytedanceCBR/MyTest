@@ -106,7 +106,7 @@
                 }
                 make.left.right.equalTo(self.view);
             }];
-            [onekeyLoginView updateOneKeyLoginWithPhone:self.viewModel.mobileNumber service:[self.viewModel serviceName] protocol:[self.viewModel protocolAttrTextByIsOneKeyLoginViewType:self.viewType] showDouyinIcon:[self.viewModel shouldShowDouyinIcon]];
+            [onekeyLoginView updateOneKeyLoginWithPhone:self.viewModel.mobileNumber service:[self.viewModel.class serviceName] protocol:[self.viewModel protocolAttrTextByIsOneKeyLoginViewType:self.viewType] showDouyinIcon:[self.viewModel shouldShowDouyinIcon]];
             if ([self.viewModel shouldShowDouyinIcon]) {
                 tracerDict[@"douyin_is_show"] = @(1);
                 if (@available(iOS 13.0, *)) {
