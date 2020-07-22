@@ -15,15 +15,14 @@
 #import "TTAccountManager.h"
 #import "UIButton+TTAdditions.h"
 #import "FHUserTracker.h"
-#import "UIImageView+BDWebImage.h"
 #import "TTRoute.h"
 #import "JSONAdditions.h"
 #import "FHUGCCellHelper.h"
-#import "TTImageView+TrafficSave.h"
+#import "UIImageView+fhUgcImage.h"
 
 @interface FHUGCCellOriginItemView ()<TTUGCAsyncLabelDelegate>
 
-@property(nonatomic ,strong) TTImageView *iconView;
+@property(nonatomic ,strong) UIImageView *iconView;
 @property(nonatomic ,strong) TTUGCAsyncLabel *contentLabel;
 @property(nonatomic ,assign) BOOL isClickLink;
 
@@ -51,10 +50,10 @@
 //    singleTap
 //    [self addGestureRecognizer:singleTap];
     
-    self.iconView = [[TTImageView alloc] init];
+    self.iconView = [[UIImageView alloc] init];
     _iconView.hidden = YES;
     _iconView.backgroundColor = [UIColor whiteColor];
-    _iconView.imageContentMode = TTImageViewContentModeScaleAspectFill;
+    _iconView.contentMode = UIViewContentModeScaleAspectFill;
     _iconView.clipsToBounds = YES;
     [self addSubview:_iconView];
     
@@ -88,12 +87,11 @@
         
         self.cellModel = cellModel;
         if(cellModel.originItemModel.imageModel){
-//            [self.iconView bd_setImageWithURL:[NSURL URLWithString:cellModel.originItemModel.imageModel.url] placeholder:nil];
-            TTImageInfosModel *imageInfoModel = [FHUGCCellHelper convertTTImageInfosModel:cellModel.originItemModel.imageModel];
-            __weak typeof(self) wSelf = self;
-            [self.iconView setImageWithModelInTrafficSaveMode:imageInfoModel placeholderImage:nil success:nil failure:^(NSError *error) {
-                [wSelf.iconView setImage:nil];
-            }];
+            if (cellModel.originItemModel.imageModel && cellModel.originItemModel.imageModel.url.length > 0) {
+                [self.iconView fh_setImageWithURLStringInTrafficSaveMode:cellModel.originItemModel.imageModel.url placeholder:nil];
+            }else{
+                [self.iconView setImage:nil];
+            }
             _iconView.hidden = NO;
             
             self.contentLabel.left = 80;
