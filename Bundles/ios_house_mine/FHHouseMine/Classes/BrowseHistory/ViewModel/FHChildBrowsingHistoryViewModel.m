@@ -360,6 +360,7 @@
         NSString *urlStr = nil;
         params[@"card_type"] = @"left_pic";
         params[UT_ENTER_FROM] = [self getPageType:self.houseType];
+        params[UT_ORIGIN_FROM] = self.viewController.tracerDict[UT_ORIGIN_FROM] ?: @"be_null";
         params[UT_RANK] = @(index);
         switch (self.houseType) {
             case FHHouseTypeRentHouse:
