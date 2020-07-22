@@ -310,6 +310,7 @@ logPB:self.listLogPB extraInfo:self.extraInfo completion:^(FHDetailOldModel * _N
         houseTitleModel.housetype = self.houseType;
         houseTitleModel.titleStr = model.data.title;
         houseTitleModel.tags = model.data.tags;
+        houseTitleModel.reportUrl = model.data.reportUrl;
         if (model.data.vouchModel && model.data.vouchModel.vouchStatus == 1) {
             houseTitleModel.businessTag = @"企业担保";
             houseTitleModel.advantage = model.data.vouchModel.vouchText;
@@ -340,8 +341,10 @@ logPB:self.listLogPB extraInfo:self.extraInfo completion:^(FHDetailOldModel * _N
             headerCellModel.houseImage = @[imgModel];
         }
         FHDetailHouseTitleModel *houseTitleModel = [[FHDetailHouseTitleModel alloc] init];
+        houseTitleModel.housetype = self.houseType;
         houseTitleModel.titleStr = model.data.title;
         houseTitleModel.tags = model.data.tags;
+        houseTitleModel.reportUrl = model.data.reportUrl;
         if (model.data.vouchModel && model.data.vouchModel.vouchStatus == 1) {
             houseTitleModel.businessTag = @"企业担保";
             houseTitleModel.advantage = model.data.vouchModel.vouchText;
@@ -478,7 +481,7 @@ logPB:self.listLogPB extraInfo:self.extraInfo completion:^(FHDetailOldModel * _N
         infoModel.baseViewModel = self;
         infoModel.tableView = self.tableView;
         infoModel.houseModelType = FHHouseModelTypeOutlineInfo;
-        infoModel.hideReport = NO;
+        infoModel.hideReport = YES;
         [self.items addObject:infoModel];
     }
     // 房源榜单
