@@ -14,10 +14,10 @@ NS_ASSUME_NONNULL_BEGIN
 @interface FHHouseRealtorUserCommentItemModel : JSONModel
 @property (assign, nonatomic) CGFloat cellHeight;
 @property (copy, nonatomic, nullable) NSString *id;
-@property (copy, nonatomic, nullable) NSString *avatarUrl;
+@property (copy, nonatomic, nullable) NSString *avatar_url;
 @property (strong, nonatomic, nullable) NSDictionary *tags;
 @property (copy, nonatomic, nullable) NSString *score;
-@property (copy, nonatomic, nullable) NSString *scoreCount;
+@property (assign, nonatomic) NSInteger star_count;
 @property (copy, nonatomic, nullable) NSString *time;
 @property (copy, nonatomic, nullable) NSString *content;
 @property (copy, nonatomic, nullable) NSString *layout_style;

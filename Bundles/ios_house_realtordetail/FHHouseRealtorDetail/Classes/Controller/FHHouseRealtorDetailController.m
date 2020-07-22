@@ -22,6 +22,14 @@
     [self createTracerDic];
 }
 
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    if (!_viewModel.isRequest) {
+        [_viewModel requestData:YES first:YES];
+        _viewModel.isRequest = YES;
+    }
+}
+
 - (void)createModel {
     NSMutableDictionary *dic = self.realtorInfo.mutableCopy;
     [dic setObject:self.tabName forKey:@"tab_name"];

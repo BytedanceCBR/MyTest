@@ -214,7 +214,6 @@
 
 - (void)initSegmentWithTabInfoArr:(NSArray *)tabListArr {
     NSMutableArray *titles = [NSMutableArray array];
-    NSInteger selectedIndex = 0;
     if(tabListArr && tabListArr.count > 0) {
         for(NSInteger i = 0;i < tabListArr.count;i++) {
             FHHouseRealtorDetailRgcTabModel *item = tabListArr[i];
@@ -407,7 +406,6 @@
 }
 
 - (UIScrollView *)pagingView:(TTHorizontalPagingView *)pagingView viewAtIndex:(NSInteger)index {
-    index = MIN(self.subVCs.count - 1, index);
     FHHouseRealtorDetailBaseViewController *feedVC = self.subVCs[index];
     if(!feedVC.tableView){
         [feedVC viewDidLoad];

@@ -49,24 +49,13 @@
 - (instancetype)initWithController:(FHHouseRealtorDetailController *)viewController tableView:(UITableView *)tableView realtorInfo:(NSDictionary *)realtorInfo tracerDic:(NSDictionary *)tracerDic {
     self = [super init];
     if (self) {
-        //        _detailTracerDic = [NSMutableDictionary new];
-        //        _items = [NSMutableArray new];
-        //        _cellHeightCaches = [NSMutableDictionary new];
-        //        _elementShowCaches = [NSMutableDictionary new];
-        //        _elementShdowGroup = [NSMutableDictionary new];
-        //        _lastPointOffset = CGPointZero;
-        //        _weakedCellTable = [NSHashTable hashTableWithOptions:NSPointerFunctionsWeakMemory];
-        //        _weakedVCLifeCycleCellTable = [NSHashTable hashTableWithOptions:NSPointerFunctionsWeakMemory];
-        //        self.houseType = houseType;
          self.tracerDic = tracerDic;
         self.detailController = viewController;
         self.tableView = tableView;
         self.realtorInfo = realtorInfo;
-        //        self.tableView.backgroundColor = [UIColor themeGray7];
         [self configTableView];
         self.detailJumpManager = [[FHUGCFeedDetailJumpManager alloc] init];
         self.detailJumpManager.refer = 1;
-        [self requestData:YES first:YES];
     }
     return self;
 }
@@ -89,16 +78,16 @@
         [self.requestTask cancel];
         self.detailController.isLoadingData = NO;
     }
-    //
     if(self.detailController.isLoadingData){
         return;
     }
-    NSString *refreshType = @"be_null";
-    //    self.detailController.isLoadingData = YES;
     
-    //    if(isFirst){
-    //        [self.detailController startLoading];
-    //    }
+//    if (isFirst) {
+//        self.detailController.isLoadingData = YES;
+//        [self.detailController startLoading];
+//    }
+    
+    NSString *refreshType = @"be_null";
     __weak typeof(self) wself = self;
     NSInteger listCount = self.dataList.count;
     if(isFirst){
@@ -127,19 +116,14 @@
     self.categoryId = @"f_realtor_profile";
     TTHttpTask *task = [FHHouseUGCAPI requestFeedListWithCategory:self.categoryId behotTime:behotTime loadMore:!isHead listCount:listCount extraDic:extraDic completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
         wself.detailController.isLoadingData = NO;
+        [wself.detailController endLoading];
         FHFeedListModel *feedListModel = (FHFeedListModel *)model;
         wself.feedListModel = feedListModel;
-        if (!wself) {
-            if(isFirst){
-                [wself.detailController endLoading];
-            }
-            return;
-        }
+        
         if (error) {
             //TODO: show handle error
             [self reloadTableViewData];
             if(isFirst){
-                [wself.detailController endLoading];
                 if(error.code != -999){
                     wself.refreshFooter.hidden = YES;
                 }
@@ -163,11 +147,11 @@
                     [wself.dataList addObjectsFromArray:resultArr];
                 }
                 dispatch_async(dispatch_get_main_queue(), ^{
-                    if(isHead){
-                        wself.tableView.hasMore = YES;
-                    }else {
+//                    if(isHead){
+//                        wself.tableView.hasMore = YES;
+//                    }else {
                         wself.tableView.hasMore = feedListModel.hasMore;
-                    }
+//                    }
                     if(wself.dataList.count > 0){
                         [wself updateTableViewWithMoreData:feedListModel.hasMore];
                         [wself.detailController.emptyView hideEmptyView];
@@ -177,7 +161,6 @@
             });
         }
     }];
-    //    self.requestTask = task;
 }
 - (NSArray *)convertModel:(NSArray *)feedList{
     NSMutableArray *resultArray = [[NSMutableArray alloc] init];
@@ -316,7 +299,7 @@
     if(self.dataList.count > 0){
         self.tableView.backgroundColor = [UIColor themeGray7];
         
-        CGFloat height = [self getVisibleHeight:5];
+        CGFloat height = [self getVisibleHeight:self.dataList.count];
         if(height < self.detailController.errorViewHeight && height > 0 && self.detailController.errorViewHeight > 0){
             [self.tableView reloadData];
             CGFloat refreshFooterBottomHeight = self.tableView.mj_footer.height;
@@ -327,9 +310,9 @@
             UIView *tableFooterView = [[UIView alloc] initWithFrame:CGRectMake(0, 15, [UIScreen mainScreen].bounds.size.width, self.detailController.errorViewHeight - height - refreshFooterBottomHeight)];
             tableFooterView.backgroundColor = [UIColor clearColor];
             self.tableView.tableFooterView = tableFooterView;
-            //            //修改footer的位置回到cell下方，不修改会在tableFooterView的下方
-            //            self.tableView.mj_footer.mj_y -= tableFooterView.height;
-            //            self.tableView.mj_footer.hidden = NO;
+                        //修改footer的位置回到cell下方，不修改会在tableFooterView的下方
+                        self.tableView.mj_footer.mj_y -= tableFooterView.height;
+                        self.tableView.mj_footer.hidden = NO;
         }else{
             self.tableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width,0.001)];
             [self.tableView reloadData];

@@ -34,8 +34,6 @@
 + (JSONKeyMapper*)keyMapper
 {
     NSDictionary *dict = @{
-            @"avatarUrl": @"avatar_url",
-            @"scoreCount": @"score_count",
             @"layoutStyle": @"layout_style",
     };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
