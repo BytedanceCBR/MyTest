@@ -260,7 +260,7 @@ def appPods
     #----头条组件协议库-----
 
     pod 'TTServiceProtocols','7.5.7.2'
-    pod 'BDTrackerProtocol','2.1.1'
+    pod_binary 'BDTrackerProtocol','2.1.1'
 
 
     #-----头条头像-----
@@ -405,7 +405,7 @@ def appPods
     #-----头条交互式退出手势----
     pod_binary 'TTImagePreviewAnimateManager', '1.0.13'
     #-----头条日志库-----
-    pod 'TTTracker','1.3.20'
+    pod_binary 'TTTracker','1.3.20'
 #    pod_binary 'BDTracker','1.3.1',:subspecs => [
 #    'Network',
 #    'Base',
