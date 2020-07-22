@@ -114,7 +114,7 @@ static NSString * const kFHLynxEnableControlKey = @"lynx_enable";
                 NSString *path = [NSString stringWithFormat:@"LynxLocalChannels/%@/%@",channel,[FHLynxManager defaultJSFileName]];
                 NSString *templatePath = [[NSBundle mainBundle] pathForResource:path ofType:@""];
                 data = [NSData dataWithContentsOfFile:templatePath];
-                [self syncAllChannel];
+//                [self syncAllChannel];
             }
             if (data) {
                 [self cacheData:data andChannel:channel];
