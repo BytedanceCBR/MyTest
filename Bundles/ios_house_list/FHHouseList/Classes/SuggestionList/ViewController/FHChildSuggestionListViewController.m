@@ -187,6 +187,8 @@
 
 - (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
+    
+    [self.viewModel viewWillDisappear];
 }
 
 - (void)viewDidDisappear:(BOOL)animated {
