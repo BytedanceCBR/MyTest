@@ -148,7 +148,7 @@
     self.mapView.frame = mapFrame;
     self.nativeMapImageView.frame = mapFrame;
     self.mapMaskBtn.frame = mapFrame;
-
+    self.baiduPanoButton.frame = CGRectMake(MAIN_SCREEN_WIDTH - 8 - 40, CGRectGetMaxY(mapFrame) - 8 - 40, 40, 40);
     [self.contentView mas_remakeConstraints:^(MASConstraintMaker *make) {
         make.top.left.right.mas_equalTo(self.mapMaskBtn);
         make.bottom.mas_greaterThanOrEqualTo(self.mapMaskBtn).offset(30);

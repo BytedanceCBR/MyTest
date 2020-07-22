@@ -113,9 +113,17 @@ char *const FHBaiduPanoramaPOISearchResultTypeName = "FHBaiduPanoramaPOISearchRe
 
 @property (nonatomic, strong) BaiduPanoImageOverlay *selectOverlay;
 
+@property (nonatomic, strong) NSMutableArray *testArray;
 @end
 
 @implementation FHBaiduPanoramaViewController
+
+- (NSMutableArray *)testArray {
+    if (!_testArray) {
+        _testArray = [NSMutableArray array];
+    }
+    return _testArray;
+}
 
 - (void)dealloc {
     [[UIApplication sharedApplication] setStatusBarStyle:_lastStatusBarStyle];
@@ -384,6 +392,12 @@ char *const FHBaiduPanoramaPOISearchResultTypeName = "FHBaiduPanoramaPOISearchRe
 }
 
 - (void)overlayButtonAction {
+//    [self.panoramaView removeAllOverlay];
+//    [self.overlays removeAllObjects];
+//    [self addOverlays:self.testArray];
+//
+//    [self.testArray removeAllObjects];
+//    return;
     self.overlayButton.selected = !self.overlayButton.selected;
     [self.panoramaView setAllCustomOverlaysHidden:self.overlayButton.selected];
     [self.panoramaView setPoiOverlayHidden:self.overlayButton.selected];
@@ -561,10 +575,13 @@ static NSInteger overlayIndex = 0;
         double overlayAngle = [self computeAzimuthBy:self.point other:overlay.coordinate];
         for (BaiduPanoImageOverlay *item in self.overlays) {
             double itemAngle = [self computeAzimuthBy:self.point other:item.coordinate];
-            double distance = [self distanceBetweenOrderBy:self.point other:item.coordinate];
-            CGFloat heightRate = 150 / 1000.0 * distance;
-            if (abs(overlayAngle - itemAngle) < 15) {
-                overlay.height += heightRate;
+            if (abs(overlayAngle - itemAngle) < 20) {
+                double distance = [self distanceBetweenOrderBy:self.point other:overlay.coordinate];
+                double itemDistance = [self distanceBetweenOrderBy:self.point other:item.coordinate];
+                if (abs(overlay.height - item.height * distance/itemDistance) < 20) {
+                    CGFloat heightRate = distance/1000.0 * 200;
+                    overlay.height += heightRate;
+                }
             }
         }
         [self.overlays addObject:overlay];
@@ -758,9 +775,9 @@ static NSInteger overlayIndex = 0;
                 overlay.type = BaiduPanoOverlayTypeImage;
                 overlay.coordinate = self.selectOverlay.coordinate;
                 overlay.height = 0;
-                overlay.fh_imageName = overlay.fh_imageName;
-                overlay.fh_name = overlay.fh_name;
-                overlay.fh_distance = overlay.fh_distance;
+                overlay.fh_imageName = self.selectOverlay.fh_imageName;
+                overlay.fh_name = self.selectOverlay.fh_name;
+                overlay.fh_distance = self.selectOverlay.fh_distance;
                 overlay.size = self.selectOverlay.size;
                 overlay.image = [self imageWithName:self.selectOverlay.fh_name icon:[UIImage imageNamed:self.selectOverlay.fh_imageName] distance:[self distanceBetweenOrderBy:self.point other:self.selectOverlay.coordinate]];
                 [self.overlays addObject:overlay];
@@ -809,12 +826,16 @@ static NSInteger overlayIndex = 0;
  * @param overlayId 覆盖物标识
  */
 - (void)panoramaView:(BaiduPanoramaView *)panoramaView overlayClicked:(NSString *)overlayId {
-    NSLog(@"baidu_overlayClicked");
+//    NSLog(@"baidu_overlayClicked");
     if (!self.overlays.count) {
         return;
     }
     for (BaiduPanoImageOverlay *overlay in self.overlays) {
         if ([overlay.overlayKey isEqualToString:overlayId]) {
+//            overlay.height = 0;
+//            [self.testArray addObject:overlay];
+//            double itemAngle = [self computeAzimuthBy:self.point other:overlay.coordinate];
+//            NSLog(@"itemAngle %f",itemAngle);
             self.selectOverlay = overlay;
             self.lastPoint = self.point;
             self.point = overlay.coordinate;

@@ -276,13 +276,7 @@ static FHLoginSharedModel *_sharedModel = nil;
         [FHLoginSharedModel sharedModel].hasPushedLoginProcess = YES;
         _needPopVC = YES;
         _isNeedCheckUGCAdUser = NO;
-        _processType = FHLoginProcessOrigin;
         _viewController = viewController;
-        id res = [BDABTestManager getExperimentValueForKey:@"f_douyin_login_type" withExposure:YES];
-        if ([res isKindOfClass:[NSNumber class]]) {
-            _processType = [(NSNumber *)res integerValue];
-        }
-//        NSLog(@"BDClientABTest f_douyin_login_type is %@",res);
         [self addObserver];
     }
     return self;
@@ -437,36 +431,13 @@ static FHLoginSharedModel *_sharedModel = nil;
 }
 
 - (void)updateViewType {
-    //判断 self.processType
     FHLoginViewType viewType = FHLoginViewTypeOneKey;
-    switch (self.processType) {
-        case FHLoginProcessOrigin:
-            if ([FHLoginSharedModel sharedModel].isOneKeyLogin) {
-                viewType = FHLoginViewTypeOneKey;
-            } else {
-                viewType = FHLoginViewTypeMobile;
-            }
-            break;
-        case FHLoginProcessTestA:
-            if ([FHLoginSharedModel sharedModel].isOneKeyLogin) {
-                viewType = FHLoginViewTypeOneKey;
-            } else if([FHLoginSharedModel sharedModel].douyinCanQucikLogin && ![FHLoginSharedModel sharedModel].disableDouyinOneClickLoginSetting) {
-                viewType = FHLoginViewTypeDouYin;
-            } else {
-                viewType = FHLoginViewTypeMobile;
-            }
-            break;
-        case FHLoginProcessTestB:
-            if ([FHLoginSharedModel sharedModel].douyinCanQucikLogin && ![FHLoginSharedModel sharedModel].disableDouyinOneClickLoginSetting) {
-                viewType = FHLoginViewTypeDouYin;
-            } else if([FHLoginSharedModel sharedModel].isOneKeyLogin) {
-                viewType = FHLoginViewTypeOneKey;
-            } else {
-                viewType = FHLoginViewTypeMobile;
-            }
-            break;
-        default:
-            break;
+    if ([FHLoginSharedModel sharedModel].isOneKeyLogin) {
+        viewType = FHLoginViewTypeOneKey;
+    } else if([FHLoginSharedModel sharedModel].douyinCanQucikLogin && ![FHLoginSharedModel sharedModel].disableDouyinOneClickLoginSetting) {
+        viewType = FHLoginViewTypeDouYin;
+    } else {
+        viewType = FHLoginViewTypeMobile;
     }
     self.currentViewType = viewType;
     if (self.loginViewViewTypeChanged) {
@@ -526,12 +497,8 @@ static FHLoginSharedModel *_sharedModel = nil;
 }
 
 - (BOOL)shouldShowDouyinIcon {
-    if (self.processType == FHLoginProcessOrigin) {
+    if ([FHLoginSharedModel sharedModel].disableDouyinIconLoginSetting) {
         return NO;
-    }else {
-        if ([FHLoginSharedModel sharedModel].disableDouyinIconLoginSetting) {
-            return NO;
-        }
     }
     return YES;
 }
