@@ -20,6 +20,10 @@ NS_ASSUME_NONNULL_BEGIN
 /// @param service 运营商名称
 /// @param protocol 协议
 - (void)updateOneKeyLoginWithPhone:(NSString *)phoneNum service:(NSString *)service protocol:(NSAttributedString *)protocol showDouyinIcon:(BOOL )showDouyinIcon;
+
+- (instancetype)initWithFrame:(CGRect)frame isHalfLogin:(BOOL)isHalfLogin;
+
+- (void)updateOneKeyLoginWithPhone:(NSString *)phoneNum service:(NSString *)service protocol:(NSAttributedString *)protocol showDouyinIcon:(BOOL )showDouyinIcon showCodeLoginBtn:(BOOL)showCode;
 @end
 
 NS_ASSUME_NONNULL_END
