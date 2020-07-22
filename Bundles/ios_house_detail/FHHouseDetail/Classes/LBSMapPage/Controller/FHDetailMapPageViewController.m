@@ -28,6 +28,7 @@
 #import "FHFakeInputNavbar.h"
 #import "UIImage+FIconFont.h"
 #import <ByteDanceKit/NSDictionary+BTDAdditions.h>
+#import "TTReachability.h"
 
 static NSInteger const kBottomBarTagValue = 100;
 static NSInteger const kBottomButtonLabelTagValue = 1000;
@@ -612,6 +613,11 @@ static MAMapView *kFHPageMapView = nil;
 }
 
 - (void)pushBaiduPano {
+    if (![TTReachability isNetworkConnected]) {
+        [[ToastManager manager] showToast:@"网络异常"];
+        return;
+    }
+
     if (CLLocationCoordinate2DIsValid(self.centerPoint)) {
         NSMutableDictionary *tracerDict = self.traceDict.mutableCopy;
         tracerDict[@"element_from"] = @"map";

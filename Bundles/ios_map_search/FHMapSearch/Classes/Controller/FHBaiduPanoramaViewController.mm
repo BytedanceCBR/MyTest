@@ -21,6 +21,8 @@
 #import <TTUIWidget/UIViewController+NavigationBarStyle.h>
 #import "UIViewController+Track.h"
 #import <FHHouseBase/FHUserTracker.h>
+#import "TTReachability.h"
+#import "ToastManager.h"
 
 char *const FHBaiduPanoramaPOISearchResultKeyName = "FHBaiduPanoramaPOISearchResultKeyName";
 char *const FHBaiduPanoramaPOISearchResultTypeName = "FHBaiduPanoramaPOISearchResultTypeName";
@@ -756,6 +758,9 @@ static NSInteger overlayIndex = 0;
                 overlay.type = BaiduPanoOverlayTypeImage;
                 overlay.coordinate = self.selectOverlay.coordinate;
                 overlay.height = 0;
+                overlay.fh_imageName = overlay.fh_imageName;
+                overlay.fh_name = overlay.fh_name;
+                overlay.fh_distance = overlay.fh_distance;
                 overlay.size = self.selectOverlay.size;
                 overlay.image = [self imageWithName:self.selectOverlay.fh_name icon:[UIImage imageNamed:self.selectOverlay.fh_imageName] distance:[self distanceBetweenOrderBy:self.point other:self.selectOverlay.coordinate]];
                 [self.overlays addObject:overlay];
@@ -785,6 +790,11 @@ static NSInteger overlayIndex = 0;
 - (void)panoramaLoadFailed:(BaiduPanoramaView *)panoramaView error:(NSError *)error {
     NSLog(@"baidu_panoramaLoadFailed error:%@",error);
     self.selectOverlay = nil;
+    if (![TTReachability isNetworkConnected]) {
+        [[ToastManager manager] showToast:@"网络异常" style:FHToastViewStyleDefault position:FHToastViewPositionBottom verticalOffset:-20];
+    } else {
+        [[ToastManager manager] showToast:@"该地区不支持全景信息，请重新选择" style:FHToastViewStyleDefault position:FHToastViewPositionBottom verticalOffset:-20];
+    }
     if (CLLocationCoordinate2DIsValid(self.lastPoint)) {
         self.point = self.lastPoint;
         self.lastPoint = kCLLocationCoordinate2DInvalid;

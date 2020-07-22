@@ -27,6 +27,8 @@
 #import <TTBaseLib/TTUIResponderHelper.h>
 #import "FHDetailFloorPanDetailInfoModel.h"
 #import <TTUIWidget/TTNavigationController.h>
+#import "TTReachability.h"
+#import "ToastManager.h"
 
 @interface FHDetailMediaHeaderCorrectingCell ()<FHMultiMediaCorrectingScrollViewDelegate,FHDetailScrollViewDidScrollProtocol,FHDetailVCViewLifeCycleProtocol>
 
@@ -782,6 +784,11 @@
     if (itemModel.mediaType == FHMultiMediaTypeBaiduPanorama && itemModel.imageUrl.length) {
         //进入百度街景
         //shceme baidu_panorama_detail
+        if (![TTReachability isNetworkConnected]) {
+            [[ToastManager manager] showToast:@"网络异常"];
+            return;
+        }
+        
         NSMutableDictionary *tracerDict = self.baseViewModel.detailTracerDic.mutableCopy;
         NSMutableDictionary *param = [NSMutableDictionary new];
         tracerDict[@"element_from"] = @"picture";

@@ -18,6 +18,7 @@
 #import "UIViewAdditions.h"
 #import "FHDetailMapViewSnapService.h"
 #import "HMDUserExceptionTracker.h"
+#import "TTReachability.h"
 
 @implementation FHDetailStaticMapCellModel
 
@@ -385,6 +386,11 @@
 }
 
 - (void)baiduPanoButtonAction {
+    if (![TTReachability isNetworkConnected]) {
+        [[ToastManager manager] showToast:@"网络异常"];
+        return;
+    }
+
     FHDetailStaticMapCellModel *dataModel = (FHDetailStaticMapCellModel *) self.currentData;
     NSMutableDictionary *tracerDict = self.baseViewModel.detailTracerDic.mutableCopy;
     tracerDict[@"element_from"] = @"map";
