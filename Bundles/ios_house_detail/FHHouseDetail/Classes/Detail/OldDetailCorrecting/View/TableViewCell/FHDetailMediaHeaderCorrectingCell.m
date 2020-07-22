@@ -718,8 +718,8 @@
             dict[@"click_position"] = @"house_vr";
         }else if ([str isEqualToString:@"样板间"]) {
             dict[@"click_position"] = @"prototype";
-        }else if ([str isEqualToString:@"baiduPano"]) {
-            dict[@"click_position"] = @"街景";
+        }else if ([str isEqualToString:@"街景"]) {
+            dict[@"click_position"] = @"panorama";
         }
 
         dict[@"rank"] = @"be_null";
@@ -780,11 +780,11 @@
     //vr
     FHMultiMediaItemModel *itemModel = _model.medias[index];
     if (itemModel.mediaType == FHMultiMediaTypeBaiduPanorama && itemModel.imageUrl.length) {
-        [self trackClickOptions:@"baiduPano"];
         //进入百度街景
         //shceme baidu_panorama_detail
         NSMutableDictionary *tracerDict = self.baseViewModel.detailTracerDic.mutableCopy;
         NSMutableDictionary *param = [NSMutableDictionary new];
+        tracerDict[@"element_from"] = @"picture";
         param[TRACER_KEY] = tracerDict.copy;
         
         NSString *gaodeLat = nil;

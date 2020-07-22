@@ -22,6 +22,60 @@
 #import "UIViewController+Track.h"
 #import <FHHouseBase/FHUserTracker.h>
 
+char *const FHBaiduPanoramaPOISearchResultKeyName = "FHBaiduPanoramaPOISearchResultKeyName";
+char *const FHBaiduPanoramaPOISearchResultTypeName = "FHBaiduPanoramaPOISearchResultTypeName";
+
+@interface BMKPoiSearch (fh_property)
+@property (nonatomic, copy) NSString *fh_keyword;
+@end
+
+@implementation BMKPoiSearch (fh_property)
+- (void)setFh_keyword:(NSString *)fh_keyword {
+    objc_setAssociatedObject(self, FHBaiduPanoramaPOISearchResultKeyName, fh_keyword, OBJC_ASSOCIATION_COPY);
+}
+
+- (NSString *)fh_keyword {
+    return objc_getAssociatedObject(self, FHBaiduPanoramaPOISearchResultKeyName);
+}
+@end
+
+@interface BaiduPanoImageOverlay (fh_property)
+
+@property (nonatomic, copy) NSString *fh_name;
+@property (nonatomic, copy) NSString *fh_imageName;
+@property (nonatomic) NSInteger fh_distance;
+
+@end
+
+@implementation BaiduPanoImageOverlay (fh_property)
+
+- (void)setFh_name:(NSString *)fh_name {
+    objc_setAssociatedObject(self, @selector(fh_name), fh_name, OBJC_ASSOCIATION_COPY);
+}
+
+- (NSString *)fh_name {
+    return objc_getAssociatedObject(self, @selector(fh_name));
+}
+
+- (void)setFh_imageName:(NSString *)fh_imageName {
+    objc_setAssociatedObject(self, @selector(fh_imageName), fh_imageName, OBJC_ASSOCIATION_COPY);
+}
+
+- (NSString *)fh_imageName {
+    return objc_getAssociatedObject(self, @selector(fh_imageName));
+}
+
+- (void)setFh_distance:(NSInteger)fh_distance {
+    objc_setAssociatedObject(self, @selector(fh_distance), @(fh_distance), OBJC_ASSOCIATION_RETAIN);
+}
+
+- (NSInteger)fh_distance {
+    NSNumber *distance = objc_getAssociatedObject(self, @selector(fh_distance));
+    return [distance integerValue];
+}
+
+@end
+
 @interface FHBaiduPanoramaViewController ()<BMKGeneralDelegate,BMKMapViewDelegate,BaiduPanoramaViewDelegate,BMKPoiSearchDelegate,BMKGeoCodeSearchDelegate>
 
 @property (nonatomic, strong) UIView *topBar;
@@ -358,13 +412,14 @@
     for (NSString *keyword in @[@"公交",@"地铁",@"教育",@"医院",@"商场",@"小区"]) {
         BMKPoiSearch *poiSearch = [[BMKPoiSearch alloc] init];
         poiSearch.delegate = self;
+        poiSearch.fh_keyword = keyword;
         BMKPOINearbySearchOption *option = [[BMKPOINearbySearchOption alloc] init];
         option.keywords = @[keyword];
         option.location = self.point;
         option.radius = 1000;
         option.isRadiusLimit = YES;
         option.scope = BMK_POI_SCOPE_DETAIL_INFORMATION;
-        option.pageIndex = 0;
+//        option.pageIndex = 0;
         option.pageSize = 20;
         [poiSearch poiSearchNearBy:option];
     }
@@ -383,13 +438,22 @@
 
 static NSInteger overlayIndex = 0;
 
-- (void)handlePoiResult:(BMKPOISearchResult *)poiResult{
+- (void)handlePoiResult:(BMKPOISearchResult *)poiResult keyword:(NSString *)keyword{
     dispatch_async(self.serialQueue, ^{
-        NSMutableArray *filterArray = [NSMutableArray array];
+        NSMutableArray *overlays = [NSMutableArray array];
         for (BMKPoiInfo *poiInfo in poiResult.poiInfoList) {
             if (!poiInfo.hasDetailInfo) {
-                continue;
+                if ([keyword isEqualToString:@"公交"]) {
+                    BMKPOIDetailInfo *detailIn = [[BMKPOIDetailInfo alloc] init];
+                    detailIn.type = @"bus";
+                    detailIn.tag = keyword;
+                    detailIn.distance = [self distanceBetweenOrderBy:self.point other:poiInfo.pt];
+                    poiInfo.detailInfo = detailIn;
+                } else {
+                    continue;
+                }
             }
+            
             BMKPOIDetailInfo *detailInfo = poiInfo.detailInfo;
             NSString *type = detailInfo.type;
             if ([detailInfo.tag containsString:@"atm"]) {
@@ -399,18 +463,13 @@ static NSInteger overlayIndex = 0;
                 //                [self.filterPoiList addObject:poiInfo];
                 continue;
             }
-            NSString *name = poiInfo.name;
-            NSString *typeName = nil;
-            //tag
-//            if ([detailInfo.tag containsString:@"银行"]) {
-//                typeName = @"银行";
-//            } else
-            if ([detailInfo.tag containsString:@"地铁"]) {
-                typeName = @"地铁";
-            } else if ([detailInfo.tag containsString:@"住宅"]) {
-                typeName = @"小区";
+            if (detailInfo.distance < 10) {
+                continue;
             }
-            //type
+            NSString *name = poiInfo.name;
+            NSString *typeName = keyword;
+            //tag
+
             if (!typeName.length) {
                 if ([detailInfo.type isEqualToString:@"education"]) {
                     typeName = @"教育";
@@ -420,9 +479,10 @@ static NSInteger overlayIndex = 0;
                     typeName = @"商场";
                 } else if ([detailInfo.type isEqualToString:@"house"]) {
                     typeName = @"小区";
+                } else if ([detailInfo.tag containsString:@"地铁"]) {
+                    typeName = @"地铁";
                 }
             }
-            
             if (!typeName.length) {
                 continue;
             }
@@ -442,74 +502,61 @@ static NSInteger overlayIndex = 0;
                 if (index != NSNotFound) {
                     continue;
                 }
-                [self.filterPoiList addObject:poiInfo];
-                [filterArray addObject:poiInfo];
+
                 limit += 1;
                 self.limitDict[typeName] = @(limit);
             } else {
-                [self.filterPoiList addObject:poiInfo];
                 self.limitDict[typeName] = @(1);
-                [filterArray addObject:poiInfo];
             }
+            [self.filterPoiList addObject:poiInfo];
+            
+            NSString *imageName = nil;
+            //@"公交",@"地铁",@"教育",@"医院",@"商场",@"小区"
+            if ([typeName isEqualToString:@"公交"]) {
+                imageName = @"baidu_overlay_type_bus";
+            } else if ([typeName isEqualToString:@"银行"]) {
+                imageName = @"baidu_overlay_type_bank";
+            }else if ([typeName isEqualToString:@"地铁"]) {
+                imageName = @"baidu_overlay_type_subway";
+            } else if ([typeName isEqualToString:@"教育"]) {
+                imageName = @"baidu_overlay_type_school";
+            } else if ([typeName isEqualToString:@"医院"]) {
+                imageName = @"baidu_overlay_type_hospital";
+            } else if ([typeName isEqualToString:@"商场"]) {
+                imageName = @"baidu_overlay_type_shop";
+            } else if ([typeName isEqualToString:@"小区"]) {
+                imageName = @"baidu_overlay_type_area";
+            }
+            
+            //type
+
+            overlayIndex += 1;
+            BaiduPanoImageOverlay *overlay = [[BaiduPanoImageOverlay alloc] init];
+            overlay.overlayKey = [@(overlayIndex) stringValue];
+            overlay.type = BaiduPanoOverlayTypeImage;
+            overlay.coordinate = poiInfo.pt;
+            overlay.height = 0;
+            overlay.fh_imageName = imageName;
+            overlay.fh_name = poiInfo.name;
+            overlay.fh_distance = detailInfo.distance;
+            [overlays addObject:overlay];
         }
-        if (filterArray.count) {
+        if (overlays.count) {
             dispatch_async(dispatch_get_main_queue(), ^{
-                [self addOverlays:filterArray.copy];
+                [self addOverlays:overlays.copy];
             });
         }
     });
 }
 
 - (void)addOverlays:(NSArray *)overlays {
-    for (BMKPoiInfo *poiInfo in overlays) {
-        NSString *name = poiInfo.name;
-        if (!poiInfo.detailInfo) {
-            continue;
-        }
-        BMKPOIDetailInfo *detailInfo = poiInfo.detailInfo;
-        NSInteger distance = detailInfo.distance;
-        
-        if (distance < 10) {
-            continue;
-        }
-        NSString *imageName = nil;
-        //tag
-        if ([detailInfo.tag containsString:@"银行"]) {
-            imageName = @"baidu_overlay_type_bank";
-        } else if ([detailInfo.tag containsString:@"地铁"]) {
-            imageName = @"baidu_overlay_type_subway";
-        } else if ([detailInfo.tag containsString:@"住宅"]) {
-            imageName = @"baidu_overlay_type_area";
-        }
-        
-        //type
-        if (!imageName.length) {
-            if ([detailInfo.type isEqualToString:@"education"]) {
-                imageName = @"baidu_overlay_type_school";
-            } else if ([detailInfo.type isEqualToString:@"hospital"]) {
-                imageName = @"baidu_overlay_type_hospital";
-            } else if ([detailInfo.type isEqualToString:@"shopping"]) {
-                imageName = @"baidu_overlay_type_shop";
-            } else if ([detailInfo.type isEqualToString:@"house"]) {
-                imageName = @"baidu_overlay_type_area";
-            }
-        }
-        if (!imageName.length || !name.length) {
-            continue;
-        }
-        overlayIndex += 1;
-        
+    for (BaiduPanoImageOverlay *overlay in overlays) {
         //重叠问题，添加到全景上以后，后续的点都要与前面的比对，有重复的height 增加
-        UIImage *image = [self imageWithName:name icon:[UIImage imageNamed:imageName] distance:distance];
-        BaiduPanoImageOverlay *overlay = [[BaiduPanoImageOverlay alloc] init];
-        overlay.overlayKey = [@(overlayIndex) stringValue];
-        overlay.type = BaiduPanoOverlayTypeImage;
-        overlay.coordinate = poiInfo.pt;
-        overlay.height = 0;
-        overlay.size = image.size;
+        UIImage *image = [self imageWithName:overlay.fh_name icon:[UIImage imageNamed:overlay.fh_imageName] distance:overlay.fh_distance];
         overlay.image = image;
+        overlay.size = image.size;
+        
         double overlayAngle = [self computeAzimuthBy:self.point other:overlay.coordinate];
-//        BOOL ignore = NO;
         for (BaiduPanoImageOverlay *item in self.overlays) {
             double itemAngle = [self computeAzimuthBy:self.point other:item.coordinate];
             double distance = [self distanceBetweenOrderBy:self.point other:item.coordinate];
@@ -517,14 +564,7 @@ static NSInteger overlayIndex = 0;
             if (abs(overlayAngle - itemAngle) < 15) {
                 overlay.height += heightRate;
             }
-
-//            if (overlay.height > 300) {
-//                ignore = YES;
-//            }
         }
-//        if (ignore) {
-//            continue;
-//        }
         [self.overlays addObject:overlay];
         [self.panoramaView addOverlay:overlay];
     }
@@ -710,13 +750,14 @@ static NSInteger overlayIndex = 0;
             double lat = [jsonDict btd_doubleValueForKey:@"Y"]/100.0;
             self.point = [BaiduPanoUtils baiduCoorEncryptLon:lon lat:lat coorType:COOR_TYPE_BDMC];
             if (self.selectOverlay) {
+                self.customNavBarView.title.text = self.selectOverlay.fh_name;
                 BaiduPanoImageOverlay *overlay = [[BaiduPanoImageOverlay alloc] init];
                 overlay.overlayKey = [@(overlayIndex) stringValue];
                 overlay.type = BaiduPanoOverlayTypeImage;
                 overlay.coordinate = self.selectOverlay.coordinate;
                 overlay.height = 0;
                 overlay.size = self.selectOverlay.size;
-                overlay.image = self.selectOverlay.image;
+                overlay.image = [self imageWithName:self.selectOverlay.fh_name icon:[UIImage imageNamed:self.selectOverlay.fh_imageName] distance:[self distanceBetweenOrderBy:self.point other:self.selectOverlay.coordinate]];
                 [self.overlays addObject:overlay];
                 [self.panoramaView addOverlay:overlay];
                 self.selectOverlay = nil;
@@ -1003,7 +1044,7 @@ static NSInteger overlayIndex = 0;
  */
 - (void)onGetPoiResult:(BMKPoiSearch*)searcher result:(BMKPOISearchResult*)poiResult errorCode:(BMKSearchErrorCode)errorCode {
 //    NSLog(@"baidu_onGetPoiResult");
-    [self handlePoiResult:poiResult];
+    [self handlePoiResult:poiResult keyword:[searcher fh_keyword]];
     if (errorCode != BMK_SEARCH_NO_ERROR) {
         //上报"api_error"
     }

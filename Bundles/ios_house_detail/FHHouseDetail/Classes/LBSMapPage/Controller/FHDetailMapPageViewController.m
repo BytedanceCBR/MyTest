@@ -614,6 +614,7 @@ static MAMapView *kFHPageMapView = nil;
 - (void)pushBaiduPano {
     if (CLLocationCoordinate2DIsValid(self.centerPoint)) {
         NSMutableDictionary *tracerDict = self.traceDict.mutableCopy;
+        tracerDict[@"element_from"] = @"map";
         NSMutableDictionary *param = [NSMutableDictionary new];
         param[TRACER_KEY] = tracerDict.copy;
         param[@"gaodeLat"] = [@(self.centerPoint.latitude) stringValue];
