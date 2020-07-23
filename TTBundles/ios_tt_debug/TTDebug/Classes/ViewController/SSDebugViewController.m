@@ -764,7 +764,13 @@ extern NSString *const BOE_OPEN_KEY ;
         frequenceControlDisable.checked = [[NSUserDefaults standardUserDefaults] boolForKey:@"_IM_Frequenct_Control_Disable_"];
         frequenceControlDisable.switchAction = @selector(toggleIMFrequencyControlDisable);
         
-        STTableViewSectionItem *section = [[STTableViewSectionItem alloc] initWithSectionTitle:@"IM相关调试选项" items:@[toggleIMConnectionItem, toggleIMReadReceiptRequestItem, toggleIMFakeTokenItem, invalidIMToken, frequenceControlDisable]];
+        
+        STTableViewCellItem *deviceIdToggleNullItem = [[STTableViewCellItem alloc] initWithTitle:@"IM初始化设备ID为空场景模拟" target:self action:nil];
+        deviceIdToggleNullItem.switchStyle = YES;
+        deviceIdToggleNullItem.checked = [[NSUserDefaults standardUserDefaults] boolForKey:@"_IM_Device_Is_Null_"];
+        deviceIdToggleNullItem.switchAction = @selector(toggleIMDeviceNull);
+        
+        STTableViewSectionItem *section = [[STTableViewSectionItem alloc] initWithSectionTitle:@"IM相关调试选项" items:@[toggleIMConnectionItem, toggleIMReadReceiptRequestItem, toggleIMFakeTokenItem, invalidIMToken, frequenceControlDisable,deviceIdToggleNullItem]];
         
         [dataSource addObject:section];
     }
@@ -793,6 +799,15 @@ extern NSString *const BOE_OPEN_KEY ;
     BOOL isDisableIMFrequenceControl = [[NSUserDefaults standardUserDefaults] boolForKey:@"_IM_Frequenct_Control_Disable_"];
     [[NSUserDefaults standardUserDefaults] setBool:!isDisableIMFrequenceControl forKey:@"_IM_Frequenct_Control_Disable_"];
     [[NSUserDefaults standardUserDefaults] synchronize];
+}
+- (void)toggleIMDeviceNull {
+    BOOL isSimulateDeviceIdNull = ![[NSUserDefaults standardUserDefaults] boolForKey:@"_IM_Device_Is_Null_"];
+    [[NSUserDefaults standardUserDefaults] setBool:isSimulateDeviceIdNull forKey:@"_IM_Device_Is_Null_"];
+    [[NSUserDefaults standardUserDefaults] synchronize];
+    
+    if(isSimulateDeviceIdNull) {
+        [TTInstallIDManager clearDidAndIid];
+    }
 }
 - (void)triggerIMTokenInvalide {
     [[IMManager shareInstance] invalidTokenForDebug];
