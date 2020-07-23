@@ -24,6 +24,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong) UILabel *subTitleLabel;
 @property (nonatomic, strong) UIView *titleContainer;
 - (void)showBottomBar:(BOOL)show;
+- (void)showRealtorLeaveHeader;
 @end
 
 NS_ASSUME_NONNULL_END

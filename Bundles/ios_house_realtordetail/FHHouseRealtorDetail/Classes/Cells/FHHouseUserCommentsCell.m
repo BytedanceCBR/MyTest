@@ -63,15 +63,6 @@
         infoView.preferredMaxLayoutHeight = screenFrame.size.height;
         [infoView triggerLayout];
         [self addSubview:infoView];
-        NSData *templateData =  [[FHLynxManager sharedInstance] lynxDataForChannel:@"lynx_evaluation_item" templateKey:[FHLynxManager defaultJSFileName] version:0];
-        //        NSData *templateData = [NSData dataWithContentsOfURL:[NSURL URLWithString:@"http://10.95.248.194:30334/realtor_detail_header/template.js?1594963282405"]];
-        if (templateData) {
-            if (templateData != self.currentTemData) {
-                self.currentTemData = templateData;
-                [infoView loadTemplate:templateData withURL:@"local"];
-            }
-        }
-        
         _infoView = infoView;
     }
     return _infoView;
@@ -93,7 +84,15 @@
 
 - (void)updateModel:(FHHouseRealtorUserCommentItemModel *)model {
     NSString *lynxData = [model yy_modelToJSONString];
-    [_infoView updateDataWithString:lynxData];
+    NSData *templateData =  [[FHLynxManager sharedInstance] lynxDataForChannel:@"lynx_evaluation_item" templateKey:[FHLynxManager defaultJSFileName] version:0];
+    //        NSData *templateData = [NSData dataWithContentsOfURL:[NSURL URLWithString:@"http://10.95.248.194:30334/realtor_detail_header/template.js?1594963282405"]];
+    if (templateData) {
+        if (templateData != self.currentTemData) {
+            self.currentTemData = templateData;
+            LynxTemplateData *data = [[LynxTemplateData alloc]initWithJson:lynxData];
+            [self.infoView loadTemplate:templateData withURL:@"local" initData:data];
+        }
+    }
     self.cellHeights = [_infoView intrinsicContentSize].height;
 }
 
