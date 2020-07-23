@@ -53,26 +53,9 @@
     self.automaticallyAdjustsScrollViewInsets = NO;
     [self initNavBar];
     [self initView];
-    [self initConstrains];
     [self initViewModel];
 }
 
-- (void)viewWillAppear:(BOOL)animated {
-    [super viewWillAppear:animated];
-    [self.viewModel viewWillAppear];
-}
-
-- (void)viewDidAppear:(BOOL)animated {
-    [super viewDidAppear:animated];
-    [self.viewModel viewDidAppear];
-}
-
-- (void)viewWillDisappear:(BOOL)animated {
-    [super viewWillDisappear:animated];
-    [self.viewModel viewWillDisappear];
-    [self.viewModel addStayPageLog:self.ttTrackStayTime];
-    [self tt_resetStayTime];
-}
 
 - (void)initNavBar {
     [self setupDefaultNavBar:NO];
@@ -82,7 +65,6 @@
 }
 
 - (void)initView {
-
     [self initHeaderView];
     [self initSegmentView];
     [self addDefaultEmptyViewFullScreen];
@@ -124,16 +106,6 @@
     self.headerView.controller = self;
     self.headerView.channel = @"lynx_realtor_detail_header";
     self.headerView.bacImageName = @"realtor_header";
-//    self.headerView.channel = @"http://192.168.50.221:30334/lynx_realtor_detail_header/template.js?1595163180304";
-    
-    
-//        self.headerView = [[FHHouseRealtorDetailHeaderView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, 0)];
-//        self.headerView.controller = self;
-////        self.headerView.channel = @"lynx_realtor_detail_header";
-//        self.headerView.channel = @"http://192.168.50.221:30334/lynx_realtor_detail_header/template.js?1595139974768";
-//        self.headerView.bacImageName = @"realtor_header";
-//        self.headerView.height = self.headerView.viewHeight;
-
 }
 
 - (void)initSegmentView {
@@ -159,8 +131,6 @@
     [_segmentView setUnderLineLayer:2];
 }
 
-- (void)initConstrains {
-}
 
 - (void)setNavBar {
         self.customNavBarView.title.text = @"经纪人主页";
@@ -168,7 +138,7 @@
         UIImage *whiteBackArrowImage = ICON_FONT_IMG(24, @"\U0000e68a", [UIColor whiteColor]);
         [self.customNavBarView.leftBtn setBackgroundImage:whiteBackArrowImage forState:UIControlStateNormal];
         [self.customNavBarView.leftBtn setBackgroundImage:whiteBackArrowImage forState:UIControlStateHighlighted];
-        [self.customNavBarView setNaviBarTransparent:YES];
+    [self.customNavBarView setNaviBarTransparent:YES];
     self.customNavBarView.seperatorLine.hidden = YES;
 }
 
@@ -188,13 +158,12 @@
     [self.viewModel requestDataWithRealtorId:self.realtorDetailInfo[@"realtor_id"] refreshFeed:YES];
 }
 
-// 白色
-- (UIImage *)shareWhiteImage
-{
-    if (!_shareWhiteImage) {
-        _shareWhiteImage = ICON_FONT_IMG(24, @"\U0000e692", [UIColor whiteColor]); //detail_share_white
-    }
-    return _shareWhiteImage;
+- (void)showRealtorLeaveHeader {
+    [self.view addSubview:_headerView];
+    [_headerView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.right.top.equalTo(self.view);
+    }];
+    self.view.backgroundColor = [UIColor colorWithHexStr:@"#f8f8f8"];
 }
 
 - (NSString *)pageType {

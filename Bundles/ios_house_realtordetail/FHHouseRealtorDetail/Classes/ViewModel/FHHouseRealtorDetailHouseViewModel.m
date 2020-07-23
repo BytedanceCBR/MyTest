@@ -157,7 +157,7 @@
             }
             //设置footer来占位
             UIView *tableFooterView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, self.detailController.errorViewHeight - height - refreshFooterBottomHeight)];
-            tableFooterView.backgroundColor = [UIColor clearColor];
+               tableFooterView.backgroundColor = [UIColor colorWithHexStr:@"#f8f8f8"];
             self.tableView.tableFooterView = tableFooterView;
             //            //修改footer的位置回到cell下方，不修改会在tableFooterView的下方
             //            self.tableView.mj_footer.mj_y -= tableFooterView.height;
@@ -169,7 +169,7 @@
     }else{
         [self.errorView showEmptyWithTip:@"暂无内容" errorImageName:kFHErrorMaskNetWorkErrorImageName showRetry:NO];
         UIView *tableFooterView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, self.detailController.errorViewHeight)];
-        tableFooterView.backgroundColor = [UIColor whiteColor];
+          tableFooterView.backgroundColor = [UIColor colorWithHexStr:@"#f8f8f8"];
         [tableFooterView addSubview:self.errorView];
         self.tableView.tableFooterView = tableFooterView;
         self.refreshFooter.hidden = YES;
@@ -242,6 +242,7 @@
 - (FHErrorView *)errorView {
     if(!_errorView){
         _errorView = [[FHErrorView alloc] initWithFrame:CGRectMake(10, 0, [UIScreen mainScreen].bounds.size.width, 500)];
+        _errorView.backgroundColor = [UIColor colorWithHexStr:@"f8f8f8"];
     }
     return _errorView;
 }
