@@ -239,52 +239,52 @@
         self.underLine.top = selectedLabel.height - underLineH;
     }
 //
-//    self.underLine.height = underLineH;
+    self.underLine.height = underLineH;
     // 最开始不需要动画
-//    if (self.underLine.left == 0) {
-//        if (_underLineWidth >0) {
-//            self.underLine.width = _underLineWidth;
-//        }else {
-//            if (_isUnderLineEqualTitleWidth) {
-//                self.underLine.width = titleBounds.size.width;
-//            } else {
-//                self.underLine.width = selectedLabel.width;
-//            }
-//        }
-//
-//        self.underLine.centerX = selectedLabel.centerX;
-//        return;
-//    }
+    if (self.underLine.left == 0) {
+        if (_underLineWidth >0) {
+            self.underLine.width = _underLineWidth;
+        }else {
+            if (_isUnderLineEqualTitleWidth) {
+                self.underLine.width = titleBounds.size.width;
+            } else {
+                self.underLine.width = selectedLabel.width;
+            }
+        }
+
+        self.underLine.centerX = selectedLabel.centerX;
+        return;
+    }
     
     // 点击时候需要动画
     [UIView animateWithDuration:0.25 animations:^{
-//        if (_underLineWidth >0) {
-//            self.underLine.width = _underLineWidth;
-//        }else {
-//            if (_isUnderLineEqualTitleWidth) {
-//                self.underLine.width = titleBounds.size.width;
-//            } else {
-//                self.underLine.width = selectedLabel.width;
-//            }
-//        }
+        if (_underLineWidth >0) {
+            self.underLine.width = _underLineWidth;
+        }else {
+            if (_isUnderLineEqualTitleWidth) {
+                self.underLine.width = titleBounds.size.width;
+            } else {
+                self.underLine.width = selectedLabel.width;
+            }
+        }
         self.underLine.centerX = selectedLabel.centerX;
     }];
 }
 
 - (void)setUpUnderLineOffset:(CGFloat)offsetX rightLabel:(UILabel *)rightLabel leftLabel:(UILabel *)leftLabel
 {
-    // 获取两个标题中心点距离
-    CGFloat centerDelta = rightLabel.left - leftLabel.left;
-    // 标题宽度差值
-    CGFloat widthDelta = [self widthDeltaWithRightLabel:rightLabel leftLabel:leftLabel];
-    // 获取移动距离
-    CGFloat offsetDelta = offsetX - self.lastOffsetX;
-    // 计算当前下划线偏移量
-    CGFloat underLineTransformX = offsetDelta * centerDelta / self.width;
-    // 宽度递增偏移量
-    CGFloat underLineWidth = offsetDelta * widthDelta / self.width;
-    self.underLine.width += underLineWidth;
-    self.underLine.left += underLineTransformX;
+//    // 获取两个标题中心点距离
+//    CGFloat centerDelta = rightLabel.left - leftLabel.left;
+//    // 标题宽度差值
+//    CGFloat widthDelta = [self widthDeltaWithRightLabel:rightLabel leftLabel:leftLabel];
+//    // 获取移动距离
+//    CGFloat offsetDelta = offsetX - self.lastOffsetX;
+//    // 计算当前下划线偏移量
+//    CGFloat underLineTransformX = offsetDelta * centerDelta / self.width;
+//    // 宽度递增偏移量
+//    CGFloat underLineWidth = offsetDelta * widthDelta / self.width;
+//    self.underLine.width += underLineWidth;
+//    self.underLine.left += underLineTransformX;
     
 }
 
