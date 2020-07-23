@@ -310,6 +310,7 @@
 //}
 
 - (void)reloadTableViewData {
+    self.tableView.scrollEnabled = YES;
     if(self.dataList.count > 0){
         self.tableView.backgroundColor = [UIColor themeGray7];
         

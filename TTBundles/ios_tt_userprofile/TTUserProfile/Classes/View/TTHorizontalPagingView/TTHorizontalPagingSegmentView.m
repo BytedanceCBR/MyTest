@@ -230,7 +230,7 @@
 
 - (void)setupUnderLine:(SSThemedLabel *)selectedLabel
 {
-    // 获取文字尺寸
+//    // 获取文字尺寸
     CGRect titleBounds = [selectedLabel.text boundingRectWithSize:CGSizeMake(MAXFLOAT, 0) options:NSStringDrawingUsesLineFragmentOrigin attributes:@{NSFontAttributeName:self.titleFont} context:nil];
     CGFloat underLineH = self.underLineH > 0 ? self.underLineH : 2;
     if (self.underLinePaddingToLab>0) {
@@ -238,23 +238,23 @@
     }else {
         self.underLine.top = selectedLabel.height - underLineH;
     }
-    
-    self.underLine.height = underLineH;
+//
+//    self.underLine.height = underLineH;
     // 最开始不需要动画
-    if (self.underLine.left == 0) {
-        if (_underLineWidth >0) {
-            self.underLine.width = _underLineWidth;
-        }else {
-            if (_isUnderLineEqualTitleWidth) {
-                self.underLine.width = titleBounds.size.width;
-            } else {
-                self.underLine.width = selectedLabel.width;
-            }
-        }
-        
-        self.underLine.centerX = selectedLabel.centerX;
-        return;
-    }
+//    if (self.underLine.left == 0) {
+//        if (_underLineWidth >0) {
+//            self.underLine.width = _underLineWidth;
+//        }else {
+//            if (_isUnderLineEqualTitleWidth) {
+//                self.underLine.width = titleBounds.size.width;
+//            } else {
+//                self.underLine.width = selectedLabel.width;
+//            }
+//        }
+//
+//        self.underLine.centerX = selectedLabel.centerX;
+//        return;
+//    }
     
     // 点击时候需要动画
     [UIView animateWithDuration:0.25 animations:^{

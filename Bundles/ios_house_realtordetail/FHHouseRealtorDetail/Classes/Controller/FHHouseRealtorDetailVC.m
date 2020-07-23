@@ -163,6 +163,7 @@
     [_headerView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.right.top.equalTo(self.view);
     }];
+    [self.view bringSubviewToFront:self.customNavBarView];
     self.view.backgroundColor = [UIColor colorWithHexStr:@"#f8f8f8"];
 }
 
