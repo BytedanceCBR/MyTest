@@ -1079,9 +1079,7 @@
 - (void)p_buildCommentViewController
 {
     self.commentViewController = [[TTCommentViewController alloc] initWithViewFrame:[self p_contentVisableRect] dataSource:self delegate:self];
-    NSMutableDictionary *dict = @{}.mutableCopy;
-    dict[@"page_type"] = [self pageType];
-    self.commentViewController.tracerDict = dict;
+    self.commentViewController.tracerDict = self.detailModel.reportParams;
     self.commentViewController.enableImpressionRecording = YES;
     [self.commentViewController willMoveToParentViewController:self];
     [self addChildViewController:self.commentViewController];

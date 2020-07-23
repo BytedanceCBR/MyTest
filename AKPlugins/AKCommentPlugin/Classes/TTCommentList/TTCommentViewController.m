@@ -417,16 +417,19 @@ static NSInteger kDeleteCommentActionSheetTag = 10;
     [dic setValue:model.groupModel.groupID forKey:@"group_id"];
     [dic setValue:model.userID forKey:@"to_user_id"];
     [dic setValue:model.commentID forKey:@"comment_id"];
-    [dic setValue:@"detail" forKey:@"position"];
+//    [dic setValue:@"detail" forKey:@"position"];
     if (self.enter_from.length > 0) {
         [dic setValue:self.enter_from forKey:@"enter_from"];
     }
     if ([self.tracerDict isKindOfClass:[NSDictionary class]]) {
-        dic[@"rank"] = self.tracerDict[@"rank"] ?: @"be_null";
-        dic[@"log_pb"] = self.tracerDict[@"log_pb"] ?: @"be_null";
-        dic[@"enter_type"] = self.tracerDict[@"enter_type"] ?: @"be_null";
+        dic[@"rank"] = self.tracerDict[@"rank"];
+        dic[@"log_pb"] = self.tracerDict[@"log_pb"];
+        dic[@"enter_from"] = self.tracerDict[@"page_type"] ?: @"be_null";
+        dic[@"origin_from"] = self.tracerDict[@"origin_from"] ?: @"be_null";
+        dic[@"group_source"] = self.tracerDict[@"group_source"];
     }
     [FHUserTracker writeEvent:@"comment_enter" params:dic];
+    [FHUserTracker writeEvent:@"go_detail" params:dic];
 }
 
 - (void)p_profileFillAction {

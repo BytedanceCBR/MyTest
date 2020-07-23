@@ -821,6 +821,9 @@ static NSUInteger const kOldAnimationViewTag = 20161221;
     TTCommentViewController *vc = (TTCommentViewController *)(self.commentViewController);
     NSMutableDictionary *dict = @{}.mutableCopy;
     dict[@"enter_from"] = self.detailModel.gdExtJsonDict[@"enter_from"];
+    dict[@"origin_from"] = self.detailModel.gdExtJsonDict[@"origin_from"];
+    dict[@"category_name"] = self.detailModel.gdExtJsonDict[@"category_name"];
+    dict[@"page_type"] = @"answer";
     vc.tracerDict = dict;
     
     
@@ -2039,13 +2042,13 @@ static NSUInteger const kOldAnimationViewTag = 20161221;
     [dict setValue:answerEntity.ansid forKey:@"group_id"];
     [dict setValue:answerEntity.user.userID forKey:@"user_id"];
     [dict setValue:@(10) forKey:@"group_source"];
-    [dict setValue:@"detail" forKey:@"position"];
+    [dict setValue:@"feed_detail" forKey:@"click_position"];
     [dict setValue:@"house_app2c_v2" forKey:@"event_type"];
     
     if (self.detailModel.answerEntity.isDigg) {
-        [BDTrackerProtocol eventV3:@"rt_like" params:[dict copy]];
+        [BDTrackerProtocol eventV3:@"click_like" params:[dict copy]];
     } else {
-        [BDTrackerProtocol eventV3:@"rt_unlike" params:[dict copy]];
+        [BDTrackerProtocol eventV3:@"click_dislike" params:[dict copy]];
     }
 }
 
@@ -2089,6 +2092,7 @@ static NSUInteger const kOldAnimationViewTag = 20161221;
     if (!model.userDigged) {
         NSMutableDictionary *params = [[NSMutableDictionary alloc] initWithCapacity:5];
         [params setValue:@"house_app2c_v2" forKey:@"event_type"];
+        [params setValue:[self.detailModel.gdExtJsonDict objectForKey:@"origin_from"]  forKey:@"origin_from"];
         [params setValue:[self.detailModel.gdExtJsonDict objectForKey:@"enter_from"]  forKey:@"enter_from"];
         [params setValue:[self.detailModel.gdExtJsonDict objectForKey:@"category_name"]  forKey:@"category_name"];
         [params setValue:[self.detailModel.gdExtJsonDict objectForKey:@"ansid"]  forKey:@"ansid"];
@@ -2097,11 +2101,12 @@ static NSUInteger const kOldAnimationViewTag = 20161221;
         [params setValue:[self.detailModel.gdExtJsonDict objectForKey:@"group_id"]  forKey:@"group_id"];
         [params setValue:model.commentID.stringValue forKey:@"comment_id"];
         [params setValue:[self.detailModel.gdExtJsonDict objectForKey:@"ansid"]  forKey:@"group_id"];
-        [params setValue:@"comment" forKey:@"position"];
-        [TTTrackerWrapper eventV3:@"rt_unlike" params:params];
+        [params setValue:@"comment" forKey:@"click_position"];
+        [TTTrackerWrapper eventV3:@"click_dislike" params:params];
     } else {
         NSMutableDictionary *params = [[NSMutableDictionary alloc] initWithCapacity:5];
         [params setValue:@"house_app2c_v2" forKey:@"event_type"];
+        [params setValue:[self.detailModel.gdExtJsonDict objectForKey:@"origin_from"]  forKey:@"origin_from"];
         [params setValue:[self.detailModel.gdExtJsonDict objectForKey:@"enter_from"]  forKey:@"enter_from"];
         [params setValue:[self.detailModel.gdExtJsonDict objectForKey:@"category_name"]  forKey:@"category_name"];
         [params setValue:[self.detailModel.gdExtJsonDict objectForKey:@"ansid"]  forKey:@"ansid"];
@@ -2110,8 +2115,8 @@ static NSUInteger const kOldAnimationViewTag = 20161221;
         [params setValue:[self.detailModel.gdExtJsonDict objectForKey:@"group_id"]  forKey:@"group_id"];
         [params setValue:model.commentID.stringValue forKey:@"comment_id"];
         [params setValue:[self.detailModel.gdExtJsonDict objectForKey:@"ansid"]  forKey:@"group_id"];
-        [params setValue:@"comment" forKey:@"position"];
-        [TTTrackerWrapper eventV3:@"rt_like" params:params];
+        [params setValue:@"comment" forKey:@"click_position"];
+        [TTTrackerWrapper eventV3:@"click_like" params:params];
     }
 }
 
@@ -2207,7 +2212,8 @@ static NSUInteger const kOldAnimationViewTag = 20161221;
     //todo
     [mdict setValue:@"detail_wenda_comment_dig" forKey:@"fromPage"];
     [mdict setValue:[self.detailModel.gdExtJsonDict tt_stringValueForKey:@"category_name"]  forKey:@"categoryName"];
-    [mdict setValue:[self.detailModel.gdExtJsonDict tt_stringValueForKey:@"enter_from"]  forKey:@"enterFrom"];
+    [mdict setValue:@"answer" forKey:@"enterFrom"];
+    [mdict setValue:[self.detailModel.gdExtJsonDict tt_stringValueForKey:@"origin_from"]  forKey:@"originFrom"];
     [mdict setValue:self.detailModel.answerEntity.ansid forKey:@"groupId"];
     [mdict setValue:[self.detailModel.gdExtJsonDict tt_stringValueForKey:@"qid"] forKey:@"qid"];
     [mdict setValue:[self.detailModel.gdExtJsonDict tt_objectForKey:@"log_pb"] forKey:@"logPb"];

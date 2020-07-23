@@ -1882,7 +1882,7 @@ static const CGFloat kFloatingViewOriginY = 230;
     NSString *eventName = commentModel.userDigg ? @"click_dislike" : @"click_like";
     NSString *position = @"comment";
     if(commentModel.replyToComment){
-        position = @"relpy";
+        position = @"reply";
     }
     [AWEVideoDetailTracker trackEvent:eventName
                                 model:self.model
