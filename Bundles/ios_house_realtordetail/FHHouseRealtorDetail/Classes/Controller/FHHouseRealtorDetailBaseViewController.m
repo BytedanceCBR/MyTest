@@ -34,6 +34,7 @@
         _tableView.estimatedRowHeight = UITableViewAutomaticDimension;
         _tableView.estimatedSectionFooterHeight = 0;
         _tableView.estimatedSectionHeaderHeight = 0;
+        _tableView.scrollEnabled = NO;
         [self.view addSubview:_tableView];
         [_tableView mas_makeConstraints:^(MASConstraintMaker *make) {
             make.edges.mas_equalTo(self.view);

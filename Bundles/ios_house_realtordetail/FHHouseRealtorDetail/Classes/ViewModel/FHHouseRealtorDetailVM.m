@@ -45,7 +45,6 @@
 
 @property (nonatomic, weak) FHHouseRealtorDetailVC *viewController;
 @property (nonatomic, strong) FHHouseRealtorDetailBaseViewController *feedListController; //当前显示的feedVC
-@property (nonatomic, assign) BOOL isViewAppear;
 @property (nonatomic, strong) TTHorizontalPagingView *pagingView;
 @property (nonatomic, strong) FHHouseRealtorDetailDataModel *data;
 @property (nonatomic, strong) FHRealtorDetailBottomBar *bottomBar;
@@ -58,8 +57,6 @@
 @property (nonatomic, assign) NSInteger selectedIndex;
 @property (nonatomic, strong) NSMutableArray *ugcTabList;
 @property (nonatomic, assign) BOOL isFirstEnter;
-
-//@property (nonatomic, strong) FHUGCGuideView *guideView;
 @property (nonatomic) BOOL shouldShowUGcGuide;
 @end
 @implementation FHHouseRealtorDetailVM
@@ -72,9 +69,6 @@
         self.realtorPhoneCallModel = [[FHRealtorEvaluatingPhoneCallModel alloc]initWithHouseType:[NSString stringWithFormat:@"%@",realtorInfo[@"house_type"]].intValue houseId:realtorInfo[@"house_id"]];
         self.realtorPhoneCallModel.tracerDict = tracerDict;
         self.realtorPhoneCallModel.belongsVC = viewController;
-        [self initView];
-        self.shouldShowUGcGuide = YES;
-        self.isViewAppear = YES;
         self.isFirstEnter = YES;
         self.viewController.segmentView.delegate = self;
         self.realtorInfo = realtorInfo;
@@ -90,33 +84,9 @@
     return self;
 }
 
-- (void)initView {
-    
-}
 
-- (void)dealloc {
-    [[NSNotificationCenter defaultCenter] removeObserver:self];
-}
-
-- (void)viewWillAppear {
-    
-}
-
-- (void)viewDidAppear {
-    self.isViewAppear = YES;
-    [self updateNavBarWithAlpha:self.viewController.customNavBarView.bgView.alpha];
-}
-
-- (void)viewWillDisappear {
-    self.isViewAppear = NO;
-}
-
-- (void)endRefreshing {
-    
-}
 
 - (void)requestDataWithRealtorId:(NSString *)realtorId refreshFeed:(BOOL)refreshFeed {
-    
     if (![TTReachability isNetworkConnected]) {
         [self onNetworError:YES showToast:YES];
         return;
@@ -142,19 +112,10 @@
 }
 
 - (void)processDetailData:(FHHouseRealtorDetailModel *)model {
-    [self.viewController showBottomBar:YES];
     self.data = model.data;
     NSArray *commentInfo = model.data.evaluation[@"comment_info"];
-    if (commentInfo.count == 0) {
-        [self updateUIWithData];
-    }
+    BOOL realtorLeave = [model.data.realtor.allKeys containsObject:@"is_leave"]?[model.data.realtor[@"is_leave"] boolValue]:NO;
     if(self.isFirstEnter){
-        //初始化segment
-        self.ugcTabList = model.data.ugcTabList.mutableCopy;
-        FHHouseRealtorDetailRgcTabModel *models =  [[FHHouseRealtorDetailRgcTabModel alloc]init];
-        models.showName = @"房源";
-        models.tabName = @"house_list";
-        [self.ugcTabList insertObject:models atIndex:0];
         NSMutableDictionary *dic = @{}.mutableCopy;
         NSMutableDictionary *dicm = model.data.scoreInfo.mutableCopy;
         if (dicm && [dicm.allKeys containsObject:@"open_url"]) {
@@ -194,16 +155,21 @@
         }
         [self.viewController.headerView reloadDataWithDic:dic];
         self.viewController.headerView.height = self.viewController.headerView.viewHeight;
-        
-        
+        if (realtorLeave) {
+            [self.viewController showRealtorLeaveHeader];
+            return;
+        }
+        [self.viewController showBottomBar:YES];
+        //初始化segment
+        self.ugcTabList = model.data.ugcTabList.mutableCopy;
+        FHHouseRealtorDetailRgcTabModel *models =  [[FHHouseRealtorDetailRgcTabModel alloc]init];
+        models.showName = @"房源";
+        models.tabName = @"house_list";
+        [self.ugcTabList insertObject:models atIndex:0];
         [self initSegmentWithTabInfoArr:self.ugcTabList];
         //初始化vc
         [self initSubVCinitWithTabInfoArr:self.ugcTabList];
     }
-    //    NSLog(@"%@",self.viewController.headerView.viewHeight);
-    //    [self.pagingView reloadHeaderViewHeight:self.viewController.headerView.viewHeight];
-    //    [self.viewController.headerView setNeedsLayout];
-    //    [self.viewController.headerView layoutIfNeeded];
 }
 
 -(void)onNetworError:(BOOL)showEmpty showToast:(BOOL)showToast{
@@ -300,9 +266,6 @@
 }
 
 - (void)updateNavBarWithAlpha:(CGFloat)alpha {
-    if (!self.isViewAppear) {
-        return;
-    }
     UIImage *whiteBackArrowImage = ICON_FONT_IMG(24, @"\U0000e68a", [UIColor whiteColor]);
     UIImage *blackBackArrowImage = ICON_FONT_IMG(24, @"\U0000e68a", [UIColor themeGray1]);
     alpha = fminf(fmaxf(0.0f, alpha), 1.0f);
@@ -328,14 +291,9 @@
         [self.viewController.customNavBarView.leftBtn setBackgroundImage:blackBackArrowImage forState:UIControlStateNormal];
         [self.viewController.customNavBarView.leftBtn setBackgroundImage:blackBackArrowImage forState:UIControlStateHighlighted];
     }
-    [self.viewController.customNavBarView refreshAlpha:alpha];
+    self.viewController.customNavBarView.bgView.alpha = alpha;
 }
 
-
-- (void)updateUIWithData {
-//    self.viewController.headerView.height = 310;
-//    [self.pagingView reloadHeaderViewHeight:310];
-}
 
 #pragma UIScrollViewDelegate
 
@@ -476,12 +434,12 @@
     [self refreshContentOffset:delta];
 }
 
-- (void)pagingView:(TTHorizontalPagingView *)pagingView scrollViewDidEndDraggingOffset:(CGFloat)offset {
-    CGFloat delta = self.pagingView.currentContentViewTopInset + offset;
-    if(delta <= -50){
-        
-    }
-}
+//- (void)pagingView:(TTHorizontalPagingView *)pagingView scrollViewDidEndDraggingOffset:(CGFloat)offset {
+//    CGFloat delta = self.pagingView.currentContentViewTopInset + offset;
+//    if(delta <= -50){
+//
+//    }
+//}
 
 #pragma mark - segmentView 代理
 - (void)segmentView:(TTHorizontalPagingSegmentView *)segmentView didSelectedItemAtIndex:(NSInteger)index toIndex:(NSInteger)toIndex {
