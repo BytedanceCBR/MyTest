@@ -49,7 +49,7 @@
 - (instancetype)initWithController:(FHHouseRealtorDetailController *)viewController tableView:(UITableView *)tableView realtorInfo:(NSDictionary *)realtorInfo tracerDic:(NSDictionary *)tracerDic {
     self = [super init];
     if (self) {
-         self.tracerDic = tracerDic;
+        self.tracerDic = tracerDic;
         self.detailController = viewController;
         self.tableView = tableView;
         self.realtorInfo = realtorInfo;
@@ -89,10 +89,10 @@
         return;
     }
     
-//    if (isFirst) {
-//        self.detailController.isLoadingData = YES;
-//        [self.detailController startLoading];
-//    }
+    //    if (isFirst) {
+    //        self.detailController.isLoadingData = YES;
+    //        [self.detailController startLoading];
+    //    }
     
     NSString *refreshType = @"be_null";
     __weak typeof(self) wself = self;
@@ -148,30 +148,22 @@
             return;
         }
         if(model){
-            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
-                NSArray *resultArr = [self convertModel:feedListModel.data];
-                if(isHead && feedListModel.hasMore){
-                    [wself.dataList removeAllObjects];
-                }
-                if(isHead){
-                    [wself.dataList removeAllObjects];
-                    [wself.dataList addObjectsFromArray:resultArr];
-                }else{
-                    [wself.dataList addObjectsFromArray:resultArr];
-                }
-                dispatch_async(dispatch_get_main_queue(), ^{
-//                    if(isHead){
-//                        wself.tableView.hasMore = YES;
-//                    }else {
-                        wself.tableView.hasMore = feedListModel.hasMore;
-//                    }
-                    if(wself.dataList.count > 0){
-                        [wself updateTableViewWithMoreData:feedListModel.hasMore];
-                        [wself.detailController.emptyView hideEmptyView];
-                    }
-                    [self reloadTableViewData];
-                });
-            });
+            NSArray *resultArr = [self convertModel:feedListModel.data];
+            if(isHead && feedListModel.hasMore){
+                [wself.dataList removeAllObjects];
+            }
+            if(isHead){
+                [wself.dataList removeAllObjects];
+                [wself.dataList addObjectsFromArray:resultArr];
+            }else{
+                [wself.dataList addObjectsFromArray:resultArr];
+            }
+            wself.tableView.hasMore = feedListModel.hasMore;
+            if(wself.dataList.count > 0){
+                [wself updateTableViewWithMoreData:feedListModel.hasMore];
+                [wself.detailController.emptyView hideEmptyView];
+            }
+            [self reloadTableViewData];
         }
     }];
 }
@@ -253,10 +245,10 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     if (indexPath.row == 0) {
-         NSString *identifier = @"FHHouseRealtorDetailPlaceCell";
-         FHHouseBaseItemCell *cell = [tableView dequeueReusableCellWithIdentifier:identifier];
+        NSString *identifier = @"FHHouseRealtorDetailPlaceCell";
+        FHHouseBaseItemCell *cell = [tableView dequeueReusableCellWithIdentifier:identifier];
         [cell.contentView setBackgroundColor:[UIColor colorWithHexStr:@"#f8f8f8"]];
-         return cell;
+        return cell;
     }else {
         if(indexPath.row < self.dataList.count + 1){
             FHFeedUGCCellModel *cellModel = self.dataList[indexPath.row -1];
@@ -274,7 +266,7 @@
             return cell;
         }
     }
-
+    
     return [[FHUGCBaseCell alloc] init];
 }
 
@@ -323,7 +315,7 @@
             }
             //设置footer来占位
             UIView *tableFooterView = [[UIView alloc] initWithFrame:CGRectMake(0, 15, [UIScreen mainScreen].bounds.size.width, self.detailController.errorViewHeight - height - refreshFooterBottomHeight)];
-               tableFooterView.backgroundColor = [UIColor colorWithHexStr:@"#f8f8f8"];
+            tableFooterView.backgroundColor = [UIColor colorWithHexStr:@"#f8f8f8"];
             self.tableView.tableFooterView = tableFooterView;
         }else{
             self.tableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width,0.001)];
@@ -332,7 +324,7 @@
     }else{
         [self.errorView showEmptyWithTip:@"暂无内容" errorImageName:kFHErrorMaskNetWorkErrorImageName showRetry:NO];
         UIView *tableFooterView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, self.detailController.errorViewHeight)];
-           tableFooterView.backgroundColor = [UIColor colorWithHexStr:@"#f8f8f8"];
+        tableFooterView.backgroundColor = [UIColor colorWithHexStr:@"#f8f8f8"];
         [tableFooterView addSubview:self.errorView];
         self.tableView.tableFooterView = tableFooterView;
         self.refreshFooter.hidden = YES;
@@ -433,21 +425,21 @@
         return;
     }
     [self.showHouseCache addObject:itemData.groupId];
-      NSMutableDictionary *dict = [NSMutableDictionary dictionary];
-        dict[@"origin_from"] = [extraDic.allKeys containsObject:@"origin_from"]?extraDic[@"origin_from"]:@"be_null";
-        dict[@"enter_from"] =  [extraDic.allKeys containsObject:@"enter_from"]?extraDic[@"enter_from"]:@"be_null";
-        dict[@"page_type"] = [extraDic.allKeys containsObject:@"page_type"]?extraDic[@"page_type"]:@"be_null";
-        dict[@"event_type"] = [self eventType];
+    NSMutableDictionary *dict = [NSMutableDictionary dictionary];
+    dict[@"origin_from"] = [extraDic.allKeys containsObject:@"origin_from"]?extraDic[@"origin_from"]:@"be_null";
+    dict[@"enter_from"] =  [extraDic.allKeys containsObject:@"enter_from"]?extraDic[@"enter_from"]:@"be_null";
+    dict[@"page_type"] = [extraDic.allKeys containsObject:@"page_type"]?extraDic[@"page_type"]:@"be_null";
+    dict[@"event_type"] = [self eventType];
     dict[@"category_name"] = self.realtorInfo[@"tab_name"];
-        dict[@"group_id"] = [extraDic.allKeys containsObject:@"group_id"]?extraDic[@"group_id"]:@"be_null";
-        dict[@"group_source"] = itemData.logPb[@"group_source"]?:@"be_null";
-        dict[@"realtor_id"] = itemData.realtor.realtorId?:@"be_null";
-        dict[@"realtor_id"] = itemData.realtor.realtorId?:@"be_null";
-        dict[@"element_type"] = @"realtor_evaluate";
-        dict[@"rank"] = [extraDic.allKeys containsObject:@"rank"]?extraDic[@"rank"]:@"be_null";
-        dict[@"from_gid"] = [extraDic.allKeys containsObject:@"from_gid"]?extraDic[@"from_gid"]:@"be_null";
-        dict[@"log_pb"] =  [extraDic.allKeys containsObject:@"log_pb"]?extraDic[@"log_pb"]:@"be_null";
-        TRACK_EVENT(@"feed_client_show", dict);
+    dict[@"group_id"] = [extraDic.allKeys containsObject:@"group_id"]?extraDic[@"group_id"]:@"be_null";
+    dict[@"group_source"] = itemData.logPb[@"group_source"]?:@"be_null";
+    dict[@"realtor_id"] = itemData.realtor.realtorId?:@"be_null";
+    dict[@"realtor_id"] = itemData.realtor.realtorId?:@"be_null";
+    dict[@"element_type"] = @"realtor_evaluate";
+    dict[@"rank"] = [extraDic.allKeys containsObject:@"rank"]?extraDic[@"rank"]:@"be_null";
+    dict[@"from_gid"] = [extraDic.allKeys containsObject:@"from_gid"]?extraDic[@"from_gid"]:@"be_null";
+    dict[@"log_pb"] =  [extraDic.allKeys containsObject:@"log_pb"]?extraDic[@"log_pb"]:@"be_null";
+    TRACK_EVENT(@"feed_client_show", dict);
 }
 
 - (NSString*)eventType {
