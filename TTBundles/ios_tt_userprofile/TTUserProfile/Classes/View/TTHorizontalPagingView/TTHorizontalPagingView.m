@@ -10,6 +10,7 @@
 #import "TTHorizontalPagingSegmentView.h"
 #import <objc/runtime.h>
 #import <TTBaseLib/UIViewAdditions.h>
+#import "UIView+BTDAdditions.h"
 
 @interface TTHorizontalPagingCollectionView : UICollectionView <UIGestureRecognizerDelegate>
 
@@ -501,6 +502,7 @@ static void *TTHorizontalPagingViewSettingInset = &TTHorizontalPagingViewSetting
         if(self.headerShowHeight > self.segmentTopSpace) {
             if(self.segmentView.superview == self){
                 [_segmentView removeFromSuperview];
+                 _segmentView.btd_y = self.headerView.bottom;
                 _segmentView.frame = CGRectMake(0, self.headerView.bottom, self.width, self.segmentViewHeight);
                 [self.movingView addSubview:_segmentView];
             }

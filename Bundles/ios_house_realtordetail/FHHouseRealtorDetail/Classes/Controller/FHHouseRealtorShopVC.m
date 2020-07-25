@@ -44,6 +44,7 @@
     [self setNavBar];
     [self initBottomBar];
     [self addDefaultEmptyViewWithEdgeInsets:UIEdgeInsetsMake(0, 0, 0, 0)];
+    self.emptyView.backgroundColor = [UIColor colorWithHexStr:@"#f8f8f8"];
      [self createModel];
 }
 
