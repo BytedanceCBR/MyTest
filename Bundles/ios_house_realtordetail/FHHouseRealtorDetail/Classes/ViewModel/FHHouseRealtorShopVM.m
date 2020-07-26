@@ -142,7 +142,6 @@
         self.detailController.customNavBarView.title.text = [UIColor blackColor];
         [self.detailController.customNavBarView.leftBtn setBackgroundImage:whiteBackArrowImage forState:UIControlStateNormal];
         [self.detailController.customNavBarView.leftBtn setBackgroundImage:whiteBackArrowImage forState:UIControlStateHighlighted];
-        [self.detailController.customNavBarView setNaviBarTransparent:NO];
     }
     if(showToast){
         [[ToastManager manager] showToast:@"网络异常"];
@@ -177,12 +176,7 @@
         [self.detailController.customNavBarView.leftBtn setBackgroundImage:blackBackArrowImage forState:UIControlStateNormal];
         [self.detailController.customNavBarView.leftBtn setBackgroundImage:blackBackArrowImage forState:UIControlStateHighlighted];
     }
-    [self.detailController.customNavBarView refreshAlpha:alpha];
-
-//    NSMutableArray *tabArray = [self.socialGroupModel.data.tabInfo mutableCopy];
-//    if(tabArray && tabArray.count > 1) {
-//        self.viewController.customNavBarView.seperatorLine.hidden = YES;
-//    }
+     self.detailController.customNavBarView.bgView.alpha = alpha;
 }
 
 - (void)configTableView {
@@ -295,7 +289,6 @@
     label.font = [UIFont themeFontMedium:20];
     label.text = self.houseTotal;
     [view addSubview:label];
-    
     return view;
 }
 
@@ -344,14 +337,6 @@
         FHHomeHouseDataItemsModel *theModel = self.dataList[indexPath.row];
         
         NSMutableDictionary *traceParam = [NSMutableDictionary new];
-        //        traceParam[@"enter_from"] = [self pageTypeString];
-        //        traceParam[@"log_pb"] = theModel.logPb;
-        //        traceParam[@"origin_from"] = [self pageTypeString];
-        //        traceParam[@"card_type"] = @"left_pic";
-        //        traceParam[@"rank"] = [self getRankFromHouseId:theModel.idx indexPath:indexPath];
-        //        traceParam[@"origin_search_id"] = self.originSearchId ? : @"be_null";
-        //        traceParam[@"element_from"] = @"maintab_list";
-        //        traceParam[@"enter_from"] = @"maintab";
         [traceParam addEntriesFromDictionary:self.tracerDict];
         [traceParam setObject:traceParam[@"page_type"] forKey:@"enter_from"];
         NSMutableDictionary *dict = @{@"house_type":@(2),

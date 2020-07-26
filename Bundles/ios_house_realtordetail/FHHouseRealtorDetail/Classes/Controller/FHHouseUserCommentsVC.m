@@ -35,6 +35,7 @@
     [self initTableView];
     [self setupDefaultNavBar:NO];
     self.customNavBarView.title.text = @"用户评价";
+        [self initTableView];
     [self initFrame];
     [self addDefaultEmptyViewFullScreen];
      [self createModel];

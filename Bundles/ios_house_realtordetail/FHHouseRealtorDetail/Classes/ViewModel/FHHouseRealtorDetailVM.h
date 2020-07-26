@@ -14,23 +14,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FHHouseRealtorDetailVM : NSObject
 @property (nonatomic , strong) NSMutableDictionary *tracerDict;
-@property (nonatomic, copy)     NSDictionary       *shareTracerDict;// 分享埋点数据
-
 - (instancetype)initWithController:(FHHouseRealtorDetailVC *)viewController tracerDict:(NSDictionary*)tracerDict realtorInfo:(NSDictionary *)realtorInfo bottomBar:(FHRealtorDetailBottomBar *)bottomBar;
-
 - (void)requestDataWithRealtorId:(NSString *)realtorId refreshFeed:(BOOL)refreshFeed;
-
-- (void)viewWillAppear;
-
-- (void)viewDidAppear;
-
-- (void)viewWillDisappear;
-
 - (void)addGoDetailLog;
-
-- (void)addStayPageLog:(NSTimeInterval)stayTime;
-
-
 - (void)updateNavBarWithAlpha:(CGFloat)alpha;
 @end
 
