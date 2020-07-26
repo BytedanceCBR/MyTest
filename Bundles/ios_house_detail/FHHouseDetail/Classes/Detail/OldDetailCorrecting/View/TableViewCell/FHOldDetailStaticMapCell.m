@@ -17,6 +17,9 @@
 #import "FHDetailHeaderStarTitleView.h"
 #import "FHSegmentControl.h"
 #import "TTReachability.h"
+#import "FHDetailNewModel.h"
+#import "FHDetailOldModel.h""
+#import "FHDetailNeighborhoodModel.h"
 
 @interface FHOldDetailStaticMapCell () <AMapSearchDelegate, UITableViewDelegate, UITableViewDataSource, FHDetailVCViewLifeCycleProtocol, FHStaticMapDelegate, MAMapViewDelegate>
 //ui
@@ -347,7 +350,14 @@
     tracerDict[@"element_from"] = @"map";
     NSMutableDictionary *param = [NSMutableDictionary new];
     param[TRACER_KEY] = tracerDict.copy;
-    
+    if ([self.baseViewModel.detailData isKindOfClass:[FHDetailOldModel class]]) {
+        // 二手房数据
+        tracerDict[@"enter_from"] = @"old_detail";
+    }else if ([self.baseViewModel.detailData isKindOfClass:[FHDetailNewModel class]]) {
+        tracerDict[@"enter_from"] = @"new_detail";
+    }else if ([self.baseViewModel.detailData isKindOfClass:[FHDetailNeighborhoodModel class]]) {
+        tracerDict[@"enter_from"] = @"neighborhood_detail";
+    }
     if (dataModel.gaodeLat.length && dataModel.gaodeLng.length) {
         param[@"gaodeLat"] = dataModel.gaodeLat;
         param[@"gaodeLon"] = dataModel.gaodeLng;

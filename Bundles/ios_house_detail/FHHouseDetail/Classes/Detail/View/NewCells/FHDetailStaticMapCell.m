@@ -394,6 +394,7 @@
     FHDetailStaticMapCellModel *dataModel = (FHDetailStaticMapCellModel *) self.currentData;
     NSMutableDictionary *tracerDict = self.baseViewModel.detailTracerDic.mutableCopy;
     tracerDict[@"element_from"] = @"map";
+    tracerDict[@"enter_from"] = @"rent_detail";
     NSMutableDictionary *param = [NSMutableDictionary new];
     param[TRACER_KEY] = tracerDict.copy;
     
