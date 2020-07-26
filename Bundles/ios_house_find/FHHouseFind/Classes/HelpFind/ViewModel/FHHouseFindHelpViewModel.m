@@ -398,7 +398,14 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
     } else {
         // Fallback on earlier versions
     }
-    NSArray<FHFilterNodeModel*> *configs = [self.class convertConfigItemsToModel:@[model.items.lastObject.configOption]];
+    __block NSInteger regionIndex = 0;
+    [model.items enumerateObjectsUsingBlock:^(FHHouseFindSelectItemModel * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        if (obj.tabId == FHSearchTabIdTypeRegion) {
+            regionIndex = idx;
+            *stop = YES;
+        }
+    }];
+    NSArray<FHFilterNodeModel*> *configs = [self.class convertConfigItemsToModel:@[model.items[regionIndex].configOption]];
     __weak typeof(self)wself = self;
     frame.size.height = REGION_CONTENT_HEIGHT + bottomHeight;
     _regionSheet = [[FHHouseFindHelpRegionSheet alloc]initWithFrame:frame];
