@@ -276,9 +276,10 @@
 }
 
 // 输入框执行搜索
-- (BOOL)textFieldShouldReturn:(UITextField *)textField {
-    //  NSString *userInputText = self.naviBar.searchInput.text;
-}
+//- (BOOL)textFieldShouldReturn:(UITextField *)textField {
+//    //  NSString *userInputText = self.naviBar.searchInput.text;
+//
+//}
 
 #pragma mark - dealloc
 

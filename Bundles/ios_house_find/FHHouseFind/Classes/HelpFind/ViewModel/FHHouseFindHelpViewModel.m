@@ -796,7 +796,7 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
     return phoneNum;
 }
 
-- (BOOL)storePhoneNumber:(NSString *)phoneNumber {
+- (void)storePhoneNumber:(NSString *)phoneNumber {
     YYCache *findHousePhoneNumberCache = [[FHEnvContext sharedInstance].generalBizConfig findHousePhoneNumberCache];
     [findHousePhoneNumberCache setObject:phoneNumber ?: @"" forKey:kFHFindHousePhoneNumberCacheKey];
 }

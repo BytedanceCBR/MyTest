@@ -23,36 +23,36 @@ inhibit_all_warnings!
 # F100 业务线库
 def fhPods
     
-    pod 'FHHouseBase' , :path => '../Bundles/ios_house_base' # :git => 'git@code.byted.org:fproject/ios_house_base.git' ,:branch => 'feature/develop' #
+    pod 'FHHouseBase' , :path => '../Bundles/ios_house_base', :inhibit_warnings => false # :git => 'git@code.byted.org:fproject/ios_house_base.git' ,:branch => 'feature/develop' #
     #    pod 'FHHouseRent' , :path => '../Bundles/ios_house_rent' #:git => 'git@code.byted.org:fproject/ios_house_rent.git' ,:branch => 'feature/develop' #
-    pod 'FHMapSearch' , :path => '../Bundles/ios_map_search' # :git => 'git@code.byted.org:fproject/ios_map_search.git' ,:branch => 'feature/develop' #
-    pod 'FHHouseHome' , :path => '../Bundles/ios_house_home' # :git => 'git@code.byted.org:fproject/ios_house_home.git' ,:branch => 'feature/develop' #
-    pod 'FHHouseDetail' , :path => '../Bundles/ios_house_detail' # :git => 'git@code.byted.org:fproject/ios_house_detail.git' , :branch => 'feature/develop'
-    pod 'FHHouseMessage' , :path => '../Bundles/ios_house_message' # :git => 'git@code.byted.org:fproject/ios_house_message.git' , :branch => 'feature/develop'
-    pod 'FHHouseList' , :path => '../Bundles/ios_house_list' # :git => 'git@code.byted.org:fproject/ios_house_list.git' , :branch => 'feature/develop'
-    pod 'FHHouseFind' , :path => '../Bundles/ios_house_find'
-    pod 'FHHouseMine' , :path => '../Bundles/ios_house_mine'
-    pod 'FHHouseEpidemicSituation', :path => '../Bundles/ios_house_esituation'
-    pod 'FHHouseRealtorDetail', :path => '../Bundles/ios_house_realtordetail'
-    pod 'FHHouseUGC' , :path => '../Bundles/ios_house_ugc'
-    pod 'FHHouseTrend' , :path => '../Bundles/ios_house_trend'
-    pod 'FHCHousePush' , :path => '../Bundles/FHCHousePush'#,:git => 'git@code.byted.org:fproject/FHCHousePush.git' , :branch => 'feature/develop'
+    pod 'FHMapSearch' , :path => '../Bundles/ios_map_search', :inhibit_warnings => false # :git => 'git@code.byted.org:fproject/ios_map_search.git' ,:branch => 'feature/develop' #
+    pod 'FHHouseHome' , :path => '../Bundles/ios_house_home', :inhibit_warnings => false # :git => 'git@code.byted.org:fproject/ios_house_home.git' ,:branch => 'feature/develop' #
+    pod 'FHHouseDetail' , :path => '../Bundles/ios_house_detail', :inhibit_warnings => false # :git => 'git@code.byted.org:fproject/ios_house_detail.git' , :branch => 'feature/develop'
+    pod 'FHHouseMessage' , :path => '../Bundles/ios_house_message', :inhibit_warnings => false # :git => 'git@code.byted.org:fproject/ios_house_message.git' , :branch => 'feature/develop'
+    pod 'FHHouseList' , :path => '../Bundles/ios_house_list', :inhibit_warnings => false # :git => 'git@code.byted.org:fproject/ios_house_list.git' , :branch => 'feature/develop'
+    pod 'FHHouseFind' , :path => '../Bundles/ios_house_find', :inhibit_warnings => false
+    pod 'FHHouseMine' , :path => '../Bundles/ios_house_mine', :inhibit_warnings => false
+    pod 'FHHouseEpidemicSituation', :path => '../Bundles/ios_house_esituation', :inhibit_warnings => false
+    pod 'FHHouseRealtorDetail', :path => '../Bundles/ios_house_realtordetail', :inhibit_warnings => false
+    pod 'FHHouseUGC' , :path => '../Bundles/ios_house_ugc', :inhibit_warnings => false
+    pod 'FHHouseTrend' , :path => '../Bundles/ios_house_trend', :inhibit_warnings => false
+    pod 'FHCHousePush' , :path => '../Bundles/FHCHousePush', :inhibit_warnings => false#,:git => 'git@code.byted.org:fproject/FHCHousePush.git' , :branch => 'feature/develop'
     #    pod 'FHCHousePush' , :git => 'git@code.byted.org:fproject/FHCHousePush.git' , :branch => 'feature/develop'
     
-    pod 'FHWebView', :path => '../AKPlugins/FHWebView'
-    pod 'FHRNKit' , :path => '../Bundles/ios_common_rn'
-    pod 'FHLynxKit' , :path => '../Bundles/ios_common_lynx'
+    pod 'FHWebView', :path => '../AKPlugins/FHWebView', :inhibit_warnings => false
+    pod 'FHRNKit' , :path => '../Bundles/ios_common_rn', :inhibit_warnings => false
+    pod 'FHLynxKit' , :path => '../Bundles/ios_common_lynx', :inhibit_warnings => false
 
 #    pod 'ios_house_filter' , :git => 'git@code.byted.org:fproject/ios_house_filter.git', :commit => '60e9866a118874a07ca697cfbc4155bfa6b3d72c' #:branch => 'feature/develop'filter-triangle-open-highlighted
-    pod 'ios_house_filter' , '1.0.2.2-bugfix'
+    pod 'ios_house_filter' , '1.0.2.2-bugfix', :inhibit_warnings => false
 
 
-    pod 'FHCommonUI','0.9.0.3'
+    pod 'FHCommonUI','0.9.0.3', :inhibit_warnings => false
 #    pod 'FHCommonUI',:path => '../../../ios_common_ui/'
     #pod 'FHCommonUI', :git => 'git@code.byted.org:fproject/ios_common_ui.git', :commit => '375181b5f667aaa2cab7d8cbbb9965fbc0123079'
 
 
-    pod 'FHPopupViewCenter', '0.0.2-rc.7', :subspecs => [
+    pod 'FHPopupViewCenter', '0.0.2-rc.7', :inhibit_warnings => false, :subspecs => [
     'Core',
     'DelegateForC'
     ]
@@ -65,7 +65,7 @@ def fhPods
     # 'DelegateForC'
     #]
 
-    pod 'ios_house_im' , '0.2.14-rc.11'
+    pod 'ios_house_im' , '0.2.14-rc.11', :inhibit_warnings => false
 #     pod 'ios_house_im' , :path => '../../ios_house_im'
 #    pod 'ios_house_im' , :git => 'git@code.byted.org:fproject/ios_house_im.git' , :commit => 'dc06eace35ecb941f03ce55b2e57eccfcf340a9a'
 
@@ -86,29 +86,29 @@ def appDevelopPods
     pod 'TTUserProfile', :path => '../TTBundles/ios_tt_userprofile'
     pod 'TTArticleVideo', :path => '../TTBundles/ios_tt_article_video'
     # 老的头条监控库添加
-    pod 'TTMonitor', :path => '../AKPlugins/TTMonitor', :inhibit_warnings => false
+    pod 'TTMonitor', :path => '../AKPlugins/TTMonitor'
     #-----头条旧业务兼容库-----#
-    pod 'TTCompatibleModule', :path => '../AKPlugins/TTCompatibleModule', :inhibit_warnings => false
+    pod 'TTCompatibleModule', :path => '../AKPlugins/TTCompatibleModule'
     #-----问答业务库-----#
-    pod 'AKWDPlugin', :path => '../AKPlugins/AKWDPlugin', :inhibit_warnings => false
+    pod 'AKWDPlugin', :path => '../AKPlugins/AKWDPlugin'
     #-----平台基础库-----#
-    pod 'TTPlatformBaseLib'  , :path => '../AKPlugins/TTPlatformBaseLib', :inhibit_warnings => false
+    pod 'TTPlatformBaseLib'  , :path => '../AKPlugins/TTPlatformBaseLib'
     #-----评论业务库-----#
-    pod 'AKCommentPlugin', :path => '../AKPlugins/AKCommentPlugin', :inhibit_warnings => false
+    pod 'AKCommentPlugin', :path => '../AKPlugins/AKCommentPlugin'
     #-----头条图片滑动浏览器----
-    pod 'TTPhotoScrollVC', :path => '../AKPlugins/TTPhotoScrollVC', :inhibit_warnings => false
+    pod 'TTPhotoScrollVC', :path => '../AKPlugins/TTPhotoScrollVC'
     #-----UI库----
     #-----账号登录UI库-----
-    pod 'TTAccountLogin', :path => '../AKPlugins/AKAccountLogin', :inhibit_warnings => false
+    pod 'TTAccountLogin', :path => '../AKPlugins/AKAccountLogin'
     #-----账号的业务库----
-    pod 'TTNewsAccountBusiness', :path => '../AKPlugins/TTNewsAccountBusiness', :inhibit_warnings => false
+    pod 'TTNewsAccountBusiness', :path => '../AKPlugins/TTNewsAccountBusiness'
     pod 'yoga', :path => '../ReactCommon/yoga'
     pod 'BDTArticle', :path => '../AKPlugins/BDTArticle' #'0.2.3'
     pod 'BDTExploreOrderedData', :path => '../AKPlugins/BDTExploreOrderedData' #'0.1.7'
-    pod 'BDTBasePlayer' , :path => '../AKPlugins/BDTBasePlayer', :inhibit_warnings => false
+    pod 'BDTBasePlayer' , :path => '../AKPlugins/BDTBasePlayer'
     pod 'BDTSharedHeaders', :path => '../Vendor/BDTSharedHeaders'
     #----- 新分享库 -----
-    pod 'AKShareServicePlugin', :path => '../AKPlugins/AKShareServicePlugin', :inhibit_warnings => false
+    pod 'AKShareServicePlugin', :path => '../AKPlugins/AKShareServicePlugin'
     
     pod 'TTShare' , :path => '../AKPlugins/TTShare'  , :subspecs => [  # '0.3.3'
     'TTShareBusiness/TTShareWeChatBusiness',
@@ -119,15 +119,15 @@ def appDevelopPods
     'TTShareBasic/TTQQShare'
     ]
     #----头条webview库-----
-    pod 'AKWebViewBundlePlugin', :path => '../AKPlugins/AKWebViewBundlePlugin', :inhibit_warnings => false
+    pod 'AKWebViewBundlePlugin', :path => '../AKPlugins/AKWebViewBundlePlugin'
     #-----头条号---
     pod 'TTAdModule', :path => '../AKPlugins/TTAdModule' #'0.1.25'
     #-----朋友关系-----
-    pod 'TTFriendRelation', :path => '../AKPlugins/TTFriendRelation', :inhibit_warnings => false
+    pod 'TTFriendRelation', :path => '../AKPlugins/TTFriendRelation'
     #----点赞按钮-----
-    pod 'TTDiggButton', :path => '../AKPlugins/AKDiggButton', :inhibit_warnings => false
+    pod 'TTDiggButton', :path => '../AKPlugins/AKDiggButton'
     #-----平台化UIModel库-----
-    pod 'TTPlatformUIModel', :path => '../AKPlugins/AKPlatformUIModel', :inhibit_warnings => false
+    pod 'TTPlatformUIModel', :path => '../AKPlugins/AKPlatformUIModel'
     #-----音频相关库---
     pod_binary 'TTAudio', '0.1.6'
     
@@ -142,14 +142,14 @@ def appDevelopPods
     #    'Location'
     ]
     #-----视频业务库-----#
-    pod 'TTVPlayerPod', :path => '../AKPlugins/TTVPlayer', :inhibit_warnings => false
+    pod 'TTVPlayerPod', :path => '../AKPlugins/TTVPlayer'
     #-----小视频-----
-    pod 'HTSVideoPlay', :path => '../Vendor/ShortVideo', :inhibit_warnings => false
+    pod 'HTSVideoPlay', :path => '../Vendor/ShortVideo'
     
     #-----UGC-----
     #    pod 'TTUGCFeature', :path => '../Vendor/TTUGCFeature', :inhibit_warnings => false
-    pod 'TTUGCFoundation', :path => '../Vendor/TTUGCFoundation', :inhibit_warnings => false
-    pod 'TTPostBase', :path => '../AKPlugins/TTPostBase', :inhibit_warnings => false
+    pod 'TTUGCFoundation', :path => '../Vendor/TTUGCFoundation'
+    pod 'TTPostBase', :path => '../AKPlugins/TTPostBase'
 
     
 end
@@ -449,7 +449,7 @@ def appPods
     ]
 
     #-----TTAccountSDK-----
-    pod 'TTAccountSDK', '5.10.1-rc.4', :inhibit_warnings => false, :subspecs => [
+    pod 'TTAccountSDK', '5.10.1-rc.4', :subspecs => [
     'Account',
 #    'Logger',
     'WeChatAccount',
@@ -625,6 +625,7 @@ end
 
 target 'f100' do
 #    testPods
+  pod 'LookinServer', :configurations => ['Debug']
     fhPods
     appPods
     appDevelopPods

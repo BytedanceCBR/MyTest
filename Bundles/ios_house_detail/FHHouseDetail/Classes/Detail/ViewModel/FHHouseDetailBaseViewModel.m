@@ -727,7 +727,7 @@
 
 - (void)enableController:(BOOL)enabled
 {
-    TTNavigationController *nav = self.detailController.navigationController;
+    TTNavigationController *nav = (TTNavigationController *)self.detailController.navigationController;
     nav.panRecognizer.enabled = enabled;
 }
 #pragma mark - poplayer
