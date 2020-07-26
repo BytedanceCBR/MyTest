@@ -279,6 +279,7 @@ NSString *const assertDesc_articleType = @"protocoledArticle must be Article";
         _commentVC = [[TTVCommentViewController alloc] initWithDataSource:self delegate:self];
         _commentVC.enableImpressionRecording = YES;
         _commentVC.hasSelfShown = YES;
+        _commentVC.tracerDict = self.detailModel.reportParams;
         _commentVC.detailStateStore = self.detailStateStore;
         [self addChildViewController:_commentVC];
         _toolbarVC = [[TTVVideoDetailToolBarViewController alloc] init];
@@ -513,8 +514,8 @@ NSString *const assertDesc_articleType = @"protocoledArticle must be Article";
     self.tracker = [[TTVVideoDetailStayPageTracker alloc] initWithArticle:article];
     self.tracker.detailStateStore = self.detailStateStore;
     self.tracker.detailModel = self.detailModel;
-    self.tracker.enterFrom = [self enterFromString];
-    self.tracker.categoryName = [self categoryName];
+    self.tracker.enterFrom = self.detailModel.reportParams[@"page_type"];
+    self.tracker.categoryName = self.detailModel.reportParams[@"category_name"];
     //orderedData 传过去为了 logextra
     self.tracker.articleExtraInfo = self.detailModel.articleExtraInfo;
 }
@@ -1858,7 +1859,12 @@ NSString *const assertDesc_articleType = @"protocoledArticle must be Article";
     
     if(self.detailModel.reportParams.count > 0){
         [params addEntriesFromDictionary:self.detailModel.reportParams];
+        if(self.detailModel.reportParams[@"page_type"]){
+            params[@"enter_from"] = self.detailModel.reportParams[@"page_type"];
+        }
     }
+    
+    [params setValue:@"comment_detail" forKey:@"page_type"];
     
     if (isDigg) {
         [TTTrackerWrapper eventV3:@"click_like" params:params];

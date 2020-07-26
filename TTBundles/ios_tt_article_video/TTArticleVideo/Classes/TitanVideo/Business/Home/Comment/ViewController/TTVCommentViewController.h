@@ -21,6 +21,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic,strong) SSThemedTableView *commentTableView;
 @property (nonatomic, strong) TTVContainerScrollView *ttvContainerScrollView;
 @property (nonatomic, strong) TTVDetailStateStore *detailStateStore;
+@property(nonatomic , copy) NSDictionary *tracerDict; // 外部 传入
 
 - (instancetype)initWithDataSource:(nullable id<TTVCommentDataSource>)datasource
                          delegate:(nullable id<TTVCommentDelegate>)delegate NS_DESIGNATED_INITIALIZER;
