@@ -53,7 +53,7 @@
         self.titleLabel.textAlignment = NSTextAlignmentCenter;
         [self addSubview:self.titleLabel];
 
-        self.arrowView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"mapsearch_annotation_arrow"]];
+        self.arrowView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"house_detail_map_ana_arrow"]];
         [self.backImageView addSubview:self.arrowView];
     }
     return self;
@@ -394,6 +394,7 @@
     FHDetailStaticMapCellModel *dataModel = (FHDetailStaticMapCellModel *) self.currentData;
     NSMutableDictionary *tracerDict = self.baseViewModel.detailTracerDic.mutableCopy;
     tracerDict[@"element_from"] = @"map";
+    tracerDict[@"enter_from"] = @"rent_detail";
     NSMutableDictionary *param = [NSMutableDictionary new];
     param[TRACER_KEY] = tracerDict.copy;
     
