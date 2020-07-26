@@ -305,7 +305,7 @@
     [self.customNavBarView setLeftButtonBlock:^{
         [weakSelf cancelLoginAction];
         
-        if([self.tracerModel.enterFrom isEqualToString:@"conversation_detail"]) {
+        if([weakSelf.tracerModel.enterFrom isEqualToString:@"conversation_detail"]) {
             [FHLoginHalfView showToastWhenLoginFailedOrCancel];
         }
     }];
