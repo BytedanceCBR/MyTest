@@ -23,8 +23,6 @@
 #import "FHLynxManager.h"
 @interface FHHouseRealtorDetailVC ()<TTUIViewControllerTrackProtocol>
 @property (nonatomic, strong) FHHouseRealtorDetailVM *viewModel;
-@property (nonatomic, strong) UIImage *shareWhiteImage;
-@property (nonatomic, strong) UIButton *shareButton;// 分享
 @property (nonatomic, strong) UIView *bottomMaskView;
 @property (nonatomic, strong) FHRealtorDetailBottomBar *bottomBar;
 @property (nonatomic, strong )NSDictionary *realtorDetailInfo;
@@ -39,8 +37,6 @@
         self.communityId = paramObj.allParams[@"community_id"];
         self.tabName = paramObj.allParams[@"tab_name"];
         self.realtorDetailInfo = paramObj.allParams;
-//        // 取链接中的埋点数据
-//        self.tracerDict = paramObj.allParams[@"tracer"];
         self.tracerDict[@"enter_from"] =  self.tracerDict[@"page_type"];
         self.tracerDict[@"page_type"] = [self pageType];
 
@@ -169,19 +165,6 @@
 
 - (NSString *)pageType {
     return @"realtor_detail";
-}
-
-#pragma mark - 埋点
-
-- (NSDictionary *)followButtonTraceDict {
-    NSMutableDictionary *params = [NSMutableDictionary dictionary];
-    params[@"community_id"] = self.communityId;
-    params[@"page_type"] = self.tracerDict[@"page_type"] ?: @"be_null";
-    params[@"enter_from"] = self.tracerDict[@"enter_from"] ?: @"be_null";
-    params[@"enter_type"] = self.tracerDict[@"enter_type"] ?: @"be_null";
-    params[@"click_position"] = @"join_like";
-    params[@"log_pb"] = self.tracerDict[@"log_pb"] ?: @"be_null";
-    return [params copy];
 }
 
 @end
