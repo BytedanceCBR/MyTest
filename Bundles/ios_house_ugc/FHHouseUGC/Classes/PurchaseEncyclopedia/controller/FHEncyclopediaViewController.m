@@ -33,19 +33,23 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     [self initNav];
-    [self addDefaultEmptyViewFullScreen];
     [self checkLocalData];
 }
 - (void)checkLocalData {
     BOOL jumpLynxHeader = [[FHLynxManager sharedInstance] checkChannelTemplateIsAvalable:@"ugc_encyclopedia_lynx_header" templateKey:[FHLynxManager defaultJSFileName]];
    BOOL jumpLynxItem = [[FHLynxManager sharedInstance] checkChannelTemplateIsAvalable:@"ugc_encyclopedia_lynx_item" templateKey:[FHLynxManager defaultJSFileName]];
-    if (jumpLynxHeader && jumpLynxItem && [TTReachability isNetworkConnected]) {
+    if (jumpLynxHeader && jumpLynxItem) {
         [self initUI];
+        [self addDefaultEmptyViewFullScreen];
         [self initViewModel];
-        [self.emptyView hideEmptyView];
     }else {
        [self.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoData];
     }
+    
+}
+
+-(void)retryLoadData {
+    [_viewModel requestHeaderConfig];
 }
 
 - (void)initUI {

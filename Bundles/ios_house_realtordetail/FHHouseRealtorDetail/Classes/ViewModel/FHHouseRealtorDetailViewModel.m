@@ -7,7 +7,6 @@
 
 #import "FHHouseRealtorDetailViewModel.h"
 #import "FHHouseRealtorDetailInfoModel.h"
-#import "FHHouseRealtorDetailBaseCell.h"
 #import "FHMainApi.h"
 #import "UIScrollView+Refresh.h"
 #import "FHRefreshCustomFooter.h"
@@ -364,34 +363,6 @@
     [self.detailJumpManager jumpToDetail:cellModel showComment:YES enterType:@"feed_comment"];
 }
 
-//- (void)clickRealtorIm:(FHFeedUGCCellModel *)cellModel cell:(FHUGCBaseCell *)cell {
-//    NSInteger index = [self.dataList indexOfObject:cellModel];
-//    NSMutableDictionary *imExtra = @{}.mutableCopy;
-//    imExtra[@"realtor_position"] = @"realtor_evaluate";
-//    imExtra[@"from_gid"] = cellModel.groupId;
-//    [self.realtorPhoneCallModel imchatActionWithPhone:cellModel.realtor realtorRank:[NSString stringWithFormat:@"%ld",(long)index] extraDic:imExtra];
-//}
-
-//- (void)clickRealtorPhone:(FHFeedUGCCellModel *)cellModel cell:(FHUGCBaseCell *)cell {
-//     NSMutableDictionary *extraDict = self.tracerDic.mutableCopy;
-//    extraDict[@"realtor_id"] = cellModel.realtor.realtorId;
-//    extraDict[@"realtor_rank"] = @"be_null";
-//    extraDict[@"realtor_logpb"] = cellModel.realtor.realtorLogpb;
-//    extraDict[@"realtor_position"] = @"realtor_evaluate";
-//    extraDict[@"from_gid"] = cellModel.groupId;
-//    NSDictionary *associateInfoDict = cellModel.realtor.associateInfo.phoneInfo;
-//    extraDict[kFHAssociateInfo] = associateInfoDict;
-//    FHAssociatePhoneModel *associatePhone = [[FHAssociatePhoneModel alloc]init];
-//    associatePhone.reportParams = extraDict;
-//    associatePhone.associateInfo = associateInfoDict;
-//    associatePhone.realtorId = cellModel.realtor.realtorId;
-//    associatePhone.searchId = self.tracerDic[@"log_pb"][@"search_id"];
-//    associatePhone.imprId = self.tracerDic[@"log_pb"][@"impr_id"];
-//    associatePhone.houseType =self.houseType.integerValue;
-//    associatePhone.houseId = self.houseId;
-//    associatePhone.showLoading = NO;
-//    [self.realtorPhoneCallModel phoneChatActionWithAssociateModel:associatePhone];
-//}
 
 - (void)goToCommunityDetail:(FHFeedUGCCellModel *)cellModel {
     [self.detailJumpManager goToCommunityDetail:cellModel];

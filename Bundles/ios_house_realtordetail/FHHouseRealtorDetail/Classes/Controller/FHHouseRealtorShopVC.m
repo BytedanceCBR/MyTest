@@ -48,6 +48,11 @@
      [self createModel];
 }
 
+- (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
+    [self.viewModel updateNavBarWithAlpha:self.customNavBarView.bgView.alpha];
+}
+
 - (void)initFrame {
     
     [self.tableView mas_makeConstraints:^(MASConstraintMaker *make) {
