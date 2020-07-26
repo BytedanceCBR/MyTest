@@ -345,11 +345,10 @@
         return;
     }
 
+    NSMutableDictionary *param = [NSMutableDictionary new];
     FHDetailStaticMapCellModel *dataModel = (FHDetailStaticMapCellModel *) self.currentData;
     NSMutableDictionary *tracerDict = self.baseViewModel.detailTracerDic.mutableCopy;
     tracerDict[@"element_from"] = @"map";
-    NSMutableDictionary *param = [NSMutableDictionary new];
-    param[TRACER_KEY] = tracerDict.copy;
     if ([self.baseViewModel.detailData isKindOfClass:[FHDetailOldModel class]]) {
         // 二手房数据
         tracerDict[@"enter_from"] = @"old_detail";
@@ -358,6 +357,7 @@
     }else if ([self.baseViewModel.detailData isKindOfClass:[FHDetailNeighborhoodModel class]]) {
         tracerDict[@"enter_from"] = @"neighborhood_detail";
     }
+    param[TRACER_KEY] = tracerDict.copy;
     if (dataModel.gaodeLat.length && dataModel.gaodeLng.length) {
         param[@"gaodeLat"] = dataModel.gaodeLat;
         param[@"gaodeLon"] = dataModel.gaodeLng;
