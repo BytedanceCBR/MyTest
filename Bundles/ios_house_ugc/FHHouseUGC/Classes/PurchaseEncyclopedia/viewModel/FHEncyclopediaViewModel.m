@@ -81,6 +81,7 @@
             [self collectionDataCrate:configModel.items];
         }
     }];
+    
 }
 
 - (void)collectionDataCrate:(NSArray *)array {

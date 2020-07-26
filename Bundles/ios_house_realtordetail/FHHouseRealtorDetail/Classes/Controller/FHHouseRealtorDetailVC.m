@@ -39,7 +39,7 @@
         self.realtorDetailInfo = paramObj.allParams;
         self.tracerDict[@"enter_from"] =  self.tracerDict[@"page_type"];
         self.tracerDict[@"page_type"] = [self pageType];
-
+        
     }
     return self;
 }
@@ -52,6 +52,10 @@
     [self initViewModel];
 }
 
+- (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
+    [self.viewModel updateNavBarWithAlpha:self.customNavBarView.bgView.alpha];
+}
 
 - (void)initNavBar {
     [self setupDefaultNavBar:NO];
@@ -129,11 +133,11 @@
 
 
 - (void)setNavBar {
-        self.customNavBarView.title.text = @"经纪人主页";
-        self.customNavBarView.title.textColor = [UIColor whiteColor];
-        UIImage *whiteBackArrowImage = ICON_FONT_IMG(24, @"\U0000e68a", [UIColor whiteColor]);
-        [self.customNavBarView.leftBtn setBackgroundImage:whiteBackArrowImage forState:UIControlStateNormal];
-        [self.customNavBarView.leftBtn setBackgroundImage:whiteBackArrowImage forState:UIControlStateHighlighted];
+    self.customNavBarView.title.text = @"经纪人主页";
+    self.customNavBarView.title.textColor = [UIColor whiteColor];
+    UIImage *whiteBackArrowImage = ICON_FONT_IMG(24, @"\U0000e68a", [UIColor whiteColor]);
+    [self.customNavBarView.leftBtn setBackgroundImage:whiteBackArrowImage forState:UIControlStateNormal];
+    [self.customNavBarView.leftBtn setBackgroundImage:whiteBackArrowImage forState:UIControlStateHighlighted];
     [self.customNavBarView setNaviBarTransparent:YES];
     self.customNavBarView.seperatorLine.hidden = YES;
 }
