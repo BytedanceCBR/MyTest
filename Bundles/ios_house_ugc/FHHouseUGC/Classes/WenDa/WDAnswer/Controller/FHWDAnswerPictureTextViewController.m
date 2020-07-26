@@ -472,7 +472,7 @@ static CGFloat kWenDaToolbarHeight = 80.f;
     
     NSUInteger maxTextCount = [TTKitchen getInt:kTTKUGCPostAndRepostContentMaxCount];
 
-    if (isEmptyString(inputText) && self.addImagesView.selectedImageCacheTasks.count == 0) {
+    if (isEmptyString(inputText)) {
         [self endEditing];
         [TTIndicatorView showWithIndicatorStyle:TTIndicatorViewStyleImage
                                   indicatorText:NSLocalizedString(@"说点什么...", nil)
