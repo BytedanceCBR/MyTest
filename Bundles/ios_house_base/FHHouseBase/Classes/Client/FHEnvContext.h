@@ -63,6 +63,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign) BOOL isClickTab;
 @property (nonatomic, assign) BOOL isShowingHomeHouseFind;
 @property (nonatomic, copy) NSString * refreshConfigRequestType;
+@property (nonatomic, copy) NSString *enterChannel;
 
 @property(nonatomic , strong) RACReplaySubject *configDataReplay;
 @property (nonatomic , strong) FHMessageManager *messageManager;

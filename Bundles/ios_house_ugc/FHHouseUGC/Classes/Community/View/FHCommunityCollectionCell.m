@@ -11,6 +11,7 @@
 #import "FHNearbyViewController.h"
 #import "FHMyJoinViewController.h"
 #import "FHHouseFindViewController.h"
+#import "FHEnvContext.h"
 
 @interface FHCommunityCollectionCell ()
 
@@ -106,7 +107,12 @@
 - (NSDictionary *)tracerDict {
     NSString *enterType = self.enterType ? self.enterType : @"default";
     NSString *originFrom = self.tracerDic[@"origin_from"] ?: @"be_null";
-    NSString *enterFrom = self.tracerDic[@"origin_from"] ?: @"be_null";
+     NSString *enterFrom = self.tracerDic[@"origin_from"] ?: @"be_null";
+    if([[FHEnvContext sharedInstance].enterChannel isEqualToString:@"push"]){
+        originFrom = [FHEnvContext sharedInstance].enterChannel;
+        enterFrom = [FHEnvContext sharedInstance].enterChannel;
+    }
+    
     return @{
              @"origin_from":originFrom,
              @"enter_from":enterFrom,

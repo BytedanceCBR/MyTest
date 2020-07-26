@@ -121,6 +121,11 @@
     }
 }
 
+- (void)setTracerDict:(NSMutableDictionary *)tracerDict {
+    [super setTracerDict:tracerDict];
+    _feedVC.tracerDict = [tracerDict mutableCopy];
+}
+
 - (void)loadFeedListView {
     NSTimeInterval currentTime = [[NSDate date] timeIntervalSince1970] - self.lastRequestTime;
     //开启定位时候需要获取定位信息

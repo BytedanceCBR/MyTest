@@ -145,6 +145,7 @@ typedef NS_ENUM(NSUInteger,TTTabbarTipViewType){
 @property (nonatomic, assign) BOOL needShowSurfaceTip;
 @property (nonatomic, assign) BOOL autoEnterShortVideoTab;
 @property (nonatomic, assign) BOOL autoEnterTab;
+@property (nonatomic, assign) BOOL enterTabFromPush;
 @property (nonatomic, strong) NSString *lastSelectedTabTag;
 
 //@property (nonatomic, strong) LOTAnimationView *animationView1;
@@ -637,6 +638,10 @@ typedef NS_ENUM(NSUInteger,TTTabbarTipViewType){
         [logv3Dic setValue:@0 forKey:@"with_tips"];
         [logv3Dic setValue:self.autoEnterTab?@1:@0 forKey:@"is_auto"];
         [logv3Dic setValue:@"default" forKey:@"enter_type"];
+        
+        NSString *enterChannel = @"default";
+        [logv3Dic setValue:enterChannel forKey:@"enter_channel"];
+        [FHEnvContext sharedInstance].enterChannel = enterChannel;
         [FHEnvContext recordEvent:logv3Dic andEventKey:@"enter_tab"];
     }
     
@@ -1283,7 +1288,10 @@ typedef NS_ENUM(NSUInteger,TTTabbarTipViewType){
             [logv3Dic setValue:badgeView.hidden?@0:@1 forKey:@"with_tips"];
             [logv3Dic setValue:self.autoEnterTab?@1:@0 forKey:@"is_auto"];
             [logv3Dic setValue:self.isClickTab ? @"click_tab":@"default" forKey:@"enter_type"];
+            [logv3Dic setValue:[FHEnvContext sharedInstance].enterChannel forKey:@"enter_channel"];
+            
             self.autoEnterTab = NO;
+            self.enterTabFromPush = NO;
             if ([selectedTabName isEqualToString:@"find"]) {
                 [logv3Dic setValue:@"discover_tab" forKey:@"tab_name"];
                 
@@ -1954,10 +1962,11 @@ typedef NS_ENUM(NSUInteger,TTTabbarTipViewType){
     }
     
     NSString *tag = [notification.userInfo tt_stringValueForKey:@"tag"];
-    [self updateSelectedViewControllerForTag:tag];
+    BOOL isFromPush = [notification.userInfo tt_boolValueForKey:@"isFromPush"];
+    [self updateSelectedViewControllerForTag:tag isFromPush:isFromPush];
 }
 
-- (void)updateSelectedViewControllerForTag:(NSString *)tag {
+- (void)updateSelectedViewControllerForTag:(NSString *)tag isFromPush:(BOOL)isFromPush {
     if (![[TTTabBarManager sharedTTTabBarManager].tabTags containsObject:tag]) {
         return;
     }
@@ -1967,13 +1976,23 @@ typedef NS_ENUM(NSUInteger,TTTabbarTipViewType){
         return;
     }
     
-    [self setSelectedIndexWithTag:tag];
+    [self setSelectedIndexWithTag:tag isFromPush:isFromPush];
 }
 
-- (void)setSelectedIndexWithTag:(NSString *)tag {
+- (void)setSelectedIndexWithTag:(NSString *)tag isFromPush:(BOOL)isFromPush{
     if (isEmptyString(tag)) return;
     
     self.autoEnterTab = YES;
+    self.enterTabFromPush = isFromPush;
+    
+    NSString *enterChannel = @"click";
+    if(self.enterTabFromPush){
+        enterChannel = @"push";
+    }else if(self.autoEnterTab){
+        enterChannel = @"default";
+    }
+    [FHEnvContext sharedInstance].enterChannel = enterChannel;
+    
     NSUInteger index = [[TTTabBarManager sharedTTTabBarManager].tabTags indexOfObject:tag];
     TTTabbar *tab = (TTTabbar *)self.tabBar;
     //这里加上这个判断，已经在这个tab就不在切换了 by xsm，要不然push不了新页面

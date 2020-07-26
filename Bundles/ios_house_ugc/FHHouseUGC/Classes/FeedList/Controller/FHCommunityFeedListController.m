@@ -65,6 +65,19 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationDidEnterBackground) name:UIApplicationDidEnterBackgroundNotification object:nil];
 }
 
+- (void)setTracerDict:(NSMutableDictionary *)tracerDict {
+    [super setTracerDict:tracerDict];
+    if(self.dataList.count > 0){
+        for (FHFeedUGCCellModel *cellModel in self.dataList) {
+            NSMutableDictionary *tracerDic = [cellModel.tracerDic mutableCopy];
+            if(tracerDict[@"origin_from"]){
+                tracerDic[@"origin_from"] = tracerDict[@"origin_from"];
+            }
+            cellModel.tracerDic = tracerDic;
+        }
+    }
+}
+
 - (void)dealloc {
     [[SSImpressionManager shareInstance] removeRegist:self];
     [TTAccount removeMulticastDelegate:self];

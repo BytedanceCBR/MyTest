@@ -104,6 +104,7 @@ static NSString * const kFUGCPrefixStr = @"fugc";
         [tracerDict setValue:@(0) forKey:@"with_tips"];
         [tracerDict setValue:[FHEnvContext sharedInstance].isClickTab ? @"click_tab" : @"default" forKey:@"enter_type"];
         tracerDict[@"stay_time"] = @((int)duration);
+        tracerDict[@"enter_channel"] = [FHEnvContext sharedInstance].enterChannel;
         
         if (((int)duration) > 0) {
             [FHEnvContext recordEvent:tracerDict andEventKey:@"stay_tab"];
