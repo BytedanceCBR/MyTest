@@ -42,8 +42,6 @@
 @property(nonatomic, strong) FHRealtorEvaluatingPhoneCallModel *realtorPhoneCallModel;
 @property (copy, nonatomic) NSString *houseType;
 @property (copy, nonatomic) NSString *houseId;
-
-
 @end
 @implementation FHDetailEvaluationListViewModel
 - (instancetype)initWithController:(FHDetailEvaluationListViewController *)viewController tableView:(UITableView *)table headerView:(FHDetailEvaluationListViewHeader *)header userInfo:(NSDictionary *)userInfo {
@@ -239,7 +237,7 @@ self.tableView.mj_footer.hidden = NO;
 if (hasMore) {
     [self.tableView.mj_footer endRefreshing];
 }else {
-    [self.refreshFooter setUpNoMoreDataText:@"我是有底线的" offsetY:-3];
+    [self.refreshFooter setUpNoMoreDataText:@"- 我是有底线的哟 -  " offsetY:-3];
     [self.tableView.mj_footer endRefreshingWithNoMoreData];
 }
 }
@@ -388,6 +386,12 @@ if (hasMore) {
     self.detailJumpManager.currentCell = self.currentCell;
     [self.detailJumpManager jumpToDetail:cellModel showComment:NO enterType:@"feed_content_blank"];
 }
+
+- (void)gotoLinkUrl:(FHFeedUGCCellModel *)cellModel url:(NSURL *)url {
+    // PM要求点富文本链接也进入详情页
+    [self lookAllLinkClicked:cellModel cell:nil];
+}
+
 
 - (void)clickRealtorHeader:(FHFeedUGCCellModel *)cellModel cell:(FHUGCBaseCell *)cell {
     if ([self.houseType integerValue] == FHHouseTypeSecondHandHouse) {

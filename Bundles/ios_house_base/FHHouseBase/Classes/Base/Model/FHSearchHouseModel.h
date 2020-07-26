@@ -373,6 +373,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface  FHSearchHouseItemModel  : FHSearchBaseItemModel
 
+@property (nonatomic, copy , nullable) NSString *houseStatus;
 @property (nonatomic, copy , nullable) NSString *buildingSquareMeter;
 @property (nonatomic, strong , nullable) NSDictionary *logPb ;
 @property (nonatomic, strong , nullable) NSArray<FHHouseBaseInfoModel> *baseInfo;

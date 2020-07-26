@@ -213,7 +213,6 @@ static inline long CTFramesetterSuggestNumberOfLinesForAttributedStringWithConst
 @property (readwrite, nonatomic, copy) NSAttributedString *inactiveAttributedText;
 @property (readwrite, nonatomic, copy) NSAttributedString *renderedAttributedText;
 @property (readwrite, nonatomic, strong) NSArray *linkModels;
-@property (readwrite, nonatomic, strong) TTUGCAttributedLabelLink *activeLink;
 @property (readwrite, nonatomic, assign) NSRange truncatedTokenRange; // 相对于 truncatedLine 的 range
 @property (readwrite, nonatomic, assign) CGRect truncatedTokenRect; // 相对于 lineLine 的 rect
 

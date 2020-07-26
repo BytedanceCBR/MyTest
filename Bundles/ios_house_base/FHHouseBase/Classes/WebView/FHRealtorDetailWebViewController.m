@@ -43,7 +43,7 @@ static NSString *s_oldAgent = nil;
         self.realtorUserInfo = paramObj.userInfo;
         _realtorId = paramObj.allParams[@"realtor_id"];
         self.houseType = 0;
-        [_tracerDict addEntriesFromDictionary:[self.realtorUserInfo allInfo][@"trace"]];
+        [_tracerDict addEntriesFromDictionary:[self.realtorUserInfo allInfo][@"tracer"]];
         _houseId = paramObj.userInfo.allInfo[@"house_id"];
         _phoneCallViewModel = [[FHHouseDetailPhoneCallViewModel alloc]initWithHouseType:FHHouseTypeSecondHandHouse houseId:self.houseId];
     }

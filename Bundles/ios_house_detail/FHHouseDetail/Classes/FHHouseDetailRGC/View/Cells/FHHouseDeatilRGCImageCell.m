@@ -228,6 +228,8 @@
     
     self.lineView.hidden = cellModel.isInRealtorEvaluationList || !cellModel.isShowLineView;
     
+    [self.headerView hiddenConnectBtn:cellModel.isHiddenConnectBtn];
+    
 }
 
 // 评论点击

@@ -131,9 +131,9 @@
                 }
                 make.left.right.equalTo(self.view);
             }];
-            [onekeyBindView updateOneKeyLoginWithPhone:self.viewModel.mobileNumber service:[self.viewModel serviceName] protocol:[self.viewModel protocolAttrTextByIsOneKeyLoginViewType:self.viewType]];
+            [onekeyBindView updateOneKeyLoginWithPhone:self.viewModel.mobileNumber service:[self.viewModel.class serviceName] protocol:[self.viewModel protocolAttrTextByIsOneKeyLoginViewType:self.viewType]];
             tracker[@"bind_type"] = @"oneclick_bind";
-            tracker[@"carrier"] = [self.viewModel serviceName]?:@"";
+            tracker[@"carrier"] = [self.viewModel.class serviceName]?:@"";
             break;
         }
         case FHBindViewTypeMobile: {

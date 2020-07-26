@@ -70,7 +70,12 @@
         make.left.right.top.mas_equalTo(self.view);
         make.height.mas_equalTo(14);
     }];
+    self.view.layer.masksToBounds = YES;
 
+    UIBezierPath *maskPath = [UIBezierPath bezierPathWithRoundedRect:self.view.bounds byRoundingCorners:UIRectCornerTopLeft | UIRectCornerTopRight cornerRadii:CGSizeMake(20, 20)];
+     CAShapeLayer *layer = [[CAShapeLayer alloc]init];
+     layer.path = maskPath.CGPath;
+     self.view.layer.mask = layer;
     
     [self.view addSubview:_tableView];
     
@@ -121,7 +126,7 @@
     self.view.hidden = NO;
     
     [UIView animateWithDuration:0.3 animations:^{
-        self.view.top =  floor(self.view.superview.height/3);
+        self.view.top =  floor(self.view.superview.height/2);
     }];
 
     [self.viewModel updateWithHouseData:nil neighbor:neighbor bubble:bubble];
@@ -135,7 +140,7 @@
     self.view.hidden = NO;
     
     [UIView animateWithDuration:0.3 animations:^{
-        self.view.top = floor(self.view.superview.height/3);
+        self.view.top = floor(self.view.superview.height/2);
     }];
     
     [self.parentViewController.view addSubview:self.view];
@@ -144,7 +149,7 @@
 
 -(CGFloat)initialTop
 {
-    return floor(self.view.superview.height/3);
+    return floor(self.view.superview.height/2);
 }
 
 -(CGFloat)minTop

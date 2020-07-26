@@ -80,6 +80,7 @@
                            @"gaodeImageUrl": @"gaode_image_url",
                            @"gaodeImage": @"gaode_image",
                            @"dataSourceId": @"data_source_id",
+                           @"baiduPanoramaUrl": @"baidu_panorama_url"
                            };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
         return dict[keyName]?:keyName;

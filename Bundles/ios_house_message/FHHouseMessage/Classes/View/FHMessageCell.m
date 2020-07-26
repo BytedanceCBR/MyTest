@@ -246,6 +246,7 @@
     }
     self.scoreLabel.hidden = YES;
     self.companyLabel.hidden = YES;
+    self.muteImageView.hidden = YES;
 }
 
 - (void)updateWithChat:(IMConversation*)conversation {

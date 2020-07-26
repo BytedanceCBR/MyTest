@@ -264,6 +264,11 @@
     [self.detailJumpManager jumpToDetail:cellModel showComment:YES enterType:@"feed_comment"];
 }
 
+- (void)gotoLinkUrl:(FHFeedUGCCellModel *)cellModel url:(NSURL *)url {
+    // PM要求点富文本链接也进入详情页
+    [self lookAllLinkClicked:cellModel cell:nil];
+}
+
 - (void)clickRealtorIm:(FHFeedUGCCellModel *)cellModel cell:(FHUGCBaseCell *)cell {
     NSInteger index = [self.dataList indexOfObject:cellModel];
     NSMutableDictionary *imExtra = @{}.mutableCopy;
@@ -353,13 +358,14 @@
 @implementation FHhouseDetailRGCListCellModel
 
 - (void)setContentModel:(FHDetailBrokerContentModel *)contentModel {
+    _contentModel = [contentModel copy];
     NSMutableArray *dataArr = [[NSMutableArray alloc]init];
     CGFloat contentHeight = 0;
-    for (int m = 0; m < contentModel.data.count;  m++) {
-        NSString *content = contentModel.data[m];
+    for (int m = 0; m < _contentModel.data.count;  m++) {
+        NSString *content = _contentModel.data[m];
         FHFeedUGCCellModel *model = [FHFeedUGCCellModel modelFromFeed:content];
         model.realtorIndex = m;
-        model.isShowLineView = m < contentModel.data.count -1;
+        model.isShowLineView = m < _contentModel.data.count -1;
         switch (model.cellType) {
             case FHUGCFeedListCellTypeUGC:
                 model.cellSubType = FHUGCFeedListCellSubTypeUGCBrokerImage;
@@ -379,9 +385,9 @@
             [dataArr addObject:model];
         }
     }
-    contentModel.fHFeedUGCCellModelDataArr = dataArr;
+    _contentModel.fHFeedUGCCellModelDataArr = dataArr;
     self.cellHeight = contentHeight;
-    _contentModel = contentModel;
+    
 }
 
 

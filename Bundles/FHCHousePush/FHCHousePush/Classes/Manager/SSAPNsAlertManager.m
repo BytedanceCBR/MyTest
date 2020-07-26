@@ -28,6 +28,7 @@
 #import "FHBaseViewController.h"
 #import "UIViewController+TTMovieUtil.h"
 #import <FHCHousePush/TTPushServiceDelegate.h>
+#import "FHCHousePushUtils.h"
 
 #define kApnsAlertManagerCouldShowAlertViewKey @"kApnsAlertManagerCouldShowAlertViewKey"
 
@@ -166,8 +167,9 @@ static NSString * const kTTAPNsImportanceKey = @"important";
                         params[@"event_type"] = @"house_app2c_v2";
 
                         [BDTrackerProtocol eventV3:@"push_click" params:params];
-
-                        [[TTRoute sharedRoute] openURLByPushViewController:openURL];
+                        //1.03 push添加origin_from埋点 这部分不确定会不会走到，以防万一一起写了。
+                        TTRouteUserInfo *userInfo = [FHCHousePushUtils getPushUserInfo:paramObj];
+                        [[TTRoute sharedRoute] openURLByPushViewController:openURL userInfo:userInfo];
                     });
                 }
                 wrapperTrackEventWithCustomKeys(@"apn", @"news_alert_view", rid, nil, nil);
@@ -305,7 +307,10 @@ static NSString * const kTTAPNsImportanceKey = @"important";
                     //所以用让openURL操作慢0.1s，确保视频已经完全退出
                     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
                         NSURL *openURL = [TTStringHelper URLWithURLString:schemaReplaceStr];
-                        [[TTRoute sharedRoute] openURLByPushViewController:openURL];
+                        //1.03 push添加origin_from埋点 这部分不确定会不会走到，以防万一一起写了。
+                        TTRouteParamObj *paramObj = [[TTRoute sharedRoute] routeParamObjWithURL:openURL];
+                        TTRouteUserInfo *userInfo = [FHCHousePushUtils getPushUserInfo:paramObj];
+                        [[TTRoute sharedRoute] openURLByPushViewController:openURL userInfo:userInfo];
                     });
                 }
                 if (![TTTrackerWrapper isOnlyV3SendingEnable]) {
@@ -434,10 +439,12 @@ static NSString * const kTTAPNsImportanceKey = @"important";
             }
 
 //            NSURL *handledOpenURL = [TTStringHelper URLWithURLString:openURL];
+            //1.03 push添加origin_from埋点
+            TTRouteUserInfo *userInfo = [FHCHousePushUtils getPushUserInfo:paramObj];
             if ([[openURL host] isEqualToString:@"main"]) {
                 NSString * str = [schemaString stringByAppendingString:@"&needToRoot=1"];
                 openURL = [TTStringHelper URLWithURLString:str];
-                [[TTRoute sharedRoute] openURL:openURL userInfo:nil objHandler:nil];
+                [[TTRoute sharedRoute] openURL:openURL userInfo:userInfo objHandler:nil];
 //                TTRouteParamObj* obj = [[TTRoute sharedRoute] routeParamObjWithURL:openURL];
 //                NSDictionary* params = [obj queryParams];
 //                if (params != nil) {
@@ -459,21 +466,11 @@ static NSString * const kTTAPNsImportanceKey = @"important";
                     }
                 }
                  */
-                NSDictionary* info = @{@"isFromPush": @(1),
-                                       @"tracer":@{@"enter_from": @"push",
-                                                   @"enter_type": @"click",
-                                                   @"element_from": @"be_null",
-                                                   @"rank": @"be_null",
-                                                   @"card_type": @"be_null",
-                                                   @"origin_from": @"push",
-                                                   @"origin_search_id": @"be_null"
-//                                                   @"group_id": paramObj.allParams[@"group_id"],
-                                                   }};
                 id<FHHouseEnvContextBridge> envBridge = [[FHHouseBridgeManager sharedInstance] envContextBridge];
                 [envBridge setTraceValue:@"push" forKey:@"origin_from"];
                 [envBridge setTraceValue:@"be_null" forKey:@"origin_search_id"];
                 
-                TTRouteUserInfo* userInfo = [[TTRouteUserInfo alloc] initWithInfo:info];
+                
                 [[TTRoute sharedRoute] openURLByPushViewController:openURL userInfo:userInfo];
             }
             

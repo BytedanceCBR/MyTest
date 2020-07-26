@@ -1413,6 +1413,8 @@ typedef NS_ENUM(NSInteger, SSCommentType)  {
 +(BOOL)enableWebviewNativeComponent;
 //是否开启语音消息
 + (BOOL)enableRecordVoiceSegment;
+// 是否开启IM模块在线监控逻辑开关
++ (BOOL)enableIMOnlineMonitorLogic;
 @end
 
 

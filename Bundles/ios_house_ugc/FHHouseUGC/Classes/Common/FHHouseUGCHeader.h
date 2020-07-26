@@ -27,13 +27,8 @@ typedef NS_ENUM(NSInteger, FHCommunityCollectionCellType)
 
 typedef NS_ENUM(NSInteger, FHUGCFeedListCellSubType)
 {
-    FHUGCFeedListCellSubTypePureTitle = 0,                         //纯文本
-    FHUGCFeedListCellSubTypeSingleImage,                           //单图
-    FHUGCFeedListCellSubTypeTwoImage,                              //两图
-    FHUGCFeedListCellSubTypeMultiImage,                            //多图
-    FHUGCFeedListCellSubTypeArticlePureTitle,                      //文章纯文本
-    FHUGCFeedListCellSubTypeArticleSingleImage,                    //文章单图
-    FHUGCFeedListCellSubTypeArticleMultiImage,                     //文章多图
+    FHUGCFeedListCellSubTypePost = 0,                              //帖子
+    FHUGCFeedListCellSubTypeArticle,                               //文章
     FHUGCFeedListCellSubTypeUGCRecommend,                          //小区推荐
     FHUGCFeedListCellSubTypeUGCBanner,                             //运营位
     FHUGCFeedListCellSubTypeUGCGuide,                              //初次进入引导页

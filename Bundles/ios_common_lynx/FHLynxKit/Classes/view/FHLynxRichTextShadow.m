@@ -89,14 +89,15 @@ LYNX_REGISTER_SHADOW_NODE("f-rich-text")
             widthMode:(LynxMeasureMode)widthMode
                height:(CGFloat)height
            heightMode:(LynxMeasureMode)heightMode {
-  LynxLayoutSpec *spec = [[LynxLayoutSpec alloc] initWithWidth:width
-                                                        height:height
-                                                     widthMode:widthMode
-                                                    heightMode:heightMode
-                                                  textOverflow:self.textOverflow
-                                                    whiteSpace:self.whiteSpace
-                                                    maxLineNum:self.maxLineNum
-                                                     textStyle:self.textStyle];
+    LynxLayoutSpec *spec = [[LynxLayoutSpec alloc] initWithWidth:width height:height widthMode:widthMode heightMode:heightMode textOverflow:self.textOverflow overflow:LynxNoOverflow whiteSpace:self.whiteSpace maxLineNum:self.maxLineNum textStyle:self.textStyle];
+//  LynxLayoutSpec *spec = [[LynxLayoutSpec alloc] initWithWidth:width
+//                                                        height:height
+//                                                     widthMode:widthMode
+//                                                    heightMode:heightMode
+//                                                  textOverflow:self.textOverflow
+//                                                    whiteSpace:self.whiteSpace
+//                                                    maxLineNum:self.maxLineNum
+//                                                     textStyle:self.textStyle];
   spec.layoutManagerDelegate = _lineSpacingAdaptation;
   self.textRenderer = [[LynxTextRendererCache cache] rendererWithString:self.attrStr
                                                              layoutSpec:spec];
