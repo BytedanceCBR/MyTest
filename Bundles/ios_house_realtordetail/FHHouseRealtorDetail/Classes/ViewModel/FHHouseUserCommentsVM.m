@@ -113,6 +113,7 @@
             return;
         }
         if (model.data.commentInfo.count > 0) {
+            self.detailController.emptyView.hidden = YES;
             [wself updateTableViewWithMoreData:model.data.hasMore];
                 [self.dataList addObjectsFromArray:model.data.commentInfo];
                 self.lastOffset = model.data.offset;

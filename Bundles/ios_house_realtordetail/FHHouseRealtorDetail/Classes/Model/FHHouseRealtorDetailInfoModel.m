@@ -63,7 +63,7 @@
 + (JSONKeyMapper*)keyMapper
 {
     NSDictionary *dict = @{
-            @"associateInfo": @"user_name",
+            @"associateInfo": @"realtor_home_page_associate_info",
             @"certificationPage": @"certification_page",
             @"certificationIcon": @"certification_icon",
             @"scoreInfo": @"score_info",
