@@ -227,19 +227,7 @@
     }else {
         showTitleMapBtn = NO;
     }
-    if (hasVideo) {
-        FHVideoHouseVideoVideoInfosModel *info = model.data.neighborhoodVideo.videoInfos[0];
-        FHMultiMediaItemModel * itemModel = [[FHMultiMediaItemModel alloc] init];
-        itemModel.cellHouseType = FHMultiMediaCellHouseNeiborhood;
-        itemModel.mediaType = FHMultiMediaTypeVideo;
-        itemModel.videoID = info.vid;
-        itemModel.imageUrl = info.coverImageUrl;
-        itemModel.vWidth = info.vWidth;
-        itemModel.vHeight = info.vHeight;
-        itemModel.infoTitle = model.data.neighborhoodVideo.infoTitle;
-        itemModel.infoSubTitle = model.data.neighborhoodVideo.infoSubTitle;
-        itemModel.groupType = @"视频";
-        
+    if (hasVideo || model.data.neighborhoodInfo.baiduPanoramaUrl.length) {
         
         FHDetailMediaHeaderCorrectingModel *headerCellModel = [[FHDetailMediaHeaderCorrectingModel alloc] init];
         FHHouseDetailImageListDataModel *houseImageDictList = [[FHHouseDetailImageListDataModel alloc] init];
@@ -263,13 +251,36 @@
         };
         houseTitleModel.address = model.data.neighborhoodInfo.address;
 //        houseTitleModel.tags = model.data.tags;
-        headerCellModel.vedioModel = itemModel;// 添加视频模型数据
+        
         headerCellModel.titleDataModel = houseTitleModel;
         headerCellModel.contactViewModel = self.contactViewModel;
         headerCellModel.isInstantData = model.isInstantData;
         houseTitleModel.neighborhoodInfoModel = neighborhoodInfoModel;
         houseTitleModel.showMapBtn = showTitleMapBtn;
         houseTitleModel.housetype = self.houseType;
+        
+        if (hasVideo) {
+            FHVideoHouseVideoVideoInfosModel *info = model.data.neighborhoodVideo.videoInfos[0];
+            FHMultiMediaItemModel * itemModel = [[FHMultiMediaItemModel alloc] init];
+            itemModel.cellHouseType = FHMultiMediaCellHouseNeiborhood;
+            itemModel.mediaType = FHMultiMediaTypeVideo;
+            itemModel.videoID = info.vid;
+            itemModel.imageUrl = info.coverImageUrl;
+            itemModel.vWidth = info.vWidth;
+            itemModel.vHeight = info.vHeight;
+            itemModel.infoTitle = model.data.neighborhoodVideo.infoTitle;
+            itemModel.infoSubTitle = model.data.neighborhoodVideo.infoSubTitle;
+            itemModel.groupType = @"视频";
+            headerCellModel.vedioModel = itemModel;// 添加视频模型数据
+        }
+        if (model.data.neighborhoodInfo.baiduPanoramaUrl.length) {
+            FHMultiMediaItemModel * itemModel = [[FHMultiMediaItemModel alloc] init];
+            itemModel.cellHouseType = FHMultiMediaCellHouseNeiborhood;
+            itemModel.mediaType = FHMultiMediaTypeBaiduPanorama;
+            itemModel.imageUrl = model.data.neighborhoodInfo.baiduPanoramaUrl;
+            itemModel.groupType = @"街景";
+            headerCellModel.baiduPanoramaModel = itemModel;// 添加百度街景数据
+        }
         [self.items addObject:headerCellModel];
     }else {
         // 添加头滑动图片
@@ -364,6 +375,7 @@
     //地图
     if(model.data.neighborhoodInfo.gaodeLat.length > 0 && model.data.neighborhoodInfo.gaodeLng.length > 0){
         FHDetailStaticMapCellModel *staticMapModel = [[FHDetailStaticMapCellModel alloc] init];
+        staticMapModel.baiduPanoramaUrl = model.data.neighborhoodInfo.baiduPanoramaUrl;
         staticMapModel.mapCentertitle = model.data.neighborhoodInfo.name;
         staticMapModel.gaodeLat = model.data.neighborhoodInfo.gaodeLat;
         staticMapModel.gaodeLng = model.data.neighborhoodInfo.gaodeLng;

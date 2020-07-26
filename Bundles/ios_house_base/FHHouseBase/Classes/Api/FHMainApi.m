@@ -508,12 +508,21 @@
         [extra addEntriesFromDictionary:extraDict];
     }
     NSMutableDictionary *metricDict = [NSMutableDictionary new];
+    UIApplicationState appState = [UIApplication sharedApplication].applicationState;
     if (startData && backDate) {
-        metricDict[@"api_duration_network"] = @([backDate timeIntervalSinceDate:startData]*1000);
+        NSTimeInterval duration = [backDate timeIntervalSinceDate:startData]*1000;
+        if (appState == UIApplicationStateActive || duration < 15*1000) {
+            //为了避免出现特别大的无效数据 App切换前后台的时候数据大的也不添加
+            metricDict[@"api_duration_network"] = @(duration);
+        }
     }
     
     if (startData && serializeDate) {
-        metricDict[@"api_duration_business"] = @([serializeDate timeIntervalSinceDate:startData]*1000);
+        NSTimeInterval duration = [serializeDate timeIntervalSinceDate:startData]*1000;
+        if (appState == UIApplicationStateActive || duration < 15*1000) {
+            //为了避免出现特别大的无效数据 App切换前后台的时候数据大的也不添加
+            metricDict[@"api_duration_business"] = @(duration);
+        }
     }
     
     if (type != FHNetworkMonitorTypeSuccess) {
@@ -945,6 +954,211 @@
     }];
 }
 
++(TTHttpTask *)requestRealtorHomePage:(NSDictionary *_Nullable)param completion:(void(^_Nullable)(FHHouseRealtorDetailModel *model, NSError *error))completion
+{
+    NSString *url = QURL(@"/f100/api/realtor/home_page/v2?");
+    
+    NSDate *startDate = [NSDate date];
+    return [[TTNetworkManager shareInstance] requestForBinaryWithResponse:url params:param method:@"GET" needCommonParams:YES callback:^(NSError *error, id obj, TTHttpResponse *response) {
+        if (!completion) {
+            return ;
+        }
+        NSDate *backDate = [NSDate date];
+        __block NSError *backError = error;
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
+            FHHouseRealtorDetailModel *model = (FHHouseRealtorDetailModel *)[self generateModel:obj class:[FHHouseRealtorDetailModel class] error:&backError];
+            NSDate *serDate = [NSDate date];
+            FHNetworkMonitorType resultType = FHNetworkMonitorTypeSuccess;
+            NSInteger code = 0;
+            NSString *errMsg = nil;
+            NSMutableDictionary *extraDict = nil;
+            NSDictionary *exceptionDict = nil;
+            NSInteger responseCode = -1;
+            if (response.statusCode) {
+                responseCode = response.statusCode;
+            }
+            if (response.statusCode == 200  && [model isKindOfClass:[FHHomeHouseModel class]]) {
+                if ([model respondsToSelector:@selector(status)]) {
+                    NSString *status = [model performSelector:@selector(status)];
+                    if (status.integerValue != 0 || error != nil) {
+                        extraDict = @{}.mutableCopy;
+                        extraDict[@"request_url"] = response.URL.absoluteString;
+                        extraDict[@"response_headers"] = response.allHeaderFields;
+                        extraDict[@"error"] = error.domain;
+                        
+                        code = [status integerValue];
+                        errMsg = error.domain;
+                        
+                        NSInteger houseType = [[param valueForKey:@"house_type"] integerValue];
+                        resultType = FHNetworkMonitorTypeBizFailed+houseType;
+                        exceptionDict = @{@"data_type":(param[@"house_type"]?:@"-1")};
+                    }
+                }
+            }else{
+                code = response.statusCode;
+                resultType = FHNetworkMonitorTypeNetFailed;
+            }
+            [self addRequestLog:response.URL.path startDate:startDate backDate:backDate serializeDate:serDate resultType:resultType errorCode:code errorMsg:errMsg extra:extraDict exceptionDict:exceptionDict responseCode:responseCode];
+            [[FHHouseErrorHubManager sharedInstance] checkRequestResponseWithHost:url requestParams:param responseStatus:response response:obj analysisError:backError changeModelType:resultType errorHubType:FHErrorHubTypeRequest];
+            dispatch_async(dispatch_get_main_queue(), ^{
+                completion(model,backError);
+            });
+        });
+    }];
+}
++(TTHttpTask *)requestRealtorHomeRecommend:(NSDictionary *_Nullable)param completion:(void(^_Nullable)(FHHomeHouseModel *model, NSError *error))completion
+{
+    NSString *url = QURL(@"/f100/api/realtor_house_list?");
+    
+    NSDate *startDate = [NSDate date];
+    return [[TTNetworkManager shareInstance] requestForBinaryWithResponse:url params:param method:@"GET" needCommonParams:YES callback:^(NSError *error, id obj, TTHttpResponse *response) {
+        if (!completion) {
+            return ;
+        }
+        NSDate *backDate = [NSDate date];
+        __block NSError *backError = error;
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
+            FHHomeHouseModel *model = (FHHomeHouseModel *)[self generateModel:obj class:[FHHomeHouseModel class] error:&backError];
+            NSDate *serDate = [NSDate date];
+            FHNetworkMonitorType resultType = FHNetworkMonitorTypeSuccess;
+            NSInteger code = 0;
+            NSString *errMsg = nil;
+            NSMutableDictionary *extraDict = nil;
+            NSDictionary *exceptionDict = nil;
+            NSInteger responseCode = -1;
+            if (response.statusCode) {
+                responseCode = response.statusCode;
+            }
+            if (response.statusCode == 200  && [model isKindOfClass:[FHHomeHouseModel class]]) {
+                if ([model respondsToSelector:@selector(status)]) {
+                    NSString *status = [model performSelector:@selector(status)];
+                    if (status.integerValue != 0 || error != nil || model.data.items.count == 0) {
+                        extraDict = @{}.mutableCopy;
+                        extraDict[@"request_url"] = response.URL.absoluteString;
+                        extraDict[@"response_headers"] = response.allHeaderFields;
+                        extraDict[@"error"] = error.domain;
+                        
+                        code = [status integerValue];
+                        errMsg = error.domain;
+                        
+                        NSInteger houseType = [[param valueForKey:@"house_type"] integerValue];
+                        resultType = FHNetworkMonitorTypeBizFailed+houseType;
+                        exceptionDict = @{@"data_type":(param[@"house_type"]?:@"-1")};
+                    }
+                }
+            }else{
+                code = response.statusCode;
+                resultType = FHNetworkMonitorTypeNetFailed;
+            }
+            [self addRequestLog:response.URL.path startDate:startDate backDate:backDate serializeDate:serDate resultType:resultType errorCode:code errorMsg:errMsg extra:extraDict exceptionDict:exceptionDict responseCode:responseCode];
+            [[FHHouseErrorHubManager sharedInstance] checkRequestResponseWithHost:url requestParams:param responseStatus:response response:obj analysisError:backError changeModelType:resultType errorHubType:FHErrorHubTypeRequest];
+            dispatch_async(dispatch_get_main_queue(), ^{
+                completion(model,backError);
+            });
+        });
+    }];
+}
 
++(TTHttpTask *)requestRealtorUserCommon:(NSDictionary *_Nullable)param completion:(void(^_Nullable)(FHHouseRealtorUserCommentDataModel *model, NSError *error))completion
+{
+    NSString *url = QURL(@"/f100/api/realtor/home_page/evaluation_list?");
+    
+    NSDate *startDate = [NSDate date];
+    return [[TTNetworkManager shareInstance] requestForBinaryWithResponse:url params:param method:@"GET" needCommonParams:YES callback:^(NSError *error, id obj, TTHttpResponse *response) {
+        if (!completion) {
+            return ;
+        }
+        NSDate *backDate = [NSDate date];
+        __block NSError *backError = error;
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
+            FHHouseRealtorUserCommentDataModel *model = (FHHouseRealtorUserCommentDataModel *)[self generateModel:obj class:[FHHouseRealtorUserCommentDataModel class] error:&backError];
+            NSDate *serDate = [NSDate date];
+            FHNetworkMonitorType resultType = FHNetworkMonitorTypeSuccess;
+            NSInteger code = 0;
+            NSString *errMsg = nil;
+            NSMutableDictionary *extraDict = nil;
+            NSDictionary *exceptionDict = nil;
+            NSInteger responseCode = -1;
+            if (response.statusCode) {
+                responseCode = response.statusCode;
+            }
+            if (response.statusCode == 200  && [model isKindOfClass:[FHHouseRealtorUserCommentDataModel class]]) {
+                if ([model respondsToSelector:@selector(status)]) {
+                    NSString *status = [model performSelector:@selector(status)];
+                    if (status.integerValue != 0 || error != nil ) {
+                        extraDict = @{}.mutableCopy;
+                        extraDict[@"request_url"] = response.URL.absoluteString;
+                        extraDict[@"response_headers"] = response.allHeaderFields;
+                        extraDict[@"error"] = error.domain;
+                        
+                        code = [status integerValue];
+                        errMsg = error.domain;
+                    }
+                }
+            }else{
+                code = response.statusCode;
+                resultType = FHNetworkMonitorTypeNetFailed;
+            }
+            [self addRequestLog:response.URL.path startDate:startDate backDate:backDate serializeDate:serDate resultType:resultType errorCode:code errorMsg:errMsg extra:extraDict exceptionDict:exceptionDict responseCode:responseCode];
+            [[FHHouseErrorHubManager sharedInstance] checkRequestResponseWithHost:url requestParams:param responseStatus:response response:obj analysisError:backError changeModelType:resultType errorHubType:FHErrorHubTypeRequest];
+            dispatch_async(dispatch_get_main_queue(), ^{
+                completion(model,backError);
+            });
+        });
+    }];
+}
+
++(TTHttpTask *)requestRealtorShop:(NSDictionary *_Nullable)param completion:(void(^_Nullable)(FHHouseRealtorShopDetailModel *model, NSError *error))completion
+{
+    NSString *url = QURL(@"/f100/api/realtor/home_page/shop?");
+    
+    NSDate *startDate = [NSDate date];
+    return [[TTNetworkManager shareInstance] requestForBinaryWithResponse:url params:param method:@"GET" needCommonParams:YES callback:^(NSError *error, id obj, TTHttpResponse *response) {
+        if (!completion) {
+            return ;
+        }
+        NSDate *backDate = [NSDate date];
+        __block NSError *backError = error;
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
+            FHHouseRealtorShopDetailModel *model = (FHHouseRealtorShopDetailModel *)[self generateModel:obj class:[FHHouseRealtorShopDetailModel class] error:&backError];
+            NSDate *serDate = [NSDate date];
+            FHNetworkMonitorType resultType = FHNetworkMonitorTypeSuccess;
+            NSInteger code = 0;
+            NSString *errMsg = nil;
+            NSMutableDictionary *extraDict = nil;
+            NSDictionary *exceptionDict = nil;
+            NSInteger responseCode = -1;
+            if (response.statusCode) {
+                responseCode = response.statusCode;
+            }
+            if (response.statusCode == 200  && [model isKindOfClass:[FHHouseRealtorShopDetailModel class]]) {
+                if ([model respondsToSelector:@selector(status)]) {
+                    NSString *status = [model performSelector:@selector(status)];
+                    if (status.integerValue != 0 || error != nil) {
+                        extraDict = @{}.mutableCopy;
+                        extraDict[@"request_url"] = response.URL.absoluteString;
+                        extraDict[@"response_headers"] = response.allHeaderFields;
+                        extraDict[@"error"] = error.domain;
+                        
+                        code = [status integerValue];
+                        errMsg = error.domain;
+                        
+                        NSInteger houseType = [[param valueForKey:@"house_type"] integerValue];
+                        resultType = FHNetworkMonitorTypeBizFailed+houseType;
+                        exceptionDict = @{@"data_type":(param[@"house_type"]?:@"-1")};
+                    }
+                }
+            }else{
+                code = response.statusCode;
+                resultType = FHNetworkMonitorTypeNetFailed;
+            }
+            [self addRequestLog:response.URL.path startDate:startDate backDate:backDate serializeDate:serDate resultType:resultType errorCode:code errorMsg:errMsg extra:extraDict exceptionDict:exceptionDict responseCode:responseCode];
+            [[FHHouseErrorHubManager sharedInstance] checkRequestResponseWithHost:url requestParams:param responseStatus:response response:obj analysisError:backError changeModelType:resultType errorHubType:FHErrorHubTypeRequest];
+            dispatch_async(dispatch_get_main_queue(), ^{
+                completion(model,backError);
+            });
+        });
+    }];
+}
 @end
 

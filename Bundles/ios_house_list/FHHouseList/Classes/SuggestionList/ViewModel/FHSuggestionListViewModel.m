@@ -6,7 +6,6 @@
 //
 
 #import "FHSuggestionListViewModel.h"
-#import "FHSuggestionListViewController.h"
 #import "FHSuggestionCollectionViewCell.h"
 #import "FHSuggestionCollectionView.h"
 
@@ -28,8 +27,13 @@
         _currentTabIndex = -1;
         self.listController = viewController;
         self.cellDict = [NSMutableDictionary new];
+        [self initNotification];
     }
     return self;
+}
+
+- (void)dealloc {
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 - (void)updateSubVCTrackStatus
@@ -73,7 +77,37 @@
     }
 }
 
+- (void)initNotification {
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(keyboardWillShowNotifiction:) name:UIKeyboardWillShowNotification object:nil];
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(keyboardWillHideNotifiction:) name:UIKeyboardWillHideNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(sugSubscribeNoti:) name:@"kFHSugSubscribeNotificationName" object:nil];
+}
 
+- (void)keyboardWillShowNotifiction:(NSNotification *)notification {
+    //获取键盘弹出的高度
+    NSDictionary *dict = [notification userInfo];
+    NSValue *value = [dict objectForKey:UIKeyboardFrameEndUserInfoKey];
+    CGRect keyboardFrame = [value CGRectValue];
+    CGFloat keyboardHeight = keyboardFrame.size.height;
+    
+    self.isTrackerCacheDisabled = NO;
+    self.keyboardHeight = keyboardHeight;
+    self.listController.isTrackerCacheDisabled = self.isTrackerCacheDisabled;
+    self.listController.keyboardHeight = self.keyboardHeight;
+}
+
+- (void)keyboardWillHideNotifiction:(NSNotification *)notification {
+    self.isTrackerCacheDisabled = YES;
+    self.keyboardHeight = 0.0;
+    self.listController.isTrackerCacheDisabled = self.isTrackerCacheDisabled;
+    self.listController.keyboardHeight = self.keyboardHeight;
+    
+    NSInteger selectedIndex = self.segmentControl.selectedSegmentIndex;
+    if (selectedIndex >= 0 && selectedIndex < self.listController.houseTypeArray.count) {
+        NSNumber *value = self.listController.houseTypeArray[selectedIndex];
+        [[NSNotificationCenter defaultCenter] postNotificationName:kFHSuggestionKeyboardWillHideNotification object:value];
+    }
+}
 
 #pragma mark - UICollectionViewDelegate
 - (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView
@@ -139,7 +173,7 @@
         tabIndex = ceilf(tabIndex);
     }
     NSInteger index = (int)tabIndex;
-    if (tabIndex != self.listController.segmentControl.selectedSegmentIndex) {
+    if (index != self.listController.segmentControl.selectedSegmentIndex) {
         self.currentTabIndex = index;
         self.listController.segmentControl.selectedSegmentIndex = index;
         self.listController.houseType = [self.listController.houseTypeArray[index] integerValue];

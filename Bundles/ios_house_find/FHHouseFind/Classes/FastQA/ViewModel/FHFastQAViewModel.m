@@ -324,7 +324,7 @@
             // 显示 151*****010
             NSString *tempPhone = self.phoneNum;
             if (self.phoneNum.length == 11 && [self.phoneNum hasPrefix:@"1"] && [self isPureInt:self.phoneNum]) {
-                tempPhone = [NSString stringWithFormat:@"%@*****%@",[self.phoneNum substringToIndex:3],[self.phoneNum substringFromIndex:7]];
+                tempPhone = [NSString stringWithFormat:@"%@****%@",[self.phoneNum substringToIndex:3],[self.phoneNum substringFromIndex:7]];
             }
             self.mobileView.phoneTextField.text = tempPhone;
         }

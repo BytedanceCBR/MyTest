@@ -367,6 +367,7 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
         staticMapModel.tableView = self.tableView;
         staticMapModel.staticImage = model.data.neighborhoodInfo.gaodeImage;
         staticMapModel.mapOnly = YES;
+        staticMapModel.baiduPanoramaUrl = model.data.neighborhoodInfo.baiduPanoramaUrl;
         [self.items addObject:staticMapModel];
 
     } else{

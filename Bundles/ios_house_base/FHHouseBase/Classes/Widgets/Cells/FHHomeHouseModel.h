@@ -249,6 +249,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong , nullable) FHHomeHouseDataItemsUserStatusModel *userStatus ;
 @property (nonatomic, copy , nullable) NSString *displayTitle;
 @property (nonatomic, copy , nullable) NSString *imprId;
+@property (nonatomic, copy , nullable) NSString *id;
 @property (nonatomic, strong , nullable) FHHomeHouseImageTagModel *houseImageTag ;
 @property (nonatomic, strong , nullable) FHHomeHouseDataItemsGlobalPricingModel *globalPricing ;
 @property (nonatomic, copy , nullable) NSString *title;

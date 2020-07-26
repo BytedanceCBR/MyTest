@@ -51,13 +51,14 @@
         _contentView.layer.masksToBounds = YES;
         _contentView.backgroundColor = [UIColor whiteColor];
         _contentView.autoresizingMask = UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight;
-        
+        _contentView.layer.borderWidth = 0.5;
+        _contentView.layer.borderColor = [UIColor colorWithRed:0.0 green:0.0 blue:0.0 alpha:0.3].CGColor;
         [self addSubview:_contentView];
         
         _subwayItem = [self itemViewWithType:FHMapSearchSideBarItemTypeSubway];
         _circleItem = [self itemViewWithType:FHMapSearchSideBarItemTypeCircle];
         _filterItem = [self itemViewWithType:FHMapSearchSideBarItemTypeFilter];
-        _listItem   = [self itemViewWithType:FHMapSearchSideBarItemTypeList];
+//        _listItem   = [self itemViewWithType:FHMapSearchSideBarItemTypeList];
         
         
         _listItem.bottomLine.hidden = YES;
@@ -65,7 +66,7 @@
         [_contentView addSubview:_subwayItem];
         [_contentView addSubview:_circleItem];
         [_contentView addSubview:_filterItem];
-        [_contentView addSubview:_listItem];
+//        [_contentView addSubview:_listItem];
         
         
         CALayer *layer = self.layer;
@@ -94,7 +95,7 @@
                                    @(FHMapSearchSideBarItemTypeSubway):self.subwayItem,
                                    @(FHMapSearchSideBarItemTypeCircle):self.circleItem,
                                    @(FHMapSearchSideBarItemTypeFilter):self.filterItem,
-                                   @(FHMapSearchSideBarItemTypeList):self.listItem,
+//                                   @(FHMapSearchSideBarItemTypeList):self.listItem,
                                    }.mutableCopy;
     
     NSMutableArray *items = [[NSMutableArray alloc] initWithCapacity:types.count];

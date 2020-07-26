@@ -22,6 +22,9 @@ typedef enum : NSUInteger {
     FHEnterSuggestionTypeOldMain       =   5,// 二手房大类页
 } FHEnterSuggestionType;
 
+#define kFHSuggestionKeyboardWillHideNotification @"FHSuggestionKeyboardWillHideNotification"
+#define kFHSuggestionHouseTypeDidChanged @"FHSuggestionHouseTypeDidChanged"
+
 //特别说明：埋点逻辑和页面跳转逻辑全在子VC:FHChildSuggestionListViewController实现
 
 NS_ASSUME_NONNULL_BEGIN
@@ -34,6 +37,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign)     FHHouseType       houseType;
 @property (nonatomic, strong)     TTRouteParamObj *paramObj;
 @property (nonatomic, strong)     FHSuggestionCollectionView *collectionView;
+@property (nonatomic, assign)     CGFloat keyboardHeight;
+@property (nonatomic, assign)     BOOL isTrackerCacheDisabled;
 
 - (void)requestDeleteHistory;
 

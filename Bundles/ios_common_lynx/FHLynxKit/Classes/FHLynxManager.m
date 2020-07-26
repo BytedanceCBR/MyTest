@@ -35,6 +35,7 @@ static NSString * const kFHLynxEnableControlKey = @"lynx_enable";
 @property (nonatomic, assign) BOOL isRetryingSync;
 @property (atomic, strong) NSMutableArray *activeChannels;
 @property (atomic, strong) NSMutableArray *deprecatedChannels;
+@property (nonatomic, strong) NSMutableArray* needUpdateCacheArray;
 
 @end
 
@@ -49,6 +50,7 @@ static NSString * const kFHLynxEnableControlKey = @"lynx_enable";
         _lynx_io_queue = dispatch_queue_create("com.bytedance.fh_lynx_manager.lynx_io_queue", DISPATCH_QUEUE_SERIAL);
         _templateCache = [NSMutableDictionary dictionary];
         _totalConfigDict = [NSMutableDictionary dictionary];
+        _needUpdateCacheArray = [NSMutableArray new];
         pthread_mutex_init(&_configDictLock, NULL);
     }
     return self;
@@ -68,6 +70,16 @@ static NSString * const kFHLynxEnableControlKey = @"lynx_enable";
     NSString *cacheKey = [self cacheKeyForChannel:channel templateKey:templateKey version:0];
     __block NSData *data = [self.templateCache objectForKey:cacheKey];
     
+    //如果启动的时候读取的是工程内置的,则在使用的时候再取一次gecko下载的
+    if ([self.needUpdateCacheArray containsObject:channel]) {
+        NSData * dataFromGecko = [self getGeckoFileDataWithChannel:channel fileName:[FHLynxManager defaultJSFileName]];
+        //如果gecko能读到,则替换成gekco的
+        if (dataFromGecko) {
+            [self cacheData:dataFromGecko andChannel:channel];
+            data = dataFromGecko;
+        }
+    }
+    
     if (!data) {
         NSNumber *costTime = @(0);
         CFAbsoluteTime startTime = CFAbsoluteTimeGetCurrent();
@@ -75,7 +87,7 @@ static NSString * const kFHLynxEnableControlKey = @"lynx_enable";
         //没有的话同步读，用磁盘io的串行队列
         dispatch_sync(self.lynx_io_queue, ^{
             data = [self getGeckoFileDataWithChannel:channel fileName:[FHLynxManager defaultJSFileName]];
-            if (data) {
+            if (data) {  
                 [self cacheData:data andChannel:channel];
             }
         });
@@ -87,9 +99,9 @@ static NSString * const kFHLynxEnableControlKey = @"lynx_enable";
 {
     NSMutableDictionary * paramsExtra = [NSMutableDictionary new];
     [paramsExtra setValue:[[TTInstallIDManager sharedInstance] deviceID] forKey:@"device_id"];
-     NSMutableDictionary *uploadParams = [NSMutableDictionary new];
-     [uploadParams setValue:status forKey:@"error"];
-     [[HMDTTMonitor defaultManager] hmdTrackService:@"lynx_template_data_source" status:[status integerValue] extra:paramsExtra];
+    NSMutableDictionary *uploadParams = [NSMutableDictionary new];
+    [uploadParams setValue:status forKey:@"error"];
+    [[HMDTTMonitor defaultManager] hmdTrackService:@"lynx_template_data_source" status:[status integerValue] extra:paramsExtra];
 }
      
 
@@ -114,7 +126,10 @@ static NSString * const kFHLynxEnableControlKey = @"lynx_enable";
                 NSString *path = [NSString stringWithFormat:@"LynxLocalChannels/%@/%@",channel,[FHLynxManager defaultJSFileName]];
                 NSString *templatePath = [[NSBundle mainBundle] pathForResource:path ofType:@""];
                 data = [NSData dataWithContentsOfFile:templatePath];
-                [self syncAllChannel];
+                if (data) {
+                    [self.needUpdateCacheArray addObject:channel];
+                }
+//                [self syncAllChannel];
             }
             if (data) {
                 [self cacheData:data andChannel:channel];
@@ -312,7 +327,7 @@ static NSString * const kFHLynxEnableControlKey = @"lynx_enable";
 }
 
 - (NSArray<NSString *> *)allLocalChannelsArray{
-    return @[@"ugc_operation",@"lynx_common_question",@"ugc_encyclopedia_lynx_item",@"ugc_encyclopedia_lynx_header",@"lynx_realtor_card",@"lynx_enterprise_guarantee",@"lynx_estate_info"];
+    return @[@"ugc_operation",@"lynx_common_question",@"ugc_encyclopedia_lynx_item",@"ugc_encyclopedia_lynx_header",@"lynx_realtor_card",@"lynx_enterprise_guarantee",@"lynx_estate_info",@"lynx_realtor_detail_header",@"lynx_realtor_shop_header",@"lynx_evaluation_item"];
 }
 
 - (NSArray<NSString *> *)allConfigChannelsArray{

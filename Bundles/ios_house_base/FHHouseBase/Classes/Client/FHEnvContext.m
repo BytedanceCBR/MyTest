@@ -1143,6 +1143,16 @@ static NSInteger kGetLightRequestRetryCount = 3;
     }
 }
 
++ (BOOL)isLongShortTicketOpen {
+    NSDictionary *archSettings= [[TTSettingsManager sharedManager] settingForKey:@"f_settings" defaultValue:@{} freeze:YES];
+    NSString *isOpen = [archSettings tt_stringValueForKey:@"f_long_short_ticket_open"];
+    if(isOpen){
+        return [isOpen boolValue];
+    }else{
+        return YES;
+    }
+}
+
 + (BOOL)isNewDiscovery {
 //    FHConfigDataModel *configData = [[FHEnvContext sharedInstance] getConfigFromCache];
 //    if([configData.channelType isEqualToString:@"1"]){

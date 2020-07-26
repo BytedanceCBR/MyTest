@@ -28,6 +28,7 @@
                            @"schoolDictList": @"school_dict_list",
                            @"searchId": @"search_id",
                            @"imprId": @"impr_id",
+                           @"baiduPanoramaUrl": @"baidu_panorama_url",
                            };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
         return dict[keyName]?:keyName;

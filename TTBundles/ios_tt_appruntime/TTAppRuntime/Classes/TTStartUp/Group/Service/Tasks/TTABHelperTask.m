@@ -81,8 +81,8 @@ DEC_TASK("TTABHelperTask",FHTaskTypeSerial,TASK_PRIORITY_HIGH+4);
     }];
     [BDABTestManager registerExperiment:exp];
     
-    //实验地址 https://data.bytedance.net/libra/flight/392641
-    BDABTestBaseExperiment *douyinLoginExp = [[BDABTestBaseExperiment alloc] initWithKey:@"f_douyin_login_type" owner:@"xielei.233" description:@"分对照组，P0（优先运营商显示），P1（优先抖音）" defaultValue:@{@"value": @(0)} valueType:BDABTestValueTypeDictionary isSticky:YES settingsValueBlock:^id(NSString *key) {
+    //实验地址 https://data.bytedance.net/libra/flight/449156
+    BDABTestBaseExperiment *imLoginTypeExp = [[BDABTestBaseExperiment alloc] initWithKey:@"f_im_login_type" owner:@"zhongxinyuan" description:@"IM 登录路径优化实验(0 - 不自动跳转登录, 1 - 跳转全屏登录, 2 - 跳转弹窗登录)" defaultValue:@{@"value": @(0)} valueType:BDABTestValueTypeDictionary isSticky:YES settingsValueBlock:^id(NSString *key) {
         if (key.length > 0) {
             NSDictionary *archSettings= [[TTSettingsManager sharedManager] settingForKey:@"f_settings" defaultValue:@{} freeze:YES];
             if ([archSettings valueForKey:key]) {
@@ -91,7 +91,7 @@ DEC_TASK("TTABHelperTask",FHTaskTypeSerial,TASK_PRIORITY_HIGH+4);
         }
         return nil;
     }];
-    [BDABTestManager registerExperiment:douyinLoginExp];
+    [BDABTestManager registerExperiment:imLoginTypeExp];
     
     BDABTestBaseExperiment *newDiscoveryExp = [[BDABTestBaseExperiment alloc] initWithKey:@"f_find_revision_v103" owner:@"yangdongze" description:@"首页发现tab内容实验，对照组为原发现内容，实验组内容为社区7个频道的内容" defaultValue:@(0) valueType:BDABTestValueTypeNumber isSticky:YES settingsValueBlock:^id(NSString *key) {
         if (key.length > 0) {
@@ -103,7 +103,6 @@ DEC_TASK("TTABHelperTask",FHTaskTypeSerial,TASK_PRIORITY_HIGH+4);
         return nil;
     }];
     [BDABTestManager registerExperiment:newDiscoveryExp];
-    
 }
 
 // 添加客户端实验

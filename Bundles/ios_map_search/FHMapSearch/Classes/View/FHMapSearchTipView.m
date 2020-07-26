@@ -33,15 +33,21 @@
 //        [self addSubview:frost];
         
         _tipLabel = [[UILabel alloc] init];
-        _tipLabel.font = [UIFont themeFontRegular:12];
+        _tipLabel.font = [UIFont themeFontMedium:16];
         _tipLabel.textAlignment = NSTextAlignmentCenter;
-        _tipLabel.textColor = [UIColor themeGray1];
+        _tipLabel.textColor = [UIColor whiteColor];
         [self addSubview:_tipLabel];
         
-        UIImage *img = SYS_IMG(@"mapsearch_round_white_bg");
-        img = [img resizableImageWithCapInsets:UIEdgeInsetsMake(40, 40, 40, 40)];
-        self.layer.contents = (id)[img CGImage];
+//        UIImage *img = SYS_IMG(@"mapsearch_round_white_bg");
+//        img = [img resizableImageWithCapInsets:UIEdgeInsetsMake(40, 40, 40, 40)];
+//        self.layer.contents = (id)[img CGImage];
+        self.backgroundColor = [UIColor colorWithRed:51.0/255.0 green:51.0/255.0 blue:51.0/255.0 alpha:0.8];
         
+        self.layer.cornerRadius = 5;
+        self.layer.masksToBounds = YES;
+//        self.layer.borderColor = [UIColor themeOrange1].CGColor;
+//        self.layer.borderWidth = 0.6;
+
 //        self.backgroundColor = [UIColor themeRed2];
 //
 //        self.layer.cornerRadius = 20;

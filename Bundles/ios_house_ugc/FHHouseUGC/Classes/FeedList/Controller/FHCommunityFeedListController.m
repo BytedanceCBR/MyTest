@@ -55,7 +55,7 @@
     // Do any additional setup after loading the view.
     self.automaticallyAdjustsScrollViewInsets = NO;
     [self initView];
-    [self initConstraints];
+//    [self initConstraints];
     [self initViewModel];
     
     [[SSImpressionManager shareInstance] addRegist:self];
@@ -187,20 +187,25 @@
 }
 
 - (void)initNotifyBarView {
-    self.notifyBarView = [[ArticleListNotifyBarView alloc]initWithFrame:CGRectZero];
+    self.notifyBarView = [[ArticleListNotifyBarView alloc]initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, 32)];
     [self.view addSubview:self.notifyBarView];
 }
 
-- (void)initConstraints {
-    [self.tableView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.edges.equalTo(self.view);
-    }];
-    
-    [self.notifyBarView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.left.right.mas_equalTo(self.tableView);
-        make.height.mas_equalTo(32);
-    }];
+- (void)viewWillLayoutSubviews {
+    [super viewWillLayoutSubviews];
+    self.tableView.frame = self.view.bounds;
 }
+
+//- (void)initConstraints {
+//    [self.tableView mas_makeConstraints:^(MASConstraintMaker *make) {
+//        make.edges.equalTo(self.view);
+//    }];
+//    
+//    [self.notifyBarView mas_makeConstraints:^(MASConstraintMaker *make) {
+//        make.top.left.right.mas_equalTo(self.tableView);
+//        make.height.mas_equalTo(32);
+//    }];
+//}
 
 - (void)initViewModel {
     FHCommunityFeedListBaseViewModel *viewModel = nil;

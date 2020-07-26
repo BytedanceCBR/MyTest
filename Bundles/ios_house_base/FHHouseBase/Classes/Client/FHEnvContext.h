@@ -255,6 +255,11 @@ NS_ASSUME_NONNULL_BEGIN
 + (BOOL)isSpringHangOpen;
 
 /*
+判断开启了长短票据，默认YES
+ */
++ (BOOL)isLongShortTicketOpen;
+
+/*
 是否开启发现和UGC合并，默认NO
  */
 + (BOOL)isNewDiscovery;
