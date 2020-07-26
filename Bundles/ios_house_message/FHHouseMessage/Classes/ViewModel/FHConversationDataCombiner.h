@@ -29,6 +29,8 @@ NS_ASSUME_NONNULL_BEGIN
 -(NSUInteger)numberOfItems;
 
 -(NSArray*)allItems;
+
+-(BOOL)isFirstLoad;
 @end
 
 NS_ASSUME_NONNULL_END
