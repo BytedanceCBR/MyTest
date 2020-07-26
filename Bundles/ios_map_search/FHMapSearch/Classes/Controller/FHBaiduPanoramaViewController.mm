@@ -1131,7 +1131,7 @@ static NSInteger overlayIndex = 0;
     NSMutableDictionary *params = [NSMutableDictionary dictionary];
     [params addEntriesFromDictionary:self.tracerDict];
     params[@"page_type"] = @"street_mapping";
-    params[@"event_tracking_id"] = @"70950";
+//    params[@"event_tracking_id"] = @"70950";
     [FHUserTracker writeEvent:@"go_detail" params:params];
 }
 @end
