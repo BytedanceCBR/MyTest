@@ -28,6 +28,7 @@
     ArticleTabBarStyleNewsListViewController *ariticleListVC = [[ArticleTabBarStyleNewsListViewController alloc] init];
     ariticleListVC.isShowTopSearchPanel = NO;
     self.contentVC = ariticleListVC;
+    ariticleListVC.view.frame = self.bounds;
     [self.contentView addSubview:ariticleListVC.view];
 }
 
