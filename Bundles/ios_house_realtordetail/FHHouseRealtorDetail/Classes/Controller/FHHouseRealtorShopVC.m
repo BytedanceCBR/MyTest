@@ -51,7 +51,7 @@
 
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
-    [self.viewModel updateNavBarWithAlpha:0];
+    [self.viewModel updateNavBarWithAlpha:self.customNavBarView.bgView.alpha];
 }
 
 - (void)initFrame {
