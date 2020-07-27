@@ -260,7 +260,10 @@
 
 - (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
-    [self.viewModel viewWillDisappear];
+    if(![FHEnvContext sharedInstance].isShowingHomeHouseFind || !self.isNewDiscovery){
+        [self.viewModel viewWillDisappear];
+    }
+    
     if (self.loginTipview) {
          [self.loginTipview pauseTimer];
     }
@@ -271,7 +274,10 @@
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-    [self.viewModel viewWillAppear];
+    if(![FHEnvContext sharedInstance].isShowingHomeHouseFind || !self.isNewDiscovery){
+        [self.viewModel viewWillAppear];
+    }
+    
     [self initLoginTipView];
     self.stayTime = [[NSDate date] timeIntervalSince1970];
 //    [self addUgcGuide];
@@ -814,6 +820,7 @@
     tracerDict[@"enter_from"] = self.tracerDict[@"enter_from"] ?: @"be_null";
     tracerDict[@"category_name"] = self.tracerDict[@"category_name"] ?: @"be_null";
     [FHEnvContext recordEvent:tracerDict andEventKey:@"enter_category"];
+    [self.viewModel viewWillAppear];
 }
 
 - (void)viewDisAppearForEnterType:(NSInteger)enterType
@@ -828,6 +835,7 @@
     if (((int) duration) > 0) {
         [FHEnvContext recordEvent:tracerDict andEventKey:@"stay_category"];
     }
+    [self.viewModel viewWillDisappear];
 }
 
 #pragma mark - TTUIViewControllerTrackProtocol
