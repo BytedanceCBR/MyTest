@@ -137,15 +137,9 @@ static bool isTTCommentPublishing = NO;
     
     //上报埋点
     NSMutableDictionary *params = [NSMutableDictionary dictionary];
+    [params addEntriesFromDictionary:self.extraDic];
     params[@"click_position"] = @"submit_comment";
     params[@"page_type"] = @"update_detail";
-    params[@"origin_from"] = self.extraDic[@"origin_from"] ?: @"be_null";
-    params[@"enter_type"] = self.extraDic[@"enter_type"]?:@"be_null";
-    params[@"enter_from"] = self.extraDic[@"enter_from"]?:@"be_null";
-    params[@"social_group_id"] = self.extraDic[@"social_group_id"]?:@"be_null";
-    params[@"rank"] = self.extraDic[@"rank"]?:@"be_null";
-    params[@"impr_id"] = self.extraDic[@"impr_id"]?:@"be_null";
-    params[@"group_source"] = self.extraDic[@"group_source"]?:@"be_null";
     params[@"group_id"] = self.commentDetailModel.groupModel.groupID ?: @"be_null";
     [FHUserTracker writeEvent:@"click_submit_comment" params:params];
     
