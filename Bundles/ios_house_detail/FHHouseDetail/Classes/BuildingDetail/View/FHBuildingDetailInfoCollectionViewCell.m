@@ -173,7 +173,7 @@ CGFloat const FHBuildingDetailInfoListCellMinimumLineSpacing = 25 + 12;
         }
         else{
             UICollectionViewLayoutAttributes *attributes = [self.collectionView layoutAttributesForItemAtIndexPath:self.currentIndexPath];
-            *targetContentOffset = CGPointMake(attributes.frame.origin.x - 25, 0);
+            *targetContentOffset = CGPointMake(attributes.frame.origin.x - FHBuildingDetailInfoListCellMinimumLineSpacing, 0);
         }
     }
 }
