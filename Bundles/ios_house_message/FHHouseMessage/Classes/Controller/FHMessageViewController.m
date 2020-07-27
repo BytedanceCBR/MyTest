@@ -30,12 +30,14 @@
 #import <FHMessageNotificationManager.h>
 #import "FHEnvContext.h"
 #import <FHPopupViewCenter/FHPopupViewManager.h>
+#import "FHMessageTopView.h"
 
 @interface FHMessageViewController ()
 
 @property(nonatomic, strong) FHMessageViewModel *viewModel;
 @property(nonatomic, strong) FHPushMessageTipView *pushTipView;
 @property (nonatomic, copy)     NSString       *enter_from;// 外部传入
+@property (nonatomic, strong) FHMessageTopView *topView;
 @end
 
 @implementation FHMessageViewController
@@ -46,7 +48,7 @@
     self.showenRetryButton = YES;
     self.ttTrackStayEnable = YES;
     self.enter_from = self.tracerDict[UT_ENTER_FROM];
-    [self initNavbar];
+    //[self initNavbar];
     [self initView];
     [self initConstraints];
     [self initViewModel];
@@ -138,6 +140,8 @@
 }
 
 - (void)initView {
+    self.topView = [[FHMessageTopView alloc] init];
+    [self.view addSubview:_topView];
     self.containerView = [[UIView alloc] init];
     [self.view addSubview:_containerView];
     
@@ -210,6 +214,16 @@
 
 
 - (void)initConstraints {
+    CGFloat height = 64.f;
+    if (@available(iOS 13.0, *)) {
+        height = 44.f + [UIApplication sharedApplication].keyWindow.safeAreaInsets.top;
+    } else if (@available(iOS 11.0, *)) {
+        height = 44.f + self.view.tt_safeAreaInsets.top;
+    }
+    [self.topView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.left.right.mas_equalTo(0);
+        make.height.mas_equalTo(height);
+    }];
     CGFloat bottom = [self getBottomMargin];
     if (@available(iOS 11.0 , *)) {
         if([self isAlignToSafeBottom]){
