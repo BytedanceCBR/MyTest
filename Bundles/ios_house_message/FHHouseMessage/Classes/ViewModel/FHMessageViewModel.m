@@ -197,24 +197,14 @@
 #pragma mark - UITableViewDataSource
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    if (_messageDataType == 1) {
-        return [[_combiner conversationItems] count];
-    } else if (_messageDataType == 2) {
-        return [[_combiner channelItems] count];
-    }
-    return [_combiner numberOfItems];
+    return [[self items] count];
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     FHMessageCell *cell = [tableView dequeueReusableCellWithIdentifier:kCellId];
     
-    if (([_combiner conversationItems].count > indexPath.row && _messageDataType == 1) || ([_combiner channelItems].count > indexPath.row && _messageDataType == 2)) {
-        id model = nil;
-        if (_messageDataType == 1) {
-            model = [_combiner conversationItems][indexPath.row];
-        } else if (_messageDataType == 2) {
-            model = [_combiner channelItems][indexPath.row];
-        }
+    if ([[self items] count] > indexPath.row) {
+        id model = [self items][indexPath.row];
         if ([model isKindOfClass:[FHUnreadMsgDataUnreadModel class]]) {
             [cell updateWithModel:model];
         } else {
@@ -237,11 +227,20 @@
     return 0.01f;
 }
 
+- (NSArray *)items {
+    if (_messageDataType == 1) {
+        return [_combiner conversationItems];
+    } else if (_messageDataType == 2) {
+        return [_combiner channelItems];
+    }
+    return [[NSArray alloc] init];
+}
+
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
 
     [tableView deselectRowAtIndexPath:indexPath animated:NO];
-    if ([[_combiner allItems] count] > indexPath.row) {
-        id item = [_combiner allItems][indexPath.row];
+    if ([[self items] count] > indexPath.row) {
+        id item = [self items][indexPath.row];
         if ([item isKindOfClass:[FHUnreadMsgDataUnreadModel class]]) {
             FHUnreadMsgDataUnreadModel *theModel = item;
             if ([theModel.unread integerValue] > 0) {
@@ -285,8 +284,8 @@
 }
 
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
-    if ([[_combiner allItems] count] > indexPath.row) {
-        id item = [_combiner allItems][indexPath.row];
+    if ([[self items] count] > indexPath.row) {
+        id item = [self items][indexPath.row];
         if ([item isKindOfClass:[IMConversation class]]) {
             return YES;
         } else {
@@ -298,8 +297,8 @@
 }
 
 - (UITableViewCellEditingStyle)tableView:(UITableView *)tableView editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath {
-    if ([[_combiner allItems] count] > indexPath.row) {
-        id item = [_combiner allItems][indexPath.row];
+    if ([[self items] count] > indexPath.row) {
+        id item = [self items][indexPath.row];
         if ([item isKindOfClass:[IMConversation class]]) {
             return UITableViewCellEditingStyleDelete;
         } else {
@@ -311,8 +310,8 @@
 }
 
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
-    if ([self.combiner allItems].count > indexPath.row) {
-        id conv = [self.combiner allItems][indexPath.row];
+    if ([self items].count > indexPath.row) {
+        id conv = [self items][indexPath.row];
         if ([conv isKindOfClass:[IMConversation class]]) {
             [self displayDeleteConversationConfirm:conv];
         }
@@ -328,8 +327,8 @@
     UIContextualAction *action = [UIContextualAction contextualActionWithStyle:UIContextualActionStyleNormal title:@"删除" handler:^(UIContextualAction *_Nonnull action, __kindof UIView *_Nonnull sourceView, void (^_Nonnull completionHandler)(BOOL)) {
         @strongify(self);
         completionHandler(YES);
-        if ([self.combiner allItems].count > indexPath.row) {
-            id conv = [self.combiner allItems][indexPath.row];
+        if ([self items].count > indexPath.row) {
+            id conv = [self items][indexPath.row];
             if ([conv isKindOfClass:[IMConversation class]]) {
                 [self displayDeleteConversationConfirm:conv];
             }
