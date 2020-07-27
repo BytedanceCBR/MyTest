@@ -55,7 +55,6 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(networkStateChange:) name:TTReachabilityChangedNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationDidBecomeActive) name:UIApplicationDidBecomeActiveNotification object:nil];
 //     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(userInfoReload) name:KUSER_UPDATE_NOTIFICATION object:nil];
-    
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(periodicalFetchUnreadMessage:) name:kPeriodicalFetchUnreadMessage object:nil];
 }
 
@@ -268,7 +267,7 @@
 }
 
 - (void)initViewModel {
-    _viewModel = [[FHMessageViewModel alloc] initWithTableView:_tableView controller:self];
+    _viewModel = [[FHMessageViewModel alloc] initWithTableView:_tableView topView:self.topView controller:self];
     [_viewModel setPageType:[self getPageType]];
     if (self.enter_from.length > 0) {
         [_viewModel setEnterFrom:self.enter_from];

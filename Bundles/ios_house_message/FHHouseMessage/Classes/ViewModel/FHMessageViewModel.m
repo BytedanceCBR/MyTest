@@ -46,8 +46,8 @@
 @end
 
 @interface FHMessageViewModel () <IMChatStateObserver, UITableViewDelegate>
-@property(nonatomic, strong) FHConversationDataCombiner *combiner;
 
+@property(nonatomic, strong) FHConversationDataCombiner *combiner;
 @property(nonatomic, strong) UITableView *tableView;
 @property(nonatomic, weak) FHMessageViewController *viewController;
 @property(nonatomic, weak) TTHttpTask *requestTask;
@@ -55,17 +55,24 @@
 @property(nonatomic, assign) BOOL isFirstLoad;
 @property(nonatomic, strong) NSString *pageType;
 @property (nonatomic, copy)     NSString       *enterFrom;
-
+@property (nonatomic, weak) FHMessageTopView *topView;
+@property (nonatomic, assign) NSInteger messageDataType;
 @property(nonatomic, strong) DeleteAlertDelegate *deleteAlertDelegate;
 
 @end
 
 @implementation FHMessageViewModel
 
-- (instancetype)initWithTableView:(UITableView *)tableView controller:(FHMessageViewController *)viewController {
+- (instancetype)initWithTableView:(UITableView *)tableView topView:(nonnull FHMessageTopView *)topView controller:(FHMessageViewController *)viewController {
     self = [super init];
     if (self) {
         self.combiner = [[FHConversationDataCombiner alloc] init];
+        self.topView = topView;
+        _messageDataType = 1;
+        __weak typeof(self)wself = self;
+        topView.tagChangeBlock = ^(NSInteger tag) {
+            [wself refreshDataWithType:tag];
+        };
         _dataList = [[NSMutableArray alloc] init];
         _isFirstLoad = YES;
         self.tableView = tableView;
@@ -92,6 +99,11 @@
         }];
     }
     return self;
+}
+
+- (void)refreshDataWithType:(NSInteger)tag {
+    _messageDataType = tag;
+    [self.tableView reloadData];
 }
 
 - (void)refreshConversationList {
@@ -185,13 +197,24 @@
 #pragma mark - UITableViewDataSource
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+    if (_messageDataType == 1) {
+        return [[_combiner conversationItems] count];
+    } else if (_messageDataType == 2) {
+        return [[_combiner channelItems] count];
+    }
     return [_combiner numberOfItems];
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     FHMessageCell *cell = [tableView dequeueReusableCellWithIdentifier:kCellId];
-    if ([[_combiner allItems] count] > indexPath.row) {
-        id model = [_combiner allItems][indexPath.row];
+    
+    if (([_combiner conversationItems].count > indexPath.row && _messageDataType == 1) || ([_combiner channelItems].count > indexPath.row && _messageDataType == 2)) {
+        id model = nil;
+        if (_messageDataType == 1) {
+            model = [_combiner conversationItems][indexPath.row];
+        } else if (_messageDataType == 2) {
+            model = [_combiner channelItems][indexPath.row];
+        }
         if ([model isKindOfClass:[FHUnreadMsgDataUnreadModel class]]) {
             [cell updateWithModel:model];
         } else {

@@ -60,6 +60,14 @@
     return _items;
 }
 
+- (NSArray *)conversationItems {
+    return _conversations;
+}
+
+- (NSArray *)channelItems {
+    return _channels;
+}
+
 -(void)resetAllItems {
     NSMutableArray<id<ConversationComparable>>* theItems = [NSMutableArray arrayWithArray:_conversations];
     [theItems addObjectsFromArray:_channels];

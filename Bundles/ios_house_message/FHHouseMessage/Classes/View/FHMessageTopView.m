@@ -114,6 +114,9 @@
 
 - (void)clickBtn:(UIButton *)button {
     if (!button.selected) {
+        if (self.tagChangeBlock) {
+            self.tagChangeBlock(button.tag);
+        }
         self.chatButton.selected = !self.chatButton.selected;
         self.systemMessageButton.selected = !self.systemMessageButton.selected;
         [self updateColor:self.chatButton];

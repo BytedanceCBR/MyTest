@@ -7,6 +7,7 @@
 
 #import <Foundation/Foundation.h>
 #import "FHMessageBridgeProtocol.h"
+#import "FHMessageTopView.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -16,7 +17,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property(nonatomic, strong) NSMutableArray *dataList;
 
-- (instancetype)initWithTableView:(UITableView *)tableView controller:(FHMessageViewController *)viewController;
+- (instancetype)initWithTableView:(UITableView *)tableView topView:(FHMessageTopView *)topView controller:(FHMessageViewController *)viewController;
 
 - (void)requestData;
 
@@ -31,6 +32,9 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)setEnterFrom:(NSString *)enterFrom;
 
 - (void)refreshConversationList;
+
+- (void)refreshDataWithType:(NSInteger)tag;
+
 @end
 
 NS_ASSUME_NONNULL_END

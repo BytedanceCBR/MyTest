@@ -29,6 +29,9 @@ NS_ASSUME_NONNULL_BEGIN
 -(NSUInteger)numberOfItems;
 
 -(NSArray*)allItems;
+
+- (NSArray *)conversationItems;
+- (NSArray *)channelItems;
 @end
 
 NS_ASSUME_NONNULL_END
