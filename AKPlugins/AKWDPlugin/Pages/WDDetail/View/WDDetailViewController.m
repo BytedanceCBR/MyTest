@@ -2220,6 +2220,10 @@ static NSUInteger const kOldAnimationViewTag = 20161221;
     [mdict setValue:[self.detailModel.gdExtJsonDict tt_objectForKey:@"log_pb"] forKey:@"logPb"];
     [mdict setValue:[self.detailModel.gdExtJsonDict tt_objectForKey:@"element_from"] forKey:@"element_from"];
     
+    if (self.detailModel.gdExtJsonDict) {
+        [mdict setValue:self.detailModel.gdExtJsonDict forKey:@"extraDic"];
+    }
+    
     if (self.isNewVersion) {
         if ([self.wdDelegate respondsToSelector:@selector(wd_commentViewController:didSelectWithInfo:)]) {
             [self.wdDelegate wd_commentViewController:ttController didSelectWithInfo:mdict];

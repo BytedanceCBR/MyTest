@@ -310,6 +310,7 @@
     } getReplyCommentModelClassBlock:nil commentRepostWithPreRichSpanText:nil commentSource:nil];
     
     replyManager.enterFrom = self.tracerDict[@"page_type"];
+    replyManager.extraDic = self.tracerDict;
     replyManager.logPb = self.tracerDict[@"log_pb"];
     
     self.commentWriteView = [[FHUGCReplyCommentWriteView alloc] initWithCommentManager:replyManager];
