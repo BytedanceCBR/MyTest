@@ -15,6 +15,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (instancetype)initWithWithController:(FHEncyclopediaViewController *)viewController collectionView:(UICollectionView *)collectionView headerView:(FHEncyclopediaHeader *)header tracerModel:(FHTracerModel *)tracerModel;
 @property(nonatomic , assign) NSInteger currentTabIndex;
 @property(nonatomic, strong) FHTracerModel *tracerModel;
+- (void)requestHeaderConfig;
 @end
 
 NS_ASSUME_NONNULL_END

@@ -310,6 +310,7 @@ logPB:self.listLogPB extraInfo:self.extraInfo completion:^(FHDetailOldModel * _N
         houseTitleModel.housetype = self.houseType;
         houseTitleModel.titleStr = model.data.title;
         houseTitleModel.tags = model.data.tags;
+        houseTitleModel.reportUrl = model.data.reportUrl;
         if (model.data.vouchModel && model.data.vouchModel.vouchStatus == 1) {
             houseTitleModel.businessTag = @"企业担保";
             houseTitleModel.advantage = model.data.vouchModel.vouchText;
@@ -340,8 +341,10 @@ logPB:self.listLogPB extraInfo:self.extraInfo completion:^(FHDetailOldModel * _N
             headerCellModel.houseImage = @[imgModel];
         }
         FHDetailHouseTitleModel *houseTitleModel = [[FHDetailHouseTitleModel alloc] init];
+        houseTitleModel.housetype = self.houseType;
         houseTitleModel.titleStr = model.data.title;
         houseTitleModel.tags = model.data.tags;
+        houseTitleModel.reportUrl = model.data.reportUrl;
         if (model.data.vouchModel && model.data.vouchModel.vouchStatus == 1) {
             houseTitleModel.businessTag = @"企业担保";
             houseTitleModel.advantage = model.data.vouchModel.vouchText;
@@ -478,7 +481,7 @@ logPB:self.listLogPB extraInfo:self.extraInfo completion:^(FHDetailOldModel * _N
         infoModel.baseViewModel = self;
         infoModel.tableView = self.tableView;
         infoModel.houseModelType = FHHouseModelTypeOutlineInfo;
-        infoModel.hideReport = NO;
+        infoModel.hideReport = YES;
         [self.items addObject:infoModel];
     }
     // 房源榜单
@@ -675,6 +678,7 @@ logPB:self.listLogPB extraInfo:self.extraInfo completion:^(FHDetailOldModel * _N
     //地图
     if(model.data.neighborhoodInfo.gaodeLat.length > 0 && model.data.neighborhoodInfo.gaodeLng.length > 0){
         FHDetailStaticMapCellModel *staticMapModel = [[FHDetailStaticMapCellModel alloc] init];
+        staticMapModel.baiduPanoramaUrl = model.data.neighborhoodInfo.baiduPanoramaUrl;
         staticMapModel.gaodeLat = model.data.neighborhoodInfo.gaodeLat;
         staticMapModel.gaodeLng = model.data.neighborhoodInfo.gaodeLng;
         staticMapModel.houseModelType = FHHouseModelTypeLocationPeriphery;

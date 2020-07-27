@@ -57,19 +57,21 @@
              _segmentView.preferredMaxLayoutHeight = screenFrame.size.height;
              [_segmentView triggerLayout];
              [self addSubview:_segmentView];
-        NSData *templateData =  [[FHLynxManager sharedInstance] lynxDataForChannel:@"ugc_encyclopedia_lynx_header" templateKey:[FHLynxManager defaultJSFileName] version:0];
-              if (templateData) {
-                   if (templateData != self.currentTemData) {
-                       self.currentTemData = templateData;
-                      [self.segmentView loadTemplate:templateData withURL:@"local"];
-                   }
-               }
     }
     return _segmentView;
 }
 
 - (void)updateModel:(EncyclopediaConfigDataModel *)model {
     NSString *lynxData = [model yy_modelToJSONString];
+    NSData *templateData =  [[FHLynxManager sharedInstance] lynxDataForChannel:@"ugc_encyclopedia_lynx_header" templateKey:[FHLynxManager defaultJSFileName] version:0];
+    LynxTemplateData *data = [[LynxTemplateData alloc]initWithJson:lynxData];
+          if (templateData) {
+               if (templateData != self.currentTemData) {
+                   self.currentTemData = templateData;
+                   [self.segmentView loadTemplate:templateData withURL:@"loca" initData:data];
+//                  [self.segmentView loadTemplate:templateData withURL:@"local"];
+               }
+           }
     [_segmentView updateDataWithString:lynxData];
     
 }

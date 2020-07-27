@@ -1,0 +1,6 @@
+framework module F100BaiduMapKit {
+  umbrella header "F100BaiduMapKit.h"
+
+  export *
+  module * { export * }
+}

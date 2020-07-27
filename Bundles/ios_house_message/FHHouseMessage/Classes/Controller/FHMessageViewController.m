@@ -177,8 +177,7 @@
     [self addDefaultEmptyViewFullScreen];
 }
 
-- (void)hidePushTip
-{
+- (void)hidePushTip {
     NSInteger lastTimeShowMessageTip = (NSInteger)[[NSDate date] timeIntervalSince1970];
     [FHPushAuthorizeHelper setLastTimeShowMessageTip:lastTimeShowMessageTip];
     self.pushTipView.hidden = YES;

@@ -12,6 +12,7 @@ NS_ASSUME_NONNULL_BEGIN
 typedef NS_ENUM(NSInteger , FHMapSimpleNavbarType) {
     FHMapSimpleNavbarTypeBack = 0 ,
     FHMapSimpleNavbarTypeClose,
+    FHMapSimpleNavbarTypeDrawLine,
 };
 
 @interface FHMapSimpleNavbar : UIView
@@ -21,8 +22,11 @@ typedef NS_ENUM(NSInteger , FHMapSimpleNavbarType) {
 @property(nonatomic , strong) NSString *title;
 
 @property(nonatomic , copy) void (^backActionBlock)(FHMapSimpleNavbarType type);
+@property(nonatomic , copy) void (^rightActionBlock)(FHMapSimpleNavbarType type);
 
 -(CGFloat)titleBottom;
+
+- (void)updateCicleBtn:(BOOL)isShowCircle;
 
 @end
 

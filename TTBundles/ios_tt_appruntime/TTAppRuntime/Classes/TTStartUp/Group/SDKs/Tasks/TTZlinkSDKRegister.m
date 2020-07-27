@@ -13,6 +13,8 @@
 #import "TTInstallIDManager.h"
 #import "TTSandBoxHelper.h"
 #import "TTNetworkHelper.h"
+#import "TTSettingsManager.h"
+#import "NSDictionary+TTAdditions.h"
 
 DEC_TASK("TTZlinkSDKRegister",FHTaskTypeSDKs,TASK_PRIORITY_HIGH);
 
@@ -28,6 +30,12 @@ DEC_TASK("TTZlinkSDKRegister",FHTaskTypeSDKs,TASK_PRIORITY_HIGH);
 
 - (BOOL)registerSDK:(UIApplication *)application options: (NSDictionary *)launchOptions {
 
+    NSDictionary *fhSettings= [[TTSettingsManager sharedManager] settingForKey:@"f_settings" defaultValue:@{} freeze:YES];
+    BOOL f_zlink_disable = [fhSettings tt_boolValueForKey:@"f_zlink_disable"];
+    if (f_zlink_disable) {
+        return NO;
+    }
+    
     if ([SharedAppDelegate conformsToProtocol:@protocol(BDUGDeepLinkDelegate)]) {
         BDUGDeepLinkManager *manager = [BDUGDeepLinkManager shareInstance];
         manager.delegate = (id<BDUGDeepLinkDelegate>)SharedAppDelegate;

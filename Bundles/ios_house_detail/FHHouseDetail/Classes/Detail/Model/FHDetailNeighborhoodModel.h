@@ -124,6 +124,9 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *groupId;
 @property (nonatomic, copy , nullable) NSString *searchId;
 @property (nonatomic, copy , nullable) NSString *id;
+
+/// 1.0.3 新增百度街景标志位，length > 0 支持街景
+@property (nonatomic, copy, nullable) NSString *baiduPanoramaUrl;
 @end
 
 @protocol FHDetailNeighborhoodDataTotalSalesListModel<NSObject>

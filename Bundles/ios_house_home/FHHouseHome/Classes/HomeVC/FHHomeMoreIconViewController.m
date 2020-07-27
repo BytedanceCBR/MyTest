@@ -314,6 +314,10 @@
        
        NSString *stringOriginFrom = model.logPb[@"origin_from"];
 
+       //帮我找房埋点修正需要
+       if (stringOriginFrom.length > 0) {
+           dictTrace[@"origin_from"] = stringOriginFrom;
+       }
        NSDictionary *userInfoDict = @{@"tracer":dictTrace};
        TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:userInfoDict];
        
