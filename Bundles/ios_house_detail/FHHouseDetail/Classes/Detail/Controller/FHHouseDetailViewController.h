@@ -26,7 +26,7 @@ extern NSString *const INSTANT_DATA_KEY;
 //ViewModel
 @property (nonatomic, strong)   FHHouseDetailBaseViewModel       *viewModel;
 //bizTrace
-@property (nonatomic, strong)   NSDictionary       *bizTrace;
+@property (nonatomic, copy) NSString *bizTrace;
 
 //设置状态栏
 - (void)refreshContentOffset:(CGPoint)contentOffset;

@@ -21,6 +21,7 @@
 #import <Heimdallr/HMDUserExceptionTracker.h>
 #import "TTTabbarLoadEpidemicSituatioHelper.h"
 #import "FHHouseErrorHubManager.h"
+#import <TTInstallService/TTInstallUtil.h>
 
 #define GET @"GET"
 #define POST @"POST"
@@ -508,7 +509,10 @@
         [extra addEntriesFromDictionary:extraDict];
     }
     NSMutableDictionary *metricDict = [NSMutableDictionary new];
-    UIApplicationState appState = [UIApplication sharedApplication].applicationState;
+    __block UIApplicationState appState;
+    ttinstall_dispatch_main_sync_safe(^{
+        appState = [UIApplication sharedApplication].applicationState;
+    });
     if (startData && backDate) {
         NSTimeInterval duration = [backDate timeIntervalSinceDate:startData]*1000;
         if (appState == UIApplicationStateActive || duration < 15*1000) {

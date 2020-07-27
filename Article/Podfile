@@ -280,10 +280,6 @@ def appPods
 
     #-----点赞分享顶踩不感兴趣----
     pod_binary 'TTBatchItemAction','0.1.8'
-    #-------AB测库--------
-    #pod 'TTABManager', :path => '../AKPlugins/TTABManager', :inhibit_warnings => false
-
-    pod_binary 'TTABManager', '0.0.7'
 
     #-----头条网络业务库------
     pod_binary 'TTNetBusiness','0.1.0', :subspecs => [
@@ -712,7 +708,6 @@ post_install do |installer|
           '${PODS_ROOT}/GoogleMaps/Maps/Frameworks',
           '${PODS_ROOT}/GoogleMaps/Base/Frameworks',
           '${PODS_ROOT}/BDUGUnionSDK/BDUGUnionSDK/Classes',
-          '${PODS_ROOT}/TTABManager',
           '${PODS_ROOT}/TTNetBusiness/ios',
           '${PODS_ROOT}/TencentQQSDK/TencentQQSDK/Classes',
 
@@ -723,11 +718,6 @@ post_install do |installer|
         if target.name == "FHRNKit" || target.name == "TTDebug"
           target.build_configurations.each do |config|
             config.build_settings['HEADER_SEARCH_PATHS'] ||= ['$(inherited)','${PODS_ROOT}/Headers/Public/React']
-          end
-        end
-        if target.name == "FHMapSearch"
-          target.build_configurations.each do |config|
-            config.build_settings['HEADER_SEARCH_PATHS'] ||= ['$(inherited)','${PODS_ROOT}/../Bundles/BaiduMapKit/BaiduMapKit/**']
           end
         end
     end

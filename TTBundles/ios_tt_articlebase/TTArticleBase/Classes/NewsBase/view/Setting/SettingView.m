@@ -41,8 +41,6 @@
 #import "SettingPushCell.h"
 #import "SettingNormalCell.h"
 #import "SettingSwitch.h"
-
-#import <TTABManager/TTABHelper.h>
 //#import "revision.h"
 
 #import "TTAuthorizeHintView.h"
@@ -629,16 +627,8 @@ TTEditUserProfileViewControllerDelegate
         cell.accessoryType = UITableViewCellAccessoryNone;
     }
     else if (cellType == SettingCellTypeClearCache) {
-        
+        cell.textLabel.text = NSLocalizedString(@"清除缓存", nil);
         //此处进行ABManager 的测试实验
-        
-        TTClearCacheLiteraryType type = [TTABHelper clearCacheLiteraryType];
-        if (type == TTClearCacheLiteraryTypeClear) {
-            cell.textLabel.text = NSLocalizedString(@"清除缓存", nil);
-        }
-        else {
-            cell.textLabel.text = NSLocalizedString(@"清理缓存", nil);
-        }
         
         //如果刚刚清理过 就直接显示0.0M 不要计算了-- nick 4.9.x
         if (self.cacheJustCleaned) {

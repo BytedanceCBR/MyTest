@@ -583,7 +583,7 @@
     NSString* url = [host stringByAppendingFormat:@"/f100/api/building/info"];
     return [FHMainApi getRequest:url query:nil params:@{@"court_id": courtId?:@""} jsonClass:[FHBuildingDetailModel class] completion:^(JSONModel * _Nullable model, NSError * _Nullable error) {
         if (completion) {
-            completion(model,error);
+            completion((FHBuildingDetailModel *)model, error);
         }
     }];
 }

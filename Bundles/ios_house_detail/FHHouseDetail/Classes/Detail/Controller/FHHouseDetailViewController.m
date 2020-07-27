@@ -32,6 +32,7 @@
 #import <FHHouseBase/FHRelevantDurationTracker.h>
 #import <CallKit/CXCallObserver.h>
 #import <CallKit/CXCall.h>
+#import <ByteDanceKit/NSDictionary+BTDAdditions.h>
 
 @interface FHHouseDetailViewController ()<UIGestureRecognizerDelegate>
 
@@ -65,6 +66,7 @@
 @property (nonatomic, assign) CGPoint lastContentOffset;
 @property (nonatomic, strong) NSDictionary *extraInfo;
 
+@property (nonatomic) double initTimeInterval;
 @end
 
 @implementation FHHouseDetailViewController
@@ -72,11 +74,12 @@
 - (instancetype)initWithRouteParamObj:(TTRouteParamObj *)paramObj {
     self = [super initWithRouteParamObj:paramObj];
     if (self) {
+        self.initTimeInterval = CFAbsoluteTimeGetCurrent();
         self.isResetStatusBar = NO;
         self.houseType = [paramObj.allParams[@"house_type"] integerValue];
         self.ridcode = paramObj.allParams[@"ridcode"];
         self.realtorId = paramObj.allParams[@"realtor_id"];
-        self.bizTrace = paramObj.allParams[@"biz_trace"];
+        self.bizTrace = [paramObj.allParams btd_stringValueForKey:@"biz_trace"];
         
         NSObject *extraInfo = paramObj.allParams[kFHClueExtraInfo];
         if ([extraInfo isKindOfClass:[NSString class]]) {
@@ -323,6 +326,7 @@
     self.viewModel.detailTracerDic = [self makeDetailTracerData];
     self.viewModel.source = self.source;
     self.viewModel.extraInfo = self.extraInfo;
+    self.viewModel.initTimeInterval = self.initTimeInterval;
     [self.view addSubview:_tableView];
 
     __weak typeof(self)wself = self;

@@ -23,6 +23,8 @@
 #import "FHDetailQuestionPopView.h"
 #import "FHDetailMediaHeaderCorrectingCell.h"
 #import "FHHouseErrorHubManager.h"
+#import <Heimdallr/HMDTTMonitor.h>
+#import <TTInstallService/TTInstallUtil.h>
 
 @interface FHHouseDetailBaseViewModel ()<UITableViewDelegate, UITableViewDataSource>
 
@@ -37,6 +39,7 @@
 @property (nonatomic, assign) BOOL floatIconAnimation;
 @property (nonatomic, assign) BOOL clickShowIcon;
 @property(nonatomic, assign) CGPoint tableviewBeginOffSet;
+
 
 @end
 
@@ -729,6 +732,32 @@
 {
     TTNavigationController *nav = (TTNavigationController *)self.detailController.navigationController;
     nav.panRecognizer.enabled = enabled;
+}
+
+- (void)addPageLoadLog {
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        if (self.firstReloadInterval == 0) {
+            self.firstReloadInterval = CFAbsoluteTimeGetCurrent();
+        }
+        __block UIApplicationState appState;
+        ttinstall_dispatch_main_sync_safe(^{
+            appState = [UIApplication sharedApplication].applicationState;
+        });
+        if (self.initTimeInterval > 0 && self.firstReloadInterval > 0) {
+            
+            double duration = self.firstReloadInterval - self.initTimeInterval;
+            if (appState == UIApplicationStateActive || duration < 15) {
+                //为了避免出现特别大的无效数据 App切换前后台的时候数据大的也不添加
+                NSMutableDictionary *metricDict = [NSMutableDictionary dictionary];
+                //单位 秒 -> 毫秒
+                metricDict[@"total_duration"] = @(duration * 1000);
+                
+                [[HMDTTMonitor defaultManager] hmdTrackService:@"pss_house_detail_old" metric:metricDict.copy category:@{@"status":@(0)} extra:nil];
+            }
+        }
+        
+
+    });
 }
 #pragma mark - poplayer
 

@@ -25,7 +25,6 @@
 #import "WDSettingHelper.h"
 #import "ExploreCellHelper.h"
 #import "ArticleWebViewToAppStoreManager.h"
-#import <TTABManager/TTABHelper.h>
 #import "TTUISettingHelper.h"
 #import "TTLCSServerConfig.h"
 #import "TTTabBarManager.h"
@@ -83,6 +82,7 @@
 #import "ExploreLogicSetting.h"
 #import <BDUGAccountOnekeyLogin/BDUGOnekeySettingManager.h>
 #import "FHLocManager.h"
+#import <BDABTestSDK/BDABTestManager.h>
 
 #define SSFetchSettingsManagerFetchedDateKey @"SSFetchSettingsManagerFetchedDateKey"
 #define kFetchTimeInterval (3 * 60 * 60)
@@ -636,11 +636,11 @@
         [SSCommonLogic setForumRefreshTimeInterval:[[dSettings objectForKey:@"forum_refresh_interval"] intValue]];
     }
     if ([dSettings objectForKey:@"ab_version"]) {
-        [[TTABHelper sharedInstance_tt] saveABVersion:[dSettings objectForKey:@"ab_version"]];
+        [BDABTestManager saveABVersion:[dSettings objectForKey:@"ab_version"]];
     }
     
     if ([[dSettings allKeys] containsObject:@"ab_settings"]) {
-        [[TTABHelper sharedInstance_tt] saveServerSettings:[dSettings objectForKey:@"ab_settings"]];
+        [BDABTestManager saveServerSettingsForServerExperiments:[dSettings objectForKey:@"ab_settings"]];
     }
     
     if ([dSettings objectForKey:@"iar"]) {
