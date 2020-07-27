@@ -412,12 +412,12 @@ typedef void (^TTCommentLoginPipelineCompletion)(TTCommentLoginState state);
         return;
     }
     
-//    //上报埋点
-//    NSMutableDictionary *params = [NSMutableDictionary dictionary];
-//    if(self.reportParams){
-//        [params addEntriesFromDictionary:self.reportParams];
-//    }
-//    [FHUserTracker writeEvent:@"click_submit_comment" params:params];
+    //上报埋点
+    NSMutableDictionary *params = [NSMutableDictionary dictionary];
+    if(self.reportParams){
+        [params addEntriesFromDictionary:self.reportParams];
+    }
+    [FHUserTracker writeEvent:@"click_submit_comment" params:params];
     
     isTTArticleWritePublishing = YES;
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
@@ -447,7 +447,7 @@ typedef void (^TTCommentLoginPipelineCompletion)(TTCommentLoginState state);
         }
     }
 
-    [TTTrackerWrapper eventV3:@"at_function_stats" params:@{
+    [TTTrackerWrapper  eventV3:@"at_function_stats" params:@{
                                                             @"group_id" : self.groupModel.groupID ?: @"",
                                                             @"at_user_list" :[mentionUsers componentsJoinedByString:@","],
                                                             @"source" : @"comment"

@@ -1103,6 +1103,7 @@ static NSUInteger const kOldAnimationViewTag = 20161221;
         *willRepostFwID = fwID;
     } extraTrackDict:nil bindVCTrackDict:nil commentRepostWithPreRichSpanText:nil readQuality:qualityModel];
     commentManager.enterFrom = self.detailModel.gdExtJsonDict[@"enter_from"];
+    commentManager.reportParams = self.detailModel.gdExtJsonDict;
     self.commentWriteView = [[TTCommentWriteView alloc] initWithCommentManager:commentManager];
 
     self.commentWriteView.emojiInputViewVisible = switchToEmojiInput;

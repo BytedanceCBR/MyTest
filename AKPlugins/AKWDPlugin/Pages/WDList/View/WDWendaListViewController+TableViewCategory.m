@@ -100,7 +100,9 @@
         }
         [self addReadAnswerID:model.answerEntity.ansid];
         WDListCellLayoutModel <WDListCellLayoutModelBaseProtocol>*cellLayoutModel = [self getCellLayoutModelFromDataModel:model];
-        UITableViewCell <WDListCellBaseProtocol>*cell = [[WDListCellRouterCenter sharedInstance] dequeueTableCellForLayoutModel:cellLayoutModel tableView:tableView indexPath:indexPath gdExtJson:self.viewModel.gdExtJson apiParams:self.viewModel.apiParameter pageType:WDWendaListRequestTypeNICE];
+        NSMutableDictionary *gdExtJson = self.viewModel.gdExtJson.mutableCopy;
+        [gdExtJson setValue:@(indexPath.row) forKey:@"rank"];
+        UITableViewCell <WDListCellBaseProtocol>*cell = [[WDListCellRouterCenter sharedInstance] dequeueTableCellForLayoutModel:cellLayoutModel tableView:tableView indexPath:indexPath gdExtJson:gdExtJson apiParams:self.viewModel.apiParameter pageType:WDWendaListRequestTypeNICE];
         if (!cell) {
             return [[UITableViewCell alloc] init];
         }

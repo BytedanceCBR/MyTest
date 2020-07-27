@@ -90,6 +90,7 @@
         NSMutableDictionary* searchTracerDict = [NSMutableDictionary dictionary];
         searchTracerDict[@"element_type"] = @"all_community_list";
         searchTracerDict[@"enter_from"] = @"all_community_list";
+        searchTracerDict[@"origin_from"] = self.tracerDict[@"origin_from"]?:@"be_null";
         paramDic[@"tracer"] = searchTracerDict;
         TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:paramDic];
         [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:userInfo];

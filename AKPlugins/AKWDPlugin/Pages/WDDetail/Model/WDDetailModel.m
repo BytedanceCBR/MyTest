@@ -59,6 +59,13 @@ NSString * const kWDDetailNatantLikeAndRewardsKey = @"WDDetailNatantLikeAndRewar
             gdExtJsonAdd[@"enter_from"] = tracer[@"enter_from"];
             gdExtJsonAdd[@"origin_from"] = tracer[@"origin_from"];
             gdExtJsonAdd[@"category_name"] = tracer[@"category_name"];
+            if (tracer[@"social_group_id"]) {
+                gdExtJsonAdd[@"social_group_id"] = tracer[@"social_group_id"];
+            }
+            if (tracer[@"concern_id"]) {
+                gdExtJsonAdd[@"concern_id"] = tracer[@"concern_id"];
+            }
+            gdExtJsonAdd[@"rank"] = tracer[@"rank"];
         }
         gdExtJson = [gdExtJsonAdd copy];
         
