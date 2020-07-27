@@ -280,8 +280,8 @@ static const float timerInterval = 3.0f;
     dict[@"rank"] = @(_selectedIndex);
     dict[@"group_id"] = cellModel.groupId;
     
-    if(dict[@"log_pb"][@"group_source"]){
-        dict[@"group_source"] = dict[@"log_pb"][@"group_source"];
+    if(cellModel.tracer[@"log_pb"][@"group_source"]){
+        dict[@"group_source"] = cellModel.tracer[@"log_pb"][@"group_source"];
     }
     
     TRACK_EVENT(@"feed_client_show", dict);

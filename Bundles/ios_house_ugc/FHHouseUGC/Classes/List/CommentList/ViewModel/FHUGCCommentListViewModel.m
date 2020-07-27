@@ -401,6 +401,12 @@
     if(cellModel.logPb[@"group_source"]){
         dict[@"group_source"] = cellModel.logPb[@"group_source"];
     }
+    if(cellModel.fromGid){
+        dict[@"from_gid"] = cellModel.fromGid;
+    }
+    if(cellModel.fromGroupSource){
+        dict[@"from_group_source"] = cellModel.fromGroupSource;
+    }
     
     return dict;
 }

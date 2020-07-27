@@ -15,12 +15,12 @@
     dict[@"origin_from"] = self.tracerModel.originFrom?: @"be_null";
     dict[@"enter_from"] = self.tracerModel.enterFrom?: @"be_null";
     dict[@"page_type"] = [extraDic.allKeys containsObject:@"page_type"]?extraDic[@"page_type"]:@"be_null";
-    dict[@"group_id"] = [extraDic.allKeys containsObject:@"group_id"]?extraDic[@"group_id"]:@"be_null";
+    dict[@"group_id"] = itemData.groupId;
     dict[@"realtor_id"] = itemData.realtor.realtorId?:@"be_null";
     dict[@"element_type"] = @"realtor_evaluate";
     dict[@"rank"] = [extraDic.allKeys containsObject:@"rank"]?extraDic[@"rank"]:@"be_null";
     dict[@"from_gid"] = [extraDic.allKeys containsObject:@"from_gid"]?extraDic[@"from_gid"]:@"be_null";
-    dict[@"log_pb"] = self.tracerModel.logPb?: [extraDic.allKeys containsObject:@"log_pb"]?extraDic[@"log_pb"]:@"be_null";
+    dict[@"log_pb"] = itemData.logPb;
     
     id logPb = dict[@"log_pb"];
     NSDictionary *logPbDic = nil;

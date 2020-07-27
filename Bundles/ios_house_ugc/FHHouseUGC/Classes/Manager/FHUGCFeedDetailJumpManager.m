@@ -204,6 +204,12 @@
     if(cellModel.tracerDic[@"concern_id"]){
         traceParam[@"concern_id"] = cellModel.tracerDic[@"concern_id"];
     }
+    if(cellModel.fromGid){
+        traceParam[@"from_gid"] = cellModel.fromGid;
+    }
+    if(cellModel.fromGroupSource){
+        traceParam[@"from_group_source"] = cellModel.fromGroupSource;
+    }
     dict[@"tracer"] = traceParam;
     dict[@"data"] = cellModel;
     dict[@"begin_show_comment"] = showComment ? @"1" : @"0";
@@ -225,6 +231,12 @@
     }
     if(cellModel.tracerDic[@"concern_id"]){
         tracerDic[@"concern_id"] = cellModel.tracerDic[@"concern_id"];
+    }
+    if(cellModel.fromGid){
+        tracerDic[@"from_gid"] = cellModel.fromGid;
+    }
+    if(cellModel.fromGroupSource){
+        tracerDic[@"from_group_source"] = cellModel.fromGroupSource;
     }
     dict[@"tracer"] = tracerDic;
     
