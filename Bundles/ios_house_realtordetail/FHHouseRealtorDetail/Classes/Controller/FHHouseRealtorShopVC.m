@@ -8,7 +8,7 @@
 #import "FHHouseRealtorShopVC.h"
 #import "FHBaseTableView.h"
 #import "FHHouseRealtorShopVM.h"
-
+#import "FHLynxManager.h"
 #import "UIDevice+BTDAdditions.h"
 #import "FHCommonDefines.h"
 #import "FHUserTracker.h"
@@ -51,7 +51,7 @@
 
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
-    [self.viewModel updateNavBarWithAlpha:0];
+    [self.viewModel updateNavBarWithAlpha:self.customNavBarView.bgView.alpha];
 }
 
 - (void)initFrame {
@@ -62,7 +62,12 @@
 }
 
 - (void)createModel {
-    _viewModel = [[FHHouseRealtorShopVM alloc]initWithController:self tableView:self.tableView realtorDic:self.realtorInfoDic.copy bottomBar:self.bottomBar tracerDic:self.tracerDict];
+    NSData *templateData =  [[FHLynxManager sharedInstance] lynxDataForChannel:@"lynx_realtor_shop_header" templateKey:[FHLynxManager defaultJSFileName] version:0];
+       if (!templateData) {
+           [self.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoData];
+       }else {
+        _viewModel = [[FHHouseRealtorShopVM alloc]initWithController:self tableView:self.tableView realtorDic:self.realtorInfoDic.copy bottomBar:self.bottomBar tracerDic:self.tracerDict];
+       }
 }
 
 - (void)retryLoadData {
