@@ -33,8 +33,6 @@
 - (instancetype)initWithRouteParamObj:(nullable TTRouteParamObj *)paramObj {
     self = [super initWithRouteParamObj:paramObj];
     if (self) {
-        self.ttTrackStayEnable = YES;
-        self.communityId = paramObj.allParams[@"community_id"];
         self.tabName = paramObj.allParams[@"tab_name"];
         self.realtorDetailInfo = paramObj.allParams;
         self.tracerDict[@"enter_from"] =  self.tracerDict[@"page_type"];
@@ -54,6 +52,11 @@
 
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
+    [self.viewModel updateNavBarWithAlpha:self.customNavBarView.bgView.alpha];
+}
+
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
     [self.viewModel updateNavBarWithAlpha:self.customNavBarView.bgView.alpha];
 }
 

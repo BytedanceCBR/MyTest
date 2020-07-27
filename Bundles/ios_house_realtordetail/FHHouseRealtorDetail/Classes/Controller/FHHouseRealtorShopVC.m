@@ -30,6 +30,7 @@
 {
     self = [super initWithRouteParamObj:paramObj];
     if (self) {
+        self.isResetStatusBar = NO;
         [self createTracerDic:paramObj.allParams];
         self.realtorInfoDic = paramObj.allParams.mutableCopy;
     }
@@ -50,11 +51,10 @@
 
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
-    [self.viewModel updateNavBarWithAlpha:self.customNavBarView.bgView.alpha];
+    [self.viewModel updateNavBarWithAlpha:0];
 }
 
 - (void)initFrame {
-    
     [self.tableView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.left.right.mas_equalTo(self.view);
         make.bottom.equalTo(self.bottomBar);
@@ -134,6 +134,7 @@
 - (void)setNavBar {
     [self setupDefaultNavBar:NO];
         self.customNavBarView.title.text = @"经纪人店铺";
+        [self.customNavBarView setNaviBarTransparent:YES];
 }
 
 - (NSString *)pageType {

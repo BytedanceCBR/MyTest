@@ -85,6 +85,7 @@
                 [self requestData:YES first:YES];
                 [self loadDataForShop:model];
                 [self prossHeaderData:model];
+                [self updateNavBarWithAlpha:0];
 //                [self requestData:YES first:YES];
                 //                [wSelf updateUIWithData];
                 //                    [wSelf processDetailData:model];
