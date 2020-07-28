@@ -66,7 +66,7 @@
 {
     if (!_bezierPath) {
         _bezierPath = [UIBezierPath bezierPath];
-        _bezierPath.lineWidth = 4;
+        _bezierPath.lineWidth = 10;
         
     }
     return _bezierPath;
@@ -175,7 +175,7 @@
 {
     [super drawRect:rect];
     
-    [[UIColor themeOrange4] setStroke];
+    [[UIColor themeOrange1] setStroke];
     [self.bezierPath stroke];
 }
 

@@ -77,12 +77,6 @@ typedef NS_ENUM(NSUInteger, FHBindViewType) {
     FHBindViewTypeVerify = 2,
 };
 
-typedef NS_ENUM(NSUInteger, FHLoginProcessType) {
-    FHLoginProcessOrigin = 0, //线上策略，优先运营商一键登录 -> 手机号验证码登录
-    FHLoginProcessTestA = 1, //优先运营商一键登录 -> 抖音一键登录 -> 手机号验证码登录
-    FHLoginProcessTestB = 2, //优先抖音一键登录 -> 运营商一键登录 -> 手机号验证码登录
-};
-
 FOUNDATION_EXPORT NSString *const FHLoginTrackLastLoginMethodKey;
 FOUNDATION_EXPORT NSString *const FHLoginTrackLoginSuggestMethodKey;
 

@@ -6,6 +6,7 @@
 //
 
 #import "FHCHousePushUtils.h"
+#include "TTRoute.h"
 
 @implementation FHCHousePushUtils
 
@@ -30,6 +31,30 @@
 {
     long long fixedID = [self fixLongLongTypeGroupID:[gID longLongValue]];
     return @(fixedID);
+}
+
++ (TTRouteUserInfo *)getPushUserInfo:(TTRouteParamObj *)paramObj{
+    NSMutableDictionary *info =  [NSMutableDictionary new];
+    [info setValue:@(1) forKey:@"isFromPush"];
+
+    NSMutableDictionary *tracerDict = [NSMutableDictionary dictionaryWithDictionary:@{ @"enter_from": @"push",
+                                                                                       @"enter_type": @"click",
+                                                                                       @"element_from": @"be_null",
+                                                                                       @"rank": @"be_null",
+                                                                                       @"card_type": @"be_null",
+                                                                                       @"origin_from": @"push",
+                                                                                       @"origin_search_id": @"be_null"
+    } ];
+    if ([paramObj.queryParams.allKeys containsObject:@"origin_from"]) {
+        NSString *value = [paramObj.queryParams objectForKey:@"origin_from"];
+        if (value != nil) {
+            [tracerDict setValue:value forKey:@"origin_from"];
+        }
+    }
+    [info setValue:tracerDict forKey:@"tracer"];
+    TTRouteUserInfo* userInfo = [[TTRouteUserInfo alloc] initWithInfo:info.copy];
+    
+    return userInfo;
 }
 
 @end

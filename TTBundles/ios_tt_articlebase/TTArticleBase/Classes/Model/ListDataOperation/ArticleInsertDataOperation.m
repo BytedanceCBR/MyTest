@@ -140,7 +140,7 @@
             insertedArray = results;
         } else {
             if (responseRemotePersistentData.count > 0) {
-                insertedArray = [ExploreOrderedData insertObjectsWithDataArray:responseRemotePersistentData save:shouldPersist];
+                insertedArray = [ExploreOrderedData insertObjectsWithDataArray:[responseRemotePersistentData copy] save:shouldPersist];
             }
         }
         

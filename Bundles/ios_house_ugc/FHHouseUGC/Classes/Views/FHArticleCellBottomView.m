@@ -85,53 +85,20 @@
     self.positionView.width = 0;
     self.positionView.height = 24;
     
-//    [self.positionView mas_makeConstraints:^(MASConstraintMaker *make) {
-//        make.left.mas_equalTo(self).offset(20);
-//        make.top.mas_equalTo(self);
-//        make.height.mas_equalTo(24);
-//    }];
-//
-//    [self.position mas_makeConstraints:^(MASConstraintMaker *make) {
-//        make.left.mas_equalTo(self.positionView).offset(6);
-//        make.right.mas_equalTo(self.positionView).offset(-6);
-//        make.centerY.mas_equalTo(self.positionView);
-//        make.height.mas_equalTo(18);
-//    }];
-    
     self.descLabel.left = 20;
     self.descLabel.centerY = self.positionView.centerY;
     self.descLabel.height = 24;
     self.descLabel.width = [UIScreen mainScreen].bounds.size.width - 40 - 20 - 20;
     
-    
-//    [self.descLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-//        make.left.mas_equalTo(self.positionView.mas_right).offset(6);
-//        make.centerY.mas_equalTo(self.positionView);
-//        make.right.mas_equalTo(self.moreBtn.mas_left).offset(-20);
-//    }];
-    
     self.moreBtn.left = self.descLabel.right + 20;
     self.moreBtn.top = 2;
     self.moreBtn.height = 20;
     self.moreBtn.width = 20;
-    
-//    [self.moreBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-//        make.width.height.mas_equalTo(20);
-//        make.centerY.mas_equalTo(self.positionView);
-//        make.right.mas_equalTo(self).offset(-18);
-//    }];
-    
+
     self.bottomSepView.left = 0;
     self.bottomSepView.top = self.positionView.bottom + 10;
     self.bottomSepView.height = 5;
     self.bottomSepView.width = [UIScreen mainScreen].bounds.size.width;
-    
-//    [self.bottomSepView mas_makeConstraints:^(MASConstraintMaker *make) {
-//        make.top.mas_equalTo(self.positionView.mas_bottom).offset(10);
-//        make.left.mas_equalTo(self).offset(0);
-//        make.right.mas_equalTo(self).offset(0);
-//        make.height.mas_equalTo(5);
-//    }];
 }
 
 - (UILabel *)LabelWithFont:(UIFont *)font textColor:(UIColor *)textColor {
@@ -146,17 +113,10 @@
     //设置是否显示引导
     if(cellModel.isInsertGuideCell){
         self.guideView.hidden = NO;
-        
         self.guideView.top = self.positionView.bottom;
         self.guideView.left = 0;
         self.guideView.width = [UIScreen mainScreen].bounds.size.width;
         self.guideView.height = 42;
-        
-//        [self.guideView mas_makeConstraints:^(MASConstraintMaker *make) {
-//            make.top.mas_equalTo(self.positionView.mas_bottom);
-//            make.left.right.mas_equalTo(self);
-//            make.height.mas_equalTo(42);
-//        }];
     }else{
         self.guideView.hidden = YES;
     }
@@ -167,13 +127,6 @@
     self.bottomSepView.top = self.positionView.bottom + 10;
     self.bottomSepView.height = cellModel.bottomLineHeight;
     self.bottomSepView.width = [UIScreen mainScreen].bounds.size.width - cellModel.bottomLineLeftMargin - cellModel.bottomLineRightMargin;
-    
-//    [self.bottomSepView mas_updateConstraints:^(MASConstraintMaker *make) {
-//        make.top.mas_equalTo(self.positionView.mas_bottom).offset(10);
-//        make.left.mas_equalTo(self).offset(cellModel.bottomLineLeftMargin);
-//        make.right.mas_equalTo(self).offset(-cellModel.bottomLineRightMargin);
-//        make.height.mas_equalTo(cellModel.bottomLineHeight);
-//    }];
 }
 
 - (void)showPositionView:(BOOL)isShow {
@@ -184,48 +137,20 @@
         self.position.height = 18;
         self.position.left = 6;
         [self.position sizeToFit];
+        
         CGFloat labelWidth = self.position.width;
-        
-        
         self.positionView.left = 20;
         self.positionView.width = labelWidth + 12;
         self.positionView.height = 24;
-            
-        //    [self.positionView mas_makeConstraints:^(MASConstraintMaker *make) {
-        //        make.left.mas_equalTo(self).offset(20);
-        //        make.top.mas_equalTo(self);
-        //        make.height.mas_equalTo(24);
-        //    }];
-        //
-        //    [self.position mas_makeConstraints:^(MASConstraintMaker *make) {
-        //        make.left.mas_equalTo(self.positionView).offset(6);
-        //        make.right.mas_equalTo(self.positionView).offset(-6);
-        //        make.centerY.mas_equalTo(self.positionView);
-        //        make.height.mas_equalTo(18);
-        //    }];
-        
         
         self.descLabel.left = self.positionView.right + 6;
         self.descLabel.centerY = self.positionView.centerY;
         self.descLabel.height = 24;
         self.descLabel.width = [UIScreen mainScreen].bounds.size.width - 40 - 20 - 20 - self.positionView.width - 6;
-        
-//        [self.descLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
-//            make.left.mas_equalTo(self.positionView.mas_right).offset(6);
-//            make.centerY.mas_equalTo(self.positionView);
-//            make.right.mas_equalTo(self.moreBtn.mas_left).offset(-20);
-//        }];
     }else{
-        
         self.descLabel.left = 20;
         self.descLabel.centerY = self.positionView.centerY;
         self.descLabel.width = [UIScreen mainScreen].bounds.size.width - 40 - 20 - 20;
-        
-//        [self.descLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
-//            make.left.mas_equalTo(self).offset(20);
-//            make.centerY.mas_equalTo(self.positionView);
-//            make.right.mas_equalTo(self.moreBtn.mas_left).offset(-20);
-//        }];
     }
 }
 

@@ -13,7 +13,8 @@
 #import "FHSearchHouseModel.h"
 #import "FHHomeRollModel.h"
 #import "FHHomeHouseModel.h"
-
+#import "FHHouseRealtorDetailInfoModel.h"
+#import "FHHouseRealtorUserCommentDataModel.h"
 @class TTHttpTask;
 
 NS_ASSUME_NONNULL_BEGIN
@@ -153,6 +154,17 @@ typedef NS_ENUM(NSInteger , FHNetworkMonitorType) {
  */
 
 +(TTHttpTask *_Nullable)checkUGCPostPromotionparams:(NSDictionary *_Nullable)param  completion:(void(^_Nullable)(NSDictionary *_Nullable result , NSError *_Nullable error))completion;
+/**
+ 经纪人主页请求
+ */
++(TTHttpTask *)requestRealtorHomePage:(NSDictionary *_Nullable)param completion:(void(^_Nullable)(FHHouseRealtorDetailModel *model, NSError *error))completion;
+
++(TTHttpTask *)requestRealtorHomeRecommend:(NSDictionary *_Nullable)param completion:(void(^_Nullable)(FHHomeHouseModel *model, NSError *error))completion;
+
++(TTHttpTask *)requestRealtorUserCommon:(NSDictionary *_Nullable)param completion:(void(^_Nullable)(FHHouseRealtorUserCommentDataModel *model, NSError *error))completion;
+
++(TTHttpTask *)requestRealtorShop:(NSDictionary *_Nullable)param completion:(void(^_Nullable)(FHHouseRealtorShopDetailModel *model, NSError *error))completion;
+
 
 +(void)addRequestLog:(NSString *)path startDate:(NSDate *)startData backDate:(NSDate *)backDate serializeDate:(NSDate *)serializeDate resultType:(FHNetworkMonitorType)type errorCode:(NSInteger)errorCode errorMsg:(NSString *)errorMsg extra:(NSDictionary *)extraDict responseCode:(NSInteger)responseCode;
 +(void)addRequestLog:(NSString *)path startDate:(NSDate *)startData backDate:(NSDate *)backDate serializeDate:(NSDate *)serializeDate resultType:(FHNetworkMonitorType)type errorCode:(NSInteger)errorCode errorMsg:(NSString *)errorMsg extra:(NSDictionary *)extraDict exceptionDict:(NSDictionary *)exceptionDict responseCode:(NSInteger)responseCode;
