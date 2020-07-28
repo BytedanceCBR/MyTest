@@ -16,7 +16,6 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @interface FHHouseRealtorDetailVC : FHBaseViewController
-@property (nonatomic, copy) NSString *communityId;
 @property (nonatomic, copy) NSString *tabName;
 @property (nonatomic, strong) FHHouseRealtorDetailHeaderView *headerView;
 @property (nonatomic, strong) FHCommunityDetailSegmentView *segmentView;

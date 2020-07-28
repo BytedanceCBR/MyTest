@@ -70,6 +70,7 @@
 - (void)requestRealtorShop {
     if (![TTReachability isNetworkConnected]) {
         [self onNetworError:YES showToast:YES];
+        [self updateNavBarWithAlpha:1];
         return;
     }
     NSMutableDictionary *parmas= [NSMutableDictionary new];
@@ -84,6 +85,7 @@
                 [self requestData:YES first:YES];
                 [self loadDataForShop:model];
                 [self prossHeaderData:model];
+                [self updateNavBarWithAlpha:0];
 //                [self requestData:YES first:YES];
                 //                [wSelf updateUIWithData];
                 //                    [wSelf processDetailData:model];

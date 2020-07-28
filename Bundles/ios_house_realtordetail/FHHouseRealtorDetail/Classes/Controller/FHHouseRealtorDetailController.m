@@ -19,7 +19,6 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     [self createModel];
-    [self createTracerDic];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -36,10 +35,5 @@
     [dic setObject:self.tabName?:@"" forKey:@"tab_name"];
     _viewModel = [[FHHouseRealtorDetailViewModel alloc]initWithController:self tableView:self.tableView realtorInfo:dic tracerDic:self.tracerDict];
 }
-
-- (void)createTracerDic {
-    NSMutableDictionary *dic = self.tracerDict.mutableCopy;
-}
-
 
 @end
