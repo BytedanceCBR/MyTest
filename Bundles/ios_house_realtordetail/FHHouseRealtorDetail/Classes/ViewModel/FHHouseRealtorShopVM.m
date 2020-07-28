@@ -141,7 +141,7 @@
     if(showEmpty){
         [self.detailController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoNetWorkAndRefresh];
         UIImage *whiteBackArrowImage = ICON_FONT_IMG(24, @"\U0000e68a", [UIColor blackColor]);
-        self.detailController.customNavBarView.title.text = [UIColor blackColor];
+        self.detailController.customNavBarView.title.textColor = [UIColor blackColor];
         [self.detailController.customNavBarView.leftBtn setBackgroundImage:whiteBackArrowImage forState:UIControlStateNormal];
         [self.detailController.customNavBarView.leftBtn setBackgroundImage:whiteBackArrowImage forState:UIControlStateHighlighted];
     }
@@ -347,7 +347,7 @@
         //        dict[INSTANT_DATA_KEY] = theModel;
         dict[@"biz_trace"] = theModel.bizTrace;
         NSURL *jumpUrl = nil;
-        jumpUrl = [NSURL URLWithString:[NSString stringWithFormat:@"sslocal://old_house_detail?house_id=%@",theModel.idx]];
+        jumpUrl = [NSURL URLWithString:[NSString stringWithFormat:@"sslocal://old_house_detail?house_id=%@&realtor_id=%@",theModel.idx,self.realtorInfo[@"realtor_id"]?:@""]];
         
         if (jumpUrl != nil) {
             TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
