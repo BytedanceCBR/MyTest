@@ -139,7 +139,7 @@ static bool isTTCommentPublishing = NO;
     NSMutableDictionary *params = [NSMutableDictionary dictionary];
     [params addEntriesFromDictionary:self.extraDic];
     params[@"click_position"] = @"submit_comment";
-    params[@"page_type"] = @"update_detail";
+    params[@"page_type"] = @"comment_detail";
     params[@"group_id"] = self.commentDetailModel.groupModel.groupID ?: @"be_null";
     [FHUserTracker writeEvent:@"click_submit_comment" params:params];
     
@@ -186,6 +186,7 @@ static bool isTTCommentPublishing = NO;
             if (self.commentWriteView.isNeedTips) {
                 [TTIndicatorView showWithIndicatorStyle:TTIndicatorViewStyleImage indicatorText:@"发布成功" indicatorImage:[UIImage themedImageNamed:@"doneicon_popup_textpage.png"] autoDismiss:YES dismissHandler:nil];
             }
+             [BDTrackerProtocol eventV3:@"rt_post_comment" params:params];
         
         }
 

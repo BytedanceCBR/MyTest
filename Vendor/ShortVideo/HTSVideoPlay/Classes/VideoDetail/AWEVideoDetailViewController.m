@@ -2449,7 +2449,7 @@ static const CGFloat kFloatingViewOriginY = 230;
     } extraTrackDict:nil bindVCTrackDict:nil commentRepostWithPreRichSpanText:nil readQuality:nil];
     commentManager.enterFrom = @"feed_detail";
     commentManager.enter_type = @"submit_comment";
-    commentManager.reportParams = self.tracerDic;
+    commentManager.reportParams = self.tracerDic[@"extraDic"];
     
     self.commentWriteView = [[FHPostDetailCommentWriteView alloc] initWithCommentManager:commentManager];
 
