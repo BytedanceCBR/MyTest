@@ -573,9 +573,9 @@
     }
     NSMutableDictionary *cat = [NSMutableDictionary new];
     if (type != FHNetworkMonitorTypeSuccess) {
-          cat[@"status"] = @"0";
+        cat[@"status"] = @"0";
     }else{
-          cat[@"status"] = @"0";
+        cat[@"status"] = @"0";
     }
     [[HMDTTMonitor defaultManager] hmdTrackService:key metric:metricDict category:cat extra:extra];
 }
