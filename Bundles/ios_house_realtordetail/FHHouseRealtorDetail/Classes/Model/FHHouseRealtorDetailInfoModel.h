@@ -105,6 +105,9 @@ NS_ASSUME_NONNULL_BEGIN
 @end
 
 @interface FHHouseRealtorDetailDataModel : JSONModel
+
+///默认选中index
+@property (nonatomic, copy, nullable) NSString *realtorTab;
 ///线索字段
 @property (nonatomic, strong, nullable) FHClueAssociateInfoModel *associateInfo;
 ///经纪人认证信息页面schema

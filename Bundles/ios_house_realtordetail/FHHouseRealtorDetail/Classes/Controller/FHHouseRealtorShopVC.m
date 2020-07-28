@@ -8,7 +8,7 @@
 #import "FHHouseRealtorShopVC.h"
 #import "FHBaseTableView.h"
 #import "FHHouseRealtorShopVM.h"
-
+#import "FHLynxManager.h"
 #import "UIDevice+BTDAdditions.h"
 #import "FHCommonDefines.h"
 #import "FHUserTracker.h"
@@ -30,6 +30,7 @@
 {
     self = [super initWithRouteParamObj:paramObj];
     if (self) {
+        self.isResetStatusBar = NO;
         [self createTracerDic:paramObj.allParams];
         self.realtorInfoDic = paramObj.allParams.mutableCopy;
     }
@@ -48,8 +49,12 @@
      [self createModel];
 }
 
+- (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
+    [self.viewModel updateNavBarWithAlpha:self.customNavBarView.bgView.alpha];
+}
+
 - (void)initFrame {
-    
     [self.tableView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.left.right.mas_equalTo(self.view);
         make.bottom.equalTo(self.bottomBar);
@@ -57,7 +62,12 @@
 }
 
 - (void)createModel {
-    _viewModel = [[FHHouseRealtorShopVM alloc]initWithController:self tableView:self.tableView realtorDic:self.realtorInfoDic.copy bottomBar:self.bottomBar tracerDic:self.tracerDict];
+    NSData *templateData =  [[FHLynxManager sharedInstance] lynxDataForChannel:@"lynx_realtor_shop_header" templateKey:[FHLynxManager defaultJSFileName] version:0];
+       if (!templateData) {
+           [self.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoData];
+       }else {
+        _viewModel = [[FHHouseRealtorShopVM alloc]initWithController:self tableView:self.tableView realtorDic:self.realtorInfoDic.copy bottomBar:self.bottomBar tracerDic:self.tracerDict];
+       }
 }
 
 - (void)retryLoadData {
@@ -129,6 +139,7 @@
 - (void)setNavBar {
     [self setupDefaultNavBar:NO];
         self.customNavBarView.title.text = @"经纪人店铺";
+        [self.customNavBarView setNaviBarTransparent:YES];
 }
 
 - (NSString *)pageType {
