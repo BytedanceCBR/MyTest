@@ -141,7 +141,7 @@
     if(showEmpty){
         [self.detailController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoNetWorkAndRefresh];
         UIImage *whiteBackArrowImage = ICON_FONT_IMG(24, @"\U0000e68a", [UIColor blackColor]);
-        self.detailController.customNavBarView.title.text = [UIColor blackColor];
+        self.detailController.customNavBarView.title.textColor = [UIColor blackColor];
         [self.detailController.customNavBarView.leftBtn setBackgroundImage:whiteBackArrowImage forState:UIControlStateNormal];
         [self.detailController.customNavBarView.leftBtn setBackgroundImage:whiteBackArrowImage forState:UIControlStateHighlighted];
     }
