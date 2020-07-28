@@ -105,10 +105,12 @@
 }
 
 +(TTHttpTask*)requestNeighborhoodDetail:(NSString*)neighborhoodId
-                                  logPB:(NSDictionary *)logPB
-                                  query:(NSString*)query
-                              extraInfo:(NSDictionary *)extraInfo
-                             completion:(void(^)(FHDetailNeighborhoodModel * _Nullable model , NSError * _Nullable error))completion
+   ridcode:(NSString *)ridcode
+ realtorId:(NSString *)realtorId
+     logPB:(NSDictionary *)logPB
+     query:(NSString*)query
+ extraInfo:(NSDictionary *)extraInfo
+completion:(void(^)(FHDetailNeighborhoodModel * _Nullable model , NSError * _Nullable error))completion
 {
     NSString * host = [FHURLSettings baseURL] ?: @"https://i.haoduofangs.com";
     NSString* url = [host stringByAppendingFormat:@"/f100/api/neighborhood/info?neighborhood_id=%@",neighborhoodId];
@@ -118,6 +120,12 @@
     NSMutableDictionary *paramDic = [NSMutableDictionary new];
     if ([logPB isKindOfClass:[NSDictionary class]]) {
         [paramDic addEntriesFromDictionary:logPB];
+    }
+    if (ridcode.length > 0) {
+        paramDic[@"ridcode"] = ridcode;
+    }
+    if (realtorId.length > 0) {
+        paramDic[@"realtor_id"] = realtorId;
     }
     if (extraInfo) {
         NSData *data = [NSJSONSerialization dataWithJSONObject:extraInfo options:0 error:nil];
