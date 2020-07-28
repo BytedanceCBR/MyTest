@@ -812,14 +812,15 @@
 //    [FHUserTracker writeEvent:@"click_community_search" params:reportParams];
 //}
 
-- (void)viewAppearForEnterType:(NSInteger)enterType
-{
-    self.stayTime = [[NSDate date] timeIntervalSince1970];
-    NSMutableDictionary *tracerDict = [NSMutableDictionary new];
-    tracerDict[@"enter_type"] = @(enterType);
-    tracerDict[@"enter_from"] = self.tracerDict[@"enter_from"] ?: @"be_null";
-    tracerDict[@"category_name"] = self.tracerDict[@"category_name"] ?: @"be_null";
-    [FHEnvContext recordEvent:tracerDict andEventKey:@"enter_category"];
+- (void)viewAppearForEnterType:(NSInteger)enterType needReport:(BOOL)needReport {
+    if(needReport){
+        self.stayTime = [[NSDate date] timeIntervalSince1970];
+        NSMutableDictionary *tracerDict = [NSMutableDictionary new];
+        tracerDict[@"enter_type"] = @(enterType);
+        tracerDict[@"enter_from"] = self.tracerDict[@"enter_from"] ?: @"be_null";
+        tracerDict[@"category_name"] = self.tracerDict[@"category_name"] ?: @"be_null";
+        [FHEnvContext recordEvent:tracerDict andEventKey:@"enter_category"];
+    }
     [self.viewModel viewWillAppear];
 }
 

@@ -302,13 +302,12 @@ static NSString * const kFUGCPrefixStr = @"fugc";
         StrongSelf;
         NSIndexPath *indexPath = [NSIndexPath indexPathForRow:index inSection:0];
         if ([self.collectionView numberOfItemsInSection:0] > index && index != self.currentTabIndex) {
+            [FHEnvContext sharedInstance].isShowingHomeHouseFind = (index == 0);
             self.currentTabIndex = index;
             [self.collectionView scrollToItemAtIndexPath:indexPath atScrollPosition:UICollectionViewScrollPositionLeft animated:NO];
             [self.topView changeBackColor:index];
             [self.viewModel sendEnterCategory:(index == 0 ? FHHomeMainTraceTypeHouse : FHHomeMainTraceTypeFeed) enterType:FHHomeMainTraceEnterTypeClick];
             [self.viewModel sendStayCategory:(index == 0 ? FHHomeMainTraceTypeFeed : FHHomeMainTraceTypeHouse) enterType:FHHomeMainTraceEnterTypeClick];
-            
-            [FHEnvContext sharedInstance].isShowingHomeHouseFind = (index == 0);
         }
     };
 }

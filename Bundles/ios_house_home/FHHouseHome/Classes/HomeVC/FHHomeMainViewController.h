@@ -19,6 +19,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic, strong) UIView *containerView;
 @property(nonatomic, strong) UIView *switchCityView;
 @property(nonatomic, assign) NSInteger currentTabIndex;
+@property(nonatomic , weak) id feedListVC;
 
 - (void)changeTopStatusShowHouse:(BOOL)isShowHouse;
 - (void)changeTopSearchBtn:(BOOL)isShow;

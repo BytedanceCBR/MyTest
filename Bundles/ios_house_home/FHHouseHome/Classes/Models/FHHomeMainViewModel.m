@@ -111,6 +111,7 @@
     
     if ([cell.contentVC isKindOfClass:[ArticleTabBarStyleNewsListViewController class]] || [cell.contentVC isKindOfClass:[FHCommunityViewController class]]) {
         self.feedListVC = cell.contentVC;
+        self.viewController.feedListVC = cell.contentVC;
     }
     
     if ([cell.contentVC isKindOfClass:[FHHomeViewController class]]) {
@@ -210,13 +211,18 @@
                                  forKey:@"category_name"];
                 [FHEnvContext recordEvent:traceDict andEventKey:@"enter_category"];
             }
+            
+            if ([self.viewController.feedListVC isKindOfClass:[FHCommunityViewController class]]) {
+                FHCommunityViewController *vc = (FHCommunityViewController *)self.viewController.feedListVC;
+                [vc viewAppearForEnterType:enterType needReport:NO];
+            }
         }else{
             if ([self.feedListVC isKindOfClass:[ArticleTabBarStyleNewsListViewController class]]) {
                 ArticleTabBarStyleNewsListViewController *articleListVC = (ArticleTabBarStyleNewsListViewController *)self.feedListVC;
                 [articleListVC viewAppearForEnterType:enterType];
             }else if ([self.feedListVC isKindOfClass:[FHCommunityViewController class]]) {
                 FHCommunityViewController *vc = (FHCommunityViewController *)self.feedListVC;
-                [vc viewAppearForEnterType:enterType];
+                [vc viewAppearForEnterType:enterType needReport:YES];
             }
         }
     }

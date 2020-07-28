@@ -27,7 +27,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)hideGuideView;
 - (void)hideRedPoint;
 - (void)updateSpringView;
-- (void)viewAppearForEnterType:(NSInteger)enterType;
+- (void)viewAppearForEnterType:(NSInteger)enterType needReport:(BOOL)needReport;
 - (void)viewDisAppearForEnterType:(NSInteger)enterType;
 
 @end
