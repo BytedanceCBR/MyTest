@@ -27,9 +27,11 @@ NS_ASSUME_NONNULL_BEGIN
 
 // 新房详情页请求
 +(TTHttpTask*)requestNewDetail:(NSString*)houseId
-                         logPB:(NSDictionary *)logPB
-                     extraInfo:(NSDictionary *)extraInfo
-                    completion:(void(^)(FHDetailNewModel * _Nullable model , NSError * _Nullable error))completion;
+     logPB:(NSDictionary *)logPB
+       ridcode:(NSString *)ridcode
+     realtorId:(NSString *)realtorId
+     extraInfo:(NSDictionary *)extraInfo
+completion:(void(^)(FHDetailNewModel * _Nullable model , NSError * _Nullable error))completion;
 
 // 二手房详情页请求
 +(TTHttpTask*)requestOldDetail:(NSString *)houseId
