@@ -13,7 +13,7 @@
 
 #define HOR_MARGIN 20
 #define TOP_MARGIN 20
-#define CONTENT_VER_MARGIN 10
+#define CONTENT_VER_MARGIN 20
 
 @interface FHDetailHalfPopCheckCell ()
 
@@ -48,7 +48,7 @@
         
         _tipLabel = [[UILabel alloc] init];
         _tipLabel.textColor = [UIColor themeGray4];
-        _tipLabel.font = _contentLabel.font;
+        _tipLabel.font = [UIFont themeFontRegular:12];
         
         [self.contentView addSubview:_contentLabel];
         [self.contentView addSubview:_tipLabel];
