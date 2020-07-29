@@ -378,19 +378,17 @@ DEC_TASK("FHIMStartupTask",FHTaskTypeSerial,TASK_PRIORITY_HIGH+16);
 }
 
 - (void)startWithApplication:(UIApplication *)application options:(NSDictionary *)launchOptions {
-    if ([SSCommonLogic imCanStart]) {
-        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
-            FHIMAccountCenterImpl* accountCenter = [[FHIMAccountCenterImpl alloc] init];
-            [IMManager shareInstance].accountCenter = accountCenter;
-            
-            FHIMConfigDelegateImpl* delegate = [[FHIMConfigDelegateImpl alloc] init];
-            [[FHIMConfigManager shareInstance] registerDelegate:delegate];
-            
-            [IMManager shareInstance].imAlertViewListener = [FHIMAlertViewListenerImpl shareInstance];
-            
-            NSString* uid = [[TTAccount sharedAccount] userIdString];
-            [[IMManager shareInstance] startupWithUid:uid];
-        });
+    if ([SSCommonLogic imCanStart]) {        
+        FHIMAccountCenterImpl* accountCenter = [[FHIMAccountCenterImpl alloc] init];
+        [IMManager shareInstance].accountCenter = accountCenter;
+        
+        FHIMConfigDelegateImpl* delegate = [[FHIMConfigDelegateImpl alloc] init];
+        [[FHIMConfigManager shareInstance] registerDelegate:delegate];
+        
+        [IMManager shareInstance].imAlertViewListener = [FHIMAlertViewListenerImpl shareInstance];
+        
+        NSString* uid = [[TTAccount sharedAccount] userIdString];
+        [[IMManager shareInstance] startupWithUid:uid];
     }
 }
 
