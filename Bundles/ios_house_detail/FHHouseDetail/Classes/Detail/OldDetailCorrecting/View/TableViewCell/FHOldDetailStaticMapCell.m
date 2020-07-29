@@ -435,7 +435,7 @@
         }
         AMapPOIAroundSearchRequest *requestPoi = [AMapPOIAroundSearchRequest new];
         
-        requestPoi.keywords = [self keyWordConver:categoryName];
+        requestPoi.keywords = [FHOldDetailStaticMapCell keyWordConver:categoryName];
         requestPoi.location = [AMapGeoPoint locationWithLatitude:center.latitude longitude:center.longitude];
         requestPoi.requireExtension = YES;
         requestPoi.radius = 2000;
@@ -445,7 +445,7 @@
     }
 }
 
-- (NSString *)keyWordConver:(NSString *)category{
++ (NSString *)keyWordConver:(NSString *)category{
     if([category isEqualToString:@"交通"]){
         return @"公交地铁";
     }else if([category isEqualToString:@"教育"]){
@@ -453,21 +453,25 @@
     }else if([category isEqualToString:@"医疗"]){
         return @"医院|卫生院|急救中心";
     }else if([category isEqualToString:@"生活"]){
-        return @"购物|银行";
+        return @"购物|银行|商场|便利店";
+    }else if([category isEqualToString:@"休闲"]){
+        return @"休闲|电影院|咖啡厅|影剧院";
     }else{
         return @"公交地铁";
     }
 }
 
-- (NSString *)keyWordConverReverse:(NSString *)category{
++ (NSString *)keyWordConverReverse:(NSString *)category{
     if([category isEqualToString:@"公交地铁"]){
         return @"交通";
     }else if([category isEqualToString:@"中学|小学|幼儿园"]){
         return @"教育";
     }else if([category isEqualToString:@"医院|卫生院|急救中心"]){
         return @"医疗";
-    }else if([category isEqualToString:@"购物|银行"]){
+    }else if([category isEqualToString:@"购物|银行|商场|便利店"]){
         return @"生活";
+    }else if([category isEqualToString:@"休闲|电影院|咖啡厅|影剧院"]){
+        return @"休闲";
     }else{
         return @"交通";
     }
@@ -626,7 +630,7 @@
         }
     }
     AMapPOIKeywordsSearchRequest *searchRequest = (AMapPOIKeywordsSearchRequest *) request;
-    NSString *category = [self keyWordConverReverse:searchRequest.keywords];
+    NSString *category = [FHOldDetailStaticMapCell keyWordConverReverse:searchRequest.keywords];
     NSMutableArray *annotations = [NSMutableArray array];
     FHStaticMapAnnotation *annotation = nil;
     for (NSUInteger i = 0; i < poiArray.count; i++) {

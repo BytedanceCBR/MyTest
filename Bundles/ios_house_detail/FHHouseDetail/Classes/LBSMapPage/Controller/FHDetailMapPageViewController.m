@@ -29,9 +29,11 @@
 #import "UIImage+FIconFont.h"
 #import <ByteDanceKit/NSDictionary+BTDAdditions.h>
 #import "TTReachability.h"
+#import "FHOldDetailStaticMapCell.h"
 
 static NSInteger const kBottomBarTagValue = 100;
 static NSInteger const kBottomButtonLabelTagValue = 1000;
+static NSInteger const kBottomButtonIndicatorTagValue = 10000;
 
 static MAMapView *kFHPageMapView = nil;
 
@@ -41,7 +43,7 @@ static MAMapView *kFHPageMapView = nil;
 @property (nonatomic, weak) MAMapView *mapView;
 @property (nonnull, strong) UIView *mapContainer;
 @property (nonatomic, strong) UIView * bottomBarView;
-@property (nonatomic, strong) UIButton * previouseIconButton;
+@property (nonatomic, strong) UIButton * previouseIndicator;
 @property (nonatomic, strong) UILabel * previouseLabel;
 @property (nonatomic, assign) NSInteger selectedIndex;
 @property (nonatomic, strong) NSArray * nameArray;
@@ -97,7 +99,7 @@ static MAMapView *kFHPageMapView = nil;
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    _nameArray = [NSArray arrayWithObjects:@"银行",@"公交",@"地铁",@"教育",@"医院",@"休闲",@"购物",@"健身",@"美食", nil];
+    _nameArray = [NSArray arrayWithObjects:@"交通",@"教育",@"医疗",@"生活",@"休闲", nil];
     _imageNameArray = [NSArray arrayWithObjects:@"tab-bank",@"tab-bus",@"tab-subway",@"tab-education",@"tab-hospital",@"tab-relaxation",@"tab-mall",@"tab-swim",@"tab-food", nil];
     _keyWordArray = [NSArray arrayWithObjects:@"bank",@"bus",@"subway",@"scholl",@"hospital",@"entertainment",@"shopping",@"gym",@"food", nil];
     _iconImageArray = [NSArray arrayWithObjects:@"icon-bank",@"icon-bus",@"icon-subway",@"icon_education",@"icon_hospital",@"icon-relaxation",@"icon-mall",@"icon_swim",@"icon-restaurant", nil];
@@ -194,16 +196,17 @@ static MAMapView *kFHPageMapView = nil;
 {
     _bottomBarView = [UIView new];
     [self.view addSubview:_bottomBarView];
-    CGFloat bottomBarHeight = 43;
+    CGFloat bottomBarHeight = 44;
     [_bottomBarView setBackgroundColor:[UIColor whiteColor]];
     
     [_bottomBarView mas_makeConstraints:^(MASConstraintMaker *make) {
-        if ([TTDeviceHelper isIPhoneXDevice]) {
-            make.bottom.equalTo(self.view).offset(-40);
-        }else
-        {
-            make.bottom.equalTo(self.view);
-        }
+//        if ([TTDeviceHelper isIPhoneXDevice]) {
+//            make.top.equalTo(self.naviBar.mas_bottom);
+//        }else
+//        {
+//            make.bottom.equalTo(self.view);
+//        }
+        make.top.equalTo(self.naviBar.mas_bottom);
         make.left.right.mas_equalTo(self.view);
         make.height.mas_equalTo(bottomBarHeight);
         make.left.right.equalTo(self.view);
@@ -215,7 +218,7 @@ static MAMapView *kFHPageMapView = nil;
     [_bottomBarView addSubview:scrollViewItem];
     self.bottomScrollView = scrollViewItem;
     
-    CGFloat itemWidth = [UIScreen mainScreen].bounds.size.width / 6.5;
+    CGFloat itemWidth = [UIScreen mainScreen].bounds.size.width / 5;
     scrollViewItem.frame = CGRectMake(0.0f, 0.0f, self.view.frame.size.width, bottomBarHeight);
     scrollViewItem.contentSize = CGSizeMake(itemWidth * [_nameArray count], bottomBarHeight);
     scrollViewItem.showsVerticalScrollIndicator = NO;
@@ -226,35 +229,51 @@ static MAMapView *kFHPageMapView = nil;
         [scrollViewItem addSubview:iconView];
 
         UIButton *buttonIcon = [UIButton buttonWithType:UIButtonTypeCustom];
-        if (i == self.selectedIndex) {
-            NSString *stringName = [NSString stringWithFormat:@"%@-pressed",_imageNameArray[i]];
-            [buttonIcon setImage:[UIImage imageNamed:[NSString stringWithFormat:@"%@-pressed",_imageNameArray[i]]] forState:UIControlStateNormal];
-            self.previouseIconButton = buttonIcon;
-        }else
-        {
-        [buttonIcon setImage:[UIImage imageNamed:_imageNameArray[i]] forState:UIControlStateNormal];
-        }
-        
+//        if (i == self.selectedIndex) {
+//            NSString *stringName = [NSString stringWithFormat:@"%@-pressed",_imageNameArray[i]];
+//            [buttonIcon setImage:[UIImage imageNamed:[NSString stringWithFormat:@"%@-pressed",_imageNameArray[i]]] forState:UIControlStateNormal];
+//            self.previouseIconButton = buttonIcon;
+//        }else
+//        {
+//        [buttonIcon setImage:[UIImage imageNamed:_imageNameArray[i]] forState:UIControlStateNormal];
+//        }
         [buttonIcon addTarget:self action:@selector(typeButtonClick:) forControlEvents:UIControlEventTouchUpInside];
         buttonIcon.tag = i;
         [buttonIcon setFrame:CGRectMake((itemWidth - 32) / 2, 0, 32, 32)];
-        [iconView addSubview:buttonIcon];
 
         
         UILabel *buttonLabel = [UILabel new];
         buttonLabel.text = _nameArray[i];
         buttonLabel.textAlignment = NSTextAlignmentCenter;
-        buttonLabel.font = [UIFont themeFontRegular:9];
-        if (i == self.selectedIndex) {
-            buttonLabel.textColor = [UIColor themeRed1];
-            self.previouseLabel = buttonLabel;
-        }else
-        {
-            buttonLabel.textColor = [UIColor themeGray3];
-        }
+        buttonLabel.textColor = [UIColor themeGray1];
+
+  
+
         buttonLabel.tag = i + kBottomButtonLabelTagValue;
-        [buttonLabel setFrame:CGRectMake(0, 30, itemWidth, 13)];
+        [buttonLabel setFrame:CGRectMake(0, 11, itemWidth, 22)];
+        buttonLabel.textAlignment = NSTextAlignmentCenter;
         [iconView addSubview:buttonLabel];
+        
+        
+        UIView *selectIndicator = [[UIView alloc] initWithFrame:CGRectMake((itemWidth - 20)/2,buttonLabel.frame.origin.y + buttonLabel.frame.size.height + 3, 20, 4)];
+        [selectIndicator setBackgroundColor:[UIColor colorWithHexStr:@"#ff9629"]];
+        selectIndicator.layer.masksToBounds = YES;
+        selectIndicator.layer.cornerRadius = 2;
+        selectIndicator.tag = i + kBottomButtonIndicatorTagValue;
+        [iconView addSubview:selectIndicator];
+        
+        if (i == self.selectedIndex) {
+              self.previouseLabel = buttonLabel;
+              self.previouseIndicator = selectIndicator;
+              buttonLabel.font = [UIFont themeFontMedium:16];
+              selectIndicator.hidden = NO;
+        }else{
+              buttonLabel.font = [UIFont themeFontRegular:16];
+              selectIndicator.hidden = YES;
+        }
+
+        
+        [iconView addSubview:buttonIcon];
     }
     [self changeBottomItemViewOffsetByIndex:self.selectedIndex];
     self.searchCategory = self.nameArray[self.selectedIndex];
@@ -296,25 +315,33 @@ static MAMapView *kFHPageMapView = nil;
     return buttonLabel;
 }
 
+- (UIView *)getIndicatorFromTag:(NSInteger)index
+{
+    UIView *scrollContent = [_bottomBarView viewWithTag:kBottomBarTagValue];
+    UIView *buttonLabel = [scrollContent viewWithTag:index + kBottomButtonIndicatorTagValue];
+    return buttonLabel;
+}
+
 - (void)typeButtonClick:(UIButton *)button
 {
     UILabel *buttonLabel = [self getLabelFromTag:button.tag];
-    
-    if (button.tag < [_imageNameArray count] && self.previouseIconButton.tag < [_imageNameArray count]) {
-        [self.previouseIconButton setImage:[UIImage imageNamed:_imageNameArray[self.previouseIconButton.tag]] forState:UIControlStateNormal];
-        self.previouseLabel.textColor = [UIColor themeGray1];
-        buttonLabel.textColor = [UIColor themeRed1];
-        [button setImage:[UIImage imageNamed:[NSString stringWithFormat:@"%@-pressed",_imageNameArray[button.tag]]] forState:UIControlStateNormal];
+    UIView *indicatorView = [self getIndicatorFromTag:button.tag];
+    self.previouseIndicator.hidden = YES;
+    self.previouseLabel.font = [UIFont themeFontRegular:16];
+
+    if (button.tag < [_imageNameArray count] && indicatorView) {
+        indicatorView.hidden = NO;
+        buttonLabel.font = [UIFont themeFontMedium:16];
     }
     if (self.nameArray.count > button.tag) {
         NSString *category = self.nameArray[button.tag];
         if (![category isEqualToString:self.searchCategory]) {
             self.searchCategory = category;
-            [self requestPoiInfo:self.centerPoint andKeyWord:self.nameArray[button.tag]];
+            [self requestPoiInfo:self.centerPoint andKeyWord:[FHOldDetailStaticMapCell keyWordConver:self.nameArray[button.tag]]];
         }
     }
     [self changeBottomItemViewOffsetByIndex:button.tag];
-    self.previouseIconButton = button;
+    self.previouseIndicator = indicatorView;
     self.previouseLabel = buttonLabel;
 }
 
@@ -353,13 +380,14 @@ static MAMapView *kFHPageMapView = nil;
     _mapContainer = [UIView new];
     [self.view addSubview:_mapContainer];
     [_mapContainer mas_makeConstraints:^(MASConstraintMaker *make) {
-        if ([TTDeviceHelper isIPhoneXDevice]) {
-            make.bottom.equalTo(self.view).offset(-83);
-        }else
-        {
-            make.bottom.equalTo(self.view).offset(-43);
-        }
-        make.top.equalTo(self.naviBar.mas_bottom);
+//        if ([TTDeviceHelper isIPhoneXDevice]) {
+//            make.bottom.equalTo(self.view).offset(-40);
+//        }else
+//        {
+//            make.bottom.equalTo(self.view).offset(0);
+//        }
+        make.bottom.equalTo(self.view).offset(0);
+        make.top.equalTo(self.naviBar.mas_bottom).offset(44);
         make.left.right.equalTo(self.view);
     }];
     [_mapContainer setBackgroundColor:[UIColor whiteColor]];
@@ -372,7 +400,7 @@ static MAMapView *kFHPageMapView = nil;
     } else {
         bottomHeight = 43;
     }
-    CGRect mapFrame = CGRectMake(0, 0, self.view.width, self.view.height - navHeight - bottomHeight);
+    CGRect mapFrame = CGRectMake(0, bottomHeight, self.view.width, self.view.height - navHeight - bottomHeight);
     if (!kFHPageMapView) {
         kFHPageMapView = [[MAMapView alloc] initWithFrame:mapFrame];// 不会同时出两个页面
 
@@ -549,7 +577,7 @@ static MAMapView *kFHPageMapView = nil;
         [self.mapView setCenterCoordinate:self.centerPoint];
         return;
     }
-    NSString *keyWords = searchReqeust.keywords;
+    NSString *keyWords =[FHOldDetailStaticMapCell keyWordConverReverse:searchReqeust.keywords];
     if (keyWords.length <= 0) {
         [[ToastManager manager] showToast:@"暂无相关信息"];
         [self.mapView setCenterCoordinate:self.centerPoint];

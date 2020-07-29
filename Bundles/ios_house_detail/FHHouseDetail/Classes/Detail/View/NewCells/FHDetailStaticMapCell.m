@@ -19,6 +19,7 @@
 #import "FHDetailMapViewSnapService.h"
 #import "HMDUserExceptionTracker.h"
 #import "TTReachability.h"
+#import "FHOldDetailStaticMapCell.h"
 
 @implementation FHDetailStaticMapCellModel
 
@@ -483,7 +484,7 @@
         }
         AMapPOIAroundSearchRequest *requestPoi = [AMapPOIAroundSearchRequest new];
 
-        requestPoi.keywords = [categoryName isEqualToString:@"交通"] ? @"公交地铁" : categoryName;
+        requestPoi.keywords = [FHOldDetailStaticMapCell keyWordConver:categoryName];
         requestPoi.location = [AMapGeoPoint locationWithLatitude:center.latitude longitude:center.longitude];
         requestPoi.requireExtension = YES;
         requestPoi.requireSubPOIs = NO;
@@ -645,7 +646,7 @@
         }
     }
     AMapPOIKeywordsSearchRequest *searchRequest = (AMapPOIKeywordsSearchRequest *) request;
-    NSString *category = [searchRequest.keywords isEqualToString:@"公交地铁"] ? @"交通" : searchRequest.keywords;
+    NSString *category = [FHOldDetailStaticMapCell keyWordConverReverse:searchRequest.keywords];
 
     NSMutableArray *annotations = [NSMutableArray array];
     FHStaticMapAnnotation *annotation = nil;
