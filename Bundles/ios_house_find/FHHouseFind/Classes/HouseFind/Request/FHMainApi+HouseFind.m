@@ -6,6 +6,8 @@
 //
 
 #import "FHMainApi+HouseFind.h"
+#import "TTNetworkManager.h"
+#import "FHURLSettings.h"
 
 @implementation FHMainApi (HouseFind)
 
@@ -50,6 +52,39 @@
         paramDic[@"tel_num"] = phoneNum;
     }
     return [FHMainApi queryData:queryPath params:paramDic class:[FHHouseFindRecommendModel class] completion:completion];
+}
+
+/**
+ 获取线索参数
+ @param params 参数字典，from="app_findselfhouse"，from_data=json格式参数
+ @param completion 完成回调
+ */
++ (TTHttpTask *)loadAssociateEntranceWithParams:(NSDictionary *)params completion:(void (^)(NSError * _Nonnull, id _Nonnull))completion {
+ 
+    NSString * host = [FHURLSettings baseURL] ?: @"https://i.haoduofangs.com";
+    NSString* url = [host stringByAppendingString:@"/f100/api/associate_entrance"];
+    
+    return [[TTNetworkManager shareInstance] requestForJSONWithResponse:url params:params method:@"GET" needCommonParams:YES callback:^(NSError *error, id jsonObj, TTHttpResponse *response) {
+        
+        if(completion) {
+            completion(error, jsonObj);
+        }
+    }];
+}
+
+/**
+ 提交线索信息
+ */
++ (TTHttpTask *)commitAssociateInfoWithParams:(NSDictionary *)params completion:(void (^)(NSError * _Nonnull, id _Nonnull))completion {
+    NSString * host = [FHURLSettings baseURL] ?: @"https://i.haoduofangs.com";
+    NSString* url = [host stringByAppendingString:@"/f100/api/call_report"];
+    
+    return [[TTNetworkManager shareInstance] requestForJSONWithResponse:url params:params method:@"GET" needCommonParams:YES callback:^(NSError *error, id jsonObj, TTHttpResponse *response) {
+        
+        if(completion) {
+            completion(error, jsonObj);
+        }
+    }];
 }
 
 @end

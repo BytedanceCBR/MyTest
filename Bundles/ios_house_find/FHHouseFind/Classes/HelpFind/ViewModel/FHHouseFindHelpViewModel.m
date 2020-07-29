@@ -32,6 +32,7 @@
 #import "FHFindHouseAreaSelectionPanel.h"
 #import "FHFilterModelParser.h"
 #import "AreaSelectionTableViewVM.h"
+#import "NSDictionary+BTDAdditions.h"
 
 #define HELP_HEADER_ID @"header_id"
 #define HELP_ITEM_HOR_MARGIN 20
@@ -246,16 +247,81 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
 //    }];
 }
 #pragma mark 提交选项
-- (BOOL)submitActionWithPhoneNumber:(NSString *)phoneNumber
-{
+- (BOOL)submitActionWithPhoneNumber:(NSString *)phoneNumber {
     if (phoneNumber.length < 1) {
         return NO;
     }
     
-    __weak typeof(self)wself = self;
+    if (![TTReachability isNetworkConnected]) {
+        [[ToastManager manager] showToast:@"网络异常"];
+        return YES;
+    }
+    
+    __weak typeof(self) weakSelf = self;
     FHHouseType ht = _houseType;
     FHHouseFindSelectModel *selectModel = [self selectModelWithType:ht];
-    NSMutableString *query = [NSMutableString new];
+    NSMutableDictionary *associateDict = [[NSMutableDictionary alloc] init];
+    if (selectModel.items.count > 0) {
+        if (selectModel.items.count > 0) {
+            for (FHHouseFindSelectItemModel *item in selectModel.items ) {
+                NSDictionary *dict = [item associateInfoForFindingHouse];
+                [dict enumerateKeysAndObjectsUsingBlock:^(id  _Nonnull key, id  _Nonnull obj, BOOL * _Nonnull stop) {
+                    associateDict[key] = obj;
+                }];
+            }
+        }
+    }
+    
+    //从config中获取当前城市id
+    FHConfigDataModel *configData = [[FHEnvContext sharedInstance] getConfigFromCache];
+    NSAssert(configData, @"获取config数据失败！");
+    if (configData) {
+        NSString *cityId = configData.currentCityId;
+        if (cityId.length > 0) {
+            associateDict[@"city_id"] = cityId;
+        }
+    }
+    
+    //Step1: 提交用户选择信息，获取线索相关信息
+    //TODO: params待定
+    NSString *associateStr = [associateDict btd_jsonStringEncoded];
+    NSDictionary *params = @{
+        @"from": @"app_findselfhouse",
+        @"from_data": associateStr,
+    };
+    
+    [FHMainApi loadAssociateEntranceWithParams:params completion:^(NSError * _Nonnull error, id _Nonnull response) {
+        if (!error) {
+            //Step2: 提交线索信息
+            //TODO: 提交线索信息
+            [weakSelf commitAssociateInfoWithParams:nil selectedModel:selectModel phoneNumber:phoneNumber];
+        } else {
+           NSString *message = error.localizedDescription ? : @"请求失败，请稍后重试";
+           [[ToastManager manager] showToast:message];
+       }
+    }];
+    
+    return YES;
+}
+
+- (void)commitAssociateInfoWithParams:(NSDictionary *)params selectedModel:(FHHouseFindSelectModel *)selectedModel phoneNumber:(NSString *)phoneNumber {
+    __weak typeof(self) weakSelf = self;
+    
+    [FHMainApi commitAssociateInfoWithParams:params completion:^(NSError * _Nonnull error, id _Nonnull response) {
+        if (!error) {
+            //Step3: 保存用户选择信息
+            [weakSelf saveSelectedInfoWithSelectedModel:selectedModel phoneNumber:phoneNumber];
+        } else {
+            NSString *message = error.localizedDescription ? : @"请求失败，请稍后重试";
+            [[ToastManager manager] showToast:message];
+        }
+    }];
+}
+
+- (void)saveSelectedInfoWithSelectedModel:(FHHouseFindSelectModel *)selectModel phoneNumber:(NSString *)phoneNumber {
+    __weak typeof(self) weakSelf = self;
+    NSMutableString *query = [[NSMutableString alloc] init];
+    
     if (selectModel.items.count > 0) {
         for (FHHouseFindSelectItemModel *item in selectModel.items ) {
             NSString *q = [item selectQueryForFindingHouse];
@@ -272,23 +338,17 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
         }
     }
     
-    if (![TTReachability isNetworkConnected]) {
-        [[ToastManager manager] showToast:@"网络异常"];
-        return YES;
-    }
     [FHMainApi saveHFHelpFindByHouseType:[NSString stringWithFormat:@"%ld",_houseType] query:query phoneNum:phoneNumber completion:^(FHHouseFindRecommendModel * _Nonnull model, NSError * _Nonnull error) {
         if (model && error == NULL) {
             if (model.data) {
-                wself.recommendModel = model.data;
-                [wself jump2HouseFindResultPage:[model toDictionary]];
+                weakSelf.recommendModel = model.data;
+                [weakSelf jump2HouseFindResultPage:[model toDictionary]];
             }
         } else {
             NSString *message = error.localizedDescription ? : @"请求失败，请稍后重试";
-            [[ToastManager manager]showToast:message];
+            [[ToastManager manager] showToast:message];
         }
     }];
-    
-    return YES;
 }
 
 - (void)jump2HouseFindResultPage:(NSDictionary *)recommendDict

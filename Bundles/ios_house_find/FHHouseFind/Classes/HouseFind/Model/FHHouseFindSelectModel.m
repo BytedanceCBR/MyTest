@@ -6,6 +6,8 @@
 //
 
 #import "FHHouseFindSelectModel.h"
+#import "NSDictionary+BTDAdditions.h"
+#import "NSArray+BTDAdditions.h"
 
 @implementation FHHouseFindSelectItemModel
 
@@ -199,6 +201,146 @@
     }
     
     return [query copy];
+}
+
+/**
+ 将用户选择的结果拼接成一个JSON格式的数据上报给获取线索信息的接口（ f100/api/associate_entrance）
+ 涉及到一下几个字段：district, area, price, room_num
+ 数据格式如下：
+ {
+     "city_id": 1363,
+     "district[]": [1364],
+     "area[]": [1366],
+     "price[]": [[150000,200000], [200000,250000]],
+     "room_num[]": [[2,2],[3,3],[4]]
+ }
+ */
+- (NSDictionary *)associateInfoForFindingHouse {
+    NSMutableDictionary *resultDict = [[NSMutableDictionary alloc] init];
+    if (self.tabId == FHSearchTabIdTypePrice) {
+        if (!self.rate) {
+            return resultDict;
+        }
+        
+        NSString *key = [NSString stringWithFormat:@"%@[]", self.configOption.type ?: @"price"];
+        NSInteger r = self.rate.integerValue;
+        if (self.lowerPrice && self.higherPrice) {
+            NSInteger lowPrice = self.lowerPrice.integerValue;
+            NSInteger highPrice = self.higherPrice.integerValue;
+            if (lowPrice > highPrice) {
+                NSInteger temp = lowPrice;
+                lowPrice = highPrice;
+                highPrice = temp;
+            }
+            
+            if (highPrice == 0 && self.fromType == FHHouseFindPriceFromTypeHelp) {
+                NSInteger priceNum = lowPrice * r;
+                NSString *priceStr = [NSString stringWithFormat:@"%zi", priceNum];
+                [resultDict btd_setObject:@[priceStr] forKey:key];
+            } else {
+                lowPrice = lowPrice * r;
+                highPrice = highPrice * r;
+                NSString *lowPriceStr = [NSString stringWithFormat:@"%zi", lowPrice];
+                NSString *highPriceStr = [NSString stringWithFormat:@"%zi", highPrice];
+                [resultDict btd_setObject:@[lowPriceStr, highPriceStr] forKey:key];
+            }
+        } else if (self.lowerPrice) {
+            NSInteger lowPrice = self.lowerPrice.integerValue;
+            NSString *lowPriceStr = [NSString stringWithFormat:@"%zi", lowPrice];
+            [resultDict btd_setObject:@[lowPriceStr] forKey:key];
+        } else if (self.higherPrice) {
+            NSInteger highPrice = self.higherPrice.integerValue;
+            if (highPrice > 0) {
+                NSString *lowPriceStr = @"0";
+                NSString *highPriceStr = [NSString stringWithFormat:@"%zi", highPrice];
+                [resultDict btd_setObject:@[lowPriceStr, highPriceStr] forKey:key];
+            } else {
+                [resultDict btd_setObject:@[@"0"] forKey:key];
+            }
+        } else {
+            if (self.fromType == FHHouseFindPriceFromTypeHelp) {
+                NSMutableArray *priceArray = [[NSMutableArray alloc] init];
+                for (NSNumber *index in self.selectIndexes) {
+                    if (self.configOption.options.count > index.integerValue) {
+                        FHSearchFilterConfigOption *op = self.configOption.options[index.integerValue];
+                        if (op.type.length > 0) {
+                            key = [NSString stringWithFormat:@"%@[]", op.type];
+                        }
+                        if (op.value.length > 0) {
+                            NSData *priceData = [op.value dataUsingEncoding:NSUTF8StringEncoding];
+                            NSArray *prices = [NSJSONSerialization JSONObjectWithData:priceData options:kNilOptions error:nil];
+                            if (prices && [prices isKindOfClass:[NSArray class]]) {
+                                [prices enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+                                    NSString *price = [NSString stringWithFormat:@"%@", obj];
+                                    [priceArray btd_addObject:price];
+                                }];
+                            }
+                        }
+                    }
+                }
+                if (priceArray.count > 0) {
+                    [resultDict btd_setObject:priceArray forKey:key];
+                }
+            }
+        }
+    } else {
+        if (!_configOption) {
+            return resultDict;
+        }
+        
+        //帮我找房区域选择特殊处理，需要支持商圈
+        if (self.tabId == FHSearchTabIdTypeRegion) {
+            NSArray<FHSearchFilterConfigOption *> *options = @[self.configOption];
+            __block NSArray<FHSearchFilterConfigOption *> *itemOptions = options.copy;
+            for (NSNumber *index in self.selectIndexes) {
+                if (itemOptions.count > index.integerValue) {
+                    FHSearchFilterConfigOption *op = itemOptions[index.integerValue];
+                    if (op.value) {
+                        if ([resultDict objectForKey:op.type]) {
+                            //商圈的“不限”选项op.type=district，直接忽略不上报
+                            continue;
+                        }
+                        NSString *key = [NSString stringWithFormat:@"%@[]", op.type];
+                        NSString *value = [NSString stringWithFormat:@"%@", op.value];
+                        [resultDict btd_setObject:@[value] forKey:key];
+                    }
+                    itemOptions = itemOptions[index.integerValue].options;
+                }
+            }
+        } else if (self.tabId == FHSearchTabIdTypeRoom) {
+            NSString *roomKey = @"rootm_num[]";
+            NSMutableArray *roomArr = [[NSMutableArray alloc] init];
+            
+            for (NSNumber *index in self.selectIndexes) {
+                if (self.configOption.options.count > index.integerValue) {
+                    FHSearchFilterConfigOption *op = self.configOption.options[index.integerValue];
+                    if (op.type.length > 0) {
+                        roomKey = [NSString stringWithFormat:@"%@[]", op.type];
+                    }
+                    if (op.value.length > 0) {
+                        NSString *value = [NSString stringWithFormat:@"%@", op.value];
+                        NSData *rootData = [op.value dataUsingEncoding:NSUTF8StringEncoding];
+                        NSArray *rooms = [NSJSONSerialization JSONObjectWithData:rootData options:kNilOptions error:nil];
+                        NSMutableArray *roomSubArr = [[NSMutableArray alloc] init];
+                        if (rooms && [rooms isKindOfClass:[NSArray class]]) {
+                            [rooms enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+                                NSString *room = [NSString stringWithFormat:@"%@", obj];
+                                [roomSubArr btd_addObject:room];
+                            }];
+                            
+                            if (roomSubArr.count > 0) {
+                                [roomArr btd_addObject:roomSubArr];
+                            }
+                        }
+                    }
+                }
+            }
+            
+            [resultDict btd_setObject:roomArr forKey:roomKey];
+        }
+    }
+    
+    return resultDict;
 }
 
 @end
