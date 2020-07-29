@@ -31,6 +31,7 @@
 #import "FHEnvContext.h"
 #import <FHPopupViewCenter/FHPopupViewManager.h>
 #import "FHMessageTopView.h"
+#import "FHMessageEditHelp.h"
 
 @interface FHMessageViewController ()
 
@@ -44,6 +45,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    [FHMessageEditHelp shared].isCanReloadData = YES;
     // Do any additional setup after loading the view.
     self.showenRetryButton = YES;
     self.ttTrackStayEnable = YES;

@@ -6,15 +6,49 @@
 //
 
 #import "FHMessageEditView.h"
+#import "UIColor+Theme.h"
+#import "UIFont+House.h"
+#import "Masonry.h"
+
+@interface FHMessageEditView()
+
+@property (nonatomic, strong) UIButton *deleteButton;
+
+@end
 
 @implementation FHMessageEditView
 
-/*
-// Only override drawRect: if you perform custom drawing.
-// An empty implementation adversely affects performance during animation.
-- (void)drawRect:(CGRect)rect {
-    // Drawing code
+- (instancetype)initWithFrame:(CGRect)frame
+{
+    self = [super initWithFrame:frame];
+    if (self) {
+        [self setupUI];
+    }
+    return self;
 }
-*/
+
+- (void)setupUI {
+    self.deleteButton = [self getButtonWithTitle:@"删除" andTag:1];
+    [self addSubview:_deleteButton];
+    [self.deleteButton mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.bottom.mas_equalTo(0);
+        make.right.mas_equalTo(-10);
+        make.width.mas_equalTo(68);
+    }];
+}
+
+- (UIButton *)getButtonWithTitle:(NSString *)title andTag:(NSInteger)tag {
+    UIButton *btn = [[UIButton alloc] init];
+    [btn setTitle:title forState:UIControlStateNormal];
+    btn.titleLabel.font = [UIFont themeFontRegular:16];
+    [btn setTitleColor:[UIColor themeWhite] forState:UIControlStateNormal];
+    btn.tag = tag;
+    [btn addTarget:self action:@selector(clickBtn:) forControlEvents:UIControlEventTouchUpInside];
+    return btn;
+}
+
+- (void)clickBtn:(UIButton *)btn {
+    
+}
 
 @end

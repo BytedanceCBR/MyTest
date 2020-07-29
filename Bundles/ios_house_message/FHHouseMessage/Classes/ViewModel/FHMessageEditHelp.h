@@ -10,7 +10,9 @@
 
 @interface FHMessageEditHelp : NSObject
 
-@property (weak, nonatomic) FHMessageCell *currentCell;
+@property (nonatomic, weak) FHMessageCell *currentCell;
+
+@property (nonatomic, assign) BOOL isCanReloadData;
 
 + (instancetype)shared;
 

@@ -529,6 +529,7 @@
 }
 
 - (void)panAction:(UIPanGestureRecognizer *)pan {
+    [FHMessageEditHelp shared].isCanReloadData = NO;
     if (![FHMessageEditHelp shared].currentCell) {
         [FHMessageEditHelp shared].currentCell = self;
     }
@@ -548,7 +549,7 @@
     if (self.state == SliderMenuClose && panX >= 0) {
         return;
     }
-    _lastPanStateIsEnd = false;
+    _lastPanStateIsEnd = NO;
     CGFloat offsetX = panX + _currentOffset;
     if (offsetX > 0) {
         offsetX = 0;
@@ -570,7 +571,7 @@
         self.state = SliderMenuSlider;
         [self move:offsetX];
     } else if (pan.state == UIGestureRecognizerStateEnded) {
-        _lastPanStateIsEnd = true;
+        _lastPanStateIsEnd = YES;
         CGPoint speed = [pan velocityInView:self];
         CGFloat time = 0.4;
         if (offsetX < 0.3 * _maxOffset || offsetX < -30) {
@@ -609,14 +610,14 @@
 }
 
 - (void)close {
-    [self openMenu:false time:0.3 springX:3];
+    [self openMenu:false time:0 springX:0];
 }
 
 - (void)addEditView {
     [FHMessageEditHelp shared].currentCell = self;
     if (!_editView) {
-        _editView = [[UIView alloc] init];
-        _editView.backgroundColor = [UIColor yellowColor];
+        _editView = [[FHMessageEditView alloc] init];
+        _editView.backgroundColor = [UIColor themeOrange1];
         _editView.frame = CGRectMake(CGRectGetMaxX(self.backView.frame) - 20, CGRectGetMinY(self.backView.frame), -_maxOffset + 20, self.backView.frame.size.height);
         _editView.layer.cornerRadius = 10;
         [self.contentView insertSubview:_editView belowSubview:self.backView];
@@ -634,9 +635,12 @@
         self.editView.alpha = alpha;
         [self move:moveX + springX];
     } completion:^(BOOL finished) {
+        if (_lastPanStateIsEnd && [[FHMessageEditHelp shared].currentCell isEqual:self]) {
+            [FHMessageEditHelp shared].isCanReloadData = YES;
+        }
         if (self.cancelAnimationCompletion) {
             [self removeAnimations];
-            self.cancelAnimationCompletion = false;
+            self.cancelAnimationCompletion = NO;
             return;
         }
         if (finished) {
