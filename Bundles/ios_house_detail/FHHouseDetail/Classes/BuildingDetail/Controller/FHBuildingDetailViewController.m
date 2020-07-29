@@ -17,9 +17,11 @@
 #import "FHBuildingDetailHeaderCollectionViewCell.h"
 #import "FHBuildingDetailInfoCollectionViewCell.h"
 #import "FHBuildingDetailEmptyFloorCollectionViewCell.h"
+#import "FHBuildingDetailTopImageCollectionViewCell.h"
 #import "FHDetailBaseModel.h"
 #import "FHHouseDetailContactViewModel.h"
 #import "FHBuildingDetailModel.h"
+#import "FHBuildingDetailUtils.h"
 
 @interface FHBuildingDetailViewController ()<UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout>
 
@@ -165,7 +167,7 @@
         make.top.equalTo(self.customNavBarView.mas_bottom);
         make.bottom.mas_equalTo(0);
     }];
-    
+    [self.collectionView registerClass:[FHBuildingDetailTopImageCollectionViewCell class] forCellWithReuseIdentifier:NSStringFromClass([FHBuildingDetailTopImageCollectionViewCell class])];
     [self.collectionView registerClass:[FHBuildingDetailHeaderCollectionViewCell class] forCellWithReuseIdentifier:NSStringFromClass([FHBuildingDetailHeaderCollectionViewCell class])];
     [self.collectionView registerClass:[FHBuildingDetailInfoCollectionViewCell class] forCellWithReuseIdentifier:NSStringFromClass([FHBuildingDetailInfoCollectionViewCell class])];
     [self.collectionView registerClass:[FHBuildingDetailFloorCollectionViewCell class] forCellWithReuseIdentifier:NSStringFromClass([FHBuildingDetailFloorCollectionViewCell class])];
@@ -281,6 +283,12 @@
     [self refreshBottomBar];
     
     NSMutableArray <FHBuildingSectionModel *>*items = [NSMutableArray array];
+    
+    if (self.viewModel.locationModel.buildingImage) {
+        FHBuildingSectionModel *imageSection = [[FHBuildingSectionModel alloc] init];
+        imageSection.sectionType = FHBuildingSectionTypeImage;
+        [items addObject:imageSection];
+    }
     
     if (self.viewModel.buildingDetailModel.data.buildingList.count > self.currentSelectIndex) {
         
@@ -403,6 +411,12 @@
     FHDetailBaseCollectionCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:sectionModel.className forIndexPath:indexPath];
     __weak typeof(self) weakSelf = self;
     switch (sectionModel.sectionType) {
+        case FHBuildingSectionTypeImage: {
+            
+            [cell refreshWithData:self.viewModel.locationModel];
+            
+            break;
+        }
         case FHBuildingSectionTypeInfo: {
             //切换调用
             [cell refreshWithData:self.viewModel.buildingDetailModel];
@@ -468,6 +482,10 @@
     FHBuildingSectionModel *sectionModel = self.viewModel.items[indexPath.section];
     CGFloat width = CGRectGetWidth(collectionView.frame);
     switch (sectionModel.sectionType) {
+        case FHBuildingSectionTypeImage: {
+            return [FHBuildingDetailUtils getTopImageViewSize];
+            break;
+        }
         case FHBuildingSectionTypeInfo: {
             //切换调用
             return CGSizeMake(width , 172 + 20 * 2);
@@ -493,6 +511,14 @@
         case FHBuildingSectionTypeFloor:
             return UIEdgeInsetsMake(20, 15, 20, 15);
             break;
+        case FHBuildingSectionTypeInfo:
+            if (self.viewModel.locationModel.buildingImage) {
+                return UIEdgeInsetsMake(-41, 0, 0, 0); //猜的 先测试
+            } else {
+                return UIEdgeInsetsZero;
+            }
+            
+            break;
         default:
             break;
     }
@@ -506,6 +532,7 @@
 - (CGFloat)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout minimumInteritemSpacingForSectionAtIndex:(NSInteger)section {
     return 0;
 }
+
 
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout referenceSizeForHeaderInSection:(NSInteger)section {
     FHBuildingSectionModel *sectionModel = self.viewModel.items[section];

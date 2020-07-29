@@ -24,6 +24,7 @@ CGFloat const FHBuildingDetailInfoListCellMinimumLineSpacing = 25 + 12;
 
 - (instancetype)initWithFrame:(CGRect)frame {
     if (self = [super initWithFrame:frame]) {
+        self.backgroundColor = [UIColor clearColor];
         UICollectionViewFlowLayout *layout = [[UICollectionViewFlowLayout alloc] init];
         layout.sectionInset = UIEdgeInsetsZero;
         layout.scrollDirection = UICollectionViewScrollDirectionHorizontal;
@@ -32,7 +33,7 @@ CGFloat const FHBuildingDetailInfoListCellMinimumLineSpacing = 25 + 12;
         UICollectionView *collectionView = [[UICollectionView alloc] initWithFrame:self.contentView.bounds collectionViewLayout:layout];
         collectionView.showsVerticalScrollIndicator = NO;
         collectionView.showsHorizontalScrollIndicator = NO;
-        collectionView.backgroundColor = [UIColor themeGray7];
+        collectionView.backgroundColor = [UIColor clearColor];
         collectionView.delegate = self;
         collectionView.dataSource = self;
         collectionView.decelerationRate = UIScrollViewDecelerationRateFast;

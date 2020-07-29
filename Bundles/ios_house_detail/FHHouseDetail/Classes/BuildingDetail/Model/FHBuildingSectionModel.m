@@ -10,7 +10,7 @@
 #import "FHBuildingDetailFloorCollectionViewCell.h"
 #import "FHBuildingDetailHeaderCollectionViewCell.h"
 #import "FHBuildingDetailEmptyFloorCollectionViewCell.h"
-
+#import "FHBuildingDetailTopImageCollectionViewCell.h"
 @implementation FHBuildingSectionModel
 
 - (NSString *)className {
@@ -28,6 +28,9 @@
             break;
         case FHBuildingSectionTypeFloor:
             return NSStringFromClass([FHBuildingDetailFloorCollectionViewCell class]);
+            break;
+        case FHBuildingSectionTypeImage:
+            return NSStringFromClass([FHBuildingDetailTopImageCollectionViewCell class]);
             break;
         default:
             break;

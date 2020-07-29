@@ -8,6 +8,7 @@
 #import <Foundation/Foundation.h>
 #import "FHBuildingDetailViewController.h"
 #import "FHBuildingSectionModel.h"
+#import "FHBuildingDetailModel.h"
 @class FHBuildingDetailModel;
 NS_ASSUME_NONNULL_BEGIN
 
@@ -20,6 +21,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong) FHBuildingDetailModel *buildingDetailModel;
 
 @property (nonatomic, copy) NSArray <FHBuildingSectionModel *>*items;
+
+@property (nonatomic, strong) FHBuildingLocationModel *locationModel;
 
 - (void)startLoadData;
 
