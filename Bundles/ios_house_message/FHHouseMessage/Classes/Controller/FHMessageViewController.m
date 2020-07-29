@@ -120,7 +120,8 @@
 }
 
 - (void)userInfoReload {
-    [_tableView reloadData];
+    [self.viewModel reloadData];
+    //[_tableView reloadData];
 }
 
 - (void)initNavbar {

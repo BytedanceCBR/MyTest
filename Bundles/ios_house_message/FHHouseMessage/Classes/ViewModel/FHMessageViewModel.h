@@ -35,6 +35,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)refreshDataWithType:(NSInteger)tag;
 
+- (void)reloadData; //tableView reload前关闭左滑删除按钮
+
 @end
 
 NS_ASSUME_NONNULL_END

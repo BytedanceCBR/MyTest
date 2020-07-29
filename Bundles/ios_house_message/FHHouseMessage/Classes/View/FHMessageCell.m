@@ -17,6 +17,8 @@
 #import "TIMOMessage.h"
 #import "TIMMessageStoreBridge.h"
 #import "FHShadowLabel.h"
+#import "FHMessageEditView.h"
+#import "FHMessageEditHelp.h"
 
 #define CURRENT_CALENDAR [NSCalendar currentCalendar]
 
@@ -31,6 +33,12 @@
 @property(nonatomic, strong) UILabel *timeLabel;
 @property(nonatomic, strong) UIImageView *msgStateView;
 @property(nonatomic, strong) UIImageView *muteImageView;
+@property (nonatomic, strong) UIPanGestureRecognizer *pan;
+@property (assign, nonatomic) BOOL lastPanStateIsEnd;
+@property (assign, nonatomic) CGFloat currentOffset;
+@property (assign, nonatomic) CGFloat maxOffset;
+@property (assign, nonatomic) BOOL cancelAnimationCompletion;
+@property (nonatomic, strong) FHMessageEditView *editView;
 
 @end
 
@@ -47,6 +55,7 @@
     self = [super initWithStyle:style
                 reuseIdentifier:reuseIdentifier];
     if (self) {
+        _maxOffset = -88;
         [self initUIs];
         self.selectionStyle = UITableViewCellSelectionStyleNone;
     }
@@ -499,5 +508,169 @@
     return [self isSameYearAsDate:[NSDate date] ofDate:date];
 }
 
+//自定义左滑编辑
+- (void)initGestureWithData:(id)data {
+    if ([data isKindOfClass:[IMConversation class]]) {
+        if (!_pan) {
+            _pan = [[UIPanGestureRecognizer alloc]initWithTarget:self action:@selector(panAction:)];
+            _pan.delegate = self;
+            [self.contentView addGestureRecognizer:_pan];
+        }
+    } else {
+        if (_pan) {
+            [self.contentView removeGestureRecognizer:_pan];
+            _pan = nil;
+        }
+        if (_editView) {
+            [self.editView removeFromSuperview];
+            self.editView = nil;
+        }
+    }
+}
+
+- (void)panAction:(UIPanGestureRecognizer *)pan {
+    if (![FHMessageEditHelp shared].currentCell) {
+        [FHMessageEditHelp shared].currentCell = self;
+    }
+//    if (_lastPanStateIsEnd && self.state == SliderMenuSlider && [[FHMessageEditHelp shared].currentCell isEqual:self]) {
+//        _cancelAnimationCompletion = true;
+//        self.currentOffset = 0;
+//        [pan setTranslation:CGPointMake(self.layer.presentationLayer.frame.origin.x, 0) inView:pan.view];
+//        [self move:self.layer.presentationLayer.frame.origin.x];
+//        [self.layer removeAllAnimations];
+//        [self removeAnimations];
+//    }
+    if (![[FHMessageEditHelp shared].currentCell isEqual:self]) {
+        [[FHMessageEditHelp shared].currentCell openMenu:false time:0.35 springX:0];
+        [FHMessageEditHelp shared].currentCell = self;
+    }
+    CGFloat panX = [pan translationInView:pan.view].x;
+    if (self.state == SliderMenuClose && panX >= 0) {
+        return;
+    }
+    _lastPanStateIsEnd = false;
+    CGFloat offsetX = panX + _currentOffset;
+    if (offsetX > 0) {
+        offsetX = 0;
+    }
+    if (!_editView) {
+        [self addEditView];
+    }
+    if (pan.state == UIGestureRecognizerStateBegan) {
+        [self.layer removeAllAnimations];
+        [self removeAnimations];
+    } else if (pan.state == UIGestureRecognizerStateChanged) {
+        if (panX > 0) {
+            if (self.state == SliderMenuOpen) {
+                [self cancelPan];
+                [self openMenu:false time:0.35 springX:3];
+            }
+            return;
+        }
+        self.state = SliderMenuSlider;
+        [self move:offsetX];
+    } else if (pan.state == UIGestureRecognizerStateEnded) {
+        _lastPanStateIsEnd = true;
+        CGPoint speed = [pan velocityInView:self];
+        CGFloat time = 0.4;
+        if (offsetX < 0.3 * _maxOffset || offsetX < -30) {
+            if (offsetX < _maxOffset) {
+                [self openMenu:true time:time springX:3];
+            } else {
+                [self openMenu:true time:time springX:-10];
+            }
+        } else {
+            time = MAX(MIN( ABS(offsetX*1.8/speed.x),time),0.25);
+            [self openMenu:false time:time springX:3];
+        }
+    }
+}
+
+- (BOOL)gestureRecognizerShouldBegin:(UIGestureRecognizer *)gestureRecognizer{
+    if (gestureRecognizer == _pan) {
+        
+        CGFloat panY = [_pan translationInView:gestureRecognizer.view].y;
+        if ( ABS(panY) > 0) {
+            if ([FHMessageEditHelp shared].currentCell) {
+                [[FHMessageEditHelp shared].currentCell openMenu:false time:0.4 springX:0];
+            }
+            return false;
+        }
+    }
+    return true;
+}
+
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer{
+    return true;
+}
+
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldBeRequiredToFailByGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer{
+    return true;
+}
+
+- (void)close {
+    [self openMenu:false time:0.3 springX:3];
+}
+
+- (void)addEditView {
+    [FHMessageEditHelp shared].currentCell = self;
+    if (!_editView) {
+        _editView = [[UIView alloc] init];
+        _editView.backgroundColor = [UIColor yellowColor];
+        _editView.frame = CGRectMake(CGRectGetMaxX(self.backView.frame) - 20, CGRectGetMinY(self.backView.frame), -_maxOffset + 20, self.backView.frame.size.height);
+        _editView.layer.cornerRadius = 10;
+        [self.contentView insertSubview:_editView belowSubview:self.backView];
+    }
+}
+
+- (void)openMenu:(BOOL)open time:(NSTimeInterval)time springX:(CGFloat)springX {
+    CGFloat moveX = open ? _maxOffset : 0;
+    CGFloat alpha = open ? 1 : 0;
+    self.state = SliderMenuSlider;
+    [self.layer removeAllAnimations];
+    [self removeAnimations];
+    UIViewAnimationOptions options = UIViewAnimationOptionAllowUserInteraction | UIViewAnimationOptionBeginFromCurrentState | UIViewAnimationOptionOverrideInheritedDuration |  UIViewAnimationOptionCurveEaseOut;
+    [UIView animateWithDuration:time delay:0 options:options animations:^{
+        self.editView.alpha = alpha;
+        [self move:moveX + springX];
+    } completion:^(BOOL finished) {
+        if (self.cancelAnimationCompletion) {
+            [self removeAnimations];
+            self.cancelAnimationCompletion = false;
+            return;
+        }
+        if (finished) {
+            if (springX != 0) {
+                [UIView animateWithDuration:0.3 delay:0 options:options animations:^{
+                    [self move:moveX];
+                } completion:nil];
+            }
+            if (open) {
+                self.state = SliderMenuOpen;
+                self.currentOffset = self.maxOffset;
+            } else {
+                self.state = SliderMenuClose;
+                self.currentOffset = 0;
+                if (self.editView) {
+                    [self.editView removeFromSuperview];
+                    self.editView = nil;
+                }
+            }
+        }
+    }];
+}
+
+- (void)removeAnimations {
+    [_editView.layer removeAllAnimations];
+}
+
+- (void)cancelPan{
+    _pan.enabled = false;
+    _pan.enabled = true;
+}
+
+- (void)move:(CGFloat)x {
+    self.frame = CGRectMake(x, self.frame.origin.y, self.frame.size.width, self.frame.size.height);
+}
 
 @end
