@@ -911,6 +911,7 @@
 				FCC852F64C0273F226C6A461 /* [CP] Copy Pods Resources */,
 				2B1A0A7624C04B61009D40FF /* Embed Frameworks */,
 				2B53A10F24C59A2C00923B3C /* ShellScript */,
+				61666515D15F6BB0A4F59DE2 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -1292,7 +1293,7 @@
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-NewsLiteInHouse/Pods-NewsLiteInHouse-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		61C60288D06486DFDE078DAD /* [CP] Embed Pods Frameworks */ = {
+		61666515D15F6BB0A4F59DE2 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (

@@ -1415,6 +1415,8 @@ typedef NS_ENUM(NSInteger, SSCommentType)  {
 + (BOOL)enableRecordVoiceSegment;
 // 是否开启IM模块在线监控逻辑开关
 + (BOOL)enableIMOnlineMonitorLogic;
+//  是否开启IM语音通话开关
++ (BOOL)enableVoIPAudioCall;
 @end
 
 
