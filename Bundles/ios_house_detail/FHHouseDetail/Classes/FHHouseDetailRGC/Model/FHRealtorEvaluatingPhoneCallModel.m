@@ -30,8 +30,10 @@
 {
     self = [super init];
     if (self) {
-        _houseType = houseType;
-        _houseId = houseId;
+        if (houseType &&houseId ) {
+            _houseType = houseType;
+            _houseId = houseId;
+        }
         _rnIsUnAvalable = NO;
     }
     return self;
@@ -42,8 +44,10 @@
     
     // IM 透传数据模型
     FHAssociateIMModel *associateIMModel = [FHAssociateIMModel new];
-    associateIMModel.houseId = self.houseId;
-    associateIMModel.houseType = self.houseType;
+    if (self.houseType && self.houseId) {
+        associateIMModel.houseId = self.houseId;
+        associateIMModel.houseType = self.houseType;
+    }
     associateIMModel.associateInfo = realtorModel.associateInfo;
     if (extra && extra[@"bizTrace"]) {
         associateIMModel.extraInfo = @{@"biz_trace":extra[@"bizTrace"]};
@@ -147,10 +151,29 @@
         return nil;
     }
     
+    NSDictionary *settings = [FHRealtorEvaluatingPhoneCallModel fhSettings];
+     BOOL openNewRealtor = settings[@"f_new_realtor_detail"];
+    if (openNewRealtor) {
+            NSURL *openUrl = [NSURL URLWithString:[NSString stringWithFormat:@"sslocal://new_realtor_detail"]];
+          NSMutableDictionary *info = @{}.mutableCopy;
+          info[@"title"] = @"经纪人主页";
+          info[@"realtor_id"] = contactPhone.realtorId;
+          info[@"delegate"] = self;
+          info[@"tracer"] = self.tracerDict;
+        if (self.houseId && self.houseType) {
+            info[@"house_id"] = _houseId;
+            info[@"house_type"] = @(_houseType);
+        }
+          TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:info];
+          TTRouteObject *routeObj = [[TTRoute sharedRoute] routeObjWithOpenURL:openUrl userInfo:userInfo];
+          return routeObj;
+    }
+    
+    
     if (![FHIESGeckoManager isHasCacheForChannel:@"f_realtor_detail"] && !isOpen) {
         return nil;
     }
-    
+
     NSString * host = [FHURLSettings baseURL] ?: @"https://i.haoduofangs.com";
     //    NSString *host = @"http://10.1.15.29:8889";
     NSURL *openUrl = [NSURL URLWithString:[NSString stringWithFormat:@"sslocal://realtor_detail?realtor_id=%@",contactPhone.realtorId]];
@@ -174,7 +197,7 @@
             NSDictionary *logPbDict = [NSJSONSerialization JSONObjectWithData:logPbData options:kNilOptions error:nil];
             dict[@"log_pb"] = logPbDict;
         }
-        
+
     }
     dict[@"search_id"] = self.tracerDict[@"search_id"] ? : @"be_null";
     dict[@"origin_search_id"] = self.tracerDict[@"origin_search_id"] ? : @"be_null";
@@ -215,29 +238,6 @@
     [imdic setValue:contactPhone.realtorId forKey:@"target_user_id"];
     [imdic setValue:contactPhone.realtorName forKey:@"chat_title"];
     imdic[@"source"] = @"app_realtor_mainpage";
-//    imdic[kFHCluePage] = @(FHClueIMPageTypeCExpertDetail);// todo zjing
-//    imdic[kFHClueEndpoint] = @(FHClueEndPointTypeC);
-//    NSURL *url = [NSURL URLWithString:contactPhone.realtorDetailUrl];
-//    if (url) {
-//        NSURLComponents* components = [NSURLComponents componentsWithURL:url resolvingAgainstBaseURL:NO];
-//        NSMutableArray<NSURLQueryItem *> *queryItems = [components.queryItems mutableCopy];
-//        NSURLQueryItem *imQueryItem;
-//        for(NSURLQueryItem *queryItem in components.queryItems){
-//            if([queryItem.name isEqualToString:@"im_params"]){
-//                imQueryItem = queryItem;
-//                break;
-//            }
-//        }
-//        if (imQueryItem.value.length > 0) {
-//            NSError *err;
-//            NSString *imParamStr = [imQueryItem.value stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
-//            NSData *jsondata = [imParamStr dataUsingEncoding:NSUTF8StringEncoding];
-//            NSDictionary *dic = [NSJSONSerialization JSONObjectWithData:jsondata options:NSJSONReadingMutableContainers error:&err];
-//            if (!err && dic) {
-//                [imdic addEntriesFromDictionary:dic];
-//            }
-//        }
-//    }
     NSString *imParams = nil;
     NSError *imParseError = nil;
     NSData *imJsonData = [NSJSONSerialization dataWithJSONObject:imdic options:0 error:&imParseError];
@@ -253,7 +253,7 @@
     } else {
         jumpUrl = [NSString stringWithFormat:@"%@&report_params=%@",realtorDeUrl,reportParams ? : @""];
     }
-    //    jumpUrl = [NSString stringWithFormat:@"%@/f100/client/realtor_detail?realtor_id=%@&report_params=%@&im_params=%@",host,contactPhone.realtorId,reportParams ? : @"", imParams ?: @""];
+
     NSMutableDictionary *info = @{}.mutableCopy;
     info[@"url"] = jumpUrl;
     info[@"title"] = @"经纪人主页";
@@ -272,11 +272,11 @@
         dict[@"page_type"] = @"realtor_detail";
         BOOL islogin = [[TTAccount sharedAccount] isLogin];
         [imdic setValue:islogin ? @"1" : @"0" forKey:@"is_login"];
-        
+
         NSString *openUrlRnStr = [NSString stringWithFormat:@"sslocal://react?module_name=FHRNAgentDetailModule_home&realtorId=%@&can_multi_preload=%ld&channelName=f_realtor_detail&debug=0&report_params=%@&im_params=%@&bundle_name=%@&is_login=%@",contactPhone.realtorId,isPre ? 1 : 0,[FHUtils getJsonStrFrom:dict],[FHUtils getJsonStrFrom:imdic],@"agent_detail.bundle",islogin ? @"1" : @"0"];
-        
+
         NSURL *openUrlRn = [NSURL URLWithString:openUrlRnStr];
-        
+
         TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:info];
         TTRouteObject *routeObj = [[TTRoute sharedRoute] routeObjWithOpenURL:openUrlRn userInfo:userInfo];
         if (isPre) {
@@ -334,46 +334,4 @@
     }
 }
 
-//- (void)licenseActionWithPhone:(FHFeedUGCCellRealtorModel *)contactPhone
-//{
-//    NSMutableArray *images = @[].mutableCopy;
-//    NSMutableArray *imageTitles = @[].mutableCopy;
-//
-//    // "营业执照"
-//    if (contactPhone.certificationPage.length > 0) {
-//        TTImageInfosModel *model = [[TTImageInfosModel alloc] initWithURL:contactPhone.certificationPage];
-//        model.imageType = TTImageTypeLarge;
-//        if (model) {
-//            [images addObject:model];
-//        }
-//        [imageTitles addObject:@"营业执照"];
-//    }
-//    // "从业人员信息卡"
-//    if (contactPhone.certificate.length > 0) {
-//        TTImageInfosModel *model = [[TTImageInfosModel alloc] initWithURL:contactPhone.certificate];
-//        model.imageType = TTImageTypeLarge;
-//        if (model) {
-//            [images addObject:model];
-//        }
-//        [imageTitles addObject:@"从业人员信息卡"];
-//    }
-//    if (images.count == 0) {
-//        return;
-//    }
-//
-//    TTPhotoScrollViewController *vc = [[TTPhotoScrollViewController alloc] init];
-//    vc.dragToCloseDisabled = YES;
-//    vc.mode = PhotosScrollViewSupportBrowse;
-//    vc.startWithIndex = 0;
-//    vc.imageInfosModels = images;
-//    vc.imageTitles = imageTitles;
-//
-//    UIImage *placeholder = [UIImage imageNamed:@"default_image"];
-//    NSMutableArray *placeholders = [[NSMutableArray alloc] initWithCapacity:images.count];
-//    for (NSInteger i = 0 ; i < images.count; i++) {
-//        [placeholders addObject:placeholder];
-//    }
-//    vc.placeholders = placeholders;
-//    [vc presentPhotoScrollView];
-//}
 @end

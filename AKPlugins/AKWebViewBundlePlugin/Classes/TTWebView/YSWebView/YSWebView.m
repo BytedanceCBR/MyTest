@@ -182,12 +182,22 @@ YSWebViewNavigationType mapUIWebViewNavigationTypeToYSWebViewNavigationType(UIWe
     }
 }
 
++(WKProcessPool *)sharedProcessPool
+{
+    static WKProcessPool *pool = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        pool = [[WKProcessPool alloc] init];
+    });
+    return pool;
+}
+
 - (void)configureWKWebView {
     
     //更改configuration 由单例为每次创建，以使得每次能够使用BDNativeComponents
     WKWebViewConfiguration *configuration = [[WKWebViewConfiguration alloc] init];
     configuration.userContentController = [[WKUserContentController alloc] init];
-    configuration.processPool = [[WKProcessPool alloc] init];
+    configuration.processPool = [self.class sharedProcessPool];
     
     _webViewWK =  [[TTWKWebView alloc] initWithFrame:self.bounds configuration:configuration];//[[TTWKWebView alloc] initSharedConfigurationViewWithFrame:self.bounds];
     _webViewWK.configuration.allowsInlineMediaPlayback = YES;

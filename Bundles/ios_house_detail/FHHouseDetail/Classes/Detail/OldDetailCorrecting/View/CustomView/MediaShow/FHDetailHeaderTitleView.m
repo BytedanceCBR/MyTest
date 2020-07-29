@@ -13,6 +13,7 @@
 #import "UILabel+House.h"
 #import "UIColor+Theme.h"
 #import "FHDetailTopBannerView.h"
+#import "FHDetailFeedbackButton.h"
 #import <FHHouseBase/UIImage+FIconFont.h>
 
 @interface FHDetailHeaderTitleView ()
@@ -23,6 +24,7 @@
 @property (nonatomic, weak) UILabel *addressLab;
 @property (nonatomic, weak) UILabel *totalPirce;//仅户型详情页x展示
 @property (nonatomic, weak) UIControl *priceAskView;
+@property (nonatomic, weak) FHDetailFeedbackButton *feedbackButton;
 
 @property (nonatomic, strong) FHDetailTopBannerView *topBanner;
 
@@ -102,6 +104,15 @@
     return _addressLab;
 }
 
+- (FHDetailFeedbackButton *)feedbackButton {
+    if (!_feedbackButton) {
+        FHDetailFeedbackButton *button = [[FHDetailFeedbackButton alloc] init];
+        [self addSubview:button];
+        _feedbackButton = button;
+    }
+    return _feedbackButton;
+}
+
 - (UIButton *)mapBtn {
     if (!_mapBtn) {
         UIButton *mapBtn = [[UIButton alloc]init];
@@ -142,7 +153,7 @@
     label.textAlignment = NSTextAlignmentCenter;
     label.backgroundColor = bacColor;
     label.textColor = textColor;
-    label.layer.cornerRadius = 1;
+    label.layer.cornerRadius = 2;
     label.layer.masksToBounds = YES;
     label.text = text;
     label.font = [UIFont themeFontRegular:12];
@@ -413,6 +424,16 @@
                 make.top.mas_equalTo(self.topBanner.mas_bottom).mas_offset(30);
                 make.height.mas_offset(tagHeight);
             }];
+            //1.0.3把反馈按钮移到此处
+            [self.feedbackButton mas_makeConstraints:^(MASConstraintMaker *make) {
+                make.centerY.mas_equalTo(self.tagBacView);
+                make.height.mas_equalTo(16);
+                make.right.mas_equalTo(-31);
+                make.width.mas_equalTo(46);
+            }];
+            FHDetailOldDataModel *ershouData = [(FHDetailOldModel *)self.baseViewModel.detailData data];
+            [self.feedbackButton updateWithDetailTracerDic:self.baseViewModel.detailTracerDic.copy listLogPB:self.baseViewModel.listLogPB houseData:ershouData reportUrl:model.reportUrl];
+            
             [self.nameLabel mas_makeConstraints:^(MASConstraintMaker *make) {
                 make.left.mas_equalTo(self).offset(31);
                 make.right.mas_equalTo(self).offset(-35);
@@ -458,9 +479,12 @@
         if (self.model.housetype == FHHouseTypeNewHouse) {
             inset = 4;
         }
-        CGFloat itemWidth = itemSize.width + 18;
+        CGFloat itemWidth = itemSize.width + 10;
         maxWidth += itemWidth + inset;
         CGFloat tagWidth = [UIScreen mainScreen].bounds.size.width - 30;
+        if (model.housetype == FHHouseTypeSecondHandHouse) {
+            tagWidth -= 46;
+        }
         if (maxWidth >= tagWidth) {
             *stop = YES;
         }else {

@@ -43,6 +43,9 @@
 #import "FHMapAreaHouseListViewController.h"
 #import <FHHouseBase/FHSearchChannelTypes.h>
 #import <TTUIWidget/TTNavigationController.h>
+#import "FHHouseOpenURLUtil.h"
+#import <NSDictionary+TTAdditions.h>
+#import "FHMapSimpleNavbar.h"
 
 #define kTipDuration 3
 
@@ -681,7 +684,7 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
                     SHOW_TOAST(@"网络异常");
                 }
                 strongSelf->onSaleHouseCount = 0;
-                [strongSelf.bottomBar showDrawLine:@"区域内共找到0套房源" showIndicator:NO];
+                [strongSelf.bottomBar showDrawLine:@"0套房源" withNum:0 showIndicator:NO];
                 [[FHMainManager sharedInstance] showToast:@"房源请求失败" duration:2];
                 if ([TTReachability isNetworkConnected]) {
                     [[HMDTTMonitor defaultManager] hmdTrackService:@"map_house_request_failed" attributes:@{@"message":error.domain?:@""}];
@@ -693,8 +696,9 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
         }
         if (showTip && wself.showMode == FHMapSearchShowModeMap) {
             NSString *tip = model.tips;
-            if (tip) {
-                CGFloat topY = [wself.viewController topBarBottom] + 14 ;
+            if (tip && [tip isKindOfClass:[NSString class]] && tip.length > 0) {
+//                CGFloat topY = [wself.viewController topBarBottom] + 14 ;
+                CGFloat topY = [UIScreen mainScreen].bounds.size.height - 100;
                 [wself.tipView showIn:wself.viewController.view at:CGPointMake(wself.viewController.view.width/2, topY) content:tip duration:kTipDuration above:wself.viewController.navBarView];
             }
         }
@@ -727,10 +731,20 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
             [wself addEnterMapLog];
         }
         if (wself.showMode == FHMapSearchShowModeDrawLine) {
-            [wself.bottomBar showDrawLine:[NSString stringWithFormat:@"区域内共找到%ld套房源",strongSelf->onSaleHouseCount] showIndicator:strongSelf->onSaleHouseCount > 0];
+            [wself.bottomBar showDrawLine:[NSString stringWithFormat:@"%ld套房源",strongSelf->onSaleHouseCount] withNum:strongSelf->onSaleHouseCount showIndicator:strongSelf->onSaleHouseCount > 0];
         }
+        NSDictionary *urlParams = [FHHouseOpenURLUtil queryDict:model.mapFindHouseOpenUrl];
+         CLLocationCoordinate2D moveCenter = CLLocationCoordinate2DMake([urlParams tt_floatValueForKey:@"center_latitude"], [urlParams tt_floatValueForKey:@"center_longitude"]);
+        CGFloat zoomLevel = [urlParams tt_floatValueForKey:@"resize_level"];
+        
         //handle open url
         [wself updateBubble:model.mapFindHouseOpenUrl];
+        
+        if (moveCenter.latitude != 0 && moveCenter.longitude != 0 && zoomLevel) {
+            [self.mapView setCenterCoordinate:moveCenter animated:YES];
+            [self.mapView setZoomLevel:zoomLevel animated:YES]; //atP
+        }
+
     }];
     _requestMapLevel = _mapView.zoomLevel;
     _requestHouseTask = task;
@@ -1267,14 +1281,15 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
         MACircleRenderer *accuracyCircleRenderer = [[MACircleRenderer alloc] initWithCircle:overlay];
 //        accuracyCircleRenderer.lineWidth    = 1.f;
 //        accuracyCircleRenderer.strokeColor  = RGB(41, 156 ,255 );
-        accuracyCircleRenderer.fillColor    = [[UIColor themeRed1] colorWithAlphaComponent:0.3];
+        accuracyCircleRenderer.fillColor = RGBA(0xfe, 0x55, 0x00,0.3);
+//        accuracyCircleRenderer.fillColor    = [[UIColor themeRed1] colorWithAlphaComponent:0.3];
         return accuracyCircleRenderer;
     } else if ([overlay isKindOfClass:[MAPolygon class]]) {
         
         MAPolygonRenderer *polygonRenderer = [[MAPolygonRenderer alloc] initWithPolygon:overlay];
-        polygonRenderer.lineWidth   = 6.f;
-        polygonRenderer.strokeColor = [UIColor themeOrange4];
-        polygonRenderer.fillColor   = RGBA(0xff, 0x96, 0x29,0.1);
+        polygonRenderer.lineWidth   = 10.f;
+        polygonRenderer.strokeColor = [UIColor themeOrange1];
+        polygonRenderer.fillColor   = RGBA(0xfe, 0x55, 0x00,0.1);
         
         return polygonRenderer;
     }else if ([overlay isKindOfClass:[MAPolyline class]]){
@@ -1502,8 +1517,12 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
             [showTyeps addObject:@(FHMapSearchSideBarItemTypeCircle)];
         }
         
+        if(self.showMode == FHMapSearchShowModeDrawLine){
+            [self.simpleNavBar updateCicleBtn:showCircle];
+        }
+        
         [showTyeps addObject:@(FHMapSearchSideBarItemTypeFilter)];
-        [showTyeps addObject:@(FHMapSearchSideBarItemTypeList)];
+//        [showTyeps addObject:@(FHMapSearchSideBarItemTypeList)];
         
         types = showTyeps;
         
@@ -1532,7 +1551,7 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
     //move annotationview to center
     CLLocationCoordinate2D center = CLLocationCoordinate2DMake(model.centerLatitude.floatValue, model.centerLongitude.floatValue);
     CGPoint annotationViewPoint = [self.mapView convertCoordinate:center toPointToView:self.mapView];
-    CGPoint destCenterPoint = CGPointMake(self.mapView.width/2, self.mapView.height/6);
+    CGPoint destCenterPoint = CGPointMake(self.mapView.width/2, self.mapView.height/4);
     CGPoint currentCenterPoint = CGPointMake(self.mapView.width/2, self.mapView.height/2);
     CGPoint toMovePoint = CGPointMake(annotationViewPoint.x - destCenterPoint.x + currentCenterPoint.x, annotationViewPoint.y - destCenterPoint.y + currentCenterPoint.y);
     toMovePoint.y -= 18;//annotationview height/2
@@ -1862,7 +1881,7 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
     }else{
         SHOW_TOAST(@"网络异常");
         self->onSaleHouseCount = 0;
-        [self.bottomBar showDrawLine:@"区域内共找到0套房源" showIndicator:NO];
+        [self.bottomBar showDrawLine:@"0套房源" withNum:0 showIndicator:NO];
     }
     
 }
@@ -1980,6 +1999,19 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
         self.drawMaskView.hidden = NO;
     }];
     [[NSUserDefaults standardUserDefaults] setBool:YES forKey:showedGuide];
+}
+
+-(void)reDrawMapCircle
+{
+    CGFloat zoomLevel = self.mapView.zoomLevel;
+    BOOL showCircle = (self.configModel.houseType == FHHouseTypeSecondHandHouse) && (zoomLevel >= 13);
+    if (!showCircle) {
+        [[ToastManager manager] showToast:@"请放大地图后使用画圈找房"];
+        return;
+    }
+    
+    [self.mapView removeOverlay:self.drawLayer];
+    [self chooseDrawLine];
 }
 
 //退出画圈找房

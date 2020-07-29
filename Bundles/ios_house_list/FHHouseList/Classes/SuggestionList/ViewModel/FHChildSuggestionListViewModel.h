@@ -37,6 +37,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)requestDeleteHistoryByHouseType:(NSString *)houseType;
 - (void)requestSugSubscribe:(NSInteger)cityId houseType:(NSInteger)houseType;
 - (void)reloadHistoryTableView;
+- (void)viewWillDisappear;
 @end
 
 NS_ASSUME_NONNULL_END
