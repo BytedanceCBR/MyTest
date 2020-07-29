@@ -2140,11 +2140,10 @@ typedef NS_ENUM(NSUInteger,TTTabbarTipViewType){
 //}
 
 - (void)showSecondTabRedDots {
-    //判断条件 1、不在邻里tab 2、关注页面有新内容 或者 有关注页面有新消息
+    //判断条件 1、不在邻里tab 2、关注页面有新内容
     if(![[self lastTabIdentifier] isEqualToString:kFHouseFindTabKey]){
         BOOL hasNew = [FHUGCConfig sharedInstance].ugcFocusHasNew;
-        FHUnreadMsgDataUnreadModel *model = [FHMessageNotificationTipsManager sharedManager].tipsModel;
-        if ((model && [model.unread integerValue] > 0) || hasNew) {
+        if (hasNew) {
             [FHEnvContext showFindTabRedDots];
         }else{
             [FHEnvContext hideFindTabRedDots];

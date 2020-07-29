@@ -78,7 +78,7 @@
     if(!self.isNewDiscovery){
         [self onFocusHaveNewContents];
     }else{
-        [self onCommunityHaveNewContents];
+//        [self onCommunityHaveNewContents];
     }
 
     self.isFirstLoad = YES;
