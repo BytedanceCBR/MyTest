@@ -28,7 +28,7 @@
 {
     CGFloat height = TOP_MARGIN;
     
-    UIFont *font = [UIFont themeFontRegular:12];
+    UIFont *font = [UIFont themeFontRegular:14];
     height += [title boundingRectWithSize:CGSizeMake([[UIScreen mainScreen]bounds].size.width - 2*HOR_MARGIN, INT_MAX) options:NSStringDrawingUsesFontLeading attributes:@{NSFontAttributeName:font} context:nil].size.height;
     
     height = ceil(height) + CONTENT_VER_MARGIN + 19;
@@ -42,7 +42,7 @@
     if (self) {
         _contentLabel = [[UILabel alloc] init];
         _contentLabel.numberOfLines = 0;
-        _contentLabel.font = [UIFont themeFontRegular:12];
+        _contentLabel.font = [UIFont themeFontRegular:14];
         _contentLabel.textColor = [UIColor themeGray3];
         _contentLabel.preferredMaxLayoutWidth = CGRectGetWidth([[UIScreen mainScreen]bounds]) - 2*HOR_MARGIN;
         

@@ -328,6 +328,7 @@
         case UIGestureRecognizerStateEnded:
         case UIGestureRecognizerStateCancelled:
         {
+            //之前没有判断加速度，完全使用绝对位置进行判断是不太合理的
             CGFloat yVelociy = [pan velocityInView:self].y;
             if (yVelociy/1000.0 > 0.3) {
                 [self addPopClickLog:@"cancel"];
