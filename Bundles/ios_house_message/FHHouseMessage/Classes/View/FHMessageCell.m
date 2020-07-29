@@ -521,10 +521,7 @@
             [self.contentView removeGestureRecognizer:_pan];
             _pan = nil;
         }
-        if (_editView) {
-            [self.editView removeFromSuperview];
-            self.editView = nil;
-        }
+        [self removeEditView];
     }
 }
 
@@ -624,6 +621,16 @@
     }
 }
 
+- (void)removeEditView {
+    if (self.editView) {
+        for (UIView *view in self.editView.subviews) {
+            [view removeFromSuperview];
+        }
+        [self.editView removeFromSuperview];
+        self.editView = nil;
+    }
+}
+
 - (void)openMenu:(BOOL)open time:(NSTimeInterval)time springX:(CGFloat)springX {
     CGFloat moveX = open ? _maxOffset : 0;
     CGFloat alpha = open ? 1 : 0;
@@ -635,7 +642,7 @@
         self.editView.alpha = alpha;
         [self move:moveX + springX];
     } completion:^(BOOL finished) {
-        if (_lastPanStateIsEnd && [[FHMessageEditHelp shared].currentCell isEqual:self]) {
+        if (_lastPanStateIsEnd && [[FHMessageEditHelp shared].currentCell isEqual:self] && !open) {
             [FHMessageEditHelp shared].isCanReloadData = YES;
         }
         if (self.cancelAnimationCompletion) {
@@ -655,10 +662,7 @@
             } else {
                 self.state = SliderMenuClose;
                 self.currentOffset = 0;
-                if (self.editView) {
-                    [self.editView removeFromSuperview];
-                    self.editView = nil;
-                }
+                [self removeEditView];
             }
         }
     }];

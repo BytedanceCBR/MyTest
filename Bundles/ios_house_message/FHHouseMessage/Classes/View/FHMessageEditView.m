@@ -12,7 +12,7 @@
 
 @interface FHMessageEditView()
 
-@property (nonatomic, strong) UIButton *deleteButton;
+@property (nonatomic, weak) UIButton *deleteButton;
 
 @end
 
@@ -28,8 +28,9 @@
 }
 
 - (void)setupUI {
-    self.deleteButton = [self getButtonWithTitle:@"删除" andTag:1];
-    [self addSubview:_deleteButton];
+    UIButton *btn = [self getButtonWithTitle:@"删除" andTag:1];
+    [self addSubview:btn];
+    self.deleteButton = btn;
     [self.deleteButton mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.bottom.mas_equalTo(0);
         make.right.mas_equalTo(-10);

@@ -346,10 +346,10 @@
 //}
 
 - (void)reloadData {
+    [FHMessageEditHelp close];
     if (![FHMessageEditHelp shared].isCanReloadData) {
         return;
     }
-    [FHMessageEditHelp close];
     [self.tableView reloadData];
 }
 
