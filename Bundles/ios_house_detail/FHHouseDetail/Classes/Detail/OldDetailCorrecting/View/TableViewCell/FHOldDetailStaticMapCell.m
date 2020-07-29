@@ -71,7 +71,7 @@
         _centerAnnotation = [[FHStaticMapAnnotation alloc] init];
         _centerAnnotation.extra = @"center_annotation";
         
-        _nameArray = @[@"交通", @"购物", @"医院", @"教育"];
+        _nameArray = @[@"交通", @"教育", @"医疗", @"生活"];
         _countCategoryDict = [NSMutableDictionary new];
         _poiAnnotations = [NSMutableDictionary new];
         _poiSearchStatus = [NSMutableDictionary dictionary];
@@ -201,7 +201,7 @@
 
 - (void)setUpSegmentedControl {
     _segmentedControl = [FHSegmentControl new];
-    _segmentedControl.sectionTitles = @[@"交通(0)", @"购物(0)", @"医院(0)", @"教育(0)"];
+    _segmentedControl.sectionTitles = @[@"交通(0)", @"教育(0)", @"医疗(0)", @"生活(0)"];
     _segmentedControl.selectionIndicatorSize = CGSizeMake(12, 3);
     _segmentedControl.selectionIndicatorCornerRadius = 1.5;
     _segmentedControl.selectionIndicatorColor = [UIColor themeGray1];
@@ -435,12 +435,41 @@
         }
         AMapPOIAroundSearchRequest *requestPoi = [AMapPOIAroundSearchRequest new];
         
-        requestPoi.keywords = [categoryName isEqualToString:@"交通"] ? @"公交地铁" : categoryName;
+        requestPoi.keywords = [self keyWordConver:categoryName];
         requestPoi.location = [AMapGeoPoint locationWithLatitude:center.latitude longitude:center.longitude];
         requestPoi.requireExtension = YES;
+        requestPoi.radius = 2000;
         requestPoi.requireSubPOIs = NO;
         
         [self.searchApi AMapPOIAroundSearch:requestPoi];
+    }
+}
+
+- (NSString *)keyWordConver:(NSString *)category{
+    if([category isEqualToString:@"交通"]){
+        return @"公交地铁";
+    }else if([category isEqualToString:@"教育"]){
+        return @"中学|小学|幼儿园";
+    }else if([category isEqualToString:@"医疗"]){
+        return @"医院|卫生院|急救中心";
+    }else if([category isEqualToString:@"生活"]){
+        return @"购物|银行";
+    }else{
+        return @"公交地铁";
+    }
+}
+
+- (NSString *)keyWordConverReverse:(NSString *)category{
+    if([category isEqualToString:@"公交地铁"]){
+        return @"交通";
+    }else if([category isEqualToString:@"中学|小学|幼儿园"]){
+        return @"教育";
+    }else if([category isEqualToString:@"医院|卫生院|急救中心"]){
+        return @"医疗";
+    }else if([category isEqualToString:@"购物|银行"]){
+        return @"生活";
+    }else{
+        return @"交通";
     }
 }
 
@@ -597,8 +626,7 @@
         }
     }
     AMapPOIKeywordsSearchRequest *searchRequest = (AMapPOIKeywordsSearchRequest *) request;
-    NSString *category = [searchRequest.keywords isEqualToString:@"公交地铁"] ? @"交通" : searchRequest.keywords;
-    
+    NSString *category = [self keyWordConverReverse:searchRequest.keywords];
     NSMutableArray *annotations = [NSMutableArray array];
     FHStaticMapAnnotation *annotation = nil;
     for (NSUInteger i = 0; i < poiArray.count; i++) {

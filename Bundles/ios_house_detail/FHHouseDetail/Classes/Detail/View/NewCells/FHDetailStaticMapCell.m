@@ -121,7 +121,7 @@
         _centerAnnotation = [[FHStaticMapAnnotation alloc] init];
         _centerAnnotation.extra = @"center_annotation";
 
-        _nameArray = @[@"交通", @"购物", @"医院", @"教育"];
+        _nameArray = @[@"交通", @"教育", @"医疗", @"生活"];
         _countCategoryDict = [NSMutableDictionary new];
         _poiAnnotations = [NSMutableDictionary new];
         _poiSearchStatus = [NSMutableDictionary dictionary];
@@ -249,7 +249,7 @@
 
 - (void)setUpSegmentedControl {
     _segmentedControl = [HMSegmentedControl new];
-    _segmentedControl.sectionTitles = @[@"交通(0)", @"购物(0)", @"医院(0)", @"教育(0)"];
+    _segmentedControl.sectionTitles = @[@"交通(0)", @"教育(0)", @"医疗(0)", @"生活(0)"];
     _segmentedControl.selectionIndicatorHeight = 2;
     _segmentedControl.selectionIndicatorColor = [UIColor themeOrange1];
     _segmentedControl.selectionStyle = HMSegmentedControlSelectionStyleTextWidthStripe;
