@@ -701,10 +701,17 @@
         
         
         FHFeedUGCCellUserModel *user = [[FHFeedUGCCellUserModel alloc] init];
-        user.name = realtor.realtorName;
-        user.avatarUrl = realtor.avatarUrl;
-        user.realtorId = realtor.realtorId;
-        user.firstBizType = realtor.firstBizType;
+
+        if (realtor.realtorId.length>0) {
+                    user.name = realtor.realtorName;
+            user.avatarUrl = realtor.avatarUrl;
+            user.realtorId = realtor.realtorId;
+            user.firstBizType = realtor.firstBizType;
+        }else {
+            user.name = model.rawData.user.info.name;
+            user.avatarUrl = model.rawData.user.info.avatarUrl;
+        }
+
         user.userId = model.rawData.user.info.userId;
         user.schema = model.rawData.user.info.schema;
         cellModel.user = user;
