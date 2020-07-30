@@ -475,7 +475,7 @@
             }
         }
         [self addEnterCategoryLog:position];
-        [self.pagingView scrollToIndex:toIndex withAnimation:NO];
+        [self.pagingView scrollToIndex:toIndex withAnimation:YES];
     }
 }
 
