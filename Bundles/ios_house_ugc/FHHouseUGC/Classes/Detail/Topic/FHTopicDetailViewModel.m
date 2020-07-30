@@ -206,78 +206,84 @@
             } else {
                 // 上拉加载loadmore
             }
+            [wSelf processLoadingState];
         } else {
             if ([model isKindOfClass:[FHTopicFeedListModel class]]) {
                 wSelf.hasFeedListData = YES;
                 FHTopicFeedListModel *feedList = (FHTopicFeedListModel *)model;
-                
-                // 数据转模型 添加数据
-                NSMutableArray *tempArray = [NSMutableArray new];
-                [feedList.data enumerateObjectsUsingBlock:^(FHTopicFeedListDataModel*  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-                    if ([obj isKindOfClass:[FHTopicFeedListDataModel class]]) {
-                        FHFeedUGCCellModel *cellModel = [FHFeedUGCCellModel modelFromFeed:obj.content];
-                        cellModel.categoryId = self.categoryName;
-                        if (cellModel) {
-                            [tempArray addObject:cellModel];
+                dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
+                    // 数据转模型 添加数据
+                    NSMutableArray *tempArray = [NSMutableArray new];
+                    [feedList.data enumerateObjectsUsingBlock:^(FHTopicFeedListDataModel*  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+                        if ([obj isKindOfClass:[FHTopicFeedListDataModel class]]) {
+                            FHFeedUGCCellModel *cellModel = [FHFeedUGCCellModel modelFromFeed:obj.content];
+                            cellModel.categoryId = self.categoryName;
+                            if (cellModel) {
+                                [tempArray addObject:cellModel];
+                            }
                         }
-                    }
-                }];
-                
-                if (wSelf.feedOffset == 0) {
-                    // 说明是第一次请求--之前的数据保留（去重）
-                    if (tempArray.count > 0) {
-                        // 有返回（下拉）
-                        [tempArray enumerateObjectsUsingBlock:^(FHFeedUGCCellModel*  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-                            if (obj.groupId.length > 0) {
-                                [self removeDuplicaionModel:obj.groupId];
-                            }
-                        }];
-                    }
-                    // 再插入顶部
-                    if (self.dataList.count > 0) {
-                        // JOKER: 头部插入时，旧数据的置顶全部取消，以新数据中的置顶贴子为准
-                        [self.dataList enumerateObjectsUsingBlock:^(FHFeedUGCCellModel *  _Nonnull cellModel, NSUInteger idx, BOOL * _Nonnull stop) {
-                            cellModel.isStick = NO;
-                        }];
-                        // 头部插入新数据
-                        [tempArray addObjectsFromArray:self.dataList];
-                    }
-                    [self.dataList removeAllObjects];
-                    if (tempArray.count > 0) {
-                        [self.dataList addObjectsFromArray:tempArray];
-                    }
-                } else {
-                    // 上拉加载loadmore
-                    if (tempArray.count > 0) {
-                        [self.dataList enumerateObjectsUsingBlock:^(FHFeedUGCCellModel*  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-                            if (obj.groupId.length > 0) {
-                                // 新数据去重
-                                for (FHFeedUGCCellModel *itemModel in tempArray) {
-                                    if([obj.groupId isEqualToString:itemModel.groupId]){
-                                        [tempArray removeObject:itemModel];
-                                        break;
-                                    }
+                    }];
+                    
+                    if (wSelf.feedOffset == 0) {
+                        // 说明是第一次请求--之前的数据保留（去重）
+                        if (tempArray.count > 0) {
+                            // 有返回（下拉）
+                            [tempArray enumerateObjectsUsingBlock:^(FHFeedUGCCellModel*  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+                                if (obj.groupId.length > 0) {
+                                    [self removeDuplicaionModel:obj.groupId];
                                 }
-                            }
-                        }];
-                        // 插入底部
+                            }];
+                        }
+                        // 再插入顶部
+                        if (self.dataList.count > 0) {
+                            // JOKER: 头部插入时，旧数据的置顶全部取消，以新数据中的置顶贴子为准
+                            [self.dataList enumerateObjectsUsingBlock:^(FHFeedUGCCellModel *  _Nonnull cellModel, NSUInteger idx, BOOL * _Nonnull stop) {
+                                cellModel.isStick = NO;
+                            }];
+                            // 头部插入新数据
+                            [tempArray addObjectsFromArray:self.dataList];
+                        }
+                        [self.dataList removeAllObjects];
                         if (tempArray.count > 0) {
                             [self.dataList addObjectsFromArray:tempArray];
                         }
+                    } else {
+                        // 上拉加载loadmore
+                        if (tempArray.count > 0) {
+                            [self.dataList enumerateObjectsUsingBlock:^(FHFeedUGCCellModel*  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+                                if (obj.groupId.length > 0) {
+                                    // 新数据去重
+                                    for (FHFeedUGCCellModel *itemModel in tempArray) {
+                                        if([obj.groupId isEqualToString:itemModel.groupId]){
+                                            [tempArray removeObject:itemModel];
+                                            break;
+                                        }
+                                    }
+                                }
+                            }];
+                            // 插入底部
+                            if (tempArray.count > 0) {
+                                [self.dataList addObjectsFromArray:tempArray];
+                            }
+                        }
                     }
-                }
-        
-                wSelf.hasMore = feedList.hasMore;
-                wSelf.feedOffset = [feedList.offset integerValue];// 时间序 服务端返回的是时间
-                wSelf.appExtraParams = feedList.apiBaseInfo.appExtraParams;
+                    
+                    wSelf.feedOffset = [feedList.offset integerValue];// 时间序 服务端返回的是时间
+                    wSelf.appExtraParams = feedList.apiBaseInfo.appExtraParams;
+                    
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        wSelf.hasMore = feedList.hasMore;
+                        [wSelf processLoadingState];
+                    });
+                });
             } else {
                 // 成功埋点 status = 0 成功（不上报） status = 2：list data error
                 NSMutableDictionary *metric = @{}.mutableCopy;
                 metric[@"topic_id"] = cidStr;
                 [[HMDTTMonitor defaultManager] hmdTrackService:@"ugc_topic_detail_error" metric:metric category:@{@"status":@(2)} extra:nil];
+                [wSelf processLoadingState];
             }
         }
-        [wSelf processLoadingState];
     }];
 }
 
