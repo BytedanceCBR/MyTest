@@ -248,12 +248,12 @@
                 [resultDict btd_setObject:priceArr forKey:key];
             }
         } else if (self.lowerPrice) {
-            NSInteger lowPrice = self.lowerPrice.integerValue;
+            NSInteger lowPrice = self.lowerPrice.integerValue * r;
             NSString *lowPriceStr = [NSString stringWithFormat:@"%zi", lowPrice];
             [priceArr btd_addObject:@[lowPriceStr]];
             [resultDict btd_setObject:priceArr forKey:key];
         } else if (self.higherPrice) {
-            NSInteger highPrice = self.higherPrice.integerValue;
+            NSInteger highPrice = self.higherPrice.integerValue * r;
             if (highPrice > 0) {
                 NSString *lowPriceStr = @"0";
                 NSString *highPriceStr = [NSString stringWithFormat:@"%zi", highPrice];
