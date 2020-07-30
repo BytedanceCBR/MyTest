@@ -7,6 +7,8 @@
 
 #import <UIKit/UIKit.h>
 
+typedef void (^ClickBtn)(void);
+
 typedef NS_ENUM(NSInteger,SliderMenuState) {
     SliderMenuClose, // 关闭
     SliderMenuSlider, // 滑动中
@@ -14,6 +16,8 @@ typedef NS_ENUM(NSInteger,SliderMenuState) {
 };
 
 @interface FHMessageEditView : UIView
+
+@property (nonatomic, copy) ClickBtn clickDeleteBtn;
 
 @end
 

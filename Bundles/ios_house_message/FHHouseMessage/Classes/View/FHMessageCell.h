@@ -13,17 +13,19 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+typedef void(^FHMessageCellClick)(id data);
+
 @interface FHMessageCell : UITableViewCell
 
 @property(nonatomic, strong) TTBadgeNumberView *unreadView;
 @property (nonatomic, assign) SliderMenuState state;
+@property (nonatomic, copy) FHMessageCellClick deleteConversation;
 
 - (void)updateWithModel:(FHUnreadMsgDataUnreadModel *)model;
 - (void)updateWithChat:(IMConversation*)conversation;
 -(void)displaySendState:(ChatMsg *)msg;
-- (void)initGestureWithData:(id)data;
+- (void)initGestureWithData:(id)data index:(NSInteger)index;
 - (void)close;
-
 @end
 
 NS_ASSUME_NONNULL_END

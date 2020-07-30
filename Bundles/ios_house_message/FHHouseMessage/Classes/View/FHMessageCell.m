@@ -39,6 +39,8 @@
 @property (assign, nonatomic) CGFloat maxOffset;
 @property (assign, nonatomic) BOOL cancelAnimationCompletion;
 @property (nonatomic, strong) FHMessageEditView *editView;
+@property (nonatomic, assign) BOOL index;
+@property (nonatomic, strong) IMConversation *conv;
 
 @end
 
@@ -509,14 +511,17 @@
 }
 
 //自定义左滑编辑
-- (void)initGestureWithData:(id)data {
+- (void)initGestureWithData:(id)data index:(NSInteger)index{
+    self.index = index;
     if ([data isKindOfClass:[IMConversation class]]) {
+        self.conv = data;
         if (!_pan) {
             _pan = [[UIPanGestureRecognizer alloc]initWithTarget:self action:@selector(panAction:)];
             _pan.delegate = self;
             [self.contentView addGestureRecognizer:_pan];
         }
     } else {
+        self.conv = nil;
         if (_pan) {
             [self.contentView removeGestureRecognizer:_pan];
             _pan = nil;
@@ -610,6 +615,16 @@
     [self openMenu:false time:0 springX:0];
 }
 
+- (UIView *)hitTest:(CGPoint)point withEvent:(UIEvent *)event{
+    
+    CGPoint newP = [self convertPoint:point toView:_editView];
+    if ( [_editView pointInside:newP withEvent:event])
+    {
+        return [_editView hitTest:newP withEvent:event];
+    }
+    return [super hitTest:point withEvent:event];
+}
+
 - (void)addEditView {
     [FHMessageEditHelp shared].currentCell = self;
     if (!_editView) {
@@ -617,7 +632,17 @@
         _editView.backgroundColor = [UIColor themeOrange1];
         _editView.frame = CGRectMake(CGRectGetMaxX(self.backView.frame) - 20, CGRectGetMinY(self.backView.frame), -_maxOffset + 20, self.backView.frame.size.height);
         _editView.layer.cornerRadius = 10;
+        __weak typeof(self)wself = self;
+        _editView.clickDeleteBtn = ^{
+            [wself delete];
+        };
         [self.contentView insertSubview:_editView belowSubview:self.backView];
+    }
+}
+
+- (void)delete {
+    if (self.deleteConversation) {
+        self.deleteConversation(self.conv);
     }
 }
 

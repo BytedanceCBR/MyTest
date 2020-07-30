@@ -210,7 +210,11 @@
         } else {
             [cell updateWithChat:model];
         }
-        [cell initGestureWithData:model];
+        __weak typeof(self)wself = self;
+        cell.deleteConversation = ^(id data) {
+            [wself displayDeleteConversationConfirm:data];
+        };
+        [cell initGestureWithData:model index:indexPath.row];
     }
     return cell;
 }

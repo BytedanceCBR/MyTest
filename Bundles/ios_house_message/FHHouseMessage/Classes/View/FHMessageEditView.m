@@ -49,7 +49,9 @@
 }
 
 - (void)clickBtn:(UIButton *)btn {
-    
+    if (btn.tag == 1 && self.clickDeleteBtn) {
+        self.clickDeleteBtn();
+    }
 }
 
 @end
