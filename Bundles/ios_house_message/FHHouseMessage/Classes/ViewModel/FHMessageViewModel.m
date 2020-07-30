@@ -146,11 +146,16 @@
 }
 
 - (void)checkShouldShowEmptyMaskView {
-    if ([self.combiner allItems].count > 0) {
+    if (![TTAccount sharedAccount].isLogin) {
+        [self.viewController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoLogin];
+        [self clearBadgeNumber];
+        return;
+    }
+    if ([self items].count > 0) {
         [self.viewController.emptyView hideEmptyView];
         [self reloadData];
     } else {
-        [self.viewController.emptyView showEmptyWithType:FHEmptyMaskViewTypeEmptyMessage];
+        [self.viewController.emptyView showEmptyWithType:FHEmptyMaskViewTypeEmptyChatMessage];
         [self clearBadgeNumber];
     }
 }
