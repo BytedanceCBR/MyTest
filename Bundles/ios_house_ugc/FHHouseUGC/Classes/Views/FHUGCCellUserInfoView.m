@@ -736,94 +736,95 @@
             [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:userInfo];
         }
     }
-    
-    - (void)gotoEditPostVC {
-        if(self.cellModel.cellType != FHUGCFeedListCellTypeUGC) {
-            return;
-        }
-        if (self.cellModel.editState == FHUGCPostEditStateSending) {
-            // 编辑发送中
-            [[ToastManager manager] showToast:@"帖子编辑中，请稍后"];
-            return;
-        }
-        // 跳转发布器
-        NSMutableDictionary *dic = [NSMutableDictionary new];
-        
-        NSMutableDictionary *tracerDict = [self.cellModel.tracerDic mutableCopy];
-        tracerDict[@"click_position"] = @"edit";
-        tracerDict[@"enter_type"] = @"be_null";
-        TRACK_EVENT(@"click_edit", tracerDict);
-        
-        NSString *page_type = tracerDict[@"page_type"];
-        if (page_type) {
-            tracerDict[@"enter_from"] = page_type;
-        }
-        [tracerDict removeObjectForKey:@"click_position"];
-        tracerDict[UT_ENTER_TYPE] = @"click";
-        dic[TRACER_KEY] = tracerDict;
-        
-        // Feed 文本内容传入图文发布器
-        dic[@"post_content"] = self.cellModel.content;
-        dic[@"post_content_rich_span"] = self.cellModel.contentRichSpan;
-        
-        // Feed 图片信息传入图文发布器
-        NSMutableArray *outerInputAssets = [NSMutableArray array];
-        [self.cellModel.imageList enumerateObjectsUsingBlock:^(FHFeedContentImageListModel * _Nonnull imageModel, NSUInteger idx, BOOL * _Nonnull stop) {
-            TTAssetModel *outerAssetModel = [TTAssetModel modelWithImageWidth:imageModel.width height:imageModel.height url:imageModel.url uri:imageModel.uri];
-            [outerInputAssets addObject:outerAssetModel];
-        }];
-        dic[@"outerInputAssets"] = outerInputAssets;
-        
-        // Feed 圈子信息传入图文发布器
-        dic[@"select_group_id"] = self.cellModel.community.socialGroupId;
-        dic[@"select_group_name"] = self.cellModel.community.name;
-        
-        // 是否是来自外部传入编辑
-        dic[@"isOuterEdit"] = @(YES);
-        dic[@"outerPostId"] = self.cellModel.groupId;
-        
-        TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dic];
-        NSURL *url = [NSURL URLWithString:@"sslocal://ugc_post"];
-        [[TTRoute sharedRoute] openURLByPresentViewController:url userInfo:userInfo];
+}
+
+- (void)gotoEditPostVC {
+    if(self.cellModel.cellType != FHUGCFeedListCellTypeUGC) {
+        return;
     }
+    if (self.cellModel.editState == FHUGCPostEditStateSending) {
+        // 编辑发送中
+        [[ToastManager manager] showToast:@"帖子编辑中，请稍后"];
+        return;
+    }
+    // 跳转发布器
+    NSMutableDictionary *dic = [NSMutableDictionary new];
     
+    NSMutableDictionary *tracerDict = [self.cellModel.tracerDic mutableCopy];
+    tracerDict[@"click_position"] = @"edit";
+    tracerDict[@"enter_type"] = @"be_null";
+    TRACK_EVENT(@"click_edit", tracerDict);
+    
+    NSString *page_type = tracerDict[@"page_type"];
+    if (page_type) {
+        tracerDict[@"enter_from"] = page_type;
+    }
+    [tracerDict removeObjectForKey:@"click_position"];
+    tracerDict[UT_ENTER_TYPE] = @"click";
+    dic[TRACER_KEY] = tracerDict;
+    
+    // Feed 文本内容传入图文发布器
+    dic[@"post_content"] = self.cellModel.content;
+    dic[@"post_content_rich_span"] = self.cellModel.contentRichSpan;
+    
+    // Feed 图片信息传入图文发布器
+    NSMutableArray *outerInputAssets = [NSMutableArray array];
+    [self.cellModel.imageList enumerateObjectsUsingBlock:^(FHFeedContentImageListModel * _Nonnull imageModel, NSUInteger idx, BOOL * _Nonnull stop) {
+        TTAssetModel *outerAssetModel = [TTAssetModel modelWithImageWidth:imageModel.width height:imageModel.height url:imageModel.url uri:imageModel.uri];
+        [outerInputAssets addObject:outerAssetModel];
+    }];
+    dic[@"outerInputAssets"] = outerInputAssets;
+    
+    // Feed 圈子信息传入图文发布器
+    dic[@"select_group_id"] = self.cellModel.community.socialGroupId;
+    dic[@"select_group_name"] = self.cellModel.community.name;
+    
+    // 是否是来自外部传入编辑
+    dic[@"isOuterEdit"] = @(YES);
+    dic[@"outerPostId"] = self.cellModel.groupId;
+    
+    TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dic];
+    NSURL *url = [NSURL URLWithString:@"sslocal://ugc_post"];
+    [[TTRoute sharedRoute] openURLByPresentViewController:url userInfo:userInfo];
+}
+
 #pragma mark - 埋点
-    
-    - (void)trackClickOptions {
-        NSMutableDictionary *dict = [self.cellModel.tracerDic mutableCopy];
-        dict[@"click_position"] = @"feed_more";
-        TRACK_EVENT(@"click_options", dict);
+
+- (void)trackClickOptions {
+    NSMutableDictionary *dict = [self.cellModel.tracerDic mutableCopy];
+    dict[@"click_position"] = @"feed_more";
+    TRACK_EVENT(@"click_options", dict);
+}
+
+- (void)trackClickWithEvent:(NSString *)event position:(NSString *)position {
+    NSMutableDictionary *dict = [self.cellModel.tracerDic mutableCopy];
+    dict[@"click_position"] = position;
+    TRACK_EVENT(event, dict);
+}
+
+- (void)trackConfirmPopupShow:(NSString *)event {
+    NSMutableDictionary *dict = [self.cellModel.tracerDic mutableCopy];
+    TRACK_EVENT(event, dict);
+}
+
+- (void)trackConfirmPopupClickWithEvent:(NSString *)event isCancel:(BOOL)isCancel {
+    NSMutableDictionary *dict = [self.cellModel.tracerDic mutableCopy];
+    if(isCancel){
+        dict[@"click_position"] = @"cancel";
+    }else{
+        dict[@"click_position"] = @"confrim";
     }
-    
-    - (void)trackClickWithEvent:(NSString *)event position:(NSString *)position {
-        NSMutableDictionary *dict = [self.cellModel.tracerDic mutableCopy];
-        dict[@"click_position"] = position;
-        TRACK_EVENT(event, dict);
+    TRACK_EVENT(event, dict);
+}
+
+- (void)trackConfirmDeletePopupClick:(BOOL)isCancel {
+    NSMutableDictionary *dict = [self.cellModel.tracerDic mutableCopy];
+    if(isCancel){
+        dict[@"click_position"] = @"cancel";
+    }else{
+        dict[@"click_position"] = @"confrim_delete";
     }
-    
-    - (void)trackConfirmPopupShow:(NSString *)event {
-        NSMutableDictionary *dict = [self.cellModel.tracerDic mutableCopy];
-        TRACK_EVENT(event, dict);
-    }
-    
-    - (void)trackConfirmPopupClickWithEvent:(NSString *)event isCancel:(BOOL)isCancel {
-        NSMutableDictionary *dict = [self.cellModel.tracerDic mutableCopy];
-        if(isCancel){
-            dict[@"click_position"] = @"cancel";
-        }else{
-            dict[@"click_position"] = @"confrim";
-        }
-        TRACK_EVENT(event, dict);
-    }
-    
-    - (void)trackConfirmDeletePopupClick:(BOOL)isCancel {
-        NSMutableDictionary *dict = [self.cellModel.tracerDic mutableCopy];
-        if(isCancel){
-            dict[@"click_position"] = @"cancel";
-        }else{
-            dict[@"click_position"] = @"confrim_delete";
-        }
-        TRACK_EVENT(@"confirm_delete_popup_click", dict);
-    }
-    
-    @end
+    TRACK_EVENT(@"confirm_delete_popup_click", dict);
+}
+
+@end
