@@ -23,8 +23,6 @@
 #import "FHLynxManager.h"
 @interface FHHouseRealtorDetailVC ()<TTUIViewControllerTrackProtocol>
 @property (nonatomic, strong) FHHouseRealtorDetailVM *viewModel;
-@property (nonatomic, strong) UIImage *shareWhiteImage;
-@property (nonatomic, strong) UIButton *shareButton;// 分享
 @property (nonatomic, strong) UIView *bottomMaskView;
 @property (nonatomic, strong) FHRealtorDetailBottomBar *bottomBar;
 @property (nonatomic, strong )NSDictionary *realtorDetailInfo;
@@ -35,15 +33,11 @@
 - (instancetype)initWithRouteParamObj:(nullable TTRouteParamObj *)paramObj {
     self = [super initWithRouteParamObj:paramObj];
     if (self) {
-        self.ttTrackStayEnable = YES;
-        self.communityId = paramObj.allParams[@"community_id"];
         self.tabName = paramObj.allParams[@"tab_name"];
         self.realtorDetailInfo = paramObj.allParams;
-//        // 取链接中的埋点数据
-//        self.tracerDict = paramObj.allParams[@"tracer"];
         self.tracerDict[@"enter_from"] =  self.tracerDict[@"page_type"];
         self.tracerDict[@"page_type"] = [self pageType];
-
+        
     }
     return self;
 }
@@ -56,6 +50,15 @@
     [self initViewModel];
 }
 
+- (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
+    [self.viewModel updateNavBarWithAlpha:self.customNavBarView.bgView.alpha];
+}
+
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    [self.viewModel updateNavBarWithAlpha:self.customNavBarView.bgView.alpha];
+}
 
 - (void)initNavBar {
     [self setupDefaultNavBar:NO];
@@ -133,11 +136,11 @@
 
 
 - (void)setNavBar {
-        self.customNavBarView.title.text = @"经纪人主页";
-        self.customNavBarView.title.textColor = [UIColor whiteColor];
-        UIImage *whiteBackArrowImage = ICON_FONT_IMG(24, @"\U0000e68a", [UIColor whiteColor]);
-        [self.customNavBarView.leftBtn setBackgroundImage:whiteBackArrowImage forState:UIControlStateNormal];
-        [self.customNavBarView.leftBtn setBackgroundImage:whiteBackArrowImage forState:UIControlStateHighlighted];
+    self.customNavBarView.title.text = @"经纪人主页";
+    self.customNavBarView.title.textColor = [UIColor whiteColor];
+    UIImage *whiteBackArrowImage = ICON_FONT_IMG(24, @"\U0000e68a", [UIColor whiteColor]);
+    [self.customNavBarView.leftBtn setBackgroundImage:whiteBackArrowImage forState:UIControlStateNormal];
+    [self.customNavBarView.leftBtn setBackgroundImage:whiteBackArrowImage forState:UIControlStateHighlighted];
     [self.customNavBarView setNaviBarTransparent:YES];
     self.customNavBarView.seperatorLine.hidden = YES;
 }
@@ -169,19 +172,6 @@
 
 - (NSString *)pageType {
     return @"realtor_detail";
-}
-
-#pragma mark - 埋点
-
-- (NSDictionary *)followButtonTraceDict {
-    NSMutableDictionary *params = [NSMutableDictionary dictionary];
-    params[@"community_id"] = self.communityId;
-    params[@"page_type"] = self.tracerDict[@"page_type"] ?: @"be_null";
-    params[@"enter_from"] = self.tracerDict[@"enter_from"] ?: @"be_null";
-    params[@"enter_type"] = self.tracerDict[@"enter_type"] ?: @"be_null";
-    params[@"click_position"] = @"join_like";
-    params[@"log_pb"] = self.tracerDict[@"log_pb"] ?: @"be_null";
-    return [params copy];
 }
 
 @end

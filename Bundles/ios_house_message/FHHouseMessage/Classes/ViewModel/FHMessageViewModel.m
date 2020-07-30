@@ -67,7 +67,7 @@
     if (self) {
         self.combiner = [[FHConversationDataCombiner alloc] init];
         _dataList = [[NSMutableArray alloc] init];
-        _isFirstLoad = YES;
+        _isFirstLoad = self.combiner.isFirstLoad;
         self.tableView = tableView;
 
         [tableView registerClass:[FHMessageCell class] forCellReuseIdentifier:kCellId];
@@ -406,7 +406,6 @@
 - (void)conversationUpdated:(NSString *)conversationIdentifier {
     NSArray<IMConversation *> *allConversations = [[IMManager shareInstance].chatService allConversations];
     [_combiner resetConversations:allConversations];
-//    [self.tableView reloadData];
     [self checkShouldShowEmptyMaskView];
 }
 
