@@ -22,6 +22,7 @@
 #import "FHHouseDetailContactViewModel.h"
 #import "FHBuildingDetailModel.h"
 #import "FHBuildingDetailUtils.h"
+#import "NSDictionary+BTDAdditions.h"
 
 @interface FHBuildingDetailViewController ()<UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout>
 
@@ -41,6 +42,11 @@
 
 @property (nonatomic) BOOL shouldReloadAnimated;
 @property (nonatomic, strong) NSMutableArray *showHouseCache;
+
+@property (nonatomic, strong) FHBuildingIndexModel *currentIndex;
+@property (nonatomic, strong) NSMutableDictionary *currentDict;
+
+@property (nonatomic, weak) FHBuildingDetailTopImageCollectionViewCell *topImageView;
 @end
 
 @implementation FHBuildingDetailViewController
@@ -64,6 +70,7 @@
             self.contactViewModel.onLineName = contactViewModel.onLineName;
             self.contactViewModel.toast = contactViewModel.toast;
         }
+        self.currentDict = [[NSMutableDictionary alloc] init];
     }
     return self;
 }
@@ -106,12 +113,14 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     self.view.backgroundColor = [UIColor themeGray7];
+    self.topImageView = nil;
     [self setupNavbar];
     [self setupUI];
     
     [self addDefaultEmptyViewFullScreen];
 
     self.currentSelectIndex = 0;
+    
     self.viewModel = [[FHBuildingDetailViewModel alloc] initWithController:self];
     self.viewModel.houseId = self.houseId;
 //    self.viewModel
@@ -284,19 +293,24 @@
     
     NSMutableArray <FHBuildingSectionModel *>*items = [NSMutableArray array];
     
-    if (self.viewModel.locationModel.buildingImage) {
+    if (self.viewModel.locationModel.buildingImage.url.length > 0) {
         FHBuildingSectionModel *imageSection = [[FHBuildingSectionModel alloc] init];
         imageSection.sectionType = FHBuildingSectionTypeImage;
         [items addObject:imageSection];
     }
     
-    if (self.viewModel.buildingDetailModel.data.buildingList.count > self.currentSelectIndex) {
+    if (self.viewModel.locationModel.saleStatusList.count <= self.currentIndex.saleStatus) {
+        return;
+    }
+    
+    FHBuildingSaleStatusModel *statusModel = self.viewModel.locationModel.saleStatusList[self.currentIndex.saleStatus];
+    if (statusModel.buildingList.count > self.currentIndex.buildingIndex) {
         
         FHBuildingSectionModel *infoSection = [[FHBuildingSectionModel alloc] init];
         infoSection.sectionType = FHBuildingSectionTypeInfo;
         [items addObject:infoSection];
 
-        FHBuildingDetailDataItemModel *model = self.viewModel.buildingDetailModel.data.buildingList[self.currentSelectIndex];
+        FHBuildingDetailDataItemModel *model = statusModel.buildingList[self.currentSelectIndex];
 
         FHBuildingSectionModel *section = [[FHBuildingSectionModel alloc] init];
         if (model.relatedFloorplanList.list.count) {
@@ -310,13 +324,56 @@
         
         self.layout.model = model;
         self.viewModel.items = items.copy;
+        self.currentIndex = [[FHBuildingIndexModel alloc] init];
+        self.currentIndex.saleStatus = 0;
+        self.currentIndex.buildingIndex = 0;
         [self.collectionView reloadData];
     }
 }
 
+- (void)responseCenterWithOperat:(FHBuildingDetailOperatType)type withIndexModel:(FHBuildingIndexModel *)indexModel {
+    switch (type) {
+        case FHBuildingDetailOperatTypeSaleStatus:
+            indexModel.buildingIndex = [self.currentDict btd_integerValueForKey:@(indexModel.saleStatus)];
+            self.currentIndex = indexModel;
+            [self reloadFloorCollectionViewData];
+            break;
+        case FHBuildingDetailOperatTypeInfoCell:
+            self.currentIndex = indexModel;
+            [self.currentDict btd_setObject:@(indexModel.buildingIndex) forKey:@(indexModel.saleStatus)];
+            
+            break;
+        case FHBuildingDetailOperatTypeButton:
+            self.currentIndex = indexModel;
+            [self.currentDict btd_setObject:@(indexModel.buildingIndex) forKey:@(indexModel.saleStatus)];
+           [self reloadFloorCollectionViewData];
+            break;
+        case FHBuildingDetailOperatTypeFromNew:
+            self.currentIndex = indexModel;
+            [self.currentDict btd_setObject:@(indexModel.buildingIndex) forKey:@(indexModel.saleStatus)];
+            break;
+        default:
+            break;
+    }
+    [self.topImageView updateWithIndexModel:indexModel];
+    [self reloadRelatedFloorpanData];
+}
+
+- (void)reloadFloorCollectionViewData {
+    [UIView setAnimationsEnabled:NO];
+    [self.collectionView performBatchUpdates:^{
+        [self.collectionView reloadSections:[NSIndexSet indexSetWithIndex:self.viewModel.items.count - 2]];
+    } completion:^(BOOL finished) {
+        [UIView setAnimationsEnabled:YES];
+    }];
+    ;
+}
+
 - (void)reloadRelatedFloorpanData {
     FHBuildingSectionModel *section = self.viewModel.items.lastObject;
-    FHBuildingDetailDataItemModel *model = self.viewModel.buildingDetailModel.data.buildingList[self.currentSelectIndex];
+    //FHBuildingDetailDataItemModel *model = self.viewModel.buildingDetailModel.data.buildingList[self.currentSelectIndex];
+    FHBuildingSaleStatusModel *saleModel = self.viewModel.locationModel.saleStatusList[self.currentIndex.saleStatus];
+    FHBuildingDetailDataItemModel *model = saleModel.buildingList[self.currentIndex.buildingIndex];
     if (model.relatedFloorplanList.list.count) {
         section.sectionType = FHBuildingSectionTypeFloor;
         section.sectionTitle = model.relatedFloorplanList.title;
@@ -391,7 +448,9 @@
     FHBuildingSectionModel *sectionModel = self.viewModel.items[section];
     switch (sectionModel.sectionType) {
         case FHBuildingSectionTypeFloor: {
-            FHBuildingDetailDataItemModel *model =  self.viewModel.buildingDetailModel.data.buildingList[self.currentSelectIndex];
+            //FHBuildingDetailDataItemModel *model =  self.viewModel.buildingDetailModel.data.buildingList[self.currentSelectIndex];
+            FHBuildingSaleStatusModel *saleModel = self.viewModel.locationModel.saleStatusList[self.currentIndex.saleStatus];
+            FHBuildingDetailDataItemModel *model = saleModel.buildingList[self.currentIndex.buildingIndex];
             if (model.relatedFloorplanList.list.count > 0) {
                 return model.relatedFloorplanList.list.count;
             }
@@ -412,23 +471,30 @@
     __weak typeof(self) weakSelf = self;
     switch (sectionModel.sectionType) {
         case FHBuildingSectionTypeImage: {
-            
+            [((FHBuildingDetailTopImageCollectionViewCell *)cell) setIndexDidSelect:^(FHBuildingDetailOperatType type, FHBuildingIndexModel * _Nonnull index) {
+                [weakSelf responseCenterWithOperat:type withIndexModel:index];
+            }];
+            self.topImageView = cell;
             [cell refreshWithData:self.viewModel.locationModel];
-            
+            [((FHBuildingDetailTopImageCollectionViewCell *)cell) updateWithIndexModel:self.currentIndex];
             break;
         }
         case FHBuildingSectionTypeInfo: {
             //切换调用
-            [cell refreshWithData:self.viewModel.buildingDetailModel];
-            [(FHBuildingDetailInfoCollectionViewCell *)cell setIndexDidChanged:^(NSUInteger index) {
-                weakSelf.currentSelectIndex = index;
-                [weakSelf reloadRelatedFloorpanData];
+            FHBuildingSaleStatusModel *saleModel = self.viewModel.locationModel.saleStatusList[self.currentIndex.saleStatus];
+            ((FHBuildingDetailInfoCollectionViewCell *)cell).currentIndexPath = [NSIndexPath indexPathForItem:self.currentIndex.buildingIndex + saleModel.buildingList.count inSection:0];
+            [cell refreshWithData:saleModel];
+            
+            [(FHBuildingDetailInfoCollectionViewCell *)cell setInfoIndexDidSelect:^(FHBuildingDetailOperatType type, FHBuildingIndexModel * _Nonnull index) {
+                [weakSelf responseCenterWithOperat:type withIndexModel:index];
             }];
+            
             break;
         }
         case FHBuildingSectionTypeFloor: {
             //动态调整
-            FHBuildingDetailDataItemModel *model = self.viewModel.buildingDetailModel.data.buildingList[self.currentSelectIndex];
+            FHBuildingSaleStatusModel *saleModel = self.viewModel.locationModel.saleStatusList[self.currentIndex.saleStatus];
+            FHBuildingDetailDataItemModel *model = saleModel.buildingList[self.currentIndex.buildingIndex];
             [cell refreshWithData:model.relatedFloorplanList.list[indexPath.row]];
             UIView *bottomLine = [(FHBuildingDetailFloorCollectionViewCell *)cell bottomLine];
             if (indexPath.row == model.relatedFloorplanList.list.count - 1) {
@@ -512,7 +578,7 @@
             return UIEdgeInsetsMake(20, 15, 20, 15);
             break;
         case FHBuildingSectionTypeInfo:
-            if (self.viewModel.locationModel.buildingImage) {
+            if (self.viewModel.locationModel.buildingImage.url.length) {
                 return UIEdgeInsetsMake(-41, 0, 0, 0); //猜的 先测试
             } else {
                 return UIEdgeInsetsZero;
@@ -547,7 +613,8 @@
 - (void)collectionView:(UICollectionView *)collectionView willDisplayCell:(UICollectionViewCell *)cell forItemAtIndexPath:(NSIndexPath *)indexPath {
     if ([cell isKindOfClass:[FHBuildingDetailFloorCollectionViewCell class]]) {
         // 上报埋点
-        FHBuildingDetailDataItemModel *model = self.viewModel.buildingDetailModel.data.buildingList[self.currentSelectIndex];
+        FHBuildingSaleStatusModel *saleModel = self.viewModel.locationModel.saleStatusList[self.currentIndex.saleStatus];
+        FHBuildingDetailDataItemModel *model = saleModel.buildingList[self.currentIndex.buildingIndex];
         FHBuildingDetailRelatedFloorpanModel *floorpan = model.relatedFloorplanList.list[indexPath.row];
         [self addHouseShow:floorpan.id];
     }
@@ -556,7 +623,8 @@
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
     FHBuildingSectionModel *sectionModel = self.viewModel.items[indexPath.section];
     if (sectionModel.sectionType == FHBuildingSectionTypeFloor) {
-        FHBuildingDetailDataItemModel *model = self.viewModel.buildingDetailModel.data.buildingList[self.currentSelectIndex];
+        FHBuildingSaleStatusModel *saleModel = self.viewModel.locationModel.saleStatusList[self.currentIndex.saleStatus];
+        FHBuildingDetailDataItemModel *model = saleModel.buildingList[self.currentIndex.buildingIndex];
         FHBuildingDetailRelatedFloorpanModel *floorModel = model.relatedFloorplanList.list[indexPath.row];
         NSMutableDictionary *traceParam = [NSMutableDictionary new];
         [traceParam addEntriesFromDictionary:self.tracerDict];
@@ -657,5 +725,6 @@
     //    }
     [FHUserTracker writeEvent:@"stay_page" params:params];
 }
+
 
 @end

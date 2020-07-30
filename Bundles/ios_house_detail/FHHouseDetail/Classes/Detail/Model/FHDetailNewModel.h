@@ -219,6 +219,9 @@ NS_ASSUME_NONNULL_BEGIN
    - name楼栋名称，类型string
    - layers层数，类型string
    - family户数，类型string
+   - point_x 锚点横坐标，类型string
+   - point_y 锚点纵坐标，类型stirng
+   - sale_status，类型string
  */
 
 @protocol FHDetailNewBuildingListItem <NSObject>
@@ -234,13 +237,14 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FHDetailNewBuildingInfoModel : JSONModel
 
+@property (nonatomic, copy, nullable) NSString *id;
 @property (nonatomic, copy, nullable) NSString *title;
 @property (nonatomic, copy, nullable) NSString *buttonText;
 @property (nonatomic, copy, nullable) NSString *buildingNameText;
 @property (nonatomic, copy, nullable) NSString *layerText;
 @property (nonatomic, copy, nullable) NSString *family;
 @property (nonatomic, strong , nullable) NSArray<FHDetailNewBuildingListItem> *list;
-
+@property (nonatomic, strong , nullable) FHImageModel *buildingImage;
 @end
 
 

@@ -7,13 +7,15 @@
 
 #import "FHDetailBaseCell.h"
 #import "FHPropertyListCorrectingRowView.h"
+#import "FHBuildingDetailModel.h"
 NS_ASSUME_NONNULL_BEGIN
 //楼栋详情页 信息
 @interface FHBuildingDetailInfoCollectionViewCell : FHDetailBaseCollectionCell
 
 @property (nonatomic, strong) NSIndexPath *currentIndexPath;
 
-@property (nonatomic, copy) void (^indexDidChanged)(NSUInteger index);
+@property (nonatomic, copy) FHBuildingIndexDidSelect infoIndexDidSelect;
+
 
 @end
 

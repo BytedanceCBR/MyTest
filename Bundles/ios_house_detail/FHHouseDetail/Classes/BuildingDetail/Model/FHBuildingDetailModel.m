@@ -103,6 +103,16 @@
 
 @implementation FHBuildingIndexModel
 
++ (instancetype)indexModelWithSaleStatus:(NSInteger)saleStatus withBuildingIndex:(NSInteger)buildingIndex {
+    FHBuildingIndexModel *indexModel = [[FHBuildingIndexModel alloc] init];
+    indexModel.saleStatus = saleStatus;
+    indexModel.buildingIndex = buildingIndex;
+    return indexModel;
+}
+
+- (BOOL)isEqual:(FHBuildingIndexModel *)object {
+    return (self.buildingIndex == object.buildingIndex) && (self.saleStatus == object.saleStatus);
+}
 
 @end
 

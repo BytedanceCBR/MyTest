@@ -1,16 +1,16 @@
 //
-//  FHBuildDetailImageViewButton.m
+//  FHBuildingDetailImageViewButton.m
 //  AKCommentPlugin
 //
 //  Created by luowentao on 2020/7/28.
 //
 
-#import "FHBuildDetailImageViewButton.h"
+#import "FHBuildingDetailImageViewButton.h"
 #import "Masonry/Masonry.h"
 #import "UIFont+House.h"
 #import "UIColor+Theme.h"
 
-@interface FHBuildDetailImageViewButton()
+@interface FHBuildingDetailImageViewButton()
 
 @property (nonatomic, strong) FHBuildingDetailDataItemModel *itemModel;
 @property (nonatomic, strong) UIImageView *backgroundImage;
@@ -26,7 +26,7 @@
 
 @end
 
-@implementation FHBuildDetailImageViewButton
+@implementation FHBuildingDetailImageViewButton
 
 - (instancetype)initWithFrame:(CGRect)frame
 {
@@ -64,6 +64,7 @@
     if (data && [data isKindOfClass:[FHBuildingDetailDataItemModel class]]) {
         FHBuildingDetailDataItemModel *model = (FHBuildingDetailDataItemModel *)data;
         self.itemModel = model;
+        self.buttonIndex = model.buildingIndex;
         [self.titleLabel setText:[NSString stringWithFormat:@"%@|%@",model.name,model.saleStatus.content]];
         NSMutableAttributedString *attri = [[NSMutableAttributedString alloc] initWithString:self.titleLabel.text];
         NSRange ran = NSMakeRange(model.name.length, 1);
@@ -110,14 +111,16 @@
 
 - (void)buttonOnClick {
     
-    self.isSelected = !self.isSelected;
-    if (self.indexDidSelect) {
-        self.indexDidSelect(self.layer.position);
+    if (self.buttonIndexDidSelect) {
+        self.buttonIndexDidSelect(FHBuildingDetailOperatTypeButton, self.buttonIndex);
     }
     
     NSLog(@" self %@ father %@",NSStringFromCGRect(self.frame),NSStringFromCGRect(self.superview.frame));
 }
 
+- (CGPoint)getButtonPosition {
+    return self.layer.position;
+}
 
 - (void)buttonMoveWithSize:(CGSize)newSize {
     [self.layer setPosition:CGPointMake((newSize.width * self.pointX) / self.beginWidth,(newSize.height * self.pointY) / self.beginHeight)];

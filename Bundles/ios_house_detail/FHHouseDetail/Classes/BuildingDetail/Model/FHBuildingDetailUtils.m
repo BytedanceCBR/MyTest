@@ -12,7 +12,9 @@
 
 + (CGSize)getTopImageViewSize {
     CGFloat width = [UIScreen mainScreen].bounds.size.width;
-    return CGSizeMake(width, 281.0 * (375.0/281.0));
+    CGFloat photoCellHeight = 281.0;
+    photoCellHeight = round(width / 375.0f * photoCellHeight + 0.5);
+    return CGSizeMake(width, photoCellHeight);
 }
 
 @end

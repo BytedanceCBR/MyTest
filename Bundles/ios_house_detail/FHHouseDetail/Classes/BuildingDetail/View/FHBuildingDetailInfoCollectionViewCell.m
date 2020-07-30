@@ -48,9 +48,9 @@ CGFloat const FHBuildingDetailInfoListCellMinimumLineSpacing = 25 + 12;
 }
 
 - (void)refreshWithData:(id)data {
-    if (data && [data isKindOfClass:[FHBuildingDetailModel class]]) {
-        FHBuildingDetailModel *model = (FHBuildingDetailModel *)data;
-        self.buildingList = model.data.buildingList;
+    if (data && [data isKindOfClass:[FHBuildingSaleStatusModel class]]) {
+        FHBuildingSaleStatusModel *model = (FHBuildingSaleStatusModel *)data;
+        self.buildingList = model.buildingList;
         [self.collectionView reloadData];
         
         //判断
@@ -64,9 +64,11 @@ CGFloat const FHBuildingDetailInfoListCellMinimumLineSpacing = 25 + 12;
     }
 }
 
+
 - (void)updateIndexPahtAtPosition:(NSIndexPath *)indexPath {
-    if (self.indexDidChanged) {
-        self.indexDidChanged(indexPath.row % self.buildingList.count);
+    if (self.infoIndexDidSelect) {
+        FHBuildingDetailDataItemModel *itemModel = self.buildingList[indexPath.row % self.buildingList.count];
+        self.infoIndexDidSelect(FHBuildingDetailOperatTypeInfoCell,itemModel.buildingIndex);
     }
 }
 

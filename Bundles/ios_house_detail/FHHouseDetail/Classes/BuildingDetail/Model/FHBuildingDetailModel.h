@@ -13,12 +13,21 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+typedef NS_ENUM(NSUInteger, FHBuildingDetailOperatType) {
+    FHBuildingDetailOperatTypeButton = 1,        //点击按钮 按钮置中，点击button 只影响楼号 按钮显示在最上层 滑动CollectionView
+    FHBuildingDetailOperatTypeInfoCell,          //滑动CollectView 只影响楼号 按钮显示在最上层
+    FHBuildingDetailOperatTypeSaleStatus,        //点击状态label = 切换对应的状态后点击对应的按钮 ,隐藏其他button,
+    FHBuildingDetailOperatTypeFromNew            //等于点击状态label同时点击按钮
+};
+
 @interface FHBuildingIndexModel : NSObject
 
-@property (nonatomic, assign) NSUInteger saleStatus; //销售状态 - X
-@property (nonatomic, assign) NSUInteger buildingIndex; //楼   - Y
-
+@property (nonatomic, assign) NSInteger saleStatus; //销售状态 - X
+@property (nonatomic, assign) NSInteger buildingIndex; //楼   - Y
++ (instancetype)indexModelWithSaleStatus:(NSInteger)saleStatus withBuildingIndex:(NSInteger)buildingIndex;
 @end
+
+
 
 @protocol FHBuildingDetailRelatedFloorpanModel <NSObject>
 @end
@@ -105,5 +114,5 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
-typedef void(^FHBuildingIndexDidSelect)(FHBuildingIndexModel *index);
+typedef void(^FHBuildingIndexDidSelect)(FHBuildingDetailOperatType type, FHBuildingIndexModel *index);
 NS_ASSUME_NONNULL_END

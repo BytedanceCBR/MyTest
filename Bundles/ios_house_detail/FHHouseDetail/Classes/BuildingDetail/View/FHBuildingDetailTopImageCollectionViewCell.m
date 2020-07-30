@@ -7,7 +7,7 @@
 
 #import "FHBuildingDetailTopImageCollectionViewCell.h"
 #import "FHBuildingDetailUtils.h"
-#import "FHBuildDetailTopImageView.h"
+#import "FHBuildingDetailTopImageView.h"
 #import "FHVideoAndImageItemCorrectingView.h"
 #import <Masonry/Masonry.h>
 
@@ -15,8 +15,9 @@
 
 
 @property (nonatomic, strong) FHBuildingLocationModel *locationModel;
-@property (nonatomic, strong) FHBuildDetailTopImageView *imageView;
+@property (nonatomic, strong) FHBuildingDetailTopImageView *imageView;
 @property (nonatomic, weak) FHVideoAndImageItemCorrectingView *saleStatusView;
+@property (nonatomic, strong) FHBuildingIndexModel *indexModel;
 
 @end
 
@@ -27,8 +28,13 @@
     self = [super initWithFrame:frame];
     if (self) {
         self.backgroundColor = [UIColor clearColor];
-        self.imageView = [[FHBuildDetailTopImageView alloc] initWithFrame:frame];
+        FHBuildingDetailTopImageView *imageView = [[FHBuildingDetailTopImageView alloc] initWithFrame:frame];
+        self.imageView = imageView;
         [self.contentView addSubview:self.imageView];
+        __weak typeof(self) wSelf = self;
+        [imageView setButtonDidSelect:^(FHBuildingDetailOperatType type, FHBuildingIndexModel * _Nonnull index) {
+            [wSelf clickItem:type indexModel:index];
+        }];
 
     }
     return self;
@@ -58,22 +64,25 @@
         [self addSubview:saleView];
         __weak typeof(self) wSelf = self;
         saleView.selectedBlock = ^(NSInteger index, NSString * _Nonnull name, NSString * _Nonnull value) {
-            [wSelf clickSaleStatusItem:index];
+            [wSelf clickItem:FHBuildingDetailOperatTypeSaleStatus indexModel:[FHBuildingIndexModel indexModelWithSaleStatus:index withBuildingIndex:0]];
         };
         _saleStatusView = saleView;
     }
     return _saleStatusView;
 }
 
-
-
-- (void)clickSaleStatusItem:(NSInteger)index {
-    NSLog(@"选择了 %@",@(index));
+- (void)clickItem:(FHBuildingDetailOperatType)type indexModel:(FHBuildingIndexModel *)indexModel {
+    if (self.IndexDidSelect) {
+        self.IndexDidSelect(type, indexModel);
+    }
 }
 
-- (void)switchSaleStatusItem:(FHBuildingIndexModel *)index {
+- (void)updateWithIndexModel:(FHBuildingIndexModel *)indexModel {
     
-    [self.saleStatusView selectedItem:self.locationModel.saleStatusContents[index.saleStatus]];
+    [_saleStatusView selectedItem:self.locationModel.saleStatusContents[indexModel.saleStatus]];
+    [self.imageView updateWithIndexModel:indexModel];
+    self.indexModel = indexModel;
+    
 }
 
 
