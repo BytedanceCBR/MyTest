@@ -1120,9 +1120,11 @@ static void extracted(WDWendaListViewController *object, WDWendaListViewControll
             NSURL *openUrl = [NSURL URLWithString:[NSString stringWithFormat:@"sslocal://ugc_wenda_publish"]];
             NSMutableDictionary *info = @{}.mutableCopy;
             info[@"title"] = @"提问";
-            info[@"enter_from"] = @"question";
+    NSMutableDictionary *tracer = self.viewModel.gdExtJson.mutableCopy;
+    tracer[@"enter_from"] = @"question";
+            info[@"tracer"] = tracer;
             TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:info];
-        [[TTRoute sharedRoute] openURLByViewController:openUrl userInfo:userInfo];
+           [[TTRoute sharedRoute] openURLByViewController:openUrl userInfo:userInfo];
 }
 
 - (SSThemedView<WDWendaListQuestionHeaderProtocol> *)questionHeader
