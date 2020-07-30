@@ -298,7 +298,9 @@
         NSMutableDictionary *dict = @{}.mutableCopy;
         dict[@"community_id"] = model.socialGroup.socialGroupId;
         NSString* enterFrom = self.viewController.type == FHUGCMyInterestedTypeEmpty ? @"feed_blank_select" : @"like_neighborhood_list";
-        dict[@"tracer"] = @{@"enter_from":enterFrom,
+        dict[@"tracer"] = @{
+                            @"origin_from":self.viewController.tracerDict[@"origin_from"] ?: @"be_null",
+                            @"enter_from":enterFrom,
                             @"enter_type":@"click",
                             @"rank":@(indexPath.row),
                             @"log_pb":model.socialGroup.logPb ?: @"be_null"};

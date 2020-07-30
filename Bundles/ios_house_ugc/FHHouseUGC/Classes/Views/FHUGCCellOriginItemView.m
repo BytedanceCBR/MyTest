@@ -115,19 +115,16 @@
         TTRouteUserInfo *userInfo = nil;
         NSMutableDictionary *dict = [NSMutableDictionary dictionary];
         NSURL *openUrl = [NSURL URLWithString:routeUrl];
-        if([openUrl.scheme isEqualToString:@"thread_detail"]){
-            dict[@"origin_from"] = self.cellModel.tracerDic[@"origin_from"];
-            dict[@"category_name"] = self.cellModel.tracerDic[@"category_name"]?:@"be_null";
-            dict[@"enter_from"] = self.cellModel.tracerDic[@"page_type"];
-            dict[@"enter_type"] = @"feed_content_blank";
-            dict[@"rank"] = self.cellModel.tracerDic[@"rank"];
-        }else{
-            NSMutableDictionary *tracerDic = [NSMutableDictionary dictionary];
-            tracerDic[@"origin_from"] = self.cellModel.tracerDic[@"origin_from"] ?: @"be_null";
-            tracerDic[@"enter_from"] = self.cellModel.tracerDic[@"page_type"] ?: @"be_null";
-            tracerDic[@"category_name"] = self.cellModel.tracerDic[@"category_name"] ?: @"be_null";
-            dict[@"tracer"] = tracerDic;
-        }
+
+        NSMutableDictionary *tracerDic = [NSMutableDictionary dictionary];
+        tracerDic[@"origin_from"] = self.cellModel.tracerDic[@"origin_from"] ?: @"be_null";
+        tracerDic[@"enter_from"] = self.cellModel.tracerDic[@"page_type"] ?: @"be_null";
+        tracerDic[@"category_name"] = self.cellModel.tracerDic[@"category_name"] ?: @"be_null";
+        tracerDic[@"rank"] = self.cellModel.tracerDic[@"rank"];
+        tracerDic[@"impr_id"] = self.cellModel.tracerDic[@"impr_id"];
+        tracerDic[@"from_gid"] = self.cellModel.tracerDic[@"group_id"];
+        tracerDic[@"from_group_source"] = self.cellModel.tracerDic[@"group_source"];
+        dict[@"tracer"] = tracerDic;
         
         userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
         [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:userInfo];

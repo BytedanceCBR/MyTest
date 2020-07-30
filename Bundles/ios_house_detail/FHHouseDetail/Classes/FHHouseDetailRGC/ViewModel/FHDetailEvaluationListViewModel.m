@@ -304,7 +304,7 @@ if (hasMore) {
             [extraDic setValue:cellModel.logPb forKey:@"log_pb"];
             [extraDic setValue:cellModel.groupId forKey:@"group_id"];
             [extraDic setValue:self.houseId forKey:@"from_gid"];
-            [self.tracerHelper trackListFeedClientShow:self.dataList[indexPath.row] withExtraDic:extraDic];
+            [self.tracerHelper trackFeedClientShow:self.dataList[indexPath.row] withExtraDic:extraDic];
         }
     }
 }
@@ -405,7 +405,6 @@ if (hasMore) {
 
 - (void)trackClickComment:(FHFeedUGCCellModel *)cellModel {
     NSMutableDictionary *dict = [cellModel.tracerDic mutableCopy];
-    dict[@"click_position"] = @"feed_comment";
     TRACK_EVENT(@"click_comment", dict);
 }
 

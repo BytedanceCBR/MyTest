@@ -57,6 +57,7 @@
 #import <BDTrackerProtocol/BDTrackerProtocol.h>
 #import "UIColor+Theme.h"
 #import "UIFont+House.h"
+#import "FHUtils.h"
 
 #define kListBottomBarHeight (self.view.tt_safeAreaInsets.bottom ? self.view.tt_safeAreaInsets.bottom + 44 : 44)
 
@@ -96,7 +97,6 @@ static NSString * const WukongListTipsHasShown = @"kWukongListTipsHasShown";
 @property (nonatomic, copy)   NSString *       qid;
 @property (nonatomic, copy)   NSString *       ansid;
 @property (nonatomic, assign)   BOOL       needReloadData;
-@property (nonatomic, strong)   NSDictionary       *goDetailDict;
 
 @end
 
@@ -149,9 +149,10 @@ static NSString * const WukongListTipsHasShown = @"kWukongListTipsHasShown";
     NSMutableDictionary *extraDictsAdd = [NSMutableDictionary dictionaryWithDictionary:extraDicts];
     NSDictionary *tracer = paramObj.allParams[@"tracer"];
     if(tracer && tracer.count > 0){
-        extraDictsAdd[@"enter_from"] = tracer[@"enter_from"];
-        extraDictsAdd[@"origin_from"] = tracer[@"origin_from"];
-        extraDictsAdd[@"category_name"] = tracer[@"category_name"];
+//        extraDictsAdd[@"enter_from"] = tracer[@"enter_from"];
+//        extraDictsAdd[@"origin_from"] = tracer[@"origin_from"];
+//        extraDictsAdd[@"category_name"] = tracer[@"category_name"];
+        [extraDictsAdd addEntriesFromDictionary:tracer];
     }
     
     BOOL needReturn = [[paramObj.userInfo.extra tt_stringValueForKey:kWDListNeedReturnKey] boolValue];
@@ -238,6 +239,23 @@ static NSString * const WukongListTipsHasShown = @"kWukongListTipsHasShown";
         [v3Dic removeObjectForKey:@"article_type"];
         [v3Dic removeObjectForKey:@"pct"];
         [v3Dic setValue:self.viewModel.qID forKey:@"group_id"];
+        
+        id logPb = v3Dic[@"log_pb"];
+        NSDictionary *logPbDic = nil;
+        if([logPb isKindOfClass:[NSDictionary class]]){
+            logPbDic = logPb;
+        }else if([logPb isKindOfClass:[NSString class]]){
+            logPbDic = [FHUtils dictionaryWithJsonString:logPb];
+        }
+        
+        if(logPbDic[@"impr_id"]){
+            v3Dic[@"impr_id"] = logPbDic[@"impr_id"];
+        }
+        
+        if(logPbDic[@"group_source"]){
+            v3Dic[@"group_source"] = logPbDic[@"group_source"];
+        }
+        
         [BDTrackerProtocol eventV3:@"go_detail" params:v3Dic isDoubleSending:NO];
         self.goDetailDict = v3Dic;
 

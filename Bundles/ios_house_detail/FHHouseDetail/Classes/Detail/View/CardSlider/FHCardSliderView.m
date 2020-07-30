@@ -279,7 +279,12 @@ static const float timerInterval = 3.0f;
     [dict removeObjectsForKeys:@[@"card_type"]];
     dict[@"rank"] = @(_selectedIndex);
     dict[@"group_id"] = cellModel.groupId;
-    TRACK_EVENT(@"card_show", dict);
+    
+    if(cellModel.tracer[@"log_pb"][@"group_source"]){
+        dict[@"group_source"] = cellModel.tracer[@"log_pb"][@"group_source"];
+    }
+    
+    TRACK_EVENT(@"feed_client_show", dict);
 }
 
 @end

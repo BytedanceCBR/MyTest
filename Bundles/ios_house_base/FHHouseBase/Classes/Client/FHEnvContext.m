@@ -43,6 +43,7 @@
 #import "FHLynxManager.h"
 #import "FHUGCCategoryManager.h"
 #import "FHUserTracker.h"
+#import "BDABTestManager.h"
 
 #define kFHHouseMixedCategoryID   @"f_house_news" // 推荐频道
 
@@ -111,7 +112,7 @@ static NSInteger kGetLightRequestRetryCount = 3;
                 FHConfigDataModel *configModel = model.data;
                 [[FHLocManager sharedInstance] updateAllConfig:model isNeedDiff:NO];
                 
-                if([self isNewDiscovery]){
+                if([self isHomeNewDiscovery]){
                     [[FHUGCCategoryManager sharedManager] startGetCategoryWithCompleticon:^(BOOL isSuccessed) {
                         //首次请求频道无论成功失败都跳转
                         if (retryGetLightCount == kGetLightRequestRetryCount) {
@@ -256,7 +257,7 @@ static NSInteger kGetLightRequestRetryCount = 3;
                 FHConfigDataModel *configModel = model.data;
                 [[FHLocManager sharedInstance] updateAllConfig:model isNeedDiff:NO];
                 
-                if([self isNewDiscovery]){
+                if([self isHomeNewDiscovery]){
                     [[FHUGCCategoryManager sharedManager] startGetCategoryWithCompleticon:^(BOOL isSuccessed) {
                         //首次请求频道无论成功失败都跳转
                         if (retryGetLightCount == kGetLightRequestRetryCount) {
@@ -367,7 +368,7 @@ static NSInteger kGetLightRequestRetryCount = 3;
                 FHConfigDataModel *configModel = model.data;
                 [[FHLocManager sharedInstance] updateAllConfig:model isNeedDiff:NO];
                 
-                if([self isNewDiscovery]){
+                if([self isHomeNewDiscovery]){
                     [[FHUGCCategoryManager sharedManager] startGetCategoryWithCompleticon:^(BOOL isSuccessed) {
                         //首次请求频道无论成功失败都跳转
                         if (retryGetLightCount == kGetLightRequestRetryCount) {
@@ -450,6 +451,11 @@ static NSInteger kGetLightRequestRetryCount = 3;
 {
     if (kIsNSString(traceKey) && kIsNSDictionary(params)) {
         NSMutableDictionary *pramsDict = [[NSMutableDictionary alloc] initWithDictionary:params];
+        
+        if([params[@"category_name"] isEqualToString:@"f_house_news"]){
+            NSLog(@"11");
+        }
+        
         [FHUserTracker writeEvent:traceKey params:pramsDict];
     }
 }
@@ -913,23 +919,15 @@ static NSInteger kGetLightRequestRetryCount = 3;
         }
         [tabItem setTitle:name];
     }else{
-        if([self isNewDiscovery]){
-            [tabItem setTitle:@"热点"];
+        if ([self isUGCOpen]) {
+            [tabItem setTitle:@"邻里"];
         }else{
-            if ([self isUGCOpen]) {
-                [tabItem setTitle:@"邻里"];
-            }else{
-                [tabItem setTitle:@"找房"];
-            }
+            [tabItem setTitle:@"找房"];
         }
     }
     
     if ([self isUGCOpen]) {
-        if([self isNewDiscovery]){
-            [tabItem setNormalImage:[UIImage imageNamed:@"tab-hot-news"] highlightedImage:[UIImage imageNamed:@"tab-hot-news_press"] loadingImage:nil];
-        }else{
-            [tabItem setNormalImage:[UIImage imageNamed:@"tab-ugc"] highlightedImage:[UIImage imageNamed:@"tab-ugc_press"] loadingImage:nil];
-        }
+        [tabItem setNormalImage:[UIImage imageNamed:@"tab-ugc"] highlightedImage:[UIImage imageNamed:@"tab-ugc_press"] loadingImage:nil];
     }else{
         [tabItem setNormalImage:[UIImage imageNamed:@"tab-search"] highlightedImage:[UIImage imageNamed:@"tab-search_press"] loadingImage:nil];
     }
@@ -1156,9 +1154,18 @@ static NSInteger kGetLightRequestRetryCount = 3;
 }
 
 + (BOOL)isNewDiscovery {
-    FHConfigDataModel *configData = [[FHEnvContext sharedInstance] getConfigFromCache];
-    if([configData.channelType isEqualToString:@"1"]){
-        return YES;
+//    FHConfigDataModel *configData = [[FHEnvContext sharedInstance] getConfigFromCache];
+//    if([configData.channelType isEqualToString:@"1"]){
+//        return YES;
+//    }
+    return NO;
+}
+
++ (BOOL)isHomeNewDiscovery {
+    id res = [BDABTestManager getExperimentValueForKey:@"f_find_revision_v103" withExposure:YES];
+    if ([res isKindOfClass:[NSNumber class]]) {
+        BOOL isHomeNewDiscovery = [(NSNumber *)res boolValue];
+        return isHomeNewDiscovery;
     }
     return NO;
 }

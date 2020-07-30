@@ -42,6 +42,7 @@
         tracerDic[@"rank"] = @(i);
         tracerDic[@"origin_from"] = self.tracerDict[@"origin_from"] ?: @"be_null";
         tracerDic[@"enter_from"] = self.tracerDict[@"enter_from"] ?: @"be_null";
+        tracerDic[@"element_from"] = @"neighborhood_comment";
         tracerDic[@"page_type"] = self.tracerDict[@"page_type"] ?: @"be_null";
         cellModel.tracerDic = [tracerDic copy];
         

@@ -19,6 +19,7 @@
 #import "TTStringHelper.h"
 #import "FHUGCCellManager.h"
 #import "FHUGCFeedDetailJumpManager.h"
+#import "FHUtils.h"
 
 #define cellId @"cellId"
 
@@ -293,12 +294,32 @@
             dict[UT_ORIGIN_FROM] = self.baseViewModel.detailTracerDic[UT_ORIGIN_FROM]?:UT_BE_NULL;
             dict[UT_PAGE_TYPE] = [self.baseViewModel pageTypeString];
             dict[UT_LOG_PB] = cellModel.logPb;
+            dict[UT_ELEMENT_TYPE] = [self elementTypeString:FHHouseTypeNeighborhood];
             dict[@"rank"] = @(indexPath.row);
-            dict[@"comment_id"] = cellModel.groupId;
+            dict[@"group_id"] = cellModel.groupId;
+            dict[@"from_gid"] = self.baseViewModel.houseId;
+            
+            id logPb = dict[@"log_pb"];
+            NSDictionary *logPbDic = nil;
+            if([logPb isKindOfClass:[NSDictionary class]]){
+                logPbDic = logPb;
+            }else if([logPb isKindOfClass:[NSString class]]){
+                logPbDic = [FHUtils dictionaryWithJsonString:logPb];
+            }
+            
+            if(logPbDic[@"impr_id"]){
+                dict[@"impr_id"] = logPbDic[@"impr_id"];
+            }
+            
+            if(logPbDic[@"group_source"]){
+                dict[@"group_source"] = logPbDic[@"group_source"];
+            }
+            
             TRACK_EVENT(@"feed_client_show", dict);
         }
     }
 }
+
 - (void)fh_willDisplayCell  {
     [super fh_willDisplayCell];
     
@@ -309,6 +330,7 @@
         }
     }
 }
+
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     if(indexPath.row < self.dataList.count){
         FHFeedUGCCellModel *cellModel = self.dataList[indexPath.row];

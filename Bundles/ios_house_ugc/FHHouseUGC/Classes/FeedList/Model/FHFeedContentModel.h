@@ -721,6 +721,10 @@ typedef NS_ENUM(NSUInteger, FHFeedContentStickStyle) {
 @property (assign, nonatomic) BOOL hidelLine;
 
 @property (nonatomic, strong, nullable) NSDictionary *lynxData;
+//转评来源id
+@property (nonatomic, copy , nullable) NSString *fromGid;
+//转评来源类型
+@property (nonatomic, copy , nullable) NSString *fromGroupSource;
 
 @end
 

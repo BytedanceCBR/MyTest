@@ -394,6 +394,8 @@
         cellModel.commentSchema = model.rawData.content.commentSchema;
         cellModel.showLookMore = YES;
         cellModel.numberOfLines = 3;
+        cellModel.fromGid = model.rawData.fromGid;
+        cellModel.fromGroupSource = model.rawData.fromGroupSource;
         
         cellModel.imageList = model.rawData.content.answer.thumbImageList;
         //处理大图
@@ -447,6 +449,8 @@
         cellModel.openUrl = model.rawData.commentBase.detailSchema;
         cellModel.showLookMore = YES;
         cellModel.numberOfLines = 3;
+        cellModel.fromGid = model.rawData.fromGid;
+        cellModel.fromGroupSource = model.rawData.fromGroupSource;
         
         cellModel.imageList = model.rawData.commentBase.imageList;
         cellModel.largeImageList = model.rawData.commentBase.imageList;

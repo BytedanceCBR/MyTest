@@ -197,21 +197,26 @@
     return [self.dataList count];
 }
 
-- (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
-    if(indexPath.row < self.dataList.count){
-        NSString *tempKey = [NSString stringWithFormat:@"%ld_%ld",indexPath.section,indexPath.row];
-        if (!self.elementShowCaches[tempKey]) {
-            self.elementShowCaches[tempKey] = @(YES);
-            FHhouseDetailRGCListCellModel *cellModel = (FHhouseDetailRGCListCellModel *)self.currentData;
-            FHFeedUGCCellModel *cellModelItem = self.dataList[indexPath.row];
-            NSDictionary *houseInfo = cellModel.extraDic;
-            NSDictionary *extraDic = @{}.mutableCopy;
-            [extraDic setValue:cellModel.detailTracerDic[@"page_type"] forKey:@"page_type"];
-            [extraDic setValue:[NSString stringWithFormat:@"%ld",(long)indexPath.row] forKey:@"rank"];
-            [extraDic setValue:cellModelItem.groupId forKey:@"from_gid"];
-            [extraDic setValue:houseInfo[@"house_id"] forKey:@"group_id"];
-            [extraDic setValue:[self elementTypeString:FHHouseTypeSecondHandHouse] forKey:@"element_type"];
-            [self.tracerHelper trackFeedClientShow:self.dataList[indexPath.row] withExtraDic:extraDic];
+- (void)fh_willDisplayCell  {
+    [super fh_willDisplayCell];
+    
+    if(self.dataList.count > 0) {
+        for(int i = 0; i < self.dataList.count; i++) {
+            NSIndexPath *indexPath = [NSIndexPath indexPathForRow:i inSection:0];
+            NSString *tempKey = [NSString stringWithFormat:@"%ld_%ld",indexPath.section,indexPath.row];
+            if (!self.elementShowCaches[tempKey]) {
+                self.elementShowCaches[tempKey] = @(YES);
+                FHhouseDetailRGCListCellModel *cellModel = (FHhouseDetailRGCListCellModel *)self.currentData;
+                FHFeedUGCCellModel *cellModelItem = self.dataList[indexPath.row];
+                NSDictionary *houseInfo = cellModel.extraDic;
+                NSDictionary *extraDic = @{}.mutableCopy;
+                [extraDic setValue:cellModel.detailTracerDic[@"page_type"] forKey:@"page_type"];
+                [extraDic setValue:[NSString stringWithFormat:@"%ld",(long)indexPath.row] forKey:@"rank"];
+                [extraDic setValue:cellModelItem.groupId forKey:@"from_gid"];
+                [extraDic setValue:houseInfo[@"house_id"] forKey:@"group_id"];
+                [extraDic setValue:[self elementTypeString:FHHouseTypeSecondHandHouse] forKey:@"element_type"];
+                [self.tracerHelper trackFeedClientShow:self.dataList[indexPath.row] withExtraDic:extraDic];
+            }
         }
     }
 }
@@ -349,7 +354,6 @@
 
 - (void)trackClickComment:(FHFeedUGCCellModel *)cellModel {
     NSMutableDictionary *dict = [cellModel.tracerDic mutableCopy];
-    dict[@"click_position"] = @"feed_comment";
     TRACK_EVENT(@"click_comment", dict);
 }
 

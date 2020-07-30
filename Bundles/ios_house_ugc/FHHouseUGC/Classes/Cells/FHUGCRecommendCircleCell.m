@@ -137,6 +137,7 @@
             dict[@"action_type"] = @(FHCommunityListTypeFollow);
             dict[@"select_district_tab"] = @(FHUGCCommunityDistrictTabIdRecommend);
             NSMutableDictionary *traceParam = @{}.mutableCopy;
+            traceParam[@"origin_from"] = self.cellModel.tracerDic[@"origin_from"] ?: @"be_null",
             traceParam[@"enter_type"] = @"click";
             traceParam[@"enter_from"] = self.cellModel.tracerDic[@"page_type"] ?: @"be_null";
             traceParam[@"element_from"] = @"top_operation_position";

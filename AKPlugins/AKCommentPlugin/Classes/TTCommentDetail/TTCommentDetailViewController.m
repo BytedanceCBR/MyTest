@@ -40,6 +40,7 @@
 #import "TTBusinessManager+StringUtils.h"
 #import "UIColor+Theme.h"
 #import <BDTrackerProtocol/BDTrackerProtocol.h>
+#import "FHUserTracker.h"
 
 
 #define kDeleteCommentNotificationKey   @"kDeleteCommentNotificationKey"
@@ -124,6 +125,7 @@ NSString *const kTTCommentDetailForwardCommentNotification = @"kTTCommentDetailF
     //一个trick的实现，转发需求临时方案，先把文章信息带到评论详情页 //xushuangqing....
     _article = [baseCondition tt_objectForKey:@"group" ofClass:[Article class]];
 
+    self.originFrom = baseCondition[@"originFrom"];
     self.enterFrom = baseCondition[@"enterFrom"];
     self.categoryID = baseCondition[@"categoryID"];
     if (isEmptyString(self.categoryID)) {
@@ -426,11 +428,13 @@ NSString *const kTTCommentDetailForwardCommentNotification = @"kTTCommentDetailF
     [dic setValue:self.commentModel.groupModel.groupID forKey:@"group_id"];
     [dic setValue:self.commentModel.userID forKey:@"to_user_id"];
     [dic setValue:self.commentModel.commentID forKey:@"comment_id"];
-    [dic setValue:@"detail" forKey:@"position"];
+    [dic setValue:@"comment_detail" forKey:@"page_type"];
     [dic setValue:@(time).stringValue forKey:@"stay_time"];
     
+    dic[@"enter_from"] = self.enterFrom ?: @"be_null";
+    
     [BDTrackerProtocol eventV3:@"comment_close" params:dic];
-
+    [FHUserTracker writeEvent:@"stay_page" params:dic];
     [self trySendCurrentPageStayTime];
 }
 
@@ -710,17 +714,26 @@ NSString *const kTTCommentDetailForwardCommentNotification = @"kTTCommentDetailF
         return;
     }
     
+    NSMutableDictionary *params = [NSMutableDictionary dictionary];
+    [params setValue:@"house_app2c_v2" forKey:@"event_type"];
+    [params setValue:_groupId forKey:@"group_Id"];
+    [params setValue:_groupId forKey:@"item_Id"];
+    [params setValue:_logPb  forKey:@"log_pd"];
+    [params setValue:commentId forKey:@"comment_id"];
+    
+    if(self.extraDic){
+        [params addEntriesFromDictionary:self.extraDic];
+        if(self.extraDic[@"page_type"]){
+            params[@"enter_from"] = self.extraDic[@"page_type"];
+        }
+    }
+    
+    [params setValue:@"comment_detail" forKey:@"page_type"];
+    
     if (!self.pageState.detailModel.userDigg) {
-        NSMutableDictionary *params = [NSMutableDictionary dictionary];
-        [params setValue:@"house_app2c_v2" forKey:@"event_type"];
-        [params setValue:_groupId forKey:@"group_Id"];
-        [params setValue:_groupId forKey:@"item_Id"];
-        [params setValue:_logPb  forKey:@"log_pd"];
-        [params setValue:_categoryName  forKey:@"category_name"];
-        [params setValue:[FHTraceEventUtils generateEnterfrom:_categoryName] forKey:@"enter_from"];
-        [params setValue:@"comment_detail" forKey:@"position"];
-        [params setValue:commentId forKey:@"comment_id"];
-        [BDTrackerProtocol eventV3:@"rt_like" params:params];
+        [BDTrackerProtocol eventV3:@"click_like" params:params];
+    }else{
+        [BDTrackerProtocol eventV3:@"click_dislike" params:params];
     }
 //    wrapperTrackEvent(@"update_detail", @"bottom_digg_click");
 //    TTMomentDetailAction *action = [TTMomentDetailAction digActionWithCommentDetailModel:self.pageState.detailModel];
@@ -841,17 +854,25 @@ NSString *const kTTCommentDetailForwardCommentNotification = @"kTTCommentDetailF
     [params setValue:_groupId forKey:@"item_Id"];
     [params setValue:_logPb  forKey:@"log_pd"];
     [params setValue:_categoryName  forKey:@"category_name"];
-    [params setValue:[FHTraceEventUtils generateEnterfrom:_categoryName] forKey:@"enter_from"];
-    [params setValue:@"comment_detail" forKey:@"position"];
+    [params setValue:self.originFrom forKey:@"origin_from"];
+    [params setValue:self.enterFrom forKey:@"enter_from"];
+    [params setValue:@"comment" forKey:@"click_position"];
     if (!isEmptyString(_qid)) {
         [params setValue:_groupId forKey:@"ansid"];
         [params setValue:_qid forKey:@"qid"];
     }
     [params setValue:[self.commentModel.commentID stringValue] forKey:@"comment_id"];
+    
+    if(self.extraDic){
+        [params addEntriesFromDictionary:self.extraDic];
+        params[@"enter_from"] = self.extraDic[@"page_type"];
+    }
+    [params setValue:@"comment_detail" forKey:@"page_type"];
+    
     if (!self.pageState.detailModel.userDigg) {
-        [BDTrackerProtocol eventV3:@"rt_like" params:params];
+        [BDTrackerProtocol eventV3:@"click_like" params:params];
     } else {
-         [BDTrackerProtocol eventV3:@"rt_unlike" params:params];
+         [BDTrackerProtocol eventV3:@"click_dislike" params:params];
     }
     
     SSUserModel *userModel;
@@ -1008,8 +1029,9 @@ NSString *const kTTCommentDetailForwardCommentNotification = @"kTTCommentDetailF
     [params setValue:_groupId forKey:@"group_Id"];
     [params setValue:_groupId forKey:@"item_Id"];
     [params setValue:_logPb forKey:@"log_pd"];
+    [params setValue:self.originFrom  forKey:@"origin_from"];
     [params setValue:_categoryName  forKey:@"category_name"];
-    [params setValue:@"reply" forKey:@"position"];
+    [params setValue:@"reply" forKey:@"click_position"];
     [params setValue:_commentModel.commentID forKey:@"comment_id"];
     if (!isEmptyString(_qid)) {
         [params setValue:_qid forKey:@"qid"];
@@ -1019,19 +1041,17 @@ NSString *const kTTCommentDetailForwardCommentNotification = @"kTTCommentDetailF
     if(self.extraDic){
         [params addEntriesFromDictionary:self.extraDic];
         
-        if(self.extraDic[@"enter_from"]){
-            params[@"category_name"] = self.extraDic[@"enter_from"];
+        if(self.extraDic[@"page_type"]){
+            params[@"enter_from"] = self.extraDic[@"page_type"];
         }
     }
     
-//    [params setValue:[FHTraceEventUtils generateEnterfrom:_categoryName] forKey:@"enter_from"];
+    [params setValue:@"comment_detail" forKey:@"page_type"];
     
     if (!model.userDigg) {
-        [params setValue:@"feed_like" forKey:@"click_position"];
-        [BDTrackerProtocol eventV3:@"rt_like" params:params];
+        [BDTrackerProtocol eventV3:@"click_like" params:params];
     }else{
-        [params setValue:@"feed_dislike" forKey:@"click_position"];
-        [BDTrackerProtocol eventV3:@"rt_unlike" params:params];
+        [BDTrackerProtocol eventV3:@"click_dislike" params:params];
     }
     TTMomentDetailAction *action = [TTMomentDetailAction digActionWithReplyCommentModel:model];
     action.commentDetailModel = self.pageState.detailModel;

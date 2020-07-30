@@ -73,6 +73,11 @@
             self.tracerDict[@"enter_from"] = @"default";
         }
         
+        NSString *originFrom = params[@"origin_from"];
+        if (originFrom.length > 0) {
+            self.tracerDict[@"origin_from"] = originFrom;
+        }
+        
         self.tracerDict[@"enter_type"] = @"click";
         // 取url中的埋点数据结束
         self.enter_from = self.tracerDict[@"enter_from"];
@@ -433,7 +438,11 @@
 
 - (void)addGoDetailLog {
     NSMutableDictionary *tracerDict = self.tracerDict.mutableCopy;
-    [FHUserTracker writeEvent:@"go_detail_personal" params:tracerDict];
+    tracerDict[@"user_id"] = self.userId;
+    [FHUserTracker writeEvent:@"go_detail" params:tracerDict];
+    
+    tracerDict[@"category_name"] = @"personal_homepage";
+    [FHUserTracker writeEvent:@"enter_category" params:tracerDict];
 }
 
 - (void)addStayPageLog {
@@ -442,8 +451,12 @@
         return;
     }
     NSMutableDictionary *tracerDict = self.tracerDict.mutableCopy;
+    tracerDict[@"user_id"] = self.userId;
     tracerDict[@"stay_time"] = [NSNumber numberWithInteger:duration];
-    [FHUserTracker writeEvent:@"stay_page_personal" params:tracerDict];
+    [FHUserTracker writeEvent:@"stay_page" params:tracerDict];
+    
+    tracerDict[@"category_name"] = @"personal_homepage";
+    [FHUserTracker writeEvent:@"stay_category" params:tracerDict];
     [self tt_resetStayTime];
 }
 

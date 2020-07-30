@@ -1079,9 +1079,7 @@
 - (void)p_buildCommentViewController
 {
     self.commentViewController = [[TTCommentViewController alloc] initWithViewFrame:[self p_contentVisableRect] dataSource:self delegate:self];
-    NSMutableDictionary *dict = @{}.mutableCopy;
-    dict[@"page_type"] = [self pageType];
-    self.commentViewController.tracerDict = dict;
+    self.commentViewController.tracerDict = self.detailModel.reportParams;
     self.commentViewController.enableImpressionRecording = YES;
     [self.commentViewController willMoveToParentViewController:self];
     [self addChildViewController:self.commentViewController];
@@ -2280,13 +2278,18 @@
 //    }
     
     [dic setValue:self.detailModel.article.groupModel.groupID forKey:@"group_id"];
-
     [dic setValue:enterFrom forKey:@"enter_from"];
     if (![@"push" isEqualToString: enterFrom]) {
         [dic setValue:[self categoryName] forKey:@"category_name"];
     }
     [dic setValue:self.detailModel.logPb == nil ? @"be_null" : self.detailModel.logPb forKey:@"log_pb"];
 //    [[EnvContext shared].tracer writeEvent:@"go_detail" params:dic];
+    
+    if(!self.detailModel.reportParams){
+        NSMutableDictionary *reportParams = [NSMutableDictionary dictionary];
+        reportParams[@"page_type"] = @"article_detail";
+        self.detailModel.reportParams = [reportParams copy];
+    }
 
     if([self.detailModel.reportParams isKindOfClass:[NSDictionary class]])
     {
@@ -2645,8 +2648,7 @@
         [params setValue:model.userID.stringValue forKey:@"user_id"];
         [params setValue:self.detailModel.orderedData.logPb forKey:@"log_pb"];
         [params setValue:self.detailModel.orderedData.categoryID forKey:@"category_name"];
-        [params setValue:@"comment" forKey:@"position"];
-        [params setValue:@"feed_dislike" forKey:@"click_position"];
+        [params setValue:@"comment" forKey:@"click_position"];
         
         if([self.detailModel.reportParams isKindOfClass:[NSDictionary class]]){
             [params addEntriesFromDictionary:self.detailModel.reportParams];
@@ -2656,9 +2658,7 @@
             }
         }
         
-//        [params setValue:self.detailModel.clickLabel forKey:@"enter_from"];
-        
-        [TTTrackerWrapper eventV3:@"rt_unlike" params:params];
+        [TTTrackerWrapper eventV3:@"click_dislike" params:params];
     } else {
         NSMutableDictionary *params = [[NSMutableDictionary alloc] initWithCapacity:5];
         [params setValue:@"house_app2c_v2" forKey:@"event_type"];
@@ -2668,8 +2668,7 @@
 //        [params setValue:model.userID.stringValue forKey:@"user_id"];
         [params setValue:self.detailModel.orderedData.logPb forKey:@"log_pb"];
         [params setValue:self.detailModel.orderedData.categoryID forKey:@"category_name"];
-        [params setValue:@"comment" forKey:@"position"];
-        [params setValue:@"feed_like" forKey:@"click_position"];
+        [params setValue:@"comment" forKey:@"click_position"];
         
         if([self.detailModel.reportParams isKindOfClass:[NSDictionary class]]){
             [params addEntriesFromDictionary:self.detailModel.reportParams];
@@ -2679,9 +2678,7 @@
             }
         }
         
-//        [params setValue:[FHTraceEventUtils generateEnterfrom:self.detailModel.orderedData.categoryID] forKey:@"enter_from"];
-        
-        [TTTrackerWrapper eventV3:@"rt_like" params:params];
+        [TTTrackerWrapper eventV3:@"click_like" params:params];
     }
 }
 

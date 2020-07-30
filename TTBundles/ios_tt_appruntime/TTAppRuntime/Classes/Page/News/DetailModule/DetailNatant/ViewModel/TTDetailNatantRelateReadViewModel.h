@@ -25,6 +25,7 @@ typedef void(^AlbumClickAction)(Article * _Nullable article);
 @property (nonatomic, strong, nullable) NSString *impressionID;
 @property (nonatomic, strong, nullable) NSString *aggrType;
 @property (nonatomic, strong, nullable) NSDictionary *middle_image;
+@property (nonatomic, strong, nullable) NSDictionary *logPb;
 
 @end
 

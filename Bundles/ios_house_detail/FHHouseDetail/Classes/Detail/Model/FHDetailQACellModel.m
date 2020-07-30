@@ -40,6 +40,7 @@
         tracerDic[@"origin_from"] = self.tracerDict[@"origin_from"] ?: @"be_null";
         tracerDic[@"enter_from"] = self.tracerDict[@"enter_from"] ?: @"be_null";
         tracerDic[@"page_type"] = self.tracerDict[@"page_type"] ?: @"be_null";
+        tracerDic[@"element_from"] = @"neighborhood_question";
         cellModel.tracerDic = [tracerDic copy];
         
         [_dataList addObject:cellModel];

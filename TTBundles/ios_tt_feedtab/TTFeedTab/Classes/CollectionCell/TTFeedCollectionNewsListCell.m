@@ -30,11 +30,11 @@
     self = [super initWithFrame:frame];
     if (self) {
         CGFloat topPadding = 0;
-        CGFloat bottomPadding = 44 + [TTUIResponderHelper mainWindow].tt_safeAreaInsets.bottom;
+//        CGFloat bottomPadding = 44 + [TTUIResponderHelper mainWindow].tt_safeAreaInsets.bottom;
         
-        if ([TTDeviceHelper isPadDevice]) {
-            bottomPadding = 0;
-        }
+//        if ([TTDeviceHelper isPadDevice]) {
+        CGFloat bottomPadding = 0;
+//        }
         
         /*self.listView = [[TTFeedMixedListView alloc] initWithFrame:CGRectMake(0, 0, self.bounds.size.width, self.bounds.size.height)];
         [self.listView setListTopInset:topPadding BottomInset:bottomPadding];

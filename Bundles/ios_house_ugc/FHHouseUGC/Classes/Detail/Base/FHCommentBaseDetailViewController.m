@@ -961,17 +961,17 @@
 // 详情页他人评论点赞
 - (void)click_reply_like:(NSString *)comment_id {
     NSMutableDictionary *tracerDict = self.tracerDict.mutableCopy;
-    tracerDict[@"click_position"] = @"reply_like";
+    tracerDict[@"click_position"] = @"comment";
     tracerDict[@"comment_id"] = comment_id ?: @"be_null";
-    [FHUserTracker writeEvent:@"click_reply_like" params:tracerDict];
+    [FHUserTracker writeEvent:@"click_like" params:tracerDict];
 }
 
 // 详情页他人评论取消点赞
 - (void)click_reply_dislike:(NSString *)comment_id {
     NSMutableDictionary *tracerDict = self.tracerDict.mutableCopy;
-    tracerDict[@"click_position"] = @"reply_dislike";
+    tracerDict[@"click_position"] = @"comment";
     tracerDict[@"comment_id"] = comment_id ?: @"be_null";
-    [FHUserTracker writeEvent:@"click_reply_dislike" params:tracerDict];
+    [FHUserTracker writeEvent:@"click_dislike" params:tracerDict];
 }
 
 // 点击删除自己的评论
@@ -985,14 +985,14 @@
 // 详情 点赞
 - (void)click_feed_like {
     NSMutableDictionary *tracerDict = self.tracerDict.mutableCopy;
-    tracerDict[@"click_position"] = @"feed_like";
+    tracerDict[@"click_position"] = @"feed_detail";
     [FHUserTracker writeEvent:@"click_like" params:tracerDict];
 }
 
 // 详情页 取消点赞
 - (void)click_feed_dislike {
     NSMutableDictionary *tracerDict = self.tracerDict.mutableCopy;
-    tracerDict[@"click_position"] = @"feed_dislike";
+    tracerDict[@"click_position"] = @"feed_detail";
     [FHUserTracker writeEvent:@"click_dislike" params:tracerDict];
 }
 

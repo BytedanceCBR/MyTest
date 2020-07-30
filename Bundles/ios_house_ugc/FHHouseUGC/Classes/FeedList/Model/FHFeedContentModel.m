@@ -491,7 +491,9 @@
                            @"upSpace":@"up_space",
                            @"downSpace":@"down_space",
                            @"lynxData":@"lynx_data",
-                           @"hidelLine":@"hide_line"
+                           @"hidelLine":@"hide_line",
+                           @"fromGid":@"from_gid",
+                           @"fromGroupSource":@"from_group_source"
                            };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
         return dict[keyName]?:keyName;

@@ -131,6 +131,7 @@
     tracerDict[@"tab_name"] = @"operation_tab";
     tracerDict[@"with_tips"] = @"0";
     tracerDict[@"log_pb"] = centerTabConfig.logPb;
+    tracerDict[@"enter_channel"] = [FHEnvContext sharedInstance].enterChannel;
     return tracerDict;
 }
 

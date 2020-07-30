@@ -92,6 +92,17 @@ DEC_TASK("TTABHelperTask",FHTaskTypeSerial,TASK_PRIORITY_HIGH+4);
         return nil;
     }];
     [BDABTestManager registerExperiment:imLoginTypeExp];
+    
+    BDABTestBaseExperiment *newDiscoveryExp = [[BDABTestBaseExperiment alloc] initWithKey:@"f_find_revision_v103" owner:@"yangdongze" description:@"首页发现tab内容实验，对照组为原发现内容，实验组内容为社区7个频道的内容" defaultValue:@(0) valueType:BDABTestValueTypeNumber isSticky:YES settingsValueBlock:^id(NSString *key) {
+        if (key.length > 0) {
+            NSDictionary *archSettings= [[TTSettingsManager sharedManager] settingForKey:@"f_settings" defaultValue:@{} freeze:YES];
+            if ([archSettings valueForKey:key]) {
+                return archSettings[key];
+            }
+        }
+        return nil;
+    }];
+    [BDABTestManager registerExperiment:newDiscoveryExp];
 }
 
 // 添加客户端实验

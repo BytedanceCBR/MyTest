@@ -163,6 +163,7 @@
         }
         
         NSMutableDictionary *traceParam = @{}.mutableCopy;
+        traceParam[@"origin_from"] = @"message";
         traceParam[@"enter_from"] = @"feed_message_list";
         traceParam[@"enter_type"] = @"feed_message_card";
         traceParam[@"rank"] = @(indexPath.row);

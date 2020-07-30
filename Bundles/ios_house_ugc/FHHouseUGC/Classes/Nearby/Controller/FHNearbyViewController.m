@@ -101,6 +101,7 @@
     
         self.feedVC =[[FHCommunityFeedListController alloc] init];
         _feedVC.listType = FHCommunityFeedListTypeNearby;
+        _feedVC.isNewDiscovery = self.isNewDiscovery;
         _feedVC.currentLocaton = self.currentLocaton;
         _feedVC.tableHeaderView = self.headerView;
         _feedVC.view.frame = self.view.bounds;
@@ -118,6 +119,11 @@
         _feedVC.currentLocaton = self.currentLocaton;
         [self.feedVC startLoadData];
     }
+}
+
+- (void)setTracerDict:(NSMutableDictionary *)tracerDict {
+    [super setTracerDict:tracerDict];
+    _feedVC.tracerDict = [tracerDict mutableCopy];
 }
 
 - (void)loadFeedListView {
@@ -207,19 +213,15 @@
 
 - (FHNearbyHeaderView *)headerView {
     if(!_headerView){
-        if([FHEnvContext isNewDiscovery]){
-            _headerViewHeight = 49.0f;
-        }else{
-            _headerViewHeight = 0.001f;
-        }
-        _headerView = [[FHNearbyHeaderView alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, _headerViewHeight)];
+        _headerViewHeight = 49.0f;
+        _headerView = [[FHNearbyHeaderView alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, _headerViewHeight) isNewDiscovery:self.isNewDiscovery];
         
         NSMutableDictionary *tracerDict = [NSMutableDictionary dictionary];
         [tracerDict addEntriesFromDictionary:self.tracerDict];
         tracerDict[@"page_type"] = @"hot_discuss_feed";
         _headerView.searchView.tracerDict = tracerDict;
         
-        _headerView.searchView.hidden = ![FHEnvContext isNewDiscovery];
+        _headerView.searchView.hidden = NO;
         _headerView.hidden = YES;
     }
     return _headerView;

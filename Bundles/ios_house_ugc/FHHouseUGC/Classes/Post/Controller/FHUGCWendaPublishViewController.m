@@ -712,6 +712,7 @@
     traceParam[UT_ELEMENT_FROM] = @"select_like_publisher_neighborhood";
     traceParam[UT_ENTER_FROM] = [self pageType];
     traceParam[UT_ENTER_TYPE] = @"click";
+    traceParam[UT_ORIGIN_FROM] = self.tracerDict[UT_ORIGIN_FROM] ?: @"be_null";
     dict[TRACER_KEY] = traceParam;
     TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
     NSURL *openUrl = [NSURL URLWithString:@"sslocal://ugc_community_list"];
@@ -1039,6 +1040,13 @@
                 
                 [[ToastManager manager] showToast:@"发布成功!"];
                 
+                //发布成功埋点
+                NSMutableDictionary *tracerDict = self.tracerDict.mutableCopy;
+                tracerDict[@"group_id"] = cellModel.groupId;
+                tracerDict[@"page_type"] = [self pageType];
+                [tracerDict removeObjectsForKeys:@[@"origin_from"]];
+                [FHUserTracker writeEvent:@"feed_publish_success" params:tracerDict];
+                
                 dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
                     // 发通知进行数据插入操作
                     [[NSNotificationCenter defaultCenter] postNotificationName:kTTForumPostThreadSuccessNotification object:nil userInfo:userInfo];
@@ -1130,9 +1138,6 @@
     NSMutableDictionary *dict = @{}.mutableCopy;
     dict[UT_PAGE_TYPE] = [self pageType];
     dict[UT_ENTER_FROM] = self.tracerModel.enterFrom?:UT_BE_NULL;
-    dict[UT_LOG_PB] = self.tracerModel.logPb?:UT_BE_NULL;
-    dict[UT_ELEMENT_FROM] = self.tracerModel.elementFrom?:UT_BE_NULL;
-    dict[@"group_id"] = self.neighborhoodId ?: @"be_null";
     TRACK_EVENT(@"go_detail", dict);
 }
 
