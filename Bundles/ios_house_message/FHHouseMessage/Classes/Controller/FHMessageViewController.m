@@ -30,7 +30,6 @@
 #import <FHMessageNotificationManager.h>
 #import "FHEnvContext.h"
 #import <FHPopupViewCenter/FHPopupViewManager.h>
-#import "FHMessageTopView.h"
 #import "FHMessageEditHelp.h"
 
 @interface FHMessageViewController ()
@@ -38,7 +37,6 @@
 @property(nonatomic, strong) FHMessageViewModel *viewModel;
 @property(nonatomic, strong) FHPushMessageTipView *pushTipView;
 @property (nonatomic, copy)     NSString       *enter_from;// 外部传入
-@property (nonatomic, strong) FHMessageTopView *topView;
 @end
 
 @implementation FHMessageViewController
@@ -127,14 +125,19 @@
 }
 
 - (void)initNavbar {
-    [self setupDefaultNavBar:NO];
-    self.customNavBarView.leftBtn.hidden = [self leftActionHidden];
-    self.customNavBarView.title.text = @"消息";
-    //消息列表页UI改版
-    self.customNavBarView.title.font = [UIFont themeFontSemibold:18];
-    self.customNavBarView.bgView.hidden = YES;
-    self.customNavBarView.seperatorLine.hidden = YES;
-    self.customNavBarView.backgroundColor = [UIColor themeGray7];
+    if (self.isSegmentedChildViewController) {
+        [self setupDefaultNavBar:NO];
+        self.customNavBarView.hidden = YES;
+    } else {
+        [self setupDefaultNavBar:NO];
+        self.customNavBarView.leftBtn.hidden = [self leftActionHidden];
+        self.customNavBarView.title.text = @"消息";
+        //消息列表页UI改版
+        self.customNavBarView.title.font = [UIFont themeFontSemibold:18];
+        self.customNavBarView.bgView.hidden = YES;
+        self.customNavBarView.seperatorLine.hidden = YES;
+        self.customNavBarView.backgroundColor = [UIColor themeGray7];
+    }
 }
 
 - (BOOL)leftActionHidden {
@@ -142,8 +145,7 @@
 }
 
 - (void)initView {
-    self.topView = [[FHMessageTopView alloc] init];
-    [self.view addSubview:_topView];
+
     self.containerView = [[UIView alloc] init];
     [self.view addSubview:_containerView];
     
@@ -216,16 +218,7 @@
 
 
 - (void)initConstraints {
-    CGFloat height = 64.f;
-    if (@available(iOS 13.0, *)) {
-        height = 44.f + [UIApplication sharedApplication].keyWindow.safeAreaInsets.top;
-    } else if (@available(iOS 11.0, *)) {
-        height = 44.f + self.view.tt_safeAreaInsets.top;
-    }
-    [self.topView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.left.right.mas_equalTo(0);
-        make.height.mas_equalTo(height);
-    }];
+
     CGFloat bottom = [self getBottomMargin];
     if (@available(iOS 11.0 , *)) {
         if([self isAlignToSafeBottom]){
@@ -270,7 +263,7 @@
 }
 
 - (void)initViewModel {
-    _viewModel = [[FHMessageViewModel alloc] initWithTableView:_tableView topView:self.topView controller:self];
+    _viewModel = [[FHMessageViewModel alloc] initWithTableView:_tableView controller:self];
     [_viewModel setPageType:[self getPageType]];
     if (self.enter_from.length > 0) {
         [_viewModel setEnterFrom:self.enter_from];

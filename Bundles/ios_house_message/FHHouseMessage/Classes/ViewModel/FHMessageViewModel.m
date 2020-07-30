@@ -30,21 +30,6 @@
 #import "FHMessageEditView.h"
 #define kCellId @"FHMessageCell_id"
 
-@interface DeleteAlertDelegate : NSObject <UIAlertViewDelegate>
-@property(nonatomic, strong) IMConversation *conv;
-@property(nonatomic, weak) FHMessageViewModel *viewModel;
-@end
-
-@implementation DeleteAlertDelegate
-
-- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
-    if (buttonIndex == 1) {
-        [_viewModel deleteConversation:_conv];
-    }
-}
-
-@end
-
 @interface FHMessageViewModel () <IMChatStateObserver, UITableViewDelegate>
 
 @property(nonatomic, strong) FHConversationDataCombiner *combiner;
@@ -55,24 +40,16 @@
 @property(nonatomic, assign) BOOL isFirstLoad;
 @property(nonatomic, strong) NSString *pageType;
 @property (nonatomic, copy)     NSString       *enterFrom;
-@property (nonatomic, weak) FHMessageTopView *topView;
-@property (nonatomic, assign) NSInteger messageDataType;
-@property(nonatomic, strong) DeleteAlertDelegate *deleteAlertDelegate;
-
 @end
 
 @implementation FHMessageViewModel
 
-- (instancetype)initWithTableView:(UITableView *)tableView topView:(nonnull FHMessageTopView *)topView controller:(FHMessageViewController *)viewController {
+- (instancetype)initWithTableView:(UITableView *)tableView controller:(FHMessageViewController *)viewController {
     self = [super init];
     if (self) {
         self.combiner = [[FHConversationDataCombiner alloc] init];
-        self.topView = topView;
-        _messageDataType = 1;
         __weak typeof(self)wself = self;
-        topView.tagChangeBlock = ^(NSInteger tag) {
-            [wself refreshDataWithType:tag];
-        };
+
         _dataList = [[NSMutableArray alloc] init];
         _isFirstLoad = YES;
         self.tableView = tableView;
@@ -99,11 +76,6 @@
         }];
     }
     return self;
-}
-
-- (void)refreshDataWithType:(NSInteger)tag {
-    _messageDataType = tag;
-    [self reloadData];
 }
 
 - (void)refreshConversationList {
@@ -217,7 +189,9 @@
         cell.stateIsClose = ^(id  _Nullable data) {
             [wself reloadData];
         };
-        [cell initGestureWithData:model index:indexPath.row];
+        if (self.viewController.dataType == FHMessageRequestDataTypeIM) {
+            [cell initGestureWithData:model index:indexPath.row];
+        }
     }
     return cell;
 }
@@ -236,12 +210,18 @@
 }
 
 - (NSArray *)items {
-    if (_messageDataType == 1) {
-        return [_combiner conversationItems];
-    } else if (_messageDataType == 2) {
-        return [_combiner channelItems];
+    switch (self.viewController.dataType) {
+        case FHMessageRequestDataTypeIM:
+            return [_combiner conversationItems];
+            break;
+        case FHMessageRequestDataTypeSystem:
+            return [_combiner channelItems];
+            break;
+        default:
+            return nil;
+            break;
     }
-    return [[NSArray alloc] init];
+    return nil;
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -353,10 +333,10 @@
 //}
 
 - (void)reloadData {
-    [FHMessageEditHelp close];
-    if (![FHMessageEditHelp shared].isCanReloadData) {
-        return;
-    }
+//    [FHMessageEditHelp close];
+//    if (![FHMessageEditHelp shared].isCanReloadData) {
+//        return;
+//    }
     NSInteger chatNumber = 0;
     NSInteger systemMessageNumber = 0;
     BOOL hasRedPoint = NO;
@@ -371,7 +351,9 @@
     for (FHUnreadMsgDataUnreadModel *item in [_combiner channelItems]) {
         systemMessageNumber += [item.unread integerValue];
     }
-    [self.topView updateRedPointWithChat:chatNumber andHasRedPoint:hasRedPoint  andSystemMessage:systemMessageNumber];
+    if (self.viewController.updateRedPoint) {
+        self.viewController.updateRedPoint(chatNumber, hasRedPoint, systemMessageNumber);
+    }
     [self.tableView reloadData];
 }
 
@@ -421,16 +403,28 @@
 }
 
 - (void)displayDeleteConversationConfirm:(IMConversation *)conversation {
-    self.deleteAlertDelegate = [[DeleteAlertDelegate alloc] init];
-    self.deleteAlertDelegate.viewModel = self;
-    self.deleteAlertDelegate.conv = conversation;
-    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"删除会话"
-                                                        message:@"确定要删除当前会话记录？"
-                                                       delegate:self.deleteAlertDelegate
-                                              cancelButtonTitle:@"取消"
-                                              otherButtonTitles:@"删除", nil];
+    __weak typeof(self) weakSelf = self;
+    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"删除会话"
+                                                                   message:@"确定要删除当前会话记录？"
+                                                            preferredStyle:UIAlertControllerStyleAlert];
+    UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"取消"
+                                                           style:UIAlertActionStyleCancel
+                                                         handler:^(UIAlertAction * _Nonnull action) {
+        // 点击取消按钮，调用此block
 
-    [alertView show];
+    }];
+    [alertController addAction:cancelAction];
+    
+    UIAlertAction *defaultAction = [UIAlertAction actionWithTitle:@"删除"
+                                                            style:UIAlertActionStyleDefault
+                                                          handler:^(UIAlertAction * _Nonnull action) {
+        // 点击按钮，调用此block
+        [weakSelf deleteConversation:conversation];
+        [FHMessageEditHelp shared].currentCell = nil;
+        [FHMessageEditHelp shared].conversation = nil;
+    }];
+    [alertController addAction:defaultAction];
+    [[TTUIResponderHelper visibleTopViewController] presentViewController:alertController animated:YES completion:nil];
 };
 
 - (void)deleteConversation:(IMConversation *)conv {

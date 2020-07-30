@@ -33,7 +33,7 @@
 @property(nonatomic, strong) UILabel *timeLabel;
 @property(nonatomic, strong) UIImageView *msgStateView;
 @property(nonatomic, strong) UIImageView *muteImageView;
-@property (nonatomic, strong) UIPanGestureRecognizer *pan;
+@property (nonatomic, strong) UIPanGestureRecognizer *panGesture;
 @property (assign, nonatomic) BOOL lastPanStateIsEnd;
 @property (assign, nonatomic) CGFloat currentOffset;
 @property (assign, nonatomic) CGFloat maxOffset;
@@ -46,28 +46,13 @@
 
 @implementation FHMessageCell
 
-- (void)awakeFromNib {
-    [super awakeFromNib];
-    // Initialization code
-    [self initUIs];
-}
-
--(instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
-{
-    self = [super initWithStyle:style
-                reuseIdentifier:reuseIdentifier];
-    if (self) {
+-(instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
+    if (self = [super initWithStyle:style reuseIdentifier:reuseIdentifier]) {
         _maxOffset = -88;
-        [self initUIs];
+        [self initViews];
         self.selectionStyle = UITableViewCellSelectionStyleNone;
     }
     return self;
-}
-
-- (void)initUIs
-{
-    [self initViews];
-    [self initConstraints];
 }
 
 - (void)initViews
@@ -82,15 +67,47 @@
     self.backView.layer.shadowColor = RGB(110, 110, 110).CGColor;
     self.backView.layer.shadowOpacity = 0.1;
     [self.contentView addSubview:self.backView];
+    [self.backView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.mas_equalTo(15);
+        make.top.equalTo(self.contentView);
+        make.bottom.mas_equalTo(-12);
+        make.width.mas_equalTo(self.contentView.mas_width).mas_offset(-30);
+    }];
     
     self.iconView = [[UIImageView alloc] init];
     [self.backView addSubview:_iconView];
     _iconView.layer.masksToBounds = YES;
     _iconView.layer.cornerRadius = 25;
     _iconView.contentMode = UIViewContentModeScaleAspectFill;
+    [self.iconView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.mas_equalTo(16);
+        make.centerY.mas_equalTo(self.backView.mas_centerY);
+        make.width.height.mas_equalTo(50);
+    }];
+    
+    self.titleLabel = [self LabelWithFont:[UIFont themeFontMedium:16] textColor:[UIColor themeGray1]];
+    [self.backView addSubview:_titleLabel];
+    [self.titleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.mas_equalTo(self.iconView.mas_right).offset(12);
+        make.top.mas_equalTo(self.backView.mas_top).offset(20);
+        make.height.mas_equalTo(22);
+    }];
     
     self.scoreLabel = [self LabelWithFont:[UIFont themeFontRegular:12] textColor:[UIColor themeGray1]];
     [self.backView addSubview:self.scoreLabel];
+    [self.scoreLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.mas_equalTo(self.titleLabel.mas_right).offset(4);
+        make.centerY.mas_equalTo(self.titleLabel.mas_centerY);
+    }];
+    
+    self.timeLabel = [self LabelWithFont:[UIFont themeFontRegular:12] textColor:[UIColor themeGray3]];
+    [self.backView addSubview:_timeLabel];
+    [self.timeLabel setContentCompressionResistancePriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisHorizontal];
+    [self.timeLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.right.mas_equalTo(self.backView.mas_right).offset(-16);
+        make.centerY.mas_equalTo(self.titleLabel.mas_centerY);
+        make.height.mas_equalTo(17);
+    }];
     
     self.companyLabel = [[FHShadowLabel alloc] initWithEdgeInsets:UIEdgeInsetsMake(3, 4, 3, 4)];
     [self.backView addSubview:self.companyLabel];
@@ -101,59 +118,6 @@
     self.companyLabel.layer.cornerRadius = 8;
     self.companyLabel.hidden = YES;
     [self.companyLabel setContentCompressionResistancePriority:UILayoutPriorityDefaultLow forAxis:UILayoutConstraintAxisHorizontal];
-    
-    self.msgStateView = [[UIImageView alloc] init];
-    [self.backView addSubview:_msgStateView];
-    self.msgStateView.hidden = YES;
-    
-    self.titleLabel = [self LabelWithFont:[UIFont themeFontMedium:16] textColor:[UIColor themeGray1]];
-    [self.backView addSubview:_titleLabel];
-    
-    self.subTitleLabel = [self LabelWithFont:[UIFont themeFontRegular:12] textColor:[UIColor themeGray3]];
-    [self.backView addSubview:_subTitleLabel];
-    
-    self.timeLabel = [self LabelWithFont:[UIFont themeFontRegular:12] textColor:[UIColor themeGray3]];
-    [self.backView addSubview:_timeLabel];
-    [self.timeLabel setContentCompressionResistancePriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisHorizontal];
-    
-    self.unreadView = [[TTBadgeNumberView alloc] init];
-    //self.unreadView.badgeNumberPointSize = 12;
-    [self.unreadView setBadgeLabelFontSize:10];
-    _unreadView.badgeViewStyle = TTBadgeNumberViewStyleDefaultWithBorder;
-    [self.backView addSubview:_unreadView];
-    
-    self.muteImageView = [[UIImageView alloc] init];
-    [self.backView addSubview:self.muteImageView];
-    self.muteImageView.image = [UIImage imageNamed:@"chat_status_mute"];
-    self.muteImageView.hidden = YES;
-}
-
-- (void)initConstraints
-{
-    [self.backView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(15);
-        make.right.mas_equalTo(-15);
-        make.top.equalTo(self.contentView);
-        make.bottom.mas_equalTo(-12);
-    }];
-    
-    [self.iconView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(16);
-        make.centerY.mas_equalTo(self.backView.mas_centerY);
-        make.width.height.mas_equalTo(50);
-    }];
-    
-    [self.titleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(self.iconView.mas_right).offset(12);
-        make.top.mas_equalTo(self.backView.mas_top).offset(20);
-        make.height.mas_equalTo(22);
-    }];
-    
-    [self.scoreLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(self.titleLabel.mas_right).offset(4);
-        make.centerY.mas_equalTo(self.titleLabel.mas_centerY);
-    }];
-    
     [self.companyLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.height.mas_equalTo(16);
         make.left.mas_equalTo(self.scoreLabel.mas_right).offset(4);
@@ -162,12 +126,8 @@
         make.right.mas_lessThanOrEqualTo(self.timeLabel.mas_left).offset(-4);
     }];
     
-    [self.msgStateView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(self.titleLabel.mas_left);
-        make.centerY.mas_equalTo(self.subTitleLabel.mas_centerY);
-        make.width.height.mas_equalTo(14);
-    }];
-    
+    self.subTitleLabel = [self LabelWithFont:[UIFont themeFontRegular:12] textColor:[UIColor themeGray3]];
+    [self.backView addSubview:_subTitleLabel];
     [self.subTitleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(self.iconView.mas_right).offset(12);
         make.right.mas_equalTo(self.muteImageView.mas_left).offset(-5);
@@ -175,21 +135,49 @@
         make.height.mas_equalTo(20);
     }];
     
-    [self.timeLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.right.mas_equalTo(self.backView.mas_right).offset(-16);
-        make.centerY.mas_equalTo(self.titleLabel.mas_centerY);
-        make.height.mas_equalTo(17);
-    }];
-    
-    [self.unreadView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.right.mas_equalTo(self.iconView.mas_right).offset(4);
-        make.top.mas_equalTo(self.iconView.mas_top).offset(1);
-    }];
-    
+    self.muteImageView = [[UIImageView alloc] init];
+    [self.backView addSubview:self.muteImageView];
+    self.muteImageView.image = [UIImage imageNamed:@"chat_status_mute"];
+    self.muteImageView.hidden = YES;
     [self.muteImageView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.size.mas_equalTo(CGSizeMake(14, 14));
         make.centerY.mas_equalTo(self.subTitleLabel.mas_centerY);
         make.right.mas_equalTo(-16);
+    }];
+    
+    self.msgStateView = [[UIImageView alloc] init];
+    [self.backView addSubview:_msgStateView];
+    self.msgStateView.hidden = YES;
+    [self.msgStateView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.mas_equalTo(self.titleLabel.mas_left);
+        make.centerY.mas_equalTo(self.subTitleLabel.mas_centerY);
+        make.width.height.mas_equalTo(14);
+    }];
+            
+    self.unreadView = [[TTBadgeNumberView alloc] init];
+    //self.unreadView.badgeNumberPointSize = 12;
+    [self.unreadView setBadgeLabelFontSize:10];
+    _unreadView.badgeViewStyle = TTBadgeNumberViewStyleDefaultWithBorder;
+    [self.backView addSubview:_unreadView];
+    [self.unreadView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.right.mas_equalTo(self.iconView.mas_right).offset(4);
+        make.top.mas_equalTo(self.iconView.mas_top).offset(1);
+    }];
+        
+    self.editView = [[FHMessageEditView alloc] init];
+    self.editView.backgroundColor = [UIColor themeOrange1];
+    self.editView.frame = CGRectMake(CGRectGetMaxX(self.backView.frame) - 20, CGRectGetMinY(self.backView.frame), -_maxOffset + 20, self.backView.frame.size.height);
+    self.editView.layer.cornerRadius = 10;
+    __weak typeof(self)wself = self;
+    self.editView.clickDeleteBtn = ^{
+        [wself delete];
+    };
+    [self.contentView insertSubview:self.editView belowSubview:self.backView];
+    [self.editView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.mas_equalTo(self.backView.mas_right).mas_offset(-20);
+        make.top.mas_equalTo(self.backView.mas_top);
+        make.height.mas_equalTo(self.backView.mas_height);
+        make.right.mas_equalTo(-15);
     }];
 }
 
@@ -262,6 +250,21 @@
 
 - (void)updateWithChat:(IMConversation*)conversation {
     IMConversation* conv = conversation;
+    
+    if ([[FHMessageEditHelp shared].conversation.identifier isEqualToString:conversation.identifier]) {
+        //更新 删除 layout
+        [self.backView mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.left.mas_equalTo(15 + self.maxOffset);
+        }];
+    } else {
+        if (self.state == SliderMenuOpen) {
+            NSLog(@"111");
+        }
+        [self.backView mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.left.mas_equalTo(15);
+        }];
+    }
+    
     if (conv.mute) {
         if (conv.unreadCount > 0) {
             self.unreadView.badgeNumber = TTBadgeNumberPoint;
@@ -515,18 +518,11 @@
     self.index = index;
     if ([data isKindOfClass:[IMConversation class]]) {
         self.conv = data;
-        if (!_pan) {
-            _pan = [[UIPanGestureRecognizer alloc]initWithTarget:self action:@selector(panAction:)];
-            _pan.delegate = self;
-            [self.contentView addGestureRecognizer:_pan];
+        if (!_panGesture) {
+            _panGesture = [[UIPanGestureRecognizer alloc]initWithTarget:self action:@selector(panAction:)];
+            _panGesture.delegate = self;
+            [self.backView addGestureRecognizer:_panGesture];
         }
-    } else {
-        self.conv = nil;
-        if (_pan) {
-            [self.contentView removeGestureRecognizer:_pan];
-            _pan = nil;
-        }
-        [self removeEditView];
     }
 }
 
@@ -534,6 +530,7 @@
     [FHMessageEditHelp shared].isCanReloadData = NO;
     if (![FHMessageEditHelp shared].currentCell) {
         [FHMessageEditHelp shared].currentCell = self;
+        [FHMessageEditHelp shared].conversation = self.conv;
     }
 //    if (_lastPanStateIsEnd && self.state == SliderMenuSlider && [[FHMessageEditHelp shared].currentCell isEqual:self]) {
 //        _cancelAnimationCompletion = true;
@@ -546,6 +543,7 @@
     if (![[FHMessageEditHelp shared].currentCell isEqual:self]) {
         [[FHMessageEditHelp shared].currentCell openMenu:false time:0.35 springX:0];
         [FHMessageEditHelp shared].currentCell = self;
+        [FHMessageEditHelp shared].conversation = self.conv;
     }
     CGFloat panX = [pan translationInView:pan.view].x;
     if (self.state == SliderMenuClose && panX >= 0) {
@@ -556,12 +554,10 @@
     if (offsetX > 0) {
         offsetX = 0;
     }
-    if (!_editView) {
-        [self addEditView];
-    }
+
     if (pan.state == UIGestureRecognizerStateBegan) {
-        [self.layer removeAllAnimations];
-        [self removeAnimations];
+//        [self.layer removeAllAnimations];
+//        [self removeAnimations];
     } else if (pan.state == UIGestureRecognizerStateChanged) {
         if (panX > 0) {
             if (self.state == SliderMenuOpen) {
@@ -590,14 +586,17 @@
 }
 
 - (BOOL)gestureRecognizerShouldBegin:(UIGestureRecognizer *)gestureRecognizer{
-    if (gestureRecognizer == _pan) {
+    if (gestureRecognizer == _panGesture) {
         
-        CGFloat panY = [_pan translationInView:gestureRecognizer.view].y;
+        CGFloat panY = [_panGesture translationInView:gestureRecognizer.view].y;
         if ( ABS(panY) > 0) {
             if ([FHMessageEditHelp shared].currentCell) {
                 [[FHMessageEditHelp shared].currentCell openMenu:false time:0.4 springX:0];
             }
             return false;
+        }
+        if (CGRectGetWidth(self.backView.frame) - [self.panGesture locationInView:self.backView].x > 100) {
+            return NO;
         }
     }
     return true;
@@ -625,36 +624,21 @@
     return [super hitTest:point withEvent:event];
 }
 
-- (void)addEditView {
-    [FHMessageEditHelp shared].currentCell = self;
-    if (!_editView) {
-        _editView = [[FHMessageEditView alloc] init];
-        _editView.backgroundColor = [UIColor themeOrange1];
-        _editView.frame = CGRectMake(CGRectGetMaxX(self.backView.frame) - 20, CGRectGetMinY(self.backView.frame), -_maxOffset + 20, self.backView.frame.size.height);
-        _editView.layer.cornerRadius = 10;
-        __weak typeof(self)wself = self;
-        _editView.clickDeleteBtn = ^{
-            [wself delete];
-        };
-        [self.contentView insertSubview:_editView belowSubview:self.backView];
-    }
-}
-
 - (void)delete {
     if (self.deleteConversation) {
         self.deleteConversation(self.conv);
     }
 }
 
-- (void)removeEditView {
-    if (self.editView) {
-        for (UIView *view in self.editView.subviews) {
-            [view removeFromSuperview];
-        }
-        [self.editView removeFromSuperview];
-        self.editView = nil;
-    }
-}
+//- (void)removeEditView {
+//    if (self.editView) {
+//        for (UIView *view in self.editView.subviews) {
+//            [view removeFromSuperview];
+//        }
+//        [self.editView removeFromSuperview];
+//        self.editView = nil;
+//    }
+//}
 
 - (void)openMenu:(BOOL)open time:(NSTimeInterval)time springX:(CGFloat)springX {
     CGFloat moveX = open ? _maxOffset : 0;
@@ -664,7 +648,7 @@
     [self removeAnimations];
     UIViewAnimationOptions options = UIViewAnimationOptionAllowUserInteraction | UIViewAnimationOptionBeginFromCurrentState | UIViewAnimationOptionOverrideInheritedDuration |  UIViewAnimationOptionCurveEaseOut;
     [UIView animateWithDuration:time delay:0 options:options animations:^{
-        self.editView.alpha = alpha;
+//        self.editView.alpha = alpha;
         [self move:moveX + springX];
     } completion:^(BOOL finished) {
         if (self.cancelAnimationCompletion) {
@@ -687,10 +671,11 @@
             } else {
                 self.state = SliderMenuClose;
                 self.currentOffset = 0;
-                [self removeEditView];
                 if (self.stateIsClose) {
                     self.stateIsClose(nil);
                 }
+                [FHMessageEditHelp shared].currentCell = nil;
+                [FHMessageEditHelp shared].conversation = nil;
             }
         }
     }];
@@ -701,12 +686,15 @@
 }
 
 - (void)cancelPan{
-    _pan.enabled = false;
-    _pan.enabled = true;
+    _panGesture.enabled = false;
+    _panGesture.enabled = true;
 }
 
 - (void)move:(CGFloat)x {
-    self.frame = CGRectMake(x, self.frame.origin.y, self.frame.size.width, self.frame.size.height);
+    [self.backView mas_updateConstraints:^(MASConstraintMaker *make) {
+        make.left.mas_equalTo(15 + x);
+    }];
+//    self.backView = CGRectMake(x, self.frame.origin.y, self.frame.size.width, self.frame.size.height);
 }
 
 @end

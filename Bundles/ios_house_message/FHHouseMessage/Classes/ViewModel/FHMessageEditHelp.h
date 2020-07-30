@@ -8,11 +8,14 @@
 #import <Foundation/Foundation.h>
 #import "FHMessageCell.h"
 
+@class IMConversation;
 @interface FHMessageEditHelp : NSObject
 
 @property (nonatomic, weak) FHMessageCell *currentCell;
 
 @property (nonatomic, assign) BOOL isCanReloadData;
+
+@property (nonatomic, weak) IMConversation *conversation;
 
 + (instancetype)shared;
 

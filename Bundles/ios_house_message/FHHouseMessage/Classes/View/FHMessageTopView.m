@@ -31,6 +31,7 @@
     if (self) {
         [self setupUI];
         [self initConstraints];
+        self.selectIndex = 0;
     }
     return self;
 }
@@ -42,12 +43,12 @@
     self.containerView.layer.cornerRadius = 15;
     self.containerView.layer.masksToBounds = YES;
     
-    self.chatButton = [self getButtonWithTitle:@"微聊" andTag:1];
+    self.chatButton = [self getButtonWithTitle:@"微聊" andTag:0];
     [self.containerView addSubview:_chatButton];
     self.chatButton.selected = YES;
     [self updateColor:self.chatButton];
     
-    self.systemMessageButton = [self getButtonWithTitle:@"通知" andTag:2];
+    self.systemMessageButton = [self getButtonWithTitle:@"通知" andTag:1];
     [self.containerView addSubview:_systemMessageButton];
     self.systemMessageButton.selected = NO;
     [self updateColor:self.systemMessageButton];
@@ -137,6 +138,20 @@
     } else {
         [btn setTitleColor:[UIColor themeGray2] forState:UIControlStateNormal];
         [btn setBackgroundImage:[FHUtils createImageWithColor:[UIColor themeGray7]] forState:UIControlStateNormal];
+    }
+}
+
+- (void)setSelectIndex:(NSUInteger)selectIndex {
+    if (selectIndex == 0 && !self.chatButton.selected) {
+        self.chatButton.selected = YES;
+        self.systemMessageButton.selected = NO;
+        [self updateColor:self.chatButton];
+        [self updateColor:self.systemMessageButton];
+    } else if (selectIndex == 1 && !self.systemMessageButton.selected){
+        self.chatButton.selected = NO;
+        self.systemMessageButton.selected = YES;
+        [self updateColor:self.chatButton];
+        [self updateColor:self.systemMessageButton];
     }
 }
 /*
