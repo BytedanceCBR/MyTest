@@ -948,7 +948,7 @@
     NSString *createTime = model.createTime.length > 0 ? model.createTime : model.rawData.createTime;
     NSString *readCount = model.readCount.length > 0 ? model.readCount : model.rawData.readCount;
     NSString *distanceInfo = model.distanceInfo.length > 0 ? model.distanceInfo : model.rawData.distanceInfo;
-    NSString *realtorDesc = model.realtor.desc.length>0?model.rawData.realtor.desc:@"";
+    NSString *realtorDesc = model.realtor.desc.length>0?model.realtor.desc:model.rawData.realtor.desc;
     return [self generateUGCDescWithCreateTime:createTime readCount:readCount distanceInfo:distanceInfo realtorDesc:realtorDesc];
 }
 
