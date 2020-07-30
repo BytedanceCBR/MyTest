@@ -52,7 +52,7 @@
     WeakSelf;
     FHBlockTransformer *transform = [FHBlockTransformer transformWithBlock:^UIImage * _Nullable(UIImage * _Nullable image) {
         StrongSelf;
-        return [self compressImage:image toTargetWidth:resizeWidth * 3];
+        return [self compressImage:image toResizeWidth:resizeWidth * 3];
     }];
     
     return [self bd_setImageWithURL:imageURL placeholder:placeholder options:BDImageRequestSetDelaySetImage transformer:transform progress:nil completion:^(BDWebImageRequest *request, UIImage *image, NSData *data, NSError *error, BDWebImageResultFrom from) {
@@ -108,13 +108,20 @@
     }];
 }
 
-- (UIImage*)compressImage:(UIImage*)sourceImage toTargetWidth:(CGFloat)targetWidth {
+- (UIImage*)compressImage:(UIImage*)sourceImage toResizeWidth:(CGFloat)resizeWidth {
     //获取原图片的大小尺寸
     CGSize imageSize = sourceImage.size;
     CGFloat width = imageSize.width;
     CGFloat height = imageSize.height;
     //根据目标图片的宽度计算目标图片的高度
+    CGFloat targetWidth = resizeWidth;
     CGFloat targetHeight = (targetWidth / width) * height;
+    
+    if(width > height){
+        targetHeight = resizeWidth;
+        targetWidth = (targetHeight / height) * width;
+    }
+    
     //开启图片上下文
     UIGraphicsBeginImageContext(CGSizeMake(targetWidth, targetHeight));
     //绘制图片
