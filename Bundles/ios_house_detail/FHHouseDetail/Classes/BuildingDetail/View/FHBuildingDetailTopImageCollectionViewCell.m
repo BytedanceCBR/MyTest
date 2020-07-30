@@ -8,12 +8,15 @@
 #import "FHBuildingDetailTopImageCollectionViewCell.h"
 #import "FHBuildingDetailUtils.h"
 #import "FHBuildDetailTopImageView.h"
+#import "FHVideoAndImageItemCorrectingView.h"
+#import <Masonry/Masonry.h>
 
 @interface FHBuildingDetailTopImageCollectionViewCell() <UIScrollViewDelegate>
 
-@property (nonatomic, strong) UIScrollView *scrollView;
+
 @property (nonatomic, strong) FHBuildingLocationModel *locationModel;
 @property (nonatomic, strong) FHBuildDetailTopImageView *imageView;
+@property (nonatomic, weak) FHVideoAndImageItemCorrectingView *saleStatusView;
 
 @end
 
@@ -24,16 +27,9 @@
     self = [super initWithFrame:frame];
     if (self) {
         self.backgroundColor = [UIColor clearColor];
-        UIScrollView *scrollView = [[UIScrollView alloc] initWithFrame:self.contentView.bounds];
-        scrollView.delegate = self;
-        scrollView.minimumZoomScale = 1.0;
-        scrollView.maximumZoomScale = 3.0;
-        [scrollView setShowsVerticalScrollIndicator:NO];
-        [scrollView setShowsHorizontalScrollIndicator:NO];
-        scrollView.backgroundColor = [UIColor clearColor];
-        self.scrollView = scrollView;
-        self.scrollView.contentSize = CGSizeMake(frame.size.width + 0.4, frame.size.height + 0.4);
-        [self.contentView addSubview:scrollView];
+        self.imageView = [[FHBuildDetailTopImageView alloc] initWithFrame:frame];
+        [self.contentView addSubview:self.imageView];
+
     }
     return self;
 }
@@ -42,18 +38,43 @@
     if (data && [data isKindOfClass:[FHBuildingLocationModel class]]) {
         FHBuildingLocationModel *model = (FHBuildingLocationModel *)data;
         self.locationModel = model;
-        CGSize size = [FHBuildingDetailUtils getTopImageViewSize];
-        FHBuildDetailTopImageView *imageView = [[FHBuildDetailTopImageView alloc] initWithFrame:CGRectMake(0, 0, size.width, size.height)];
-        [self.scrollView addSubview:imageView];
-        [imageView updateWithData:model];
-        self.imageView = imageView;
+        [self.imageView updateWithData:model];
         
-        
+        if (model.saleStatusContents.count > 1) {
+            [self.saleStatusView mas_makeConstraints:^(MASConstraintMaker *make) {
+                make.centerX.mas_equalTo(self);
+                make.bottom.mas_equalTo(self).offset(-36);
+                make.width.mas_equalTo(self.saleStatusView.itemWidth * model.saleStatusContents.count);
+                make.height.mas_equalTo(22);
+            }];
+            self.saleStatusView.titleArray = model.saleStatusContents;
+        }
     }
 }
 
-- (UIView *)viewForZoomingInScrollView:(UIScrollView *)scrollView{
-    return self.imageView.imageView;
+- (FHVideoAndImageItemCorrectingView *)saleStatusView {
+    if (!_saleStatusView) {
+        FHVideoAndImageItemCorrectingView *saleView = [[FHVideoAndImageItemCorrectingView alloc] initWithFrame:CGRectMake(0, 0, self.bounds.size.width, 22)];
+        [self addSubview:saleView];
+        __weak typeof(self) wSelf = self;
+        saleView.selectedBlock = ^(NSInteger index, NSString * _Nonnull name, NSString * _Nonnull value) {
+            [wSelf clickSaleStatusItem:index];
+        };
+        _saleStatusView = saleView;
+    }
+    return _saleStatusView;
 }
+
+
+
+- (void)clickSaleStatusItem:(NSInteger)index {
+    NSLog(@"选择了 %@",@(index));
+}
+
+- (void)switchSaleStatusItem:(FHBuildingIndexModel *)index {
+    
+    [self.saleStatusView selectedItem:self.locationModel.saleStatusContents[index.saleStatus]];
+}
+
 
 @end

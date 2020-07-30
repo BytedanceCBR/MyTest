@@ -611,7 +611,7 @@ def testPods
     'Core'
     ]
     pod_binary 'FBRetainCycleDetector','0.1.5-alpha.3'
-    pod 'LookinServer', :configurations => ['Debug']
+    pod 'LookinServer'
 end
 
 target 'NewsLiteInHouse' do

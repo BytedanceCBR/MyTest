@@ -69,14 +69,14 @@
         }
         [array addObject:building];
     }
-    NSArray *allPoint = @[@"在售",@"代售",@"售罄"];
+    NSArray *allPoint = @[@"在售",@"待售",@"售罄"];
     NSMutableArray *order = [NSMutableArray arrayWithCapacity:3];
     for (NSString *saleStr in allPoint) {
         if ([saleStatusContentArray containsObject:saleStr]) {
             [order addObject:saleStr];
         }
     }
-    saleStatusContentArray = order.copy;
+    saleStatusContentArray = order;
 
     for (NSUInteger i = 0; i < saleStatusContentArray.count; i++) {
         NSString *saleStatusContent = saleStatusContentArray[i];

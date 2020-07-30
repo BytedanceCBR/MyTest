@@ -12,10 +12,10 @@ NS_ASSUME_NONNULL_BEGIN
 @interface FHBuildDetailImageViewButton : UIView
 
 @property (nonatomic, copy) FHBuildingIndexDidSelect buttonIndexDidSelect;
-
+@property (nonatomic, copy) void (^indexDidSelect)(CGPoint p);
 - (void)updateWithData:(id)data;
 
-- (void)buttonMoveWithHeight:(CGFloat)nowWidth withHeight:(CGFloat)nowHeight;
+- (void)buttonMoveWithSize:(CGSize)newSize;
 
 @property (nonatomic, assign) BOOL isSelected;
 @end

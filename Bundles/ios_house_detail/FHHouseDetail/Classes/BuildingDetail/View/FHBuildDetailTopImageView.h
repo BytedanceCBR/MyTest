@@ -14,7 +14,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong, readonly) UIImageView *imageView;
 
 - (void)updateWithData:(id)data;
-
+- (void)move:(CGSize)newSize;
 @end
 
 NS_ASSUME_NONNULL_END

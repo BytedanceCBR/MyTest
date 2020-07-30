@@ -8,16 +8,18 @@
 #import "FHBuildDetailTopImageView.h"
 #import "FHBuildDetailImageViewButton.h"
 #import <BDWebImage.h>
-#import <Masonry/Masonry.h>
-#import "FHVideoAndImageItemCorrectingView.h"
 
-@interface FHBuildDetailTopImageView ()
+
+
+@interface FHBuildDetailTopImageView ()<UIScrollViewDelegate>
 
 @property (nonatomic, strong, readwrite) UIImageView *imageView;
 @property (nonatomic, strong) FHBuildingLocationModel *locationModel;
 //@property (nonatomic, copy) NSArray<FHBuildDetailImageViewButton *> *buildingButtons;
 @property (nonatomic, copy) NSArray *saleStatusButtons;
-@property (nonatomic, weak) FHVideoAndImageItemCorrectingView *saleStatusView;
+@property (nonatomic, strong) UIScrollView *scrollView;
+@property (nonatomic, assign) CGSize imageSize;
+@property (nonatomic, strong) UIImage *placeHolder;
 
 @end
 
@@ -27,10 +29,20 @@
 {
     self = [super initWithFrame:frame];
     if (self) {
+        self.imageSize = frame.size;
         UIImageView *imageView = [[UIImageView alloc] initWithFrame:frame];
         self.imageView = imageView;
-        [self addSubview:imageView];
-
+        UIScrollView *scrollView = [[UIScrollView alloc] initWithFrame:frame];
+        scrollView.delegate = self;
+        scrollView.minimumZoomScale = 1.0;
+        scrollView.maximumZoomScale = 3.0;
+        [scrollView setShowsVerticalScrollIndicator:NO];
+        [scrollView setShowsHorizontalScrollIndicator:NO];
+        scrollView.backgroundColor = [UIColor clearColor];
+        self.scrollView = scrollView;
+        self.scrollView.contentSize = CGSizeMake(frame.size.width + 0.4, frame.size.height + 0.4);
+        [self addSubview:scrollView];
+        [self.scrollView addSubview:imageView];
     }
     return self;
 }
@@ -40,52 +52,74 @@
         FHBuildingLocationModel *model = (FHBuildingLocationModel *)data;
         self.locationModel = model;
         NSURL *url = [NSURL URLWithString:model.buildingImage.url];
-        [self.imageView bd_setImageWithURL:url];
+        [self.imageView bd_setImageWithURL:url placeholder:self.placeHolder];
         NSMutableArray *saleButtons = [NSMutableArray arrayWithCapacity:model.saleStatusList.count];
         for (FHBuildingSaleStatusModel *StatusModel in model.saleStatusList) {
             NSMutableArray *buildingButtons = [NSMutableArray arrayWithCapacity:StatusModel.buildingList.count];
             for (FHBuildingDetailDataItemModel *building in StatusModel.buildingList) {
                 FHBuildDetailImageViewButton *button = [[FHBuildDetailImageViewButton alloc] init];
                 [button updateWithData:building];
-                [self addSubview:button];
+                [button buttonMoveWithSize:self.imageView.frame.size];
+                [self.scrollView addSubview:button];
+                __weak typeof(self) wSelf = self;
+                [button setIndexDidSelect:^(CGPoint p) {
+                    [wSelf pointMoveToCenter:p];
+                }];
                 [buildingButtons addObject:button];
             }
             [saleButtons addObject:buildingButtons.copy];
         }
         self.saleStatusButtons = saleButtons.copy;
-        if (model.saleStatusContents.count > 1) {
-            [self.saleStatusView mas_makeConstraints:^(MASConstraintMaker *make) {
-                make.centerX.mas_equalTo(self);
-                make.bottom.mas_equalTo(self).offset(-36);
-                make.width.mas_equalTo(self.saleStatusView.itemWidth * model.saleStatusContents.count);
-                make.height.mas_equalTo(22);
-            }];
-            self.saleStatusView.titleArray = model.saleStatusContents;
-        }
+        
     }
     [self layoutIfNeeded];
 }
 
-- (FHVideoAndImageItemCorrectingView *)saleStatusView {
-    if (!_saleStatusView) {
-        FHVideoAndImageItemCorrectingView *saleView = [[FHVideoAndImageItemCorrectingView alloc] initWithFrame:CGRectMake(0, 0, self.bounds.size.width, 22)];
-        [self addSubview:saleView];
-        __weak typeof(self) wSelf = self;
-        saleView.selectedBlock = ^(NSInteger index, NSString * _Nonnull name, NSString * _Nonnull value) {
-            [wSelf clickSaleStatusItem:index];
-        };
-        _saleStatusView = saleView;
+- (UIImage *)placeHolder {
+    if (!_placeHolder) {
+        _placeHolder = [UIImage imageNamed:@"default_image"];
     }
-    return _saleStatusView;
+    return _placeHolder;
 }
 
-- (void)clickSaleStatusItem:(NSInteger)index {
-    NSLog(@"选择了 %@",@(index));
+#pragma mark - UIScrollViewDelegate
+
+- (UIView *)viewForZoomingInScrollView:(UIScrollView *)scrollView{
+    return self.imageView;
 }
 
-- (void)switchSaleStatusItem:(FHBuildingIndexModel *)index {
-    
-    [self.saleStatusView selectedItem:self.locationModel.saleStatusContents[index.saleStatus]];
+- (void)scrollViewDidZoom:(UIScrollView *)scrollView {
+    [self move:self.imageView.frame.size];
 }
+
+- (void)move:(CGSize)newSize{
+    for (NSArray *buttonAry in self.saleStatusButtons) {
+        for (FHBuildDetailImageViewButton *button in buttonAry) {
+
+            [button buttonMoveWithSize:newSize];
+        }
+    }
+}
+
+- (void)pointMoveToCenter:(CGPoint)point{
+    CGSize size = self.imageSize;
+    CGSize edgeSize = self.imageView.frame.size;
+    CGFloat offsetX = point.x - size.width / 2.0;
+    if (offsetX < 0) {
+        offsetX = 0;
+    }
+    if (offsetX + size.width > edgeSize.width) {
+        offsetX = edgeSize.width - size.width;
+    }
+    CGFloat offsetY = point.y - size.height / 2.0;
+    if (offsetY < 0) {
+        offsetY = 0;
+    }
+    if (offsetY + size.height > edgeSize.height) {
+        offsetY = edgeSize.height - size.height;
+    }
+    [self.scrollView setContentOffset:CGPointMake(offsetX, offsetY) animated:YES];
+}
+
 
 @end

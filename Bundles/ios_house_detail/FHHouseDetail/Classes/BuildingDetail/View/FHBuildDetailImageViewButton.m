@@ -54,6 +54,7 @@
         self.isSelected = NO;
         UITapGestureRecognizer *gesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(buttonOnClick)];
         [self addGestureRecognizer:gesture];
+        self.layer.anchorPoint = CGPointMake(0.5, 0.7142);
         
     }
     return self;
@@ -97,6 +98,7 @@
 }
 
 - (void)setIsSelected:(BOOL)isSelected {
+    
     if (_isSelected == isSelected) {
         return;
     }
@@ -107,12 +109,19 @@
 
 
 - (void)buttonOnClick {
-    self.isSelected = !self.isSelected;
     
+    self.isSelected = !self.isSelected;
+    if (self.indexDidSelect) {
+        self.indexDidSelect(self.layer.position);
+    }
+    
+    NSLog(@" self %@ father %@",NSStringFromCGRect(self.frame),NSStringFromCGRect(self.superview.frame));
 }
 
-- (void)buttonMoveWithHeight:(CGFloat)nowWidth withHeight:(CGFloat)nowHeight {
-    [self.layer setPosition:CGPointMake((nowWidth * self.pointX) / self.beginWidth,(nowHeight * self.pointY) / self.beginHeight)];
+
+- (void)buttonMoveWithSize:(CGSize)newSize {
+    [self.layer setPosition:CGPointMake((newSize.width * self.pointX) / self.beginWidth,(newSize.height * self.pointY) / self.beginHeight)];
+    NSLog(@"already move :%@",NSStringFromCGPoint(self.layer.position));
 }
 
 @end
