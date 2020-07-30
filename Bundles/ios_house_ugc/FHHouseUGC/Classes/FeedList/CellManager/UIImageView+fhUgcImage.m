@@ -14,8 +14,9 @@
 
 - (nullable BDWebImageRequest *)fh_setImageWithURL:(nonnull NSURL *)imageURL placeholder:(nullable UIImage *)placeholder {
     [self.layer removeAnimationForKey:@"contents"];
+    WeakSelf;
     return [self bd_setImageWithURL:imageURL placeholder:placeholder options:BDImageRequestSetDelaySetImage completion:^(BDWebImageRequest *request, UIImage *image, NSData *data, NSError *error, BDWebImageResultFrom from) {
-        
+        StrongSelf;
         NSMutableDictionary *imageData = [NSMutableDictionary dictionary];
         imageData[@"image"] = image;
         imageData[@"from"] = @(from);
