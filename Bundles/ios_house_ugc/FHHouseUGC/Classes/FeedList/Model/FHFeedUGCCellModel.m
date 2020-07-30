@@ -427,7 +427,6 @@
         if (model.isFromDetail) {
             cellModel.numberOfLines = 0;
         }
-        
         [FHUGCCellHelper setRichContentImageWithModel:cellModel width:([UIScreen mainScreen].bounds.size.width - 40) numberOfLines:cellModel.numberOfLines];
         
         //小区问答数据处理
@@ -693,8 +692,8 @@
         
         
         FHFeedUGCCellUserModel *user = [[FHFeedUGCCellUserModel alloc] init];
-        user.name = model.rawData.user.info.name;
-        user.avatarUrl = model.rawData.user.info.avatarUrl;
+        user.name = realtor.agencyName;
+        user.avatarUrl = realtor.avatarUrl;
         user.userId = model.rawData.user.info.userId;
         user.schema = model.rawData.user.info.schema;
         cellModel.user = user;

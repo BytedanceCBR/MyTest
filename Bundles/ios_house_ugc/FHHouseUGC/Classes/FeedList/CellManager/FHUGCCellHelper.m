@@ -151,17 +151,9 @@
     }
     
     if (!isEmptyString(threadContent.text)) {
-       __block NSAttributedString *att;
-        if (model.user.avatarUrl) {
-            [[BDWebImageManager sharedManager] requestImage:model.user.avatarUrl options:BDImageRequestHighPriority complete:^(BDWebImageRequest *request, UIImage *image, NSData *data, NSError *error, BDWebImageResultFrom from) {
-                if (!error && image) {
-                              NSTextAttachment *attachment = [[NSTextAttachment alloc]init];
-                              attachment.bounds = CGRectMake(0, -5, 20, 20);
-                              attachment.image = [self circleImage:image];
-                              att = [NSAttributedString attributedStringWithAttachment:attachment];
-                }
                 CGFloat lineHeight = ceil(16 * 1.4);
-                NSMutableAttributedString *userAttrStr = [att mutableCopy];;
+        
+             NSMutableAttributedString *userAttrStr = [[NSMutableAttributedString alloc]init];
                 if (model.user.name) {
                     NSAttributedString *as = [[NSAttributedString alloc]initWithString:[NSString stringWithFormat:@" %@说：",model.user.name]];
                     [userAttrStr appendAttributedString:as];
@@ -172,6 +164,7 @@
                     paragraphStyle.minimumLineHeight = lineHeight;
                     paragraphStyle.maximumLineHeight = lineHeight;
                     paragraphStyle.lineSpacing = 2;
+                    paragraphStyle.firstLineHeadIndent = 20;
                     paragraphStyle.lineBreakMode = NSLineBreakByCharWrapping;
                     [attributes setValue:paragraphStyle forKey:NSParagraphStyleAttributeName];
                     [userAttrStr addAttributes:attributes range:NSMakeRange(0, userAttrStr.length)];
@@ -189,7 +182,6 @@
                     paragraphStyle.minimumLineHeight = lineHeight;
                     paragraphStyle.maximumLineHeight = lineHeight;
                     paragraphStyle.lineSpacing = 2;
-                    
                     paragraphStyle.lineBreakMode = NSLineBreakByCharWrapping;
                     [attributes setValue:paragraphStyle forKey:NSParagraphStyleAttributeName];
                     
@@ -207,8 +199,6 @@
                                                                limitedToNumberOfLines:&numberOfLines];
                     model.contentHeight = size.height;
                 }
-            }];
-        }
     }else{
         model.contentHeight = 0;
     }

@@ -39,6 +39,7 @@
 @property(nonatomic ,strong) FHUGCCellBottomView *bottomView;
 @property(nonatomic ,strong) FHFeedUGCCellModel *cellModel;
 @property(nonatomic ,strong) FHUGCCellAttachCardView *attachCardView;
+@property(nonatomic, strong) UIImageView *contentImage;
 //@property(nonatomic ,assign) CGFloat imageViewheight;
 
 @end
@@ -77,6 +78,11 @@
     _contentLabel.delegate = self;
     [self.contentView addSubview:_contentLabel];
     
+    self.contentImage = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, 20, 20)];
+    _contentImage.layer.cornerRadius = 10;
+    _contentImage.layer.masksToBounds = YES;
+    [self.contentLabel addSubview:self.contentImage];
+    
     self.multiImageView = [[FHUGCCellMultiImageView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width - leftMargin - rightMargin, 0) count:3];
     _multiImageView.hidden = YES;
     [self.contentView addSubview:_multiImageView];
@@ -110,6 +116,11 @@
     self.contentLabel.left = leftMargin;
     self.contentLabel.width = [UIScreen mainScreen].bounds.size.width - leftMargin - rightMargin;
     self.contentLabel.height = 0;
+    
+    self.contentImage.top = 0;
+    self.contentImage.left = 0;
+    self.contentImage.width = 20;
+    self.contentImage.height = 20;
     
     self.multiImageView.top = self.userInfoView.bottom + 10;
     self.multiImageView.left = leftMargin;
@@ -185,6 +196,10 @@
         self.singleImageView.top = self.userInfoView.bottom + 20 + cellModel.contentHeight;
     }
     
+    if (cellModel.user.avatarUrl) {
+        [self.contentImage bd_setImageWithURL:[NSURL URLWithString:cellModel.user.avatarUrl]];
+    };
+    
     UIView *lastView = self.contentLabel;
     CGFloat topOffset = 10;
     //图片
@@ -257,7 +272,6 @@
         }else {
             userInfoHeight = 30;
         }
-        
         CGFloat height = userInfoHeight + bottomViewHeight + topMargin + 10;
         
         if(!isEmptyString(cellModel.content)){

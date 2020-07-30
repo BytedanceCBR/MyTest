@@ -600,5 +600,9 @@
 {
     return [NSString stringWithFormat:@"%@/f100/api/channel/config", [self baseURL]];
 }
+
++ (NSString *)shortVideoRealtorInfoUrlString {
+    return [NSString stringWithFormat:@"%@/f100/ugc/gid_realtor_info", [self baseURL]];
+}
 @end
 
