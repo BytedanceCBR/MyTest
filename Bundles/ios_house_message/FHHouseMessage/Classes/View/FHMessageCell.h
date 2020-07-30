@@ -20,6 +20,7 @@ typedef void(^FHMessageCellClick)(id data);
 @property(nonatomic, strong) TTBadgeNumberView *unreadView;
 @property (nonatomic, assign) SliderMenuState state;
 @property (nonatomic, copy) FHMessageCellClick deleteConversation;
+@property (nonatomic, copy) FHMessageCellClick stateIsClose;
 
 - (void)updateWithModel:(FHUnreadMsgDataUnreadModel *)model;
 - (void)updateWithChat:(IMConversation*)conversation;

@@ -214,6 +214,9 @@
         cell.deleteConversation = ^(id data) {
             [wself displayDeleteConversationConfirm:data];
         };
+        cell.stateIsClose = ^(id  _Nullable data) {
+            [wself reloadData];
+        };
         [cell initGestureWithData:model index:indexPath.row];
     }
     return cell;
@@ -354,6 +357,17 @@
     if (![FHMessageEditHelp shared].isCanReloadData) {
         return;
     }
+    NSInteger chatNumber = 0;
+    NSInteger systemMessageNumber = 0;
+    for (IMConversation *conv in [_combiner conversationItems]) {
+        if (!conv.mute) {
+            chatNumber += conv.unreadCount;
+        }
+    }
+    for (FHUnreadMsgDataUnreadModel *item in [_combiner channelItems]) {
+        systemMessageNumber += [item.unread integerValue];
+    }
+    [self.topView updateRedPointWithChat:chatNumber andSystemMessage:systemMessageNumber];
     [self.tableView reloadData];
 }
 

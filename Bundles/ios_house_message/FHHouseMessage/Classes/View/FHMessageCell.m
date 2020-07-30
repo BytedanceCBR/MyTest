@@ -667,15 +667,15 @@
         self.editView.alpha = alpha;
         [self move:moveX + springX];
     } completion:^(BOOL finished) {
-        if (_lastPanStateIsEnd && [[FHMessageEditHelp shared].currentCell isEqual:self] && !open) {
-            [FHMessageEditHelp shared].isCanReloadData = YES;
-        }
         if (self.cancelAnimationCompletion) {
             [self removeAnimations];
             self.cancelAnimationCompletion = NO;
             return;
         }
         if (finished) {
+            if (_lastPanStateIsEnd && [[FHMessageEditHelp shared].currentCell isEqual:self] && !open) {
+                [FHMessageEditHelp shared].isCanReloadData = YES;
+            }
             if (springX != 0) {
                 [UIView animateWithDuration:0.3 delay:0 options:options animations:^{
                     [self move:moveX];
@@ -688,6 +688,9 @@
                 self.state = SliderMenuClose;
                 self.currentOffset = 0;
                 [self removeEditView];
+                if (self.stateIsClose) {
+                    self.stateIsClose(nil);
+                }
             }
         }
     }];

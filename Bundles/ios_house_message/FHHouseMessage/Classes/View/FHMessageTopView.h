@@ -13,6 +13,9 @@ NS_ASSUME_NONNULL_BEGIN
 @interface FHMessageTopView : UIView
 
 @property (nonatomic, copy) TagChangeBlock tagChangeBlock;
+
+- (void)updateRedPointWithChat:(NSInteger)chatNumber andSystemMessage:(NSInteger)systemMessageNumber;
+
 @end
 
 NS_ASSUME_NONNULL_END

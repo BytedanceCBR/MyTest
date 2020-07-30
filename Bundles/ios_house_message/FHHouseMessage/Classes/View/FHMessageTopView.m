@@ -10,14 +10,15 @@
 #import "UIColor+Theme.h"
 #import "UIFont+House.h"
 #import "FHUtils.h"
+#import "TTBadgeNumberView.h"
 
 @interface FHMessageTopView()
 
 @property (nonatomic, strong) UIView *containerView;
 @property (nonatomic, strong) UIButton *chatButton;
 @property (nonatomic, strong) UIButton *systemMessageButton;
-@property (nonatomic, strong) UIView *chatRedPointView;
-@property (nonatomic, strong) UIView *systemMessageRedPointView;
+@property (nonatomic, strong) TTBadgeNumberView *unreadChatView;
+@property (nonatomic, strong) TTBadgeNumberView *unreadSystemMessageView;
 
 
 @end
@@ -51,19 +52,15 @@
     self.systemMessageButton.selected = NO;
     [self updateColor:self.systemMessageButton];
     
-    self.chatRedPointView = [[UIView alloc] init];
-    [self.chatButton addSubview:_chatRedPointView];
-    self.chatRedPointView.layer.cornerRadius = 5;
-    self.chatRedPointView.layer.masksToBounds = YES;
-    self.chatRedPointView.backgroundColor = [UIColor themeOrange1];
-    self.chatRedPointView.hidden = YES;
+    self.unreadChatView = [[TTBadgeNumberView alloc] init];
+    [self.unreadChatView setBadgeLabelFontSize:10];
+    self.unreadChatView.badgeViewStyle = TTBadgeNumberViewStyleDefaultWithBorder;
+    [self.containerView addSubview:_unreadChatView];
     
-    self.systemMessageRedPointView = [[UIView alloc] init];
-    [self.systemMessageButton addSubview:_systemMessageRedPointView];
-    self.systemMessageRedPointView.layer.cornerRadius = 5;
-    self.systemMessageRedPointView.layer.masksToBounds = YES;
-    self.systemMessageRedPointView.backgroundColor = [UIColor themeOrange1];
-    self.systemMessageRedPointView.hidden = YES;
+    self.unreadSystemMessageView = [[TTBadgeNumberView alloc] init];
+    [self.unreadSystemMessageView setBadgeLabelFontSize:10];
+    self.unreadSystemMessageView.badgeViewStyle = TTBadgeNumberViewStyleDefaultWithBorder;
+    [self.containerView addSubview:_unreadSystemMessageView];
 }
 
 - (void)initConstraints {
@@ -85,16 +82,19 @@
         make.height.mas_equalTo(26);
         make.width.mas_equalTo(86);
     }];
-    [self.chatRedPointView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.width.height.mas_equalTo(10);
-        make.bottom.mas_equalTo(-14);
-        make.right.mas_equalTo(-15);
+    [self.unreadChatView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.right.mas_equalTo(self.chatButton.mas_right).offset(-14);
+        make.top.mas_equalTo(self.chatButton.mas_top).offset(-1);
     }];
-    [self.systemMessageRedPointView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.width.height.mas_equalTo(10);
-        make.bottom.mas_equalTo(-14);
-        make.right.mas_equalTo(-15);
+    [self.unreadSystemMessageView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.right.mas_equalTo(self.systemMessageButton.mas_right).offset(-14);
+        make.top.mas_equalTo(self.systemMessageButton.mas_top).offset(-1);
     }];
+}
+
+- (void)updateRedPointWithChat:(NSInteger)chatNumber andSystemMessage:(NSInteger)systemMessageNumber {
+    self.unreadChatView.badgeNumber = chatNumber;
+    self.unreadSystemMessageView.badgeNumber = systemMessageNumber == 0 ? TTBadgeNumberHidden : TTBadgeNumberPoint;
 }
 
 - (UIButton *)getButtonWithTitle:(NSString *)title andTag:(NSInteger)tag {
