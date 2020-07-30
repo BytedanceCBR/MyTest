@@ -894,7 +894,7 @@
     }
     
     
-    if (realtor) {
+    if (realtor.realtorId.length>0) {
         user.name = realtor.realtorName;
         user.avatarUrl = realtor.avatarUrl;
         user.realtorId = realtor.realtorId;
