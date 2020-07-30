@@ -37,6 +37,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *firstBizType;
 @property (nonatomic, copy , nullable) NSString *schema;
 @property (nonatomic, copy , nullable) NSString *userAuthInfo;
+@property (nonatomic, copy , nullable) NSString *desc;
 
 @end
 

@@ -332,16 +332,24 @@
         }
     }
 }
-
 + (void)setAsyncRichContent:(TTUGCAsyncLabel *)label model:(FHFeedUGCCellModel *)model {
+    [FHUGCCellHelper setAsyncRichContent:label model:model truncatedToken:nil];
+}
+
++ (void)setAsyncRichContent:(TTUGCAsyncLabel *)label model:(FHFeedUGCCellModel *)model truncatedToken:(NSAttributedString *)truncatedToken {
     //内容
     TTUGCTextRender *textRender = [[TTUGCTextRender alloc] initWithAttributedText:model.contentAStr];
     textRender.maximumNumberOfLines = model.numberOfLines;
     textRender.font = [UIFont themeFontRegular:16];
     if(model.showLookMore){
-        textRender.truncatedToken = [FHUGCCellHelper truncationFont:[UIFont themeFontRegular:16]
-                                                       contentColor:[UIColor themeGray1]
-                                                              color:[UIColor themeRed3]];
+        if (truncatedToken) {
+            textRender.truncatedToken = truncatedToken;
+        }else {
+            textRender.truncatedToken = [FHUGCCellHelper truncationFont:[UIFont themeFontRegular:16]
+            contentColor:[UIColor themeGray1]
+                   color:[UIColor themeRed3]];
+        }
+        
     }
     
     NSMutableArray *linkModels = [NSMutableArray array];

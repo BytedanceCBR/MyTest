@@ -196,7 +196,7 @@
     BOOL isContentEmpty = isEmptyString(self.cellModel.content);
     self.contentLabel.hidden = isContentEmpty;
     self.contentLabel.height = isContentEmpty ? 0 : self.cellModel.contentHeight;
-    [FHUGCCellHelper setAsyncRichContent:self.contentLabel model:self.cellModel];
+    [FHUGCCellHelper setAsyncRichContent:self.contentLabel model:self.cellModel ];
     
     // 设置图片
     CGFloat imageViewTop = isContentEmpty ? (self.userInfoView.bottom + vGap) : self.userInfoView.bottom + vGap + self.cellModel.contentHeight + vGap;

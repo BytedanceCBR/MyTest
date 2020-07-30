@@ -191,7 +191,10 @@
     }else{
         self.contentLabel.hidden = NO;
         self.contentLabel.height = cellModel.contentHeight;
-        [FHUGCCellHelper setAsyncRichContent:self.contentLabel model:cellModel];
+        NSAttributedString *more =   [FHUGCCellHelper truncationFont:[UIFont themeFontRegular:14]
+                   contentColor:[UIColor themeGray1]
+                          color:[UIColor themeRed3]];
+        [FHUGCCellHelper setAsyncRichContent:self.contentLabel model:cellModel truncatedToken:more];
         self.multiImageView.top = self.userInfoView.bottom + 20 + cellModel.contentHeight;
         self.singleImageView.top = self.userInfoView.bottom + 20 + cellModel.contentHeight;
     }
@@ -261,10 +264,6 @@
 + (CGFloat)heightForData:(id)data {
     if([data isKindOfClass:[FHFeedUGCCellModel class]]){
         FHFeedUGCCellModel *cellModel = (FHFeedUGCCellModel *)data;
-        
-//        UILabel *lab = [[UILabel alloc]init];
-//        lab.text = !isEmptyString(cellModel.originItemModel.content) ?[NSString stringWithFormat:@"问题：%@",cellModel.originItemModel.content] : @"";
-//        CGSize titleLabelSize = [lab sizeThatFits:CGSizeMake(MAXFLOAT, 30)];
         NSString *titleStr =  !isEmptyString(cellModel.originItemModel.content) ?[NSString stringWithFormat:@"问题：%@",cellModel.originItemModel.content] : @"";
         CGSize size = [titleStr sizeWithFont:[UIFont themeFontMedium:16] constrainedToSize:CGSizeMake(CGFLOAT_MAX, 30) lineBreakMode:NSLineBreakByWordWrapping];
         CGFloat maxTitleLabelSizeWidth = [UIScreen mainScreen].bounds.size.width - 10 - 50;

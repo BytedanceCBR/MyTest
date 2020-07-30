@@ -393,7 +393,6 @@
         cellModel.openUrl = model.rawData.content.answer.answerDetailSchema;
         cellModel.commentSchema = model.rawData.content.commentSchema;
         cellModel.showLookMore = YES;
-        cellModel.numberOfLines = 3;
         cellModel.fromGid = model.rawData.fromGid;
         cellModel.fromGroupSource = model.rawData.fromGroupSource;
         
@@ -401,6 +400,11 @@
         //处理大图
         cellModel.largeImageList = model.rawData.content.answer.largeImageList;
         
+        if (cellModel.imageList.count == 0) {
+            cellModel.numberOfLines = 5;
+        }else {
+             cellModel.numberOfLines = 3;
+        }
         cellModel.desc = [self generateUGCDescWithCreateTime:model.rawData.content.answer.createTime readCount:nil distanceInfo:nil];
         
         cellModel.diggCount = model.rawData.content.answer.diggCount;
@@ -697,7 +701,7 @@
         
         
         FHFeedUGCCellUserModel *user = [[FHFeedUGCCellUserModel alloc] init];
-        user.name = realtor.agencyName;
+        user.name = realtor.realtorName;
         user.avatarUrl = realtor.avatarUrl;
         user.realtorId = realtor.realtorId;
         user.firstBizType = realtor.firstBizType;
@@ -853,7 +857,7 @@
         user.schema = model.rawData.user.schema;
         user.userAuthInfo = model.rawData.user.userAuthInfo;
     }
-    cellModel.user = user;
+
     
     FHFeedUGCCellRealtorModel *realtor = [[FHFeedUGCCellRealtorModel alloc] init];
     if(model.realtor) {
@@ -881,6 +885,16 @@
         realtor.realtorLogpb = model.rawData.realtor.realtorLogpb;
         cellModel.realtor = realtor;
     }
+    
+    
+    if (realtor) {
+        user.name = realtor.realtorName;
+        user.avatarUrl = realtor.avatarUrl;
+        user.realtorId = realtor.realtorId;
+        user.firstBizType =realtor.firstBizType;
+        user.desc = realtor.desc;
+    }
+    cellModel.user = user;
 //    if (cellModel.) {
 //        <#statements#>
 //    }
@@ -934,12 +948,23 @@
     NSString *createTime = model.createTime.length > 0 ? model.createTime : model.rawData.createTime;
     NSString *readCount = model.readCount.length > 0 ? model.readCount : model.rawData.readCount;
     NSString *distanceInfo = model.distanceInfo.length > 0 ? model.distanceInfo : model.rawData.distanceInfo;
-    return [self generateUGCDescWithCreateTime:createTime readCount:readCount distanceInfo:distanceInfo];
+    NSString *realtorDesc = model.realtor.desc.length>0?model.rawData.realtor.desc:@"";
+    return [self generateUGCDescWithCreateTime:createTime readCount:readCount distanceInfo:distanceInfo realtorDesc:realtorDesc];
 }
 
 + (NSAttributedString *)generateUGCDescWithCreateTime:(NSString *)createTime readCount:(NSString *)readCount distanceInfo:(NSString *)distanceInfo {
+    return [self generateUGCDescWithCreateTime:createTime readCount:readCount distanceInfo:distanceInfo realtorDesc:nil];
+}
+
++ (NSAttributedString *)generateUGCDescWithCreateTime:(NSString *)createTime readCount:(NSString *)readCount distanceInfo:(NSString *)distanceInfo realtorDesc:(NSString *)realtorDesc {
     NSMutableAttributedString *desc = [[NSMutableAttributedString alloc] initWithString:@""];
     double time = [createTime doubleValue];
+    
+    
+    if (!isEmptyString(realtorDesc)) {
+        NSAttributedString *descStr = [[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@"%@ ",realtorDesc]];
+        [desc appendAttributedString:descStr];
+    };
     
     NSString *publishTime = [FHBusinessManager ugcCustomtimeAndCustomdateStringSince1970:time type:@"onlyDate"];
     
