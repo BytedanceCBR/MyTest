@@ -38,13 +38,13 @@
 }
 - (void)checkLocalData {
     BOOL jumpLynxHeader = [[FHLynxManager sharedInstance] checkChannelTemplateIsAvalable:@"ugc_encyclopedia_lynx_header" templateKey:[FHLynxManager defaultJSFileName]];
-   BOOL jumpLynxItem = [[FHLynxManager sharedInstance] checkChannelTemplateIsAvalable:@"ugc_encyclopedia_lynx_item" templateKey:[FHLynxManager defaultJSFileName]];
+    BOOL jumpLynxItem = [[FHLynxManager sharedInstance] checkChannelTemplateIsAvalable:@"ugc_encyclopedia_lynx_item" templateKey:[FHLynxManager defaultJSFileName]];
     if (jumpLynxHeader && jumpLynxItem) {
         [self initUI];
         [self addDefaultEmptyViewFullScreen];
         [self initViewModel];
     }else {
-       [self.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoData];
+        [self.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoData];
     }
     
 }
@@ -94,18 +94,20 @@
 }
 
 - (void)writeQuestion:(UIButton *)btn {
-            NSURL *openUrl = [NSURL URLWithString:[NSString stringWithFormat:@"sslocal://ugc_wenda_publish"]];
-            NSMutableDictionary *info = @{}.mutableCopy;
-            info[@"title"] = @"提问";
-            info[@"enter_from"] = @"f_house_encyclopedia";
-            TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:info];
-        [[TTRoute sharedRoute] openURLByViewController:openUrl userInfo:userInfo];
+    NSURL *openUrl = [NSURL URLWithString:[NSString stringWithFormat:@"sslocal://ugc_wenda_publish"]];
+    NSMutableDictionary *info = @{}.mutableCopy;
+    info[@"title"] = @"提问";
+    NSMutableDictionary *dic = @{}.mutableCopy;
+    dic[@"enter_from"] = @"f_house_encyclopedia";
+    info[@"tracer"] = dic;
+    TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:info];
+    [[TTRoute sharedRoute] openURLByViewController:openUrl userInfo:userInfo];
 }
 
 - (void)initViewModel {
     _viewModel = [[FHEncyclopediaViewModel alloc] initWithWithController:self collectionView:self.collectionView headerView:self.encyclopediaHeader
-                  tracerModel:self.tracerModel];
-
+                                                             tracerModel:self.tracerModel];
+    
 }
 
 - (FHEncyclopediaHeader *)encyclopediaHeader {

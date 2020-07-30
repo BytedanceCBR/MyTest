@@ -118,11 +118,13 @@
 
 - (void)updateUserInfoView:(FHFeedUGCCellModel *)cellModel {
     [self.userInfoView setTitleModel:cellModel];
-    UILabel *lab = [[UILabel alloc]init];
-      lab.text = !isEmptyString(cellModel.originItemModel.content) ?[NSString stringWithFormat:@"问题：%@",cellModel.originItemModel.content] : @"";
-    CGSize titleLabelSize = [lab sizeThatFits:CGSizeMake(MAXFLOAT, 30)];
-    CGFloat maxTitleLabelSizeWidth = self.userInfoView.width - 10 - 50;
-    if(titleLabelSize.width > maxTitleLabelSizeWidth){
+//    UILabel *lab = [[UILabel alloc]init];
+//      lab.text = !isEmptyString(cellModel.originItemModel.content) ?[NSString stringWithFormat:@"问题：%@",cellModel.originItemModel.content] : @"";
+    NSString *titleStr =  !isEmptyString(cellModel.originItemModel.content) ?[NSString stringWithFormat:@"问题：%@",cellModel.originItemModel.content] : @"";
+    CGSize size = [titleStr sizeWithFont:[UIFont themeFontMedium:16] constrainedToSize:CGSizeMake(CGFLOAT_MAX, 30) lineBreakMode:NSLineBreakByWordWrapping];
+    CGFloat maxTitleLabelSizeWidth = [UIScreen mainScreen].bounds.size.width - 10 - 50;
+    CGFloat userInfoHeight = 0;
+    if(size.width > maxTitleLabelSizeWidth){
         self.userInfoView.height = 50;
     }else {
         self.userInfoView.height = 30;
@@ -137,12 +139,13 @@
 + (CGFloat)heightForData:(id)data {
     if([data isKindOfClass:[FHFeedUGCCellModel class]]){
         FHFeedUGCCellModel *cellModel = (FHFeedUGCCellModel *)data;
-        UILabel *lab = [[UILabel alloc]init];
-        lab.text = !isEmptyString(cellModel.originItemModel.content) ?[NSString stringWithFormat:@"问题：%@",cellModel.originItemModel.content] : @"";
-        CGSize titleLabelSize = [lab sizeThatFits:CGSizeMake(MAXFLOAT, 50)];
+//        UILabel *lab = [[UILabel alloc]init];
+//        lab.text = !isEmptyString(cellModel.originItemModel.content) ?[NSString stringWithFormat:@"问题：%@",cellModel.originItemModel.content] : @"";
+        NSString *titleStr =  !isEmptyString(cellModel.originItemModel.content) ?[NSString stringWithFormat:@"问题：%@",cellModel.originItemModel.content] : @"";
+        CGSize size = [titleStr sizeWithFont:[UIFont themeFontMedium:16] constrainedToSize:CGSizeMake(CGFLOAT_MAX, 30) lineBreakMode:NSLineBreakByWordWrapping];
         CGFloat maxTitleLabelSizeWidth = [UIScreen mainScreen].bounds.size.width - 10 - 50;
         CGFloat userInfoHeight = 0;
-        if(titleLabelSize.width > maxTitleLabelSizeWidth){
+        if(size.width > maxTitleLabelSizeWidth){
             userInfoHeight = 50;
         }else {
             userInfoHeight = 30;

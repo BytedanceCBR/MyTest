@@ -8,6 +8,7 @@
 #import <UIKit/UIKit.h>
 #import "FHFeedUGCCellModel.h"
 #import "TTAsyncCornerImageView.h"
+#import "TTUGCAsyncLabel.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
