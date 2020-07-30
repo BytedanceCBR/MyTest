@@ -359,15 +359,19 @@
     }
     NSInteger chatNumber = 0;
     NSInteger systemMessageNumber = 0;
+    BOOL hasRedPoint = NO;
     for (IMConversation *conv in [_combiner conversationItems]) {
-        if (!conv.mute) {
+        if (conv.type == IMConversationType1to1Chat) {
             chatNumber += conv.unreadCount;
+        }
+        if (conv.type == IMConversationTypeGroupChat && conv.unreadCount > 0) {
+            hasRedPoint = YES;
         }
     }
     for (FHUnreadMsgDataUnreadModel *item in [_combiner channelItems]) {
         systemMessageNumber += [item.unread integerValue];
     }
-    [self.topView updateRedPointWithChat:chatNumber andSystemMessage:systemMessageNumber];
+    [self.topView updateRedPointWithChat:chatNumber andHasRedPoint:hasRedPoint  andSystemMessage:systemMessageNumber];
     [self.tableView reloadData];
 }
 

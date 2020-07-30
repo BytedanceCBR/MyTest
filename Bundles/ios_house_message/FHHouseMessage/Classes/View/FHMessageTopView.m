@@ -92,9 +92,15 @@
     }];
 }
 
-- (void)updateRedPointWithChat:(NSInteger)chatNumber andSystemMessage:(NSInteger)systemMessageNumber {
-    self.unreadChatView.badgeNumber = chatNumber;
-    self.unreadSystemMessageView.badgeNumber = systemMessageNumber == 0 ? TTBadgeNumberHidden : TTBadgeNumberPoint;
+- (void)updateRedPointWithChat:(NSInteger)chatNumber andHasRedPoint:(BOOL)hasRedPoint  andSystemMessage:(NSInteger)systemMessageNumber {
+    if (chatNumber) {
+        self.unreadChatView.badgeNumber = chatNumber;
+    } else if (hasRedPoint) {
+        self.unreadChatView.badgeNumber = TTBadgeNumberPoint;
+    } else {
+        self.unreadChatView.badgeNumber = 0;
+    }
+    self.unreadSystemMessageView.badgeNumber = systemMessageNumber == 0 ? TTBadgeNumberHidden : systemMessageNumber;
 }
 
 - (UIButton *)getButtonWithTitle:(NSString *)title andTag:(NSInteger)tag {
