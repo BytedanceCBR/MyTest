@@ -593,7 +593,7 @@
             backImageView.frame = CGRectMake(0, 0, titleLabel.frame.size.width + 40, 35);
             titleLabel.center = CGPointMake(backImageView.center.x, backImageView.center.y - 1);
             
-            UIImageView *bottomArrowView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"mapsearch_annotation_arrow"]];
+            UIImageView *bottomArrowView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"house_detail_map_ana_arrow"]];
             [backImageView addSubview:bottomArrowView];
             bottomArrowView.backgroundColor = [UIColor clearColor];
             bottomArrowView.frame = CGRectMake(backImageView.frame.size.width / 2.0 - 5, backImageView.frame.size.height - 12, 10.5, 10.5);

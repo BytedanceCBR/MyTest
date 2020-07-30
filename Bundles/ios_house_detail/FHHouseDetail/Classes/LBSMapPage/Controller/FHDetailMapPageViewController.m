@@ -415,7 +415,7 @@ static MAMapView *kFHPageMapView = nil;
         [kFHPageMapView setCustomMapStyleOptions:options];
         [kFHPageMapView setCustomMapStyleEnabled:YES];
 
-        kFHPageMapView.zoomLevel  = 14;
+        kFHPageMapView.zoomLevel  = 18;
         [kFHPageMapView setCenterCoordinate:self.centerPoint];
     }
     _mapView = kFHPageMapView;
@@ -563,6 +563,8 @@ static MAMapView *kFHPageMapView = nil;
         self.baiduPanoAnnotation = baiduPanoAnnotation;
     }
     
+    NSLog(@"self.baiduPanoramaUrl=%@",self.baiduPanoramaUrl);
+    
     
     // PM 确认 不进行缩放
 //    [self.mapView showAnnotations:self.mapView.annotations edgePadding:UIEdgeInsetsMake(20, 20, 20, 20) animated:NO];
@@ -629,6 +631,22 @@ static MAMapView *kFHPageMapView = nil;
 - (UIImage *)getIconImageFromCategory:(NSString *)category
 {
     if ([self.nameArray containsObject:category]) {
+        if ([category isEqualToString:@"教育"]) {
+            return [UIImage imageNamed:@"map_detail_education"];
+        }
+        if ([category isEqualToString:@"医疗"]) {
+            return [UIImage imageNamed:@"map_detail_hospital"];
+        }
+        if ([category isEqualToString:@"交通"]) {
+            return [UIImage imageNamed:@"map_detail_traffic"];
+        }
+        
+        if ([category isEqualToString:@"生活"]) {
+            return [UIImage imageNamed:@"map_detail_life"];
+        }
+        if ([category isEqualToString:@"休闲"]) {
+            return [UIImage imageNamed:@"map_detail_play"];
+        }
         NSInteger indexValue = [self.nameArray indexOfObject:category];
         UIImage *image = [UIImage imageNamed:self.iconImageArray[indexValue]];
         return image;
@@ -662,24 +680,93 @@ static MAMapView *kFHPageMapView = nil;
 - (MAAnnotationView *)mapView:(MAMapView *)mapView viewForAnnotation:(id<MAAnnotation>)annotation
 {
     if ([annotation isKindOfClass:[FHMyMAAnnotation class]]) {
-        NSString *pointResueseIdetifier = @"pointReuseIndetifier";
-        MAAnnotationView *annotationV = [mapView dequeueReusableAnnotationViewWithIdentifier:pointResueseIdetifier];
-        if (annotationV == nil) {
-            annotationV = [[MAAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:pointResueseIdetifier];
-        }
-        annotationV.image = [self getIconImageFromCategory:((FHMyMAAnnotation *)annotation).type];
+        MAAnnotationView *annotationV = nil;
         if ([[(FHMyMAAnnotation *)annotation type] isEqualToString:@"baiduPano"]) {
+            NSString *pointResueseIdetifier = @"pointReuseIndetifier";
+            annotationV = [mapView dequeueReusableAnnotationViewWithIdentifier:pointResueseIdetifier];
+            if (annotationV == nil) {
+                annotationV = [[MAAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:pointResueseIdetifier];
+            }
+            
             annotationV.centerOffset = CGPointMake(0, -50);
             annotationV.canShowCallout = NO;
+            annotationV.image = [self getIconImageFromCategory:@"baiduPano"];
             [annotationV addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(pushBaiduPano)]];
-        } else {
+            annotationV.zIndex = 101;
+
+        }else if ([[(FHMyMAAnnotation *)annotation type] isEqualToString:@"user"]){
+            NSString *pointResueseIdetifier = @"pointReuseIndetifierUser";
+                     annotationV = [mapView dequeueReusableAnnotationViewWithIdentifier:pointResueseIdetifier];
+             if (annotationV == nil) {
+                 annotationV = [[MAAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:pointResueseIdetifier];
+             }
+            annotationV.image = [self getIconImageFromCategory:@"user"];
             annotationV.centerOffset = CGPointMake(0, -10);
-            annotationV.canShowCallout = YES;
-            if (annotationV.gestureRecognizers.count) {
-                for (UIGestureRecognizer *gesture in annotationV.gestureRecognizers) {
-                    [annotationV removeGestureRecognizer:gesture];
-                }
-            }
+            annotationV.zIndex = 100;
+        }else {
+            
+           NSString *reuseIdentifier = @"poi_annotation";
+           MAAnnotationView *annotationView = (MAAnnotationView *) [mapView dequeueReusableAnnotationViewWithIdentifier:reuseIdentifier];
+           if (!annotationView) {
+               annotationView = [[MAAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:reuseIdentifier];
+           }
+            
+
+           UIImageView *backImageView = [UIImageView new];
+           [annotationView addSubview:backImageView];
+            
+            UIImageView *leftIcon = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"map_detail_play"]];
+                   [annotationView addSubview:leftIcon];
+            leftIcon.image = [self getIconImageFromCategory:((FHMyMAAnnotation *)annotation).type];
+
+            leftIcon.backgroundColor = [UIColor clearColor];
+            leftIcon.frame = CGRectMake(11, 10.5, 11, 11);
+            
+            [annotationView addSubview:leftIcon];
+
+           UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(17, 0, 100, 30)];
+           titleLabel.text = annotation.title;
+           titleLabel.frame = CGRectMake(0, 0, titleLabel.text.length * 13, 32);
+           backImageView.frame = CGRectMake(0, 0, titleLabel.text.length * 13 + 20, 30);
+
+//           UIImage *imageAnna = [UIImage imageNamed:@"mapsearch_detail_annotation_bg"];//mapsearch_annotation_bg
+//
+//           CGFloat width = imageAnna.size.width > 0 ? imageAnna.size.width : 10;
+//           CGFloat height = imageAnna.size.height > 0 ? imageAnna.size.height : 10;
+//
+//           imageAnna = [imageAnna resizableImageWithCapInsets:UIEdgeInsetsMake(height / 2.0, width / 2.0, height / 2.0, width / 2.0) resizingMode:UIImageResizingModeStretch];
+//           backImageView.image = imageAnna;
+
+           backImageView.layer.cornerRadius = 15;
+           backImageView.layer.masksToBounds = YES;
+
+           [annotationView addSubview:titleLabel];
+           titleLabel.font = [UIFont themeFontRegular:12];
+           titleLabel.textColor = [UIColor whiteColor];
+           titleLabel.layer.masksToBounds = YES;
+
+           titleLabel.numberOfLines = 1;
+           titleLabel.textAlignment = NSTextAlignmentCenter;
+           titleLabel.backgroundColor = [UIColor clearColor];
+           [titleLabel sizeToFit];
+           backImageView.frame = CGRectMake(0, 0, titleLabel.frame.size.width + 60, 30);
+           [backImageView setBackgroundColor:[UIColor colorWithHexStr:@"#ff9629"]];
+           titleLabel.center = CGPointMake(backImageView.center.x, backImageView.center.y);
+
+           UIImageView *bottomArrowView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"mapsearch_annotation_arrow"]];
+           [annotationView addSubview:bottomArrowView];
+           bottomArrowView.backgroundColor = [UIColor clearColor];
+           bottomArrowView.frame = CGRectMake(backImageView.frame.size.width / 2.0 - 5, backImageView.frame.size.height - 5.5, 10.5, 10.5);
+           annotationView.centerOffset = CGPointMake(-backImageView.frame.size.width / 2.0, -40);
+           return annotationView;
+//            annotationV.centerOffset = CGPointMake(0, -10);
+//            annotationV.canShowCallout = YES;
+//            annotationV.selected = YES;
+//            if (annotationV.gestureRecognizers.count) {
+//                for (UIGestureRecognizer *gesture in annotationV.gestureRecognizers) {
+//                    [annotationV removeGestureRecognizer:gesture];
+//                }
+//            }
         }
         
         return annotationV ? annotationV : [[MAAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:@"default"];
