@@ -181,6 +181,30 @@
     [self.containerView addSubview:_pushTipView];
 
     [self addDefaultEmptyViewFullScreen];
+    self.emptyView.loginBlock = ^{
+        [wself login];
+    };
+}
+
+- (void)login {
+    NSString *clickTrackDic = @{
+        @"click_type":@"login",
+        @"page_type":@"minetab"
+    };
+    //TRACK_EVENT(@"click_minetab", clickTrackDic);
+    
+    NSMutableDictionary *dict = @{}.mutableCopy;
+    dict[@"isCheckUGCADUser"] = @(1);
+    dict[TRACER_KEY] = @{
+        @"enter_from": @"minetab",
+        @"enter_method": @"click_mine",
+        @"enter_type": @"login",
+        @"trigger": @"user"
+    };
+    TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
+    
+    NSURL* url = [NSURL URLWithString:@"snssdk1370://flogin"];
+    [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
 }
 
 - (void)hidePushTip {
