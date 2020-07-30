@@ -98,6 +98,11 @@
     self.userName = [self LabelWithFont:[UIFont themeFontMedium:16] textColor:[UIColor themeGray1]];
     [self addSubview:_userName];
     
+    self.titleLabel = [self LabelWithFont:[UIFont themeFontMedium:16] textColor:[UIColor themeGray1]];
+    self.titleLabel.numberOfLines = 0;
+    self.titleLabel.hidden = YES;
+    [self addSubview:_titleLabel];
+    
     _userName.userInteractionEnabled = YES;
      UITapGestureRecognizer *tap1 = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(goToPersonalHomePage)];
     [_userName addGestureRecognizer:tap1];
@@ -148,6 +153,12 @@
     self.userName.left = self.icon.right + 10;
     self.userName.width = 100;
     self.userName.height = 22;
+    
+    self.titleLabel.top = 0;
+    self.titleLabel.left =  20;
+    self.titleLabel.width = 100;
+    self.titleLabel.height = 50;
+    
     
     self.moreBtn.top = 10;
     self.moreBtn.width = 20;
@@ -201,6 +212,26 @@
     [self updateDescLabel];
     [self updateEditState];
     [self updateFrame];
+}
+
+- (void)setTitleModel:(FHFeedUGCCellModel *)cellModel {
+        self.titleLabel.text = !isEmptyString(cellModel.originItemModel.content) ?[NSString stringWithFormat:@"问题：%@",cellModel.originItemModel.content] : @"";
+      CGSize titleLabelSize = [self.titleLabel sizeThatFits:CGSizeMake(MAXFLOAT, 50)];
+      self.titleLabel.width = titleLabelSize.width;
+      CGFloat maxTitleLabelSizeWidth = self.width - 20 - 20 - 20 ;
+      if(self.titleLabel.width > maxTitleLabelSizeWidth){
+          self.titleLabel.width = maxTitleLabelSizeWidth;
+           self.titleLabel.height = 50;
+            self.moreBtn.top = 5;
+      }else {
+          self.titleLabel.height = 30;
+          self.moreBtn.top = 5;
+      }
+    self.titleLabel.hidden = NO;
+    self.userName.hidden = YES;
+    self.icon.hidden =  YES;
+    self.userAuthLabel.hidden = YES;
+    self.descLabel.hidden = YES;
 }
 
 - (void)updateMoreBtnWithTitleType {

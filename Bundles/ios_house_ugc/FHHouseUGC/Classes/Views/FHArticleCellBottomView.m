@@ -23,6 +23,7 @@
 @interface FHArticleCellBottomView ()
 
 @property(nonatomic ,strong) UIView *bottomSepView;
+@property(assign ,nonatomic) BOOL showPositionView;
 
 @end
 
@@ -33,6 +34,7 @@
     if (self) {
         [self initViews];
         [self initConstraints];
+        _showPositionView = NO;
     }
     return self;
 }
@@ -66,6 +68,18 @@
     _moreBtn.hitTestEdgeInsets = UIEdgeInsetsMake(-10, -10, -10, -10);
     [self addSubview:_moreBtn];
     
+    self.answerBtn = [[UIButton alloc] init];
+    [_answerBtn setBackgroundColor:[UIColor themeOrange4]];
+    [_answerBtn setTitle:@"去回答" forState:UIControlStateNormal];
+    _answerBtn.titleLabel.font = [UIFont themeFontRegular:14];
+    _answerBtn.layer.cornerRadius = 13;
+    _answerBtn.layer.masksToBounds = YES;
+    [_answerBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    [_answerBtn addTarget:self action:@selector(questionAction) forControlEvents:UIControlEventTouchUpInside];
+    _answerBtn.hitTestEdgeInsets = UIEdgeInsetsMake(-10, -10, -10, -10);
+    [self addSubview:_answerBtn];
+    self.answerBtn.hidden = YES;
+    
     self.bottomSepView = [[UIView alloc] init];
     _bottomSepView.backgroundColor = [UIColor themeGray7];
     [self addSubview:_bottomSepView];
@@ -94,6 +108,12 @@
     self.moreBtn.top = 2;
     self.moreBtn.height = 20;
     self.moreBtn.width = 20;
+    
+    self.answerBtn.left = self.descLabel.right + 20;
+    self.answerBtn.centerY = self.descLabel.centerY;
+    self.answerBtn.height = 26;
+    self.answerBtn.width = 75;
+    
 
     self.bottomSepView.left = 0;
     self.bottomSepView.top = self.positionView.bottom + 10;
@@ -131,6 +151,7 @@
 
 - (void)showPositionView:(BOOL)isShow {
     self.positionView.hidden = !isShow;
+    self.showPositionView = isShow;
     if(isShow){
         
         self.position.top = 3;
@@ -152,6 +173,17 @@
         self.descLabel.centerY = self.positionView.centerY;
         self.descLabel.width = [UIScreen mainScreen].bounds.size.width - 40 - 20 - 20;
     }
+}
+
+- (void)questionAction {
+        NSURL *openUrl = [NSURL URLWithString:[NSString stringWithFormat:@"sslocal://wenda_post"]];
+        NSMutableDictionary *info = @{}.mutableCopy;
+        info[@"title"] = @"回答";
+        info[@"qid"] = self.cellModel.groupId;
+        info[@"enter_from"] = self.cellModel.tracerDic[@"page_type"];
+//        info[@"gd_ext_json"] = self.cellModel.tracerDic[@"gd_ext_json"];
+        TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:info];
+    [[TTRoute sharedRoute] openURLByViewController:openUrl userInfo:userInfo];
 }
 
 - (void)moreOperation {
@@ -459,4 +491,15 @@
     TRACK_EVENT(@"confirm_delete_popup_click", dict);
 }
 
+- (void)updateIsQuestion {
+    self.moreBtn.hidden = YES;
+    self.answerBtn.hidden = NO;
+    if (_showPositionView) {
+        self.descLabel.width = [UIScreen mainScreen].bounds.size.width - 40 - 75 - 20 - self.positionView.width - 6;
+    }else {
+        self.descLabel.width = [UIScreen mainScreen].bounds.size.width - 40 - 75 - 20;
+    }
+     self.answerBtn.left = self.descLabel.right + 20;
+    self.answerBtn.centerY = self.descLabel.centerY;
+}
 @end

@@ -331,7 +331,7 @@
         }
     }
     else if(cellModel.cellType == FHUGCFeedListCellTypeQuestion){
-        cellModel.cellSubType = FHUGCFeedListCellSubTypeArticle;
+        cellModel.cellSubType = FHUGCFeedListCellSubTypeQuestion;
         // 发布用户的信息
         FHFeedUGCCellUserModel *user = [[FHFeedUGCCellUserModel alloc] init];
         user.name = model.rawData.content.user.uname;
@@ -359,6 +359,12 @@
             cellModel.numberOfLines = 0;
         }
         
+        FHFeedUGCOriginItemModel *originItemModel = [[FHFeedUGCOriginItemModel alloc] init];
+        if (cellModel.title) {
+            originItemModel.content = cellModel.title;
+            cellModel.originItemModel = originItemModel;
+        }
+        
         if(model.sourceDesc){
             cellModel.desc = [[NSMutableAttributedString alloc] initWithString:model.sourceDesc];
         }else if(model.rawData.content.extra.answerCount){
@@ -381,7 +387,7 @@
         }
     }
     else if(cellModel.cellType == FHUGCFeedListCellTypeAnswer){
-        cellModel.cellSubType = FHUGCFeedListCellSubTypePost;
+        cellModel.cellSubType = FHUGCFeedListCellSubTypeAnswer;
         cellModel.groupId = model.rawData.groupId;
         cellModel.content = model.rawData.content.answer.abstractText;
         cellModel.openUrl = model.rawData.content.answer.answerDetailSchema;
@@ -422,7 +428,7 @@
             cellModel.numberOfLines = 0;
         }
         
-        [FHUGCCellHelper setRichContentWithModel:cellModel width:([UIScreen mainScreen].bounds.size.width - 40) numberOfLines:cellModel.numberOfLines];
+        [FHUGCCellHelper setRichContentImageWithModel:cellModel width:([UIScreen mainScreen].bounds.size.width - 40) numberOfLines:cellModel.numberOfLines];
         
         //小区问答数据处理
         if([model.cellCtrls.cellLayoutStyle isEqualToString:@"10001"]){

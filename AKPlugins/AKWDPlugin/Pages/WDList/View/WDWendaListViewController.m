@@ -55,6 +55,8 @@
 #import "TTAccountManager.h"
 #import "FHUserTracker.h"
 #import <BDTrackerProtocol/BDTrackerProtocol.h>
+#import "UIColor+Theme.h"
+#import "UIFont+House.h"
 
 #define kListBottomBarHeight (self.view.tt_safeAreaInsets.bottom ? self.view.tt_safeAreaInsets.bottom + 44 : 44)
 
@@ -328,7 +330,9 @@ static NSString * const WukongListTipsHasShown = @"kWukongListTipsHasShown";
     [backButtonView.backButton addTarget:self action:@selector(dismissSelf) forControlEvents:UIControlEventTouchUpInside];
     self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:backButtonView];
 
-    UIBarButtonItem *moreButtonItem = [[UIBarButtonItem alloc] initWithCustomView:[self moreButton]];
+    UIBarButtonItem *moreButtonItem = [[UIBarButtonItem alloc] initWithCustomView:[self questionBtn]];
+    
+//    UIBarButtonItem *moreButtonItem = [[UIBarButtonItem alloc] initWithCustomView:[self moreButton]];
     self.navigationItem.rightBarButtonItems = @[moreButtonItem];
  
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(postAnswerSuccess:) name:@"kFHWDAnswerPictureTextPostSuccessNotification" object:nil];
@@ -1096,6 +1100,29 @@ static void extracted(WDWendaListViewController *object, WDWendaListViewControll
     {
         return nil;
     }
+}
+
+- (UIButton *)questionBtn {
+    UIButton *questionBtn = [[UIButton alloc]initWithFrame:CGRectMake(0, 0, 90, 20)];
+    [questionBtn setTitleColor:[UIColor themeOrange4] forState:UIControlStateNormal];
+    [questionBtn setTitle:@"我要提问" forState:UIControlStateNormal];
+    questionBtn.titleLabel.font = [UIFont themeFontRegular:14];
+    [questionBtn setImage:[UIImage imageNamed:@"right_write"] forState:UIControlStateNormal];
+    questionBtn.imageEdgeInsets = UIEdgeInsetsMake(0, 0, 0, 0);
+    questionBtn.titleEdgeInsets = UIEdgeInsetsMake(0, 10, 0, 0);
+    [questionBtn setAdjustsImageWhenHighlighted:NO];
+    questionBtn.contentHorizontalAlignment = UIControlContentHorizontalAlignmentCenter;
+    [questionBtn addTarget:self action:@selector(writeQuestion:) forControlEvents:UIControlEventTouchUpInside];
+    return questionBtn;
+}
+
+- (void)writeQuestion:(UIButton *)btn {
+            NSURL *openUrl = [NSURL URLWithString:[NSString stringWithFormat:@"sslocal://ugc_wenda_publish"]];
+            NSMutableDictionary *info = @{}.mutableCopy;
+            info[@"title"] = @"提问";
+            info[@"enter_from"] = @"question";
+            TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:info];
+        [[TTRoute sharedRoute] openURLByViewController:openUrl userInfo:userInfo];
 }
 
 - (SSThemedView<WDWendaListQuestionHeaderProtocol> *)questionHeader

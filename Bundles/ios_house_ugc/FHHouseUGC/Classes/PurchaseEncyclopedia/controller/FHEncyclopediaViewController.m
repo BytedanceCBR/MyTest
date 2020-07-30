@@ -13,6 +13,7 @@
 #import "FHTracerModel.h"
 #import "FHLynxManager.h"
 #import "TTReachability.h"
+#import "UIView+BTDAdditions.h"
 @interface FHEncyclopediaViewController ()
 @property (weak, nonatomic) UICollectionView *collectionView;
 @property (weak, nonatomic) FHEncyclopediaHeader *encyclopediaHeader;
@@ -68,6 +69,37 @@
     [self setupDefaultNavBar:NO];
     self.customNavBarView.seperatorLine.hidden = YES;
     self.customNavBarView.title.text = @"购房百科";
+    UIButton *rightbtn = [self questionBtn];
+    [self.customNavBarView addSubview:rightbtn];
+    [rightbtn setBtd_y:self.customNavBarView.leftBtn.btd_centerY];
+    [rightbtn mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.centerY.equalTo(self.customNavBarView.title);
+        make.right.equalTo(self.customNavBarView.mas_right).offset(-10);
+        make.size.mas_equalTo(CGSizeMake(90, 20));
+    }];
+}
+
+- (UIButton *)questionBtn {
+    UIButton *questionBtn = [[UIButton alloc]init];
+    [questionBtn setTitleColor:[UIColor themeOrange4] forState:UIControlStateNormal];
+    [questionBtn setTitle:@"我要提问" forState:UIControlStateNormal];
+    questionBtn.titleLabel.font = [UIFont themeFontRegular:14];
+    [questionBtn setImage:[UIImage imageNamed:@"right_write"] forState:UIControlStateNormal];
+    questionBtn.imageEdgeInsets = UIEdgeInsetsMake(0, 0, 0, 0);
+    questionBtn.titleEdgeInsets = UIEdgeInsetsMake(0, 10, 0, 0);
+    [questionBtn setAdjustsImageWhenHighlighted:NO];
+    questionBtn.contentHorizontalAlignment = UIControlContentHorizontalAlignmentCenter;
+    [questionBtn addTarget:self action:@selector(writeQuestion:) forControlEvents:UIControlEventTouchUpInside];
+    return questionBtn;
+}
+
+- (void)writeQuestion:(UIButton *)btn {
+            NSURL *openUrl = [NSURL URLWithString:[NSString stringWithFormat:@"sslocal://ugc_wenda_publish"]];
+            NSMutableDictionary *info = @{}.mutableCopy;
+            info[@"title"] = @"提问";
+            info[@"enter_from"] = @"f_house_encyclopedia";
+            TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:info];
+        [[TTRoute sharedRoute] openURLByViewController:openUrl userInfo:userInfo];
 }
 
 - (void)initViewModel {

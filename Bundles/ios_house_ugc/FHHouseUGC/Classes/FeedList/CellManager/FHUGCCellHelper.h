@@ -67,6 +67,8 @@ NS_ASSUME_NONNULL_BEGIN
 ////
 + (void)setAsyncRichContent:(TTUGCAsyncLabel *)label model:(FHFeedUGCCellModel *)model;
 
++ (void)setRichContentImageWithModel:(FHFeedUGCCellModel *)model width:(CGFloat)width numberOfLines:(NSInteger)numberOfLines;
+
 @end
 
 NS_ASSUME_NONNULL_END

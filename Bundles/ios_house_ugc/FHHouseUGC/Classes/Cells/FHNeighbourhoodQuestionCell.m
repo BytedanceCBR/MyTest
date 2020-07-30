@@ -6,7 +6,6 @@
 //
 
 #import "FHNeighbourhoodQuestionCell.h"
-#import "FHArticleCellBottomView.h"
 #import "FHUGCCellHelper.h"
 #import "TTBaseMacro.h"
 #import "TTStringHelper.h"
