@@ -223,6 +223,7 @@
         }
         
         NSString *key = [NSString stringWithFormat:@"%@[]", self.configOption.type ?: @"price"];
+        NSMutableArray *priceArr = [[NSMutableArray alloc] init];
         NSInteger r = self.rate.integerValue;
         if (self.lowerPrice && self.higherPrice) {
             NSInteger lowPrice = self.lowerPrice.integerValue;
@@ -236,26 +237,30 @@
             if (highPrice == 0 && self.fromType == FHHouseFindPriceFromTypeHelp) {
                 NSInteger priceNum = lowPrice * r;
                 NSString *priceStr = [NSString stringWithFormat:@"%zi", priceNum];
-                [resultDict btd_setObject:@[priceStr] forKey:key];
+                [priceArr btd_addObject:@[priceStr]];
+                [resultDict btd_setObject:priceArr forKey:key];
             } else {
                 lowPrice = lowPrice * r;
                 highPrice = highPrice * r;
                 NSString *lowPriceStr = [NSString stringWithFormat:@"%zi", lowPrice];
                 NSString *highPriceStr = [NSString stringWithFormat:@"%zi", highPrice];
-                [resultDict btd_setObject:@[lowPriceStr, highPriceStr] forKey:key];
+                [priceArr btd_addObject:@[lowPriceStr, highPriceStr]];
+                [resultDict btd_setObject:priceArr forKey:key];
             }
         } else if (self.lowerPrice) {
             NSInteger lowPrice = self.lowerPrice.integerValue;
             NSString *lowPriceStr = [NSString stringWithFormat:@"%zi", lowPrice];
-            [resultDict btd_setObject:@[lowPriceStr] forKey:key];
+            [priceArr btd_addObject:@[lowPriceStr]];
+            [resultDict btd_setObject:priceArr forKey:key];
         } else if (self.higherPrice) {
             NSInteger highPrice = self.higherPrice.integerValue;
             if (highPrice > 0) {
                 NSString *lowPriceStr = @"0";
                 NSString *highPriceStr = [NSString stringWithFormat:@"%zi", highPrice];
-                [resultDict btd_setObject:@[lowPriceStr, highPriceStr] forKey:key];
+                [priceArr btd_addObject:@[lowPriceStr, highPriceStr]];
+                [resultDict btd_setObject:priceArr forKey:key];
             } else {
-                [resultDict btd_setObject:@[@"0"] forKey:key];
+                [resultDict btd_setObject:@[@[@"0"]] forKey:key];
             }
         } else {
             if (self.fromType == FHHouseFindPriceFromTypeHelp) {
@@ -279,7 +284,7 @@
                     }
                 }
                 if (priceArray.count > 0) {
-                    [resultDict btd_setObject:priceArray forKey:key];
+                    [resultDict btd_setObject:@[priceArray] forKey:key];
                 }
             }
         }

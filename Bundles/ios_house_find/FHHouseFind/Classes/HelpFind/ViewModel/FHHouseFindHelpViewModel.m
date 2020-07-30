@@ -81,6 +81,8 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
 //@property(nonatomic , assign) BOOL isVerifyCodeRetry;
 @property(nonatomic , assign) CGPoint lastContentOffset;
 @property(nonatomic , assign) BOOL isKeyboardShow;
+//1.0.4版本帮我找房新增线索逻辑
+@property (nonatomic, copy) NSDictionary *reportFormInfo;
 
 @end
 
@@ -158,14 +160,13 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
     }
     [self selectDefaultItems];
     [self.collectionView reloadData];
-    [self addClickLogWithEvent:@"click_options" position:@"reset"];
+    [self addClickLogWithEvent:@"click_options" position:@"reset" associateInfo:nil];
 }
 
 - (void)confirmBtnDidClick
 {
 //    [self.collectionView endEditing:YES];
     __weak typeof(self) wself = self;
-    [self addClickLogWithEvent:@"click_confirm" position:nil];
     
     FHHouseType ht = _houseType;
     FHHouseFindSelectModel *model = [self selectModelWithType:ht];
@@ -283,7 +284,6 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
     }
     
     //Step1: 提交用户选择信息，获取线索相关信息
-    //TODO: params待定
     NSString *associateStr = [associateDict btd_jsonStringEncoded];
     NSDictionary *params = @{
         @"from": @"app_findselfhouse",
@@ -291,10 +291,26 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
     };
     
     [FHMainApi loadAssociateEntranceWithParams:params completion:^(NSError * _Nonnull error, id _Nonnull response) {
+        __strong typeof(weakSelf) strongSelf = weakSelf;
+        
         if (!error) {
             //Step2: 提交线索信息
-            //TODO: 提交线索信息
-            [weakSelf commitAssociateInfoWithParams:nil selectedModel:selectModel phoneNumber:phoneNumber];
+            NSDictionary *responseDict = (NSDictionary *)response;
+            if (responseDict && [responseDict isKindOfClass:[NSDictionary class]]) {
+                NSDictionary *data = responseDict[@"data"];
+                if (data && [data isKindOfClass:[NSDictionary class]]) {
+                    NSDictionary *associateInfo = data[@"associate_info"];
+                    strongSelf.reportFormInfo = associateInfo[@"report_form_info"];
+                }
+            }
+            
+            NSString *originFrom = self.tracerDict[@"origin_from"] ?: @"be_null";
+            NSDictionary *params = @{
+                @"origin_from": originFrom,
+                @"user_phone": phoneNumber,
+                @"report_form_info": strongSelf.reportFormInfo ?: @{},
+            };
+            [strongSelf commitAssociateInfoWithParams:params selectedModel:selectModel phoneNumber:phoneNumber];
         } else {
            NSString *message = error.localizedDescription ? : @"请求失败，请稍后重试";
            [[ToastManager manager] showToast:message];
@@ -308,9 +324,13 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
     __weak typeof(self) weakSelf = self;
     
     [FHMainApi commitAssociateInfoWithParams:params completion:^(NSError * _Nonnull error, id _Nonnull response) {
+        __strong typeof(weakSelf) strongSelf = weakSelf;
+        
         if (!error) {
             //Step3: 保存用户选择信息
-            [weakSelf saveSelectedInfoWithSelectedModel:selectedModel phoneNumber:phoneNumber];
+            [strongSelf saveSelectedInfoWithSelectedModel:selectedModel phoneNumber:phoneNumber];
+            //埋点
+            [strongSelf addClickLogWithEvent:@"click_confirm" position:nil associateInfo:strongSelf.reportFormInfo];
         } else {
             NSString *message = error.localizedDescription ? : @"请求失败，请稍后重试";
             [[ToastManager manager] showToast:message];
@@ -1620,7 +1640,7 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
     [FHUserTracker writeEvent:@"click_login" params:params];
 }
 
-- (void)addClickLogWithEvent:(NSString *)event position:(NSString *)position
+- (void)addClickLogWithEvent:(NSString *)event position:(NSString *)position associateInfo:(NSDictionary *)associateInfo
 {
     NSString *eventStr = event ?: @"click_options";
     NSMutableDictionary *params = @{}.mutableCopy;
@@ -1629,6 +1649,9 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
     params[@"page_type"] = [self pageTypeString];
     if (position.length > 0) {
         params[@"click_position"] = position;
+    }
+    if (associateInfo.count > 0) {
+        params[@"associate_info"] = [associateInfo btd_jsonStringEncoded];
     }
     
     [FHUserTracker writeEvent:event params:params];

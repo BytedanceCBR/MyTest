@@ -8,6 +8,7 @@
 #import "FHMainApi+HouseFind.h"
 #import "TTNetworkManager.h"
 #import "FHURLSettings.h"
+#import "FHPostDataHTTPRequestSerializer.h"
 
 @implementation FHMainApi (HouseFind)
 
@@ -64,7 +65,11 @@
     NSString * host = [FHURLSettings baseURL] ?: @"https://i.haoduofangs.com";
     NSString* url = [host stringByAppendingString:@"/f100/api/associate_entrance"];
     
-    return [[TTNetworkManager shareInstance] requestForJSONWithResponse:url params:params method:@"GET" needCommonParams:YES callback:^(NSError *error, id jsonObj, TTHttpResponse *response) {
+    return [[TTNetworkManager shareInstance] requestForJSONWithResponse:url
+                                                                 params:params
+                                                                 method:@"GET"
+                                                       needCommonParams:YES
+                                                               callback:^(NSError *error, id jsonObj, TTHttpResponse *response) {
         
         if(completion) {
             completion(error, jsonObj);
@@ -74,14 +79,22 @@
 
 /**
  提交线索信息
+ @param params 参数字典
  */
 + (TTHttpTask *)commitAssociateInfoWithParams:(NSDictionary *)params completion:(void (^)(NSError * _Nonnull, id _Nonnull))completion {
     NSString * host = [FHURLSettings baseURL] ?: @"https://i.haoduofangs.com";
     NSString* url = [host stringByAppendingString:@"/f100/api/call_report"];
-    
-    return [[TTNetworkManager shareInstance] requestForJSONWithResponse:url params:params method:@"GET" needCommonParams:YES callback:^(NSError *error, id jsonObj, TTHttpResponse *response) {
+
+    return [[TTNetworkManager shareInstance] requestForBinaryWithResponse:url
+                                                                   params:params
+                                                                   method:@"POST"
+                                                         needCommonParams:YES
+                                                        requestSerializer:[FHPostDataHTTPRequestSerializer class]
+                                                       responseSerializer:[[TTNetworkManager shareInstance] defaultBinaryResponseSerializerClass]
+                                                               autoResume:YES
+                                                                 callback:^(NSError *error, id jsonObj, TTHttpResponse *response) {
         
-        if(completion) {
+        if (completion) {
             completion(error, jsonObj);
         }
     }];
