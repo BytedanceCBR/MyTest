@@ -687,6 +687,7 @@
         realtor.realtorName  = model.rawData.realtor.realtorName;
         realtor.associateInfo = model.rawData.realtor.associateInfo;
         realtor.realtorLogpb = model.rawData.realtor.realtorLogpb;
+        realtor.firstBizType = model.rawData.realtor.firstBizType;
         cellModel.realtor = realtor;
         
         
@@ -694,6 +695,8 @@
         FHFeedUGCCellUserModel *user = [[FHFeedUGCCellUserModel alloc] init];
         user.name = realtor.agencyName;
         user.avatarUrl = realtor.avatarUrl;
+        user.realtorId = realtor.realtorId;
+        user.firstBizType = realtor.firstBizType;
         user.userId = model.rawData.user.info.userId;
         user.schema = model.rawData.user.info.schema;
         cellModel.user = user;

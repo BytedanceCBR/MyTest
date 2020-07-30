@@ -210,6 +210,7 @@ typedef NS_ENUM(NSUInteger, FHFeedContentStickStyle) {
 @property (nonatomic, copy , nullable) NSString *certificationIcon;
 @property (nonatomic, copy , nullable) NSString *certificationPage;
 @property (nonatomic, copy , nullable) NSString *chatOpenurl;
+@property (nonatomic, copy , nullable) NSString *firstBizType;
 @property (nonatomic, copy , nullable) NSString *desc;
 @property (nonatomic, copy , nullable) NSString *mainPageInfo;
 @property (nonatomic, copy , nullable) NSString *realtorId;

@@ -715,12 +715,25 @@
 }
 
 - (void)goToPersonalHomePage {
-    if(!isEmptyString(self.cellModel.user.schema)){
-        NSMutableDictionary *dict = @{}.mutableCopy;
-        dict[@"from_page"] = self.cellModel.tracerDic[@"page_type"] ? self.cellModel.tracerDic[@"page_type"] : @"default";
-        TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
-        NSURL *openUrl = [NSURL URLWithString:self.cellModel.user.schema];
-        [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:userInfo];
+    if (self.cellModel.user.realtorId.length > 0) {
+        if (![self.cellModel.user.firstBizType isEqualToString:@"1"]) {
+            NSURL *openUrl = [NSURL URLWithString:[NSString stringWithFormat:@"sslocal://new_realtor_detail"]];
+                    NSMutableDictionary *info = @{}.mutableCopy;
+                    info[@"title"] = @"经纪人主页";
+                    info[@"realtor_id"] = self.cellModel.user.realtorId;
+                    NSMutableDictionary *tracerDic = self.cellModel.tracerDic.mutableCopy;
+                    info[@"tracer"] = tracerDic;
+                    TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:info];
+                       [[TTRoute sharedRoute]openURLByViewController:openUrl userInfo:userInfo];
+        }
+    }else {
+        if(!isEmptyString(self.cellModel.user.schema)){
+            NSMutableDictionary *dict = @{}.mutableCopy;
+            dict[@"from_page"] = self.cellModel.tracerDic[@"page_type"] ? self.cellModel.tracerDic[@"page_type"] : @"default";
+            TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
+            NSURL *openUrl = [NSURL URLWithString:self.cellModel.user.schema];
+            [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:userInfo];
+        }
     }
 }
 

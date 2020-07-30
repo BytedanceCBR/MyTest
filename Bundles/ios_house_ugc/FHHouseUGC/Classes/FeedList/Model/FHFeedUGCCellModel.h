@@ -33,6 +33,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *name;
 @property (nonatomic, copy , nullable) NSString *avatarUrl;
 @property (nonatomic, copy , nullable) NSString *userId;
+@property (nonatomic, copy , nullable) NSString *realtorId;
+@property (nonatomic, copy , nullable) NSString *firstBizType;
 @property (nonatomic, copy , nullable) NSString *schema;
 @property (nonatomic, copy , nullable) NSString *userAuthInfo;
 
@@ -46,6 +48,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *certificationPage;
 @property (nonatomic, copy , nullable) NSString *chatOpenurl;
 @property (nonatomic, copy , nullable) NSString *desc;
+@property (nonatomic, copy , nullable) NSString *firstBizType;
 @property (nonatomic, copy , nullable) NSString *mainPageInfo;
 @property (nonatomic, copy , nullable) NSString *realtorId;
 @property (nonatomic, copy , nullable) NSString *realtorName;
