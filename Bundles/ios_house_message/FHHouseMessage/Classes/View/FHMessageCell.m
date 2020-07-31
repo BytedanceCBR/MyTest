@@ -77,10 +77,6 @@
     self.backView = [[UIView alloc] init];
     self.backView.backgroundColor = [UIColor themeWhite];
     self.backView.layer.cornerRadius = 10;
-    self.backView.layer.shadowOffset = CGSizeMake(0, 5);
-    self.backView.layer.shadowRadius = 4.5;
-    self.backView.layer.shadowColor = RGB(110, 110, 110).CGColor;
-    self.backView.layer.shadowOpacity = 0.1;
     [self.contentView addSubview:self.backView];
     
     self.iconView = [[UIImageView alloc] init];
