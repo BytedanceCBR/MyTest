@@ -12,7 +12,7 @@
 #import <AMapFoundationKit/AMapFoundationKit.h>
 #import <AMapFoundationKit/AMapFoundationKit.h>
 #import <MAMapKit/MAMapKit.h>
-
+#import <YYText/YYLabel.h>
 #import "TTDeviceHelper.h"
 #import "TTUIResponderHelper.h"
 #import "UIViewAdditions.h"
@@ -30,6 +30,9 @@
 #import <ByteDanceKit/NSDictionary+BTDAdditions.h>
 #import "TTReachability.h"
 #import "FHOldDetailStaticMapCell.h"
+#import "FHMyItemAnnView.h"
+#import <UIDevice+BTDAdditions.h>
+#import "YYText.h"
 
 static NSInteger const kBottomBarTagValue = 100;
 static NSInteger const kBottomButtonLabelTagValue = 1000;
@@ -61,6 +64,13 @@ static MAMapView *kFHPageMapView = nil;
 @property (nonatomic, weak)     UIScrollView       *bottomScrollView;
 @property (nonatomic, copy) NSString *baiduPanoramaUrl;
 @property (nonatomic , strong) FHMyMAAnnotation *baiduPanoAnnotation;
+@property (nonatomic , strong) UIView *bottomShowInfoView;
+@property(nonatomic , strong) UIPanGestureRecognizer *panGesture;
+@property(nonatomic , assign) CGPoint panLocation;
+@property(nonatomic , assign) CGFloat dragOffset;
+
+@property(nonatomic , weak)FHMyItemAnnView *currentSelectAna;
+
 @end
 
 @implementation FHDetailMapPageViewController
@@ -90,6 +100,7 @@ static MAMapView *kFHPageMapView = nil;
         if (paramObj.allParams[@"baiduPanoramaUrl"]) {
             self.baiduPanoramaUrl = [paramObj.allParams btd_stringValueForKey:@"baiduPanoramaUrl"];
         }
+    
         
     }
     return self;
@@ -190,6 +201,150 @@ static MAMapView *kFHPageMapView = nil;
         make.left.top.right.mas_equalTo(self.view);
         make.height.mas_equalTo(navHeight);
     }];
+    
+}
+
+-(void)panAction:(UIPanGestureRecognizer *)pan
+{
+    [self hideAnaInfoView:nil];
+//    switch (pan.state) {
+//        case UIGestureRecognizerStateBegan:
+//            self.panLocation = [pan locationInView:self];
+//            break;
+//        case UIGestureRecognizerStateChanged:{
+//            CGPoint loc = [pan locationInView:self];
+//            self.dragOffset = loc.y - self.panLocation.y;
+//            if (self.dragOffset >= 0) {
+//                self.bottomShowInfoView.top = self.bottomShowInfoView.origin.y + self.dragOffset;
+//            }
+//        }
+//            break;
+//        case UIGestureRecognizerStateEnded:
+//        case UIGestureRecognizerStateCancelled:
+//        {
+////            if (self.dragOffset + self.bgTop > self.height/2 && self.dragOffset > self.bgView.height/3) {
+////                [self addPopClickLog:@"cancel"];
+////                [self dismiss:YES];
+////            }else{
+////                self.bgView.top = self.bgTop;
+////                self.dragOffset = 0;
+////            }
+//        }
+//            break;
+//        default:
+//            break;
+//    }
+}
+
+- (void)showAnaInfoView:(AMapPOI *)poi{
+    if (!self.bottomShowInfoView) {
+        self.bottomShowInfoView = [UIView new];
+        [self.bottomShowInfoView setFrame:CGRectMake(0, self.view.frame.size.height, self.view.frame.size.width, 150)];
+        [self.view addSubview:self.bottomShowInfoView];
+        [self.bottomShowInfoView setBackgroundColor:[UIColor whiteColor]];
+        [self.view bringSubviewToFront:self.bottomShowInfoView];
+                
+        UISwipeGestureRecognizer *panGesture = [[UISwipeGestureRecognizer alloc]initWithTarget:self action:@selector(panAction:)];
+        [panGesture setDirection:UISwipeGestureRecognizerDirectionDown];
+        [self.bottomShowInfoView addGestureRecognizer:panGesture];
+        self.panGesture = panGesture;
+     }
+    
+    for (UIView *subviw in self.bottomShowInfoView.subviews) {
+        [subviw removeFromSuperview];
+    }
+    
+    
+    UIView *indicator = [UIView new];
+    [indicator setFrame:CGRectMake((self.bottomShowInfoView.size.width - 40)/2, 10, 40, 4)];
+    indicator.layer.cornerRadius = 2;
+    indicator.layer.masksToBounds = YES;
+    [indicator setBackgroundColor:[UIColor themeGray6]];
+    [self.bottomShowInfoView addSubview:indicator];
+     
+    
+     UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(20.0f, indicator.bottom + 10, self.view.frame.size.width - 40, 30)];
+     titleLabel.text = poi.name;
+     [titleLabel setFont:[UIFont themeFontMedium:20]];
+     [titleLabel setTextColor:[UIColor themeGray1]];
+      titleLabel.numberOfLines = 2;
+      [titleLabel sizeToFit];
+     [self.bottomShowInfoView addSubview:titleLabel];
+             
+     
+     UILabel *addressLabel = [[UILabel alloc] initWithFrame:CGRectMake(20.0f, titleLabel.bottom + 3, self.view.frame.size.width - 40, 20)];
+     addressLabel.text = [NSString stringWithFormat:@"%@ | %@",poi.district,poi.address];
+     [addressLabel setFont:[UIFont themeFontRegular:14]];
+     [addressLabel setTextColor:[UIColor themeGray1]];
+     addressLabel.numberOfLines = 2;
+     [addressLabel sizeToFit];
+     [self.bottomShowInfoView addSubview:addressLabel];
+     
+     
+     UILabel *tagLabel = [[UILabel alloc] initWithFrame:CGRectMake(20.0f, addressLabel.bottom + 10, self.view.frame.size.width - 40, 14)];
+    
+     if (self.selectedIndex < self.nameArray.count) {
+         NSMutableAttributedString *nameAttr = [FHDetailMapPageViewController createTagAttrString:self.nameArray[self.selectedIndex] isFirst:YES textColor:[UIColor colorWithHexStr:@"#8493ad"] backgroundColor:[UIColor blackColor]];
+         
+         if (poi.type) {
+             NSArray *attrString = [poi.type componentsSeparatedByString:@";"];
+             
+             if (attrString.count > 0) {
+                 NSMutableAttributedString *typeAttr = [FHDetailMapPageViewController createTagAttrString:attrString.firstObject isFirst:NO textColor:[UIColor colorWithHexStr:@"#8493ad"] backgroundColor:[UIColor blackColor]];
+                 [nameAttr appendAttributedString:typeAttr];
+             }else{
+                 NSMutableAttributedString *typeAttr = [FHDetailMapPageViewController createTagAttrString:poi.type isFirst:NO textColor:[UIColor colorWithHexStr:@"#8493ad"] backgroundColor:[UIColor themeGray7]];
+                 [nameAttr appendAttributedString:typeAttr];
+             }
+            
+         }
+         tagLabel.attributedText = nameAttr;
+     }
+    [self.bottomShowInfoView addSubview:tagLabel];
+     
+     
+     UILabel *bottomOriginLabel = [[UILabel alloc] initWithFrame:CGRectMake(20.0f, tagLabel.bottom + 20, self.view.frame.size.width - 40, 16)];
+     bottomOriginLabel.text = @"数据来自第三方地图,更多信息请咨询经纪人";
+     [bottomOriginLabel setFont:[UIFont themeFontRegular:14]];
+     [bottomOriginLabel setTextColor:[UIColor themeGray1]];
+     [self.bottomShowInfoView addSubview:bottomOriginLabel];
+     CGFloat finalHeight = bottomOriginLabel.bottom + 20 + ([UIDevice btd_isIPhoneXSeries] ? 20 : 0);
+//     [self.bottomShowInfoView setFrame:CGRectMake(0, self.view.frame.size.height - finalHeight, self.view.frame.size.width, finalHeight)];
+
+    [UIView animateWithDuration:0.3 animations:^{
+        [self.bottomShowInfoView setFrame:CGRectMake(0, self.view.frame.size.height - finalHeight, self.view.frame.size.width, finalHeight)];
+
+        UIBezierPath *maskPath = [UIBezierPath bezierPathWithRoundedRect:self.bottomShowInfoView.bounds byRoundingCorners:UIRectCornerTopLeft | UIRectCornerTopRight cornerRadii:CGSizeMake(20, 20)];
+         CAShapeLayer *layer = [[CAShapeLayer alloc]init];
+         layer.frame = self.bottomShowInfoView.bounds;
+         layer.path = maskPath.CGPath;
+         self.bottomShowInfoView.layer.mask = layer;
+    } completion:^(BOOL finished) {
+              
+    }];
+}
+
++(NSAttributedString *)createTagAttrString:(NSString *)text isFirst:(BOOL)isFirst textColor:(UIColor *)textColor backgroundColor:(UIColor *)backgroundColor {
+    
+    NSMutableAttributedString *attributeText = [[NSMutableAttributedString alloc]initWithString:[NSString stringWithFormat:@"  %@  ",text]];
+    attributeText.yy_font = [UIFont themeFontRegular:10];
+    attributeText.yy_color = textColor;
+    NSRange substringRange = [attributeText.string rangeOfString:text];
+    [attributeText yy_setTextBinding:[YYTextBinding bindingWithDeleteConfirm:NO] range:substringRange];
+    YYTextBorder *border = [YYTextBorder borderWithFillColor:backgroundColor cornerRadius:2];
+    [border setInsets:UIEdgeInsetsMake(0, -4, 0, -4)];
+    
+    [attributeText yy_setTextBackgroundBorder:border range:substringRange];
+    return attributeText;
+    
+}
+
+- (void)hideAnaInfoView:(AMapAOI *)poi{
+    [UIView animateWithDuration:0.3 animations:^{
+         [self.bottomShowInfoView setFrame:CGRectMake(0, self.view.frame.size.height, self.view.frame.size.width, self.bottomShowInfoView.frame.size.height)];
+     } completion:^(BOOL finished) {
+               
+     }];
 }
 
 - (void)setUpBottomBarView
@@ -415,7 +570,7 @@ static MAMapView *kFHPageMapView = nil;
         [kFHPageMapView setCustomMapStyleOptions:options];
         [kFHPageMapView setCustomMapStyleEnabled:YES];
 
-        kFHPageMapView.zoomLevel  = 18;
+        kFHPageMapView.zoomLevel  = 15.5;
         [kFHPageMapView setCenterCoordinate:self.centerPoint];
     }
     _mapView = kFHPageMapView;
@@ -563,9 +718,6 @@ static MAMapView *kFHPageMapView = nil;
         self.baiduPanoAnnotation = baiduPanoAnnotation;
     }
     
-    NSLog(@"self.baiduPanoramaUrl=%@",self.baiduPanoramaUrl);
-    
-    
     // PM 确认 不进行缩放
 //    [self.mapView showAnnotations:self.mapView.annotations edgePadding:UIEdgeInsetsMake(20, 20, 20, 20) animated:NO];
 }
@@ -612,14 +764,14 @@ static MAMapView *kFHPageMapView = nil;
         maAnna.type = self.searchCategory;
         maAnna.coordinate = CLLocationCoordinate2DMake(poi.location.latitude,poi.location.longitude);
         maAnna.title = poi.name;
-        
+        maAnna.poi = poi;
         [poiArray addObject:maAnna];
     }
     
     self.poiAnnotations = poiArray;
     
     [self setUpAnnotations];
-    self.mapView.zoomLevel  = 14;
+    self.mapView.zoomLevel  = 15.5;
     [self.mapView setCenterCoordinate:self.centerPoint];
     if (!self.locationCircle && self.centerPoint.latitude > 0 && self.centerPoint.longitude > 0) {
         MACircle *circle = [MACircle circleWithCenterCoordinate:self.centerPoint radius:1000];
@@ -675,6 +827,11 @@ static MAMapView *kFHPageMapView = nil;
     }
 }
 
+- (void)anaClick:(UIButton *)tap{
+    
+    
+}
+
 #pragma MapViewDelegata
 
 - (MAAnnotationView *)mapView:(MAMapView *)mapView viewForAnnotation:(id<MAAnnotation>)annotation
@@ -700,42 +857,40 @@ static MAMapView *kFHPageMapView = nil;
              if (annotationV == nil) {
                  annotationV = [[MAAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:pointResueseIdetifier];
              }
+            annotationV.canShowCallout = YES;
             annotationV.image = [self getIconImageFromCategory:@"user"];
             annotationV.centerOffset = CGPointMake(0, -10);
             annotationV.zIndex = 100;
         }else {
             
            NSString *reuseIdentifier = @"poi_annotation";
-           MAAnnotationView *annotationView = (MAAnnotationView *) [mapView dequeueReusableAnnotationViewWithIdentifier:reuseIdentifier];
+           FHMyItemAnnView *annotationView = (FHMyItemAnnView *) [mapView dequeueReusableAnnotationViewWithIdentifier:reuseIdentifier];
            if (!annotationView) {
-               annotationView = [[MAAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:reuseIdentifier];
+               annotationView = [[FHMyItemAnnView alloc] initWithAnnotation:annotation reuseIdentifier:reuseIdentifier];
            }
-            
+           annotationView.canShowCallout = NO;
+           annotationV.image = [self getIconImageFromCategory:@"教育"];
 
            UIImageView *backImageView = [UIImageView new];
            [annotationView addSubview:backImageView];
+            FHMyMAAnnotation *annotationMy = (FHMyMAAnnotation *)annotation;
+//            NSLog(@"poi=%@",[annotationMy.poi description]);
+            
             
             UIImageView *leftIcon = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"map_detail_play"]];
                    [annotationView addSubview:leftIcon];
             leftIcon.image = [self getIconImageFromCategory:((FHMyMAAnnotation *)annotation).type];
 
             leftIcon.backgroundColor = [UIColor clearColor];
-            leftIcon.frame = CGRectMake(11, 10.5, 11, 11);
-            
-            [annotationView addSubview:leftIcon];
+            leftIcon.frame = CGRectMake(11, 9, 11, 11);
 
+            [annotationView addSubview:leftIcon];
            UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(17, 0, 100, 30)];
            titleLabel.text = annotation.title;
            titleLabel.frame = CGRectMake(0, 0, titleLabel.text.length * 13, 32);
            backImageView.frame = CGRectMake(0, 0, titleLabel.text.length * 13 + 20, 30);
+           UIImage *imageAnna = [UIImage imageNamed:@"mapsearch_detail_annotation_bg"];//mapsearch_annotation_bg
 
-//           UIImage *imageAnna = [UIImage imageNamed:@"mapsearch_detail_annotation_bg"];//mapsearch_annotation_bg
-//
-//           CGFloat width = imageAnna.size.width > 0 ? imageAnna.size.width : 10;
-//           CGFloat height = imageAnna.size.height > 0 ? imageAnna.size.height : 10;
-//
-//           imageAnna = [imageAnna resizableImageWithCapInsets:UIEdgeInsetsMake(height / 2.0, width / 2.0, height / 2.0, width / 2.0) resizingMode:UIImageResizingModeStretch];
-//           backImageView.image = imageAnna;
 
            backImageView.layer.cornerRadius = 15;
            backImageView.layer.masksToBounds = YES;
@@ -749,6 +904,8 @@ static MAMapView *kFHPageMapView = nil;
            titleLabel.textAlignment = NSTextAlignmentCenter;
            titleLabel.backgroundColor = [UIColor clearColor];
            [titleLabel sizeToFit];
+            
+        
            backImageView.frame = CGRectMake(0, 0, titleLabel.frame.size.width + 60, 30);
            [backImageView setBackgroundColor:[UIColor colorWithHexStr:@"#ff9629"]];
            titleLabel.center = CGPointMake(backImageView.center.x, backImageView.center.y);
@@ -758,15 +915,20 @@ static MAMapView *kFHPageMapView = nil;
            bottomArrowView.backgroundColor = [UIColor clearColor];
            bottomArrowView.frame = CGRectMake(backImageView.frame.size.width / 2.0 - 5, backImageView.frame.size.height - 5.5, 10.5, 10.5);
            annotationView.centerOffset = CGPointMake(-backImageView.frame.size.width / 2.0, -40);
+           annotationView.poi = annotationMy.poi;
+
+            
+            annotationView.backColorView = backImageView;
+            annotationView.bottomArrowView = bottomArrowView;
+
+//            UIButton *buttonMask = [UIButton buttonWithType:UIButtonTypeCustom];
+//            [buttonMask setBackgroundColor:[UIColor clearColor]];
+//            [annotationView addSubview:buttonMask];
+//            [buttonMask setFrame:CGRectMake(0, 0, backImageView.frame.size.width, backImageView.frame.size.height)];
+//            [buttonMask addTarget:self action:@selector(anaClick:) forControlEvents:UIControlEventTouchUpInside];;
+//            UITapGestureRecognizer *tapGes = [UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapAnn)
+
            return annotationView;
-//            annotationV.centerOffset = CGPointMake(0, -10);
-//            annotationV.canShowCallout = YES;
-//            annotationV.selected = YES;
-//            if (annotationV.gestureRecognizers.count) {
-//                for (UIGestureRecognizer *gesture in annotationV.gestureRecognizers) {
-//                    [annotationV removeGestureRecognizer:gesture];
-//                }
-//            }
         }
         
         return annotationV ? annotationV : [[MAAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:@"default"];
@@ -777,7 +939,6 @@ static MAMapView *kFHPageMapView = nil;
 
 - (MAOverlayRenderer *)mapView:(MAMapView *)mapView rendererForOverlay:(id <MAOverlay>)overlay
 {
-    
     if ([overlay isKindOfClass:[MACircle class]]) {
         MACircleRenderer *circleRenderer = [[MACircleRenderer alloc] initWithCircle:overlay];
         
@@ -789,6 +950,56 @@ static MAMapView *kFHPageMapView = nil;
     MACircle * cicle = [MACircle circleWithMapRect:MAMapRectZero];
     MAOverlayRenderer *overlayRender = [[MAOverlayRenderer alloc] initWithOverlay:overlay];
     return overlayRender;
+}
+
+- (void)mapView:(MAMapView *)mapView didAnnotationViewTapped:(MAAnnotationView *)view{
+    if([view isKindOfClass:[FHMyItemAnnView class]]){
+        FHMyMAAnnotation *clickAna = (FHMyItemAnnView *)view;
+        if (clickAna.poi) {
+            NSLog(@"poi=%@",clickAna.poi);
+            [self showAnaInfoView:clickAna.poi];
+        }
+    }
+}
+
+- (void)mapView:(MAMapView *)mapView didDeselectAnnotationView:(MAAnnotationView *)view
+{
+    if ([view isKindOfClass:[FHMyItemAnnView class]]) {
+        [self processSelected:NO andAnnotationView:view];
+    }
+}
+
+-(void)mapView:(MAMapView *)mapView didSelectAnnotationView:(MAAnnotationView *)view
+{
+    if ([view isKindOfClass:[FHMyItemAnnView class]]) {
+        [self processSelected:NO andAnnotationView:self.currentSelectAna];
+        [self processSelected:YES andAnnotationView:view];
+        FHMyItemAnnView *neighborView = (FHMyItemAnnView *)view;
+        self.currentSelectAna = neighborView;
+    }
+}
+
+- (void)mapView:(MAMapView *)mapView annotationView:(MAAnnotationView *)view calloutAccessoryControlTapped:(UIControl *)control{
+    
+}
+
+- (void)mapView:(MAMapView *)mapView didSingleTappedAtCoordinate:(CLLocationCoordinate2D)coordinate{
+    [self hideAnaInfoView:nil];
+}
+
+#pragma mark select
+- (void)processSelected:(BOOL)isSelected andAnnotationView:(MAAnnotationView *)view{
+    if (![view isKindOfClass:[FHMyItemAnnView class]]) {
+        return;
+    }
+    FHMyItemAnnView *neighborView = (FHMyItemAnnView *)view;
+    if (isSelected) {
+        [neighborView.backColorView setBackgroundColor:[UIColor colorWithHexStr:@"#fe5500"]];
+        [neighborView.bottomArrowView  setImage:[UIImage imageNamed:@"mapsearch_annotation_arrow_orange"]];
+    }else{
+        [neighborView.backColorView setBackgroundColor:[UIColor colorWithHexStr:@"#ff9629"]];
+        [neighborView.bottomArrowView  setImage:[UIImage imageNamed:@"mapsearch_annotation_arrow"]];
+    }
 }
 
 #pragma safeInset
@@ -810,5 +1021,4 @@ static MAMapView *kFHPageMapView = nil;
     }
     return height;
 }
-
 @end

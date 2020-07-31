@@ -7,10 +7,15 @@
 
 #import <MAMapKit/MAMapKit.h>
 
+#import <AMapSearchKit/AMapCommonObj.h>
+
 NS_ASSUME_NONNULL_BEGIN
 
 @interface FHMyMAAnnotation : MAPointAnnotation
 @property (nonnull, strong) NSString *type;
+@property (nonnull, strong) AMapPOI * poi;
+
+
 @end
 
 NS_ASSUME_NONNULL_END

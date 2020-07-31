@@ -568,8 +568,10 @@
     extra[@"requestStatus"] = @(type);
     
     NSMutableDictionary *metricDict = [NSMutableDictionary new];
-    if (duration) {
+    if (duration < 1000) {
         metricDict[@"duration"] = @(duration*1000);
+    }else{
+        return;
     }
     NSMutableDictionary *cat = [NSMutableDictionary new];
     if (type != FHNetworkMonitorTypeSuccess) {
