@@ -306,7 +306,7 @@ static MAMapView *kFHPageMapView = nil;
      UILabel *bottomOriginLabel = [[UILabel alloc] initWithFrame:CGRectMake(20.0f, tagLabel.bottom + 20, self.view.frame.size.width - 40, 16)];
      bottomOriginLabel.text = @"数据来自第三方地图,更多信息请咨询经纪人";
      [bottomOriginLabel setFont:[UIFont themeFontRegular:14]];
-     [bottomOriginLabel setTextColor:[UIColor themeGray1]];
+     [bottomOriginLabel setTextColor:[UIColor themeGray3]];
      [self.bottomShowInfoView addSubview:bottomOriginLabel];
      CGFloat finalHeight = bottomOriginLabel.bottom + 20 + ([UIDevice btd_isIPhoneXSeries] ? 20 : 0);
 
