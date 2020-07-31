@@ -189,19 +189,10 @@
 }
 
 - (void)login {
-    NSString *clickTrackDic = @{
-        @"click_type":@"login",
-        @"page_type":@"minetab"
-    };
-    //TRACK_EVENT(@"click_minetab", clickTrackDic);
-    
     NSMutableDictionary *dict = @{}.mutableCopy;
-    dict[@"isCheckUGCADUser"] = @(1);
     dict[TRACER_KEY] = @{
-        @"enter_from": @"minetab",
-        @"enter_method": @"click_mine",
-        @"enter_type": @"login",
-        @"trigger": @"user"
+        @"enter_from": [self getPageType],
+        @"enter_method": @"click_login",
     };
     TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
     
@@ -295,6 +286,11 @@
 }
 
 - (NSString *)getPageType {
+    if (self.dataType == FHMessageRequestDataTypeIM) {
+        return @"message_weiliao";
+    } else if (self.dataType == FHMessageRequestDataTypeSystem) {
+        return @"message_notice";
+    }
     return @"message_list";
 }
 
