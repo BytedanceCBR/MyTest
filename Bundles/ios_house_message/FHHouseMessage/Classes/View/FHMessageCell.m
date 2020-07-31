@@ -664,11 +664,14 @@
             if (open) {
                 self.state = SliderMenuOpen;
                 self.currentOffset = self.maxOffset;
+                if (self.openEditTrack) {
+                    self.openEditTrack(nil);
+                }
             } else {
                 self.state = SliderMenuClose;
                 self.currentOffset = 0;
-                if (self.stateIsClose) {
-                    self.stateIsClose(nil);
+                if (self.closeEditTrack) {
+                    self.closeEditTrack(nil);
                 }
                 [FHMessageEditHelp shared].currentCell = nil;
                 [FHMessageEditHelp shared].conversation = nil;

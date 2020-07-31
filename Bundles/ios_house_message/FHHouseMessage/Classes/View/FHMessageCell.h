@@ -21,6 +21,8 @@ typedef void(^FHMessageCellClick)(id data);
 @property (nonatomic, assign) SliderMenuState state;
 @property (nonatomic, copy) FHMessageCellClick deleteConversation;
 @property (nonatomic, copy) FHMessageCellClick stateIsClose;
+@property (nonatomic, copy) FHMessageCellClick openEditTrack;
+@property (nonatomic, copy) FHMessageCellClick closeEditTrack;
 
 - (void)updateWithModel:(FHUnreadMsgDataUnreadModel *)model;
 - (void)updateWithChat:(IMConversation*)conversation;

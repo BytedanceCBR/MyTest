@@ -173,8 +173,11 @@
         cell.deleteConversation = ^(id data) {
             [wself displayDeleteConversationConfirm:data];
         };
-        cell.stateIsClose = ^(id  _Nullable data) {
-            [wself reloadData];
+        cell.openEditTrack = ^(id data) {
+            [wself openEditTrack];
+        };
+        cell.closeEditTrack = ^(id data) {
+            [wself closeEditTrack];
         };
         if (self.viewController.dataType == FHMessageRequestDataTypeIM) {
             [cell initGestureWithData:model index:indexPath.row];
@@ -418,6 +421,15 @@
     [[TTUIResponderHelper visibleTopViewController] presentViewController:alertController animated:YES completion:nil];
 };
 
+- (NSString *)getPageTypeWithDataType{
+    if (self.viewController.dataType == FHMessageRequestDataTypeIM) {
+        return @"message_weiliao";
+    } else if (self.viewController.dataType == FHMessageRequestDataTypeSystem) {
+        return @"message_notice";
+    }
+    return @"message_list";
+}
+
 - (void)deleteConversation:(IMConversation *)conv {
     NSString *conversationId = conv.identifier;
     NSString *targetUserId = [conv getTargetUserId:[[TTAccount sharedAccount] userIdString]];
@@ -448,5 +460,21 @@
     [FHUserTracker writeEvent:@"click_conversation" params:params];
 }
 
+- (void)openEditTrack {
+    NSDictionary *params = @{
+            @"page_type": [self getPageTypeWithDataType],
+            @"enter_from":@"message"
+    };
+    [FHUserTracker writeEvent:@"message_flip_show" params:params];
+}
+
+- (void)closeEditTrack {
+    NSDictionary *params = @{
+            @"page_type": [self getPageTypeWithDataType],
+            @"enter_from": @"message",
+            @"click_position": @"delete"
+    };
+    [FHUserTracker writeEvent:@"message_flip_show" params:params];
+}
 
 @end

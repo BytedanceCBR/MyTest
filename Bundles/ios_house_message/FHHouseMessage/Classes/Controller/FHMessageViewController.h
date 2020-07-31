@@ -33,6 +33,8 @@ typedef NS_ENUM(NSUInteger, FHMessageRequestDataType) {
 
 @property (nonatomic, copy) void (^updateRedPoint)(NSInteger chatNumber, BOOL hasRedPoint, NSInteger systemMessageNumber);
 
+- (void)addEnterCategoryLogWithType:(NSString *)enterType;
+
 - (NSString *)getPageType;
 - (CGFloat) getBottomMargin;
 - (BOOL) leftActionHidden;

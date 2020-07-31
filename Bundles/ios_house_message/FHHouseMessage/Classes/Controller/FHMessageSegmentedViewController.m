@@ -12,6 +12,7 @@
 #import "FHMessageViewModel.h"
 #import "FHMessageNotificationTipsManager.h"
 #import <FHMessageNotificationManager.h>
+#import "UIViewController+Track.h"
 
 typedef NS_ENUM(NSInteger, FHSegmentedControllerAnimatedTransitionDirection) {
     FHSegmentedControllerAnimatedTransitionDirectionUnknown,
@@ -225,7 +226,7 @@ typedef NS_ENUM(NSInteger, FHSegmentedControllerAnimatedTransitionDirection) {
 @property (nonatomic) FHSegmentedControllerAnimatedTransitionDirection interactivePanDirection;
 @property (nonatomic,strong) FHSegmentedControllerAnimatedTransitionContext *interactiveTransitionContext;
 @property (nonatomic,strong) FHSegmentedControllerInteractiveTransition *interactiveTransitionAnimator;
-
+@property (nonatomic, strong) NSString *enterType;
 @property (nonatomic, strong) FHMessageTopView *topView;
 @end
 
@@ -248,6 +249,7 @@ typedef NS_ENUM(NSInteger, FHSegmentedControllerAnimatedTransitionDirection) {
 
 - (void)setActiveViewController:(UIViewController *)activeViewController {
     _activeViewController = activeViewController;
+    [self addEnterCategoryLogWithType:_enterType];
 //    if (self.shouldUseRightBarButtonItemOfActiveViewController) {
 //        self.navigationItem.rightBarButtonItems = self.activeViewController.navigationItem.rightBarButtonItems;
 //    }
@@ -291,6 +293,7 @@ typedef NS_ENUM(NSInteger, FHSegmentedControllerAnimatedTransitionDirection) {
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    self.ttTrackStayEnable = YES;
     _dataList = [[NSMutableArray alloc] init];
     _combiner = [[FHConversationDataCombiner alloc] init];
     [[IMManager shareInstance] addChatStateObverver:self];
@@ -322,6 +325,7 @@ typedef NS_ENUM(NSInteger, FHSegmentedControllerAnimatedTransitionDirection) {
     systemViewController.dataType = FHMessageRequestDataTypeSystem;
     
     self.viewControllers = @[imViewController,systemViewController];
+    self.enterType = @"dafault";
     self.segmentedControl.hidden = YES;
     
     
@@ -329,6 +333,7 @@ typedef NS_ENUM(NSInteger, FHSegmentedControllerAnimatedTransitionDirection) {
     self.topView.tagChangeBlock = ^(NSInteger tag) {
         //tag 0 1
         [weakSelf selectViewControllerAtIndex:tag];
+        weakSelf.enterType = @"click";
 //        [weakSelf setActiveViewController:weakSelf.viewControllers.lastObject];
 //        [wself refreshDataWithType:tag];
     };
@@ -358,6 +363,12 @@ typedef NS_ENUM(NSInteger, FHSegmentedControllerAnimatedTransitionDirection) {
             return;
         }
     }];
+}
+
+- (void)viewWillDisappear:(BOOL)animated {
+    [super viewWillDisappear:animated];
+    [self addStayCategoryLog:self.ttTrackStayTime];
+    [self tt_resetStayTime];
 }
 
 - (void)periodicalFetchUnreadMessage:(NSNotification *)notification {
@@ -550,8 +561,14 @@ typedef NS_ENUM(NSInteger, FHSegmentedControllerAnimatedTransitionDirection) {
             }
             self.interactiveTransitionContext = nil;
             self.interactiveTransitionAnimator = nil;
+            self.enterType = @"flip";
         }break;
     }
+}
+
+- (void)addEnterCategoryLogWithType:(NSString *)enterType {
+    FHMessageViewController *vc = self.activeViewController;
+    [vc addEnterCategoryLogWithType: enterType];
 }
 
 #pragma mark - GestureDelegate
@@ -647,6 +664,41 @@ typedef NS_ENUM(NSInteger, FHSegmentedControllerAnimatedTransitionDirection) {
 
 - (void)segmentedViewController:(FHMessageSegmentedViewController *)segmentedViewController didChangeContentViewControllerFromViewController:(UIViewController *)fromViewController toViewController:(UIViewController *)toViewController {
     self.topView.selectIndex = [self.viewControllers indexOfObject:toViewController];
+}
+
+-(NSDictionary *)categoryLogDict {
+    FHMessageViewController *vc = self.activeViewController;
+    NSInteger badgeNumber = [[vc.viewModel messageBridgeInstance] getMessageTabBarBadgeNumber];
+    
+    NSMutableDictionary *tracerDict = @{}.mutableCopy;
+    tracerDict[@"enter_type"] = @"click_tab";
+    tracerDict[@"tab_name"] = @"message";
+    tracerDict[@"with_tips"] = badgeNumber > 0 ? @"1" : @"0";
+    
+    return tracerDict;
+}
+
+-(void)addStayCategoryLog:(NSTimeInterval)stayTime {
+    
+    NSTimeInterval duration = stayTime * 1000.0;
+    if (duration == 0) {//当前页面没有在展示过
+        return;
+    }
+    NSMutableDictionary *tracerDict = [self categoryLogDict].mutableCopy;
+    tracerDict[@"stay_time"] = [NSNumber numberWithInteger:duration];
+    TRACK_EVENT(@"stay_tab", tracerDict);
+}
+
+#pragma mark - TTUIViewControllerTrackProtocol
+
+- (void)trackEndedByAppWillEnterBackground {
+    [self addStayCategoryLog:self.ttTrackStayTime];
+    [self tt_resetStayTime];
+}
+
+- (void)trackStartedByAppWillEnterForground {
+    [self tt_resetStayTime];
+    self.ttTrackStartTime = [[NSDate date] timeIntervalSince1970];
 }
 
 @end

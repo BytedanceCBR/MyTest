@@ -35,12 +35,15 @@
 
 @property(nonatomic, strong) FHPushMessageTipView *pushTipView;
 @property (nonatomic, copy)     NSString       *enter_from;// 外部传入
+@property(nonatomic , assign) BOOL hasEnterCategory;
+
 @end
 
 @implementation FHMessageViewController
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    _hasEnterCategory = NO;
     [FHMessageEditHelp shared].isCanReloadData = YES;
     // Do any additional setup after loading the view.
     self.showenRetryButton = YES;
@@ -85,7 +88,6 @@
 
 - (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
-    [self addStayCategoryLog:self.ttTrackStayTime];
     [self tt_resetStayTime];
     [FHBubbleTipManager shareInstance].canShowTip = YES;
 }
@@ -277,7 +279,24 @@
     }
 }
 
+- (void)addEnterCategoryLogWithType:(NSString *)enterType {
+    if (_hasEnterCategory) {
+        return;
+    }
+    _hasEnterCategory = YES;
+    NSDictionary *params = @{
+            @"category_name": [self getPageTypeWithDataType],
+            @"enter_from": @"message",
+            @"enter_type": enterType
+    };
+    [FHUserTracker writeEvent:@"enter_category" params:params];
+}
+
 - (NSString *)getPageType {
+    return @"message_list";
+}
+
+- (NSString *)getPageTypeWithDataType {
     if (self.dataType == FHMessageRequestDataTypeIM) {
         return @"message_weiliao";
     } else if (self.dataType == FHMessageRequestDataTypeSystem) {
@@ -300,45 +319,12 @@
     [self startLoadData];
 }
 
--(NSDictionary *)categoryLogDict {
-    NSInteger badgeNumber = [[self.viewModel messageBridgeInstance] getMessageTabBarBadgeNumber];
-    
-    NSMutableDictionary *tracerDict = @{}.mutableCopy;
-    tracerDict[@"enter_type"] = @"click_tab";
-    tracerDict[@"tab_name"] = @"message";
-    tracerDict[@"with_tips"] = badgeNumber > 0 ? @"1" : @"0";
-    
-    return tracerDict;
-}
-
--(void)addStayCategoryLog:(NSTimeInterval)stayTime {
-    
-    NSTimeInterval duration = stayTime * 1000.0;
-    if (duration == 0) {//当前页面没有在展示过
-        return;
-    }
-    NSMutableDictionary *tracerDict = [self categoryLogDict].mutableCopy;
-    tracerDict[@"stay_time"] = [NSNumber numberWithInteger:duration];
-    TRACK_EVENT(@"stay_tab", tracerDict);
-}
-
 #pragma mark - UIViewControllerErrorHandler
 
 - (BOOL)tt_hasValidateData {
     return self.fatherVC.dataList.count == 0 ? NO : YES; //默认会显示空
 }
 
-#pragma mark - TTUIViewControllerTrackProtocol
-
-- (void)trackEndedByAppWillEnterBackground {
-    [self addStayCategoryLog:self.ttTrackStayTime];
-    [self tt_resetStayTime];
-}
-
-- (void)trackStartedByAppWillEnterForground {
-    [self tt_resetStayTime];
-    self.ttTrackStartTime = [[NSDate date] timeIntervalSince1970];
-}
 
 - (BOOL) isAlignToSafeBottom {
     return YES;
