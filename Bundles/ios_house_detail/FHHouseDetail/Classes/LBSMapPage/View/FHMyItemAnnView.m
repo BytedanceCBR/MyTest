@@ -14,7 +14,7 @@
                      reuseIdentifier:reuseIdentifier];
     if (self) {
         
-        self.frame = CGRectMake(0.0f, 0.0, annotation.title.length * 20, 30);
+        self.frame = CGRectMake(0.0f, 0.0, annotation.title.length * 17, 30);
         
     }
     return self;

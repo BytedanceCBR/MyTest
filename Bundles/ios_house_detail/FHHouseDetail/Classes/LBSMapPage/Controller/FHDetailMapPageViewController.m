@@ -309,7 +309,6 @@ static MAMapView *kFHPageMapView = nil;
      [bottomOriginLabel setTextColor:[UIColor themeGray1]];
      [self.bottomShowInfoView addSubview:bottomOriginLabel];
      CGFloat finalHeight = bottomOriginLabel.bottom + 20 + ([UIDevice btd_isIPhoneXSeries] ? 20 : 0);
-//     [self.bottomShowInfoView setFrame:CGRectMake(0, self.view.frame.size.height - finalHeight, self.view.frame.size.width, finalHeight)];
 
     [UIView animateWithDuration:0.3 animations:^{
         [self.bottomShowInfoView setFrame:CGRectMake(0, self.view.frame.size.height - finalHeight, self.view.frame.size.width, finalHeight)];
@@ -755,7 +754,7 @@ static MAMapView *kFHPageMapView = nil;
         return;
     }
     
-    NSInteger poiCount = response.pois.count > 50 ? 50 :  response.pois.count;
+    NSInteger poiCount = response.pois.count > 10 ? 10 :  response.pois.count;
     NSMutableArray *poiArray = [NSMutableArray new];
     for (NSInteger i = 0; i < poiCount; i++) {
         AMapPOI * poi = response.pois[i];

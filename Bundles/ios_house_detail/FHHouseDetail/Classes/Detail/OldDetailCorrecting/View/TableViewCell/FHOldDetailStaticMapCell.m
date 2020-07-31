@@ -447,7 +447,7 @@
 
 + (NSString *)keyWordConver:(NSString *)category{
     if([category isEqualToString:@"交通"]){
-        return @"公交地铁";
+        return @"公交站|地铁站";
     }else if([category isEqualToString:@"教育"]){
         return @"中学|小学|幼儿园";
     }else if([category isEqualToString:@"医疗"]){
@@ -462,7 +462,7 @@
 }
 
 + (NSString *)keyWordConverReverse:(NSString *)category{
-    if([category isEqualToString:@"公交地铁"]){
+    if([category isEqualToString:@"公交站|地铁站"]){
         return @"交通";
     }else if([category isEqualToString:@"中学|小学|幼儿园"]){
         return @"教育";
