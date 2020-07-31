@@ -58,7 +58,7 @@
             self.comment_id = [params tt_stringValueForKey:@"comment_id"];
             self.lastPageSocialGroupId = [params objectForKey:@"social_group_id"];
             // 埋点
-            self.tracerDict[@"page_type"] = @"ugc_comment_detail";
+            self.tracerDict[@"page_type"] = @"comment_detail";
             self.ttTrackStayEnable = YES;
             // 点击评论按钮
             self.beginShowComment = NO;

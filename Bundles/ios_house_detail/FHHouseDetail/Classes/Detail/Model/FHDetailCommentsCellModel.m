@@ -44,6 +44,11 @@
         tracerDic[@"enter_from"] = self.tracerDict[@"enter_from"] ?: @"be_null";
         tracerDic[@"element_from"] = @"neighborhood_comment";
         tracerDic[@"page_type"] = self.tracerDict[@"page_type"] ?: @"be_null";
+        if(self.houseId){
+            tracerDic[@"from_gid"] = self.houseId;
+        }else if(self.neighborhoodId){
+            tracerDic[@"from_gid"] = self.neighborhoodId;
+        }
         cellModel.tracerDic = [tracerDic copy];
         
         [_dataList addObject:cellModel];

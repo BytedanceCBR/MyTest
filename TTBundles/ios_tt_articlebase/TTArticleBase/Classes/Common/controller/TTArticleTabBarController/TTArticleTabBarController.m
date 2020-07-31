@@ -473,6 +473,14 @@ typedef NS_ENUM(NSUInteger,TTTabbarTipViewType){
                 TTTabBarItem *item = [[TTTabBarManager sharedTTTabBarManager] tabItemWithIdentifier:kTTTabHomeTabKey];
                 [[TTTabBarManager sharedTTTabBarManager]reloadIconAndTitleForItem:item];
             }
+            
+            NSString *enterChannel = @"click";
+            if(self.enterTabFromPush){
+                enterChannel = @"push";
+            }else if(self.autoEnterTab){
+                enterChannel = @"default";
+            }
+            [FHEnvContext sharedInstance].enterChannel = enterChannel;
 
             [self tabBarController:self didSelectViewController:self.viewControllers[index]];
             

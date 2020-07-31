@@ -146,6 +146,15 @@ NSString *const kTTCommentDetailForwardCommentNotification = @"kTTCommentDetailF
     
 }
 
+-(void)addGoDetailLog {
+    NSMutableDictionary *tracerDict = [NSMutableDictionary dictionary];
+    if(self.extraDic){
+        [tracerDict addEntriesFromDictionary:self.extraDic];
+    }
+    [tracerDict setValue:@"comment_detail" forKey:@"page_type"];
+    [FHUserTracker writeEvent:@"go_detail" params:tracerDict];
+}
+
 - (void)trySendCurrentPageStayTime {
     if (self.ttTrackStartTime == 0) {//当前页面没有在展示过
         return;
@@ -330,6 +339,7 @@ NSString *const kTTCommentDetailForwardCommentNotification = @"kTTCommentDetailF
     self.store.enterFrom = self.enterFrom;
     self.store.categoryID = self.categoryID;
     self.store.logPb = self.logPb;
+    [self addGoDetailLog];
 }
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
@@ -434,7 +444,13 @@ NSString *const kTTCommentDetailForwardCommentNotification = @"kTTCommentDetailF
     dic[@"enter_from"] = self.enterFrom ?: @"be_null";
     
     [BDTrackerProtocol eventV3:@"comment_close" params:dic];
-    [FHUserTracker writeEvent:@"stay_page" params:dic];
+    
+    NSMutableDictionary *tracerDict = [NSMutableDictionary dictionary];
+    if(self.extraDic){
+        [tracerDict addEntriesFromDictionary:self.extraDic];
+    }
+    [tracerDict setValue:@"comment_detail" forKey:@"page_type"];
+    [FHUserTracker writeEvent:@"stay_page" params:tracerDict];
     [self trySendCurrentPageStayTime];
 }
 

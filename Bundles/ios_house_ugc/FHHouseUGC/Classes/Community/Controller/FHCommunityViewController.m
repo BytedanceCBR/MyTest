@@ -816,9 +816,15 @@
     if(needReport){
         self.stayTime = [[NSDate date] timeIntervalSince1970];
         NSMutableDictionary *tracerDict = [NSMutableDictionary new];
+        if (enterType == 1) {
+            tracerDict[@"enter_type"] = @"click";
+        }else{
+            tracerDict[@"enter_type"] = @"flip";
+        }
         tracerDict[@"enter_type"] = @(enterType);
         tracerDict[@"enter_from"] = self.tracerDict[@"enter_from"] ?: @"be_null";
         tracerDict[@"category_name"] = self.tracerDict[@"category_name"] ?: @"be_null";
+        tracerDict[@"enter_channel"] = @"click";
         [FHEnvContext recordEvent:tracerDict andEventKey:@"enter_category"];
     }
     [self.viewModel viewWillAppear];
@@ -828,9 +834,14 @@
 {
     NSMutableDictionary *tracerDict = [NSMutableDictionary new];
     NSTimeInterval duration = ([[NSDate date] timeIntervalSince1970] - self.stayTime) * 1000.0;
-    tracerDict[@"enter_type"] = @(enterType);
+    if (enterType == 1) {
+        tracerDict[@"enter_type"] = @"click";
+    }else{
+        tracerDict[@"enter_type"] = @"flip";
+    }
     tracerDict[@"enter_from"] = self.tracerDict[@"enter_from"] ?: @"be_null";
     tracerDict[@"category_name"] = self.tracerDict[@"category_name"] ?: @"be_null";
+    tracerDict[@"enter_channel"] = @"click";
     tracerDict[@"stay_time"] = @((int) duration);
 
     if (((int) duration) > 0) {

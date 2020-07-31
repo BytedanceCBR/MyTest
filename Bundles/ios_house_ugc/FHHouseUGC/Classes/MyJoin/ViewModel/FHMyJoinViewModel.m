@@ -222,8 +222,9 @@
         NSString *originFrom = self.viewController.tracerDict[@"origin_from"] ?: @"be_null";
         dict[@"tracer"] = @{
             @"origin_from":originFrom,
-            @"enter_from":@"my_joined_neighborhood",
+            @"enter_from":[self pageType],
             @"enter_type":@"click",
+            @"element_from":@"my_joined_neighborhood",
             @"rank":@(indexPath.row),
             @"log_pb":model.logPb ?: @"be_null"};
         TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
@@ -307,9 +308,11 @@
     NSMutableDictionary *tracerDict = [NSMutableDictionary dictionary];
     
     tracerDict[@"element_type"] = @"all_community";
+    tracerDict[@"social_group_id"] = cellModel.socialGroupId;
     tracerDict[@"page_type"] = [self pageType];
-    tracerDict[@"enter_from"] = @"neighborhood_tab";
-    TRACK_EVENT(@"element_show", tracerDict);
+    tracerDict[@"origin_from"] = self.viewController.tracerDict[@"origin_from"] ?: @"be_null";
+    tracerDict[@"enter_from"] = self.viewController.tracerDict[@"enter_from"] ?: @"be_null";
+    TRACK_EVENT(@"community_group_show", tracerDict);
 }
 
 - (NSString *)pageType {
