@@ -8,6 +8,7 @@
 #import "FHMessageSegmentedViewController.h"
 #import "FHMessageViewController.h"
 #import "FHMessageTopView.h"
+#import "IMManager.h"
 
 typedef NS_ENUM(NSInteger, FHSegmentedControllerAnimatedTransitionDirection) {
     FHSegmentedControllerAnimatedTransitionDirectionUnknown,
@@ -260,7 +261,12 @@ typedef NS_ENUM(NSInteger, FHSegmentedControllerAnimatedTransitionDirection) {
     }
     [self.segmentedControl sizeToFit];
     if (self.segmentedControl.numberOfSegments) {
-        self.segmentedControl.selectedSegmentIndex = 0;
+        NSArray<IMConversation *> *allConversations = [[IMManager shareInstance].chatService allConversations];
+        if ([allConversations count] > 0) {
+            self.segmentedControl.selectedSegmentIndex = 0;
+        } else {
+            self.segmentedControl.selectedSegmentIndex = 1;
+        }
     }
     [self segmentedControlValueChanged];
 }
@@ -301,6 +307,9 @@ typedef NS_ENUM(NSInteger, FHSegmentedControllerAnimatedTransitionDirection) {
     imViewController.dataType = FHMessageRequestDataTypeIM;
 
     FHMessageViewController *systemViewController = [[FHMessageViewController alloc] init];
+    [systemViewController setUpdateRedPoint:^(NSInteger chatNumber, BOOL hasRedPoint, NSInteger systemMessageNumber) {
+        [weakSelf.topView updateRedPointWithChat:chatNumber andHasRedPoint:hasRedPoint andSystemMessage:systemMessageNumber];
+    }];
     systemViewController.isSegmentedChildViewController = YES;
     systemViewController.dataType = FHMessageRequestDataTypeSystem;
     
@@ -319,8 +328,14 @@ typedef NS_ENUM(NSInteger, FHSegmentedControllerAnimatedTransitionDirection) {
     [self.topView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.right.mas_equalTo(0);
         make.height.mas_equalTo(30);
-        make.bottom.mas_equalTo(-7);
+        make.bottom.mas_equalTo(0);
     }];
+    NSArray<IMConversation *> *allConversations = [[IMManager shareInstance].chatService allConversations];
+    if ([allConversations count] == 0) {
+        [self selectViewControllerAtIndex:1];
+    } else {
+        [self selectViewControllerAtIndex:0];
+    }
 }
 
 - (void)setInteractivePanDirection:(FHSegmentedControllerAnimatedTransitionDirection)interactivePanDirection {

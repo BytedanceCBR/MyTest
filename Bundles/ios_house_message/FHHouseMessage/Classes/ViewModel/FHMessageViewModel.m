@@ -146,7 +146,7 @@
 }
 
 - (void)checkShouldShowEmptyMaskView {
-    if (![TTAccount sharedAccount].isLogin) {
+    if (![TTAccount sharedAccount].isLogin && self.viewController.dataType == FHMessageRequestDataTypeIM) {
         [self.viewController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoLogin];
         [self clearBadgeNumber];
         return;

@@ -11,6 +11,7 @@
 #import "UIFont+House.h"
 #import "FHUtils.h"
 #import "TTBadgeNumberView.h"
+#import "IMManager.h"
 
 @interface FHMessageTopView()
 
@@ -31,7 +32,6 @@
     if (self) {
         [self setupUI];
         [self initConstraints];
-        self.selectIndex = 0;
     }
     return self;
 }
@@ -45,12 +45,20 @@
     
     self.chatButton = [self getButtonWithTitle:@"微聊" andTag:0];
     [self.containerView addSubview:_chatButton];
-    self.chatButton.selected = YES;
-    [self updateColor:self.chatButton];
+
     
     self.systemMessageButton = [self getButtonWithTitle:@"通知" andTag:1];
     [self.containerView addSubview:_systemMessageButton];
-    self.systemMessageButton.selected = NO;
+    
+    NSArray<IMConversation *> *allConversations = [[IMManager shareInstance].chatService allConversations];
+    if ([allConversations count] > 0) {
+        self.chatButton.selected = YES;
+        self.systemMessageButton.selected = NO;
+    } else {
+        self.chatButton.selected = NO;
+        self.systemMessageButton.selected = YES;
+    }
+    [self updateColor:self.chatButton];
     [self updateColor:self.systemMessageButton];
     
     self.unreadChatView = [[TTBadgeNumberView alloc] init];
