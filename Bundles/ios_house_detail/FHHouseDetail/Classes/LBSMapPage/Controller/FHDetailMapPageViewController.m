@@ -310,7 +310,7 @@ static MAMapView *kFHPageMapView = nil;
      [self.bottomShowInfoView addSubview:bottomOriginLabel];
      CGFloat finalHeight = bottomOriginLabel.bottom + 20 + ([UIDevice btd_isIPhoneXSeries] ? 20 : 0);
 
-    if (self.bottomBarView.origin.y < self.view.frame.size.height) {
+    if (self.bottomBarView.frame.origin.y != self.view.frame.size.height) {
         [self.bottomShowInfoView setFrame:CGRectMake(0, self.view.frame.size.height - finalHeight, self.view.frame.size.width, finalHeight)];
         
         UIBezierPath *maskPath = [UIBezierPath bezierPathWithRoundedRect:self.bottomShowInfoView.bounds byRoundingCorners:UIRectCornerTopLeft | UIRectCornerTopRight cornerRadii:CGSizeMake(20, 20)];
@@ -350,11 +350,13 @@ static MAMapView *kFHPageMapView = nil;
 }
 
 - (void)hideAnaInfoView:(AMapAOI *)poi{
-    [UIView animateWithDuration:0.3 animations:^{
-         [self.bottomShowInfoView setFrame:CGRectMake(0, self.view.frame.size.height, self.view.frame.size.width, self.bottomShowInfoView.frame.size.height)];
-     } completion:^(BOOL finished) {
-               
-     }];
+    if (self.bottomBarView) {
+        [UIView animateWithDuration:0.3 animations:^{
+             [self.bottomShowInfoView setFrame:CGRectMake(0, self.view.frame.size.height, self.view.frame.size.width, self.bottomShowInfoView.frame.size.height)];
+         } completion:^(BOOL finished) {
+                   
+         }];
+    }
 }
 
 - (void)setUpBottomBarView
@@ -471,6 +473,7 @@ static MAMapView *kFHPageMapView = nil;
             }
         }
     }
+    
 }
 
 - (UILabel *)getLabelFromTag:(NSInteger)index
@@ -502,12 +505,16 @@ static MAMapView *kFHPageMapView = nil;
         NSString *category = self.nameArray[button.tag];
         if (![category isEqualToString:self.searchCategory]) {
             self.searchCategory = category;
-            [self requestPoiInfo:self.centerPoint andKeyWord:[FHOldDetailStaticMapCell keyWordConver:self.nameArray[button.tag]]];
+            self.selectedIndex = button.tag;
+            [self requestPoiInfo:self.centerPoint andKeyWord:self.nameArray[button.tag]];
+            [self processSelected:NO andAnnotationView:self.currentSelectAna];
+            [self hideAnaInfoView:nil];
         }
     }
     [self changeBottomItemViewOffsetByIndex:button.tag];
     self.previouseIndicator = indicatorView;
     self.previouseLabel = buttonLabel;
+    
 }
 
 - (void)cleanAllAnnotations
@@ -530,7 +537,7 @@ static MAMapView *kFHPageMapView = nil;
     }
     
     AMapPOIAroundSearchRequest *requestPoi = [AMapPOIAroundSearchRequest new];
-    requestPoi.keywords = categoryName;
+    requestPoi.keywords = [FHOldDetailStaticMapCell keyWordConver:categoryName];
     requestPoi.location = [AMapGeoPoint locationWithLatitude:self.centerPoint.latitude longitude:self.centerPoint.longitude];
     requestPoi.requireExtension = YES;
     requestPoi.requireSubPOIs = YES;
