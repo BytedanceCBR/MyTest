@@ -104,7 +104,7 @@
         for (FHBuildingDetailDataItemModel *building in model.data.buildingList) {
             building.buildingIndex = [FHBuildingIndexModel indexModelWithSaleStatus:0 withBuildingIndex:buildingArr.count];
             if ([building.buildingID isEqualToString:self.originId]) {
-                indexModel = [FHBuildingIndexModel indexModelWithSaleStatus:0 withBuildingIndex:buildingArr];
+                indexModel = [FHBuildingIndexModel indexModelWithSaleStatus:0 withBuildingIndex:buildingArr.count];
             }
             [buildingArr addObject:building];
         }

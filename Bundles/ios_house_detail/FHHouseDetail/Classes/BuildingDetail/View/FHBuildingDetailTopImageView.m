@@ -8,6 +8,7 @@
 #import "FHBuildingDetailTopImageView.h"
 #import "FHBuildingDetailImageViewButton.h"
 #import <BDWebImage.h>
+#import "FHBuildingDetailScrollView.h"
 #import "UIColor+Theme.h"
 
 
@@ -18,7 +19,7 @@
 @property (nonatomic, strong) FHBuildingLocationModel *locationModel;
 //@property (nonatomic, copy) NSArray<FHBuildingDetailImageViewButton *> *buildingButtons;
 @property (nonatomic, copy) NSArray *saleStatusButtons;
-@property (nonatomic, strong) UIScrollView *scrollView;
+@property (nonatomic, strong) FHBuildingDetailScrollView *scrollView;
 @property (nonatomic, assign) CGSize imageSize;
 @property (nonatomic, strong) UIImage *placeHolder;
 @property (nonatomic, strong) FHBuildingIndexModel *indexModel;
@@ -34,7 +35,7 @@
         self.imageSize = frame.size;
         UIImageView *imageView = [[UIImageView alloc] initWithFrame:frame];
         self.imageView = imageView;
-        UIScrollView *scrollView = [[UIScrollView alloc] initWithFrame:frame];
+        FHBuildingDetailScrollView *scrollView = [[FHBuildingDetailScrollView alloc] initWithFrame:frame];
         scrollView.delegate = self;
         scrollView.minimumZoomScale = 1.0;
         scrollView.maximumZoomScale = 3.0;
