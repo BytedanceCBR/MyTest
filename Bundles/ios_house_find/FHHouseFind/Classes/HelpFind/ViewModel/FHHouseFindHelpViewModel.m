@@ -276,11 +276,9 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
     //从config中获取当前城市id
     FHConfigDataModel *configData = [[FHEnvContext sharedInstance] getConfigFromCache];
     NSAssert(configData, @"获取config数据失败！");
-    if (configData) {
-        NSString *cityId = configData.currentCityId;
-        if (cityId.length > 0) {
-            associateDict[@"city_id"] = cityId;
-        }
+    NSString *cityId = configData.currentCityId;
+    if (cityId.length > 0) {
+        associateDict[@"city_id"] = cityId;
     }
     
     //Step1: 提交用户选择信息，获取线索相关信息
@@ -309,6 +307,7 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
                 @"origin_from": originFrom,
                 @"user_phone": phoneNumber,
                 @"report_form_info": strongSelf.reportFormInfo ?: @{},
+                @"city_id": cityId ?: @"",
             };
             [strongSelf commitAssociateInfoWithParams:params selectedModel:selectModel phoneNumber:phoneNumber];
         } else {

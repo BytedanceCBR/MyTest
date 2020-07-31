@@ -62,8 +62,8 @@
  */
 + (TTHttpTask *)loadAssociateEntranceWithParams:(NSDictionary *)params completion:(void (^)(NSError * _Nonnull, id _Nonnull))completion {
  
-    NSString * host = [FHURLSettings baseURL] ?: @"https://i.haoduofangs.com";
-    NSString* url = [host stringByAppendingString:@"/f100/api/associate_entrance"];
+    NSString *host = [FHURLSettings baseURL] ?: @"https://i.haoduofangs.com";
+    NSString *url = [host stringByAppendingString:@"/f100/api/associate_entrance"];
     
     return [[TTNetworkManager shareInstance] requestForJSONWithResponse:url
                                                                  params:params
@@ -82,8 +82,8 @@
  @param params 参数字典
  */
 + (TTHttpTask *)commitAssociateInfoWithParams:(NSDictionary *)params completion:(void (^)(NSError * _Nonnull, id _Nonnull))completion {
-    NSString * host = [FHURLSettings baseURL] ?: @"https://i.haoduofangs.com";
-    NSString* url = [host stringByAppendingString:@"/f100/api/call_report"];
+    NSString *host = [FHURLSettings baseURL] ?: @"https://i.haoduofangs.com";
+    NSString *url = [host stringByAppendingString:@"/f100/api/call_report"];
 
     return [[TTNetworkManager shareInstance] requestForBinaryWithResponse:url
                                                                    params:params
