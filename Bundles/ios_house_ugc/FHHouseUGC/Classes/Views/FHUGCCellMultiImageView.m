@@ -183,8 +183,7 @@
             }
 
             if (imageModel && imageModel.url.length > 0) {
-//                [imageView fh_setImageWithURLStringInTrafficSaveMode:imageModel.url placeholder:nil];
-                [imageView fh_setImageWithURL:imageModel.url placeholder:nil resizeWidth:imageView.width];
+                [imageView fh_setImageWithURL:imageModel.url placeholder:nil reSize:imageView.size];
                 
             }
         }else{

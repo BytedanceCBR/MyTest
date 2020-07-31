@@ -18,6 +18,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (nullable BDWebImageRequest *)fh_setImageWithURL:(nonnull NSURL *)imageURL placeholder:(nullable UIImage *)placeholder resizeWidth:(CGFloat)resizeWidth;
 
+- (nullable BDWebImageRequest *)fh_setImageWithURL:(nonnull NSURL *)imageURL placeholder:(nullable UIImage *)placeholder reSize:(CGSize)reSize;
+
 - (void)fh_setImageWithURLStringInTrafficSaveMode:(NSString *)URLString placeholder:(nullable UIImage *)placeholder;
 
 @end
