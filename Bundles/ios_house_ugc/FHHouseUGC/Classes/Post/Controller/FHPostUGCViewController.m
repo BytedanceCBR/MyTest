@@ -222,6 +222,7 @@ static NSInteger const kMaxPostImageCount = 9;
             if (element_from.length > 0) {
                 self.tracerDict[@"element_from"] = element_from;
             }
+            self.tracerDict[@"page_type"] = @"feed_publisher";
             NSString *log_pb_str = params[@"log_pb"];
             if ([log_pb_str isKindOfClass:[NSString class]] && log_pb_str.length > 0) {
                 NSData *jsonData = [log_pb_str dataUsingEncoding:NSUTF8StringEncoding];

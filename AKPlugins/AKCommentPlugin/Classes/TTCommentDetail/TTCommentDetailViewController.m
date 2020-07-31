@@ -736,6 +736,7 @@ NSString *const kTTCommentDetailForwardCommentNotification = @"kTTCommentDetailF
     [params setValue:_groupId forKey:@"item_Id"];
     [params setValue:_logPb  forKey:@"log_pd"];
     [params setValue:commentId forKey:@"comment_id"];
+    [params setValue:@"comment" forKey:@"click_position"];
     
     if(self.extraDic){
         [params addEntriesFromDictionary:self.extraDic];
