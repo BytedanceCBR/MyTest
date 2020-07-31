@@ -18,6 +18,7 @@
 @property (nonatomic, strong) FHBuildingDetailTopImageView *imageView;
 @property (nonatomic, weak) FHVideoAndImageItemCorrectingView *saleStatusView;
 @property (nonatomic, strong) FHBuildingIndexModel *indexModel;
+@property (nonatomic, strong) UIView *bottomGradientView;
 
 @end
 
@@ -35,7 +36,7 @@
         [imageView setButtonDidSelect:^(FHBuildingDetailOperatType type, FHBuildingIndexModel * _Nonnull index) {
             [wSelf clickItem:type indexModel:index];
         }];
-
+        [self.contentView addSubview:self.bottomGradientView];
     }
     return self;
 }
@@ -57,6 +58,25 @@
         }
     }
 }
+
+- (UIView *)bottomGradientView {
+    if (!_bottomGradientView) {
+        CGRect frame = CGRectMake(0, 0, CGRectGetWidth([[UIScreen mainScreen] bounds]), 25);
+        CAGradientLayer *gradientLayer = [CAGradientLayer layer];
+        gradientLayer.frame = frame;
+        gradientLayer.colors = @[
+                                 (__bridge id)[UIColor colorWithWhite:1 alpha:0].CGColor,
+                                 (__bridge id)[UIColor themeGray7].CGColor
+                                 ];
+        gradientLayer.startPoint = CGPointMake(0.5, 0);
+        gradientLayer.endPoint = CGPointMake(0.5, 0.9);
+        frame.origin.y = self.frame.size.height - 25;
+        _bottomGradientView = [[UIView alloc] initWithFrame:frame];
+        [_bottomGradientView.layer addSublayer:gradientLayer];
+    }
+    return _bottomGradientView;
+}
+
 
 - (FHVideoAndImageItemCorrectingView *)saleStatusView {
     if (!_saleStatusView) {

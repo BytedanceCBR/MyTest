@@ -17,6 +17,8 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)move:(CGSize)newSize;
 
 - (void)updateWithIndexModel:(FHBuildingIndexModel *)indexModel;
+
+- (void)showAllButton;
 @end
 
 NS_ASSUME_NONNULL_END

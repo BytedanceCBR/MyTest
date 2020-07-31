@@ -12,7 +12,8 @@ NS_ASSUME_NONNULL_BEGIN
 @interface FHBuildingDetailUtils : NSObject
 
 + (CGSize)getTopImageViewSize;
-
++ (CGSize)getDetailBuildingViewSize;
++ (CGSize)getDetailBuildingImageViewSize;
 @end
 
 NS_ASSUME_NONNULL_END

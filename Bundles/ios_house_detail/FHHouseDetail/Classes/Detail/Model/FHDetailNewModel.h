@@ -228,16 +228,18 @@ NS_ASSUME_NONNULL_BEGIN
 @end
 
 @interface FHDetailNewBuildingListItem : JSONModel
-
+@property (nonatomic, copy, nullable) NSString *id;
 @property (nonatomic, copy, nullable) NSString *name;
 @property (nonatomic, copy, nullable) NSString *layers;
 @property (nonatomic, copy, nullable) NSString *family;
+@property (nonatomic, copy, nullable) NSString *pointX;
+@property (nonatomic, copy, nullable) NSString *pointY;
+@property (nonatomic, copy, nullable) NSString *saleStatus;
 
 @end
 
 @interface FHDetailNewBuildingInfoModel : JSONModel
 
-@property (nonatomic, copy, nullable) NSString *id;
 @property (nonatomic, copy, nullable) NSString *title;
 @property (nonatomic, copy, nullable) NSString *buttonText;
 @property (nonatomic, copy, nullable) NSString *buildingNameText;

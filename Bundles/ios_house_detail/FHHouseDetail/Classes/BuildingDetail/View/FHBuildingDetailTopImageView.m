@@ -22,7 +22,7 @@
 @property (nonatomic, assign) CGSize imageSize;
 @property (nonatomic, strong) UIImage *placeHolder;
 @property (nonatomic, strong) FHBuildingIndexModel *indexModel;
-@property (nonatomic, strong) UIView *bottomGradientView;
+
 @end
 
 @implementation FHBuildingDetailTopImageView
@@ -44,7 +44,7 @@
         self.scrollView = scrollView;
         self.scrollView.contentSize = CGSizeMake(frame.size.width + 0.4, frame.size.height + 0.4);
         [self addSubview:scrollView];
-        [self addSubview:self.bottomGradientView];
+        
         
         [self.scrollView addSubview:imageView];
     }
@@ -84,24 +84,6 @@
         _placeHolder = [UIImage imageNamed:@"default_image"];
     }
     return _placeHolder;
-}
-
-- (UIView *)bottomGradientView {
-    if (!_bottomGradientView) {
-        CGRect frame = CGRectMake(0, 0, CGRectGetWidth([[UIScreen mainScreen] bounds]), 25);
-        CAGradientLayer *gradientLayer = [CAGradientLayer layer];
-        gradientLayer.frame = frame;
-        gradientLayer.colors = @[
-                                 (__bridge id)[UIColor colorWithWhite:1 alpha:0].CGColor,
-                                 (__bridge id)[UIColor themeGray7].CGColor
-                                 ];
-        gradientLayer.startPoint = CGPointMake(0.5, 0);
-        gradientLayer.endPoint = CGPointMake(0.5, 0.9);
-        frame.origin.y = self.frame.size.height - 25;
-        _bottomGradientView = [[UIView alloc] initWithFrame:frame];
-        [_bottomGradientView.layer addSublayer:gradientLayer];
-    }
-    return _bottomGradientView;
 }
 
 #pragma mark - UIScrollViewDelegate
@@ -169,4 +151,13 @@
     [self pointMoveToCenter:[button getButtonPosition]];
 }
 
+- (void)showAllButton {
+    for (NSArray *buttonAry in self.saleStatusButtons) {
+        for (FHBuildingDetailImageViewButton *button in buttonAry) {
+            [button setHidden:NO];
+            button.isSelected = YES;
+            
+        }
+    }
+}
 @end

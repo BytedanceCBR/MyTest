@@ -27,7 +27,7 @@
 @interface FHBuildingDetailViewController ()<UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout>
 
 @property (nonatomic, copy) NSString *houseId;
-
+@property (nonatomic, copy) NSString *originId;
 @property (nonatomic, strong) FHBuildingDetailViewModel *viewModel;
 @property (nonatomic, assign) NSUInteger currentSelectIndex;
 
@@ -43,9 +43,7 @@
 @property (nonatomic) BOOL shouldReloadAnimated;
 @property (nonatomic, strong) NSMutableArray *showHouseCache;
 
-@property (nonatomic, strong) FHBuildingIndexModel *currentIndex;
 @property (nonatomic, strong) NSMutableDictionary *currentDict;
-
 @property (nonatomic, weak) FHBuildingDetailTopImageCollectionViewCell *topImageView;
 @end
 
@@ -56,6 +54,9 @@
         self.ttTrackStayEnable = YES;
         if (paramObj.allParams[@"house_id"]) {
             self.houseId = paramObj.allParams[@"house_id"];
+        }
+        if (paramObj.allParams[@"origin_id"]) {
+            self.originId = paramObj.allParams[@"origin_id"];
         }
 
         self.contactViewModel = [[FHHouseDetailContactViewModel alloc] initWithNavBar:nil bottomBar:nil houseType:FHHouseTypeNewHouse houseId:self.houseId];
@@ -123,6 +124,7 @@
     
     self.viewModel = [[FHBuildingDetailViewModel alloc] initWithController:self];
     self.viewModel.houseId = self.houseId;
+    self.viewModel.originId = self.originId;
 //    self.viewModel
     [self.viewModel startLoadData];
     [self addGoDetailLog];
@@ -324,9 +326,6 @@
         
         self.layout.model = model;
         self.viewModel.items = items.copy;
-        self.currentIndex = [[FHBuildingIndexModel alloc] init];
-        self.currentIndex.saleStatus = 0;
-        self.currentIndex.buildingIndex = 0;
         [self.collectionView reloadData];
     }
 }
@@ -336,6 +335,7 @@
         case FHBuildingDetailOperatTypeSaleStatus:
             indexModel.buildingIndex = [self.currentDict btd_integerValueForKey:@(indexModel.saleStatus)];
             self.currentIndex = indexModel;
+            [self addClickOptions:type withIndexModel:indexModel];
             [self reloadFloorCollectionViewData];
             break;
         case FHBuildingDetailOperatTypeInfoCell:
@@ -346,6 +346,7 @@
         case FHBuildingDetailOperatTypeButton:
             self.currentIndex = indexModel;
             [self.currentDict btd_setObject:@(indexModel.buildingIndex) forKey:@(indexModel.saleStatus)];
+            [self addClickOptions:type withIndexModel:indexModel];
            [self reloadFloorCollectionViewData];
             break;
         case FHBuildingDetailOperatTypeFromNew:
@@ -726,5 +727,26 @@
     [FHUserTracker writeEvent:@"stay_page" params:params];
 }
 
+- (void)addClickOptions:(FHBuildingDetailOperatType)type withIndexModel:(FHBuildingIndexModel *)indexModel {
+    NSMutableDictionary *params = [NSMutableDictionary dictionary];
+    [params addEntriesFromDictionary:self.tracerDict];
+    params[@"element_type"] = @"楼栋";
+    if (self.houseId.length) {
+        params[@"group_id"] = self.houseId;
+    }
+    NSString *clickPosition = @"null";
+    switch (type) {
+        case FHBuildingDetailOperatTypeSaleStatus:
+            clickPosition = self.viewModel.locationModel.saleStatusContents[indexModel.saleStatus];
+            break;
+        case FHBuildingDetailOperatTypeButton:
+            clickPosition = @"图片tag";
+            break;
+        default:
+            break;
+    }
+    params[@"click_position"] = clickPosition;
+    [FHUserTracker writeEvent:@"click_options" params:params];
+}
 
 @end
