@@ -6,7 +6,6 @@
 //
 
 #import "FHMessageViewController.h"
-#import "FHMessageViewModel.h"
 #import "Masonry.h"
 #import "UIViewController+NavbarItem.h"
 #import "UIColor+Theme.h"
@@ -34,7 +33,6 @@
 
 @interface FHMessageViewController ()
 
-@property(nonatomic, strong) FHMessageViewModel *viewModel;
 @property(nonatomic, strong) FHPushMessageTipView *pushTipView;
 @property (nonatomic, copy)     NSString       *enter_from;// 外部传入
 @end
@@ -55,7 +53,6 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(networkStateChange:) name:TTReachabilityChangedNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationDidBecomeActive) name:UIApplicationDidBecomeActiveNotification object:nil];
 //     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(userInfoReload) name:KUSER_UPDATE_NOTIFICATION object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(periodicalFetchUnreadMessage:) name:kPeriodicalFetchUnreadMessage object:nil];
 }
 
 - (void)applicationDidBecomeActive
@@ -71,11 +68,6 @@
     }];
 }
 
-
-- (void)periodicalFetchUnreadMessage:(NSNotification *)notification {
-    [self startLoadData];
-}
-
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
 
@@ -86,7 +78,7 @@
 
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
-    [self.viewModel refreshConversationList];
+    [self.fatherVC refreshConversationList];
     [[FHPopupViewManager shared] triggerPopupView];
     [[FHPopupViewManager shared] triggerPendant];
 }
@@ -333,7 +325,7 @@
 #pragma mark - UIViewControllerErrorHandler
 
 - (BOOL)tt_hasValidateData {
-    return _viewModel.dataList.count == 0 ? NO : YES; //默认会显示空
+    return self.fatherVC.dataList.count == 0 ? NO : YES; //默认会显示空
 }
 
 #pragma mark - TTUIViewControllerTrackProtocol

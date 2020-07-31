@@ -6,6 +6,7 @@
 //
 
 #import "FHBaseViewController.h"
+#import "FHConversationDataCombiner.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -31,9 +32,17 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic,readonly,weak) UIViewController *activeViewController;
 
+@property(nonatomic, strong) FHConversationDataCombiner *combiner;
+
 @property (nonatomic,readonly,weak) UIPanGestureRecognizer *interactivePanGestureRecognizer;
 
+@property(nonatomic, strong) NSMutableArray *dataList;
+
 - (void)selectViewControllerAtIndex:(NSInteger)index;
+
+- (void)reloadData;
+
+- (void)refreshConversationList;
 
 @end
 

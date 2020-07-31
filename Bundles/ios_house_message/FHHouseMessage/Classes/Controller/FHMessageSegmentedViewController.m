@@ -9,6 +9,9 @@
 #import "FHMessageViewController.h"
 #import "FHMessageTopView.h"
 #import "IMManager.h"
+#import "FHMessageViewModel.h"
+#import "FHMessageNotificationTipsManager.h"
+#import <FHMessageNotificationManager.h>
 
 typedef NS_ENUM(NSInteger, FHSegmentedControllerAnimatedTransitionDirection) {
     FHSegmentedControllerAnimatedTransitionDirectionUnknown,
@@ -211,7 +214,7 @@ typedef NS_ENUM(NSInteger, FHSegmentedControllerAnimatedTransitionDirection) {
 
 @end
 
-@interface FHMessageSegmentedViewController ()<UIGestureRecognizerDelegate,FHMessageSegmentedViewControllerDelegate>
+@interface FHMessageSegmentedViewController ()<UIGestureRecognizerDelegate,FHMessageSegmentedViewControllerDelegate, IMChatStateObserver>
 
 @property (nonatomic,strong,readwrite) UISegmentedControl *segmentedControl;
 @property (nonatomic,readwrite,weak) UIViewController *activeViewController;
@@ -288,6 +291,9 @@ typedef NS_ENUM(NSInteger, FHSegmentedControllerAnimatedTransitionDirection) {
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    _dataList = [[NSMutableArray alloc] init];
+    _combiner = [[FHConversationDataCombiner alloc] init];
+    [[IMManager shareInstance] addChatStateObverver:self];
     [self configureSegmentedControlUsingViewControllers:self.viewControllers];
     self.delegate = self;
     UIPanGestureRecognizer *interactivePanGestureRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handlePanGesture:)];
@@ -300,6 +306,7 @@ typedef NS_ENUM(NSInteger, FHSegmentedControllerAnimatedTransitionDirection) {
 
     __weak typeof(self) weakSelf = self;
     FHMessageViewController *imViewController = [[FHMessageViewController alloc] init];
+    imViewController.fatherVC = self;
     [imViewController setUpdateRedPoint:^(NSInteger chatNumber, BOOL hasRedPoint, NSInteger systemMessageNumber) {
         [weakSelf.topView updateRedPointWithChat:chatNumber andHasRedPoint:hasRedPoint andSystemMessage:systemMessageNumber];
     }];
@@ -307,6 +314,7 @@ typedef NS_ENUM(NSInteger, FHSegmentedControllerAnimatedTransitionDirection) {
     imViewController.dataType = FHMessageRequestDataTypeIM;
 
     FHMessageViewController *systemViewController = [[FHMessageViewController alloc] init];
+    systemViewController.fatherVC = self;
     [systemViewController setUpdateRedPoint:^(NSInteger chatNumber, BOOL hasRedPoint, NSInteger systemMessageNumber) {
         [weakSelf.topView updateRedPointWithChat:chatNumber andHasRedPoint:hasRedPoint andSystemMessage:systemMessageNumber];
     }];
@@ -335,6 +343,52 @@ typedef NS_ENUM(NSInteger, FHSegmentedControllerAnimatedTransitionDirection) {
         [self selectViewControllerAtIndex:1];
     } else {
         [self selectViewControllerAtIndex:0];
+    }
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(periodicalFetchUnreadMessage:) name:kPeriodicalFetchUnreadMessage object:nil];
+    @weakify(self)
+    [[[[NSNotificationCenter defaultCenter] rac_addObserverForName:KUSER_UPDATE_NOTIFICATION object:nil] throttle:2] subscribeNext:^(NSNotification *_Nullable x) {
+        @strongify(self)
+        [self refreshConversationList];
+    }];
+    [[[[NSNotificationCenter defaultCenter] rac_addObserverForName:kTTMessageNotificationTipsChangeNotification object:nil] throttle:2] subscribeNext:^(NSNotification *_Nullable x) {
+        @strongify(self)
+        if([FHMessageNotificationTipsManager sharedManager].tipsModel){
+            [self.combiner resetSystemChannels:self.dataList ugcUnreadMsg:[FHMessageNotificationTipsManager sharedManager].tipsModel];
+            [self reloadData];
+            return;
+        }
+    }];
+}
+
+- (void)periodicalFetchUnreadMessage:(NSNotification *)notification {
+    FHMessageViewController *vc = self.activeViewController;
+    if (vc) {
+        [vc startLoadData];
+    }
+}
+
+- (void)reloadData {
+    FHMessageViewController *vc = self.activeViewController;
+    if (vc && vc.viewModel) {
+        [vc.viewModel reloadData];
+    }
+}
+
+- (void)refreshConversationList {
+    NSArray<IMConversation *> *allConversations = [[IMManager shareInstance].chatService allConversations];
+    [_combiner resetConversations:allConversations];
+    FHMessageViewController *vc = self.activeViewController;
+    if (vc && vc.viewModel) {
+        [vc.viewModel reloadData];
+    }
+}
+
+- (void)conversationUpdated:(NSString *)conversationIdentifier {
+    NSArray<IMConversation *> *allConversations = [[IMManager shareInstance].chatService allConversations];
+    [_combiner resetConversations:allConversations];
+    FHMessageViewController *vc = self.activeViewController;
+    if (vc && vc.viewModel) {
+        [vc.viewModel checkShouldShowEmptyMaskView];
     }
 }
 

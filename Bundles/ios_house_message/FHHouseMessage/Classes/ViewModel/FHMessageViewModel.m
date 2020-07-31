@@ -30,9 +30,8 @@
 #import "FHMessageEditView.h"
 #define kCellId @"FHMessageCell_id"
 
-@interface FHMessageViewModel () <IMChatStateObserver, UITableViewDelegate>
+@interface FHMessageViewModel () <UITableViewDelegate>
 
-@property(nonatomic, strong) FHConversationDataCombiner *combiner;
 @property(nonatomic, strong) UITableView *tableView;
 @property(nonatomic, weak) FHMessageViewController *viewController;
 @property(nonatomic, weak) TTHttpTask *requestTask;
@@ -40,6 +39,7 @@
 @property(nonatomic, assign) BOOL isFirstLoad;
 @property(nonatomic, strong) NSString *pageType;
 @property (nonatomic, copy)     NSString       *enterFrom;
+
 @end
 
 @implementation FHMessageViewModel
@@ -47,10 +47,8 @@
 - (instancetype)initWithTableView:(UITableView *)tableView controller:(FHMessageViewController *)viewController {
     self = [super init];
     if (self) {
-        self.combiner = [[FHConversationDataCombiner alloc] init];
         __weak typeof(self)wself = self;
 
-        _dataList = [[NSMutableArray alloc] init];
         _isFirstLoad = YES;
         self.tableView = tableView;
 
@@ -60,28 +58,8 @@
         tableView.dataSource = self;
 
         self.viewController = viewController;
-        [[IMManager shareInstance] addChatStateObverver:self];
-        @weakify(self)
-        [[[[NSNotificationCenter defaultCenter] rac_addObserverForName:KUSER_UPDATE_NOTIFICATION object:nil] throttle:2] subscribeNext:^(NSNotification *_Nullable x) {
-            @strongify(self)
-            [self refreshConversationList];
-        }];
-        [[[[NSNotificationCenter defaultCenter] rac_addObserverForName:kTTMessageNotificationTipsChangeNotification object:nil] throttle:2] subscribeNext:^(NSNotification *_Nullable x) {
-            @strongify(self)
-            if([FHMessageNotificationTipsManager sharedManager].tipsModel){
-                [_combiner resetSystemChannels:self.dataList ugcUnreadMsg:[FHMessageNotificationTipsManager sharedManager].tipsModel];
-                [self reloadData];
-                return;
-            }
-        }];
     }
     return self;
-}
-
-- (void)refreshConversationList {
-    NSArray<IMConversation *> *allConversations = [[IMManager shareInstance].chatService allConversations];
-    [_combiner resetConversations:allConversations];
-    [self reloadData];
 }
 
 - (void)setPageType:(NSString *)pageType {
@@ -121,7 +99,7 @@
     BOOL isLogin = [IMManager shareInstance].isClientLogin;
     if(isLogin) {
         NSArray<IMConversation *> *allConversations = [[IMManager shareInstance].chatService allConversations];
-        [_combiner resetConversations:allConversations];
+        [self.viewController.fatherVC.combiner resetConversations:allConversations];
     };
     
     if (self.isFirstLoad) {
@@ -130,7 +108,7 @@
 
     self.isFirstLoad = NO;
 
-    if (error && [self.combiner allItems].count == 0) {
+    if (error && [self.viewController.fatherVC.combiner allItems].count == 0) {
         //TODO: show handle error
         [self.viewController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNetWorkError];
         [self clearBadgeNumber];
@@ -139,10 +117,14 @@
 
     [self.viewController.emptyView hideEmptyView];
 
-    self.dataList = [unreadMsg.data.unread mutableCopy];
-    [self.combiner resetSystemChannels:self.dataList ugcUnreadMsg:ugcUnread];
-    self.viewController.hasValidateData = self.dataList.count > 0;
+    self.viewController.fatherVC.dataList = [unreadMsg.data.unread mutableCopy];
+    [self.viewController.fatherVC.combiner resetSystemChannels:[self dataList] ugcUnreadMsg:ugcUnread];
+    self.viewController.hasValidateData = [self dataList].count > 0;
     [self checkShouldShowEmptyMaskView];
+}
+
+- (NSMutableArray *)dataList {
+    return self.viewController.fatherVC.dataList;
 }
 
 - (void)checkShouldShowEmptyMaskView {
@@ -214,13 +196,17 @@
     return 0.01f;
 }
 
+- (FHConversationDataCombiner *)combiner {
+    return self.viewController.fatherVC.combiner;
+}
+
 - (NSArray *)items {
     switch (self.viewController.dataType) {
         case FHMessageRequestDataTypeIM:
-            return [_combiner conversationItems];
+            return [[self combiner] conversationItems];
             break;
         case FHMessageRequestDataTypeSystem:
-            return [_combiner channelItems];
+            return [[self combiner] channelItems];
             break;
         default:
             return nil;
@@ -345,7 +331,7 @@
     NSInteger chatNumber = 0;
     NSInteger systemMessageNumber = 0;
     BOOL hasRedPoint = NO;
-    for (IMConversation *conv in [_combiner conversationItems]) {
+    for (IMConversation *conv in [[self combiner] conversationItems]) {
         if (conv.type == IMConversationType1to1Chat) {
             chatNumber += conv.unreadCount;
         }
@@ -353,7 +339,7 @@
             hasRedPoint = YES;
         }
     }
-    for (FHUnreadMsgDataUnreadModel *item in [_combiner channelItems]) {
+    for (FHUnreadMsgDataUnreadModel *item in [[self combiner] channelItems]) {
         systemMessageNumber += [item.unread integerValue];
     }
     if (self.viewController.updateRedPoint) {
@@ -462,10 +448,5 @@
     [FHUserTracker writeEvent:@"click_conversation" params:params];
 }
 
-- (void)conversationUpdated:(NSString *)conversationIdentifier {
-    NSArray<IMConversation *> *allConversations = [[IMManager shareInstance].chatService allConversations];
-    [_combiner resetConversations:allConversations];
-    [self checkShouldShowEmptyMaskView];
-}
 
 @end
