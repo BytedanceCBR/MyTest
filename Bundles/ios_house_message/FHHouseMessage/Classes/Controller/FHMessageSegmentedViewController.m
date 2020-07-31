@@ -293,6 +293,7 @@ typedef NS_ENUM(NSInteger, FHSegmentedControllerAnimatedTransitionDirection) {
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    self.enterType = @"dafault";
     self.ttTrackStayEnable = YES;
     _dataList = [[NSMutableArray alloc] init];
     _combiner = [[FHConversationDataCombiner alloc] init];
@@ -325,7 +326,6 @@ typedef NS_ENUM(NSInteger, FHSegmentedControllerAnimatedTransitionDirection) {
     systemViewController.dataType = FHMessageRequestDataTypeSystem;
     
     self.viewControllers = @[imViewController,systemViewController];
-    self.enterType = @"dafault";
     self.segmentedControl.hidden = YES;
     
     
@@ -567,6 +567,9 @@ typedef NS_ENUM(NSInteger, FHSegmentedControllerAnimatedTransitionDirection) {
 }
 
 - (void)addEnterCategoryLogWithType:(NSString *)enterType {
+    if (!self.activeViewController) {
+        return;
+    }
     FHMessageViewController *vc = self.activeViewController;
     [vc addEnterCategoryLogWithType: enterType];
 }
