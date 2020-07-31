@@ -17,7 +17,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property(nonatomic, strong) NSMutableArray *dataList;
 
-- (instancetype)initWithTableView:(UITableView *)tableView topView:(FHMessageTopView *)topView controller:(FHMessageViewController *)viewController;
+- (instancetype)initWithTableView:(UITableView *)tableView controller:(FHMessageViewController *)viewController;
 
 - (void)requestData;
 

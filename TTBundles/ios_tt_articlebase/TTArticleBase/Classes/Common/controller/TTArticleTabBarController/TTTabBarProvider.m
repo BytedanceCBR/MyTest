@@ -26,7 +26,7 @@
 #import "TTSegmentedControl.h"
 //#import "TTSFActivityManager.h"
 //#import "TTSFResourcesManager.h"
-#import "FHMessageViewController.h"
+#import "FHMessageSegmentedViewController.h"
 #import "FHMineViewController.h"
 #import <FHHouseFind/FHHouseFindViewController.h>
 #import <BDABTestSDK/BDABTestManager.h>
@@ -122,7 +122,7 @@ static NSString *lastTabIdentifier;
         return communityVC;
 
     } else if ([identifier isEqualToString:kFHouseMessageTabKey]) {
-        FHMessageViewController* vc = [[FHMessageViewController alloc] init];
+        FHMessageSegmentedViewController* vc = [[FHMessageSegmentedViewController alloc] init];
         return vc;
     } else if ([identifier isEqualToString:kFHouseMineTabKey]) {
         FHMineViewController* vc = [[FHMineViewController alloc] init];

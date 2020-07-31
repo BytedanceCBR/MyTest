@@ -14,6 +14,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, copy) TagChangeBlock tagChangeBlock;
 
+@property (nonatomic) NSUInteger selectIndex;
+
 - (void)updateRedPointWithChat:(NSInteger)chatNumber andHasRedPoint:(BOOL)hasRedPoint andSystemMessage:(NSInteger)systemMessageNumber;
 
 @end
