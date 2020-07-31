@@ -35,6 +35,7 @@
 #import <CoreTelephony/CTTelephonyNetworkInfo.h>
 #import <ByteDanceKit/NSDictionary+BTDAdditions.h>
 #import <ByteDanceKit/BTDWeakProxy.h>
+#import "SSCommonLogic.h"
 
 extern NSString *const kFHPhoneNumberCacheKey;
 extern NSString *const kFHPLoginhoneNumberCacheKey;
@@ -84,7 +85,6 @@ static FHLoginSharedModel *_sharedModel = nil;
         NSDictionary *fhSettings = [self.class fhSettings];
         NSDictionary *loginSettings = [fhSettings btd_dictionaryValueForKey:@"login_settings"];
         if (loginSettings) {
-            self.disableDouyinIconLoginSetting = [loginSettings btd_boolValueForKey:@"disable_douyin_icon" default:NO];
             self.disableDouyinOneClickLoginSetting = [loginSettings btd_boolValueForKey:@"disable_douyin_oneclick" default:NO];
         }
     }
@@ -482,7 +482,7 @@ static FHLoginSharedModel *_sharedModel = nil;
 }
 
 - (BOOL)shouldShowDouyinIcon {
-    if ([FHLoginSharedModel sharedModel].disableDouyinIconLoginSetting) {
+    if ([SSCommonLogic disableDouyinIconLoginLogic]) {
         return NO;
     }
     return YES;
