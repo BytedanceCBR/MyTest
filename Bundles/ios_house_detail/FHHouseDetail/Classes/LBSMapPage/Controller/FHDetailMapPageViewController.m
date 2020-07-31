@@ -310,17 +310,28 @@ static MAMapView *kFHPageMapView = nil;
      [self.bottomShowInfoView addSubview:bottomOriginLabel];
      CGFloat finalHeight = bottomOriginLabel.bottom + 20 + ([UIDevice btd_isIPhoneXSeries] ? 20 : 0);
 
-    [UIView animateWithDuration:0.3 animations:^{
+    if (self.bottomBarView.origin.y < self.view.frame.size.height) {
         [self.bottomShowInfoView setFrame:CGRectMake(0, self.view.frame.size.height - finalHeight, self.view.frame.size.width, finalHeight)];
-
+        
         UIBezierPath *maskPath = [UIBezierPath bezierPathWithRoundedRect:self.bottomShowInfoView.bounds byRoundingCorners:UIRectCornerTopLeft | UIRectCornerTopRight cornerRadii:CGSizeMake(20, 20)];
          CAShapeLayer *layer = [[CAShapeLayer alloc]init];
          layer.frame = self.bottomShowInfoView.bounds;
          layer.path = maskPath.CGPath;
          self.bottomShowInfoView.layer.mask = layer;
-    } completion:^(BOOL finished) {
-              
-    }];
+
+    }else{
+        [UIView animateWithDuration:0.3 animations:^{
+            [self.bottomShowInfoView setFrame:CGRectMake(0, self.view.frame.size.height - finalHeight, self.view.frame.size.width, finalHeight)];
+
+            UIBezierPath *maskPath = [UIBezierPath bezierPathWithRoundedRect:self.bottomShowInfoView.bounds byRoundingCorners:UIRectCornerTopLeft | UIRectCornerTopRight cornerRadii:CGSizeMake(20, 20)];
+             CAShapeLayer *layer = [[CAShapeLayer alloc]init];
+             layer.frame = self.bottomShowInfoView.bounds;
+             layer.path = maskPath.CGPath;
+             self.bottomShowInfoView.layer.mask = layer;
+        } completion:^(BOOL finished) {
+                  
+        }];
+    }
 }
 
 +(NSAttributedString *)createTagAttrString:(NSString *)text isFirst:(BOOL)isFirst textColor:(UIColor *)textColor backgroundColor:(UIColor *)backgroundColor {
