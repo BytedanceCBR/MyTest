@@ -876,12 +876,12 @@ static MAMapView *kFHPageMapView = nil;
 //            NSLog(@"poi=%@",[annotationMy.poi description]);
             
             
-            UIImageView *leftIcon = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"map_detail_play"]];
+           UIImageView *leftIcon = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"map_detail_play"]];
                    [annotationView addSubview:leftIcon];
-            leftIcon.image = [self getIconImageFromCategory:((FHMyMAAnnotation *)annotation).type];
+           leftIcon.image = [self getIconImageFromCategory:((FHMyMAAnnotation *)annotation).type];
 
-            leftIcon.backgroundColor = [UIColor clearColor];
-            leftIcon.frame = CGRectMake(11, 9, 11, 11);
+           leftIcon.backgroundColor = [UIColor clearColor];
+           leftIcon.frame = CGRectMake(11, 9, 11, 11);
 
             [annotationView addSubview:leftIcon];
            UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(17, 0, 100, 30)];
@@ -913,13 +913,13 @@ static MAMapView *kFHPageMapView = nil;
            [annotationView addSubview:bottomArrowView];
            bottomArrowView.backgroundColor = [UIColor clearColor];
            bottomArrowView.frame = CGRectMake(backImageView.frame.size.width / 2.0 - 5, backImageView.frame.size.height - 5.5, 10.5, 10.5);
-           annotationView.centerOffset = CGPointMake(-backImageView.frame.size.width / 2.0, -40);
+           annotationView.centerOffset = CGPointMake(-backImageView.frame.size.width / 2.0, -20);
            annotationView.poi = annotationMy.poi;
 
             
             annotationView.backColorView = backImageView;
             annotationView.bottomArrowView = bottomArrowView;
-
+            [annotationView setFrame:CGRectMake(annotationView.frame.origin.x, annotationView.frame.origin.y, backImageView.frame.size.width, backImageView.frame.size.height)];
 //            UIButton *buttonMask = [UIButton buttonWithType:UIButtonTypeCustom];
 //            [buttonMask setBackgroundColor:[UIColor clearColor]];
 //            [annotationView addSubview:buttonMask];
