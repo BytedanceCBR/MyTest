@@ -73,7 +73,7 @@ typedef NS_ENUM(NSUInteger, FHBuildingDetailOperatType) {
 @property (nonatomic, copy, nullable) NSString *pointY;
 @property (nonatomic, copy, nullable) NSString *beginWidth;
 @property (nonatomic, copy, nullable) NSString *beginHeight;
-@property (nonatomic, strong, nullable) FHBuildingIndexModel *buildingIndex;
+@property (nonatomic, strong, nullable) FHBuildingIndexModel *buildingIndex;    //记录这个楼在FHBuildingLocationModel的位置
 @end
 
 
@@ -110,7 +110,7 @@ typedef NS_ENUM(NSUInteger, FHBuildingDetailOperatType) {
 @interface FHBuildingLocationModel : NSObject
 @property (nonatomic, strong) NSArray<FHBuildingSaleStatusModel > *saleStatusList;
 @property (nonatomic, strong) NSArray *saleStatusContents;
-@property (nonatomic, strong , nullable) FHImageModel *buildingImage;
+@property (nonatomic, strong) FHImageModel *buildingImage;
 
 @end
 

@@ -114,8 +114,6 @@
     if (self.buttonIndexDidSelect) {
         self.buttonIndexDidSelect(FHBuildingDetailOperatTypeButton, self.buttonIndex);
     }
-    
-    NSLog(@" self %@ father %@",NSStringFromCGRect(self.frame),NSStringFromCGRect(self.superview.frame));
 }
 
 - (CGPoint)getButtonPosition {
@@ -124,7 +122,6 @@
 
 - (void)buttonMoveWithSize:(CGSize)newSize {
     [self.layer setPosition:CGPointMake((newSize.width * self.pointX) / self.beginWidth,(newSize.height * self.pointY) / self.beginHeight)];
-    NSLog(@"already move :%@",NSStringFromCGPoint(self.layer.position));
 }
 
 @end

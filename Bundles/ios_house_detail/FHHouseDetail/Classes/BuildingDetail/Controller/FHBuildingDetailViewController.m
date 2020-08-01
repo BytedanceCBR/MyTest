@@ -29,7 +29,6 @@
 @property (nonatomic, copy) NSString *houseId;
 @property (nonatomic, copy) NSString *originId;
 @property (nonatomic, strong) FHBuildingDetailViewModel *viewModel;
-@property (nonatomic, assign) NSUInteger currentSelectIndex;
 
 @property (nonatomic, strong) FHBuildingDetailCollectionViewFlowLayout *layout;
 @property (nonatomic, weak) FHBaseCollectionView *collectionView;
@@ -119,13 +118,10 @@
     [self setupUI];
     
     [self addDefaultEmptyViewFullScreen];
-
-    self.currentSelectIndex = 0;
     
     self.viewModel = [[FHBuildingDetailViewModel alloc] initWithController:self];
     self.viewModel.houseId = self.houseId;
     self.viewModel.originId = self.originId;
-//    self.viewModel
     [self.viewModel startLoadData];
     [self addGoDetailLog];
 }
@@ -312,7 +308,7 @@
         infoSection.sectionType = FHBuildingSectionTypeInfo;
         [items addObject:infoSection];
 
-        FHBuildingDetailDataItemModel *model = statusModel.buildingList[self.currentSelectIndex];
+        FHBuildingDetailDataItemModel *model = statusModel.buildingList[self.currentIndex.buildingIndex];
 
         FHBuildingSectionModel *section = [[FHBuildingSectionModel alloc] init];
         if (model.relatedFloorplanList.list.count) {
@@ -349,7 +345,7 @@
             [self addClickOptions:type withIndexModel:indexModel];
            [self reloadFloorCollectionViewData];
             break;
-        case FHBuildingDetailOperatTypeFromNew:
+        case FHBuildingDetailOperatTypeFromNew:    //不可能出现
             self.currentIndex = indexModel;
             [self.currentDict btd_setObject:@(indexModel.buildingIndex) forKey:@(indexModel.saleStatus)];
             break;
@@ -372,7 +368,6 @@
 
 - (void)reloadRelatedFloorpanData {
     FHBuildingSectionModel *section = self.viewModel.items.lastObject;
-    //FHBuildingDetailDataItemModel *model = self.viewModel.buildingDetailModel.data.buildingList[self.currentSelectIndex];
     FHBuildingSaleStatusModel *saleModel = self.viewModel.locationModel.saleStatusList[self.currentIndex.saleStatus];
     FHBuildingDetailDataItemModel *model = saleModel.buildingList[self.currentIndex.buildingIndex];
     if (model.relatedFloorplanList.list.count) {
@@ -449,7 +444,6 @@
     FHBuildingSectionModel *sectionModel = self.viewModel.items[section];
     switch (sectionModel.sectionType) {
         case FHBuildingSectionTypeFloor: {
-            //FHBuildingDetailDataItemModel *model =  self.viewModel.buildingDetailModel.data.buildingList[self.currentSelectIndex];
             FHBuildingSaleStatusModel *saleModel = self.viewModel.locationModel.saleStatusList[self.currentIndex.saleStatus];
             FHBuildingDetailDataItemModel *model = saleModel.buildingList[self.currentIndex.buildingIndex];
             if (model.relatedFloorplanList.list.count > 0) {

@@ -130,9 +130,6 @@ CGFloat const FHBuildingDetailInfoListCellMinimumLineSpacing = 25 + 12;
 
 }
 
-- (void)scrollViewWillBeginDecelerating:(UIScrollView *)scrollView{
-
-}
 
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView{
     CGPoint contentOffset = CGPointMake(self.collectionView.contentOffset.x + CGRectGetMidX(self.contentView.bounds), CGRectGetMidY(self.contentView.bounds));
@@ -300,15 +297,16 @@ CGFloat const FHBuildingDetailInfoListCellMinimumLineSpacing = 25 + 12;
             self.saleStatusLabel.hidden = YES;
         }
         
-        [model.baseInfo enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        [self.infosView enumerateObjectsUsingBlock:^(FHPropertyListCorrectingRowView * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
             if (idx >= 6) {
                 *stop = YES;
             }
-            if ([obj isKindOfClass:[FHHouseBaseInfoModel class]]) {
-                FHHouseBaseInfoModel *info = (FHHouseBaseInfoModel *)obj;
-                FHPropertyListCorrectingRowView *rowView = self.infosView[idx];
-                rowView.keyLabel.text = info.attr;
-                rowView.valueLabel.text = info.value;
+            [obj setHidden:YES];
+            if (idx < model.baseInfo.count) {
+                [obj setHidden:NO];
+                FHHouseBaseInfoModel *info = model.baseInfo[idx];
+                obj.keyLabel.text = info.attr;
+                obj.valueLabel.text = info.value;
             }
         }];
     }

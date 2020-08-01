@@ -107,7 +107,6 @@
         imageView.center = image.center;
         imageView.userInteractionEnabled = NO;
         FHBuildingLocationModel *locationModel = [[FHBuildingLocationModel alloc] init];
-        NSMutableArray *saleArr = [NSMutableArray arrayWithCapacity:1];
         FHBuildingSaleStatusModel *saleModel = [[FHBuildingSaleStatusModel alloc] init];
         NSMutableArray *buildingArr = [NSMutableArray arrayWithCapacity:model.buildingInfo.list.count];
         for (FHDetailNewBuildingListItem *buildItem in model.buildingInfo.list) {
