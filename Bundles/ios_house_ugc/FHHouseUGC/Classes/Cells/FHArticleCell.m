@@ -55,7 +55,7 @@
 - (void)initUIs {
     _imageViewList = [[NSMutableArray alloc] init];
     _imageWidth = ([UIScreen mainScreen].bounds.size.width - leftMargin - rightMargin - imagePadding * 2)/3;
-    _imageHeight = _imageWidth * 82.0f/109.0f;
+    _imageHeight = ceil(_imageWidth * 82.0f/109.0f);
     
     [self initViews];
     [self initConstraints];
@@ -231,7 +231,7 @@
         CGFloat height = cellModel.contentHeight + bottomViewHeight + topMargin + 10;
         
         if(cellModel.imageList.count > 1){
-            CGFloat imageViewHeight = ([UIScreen mainScreen].bounds.size.width - leftMargin - rightMargin - imagePadding * 2)/3 * 82.0f/109.0f;
+            CGFloat imageViewHeight = ceil(([UIScreen mainScreen].bounds.size.width - leftMargin - rightMargin - imagePadding * 2)/3 * 82.0f/109.0f);
             height += (imageViewHeight + 10);
         }else if(cellModel.imageList.count == 1){
             height = singleImageViewHeight + bottomViewHeight + topMargin + 10;

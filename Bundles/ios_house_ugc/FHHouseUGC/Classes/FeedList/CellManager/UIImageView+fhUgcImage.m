@@ -61,11 +61,11 @@
         imageData[@"image"] = image;
         imageData[@"from"] = @(from);
         
-        if([TTDeviceHelper is568Screen] || [TTDeviceHelper is480Screen] || ([TTDeviceHelper is667Screen] && [TTDeviceHelper OSVersionNumber] < 13.0)){
-            [self performSelector:@selector(setImageWithData:) withObject:imageData afterDelay:0 inModes:@[NSDefaultRunLoopMode]];
-        }else{
+//        if([TTDeviceHelper is568Screen] || [TTDeviceHelper is480Screen] || ([TTDeviceHelper is667Screen] && [TTDeviceHelper OSVersionNumber] < 13.0)){
+//            [self performSelector:@selector(setImageWithData:) withObject:imageData afterDelay:0 inModes:@[NSDefaultRunLoopMode]];
+//        }else{
             [self setImageWithData:imageData];
-        }
+//        }
     }];
 }
 
@@ -182,21 +182,36 @@
     //开启图片上下文
     UIGraphicsBeginImageContextWithOptions(size, NO, scale);
     //根据目标图片的宽度计算目标图片的高度
+//    CGFloat targetWidth = size.width;
+//    CGFloat targetHeight = ceilf((targetWidth / width) * height);
+//
+//    if(width > height){
+//        targetHeight = size.width;
+//        targetWidth = ceilf((targetHeight / height) * width);
+//    }
     CGFloat targetWidth = size.width;
-    CGFloat targetHeight = ceilf((targetWidth / width) * height);
+    CGFloat targetHeight = size.height;
+    CGFloat scaleFactor = 0.0;
+    CGFloat widthFactor = size.width / width;
+    CGFloat heightFactor = size.height / height;
     
-    if(width > height){
-        targetHeight = size.width;
-        targetWidth = ceilf((targetHeight / height) * width);
+    if(widthFactor > heightFactor){
+        scaleFactor = widthFactor;
+    }else{
+        scaleFactor = heightFactor;
     }
+    
+    targetWidth = ceilf(width * scaleFactor);
+    targetHeight = ceilf(height * scaleFactor);
     
     CGFloat x = 0;
     CGFloat y = 0;
-    if(targetWidth > size.width){
+    if(widthFactor <= heightFactor){
         x = ceilf((size.width - targetWidth)/2);
     }else if(targetHeight > size.height){
         y = ceilf((size.height - targetHeight)/2);
     }
+    
     //绘制图片
     [sourceImage drawInRect:CGRectMake(x, y, targetWidth, targetHeight)];
     //从上下文中获取绘制好的图片

@@ -11,6 +11,7 @@
 #import "Masonry.h"
 #import "UIImageView+BDWebImage.h"
 #import "FHUGCModel.h"
+#import "UIImageView+fhUgcImage.h"
 
 #define iconWidth 50
 
@@ -41,7 +42,7 @@
         _descLabel.text = model.suggestReason;
         
         if(model.avatar.length > 0){
-            [self.icon bd_setImageWithURL:[NSURL URLWithString:model.avatar] placeholder:nil];
+            [self.icon fh_setImageWithURL:[NSURL URLWithString:model.avatar] placeholder:nil reSize:self.contentView.bounds.size];
         }
         
         if (model.tagIcon.length > 0 && ![model.socialGroupId isEqualToString:@"-1"]) {

@@ -83,7 +83,7 @@
 - (void)initConstraints {
     if(self.count == 1){
         _imageWidth = self.bounds.size.width;
-        _viewHeight = self.imageWidth * 9.0f/16.0f;
+        _viewHeight = ceil(self.imageWidth * 9.0f/16.0f);
         _imageHeight = _viewHeight;
         UIImageView *imageView = [self.imageViewList firstObject];
         
@@ -93,7 +93,7 @@
         imageView.height = self.viewHeight;
     }else if(self.count == 2){
         _imageWidth = (self.bounds.size.width - itemPadding)/2;
-        _viewHeight = self.imageWidth * 124.0f/165.0f;
+        _viewHeight = ceil(self.imageWidth * 124.0f/165.0f);
         _imageHeight = _viewHeight;
         UIView *firstView = self;
         for (UIImageView *imageView in self.imageViewList) {
@@ -113,7 +113,7 @@
     }else if(self.count == 4){
         _imageWidth = (self.bounds.size.width - itemPadding * 2)/3;
         _imageHeight = _imageWidth;
-        _viewHeight = _imageWidth * 2 + itemPadding;
+        _viewHeight = ceil(_imageWidth * 2 + itemPadding);
         
         UIView *topView = self;
         for (NSInteger i = 0; i < self.imageViewList.count; i++) {
@@ -132,7 +132,7 @@
         _imageWidth = (self.bounds.size.width - itemPadding * 2)/3;
         _imageHeight = _imageWidth;
         NSInteger row = (self.count - 1)/3;
-        _viewHeight = _imageWidth * (row + 1) + itemPadding * row;
+        _viewHeight = ceil(_imageWidth * (row + 1) + itemPadding * row);
         
         UIView *topView = self;
         for (NSInteger i = 0; i < self.imageViewList.count; i++) {
@@ -287,17 +287,17 @@
 
 + (CGFloat)viewHeightForCount:(CGFloat)count width:(CGFloat)width {
     if(count == 1){
-        return width * 9.0f/16.0f;
+        return ceil(width * 9.0f/16.0f);
     }else if(count == 2){
         CGFloat imageWidth = (width - itemPadding)/2;
-        return imageWidth * 124.0f/165.0f;
+        return ceil(imageWidth * 124.0f/165.0f);
     }else if(count == 4){
         CGFloat imageWidth = (width - itemPadding * 2)/3;
-        return imageWidth * 2 + itemPadding;
+        return ceil(imageWidth * 2 + itemPadding);
     }else if(count >= 3){
         CGFloat imageWidth = (width - itemPadding * 2)/3;
         NSInteger row = (count - 1)/3;
-        return imageWidth * (row + 1) + itemPadding * row;
+        return ceil(imageWidth * (row + 1) + itemPadding * row);
     }
     return 0;
 }

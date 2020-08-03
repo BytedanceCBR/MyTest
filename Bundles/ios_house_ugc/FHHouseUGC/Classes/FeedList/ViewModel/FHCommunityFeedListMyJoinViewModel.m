@@ -477,7 +477,7 @@
         FHFeedUGCCellModel *cellModel = self.dataList[indexPath.row];
         Class cellClass = [self.cellManager cellClassFromCellViewType:cellModel.cellSubType data:nil];
         if([cellClass isSubclassOfClass:[FHUGCBaseCell class]]) {
-            return [cellClass heightForData:cellModel];
+            return ceil([cellClass heightForData:cellModel]);
         }
     }
     return 100;

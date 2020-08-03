@@ -169,7 +169,7 @@
 
 - (FHFeedCustomHeaderView *)customTableHeaderView {
     if(!_tableHeaderView){
-        _headerViewHeight = 0.001f;
+        _headerViewHeight = CGFLOAT_MIN;
         FHFeedCustomHeaderView *tableHeaderView = [[FHFeedCustomHeaderView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, _headerViewHeight) addProgressView:self.isInsertFeedWhenPublish];
         if(self.isInsertFeedWhenPublish){
             WeakSelf;
