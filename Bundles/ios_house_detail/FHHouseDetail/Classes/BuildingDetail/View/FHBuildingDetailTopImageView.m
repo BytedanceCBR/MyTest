@@ -147,7 +147,7 @@
 
     FHBuildingDetailImageViewButton *button = buttonAry[indexModel.buildingIndex];
     button.isSelected = YES;
-    [self bringSubviewToFront:button];
+    [self.scrollView bringSubviewToFront:button];
     [self move:self.imageView.frame.size];
     [self pointMoveToCenter:[button getButtonPosition]];
 }
