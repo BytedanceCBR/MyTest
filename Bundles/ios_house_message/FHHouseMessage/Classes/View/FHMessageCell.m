@@ -701,6 +701,7 @@
     [self.backView mas_updateConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(15 + x);
     }];
+    [self.contentView layoutIfNeeded];
 //    [self.backView layoutIfNeeded];
 //    [UIView commitAnimations];
 //    self.frame = CGRectMake(x, self.frame.origin.y, self.frame.size.width, self.frame.size.height);
