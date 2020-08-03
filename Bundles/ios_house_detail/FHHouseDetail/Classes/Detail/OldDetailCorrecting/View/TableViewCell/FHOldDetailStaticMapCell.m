@@ -201,7 +201,7 @@
 
 - (void)setUpSegmentedControl {
     _segmentedControl = [FHSegmentControl new];
-    _segmentedControl.sectionTitles = @[@"交通(0)", @"教育(0)", @"医疗(0)", @"生活(0)"];
+    _segmentedControl.sectionTitles = @[@"交通", @"教育", @"医疗", @"生活"];
     _segmentedControl.selectionIndicatorSize = CGSizeMake(12, 3);
     _segmentedControl.selectionIndicatorCornerRadius = 1.5;
     _segmentedControl.selectionIndicatorColor = [UIColor themeGray1];
@@ -662,9 +662,10 @@
     NSMutableArray *sectionTitleArray = [NSMutableArray new];
     for (NSInteger i = 0; i < _nameArray.count; i++) {
         if (_countCategoryDict[_nameArray[i]]) {
-            [sectionTitleArray addObject:[NSString stringWithFormat:@"%@(%ld)", _nameArray[i], [self.countCategoryDict[_nameArray[i]] integerValue]]];
+//            [sectionTitleArray addObject:[NSString stringWithFormat:@"%@(%ld)", _nameArray[i], [self.countCategoryDict[_nameArray[i]] integerValue]]];
+            [sectionTitleArray addObject:[NSString stringWithFormat:@"%@", _nameArray[i]]];
         } else {
-            [sectionTitleArray addObject:[NSString stringWithFormat:@"%@(0)", _nameArray[i]]];
+            [sectionTitleArray addObject:[NSString stringWithFormat:@"%@", _nameArray[i]]];
         }
     }
     

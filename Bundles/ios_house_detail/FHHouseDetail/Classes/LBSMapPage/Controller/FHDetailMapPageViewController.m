@@ -290,6 +290,9 @@ static MAMapView *kFHPageMapView = nil;
              NSArray *attrString = [poi.type componentsSeparatedByString:@";"];
              
              if (attrString.count > 0) {
+                 NSMutableAttributedString *typeAttrSpace = [FHDetailMapPageViewController createTagAttrString:@" " isFirst:NO textColor:[UIColor colorWithHexStr:@"#8493ad"] backgroundColor:[UIColor whiteColor]];
+                 [nameAttr appendAttributedString:typeAttrSpace];
+                 
                  NSMutableAttributedString *typeAttr = [FHDetailMapPageViewController createTagAttrString:attrString.firstObject isFirst:NO textColor:[UIColor colorWithHexStr:@"#8493ad"] backgroundColor:[UIColor themeGray7]];
                  [nameAttr appendAttributedString:typeAttr];
              }else{
@@ -336,16 +339,17 @@ static MAMapView *kFHPageMapView = nil;
 
 +(NSAttributedString *)createTagAttrString:(NSString *)text isFirst:(BOOL)isFirst textColor:(UIColor *)textColor backgroundColor:(UIColor *)backgroundColor {
     
-    NSMutableAttributedString *attributeText = [[NSMutableAttributedString alloc]initWithString:[NSString stringWithFormat:@"  %@  ",text]];
+    NSMutableAttributedString *attributeText = [[NSMutableAttributedString alloc]initWithString:[NSString stringWithFormat:@" %@ ",text]];
     attributeText.yy_font = [UIFont themeFontRegular:10];
     attributeText.yy_color = textColor;
     NSRange substringRange = [attributeText.string rangeOfString:text];
     attributeText.yy_backgroundColor = backgroundColor;
-//    [attributeText yy_setTextBinding:[YYTextBinding bindingWithDeleteConfirm:NO] range:substringRange];
-//    YYTextBorder *border = [YYTextBorder borderWithFillColor:[UIColor blackColor] cornerRadius:2];
-//    [border setInsets:UIEdgeInsetsMake(0, -4, 0, -4)];
     
-//    [attributeText yy_setTextBackgroundBorder:border range:substringRange];
+    [attributeText yy_setTextBinding:[YYTextBinding bindingWithDeleteConfirm:NO] range:substringRange];
+    YYTextBorder *border = [YYTextBorder borderWithFillColor:backgroundColor cornerRadius:2];
+    [border setInsets:UIEdgeInsetsMake(0, -4, 0, -4)];
+    
+    [attributeText yy_setTextBackgroundBorder:border range:substringRange];
     return attributeText;
     
 }
