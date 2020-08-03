@@ -64,6 +64,13 @@ CGFloat const FHBuildingDetailInfoListCellMinimumLineSpacing = 25 + 12;
     }
 }
 
+- (void)manualSetContentOffset:(NSInteger)index {
+    if (self.buildingList.count > 1) {
+        index += self.buildingList.count;
+        UICollectionViewLayoutAttributes *attributes = [self.collectionView layoutAttributesForItemAtIndexPath:[NSIndexPath indexPathForItem:index inSection:0]];
+        [self.collectionView setContentOffset:CGPointMake(attributes.frame.origin.x - FHBuildingDetailInfoListCellMinimumLineSpacing, 0) animated:YES];
+    }
+}
 
 - (void)updateIndexPahtAtPosition:(NSIndexPath *)indexPath {
     if (self.infoIndexDidSelect) {

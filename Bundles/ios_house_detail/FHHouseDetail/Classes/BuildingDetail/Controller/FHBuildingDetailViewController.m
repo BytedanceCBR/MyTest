@@ -44,6 +44,7 @@
 
 @property (nonatomic, strong) NSMutableDictionary *currentDict;
 @property (nonatomic, weak) FHBuildingDetailTopImageCollectionViewCell *topImageView;
+@property (nonatomic, weak) FHBuildingDetailInfoCollectionViewCell *infoCollectionView;
 @end
 
 @implementation FHBuildingDetailViewController
@@ -338,13 +339,12 @@
         case FHBuildingDetailOperatTypeInfoCell:
             self.currentIndex = indexModel;
             [self.currentDict btd_setObject:@(indexModel.buildingIndex) forKey:@(indexModel.saleStatus)];
-            
             break;
         case FHBuildingDetailOperatTypeButton:
             self.currentIndex = indexModel;
             [self.currentDict btd_setObject:@(indexModel.buildingIndex) forKey:@(indexModel.saleStatus)];
             [self addClickOptions:type withIndexModel:indexModel];
-           [self reloadFloorCollectionViewData];
+            [self.infoCollectionView manualSetContentOffset:indexModel.buildingIndex];
             break;
         case FHBuildingDetailOperatTypeFromNew:    //不可能出现
             self.currentIndex = indexModel;
@@ -478,8 +478,10 @@
         case FHBuildingSectionTypeInfo: {
             //切换调用
             FHBuildingSaleStatusModel *saleModel = self.viewModel.locationModel.saleStatusList[self.currentIndex.saleStatus];
+            
             ((FHBuildingDetailInfoCollectionViewCell *)cell).currentIndexPath = [NSIndexPath indexPathForItem:self.currentIndex.buildingIndex + saleModel.buildingList.count inSection:0];
             [cell refreshWithData:saleModel];
+            self.infoCollectionView = cell;
             
             [(FHBuildingDetailInfoCollectionViewCell *)cell setInfoIndexDidSelect:^(FHBuildingDetailOperatType type, FHBuildingIndexModel * _Nonnull index) {
                 [weakSelf responseCenterWithOperat:type withIndexModel:index];

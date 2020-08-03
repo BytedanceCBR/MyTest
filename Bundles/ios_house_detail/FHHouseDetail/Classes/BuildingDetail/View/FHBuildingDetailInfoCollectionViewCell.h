@@ -15,7 +15,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong) NSIndexPath *currentIndexPath;
 
 @property (nonatomic, copy) FHBuildingIndexDidSelect infoIndexDidSelect;
-
+- (void)manualSetContentOffset:(NSInteger)index;
 
 @end
 

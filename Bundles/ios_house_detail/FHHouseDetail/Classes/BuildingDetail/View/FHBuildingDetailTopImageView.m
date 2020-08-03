@@ -144,9 +144,9 @@
             [button setHidden:YES];
         }
     }
+    self.indexModel = indexModel;
     FHBuildingSaleStatusModel *saleStatusModel = self.locationModel.saleStatusList[indexModel.saleStatus];
     NSArray *buttonAry = self.saleStatusButtons[indexModel.saleStatus];
-
     for (NSInteger buildingIndex = 0; buildingIndex < buttonAry.count; buildingIndex++) {
         FHBuildingDetailImageViewButton *button = buttonAry[buildingIndex];
         FHBuildingDetailDataItemModel *itemModel = saleStatusModel.buildingList[buildingIndex];
@@ -161,7 +161,6 @@
             }
         }
     }
-    self.indexModel = indexModel;
 }
 
 - (void)showAllButton {
