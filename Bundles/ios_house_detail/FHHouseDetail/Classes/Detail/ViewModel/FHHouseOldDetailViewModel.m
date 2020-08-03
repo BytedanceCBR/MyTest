@@ -41,7 +41,6 @@
 #import "FHDetailNewModel.h"
 #import "FHODetailCommunityEntryCorrectingCell.h"
 #import "FHDetailBlankLineCell.h"
-#import "FHDetailDetectiveCell.h"
 #import "FHDetailHouseReviewCommentCell.h"
 #import "FHDetailUserHouseCommentCell.h"
 #import <FHHouseBase/FHSearchHouseModel.h>

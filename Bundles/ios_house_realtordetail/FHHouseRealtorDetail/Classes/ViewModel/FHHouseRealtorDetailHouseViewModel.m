@@ -271,7 +271,7 @@
 //        dict[INSTANT_DATA_KEY] = theModel;
         dict[@"biz_trace"] = theModel.bizTrace;
         NSURL *jumpUrl = nil;
-            jumpUrl = [NSURL URLWithString:[NSString stringWithFormat:@"sslocal://old_house_detail?house_id=%@",theModel.idx]];
+        jumpUrl = [NSURL URLWithString:[NSString stringWithFormat:@"sslocal://old_house_detail?house_id=%@&realtor_id=%@",theModel.idx,self.realtorInfo[@"realtor_id"]?:@""]];
         
         if (jumpUrl != nil) {
             TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];

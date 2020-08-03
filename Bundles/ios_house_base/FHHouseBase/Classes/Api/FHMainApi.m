@@ -508,12 +508,30 @@
         [extra addEntriesFromDictionary:extraDict];
     }
     NSMutableDictionary *metricDict = [NSMutableDictionary new];
+    
+    __block UIApplicationState appState = UIApplicationStateActive;
+    if ([NSThread currentThread] == [NSThread mainThread]) {
+        appState = [UIApplication sharedApplication].applicationState;
+    }else{
+        dispatch_sync(dispatch_get_main_queue(), ^{
+            appState = [UIApplication sharedApplication].applicationState;
+        });
+    }
+    
     if (startData && backDate) {
-        metricDict[@"api_duration_network"] = @([backDate timeIntervalSinceDate:startData]*1000);
+        NSTimeInterval duration = [backDate timeIntervalSinceDate:startData]*1000;
+        if (appState == UIApplicationStateActive || duration < 15*1000) {
+            //为了避免出现特别大的无效数据 App切换前后台的时候数据大的也不添加
+            metricDict[@"api_duration_network"] = @(duration);
+        }
     }
     
     if (startData && serializeDate) {
-        metricDict[@"api_duration_business"] = @([serializeDate timeIntervalSinceDate:startData]*1000);
+        NSTimeInterval duration = [serializeDate timeIntervalSinceDate:startData]*1000;
+        if (appState == UIApplicationStateActive || duration < 15*1000) {
+            //为了避免出现特别大的无效数据 App切换前后台的时候数据大的也不添加
+            metricDict[@"api_duration_business"] = @(duration);
+        }
     }
     
     if (type != FHNetworkMonitorTypeSuccess) {

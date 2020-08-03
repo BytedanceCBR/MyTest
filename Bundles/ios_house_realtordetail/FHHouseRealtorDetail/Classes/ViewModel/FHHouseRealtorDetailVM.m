@@ -56,6 +56,7 @@
 @property (nonatomic, strong) NSDictionary *realtorInfo;
 @property (nonatomic, assign) NSInteger selectedIndex;
 @property (nonatomic, strong) NSMutableArray *ugcTabList;
+@property (nonatomic, assign) NSInteger currentIndex;
 @property (nonatomic, assign) BOOL isFirstEnter;
 @property (nonatomic) BOOL shouldShowUGcGuide;
 @end
@@ -89,6 +90,7 @@
 - (void)requestDataWithRealtorId:(NSString *)realtorId refreshFeed:(BOOL)refreshFeed {
     if (![TTReachability isNetworkConnected]) {
         [self onNetworError:YES showToast:YES];
+        [self updateNavBarWithAlpha:1];
         return;
     }
     NSMutableDictionary *parmas= [NSMutableDictionary new];
@@ -115,6 +117,11 @@
     self.data = model.data;
     NSArray *commentInfo = model.data.evaluation[@"comment_info"];
     BOOL realtorLeave = [model.data.realtor.allKeys containsObject:@"is_leave"]?[model.data.realtor[@"is_leave"] boolValue]:NO;
+    
+    if (model.data.realtorTab) {
+        self.currentIndex = [model.data.realtorTab integerValue];
+    }
+    
     if(self.isFirstEnter){
         NSMutableDictionary *dic = @{}.mutableCopy;
         NSMutableDictionary *dicm = model.data.scoreInfo.mutableCopy;
@@ -196,7 +203,12 @@
         self.viewController.segmentView.hidden = YES;
     }
     if (tabListArr && tabListArr.count>1) {
-        self.viewController.segmentView.selectedIndex = 1;
+        if (self.currentIndex < tabListArr.count) {
+            self.viewController.segmentView.selectedIndex = self.currentIndex;
+        }else {
+             self.viewController.segmentView.selectedIndex = 0;
+        }
+        
         [self addEnterCategoryLog:@"realtor_all_list"];
     }
     self.viewController.segmentView.titles = titles;
@@ -434,12 +446,6 @@
     [self refreshContentOffset:delta];
 }
 
-//- (void)pagingView:(TTHorizontalPagingView *)pagingView scrollViewDidEndDraggingOffset:(CGFloat)offset {
-//    CGFloat delta = self.pagingView.currentContentViewTopInset + offset;
-//    if(delta <= -50){
-//
-//    }
-//}
 
 #pragma mark - segmentView 代理
 - (void)segmentView:(TTHorizontalPagingSegmentView *)segmentView didSelectedItemAtIndex:(NSInteger)index toIndex:(NSInteger)toIndex {

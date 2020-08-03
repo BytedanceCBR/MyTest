@@ -25,7 +25,6 @@
     self = [super initWithRouteParamObj:paramObj];
     if (self) {
         [self createTracerDic:paramObj.allParams];
-//        self.realtorInfoDic = paramObj.allParams.mutableCopy;
     }
     return self;
 }
