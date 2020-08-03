@@ -1163,9 +1163,8 @@ static NSInteger kGetLightRequestRetryCount = 3;
 
 + (BOOL)isHomeNewDiscovery {
     id res = [BDABTestManager getExperimentValueForKey:@"f_find_revision_v103" withExposure:YES];
-    if ([res isKindOfClass:[NSNumber class]]) {
-        BOOL isHomeNewDiscovery = [(NSNumber *)res boolValue];
-        return isHomeNewDiscovery;
+    if(res){
+        return [res boolValue];
     }
     return NO;
 }
