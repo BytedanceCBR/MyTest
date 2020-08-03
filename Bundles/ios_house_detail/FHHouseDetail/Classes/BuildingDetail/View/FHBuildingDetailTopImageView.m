@@ -137,19 +137,25 @@
             [button setHidden:YES];
         }
     }
+    FHBuildingSaleStatusModel *saleStatusModel = self.locationModel.saleStatusList[indexModel.saleStatus];
     NSArray *buttonAry = self.saleStatusButtons[indexModel.saleStatus];
-    for (FHBuildingDetailImageViewButton *button in buttonAry) {
-        [button setHidden:NO];
+    
+    for (NSInteger buildingIndex = 0; buildingIndex < buttonAry.count; buildingIndex ++) {
+        FHBuildingDetailImageViewButton *button = buttonAry[buildingIndex];
+        FHBuildingDetailDataItemModel *itemModel = saleStatusModel.buildingList[buildingIndex];
         button.isSelected = NO;
+        if (itemModel.pointX.length && itemModel.pointY.length) {
+            [button setHidden:NO];
+            if ([indexModel isEqual:itemModel.buildingIndex]) {
+                button.isSelected = YES;
+                [self.scrollView bringSubviewToFront:button];
+                [self move:self.imageView.frame.size];
+                [self pointMoveToCenter:[button getButtonPosition]];
+            }
+        }
+        
     }
-
     self.indexModel = indexModel;
-
-    FHBuildingDetailImageViewButton *button = buttonAry[indexModel.buildingIndex];
-    button.isSelected = YES;
-    [self.scrollView bringSubviewToFront:button];
-    [self move:self.imageView.frame.size];
-    [self pointMoveToCenter:[button getButtonPosition]];
 }
 
 - (void)showAllButton {
