@@ -14,8 +14,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, copy) FHBuildingIndexDidSelect IndexDidSelect;
 
-
-
 - (void)updateWithIndexModel:(FHBuildingIndexModel *)indexModel;
 @end
 

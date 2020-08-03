@@ -11,8 +11,6 @@
 #import "FHBuildingDetailScrollView.h"
 #import "UIColor+Theme.h"
 
-
-
 @interface FHBuildingDetailTopImageView ()<UIScrollViewDelegate>
 
 @property (nonatomic, strong, readwrite) UIImageView *imageView;
@@ -45,7 +43,7 @@
         self.scrollView = scrollView;
         self.scrollView.contentSize = CGSizeMake(frame.size.width + 0.4, frame.size.height + 0.4);
         [self addSubview:scrollView];
-        
+
         self.placeHolder = [[UIImageView alloc] initWithFrame:frame];
         self.placeHolder.image = [UIImage imageNamed:@"default_image"];
         [self.scrollView addSubview:imageView];
@@ -59,13 +57,13 @@
         FHBuildingLocationModel *model = (FHBuildingLocationModel *)data;
         self.locationModel = model;
         NSURL *url = [NSURL URLWithString:model.buildingImage.url];
-         __weak typeof(self) wSelf = self;
+        __weak typeof(self) wSelf = self;
         [self.imageView bd_setImageWithURL:url placeholder:nil options:BDImageRequestDefaultPriority completion:^(BDWebImageRequest *request, UIImage *image, NSData *data, NSError *error, BDWebImageResultFrom from) {
             if (image && wSelf) {
                 [wSelf.placeHolder setHidden:YES];
             }
         }];
-        
+
         NSMutableArray *saleButtons = [NSMutableArray arrayWithCapacity:model.saleStatusList.count];
         for (FHBuildingSaleStatusModel *StatusModel in model.saleStatusList) {
             NSMutableArray *buildingButtons = [NSMutableArray arrayWithCapacity:StatusModel.buildingList.count];
@@ -76,7 +74,7 @@
                 [button buttonMoveWithSize:self.imageView.frame.size];
                 [self.scrollView addSubview:button];
                 __weak typeof(self) wSelf = self;
-                [button setButtonIndexDidSelect:^(FHBuildingDetailOperatType type, FHBuildingIndexModel * _Nonnull index) {
+                [button setButtonIndexDidSelect:^(FHBuildingDetailOperatType type, FHBuildingIndexModel *_Nonnull index) {
                     [wSelf catchButtonClick:type indexModel:index];
                 }];
                 [buildingButtons addObject:button];
@@ -88,10 +86,9 @@
     [self layoutIfNeeded];
 }
 
-
 #pragma mark - UIScrollViewDelegate
 
-- (UIView *)viewForZoomingInScrollView:(UIScrollView *)scrollView{
+- (UIView *)viewForZoomingInScrollView:(UIScrollView *)scrollView {
     return self.imageView;
 }
 
@@ -99,7 +96,7 @@
     [self move:self.imageView.frame.size];
 }
 
-- (void)move:(CGSize)newSize{
+- (void)move:(CGSize)newSize {
     NSArray *buttonAry = self.saleStatusButtons[self.indexModel.saleStatus];
     for (FHBuildingDetailImageViewButton *button in buttonAry) {
         [button buttonMoveWithSize:newSize];
@@ -131,6 +128,7 @@
     }
     [self.scrollView setContentOffset:CGPointMake(offsetX, offsetY) animated:YES];
 }
+
 //唯一响应
 - (void)updateWithIndexModel:(FHBuildingIndexModel *)indexModel {
     if (indexModel.saleStatus != self.indexModel.saleStatus) {
@@ -146,7 +144,7 @@
     }
 
     self.indexModel = indexModel;
-    
+
     FHBuildingDetailImageViewButton *button = buttonAry[indexModel.buildingIndex];
     button.isSelected = YES;
     [self bringSubviewToFront:button];
@@ -159,8 +157,8 @@
         for (FHBuildingDetailImageViewButton *button in buttonAry) {
             [button setHidden:NO];
             button.isSelected = YES;
-            
         }
     }
 }
+
 @end

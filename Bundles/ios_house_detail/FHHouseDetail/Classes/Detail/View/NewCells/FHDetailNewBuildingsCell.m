@@ -96,14 +96,14 @@
             make.height.mas_equalTo(size.height + 20);
         }];
         stackViewHeight += size.height + 20;
-        
+
         [self.stackView addArrangedSubview:containView];
         UIView *image = [[UIView alloc] initWithFrame:CGRectMake(0, 0, size.width, size.height)];
         image.clipsToBounds = YES;
         image.layer.cornerRadius = 10;
         image.contentMode = UIViewContentModeCenter;
         CGSize imageSize = [FHBuildingDetailUtils getDetailBuildingImageViewSize];
-        FHBuildingDetailTopImageView *imageView = [[FHBuildingDetailTopImageView alloc] initWithFrame:CGRectMake(0, 0, imageSize.width,imageSize.height)];
+        FHBuildingDetailTopImageView *imageView = [[FHBuildingDetailTopImageView alloc] initWithFrame:CGRectMake(0, 0, imageSize.width, imageSize.height)];
         imageView.center = image.center;
         imageView.userInteractionEnabled = NO;
         FHBuildingLocationModel *locationModel = [[FHBuildingLocationModel alloc] init];
@@ -128,10 +128,9 @@
         [imageView showAllButton];
         [containView addSubview:image];
         [image addSubview:imageView];
-        UITapGestureRecognizer * tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(clickTopImage:)];
+        UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(clickTopImage:)];
         [image addGestureRecognizer:tapGesture];
     }
-    
     
     UIView *topView = [[UIView alloc] init];
     topView.backgroundColor = [UIColor whiteColor];

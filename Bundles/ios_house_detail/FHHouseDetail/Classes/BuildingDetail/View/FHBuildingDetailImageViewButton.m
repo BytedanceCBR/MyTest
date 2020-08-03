@@ -10,7 +10,7 @@
 #import "UIFont+House.h"
 #import "UIColor+Theme.h"
 
-@interface FHBuildingDetailImageViewButton()
+@interface FHBuildingDetailImageViewButton ()
 
 @property (nonatomic, strong) FHBuildingDetailDataItemModel *itemModel;
 @property (nonatomic, strong) UIImageView *backgroundImage;
@@ -22,7 +22,6 @@
 @property (nonatomic, assign) CGFloat pointY;
 @property (nonatomic, assign) CGFloat beginWidth;
 @property (nonatomic, assign) CGFloat beginHeight;
- 
 
 @end
 
@@ -55,7 +54,6 @@
         UITapGestureRecognizer *gesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(buttonOnClick)];
         [self addGestureRecognizer:gesture];
         self.layer.anchorPoint = CGPointMake(0.5, 0.7142);
-        
     }
     return self;
 }
@@ -65,20 +63,19 @@
         FHBuildingDetailDataItemModel *model = (FHBuildingDetailDataItemModel *)data;
         self.itemModel = model;
         self.buttonIndex = model.buildingIndex;
-        [self.titleLabel setText:[NSString stringWithFormat:@"%@|%@",model.name,model.saleStatus.content]];
+        [self.titleLabel setText:[NSString stringWithFormat:@"%@|%@", model.name, model.saleStatus.content]];
         NSMutableAttributedString *attri = [[NSMutableAttributedString alloc] initWithString:self.titleLabel.text];
         NSRange ran = NSMakeRange(model.name.length, 1);
         [attri addAttribute:NSFontAttributeName value:[UIFont systemFontOfSize:10] range:ran];
         self.titleLabel.attributedText = attri;
         [self.titleLabel sizeToFit];
         CGSize itemSize = [self.titleLabel sizeThatFits:CGSizeMake([UIScreen mainScreen].bounds.size.width, 17.0)];
-        
-        
+
         self.beginWidth = [model.beginWidth floatValue];
         self.beginHeight = [model.beginHeight floatValue];
         self.pointX = [model.pointX floatValue];
         self.pointY = [model.pointY floatValue];
-        self.frame = CGRectMake(self.pointX,self.pointY, itemSize.width + 30.0, 42);
+        self.frame = CGRectMake(self.pointX, self.pointY, itemSize.width + 30.0, 42);
     }
 }
 
@@ -99,7 +96,6 @@
 }
 
 - (void)setIsSelected:(BOOL)isSelected {
-    
     if (_isSelected == isSelected) {
         return;
     }
@@ -108,9 +104,7 @@
     self.titleLabel.textColor = isSelected ? [UIColor themeWhite] : [UIColor themeGray1];
 }
 
-
 - (void)buttonOnClick {
-    
     if (self.buttonIndexDidSelect) {
         self.buttonIndexDidSelect(FHBuildingDetailOperatTypeButton, self.buttonIndex);
     }
@@ -121,7 +115,7 @@
 }
 
 - (void)buttonMoveWithSize:(CGSize)newSize {
-    [self.layer setPosition:CGPointMake((newSize.width * self.pointX) / self.beginWidth,(newSize.height * self.pointY) / self.beginHeight)];
+    [self.layer setPosition:CGPointMake((newSize.width * self.pointX) / self.beginWidth, (newSize.height * self.pointY) / self.beginHeight)];
 }
 
 @end

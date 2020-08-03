@@ -295,6 +295,7 @@
         FHBuildingSectionModel *imageSection = [[FHBuildingSectionModel alloc] init];
         imageSection.sectionType = FHBuildingSectionTypeImage;
         [items addObject:imageSection];
+        self.layout.existTopImageView = YES;
     }
     
     if (self.viewModel.locationModel.saleStatusList.count <= self.currentIndex.saleStatus) {
