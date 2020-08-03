@@ -439,12 +439,14 @@
         if (error == nil) {
             [conv setDraft:nil];
             NSDictionary *params = @{
-                    @"page_type": _pageType,
-                    @"conversation_id": conversationId,
+                    @"page_type": [self getPageTypeWithDataType],
+                    //@"conversation_id": conversationId,
                     @"realtor_id": targetUserId,
-                    @"enter_from":self.enterFrom ?: @"be_null"
+                    @"click_position": @"delete",
+                    @"enter_from":@"message"
             };
-            [FHUserTracker writeEvent:@"delete_conversation" params:params];
+            //[FHUserTracker writeEvent:@"delete_conversation" params:params];
+            [FHUserTracker writeEvent:@"message_flip_click" params:params];
         }
     }];
 }

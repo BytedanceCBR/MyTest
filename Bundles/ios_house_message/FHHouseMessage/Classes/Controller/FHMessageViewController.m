@@ -49,89 +49,28 @@
     self.showenRetryButton = YES;
     self.ttTrackStayEnable = YES;
     self.enter_from = self.tracerDict[UT_ENTER_FROM];
-    //[self initNavbar];
     [self initView];
     [self initConstraints];
     [self initViewModel];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(networkStateChange:) name:TTReachabilityChangedNotification object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationDidBecomeActive) name:UIApplicationDidBecomeActiveNotification object:nil];
-//     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(userInfoReload) name:KUSER_UPDATE_NOTIFICATION object:nil];
-}
-
-- (void)applicationDidBecomeActive
-{
-    BOOL isEnabled = [FHPushAuthorizeManager isMessageTipEnabled];
-    CGFloat pushTipHeight = isEnabled ? 36 : 0;
-    if (pushTipHeight > 0) {
-        [self addTipShowLog];
-    }
-    self.pushTipView.hidden = pushTipHeight > 0 ? NO : YES;
-    [self.pushTipView mas_updateConstraints:^(MASConstraintMaker *make) {
-        make.height.mas_equalTo(pushTipHeight);
-    }];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-
-    [FHBubbleTipManager shareInstance].canShowTip = NO;
     [self startLoadData];
-    [self applicationDidBecomeActive];
 }
 
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
     [self.fatherVC refreshConversationList];
-    [[FHPopupViewManager shared] triggerPopupView];
-    [[FHPopupViewManager shared] triggerPendant];
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
     [self tt_resetStayTime];
-    [FHBubbleTipManager shareInstance].canShowTip = YES;
-}
-
-- (void)addTipShowLog
-{
-    NSMutableDictionary *params = @{}.mutableCopy;
-    params[@"page_type"] = @"messagetab";
-    [FHUserTracker writeEvent:@"tip_show" params:params];
-
-}
-
-- (void)addTipClickLog:(FHPushMessageTipCompleteType)type
-{
-    NSMutableDictionary *params = @{}.mutableCopy;
-    params[@"page_type"] = @"messagetab";
-    if (type == FHPushMessageTipCompleteTypeDone) {
-        params[@"click_type"] = @"confirm";
-    }else {
-        params[@"click_type"] = @"cancel";
-    }
-    [FHUserTracker writeEvent:@"tip_click" params:params];
-    
 }
 
 - (void)userInfoReload {
     [self.viewModel reloadData];
-    //[_tableView reloadData];
-}
-
-- (void)initNavbar {
-    if (self.isSegmentedChildViewController) {
-        [self setupDefaultNavBar:NO];
-        self.customNavBarView.hidden = YES;
-    } else {
-        [self setupDefaultNavBar:NO];
-        self.customNavBarView.leftBtn.hidden = [self leftActionHidden];
-        self.customNavBarView.title.text = @"消息";
-        //消息列表页UI改版
-        self.customNavBarView.title.font = [UIFont themeFontSemibold:18];
-        self.customNavBarView.bgView.hidden = YES;
-        self.customNavBarView.seperatorLine.hidden = YES;
-        self.customNavBarView.backgroundColor = [UIColor themeGray7];
-    }
 }
 
 - (BOOL)leftActionHidden {
@@ -142,24 +81,6 @@
 
     self.containerView = [[UIView alloc] init];
     [self.view addSubview:_containerView];
-    
-    _notNetHeader = [[FHNoNetHeaderView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, 36)];
-    if ([TTReachability isNetworkConnected]) {
-        [_notNetHeader setHidden:YES];
-    } else {
-        [_notNetHeader setHidden:NO];
-    }
-    __weak typeof(self)wself = self;
-    _pushTipView = [[FHPushMessageTipView alloc] initAuthorizeTipWithCompleted:^(FHPushMessageTipCompleteType type) {
-        [wself addTipClickLog:type];
-        if (type == FHPushMessageTipCompleteTypeDone) {
-            NSURL *url = [NSURL URLWithString:UIApplicationOpenSettingsURLString];
-            [[UIApplication sharedApplication] openURL:url];
-        } else if (type == FHPushMessageTipCompleteTypeCancel) {
-            [wself hidePushTip];
-        }
-    }];
-
     _tableView = [[FHBaseTableView alloc] init];
     _tableView.backgroundColor = [UIColor themeGray7];
     _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
@@ -173,10 +94,8 @@
     _tableView.tableHeaderView = headerView;
 
     [self.containerView addSubview:_tableView];
-    [self.containerView addSubview:_notNetHeader];
-    [self.containerView addSubview:_pushTipView];
-
     [self addDefaultEmptyViewFullScreen];
+    __weak typeof(self)wself = self;
     self.emptyView.loginBlock = ^{
         [wself login];
     };
@@ -193,38 +112,6 @@
     NSURL* url = [NSURL URLWithString:@"snssdk1370://flogin"];
     [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
 }
-
-- (void)hidePushTip {
-    NSInteger lastTimeShowMessageTip = (NSInteger)[[NSDate date] timeIntervalSince1970];
-    [FHPushAuthorizeHelper setLastTimeShowMessageTip:lastTimeShowMessageTip];
-    self.pushTipView.hidden = YES;
-    [self.pushTipView mas_updateConstraints:^(MASConstraintMaker *make) {
-        make.height.mas_equalTo(0);
-    }];
-}
-
-- (void)networkStateChange:(NSNotification *)notification {
-    if ([TTReachability isNetworkConnected]) {
-        [_notNetHeader setHidden:YES];
-        [_notNetHeader mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.height.mas_equalTo(0);
-        }];
-    } else {
-        [_notNetHeader setHidden:NO];
-        [_notNetHeader mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.height.mas_equalTo(36);
-        }];
-    }
-//    [self.tableView mas_remakeConstraints:^(MASConstraintMaker *make) {
-//        if ([TTReachability isNetworkConnected]) {
-//            make.top.left.right.bottom.mas_equalTo(self.contaicognerView);
-//        } else {
-//            make.top.mas_equalTo(self.containerView).offset(30);
-//            make.left.right.bottom.mas_equalTo(self.containerView);
-//        }
-//    }];
-}
-
 
 - (void)initConstraints {
 
@@ -244,22 +131,6 @@
         }
         make.left.right.equalTo(self.view);
         make.bottom.mas_equalTo(self.view).offset(-bottom);
-    }];
-    [self.notNetHeader mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.right.top.mas_equalTo(0);
-        if ([TTReachability isNetworkConnected]) {
-            make.height.mas_equalTo(0);
-        }else {
-            make.height.mas_equalTo(36);
-        }
-    }];
-    BOOL isEnabled = [FHPushAuthorizeManager isMessageTipEnabled];
-    CGFloat pushTipHeight = isEnabled ? 36 : 0;
-    self.pushTipView.hidden = pushTipHeight > 0 ? NO : YES;
-    [self.pushTipView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.notNetHeader.mas_bottom);
-        make.left.right.mas_equalTo(0);
-        make.height.mas_equalTo(pushTipHeight);
     }];
     [self.tableView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(self.pushTipView.mas_bottom);
@@ -324,7 +195,6 @@
 - (BOOL)tt_hasValidateData {
     return self.fatherVC.dataList.count == 0 ? NO : YES; //默认会显示空
 }
-
 
 - (BOOL) isAlignToSafeBottom {
     return [self.fatherVC isAlignToSafeBottom];

@@ -13,6 +13,14 @@
 #import "FHMessageNotificationTipsManager.h"
 #import <FHMessageNotificationManager.h>
 #import "UIViewController+Track.h"
+#import <TTReachability/TTReachability.h>
+#import "FHNoNetHeaderView.h"
+#import <FHCHousePush/FHPushMessageTipView.h>
+#import <FHCHousePush/FHPushAuthorizeManager.h>
+#import <FHCHousePush/FHPushAuthorizeHelper.h>
+#import <FHCHousePush/FHPushMessageTipView.h>
+#import "FHBubbleTipManager.h"
+#import <FHPopupViewCenter/FHPopupViewManager.h>
 
 typedef NS_ENUM(NSInteger, FHSegmentedControllerAnimatedTransitionDirection) {
     FHSegmentedControllerAnimatedTransitionDirectionUnknown,
@@ -228,6 +236,11 @@ typedef NS_ENUM(NSInteger, FHSegmentedControllerAnimatedTransitionDirection) {
 @property (nonatomic,strong) FHSegmentedControllerInteractiveTransition *interactiveTransitionAnimator;
 @property (nonatomic, strong) NSString *enterType;
 @property (nonatomic, strong) FHMessageTopView *topView;
+@property (nonatomic, strong) FHNoNetHeaderView *notNetHeader;
+@property (nonatomic, assign) CGFloat notNetHeaderHeight;
+@property (nonatomic, strong) FHPushMessageTipView *pushTipView;
+@property (nonatomic, assign) CGFloat pushTipViewHeight;
+
 @end
 
 @implementation FHMessageSegmentedViewController
@@ -350,6 +363,48 @@ typedef NS_ENUM(NSInteger, FHSegmentedControllerAnimatedTransitionDirection) {
     } else {
         [self selectViewControllerAtIndex:0];
     }
+    _notNetHeader = [[FHNoNetHeaderView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, 36)];
+    [self.view addSubview:_notNetHeader];
+    if ([TTReachability isNetworkConnected]) {
+        [_notNetHeader setHidden:YES];
+    } else {
+        [_notNetHeader setHidden:NO];
+    }
+    [self.notNetHeader mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.right.mas_equalTo(0);
+        make.top.mas_equalTo(self.customNavBarView.mas_bottom);
+        if ([TTReachability isNetworkConnected]) {
+            make.height.mas_equalTo(0);
+            _notNetHeaderHeight = 0;
+        }else {
+            make.height.mas_equalTo(36);
+            _notNetHeaderHeight = 36;
+        }
+    }];
+    __weak typeof(self)wself = self;
+    _pushTipView = [[FHPushMessageTipView alloc] initAuthorizeTipWithCompleted:^(FHPushMessageTipCompleteType type) {
+        [wself addTipClickLog:type];
+        if (type == FHPushMessageTipCompleteTypeDone) {
+            NSURL *url = [NSURL URLWithString:UIApplicationOpenSettingsURLString];
+            [[UIApplication sharedApplication] openURL:url];
+        } else if (type == FHPushMessageTipCompleteTypeCancel) {
+            [wself hidePushTip];
+        }
+    }];
+    [self.view addSubview:_pushTipView];
+    BOOL isEnabled = [FHPushAuthorizeManager isMessageTipEnabled];
+    isEnabled = YES;
+    CGFloat pushTipHeight = isEnabled ? 36 : 0;
+    self.pushTipView.hidden = pushTipHeight > 0 ? NO : YES;
+    _pushTipViewHeight = pushTipHeight;
+    [self.pushTipView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.mas_equalTo(self.notNetHeader.mas_bottom);
+        make.left.right.mas_equalTo(0);
+        make.height.mas_equalTo(pushTipHeight);
+    }];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(networkStateChange:) name:TTReachabilityChangedNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationDidBecomeActive) name:UIApplicationDidBecomeActiveNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(periodicalFetchUnreadMessage:) name:kPeriodicalFetchUnreadMessage object:nil];
     @weakify(self)
     [[[[NSNotificationCenter defaultCenter] rac_addObserverForName:KUSER_UPDATE_NOTIFICATION object:nil] throttle:2] subscribeNext:^(NSNotification *_Nullable x) {
@@ -364,6 +419,52 @@ typedef NS_ENUM(NSInteger, FHSegmentedControllerAnimatedTransitionDirection) {
             return;
         }
     }];
+    [self updateContentView];
+}
+
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    [FHBubbleTipManager shareInstance].canShowTip = NO;
+    [self applicationDidBecomeActive];
+}
+
+- (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
+    [[FHPopupViewManager shared] triggerPopupView];
+    [[FHPopupViewManager shared] triggerPendant];
+}
+
+- (void)viewWillDisappear:(BOOL)animated {
+    [super viewWillDisappear:animated];
+    [self addStayCategoryLog:self.ttTrackStayTime];
+    [self tt_resetStayTime];
+    [FHBubbleTipManager shareInstance].canShowTip = YES;
+}
+
+- (void)applicationDidBecomeActive
+{
+    BOOL isEnabled = [FHPushAuthorizeManager isMessageTipEnabled];
+    CGFloat pushTipHeight = isEnabled ? 36 : 0;
+    if (pushTipHeight > 0) {
+        [self addTipShowLog];
+    }
+    self.pushTipView.hidden = pushTipHeight > 0 ? NO : YES;
+    _pushTipViewHeight = pushTipHeight;
+    [self.pushTipView mas_updateConstraints:^(MASConstraintMaker *make) {
+        make.height.mas_equalTo(pushTipHeight);
+    }];
+    [self updateContentView];
+}
+
+- (void)hidePushTip {
+    NSInteger lastTimeShowMessageTip = (NSInteger)[[NSDate date] timeIntervalSince1970];
+    [FHPushAuthorizeHelper setLastTimeShowMessageTip:lastTimeShowMessageTip];
+    self.pushTipView.hidden = YES;
+    [self.pushTipView mas_updateConstraints:^(MASConstraintMaker *make) {
+        make.height.mas_equalTo(0);
+    }];
+    _pushTipViewHeight = 0;
+    [self updateContentView];
 }
 
 - (NSString *)getPageType {
@@ -382,17 +483,34 @@ typedef NS_ENUM(NSInteger, FHSegmentedControllerAnimatedTransitionDirection) {
     return YES;
 }
 
-- (void)viewWillDisappear:(BOOL)animated {
-    [super viewWillDisappear:animated];
-    [self addStayCategoryLog:self.ttTrackStayTime];
-    [self tt_resetStayTime];
-}
-
 - (void)periodicalFetchUnreadMessage:(NSNotification *)notification {
     FHMessageViewController *vc = self.activeViewController;
     if (vc) {
         [vc startLoadData];
     }
+}
+
+- (void)networkStateChange:(NSNotification *)notification {
+    _notNetHeaderHeight = 0.f;
+    if ([TTReachability isNetworkConnected]) {
+        [_notNetHeader setHidden:YES];
+        [_notNetHeader mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.height.mas_equalTo(0);
+        }];
+        
+    } else {
+        _notNetHeaderHeight = 36.f;
+        [_notNetHeader setHidden:NO];
+        [_notNetHeader mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.height.mas_equalTo(36);
+        }];
+    }
+    [_notNetHeader layoutIfNeeded];
+    [self updateContentView];
+}
+
+- (void)updateContentView {
+    self.contentView.frame = CGRectMake(self.contentView.frame.origin.x, _notNetHeaderHeight + _pushTipViewHeight, self.contentView.frame.size.width, self.contentView.frame.size.height);
 }
 
 - (void)reloadData {
@@ -686,6 +804,18 @@ typedef NS_ENUM(NSInteger, FHSegmentedControllerAnimatedTransitionDirection) {
     self.topView.selectIndex = [self.viewControllers indexOfObject:toViewController];
 }
 
+- (void)addTipClickLog:(FHPushMessageTipCompleteType)type
+{
+    NSMutableDictionary *params = @{}.mutableCopy;
+    params[@"page_type"] = @"messagetab";
+    if (type == FHPushMessageTipCompleteTypeDone) {
+        params[@"click_type"] = @"confirm";
+    }else {
+        params[@"click_type"] = @"cancel";
+    }
+    [FHUserTracker writeEvent:@"tip_click" params:params];
+}
+
 -(NSDictionary *)categoryLogDict {
     FHMessageViewController *vc = self.activeViewController;
     NSInteger badgeNumber = [[vc.viewModel messageBridgeInstance] getMessageTabBarBadgeNumber];
@@ -707,6 +837,13 @@ typedef NS_ENUM(NSInteger, FHSegmentedControllerAnimatedTransitionDirection) {
     NSMutableDictionary *tracerDict = [self categoryLogDict].mutableCopy;
     tracerDict[@"stay_time"] = [NSNumber numberWithInteger:duration];
     TRACK_EVENT(@"stay_tab", tracerDict);
+}
+
+- (void)addTipShowLog
+{
+    NSMutableDictionary *params = @{}.mutableCopy;
+    params[@"page_type"] = @"messagetab";
+    [FHUserTracker writeEvent:@"tip_show" params:params];
 }
 
 #pragma mark - TTUIViewControllerTrackProtocol
