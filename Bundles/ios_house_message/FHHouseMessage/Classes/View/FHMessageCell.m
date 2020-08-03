@@ -679,7 +679,7 @@
                 self.state = SliderMenuClose;
                 self.currentOffset = 0;
                 if (self.closeEditTrack) {
-                    self.closeEditTrack(nil);
+                    //self.closeEditTrack(nil);
                 }
 //                [FHMessageEditHelp shared].currentCell = nil;
 //                [FHMessageEditHelp shared].conversation = nil;
