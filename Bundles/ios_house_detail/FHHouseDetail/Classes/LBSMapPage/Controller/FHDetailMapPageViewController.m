@@ -241,33 +241,7 @@ static MAMapView *kFHPageMapView = nil;
 -(void)panAction:(UIPanGestureRecognizer *)pan
 {
     [self hideAnaInfoView:nil];
-//    switch (pan.state) {
-//        case UIGestureRecognizerStateBegan:
-//            self.panLocation = [pan locationInView:self];
-//            break;
-//        case UIGestureRecognizerStateChanged:{
-//            CGPoint loc = [pan locationInView:self];
-//            self.dragOffset = loc.y - self.panLocation.y;
-//            if (self.dragOffset >= 0) {
-//                self.bottomShowInfoView.top = self.bottomShowInfoView.origin.y + self.dragOffset;
-//            }
-//        }
-//            break;
-//        case UIGestureRecognizerStateEnded:
-//        case UIGestureRecognizerStateCancelled:
-//        {
-////            if (self.dragOffset + self.bgTop > self.height/2 && self.dragOffset > self.bgView.height/3) {
-////                [self addPopClickLog:@"cancel"];
-////                [self dismiss:YES];
-////            }else{
-////                self.bgView.top = self.bgTop;
-////                self.dragOffset = 0;
-////            }
-//        }
-//            break;
-//        default:
-//            break;
-//    }
+    [self processSelected:NO andAnnotationView:self.currentSelectAna];
 }
 
 - (void)showAnaInfoView:(AMapPOI *)poi{
@@ -396,7 +370,7 @@ static MAMapView *kFHPageMapView = nil;
              [self.bottomShowInfoView setFrame:CGRectMake(0, self.view.frame.size.height, self.view.frame.size.width, self.bottomShowInfoView.frame.size.height)];
          } completion:^(BOOL finished) {
                    
-         }];
+         }];        
     }
 }
 
@@ -614,7 +588,7 @@ static MAMapView *kFHPageMapView = nil;
     } else {
         bottomHeight = 43;
     }
-    CGRect mapFrame = CGRectMake(0, bottomHeight, self.view.width, self.view.height - navHeight - bottomHeight);
+    CGRect mapFrame = CGRectMake(0, bottomHeight - 1, self.view.width, self.view.height - navHeight - bottomHeight);
     if (!kFHPageMapView) {
         kFHPageMapView = [[MAMapView alloc] initWithFrame:mapFrame];// 不会同时出两个页面
 
@@ -942,21 +916,22 @@ static MAMapView *kFHPageMapView = nil;
            leftIcon.image = [self getIconImageFromCategory:((FHMyMAAnnotation *)annotation).type];
 
            leftIcon.backgroundColor = [UIColor clearColor];
-           leftIcon.frame = CGRectMake(11, 9, 11, 11);
+           leftIcon.frame = CGRectMake(15, 8, 18, 18);
 
             
           [annotationView addSubview:leftIcon];
-           UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(17, 0, 100, 30)];
+           UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(25, 0, 100, 30)];
            titleLabel.text = annotation.title;
            titleLabel.frame = CGRectMake(0, 0, titleLabel.text.length * 13, 32);
-           backImageView.frame = CGRectMake(0, 0, titleLabel.text.length * 13 + 20, 30);
            UIImage *imageAnna = [UIImage imageNamed:@"mapsearch_detail_annotation_bg"];//mapsearch_annotation_bg
 
 
            backImageView.layer.cornerRadius = 15;
            backImageView.layer.masksToBounds = YES;
-           backImageView.layer.shadowColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:0.5].CGColor;
-           backImageView.layer.shadowOffset = CGSizeMake(2, 2);
+            backImageView.layer.borderWidth = 0.5;
+            backImageView.layer.borderColor = [UIColor themeOrange2].CGColor;
+//           backImageView.layer.shadowColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:0.5].CGColor;
+//           backImageView.layer.shadowOffset = CGSizeMake(2, 2);
 
            [annotationView addSubview:titleLabel];
            titleLabel.font = [UIFont themeFontRegular:12];
@@ -969,9 +944,9 @@ static MAMapView *kFHPageMapView = nil;
            [titleLabel sizeToFit];
             
         
-           backImageView.frame = CGRectMake(0, 0, titleLabel.frame.size.width + 60, 30);
+           backImageView.frame = CGRectMake(3, 3, titleLabel.frame.size.width + 45 , 30);
            [backImageView setBackgroundColor:[UIColor colorWithHexStr:@"#ff9629"]];
-           titleLabel.center = CGPointMake(backImageView.center.x, backImageView.center.y);
+           titleLabel.center = CGPointMake(backImageView.center.x + 10, backImageView.center.y);
 
            UIImageView *bottomArrowView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"mapsearch_annotation_arrow"]];
            [annotationView addSubview:bottomArrowView];
@@ -982,6 +957,10 @@ static MAMapView *kFHPageMapView = nil;
 
            annotationView.backColorView = backImageView;
            annotationView.bottomArrowView = bottomArrowView;
+            
+            CGRect frame = annotationView.frame;
+            frame.size = CGSizeMake(backImageView.frame.size.width, backImageView.frame.size.height);
+            annotationView.frame = frame;
            return annotationView;
         }
         

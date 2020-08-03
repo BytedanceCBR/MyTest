@@ -27,9 +27,9 @@
 -(void)setAnnotation:(id<MAAnnotation>)annotation
 {
     [super setAnnotation:annotation];
-    CGRect frame = self.frame;
-    frame.size = CGSizeMake(self.annotation.title.length * 16 + 5, 30);
-    self.frame = frame;
+//    CGRect frame = self.frame;
+//    frame.size = CGSizeMake(self.annotation.title.length * 16 + 5, 30);
+//    self.frame = frame;
 //    self.frame = CGRectMake(self.frame.origin.x, self.frame.origin.y, self.annotation.title.length * 16 + 5, 30);
 }
 
