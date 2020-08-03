@@ -607,7 +607,7 @@
 }
 
 - (void)close {
-    [self openMenu:false time:0 springX:0];
+    [self openMenu:false time:0.35 springX:0];
 }
 
 - (UIView *)hitTest:(CGPoint)point withEvent:(UIEvent *)event{
@@ -637,25 +637,33 @@
 //}
 
 - (void)openMenu:(BOOL)open time:(NSTimeInterval)time springX:(CGFloat)springX {
+    if (!open) {
+        [FHMessageEditHelp shared].currentCell = nil;
+        [FHMessageEditHelp shared].conversation = nil;
+    }
     CGFloat moveX = open ? _maxOffset : 0;
-    CGFloat alpha = open ? 1 : 0;
     self.state = SliderMenuSlider;
     [self.layer removeAllAnimations];
     [self removeAnimations];
     UIViewAnimationOptions options = UIViewAnimationOptionAllowUserInteraction | UIViewAnimationOptionBeginFromCurrentState | UIViewAnimationOptionOverrideInheritedDuration |  UIViewAnimationOptionCurveEaseOut;
     [UIView animateWithDuration:time delay:0 options:options animations:^{
-//        self.editView.alpha = alpha;
-        [self move:moveX + springX];
-    } completion:^(BOOL finished) {
-        if (self.cancelAnimationCompletion) {
-            [self removeAnimations];
-            self.cancelAnimationCompletion = NO;
-            return;
+        [self.backView mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.left.mas_equalTo(15 + moveX + springX);
+        }];
+        if (!open) {
+            [self.contentView layoutIfNeeded];
         }
+        //[self move:moveX + springX];
+    } completion:^(BOOL finished) {
+//        if (self.cancelAnimationCompletion) {
+//            [self removeAnimations];
+//            self.cancelAnimationCompletion = NO;
+//            return;
+//        }
         if (finished) {
-            if (_lastPanStateIsEnd && [[FHMessageEditHelp shared].currentCell isEqual:self] && !open) {
-                [FHMessageEditHelp shared].isCanReloadData = YES;
-            }
+//            if (_lastPanStateIsEnd && [[FHMessageEditHelp shared].currentCell isEqual:self] && !open) {
+//                [FHMessageEditHelp shared].isCanReloadData = YES;
+//            }
             if (springX != 0) {
                 [UIView animateWithDuration:0.3 delay:0 options:options animations:^{
                     [self move:moveX];
@@ -673,8 +681,8 @@
                 if (self.closeEditTrack) {
                     self.closeEditTrack(nil);
                 }
-                [FHMessageEditHelp shared].currentCell = nil;
-                [FHMessageEditHelp shared].conversation = nil;
+//                [FHMessageEditHelp shared].currentCell = nil;
+//                [FHMessageEditHelp shared].conversation = nil;
             }
         }
     }];
@@ -693,7 +701,9 @@
     [self.backView mas_updateConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(15 + x);
     }];
-//    self.backView = CGRectMake(x, self.frame.origin.y, self.frame.size.width, self.frame.size.height);
+//    [self.backView layoutIfNeeded];
+//    [UIView commitAnimations];
+//    self.frame = CGRectMake(x, self.frame.origin.y, self.frame.size.width, self.frame.size.height);
 }
 
 @end

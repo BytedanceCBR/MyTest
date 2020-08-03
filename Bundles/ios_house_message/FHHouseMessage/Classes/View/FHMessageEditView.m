@@ -33,7 +33,7 @@
     self.deleteButton = btn;
     [self.deleteButton mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.bottom.mas_equalTo(0);
-        make.right.mas_equalTo(-10);
+        make.right.mas_equalTo(10);
         make.width.mas_equalTo(self.mas_width);
     }];
 }
