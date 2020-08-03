@@ -21,7 +21,7 @@
 @property (nonatomic, copy) NSArray *saleStatusButtons;
 @property (nonatomic, strong) FHBuildingDetailScrollView *scrollView;
 @property (nonatomic, assign) CGSize imageSize;
-@property (nonatomic, strong) UIImage *placeHolder;
+@property (nonatomic, strong) UIImageView *placeHolder;
 @property (nonatomic, strong) FHBuildingIndexModel *indexModel;
 
 @end
@@ -46,8 +46,10 @@
         self.scrollView.contentSize = CGSizeMake(frame.size.width + 0.4, frame.size.height + 0.4);
         [self addSubview:scrollView];
         
-        
+        self.placeHolder = [[UIImageView alloc] initWithFrame:frame];
+        self.placeHolder.image = [UIImage imageNamed:@"default_image"];
         [self.scrollView addSubview:imageView];
+        [self addSubview:self.placeHolder];
     }
     return self;
 }
@@ -57,7 +59,13 @@
         FHBuildingLocationModel *model = (FHBuildingLocationModel *)data;
         self.locationModel = model;
         NSURL *url = [NSURL URLWithString:model.buildingImage.url];
-        [self.imageView bd_setImageWithURL:url placeholder:self.placeHolder];
+         __weak typeof(self) wSelf = self;
+        [self.imageView bd_setImageWithURL:url placeholder:nil options:BDImageRequestDefaultPriority completion:^(BDWebImageRequest *request, UIImage *image, NSData *data, NSError *error, BDWebImageResultFrom from) {
+            if (image && wSelf) {
+                [wSelf.placeHolder setHidden:YES];
+            }
+        }];
+        
         NSMutableArray *saleButtons = [NSMutableArray arrayWithCapacity:model.saleStatusList.count];
         for (FHBuildingSaleStatusModel *StatusModel in model.saleStatusList) {
             NSMutableArray *buildingButtons = [NSMutableArray arrayWithCapacity:StatusModel.buildingList.count];
@@ -80,12 +88,6 @@
     [self layoutIfNeeded];
 }
 
-- (UIImage *)placeHolder {
-    if (!_placeHolder) {
-        _placeHolder = [UIImage imageNamed:@"default_image"];
-    }
-    return _placeHolder;
-}
 
 #pragma mark - UIScrollViewDelegate
 
