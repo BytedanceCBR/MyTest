@@ -647,9 +647,11 @@ typedef NS_ENUM(NSUInteger,TTTabbarTipViewType){
         [logv3Dic setValue:self.autoEnterTab?@1:@0 forKey:@"is_auto"];
         [logv3Dic setValue:@"default" forKey:@"enter_type"];
         
-        NSString *enterChannel = @"default";
-        [logv3Dic setValue:enterChannel forKey:@"enter_channel"];
-        [FHEnvContext sharedInstance].enterChannel = enterChannel;
+        if(![FHEnvContext sharedInstance].enterChannel){
+            [FHEnvContext sharedInstance].enterChannel = @"default";
+        }
+
+        [logv3Dic setValue:[FHEnvContext sharedInstance].enterChannel forKey:@"enter_channel"];
         [FHEnvContext recordEvent:logv3Dic andEventKey:@"enter_tab"];
     }
     
