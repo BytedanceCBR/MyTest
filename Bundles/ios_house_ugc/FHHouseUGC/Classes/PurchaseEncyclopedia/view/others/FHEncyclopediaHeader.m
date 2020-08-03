@@ -84,7 +84,6 @@
                }
            }
     [_segmentView updateDataWithString:lynxData];
-    
 }
 
 -(UIImage*) createImageWithColor:(UIColor*) color

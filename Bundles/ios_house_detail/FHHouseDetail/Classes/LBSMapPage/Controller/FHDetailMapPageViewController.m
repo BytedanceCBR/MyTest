@@ -147,6 +147,39 @@ static MAMapView *kFHPageMapView = nil;
 
 #pragma mark - TTUIViewControllerTrackProtocol
 
+- (void)sendClickMapEvent:(NSString *)categoryName{
+    NSInteger index = [self.nameArray indexOfObject:categoryName];
+    
+    NSArray *facilities = @[@"traffic", @"education", @"hospital", @"life", @"entertainment"];
+    if (index >= 0 && index < facilities.count) {
+        NSMutableDictionary *tracerDict = self.traceDict.mutableCopy;
+        [tracerDict removeObjectForKey:@"element_from"];
+        [tracerDict setValue:@"map_detail" forKey:@"page_type"];
+        if ([self.traceDict[@"log_pb"] isKindOfClass:[NSDictionary class]]) {
+            tracerDict[@"group_id"] = self.traceDict[@"log_pb"][@"group_id"];
+        }
+        // click_facilities
+//        NSMutableDictionary *tracerDic = self.baseViewModel.detailTracerDic.mutableCopy;
+//        tracerDic[@"element_type"] = [self elementTypeString:self.baseViewModel.houseType];
+        tracerDict[@"map_tag"] = facilities[index];
+        [FHUserTracker writeEvent:@"click_map" params:tracerDict];
+    }
+}
+
+- (void)sendClickMapEventForPoi:(NSString *)name{
+        NSMutableDictionary *tracerDict = [NSMutableDictionary new];
+    
+        [tracerDict setValue:@"map_detail" forKey:@"page_type"];
+        // click_facilities
+//        NSMutableDictionary *tracerDic = self.baseViewModel.detailTracerDic.mutableCopy;
+//        tracerDic[@"element_type"] = [self elementTypeString:self.baseViewModel.houseType];
+        tracerDict[@"click_position"] = name;
+        if ([self.traceDict[@"log_pb"] isKindOfClass:[NSDictionary class]]) {
+            tracerDict[@"group_id"] = self.traceDict[@"log_pb"][@"group_id"];
+        }
+        [FHUserTracker writeEvent:@"click_map" params:tracerDict];
+}
+
 - (void)trackEndedByAppWillEnterBackground {
     [self addStayPageLog:self.ttTrackStayTime];
     [self tt_resetStayTime];
@@ -168,6 +201,7 @@ static MAMapView *kFHPageMapView = nil;
     [self tt_resetStayTime];
     self.ttTrackStartTime = [[NSDate date] timeIntervalSince1970];
 }
+
 
 - (void)setUpNaviBar
 {
@@ -248,6 +282,7 @@ static MAMapView *kFHPageMapView = nil;
         [panGesture setDirection:UISwipeGestureRecognizerDirectionDown];
         [self.bottomShowInfoView addGestureRecognizer:panGesture];
         self.panGesture = panGesture;
+        
      }
     
     for (UIView *subviw in self.bottomShowInfoView.subviews) {
@@ -271,6 +306,7 @@ static MAMapView *kFHPageMapView = nil;
       [titleLabel sizeToFit];
      [self.bottomShowInfoView addSubview:titleLabel];
              
+     [self sendClickMapEventForPoi:poi.name];
      
      UILabel *addressLabel = [[UILabel alloc] initWithFrame:CGRectMake(20.0f, titleLabel.bottom + 3, self.view.frame.size.width - 40, 20)];
      addressLabel.text = [NSString stringWithFormat:@"%@ | %@",poi.district,poi.address];
@@ -514,6 +550,7 @@ static MAMapView *kFHPageMapView = nil;
             [self requestPoiInfo:self.centerPoint andKeyWord:self.nameArray[button.tag]];
             [self processSelected:NO andAnnotationView:self.currentSelectAna];
             [self hideAnaInfoView:nil];
+            [self sendClickMapEvent:category];
         }
     }
     [self changeBottomItemViewOffsetByIndex:button.tag];

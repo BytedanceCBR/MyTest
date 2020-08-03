@@ -424,7 +424,7 @@
 }
 
 - (void)clickFacilitiesTracker:(NSInteger)index {
-    NSArray *facilities = @[@"traffic", @"shopping", @"hospital", @"education"];
+    NSArray *facilities = @[@"traffic", @"education", @"hospital", @"life"];
     if (index >= 0 && index < facilities.count) {
         // click_facilities
         NSMutableDictionary *tracerDic = self.baseViewModel.detailTracerDic.mutableCopy;
