@@ -266,7 +266,7 @@
     NSMutableDictionary * paramsExtra = [NSMutableDictionary new];
     [paramsExtra setValue:[[TTInstallIDManager sharedInstance] deviceID] forKey:@"device_id"];
      NSMutableDictionary *uploadParams = [NSMutableDictionary new];
-    NSString *eventServie = [NSString stringWithFormat:@"lynx_page_info_%@",_channelName];
+    NSString *eventServie = [NSString stringWithFormat:@"lynx_page_duration_%@",_channelName];
     if (time < 15) {
         [uploadParams setValue:@(time * 1000) forKey:@"duration"];
         [[HMDTTMonitor defaultManager] hmdTrackService:eventServie metric:uploadParams category:nil extra:paramsExtra];

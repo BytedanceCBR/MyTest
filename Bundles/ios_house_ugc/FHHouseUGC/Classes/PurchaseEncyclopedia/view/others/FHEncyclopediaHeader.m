@@ -18,6 +18,9 @@
 #import "SDWebImageManager.h"
 #import "UIColor+Theme.h"
 #import <BDWebImage/UIImageView+BDWebImage.h>
+#import "TTInstallIDManager.h"
+#import "HMDTTMonitor.h"
+
 @interface FHEncyclopediaHeader()<LynxViewClient>
 @property (strong, nonatomic)LynxView *segmentView;
 @property(nonatomic ,strong) NSData *currentTemData;
@@ -59,6 +62,7 @@
              [self addSubview:_segmentView];
         NSData *templateData =  [[FHLynxManager sharedInstance] lynxDataForChannel:@"ugc_encyclopedia_lynx_header" templateKey:[FHLynxManager defaultJSFileName] version:0];
               if (templateData) {
+                  _loadTime = [[NSDate date] timeIntervalSince1970];
                    if (templateData != self.currentTemData) {
                        self.currentTemData = templateData;
                       [self.segmentView loadTemplate:templateData withURL:@"local"];
@@ -93,6 +97,41 @@
     }
     return _placeholderImage;
 }
+
+- (void)lynxViewDidFirstScreen:(LynxView*)view{
+    NSTimeInterval costTime = [[NSDate date] timeIntervalSince1970] - _loadTime;
+    [self sendCostTimeEvent:costTime andService:@"lynx_page_duration"];
+}
+
+- (void)sendCostTimeEvent:(NSTimeInterval)time andService:(NSString *)sevice
+{
+    NSMutableDictionary * paramsExtra = [NSMutableDictionary new];
+    [paramsExtra setValue:[[TTInstallIDManager sharedInstance] deviceID] forKey:@"device_id"];
+     NSMutableDictionary *uploadParams = [NSMutableDictionary new];
+    NSString *eventServie = [NSString stringWithFormat:@"lynx_page_duration_%@",@"ugc_encyclopedia_lynx_header"];
+    if (time < 15) {
+        [uploadParams setValue:@(time * 1000) forKey:@"duration"];
+        [[HMDTTMonitor defaultManager] hmdTrackService:eventServie metric:uploadParams category:nil extra:paramsExtra];
+    }
+}
+
+- (void)lynxView:(LynxView*)view didReceiveFirstLoadPerf:(LynxPerformance*)perf{
+    
+    NSMutableDictionary * paramsExtra = [NSMutableDictionary new];
+    [paramsExtra setValue:[[TTInstallIDManager sharedInstance] deviceID] forKey:@"device_id"];
+     NSMutableDictionary *uploadParams = [NSMutableDictionary new];
+    if (perf && [[perf toDictionary] isKindOfClass:[NSDictionary class]]) {
+        [uploadParams addEntriesFromDictionary:[perf toDictionary]];
+    }
+    NSString *eventServie = [NSString stringWithFormat:@"lynx_page_info_%@",@"ugc_encyclopedia_lynx_header"];
+    [[HMDTTMonitor defaultManager] hmdTrackService:eventServie metric:uploadParams category:nil extra:paramsExtra];
+    
+}
+
+- (void)lynxView:(LynxView*)view didReceiveUpdatePerf:(LynxPerformance*)perf{
+    NSLog(@"perf=%@",[perf toDictionary]);
+}
+
 
 
 - (void)loadImageWithURL:(nonnull NSURL*)url

@@ -19,12 +19,16 @@
 #import "FHHouseRealtorDetailInfoModel.h"
 #import "UIDevice+BTDAdditions.h"
 #import "FLynxWikiHeaderBridge.h"
+#import "TTInstallIDManager.h"
+
 @interface FHHouseUserCommentsCell()
 @property (weak, nonatomic)LynxView *infoView;
 @property(nonatomic ,strong) NSData *currentTemData;
 @property (strong, nonatomic) UIImage *placeholderImage;
 @property (weak, nonatomic) UIImageView *headerIma;
 @property (assign, nonatomic) CGFloat cellHeights;
+@property (nonatomic, assign) NSTimeInterval loadTime; //页面加载时间
+
 @end
 @implementation FHHouseUserCommentsCell
 - (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
@@ -85,6 +89,7 @@
 - (void)updateModel:(FHHouseRealtorUserCommentItemModel *)model {
     NSString *lynxData = [model yy_modelToJSONString];
     NSData *templateData =  [[FHLynxManager sharedInstance] lynxDataForChannel:@"lynx_evaluation_item" templateKey:[FHLynxManager defaultJSFileName] version:0];
+    _loadTime = [[NSDate date] timeIntervalSince1970];
     //        NSData *templateData = [NSData dataWithContentsOfURL:[NSURL URLWithString:@"http://10.95.248.194:30334/realtor_detail_header/template.js?1594963282405"]];
     if (templateData) {
         if (templateData != self.currentTemData) {
@@ -106,7 +111,7 @@
     return _headerIma;
 }
 
--(UIImage*) createImageWithColor:(UIColor*) color
+-(UIImage*)createImageWithColor:(UIColor*) color
 {
     CGRect rect=CGRectMake(0.0f, 0.0f, 1.0f, 1.0f);
     UIGraphicsBeginImageContext(rect.size);
@@ -124,6 +129,41 @@
         _placeholderImage = placeholderImage;
     }
     return _placeholderImage;
+}
+
+
+#pragma mark - LynxClient
+- (void)lynxViewDidFirstScreen:(LynxView*)view{
+    NSTimeInterval costTime = [[NSDate date] timeIntervalSince1970] - _loadTime;
+    [self sendCostTimeEvent:costTime andService:@"lynx_page_duration"];
+}
+
+- (void)sendCostTimeEvent:(NSTimeInterval)time andService:(NSString *)sevice
+{
+    NSMutableDictionary * paramsExtra = [NSMutableDictionary new];
+    [paramsExtra setValue:[[TTInstallIDManager sharedInstance] deviceID] forKey:@"device_id"];
+     NSMutableDictionary *uploadParams = [NSMutableDictionary new];
+    NSString *eventServie = [NSString stringWithFormat:@"lynx_page_duration_%@",@"lynx_evaluation_item"];
+    if (time < 15) {
+        [uploadParams setValue:@(time * 1000) forKey:@"duration"];
+        [[HMDTTMonitor defaultManager] hmdTrackService:eventServie metric:uploadParams category:nil extra:paramsExtra];
+    }
+}
+
+- (void)lynxView:(LynxView*)view didReceiveFirstLoadPerf:(LynxPerformance*)perf{
+    
+    NSMutableDictionary * paramsExtra = [NSMutableDictionary new];
+    [paramsExtra setValue:[[TTInstallIDManager sharedInstance] deviceID] forKey:@"device_id"];
+     NSMutableDictionary *uploadParams = [NSMutableDictionary new];
+    if (perf && [[perf toDictionary] isKindOfClass:[NSDictionary class]]) {
+        [uploadParams addEntriesFromDictionary:[perf toDictionary]];
+    }
+    NSString *eventServie = [NSString stringWithFormat:@"lynx_page_info_%@",@"lynx_evaluation_item"];
+    [[HMDTTMonitor defaultManager] hmdTrackService:eventServie metric:uploadParams category:nil extra:paramsExtra];
+    
+}
+- (void)lynxView:(LynxView*)view didReceiveUpdatePerf:(LynxPerformance*)perf{
+    NSLog(@"perf=%@",[perf toDictionary]);
 }
 
 - (void)loadImageWithURL:(nonnull NSURL*)url
