@@ -13,6 +13,7 @@
 #import "UIViewAdditions.h"
 #import "UIDevice+BTDAdditions.h"
 #import "FHUGCencyclopediaTracerHelper.h"
+#import "TTReachability.h"
 @interface FHEncyclopediaViewModel()<UICollectionViewDelegate,UICollectionViewDataSource,FHEncyclopediaHeaderDelegate>
 @property (weak, nonatomic) FHEncyclopediaViewController *baseVC;
 @property (weak, nonatomic) UICollectionView *mainCollection;
@@ -58,6 +59,10 @@
 }
 
 - (void)requestHeaderConfig {
+    if (![TTReachability isNetworkConnected]) {
+        [self.baseVC.emptyView showEmptyWithTip:@"网络异常，请检查网络连接" errorImageName:kFHErrorMaskNoNetWorkImageName showRetry:YES];
+        return;
+    }
     NSMutableDictionary *extraDic = [NSMutableDictionary dictionary];
     NSString *fCityId = [FHEnvContext getCurrentSelectCityIdFromLocal];
     if(fCityId){
@@ -68,6 +73,7 @@
                 [[ToastManager manager] showToast:@"网络异常"];
                         return;
         }else {
+            self.baseVC.emptyView.hidden = YES;
             EncyclopediaConfigDataModel *configModel = (EncyclopediaConfigDataModel *)model;
             NSMutableArray *items = configModel.items.mutableCopy;
             configModel.items = items;
@@ -75,6 +81,7 @@
             [self collectionDataCrate:configModel.items];
         }
     }];
+    
 }
 
 - (void)collectionDataCrate:(NSArray *)array {

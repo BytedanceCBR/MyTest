@@ -275,11 +275,8 @@
 //    else {
 //        contactPhone = model.data.contact;
 //    }
-    if (contactPhone.enablePhone) {
-        contactPhone.isFormReport = NO;
-    }else {
-        contactPhone.isFormReport = YES;
-    }
+
+    contactPhone.isFormReport = !contactPhone.enablePhone;
     self.contactViewModel.contactPhone = contactPhone;
     
     [self refreshBottomBar];
@@ -338,7 +335,7 @@
 
         NSMutableDictionary *extraDic = @{
             @"realtor_position":@"detail_button",
-//            @"position":@"report_button",
+            @"position":@"report_button",
             @"element_from":@"building"
         }.mutableCopy;
         [extraDic addEntriesFromDictionary:self.tracerDict];
@@ -589,8 +586,8 @@
     if (dic && [dic isKindOfClass:[NSDictionary class]]) {
         NSMutableDictionary *tracerDic = dic.mutableCopy;
         tracerDic[@"is_im"] = contactPhone.imOpenUrl.length ? @"1" : @"0";
-        tracerDic[@"is_call"] = contactPhone.enablePhone  ? @"0" : @"1";
-        tracerDic[@"is_report"] = contactPhone.enablePhone ? @"1" : @"0";
+        tracerDic[@"is_call"] = contactPhone.enablePhone ? @"1" : @"0";
+        tracerDic[@"is_report"] = contactPhone.enablePhone ? @"0" : @"1";
         tracerDic[@"is_online"] = contactPhone.unregistered ? @"1" : @"0";
         tracerDic[@"element_from"] = @"building";
         tracerDic[@"event_tracking_id"] = @"70952";

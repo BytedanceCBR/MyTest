@@ -19,6 +19,8 @@
 NS_ASSUME_NONNULL_BEGIN
 
 #define defaultTruncationLinkURLString @"www.bytedance.contentTruncationLinkURLString"
+#define kUGCPaddingLeft 20
+#define kUGCPaddingRight 20
 
 @interface FHUGCCellHelper : NSObject
 

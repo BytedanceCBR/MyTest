@@ -264,6 +264,11 @@
     [self.detailJumpManager jumpToDetail:cellModel showComment:YES enterType:@"feed_comment"];
 }
 
+- (void)gotoLinkUrl:(FHFeedUGCCellModel *)cellModel url:(NSURL *)url {
+    // PM要求点富文本链接也进入详情页
+    [self lookAllLinkClicked:cellModel cell:nil];
+}
+
 - (void)clickRealtorIm:(FHFeedUGCCellModel *)cellModel cell:(FHUGCBaseCell *)cell {
     NSInteger index = [self.dataList indexOfObject:cellModel];
     NSMutableDictionary *imExtra = @{}.mutableCopy;
@@ -331,6 +336,10 @@
     }
 }
 
+- (void)goToCommunityDetail:(FHFeedUGCCellModel *)cellModel {
+    [self.detailJumpManager goToCommunityDetail:cellModel];
+}
+
 - (void)lookAllLinkClicked:(FHFeedUGCCellModel *)cellModel cell:(nonnull FHUGCBaseCell *)cell {
     self.currentCellModel = cellModel;
     self.currentCell = cell;
@@ -349,30 +358,36 @@
 @implementation FHhouseDetailRGCListCellModel
 
 - (void)setContentModel:(FHDetailBrokerContentModel *)contentModel {
+    _contentModel = [contentModel copy];
     NSMutableArray *dataArr = [[NSMutableArray alloc]init];
     CGFloat contentHeight = 0;
-    for (int m = 0; m < contentModel.data.count;  m++) {
-        NSString *content = contentModel.data[m];
+    for (int m = 0; m < _contentModel.data.count;  m++) {
+        NSString *content = _contentModel.data[m];
         FHFeedUGCCellModel *model = [FHFeedUGCCellModel modelFromFeed:content];
         model.realtorIndex = m;
+        model.isShowLineView = m < _contentModel.data.count -1;
         switch (model.cellType) {
             case FHUGCFeedListCellTypeUGC:
                 model.cellSubType = FHUGCFeedListCellSubTypeUGCBrokerImage;
-                contentHeight = model.contentHeight  +75 + 30 + 50 +contentHeight + 40;
+                ///内容高度 + 图片高度 + 距离顶部高度 + 底部高度
+                contentHeight = model.contentHeight  + (model.imageList.count == 0?0:75 + 30) + 40 +contentHeight + 40;
                 break;
             case FHUGCFeedListCellTypeUGCSmallVideo:
                 model.cellSubType = FHUGCFeedListCellSubTypeUGCBrokerVideo;
-                contentHeight = model.contentHeight  +150 + 30 + 50 +contentHeight + 90;
+                ///内容高度 + 视频高度 + 距离顶部高度 + 底部高度
+                contentHeight = model.contentHeight  +150 + 10 + 40 +contentHeight + 90;
                 break;
             default:
                 break;
         }
         model.tracerDic = self.detailTracerDic;
-        [dataArr addObject:model];
+        if (model) {
+            [dataArr addObject:model];
+        }
     }
-    contentModel.fHFeedUGCCellModelDataArr = dataArr;
+    _contentModel.fHFeedUGCCellModelDataArr = dataArr;
     self.cellHeight = contentHeight;
-    _contentModel = contentModel;
+    
 }
 
 

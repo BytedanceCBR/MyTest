@@ -11,6 +11,9 @@
 #import <Masonry/Masonry.h>
 #import <FHHouseBase/FHCommonDefines.h>
 #import <FHHouseBase/UIImage+FIconFont.h>
+#import <FHHouseType.h>
+#import <TTRoute.h>
+#import <FHUserTracker.h>
 
 #define BTN_WIDTH  24
 #define BG_LAYER_HEIGHT 100
@@ -18,8 +21,11 @@
 @interface FHMapSimpleNavbar ()
 
 @property(nonatomic , strong) UIButton *backButton;
+@property(nonatomic , strong) UIButton *rightButton;
 @property(nonatomic , strong) UILabel *titleLabel;
+@property(nonatomic , strong) UILabel *rightTitleLabel;
 @property(nonatomic , strong) CALayer *bgLayer;
+@property(nonatomic , assign) BOOL isShowCircle;
 
 @end
 
@@ -45,14 +51,33 @@
         [_backButton setImage:backImg forState:UIControlStateNormal];
         [_backButton addTarget:self action:@selector(backAction:) forControlEvents:UIControlEventTouchUpInside];
         
+        
+        UIImage *searImg = ICON_FONT_IMG(24, @"\U0000e675",[UIColor themeGray1]);
+        _rightButton = [UIButton buttonWithType:UIButtonTypeCustom];
+        [_rightButton setImage:searImg forState:UIControlStateNormal];
+        [_rightButton addTarget:self action:@selector(rightBtnClick:) forControlEvents:UIControlEventTouchUpInside];
+        
+        
         _titleLabel = [[UILabel alloc] init];
         _titleLabel.font = [UIFont themeFontMedium:18];
         _titleLabel.textColor = [UIColor themeGray1];
         _titleLabel.textAlignment = NSTextAlignmentCenter;
         
+        _rightTitleLabel = [[UILabel alloc] init];
+        _rightTitleLabel.font = [UIFont themeFontRegular:12];
+        _rightTitleLabel.text = @"重画";
+        _rightTitleLabel.textColor = [UIColor themeGray1];
+        _rightTitleLabel.userInteractionEnabled = YES;
+        
+        UITapGestureRecognizer *tapReDraw = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(rightBtnClick:)];
+        [_rightTitleLabel addGestureRecognizer:tapReDraw];
+        
+        
         [self addSubview:_backButton];
         [self addSubview:_titleLabel];
-        
+        [self addSubview:_rightButton];
+        [self addSubview:_rightTitleLabel];
+
         [self initContraints];
     }
     return self;
@@ -65,6 +90,58 @@
     }
 }
 
+- (void)updateCicleBtn:(BOOL)isShowCircle{
+//    _isShowCircle = isShowCircle;
+//    UIImage *img = nil;
+//    if(_type == FHMapSimpleNavbarTypeClose){
+//        img = ICON_FONT_IMG(24, @"\U0000e673",[UIColor themeGray1]);
+//        _rightTitleLabel.hidden = YES;
+//    }else if(_type == FHMapSimpleNavbarTypeDrawLine && isShowCircle){
+//        img = ICON_FONT_IMG(24, @"\U0000e673",[UIColor themeGray1]);
+//        [_rightButton setImage:[UIImage imageNamed:@"draw_line_btn"] forState:UIControlStateNormal];
+//        [_rightButton mas_updateConstraints:^(MASConstraintMaker *make) {
+//           make.right.equalTo(self).offset(-48);
+//        }];
+//        _rightTitleLabel.hidden = NO;
+//    }else{
+//        img = ICON_FONT_IMG(22, @"\U0000e68a",[UIColor themeGray1]);
+//        UIImage *searImg = ICON_FONT_IMG(24, @"\U0000e675",[UIColor themeGray1]);
+//        [_rightButton setImage:searImg forState:UIControlStateNormal];
+//        [_rightButton mas_updateConstraints:^(MASConstraintMaker *make) {
+//           make.right.equalTo(self).offset(-18);
+//        }];
+//        _rightTitleLabel.hidden = YES;
+//    }
+
+}
+
+-(void)rightBtnClick:(id)sender{
+    if(self.type == FHMapSimpleNavbarTypeDrawLine){
+     
+        if (self.rightActionBlock) {
+            self.rightActionBlock(FHMapSimpleNavbarTypeDrawLine);
+        }
+    }else{
+        
+        NSMutableDictionary *tracerParamsClick = [NSMutableDictionary new];
+        tracerParamsClick[@"page_type"] = @"map_search_detail";
+        [FHUserTracker writeEvent:@"click_search" params:tracerParamsClick];
+             
+        
+        
+        NSMutableDictionary *tracerParams = [NSMutableDictionary new];
+        tracerParams[@"enter_type"] = @"click";
+        tracerParams[@"element_from"] = @"map_search";
+        tracerParams[@"enter_from"] = @"map_search";
+        
+        NSMutableDictionary *infos = [NSMutableDictionary new];
+        infos[@"house_type"] = @(FHHouseTypeSecondHandHouse);
+        infos[@"tracer"] = tracerParams;
+        infos[@"from_home"] = @(1);
+        TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:infos];
+        [[TTRoute sharedRoute] openURLByViewController:[NSURL URLWithString:@"sslocal://house_search"] userInfo:userInfo];
+    }
+}
 
 -(void)initContraints
 {
@@ -92,6 +169,19 @@
         make.right.mas_equalTo(-(left+BTN_WIDTH));
     }];
     
+    [_rightButton mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.right.equalTo(self).offset(-18);
+        make.top.mas_equalTo(top);
+        make.size.mas_equalTo(CGSizeMake(BTN_WIDTH, BTN_WIDTH));
+    }];
+    
+    [_rightTitleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+         make.right.equalTo(self).offset(-18);
+         make.centerY.mas_equalTo(self.rightButton);
+         make.size.mas_equalTo(CGSizeMake(30, 20));
+     }];
+    _rightTitleLabel.hidden = YES;
+    
 }
 
 -(void)setType:(FHMapSimpleNavbarType)type
@@ -99,14 +189,32 @@
     if (_type == type) {
         return;
     }
-    
+    _rightTitleLabel.hidden = YES;
+
     _type = type;
-    
+    _isShowCircle = NO;
+
     UIImage *img = nil;
     if(type == FHMapSimpleNavbarTypeClose){
         img = ICON_FONT_IMG(24, @"\U0000e673",[UIColor themeGray1]);
+        _rightTitleLabel.hidden = YES;
+    }else if(type == FHMapSimpleNavbarTypeDrawLine){
+        img = ICON_FONT_IMG(24, @"\U0000e673",[UIColor themeGray1]);
+        [_rightButton setImage:[UIImage imageNamed:@"draw_line_btn"] forState:UIControlStateNormal];
+        [_rightButton mas_updateConstraints:^(MASConstraintMaker *make) {
+           make.right.equalTo(self).offset(-48);
+        }];
+        _rightTitleLabel.hidden = NO;
+        _isShowCircle = YES;
     }else{
         img = ICON_FONT_IMG(22, @"\U0000e68a",[UIColor themeGray1]);
+        UIImage *searImg = ICON_FONT_IMG(24, @"\U0000e675",[UIColor themeGray1]);
+        [_rightButton setImage:searImg forState:UIControlStateNormal];
+        [_rightButton mas_updateConstraints:^(MASConstraintMaker *make) {
+           make.right.equalTo(self).offset(-18);
+        }];
+        
+        _rightTitleLabel.hidden = YES;
     }
 
     [self.backButton setImage:img forState:UIControlStateNormal];

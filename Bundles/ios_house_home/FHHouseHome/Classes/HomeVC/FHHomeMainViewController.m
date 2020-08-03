@@ -27,6 +27,7 @@
 #import "WDDefines.h"
 #import "TTAccountLoginManager.h"
 #import "TTAccountManager.h"
+#import "UIDevice+BTDAdditions.h"
 
 static NSString * const kFUGCPrefixStr = @"fugc";
 
@@ -72,7 +73,7 @@ static NSString * const kFUGCPrefixStr = @"fugc";
     self.ttTrackStayEnable = YES;
     [self initLoginTipView];
     //UGC地推包检查粘贴板
-    [self checkPasteboard:NO];
+//    [self checkPasteboard:NO];
     
     //如果是inhouse的，弹升级弹窗
     if ([TTSandBoxHelper isInHouseApp] && !self.isHaveCheckUpgrage) {
@@ -165,19 +166,22 @@ static NSString * const kFUGCPrefixStr = @"fugc";
         _firstLanchCanShowLogin = YES;
     }
     if (_firstLanchCanShowLogin ) {
-           if (!self.isShowLoginTip) {
-             self.loginTipview =  [FHLoginTipView showLoginTipViewInView:self.containerView navbarHeight:kNavigationBarHeight withTracerDic:self.tracerDict];
-             self.isShowLoginTip = YES;
-             self.loginTipview.type = FHLoginTipViewtTypeMain;
-         }else {
-             if (self.loginTipview) {
-                 if ([TTAccount sharedAccount].isLogin) {
-                     [self.loginTipview removeFromSuperview];
-                 }else {
-                     [self.loginTipview startTimer];
-                 }
-             }
-         }
+        if (!self.isShowLoginTip) {
+            CGFloat statusBarHeight =  ((![[UIApplication sharedApplication] isStatusBarHidden]) ? [[UIApplication sharedApplication] statusBarFrame].size.height : ([UIDevice btd_isIPhoneXSeries]?44.f:20.f));
+               //获取导航栏的rect
+                CGRect navRect = self.navigationController.navigationBar.frame;
+            self.loginTipview =  [FHLoginTipView showLoginTipViewInView:self.containerView navbarHeight:navRect.size.height+statusBarHeight withTracerDic:self.tracerDict];
+            self.isShowLoginTip = YES;
+            self.loginTipview.type = FHLoginTipViewtTypeMain;
+        }else {
+            if (self.loginTipview) {
+                if ([TTAccount sharedAccount].isLogin) {
+                    [self.loginTipview removeFromSuperview];
+                }else {
+                    [self.loginTipview startTimer];
+                }
+            }
+        }
     }
 }
 
@@ -279,7 +283,7 @@ static NSString * const kFUGCPrefixStr = @"fugc";
 - (void)_willEnterForeground:(NSNotification *)notification
 {
     if (self.isShowing) {
-        [self checkPasteboard:NO];
+//        [self checkPasteboard:NO];
     }
 }
 
@@ -338,6 +342,7 @@ static NSString * const kFUGCPrefixStr = @"fugc";
 
 - (void)checkPasteboard:(BOOL)isAutoJump
 {
+    /*
     __weak typeof(self) weakSelf = self;
     //据说主线程读剪切板会导致app卡死。。。改为子线程读
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
@@ -368,6 +373,7 @@ static NSString * const kFUGCPrefixStr = @"fugc";
             });
         }
     });
+     */
 }
 
 - (void)requestSendUGCUserAD:(NSString *)requestStr

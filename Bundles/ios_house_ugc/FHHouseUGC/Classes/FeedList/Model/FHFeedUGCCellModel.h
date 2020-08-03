@@ -240,7 +240,9 @@ typedef NS_ENUM(NSUInteger, FHFeedUGCDiggType) {
 //1.0.1rgc 是否在列表页展示
 @property (nonatomic, assign) BOOL isInRealtorEvaluationList;
 @property (nonatomic, strong , nullable) NSDictionary *lynxData;
-
+@property (nonatomic, assign) BOOL isShowLineView;
+//1.0.3 经纪人主页隐藏联系按钮
+@property (nonatomic, assign) BOOL isHiddenConnectBtn;
 + (FHFeedContentModel *)contentModelFromFeedContent:(NSString *)content;
 
 + (FHFeedUGCCellModel *)modelFromFeed:(id)content;

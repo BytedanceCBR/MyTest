@@ -15,23 +15,24 @@
 #import "TTAccountManager.h"
 #import "UIButton+TTAdditions.h"
 #import "FHUserTracker.h"
-#import "UIImageView+BDWebImage.h"
 #import "TTRoute.h"
 #import "JSONAdditions.h"
 #import "FHUGCCellHelper.h"
 #import "TTSettingsManager.h"
-#import "FHUserTracker.h"
 #import "FHHouseContactDefines.h"
 #import "UIViewAdditions.h"
-#import "TTImageView+TrafficSave.h"
+#import "UIImageView+fhUgcImage.h"
+#import "FHRealtorEvaluatingPhoneCallModel.h"
 
 @interface FHUGCCellAttachCardView ()
 
-@property(nonatomic ,strong) TTImageView *iconView;
+@property(nonatomic ,strong) UIImageView *iconView;
 @property(nonatomic ,strong) UILabel *titleLabel;
 @property(nonatomic ,strong) UILabel *descLabel;
 @property(nonatomic ,strong) UIView *spLine;
 @property(nonatomic ,strong) UIButton *button;
+@property(nonatomic, strong) FHRealtorEvaluatingPhoneCallModel *realtorPhoneCallModel;
+@property(nonatomic, strong) FHFeedUGCCellRealtorModel *realtorModel;
 
 @end
 
@@ -56,9 +57,9 @@
     UITapGestureRecognizer* singleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(goToDetail)];
     [self addGestureRecognizer:singleTap];
     
-    self.iconView = [[TTImageView alloc] init];
+    self.iconView = [[UIImageView alloc] init];
     _iconView.backgroundColor = [UIColor whiteColor];
-    _iconView.imageContentMode = TTImageViewContentModeScaleAspectFill;
+    _iconView.contentMode = UIViewContentModeScaleAspectFill;
     _iconView.layer.cornerRadius = 4;
     _iconView.layer.masksToBounds = YES;
     _iconView.clipsToBounds = YES;
@@ -124,14 +125,8 @@
         
         self.cellModel = cellModel;
         
-//        [self.iconView bd_setImageWithURL:[NSURL URLWithString:cellModel.attachCardInfo.coverImage.url] placeholder:nil];
-        
         if (cellModel.attachCardInfo.imageModel && cellModel.attachCardInfo.imageModel.url.length > 0) {
-            TTImageInfosModel *imageInfoModel = [FHUGCCellHelper convertTTImageInfosModel:cellModel.attachCardInfo.imageModel];
-            __weak typeof(self) wSelf = self;
-            [self.iconView setImageWithModelInTrafficSaveMode:imageInfoModel placeholderImage:nil success:nil failure:^(NSError *error) {
-                [wSelf.iconView setImage:nil];
-            }];
+            [self.iconView fh_setImageWithURLStringInTrafficSaveMode:cellModel.attachCardInfo.imageModel.url placeholder:nil];
         }else{
             [self.iconView setImage:nil];
         }
@@ -166,6 +161,12 @@
         if(cellModel.isFromDetail){
             [self trackCardShow:cellModel rank:0];
         }
+        FHFeedUGCContentAttachCardInfoExtraModel *extra = self.cellModel.attachCardInfo.extra;
+        self.realtorPhoneCallModel = [[FHRealtorEvaluatingPhoneCallModel alloc]initWithHouseType:[NSString stringWithFormat:@"%@",extra.houseType].intValue houseId:extra.fromGid];
+         self.realtorPhoneCallModel.tracerDict = self.cellModel.tracerDic;
+        self.realtorModel = [[FHFeedUGCCellRealtorModel alloc]init];
+        self.realtorModel.associateInfo = [[FHClueAssociateInfoModel alloc]initWithString:extra.associateInfo error:nil];
+        self.realtorModel.realtorId = extra.realtorId;
     }
 }
 
@@ -313,40 +314,14 @@
 }
 
 - (void)imAction:(NSURL *)openUrl {
-    TTRouteParamObj *obj =[[TTRoute sharedRoute] routeParamObjWithURL:openUrl];
-    [self addClickIM:obj];
-    
-    NSMutableDictionary *dict = [NSMutableDictionary dictionary];
-    
-    NSString *from = @"";
-    if(self.cellModel.isFromDetail){
-        from = @"app_weitoutiao";
-        dict[kFHClueEndpoint] = @(FHClueEndPointTypeC);
-        dict[kFHCluePage] = @(FHClueIMPageTypeUGCDetail);
-    }else{
-        from = @"app_feed_weitoutiao";
-        dict[kFHClueEndpoint] = @(FHClueEndPointTypeC);
-        dict[kFHCluePage] = @(FHClueIMPageTypeUGCFeed);
-    }
-    
-    dict[@"from"] = from;
-    dict[@"target_type"] = @(2);
-    dict[@"enter_from"] = self.cellModel.tracerDic[@"page_type"] ?: @"be_null";
-    dict[@"element_from"] = [self elementFrom];
-    dict[@"log_pb"] = self.cellModel.tracerDic[@"log_pb"] ?: @"be_null";
-    dict[@"rank"] = self.cellModel.tracerDic[@"rank"] ?: @"be_null";
-    dict[@"card_type"] = self.cellModel.tracerDic[@"card_type"] ? : @"be_null";
-    dict[@"page_type"] = self.cellModel.tracerDic[@"page_type"] ?: @"be_null";
-    dict[@"realtor_id"] = obj.queryParams[@"target_user_id"] ?: @"be_null";
-    dict[@"house_type"] = @"old";
-    dict[@"impr_id"] = self.cellModel.tracerDic[@"log_pb"][@"impr_id"] ?: @"be_null";
-    dict[@"group_id"] = self.cellModel.groupId;
-    dict[@"group_type"] = @"weitoutiao";
-
-    NSMutableDictionary * userInfoDict = @{@"tracer":dict, @"from": from}.mutableCopy;
-    
-    TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:userInfoDict];
-    [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:userInfo];
+    FHFeedUGCContentAttachCardInfoExtraModel *extra = self.cellModel.attachCardInfo.extra;
+    NSMutableDictionary *imExtra = self.cellModel.tracerDic.mutableCopy;
+    imExtra[@"from_gid"] = extra.fromGid;
+    imExtra[@"house_type"] = extra.houseType;
+    imExtra[@"group_id"] = extra.groupId;
+    imExtra[@"log_pb"] = @"";
+    self.realtorModel.chatOpenurl = openUrl.absoluteString;
+    [self.realtorPhoneCallModel imchatActionWithPhone:self.realtorModel realtorRank:@"0" extraDic:imExtra];
 }
 
 - (void)addClickIM:(TTRouteParamObj *)obj {

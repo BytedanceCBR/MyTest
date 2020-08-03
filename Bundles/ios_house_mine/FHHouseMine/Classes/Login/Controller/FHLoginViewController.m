@@ -16,6 +16,167 @@
 #import "TTAccountLoginManager.h"
 #import "TTAccountManager.h"
 #import "ToastManager.h"
+#import "UIView+Utils.h"
+#import "TTUIResponderHelper.h"
+#import "FHIMFrequencyControlManager.h"
+
+#define SCREEN_WIDTH    [UIScreen mainScreen].bounds.size.width
+#define SCREEN_HEIGHT   [UIScreen mainScreen].bounds.size.height
+#define ANIMATION_DURATION  0.25
+#define LOGIN_HALF_VIEW_HEIGHT  479
+
+@interface FHLoginHalfView : UIView<FHLoginViewDelegate>
+
+@property (nonatomic, strong) FHOneKeyLoginView *oneKeyLoginView;
+@property (nonatomic, strong) UIButton *bgDismissButton;
+@property (nonatomic, strong) UIView *animationContainerView;
+@property (nonatomic, weak)  FHLoginViewController *viewController;
+
+- (void)showOn:(UIViewController *)vc;
+- (void)dismiss;
+@end
+
+@implementation FHLoginHalfView
+
+- (UIButton *)bgDismissButton {
+    if(!_bgDismissButton) {
+        _bgDismissButton = [UIButton buttonWithType:UIButtonTypeCustom];
+        _bgDismissButton.frame = CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT - self.animationContainerView.height);
+        [_bgDismissButton addTarget:self action:@selector(dismiss) forControlEvents:UIControlEventTouchUpInside];
+    }
+    return _bgDismissButton;
+}
+
+- (CGFloat)safeAreaBottom {
+    CGFloat ret = 0;
+    if(@available(iOS 11.0, *)) {
+        ret = [TTUIResponderHelper mainWindow].safeAreaInsets.bottom;
+    }
+    return ret;
+}
+
+- (UIView *)animationContainerView {
+    if(!_animationContainerView) {
+        _animationContainerView = [[UIView alloc] initWithFrame:CGRectMake(0, SCREEN_HEIGHT, SCREEN_WIDTH, LOGIN_HALF_VIEW_HEIGHT + [self safeAreaBottom])];
+        _animationContainerView.backgroundColor = [UIColor themeWhite];
+        UIBezierPath *maskPath = [UIBezierPath bezierPathWithRoundedRect:_animationContainerView.bounds byRoundingCorners:UIRectCornerTopLeft | UIRectCornerTopRight cornerRadii:CGSizeMake(10, 10)];
+        CAShapeLayer *maskLayer = [[CAShapeLayer alloc] init];
+        maskLayer.frame = _animationContainerView.bounds;
+        maskLayer.path = maskPath.CGPath;
+        _animationContainerView.layer.mask = maskLayer;
+    }
+    return _animationContainerView;
+}
+
+- (FHOneKeyLoginView *)oneKeyLoginView {
+    if(!_oneKeyLoginView) {
+        _oneKeyLoginView = [[FHOneKeyLoginView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, LOGIN_HALF_VIEW_HEIGHT) isHalfLogin:YES];
+        
+        UIButton *closeBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+        [closeBtn setImage:[UIImage imageNamed:@"douyin_login_close"] forState:UIControlStateNormal];
+        closeBtn.frame = CGRectMake(0, 0, 54, 54);
+        [closeBtn addTarget:self action:@selector(dismiss) forControlEvents:UIControlEventTouchUpInside];
+        [_oneKeyLoginView addSubview:closeBtn];
+        
+        _oneKeyLoginView.delegate = self;
+        
+    }
+    return _oneKeyLoginView;
+}
+
+- (instancetype)initWithFrame:(CGRect)frame {
+    if(self = [super initWithFrame:frame]) {
+        self.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0.3];
+        [self.animationContainerView addSubview:self.oneKeyLoginView];
+        [self addSubview:self.bgDismissButton];
+        [self addSubview:self.animationContainerView];
+    }
+    return self;
+}
+
+- (void)showOn:(UIViewController *)vc {
+
+    UIView *onView = vc.view;
+    [onView addSubview:self];
+        
+    CGRect frame = self.animationContainerView.frame;
+    frame.origin.y = SCREEN_HEIGHT;
+    self.animationContainerView.frame = frame;
+    self.alpha = 0.0f;
+    
+    [UIView animateWithDuration:ANIMATION_DURATION animations:^{
+        self.alpha = 1.0f;
+        CGRect frame = self.animationContainerView.frame;
+        frame.origin.y = SCREEN_HEIGHT - self.animationContainerView.size.height;
+        self.animationContainerView.frame = frame;
+    }];
+    [self traceOneKeyLoginShow];
+}
+
+- (void)traceOneKeyLoginShow {
+    NSMutableDictionary *tracerDict = [self.viewController tracerDict].mutableCopy;
+    NSString *login_suggest_method = @"one_click";
+    tracerDict[@"login_suggest_method"] = login_suggest_method;
+    tracerDict[@"carrier_one_click_show"] = @(1);
+    [FHLoginTrackHelper loginShow:tracerDict];
+    [[NSUserDefaults standardUserDefaults] setObject:login_suggest_method forKey:FHLoginTrackLoginSuggestMethodKey];
+    [[NSUserDefaults standardUserDefaults] synchronize];
+}
+
+- (void)dismiss {
+    self.alpha = 1.0f;
+    CGRect frame = self.animationContainerView.frame;
+    frame.origin.y = SCREEN_HEIGHT - self.animationContainerView.size.height;
+    self.animationContainerView.frame = frame;
+    [UIView animateWithDuration:ANIMATION_DURATION animations:^{
+        CGRect frame = self.animationContainerView.frame;
+        frame.origin.y = SCREEN_HEIGHT;
+        self.animationContainerView.frame = frame;
+        self.alpha = 0.0f;
+    } completion:^(BOOL finished) {
+        [self removeFromSuperview];
+        [self.class showToastWhenLoginFailedOrCancel];
+    }];
+}
+
+- (void)oneKeyLoginAction {
+    NSMutableDictionary *tracerDict = [self.viewController tracerDict].mutableCopy;
+    tracerDict[@"login_method"] = @"one_click";
+    [FHLoginTrackHelper loginSubmit:tracerDict];
+    
+    __weak typeof(self) wself = self;
+    [[ToastManager manager] showToast:@"正在登录中"];
+    [TTAccount oneKeyLoginWithCompleted:^(NSError *_Nullable error) {
+        //运营商一键登录，自带手机号，不需要绑定流程
+        [wself handleLoginResult:nil phoneNum:nil smsCode:nil error:error isOneKeyLogin:YES];
+        [FHLoginTrackHelper loginResult:tracerDict error:error];
+        if (!error) {
+            [[NSUserDefaults standardUserDefaults] setObject:@"one_click" forKey:FHLoginTrackLastLoginMethodKey];
+            [[NSUserDefaults standardUserDefaults] synchronize];
+        }
+    }];
+}
+
+- (void)handleLoginResult:(UIImage *)captchaImage phoneNum:(NSString *)phoneNumber smsCode:(NSString *)smsCode error:(NSError *)error isOneKeyLogin:(BOOL)isOneKeyLogin {
+    if (!error) {
+        [[ToastManager manager] showToast:@"登录成功"];
+        [self dismiss];
+    } else {
+        [self handleLoginError:error];
+    }
+}
+
+- (void)handleLoginError:(NSError *)error {
+    [self.class showToastWhenLoginFailedOrCancel];
+}
+
++ (void)showToastWhenLoginFailedOrCancel {
+    if(![TTAccount sharedAccount].isLogin) {
+        NSString *errorMessage = @"需要先登录才能进行操作哦";
+        [[ToastManager manager] showToast:errorMessage];
+    }
+}
+@end
 
 @interface FHLoginViewController ()<TTRouteInitializeProtocol>
 
@@ -30,6 +191,9 @@
 @property (nonatomic, assign)   BOOL       present;
 @property (nonatomic, assign)   BOOL       isFromMineTab;
 @property (nonatomic, weak) UITextField *textField;
+
+@property (nonatomic, strong) FHLoginHalfView *halfLoginView;
+@property (nonatomic, assign) BOOL isDisableDragBack;
 @end
 
 @implementation FHLoginViewController
@@ -90,6 +254,8 @@
         if (params[@"present"]) {
             self.present = [params[@"present"] boolValue];
         }
+        
+        self.isDisableDragBack = [params tta_boolForKey:@"ttDisableDragBack"];
     }
     return self;
 }
@@ -100,6 +266,8 @@
     self.automaticallyAdjustsScrollViewInsets = NO;
     [self initNavbar];
     [self initViewModel];
+
+    self.ttDisableDragBack = self.isDisableDragBack;
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -136,6 +304,10 @@
     __weak typeof(self) weakSelf = self;
     [self.customNavBarView setLeftButtonBlock:^{
         [weakSelf cancelLoginAction];
+        
+        if([weakSelf.tracerModel.enterFrom isEqualToString:@"conversation_detail"]) {
+            [FHLoginHalfView showToastWhenLoginFailedOrCancel];
+        }
     }];
 }
 
@@ -183,7 +355,7 @@
                 make.left.right.equalTo(self.view);
             }];
             self.currentShowView = self.onekeyLoginView;
-            [self.onekeyLoginView updateOneKeyLoginWithPhone:self.viewModel.mobileNumber service:[self.viewModel serviceName] protocol:[self.viewModel protocolAttrTextByIsOneKeyLoginViewType:type] showDouyinIcon:[self.viewModel shouldShowDouyinIcon]];
+            [self.onekeyLoginView updateOneKeyLoginWithPhone:self.viewModel.mobileNumber service:[self.viewModel.class serviceName] protocol:[self.viewModel protocolAttrTextByIsOneKeyLoginViewType:type] showDouyinIcon:[self.viewModel shouldShowDouyinIcon]];
         }
             break;
         case FHLoginViewTypeMobile:
@@ -244,4 +416,33 @@
     [self.view bringSubviewToFront:self.customNavBarView];
 }
 
+#pragma mark - 半屏登录页面
+- (void)supportCarrierLogin:(void (^)(BOOL))completion {
+    if (!completion) {
+        return;
+    }
+    if ([FHLoginSharedModel sharedModel].hasRequestedApis) {
+        completion([FHLoginSharedModel sharedModel].isOneKeyLogin);
+    } else {
+        [[FHLoginSharedModel sharedModel] loadOneKayAndDouyinConfigs:^{
+            completion([FHLoginSharedModel sharedModel].isOneKeyLogin);
+        }];
+    }
+}
+
+- (void)showHalfLogin:(UIViewController *)vc {
+    NSString *mobileNumber = [FHLoginSharedModel sharedModel].mobileNumber;
+    NSString *serviceName = [FHLoginViewModel serviceName];
+    
+    [self.halfLoginView.oneKeyLoginView updateOneKeyLoginWithPhone:mobileNumber service:serviceName protocol:[FHLoginViewModel protocolAttrTextForOneKeyLoginViewType] showDouyinIcon:NO showCodeLoginBtn:NO];
+    [self.halfLoginView showOn:vc];
+}
+
+- (FHLoginHalfView *)halfLoginView {
+    if(!_halfLoginView) {
+        _halfLoginView = [[FHLoginHalfView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT)];
+        _halfLoginView.viewController = self;
+    }
+    return _halfLoginView;
+}
 @end

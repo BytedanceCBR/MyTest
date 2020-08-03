@@ -26,7 +26,7 @@
         loginTipView.traceDict = tracerDic;
         loginTipView.navbarHeight = navbarHeight;
         [bacView addSubview:loginTipView];
-         loginTipView.showTimer =   [NSTimer scheduledTimerWithTimeInterval:10 target:loginTipView selector:@selector(loginTipViewDsappear) userInfo:nil repeats:NO];
+        loginTipView.showTimer =   [NSTimer scheduledTimerWithTimeInterval:10 target:loginTipView selector:@selector(loginTipViewDsappear) userInfo:nil repeats:NO];
         return loginTipView;
     }else {
         return nil;

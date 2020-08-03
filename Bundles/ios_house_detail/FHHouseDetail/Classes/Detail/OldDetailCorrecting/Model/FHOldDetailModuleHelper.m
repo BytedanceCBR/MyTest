@@ -206,7 +206,7 @@
     }else if (model.houseModelType == FHHouseModelTypeLocationPeriphery) {
         titleMolde.title = @"位置及周边配套";
     }else if (model.houseModelType == FHHouseModelTypeHousingEvaluation) {
-        titleMolde.title = @"房源评价动态";
+        titleMolde.title = @"房源动态";
     }
     //外面传了就直接用
     if(title.length > 0){

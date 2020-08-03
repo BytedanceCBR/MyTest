@@ -523,6 +523,8 @@
     @"imprId": @"impr_id",
     @"groupId": @"group_id",
     @"groupSource": @"group_source",
+    @"associateInfo": @"associate_info",
+    @"realtorId":@"realtor_id"
   };
   return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
      return dict[keyName]?:keyName;

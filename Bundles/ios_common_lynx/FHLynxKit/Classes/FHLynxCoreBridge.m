@@ -19,7 +19,8 @@
 #import "TTNetworkManager.h"
 #import "FHRNHTTPRequestSerializer.h"
 #import "FHUtils.h"
-
+#import "TTPhotoScrollViewController.h"
+#import "FHImageModel.h"
 #define FHLynxBridgeMsgSuccess @(1)
 #define FHLynxBridgeMsgFailed @(0)
 
@@ -44,6 +45,7 @@ typedef void(^FHLynxBridgeCallback)(NSString *response);
         @"getStringSetting" : NSStringFromSelector(@selector(getStringSetting:)),
         @"showToast" : NSStringFromSelector(@selector(showToast:)),
         @"log" : NSStringFromSelector(@selector(log:logInfo:)),
+        @"previewImage" : NSStringFromSelector(@selector(previewImageInfo:)),
         @"fetch" : NSStringFromSelector(@selector(fetchWithParam:callback:)),
 //        @"dispatchEvent": NSStringFromSelector(@selector(dispatchEvent:label:params:)),
     };
@@ -107,6 +109,59 @@ typedef void(^FHLynxBridgeCallback)(NSString *response);
 
 - (void)log:(NSString *)logKey logInfo:(NSString *)logInfo{
     NSLog(@"[FHLynx] %@:%@",logKey,logInfo);
+}
+
+- (void)previewImageInfo:(NSString *)imageInfo{
+    NSLog(@"[FHLynx] %@ thrad = %d",imageInfo,[NSThread isMainThread]);
+
+        void (^invokBlock)(void) = ^() {
+              if (!isEmptyString(imageInfo)) {
+                   NSDictionary *imageInfoDict = [FHUtils dictionaryWithJsonString:imageInfo];
+                   NSInteger index = [imageInfoDict[@"index"] integerValue];
+                   NSArray * imagesArray = imageInfoDict[@"images"];
+                   
+                   TTPhotoScrollViewController *vc = [[TTPhotoScrollViewController alloc] init];
+                   vc.dragToCloseDisabled = YES;
+                   vc.mode = PhotosScrollViewSupportDownloadMode;
+                   vc.startWithIndex = index;
+                   
+                   NSMutableArray *models = [NSMutableArray arrayWithCapacity:imagesArray.count];
+                   for (NSString *imageUrlStr in imagesArray) {
+                       if ([imageUrlStr isKindOfClass:[NSString class]]) {
+                           FHImageModel *image = [[FHImageModel alloc] init];
+                           
+                           NSMutableDictionary *dict = [NSMutableDictionary new];
+                           [dict setValue:imageUrlStr forKey:kTTImageURIKey];
+                           [dict setValue:imageUrlStr forKey:TTImageInfosModelURL];
+//                           [dict setValue:@([UIScreen mainScreen].bounds.size.width) forKey:kTTImageWidthKey];
+//                           [dict setValue:@([UIScreen mainScreen].bounds.size.height) forKey:kTTImageHeightKey];
+                           NSMutableArray *urlList = [[NSMutableArray alloc] initWithCapacity:0];
+                           if (!isEmptyString(imageUrlStr)) {
+                               [urlList addObject:@{TTImageInfosModelURL : imageUrlStr}];
+                           }
+                           [dict setValue:urlList forKey:kTTImageURLListKey];
+                           TTImageInfosModel *model = [[TTImageInfosModel alloc] initWithDictionary:dict];
+                           model.imageType = TTImageTypeLarge;
+                           [models addObject:model];
+                       }
+                   }
+                   vc.imageInfosModels = models;
+                   [vc setStartWithIndex:index];
+                   UIImage *placeholder = [UIImage imageNamed:@"default_image"];
+                   NSMutableArray *placeholders = [[NSMutableArray alloc] initWithCapacity:imagesArray.count];
+                   for (NSInteger i = 0 ; i < imagesArray.count; i++) {
+                       [placeholders addObject:placeholder];
+                   }
+                   vc.placeholders = placeholders;
+                   [vc presentPhotoScrollView];
+                   
+               }
+        };
+        if ([NSThread isMainThread]) {
+            invokBlock();
+        } else {
+            dispatch_sync(dispatch_get_main_queue(), invokBlock);
+        }
 }
 
 - (NSString *)getStringSetting:(NSString *)key {

@@ -32,6 +32,7 @@
 @property (strong ,nonatomic) FHUGCCellUserInfoView *userInfoView;
 @property (nonatomic ,assign) CGFloat imageViewheight;
 @property(nonatomic ,strong) FHFeedUGCCellModel *cellModel;
+@property (strong ,nonatomic) FHUGCCellUserInfoView *lineView;
 
 @end
 @implementation FHHouseDeatilRGCImageCell
@@ -98,6 +99,10 @@
     _bottomView.marginRight = 8;
     _bottomView.paddingLike = 30;
     [self.contentContainer addSubview:_bottomView];
+    
+    self.lineView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width- leftMargin - rightMargin -30, .5)];
+    self.lineView.backgroundColor = [UIColor themeGray6];
+    [self.contentContainer addSubview:self.lineView];
 }
 
 - (void)initConstraints {
@@ -131,7 +136,7 @@
     self.contentLabel.width = [UIScreen mainScreen].bounds.size.width - leftMargin - rightMargin -30;
     self.contentLabel.height = 0;
     
-    self.multiImageView.top = self.userInfoView.bottom + 10;
+    self.multiImageView.top = self.userInfoView.bottom + 7;
     self.multiImageView.left = leftMargin;
     self.multiImageView.width = [UIScreen mainScreen].bounds.size.width - leftMargin - rightMargin -30;
     self.multiImageView.height = self.imageViewheight;
@@ -140,6 +145,11 @@
     self.bottomView.left = 0;
     self.bottomView.width = [UIScreen mainScreen].bounds.size.width- leftMargin - rightMargin ;
     self.bottomView.height = bottomViewHeight;
+    
+    self.lineView.top = self.multiImageView.bottom + 30;
+    self.lineView.left = leftMargin;
+    self.lineView.width = [UIScreen mainScreen].bounds.size.width- leftMargin - rightMargin -30 ;
+    self.lineView.height = 0.5;
     
     if(isEmptyString(cellModel.content)){
           self.contentLabel.hidden = YES;
@@ -155,9 +165,10 @@
     //图片
     [self.multiImageView updateImageView:cellModel.imageList largeImageList:cellModel.largeImageList];
     
-    UIView *lastView = self.multiImageView;
+    UIView *lastView = cellModel.imageList.count == 0?self.contentLabel:self.multiImageView;
     CGFloat topOffset = 15;
     self.bottomView.top = lastView.bottom + topOffset;
+    self.lineView.top = lastView.bottom + 30;
     //
     //    self.originView.top = self.multiImageView.bottom + 10;
     //    self.originView.left = leftMargin;
@@ -205,13 +216,20 @@
         [self.bottomView.commentBtn setTitle:[TTBusinessManager formatCommentCount:commentCount] forState:UIControlStateNormal];
     }
     [self.bottomView updateLikeState:cellModel.diggCount userDigg:cellModel.userDigg];
+    
+    UITapGestureRecognizer* tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(goToCommunityDetail:)];
+    [self.bottomView.positionView addGestureRecognizer:tap];
     //内容
     self.contentLabel.numberOfLines = cellModel.numberOfLines;
     
     [self initConstraints];
     
-  
-
+    self.bottomView.hidden = !cellModel.isInRealtorEvaluationList;
+    
+    self.lineView.hidden = cellModel.isInRealtorEvaluationList || !cellModel.isShowLineView;
+    
+    [self.headerView hiddenConnectBtn:cellModel.isHiddenConnectBtn];
+    
 }
 
 // 评论点击
@@ -260,9 +278,9 @@
         FHFeedUGCCellModel *cellModel = (FHFeedUGCCellModel *)data;
         CGFloat height;
         if (cellModel.isInRealtorEvaluationList) {
-            height =  cellModel.contentHeight  +75 + 30 + 50 + 75;
+            height =  cellModel.contentHeight  +(cellModel.imageList.count == 0?15:75+ 22)  + 50 + 85;
         }else {
-            height =  cellModel.contentHeight  +75 + 30 + 50 + 40;
+            height =  cellModel.contentHeight  +(cellModel.imageList.count == 0?0:75+ 30)  + 50 + 40;
         }
         return height;
     }

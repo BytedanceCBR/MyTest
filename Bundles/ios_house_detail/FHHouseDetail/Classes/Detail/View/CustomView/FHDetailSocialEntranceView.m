@@ -327,8 +327,13 @@
         if (attrStr.length > 0) {
             [attrStr addAttributes:typeAttributes range:NSMakeRange(0, attrStr.length)];
         }
+
         [self.messageLabel setText:attrStr];
-        
+        self.messageLabel.attributedTruncationToken = [self truncationFont:[UIFont systemFontOfSize:12]
+                                                                 contentColor:[UIColor whiteColor]
+                                                                        color:[UIColor themeRed3]];
+        self.messageLabel.linkAttributes = @{NSForegroundColorAttributeName: [UIColor themeGray2], NSFontAttributeName: [UIFont themeFontRegular:12]};
+        self.messageLabel.activeLinkAttributes = @{NSForegroundColorAttributeName: [UIColor themeGray2], NSFontAttributeName: [UIFont themeFontRegular:12]};
         YYTextLayout *layout = [YYTextLayout layoutWithContainerSize:CGSizeMake(2000, 18) text:attrStr];
         CGSize size = layout.textBoundingSize;
         
@@ -348,6 +353,27 @@
         
         [self layoutIfNeeded];
     }
+}
+
+//...全文处理
+- (NSAttributedString *)truncationFont:(UIFont *)font contentColor:(UIColor *)contentColor color:(UIColor *)color {
+    NSString * moreStr = NSLocalizedString(@"...", nil);
+    NSMutableDictionary * attrDic = @{}.mutableCopy;
+    if (font) {
+        [attrDic setValue:font forKey:NSFontAttributeName];
+    }
+    if (color) {
+        [attrDic setValue:color forKey:NSForegroundColorAttributeName];
+    }
+    NSMutableAttributedString * truncationString = [[NSMutableAttributedString alloc] initWithString:moreStr attributes:attrDic];
+    // TODO 其实这里使用了错误的方式来修复点击无效的 bug，暂且如此
+    [truncationString addAttribute:NSLinkAttributeName  // 修复点击问题的bug 强制加一个无用action
+                             value:[NSURL URLWithString:@"www.bytedance.contentTruncationLinkURLString"]
+                             range:NSMakeRange(0, moreStr.length)];
+    if (contentColor) {
+        [truncationString addAttribute:NSForegroundColorAttributeName value:contentColor range:NSMakeRange(0, @"...".length)];
+    }
+    return truncationString.copy;
 }
 
 - (void)setDirection:(FHDetailSocialMessageDirection)direction {

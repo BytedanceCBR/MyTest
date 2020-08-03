@@ -32,7 +32,7 @@
 #import "TTVSettingsConfiguration.h"
 #import "TTSettingsManager.h"
 #import <TTBaseLib/TTSandBoxHelper.h>
-
+#import <ByteDanceKit/NSDictionary+BTDAdditions.h>
 
 #define kErrorDescriptionAPIKey @"description"
 
@@ -5467,6 +5467,34 @@ static NSString *const kFFeedRefreshStrategy = @"feed_refresh_settings";
     return YES;
 }
 
++ (BOOL)enableRecordVoiceSegment {
+    NSDictionary *fhSettings = [self fhSettings];
+    if (fhSettings != nil && [fhSettings objectForKey:@"f_im_voice_message_enable"] != nil) {
+        BOOL showBtn = [[fhSettings objectForKey:@"f_im_voice_message_enable"] boolValue];
+        return showBtn;
+    }
+    return NO;
+}
++ (BOOL)enableIMOnlineMonitorLogic {
+    NSDictionary *fhSettings = [self fhSettings];
+    if (fhSettings != nil && [fhSettings objectForKey:@"f_im_online_monitor_logic_enable"] != nil) {
+        BOOL isEnable = [[fhSettings objectForKey:@"f_im_online_monitor_logic_enable"] boolValue];
+        return isEnable;
+    }
+    return NO;
+}
+
++ (BOOL)disableDouyinIconLoginLogic {
+    NSDictionary *fhSettings = [self fhSettings];
+    if (fhSettings != nil && [fhSettings objectForKey:@"login_settings"] != nil) {
+        //如果获取到，则 update_version_code >= review 版本则 为 1，否则为0
+        //注意逻辑，线上为0，isDisable NO，review 为 YES
+        NSDictionary *loginSettings = [fhSettings btd_dictionaryValueForKey:@"login_settings"];
+        BOOL isDisable = [loginSettings btd_boolValueForKey:@"disable_douyin_icon" default:YES];
+        return isDisable;
+    }
+    return YES;
+}
 @end
 
 

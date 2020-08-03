@@ -12,6 +12,7 @@
 #import "FHEncyclopediaViewModel.h"
 #import "FHTracerModel.h"
 #import "FHLynxManager.h"
+#import "TTReachability.h"
 @interface FHEncyclopediaViewController ()
 @property (weak, nonatomic) UICollectionView *collectionView;
 @property (weak, nonatomic) FHEncyclopediaHeader *encyclopediaHeader;
@@ -32,7 +33,6 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     [self initNav];
-    [self addDefaultEmptyViewFullScreen];
     [self checkLocalData];
 }
 - (void)checkLocalData {
@@ -40,11 +40,16 @@
    BOOL jumpLynxItem = [[FHLynxManager sharedInstance] checkChannelTemplateIsAvalable:@"ugc_encyclopedia_lynx_item" templateKey:[FHLynxManager defaultJSFileName]];
     if (jumpLynxHeader && jumpLynxItem) {
         [self initUI];
+        [self addDefaultEmptyViewFullScreen];
         [self initViewModel];
-        [self.emptyView hideEmptyView];
     }else {
        [self.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoData];
     }
+    
+}
+
+-(void)retryLoadData {
+    [_viewModel requestHeaderConfig];
 }
 
 - (void)initUI {

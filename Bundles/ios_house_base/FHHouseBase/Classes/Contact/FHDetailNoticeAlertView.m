@@ -131,7 +131,7 @@
         // 显示 151*****010
         NSString *tempPhone = phoneNum;
         if (phoneNum.length == 11) {
-            tempPhone = [NSString stringWithFormat:@"%@*****%@",[phoneNum substringToIndex:3],[phoneNum substringFromIndex:7]];
+            tempPhone = [NSString stringWithFormat:@"%@****%@",[phoneNum substringToIndex:3],[phoneNum substringFromIndex:7]];
             self.originPhoneNumber = phoneNum;
         }
         self.phoneTextField.text = tempPhone;

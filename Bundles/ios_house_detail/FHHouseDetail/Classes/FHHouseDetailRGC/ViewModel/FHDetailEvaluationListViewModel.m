@@ -42,8 +42,6 @@
 @property(nonatomic, strong) FHRealtorEvaluatingPhoneCallModel *realtorPhoneCallModel;
 @property (copy, nonatomic) NSString *houseType;
 @property (copy, nonatomic) NSString *houseId;
-
-
 @end
 @implementation FHDetailEvaluationListViewModel
 - (instancetype)initWithController:(FHDetailEvaluationListViewController *)viewController tableView:(UITableView *)table headerView:(FHDetailEvaluationListViewHeader *)header userInfo:(NSDictionary *)userInfo {
@@ -239,7 +237,7 @@ self.tableView.mj_footer.hidden = NO;
 if (hasMore) {
     [self.tableView.mj_footer endRefreshing];
 }else {
-    [self.refreshFooter setUpNoMoreDataText:@"我是有底线的" offsetY:-3];
+    [self.refreshFooter setUpNoMoreDataText:@"- 我是有底线的哟 -  " offsetY:-3];
     [self.tableView.mj_footer endRefreshingWithNoMoreData];
 }
 }
@@ -252,20 +250,21 @@ if (hasMore) {
         cellModel.categoryId = self.categoryId;
         cellModel.tableView = self.tableView;
         cellModel.enterFrom = [self.listController categoryName];
+        cellModel.isShowLineView = NO;
         switch (cellModel.cellType) {
             case FHUGCFeedListCellTypeUGC:
                 cellModel.cellSubType = FHUGCFeedListCellSubTypeUGCBrokerImage;
-//                contentHeight = model.contentHeight  +75 + 20 + 50 +contentHeight + 30;
                 break;
             case FHUGCFeedListCellTypeUGCSmallVideo:
                 cellModel.cellSubType = FHUGCFeedListCellSubTypeUGCBrokerVideo;
-//                contentHeight = model.contentHeight  +150 + 20 + 50 +contentHeight + 45;
                 break;
             default:
                 break;
         }
         cellModel.tracerDic = self.tracerDic;
-        [resultArray addObject:cellModel];
+        if (cellModel) {
+            [resultArray addObject:cellModel];
+        }
     }
     return resultArray;
 }
@@ -377,12 +376,22 @@ if (hasMore) {
     [self.realtorPhoneCallModel phoneChatActionWithAssociateModel:associatePhone];
 }
 
+- (void)goToCommunityDetail:(FHFeedUGCCellModel *)cellModel {
+    [self.detailJumpManager goToCommunityDetail:cellModel];
+}
+
 - (void)lookAllLinkClicked:(FHFeedUGCCellModel *)cellModel cell:(nonnull FHUGCBaseCell *)cell {
     self.currentCellModel = cellModel;
     self.currentCell = cell;
     self.detailJumpManager.currentCell = self.currentCell;
     [self.detailJumpManager jumpToDetail:cellModel showComment:NO enterType:@"feed_content_blank"];
 }
+
+- (void)gotoLinkUrl:(FHFeedUGCCellModel *)cellModel url:(NSURL *)url {
+    // PM要求点富文本链接也进入详情页
+    [self lookAllLinkClicked:cellModel cell:nil];
+}
+
 
 - (void)clickRealtorHeader:(FHFeedUGCCellModel *)cellModel cell:(FHUGCBaseCell *)cell {
     if ([self.houseType integerValue] == FHHouseTypeSecondHandHouse) {

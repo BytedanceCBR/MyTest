@@ -67,7 +67,7 @@
     if (self) {
         self.combiner = [[FHConversationDataCombiner alloc] init];
         _dataList = [[NSMutableArray alloc] init];
-        _isFirstLoad = YES;
+        _isFirstLoad = self.combiner.isFirstLoad;
         self.tableView = tableView;
 
         [tableView registerClass:[FHMessageCell class] forCellReuseIdentifier:kCellId];
@@ -80,9 +80,7 @@
         @weakify(self)
         [[[[NSNotificationCenter defaultCenter] rac_addObserverForName:KUSER_UPDATE_NOTIFICATION object:nil] throttle:2] subscribeNext:^(NSNotification *_Nullable x) {
             @strongify(self)
-            NSArray<IMConversation *> *allConversations = [[IMManager shareInstance].chatService allConversations];
-            [_combiner resetConversations:allConversations];
-            [self.tableView reloadData];
+            [self refreshConversationList];
         }];
         [[[[NSNotificationCenter defaultCenter] rac_addObserverForName:kTTMessageNotificationTipsChangeNotification object:nil] throttle:2] subscribeNext:^(NSNotification *_Nullable x) {
             @strongify(self)
@@ -94,6 +92,12 @@
         }];
     }
     return self;
+}
+
+- (void)refreshConversationList {
+    NSArray<IMConversation *> *allConversations = [[IMManager shareInstance].chatService allConversations];
+    [_combiner resetConversations:allConversations];
+    [self.tableView reloadData];
 }
 
 - (void)setPageType:(NSString *)pageType {
@@ -203,7 +207,7 @@
     if (indexPath.row == 0) {
         return 92;
     }
-    return 82;
+    return 96;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
@@ -401,7 +405,6 @@
 - (void)conversationUpdated:(NSString *)conversationIdentifier {
     NSArray<IMConversation *> *allConversations = [[IMManager shareInstance].chatService allConversations];
     [_combiner resetConversations:allConversations];
-//    [self.tableView reloadData];
     [self checkShouldShowEmptyMaskView];
 }
 

@@ -6,11 +6,14 @@ NS_ASSUME_NONNULL_BEGIN
 @interface FHFeedUGCContentAttachCardInfoExtraModel : JSONModel
 
 @property (nonatomic, copy , nullable) NSString *groupSource;
+@property (nonatomic, copy , nullable) NSString *associateInfo;
 @property (nonatomic, copy , nullable) NSString *imprId;
 @property (nonatomic, copy , nullable) NSString *houseType;
 @property (nonatomic, copy , nullable) NSString *fromGid;
 @property (nonatomic, copy , nullable) NSString *groupId;
 @property (nonatomic, copy , nullable) NSString *event;
+@property (nonatomic, copy , nullable) NSString *realtorId;
+
 @end
 
 @interface FHFeedUGCContentAttachCardInfoButtonModel : JSONModel

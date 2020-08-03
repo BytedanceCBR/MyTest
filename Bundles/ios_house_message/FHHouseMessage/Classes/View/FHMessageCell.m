@@ -16,16 +16,21 @@
 #import "TTRichSpanText.h"
 #import "TIMOMessage.h"
 #import "TIMMessageStoreBridge.h"
+#import "FHShadowLabel.h"
 
 #define CURRENT_CALENDAR [NSCalendar currentCalendar]
 
 @interface FHMessageCell()
 
+@property(nonatomic, strong) UIView *backView;
 @property(nonatomic, strong) UIImageView *iconView;
 @property(nonatomic, strong) UILabel *titleLabel;
+@property(nonatomic, strong) UILabel *scoreLabel;
+@property(nonatomic, strong) FHShadowLabel *companyLabel;
 @property(nonatomic, strong) UILabel *subTitleLabel;
 @property(nonatomic, strong) UILabel *timeLabel;
 @property(nonatomic, strong) UIImageView *msgStateView;
+@property(nonatomic, strong) UIImageView *muteImageView;
 
 @end
 
@@ -56,100 +61,161 @@
 
 - (void)initViews
 {
+    self.contentView.backgroundColor = [UIColor themeGray7];
+    
+    self.backView = [[UIView alloc] init];
+    self.backView.backgroundColor = [UIColor themeWhite];
+    self.backView.layer.cornerRadius = 10;
+    self.backView.layer.shadowOffset = CGSizeMake(0, 5);
+    self.backView.layer.shadowRadius = 4.5;
+    self.backView.layer.shadowColor = RGB(110, 110, 110).CGColor;
+    self.backView.layer.shadowOpacity = 0.1;
+    [self.contentView addSubview:self.backView];
+    
     self.iconView = [[UIImageView alloc] init];
-    [self.contentView addSubview:_iconView];
+    [self.backView addSubview:_iconView];
     _iconView.layer.masksToBounds = YES;
-    _iconView.layer.cornerRadius = 27;
+    _iconView.layer.cornerRadius = 25;
     _iconView.contentMode = UIViewContentModeScaleAspectFill;
     
+    self.scoreLabel = [self LabelWithFont:[UIFont themeFontRegular:12] textColor:[UIColor themeGray1]];
+    [self.backView addSubview:self.scoreLabel];
+    
+    self.companyLabel = [[FHShadowLabel alloc] initWithEdgeInsets:UIEdgeInsetsMake(3, 4, 3, 4)];
+    [self.backView addSubview:self.companyLabel];
+    self.companyLabel.font = [UIFont themeFontRegular:10];
+    self.companyLabel.textColor = [UIColor themeGray2];
+    self.companyLabel.textAlignment = NSTextAlignmentCenter;
+    self.companyLabel.layer.backgroundColor = [UIColor themeGray7].CGColor;
+    self.companyLabel.layer.cornerRadius = 8;
+    self.companyLabel.hidden = YES;
+    [self.companyLabel setContentCompressionResistancePriority:UILayoutPriorityDefaultLow forAxis:UILayoutConstraintAxisHorizontal];
+    
     self.msgStateView = [[UIImageView alloc] init];
-    [self.contentView addSubview:_msgStateView];
+    [self.backView addSubview:_msgStateView];
     self.msgStateView.hidden = YES;
     
     self.titleLabel = [self LabelWithFont:[UIFont themeFontMedium:16] textColor:[UIColor themeGray1]];
-    [self.contentView addSubview:_titleLabel];
+    [self.backView addSubview:_titleLabel];
     
-    self.subTitleLabel = [self LabelWithFont:[UIFont themeFontRegular:14] textColor:[UIColor themeGray3]];
-    [self.contentView addSubview:_subTitleLabel];
+    self.subTitleLabel = [self LabelWithFont:[UIFont themeFontRegular:12] textColor:[UIColor themeGray3]];
+    [self.backView addSubview:_subTitleLabel];
     
     self.timeLabel = [self LabelWithFont:[UIFont themeFontRegular:12] textColor:[UIColor themeGray3]];
-    [self.contentView addSubview:_timeLabel];
+    [self.backView addSubview:_timeLabel];
+    [self.timeLabel setContentCompressionResistancePriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisHorizontal];
     
     self.unreadView = [[TTBadgeNumberView alloc] init];
     //self.unreadView.badgeNumberPointSize = 12;
-    [self.unreadView setBadgeLabelFontSize:12];
+    [self.unreadView setBadgeLabelFontSize:10];
     _unreadView.badgeViewStyle = TTBadgeNumberViewStyleDefaultWithBorder;
-    [self.contentView addSubview:_unreadView];
+    [self.backView addSubview:_unreadView];
+    
+    self.muteImageView = [[UIImageView alloc] init];
+    [self.backView addSubview:self.muteImageView];
+    self.muteImageView.image = [UIImage imageNamed:@"chat_status_mute"];
+    self.muteImageView.hidden = YES;
 }
 
 - (void)initConstraints
 {
+    [self.backView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.mas_equalTo(15);
+        make.right.mas_equalTo(-15);
+        make.top.equalTo(self.contentView);
+        make.bottom.mas_equalTo(-12);
+    }];
+    
     [self.iconView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(23);
-        make.bottom.mas_equalTo(-14);
-        make.width.height.mas_equalTo(54);
+        make.left.mas_equalTo(16);
+        make.centerY.mas_equalTo(self.backView.mas_centerY);
+        make.width.height.mas_equalTo(50);
     }];
     
     [self.titleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(self.iconView.mas_right).offset(19);
-        make.right.mas_equalTo(-100);
-        make.top.mas_equalTo(self.iconView.mas_top).offset(3);
+        make.left.mas_equalTo(self.iconView.mas_right).offset(12);
+        make.top.mas_equalTo(self.backView.mas_top).offset(20);
         make.height.mas_equalTo(22);
+    }];
+    
+    [self.scoreLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.mas_equalTo(self.titleLabel.mas_right).offset(4);
+        make.centerY.mas_equalTo(self.titleLabel.mas_centerY);
+    }];
+    
+    [self.companyLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.height.mas_equalTo(16);
+        make.left.mas_equalTo(self.scoreLabel.mas_right).offset(4);
+        make.centerY.mas_equalTo(self.scoreLabel.mas_centerY);
+        make.width.mas_lessThanOrEqualTo(118);
+        make.right.mas_lessThanOrEqualTo(self.timeLabel.mas_left).offset(-4);
     }];
     
     [self.msgStateView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(self.titleLabel.mas_left);
-        make.top.mas_equalTo(self.titleLabel.mas_bottom).offset(10);
-        make.width.height.mas_equalTo(12);
+        make.centerY.mas_equalTo(self.subTitleLabel.mas_centerY);
+        make.width.height.mas_equalTo(14);
     }];
     
     [self.subTitleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(self.titleLabel.mas_left);
-        make.right.mas_equalTo(self.contentView).offset(-20);
-        make.top.mas_equalTo(self.titleLabel.mas_bottom).offset(6);
+        make.left.mas_equalTo(self.iconView.mas_right).offset(12);
+        make.right.mas_equalTo(self.muteImageView.mas_left).offset(-5);
+        make.top.mas_equalTo(self.titleLabel.mas_bottom).offset(4);
         make.height.mas_equalTo(20);
     }];
     
     [self.timeLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.right.mas_equalTo(self.contentView).offset(-20);
+        make.right.mas_equalTo(self.backView.mas_right).offset(-16);
         make.centerY.mas_equalTo(self.titleLabel.mas_centerY);
         make.height.mas_equalTo(17);
     }];
     
     [self.unreadView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.right.mas_equalTo(self.iconView.mas_right);
-        make.top.mas_equalTo(self.iconView.mas_top);
+        make.right.mas_equalTo(self.iconView.mas_right).offset(4);
+        make.top.mas_equalTo(self.iconView.mas_top).offset(1);
+    }];
+    
+    [self.muteImageView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.size.mas_equalTo(CGSizeMake(14, 14));
+        make.centerY.mas_equalTo(self.subTitleLabel.mas_centerY);
+        make.right.mas_equalTo(-16);
     }];
 }
 
--(void)displaySendState:(ChatMsg *)msg {
+-(void)displaySendState:(ChatMsg *)msg isMute:(BOOL)isMute {
     if (msg.type == ChatMstTypeNotice) {
         [self.msgStateView setHidden:YES];
-        [self updateLayoutForMsgState:ChatMsgStateSuccess];
+        [self updateLayoutForMsgState:ChatMsgStateSuccess isMute:isMute];
     } else if (msg.state == ChatMsgStateFail) {
-        [self.msgStateView setImage:[UIImage imageNamed:@"chat_state_fail_ic"]];
+        [self.msgStateView setImage:[UIImage imageNamed:@"chat_state_fail_orange_ic"]];
         [self.msgStateView setHidden:NO];
-        [self updateLayoutForMsgState:msg.state];
+        [self updateLayoutForMsgState:msg.state isMute:isMute];
     } else if (msg.state == ChatMsgStateSending) {
         [self.msgStateView setImage:[UIImage imageNamed:@"chat_state_message_sending_ic"]];
         [self.msgStateView setHidden:NO];
-        [self updateLayoutForMsgState:msg.state];
+        [self updateLayoutForMsgState:msg.state isMute:isMute];
     } else {
         [self.msgStateView setHidden:YES];
-        [self updateLayoutForMsgState:msg.state];
+        [self updateLayoutForMsgState:msg.state isMute:isMute];
     }
 }
 
--(void)updateLayoutForMsgState:(ChatMsgState)state
+-(void)updateLayoutForMsgState:(ChatMsgState)state isMute:(BOOL)isMute
 {
+    self.muteImageView.hidden = !isMute;
+    
     [self.subTitleLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
         if (state != ChatMsgStateSuccess) {
             make.left.mas_equalTo(self.titleLabel.mas_left).offset(16);
         } else {
             make.left.mas_equalTo(self.titleLabel.mas_left);
         }
-        make.right.mas_equalTo(self.contentView).offset(-20);
-        make.top.mas_equalTo(self.titleLabel.mas_bottom).offset(6);
+        if (isMute) {
+            make.right.mas_equalTo(self.muteImageView.mas_left).offset(-5);
+        } else {
+            make.right.mas_equalTo(self.backView.mas_right).offset(-16);
+        }
+        make.top.mas_equalTo(self.titleLabel.mas_bottom).offset(4);
         make.height.mas_equalTo(20);
     }];
 }
@@ -167,6 +233,7 @@
 - (void)updateWithModel:(FHUnreadMsgDataUnreadModel *)model
 {
     self.titleLabel.text = model.title;
+    self.subTitleLabel.attributedText = nil;
     self.subTitleLabel.text = model.content;
     NSDate* date = [[NSDate alloc] initWithTimeIntervalSince1970:[model.timestamp doubleValue]];
     self.timeLabel.text = [self timeLabelByDate:date];
@@ -175,8 +242,11 @@
     if(!_msgStateView.hidden){
         //im 复用cell
         self.msgStateView.hidden = YES;
-        [self updateLayoutForMsgState:ChatMsgStateSuccess];
+        [self updateLayoutForMsgState:ChatMsgStateSuccess isMute:NO];
     }
+    self.scoreLabel.hidden = YES;
+    self.companyLabel.hidden = YES;
+    self.muteImageView.hidden = YES;
 }
 
 - (void)updateWithChat:(IMConversation*)conversation {
@@ -187,9 +257,12 @@
         } else {
             self.unreadView.badgeNumber = 0;
         }
+        self.muteImageView.hidden = NO;
     } else {
         self.unreadView.badgeNumber = conv.unreadCount;
+        self.muteImageView.hidden = YES;
     }
+    
     BOOL isGroupChat = (conv.type == IMConversationTypeGroupChat);
     ChatMsg *lastMsg = [conv lastChatMsg];
     
@@ -227,16 +300,25 @@
                     }];
                 }
             }
+            self.subTitleLabel.attributedText = nil;
             self.subTitleLabel.text = [NSString stringWithFormat:@"%@ %@", roleHintText, recallHintText];
         }
         else if (isGroupChat) {
-            NSString *cutStr = [self cutLineBreak:[conv lastMessage]];
+            NSString *lastMessage = [conv lastMessage];
+            NSString *cutStr = [self cutLineBreak:lastMessage];
+            
+            
             NSNumber *uid =[NSNumber numberWithLongLong: [[[TTAccount sharedAccount] userIdString] longLongValue]];
             if (lastMsg.isCurrentUser || lastMsg.type == ChatMstTypeNotice) {
                 if ([lastMsg.mentionedUsers containsObject:uid] && ![self lastMsgHasReadInConversation:conv]) {
                     self.subTitleLabel.attributedText = [self getAtAttributeString:cutStr];;
                 } else {
-                    self.subTitleLabel.text = cutStr;
+                    if([conv lastChatMsg].type != ChatMsgTypeVoiceSegment) {
+                        self.subTitleLabel.attributedText = nil;
+                        self.subTitleLabel.text = cutStr;
+                    } else {
+                        [self processVoiceLastMessage:conv lastMessage:cutStr];
+                    }
                 }
             } else {
                 [[FHChatUserInfoManager shareInstance] getUserInfoSync:[[NSNumber numberWithLongLong:lastMsg.userId] stringValue] block:^(NSString * _Nonnull userId, FHChatUserInfo * _Nonnull userInfo) {
@@ -244,18 +326,62 @@
                     if ([lastMsg.mentionedUsers containsObject:uid] && ![self lastMsgHasReadInConversation:conv]) {
                         self.subTitleLabel.attributedText = [self getAtAttributeString:tipMsg];;
                     } else {
-                         self.subTitleLabel.text = tipMsg;
+                        
+                        if([conv lastChatMsg].type != ChatMsgTypeVoiceSegment) {
+                            self.subTitleLabel.attributedText = nil;
+                            self.subTitleLabel.text = tipMsg;
+                        } else {
+                            [self processVoiceLastMessage:conv lastMessage:tipMsg];
+                        }
                     }
                 }];
             }
         } else {
-            self.subTitleLabel.text = [self cutLineBreak:[conv lastMessage]];
+            NSString *lastMessage = [conv lastMessage];
+            if([conv lastChatMsg].type != ChatMsgTypeVoiceSegment) {
+                self.subTitleLabel.attributedText = nil;
+                self.subTitleLabel.text = [self cutLineBreak:lastMessage];
+            } else {
+                [self processVoiceLastMessage:conv lastMessage:lastMessage];
+            }
         }
     }
     
+    if (conv.type == IMConversationType1to1Chat) {
+        if (!isEmptyString(conv.realtorScore)) {
+            self.scoreLabel.hidden = NO;
+            self.scoreLabel.text = conv.realtorScore;
+        } else {
+            self.scoreLabel.hidden = YES;
+        }
+        if (!isEmptyString(conv.companyName)) {
+            self.companyLabel.hidden = NO;
+            self.companyLabel.text = conv.companyName;
+        } else {
+            self.companyLabel.hidden = YES;
+        }
+    } else {
+        self.scoreLabel.hidden = YES;
+        self.companyLabel.hidden = YES;
+    }
 
-    [self displaySendState:lastMsg];
+    [self displaySendState:lastMsg isMute:conv.mute];
     self.timeLabel.text = [self timeLabelByDate:conv.updatedAt];
+}
+- (void)processVoiceLastMessage:(IMConversation *)conv lastMessage:(NSString *)lastMessage {
+        NSRange range = [lastMessage rangeOfString:@"[语音]"];
+        NSMutableAttributedString *attributeLastMessage = [[NSMutableAttributedString alloc] initWithString:lastMessage];
+        UIColor *attributeColor = [self isLastVoiceMessageReadByCurrentUser:conv] ? [UIColor themeGray3] : [UIColor colorWithHexStr:@"FE5500"];
+        [attributeLastMessage addAttributes:@{NSForegroundColorAttributeName: attributeColor, NSFontAttributeName:self.subTitleLabel.font} range:range];
+        self.subTitleLabel.attributedText = attributeLastMessage;
+}
+- (BOOL)isLastVoiceMessageReadByCurrentUser:(IMConversation *)conv {
+    BOOL ret = NO;
+    ChatMsg *lastMsg = [conv lastChatMsg];
+    if(lastMsg.type == ChatMsgTypeVoiceSegment && (lastMsg.isCurrentUser || lastMsg.isReadByCurrentUser)) {
+        ret = YES;
+    }
+    return ret;
 }
 
 -(BOOL)lastMsgHasReadInConversation:(IMConversation *)conv {
@@ -270,8 +396,8 @@
     paragraphStyle.lineSpacing = 0;
     paragraphStyle.lineBreakMode = NSLineBreakByTruncatingTail;
 
-    NSDictionary<NSString *, id> *attributes = @{NSFontAttributeName: [UIFont systemFontOfSize:14],
-                                                 NSForegroundColorAttributeName : [UIColor redColor] ,
+    NSDictionary<NSString *, id> *attributes = @{NSFontAttributeName: [UIFont themeFontRegular:12],
+                                                 NSForegroundColorAttributeName : [UIColor themeOrange1] ,
                                                  NSParagraphStyleAttributeName : paragraphStyle};
     [attrStr addAttributes:attributes range:theRange];
     return attrStr;
@@ -285,8 +411,8 @@
     paragraphStyle.lineSpacing = 0;
     paragraphStyle.lineBreakMode = NSLineBreakByTruncatingTail;
     
-    NSDictionary<NSString *, id> *attributes = @{NSFontAttributeName: [UIFont systemFontOfSize:14],
-                                                 NSForegroundColorAttributeName : [UIColor themeRed3] ,
+    NSDictionary<NSString *, id> *attributes = @{NSFontAttributeName: [UIFont themeFontRegular:12],
+                                                 NSForegroundColorAttributeName : [UIColor themeOrange1] ,
                                                  NSParagraphStyleAttributeName : paragraphStyle};
     [attrStr addAttributes:attributes range:theRange];
     return attrStr;
@@ -349,10 +475,7 @@
 }
 
 -(NSString*)timeWithYesterdayTime:(NSDate*)date {
-    NSDateFormatter* formatter = [[NSDateFormatter alloc] init];
-    formatter.dateFormat = @"HH:mm";
-
-    return [NSString stringWithFormat:@"昨天 %@", [formatter stringFromDate:date]];
+    return @"昨天";
 }
 
 -(NSString*)longTimeLabel:(NSDate*)date {
