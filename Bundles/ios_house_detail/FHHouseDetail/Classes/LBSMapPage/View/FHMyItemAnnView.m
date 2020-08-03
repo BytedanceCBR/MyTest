@@ -14,11 +14,25 @@
                      reuseIdentifier:reuseIdentifier];
     if (self) {
         
-        self.frame = CGRectMake(0.0f, 0.0, annotation.title.length * 16 + 5, 30);
         
     }
     return self;
 }
+
+- (void)layoutSubviews
+{
+    [super layoutSubviews];
+}
+
+-(void)setAnnotation:(id<MAAnnotation>)annotation
+{
+    [super setAnnotation:annotation];
+    CGRect frame = self.frame;
+    frame.size = CGSizeMake(self.annotation.title.length * 16 + 5, 30);
+    self.frame = frame;
+//    self.frame = CGRectMake(self.frame.origin.x, self.frame.origin.y, self.annotation.title.length * 16 + 5, 30);
+}
+
 /*
 // Only override drawRect: if you perform custom drawing.
 // An empty implementation adversely affects performance during animation.

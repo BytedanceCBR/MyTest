@@ -284,13 +284,13 @@ static MAMapView *kFHPageMapView = nil;
      UILabel *tagLabel = [[UILabel alloc] initWithFrame:CGRectMake(20.0f, addressLabel.bottom + 10, self.view.frame.size.width - 40, 14)];
     
      if (self.selectedIndex < self.nameArray.count) {
-         NSMutableAttributedString *nameAttr = [FHDetailMapPageViewController createTagAttrString:self.nameArray[self.selectedIndex] isFirst:YES textColor:[UIColor colorWithHexStr:@"#8493ad"] backgroundColor:[UIColor blackColor]];
+         NSMutableAttributedString *nameAttr = [FHDetailMapPageViewController createTagAttrString:self.nameArray[self.selectedIndex] isFirst:YES textColor:[UIColor colorWithHexStr:@"#8493ad"] backgroundColor:[UIColor themeGray7]];
          
          if (poi.type) {
              NSArray *attrString = [poi.type componentsSeparatedByString:@";"];
              
              if (attrString.count > 0) {
-                 NSMutableAttributedString *typeAttr = [FHDetailMapPageViewController createTagAttrString:attrString.firstObject isFirst:NO textColor:[UIColor colorWithHexStr:@"#8493ad"] backgroundColor:[UIColor blackColor]];
+                 NSMutableAttributedString *typeAttr = [FHDetailMapPageViewController createTagAttrString:attrString.firstObject isFirst:NO textColor:[UIColor colorWithHexStr:@"#8493ad"] backgroundColor:[UIColor themeGray7]];
                  [nameAttr appendAttributedString:typeAttr];
              }else{
                  NSMutableAttributedString *typeAttr = [FHDetailMapPageViewController createTagAttrString:poi.type isFirst:NO textColor:[UIColor colorWithHexStr:@"#8493ad"] backgroundColor:[UIColor themeGray7]];
@@ -304,7 +304,7 @@ static MAMapView *kFHPageMapView = nil;
      
      
      UILabel *bottomOriginLabel = [[UILabel alloc] initWithFrame:CGRectMake(20.0f, tagLabel.bottom + 20, self.view.frame.size.width - 40, 16)];
-     bottomOriginLabel.text = @"数据来自第三方地图,更多信息请咨询经纪人";
+     bottomOriginLabel.text = @"数据来自第三方地图，更多信息请咨询经纪人";
      [bottomOriginLabel setFont:[UIFont themeFontRegular:14]];
      [bottomOriginLabel setTextColor:[UIColor themeGray3]];
      [self.bottomShowInfoView addSubview:bottomOriginLabel];
@@ -340,11 +340,12 @@ static MAMapView *kFHPageMapView = nil;
     attributeText.yy_font = [UIFont themeFontRegular:10];
     attributeText.yy_color = textColor;
     NSRange substringRange = [attributeText.string rangeOfString:text];
-    [attributeText yy_setTextBinding:[YYTextBinding bindingWithDeleteConfirm:NO] range:substringRange];
-    YYTextBorder *border = [YYTextBorder borderWithFillColor:backgroundColor cornerRadius:2];
-    [border setInsets:UIEdgeInsetsMake(0, -4, 0, -4)];
+    attributeText.yy_backgroundColor = backgroundColor;
+//    [attributeText yy_setTextBinding:[YYTextBinding bindingWithDeleteConfirm:NO] range:substringRange];
+//    YYTextBorder *border = [YYTextBorder borderWithFillColor:[UIColor blackColor] cornerRadius:2];
+//    [border setInsets:UIEdgeInsetsMake(0, -4, 0, -4)];
     
-    [attributeText yy_setTextBackgroundBorder:border range:substringRange];
+//    [attributeText yy_setTextBackgroundBorder:border range:substringRange];
     return attributeText;
     
 }
@@ -598,6 +599,7 @@ static MAMapView *kFHPageMapView = nil;
     _mapView.scrollEnabled = YES;
     _mapView.showsUserLocation = NO;
     _mapView.rotateCameraEnabled = NO;
+    _mapView.customizeUserLocationAccuracyCircleRepresentation = YES;
     _mapView.rotateEnabled = NO;
     [_mapView setCenterCoordinate:self.centerPoint];
     [_mapContainer addSubview:_mapView];
@@ -901,7 +903,8 @@ static MAMapView *kFHPageMapView = nil;
            leftIcon.backgroundColor = [UIColor clearColor];
            leftIcon.frame = CGRectMake(11, 9, 11, 11);
 
-            [annotationView addSubview:leftIcon];
+            
+          [annotationView addSubview:leftIcon];
            UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(17, 0, 100, 30)];
            titleLabel.text = annotation.title;
            titleLabel.frame = CGRectMake(0, 0, titleLabel.text.length * 13, 32);
@@ -911,6 +914,8 @@ static MAMapView *kFHPageMapView = nil;
 
            backImageView.layer.cornerRadius = 15;
            backImageView.layer.masksToBounds = YES;
+           backImageView.layer.shadowColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:0.5].CGColor;
+           backImageView.layer.shadowOffset = CGSizeMake(2, 2);
 
            [annotationView addSubview:titleLabel];
            titleLabel.font = [UIFont themeFontRegular:12];
@@ -931,20 +936,11 @@ static MAMapView *kFHPageMapView = nil;
            [annotationView addSubview:bottomArrowView];
            bottomArrowView.backgroundColor = [UIColor clearColor];
            bottomArrowView.frame = CGRectMake(backImageView.frame.size.width / 2.0 - 5, backImageView.frame.size.height - 5.5, 10.5, 10.5);
-           annotationView.centerOffset = CGPointMake(-backImageView.frame.size.width / 2.0, -20);
+           annotationView.centerOffset = CGPointMake(0, -20);
            annotationView.poi = annotationMy.poi;
 
-            
-            annotationView.backColorView = backImageView;
-            annotationView.bottomArrowView = bottomArrowView;
-            [annotationView setFrame:CGRectMake(annotationView.frame.origin.x, annotationView.frame.origin.y, backImageView.frame.size.width, backImageView.frame.size.height)];
-//            UIButton *buttonMask = [UIButton buttonWithType:UIButtonTypeCustom];
-//            [buttonMask setBackgroundColor:[UIColor clearColor]];
-//            [annotationView addSubview:buttonMask];
-//            [buttonMask setFrame:CGRectMake(0, 0, backImageView.frame.size.width, backImageView.frame.size.height)];
-//            [buttonMask addTarget:self action:@selector(anaClick:) forControlEvents:UIControlEventTouchUpInside];;
-//            UITapGestureRecognizer *tapGes = [UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapAnn)
-
+           annotationView.backColorView = backImageView;
+           annotationView.bottomArrowView = bottomArrowView;
            return annotationView;
         }
         
@@ -956,17 +952,18 @@ static MAMapView *kFHPageMapView = nil;
 
 - (MAOverlayRenderer *)mapView:(MAMapView *)mapView rendererForOverlay:(id <MAOverlay>)overlay
 {
-    if ([overlay isKindOfClass:[MACircle class]]) {
-        MACircleRenderer *circleRenderer = [[MACircleRenderer alloc] initWithCircle:overlay];
-        
-        circleRenderer.lineWidth    = 0.0f;
-        circleRenderer.strokeColor  = [UIColor clearColor];
-        circleRenderer.fillColor    = [UIColor colorWithRed:255/255.0 green:88/255.0 blue:105/255.0 alpha:0.2];
-        return circleRenderer;
-    }
-    MACircle * cicle = [MACircle circleWithMapRect:MAMapRectZero];
-    MAOverlayRenderer *overlayRender = [[MAOverlayRenderer alloc] initWithOverlay:overlay];
-    return overlayRender;
+    return nil;
+//    if ([overlay isKindOfClass:[MACircle class]]) {
+//        MACircleRenderer *circleRenderer = [[MACircleRenderer alloc] initWithCircle:overlay];
+//
+//        circleRenderer.lineWidth    = 0.0f;
+//        circleRenderer.strokeColor  = [UIColor clearColor];
+//        circleRenderer.fillColor    = [UIColor colorWithRed:255/255.0 green:88/255.0 blue:105/255.0 alpha:0.2];
+//        return circleRenderer;
+//    }
+//    MACircle * cicle = [MACircle circleWithMapRect:MAMapRectZero];
+//    MAOverlayRenderer *overlayRender = [[MAOverlayRenderer alloc] initWithOverlay:overlay];
+//    return overlayRender;
 }
 
 - (void)mapView:(MAMapView *)mapView didAnnotationViewTapped:(MAAnnotationView *)view{
@@ -994,6 +991,11 @@ static MAMapView *kFHPageMapView = nil;
         FHMyItemAnnView *neighborView = (FHMyItemAnnView *)view;
         self.currentSelectAna = neighborView;
     }
+}
+
+- (void)mapView:(MAMapView *)mapView mapDidZoomByUser:(BOOL)wasUserAction
+{
+    
 }
 
 - (void)mapView:(MAMapView *)mapView annotationView:(MAAnnotationView *)view calloutAccessoryControlTapped:(UIControl *)control{
