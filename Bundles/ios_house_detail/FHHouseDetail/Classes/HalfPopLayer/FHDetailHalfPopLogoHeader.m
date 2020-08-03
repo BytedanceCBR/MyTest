@@ -56,7 +56,7 @@
     _titleLabel.font = [UIFont themeFontSemibold:20];
     _titleLabel.textColor = [UIColor themeOrange4];
     
-    _tipLabel = [[UILabel alloc]init];
+    _tipLabel = [[UILabel alloc] init];
     _tipLabel.textColor = [UIColor themeGray3];
     _tipLabel.font = [UIFont themeFontRegular:12];
     
@@ -104,17 +104,16 @@
     self.titleLabel.text = title;
     self.tipLabel.text = tip;
     
-    [self.titleLabel sizeToFit];
-    [self.tipLabel sizeToFit];
-    
-    [_titleLabel mas_updateConstraints:^(MASConstraintMaker *make) {
-        make.width.mas_equalTo(CGRectGetWidth(self.titleLabel.bounds));
-    }];
-    [_tipLabel mas_updateConstraints:^(MASConstraintMaker *make) {
-        make.width.mas_equalTo(CGRectGetWidth(self.tipLabel.bounds));
-    }];
-    
     [self.iconImgView bd_setImageWithURL:[NSURL URLWithString:imgUrl]];
+    if (self.halfPopType == FHDetailHalfPopTypeCenter) {
+        CGFloat offset = 0;
+        if (imgUrl.length) {
+            offset = 10;
+        }
+        [_titleLabel mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.centerX.mas_equalTo(self).offset(offset);
+        }];
+    }
 }
 
 - (void)updateWithTitle:(NSString *)title tip:(NSString *)tip
