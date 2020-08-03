@@ -333,20 +333,21 @@
 //    }
     NSInteger chatNumber = 0;
     NSInteger systemMessageNumber = 0;
-    BOOL hasRedPoint = NO;
+    BOOL hasChatRedPoint = NO;
     for (IMConversation *conv in [[self combiner] conversationItems]) {
-        if (conv.type == IMConversationType1to1Chat) {
+        if (conv.mute) {
+            if (conv.unreadCount > 0) {
+                hasChatRedPoint = YES;
+            }
+        } else {
             chatNumber += conv.unreadCount;
-        }
-        if (conv.type == IMConversationTypeGroupChat && conv.unreadCount > 0) {
-            hasRedPoint = YES;
         }
     }
     for (FHUnreadMsgDataUnreadModel *item in [[self combiner] channelItems]) {
         systemMessageNumber += [item.unread integerValue];
     }
     if (self.viewController.updateRedPoint) {
-        self.viewController.updateRedPoint(chatNumber, hasRedPoint, systemMessageNumber);
+        self.viewController.updateRedPoint(chatNumber, hasChatRedPoint, systemMessageNumber);
     }
     [self.tableView reloadData];
 }
