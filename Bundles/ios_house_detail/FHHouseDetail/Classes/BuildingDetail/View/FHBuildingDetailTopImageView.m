@@ -62,6 +62,7 @@
             }
         }
         self.saleStatusButtons = nil;
+        [self.placeHolder setHidden:NO];
         NSURL *url = [NSURL URLWithString:model.buildingImage.url];
         __weak typeof(self) wSelf = self;
         [self.imageView bd_setImageWithURL:url placeholder:nil options:BDImageRequestDefaultPriority completion:^(BDWebImageRequest *request, UIImage *image, NSData *data, NSError *error, BDWebImageResultFrom from) {
