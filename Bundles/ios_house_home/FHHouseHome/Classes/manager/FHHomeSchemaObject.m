@@ -137,6 +137,11 @@
 
 - (BOOL)isFromPush:(NSDictionary *)params {
     BOOL isFromPush = NO;
+    
+    if([params.allKeys containsObject:@"isFromPush"]){
+        isFromPush = [params[@"isFromPush"] boolValue];
+    }
+    
     if([params.allKeys containsObject:@"enter_from"]){
         NSString *enterFrom = params[@"enter_from"];
         if([enterFrom isEqualToString:@"push"]){
@@ -158,6 +163,7 @@
             }
         }
     }
+    
     return isFromPush;
 }
 
