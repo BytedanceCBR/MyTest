@@ -56,6 +56,12 @@
     if (data && [data isKindOfClass:[FHBuildingLocationModel class]]) {
         FHBuildingLocationModel *model = (FHBuildingLocationModel *)data;
         self.locationModel = model;
+        for (NSArray *buttonAry in self.saleStatusButtons) {
+            for (FHBuildingDetailImageViewButton *button in buttonAry) {
+                [button removeFromSuperview];
+            }
+        }
+        self.saleStatusButtons = nil;
         NSURL *url = [NSURL URLWithString:model.buildingImage.url];
         __weak typeof(self) wSelf = self;
         [self.imageView bd_setImageWithURL:url placeholder:nil options:BDImageRequestDefaultPriority completion:^(BDWebImageRequest *request, UIImage *image, NSData *data, NSError *error, BDWebImageResultFrom from) {
@@ -139,8 +145,8 @@
     }
     FHBuildingSaleStatusModel *saleStatusModel = self.locationModel.saleStatusList[indexModel.saleStatus];
     NSArray *buttonAry = self.saleStatusButtons[indexModel.saleStatus];
-    
-    for (NSInteger buildingIndex = 0; buildingIndex < buttonAry.count; buildingIndex ++) {
+
+    for (NSInteger buildingIndex = 0; buildingIndex < buttonAry.count; buildingIndex++) {
         FHBuildingDetailImageViewButton *button = buttonAry[buildingIndex];
         FHBuildingDetailDataItemModel *itemModel = saleStatusModel.buildingList[buildingIndex];
         button.isSelected = NO;
@@ -153,7 +159,6 @@
                 [self pointMoveToCenter:[button getButtonPosition]];
             }
         }
-        
     }
     self.indexModel = indexModel;
 }
