@@ -607,6 +607,8 @@
 }
 
 - (void)close {
+    [FHMessageEditHelp shared].currentCell = nil;
+    [FHMessageEditHelp shared].conversation = nil;
     [self openMenu:false time:0.35 springX:0];
 }
 

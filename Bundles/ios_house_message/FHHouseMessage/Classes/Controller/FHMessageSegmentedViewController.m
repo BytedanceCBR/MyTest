@@ -306,7 +306,7 @@ typedef NS_ENUM(NSInteger, FHSegmentedControllerAnimatedTransitionDirection) {
     self.interactivePanGestureRecognizer = interactivePanGestureRecognizer;
     
     [self setupDefaultNavBar:NO];
-    self.customNavBarView.leftBtn.hidden = YES;
+    self.customNavBarView.leftBtn.hidden = [self leftActionHidden];
 
     __weak typeof(self) weakSelf = self;
     FHMessageViewController *imViewController = [[FHMessageViewController alloc] init];
@@ -339,7 +339,8 @@ typedef NS_ENUM(NSInteger, FHSegmentedControllerAnimatedTransitionDirection) {
     };
     [self.customNavBarView addSubview:self.topView];
     [self.topView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.right.mas_equalTo(0);
+        make.centerX.mas_equalTo(self.customNavBarView);
+        make.width.mas_equalTo(180);
         make.height.mas_equalTo(30);
         make.bottom.mas_equalTo(0);
     }];
@@ -363,6 +364,22 @@ typedef NS_ENUM(NSInteger, FHSegmentedControllerAnimatedTransitionDirection) {
             return;
         }
     }];
+}
+
+- (NSString *)getPageType {
+    return @"message_list";
+}
+
+- (BOOL)leftActionHidden {
+    return YES;
+}
+
+- (CGFloat)getBottomMargin {
+    return 49;
+}
+
+- (BOOL) isAlignToSafeBottom {
+    return YES;
 }
 
 - (void)viewWillDisappear:(BOOL)animated {

@@ -44,6 +44,12 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)refreshConversationList;
 
+- (NSString *)getPageType;
+
+- (CGFloat)getBottomMargin;
+
+- (BOOL) isAlignToSafeBottom;
+
 @end
 
 NS_ASSUME_NONNULL_END

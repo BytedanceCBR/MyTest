@@ -268,7 +268,7 @@
 }
 
 - (CGFloat)getBottomMargin {
-    return 49;
+    return [self.fatherVC getBottomMargin];
 }
 
 - (void)initViewModel {
@@ -293,7 +293,7 @@
 }
 
 - (NSString *)getPageType {
-    return @"message_list";
+    return [self.fatherVC getPageType];
 }
 
 - (NSString *)getPageTypeWithDataType {
@@ -327,6 +327,6 @@
 
 
 - (BOOL) isAlignToSafeBottom {
-    return YES;
+    return [self.fatherVC isAlignToSafeBottom];
 }
 @end
