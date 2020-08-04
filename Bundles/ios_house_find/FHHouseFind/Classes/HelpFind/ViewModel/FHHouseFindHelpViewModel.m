@@ -398,7 +398,19 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
     } else {
         // Fallback on earlier versions
     }
-    NSArray<FHFilterNodeModel*> *configs = [self.class convertConfigItemsToModel:@[model.items.lastObject.configOption]];
+    
+    __block NSInteger regionIndex = -1;
+    [model.items enumerateObjectsUsingBlock:^(FHHouseFindSelectItemModel * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        if (obj.tabId == FHSearchTabIdTypeRegion) {
+            regionIndex = idx;
+            *stop = YES;
+        }
+    }];
+    if (regionIndex == -1) {
+        return;
+    }
+    
+    NSArray<FHFilterNodeModel*> *configs = [self.class convertConfigItemsToModel:@[model.items[regionIndex].configOption]];
     __weak typeof(self)wself = self;
     frame.size.height = REGION_CONTENT_HEIGHT + bottomHeight;
     _regionSheet = [[FHHouseFindHelpRegionSheet alloc]initWithFrame:frame];
@@ -796,7 +808,7 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
     return phoneNum;
 }
 
-- (BOOL)storePhoneNumber:(NSString *)phoneNumber {
+- (void)storePhoneNumber:(NSString *)phoneNumber {
     YYCache *findHousePhoneNumberCache = [[FHEnvContext sharedInstance].generalBizConfig findHousePhoneNumberCache];
     [findHousePhoneNumberCache setObject:phoneNumber ?: @"" forKey:kFHFindHousePhoneNumberCacheKey];
 }

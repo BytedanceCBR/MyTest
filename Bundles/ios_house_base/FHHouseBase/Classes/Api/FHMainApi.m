@@ -21,6 +21,7 @@
 #import <Heimdallr/HMDUserExceptionTracker.h>
 #import "TTTabbarLoadEpidemicSituatioHelper.h"
 #import "FHHouseErrorHubManager.h"
+#import <TTInstallService/TTInstallUtil.h>
 
 #define GET @"GET"
 #define POST @"POST"
@@ -487,7 +488,7 @@
     [self addRequestLog:path startDate:startData backDate:backDate serializeDate:serializeDate resultType:type errorCode:errorCode errorMsg:errorMsg extra:extraDict exceptionDict:nil responseCode:responseCode];
 }
 
-+(void)addRequestLog:(NSString *)path startDate:(NSDate *)startData backDate:(NSDate *)backDate serializeDate:(NSDate *)serializeDate resultType:(FHNetworkMonitorType)type errorCode:(NSInteger)errorCode errorMsg:(NSString *)errorMsg extra:(NSDictionary *)extraDict exceptionDict:(NSDictionary *)exceptionDict responseCode:(NSInteger)responseCode
++(void)addRequestLog:(NSString *)path startDate:(NSDate *)startData backDate:(NSDate *)backDate serializeDate:(NSDate *)serializeDate resultType:(FHNetworkMonitorType)type errorCode:(NSInteger)errorCode errorMsg:(NSString *)errorMsg extra:(NSDictionary *)extraDict exceptionDict:(NSDictionary * _Nullable)exceptionDict responseCode:(NSInteger)responseCode
 {
     NSString *sPath = path;
     path = [path stringByReplacingOccurrencesOfString:@"f100/api" withString:@""];
@@ -508,12 +509,28 @@
         [extra addEntriesFromDictionary:extraDict];
     }
     NSMutableDictionary *metricDict = [NSMutableDictionary new];
+    __block UIApplicationState appState = UIApplicationStateActive;
+    if ([NSThread currentThread] == [NSThread mainThread]) {
+        appState = [UIApplication sharedApplication].applicationState;
+    }else{
+        dispatch_sync(dispatch_get_main_queue(), ^{
+            appState = [UIApplication sharedApplication].applicationState;
+        });
+    }
     if (startData && backDate) {
-        metricDict[@"api_duration_network"] = @([backDate timeIntervalSinceDate:startData]*1000);
+        NSTimeInterval duration = [backDate timeIntervalSinceDate:startData]*1000;
+        if (appState == UIApplicationStateActive || duration < 15*1000) {
+            //为了避免出现特别大的无效数据 App切换前后台的时候数据大的也不添加
+            metricDict[@"api_duration_network"] = @(duration);
+        }
     }
     
     if (startData && serializeDate) {
-        metricDict[@"api_duration_business"] = @([serializeDate timeIntervalSinceDate:startData]*1000);
+        NSTimeInterval duration = [serializeDate timeIntervalSinceDate:startData]*1000;
+        if (appState == UIApplicationStateActive || duration < 15*1000) {
+            //为了避免出现特别大的无效数据 App切换前后台的时候数据大的也不添加
+            metricDict[@"api_duration_business"] = @(duration);
+        }
     }
     
     if (type != FHNetworkMonitorTypeSuccess) {
@@ -552,12 +569,14 @@
         if ([headerDict isKindOfClass:[NSDictionary class]]) {
             customDict[@"log_id"] = headerDict[@"x-tt-logid"];
         }
-        NSStream *cityName = [FHEnvContext getCurrentSelectCityIdFromLocal];
+        NSString *cityName = [FHEnvContext getCurrentSelectCityIdFromLocal];
         customDict[@"city"] = cityName?:@"";
-        if ([exceptionDict isKindOfClass:[NSDictionary class]]) {
+        if (exceptionDict && [exceptionDict isKindOfClass:[NSDictionary class]]) {
             [customDict addEntriesFromDictionary:exceptionDict];
         }
-        [[HMDUserExceptionTracker sharedTracker] trackUserExceptionWithExceptionType:@"NetworkError" title:@"api_error" subTitle:sPath?:@"" customParams:customDict filters:filterDict callback:nil];
+        [[HMDUserExceptionTracker sharedTracker] trackUserExceptionWithExceptionType:@"NetworkError" title:@"api_error" subTitle:sPath?:@"" customParams:customDict filters:filterDict callback:^(NSError * _Nullable error) {
+            
+        }];
     }
     
 }

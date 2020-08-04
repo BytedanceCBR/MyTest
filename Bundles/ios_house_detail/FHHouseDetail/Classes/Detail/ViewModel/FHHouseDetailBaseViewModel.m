@@ -23,6 +23,8 @@
 #import "FHDetailQuestionPopView.h"
 #import "FHDetailMediaHeaderCorrectingCell.h"
 #import "FHHouseErrorHubManager.h"
+#import <Heimdallr/HMDTTMonitor.h>
+#import <TTInstallService/TTInstallUtil.h>
 
 @interface FHHouseDetailBaseViewModel ()<UITableViewDelegate, UITableViewDataSource>
 
@@ -37,6 +39,7 @@
 @property (nonatomic, assign) BOOL floatIconAnimation;
 @property (nonatomic, assign) BOOL clickShowIcon;
 @property(nonatomic, assign) CGPoint tableviewBeginOffSet;
+
 
 @end
 
@@ -100,16 +103,9 @@
 }
 
 - (void)reloadData {
-    
-    CGRect frame = self.tableView.frame;
+//    CGRect frame = self.tableView.frame;
     [self.tableView reloadData];
     //防止滑动卡顿，测试前关闭
-    
-    
-    
-    
-    
-    
     
 //    if (!self.scretchingWhenLoading) {
 //        self.tableView.frame = CGRectMake(frame.origin.x, frame.origin.y, frame.size.width,10000);//设置大frame 强制计算cell高度
@@ -120,10 +116,6 @@
 //            self.scretchingWhenLoading = YES;
 //        }
 //    }
-    
-    
-    
-    
 }
 
 // 回调方法
@@ -189,7 +181,7 @@
         item.model = model;
         item.itemClickBlock = ^(FHDetailQuestionPopMenuItem *menuItem) {
             FHDetailDataQuickQuestionItemModel *model = menuItem.model;
-            [wself addclickAskQuestionLog:model rank:@(menuItem.index)];
+            [wself addclickAskQuestionLog:model.id rank:@(menuItem.index)];
             [wself imAction:model];
         };
         item.title = model.text;
@@ -630,7 +622,11 @@
     
 }
 
-- (void)addclickAskQuestionLog:(FHDetailOldDataModel *)model rank:(NSNumber *)rank
+- (void)addClickOptionLog:(NSString *)position {
+    
+}
+
+- (void)addclickAskQuestionLog:(NSString *)modelId rank:(NSNumber *)rank
 {
     //    1.event_type：house_app2c_v2
     //    2.page_type（页面类型）：old_detail（二手房详情页）
@@ -646,7 +642,7 @@
         [params addEntriesFromDictionary:self.detailTracerDic];
     }
     params[@"rank"] = rank ? : @"be_null";
-    params[@"question_id"] = model.id ? : @"be_null";
+    params[@"question_id"] = modelId ? : @"be_null";
     [FHUserTracker writeEvent:@"click_ask_question" params:params];
     
 }
@@ -727,8 +723,34 @@
 
 - (void)enableController:(BOOL)enabled
 {
-    TTNavigationController *nav = self.detailController.navigationController;
+    TTNavigationController *nav = (TTNavigationController *)self.detailController.navigationController;
     nav.panRecognizer.enabled = enabled;
+}
+
+- (void)addPageLoadLog {
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        if (self.firstReloadInterval == 0) {
+            self.firstReloadInterval = CFAbsoluteTimeGetCurrent();
+        }
+        __block UIApplicationState appState;
+        ttinstall_dispatch_main_sync_safe(^{
+            appState = [UIApplication sharedApplication].applicationState;
+        });
+        if (self.initTimeInterval > 0 && self.firstReloadInterval > 0) {
+            
+            double duration = self.firstReloadInterval - self.initTimeInterval;
+            if (appState == UIApplicationStateActive || duration < 15) {
+                //为了避免出现特别大的无效数据 App切换前后台的时候数据大的也不添加
+                NSMutableDictionary *metricDict = [NSMutableDictionary dictionary];
+                //单位 秒 -> 毫秒
+                metricDict[@"total_duration"] = @(duration * 1000);
+                
+                [[HMDTTMonitor defaultManager] hmdTrackService:@"pss_house_detail_old" metric:metricDict.copy category:@{@"status":@(0)} extra:nil];
+            }
+        }
+        
+
+    });
 }
 #pragma mark - poplayer
 

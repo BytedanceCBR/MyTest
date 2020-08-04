@@ -27,8 +27,8 @@ typedef NS_ENUM(NSUInteger, TTVPlayerPanGestureDirection) {
 @property (nonatomic, copy) void(^volumeDidChanged)(CGFloat volume ,BOOL isSystemVolumeButton);
 @property (nonatomic, copy) void(^doubleTapClick)(void);
 @property (nonatomic, copy) void(^singleTapClick)(void);
-@property (nonatomic, copy) void(^changeVolumeClick)();
-@property (nonatomic, copy) void(^changeBrightnessClick)();
+@property (nonatomic, copy) void(^changeVolumeClick)(void);
+@property (nonatomic, copy) void(^changeBrightnessClick)(void);
 
 //@property (nonatomic, strong, readonly) TTVideoVolumeService *volumeService;
 //@property (nonatomic, strong, readonly) TTVideoBrightnessService *brightnessService;

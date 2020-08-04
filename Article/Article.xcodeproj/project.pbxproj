@@ -911,7 +911,7 @@
 				FCC852F64C0273F226C6A461 /* [CP] Copy Pods Resources */,
 				2B1A0A7624C04B61009D40FF /* Embed Frameworks */,
 				2B53A10F24C59A2C00923B3C /* ShellScript */,
-				C63F33D7FFB371C1E9EC99F1 /* [CP] Embed Pods Frameworks */,
+				875B57A01A31627727BC4185 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -1300,6 +1300,23 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "${PODS_ROOT}/SecGuard/IESSafeGuardDev/Assets/Resources/sgmpre.sh";
+			showEnvVarsInLog = 0;
+		};
+		875B57A01A31627727BC4185 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-f100/Pods-f100-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-f100/Pods-f100-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-f100/Pods-f100-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		8A48766275BDF55FC225ABAF /* [CP] Copy Pods Resources */ = {

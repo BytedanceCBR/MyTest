@@ -149,20 +149,6 @@ typedef NS_ENUM(NSUInteger, FHRealtorCellShowStyle) {
 
 @property (nonatomic, assign) BOOL isInstantData;//是否是列表页带入的
 @property (nonatomic, strong , nullable) NSDictionary *realtorLogpb;
-
-- (nonnull id)copyWithZone:(nullable NSZone *)zone;
-
-- (void)encodeWithCoder:(nonnull NSCoder *)aCoder;
-
-- (nullable instancetype)initWithCoder:(nonnull NSCoder *)aDecoder;
-
-- (instancetype)initWithData:(NSData *)data error:(NSError *__autoreleasing *)error;
-
-- (instancetype)initWithDictionary:(NSDictionary *)dict error:(NSError *__autoreleasing *)err;
-
-- (NSDictionary *)toDictionary;
-
-- (NSDictionary *)toDictionaryWithKeys:(NSArray *)propertyNames;
 @end
 
 

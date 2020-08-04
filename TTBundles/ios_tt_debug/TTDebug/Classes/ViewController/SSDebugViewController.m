@@ -260,7 +260,7 @@ extern NSString *const BOE_OPEN_KEY ;
 //        STTableViewCellItem *item_001 = [[STTableViewCellItem alloc] initWithTitle:@"Settings调试选项" target:self action:@selector(_openSettingsBrowserVC)];
 //        [itemArray addObject:item_001];
         
-        STTableViewCellItem *item_002 = [[STTableViewCellItem alloc] initWithTitle:@"客户端ABTest试验详情" target:self action:@selector(_openClientABTestVC)];
+//        STTableViewCellItem *item_002 = [[STTableViewCellItem alloc] initWithTitle:@"客户端ABTest试验详情" target:self action:@selector(_openClientABTestVC)];
         
         
         STTableViewCellItem *settingRefreshItem = [[STTableViewCellItem alloc] initWithTitle:@"强制刷新 settings" target:self action:@selector(forceRefreshSettings)];
@@ -764,7 +764,12 @@ extern NSString *const BOE_OPEN_KEY ;
         frequenceControlDisable.checked = [[NSUserDefaults standardUserDefaults] boolForKey:@"_IM_Frequenct_Control_Disable_"];
         frequenceControlDisable.switchAction = @selector(toggleIMFrequencyControlDisable);
         
-        STTableViewSectionItem *section = [[STTableViewSectionItem alloc] initWithSectionTitle:@"IM相关调试选项" items:@[toggleIMConnectionItem, toggleIMReadReceiptRequestItem, toggleIMFakeTokenItem, invalidIMToken, frequenceControlDisable]];
+        STTableViewCellItem *enableSingleChatRecallItem = [[STTableViewCellItem alloc] initWithTitle:@"IM单聊支持撤回开关" target:self action:nil];
+        enableSingleChatRecallItem.switchStyle = YES;
+        enableSingleChatRecallItem.checked = [[NSUserDefaults standardUserDefaults] boolForKey:@"_IM_SingleChat_Recall_Enable_"];
+        enableSingleChatRecallItem.switchAction = @selector(toggleIMSingleChatRecallEnable);
+        
+        STTableViewSectionItem *section = [[STTableViewSectionItem alloc] initWithSectionTitle:@"IM相关调试选项" items:@[toggleIMConnectionItem, toggleIMReadReceiptRequestItem, toggleIMFakeTokenItem, invalidIMToken, frequenceControlDisable, enableSingleChatRecallItem]];
         
         [dataSource addObject:section];
     }
@@ -794,6 +799,13 @@ extern NSString *const BOE_OPEN_KEY ;
     [[NSUserDefaults standardUserDefaults] setBool:!isDisableIMFrequenceControl forKey:@"_IM_Frequenct_Control_Disable_"];
     [[NSUserDefaults standardUserDefaults] synchronize];
 }
+
+- (void)toggleIMSingleChatRecallEnable {
+    BOOL isSingleChatRecallEnable = [[NSUserDefaults standardUserDefaults] boolForKey:@"_IM_SingleChat_Recall_Enable_"];
+    [[NSUserDefaults standardUserDefaults] setBool:!isSingleChatRecallEnable forKey:@"_IM_SingleChat_Recall_Enable_"];
+    [[NSUserDefaults standardUserDefaults] synchronize];
+}
+
 - (void)triggerIMTokenInvalide {
     [[IMManager shareInstance] invalidTokenForDebug];
 }

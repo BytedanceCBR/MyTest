@@ -5,7 +5,6 @@
 #import "FHOldDetailStaticMapCell.h"
 #import "FHEnvContext.h"
 #import <FHHouseDetail/FHDetailHeaderView.h>
-#import <TTBaseLib/NSDictionary+TTAdditions.h>
 #import "FHDetailStaticMapCell.h"
 #import "AMapSearchAPI.h"
 #import "MAMapKit.h"
@@ -17,8 +16,12 @@
 #import "FHDetailHeaderStarTitleView.h"
 #import "FHSegmentControl.h"
 #import "TTReachability.h"
+#import "FHDetailNewModel.h"
+#import "FHDetailOldModel.h"
+#import "FHDetailNeighborhoodModel.h"
+#import <ByteDanceKit/ByteDanceKit.h>
 
-@interface FHOldDetailStaticMapCell () <AMapSearchDelegate, UITableViewDelegate, UITableViewDataSource, FHDetailVCViewLifeCycleProtocol, FHStaticMapDelegate, MAMapViewDelegate>
+@interface FHOldDetailStaticMapCell () <AMapSearchDelegate, UITableViewDelegate, UITableViewDataSource, FHStaticMapDelegate, MAMapViewDelegate>
 //ui
 @property(nonatomic, assign) CGFloat cellWidth;
 
@@ -342,12 +345,19 @@
         return;
     }
 
+    NSMutableDictionary *param = [NSMutableDictionary new];
     FHDetailStaticMapCellModel *dataModel = (FHDetailStaticMapCellModel *) self.currentData;
     NSMutableDictionary *tracerDict = self.baseViewModel.detailTracerDic.mutableCopy;
     tracerDict[@"element_from"] = @"map";
-    NSMutableDictionary *param = [NSMutableDictionary new];
+    if ([self.baseViewModel.detailData isKindOfClass:[FHDetailOldModel class]]) {
+        // 二手房数据
+        tracerDict[@"enter_from"] = @"old_detail";
+    }else if ([self.baseViewModel.detailData isKindOfClass:[FHDetailNewModel class]]) {
+        tracerDict[@"enter_from"] = @"new_detail";
+    }else if ([self.baseViewModel.detailData isKindOfClass:[FHDetailNeighborhoodModel class]]) {
+        tracerDict[@"enter_from"] = @"neighborhood_detail";
+    }
     param[TRACER_KEY] = tracerDict.copy;
-    
     if (dataModel.gaodeLat.length && dataModel.gaodeLng.length) {
         param[@"gaodeLat"] = dataModel.gaodeLat;
         param[@"gaodeLon"] = dataModel.gaodeLng;
@@ -376,7 +386,7 @@
     self.centerPoint = CLLocationCoordinate2DMake([dataModel.gaodeLat floatValue], [dataModel.gaodeLng floatValue]);
     
     NSDictionary *fhSettings = [self fhSettings];
-    dataModel.useNativeMap = [fhSettings tt_unsignedIntegerValueForKey:@"f_use_static_map"] == 0;
+    dataModel.useNativeMap = [fhSettings btd_unsignedIntegerValueForKey:@"f_use_static_map"] == 0;
     
     [self cleanSubViews];
     [self setupViews:dataModel.useNativeMap];

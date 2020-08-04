@@ -19,9 +19,6 @@
 
 @property (nonatomic, strong)   UIButton       *openAllBtn;
 
-
-
-
 @end
 
 @implementation FHDetailBottomOpenAllView

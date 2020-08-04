@@ -634,11 +634,11 @@
 //            traceParam[@"origin_search_id"] = self.baseViewModel.detailTracerDic[@"origin_search_id"];
 //        traceParam[@"element_from"] = @"be_null";
         //                    traceParam[@"log_pb"] = model.logPb;
-        NSDictionary *dict = @{@"house_type":@(1),
-                               @"tracer": traceParam
-        };
+//        NSDictionary *dict = @{@"house_type":@(1),
+//                               @"tracer": traceParam
+//        };
         
-        NSMutableDictionary *infoDict = [NSMutableDictionary dictionaryWithDictionary:nil];
+        NSMutableDictionary *infoDict = [NSMutableDictionary dictionary];
         [infoDict setValue:floorModel.id forKey:@"floor_plan_id"];
 //        [infoDict addEntriesFromDictionary:subPageParams];
         infoDict[@"house_type"] = @(1);
