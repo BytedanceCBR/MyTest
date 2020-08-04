@@ -10,6 +10,8 @@
 #import "UIFont+House.h"
 #import "UIColor+Theme.h"
 
+CGFloat const FHBuildingDetailImageViewButtonAnchorPointY = 0.7142;
+
 @interface FHBuildingDetailImageViewButton ()
 
 @property (nonatomic, strong) FHBuildingDetailDataItemModel *itemModel;
@@ -53,7 +55,7 @@
         self.isSelected = NO;
         UITapGestureRecognizer *gesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(buttonOnClick)];
         [self addGestureRecognizer:gesture];
-        self.layer.anchorPoint = CGPointMake(0.5, 0.7142);
+        self.layer.anchorPoint = CGPointMake(0.5, FHBuildingDetailImageViewButtonAnchorPointY);
     }
     return self;
 }
@@ -116,6 +118,13 @@
 
 - (void)buttonMoveWithSize:(CGSize)newSize {
     [self.layer setPosition:CGPointMake((newSize.width * self.pointX) / self.beginWidth, (newSize.height * self.pointY) / self.beginHeight)];
+}
+
+- (UIView *)hitTest:(CGPoint)point withEvent:(UIEvent *)event {
+    if ((point.y > self.frame.size.height * FHBuildingDetailImageViewButtonAnchorPointY)||(point.x < 5.0)||(point.x > self.frame.size.width - 5.0)) {
+        return nil;
+    }
+    return [super hitTest:point withEvent:event];
 }
 
 @end
