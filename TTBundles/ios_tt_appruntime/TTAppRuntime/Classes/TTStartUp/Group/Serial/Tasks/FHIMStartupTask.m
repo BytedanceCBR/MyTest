@@ -370,8 +370,21 @@ DEC_TASK("FHIMStartupTask",FHTaskTypeSerial,TASK_PRIORITY_HIGH+16);
 }
 @end
 
+@interface FHIMStartupTask()
+@property (nonatomic, assign) BOOL isConfigIMModule;
+@end
+
 @implementation FHIMStartupTask
 
+- (instancetype)init {
+    if(self = [super init]) {
+        
+        self.isConfigIMModule = NO;
+        
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(deviceDidRefreshed:) name:@"kFHTrackerDidRefreshDeviceId" object:nil];
+    }
+    return self;
+}
 - (NSString *)taskIdentifier {
     return @"FHIMStartupTask";
 }
@@ -381,7 +394,17 @@ DEC_TASK("FHIMStartupTask",FHTaskTypeSerial,TASK_PRIORITY_HIGH+16);
 }
 
 - (void)startWithApplication:(UIApplication *)application options:(NSDictionary *)launchOptions {
-    if ([SSCommonLogic imCanStart]) {        
+    if ([SSCommonLogic imCanStart]) {
+        [self configIMModule:@"startWithApplication"];
+    }
+}
+- (void)configIMModule:(NSString *)from {
+    
+    NSString* did = [[TTInstallIDManager sharedInstance] deviceID];
+    if(!self.isConfigIMModule && did.length > 0) {
+        
+        [IMManager shareInstance].fromSource = from;
+        
         FHIMAccountCenterImpl* accountCenter = [[FHIMAccountCenterImpl alloc] init];
         [IMManager shareInstance].accountCenter = accountCenter;
         
@@ -392,7 +415,13 @@ DEC_TASK("FHIMStartupTask",FHTaskTypeSerial,TASK_PRIORITY_HIGH+16);
         
         NSString* uid = [[TTAccount sharedAccount] userIdString];
         [[IMManager shareInstance] startupWithUid:uid];
+        
+        self.isConfigIMModule = YES;
     }
+}
+
+- (void)deviceDidRefreshed:(NSNotification *)notification {
+    [self configIMModule:@"deviceDidRefreshedNotification"];
 }
 
 #pragma mark - 打开Watch Session
