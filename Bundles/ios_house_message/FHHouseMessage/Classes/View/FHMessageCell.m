@@ -648,6 +648,7 @@
         [self.backView mas_updateConstraints:^(MASConstraintMaker *make) {
             make.left.mas_equalTo(15 + moveX + springX);
         }];
+        [FHMessageEditHelp shared].isCanReloadData = NO;
         if (!open) {
             [self.contentView layoutIfNeeded];
         }
@@ -659,6 +660,7 @@
 //            return;
 //        }
         if (finished) {
+            [FHMessageEditHelp shared].isCanReloadData = YES;
 //            if (_lastPanStateIsEnd && [[FHMessageEditHelp shared].currentCell isEqual:self] && !open) {
 //                [FHMessageEditHelp shared].isCanReloadData = YES;
 //            }
