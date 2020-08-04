@@ -936,7 +936,7 @@ static MAMapView *kFHPageMapView = nil;
            leftIcon.image = [self getIconImageFromCategory:((FHMyMAAnnotation *)annotation).type];
 
            leftIcon.backgroundColor = [UIColor clearColor];
-           leftIcon.frame = CGRectMake(15, 10, 18, 18);
+           leftIcon.frame = CGRectMake(15, 11, 18, 18);
 
             
           [annotationView addSubview:leftIcon];
