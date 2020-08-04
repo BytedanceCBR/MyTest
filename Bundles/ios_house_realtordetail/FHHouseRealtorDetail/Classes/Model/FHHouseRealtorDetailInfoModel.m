@@ -64,6 +64,7 @@
 {
     NSDictionary *dict = @{
             @"associateInfo": @"realtor_home_page_associate_info",
+            @"realtorTab":@"realtor_tab",
             @"certificationPage": @"certification_page",
             @"certificationIcon": @"certification_icon",
             @"scoreInfo": @"score_info",

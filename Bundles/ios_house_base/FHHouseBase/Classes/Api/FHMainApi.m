@@ -509,10 +509,14 @@
         [extra addEntriesFromDictionary:extraDict];
     }
     NSMutableDictionary *metricDict = [NSMutableDictionary new];
-    __block UIApplicationState appState;
-    ttinstall_dispatch_main_sync_safe(^{
+    __block UIApplicationState appState = UIApplicationStateActive;
+    if ([NSThread currentThread] == [NSThread mainThread]) {
         appState = [UIApplication sharedApplication].applicationState;
-    });
+    }else{
+        dispatch_sync(dispatch_get_main_queue(), ^{
+            appState = [UIApplication sharedApplication].applicationState;
+        });
+    }
     if (startData && backDate) {
         NSTimeInterval duration = [backDate timeIntervalSinceDate:startData]*1000;
         if (appState == UIApplicationStateActive || duration < 15*1000) {
