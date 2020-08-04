@@ -11,15 +11,17 @@
 @class IMConversation;
 @interface FHMessageEditHelp : NSObject
 
-@property (nonatomic, weak) FHMessageCell *currentCell;
+@property (nonatomic, strong) FHMessageCell *currentCell;
 
 @property (nonatomic, assign) BOOL isCanReloadData;
 
-@property (nonatomic, weak) IMConversation *conversation;
+@property (nonatomic, strong) IMConversation *conversation;
 
 + (instancetype)shared;
 
 + (void)close;
+
++ (void)clear;
 
 @end
 

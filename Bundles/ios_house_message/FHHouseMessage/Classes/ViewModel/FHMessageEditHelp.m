@@ -24,4 +24,12 @@
     }
 }
 
++ (void)clear {
+    if ([FHMessageEditHelp shared].currentCell) {
+        [FHMessageEditHelp shared].currentCell.state = SliderMenuClose;
+        [FHMessageEditHelp shared].currentCell = nil;
+        [FHMessageEditHelp shared].conversation = nil;
+    }
+}
+
 @end

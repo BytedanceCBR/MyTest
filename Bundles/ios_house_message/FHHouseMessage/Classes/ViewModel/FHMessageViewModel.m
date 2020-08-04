@@ -352,10 +352,6 @@
     [self.tableView reloadData];
 }
 
-- (void)scrollViewDidScroll:(UIScrollView *)scrollView {
-    [FHMessageEditHelp close];
-}
-
 - (id <FHMessageBridgeProtocol>)messageBridgeInstance {
     if (!_messageBridge) {
         Class classBridge = NSClassFromString(@"FHMessageBridgeImp");
@@ -415,8 +411,7 @@
                                                           handler:^(UIAlertAction * _Nonnull action) {
         // 点击按钮，调用此block
         [weakSelf deleteConversation:conversation];
-        [FHMessageEditHelp shared].currentCell = nil;
-        [FHMessageEditHelp shared].conversation = nil;
+        [FHMessageEditHelp clear];
     }];
     [alertController addAction:defaultAction];
     [[TTUIResponderHelper visibleTopViewController] presentViewController:alertController animated:YES completion:nil];

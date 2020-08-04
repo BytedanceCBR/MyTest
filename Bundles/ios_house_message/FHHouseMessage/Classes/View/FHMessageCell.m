@@ -49,6 +49,7 @@
 -(instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
     if (self = [super initWithStyle:style reuseIdentifier:reuseIdentifier]) {
         _maxOffset = -88;
+        self.state = SliderMenuClose;
         [self initViews];
         self.selectionStyle = UITableViewCellSelectionStyleNone;
     }
@@ -246,7 +247,7 @@
 
 - (void)updateWithChat:(IMConversation*)conversation {
     IMConversation* conv = conversation;
-    
+    self.conv = conversation;
     if ([[FHMessageEditHelp shared].conversation.identifier isEqualToString:conversation.identifier]) {
         //更新 删除 layout
         [self.backView mas_updateConstraints:^(MASConstraintMaker *make) {
@@ -254,7 +255,7 @@
         }];
     } else {
         if (self.state == SliderMenuOpen) {
-            NSLog(@"111");
+            NSLog(@"11122 %@ %@", [FHMessageEditHelp shared].conversation.identifier, self.conv.identifier);
         }
         [self.backView mas_updateConstraints:^(MASConstraintMaker *make) {
             make.left.mas_equalTo(15);
@@ -523,7 +524,6 @@
 }
 
 - (void)panAction:(UIPanGestureRecognizer *)pan {
-    [FHMessageEditHelp shared].isCanReloadData = NO;
     if (![FHMessageEditHelp shared].currentCell) {
         [FHMessageEditHelp shared].currentCell = self;
         [FHMessageEditHelp shared].conversation = self.conv;
@@ -545,7 +545,6 @@
     if (self.state == SliderMenuClose && panX >= 0) {
         return;
     }
-    _lastPanStateIsEnd = NO;
     CGFloat offsetX = panX + _currentOffset;
     if (offsetX > 0) {
         offsetX = 0;
@@ -565,7 +564,6 @@
         self.state = SliderMenuSlider;
         [self move:offsetX];
     } else if (pan.state == UIGestureRecognizerStateEnded) {
-        _lastPanStateIsEnd = YES;
         CGPoint speed = [pan velocityInView:self];
         CGFloat time = 0.4;
         if (offsetX < 0.3 * _maxOffset || offsetX < -30) {
@@ -585,13 +583,13 @@
     if (gestureRecognizer == _panGesture) {
         
         CGFloat panY = [_panGesture translationInView:gestureRecognizer.view].y;
-        if ( ABS(panY) > 0) {
+        if (ABS(panY) > 0) {
             if ([FHMessageEditHelp shared].currentCell) {
                 [[FHMessageEditHelp shared].currentCell openMenu:false time:0.4 springX:0];
             }
             return false;
         }
-        if (CGRectGetWidth(self.backView.frame) - [self.panGesture locationInView:self.backView].x > 100) {
+        if (CGRectGetWidth(self.backView.frame) - [self.panGesture locationInView:self.backView].x > 120) {
             return NO;
         }
     }
@@ -607,8 +605,7 @@
 }
 
 - (void)close {
-    [FHMessageEditHelp shared].currentCell = nil;
-    [FHMessageEditHelp shared].conversation = nil;
+    [FHMessageEditHelp clear];
     [self openMenu:false time:0.35 springX:0];
 }
 
@@ -640,8 +637,7 @@
 
 - (void)openMenu:(BOOL)open time:(NSTimeInterval)time springX:(CGFloat)springX {
     if (!open) {
-        [FHMessageEditHelp shared].currentCell = nil;
-        [FHMessageEditHelp shared].conversation = nil;
+        [FHMessageEditHelp clear];
     }
     CGFloat moveX = open ? _maxOffset : 0;
     self.state = SliderMenuSlider;
@@ -673,6 +669,7 @@
             }
             if (open) {
                 self.state = SliderMenuOpen;
+                NSLog(@"11122 %@", self.conv.identifier);
                 self.currentOffset = self.maxOffset;
                 if (self.openEditTrack) {
                     self.openEditTrack(nil);
@@ -683,8 +680,6 @@
                 if (self.closeEditTrack) {
                     //self.closeEditTrack(nil);
                 }
-//                [FHMessageEditHelp shared].currentCell = nil;
-//                [FHMessageEditHelp shared].conversation = nil;
             }
         }
     }];
