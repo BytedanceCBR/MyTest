@@ -518,7 +518,7 @@
         if (!_panGesture) {
             _panGesture = [[UIPanGestureRecognizer alloc]initWithTarget:self action:@selector(panAction:)];
             _panGesture.delegate = self;
-            [self.backView addGestureRecognizer:_panGesture];
+            [self.contentView addGestureRecognizer:_panGesture];
         }
     }
 }
