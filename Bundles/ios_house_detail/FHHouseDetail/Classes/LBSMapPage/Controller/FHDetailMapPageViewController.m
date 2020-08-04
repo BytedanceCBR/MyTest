@@ -553,6 +553,7 @@ static MAMapView *kFHPageMapView = nil;
 {
     if (![FHEnvContext isNetworkConnected]) {
         [[ToastManager manager] showToast:@"网络异常"];
+        [self.mapView removeAnnotations:self.poiAnnotations];
         return;
     }
     
@@ -986,10 +987,10 @@ static MAMapView *kFHPageMapView = nil;
            annotationView.bottomArrowView = bottomArrowView;
             
             
-            CGRect frame = annotationView.frame;
-            frame.size = CGSizeMake(backImageView.frame.size.width + 10, backImageView.frame.size.height + 10);
-            annotationView.frame = frame;
-            bottomArrowView.frame = CGRectMake(backImageView.frame.size.width / 2.0 - 5, backImageView.frame.size.height - 2, 10.5, 10.5);
+           CGRect frame = annotationView.frame;
+           frame.size = CGSizeMake(backImageView.frame.size.width + 10, backImageView.frame.size.height + 10);
+           annotationView.frame = frame;
+           bottomArrowView.frame = CGRectMake(backImageView.frame.size.width / 2.0 - 5, backImageView.frame.size.height - 2, 10.5, 10.5);
             
            return annotationView;
         }
