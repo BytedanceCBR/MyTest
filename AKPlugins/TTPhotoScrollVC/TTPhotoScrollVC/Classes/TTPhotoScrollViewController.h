@@ -9,7 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "TTImageInfosModel.h"
 
-typedef void(^TTPhotoScrollViewDismissBlock) ();
+typedef void(^TTPhotoScrollViewDismissBlock) (void);
 
 typedef enum : NSUInteger {
     PhotosScrollViewSupportDownloadMode = 0, // default value

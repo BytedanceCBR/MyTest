@@ -98,6 +98,14 @@ extern NSString *const DETAIL_SHOW_POP_LAYER_NOTIFICATION ; //详情页点击显
 - (void)enableController:(BOOL)enabled;
 - (void)popLayerReport:(id)model;
 - (void)poplayerFeedBack:(id)model type:(NSInteger)type completion:(void (^)(BOOL success))completion;
+
+/**
+ 1.0.4 版本统计二手房详情页加载总时长
+ 写入到base类中，考虑到后期会加入其它详情页的统计时长
+ */
+@property (nonatomic) double initTimeInterval;
+@property (nonatomic) double firstReloadInterval;
+- (void)addPageLoadLog;
 @end
 
 NS_ASSUME_NONNULL_END

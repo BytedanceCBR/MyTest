@@ -7,11 +7,6 @@
 
 #import "TTExpermimentPreviewViewController.h"
 #import "TTClientABTestBrowserViewController.h"
-#import <TTABManager/TTABManager.h>
-#import <TTABManager/TTABStorageManager.h>
-#import <TTABManager/TTABManagerUtil.h>
-#import <TTABManager/TTABLayer.h>
-#import <TTABManager/TTABHelper.h>
 #import <TTBaseLib/TTDeviceHelper.h>
 #import <TTBaseLib/UIViewAdditions.h>
 
@@ -116,7 +111,7 @@ UITextViewDelegate
         titleLabel.lineBreakMode = NSLineBreakByTruncatingTail;
         titleLabel.font = [UIFont boldSystemFontOfSize:12];
         titleLabel.textColor = [UIColor blackColor];
-        titleLabel.text = [NSString stringWithFormat:@"试验:%@详情", self.experimentModel.layer.layerName ? : @"***"];
+//        titleLabel.text = [NSString stringWithFormat:@"试验:%@详情", self.experimentModel.layer.layerName ? : @"***"];
         titleLabel.frame = CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width - 2 * 30, 44);
         self.navigationItem.titleView = titleLabel;
     }
@@ -128,10 +123,10 @@ UITextViewDelegate
         NSMutableString *exprimentResultText = [NSMutableString string];
         
         [exprimentResultText appendString:@"-----命中试验结果如下-----"];
-        [exprimentResultText appendFormat:@"\n名称: %@", self.experimentModel.layer.layerName ? : @"***"];
+//        [exprimentResultText appendFormat:@"\n名称: %@", self.experimentModel.layer.layerName ? : @"***"];
         [exprimentResultText appendFormat:@"\nrandomValue: %ld", self.experimentModel.hitRandomValue];
-        [exprimentResultText appendFormat:@"\nminRegion: %ld", (long)self.experimentModel.hitExperiment.minRegion];
-        [exprimentResultText appendFormat:@"\nmaxRegion: %ld", (long)self.experimentModel.hitExperiment.maxRegion];
+//        [exprimentResultText appendFormat:@"\nminRegion: %ld", (long)self.experimentModel.hitExperiment.minRegion];
+//        [exprimentResultText appendFormat:@"\nmaxRegion: %ld", (long)self.experimentModel.hitExperiment.maxRegion];
         [exprimentResultText appendFormat:@"\nfeatureKey: %@", self.experimentModel.featureKey];
         [exprimentResultText appendFormat:@"\nfeatureValue: %@", self.experimentModel.featureValue];
         
@@ -139,26 +134,26 @@ UITextViewDelegate
         self.hitExperimentPreviewTextView.frame = CGRectMake(marginInset, 10, maxWidth, 160);
     }
     
-    {
-        NSDictionary *ABJSON = [TTABManagerUtil readABJSON];
-        NSArray *abJSONTraficOrigLayers = ABJSON[@"traffic_map"];
-        
-        __block NSDictionary *hitOrigLayerData = nil;
-        [abJSONTraficOrigLayers enumerateObjectsUsingBlock:^(NSDictionary * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-            if ([obj isKindOfClass:[NSDictionary class]] && [obj count] > 0) {
-                NSString *currentLayerName = obj[@"layer_name"];
-                if (currentLayerName && self.experimentModel.layer.layerName &&
-                    [currentLayerName isEqualToString:self.experimentModel.layer.layerName]) {
-                    hitOrigLayerData = obj;
-                    *stop = YES;
-                }
-            }
-        }];
-        
-        self.experimentContentTextView.text = hitOrigLayerData.description;
-        CGFloat topTextRangeHeight = self.hitExperimentPreviewTextView.bottom + 15;
-        self.experimentContentTextView.frame = CGRectMake(marginInset, topTextRangeHeight, maxWidth, maxHeight - topTextRangeHeight);
-    }
+//    {
+//        NSDictionary *ABJSON = [TTABManagerUtil readABJSON];
+//        NSArray *abJSONTraficOrigLayers = ABJSON[@"traffic_map"];
+//
+//        __block NSDictionary *hitOrigLayerData = nil;
+//        [abJSONTraficOrigLayers enumerateObjectsUsingBlock:^(NSDictionary * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+//            if ([obj isKindOfClass:[NSDictionary class]] && [obj count] > 0) {
+//                NSString *currentLayerName = obj[@"layer_name"];
+//                if (currentLayerName && self.experimentModel.layer.layerName &&
+//                    [currentLayerName isEqualToString:self.experimentModel.layer.layerName]) {
+//                    hitOrigLayerData = obj;
+//                    *stop = YES;
+//                }
+//            }
+//        }];
+//
+//        self.experimentContentTextView.text = hitOrigLayerData.description;
+//        CGFloat topTextRangeHeight = self.hitExperimentPreviewTextView.bottom + 15;
+//        self.experimentContentTextView.frame = CGRectMake(marginInset, topTextRangeHeight, maxWidth, maxHeight - topTextRangeHeight);
+//    }
 }
 
 - (UILabel *)experimentLabel

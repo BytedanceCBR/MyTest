@@ -93,7 +93,7 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
     reportParams.cardType = self.tracerDict[@"card_type"] ? : @"be_null";
     reportParams.pageType = self.tracerDict[@"page_type"] ?: @"be_null";
     reportParams.realtorId = contactPhone.realtorId;
-    reportParams.realtorRank = rank ?: @"0";
+    reportParams.realtorRank = rank ? @(rank.integerValue): @(0);
     reportParams.realtorLogpb = contactPhone.realtorLogpb;
     reportParams.conversationId = @"be_null";
     reportParams.extra = extra;
@@ -221,12 +221,12 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
         if (isPre && [FHEnvContext isNetworkConnected]) {
             TTRouteObject *routeAgentObj = [[FHRNHelper sharedInstance] getRNCacheForCacheKey:self.hash];
             if ([routeAgentObj.instance isKindOfClass:[UIViewController class]] && [self.belongsVC isKindOfClass:[UIViewController class]]) {
-                [self.belongsVC.navigationController pushViewController:routeAgentObj.instance animated:YES];
+                [self.belongsVC.navigationController pushViewController:(UIViewController *)routeAgentObj.instance animated:YES];
             }else
             {
                 TTRouteObject *routeObj = [self creatJump2RealtorDetailWithPhone:contactPhone isPreLoad:NO andIsOpen:NO extra:extra];
                 if ([routeObj.instance isKindOfClass:[UIViewController class]] && [self.belongsVC isKindOfClass:[UIViewController class]]) {
-                    [self.belongsVC.navigationController pushViewController:routeObj.instance animated:YES];
+                    [self.belongsVC.navigationController pushViewController:(UIViewController *)routeObj.instance animated:YES];
                 }else
                 {
                     [self creatJump2RealtorDetailWithPhone:contactPhone isPreLoad:NO andIsOpen:YES extra:extra];
@@ -236,7 +236,7 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
         {
             TTRouteObject *routeObj = [self creatJump2RealtorDetailWithPhone:contactPhone isPreLoad:NO andIsOpen:NO extra:extra];
             if ([routeObj.instance isKindOfClass:[UIViewController class]] && [self.belongsVC isKindOfClass:[UIViewController class]]) {
-                [self.belongsVC.navigationController pushViewController:routeObj.instance animated:YES];
+                [self.belongsVC.navigationController pushViewController:(UIViewController *)routeObj.instance animated:YES];
             }else
             {
                 [self creatJump2RealtorDetailWithPhone:contactPhone isPreLoad:NO andIsOpen:YES extra:extra];
@@ -374,7 +374,7 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
                 BOOL islogin = [[TTAccount sharedAccount] isLogin];
                 [imdic setValue:islogin ? @"1" : @"0" forKey:@"is_login"];
         
-                NSString *openUrlRnStr = [NSString stringWithFormat:@"sslocal://react?module_name=FHRNAgentDetailModule_home&realtorId=%@&can_multi_preload=%ld&channelName=f_realtor_detail&debug=0&report_params=%@&im_params=%@&bundle_name=%@&is_login=%@",contactPhone.realtorId,isPre ? 1 : 0,[FHUtils getJsonStrFrom:dict],[FHUtils getJsonStrFrom:imdic],@"agent_detail.bundle",islogin ? @"1" : @"0"];
+                NSString *openUrlRnStr = [NSString stringWithFormat:@"sslocal://react?module_name=FHRNAgentDetailModule_home&realtorId=%@&can_multi_preload=%d&channelName=f_realtor_detail&debug=0&report_params=%@&im_params=%@&bundle_name=%@&is_login=%@",contactPhone.realtorId,isPre ? 1 : 0,[FHUtils getJsonStrFrom:dict],[FHUtils getJsonStrFrom:imdic],@"agent_detail.bundle",islogin ? @"1" : @"0"];
         
                 NSURL *openUrlRn = [NSURL URLWithString:openUrlRnStr];
         
@@ -412,10 +412,13 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
 - (void)destoryRNPreloadCache
 {
     TTRouteObject *routeAgentObj = [[FHRNHelper sharedInstance] getRNCacheForCacheKey:self.hash];
-    
+    #pragma clang diagnostic push
+    #pragma clang diagnostic ignored "-Wundeclared-selector"
     if ([routeAgentObj.instance respondsToSelector:@selector(destroyRNView)]) {
         [routeAgentObj.instance performSelector:@selector(destroyRNView) withObject:nil];
     }
+    #pragma clang diagnostic pop
+
     routeAgentObj.instance = nil;
     routeAgentObj.paramObj.userInfo = nil;
     routeAgentObj.paramObj = nil;
