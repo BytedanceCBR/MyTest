@@ -328,9 +328,9 @@
 
 - (void)reloadData {
 //    [FHMessageEditHelp close];
-    if (![FHMessageEditHelp shared].isCanReloadData) {
-        return;
-    }
+//    if (![FHMessageEditHelp shared].isCanReloadData) {
+//        return;
+//    }
     NSInteger chatNumber = 0;
     NSInteger systemMessageNumber = 0;
     BOOL hasChatRedPoint = NO;
