@@ -787,6 +787,7 @@
                            @"coverImage": @"cover_image",
                            @"shareUrl": @"share_url",
                            @"associateInfo": @"associate_info",
+                           @"modelDescription": @"description"
     };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
         return dict[keyName]?:keyName;

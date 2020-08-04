@@ -17,13 +17,9 @@
 
 @end
 
-
-
-@class TTABLayer;
-@class TTABLayerExperiment;
 @interface TTExperimentResultModel : NSObject
-@property (nonatomic, strong) TTABLayer *layer;
-@property (nonatomic, strong) TTABLayerExperiment *hitExperiment;
+//@property (nonatomic, strong) TTABLayer *layer;
+//@property (nonatomic, strong) TTABLayerExperiment *hitExperiment;
 @property (nonatomic, assign) NSInteger hitRandomValue;
 @property (nonatomic,   copy) NSString *featureKey;
 @property (nonatomic,   copy) NSString *featureValue;

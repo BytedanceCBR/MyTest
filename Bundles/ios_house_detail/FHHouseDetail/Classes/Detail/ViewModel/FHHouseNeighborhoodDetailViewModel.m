@@ -46,7 +46,7 @@
 #import "FHDetailAccessCellModel.h"
 #import "FHDetailCommentsCellModel.h"
 #import "TTDeviceHelper.h"
-#import "FHOldDetailStaticMapCell.h""
+#import "FHOldDetailStaticMapCell.h"
 #import "FHDetailPriceChartCell.h"
 #import "FHDetailNeighborhoodHouseSaleCell.h"
 #import "FHDetailNeighborhoodHouseRentCell.h"
