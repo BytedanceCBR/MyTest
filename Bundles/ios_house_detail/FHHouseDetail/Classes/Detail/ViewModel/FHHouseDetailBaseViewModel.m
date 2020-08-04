@@ -103,16 +103,9 @@
 }
 
 - (void)reloadData {
-    
-    CGRect frame = self.tableView.frame;
+//    CGRect frame = self.tableView.frame;
     [self.tableView reloadData];
     //防止滑动卡顿，测试前关闭
-    
-    
-    
-    
-    
-    
     
 //    if (!self.scretchingWhenLoading) {
 //        self.tableView.frame = CGRectMake(frame.origin.x, frame.origin.y, frame.size.width,10000);//设置大frame 强制计算cell高度
@@ -123,10 +116,6 @@
 //            self.scretchingWhenLoading = YES;
 //        }
 //    }
-    
-    
-    
-    
 }
 
 // 回调方法
@@ -192,7 +181,7 @@
         item.model = model;
         item.itemClickBlock = ^(FHDetailQuestionPopMenuItem *menuItem) {
             FHDetailDataQuickQuestionItemModel *model = menuItem.model;
-            [wself addclickAskQuestionLog:model rank:@(menuItem.index)];
+            [wself addclickAskQuestionLog:model.id rank:@(menuItem.index)];
             [wself imAction:model];
         };
         item.title = model.text;
@@ -633,7 +622,11 @@
     
 }
 
-- (void)addclickAskQuestionLog:(FHDetailOldDataModel *)model rank:(NSNumber *)rank
+- (void)addClickOptionLog:(NSString *)position {
+    
+}
+
+- (void)addclickAskQuestionLog:(NSString *)modelId rank:(NSNumber *)rank
 {
     //    1.event_type：house_app2c_v2
     //    2.page_type（页面类型）：old_detail（二手房详情页）
@@ -649,7 +642,7 @@
         [params addEntriesFromDictionary:self.detailTracerDic];
     }
     params[@"rank"] = rank ? : @"be_null";
-    params[@"question_id"] = model.id ? : @"be_null";
+    params[@"question_id"] = modelId ? : @"be_null";
     [FHUserTracker writeEvent:@"click_ask_question" params:params];
     
 }

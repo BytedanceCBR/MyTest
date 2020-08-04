@@ -604,7 +604,7 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
 - (void)callActionWithAssociatePhone:(FHAssociatePhoneModel *)associatePhone
 {
     WeakSelf;
-    NSDictionary *associateInfoDict = associatePhone.associateInfo;
+//    NSDictionary *associateInfoDict = associatePhone.associateInfo;
     NSDictionary *reportParamsDict = associatePhone.reportParams;
     // 圈子电话咨询数据备份
     self.socialContactConfig = nil;
