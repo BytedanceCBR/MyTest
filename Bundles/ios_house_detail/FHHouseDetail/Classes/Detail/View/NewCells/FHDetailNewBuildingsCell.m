@@ -344,7 +344,7 @@
     [params addEntriesFromDictionary:self.baseViewModel.detailTracerDic];
     params[@"group_id"] = self.baseViewModel.houseId?:@"";
     params[@"click_position"] = clickPosition;
-    params[@"element_type"] = @"楼栋";
+    params[@"element_type"] = @"building";
     [FHUserTracker writeEvent:@"click_options" params:params];
 }
 

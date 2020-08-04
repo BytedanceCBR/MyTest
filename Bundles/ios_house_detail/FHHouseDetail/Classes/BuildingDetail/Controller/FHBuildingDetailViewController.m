@@ -727,7 +727,7 @@
 - (void)addClickOptions:(FHBuildingDetailOperatType)type withIndexModel:(FHBuildingIndexModel *)indexModel {
     NSMutableDictionary *params = [NSMutableDictionary dictionary];
     [params addEntriesFromDictionary:self.tracerDict];
-    params[@"element_type"] = @"楼栋";
+    params[@"element_type"] = @"building";
     if (self.houseId.length) {
         params[@"group_id"] = self.houseId;
     }
