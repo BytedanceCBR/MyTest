@@ -128,6 +128,8 @@ static MAMapView *kFHPageMapView = nil;
     
     [self setUpMapView];
     
+    [self requestPoiInfo:self.centerPoint andKeyWord:self.searchCategory];
+    
     [self setUpBottomBarView];
     
     [_traceDict removeObjectForKey:@"page_type"];
@@ -283,7 +285,11 @@ static MAMapView *kFHPageMapView = nil;
      [self sendClickMapEventForPoi:poi.name];
      
      UILabel *addressLabel = [[UILabel alloc] initWithFrame:CGRectMake(20.0f, titleLabel.bottom + 3, self.view.frame.size.width - 40, 20)];
-     addressLabel.text = [NSString stringWithFormat:@"%@ | %@",poi.district,poi.address];
+     if (poi.address.length > 0) {
+            addressLabel.text = [NSString stringWithFormat:@"%@ | %@",poi.district,poi.address];
+     }else{
+         addressLabel.text = [NSString stringWithFormat:@"%@",poi.district];
+     }
      [addressLabel setFont:[UIFont themeFontRegular:14]];
      [addressLabel setTextColor:[UIColor themeGray1]];
      addressLabel.numberOfLines = 2;
@@ -627,7 +633,6 @@ static MAMapView *kFHPageMapView = nil;
     [_mapView setBackgroundColor:[UIColor whiteColor]];
     
     
-    [self requestPoiInfo:self.centerPoint andKeyWord:self.searchCategory];
 }
 
 - (void)dealloc
@@ -804,6 +809,8 @@ static MAMapView *kFHPageMapView = nil;
         [poiArray addObject:maAnna];
     }
     
+    
+    
     self.poiAnnotations = poiArray;
     
     [self setUpAnnotations];
@@ -868,6 +875,8 @@ static MAMapView *kFHPageMapView = nil;
     
 }
 
+
+
 #pragma MapViewDelegata
 
 - (MAAnnotationView *)mapView:(MAMapView *)mapView viewForAnnotation:(id<MAAnnotation>)annotation
@@ -901,13 +910,22 @@ static MAMapView *kFHPageMapView = nil;
             
            NSString *reuseIdentifier = @"poi_annotation";
            FHMyItemAnnView *annotationView = (FHMyItemAnnView *) [mapView dequeueReusableAnnotationViewWithIdentifier:reuseIdentifier];
+
            if (!annotationView) {
                annotationView = [[FHMyItemAnnView alloc] initWithAnnotation:annotation reuseIdentifier:reuseIdentifier];
+           }else{
+               for (UIView *subview in annotationView.subviews) {
+                  [subview removeFromSuperview];
+               }
            }
+            
            annotationView.canShowCallout = NO;
            annotationV.image = [self getIconImageFromCategory:@"教育"];
 
            UIImageView *backImageView = [UIImageView new];
+           UIImageView *backImageShaderView = [UIImageView new];
+
+           [annotationView addSubview:backImageShaderView];
            [annotationView addSubview:backImageView];
             FHMyMAAnnotation *annotationMy = (FHMyMAAnnotation *)annotation;
 //            NSLog(@"poi=%@",[annotationMy.poi description]);
@@ -918,7 +936,7 @@ static MAMapView *kFHPageMapView = nil;
            leftIcon.image = [self getIconImageFromCategory:((FHMyMAAnnotation *)annotation).type];
 
            leftIcon.backgroundColor = [UIColor clearColor];
-           leftIcon.frame = CGRectMake(15, 8, 18, 18);
+           leftIcon.frame = CGRectMake(15, 10, 18, 18);
 
             
           [annotationView addSubview:leftIcon];
@@ -928,12 +946,16 @@ static MAMapView *kFHPageMapView = nil;
            UIImage *imageAnna = [UIImage imageNamed:@"mapsearch_detail_annotation_bg"];//mapsearch_annotation_bg
 
 
-           backImageView.layer.cornerRadius = 15;
-           backImageView.layer.masksToBounds = YES;
-            backImageView.layer.borderWidth = 0.5;
-            backImageView.layer.borderColor = [UIColor themeOrange2].CGColor;
+           backImageView.layer.shadowColor = [UIColor colorWithWhite:0 alpha:0.1].CGColor;// 阴影颜色
+           backImageView.layer.shadowOpacity = 1;// 阴影不透明度
+           backImageView.layer.shadowOffset = CGSizeMake(2, 3.5);// 阴影偏移
+           backImageView.layer.shadowRadius = 5;// 阴影半径
+           backImageView.layer.cornerRadius = 15;// 圆角半径
+//            backImageView.layer.borderWidth = 0.5;
+//            backImageView.layer.borderColor = [UIColor themeOrange2].CGColor;
 //           backImageView.layer.shadowColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:0.5].CGColor;
 //           backImageView.layer.shadowOffset = CGSizeMake(2, 2);
+            
 
            [annotationView addSubview:titleLabel];
            titleLabel.font = [UIFont themeFontRegular:12];
@@ -946,7 +968,11 @@ static MAMapView *kFHPageMapView = nil;
            [titleLabel sizeToFit];
             
         
-           backImageView.frame = CGRectMake(3, 3, titleLabel.frame.size.width + 45 , 30);
+           backImageView.frame = CGRectMake(5, 5, titleLabel.frame.size.width + 45 , 30);
+           backImageShaderView.frame = backImageView.frame;
+           backImageShaderView.layer.shadowOffset = CGSizeMake(4, 4);
+           backImageShaderView.layer.shadowColor = [UIColor colorWithWhite:0 alpha:1].CGColor;
+            
            [backImageView setBackgroundColor:[UIColor colorWithHexStr:@"#ff9629"]];
            titleLabel.center = CGPointMake(backImageView.center.x + 10, backImageView.center.y);
 
@@ -960,8 +986,10 @@ static MAMapView *kFHPageMapView = nil;
            annotationView.backColorView = backImageView;
            annotationView.bottomArrowView = bottomArrowView;
             
+            
+            
             CGRect frame = annotationView.frame;
-            frame.size = CGSizeMake(backImageView.frame.size.width, backImageView.frame.size.height);
+            frame.size = CGSizeMake(backImageView.frame.size.width + 10, backImageView.frame.size.height + 10);
             annotationView.frame = frame;
            return annotationView;
         }
