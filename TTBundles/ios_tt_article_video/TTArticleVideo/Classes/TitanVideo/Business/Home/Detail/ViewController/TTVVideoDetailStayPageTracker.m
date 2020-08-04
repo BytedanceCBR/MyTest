@@ -326,7 +326,7 @@ static NSInteger const vaildStayPageMaxInterval = 7200;
     [event3Dic setValue:self.detailModel.categoryID forKey:@"category_id"];
     [event3Dic setValue:[self.detailModel.article.userInfo ttgc_contentID] forKey:@"author_id"];
     [event3Dic setValue:@"video" forKey:@"article_type"];
-    
+    [event3Dic setValue:@"89247" forKey:@"event_tracking_id"];
     [TTTrackerWrapper eventV3:@"go_detail" params:event3Dic isDoubleSending:YES];
 
 }

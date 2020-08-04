@@ -1014,7 +1014,8 @@
                 resultType = FHNetworkMonitorTypeNetFailed;
             }
             [self addRequestLog:response.URL.path startDate:startDate backDate:backDate serializeDate:serDate resultType:resultType errorCode:code errorMsg:errMsg extra:extraDict exceptionDict:exceptionDict responseCode:responseCode];
-            [[FHHouseErrorHubManager sharedInstance] checkRequestResponseWithHost:url requestParams:param responseStatus:response response:obj analysisError:backError changeModelType:resultType errorHubType:FHErrorHubTypeRequest];
+            FHErrorHubManagerUtil *errorHubUtil = [[FHErrorHubManagerUtil alloc]init];
+            [errorHubUtil checkRequestResponseWithHost:url requestParams:param responseStatus:response response:obj analysisError:backError changeModelType:resultType errorHubType:1];
             dispatch_async(dispatch_get_main_queue(), ^{
                 completion(model,backError);
             });
@@ -1066,7 +1067,8 @@
                 resultType = FHNetworkMonitorTypeNetFailed;
             }
             [self addRequestLog:response.URL.path startDate:startDate backDate:backDate serializeDate:serDate resultType:resultType errorCode:code errorMsg:errMsg extra:extraDict exceptionDict:exceptionDict responseCode:responseCode];
-            [[FHHouseErrorHubManager sharedInstance] checkRequestResponseWithHost:url requestParams:param responseStatus:response response:obj analysisError:backError changeModelType:resultType errorHubType:FHErrorHubTypeRequest];
+            FHErrorHubManagerUtil *errorHubUtil = [[FHErrorHubManagerUtil alloc]init];
+            [errorHubUtil checkRequestResponseWithHost:url requestParams:param responseStatus:response response:obj analysisError:backError changeModelType:resultType errorHubType:1];
             dispatch_async(dispatch_get_main_queue(), ^{
                 completion(model,backError);
             });
@@ -1115,7 +1117,8 @@
                 resultType = FHNetworkMonitorTypeNetFailed;
             }
             [self addRequestLog:response.URL.path startDate:startDate backDate:backDate serializeDate:serDate resultType:resultType errorCode:code errorMsg:errMsg extra:extraDict exceptionDict:exceptionDict responseCode:responseCode];
-            [[FHHouseErrorHubManager sharedInstance] checkRequestResponseWithHost:url requestParams:param responseStatus:response response:obj analysisError:backError changeModelType:resultType errorHubType:FHErrorHubTypeRequest];
+            FHErrorHubManagerUtil *errorHubUtil = [[FHErrorHubManagerUtil alloc]init];
+            [errorHubUtil checkRequestResponseWithHost:url requestParams:param responseStatus:response response:obj analysisError:backError changeModelType:resultType errorHubType:1];
             dispatch_async(dispatch_get_main_queue(), ^{
                 completion(model,backError);
             });
@@ -1168,7 +1171,8 @@
                 resultType = FHNetworkMonitorTypeNetFailed;
             }
             [self addRequestLog:response.URL.path startDate:startDate backDate:backDate serializeDate:serDate resultType:resultType errorCode:code errorMsg:errMsg extra:extraDict exceptionDict:exceptionDict responseCode:responseCode];
-            [[FHHouseErrorHubManager sharedInstance] checkRequestResponseWithHost:url requestParams:param responseStatus:response response:obj analysisError:backError changeModelType:resultType errorHubType:FHErrorHubTypeRequest];
+            FHErrorHubManagerUtil *errorHubUtil = [[FHErrorHubManagerUtil alloc]init];
+            [errorHubUtil checkRequestResponseWithHost:url requestParams:param responseStatus:response response:obj analysisError:backError changeModelType:resultType errorHubType:1];
             dispatch_async(dispatch_get_main_queue(), ^{
                 completion(model,backError);
             });
