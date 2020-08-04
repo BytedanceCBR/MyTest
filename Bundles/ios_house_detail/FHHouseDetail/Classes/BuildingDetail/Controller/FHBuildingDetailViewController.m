@@ -470,7 +470,7 @@
             [((FHBuildingDetailTopImageCollectionViewCell *)cell) setIndexDidSelect:^(FHBuildingDetailOperatType type, FHBuildingIndexModel * _Nonnull index) {
                 [weakSelf responseCenterWithOperat:type withIndexModel:index];
             }];
-            self.topImageView = cell;
+            self.topImageView = (FHBuildingDetailTopImageCollectionViewCell *)cell;
             [cell refreshWithData:self.viewModel.locationModel];
             [((FHBuildingDetailTopImageCollectionViewCell *)cell) updateWithIndexModel:self.currentIndex];
             break;
@@ -481,7 +481,7 @@
             
             ((FHBuildingDetailInfoCollectionViewCell *)cell).currentIndexPath = [NSIndexPath indexPathForItem:self.currentIndex.buildingIndex inSection:0];
             [cell refreshWithData:saleModel];
-            self.infoCollectionView = cell;
+            self.infoCollectionView = (FHBuildingDetailInfoCollectionViewCell *)cell;
             
             [(FHBuildingDetailInfoCollectionViewCell *)cell setInfoIndexDidSelect:^(FHBuildingDetailOperatType type, FHBuildingIndexModel * _Nonnull index) {
                 [weakSelf responseCenterWithOperat:type withIndexModel:index];

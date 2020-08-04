@@ -109,7 +109,7 @@
             [buildingArr addObject:building];
         }
         noImageSaleModel.buildingList = buildingArr.copy;
-        locationModel.saleStatusList = [NSArray arrayWithObject:noImageSaleModel];
+        locationModel.saleStatusList = [NSArray<FHBuildingSaleStatusModel> arrayWithObject:noImageSaleModel];
     }
 
     
