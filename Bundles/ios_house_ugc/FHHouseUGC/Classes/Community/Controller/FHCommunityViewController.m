@@ -104,8 +104,14 @@
 //    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onUnreadMessageChange) name:kFHUGCFollowNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onFocusHaveNewContents) name:kFHUGCFocusTabHasNewNotification object:nil];
 //    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onUnreadMessageChange) name:kFHUGCLoadFollowDataFinishedNotification object:nil];
+    
     //tabbar双击的通知
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(refreshData) name:kFindTabbarKeepClickedNotification object:nil];
+    if(self.isNewDiscovery){
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(refreshData) name:kExploreMixedListRefreshTypeNotification object:nil];
+    }else{
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(refreshData) name:kFindTabbarKeepClickedNotification object:nil];
+    }
+    
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(changeTab) name:kFHUGCForumPostThreadFinish object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateSegmentView) name:kUGCCategoryGotFinishedNotification object:nil];
     
@@ -604,7 +610,9 @@
 }
 
 - (void)refreshData {
-    [self.viewModel refreshCell:NO isClick:YES];
+    if(!self.isNewDiscovery || ![FHEnvContext sharedInstance].isShowingHomeHouseFind){
+        [self.viewModel refreshCell:NO isClick:YES];
+    }
 }
 
 - (void)changeTab {

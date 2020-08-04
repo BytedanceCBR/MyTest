@@ -86,6 +86,7 @@
             tracerDic[@"category_name"] = cellModel.tracerDic[@"category_name"] ?: @"be_null";
             tracerDic[@"enter_type"] = enterType ? enterType : @"be_null";
             tracerDic[@"rank"] = cellModel.tracerDic[@"rank"];
+            tracerDic[@"group_source"] = cellModel.tracerDic[@"group_source"];
             if(!isEmptyString(cellModel.community.socialGroupId)){
                 tracerDic[@"social_group_id"] = cellModel.community.socialGroupId;
             }
