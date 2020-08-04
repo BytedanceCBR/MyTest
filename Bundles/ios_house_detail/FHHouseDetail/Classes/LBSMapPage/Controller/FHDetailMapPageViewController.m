@@ -979,7 +979,6 @@ static MAMapView *kFHPageMapView = nil;
            UIImageView *bottomArrowView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"mapsearch_annotation_arrow"]];
            [annotationView addSubview:bottomArrowView];
            bottomArrowView.backgroundColor = [UIColor clearColor];
-           bottomArrowView.frame = CGRectMake(backImageView.frame.size.width / 2.0 - 5, backImageView.frame.size.height - 5.5, 10.5, 10.5);
            annotationView.centerOffset = CGPointMake(0, -20);
            annotationView.poi = annotationMy.poi;
 
@@ -987,10 +986,11 @@ static MAMapView *kFHPageMapView = nil;
            annotationView.bottomArrowView = bottomArrowView;
             
             
-            
             CGRect frame = annotationView.frame;
             frame.size = CGSizeMake(backImageView.frame.size.width + 10, backImageView.frame.size.height + 10);
             annotationView.frame = frame;
+            bottomArrowView.frame = CGRectMake(backImageView.frame.size.width / 2.0 - 5, backImageView.frame.size.height - 2, 10.5, 10.5);
+            
            return annotationView;
         }
         
