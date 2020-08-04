@@ -50,7 +50,7 @@
     if (isRange.location != NSNotFound) {
         return YES;
     }
-    return YES;
+    return NO;
 }
 
 + (NSString *)fhBuildVersion
