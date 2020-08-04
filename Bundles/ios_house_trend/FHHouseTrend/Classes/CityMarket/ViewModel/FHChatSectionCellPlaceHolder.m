@@ -185,6 +185,7 @@
                 }
                 return [PNLineChartDataItem dataItemWithY:theValue];
             }
+            return [PNLineChartDataItem empty];
         };
         lineIndex += 1;
         return data01;

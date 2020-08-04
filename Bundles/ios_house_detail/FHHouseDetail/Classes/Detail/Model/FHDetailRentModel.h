@@ -186,7 +186,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface FHRentDetailImShareInfoModel : JSONModel
 @property (nonatomic, copy , nullable) NSString *shareUrl;
 @property (nonatomic, copy , nullable) NSString *coverImage;
-@property (nonatomic, copy , nullable) NSString *description;
+@property (nonatomic, copy , nullable) NSString *modelDescription;
 @property (nonatomic, copy , nullable) NSString *title;
 @end
 

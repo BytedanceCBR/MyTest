@@ -24,7 +24,6 @@
 #import "FHHouseDetailAPI.h"
 #import "TTReachability.h"
 #import <FHHouseBase/FHHouseFollowUpHelper.h>
-#import "NSDictionary+TTAdditions.h"
 #import "FHURLSettings.h"
 #import "TTRoute.h"
 #import "ToastManager.h"
@@ -64,6 +63,7 @@
 #import "TTAccountLoginManager.h"
 #import "FHUtils.h"
 #import "BDABTestManager.h"
+#import <ByteDanceKit/NSDictionary+BTDAdditions.h>
 
 NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
 
@@ -106,7 +106,7 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
         
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(refreshBottomBarLoadingState:) name:kFHDetailLoadingNotification object:nil];
         
-        [FHEnvContext sharedInstance].messageManager ;
+//        [FHEnvContext sharedInstance].messageManager ;
         
         __weak typeof(self)wself = self;
         _bottomBar.bottomBarContactBlock = ^{
@@ -168,8 +168,8 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
 - (void)refreshFollowStatus:(NSNotification *)noti
 {
     NSDictionary *userInfo = noti.userInfo;
-    NSString *followId = [userInfo tt_stringValueForKey:@"followId"];
-    NSInteger followStatus = [userInfo tt_integerValueForKey:@"followStatus"];
+    NSString *followId = [userInfo btd_stringValueForKey:@"followId"];
+    NSInteger followStatus = [userInfo btd_integerValueForKey:@"followStatus"];
     if (![followId isEqualToString:self.houseId]) {
         return;
     }
@@ -184,8 +184,8 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
 - (void)refreshBottomBarLoadingState:(NSNotification *)noti
 {
     NSDictionary *userInfo = noti.userInfo;
-    NSString *houseId = [userInfo tt_stringValueForKey:@"house_id"];
-    NSInteger loading = [userInfo tt_integerValueForKey:@"show_loading"];
+    NSString *houseId = [userInfo btd_stringValueForKey:@"house_id"];
+    NSInteger loading = [userInfo btd_integerValueForKey:@"show_loading"];
     if (![houseId isEqualToString:self.houseId]) {
         return;
     }
@@ -219,7 +219,7 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
 }
 
 // 关注
-- (void)followActionWithExtra:(NSDictionary *)extra {
+- (void)followActionWithExtra:(NSDictionary * _Nullable)extra {
     NSMutableDictionary *extraDict = @{}.mutableCopy;
     if (self.tracerDict) {
         [extraDict addEntriesFromDictionary:self.tracerDict];
@@ -273,7 +273,7 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
 - (void)jump2RealtorDetail
 {
     if (self.houseType != FHHouseTypeNewHouse) {
-        [self.phoneCallViewModel jump2RealtorDetailWithPhone:self.contactPhone isPreLoad:YES extra:nil];
+        [self.phoneCallViewModel jump2RealtorDetailWithPhone:self.contactPhone isPreLoad:YES extra:@{}];
     }
 }
 
@@ -284,7 +284,7 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
 
 // 详情页分享
 - (void)shareAction {
-    [self shareActionWithShareExtra:nil];
+    [self shareActionWithShareExtra:@{}];
 }
 
 // 携带埋点参数的分享
@@ -407,7 +407,7 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
         // 可能会出现崩溃的代码
         if ([FHHouseDetailPhoneCallViewModel fhRNEnableChannels].count > 0 && [FHHouseDetailPhoneCallViewModel fhRNPreLoadChannels].count > 0 && [[FHHouseDetailPhoneCallViewModel fhRNEnableChannels] containsObject:@"f_realtor_detail"] && [[FHHouseDetailPhoneCallViewModel fhRNPreLoadChannels] containsObject:@"f_realtor_detail"] && contactPhone.showRealtorinfo && [FHIESGeckoManager isHasCacheForChannel:@"f_realtor_detail"]) {
             //保证主线程执行
-            [self.phoneCallViewModel creatJump2RealtorDetailWithPhone:contactPhone isPreLoad:YES andIsOpen:NO extra:nil];
+            [self.phoneCallViewModel creatJump2RealtorDetailWithPhone:contactPhone isPreLoad:YES andIsOpen:NO extra:@{}];
         }
     }
     
@@ -604,7 +604,7 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
 - (void)callActionWithAssociatePhone:(FHAssociatePhoneModel *)associatePhone
 {
     WeakSelf;
-    NSDictionary *associateInfoDict = associatePhone.associateInfo;
+//    NSDictionary *associateInfoDict = associatePhone.associateInfo;
     NSDictionary *reportParamsDict = associatePhone.reportParams;
     // 圈子电话咨询数据备份
     self.socialContactConfig = nil;
@@ -903,23 +903,23 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
         dict[@"auto_join"] = @"1";
         dict[@"conversation_id"] = self.socialInfo.socialGroupInfo.chatStatus.conversationId;
         dict[@"short_conversation_id"] = [[NSNumber numberWithLongLong:self.socialInfo.socialGroupInfo.chatStatus.conversationShortId] stringValue];
-        NSString *title = [@"" stringByAppendingFormat:@"%@(%d)", self.socialInfo.socialGroupInfo.socialGroupName, self.socialInfo.socialGroupInfo.chatStatus.currentConversationCount];
+        NSString *title = [NSString stringWithFormat:@"%@(%ld)",self.socialInfo.socialGroupInfo.socialGroupName, (unsigned long)self.socialInfo.socialGroupInfo.chatStatus.currentConversationCount];
         dict[@"chat_title"] = title;
     } else {
         NSInteger count = [[IMManager shareInstance].chatService sdkConversationWithIdentifier:convId].participantsCount;
-        NSString *title = [@"" stringByAppendingFormat:@"%@(%d)", self.socialInfo.socialGroupInfo.socialGroupName, count];
+        NSString *title = [NSString stringWithFormat:@"%@(%ld)", self.socialInfo.socialGroupInfo.socialGroupName, count];
         dict[@"chat_title"] = title;
         dict[@"in_conversation"] = @"1";
         dict[@"conversation_id"] = self.socialInfo.socialGroupInfo.chatStatus.conversationId;
         dict[@"short_conversation_id"] = [[NSNumber numberWithLongLong:self.socialInfo.socialGroupInfo.chatStatus.conversationShortId] stringValue];
     }
-    dict[@"member_role"] = [NSString stringWithFormat: @"%d", self.socialInfo.socialGroupInfo.userAuth];
+    dict[@"member_role"] = [NSString stringWithFormat: @"%ld",(unsigned long)self.socialInfo.socialGroupInfo.userAuth];
     dict[@"is_admin"] = @(self.socialInfo.socialGroupInfo.userAuth > UserAuthTypeNormal);
-    dict[@"report_params"] = [[reportDic JSONRepresentation] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+    dict[@"report_params"] = [reportDic btd_jsonStringEncoded];
     
-    WeakSelf;
+//    WeakSelf;
     dict[@"group_chat_page_exit_block"] = ^(void) {
-        StrongSelf;
+//        StrongSelf;
         // 返回是否需要刷新数据
     };
     TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];

@@ -22,7 +22,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, copy) NSString *className;
 
-@property (nonatomic, copy) NSString *sectionTitle;
+@property (nonatomic, copy, nullable) NSString *sectionTitle;
 
 @end
 

@@ -503,8 +503,8 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
  // 周边房源
  - (void)requestRelatedHouseSearch {
      __weak typeof(self) wSelf = self;
-     [FHHouseDetailAPI requestHouseRentRelated:self.houseId class:[FHListResultHouseModel class] completion:^(id<FHBaseModelProtocol>  _Nullable model, NSError * _Nonnull error) {
-         FHListResultHouseModel *models = (FHListResultHouseModel*)model;
+     [FHHouseDetailAPI requestHouseRentRelated:self.houseId class:[FHListResultHouseModel class] completion:^(FHListResultHouseModel *model, NSError * _Nonnull error) {
+         FHListResultHouseModel *models = model;
          wSelf.requestRelatedCount += 1;
          wSelf.relatedHouseData = models.data;
          [wSelf processDetailRelatedData];

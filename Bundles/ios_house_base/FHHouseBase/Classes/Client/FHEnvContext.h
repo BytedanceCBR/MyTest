@@ -26,6 +26,8 @@
 #define kUGCTitleNearbyList @"nearby_list"
 #define kSecondTab @"tab_community"
 
+NS_ASSUME_NONNULL_BEGIN
+
 extern NSString *const PERMISSION_PROTOCOL_CONFIRMED_NOTIFICATION;
 
 static NSString *const kFHUserSelectCityNotification = @"k_fh_user_select_city";
@@ -44,13 +46,10 @@ static NSString *const kFHSwitchGetLightFinishedNotification = @"k_fh_get_light_
 
 static NSString *const kFHUGCPromotionUser = @"is_promotion_user";
 
-
-
 @class FHMessageManager;
 @class TTReachability;
 @class UNUserNotificationCenter;
 @class UNNotificationResponse;
-NS_ASSUME_NONNULL_BEGIN
 
 @interface FHEnvContext : NSObject
 {
@@ -308,7 +307,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 -(void)addRemoteNotification:(UIApplication *)application userInfo:(NSDictionary *)userInfo;
 
--(void)addUNRemoteNOtification:(UNUserNotificationCenter *)center didReceiveNotificationResponse:(UNNotificationResponse *)response withCompletionHandler:(void (^)())completionHandler ;
+-(void)addUNRemoteNOtification:(UNUserNotificationCenter *)center didReceiveNotificationResponse:(UNNotificationResponse *)response withCompletionHandler:(void (^)(void))completionHandler ;
 
 + (NSString *)getCurrentTabIdentifier;
 
