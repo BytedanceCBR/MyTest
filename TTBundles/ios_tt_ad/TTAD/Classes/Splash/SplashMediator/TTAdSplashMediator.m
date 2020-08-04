@@ -14,9 +14,7 @@
 #import <TTBaseLib/TTUIResponderHelper.h>
 #import "UIDevice+TTAdditions.h"
 #import "NSDictionary+TTAdditions.h"
-#import <TTABManager/TTABHelper.h>
 #import "TTLocationManager.h"
-#import <TTABManager/TTABManagerUtil.h>
 #import "TTURLUtils.h"
 #import "TTAdTrackManager.h"
 #import "TTAppLinkManager.h"
@@ -43,6 +41,8 @@
 #import <FHHouseBase/TTSandBoxHelper+House.h>
 #import <FHPopupViewCenter/FHPopupViewManager.h>
 #import "TTSettingsManager.h"
+#import <BDABTestSDK/BDABTestManager.h>
+#import <BDABTestSDK/BDClientABManagerUtil.h>
 
 const static NSInteger splashCallbackPatience = 30000; // 从第三方app召回最长忍耐时间 30 000ms
 
@@ -121,10 +121,10 @@ const static NSInteger splashCallbackPatience = 30000; // 从第三方app召回�
         [dict setValue:[[TTInstallIDManager sharedInstance] deviceID] forKey:TT_DEVICE_ID];
         
 #ifndef SS_TODAY_EXTENSTION
-        [dict setValue:[[TTABHelper sharedInstance_tt] ABVersion] forKey:TT_AB_VERSION];
-        [dict setValue:[[TTABHelper sharedInstance_tt] ABFeature] forKey:TT_AB_FEATURE];
-        [dict setValue:[[TTABHelper sharedInstance_tt] ABGroup] forKey:TT_AB_GROUP];
-        [dict setValue:[TTABManagerUtil ABTestClient] forKey:TT_AB_CLIENT];
+        [dict setValue:[BDABTestManager ABVersion] forKey:TT_AB_VERSION];
+//        [dict setValue:[BDABTestManager ABFeature] forKey:TT_AB_FEATURE];
+        [dict setValue:[BDABTestManager ABGroup] forKey:TT_AB_GROUP];
+        [dict setValue:[BDABTestManager ABTestClient] forKey:TT_AB_CLIENT];
 #endif
         return dict;
     }];

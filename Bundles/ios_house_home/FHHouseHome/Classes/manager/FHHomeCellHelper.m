@@ -220,7 +220,7 @@ static NSMutableArray  * _Nullable identifierArr;
     [self.traceShowCache removeAllObjects];
 }
 
-- (CGFloat)initFHHomeHeaderIconCountAndHeight
+- (void)initFHHomeHeaderIconCountAndHeight
 {
     self.kFHHomeIconRowCount = 5;
     self.kFHHomeIconDefaultHeight = 42;
