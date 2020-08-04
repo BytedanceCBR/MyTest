@@ -34,8 +34,8 @@
         _logoImgView.layer.borderWidth = 0.5;
         
         _titleLabel = [[UILabel alloc] init];
-        _titleLabel.font = [UIFont themeFontSemibold:20];
-        _tipLabel.textColor = [UIColor themeOrange1];
+        _titleLabel.font = [UIFont themeFontMedium:16];
+        _titleLabel.textColor = [UIColor colorWithHexString:@"#222222"];
         
         _tipLabel = [[UILabel alloc]init];
         _tipLabel.textColor = [UIColor themeGray3];

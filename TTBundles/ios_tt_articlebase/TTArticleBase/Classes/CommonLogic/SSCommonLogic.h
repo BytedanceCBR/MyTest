@@ -1417,6 +1417,8 @@ typedef NS_ENUM(NSInteger, SSCommentType)  {
 + (BOOL)enableIMOnlineMonitorLogic;
 //  是否开启IM语音通话开关
 + (BOOL)enableVoIPAudioCall;
+// 是否开启抖音苹果登录，默认关闭
++ (BOOL)disableDouyinIconLoginLogic;
 @end
 
 
