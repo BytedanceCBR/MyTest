@@ -251,10 +251,10 @@
 //                           @"tracer": traceParam
 //                           };
     
-    NSMutableDictionary *infoDict = [NSMutableDictionary dictionaryWithDictionary:nil];
+    NSMutableDictionary *infoDict = [NSMutableDictionary dictionary];
 //    infoDict[@"house_type"] = @(1);
 //    [infoDict setValue:floorPanInfoModel.id forKey:@"floor_plan_id"];
-    NSMutableDictionary *subPageParams = [self.baseViewModel subPageParams];
+    NSMutableDictionary *subPageParams = [self.baseViewModel subPageParams].mutableCopy;
     subPageParams[@"contact_phone"] = nil;
     [infoDict addEntriesFromDictionary:subPageParams];
     infoDict[@"tracer"] = traceParam;

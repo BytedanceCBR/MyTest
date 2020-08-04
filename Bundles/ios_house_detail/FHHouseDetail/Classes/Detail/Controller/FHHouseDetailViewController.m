@@ -452,7 +452,7 @@
 - (void)setupCallCenter {
     if (@available(iOS 10.0 , *)) {
         _callObserver = [[CXCallObserver alloc]init];
-        [_callObserver setDelegate:self queue:dispatch_get_main_queue()];
+        [_callObserver setDelegate:(id)self queue:dispatch_get_main_queue()];
     }else {
         @weakify(self);
         _callCenter = [[CTCallCenter alloc] init];

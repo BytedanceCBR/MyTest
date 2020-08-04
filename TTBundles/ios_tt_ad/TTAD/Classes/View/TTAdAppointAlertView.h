@@ -32,7 +32,7 @@ typedef NS_ENUM(NSUInteger, TTAdApointFromSource) {
 };
 
 typedef void(^TTAdApointCompleteBlock)(TTAdApointCompleteType type);
-typedef void(^TTAdApointHideBlock)();
+typedef void(^TTAdApointHideBlock)(void);
 
 @protocol  TTAdAppointDelegate<NSObject>
 
@@ -52,7 +52,7 @@ typedef void(^TTAdApointHideBlock)();
 - (void)stopAnimating;
 @end
 
-typedef void(^TTAdActionBlock)();
+typedef void(^TTAdActionBlock)(void);
 @interface TTAdRetryView : SSThemedView
 
 @property (nonatomic,strong,nonnull) SSThemedButton* retryCicle;
