@@ -345,6 +345,8 @@ static MAMapView *kFHPageMapView = nil;
                   
         }];
     }
+    
+    [self processSelected:YES andAnnotationView:self.currentSelectAna];
 }
 
 +(NSAttributedString *)createTagAttrString:(NSString *)text isFirst:(BOOL)isFirst textColor:(UIColor *)textColor backgroundColor:(UIColor *)backgroundColor {
@@ -370,7 +372,7 @@ static MAMapView *kFHPageMapView = nil;
              [self.bottomShowInfoView setFrame:CGRectMake(0, self.view.frame.size.height, self.view.frame.size.width, self.bottomShowInfoView.frame.size.height)];
          } completion:^(BOOL finished) {
                    
-         }];        
+         }];
     }
 }
 
@@ -990,7 +992,6 @@ static MAMapView *kFHPageMapView = nil;
     if([view isKindOfClass:[FHMyItemAnnView class]]){
         FHMyMAAnnotation *clickAna = (FHMyItemAnnView *)view;
         if (clickAna.poi) {
-            NSLog(@"poi=%@",clickAna.poi);
             [self showAnaInfoView:clickAna.poi];
         }
     }
@@ -1000,6 +1001,7 @@ static MAMapView *kFHPageMapView = nil;
 {
     if ([view isKindOfClass:[FHMyItemAnnView class]]) {
         [self processSelected:NO andAnnotationView:view];
+        view.selected = NO;
     }
 }
 
@@ -1010,6 +1012,7 @@ static MAMapView *kFHPageMapView = nil;
         [self processSelected:YES andAnnotationView:view];
         FHMyItemAnnView *neighborView = (FHMyItemAnnView *)view;
         self.currentSelectAna = neighborView;
+        view.selected = YES;
     }
 }
 
@@ -1035,9 +1038,11 @@ static MAMapView *kFHPageMapView = nil;
     if (isSelected) {
         [neighborView.backColorView setBackgroundColor:[UIColor colorWithHexStr:@"#fe5500"]];
         [neighborView.bottomArrowView  setImage:[UIImage imageNamed:@"mapsearch_annotation_arrow_orange"]];
+        view.selected = YES;
     }else{
         [neighborView.backColorView setBackgroundColor:[UIColor colorWithHexStr:@"#ff9629"]];
         [neighborView.bottomArrowView  setImage:[UIImage imageNamed:@"mapsearch_annotation_arrow"]];
+        view.selected = NO;
     }
 }
 
