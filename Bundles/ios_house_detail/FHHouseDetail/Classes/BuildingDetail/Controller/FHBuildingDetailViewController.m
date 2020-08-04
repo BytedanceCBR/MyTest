@@ -479,7 +479,7 @@
             //切换调用
             FHBuildingSaleStatusModel *saleModel = self.viewModel.locationModel.saleStatusList[self.currentIndex.saleStatus];
             
-            ((FHBuildingDetailInfoCollectionViewCell *)cell).currentIndexPath = [NSIndexPath indexPathForItem:self.currentIndex.buildingIndex + saleModel.buildingList.count inSection:0];
+            ((FHBuildingDetailInfoCollectionViewCell *)cell).currentIndexPath = [NSIndexPath indexPathForItem:self.currentIndex.buildingIndex inSection:0];
             [cell refreshWithData:saleModel];
             self.infoCollectionView = cell;
             

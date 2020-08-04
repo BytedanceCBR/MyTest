@@ -10,6 +10,7 @@
 #import <FHHouseBase/FHBaseCollectionView.h>
 
 CGFloat const FHBuildingDetailInfoListCellMinimumLineSpacing = 25 + 12;
+NSInteger const FHBuildingDetailInfoListCellPageMultiple = 99;
 
 @interface FHBuildingDetailInfoCollectionViewCell ()<UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout>
 
@@ -55,8 +56,9 @@ CGFloat const FHBuildingDetailInfoListCellMinimumLineSpacing = 25 + 12;
         
         //判断
         if (self.buildingList.count > 1) {
-            UICollectionViewLayoutAttributes *attributes = [self.collectionView layoutAttributesForItemAtIndexPath:[NSIndexPath indexPathForItem:self.buildingList.count inSection:0]];
+            UICollectionViewLayoutAttributes *attributes = [self.collectionView layoutAttributesForItemAtIndexPath:[NSIndexPath indexPathForItem:self.buildingList.count * (FHBuildingDetailInfoListCellPageMultiple / 2) inSection:0]];
             if (self.currentIndexPath) {
+                self.currentIndexPath = [self getNewIndexPath:self.currentIndexPath];
                 attributes = [self.collectionView layoutAttributesForItemAtIndexPath:self.currentIndexPath];
             }
             [self.collectionView setContentOffset:CGPointMake(attributes.frame.origin.x - FHBuildingDetailInfoListCellMinimumLineSpacing, 0)];
@@ -64,10 +66,16 @@ CGFloat const FHBuildingDetailInfoListCellMinimumLineSpacing = 25 + 12;
     }
 }
 
+- (NSIndexPath *)getNewIndexPath:(NSIndexPath *)oldIndexPath {
+    NSIndexPath *newIndexPath = [NSIndexPath indexPathForItem:(oldIndexPath.item % self.buildingList.count) + (self.buildingList.count * (FHBuildingDetailInfoListCellPageMultiple / 2)) inSection:0];
+    return newIndexPath;
+}
+
 - (void)manualSetContentOffset:(NSInteger)index {
     if (self.buildingList.count > 1) {
-        index += self.buildingList.count;
-        UICollectionViewLayoutAttributes *attributes = [self.collectionView layoutAttributesForItemAtIndexPath:[NSIndexPath indexPathForItem:index inSection:0]];
+        NSInteger newIndex = ((self.currentIndexPath.row / self.buildingList.count) * self.buildingList.count) + index;
+        self.currentIndexPath = [NSIndexPath indexPathForItem:newIndex inSection:0];
+        UICollectionViewLayoutAttributes *attributes = [self.collectionView layoutAttributesForItemAtIndexPath:[NSIndexPath indexPathForItem:newIndex inSection:0]];
         [self.collectionView setContentOffset:CGPointMake(attributes.frame.origin.x - FHBuildingDetailInfoListCellMinimumLineSpacing, 0) animated:YES];
     }
 }
@@ -94,7 +102,7 @@ CGFloat const FHBuildingDetailInfoListCellMinimumLineSpacing = 25 + 12;
     if (self.buildingList.count == 1) {
         return 1;
     }
-    return self.buildingList.count * 3;
+    return self.buildingList.count * FHBuildingDetailInfoListCellPageMultiple;
 }
 
 - (__kindof UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
@@ -143,9 +151,9 @@ CGFloat const FHBuildingDetailInfoListCellMinimumLineSpacing = 25 + 12;
     NSIndexPath *indexPath = [self.collectionView indexPathForItemAtPoint:contentOffset];
     UICollectionViewLayoutAttributes *attributes = nil;
     if (indexPath.row < self.buildingList.count) {
-        attributes = [self.collectionView layoutAttributesForItemAtIndexPath:[NSIndexPath indexPathForItem:self.buildingList.count + indexPath.row inSection:0]];
-    } else if (indexPath.row > self.buildingList.count * 2 - 1) {
-        attributes = [self.collectionView layoutAttributesForItemAtIndexPath:[NSIndexPath indexPathForItem:indexPath.row - self.buildingList.count inSection:0]];
+        attributes = [self.collectionView layoutAttributesForItemAtIndexPath:[self getNewIndexPath:indexPath]];
+    } else if (indexPath.row > self.buildingList.count * (FHBuildingDetailInfoListCellPageMultiple - 1) - 1) {
+        attributes = [self.collectionView layoutAttributesForItemAtIndexPath:[self getNewIndexPath:indexPath]];
     }
     if (attributes) {
         [self.collectionView setContentOffset:CGPointMake(attributes.frame.origin.x - FHBuildingDetailInfoListCellMinimumLineSpacing, 0)];
