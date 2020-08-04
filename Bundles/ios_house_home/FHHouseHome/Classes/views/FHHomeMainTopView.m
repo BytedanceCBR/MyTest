@@ -79,11 +79,11 @@ static const float kMapSearchBtnRightPading = 50;
     _searchBtn.hitTestEdgeInsets =  UIEdgeInsetsMake(-5, -5, -5, -5);
     [self addSubview:_searchBtn];
     
-    WeakSelf;
-    [[FHEnvContext sharedInstance].configDataReplay subscribeNext:^(id  _Nullable x) {
-        StrongSelf;
-        [self showUnValibleCity];
-    }];
+//    WeakSelf;
+//    [[FHEnvContext sharedInstance].configDataReplay subscribeNext:^(id  _Nullable x) {
+//        StrongSelf;
+//        [self showUnValibleCity];
+//    }];
         
 }
 
@@ -517,8 +517,7 @@ static const float kMapSearchBtnRightPading = 50;
 
 - (void)changeBackColor:(NSInteger)index
 {
-    UIColor *backColor = index == 0 ? [UIColor themeHomeColor] : [UIColor whiteColor];
-    
+    UIColor *backColor = (index == 0 && [FHEnvContext isCurrentCityNormalOpen]) ? [UIColor themeHomeColor] : [UIColor whiteColor];
 //    [self.houseSegmentControl setBackgroundColor:backColor];
 //    [self.segmentControl setBackgroundColor:backColor];
     [self setBackgroundColor:backColor];

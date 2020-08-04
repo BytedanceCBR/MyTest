@@ -146,9 +146,10 @@ TTAccountMulticastProtocol
         self.isEnterHomeTabFromPostNotification = NO;
         [self registerNotifications];
         [self loadStatusModelsWithCompletionBlock:^{
-            if([FHPostUGCProgressView sharedInstance].refreshViewBlk) {
-                [FHPostUGCProgressView sharedInstance].refreshViewBlk();
-            }
+//            if([FHPostUGCProgressView sharedInstance].refreshViewBlk) {
+//                [FHPostUGCProgressView sharedInstance].refreshViewBlk();
+//            }
+            [[NSNotificationCenter defaultCenter] postNotificationName:kLoadStatusModelsWithCompletionNotification object:nil];
         }];
         self.cityName = [FHEnvContext getCurrentUserDeaultCityNameFromLocal];
     }
@@ -165,7 +166,8 @@ TTAccountMulticastProtocol
         }];
         [self.followTaskStatusModels removeAllObjects];
         // 刷新UI 数据
-        [[FHPostUGCProgressView sharedInstance] updatePostData];
+        [[NSNotificationCenter defaultCenter] postNotificationName:kUpdatePostDataNotification object:nil];
+//        [[FHPostUGCProgressView sharedInstance] updatePostData];
     }
     //切城市 消息系统
     if(currentCityName.length > 0 && ![currentCityName isEqualToString:self.cityName]){

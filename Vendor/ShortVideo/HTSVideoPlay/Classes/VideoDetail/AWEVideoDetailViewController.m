@@ -234,6 +234,7 @@ typedef NS_ENUM(NSInteger, TSVDetailCommentViewStatus) {
 @property (nonatomic, strong) FHPostDetailCommentWriteView *commentWriteView;
 @property (nonatomic, strong) TTGroupModel *groupModel;
 
+@property (nonatomic, strong) NSDictionary *tracerDic;
 @end
 
 static const CGFloat kFloatingViewOriginY = 230;
@@ -257,6 +258,7 @@ static const CGFloat kFloatingViewOriginY = 230;
         /// extra 里是以dict传入的参数
         NSDictionary *extraParams = paramObj.userInfo.extra;
         /// allParams 里是以上两个字典的并集，extra会覆盖 query
+        _tracerDic = paramObj.userInfo.extra;
         _pageParams = paramObj.allParams.copy;
 
         _groupID = [params[AWEVideoGroupId] copy] ?: @"";
@@ -1879,11 +1881,15 @@ static const CGFloat kFloatingViewOriginY = 230;
 
 - (void)commentCell:(AWEVideoCommentCell *)cell didClickLikeWithModel:(AWECommentModel *)commentModel
 {
-    NSString *eventName = commentModel.userDigg ? @"rt_unlike" : @"rt_like";
+    NSString *eventName = commentModel.userDigg ? @"click_dislike" : @"click_like";
+    NSString *position = @"comment";
+    if(commentModel.replyToComment){
+        position = @"reply";
+    }
     [AWEVideoDetailTracker trackEvent:eventName
                                 model:self.model
                       commonParameter:self.commonTrackingParameter
-                       extraParameter:@{@"position": @"reply",
+                       extraParameter:@{@"click_position": position,
                                         @"comment_id": [commentModel.id stringValue]}];
 
     if ([self alertIfNotValid]) {
@@ -2443,9 +2449,10 @@ static const CGFloat kFloatingViewOriginY = 230;
     } extraTrackDict:nil bindVCTrackDict:nil commentRepostWithPreRichSpanText:nil readQuality:nil];
     commentManager.enterFrom = @"feed_detail";
     commentManager.enter_type = @"submit_comment";
+    commentManager.reportParams = self.tracerDic[@"extraDic"];
     
     self.commentWriteView = [[FHPostDetailCommentWriteView alloc] initWithCommentManager:commentManager];
-    
+
     self.commentWriteView.emojiInputViewVisible = switchToEmojiInput;
     
     [self.commentWriteView showInView:self.view animated:YES];

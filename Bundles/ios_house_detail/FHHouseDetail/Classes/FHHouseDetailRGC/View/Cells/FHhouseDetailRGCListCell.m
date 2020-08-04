@@ -197,21 +197,26 @@
     return [self.dataList count];
 }
 
-- (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
-    if(indexPath.row < self.dataList.count){
-        NSString *tempKey = [NSString stringWithFormat:@"%ld_%ld",indexPath.section,indexPath.row];
-        if (!self.elementShowCaches[tempKey]) {
-            self.elementShowCaches[tempKey] = @(YES);
-            FHhouseDetailRGCListCellModel *cellModel = (FHhouseDetailRGCListCellModel *)self.currentData;
-            FHFeedUGCCellModel *cellModelItem = self.dataList[indexPath.row];
-            NSDictionary *houseInfo = cellModel.extraDic;
-            NSDictionary *extraDic = @{}.mutableCopy;
-            [extraDic setValue:cellModel.detailTracerDic[@"page_type"] forKey:@"page_type"];
-            [extraDic setValue:[NSString stringWithFormat:@"%ld",(long)indexPath.row] forKey:@"rank"];
-            [extraDic setValue:cellModelItem.groupId forKey:@"from_gid"];
-            [extraDic setValue:houseInfo[@"house_id"] forKey:@"group_id"];
-            [extraDic setValue:[self elementTypeString:FHHouseTypeSecondHandHouse] forKey:@"element_type"];
-            [self.tracerHelper trackFeedClientShow:self.dataList[indexPath.row] withExtraDic:extraDic];
+- (void)fh_willDisplayCell  {
+    [super fh_willDisplayCell];
+    
+    if(self.dataList.count > 0) {
+        for(int i = 0; i < self.dataList.count; i++) {
+            NSIndexPath *indexPath = [NSIndexPath indexPathForRow:i inSection:0];
+            NSString *tempKey = [NSString stringWithFormat:@"%ld_%ld",indexPath.section,indexPath.row];
+            if (!self.elementShowCaches[tempKey]) {
+                self.elementShowCaches[tempKey] = @(YES);
+                FHhouseDetailRGCListCellModel *cellModel = (FHhouseDetailRGCListCellModel *)self.currentData;
+                FHFeedUGCCellModel *cellModelItem = self.dataList[indexPath.row];
+                NSDictionary *houseInfo = cellModel.extraDic;
+                NSDictionary *extraDic = @{}.mutableCopy;
+                [extraDic setValue:cellModel.detailTracerDic[@"page_type"] forKey:@"page_type"];
+                [extraDic setValue:[NSString stringWithFormat:@"%ld",(long)indexPath.row] forKey:@"rank"];
+                [extraDic setValue:houseInfo[@"houseId"] forKey:@"from_gid"];
+                [extraDic setValue:cellModelItem.groupId forKey:@"group_id"];
+                [extraDic setValue:[self elementTypeString:FHHouseTypeSecondHandHouse] forKey:@"element_type"];
+                [self.tracerHelper trackFeedClientShow:self.dataList[indexPath.row] withExtraDic:extraDic];
+            }
         }
     }
 }
@@ -253,6 +258,9 @@
     self.currentCellModel = cellModel;
     self.currentCell = [tableView cellForRowAtIndexPath:indexPath];
     self.detailJumpManager.currentCell = self.currentCell;
+    
+    FHhouseDetailRGCListCellModel *model = (FHhouseDetailRGCListCellModel *)self.currentData;
+    
     [self.detailJumpManager jumpToDetail:cellModel showComment:NO enterType:@"feed_content_blank"];
 }
 
@@ -349,7 +357,6 @@
 
 - (void)trackClickComment:(FHFeedUGCCellModel *)cellModel {
     NSMutableDictionary *dict = [cellModel.tracerDic mutableCopy];
-    dict[@"click_position"] = @"feed_comment";
     TRACK_EVENT(@"click_comment", dict);
 }
 
@@ -380,7 +387,24 @@
             default:
                 break;
         }
-        model.tracerDic = self.detailTracerDic;
+//        model.tracerDic = self.detailTracerDic;
+        NSMutableDictionary *tracerDic = [NSMutableDictionary dictionary];
+        tracerDic[@"rank"] = @(m);
+        tracerDic[@"origin_from"] = self.detailTracerDic[@"origin_from"] ?: @"be_null";
+        tracerDic[@"enter_from"] = self.detailTracerDic[@"enter_from"] ?: @"be_null";
+        tracerDic[@"page_type"] = self.detailTracerDic[@"page_type"] ?: @"be_null";
+        tracerDic[@"element_type"] = @"realtor_evaluate";
+        tracerDic[@"group_id"] = model.groupId;
+        tracerDic[@"from_gid"] = self.extraDic[@"houseId"];
+        tracerDic[@"log_pb"] = model.logPb;
+        if(model.logPb[@"impr_id"]){
+            tracerDic[@"impr_id"] = model.logPb[@"impr_id"];
+        }
+        if(model.logPb[@"group_source"]){
+            tracerDic[@"group_source"] = model.logPb[@"group_source"];
+        }
+        model.tracerDic = [tracerDic copy];
+        
         if (model) {
             [dataArr addObject:model];
         }

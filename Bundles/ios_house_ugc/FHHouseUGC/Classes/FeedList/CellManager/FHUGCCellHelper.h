@@ -59,6 +59,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (TTImageInfosModel *)convertTTImageInfosModel:(FHFeedContentImageListModel *)imageModel;
 
++ (NSArray *)convertToImageUrls:(FHFeedContentImageListModel *)imageModel;
+
 //小区问答
 + (void)setQuestionRichContentWithModel:(FHFeedUGCCellModel *)model width:(CGFloat)width numberOfLines:(NSInteger)numberOfLines;
 

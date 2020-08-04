@@ -565,6 +565,18 @@
     return nil;
 }
 
++ (NSArray *)convertToImageUrls:(FHFeedContentImageListModel *)imageModel {
+    NSMutableArray *imageUrls = [NSMutableArray array];
+    if(imageModel.urlList.count > 0){
+        for (FHFeedContentImageListUrlListModel *listModel in imageModel.urlList) {
+            [imageUrls addObject:listModel.url];
+        }
+    }else if(imageModel.url){
+        [imageUrls addObject:imageModel.url];
+    }
+    return imageUrls;
+}
+
 + (NSAttributedString *)convertRichContentWithModel:(AWECommentModel *)model {
     NSMutableAttributedString *mutableAttributedString = nil;
     

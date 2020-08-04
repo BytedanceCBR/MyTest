@@ -46,7 +46,7 @@
     if (self) {
         self.dataList = [[NSMutableArray alloc] init];
         [self configTableView];
-        if(![FHEnvContext isNewDiscovery]){
+        if(!viewController.isNewDiscovery){
             // 发帖成功
             [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(postThreadSuccess:) name:kTTForumPostThreadSuccessNotification object:nil];
         }
@@ -412,6 +412,11 @@
             cellModel.tableView = self.tableView;
             cellModel.categoryId = self.categoryId;
             cellModel.feedVC = self.viewController;
+            
+            if(self.dataList.count == 0){
+                [self updateTableViewWithMoreData:self.tableView.hasMore];
+                [self.viewController.emptyView hideEmptyView];
+            }
             // 插入在置顶贴的下方
             [self.dataList insertObject:cellModel atIndex:index];
             [self.tableView reloadData];
@@ -544,11 +549,11 @@
 #pragma mark - UITableViewDelegate
 
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
-    return [[UIView alloc] initWithFrame:CGRectMake(0, 0, 0, 0.001f)];
+    return [[UIView alloc] initWithFrame:CGRectMake(0, 0, 0, CGFLOAT_MIN)];
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
-    return 0.001f;
+    return CGFLOAT_MIN;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -556,7 +561,7 @@
         FHFeedUGCCellModel *cellModel = self.dataList[indexPath.row];
         Class cellClass = [self.cellManager cellClassFromCellViewType:cellModel.cellSubType data:nil];
         if([cellClass isSubclassOfClass:[FHUGCBaseCell class]]) {
-            return [cellClass heightForData:cellModel];
+            return ceil([cellClass heightForData:cellModel]);
         }
     }
     return 100;
@@ -804,6 +809,18 @@
     dict[@"log_pb"] = cellModel.logPb;
     dict[@"rank"] = @(rank);
     dict[@"group_id"] = cellModel.groupId;
+    if(cellModel.logPb[@"impr_id"]){
+        dict[@"impr_id"] = cellModel.logPb[@"impr_id"];
+    }
+    if(cellModel.logPb[@"group_source"]){
+        dict[@"group_source"] = cellModel.logPb[@"group_source"];
+    }
+    if(cellModel.fromGid){
+        dict[@"from_gid"] = cellModel.fromGid;
+    }
+    if(cellModel.fromGroupSource){
+        dict[@"from_group_source"] = cellModel.fromGroupSource;
+    }
     
     return dict;
 }
@@ -814,7 +831,6 @@
 
 - (void)trackClickComment:(FHFeedUGCCellModel *)cellModel {
     NSMutableDictionary *dict = [cellModel.tracerDic mutableCopy];
-    dict[@"click_position"] = @"feed_comment";
     TRACK_EVENT(@"click_comment", dict);
 }
 
