@@ -14,6 +14,7 @@
 #import "FHLynxManager.h"
 #import "TTReachability.h"
 #import "UIView+BTDAdditions.h"
+#import "TTAccountManager.h"
 @interface FHEncyclopediaViewController ()
 @property (weak, nonatomic) UICollectionView *collectionView;
 @property (weak, nonatomic) FHEncyclopediaHeader *encyclopediaHeader;
@@ -93,7 +94,36 @@
     return questionBtn;
 }
 
+
+
 - (void)writeQuestion:(UIButton *)btn {
+    if ([TTAccountManager isLogin]) {
+        [self gotoWendaPublishVC];
+    } else {
+        [self gotoLogin];
+    }
+}
+
+- (void)gotoLogin {
+    NSMutableDictionary *params = [NSMutableDictionary dictionary];
+    [params setObject:@"f_house_encyclopedia" forKey:@"enter_from"];
+    [params setObject:@"want_question" forKey:@"enter_type"];
+    // 登录成功之后不自己Pop，先进行页面跳转逻辑，再pop
+    [params setObject:@(YES) forKey:@"need_pop_vc"];
+    __weak typeof(self) wSelf = self;
+    [TTAccountLoginManager showAlertFLoginVCWithParams:params completeBlock:^(TTAccountAlertCompletionEventType type, NSString * _Nullable phoneNum) {
+        if (type == TTAccountAlertCompletionEventTypeDone) {
+            // 登录成功
+            if ([TTAccountManager isLogin]) {
+                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                   [wSelf gotoWendaPublishVC];
+                });
+            }
+        }
+    }];
+}
+
+- (void)gotoWendaPublishVC {
     NSURL *openUrl = [NSURL URLWithString:[NSString stringWithFormat:@"sslocal://ugc_wenda_publish"]];
     NSMutableDictionary *info = @{}.mutableCopy;
     info[@"title"] = @"提问";

@@ -19,6 +19,7 @@
 #import "FHFeedOperationResultModel.h"
 #import "ToastManager.h"
 #import "UIViewAdditions.h"
+#import "TTAccountManager.h"
 
 @interface FHArticleCellBottomView ()
 
@@ -75,7 +76,7 @@
     _answerBtn.layer.cornerRadius = 13;
     _answerBtn.layer.masksToBounds = YES;
     [_answerBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-    [_answerBtn addTarget:self action:@selector(questionAction) forControlEvents:UIControlEventTouchUpInside];
+    [_answerBtn addTarget:self action:@selector(writeQuestion:) forControlEvents:UIControlEventTouchUpInside];
     _answerBtn.hitTestEdgeInsets = UIEdgeInsetsMake(-10, -10, -10, -10);
     [self addSubview:_answerBtn];
     self.answerBtn.hidden = YES;
@@ -175,6 +176,33 @@
     }
 }
 
+- (void)writeQuestion:(UIButton *)btn {
+    if ([TTAccountManager isLogin]) {
+        [self questionAction];
+    } else {
+        [self gotoLogin];
+    }
+}
+
+- (void)gotoLogin {
+    NSMutableDictionary *params = [NSMutableDictionary dictionary];
+    [params setObject:self.cellModel.tracerDic[@"page_type"]?:@"be_null" forKey:@"enter_from"];
+    [params setObject:@"want_answer" forKey:@"enter_type"];
+    // 登录成功之后不自己Pop，先进行页面跳转逻辑，再pop
+    [params setObject:@(YES) forKey:@"need_pop_vc"];
+    __weak typeof(self) wSelf = self;
+    [TTAccountLoginManager showAlertFLoginVCWithParams:params completeBlock:^(TTAccountAlertCompletionEventType type, NSString * _Nullable phoneNum) {
+        if (type == TTAccountAlertCompletionEventTypeDone) {
+            // 登录成功
+            if ([TTAccountManager isLogin]) {
+                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                   [wSelf questionAction];
+                });
+            }
+        }
+    }];
+}
+
 - (void)questionAction {
         NSURL *openUrl = [NSURL URLWithString:[NSString stringWithFormat:@"sslocal://wenda_post"]];
         NSMutableDictionary *info = @{}.mutableCopy;
@@ -185,6 +213,8 @@
         TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:info];
     [[TTRoute sharedRoute] openURLByViewController:openUrl userInfo:userInfo];
 }
+
+
 
 - (void)moreOperation {
     [self trackClickOptions];

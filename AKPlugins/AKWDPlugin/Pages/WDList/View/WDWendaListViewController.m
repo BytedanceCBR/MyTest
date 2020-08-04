@@ -435,7 +435,7 @@ static NSString * const WukongListTipsHasShown = @"kWukongListTipsHasShown";
     if ([TTAccountManager isLogin]) {
         [self gotoPostWDAnswer];
     } else {
-        [self gotoLogin];
+        [self gotoLogin:YES];
     }
 }
 
@@ -464,10 +464,10 @@ static NSString * const WukongListTipsHasShown = @"kWukongListTipsHasShown";
     [[TTRoute sharedRoute] openURLByPresentViewController:openUrl userInfo:userInfo];
 }
 
-- (void)gotoLogin {
+- (void)gotoLogin:(BOOL)isAnswer {
     NSMutableDictionary *params = [NSMutableDictionary dictionary];
     [params setObject:@"question" forKey:@"enter_from"];
-    [params setObject:@"want_answer" forKey:@"enter_type"];
+    [params setObject:isAnswer?@"want_answer":@"want_question" forKey:@"enter_type"];
     // 登录成功之后不自己Pop，先进行页面跳转逻辑，再pop
     [params setObject:@(NO) forKey:@"need_pop_vc"];
     params[@"from_ugc"] = @(YES);
@@ -476,7 +476,11 @@ static NSString * const WukongListTipsHasShown = @"kWukongListTipsHasShown";
         if (type == TTAccountAlertCompletionEventTypeDone) {
             // 登录成功
             if ([TTAccountManager isLogin]) {
-                [wSelf gotoPostWDAnswer];
+                if (isAnswer) {
+                     [wSelf gotoPostWDAnswer];
+                }else {
+                     [wSelf goQuestion];
+                }
             }
             // 移除登录页面
             dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.7 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
@@ -1135,6 +1139,15 @@ static void extracted(WDWendaListViewController *object, WDWendaListViewControll
 }
 
 - (void)writeQuestion:(UIButton *)btn {
+    
+    if ([TTAccountManager isLogin]) {
+        [self goQuestion];
+    } else {
+        [self gotoLogin:NO];
+    }
+}
+
+- (void)goQuestion {
             NSURL *openUrl = [NSURL URLWithString:[NSString stringWithFormat:@"sslocal://ugc_wenda_publish"]];
             NSMutableDictionary *info = @{}.mutableCopy;
             info[@"title"] = @"提问";

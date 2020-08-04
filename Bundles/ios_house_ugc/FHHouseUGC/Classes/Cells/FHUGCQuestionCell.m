@@ -122,7 +122,7 @@
 //      lab.text = !isEmptyString(cellModel.originItemModel.content) ?[NSString stringWithFormat:@"问题：%@",cellModel.originItemModel.content] : @"";
     NSString *titleStr =  !isEmptyString(cellModel.originItemModel.content) ?[NSString stringWithFormat:@"问题：%@",cellModel.originItemModel.content] : @"";
     CGSize size = [titleStr sizeWithFont:[UIFont themeFontMedium:16] constrainedToSize:CGSizeMake(CGFLOAT_MAX, 30) lineBreakMode:NSLineBreakByWordWrapping];
-    CGFloat maxTitleLabelSizeWidth = [UIScreen mainScreen].bounds.size.width - 10 - 50;
+    CGFloat maxTitleLabelSizeWidth = [UIScreen mainScreen].bounds.size.width - 10 - 50 -5;
     CGFloat userInfoHeight = 0;
     if(size.width > maxTitleLabelSizeWidth){
         self.userInfoView.height = 50;
@@ -143,7 +143,7 @@
 //        lab.text = !isEmptyString(cellModel.originItemModel.content) ?[NSString stringWithFormat:@"问题：%@",cellModel.originItemModel.content] : @"";
         NSString *titleStr =  !isEmptyString(cellModel.originItemModel.content) ?[NSString stringWithFormat:@"问题：%@",cellModel.originItemModel.content] : @"";
         CGSize size = [titleStr sizeWithFont:[UIFont themeFontMedium:16] constrainedToSize:CGSizeMake(CGFLOAT_MAX, 30) lineBreakMode:NSLineBreakByWordWrapping];
-        CGFloat maxTitleLabelSizeWidth = [UIScreen mainScreen].bounds.size.width - 10 - 50;
+        CGFloat maxTitleLabelSizeWidth = [UIScreen mainScreen].bounds.size.width - 10 - 50 -5;
         CGFloat userInfoHeight = 0;
         if(size.width > maxTitleLabelSizeWidth){
             userInfoHeight = 50;

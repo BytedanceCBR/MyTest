@@ -218,7 +218,7 @@
     self.titleLabel.text = !isEmptyString(cellModel.originItemModel.content) ?[NSString stringWithFormat:@"问题：%@",cellModel.originItemModel.content] : @"";
     CGSize titleLabelSize = [self.titleLabel sizeThatFits:CGSizeMake(MAXFLOAT, 50)];
     self.titleLabel.width = titleLabelSize.width;
-    CGFloat maxTitleLabelSizeWidth = self.width - 20 - 20 - 20 ;
+    CGFloat maxTitleLabelSizeWidth = self.width - 20 - 20 - 20 -5 ;
     if(self.titleLabel.width > maxTitleLabelSizeWidth){
         self.titleLabel.width = maxTitleLabelSizeWidth;
         self.titleLabel.height = 50;
