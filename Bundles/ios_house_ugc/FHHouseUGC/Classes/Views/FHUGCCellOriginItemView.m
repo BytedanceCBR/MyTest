@@ -118,6 +118,7 @@
         tracerDic[@"origin_from"] = self.cellModel.tracerDic[@"origin_from"] ?: @"be_null";
         tracerDic[@"enter_from"] = self.cellModel.tracerDic[@"page_type"] ?: @"be_null";
         tracerDic[@"category_name"] = self.cellModel.tracerDic[@"category_name"] ?: @"be_null";
+        tracerDic[@"enter_type"] = @"feed_content_blank";
         tracerDic[@"rank"] = self.cellModel.tracerDic[@"rank"];
         tracerDic[@"impr_id"] = self.cellModel.tracerDic[@"impr_id"];
         tracerDic[@"from_gid"] = self.cellModel.tracerDic[@"group_id"];

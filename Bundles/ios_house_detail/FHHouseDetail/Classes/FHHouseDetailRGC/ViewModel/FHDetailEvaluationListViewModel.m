@@ -274,7 +274,7 @@ if (hasMore) {
     tracerDic[@"origin_from"] = self.tracerDic[@"origin_from"] ?: @"be_null";
     tracerDic[@"enter_from"] = self.tracerDic[@"enter_from"] ?: @"be_null";
     tracerDic[@"page_type"] = self.tracerDic[@"page_type"] ?: @"be_null";
-    tracerDic[@"element_from"] = @"realtor_evaluate";
+    tracerDic[@"element_type"] = @"realtor_evaluate";
     tracerDic[@"group_id"] = cellModel.groupId;
     tracerDic[@"from_gid"] = self.listController.tracerDict[@"from_gid"];
     tracerDic[@"log_pb"] = cellModel.logPb;

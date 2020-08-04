@@ -821,7 +821,6 @@
         }else{
             tracerDict[@"enter_type"] = @"flip";
         }
-        tracerDict[@"enter_type"] = @(enterType);
         tracerDict[@"enter_from"] = self.tracerDict[@"enter_from"] ?: @"be_null";
         tracerDict[@"category_name"] = self.tracerDict[@"category_name"] ?: @"be_null";
         tracerDict[@"enter_channel"] = @"click";

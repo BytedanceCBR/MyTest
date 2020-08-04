@@ -393,7 +393,7 @@
         tracerDic[@"origin_from"] = self.detailTracerDic[@"origin_from"] ?: @"be_null";
         tracerDic[@"enter_from"] = self.detailTracerDic[@"enter_from"] ?: @"be_null";
         tracerDic[@"page_type"] = self.detailTracerDic[@"page_type"] ?: @"be_null";
-        tracerDic[@"element_from"] = @"realtor_evaluate";
+        tracerDic[@"element_type"] = @"realtor_evaluate";
         tracerDic[@"group_id"] = model.groupId;
         tracerDic[@"from_gid"] = self.extraDic[@"houseId"];
         tracerDic[@"log_pb"] = model.logPb;
