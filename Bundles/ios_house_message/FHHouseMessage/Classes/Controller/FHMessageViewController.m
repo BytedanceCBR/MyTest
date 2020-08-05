@@ -56,6 +56,7 @@
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
+    [self.emptyView hideEmptyView];
     [self startLoadData];
 }
 
@@ -108,7 +109,6 @@
         @"enter_method": @"click_login",
     };
     TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
-    
     NSURL* url = [NSURL URLWithString:@"snssdk1370://flogin"];
     [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
 }
