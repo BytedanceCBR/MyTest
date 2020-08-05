@@ -26,6 +26,10 @@
 @property (nonatomic, strong) HMScrollView *scrollView;
 @property (nonatomic, strong) TTBadgeNumberView *tipView;
 
+//消息页多tab红点
+@property (nonatomic, strong) TTBadgeNumberView *chatTipView;
+@property (nonatomic, strong) TTBadgeNumberView *systemMessageTipView;
+
 @end
 
 @implementation HMScrollView
@@ -385,54 +389,83 @@
             
             //显示红点
             if(idx < _sectionRedPoints.count){
-                //这里同时存在红点和消息数的时候，优先消息数
-                BOOL isHaveMessageTips = NO;
-                if(idx < _sectionMessageTips.count){
-                    NSInteger tipsCount = [_sectionMessageTips[idx] integerValue];
-                    if(tipsCount > 0){
-                        isHaveMessageTips = YES;
+                if (!_isMessageTab) {
+                    //这里同时存在红点和消息数的时候，优先消息数
+                    BOOL isHaveMessageTips = NO;
+                    if(idx < _sectionMessageTips.count){
+                        NSInteger tipsCount = [_sectionMessageTips[idx] integerValue];
+                        if(tipsCount > 0){
+                            isHaveMessageTips = YES;
+                        }
                     }
-                }
-                
-                BOOL isShowRed = [_sectionRedPoints[idx] boolValue] && !isHaveMessageTips;
-                if(isShowRed){
-                    UIImage *icon = [UIImage imageNamed:@"seg_red_point"];
-                    CGFloat imageWidth = icon.size.width;
-                    CGFloat imageHeight = icon.size.height;
-                    CGFloat red_y = roundf(CGRectGetMinY(rect)  - imageHeight + 4.0f);
-                    CGFloat red_x = 0;
-                    if(self.segmentWidthStyle == HMSegmentedControlSegmentWidthStyleDynamic){
-                        red_x = roundf(CGRectGetMaxX(rect)  - imageWidth - self.segmentEdgeInset.right);
-                    }else{
-                        red_x = roundf(CGRectGetMaxX(rect)  - imageWidth/2.0f);
-                    }
-                    CGRect redPointRect = CGRectMake(red_x, red_y, imageWidth, imageHeight);
                     
-                    CALayer *imageLayer = [CALayer layer];
-                    imageLayer.frame = redPointRect;
-                    imageLayer.contents = (id)icon.CGImage;
-                    [self.scrollView.layer addSublayer:imageLayer];
+                    BOOL isShowRed = [_sectionRedPoints[idx] boolValue] && !isHaveMessageTips;
+                    if(isShowRed){
+                        UIImage *icon = [UIImage imageNamed:@"seg_red_point"];
+                        CGFloat imageWidth = icon.size.width;
+                        CGFloat imageHeight = icon.size.height;
+                        CGFloat red_y = roundf(CGRectGetMinY(rect)  - imageHeight + 4.0f);
+                        CGFloat red_x = 0;
+                        if(self.segmentWidthStyle == HMSegmentedControlSegmentWidthStyleDynamic){
+                            red_x = roundf(CGRectGetMaxX(rect)  - imageWidth - self.segmentEdgeInset.right);
+                        }else{
+                            red_x = roundf(CGRectGetMaxX(rect)  - imageWidth/2.0f);
+                        }
+                        CGRect redPointRect = CGRectMake(red_x, red_y, imageWidth, imageHeight);
+                        
+                        CALayer *imageLayer = [CALayer layer];
+                        imageLayer.frame = redPointRect;
+                        imageLayer.contents = (id)icon.CGImage;
+                        [self.scrollView.layer addSublayer:imageLayer];
+                    }
                 }
             }
             
             //显示数字
             if(idx < _sectionMessageTips.count){
-                NSInteger tipsCount = [_sectionMessageTips[idx] integerValue];
-                if(tipsCount > 0){
-                    self.tipView = [[TTBadgeNumberView alloc] init];
-                    _tipView.badgeViewStyle = TTBadgeNumberViewStyleDefaultWithBorder;
-                    _tipView.badgeNumber = tipsCount;
+                if (!_isMessageTab) {
+                    NSInteger tipsCount = [_sectionMessageTips[idx] integerValue];
+                    if(tipsCount > 0){
+                        self.tipView = [[TTBadgeNumberView alloc] init];
+                        _tipView.badgeViewStyle = TTBadgeNumberViewStyleDefaultWithBorder;
+                        _tipView.badgeNumber = tipsCount;
+                        
+                        CGFloat width = self.tipView.frame.size.width;
+                        CGFloat height = self.tipView.frame.size.height;
+                        CGFloat red_y = roundf(CGRectGetMinY(rect) - height/2 + 1.0f);
+                        CGFloat red_x = roundf(CGRectGetMaxX(rect) - 5.0f);
+                        CGRect redPointRect = CGRectMake(red_x, red_y, width, height);
+                        
+                        _tipView.frame = redPointRect;
+                        [self.scrollView.layer addSublayer:_tipView.layer];
+                    }else{
+                        self.tipView.badgeNumber = TTBadgeNumberHidden;
+                    }
+                } else {
+                    NSInteger tipsCount = [_sectionMessageTips[idx] integerValue];
+                    TTBadgeNumberView *tipView = [[TTBadgeNumberView alloc] init];
+                    tipView.badgeViewStyle = TTBadgeNumberViewStyleDefaultWithBorder;
+                    if (tipsCount > 0) {
+                        tipView.badgeNumber = tipsCount;
+                    } else if ([_sectionRedPoints[idx] boolValue]) {
+                        tipView.badgeNumber = TTBadgeNumberPoint;
+                    } else {
+                        tipView.badgeNumber = TTBadgeNumberHidden;
+                    }
                     
-                    CGFloat width = self.tipView.frame.size.width;
-                    CGFloat height = self.tipView.frame.size.height;
+                    CGFloat width = tipView.frame.size.width;
+                    CGFloat height = tipView.frame.size.height;
                     CGFloat red_y = roundf(CGRectGetMinY(rect) - height/2 + 1.0f);
                     CGFloat red_x = roundf(CGRectGetMaxX(rect) - 5.0f);
                     CGRect redPointRect = CGRectMake(red_x, red_y, width, height);
-                    
-                    _tipView.frame = redPointRect;
-                    [self.scrollView.layer addSublayer:_tipView.layer];
-                }else{
-                    self.tipView.badgeNumber = TTBadgeNumberHidden;
+                           
+                    tipView.frame = redPointRect;
+                    [self.scrollView.layer addSublayer:tipView.layer];
+                    if (idx == 0) {
+                        self.chatTipView = tipView;
+                    } else {
+                        self.systemMessageTipView = tipView;
+                    }
                 }
             }
             

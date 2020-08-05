@@ -8,6 +8,7 @@
 #import "FHMessageSegmentedViewController.h"
 #import "FHMessageViewController.h"
 #import "FHMessageTopView.h"
+#import "TTDeviceHelper.h"
 #import "IMManager.h"
 #import "FHMessageViewModel.h"
 #import "FHMessageNotificationTipsManager.h"
@@ -225,17 +226,17 @@ typedef NS_ENUM(NSInteger, FHSegmentedControllerAnimatedTransitionDirection) {
 
 @interface FHMessageSegmentedViewController ()<UIGestureRecognizerDelegate,FHMessageSegmentedViewControllerDelegate, IMChatStateObserver>
 
-@property (nonatomic,strong,readwrite) UISegmentedControl *segmentedControl;
+@property (nonatomic,strong,readwrite) HMSegmentedControl *segmentedControl;
 @property (nonatomic,readwrite,weak) UIViewController *activeViewController;
 @property (nonatomic,weak) UIView *contentView;
 
+@property (nonatomic, strong) FHMessageTopView *topView;
 @property (nonatomic,weak) UIPanGestureRecognizer *interactivePanGestureRecognizer;
 @property (nonatomic) CGPoint interactivePanInitialPoint;
 @property (nonatomic) FHSegmentedControllerAnimatedTransitionDirection interactivePanDirection;
 @property (nonatomic,strong) FHSegmentedControllerAnimatedTransitionContext *interactiveTransitionContext;
 @property (nonatomic,strong) FHSegmentedControllerInteractiveTransition *interactiveTransitionAnimator;
 @property (nonatomic, strong) NSString *enterType;
-@property (nonatomic, strong) FHMessageTopView *topView;
 @property (nonatomic, strong) FHNoNetHeaderView *notNetHeader;
 @property (nonatomic, assign) CGFloat notNetHeaderHeight;
 @property (nonatomic, strong) FHPushMessageTipView *pushTipView;
@@ -263,22 +264,17 @@ typedef NS_ENUM(NSInteger, FHSegmentedControllerAnimatedTransitionDirection) {
 - (void)setActiveViewController:(UIViewController *)activeViewController {
     _activeViewController = activeViewController;
     [self addEnterCategoryLogWithType:_enterType];
-//    if (self.shouldUseRightBarButtonItemOfActiveViewController) {
-//        self.navigationItem.rightBarButtonItems = self.activeViewController.navigationItem.rightBarButtonItems;
-//    }
-//    if (self.shouldUseLeftBarButtonItemOfActiveViewController) {
-//        self.navigationItem.leftBarButtonItems = self.activeViewController.navigationItem.leftBarButtonItems;
-//    }
     [self setNeedsStatusBarAppearanceUpdate];
 }
 
 - (void)configureSegmentedControlUsingViewControllers:(NSArray *)viewControllers {
-    [self.segmentedControl removeAllSegments];
-    for (UIViewController *viewController in viewControllers.reverseObjectEnumerator.allObjects) {
-        [self.segmentedControl insertSegmentWithTitle:viewController.title atIndex:0 animated:NO];
-    }
+//    NSMutableArray *arrayM = [[NSMutableArray alloc] init];
+//    for (UIViewController *viewController in viewControllers.objectEnumerator.allObjects) {
+//        [arrayM addObject:viewController.title];
+//    }
+//    self.segmentedControl.sectionTitles = arrayM;
     [self.segmentedControl sizeToFit];
-    if (self.segmentedControl.numberOfSegments) {
+    if (self.segmentedControl.sectionTitles.count) {
         NSArray<IMConversation *> *allConversations = [[IMManager shareInstance].chatService allConversations];
         if ([allConversations count] > 0) {
             self.segmentedControl.selectedSegmentIndex = 0;
@@ -291,15 +287,47 @@ typedef NS_ENUM(NSInteger, FHSegmentedControllerAnimatedTransitionDirection) {
 
 - (void)loadView {
     self.view = [[UIView alloc] initWithFrame:UIScreen.mainScreen.applicationFrame];
-    
     UIView *contentView = [[UIView alloc] initWithFrame:self.view.bounds];
     contentView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     [self.view addSubview:contentView];
     self.contentView = contentView;
     
-    UISegmentedControl *segmentedControl = [[UISegmentedControl alloc] initWithItems:@[]];
-    [segmentedControl addTarget:self action:@selector(segmentedControlValueChanged) forControlEvents:UIControlEventValueChanged];
-    self.navigationItem.titleView = segmentedControl;
+//    self.topView = [[UIView alloc] init];
+//    self.topView.backgroundColor = [UIColor themeGray8];
+//    [self.view addSubview:_topView];
+//    BOOL isIphoneX = [TTDeviceHelper isIPhoneXDevice];
+//    CGFloat naviHeight = 44 + (isIphoneX ? 44 : 20) + 54;
+//    [self.topView mas_makeConstraints:^(MASConstraintMaker *make) {
+//        make.left.right.top.mas_equalTo(0);
+//        make.height.mas_equalTo(naviHeight);
+//    }];
+    
+    HMSegmentedControl *segmentedControl = [[HMSegmentedControl alloc] initWithSectionTitles:@[@"微聊", @"通知"]];
+    NSDictionary *titleTextAttributes = @{NSFontAttributeName: [UIFont themeFontRegular:16],
+                                          NSForegroundColorAttributeName: [UIColor themeGray1]};
+    segmentedControl.titleTextAttributes = titleTextAttributes;
+    NSDictionary *selectedTitleTextAttributes = @{NSFontAttributeName: [UIFont themeFontSemibold:18],
+                                                  NSForegroundColorAttributeName: [UIColor themeGray1]};
+    segmentedControl.selectedTitleTextAttributes = selectedTitleTextAttributes;
+        segmentedControl.selectionStyle = HMSegmentedControlSelectionStyleTextWidthStripe;
+    segmentedControl.segmentWidthStyle = HMSegmentedControlSegmentWidthStyleFixed;
+    segmentedControl.segmentEdgeInset = UIEdgeInsetsMake(5, 0, 5, 0);
+    segmentedControl.selectionIndicatorLocation = HMSegmentedControlSelectionIndicatorLocationDown;
+    segmentedControl.selectionIndicatorWidth = 20.0f;
+    segmentedControl.selectionIndicatorHeight = 4.0f;
+    segmentedControl.selectionIndicatorCornerRadius = 2.0f;
+    segmentedControl.selectionIndicatorEdgeInsets = UIEdgeInsetsMake(0, 0, -3, 0);
+    segmentedControl.selectionIndicatorColor = [UIColor colorWithHexStr:@"#ff9629"];
+    [segmentedControl setBackgroundColor:[UIColor clearColor]];
+    segmentedControl.isMessageTab = YES;
+    //[segmentedControl addTarget:self action:@selector(segmentedControlValueChanged) forControlEvents:UIControlEventValueChanged];
+    WeakSelf;
+    segmentedControl.indexChangeBlock = ^(NSInteger index) {
+        WeakSelf;
+        [self segmentedControlValueChanged];
+    };
+    //self.navigationItem.titleView = segmentedControl;
+    //[self.customNavBarView addSubview:segmentedControl];
     self.segmentedControl = segmentedControl;
 }
 
@@ -320,12 +348,24 @@ typedef NS_ENUM(NSInteger, FHSegmentedControllerAnimatedTransitionDirection) {
     
     [self setupDefaultNavBar:NO];
     self.customNavBarView.leftBtn.hidden = [self leftActionHidden];
+    self.customNavBarView.bgView.backgroundColor = [UIColor themeGray7];
+    [self.customNavBarView addSubview:_segmentedControl];
+    NSInteger count = _segmentedControl.sectionTitles.count;
+    [_segmentedControl mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.centerX.equalTo(self.customNavBarView);
+        make.height.mas_equalTo(44);
+        make.bottom.mas_equalTo(-6);
+        make.width.mas_equalTo(70 * count);
+        //make.left.mas_equalTo(tabMargin);
+        //make.right.mas_equalTo(-tabMargin);
+    }];
 
     __weak typeof(self) weakSelf = self;
     FHMessageViewController *imViewController = [[FHMessageViewController alloc] init];
     imViewController.fatherVC = self;
     [imViewController setUpdateRedPoint:^(NSInteger chatNumber, BOOL hasRedPoint, NSInteger systemMessageNumber) {
-        [weakSelf.topView updateRedPointWithChat:chatNumber andHasRedPoint:hasRedPoint andSystemMessage:systemMessageNumber];
+        [weakSelf updateRedPointWithChat:chatNumber andHasChatRedPoint:hasRedPoint andSystemMessage:systemMessageNumber];
+        //[weakSelf.topView updateRedPointWithChat:chatNumber andHasRedPoint:hasRedPoint andSystemMessage:systemMessageNumber];
     }];
     imViewController.isSegmentedChildViewController = YES;
     imViewController.dataType = FHMessageRequestDataTypeIM;
@@ -333,13 +373,14 @@ typedef NS_ENUM(NSInteger, FHSegmentedControllerAnimatedTransitionDirection) {
     FHMessageViewController *systemViewController = [[FHMessageViewController alloc] init];
     systemViewController.fatherVC = self;
     [systemViewController setUpdateRedPoint:^(NSInteger chatNumber, BOOL hasRedPoint, NSInteger systemMessageNumber) {
-        [weakSelf.topView updateRedPointWithChat:chatNumber andHasRedPoint:hasRedPoint andSystemMessage:systemMessageNumber];
+        [weakSelf updateRedPointWithChat:chatNumber andHasChatRedPoint:hasRedPoint andSystemMessage:systemMessageNumber];
+        //[weakSelf.topView updateRedPointWithChat:chatNumber andHasRedPoint:hasRedPoint andSystemMessage:systemMessageNumber];
     }];
     systemViewController.isSegmentedChildViewController = YES;
     systemViewController.dataType = FHMessageRequestDataTypeSystem;
     
     self.viewControllers = @[imViewController,systemViewController];
-    self.segmentedControl.hidden = YES;
+    //self.segmentedControl.hidden = YES;
     
     
     self.topView = [[FHMessageTopView alloc] init];
@@ -350,13 +391,13 @@ typedef NS_ENUM(NSInteger, FHSegmentedControllerAnimatedTransitionDirection) {
 //        [weakSelf setActiveViewController:weakSelf.viewControllers.lastObject];
 //        [wself refreshDataWithType:tag];
     };
-    [self.customNavBarView addSubview:self.topView];
-    [self.topView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.centerX.mas_equalTo(self.customNavBarView);
-        make.width.mas_equalTo(180);
-        make.height.mas_equalTo(30);
-        make.bottom.mas_equalTo(0);
-    }];
+//    [self.customNavBarView addSubview:self.topView];
+//    [self.segmentedControl mas_makeConstraints:^(MASConstraintMaker *make) {
+//        make.centerX.mas_equalTo(self.customNavBarView);
+//        make.width.mas_equalTo(180);
+//        make.height.mas_equalTo(30);
+//        make.bottom.mas_equalTo(0);
+//    }];
     NSArray<IMConversation *> *allConversations = [[IMManager shareInstance].chatService allConversations];
     if ([allConversations count] == 0) {
         [self selectViewControllerAtIndex:1];
@@ -439,6 +480,12 @@ typedef NS_ENUM(NSInteger, FHSegmentedControllerAnimatedTransitionDirection) {
     [self addStayCategoryLog:self.ttTrackStayTime];
     [self tt_resetStayTime];
     [FHBubbleTipManager shareInstance].canShowTip = YES;
+}
+
+- (void)updateRedPointWithChat:(NSInteger)chatNumber andHasChatRedPoint:(BOOL)hasRedPoint andSystemMessage:(NSInteger)systemMessageNumber {
+    NSInteger boolNumber = hasRedPoint ? 1 : 0;
+    self.segmentedControl.sectionMessageTips = @[@(chatNumber), @(systemMessageNumber)];
+    self.segmentedControl.sectionRedPoints = @[@(boolNumber), @0];
 }
 
 - (void)applicationDidBecomeActive
@@ -558,7 +605,7 @@ typedef NS_ENUM(NSInteger, FHSegmentedControllerAnimatedTransitionDirection) {
             }
         } break;
         case FHSegmentedControllerAnimatedTransitionDirectionFromRightToLeft:{
-            if (self.segmentedControl.selectedSegmentIndex + 1 < (NSInteger)self.segmentedControl.numberOfSegments) {
+            if (self.segmentedControl.selectedSegmentIndex + 1 < (NSInteger)self.segmentedControl.sectionTitles.count) {
                 toViewController = self.viewControllers[self.segmentedControl.selectedSegmentIndex + 1];
             }
         } break;

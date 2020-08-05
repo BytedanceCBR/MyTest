@@ -151,10 +151,10 @@
 }
 
 - (void)addEnterCategoryLogWithType:(NSString *)enterType {
-    if (_hasEnterCategory) {
-        return;
-    }
-    _hasEnterCategory = YES;
+//    if (_hasEnterCategory) {
+//        return;
+//    }
+//    _hasEnterCategory = YES;
     NSDictionary *params = @{
             @"category_name": [self getPageTypeWithDataType],
             @"enter_from": @"message",

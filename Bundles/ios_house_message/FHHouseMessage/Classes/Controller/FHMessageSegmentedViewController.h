@@ -7,6 +7,7 @@
 
 #import "FHBaseViewController.h"
 #import "FHConversationDataCombiner.h"
+#import "HMSegmentedControl.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -26,7 +27,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic,weak) id<FHMessageSegmentedViewControllerDelegate> delegate;
 
-@property (nonatomic,strong,readonly) UISegmentedControl *segmentedControl;
+@property (nonatomic,strong,readonly) HMSegmentedControl *segmentedControl;
 
 @property (nonatomic,copy) NSArray *viewControllers;
 

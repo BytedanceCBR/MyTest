@@ -292,6 +292,8 @@ typedef NS_ENUM(NSInteger, HMSegmentedControlImagePosition) {
  */
 @property (nonatomic) BOOL shouldFixedSelectPosition;
 
+@property (nonatomic) BOOL isMessageTab;
+
 - (id)initWithSectionTitles:(NSArray<NSString *> *)sectiontitles;
 - (id)initWithSectionImages:(NSArray<UIImage *> *)sectionImages sectionSelectedImages:(NSArray<UIImage *> *)sectionSelectedImages;
 - (instancetype)initWithSectionImages:(NSArray<UIImage *> *)sectionImages sectionSelectedImages:(NSArray<UIImage *> *)sectionSelectedImages titlesForSections:(NSArray<NSString *> *)sectiontitles;
@@ -300,4 +302,5 @@ typedef NS_ENUM(NSInteger, HMSegmentedControlImagePosition) {
 - (void)setTitleFormatter:(HMTitleFormatterBlock)titleFormatter;
 - (CGFloat)totalSegmentedControlWidth;
 - (void)setScrollValue:(CGFloat)value isDirectionLeft:(BOOL)isDirectionLeft;
+
 @end

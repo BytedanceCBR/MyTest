@@ -176,8 +176,8 @@
         cell.openEditTrack = ^(id data) {
             [wself openEditTrack];
         };
-        cell.closeEditTrack = ^(id data) {
-            [wself closeEditTrack];
+        cell.stateIsClose = ^(id data) {
+            [wself reloadData];
         };
         if (self.viewController.dataType == FHMessageRequestDataTypeIM) {
             [cell initGestureWithData:model index:indexPath.row];
@@ -328,9 +328,9 @@
 
 - (void)reloadData {
 //    [FHMessageEditHelp close];
-//    if (![FHMessageEditHelp shared].isCanReloadData) {
-//        return;
-//    }
+    if (![FHMessageEditHelp shared].isCanReloadData) {
+        return;
+    }
     NSInteger chatNumber = 0;
     NSInteger systemMessageNumber = 0;
     BOOL hasChatRedPoint = NO;
@@ -462,15 +462,6 @@
     NSDictionary *params = @{
             @"page_type": [self getPageTypeWithDataType],
             @"enter_from":@"message"
-    };
-    [FHUserTracker writeEvent:@"message_flip_show" params:params];
-}
-
-- (void)closeEditTrack {
-    NSDictionary *params = @{
-            @"page_type": [self getPageTypeWithDataType],
-            @"enter_from": @"message",
-            @"click_position": @"delete"
     };
     [FHUserTracker writeEvent:@"message_flip_show" params:params];
 }

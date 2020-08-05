@@ -661,6 +661,9 @@
 //        }
         if (finished) {
             [FHMessageEditHelp shared].isCanReloadData = YES;
+            if (self.stateIsClose) {
+                self.stateIsClose(nil);
+            }
 //            if (_lastPanStateIsEnd && [[FHMessageEditHelp shared].currentCell isEqual:self] && !open) {
 //                [FHMessageEditHelp shared].isCanReloadData = YES;
 //            }
