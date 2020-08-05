@@ -641,6 +641,7 @@
     }
     CGFloat moveX = open ? _maxOffset : 0;
     self.state = SliderMenuSlider;
+    [FHMessageEditHelp shared].isCanReloadData = NO;
     [self.layer removeAllAnimations];
     [self removeAnimations];
     UIViewAnimationOptions options = UIViewAnimationOptionAllowUserInteraction | UIViewAnimationOptionBeginFromCurrentState | UIViewAnimationOptionOverrideInheritedDuration |  UIViewAnimationOptionCurveEaseOut;
@@ -648,7 +649,6 @@
         [self.backView mas_updateConstraints:^(MASConstraintMaker *make) {
             make.left.mas_equalTo(15 + moveX + springX);
         }];
-        [FHMessageEditHelp shared].isCanReloadData = NO;
         if (!open) {
             [self.contentView layoutIfNeeded];
         }
