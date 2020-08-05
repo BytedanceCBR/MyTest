@@ -48,7 +48,7 @@
         FHFeedContentRawDataHotCellListModel *model = (FHFeedContentRawDataHotCellListModel *)data;
         _titleLabel.text = model.title;
         _descLabel.text = model.desc;
-        [self.bgView fh_setImageWithURL:[NSURL URLWithString:model.avatar] placeholder:nil reSize:self.contentView.bounds.size];
+        [self.bgView fh_setImageWithURL:[NSURL URLWithString:model.avatar] placeholder:nil reSize:model.itemSize];
         if(model.tips){
             _tagView.hidden = NO;
             _tagLabel.text = model.tips.content;

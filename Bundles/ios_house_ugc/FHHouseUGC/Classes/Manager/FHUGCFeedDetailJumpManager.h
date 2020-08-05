@@ -25,7 +25,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)jumpToDetail:(FHFeedUGCCellModel *)cellModel
          showComment:(BOOL)showComment
            enterType:(NSString *)enterType
-            extraDic:(NSDictionary *)extraDic;
+            extraDic:(nullable NSDictionary *)extraDic;
 
 //进入圈子详情页
 - (void)goToCommunityDetail:(FHFeedUGCCellModel *)cellModel;

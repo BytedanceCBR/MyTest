@@ -109,8 +109,6 @@
 
 //视频详情页
 - (void)jumpToVideoDetail:(FHFeedUGCCellModel *)cellModel showComment:(BOOL)showComment enterType:(NSString *)enterType extraDic:(NSDictionary *)extraDic {
-    NSMutableDictionary *dict = @{}.mutableCopy;
-    
     if(self.currentCell && [self.currentCell isKindOfClass:[FHUGCVideoCell class]]){
         FHUGCVideoCell *cell = (FHUGCVideoCell *)self.currentCell;
         
@@ -186,7 +184,7 @@
     TRACK_EVENT(@"banner_click", guideDict);
     //根据url跳转
     NSURL *openUrl = [NSURL URLWithString:cellModel.openUrl];
-    TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:nil];
+    TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:guideDict];
     [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:userInfo];
 }
 
@@ -206,7 +204,7 @@
     TRACK_EVENT(@"card_click", guideDict);
     //根据url跳转
     NSURL *openUrl = [NSURL URLWithString:cellModel.openUrl];
-    TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:nil];
+    TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:guideDict];
     [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:userInfo];
 }
 

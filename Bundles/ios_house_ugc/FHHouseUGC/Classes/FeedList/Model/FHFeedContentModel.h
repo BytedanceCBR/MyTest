@@ -63,6 +63,7 @@ typedef NS_ENUM(NSUInteger, FHFeedContentStickStyle) {
 @property (nonatomic, strong , nullable) FHFeedContentRawDataHotCellListTipsModel *tips ;
 @property (nonatomic, copy , nullable) NSString *id;
 @property (nonatomic, copy , nullable) NSString *desc;
+@property (nonatomic, assign) CGSize itemSize;
 @end
 
 @interface FHFeedContentRawDataVideoPlayAddrModel : JSONModel
