@@ -84,13 +84,10 @@ static NSString * const kFHLynxEnableControlKey = @"lynx_enable";
         NSNumber *costTime = @(0);
         CFAbsoluteTime startTime = CFAbsoluteTimeGetCurrent();
         
-        //没有的话同步读，用磁盘io的串行队列
-        dispatch_sync(self.lynx_io_queue, ^{
-            data = [self getGeckoFileDataWithChannel:channel fileName:[FHLynxManager defaultJSFileName]];
-            if (data) {  
-                [self cacheData:data andChannel:channel];
-            }
-        });
+        data = [self getGeckoFileDataWithChannel:channel fileName:[FHLynxManager defaultJSFileName]];
+        if (data) {
+            [self cacheData:data andChannel:channel];
+        }
     };
    return data;
 }

@@ -74,7 +74,7 @@
         _centerAnnotation = [[FHStaticMapAnnotation alloc] init];
         _centerAnnotation.extra = @"center_annotation";
         
-        _nameArray = @[@"交通", @"购物", @"医院", @"教育"];
+        _nameArray = @[@"交通", @"教育", @"医疗", @"生活"];
         _countCategoryDict = [NSMutableDictionary new];
         _poiAnnotations = [NSMutableDictionary new];
         _poiSearchStatus = [NSMutableDictionary dictionary];
@@ -204,7 +204,7 @@
 
 - (void)setUpSegmentedControl {
     _segmentedControl = [FHSegmentControl new];
-    _segmentedControl.sectionTitles = @[@"交通(0)", @"购物(0)", @"医院(0)", @"教育(0)"];
+    _segmentedControl.sectionTitles = @[@"交通", @"教育", @"医疗", @"生活"];
     _segmentedControl.selectionIndicatorSize = CGSizeMake(12, 3);
     _segmentedControl.selectionIndicatorCornerRadius = 1.5;
     _segmentedControl.selectionIndicatorColor = [UIColor themeGray1];
@@ -424,7 +424,7 @@
 }
 
 - (void)clickFacilitiesTracker:(NSInteger)index {
-    NSArray *facilities = @[@"traffic", @"shopping", @"hospital", @"education"];
+    NSArray *facilities = @[@"traffic", @"education", @"hospital", @"life"];
     if (index >= 0 && index < facilities.count) {
         // click_facilities
         NSMutableDictionary *tracerDic = self.baseViewModel.detailTracerDic.mutableCopy;
@@ -445,12 +445,45 @@
         }
         AMapPOIAroundSearchRequest *requestPoi = [AMapPOIAroundSearchRequest new];
         
-        requestPoi.keywords = [categoryName isEqualToString:@"交通"] ? @"公交地铁" : categoryName;
+        requestPoi.keywords = [FHOldDetailStaticMapCell keyWordConver:categoryName];
         requestPoi.location = [AMapGeoPoint locationWithLatitude:center.latitude longitude:center.longitude];
         requestPoi.requireExtension = YES;
+        requestPoi.radius = 2000;
         requestPoi.requireSubPOIs = NO;
         
         [self.searchApi AMapPOIAroundSearch:requestPoi];
+    }
+}
+
++ (NSString *)keyWordConver:(NSString *)category{
+    if([category isEqualToString:@"交通"]){
+        return @"公交地铁";
+    }else if([category isEqualToString:@"教育"]){
+        return @"学校";
+    }else if([category isEqualToString:@"医疗"]){
+        return @"医院";
+    }else if([category isEqualToString:@"生活"]){
+        return @"购物|银行";
+    }else if([category isEqualToString:@"休闲"]){
+        return @"电影院|咖啡厅|影剧院";
+    }else{
+        return @"公交地铁";
+    }
+}
+
++ (NSString *)keyWordConverReverse:(NSString *)category{
+    if([category isEqualToString:@"公交地铁"]){
+        return @"交通";
+    }else if([category isEqualToString:@"学校"]){
+        return @"教育";
+    }else if([category isEqualToString:@"医院"]){
+        return @"医疗";
+    }else if([category isEqualToString:@"购物|银行"]){
+        return @"生活";
+    }else if([category isEqualToString:@"电影院|咖啡厅|影剧院"]){
+        return @"休闲";
+    }else{
+        return @"交通";
     }
 }
 
@@ -570,7 +603,7 @@
             backImageView.frame = CGRectMake(0, 0, titleLabel.frame.size.width + 40, 35);
             titleLabel.center = CGPointMake(backImageView.center.x, backImageView.center.y - 1);
             
-            UIImageView *bottomArrowView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"mapsearch_annotation_arrow"]];
+            UIImageView *bottomArrowView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"house_detail_map_ana_arrow"]];
             [backImageView addSubview:bottomArrowView];
             bottomArrowView.backgroundColor = [UIColor clearColor];
             bottomArrowView.frame = CGRectMake(backImageView.frame.size.width / 2.0 - 5, backImageView.frame.size.height - 12, 10.5, 10.5);
@@ -607,8 +640,7 @@
         }
     }
     AMapPOIKeywordsSearchRequest *searchRequest = (AMapPOIKeywordsSearchRequest *) request;
-    NSString *category = [searchRequest.keywords isEqualToString:@"公交地铁"] ? @"交通" : searchRequest.keywords;
-    
+    NSString *category = [FHOldDetailStaticMapCell keyWordConverReverse:searchRequest.keywords];
     NSMutableArray *annotations = [NSMutableArray array];
     FHStaticMapAnnotation *annotation = nil;
     for (NSUInteger i = 0; i < poiArray.count; i++) {
@@ -640,9 +672,10 @@
     NSMutableArray *sectionTitleArray = [NSMutableArray new];
     for (NSInteger i = 0; i < _nameArray.count; i++) {
         if (_countCategoryDict[_nameArray[i]]) {
-            [sectionTitleArray addObject:[NSString stringWithFormat:@"%@(%ld)", _nameArray[i], [self.countCategoryDict[_nameArray[i]] integerValue]]];
+//            [sectionTitleArray addObject:[NSString stringWithFormat:@"%@(%ld)", _nameArray[i], [self.countCategoryDict[_nameArray[i]] integerValue]]];
+            [sectionTitleArray addObject:[NSString stringWithFormat:@"%@", _nameArray[i]]];
         } else {
-            [sectionTitleArray addObject:[NSString stringWithFormat:@"%@(0)", _nameArray[i]]];
+            [sectionTitleArray addObject:[NSString stringWithFormat:@"%@", _nameArray[i]]];
         }
     }
     

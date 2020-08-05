@@ -49,6 +49,7 @@
 //键盘遮挡猜你想搜cell影响埋点上报准确性
 @property (nonatomic, strong) NSMutableArray *trackerCacheArr;
 @property (nonatomic, assign) BOOL isFirstShow;  //标记是否是首次进入页面
+@property (nonatomic, assign) NSTimeInterval startMonitorTime;
 
 @end
 
@@ -67,6 +68,8 @@
         self.sectionHeaderView = [[UIView alloc] init];
         self.sectionHeaderView.backgroundColor = [UIColor whiteColor];
         self.isFirstShow = YES;
+        _startMonitorTime = [[NSDate date] timeIntervalSince1970];
+
         [self setupSubscribeView];
         [self setupHistoryView];
         [self initNotification];
@@ -1223,6 +1226,9 @@
             wself.guessYouWantData = model.data.data;
             wself.guessYouWantExtraInfo = model.data.extraInfo;
             [wself reloadHistoryTableView];
+            if (wself.isFirstShow) {
+                [FHMainApi addUserOpenVCDurationLog:@"pss_search" resultType:FHNetworkMonitorTypeSuccess duration:[[NSDate date] timeIntervalSince1970] - _startMonitorTime];
+            }
         }  else {
             if (error && ![error.userInfo[@"NSLocalizedDescription"] isEqualToString:@"the request was cancelled"]) {
                 wself.listController.isLoadingData = NO;

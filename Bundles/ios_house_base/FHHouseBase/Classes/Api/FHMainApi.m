@@ -581,6 +581,27 @@
     
 }
 
++(void)addUserOpenVCDurationLog:(NSString *)vcKey resultType:(FHNetworkMonitorType)type duration:(CGFloat)duration{
+    NSString *key = vcKey.copy;
+    NSMutableDictionary *extra = [NSMutableDictionary new];
+    extra[@"requestStatus"] = @(type);
+    
+    NSMutableDictionary *metricDict = [NSMutableDictionary new];
+    if (duration < 1000) {
+        metricDict[@"duration"] = @(duration*1000);
+    }else{
+        return;
+    }
+    NSMutableDictionary *cat = [NSMutableDictionary new];
+    if (type != FHNetworkMonitorTypeSuccess) {
+        cat[@"status"] = @"0";
+    }else{
+        cat[@"status"] = @"0";
+    }
+    [[HMDTTMonitor defaultManager] hmdTrackService:key metric:metricDict category:cat extra:extra];
+}
+
+
 #pragma Mark - base request
 +(TTHttpTask *_Nullable)getRequest:(NSString *_Nonnull)path query:(NSString *_Nullable)query params:(NSDictionary *_Nullable)param jsonClass:(Class _Nonnull)clazz completion:(void(^_Nullable)(JSONModel *_Nullable model , NSError *_Nullable error))completion
 {
