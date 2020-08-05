@@ -191,15 +191,15 @@ static const NSString *kFHUGCPublisherHistoryDataKey = @"key_ugc_publisher_histo
         self.retryTimes = 0;
         [self loadFollowData];
     }else{
-        if(![FHEnvContext isNewDiscovery]){
+//        if(![FHEnvContext isNewDiscovery]){
             [self setFocusTimerState];
-        }
+//        }
     }
     
-    if([FHEnvContext isNewDiscovery]){
-        [self setUGCTimerState];
-        [self setCommunityTimerState];
-    }
+//    if([FHEnvContext isNewDiscovery]){
+//        [self setUGCTimerState];
+//        [self setCommunityTimerState];
+//    }
     
     [self loadUGCConfigData];
     [[TTForumPostThreadStatusViewModel sharedInstance_tt] checkCityPostData];
@@ -214,9 +214,9 @@ static const NSString *kFHUGCPublisherHistoryDataKey = @"key_ugc_publisher_histo
             if(wself.retryTimes < 5){
                 [wself performSelector:@selector(loadFollowData) withObject:nil afterDelay:30];
             }else{
-                if(![FHEnvContext isNewDiscovery]){
+//                if(![FHEnvContext isNewDiscovery]){
                     [wself setFocusTimerState];
-                }
+//                }
             }
             return;
         }
@@ -230,18 +230,18 @@ static const NSString *kFHUGCPublisherHistoryDataKey = @"key_ugc_publisher_histo
                         [[FHUGCSocialGroupData sharedInstance] resetSocialGroupDataWith:self.followData.data.userFollowSocialGroups];
                     }
                     [wself updateFollowData];
-                    if(![FHEnvContext isNewDiscovery]){
+//                    if(![FHEnvContext isNewDiscovery]){
                         [wself setFocusTimerState];
-                    }
+//                    }
                 });
             }else{
                 wself.retryTimes++;
                 if(wself.retryTimes < 5){
                     [wself performSelector:@selector(loadFollowData) withObject:nil afterDelay:30];
                 }else{
-                    if(![FHEnvContext isNewDiscovery]){
+//                    if(![FHEnvContext isNewDiscovery]){
                         [wself setFocusTimerState];
-                    }
+//                    }
                 }
             }
         }
@@ -276,9 +276,9 @@ static const NSString *kFHUGCPublisherHistoryDataKey = @"key_ugc_publisher_histo
             }
             self.followData.data.userFollowSocialGroups = sGroups;
             [self updateFollowData];
-            if(![FHEnvContext isNewDiscovery]){
+//            if(![FHEnvContext isNewDiscovery]){
                 [self setFocusTimerState];
-            }
+//            }
             [[FHUGCSocialGroupData sharedInstance] updateSocialGroupDataWith:social_group];
         }
     }
@@ -313,9 +313,9 @@ static const NSString *kFHUGCPublisherHistoryDataKey = @"key_ugc_publisher_histo
         }
         self.followData.data.userFollowSocialGroups = sGroups;
         [self updateFollowData];
-        if(![FHEnvContext isNewDiscovery]){
+//        if(![FHEnvContext isNewDiscovery]){
             [self setFocusTimerState];
-        }
+//        }
     }
 }
 
@@ -628,10 +628,10 @@ static const NSString *kFHUGCPublisherHistoryDataKey = @"key_ugc_publisher_histo
     // 重新加载
     [self loadFollowData];
     
-    if([FHEnvContext isNewDiscovery]){
-        [self setUGCTimerState];
-        [self setCommunityTimerState];
-    }
+//    if([FHEnvContext isNewDiscovery]){
+//        [self setUGCTimerState];
+//        [self setCommunityTimerState];
+//    }
 }
 
 

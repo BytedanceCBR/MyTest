@@ -6,12 +6,13 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "FHFeedContentModel.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
 @interface FHUGCHotCommunityLayout : UICollectionViewFlowLayout
 
-@property(nonatomic , strong) NSArray *dataList;
+@property(nonatomic , strong) NSArray<FHFeedContentRawDataHotCellListModel> *dataList;
 
 @end
 

@@ -62,6 +62,7 @@ static NSString *const kFHUGCPromotionUser = @"is_promotion_user";
 @property (nonatomic, assign) BOOL isClickTab;
 @property (nonatomic, assign) BOOL isShowingHomeHouseFind;
 @property (nonatomic, copy) NSString * refreshConfigRequestType;
+@property (nonatomic, copy) NSString *enterChannel;
 
 @property(nonatomic , strong) RACReplaySubject *configDataReplay;
 @property (nonatomic , strong) FHMessageManager *messageManager;
@@ -262,6 +263,11 @@ static NSString *const kFHUGCPromotionUser = @"is_promotion_user";
 是否开启发现和UGC合并，默认NO
  */
 + (BOOL)isNewDiscovery;
+
+/*
+是否首页替换为新发现，默认NO
+ */
++ (BOOL)isHomeNewDiscovery;
 
 /*
 判断开启首次安装用户引导，默认YES

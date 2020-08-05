@@ -63,7 +63,8 @@ NSString *const kTTRemoteInnerDomainsKey = @"kTTRemoteInnerDomainsKey";
                               @"m-lf.haoduofangs.com",//好多房
                               @"99hdf.com",//99好多房
                               @"xflapp.com",//幸福里好多房
-                              @"i.haoduofangs.com"]; //幸福里
+                              @"i.haoduofangs.com",//幸福里
+                              @"haoduofangs.com"]; //幸福里
         
         [[TTRJSBForwarding sharedInstance] registeJSBAlias:@"TTRGallery.gallery" for:@"gallery"];
     }

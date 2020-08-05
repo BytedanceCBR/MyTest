@@ -104,6 +104,7 @@ static NSString * const kFUGCPrefixStr = @"fugc";
         [tracerDict setValue:@(0) forKey:@"with_tips"];
         [tracerDict setValue:[FHEnvContext sharedInstance].isClickTab ? @"click_tab" : @"default" forKey:@"enter_type"];
         tracerDict[@"stay_time"] = @((int)duration);
+        tracerDict[@"enter_channel"] = [FHEnvContext sharedInstance].enterChannel;
         
         if (((int)duration) > 0) {
             [FHEnvContext recordEvent:tracerDict andEventKey:@"stay_tab"];
@@ -131,9 +132,6 @@ static NSString * const kFUGCPrefixStr = @"fugc";
     self.topView = [[FHHomeMainTopView alloc] init];
     _topView.backgroundColor = [UIColor themeHomeColor];
     [self.view addSubview:_topView];
-    
-    self.topView.segmentControl.hidden = [FHEnvContext isNewDiscovery];
-    
     
     self.containerView = [[UIView alloc] init];
     [self.view addSubview:_containerView];
@@ -268,11 +266,11 @@ static NSString * const kFUGCPrefixStr = @"fugc";
     [[FHEnvContext sharedInstance].configDataReplay subscribeNext:^(id  _Nullable x) {
         StrongSelf;
         FHConfigDataModel *xConfigDataModel = (FHConfigDataModel *)x;
+        [self.topView showUnValibleCity];
+        [self.topView updateMapSearchBtn];
         [FHEnvContext changeFindTabTitle];
         [FHEnvContext showRedPointForNoUgc];
-        [self.topView  updateMapSearchBtn];
         self.viewModel = [[FHHomeMainViewModel alloc] initWithCollectionView:self.collectionView controller:self];
-        self.topView.segmentControl.hidden = [FHEnvContext isNewDiscovery];
         [FHEnvContext sharedInstance].isShowingHomeHouseFind = [FHEnvContext isCurrentCityNormalOpen];
         if([FHEnvContext sharedInstance].isRefreshFromCitySwitch) {
             [self.switchCityView removeFromSuperview];
@@ -303,20 +301,20 @@ static NSString * const kFUGCPrefixStr = @"fugc";
     self.topView.indexChangeBlock = ^(NSInteger index) {
         StrongSelf;
         NSIndexPath *indexPath = [NSIndexPath indexPathForRow:index inSection:0];
-        if ([self.collectionView numberOfItemsInSection:0] > index && index != self.viewModel.currentIndex) {
+        if ([self.collectionView numberOfItemsInSection:0] > index && index != self.currentTabIndex) {
+            [FHEnvContext sharedInstance].isShowingHomeHouseFind = (index == 0);
+            self.currentTabIndex = index;
             [self.collectionView scrollToItemAtIndexPath:indexPath atScrollPosition:UICollectionViewScrollPositionLeft animated:NO];
             [self.topView changeBackColor:index];
             [self.viewModel sendEnterCategory:(index == 0 ? FHHomeMainTraceTypeHouse : FHHomeMainTraceTypeFeed) enterType:FHHomeMainTraceEnterTypeClick];
             [self.viewModel sendStayCategory:(index == 0 ? FHHomeMainTraceTypeFeed : FHHomeMainTraceTypeHouse) enterType:FHHomeMainTraceEnterTypeClick];
-            
-            [FHEnvContext sharedInstance].isShowingHomeHouseFind = (index == 0);
         }
     };
 }
 
 - (void)changeTopStatusShowHouse:(BOOL)isShowHouse
 {
-    self.topView.segmentControl.hidden = [FHEnvContext isNewDiscovery] ? YES :isShowHouse;
+    self.topView.segmentControl.hidden = isShowHouse;
     self.topView.houseSegmentControl.hidden = !isShowHouse;
     //房源显示时，禁止滑动
     if (isShowHouse) {

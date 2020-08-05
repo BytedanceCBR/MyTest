@@ -167,6 +167,13 @@
     NSMutableDictionary *tracerDic = [NSMutableDictionary dictionary];
     tracerDic[@"origin_from"] = gdExtJson[@"origin_from"] ?: @"be_null";
     tracerDic[@"category_name"] = gdExtJson[@"category_name"] ?: @"be_null";
+    if (gdExtJson[@"social_group_id"]) {
+        tracerDic[@"social_group_id"] = gdExtJson[@"social_group_id"];
+    }
+    if (gdExtJson[@"concern_id"]) {
+        tracerDic[@"concern_id"] = gdExtJson[@"concern_id"];
+    }
+    tracerDic[@"rank"] = gdExtJson[@"rank"];
     tracerDic[@"enter_from"] = @"question";
     dic[@"tracer"] = tracerDic;
     

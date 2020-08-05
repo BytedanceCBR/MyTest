@@ -10,13 +10,19 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+#define kLoadStatusModelsWithCompletionNotification @"kLoadStatusModelsWithCompletionNotification"
+#define kUpdatePostDataNotification @"kUpdatePostDataNotification"
+
 // 发帖进度，添加后视图不需移除，后续高度自动变化，并执行：refreshViewBlk
 @interface FHPostUGCProgressView : UIView
 
-+ (instancetype)sharedInstance;
+//+ (instancetype)sharedInstance;
 
 // 刷新视图闭包
 @property (nonatomic, copy)     dispatch_block_t      refreshViewBlk;
+
+//新的发现页面
+@property(nonatomic, assign) BOOL isNewDiscovery;
 
 // 视图高度
 - (CGFloat)viewHeight;
@@ -27,6 +33,9 @@ NS_ASSUME_NONNULL_BEGIN
 @end
 
 @interface FHPostUGCProgressCell : FHUGCBaseCell
+
+//新的发现页面
+@property(nonatomic, assign) BOOL isNewDiscovery;
 
 @end
 

@@ -23,6 +23,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *articleType;
 @property (nonatomic, copy , nullable) NSString *groupId;
 @property (nonatomic, copy , nullable) NSString *schema;
+@property (nonatomic, strong , nullable) NSDictionary *logPb;
 @end
 
 @interface FHDetailNeighborhoodDataStrategyModel : JSONModel
