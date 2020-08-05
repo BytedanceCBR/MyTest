@@ -244,7 +244,7 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     if (indexPath.row == 0) {
-        NSString *identifier = @"trackFeedClientShow";
+        NSString *identifier = @"FHHouseRealtorDetailPlaceCell";
         FHHouseBaseItemCell *cell = [tableView dequeueReusableCellWithIdentifier:identifier];
         [cell.contentView setBackgroundColor:[UIColor colorWithHexStr:@"#f8f8f8"]];
         return cell;
@@ -259,7 +259,7 @@
                 cell.selectionStyle = UITableViewCellSelectionStyleNone;
             }
             cell.delegate = self;
-            cellModel.tracerDic = [self trackDict:cellModel rank:indexPath.row];
+            cellModel.tracerDic = [self trackDict:cellModel rank:(indexPath.row -1)];
             if(indexPath.row < self.dataList.count +1){
                 [cell refreshWithData:cellModel];
             }
@@ -401,7 +401,7 @@
     dict[@"group_id"] = cellModel.groupId;
     dict[@"realtor_id"] = cellModel.realtor.realtorId?:@"be_null";
     dict[@"element_type"] = @"realtor_evaluate";
-    dict[@"from_gid"] = self.tracerDic[@"from_gid"] ?: @"be_null";
+    dict[@"from_gid"] = self.tracerDic[@"log_pb"][@"group_id"] ?: @"be_null";
    
     if(cellModel.logPb[@"impr_id"]){
         dict[@"impr_id"] = cellModel.logPb[@"impr_id"];
@@ -423,10 +423,6 @@
     [self.showHouseCache addObject:itemData.groupId];
     NSMutableDictionary *dict = [self trackDict:itemData rank:rank];
     TRACK_EVENT(@"feed_client_show", dict);
-}
-
-- (NSString*)eventType {
-    return @"house_app2c_v2";
 }
 
 - (NSMutableArray *)showHouseCache {
