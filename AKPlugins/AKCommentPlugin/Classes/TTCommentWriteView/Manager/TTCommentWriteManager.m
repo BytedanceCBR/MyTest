@@ -413,11 +413,11 @@ typedef void (^TTCommentLoginPipelineCompletion)(TTCommentLoginState state);
     }
     
     //上报埋点
-    NSMutableDictionary *params = [NSMutableDictionary dictionary];
-    if(self.reportParams){
-        [params addEntriesFromDictionary:self.reportParams];
-    }
-    [FHUserTracker writeEvent:@"click_submit_comment" params:params];
+//    NSMutableDictionary *params = [NSMutableDictionary dictionary];
+//    if(self.reportParams){
+//        [params addEntriesFromDictionary:self.reportParams];
+//    }
+//    [FHUserTracker writeEvent:@"click_submit_comment" params:params];
     
     isTTArticleWritePublishing = YES;
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{

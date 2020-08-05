@@ -1134,7 +1134,7 @@
     NSMutableDictionary *dict = @{}.mutableCopy;
     dict[UT_PAGE_TYPE] = [self pageType];
     dict[UT_ENTER_FROM] = self.tracerModel.enterFrom?:UT_BE_NULL;
-    dict[UT_CLICK_POSITION] = @"passport_publisher";
+    dict[@"click_options"] = @"passport_publisher";
     TRACK_EVENT(@"feed_publish_click", dict);
 }
 

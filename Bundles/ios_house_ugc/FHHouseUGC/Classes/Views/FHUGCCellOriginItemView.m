@@ -88,9 +88,7 @@
         self.cellModel = cellModel;
         if(cellModel.originItemModel.imageModel){
             if (cellModel.originItemModel.imageModel && cellModel.originItemModel.imageModel.url.length > 0) {
-                [self.iconView fh_setImageWithURLStringInTrafficSaveMode:cellModel.originItemModel.imageModel.url placeholder:nil];
-            }else{
-                [self.iconView setImage:nil];
+                [self.iconView fh_setImageWithURL:cellModel.originItemModel.imageModel.url placeholder:nil reSize:self.iconView.size];
             }
             _iconView.hidden = NO;
             
@@ -120,6 +118,7 @@
         tracerDic[@"origin_from"] = self.cellModel.tracerDic[@"origin_from"] ?: @"be_null";
         tracerDic[@"enter_from"] = self.cellModel.tracerDic[@"page_type"] ?: @"be_null";
         tracerDic[@"category_name"] = self.cellModel.tracerDic[@"category_name"] ?: @"be_null";
+        tracerDic[@"enter_type"] = @"feed_content_blank";
         tracerDic[@"rank"] = self.cellModel.tracerDic[@"rank"];
         tracerDic[@"impr_id"] = self.cellModel.tracerDic[@"impr_id"];
         tracerDic[@"from_gid"] = self.cellModel.tracerDic[@"group_id"];

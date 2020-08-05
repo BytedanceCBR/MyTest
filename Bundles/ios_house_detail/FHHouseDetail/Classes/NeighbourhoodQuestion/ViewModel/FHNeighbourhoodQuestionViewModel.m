@@ -540,6 +540,7 @@
     NSMutableDictionary *dict = [NSMutableDictionary dictionary];
     dict[@"origin_from"] = self.viewController.tracerDict[@"origin_from"];
     dict[@"enter_from"] = self.viewController.tracerDict[@"enter_from"];
+    dict[@"element_from"] = self.viewController.tracerDict[@"element_from"];
     dict[@"page_type"] = [self pageType];
     dict[@"log_pb"] = cellModel.logPb;
     dict[@"rank"] = @(rank);

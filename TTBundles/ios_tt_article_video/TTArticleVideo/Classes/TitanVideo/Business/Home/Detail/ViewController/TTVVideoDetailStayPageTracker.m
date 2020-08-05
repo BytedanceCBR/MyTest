@@ -233,6 +233,7 @@ static NSInteger const vaildStayPageMaxInterval = 7200;
     }
     id value = @(_article.uniqueID);
 //    [dict setValue:value forKey:@"value"];
+    [dict setValue:@"video_detail" forKey:@"page_type"];
     [dict setValue:@((NSInteger)(duration * 1000)) forKey:@"stay_time"];
 //    [dict setValue:@"video" forKey:@"page_type"];
     [dict setValue:value forKey:@"item_id"];
@@ -335,6 +336,7 @@ static NSInteger const vaildStayPageMaxInterval = 7200;
     [self ttv_logGoDetail3];
     
     NSMutableDictionary *dic = [NSMutableDictionary dictionary];
+    [dic setValue:@"video_detail" forKey:@"page_type"];
     id value = [self.detailModel uniqueID];
 //    [dic setValue:[self.detailStateStore.state ttv_adid].stringValue forKey:@"ext_value"];
     [dic setValue:value forKey:@"item_id"];
@@ -405,6 +407,7 @@ static NSInteger const vaildStayPageMaxInterval = 7200;
         [dict setValuesForKeysWithDictionary:self.detailModel.gdExtJsonDict];
     }
     
+    [dict setValue:@"video_detail" forKey:@"page_type"];
     [dict setValue:@"article" forKey:@"category"];
     [dict setValue:@"read_pct" forKey:@"tag"];
     [dict setValue:self.detailModel.clickLabel forKey:@"label"];

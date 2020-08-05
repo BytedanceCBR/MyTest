@@ -191,8 +191,10 @@ static CGFloat const kSectionHeaderHeight = 38;
 
 - (void)mainTabbarClicked:(NSNotification *)notification
 {
-    self.homeListViewModel.reloadType = TTReloadTypeTab;
-    [self pullAndRefresh];
+    if([FHEnvContext sharedInstance].isShowingHomeHouseFind){
+        self.homeListViewModel.reloadType = TTReloadTypeTab;
+        [self pullAndRefresh];
+    }
 }
 
 - (void)setUpMainTableConstraints

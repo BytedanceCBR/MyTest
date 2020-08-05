@@ -104,8 +104,14 @@
 //    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onUnreadMessageChange) name:kFHUGCFollowNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onFocusHaveNewContents) name:kFHUGCFocusTabHasNewNotification object:nil];
 //    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onUnreadMessageChange) name:kFHUGCLoadFollowDataFinishedNotification object:nil];
+    
     //tabbar双击的通知
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(refreshData) name:kFindTabbarKeepClickedNotification object:nil];
+    if(self.isNewDiscovery){
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(refreshData) name:kExploreMixedListRefreshTypeNotification object:nil];
+    }else{
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(refreshData) name:kFindTabbarKeepClickedNotification object:nil];
+    }
+    
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(changeTab) name:kFHUGCForumPostThreadFinish object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateSegmentView) name:kUGCCategoryGotFinishedNotification object:nil];
     
@@ -604,11 +610,14 @@
 }
 
 - (void)refreshData {
-    [self.viewModel refreshCell:NO isClick:YES];
+    if(!self.isNewDiscovery || ![FHEnvContext sharedInstance].isShowingHomeHouseFind){
+        [self.viewModel refreshCell:NO isClick:YES];
+    }
 }
 
 - (void)changeTab {
-    if(!self.isNewDiscovery){
+    NSString *tabIdentifier = [FHEnvContext getCurrentTabIdentifier];
+    if(!self.isNewDiscovery && [tabIdentifier isEqualToString:@"tab_f_find"]){
         if (self.navigationController.viewControllers.count <= 1) {
             [self.viewModel changeTab:1];
         }
@@ -816,9 +825,14 @@
     if(needReport){
         self.stayTime = [[NSDate date] timeIntervalSince1970];
         NSMutableDictionary *tracerDict = [NSMutableDictionary new];
-        tracerDict[@"enter_type"] = @(enterType);
+        if (enterType == 1) {
+            tracerDict[@"enter_type"] = @"click";
+        }else{
+            tracerDict[@"enter_type"] = @"flip";
+        }
         tracerDict[@"enter_from"] = self.tracerDict[@"enter_from"] ?: @"be_null";
         tracerDict[@"category_name"] = self.tracerDict[@"category_name"] ?: @"be_null";
+        tracerDict[@"enter_channel"] = @"click";
         [FHEnvContext recordEvent:tracerDict andEventKey:@"enter_category"];
     }
     [self.viewModel viewWillAppear];
@@ -828,9 +842,14 @@
 {
     NSMutableDictionary *tracerDict = [NSMutableDictionary new];
     NSTimeInterval duration = ([[NSDate date] timeIntervalSince1970] - self.stayTime) * 1000.0;
-    tracerDict[@"enter_type"] = @(enterType);
+    if (enterType == 1) {
+        tracerDict[@"enter_type"] = @"click";
+    }else{
+        tracerDict[@"enter_type"] = @"flip";
+    }
     tracerDict[@"enter_from"] = self.tracerDict[@"enter_from"] ?: @"be_null";
     tracerDict[@"category_name"] = self.tracerDict[@"category_name"] ?: @"be_null";
+    tracerDict[@"enter_channel"] = @"click";
     tracerDict[@"stay_time"] = @((int) duration);
 
     if (((int) duration) > 0) {

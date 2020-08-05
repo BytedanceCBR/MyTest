@@ -141,6 +141,7 @@ static bool isTTCommentPublishing = NO;
     params[@"click_position"] = @"submit_comment";
     params[@"page_type"] = @"comment_detail";
     params[@"group_id"] = self.commentDetailModel.groupModel.groupID ?: @"be_null";
+    params[@"comment_id"] = self.commentDetailModel.commentID ?: @"be_null";
     [FHUserTracker writeEvent:@"click_submit_comment" params:params];
     
     isTTCommentPublishing = YES;

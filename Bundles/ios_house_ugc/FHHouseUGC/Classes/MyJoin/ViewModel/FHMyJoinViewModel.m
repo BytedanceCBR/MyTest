@@ -222,8 +222,9 @@
         NSString *originFrom = self.viewController.tracerDict[@"origin_from"] ?: @"be_null";
         dict[@"tracer"] = @{
             @"origin_from":originFrom,
-            @"enter_from":@"my_joined_neighborhood",
+            @"enter_from":[self pageType],
             @"enter_type":@"click",
+            @"element_from":@"top_operation_position",
             @"rank":@(indexPath.row),
             @"log_pb":model.logPb ?: @"be_null"};
         TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
@@ -239,7 +240,7 @@
 
 - (void)trackMore {
     NSMutableDictionary *tracerDict = [NSMutableDictionary dictionary];
-    tracerDict[@"element_type"] = @"my_joined_neighborhood";
+    tracerDict[@"element_type"] = @"top_operation_position";
     tracerDict[@"page_type"] = [self pageType];
     tracerDict[@"enter_from"] = @"neighborhood_tab";
     TRACK_EVENT(@"click_more", tracerDict);
@@ -255,7 +256,7 @@
     traceParam[@"enter_type"] = enterType;
     traceParam[@"origin_from"] = self.viewController.tracerDict[@"origin_from"] ?: @"be_null";
     traceParam[@"enter_from"] = [self pageType];
-    traceParam[@"element_from"] = @"my_joined_neighborhood";
+    traceParam[@"element_from"] = @"top_operation_position";
     dict[TRACER_KEY] = traceParam;
     TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
     NSURL *openUrl = [NSURL URLWithString:@"sslocal://ugc_community_list"];
@@ -306,10 +307,12 @@
 - (void)trackClientShow:(FHUGCScialGroupDataModel *)cellModel rank:(NSInteger)rank {
     NSMutableDictionary *tracerDict = [NSMutableDictionary dictionary];
     
-    tracerDict[@"element_type"] = @"all_community";
+    tracerDict[@"element_type"] = @"top_operation_position";
+    tracerDict[@"social_group_id"] = cellModel.socialGroupId;
     tracerDict[@"page_type"] = [self pageType];
-    tracerDict[@"enter_from"] = @"neighborhood_tab";
-    TRACK_EVENT(@"element_show", tracerDict);
+    tracerDict[@"origin_from"] = self.viewController.tracerDict[@"origin_from"] ?: @"be_null";
+    tracerDict[@"enter_from"] = self.viewController.tracerDict[@"enter_from"] ?: @"be_null";
+    TRACK_EVENT(@"community_group_show", tracerDict);
 }
 
 - (NSString *)pageType {

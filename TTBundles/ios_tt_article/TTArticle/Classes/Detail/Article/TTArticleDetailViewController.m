@@ -2263,6 +2263,7 @@
     NSString* enterFrom = [self enterFromString];
 
     NSMutableDictionary *dic = [NSMutableDictionary dictionary];
+    dic[@"page_type"] = @"article_detail";
 //    [dic setValue:self.detailModel.adID.stringValue forKey:@"ext_value"];
     [dic setValue:self.detailModel.article.groupModel.itemID forKey:@"item_id"];
 //    [dic setValue:self.detailModel.article.aggrType forKey:@"aggr_type"];
@@ -2287,6 +2288,10 @@
     
     if(!self.detailModel.reportParams){
         NSMutableDictionary *reportParams = [NSMutableDictionary dictionary];
+        reportParams[@"page_type"] = @"article_detail";
+        self.detailModel.reportParams = [reportParams copy];
+    }else{
+        NSMutableDictionary *reportParams = [self.detailModel.reportParams mutableCopy];
         reportParams[@"page_type"] = @"article_detail";
         self.detailModel.reportParams = [reportParams copy];
     }

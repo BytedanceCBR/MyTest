@@ -210,6 +210,7 @@
     info[@"qid"] = self.cellModel.groupId;
     NSMutableDictionary *tracer = @{}.mutableCopy;
     tracer[@"enter_from"] = self.cellModel.tracerDic[@"page_type"];
+    tracer[@"enter_type"] = @"click";
     info[@"tracer"] = tracer;
     //        info[@"gd_ext_json"] = self.cellModel.tracerDic[@"gd_ext_json"];
     TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:info];

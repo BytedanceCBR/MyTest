@@ -58,6 +58,8 @@
                            @"saleStatus": @"sale_status",
                            @"baseInfo": @"base_info",
                            @"relatedFloorplanList": @"related_floorplan",
+                           @"pointX": @"point_x",
+                           @"pointY": @"point_y",
                            };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
         return dict[keyName]?:keyName;
@@ -77,6 +79,7 @@
                            @"buildingList": @"building_list",
                            @"associateInfo": @"associate_info",
                            @"highlightedRealtor": @"highlighted_realtor",
+                           @"buildingImage": @"building_image",
                            };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
         return dict[keyName]?:keyName;
@@ -95,4 +98,32 @@
     return YES;
 }
 
+
 @end
+
+@implementation FHBuildingIndexModel
+
++ (instancetype)indexModelWithSaleStatus:(NSInteger)saleStatus withBuildingIndex:(NSInteger)buildingIndex {
+    FHBuildingIndexModel *indexModel = [[FHBuildingIndexModel alloc] init];
+    indexModel.saleStatus = saleStatus;
+    indexModel.buildingIndex = buildingIndex;
+    return indexModel;
+}
+
+- (BOOL)isEqual:(FHBuildingIndexModel *)object {
+    return (self.buildingIndex == object.buildingIndex) && (self.saleStatus == object.saleStatus);
+}
+
+@end
+
+@implementation FHBuildingSaleStatusModel
+
+
+
+@end
+
+@implementation FHBuildingLocationModel
+
+
+@end
+

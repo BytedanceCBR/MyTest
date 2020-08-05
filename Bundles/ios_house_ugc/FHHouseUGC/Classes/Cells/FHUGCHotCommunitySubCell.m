@@ -13,6 +13,7 @@
 #import "FHUGCModel.h"
 #import "FHCornerView.h"
 #import "FHUGCHotCommunityCell.h"
+#import "UIImageView+fhUgcImage.h"
 
 @interface FHUGCHotCommunitySubCell ()
 
@@ -47,8 +48,7 @@
         FHFeedContentRawDataHotCellListModel *model = (FHFeedContentRawDataHotCellListModel *)data;
         _titleLabel.text = model.title;
         _descLabel.text = model.desc;
-        [self.bgView bd_setImageWithURL:[NSURL URLWithString:model.avatar] placeholder:nil];
-        
+        [self.bgView fh_setImageWithURL:[NSURL URLWithString:model.avatar] placeholder:nil reSize:model.itemSize];
         if(model.tips){
             _tagView.hidden = NO;
             _tagLabel.text = model.tips.content;

@@ -144,8 +144,26 @@ static const float timerInterval = 3.0f;
     
     FHCardSliderCellModel *cellModel = self.dataSource[indexPath.row%self.dataSource.count];
     if(cellModel.schema.length > 0){
+        NSMutableDictionary *dict = @{}.mutableCopy;
+        // 埋点
+        NSMutableDictionary *traceParam = @{}.mutableCopy;
+        traceParam[@"origin_from"] = self.tracerDic[@"origin_from"];
+        traceParam[@"enter_from"] = self.tracerDic[@"page_type"];
+        traceParam[@"element_type"] = self.tracerDic[@"element_type"];
+        traceParam[@"from_gid"] = self.tracerDic[@"from_gid"];
+        traceParam[@"group_id"] = cellModel.groupId;
+        if(cellModel.tracer[@"log_pb"][@"group_source"]){
+            traceParam[@"group_source"] = cellModel.tracer[@"log_pb"][@"group_source"];
+        }
+        if(cellModel.tracer[@"log_pb"][@"impr_id"]){
+            traceParam[@"impr_id"] = cellModel.tracer[@"log_pb"][@"impr_id"];
+        }
+        dict[@"tracer"] = traceParam;
+
+        TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
+        
         NSURL *url = [NSURL URLWithString:cellModel.schema];
-        [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:nil];
+        [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
     }
 }
 
@@ -276,12 +294,16 @@ static const float timerInterval = 3.0f;
     if(self.tracerDic){
         [dict addEntriesFromDictionary:self.tracerDic];
     }
-    [dict removeObjectsForKeys:@[@"card_type"]];
+    [dict removeObjectsForKeys:@[@"card_type",@"log_pb"]];
     dict[@"rank"] = @(_selectedIndex);
     dict[@"group_id"] = cellModel.groupId;
     
     if(cellModel.tracer[@"log_pb"][@"group_source"]){
         dict[@"group_source"] = cellModel.tracer[@"log_pb"][@"group_source"];
+    }
+    
+    if(cellModel.tracer[@"log_pb"][@"impr_id"]){
+        dict[@"impr_id"] = cellModel.tracer[@"log_pb"][@"impr_id"];
     }
     
     TRACK_EVENT(@"feed_client_show", dict);

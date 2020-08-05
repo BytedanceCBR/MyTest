@@ -447,22 +447,6 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     FHFeedUGCCellModel *cellModel = self.dataList[indexPath.row];
-//    BOOL canOpenURL = NO;
-//    if (!canOpenURL && !isEmptyString(cellModel.openUrl)) {
-//        NSURL *url = [TTStringHelper URLWithURLString:cellModel.openUrl];
-//        if ([[UIApplication sharedApplication] canOpenURL:url]) {
-//            canOpenURL = YES;
-//            [[UIApplication sharedApplication] openURL:url];
-//        }
-//        else if([[TTRoute sharedRoute] canOpenURL:url]){
-//            canOpenURL = YES;
-//            //优先跳转openurl
-//            [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:nil];
-//        }
-//    }else{
-//        NSURL *openUrl = [NSURL URLWithString:cellModel.detailScheme];
-//        [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:nil];
-//    }
      [self.detailJumpManager jumpToDetail:cellModel showComment:NO enterType:@"feed_content_blank"];
     
 }

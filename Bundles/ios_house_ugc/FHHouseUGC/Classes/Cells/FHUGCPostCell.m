@@ -274,23 +274,6 @@
         }
         
         return height;
-        
-//        HFeedUGCCellModel *cellModel = (FHFeedUGCCellModel *)data;
-//        CGFloat height = cellModel.contentHeight + userInfoViewHeight + bottomViewHeight + topMargin + 20;
-//
-//        if(cellModel.originItemModel){
-//            height += (cellModel.originItemHeight + 10);
-//        }
-//
-//        if(cellModel.attachCardInfo){
-//            height += (attachCardViewHeight + 10);
-//        }
-//
-//        if(cellModel.isInsertGuideCell){
-//            height += guideViewHeight;
-//        }
-//
-//        return height;
     }
     return 44;
 }

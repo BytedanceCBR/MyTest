@@ -107,7 +107,7 @@
     }
     return [FHMainApi getRequest:url query:nil params:paramDic jsonClass:[FHDetailOldModel class] completion:^(JSONModel * _Nullable model, NSError * _Nullable error) {
         if (completion) {
-            completion(model,error);
+            completion((FHDetailOldModel *)model,error);
         }
     }];
 }
@@ -176,7 +176,7 @@ completion:(void(^)(FHDetailNeighborhoodModel * _Nullable model , NSError * _Nul
 
 // 租房-周边房源
 + (TTHttpTask*)requestHouseRentRelated:(NSString*)rentId class:(Class)cls
-                            completion:(void(^)(id<FHBaseModelProtocol> _Nullable model , NSError *error))completion {
+                            completion:(void(^)(FHListResultHouseModel *model, NSError *error))completion {
     NSString * host = [FHURLSettings baseURL] ?: @"https://i.haoduofangs.com";
     NSString* url = [host stringByAppendingString:@"/f100/api/related_rent"];
     NSMutableDictionary *paramDic = [NSMutableDictionary new];
@@ -185,13 +185,10 @@ completion:(void(^)(FHDetailNeighborhoodModel * _Nullable model , NSError * _Nul
     }
     paramDic[@"count"] = @(5);
     paramDic[CHANNEL_ID] = CHANNEL_ID_RELATED_RENT;
-
-    __weak typeof(self)wself = self;
-    return [FHMainApi getRequest:url query:nil params:paramDic jsonClass:cls completion:^(JSONModel * _Nullable m, NSError * _Nullable error) {
+    return [FHMainApi getRequest:url query:nil params:paramDic jsonClass:cls completion:^(JSONModel * _Nullable model, NSError * _Nullable error) {
 //        FHHouseRentRelatedResponseModel* model = (FHHouseRentRelatedResponseModel*)m;
-        id<FHBaseModelProtocol> model = m;
         if (completion) {
-            completion(model,error);
+            completion((FHListResultHouseModel *)model,error);
         }
     }];
 }
@@ -211,7 +208,6 @@ completion:(void(^)(FHDetailNeighborhoodModel * _Nullable model , NSError * _Nul
     }
     paramDic[@"count"] = @(5);
     paramDic[CHANNEL_ID] = CHANNEL_ID_SAME_NEIGHBORHOOD_RENT;
-    __weak typeof(self)wself = self;
     return [FHMainApi getRequest:url query:nil params:paramDic jsonClass:[FHRentSameNeighborhoodResponseModel class] completion:^(JSONModel * _Nullable m, NSError * _Nullable error) {
         FHRentSameNeighborhoodResponseModel* model = (FHRentSameNeighborhoodResponseModel*)m ;
         if (completion) {
@@ -239,10 +235,8 @@ completion:(void(^)(FHDetailNeighborhoodModel * _Nullable model , NSError * _Nul
     }
     paramDic[@"search_id"] = searchId ?: @"";
     paramDic[CHANNEL_ID] = CHANNEL_ID_RELATED_HOUSE;
-    __weak typeof(self)wself = self;
     return [FHMainApi getRequest:url query:nil params:paramDic jsonClass:[FHDetailRelatedHouseResponseModel class] completion:^(JSONModel * _Nullable m, NSError * _Nullable error) {
         FHDetailRelatedHouseResponseModel *model = (FHDetailRelatedHouseResponseModel *)m;
-
         if (completion) {
             completion(model,error);
         }
@@ -270,8 +264,6 @@ completion:(void(^)(FHDetailNeighborhoodModel * _Nullable model , NSError * _Nul
         paramDic[@"search_id"] = searchId;
     }
     paramDic[CHANNEL_ID] = CHANNEL_ID_RELATED_NEIGHBORHOOD;
-    __weak typeof(self)wself = self;
-    
     return [FHMainApi getRequest:url query:nil params:paramDic jsonClass:[FHDetailRelatedNeighborhoodResponseModel class] completion:^(JSONModel * _Nullable m, NSError * _Nullable error) {
         FHDetailRelatedNeighborhoodResponseModel *model = (FHDetailRelatedNeighborhoodResponseModel *)m;
         if (completion) {
@@ -302,7 +294,7 @@ completion:(void(^)(FHDetailNeighborhoodModel * _Nullable model , NSError * _Nul
     }
     return [FHMainApi getRequest:url query:nil params:paramDic jsonClass:[FHTransactionHistoryModel class] completion:^(JSONModel * _Nullable model, NSError * _Nullable error) {
         if (completion) {
-            completion(model,error);
+            completion((FHTransactionHistoryModel *)model,error);
         }
     }];
 }
@@ -337,7 +329,7 @@ completion:(void(^)(FHDetailNeighborhoodModel * _Nullable model , NSError * _Nul
         paramDic[@"offset"] = @"0";
     }
     paramDic[CHANNEL_ID] = CHANNEL_ID_SAME_NEIGHBORHOOD_HOUSE;
-    __weak typeof(self)wself = self;
+//    __weak typeof(self)wself = self;
     return [FHMainApi getRequest:url query:nil params:paramDic jsonClass:[FHDetailSameNeighborhoodHouseResponseModel class] completion:^(JSONModel * _Nullable m, NSError * _Nullable error) {
         FHDetailSameNeighborhoodHouseResponseModel *model = (FHDetailSameNeighborhoodHouseResponseModel *)m;
 
@@ -366,7 +358,7 @@ completion:(void(^)(FHDetailNeighborhoodModel * _Nullable model , NSError * _Nul
     paramDic[@"count"] = @(count);
     return [FHMainApi getRequest:url query:nil params:paramDic jsonClass:[FHListResultHouseModel class] completion:^(JSONModel * _Nullable model, NSError * _Nullable error) {
         if (completion) {
-            completion(model,error);
+            completion((FHListResultHouseModel *)model,error);
         }
     }];
 }
@@ -386,7 +378,7 @@ completion:(void(^)(FHDetailNeighborhoodModel * _Nullable model , NSError * _Nul
     paramDic[CHANNEL_ID] = CHANNEL_ID_RELATED_COURT;
     return [FHMainApi getRequest:url query:nil params:paramDic jsonClass:[FHListResultHouseModel class] completion:^(JSONModel * _Nullable model, NSError * _Nullable error) {
         if (completion) {
-            completion(model,error);
+            completion((FHListResultHouseModel *)model,error);
         }
     }];
 }
@@ -396,13 +388,13 @@ completion:(void(^)(FHDetailNeighborhoodModel * _Nullable model , NSError * _Nul
                                   query:(NSString*)query
                              completion:(void(^)(FHDetailNewTimeLineResponseModel * _Nullable model , NSError * _Nullable error))completion {
     NSString * host = [FHURLSettings baseURL] ?: @"https://i.haoduofangs.com";
-    NSString* url = [host stringByAppendingFormat:[NSString stringWithFormat:@"/f100/api/court/timeline?%@",query]];
+    NSString* url = [host stringByAppendingFormat:@"/f100/api/court/timeline?%@",query];
     
     NSMutableDictionary *paramDic = [NSMutableDictionary new];
     
     return [FHMainApi getRequest:url query:nil params:paramDic jsonClass:[FHDetailNewTimeLineResponseModel class] completion:^(JSONModel * _Nullable model, NSError * _Nullable error) {
         if (completion) {
-            completion(model,error);
+            completion((FHDetailNewTimeLineResponseModel *)model,error);
         }
     }];
     
@@ -434,11 +426,11 @@ completion:(void(^)(FHDetailNeighborhoodModel * _Nullable model , NSError * _Nul
     }
     
     NSString * host = [FHURLSettings baseURL] ?: @"https://i.haoduofangs.com";
-    NSString* url = [host stringByAppendingFormat:[NSString stringWithFormat:@"/f100/api/court/detail?court_id=%@",courtId]];
+    NSString* url = [host stringByAppendingFormat:@"/f100/api/court/detail?court_id=%@",courtId];
     
     return [FHMainApi getRequest:url query:nil params:nil jsonClass:[FHDetailNewCoreDetailModel class] completion:^(JSONModel * _Nullable model, NSError * _Nullable error) {
         if (completion) {
-            completion(model,error);
+            completion((FHDetailNewCoreDetailModel *)model,error);
         }
     }];
 }
@@ -451,11 +443,11 @@ completion:(void(^)(FHDetailNeighborhoodModel * _Nullable model , NSError * _Nul
     }
     
     NSString * host = [FHURLSettings baseURL] ?: @"https://i.haoduofangs.com";
-    NSString* url = [host stringByAppendingFormat:[NSString stringWithFormat:@"/f100/api/floorplan/info?floorplan_id=%@",floorPanId]];
+    NSString* url = [host stringByAppendingFormat:@"/f100/api/floorplan/info?floorplan_id=%@",floorPanId];
     
     return [FHMainApi getRequest:url query:nil params:nil jsonClass:[FHDetailFloorPanDetailInfoModel class] completion:^(JSONModel * _Nullable model, NSError * _Nullable error) {
         if (completion) {
-            completion(model,error);
+            completion((FHDetailFloorPanDetailInfoModel *)model,error);
         }
     }];
     
@@ -469,10 +461,10 @@ completion:(void(^)(FHDetailNeighborhoodModel * _Nullable model , NSError * _Nul
     }
     
     NSString * host = [FHURLSettings baseURL] ?: @"https://i.haoduofangs.com";
-    NSString* url = [host stringByAppendingFormat:[NSString stringWithFormat:@"/f100/api/court/floorplan?court_id=%@",courtId]];
+    NSString* url = [host stringByAppendingFormat:@"/f100/api/court/floorplan?court_id=%@",courtId];
     return [FHMainApi getRequest:url query:nil params:nil jsonClass:[FHDetailFloorPanListResponseModel class] completion:^(JSONModel * _Nullable model, NSError * _Nullable error) {
         if (completion) {
-            completion(model,error);
+            completion((FHDetailFloorPanListResponseModel *)model,error);
         }
     }];    
 }
@@ -557,9 +549,9 @@ completion:(void(^)(FHDetailNeighborhoodModel * _Nullable model , NSError * _Nul
 
 
 + (TTHttpTask *)requestRealtorEvaluationFeedback:(NSString *)targetId targetType:(NSInteger)targetType evaluationType:(NSInteger)evaluationType realtorId:(NSString *)realtorId content:(NSString *)content score:(NSInteger)score tags: (NSArray*)tags completion:(void (^)(bool, NSError * _Nullable))completion {
-    [self requestRealtorEvaluationFeedback:targetId targetType:targetType evaluationType:evaluationType realtorId:realtorId content:content score:score tags:tags from:nil completion:completion];
+    return [self requestRealtorEvaluationFeedback:targetId targetType:targetType evaluationType:evaluationType realtorId:realtorId content:content score:score tags:tags from:nil completion:completion];
 }
-+ (TTHttpTask *)requestRealtorEvaluationFeedback:(NSString *)targetId targetType:(NSInteger)targetType evaluationType:(NSInteger)evaluationType realtorId:(NSString *)realtorId content:(NSString *)content score:(NSInteger)score tags: (NSArray*)tags from:(NSString *)from completion:(void (^)(bool, NSError * _Nullable))completion {
++ (TTHttpTask *)requestRealtorEvaluationFeedback:(NSString *)targetId targetType:(NSInteger)targetType evaluationType:(NSInteger)evaluationType realtorId:(NSString *)realtorId content:(NSString *)content score:(NSInteger)score tags: (NSArray*)tags from:(NSString * _Nullable)from completion:(void (^)(bool, NSError * _Nullable))completion {
 
     NSString *path = @"/f100/api/associate/realtor_evaluation/assign";
     NSMutableDictionary *param = [NSMutableDictionary new];
@@ -579,7 +571,9 @@ completion:(void(^)(FHDetailNeighborhoodModel * _Nullable model , NSError * _Nul
         param[@"content"] = content;
     }
     param[@"tag_ids"] = tags;
-    param[@"element_from"] = from;
+    if (from) {
+        param[@"element_from"] = from;
+    }
     
     return [FHMainApi postJsonRequest:path query:nil params:param completion:^(NSDictionary * _Nullable result, NSError * _Nullable error) {
         BOOL success = NO;
@@ -602,10 +596,10 @@ completion:(void(^)(FHDetailNeighborhoodModel * _Nullable model , NSError * _Nul
         return nil;
     }
     NSString * host = [FHURLSettings baseURL] ?: @"https://i.haoduofangs.com";
-    NSString* url = [host stringByAppendingFormat:[NSString stringWithFormat:@"/f100/api/building/info"]];
+    NSString* url = [host stringByAppendingFormat:@"/f100/api/building/info"];
     return [FHMainApi getRequest:url query:nil params:@{@"court_id": courtId?:@""} jsonClass:[FHBuildingDetailModel class] completion:^(JSONModel * _Nullable model, NSError * _Nullable error) {
         if (completion) {
-            completion(model,error);
+            completion((FHBuildingDetailModel *)model, error);
         }
     }];
 }

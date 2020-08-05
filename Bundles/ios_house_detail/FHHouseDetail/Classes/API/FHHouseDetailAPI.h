@@ -61,7 +61,7 @@ completion:(void(^)(FHDetailNewModel * _Nullable model , NSError * _Nullable err
 //                            completion:(void(^)(FHHouseRentRelatedResponseModel* model , NSError *error))completion;
 
 + (TTHttpTask*)requestHouseRentRelated:(NSString*)rentId class:(Class)cls
-completion:(void(^)(id<FHBaseModelProtocol> _Nullable model , NSError *error))completion;
+completion:(void(^)(FHListResultHouseModel *model , NSError *error))completion;
 
 // 租房-同小区房源
 + (TTHttpTask*)requestHouseRentSameNeighborhood:(NSString*)rentId
@@ -145,7 +145,7 @@ completion:(void(^)(id<FHBaseModelProtocol> _Nullable model , NSError *error))co
 
 
 + (TTHttpTask *)requestRealtorEvaluationFeedback:(NSString *)targetId targetType:(NSInteger)targetType evaluationType:(NSInteger)evaluationType realtorId:(NSString *)realtorId content:(NSString *)content score:(NSInteger)score tags: (NSArray*)tags completion:(void (^)(bool, NSError * _Nullable))completion;
-+ (TTHttpTask *)requestRealtorEvaluationFeedback:(NSString *)targetId targetType:(NSInteger)targetType evaluationType:(NSInteger)evaluationType realtorId:(NSString *)realtorId content:(NSString *)content score:(NSInteger)score tags: (NSArray*)tags from:(NSString *)from completion:(void (^)(bool, NSError * _Nullable))completion;
++ (TTHttpTask *)requestRealtorEvaluationFeedback:(NSString *)targetId targetType:(NSInteger)targetType evaluationType:(NSInteger)evaluationType realtorId:(NSString *)realtorId content:(NSString *)content score:(NSInteger)score tags: (NSArray*)tags from:(NSString * _Nullable)from completion:(void (^)(bool, NSError * _Nullable))completion;
 
 //1.0.2 楼栋详情 
 +(TTHttpTask*)requestBuildingDetail:(NSString*)courtId

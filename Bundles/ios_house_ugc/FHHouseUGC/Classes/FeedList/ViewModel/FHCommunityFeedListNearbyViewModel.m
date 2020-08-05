@@ -289,6 +289,11 @@
                         }];
                         [wself.tableView scrollRectToVisible:CGRectMake(0, 0, 1, 1) animated:NO];
                     }
+                    
+                    if(!self.viewController.alreadyReportPageMonitor && !self.viewController.isNewDiscovery){
+                        [FHMainApi addUserOpenVCDurationLog:@"pss_community_nearby" resultType:FHNetworkMonitorTypeSuccess duration:[[NSDate date] timeIntervalSince1970] - self.viewController.startMonitorTime];
+                        self.viewController.alreadyReportPageMonitor = YES;
+                    }
                 });
             });
         }
@@ -549,11 +554,11 @@
 #pragma mark - UITableViewDelegate
 
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
-    return [[UIView alloc] initWithFrame:CGRectMake(0, 0, 0, 0.001f)];
+    return [[UIView alloc] initWithFrame:CGRectMake(0, 0, 0, CGFLOAT_MIN)];
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
-    return 0.001f;
+    return CGFLOAT_MIN;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -561,7 +566,7 @@
         FHFeedUGCCellModel *cellModel = self.dataList[indexPath.row];
         Class cellClass = [self.cellManager cellClassFromCellViewType:cellModel.cellSubType data:nil];
         if([cellClass isSubclassOfClass:[FHUGCBaseCell class]]) {
-            return [cellClass heightForData:cellModel];
+            return ceil([cellClass heightForData:cellModel]);
         }
     }
     return 100;

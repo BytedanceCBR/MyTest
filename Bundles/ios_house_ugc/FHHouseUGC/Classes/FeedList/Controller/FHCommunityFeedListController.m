@@ -53,6 +53,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
+    self.startMonitorTime = [[NSDate date] timeIntervalSince1970];
     self.automaticallyAdjustsScrollViewInsets = NO;
     [self initView];
 //    [self initConstraints];
@@ -169,7 +170,7 @@
 
 - (FHFeedCustomHeaderView *)customTableHeaderView {
     if(!_tableHeaderView){
-        _headerViewHeight = 0.001f;
+        _headerViewHeight = CGFLOAT_MIN;
         FHFeedCustomHeaderView *tableHeaderView = [[FHFeedCustomHeaderView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, _headerViewHeight) addProgressView:self.isInsertFeedWhenPublish];
         if(self.isInsertFeedWhenPublish){
             WeakSelf;

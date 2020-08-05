@@ -41,8 +41,6 @@
 #import "SettingPushCell.h"
 #import "SettingNormalCell.h"
 #import "SettingSwitch.h"
-
-#import <TTABManager/TTABHelper.h>
 //#import "revision.h"
 
 #import "TTAuthorizeHintView.h"
@@ -95,7 +93,7 @@
 #import "FHUserTrackerDefine.h"
 #import <TTBaseLib/TTSandBoxHelper.h>
 #import <ByteDanceKit/NSDictionary+BTDAdditions.h>
-
+#import "SSCommonLogic.h"
 
 #define kCellHeight     43.f
 #define UMENG_SETTINGVIEW_EVENT_ID_STR @"more_tab"
@@ -217,8 +215,6 @@ TTEditUserProfileViewControllerDelegate
  */
 @property (nonatomic, assign) BOOL resetPasswordAlertShowed; // default is NO
 @property (nonatomic, assign) BOOL airDownloading;
-@property (nonatomic, assign) BOOL disableDouyinIconLoginSetting;
-
 @end
 
 @implementation SettingView
@@ -252,15 +248,7 @@ TTEditUserProfileViewControllerDelegate
         // _shouldShowADRegisterEntrance = ![TTSettingMineTabManager sharedInstance_tt].hadDisplayedADRegisterEntrance;
         // 产品要求暂时去除该入口
         _shouldShowADRegisterEntrance = NO;
-        
-        NSDictionary *fhSettings = [self.class fhSettings];
-        NSDictionary *loginSettings = [fhSettings btd_dictionaryValueForKey:@"login_settings"];
-        if (loginSettings) {
-            self.disableDouyinIconLoginSetting = [loginSettings btd_boolValueForKey:@"disable_douyin_icon" default:NO];
-//            self.disableDouyinIconLoginSetting = YES;
-        }
-
-        
+                
         // table view
         self.tableView = [[SSThemedTableView alloc] initWithFrame:self.bounds style:UITableViewStylePlain];
         _tableView.autoresizingMask = UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight;
@@ -629,16 +617,8 @@ TTEditUserProfileViewControllerDelegate
         cell.accessoryType = UITableViewCellAccessoryNone;
     }
     else if (cellType == SettingCellTypeClearCache) {
-        
+        cell.textLabel.text = NSLocalizedString(@"清除缓存", nil);
         //此处进行ABManager 的测试实验
-        
-        TTClearCacheLiteraryType type = [TTABHelper clearCacheLiteraryType];
-        if (type == TTClearCacheLiteraryTypeClear) {
-            cell.textLabel.text = NSLocalizedString(@"清除缓存", nil);
-        }
-        else {
-            cell.textLabel.text = NSLocalizedString(@"清理缓存", nil);
-        }
         
         //如果刚刚清理过 就直接显示0.0M 不要计算了-- nick 4.9.x
         if (self.cacheJustCleaned) {
@@ -854,7 +834,7 @@ TTEditUserProfileViewControllerDelegate
                                                                       @(SettingCellTypeUserProtocol),
                                                                       @(SettingCellTypePrivacyProtocol),
                                                                      @(SettingCellTypeBusinessLicense),]];
-            if ([TTAccountManager isLogin] && !self.disableDouyinIconLoginSetting) {
+            if ([TTAccountManager isLogin] && ![SSCommonLogic disableDouyinIconLoginLogic]) {
                 [array addObject:@(SettingCellTypeFHAccountBindingSetting)];
             }
             return array;

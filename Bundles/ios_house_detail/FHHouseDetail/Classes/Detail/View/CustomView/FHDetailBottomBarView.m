@@ -9,12 +9,12 @@
 #import "FHLoadingButton.h"
 #import "UIFont+House.h"
 #import "UIColor+Theme.h"
-#import "TTDeviceHelper.h"
 #import "Masonry.h"
 #import "BDWebImage.h"
 #import "UIColor+Theme.h"
 #import <FHHouseBase/UIImage+FIconFont.h>
 #import <FHHouseBase/FHCommonDefines.h>
+#import <ByteDanceKit/UIDevice+BTDAdditions.h>
 
 @interface FHDetailBottomBarView ()
 
@@ -49,7 +49,7 @@
     [self addSubview:topLine];
     [topLine mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.right.top.mas_equalTo(self);
-        make.height.mas_equalTo([TTDeviceHelper ssOnePixel]);
+        make.height.mas_equalTo([UIDevice btd_onePixel]);
     }];
     
     [self addSubview:self.leftView];
@@ -65,7 +65,7 @@
     [self.leftView addSubview:self.licenceIcon];
     
     CGFloat avatarLeftMargin = 20;
-    if ([TTDeviceHelper is568Screen]) {
+    if ([UIDevice btd_is568Screen]) {
         avatarLeftMargin = 15;
     }
     
@@ -104,13 +104,13 @@
         make.top.mas_equalTo(10);
         make.bottom.mas_equalTo(-10);
         make.left.mas_equalTo(self.leftView.mas_right).offset(10);
-        make.right.mas_equalTo(self.leftView.mas_right).offset(10 + _imBtnWidth);
+        make.right.mas_equalTo(self.leftView.mas_right).offset(10 + self.imBtnWidth);
         make.height.mas_equalTo(44);
     }];
     
     CGFloat btnBetween = 10;
     CGFloat btnRightMargin = -20;
-    if ([TTDeviceHelper is568Screen]) {
+    if ([UIDevice btd_is568Screen]) {
         btnBetween = 5;
         btnRightMargin = -15;
     }
@@ -236,7 +236,7 @@
     CGFloat maxAgencyLabelWidth = [UIScreen mainScreen].bounds.size.width - 300;
     CGFloat agencyLabelWidth = [contactPhone.agencyName boundingRectWithSize:CGSizeMake(maxAgencyLabelWidth, MAXFLOAT) options:NSStringDrawingUsesLineFragmentOrigin attributes:@{NSFontAttributeName: self.agencyLabel.font} context:nil].size.width + 1;
     CGFloat realtorContentWidth = 0;
-    if ([TTDeviceHelper is568Screen]) {
+    if ([UIDevice btd_is568Screen]) {
         realtorContentWidth = [UIScreen mainScreen].bounds.size.width - 178;
     } else {
         CGFloat labelWidth = MAX(nameLabelwidth, agencyLabelWidth);
@@ -251,7 +251,7 @@
     if (showIM) {
         CGFloat leftMargin = 10;
         if (contactPhone.showRealtorinfo == 1) {
-            if ([TTDeviceHelper is568Screen]) {
+            if ([UIDevice btd_is568Screen]) {
                 _imBtnWidth = 74;
             } else {
                 _imBtnWidth = ([UIScreen mainScreen].bounds.size.width - leftWidth - leftMargin - 30) / 2;
@@ -272,21 +272,21 @@
         }
     }
     
-    void (^updateBlock)() = ^{
+    void (^updateBlock)(void) = ^{
         [self.leftView mas_updateConstraints:^(MASConstraintMaker *make) {
             make.width.mas_equalTo(leftWidth);
         }];
         if (showIM) {
             if (contactPhone.showRealtorinfo == 1) {
                 [self.imChatBtn mas_updateConstraints:^(MASConstraintMaker *make) {
-                    make.width.mas_equalTo(_imBtnWidth);
-                    make.right.mas_equalTo(self.leftView.mas_right).offset(10 + _imBtnWidth);
+                    make.width.mas_equalTo(self.imBtnWidth);
+                    make.right.mas_equalTo(self.leftView.mas_right).offset(10 + self.imBtnWidth);
                 }];
             } else {
                 [self.imChatBtn mas_updateConstraints:^(MASConstraintMaker *make) {
                     make.left.mas_equalTo(self).offset(20);
-                    make.width.mas_equalTo(_imBtnWidth);
-                    make.right.mas_equalTo(self.leftView.mas_right).offset(10 + _imBtnWidth);
+                    make.width.mas_equalTo(self.imBtnWidth);
+                    make.right.mas_equalTo(self.leftView.mas_right).offset(10 + self.imBtnWidth);
                 }];
             }
             
@@ -396,7 +396,7 @@
         _contactBtn = [[FHLoadingButton alloc]init];
         [_contactBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
         [_contactBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateHighlighted];
-        if ([TTDeviceHelper is568Screen]) {
+        if ([UIDevice btd_is568Screen]) {
             _contactBtn.titleLabel.font = [UIFont themeFontRegular:14];
         } else {
             _contactBtn.titleLabel.font = [UIFont themeFontRegular:16];
@@ -415,7 +415,7 @@
         _imChatBtn = [[UIButton alloc] init];
         _imChatBtn.layer.cornerRadius = 4;
         _imChatBtn.backgroundColor = [UIColor themeIMOrange];
-        if ([TTDeviceHelper is568Screen]) {
+        if ([UIDevice btd_is568Screen]) {
             _imChatBtn.titleLabel.font = [UIFont themeFontRegular:14];
         } else {
             _imChatBtn.titleLabel.font = [UIFont themeFontRegular:16];

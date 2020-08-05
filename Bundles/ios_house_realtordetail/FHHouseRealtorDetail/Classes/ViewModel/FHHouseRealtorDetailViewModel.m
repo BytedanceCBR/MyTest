@@ -260,6 +260,7 @@
                 cell.selectionStyle = UITableViewCellSelectionStyleNone;
             }
             cell.delegate = self;
+            cellModel.tracerDic = [self trackDict:cellModel rank:(indexPath.row -1)];
             if(indexPath.row < self.dataList.count +1){
                 [cell refreshWithData:cellModel];
             }
@@ -276,7 +277,7 @@
     }
     if(indexPath.row < self.dataList.count + 1){
         FHFeedUGCCellModel *cellModel = self.dataList[indexPath.row -1];
-        [self trackFeedClientShow:cellModel withExtraDic:self.tracerDic];
+        [self trackFeedClientShow:cellModel rank:(indexPath.row - 1)];
     }
 }
 
@@ -389,7 +390,31 @@
 //        [self.realtorPhoneCallModel jump2RealtorDetailWithPhone:cellModel.realtor isPreLoad:NO extra:dict];
 //    }
 //}
-- (void)trackFeedClientShow:(FHFeedUGCCellModel *)itemData withExtraDic:(NSDictionary *)extraDic{
+
+- (NSMutableDictionary *)trackDict:(FHFeedUGCCellModel *)cellModel rank:(NSInteger)rank {
+    NSMutableDictionary *dict = [NSMutableDictionary dictionary];
+    dict[@"origin_from"] = self.tracerDic[@"origin_from"] ?: @"be_null";
+    dict[@"enter_from"] = self.tracerDic[@"enter_from"] ?: @"be_null";
+    dict[@"page_type"] = self.tracerDic[@"page_type"] ?: @"be_null";
+    dict[@"category_name"] = [self categoryName];
+    dict[@"log_pb"] = cellModel.logPb;
+    dict[@"rank"] = @(rank);
+    dict[@"group_id"] = cellModel.groupId;
+    dict[@"realtor_id"] = cellModel.realtor.realtorId?:@"be_null";
+    dict[@"element_type"] = @"realtor_evaluate";
+    dict[@"from_gid"] = self.tracerDic[@"log_pb"][@"group_id"] ?: @"be_null";
+   
+    if(cellModel.logPb[@"impr_id"]){
+        dict[@"impr_id"] = cellModel.logPb[@"impr_id"];
+    }
+    if(cellModel.logPb[@"group_source"]){
+        dict[@"group_source"] = cellModel.logPb[@"group_source"];
+    }
+    
+    return dict;
+}
+
+- (void)trackFeedClientShow:(FHFeedUGCCellModel *)itemData rank:(NSInteger)rank{
     if (!itemData.groupId) {
         return;
     }
@@ -397,25 +422,8 @@
         return;
     }
     [self.showHouseCache addObject:itemData.groupId];
-    NSMutableDictionary *dict = [NSMutableDictionary dictionary];
-    dict[@"origin_from"] = [extraDic.allKeys containsObject:@"origin_from"]?extraDic[@"origin_from"]:@"be_null";
-    dict[@"enter_from"] =  [extraDic.allKeys containsObject:@"enter_from"]?extraDic[@"enter_from"]:@"be_null";
-    dict[@"page_type"] = [extraDic.allKeys containsObject:@"page_type"]?extraDic[@"page_type"]:@"be_null";
-    dict[@"event_type"] = [self eventType];
-    dict[@"category_name"] = self.realtorInfo[@"tab_name"];
-    dict[@"group_id"] = [extraDic.allKeys containsObject:@"group_id"]?extraDic[@"group_id"]:@"be_null";
-    dict[@"group_source"] = itemData.logPb[@"group_source"]?:@"be_null";
-    dict[@"realtor_id"] = itemData.realtor.realtorId?:@"be_null";
-    dict[@"realtor_id"] = itemData.realtor.realtorId?:@"be_null";
-    dict[@"element_type"] = @"realtor_evaluate";
-    dict[@"rank"] = [extraDic.allKeys containsObject:@"rank"]?extraDic[@"rank"]:@"be_null";
-    dict[@"from_gid"] = [extraDic.allKeys containsObject:@"from_gid"]?extraDic[@"from_gid"]:@"be_null";
-    dict[@"log_pb"] =  [extraDic.allKeys containsObject:@"log_pb"]?extraDic[@"log_pb"]:@"be_null";
+    NSMutableDictionary *dict = [self trackDict:itemData rank:rank];
     TRACK_EVENT(@"feed_client_show", dict);
-}
-
-- (NSString*)eventType {
-    return @"house_app2c_v2";
 }
 
 - (NSMutableArray *)showHouseCache {
@@ -434,5 +442,19 @@
     self.refreshFooter.hidden = YES;
     self.tableView.backgroundColor = [UIColor whiteColor];
     [self.tableView reloadData];
+}
+
+- (NSString *)categoryName {
+    NSString *str = @"";
+    
+    if(self.categoryId.length > 0){
+        str = [str stringByAppendingString:self.categoryId];
+    }
+    
+    if([self.realtorInfo[@"tab_name"] length] > 0){
+        str = [str stringByAppendingString: [NSString stringWithFormat:@"_%@",self.realtorInfo[@"tab_name"]]];
+    }
+    
+    return str;
 }
 @end

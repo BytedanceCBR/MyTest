@@ -10,6 +10,8 @@
 #import <FHCommonUI/UIFont+House.h>
 #import <FHCommonUI/UIColor+Theme.h>
 #import "FHDetailCommonDefine.h"
+#import "FHBuildingDetailUtils.h"
+#import "FHBuildingDetailTopImageView.h"
 
 @interface FHDetailNewBuildingsCell ()
 
@@ -19,9 +21,13 @@
 
 @property (nonatomic, strong) UIStackView *stackView;
 
+@property (nonatomic, weak) UIView *detailImageView;
+
+
 @end
 
 @implementation FHDetailNewBuildingsCell
+
 
 -(instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
 {
@@ -52,7 +58,7 @@
     
     self.headerView = [[FHDetailHeaderView alloc] init];
     self.headerView.label.text = @"楼栋信息";
-    [self.headerView addTarget:self action:@selector(moreButtonClick:) forControlEvents:UIControlEventTouchUpInside];
+    //[self.headerView addTarget:self action:@selector(moreButtonClick:) forControlEvents:UIControlEventTouchUpInside];
     [self.contentView addSubview:self.headerView];
     [self.headerView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(self.contentView).mas_offset(15);
@@ -80,9 +86,51 @@
     [self.stackView.arrangedSubviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
     FHDetailNewBuildingsCellModel *model = (FHDetailNewBuildingsCellModel *)data;
     adjustImageScopeType(model)
-    
     CGFloat stackViewHeight = 0;
     CGFloat itemWidth = 58;
+    if (model.buildingInfo.buildingImage.url.length && ([model.buildingInfo.buildingImage.height floatValue] > 0) && ([model.buildingInfo.buildingImage.width floatValue] > 0)) {
+        CGSize size = [FHBuildingDetailUtils getDetailBuildingViewSize];
+        UIView *containView = [[UIView alloc] init];
+        [containView mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.width.mas_equalTo(self.stackView);
+            make.height.mas_equalTo(size.height + 20);
+        }];
+        stackViewHeight += size.height + 20;
+
+        [self.stackView addArrangedSubview:containView];
+        UIView *image = [[UIView alloc] initWithFrame:CGRectMake(0, 0, size.width, size.height)];
+        image.clipsToBounds = YES;
+        image.layer.cornerRadius = 10;
+        image.contentMode = UIViewContentModeCenter;
+        CGSize imageSize = [FHBuildingDetailUtils getDetailBuildingImageViewSize];
+        FHBuildingDetailTopImageView *imageView = [[FHBuildingDetailTopImageView alloc] initWithFrame:CGRectMake(0, 0, imageSize.width, imageSize.height)];
+        imageView.center = image.center;
+        imageView.userInteractionEnabled = NO;
+        FHBuildingLocationModel *locationModel = [[FHBuildingLocationModel alloc] init];
+        FHBuildingSaleStatusModel *saleModel = [[FHBuildingSaleStatusModel alloc] init];
+        NSMutableArray *buildingArr = [NSMutableArray arrayWithCapacity:model.buildingInfo.list.count];
+        for (FHDetailNewBuildingListItem *buildItem in model.buildingInfo.list) {
+            FHBuildingDetailDataItemModel *building = [[FHBuildingDetailDataItemModel alloc] init];
+            building.pointX = buildItem.pointX;
+            building.pointY = buildItem.pointY;
+            building.beginWidth = model.buildingInfo.buildingImage.width;
+            building.beginHeight = model.buildingInfo.buildingImage.height;
+            FHSaleStatusModel *saleStatus = [[FHSaleStatusModel alloc] init];
+            saleStatus.content = buildItem.saleStatus;
+            building.saleStatus = saleStatus;
+            building.name = buildItem.name;
+            [buildingArr addObject:building];
+        }
+        saleModel.buildingList = buildingArr.copy;
+        locationModel.saleStatusList = [NSArray<FHBuildingSaleStatusModel> arrayWithObject:saleModel];
+        locationModel.buildingImage = model.buildingInfo.buildingImage;
+        [imageView updateWithData:locationModel];
+        [imageView showAllButton];
+        [containView addSubview:image];
+        [image addSubview:imageView];
+        UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(clickTopImage:)];
+        [image addGestureRecognizer:tapGesture];
+    }
     
     UIView *topView = [[UIView alloc] init];
     topView.backgroundColor = [UIColor whiteColor];
@@ -125,7 +173,10 @@
         for (NSUInteger index = 0; index < model.buildingInfo.list.count; index ++) {
             FHDetailNewBuildingListItem *item = model.buildingInfo.list[index];
             
-            UIView *itemView = [[UIView alloc] init];
+            FHDetailNewBuildingsInfoView *itemView = [[FHDetailNewBuildingsInfoView alloc] init];
+            itemView.infoId = item.id;
+            UITapGestureRecognizer * tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(clickInfoView:)];
+            [itemView addGestureRecognizer:tapGesture];
             itemView.backgroundColor = [UIColor whiteColor];
             [itemView mas_makeConstraints:^(MASConstraintMaker *make) {
                 make.width.mas_equalTo(self.stackView);
@@ -191,7 +242,7 @@
     [moreButton setTitle:title forState:UIControlStateNormal];
     [moreButton setTitleColor:[UIColor colorWithHexString:@"#ff9629"] forState:UIControlStateNormal];
     moreButton.titleLabel.font = [UIFont themeFontMedium:16];
-    [moreButton addTarget:self action:@selector(moreButtonAction:) forControlEvents:UIControlEventTouchUpInside];
+    [moreButton addTarget:self action:@selector(clickMoreButton:) forControlEvents:UIControlEventTouchUpInside];
     [bottomView addSubview:moreButton];
     [moreButton mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.right.mas_equalTo(0);
@@ -204,6 +255,7 @@
     }];
 }
 
+
 - (UIImageView *)shadowImage
 {
     if (!_shadowImage) {
@@ -212,6 +264,7 @@
     }
     return _shadowImage;
 }
+
 
 - (UILabel *)buildInfoLabel {
     UILabel *label = [[UILabel alloc] init];
@@ -232,12 +285,12 @@
 }
 
 //进入楼栋详情页
-- (void)moreButtonAction:(id)sender {
+- (void)goBuildingDetail:(NSString *)originId{
     if (!self.baseViewModel.houseId.length) {
         return;
     }
-    
     NSMutableDictionary *traceParam = [NSMutableDictionary dictionary];
+    
     traceParam[@"enter_from"] = @"new_detail";
     traceParam[@"log_pb"] = self.baseViewModel.detailTracerDic[@"log_pb"];
     traceParam[@"origin_from"] = self.baseViewModel.detailTracerDic[@"origin_from"];
@@ -251,14 +304,16 @@
 //                           @"tracer": traceParam
 //                           };
     
-    NSMutableDictionary *infoDict = [NSMutableDictionary dictionaryWithDictionary:nil];
+    NSMutableDictionary *infoDict = [NSMutableDictionary dictionary];
 //    infoDict[@"house_type"] = @(1);
 //    [infoDict setValue:floorPanInfoModel.id forKey:@"floor_plan_id"];
-    NSMutableDictionary *subPageParams = [self.baseViewModel subPageParams];
+    NSMutableDictionary *subPageParams = [self.baseViewModel subPageParams].mutableCopy;
     subPageParams[@"contact_phone"] = nil;
     [infoDict addEntriesFromDictionary:subPageParams];
     infoDict[@"tracer"] = traceParam;
     infoDict[@"house_id"] = self.baseViewModel.houseId?:@"";
+    infoDict[@"origin_id"] = originId;
+    
     if (self.baseViewModel.contactViewModel) {
         infoDict[@"contactViewModel"] = self.baseViewModel.contactViewModel;
     }
@@ -268,9 +323,41 @@
     [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:@"sslocal://new_building_detail"] userInfo:info];
 }
 
+- (void)clickTopImage:(id)sender {
+    [self addClickOptions:@"图片"];
+    [self goBuildingDetail:nil];
+}
+
+- (void)clickInfoView:(UIGestureRecognizer *)sender {
+    FHDetailNewBuildingsInfoView *view = (FHDetailNewBuildingsInfoView *)(sender.view);
+    [self addClickOptions:@"外漏"];
+    [self goBuildingDetail:view.infoId];
+}
+
+- (void)clickMoreButton:(id)sender {
+    [self addClickOptions:@"查看更多"];
+    [self goBuildingDetail:nil];
+}
+
+- (void)addClickOptions:(NSString *)clickPosition {
+    NSMutableDictionary *params = [NSMutableDictionary dictionary];
+    [params addEntriesFromDictionary:self.baseViewModel.detailTracerDic];
+    params[@"group_id"] = self.baseViewModel.houseId?:@"";
+    params[@"click_position"] = clickPosition;
+    params[@"element_type"] = @"building";
+    [FHUserTracker writeEvent:@"click_options" params:params];
+}
+
+
+
 @end
 
 @implementation FHDetailNewBuildingsCellModel
+
+
+@end
+
+@implementation FHDetailNewBuildingsInfoView
 
 
 @end

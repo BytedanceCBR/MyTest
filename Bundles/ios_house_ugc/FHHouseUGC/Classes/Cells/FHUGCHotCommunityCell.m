@@ -119,7 +119,7 @@
     
     FHFeedUGCCellModel *model = (FHFeedUGCCellModel *)data;
     self.cellModel = model;
-    self.dataList = model.hotCellList;
+    self.dataList = [model.hotCellList mutableCopy];
     self.flowLayout.dataList = _dataList;
     
     [self.collectionView reloadData];
