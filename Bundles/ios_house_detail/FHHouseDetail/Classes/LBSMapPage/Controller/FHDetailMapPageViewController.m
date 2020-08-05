@@ -871,13 +871,6 @@ static MAMapView *kFHPageMapView = nil;
     }
 }
 
-- (void)anaClick:(UIButton *)tap{
-    
-    
-}
-
-
-
 #pragma MapViewDelegata
 
 - (MAAnnotationView *)mapView:(MAMapView *)mapView viewForAnnotation:(id<MAAnnotation>)annotation
