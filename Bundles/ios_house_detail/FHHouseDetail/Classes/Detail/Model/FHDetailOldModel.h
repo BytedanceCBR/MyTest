@@ -218,7 +218,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface FHDetailImShareInfoModel : JSONModel
 @property (nonatomic, copy , nullable) NSString *shareUrl;
 @property (nonatomic, copy , nullable) NSString *coverImage;
-@property (nonatomic, copy , nullable) NSString *description;
+@property (nonatomic, copy , nullable) NSString *modelDescription;
 @property (nonatomic, copy , nullable) NSString *title;
 @property (nonatomic, strong , nullable) FHClueAssociateInfoModel *associateInfo;
 @end

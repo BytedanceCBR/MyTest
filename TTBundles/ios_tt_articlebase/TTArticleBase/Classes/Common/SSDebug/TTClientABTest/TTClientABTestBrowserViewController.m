@@ -7,33 +7,28 @@
 
 #import "TTClientABTestBrowserViewController.h"
 #import "TTExpermimentPreviewViewController.h"
-#import <TTABManager/TTABManager.h>
-#import <TTABManager/TTABStorageManager.h>
-#import <TTABManager/TTABManagerUtil.h>
-#import <TTABManager/TTABLayer.h>
-#import <TTABManager/TTABHelper.h>
 #import <TTBaseLib/UIViewAdditions.h>
 #import <TTBaseLib/TTDeviceHelper.h>
 
-@protocol TTABManagerPrivateData <NSObject>
-@property (nonatomic, strong) NSMutableArray<TTABLayer *> *layers;
-@optional
-- (void)_launchDistributionForABGroup:(NSDictionary *)dict;
-@end
-@interface TTABManager()
-<
-TTABManagerPrivateData
->
-@end
-
-@protocol TTABHelperPrivateData <NSObject>
-@property(nonatomic, strong, readwrite) TTABManager *ABManager;
-@end
-@interface TTABHelper()
-<
-TTABHelperPrivateData
->
-@end
+//@protocol TTABManagerPrivateData <NSObject>
+//@property (nonatomic, strong) NSMutableArray<TTABLayer *> *layers;
+//@optional
+//- (void)_launchDistributionForABGroup:(NSDictionary *)dict;
+//@end
+//@interface TTABManager()
+//<
+//TTABManagerPrivateData
+//>
+//@end
+//
+//@protocol TTABHelperPrivateData <NSObject>
+//@property(nonatomic, strong, readwrite) TTABManager *ABManager;
+//@end
+//@interface TTABHelper()
+//<
+//TTABHelperPrivateData
+//>
+//@end
 
 
 
@@ -210,61 +205,61 @@ UITableViewDataSource
 
 - (void)loadDataSource
 {
-    NSMutableArray *experimentsModels = [NSMutableArray array];
-    
-    NSArray<TTABLayer *> *layers = [[[TTABHelper sharedInstance_tt].ABManager layers] copy];
-    if (!layers)  {
-        NSDictionary *ABJSON = [TTABManagerUtil readABJSON];
-        
-        if ((![ABJSON isKindOfClass:[NSDictionary class]] || [ABJSON count] == 0)) {
-            NSLog(@"没有找到ab.json文件或读取异常！！！！！！");
-        }
-        if ([[TTABHelper sharedInstance_tt].ABManager respondsToSelector:@selector(_launchDistributionForABGroup:)]) {
-            [[TTABHelper sharedInstance_tt].ABManager _launchDistributionForABGroup:ABJSON];
-        } else {
-            NSLog(@"请确认TTABManager函数名称是否发生变更！！！！！！");
-        }
-        
-        layers = [[[TTABHelper sharedInstance_tt].ABManager layers] copy];
-    }
-    
-    [layers enumerateObjectsUsingBlock:^(TTABLayer * _Nonnull layer, NSUInteger idx, BOOL * _Nonnull stop) {
-        if (layer) {
-            __block NSArray *featureKeys = nil;
-            [layer.experiments enumerateObjectsUsingBlock:^(TTABLayerExperiment * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-                if ([[obj.results allKeys] count] > 0) {
-                    featureKeys = [[obj.results allKeys] copy];
-                    *stop = YES;
-                }
-            }];
-            
-            __block NSString *featureKey = nil;
-            __block NSString *featureValue = nil;
-            [featureKeys enumerateObjectsUsingBlock:^(NSString * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-                NSString *tmpFeatureValue = [[TTABHelper sharedInstance_tt] valueForFeatureKey:obj];
-                if (tmpFeatureValue && [tmpFeatureValue length] > 0) {
-                    featureKey = [obj copy];
-                    featureValue = [tmpFeatureValue copy];
-                    *stop = YES;
-                }
-            }];
-            
-            // {layerName: ranodmValue}
-            NSDictionary *randomValues = [TTABStorageManager randomNumber];
-            NSInteger hitRandomValue = layer.layerName ? [[randomValues valueForKey:layer.layerName] integerValue] : -1;
-            
-            TTExperimentResultModel *model = [TTExperimentResultModel new];
-            model.layer = layer;
-            model.hitRandomValue = hitRandomValue;
-            model.hitExperiment = [layer experimentForRandomValue:hitRandomValue];
-            model.featureKey = featureKey;
-            model.featureValue = featureValue;
-            
-            if (model) [experimentsModels addObject:model];
-        }
-    }];
-    
-    self.experimentsArray = [experimentsModels copy];
+//    NSMutableArray *experimentsModels = [NSMutableArray array];
+//
+//    NSArray<TTABLayer *> *layers = [[[TTABHelper sharedInstance_tt].ABManager layers] copy];
+//    if (!layers)  {
+//        NSDictionary *ABJSON = [TTABManagerUtil readABJSON];
+//
+//        if ((![ABJSON isKindOfClass:[NSDictionary class]] || [ABJSON count] == 0)) {
+//            NSLog(@"没有找到ab.json文件或读取异常！！！！！！");
+//        }
+//        if ([[TTABHelper sharedInstance_tt].ABManager respondsToSelector:@selector(_launchDistributionForABGroup:)]) {
+//            [[TTABHelper sharedInstance_tt].ABManager _launchDistributionForABGroup:ABJSON];
+//        } else {
+//            NSLog(@"请确认TTABManager函数名称是否发生变更！！！！！！");
+//        }
+//
+//        layers = [[[TTABHelper sharedInstance_tt].ABManager layers] copy];
+//    }
+//
+//    [layers enumerateObjectsUsingBlock:^(TTABLayer * _Nonnull layer, NSUInteger idx, BOOL * _Nonnull stop) {
+//        if (layer) {
+//            __block NSArray *featureKeys = nil;
+//            [layer.experiments enumerateObjectsUsingBlock:^(TTABLayerExperiment * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+//                if ([[obj.results allKeys] count] > 0) {
+//                    featureKeys = [[obj.results allKeys] copy];
+//                    *stop = YES;
+//                }
+//            }];
+//
+//            __block NSString *featureKey = nil;
+//            __block NSString *featureValue = nil;
+//            [featureKeys enumerateObjectsUsingBlock:^(NSString * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+//                NSString *tmpFeatureValue = [[TTABHelper sharedInstance_tt] valueForFeatureKey:obj];
+//                if (tmpFeatureValue && [tmpFeatureValue length] > 0) {
+//                    featureKey = [obj copy];
+//                    featureValue = [tmpFeatureValue copy];
+//                    *stop = YES;
+//                }
+//            }];
+//
+//            // {layerName: ranodmValue}
+//            NSDictionary *randomValues = [TTABStorageManager randomNumber];
+//            NSInteger hitRandomValue = layer.layerName ? [[randomValues valueForKey:layer.layerName] integerValue] : -1;
+//
+//            TTExperimentResultModel *model = [TTExperimentResultModel new];
+//            model.layer = layer;
+//            model.hitRandomValue = hitRandomValue;
+//            model.hitExperiment = [layer experimentForRandomValue:hitRandomValue];
+//            model.featureKey = featureKey;
+//            model.featureValue = featureValue;
+//
+//            if (model) [experimentsModels addObject:model];
+//        }
+//    }];
+//
+//    self.experimentsArray = [experimentsModels copy];
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
@@ -288,14 +283,14 @@ UITableViewDataSource
     {
         TTExperimentResultModel *selectedExperimentMdl = indexPath.row < self.experimentsArray.count ? self.experimentsArray[indexPath.row] : nil;
         if (selectedExperimentMdl) {
-            cell.nameLabel.text = [NSString stringWithFormat:@"试验名称: %@",
-                                   selectedExperimentMdl.layer.layerName];
+//            cell.nameLabel.text = [NSString stringWithFormat:@"试验名称: %@",
+//                                   selectedExperimentMdl.layer.layerName];
             cell.resultLabel.text = [NSString stringWithFormat:@"命中试验结果: {\nfeatureKey: %@, \nfeatureValue: %@ }",
                                      selectedExperimentMdl.featureKey ? : @"***",
                                      selectedExperimentMdl.featureValue ? : @"***"];
-            cell.rangeLabel.text = [NSString stringWithFormat:@"命中试验区间: [%ld, %ld)",
-                                    (long)selectedExperimentMdl.hitExperiment.minRegion,
-                                    (long)selectedExperimentMdl.hitExperiment.maxRegion];
+//            cell.rangeLabel.text = [NSString stringWithFormat:@"命中试验区间: [%ld, %ld)",
+//                                    (long)selectedExperimentMdl.hitExperiment.minRegion,
+//                                    (long)selectedExperimentMdl.hitExperiment.maxRegion];
         }
     }
     

@@ -7,7 +7,6 @@
 //
 
 #import "TTABHelperTask.h"
-#import <TTABManager/TTABHelper.h>
 #import "TTSystemPermClientAB.h"
 #import <BDABTestSDK/BDABTestBaseExperiment.h>
 #import <BDABTestSDK/BDABTestManager.h>
@@ -27,10 +26,10 @@ DEC_TASK("TTABHelperTask",FHTaskTypeSerial,TASK_PRIORITY_HIGH+4);
 - (void)startWithApplication:(UIApplication *)application options:(NSDictionary *)launchOptions {
     [super startWithApplication:application options:launchOptions];
     //AB测试，迁移逻辑
-    [[TTABHelper sharedInstance_tt] migrationIfNeed];
+//    [[TTABHelper sharedInstance_tt] migrationIfNeed];
     
     //AB测试：分组逻辑 >>客户端实验分组应该放到
-    [[TTABHelper sharedInstance_tt] distributionIfNeed];
+//    [[TTABHelper sharedInstance_tt] distributionIfNeed];
     
     [self.class startClientABs];
     // BDABTestSDK 注册

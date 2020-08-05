@@ -32,10 +32,6 @@
     return cacheSizeT;
 }
 
-+ (Boolean)is812Screen {
-    return [TTDeviceHelper getDeviceType] == TTDeviceMode812;
-}
-
 + (Boolean)is896Screen2X {
     CGFloat scale = [UIScreen mainScreen].scale;
     return [TTDeviceHelper getDeviceType] == TTDeviceMode896 && scale == 2.f;
