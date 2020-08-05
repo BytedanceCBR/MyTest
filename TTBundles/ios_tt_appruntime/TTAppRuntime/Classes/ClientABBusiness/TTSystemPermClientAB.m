@@ -6,12 +6,10 @@
 //
 
 #import "TTSystemPermClientAB.h"
-#import <TTABManager/TTABManager.h>
-#import <TTABManager/TTABHelper.h>
 #import <TTDialogDirector/TTDialogDirector+ClientAB.h>
 #import "UIAlertView+Blocks.h"
 #import <TTBaseLib/TTBaseMacro.h>
-
+#import <BDABTestSDK/BDClientABManager.h>
 
 @implementation TTSystemPermClientAB
 
@@ -22,7 +20,7 @@
 
 + (void)dialogDirectorLoadSPOptimizationType
 {
-    NSString *optFeatureValueString = [[TTABHelper sharedInstance_tt] valueForFeatureKey:@"launch_system_permissions_type"];
+    NSString *optFeatureValueString = [[BDClientABManager sharedManager] valueForFeatureKey:@"launch_system_permissions_type"];
     
     TTLaunchSystemPermOptimizationType distributionType = TTLaunchSystemPermOptimizationTypeNone;
     if (isEmptyString(optFeatureValueString) || [optFeatureValueString isEqualToString:@"move_none"]) {

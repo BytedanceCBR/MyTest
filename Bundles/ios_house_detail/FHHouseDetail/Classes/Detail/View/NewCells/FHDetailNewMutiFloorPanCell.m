@@ -232,15 +232,13 @@
                 traceParam[@"rank"] = @(floorPanInfoModel.index);
                 traceParam[@"origin_search_id"] = self.baseViewModel.detailTracerDic[@"origin_search_id"];
                 traceParam[@"element_from"] = @"house_model";
-                
-                NSDictionary *dict = @{@"house_type":@(1),
-                                       @"tracer": traceParam
-                                       };
-                
-                NSMutableDictionary *infoDict = [NSMutableDictionary dictionaryWithDictionary:nil];
+//                NSDictionary *dict = @{@"house_type":@(1),
+//                                       @"tracer": traceParam
+//                                       };
+                NSMutableDictionary *infoDict = [NSMutableDictionary dictionary];
                 infoDict[@"house_type"] = @(1);
                 [infoDict setValue:floorPanInfoModel.id forKey:@"floor_plan_id"];
-                NSMutableDictionary *subPageParams = [self.baseViewModel subPageParams];
+                NSMutableDictionary *subPageParams = [self.baseViewModel subPageParams].mutableCopy;
                 subPageParams[@"contact_phone"] = nil;
                 [infoDict addEntriesFromDictionary:subPageParams];
                 infoDict[@"tracer"] = traceParam;
@@ -290,7 +288,7 @@
     reportParams.pageType = [self.baseViewModel pageTypeString];
     FHDetailContactModel *contactPhone = self.baseViewModel.contactViewModel.contactPhone;
     reportParams.realtorId = contactPhone.realtorId;
-    reportParams.realtorRank = @"0";
+    reportParams.realtorRank = @(0);
     reportParams.conversationId = @"be_null";
     reportParams.realtorLogpb = contactPhone.realtorLogpb;
     reportParams.realtorPosition = @"house_model";
@@ -314,7 +312,7 @@
 
 - (void)fhDetail_scrollViewDidScroll:(UIView *)vcParentView {
         if (vcParentView) {
-            UIWindow* window = [UIApplication sharedApplication].keyWindow;
+//            UIWindow* window = [UIApplication sharedApplication].keyWindow;
             CGFloat SH = [UIScreen mainScreen].bounds.size.height;
             CGPoint point = [self convertPoint:CGPointZero toView:vcParentView];
             CGFloat bottombarHight =  self.baseViewModel.houseType ==FHHouseTypeRentHouse? 64:80;
@@ -322,7 +320,7 @@
               if ([self.houseShowCache valueForKey:@"isShowFloorPan"]) {
                     return;
               }else {
-                  NSMutableArray * visibles = self.colView.collectionContainer.indexPathsForVisibleItems;
+                  NSArray * visibles = self.colView.collectionContainer.indexPathsForVisibleItems;
                   [self.houseShowCache setValue:@(YES) forKey:@"isShowFloorPan"];
                   [visibles enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
                       NSIndexPath *indexPath = (NSIndexPath *)obj;
@@ -380,7 +378,7 @@
         self.consultDetailButton.hidden = model.imOpenUrl.length > 0 ? NO : YES;
 //        self.spaceLabel.text = [NSString stringWithFormat:@"%@ %@",model.squaremeter,model.facingDirection];
         
-        NSMutableArray *tagArr = [NSMutableArray array];
+//        NSMutableArray *tagArr = [NSMutableArray array];
 //        self.titleLabel.text = [NSString stringWithFormat:@"%@ %@",model.title,model.squaremeter];;
         self.titleLabel.text = model.title;
         self.spaceLabel.text = model.squaremeter;

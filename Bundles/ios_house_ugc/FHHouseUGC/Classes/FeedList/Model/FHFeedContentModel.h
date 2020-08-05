@@ -63,6 +63,7 @@ typedef NS_ENUM(NSUInteger, FHFeedContentStickStyle) {
 @property (nonatomic, strong , nullable) FHFeedContentRawDataHotCellListTipsModel *tips ;
 @property (nonatomic, copy , nullable) NSString *id;
 @property (nonatomic, copy , nullable) NSString *desc;
+@property (nonatomic, assign) CGSize itemSize;
 @end
 
 @interface FHFeedContentRawDataVideoPlayAddrModel : JSONModel
@@ -210,6 +211,7 @@ typedef NS_ENUM(NSUInteger, FHFeedContentStickStyle) {
 @property (nonatomic, copy , nullable) NSString *certificationIcon;
 @property (nonatomic, copy , nullable) NSString *certificationPage;
 @property (nonatomic, copy , nullable) NSString *chatOpenurl;
+@property (nonatomic, copy , nullable) NSString *firstBizType;
 @property (nonatomic, copy , nullable) NSString *desc;
 @property (nonatomic, copy , nullable) NSString *mainPageInfo;
 @property (nonatomic, copy , nullable) NSString *realtorId;
@@ -720,6 +722,10 @@ typedef NS_ENUM(NSUInteger, FHFeedContentStickStyle) {
 @property (assign, nonatomic) BOOL hidelLine;
 
 @property (nonatomic, strong, nullable) NSDictionary *lynxData;
+//转评来源id
+@property (nonatomic, copy , nullable) NSString *fromGid;
+//转评来源类型
+@property (nonatomic, copy , nullable) NSString *fromGroupSource;
 
 @end
 

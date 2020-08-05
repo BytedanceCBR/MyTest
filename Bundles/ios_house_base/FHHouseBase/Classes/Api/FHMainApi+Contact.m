@@ -107,7 +107,7 @@
                                      agencyList:(NSArray<FHFillFormAgencyListItemModel *> *)agencyList
                                      completion:(void(^)(FHDetailResponseModel * _Nullable model , NSError * _Nullable error))completion
 {
-    [self requestSendPhoneNumbserByHouseId:houseId phone:phone from:from cluePage:nil clueEndpoint:nil targetType:nil extraInfo:nil agencyList:agencyList completion:completion];
+    return [self requestSendPhoneNumbserByHouseId:houseId phone:phone from:from cluePage:nil clueEndpoint:nil targetType:nil extraInfo:nil agencyList:agencyList completion:completion];
 }
 // 详情页线索提交表单
 + (TTHttpTask*)requestSendPhoneNumbserByHouseId:(NSString*)houseId
@@ -206,7 +206,7 @@
                           extraInfo:(nonnull NSDictionary *)extra
                          completion:(void(^)(FHDetailVirtualNumResponseModel * _Nullable model , NSError * _Nullable error))completion
 {
-    [self requestVirtualNumber:realtorId houseId:houseId houseType:houseType searchId:searchId imprId:imprId from:fromStr cluePage:nil clueEndpoint:nil extraInfo:nil completion:completion];
+    return [self requestVirtualNumber:realtorId houseId:houseId houseType:houseType searchId:searchId imprId:imprId from:fromStr cluePage:nil clueEndpoint:nil extraInfo:nil completion:completion];
 }
 
 // 中介转接电话

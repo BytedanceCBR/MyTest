@@ -410,6 +410,10 @@ NSString *const TSVLastShareActivityName = @"TSVLastShareActivityName";
 }
 - (void)clickUserNameButton
 {
+    
+    if ([self.model.author.firstBizType isEqualToString:@"1"]) {
+        return;
+    }
     NSString *position = @"detail";
 
     [AWEVideoDetailTracker trackEvent:@"rt_click_nickname"
@@ -419,11 +423,25 @@ NSString *const TSVLastShareActivityName = @"TSVLastShareActivityName";
                                         @"position": position,
                                         @"user_id": self.model.author.userID ?: @"",
                                         }];
-    [self handleAvatarOrUserNameClick];
+    
+    
+    NSURL *openUrl = [NSURL URLWithString:[NSString stringWithFormat:@"sslocal://new_realtor_detail"]];
+            NSMutableDictionary *info = @{}.mutableCopy;
+            info[@"title"] = @"经纪人主页";
+            info[@"realtor_id"] = self.model.author.realtorId;
+            NSMutableDictionary *tracerDic = self.model.extraDic.mutableCopy;
+            info[@"tracer"] = tracerDic;
+            TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:info];
+        [[TTRoute sharedRoute]openURLByViewController:openUrl userInfo:userInfo];
+//    [self handleAvatarOrUserNameClick];
 }
 
 - (void)clickAvatarButton
 {
+    if ([self.model.author.firstBizType isEqualToString:@"1"]) {
+        return;
+    }
+    
     NSString *position = @"detail";
 
     [AWEVideoDetailTracker trackEvent:@"rt_click_avatar"
@@ -433,7 +451,16 @@ NSString *const TSVLastShareActivityName = @"TSVLastShareActivityName";
                                         @"position": position,
                                         @"user_id": self.model.author.userID ?: @"",
                                         }];
-    [self handleAvatarOrUserNameClick];
+    NSURL *openUrl = [NSURL URLWithString:[NSString stringWithFormat:@"sslocal://new_realtor_detail"]];
+            NSMutableDictionary *info = @{}.mutableCopy;
+            info[@"title"] = @"经纪人主页";
+            info[@"realtor_id"] = self.model.author.realtorId;
+            NSMutableDictionary *tracerDic = self.model.extraDic.mutableCopy;
+            info[@"tracer"] = tracerDic;
+            TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:info];
+        [[TTRoute sharedRoute]openURLByViewController:openUrl userInfo:userInfo];
+    
+//    [self handleAvatarOrUserNameClick];
 }
 
 - (void)handleAvatarOrUserNameClick

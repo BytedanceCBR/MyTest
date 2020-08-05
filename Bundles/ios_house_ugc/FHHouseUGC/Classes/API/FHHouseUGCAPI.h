@@ -126,6 +126,9 @@ NS_ASSUME_NONNULL_BEGIN
 //购房百科配置
 + (TTHttpTask *)requestEncyclopediaConfigWithCategory:(NSString *)category extraDic:(NSDictionary *)extraDic completion:(void (^ _Nullable)(id <FHBaseModelProtocol> model, NSError *error))completion;
 
+//小视频经纪人信息
++ (TTHttpTask *)requestShortVideoWithGroupId:(NSString *)groupId completion:(void (^ _Nullable)(id <FHBaseModelProtocol> model, NSError *error))completion;
+
 //1.0.1详情页增加rgc内容tab请求
 + (TTHttpTask *)requestTabListWithhouseId:(NSString *)houseId class:(Class)cls houseType:(NSString *)houseType completion:(void (^ _Nullable)(id<FHBaseModelProtocol> model, NSError *error))completion;
 

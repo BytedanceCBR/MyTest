@@ -276,9 +276,10 @@
 }
 
 // 输入框执行搜索
-- (BOOL)textFieldShouldReturn:(UITextField *)textField {
-    //  NSString *userInputText = self.naviBar.searchInput.text;
-}
+//- (BOOL)textFieldShouldReturn:(UITextField *)textField {
+//    //  NSString *userInputText = self.naviBar.searchInput.text;
+//
+//}
 
 #pragma mark - dealloc
 
@@ -381,10 +382,13 @@
         [self addCommunityClickLog:data rank:row];
         NSMutableDictionary *dict = @{}.mutableCopy;
         dict[@"community_id"] = data.socialGroupId;
-        dict[@"tracer"] = @{@"enter_from":@"community_search_show",
+        dict[@"tracer"] = @{
+                            @"origin_from":self.tracerDict[@"origin_from"] ?: @"be_null",
+                            @"enter_from":@"community_search_show",
                             @"enter_type":@"click",
                             @"rank":@(row),
-                            @"log_pb":data.logPb ?: @"be_null"};
+                            @"log_pb":data.logPb ?: @"be_null"
+        };
         TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
         // 跳转到圈子详情页
         NSURL *openUrl = [NSURL URLWithString:@"sslocal://ugc_community_detail"];

@@ -32,6 +32,7 @@
 #import <FHHouseBase/FHRelevantDurationTracker.h>
 #import <CallKit/CXCallObserver.h>
 #import <CallKit/CXCall.h>
+#import <ByteDanceKit/NSDictionary+BTDAdditions.h>
 
 @interface FHHouseDetailViewController ()<UIGestureRecognizerDelegate>
 
@@ -65,6 +66,7 @@
 @property (nonatomic, assign) CGPoint lastContentOffset;
 @property (nonatomic, strong) NSDictionary *extraInfo;
 
+@property (nonatomic) double initTimeInterval;
 @end
 
 @implementation FHHouseDetailViewController
@@ -72,18 +74,19 @@
 - (instancetype)initWithRouteParamObj:(TTRouteParamObj *)paramObj {
     self = [super initWithRouteParamObj:paramObj];
     if (self) {
+        self.initTimeInterval = CFAbsoluteTimeGetCurrent();
         self.isResetStatusBar = NO;
         self.houseType = [paramObj.allParams[@"house_type"] integerValue];
         self.ridcode = paramObj.allParams[@"ridcode"];
         self.realtorId = paramObj.allParams[@"realtor_id"];
-        self.bizTrace = paramObj.allParams[@"biz_trace"];
+        self.bizTrace = [paramObj.allParams btd_stringValueForKey:@"biz_trace"];
         
         NSObject *extraInfo = paramObj.allParams[kFHClueExtraInfo];
         if ([extraInfo isKindOfClass:[NSString class]]) {
-            NSDictionary *extraInfoDict = [self getDictionaryFromJSONString:extraInfo];
+            NSDictionary *extraInfoDict = [self getDictionaryFromJSONString:(NSString *)extraInfo];
             self.extraInfo = extraInfoDict;
         }else if ([extraInfo isKindOfClass:[NSDictionary class]]) {
-            self.extraInfo = extraInfo;
+            self.extraInfo = (NSDictionary *)extraInfo;
         }
 
         if (!self.houseType) {
@@ -323,11 +326,12 @@
     self.viewModel.detailTracerDic = [self makeDetailTracerData];
     self.viewModel.source = self.source;
     self.viewModel.extraInfo = self.extraInfo;
+    self.viewModel.initTimeInterval = self.initTimeInterval;
     [self.view addSubview:_tableView];
 
     __weak typeof(self)wself = self;
-    CGRect screenBounds = [UIScreen mainScreen].bounds;
-    CGFloat navBarHeight = [TTDeviceHelper isIPhoneXDevice] ? 44 : 20;
+//    CGRect screenBounds = [UIScreen mainScreen].bounds;
+//    CGFloat navBarHeight = [TTDeviceHelper isIPhoneXDevice] ? 44 : 20;
     _navBar = [[FHDetailNavBar alloc]initWithType:FHDetailNavBarTypeDefault];
     _navBar.backActionBlock = ^{
         [wself.navigationController popViewControllerAnimated:YES];
@@ -392,7 +396,7 @@
     }];
     [_bottomBar mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.right.mas_equalTo(self.view);
-        make.height.mas_equalTo(_houseType ==FHHouseTypeRentHouse? 64:80);
+        make.height.mas_equalTo(self.houseType == FHHouseTypeRentHouse ? 64 : 80);
         if (@available(iOS 11.0, *)) {
             make.bottom.mas_equalTo(self.view.mas_bottom).mas_offset(-[UIApplication sharedApplication].delegate.window.safeAreaInsets.bottom);
         }else {
@@ -445,14 +449,12 @@
     
 }
 
-- (void)setupCallCenter
-{
-    @weakify(self);
-    
+- (void)setupCallCenter {
     if (@available(iOS 10.0 , *)) {
         _callObserver = [[CXCallObserver alloc]init];
-        [_callObserver setDelegate:self queue:dispatch_get_main_queue()];
+        [_callObserver setDelegate:(id)self queue:dispatch_get_main_queue()];
     }else {
+        @weakify(self);
         _callCenter = [[CTCallCenter alloc] init];
         _callCenter.callEventHandler = ^(CTCall* call){
             @strongify(self);
@@ -463,7 +465,7 @@
     }
 }
 
-- (void)callObserver:(CXCallObserver *)callObserver callChanged:(CXCall *)call{
+- (void)callObserver:(CXCallObserver *)callObserver callChanged:(CXCall *)call API_AVAILABLE(ios(10.0)){
     
     if (![self isTopestViewController]) {
         return ;

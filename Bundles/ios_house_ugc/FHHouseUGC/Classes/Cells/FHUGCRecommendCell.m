@@ -292,6 +292,7 @@
     traceParam[@"enter_type"] = @"click";
     traceParam[@"enter_from"] = @"hot_discuss_feed";
     traceParam[@"element_from"] = @"like_neighborhood";
+    traceParam[@"origin_from"] = self.model.tracerDic[@"origin_from"] ?: @"be_null";
     dict[@"tracer"] = traceParam;
     TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
     NSURL *openUrl = [NSURL URLWithString:@"sslocal://ugc_community_list"];

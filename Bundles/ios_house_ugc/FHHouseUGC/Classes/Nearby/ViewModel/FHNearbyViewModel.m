@@ -22,7 +22,7 @@
         _viewController = viewController;
         [self updateJoinProgressView];
         
-        if(![FHEnvContext isNewDiscovery]){
+        if(!viewController.isNewDiscovery){
             //防止第一次进入headview高度不对的问题
             __weak typeof(self) weakSelf = self;
             self.viewController.headerView.progressView.refreshViewBlk = ^{

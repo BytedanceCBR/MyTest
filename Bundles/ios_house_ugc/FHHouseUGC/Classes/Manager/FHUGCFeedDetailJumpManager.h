@@ -17,7 +17,16 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic , assign) NSInteger refer;
 
 //进入feed详情页
-- (void)jumpToDetail:(FHFeedUGCCellModel *)cellModel showComment:(BOOL)showComment enterType:(NSString *)enterType;
+- (void)jumpToDetail:(FHFeedUGCCellModel *)cellModel
+         showComment:(BOOL)showComment
+           enterType:(NSString *)enterType;
+
+//需要传入额外字段
+- (void)jumpToDetail:(FHFeedUGCCellModel *)cellModel
+         showComment:(BOOL)showComment
+           enterType:(NSString *)enterType
+            extraDic:(nullable NSDictionary *)extraDic;
+
 //进入圈子详情页
 - (void)goToCommunityDetail:(FHFeedUGCCellModel *)cellModel;
 

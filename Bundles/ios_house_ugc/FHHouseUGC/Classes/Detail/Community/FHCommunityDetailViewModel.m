@@ -1109,9 +1109,9 @@
     params[@"log_pb"] = self.tracerDict[@"log_pb"] ?: @"be_null";
     params[@"rank"] = self.tracerDict[@"rank"] ?: @"be_null";
     params[@"page_type"] = self.tracerDict[@"page_type"] ?: @"be_null";
-    params[@"group_id"] = self.tracerDict[@"group_id"] ?: @"be_null";
+    params[@"social_group_id"] = self.tracerDict[@"group_id"] ?: @"be_null";
     params[@"element_from"] = self.tracerDict[@"element_from"] ?: @"be_null";
-    [FHUserTracker writeEvent:@"go_detail_community" params:params];
+    [FHUserTracker writeEvent:@"go_detail" params:params];
 }
 
 - (void)addStayPageLog:(NSTimeInterval)stayTime {
@@ -1126,10 +1126,10 @@
     params[@"log_pb"] = self.tracerDict[@"log_pb"] ?: @"be_null";
     params[@"rank"] = self.tracerDict[@"rank"] ?: @"be_null";
     params[@"page_type"] = self.tracerDict[@"page_type"] ?: @"be_null";
-    params[@"group_id"] = self.tracerDict[@"group_id"] ?: @"be_null";
+    params[@"social_group_id"] = self.tracerDict[@"group_id"] ?: @"be_null";
     params[@"element_from"] = self.tracerDict[@"element_from"] ?: @"be_null";
     params[@"stay_time"] = [NSNumber numberWithInteger:duration];
-    [FHUserTracker writeEvent:@"stay_page_community" params:params];
+    [FHUserTracker writeEvent:@"stay_page" params:params];
 }
 
 - (void)addPublicationsShowLog {
@@ -1295,7 +1295,7 @@
             }
         }
         [self addClickOptionsLog:position];
-        [self.pagingView scrollToIndex:toIndex withAnimation:YES];
+        [self.pagingView scrollToIndex:toIndex withAnimation:NO];
     }
 }
 

@@ -118,6 +118,7 @@
 {
     [self.naviBar.searchInput resignFirstResponder];
     [self.searchView.searchInput resignFirstResponder];
+    return YES;
 }
 
 #pragma mark - tableview delegate

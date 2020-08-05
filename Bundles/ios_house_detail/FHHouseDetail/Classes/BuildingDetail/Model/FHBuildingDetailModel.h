@@ -13,6 +13,22 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+typedef NS_ENUM(NSUInteger, FHBuildingDetailOperatType) {
+    FHBuildingDetailOperatTypeButton = 1,        //点击按钮 按钮置中，点击button 只影响楼号 按钮显示在最上层 滑动CollectionView
+    FHBuildingDetailOperatTypeInfoCell,          //滑动CollectView 只影响楼号 按钮显示在最上层
+    FHBuildingDetailOperatTypeSaleStatus,        //点击状态label = 切换对应的状态后点击对应的按钮 ,隐藏其他button,
+    FHBuildingDetailOperatTypeFromNew            //等于点击状态label同时点击按钮
+};
+
+@interface FHBuildingIndexModel : NSObject
+
+@property (nonatomic, assign) NSInteger saleStatus; //销售状态 - X
+@property (nonatomic, assign) NSInteger buildingIndex; //楼   - Y
++ (instancetype)indexModelWithSaleStatus:(NSInteger)saleStatus withBuildingIndex:(NSInteger)buildingIndex;
+@end
+
+
+
 @protocol FHBuildingDetailRelatedFloorpanModel <NSObject>
 @end
 
@@ -37,6 +53,7 @@ NS_ASSUME_NONNULL_BEGIN
 @protocol FHBuildingDetailDataItemModel<NSObject>
 @end
 
+
 @interface FHBuildingDetailDataItemModel : JSONModel
 
 @property (nonatomic, copy , nullable) NSString *buildingID;
@@ -50,13 +67,22 @@ NS_ASSUME_NONNULL_BEGIN
 
 /// 关联户型列表
 @property (nonatomic, copy, nullable) FHBuildingDetailRelatedFloorpanListModel *relatedFloorplanList;
+
+///  该楼的坐标
+@property (nonatomic, copy, nullable) NSString *pointX;
+@property (nonatomic, copy, nullable) NSString *pointY;
+@property (nonatomic, copy, nullable) NSString *beginWidth;
+@property (nonatomic, copy, nullable) NSString *beginHeight;
+@property (nonatomic, strong, nullable) FHBuildingIndexModel *buildingIndex;    //记录这个楼在FHBuildingLocationModel的位置
 @end
+
 
 @interface FHBuildingDetailDataModel : JSONModel
 
 @property (nonatomic, strong , nullable) FHClueAssociateInfoModel *associateInfo;
 @property (nonatomic, strong , nullable) NSArray<FHBuildingDetailDataItemModel> *buildingList;
 @property (nonatomic, strong , nullable) FHDetailContactModel *highlightedRealtor;
+@property (nonatomic, strong , nullable) FHImageModel *buildingImage;
 @end
 
 @interface FHBuildingDetailModel : JSONModel
@@ -65,6 +91,28 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *message;
 @property (nonatomic, strong , nullable) FHBuildingDetailDataModel *data ;
 
+
+
 @end
 
+
+
+@interface FHBuildingSaleStatusModel : NSObject
+
+@property (nonatomic, strong) FHSaleStatusModel *saleStatus;
+@property (nonatomic, copy) NSArray<FHBuildingDetailDataItemModel> *buildingList;
+
+@end
+
+@protocol FHBuildingSaleStatusModel<NSObject>
+@end
+
+@interface FHBuildingLocationModel : NSObject
+@property (nonatomic, strong) NSArray<FHBuildingSaleStatusModel > *saleStatusList;
+@property (nonatomic, strong) NSArray *saleStatusContents;
+@property (nonatomic, strong) FHImageModel *buildingImage;
+
+@end
+
+typedef void(^FHBuildingIndexDidSelect)(FHBuildingDetailOperatType type, FHBuildingIndexModel *index);
 NS_ASSUME_NONNULL_END

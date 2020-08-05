@@ -34,14 +34,12 @@
 #import "FHDetailHouseSubscribeCorrectingCell.h"
 #import "FHDetailAveragePriceComparisonCell.h"
 #import "FHEnvContext.h"
-#import "NSDictionary+TTAdditions.h"
 #import <FHHouseBase/FHHouseFollowUpHelper.h>
 #import <FHHouseBase/FHMainApi+Contact.h>
 #import <FHHouseBase/FHUserTrackerDefine.h>
 #import "FHDetailNewModel.h"
 #import "FHODetailCommunityEntryCorrectingCell.h"
 #import "FHDetailBlankLineCell.h"
-#import "FHDetailDetectiveCell.h"
 #import "FHDetailHouseReviewCommentCell.h"
 #import "FHDetailUserHouseCommentCell.h"
 #import <FHHouseBase/FHSearchHouseModel.h>
@@ -68,6 +66,7 @@
 #import "TTSettingsManager.h"
 #import "FHhouseDetailRGCListCell.h"
 #import "TTAccountManager.h"
+#import <ByteDanceKit/NSDictionary+BTDAdditions.h>
 
 extern NSString *const kFHPhoneNumberCacheKey;
 extern NSString *const kFHSubscribeHouseCacheKey;
@@ -165,7 +164,6 @@ logPB:self.listLogPB extraInfo:self.extraInfo completion:^(FHDetailOldModel * _N
                 wSelf.neighborhoodId = neighborhoodId;
                 // 周边数据请求
                 [wSelf requestRelatedData:neighborhoodId];
-                [wSelf.navBar showMessageNumber];
                 wSelf.contactViewModel.imShareInfo = model.data.imShareInfo;
             } else {
                 wSelf.detailController.isLoadingData = NO;
@@ -199,6 +197,7 @@ logPB:self.listLogPB extraInfo:self.extraInfo completion:^(FHDetailOldModel * _N
         [self.bottomStatusBar mas_updateConstraints:^(MASConstraintMaker *make) {
             make.height.mas_equalTo(30);
         }];
+        [self.navBar showMessageNumber];
     }else if (status == -1) {
         self.bottomStatusBar.hidden = YES;
         [self.navBar showRightItems:NO];
@@ -212,6 +211,7 @@ logPB:self.listLogPB extraInfo:self.extraInfo completion:^(FHDetailOldModel * _N
         [self.bottomStatusBar mas_updateConstraints:^(MASConstraintMaker *make) {
             make.height.mas_equalTo(0);
         }];
+        [self.navBar showMessageNumber];
     }
 }
 
@@ -259,7 +259,7 @@ logPB:self.listLogPB extraInfo:self.extraInfo completion:^(FHDetailOldModel * _N
         hasVR = YES;
         
         NSDictionary *fhSettings= [[TTSettingsManager sharedManager] settingForKey:@"f_settings" defaultValue:@{} freeze:YES];
-        BOOL boolSwitchCityHome = [fhSettings tt_boolValueForKey:@"f_webview_preload_close"];
+        BOOL boolSwitchCityHome = [fhSettings btd_boolValueForKey:@"f_webview_preload_close"];
         
         if(!boolSwitchCityHome){
             [[FHVRPreloadManager sharedInstance] requestForSimilarHouseId:model.data.id];
@@ -462,7 +462,7 @@ logPB:self.listLogPB extraInfo:self.extraInfo completion:^(FHDetailOldModel * _N
         FHHouseTagsModel *tagInfo = model.data.tags[0];
         tag = tagInfo.content ?: @"";
     }
-    NSString *houseType = [NSString stringWithFormat:@"%d", self.houseType];
+    NSString *houseType = [NSString stringWithFormat:@"%ld", (long)self.houseType];
     NSString *houseDes = [NSString stringWithFormat:@"%@/%@/%@", area, face, tag];
 //    // 幸福天眼
 //    __weak typeof(self)wself = self;
@@ -683,7 +683,7 @@ logPB:self.listLogPB extraInfo:self.extraInfo completion:^(FHDetailOldModel * _N
         staticMapModel.gaodeLng = model.data.neighborhoodInfo.gaodeLng;
         staticMapModel.houseModelType = FHHouseModelTypeLocationPeriphery;
         staticMapModel.houseId = model.data.id;
-        staticMapModel.houseType = [NSString stringWithFormat:@"%d",FHHouseTypeSecondHandHouse];
+        staticMapModel.houseType = [@(FHHouseTypeSecondHandHouse) stringValue];
         //todo zlj review check
         staticMapModel.mapCentertitle = model.data.neighborhoodInfo.name;
         staticMapModel.title = model.data.neighborEval.title;
@@ -869,6 +869,9 @@ logPB:self.listLogPB extraInfo:self.extraInfo completion:^(FHDetailOldModel * _N
          self.items = [FHOldDetailModuleHelper moduleClassificationMethod:self.items];
         //
         [self reloadData];
+//        self.detailController
+        self.firstReloadInterval = CFAbsoluteTimeGetCurrent();
+        [self addPageLoadLog];
     }
 }
 

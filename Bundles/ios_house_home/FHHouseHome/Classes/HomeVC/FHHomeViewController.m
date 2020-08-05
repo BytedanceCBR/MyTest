@@ -38,6 +38,7 @@
 #import "FHHomeBaseScrollView.h"
 #import "FHHomeMainViewController.h"
 #import <FHHouseBase/FHHomeScrollBannerView.h>
+#import "FHUGCCategoryManager.h"
 
 static CGFloat const kShowTipViewHeight = 32;
 
@@ -190,8 +191,10 @@ static CGFloat const kSectionHeaderHeight = 38;
 
 - (void)mainTabbarClicked:(NSNotification *)notification
 {
-    self.homeListViewModel.reloadType = TTReloadTypeTab;
-    [self pullAndRefresh];
+    if([FHEnvContext sharedInstance].isShowingHomeHouseFind){
+        self.homeListViewModel.reloadType = TTReloadTypeTab;
+        [self pullAndRefresh];
+    }
 }
 
 - (void)setUpMainTableConstraints
@@ -313,10 +316,12 @@ static CGFloat const kSectionHeaderHeight = 38;
     [[FHLocManager sharedInstance] requestCurrentLocation:NO andShowSwitch:NO];
     
     //首次无网启动点击加载重试，增加拉取频道
-    if ([TTSandBoxHelper isAPPFirstLaunch] && ![FHEnvContext isNewDiscovery]) {
-        [[TTArticleCategoryManager sharedManager] startGetCategoryWithCompleticon:^(BOOL isSuccessed){
-            
-        }];
+    if ([TTSandBoxHelper isAPPFirstLaunch]) {
+        if([FHEnvContext isHomeNewDiscovery]){
+            [[FHUGCCategoryManager sharedManager] startGetCategory];
+        }else{
+            [[TTArticleCategoryManager sharedManager] startGetCategory];
+        }
     }
 }
 

@@ -175,7 +175,7 @@
     
     self.model.medias = itemArray;
     if([self.baseViewModel.detailData isKindOfClass:[FHDetailOldModel class]]) {
-        FHDetailOldModel *detailOldModel = self.baseViewModel.detailData;
+        FHDetailOldModel *detailOldModel = (FHDetailOldModel *)self.baseViewModel.detailData;
         self.model.isShowSkyEyeLogo = detailOldModel.data.baseExtra.detective.detectiveInfo.showSkyEyeLogo;
     }
 }

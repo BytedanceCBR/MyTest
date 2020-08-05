@@ -82,6 +82,7 @@ static void *TTHorizontalPagingViewSettingInset = &TTHorizontalPagingViewSetting
 @property (nonatomic, assign) BOOL segmentCanPan;
 @property (nonatomic, assign) CGFloat headerShowHeight;
 @property (nonatomic, assign) BOOL isFirstLoad;
+@property (nonatomic, assign) BOOL animation;
 
 @end
 
@@ -167,8 +168,12 @@ static void *TTHorizontalPagingViewSettingInset = &TTHorizontalPagingViewSetting
 
 - (void)scrollToIndex:(NSInteger)pageIndex withAnimation:(BOOL)animation {
     if(pageIndex >= self.section || pageIndex < 0 || self.section <= 0) return;
+    [self.currentContentView setContentOffset:self.currentContentView.contentOffset animated:NO];
+    self.animation = animation;
     [self.horizontalCollectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForRow:pageIndex inSection:0] atScrollPosition:UICollectionViewScrollPositionNone animated:animation];
     if(!animation) {
+        self.isSwitching = YES;
+        self.segmentView.isSwitching = YES;
         [self scrollViewDidEndScrollingAnimation:self.horizontalCollectionView];
     }
 }
@@ -356,8 +361,10 @@ static void *TTHorizontalPagingViewSettingInset = &TTHorizontalPagingViewSetting
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    self.isSwitching = YES;
-    self.segmentView.isSwitching = YES;
+    if(self.animation){
+        self.isSwitching = YES;
+        self.segmentView.isSwitching = YES;
+    }
     NSString *identifier = [self collectionViewCellIdentifierWithIndex:indexPath.item];
     UICollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:identifier forIndexPath:indexPath];
     if(indexPath.row && self.segmentView.selectedIndex != indexPath.row){

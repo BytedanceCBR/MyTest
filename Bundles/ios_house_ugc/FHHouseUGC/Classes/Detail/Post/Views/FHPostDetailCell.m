@@ -334,7 +334,7 @@
         [self.multiImageView mas_updateConstraints:^(MASConstraintMaker *make) {
             make.top.mas_equalTo(self.userInfoView.mas_bottom).offset(20 + cellModel.contentHeight);
         }];
-        [FHUGCCellHelper setAsyncRichContent:self.contentLabel model:cellModel];
+        [FHUGCCellHelper setAsyncRichContent:self.contentLabel model:cellModel ];
     }
     // 图片
     [self.multiImageView updateImageView:cellModel.imageList largeImageList:cellModel.largeImageList];
