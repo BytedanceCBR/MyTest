@@ -131,7 +131,7 @@
     dic[@"enter_from"] = @"f_house_encyclopedia";
     info[@"tracer"] = dic;
     TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:info];
-    [[TTRoute sharedRoute] openURLByViewController:openUrl userInfo:userInfo];
+    [[TTRoute sharedRoute] openURLByPresentViewController:openUrl userInfo:userInfo];
 }
 
 - (void)initViewModel {

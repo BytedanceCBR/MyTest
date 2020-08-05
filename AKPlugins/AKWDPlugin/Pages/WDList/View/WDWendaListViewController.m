@@ -1141,7 +1141,7 @@ static void extracted(WDWendaListViewController *object, WDWendaListViewControll
     tracer[@"enter_from"] = @"question";
             info[@"tracer"] = tracer;
             TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:info];
-           [[TTRoute sharedRoute] openURLByViewController:openUrl userInfo:userInfo];
+           [[TTRoute sharedRoute] openURLByPresentViewController:openUrl userInfo:userInfo];
 }
 
 - (SSThemedView<WDWendaListQuestionHeaderProtocol> *)questionHeader

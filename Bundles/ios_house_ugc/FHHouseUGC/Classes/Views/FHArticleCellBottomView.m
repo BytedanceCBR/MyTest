@@ -211,7 +211,7 @@
         info[@"enter_from"] = self.cellModel.tracerDic[@"page_type"];
 //        info[@"gd_ext_json"] = self.cellModel.tracerDic[@"gd_ext_json"];
         TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:info];
-    [[TTRoute sharedRoute] openURLByViewController:openUrl userInfo:userInfo];
+    [[TTRoute sharedRoute] openURLByPresentViewController:openUrl userInfo:userInfo];
 }
 
 
