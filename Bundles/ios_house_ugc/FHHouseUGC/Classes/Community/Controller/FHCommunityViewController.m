@@ -616,7 +616,8 @@
 }
 
 - (void)changeTab {
-    if(!self.isNewDiscovery){
+    NSString *tabIdentifier = [FHEnvContext getCurrentTabIdentifier];
+    if(!self.isNewDiscovery && [tabIdentifier isEqualToString:@"tab_f_find"]){
         if (self.navigationController.viewControllers.count <= 1) {
             [self.viewModel changeTab:1];
         }
