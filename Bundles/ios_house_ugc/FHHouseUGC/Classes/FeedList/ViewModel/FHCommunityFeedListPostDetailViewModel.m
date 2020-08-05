@@ -351,56 +351,6 @@
                 });
             });
         }
-        
-//        if(model){
-//            if(isHead){
-//                [wself.dataList removeAllObjects];
-//            }
-//            
-//            wself.tableView.hasMore = feedListModel.hasMore;
-//            
-//            NSArray *result = [wself convertModel:feedListModel.data isHead:isHead];
-//            
-//            if(isFirst){
-//                [wself.clientShowDict removeAllObjects];
-//                [wself.dataList removeAllObjects];
-//            }
-//            if(isHead){
-//                // JOKER: 头部插入时，旧数据的置顶全部取消，以新数据中的置顶贴子为准
-//                [wself.dataList enumerateObjectsUsingBlock:^(FHFeedUGCCellModel *  _Nonnull cellModel, NSUInteger idx, BOOL * _Nonnull stop) {
-//                    cellModel.isStick = NO;
-//                }];
-//                // 头部插入新数据
-//                [wself.dataList insertObjects:result atIndexes:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, result.count)]];
-//            }else{
-//                [wself.dataList addObjectsFromArray:result];
-//            }
-//            
-//            //第一次拉取数据过少时，在多拉一次loadmore
-//            if(self.dataList.count > 0 && self.dataList.count < 5 && self.tableView.hasMore && self.retryCount < 1){
-//                self.retryCount += 1;
-//                [self requestData:NO first:NO];
-//                return;
-//            }
-//        
-//            wself.viewController.hasValidateData = wself.dataList.count > 0;
-//            [wself reloadTableViewData];
-//            
-//            if(wself.viewController.requestSuccess){
-//                wself.viewController.requestSuccess(wself.viewController.hasValidateData);
-//            }
-//            
-//            NSString *refreshTip = feedListModel.tips.displayInfo;
-//            if (isHead && wself.dataList.count > 0 && ![refreshTip isEqualToString:@""] && wself.viewController.tableViewNeedPullDown && !wself.isRefreshingTip){
-//                wself.isRefreshingTip = YES;
-//                [wself.viewController showNotify:refreshTip completion:^{
-//                    dispatch_async(dispatch_get_main_queue(), ^{
-//                        wself.isRefreshingTip = NO;
-//                    });
-//                }];
-//                [wself.tableView scrollRectToVisible:CGRectMake(0, 0, 1, 1) animated:NO];
-//            }
-//        }
     }];
 }
 
@@ -906,7 +856,7 @@
     dict[@"origin_from"] = self.viewController.tracerDict[@"origin_from"] ?: @"be_null";
     dict[@"enter_from"] = self.viewController.tracerDict[@"enter_from"] ?: @"be_null";
     dict[@"page_type"] = [self pageType];
-    dict[@"category_name"] = self.categoryId;
+    dict[@"category_name"] = [self categoryName];
     dict[@"log_pb"] = cellModel.logPb;
     dict[@"rank"] = @(rank);
     dict[@"group_id"] = cellModel.groupId;
@@ -947,6 +897,20 @@
         dict[@"click_position"] = @"vote_content";
     }
     TRACK_EVENT(@"click_options", dict);
+}
+
+- (NSString *)categoryName {
+    NSString *str = @"";
+    
+    if(self.categoryId.length > 0){
+        str = [str stringByAppendingString:self.categoryId];
+    }
+    
+    if(self.tabName.length > 0){
+        str = [str stringByAppendingString: [NSString stringWithFormat:@"_%@",self.tabName]];
+    }
+    
+    return str;
 }
 
 @end
