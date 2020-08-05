@@ -105,7 +105,7 @@
 - (void)login {
     NSMutableDictionary *dict = @{}.mutableCopy;
     dict[TRACER_KEY] = @{
-        @"enter_from": [self getPageType],
+        @"enter_from": [self getPageTypeWithDataType],
         @"enter_method": @"click_login",
     };
     TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
