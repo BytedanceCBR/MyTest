@@ -117,7 +117,9 @@ CGFloat const FHBuildingDetailImageViewButtonAnchorPointY = 0.7142;
 }
 
 - (void)buttonMoveWithSize:(CGSize)newSize {
-    [self.layer setPosition:CGPointMake((newSize.width * self.pointX) / self.beginWidth, (newSize.height * self.pointY) / self.beginHeight)];
+    if (self.beginWidth > 0 && self.beginHeight > 0) {
+        [self.layer setPosition:CGPointMake((newSize.width * self.pointX) / self.beginWidth, (newSize.height * self.pointY) / self.beginHeight)];
+    }
 }
 
 - (UIView *)hitTest:(CGPoint)point withEvent:(UIEvent *)event {

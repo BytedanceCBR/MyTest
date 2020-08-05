@@ -88,7 +88,7 @@
     adjustImageScopeType(model)
     CGFloat stackViewHeight = 0;
     CGFloat itemWidth = 58;
-    if (model.buildingInfo.buildingImage.url.length) {
+    if (model.buildingInfo.buildingImage.url.length && ([model.buildingInfo.buildingImage.height floatValue] > 0) && ([model.buildingInfo.buildingImage.width floatValue] > 0)) {
         CGSize size = [FHBuildingDetailUtils getDetailBuildingViewSize];
         UIView *containView = [[UIView alloc] init];
         [containView mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -122,8 +122,7 @@
             [buildingArr addObject:building];
         }
         saleModel.buildingList = buildingArr.copy;
-        NSArray<FHBuildingSaleStatusModel> *saleStatusList = [NSArray<FHBuildingSaleStatusModel> arrayWithObject:saleModel];
-        locationModel.saleStatusList = saleStatusList;
+        locationModel.saleStatusList = [NSArray<FHBuildingSaleStatusModel> arrayWithObject:saleModel];
         locationModel.buildingImage = model.buildingInfo.buildingImage;
         [imageView updateWithData:locationModel];
         [imageView showAllButton];

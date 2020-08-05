@@ -53,7 +53,7 @@
     self.buildingDetailModel = model;
     FHBuildingLocationModel *locationModel = [[FHBuildingLocationModel alloc] init];
     FHBuildingIndexModel *indexModel = [FHBuildingIndexModel indexModelWithSaleStatus:0 withBuildingIndex:0];
-    if (model.data.buildingImage.url.length) {
+    if (model.data.buildingImage.url.length && ([model.data.buildingImage.width floatValue] > 0) && (([model.data.buildingImage.width floatValue] > 0)) ) {
         NSMutableArray *saleArray = [NSMutableArray array];                                 //每个销售状态的房子
         NSMutableDictionary *saleDic = [[NSMutableDictionary alloc] initWithCapacity:3];    //销售状态
         NSMutableDictionary *buildingDic = [[NSMutableDictionary alloc] initWithCapacity:3];
@@ -97,7 +97,7 @@
         }
         locationModel.saleStatusContents = saleStatusContentArray.copy;
         locationModel.saleStatusList = saleArray.copy;
-        
+        locationModel.buildingImage = model.data.buildingImage;
     } else {//无图把全部元素整合成一个
         FHBuildingSaleStatusModel *noImageSaleModel = [[FHBuildingSaleStatusModel alloc] init];
         NSMutableArray *buildingArr = [NSMutableArray arrayWithCapacity:model.data.buildingList.count];
@@ -110,10 +110,11 @@
         }
         noImageSaleModel.buildingList = buildingArr.copy;
         locationModel.saleStatusList = [NSArray<FHBuildingSaleStatusModel> arrayWithObject:noImageSaleModel];
+        locationModel.buildingImage = [[FHImageModel alloc] init];
     }
 
     
-    locationModel.buildingImage = model.data.buildingImage;
+    
     self.locationModel = locationModel;
     self.buildingVC.currentIndex = indexModel;
     [self.buildingVC reloadData];
