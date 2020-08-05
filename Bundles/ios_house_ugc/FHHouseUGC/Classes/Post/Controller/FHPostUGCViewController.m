@@ -838,6 +838,7 @@ static NSInteger const kMaxPostImageCount = 9;
 }
 
 - (void)endEditing {
+    
     self.isToolbarWillEndEditing = YES;
     
     [self.view endEditing:YES];
@@ -1583,7 +1584,7 @@ static NSInteger const kMaxPostImageCount = 9;
 
 - (void)keyboardWillChange:(NSNotification *)notification {
     CGRect keyboardEndFrame = [[notification.userInfo objectForKey:UIKeyboardFrameEndUserInfoKey] CGRectValue];
-    self.isKeyboardShow = keyboardEndFrame.origin.y < SCREEN_HEIGHT;
+    self.isKeyboardShow = ceil(keyboardEndFrame.origin.y)< SCREEN_HEIGHT;
     if(self.isKeyboardShow) {
         self.keyboardFrameForToolbar = keyboardEndFrame;
     } else {

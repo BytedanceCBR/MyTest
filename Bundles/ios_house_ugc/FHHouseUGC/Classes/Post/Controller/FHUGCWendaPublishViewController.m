@@ -251,7 +251,7 @@
 - (void)keyboardFrameWillChange:(NSNotification *)notification {
     
     CGRect keyboardEndFrame = [[notification.userInfo objectForKey:UIKeyboardFrameEndUserInfoKey] CGRectValue];
-    self.isKeyboardWillHide = keyboardEndFrame.origin.y >= SCREEN_HEIGHT;
+    self.isKeyboardWillHide = ceil(keyboardEndFrame.origin.y)>= SCREEN_HEIGHT;
     if(!self.isKeyboardWillHide) {
         self.keyboardFrameForToolbar = keyboardEndFrame;
     } else {
@@ -1087,8 +1087,12 @@
     self.toolbar.frame = frame;
     
     [self.toolbar layoutTagSelectCollectionViewWithTags:self.hotTags hasSelected:self.hasSocialGroup];
-    
-    CGFloat height = SCREEN_HEIGHT - kNavigationBarHeight - [self toolbarHeight] - (self.isKeyboardWillHide ? 0 : self.keyboardFrameForToolbar.size.height) - [TTUIResponderHelper mainWindow].tt_safeAreaInsets.bottom;
+    CGFloat scr = SCREEN_HEIGHT;
+    CGFloat navh = kNavigationBarHeight;
+    CGFloat th = [self toolbarHeight];
+    CGFloat sa = [TTUIResponderHelper mainWindow].tt_safeAreaInsets.bottom;
+    CGFloat height = SCREEN_HEIGHT - kNavigationBarHeight - [self toolbarHeight] - (self.isKeyboardWillHide ? 0 : self.keyboardFrameForToolbar.size.height) - (self.isKeyboardWillHide ? [TTUIResponderHelper mainWindow].tt_safeAreaInsets.bottom : -[TTUIResponderHelper mainWindow].tt_safeAreaInsets.bottom );
+//    最后一个 [TTUIResponderHelper mainWindow].tt_safeAreaInsets.bottom是toolbar多计算的位置
     self.textContentScrollView.height = height;
     [self updateTextContentScrollViewContentSize];
 }

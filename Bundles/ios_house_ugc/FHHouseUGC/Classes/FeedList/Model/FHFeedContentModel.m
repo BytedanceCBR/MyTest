@@ -708,7 +708,8 @@
                            @"realtorId": @"realtor_id",
                            @"realtorName": @"realtor_name",
                            @"associateInfo": @"associate_info",
-                           @"realtorLogpb":@"realtor_log_pb"
+                           @"realtorLogpb":@"realtor_log_pb",
+                           @"firstBizType":@"first_biz_type"
                            };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
         return dict[keyName]?:keyName;
