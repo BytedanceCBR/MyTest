@@ -11,6 +11,7 @@
 
 CGFloat const FHBuildingDetailInfoListCellMinimumLineSpacing = 25 + 12;
 NSInteger const FHBuildingDetailInfoListCellPageMultiple = 99;
+CGFloat const FHBuildingDetailInfoListCellShadowImageViewSpacingTop = 20.0;
 
 @interface FHBuildingDetailInfoCollectionViewCell ()<UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout>
 
@@ -193,6 +194,13 @@ NSInteger const FHBuildingDetailInfoListCellPageMultiple = 99;
     }
 }
 
+- (UIView *)hitTest:(CGPoint)point withEvent:(UIEvent *)event {
+    if (point.y <= FHBuildingDetailInfoListCellShadowImageViewSpacingTop) {
+        return nil;
+    }
+    return [super hitTest:point withEvent:event];
+}
+
 @end
 
 @implementation FHBuildingDetailInfoListCell
@@ -205,7 +213,7 @@ NSInteger const FHBuildingDetailInfoListCellPageMultiple = 99;
         shadowImageView.image = [[UIImage imageNamed:@"top_left_right_bottom"] resizableImageWithCapInsets:UIEdgeInsetsMake(30,25,30,25) resizingMode:UIImageResizingModeStretch];
         [self.contentView addSubview:shadowImageView];
         [shadowImageView mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.edges.mas_equalTo(UIEdgeInsetsMake(-20, -15, -20, -15));
+            make.edges.mas_equalTo(UIEdgeInsetsMake(-FHBuildingDetailInfoListCellShadowImageViewSpacingTop, -15, -20, -15));
         }];
         
         self.stackView = [[UIStackView alloc] init];

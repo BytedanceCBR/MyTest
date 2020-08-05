@@ -72,6 +72,7 @@
         frame.origin.y = self.frame.size.height - 25;
         _bottomGradientView = [[UIView alloc] initWithFrame:frame];
         [_bottomGradientView.layer addSublayer:gradientLayer];
+        [_bottomGradientView setUserInteractionEnabled:NO];
     }
     return _bottomGradientView;
 }
