@@ -53,6 +53,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
+    self.startMonitorTime = [[NSDate date] timeIntervalSince1970];
     self.automaticallyAdjustsScrollViewInsets = NO;
     [self initView];
 //    [self initConstraints];

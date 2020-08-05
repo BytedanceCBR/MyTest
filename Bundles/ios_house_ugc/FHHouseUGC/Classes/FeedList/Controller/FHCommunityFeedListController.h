@@ -61,6 +61,9 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic, assign) BOOL isNewDiscovery;
 //圈子信息
 @property(nonatomic, weak) id<UIScrollViewDelegate> scrollViewDelegate;
+//页面打开速度
+@property(nonatomic, assign) NSTimeInterval startMonitorTime;
+@property(nonatomic, assign) BOOL alreadyReportPageMonitor;
 
 - (void)showNotify:(NSString *)message ;
 - (void)showNotify:(NSString *)message completion:(void(^)())completion;

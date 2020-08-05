@@ -289,6 +289,11 @@
                         }];
                         [wself.tableView scrollRectToVisible:CGRectMake(0, 0, 1, 1) animated:NO];
                     }
+                    
+                    if(!self.viewController.alreadyReportPageMonitor){
+                        [FHMainApi addUserOpenVCDurationLog:@"pss_community_nearby" resultType:FHNetworkMonitorTypeSuccess duration:[[NSDate date] timeIntervalSince1970] - self.viewController.startMonitorTime];
+                        self.viewController.alreadyReportPageMonitor = YES;
+                    }
                 });
             });
         }
