@@ -255,7 +255,6 @@
     
 }
 - (void)lynxView:(LynxView*)view didReceiveUpdatePerf:(LynxPerformance*)perf{
-    NSLog(@"perf=%@",[perf toDictionary]);
 }
 
 

@@ -165,7 +165,6 @@
     
 }
 - (void)lynxView:(LynxView*)view didReceiveUpdatePerf:(LynxPerformance*)perf{
-    NSLog(@"perf=%@",[perf toDictionary]);
 }
 
 - (void)loadImageWithURL:(nonnull NSURL*)url

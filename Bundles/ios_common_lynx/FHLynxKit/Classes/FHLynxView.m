@@ -204,7 +204,6 @@
     
 }
 - (void)lynxView:(LynxView*)view didReceiveUpdatePerf:(LynxPerformance*)perf{
-    NSLog(@"perf=%@",[perf toDictionary]);
 }
 
 //这里接收TTLynxViewClient抛上来的sizeChange事件
