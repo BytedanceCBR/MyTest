@@ -166,7 +166,6 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
 - (void)confirmBtnDidClick
 {
 //    [self.collectionView endEditing:YES];
-    __weak typeof(self) wself = self;
     
     FHHouseType ht = _houseType;
     FHHouseFindSelectModel *model = [self selectModelWithType:ht];
@@ -311,8 +310,8 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
             };
             [strongSelf commitAssociateInfoWithParams:params selectedModel:selectModel phoneNumber:phoneNumber];
         } else {
-           NSString *message = error.localizedDescription ? : @"请求失败，请稍后重试";
-           [[ToastManager manager] showToast:message];
+            //接口出错统一提示“网络错误”
+            [[ToastManager manager] showToast:@"网络错误"];
        }
     }];
     
@@ -331,8 +330,7 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
             //埋点
             [strongSelf addClickLogWithEvent:@"click_confirm" position:nil associateInfo:strongSelf.reportFormInfo];
         } else {
-            NSString *message = error.localizedDescription ? : @"请求失败，请稍后重试";
-            [[ToastManager manager] showToast:message];
+            [[ToastManager manager] showToast:@"网络错误"];
         }
     }];
 }
@@ -364,8 +362,7 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
                 [weakSelf jump2HouseFindResultPage:[model toDictionary]];
             }
         } else {
-            NSString *message = error.localizedDescription ? : @"请求失败，请稍后重试";
-            [[ToastManager manager] showToast:message];
+            [[ToastManager manager] showToast:@"网络错误"];
         }
     }];
 }
