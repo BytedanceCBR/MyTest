@@ -6,7 +6,6 @@
 //
 
 #import "FHMainApi+HouseFind.h"
-#import "TTNetworkManager.h"
 #import "FHURLSettings.h"
 #import "FHPostDataHTTPRequestSerializer.h"
 
@@ -60,7 +59,7 @@
  @param params 参数字典，from="app_findselfhouse"，from_data=json格式参数
  @param completion 完成回调
  */
-+ (TTHttpTask *)loadAssociateEntranceWithParams:(NSDictionary *)params completion:(void (^)(NSError * _Nonnull, id _Nonnull))completion {
++ (TTHttpTask *)loadAssociateEntranceWithParams:(NSDictionary *)params completion:(void (^)(NSError *error, id response, TTHttpResponse *httpResponse))completion {
  
     NSString *host = [FHURLSettings baseURL] ?: @"https://i.haoduofangs.com";
     NSString *url = [host stringByAppendingString:@"/f100/api/associate_entrance"];
@@ -72,7 +71,7 @@
                                                                callback:^(NSError *error, id jsonObj, TTHttpResponse *response) {
         
         if(completion) {
-            completion(error, jsonObj);
+            completion(error, jsonObj, response);
         }
     }];
 }
@@ -81,7 +80,7 @@
  提交线索信息
  @param params 参数字典
  */
-+ (TTHttpTask *)commitAssociateInfoWithParams:(NSDictionary *)params completion:(void (^)(NSError * _Nonnull, id _Nonnull))completion {
++ (TTHttpTask *)commitAssociateInfoWithParams:(NSDictionary *)params completion:(void (^)(NSError *error, id response, TTHttpResponse *httpResponse))completion {
     NSString *host = [FHURLSettings baseURL] ?: @"https://i.haoduofangs.com";
     NSString *url = [host stringByAppendingString:@"/f100/api/call_report"];
 
@@ -95,7 +94,7 @@
                                                                  callback:^(NSError *error, id jsonObj, TTHttpResponse *response) {
         
         if (completion) {
-            completion(error, jsonObj);
+            completion(error, jsonObj, response);
         }
     }];
 }
