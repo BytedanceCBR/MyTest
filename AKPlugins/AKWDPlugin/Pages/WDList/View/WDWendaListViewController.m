@@ -404,7 +404,7 @@ static NSString * const WukongListTipsHasShown = @"kWukongListTipsHasShown";
     } else if (@available(iOS 11.0 , *)) {
         bottomSafeHeight = self.view.tt_safeAreaInsets.bottom;
     }
-    self.bottomButtonHeight = 48 + bottomSafeHeight;
+    self.bottomButtonHeight = 64 + bottomSafeHeight;
     self.bottomButton = [[WDListBottomButton alloc] init];
     [self.view addSubview:self.bottomButton];
     self.bottomButton.frame = CGRectMake(0, SSScreenHeight - self.bottomButtonHeight, SSScreenWidth, self.bottomButtonHeight);
