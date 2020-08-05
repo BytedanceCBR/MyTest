@@ -215,6 +215,8 @@
 }
 
 - (void)setTitleModel:(FHFeedUGCCellModel *)cellModel {
+    //设置userInfo
+    self.cellModel = cellModel;
     self.titleLabel.text = !isEmptyString(cellModel.originItemModel.content) ?[NSString stringWithFormat:@"问题：%@",cellModel.originItemModel.content] : @"";
     CGSize titleLabelSize = [self.titleLabel sizeThatFits:CGSizeMake(MAXFLOAT, 50)];
     self.titleLabel.width = titleLabelSize.width;

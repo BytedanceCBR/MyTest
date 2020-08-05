@@ -117,7 +117,7 @@
     
 
     self.bottomSepView.left = 0;
-    self.bottomSepView.top = self.positionView.bottom + 10;
+    self.bottomSepView.top = self.positionView.bottom + 10 + self.sepLineMorePadding;
     self.bottomSepView.height = 5;
     self.bottomSepView.width = [UIScreen mainScreen].bounds.size.width;
 }
@@ -145,7 +145,7 @@
     self.moreBtn.hidden = cellModel.hiddenMore;
     
     self.bottomSepView.left = cellModel.bottomLineLeftMargin;
-    self.bottomSepView.top = self.positionView.bottom + 10;
+    self.bottomSepView.top = self.positionView.bottom + 10 + self.sepLineMorePadding;;
     self.bottomSepView.height = cellModel.bottomLineHeight;
     self.bottomSepView.width = [UIScreen mainScreen].bounds.size.width - cellModel.bottomLineLeftMargin - cellModel.bottomLineRightMargin;
 }
@@ -204,13 +204,15 @@
 }
 
 - (void)questionAction {
-        NSURL *openUrl = [NSURL URLWithString:[NSString stringWithFormat:@"sslocal://wenda_post"]];
-        NSMutableDictionary *info = @{}.mutableCopy;
-        info[@"title"] = @"回答";
-        info[@"qid"] = self.cellModel.groupId;
-        info[@"enter_from"] = self.cellModel.tracerDic[@"page_type"];
-//        info[@"gd_ext_json"] = self.cellModel.tracerDic[@"gd_ext_json"];
-        TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:info];
+    NSURL *openUrl = [NSURL URLWithString:[NSString stringWithFormat:@"sslocal://wenda_post"]];
+    NSMutableDictionary *info = @{}.mutableCopy;
+    info[@"title"] = @"回答";
+    info[@"qid"] = self.cellModel.groupId;
+    NSMutableDictionary *tracer = @{}.mutableCopy;
+    tracer[@"enter_from"] = self.cellModel.tracerDic[@"page_type"];
+    info[@"tracer"] = tracer;
+    //        info[@"gd_ext_json"] = self.cellModel.tracerDic[@"gd_ext_json"];
+    TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:info];
     [[TTRoute sharedRoute] openURLByPresentViewController:openUrl userInfo:userInfo];
 }
 

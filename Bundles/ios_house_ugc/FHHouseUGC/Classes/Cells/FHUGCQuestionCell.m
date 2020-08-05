@@ -14,7 +14,7 @@
 #import "FHUGCCellUserInfoView.h"
 
 #define maxLines 3
-#define bottomViewHeight 39
+#define bottomViewHeight 49
 #define guideViewHeight 27
 #define topMargin 15
 #define singleImageViewHeight 90
@@ -59,6 +59,7 @@
 
     
     self.bottomView = [[FHArticleCellBottomView alloc] initWithFrame:CGRectZero];
+    self.bottomView.sepLineMorePadding = 10;
     __weak typeof(self) wself = self;
     _bottomView.deleteCellBlock = ^{
         [wself deleteCell];
