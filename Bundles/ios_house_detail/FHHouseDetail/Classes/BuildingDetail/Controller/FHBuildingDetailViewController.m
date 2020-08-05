@@ -14,7 +14,6 @@
 #import "FHLoadingButton.h"
 #import "FHDetailSectionTitleCollectionView.h"
 #import "FHBuildingDetailFloorCollectionViewCell.h"
-#import "FHBuildingDetailHeaderCollectionViewCell.h"
 #import "FHBuildingDetailInfoCollectionViewCell.h"
 #import "FHBuildingDetailEmptyFloorCollectionViewCell.h"
 #import "FHBuildingDetailTopImageCollectionViewCell.h"
@@ -176,11 +175,11 @@
         make.bottom.mas_equalTo(0);
     }];
     [self.collectionView registerClass:[FHBuildingDetailTopImageCollectionViewCell class] forCellWithReuseIdentifier:NSStringFromClass([FHBuildingDetailTopImageCollectionViewCell class])];
-    [self.collectionView registerClass:[FHBuildingDetailHeaderCollectionViewCell class] forCellWithReuseIdentifier:NSStringFromClass([FHBuildingDetailHeaderCollectionViewCell class])];
     [self.collectionView registerClass:[FHBuildingDetailInfoCollectionViewCell class] forCellWithReuseIdentifier:NSStringFromClass([FHBuildingDetailInfoCollectionViewCell class])];
     [self.collectionView registerClass:[FHBuildingDetailFloorCollectionViewCell class] forCellWithReuseIdentifier:NSStringFromClass([FHBuildingDetailFloorCollectionViewCell class])];
     [self.collectionView registerClass:[FHBuildingDetailEmptyFloorCollectionViewCell class] forCellWithReuseIdentifier:NSStringFromClass([FHBuildingDetailEmptyFloorCollectionViewCell class])];
     [self.collectionView registerClass:[FHDetailSectionTitleCollectionView class] forSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:NSStringFromClass([FHDetailSectionTitleCollectionView class])];
+    [self.collectionView registerClass:[UICollectionViewCell class] forCellWithReuseIdentifier:NSStringFromClass([UICollectionViewCell class])];
 }
 
 - (void)refreshBottomBar {
@@ -577,7 +576,7 @@
             break;
         case FHBuildingSectionTypeInfo:
             if (self.viewModel.locationModel.buildingImage.url.length) {
-                return UIEdgeInsetsMake(-41, 0, 0, 0); //猜的 先测试
+                return UIEdgeInsetsMake(-41, 0, 0, 0);
             } else {
                 return UIEdgeInsetsZero;
             }

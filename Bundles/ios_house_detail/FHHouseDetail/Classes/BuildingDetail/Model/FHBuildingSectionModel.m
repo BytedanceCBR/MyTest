@@ -8,7 +8,6 @@
 #import "FHBuildingSectionModel.h"
 #import "FHBuildingDetailInfoCollectionViewCell.h"
 #import "FHBuildingDetailFloorCollectionViewCell.h"
-#import "FHBuildingDetailHeaderCollectionViewCell.h"
 #import "FHBuildingDetailEmptyFloorCollectionViewCell.h"
 #import "FHBuildingDetailTopImageCollectionViewCell.h"
 @implementation FHBuildingSectionModel
@@ -17,9 +16,6 @@
     switch (self.sectionType) {
         case FHBuildingSectionTypeEmpty:
             return NSStringFromClass([FHBuildingDetailEmptyFloorCollectionViewCell class]);
-            break;
-        case FHBuildingSectionTypeHeader:
-            return NSStringFromClass([FHBuildingDetailHeaderCollectionViewCell class]);
             break;
         case FHBuildingSectionTypeInfo:
             return NSStringFromClass([
@@ -35,6 +31,7 @@
         default:
             break;
     }
+    return NSStringFromClass([UICollectionViewCell class]);
 }
 
 @end

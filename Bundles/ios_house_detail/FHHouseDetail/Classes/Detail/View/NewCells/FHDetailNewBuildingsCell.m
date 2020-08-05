@@ -122,7 +122,8 @@
             [buildingArr addObject:building];
         }
         saleModel.buildingList = buildingArr.copy;
-        locationModel.saleStatusList = [NSArray arrayWithObject:saleModel];
+        NSArray<FHBuildingSaleStatusModel> *saleStatusList = [NSArray<FHBuildingSaleStatusModel> arrayWithObject:saleModel];
+        locationModel.saleStatusList = saleStatusList;
         locationModel.buildingImage = model.buildingInfo.buildingImage;
         [imageView updateWithData:locationModel];
         [imageView showAllButton];
