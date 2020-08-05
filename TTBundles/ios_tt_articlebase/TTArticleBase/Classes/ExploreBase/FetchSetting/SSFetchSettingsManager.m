@@ -184,7 +184,7 @@ static SSFetchSettingsManager * manager;
     {
         [ArticleAddressManager setUploadInterval:[[dSettings objectForKey:@"contacts_collect_interval"] doubleValue]];
     }
-        
+         
     if([[dSettings allKeys] containsObject:@"indicator_tips"])
     {
         [[SSIndicatorTipsManager shareInstance] setIndicatorTipsWithDictionary:[dSettings objectForKey:@"indicator_tips"]];

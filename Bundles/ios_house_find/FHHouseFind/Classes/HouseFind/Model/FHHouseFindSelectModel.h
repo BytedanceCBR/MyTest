@@ -37,6 +37,7 @@ typedef enum : NSInteger {
 
 -(NSString *)selectQuery;
 -(NSString *)selectQueryForFindingHouse;
+- (NSDictionary *)associateInfoForFindingHouse;
 
 @end
 
