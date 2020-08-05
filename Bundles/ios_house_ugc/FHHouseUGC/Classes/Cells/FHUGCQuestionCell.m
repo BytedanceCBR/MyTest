@@ -107,8 +107,9 @@
     [self updateUserInfoView:cellModel];
     
     self.bottomView.cellModel = cellModel;
-    self.bottomView.descLabel.attributedText = cellModel.desc;
-    
+    if (![cellModel.desc.string isEqualToString:@"0个回答"]) {
+            self.bottomView.descLabel.attributedText = cellModel.desc;
+    }
     BOOL showCommunity = cellModel.showCommunity && !isEmptyString(cellModel.community.name);
     self.bottomView.position.text = cellModel.community.name;
     [self.bottomView showPositionView:showCommunity];
