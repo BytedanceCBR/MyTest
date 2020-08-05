@@ -11,9 +11,9 @@
 
 
 
-typedef NSString * (^TTAccountLoginDynamicConfTextBlock)();
+typedef NSString * (^TTAccountLoginDynamicConfTextBlock)(void);
 typedef NSString * (^TTAccountLoginDynamicConfTextForTypeBlock)(NSInteger type);
-typedef NSArray  * (^TTAccountLoginDynamicConfLoginPlatformListBlock)();
+typedef NSArray  * (^TTAccountLoginDynamicConfLoginPlatformListBlock)(void);
 
 /**
  * 服务端下发设置和配置信息

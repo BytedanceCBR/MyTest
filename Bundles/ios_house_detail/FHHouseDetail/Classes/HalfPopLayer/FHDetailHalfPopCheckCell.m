@@ -13,7 +13,7 @@
 
 #define HOR_MARGIN 20
 #define TOP_MARGIN 20
-#define CONTENT_VER_MARGIN 10
+#define CONTENT_VER_MARGIN 20
 
 @interface FHDetailHalfPopCheckCell ()
 
@@ -28,7 +28,7 @@
 {
     CGFloat height = TOP_MARGIN;
     
-    UIFont *font = [UIFont themeFontRegular:12];
+    UIFont *font = [UIFont themeFontRegular:14];
     height += [title boundingRectWithSize:CGSizeMake([[UIScreen mainScreen]bounds].size.width - 2*HOR_MARGIN, INT_MAX) options:NSStringDrawingUsesFontLeading attributes:@{NSFontAttributeName:font} context:nil].size.height;
     
     height = ceil(height) + CONTENT_VER_MARGIN + 19;
@@ -42,13 +42,13 @@
     if (self) {
         _contentLabel = [[UILabel alloc] init];
         _contentLabel.numberOfLines = 0;
-        _contentLabel.font = [UIFont themeFontRegular:12];
+        _contentLabel.font = [UIFont themeFontRegular:14];
         _contentLabel.textColor = [UIColor themeGray3];
         _contentLabel.preferredMaxLayoutWidth = CGRectGetWidth([[UIScreen mainScreen]bounds]) - 2*HOR_MARGIN;
         
         _tipLabel = [[UILabel alloc] init];
         _tipLabel.textColor = [UIColor themeGray4];
-        _tipLabel.font = _contentLabel.font;
+        _tipLabel.font = [UIFont themeFontRegular:12];
         
         [self.contentView addSubview:_contentLabel];
         [self.contentView addSubview:_tipLabel];

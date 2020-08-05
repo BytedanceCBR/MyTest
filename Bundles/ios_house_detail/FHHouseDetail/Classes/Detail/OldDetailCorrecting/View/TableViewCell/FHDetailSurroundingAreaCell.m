@@ -166,8 +166,7 @@
     FHDetailSurroundingAreaModel *model = (FHDetailSurroundingAreaModel *)self.currentData;
     if (model.relatedNeighborhoodData && model.relatedNeighborhoodData.hasMore) {
         
-        NSString *searchId = model.relatedNeighborhoodData.searchId;
-        
+//        NSString *searchId = model.relatedNeighborhoodData.searchId;
         NSMutableDictionary *tracerDic = self.baseViewModel.detailTracerDic.mutableCopy;
         tracerDic[@"enter_type"] = @"click";
         tracerDic[@"log_pb"] = self.baseViewModel.listLogPB ? self.baseViewModel.listLogPB : @"be_null";
