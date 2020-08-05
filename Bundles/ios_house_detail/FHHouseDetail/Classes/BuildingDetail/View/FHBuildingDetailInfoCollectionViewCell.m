@@ -10,6 +10,8 @@
 #import <FHHouseBase/FHBaseCollectionView.h>
 
 CGFloat const FHBuildingDetailInfoListCellMinimumLineSpacing = 25 + 12;
+NSInteger const FHBuildingDetailInfoListCellPageMultiple = 99;
+CGFloat const FHBuildingDetailInfoListCellShadowImageViewSpacingTop = 20.0;
 
 @interface FHBuildingDetailInfoCollectionViewCell ()<UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout>
 
@@ -24,6 +26,7 @@ CGFloat const FHBuildingDetailInfoListCellMinimumLineSpacing = 25 + 12;
 
 - (instancetype)initWithFrame:(CGRect)frame {
     if (self = [super initWithFrame:frame]) {
+        self.backgroundColor = [UIColor clearColor];
         UICollectionViewFlowLayout *layout = [[UICollectionViewFlowLayout alloc] init];
         layout.sectionInset = UIEdgeInsetsZero;
         layout.scrollDirection = UICollectionViewScrollDirectionHorizontal;
@@ -32,7 +35,7 @@ CGFloat const FHBuildingDetailInfoListCellMinimumLineSpacing = 25 + 12;
         UICollectionView *collectionView = [[UICollectionView alloc] initWithFrame:self.contentView.bounds collectionViewLayout:layout];
         collectionView.showsVerticalScrollIndicator = NO;
         collectionView.showsHorizontalScrollIndicator = NO;
-        collectionView.backgroundColor = [UIColor themeGray7];
+        collectionView.backgroundColor = [UIColor clearColor];
         collectionView.delegate = self;
         collectionView.dataSource = self;
         collectionView.decelerationRate = UIScrollViewDecelerationRateFast;
@@ -47,15 +50,16 @@ CGFloat const FHBuildingDetailInfoListCellMinimumLineSpacing = 25 + 12;
 }
 
 - (void)refreshWithData:(id)data {
-    if (data && [data isKindOfClass:[FHBuildingDetailModel class]]) {
-        FHBuildingDetailModel *model = (FHBuildingDetailModel *)data;
-        self.buildingList = model.data.buildingList;
+    if (data && [data isKindOfClass:[FHBuildingSaleStatusModel class]]) {
+        FHBuildingSaleStatusModel *model = (FHBuildingSaleStatusModel *)data;
+        self.buildingList = model.buildingList;
         [self.collectionView reloadData];
         
         //判断
         if (self.buildingList.count > 1) {
-            UICollectionViewLayoutAttributes *attributes = [self.collectionView layoutAttributesForItemAtIndexPath:[NSIndexPath indexPathForItem:self.buildingList.count inSection:0]];
+            UICollectionViewLayoutAttributes *attributes = [self.collectionView layoutAttributesForItemAtIndexPath:[NSIndexPath indexPathForItem:self.buildingList.count * (FHBuildingDetailInfoListCellPageMultiple / 2) inSection:0]];
             if (self.currentIndexPath) {
+                self.currentIndexPath = [self getNewIndexPath:self.currentIndexPath];
                 attributes = [self.collectionView layoutAttributesForItemAtIndexPath:self.currentIndexPath];
             }
             [self.collectionView setContentOffset:CGPointMake(attributes.frame.origin.x - FHBuildingDetailInfoListCellMinimumLineSpacing, 0)];
@@ -63,9 +67,24 @@ CGFloat const FHBuildingDetailInfoListCellMinimumLineSpacing = 25 + 12;
     }
 }
 
+- (NSIndexPath *)getNewIndexPath:(NSIndexPath *)oldIndexPath {
+    NSIndexPath *newIndexPath = [NSIndexPath indexPathForItem:(oldIndexPath.item % self.buildingList.count) + (self.buildingList.count * (FHBuildingDetailInfoListCellPageMultiple / 2)) inSection:0];
+    return newIndexPath;
+}
+
+- (void)manualSetContentOffset:(NSInteger)index {
+    if (self.buildingList.count > 1) {
+        NSInteger newIndex = ((self.currentIndexPath.row / self.buildingList.count) * self.buildingList.count) + index;
+        self.currentIndexPath = [NSIndexPath indexPathForItem:newIndex inSection:0];
+        UICollectionViewLayoutAttributes *attributes = [self.collectionView layoutAttributesForItemAtIndexPath:[NSIndexPath indexPathForItem:newIndex inSection:0]];
+        [self.collectionView setContentOffset:CGPointMake(attributes.frame.origin.x - FHBuildingDetailInfoListCellMinimumLineSpacing, 0) animated:YES];
+    }
+}
+
 - (void)updateIndexPahtAtPosition:(NSIndexPath *)indexPath {
-    if (self.indexDidChanged) {
-        self.indexDidChanged(indexPath.row % self.buildingList.count);
+    if (self.infoIndexDidSelect) {
+        FHBuildingDetailDataItemModel *itemModel = self.buildingList[indexPath.row % self.buildingList.count];
+        self.infoIndexDidSelect(FHBuildingDetailOperatTypeInfoCell,itemModel.buildingIndex);
     }
 }
 
@@ -84,7 +103,7 @@ CGFloat const FHBuildingDetailInfoListCellMinimumLineSpacing = 25 + 12;
     if (self.buildingList.count == 1) {
         return 1;
     }
-    return self.buildingList.count * 3;
+    return self.buildingList.count * FHBuildingDetailInfoListCellPageMultiple;
 }
 
 - (__kindof UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
@@ -127,18 +146,15 @@ CGFloat const FHBuildingDetailInfoListCellMinimumLineSpacing = 25 + 12;
 
 }
 
-- (void)scrollViewWillBeginDecelerating:(UIScrollView *)scrollView{
-
-}
 
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView{
     CGPoint contentOffset = CGPointMake(self.collectionView.contentOffset.x + CGRectGetMidX(self.contentView.bounds), CGRectGetMidY(self.contentView.bounds));
     NSIndexPath *indexPath = [self.collectionView indexPathForItemAtPoint:contentOffset];
     UICollectionViewLayoutAttributes *attributes = nil;
     if (indexPath.row < self.buildingList.count) {
-        attributes = [self.collectionView layoutAttributesForItemAtIndexPath:[NSIndexPath indexPathForItem:self.buildingList.count + indexPath.row inSection:0]];
-    } else if (indexPath.row > self.buildingList.count * 2 - 1) {
-        attributes = [self.collectionView layoutAttributesForItemAtIndexPath:[NSIndexPath indexPathForItem:indexPath.row - self.buildingList.count inSection:0]];
+        attributes = [self.collectionView layoutAttributesForItemAtIndexPath:[self getNewIndexPath:indexPath]];
+    } else if (indexPath.row > self.buildingList.count * (FHBuildingDetailInfoListCellPageMultiple - 1) - 1) {
+        attributes = [self.collectionView layoutAttributesForItemAtIndexPath:[self getNewIndexPath:indexPath]];
     }
     if (attributes) {
         [self.collectionView setContentOffset:CGPointMake(attributes.frame.origin.x - FHBuildingDetailInfoListCellMinimumLineSpacing, 0)];
@@ -173,9 +189,16 @@ CGFloat const FHBuildingDetailInfoListCellMinimumLineSpacing = 25 + 12;
         }
         else{
             UICollectionViewLayoutAttributes *attributes = [self.collectionView layoutAttributesForItemAtIndexPath:self.currentIndexPath];
-            *targetContentOffset = CGPointMake(attributes.frame.origin.x - 25, 0);
+            *targetContentOffset = CGPointMake(attributes.frame.origin.x - FHBuildingDetailInfoListCellMinimumLineSpacing, 0);
         }
     }
+}
+
+- (UIView *)hitTest:(CGPoint)point withEvent:(UIEvent *)event {
+    if (point.y <= FHBuildingDetailInfoListCellShadowImageViewSpacingTop) {
+        return nil;
+    }
+    return [super hitTest:point withEvent:event];
 }
 
 @end
@@ -190,7 +213,7 @@ CGFloat const FHBuildingDetailInfoListCellMinimumLineSpacing = 25 + 12;
         shadowImageView.image = [[UIImage imageNamed:@"top_left_right_bottom"] resizableImageWithCapInsets:UIEdgeInsetsMake(30,25,30,25) resizingMode:UIImageResizingModeStretch];
         [self.contentView addSubview:shadowImageView];
         [shadowImageView mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.edges.mas_equalTo(UIEdgeInsetsMake(-20, -15, -20, -15));
+            make.edges.mas_equalTo(UIEdgeInsetsMake(-FHBuildingDetailInfoListCellShadowImageViewSpacingTop, -15, -20, -15));
         }];
         
         self.stackView = [[UIStackView alloc] init];
@@ -297,15 +320,16 @@ CGFloat const FHBuildingDetailInfoListCellMinimumLineSpacing = 25 + 12;
             self.saleStatusLabel.hidden = YES;
         }
         
-        [model.baseInfo enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        [self.infosView enumerateObjectsUsingBlock:^(FHPropertyListCorrectingRowView * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
             if (idx >= 6) {
                 *stop = YES;
             }
-            if ([obj isKindOfClass:[FHHouseBaseInfoModel class]]) {
-                FHHouseBaseInfoModel *info = (FHHouseBaseInfoModel *)obj;
-                FHPropertyListCorrectingRowView *rowView = self.infosView[idx];
-                rowView.keyLabel.text = info.attr;
-                rowView.valueLabel.text = info.value;
+            [obj setHidden:YES];
+            if (idx < model.baseInfo.count) {
+                [obj setHidden:NO];
+                FHHouseBaseInfoModel *info = model.baseInfo[idx];
+                obj.keyLabel.text = info.attr;
+                obj.valueLabel.text = info.value;
             }
         }];
     }
