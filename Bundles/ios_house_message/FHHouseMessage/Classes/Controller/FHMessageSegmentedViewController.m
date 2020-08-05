@@ -349,13 +349,14 @@ typedef NS_ENUM(NSInteger, FHSegmentedControllerAnimatedTransitionDirection) {
     [self setupDefaultNavBar:NO];
     self.customNavBarView.leftBtn.hidden = [self leftActionHidden];
     self.customNavBarView.bgView.backgroundColor = [UIColor themeGray7];
+    self.customNavBarView.seperatorLine.hidden = YES;
     [self.customNavBarView addSubview:_segmentedControl];
     NSInteger count = _segmentedControl.sectionTitles.count;
     [_segmentedControl mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerX.equalTo(self.customNavBarView);
         make.height.mas_equalTo(44);
         make.bottom.mas_equalTo(-6);
-        make.width.mas_equalTo(70 * count);
+        make.width.mas_equalTo(80 * count);
         //make.left.mas_equalTo(tabMargin);
         //make.right.mas_equalTo(-tabMargin);
     }];
