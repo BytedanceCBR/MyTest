@@ -243,6 +243,11 @@ typedef NS_ENUM(NSUInteger, FHFeedUGCDiggType) {
 @property (nonatomic, assign) BOOL isShowLineView;
 //1.0.3 经纪人主页隐藏联系按钮
 @property (nonatomic, assign) BOOL isHiddenConnectBtn;
+//转评来源id
+@property (nonatomic, copy , nullable) NSString *fromGid;
+//转评来源类型
+@property (nonatomic, copy , nullable) NSString *fromGroupSource;
+
 + (FHFeedContentModel *)contentModelFromFeedContent:(NSString *)content;
 
 + (FHFeedUGCCellModel *)modelFromFeed:(id)content;

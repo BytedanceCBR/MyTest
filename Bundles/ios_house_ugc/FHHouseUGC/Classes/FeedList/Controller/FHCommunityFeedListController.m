@@ -35,6 +35,7 @@
 @property(nonatomic, assign) NSTimeInterval enterTabTimestamp;
 @property(nonatomic, assign) BOOL noNeedAddEnterCategorylog;
 @property(nonatomic, assign) UIEdgeInsets originContentInset;
+@property(nonatomic, assign) BOOL alreadySetContentInset;
 
 @end
 
@@ -63,6 +64,19 @@
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationDidBecomeActive) name:UIApplicationDidBecomeActiveNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationDidEnterBackground) name:UIApplicationDidEnterBackgroundNotification object:nil];
+}
+
+- (void)setTracerDict:(NSMutableDictionary *)tracerDict {
+    [super setTracerDict:tracerDict];
+    if(self.dataList.count > 0){
+        for (FHFeedUGCCellModel *cellModel in self.dataList) {
+            NSMutableDictionary *tracerDic = [cellModel.tracerDic mutableCopy];
+            if(tracerDict[@"origin_from"]){
+                tracerDic[@"origin_from"] = tracerDict[@"origin_from"];
+            }
+            cellModel.tracerDic = tracerDic;
+        }
+    }
 }
 
 - (void)dealloc {
@@ -156,7 +170,7 @@
 
 - (FHFeedCustomHeaderView *)customTableHeaderView {
     if(!_tableHeaderView){
-        _headerViewHeight = 0.001f;
+        _headerViewHeight = CGFLOAT_MIN;
         FHFeedCustomHeaderView *tableHeaderView = [[FHFeedCustomHeaderView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, _headerViewHeight) addProgressView:self.isInsertFeedWhenPublish];
         if(self.isInsertFeedWhenPublish){
             WeakSelf;
@@ -293,7 +307,10 @@
 }
 
 - (void)showNotify:(NSString *)message completion:(void(^)())completion {
-    self.originContentInset = self.tableView.contentInset;
+    if(!self.alreadySetContentInset){
+        self.originContentInset = self.tableView.contentInset;
+        self.alreadySetContentInset = YES;
+    }
     UIEdgeInsets inset = self.tableView.contentInset;
     inset.top = self.notifyBarView.height;
     self.tableView.contentInset = inset;
@@ -346,9 +363,9 @@
 
 // 帐号切换
 - (void)onAccountStatusChanged:(TTAccountStatusChangedReasonType)reasonType platform:(NSString *)platformName {
-    if(self.listType == FHCommunityFeedListTypeNearby || self.listType == FHCommunityFeedListTypeMyJoin) {
-        self.needReloadData = YES;
-    }
+//    if(self.listType == FHCommunityFeedListTypeNearby || self.listType == FHCommunityFeedListTypeMyJoin) {
+//        self.needReloadData = YES;
+//    }
 }
 
 #pragma mark - SSImpressionProtocol

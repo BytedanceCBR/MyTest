@@ -42,6 +42,7 @@
 #import <TTPlatformBaseLib/TTTrackerWrapper.h>
 #import <TTArticleBase/Log.h>
 #import "FHUserTracker.h"
+#import "FHUtils.h"
 
 @interface TTVDetailRelatedTableViewItem (sourceRelatedItemCarried)
 
@@ -279,7 +280,7 @@
                 
                 [traceParams setValue:@"related" forKey:@"category_name"];
                 
-                [traceParams setValue:@"click_related" forKey:@"enter_from"];
+                [traceParams setValue:self.detailStateStore.state.enterFrom forKey:@"enter_from"];
 
                 NSString *jsonLogPb = item.videoItem.logPb;
                 if ([jsonLogPb isKindOfClass:[NSString class]])
@@ -299,9 +300,25 @@
                         }
                     }
                 }
-                [traceParams setValue: @"be_null" forKey:@"cell_type"];
-//                [BDTrackerProtocol eventV3:@"client_show" params:traceParams];
-                [FHUserTracker writeEvent:@"client_show" params:traceParams];
+                [traceParams setValue: @(indexPath.row) forKey:@"rank"];
+                
+                id logPb = traceParams[@"log_pb"];
+                NSDictionary *logPbDic = nil;
+                if([logPb isKindOfClass:[NSDictionary class]]){
+                    logPbDic = logPb;
+                }else if([logPb isKindOfClass:[NSString class]]){
+                    logPbDic = [FHUtils dictionaryWithJsonString:logPb];
+                }
+                
+                if(logPbDic[@"impr_id"]){
+                    traceParams[@"impr_id"] = logPbDic[@"impr_id"];
+                }
+                
+                if(logPbDic[@"group_source"]){
+                    traceParams[@"group_source"] = logPbDic[@"group_source"];
+                }
+                
+                [FHUserTracker writeEvent:@"feed_client_show" params:traceParams];
 
                 [self.traceIdDict setObject:@"" forKey:itemId];
             }

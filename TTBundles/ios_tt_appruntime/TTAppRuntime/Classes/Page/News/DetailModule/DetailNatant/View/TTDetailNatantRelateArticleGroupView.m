@@ -24,6 +24,7 @@
 #import <BDTrackerProtocol/BDTrackerProtocol.h>
 #import <TTPlatformBaseLib/TTTrackerWrapper.h>
 #import "FHUserTracker.h"
+#import "FHUtils.h"
 
 @interface TTDetailNatantRelateReadSectionView : TTDetailNatantViewBase
 @property(nonatomic, strong)SSThemedLabel * titleLabel;
@@ -152,15 +153,33 @@
     
     [traceParams setValue:@"house_app2c_v2" forKey:@"event_type"];
     [traceParams setValue:dictTraceData.itemId forKey:@"item_id"];
-    //[traceParams setValue:@"click_related" forKey:@"enter_from"]; to do 去掉enter_from
     [traceParams setValue:dictTraceData.groupId forKey:@"group_id"];
     [traceParams setValue:self.viewModel.articleInfoManager.detailModel.originalGroupID forKey:@"from_gid"];
-    [traceParams setValue:self.viewModel.articleInfoManager.detailModel.logPb forKey:@"log_pb"];
+    [traceParams setValue:dictTraceData.logPb forKey:@"log_pb"];
     [traceParams setValue:@"related" forKey:@"category_name"];
-    [traceParams setValue:@"be_null" forKey:@"cell_type"];
+    
+    NSDictionary *reportParams = self.viewModel.articleInfoManager.detailModel.reportParams;
+    if(reportParams && [reportParams isKindOfClass:[NSDictionary class]]){
+        traceParams[@"enter_from"] = reportParams[@"enter_from"];
+    }
+    
+    id logPb = dictTraceData.logPb;
+    NSDictionary *logPbDic = nil;
+    if([logPb isKindOfClass:[NSDictionary class]]){
+        logPbDic = logPb;
+    }else if([logPb isKindOfClass:[NSString class]]){
+        logPbDic = [FHUtils dictionaryWithJsonString:logPb];
+    }
+    
+    if(logPbDic[@"impr_id"]){
+        traceParams[@"impr_id"] = logPbDic[@"impr_id"];
+    }
+    
+    if(logPbDic[@"group_source"]){
+        traceParams[@"group_source"] = logPbDic[@"group_source"];
+    }
 
-//    [BDTrackerProtocol eventV3:@"client_show" params:traceParams];
-    [FHUserTracker writeEvent:@"client_show" params:traceParams];
+    [FHUserTracker writeEvent:@"feed_client_show" params:traceParams];
 }
 
 - (void)themeChanged:(NSNotification *)notification{

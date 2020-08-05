@@ -42,7 +42,6 @@
     
     self.searchView = [[FHUGCSearchView alloc] initWithFrame:CGRectZero];
     _searchView.backgroundColor = [UIColor themeGray7];
-    _searchView.hidden = YES;
     [self addSubview:_searchView];
     
     [self initCollectionView];
@@ -56,23 +55,16 @@
     _bottomSepView.hidden = YES;
     [self addSubview:_bottomSepView];
     
-    if([FHEnvContext isNewDiscovery]){
-        self.backgroundColor = [UIColor whiteColor];
-        _headerView.hidden = YES;
-        _searchView.hidden = NO;
-        _bottomSepView.hidden = NO;
-    }
+    self.backgroundColor = [UIColor whiteColor];
+    _headerView.hidden = YES;
+    _bottomSepView.hidden = NO;
 }
 
 - (void)initCollectionView {
     UICollectionViewFlowLayout *flowLayout = [[UICollectionViewFlowLayout alloc] init];
-    flowLayout.sectionInset = UIEdgeInsetsMake(0, 20, 0, 0);
+    flowLayout.sectionInset = UIEdgeInsetsMake(0, 20, 0, 20);
     flowLayout.minimumLineSpacing = 8;
     flowLayout.scrollDirection = UICollectionViewScrollDirectionHorizontal;
-    if([FHEnvContext isNewDiscovery]){
-        flowLayout.sectionInset = UIEdgeInsetsMake(0, 20, 0, 20);
-        flowLayout.minimumLineSpacing = 4;
-    }
 
     self.collectionView = [[FHBaseCollectionView alloc] initWithFrame:CGRectZero collectionViewLayout:flowLayout];
     _collectionView.showsHorizontalScrollIndicator = NO;
@@ -80,9 +72,7 @@
     _collectionView.backgroundColor = [UIColor themeGray7];
     [self addSubview:_collectionView];
     
-    if([FHEnvContext isNewDiscovery]){
-        _collectionView.backgroundColor = [UIColor whiteColor];
-    }
+    _collectionView.backgroundColor = [UIColor whiteColor];
 }
 
 - (void)initConstraints {
@@ -111,19 +101,11 @@
         make.height.mas_equalTo(5);
     }];
     
-    if([FHEnvContext isNewDiscovery]){
-        [_collectionView mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.top.mas_equalTo(self.searchView.mas_bottom).offset(15);
-            make.left.right.mas_equalTo(self);
-            make.height.mas_equalTo(60);
-        }];
-    }else{
-        [_collectionView mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.top.mas_equalTo(self.headerView.mas_bottom);
-            make.left.right.mas_equalTo(self);
-            make.height.mas_equalTo(128);
-        }];
-    }
+    [_collectionView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.mas_equalTo(self.searchView.mas_bottom).offset(15);
+        make.left.right.mas_equalTo(self);
+        make.height.mas_equalTo(60);
+    }];
 }
 
 - (UILabel *)LabelWithFont:(UIFont *)font textColor:(UIColor *)textColor {

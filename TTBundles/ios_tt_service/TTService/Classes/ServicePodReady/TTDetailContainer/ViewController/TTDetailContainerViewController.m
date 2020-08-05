@@ -49,19 +49,42 @@
     self = [super initWithRouteParamObj:paramObj];
     if (self) {
         TTDetailContainerViewModel * viewModel = [[TTDetailContainerViewModel alloc] initWithRouteParamObj:paramObj];
+        NSMutableDictionary *reportDict = [NSMutableDictionary dictionary];
         if([paramObj.allParams[@"report_params"] isKindOfClass:[NSString class]])
         {
-            NSMutableDictionary *reportDict = [[FHUtils dictionaryWithJsonString:paramObj.allParams[@"report_params"]] mutableCopy];
-            //这里强插入categoryName
-            if(reportDict[@"enter_from"]){
-                reportDict[@"category_name"] = reportDict[@"enter_from"];
-            }
-            
-            if([reportDict isKindOfClass:[NSDictionary class]])
-            {
-                viewModel.reportParams = reportDict;
-                viewModel.detailModel.reportParams = reportDict;
-            }
+            NSDictionary *reportParams = [FHUtils dictionaryWithJsonString:paramObj.allParams[@"report_params"]];
+            [reportDict addEntriesFromDictionary:reportParams];
+        }
+        
+        NSDictionary *tracer = paramObj.allParams[@"tracer"];
+        if(tracer){
+            [reportDict addEntriesFromDictionary:tracer];
+        }
+        
+        id logPb = reportDict[@"log_pb"];
+        NSDictionary *logPbDic = nil;
+        if([logPb isKindOfClass:[NSDictionary class]]){
+            logPbDic = logPb;
+        }else if([logPb isKindOfClass:[NSString class]]){
+            logPbDic = [FHUtils dictionaryWithJsonString:logPb];
+        }
+        
+        if(logPbDic[@"impr_id"]){
+            reportDict[@"impr_id"] = logPbDic[@"impr_id"];
+        }
+        
+        if(logPbDic[@"group_source"]){
+            reportDict[@"group_source"] = logPbDic[@"group_source"];
+        }
+        
+        if(logPbDic[@"group_id"]){
+            reportDict[@"group_id"] = logPbDic[@"group_id"];
+        }
+        
+        if([reportDict isKindOfClass:[NSDictionary class]])
+        {
+            viewModel.reportParams = reportDict;
+            viewModel.detailModel.reportParams = reportDict;
         }
         
         self.viewModel = viewModel;

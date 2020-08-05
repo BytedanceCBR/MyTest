@@ -239,8 +239,8 @@
             } else {
                 // 上拉加载loadmore
                 [[ToastManager manager] showToast:@"网络异常"];
-                self.currentTableView.mj_footer.hidden = NO;
-                [self.currentTableView.mj_footer endRefreshing];
+                wSelf.currentTableView.mj_footer.hidden = NO;
+                [wSelf.currentTableView.mj_footer endRefreshing];
                 return;
             }
         } else {
@@ -268,27 +268,27 @@
                             // 有返回（下拉）
                             [tempArray enumerateObjectsUsingBlock:^(FHFeedUGCCellModel*  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
                                 if (obj.groupId.length > 0) {
-                                    [self removeDuplicaionModel:obj.groupId];
+                                    [wSelf removeDuplicaionModel:obj.groupId];
                                 }
                             }];
                         }
                         // 再插入顶部
-                        if (self.dataList.count > 0) {
+                        if (wSelf.dataList.count > 0) {
                             // JOKER: 头部插入时，旧数据的置顶全部取消，以新数据中的置顶贴子为准
-                            [self.dataList enumerateObjectsUsingBlock:^(FHFeedUGCCellModel *  _Nonnull cellModel, NSUInteger idx, BOOL * _Nonnull stop) {
+                            [wSelf.dataList enumerateObjectsUsingBlock:^(FHFeedUGCCellModel *  _Nonnull cellModel, NSUInteger idx, BOOL * _Nonnull stop) {
                                 cellModel.isStick = NO;
                             }];
                             // 头部插入新数据
                             [tempArray addObjectsFromArray:self.dataList];
                         }
-                        [self.dataList removeAllObjects];
+                        [wSelf.dataList removeAllObjects];
                         if (tempArray.count > 0) {
-                            [self.dataList addObjectsFromArray:tempArray];
+                            [wSelf.dataList addObjectsFromArray:tempArray];
                         }
                     } else {
                         // 上拉加载loadmore
                         if (tempArray.count > 0) {
-                            [self.dataList enumerateObjectsUsingBlock:^(FHFeedUGCCellModel*  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+                            [wSelf.dataList enumerateObjectsUsingBlock:^(FHFeedUGCCellModel*  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
                                 if (obj.groupId.length > 0) {
                                     // 新数据去重
                                     for (FHFeedUGCCellModel *itemModel in tempArray) {
@@ -301,14 +301,15 @@
                             }];
                             // 插入底部
                             if (tempArray.count > 0) {
-                                [self.dataList addObjectsFromArray:tempArray];
+                                [wSelf.dataList addObjectsFromArray:tempArray];
                             }
                         }
                     }
                     
+                    wSelf.feedOffset = [feedList.offset integerValue];// 时间序 服务端返回的是时间
+                    
                     dispatch_async(dispatch_get_main_queue(), ^{
                         wSelf.hasMore = feedList.hasMore;
-                        wSelf.feedOffset = [feedList.offset integerValue];// 时间序 服务端返回的是时间
                         [wSelf processLoadingState];
                     });
                 });
@@ -836,6 +837,18 @@
     dict[@"rank"] = @(rank);
     dict[@"category_name"] = self.categoryName;
     dict[@"group_id"] = cellModel.groupId;
+    if(cellModel.logPb[@"impr_id"]){
+        dict[@"impr_id"] = cellModel.logPb[@"impr_id"];
+    }
+    if(cellModel.logPb[@"group_source"]){
+        dict[@"group_source"] = cellModel.logPb[@"group_source"];
+    }
+    if(cellModel.fromGid){
+        dict[@"from_gid"] = cellModel.fromGid;
+    }
+    if(cellModel.fromGroupSource){
+        dict[@"from_group_source"] = cellModel.fromGroupSource;
+    }
     
     return dict;
 }
@@ -846,7 +859,6 @@
 
 - (void)trackClickComment:(FHFeedUGCCellModel *)cellModel {
     NSMutableDictionary *dict = [cellModel.tracerDic mutableCopy];
-    dict[@"click_position"] = @"feed_comment";
     TRACK_EVENT(@"click_comment", dict);
 }
 

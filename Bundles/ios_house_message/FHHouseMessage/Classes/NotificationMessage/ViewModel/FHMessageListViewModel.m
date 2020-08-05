@@ -164,11 +164,17 @@
         }
         
         NSMutableDictionary *traceParam = @{}.mutableCopy;
+        traceParam[@"origin_from"] = @"message";
         traceParam[@"enter_from"] = @"feed_message_list";
         traceParam[@"enter_type"] = @"feed_message_card";
         traceParam[@"rank"] = @(indexPath.row);
         traceParam[@"log_pb"] = model.logPb;
+        traceParam[@"group_id"] = model.ID;
+        if(model.logPb[@"impr_id"]){
+            traceParam[@"impr_id"] = model.logPb[@"impr_id"];
+        }
         dict[TRACER_KEY] = traceParam;
+        dict[@"extraDic"] = traceParam;
         
         dict[@"begin_show_comment"] = @"1";
         userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];

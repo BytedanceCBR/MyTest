@@ -349,7 +349,8 @@ typedef NS_ENUM(NSInteger, FHCommunityCategoryListState) {
         
         NSMutableDictionary *dict = @{}.mutableCopy;
         dict[@"community_id"] = data.socialGroupId;
-        dict[@"tracer"] = @{@"enter_from": [self categoryName],
+        dict[@"tracer"] = @{@"origin_from": self.viewController.tracerDict[@"origin_from"] ?: @"be_null",
+                            @"enter_from": [self categoryName],
                             @"enter_type": @"click",
                             @"rank":@(row),
                             @"log_pb": data.logPb ?: @"be_null"};
