@@ -1574,7 +1574,7 @@
                 if (self.priceLabel.yoga.marginTop.value != 57) {
                     layout.marginTop = YGPointValue(57);
                 }
-                layout.maxWidth = YGPointValue(90);
+                layout.maxWidth = YGPointValue(100);
                 layout.width = YGPointValue(priceSize.width);
 //                layout.maxWidth = YGPointValue(YOGA_RIGHT_PRICE_WIDITH + 20);
             }];
@@ -1621,6 +1621,7 @@
                     layout.marginLeft = YGPointValue(0);
                 }
             }];
+            
             _priceLabel.font = [UIFont themeFontSemibold:[TTDeviceHelper isScreenWidthLarge320] ? 16 : 15];
             [_priceLabel configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
                 if (self.priceLabel.yoga.marginTop.value != 57) {
