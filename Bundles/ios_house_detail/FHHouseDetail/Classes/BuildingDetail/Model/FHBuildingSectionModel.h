@@ -6,13 +6,16 @@
 //
 
 #import <Foundation/Foundation.h>
-
+#import "FHBuildingDetailModel.h"
 typedef NS_ENUM(NSUInteger, FHBuildingSectionType) {
     FHBuildingSectionTypeHeader = 1,
     FHBuildingSectionTypeInfo,
     FHBuildingSectionTypeFloor,
-    FHBuildingSectionTypeEmpty
+    FHBuildingSectionTypeEmpty,
+    FHBuildingSectionTypeImage
 };
+
+
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -25,5 +28,6 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy, nullable) NSString *sectionTitle;
 
 @end
+
 
 NS_ASSUME_NONNULL_END

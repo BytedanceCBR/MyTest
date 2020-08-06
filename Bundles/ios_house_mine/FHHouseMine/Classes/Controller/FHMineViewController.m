@@ -235,6 +235,7 @@
     tracerDict[@"enter_type"] = @"click_tab";
     tracerDict[@"tab_name"] = @"mine";
     tracerDict[@"with_tips"] = @"0";
+    tracerDict[@"enter_channel"] = [FHEnvContext sharedInstance].enterChannel;
     
     return tracerDict;
 }

@@ -182,6 +182,9 @@ static APNsManager *_sharedManager = nil;
         if ([topVC isKindOfClass:[UIViewController class]]) {
             [topVC.view endEditing:YES];
         }
+        
+        //push进入设置这个值
+        [FHEnvContext sharedInstance].enterChannel = @"push";
 
         NSString *appURL = paramObj.scheme;
         if (isEmptyString(appURL) || [TTRoute conformsToRouteWithScheme:appURL]) {

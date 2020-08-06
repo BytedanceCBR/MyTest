@@ -34,13 +34,13 @@
 
 @implementation FHPostUGCProgressView
 
-+ (instancetype)sharedInstance {
-    static FHPostUGCProgressView *_sharedInstance = nil;
-    if (!_sharedInstance){
-        _sharedInstance = [[FHPostUGCProgressView alloc] initWithFrame:CGRectZero];
-    }
-    return _sharedInstance;
-}
+//+ (instancetype)sharedInstance {
+//    static FHPostUGCProgressView *_sharedInstance = nil;
+//    if (!_sharedInstance){
+//        _sharedInstance = [[FHPostUGCProgressView alloc] initWithFrame:CGRectZero];
+//    }
+//    return _sharedInstance;
+//}
 
 - (instancetype)initWithFrame:(CGRect)frame
 {
@@ -48,6 +48,10 @@
     if (self) {
         self.backgroundColor = [UIColor redColor];
         self.houseShowTracerDic = [NSMutableDictionary new];
+        
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(loadStatusModelsWithCompletion) name:kLoadStatusModelsWithCompletionNotification object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updatePostData) name:kUpdatePostDataNotification object:nil];
+        
         [self setupData];
         [self setupUI];
         __weak typeof(self) weakSelf = self;
@@ -78,6 +82,12 @@
     self.hidden = _ugc_viewHeight <= 0;
     if (_ugc_viewHeight > 0) {
         [self.tableView reloadData];
+    }
+}
+
+- (void)loadStatusModelsWithCompletion {
+    if(self.refreshViewBlk){
+        self.refreshViewBlk();
     }
 }
 
@@ -145,6 +155,7 @@
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     FHPostUGCProgressCell *cell = (FHPostUGCProgressCell *)[tableView dequeueReusableCellWithIdentifier:@"FHPostUGCProgressCell" forIndexPath:indexPath];
+    cell.isNewDiscovery = self.isNewDiscovery;
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
     
     NSInteger row = indexPath.row;
@@ -206,7 +217,7 @@
     
     NSMutableDictionary *tracerDict = @{}.mutableCopy;
     tracerDict[@"element_type"] = @"publish_failed_toast";
-    if([FHEnvContext isNewDiscovery]){
+    if(self.isNewDiscovery){
         tracerDict[@"page_type"] = @"f_news_recommend";
     }else{
         tracerDict[@"page_type"] = @"hot_discuss_feed";
@@ -345,7 +356,7 @@
 - (void)retryBtnClick {
     NSMutableDictionary *tracerDict = @{}.mutableCopy;
     tracerDict[@"element_from"] = @"publish_failed_toast";
-    if([FHEnvContext isNewDiscovery]){
+    if(self.isNewDiscovery){
         tracerDict[@"page_type"] = @"f_news_recommend";
     }else{
         tracerDict[@"page_type"] = @"hot_discuss_feed";
@@ -367,7 +378,7 @@
     if (self.statusModel) {
         NSMutableDictionary *tracerDict = @{}.mutableCopy;
         tracerDict[@"element_from"] = @"publish_failed_toast";
-        if([FHEnvContext isNewDiscovery]){
+        if(self.isNewDiscovery){
             tracerDict[@"page_type"] = @"f_news_recommend";
         }else{
             tracerDict[@"page_type"] = @"hot_discuss_feed";

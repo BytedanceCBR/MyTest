@@ -121,6 +121,8 @@ extern NSString *const INSTANT_DATA_KEY;
 //预约以后的状态暂存
 @property (nonatomic, strong) NSMutableDictionary *subscribeCache;
 
+@property (nonatomic, assign) NSTimeInterval startMonitorTime;
+
 @end
 
 
@@ -175,7 +177,8 @@ extern NSString *const INSTANT_DATA_KEY;
         self.tableView = tableView;
         self.isShowSubscribeCell = NO;
         self.filterOpenUrlMdodel = [FHSearchFilterOpenUrlModel instanceFromUrl:[paramObj.sourceURL absoluteString]];
-        
+        _startMonitorTime = [[NSDate date] timeIntervalSince1970];
+
         NSString *houseTypeStr = paramObj.allParams[@"house_type"];
         self.houseType = houseTypeStr.length > 0 ? houseTypeStr.integerValue : FHHouseTypeSecondHandHouse;
 
@@ -880,6 +883,7 @@ extern NSString *const INSTANT_DATA_KEY;
             redirectTips = nil;
         }
         self.fromRecommend = fromRecommend;
+        BOOL isFirstLoadCopy = self.isFirstLoad;
 
         if (self.isFirstLoad) {
             self.originSearchId = self.searchId;
@@ -1087,7 +1091,9 @@ extern NSString *const INSTANT_DATA_KEY;
         }
 
         [self.tableView reloadData];
-        
+        if (isFirstLoadCopy) {
+            [FHMainApi addUserOpenVCDurationLog:@"pss_house_list" resultType:FHNetworkMonitorTypeSuccess duration:[[NSDate date] timeIntervalSince1970] - _startMonitorTime];
+        }
         if(addNoHouseCell){
             self.tableView.mj_footer.hidden = YES;
         }else{

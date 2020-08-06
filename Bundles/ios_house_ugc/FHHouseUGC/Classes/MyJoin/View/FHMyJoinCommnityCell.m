@@ -9,7 +9,7 @@
 #import "UIColor+Theme.h"
 #import "UIFont+House.h"
 #import "Masonry.h"
-#import "UIImageView+BDWebImage.h"
+#import "UIImageView+fhUgcImage.h"
 #import "FHUGCModel.h"
 
 #define iconWidth 50
@@ -45,7 +45,7 @@
             self.icon.image = [UIImage imageNamed:@"fh_ugc_all_bg"];
         }else{
             self.blackCoverView.hidden = NO;
-            [self.icon bd_setImageWithURL:[NSURL URLWithString:model.avatar] placeholder:nil];
+            [self.icon fh_setImageWithURL:[NSURL URLWithString:model.avatar] placeholder:nil reSize:self.contentView.bounds.size];
         }
     }
 }

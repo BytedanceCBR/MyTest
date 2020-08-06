@@ -23,6 +23,8 @@
 #import "FHUGCLynxCommonCell.h"
 #import "FHArticleCell.h"
 #import "FHUGCPostCell.h"
+#import "FHUGCAnswerCell.h"
+#import "FHUGCQuestionCell.h"
 #import "FHHouseDeatilRGCImageCell.h"
 #import "FHHouseDeatilRGCVideoCell.h"
 
@@ -61,7 +63,9 @@
                                 @"FHUGCEncyclopediasCell",
                                 @"FHUGCLynxCommonCell",
                                 @"FHHouseDeatilRGCImageCell",
-                                @"FHHouseDeatilRGCVideoCell"
+                                @"FHHouseDeatilRGCVideoCell",
+                                @"FHUGCAnswerCell",
+                                @"FHUGCQuestionCell"
                                 //可扩展
                                  ];
 }
@@ -125,6 +129,10 @@
             
         case FHUGCFeedListCellSubTypeUGCBrokerVideo:
             return [FHHouseDeatilRGCVideoCell class];
+        case FHUGCFeedListCellSubTypeAnswer:
+                return [FHUGCAnswerCell class];
+            case FHUGCFeedListCellSubTypeQuestion:
+                       return [FHUGCQuestionCell class];
             
         default:
             break;

@@ -439,8 +439,6 @@ extern BOOL ttvs_isEnhancePlayerTitleFont(void);
         @strongify(self);
         [self.logo setImage:nil];
     }];
-    
-    return;
 }
 
 /**
