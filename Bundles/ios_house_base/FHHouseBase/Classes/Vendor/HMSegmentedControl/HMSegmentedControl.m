@@ -241,6 +241,10 @@
     [self setNeedsDisplay];
 }
 
+- (void)setBounces:(BOOL)bounces {
+    self.scrollView.bounces = bounces;
+}
+
 #pragma mark - Drawing
 
 - (CGSize)measureTitleAtIndex:(NSUInteger)index {

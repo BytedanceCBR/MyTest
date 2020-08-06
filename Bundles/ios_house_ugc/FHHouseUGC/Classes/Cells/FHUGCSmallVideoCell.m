@@ -6,7 +6,6 @@
 //
 
 #import "FHUGCSmallVideoCell.h"
-#import "UIImageView+BDWebImage.h"
 #import "FHUGCCellUserInfoView.h"
 #import "FHUGCCellBottomView.h"
 #import "FHUGCCellMultiImageView.h"
@@ -14,6 +13,7 @@
 #import "TTRoute.h"
 #import "TTBusinessManager+StringUtils.h"
 #import "UIViewAdditions.h"
+#import "UIImageView+fhUgcImage.h"
 
 #define leftMargin 20
 #define rightMargin 20
@@ -74,10 +74,10 @@
     
     self.imageViewheight = 200;
     self.imageViewWidth = 150;
-    self.videoImageView = [[TTImageView alloc] initWithFrame:CGRectMake(0, 0, self.imageViewWidth, self.imageViewheight)];
+    self.videoImageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, self.imageViewWidth, self.imageViewheight)];
     _videoImageView.backgroundColor = [UIColor themeGray7];
     _videoImageView.layer.masksToBounds = YES;
-    _videoImageView.imageContentMode = TTImageViewContentModeScaleAspectFill;
+    _videoImageView.contentMode = UIViewContentModeScaleAspectFill;
     _videoImageView.layer.borderColor = [[UIColor themeGray6] CGColor];
     _videoImageView.layer.borderWidth = 0.5;
     _videoImageView.layer.cornerRadius = 4;
@@ -207,11 +207,7 @@
         self.videoImageView.height = self.imageViewheight;
         
         if (imageModel && imageModel.url.length > 0) {
-            TTImageInfosModel *imageInfoModel = [FHUGCCellHelper convertTTImageInfosModel:imageModel];
-            __weak typeof(self) wSelf = self;
-            [self.videoImageView setImageWithModelInTrafficSaveMode:imageInfoModel placeholderImage:nil success:nil failure:^(NSError *error) {
-                [wSelf.videoImageView setImage:nil];
-            }];
+            [self.videoImageView fh_setImageWithURL:imageModel.url placeholder:nil reSize:self.videoImageView.size];
         }
     }
     // 时间

@@ -126,7 +126,7 @@
         self.cellModel = cellModel;
         
         if (cellModel.attachCardInfo.imageModel && cellModel.attachCardInfo.imageModel.url.length > 0) {
-            [self.iconView fh_setImageWithURLStringInTrafficSaveMode:cellModel.attachCardInfo.imageModel.url placeholder:nil];
+            [self.iconView fh_setImageWithURL:cellModel.attachCardInfo.imageModel.url placeholder:nil reSize:self.iconView.size];
         }else{
             [self.iconView setImage:nil];
         }

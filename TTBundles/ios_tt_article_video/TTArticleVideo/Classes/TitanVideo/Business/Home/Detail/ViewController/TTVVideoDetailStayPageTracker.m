@@ -16,6 +16,7 @@
 #import "TTRelevantDurationTracker.h"
 #import "FHEnvContext.h"
 #import <TTPlatformBaseLib/TTTrackerWrapper.h>
+#import "FHUserTracker.h"
 
 static NSInteger const vaildStayPageMinInterval = 1;
 static NSInteger const vaildStayPageMaxInterval = 7200;
@@ -232,6 +233,7 @@ static NSInteger const vaildStayPageMaxInterval = 7200;
     }
     id value = @(_article.uniqueID);
 //    [dict setValue:value forKey:@"value"];
+    [dict setValue:@"video_detail" forKey:@"page_type"];
     [dict setValue:@((NSInteger)(duration * 1000)) forKey:@"stay_time"];
 //    [dict setValue:@"video" forKey:@"page_type"];
     [dict setValue:value forKey:@"item_id"];
@@ -334,6 +336,7 @@ static NSInteger const vaildStayPageMaxInterval = 7200;
     [self ttv_logGoDetail3];
     
     NSMutableDictionary *dic = [NSMutableDictionary dictionary];
+    [dic setValue:@"video_detail" forKey:@"page_type"];
     id value = [self.detailModel uniqueID];
 //    [dic setValue:[self.detailStateStore.state ttv_adid].stringValue forKey:@"ext_value"];
     [dic setValue:value forKey:@"item_id"];
@@ -404,6 +407,7 @@ static NSInteger const vaildStayPageMaxInterval = 7200;
         [dict setValuesForKeysWithDictionary:self.detailModel.gdExtJsonDict];
     }
     
+    [dict setValue:@"video_detail" forKey:@"page_type"];
     [dict setValue:@"article" forKey:@"category"];
     [dict setValue:@"read_pct" forKey:@"tag"];
     [dict setValue:self.detailModel.clickLabel forKey:@"label"];
@@ -459,11 +463,14 @@ static NSInteger const vaildStayPageMaxInterval = 7200;
             [dic setValue:commentModel.groupModel.itemID forKey:@"item_id"];
             [dic setValue:commentModel.groupModel.groupID forKey:@"group_id"];
             [dic setValue:commentModel.userID forKey:@"to_user_id"];
+            [dic setValue:@"comment_detail" forKey:@"page_type"];
             [dic setValue:commentModel.commentID forKey:@"comment_id"];
-            [dic setValue:@"detail" forKey:@"position"];
             [dic setValue:@(round(self.commentDetailShowTimeTotal)).stringValue forKey:@"stay_time"];
             
-            [BDTrackerProtocol eventV3:@"comment_close" params:dic];
+            dic[@"enter_from"] = self.enterFrom ?: @"be_null";
+            
+            [FHUserTracker writeEvent:@"comment_close" params:dic];
+            [FHUserTracker writeEvent:@"stay_page" params:dic];
         }
     }
 }

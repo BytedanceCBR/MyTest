@@ -440,7 +440,7 @@ typedef enum : NSUInteger {
     NSMutableDictionary *param = @{}.mutableCopy;
     param[UT_PAGE_TYPE] = [self pageTypeString];
     param[UT_ENTER_FROM] = self.tracerModel.enterFrom;
-    param[@"click_position"] = @"passport_publisher";
+    param[@"click_options"] = @"passport_publisher";
     TRACK_EVENT(@"feed_publish_click", param);
 }
 

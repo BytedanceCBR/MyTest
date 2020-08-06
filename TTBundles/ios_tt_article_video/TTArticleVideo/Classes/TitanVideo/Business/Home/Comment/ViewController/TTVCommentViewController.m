@@ -45,6 +45,7 @@
 //#import "TTProfileFillViewController.h"
 #import <BDTrackerProtocol/BDTrackerProtocol.h>
 #import <TTPlatformBaseLib/TTTrackerWrapper.h>
+#import "FHUserTracker.h"
 
 static NSString *kTTVCommentCellIdentifier = @"TTVCommentCellIdentifier";
 static CGFloat kCommentViewLoadMoreCellHeight = 44.f;
@@ -473,9 +474,14 @@ TTCommentFooterCellDelegate>
     [dic setValue:model.groupModel.groupID forKey:@"group_id"];
     [dic setValue:model.userID forKey:@"to_user_id"];
     [dic setValue:model.commentID forKey:@"comment_id"];
-    [dic setValue:@"detail" forKey:@"position"];
+    [dic setValue:@"comment_detail" forKey:@"page_type"];
     
-    [BDTrackerProtocol eventV3:@"comment_enter" params:dic];
+    if ([self.tracerDict isKindOfClass:[NSDictionary class]]) {
+        dic[@"enter_from"] = self.tracerDict[@"page_type"] ?: @"be_null";
+        dic[@"group_source"] = self.tracerDict[@"group_source"];
+    }
+    [FHUserTracker writeEvent:@"comment_enter" params:dic];
+    [FHUserTracker writeEvent:@"go_detail" params:dic];
 }
 
 

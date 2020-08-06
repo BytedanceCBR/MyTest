@@ -17,6 +17,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic, strong) FHCommunityFeedListController *feedListVC;
 @property(nonatomic, assign) BOOL withTips;
 @property(nonatomic, assign) CGFloat neighbourhoodViewHeight;
+//新的发现页面
+@property(nonatomic, assign) BOOL isNewDiscovery;
 
 - (void)viewWillAppear;
 - (void)viewWillDisappear;

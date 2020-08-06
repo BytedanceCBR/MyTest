@@ -261,13 +261,34 @@ if (hasMore) {
             default:
                 break;
         }
-        cellModel.tracerDic = self.tracerDic;
         if (cellModel) {
             [resultArray addObject:cellModel];
         }
     }
     return resultArray;
 }
+
+- (NSMutableDictionary *)trackDict:(FHFeedUGCCellModel *)cellModel rank:(NSInteger)rank {
+    NSMutableDictionary *tracerDic = [NSMutableDictionary dictionary];
+    tracerDic[@"rank"] = @(rank);
+    tracerDic[@"origin_from"] = self.tracerDic[@"origin_from"] ?: @"be_null";
+    tracerDic[@"enter_from"] = self.tracerDic[@"enter_from"] ?: @"be_null";
+    tracerDic[@"page_type"] = self.tracerDic[@"page_type"] ?: @"be_null";
+    tracerDic[@"element_type"] = @"realtor_evaluate";
+    tracerDic[@"group_id"] = cellModel.groupId;
+    tracerDic[@"from_gid"] = self.listController.tracerDict[@"from_gid"];
+    tracerDic[@"log_pb"] = cellModel.logPb;
+    tracerDic[@"category_name"] = self.categoryId;
+    if(cellModel.logPb[@"impr_id"]){
+        tracerDic[@"impr_id"] = cellModel.logPb[@"impr_id"];
+    }
+    if(cellModel.logPb[@"group_source"]){
+        tracerDic[@"group_source"] = cellModel.logPb[@"group_source"];
+    }
+    
+    return tracerDic;
+}
+
 
 - (nonnull UITableViewCell *)tableView:(nonnull UITableView *)tableView cellForRowAtIndexPath:(nonnull NSIndexPath *)indexPath {
     if(indexPath.row < self.dataList.count){
@@ -280,10 +301,13 @@ if (hasMore) {
             cell.selectionStyle = UITableViewCellSelectionStyleNone;
         }
         
+        cell.delegate = self;
+        cellModel.tracerDic = [self trackDict:cellModel rank:indexPath.row];
+        
         if(indexPath.row < self.dataList.count){
             [cell refreshWithData:cellModel];
         }
-        cell.delegate = self;
+
         return cell;
     }
     return [[FHUGCBaseCell alloc] init];
@@ -304,7 +328,7 @@ if (hasMore) {
             [extraDic setValue:cellModel.logPb forKey:@"log_pb"];
             [extraDic setValue:cellModel.groupId forKey:@"group_id"];
             [extraDic setValue:self.houseId forKey:@"from_gid"];
-            [self.tracerHelper trackListFeedClientShow:self.dataList[indexPath.row] withExtraDic:extraDic];
+            [self.tracerHelper trackFeedClientShow:self.dataList[indexPath.row] withExtraDic:extraDic];
         }
     }
 }
@@ -405,7 +429,6 @@ if (hasMore) {
 
 - (void)trackClickComment:(FHFeedUGCCellModel *)cellModel {
     NSMutableDictionary *dict = [cellModel.tracerDic mutableCopy];
-    dict[@"click_position"] = @"feed_comment";
     TRACK_EVENT(@"click_comment", dict);
 }
 

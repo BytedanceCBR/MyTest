@@ -46,6 +46,9 @@ typedef NS_ENUM(NSInteger, FHUGCFeedListCellSubType)
     //1.0.1j详情页经纪人评测
     FHUGCFeedListCellSubTypeUGCBrokerImage,                               //详情页经纪人评测t图片
     FHUGCFeedListCellSubTypeUGCBrokerVideo,                               //详情页经纪人评测视频
+    
+    FHUGCFeedListCellSubTypeAnswer ,                              //问题回答
+    FHUGCFeedListCellSubTypeQuestion ,                              //问题回答
 };
 
 typedef NS_ENUM(NSInteger, FHUGCFeedListCellType)
