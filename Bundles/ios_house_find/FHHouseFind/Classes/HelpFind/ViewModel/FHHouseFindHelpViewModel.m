@@ -166,7 +166,6 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
 - (void)confirmBtnDidClick
 {
 //    [self.collectionView endEditing:YES];
-    __weak typeof(self) wself = self;
     
     FHHouseType ht = _houseType;
     FHHouseFindSelectModel *model = [self selectModelWithType:ht];
@@ -288,10 +287,10 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
         @"from_data": associateStr,
     };
     
-    [FHMainApi loadAssociateEntranceWithParams:params completion:^(NSError * _Nonnull error, id _Nonnull response) {
+    [FHMainApi loadAssociateEntranceWithParams:params completion:^(NSError *error, id response, TTHttpResponse *httpResponse) {
         __strong typeof(weakSelf) strongSelf = weakSelf;
         
-        if (!error) {
+        if (!error && httpResponse.statusCode == 200) {
             //Step2: 提交线索信息
             NSDictionary *responseDict = (NSDictionary *)response;
             if (responseDict && [responseDict isKindOfClass:[NSDictionary class]]) {
@@ -300,6 +299,9 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
                     NSDictionary *associateInfo = data[@"associate_info"];
                     strongSelf.reportFormInfo = associateInfo[@"report_form_info"];
                 }
+            } else {
+                [[ToastManager manager] showToast:@"网络错误"];
+                return;
             }
             
             NSString *originFrom = self.tracerDict[@"origin_from"] ?: @"be_null";
@@ -311,6 +313,7 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
             };
             [strongSelf commitAssociateInfoWithParams:params selectedModel:selectModel phoneNumber:phoneNumber];
         } else {
+            //接口出错统一提示“网络错误”
             [[ToastManager manager] showToast:@"网络错误"];
         }
     }];
@@ -321,10 +324,18 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
 - (void)commitAssociateInfoWithParams:(NSDictionary *)params selectedModel:(FHHouseFindSelectModel *)selectedModel phoneNumber:(NSString *)phoneNumber {
     __weak typeof(self) weakSelf = self;
     
-    [FHMainApi commitAssociateInfoWithParams:params completion:^(NSError * _Nonnull error, id _Nonnull response) {
+    [FHMainApi commitAssociateInfoWithParams:params completion:^(NSError *error, id response, TTHttpResponse *httpResponse) {
         __strong typeof(weakSelf) strongSelf = weakSelf;
         
-        if (!error) {
+        if (!error && httpResponse.statusCode == 200) {
+            NSDictionary *responseDict = (NSDictionary *)response;
+            if (responseDict && [responseDict isKindOfClass:[NSDictionary class]]) {
+                
+            } else {
+                [[ToastManager manager] showToast:@"网络错误"];
+                return;
+            }
+            
             //Step3: 保存用户选择信息
             [strongSelf saveSelectedInfoWithSelectedModel:selectedModel phoneNumber:phoneNumber];
             //埋点
