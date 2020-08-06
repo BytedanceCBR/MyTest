@@ -937,7 +937,7 @@ static MAMapView *kFHPageMapView = nil;
            UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(25, 0, 100, 30)];
            titleLabel.text = annotation.title;
            titleLabel.frame = CGRectMake(0, 0, titleLabel.text.length * 13, 32);
-           UIImage *imageAnna = [UIImage imageNamed:@"mapsearch_detail_annotation_bg"];//mapsearch_annotation_bg
+//           UIImage *imageAnna = [UIImage imageNamed:@"mapsearch_detail_annotation_bg"];//mapsearch_annotation_bg
 
 
            backImageView.layer.shadowColor = [UIColor colorWithWhite:0 alpha:0.1].CGColor;// 阴影颜色
