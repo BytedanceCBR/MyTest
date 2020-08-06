@@ -210,7 +210,7 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
 
 - (void)jump2RealtorDetailWithPhone:(FHDetailContactModel *)contactPhone isPreLoad:(BOOL)isPre extra:(NSDictionary*)extra
 {
-    TTRouteObject *routeObj = [self creatJump2RealtorDetailWithPhone:contactPhone isPreLoad:NO andIsOpen:NO extra:extra];
+    TTRouteObject *routeObj = [self creatJump2RealtorDetailWithPhone:contactPhone isPreLoad:NO andIsOpen:YES extra:extra];
           if ([routeObj.instance isKindOfClass:[UIViewController class]] && [self.belongsVC isKindOfClass:[UIViewController class]]) {
               [self.belongsVC.navigationController pushViewController:(UIViewController *)routeObj.instance animated:YES];
           }
@@ -224,13 +224,11 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
     }
     NSDictionary *settings = [self fhSettings];
     BOOL openNewRealtor = settings[@"f_new_realtor_detail"];
-//    BOOL openNewRealtor = NO;
     if (openNewRealtor) {
             NSURL *openUrl = [NSURL URLWithString:[NSString stringWithFormat:@"sslocal://new_realtor_detail"]];
         NSMutableDictionary *info = @{}.mutableCopy;
         info[@"title"] = @"经纪人主页";
         info[@"realtor_id"] = contactPhone.realtorId;
-        info[@"delegate"] = self;
         NSMutableDictionary *tracerDic = self.tracerDict.mutableCopy;
         tracerDic[@"element_from"] = extra[@"element_from"] ? : [self elementTypeStringByHouseType:self.houseType];
         info[@"tracer"] = tracerDic;

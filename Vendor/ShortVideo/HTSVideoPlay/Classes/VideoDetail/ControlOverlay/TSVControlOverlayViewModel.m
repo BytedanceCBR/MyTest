@@ -410,12 +410,18 @@ NSString *const TSVLastShareActivityName = @"TSVLastShareActivityName";
 }
 - (void)clickUserNameButton
 {
-    
+        [self goRealtorHomePage];
+//    [self handleAvatarOrUserNameClick];
+}
+
+- (void)goRealtorHomePage {
     if ([self.model.author.firstBizType isEqualToString:@"1"]) {
         return;
     }
+     NSDictionary *fhSettings = [self fhSettings];
+     BOOL openNewRealtor = fhSettings[@"f_new_realtor_detail"];
+    openNewRealtor = NO;
     NSString *position = @"detail";
-
     [AWEVideoDetailTracker trackEvent:@"rt_click_nickname"
                                 model:self.model
                       commonParameter:self.commonTrackingParameter
@@ -424,41 +430,46 @@ NSString *const TSVLastShareActivityName = @"TSVLastShareActivityName";
                                         @"user_id": self.model.author.userID ?: @"",
                                         }];
     
-    
-    NSURL *openUrl = [NSURL URLWithString:[NSString stringWithFormat:@"sslocal://new_realtor_detail"]];
-            NSMutableDictionary *info = @{}.mutableCopy;
-            info[@"title"] = @"经纪人主页";
-            info[@"realtor_id"] = self.model.author.realtorId;
-            NSMutableDictionary *tracerDic = self.model.extraDic.mutableCopy;
-            info[@"tracer"] = tracerDic;
-            TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:info];
-        [[TTRoute sharedRoute]openURLByViewController:openUrl userInfo:userInfo];
-//    [self handleAvatarOrUserNameClick];
+    if (openNewRealtor) {
+          NSURL *openUrl = [NSURL URLWithString:[NSString stringWithFormat:@"sslocal://new_realtor_detail"]];
+                  NSMutableDictionary *info = @{}.mutableCopy;
+                  info[@"title"] = @"经纪人主页";
+                  info[@"realtor_id"] = self.model.author.realtorId;
+                  NSMutableDictionary *tracerDic = self.model.extraDic.mutableCopy;
+                  info[@"tracer"] = tracerDic;
+                  TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:info];
+              [[TTRoute sharedRoute]openURLByViewController:openUrl userInfo:userInfo];
+    }else {
+        NSError *parseError = nil;
+        NSString *reportParams = nil;
+        NSData *jsonData = [NSJSONSerialization dataWithJSONObject:self.model.extraDic options:0 error:&parseError];
+        if (!parseError) {
+            reportParams = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+        }
+        NSMutableDictionary *info = @{}.mutableCopy;
+        NSString * host = [FHURLSettings baseURL] ?: @"https://i.haoduofangs.com";
+        NSURL *openUrl = [NSURL URLWithString:@"sslocal://realtor_detail"];
+        NSString *jumpUrl = [NSString stringWithFormat:@"%@/f100/client/realtor_detail?realtor_id=%@&report_params=%@",host,self.model.author.realtorId,reportParams ? : @""];
+        info[@"url"] = jumpUrl;
+        info[@"title"] = @"经纪人主页";
+        info[@"realtor_id"] = self.model.author.realtorId;
+        info[@"trace"] = self.model.extraDic;
+            TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc]initWithInfo:info];
+            [[TTRoute sharedRoute]openURLByViewController:openUrl userInfo:userInfo];
+    }
+}
+
+- (NSDictionary *)fhSettings {
+    if ([[NSUserDefaults standardUserDefaults] objectForKey:@"kFHSettingsKey"]){
+        return [[NSUserDefaults standardUserDefaults] dictionaryForKey:@"kFHSettingsKey"];
+    } else {
+        return nil;
+    }
 }
 
 - (void)clickAvatarButton
 {
-    if ([self.model.author.firstBizType isEqualToString:@"1"]) {
-        return;
-    }
-    
-    NSString *position = @"detail";
-
-    [AWEVideoDetailTracker trackEvent:@"rt_click_avatar"
-                                model:self.model
-                      commonParameter:self.commonTrackingParameter
-                       extraParameter:@{
-                                        @"position": position,
-                                        @"user_id": self.model.author.userID ?: @"",
-                                        }];
-    NSURL *openUrl = [NSURL URLWithString:[NSString stringWithFormat:@"sslocal://new_realtor_detail"]];
-            NSMutableDictionary *info = @{}.mutableCopy;
-            info[@"title"] = @"经纪人主页";
-            info[@"realtor_id"] = self.model.author.realtorId;
-            NSMutableDictionary *tracerDic = self.model.extraDic.mutableCopy;
-            info[@"tracer"] = tracerDic;
-            TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:info];
-        [[TTRoute sharedRoute]openURLByViewController:openUrl userInfo:userInfo];
+    [self goRealtorHomePage];
     
 //    [self handleAvatarOrUserNameClick];
 }

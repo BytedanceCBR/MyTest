@@ -107,7 +107,10 @@
 
 - (void)jump2RealtorDetailWithPhone:(FHFeedUGCCellRealtorModel *)contactPhone isPreLoad:(BOOL)isPre extra:(NSDictionary*)extra
 {
-        [self creatJump2RealtorDetailWithPhone:contactPhone isPreLoad:NO andIsOpen:YES extra:extra];
+           TTRouteObject *routeObj = [self creatJump2RealtorDetailWithPhone:contactPhone isPreLoad:NO andIsOpen:YES extra:extra];
+              if ([routeObj.instance isKindOfClass:[UIViewController class]] && [self.belongsVC isKindOfClass:[UIViewController class]]) {
+                  [self.belongsVC.navigationController pushViewController:(UIViewController *)routeObj.instance animated:YES];
+              }
 }
 
 - (TTRouteObject *)creatJump2RealtorDetailWithPhone:(FHFeedUGCCellRealtorModel *)contactPhone isPreLoad:(BOOL)isPre andIsOpen:(BOOL)isOpen extra:(NSDictionary*)extra
@@ -123,13 +126,13 @@
           NSMutableDictionary *info = @{}.mutableCopy;
           info[@"title"] = @"经纪人主页";
           info[@"realtor_id"] = contactPhone.realtorId;
-          info[@"delegate"] = self;
           info[@"tracer"] = self.tracerDict;
         if (self.houseId && self.houseType) {
             info[@"house_id"] = _houseId;
             info[@"house_type"] = @(_houseType);
         }
           TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:info];
+        
           TTRouteObject *routeObj = [[TTRoute sharedRoute] routeObjWithOpenURL:openUrl userInfo:userInfo];
           return routeObj;
     }
@@ -204,16 +207,9 @@
     if (!imParseError) {
         imParams = [[NSString alloc] initWithData:imJsonData encoding:NSUTF8StringEncoding];
     }
-    NSString *realtorDeUrl = contactPhone.mainPageInfo;
     //    realtorDeUrl = [realtorDeUrl stringByReplacingOccurrencesOfString:@"https://i.haoduofangs.com" withString:@"http://10.1.15.29:8889"];
     NSString *jumpUrl =@"";
-
-    if (isEmptyString(realtorDeUrl)) {
-        jumpUrl = [NSString stringWithFormat:@"%@?realtor_id=%@&report_params=%@&im_params=%@",host,contactPhone.realtorId,reportParams ? : @"", imParams ?: @""];
-    } else {
-        jumpUrl = [NSString stringWithFormat:@"%@&report_params=%@",realtorDeUrl,reportParams ? : @""];
-    }
-
+    jumpUrl = [NSString stringWithFormat:@"%@/f100/client/realtor_detail?realtor_id=%@&report_params=%@&im_params=%@",host,contactPhone.realtorId,reportParams ? : @"", imParams ?: @""];
     NSMutableDictionary *info = @{}.mutableCopy;
     info[@"url"] = jumpUrl;
     info[@"title"] = @"经纪人主页";
