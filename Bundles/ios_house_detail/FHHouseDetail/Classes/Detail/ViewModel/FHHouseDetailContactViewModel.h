@@ -83,7 +83,6 @@ typedef enum : NSUInteger {
 - (void)refreshMessageDot;
 - (void)hideFollowBtn;
 
-- (void)destroyRNPreLoadCache;
 
 - (void)updateLoadFinish;
 

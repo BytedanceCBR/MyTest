@@ -40,7 +40,6 @@ def fhPods
     #    pod 'FHCHousePush' , :git => 'git@code.byted.org:fproject/FHCHousePush.git' , :branch => 'feature/develop'
     
     pod 'FHWebView', :path => '../AKPlugins/FHWebView', :inhibit_warnings => false
-    pod 'FHRNKit' , :path => '../Bundles/ios_common_rn', :inhibit_warnings => false
     pod 'FHLynxKit' , :path => '../Bundles/ios_common_lynx', :inhibit_warnings => false
 
 #    pod 'ios_house_filter' , :git => 'git@code.byted.org:fproject/ios_house_filter.git', :commit => '60e9866a118874a07ca697cfbc4155bfa6b3d72c' #:branch => 'feature/develop'filter-triangle-open-highlighted
@@ -66,8 +65,8 @@ def fhPods
     #]
 
 #    pod 'ios_house_im' , '0.2.14-rc.11'
-#     pod 'ios_house_im' , :path => '../../../im/4'
-    pod 'ios_house_im' ,'0.2.14-rc.16'
+     pod 'ios_house_im' , :path => '../../ios_house_im/'
+#    pod 'ios_house_im' ,'0.2.14-rc.16'
 
 end
 
@@ -163,30 +162,6 @@ def appPods
     
     pod_binary 'IESGeckoKit', '0.4.0'
     pod_binary 'IESWebKit', '0.2.0-rc.3'
-    pod_binary 'React', '0.55.13-rc.0', :subspecs => [ #可根据需要选择相应子库以减少包大小
-    'Core',
-    'CxxBridge',
-    'RCTActionSheet',
-    'RCTImage',
-    'RCTNetwork',
-    'RCTText',
-    'jschelpers',
-    'cxxreact',
-    'PrivateDatabase',
-    'RCTBlob',
-    'fishhook',
-    'jsinspector',
-    'RCTLinkingIOS',
-    'RNFetchBlob',
-    'base',
-    'runtime',
-#    'yoga',
-    'third-party',
-    'RCTAnimation', # Needed for FlatList and animations running on native UI thread
-    'DevSupport', # Include this to enable In-App Devmenu if RN >= 0.43
-    'RCTWebSocket', # Needed for debugging
-    'Extra'
-    ]
     
     pod_binary 'TTVideoService', '0.1.71'
     pod_binary 'TTVideoService/TTBusinessService', '0.1.71'

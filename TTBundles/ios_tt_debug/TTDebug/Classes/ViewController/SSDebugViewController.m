@@ -72,11 +72,6 @@
 //#import "TTFDashboardViewController.h"
 #import <TTArticleBase/SSCommonLogic.h>
 #import <TTArticleBase/ExploreLogicSetting.h>
-
-#import "TTRNKitHelper.h"
-#import "TTRNKit.h"
-#import "TTRNKitMacro.h"
-#import "FHRNDebugViewController.h"
 #import "BDSSOAuthManager.h"
 #import "ToastManager.h"
 #import <ByteDanceKit/NSDictionary+BTDAdditions.h>
@@ -134,7 +129,6 @@ extern NSString *const BOE_OPEN_KEY ;
 @property(nonatomic, weak)   STTableViewCellItem *item52;
 @property(nonatomic, weak)   STTableViewCellItem *item53;
 @property(nonatomic, weak)   STTableViewCellItem *item54;
-@property (nonatomic, strong) TTRNKit *ttRNKit;
 @property(nonatomic, strong) UIView *tableViewHeaderView;
 
 @end
@@ -182,10 +176,6 @@ extern NSString *const BOE_OPEN_KEY ;
         STTableViewCellItem *clientABDebugItem = [[STTableViewCellItem alloc] initWithTitle:@"😘F项目客户端AB实验调试选项点这里😘" target:self action:@selector(_openABTestSDKClientABTestVC)];
         clientABDebugItem.switchStyle = NO;
         [itemArray addObject:clientABDebugItem];
-        
-        STTableViewCellItem *rnBridgeDebugItem = [[STTableViewCellItem alloc] initWithTitle:@"RN_Debug" target:self action:@selector(_openRNBridge)];
-        rnBridgeDebugItem.switchStyle = NO;
-        [itemArray addObject:rnBridgeDebugItem];
         
         STTableViewCellItem *lynxDebugItem = [[STTableViewCellItem alloc] initWithTitle:@"Lynx_Debug" target:self action:@selector(_openLynxBridge)];
                lynxDebugItem.switchStyle = NO;
@@ -984,14 +974,6 @@ extern NSString *const BOE_OPEN_KEY ;
     [self.navigationController pushViewController:controller animated:YES];
 }
 
-- (void)_openRNBridge
-{
-    self.ttRNKit = [[TTRNKit alloc] initWithGeckoParams:[TTRNKitStartUpSetting startUpParameterForKey:TTRNKitInitGeckoParams] ?: @{}
-                                        animationParams:[TTRNKitStartUpSetting startUpParameterForKey:TTRNKitInitAnimationParams] ?: @{}];
-    self.ttRNKit.delegate = self;
-    FHRNDebugViewController *vc = [[FHRNDebugViewController alloc] init];
-    [self.navigationController pushViewController:vc animated:YES];
-}
 
 - (void)_openLynxBridge
 {

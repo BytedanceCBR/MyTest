@@ -11,7 +11,6 @@
 #import "FHHousePhoneCallUtils.h"
 #import "FHIESGeckoManager.h"
 #import "FHEnvContext.h"
-#import "FHRNHelper.h"
 #import "FHURLSettings.h"
 #import "IMManager.h"
 #import "TTAccount.h"
@@ -108,41 +107,7 @@
 
 - (void)jump2RealtorDetailWithPhone:(FHFeedUGCCellRealtorModel *)contactPhone isPreLoad:(BOOL)isPre extra:(NSDictionary*)extra
 {
-    //如果没有资源，走H5
-    if (![FHIESGeckoManager isHasCacheForChannel:@"f_realtor_detail"] || self.rnIsUnAvalable) {
         [self creatJump2RealtorDetailWithPhone:contactPhone isPreLoad:NO andIsOpen:YES extra:extra];
-        return;
-    }
-    
-    if ([FHRealtorEvaluatingPhoneCallModel isEnableCurrentChannel]) {
-        if (isPre && [FHEnvContext isNetworkConnected]) {
-            TTRouteObject *routeAgentObj = [[FHRNHelper sharedInstance] getRNCacheForCacheKey:self.hash];
-            if ([routeAgentObj.instance isKindOfClass:[UIViewController class]] && [self.belongsVC isKindOfClass:[UIViewController class]]) {
-                [self.belongsVC.navigationController pushViewController:routeAgentObj.instance animated:YES];
-            }else
-            {
-                TTRouteObject *routeObj = [self creatJump2RealtorDetailWithPhone:contactPhone isPreLoad:NO andIsOpen:NO extra:extra];
-                if ([routeObj.instance isKindOfClass:[UIViewController class]] && [self.belongsVC isKindOfClass:[UIViewController class]]) {
-                    [self.belongsVC.navigationController pushViewController:routeObj.instance animated:YES];
-                }else
-                {
-                    [self creatJump2RealtorDetailWithPhone:contactPhone isPreLoad:NO andIsOpen:YES extra:extra];
-                }
-            }
-        }else
-        {
-            TTRouteObject *routeObj = [self creatJump2RealtorDetailWithPhone:contactPhone isPreLoad:NO andIsOpen:NO extra:extra];
-            if ([routeObj.instance isKindOfClass:[UIViewController class]] && [self.belongsVC isKindOfClass:[UIViewController class]]) {
-                    [self.belongsVC.navigationController pushViewController:routeObj.instance animated:YES];
-            }else
-            {
-                [self creatJump2RealtorDetailWithPhone:contactPhone isPreLoad:NO andIsOpen:YES extra:extra];
-            }
-        }
-    }else
-    {
-        [self creatJump2RealtorDetailWithPhone:contactPhone isPreLoad:NO andIsOpen:YES extra:extra];
-    }
 }
 
 - (TTRouteObject *)creatJump2RealtorDetailWithPhone:(FHFeedUGCCellRealtorModel *)contactPhone isPreLoad:(BOOL)isPre andIsOpen:(BOOL)isOpen extra:(NSDictionary*)extra
@@ -167,11 +132,6 @@
           TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:info];
           TTRouteObject *routeObj = [[TTRoute sharedRoute] routeObjWithOpenURL:openUrl userInfo:userInfo];
           return routeObj;
-    }
-    
-    
-    if (![FHIESGeckoManager isHasCacheForChannel:@"f_realtor_detail"] && !isOpen) {
-        return nil;
     }
 
     NSString * host = [FHURLSettings baseURL] ?: @"https://i.haoduofangs.com";
@@ -262,53 +222,11 @@
     info[@"trace"] = self.tracerDict;
     info[@"house_id"] = _houseId;
     info[@"house_type"] = @(_houseType);
-
-    if (isOpen) {
         TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc]initWithInfo:info];
         [[TTRoute sharedRoute]openURLByViewController:openUrl userInfo:userInfo];
         return nil;
-    }else
-    {
-        dict[@"page_type"] = @"realtor_detail";
-        BOOL islogin = [[TTAccount sharedAccount] isLogin];
-        [imdic setValue:islogin ? @"1" : @"0" forKey:@"is_login"];
-
-        NSString *openUrlRnStr = [NSString stringWithFormat:@"sslocal://react?module_name=FHRNAgentDetailModule_home&realtorId=%@&can_multi_preload=%ld&channelName=f_realtor_detail&debug=0&report_params=%@&im_params=%@&bundle_name=%@&is_login=%@",contactPhone.realtorId,isPre ? 1 : 0,[FHUtils getJsonStrFrom:dict],[FHUtils getJsonStrFrom:imdic],@"agent_detail.bundle",islogin ? @"1" : @"0"];
-
-        NSURL *openUrlRn = [NSURL URLWithString:openUrlRnStr];
-
-        TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:info];
-        TTRouteObject *routeObj = [[TTRoute sharedRoute] routeObjWithOpenURL:openUrlRn userInfo:userInfo];
-        if (isPre) {
-            [[FHRNHelper sharedInstance] addCacheViewOpenUrl:openUrlRnStr andUserInfo:userInfo andCacheKey:self.hash];
-            return nil;
-        }else
-        {
-            return routeObj;
-        }
-    }
 }
 
-+ (BOOL)isEnableCurrentChannel
-{
-    if([FHRealtorEvaluatingPhoneCallModel fhRNEnableChannels].count > 0 && [[FHRealtorEvaluatingPhoneCallModel fhRNEnableChannels] containsObject:@"f_realtor_detail"])
-    {
-        return YES;
-    }else
-    {
-        return NO;
-    }
-}
-
-+ (NSArray *)fhRNEnableChannels
-{
-    NSDictionary *fhSettings = [self fhSettings];
-    NSArray * f_rn_enable = [fhSettings tt_arrayValueForKey:@"f_rn_enable"];
-    if ([f_rn_enable isKindOfClass:[NSArray class]]) {
-        return f_rn_enable;
-    }
-    return @[];
-}
 
 - (NSString *)elementTypeStringByHouseType:(FHHouseType)houseType
 {

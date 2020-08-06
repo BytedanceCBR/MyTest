@@ -1260,10 +1260,6 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
     return _shareManager;
 }
 
-- (void)destroyRNPreLoadCache
-{
-    [self.phoneCallViewModel destoryRNPreloadCache];
-}
 
 - (void)updateLoadFinish
 {
