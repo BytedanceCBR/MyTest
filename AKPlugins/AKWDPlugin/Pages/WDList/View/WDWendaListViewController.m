@@ -55,6 +55,8 @@
 #import "TTAccountManager.h"
 #import "FHUserTracker.h"
 #import <BDTrackerProtocol/BDTrackerProtocol.h>
+#import "UIColor+Theme.h"
+#import "UIFont+House.h"
 #import "FHUtils.h"
 
 #define kListBottomBarHeight (self.view.tt_safeAreaInsets.bottom ? self.view.tt_safeAreaInsets.bottom + 44 : 44)
@@ -147,10 +149,15 @@ static NSString * const WukongListTipsHasShown = @"kWukongListTipsHasShown";
     NSMutableDictionary *extraDictsAdd = [NSMutableDictionary dictionaryWithDictionary:extraDicts];
     NSDictionary *tracer = paramObj.allParams[@"tracer"];
     if(tracer && tracer.count > 0){
-//        extraDictsAdd[@"enter_from"] = tracer[@"enter_from"];
-//        extraDictsAdd[@"origin_from"] = tracer[@"origin_from"];
-//        extraDictsAdd[@"category_name"] = tracer[@"category_name"];
         [extraDictsAdd addEntriesFromDictionary:tracer];
+    }
+    
+    id logPb = extraDictsAdd[@"log_pb"];
+    if([logPb isKindOfClass:[NSDictionary class]]){
+        NSDictionary *logPbDic = (NSDictionary *)logPb;
+        NSMutableDictionary *logPbM = [logPbDic mutableCopy];
+        [logPbM removeObjectsForKeys:@[@"group_id"]];
+        extraDictsAdd[@"log_pb"] = [logPbM copy];
     }
     
     BOOL needReturn = [[paramObj.userInfo.extra tt_stringValueForKey:kWDListNeedReturnKey] boolValue];
@@ -346,7 +353,9 @@ static NSString * const WukongListTipsHasShown = @"kWukongListTipsHasShown";
     [backButtonView.backButton addTarget:self action:@selector(dismissSelf) forControlEvents:UIControlEventTouchUpInside];
     self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:backButtonView];
 
-    UIBarButtonItem *moreButtonItem = [[UIBarButtonItem alloc] initWithCustomView:[self moreButton]];
+    UIBarButtonItem *moreButtonItem = [[UIBarButtonItem alloc] initWithCustomView:[self questionBtn]];
+    
+//    UIBarButtonItem *moreButtonItem = [[UIBarButtonItem alloc] initWithCustomView:[self moreButton]];
     self.navigationItem.rightBarButtonItems = @[moreButtonItem];
  
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(postAnswerSuccess:) name:@"kFHWDAnswerPictureTextPostSuccessNotification" object:nil];
@@ -400,7 +409,7 @@ static NSString * const WukongListTipsHasShown = @"kWukongListTipsHasShown";
     } else if (@available(iOS 11.0 , *)) {
         bottomSafeHeight = self.view.tt_safeAreaInsets.bottom;
     }
-    self.bottomButtonHeight = 48 + bottomSafeHeight;
+    self.bottomButtonHeight = 64 + bottomSafeHeight;
     self.bottomButton = [[WDListBottomButton alloc] init];
     [self.view addSubview:self.bottomButton];
     self.bottomButton.frame = CGRectMake(0, SSScreenHeight - self.bottomButtonHeight, SSScreenWidth, self.bottomButtonHeight);
@@ -431,7 +440,7 @@ static NSString * const WukongListTipsHasShown = @"kWukongListTipsHasShown";
     if ([TTAccountManager isLogin]) {
         [self gotoPostWDAnswer];
     } else {
-        [self gotoLogin];
+        [self gotoLogin:YES];
     }
 }
 
@@ -460,38 +469,28 @@ static NSString * const WukongListTipsHasShown = @"kWukongListTipsHasShown";
     [[TTRoute sharedRoute] openURLByPresentViewController:openUrl userInfo:userInfo];
 }
 
-- (void)gotoLogin {
+- (void)gotoLogin:(BOOL)isAnswer {
     NSMutableDictionary *params = [NSMutableDictionary dictionary];
     [params setObject:@"question" forKey:@"enter_from"];
-    [params setObject:@"want_answer" forKey:@"enter_type"];
+    [params setObject:isAnswer?@"want_answer":@"want_question" forKey:@"enter_type"];
     // 登录成功之后不自己Pop，先进行页面跳转逻辑，再pop
-    [params setObject:@(NO) forKey:@"need_pop_vc"];
+    [params setObject:@(YES) forKey:@"need_pop_vc"];
     params[@"from_ugc"] = @(YES);
     __weak typeof(self) wSelf = self;
     [TTAccountLoginManager showAlertFLoginVCWithParams:params completeBlock:^(TTAccountAlertCompletionEventType type, NSString * _Nullable phoneNum) {
         if (type == TTAccountAlertCompletionEventTypeDone) {
             // 登录成功
             if ([TTAccountManager isLogin]) {
-                [wSelf gotoPostWDAnswer];
+                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                                  if (isAnswer) {
+                        [wSelf gotoPostWDAnswer];
+                   }else {
+                        [wSelf goQuestion];
+                   }
+                });
             }
-            // 移除登录页面
-            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.7 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                [wSelf delayRemoveLoginVC];
-            });
         }
     }];
-}
-
-- (void)delayRemoveLoginVC {
-    UINavigationController *navVC = self.navigationController;
-    NSInteger count = navVC.viewControllers.count;
-    if (navVC && count >= 1) {
-        NSMutableArray *vcs = [[NSMutableArray alloc] initWithArray:navVC.viewControllers];
-        if (vcs.count == count) {
-            [vcs removeLastObject];
-            [self.navigationController setViewControllers:vcs];
-        }
-    }
 }
 
 - (void)secondLoadContent {
@@ -1114,6 +1113,40 @@ static void extracted(WDWendaListViewController *object, WDWendaListViewControll
     {
         return nil;
     }
+}
+
+- (UIButton *)questionBtn {
+    UIButton *questionBtn = [[UIButton alloc]initWithFrame:CGRectMake(0, 0, 90, 20)];
+    [questionBtn setTitleColor:[UIColor themeOrange4] forState:UIControlStateNormal];
+    [questionBtn setTitle:@"我要提问" forState:UIControlStateNormal];
+    questionBtn.titleLabel.font = [UIFont themeFontRegular:14];
+    [questionBtn setImage:[UIImage imageNamed:@"right_write"] forState:UIControlStateNormal];
+    questionBtn.imageEdgeInsets = UIEdgeInsetsMake(0, 0, 0, 0);
+    questionBtn.titleEdgeInsets = UIEdgeInsetsMake(0, 10, 0, 0);
+    [questionBtn setAdjustsImageWhenHighlighted:NO];
+    questionBtn.contentHorizontalAlignment = UIControlContentHorizontalAlignmentCenter;
+    [questionBtn addTarget:self action:@selector(writeQuestion:) forControlEvents:UIControlEventTouchUpInside];
+    return questionBtn;
+}
+
+- (void)writeQuestion:(UIButton *)btn {
+    
+    if ([TTAccountManager isLogin]) {
+        [self goQuestion];
+    } else {
+        [self gotoLogin:NO];
+    }
+}
+
+- (void)goQuestion {
+            NSURL *openUrl = [NSURL URLWithString:[NSString stringWithFormat:@"sslocal://ugc_wenda_publish"]];
+            NSMutableDictionary *info = @{}.mutableCopy;
+            info[@"title"] = @"提问";
+    NSMutableDictionary *tracer = self.viewModel.gdExtJson.mutableCopy;
+    tracer[@"enter_from"] = @"question";
+            info[@"tracer"] = tracer;
+            TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:info];
+           [[TTRoute sharedRoute] openURLByPresentViewController:openUrl userInfo:userInfo];
 }
 
 - (SSThemedView<WDWendaListQuestionHeaderProtocol> *)questionHeader

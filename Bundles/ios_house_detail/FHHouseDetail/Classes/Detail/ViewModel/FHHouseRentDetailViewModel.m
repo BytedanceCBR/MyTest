@@ -150,7 +150,6 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
                 wSelf.neighborhoodId = neighborhoodId;
                 // 周边数据请求
                 [wSelf requestRelatedData:neighborhoodId];
-                [wSelf.navBar showMessageNumber];
                 wSelf.contactViewModel.imShareInfo = model.data.imShareInfo;
             } else {
                 wSelf.detailController.isLoadingData = NO;
@@ -182,6 +181,7 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
         [self.bottomStatusBar mas_updateConstraints:^(MASConstraintMaker *make) {
             make.height.mas_equalTo(30);
         }];
+                [self.navBar showMessageNumber];
         self.bottomStatusBar.text = @"该房源已停止出租";
     }else if (status == -1) {
         self.bottomStatusBar.hidden = YES;
@@ -197,8 +197,10 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
         [self.bottomStatusBar mas_updateConstraints:^(MASConstraintMaker *make) {
             make.height.mas_equalTo(30);
         }];
+                [self.navBar showMessageNumber];
         self.bottomStatusBar.text = @"该房源已出租";
     }else {
+        [self.navBar showMessageNumber];
         self.bottomStatusBar.hidden = YES;
         [self.navBar showRightItems:YES];
         [self.bottomStatusBar mas_updateConstraints:^(MASConstraintMaker *make) {

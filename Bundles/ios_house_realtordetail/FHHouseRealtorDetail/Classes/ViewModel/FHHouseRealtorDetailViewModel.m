@@ -176,6 +176,7 @@
         cellModel.tableView = self.tableView;
         cellModel.enterFrom = [self.detailController categoryName];
         cellModel.isShowLineView = NO;
+        cellModel.tracerDic = self.tracerDic;
         switch (cellModel.cellType) {
             case FHUGCFeedListCellTypeUGC:
                 cellModel.cellSubType = FHUGCFeedListCellSubTypeUGCBrokerImage;

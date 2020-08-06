@@ -29,7 +29,7 @@ static CGFloat rRadii = 8.0f;//默认圆角大小
 {
     [super setAnnotation:annotation];
     
-    [self addCornersAndShadow];
+//    [self addCornersAndShadow];
 //    CGRect frame = self.frame;
 //    frame.size = CGSizeMake(self.annotation.title.length * 16 + 5, 30);
 //    self.frame = frame;
