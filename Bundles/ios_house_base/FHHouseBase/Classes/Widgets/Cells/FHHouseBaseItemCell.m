@@ -1574,15 +1574,22 @@
                 if (self.priceLabel.yoga.marginTop.value != 57) {
                     layout.marginTop = YGPointValue(57);
                 }
+                layout.maxWidth = YGPointValue(90);
                 layout.width = YGPointValue(priceSize.width);
 //                layout.maxWidth = YGPointValue(YOGA_RIGHT_PRICE_WIDITH + 20);
             }];
+            
+            [self.tagLabel configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
+               layout.maxWidth = YGPointValue([self contentSmallImageTagMaxWidth] + 10);
+            }];
+            
             [self.mainTitleLabel.yoga markDirty];
             [self.subTitleLabel.yoga markDirty];
             [self.distanceLabel.yoga markDirty];
             [self.rightInfoView.yoga markDirty];
             [self.priceLabel.yoga markDirty];
-            
+            [self.tagLabel.yoga markDirty];
+
             [self.rightInfoView configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
                 layout.flexGrow = 0;
             }];
