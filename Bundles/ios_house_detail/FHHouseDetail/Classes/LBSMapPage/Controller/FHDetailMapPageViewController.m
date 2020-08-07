@@ -46,7 +46,7 @@ static MAMapView *kFHPageMapView = nil;
 @property (nonatomic, weak) MAMapView *mapView;
 @property (nonnull, strong) UIView *mapContainer;
 @property (nonatomic, strong) UIView * bottomBarView;
-@property (nonatomic, strong) UIButton * previouseIndicator;
+@property (nonatomic, strong) UIView * previouseIndicator;
 @property (nonatomic, strong) UILabel * previouseLabel;
 @property (nonatomic, assign) NSInteger selectedIndex;
 @property (nonatomic, strong) NSArray * nameArray;
@@ -65,7 +65,7 @@ static MAMapView *kFHPageMapView = nil;
 @property (nonatomic, copy) NSString *baiduPanoramaUrl;
 @property (nonatomic , strong) FHMyMAAnnotation *baiduPanoAnnotation;
 @property (nonatomic , strong) UIView *bottomShowInfoView;
-@property(nonatomic , strong) UIPanGestureRecognizer *panGesture;
+//@property(nonatomic , strong) UIPanGestureRecognizer *panGesture;
 @property(nonatomic , assign) CGPoint panLocation;
 @property(nonatomic , assign) CGFloat dragOffset;
 
@@ -240,7 +240,7 @@ static MAMapView *kFHPageMapView = nil;
     
 }
 
--(void)panAction:(UIPanGestureRecognizer *)pan
+-(void)panAction:(UISwipeGestureRecognizer *)pan
 {
     [self hideAnaInfoView:nil];
     [self processSelected:NO andAnnotationView:self.currentSelectAna];
@@ -257,8 +257,6 @@ static MAMapView *kFHPageMapView = nil;
         UISwipeGestureRecognizer *panGesture = [[UISwipeGestureRecognizer alloc]initWithTarget:self action:@selector(panAction:)];
         [panGesture setDirection:UISwipeGestureRecognizerDirectionDown];
         [self.bottomShowInfoView addGestureRecognizer:panGesture];
-        self.panGesture = panGesture;
-        
      }
     
     for (UIView *subviw in self.bottomShowInfoView.subviews) {
@@ -355,7 +353,7 @@ static MAMapView *kFHPageMapView = nil;
     [self processSelected:YES andAnnotationView:self.currentSelectAna];
 }
 
-+(NSAttributedString *)createTagAttrString:(NSString *)text isFirst:(BOOL)isFirst textColor:(UIColor *)textColor backgroundColor:(UIColor *)backgroundColor {
++(NSMutableAttributedString *)createTagAttrString:(NSString *)text isFirst:(BOOL)isFirst textColor:(UIColor *)textColor backgroundColor:(UIColor *)backgroundColor {
     
     NSMutableAttributedString *attributeText = [[NSMutableAttributedString alloc]initWithString:[NSString stringWithFormat:@" %@ ",text]];
     attributeText.yy_font = [UIFont themeFontRegular:10];
@@ -569,7 +567,7 @@ static MAMapView *kFHPageMapView = nil;
 //    requestPoi.cityLimit = YES;
     requestPoi.radius = 2000;
     
-    [self.searchApi AMapPOIIDSearch:requestPoi];
+    [self.searchApi AMapPOIAroundSearch:requestPoi];
 }
 
 - (void)setUpMapView
@@ -592,7 +590,7 @@ static MAMapView *kFHPageMapView = nil;
     // mapFrame 暂时没有用到
     CGFloat navHeight = [FHFakeInputNavbar perferredHeight];
     CGFloat bottomHeight = 0;
-    if ([TTDeviceHelper isIPhoneXDevice]) {
+    if ([UIDevice btd_isIPhoneXSeries]) {
         bottomHeight = 83;
     } else {
         bottomHeight = 43;
@@ -647,7 +645,6 @@ static MAMapView *kFHPageMapView = nil;
 
 - (void)createMenu
 {
-    UIApplication *shareApplication = [UIApplication sharedApplication];
     UIAlertController *optionMenu = [UIAlertController alertControllerWithTitle:nil message:nil preferredStyle:UIAlertControllerStyleActionSheet];
     
     NSString * qqUrlString = [NSString stringWithFormat:@"qqmap://map/routeplan?from=我的位置&type=drive&tocoord=%f,%f&to="")&coord_type=1&policy=0",self.centerPoint.latitude,self.centerPoint.longitude];
@@ -1012,7 +1009,7 @@ static MAMapView *kFHPageMapView = nil;
 
 - (void)mapView:(MAMapView *)mapView didAnnotationViewTapped:(MAAnnotationView *)view{
     if([view isKindOfClass:[FHMyItemAnnView class]]){
-        FHMyMAAnnotation *clickAna = (FHMyItemAnnView *)view;
+        FHMyItemAnnView *clickAna = (FHMyItemAnnView *)view;
         if (clickAna.poi) {
             [self showAnaInfoView:clickAna.poi];
         }
@@ -1074,7 +1071,7 @@ static MAMapView *kFHPageMapView = nil;
 {
     [super viewSafeAreaInsetsDidChange];
     UIEdgeInsets safeInset = self.view.safeAreaInsets;
-    if (safeInset.top > 0 || [TTDeviceHelper isIPhoneXDevice]){
+    if (safeInset.top > 0 || [UIDevice btd_isIPhoneXSeries]){
        
     }
 }
