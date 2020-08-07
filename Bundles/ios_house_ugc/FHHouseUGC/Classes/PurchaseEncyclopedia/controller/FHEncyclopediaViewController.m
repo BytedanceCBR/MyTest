@@ -130,6 +130,7 @@
     info[@"title"] = @"提问";
     NSMutableDictionary *dic = @{}.mutableCopy;
     dic[@"enter_from"] = @"f_house_encyclopedia";
+    dic[@"is_wiki"] = @(1);
     info[@"tracer"] = dic;
     TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:info];
     [[TTRoute sharedRoute] openURLByPresentViewController:openUrl userInfo:userInfo];

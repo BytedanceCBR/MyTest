@@ -38,6 +38,7 @@
 }
 
 - (void)retryLoadData {
+     _viewModel.channel_id = self.channel_id;
     [_viewModel requestData:YES first:YES];
 }
 
@@ -55,9 +56,7 @@
         _viewModel.channel_id = self.channel_id;
         [_viewModel requestData:YES first:YES];
     }else {
-        if(!self.hasValidateData){
-            [self.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoNetWorkAndRefresh];
-        }
+         [self.emptyView showEmptyWithTip:@"网络异常，请检查网络连接" errorImageName:kFHErrorMaskNoNetWorkImageName showRetry:YES];
     }
 }
 
