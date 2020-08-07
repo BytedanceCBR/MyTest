@@ -344,6 +344,7 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
             categoryDict[@"status"] = [NSString stringWithFormat:@"%ld",  FHClueErrorTypeNetFailure];
         }
         
+        NSString *message = nil;
         if (httpResponse.statusCode == 200) {
             NSData *responseData = (NSData *)response;
             if (responseData && [responseData isKindOfClass:[NSData class]]) {
@@ -351,7 +352,7 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
                 if (responseDict && [responseDict isKindOfClass:[NSDictionary class]]) {
                     if (responseDict[@"status"]) {
                         NSInteger status = [responseDict[@"status"] integerValue];
-                        NSString *message = responseDict[@"message"];
+                        message = responseDict[@"message"];
                         if (status == 0) {
                             //Step3: 保存用户选择信息
                             [strongSelf saveSelectedInfoWithSelectedModel:selectedModel phoneNumber:phoneNumber];
@@ -362,19 +363,12 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
                         } else {
                             error = [NSError errorWithDomain:responseDict[@"message"] ?: @"请求错误" code:1000 userInfo:nil];
                         }
-                        
-                        if (error) {
-                            extraDict[@"message"] = message ?: error.domain;
-                            categoryDict[@"status"] = [NSString stringWithFormat:@"%ld", FHClueErrorTypeServerFailure];
-                        }
                     }
                 } else {
                     error = [NSError errorWithDomain:@"请求错误" code:1000 userInfo:nil];
-                    [[ToastManager manager] showToast:@"网络错误"];
                 }
             } else {
                 error = [NSError errorWithDomain:@"请求错误" code:1000 userInfo:nil];
-                [[ToastManager manager] showToast:@"网络错误"];
             }
         } else {
             categoryDict[@"status"] = [NSString stringWithFormat:@"%ld", FHClueErrorTypeHttpFailure];
@@ -382,6 +376,9 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
         }
         
         if (error) {
+            NSString *errorMsg = message ?: error.domain;
+            extraDict[@"message"] = errorMsg ?: @"";
+            categoryDict[@"status"] = [NSString stringWithFormat:@"%ld", FHClueErrorTypeServerFailure];
             [[ToastManager manager] showToast:@"网络错误"];
         }
         
