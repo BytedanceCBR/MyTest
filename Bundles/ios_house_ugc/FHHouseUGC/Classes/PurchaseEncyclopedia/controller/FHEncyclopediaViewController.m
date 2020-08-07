@@ -66,6 +66,7 @@
     }];
 }
 
+
 - (void)initNav {
     [self setupDefaultNavBar:NO];
     self.customNavBarView.seperatorLine.hidden = YES;
