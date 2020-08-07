@@ -17,6 +17,7 @@
 #import "JSONAdditions.h"
 #import "HMDTTMonitor.h"
 #import "TTSandBoxHelper+House.h"
+#import "FHUtils.h"
 
 #define kRecommendSocialGroupListNil @"kRecommendSocialGroupListNil"
 #define kHotTopicListNil @"kHotTopicListNil"
@@ -206,7 +207,16 @@
     cellModel.cellType = [model.cellType integerValue];
     cellModel.behotTime = model.behotTime;
     cellModel.groupId = model.groupId;
-    cellModel.logPb = model.logPb;
+    //防止这个字段返回一个string导致crash
+    id logPb = model.logPb;
+    NSDictionary *logPbDic = nil;
+    if([logPb isKindOfClass:[NSDictionary class]]){
+        logPbDic = logPb;
+    }else if([logPb isKindOfClass:[NSString class]]){
+        logPbDic = [FHUtils dictionaryWithJsonString:logPb];
+    }
+    cellModel.logPb = logPbDic;
+    
     cellModel.aggrType = model.aggrType;
     cellModel.needLinkSpan = YES;
     cellModel.behotTime = model.behotTime;
@@ -796,7 +806,7 @@
             urlListModel.url = cellModel.attachCardInfo.coverImage.url;
             [urlList addObject:urlListModel];
         }
-        imageModel.urlList = urlList;
+        imageModel.urlList = [urlList copy];
         cellModel.attachCardInfo.imageModel = imageModel;
     }
     
@@ -818,7 +828,17 @@
     cellModel.userDigg = model.userDigg;
     cellModel.desc = [self generateUGCDesc:model];
     cellModel.groupId = model.threadId.length > 0 ? model.threadId: model.rawData.threadId;
-    cellModel.logPb = model.logPb;
+    
+    //防止这个字段返回一个string导致crash
+    id logPb = model.logPb;
+    NSDictionary *logPbDic = nil;
+    if([logPb isKindOfClass:[NSDictionary class]]){
+        logPbDic = logPb;
+    }else if([logPb isKindOfClass:[NSString class]]){
+        logPbDic = [FHUtils dictionaryWithJsonString:logPb];
+    }
+    cellModel.logPb = logPbDic;
+    
     cellModel.showLookMore = YES;
     cellModel.needLinkSpan = YES;
     cellModel.numberOfLines = 3;
@@ -902,9 +922,6 @@
         user.desc = realtor.desc;
     }
     cellModel.user = user;
-//    if (cellModel.) {
-//        <#statements#>
-//    }
     
     NSMutableArray *cellImageList = [NSMutableArray array];
     

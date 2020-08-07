@@ -10,7 +10,7 @@
 #import "UIFont+House.h"
 #import "UIColor+Theme.h"
 
-CGFloat const FHBuildingDetailImageViewButtonAnchorPointY = 0.7142;
+CGFloat const FHBuildingDetailImageViewButtonAnchorPointY = 0.7142; //  按钮底下尖尖的位置/整个button的高 -> 主要为了定位那个尖尖的位置为锚点
 
 @interface FHBuildingDetailImageViewButton ()
 
