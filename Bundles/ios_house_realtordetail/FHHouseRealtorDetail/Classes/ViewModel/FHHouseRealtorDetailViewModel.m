@@ -88,11 +88,10 @@
     if(self.detailController.isLoadingData){
         return;
     }
-    
-    //    if (isFirst) {
-    //        self.detailController.isLoadingData = YES;
-    //        [self.detailController startLoading];
-    //    }
+    self.detailController.isLoadingData = YES;
+        if (isFirst) {
+            [self.detailController startLoading];
+        }
     
     NSString *refreshType = @"be_null";
     __weak typeof(self) wself = self;
@@ -127,7 +126,7 @@
         [extraDic setObject:lastGroupId forKey:@"last_group_id"];
     }
     self.categoryId = @"f_realtor_profile";
-    TTHttpTask *task = [FHHouseUGCAPI requestFeedListWithCategory:self.categoryId behotTime:behotTime loadMore:!isHead listCount:listCount extraDic:extraDic completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
+    self.requestTask = [FHHouseUGCAPI requestFeedListWithCategory:self.categoryId behotTime:behotTime loadMore:!isHead listCount:listCount extraDic:extraDic completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
         wself.detailController.isLoadingData = NO;
         [wself.detailController endLoading];
         FHFeedListModel *feedListModel = (FHFeedListModel *)model;
