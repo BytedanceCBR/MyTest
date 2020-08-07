@@ -297,6 +297,14 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
             //Step2: 提交线索信息
             NSDictionary *responseDict = (NSDictionary *)result;
             if (responseDict && [responseDict isKindOfClass:[NSDictionary class]]) {
+                if (responseDict[@"status"]) {
+                    NSInteger status = [responseDict[@"status"] integerValue];
+                    if (status != 0) {
+                        [[ToastManager manager] showToast:@"网络错误"];
+                        return;
+                    }
+                }
+                
                 NSDictionary *data = responseDict[@"data"];
                 if (data && [data isKindOfClass:[NSDictionary class]]) {
                     NSDictionary *associateInfo = data[@"associate_info"];
@@ -362,6 +370,7 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
                             categoryDict[@"status"] = [NSString stringWithFormat:@"%ld", FHClueErrorTypeNone];
                         } else {
                             error = [NSError errorWithDomain:responseDict[@"message"] ?: @"请求错误" code:1000 userInfo:nil];
+                            extraDict[@"error_code"] = @(status);
                         }
                     }
                 } else {
@@ -373,6 +382,9 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
         } else {
             categoryDict[@"status"] = [NSString stringWithFormat:@"%ld", FHClueErrorTypeHttpFailure];
             extraDict[@"error_code"] = [NSString stringWithFormat:@"%ld", httpResponse.statusCode];
+            
+            [strongSelf addClueFormErrorRateLog:categoryDict extraDict:extraDict];
+            return;
         }
         
         if (error) {
