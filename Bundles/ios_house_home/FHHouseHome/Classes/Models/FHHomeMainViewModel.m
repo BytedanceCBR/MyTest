@@ -204,7 +204,6 @@
              }
                           
              [traceDict setValue:@"maintab" forKey:@"enter_from"];
-             [traceDict setValue:@"click" forKey:@"enter_channel"];
              [traceDict setValue:@"discover_stream" forKey:@"category_name"];
              [FHEnvContext recordEvent:traceDict andEventKey:@"enter_category"];
             if(![FHEnvContext isHomeNewDiscovery]){
