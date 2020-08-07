@@ -109,6 +109,8 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
 @property(nonatomic , assign) CLLocationCoordinate2D drawMinCoordinate;
 @property(nonatomic , assign) CLLocationCoordinate2D drawMaxCoordinate;
 @property(nonatomic , assign) BOOL hidingAreaHouseList;
+@property(nonatomic , assign) FHHouseType currentHouseType;
+@property(nonatomic , strong) NSArray *oldHouseAnnotions;
 
 @end
 
@@ -119,12 +121,12 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
     self = [super init];
     if (self) {
         self.configModel = configModel;
-        
+        _currentHouseType = configModel.houseType;
         self.viewController = viewController;
         _showMode = FHMapSearchShowModeMap;
         _selectedAnnotations = [NSMutableDictionary new];
         _lastRecordZoomLevel = configModel.resizeLevel;
-        
+    
         if (self.configModel.mapOpenUrl) {
             dispatch_async(dispatch_get_main_queue(), ^{                
                 [self updateBubble:self.configModel.mapOpenUrl];
@@ -191,6 +193,25 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
         
     }
     return self;
+}
+
+- (void)setSimpleNavBar:(FHMapSimpleNavbar *)simpleNavBar
+{
+    _simpleNavBar = simpleNavBar;
+    __weak typeof(self) weakSelf = self;
+    _simpleNavBar.indexHouseChangeBlock = ^(NSInteger index) {
+        weakSelf.currentHouseType = (index == 0 ? FHHouseTypeSecondHandHouse : FHHouseTypeNewHouse);
+        [weakSelf changeHouseType];
+    };
+}
+
+- (void)changeHouseType
+{
+    if (self.currentHouseType == FHHouseTypeNewHouse) {
+        [self.mapView removeAnnotations:(NSArray <MAAnnotation>*)self.oldHouseAnnotions];
+    }else{
+        [self.mapView addAnnotations:(NSArray <MAAnnotation>*)self.oldHouseAnnotions];
+    }
 }
 
 -(void)dealloc
@@ -670,7 +691,7 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
     }
     
     __weak typeof(self) wself = self;
-    TTHttpTask *task = [FHHouseSearcher mapSearch:houseType searchId:self.searchId query:query maxLocation:CLLocationCoordinate2DMake(maxLat, maxLong) minLocation:CLLocationCoordinate2DMake(minLat, minLong) resizeLevel:_mapView.zoomLevel targetType:targetType suggestionParams:nil extraParams:extraParams callback:^(NSError * _Nullable error, FHMapSearchDataModel * _Nullable model) {
+    TTHttpTask *task = [FHHouseSearcher mapSearch:_currentHouseType searchId:self.searchId query:query maxLocation:CLLocationCoordinate2DMake(maxLat, maxLong) minLocation:CLLocationCoordinate2DMake(minLat, minLong) resizeLevel:_mapView.zoomLevel targetType:targetType suggestionParams:nil extraParams:extraParams callback:^(NSError * _Nullable error, FHMapSearchDataModel * _Nullable model) {
         
         if (!wself) {
             return ;
@@ -839,8 +860,11 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
                 [annotations addObject:stationIconAnnotation];
             }
         }
-        NSArray *needRemoveAnnotations = [removeAnnotationDict allValues];
+//        NSArray *needRemoveAnnotations = [removeAnnotationDict allValues];
         [self.mapView removeAnnotations:currentHouseAnnotations];
+        if (self.currentHouseType == FHHouseTypeSecondHandHouse) {
+            self.oldHouseAnnotions = annotations;
+        }
         [self.mapView addAnnotations:annotations];
         if (selectedAnnoation) {
             [self.mapView selectAnnotation:selectedAnnoation animated:NO];
