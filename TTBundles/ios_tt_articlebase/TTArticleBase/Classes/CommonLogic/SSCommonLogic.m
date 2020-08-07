@@ -5495,6 +5495,15 @@ static NSString *const kFFeedRefreshStrategy = @"feed_refresh_settings";
     }
     return YES;
 }
+
++ (BOOL)enableIMRealtorLocking {
+    NSDictionary *fhSettings = [self fhSettings];
+    if (fhSettings != nil && [fhSettings objectForKey:@"f_im_realtor_locking"] != nil) {
+        BOOL isEnable = [[fhSettings objectForKey:@"f_im_realtor_locking"] boolValue];
+        return isEnable;
+    }
+    return NO;
+}
 @end
 
 
