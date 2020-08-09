@@ -327,7 +327,7 @@ static MAMapView *kFHPageMapView = nil;
      [self.bottomShowInfoView addSubview:bottomOriginLabel];
      CGFloat finalHeight = bottomOriginLabel.bottom + 20 + ([UIDevice btd_isIPhoneXSeries] ? 20 : 0);
 
-    if (self.bottomBarView.frame.origin.y != self.view.frame.size.height) {
+    if (self.bottomShowInfoView.frame.origin.y != self.view.frame.size.height) {
         [self.bottomShowInfoView setFrame:CGRectMake(0, self.view.frame.size.height - finalHeight, self.view.frame.size.width, finalHeight)];
         
         UIBezierPath *maskPath = [UIBezierPath bezierPathWithRoundedRect:self.bottomShowInfoView.bounds byRoundingCorners:UIRectCornerTopLeft | UIRectCornerTopRight cornerRadii:CGSizeMake(20, 20)];
@@ -371,7 +371,7 @@ static MAMapView *kFHPageMapView = nil;
 }
 
 - (void)hideAnaInfoView:(AMapAOI *)poi{
-    if (self.bottomBarView) {
+    if (self.bottomShowInfoView) {
         [UIView animateWithDuration:0.3 animations:^{
              [self.bottomShowInfoView setFrame:CGRectMake(0, self.view.frame.size.height, self.view.frame.size.width, self.bottomShowInfoView.frame.size.height)];
          } completion:^(BOOL finished) {

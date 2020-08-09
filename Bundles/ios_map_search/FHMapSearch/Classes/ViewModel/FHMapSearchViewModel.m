@@ -46,6 +46,7 @@
 #import "FHHouseOpenURLUtil.h"
 #import <NSDictionary+TTAdditions.h>
 #import "FHMapSimpleNavbar.h"
+#import "UIDevice+BTDAdditions.h"
 
 #define kTipDuration 3
 
@@ -88,6 +89,7 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
 @property(nonatomic , assign) BOOL needReload;
 @property(nonatomic , copy) NSString *houseListOpenUrl;//返回列表页时的openurl
 @property(nonatomic , strong) FHMapSearchBubbleModel *lastBubble;
+@property(nonatomic , strong) FHMapSearchBubbleModel *lastNewHouseBubble;
 @property(nonatomic , assign) BOOL movingToCenter;
 @property(nonatomic , assign) BOOL configUserLocationLayer;
 @property(nonatomic , assign) BOOL mapViewRegionSuccess;
@@ -110,7 +112,9 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
 @property(nonatomic , assign) CLLocationCoordinate2D drawMaxCoordinate;
 @property(nonatomic , assign) BOOL hidingAreaHouseList;
 @property(nonatomic , assign) FHHouseType currentHouseType;
+@property(nonatomic, strong) NSArray *houseNewAnnotions;
 @property(nonatomic , strong) NSArray *oldHouseAnnotions;
+@property (nonatomic , strong) UIView *bottomShowInfoView;
 
 @end
 
@@ -130,7 +134,7 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
         if (self.configModel.mapOpenUrl) {
             dispatch_async(dispatch_get_main_queue(), ^{                
                 [self updateBubble:self.configModel.mapOpenUrl];
-                if (_lastBubble) {
+                if (_lastBubble && _currentHouseType == FHHouseTypeSecondHandHouse) {
                     if (_lastBubble.resizeLevel > 1) {
                         _configModel.resizeLevel = _lastBubble.resizeLevel;
                     }
@@ -138,6 +142,16 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
                     _configModel.centerLongitude = [@(_lastBubble.centerLongitude) description];
                     
                     _configModel.houseType = _lastBubble.houseType;
+                }else{
+                    if (_lastNewHouseBubble && _currentHouseType == FHHouseTypeNewHouse) {
+                        if (_lastNewHouseBubble.resizeLevel > 1) {
+                           _configModel.resizeLevel = _lastNewHouseBubble.resizeLevel;
+                        }
+                       _configModel.centerLatitude = [@(_lastNewHouseBubble.centerLatitude) description];
+                       _configModel.centerLongitude = [@(_lastNewHouseBubble.centerLongitude) description];
+                      
+                       _configModel.houseType = _lastNewHouseBubble.houseType;
+                    }
                 }
             });
         }
@@ -148,12 +162,15 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
                 _configModel.centerLongitude = [@(location.longitude) description];
                 _lastBubble.centerLongitude = location.longitude;
                 _lastBubble.centerLatitude = location.latitude;
+                _lastNewHouseBubble.centerLongitude = location.longitude;
+                _lastNewHouseBubble.centerLatitude = location.latitude;
             }
         }
         
         if (![TTReachability isNetworkConnected]) {
             _configModel.resizeLevel = 10;
             _lastBubble.resizeLevel = 10;
+            _lastNewHouseBubble.resizeLevel = 10;
         }
         
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(connectionChanged:) name:TTReachabilityChangedNotification object:nil];
@@ -200,6 +217,9 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
     _simpleNavBar = simpleNavBar;
     __weak typeof(self) weakSelf = self;
     _simpleNavBar.indexHouseChangeBlock = ^(NSInteger index) {
+        if (weakSelf.currentHouseType == (index == 0 ? FHHouseTypeSecondHandHouse : FHHouseTypeNewHouse)) {
+            return ;
+        }
         weakSelf.currentHouseType = (index == 0 ? FHHouseTypeSecondHandHouse : FHHouseTypeNewHouse);
         [weakSelf changeHouseType];
     };
@@ -207,11 +227,21 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
 
 - (void)changeHouseType
 {
-    if (self.currentHouseType == FHHouseTypeNewHouse) {
-        [self.mapView removeAnnotations:(NSArray <MAAnnotation>*)self.oldHouseAnnotions];
-    }else{
-        [self.mapView addAnnotations:(NSArray <MAAnnotation>*)self.oldHouseAnnotions];
-    }
+    [self.mapView removeAnnotations:(NSArray <MAAnnotation>*)self.oldHouseAnnotions];
+    [self.mapView removeAnnotations:(NSArray <MAAnnotation>*)self.houseNewAnnotions];
+    
+//    if (self.currentHouseType == FHHouseTypeNewHouse && self.houseNewAnnotions.count > 0) {
+//        [self.mapView addAnnotations:(NSArray <MAAnnotation>*)self.houseNewAnnotions];
+//        return;
+//    }else{
+//        if (self.currentHouseType == FHHouseTypeSecondHandHouse && self.oldHouseAnnotions.count > 0) {
+//            [self.mapView addAnnotations:(NSArray <MAAnnotation>*)self.oldHouseAnnotions];
+//         return;
+//        }
+//    }
+    
+    self.needReload = YES;
+    [self checkNeedRequest];
 }
 
 -(void)dealloc
@@ -248,6 +278,11 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
         if (_lastBubble) {
             center = CLLocationCoordinate2DMake(_lastBubble.centerLatitude, _lastBubble.centerLongitude);
         }
+        
+        if (_lastNewHouseBubble) {
+            center = CLLocationCoordinate2DMake(_lastNewHouseBubble.centerLatitude, _lastNewHouseBubble.centerLongitude);
+        }
+        
         if (center.latitude > 0 && center.longitude > 0) {
             [_mapView setCenterCoordinate:center animated:NO];
         }else{
@@ -356,26 +391,48 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
 
 -(void)showFilter
 {
-    NSString *query =  [self.lastBubble query];
-    NSString *url = [NSString stringWithFormat:@"https:a?%@",query];
-    [self.filterView selectedWithOpenUrl:url];
-    [self.filterView showInView:self.viewController.view animated:YES];
+    if (self.currentHouseType == FHHouseTypeSecondHandHouse) {
+        NSString *query =  [self.lastBubble query];
+        NSString *url = [NSString stringWithFormat:@"https:a?%@",query];
+        [self.filterView selectedWithOpenUrl:url];
+        [self.filterView showInView:self.viewController.view animated:YES];
+    }else{
+        NSString *query =  [self.lastNewHouseBubble query];
+        NSString *url = [NSString stringWithFormat:@"https:a?%@",query];
+        [self.filterView selectedWithOpenUrl:url];
+        [self.filterView showInView:self.viewController.view animated:YES];
+    }
 }
 
 -(void)changeFilter:(NSString *)query
 {
-    if(self.areaHouseListController.view.superview){
-        [self.areaHouseListController.viewModel refreshWithFilter:query];
-        [self.lastBubble overwriteFliter:query];
-        self.needReload = YES;
-    }else{
-        [self.lastBubble overwriteFliter:query];
-        if ([TTReachability isNetworkConnected]) {
-            [self requestHouses:YES showTip:YES];
+    if (self.currentHouseType == FHHouseTypeSecondHandHouse) {
+        if(self.areaHouseListController.view.superview){
+            [self.areaHouseListController.viewModel refreshWithFilter:query];
+            [self.lastBubble overwriteFliter:query];
+            self.needReload = YES;
         }else{
-            SHOW_TOAST(@"网络异常");
+            [self.lastBubble overwriteFliter:query];
+            if ([TTReachability isNetworkConnected]) {
+                [self requestHouses:YES showTip:YES];
+            }else{
+                SHOW_TOAST(@"网络异常");
+            }
+            
         }
-        
+    }else{
+        if(self.areaHouseListController.view.superview){
+                   [self.areaHouseListController.viewModel refreshWithFilter:query];
+                   [self.lastNewHouseBubble overwriteFliter:query];
+                   self.needReload = YES;
+        }else{
+           [self.lastNewHouseBubble overwriteFliter:query];
+           if ([TTReachability isNetworkConnected]) {
+               [self requestHouses:YES showTip:YES];
+           }else{
+               SHOW_TOAST(@"网络异常");
+           }
+       }
     }
 }
 
@@ -415,6 +472,7 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
         CGFloat dstZoom = 17;
         [self.mapView setZoomLevel:dstZoom animated:NO];//变化到小区的范围
         _lastBubble.resizeLevel = dstZoom;
+        _lastNewHouseBubble.resizeLevel = dstZoom;
         if (fabs(zoom - dstZoom) > 1 && ![self shouldRequest:location.location.coordinate]) {
             dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
                 [self requestHouses:NO showTip:NO];
@@ -602,20 +660,38 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
     _firstEnterLogAdded = YES;
     
     FHHouseType houseType = self.configModel.houseType;
-    if (_lastBubble) {
+    
+    if (_lastBubble && self.currentHouseType == FHHouseTypeSecondHandHouse) {
         houseType = _lastBubble.houseType;
         if (![_lastBubble validResizeLevel]) {
             _lastBubble.resizeLevel = _mapView.zoomLevel;
         }
     }
     
-    if (byUser || ![_lastBubble validCenter]) {
+    if (self.currentHouseType == FHHouseTypeNewHouse) {
+        if (![_lastNewHouseBubble validResizeLevel]) {
+             _lastNewHouseBubble.resizeLevel = _mapView.zoomLevel;
+        }
+        houseType = FHMapSearchTypeNewHouse;
+    }
+    
+    if ((byUser || ![_lastBubble validCenter]) && self.currentHouseType == FHHouseTypeSecondHandHouse) {
         //用户手动操作使用当前地图的数据
         CLLocationCoordinate2D center = _mapView.centerCoordinate;
         [_lastBubble updateResizeLevel:_mapView.zoomLevel centerLatitude:center.latitude centerLongitude:center.longitude];
         _lastRequestCenter = _mapView.centerCoordinate;
-    }else{
-        _lastRequestCenter = CLLocationCoordinate2DMake(_lastBubble.centerLatitude, _lastBubble.centerLongitude);
+    }else if ((byUser || ![_lastNewHouseBubble validCenter])&& self.currentHouseType == FHHouseTypeNewHouse){
+        //用户手动操作使用当前地图的数据
+           CLLocationCoordinate2D center = _mapView.centerCoordinate;
+            [_lastNewHouseBubble updateResizeLevel:_mapView.zoomLevel centerLatitude:center.latitude centerLongitude:center.longitude];
+           _lastRequestCenter = _mapView.centerCoordinate;
+    }
+    else{
+        if (self.currentHouseType == FHHouseTypeNewHouse) {
+            _lastRequestCenter = CLLocationCoordinate2DMake(_lastNewHouseBubble.centerLatitude, _lastNewHouseBubble.centerLongitude);
+         }else{
+            _lastRequestCenter = CLLocationCoordinate2DMake(_lastBubble.centerLatitude, _lastBubble.centerLongitude);
+        }
     }
         
     
@@ -667,12 +743,15 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
     
     
     NSString *query = nil;
-    if (self.lastBubble) {
+    if (self.lastBubble && self.currentHouseType == FHHouseTypeSecondHandHouse) {
 //        self.lastBubble.resizeLevel = self.mapView.zoomLevel;
         query = [self.lastBubble query];
+    }else if (self.lastNewHouseBubble && self.currentHouseType == FHHouseTypeNewHouse){
+        query = [self.lastNewHouseBubble query];
     }else{
         query = self.filterConditionParams;
     }
+    
     NSMutableDictionary *extraParams = [NSMutableDictionary new];
     NSString *targetType = nil;
     if (_showMode == FHMapSearchShowModeDrawLine) {
@@ -689,9 +768,8 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
         }
         extraParams[CHANNEL_ID] = CHANNEL_ID_SUBWAY_SEARCH;
     }
-    
     __weak typeof(self) wself = self;
-    TTHttpTask *task = [FHHouseSearcher mapSearch:_currentHouseType searchId:self.searchId query:query maxLocation:CLLocationCoordinate2DMake(maxLat, maxLong) minLocation:CLLocationCoordinate2DMake(minLat, minLong) resizeLevel:_mapView.zoomLevel targetType:targetType suggestionParams:nil extraParams:extraParams callback:^(NSError * _Nullable error, FHMapSearchDataModel * _Nullable model) {
+    TTHttpTask *task = [FHHouseSearcher mapSearch:houseType searchId:self.searchId query:query maxLocation:CLLocationCoordinate2DMake(maxLat, maxLong) minLocation:CLLocationCoordinate2DMake(minLat, minLong) resizeLevel:_mapView.zoomLevel targetType:targetType suggestionParams:nil extraParams:extraParams callback:^(NSError * _Nullable error, FHMapSearchDataModel * _Nullable model) {
         
         if (!wself) {
             return ;
@@ -864,7 +942,10 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
         [self.mapView removeAnnotations:currentHouseAnnotations];
         if (self.currentHouseType == FHHouseTypeSecondHandHouse) {
             self.oldHouseAnnotions = annotations;
+        }else if(self.currentHouseType == FHHouseTypeNewHouse){
+            self.houseNewAnnotions = annotations;
         }
+        
         [self.mapView addAnnotations:annotations];
         if (selectedAnnoation) {
             [self.mapView selectAnnotation:selectedAnnoation animated:NO];
@@ -941,6 +1022,81 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
         }
     }
 }
+-(void)panAction:(UISwipeGestureRecognizer *)pan
+{
+    [self hideAnaInfoView];
+}
+
+- (void)hideAnaInfoView{
+    if (self.bottomShowInfoView) {
+        [UIView animateWithDuration:0.3 animations:^{
+             [self.bottomShowInfoView setFrame:CGRectMake(0, self.viewController.view.frame.size.height, self.viewController.view.frame.size.width, self.bottomShowInfoView.frame.size.height)];
+         } completion:^(BOOL finished) {
+                   
+         }];
+    }
+}
+
+-(void)handleSelectForNewHouse:(MAAnnotationView *)annotationView{
+        if (!self.bottomShowInfoView) {
+            self.bottomShowInfoView = [UIView new];
+            [self.bottomShowInfoView setFrame:CGRectMake(0, self.viewController.view.frame.size.height, self.viewController.view.frame.size.width, 150)];
+            [self.viewController.view addSubview:self.bottomShowInfoView];
+            [self.bottomShowInfoView setBackgroundColor:[UIColor whiteColor]];
+            [self.viewController.view bringSubviewToFront:self.bottomShowInfoView];
+                    
+            UISwipeGestureRecognizer *panGesture = [[UISwipeGestureRecognizer alloc]initWithTarget:self action:@selector(panAction:)];
+            [panGesture setDirection:UISwipeGestureRecognizerDirectionDown];
+            [self.bottomShowInfoView addGestureRecognizer:panGesture];
+         }
+        
+        for (UIView *subviw in self.bottomShowInfoView.subviews) {
+            [subviw removeFromSuperview];
+        }
+        
+        
+        UIView *indicator = [UIView new];
+        [indicator setFrame:CGRectMake((self.bottomShowInfoView.size.width - 40)/2, 10, 40, 4)];
+        indicator.layer.cornerRadius = 2;
+        indicator.layer.masksToBounds = YES;
+        [indicator setBackgroundColor:[UIColor themeGray6]];
+        [self.bottomShowInfoView addSubview:indicator];
+         
+        
+         UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(20.0f, indicator.bottom + 10, self.viewController.view.frame.size.width - 40, 30)];
+         titleLabel.text = @"新房123";
+         [titleLabel setFont:[UIFont themeFontMedium:20]];
+         [titleLabel setTextColor:[UIColor themeGray1]];
+          titleLabel.numberOfLines = 2;
+          [titleLabel sizeToFit];
+         [self.bottomShowInfoView addSubview:titleLabel];
+                 
+         CGFloat finalHeight = ([UIDevice btd_isIPhoneXSeries] ? 201 : 201);
+
+        if (self.bottomShowInfoView.frame.origin.y != self.viewController.view.frame.size.height) {
+            [self.bottomShowInfoView setFrame:CGRectMake(0, self.viewController.view.frame.size.height - finalHeight, self.viewController.view.frame.size.width, finalHeight)];
+            
+            UIBezierPath *maskPath = [UIBezierPath bezierPathWithRoundedRect:self.bottomShowInfoView.bounds byRoundingCorners:UIRectCornerTopLeft | UIRectCornerTopRight cornerRadii:CGSizeMake(20, 20)];
+             CAShapeLayer *layer = [[CAShapeLayer alloc]init];
+             layer.frame = self.bottomShowInfoView.bounds;
+             layer.path = maskPath.CGPath;
+             self.bottomShowInfoView.layer.mask = layer;
+
+        }else{
+            [UIView animateWithDuration:0.3 animations:^{
+                [self.bottomShowInfoView setFrame:CGRectMake(0, self.viewController.view.frame.size.height - finalHeight, self.viewController.view.frame.size.width, finalHeight)];
+
+                UIBezierPath *maskPath = [UIBezierPath bezierPathWithRoundedRect:self.bottomShowInfoView.bounds byRoundingCorners:UIRectCornerTopLeft | UIRectCornerTopRight cornerRadii:CGSizeMake(20, 20)];
+                 CAShapeLayer *layer = [[CAShapeLayer alloc]init];
+                 layer.frame = self.bottomShowInfoView.bounds;
+                 layer.path = maskPath.CGPath;
+                 self.bottomShowInfoView.layer.mask = layer;
+            } completion:^(BOOL finished) {
+                      
+            }];
+        }
+//        [self processSelected:YES andAnnotationView:self.currentSelectAna];
+}
 
 -(void)handleSelect:(MAAnnotationView *)annotationView
 {
@@ -971,8 +1127,14 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
 //        if (url) {
 //            [self.lastBubble overwriteFliter:url.query];
 //        }
-        self.lastBubble = [FHMapSearchBubbleModel bubbleFromUrl:model.mapFindHouseOpenUrl];
-        if (self.lastBubble) {
+        
+        if (self.currentHouseType == FHHouseTypeSecondHandHouse) {
+            self.lastBubble = [FHMapSearchBubbleModel bubbleFromUrl:model.mapFindHouseOpenUrl];
+        }else{
+            self.lastNewHouseBubble = [FHMapSearchBubbleModel bubbleFromUrl:model.mapFindHouseOpenUrl];
+        }
+        
+        if (self.lastBubble && self.currentHouseType == FHHouseTypeSecondHandHouse) {
             zoomLevel = self.lastBubble.resizeLevel;
             if (zoomLevel < 1 || zoomLevel > 20) {
                 if (houseAnnotation.searchType == FHMapSearchTypeSegment) {
@@ -983,6 +1145,18 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
             }
             if (self.lastBubble.centerLatitude > 0 && self.lastBubble.centerLongitude > 0) {
                 moveCenter = CLLocationCoordinate2DMake(self.lastBubble.centerLatitude, self.lastBubble.centerLongitude);
+            }
+        }else if (self.lastNewHouseBubble && self.currentHouseType == FHHouseTypeNewHouse) {
+            zoomLevel = self.lastNewHouseBubble.resizeLevel;
+            if (zoomLevel < 1 || zoomLevel > 20) {
+                if (houseAnnotation.searchType == FHMapSearchTypeSegment) {
+                    zoomLevel = 13.5;
+                }else if (houseAnnotation.searchType == FHMapSearchTypeStation){
+                    zoomLevel = 16.5;
+                }
+            }
+            if (self.lastNewHouseBubble.centerLatitude > 0 && self.lastNewHouseBubble.centerLongitude > 0) {
+                moveCenter = CLLocationCoordinate2DMake(self.lastNewHouseBubble.centerLatitude, self.lastNewHouseBubble.centerLongitude);
             }
         }else{
             /*
@@ -1044,7 +1218,11 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
         
         self.currentSelectAnnotation = houseAnnotation;
         self.currentSelectHouseData = houseAnnotation.houseData;
-        [self showNeighborHouseList:houseAnnotation.houseData];
+        if (self.currentHouseType == FHHouseTypeSecondHandHouse) {
+            [self showNeighborHouseList:houseAnnotation.houseData];
+        }else{
+            [self handleSelectForNewHouse:nil];
+        }
     }
 }
 
@@ -1157,6 +1335,7 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
     
     if (fabs(floor(_requestMapLevel) - floor(mapView.zoomLevel)) >= 1 ||  fabs(_requestMapLevel - mapView.zoomLevel) > 0.08*mapView.zoomLevel) {
         self.lastBubble.resizeLevel = self.mapView.zoomLevel;
+        self.lastNewHouseBubble.resizeLevel = self.mapView.zoomLevel;
         [self requestHouses:wasUserAction showTip:YES];
     }
 }
@@ -1270,8 +1449,13 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
  */
 - (void)mapView:(MAMapView *)mapView didAnnotationViewTapped:(MAAnnotationView *)view
 {
-    [self handleSelect:view];
+//    if (self.currentHouseType == FHHouseTypeNewHouse) {
+//        [self handleSelectForNewHouse:view];
+//    }else{
+        [self handleSelect:view];
+//    }
 }
+
 
 /**
  * @brief 单击地图回调，返回经纬度
@@ -1651,10 +1835,16 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
     if (openUrl.length == 0 ) {
         return;
     }
-    self.lastBubble = [FHMapSearchBubbleModel bubbleFromUrl:openUrl];
-    [self.filterView selectedWithOpenUrl:openUrl];
-    self.lastBubble.noneFilterQuery = self.filterView.noneFilterQuery;
-        
+    
+    if (self.currentHouseType == FHHouseTypeSecondHandHouse) {
+        self.lastBubble = [FHMapSearchBubbleModel bubbleFromUrl:openUrl];
+        [self.filterView selectedWithOpenUrl:openUrl];
+        self.lastBubble.noneFilterQuery = self.filterView.noneFilterQuery;
+    }else{
+        self.lastNewHouseBubble = [FHMapSearchBubbleModel bubbleFromUrl:openUrl];
+        [self.filterView selectedWithOpenUrl:openUrl];
+        self.lastNewHouseBubble.noneFilterQuery = self.filterView.noneFilterQuery;
+    }
 }
 
 
@@ -1962,6 +2152,8 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
     self.selectionStation = nil;
     [self.lastBubble removeQueryOfKey:@"line[]"];
     [self.lastBubble removeQueryOfKey:@"station[]"];
+    [self.lastNewHouseBubble removeQueryOfKey:@"line[]"];
+    [self.lastNewHouseBubble removeQueryOfKey:@"station[]"];
     [self tryUpdateSideBar];
     [self requestHouses:YES showTip:NO];
 }
@@ -2099,8 +2291,10 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
             }
             
             wself.lastBubble =  [FHMapSearchBubbleModel bubbleFromUrl:@"http://a"];
+            wself.lastNewHouseBubble =  [FHMapSearchBubbleModel bubbleFromUrl:@"http://a"];
             [wself.lastBubble overwriteFliter:self.filterConditionParams];
-            
+            [wself.lastNewHouseBubble overwriteFliter:self.filterConditionParams];
+
             NSMutableDictionary *param = [NSMutableDictionary new];
             
             wself.selectedLine = line;
@@ -2109,6 +2303,8 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
                 wself.mapView.centerCoordinate = CLLocationCoordinate2DMake(station.centerLatitude.floatValue, station.centerLongitude.floatValue);
                 wself.lastBubble.centerLongitude = station.centerLongitude.floatValue;
                 wself.lastBubble.centerLatitude = station.centerLatitude.floatValue;
+                wself.lastNewHouseBubble.centerLongitude = station.centerLongitude.floatValue;
+                wself.lastNewHouseBubble.centerLatitude = station.centerLatitude.floatValue;
             }
             CGFloat zoomLevel = station.resizeLevel.floatValue;
             if (zoomLevel < 1) {
@@ -2122,6 +2318,7 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
 
             wself.mapView.zoomLevel = zoomLevel;
             wself.lastBubble.resizeLevel = zoomLevel;
+            wself.lastNewHouseBubble.resizeLevel = zoomLevel;
 
             [wself requestHouses:NO showTip:NO];
             [wself.viewController switchNavbarMode:wself.showMode];
