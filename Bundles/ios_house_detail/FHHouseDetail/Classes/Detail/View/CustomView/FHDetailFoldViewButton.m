@@ -62,8 +62,7 @@
     
     [self.keyLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerX.mas_equalTo(self).offset(-11);
-//        make.top.mas_equalTo(self).offset(20);
-        make.centerY.mas_equalTo(self);
+        make.top.mas_equalTo(self).offset(14);
         make.height.mas_equalTo(18);
     }];
     [self.iconView mas_makeConstraints:^(MASConstraintMaker *make) {
