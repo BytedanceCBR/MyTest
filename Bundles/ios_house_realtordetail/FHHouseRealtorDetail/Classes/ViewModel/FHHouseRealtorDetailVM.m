@@ -136,12 +136,10 @@
                                                                                                             (CFStringRef)@"!*'();:@&=+$,/?%#[]",
                                                                                                             kCFStringEncodingUTF8));
             NSString *urlStr = [NSString stringWithFormat:@"sslocal://webview?url=%@",encodedString];
-            NSURL *url = [TTURLUtils URLWithString:urlStr];
             [dicm setObject:urlStr forKey:@"open_url"];
         }
         [dic setObject:model.data.realtor?:@""forKey:@"realtor"];
         [dic setObject:model.data.evaluation?:@"" forKey:@"evaluation"];
-        NSArray *array  = model.data.evaluation[@"comment_info"];
         [dic setObject:dicm?:@"" forKey:@"score_info"];
         [dic setObject:model.data.realtorShop?:@"" forKey:@"realtor_shop"];
         [dic setObject:model.data.certificationIcon?:@"" forKey:@"certification_icon"];
@@ -151,17 +149,24 @@
         if (self.tracerDict) {
             NSString *lynxReortParams= [self.tracerDict yy_modelToJSONString];
             lynxReortParams = [lynxReortParams stringByAddingPercentEncodingWithAllowedCharacters:NSCharacterSet.URLQueryAllowedCharacterSet];
-            
-            NSString *unencodedString = lynxReortParams;
-            NSString *encodedString = (NSString *)CFBridgingRelease(CFURLCreateStringByAddingPercentEscapes(kCFAllocatorDefault,
-                                                                                                            (CFStringRef)unencodedString,
-                                                                                                            NULL,
-                                                                                                            (CFStringRef)@"!*'();:@&=+$,/?%#[]",
-                                                                                                            kCFStringEncodingUTF8));
+//
+//            NSString *unencodedString = lynxReortParams;
+//            NSString *encodedString = (NSString *)CFBridgingRelease(CFURLCreateStringByAddingPercentEscapes(kCFAllocatorDefault,
+//                                                                                                            (CFStringRef)unencodedString,
+//                                                                                                            NULL,
+//                                                                                                            (CFStringRef)@"!*'();:@&=+$,/?%#[]",
+//                                                                                                            kCFStringEncodingUTF8));
             [dic setObject:lynxReortParams forKey:@"encoded_report_params"];
         }
         [self.viewController.headerView reloadDataWithDic:dic];
-        [self.viewController.headerView updateRealtorWithHeightScore];
+        if ([dicm.allKeys containsObject:@"isHightScore"]) {
+            BOOL isHightScore = dicm[@"isHightScore"];
+            if (isHightScore) {
+                [self.viewController.headerView updateRealtorWithHeightScore];
+                self.viewController.customNavBarView.title.text = @"幸福里优选经纪人";
+            }
+        }
+
         self.viewController.headerView.height = self.viewController.headerView.viewHeight;
         if (realtorLeave) {
             [self.viewController showRealtorLeaveHeader];

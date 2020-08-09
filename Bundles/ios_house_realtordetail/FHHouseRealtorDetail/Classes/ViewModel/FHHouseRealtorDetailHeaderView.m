@@ -66,15 +66,12 @@
             if (offset < 0 && offset>= -150) {
             CGFloat height = SCREEN_WIDTH - offset;
             self.headerIma.frame = CGRectMake(0,-(SCREEN_WIDTH-self.headerBackHeight) + offset, SCREEN_WIDTH, height);
-                NSLog(@"----666---%f",-(SCREEN_WIDTH-self.headerBackHeight) + offset);
         }else if( offset< -150 && offset >= -(SCREEN_WIDTH-self.headerBackHeight)) {
             CGFloat height = SCREEN_WIDTH + 150;
             self.headerIma.frame = CGRectMake(0, -(SCREEN_WIDTH-self.headerBackHeight) - 150 - (offset + 150)*0.1    , SCREEN_WIDTH, height);
-            NSLog(@"----666---%f",-(SCREEN_WIDTH-self.headerBackHeight) - 150 - (offset + 150)*0.1);
         }else if ( offset < -(SCREEN_WIDTH-self.headerBackHeight)){
             CGFloat height = SCREEN_WIDTH + 150;
             self.headerIma.frame = CGRectMake(0, -(SCREEN_WIDTH-self.headerBackHeight) - 150 - (offset + 150)*0.1 + (offset+(SCREEN_WIDTH-self.headerBackHeight)), SCREEN_WIDTH, height);
-            NSLog(@"----666---%f", -(SCREEN_WIDTH-self.headerBackHeight) - 150 - (offset + 150)*0.1 + (offset+(SCREEN_WIDTH-self.headerBackHeight)));
         } else {
             self.headerIma.frame = CGRectMake(0, -(SCREEN_WIDTH-self.headerBackHeight), SCREEN_WIDTH, SCREEN_WIDTH);
         }
