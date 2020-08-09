@@ -33,6 +33,7 @@
 #import "FHFilterModelParser.h"
 #import "AreaSelectionTableViewVM.h"
 #import "NSDictionary+BTDAdditions.h"
+#import "FHLocManager.h"
 
 #define HELP_HEADER_ID @"header_id"
 #define HELP_ITEM_HOR_MARGIN 20
@@ -115,6 +116,7 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(keyboardWillShowNotifiction:) name:UIKeyboardWillShowNotification object:nil];
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(keyboardWillHideNotifiction:) name:UIKeyboardWillHideNotification object:nil];
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(textFieldDidChange:) name:UITextFieldTextDidChangeNotification object:nil];
+         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(configLoadSuccess) name:kFHAllConfigLoadSuccessNotice object:nil];
         
     }
     return self;
@@ -375,6 +377,10 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
     if ([self.viewController.parentViewController respondsToSelector:@selector(jump2HouseFindResultVC)]) {
         [self.viewController.parentViewController performSelector:@selector(jump2HouseFindResultVC)];
     }
+}
+
+- (void)configLoadSuccess {
+    [self setupHouseContent:nil];
 }
 
 - (void)setupHouseContent:(FHConfigDataModel *)configData
