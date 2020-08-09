@@ -21,6 +21,7 @@
 #import "FHUGCencyclopediaTracerHelper.h"
 #import "FHUtils.h"
 #import "FHLynxManager.h"
+#import "TTReachability.h"
 
 
 @interface FHEncyclopediaListViewModel()<UITableViewDelegate,UITableViewDataSource,FHUGCEncyclopediaLynxCellDelegate>
@@ -59,10 +60,14 @@
     _tracerHelper.tracerModel = tracerModel;
 }
 - (void)requestData:(BOOL)isHead first:(BOOL)isFirst {
+
+    if (![TTReachability isNetworkConnected]) {
+        [self.listController.emptyView showEmptyWithTip:@"网络异常，请检查网络连接" errorImageName:kFHErrorMaskNoNetWorkImageName showRetry:YES];
+        return;
+    }
     if(self.listController.isLoadingData){
         return;
     }
-    NSString *refreshType = @"be_null";
     if (isHead) {
         [self.tracerHelper trackCategoryRefresh];
     }
