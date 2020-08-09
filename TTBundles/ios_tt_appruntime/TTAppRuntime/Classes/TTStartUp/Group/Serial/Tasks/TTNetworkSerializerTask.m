@@ -222,6 +222,20 @@ DEC_TASK("TTNetworkSerializerTask",FHTaskTypeSerial,TASK_PRIORITY_HIGH+6);
     //通过TTNet 的 requestFilterBlock在header 中添加token
     [TTNetworkManager shareInstance].requestFilterBlock = ^(TTHttpRequest *request){
         [TTAccount addTokenToRequest:request];
+        
+        // 设置BOE请求头
+        BOOL isBOE = [TTSandBoxHelper isInHouseApp] && [[NSUserDefaults standardUserDefaults] boolForKey:@"BOE_OPEN_KEY"];
+        if(isBOE) {
+            [TTNetworkManager shareInstance].requestFilterBlock = ^(TTHttpRequest *request) {
+                NSMutableDictionary *headers = [NSMutableDictionary dictionary];
+                if(request.allHTTPHeaderFields.count) {
+                    [headers addEntriesFromDictionary:request.allHTTPHeaderFields];
+                }
+                [headers setObject:@"prod" forKey:@"X-Tt-Env"];
+                [headers setObject:@"1" forKey:@"X-Use-Boe"];
+                request.allHTTPHeaderFields = headers;
+            };
+        }
     };
     
     //更新token及过期设置:过期判断取决于业务方业务，如果业务方没有踢人操作的话，只需要根据下面进行设置
