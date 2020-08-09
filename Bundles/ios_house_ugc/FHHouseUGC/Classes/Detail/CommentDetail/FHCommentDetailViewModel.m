@@ -712,17 +712,17 @@
 // 评论 点赞
 - (void)click_rt_like:(NSString *)comment_id {
     NSMutableDictionary *tracerDict = self.detailController.tracerDict.mutableCopy;
-    tracerDict[@"click_position"] = @"reply_like";
+    tracerDict[@"click_position"] = @"comment";
     tracerDict[@"comment_id"] = comment_id ?: @"be_null";
-    [FHUserTracker writeEvent:@"click_reply_like" params:tracerDict];
+    [FHUserTracker writeEvent:@"click_like" params:tracerDict];
 }
 
 // 评论 取消点赞
 - (void)click_rt_dislike:(NSString *)comment_id  {
     NSMutableDictionary *tracerDict = self.detailController.tracerDict.mutableCopy;
-    tracerDict[@"click_position"] = @"reply_dislike";
+    tracerDict[@"click_position"] = @"comment";
     tracerDict[@"comment_id"] = comment_id ?: @"be_null";
-    [FHUserTracker writeEvent:@"click_reply_dislike" params:tracerDict];
+    [FHUserTracker writeEvent:@"click_dislike" params:tracerDict];
 }
 
 # pragma mark - FHUGCBaseCellDelegate

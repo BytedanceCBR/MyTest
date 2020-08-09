@@ -48,8 +48,6 @@
 //@property(nonatomic, strong) FHUGCGuideView *guideView;
 @property(nonatomic, assign) BOOL hasShowDots;
 @property(nonatomic, assign) BOOL alreadyShowGuide;
-//新的发现页面
-@property(nonatomic, assign) BOOL isNewDiscovery;
 @property(nonatomic, assign) BOOL isFirstLoad;
 @property(nonatomic, strong) FHUGCPostMenuView *publishMenuView;
 @property (nonatomic, assign) BOOL isShowLoginTip;
@@ -62,7 +60,6 @@
     // Do any additional setup after loading the view.
     self.automaticallyAdjustsScrollViewInsets = NO;
     //test
-    self.isNewDiscovery = [FHEnvContext isNewDiscovery];
     self.hasShowDots = NO;
     self.isUgcOpen = [FHEnvContext isUGCOpen];
     self.categorys = [[FHUGCCategoryManager sharedManager].allCategories copy];
@@ -79,10 +76,9 @@
     [self initConstraints];
 
     if(!self.isNewDiscovery){
-        [self onUnreadMessageChange];
         [self onFocusHaveNewContents];
     }else{
-        [self onCommunityHaveNewContents];
+//        [self onCommunityHaveNewContents];
     }
 
     self.isFirstLoad = YES;
@@ -97,19 +93,25 @@
             [self initViewModel];
         }
         
-        if(![FHEnvContext isNewDiscovery] && self.isNewDiscovery != [FHEnvContext isNewDiscovery]){
-            [self updateSegmentView];
-        }
+//        if(![FHEnvContext isNewDiscovery] && self.isNewDiscovery != [FHEnvContext isNewDiscovery]){
+//            [self updateSegmentView];
+//        }
         
         self.segmentControl.sectionTitles = [self getSegmentTitles];
     }];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onCommunityHaveNewContents) name:kFHUGCCommunityTabHasNewNotification object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onUnreadMessageChange) name:kTTMessageNotificationTipsChangeNotification object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onUnreadMessageChange) name:kFHUGCFollowNotification object:nil];
+//    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onUnreadMessageChange) name:kTTMessageNotificationTipsChangeNotification object:nil];
+//    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onUnreadMessageChange) name:kFHUGCFollowNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onFocusHaveNewContents) name:kFHUGCFocusTabHasNewNotification object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onUnreadMessageChange) name:kFHUGCLoadFollowDataFinishedNotification object:nil];
+//    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onUnreadMessageChange) name:kFHUGCLoadFollowDataFinishedNotification object:nil];
+    
     //tabbar双击的通知
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(refreshData) name:kFindTabbarKeepClickedNotification object:nil];
+    if(self.isNewDiscovery){
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(refreshData) name:kExploreMixedListRefreshTypeNotification object:nil];
+    }else{
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(refreshData) name:kFindTabbarKeepClickedNotification object:nil];
+    }
+    
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(changeTab) name:kFHUGCForumPostThreadFinish object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateSegmentView) name:kUGCCategoryGotFinishedNotification object:nil];
     
@@ -191,7 +193,7 @@
 }
 
 - (void)hideRedPoint {
-    if([FHEnvContext isNewDiscovery]){
+    if(self.isNewDiscovery){
         NSInteger index = [[FHUGCCategoryManager sharedManager] getCategoryIndex:@"f_ugc_neighbor"];
         if(self.viewModel.currentTabIndex == index && self.hasFocusTips){
             self.hasFocusTips = NO;
@@ -222,19 +224,21 @@
     _bottomLineView.backgroundColor = [UIColor themeGray6];
     [self.topView addSubview:_bottomLineView];
 
-    self.searchBtn = [[UIButton alloc] init];
-    [_searchBtn setImage: ICON_FONT_IMG(24, @"\U0000e675", [UIColor blackColor]) forState:UIControlStateNormal];//fh_ugc_search
-    _searchBtn.hitTestEdgeInsets = UIEdgeInsetsMake(-10, -10, -10, -10);
-    [_searchBtn addTarget:self action:@selector(goToSearch) forControlEvents:UIControlEventTouchUpInside];
-    if(self.isNewDiscovery){
-        _searchBtn.hidden = YES;
-    }
-    [self.topView addSubview:_searchBtn];
+//    self.searchBtn = [[UIButton alloc] init];
+//    [_searchBtn setImage: ICON_FONT_IMG(24, @"\U0000e675", [UIColor blackColor]) forState:UIControlStateNormal];//fh_ugc_search
+//    _searchBtn.hitTestEdgeInsets = UIEdgeInsetsMake(-10, -10, -10, -10);
+//    [_searchBtn addTarget:self action:@selector(goToSearch) forControlEvents:UIControlEventTouchUpInside];
+//    if(self.isNewDiscovery){
+//        _searchBtn.hidden = YES;
+//    }
+//    [self.topView addSubview:_searchBtn];
 
     self.containerView = [[UIView alloc] init];
     [self.view addSubview:_containerView];
     
-    [self initPublishBtn];
+    if(!self.isNewDiscovery){
+        [self initPublishBtn];
+    }
 }
 - (void)initLoginTipView {
     if (!self.isShowLoginTip) {
@@ -262,16 +266,24 @@
 
 - (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
-    [self.viewModel viewWillDisappear];
+    if(![FHEnvContext sharedInstance].isShowingHomeHouseFind || !self.isNewDiscovery){
+        [self.viewModel viewWillDisappear];
+    }
+    
     if (self.loginTipview) {
          [self.loginTipview pauseTimer];
     }
-    [self addStayCategoryLog:self.stayTime];
+    if(!self.isNewDiscovery){
+        [self addStayCategoryLog:self.stayTime];
+    }
 }
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-    [self.viewModel viewWillAppear];
+    if(![FHEnvContext sharedInstance].isShowingHomeHouseFind || !self.isNewDiscovery){
+        [self.viewModel viewWillAppear];
+    }
+    
     [self initLoginTipView];
     self.stayTime = [[NSDate date] timeIntervalSince1970];
 //    [self addUgcGuide];
@@ -279,7 +291,7 @@
     if(self.isUgcOpen){
         //去掉邻里tab的红点
         [FHEnvContext hideFindTabRedDots];
-        if([FHEnvContext isNewDiscovery]){
+        if(self.isNewDiscovery){
             NSInteger index = [[FHUGCCategoryManager sharedManager] getCategoryIndex:@"f_ugc_neighbor"];
             //去掉圈子红点的同时刷新tab
             if(self.viewModel.currentTabIndex == index && [FHUGCConfig sharedInstance].ugcCommunityHasNew){
@@ -303,7 +315,7 @@
     }
     
     //关注tab，没有关注时需要隐藏关注按钮
-    if(![FHEnvContext isNewDiscovery]){
+    if(!self.isNewDiscovery){
         if(self.viewModel.currentTabIndex == 0 && [FHUGCConfig sharedInstance].followList.count <= 0){
             self.publishBtn.hidden = YES;
         }else{
@@ -339,6 +351,7 @@
     [tracerDict setValue:@(0) forKey:@"with_tips"];
     [tracerDict setValue:@"click_tab" forKey:@"enter_type"];
     tracerDict[@"stay_time"] = @((int) duration);
+    tracerDict[@"enter_channel"] = [FHEnvContext sharedInstance].enterChannel;
 
     if (((int) duration) > 0) {
         [FHEnvContext recordEvent:tracerDict andEventKey:@"stay_tab"];
@@ -427,7 +440,7 @@
     }
     
     _segmentControl = [[HMSegmentedControl alloc] initWithSectionTitles:[self getSegmentTitles]];
-
+    
     NSDictionary *titleTextAttributes = @{NSFontAttributeName: [UIFont themeFontRegular:16],
             NSForegroundColorAttributeName: [UIColor themeGray1]};
     _segmentControl.titleTextAttributes = titleTextAttributes;
@@ -447,6 +460,7 @@
     _segmentControl.selectionIndicatorCornerRadius = 2.0f;
     _segmentControl.shouldFixedSelectPosition = YES;
     _segmentControl.selectionIndicatorColor = [UIColor colorWithHexStr:@"#ff9629"];
+    _segmentControl.bounces = NO;
     
     [self.topView addSubview:_segmentControl];
 
@@ -508,6 +522,11 @@
             }
         }
     }
+    
+    if(self.isNewDiscovery){
+        top = 0;
+        bottom = 0;
+    }
 
     [self.topView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(self.view).offset(top);
@@ -515,33 +534,16 @@
         make.height.mas_equalTo(44);
     }];
 
-    [self.searchBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.centerY.mas_equalTo(self.topView).offset(-5);
-        make.right.mas_equalTo(self.topView).offset(-20);
-        make.width.height.mas_equalTo(24);
-    }];
+//    [self.searchBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+//        make.centerY.mas_equalTo(self.topView).offset(-5);
+//        make.right.mas_equalTo(self.topView).offset(-20);
+//        make.width.height.mas_equalTo(24);
+//    }];
 
     [self.bottomLineView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.bottom.right.equalTo(self.topView);
         make.height.mas_equalTo(TTDeviceHelper.ssOnePixel);
     }];
-    
-//    CGFloat segmentContentWidth = [self.segmentControl totalSegmentedControlWidth];
-//
-//    if(self.isNewDiscovery && segmentContentWidth >= SCREEN_WIDTH){
-//        [self.segmentControl mas_makeConstraints:^(MASConstraintMaker *make) {
-//            make.left.right.mas_equalTo(self.topView);
-//            make.height.mas_equalTo(44);
-//            make.bottom.mas_equalTo(self.topView).offset(-8);
-//        }];
-//    }else{
-//        [self.segmentControl mas_makeConstraints:^(MASConstraintMaker *make) {
-//            make.centerX.mas_equalTo(self.topView);
-//            make.width.mas_equalTo(segmentContentWidth);
-//            make.height.mas_equalTo(44);
-//            make.bottom.mas_equalTo(self.topView).offset(-8);
-//        }];
-//    }
     
     [self.containerView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(self.topView.mas_bottom);
@@ -569,16 +571,16 @@
 
 - (void)updateSegmentView {
     BOOL same = [[FHUGCCategoryManager sharedManager] isSameCategory:self.categorys];
-    if(self.isNewDiscovery != [FHEnvContext isNewDiscovery] || !same){
-        if(self.isNewDiscovery != [FHEnvContext isNewDiscovery]){
-            self.isNewDiscovery = [FHEnvContext isNewDiscovery];
-            [self initViewModel];
-            if(self.isNewDiscovery){
-                [self setupDiscoverySetmentedControl];
-            }else{
-                [self setupSetmentedControl];
-            }
-        }else{
+    if(!same){
+//        if(self.isNewDiscovery != [FHEnvContext isNewDiscovery]){
+//            self.isNewDiscovery = [FHEnvContext isNewDiscovery];
+//            [self initViewModel];
+//            if(self.isNewDiscovery){
+//                [self setupDiscoverySetmentedControl];
+//            }else{
+//                [self setupSetmentedControl];
+//            }
+//        }else{
             [self initViewModel];
             self.segmentControl.selectedSegmentIndex = self.viewModel.currentTabIndex;
             self.segmentControl.sectionTitles = [self getSegmentTitles];
@@ -597,9 +599,9 @@
                     make.bottom.mas_equalTo(self.topView).offset(-8);
                 }];
             }
-        }
+//        }
     }else{
-        if([FHEnvContext isNewDiscovery]){
+        if(self.isNewDiscovery){
             self.viewModel.currentTabIndex = 0;
             NSIndexPath *indexPath = [NSIndexPath indexPathForRow:0 inSection:0];
             [self.collectionView scrollToItemAtIndexPath:indexPath atScrollPosition:UICollectionViewScrollPositionLeft animated:NO];
@@ -608,16 +610,14 @@
 }
 
 - (void)refreshData {
-    [self.viewModel refreshCell:NO isClick:YES];
+    if(!self.isNewDiscovery || ![FHEnvContext sharedInstance].isShowingHomeHouseFind){
+        [self.viewModel refreshCell:NO isClick:YES];
+    }
 }
 
 - (void)changeTab {
-    if([FHEnvContext isNewDiscovery]){
-        NSInteger index = [[FHUGCCategoryManager sharedManager] getCategoryIndex:@"f_news_recommend"];
-        if (self.navigationController.viewControllers.count <= 1) {
-            [self.viewModel changeTab:index];
-        }
-    }else{
+    NSString *tabIdentifier = [FHEnvContext getCurrentTabIdentifier];
+    if(!self.isNewDiscovery && [tabIdentifier isEqualToString:@"tab_f_find"]){
         if (self.navigationController.viewControllers.count <= 1) {
             [self.viewModel changeTab:1];
         }
@@ -650,7 +650,7 @@
     [self gotoPostThreadVC];
     
     NSMutableDictionary *params = @{}.mutableCopy;
-    params[UT_ORIGIN_FROM] = @"neighborhood_tab";
+    params[UT_ORIGIN_FROM] = self.tracerDict[UT_ORIGIN_FROM] ?: @"be_null";
     params[UT_ELEMENT_TYPE] = @"feed_icon";
     params[UT_PAGE_TYPE] = [self.viewModel pageType];
     TRACK_EVENT(@"click_options", params);
@@ -658,7 +658,7 @@
 
 - (void)gotoVotePublish {
     NSMutableDictionary *params = @{}.mutableCopy;
-    params[UT_ORIGIN_FROM] = @"neighborhood_tab";
+    params[UT_ORIGIN_FROM] = self.tracerDict[UT_ORIGIN_FROM] ?: @"be_null";
     params[UT_ELEMENT_TYPE] = @"vote_icon";
     params[UT_PAGE_TYPE] = [self.viewModel pageType];
     TRACK_EVENT(@"click_options", params);
@@ -672,7 +672,7 @@
 
 - (void)gotoWendaPublish {
     NSMutableDictionary *params = @{}.mutableCopy;
-    params[UT_ORIGIN_FROM] = @"neighborhood_tab";
+    params[UT_ORIGIN_FROM] = self.tracerDict[UT_ORIGIN_FROM] ?: @"be_null";
     params[UT_ELEMENT_TYPE] = @"question_icon";
     params[UT_PAGE_TYPE] = [self.viewModel pageType];
     TRACK_EVENT(@"click_options", params);
@@ -758,6 +758,7 @@
     NSMutableDictionary *dict = @{}.mutableCopy;
     NSMutableDictionary *tracerDict = @{}.mutableCopy;
     tracerDict[UT_ENTER_FROM] = [self.viewModel pageType];
+    tracerDict[UT_ORIGIN_FROM] = self.tracerDict[UT_ORIGIN_FROM] ?: @"be_null";
     dict[TRACER_KEY] = tracerDict;
     TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
     [[TTRoute sharedRoute] openURLByPresentViewController:components.URL userInfo:userInfo];
@@ -768,6 +769,7 @@
     NSMutableDictionary *dict = @{}.mutableCopy;
     NSMutableDictionary *tracerDict = @{}.mutableCopy;
     tracerDict[UT_ENTER_FROM] = [self.viewModel pageType];
+    tracerDict[UT_ORIGIN_FROM] = self.tracerDict[UT_ORIGIN_FROM] ?: @"be_null";
     dict[TRACER_KEY] = tracerDict;
     TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
     [[TTRoute sharedRoute] openURLByPresentViewController:components.URL userInfo:userInfo];
@@ -787,6 +789,7 @@
     NSMutableDictionary *dict = @{}.mutableCopy;
     traceParam[@"page_type"] = @"feed_publisher";
     traceParam[@"enter_from"] = page_type;
+    traceParam[UT_ORIGIN_FROM] = self.tracerDict[UT_ORIGIN_FROM] ?: @"be_null";
     dict[TRACER_KEY] = traceParam;
     dict[VCTITLE_KEY] = @"发帖";
     TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
@@ -796,27 +799,61 @@
 }
 
 //进入搜索页
-- (void)goToSearch {
-//    [self hideGuideView];
-    [self addGoToSearchLog];
-    NSString *routeUrl = @"sslocal://ugc_search_list";
-    NSURL *openUrl = [NSURL URLWithString:routeUrl];
-    NSMutableDictionary *paramDic = [NSMutableDictionary dictionary];
-    NSMutableDictionary* searchTracerDict = [NSMutableDictionary dictionary];
-    searchTracerDict[@"element_type"] = @"community_group";
-    searchTracerDict[@"enter_from"] = @"neighborhood_tab";
-    searchTracerDict[@"origin_from"] = @"neighborhood_tab";
-    paramDic[@"tracer"] = searchTracerDict;
-    TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:paramDic];
-    [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:userInfo];
+//- (void)goToSearch {
+//    [self addGoToSearchLog];
+//    NSString *routeUrl = @"sslocal://ugc_search_list";
+//    NSURL *openUrl = [NSURL URLWithString:routeUrl];
+//    NSMutableDictionary *paramDic = [NSMutableDictionary dictionary];
+//    NSMutableDictionary* searchTracerDict = [NSMutableDictionary dictionary];
+//    searchTracerDict[@"element_type"] = @"community_group";
+//    searchTracerDict[@"enter_from"] = @"neighborhood_tab";
+//    searchTracerDict[@"origin_from"] = @"neighborhood_tab";
+//    paramDic[@"tracer"] = searchTracerDict;
+//    TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:paramDic];
+//    [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:userInfo];
+//}
+//
+//- (void)addGoToSearchLog {
+//    NSMutableDictionary *reportParams = [NSMutableDictionary dictionary];
+//    reportParams[@"page_type"] = @"neighborhood_tab";
+//    reportParams[@"origin_from"] = @"community_search";
+//    reportParams[@"origin_search_id"] = self.tracerDict[@"origin_search_id"] ?: @"be_null";
+//    [FHUserTracker writeEvent:@"click_community_search" params:reportParams];
+//}
+
+- (void)viewAppearForEnterType:(NSInteger)enterType needReport:(BOOL)needReport {
+    if(needReport){
+        self.stayTime = [[NSDate date] timeIntervalSince1970];
+        NSMutableDictionary *tracerDict = [NSMutableDictionary new];
+        if (enterType == 1) {
+            tracerDict[@"enter_type"] = @"click";
+        }else{
+            tracerDict[@"enter_type"] = @"flip";
+        }
+        tracerDict[@"enter_from"] = self.tracerDict[@"enter_from"] ?: @"be_null";
+        tracerDict[@"category_name"] = self.tracerDict[@"category_name"] ?: @"be_null";
+        [FHEnvContext recordEvent:tracerDict andEventKey:@"enter_category"];
+    }
+    [self.viewModel viewWillAppear];
 }
 
-- (void)addGoToSearchLog {
-    NSMutableDictionary *reportParams = [NSMutableDictionary dictionary];
-    reportParams[@"page_type"] = @"neighborhood_tab";
-    reportParams[@"origin_from"] = @"community_search";
-    reportParams[@"origin_search_id"] = self.tracerDict[@"origin_search_id"] ?: @"be_null";
-    [FHUserTracker writeEvent:@"click_community_search" params:reportParams];
+- (void)viewDisAppearForEnterType:(NSInteger)enterType
+{
+    NSMutableDictionary *tracerDict = [NSMutableDictionary new];
+    NSTimeInterval duration = ([[NSDate date] timeIntervalSince1970] - self.stayTime) * 1000.0;
+    if (enterType == 1) {
+        tracerDict[@"enter_type"] = @"click";
+    }else{
+        tracerDict[@"enter_type"] = @"flip";
+    }
+    tracerDict[@"enter_from"] = self.tracerDict[@"enter_from"] ?: @"be_null";
+    tracerDict[@"category_name"] = self.tracerDict[@"category_name"] ?: @"be_null";
+    tracerDict[@"stay_time"] = @((int) duration);
+
+    if (((int) duration) > 0) {
+        [FHEnvContext recordEvent:tracerDict andEventKey:@"stay_category"];
+    }
+    [self.viewModel viewWillDisappear];
 }
 
 #pragma mark - TTUIViewControllerTrackProtocol

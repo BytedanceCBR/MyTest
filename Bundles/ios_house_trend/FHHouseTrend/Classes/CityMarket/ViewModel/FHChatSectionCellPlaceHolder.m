@@ -148,12 +148,12 @@
     __block NSUInteger lineIndex = 0;
     BOOL shouldUseTenThousandUnit = [self shouldUseTenThousandunit:array];
 
-//    __block CGFloat maxValue = CGFLOAT_MIN;
-//    __block CGFloat minValue = CGFLOAT_MIN;
-//    [array enumerateObjectsUsingBlock:^(NSNumber*  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-//        maxValue = MAX(maxValue, [obj floatValue]);
-//        minValue = MIN(minValue, [obj floatValue]);
-//    }];
+    __block CGFloat maxValue = CGFLOAT_MIN;
+    __block CGFloat minValue = CGFLOAT_MAX;
+    [array enumerateObjectsUsingBlock:^(NSNumber*  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        maxValue = MAX(maxValue, [obj floatValue]);
+        minValue = MIN(minValue, [obj floatValue]);
+    }];
     FHCityMarketDetailResponseDataMarketTrendListDistrictMarketInfoListTrendLinesModel* trendLine = values.trendLines.firstObject;
     if (shouldUseTenThousandUnit) {
         chartView.banner.unitLabel.text = [NSString stringWithFormat:@"万%@", trendLine.valueUnit];
@@ -185,14 +185,21 @@
                 }
                 return [PNLineChartDataItem dataItemWithY:theValue];
             }
+            return [PNLineChartDataItem empty];
         };
         lineIndex += 1;
         return data01;
     }];
-//    CGFloat padding = (maxValue - minValue) / 10000 / 16;
-//    chartView.lineChart.yFixedValueMax = maxValue / 10000 - padding;
-//    chartView.lineChart.yFixedValueMin = minValue / 10000 - padding;
-    chartView.lineChart.yFixedValueMin = 0;
+    if (shouldUseTenThousandUnit) {
+//        CGFloat padding = (maxValue - minValue) / 10000 / 16;
+        chartView.lineChart.yFixedValueMax = maxValue / 10000;
+        chartView.lineChart.yFixedValueMin = minValue / 10000;
+    } else {
+//        CGFloat padding = (maxValue - minValue) / 16;
+        chartView.lineChart.yFixedValueMax = maxValue;
+        chartView.lineChart.yFixedValueMin = minValue;
+    }
+//    chartView.lineChart.yFixedValueMin = 0;
     chartView.lineChart.chartData = lineDatas;
     [chartView.lineChart strokeChart];
 

@@ -27,8 +27,10 @@ extern NSString *const kTTCommentDetailForwardCommentNotification;
 @property (nonatomic, strong) TTCommentDetailToolbarView *toolbarView;
 @property (nonatomic, strong) Article *article;
 @property (nonatomic, assign)  BOOL fromUGC;//来源是ugc模块新功能，区别以前的评论部分
+@property (nonatomic, assign)  BOOL noReportGoDetail;
 
 // 埋点用
+@property (nonatomic, copy) NSString *originFrom;
 @property (nonatomic, copy) NSString *enterFrom;
 @property (nonatomic, copy) NSString *element_from;
 @property (nonatomic, copy) NSString *categoryID;

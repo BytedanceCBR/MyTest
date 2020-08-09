@@ -335,6 +335,7 @@
     @"articleType": @"article_type",
     @"desc": @"copy_writing",
     @"groupId": @"group_id",
+    @"logPb": @"log_pb",
   };
   return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
      return dict[keyName]?:keyName;

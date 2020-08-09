@@ -17,6 +17,7 @@
 
 @property(nonatomic ,strong) UIView *sepLine;
 @property (nonatomic, strong)   WDListBottomButtonView       *buttonView;
+@property (nonatomic, strong) UIButton *writeBtn;
 
 @end
 
@@ -36,10 +37,25 @@
     self.sepLine = [[UIView alloc] init];
     self.sepLine.backgroundColor = [UIColor themeGray6];
     [self addSubview:self.sepLine];
-    self.buttonView = [[WDListBottomButtonView alloc] init];
-    [self addSubview:self.buttonView];
-    self.buttonView.userInteractionEnabled = NO;
+//    self.buttonView = [[WDListBottomButtonView alloc] init];
+//    [self addSubview:self.buttonView];
+//    self.buttonView.userInteractionEnabled = NO;
+    self.writeBtn.userInteractionEnabled = NO;
+    [self addSubview:self.writeBtn];
     [self setupConstraints];
+}
+
+- (UIButton *)writeBtn {
+    if (!_writeBtn) {
+        _writeBtn = [[UIButton alloc]init];
+        _writeBtn.backgroundColor = [UIColor themeOrange4];
+        [_writeBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+        [_writeBtn setTitle:@"写回答" forState:UIControlStateNormal];
+        _writeBtn.titleLabel.font = [UIFont themeFontRegular:16];
+        _writeBtn.layer.cornerRadius = 20;
+        _writeBtn.layer.masksToBounds = YES;
+    }
+    return _writeBtn;
 }
 
 - (void)setupConstraints {
@@ -47,10 +63,16 @@
         make.left.right.top.mas_equalTo(self);
         make.height.mas_equalTo(0.5);
     }];
-    [self.buttonView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.centerX.mas_equalTo(self);
-        make.top.mas_equalTo(self).offset(1);
-        make.height.mas_equalTo(48);
+//    [self.buttonView mas_makeConstraints:^(MASConstraintMaker *make) {
+//        make.centerX.mas_equalTo(self);
+//        make.top.mas_equalTo(self).offset(1);
+//        make.height.mas_equalTo(48);
+//    }];
+    [self.writeBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+                make.left.equalTo(self).offset(15);
+        make.right.equalTo(self).offset(-15);
+                make.top.mas_equalTo(self).offset(10);
+                make.height.mas_equalTo(40);
     }];
 }
 
@@ -76,6 +98,7 @@
 
 - (void)setupUI {
     self.backgroundColor = [UIColor whiteColor];
+//    self.backgroundColor = [UIColor red]
     self.iconImageView = [[UIImageView alloc] init];
     self.iconImageView.image = ICON_FONT_IMG(24, @"\U0000e6b3", [UIColor themeOrange1]);
     [self addSubview:_iconImageView];

@@ -82,7 +82,6 @@
 {
 //    CGFloat height = [FHFakeInputNavbar perferredHeight];
     UITableView *tableView = [[FHBaseTableView alloc] initWithFrame:CGRectZero style:UITableViewStyleGrouped];
-    __weak typeof(self) weakSelf = self;
     tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     tableView.keyboardDismissMode = UIScrollViewKeyboardDismissModeOnDrag;
     [self.view addSubview:tableView];

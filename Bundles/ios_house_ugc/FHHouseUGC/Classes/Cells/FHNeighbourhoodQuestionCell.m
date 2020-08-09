@@ -6,7 +6,6 @@
 //
 
 #import "FHNeighbourhoodQuestionCell.h"
-#import "FHArticleCellBottomView.h"
 #import "FHUGCCellHelper.h"
 #import "TTBaseMacro.h"
 #import "TTStringHelper.h"
@@ -367,6 +366,10 @@
     if(!isEmptyString(self.cellModel.writeAnswerSchema)){
         NSMutableDictionary *dict = @{}.mutableCopy;
         dict[@"title"] = @"写回答";
+        NSMutableDictionary *tracer = @{}.mutableCopy;
+        tracer[@"enter_from"] = self.cellModel.tracerDic[@"page_type"]?:@"be_null";
+        tracer[@"enter_type"] = @"click";
+        dict[@"tracer"] = tracer;
         TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
         NSURL *url = [TTStringHelper URLWithURLString:self.cellModel.writeAnswerSchema];
         [[TTRoute sharedRoute] openURLByPresentViewController:url userInfo:userInfo];

@@ -309,7 +309,7 @@
     FHDetailAdvisoryLoanModel *model = (FHDetailAdvisoryLoanModel *)self.currentData;
     NSString *openUrl = model.downPayment.openUrl;
     if (openUrl.length>0) {
-            NSURL *url = [NSURL URLWithString:openUrl];
+//            NSURL *url = [NSURL URLWithString:openUrl];
             NSMutableDictionary *imExtra = @{}.mutableCopy;
             imExtra[@"from"] = @"app_oldhouse_mortgage";
             imExtra[@"source"] = @"app_oldhouse_mortgage";

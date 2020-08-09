@@ -25,29 +25,38 @@
 {
     self = [super initWithFrame:frame];
     if (self) {
+        self.backgroundColor = [UIColor colorWithHexString:@"#fafafa"];
+        UIFont *font = [UIFont themeFontRegular:16];
+        
         _tipLabel = [[UILabel alloc]init];
-        UIFont *font = [TTDeviceHelper isScreenWidthLarge320] ? [UIFont themeFontRegular:16] : [UIFont themeFontRegular:15];
         _tipLabel.font = font;
-        _tipLabel.textColor = [UIColor themeGray1];
+        _tipLabel.textColor = [UIColor colorWithHexStr:@"#222222"];
+        [self addSubview:_tipLabel];
+        [_tipLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.left.mas_equalTo(HOR_MARGIN);
+            make.centerY.mas_equalTo(self);
+            make.right.mas_lessThanOrEqualTo(self.actionButton.mas_left).offset(-5);
+        }];
         
         _actionButton = [UIButton buttonWithType:UIButtonTypeCustom];
         _actionButton.titleLabel.font = font;
         [_actionButton setTitleColor:[UIColor themeRed3] forState:UIControlStateNormal];
         [_actionButton addTarget:self action:@selector(onAction:) forControlEvents:UIControlEventTouchUpInside];
+        [self addSubview:_actionButton];
+        [_actionButton mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.top.bottom.right.mas_equalTo(self);
+            make.width.mas_equalTo([FHDetailHalfPopFooter btnWidth]);
+        }];
         
         _negativeButton = [UIButton buttonWithType:UIButtonTypeCustom];
         _negativeButton.titleLabel.font = font;
         [_negativeButton setTitleColor:[UIColor themeGray3] forState:UIControlStateNormal];
         [_negativeButton addTarget:self action:@selector(onAction:) forControlEvents:UIControlEventTouchUpInside];
-        
-        [self addSubview:_tipLabel];
-        [self addSubview:_actionButton];
         [self addSubview:_negativeButton];
-        
-        self.backgroundColor = [UIColor themeRed2];
-        
-        [self initConstraints];
-        
+        [_negativeButton mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.top.bottom.right.mas_equalTo(self);
+            make.width.mas_equalTo([FHDetailHalfPopFooter btnWidth]);
+        }];
     }
     return self;
 }
@@ -106,34 +115,4 @@
     }];
     
 }
-
--(void)initConstraints
-{
-    [_tipLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(HOR_MARGIN);
-        make.centerY.mas_equalTo(self);
-        make.right.mas_lessThanOrEqualTo(self.actionButton.mas_left).offset(-5);
-    }];
-    
-    [_negativeButton mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.bottom.right.mas_equalTo(self);
-        make.width.mas_equalTo([FHDetailHalfPopFooter btnWidth]);
-    }];
-    
-    [_actionButton mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.bottom.right.mas_equalTo(self);        
-        make.width.mas_equalTo([FHDetailHalfPopFooter btnWidth]);
-    }];
-    
-    
-}
-
-/*
-// Only override drawRect: if you perform custom drawing.
-// An empty implementation adversely affects performance during animation.
-- (void)drawRect:(CGRect)rect {
-    // Drawing code
-}
-*/
-
 @end
