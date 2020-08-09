@@ -370,10 +370,8 @@
     NSMutableDictionary *dict = [self.cellModel.tracerDic mutableCopy];
     NSInteger user_digg = [self.cellModel.userDigg integerValue];
     if(user_digg == 1){
-        dict[@"click_position"] = @"feed_dislike";
         TRACK_EVENT(@"click_dislike", dict);
     }else{
-        dict[@"click_position"] = @"feed_like";
         TRACK_EVENT(@"click_like", dict);
     }
 }

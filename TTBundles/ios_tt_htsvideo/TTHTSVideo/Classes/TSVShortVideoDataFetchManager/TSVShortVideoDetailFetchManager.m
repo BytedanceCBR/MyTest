@@ -15,6 +15,8 @@
 #import "ReactiveObjC.h"
 #import <TTBaseLib/TTBaseMacro.h>
 #import <TTBaseLib/NSDictionary+TTAdditions.h>
+#import "FHHouseUGCAPI.h"
+#import "FHUGCShortVideoRealtorInfoModel.h"
 
 
 @interface TSVShortVideoDetailFetchManager ()
@@ -29,6 +31,8 @@
 @property (nonatomic, copy) NSString *activityCursor;
 @property (nonatomic, copy) NSString *activitySeq;
 @property (nonatomic, copy) NSString *activitySortType;
+@property (nonatomic, strong) FHUGCShortVideoRealtorInfo *realtorInfo;
+
 
 @end
 
@@ -112,15 +116,31 @@
             NSMutableDictionary *fixedDict = [NSMutableDictionary dictionary];
             [fixedDict setValue:jsonObj[@"data"] forKey:@"raw_data"];
             TTShortVideoModel *model = [[TTShortVideoModel alloc] initWithDictionary:fixedDict error:&mappingError];
-            NSMutableArray *awemeDetailItems = [NSMutableArray array];
-            if (model) {
-                [awemeDetailItems addObject:model];
-            }
-            self.awemedDetailItems = awemeDetailItems;
-            self.isLoadingRequest = NO;
-            if (finishBlock){
-                finishBlock(1,error);
-            }
+            
+            [FHHouseUGCAPI requestShortVideoWithGroupId:self.groupID completion:^(id<FHBaseModelProtocol>  _Nonnull models, NSError * _Nonnull errors) {
+                 if (!errors && models) {
+                     FHUGCShortVideoRealtor *realtor = [(FHUGCShortVideoRealtorInfoModel *)models data];
+                     _realtorInfo = realtor.realtor;
+                 }
+                if (_realtorInfo) {
+                    TSVUserModel *userModel = model.author;
+                    userModel.avatarURL = _realtorInfo.avatarUrl;
+                    userModel.name = _realtorInfo.realtorName;
+                    userModel.firstBizType = _realtorInfo.firstBizType;
+                    userModel.realtorId = _realtorInfo.realtorId;
+                    model.author = userModel;
+                }
+                NSMutableArray *awemeDetailItems = [NSMutableArray array];
+                if (model) {
+                    [awemeDetailItems addObject:model];
+                }
+                self.awemedDetailItems = awemeDetailItems;
+                self.isLoadingRequest = NO;
+                if (finishBlock){
+                    finishBlock(1,error);
+                }
+
+             }];
         }];
     } else if ([self numberOfShortVideoItems] > 0 && self.loadMoreType == TSVShortVideoListLoadMoreTypePersonalHome){
         NSString *urlStr = [ArticleURLSetting shortVideoLoadMoreURL];

@@ -1207,6 +1207,18 @@
         FHFeedContentModel *model = self.tabContentModel[section];
         dict[@"category_name"] = model.rawData.cardHeader.title;
     }
+    if(cellModel.logPb[@"impr_id"]){
+        dict[@"impr_id"] = cellModel.logPb[@"impr_id"];
+    }
+    if(cellModel.logPb[@"group_source"]){
+        dict[@"group_source"] = cellModel.logPb[@"group_source"];
+    }
+    if(cellModel.fromGid){
+        dict[@"from_gid"] = cellModel.fromGid;
+    }
+    if(cellModel.fromGroupSource){
+        dict[@"from_group_source"] = cellModel.fromGroupSource;
+    }
     
     return dict;
 }
@@ -1217,7 +1229,6 @@
 
 - (void)trackClickComment:(FHFeedUGCCellModel *)cellModel {
     NSMutableDictionary *dict = [cellModel.tracerDic mutableCopy];
-    dict[@"click_position"] = @"feed_comment";
     TRACK_EVENT(@"click_comment", dict);
 }
 

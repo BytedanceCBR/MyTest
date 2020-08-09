@@ -34,7 +34,7 @@
         _cellModel = cellModel;
         [self initViews];
     }else{
-        self.vc.tracerDict = [self traceDic].mutableCopy;
+        self.vc.tracerDict = [self tracerDict].mutableCopy;
         
         if(cellModel.type == FHCommunityCollectionCellTypeNearby){
             FHNearbyViewController *vc = (FHNearbyViewController *)self.vc;
@@ -72,23 +72,23 @@
     
     if(_cellModel.type == FHCommunityCollectionCellTypeNearby){
         FHNearbyViewController *vc = [[FHNearbyViewController alloc] init];
+        vc.isNewDiscovery = YES;
         self.vc = vc;
     }else if(_cellModel.type == FHCommunityCollectionCellTypeMyJoin){
         FHMyJoinViewController *vc = [[FHMyJoinViewController alloc] init];
         vc.withTips = self.withTips;
+        vc.isNewDiscovery = YES;
         self.vc = vc;
     }else if(_cellModel.type == FHCommunityCollectionCellTypeCustom){
         FHCommunityFeedListController *vc = [[FHCommunityFeedListController alloc] init];
         vc.listType = FHCommunityFeedListTypeCustom;
+        vc.isNewDiscovery = YES;
         vc.category = _cellModel.category;
         vc.needReportEnterCategory = YES;
-        if([_cellModel.category isEqualToString:@"f_news_recommend"]){
-            vc.isInsertFeedWhenPublish = YES;
-        }
         self.vc = vc;
     }
     
-    self.vc.tracerDict = [self traceDic].mutableCopy;
+    self.vc.tracerDict = [self tracerDict].mutableCopy;
     
     if(self.vc){
         self.vc.view.frame = self.bounds;
@@ -129,11 +129,13 @@
     }
 }
 
-- (NSDictionary *)traceDic {
+- (NSDictionary *)tracerDict {
     NSString *enterType = self.enterType ? self.enterType : @"default";
+    NSString *originFrom = self.cellModel.tracerDict[@"origin_from"] ?: @"be_null";
+    NSString *enterFrom = self.cellModel.tracerDict[@"origin_from"] ?: @"be_null";
     return @{
-             @"origin_from":@"neighborhood_tab",
-             @"enter_from":@"neighborhood_tab",
+             @"origin_from":originFrom,
+             @"enter_from":enterFrom,
              @"enter_type":enterType,
              };
 }

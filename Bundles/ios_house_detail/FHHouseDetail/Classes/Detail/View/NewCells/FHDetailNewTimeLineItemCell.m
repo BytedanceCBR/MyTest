@@ -8,6 +8,7 @@
 #import "FHDetailNewTimeLineItemCell.h"
 #import "TTRoute.h"
 #import "FHEnvContext.h"
+#import <ByteDanceKit/NSDate+BTDAdditions.h>
 
 @interface FHDetailNewTimeLineItemCell ()
 @property (nonatomic, strong) UIButton *maskBtn;
@@ -189,25 +190,19 @@
     }
 }
 
-- (NSString *)getTimeFromTimestamp:(double)timestamp{
-    //将对象类型的时间转换为NSDate类型
-    double time =timestamp;
-    NSDate * myDate=[NSDate dateWithTimeIntervalSince1970:time];
-
-    //设置时间格式
-    NSDateFormatter * formatter=[[NSDateFormatter alloc]init];
-    [formatter setDateFormat:@"MM-dd"];
-
-    //将时间转换为字符串
-    NSString *timeStr=[formatter stringFromDate:myDate];
-   
+- (NSString *)getTimeFromTimestamp:(double)timestamp{
+    //将对象类型的时间转换为NSDate类型
+    double time = timestamp;
+    NSDate *myDate = [NSDate dateWithTimeIntervalSince1970:time];
+    //设置时间格式
+    NSString *timeStr = [myDate btd_stringWithFormat:@"MM-dd"];
     if (timeStr) {
-      return timeStr;
-    }else
-    {
-      return @"未知";
+        return timeStr;
+    } else {
+        return @"未知";
     }
 }
+
 - (void)awakeFromNib {
     [super awakeFromNib];
     // Initialization code

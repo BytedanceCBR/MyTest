@@ -81,11 +81,7 @@
     
     UIView *headerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 0, 0.001)];
     if(self.type == FHUGCMyInterestedTypeEmpty){
-        if([FHEnvContext isNewDiscovery]){
-            headerView = [self emptyHeaderViewDiscovery];
-        }else{
-            headerView = [self emptyHeaderView];
-        }
+        headerView = [self emptyHeaderViewDiscovery];
     }
     _tableView.tableHeaderView = headerView;
     
@@ -133,7 +129,8 @@
     NSMutableDictionary *tracerDict = [NSMutableDictionary dictionary];
     [tracerDict addEntriesFromDictionary:self.tracerDict];
     tracerDict[@"page_type"] = @"my_join_feed";
-    tracerDict[@"origin_from"] = @"neighborhood_tab";
+    tracerDict[@"enter_from"] = self.tracerDict[@"enter_from"] ?: @"be_null";
+    tracerDict[@"origin_from"] = self.tracerDict[@"origin_from"] ?: @"be_null";
     searchView.tracerDict = tracerDict;
     [headerView addSubview:searchView];
     

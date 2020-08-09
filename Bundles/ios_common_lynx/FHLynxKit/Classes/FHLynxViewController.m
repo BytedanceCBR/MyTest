@@ -266,14 +266,32 @@
     NSMutableDictionary * paramsExtra = [NSMutableDictionary new];
     [paramsExtra setValue:[[TTInstallIDManager sharedInstance] deviceID] forKey:@"device_id"];
      NSMutableDictionary *uploadParams = [NSMutableDictionary new];
-     [uploadParams setValue:@(time) forKey:@"lynx_page_duration"];
-    [[HMDTTMonitor defaultManager] hmdTrackService:sevice metric:uploadParams category:nil extra:paramsExtra];
+    NSString *eventServie = [NSString stringWithFormat:@"lynx_page_duration_%@",_channelName];
+    if (time < 15) {
+        [uploadParams setValue:@(time * 1000) forKey:@"duration"];
+        [[HMDTTMonitor defaultManager] hmdTrackService:eventServie metric:uploadParams category:nil extra:paramsExtra];
+    }
 }
 
 
 //这里接收TTLynxViewClient抛上来的sizeChange事件
 - (void)lynxViewDidChangeIntrinsicContentSize:(LynxView*)view {
     
+}
+
+- (void)lynxView:(LynxView*)view didReceiveFirstLoadPerf:(LynxPerformance*)perf{
+    
+    NSMutableDictionary * paramsExtra = [NSMutableDictionary new];
+    [paramsExtra setValue:[[TTInstallIDManager sharedInstance] deviceID] forKey:@"device_id"];
+     NSMutableDictionary *uploadParams = [NSMutableDictionary new];
+    if (perf && [[perf toDictionary] isKindOfClass:[NSDictionary class]]) {
+        [uploadParams addEntriesFromDictionary:[perf toDictionary]];
+    }
+    NSString *eventServie = [NSString stringWithFormat:@"lynx_page_info_%@",_channelName];
+    [[HMDTTMonitor defaultManager] hmdTrackService:eventServie metric:uploadParams category:nil extra:paramsExtra];
+    
+}
+- (void)lynxView:(LynxView*)view didReceiveUpdatePerf:(LynxPerformance*)perf{
 }
 
 - (NSURL*)shouldRedirectImageUrl:(NSURL*)url {

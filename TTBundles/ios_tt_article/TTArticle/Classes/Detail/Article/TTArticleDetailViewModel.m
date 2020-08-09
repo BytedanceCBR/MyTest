@@ -16,7 +16,6 @@
 #import "TTUserSettingsManager+FontSettings.h"
 #import "ExploreEntryManager.h"
 #import "SSWebViewUtil.h"
-
 #import "TTUISettingHelper.h"
 #import "CommonURLSetting.h"
 #import "SSWebViewUtil.h"
@@ -30,11 +29,11 @@
 #import <TTBaseLib/UIDevice+TTAdditions.h>
 #import <TTBaseLib/JSONAdditions.h>
 #import <TTNetworkManager/TTNetworkManager.h>
-#import <TTABManager/TTABManagerUtil.h>
 #import <AKWebViewBundlePlugin/TTDetailWebviewGIFManager.h>
 #import <TTArticleBase/SSCommonLogic.h>
 #import <TTBaseLib/NSDictionary+TTAdditions.h>
 #import <FHHouseBase/TTSandBoxHelper+House.h>
+#import <BDABTestSDK/BDABTestManager.h>
 
 @interface TTArticleDetailViewModel ()
 
@@ -568,7 +567,7 @@
         
         //ab_client
     if (![h5Extra objectForKey:@"ab_client"]) {
-        [h5Extra setValue:[TTABManagerUtil ABTestClient] forKey:@"ab_client"];
+        [h5Extra setValue:[BDABTestManager ABTestClient] forKey:@"ab_client"];
     }
         
         //头条号强化

@@ -27,6 +27,9 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)updateMapSearchBtn;
 
 - (void)changeBackColor:(NSInteger)index;
+
+- (void)showUnValibleCity;
+
 @end
 
 NS_ASSUME_NONNULL_END

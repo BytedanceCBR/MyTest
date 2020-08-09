@@ -16,6 +16,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic , assign) FHCommunityCollectionCellType type;
 @property (nonatomic, copy , nullable) NSString *category;
 @property (nonatomic, copy , nullable) NSString *name;
+//埋点
+@property(nonatomic, strong) NSDictionary *tracerDict;
 
 + (FHCommunityDiscoveryCellModel *)cellModelForCategory:(FHUGCCategoryDataDataModel *)model;
 
