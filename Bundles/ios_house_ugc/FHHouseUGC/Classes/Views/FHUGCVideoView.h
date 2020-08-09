@@ -32,6 +32,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy) void (^ttv_commodityViewClosedBlock)();
 @property (nonatomic, copy) void (^ttv_commodityViewShowedBlock)();
 @property (nonatomic, copy) void (^ttv_playVideoBlock)();
+@property (nonatomic, copy) void (^ttv_playVideoOverrideBlock)();
 @property (nonatomic, copy) void (^ttv_videoPlayFinishedBlock)();
 @property (nonatomic, copy) void (^ttv_videoReplayActionBlock)();
 

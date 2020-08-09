@@ -97,6 +97,11 @@
     _videoView.layer.borderColor = [[UIColor themeGray6] CGColor];
     _videoView.layer.borderWidth = 0.5;
     _videoView.layer.cornerRadius = 4;
+    WeakSelf;
+    _videoView.ttv_playVideoOverrideBlock = ^{
+        StrongSelf;
+        [self goToVideoDetail];
+    };
     [self.contentView addSubview:_videoView];
 
     self.bottomView = [[FHUGCCellBottomView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, bottomViewHeight)];
@@ -107,9 +112,9 @@
     UITapGestureRecognizer* tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(goToCommunityDetail:)];
     [self.bottomView.positionView addGestureRecognizer:tap];
     
-    __weak typeof(self) wself = self;
     self.videoView.ttv_shareButtonOnMovieFinishViewDidPressBlock = ^{
-        [wself shareActionClicked];
+        StrongSelf;
+        [self shareActionClicked];
     };
 }
 
@@ -288,6 +293,16 @@
 
 - (void)endDisplay {
     [[self playMovie] didEndDisplaying];
+}
+
+- (void)goToVideoDetail {
+    TTVFeedCellSelectContext *context = [[TTVFeedCellSelectContext alloc] init];
+    context.refer = 1;
+    context.categoryId = self.cellModel.categoryId;
+    context.clickComment = NO;
+    context.enterType = @"feed_content_blank";
+    context.enterFrom = self.cellModel.tracerDic[@"page_type"] ?: @"be_null";
+    [self didSelectCell:context];
 }
 
 - (void)didSelectCell:(TTVFeedCellSelectContext *)context {

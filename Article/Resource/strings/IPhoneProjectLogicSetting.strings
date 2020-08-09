@@ -236,3 +236,6 @@
 
 //经纪人主页评论
 "realtor_evaluation" = "FHHouseUserCommentsVC";
+
+//视频轮播列表
+"ugc_video_list" = "FHUGCVideoListController";
