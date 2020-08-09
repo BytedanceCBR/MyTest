@@ -243,6 +243,8 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
     
     self.needReload = YES;
     [self checkNeedRequest];
+    
+    [self tryUpdateSideBar];
 }
 
 -(void)dealloc
@@ -1255,7 +1257,7 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
         if (self.currentHouseType == FHHouseTypeSecondHandHouse) {
             [self showNeighborHouseList:houseAnnotation.houseData];
         }else{
-            [self handleSelectForNewHouse:nil];
+            [self showNewHouseList:houseAnnotation.houseData];
         }
     }
 }
@@ -1745,7 +1747,7 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
     CGFloat zoomLevel = self.mapView.zoomLevel;
     BOOL showCircle = (self.configModel.houseType == FHHouseTypeSecondHandHouse) && (zoomLevel >= 13);
     NSArray *types = nil;
-    if(self.showMode == FHMapSearchShowModeSubway){
+    if(self.showMode == FHMapSearchShowModeSubway && self.currentHouseType == FHHouseTypeSecondHandHouse){
         types = @[@(FHMapSearchSideBarItemTypeSubway)];
     }else{
         
@@ -1766,7 +1768,14 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
         [showTyeps addObject:@(FHMapSearchSideBarItemTypeFilter)];
 //        [showTyeps addObject:@(FHMapSearchSideBarItemTypeList)];
         
+        if (self.currentHouseType == FHHouseTypeNewHouse) {
+            [showTyeps removeObject:@(FHMapSearchSideBarItemTypeSubway)];
+            [showTyeps removeObject:@(FHMapSearchSideBarItemTypeList)];
+            [showTyeps removeObject:@(FHMapSearchSideBarItemTypeCircle)];
+        }
+        
         types = showTyeps;
+
         
         if(types && [[self.sideBar currentTypes] isEqualToArray:types]){
             types = nil;
@@ -1781,6 +1790,37 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
         }];
     }
     
+}
+
+#pragma mark - new houses
+-(void)showNewHouseList:(FHMapSearchDataListModel *)model
+{
+    [self changeNavbarAppear:NO];
+    self.showMode = FHMapSearchShowModeHalfHouseList;
+    [self.tipView removeTip];
+    
+    //move annotationview to center
+    CLLocationCoordinate2D center = CLLocationCoordinate2DMake(model.centerLatitude.floatValue, model.centerLongitude.floatValue);
+    CGPoint annotationViewPoint = [self.mapView convertCoordinate:center toPointToView:self.mapView];
+    CGPoint destCenterPoint = CGPointMake(self.mapView.width/2, self.mapView.height/4);
+    CGPoint currentCenterPoint = CGPointMake(self.mapView.width/2, self.mapView.height/2);
+    CGPoint toMovePoint = CGPointMake(annotationViewPoint.x - destCenterPoint.x + currentCenterPoint.x, annotationViewPoint.y - destCenterPoint.y + currentCenterPoint.y);
+    toMovePoint.y -= 18;//annotationview height/2
+    CLLocationCoordinate2D destCenter = [self.mapView convertPoint:toMovePoint toCoordinateFromView:self.mapView];
+    [self.mapView setCenterCoordinate:destCenter animated:YES];
+    
+    FHMapSearchBubbleModel *houseListBubble = [self bubleFromOpenUrl:model.houseListOpenUrl];
+    houseListBubble.lastShowMode = self.lastShowMode;
+    
+    [self.viewController.view bringSubviewToFront:self.houseListViewController.view];
+    [self.houseListViewController showNeighborHouses:model bubble:houseListBubble];
+    
+    if (![TTReachability isNetworkConnected]) {
+        //当前不联网,判断更新筛选器选项
+        if (self.filterConditionParams) {
+            [self.houseListViewController.viewModel overwirteCondition:self.filterConditionParams];
+        }
+    }
 }
 
 #pragma mark - neighborhood houses
@@ -1812,7 +1852,6 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
             [self.houseListViewController.viewModel overwirteCondition:self.filterConditionParams];
         }
     }
-    
 }
 
 
