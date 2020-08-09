@@ -41,7 +41,9 @@
         [scrollView setShowsHorizontalScrollIndicator:NO];
         scrollView.backgroundColor = [UIColor clearColor];
         self.scrollView = scrollView;
-        self.scrollView.contentSize = CGSizeMake(frame.size.width + 0.4, frame.size.height + 0.4);
+        self.scrollView.contentSize = CGSizeMake(frame.size.width, frame.size.height);
+        self.scrollView.alwaysBounceVertical = YES;
+        self.scrollView.alwaysBounceHorizontal = YES;
         [self addSubview:scrollView];
 
         self.placeHolder = [[UIImageView alloc] initWithFrame:frame];

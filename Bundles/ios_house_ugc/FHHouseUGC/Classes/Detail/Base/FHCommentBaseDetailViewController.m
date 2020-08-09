@@ -722,7 +722,7 @@
     }
     
     TTCommentDetailViewController *detailRoot = [[TTCommentDetailViewController alloc] initWithRouteParamObj:TTRouteParamObjWithDict(mdict.copy)];
-    
+    detailRoot.noReportGoDetail = YES;
 //    detailRoot.categoryID = self.detailModel.categoryID;
 //    detailRoot.enterFrom = self.detailModel.clickLabel;
 //    detailRoot.logPb = self.detailModel.logPb;
