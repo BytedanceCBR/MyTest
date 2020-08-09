@@ -107,6 +107,7 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
 @property(nonatomic , strong) FHSearchFilterConfigOption *subwayData;
 @property(nonatomic , strong) NSArray *subwayLines;//地铁以一段一段的方式拼接
 @property(nonatomic , strong) FHMapSearchFilterView *filterView;
+@property(nonatomic , strong) FHMapSearchFilterView *filterViewNewHouse;
 @property(nonatomic , strong) FHMapAreaHouseListViewController *areaHouseListController; //区域内房源
 @property(nonatomic , assign) CLLocationCoordinate2D drawMinCoordinate;
 @property(nonatomic , assign) CLLocationCoordinate2D drawMaxCoordinate;
@@ -372,7 +373,7 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
         };
         
         FHConfigDataModel *configModel = [[FHEnvContext sharedInstance] getConfigFromCache];
-        NSArray<FHSearchFilterConfigItem> *filter = nil;
+//        NSArray<FHSearchFilterConfigItem> *filter = nil;
         
         if (self.configModel.houseType == FHHouseTypeSecondHandHouse) {
             [_filterView updateWithOldFilter:configModel.filter];
@@ -389,6 +390,39 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
     return _filterView;
 }
 
+-(FHMapSearchFilterView *)filterViewNewHouse
+{
+    if (!_filterViewNewHouse) {
+        _filterViewNewHouse = [[FHMapSearchFilterView alloc]initWithFrame:self.viewController.view.bounds];
+        __weak typeof(self) wself = self;
+        _filterViewNewHouse.confirmWithQueryBlock = ^(NSString * _Nonnull query) {
+            [wself changeFilter:query];
+        };
+        
+        _filterViewNewHouse.resetBlock = ^{
+            [wself changeFilter:@""];
+        };
+        
+        FHConfigDataModel *configModel = [[FHEnvContext sharedInstance] getConfigFromCache];
+//        NSArray<FHSearchFilterConfigItem> *filter = nil;
+        
+        if (self.currentHouseType == FHHouseTypeSecondHandHouse) {
+            [_filterViewNewHouse updateWithOldFilter:configModel.filter];
+        }else if(self.currentHouseType  == FHHouseTypeRentHouse){
+            [_filterViewNewHouse updateWithRentFilter:configModel.rentFilter];
+        }else if(self.currentHouseType == FHHouseTypeNewHouse){
+            [_filterViewNewHouse updateWithRentFilter:configModel.courtFilter];
+        }
+        
+        if(_configModel.mapOpenUrl){
+//            [_filterViewNewHouse selectedWithOpenUrl:_configModel.mapOpenUrl];
+        }else if(_configModel.conditionParams){
+            
+        }
+    }
+    return _filterViewNewHouse;
+}
+
 -(void)showFilter
 {
     if (self.currentHouseType == FHHouseTypeSecondHandHouse) {
@@ -399,8 +433,8 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
     }else{
         NSString *query =  [self.lastNewHouseBubble query];
         NSString *url = [NSString stringWithFormat:@"https:a?%@",query];
-        [self.filterView selectedWithOpenUrl:url];
-        [self.filterView showInView:self.viewController.view animated:YES];
+        [self.filterViewNewHouse selectedWithOpenUrl:url];
+        [self.filterViewNewHouse showInView:self.viewController.view animated:YES];
     }
 }
 
@@ -422,9 +456,9 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
         }
     }else{
         if(self.areaHouseListController.view.superview){
-                   [self.areaHouseListController.viewModel refreshWithFilter:query];
-                   [self.lastNewHouseBubble overwriteFliter:query];
-                   self.needReload = YES;
+//         [self.areaHouseListController.viewModel refreshWithFilter:query];
+         [self.lastNewHouseBubble overwriteFliter:query];
+          self.needReload = YES;
         }else{
            [self.lastNewHouseBubble overwriteFliter:query];
            if ([TTReachability isNetworkConnected]) {
@@ -1842,8 +1876,8 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
         self.lastBubble.noneFilterQuery = self.filterView.noneFilterQuery;
     }else{
         self.lastNewHouseBubble = [FHMapSearchBubbleModel bubbleFromUrl:openUrl];
-        [self.filterView selectedWithOpenUrl:openUrl];
-        self.lastNewHouseBubble.noneFilterQuery = self.filterView.noneFilterQuery;
+        [self.filterViewNewHouse selectedWithOpenUrl:openUrl];
+        self.lastNewHouseBubble.noneFilterQuery = self.filterViewNewHouse.noneFilterQuery;
     }
 }
 
