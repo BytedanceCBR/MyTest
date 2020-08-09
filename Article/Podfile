@@ -676,7 +676,6 @@ post_install do |installer|
           '${PODS_ROOT}/AMapLocation',
           '${PODS_ROOT}/AMapSearch',
           '${PODS_ROOT}/AMapFoundation',
-          '${PODS_ROOT}/React',
           '${PODS_ROOT}/BDTFactoryConfigurator',
           '${PODS_ROOT}/TYRZApiSDK/TYRZApiSDK/Classes',
           '${PODS_ROOT}/EAccountApiSDK/EAccountApiSDK/Classes',
@@ -685,15 +684,8 @@ post_install do |installer|
           '${PODS_ROOT}/BDUGUnionSDK/BDUGUnionSDK/Classes',
           '${PODS_ROOT}/TTNetBusiness/ios',
           '${PODS_ROOT}/TencentQQSDK/TencentQQSDK/Classes',
-
           '${PODS_ROOT}/Quaterback/BDDynamically/Frameworks/News/Release',
           ]
-        end
-
-        if target.name == "FHRNKit" || target.name == "TTDebug"
-          target.build_configurations.each do |config|
-            config.build_settings['HEADER_SEARCH_PATHS'] ||= ['$(inherited)','${PODS_ROOT}/Headers/Public/React']
-          end
         end
     end
     
