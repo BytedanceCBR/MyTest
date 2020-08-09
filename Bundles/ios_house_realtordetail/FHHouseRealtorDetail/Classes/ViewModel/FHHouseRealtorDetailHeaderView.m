@@ -16,6 +16,7 @@
 #import "SDWebImageManager.h"
 #import "UIColor+Theme.h"
 #import "LynxEnv.h"
+#import "IMConsDefine.h"
 #import <BDWebImage/UIImageView+BDWebImage.h>
 #import "FHHouseRealtorDetailInfoModel.h"
 #import "UIDevice+BTDAdditions.h"
@@ -30,6 +31,8 @@
 @property (weak, nonatomic) UIView *headerMaskView;
 @property (assign, nonatomic) CGFloat navHeight;
 @property (nonatomic, assign) NSTimeInterval loadTime; //页面加载时间
+@property (nonatomic, assign) BOOL isHeightScoreRealtor; //页面加载时间
+@property(nonatomic) CGFloat headerBackHeight;
 
  @end
 @implementation FHHouseRealtorDetailHeaderView
@@ -38,6 +41,7 @@
     self = [super initWithFrame:frame];
     if(self) {
         self.navHeight =   ((![[UIApplication sharedApplication] isStatusBarHidden]) ? [[UIApplication sharedApplication] statusBarFrame].size.height : ([UIDevice btd_isIPhoneXSeries]?44.f:20.f));
+        self.isHeightScoreRealtor = NO;
         [self createUI];
         self.backgroundColor = [UIColor colorWithHexStr:@"#f8f8f8"];
     }
@@ -46,10 +50,8 @@
 
 
 - (void)createUI {
-    [self.headerIma mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.top.right.equalTo(self);
-        make.height.mas_offset(164);
-    }];
+    self.headerBackHeight = 164;
+    [self headerIma];
     [self.headerMaskView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.edges.equalTo(self.headerIma);
     }];
@@ -57,6 +59,32 @@
         make.left.right.bottom.equalTo(self);
         make.top.equalTo(self).offset(self.navHeight+44);
     }];
+}
+
+- (void)updateWhenScrolledWithContentOffset:(CGFloat)offset isScrollTop:(BOOL)isScrollTop scrollView:(UIScrollView *)scrollView {
+    if (self.isHeightScoreRealtor) {
+            if (offset < 0 && offset>= -150) {
+            CGFloat height = SCREEN_WIDTH - offset;
+            self.headerIma.frame = CGRectMake(0,-(SCREEN_WIDTH-self.headerBackHeight) + offset, SCREEN_WIDTH, height);
+                NSLog(@"----666---%f",-(SCREEN_WIDTH-self.headerBackHeight) + offset);
+        }else if( offset< -150 && offset >= -(SCREEN_WIDTH-self.headerBackHeight)) {
+            CGFloat height = SCREEN_WIDTH + 150;
+            self.headerIma.frame = CGRectMake(0, -(SCREEN_WIDTH-self.headerBackHeight) - 150 - (offset + 150)*0.1    , SCREEN_WIDTH, height);
+            NSLog(@"----666---%f",-(SCREEN_WIDTH-self.headerBackHeight) - 150 - (offset + 150)*0.1);
+        }else if ( offset < -(SCREEN_WIDTH-self.headerBackHeight)){
+            CGFloat height = SCREEN_WIDTH + 150;
+            self.headerIma.frame = CGRectMake(0, -(SCREEN_WIDTH-self.headerBackHeight) - 150 - (offset + 150)*0.1 + (offset+(SCREEN_WIDTH-self.headerBackHeight)), SCREEN_WIDTH, height);
+            NSLog(@"----666---%f", -(SCREEN_WIDTH-self.headerBackHeight) - 150 - (offset + 150)*0.1 + (offset+(SCREEN_WIDTH-self.headerBackHeight)));
+        } else {
+            self.headerIma.frame = CGRectMake(0, -(SCREEN_WIDTH-self.headerBackHeight), SCREEN_WIDTH, SCREEN_WIDTH);
+        }
+    }
+}
+
+- (void)updateRealtorWithHeightScore {
+    self.isHeightScoreRealtor = YES;
+    self.headerIma.frame = CGRectMake(0,-(SCREEN_WIDTH-self.headerBackHeight), SCREEN_WIDTH, SCREEN_WIDTH);
+    self.headerIma.image = [UIImage imageNamed:@"realtor_bac"];
 }
 
 - (LynxView *)realtorInfoView {
@@ -105,8 +133,10 @@
 
 - (UIImageView *)headerIma {
     if (!_headerIma) {
-        UIImageView *headerIma = [[UIImageView alloc]init];
+        UIImageView *headerIma = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, self.headerBackHeight)];
         headerIma.image = [UIImage imageNamed:@"realtor_detail"];
+        headerIma.clipsToBounds = YES;
+        headerIma.contentMode = UIViewContentModeScaleAspectFill;
         [self addSubview:headerIma];
         _headerIma = headerIma;
     }

@@ -161,6 +161,7 @@
             [dic setObject:lynxReortParams forKey:@"encoded_report_params"];
         }
         [self.viewController.headerView reloadDataWithDic:dic];
+        [self.viewController.headerView updateRealtorWithHeightScore];
         self.viewController.headerView.height = self.viewController.headerView.viewHeight;
         if (realtorLeave) {
             [self.viewController showRealtorLeaveHeader];
@@ -442,8 +443,8 @@
             *selectedTitleFont = [UIFont themeFontSemibold:16];
         }];
     }
-    UIScrollView *scrollView = pagingView.currentContentView;
     [self refreshContentOffset:delta];
+        [self.viewController.headerView updateWhenScrolledWithContentOffset:delta isScrollTop:NO scrollView:pagingView.currentContentView];
 }
 
 
