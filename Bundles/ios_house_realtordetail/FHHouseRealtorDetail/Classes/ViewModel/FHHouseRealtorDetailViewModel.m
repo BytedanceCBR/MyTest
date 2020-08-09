@@ -23,6 +23,7 @@
 #import "ToastManager.h"
 #import "FHHouseBaseItemCell.h"
 #import "FHHouseRealtorDetailPlaceCell.h"
+#import "FHUtils.h"
 
 @interface FHHouseRealtorDetailViewModel()<UITableViewDelegate,UITableViewDataSource>
 @property(nonatomic , weak) UITableView *tableView;
@@ -87,11 +88,10 @@
     if(self.detailController.isLoadingData){
         return;
     }
-    
-    //    if (isFirst) {
-    //        self.detailController.isLoadingData = YES;
-    //        [self.detailController startLoading];
-    //    }
+    self.detailController.isLoadingData = YES;
+        if (isFirst) {
+            [self.detailController startLoading];
+        }
     
     NSString *refreshType = @"be_null";
     __weak typeof(self) wself = self;
@@ -126,7 +126,7 @@
         [extraDic setObject:lastGroupId forKey:@"last_group_id"];
     }
     self.categoryId = @"f_realtor_profile";
-    TTHttpTask *task = [FHHouseUGCAPI requestFeedListWithCategory:self.categoryId behotTime:behotTime loadMore:!isHead listCount:listCount extraDic:extraDic completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
+    self.requestTask = [FHHouseUGCAPI requestFeedListWithCategory:self.categoryId behotTime:behotTime loadMore:!isHead listCount:listCount extraDic:extraDic completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
         wself.detailController.isLoadingData = NO;
         [wself.detailController endLoading];
         FHFeedListModel *feedListModel = (FHFeedListModel *)model;
@@ -402,13 +402,24 @@
     dict[@"group_id"] = cellModel.groupId;
     dict[@"realtor_id"] = cellModel.realtor.realtorId?:@"be_null";
     dict[@"element_type"] = @"realtor_evaluate";
-    dict[@"from_gid"] = self.tracerDic[@"log_pb"][@"group_id"] ?: @"be_null";
-   
-    if(cellModel.logPb[@"impr_id"]){
-        dict[@"impr_id"] = cellModel.logPb[@"impr_id"];
+    
+    if([self.tracerDic[@"log_pb"] isKindOfClass:[NSDictionary class]]){
+        dict[@"from_gid"] = self.tracerDic[@"log_pb"][@"group_id"] ?: @"be_null";
     }
-    if(cellModel.logPb[@"group_source"]){
-        dict[@"group_source"] = cellModel.logPb[@"group_source"];
+   
+    id logPb = cellModel.logPb;
+    NSDictionary *logPbDic = nil;
+    if([logPb isKindOfClass:[NSDictionary class]]){
+        logPbDic = logPb;
+    }else if([logPb isKindOfClass:[NSString class]]){
+        logPbDic = [FHUtils dictionaryWithJsonString:logPb];
+    }
+    
+    if(logPbDic[@"impr_id"]){
+        dict[@"impr_id"] = logPbDic[@"impr_id"];
+    }
+    if(logPbDic[@"group_source"]){
+        dict[@"group_source"] = logPbDic[@"group_source"];
     }
     
     return dict;

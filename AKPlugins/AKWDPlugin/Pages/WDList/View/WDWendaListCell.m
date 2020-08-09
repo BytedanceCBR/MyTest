@@ -633,7 +633,7 @@
 
 - (NSAttributedString *)tokenAttributeString
 {
-    NSString *textColor = @"grey1";
+    NSString *textColor = @"red3";
     CGFloat fontSize = [WDListCellLayoutModel answerAbstractContentFontSize];
     NSMutableAttributedString *token = [[NSMutableAttributedString alloc] initWithString:@"...全文"
                                                                               attributes:@{
