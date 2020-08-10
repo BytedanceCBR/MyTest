@@ -32,10 +32,7 @@
 
 - (NSString *)elementTypeString:(FHHouseType)houseType
 {
-    if ([_headerView.label.text isEqualToString:@"楼盘动态"]) {
-        return @"house_history";
-    }
-    return @"related";
+    return @"house_history";
 }
 
 - (void)setupUI {
@@ -78,17 +75,24 @@
     CGFloat stackViewHeight = 0;
     self.headerView.label.text = model.timeLineModel.totalCount.length ? model.timeLineModel.totalCount : @"楼盘动态";
     self.headerView.isShowLoadMore = model.timeLineModel.hasMore;
+    
     for (FHDetailNewDataTimelineListModel *itemModel in model.timeLineModel.list) {
         FHDetailNewHouseNewsCellItemView *itemView = [[FHDetailNewHouseNewsCellItemView alloc] init];
+        NSDictionary *attributes = @{NSFontAttributeName: [UIFont themeFontSemibold:16]};
+        CGRect rect = [itemModel.desc boundingRectWithSize:CGSizeMake(self.contentView.frame.size.width-60, CGFLOAT_MAX)
+                                                  options:NSStringDrawingUsesLineFragmentOrigin
+                                               attributes:attributes
+                                                  context:nil];
+        CGFloat contentLabelHeight = rect.size.height <= 24 ? 24 : 48;
         [itemView newsViewShowWithData:itemModel];
         [self.stackView addArrangedSubview:itemView];
         [itemView mas_makeConstraints:^(MASConstraintMaker *make) {
             make.width.mas_equalTo(self.stackView);
-            make.height.mas_equalTo(98);
+            make.height.mas_equalTo(17 + 20 + 6 + contentLabelHeight);
         }];
         UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(moreButtonClick)];
         [itemView addGestureRecognizer:tapGesture];
-        stackViewHeight += 98;
+        stackViewHeight += 17 + 20 + 6 + contentLabelHeight;
     }
 
     [self.stackView mas_updateConstraints:^(MASConstraintMaker *make) {
@@ -193,7 +197,6 @@
     [self.contentLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(self.timeLabel.mas_bottom).mas_offset(6);
         make.left.right.mas_equalTo(self.timeLabel);
-        make.height.mas_equalTo(48);
         make.bottom.mas_equalTo(self.mas_bottom).offset(-20);
     }];
 }

@@ -425,9 +425,9 @@
             [wSelf processDetailRelatedData];
         }];
     }
-    BOOL hasVideo = NO;
-    BOOL hasVR = NO;
-    BOOL isInstant = model.isInstantData;
+//    BOOL hasVideo = NO;
+//    BOOL hasVR = NO;
+//    BOOL isInstant = model.isInstantData;
     BOOL showTitleMapBtn = NO;
     if (model.data.coreInfo.gaodeLat.length>0 && model.data.coreInfo.gaodeLng.length>0) {
         showTitleMapBtn = YES;
@@ -725,7 +725,7 @@
         staticMapModel.gaodeLat = model.data.coreInfo.gaodeLat;
         staticMapModel.gaodeLng = model.data.coreInfo.gaodeLng;
         staticMapModel.houseId = model.data.coreInfo.id;
-        staticMapModel.houseType = [NSString stringWithFormat:@"%d",FHHouseTypeNewHouse];
+        staticMapModel.houseType = [NSString stringWithFormat:@"%ld",(long)FHHouseTypeNewHouse];
         //        staticMapModel.title = model.data.coreInfo.name;
         staticMapModel.tableView = self.tableView;
         staticMapModel.staticImage = model.data.coreInfo.gaodeImage;
