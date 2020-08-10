@@ -1,14 +1,14 @@
 //
-//  FHUGCVideoCell.m
+//  FHUGCFullScreenVideoCell.m
 //  FHHouseUGC
 //
-//  Created by 谢思铭 on 2019/9/5.
+//  Created by 谢思铭 on 2020/8/9.
 //
 
-#import "FHUGCVideoCell.h"
+#import "FHUGCFullScreenVideoCell.h"
 #import "UIImageView+BDWebImage.h"
 #import "FHUGCCellUserInfoView.h"
-#import "FHUGCCellBottomView.h"
+#import "FHUGCToolView.h"
 #import "FHUGCCellMultiImageView.h"
 #import "FHUGCCellHelper.h"
 #import "TTRoute.h"
@@ -30,21 +30,23 @@
 #import "TTVFeedUserOpDataSyncMessage.h"
 #import "SSCommonLogic.h"
 #import "TTVFeedItem+TTVConvertToArticle.h"
+#import "UIViewAdditions.h"
 
-#define leftMargin 20
-#define rightMargin 20
+#define leftMargin 15
+#define rightMargin 15
 #define maxLines 3
 
-#define userInfoViewHeight 40
-#define bottomViewHeight 49
+#define userInfoViewHeight 20
+#define bottomViewHeight 50
 #define guideViewHeight 17
-#define topMargin 20
+#define topMargin 15
 
-@interface FHUGCVideoCell ()<TTUGCAsyncLabelDelegate,TTVFeedPlayMovie,TTVFeedUserOpDataSyncMessage>
+@interface FHUGCFullScreenVideoCell ()<TTUGCAsyncLabelDelegate,TTVFeedPlayMovie,TTVFeedUserOpDataSyncMessage>
 
+@property(nonatomic ,strong) TTAsyncCornerImageView *icon;
+@property(nonatomic ,strong) UILabel *userName;
 @property(nonatomic ,strong) TTUGCAsyncLabel *contentLabel;
-@property(nonatomic ,strong) FHUGCCellUserInfoView *userInfoView;
-@property(nonatomic ,strong) FHUGCCellBottomView *bottomView;
+@property(nonatomic ,strong) FHUGCToolView *bottomView;
 @property(nonatomic ,strong) FHFeedUGCCellModel *cellModel;
 @property(nonatomic ,assign) CGFloat videoViewheight;
 @property(nonatomic ,strong) FHUGCVideoView *videoView;
@@ -52,7 +54,7 @@
 
 @end
 
-@implementation FHUGCVideoCell
+@implementation FHUGCFullScreenVideoCell
 
 - (void)awakeFromNib {
     [super awakeFromNib];
@@ -81,8 +83,24 @@
 }
 
 - (void)initViews {
-    self.userInfoView = [[FHUGCCellUserInfoView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, userInfoViewHeight)];
-    [self.contentView addSubview:_userInfoView];
+    self.icon = [[TTAsyncCornerImageView alloc] initWithFrame:CGRectMake(15, 15, 20, 20) allowCorner:YES];
+    _icon.placeholderName = @"fh_mine_avatar";
+    _icon.cornerRadius = 10;
+    _icon.contentMode = UIViewContentModeScaleAspectFill;
+    _icon.borderWidth = 1;
+    _icon.borderColor = [UIColor themeGray6];
+    [self addSubview:_icon];
+    
+    _icon.userInteractionEnabled = YES;
+    UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(goToPersonalHomePage)];
+    [_icon addGestureRecognizer:tap];
+    
+    self.userName = [self LabelWithFont:[UIFont themeFontRegular:12] textColor:[UIColor themeGray1]];
+    [self addSubview:_userName];
+    
+    _userName.userInteractionEnabled = YES;
+    UITapGestureRecognizer *tap1 = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(goToPersonalHomePage)];
+    [_userName addGestureRecognizer:tap1];
     
     self.contentLabel = [[TTUGCAsyncLabel alloc] initWithFrame:CGRectZero];
     _contentLabel.numberOfLines = maxLines;
@@ -93,10 +111,6 @@
     
     self.videoViewheight = ([UIScreen mainScreen].bounds.size.width - leftMargin - rightMargin) * 188.0/335.0;
     self.videoView = [[FHUGCVideoView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width - leftMargin - rightMargin, self.videoViewheight)];
-    _videoView.layer.masksToBounds = YES;
-    _videoView.layer.borderColor = [[UIColor themeGray6] CGColor];
-    _videoView.layer.borderWidth = 0.5;
-    _videoView.layer.cornerRadius = 4;
     WeakSelf;
     _videoView.ttv_playVideoOverrideBlock = ^{
         StrongSelf;
@@ -104,13 +118,9 @@
     };
     [self.contentView addSubview:_videoView];
 
-    self.bottomView = [[FHUGCCellBottomView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, bottomViewHeight)];
-    [_bottomView.commentBtn addTarget:self action:@selector(commentBtnClick) forControlEvents:UIControlEventTouchUpInside];
-    [_bottomView.guideView.closeBtn addTarget:self action:@selector(closeGuideView) forControlEvents:UIControlEventTouchUpInside];
+    self.bottomView = [[FHUGCToolView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, bottomViewHeight)];
+    [_bottomView.commentButton addTarget:self action:@selector(commentBtnClick) forControlEvents:UIControlEventTouchUpInside];
     [self.contentView addSubview:_bottomView];
-    
-    UITapGestureRecognizer* tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(goToCommunityDetail:)];
-    [self.bottomView.positionView addGestureRecognizer:tap];
     
     self.videoView.ttv_shareButtonOnMovieFinishViewDidPressBlock = ^{
         StrongSelf;
@@ -119,31 +129,34 @@
 }
 
 - (void)initConstraints {
-    [self.userInfoView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.contentView).offset(20);
-        make.left.right.mas_equalTo(self.contentView);
-        make.height.mas_equalTo(40);
-    }];
+    self.icon.left = leftMargin;
+    self.icon.top = topMargin;
+    self.icon.width = 20;
+    self.icon.height = 20;
     
-    [self.contentLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.userInfoView.mas_bottom).offset(10);
-        make.left.mas_equalTo(self.contentView).offset(leftMargin);
-        make.right.mas_equalTo(self.contentView).offset(-rightMargin);
-        make.height.mas_equalTo(0);
-    }];
+    self.userName.left = self.icon.right + 8;
+    self.userName.top = self.icon.top + 1;
+    self.userName.width = [UIScreen mainScreen].bounds.size.width - 30 - 8 - 20;
+    self.userName.height = 18;
+    
+    self.contentLabel.top = self.icon.bottom + 8;
+    self.contentLabel.left = leftMargin;
+    self.contentLabel.width = [UIScreen mainScreen].bounds.size.width - 30;
+    self.contentLabel.height = 0;
     
     [self.videoView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.userInfoView.mas_bottom).offset(10);
-        make.left.mas_equalTo(self.contentView).offset(leftMargin);
-        make.right.mas_equalTo(self.contentView).offset(-rightMargin);
-        make.height.mas_equalTo(([UIScreen mainScreen].bounds.size.width - leftMargin - rightMargin) * 188.0/335.0);
+        make.top.mas_equalTo(self.icon.mas_bottom).offset(10);
+        make.left.mas_equalTo(self.contentView);
+        make.right.mas_equalTo(self.contentView);
+        make.height.mas_equalTo(ceil([UIScreen mainScreen].bounds.size.width * 211.0/375.0));
     }];
     
-    [self.bottomView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.videoView.mas_bottom).offset(10);
-        make.height.mas_equalTo(49);
-        make.left.right.mas_equalTo(self.contentView);
-    }];
+    [self.videoView layoutIfNeeded];
+    
+    self.bottomView.left = 0;
+    self.bottomView.top = self.videoView.bottom;
+    self.bottomView.width = [UIScreen mainScreen].bounds.size.width;
+    self.bottomView.height = bottomViewHeight;
 }
 
 - (UILabel *)LabelWithFont:(UIFont *)font textColor:(UIColor *)textColor {
@@ -166,55 +179,63 @@
     
     self.currentData = data;
     self.cellModel = cellModel;
-    //设置userInfo
-    [self.userInfoView refreshWithData:cellModel];
-    //设置底部
-    self.bottomView.cellModel = cellModel;
+    //设置头像和用户名
+    FHFeedContentImageListModel *imageModel = [[FHFeedContentImageListModel alloc] init];
+    imageModel.url = cellModel.user.avatarUrl;
+    NSMutableArray *urlList = [NSMutableArray array];
+    for (NSInteger i = 0; i < 3; i++) {
+        FHFeedContentImageListUrlListModel *urlListModel = [[FHFeedContentImageListUrlListModel alloc] init];
+        urlListModel.url = cellModel.user.avatarUrl;
+        [urlList addObject:urlListModel];
+    }
+    imageModel.urlList = [urlList copy];
     
-    BOOL showCommunity = cellModel.showCommunity && !isEmptyString(cellModel.community.name);
-    self.bottomView.position.text = cellModel.community.name;
-    [self.bottomView showPositionView:showCommunity];
+    if (imageModel && imageModel.url.length > 0) {
+        [self.icon tt_setImageWithURLString:imageModel.url];
+    }else{
+        [self.icon setImage:[UIImage imageNamed:@"fh_mine_avatar"]];
+    }
+    
+    self.userName.text = !isEmptyString(cellModel.user.name) ? cellModel.user.name : @"用户";
     //内容
     self.contentLabel.numberOfLines = cellModel.numberOfLines;
     if(isEmptyString(cellModel.content)){
         self.contentLabel.hidden = YES;
-        [self.contentLabel mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.height.mas_equalTo(0);
-        }];
+        self.contentLabel.height = 0;
         [self.videoView mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.top.mas_equalTo(self.userInfoView.mas_bottom).offset(10);
+            make.top.mas_equalTo(self.icon.mas_bottom).offset(8);
         }];
     }else{
         self.contentLabel.hidden = NO;
-        [self.contentLabel mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.height.mas_equalTo(cellModel.contentHeight);
-        }];
+        self.contentLabel.height = cellModel.contentHeight;
         [self.videoView mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.top.mas_equalTo(self.userInfoView.mas_bottom).offset(20 + cellModel.contentHeight);
+            make.top.mas_equalTo(self.icon.mas_bottom).offset(16 + cellModel.contentHeight);
         }];
         [FHUGCCellHelper setAsyncRichContent:self.contentLabel model:cellModel];
     }
     //处理视频
     self.videoItem = cellModel.videoItem;
     self.videoView.cellEntity = self.videoItem;
+    //设置底部
+    [self.bottomView refreshWithdata:self.cellModel];
     
-    [self updateCommentButton];
-    [self updateDiggButton];
-    
-    [self showGuideView];
+    [self layoutIfNeeded];
+    self.bottomView.top = self.videoView.bottom;
 }
 
 + (CGFloat)heightForData:(id)data {
     if([data isKindOfClass:[FHFeedUGCCellModel class]]){
         FHFeedUGCCellModel *cellModel = (FHFeedUGCCellModel *)data;
-        CGFloat height = cellModel.contentHeight + userInfoViewHeight + bottomViewHeight + topMargin + 30;
+        CGFloat height = userInfoViewHeight + topMargin;
         
-        if(isEmptyString(cellModel.content)){
-            height -= 10;
+        if(!isEmptyString(cellModel.content)){
+            height += (cellModel.contentHeight + 8);
         }
         
-        CGFloat videoViewheight = ([UIScreen mainScreen].bounds.size.width - leftMargin - rightMargin) * 188.0/335.0;
-        height += videoViewheight;
+        CGFloat videoViewheight = ceil([UIScreen mainScreen].bounds.size.width * 211.0/375.0);
+        height += (videoViewheight + 8);
+        
+        height += bottomViewHeight;
         
         if(cellModel.isInsertGuideCell){
             height += guideViewHeight;
@@ -223,34 +244,6 @@
         return height;
     }
     return 44;
-}
-
-- (void)showGuideView {
-    if(_cellModel.isInsertGuideCell){
-        [self.bottomView mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.height.mas_equalTo(66);
-        }];
-    }else{
-        [self.bottomView mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.height.mas_equalTo(49);
-        }];
-    }
-}
-
-- (void)closeGuideView {
-    self.cellModel.isInsertGuideCell = NO;
-    [self.cellModel.tableView beginUpdates];
-    
-    [self showGuideView];
-    self.bottomView.cellModel = self.cellModel;
-    
-    [self setNeedsUpdateConstraints];
-    
-    [self.cellModel.tableView endUpdates];
-    
-    if(self.delegate && [self.delegate respondsToSelector:@selector(closeFeedGuide:)]){
-        [self.delegate closeFeedGuide:self.cellModel];
-    }
 }
 
 - (void)deleteCell {
@@ -273,18 +266,8 @@
     }
 }
 
-- (void)updateCommentButton {
-    NSInteger  commentCount = self.videoItem.article.commentCount;
-    if(commentCount == 0){
-        [self.bottomView.commentBtn setTitle:@"评论" forState:UIControlStateNormal];
-    }else{
-        [self.bottomView.commentBtn setTitle:[TTBusinessManager formatCommentCount:commentCount] forState:UIControlStateNormal];
-    }
-}
-
-- (void)updateDiggButton {
-    NSString *diggCount = [NSString stringWithFormat:@"%lld",self.videoItem.article.diggCount];
-    [self.bottomView updateLikeState:diggCount userDigg:(self.videoItem.article.userDigg ? @"1" : @"0")];
+- (void)updateBottomView {
+    [self.bottomView refreshWithdata:self.cellModel];
 }
 
 - (void)willDisplay {
@@ -427,13 +410,6 @@
     NSMutableDictionary *applinkParams = [NSMutableDictionary dictionary];
     [applinkParams setValue:logExtra forKey:@"log_extra"];
     
-//    if (!isEmptyString(adid) && !article.hasVideo) {
-//        if ([TTAppLinkManager dealWithWebURL:article.articleURL openURL:openUrl sourceTag:@"embeded_ad" value:adid extraDic:applinkParams]) {
-//            //针对广告并且能够通过sdk打开的情况
-//            canOpenURL = YES;
-//        }
-//    }
-    
     if (!canOpenURL && !isEmptyString(openUrl)) {
         NSURL *url = [TTStringHelper URLWithURLString:openUrl];
         
@@ -445,10 +421,6 @@
             
             canOpenURL = YES;
             [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:TTRouteUserInfoWithDict(statParams)];
-            //针对广告不能通过sdk打开，但是传的有内部schema的情况
-//            if(isEmptyString(adid)){
-//                wrapperTrackEventWithCustomKeys(@"embeded_ad", @"open_url_h5", adid, nil, applinkParams);
-//            }
         }
     }
     return canOpenURL;
@@ -571,7 +543,6 @@
     self.moreActionMananger.responder = self;
     self.moreActionMananger.cellEntity = self.videoItem.originData;
     self.moreActionMananger.playVideo = self.videoItem.playVideo;
-    __weak typeof(self) wself = self;
     self.moreActionMananger.didClickActivityItemAndQueryProcess = ^BOOL(NSString *type) {
         return NO;
     };
@@ -598,18 +569,36 @@
     [self feedCollectChanged:commentCount uniqueIDStr:uniqueIDStr forKey:@"commentCount"];
 }
 
+- (void)ttv_message_feedCollectChanged:(BOOL)collect uniqueIDStr:(NSString *)uniqueIDStr {
+    [self feedCollectChanged:collect uniqueIDStr:uniqueIDStr forKey:@"userRepin"];
+}
+
 - (void)feedCollectChanged:(int)status uniqueIDStr:(NSString *)uniqueIDStr forKey:(NSString *)key {
     if ([self.videoItem.originData.uniqueIDStr isEqualToString:uniqueIDStr]) {
         if([key isEqualToString:@"userDigg"]){
             self.cellModel.videoItem.article.userDigg = status;
-            [self updateDiggButton];
+            [self.bottomView updateDiggButton];
         }else if([key isEqualToString:@"diggCount"]){
             self.cellModel.videoItem.article.diggCount = status;
-            [self updateDiggButton];
+            [self.bottomView updateDiggButton];
         }else if([key isEqualToString:@"commentCount"]){
             self.cellModel.videoItem.article.commentCount = status;
-            [self updateCommentButton];
+            [self.bottomView updateCommentButton];
+        }else if([key isEqualToString:@"userRepin"]){
+            self.cellModel.videoItem.article.userRepin = status;
+            [self.bottomView updateCollectionButton];
         }
+    }
+}
+
+- (void)goToPersonalHomePage {
+    if(!isEmptyString(self.cellModel.user.schema)){
+        NSMutableDictionary *dict = @{}.mutableCopy;
+        dict[@"from_page"] = self.cellModel.tracerDic[@"page_type"] ? self.cellModel.tracerDic[@"page_type"] : @"default";
+        dict[@"origin_from"] = self.cellModel.tracerDic[@"origin_from"] ?: @"be_null";
+        TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
+        NSURL *openUrl = [NSURL URLWithString:self.cellModel.user.schema];
+        [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:userInfo];
     }
 }
 

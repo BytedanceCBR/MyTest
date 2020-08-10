@@ -289,7 +289,11 @@
             cellModel.imageList = model.largeImageList;
             cellModel.largeImageList = nil;
             
-            cellModel.cellSubType = FHUGCFeedListCellSubTypeUGCVideo;
+            if([model.cellLayoutStyle isEqualToString:@"2"]){
+                cellModel.cellSubType = FHUGCFeedListCellSubTypeFullVideo;
+            }else{
+                cellModel.cellSubType = FHUGCFeedListCellSubTypeUGCVideo;
+            }
         }else{
             //文章
             cellModel.cellSubType = FHUGCFeedListCellSubTypeArticle;
