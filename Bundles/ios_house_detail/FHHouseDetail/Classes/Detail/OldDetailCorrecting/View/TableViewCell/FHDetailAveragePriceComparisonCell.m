@@ -130,8 +130,8 @@
     
     [self.shadowImage mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.right.mas_equalTo(self.contentView);
-        make.top.equalTo(self.contentView).offset(-12);
-        make.bottom.equalTo(self.contentView).offset(12);
+        make.top.equalTo(self.contentView).offset(-14);
+        make.bottom.equalTo(self.contentView).offset(14);
     }];
     _headerView = [[FHDetailHeaderView alloc] init];
     _headerView.isShowLoadMore = YES;
@@ -154,7 +154,7 @@
         make.top.mas_equalTo(self.headerView.mas_bottom);
         make.left.mas_equalTo(self.contentView).offset(15);
         make.right.mas_equalTo(self.contentView).offset(-15);
-        make.bottom.mas_equalTo(self.shadowImage).offset(-50);
+        make.bottom.mas_equalTo(self.shadowImage).offset(-40);
     }];
     
     _bgView = [[UIImageView alloc] init];

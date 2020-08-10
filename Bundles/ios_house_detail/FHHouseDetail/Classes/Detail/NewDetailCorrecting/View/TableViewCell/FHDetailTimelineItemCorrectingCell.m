@@ -36,14 +36,14 @@
         [self.shadowImage mas_makeConstraints:^(MASConstraintMaker *make) {
             make.left.mas_equalTo(self.contentView);
             make.right.mas_equalTo(self.contentView);
-            make.top.equalTo(self.contentView).offset(-12);
-            make.bottom.equalTo(self.contentView).offset(12);
+            make.top.equalTo(self.contentView).offset(-14);
+            make.bottom.equalTo(self.contentView).offset(14);
         }];
         [self.containerView mas_makeConstraints:^(MASConstraintMaker *make) {
             make.left.mas_equalTo(self.shadowImage).offset(15);
             make.right.mas_equalTo(self.shadowImage).offset(-15);
-            make.top.mas_equalTo(self.shadowImage).offset(12);
-            make.bottom.equalTo(self.shadowImage).offset(-12);
+            make.top.mas_equalTo(self.shadowImage).offset(20);
+            make.bottom.equalTo(self.shadowImage).offset(-20);
         }];
         _headLine = [UIView new];
 //        _headLine.backgroundColor = [UIColor whiteColor];
@@ -202,10 +202,10 @@
         if (model.isLastCell) {
             
             [_contentLabel mas_updateConstraints:^(MASConstraintMaker *make) {
-                make.bottom.equalTo(self.containerView).offset(-40);
+                make.bottom.equalTo(self.containerView).offset(-20);
             }];
             [_timeLineTailing mas_updateConstraints:^(MASConstraintMaker *make) {
-                make.bottom.equalTo(self.containerView).offset(-40);
+                make.bottom.equalTo(self.containerView).offset(-20);
             }];
         }
     }

@@ -69,8 +69,8 @@
                 itemView.lineView.hidden = YES;
             }
             [itemView mas_makeConstraints:^(MASConstraintMaker *make) {
-                make.top.mas_equalTo(self.shadowImage).offset(12);
-                make.bottom.mas_equalTo(self.shadowImage).offset(-12);
+                make.top.mas_equalTo(self.contentView);
+                make.bottom.mas_equalTo(self.contentView);
                 make.width.mas_equalTo(textSize.width+([UIScreen mainScreen].bounds.size.width<375?23:40));
                 make.left.mas_equalTo(self.contentView).offset(leftOffset);
             }];
@@ -157,7 +157,7 @@
     // 布局
     [self.keyLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(16);
-        make.top.mas_equalTo(20);
+        make.top.mas_equalTo(10);
         make.height.mas_equalTo(25);
         make.right.mas_equalTo(self).offset(-10);
     }];
@@ -166,7 +166,7 @@
         make.top.mas_equalTo(self.keyLabel.mas_bottom).offset(3);
         make.height.mas_equalTo(17);
         make.right.mas_equalTo(self).offset(-10);
-        make.bottom.mas_equalTo(self).offset(-12);
+        make.bottom.mas_equalTo(self).offset(-6);
     }];
     [self.lineView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(self.keyLabel);
