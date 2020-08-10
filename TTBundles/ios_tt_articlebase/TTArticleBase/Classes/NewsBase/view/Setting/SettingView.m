@@ -1366,15 +1366,15 @@ TTEditUserProfileViewControllerDelegate
         [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:@"fschema://aboutUs"]];
     } else if (cellType == SettingCellTypeUserProtocol) {
         // 用户协议
-        NSString *urlStr = [[NSString stringWithFormat:@"%@&hide_more=1",[ArticleURLSetting userProtocolURLString]]stringByAddingPercentEncodingWithAllowedCharacters:NSCharacterSet.URLQueryAllowedCharacterSet];
+        NSString *urlStr = [[ArticleURLSetting userProtocolURLString] stringByAddingPercentEncodingWithAllowedCharacters:NSCharacterSet.URLQueryAllowedCharacterSet];
         if (urlStr.length > 0) {
-            [[TTRoute sharedRoute]openURLByPushViewController:[NSURL URLWithString:[NSString stringWithFormat:@"fschema://webview?url=%@",urlStr]]];
+            [[TTRoute sharedRoute]openURLByPushViewController:[NSURL URLWithString:[NSString stringWithFormat:@"sslocal://webview?url=%@", urlStr]]];
         }
     } else if (cellType == SettingCellTypePrivacyProtocol) {
         // 隐私政策
-        NSString *urlStr = [[NSString stringWithFormat:@"%@&hide_more=1",[ArticleURLSetting userPrivateProtocolURLString]]stringByAddingPercentEncodingWithAllowedCharacters:NSCharacterSet.URLQueryAllowedCharacterSet];
+        NSString *urlStr = [[ArticleURLSetting userPrivateProtocolURLString] stringByAddingPercentEncodingWithAllowedCharacters:NSCharacterSet.URLQueryAllowedCharacterSet];
         if (urlStr.length > 0) {
-            [[TTRoute sharedRoute]openURLByPushViewController:[NSURL URLWithString:[NSString stringWithFormat:@"fschema://webview?url=%@",urlStr]]];
+            [[TTRoute sharedRoute]openURLByPushViewController:[NSURL URLWithString:[NSString stringWithFormat:@"sslocal://webview?url=%@", urlStr]]];
         }
     } else if (cellType == SettingCellTypeBusinessLicense) {
         // 证件资质

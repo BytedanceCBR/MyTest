@@ -136,10 +136,10 @@
         if (wself) {
             if (range.location >= wself.userRange.location && range.location+range.length <= wself.userRange.location+wself.userRange.length) {
                 // 用户协议
-                [wself showProtocolDetail:@"/f100/download/user_agreement.html" title:@"用户协议"];
+                [wself showProtocolDetail:@"/magic/page/ejs/5f1e5048a0741302e84cea20?appType=manyhouse" title:@"用户协议"];
             }else if (range.location >= wself.privacyRange.location && range.location+range.length <= wself.privacyRange.location+wself.privacyRange.length){
                     //隐私协议
-                [wself showProtocolDetail:@"/f100/download/private_policy.html" title:@"隐私政策"];
+                [wself showProtocolDetail:@"/magic/page/ejs/5f1e75ec3d3f6802d7e9ed31?appType=manyhouse" title:@"隐私政策"];
             }
         }
     };
@@ -211,7 +211,8 @@
 
 -(void)showProtocolDetail:(NSString *)urlPath title:(NSString *)title
 {
-    NSString *jumpUrl = [NSString stringWithFormat:@"%@%@",[FHURLSettings baseURL],urlPath];
+    NSString *baseUrl = @"https://m.xflapp.com";
+    NSString *jumpUrl = [NSString stringWithFormat:@"%@%@", baseUrl, urlPath];
     NSURL *openUrl = [NSURL URLWithString:jumpUrl];
     if ([[UIApplication sharedApplication] canOpenURL:openUrl]) {
         [[UIApplication sharedApplication] openURL:openUrl];

@@ -348,11 +348,11 @@
 
 + (NSString*)userProtocolURLString
 {
-    return [NSString stringWithFormat:@"%@/f100/download/user_agreement.html&title=幸福里用户协议",[FHURLSettings baseURL]];
+    return [NSString stringWithFormat:@"%@/magic/page/ejs/5f1e75ec3d3f6802d7e9ed31?appType=manyhouse&title=幸福里用户协议", [self userProtocolBaseURUString]];
 }
 
 + (NSString*)userPrivateProtocolURLString {
-    return [NSString stringWithFormat:@"%@/f100/download/private_policy.html&title=隐私政策",[FHURLSettings baseURL]];
+    return [NSString stringWithFormat:@"%@/magic/page/ejs/5f1e5048a0741302e84cea20?appType=manyhouse&title=隐私政策", [self userProtocolBaseURUString]];
 }
 
 
@@ -363,6 +363,10 @@
 
 + (NSString*)protectedProtocolURLString {
     return [NSString stringWithFormat:@"%@/f100/client/user_privacy&title=个人信息保护声明",[FHURLSettings baseURL]];
+}
+
++ (NSString *)userProtocolBaseURUString {
+    return @"https://m.xflapp.com";
 }
 
 #pragma mark -- 删除
