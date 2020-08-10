@@ -65,9 +65,9 @@ def fhPods
     # 'DelegateForC'
     #]
 
-#    pod 'ios_house_im' , '0.2.14-rc.11'
-#     pod 'ios_house_im' , :path => '../../../im/4'
-    pod 'ios_house_im' ,'0.2.14-rc.16'
+#     pod 'ios_house_im' , :path => '../../../im/3'
+#    pod 'ios_house_im' ,'0.2.14-rc.16'
+    pod 'ios_house_im' ,'0.2.14-rc.19'
 
 end
 

@@ -53,7 +53,7 @@
         }];
     }
     if (model.neighborhoodSoldHouseData) {
-        self.headerView.label.text = [NSString stringWithFormat:@"在售套数 (%@)",model.neighborhoodSoldHouseData.total];
+        self.headerView.label.text = [NSString stringWithFormat:@"在售房源 (%@)",model.neighborhoodSoldHouseData.total];
         self.headerView.isShowLoadMore = model.neighborhoodSoldHouseData.hasMore;
         UICollectionViewFlowLayout *flowLayout = [[UICollectionViewFlowLayout alloc] init];
         flowLayout.sectionInset = UIEdgeInsetsMake(0, 20, 0, 20);

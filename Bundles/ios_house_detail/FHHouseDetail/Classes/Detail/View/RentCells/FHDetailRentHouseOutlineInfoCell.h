@@ -11,8 +11,6 @@
 #import "FHHouseDetailBaseViewModel.h"
 
 NS_ASSUME_NONNULL_BEGIN
-
-@class FHDetailHouseOutlineInfoView;
 // 后续可能和二手房 样式不同
 @interface FHDetailRentHouseOutlineInfoCell : FHDetailBaseCell
 

@@ -82,6 +82,7 @@ CGFloat const FHBuildingDetailInfoListCellShadowImageViewSpacingTop = 20.0;
 }
 
 - (void)updateIndexPahtAtPosition:(NSIndexPath *)indexPath {
+    self.currentIndexPath = indexPath;
     if (self.infoIndexDidSelect) {
         FHBuildingDetailDataItemModel *itemModel = self.buildingList[indexPath.row % self.buildingList.count];
         self.infoIndexDidSelect(FHBuildingDetailOperatTypeInfoCell,itemModel.buildingIndex);
