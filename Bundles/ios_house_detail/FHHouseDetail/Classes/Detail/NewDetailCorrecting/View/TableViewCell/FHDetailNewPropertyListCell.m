@@ -48,7 +48,7 @@
         NSMutableArray *singles = [NSMutableArray new];
         __block NSInteger doubleCount = 0;// 两列计数
         __block CGFloat topOffset = model.shdowImageScopeType == FHHouseShdowImageScopeTypeTopAll?18:6;// 高度
-        __block CGFloat listRowHeight = 29;// 30
+        __block CGFloat listRowHeight = 28;// 30  原来间距是10 现在调整为8,文字距离item的顶部10,文字高20
         __block CGFloat lastViewLeftOffset = 20;
         __block CGFloat lastTopOffset = 20;
         CGFloat viewWidth = (UIScreen.mainScreen.bounds.size.width - 60 - 24) / 2;
@@ -135,7 +135,7 @@
                 lastView = v;
                 lastViewLeftOffset = 20;
                 lastTopOffset = topOffset;
-                
+    
                 topOffset += listRowHeight;
             }];
         }
@@ -145,7 +145,7 @@
         }];
     }
 //    [lastView mas_updateConstraints:^(MASConstraintMaker *make) {
-//        make.bottom.mas_equalTo(self.shadowImage.mas_bottom).offset(-42);
+//        make.bottom.mas_equalTo(self).offset(-16);
 //    }];
 
 }
@@ -173,15 +173,14 @@
     [self.shadowImage mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(self.contentView);
         make.right.mas_equalTo(self.contentView);
-        make.top.equalTo(self.contentView).offset(-12);
-        make.bottom.equalTo(self.contentView).offset(12);
+        make.top.equalTo(self.contentView).offset(-14);
+        make.bottom.equalTo(self.contentView).offset(14);
     }];
     [self.detailBtn mas_makeConstraints:^(MASConstraintMaker *make) {
         make.right.mas_equalTo(-30);
-        make.top.mas_equalTo(0);
         make.height.mas_equalTo(67);
         make.width.mas_equalTo(21);
-        make.bottom.mas_equalTo(self.shadowImage.mas_bottom).offset(-42);
+        make.bottom.mas_equalTo(self.shadowImage.mas_bottom).offset(-42+9);//原来令list距离底部为25 现在调整正为16
     }];
     [self.detailBtn addTarget:self action:@selector(detailBtnDidClick:) forControlEvents:UIControlEventTouchUpInside];
 }

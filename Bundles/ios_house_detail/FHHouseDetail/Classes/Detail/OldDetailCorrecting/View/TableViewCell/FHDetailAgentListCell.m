@@ -170,15 +170,16 @@
         [self.contentView addSubview:_foldButton];
         [_foldButton mas_makeConstraints:^(MASConstraintMaker *make) {
             make.top.mas_equalTo(self.containerView.mas_bottom);
+            make.height.mas_equalTo(58);
             make.left.right.mas_equalTo(self.contentView);
         }];
         [self.containerView mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.bottom.mas_equalTo(self.shadowImage).offset(-58-16);
+            make.bottom.mas_equalTo(self.shadowImage).offset(-58-20);
         }];
         [self.foldButton addTarget:self action:@selector(foldButtonClick:) forControlEvents:UIControlEventTouchUpInside];
     } else {
         [self.containerView mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.bottom.mas_equalTo(self.shadowImage).offset(-35);
+            make.bottom.mas_equalTo(self.shadowImage).offset(-25);
         }];
     }
     [self updateItems:NO];
@@ -403,7 +404,7 @@
         make.left.mas_equalTo(self.shadowImage).mas_offset(15);
         make.right.mas_equalTo(self.shadowImage).mas_offset(-15);
         make.height.mas_equalTo(0);
-        make.bottom.mas_equalTo(self.shadowImage).offset(-35);
+        make.bottom.mas_equalTo(self.shadowImage).offset(-25); //内部的空间距离该view底部为15 15+25-20=20
     }];
 }
 

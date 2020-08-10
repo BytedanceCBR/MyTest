@@ -25,22 +25,22 @@
         [self.shadowImage mas_makeConstraints:^(MASConstraintMaker *make) {
             make.left.mas_equalTo(self.contentView);
             make.right.mas_equalTo(self.contentView);
-            make.top.equalTo(self.contentView).offset(-12);
-            make.bottom.equalTo(self.contentView).offset(12);
+            make.top.equalTo(self.contentView).offset(-14);
+            make.bottom.equalTo(self.contentView).offset(14);
         }];
         [self.containerView mas_makeConstraints:^(MASConstraintMaker *make) {
             make.left.mas_equalTo(self.shadowImage).offset(15);
             make.right.mas_equalTo(self.shadowImage).offset(-15);
-            make.top.mas_equalTo(self.shadowImage).offset(12);
-            make.bottom.equalTo(self.shadowImage).offset(-12);
+            make.top.mas_equalTo(self.shadowImage).offset(20);
+            make.bottom.equalTo(self.shadowImage).offset(-20);
         }];
         _headerView = [[FHDetailHeaderView alloc] init];
         [self.containerView addSubview:_headerView];
         [self.headerView mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.top.mas_equalTo(self.containerView).offset(15);
+            make.top.mas_equalTo(self.containerView);
             make.right.mas_equalTo(self.containerView);
             make.left.mas_equalTo(self.containerView);
-            make.bottom.equalTo(self.containerView).mas_offset(-12);
+            make.bottom.equalTo(self.containerView);
             make.height.mas_equalTo(46);
         }];
         [_headerView addTarget:self action:@selector(moreButtonClick:) forControlEvents:UIControlEventTouchUpInside];

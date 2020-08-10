@@ -148,7 +148,7 @@
  
     if (model.discountInfo.count > 0) {
         NSInteger itemsCount = model.discountInfo.count;
-        CGFloat vHeight = 71;
+        CGFloat vHeight = 71-5; //原高度令最后一个控件距离底部为25 故-5后变成20
         CGFloat totalHeight = 0;
         UIView *lastView = nil;
         for (NSInteger idx = 0; idx < itemsCount; idx++) {
@@ -280,14 +280,14 @@
     [self.shadowImage mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(self.contentView);
         make.right.mas_equalTo(self.contentView);
-        make.top.equalTo(self.contentView).offset(-12);
-        make.bottom.equalTo(self.contentView).offset(12);
+        make.top.equalTo(self.contentView).offset(-14);
+        make.bottom.equalTo(self.contentView).offset(14);
     }];
     _headerView = [[FHDetailHeaderView alloc] init];
     _headerView.label.text = @"优惠信息";
     [self.contentView addSubview:_headerView];
     [self.headerView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.shadowImage).offset(30);
+        make.top.mas_equalTo(self.shadowImage).offset(20);
         make.right.mas_equalTo(self.shadowImage).offset(-15);
         make.left.mas_equalTo(self.shadowImage).offset(15);
         make.height.mas_equalTo(46);
@@ -295,7 +295,7 @@
     _containerView = [[UIView alloc] init];
     [self.contentView addSubview:_containerView];
     [_containerView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.headerView.mas_bottom).offset(30);
+        make.top.mas_equalTo(self.headerView.mas_bottom).offset(16);
         make.left.mas_equalTo(self.shadowImage).mas_offset(15);
         make.right.mas_equalTo(self.shadowImage).mas_offset(-15);
         make.height.mas_equalTo(0);

@@ -352,7 +352,7 @@
             [self.nameLabel mas_makeConstraints:^(MASConstraintMaker *make) {
                 make.left.mas_equalTo(self).offset(31);
                 make.right.mas_equalTo(self).offset(-35);
-                make.top.mas_equalTo(self.topBanner.mas_bottom).offset(28);
+                make.top.mas_equalTo(self.topBanner.mas_bottom).offset(16);
                 //            make.height.mas_offset(25);
                 //            make.bottom.mas_equalTo(-tagBottom - tagHeight);
             }];
@@ -361,7 +361,7 @@
                 make.right.mas_equalTo(self).offset(-15);
                 make.top.mas_equalTo(self.nameLabel.mas_bottom).offset(15);
                 make.height.mas_offset(tagHeight);
-                make.bottom.mas_equalTo(self).offset(tags.count > 0 ?-5:0);
+                make.bottom.mas_equalTo(self);
             }];
             break;
             }

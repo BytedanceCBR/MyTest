@@ -95,7 +95,7 @@
         make.top.equalTo(self.containerView);
         make.left.mas_equalTo(self.containerView).offset(15);
         make.right.mas_equalTo(self.containerView).offset(-15);
-        make.height.mas_equalTo(65);
+        make.height.mas_equalTo(65-8);//原来距离下一个view24现在16
     }];
     
     [_tableView mas_makeConstraints:^(MASConstraintMaker *make) {
