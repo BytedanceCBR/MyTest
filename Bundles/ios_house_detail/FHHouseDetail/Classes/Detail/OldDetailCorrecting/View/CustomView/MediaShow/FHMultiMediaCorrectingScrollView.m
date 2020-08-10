@@ -275,7 +275,7 @@
 }
 
 - (NSInteger)indexForIndexPath:(NSIndexPath *)indexPath {
-    if (_medias.count <= 1) {
+    if (_medias.count <= 1 || self.isShowTopImageTab) {
         return indexPath.item;
     }
     NSInteger index = indexPath.item - 1;
@@ -300,7 +300,7 @@
 }
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
-    if (_medias.count <= 1) {
+    if (_medias.count <= 1 || self.isShowTopImageTab) {
         return _medias.count;
     }
     return [_medias count]+2;
@@ -378,7 +378,7 @@
     //新房详情新增查看更多样式
     if (self.isShowTopImageTab) {
         //调用更多样式state变化
-        if (scrollView.contentOffset.x >= 52) {
+        if (scrollView.contentOffset.x >= 52 + self.colletionView.frame.size.width * (self.medias.count - 1)) {
             self.headerMoreStateView.moreState = FHHouseDetailHeaderMoreStateRelease;
         } else {
             self.headerMoreStateView.moreState = FHHouseDetailHeaderMoreStateBegin;
@@ -396,7 +396,7 @@
 - (void)scrollViewWillEndDragging:(UIScrollView *)scrollView withVelocity:(CGPoint)velocity targetContentOffset:(inout CGPoint *)targetContentOffset {
     //房源详情 左滑 超过 52px，松手，进入图片列表页
     if (self.isShowTopImageTab) {
-        if (scrollView.contentOffset.x >= 52) {
+        if (scrollView.contentOffset.x >= 52 + self.colletionView.frame.size.width * (self.medias.count - 1)) {
             if ([self.delegate respondsToSelector:@selector(goToPictureListFrom:)]) {
                 [self.delegate goToPictureListFrom:@"view_more_slide"];
             }
@@ -405,7 +405,7 @@
 }
 
 - (void)updateItemAndInfoLabel {
-    int diff = abs(self.colletionView.contentOffset.x - self.beginX);
+    CGFloat diff = ABS(self.colletionView.contentOffset.x - self.beginX);
     
     if(diff < self.colletionView.frame.size.width/2 && !self.isShowenPictureVC){
         return;
@@ -413,9 +413,13 @@
     
     NSInteger curPage = (NSInteger)(self.colletionView.contentOffset.x / self.colletionView.frame.size.width);
     
+    
     if (_medias.count > 1) {
         NSIndexPath *indexPath = nil;
-        if (curPage == 0) {
+        if (self.isShowTopImageTab) {
+            curPage = curPage + 1;
+        }
+        else if (curPage == 0) {
             //show last page
             curPage = _medias.count;
             indexPath = [NSIndexPath indexPathForItem:_medias.count inSection:0];
@@ -510,13 +514,21 @@
         self.infoLabel.hidden = YES;
         self.colletionView.alwaysBounceHorizontal = YES;
         if (model.medias.count) {
-            self.medias = @[model.medias.firstObject];
+            NSMutableArray *mArr = [NSMutableArray arrayWithCapacity:5];
+            for (NSInteger i = 0; i < MIN(model.medias.count, 5); i++) {
+                [mArr addObject:model.medias[i]];
+            }
+            self.medias = mArr.copy;
+            [self setInfoLabelText:[NSString stringWithFormat:@"%d/%ld",1,_medias.count]];
+            self.infoLabel.hidden = YES;
+            self.colletionView.hidden = NO;
+            self.noDataImageView.hidden = YES;
         }
         if (!self.headerMoreStateView) {
             self.headerMoreStateView = [[FHHouseDetailHeaderMoreStateView alloc] init];
             self.headerMoreStateView.moreState = FHHouseDetailHeaderMoreStateBegin;
             [self.colletionView addSubview:self.headerMoreStateView];
-            self.headerMoreStateView.frame = CGRectMake(CGRectGetMaxX(self.colletionView.frame), 0, 52, CGRectGetHeight(self.colletionView.frame));
+            self.headerMoreStateView.frame = CGRectMake(CGRectGetMaxX(self.colletionView.frame) * self.medias.count, 0, 52, CGRectGetHeight(self.colletionView.frame));
         }
         if (!self.listMoreView) {
             self.listMoreView = [[UIView alloc] init];
@@ -530,7 +542,7 @@
             countLabel.font = [UIFont themeFontMedium:16];
             countLabel.textColor = [UIColor colorWithHexStr:@"#4a4a4a"];
             countLabel.textAlignment = NSTextAlignmentCenter;
-            countLabel.text = [NSString stringWithFormat:@"+%d",model.medias.count];
+            countLabel.text = [NSString stringWithFormat:@"+%lu",(unsigned long)model.medias.count];
             [self.listMoreView addSubview:countLabel];
             [countLabel mas_makeConstraints:^(MASConstraintMaker *make) {
                 make.centerX.mas_equalTo(self.listMoreView);
@@ -549,6 +561,7 @@
             }];
             [self.listMoreView addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleListMoreGesture:)]];
         }
+        
         [self.colletionView reloadData];
     } else if (_medias.count > 0) {
         [self.colletionView reloadData];
@@ -596,7 +609,7 @@
         }
     }
     
-    if(_itemArray.count > 1){
+    if(_itemArray.count > 1 && self.isShowTopImageTab == false){
         self.itemView.hidden = NO;
         self.itemView.titleArray = _itemArray;
         [self.itemView selectedItem:_itemArray[0]];

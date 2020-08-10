@@ -12,10 +12,8 @@
 #import "FHDetailNearbyMapCell.h"
 #import "FHDetailPhotoHeaderCell.h"
 #import "FHDetailHouseNameCell.h"
-#import "FHDetailNewTimeLineItemCell.h"
 //#import "FHDetailNewHouseCoreInfoCell.h"
 #import "FHDetailNewHouseNewsCell.h"
-#import "FHDetailTimelineItemCorrectingCell.h"
 
 #import "FHDetailNewMutiFloorPanCell.h"
 #import "FHDetailRelatedHouseResponseModel.h"
@@ -40,7 +38,7 @@
 #import "FHNewDetailModuleHelper.h"
 #import "FHDetailCourtInfoCell.h"
 #import "FHDetailListSectionTitleCell.h"
-#import "FHOldDetailStaticMapCell.h""
+#import "FHOldDetailStaticMapCell.h"
 #import "FHDetailSalesCell.h"
 #import "FHDetailNewAddressInfoCell.h"
 #import "FHDetailNewPriceNotifyCell.h"
@@ -84,7 +82,6 @@
     
     [self.tableView registerClass:[FHOldDetailDisclaimerCell class] forCellReuseIdentifier:NSStringFromClass([FHOldDetailDisclaimerModel class])];
     
-    [self.tableView registerClass:[FHDetailTimelineItemCorrectingCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailNewTimeLineItemCorrectingModel class])];
     
 //    [self.tableView registerClass:[FHDetailNearbyMapCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailNearbyMapModel class])];
     
@@ -704,28 +701,12 @@
     }
 
     //楼盘动态
-    if (model.data.timeline.list.count != 0) {
+    if (model.data.timeline.list.count > 0) {
         
         FHDetailNewHouseNewsCellModel *newsCellModel = [[FHDetailNewHouseNewsCellModel alloc] init];
-        newsCellModel.hasMore = model.data.timeline.hasMore;
-        newsCellModel.titleText = @"楼盘动态";
-        newsCellModel.courtId = model.data.coreInfo.id;
-        newsCellModel.clickEnable = YES;
         newsCellModel.houseModelType = FHHouseModelTypeNewTimeline;
+        newsCellModel.timeLineModel = model.data.timeline;
         [self.items addObject:newsCellModel];
-        
-        for (NSInteger i = 0; i < model.data.timeline.list.count; i++) {
-            FHDetailNewDataTimelineListModel *itemModel = model.data.timeline.list[i];
-            FHDetailNewTimeLineItemCorrectingModel *item = [[FHDetailNewTimeLineItemCorrectingModel alloc] init];
-            item.desc = itemModel.desc;
-            item.title = itemModel.title;
-            item.createdTime = itemModel.createdTime;
-            item.isFirstCell = (i == 0);
-            item.isLastCell = (i == model.data.timeline.list.count - 1);
-            item.courtId = model.data.coreInfo.id;
-            item.houseModelType = FHHouseModelTypeNewTimeline;
-            [self.items addObject:item];
-        }
     }
     
     if (model.data.surroundingInfo) {
