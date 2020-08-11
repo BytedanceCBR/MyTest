@@ -114,9 +114,6 @@
                 make.top.mas_equalTo(marginTop);
                 make.left.right.mas_equalTo(self.containerView);
                 make.height.mas_equalTo(vHeight);
-                if(idx == model.recommendedRealtors.count - 1){
-                    make.bottom.mas_equalTo(-22);
-                }
             }];
             marginTop = marginTop +vHeight;
 
@@ -181,9 +178,16 @@
         }];
         [self.foldButton addTarget:self action:@selector(foldButtonClick:) forControlEvents:UIControlEventTouchUpInside];
     } else {
-        [self.containerView mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.bottom.mas_equalTo(self.shadowImage).offset(-25);
-        }];
+        if(model.houseType == FHHouseTypeNewHouse){
+            [self.containerView mas_updateConstraints:^(MASConstraintMaker *make) {
+                make.bottom.mas_equalTo(self.shadowImage).offset(-20-5 );
+            }];
+        }
+        else{
+            [self.containerView mas_updateConstraints:^(MASConstraintMaker *make) {
+                make.bottom.mas_equalTo(self.shadowImage).offset(-20-20);
+            }];
+        }
     }
     [self updateItems:NO];
 }
@@ -198,7 +202,7 @@
             if (!error && image) {
                 identifyView.image = image;
                 CGFloat ratio = 0;
-                if (image.size.height > 0) {
+                if (image.size. height > 0) {
                     ratio = image.size.width / image.size.height;
                 }
                 [identifyView mas_updateConstraints:^(MASConstraintMaker *make) {
@@ -407,7 +411,7 @@
         make.left.mas_equalTo(self.shadowImage).mas_offset(15);
         make.right.mas_equalTo(self.shadowImage).mas_offset(-15);
         make.height.mas_equalTo(0);
-        make.bottom.mas_equalTo(self.shadowImage).offset(-20);
+        make.bottom.mas_equalTo(self.shadowImage).offset(-40);
     }];
 }
 

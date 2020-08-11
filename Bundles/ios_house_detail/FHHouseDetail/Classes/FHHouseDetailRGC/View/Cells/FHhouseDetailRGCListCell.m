@@ -103,7 +103,7 @@
         make.left.mas_equalTo(self.containerView).offset(15);
         make.right.mas_equalTo(self.containerView).offset(-15);
         make.height.mas_equalTo(0);
-        make.bottom.mas_equalTo(self.containerView).offset(-12);
+        make.bottom.mas_equalTo(self.containerView).offset(-5);
     }];
     
     [_titleLabel mas_makeConstraints:^(MASConstraintMaker *make) {

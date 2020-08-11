@@ -188,8 +188,8 @@ extern NSString *const kFHPhoneNumberCacheKey;
     [self.bacIma mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(self.contentView).offset(15);
         make.right.mas_equalTo(self.contentView).offset(-15);
-        make.top.mas_equalTo(self.contentView).offset(6);
-        make.bottom.mas_equalTo(self.contentView).offset(-6);
+        make.top.mas_equalTo(self.shadowImage).offset(20);
+        make.bottom.mas_equalTo(self.shadowImage).offset(-20);
     }];
     
     [self.titleImage mas_makeConstraints:^(MASConstraintMaker *make) {

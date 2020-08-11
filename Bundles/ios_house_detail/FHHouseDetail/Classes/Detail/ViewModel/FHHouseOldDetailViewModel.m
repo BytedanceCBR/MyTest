@@ -642,7 +642,7 @@ logPB:self.listLogPB extraInfo:self.extraInfo completion:^(FHDetailOldModel * _N
         }
         paramsDict[@"page_type"] = [self pageTypeString];
         qaModel.tracerDict = paramsDict;
-        qaModel.topMargin = 0.0f;
+        qaModel.topMargin = 30.f;
         qaModel.question = model.data.question;
         qaModel.houseModelType = FHPlotHouseModelTypeNeighborhoodQA;
         [self.items addObject:qaModel];

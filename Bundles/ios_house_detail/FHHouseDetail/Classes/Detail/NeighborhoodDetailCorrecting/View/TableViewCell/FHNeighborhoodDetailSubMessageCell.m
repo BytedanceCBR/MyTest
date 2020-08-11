@@ -51,9 +51,9 @@
                 self.monthUpLabel.text = [NSString stringWithFormat:@"%.2f",fabs(value)];
                 self.monthUpTrend.hidden = NO;
                 if (value > 0) {
-                    self.monthUpTrend.image = [UIImage imageNamed:@"plot-red-arrow"];
+                    self.monthUpTrend.image = [UIImage imageNamed:@"plot_red_arrow"];
                 } else {
-                    self.monthUpTrend.image = [UIImage imageNamed:@"plot-green-arrow"];
+                    self.monthUpTrend.image = [UIImage imageNamed:@"plot_green_arrow"];
                 }
             }
         }
