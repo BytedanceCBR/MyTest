@@ -149,9 +149,11 @@
         listCount = 0;
     }
     double behotTime = 0;
+    NSString *lastGroupId = nil;
     if(!isHead && listCount > 0){
         FHFeedUGCCellModel *cellModel = [self.dataList lastObject];
         behotTime = [cellModel.behotTime doubleValue];
+         lastGroupId = cellModel.groupId;
     }
     if(isHead && listCount > 0){
         FHFeedUGCCellModel *cellModel = [self.dataList firstObject];
@@ -170,6 +172,10 @@
     }
     if (self.evaluationHeader.selectName) {
          [extraDic setObject:self.evaluationHeader.selectName forKey:@"tab_name"];
+    }
+    
+    if(lastGroupId){
+        [extraDic setObject:lastGroupId forKey:@"last_group_id"];
     }
    TTHttpTask *task = [FHHouseUGCAPI requestFeedListWithCategory:self.categoryId behotTime:behotTime loadMore:!isHead listCount:listCount extraDic:extraDic completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
         wself.listController.isLoadingData = NO;

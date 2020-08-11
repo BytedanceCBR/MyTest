@@ -368,6 +368,9 @@ DEC_TASK("FHIMStartupTask",FHTaskTypeSerial,TASK_PRIORITY_HIGH+16);
 - (BOOL)enableVoIPAudioCall {
     return [SSCommonLogic enableVoIPAudioCall];
 }
+- (BOOL)isEnableIMRealtorLocking {
+    return [SSCommonLogic enableIMRealtorLocking];
+}
 @end
 
 @interface FHIMStartupTask()

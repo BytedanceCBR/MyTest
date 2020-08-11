@@ -1419,6 +1419,8 @@ typedef NS_ENUM(NSInteger, SSCommentType)  {
 + (BOOL)enableVoIPAudioCall;
 // 是否开启抖音苹果登录，默认关闭
 + (BOOL)disableDouyinIconLoginLogic;
+/// 是否开启IM会话页跳转房源详情页经纪人锁定功能
++ (BOOL)enableIMRealtorLocking;
 @end
 
 

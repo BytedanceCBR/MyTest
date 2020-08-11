@@ -84,6 +84,7 @@
                }
            }
     [_segmentView updateDataWithString:lynxData];
+    self.viewHeight = ceil([self.segmentView intrinsicContentSize].height);
 }
 
 -(UIImage*) createImageWithColor:(UIColor*) color

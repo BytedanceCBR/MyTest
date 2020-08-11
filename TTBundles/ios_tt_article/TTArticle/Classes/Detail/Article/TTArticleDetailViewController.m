@@ -2752,7 +2752,7 @@
     [mdict setValue:self.detailModel.reportParams forKey:@"extraDic"];
 
     TTCommentDetailViewController *detailRoot = [[TTCommentDetailViewController alloc] initWithRouteParamObj:TTRouteParamObjWithDict(mdict.copy)];
-    
+    detailRoot.noReportGoDetail = YES;
     detailRoot.categoryID = self.detailModel.categoryID;
     detailRoot.enterFrom = self.detailModel.clickLabel;
     if(self.detailModel.clickLabel.length <= 0) {
