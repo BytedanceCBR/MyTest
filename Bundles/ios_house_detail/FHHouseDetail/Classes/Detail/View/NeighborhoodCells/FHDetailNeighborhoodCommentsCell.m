@@ -52,8 +52,8 @@
 - (void)setupUI {
     [self.shadowImage mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.right.equalTo(self.contentView);
-        make.top.equalTo(self.contentView).offset(-12);
-        make.bottom.equalTo(self.contentView).offset(12);
+        make.top.equalTo(self.contentView).offset(-14);
+        make.bottom.equalTo(self.contentView).offset(14);
     }];
     _containerView = [[UIView alloc] init];
 //    _containerView.clipsToBounds = YES;
@@ -136,7 +136,7 @@
     }];
     
     [_titleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.titleView).offset(30);
+        make.top.mas_equalTo(self.titleView).offset(20);
         make.left.mas_equalTo(self.titleView).offset(16);
         make.right.mas_equalTo(self.commentBtn.mas_left).offset(-10);
         make.height.mas_equalTo(25);
@@ -161,7 +161,7 @@
     self.tableView.tableHeaderView = _titleView;
     
     [_titleLabel mas_updateConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.titleView).offset(cellModel.topMargin);
+        make.top.mas_equalTo(self.titleView).offset(20);//与他相似的另一个卡片这样写死的
     }];
     
     [self.tableView mas_updateConstraints:^(MASConstraintMaker *make) {

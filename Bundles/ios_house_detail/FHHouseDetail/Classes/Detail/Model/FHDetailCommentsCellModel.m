@@ -65,10 +65,10 @@
     if(self.totalCount > 2 || self.dataList.count <= 0){
         self.footerViewHeight = _bottomMargin + 45;
     }else{
-        self.footerViewHeight = 10;
+        self.footerViewHeight = 0;
     }
     
-    self.headerViewHeight = _topMargin + 20;
+    self.headerViewHeight = _topMargin + 35 -14;//本来距离底部为20-14后为6
     
     if(self.dataList.count > 0){
         self.viewHeight = self.headerViewHeight + self.footerViewHeight;

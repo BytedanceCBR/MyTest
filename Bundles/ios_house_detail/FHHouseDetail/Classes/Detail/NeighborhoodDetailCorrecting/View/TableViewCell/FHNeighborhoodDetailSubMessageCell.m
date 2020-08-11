@@ -74,7 +74,7 @@
     }];
     [self.priceLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.equalTo(self.containerView).offset(16);
-        make.top.equalTo(self.containerView).offset(20);
+        make.top.equalTo(self.containerView).offset(16);
         make.bottom.equalTo(self.containerView).offset(-5);
     }];
     [self.monthUpTrend mas_makeConstraints:^(MASConstraintMaker *make) {

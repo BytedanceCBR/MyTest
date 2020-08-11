@@ -60,7 +60,7 @@
         self.footerViewHeight = 10;
     }
     
-    self.headerViewHeight = _topMargin + 35;
+    self.headerViewHeight = _topMargin + 35-14;
     
     if(self.dataList.count > 0){
         self.viewHeight = self.headerViewHeight + self.footerViewHeight;

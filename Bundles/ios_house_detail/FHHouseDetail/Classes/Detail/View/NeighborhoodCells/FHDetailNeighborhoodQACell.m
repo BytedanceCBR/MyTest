@@ -63,8 +63,8 @@
 - (void)setupUI {
     [self.shadowImage mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.right.equalTo(self.contentView);
-        make.top.equalTo(self.contentView).offset(-12);
-        make.bottom.equalTo(self.contentView).offset(12);
+        make.top.equalTo(self.contentView).offset(-14);
+        make.bottom.equalTo(self.contentView).offset(14);
     }];
     _containerView = [[UIView alloc] init];
     _containerView.clipsToBounds = YES;
@@ -100,7 +100,7 @@
     self.detailJumpManager = [[FHUGCFeedDetailJumpManager alloc] init];
     self.detailJumpManager.refer = 1;
     
-    self.titleView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width - 60, 65)];
+    self.titleView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width - 60, 50)];
     
     self.titleLabel = [self LabelWithFont:[UIFont themeFontMedium:18] textColor:[UIColor themeGray1]];
     _titleLabel.text = @"小区问答";
@@ -149,7 +149,7 @@
     }];
     
     [_titleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.titleView).offset(30);
+        make.top.mas_equalTo(self.titleView).offset(20);
         make.left.mas_equalTo(self.titleView).offset(16);
         make.right.mas_equalTo(self.questionBtn.mas_left).offset(-10);
         make.height.mas_equalTo(25);
@@ -174,7 +174,7 @@
     self.tableView.tableHeaderView = _titleView;
     
     [_titleLabel mas_updateConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.titleView).offset(cellModel.topMargin);
+        make.top.mas_equalTo(self.titleView).offset(20);
     }];
     
     [self.tableView mas_updateConstraints:^(MASConstraintMaker *make) {
@@ -429,6 +429,7 @@
 
 - (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section {
     FHDetailQACellModel *cellModel = (FHDetailQACellModel *)self.currentData;
+    return 65;
     return cellModel.footerViewHeight;
 }
 
