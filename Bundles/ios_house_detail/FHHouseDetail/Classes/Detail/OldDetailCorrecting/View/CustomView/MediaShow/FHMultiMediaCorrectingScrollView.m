@@ -228,7 +228,7 @@
             curPage = 1;
         }
       
-        [self setInfoLabelText:[NSString stringWithFormat:@"%ld/%ld",curPage,self.medias.count]];
+        [self setInfoLabelText:[NSString stringWithFormat:@"%ld/%lu",(long)curPage,(unsigned long)self.medias.count]];
         
         if(self.delegate && [self.delegate respondsToSelector:@selector(selectItem:)]){
             [self.delegate selectItem:self.itemArray[index]];
@@ -434,7 +434,7 @@
             FHMultiMediaItemModel *itemModel = self.medias[index];
             NSString *groupType = itemModel.groupType;
             [self.itemView selectedItem:groupType];
-            [self setInfoLabelText:[NSString stringWithFormat:@"%ld/%ld",curPage,self.medias.count]];
+            [self setInfoLabelText:[NSString stringWithFormat:@"%ld/%lu",(long)curPage,(unsigned long)self.medias.count]];
         }
     }
 }
@@ -519,7 +519,7 @@
                 [mArr addObject:model.medias[i]];
             }
             self.medias = mArr.copy;
-            [self setInfoLabelText:[NSString stringWithFormat:@"%d/%ld",1,_medias.count]];
+            [self setInfoLabelText:[NSString stringWithFormat:@"%d/%lu",1,(unsigned long)_medias.count]];
             self.infoLabel.hidden = YES;
             self.colletionView.hidden = NO;
             self.noDataImageView.hidden = YES;
@@ -565,7 +565,7 @@
         [self.colletionView reloadData];
     } else if (_medias.count > 0) {
         [self.colletionView reloadData];
-        [self setInfoLabelText:[NSString stringWithFormat:@"%d/%ld",1,_medias.count]];
+        [self setInfoLabelText:[NSString stringWithFormat:@"%d/%lu",1,(unsigned long)_medias.count]];
         self.infoLabel.hidden = NO;
         self.colletionView.hidden = NO;
         self.noDataImageView.hidden = YES;
