@@ -47,6 +47,7 @@
 #import <NSDictionary+TTAdditions.h>
 #import "FHMapSimpleNavbar.h"
 #import "UIDevice+BTDAdditions.h"
+#import "FHMapSearchNewHouseItemView.h"
 
 #define kTipDuration 3
 
@@ -76,6 +77,7 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
 @property(nonatomic , assign) NSInteger requestMapLevel;
 @property(nonatomic , weak)   TTHttpTask *requestHouseTask;
 @property(nonatomic , strong) FHMapSearchHouseListViewController *houseListViewController;//小区房源
+@property(nonatomic , strong) FHMapSearchNewHouseItemView *houseNewView;//新房房源
 
 @property(nonatomic , strong) NSString *searchId;
 @property(nonatomic , strong) NSString *houseTypeName;
@@ -651,6 +653,16 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
     return _houseListViewController;
 }
 
+
+-(FHMapSearchNewHouseItemView *)houseNewView
+{
+    if (!_houseNewView) {
+        _houseNewView = [[FHMapSearchNewHouseItemView alloc] initWithFrame:CGRectMake(0, 17, [UIScreen mainScreen].bounds.size.width, 118)];
+        _houseNewView.weakVC = self.viewController;
+    }
+    return _houseNewView;
+}
+
 -(NSString *)navTitle
 {
     if (_showMode == FHMapSearchShowModeHouseList) {
@@ -1073,7 +1085,7 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
     }
 }
 
--(void)handleSelectForNewHouse:(MAAnnotationView *)annotationView{
+-(void)handleSelectForNewHouseView:(UIView *)houseView{
         if (!self.bottomShowInfoView) {
             self.bottomShowInfoView = [UIView new];
             [self.bottomShowInfoView setFrame:CGRectMake(0, self.viewController.view.frame.size.height, self.viewController.view.frame.size.width, 150)];
@@ -1099,13 +1111,15 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
         [self.bottomShowInfoView addSubview:indicator];
          
         
-         UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(20.0f, indicator.bottom + 10, self.viewController.view.frame.size.width - 40, 30)];
-         titleLabel.text = @"新房123";
-         [titleLabel setFont:[UIFont themeFontMedium:20]];
-         [titleLabel setTextColor:[UIColor themeGray1]];
-          titleLabel.numberOfLines = 2;
-          [titleLabel sizeToFit];
-         [self.bottomShowInfoView addSubview:titleLabel];
+//         UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(20.0f, indicator.bottom + 10, self.viewController.view.frame.size.width - 40, 30)];
+//         titleLabel.text = @"新房123";
+//         [titleLabel setFont:[UIFont themeFontMedium:20]];
+//         [titleLabel setTextColor:[UIColor themeGray1]];
+//          titleLabel.numberOfLines = 2;
+//          [titleLabel sizeToFit];
+//         [self.bottomShowInfoView addSubview:titleLabel];
+    
+       [self.bottomShowInfoView addSubview:houseView];
                  
          CGFloat finalHeight = ([UIDevice btd_isIPhoneXSeries] ? 201 : 201);
 
@@ -1812,8 +1826,41 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
     FHMapSearchBubbleModel *houseListBubble = [self bubleFromOpenUrl:model.houseListOpenUrl];
     houseListBubble.lastShowMode = self.lastShowMode;
     
-    [self.viewController.view bringSubviewToFront:self.houseListViewController.view];
-    [self.houseListViewController showNeighborHouses:model bubble:houseListBubble];
+    
+    NSMutableDictionary *param = [NSMutableDictionary new];
+    NSString *  query = [NSString stringWithFormat:@"%@=%@&house_type=1",CHANNEL_ID,CHANNEL_ID_MAP_FIND_NEW];
+
+
+    param[HOUSE_TYPE_KEY] = @(1);
+//    query = [houseListBubble query];
+
+    if(model.nid){
+        param[@"court_ids"] = @[model.nid];
+        query = [query stringByAppendingFormat:@"&court_ids[]=%@",model.nid];
+    }
+    
+    
+    if ([[houseListBubble queryDict] isKindOfClass:[NSDictionary class]]) {
+        [param addEntriesFromDictionary:[houseListBubble queryDict]];
+        [param removeObjectForKey:@"district[]"];
+    }
+
+//    if (query.length == 0) {
+//        query = self.configModel.conditionQuery;
+//    }
+
+    if (![TTReachability isNetworkConnected]) {
+        [[FHMainManager sharedInstance]showToast:@"网络异常" duration:1];
+        return ;
+    }
+        
+ 
+    
+    [self.houseNewView showNewHouse:query param:param];
+    [self handleSelectForNewHouseView:self.houseNewView];
+    
+//    [self.viewController.view bringSubviewToFront:self.houseListViewController.view];
+//    [self.houseNewVC showNewHouses:model bubble:houseListBubble];
     
     if (![TTReachability isNetworkConnected]) {
         //当前不联网,判断更新筛选器选项
