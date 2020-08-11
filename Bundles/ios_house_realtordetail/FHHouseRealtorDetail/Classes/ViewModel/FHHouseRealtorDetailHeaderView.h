@@ -13,6 +13,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (weak, nonatomic) UIViewController *controller;
 @property (copy, nonatomic) NSString *channel;
 @property (copy, nonatomic) NSString *bacImageName;
+@property (weak, nonatomic) UIImageView *titleImage;
 @property (copy, nonatomic) NSString *bacImageUrl;
 @property (assign, nonatomic) CGFloat viewHeight;
 - (void)reloadDataWithDic:(NSDictionary *)dic;

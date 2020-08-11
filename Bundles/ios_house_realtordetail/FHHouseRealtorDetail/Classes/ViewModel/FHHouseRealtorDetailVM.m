@@ -58,6 +58,7 @@
 @property (nonatomic, strong) NSMutableArray *ugcTabList;
 @property (nonatomic, assign) NSInteger currentIndex;
 @property (nonatomic, assign) BOOL isFirstEnter;
+@property (nonatomic, assign) BOOL isHeightScoreRealtor;
 @property (nonatomic) BOOL shouldShowUGcGuide;
 @end
 @implementation FHHouseRealtorDetailVM
@@ -71,6 +72,7 @@
         self.realtorPhoneCallModel.tracerDict = tracerDict;
         self.realtorPhoneCallModel.belongsVC = viewController;
         self.isFirstEnter = YES;
+        self.isHeightScoreRealtor = NO;
         self.viewController.segmentView.delegate = self;
         self.realtorInfo = realtorInfo;
         __weak typeof(self)ws = self;
@@ -162,8 +164,13 @@
         if ([dicm.allKeys containsObject:@"isHightScore"]) {
             BOOL isHightScore = dicm[@"isHightScore"];
             if (isHightScore) {
+                self.isHeightScoreRealtor = isHightScore;
                 [self.viewController.headerView updateRealtorWithHeightScore];
-                self.viewController.customNavBarView.title.text = @"幸福里优选经纪人";
+                self.viewController.headerView.titleImage.hidden = NO;
+               self.viewController.customNavBarView.title.textColor = [UIColor colorWithHexStr:@"#E7C494"];
+        UIImage *whiteBackArrowImage = ICON_FONT_IMG(24, @"\U0000e68a", [UIColor colorWithHexStr:@"#E7C494"]);
+        [self.viewController.customNavBarView.leftBtn setBackgroundImage:whiteBackArrowImage forState:UIControlStateNormal];
+        [self.viewController.customNavBarView.leftBtn setBackgroundImage:whiteBackArrowImage forState:UIControlStateHighlighted];
             }
         }
 
@@ -284,7 +291,7 @@
 }
 
 - (void)updateNavBarWithAlpha:(CGFloat)alpha {
-    UIImage *whiteBackArrowImage = ICON_FONT_IMG(24, @"\U0000e68a", [UIColor whiteColor]);
+    UIImage *whiteBackArrowImage = ICON_FONT_IMG(24, @"\U0000e68a",self.isHeightScoreRealtor?[UIColor colorWithHexStr:@"#E7C494"]:[UIColor whiteColor]);
     UIImage *blackBackArrowImage = ICON_FONT_IMG(24, @"\U0000e68a", [UIColor themeGray1]);
     alpha = fminf(fmaxf(0.0f, alpha), 1.0f);
     if (alpha <= 0.1f) {
@@ -292,7 +299,7 @@
         [self.viewController.customNavBarView.leftBtn setBackgroundImage:whiteBackArrowImage forState:UIControlStateNormal];
         [self.viewController.customNavBarView.leftBtn setBackgroundImage:whiteBackArrowImage forState:UIControlStateHighlighted];
         self.viewController.titleContainer.hidden = YES;
-        self.viewController.customNavBarView.title.textColor = [UIColor whiteColor];
+        self.viewController.customNavBarView.title.textColor = self.isHeightScoreRealtor?[UIColor colorWithHexStr:@"#E7C494"]: [UIColor whiteColor];
     } else if (alpha > 0.1f && alpha < 0.9f) {
         [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault];
         self.viewController.customNavBarView.title.textColor = [UIColor themeGray1];
@@ -449,6 +456,10 @@
         }];
     }
     [self refreshContentOffset:delta];
+    if (self.isHeightScoreRealtor) {
+        self.viewController.customNavBarView.title.hidden = delta<0;
+         self.viewController.customNavBarView.leftBtn.hidden = delta<0;
+    }
         [self.viewController.headerView updateWhenScrolledWithContentOffset:delta isScrollTop:NO scrollView:pagingView.currentContentView];
 }
 

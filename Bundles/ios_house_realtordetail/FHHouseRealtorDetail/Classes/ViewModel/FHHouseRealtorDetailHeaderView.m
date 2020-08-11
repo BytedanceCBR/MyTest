@@ -34,7 +34,7 @@
 @property (nonatomic, assign) BOOL isHeightScoreRealtor; //页面加载时间
 @property(nonatomic) CGFloat headerBackHeight;
 
- @end
+@end
 @implementation FHHouseRealtorDetailHeaderView
 
 - (instancetype)initWithFrame:(CGRect)frame {
@@ -52,6 +52,7 @@
 - (void)createUI {
     self.headerBackHeight = 164;
     [self headerIma];
+    [self titleImage];
     [self.headerMaskView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.edges.equalTo(self.headerIma);
     }];
@@ -61,9 +62,26 @@
     }];
 }
 
+- (UIImageView *)titleImage {
+    if (!_titleImage) {
+        UIImageView *titleImage = [[UIImageView alloc]initWithFrame:CGRectMake((SCREEN_WIDTH -305)/2, 64+self.navHeight, 305, 23)];
+        titleImage.image = [UIImage imageNamed:@"image_title"];
+        titleImage.clipsToBounds = YES;
+        titleImage.contentMode = UIViewContentModeScaleAspectFill;
+        [self addSubview:titleImage];
+        titleImage.hidden = YES;
+        _titleImage = titleImage;
+    }
+    return _titleImage;
+}
+
 - (void)updateWhenScrolledWithContentOffset:(CGFloat)offset isScrollTop:(BOOL)isScrollTop scrollView:(UIScrollView *)scrollView {
+    
     if (self.isHeightScoreRealtor) {
-            if (offset < 0 && offset>= -150) {
+        self.titleImage.frame = CGRectMake((SCREEN_WIDTH -305)/2,64 + offset+self.navHeight, 305, 23);
+        self.titleImage.hidden = offset > 0;
+    }
+        if (offset < 0 && offset>= -150) {
             CGFloat height = SCREEN_WIDTH - offset;
             self.headerIma.frame = CGRectMake(0,-(SCREEN_WIDTH-self.headerBackHeight) + offset, SCREEN_WIDTH, height);
         }else if( offset< -150 && offset >= -(SCREEN_WIDTH-self.headerBackHeight)) {
@@ -75,12 +93,11 @@
         } else {
             self.headerIma.frame = CGRectMake(0, -(SCREEN_WIDTH-self.headerBackHeight), SCREEN_WIDTH, SCREEN_WIDTH);
         }
-    }
+    
 }
 
 - (void)updateRealtorWithHeightScore {
     self.isHeightScoreRealtor = YES;
-    self.headerIma.frame = CGRectMake(0,-(SCREEN_WIDTH-self.headerBackHeight), SCREEN_WIDTH, SCREEN_WIDTH);
     self.headerIma.image = [UIImage imageNamed:@"realtor_bac"];
 }
 
@@ -122,15 +139,15 @@
             _loadTime = [[NSDate date] timeIntervalSince1970];
             LynxTemplateData *tem = [[LynxTemplateData alloc]initWithJson:lynxData];
             [self.realtorInfoView loadTemplate:templateData withURL:@"local" initData:tem];
-        //使用segments时小数触发计算错误
-        self.viewHeight = ceil([self.realtorInfoView intrinsicContentSize].height + self.navHeight + 44);
+            //使用segments时小数触发计算错误
+            self.viewHeight = ceil([self.realtorInfoView intrinsicContentSize].height + self.navHeight + 44);
+        }
     }
-}
 }
 
 - (UIImageView *)headerIma {
     if (!_headerIma) {
-        UIImageView *headerIma = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, self.headerBackHeight)];
+        UIImageView *headerIma = [[UIImageView alloc]initWithFrame:CGRectMake(0,-(SCREEN_WIDTH-self.headerBackHeight), SCREEN_WIDTH, SCREEN_WIDTH)];
         headerIma.image = [UIImage imageNamed:@"realtor_detail"];
         headerIma.clipsToBounds = YES;
         headerIma.contentMode = UIViewContentModeScaleAspectFill;
@@ -171,7 +188,7 @@
 {
     NSMutableDictionary * paramsExtra = [NSMutableDictionary new];
     [paramsExtra setValue:[[TTInstallIDManager sharedInstance] deviceID] forKey:@"device_id"];
-     NSMutableDictionary *uploadParams = [NSMutableDictionary new];
+    NSMutableDictionary *uploadParams = [NSMutableDictionary new];
     NSString *eventServie = [NSString stringWithFormat:@"lynx_page_duration_%@",_channel];
     if (time < 15) {
         [uploadParams setValue:@(time * 1000) forKey:@"duration"];
@@ -183,7 +200,7 @@
     
     NSMutableDictionary * paramsExtra = [NSMutableDictionary new];
     [paramsExtra setValue:[[TTInstallIDManager sharedInstance] deviceID] forKey:@"device_id"];
-     NSMutableDictionary *uploadParams = [NSMutableDictionary new];
+    NSMutableDictionary *uploadParams = [NSMutableDictionary new];
     if (perf && [[perf toDictionary] isKindOfClass:[NSDictionary class]]) {
         [uploadParams addEntriesFromDictionary:[perf toDictionary]];
     }

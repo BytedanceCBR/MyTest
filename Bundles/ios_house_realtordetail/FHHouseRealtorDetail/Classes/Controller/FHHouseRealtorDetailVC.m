@@ -26,6 +26,7 @@
 @property (nonatomic, strong) UIView *bottomMaskView;
 @property (nonatomic, strong) FHRealtorDetailBottomBar *bottomBar;
 @property (nonatomic, strong )NSDictionary *realtorDetailInfo;
+
 @end
 
 @implementation FHHouseRealtorDetailVC
@@ -62,7 +63,7 @@
 
 - (void)initNavBar {
     [self setupDefaultNavBar:NO];
-    self.titleLabel =  @"经纪人主页";
+    self.titleLabel.text =  @"经纪人主页";
     //设置导航条透明
     [self setNavBar];
 }
@@ -72,7 +73,9 @@
     [self initSegmentView];
     [self addDefaultEmptyViewFullScreen];
     [self initBottomBar];
+    
 }
+
 
 - (void)showBottomBar:(BOOL)show {
     self.bottomBar.hidden = !show;
@@ -105,7 +108,7 @@
     CGFloat headerBackNormalHeight = 400;
     CGFloat headerBackXSeriesHeight = headerBackNormalHeight + 44; //刘海平多出24
     CGFloat height = [UIDevice btd_isIPhoneXSeries] ? headerBackXSeriesHeight : headerBackNormalHeight + 40;
-    self.headerView = [[FHHouseRealtorDetailHeaderView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, headerBackXSeriesHeight)];
+    self.headerView = [[FHHouseRealtorDetailHeaderView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, height)];
     self.headerView.controller = self;
     self.headerView.channel = @"lynx_realtor_detail_header";
     self.headerView.bacImageName = @"realtor_header";
