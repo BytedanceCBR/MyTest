@@ -169,7 +169,7 @@
 
     CGFloat cellHeight = [self.class heightForData:self.cellModel];
     
-    self.contentContainer.frame = CGRectMake(leftMargin, topMargin, cellWidth - leftMargin - rightMargin, cellHeight - topMargin-10);
+    self.contentContainer.frame = CGRectMake(leftMargin, topMargin, cellWidth - leftMargin - rightMargin, cellHeight - topMargin - 10);
     
     if(self.cellModel.isInNeighbourhoodCommentsList) {
         self.contentContainer.layer.masksToBounds = YES;

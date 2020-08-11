@@ -55,7 +55,7 @@
     
     //总数
     if(self.totalCount > 2 || self.dataList.count <= 0){
-        self.footerViewHeight = 80 - 10;
+        self.footerViewHeight = 80 - 20;
     }else{
         self.footerViewHeight = 10;
     }
