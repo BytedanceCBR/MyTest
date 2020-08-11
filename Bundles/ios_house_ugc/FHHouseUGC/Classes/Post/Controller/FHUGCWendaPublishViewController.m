@@ -1044,6 +1044,11 @@
                 NSMutableDictionary *tracerDict = self.tracerDict.mutableCopy;
                 tracerDict[@"group_id"] = cellModel.groupId;
                 tracerDict[@"page_type"] = [self pageType];
+                if ([self.tracerDict.allKeys containsObject:@"is_wiki"]) {
+                    tracerDict[@"is_wiki"] = self.tracerDict[@"is_wiki"];
+                }else {
+                      tracerDict[@"is_wiki"] = @(0);
+                }
                 [tracerDict removeObjectsForKeys:@[@"origin_from"]];
                 [FHUserTracker writeEvent:@"feed_publish_success" params:tracerDict];
                 

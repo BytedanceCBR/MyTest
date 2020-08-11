@@ -69,7 +69,7 @@
     self.detailTracerDic[@"enter_from"] = self.detailController.tracerDict[@"enter_from"] ?: @"be_null";
     self.detailTracerDic[@"page_type"] = @"house_info_detail";
     self.detailTracerDic[@"origin_from"] = self.detailController.tracerDict[@"origin_from"] ?: @"be_null";
-    if (self.detailController.tracerDict[@"log_pb"]) {
+    if (self.detailController.tracerDict[@"log_pb"] && [self.detailController.tracerDict[@"log_pb"] isKindOfClass:[NSDictionary class]]) {
         NSDictionary *dict = self.detailController.tracerDict[@"log_pb"];
         self.detailTracerDic[@"group_id"] = dict[@"group_id"] ?: @"be_null";
     } else {
