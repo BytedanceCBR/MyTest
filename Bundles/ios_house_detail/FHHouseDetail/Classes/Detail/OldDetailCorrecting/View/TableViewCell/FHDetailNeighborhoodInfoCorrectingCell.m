@@ -222,13 +222,30 @@
         }
         CGFloat topMargin = 8 + 12;
         if (model.neighborhoodInfo.useSchoolIm) {
+            if (!self.consultView) {
+                FHDetailNeighborhoodConsultCorrectingView *consultView = [[FHDetailNeighborhoodConsultCorrectingView alloc] init];
+                __weak typeof(self)wself = self;
+                consultView.backgroundColor = [UIColor clearColor];
+                consultView.actionBlock = ^{
+                    [wself imAction];
+                };
+                [self.containerView addSubview:consultView];
+                self.consultView = consultView;
+                [self.consultView mas_makeConstraints:^(MASConstraintMaker *make) {
+                    make.left.right.mas_equalTo(self.headerView);
+                    make.top.equalTo(self.topView.mas_bottom).mas_offset(10);
+                    make.height.mas_equalTo(16);
+                    make.bottom.mas_equalTo(self.containerView).mas_offset(-10);
+                }];
+            }
             self.schoolView.hidden = YES;
-            self.consultView.hidden = NO;
             self.consultView.nameLabel.text = @"学校:";
             self.consultView.infoLabel.text = model.neighborhoodInfo.schoolConsult.text;
         } else {
+            if (self.consultView) {
+                [self.contentView removeFromSuperview];
+            }
             self.schoolView.hidden = NO;
-            self.consultView.hidden = YES;
             if (model.neighborhoodInfo.schoolDictList.count < 1) {
                 topMargin = 8 + 26;
             }
@@ -344,7 +361,7 @@
 //        make.height.mas_equalTo(sumHeight);
 //    }];
     if (schoolNameComponents.length) {
-        CGFloat width = CGRectGetWidth(self.containerView.bounds) - 16 - 72 - 52 - 37;
+        CGFloat width = CGRectGetWidth(self.bounds) - 15 * 2 - 16 - 72 - 52 - 37;
         UILabel *nameKey = [UILabel createLabel:@"学校:" textColor:@"" fontSize:14];
         nameKey.textColor = [UIColor themeGray3];
         UILabel *nameValue = [UILabel createLabel:schoolNameComponents.copy textColor:@"" fontSize:14];
@@ -355,62 +372,67 @@
         [self.schoolView addSubview:nameValue];
         self.schoolNameLabel = nameValue;
         [nameKey mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.left.equalTo(self.schoolView);
-            make.top.bottom.equalTo(self.schoolView);
+            make.left.mas_equalTo(self.schoolView);
+            make.top.mas_equalTo(self.schoolView);
         }];
         [nameValue mas_makeConstraints:^(MASConstraintMaker *make) {
             make.left.mas_equalTo(self.schoolView).mas_offset(42);
-            make.centerY.equalTo(nameKey);
+            make.width.mas_equalTo(width);
+            make.top.mas_equalTo(0);
         }];
         
-        if ([schoolNameComponents btd_widthWithFont:[UIFont themeFontRegular:14] height:16] > width) {
+        if ([schoolNameComponents btd_widthWithFont:self.schoolNameLabel.font height:16] > width) {
             UIButton *foldBtn = [[UIButton alloc] init];
             UIImage *img = ICON_FONT_IMG(16, @"\U0000e672", nil);
             [foldBtn setImage:img forState:UIControlStateNormal];
             [foldBtn setImage:img forState:UIControlStateHighlighted];
             [foldBtn setHitTestEdgeInsets:UIEdgeInsetsMake(-10, -20, -20, -10)];
             [foldBtn addTarget:self action:@selector(foldBtnDidClick) forControlEvents:UIControlEventTouchUpInside];
-            [self addSubview:foldBtn];
+            [self.schoolView addSubview:foldBtn];
             self.foldBtn = foldBtn;
             [self.foldBtn mas_makeConstraints:^(MASConstraintMaker *make) {
                 make.centerY.mas_equalTo(nameKey.mas_centerY);
                 make.right.mas_equalTo(-12);
                 make.size.mas_equalTo(CGSizeMake(16, 16));
             }];
-            
-            UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(foldBtnDidClick)];
-            nameValue.userInteractionEnabled = YES;
-            [nameValue addGestureRecognizer:tap];
+//            [nameValue addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(foldBtnDidClick)]];
         }
     }
 }
 
 - (void)foldBtnDidClick {
-    FHDetailNeighborhoodInfoCorrectingModel *model = (FHDetailNeighborhoodInfoCorrectingModel *)self.currentData;
-    [model.tableView beginUpdates];
-    
-    CGFloat width = CGRectGetWidth(self.containerView.bounds) - 16 - 72 - 52 - 37;
-    self.foldBtn.selected = !self.foldBtn.selected;
-    UIImage *img = nil;
-    if (self.foldBtn.selected) {
-        img = ICON_FONT_IMG(16, @"\U0000e672", nil);
-        self.schoolNameLabel.numberOfLines = 0;
-        [self.schoolNameLabel btd_SetText:self.schoolNameLabel.text lineHeight:10];
-        [self.schoolView mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.height.mas_equalTo([self.schoolNameLabel btd_heightWithWidth:width]);
-        }];
-    }else {
-        img = ICON_FONT_IMG(16, @"\U0000e65f", nil);
-        self.schoolNameLabel.numberOfLines = 1;
-        [self.schoolNameLabel btd_SetText:self.schoolNameLabel.text lineHeight:0];
-        [self.schoolView mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.height.mas_equalTo(16);
-        }];
-    }
-    [self.foldBtn setImage:img forState:UIControlStateNormal];
-    [self.foldBtn setImage:img forState:UIControlStateHighlighted];
+    [UIView performWithoutAnimation:^{
+        FHDetailNeighborhoodInfoCorrectingModel *model = (FHDetailNeighborhoodInfoCorrectingModel *)self.currentData;
+        [model.tableView beginUpdates];
+        
+        CGFloat width = CGRectGetWidth(self.bounds) - 15 * 2 - 16 - 72 - 52 - 37;
+        self.foldBtn.selected = !self.foldBtn.selected;
+        UIImage *img = nil;
+        if (self.foldBtn.selected) {
+            img = ICON_FONT_IMG(16, @"\U0000e65f", nil);
+            self.schoolNameLabel.numberOfLines = 0;
+            //        [self.schoolNameLabel btd_SetText:self.schoolNameLabel.text lineHeight:10];
+            [self.schoolView mas_updateConstraints:^(MASConstraintMaker *make) {
+                make.height.mas_equalTo([self.schoolNameLabel btd_heightWithWidth:width]);
+            }];
+        }else {
+            img = ICON_FONT_IMG(16, @"\U0000e672", nil);
+            self.schoolNameLabel.numberOfLines = 1;
+            //        [self.schoolNameLabel btd_SetText:self.schoolNameLabel.text lineHeight:10];
+            [self.schoolView mas_updateConstraints:^(MASConstraintMaker *make) {
+                make.height.mas_equalTo(16);
+            }];
+        }
+        [self.foldBtn setImage:img forState:UIControlStateNormal];
+        [self.foldBtn setImage:img forState:UIControlStateHighlighted];
+        
+        [self setNeedsUpdateConstraints];
+        [self updateConstraintsIfNeeded];
+        [self layoutIfNeeded];
+        
+        [model.tableView endUpdates];
+    }];
 
-    [model.tableView endUpdates];
 }
 
 - (void)refreshItemsView
@@ -488,6 +510,7 @@
     UIView *containerView = [[UIView alloc]init];
     containerView.clipsToBounds = YES;
     containerView.layer.cornerRadius = 10;
+    [containerView addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(gotoNeighborhood)]];
     [self.contentView addSubview:containerView];
     self.containerView = containerView;
     [self.containerView mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -518,7 +541,6 @@
     FHDetailNeighborhoodTitleView *headerView = [[FHDetailNeighborhoodTitleView alloc] init];
     headerView.titleStr = @"小区";
     headerView.isShowLoadMore = YES; // 点击可以跳转小区详情
-    [headerView addTarget:self action:@selector(gotoNeighborhood) forControlEvents:UIControlEventTouchUpInside];
     [self.containerView addSubview:headerView];
     self.headerView = headerView;
     [self.headerView mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -544,24 +566,9 @@
     self.schoolView = schoolView;
     [self.schoolView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.right.mas_equalTo(self.headerView);
-        make.top.equalTo(self.topView.mas_bottom).mas_offset(10);
+        make.top.mas_equalTo(self.topView.mas_bottom).mas_offset(10);
         make.height.mas_equalTo(16);
-        make.bottom.mas_equalTo(self.containerView).mas_offset(-10);
-    }];
-    
-    FHDetailNeighborhoodConsultCorrectingView *consultView = [[FHDetailNeighborhoodConsultCorrectingView alloc] init];
-    __weak typeof(self)wself = self;
-    consultView.backgroundColor = [UIColor clearColor];
-    consultView.actionBlock = ^{
-        [wself imAction];
-    };
-    [self.containerView addSubview:consultView];
-    self.consultView = consultView;
-    [self.consultView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.right.mas_equalTo(self.headerView);
-        make.top.equalTo(self.topView.mas_bottom).mas_offset(10);
-        make.height.mas_equalTo(16);
-        make.bottom.mas_equalTo(self.containerView).mas_offset(-10);
+        make.bottom.mas_equalTo(-10);
     }];
 }
 
