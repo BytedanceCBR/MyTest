@@ -114,6 +114,9 @@
                 make.top.mas_equalTo(marginTop);
                 make.left.right.mas_equalTo(self.containerView);
                 make.height.mas_equalTo(vHeight);
+                if(idx == model.recommendedRealtors.count - 1){
+                    make.bottom.mas_equalTo(-22);
+                }
             }];
             marginTop = marginTop +vHeight;
 
@@ -170,7 +173,7 @@
         [self.contentView addSubview:_foldButton];
         [_foldButton mas_makeConstraints:^(MASConstraintMaker *make) {
             make.top.mas_equalTo(self.containerView.mas_bottom);
-            make.height.mas_equalTo(58);
+            make.height.mas_equalTo(58-6);
             make.left.right.mas_equalTo(self.contentView);
         }];
         [self.containerView mas_updateConstraints:^(MASConstraintMaker *make) {
@@ -404,7 +407,7 @@
         make.left.mas_equalTo(self.shadowImage).mas_offset(15);
         make.right.mas_equalTo(self.shadowImage).mas_offset(-15);
         make.height.mas_equalTo(0);
-        make.bottom.mas_equalTo(self.shadowImage).offset(-25); //内部的空间距离该view底部为15 15+25-20=20
+        make.bottom.mas_equalTo(self.shadowImage).offset(-20);
     }];
 }
 

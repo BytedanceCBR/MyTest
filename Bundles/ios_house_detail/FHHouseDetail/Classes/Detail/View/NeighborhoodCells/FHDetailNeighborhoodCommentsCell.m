@@ -161,7 +161,7 @@
     self.tableView.tableHeaderView = _titleView;
     
     [_titleLabel mas_updateConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.titleView).offset(20);//与他相似的另一个卡片这样写死的
+        make.top.mas_equalTo(self.titleView).offset(20);
     }];
     
     [self.tableView mas_updateConstraints:^(MASConstraintMaker *make) {

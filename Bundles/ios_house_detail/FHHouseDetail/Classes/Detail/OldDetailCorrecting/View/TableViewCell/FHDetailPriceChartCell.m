@@ -301,7 +301,7 @@
         make.left.mas_equalTo(self.contentView).offset(15);
         make.right.mas_equalTo(self.contentView).offset(-15);
         make.top.mas_equalTo(self.priceView.mas_bottom).offset(6);//6+10=16
-        make.bottom.mas_equalTo(self.shadowImage).offset(-12);
+        make.bottom.mas_equalTo(self.shadowImage).offset(-20);
     }];
     [self.priceLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(self.bottomBgView).offset(16);

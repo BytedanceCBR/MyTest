@@ -67,7 +67,7 @@
         [self.backView mas_makeConstraints:^(MASConstraintMaker *make) {
             make.top.equalTo(self.shadowImage).offset(20);
             make.left.right.mas_equalTo(self.contentView);
-            make.bottom.mas_equalTo(self.shadowImage).offset(-30);
+            make.bottom.mas_equalTo(self.shadowImage).offset(-2);
             make.height.mas_equalTo(0);
         }];
         
@@ -105,8 +105,8 @@
     [self.shadowImage mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.equalTo(self.contentView);
         make.right.equalTo(self.contentView);
-        make.top.equalTo(self.contentView).offset(-14);
-        make.bottom.equalTo(self.contentView).offset(14);
+        make.top.equalTo(self.contentView).offset(-20);
+        make.bottom.equalTo(self.contentView).offset(20);
     }];
 }
 
@@ -143,7 +143,7 @@
     //初始化poi信息列表
     [self setUpLocationListTableView];
    
-    CGFloat headerTop = (dataModel.houseType.integerValue == FHHouseTypeNeighborhood) ? 20 : dataModel.topMargin;
+    CGFloat headerTop = (dataModel.houseType.integerValue == FHHouseTypeNeighborhood) ? 6 : dataModel.topMargin;
     CGFloat headerHeight = (dataModel.houseType.integerValue == FHHouseTypeSecondHandHouse || dataModel.houseType.integerValue == FHHouseTypeNeighborhood) ? 38 : 0;
     
     self.headerView.frame = CGRectMake(15, headerTop, self.cellWidth, headerHeight);

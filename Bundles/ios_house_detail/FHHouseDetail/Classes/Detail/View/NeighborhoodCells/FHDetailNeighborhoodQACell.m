@@ -429,7 +429,6 @@
 
 - (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section {
     FHDetailQACellModel *cellModel = (FHDetailQACellModel *)self.currentData;
-    return 65;
     return cellModel.footerViewHeight;
 }
 
