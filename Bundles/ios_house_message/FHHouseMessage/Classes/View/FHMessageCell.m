@@ -253,15 +253,16 @@
         [self.backView mas_updateConstraints:^(MASConstraintMaker *make) {
             make.left.mas_equalTo(15 + self.maxOffset);
         }];
+        self.state = SliderMenuOpen;
+        [FHMessageEditHelp shared].currentCell = self;
+        self.currentOffset = self.maxOffset;
     } else {
-        if (self.state == SliderMenuOpen) {
-            NSLog(@"11122 %@ %@", [FHMessageEditHelp shared].conversation.identifier, self.conv.identifier);
-        }
+        self.state = SliderMenuClose;
+        self.currentOffset = 0;
         [self.backView mas_updateConstraints:^(MASConstraintMaker *make) {
             make.left.mas_equalTo(15);
         }];
     }
-    
     if (conv.mute) {
         if (conv.unreadCount > 0) {
             self.unreadView.badgeNumber = TTBadgeNumberPoint;
@@ -583,10 +584,15 @@
     if (gestureRecognizer == _panGesture) {
         
         CGFloat panY = [_panGesture translationInView:gestureRecognizer.view].y;
-        if (ABS(panY) > 0) {
+        CGFloat panX = [_panGesture translationInView:gestureRecognizer.view].x;
+        if (ABS(panY) > ABS(panX) * 0.8) {
+//            if (self.stateIsClose) {
+//                self.stateIsClose(nil);
+//            }
             if ([FHMessageEditHelp shared].currentCell) {
                 [[FHMessageEditHelp shared].currentCell openMenu:false time:0.4 springX:0];
             }
+            
             return false;
         }
         if (CGRectGetWidth(self.backView.frame) - [self.panGesture locationInView:self.backView].x > 120) {
@@ -652,21 +658,8 @@
         if (!open) {
             [self.contentView layoutIfNeeded];
         }
-        //[self move:moveX + springX];
     } completion:^(BOOL finished) {
-//        if (self.cancelAnimationCompletion) {
-//            [self removeAnimations];
-//            self.cancelAnimationCompletion = NO;
-//            return;
-//        }
         if (finished) {
-            [FHMessageEditHelp shared].isCanReloadData = YES;
-            if (self.stateIsClose) {
-                self.stateIsClose(nil);
-            }
-//            if (_lastPanStateIsEnd && [[FHMessageEditHelp shared].currentCell isEqual:self] && !open) {
-//                [FHMessageEditHelp shared].isCanReloadData = YES;
-//            }
             if (springX != 0) {
                 [UIView animateWithDuration:0.3 delay:0 options:options animations:^{
                     [self move:moveX];
@@ -674,7 +667,6 @@
             }
             if (open) {
                 self.state = SliderMenuOpen;
-                NSLog(@"11122 %@", self.conv.identifier);
                 self.currentOffset = self.maxOffset;
                 if (self.openEditTrack) {
                     self.openEditTrack(nil);
@@ -682,12 +674,19 @@
             } else {
                 self.state = SliderMenuClose;
                 self.currentOffset = 0;
-                if (self.closeEditTrack) {
-                    //self.closeEditTrack(nil);
-                }
             }
         }
     }];
+}
+
+- (void)prepareForReuse
+{
+    [super prepareForReuse];
+    if (self.panGesture) {
+        [self.contentView removeGestureRecognizer:_panGesture];
+        self.panGesture.delegate = nil;
+        self.panGesture = nil;
+    }
 }
 
 - (void)removeAnimations {
@@ -706,7 +705,7 @@
     [self.contentView layoutIfNeeded];
 //    [self.backView layoutIfNeeded];
 //    [UIView commitAnimations];
-//    self.frame = CGRectMake(x, self.frame.origin.y, self.frame.size.width, self.frame.size.height);
+//    self.backView.frame = CGRectMake(x, self.frame.origin.y, self.frame.size.width, self.frame.size.height);
 }
 
 @end
