@@ -50,6 +50,7 @@
 #import "FHMapSearchNewHouseItemView.h"
 
 #define kTipDuration 3
+#define CHANNEL_ID_MAP_FIND_NEW_HOUSE  @"94349556026"
 
 extern NSString *const COORDINATE_ENCLOSURE;
 extern NSString *const NEIGHBORHOOD_IDS ;
@@ -1077,11 +1078,35 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
 
 - (void)hideAnaInfoView{
     if (self.bottomShowInfoView) {
+         [self changeNavbarAppear:YES];
+        if (self.lastShowMode == FHMapSearchShowModeDrawLine ) {
+            
+            self.showMode = self.lastShowMode;
+            //恢复筛选器
+            if (self.resetConditionBlock && self.filterParam) {
+                self.resetConditionBlock(self.filterParam);
+            }
+        }else{
+            self.showMode = FHMapSearchShowModeMap;
+            [self checkNeedRequest];
+        }
+//                [wself.viewController switchNavbarMode:FHMapSearchShowModeMap];
+        [self.mapView deselectAnnotation:self.currentSelectAnnotation animated:YES];
+        [self moveAnnotationToCenter:self.currentSelectHouseData animated:YES];
+        NSString *nid = self.currentSelectHouseData.nid;
+        if (nid.length > 0) {
+            self.selectedAnnotations[nid] = nid;
+        }
+        self.currentSelectAnnotation = nil;
+        self.currentSelectHouseData = nil;
+        [self.mapView becomeFirstResponder];
+        
         [UIView animateWithDuration:0.3 animations:^{
              [self.bottomShowInfoView setFrame:CGRectMake(0, self.viewController.view.frame.size.height, self.viewController.view.frame.size.width, self.bottomShowInfoView.frame.size.height)];
          } completion:^(BOOL finished) {
                    
          }];
+        
     }
 }
 
@@ -1816,7 +1841,7 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
     //move annotationview to center
     CLLocationCoordinate2D center = CLLocationCoordinate2DMake(model.centerLatitude.floatValue, model.centerLongitude.floatValue);
     CGPoint annotationViewPoint = [self.mapView convertCoordinate:center toPointToView:self.mapView];
-    CGPoint destCenterPoint = CGPointMake(self.mapView.width/2, self.mapView.height/4);
+    CGPoint destCenterPoint = CGPointMake(self.mapView.width/2, self.mapView.height/2);
     CGPoint currentCenterPoint = CGPointMake(self.mapView.width/2, self.mapView.height/2);
     CGPoint toMovePoint = CGPointMake(annotationViewPoint.x - destCenterPoint.x + currentCenterPoint.x, annotationViewPoint.y - destCenterPoint.y + currentCenterPoint.y);
     toMovePoint.y -= 18;//annotationview height/2
@@ -1828,7 +1853,7 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
     
     
     NSMutableDictionary *param = [NSMutableDictionary new];
-    NSString *  query = [NSString stringWithFormat:@"%@=%@&house_type=1",CHANNEL_ID,CHANNEL_ID_MAP_FIND_NEW];
+    NSString *  query = [NSString stringWithFormat:@"%@=%@&house_type=1",CHANNEL_ID,CHANNEL_ID_MAP_FIND_NEW_HOUSE];
 
 
     param[HOUSE_TYPE_KEY] = @(1);

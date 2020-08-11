@@ -10,7 +10,7 @@
 #import "FHHouseSearcher.h"
 #import "ToastManager.h"
 #import "UIViewController+HUD.h"
-
+//#import "FHHomeBaseTableView.h"
 #define kMapSearchCellNewHouseItemImageId @"FHHouseBaseNewHouseCell"
 
 @interface FHMapSearchNewHouseItemView ()<UITableViewDelegate,UITableViewDataSource>
@@ -34,6 +34,7 @@
         //        _tableView.decelerationRate = 0.1;
         _houseTable.showsVerticalScrollIndicator = NO;
         _houseTable.estimatedRowHeight = 0;
+        _houseTable.scrollEnabled = NO;
         [self addSubview:_houseTable];
                 
         if (@available(iOS 11.0 , *)) {
