@@ -1366,13 +1366,13 @@ TTEditUserProfileViewControllerDelegate
         [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:@"fschema://aboutUs"]];
     } else if (cellType == SettingCellTypeUserProtocol) {
         // 用户协议
-        NSString *urlStr = [[ArticleURLSetting userProtocolURLString] stringByAddingPercentEncodingWithAllowedCharacters:NSCharacterSet.URLQueryAllowedCharacterSet];
+        NSString *urlStr = [ArticleURLSetting userProtocolURLString];
         if (urlStr.length > 0) {
             [[TTRoute sharedRoute]openURLByPushViewController:[NSURL URLWithString:[NSString stringWithFormat:@"sslocal://webview?url=%@", urlStr]]];
         }
     } else if (cellType == SettingCellTypePrivacyProtocol) {
         // 隐私政策
-        NSString *urlStr = [[ArticleURLSetting userPrivateProtocolURLString] stringByAddingPercentEncodingWithAllowedCharacters:NSCharacterSet.URLQueryAllowedCharacterSet];
+        NSString *urlStr = [ArticleURLSetting userPrivateProtocolURLString];
         if (urlStr.length > 0) {
             [[TTRoute sharedRoute]openURLByPushViewController:[NSURL URLWithString:[NSString stringWithFormat:@"sslocal://webview?url=%@", urlStr]]];
         }

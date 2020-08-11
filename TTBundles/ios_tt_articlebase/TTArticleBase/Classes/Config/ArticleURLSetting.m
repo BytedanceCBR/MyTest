@@ -9,6 +9,7 @@
 #import "ArticleURLSetting.h"
 #import "SSCommonLogic.h"
 #import "FHURLSettings.h"
+#import "NSString+BTDAdditions.h"
 
 @implementation ArticleURLSetting
 
@@ -348,11 +349,17 @@
 
 + (NSString*)userProtocolURLString
 {
-    return [NSString stringWithFormat:@"%@/magic/page/ejs/5f1e75ec3d3f6802d7e9ed31?appType=manyhouse&title=幸福里用户协议", [self userProtocolBaseURUString]];
+    NSString *encodedUrl = [[NSString stringWithFormat:@"https://m.xflapp.com/magic/page/ejs/5f1e75ec3d3f6802d7e9ed31?appType=manyhouse"] btd_stringByURLEncode];
+    NSString *encodedTitle = [[NSString stringWithFormat:@"幸福里用户协议"] btd_stringByURLEncode];
+    NSString *urlStr = [NSString stringWithFormat:@"%@&title=%@", encodedUrl, encodedTitle];
+    return urlStr;
 }
 
 + (NSString*)userPrivateProtocolURLString {
-    return [NSString stringWithFormat:@"%@/magic/page/ejs/5f1e5048a0741302e84cea20?appType=manyhouse&title=隐私政策", [self userProtocolBaseURUString]];
+    NSString *encodedUrl = [[NSString stringWithFormat:@"https://m.xflapp.com/magic/page/ejs/5f1e5048a0741302e84cea20?appType=manyhouse"] btd_stringByURLEncode];
+    NSString *encodedTitle = [[NSString stringWithFormat:@"隐私政策"] btd_stringByURLEncode];
+    NSString *urlStr = [NSString stringWithFormat:@"%@&title=%@", encodedUrl, encodedTitle];
+    return urlStr;
 }
 
 
@@ -363,10 +370,6 @@
 
 + (NSString*)protectedProtocolURLString {
     return [NSString stringWithFormat:@"%@/f100/client/user_privacy&title=个人信息保护声明",[FHURLSettings baseURL]];
-}
-
-+ (NSString *)userProtocolBaseURUString {
-    return @"https://m.xflapp.com";
 }
 
 #pragma mark -- 删除
