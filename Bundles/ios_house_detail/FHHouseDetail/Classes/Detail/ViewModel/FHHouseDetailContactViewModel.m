@@ -907,7 +907,7 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
         dict[@"chat_title"] = title;
     } else {
         NSInteger count = [[IMManager shareInstance].chatService sdkConversationWithIdentifier:convId].participantsCount;
-        NSString *title = [NSString stringWithFormat:@"%@(%ld)", self.socialInfo.socialGroupInfo.socialGroupName, count];
+        NSString *title = [NSString stringWithFormat:@"%@(%ld)", self.socialInfo.socialGroupInfo.socialGroupName, (long)count];
         dict[@"chat_title"] = title;
         dict[@"in_conversation"] = @"1";
         dict[@"conversation_id"] = self.socialInfo.socialGroupInfo.chatStatus.conversationId;
