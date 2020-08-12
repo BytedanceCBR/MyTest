@@ -483,18 +483,29 @@
         NSIndexPath *indexPath = [NSIndexPath indexPathForRow:row inSection:0];
         [self.tableView scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionTop animated:YES];
     }
-    
+}
+
+- (void)videoPlayFinished:(FHFeedUGCCellModel *)cellModel cell:(FHUGCBaseCell *)cell {
+    NSInteger row = [self.dataList indexOfObject:cellModel];
+    if(row >= 0){
+        row += 1;
+        if(row < self.dataList.count){
+            NSIndexPath *indexPath = [NSIndexPath indexPathForRow:row inSection:0];
+            [self.tableView scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionTop animated:YES];
+            UITableViewCell *cell = [self.tableView cellForRowAtIndexPath:indexPath];
+            if([cell isKindOfClass:[FHUGCFullScreenVideoCell class]]){
+                FHUGCFullScreenVideoCell *vCell = (FHUGCFullScreenVideoCell *)cell;
+                [vCell play];
+            }
+        }
+    }
 }
 
 - (void)autoPlayCurrentVideo {
-    if(self.viewController.currentVideo){
-        [self.dataList addObject:self.viewController.currentVideo];
-        [self.tableView reloadData];
-        FHUGCFullScreenVideoCell *videoCell = [self getFitableVideoCell];
-        if(videoCell){
-            self.currentVideoCell = videoCell;
-            [videoCell play];
-        }
+    FHUGCFullScreenVideoCell *videoCell = [self getFitableVideoCell];
+    if(videoCell){
+        self.currentVideoCell = videoCell;
+        [videoCell play];
     }
 }
 

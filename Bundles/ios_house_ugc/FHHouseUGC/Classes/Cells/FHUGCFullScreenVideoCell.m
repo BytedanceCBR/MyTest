@@ -212,6 +212,7 @@
         [FHUGCCellHelper setAsyncRichContent:self.contentLabel model:cellModel];
     }
     //处理视频
+    [self stop];
     self.videoItem = cellModel.videoItem;
     self.videoView.cellEntity = self.videoItem;
     WeakSelf;
@@ -222,7 +223,8 @@
             [self playVideoDidClicked];
         };
         _videoView.ttv_videoPlayFinishedBlock = ^{
-            
+            StrongSelf;
+            [self videoPlayFinished];
         };
     }else{
         _videoView.ttv_playVideoOverrideBlock = ^{
@@ -643,6 +645,21 @@
     }
 }
 
+- (void)stop {
+    UIView *view = [self cell_movieView];
+    if ([view isKindOfClass:[TTVPlayVideo class]]) {
+        TTVPlayVideo *movieView = (TTVPlayVideo *)view;
+        if (!movieView.player.context.isFullScreen &&
+            !movieView.player.context.isRotating) {
+            if (movieView.player.context.playbackState != TTVVideoPlaybackStateBreak || movieView.player.context.playbackState != TTVVideoPlaybackStateFinished) {
+                [movieView stop];
+            }
+            [movieView removeFromSuperview];
+            [self endDisplay];
+        }
+    }
+}
+
 - (void)playVideoDidClicked {
     if(self.delegate && [self.delegate respondsToSelector:@selector(didVideoClicked:cell:)]){
         [self.delegate didVideoClicked:self.cellModel cell:self];
@@ -650,9 +667,9 @@
 }
 
 - (void)videoPlayFinished {
-//    if(self.delegate && [self.delegate respondsToSelector:@selector(didVideoClicked:cell:)]){
-//        [self.delegate didVideoClicked:self.cellModel cell:self];
-//    }
+    if(self.delegate && [self.delegate respondsToSelector:@selector(videoPlayFinished:cell:)]){
+        [self.delegate videoPlayFinished:self.cellModel cell:self];
+    }
 }
 
 @end

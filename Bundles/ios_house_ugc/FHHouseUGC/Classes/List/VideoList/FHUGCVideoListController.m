@@ -174,6 +174,12 @@
     FHUGCVideoListViewModel *viewModel = [[FHUGCVideoListViewModel alloc] initWithTableView:_tableView controller:self];;
     viewModel.categoryId = self.category;
     self.viewModel = viewModel;
+    
+    if(self.currentVideo){
+        [self.viewModel.dataList addObject:self.currentVideo];
+        [self.tableView reloadData];
+    }
+        
     [self startLoadData];
 }
 
