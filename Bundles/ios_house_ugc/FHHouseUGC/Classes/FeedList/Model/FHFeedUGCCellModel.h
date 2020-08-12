@@ -251,6 +251,8 @@ typedef NS_ENUM(NSUInteger, FHFeedUGCDiggType) {
 @property (nonatomic, copy , nullable) NSString *fromGid;
 //转评来源类型
 @property (nonatomic, copy , nullable) NSString *fromGroupSource;
+//是否跳转视频详情页，默认是进入轮播页
+@property (nonatomic, assign) BOOL isVideoJumpDetail;
 
 + (FHFeedContentModel *)contentModelFromFeedContent:(NSString *)content;
 

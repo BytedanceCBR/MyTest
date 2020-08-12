@@ -13,7 +13,6 @@
 #import "FHUGCCellHelper.h"
 #import "TTRoute.h"
 #import "TTBusinessManager+StringUtils.h"
-#import "FHUGCVideoView.h"
 #import "TTVFeedPlayMovie.h"
 #import "TTVCellPlayMovieProtocol.h"
 #import "TTVPlayVideo.h"
@@ -49,7 +48,6 @@
 @property(nonatomic ,strong) FHUGCToolView *bottomView;
 @property(nonatomic ,strong) FHFeedUGCCellModel *cellModel;
 @property(nonatomic ,assign) CGFloat videoViewheight;
-@property(nonatomic ,strong) FHUGCVideoView *videoView;
 @property(nonatomic ,strong) TTVFeedCellMoreActionManager *moreActionMananger;
 
 @end
@@ -216,6 +214,24 @@
     //处理视频
     self.videoItem = cellModel.videoItem;
     self.videoView.cellEntity = self.videoItem;
+    WeakSelf;
+    if(cellModel.isVideoJumpDetail){
+        _videoView.ttv_playVideoOverrideBlock = nil;
+        _videoView.ttv_playButtonClickedBlock = ^{
+            StrongSelf;
+            [self playVideoDidClicked];
+        };
+        _videoView.ttv_videoPlayFinishedBlock = ^{
+            
+        };
+    }else{
+        _videoView.ttv_playVideoOverrideBlock = ^{
+            StrongSelf;
+            [self goToVideoDetail];
+        };
+        _videoView.ttv_playButtonClickedBlock = nil;
+        _videoView.ttv_videoPlayFinishedBlock = nil;
+    }
     //设置底部
     [self.bottomView refreshWithdata:self.cellModel];
     
@@ -279,13 +295,21 @@
 }
 
 - (void)goToVideoDetail {
-    TTVFeedCellSelectContext *context = [[TTVFeedCellSelectContext alloc] init];
-    context.refer = 1;
-    context.categoryId = self.cellModel.categoryId;
-    context.clickComment = NO;
-    context.enterType = @"feed_content_blank";
-    context.enterFrom = self.cellModel.tracerDic[@"page_type"] ?: @"be_null";
-    [self didSelectCell:context];
+    if(self.cellModel.isVideoJumpDetail){
+        TTVFeedCellSelectContext *context = [[TTVFeedCellSelectContext alloc] init];
+        context.refer = 1;
+        context.categoryId = self.cellModel.categoryId;
+        context.clickComment = NO;
+        context.enterType = @"feed_content_blank";
+        context.enterFrom = self.cellModel.tracerDic[@"page_type"] ?: @"be_null";
+        [self didSelectCell:context];
+    }else{
+        NSMutableDictionary *dict = [NSMutableDictionary dictionary];
+        dict[@"currentVideo"] = self.cellModel;
+        TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
+        NSURL *openUrl = [NSURL URLWithString:@"sslocal://ugc_video_list"];
+        [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:userInfo];
+    }
 }
 
 - (void)didSelectCell:(TTVFeedCellSelectContext *)context {
@@ -600,6 +624,35 @@
         NSURL *openUrl = [NSURL URLWithString:self.cellModel.user.schema];
         [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:userInfo];
     }
+}
+
+- (void)play {
+    UIView *view = [self cell_movieView];
+    if(view){
+        if ([view isKindOfClass:[TTVPlayVideo class]]) {
+            TTVPlayVideo *movieView = (TTVPlayVideo *)view;
+            if (!movieView.player.context.isFullScreen &&
+                !movieView.player.context.isRotating) {
+                if (movieView.player.context.playbackState != TTVVideoPlaybackStatePlaying) {
+                    [movieView.player play];
+                }
+            }
+        }
+    }else{
+        [self.videoView playVideo];
+    }
+}
+
+- (void)playVideoDidClicked {
+    if(self.delegate && [self.delegate respondsToSelector:@selector(didVideoClicked:cell:)]){
+        [self.delegate didVideoClicked:self.cellModel cell:self];
+    }
+}
+
+- (void)videoPlayFinished {
+//    if(self.delegate && [self.delegate respondsToSelector:@selector(didVideoClicked:cell:)]){
+//        [self.delegate didVideoClicked:self.cellModel cell:self];
+//    }
 }
 
 @end

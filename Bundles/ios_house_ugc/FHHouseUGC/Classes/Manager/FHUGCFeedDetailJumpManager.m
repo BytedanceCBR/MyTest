@@ -109,20 +109,30 @@
 
 //视频详情页
 - (void)jumpToVideoDetail:(FHFeedUGCCellModel *)cellModel showComment:(BOOL)showComment enterType:(NSString *)enterType extraDic:(NSDictionary *)extraDic {
-    if(self.currentCell && [self.currentCell isKindOfClass:[FHUGCVideoCell class]]){
-        FHUGCVideoCell *cell = (FHUGCVideoCell *)self.currentCell;
-        
-        TTVFeedCellSelectContext *context = [[TTVFeedCellSelectContext alloc] init];
-        context.refer = self.refer;
-        context.categoryId = cellModel.categoryId;
-        context.clickComment = showComment;
-        context.enterType = enterType;
-        context.enterFrom = cellModel.tracerDic[@"page_type"] ?: @"be_null"; 
-        
-        [cell didSelectCell:context];
-    }else if (cellModel.openUrl) {
-        NSURL *openUrl = [NSURL URLWithString:cellModel.openUrl];
-        [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:nil];
+    if(cellModel.isVideoJumpDetail){
+        //跳转到视频详情页
+        if(self.currentCell && [self.currentCell isKindOfClass:[FHUGCVideoCell class]]){
+            FHUGCVideoCell *cell = (FHUGCVideoCell *)self.currentCell;
+            
+            TTVFeedCellSelectContext *context = [[TTVFeedCellSelectContext alloc] init];
+            context.refer = self.refer;
+            context.categoryId = cellModel.categoryId;
+            context.clickComment = showComment;
+            context.enterType = enterType;
+            context.enterFrom = cellModel.tracerDic[@"page_type"] ?: @"be_null";
+            
+            [cell didSelectCell:context];
+        }else if (cellModel.openUrl) {
+            NSURL *openUrl = [NSURL URLWithString:cellModel.openUrl];
+            [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:nil];
+        }
+    }else{
+        //跳转到轮播页
+        NSMutableDictionary *dict = [NSMutableDictionary dictionary];
+        dict[@"currentVideo"] = cellModel;
+        TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
+        NSURL *openUrl = [NSURL URLWithString:@"sslocal://ugc_video_list"];
+        [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:userInfo];
     }
 }
 
