@@ -246,7 +246,7 @@
     //放到最下面
     [self.viewController.view insertSubview:self.pagingView atIndex:0];
     [self.pagingView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.right.left.bottom.equalTo(self.viewController.view);
+        make.top.right.left.equalTo(self.viewController.view);
         if (@available(iOS 11.0, *)) {
             make.bottom.mas_equalTo(self.viewController.view.mas_bottom).mas_offset(-[UIApplication sharedApplication].delegate.window.safeAreaInsets.bottom -64);
         }else {
