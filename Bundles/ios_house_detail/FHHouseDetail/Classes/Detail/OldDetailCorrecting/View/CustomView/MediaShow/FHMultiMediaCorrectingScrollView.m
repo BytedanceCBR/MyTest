@@ -103,7 +103,7 @@
 
     // 底部右侧序号信息标签
     _infoLabel = [[UILabel alloc] init];
-    _infoLabel.backgroundColor = [UIColor colorWithWhite:0 alpha:0.8];
+    _infoLabel.backgroundColor = [UIColor colorWithWhite:0 alpha:0.4];
     _infoLabel.textAlignment = NSTextAlignmentCenter;
     _infoLabel.font = [UIFont themeFontRegular:12];
     _infoLabel.textColor = [UIColor whiteColor];
@@ -113,7 +113,7 @@
     [self addSubview:_infoLabel];
     
     _totalPagesLabel = [[UILabel alloc] init];
-    _totalPagesLabel.backgroundColor = [UIColor colorWithWhite:0 alpha:0.8];
+    _totalPagesLabel.backgroundColor = [UIColor colorWithWhite:0 alpha:0.4];
     _totalPagesLabel.textAlignment = NSTextAlignmentCenter;
     _totalPagesLabel.font = [UIFont themeFontRegular:12];
     _totalPagesLabel.textColor = [UIColor whiteColor];
