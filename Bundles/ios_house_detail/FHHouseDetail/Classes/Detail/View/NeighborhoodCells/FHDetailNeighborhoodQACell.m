@@ -184,6 +184,14 @@
             make.bottom.equalTo(self.contentView);
         }];
     }
+    if(cellModel.shadowImageType == 0 || cellModel.shadowImageType == 1){
+        [_containerView mas_remakeConstraints:^(MASConstraintMaker *make) {
+            make.top.mas_equalTo(self.shadowImage).offset(14);
+            make.left.right.mas_equalTo(self.contentView);
+            make.bottom.mas_equalTo(self.shadowImage).offset(-14);
+        }];
+    }
+    
     _titleLabel.text = cellModel.title;
     [_questionBtn setTitle:cellModel.askTitle forState:UIControlStateNormal];
     

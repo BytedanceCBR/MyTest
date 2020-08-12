@@ -47,7 +47,7 @@
     if (count > 0) {
         NSMutableArray *singles = [NSMutableArray new];
         __block NSInteger doubleCount = 0;// 两列计数
-        __block CGFloat topOffset = model.shdowImageScopeType == FHHouseShdowImageScopeTypeTopAll?18:6;// 高度
+        __block CGFloat topOffset = model.shdowImageScopeType == FHHouseShdowImageScopeTypeTopAll?18:2;// 高度
         __block CGFloat listRowHeight = 28;// 30  原来间距是10 现在调整为8,文字距离item的顶部10,文字高20
         __block CGFloat lastViewLeftOffset = 20;
         __block CGFloat lastTopOffset = 20;

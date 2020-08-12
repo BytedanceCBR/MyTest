@@ -105,8 +105,8 @@
     [self.shadowImage mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.equalTo(self.contentView);
         make.right.equalTo(self.contentView);
-        make.top.equalTo(self.contentView).offset(-20);
-        make.bottom.equalTo(self.contentView).offset(20);
+        make.top.equalTo(self.contentView).offset(-14);
+        make.bottom.equalTo(self.contentView).offset(14);
     }];
 }
 
