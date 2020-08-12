@@ -1632,6 +1632,7 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
 {
     NSMutableDictionary *params = @{}.mutableCopy;
     params[@"enter_from"] = self.tracerDict[@"enter_from"] ? : @"be_null";
+    params[@"origin_from"] = self.tracerDict[@"origin_from"] ?: @"be_null";
     params[@"element_from"] = self.tracerDict[@"element_from"] ?: @"be_null";
     params[@"page_type"] = [self pageTypeString];
     [FHUserTracker writeEvent:@"go_detail" params:params];
