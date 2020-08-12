@@ -28,7 +28,7 @@
 
 @property(nonatomic, strong) UICollectionView *colletionView;
 @property(nonatomic, strong) UILabel *infoLabel;
-@property (nonatomic, strong) UIView *listMoreView;
+@property(nonatomic, strong) UILabel *totalPagesLabel;
 @property(nonatomic, strong) UIImageView *noDataImageView;
 @property(nonatomic, strong) UIImage *placeHolder;
 @property(nonatomic, strong) NSArray *medias;
@@ -103,14 +103,23 @@
 
     // 底部右侧序号信息标签
     _infoLabel = [[UILabel alloc] init];
-    _infoLabel.backgroundColor = [UIColor colorWithWhite:0 alpha:0.4];
+    _infoLabel.backgroundColor = [UIColor colorWithWhite:0 alpha:0.8];
     _infoLabel.textAlignment = NSTextAlignmentCenter;
-    _infoLabel.font = [UIFont themeFontRegular:14];
+    _infoLabel.font = [UIFont themeFontRegular:12];
     _infoLabel.textColor = [UIColor whiteColor];
-    _infoLabel.layer.cornerRadius = 10;
+    _infoLabel.layer.cornerRadius = 11;
     _infoLabel.layer.masksToBounds = YES;
     
     [self addSubview:_infoLabel];
+    
+    _totalPagesLabel = [[UILabel alloc] init];
+    _totalPagesLabel.backgroundColor = [UIColor colorWithWhite:0 alpha:0.8];
+    _totalPagesLabel.textAlignment = NSTextAlignmentCenter;
+    _totalPagesLabel.font = [UIFont themeFontRegular:12];
+    _totalPagesLabel.textColor = [UIColor whiteColor];
+    _totalPagesLabel.layer.cornerRadius = 11;
+    _totalPagesLabel.layer.masksToBounds = YES;
+    [self addSubview:_totalPagesLabel];
 }
 
 //- (void)initVideoVC {
@@ -205,9 +214,16 @@
     [self layoutIfNeeded];
     
     self.infoLabel.width = 44;
-    self.infoLabel.height = 20;
-    self.infoLabel.left = self.width - self.infoLabel.width - 16;
+    self.infoLabel.height = 22;
+    self.infoLabel.left = self.width - self.infoLabel.width - 15;
     self.infoLabel.bottom = self.titleView.top + 5;
+    
+    self.totalPagesLabel.width = 54;
+    self.totalPagesLabel.height = 22;
+    self.totalPagesLabel.left = self.width - self.totalPagesLabel.width - 15;
+    self.totalPagesLabel.bottom = self.titleView.top + 5;
+    
+    
 }
 
 - (void)selectItem:(NSInteger)index {
@@ -384,9 +400,6 @@
             self.headerMoreStateView.moreState = FHHouseDetailHeaderMoreStateBegin;
         }
     }
-    if (scrollView == self.colletionView) {
-        self.listMoreView.frame = CGRectMake(CGRectGetWidth(self.frame) - 74 - 15 - scrollView.contentOffset.x, CGRectGetMaxY(self.colletionView.frame) - 36 - 65, 74, 65);
-    }
 }
 
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
@@ -445,12 +458,13 @@
     CGSize itemSize = [self.infoLabel sizeThatFits:CGSizeMake(CGFLOAT_MAX, 20)];
     CGFloat width = itemSize.width;
     width += 14.0;
-    if (width < 44) {
-        width = 44;
+    if (width < 43) {
+        width = 43;
     }
-    
+
     self.infoLabel.width = width;
-    self.infoLabel.left = self.width - self.infoLabel.width - 16;
+    self.infoLabel.height = 22;
+    self.infoLabel.left = self.width - self.infoLabel.width - 15;
 }
 
 - (void)updateVideoState {
@@ -510,8 +524,10 @@
     self.titleView.model = titleModel;
     //如果新房详情 并且 isShowTopImageTab = true 取第一张图
     self.colletionView.alwaysBounceHorizontal = NO;
+    self.totalPagesLabel.hidden = YES;
     if (titleModel.housetype == FHHouseTypeNewHouse && self.isShowTopImageTab) {
         self.infoLabel.hidden = YES;
+        
         self.colletionView.alwaysBounceHorizontal = YES;
         if (model.medias.count) {
             NSMutableArray *mArr = [NSMutableArray arrayWithCapacity:5];
@@ -519,10 +535,10 @@
                 [mArr addObject:model.medias[i]];
             }
             self.medias = mArr.copy;
-            [self setInfoLabelText:[NSString stringWithFormat:@"%d/%lu",1,(unsigned long)_medias.count]];
-            self.infoLabel.hidden = YES;
             self.colletionView.hidden = NO;
             self.noDataImageView.hidden = YES;
+            self.totalPagesLabel.hidden = NO;
+            self.totalPagesLabel.text = [NSString stringWithFormat:@"共%lu张",model.medias.count];
         }
         if (!self.headerMoreStateView) {
             self.headerMoreStateView = [[FHHouseDetailHeaderMoreStateView alloc] init];
@@ -530,38 +546,6 @@
             [self.colletionView addSubview:self.headerMoreStateView];
             self.headerMoreStateView.frame = CGRectMake(CGRectGetMaxX(self.colletionView.frame) * self.medias.count, 0, 52, CGRectGetHeight(self.colletionView.frame));
         }
-        if (!self.listMoreView) {
-            self.listMoreView = [[UIView alloc] init];
-            self.listMoreView.frame = CGRectMake(CGRectGetWidth(self.frame) - 74 - 15, CGRectGetMaxY(self.colletionView.frame) - 36 - 65, 74, 65);
-            self.listMoreView.backgroundColor = [UIColor colorWithWhite:1.0 alpha:0.75];
-            self.listMoreView.layer.masksToBounds = YES;
-            self.listMoreView.layer.cornerRadius = 10;
-            [self addSubview:self.listMoreView];
-            
-            UILabel *countLabel = [[UILabel alloc] init];
-            countLabel.font = [UIFont themeFontMedium:16];
-            countLabel.textColor = [UIColor colorWithHexStr:@"#4a4a4a"];
-            countLabel.textAlignment = NSTextAlignmentCenter;
-            countLabel.text = [NSString stringWithFormat:@"+%lu",(unsigned long)model.medias.count];
-            [self.listMoreView addSubview:countLabel];
-            [countLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-                make.centerX.mas_equalTo(self.listMoreView);
-                make.top.mas_equalTo(12);
-            }];
-            
-            UILabel *moreLabel = [[UILabel alloc] init];
-            moreLabel.font = [UIFont themeFontRegular:12];
-            moreLabel.textColor = [UIColor colorWithHexStr:@"#4a4a4a"];
-            moreLabel.textAlignment = NSTextAlignmentCenter;
-            moreLabel.text = @"查看更多";
-            [self.listMoreView addSubview:moreLabel];
-            [moreLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-                make.centerX.mas_equalTo(self.listMoreView);
-                make.bottom.mas_equalTo(-12);
-            }];
-            [self.listMoreView addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleListMoreGesture:)]];
-        }
-        
         [self.colletionView reloadData];
     } else if (_medias.count > 0) {
         [self.colletionView reloadData];
