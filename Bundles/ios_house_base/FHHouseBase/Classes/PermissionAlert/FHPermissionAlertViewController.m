@@ -157,7 +157,7 @@
     [_confirmButton setTitleColor:[UIColor themeWhite] forState:UIControlStateNormal];
     
     [_confirmButton addTarget:self action:@selector(confirmAction:) forControlEvents:UIControlEventTouchUpInside];
-    [_confirmButton setTitle:@"我知道了" forState:UIControlStateNormal];
+    [_confirmButton setTitle:@"好的" forState:UIControlStateNormal];
     
     CGSize fitSize = [_contentLabel sizeThatFits:CGSizeMake(_contentLabel.preferredMaxLayoutWidth, CGFLOAT_MAX)];
     
