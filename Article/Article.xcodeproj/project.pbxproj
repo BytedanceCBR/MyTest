@@ -10,10 +10,6 @@
 		170182F724597A3F00334E1B /* buryingPointCheck.json in Resources */ = {isa = PBXBuildFile; fileRef = 170182F624597A3F00334E1B /* buryingPointCheck.json */; };
 		170182F824597A3F00334E1B /* buryingPointCheck.json in Resources */ = {isa = PBXBuildFile; fileRef = 170182F624597A3F00334E1B /* buryingPointCheck.json */; };
 		29B1D3A71213F9700B98F6D1 /* libPods-serviceNofExtension.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 612E41E919BED173B8EA7DC1 /* libPods-serviceNofExtension.a */; };
-		2B1A0B4E24C053C9009D40FF /* F100BaiduMapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2B1A0B4B24C053C2009D40FF /* F100BaiduMapKit.framework */; };
-		2B1A0B4F24C053C9009D40FF /* F100BaiduMapKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 2B1A0B4B24C053C2009D40FF /* F100BaiduMapKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		2B832F3524C53D60008FD142 /* F100BaiduMapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2B1A0B4B24C053C2009D40FF /* F100BaiduMapKit.framework */; };
-		2B832F3624C53D60008FD142 /* F100BaiduMapKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 2B1A0B4B24C053C2009D40FF /* F100BaiduMapKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		3D2F39962270545700AE567D /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 3D2F398A2270545700AE567D /* InfoPlist.strings */; };
 		3D2F39982270545700AE567D /* TargetLogicSetting.strings in Resources */ = {isa = PBXBuildFile; fileRef = 3D2F398E2270545700AE567D /* TargetLogicSetting.strings */; };
 		3D2F399A2270545700AE567D /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D2F39912270545700AE567D /* main.m */; };
@@ -231,28 +227,6 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
-		2B1A0A7624C04B61009D40FF /* Embed Frameworks */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "";
-			dstSubfolderSpec = 10;
-			files = (
-				2B1A0B4F24C053C9009D40FF /* F100BaiduMapKit.framework in Embed Frameworks */,
-			);
-			name = "Embed Frameworks";
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		2B832F3724C53D60008FD142 /* Embed Frameworks */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "";
-			dstSubfolderSpec = 10;
-			files = (
-				2B832F3624C53D60008FD142 /* F100BaiduMapKit.framework in Embed Frameworks */,
-			);
-			name = "Embed Frameworks";
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		B373CF062174587A008F9905 /* Embed App Extensions */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
@@ -487,7 +461,6 @@
 				B373CEEB2174587A008F9905 /* StoreKit.framework in Frameworks */,
 				B373CEEC2174587A008F9905 /* AVFoundation.framework in Frameworks */,
 				B373CEED2174587A008F9905 /* libz.dylib in Frameworks */,
-				2B1A0B4E24C053C9009D40FF /* F100BaiduMapKit.framework in Frameworks */,
 				B373CEEE2174587A008F9905 /* AdSupport.framework in Frameworks */,
 				B373CEEF2174587A008F9905 /* MapKit.framework in Frameworks */,
 				B373CEF02174587A008F9905 /* CoreLocation.framework in Frameworks */,
@@ -542,7 +515,6 @@
 				FEFA5A46205FB1A8001F50D8 /* libz.1.2.5.dylib in Frameworks */,
 				FEFA5A49205FB1A8001F50D8 /* libsqlite3.0.dylib in Frameworks */,
 				FEFA5A4A205FB1A8001F50D8 /* SystemConfiguration.framework in Frameworks */,
-				2B832F3524C53D60008FD142 /* F100BaiduMapKit.framework in Frameworks */,
 				FEFA5A4B205FB1A8001F50D8 /* MobileCoreServices.framework in Frameworks */,
 				FEFA5A4C205FB1A8001F50D8 /* UIKit.framework in Frameworks */,
 				FEFA5A4D205FB1A8001F50D8 /* Foundation.framework in Frameworks */,
@@ -713,7 +685,6 @@
 				A738A03B22C735B6C2C813A8 /* Pods-serviceNofExtension.debug.xcconfig */,
 				0218D593249841E604E71B3E /* Pods-serviceNofExtension.release.xcconfig */,
 			);
-			name = Pods;
 			path = Pods;
 			sourceTree = "<group>";
 		};
@@ -909,7 +880,6 @@
 				B373CF082174587A008F9905 /* Run Script - Fix Copy Pods Resources Script  */,
 				B373CF092174587A008F9905 /* Embed Watch Content */,
 				3D396439219ACED0002E9010 /* ShellScript */,
-				2B1A0A7624C04B61009D40FF /* Embed Frameworks */,
 				2B53A10F24C59A2C00923B3C /* ShellScript */,
 				866B7013F8F6ECC2C7C7DB0E /* [CP] Embed Pods Frameworks */,
 				271151D8AC5B4D0C1CA77734 /* [CP] Copy Pods Resources */,
@@ -939,7 +909,6 @@
 				FEFA5A56205FB1A8001F50D8 /* Run Script - Fix Copy Pods Resources Script  */,
 				FEFA5A57205FB1A8001F50D8 /* Embed Watch Content */,
 				3D39643A219ACF07002E9010 /* ShellScript */,
-				2B832F3724C53D60008FD142 /* Embed Frameworks */,
 				2B53A14024C59E9D00923B3C /* ShellScript */,
 				637196DBC1F133F305852D10 /* [CP] Embed Pods Frameworks */,
 				1A2CDFDB01D04B6111B05D56 /* [CP] Copy Pods Resources */,

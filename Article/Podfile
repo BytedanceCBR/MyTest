@@ -715,7 +715,7 @@ post_install do |installer|
           '${PODS_ROOT}/BDUGUnionSDK/BDUGUnionSDK/Classes',
           '${PODS_ROOT}/TTNetBusiness/ios',
           '${PODS_ROOT}/TencentQQSDK/TencentQQSDK/Classes',
-
+          '${PODS_ROOT}/FHMapSearch/Classes/BaiduMapKit',
           '${PODS_ROOT}/Quaterback/BDDynamically/Frameworks/News/Release',
           ]
         end
