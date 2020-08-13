@@ -80,7 +80,7 @@
     [self.monthUpTrend mas_makeConstraints:^(MASConstraintMaker *make) {
         make.right.equalTo(self.containerView).offset(-16);
         make.centerY.equalTo(self.priceLabel);
-        make.size.mas_equalTo(CGSizeMake(18, 18));
+        make.size.mas_equalTo(CGSizeMake(20, 20));
     }];
     [self.per mas_makeConstraints:^(MASConstraintMaker *make) {
         make.right.equalTo(self.monthUpTrend.mas_left).offset(-2);
