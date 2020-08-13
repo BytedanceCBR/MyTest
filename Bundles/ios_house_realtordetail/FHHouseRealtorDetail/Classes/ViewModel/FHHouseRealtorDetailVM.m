@@ -161,8 +161,8 @@
             [dic setObject:lynxReortParams forKey:@"encoded_report_params"];
         }
         [self.viewController.headerView reloadDataWithDic:dic];
-        if ([dicm.allKeys containsObject:@"isHightScore"]) {
-            BOOL isHightScore = dicm[@"isHightScore"];
+        if ([model.data.realtor.allKeys containsObject:@"is_preferred_realtor"]) {
+            BOOL isHightScore = model.data.realtor[@"is_preferred_realtor"];
             if (isHightScore) {
                 self.isHeightScoreRealtor = isHightScore;
                 [self.viewController.headerView updateRealtorWithHeightScore];
@@ -335,6 +335,7 @@
     params[@"group_id"] = self.tracerDict[@"group_id"] ?: @"be_null";
     params[@"element_from"] = self.tracerDict[@"element_from"] ?: @"be_null";
     params[@"realtor_id"] = self.realtorInfo[@"realtor_id"] ?: @"be_null";
+    params[@"event_tracking_id"] = @"93412";
     [FHUserTracker writeEvent:@"go_detail" params:params];
 }
 
