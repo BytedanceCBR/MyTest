@@ -50,11 +50,13 @@
 
 -(void)showNewHouse:(NSString *)query param:(NSDictionary *)param
 {
+    self.houseTable.hidden = YES;
     [self requsetSecondHouse:query param:param isHead:0];
 }
 
 - (void)processData:(FHSearchHouseModel *)houseModel{
     _itemModel = houseModel.data.items.firstObject;
+    self.houseTable.hidden = NO;
     [self.houseTable reloadData];
 }
 

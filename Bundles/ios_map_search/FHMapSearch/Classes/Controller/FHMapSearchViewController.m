@@ -89,6 +89,8 @@
             NSString *typeListStr = [self.configModel.houseTypeList substringWithRange:NSMakeRange(1, self.configModel.houseTypeList.length - 2)];
             NSArray *typeArray = [typeListStr componentsSeparatedByString:@","];
             self.configModel.houseTypeArray = typeArray;
+        }else{
+            self.configModel.houseTypeArray = @[@"2"];
         }
         
         self.configModel.mapOpenUrl = [paramObj.sourceURL absoluteString];
