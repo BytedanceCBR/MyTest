@@ -257,7 +257,7 @@
     
     [self.priceView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.equalTo(self.contentView).offset(31);
-        make.top.equalTo(self.headerView.mas_bottom).offset(15);
+        make.top.equalTo(self.headerView.mas_bottom).offset(6);
         make.right.equalTo(self.contentView).offset(-31);
         make.height.mas_equalTo(84);
     }];
