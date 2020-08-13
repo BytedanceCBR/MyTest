@@ -143,7 +143,7 @@
     //初始化poi信息列表
     [self setUpLocationListTableView];
    
-    CGFloat headerTop = (dataModel.houseType.integerValue == FHHouseTypeNeighborhood) ? 6 : dataModel.topMargin;
+    CGFloat headerTop = (dataModel.houseType.integerValue == FHHouseTypeNeighborhood) ? 16 : dataModel.topMargin;
     CGFloat headerHeight = (dataModel.houseType.integerValue == FHHouseTypeSecondHandHouse || dataModel.houseType.integerValue == FHHouseTypeNeighborhood) ? 38 : 0;
     
     self.headerView.frame = CGRectMake(15, headerTop, self.cellWidth, headerHeight);

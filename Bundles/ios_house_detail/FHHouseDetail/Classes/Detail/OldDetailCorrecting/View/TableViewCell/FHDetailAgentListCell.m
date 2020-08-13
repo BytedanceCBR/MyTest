@@ -169,7 +169,7 @@
          _foldButton.keyLabel.font = [UIFont themeFontRegular:14];
         [self.contentView addSubview:_foldButton];
         [_foldButton mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.top.mas_equalTo(self.containerView.mas_bottom).offset(-13);
+            make.top.mas_equalTo(self.containerView.mas_bottom).offset(-11);
             make.height.mas_equalTo(58-6);
             make.left.right.mas_equalTo(self.contentView);
         }];
