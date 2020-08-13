@@ -20,7 +20,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)pauseCurrentVideo;
 
-- (void)willFinishLoadTable;
+- (void)readyCurrentVideo;
 
 @property(nonatomic, weak) FHUGCVideoListController *viewController;
 

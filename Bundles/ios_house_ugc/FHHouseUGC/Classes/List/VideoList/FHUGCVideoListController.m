@@ -8,25 +8,17 @@
 #import "FHUGCVideoListController.h"
 #import "UIColor+Theme.h"
 #import "FHUGCVideoListViewModel.h"
-#import "TTReachability.h"
 #import "UIViewAdditions.h"
 #import "TTDeviceHelper.h"
 #import "TTRoute.h"
 #import "FHEnvContext.h"
 #import "FHUserTracker.h"
-#import "UIScrollView+Refresh.h"
-#import "FHFeedOperationView.h"
 #import <FHHouseBase/FHBaseTableView.h>
-#import "FHUGCConfig.h"
 #import "ToastManager.h"
-#import "FHFeedCustomHeaderView.h"
-#import "UIScrollView+Refresh.h"
 
 @interface FHUGCVideoListController ()<SSImpressionProtocol>
 
 @property(nonatomic, strong) FHUGCVideoListViewModel *viewModel;
-@property(nonatomic, copy) void(^notifyCompletionBlock)(void);
-@property(nonatomic, assign) NSInteger currentCityId;
 @property(nonatomic, assign) NSTimeInterval enterTabTimestamp;
 @property(nonatomic, assign) BOOL noNeedAddEnterCategorylog;
 @property(nonatomic, assign) UIEdgeInsets originContentInset;
@@ -121,7 +113,7 @@
 - (void)initTableView {
     if(!_tableView){
         self.tableView = [[FHBaseTableView alloc] initWithFrame:CGRectMake(0, CGRectGetMaxY(self.customNavBarView.frame), [UIScreen mainScreen].bounds.size.width, [UIScreen mainScreen].bounds.size.height - CGRectGetMaxY(self.customNavBarView.frame)) style:UITableViewStylePlain];
-        _tableView.backgroundColor = [UIColor themeGray7];
+        _tableView.backgroundColor = [UIColor whiteColor];
         _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
         
         UIView *headerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 0, CGFLOAT_MIN)];
@@ -171,6 +163,7 @@
     if(self.currentVideo){
         [self.viewModel.dataList addObject:self.currentVideo];
         [self.tableView reloadData];
+        [self.viewModel readyCurrentVideo];
         self.tableView.mj_footer.hidden = NO;
         self.tableView.mj_footer.state = MJRefreshStateRefreshing;
     }

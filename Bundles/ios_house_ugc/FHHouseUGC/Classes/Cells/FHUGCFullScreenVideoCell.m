@@ -87,14 +87,14 @@
     _icon.contentMode = UIViewContentModeScaleAspectFill;
     _icon.borderWidth = 1;
     _icon.borderColor = [UIColor themeGray6];
-    [self addSubview:_icon];
+    [self.contentView addSubview:_icon];
     
     _icon.userInteractionEnabled = YES;
     UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(goToPersonalHomePage)];
     [_icon addGestureRecognizer:tap];
     
     self.userName = [self LabelWithFont:[UIFont themeFontRegular:12] textColor:[UIColor themeGray1]];
-    [self addSubview:_userName];
+    [self.contentView addSubview:_userName];
     
     _userName.userInteractionEnabled = YES;
     UITapGestureRecognizer *tap1 = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(goToPersonalHomePage)];
