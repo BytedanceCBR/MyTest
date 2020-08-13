@@ -169,23 +169,23 @@
          _foldButton.keyLabel.font = [UIFont themeFontRegular:14];
         [self.contentView addSubview:_foldButton];
         [_foldButton mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.top.mas_equalTo(self.containerView.mas_bottom).offset(-11);
-            make.height.mas_equalTo(58-6);
+            make.top.mas_equalTo(self.containerView.mas_bottom).offset(-6);
+            make.height.mas_equalTo(58);
             make.left.right.mas_equalTo(self.contentView);
         }];
         [self.containerView mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.bottom.mas_equalTo(self.shadowImage).offset(-58);
+            make.bottom.mas_equalTo(self.shadowImage).offset(-78);
         }];
         [self.foldButton addTarget:self action:@selector(foldButtonClick:) forControlEvents:UIControlEventTouchUpInside];
     } else {
         if(model.houseType == FHHouseTypeNewHouse){
             [self.containerView mas_updateConstraints:^(MASConstraintMaker *make) {
-                make.bottom.mas_equalTo(self.shadowImage).offset(-20-5 );
+                make.bottom.mas_equalTo(self.shadowImage).offset(-25);
             }];
         }
         else{
             [self.containerView mas_updateConstraints:^(MASConstraintMaker *make) {
-                make.bottom.mas_equalTo(self.shadowImage).offset(-20-20);
+                make.bottom.mas_equalTo(self.shadowImage).offset(-40);
             }];
         }
     }
@@ -202,7 +202,7 @@
             if (!error && image) {
                 identifyView.image = image;
                 CGFloat ratio = 0;
-                if (image.size. height > 0) {
+                if (image.size.height > 0) {
                     ratio = image.size.width / image.size.height;
                 }
                 [identifyView mas_updateConstraints:^(MASConstraintMaker *make) {

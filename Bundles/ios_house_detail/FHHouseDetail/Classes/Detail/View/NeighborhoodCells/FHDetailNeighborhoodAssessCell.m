@@ -118,7 +118,7 @@
     self.shadowImage.image = cellModel.shadowImage;
     
     [_titleLabel mas_updateConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.containerView).offset(20);
+        make.top.mas_equalTo(self.containerView).offset(cellModel.topMargin == 30?20:cellModel.topMargin);
     }];
     
     if (cellModel.bottomMargin) {
