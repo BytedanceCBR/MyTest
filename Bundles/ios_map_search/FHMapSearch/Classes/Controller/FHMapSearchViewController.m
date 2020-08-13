@@ -85,6 +85,12 @@
             param = paramObj.allParams;
         }
         self.configModel = [[FHMapSearchConfigModel alloc] initWithDictionary:param error:nil];
+        if([self.configModel.houseTypeList isKindOfClass:[NSString class]] && self.configModel.houseTypeList.length > 2){
+            NSString *typeListStr = [self.configModel.houseTypeList substringWithRange:NSMakeRange(1, self.configModel.houseTypeList.length - 2)];
+            NSArray *typeArray = [typeListStr componentsSeparatedByString:@","];
+            self.configModel.houseTypeArray = typeArray;
+        }
+        
         self.configModel.mapOpenUrl = [paramObj.sourceURL absoluteString];
         if (self.configModel.houseType < FHHouseTypeNewHouse) {
             NSString *host = paramObj.sourceURL.host;

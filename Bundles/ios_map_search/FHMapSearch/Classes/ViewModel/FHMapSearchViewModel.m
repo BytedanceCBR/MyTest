@@ -220,12 +220,31 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
 {
     _simpleNavBar = simpleNavBar;
     __weak typeof(self) weakSelf = self;
-    _simpleNavBar.indexHouseChangeBlock = ^(NSInteger index) {
-        if (weakSelf.currentHouseType == (index == 0 ? FHHouseTypeSecondHandHouse : FHHouseTypeNewHouse)) {
-            return ;
+    NSMutableArray *titlesArray = [NSMutableArray new];
+    [self.configModel.houseTypeArray enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        if ([obj integerValue] == 2) {
+            [titlesArray addObject:@"二手房"];
         }
-        weakSelf.currentHouseType = (index == 0 ? FHHouseTypeSecondHandHouse : FHHouseTypeNewHouse);
-        [weakSelf changeHouseType];
+        if ([obj integerValue] == 1) {
+            [titlesArray addObject:@"新房"];
+        }
+    }];
+    
+    
+    if (self.configModel.houseType) {
+        NSInteger indexV = [self.configModel.houseTypeArray indexOfObject:[NSString stringWithFormat:@"%ld",self.configModel.houseType]];
+        [simpleNavBar updateSegementedTitles:titlesArray andSelectIndex:indexV];
+    }
+    
+    _simpleNavBar.indexHouseChangeBlock = ^(NSInteger index) {
+        if (index < weakSelf.configModel.houseTypeArray.count) {
+            if (weakSelf.currentHouseType == [weakSelf.configModel.houseTypeArray[index] integerValue]) {
+                return ;
+            }
+            weakSelf.currentHouseType = [weakSelf.configModel.houseTypeArray[index] integerValue];
+            weakSelf.configModel.houseType = [weakSelf.configModel.houseTypeArray[index] integerValue];
+            [weakSelf changeHouseType];
+        }
     };
 }
 
@@ -654,12 +673,64 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
     return _houseListViewController;
 }
 
+- (void)clickAround{
+    if (self.currentHouseType == FHHouseTypeNewHouse) {
+        FHMapSearchDataListModel *model = self.currentSelectAnnotation.houseData;
+        if ([model isKindOfClass:[FHMapSearchDataListModel class]]) {
+            NSMutableDictionary *infoDict = [NSMutableDictionary new];
+            [infoDict setValue:@"交通" forKey:@"category"];
+            [infoDict setValue:model.latitude forKey:@"latitude"];
+            [infoDict setValue:model.longitude forKey:@"longitude"];
+            if (model.name) {
+                [infoDict setValue:model.name forKey:@"title"];
+            }
+
+            if (!model.longitude || !model.latitude) {
+                NSMutableDictionary *params = [NSMutableDictionary new];
+                [params setValue:@"用户点击地图找房页进入新房周边配套地图页失败" forKey:@"desc"];
+                [params setValue:@"经纬度缺失" forKey:@"reason"];
+                [params setValue:model.nid forKey:@"house_id"];
+                [params setValue:@(1) forKey:@"house_type"];
+                [params setValue:infoDict[@"title"] forKey:@"name"];
+                [[HMDTTMonitor defaultManager] hmdTrackService:@"map_search_location_failed" attributes:params];
+                return;
+            }
+            
+            NSMutableDictionary *tracer = [NSMutableDictionary dictionaryWithDictionary:self.viewController.tracerDict];
+            [tracer setValue:@"around" forKey:@"click_type"];
+            [tracer setValue:@"map_search" forKey:@"element_from"];
+            [tracer setValue:@"map_search" forKey:@"enter_from"];
+            [infoDict setValue:tracer forKey:@"tracer"];
+            
+            TTRouteUserInfo *info = [[TTRouteUserInfo alloc] initWithInfo:infoDict];
+            [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:@"sslocal://fh_map_detail"] userInfo:info];
+        }
+    }
+}
 
 -(FHMapSearchNewHouseItemView *)houseNewView
 {
     if (!_houseNewView) {
-        _houseNewView = [[FHMapSearchNewHouseItemView alloc] initWithFrame:CGRectMake(0, 17, [UIScreen mainScreen].bounds.size.width, 118)];
+        _houseNewView = [[FHMapSearchNewHouseItemView alloc] initWithFrame:CGRectMake(0, 17, [UIScreen mainScreen].bounds.size.width, 201)];
         _houseNewView.weakVC = self.viewController;
+        
+        UIButton * _mapSearchBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+        [_mapSearchBtn setImage:[UIImage imageNamed:@"home_map_icon"] forState:UIControlStateNormal];
+//        _mapSearchBtn.hitTestEdgeInsets =  UIEdgeInsetsMake(-10, -10, -10, -30);
+        [_mapSearchBtn setFrame:CGRectMake(([UIScreen mainScreen].bounds.size.width - 80.0f)/2.0f, 128, 20, 20)];
+        [_mapSearchBtn addTarget:self action:@selector(clickAround) forControlEvents:UIControlEventTouchUpInside];
+        [_houseNewView addSubview:_mapSearchBtn];
+        
+        
+       UILabel * _mapSearchLabel = [UILabel new];
+       _mapSearchLabel.text = @"周边配套";
+       _mapSearchLabel.textColor = [UIColor themeGray1];
+       _mapSearchLabel.font = [UIFont themeFontMedium:14];
+       _mapSearchLabel.userInteractionEnabled = YES;
+        UITapGestureRecognizer *tapGes = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(clickAround)];
+        [_mapSearchLabel addGestureRecognizer:tapGes];
+       [_mapSearchLabel setFrame:CGRectMake(_mapSearchBtn.right + 5, _mapSearchBtn.origin.y, 60, 22)];
+       [_houseNewView addSubview:_mapSearchLabel];
     }
     return _houseNewView;
 }
@@ -1113,7 +1184,7 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
 -(void)handleSelectForNewHouseView:(UIView *)houseView{
         if (!self.bottomShowInfoView) {
             self.bottomShowInfoView = [UIView new];
-            [self.bottomShowInfoView setFrame:CGRectMake(0, self.viewController.view.frame.size.height, self.viewController.view.frame.size.width, 150)];
+            [self.bottomShowInfoView setFrame:CGRectMake(0, self.viewController.view.frame.size.height, self.viewController.view.frame.size.width, 201)];
             [self.viewController.view addSubview:self.bottomShowInfoView];
             [self.bottomShowInfoView setBackgroundColor:[UIColor whiteColor]];
             [self.viewController.view bringSubviewToFront:self.bottomShowInfoView];
@@ -1879,9 +1950,9 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
         return ;
     }
         
- 
     
     [self.houseNewView showNewHouse:query param:param];
+    
     [self handleSelectForNewHouseView:self.houseNewView];
     
 //    [self.viewController.view bringSubviewToFront:self.houseListViewController.view];

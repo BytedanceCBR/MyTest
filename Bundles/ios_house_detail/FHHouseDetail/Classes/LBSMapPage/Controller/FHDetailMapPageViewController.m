@@ -86,7 +86,10 @@ static MAMapView *kFHPageMapView = nil;
         _traceDict =[NSMutableDictionary dictionaryWithDictionary:paramObj.allParams[@"tracer"]];
         
         if ([paramObj.allParams objectForKey:@"latitude"] && [paramObj.allParams objectForKey:@"longitude"]) {
-            self.centerPoint = CLLocationCoordinate2DMake([[paramObj.allParams objectForKey:@"latitude"] floatValue], [[paramObj.allParams objectForKey:@"longitude"] floatValue]);
+            CGFloat latitatue = [[paramObj.allParams objectForKey:@"latitude"] doubleValue];
+            CGFloat longitude = [[paramObj.allParams objectForKey:@"longitude"] doubleValue];
+
+            self.centerPoint = CLLocationCoordinate2DMake(latitatue, longitude);
         }
         
         if ([[userInfo.allInfo objectForKey:@"category"] isKindOfClass:[NSString class]]) {
@@ -100,8 +103,6 @@ static MAMapView *kFHPageMapView = nil;
         if (paramObj.allParams[@"baiduPanoramaUrl"]) {
             self.baiduPanoramaUrl = [paramObj.allParams btd_stringValueForKey:@"baiduPanoramaUrl"];
         }
-    
-        
     }
     return self;
 }
