@@ -43,6 +43,10 @@
         [localChannels addObject:@"img"];
     }
     
+    if (![localChannels containsObject:@"f_vr_source"]) {
+        [localChannels addObject:@"f_vr_source"];
+    }
+    
     if ([[FHLynxManager sharedInstance] allLocalChannelsArray]) {
         [localChannels addObjectsFromArray:[[FHLynxManager sharedInstance] allLocalChannelsArray]];
     }

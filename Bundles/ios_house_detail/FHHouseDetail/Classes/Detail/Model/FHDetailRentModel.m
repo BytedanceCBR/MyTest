@@ -395,6 +395,7 @@
     NSDictionary *dict = @{
                            @"coverImage": @"cover_image",
                            @"shareUrl": @"share_url",
+                           @"modelDescription": @"description",
                            };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
         return dict[keyName]?:keyName;

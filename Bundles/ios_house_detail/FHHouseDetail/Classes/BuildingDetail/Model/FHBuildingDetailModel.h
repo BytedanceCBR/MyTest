@@ -10,8 +10,9 @@
 #import "FHHouseNewsSocialModel.h"
 #import "FHHouseBaseInfoModel.h"
 #import <FHHouseBase/FHSaleStatusModel.h>
-
+#import "FHBuildingLocationModel.h"
 NS_ASSUME_NONNULL_BEGIN
+@class FHBuildingIndexModel;
 
 @protocol FHBuildingDetailRelatedFloorpanModel <NSObject>
 @end
@@ -37,6 +38,7 @@ NS_ASSUME_NONNULL_BEGIN
 @protocol FHBuildingDetailDataItemModel<NSObject>
 @end
 
+
 @interface FHBuildingDetailDataItemModel : JSONModel
 
 @property (nonatomic, copy , nullable) NSString *buildingID;
@@ -50,13 +52,22 @@ NS_ASSUME_NONNULL_BEGIN
 
 /// 关联户型列表
 @property (nonatomic, copy, nullable) FHBuildingDetailRelatedFloorpanListModel *relatedFloorplanList;
+
+///  该楼的坐标
+@property (nonatomic, copy, nullable) NSString *pointX;
+@property (nonatomic, copy, nullable) NSString *pointY;
+@property (nonatomic, copy, nullable) NSString *beginWidth;
+@property (nonatomic, copy, nullable) NSString *beginHeight;
+@property (nonatomic, strong, nullable) FHBuildingIndexModel *buildingIndex;    //记录这个楼在FHBuildingLocationModel的位置
 @end
+
 
 @interface FHBuildingDetailDataModel : JSONModel
 
 @property (nonatomic, strong , nullable) FHClueAssociateInfoModel *associateInfo;
 @property (nonatomic, strong , nullable) NSArray<FHBuildingDetailDataItemModel> *buildingList;
 @property (nonatomic, strong , nullable) FHDetailContactModel *highlightedRealtor;
+@property (nonatomic, strong , nullable) FHImageModel *buildingImage;
 @end
 
 @interface FHBuildingDetailModel : JSONModel
@@ -65,6 +76,11 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *message;
 @property (nonatomic, strong , nullable) FHBuildingDetailDataModel *data ;
 
+
+
 @end
+
+
+
 
 NS_ASSUME_NONNULL_END

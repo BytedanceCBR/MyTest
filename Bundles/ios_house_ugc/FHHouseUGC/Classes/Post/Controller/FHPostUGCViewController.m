@@ -222,6 +222,7 @@ static NSInteger const kMaxPostImageCount = 9;
             if (element_from.length > 0) {
                 self.tracerDict[@"element_from"] = element_from;
             }
+            self.tracerDict[@"page_type"] = @"feed_publisher";
             NSString *log_pb_str = params[@"log_pb"];
             if ([log_pb_str isKindOfClass:[NSString class]] && log_pb_str.length > 0) {
                 NSData *jsonData = [log_pb_str dataUsingEncoding:NSUTF8StringEncoding];
@@ -715,6 +716,7 @@ static NSInteger const kMaxPostImageCount = 9;
     NSMutableDictionary *traceParam = @{}.mutableCopy;
     traceParam[@"enter_type"] = @"click";
     traceParam[@"enter_from"] = @"feed_publisher";
+    traceParam[@"origin_from"] = self.tracerDict[@"origin_from"] ?: @"be_null";
     traceParam[@"element_from"] = @"select_like_publisher_neighborhood";
     dict[TRACER_KEY] = traceParam;
     TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
@@ -836,6 +838,7 @@ static NSInteger const kMaxPostImageCount = 9;
 }
 
 - (void)endEditing {
+    
     self.isToolbarWillEndEditing = YES;
     
     [self.view endEditing:YES];
@@ -1138,10 +1141,7 @@ static NSInteger const kMaxPostImageCount = 9;
     [self clearDraft];
     if (hasSent && !isEmptyString(self.cid)) {
         [[NSNotificationCenter defaultCenter] postNotificationName:kFHUGCForumPostThreadFinish object:nil userInfo:@{@"cid" : self.cid}];
-        NSMutableDictionary *tracerDict = self.trackDict.mutableCopy;
-        tracerDict[@"click_position"] = @"passport_publisher";
-        // 此时没有groupID
-        [FHUserTracker writeEvent:@"feed_publish_click" params:tracerDict];
+        [self addFeedPublishClickLog];
     } else {
         [[NSNotificationCenter defaultCenter] postNotificationName:kTTForumPostingThreadActionCancelledNotification
                                                             object:nil
@@ -1584,7 +1584,7 @@ static NSInteger const kMaxPostImageCount = 9;
 
 - (void)keyboardWillChange:(NSNotification *)notification {
     CGRect keyboardEndFrame = [[notification.userInfo objectForKey:UIKeyboardFrameEndUserInfoKey] CGRectValue];
-    self.isKeyboardShow = keyboardEndFrame.origin.y < SCREEN_HEIGHT;
+    self.isKeyboardShow = ceil(keyboardEndFrame.origin.y)< SCREEN_HEIGHT;
     if(self.isKeyboardShow) {
         self.keyboardFrameForToolbar = keyboardEndFrame;
     } else {
@@ -1797,33 +1797,18 @@ static NSInteger const kMaxPostImageCount = 9;
 }
 
 - (void)addGoDetailLog {
-    if(self.isOuterEdit) {
-        NSMutableDictionary *param = @{}.mutableCopy;
-        param[UT_PAGE_TYPE] = @"feed_publisher";
-        param[UT_LOG_PB] = self.tracerModel.logPb;
-        param[UT_ENTER_FROM] = self.tracerModel.enterFrom;
-        param[UT_ENTER_TYPE] = self.tracerModel.enterType;
-        TRACK_EVENT(UT_GO_DETAIL, param);
-    }
-    
-    if(self.neighborhoodId.length > 0) {
-        NSMutableDictionary *param = @{}.mutableCopy;
-        param[UT_PAGE_TYPE] = @"feed_publisher";
-        param[UT_LOG_PB] = self.tracerModel.logPb;
-        param[@"group_id"] = self.neighborhoodId;
-        param[UT_ELEMENT_FROM] = self.tracerModel.elementFrom;
-        param[UT_ENTER_FROM] = self.tracerModel.enterFrom;
-        TRACK_EVENT(UT_GO_DETAIL, param);
-    }else if(self.groupId.length > 0){
-        NSMutableDictionary *param = @{}.mutableCopy;
-        param[UT_PAGE_TYPE] = @"feed_publisher";
-        param[UT_LOG_PB] = self.tracerDict[UT_LOG_PB];
-        param[@"group_id"] = self.groupId;
-        param[UT_ELEMENT_FROM] = self.tracerDict[UT_ELEMENT_FROM];
-        param[UT_ENTER_FROM] = self.tracerDict[UT_ENTER_FROM];
-        param[UT_ENTER_TYPE] = @"click";
-        TRACK_EVENT(UT_GO_DETAIL, param);
-    }
+    NSMutableDictionary *param = @{}.mutableCopy;
+    param[UT_PAGE_TYPE] = @"feed_publisher";
+    param[UT_ENTER_FROM] = self.tracerDict[UT_ENTER_FROM];
+    TRACK_EVENT(UT_GO_DETAIL, param);
+}
+
+- (void)addFeedPublishClickLog {
+    NSMutableDictionary *param = @{}.mutableCopy;
+    param[UT_PAGE_TYPE] = @"feed_publisher";
+    param[UT_ENTER_FROM] = self.tracerDict[UT_ENTER_FROM];
+    param[@"click_options"] = @"passport_publisher";
+    TRACK_EVENT(@"feed_publish_click", param);
 }
 
 #pragma mark - FHUGCToolbarDelegate

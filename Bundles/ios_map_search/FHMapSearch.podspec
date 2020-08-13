@@ -12,14 +12,7 @@ Pod::Spec.new do |s|
   s.source_files = 'FHMapSearch/Classes/**/*.{h,m,mm}'
 
   s.resources = ['FHMapSearch/Assets/*.xcassets']
-    
-  s.pod_target_xcconfig = { "HEADER_SEARCH_PATHS" =>"$(SRCROOT)/../../Bundles/BaiduMapKit/BaiduMapKit/F100BaiduMapKit.framework/**"}
-  # s.resource_bundles = {
-  #   ' FHMapSearch' => [' FHMapSearch/Assets/*.png']
-  # }
 
-  # s.public_header_files = 'Pod/Classes/**/*.h'
-  # s.frameworks = 'UIKit', 'MapKit'
-  s.vendored_frameworks = '../BaiduMapKit/**/*.framework'
-#  s.dependency 'BaiduMapKit', '5.3.0'
+  s.vendored_frameworks = 'FHMapSearch/Classes/*.framework'
+
 end

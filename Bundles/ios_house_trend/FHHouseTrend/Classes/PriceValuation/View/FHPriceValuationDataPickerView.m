@@ -180,8 +180,13 @@
 
 - (NSString *)pickerView:(UIPickerView *)pickerView titleForRow:(NSInteger)row forComponent:(NSInteger)component {
     if(component < self.dataSource.count){
-        ((UILabel *)[pickerView.subviews objectAtIndex:1]).backgroundColor = [UIColor themeGray6];//显示分隔线
-        ((UILabel *)[pickerView.subviews objectAtIndex:2]).backgroundColor = [UIColor themeGray6];//显示分隔线
+        NSInteger viewCount = pickerView.subviews.count;
+        if(1 < viewCount){
+            ((UILabel *)[pickerView.subviews objectAtIndex:1]).backgroundColor = [UIColor themeGray6];//显示分隔线
+        }
+        if(2 < viewCount){
+            ((UILabel *)[pickerView.subviews objectAtIndex:2]).backgroundColor = [UIColor themeGray6];//显示分隔线
+        }
         NSArray *subArray = nil;
         if(self.titleSource && component < self.titleSource.count){
             subArray = self.titleSource[component];

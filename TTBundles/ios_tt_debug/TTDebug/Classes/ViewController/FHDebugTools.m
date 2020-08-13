@@ -26,6 +26,7 @@
         @"FHLoginViewController" : @[@"textField"],
         @"FHLoginContainerViewController" : @[@"textField"],
         @"FHBindContainerViewController" : @[@"textField"],
+        @"UIButton" : @[@"__associated_object"],
     };
 
 //    {

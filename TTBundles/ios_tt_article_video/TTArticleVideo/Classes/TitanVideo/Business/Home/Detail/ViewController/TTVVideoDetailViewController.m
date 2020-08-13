@@ -279,6 +279,7 @@ NSString *const assertDesc_articleType = @"protocoledArticle must be Article";
         _commentVC = [[TTVCommentViewController alloc] initWithDataSource:self delegate:self];
         _commentVC.enableImpressionRecording = YES;
         _commentVC.hasSelfShown = YES;
+        _commentVC.tracerDict = self.detailModel.reportParams;
         _commentVC.detailStateStore = self.detailStateStore;
         [self addChildViewController:_commentVC];
         _toolbarVC = [[TTVVideoDetailToolBarViewController alloc] init];
@@ -366,12 +367,13 @@ NSString *const assertDesc_articleType = @"protocoledArticle must be Article";
     [self.detailStateStore.state setDetailModel:self.detailModel];
     self.detailStateStore.state.entity.categoryId = self.detailModel.categoryID;
     self.detailStateStore.state.entity.clickLabel = self.detailModel.clickLabel;
+    self.detailStateStore.state.enterFrom = self.detailModel.reportParams[@"enter_from"] ?: @"be_null";
     if (self.detailModel.logPb) {
         self.detailStateStore.state.logPb = self.detailModel.logPb;
     }else{
         self.detailStateStore.state.logPb = self.detailModel.gdExtJsonDict[@"log_pb"];
     }
-    self.detailStateStore.state.enterFrom = [self enterFromString];
+//    self.detailStateStore.state.enterFrom = [self enterFromString];
     self.detailStateStore.state.categoryName = [self categoryName];
     self.detailStateStore.state.authorId = [self.detailModel.article.userInfo ttgc_contentID];
     self.detailStateStore.state.rawAdData = self.detailModel.orderedData.raw_ad_data;
@@ -512,8 +514,8 @@ NSString *const assertDesc_articleType = @"protocoledArticle must be Article";
     self.tracker = [[TTVVideoDetailStayPageTracker alloc] initWithArticle:article];
     self.tracker.detailStateStore = self.detailStateStore;
     self.tracker.detailModel = self.detailModel;
-    self.tracker.enterFrom = [self enterFromString];
-    self.tracker.categoryName = [self categoryName];
+    self.tracker.enterFrom = self.detailModel.reportParams[@"page_type"];
+    self.tracker.categoryName = self.detailModel.reportParams[@"category_name"];
     //orderedData 传过去为了 logextra
     self.tracker.articleExtraInfo = self.detailModel.articleExtraInfo;
 }
@@ -1853,16 +1855,21 @@ NSString *const assertDesc_articleType = @"protocoledArticle must be Article";
     }
     [params setValue:[self categoryName] forKey:@"category_name"];
     [params setValue:[FHTraceEventUtils generateEnterfrom:[self categoryName]] forKey:@"enter_from"];
-    [params setValue:position forKey:@"position"];
+    [params setValue:position forKey:@"click_position"];
     
     if(self.detailModel.reportParams.count > 0){
         [params addEntriesFromDictionary:self.detailModel.reportParams];
+        if(self.detailModel.reportParams[@"page_type"]){
+            params[@"enter_from"] = self.detailModel.reportParams[@"page_type"];
+        }
     }
     
+    [params setValue:@"comment_detail" forKey:@"page_type"];
+    
     if (isDigg) {
-        [TTTrackerWrapper eventV3:@"rt_like" params:params];
+        [TTTrackerWrapper eventV3:@"click_like" params:params];
     }else{
-        [TTTrackerWrapper eventV3:@"rt_unlike" params:params];
+        [TTTrackerWrapper eventV3:@"click_dislike" params:params];
     }
 }
 

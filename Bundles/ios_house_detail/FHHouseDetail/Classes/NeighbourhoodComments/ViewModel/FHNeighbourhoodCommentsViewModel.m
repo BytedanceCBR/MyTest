@@ -503,13 +503,23 @@
 
 - (NSMutableDictionary *)trackDict:(FHFeedUGCCellModel *)cellModel rank:(NSInteger)rank {
     NSMutableDictionary *dict = [NSMutableDictionary dictionary];
+    dict[@"origin_from"] = self.viewController.tracerDict[@"origin_from"];
     dict[@"enter_from"] = self.viewController.tracerDict[@"enter_from"];
+    dict[@"element_from"] = self.viewController.tracerDict[@"element_from"];
+    dict[@"from_gid"] = self.viewController.tracerDict[@"from_gid"];
     dict[@"page_type"] = [self pageType];
     dict[@"log_pb"] = cellModel.logPb;
     dict[@"rank"] = @(rank);
     dict[@"category_name"] = self.categoryId;
     
-    dict[@"comment_id"] = cellModel.groupId;
+    dict[@"group_id"] = cellModel.groupId;
+    
+    if(cellModel.logPb[@"impr_id"]){
+        dict[@"impr_id"] = cellModel.logPb[@"impr_id"];
+    }
+    if(cellModel.logPb[@"group_source"]){
+        dict[@"group_source"] = cellModel.logPb[@"group_source"];
+    }
     
     return dict;
 }
@@ -520,7 +530,6 @@
 
 - (void)trackClickComment:(FHFeedUGCCellModel *)cellModel {
     NSMutableDictionary *dict = [cellModel.tracerDic mutableCopy];
-    dict[@"click_position"] = @"feed_comment";
     TRACK_EVENT(@"click_comment", dict);
 }
 

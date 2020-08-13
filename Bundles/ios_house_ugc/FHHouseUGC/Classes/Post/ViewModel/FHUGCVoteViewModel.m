@@ -671,6 +671,12 @@
                             }
                         }
                     }
+                    //发布成功埋点
+                    NSMutableDictionary *tracerDict = self.viewController.tracerDict.mutableCopy;
+                    tracerDict[@"group_id"] = cellModel.groupId;
+                    tracerDict[@"page_type"] = @"vote_publisher";
+                    [tracerDict removeObjectsForKeys:@[@"origin_from"]];
+                    [FHUserTracker writeEvent:@"feed_publish_success" params:tracerDict];
                 }
                 
                 [[NSNotificationCenter defaultCenter] postNotificationName:kTTForumPostThreadSuccessNotification object:nil userInfo:userInfo];

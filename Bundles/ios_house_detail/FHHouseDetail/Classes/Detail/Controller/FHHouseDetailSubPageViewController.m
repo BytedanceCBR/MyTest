@@ -162,8 +162,8 @@
 - (void)setupUI
 {
     __weak typeof(self)wself = self;
-    CGRect screenBounds = [UIScreen mainScreen].bounds;
-    CGFloat navBarHeight = [TTDeviceHelper isIPhoneXDevice] ? 44 : 20;
+//    CGRect screenBounds = [UIScreen mainScreen].bounds;
+//    CGFloat navBarHeight = [TTDeviceHelper isIPhoneXDevice] ? 44 : 20;
     _navBar = [[FHDetailNavBar alloc]initWithType:FHDetailNavBarTypeTitle];
     _navBar.backActionBlock = ^{
         [wself.navigationController popViewControllerAnimated:YES];
@@ -180,7 +180,7 @@
     [self.view addSubview:_bottomBar];
     [_bottomBar mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.right.mas_equalTo(self.view);
-        make.height.mas_equalTo(_houseType == FHHouseTypeRentHouse?64:80);
+        make.height.mas_equalTo(self.houseType == FHHouseTypeRentHouse?64:80);
         if (@available(iOS 11.0, *)) {
             make.bottom.mas_equalTo(self.view.mas_bottom).mas_offset(-[UIApplication sharedApplication].delegate.window.safeAreaInsets.bottom);
         }else {

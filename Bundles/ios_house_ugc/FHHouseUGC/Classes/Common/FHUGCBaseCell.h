@@ -44,6 +44,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)clickRealtorPhone:(FHFeedUGCCellModel *)cellModel cell:(FHUGCBaseCell *)cell;
 
 - (void)clickRealtorHeader:(FHFeedUGCCellModel *)cellModel cell:(FHUGCBaseCell *)cell;
+
 @end
 
 @interface FHUGCBaseCell : UITableViewCell

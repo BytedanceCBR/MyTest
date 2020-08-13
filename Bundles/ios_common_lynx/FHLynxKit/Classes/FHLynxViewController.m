@@ -91,7 +91,6 @@
 
           if (templateData) {
                 if (templateData != self.currentTemData) {
-                   NSNumber *costTime = @(0);
                    _loadTime = [[NSDate date] timeIntervalSince1970];
                     self.currentTemData = templateData;
                    [self.lynxView loadTemplate:templateData withURL:@"local"];
@@ -157,7 +156,6 @@
     if (self.currentTemData) {
         [self tt_startUpdate];
         
-         NSNumber *costTime = @(0);
          _loadTime = [[NSDate date] timeIntervalSince1970];
          [self.lynxView loadTemplate:self.currentTemData withURL:@"local"];
     
@@ -229,14 +227,14 @@
     NSTimeInterval costTime = [[NSDate date] timeIntervalSince1970] - _loadTime;
     [self sendCostTimeEvent:costTime andService:@"lynx_page_duration"];
     [self sendEvent:@"0" andError:nil];
-    
+    NSString *channelName = _channelName;
     [BDWebViewBlankDetect detectBlankByOldSnapshotWithView:view CompleteBlock:^(BOOL isBlank, UIImage * _Nonnull image, NSError * _Nonnull error) {
         if (isBlank) {
             NSMutableDictionary * paramsExtra = [NSMutableDictionary new];
             [paramsExtra setValue:[[TTInstallIDManager sharedInstance] deviceID] forKey:@"device_id"];
             NSMutableDictionary *uploadParams = [NSMutableDictionary new];
             [uploadParams setValue:error.description forKey:@"error"];
-            [uploadParams setValue:_channelName forKey:@"channel"];
+            [uploadParams setValue:channelName forKey:@"channel"];
             [[HMDTTMonitor defaultManager] hmdTrackService:@"lynx_template_black_error" metric:uploadParams category:nil extra:paramsExtra];
         }
     }];
@@ -266,14 +264,32 @@
     NSMutableDictionary * paramsExtra = [NSMutableDictionary new];
     [paramsExtra setValue:[[TTInstallIDManager sharedInstance] deviceID] forKey:@"device_id"];
      NSMutableDictionary *uploadParams = [NSMutableDictionary new];
-     [uploadParams setValue:@(time) forKey:@"lynx_page_duration"];
-    [[HMDTTMonitor defaultManager] hmdTrackService:sevice metric:uploadParams category:nil extra:paramsExtra];
+    NSString *eventServie = [NSString stringWithFormat:@"lynx_page_duration_%@",_channelName];
+    if (time < 15) {
+        [uploadParams setValue:@(time * 1000) forKey:@"duration"];
+        [[HMDTTMonitor defaultManager] hmdTrackService:eventServie metric:uploadParams category:nil extra:paramsExtra];
+    }
 }
 
 
 //这里接收TTLynxViewClient抛上来的sizeChange事件
 - (void)lynxViewDidChangeIntrinsicContentSize:(LynxView*)view {
     
+}
+
+- (void)lynxView:(LynxView*)view didReceiveFirstLoadPerf:(LynxPerformance*)perf{
+    
+    NSMutableDictionary * paramsExtra = [NSMutableDictionary new];
+    [paramsExtra setValue:[[TTInstallIDManager sharedInstance] deviceID] forKey:@"device_id"];
+     NSMutableDictionary *uploadParams = [NSMutableDictionary new];
+    if (perf && [[perf toDictionary] isKindOfClass:[NSDictionary class]]) {
+        [uploadParams addEntriesFromDictionary:[perf toDictionary]];
+    }
+    NSString *eventServie = [NSString stringWithFormat:@"lynx_page_info_%@",_channelName];
+    [[HMDTTMonitor defaultManager] hmdTrackService:eventServie metric:uploadParams category:nil extra:paramsExtra];
+    
+}
+- (void)lynxView:(LynxView*)view didReceiveUpdatePerf:(LynxPerformance*)perf{
 }
 
 - (NSURL*)shouldRedirectImageUrl:(NSURL*)url {
@@ -333,8 +349,12 @@
     CGFloat top = 0;
          if (@available(iOS 13.0 , *)) {
            top = 44.f + [UIApplication sharedApplication].keyWindow.safeAreaInsets.top;
-         } else if (@available(iOS 11.0 , *) && [UIDevice btd_isIPhoneXSeries]) {
-           top = 84;
+         } else if (@available(iOS 11.0 , *)) {
+             if ([UIDevice btd_isIPhoneXSeries]) {
+               top = 84;
+             }else{
+               top = 65;
+             }
          } else {
            top = 65;
          }
