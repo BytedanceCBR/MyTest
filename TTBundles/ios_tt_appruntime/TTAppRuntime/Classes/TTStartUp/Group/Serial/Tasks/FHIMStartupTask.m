@@ -395,16 +395,7 @@ DEC_TASK("FHIMStartupTask",FHTaskTypeSerial,TASK_PRIORITY_HIGH+16);
 
 - (void)startWithApplication:(UIApplication *)application options:(NSDictionary *)launchOptions {
     if ([SSCommonLogic imCanStart]) {
-        [self configIMModule:@"startWithApplication"];
-    }
-}
-- (void)configIMModule:(NSString *)from {
-    
-    NSString* did = [[TTInstallIDManager sharedInstance] deviceID];
-    if(!self.isConfigIMModule && did.length > 0) {
         
-        [IMManager shareInstance].fromSource = from;
-
         FHIMAccountCenterImpl* accountCenter = [[FHIMAccountCenterImpl alloc] init];
         [IMManager shareInstance].accountCenter = accountCenter;
         
@@ -419,9 +410,14 @@ DEC_TASK("FHIMStartupTask",FHTaskTypeSerial,TASK_PRIORITY_HIGH+16);
         self.isConfigIMModule = YES;
     }
 }
-
 - (void)deviceDidRefreshed:(NSNotification *)notification {
-    [self configIMModule:@"deviceDidRefreshedNotification"];
+    
+    if(!self.isConfigIMModule) {
+        return; // did刷新回调调用时如果IM模块没有被初始化，则直接跳过，因为在初始化时会正常取到刷新的did
+    }
+    
+    // did刷新回调调用时，如果IM模块已经初始化完成，则检查初始化配置的did是否为空，如果为空，则更新
+    [[IMManager shareInstance] configDeviceIdIfInitNotGet];
 }
 
 #pragma mark - 打开Watch Session
