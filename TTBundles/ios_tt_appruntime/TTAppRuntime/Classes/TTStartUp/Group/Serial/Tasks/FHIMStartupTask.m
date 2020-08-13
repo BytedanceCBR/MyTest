@@ -346,6 +346,13 @@ DEC_TASK("FHIMStartupTask",FHTaskTypeSerial,TASK_PRIORITY_HIGH+16);
     return ret;
 }
 
+- (BOOL)isIMInitDidEmptyEnable {
+    BOOL ret = NO;
+    BOOL isIMInitDidEmptyEnable = [[NSUserDefaults standardUserDefaults] boolForKey:@"_IM_Init_Did_Empty_Enable_"];
+    ret = isIMInitDidEmptyEnable;
+    return ret;
+}
+
 - (BOOL)isIMSingleChatRecallEnable {
     BOOL ret = NO;
     BOOL isIMSingleChatRecallEnable = [[NSUserDefaults standardUserDefaults] boolForKey:@"_IM_SingleChat_Recall_Enable_"];
