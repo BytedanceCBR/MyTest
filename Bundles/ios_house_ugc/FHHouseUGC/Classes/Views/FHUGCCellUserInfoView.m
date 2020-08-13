@@ -27,6 +27,7 @@
 #import "UIImageView+BDWebImage.h"
 #import "FHUGCCellHelper.h"
 
+
 @interface FHUGCCellUserInfoView()
 
 //@property (nonatomic, assign) FHUGCPostEditState editState;
@@ -78,24 +79,14 @@
 }
 
 - (void)initViews {
-//    self.icon = [[TTAsyncCornerImageView alloc] initWithFrame:CGRectMake(20, 0, 40, 40) allowCorner:YES];
-    self.icon = [[FHRealtorAvatarView alloc] initWithFrame:CGRectMake(20, 0, 40, 40)];
-    //    _icon.backgroundColor = [UIColor themeGray7];
-//    _icon.placeholderName = @"fh_mine_avatar";
-//    _icon.cornerRadius = 20;
-    //    _icon.imageContentMode = TTImageViewContentModeScaleAspectFill;
-    //    _icon.layer.masksToBounds = YES;
-    //    _icon.layer.cornerRadius = 20;
-    _icon.avatarImageView.layer.borderWidth = 1;
-    _icon.avatarImageView.layer.borderColor = [UIColor themeGray6].CGColor;
-//    _icon.borderWidth = 1;
-//    _icon.borderColor = [UIColor themeGray6];
+    _avatarView = [[FHRealtorAvatarView alloc] init];
+    _avatarView.avatarImageView.layer.borderWidth = 1;
+    _avatarView.avatarImageView.layer.borderColor = [UIColor themeGray6].CGColor;
+
+    [self addSubview:_avatarView];
     
-    [self addSubview:_icon];
-    
-    _icon.userInteractionEnabled = YES;
     UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(goToPersonalHomePage)];
-    [_icon addGestureRecognizer:tap];
+    [_avatarView.avatarImageView addGestureRecognizer:tap];
     
     self.userName = [self LabelWithFont:[UIFont themeFontMedium:16] textColor:[UIColor themeGray1]];
     [self addSubview:_userName];
@@ -146,13 +137,13 @@
 }
 
 - (void)initConstraints {
-    self.icon.top = 0;
-    self.icon.left = 20;
-    self.icon.width = 40;
-    self.icon.height = 40;
+    self.avatarView.top = 0;
+    self.avatarView.left = 20;
+    self.avatarView.width = 40;
+    self.avatarView.height = 40;
     
     self.userName.top = 0;
-    self.userName.left = self.icon.right + 10;
+    self.userName.left = self.avatarView.right + 10;
     self.userName.width = 100;
     self.userName.height = 22;
     
@@ -174,7 +165,7 @@
     
     CGFloat maxWidth = [UIScreen mainScreen].bounds.size.width - 40 - 40 - 10 - 20 - 10;
     self.descLabel.top = self.userName.bottom + 1;
-    self.descLabel.left = self.icon.right + 10;
+    self.descLabel.left = self.avatarView.right + 10;
     self.descLabel.height = 17;
     self.descLabel.width = maxWidth;
     
@@ -203,13 +194,7 @@
     }
     imageModel.urlList = urlList;
     
-    if (imageModel && imageModel.url.length > 0) {
-//        [self.icon tt_setImageWithURLString:imageModel.url];
-        [self.icon updateAvatarImageURL:imageModel.url];
-    }else{
-        [self.icon.avatarImageView setImage:[UIImage imageNamed:@"fh_mine_avatar"]];
-//        [self.icon setImage:[UIImage imageNamed:@"fh_mine_avatar"]];
-    }
+    [self.avatarView updateAvatarWithUGCCellModel:cellModel];
     
     self.userName.text = !isEmptyString(cellModel.user.name) ? cellModel.user.name : @"用户";
     self.userAuthLabel.hidden = self.userAuthLabel.text.length <= 0;
@@ -235,7 +220,7 @@
     }
     self.titleLabel.hidden = NO;
     self.userName.hidden = YES;
-    self.icon.hidden =  YES;
+    self.avatarView.hidden =  YES;
     self.userAuthLabel.hidden = YES;
     self.descLabel.hidden = YES;
 }
@@ -307,10 +292,10 @@
     NSString *pageType = self.cellModel.tracerDic[@"page_type"];
     if(pageType && [pageType isEqualToString:@"personal_homepage_detail"]){
         //在个人主页页面 头像和名字不可点击
-        _icon.userInteractionEnabled = NO;
+        _avatarView.avatarImageView.userInteractionEnabled = NO;
         _userName.userInteractionEnabled = NO;
     }else{
-        _icon.userInteractionEnabled = YES;
+        _avatarView.avatarImageView.userInteractionEnabled = YES;
         _userName.userInteractionEnabled = YES;
     }
     

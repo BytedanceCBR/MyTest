@@ -127,7 +127,7 @@
     [self.titleView refreshWithData:model];
     
     self.titleView.userName.userInteractionEnabled = model.user && model.user.schema;
-    self.titleView.icon.userInteractionEnabled = model.user && model.user.schema;
+    self.titleView.avatarView.avatarImageView.userInteractionEnabled = model.user && model.user.schema;
     self.titleView.descLabel.userInteractionEnabled = model.user && model.user.schema;
     self.contentLab.hidden = isEmptyString(model.content);
     [FHUGCCellHelper setAsyncRichContent:self.contentLab model:model];

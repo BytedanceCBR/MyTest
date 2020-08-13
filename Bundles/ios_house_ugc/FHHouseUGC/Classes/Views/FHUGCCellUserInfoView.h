@@ -9,12 +9,12 @@
 #import "FHFeedUGCCellModel.h"
 #import "TTAsyncCornerImageView.h"
 #import "TTUGCAsyncLabel.h"
-#import "FHRealtorAvatarView.h"
+#import <FHHouseBase/FHRealtorAvatarView.h>
 NS_ASSUME_NONNULL_BEGIN
 
 @interface FHUGCCellUserInfoView : UIView
 
-@property(nonatomic ,strong) FHRealtorAvatarView *icon;
+@property(nonatomic ,strong) FHRealtorAvatarView *avatarView;
 @property(nonatomic ,strong) UILabel *userName;
 @property(nonatomic ,strong) UILabel *userAuthLabel;
 @property(nonatomic ,strong) UILabel *descLabel;

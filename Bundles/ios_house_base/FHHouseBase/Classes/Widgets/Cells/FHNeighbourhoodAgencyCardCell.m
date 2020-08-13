@@ -18,7 +18,8 @@
 #import <TTThemed/UIColor+TTThemeExtension.h>
 #import "UIImage+FIconFont.h"
 #import "TTAccountManager.h"
-#import "FHRealtorAvatarView.h"
+#import <FHHouseBase/FHRealtorAvatarView.h>
+
 @interface FHNeighbourhoodAgencyCardCell ()
 
 
@@ -33,7 +34,7 @@
 
 @property(nonatomic, strong) UIView *bottomInfoView;
 @property(nonatomic, strong) UIView *lineView;
-@property(nonatomic, strong) FHRealtorAvatarView *avator;
+@property(nonatomic, strong) FHRealtorAvatarView *avatarView;
 @property(nonatomic, strong) UIButton *licenceIcon;
 @property(nonatomic, strong) UIButton *callBtn;
 @property(nonatomic, strong) UIButton *imBtn;
@@ -115,15 +116,8 @@
     _lineView.backgroundColor = [UIColor themeGray7];
      [self.bottomInfoView addSubview:_lineView];
 
-//    _avator = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"detail_default_avatar"]];
-    _avator = [[FHRealtorAvatarView alloc] init];
-//    _avator.layer.cornerRadius = 23;
-    _avator.avatarImageView.layer.cornerRadius = 23;
-    _avator.contentMode = UIViewContentModeScaleAspectFill;
-    _avator.avatarImageView.contentMode = UIViewContentModeScaleAspectFill;
-//    _avator.clipsToBounds = YES;
-    _avator.avatarImageView.clipsToBounds = YES;
-    [self.bottomInfoView addSubview:_avator];
+    self.avatarView = [[FHRealtorAvatarView alloc] init];
+    [self.bottomInfoView addSubview:self.avatarView];
 
     _licenceIcon = [[FHExtendHotAreaButton alloc] init];
     [_licenceIcon setImage:[UIImage imageNamed:@"detail_contact"] forState:UIControlStateNormal];
@@ -229,15 +223,15 @@
         make.height.mas_offset(1);
     }];
 
-    [self.avator mas_makeConstraints:^(MASConstraintMaker *make) {
+    [self.avatarView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.height.width.mas_equalTo(46);
         make.left.mas_equalTo(self.bottomInfoView).mas_offset(15);
         make.top.mas_equalTo(self.bottomInfoView).mas_offset(15);
     }];
 
     [self.name mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(self.avator.mas_right).offset(10);
-        make.top.mas_equalTo(self.avator);
+        make.left.mas_equalTo(self.avatarView.mas_right).offset(10);
+        make.top.mas_equalTo(self.avatarView);
         make.height.mas_equalTo(22);
     }];
     [self.agency mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -264,12 +258,12 @@
     [self.callBtn mas_makeConstraints:^(MASConstraintMaker *make) {
         make.width.height.mas_equalTo(30);
         make.right.mas_equalTo(self.bottomInfoView.mas_right).offset(-15);
-        make.centerY.mas_equalTo(self.avator);
+        make.centerY.mas_equalTo(self.avatarView);
     }];
     [self.imBtn mas_makeConstraints:^(MASConstraintMaker *make) {
         make.width.height.mas_equalTo(30);
         make.right.mas_equalTo(self.callBtn.mas_left).offset(-30);
-        make.centerY.mas_equalTo(self.avator);
+        make.centerY.mas_equalTo(self.avatarView);
     }];
 
 }
@@ -296,18 +290,15 @@
             self.scoreDescription.text = model.contactModel.realtorScoreDescription;
             if (IS_EMPTY_STRING(self.scoreDescription.text) || IS_EMPTY_STRING(self.score.text)) {
                 [self.name mas_remakeConstraints:^(MASConstraintMaker *make) {
-                    make.centerY.mas_equalTo(self.avator);
-                    make.left.mas_equalTo(self.avator.mas_right).offset(10);
+                    make.centerY.mas_equalTo(self.avatarView);
+                    make.left.mas_equalTo(self.avatarView.mas_right).offset(10);
                     make.height.mas_equalTo(22);
                 }];
                 self.score.hidden = YES;
                 self.scoreDescription.hidden = YES;
                 [self.licenceIcon updateConstraintsIfNeeded];
             }
-            if (model.contactModel.avatarUrl.length > 0) {
-//                [self.avator bd_setImageWithURL:[NSURL URLWithString:model.contactModel.avatarUrl] placeholder:[UIImage imageNamed:@"detail_default_avatar"]];
-                [self.avator updateAvatarImageURL:model.contactModel.avatarUrl];
-            }
+            [self.avatarView updateAvatarWithModel:model.contactModel];
             self.phoneCallViewModel = [[FHHouseDetailPhoneCallViewModel alloc] initWithHouseType:FHHouseTypeNeighborhood houseId:model.id];
             BOOL isLicenceIconHidden = ![self shouldShowContact:model.contactModel];
             [self.licenceIcon setHidden:isLicenceIconHidden];

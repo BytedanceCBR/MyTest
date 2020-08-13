@@ -122,21 +122,9 @@
                 itemView.name.text = [NSString stringWithFormat:@"%@...",[obj.realtorName substringToIndex:5]];
             }
             itemView.agency.text = obj.agencyName;
-            if (obj.avatarUrl.length) {
-                [itemView.avatorView updateAvatarImageURL:obj.avatarUrl];
-            }
-            FHDetailContactImageTagModel *tag = obj.imageTag;
-            if (tag.imageUrl.length) {
-                [itemView.avatorView updateIdentifyImageURL:tag.imageUrl];
-            }
-            
-            FHDetailContactModel *model  =  (FHDetailContactModel *)obj;
-            if (model.realtorCellShow == FHRealtorCellShowStyle0) {
+            [itemView.avatorView updateAvatarWithModel:obj];
+            if (obj.realtorCellShow == FHRealtorCellShowStyle0) {
                 itemView.agency.font = [UIFont themeFontRegular:14];
-                itemView.avatorView.identifyImageView.hidden = YES;
-            }
-            if (model.realtorCellShow == FHRealtorCellShowStyle3){
-                itemView.avatorView.identifyImageView.hidden = YES;
             }
             BOOL isLicenceIconHidden = ![self shouldShowContact:obj];
             [itemView configForLicenceIconWithHidden:isLicenceIconHidden];

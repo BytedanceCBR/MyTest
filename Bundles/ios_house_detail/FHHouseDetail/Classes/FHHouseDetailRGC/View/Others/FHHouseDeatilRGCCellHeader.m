@@ -12,10 +12,10 @@
 #import "Masonry.h"
 #import "FHRealtorEvaluatingPhoneCallModel.h"
 #import <FHHouseBase/FHCommonDefines.h>
-#import "FHRealtorAvatarView.h"
+#import <FHhousebase/FHRealtorAvatarView.h>
 
 @interface FHHouseDeatilRGCCellHeader ()
-@property (weak, nonatomic) FHRealtorAvatarView *headerIma;
+@property (strong, nonatomic) FHRealtorAvatarView *avatarView;
 @property (weak, nonatomic) UILabel *nameLab;
 @property (weak, nonatomic) UIImageView *companyBac;
 @property (weak, nonatomic) UILabel *companyNameLab;
@@ -35,14 +35,14 @@
 }
 
 - (void)createUI {
-    [self.headerIma mas_makeConstraints:^(MASConstraintMaker *make) {
+    [self.avatarView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.equalTo(self).offset(15);
         make.centerY.equalTo(self);
         make.size.mas_equalTo(CGSizeMake(34, 34));
     }];
     [self.nameLab mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.equalTo(self.headerIma.mas_right).offset(10);
-        make.top.equalTo(self.headerIma);
+        make.left.equalTo(self.avatarView.mas_right).offset(10);
+        make.top.equalTo(self.avatarView);
     }];
     
     [self.companyBac mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -62,37 +62,30 @@
     }];
     [self.phoneBtn mas_makeConstraints:^(MASConstraintMaker *make) {
         make.right.equalTo(self.mas_right).offset(-8);
-        make.centerY.equalTo(self.headerIma);
+        make.centerY.equalTo(self.avatarView);
         make.size.mas_equalTo(CGSizeMake(30, 30));
     }];
     [self.iMBtn mas_makeConstraints:^(MASConstraintMaker *make) {
         make.right.equalTo(self.phoneBtn.mas_left).offset(-30);
-        make.centerY.equalTo(self.headerIma);
+        make.centerY.equalTo(self.avatarView);
         make.size.mas_equalTo(CGSizeMake(30, 30));
     }];
     
     [self.infoLab mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.equalTo(self.nameLab);
-        make.bottom.equalTo(self.headerIma.mas_bottom).offset(2);
+        make.bottom.equalTo(self.avatarView.mas_bottom).offset(2);
         make.right.equalTo(self.iMBtn.mas_left).offset(-20);
     }];
 }
 
-- (UIImageView *)headerIma {
-    if (!_headerIma) {
-        FHRealtorAvatarView *headerIma = [[FHRealtorAvatarView alloc]init];
-        headerIma.layer.cornerRadius = 17;
-        headerIma.layer.masksToBounds = YES;
-        headerIma.backgroundColor = [UIColor themeGray7];
-//        headerIma.image = [UIImage imageNamed:@"detail_default_avatar"];
+- (FHRealtorAvatarView *)avatarView {
+    if (!_avatarView) {
+        _avatarView = [[FHRealtorAvatarView alloc] init];
         UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(clickImage)];
-        [headerIma addGestureRecognizer:tapGesture];
-        headerIma.userInteractionEnabled = YES;
-        headerIma.contentMode = UIViewContentModeScaleAspectFill;
-        [self addSubview:headerIma];
-        _headerIma = headerIma;
+        [_avatarView.avatarImageView addGestureRecognizer:tapGesture];
+        [self addSubview:_avatarView];
     }
-    return _headerIma;
+    return _avatarView;
 }
 
 - (UILabel *)nameLab {
@@ -164,16 +157,8 @@
 
 - (void)refreshWithData:(FHFeedUGCCellModel *)cellModel {
     _cellModel = cellModel;
-//    if (cellModel.realtor.avatarUrl && cellModel.realtor.avatarUrl.length>0 ) {
-//        [self.headerIma bd_setImageWithURL:[NSURL URLWithString:cellModel.realtor.avatarUrl] placeholder:[UIImage imageNamed:@"detail_default_avatar"]];
-//    }else {
-//        [self.headerIma setImage:[UIImage imageNamed:@"detail_default_avatar"]];
-//    }
-    if(cellModel.realtor.avatarUrl) {
-        [self.headerIma updateAvatarImageURL:cellModel.realtor.avatarUrl];
-    }else {
-        [self.headerIma.avatarImageView setImage:[UIImage imageNamed:@"detail_default_avatar"]];
-    }
+    
+    [self.avatarView updateAvatarWithUGCCellModel:cellModel];
 
     if (cellModel.realtor.certificationIcon.length>0) {
         self.licenceIcon.hidden = NO;

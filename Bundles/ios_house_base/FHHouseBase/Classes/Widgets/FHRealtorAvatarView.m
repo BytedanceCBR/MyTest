@@ -9,6 +9,7 @@
 #import <BDWebImage/BDWebImage.h>
 #import <Masonry/Masonry.h>
 #import <FHHouseDetail/FHDetailBaseModel.h>
+#import <FHFeedUGCCellModel.h>
 
 @interface FHRealtorAvatarView ()
 
@@ -67,8 +68,9 @@
                 if (image.size.height > 0 && image.size.width) {
                     ratio = image.size.height / image.size.width;
                 }
-                [weakSelf.identifyImageView mas_updateConstraints:^(MASConstraintMaker *make) {
-                    make.height.mas_equalTo(weakSelf.frame.size.width * ratio);
+                [weakSelf.identifyImageView mas_remakeConstraints:^(MASConstraintMaker *make) {
+                    make.left.bottom.right.mas_equalTo(0);
+                    make.height.mas_equalTo(weakSelf.avatarImageView.mas_width).multipliedBy(ratio);
                 }];
             }
         }];
@@ -76,5 +78,30 @@
         self.identifyImageView.hidden = YES;
     }
 }
+
+- (void)updateAvatarWithModel:(FHDetailContactModel *)contactModel {
+    if (contactModel.avatarUrl.length) {
+        [self updateAvatarImageURL:contactModel.avatarUrl];
+    }
+    if (contactModel.imageTag.imageUrl.length) {
+        self.identifyImageView.hidden = NO;
+        [self updateIdentifyImageURL:contactModel.imageTag.imageUrl];
+    }
+    
+//    if (contactModel.realtorCellShow == FHRealtorCellShowStyle0) {
+//        self.identifyImageView.hidden = YES;
+//    }
+    if (contactModel.realtorCellShow == FHRealtorCellShowStyle3){
+        self.identifyImageView.hidden = YES;
+    }
+}
+
+-(void)updateAvatarWithUGCCellModel:(FHFeedUGCCellModel *)cellModel {
+    if(cellModel.realtor.avatarUrl.length) {
+        [self updateAvatarImageURL:cellModel.realtor.avatarUrl];
+    }
+    
+}
+
 
 @end

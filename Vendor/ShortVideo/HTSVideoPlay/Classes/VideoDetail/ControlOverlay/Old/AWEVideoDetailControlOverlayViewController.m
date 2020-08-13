@@ -80,6 +80,7 @@
 #import "FHCommonApi.h"
 #import "UIColor+Theme.h"
 #import "UIImage+FIconFont.h"
+#import <FHHouseBase/FHRealtorAvatarView.h>
 
 static const CGFloat kCheckChallengeButtonWidth = 72;
 static const CGFloat kCheckChallengeButtonHeight = 28;
@@ -92,7 +93,7 @@ static const CGFloat kCheckChallengeButtonLeftPadding = 28;
 // Top controls
 @property (nonatomic, strong) UIView *topBarView;
 @property (nonatomic, strong) CAGradientLayer *topBarGradientLayer;
-@property (nonatomic, strong) TSVAvatarImageView *avatarImageView;
+@property (nonatomic, strong) FHRealtorAvatarView *avatarView;
 @property (nonatomic, strong) UILabel *nameLabel;
 @property (nonatomic, strong) TTFollowThemeButton *followButton;
 @property (nonatomic, strong) UIButton *moreButton;
@@ -264,11 +265,11 @@ static const CGFloat kCheckChallengeButtonLeftPadding = 28;
         _userInfoContainerView = [[UIView alloc] init];
         _userInfoContainerView.backgroundColor = [UIColor clearColor];
 
-        _avatarImageView = [[TSVAvatarImageView alloc] initWithFrame:CGRectMake(0, 0, 40, 40) model:self.model.author disableNightMode:YES];
-        [_userInfoContainerView addSubview:_avatarImageView];
+        _avatarView = [[FHRealtorAvatarView alloc] init];
+        [_userInfoContainerView addSubview:_avatarView];
         // add by zjing 去掉小视频关注
-        [_avatarImageView addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleAvatarClick:)]];
-
+        [_avatarView addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleAvatarClick:)]];
+        
         _nameLabel = [[UILabel alloc] init];
         _nameLabel.textColor = [UIColor whiteColor];
         _nameLabel.numberOfLines = 1;
@@ -538,7 +539,7 @@ static const CGFloat kCheckChallengeButtonLeftPadding = 28;
     
     CGFloat avatarSize = 40;
 
-    [_avatarImageView mas_makeConstraints:^(MASConstraintMaker *make) {
+    [_avatarView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerY.equalTo(self.userInfoContainerView);
         make.left.equalTo(_userInfoContainerView);
         make.width.height.equalTo(@(avatarSize));
@@ -546,7 +547,7 @@ static const CGFloat kCheckChallengeButtonLeftPadding = 28;
 
     [_nameLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerY.equalTo(self.userInfoContainerView);
-        make.left.equalTo(_avatarImageView.mas_right).offset(8.0);
+        make.left.equalTo(_avatarView.mas_right).offset(8.0);
         make.right.equalTo(_userInfoContainerView);
         make.height.equalTo(@24.0);
     }];
@@ -859,7 +860,7 @@ static const CGFloat kCheckChallengeButtonLeftPadding = 28;
 
     [self.view setNeedsUpdateConstraints];
 
-    [self.avatarImageView refreshWithModel:model.author];
+    [self.avatarView updateAvatarImageURL:model.author.avatarURL];
 
     self.nameLabel.text = self.model.author.name;
 

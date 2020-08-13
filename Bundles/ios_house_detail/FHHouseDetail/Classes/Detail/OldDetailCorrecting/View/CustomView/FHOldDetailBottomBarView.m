@@ -192,8 +192,8 @@
 
     self.leftView.hidden = contactPhone.showRealtorinfo == 1 ? NO : YES;
     self.imChatBtn.hidden = !showIM;
-    if (contactPhone.avatarUrl) {
-        [self.avatarView updateAvatarImageURL:contactPhone.avatarUrl];
+    if (contactPhone) {
+        [self.avatarView updateAvatarWithModel:contactPhone];
     }
 
 //    FHDetailContactImageTagModel *tag = contactPhone.imageTag;
