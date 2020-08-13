@@ -30,6 +30,7 @@ typedef void(^FHMessageCellClick)(id data);
 -(void)displaySendState:(ChatMsg *)msg;
 - (void)initGestureWithData:(id)data index:(NSInteger)index;
 - (void)close;
+- (void)initGesture;
 @end
 
 NS_ASSUME_NONNULL_END

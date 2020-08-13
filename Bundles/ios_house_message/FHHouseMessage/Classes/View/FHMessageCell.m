@@ -696,6 +696,12 @@
         }
     } completion:^(BOOL finished) {
         if (finished) {
+            if (finished) {
+//                for(FHMessageCell * cell in self.tableView.visibleCells)
+//                {
+//                    [cell initGesture];
+//                }
+            }
             if (springX != 0) {
                 [UIView animateWithDuration:0.3 delay:0 options:options animations:^{
                     [self move:moveX];
@@ -736,6 +742,17 @@
         self.editView = nil;
     }
     [self initViews];
+}
+
+- (void)initGesture {
+    if (self.panGesture) {
+        [self.contentView removeGestureRecognizer:_panGesture];
+        self.panGesture.delegate = nil;
+        self.panGesture = nil;
+    }
+    _panGesture = [[UIPanGestureRecognizer alloc]initWithTarget:self action:@selector(panAction:)];
+    _panGesture.delegate = self;
+    [self.contentView addGestureRecognizer:_panGesture];
 }
 
 - (void)removeAnimations {

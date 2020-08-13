@@ -324,6 +324,7 @@ typedef NS_ENUM(NSInteger, FHSegmentedControllerAnimatedTransitionDirection) {
     WeakSelf;
     segmentedControl.indexChangeBlock = ^(NSInteger index) {
         WeakSelf;
+        self.enterType = @"click";
         [self segmentedControlValueChanged];
     };
     //self.navigationItem.titleView = segmentedControl;
@@ -382,15 +383,9 @@ typedef NS_ENUM(NSInteger, FHSegmentedControllerAnimatedTransitionDirection) {
     self.viewControllers = @[systemViewController, imViewController];
     //self.segmentedControl.hidden = YES;
     
-    
-    self.topView = [[FHMessageTopView alloc] init];
-    self.topView.tagChangeBlock = ^(NSInteger tag) {
-        //tag 0 1
-        [weakSelf selectViewControllerAtIndex:tag];
-        weakSelf.enterType = @"click";
 //        [weakSelf setActiveViewController:weakSelf.viewControllers.lastObject];
 //        [wself refreshDataWithType:tag];
-    };
+ //   };
 //    [self.customNavBarView addSubview:self.topView];
 //    [self.segmentedControl mas_makeConstraints:^(MASConstraintMaker *make) {
 //        make.centerX.mas_equalTo(self.customNavBarView);
@@ -698,6 +693,7 @@ typedef NS_ENUM(NSInteger, FHSegmentedControllerAnimatedTransitionDirection) {
 }
 
 - (void)handlePanGesture:(UIPanGestureRecognizer *)sender {
+    self.enterType = @"flip";
     switch (sender.state) {
         case UIGestureRecognizerStateBegan:{
             //Begin
@@ -743,7 +739,6 @@ typedef NS_ENUM(NSInteger, FHSegmentedControllerAnimatedTransitionDirection) {
             }
             self.interactiveTransitionContext = nil;
             self.interactiveTransitionAnimator = nil;
-            self.enterType = @"flip";
         }break;
     }
 }
