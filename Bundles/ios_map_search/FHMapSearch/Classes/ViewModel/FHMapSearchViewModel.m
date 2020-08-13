@@ -1214,7 +1214,6 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
         [indicator setBackgroundColor:[UIColor themeGray6]];
         [self.bottomShowInfoView addSubview:indicator];
          
-        
 //         UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(20.0f, indicator.bottom + 10, self.viewController.view.frame.size.width - 40, 30)];
 //         titleLabel.text = @"新房123";
 //         [titleLabel setFont:[UIFont themeFontMedium:20]];
@@ -1225,7 +1224,7 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
     
        [self.bottomShowInfoView addSubview:houseView];
                  
-         CGFloat finalHeight = ([UIDevice btd_isIPhoneXSeries] ? 221 : 201);
+        CGFloat finalHeight = ([UIDevice btd_isIPhoneXSeries] ? 221 : 201);
 
         if (self.bottomShowInfoView.frame.origin.y != self.viewController.view.frame.size.height) {
             [self.bottomShowInfoView setFrame:CGRectMake(0, self.viewController.view.frame.size.height - finalHeight, self.viewController.view.frame.size.width, finalHeight)];
@@ -1260,6 +1259,12 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
     FHHouseAnnotation *houseAnnotation = (FHHouseAnnotation *)annotationView.annotation;
     if (houseAnnotation.searchType == FHMapSearchTypeFakeStation) {
         //地铁站不响应
+        return;
+    }
+    
+    if (![TTReachability isNetworkConnected]) {
+        [[FHMainManager sharedInstance] showToast:@"网络异常" duration:1];
+        [self dismissHouseListView];
         return;
     }
     
@@ -1606,6 +1611,8 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
 //    if (self.currentHouseType == FHHouseTypeNewHouse) {
 //        [self handleSelectForNewHouse:view];
 //    }else{
+        FHHouseAnnotation *houseAnnotation = (FHHouseAnnotation *)view.annotation;
+        self.currentSelectAnnotation = houseAnnotation;
         [self handleSelect:view];
 //    }
 }
