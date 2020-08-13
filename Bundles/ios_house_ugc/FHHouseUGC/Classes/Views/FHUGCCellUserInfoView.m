@@ -78,16 +78,18 @@
 }
 
 - (void)initViews {
-    self.icon = [[TTAsyncCornerImageView alloc] initWithFrame:CGRectMake(20, 0, 40, 40) allowCorner:YES];
+//    self.icon = [[TTAsyncCornerImageView alloc] initWithFrame:CGRectMake(20, 0, 40, 40) allowCorner:YES];
+    self.icon = [[FHRealtorAvatarView alloc] initWithFrame:CGRectMake(20, 0, 40, 40)];
     //    _icon.backgroundColor = [UIColor themeGray7];
-    _icon.placeholderName = @"fh_mine_avatar";
-    _icon.cornerRadius = 20;
+//    _icon.placeholderName = @"fh_mine_avatar";
+//    _icon.cornerRadius = 20;
     //    _icon.imageContentMode = TTImageViewContentModeScaleAspectFill;
-    _icon.contentMode = UIViewContentModeScaleAspectFill;
     //    _icon.layer.masksToBounds = YES;
     //    _icon.layer.cornerRadius = 20;
-    _icon.borderWidth = 1;
-    _icon.borderColor = [UIColor themeGray6];
+    _icon.avatarImageView.layer.borderWidth = 1;
+    _icon.avatarImageView.layer.borderColor = [UIColor themeGray6].CGColor;
+//    _icon.borderWidth = 1;
+//    _icon.borderColor = [UIColor themeGray6];
     
     [self addSubview:_icon];
     
@@ -202,9 +204,11 @@
     imageModel.urlList = urlList;
     
     if (imageModel && imageModel.url.length > 0) {
-        [self.icon tt_setImageWithURLString:imageModel.url];
+//        [self.icon tt_setImageWithURLString:imageModel.url];
+        [self.icon updateAvatarImageURL:imageModel.url];
     }else{
-        [self.icon setImage:[UIImage imageNamed:@"fh_mine_avatar"]];
+        [self.icon.avatarImageView setImage:[UIImage imageNamed:@"fh_mine_avatar"]];
+//        [self.icon setImage:[UIImage imageNamed:@"fh_mine_avatar"]];
     }
     
     self.userName.text = !isEmptyString(cellModel.user.name) ? cellModel.user.name : @"用户";

@@ -18,7 +18,7 @@
 #import <TTThemed/UIColor+TTThemeExtension.h>
 #import "UIImage+FIconFont.h"
 #import "TTAccountManager.h"
-
+#import "FHRealtorAvatarView.h"
 @interface FHNeighbourhoodAgencyCardCell ()
 
 
@@ -33,7 +33,7 @@
 
 @property(nonatomic, strong) UIView *bottomInfoView;
 @property(nonatomic, strong) UIView *lineView;
-@property(nonatomic, strong) UIImageView *avator;
+@property(nonatomic, strong) FHRealtorAvatarView *avator;
 @property(nonatomic, strong) UIButton *licenceIcon;
 @property(nonatomic, strong) UIButton *callBtn;
 @property(nonatomic, strong) UIButton *imBtn;
@@ -115,10 +115,14 @@
     _lineView.backgroundColor = [UIColor themeGray7];
      [self.bottomInfoView addSubview:_lineView];
 
-    _avator = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"detail_default_avatar"]];
-    _avator.layer.cornerRadius = 23;
+//    _avator = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"detail_default_avatar"]];
+    _avator = [[FHRealtorAvatarView alloc] init];
+//    _avator.layer.cornerRadius = 23;
+    _avator.avatarImageView.layer.cornerRadius = 23;
     _avator.contentMode = UIViewContentModeScaleAspectFill;
-    _avator.clipsToBounds = YES;
+    _avator.avatarImageView.contentMode = UIViewContentModeScaleAspectFill;
+//    _avator.clipsToBounds = YES;
+    _avator.avatarImageView.clipsToBounds = YES;
     [self.bottomInfoView addSubview:_avator];
 
     _licenceIcon = [[FHExtendHotAreaButton alloc] init];
@@ -301,7 +305,8 @@
                 [self.licenceIcon updateConstraintsIfNeeded];
             }
             if (model.contactModel.avatarUrl.length > 0) {
-                [self.avator bd_setImageWithURL:[NSURL URLWithString:model.contactModel.avatarUrl] placeholder:[UIImage imageNamed:@"detail_default_avatar"]];
+//                [self.avator bd_setImageWithURL:[NSURL URLWithString:model.contactModel.avatarUrl] placeholder:[UIImage imageNamed:@"detail_default_avatar"]];
+                [self.avator updateAvatarImageURL:model.contactModel.avatarUrl];
             }
             self.phoneCallViewModel = [[FHHouseDetailPhoneCallViewModel alloc] initWithHouseType:FHHouseTypeNeighborhood houseId:model.id];
             BOOL isLicenceIconHidden = ![self shouldShowContact:model.contactModel];

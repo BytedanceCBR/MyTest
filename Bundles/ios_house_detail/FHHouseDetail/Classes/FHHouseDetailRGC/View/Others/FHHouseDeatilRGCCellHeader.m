@@ -12,9 +12,10 @@
 #import "Masonry.h"
 #import "FHRealtorEvaluatingPhoneCallModel.h"
 #import <FHHouseBase/FHCommonDefines.h>
+#import "FHRealtorAvatarView.h"
 
 @interface FHHouseDeatilRGCCellHeader ()
-@property (weak, nonatomic) UIImageView *headerIma;
+@property (weak, nonatomic) FHRealtorAvatarView *headerIma;
 @property (weak, nonatomic) UILabel *nameLab;
 @property (weak, nonatomic) UIImageView *companyBac;
 @property (weak, nonatomic) UILabel *companyNameLab;
@@ -79,11 +80,11 @@
 
 - (UIImageView *)headerIma {
     if (!_headerIma) {
-        UIImageView *headerIma = [[UIImageView alloc]init];
+        FHRealtorAvatarView *headerIma = [[FHRealtorAvatarView alloc]init];
         headerIma.layer.cornerRadius = 17;
         headerIma.layer.masksToBounds = YES;
         headerIma.backgroundColor = [UIColor themeGray7];
-        headerIma.image = [UIImage imageNamed:@"detail_default_avatar"];
+//        headerIma.image = [UIImage imageNamed:@"detail_default_avatar"];
         UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(clickImage)];
         [headerIma addGestureRecognizer:tapGesture];
         headerIma.userInteractionEnabled = YES;
@@ -163,11 +164,17 @@
 
 - (void)refreshWithData:(FHFeedUGCCellModel *)cellModel {
     _cellModel = cellModel;
-    if (cellModel.realtor.avatarUrl && cellModel.realtor.avatarUrl.length>0 ) {
-        [self.headerIma bd_setImageWithURL:[NSURL URLWithString:cellModel.realtor.avatarUrl] placeholder:[UIImage imageNamed:@"detail_default_avatar"]];
+//    if (cellModel.realtor.avatarUrl && cellModel.realtor.avatarUrl.length>0 ) {
+//        [self.headerIma bd_setImageWithURL:[NSURL URLWithString:cellModel.realtor.avatarUrl] placeholder:[UIImage imageNamed:@"detail_default_avatar"]];
+//    }else {
+//        [self.headerIma setImage:[UIImage imageNamed:@"detail_default_avatar"]];
+//    }
+    if(cellModel.realtor.avatarUrl) {
+        [self.headerIma updateAvatarImageURL:cellModel.realtor.avatarUrl];
     }else {
-        [self.headerIma setImage:[UIImage imageNamed:@"detail_default_avatar"]];
+        [self.headerIma.avatarImageView setImage:[UIImage imageNamed:@"detail_default_avatar"]];
     }
+
     if (cellModel.realtor.certificationIcon.length>0) {
         self.licenceIcon.hidden = NO;
     }else {
