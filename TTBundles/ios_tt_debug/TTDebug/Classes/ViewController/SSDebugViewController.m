@@ -770,7 +770,7 @@ extern NSString *const BOE_OPEN_KEY ;
         enableSingleChatRecallItem.switchAction = @selector(toggleIMSingleChatRecallEnable);
         
     
-        STTableViewCellItem *enableIMInitDeviceIDEmptyItem = [[STTableViewCellItem alloc] initWithTitle:@"模拟IM初始化DID为空开关(重启生效)" target:self action:nil];
+        STTableViewCellItem *enableIMInitDeviceIDEmptyItem = [[STTableViewCellItem alloc] initWithTitle:@"模拟IM初始化DID为空开关(重启生效)" target:self action:@selector(showIMDidConfigInfo)];
         enableIMInitDeviceIDEmptyItem.switchStyle = YES;
         enableIMInitDeviceIDEmptyItem.checked = [[NSUserDefaults standardUserDefaults] boolForKey:@"_IM_Init_Did_Empty_Enable_"];
         enableIMInitDeviceIDEmptyItem.switchAction = @selector(toggleIMInitDeviceIDEmptyEnable);
@@ -816,6 +816,15 @@ extern NSString *const BOE_OPEN_KEY ;
     BOOL isIMInitDidEmptyEnable = [[NSUserDefaults standardUserDefaults] boolForKey:@"_IM_Init_Did_Empty_Enable_"];
     [[NSUserDefaults standardUserDefaults] setBool:!isIMInitDidEmptyEnable forKey:@"_IM_Init_Did_Empty_Enable_"];
     [[NSUserDefaults standardUserDefaults] synchronize];
+}
+
+- (void)showIMDidConfigInfo {
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"IM相关DID配置信息" message:[NSString stringWithFormat: @"初始化DID:%@\n当前DID:%@",[[IMManager shareInstance] getIMInitConfigDid],[[IMManager shareInstance] getIMCurrentConfigDid]] preferredStyle:UIAlertControllerStyleAlert];
+    
+    UIAlertAction *cancel = [UIAlertAction actionWithTitle:@"了解了" style:UIAlertActionStyleCancel handler:nil];
+    [alert addAction:cancel];
+    
+    [self presentViewController:alert animated:YES completion:nil];
 }
 
 - (void)triggerIMTokenInvalide {
