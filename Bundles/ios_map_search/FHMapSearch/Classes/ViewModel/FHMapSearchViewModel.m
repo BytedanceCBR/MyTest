@@ -717,7 +717,7 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
         UIButton * _mapSearchBtn = [UIButton buttonWithType:UIButtonTypeCustom];
         [_mapSearchBtn setImage:[UIImage imageNamed:@"home_map_icon"] forState:UIControlStateNormal];
 //        _mapSearchBtn.hitTestEdgeInsets =  UIEdgeInsetsMake(-10, -10, -10, -30);
-        [_mapSearchBtn setFrame:CGRectMake(([UIScreen mainScreen].bounds.size.width - 80.0f)/2.0f, 128, 20, 20)];
+        [_mapSearchBtn setFrame:CGRectMake(([UIScreen mainScreen].bounds.size.width - 80.0f)/2.0f, 140, 20, 20)];
         [_mapSearchBtn addTarget:self action:@selector(clickAround) forControlEvents:UIControlEventTouchUpInside];
         [_houseNewView addSubview:_mapSearchBtn];
         
@@ -754,7 +754,11 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
 
 -(void)dismissHouseListView
 {
-    [self.houseListViewController dismiss];
+    if (self.currentHouseType == FHHouseTypeNewHouse) {
+        [self hideAnaInfoView];
+    }else{
+        [self.houseListViewController dismiss];
+    }
 }
 
 -(void)checkNeedRequest
@@ -1217,7 +1221,7 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
     
        [self.bottomShowInfoView addSubview:houseView];
                  
-         CGFloat finalHeight = ([UIDevice btd_isIPhoneXSeries] ? 201 : 201);
+         CGFloat finalHeight = ([UIDevice btd_isIPhoneXSeries] ? 221 : 201);
 
         if (self.bottomShowInfoView.frame.origin.y != self.viewController.view.frame.size.height) {
             [self.bottomShowInfoView setFrame:CGRectMake(0, self.viewController.view.frame.size.height - finalHeight, self.viewController.view.frame.size.width, finalHeight)];
@@ -1688,6 +1692,9 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
 #pragma mark - area house list
 -(void)showSiderHouseList
 {
+    
+    [self hideAnaInfoView];
+    
     [self addSideBarHouseListLog];
     
     if ([self.configModel.enterFrom isEqualToString:@"city_market"] || [self.configModel.enterFrom isEqualToString:@"maintab"] || !self.configModel.enterFromList) {

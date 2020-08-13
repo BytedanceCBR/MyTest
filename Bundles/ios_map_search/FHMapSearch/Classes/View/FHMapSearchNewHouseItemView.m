@@ -12,6 +12,7 @@
 #import "UIViewController+HUD.h"
 //#import "FHHomeBaseTableView.h"
 #define kMapSearchCellNewHouseItemImageId @"FHHouseBaseNewHouseCell"
+#define kMapSearchCellHeight 130
 
 @interface FHMapSearchNewHouseItemView ()<UITableViewDelegate,UITableViewDataSource>
 
@@ -25,7 +26,7 @@
 -(instancetype)initWithFrame:(CGRect)frame{
     self = [super initWithFrame:frame];
     if (self) {
-       _houseTable = [[UITableView alloc] initWithFrame:CGRectMake(0, 0,  [UIScreen mainScreen].bounds.size.width,118) style:UITableViewStylePlain];
+       _houseTable = [[UITableView alloc] initWithFrame:CGRectMake(0, 0,  [UIScreen mainScreen].bounds.size.width,kMapSearchCellHeight) style:UITableViewStylePlain];
         [_houseTable registerClass:[FHHouseBaseNewHouseCell class] forCellReuseIdentifier:kMapSearchCellNewHouseItemImageId];
 
         _houseTable.dataSource = self;
@@ -80,7 +81,7 @@
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    return 118;
+    return kMapSearchCellHeight;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {

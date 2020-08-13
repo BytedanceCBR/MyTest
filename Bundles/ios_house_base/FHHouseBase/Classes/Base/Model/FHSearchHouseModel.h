@@ -226,6 +226,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong , nullable) NSArray<FHImageModel> *images;
 @property (nonatomic, copy , nullable) NSString *uploadAt;
 @property (nonatomic, strong , nullable) NSArray<FHSearchHouseDataItemsRecommendReasonsModel> *recommendReasons;
+@property (nonatomic, strong , nullable) FHHouseListHouseAdvantageTagModel *advantageDescription ;
 @property (nonatomic, copy , nullable) NSString *displaySubtitle;
 @property (nonatomic, copy , nullable) NSString *url;
 @property (nonatomic, copy , nullable) NSString *displayBuiltYear;
@@ -398,6 +399,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong, nullable) FHSearchHouseVRModel *vrInfo;
 @property (nonatomic, copy , nullable) FHSearchHouseDataItemsFakeReasonModel *fakeReason;
 @property (nonatomic, strong , nullable) FHSearchHouseDataItemsBaseInfoMapModel *baseInfoMap ;
+@property (nonatomic, strong , nullable) FHHouseListHouseAdvantageTagModel *advantageDescription ;
 
 @property (nonatomic, copy , nullable) NSString *status;
 @property (nonatomic, strong , nullable) NSArray<FHHouseTagsModel> *tags;
@@ -413,7 +415,6 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *originPrice;
 @property (nonatomic, strong) NSArray* bottomText;
 @property (nonatomic, strong , nullable) FHSearchHouseDataItemsSkyEyeTagModel *skyEyeTag ; // 先下线
-@property (nonatomic, strong , nullable) FHHouseListHouseAdvantageTagModel *advantageDescription ;
 @property (nonatomic, strong , nullable) FHDetailContactModel *contactModel ;
 @property (nonatomic, strong, nullable) FHClueAssociateInfoModel *associateInfo;
 
