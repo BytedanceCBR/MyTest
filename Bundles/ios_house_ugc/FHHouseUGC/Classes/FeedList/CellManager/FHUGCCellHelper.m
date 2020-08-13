@@ -16,6 +16,7 @@
 #import "TTRichSpanText+Link.h"
 #import "TTUGCEmojiParser.h"
 #import "TTUGCTextRender.h"
+#import <BDWebImage/UIImageView+BDWebImage.h>
 
 @implementation FHUGCCellHelper
 
@@ -129,6 +130,77 @@
             label.numberOfLines = numberOfLines;
             [label setText:mutableAttributedString];
         }
+    }
+}
+
+
++ (void)setRichContentImageWithModel:(FHFeedUGCCellModel *)model width:(CGFloat)width numberOfLines:(NSInteger)numberOfLines {
+    
+    TTRichSpans *richSpans = [TTRichSpans richSpansForJSONString:model.contentRichSpan];
+    TTRichSpanText *richContent = [[[TTRichSpanText alloc] initWithText:model.content richSpans:richSpans] replaceWhitelistLinks];
+    
+    TTRichSpanText *threadContent = [[TTRichSpanText alloc] initWithText:@"" richSpanLinks:nil imageInfoModelDictionary:nil];
+    
+    model.richContent = richContent;
+    
+    if (!isEmptyString(model.title)) {
+        [threadContent appendText:[NSString stringWithFormat:@"【%@】",model.title]];
+    }
+    if (!isEmptyString(model.content)) {
+        [threadContent appendRichSpanText:richContent];
+    }
+    
+    if (!isEmptyString(threadContent.text)) {
+                CGFloat lineHeight = ceil(16 * 1.4);
+        
+             NSMutableAttributedString *userAttrStr = [[NSMutableAttributedString alloc]init];
+                if (model.user.name) {
+                    NSAttributedString *as = [[NSAttributedString alloc]initWithString:[NSString stringWithFormat:@" %@说：",model.user.name]];
+                    [userAttrStr appendAttributedString:as];
+                    NSMutableDictionary *attributes = @{}.mutableCopy;
+                    [attributes setValue:[UIColor themeGray2] forKey:NSForegroundColorAttributeName];
+                    [attributes setValue:[UIFont themeFontSemibold:14] forKey:NSFontAttributeName];
+                    NSMutableParagraphStyle * paragraphStyle = [[NSMutableParagraphStyle alloc] init];
+                    paragraphStyle.minimumLineHeight = lineHeight;
+                    paragraphStyle.maximumLineHeight = lineHeight;
+                    paragraphStyle.lineSpacing = 2;
+                    paragraphStyle.firstLineHeadIndent = 20;
+                    paragraphStyle.lineBreakMode = NSLineBreakByCharWrapping;
+                    [attributes setValue:paragraphStyle forKey:NSParagraphStyleAttributeName];
+                    [userAttrStr addAttributes:attributes range:NSMakeRange(0, userAttrStr.length)];
+                }
+                
+                NSAttributedString *attrStr = [TTUGCEmojiParser parseInTextKitContext:threadContent.text fontSize:16 topAdjust:1.5];
+                if (attrStr) {
+                    NSMutableAttributedString *mutableAttributedString = [attrStr mutableCopy];
+                    NSMutableDictionary *attributes = @{}.mutableCopy;
+                    [attributes setValue:[UIColor themeGray2] forKey:NSForegroundColorAttributeName];
+                    [attributes setValue:[UIFont themeFontRegular:14]  forKey:NSFontAttributeName];
+
+                    NSMutableParagraphStyle * paragraphStyle = [[NSMutableParagraphStyle alloc] init];
+                    
+                    paragraphStyle.minimumLineHeight = lineHeight;
+                    paragraphStyle.maximumLineHeight = lineHeight;
+                    paragraphStyle.lineSpacing = 2;
+                    paragraphStyle.lineBreakMode = NSLineBreakByCharWrapping;
+                    [attributes setValue:paragraphStyle forKey:NSParagraphStyleAttributeName];
+                    
+                    [mutableAttributedString addAttributes:attributes range:NSMakeRange(0, attrStr.length)];
+                    
+                    if (userAttrStr) {
+                        [mutableAttributedString insertAttributedString:userAttrStr atIndex:0];
+                    }
+                    
+                    model.contentAStr = mutableAttributedString;
+                    
+                    CGSize size = [self sizeThatFitsAsyncAttributedString:mutableAttributedString
+                                                                      withConstraints:CGSizeMake(width, FLT_MAX)
+                                                                     maxNumberOfLines:numberOfLines
+                                                               limitedToNumberOfLines:&numberOfLines];
+                    model.contentHeight = size.height;
+                }
+    }else{
+        model.contentHeight = 0;
     }
 }
 
@@ -260,16 +332,24 @@
         }
     }
 }
-
 + (void)setAsyncRichContent:(TTUGCAsyncLabel *)label model:(FHFeedUGCCellModel *)model {
+    [FHUGCCellHelper setAsyncRichContent:label model:model truncatedToken:nil];
+}
+
++ (void)setAsyncRichContent:(TTUGCAsyncLabel *)label model:(FHFeedUGCCellModel *)model truncatedToken:(NSAttributedString *)truncatedToken {
     //内容
     TTUGCTextRender *textRender = [[TTUGCTextRender alloc] initWithAttributedText:model.contentAStr];
     textRender.maximumNumberOfLines = model.numberOfLines;
     textRender.font = [UIFont themeFontRegular:16];
     if(model.showLookMore){
-        textRender.truncatedToken = [FHUGCCellHelper truncationFont:[UIFont themeFontRegular:16]
-                                                       contentColor:[UIColor themeGray1]
-                                                              color:[UIColor themeRed3]];
+        if (truncatedToken) {
+            textRender.truncatedToken = truncatedToken;
+        }else {
+            textRender.truncatedToken = [FHUGCCellHelper truncationFont:[UIFont themeFontRegular:16]
+            contentColor:[UIColor themeGray1]
+                   color:[UIColor themeRed3]];
+        }
+        
     }
     
     NSMutableArray *linkModels = [NSMutableArray array];
@@ -696,5 +776,28 @@
     }
 }
 
++ (UIImage *)circleImage:(UIImage *)ima
+{
+    
+    //1.开启图片图形上下文:注意设置透明度为非透明
+    UIGraphicsBeginImageContextWithOptions(ima.size, NO, 0.0);
+    //2.开启图形上下文
+    CGContextRef ref = UIGraphicsGetCurrentContext();
+    //3.绘制圆形区域(此处根据宽度来设置)
+    CGRect rect = CGRectMake(0, 0, ima.size.width, ima.size.width);
+    CGContextAddEllipseInRect(ref, rect);
+    //4.裁剪绘图区域
+    CGContextClip(ref);
+    
+    //5.绘制图片
+    [ima drawInRect:rect];
+    
+    //6.获取图片
+    UIImage * image = UIGraphicsGetImageFromCurrentImageContext();
+    //7.关闭图形上下文
+    UIGraphicsEndImageContext();
+    
+    return image;
+}
 
 @end

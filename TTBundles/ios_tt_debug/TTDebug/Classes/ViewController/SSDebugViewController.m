@@ -260,7 +260,7 @@ extern NSString *const BOE_OPEN_KEY ;
 //        STTableViewCellItem *item_001 = [[STTableViewCellItem alloc] initWithTitle:@"Settings调试选项" target:self action:@selector(_openSettingsBrowserVC)];
 //        [itemArray addObject:item_001];
         
-        STTableViewCellItem *item_002 = [[STTableViewCellItem alloc] initWithTitle:@"客户端ABTest试验详情" target:self action:@selector(_openClientABTestVC)];
+//        STTableViewCellItem *item_002 = [[STTableViewCellItem alloc] initWithTitle:@"客户端ABTest试验详情" target:self action:@selector(_openClientABTestVC)];
         
         
         STTableViewCellItem *settingRefreshItem = [[STTableViewCellItem alloc] initWithTitle:@"强制刷新 settings" target:self action:@selector(forceRefreshSettings)];

@@ -134,7 +134,7 @@ FHDetailVCViewLifeCycleProtocol>
 - (void)setUpSegmentedControl
 {
     _segmentedControl = [HMSegmentedControl new];
-    _segmentedControl.sectionTitles = @[@"交通(0)",@"购物(0)",@"医院(0)",@"教育(0)"];
+    _segmentedControl.sectionTitles = @[@"交通",@"购物(0)",@"医院(0)",@"教育"];
     _segmentedControl.selectionIndicatorHeight = 2;
     _segmentedControl.selectionIndicatorColor = [UIColor themeOrange1];
     _segmentedControl.selectionStyle = HMSegmentedControlSelectionStyleTextWidthStripe;

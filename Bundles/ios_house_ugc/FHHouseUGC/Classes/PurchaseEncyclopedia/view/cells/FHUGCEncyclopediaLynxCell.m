@@ -22,6 +22,9 @@
 #import "FHLynxManager.h"
 #import "IESGeckoKit.h"
 #import "FHIESGeckoManager.h"
+#import "TTInstallIDManager.h"
+#import "HMDTTMonitor.h"
+
 @interface FHUGCEncyclopediaLynxCell()<LynxViewClient>
 //@property (weak, nonatomic) UILabel *content;
 //@property (weak, nonatomic) UIImageView *icon;
@@ -30,6 +33,7 @@
 //@property (strong, nonatomic) EncyclopediaItemModel *itemModel;
 @property (strong, nonatomic) UIImage *placeholderImage;
 @property (strong, nonatomic) LynxView *contentLynxView;
+@property (nonatomic, assign) NSTimeInterval loadTime; //页面加载时间
 
 @end
 
@@ -68,6 +72,40 @@
     UIImage *theImage = UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndImageContext();
     return theImage;
+}
+
+#pragma mark - LynxClient
+- (void)lynxViewDidFirstScreen:(LynxView*)view{
+    NSTimeInterval costTime = [[NSDate date] timeIntervalSince1970] - _loadTime;
+    [self sendCostTimeEvent:costTime andService:@"lynx_page_duration"];
+}
+
+
+- (void)sendCostTimeEvent:(NSTimeInterval)time andService:(NSString *)sevice
+{
+    NSMutableDictionary * paramsExtra = [NSMutableDictionary new];
+    [paramsExtra setValue:[[TTInstallIDManager sharedInstance] deviceID] forKey:@"device_id"];
+     NSMutableDictionary *uploadParams = [NSMutableDictionary new];
+    NSString *eventServie = [NSString stringWithFormat:@"lynx_page_duration_%@",@"ugc_encyclopedia_lynx_item"];
+    if (time < 15) {
+        [uploadParams setValue:@(time * 1000) forKey:@"duration"];
+        [[HMDTTMonitor defaultManager] hmdTrackService:eventServie metric:uploadParams category:nil extra:paramsExtra];
+    }
+}
+
+- (void)lynxView:(LynxView*)view didReceiveFirstLoadPerf:(LynxPerformance*)perf{
+    
+    NSMutableDictionary * paramsExtra = [NSMutableDictionary new];
+    [paramsExtra setValue:[[TTInstallIDManager sharedInstance] deviceID] forKey:@"device_id"];
+     NSMutableDictionary *uploadParams = [NSMutableDictionary new];
+    if (perf && [[perf toDictionary] isKindOfClass:[NSDictionary class]]) {
+        [uploadParams addEntriesFromDictionary:[perf toDictionary]];
+    }
+    NSString *eventServie = [NSString stringWithFormat:@"lynx_page_info_%@",@"ugc_encyclopedia_lynx_item"];
+    [[HMDTTMonitor defaultManager] hmdTrackService:eventServie metric:uploadParams category:nil extra:paramsExtra];
+    
+}
+- (void)lynxView:(LynxView*)view didReceiveUpdatePerf:(LynxPerformance*)perf{
 }
 
 - (void)loadImageWithURL:(nonnull NSURL*)url
@@ -125,6 +163,7 @@
         [self.contentView addSubview:_contentLynxView];
         NSData *templateData =  [[FHLynxManager sharedInstance] lynxDataForChannel:@"ugc_encyclopedia_lynx_item" templateKey:[FHLynxManager defaultJSFileName] version:0];
         if (templateData) {
+            _loadTime = [[NSDate date] timeIntervalSince1970];
             [self.contentLynxView loadTemplate:templateData withURL:@"local"];
         }
     }

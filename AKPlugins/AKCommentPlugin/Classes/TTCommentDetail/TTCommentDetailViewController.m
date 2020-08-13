@@ -340,7 +340,9 @@ NSString *const kTTCommentDetailForwardCommentNotification = @"kTTCommentDetailF
     self.store.enterFrom = self.enterFrom;
     self.store.categoryID = self.categoryID;
     self.store.logPb = self.logPb;
-    [self addGoDetailLog];
+    if(!self.noReportGoDetail){
+        [self addGoDetailLog];
+    }
 }
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {

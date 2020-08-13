@@ -86,6 +86,7 @@
             tracerDic[@"category_name"] = cellModel.tracerDic[@"category_name"] ?: @"be_null";
             tracerDic[@"enter_type"] = enterType ? enterType : @"be_null";
             tracerDic[@"rank"] = cellModel.tracerDic[@"rank"];
+            tracerDic[@"group_source"] = cellModel.tracerDic[@"group_source"];
             if(!isEmptyString(cellModel.community.socialGroupId)){
                 tracerDic[@"social_group_id"] = cellModel.community.socialGroupId;
             }
@@ -108,8 +109,6 @@
 
 //视频详情页
 - (void)jumpToVideoDetail:(FHFeedUGCCellModel *)cellModel showComment:(BOOL)showComment enterType:(NSString *)enterType extraDic:(NSDictionary *)extraDic {
-    NSMutableDictionary *dict = @{}.mutableCopy;
-    
     if(self.currentCell && [self.currentCell isKindOfClass:[FHUGCVideoCell class]]){
         FHUGCVideoCell *cell = (FHUGCVideoCell *)self.currentCell;
         
@@ -185,7 +184,7 @@
     TRACK_EVENT(@"banner_click", guideDict);
     //根据url跳转
     NSURL *openUrl = [NSURL URLWithString:cellModel.openUrl];
-    TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:nil];
+    TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:guideDict];
     [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:userInfo];
 }
 
@@ -205,7 +204,7 @@
     TRACK_EVENT(@"card_click", guideDict);
     //根据url跳转
     NSURL *openUrl = [NSURL URLWithString:cellModel.openUrl];
-    TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:nil];
+    TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:guideDict];
     [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:userInfo];
 }
 
@@ -261,10 +260,10 @@
         tracerDic[@"concern_id"] = cellModel.tracerDic[@"concern_id"];
     }
     if(cellModel.fromGid){
-        tracerDic[@"from_gid"] = cellModel.fromGid;
+        tracerDic[@"from_gid"] = cellModel.groupId;
     }
     if(cellModel.fromGroupSource){
-        tracerDic[@"from_group_source"] = cellModel.fromGroupSource;
+        tracerDic[@"from_group_source"] = cellModel.tracerDic[@"group_source"];
     }
     if(extraDic){
         [tracerDic addEntriesFromDictionary:extraDic];

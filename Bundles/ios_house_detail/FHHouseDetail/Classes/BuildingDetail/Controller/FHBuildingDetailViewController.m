@@ -14,19 +14,20 @@
 #import "FHLoadingButton.h"
 #import "FHDetailSectionTitleCollectionView.h"
 #import "FHBuildingDetailFloorCollectionViewCell.h"
-#import "FHBuildingDetailHeaderCollectionViewCell.h"
 #import "FHBuildingDetailInfoCollectionViewCell.h"
 #import "FHBuildingDetailEmptyFloorCollectionViewCell.h"
+#import "FHBuildingDetailTopImageCollectionViewCell.h"
 #import "FHDetailBaseModel.h"
 #import "FHHouseDetailContactViewModel.h"
 #import "FHBuildingDetailModel.h"
+#import "FHBuildingDetailUtils.h"
+#import "NSDictionary+BTDAdditions.h"
 
 @interface FHBuildingDetailViewController ()<UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout>
 
 @property (nonatomic, copy) NSString *houseId;
-
+@property (nonatomic, copy) NSString *originId;
 @property (nonatomic, strong) FHBuildingDetailViewModel *viewModel;
-@property (nonatomic, assign) NSUInteger currentSelectIndex;
 
 @property (nonatomic, strong) FHBuildingDetailCollectionViewFlowLayout *layout;
 @property (nonatomic, weak) FHBaseCollectionView *collectionView;
@@ -39,6 +40,10 @@
 
 @property (nonatomic) BOOL shouldReloadAnimated;
 @property (nonatomic, strong) NSMutableArray *showHouseCache;
+
+@property (nonatomic, strong) NSMutableDictionary *currentDict;
+@property (nonatomic, weak) FHBuildingDetailTopImageCollectionViewCell *topImageView;
+@property (nonatomic, weak) FHBuildingDetailInfoCollectionViewCell *infoCollectionView;
 @end
 
 @implementation FHBuildingDetailViewController
@@ -48,6 +53,9 @@
         self.ttTrackStayEnable = YES;
         if (paramObj.allParams[@"house_id"]) {
             self.houseId = paramObj.allParams[@"house_id"];
+        }
+        if (paramObj.allParams[@"origin_id"]) {
+            self.originId = paramObj.allParams[@"origin_id"];
         }
 
         self.contactViewModel = [[FHHouseDetailContactViewModel alloc] initWithNavBar:nil bottomBar:nil houseType:FHHouseTypeNewHouse houseId:self.houseId];
@@ -62,6 +70,7 @@
             self.contactViewModel.onLineName = contactViewModel.onLineName;
             self.contactViewModel.toast = contactViewModel.toast;
         }
+        self.currentDict = [[NSMutableDictionary alloc] init];
     }
     return self;
 }
@@ -104,15 +113,15 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     self.view.backgroundColor = [UIColor themeGray7];
+    self.topImageView = nil;
     [self setupNavbar];
     [self setupUI];
     
     [self addDefaultEmptyViewFullScreen];
-
-    self.currentSelectIndex = 0;
+    
     self.viewModel = [[FHBuildingDetailViewModel alloc] initWithController:self];
     self.viewModel.houseId = self.houseId;
-//    self.viewModel
+    self.viewModel.originId = self.originId;
     [self.viewModel startLoadData];
     [self addGoDetailLog];
 }
@@ -165,12 +174,12 @@
         make.top.equalTo(self.customNavBarView.mas_bottom);
         make.bottom.mas_equalTo(0);
     }];
-    
-    [self.collectionView registerClass:[FHBuildingDetailHeaderCollectionViewCell class] forCellWithReuseIdentifier:NSStringFromClass([FHBuildingDetailHeaderCollectionViewCell class])];
+    [self.collectionView registerClass:[FHBuildingDetailTopImageCollectionViewCell class] forCellWithReuseIdentifier:NSStringFromClass([FHBuildingDetailTopImageCollectionViewCell class])];
     [self.collectionView registerClass:[FHBuildingDetailInfoCollectionViewCell class] forCellWithReuseIdentifier:NSStringFromClass([FHBuildingDetailInfoCollectionViewCell class])];
     [self.collectionView registerClass:[FHBuildingDetailFloorCollectionViewCell class] forCellWithReuseIdentifier:NSStringFromClass([FHBuildingDetailFloorCollectionViewCell class])];
     [self.collectionView registerClass:[FHBuildingDetailEmptyFloorCollectionViewCell class] forCellWithReuseIdentifier:NSStringFromClass([FHBuildingDetailEmptyFloorCollectionViewCell class])];
     [self.collectionView registerClass:[FHDetailSectionTitleCollectionView class] forSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:NSStringFromClass([FHDetailSectionTitleCollectionView class])];
+    [self.collectionView registerClass:[UICollectionViewCell class] forCellWithReuseIdentifier:NSStringFromClass([UICollectionViewCell class])];
 }
 
 - (void)refreshBottomBar {
@@ -283,13 +292,25 @@
     
     NSMutableArray <FHBuildingSectionModel *>*items = [NSMutableArray array];
     
-    if (self.viewModel.buildingDetailModel.data.buildingList.count > self.currentSelectIndex) {
+    if (self.viewModel.locationModel.buildingImage.url.length > 0) {
+        FHBuildingSectionModel *imageSection = [[FHBuildingSectionModel alloc] init];
+        imageSection.sectionType = FHBuildingSectionTypeImage;
+        [items addObject:imageSection];
+        self.layout.existTopImageView = YES;
+    }
+    
+    if (self.viewModel.locationModel.saleStatusList.count <= self.currentIndex.saleStatus) {
+        return;
+    }
+    
+    FHBuildingSaleStatusModel *statusModel = self.viewModel.locationModel.saleStatusList[self.currentIndex.saleStatus];
+    if (statusModel.buildingList.count > self.currentIndex.buildingIndex) {
         
         FHBuildingSectionModel *infoSection = [[FHBuildingSectionModel alloc] init];
         infoSection.sectionType = FHBuildingSectionTypeInfo;
         [items addObject:infoSection];
 
-        FHBuildingDetailDataItemModel *model = self.viewModel.buildingDetailModel.data.buildingList[self.currentSelectIndex];
+        FHBuildingDetailDataItemModel *model = statusModel.buildingList[self.currentIndex.buildingIndex];
 
         FHBuildingSectionModel *section = [[FHBuildingSectionModel alloc] init];
         if (model.relatedFloorplanList.list.count) {
@@ -307,9 +328,49 @@
     }
 }
 
+- (void)responseCenterWithOperat:(FHBuildingDetailOperatType)type withIndexModel:(FHBuildingIndexModel *)indexModel {
+    switch (type) {
+        case FHBuildingDetailOperatTypeSaleStatus:
+            indexModel.buildingIndex = [self.currentDict btd_integerValueForKey:@(indexModel.saleStatus)];
+            self.currentIndex = indexModel;
+            [self addClickOptions:type withIndexModel:indexModel];
+            [self reloadFloorCollectionViewData];
+            break;
+        case FHBuildingDetailOperatTypeInfoCell:
+            self.currentIndex = indexModel;
+            [self.currentDict btd_setObject:@(indexModel.buildingIndex) forKey:@(indexModel.saleStatus)];
+            break;
+        case FHBuildingDetailOperatTypeButton:
+            self.currentIndex = indexModel;
+            [self.currentDict btd_setObject:@(indexModel.buildingIndex) forKey:@(indexModel.saleStatus)];
+            [self addClickOptions:type withIndexModel:indexModel];
+            [self.infoCollectionView manualSetContentOffset:indexModel.buildingIndex];
+            break;
+        case FHBuildingDetailOperatTypeFromNew:    //不可能出现
+            self.currentIndex = indexModel;
+            [self.currentDict btd_setObject:@(indexModel.buildingIndex) forKey:@(indexModel.saleStatus)];
+            break;
+        default:
+            break;
+    }
+    [self.topImageView updateWithIndexModel:indexModel];
+    [self reloadRelatedFloorpanData];
+}
+
+- (void)reloadFloorCollectionViewData {
+    [UIView setAnimationsEnabled:NO];
+    [self.collectionView performBatchUpdates:^{
+        [self.collectionView reloadSections:[NSIndexSet indexSetWithIndex:self.viewModel.items.count - 2]];
+    } completion:^(BOOL finished) {
+        [UIView setAnimationsEnabled:YES];
+    }];
+    ;
+}
+
 - (void)reloadRelatedFloorpanData {
     FHBuildingSectionModel *section = self.viewModel.items.lastObject;
-    FHBuildingDetailDataItemModel *model = self.viewModel.buildingDetailModel.data.buildingList[self.currentSelectIndex];
+    FHBuildingSaleStatusModel *saleModel = self.viewModel.locationModel.saleStatusList[self.currentIndex.saleStatus];
+    FHBuildingDetailDataItemModel *model = saleModel.buildingList[self.currentIndex.buildingIndex];
     if (model.relatedFloorplanList.list.count) {
         section.sectionType = FHBuildingSectionTypeFloor;
         section.sectionTitle = model.relatedFloorplanList.title;
@@ -384,7 +445,8 @@
     FHBuildingSectionModel *sectionModel = self.viewModel.items[section];
     switch (sectionModel.sectionType) {
         case FHBuildingSectionTypeFloor: {
-            FHBuildingDetailDataItemModel *model =  self.viewModel.buildingDetailModel.data.buildingList[self.currentSelectIndex];
+            FHBuildingSaleStatusModel *saleModel = self.viewModel.locationModel.saleStatusList[self.currentIndex.saleStatus];
+            FHBuildingDetailDataItemModel *model = saleModel.buildingList[self.currentIndex.buildingIndex];
             if (model.relatedFloorplanList.list.count > 0) {
                 return model.relatedFloorplanList.list.count;
             }
@@ -404,18 +466,33 @@
     FHDetailBaseCollectionCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:sectionModel.className forIndexPath:indexPath];
     __weak typeof(self) weakSelf = self;
     switch (sectionModel.sectionType) {
+        case FHBuildingSectionTypeImage: {
+            [((FHBuildingDetailTopImageCollectionViewCell *)cell) setIndexDidSelect:^(FHBuildingDetailOperatType type, FHBuildingIndexModel * _Nonnull index) {
+                [weakSelf responseCenterWithOperat:type withIndexModel:index];
+            }];
+            self.topImageView = (FHBuildingDetailTopImageCollectionViewCell *)cell;
+            [cell refreshWithData:self.viewModel.locationModel];
+            [((FHBuildingDetailTopImageCollectionViewCell *)cell) updateWithIndexModel:self.currentIndex];
+            break;
+        }
         case FHBuildingSectionTypeInfo: {
             //切换调用
-            [cell refreshWithData:self.viewModel.buildingDetailModel];
-            [(FHBuildingDetailInfoCollectionViewCell *)cell setIndexDidChanged:^(NSUInteger index) {
-                weakSelf.currentSelectIndex = index;
-                [weakSelf reloadRelatedFloorpanData];
+            FHBuildingSaleStatusModel *saleModel = self.viewModel.locationModel.saleStatusList[self.currentIndex.saleStatus];
+            
+            ((FHBuildingDetailInfoCollectionViewCell *)cell).currentIndexPath = [NSIndexPath indexPathForItem:self.currentIndex.buildingIndex inSection:0];
+            [cell refreshWithData:saleModel];
+            self.infoCollectionView = (FHBuildingDetailInfoCollectionViewCell *)cell;
+            
+            [(FHBuildingDetailInfoCollectionViewCell *)cell setInfoIndexDidSelect:^(FHBuildingDetailOperatType type, FHBuildingIndexModel * _Nonnull index) {
+                [weakSelf responseCenterWithOperat:type withIndexModel:index];
             }];
+            
             break;
         }
         case FHBuildingSectionTypeFloor: {
             //动态调整
-            FHBuildingDetailDataItemModel *model = self.viewModel.buildingDetailModel.data.buildingList[self.currentSelectIndex];
+            FHBuildingSaleStatusModel *saleModel = self.viewModel.locationModel.saleStatusList[self.currentIndex.saleStatus];
+            FHBuildingDetailDataItemModel *model = saleModel.buildingList[self.currentIndex.buildingIndex];
             [cell refreshWithData:model.relatedFloorplanList.list[indexPath.row]];
             UIView *bottomLine = [(FHBuildingDetailFloorCollectionViewCell *)cell bottomLine];
             if (indexPath.row == model.relatedFloorplanList.list.count - 1) {
@@ -469,6 +546,10 @@
     FHBuildingSectionModel *sectionModel = self.viewModel.items[indexPath.section];
     CGFloat width = CGRectGetWidth(collectionView.frame);
     switch (sectionModel.sectionType) {
+        case FHBuildingSectionTypeImage: {
+            return [FHBuildingDetailUtils getTopImageViewSize];
+            break;
+        }
         case FHBuildingSectionTypeInfo: {
             //切换调用
             return CGSizeMake(width , 172 + 20 * 2);
@@ -494,6 +575,14 @@
         case FHBuildingSectionTypeFloor:
             return UIEdgeInsetsMake(20, 15, 20, 15);
             break;
+        case FHBuildingSectionTypeInfo:
+            if (self.viewModel.locationModel.buildingImage.url.length) {
+                return UIEdgeInsetsMake(-41, 0, 0, 0);
+            } else {
+                return UIEdgeInsetsZero;
+            }
+            
+            break;
         default:
             break;
     }
@@ -508,6 +597,7 @@
     return 0;
 }
 
+
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout referenceSizeForHeaderInSection:(NSInteger)section {
     FHBuildingSectionModel *sectionModel = self.viewModel.items[section];
     if (sectionModel.sectionTitle.length) {
@@ -521,7 +611,8 @@
 - (void)collectionView:(UICollectionView *)collectionView willDisplayCell:(UICollectionViewCell *)cell forItemAtIndexPath:(NSIndexPath *)indexPath {
     if ([cell isKindOfClass:[FHBuildingDetailFloorCollectionViewCell class]]) {
         // 上报埋点
-        FHBuildingDetailDataItemModel *model = self.viewModel.buildingDetailModel.data.buildingList[self.currentSelectIndex];
+        FHBuildingSaleStatusModel *saleModel = self.viewModel.locationModel.saleStatusList[self.currentIndex.saleStatus];
+        FHBuildingDetailDataItemModel *model = saleModel.buildingList[self.currentIndex.buildingIndex];
         FHBuildingDetailRelatedFloorpanModel *floorpan = model.relatedFloorplanList.list[indexPath.row];
         [self addHouseShow:floorpan.id];
     }
@@ -530,7 +621,8 @@
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
     FHBuildingSectionModel *sectionModel = self.viewModel.items[indexPath.section];
     if (sectionModel.sectionType == FHBuildingSectionTypeFloor) {
-        FHBuildingDetailDataItemModel *model = self.viewModel.buildingDetailModel.data.buildingList[self.currentSelectIndex];
+        FHBuildingSaleStatusModel *saleModel = self.viewModel.locationModel.saleStatusList[self.currentIndex.saleStatus];
+        FHBuildingDetailDataItemModel *model = saleModel.buildingList[self.currentIndex.buildingIndex];
         FHBuildingDetailRelatedFloorpanModel *floorModel = model.relatedFloorplanList.list[indexPath.row];
         NSMutableDictionary *traceParam = [NSMutableDictionary new];
         [traceParam addEntriesFromDictionary:self.tracerDict];
@@ -542,11 +634,11 @@
 //            traceParam[@"origin_search_id"] = self.baseViewModel.detailTracerDic[@"origin_search_id"];
 //        traceParam[@"element_from"] = @"be_null";
         //                    traceParam[@"log_pb"] = model.logPb;
-        NSDictionary *dict = @{@"house_type":@(1),
-                               @"tracer": traceParam
-        };
+//        NSDictionary *dict = @{@"house_type":@(1),
+//                               @"tracer": traceParam
+//        };
         
-        NSMutableDictionary *infoDict = [NSMutableDictionary dictionaryWithDictionary:nil];
+        NSMutableDictionary *infoDict = [NSMutableDictionary dictionary];
         [infoDict setValue:floorModel.id forKey:@"floor_plan_id"];
 //        [infoDict addEntriesFromDictionary:subPageParams];
         infoDict[@"house_type"] = @(1);
@@ -630,6 +722,28 @@
     //        params[@"biz_trace"] = self.houseInfoOriginBizTrace;
     //    }
     [FHUserTracker writeEvent:@"stay_page" params:params];
+}
+
+- (void)addClickOptions:(FHBuildingDetailOperatType)type withIndexModel:(FHBuildingIndexModel *)indexModel {
+    NSMutableDictionary *params = [NSMutableDictionary dictionary];
+    [params addEntriesFromDictionary:self.tracerDict];
+    params[@"element_type"] = @"building";
+    if (self.houseId.length) {
+        params[@"group_id"] = self.houseId;
+    }
+    NSString *clickPosition = @"null";
+    switch (type) {
+        case FHBuildingDetailOperatTypeSaleStatus:
+            clickPosition = self.viewModel.locationModel.saleStatusContents[indexModel.saleStatus];
+            break;
+        case FHBuildingDetailOperatTypeButton:
+            clickPosition = @"图片tag";
+            break;
+        default:
+            break;
+    }
+    params[@"click_position"] = clickPosition;
+    [FHUserTracker writeEvent:@"click_options" params:params];
 }
 
 @end

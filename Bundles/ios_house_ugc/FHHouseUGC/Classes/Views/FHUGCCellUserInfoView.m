@@ -40,7 +40,7 @@
 - (instancetype)initWithFrame:(CGRect)frame {
     self = [super initWithFrame:frame];
     if (self) {
-//        self.editState = FHUGCPostEditStateNone;
+        //        self.editState = FHUGCPostEditStateNone;
         [self initViews];
         [self initConstraints];
         [self setupNoti];
@@ -79,27 +79,32 @@
 
 - (void)initViews {
     self.icon = [[TTAsyncCornerImageView alloc] initWithFrame:CGRectMake(20, 0, 40, 40) allowCorner:YES];
-//    _icon.backgroundColor = [UIColor themeGray7];
+    //    _icon.backgroundColor = [UIColor themeGray7];
     _icon.placeholderName = @"fh_mine_avatar";
     _icon.cornerRadius = 20;
-//    _icon.imageContentMode = TTImageViewContentModeScaleAspectFill;
+    //    _icon.imageContentMode = TTImageViewContentModeScaleAspectFill;
     _icon.contentMode = UIViewContentModeScaleAspectFill;
-//    _icon.layer.masksToBounds = YES;
-//    _icon.layer.cornerRadius = 20;
+    //    _icon.layer.masksToBounds = YES;
+    //    _icon.layer.cornerRadius = 20;
     _icon.borderWidth = 1;
     _icon.borderColor = [UIColor themeGray6];
     
     [self addSubview:_icon];
     
     _icon.userInteractionEnabled = YES;
-     UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(goToPersonalHomePage)];
+    UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(goToPersonalHomePage)];
     [_icon addGestureRecognizer:tap];
     
     self.userName = [self LabelWithFont:[UIFont themeFontMedium:16] textColor:[UIColor themeGray1]];
     [self addSubview:_userName];
     
+    self.titleLabel = [self LabelWithFont:[UIFont themeFontMedium:16] textColor:[UIColor themeGray1]];
+    self.titleLabel.numberOfLines = 0;
+    self.titleLabel.hidden = YES;
+    [self addSubview:_titleLabel];
+    
     _userName.userInteractionEnabled = YES;
-     UITapGestureRecognizer *tap1 = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(goToPersonalHomePage)];
+    UITapGestureRecognizer *tap1 = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(goToPersonalHomePage)];
     [_userName addGestureRecognizer:tap1];
     
     self.userAuthLabel = [self LabelWithFont:[UIFont themeFontRegular:10] textColor:[UIColor colorWithHexStr:@"#929292"]];
@@ -149,16 +154,22 @@
     self.userName.width = 100;
     self.userName.height = 22;
     
+    self.titleLabel.top = 0;
+    self.titleLabel.left =  20;
+    self.titleLabel.width = 100;
+    self.titleLabel.height = 50;
+    
+    
     self.moreBtn.top = 10;
     self.moreBtn.width = 20;
     self.moreBtn.height = 20;
     self.moreBtn.left = self.width - self.moreBtn.width - 20;
-
+    
     self.userAuthLabel.top = 3;
     self.userAuthLabel.left = self.userName.right + 4;
     self.userAuthLabel.width = 0;
     self.userAuthLabel.height = 16;
-
+    
     CGFloat maxWidth = [UIScreen mainScreen].bounds.size.width - 40 - 40 - 10 - 20 - 10;
     self.descLabel.top = self.userName.bottom + 1;
     self.descLabel.left = self.icon.right + 10;
@@ -195,12 +206,34 @@
     }else{
         [self.icon setImage:[UIImage imageNamed:@"fh_mine_avatar"]];
     }
-
+    
     self.userName.text = !isEmptyString(cellModel.user.name) ? cellModel.user.name : @"用户";
     self.userAuthLabel.hidden = self.userAuthLabel.text.length <= 0;
     [self updateDescLabel];
     [self updateEditState];
     [self updateFrame];
+}
+
+- (void)setTitleModel:(FHFeedUGCCellModel *)cellModel {
+    //设置userInfo
+    self.cellModel = cellModel;
+    self.titleLabel.text = !isEmptyString(cellModel.originItemModel.content) ?[NSString stringWithFormat:@"问题：%@",cellModel.originItemModel.content] : @"";
+    CGSize titleLabelSize = [self.titleLabel sizeThatFits:CGSizeMake(MAXFLOAT, 50)];
+    self.titleLabel.width = titleLabelSize.width;
+    CGFloat maxTitleLabelSizeWidth = self.width - 20 - 20 - 20 -5 ;
+    if(self.titleLabel.width > maxTitleLabelSizeWidth){
+        self.titleLabel.width = maxTitleLabelSizeWidth;
+        self.titleLabel.height = 50;
+        self.moreBtn.top = 5;
+    }else {
+        self.titleLabel.height = 30;
+        self.moreBtn.top = 5;
+    }
+    self.titleLabel.hidden = NO;
+    self.userName.hidden = YES;
+    self.icon.hidden =  YES;
+    self.userAuthLabel.hidden = YES;
+    self.descLabel.hidden = YES;
 }
 
 - (void)updateMoreBtnWithTitleType {
@@ -225,7 +258,7 @@
     
     CGSize userAuthLabelSize = [self.userAuthLabel sizeThatFits:CGSizeMake(MAXFLOAT, 16)];
     self.userAuthLabel.width = userAuthLabelSize.width + 10;
-  
+    
     CGFloat maxUserNameWidth = self.width - 40 - 50 - (self.userAuthLabel.hidden ? 0 : (self.userAuthLabel.width + 9));
     if(!self.userAuthLabel.hidden){
         if(self.cellModel.isStick && self.cellModel.stickStyle == FHFeedContentStickStyleGood) {
@@ -289,7 +322,7 @@
     CGFloat maxWidth = [UIScreen mainScreen].bounds.size.width - 40 - 40 - 10 - 20 - 10;
     if(size.width + 15 + 60 <= maxWidth){
         self.isDescToLong = NO;
-
+        
         self.descLabel.width = size.width;
         self.editLabel.left = self.descLabel.right + 5;
         self.editingLabel.left = self.descLabel.right + 5;
@@ -338,14 +371,14 @@
             NSURL *openUrl = [NSURL URLWithString:self.cellModel.allSchema];
             [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:nil];
         }
-
+        
         return;
     }
     [self trackClickOptions];
     __weak typeof(self) wself = self;
     FHFeedOperationView *dislikeView = [[FHFeedOperationView alloc] init];
     FHFeedOperationViewModel *viewModel = [[FHFeedOperationViewModel alloc] init];
-
+    
     dislikeView.dislikeTracerBlock = ^{
         [wself trackClickWithEvent:@"click_report" position:@"feed_report"];
     };
@@ -384,8 +417,8 @@
     [dislikeView showAtPoint:point
                     fromView:_moreBtn
              didDislikeBlock:^(FHFeedOperationView * _Nonnull view) {
-                 [wself handleItemselected:view];
-             }];
+        [wself handleItemselected:view];
+    }];
     
 }
 
@@ -393,15 +426,15 @@
     __weak typeof(self) wself = self;
     if(view.selectdWord.type == FHFeedOperationWordTypeReport){
         //举报
-//        if(self.reportSuccessBlock){
-//            self.reportSuccessBlock();
-//        }
+        //        if(self.reportSuccessBlock){
+        //            self.reportSuccessBlock();
+        //        }
         
         [[ToastManager manager] showToast:@"举报成功"];
-    
+        
         NSDictionary *dic = @{
-                              @"cellModel":self.cellModel,
-                              };
+            @"cellModel":self.cellModel,
+        };
         [[NSNotificationCenter defaultCenter] postNotificationName:kFHUGCReportPostNotification object:nil userInfo:dic];
         
     }else if(view.selectdWord.type == FHFeedOperationWordTypeDelete){
@@ -508,21 +541,21 @@
     UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:cancelTitle
                                                            style:UIAlertActionStyleCancel
                                                          handler:^(UIAlertAction * _Nonnull action) {
-                                                             // 点击取消按钮，调用此block
-                                                             if(cancelBlock){
-                                                                 cancelBlock();
-                                                             }
-                                                         }];
+        // 点击取消按钮，调用此block
+        if(cancelBlock){
+            cancelBlock();
+        }
+    }];
     [alert addAction:cancelAction];
     
     UIAlertAction *defaultAction = [UIAlertAction actionWithTitle:confirmTitle
                                                             style:UIAlertActionStyleDefault
                                                           handler:^(UIAlertAction * _Nonnull action) {
-                                                              // 点击按钮，调用此block
-                                                              if(confirmBlock){
-                                                                  confirmBlock();
-                                                              }
-                                                          }];
+        // 点击按钮，调用此block
+        if(confirmBlock){
+            confirmBlock();
+        }
+    }];
     [alert addAction:defaultAction];
     [[TTUIResponderHelper visibleTopViewController] presentViewController:alert animated:YES completion:nil];
 }
@@ -535,7 +568,7 @@
             if(wself.deleteCellBlock){
                 wself.deleteCellBlock();
             }
-
+            
             NSMutableDictionary *dic = [NSMutableDictionary dictionary];
             if (self.cellModel.community.socialGroupId.length > 0) {
                 dic[@"social_group_id"] = self.cellModel.community.socialGroupId;
@@ -557,7 +590,7 @@
             if(wself.deleteCellBlock){
                 wself.deleteCellBlock();
             }
-
+            
             //通知其他带有评论的页面去删除此条记录
             NSMutableDictionary *userInfo = [NSMutableDictionary dictionary];
             [userInfo setValue:commentID forKey:@"id"];
@@ -580,7 +613,7 @@
             if(wself.deleteCellBlock){
                 wself.deleteCellBlock();
             }
-    
+            
             NSMutableDictionary *dic = [NSMutableDictionary dictionary];
             if (self.cellModel.community.socialGroupId.length > 0) {
                 dic[@"social_group_id"] = self.cellModel.community.socialGroupId;
@@ -601,14 +634,14 @@
         
         if(model && [model.status integerValue] == 0 && [model isKindOfClass:[FHFeedOperationResultModel class]]){
             FHFeedOperationResultModel *resultModel = (FHFeedOperationResultModel *)model;
-    
+            
             self.cellModel.isStick = resultModel.data.isStick;
             self.cellModel.stickStyle = [resultModel.data.stickStyle integerValue];
             if(!self.cellModel.contentDecoration){
                 self.cellModel.contentDecoration = [[FHFeedUGCCellContentDecorationModel alloc] init];
             }
             self.cellModel.contentDecoration.url = resultModel.data.url;
-
+            
             NSMutableDictionary *dic = [NSMutableDictionary dictionary];
             if (self.cellModel.community.socialGroupId.length > 0) {
                 dic[@"social_group_id"] = self.cellModel.community.socialGroupId;
@@ -617,7 +650,7 @@
                 dic[@"cellModel"] = self.cellModel;
             }
             dic[@"isTop"] = @(isTop);
-
+            
             [[NSNotificationCenter defaultCenter] postNotificationName:kFHUGCTopPostNotification object:nil userInfo:dic];
             
             NSString *pageType = wself.cellModel.tracerDic[@"page_type"];
@@ -645,14 +678,14 @@
         
         if(model && [model.status integerValue] == 0 && [model isKindOfClass:[FHFeedOperationResultModel class]]){
             FHFeedOperationResultModel *resultModel = (FHFeedOperationResultModel *)model;
-    
+            
             self.cellModel.isStick = resultModel.data.isStick;
             self.cellModel.stickStyle = [resultModel.data.stickStyle integerValue];
             if(!self.cellModel.contentDecoration){
                 self.cellModel.contentDecoration = [[FHFeedUGCCellContentDecorationModel alloc] init];
             }
             self.cellModel.contentDecoration.url = resultModel.data.url;
-
+            
             NSMutableDictionary *dic = [NSMutableDictionary dictionary];
             if (self.cellModel.community.socialGroupId.length > 0) {
                 dic[@"social_group_id"] = self.cellModel.community.socialGroupId;
@@ -661,7 +694,7 @@
                 dic[@"cellModel"] = self.cellModel;
             }
             dic[@"isGood"] = @(isGood);
-
+            
             [[NSNotificationCenter defaultCenter] postNotificationName:kFHUGCGoodPostNotification object:nil userInfo:dic];
             
             NSString *pageType = wself.cellModel.tracerDic[@"page_type"];
@@ -684,13 +717,26 @@
 }
 
 - (void)goToPersonalHomePage {
-    if(!isEmptyString(self.cellModel.user.schema)){
-        NSMutableDictionary *dict = @{}.mutableCopy;
-        dict[@"from_page"] = self.cellModel.tracerDic[@"page_type"] ? self.cellModel.tracerDic[@"page_type"] : @"default";
-        dict[@"origin_from"] = self.cellModel.tracerDic[@"origin_from"] ?: @"be_null";
-        TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
-        NSURL *openUrl = [NSURL URLWithString:self.cellModel.user.schema];
-        [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:userInfo];
+    if (self.cellModel.user.realtorId.length > 0) {
+        if (![self.cellModel.user.firstBizType isEqualToString:@"1"]) {
+            NSURL *openUrl = [NSURL URLWithString:[NSString stringWithFormat:@"sslocal://new_realtor_detail"]];
+            NSMutableDictionary *info = @{}.mutableCopy;
+            info[@"title"] = @"经纪人主页";
+            info[@"realtor_id"] = self.cellModel.user.realtorId;
+            NSMutableDictionary *tracerDic = self.cellModel.tracerDic.mutableCopy;
+            info[@"tracer"] = tracerDic;
+            TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:info];
+            [[TTRoute sharedRoute]openURLByViewController:openUrl userInfo:userInfo];
+        }
+    }else {
+        if(!isEmptyString(self.cellModel.user.schema)){
+            NSMutableDictionary *dict = @{}.mutableCopy;
+            dict[@"from_page"] = self.cellModel.tracerDic[@"page_type"] ? self.cellModel.tracerDic[@"page_type"] : @"default";
+            dict[@"origin_from"] = self.cellModel.tracerDic[@"origin_from"] ?: @"be_null";
+            TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
+            NSURL *openUrl = [NSURL URLWithString:self.cellModel.user.schema];
+            [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:userInfo];
+        }
     }
 }
 
@@ -705,7 +751,7 @@
     }
     // 跳转发布器
     NSMutableDictionary *dic = [NSMutableDictionary new];
-
+    
     NSMutableDictionary *tracerDict = [self.cellModel.tracerDic mutableCopy];
     tracerDict[@"click_position"] = @"edit";
     tracerDict[@"enter_type"] = @"be_null";
@@ -722,7 +768,7 @@
     // Feed 文本内容传入图文发布器
     dic[@"post_content"] = self.cellModel.content;
     dic[@"post_content_rich_span"] = self.cellModel.contentRichSpan;
-        
+    
     // Feed 图片信息传入图文发布器
     NSMutableArray *outerInputAssets = [NSMutableArray array];
     [self.cellModel.imageList enumerateObjectsUsingBlock:^(FHFeedContentImageListModel * _Nonnull imageModel, NSUInteger idx, BOOL * _Nonnull stop) {

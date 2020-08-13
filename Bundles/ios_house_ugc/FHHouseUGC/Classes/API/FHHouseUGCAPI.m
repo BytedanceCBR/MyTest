@@ -28,6 +28,7 @@
 #import "ExploreExtenstionDataHelper.h"
 #import "TTModuleBridge.h"
 #import "FHErrorHubManagerUtil.h"
+#import "FHUGCShortVideoRealtorInfoModel.h"
 
 #define DEFULT_ERROR @"请求错误"
 #define API_ERROR_CODE  10000
@@ -349,6 +350,64 @@
             }
         });
 
+    }];
+}
+
++ (TTHttpTask *)requestShortVideoWithGroupId:(NSString *)groupId completion:(void (^ _Nullable)(id <FHBaseModelProtocol> model, NSError *error))completion {
+
+    NSString *queryPath = [ArticleURLSetting shortVideoRealtorInfoUrlString];
+
+    NSMutableDictionary *paramDic = [NSMutableDictionary new];
+    paramDic[@"group_id"] = @([groupId integerValue]);
+
+    Class cls = NSClassFromString(@"FHUGCShortVideoRealtorInfoModel");
+
+    NSDate *startDate = [NSDate date];
+    return [[TTNetworkManager shareInstance] requestForBinaryWithResponse:queryPath params:paramDic method:@"GET" needCommonParams:YES callback:^(NSError *error, id obj, TTHttpResponse *response) {
+        __block NSError *backError = error;
+        NSDate *backDate = [NSDate date];
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
+            NSDate *serDate = [NSDate date];
+            FHNetworkMonitorType resultType = FHNetworkMonitorTypeSuccess;
+            NSInteger code = 0;
+            NSString *errMsg = nil;
+            NSMutableDictionary *extraDict = nil;
+            NSDictionary *exceptionDict = nil;
+            id <FHBaseModelProtocol> model = nil;
+            NSInteger responseCode = -1;
+            if (response.statusCode) {
+                responseCode = response.statusCode;
+            }
+
+            if (backError && !obj) {
+                code = backError.code;
+                resultType = FHNetworkMonitorTypeNetFailed;
+            } else {
+                model = (id <FHBaseModelProtocol>) [FHMainApi generateModel:obj class:cls error:&backError];
+                serDate = [NSDate date];
+                if (!model) {
+                    // model 为nil
+                    code = 1;
+                    resultType = FHNetworkMonitorTypeBizFailed + 1;
+                } else {
+                    // model 不为nil
+                    if ([model respondsToSelector:@selector(status)]) {
+                        NSString *status = [model performSelector:@selector(status)];
+                        if (status.integerValue != 0 || backError != nil) {
+                            code = [status integerValue];
+                            errMsg = backError.domain;
+                            resultType = FHNetworkMonitorTypeBizFailed+code;
+                        }
+                    }
+                }
+            }
+            [FHMainApi addRequestLog:queryPath startDate:startDate backDate:backDate serializeDate:serDate resultType:resultType errorCode:code errorMsg:errMsg extra:extraDict exceptionDict:exceptionDict responseCode:responseCode];
+            if (completion) {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    completion(model, backError);
+                });
+            }
+        });
     }];
 }
 

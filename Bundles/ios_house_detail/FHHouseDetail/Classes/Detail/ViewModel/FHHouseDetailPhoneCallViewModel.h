@@ -26,7 +26,6 @@ typedef void(^FHHouseDetailPhoneCallFailBlock)(NSError *error);
 @property (nonatomic, copy) NSString *houseInfoBizTrace;
 
 - (instancetype)initWithHouseType:(FHHouseType)houseType houseId:(NSString *)houseId;
-- (void)jump2RealtorDetailWithPhone:(FHDetailContactModel *)contactPhone;
 
 - (void)licenseActionWithPhone:(FHDetailContactModel *)contactPhone;
 
@@ -41,7 +40,7 @@ typedef void(^FHHouseDetailPhoneCallFailBlock)(NSError *error);
 
 - (void)imchatActionWithPhone:(FHDetailContactModel *)contactPhone realtorRank:(NSString *)rank extraDic:(NSDictionary *)extra ;
 
-
+//- (void)jump2RealtorDetailWithPhone:(FHDetailContactModel *)contactPhone;
 - (void)jump2RealtorDetailWithPhone:(FHDetailContactModel *)contactPhone isPreLoad:(BOOL)isPre extra:(NSDictionary*)extra;
 
 - (TTRouteObject *)creatJump2RealtorDetailWithPhone:(FHDetailContactModel *)contactPhone isPreLoad:(BOOL)isPre andIsOpen:(BOOL)isOpen extra:(NSDictionary*)extra;
@@ -51,7 +50,7 @@ typedef void(^FHHouseDetailPhoneCallFailBlock)(NSError *error);
 - (void)updateLoadFinish;
 
 //Gecko Channels
-+ (NSArray *)fhGeckoChannels;
+//+ (NSArray *)fhGeckoChannels;
 //预加载的渠道
 + (NSArray *)fhRNPreLoadChannels;
 //可用的渠道

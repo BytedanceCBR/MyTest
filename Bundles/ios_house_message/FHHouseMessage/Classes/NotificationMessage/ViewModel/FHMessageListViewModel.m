@@ -126,6 +126,7 @@
         CGFloat cellWidth = [TTUIResponderHelper splitViewFrameForView:tableView].size.width;
         return [FHMessageNotificationCellHelper heightForData:model cellWidth:cellWidth];
     }
+    return 0;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {

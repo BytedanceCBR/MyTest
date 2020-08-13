@@ -338,6 +338,11 @@
                         }];
                         [wself.tableView scrollRectToVisible:CGRectMake(0, 0, 1, 1) animated:NO];
                     }
+                    
+                    if(!self.viewController.alreadyReportPageMonitor && [self.categoryId isEqualToString:@"f_news_recommend"]){
+                        [FHMainApi addUserOpenVCDurationLog:@"pss_discovery_recommend" resultType:FHNetworkMonitorTypeSuccess duration:[[NSDate date] timeIntervalSince1970] - self.viewController.startMonitorTime];
+                        self.viewController.alreadyReportPageMonitor = YES;
+                    }
                 });
             });
         }
