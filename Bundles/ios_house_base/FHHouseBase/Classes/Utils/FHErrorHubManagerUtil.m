@@ -9,7 +9,7 @@
 #import "TTSandBoxHelper.h"
 
 @implementation FHErrorHubManagerUtil
-+ (void)checkRequestResponseWithHost:(NSString *)host requestParams:(NSDictionary *)params responseStatus:(TTHttpResponse *)responseStatus response:(id)response analysisError:(NSError *)analysisError changeModelType:(FHNetworkMonitorType )type errorHubType:(NSInteger )errorHubType {
++ (void)checkRequestResponseWithHost:(NSString *)host requestParams:(NSDictionary *)params responseStatus:(TTHttpResponse *)responseStatus response:(id)response analysisError:(NSError *)analysisError changeModelType:(FHNetworkMonitorType )type {
     if (![[self getChannel] isEqualToString:@"local_test"] || ![self errorHubSwitch]) {
         return;
     }
@@ -17,7 +17,7 @@
     #pragma clang diagnostic push
     #pragma clang diagnostic ignored   "-Wundeclared-selector"
      NSObject <FHErrorHubManagerProtocol>*errorhub = [cls performSelector:@selector(sharedInstance)];
-           [errorhub checkRequestResponseWithHost:host requestParams:params responseStatus:responseStatus response:response analysisError:analysisError changeModelType:type errorHubType:errorHubType];
+           [errorhub checkRequestResponseWithHost:host requestParams:params responseStatus:responseStatus response:response analysisError:analysisError changeModelType:type errorHubType:1];
     #pragma clang diagnostic pop
    
 }

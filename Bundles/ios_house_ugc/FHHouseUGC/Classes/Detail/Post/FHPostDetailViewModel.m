@@ -411,7 +411,7 @@
             serDate = [NSDate date];
             // 帖子接口成功率
             [FHMainApi addRequestLog:@"/f100/ugc/thread" startDate:startDate backDate:backDate serializeDate:serDate resultType:resultType errorCode:code errorMsg:errMsg extra:extraDict exceptionDict:exceptionDict responseCode:responseCode];
-             [FHErrorHubManagerUtil checkRequestResponseWithHost:urlStr requestParams:param responseStatus:response response:jsonObj analysisError:jsonParseError changeModelType:resultType errorHubType:1];
+             [FHErrorHubManagerUtil checkRequestResponseWithHost:urlStr requestParams:param responseStatus:response response:jsonObj analysisError:jsonParseError changeModelType:resultType];
 //            [[FHHouseErrorHubManager sharedInstance] checkRequestResponseWithHost:urlStr requestParams:param responseStatus:response response:jsonObj analysisError:jsonParseError changeModelType:resultType errorHubType:FHErrorHubTypeRequest];
             
             if (completion) {
