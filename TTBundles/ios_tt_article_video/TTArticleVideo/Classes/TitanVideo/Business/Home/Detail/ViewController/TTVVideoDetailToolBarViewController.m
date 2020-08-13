@@ -506,11 +506,10 @@ extern NSInteger ttvs_isShareTimelineOptimize(void);
     TTCommentWriteManager *commentManager = [[TTCommentWriteManager alloc] initWithCommentCondition:condition commentViewDelegate:self commentRepostBlock:^(NSString *__autoreleasing *willRepostFwID) {
         *willRepostFwID = fwID;
     } extraTrackDict:nil bindVCTrackDict:nil commentRepostWithPreRichSpanText:nil readQuality:qualityModel];
-
+    commentManager.reportParams = self.detailModel.reportParams;
     self.commentWriteView = [[TTCommentWriteView alloc] initWithCommentManager:commentManager];
     
     self.commentWriteView.emojiInputViewVisible = switchToEmojiInput;
-
     // writeCommentView 禁表情
     self.commentWriteView.banEmojiInput = self.banEmojiInput;
     [self.commentWriteView showInView:nil animated:YES];

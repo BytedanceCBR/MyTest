@@ -15,8 +15,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (CGFloat)getTotalCacheSpace;
 
-+ (BOOL)is812Screen;
-
 + (BOOL)is896Screen2X;
 
 + (BOOL)is896Screen3X;

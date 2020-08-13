@@ -55,7 +55,7 @@
 - (void)initUIs {
     _imageViewList = [[NSMutableArray alloc] init];
     _imageWidth = ([UIScreen mainScreen].bounds.size.width - leftMargin - rightMargin - imagePadding * 2)/3;
-    _imageHeight = _imageWidth * 82.0f/109.0f;
+    _imageHeight = ceil(_imageWidth * 82.0f/109.0f);
     
     [self initViews];
     [self initConstraints];
@@ -194,8 +194,10 @@
             if(i < imageList.count){
                 FHFeedContentImageListModel *imageModel = imageList[i];
                 imageView.hidden = NO;
-                if (imageModel && imageModel.url.length > 0) {
-                    [imageView fh_setImageWithURLStringInTrafficSaveMode:imageModel.url placeholder:nil];
+                if (imageModel) {
+                    NSArray *urls = [FHUGCCellHelper convertToImageUrls:imageModel];
+                    [imageView fh_setImageWithURLs:urls placeholder:nil reSize:imageView.size];
+//                    [imageView fh_setImageWithURL:imageModel.url placeholder:nil reSize:imageView.size];
                 }
             }else{
                 imageView.hidden = YES;
@@ -208,8 +210,10 @@
         self.singleImageView.hidden = NO;
         //图片
         FHFeedContentImageListModel *imageModel = [cellModel.imageList firstObject];
-        if (imageModel && imageModel.url.length > 0) {
-            [self.singleImageView fh_setImageWithURLStringInTrafficSaveMode:imageModel.url placeholder:nil];
+        if (imageModel) {
+            NSArray *urls = [FHUGCCellHelper convertToImageUrls:imageModel];
+            [self.singleImageView fh_setImageWithURLs:urls placeholder:nil reSize:self.singleImageView.size];
+//            [self.singleImageView fh_setImageWithURL:imageModel.url placeholder:nil reSize:self.singleImageView.size];
         }
         
         self.contentLabel.width = [UIScreen mainScreen].bounds.size.width - leftMargin - rightMargin - 120 - 15;
@@ -231,7 +235,7 @@
         CGFloat height = cellModel.contentHeight + bottomViewHeight + topMargin + 10;
         
         if(cellModel.imageList.count > 1){
-            CGFloat imageViewHeight = ([UIScreen mainScreen].bounds.size.width - leftMargin - rightMargin - imagePadding * 2)/3 * 82.0f/109.0f;
+            CGFloat imageViewHeight = ceil(([UIScreen mainScreen].bounds.size.width - leftMargin - rightMargin - imagePadding * 2)/3 * 82.0f/109.0f);
             height += (imageViewHeight + 10);
         }else if(cellModel.imageList.count == 1){
             height = singleImageViewHeight + bottomViewHeight + topMargin + 10;

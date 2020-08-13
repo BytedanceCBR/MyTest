@@ -308,7 +308,10 @@
     NSDictionary *dict = @{
                            @"name": @"name",
                            @"layers": @"layers",
-                           @"family": @"family"
+                           @"family": @"family",
+                           @"pointX": @"point_x",
+                           @"pointY": @"point_y",
+                           @"saleStatus": @"sale_status"
                            };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
         return dict[keyName]?:keyName;
@@ -332,7 +335,8 @@
                            @"buildingNameText": @"building_name_text",
                            @"layerText": @"layer_text",
                            @"family": @"family",
-                           @"list": @"list"
+                           @"list": @"list",
+                           @"buildingImage": @"building_image",
                            };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
         return dict[keyName]?:keyName;

@@ -23,7 +23,6 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)loadOneKayAndDouyinConfigs:(void (^)(void))completion;
 
 @property (nonatomic, assign) BOOL disableDouyinOneClickLoginSetting;
-@property (nonatomic, assign) BOOL disableDouyinIconLoginSetting;
 
 @property (nonatomic, assign) BOOL isOneKeyLogin;
 @property (nonatomic, copy) NSString *mobileNumber;

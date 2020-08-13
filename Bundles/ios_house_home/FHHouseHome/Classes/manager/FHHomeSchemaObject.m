@@ -53,10 +53,13 @@
     if (params != nil) {
         NSString* target = params[@"select_tab"];
         NSInteger needToRoot = [params[@"needToRoot"] isEqualToString:@"0"] ? 0 : 1;
+        
+        BOOL isFromPush = [self isFromPush:params];
         if (target != nil && target.length > 0) {
             NSDictionary *userInfo = @{
                                        @"tag":target,
-                                       @"needToRoot":@(needToRoot)
+                                       @"needToRoot":@(needToRoot),
+                                       @"isFromPush":@(isFromPush),
                                        };
             [[NSNotificationCenter defaultCenter] postNotificationName:@"TTArticleTabBarControllerChangeSelectedIndexNotification" object:nil userInfo:userInfo];
         }
@@ -130,6 +133,38 @@
     }
     
     return YES;
+}
+
+- (BOOL)isFromPush:(NSDictionary *)params {
+    BOOL isFromPush = NO;
+    
+    if([params.allKeys containsObject:@"isFromPush"]){
+        isFromPush = [params[@"isFromPush"] boolValue];
+    }
+    
+    if([params.allKeys containsObject:@"enter_from"]){
+        NSString *enterFrom = params[@"enter_from"];
+        if([enterFrom isEqualToString:@"push"]){
+            isFromPush = YES;
+        }
+    }
+    if([params.allKeys containsObject:@"origin_from"]){
+        NSString *originFrom = params[@"origin_from"];
+        if([originFrom isEqualToString:@"push"]){
+            isFromPush = YES;
+        }
+    }
+    
+    if([params.allKeys containsObject:@"jumpList"]){
+        NSString *str = params[@"jumpList"];
+        if([str isKindOfClass:[NSString class]]){
+            if([str containsString:@"enter_from=push"] || [str containsString:@"origin_from=push"]){
+                isFromPush = YES;
+            }
+        }
+    }
+    
+    return isFromPush;
 }
 
 /**

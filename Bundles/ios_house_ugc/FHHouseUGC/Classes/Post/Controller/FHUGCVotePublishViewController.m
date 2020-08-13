@@ -72,6 +72,7 @@
     }
     // 注册通知
     [self registerNotification];
+    [self addGoDetailLog];
 }
 
 -(void)dealloc {
@@ -208,11 +209,7 @@
         return ;
     }
     
-    NSMutableDictionary *params = @{}.mutableCopy;
-    params[UT_PAGE_TYPE] = @"vote_publisher";
-    params[UT_ENTER_FROM] = self.tracerDict[UT_ENTER_FROM]?:UT_BE_NULL;
-    params[@"click_position"] = @"passport_publisher";
-    TRACK_EVENT(@"feed_publish_click", params);
+    [self addFeedPublishClickLog];
     
     if ([TTAccountManager isLogin]) {
         [self.viewModel publish];
@@ -302,6 +299,22 @@
     }
     self.publishBtn.enabled = isEnable;
 }
+
+- (void)addGoDetailLog {
+    NSMutableDictionary *param = @{}.mutableCopy;
+    param[UT_PAGE_TYPE] = @"vote_publisher";
+    param[UT_ENTER_FROM] = self.tracerDict[UT_ENTER_FROM];
+    TRACK_EVENT(UT_GO_DETAIL, param);
+}
+
+- (void)addFeedPublishClickLog {
+    NSMutableDictionary *param = @{}.mutableCopy;
+    param[UT_PAGE_TYPE] = @"vote_publisher";
+    param[UT_ENTER_FROM] = self.tracerDict[UT_ENTER_FROM];
+    param[@"click_options"] = @"passport_publisher";
+    TRACK_EVENT(@"feed_publish_click", param);
+}
+
 @end
                       
                       

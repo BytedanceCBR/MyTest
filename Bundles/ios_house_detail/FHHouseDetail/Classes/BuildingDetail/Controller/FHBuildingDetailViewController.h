@@ -6,13 +6,13 @@
 //
 
 #import "FHBaseViewController.h"
-
+@class FHBuildingIndexModel;
 NS_ASSUME_NONNULL_BEGIN
 
 @interface FHBuildingDetailViewController : FHBaseViewController
 
 - (void)reloadData;
-
+@property (nonatomic, strong) FHBuildingIndexModel *currentIndex;
 @end
 
 NS_ASSUME_NONNULL_END

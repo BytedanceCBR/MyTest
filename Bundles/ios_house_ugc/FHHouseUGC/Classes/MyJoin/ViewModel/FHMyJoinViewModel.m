@@ -32,7 +32,6 @@
 @property(nonatomic, assign) CGFloat messageViewHeight;
 @property(nonatomic, strong) FHMyJoinAllNeighbourhoodCell *allCell;
 @property(nonatomic, strong) NSMutableDictionary *clientShowDict;
-@property(nonatomic, assign) CGFloat beiginOffset;
 @property(nonatomic, assign) NSInteger maxFollowItem;
 
 @end
@@ -53,21 +52,17 @@
         _collectionView.delegate = self;
         _messageViewHeight = 0;
 
-        if([FHEnvContext isNewDiscovery]){
-            _maxFollowItem = 3;
-            [_collectionView registerClass:[FHMyJoinCommnityCell class] forCellWithReuseIdentifier:cellId];
-        }else{
-            _maxFollowItem = 6;
-            [_collectionView registerClass:[FHMyJoinNeighbourhoodCell class] forCellWithReuseIdentifier:cellId];
-            [_collectionView registerClass:[FHMyJoinAllNeighbourhoodCell class] forCellWithReuseIdentifier:allCellId];
-            
-             [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onUnreadMessageChange) name:kTTMessageNotificationTipsChangeNotification object:nil];
-            
-            UITapGestureRecognizer *singleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(onUnreadMessageClick)];
-            [self.viewController.neighbourhoodView.messageView addGestureRecognizer:singleTap];
-            
-            [self onUnreadMessageChange];
-        }
+        _maxFollowItem = 3;
+        [_collectionView registerClass:[FHMyJoinCommnityCell class] forCellWithReuseIdentifier:cellId];
+        
+//        if(!self.viewController.isNewDiscovery){
+//            [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onUnreadMessageChange) name:kTTMessageNotificationTipsChangeNotification object:nil];
+//            
+//            UITapGestureRecognizer *singleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(onUnreadMessageClick)];
+//            [self.viewController.neighbourhoodView.messageView addGestureRecognizer:singleTap];
+//            
+//            [self onUnreadMessageChange];
+//        }
     }
 
     return self;
@@ -100,25 +95,16 @@
 - (void)requestData {
     [self.dataList removeAllObjects];
     [self.clientShowDict removeAllObjects];
-    if([FHEnvContext isNewDiscovery]){
-        [self addAllItem];
-        if([[FHUGCConfig sharedInstance] followList].count > _maxFollowItem){
-            NSArray *followList = [[FHUGCConfig sharedInstance] followList];
-            NSArray *subFollowList = [followList subarrayWithRange:NSMakeRange(0, _maxFollowItem)];
-            [self.dataList addObjectsFromArray:subFollowList];
-        }else{
-            [self.dataList addObjectsFromArray:[[FHUGCConfig sharedInstance] followList]];
-        }
+    
+    [self addAllItem];
+    if([[FHUGCConfig sharedInstance] followList].count > _maxFollowItem){
+        NSArray *followList = [[FHUGCConfig sharedInstance] followList];
+        NSArray *subFollowList = [followList subarrayWithRange:NSMakeRange(0, _maxFollowItem)];
+        [self.dataList addObjectsFromArray:subFollowList];
     }else{
-        if([[FHUGCConfig sharedInstance] followList].count > _maxFollowItem){
-            NSArray *followList = [[FHUGCConfig sharedInstance] followList];
-            NSArray *subFollowList = [followList subarrayWithRange:NSMakeRange(0, _maxFollowItem)];
-            [self.dataList addObjectsFromArray:subFollowList];
-        }else{
-            [self.dataList addObjectsFromArray:[[FHUGCConfig sharedInstance] followList]];
-        }
-        [self addAllItem];
+        [self.dataList addObjectsFromArray:[[FHUGCConfig sharedInstance] followList]];
     }
+    
     [self updateJoinProgressView];
     [self.collectionView reloadData];
 }
@@ -126,10 +112,8 @@
 - (void)addAllItem {
     FHUGCScialGroupDataModel *model = [[FHUGCScialGroupDataModel alloc] init];
     model.socialGroupId = @"-1";
-    if([FHEnvContext isNewDiscovery]){
-        model.socialGroupName = @"全部圈子";
-        model.countText = @"发现精彩社区";
-    }
+    model.socialGroupName = @"全部圈子";
+    model.countText = @"发现精彩社区";
     [self.dataList addObject:model];
 }
 
@@ -213,17 +197,10 @@
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
     NSString *reuseId = cellId;
-    if((indexPath.row == self.dataList.count - 1) && ![FHEnvContext isNewDiscovery]){
-        reuseId = allCellId;
-    }
 
     FHUGCBaseCollectionCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:reuseId forIndexPath:indexPath];
     if (indexPath.row < self.dataList.count) {
         [cell refreshWithData:self.dataList[indexPath.row]];
-    }
-    
-    if((indexPath.row == self.dataList.count - 1) && ![FHEnvContext isNewDiscovery]){
-        self.allCell = (FHMyJoinAllNeighbourhoodCell *)cell;
     }
     
     return cell;
@@ -245,8 +222,9 @@
         NSString *originFrom = self.viewController.tracerDict[@"origin_from"] ?: @"be_null";
         dict[@"tracer"] = @{
             @"origin_from":originFrom,
-            @"enter_from":@"my_joined_neighborhood",
+            @"enter_from":[self pageType],
             @"enter_type":@"click",
+            @"element_from":@"top_operation_position",
             @"rank":@(indexPath.row),
             @"log_pb":model.logPb ?: @"be_null"};
         TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
@@ -257,70 +235,28 @@
 }
 
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath {
-    if([FHEnvContext isNewDiscovery]){
-        return CGSizeMake(120, 60);
-    }else{
-        //最后一个为全部
-        if(indexPath.row == self.dataList.count - 1){
-            return CGSizeMake(32, 128);
-        }
-        return CGSizeMake(120, 128);
-    }
+    return CGSizeMake(120, 60);
 }
 
 - (void)trackMore {
     NSMutableDictionary *tracerDict = [NSMutableDictionary dictionary];
-    tracerDict[@"element_type"] = @"my_joined_neighborhood";
+    tracerDict[@"element_type"] = @"top_operation_position";
     tracerDict[@"page_type"] = [self pageType];
     tracerDict[@"enter_from"] = @"neighborhood_tab";
     TRACK_EVENT(@"click_more", tracerDict);
 }
 
-#pragma mark - UIScrollViewDelegate
-
-- (void)scrollViewDidScroll:(UIScrollView *)scrollView {
-    if(scrollView == self.collectionView && ![FHEnvContext isNewDiscovery]){
-        CGFloat diff = 0;
-        if(scrollView.contentSize.width <= [UIScreen mainScreen].bounds.size.width){
-            diff = scrollView.contentOffset.x - self.beiginOffset;
-        }else{
-            diff = scrollView.contentOffset.x + [UIScreen mainScreen].bounds.size.width - scrollView.contentSize.width;
-        }
-        [self.allCell setShowText:(diff > leaveOffSet)];
-    }
-}
-
-- (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate {
-    if(scrollView == self.collectionView && ![FHEnvContext isNewDiscovery]){
-        CGFloat diff = 0;
-        if(scrollView.contentSize.width <= [UIScreen mainScreen].bounds.size.width){
-            diff = scrollView.contentOffset.x - self.beiginOffset;
-        }else{
-            diff = scrollView.contentOffset.x + [UIScreen mainScreen].bounds.size.width - scrollView.contentSize.width;
-        }
-        if(diff > leaveOffSet){
-            [self gotoMore:@"default"];
-        }
-    }
-}
-
-- (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView {
-    if(scrollView == self.collectionView && ![FHEnvContext isNewDiscovery]){
-        self.beiginOffset = scrollView.contentOffset.x;
-    }
-}
-
 #pragma mark - FHMyJoinNeighbourhoodViewDelegate
 
 - (void)gotoMore:(NSString *)enterType {
-//    [self trackMore];
     NSMutableDictionary *dict = @{}.mutableCopy;
     dict[@"action_type"] = @(FHCommunityListTypeFollow);
     dict[@"select_district_tab"] = @(FHUGCCommunityDistrictTabIdFollow);
     NSMutableDictionary *traceParam = @{}.mutableCopy;
     traceParam[@"enter_type"] = enterType;
+    traceParam[@"origin_from"] = self.viewController.tracerDict[@"origin_from"] ?: @"be_null";
     traceParam[@"enter_from"] = [self pageType];
-    traceParam[@"element_from"] = @"my_joined_neighborhood";
+    traceParam[@"element_from"] = @"top_operation_position";
     dict[TRACER_KEY] = traceParam;
     TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
     NSURL *openUrl = [NSURL URLWithString:@"sslocal://ugc_community_list"];
@@ -371,10 +307,12 @@
 - (void)trackClientShow:(FHUGCScialGroupDataModel *)cellModel rank:(NSInteger)rank {
     NSMutableDictionary *tracerDict = [NSMutableDictionary dictionary];
     
-    tracerDict[@"element_type"] = @"all_community";
+    tracerDict[@"element_type"] = @"top_operation_position";
+    tracerDict[@"social_group_id"] = cellModel.socialGroupId;
     tracerDict[@"page_type"] = [self pageType];
-    tracerDict[@"enter_from"] = @"neighborhood_tab";
-    TRACK_EVENT(@"element_show", tracerDict);
+    tracerDict[@"origin_from"] = self.viewController.tracerDict[@"origin_from"] ?: @"be_null";
+    tracerDict[@"enter_from"] = self.viewController.tracerDict[@"enter_from"] ?: @"be_null";
+    TRACK_EVENT(@"community_group_show", tracerDict);
 }
 
 - (NSString *)pageType {

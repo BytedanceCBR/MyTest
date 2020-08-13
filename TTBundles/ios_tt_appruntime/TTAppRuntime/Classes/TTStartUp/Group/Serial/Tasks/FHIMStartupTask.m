@@ -346,6 +346,13 @@ DEC_TASK("FHIMStartupTask",FHTaskTypeSerial,TASK_PRIORITY_HIGH+16);
     return ret;
 }
 
+- (BOOL)isIMSingleChatRecallEnable {
+    BOOL ret = NO;
+    BOOL isIMSingleChatRecallEnable = [[NSUserDefaults standardUserDefaults] boolForKey:@"_IM_SingleChat_Recall_Enable_"];
+    ret = isIMSingleChatRecallEnable;
+    return ret;
+}
+
 - (BOOL)isEnableIMReadReceiptRequestClosed {
     BOOL ret = NO;
     BOOL isIMReadReceiptRequestClosed =  [[NSUserDefaults standardUserDefaults] boolForKey:@"_IM_Read_Receipt_Request_Close_"];
@@ -358,9 +365,13 @@ DEC_TASK("FHIMStartupTask",FHTaskTypeSerial,TASK_PRIORITY_HIGH+16);
 - (BOOL)isEnableIMOnlineMonitorLogic {
     return [SSCommonLogic enableIMOnlineMonitorLogic];
 }
+- (BOOL)isEnableIMRealtorLocking {
+    return [SSCommonLogic enableIMRealtorLocking];
+}
 @end
 
 @implementation FHIMStartupTask
+
 - (NSString *)taskIdentifier {
     return @"FHIMStartupTask";
 }
@@ -374,15 +385,14 @@ DEC_TASK("FHIMStartupTask",FHTaskTypeSerial,TASK_PRIORITY_HIGH+16);
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
             FHIMAccountCenterImpl* accountCenter = [[FHIMAccountCenterImpl alloc] init];
             [IMManager shareInstance].accountCenter = accountCenter;
-
+            
             FHIMConfigDelegateImpl* delegate = [[FHIMConfigDelegateImpl alloc] init];
             [[FHIMConfigManager shareInstance] registerDelegate:delegate];
-
+            
             [IMManager shareInstance].imAlertViewListener = [FHIMAlertViewListenerImpl shareInstance];
-
+            
             NSString* uid = [[TTAccount sharedAccount] userIdString];
             [[IMManager shareInstance] startupWithUid:uid];
-
         });
     }
 }

@@ -119,7 +119,7 @@
     
     FHFeedUGCCellModel *model = (FHFeedUGCCellModel *)data;
     self.cellModel = model;
-    self.dataList = model.hotCellList;
+    self.dataList = [model.hotCellList mutableCopy];
     self.flowLayout.dataList = _dataList;
     
     [self.collectionView reloadData];
@@ -191,12 +191,12 @@
         if([model.hotCellType isEqualToString:youwenbida]){
             [self trackClickOptions:model];
         }else if([model.hotCellType isEqualToString:more]){
-            NSMutableDictionary *dict = @{}.mutableCopy;
             dict[@"action_type"] = @(FHCommunityListTypeFollow);
             dict[@"select_district_tab"] = @(FHUGCCommunityDistrictTabIdRecommend);
             NSMutableDictionary *traceParam = @{}.mutableCopy;
             traceParam[@"enter_type"] = @"click";
             traceParam[@"enter_from"] = self.cellModel.tracerDic[UT_PAGE_TYPE] ?: @"be_null";
+            traceParam[@"origin_from"] = self.cellModel.tracerDic[UT_ORIGIN_FROM] ?: @"be_null";
             traceParam[@"element_from"] = @"top_operation_position";
             dict[@"tracer"] = traceParam;
         }else{
@@ -261,7 +261,7 @@
         tracerDict[@"origin_from"] = self.cellModel.tracerDic[UT_ORIGIN_FROM] ?: @"be_null";
         tracerDict[@"rank"] = @(rank);
         if(model.id){
-            tracerDict[@"group_id"] = model.id;
+            tracerDict[@"social_group_id"] = model.id;
         }
         if(model.logPb){
             tracerDict[@"log_pb"] = model.logPb;

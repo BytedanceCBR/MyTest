@@ -190,7 +190,28 @@
     [self startLoadData];
 }
 
-#pragma mark - UIViewControllerErrorHandler
+-(NSDictionary *)categoryLogDict {
+    NSInteger badgeNumber = [[self.viewModel messageBridgeInstance] getMessageTabBarBadgeNumber];
+    
+    NSMutableDictionary *tracerDict = @{}.mutableCopy;
+    tracerDict[@"enter_type"] = @"click_tab";
+    tracerDict[@"tab_name"] = @"message";
+    tracerDict[@"with_tips"] = badgeNumber > 0 ? @"1" : @"0";
+    tracerDict[@"enter_channel"] = [FHEnvContext sharedInstance].enterChannel;
+    
+    return tracerDict;
+}
+
+-(void)addStayCategoryLog:(NSTimeInterval)stayTime {
+    
+    NSTimeInterval duration = stayTime * 1000.0;
+    if (duration == 0) {//当前页面没有在展示过
+        return;
+    }
+    NSMutableDictionary *tracerDict = [self categoryLogDict].mutableCopy;
+    tracerDict[@"stay_time"] = [NSNumber numberWithInteger:duration];
+    TRACK_EVENT(@"stay_tab", tracerDict);
+}
 
 - (BOOL)tt_hasValidateData {
     return self.fatherVC.dataList.count == 0 ? NO : YES; //默认会显示空

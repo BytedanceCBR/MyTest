@@ -11,6 +11,7 @@
 #import "Masonry.h"
 #import "UIImageView+BDWebImage.h"
 #import "FHUGCModel.h"
+#import "UIImageView+fhUgcImage.h"
 
 #define iconWidth 50
 
@@ -41,6 +42,7 @@
         _descLabel.text = model.countText;
         
         [self.icon bd_setImageWithURL:[NSURL URLWithString:model.avatar] placeholder:nil];
+        
     }
 }
 

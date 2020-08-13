@@ -20,7 +20,14 @@
     NSArray *array = [super layoutAttributesForElementsInRect:rect];
     NSMutableArray *newArray = array.mutableCopy;
     // 设置 Item 和 SupplementaryView
-      
+    if (self.existTopImageView) {
+        for (UICollectionViewLayoutAttributes *attribute in newArray) {
+            if (attribute.indexPath.section == 0) {
+                attribute.zIndex = -1;
+                break;
+            }
+        }
+    }
     // 设置 DecorationView
     if (self.model && self.model.relatedFloorplanList.list.count) {
         UICollectionViewLayoutAttributes *newAttrs = [self layoutAttributesForDecorationViewOfKind:NSStringFromClass([FHBuildingDetailShadowView class]) atIndexPath:[NSIndexPath indexPathForItem:0 inSection:self.collectionView.numberOfSections - 1]];
@@ -29,6 +36,14 @@
     
     return newArray;
 }
+
+//- (UICollectionViewLayoutAttributes *)layoutAttributesForItemAtIndexPath:(NSIndexPath *)indexPath {
+//    UICollectionViewLayoutAttributes *attributes = [super layoutAttributesForItemAtIndexPath:indexPath];
+//    if (indexPath.section == 0 && self.existTopImageView == YES) {
+//        attributes.zIndex = -1;
+//    }
+//    return attributes;
+//}
 
 //- (UICollectionViewLayoutAttributes *)layoutAttributesForDecorationViewOfKind:(NSString *)elementKind atIndexPath:(NSIndexPath *)indexPath{
 //

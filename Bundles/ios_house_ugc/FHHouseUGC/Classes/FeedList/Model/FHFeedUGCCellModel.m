@@ -17,6 +17,7 @@
 #import "JSONAdditions.h"
 #import "HMDTTMonitor.h"
 #import "TTSandBoxHelper+House.h"
+#import "FHUtils.h"
 
 #define kRecommendSocialGroupListNil @"kRecommendSocialGroupListNil"
 #define kHotTopicListNil @"kHotTopicListNil"
@@ -206,7 +207,16 @@
     cellModel.cellType = [model.cellType integerValue];
     cellModel.behotTime = model.behotTime;
     cellModel.groupId = model.groupId;
-    cellModel.logPb = model.logPb;
+    //防止这个字段返回一个string导致crash
+    id logPb = model.logPb;
+    NSDictionary *logPbDic = nil;
+    if([logPb isKindOfClass:[NSDictionary class]]){
+        logPbDic = logPb;
+    }else if([logPb isKindOfClass:[NSString class]]){
+        logPbDic = [FHUtils dictionaryWithJsonString:logPb];
+    }
+    cellModel.logPb = logPbDic;
+    
     cellModel.aggrType = model.aggrType;
     cellModel.needLinkSpan = YES;
     cellModel.behotTime = model.behotTime;
@@ -331,7 +341,7 @@
         }
     }
     else if(cellModel.cellType == FHUGCFeedListCellTypeQuestion){
-        cellModel.cellSubType = FHUGCFeedListCellSubTypeArticle;
+        cellModel.cellSubType = FHUGCFeedListCellSubTypeQuestion;
         // 发布用户的信息
         FHFeedUGCCellUserModel *user = [[FHFeedUGCCellUserModel alloc] init];
         user.name = model.rawData.content.user.uname;
@@ -359,6 +369,12 @@
             cellModel.numberOfLines = 0;
         }
         
+        FHFeedUGCOriginItemModel *originItemModel = [[FHFeedUGCOriginItemModel alloc] init];
+        if (cellModel.title) {
+            originItemModel.content = cellModel.title;
+            cellModel.originItemModel = originItemModel;
+        }
+        
         if(model.sourceDesc){
             cellModel.desc = [[NSMutableAttributedString alloc] initWithString:model.sourceDesc];
         }else if(model.rawData.content.extra.answerCount){
@@ -381,18 +397,24 @@
         }
     }
     else if(cellModel.cellType == FHUGCFeedListCellTypeAnswer){
-        cellModel.cellSubType = FHUGCFeedListCellSubTypePost;
+        cellModel.cellSubType = FHUGCFeedListCellSubTypeAnswer;
         cellModel.groupId = model.rawData.groupId;
         cellModel.content = model.rawData.content.answer.abstractText;
         cellModel.openUrl = model.rawData.content.answer.answerDetailSchema;
         cellModel.commentSchema = model.rawData.content.commentSchema;
         cellModel.showLookMore = YES;
-        cellModel.numberOfLines = 3;
+        cellModel.fromGid = model.rawData.fromGid;
+        cellModel.fromGroupSource = model.rawData.fromGroupSource;
         
         cellModel.imageList = model.rawData.content.answer.thumbImageList;
         //处理大图
         cellModel.largeImageList = model.rawData.content.answer.largeImageList;
         
+        if (cellModel.imageList.count == 0) {
+            cellModel.numberOfLines = 5;
+        }else {
+             cellModel.numberOfLines = 3;
+        }
         cellModel.desc = [self generateUGCDescWithCreateTime:model.rawData.content.answer.createTime readCount:nil distanceInfo:nil];
         
         cellModel.diggCount = model.rawData.content.answer.diggCount;
@@ -421,8 +443,7 @@
         if (model.isFromDetail) {
             cellModel.numberOfLines = 0;
         }
-        
-        [FHUGCCellHelper setRichContentWithModel:cellModel width:([UIScreen mainScreen].bounds.size.width - 40) numberOfLines:cellModel.numberOfLines];
+        [FHUGCCellHelper setRichContentImageWithModel:cellModel width:([UIScreen mainScreen].bounds.size.width - 40) numberOfLines:cellModel.numberOfLines];
         
         //小区问答数据处理
         if([model.cellCtrls.cellLayoutStyle isEqualToString:@"10001"]){
@@ -442,6 +463,8 @@
         cellModel.openUrl = model.rawData.commentBase.detailSchema;
         cellModel.showLookMore = YES;
         cellModel.numberOfLines = 3;
+        cellModel.fromGid = model.rawData.fromGid;
+        cellModel.fromGroupSource = model.rawData.fromGroupSource;
         
         cellModel.imageList = model.rawData.commentBase.imageList;
         cellModel.largeImageList = model.rawData.commentBase.imageList;
@@ -682,13 +705,23 @@
         realtor.realtorName  = model.rawData.realtor.realtorName;
         realtor.associateInfo = model.rawData.realtor.associateInfo;
         realtor.realtorLogpb = model.rawData.realtor.realtorLogpb;
+        realtor.firstBizType = model.rawData.realtor.firstBizType;
         cellModel.realtor = realtor;
         
         
         
         FHFeedUGCCellUserModel *user = [[FHFeedUGCCellUserModel alloc] init];
-        user.name = model.rawData.user.info.name;
-        user.avatarUrl = model.rawData.user.info.avatarUrl;
+
+        if (realtor.realtorId.length>0) {
+                    user.name = realtor.realtorName;
+            user.avatarUrl = realtor.avatarUrl;
+            user.realtorId = realtor.realtorId;
+            user.firstBizType = realtor.firstBizType;
+        }else {
+            user.name = model.rawData.user.info.name;
+            user.avatarUrl = model.rawData.user.info.avatarUrl;
+        }
+
         user.userId = model.rawData.user.info.userId;
         user.schema = model.rawData.user.info.schema;
         cellModel.user = user;
@@ -773,7 +806,7 @@
             urlListModel.url = cellModel.attachCardInfo.coverImage.url;
             [urlList addObject:urlListModel];
         }
-        imageModel.urlList = urlList;
+        imageModel.urlList = [urlList copy];
         cellModel.attachCardInfo.imageModel = imageModel;
     }
     
@@ -795,7 +828,17 @@
     cellModel.userDigg = model.userDigg;
     cellModel.desc = [self generateUGCDesc:model];
     cellModel.groupId = model.threadId.length > 0 ? model.threadId: model.rawData.threadId;
-    cellModel.logPb = model.logPb;
+    
+    //防止这个字段返回一个string导致crash
+    id logPb = model.logPb;
+    NSDictionary *logPbDic = nil;
+    if([logPb isKindOfClass:[NSDictionary class]]){
+        logPbDic = logPb;
+    }else if([logPb isKindOfClass:[NSString class]]){
+        logPbDic = [FHUtils dictionaryWithJsonString:logPb];
+    }
+    cellModel.logPb = logPbDic;
+    
     cellModel.showLookMore = YES;
     cellModel.needLinkSpan = YES;
     cellModel.numberOfLines = 3;
@@ -841,7 +884,7 @@
         user.schema = model.rawData.user.schema;
         user.userAuthInfo = model.rawData.user.userAuthInfo;
     }
-    cellModel.user = user;
+
     
     FHFeedUGCCellRealtorModel *realtor = [[FHFeedUGCCellRealtorModel alloc] init];
     if(model.realtor) {
@@ -869,9 +912,16 @@
         realtor.realtorLogpb = model.rawData.realtor.realtorLogpb;
         cellModel.realtor = realtor;
     }
-//    if (cellModel.) {
-//        <#statements#>
-//    }
+    
+    
+    if (realtor.realtorId.length>0) {
+        user.name = realtor.realtorName;
+        user.avatarUrl = realtor.avatarUrl;
+        user.realtorId = realtor.realtorId;
+        user.firstBizType =realtor.firstBizType;
+        user.desc = realtor.desc;
+    }
+    cellModel.user = user;
     
     NSMutableArray *cellImageList = [NSMutableArray array];
     
@@ -922,12 +972,23 @@
     NSString *createTime = model.createTime.length > 0 ? model.createTime : model.rawData.createTime;
     NSString *readCount = model.readCount.length > 0 ? model.readCount : model.rawData.readCount;
     NSString *distanceInfo = model.distanceInfo.length > 0 ? model.distanceInfo : model.rawData.distanceInfo;
-    return [self generateUGCDescWithCreateTime:createTime readCount:readCount distanceInfo:distanceInfo];
+    NSString *realtorDesc = model.realtor.desc.length>0?model.realtor.desc:model.rawData.realtor.desc;
+    return [self generateUGCDescWithCreateTime:createTime readCount:readCount distanceInfo:distanceInfo realtorDesc:realtorDesc];
 }
 
 + (NSAttributedString *)generateUGCDescWithCreateTime:(NSString *)createTime readCount:(NSString *)readCount distanceInfo:(NSString *)distanceInfo {
+    return [self generateUGCDescWithCreateTime:createTime readCount:readCount distanceInfo:distanceInfo realtorDesc:nil];
+}
+
++ (NSAttributedString *)generateUGCDescWithCreateTime:(NSString *)createTime readCount:(NSString *)readCount distanceInfo:(NSString *)distanceInfo realtorDesc:(NSString *)realtorDesc {
     NSMutableAttributedString *desc = [[NSMutableAttributedString alloc] initWithString:@""];
     double time = [createTime doubleValue];
+    
+    
+    if (!isEmptyString(realtorDesc)) {
+        NSAttributedString *descStr = [[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@"%@ ",realtorDesc]];
+        [desc appendAttributedString:descStr];
+    };
     
     NSString *publishTime = [FHBusinessManager ugcCustomtimeAndCustomdateStringSince1970:time type:@"onlyDate"];
     

@@ -294,6 +294,9 @@ typedef NS_ENUM(NSInteger, HMSegmentedControlImagePosition) {
 
 @property (nonatomic) BOOL isMessageTab;
 
+@property (nonatomic) BOOL bounces;
+
+
 - (id)initWithSectionTitles:(NSArray<NSString *> *)sectiontitles;
 - (id)initWithSectionImages:(NSArray<UIImage *> *)sectionImages sectionSelectedImages:(NSArray<UIImage *> *)sectionSelectedImages;
 - (instancetype)initWithSectionImages:(NSArray<UIImage *> *)sectionImages sectionSelectedImages:(NSArray<UIImage *> *)sectionSelectedImages titlesForSections:(NSArray<NSString *> *)sectiontitles;

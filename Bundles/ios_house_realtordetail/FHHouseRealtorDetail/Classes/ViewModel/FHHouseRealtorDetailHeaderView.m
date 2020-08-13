@@ -19,6 +19,9 @@
 #import <BDWebImage/UIImageView+BDWebImage.h>
 #import "FHHouseRealtorDetailInfoModel.h"
 #import "UIDevice+BTDAdditions.h"
+#import "TTInstallIDManager.h"
+#import "HMDTTMonitor.h"
+
 @interface FHHouseRealtorDetailHeaderView ()
 @property (weak, nonatomic)LynxView *realtorInfoView;
 @property(nonatomic ,strong) NSData *currentTemData;
@@ -26,6 +29,8 @@
 @property (weak, nonatomic) UIImageView *headerIma;
 @property (weak, nonatomic) UIView *headerMaskView;
 @property (assign, nonatomic) CGFloat navHeight;
+@property (nonatomic, assign) NSTimeInterval loadTime; //页面加载时间
+
  @end
 @implementation FHHouseRealtorDetailHeaderView
 
@@ -89,6 +94,7 @@
     if (templateData) {
         if (templateData != self.currentTemData) {
             self.currentTemData = templateData;
+            _loadTime = [[NSDate date] timeIntervalSince1970];
             LynxTemplateData *tem = [[LynxTemplateData alloc]initWithJson:lynxData];
             [self.realtorInfoView loadTemplate:templateData withURL:@"local" initData:tem];
         //使用segments时小数触发计算错误
@@ -125,6 +131,40 @@
         _placeholderImage = placeholderImage;
     }
     return _placeholderImage;
+}
+
+
+#pragma mark - LynxClient
+- (void)lynxViewDidFirstScreen:(LynxView*)view{
+    NSTimeInterval costTime = [[NSDate date] timeIntervalSince1970] - _loadTime;
+    [self sendCostTimeEvent:costTime andService:@"lynx_page_duration"];
+}
+
+- (void)sendCostTimeEvent:(NSTimeInterval)time andService:(NSString *)sevice
+{
+    NSMutableDictionary * paramsExtra = [NSMutableDictionary new];
+    [paramsExtra setValue:[[TTInstallIDManager sharedInstance] deviceID] forKey:@"device_id"];
+     NSMutableDictionary *uploadParams = [NSMutableDictionary new];
+    NSString *eventServie = [NSString stringWithFormat:@"lynx_page_duration_%@",_channel];
+    if (time < 15) {
+        [uploadParams setValue:@(time * 1000) forKey:@"duration"];
+        [[HMDTTMonitor defaultManager] hmdTrackService:eventServie metric:uploadParams category:nil extra:paramsExtra];
+    }
+}
+
+- (void)lynxView:(LynxView*)view didReceiveFirstLoadPerf:(LynxPerformance*)perf{
+    
+    NSMutableDictionary * paramsExtra = [NSMutableDictionary new];
+    [paramsExtra setValue:[[TTInstallIDManager sharedInstance] deviceID] forKey:@"device_id"];
+     NSMutableDictionary *uploadParams = [NSMutableDictionary new];
+    if (perf && [[perf toDictionary] isKindOfClass:[NSDictionary class]]) {
+        [uploadParams addEntriesFromDictionary:[perf toDictionary]];
+    }
+    NSString *eventServie = [NSString stringWithFormat:@"lynx_page_info_%@",_channel];
+    [[HMDTTMonitor defaultManager] hmdTrackService:eventServie metric:uploadParams category:nil extra:paramsExtra];
+    
+}
+- (void)lynxView:(LynxView*)view didReceiveUpdatePerf:(LynxPerformance*)perf{
 }
 
 - (void)loadImageWithURL:(nonnull NSURL*)url
@@ -175,12 +215,6 @@
         self.headerMaskView.hidden = NO;
     }
 }
-
-//- (void)lynxView:(LynxView*)view didLoadFinishedWithUrl:(NSString*)url {
-//    CGFloat statusBarHeight =  ((![[UIApplication sharedApplication] isStatusBarHidden]) ? [[UIApplication sharedApplication] statusBarFrame].size.height : ([UIDevice btd_isIPhoneXSeries]?44.f:20.f));
-//    self.viewHeight = [self.realtorInfoView intrinsicContentSize].height + statusBarHeight + 44;
-//    NSLog(@"666");
-//}
 
 - (void)setBacImageName:(NSString *)bacImageName {
     _bacImageName = bacImageName;

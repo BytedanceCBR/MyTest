@@ -19,6 +19,7 @@
 #import "FHDetailMapViewSnapService.h"
 #import "HMDUserExceptionTracker.h"
 #import "TTReachability.h"
+#import "FHOldDetailStaticMapCell.h"
 
 @implementation FHDetailStaticMapCellModel
 
@@ -53,7 +54,7 @@
         self.titleLabel.textAlignment = NSTextAlignmentCenter;
         [self addSubview:self.titleLabel];
 
-        self.arrowView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"mapsearch_annotation_arrow"]];
+        self.arrowView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"house_detail_map_ana_arrow"]];
         [self.backImageView addSubview:self.arrowView];
     }
     return self;
@@ -121,7 +122,7 @@
         _centerAnnotation = [[FHStaticMapAnnotation alloc] init];
         _centerAnnotation.extra = @"center_annotation";
 
-        _nameArray = @[@"交通", @"购物", @"医院", @"教育"];
+        _nameArray = @[@"交通", @"教育", @"医疗", @"生活"];
         _countCategoryDict = [NSMutableDictionary new];
         _poiAnnotations = [NSMutableDictionary new];
         _poiSearchStatus = [NSMutableDictionary dictionary];
@@ -249,7 +250,7 @@
 
 - (void)setUpSegmentedControl {
     _segmentedControl = [HMSegmentedControl new];
-    _segmentedControl.sectionTitles = @[@"交通(0)", @"购物(0)", @"医院(0)", @"教育(0)"];
+    _segmentedControl.sectionTitles = @[@"交通", @"教育", @"医疗", @"生活"];
     _segmentedControl.selectionIndicatorHeight = 2;
     _segmentedControl.selectionIndicatorColor = [UIColor themeOrange1];
     _segmentedControl.selectionStyle = HMSegmentedControlSelectionStyleTextWidthStripe;
@@ -394,6 +395,7 @@
     FHDetailStaticMapCellModel *dataModel = (FHDetailStaticMapCellModel *) self.currentData;
     NSMutableDictionary *tracerDict = self.baseViewModel.detailTracerDic.mutableCopy;
     tracerDict[@"element_from"] = @"map";
+    tracerDict[@"enter_from"] = @"rent_detail";
     NSMutableDictionary *param = [NSMutableDictionary new];
     param[TRACER_KEY] = tracerDict.copy;
     
@@ -462,7 +464,7 @@
 }
 
 - (void)clickFacilitiesTracker:(NSInteger)index {
-    NSArray *facilities = @[@"traffic", @"shopping", @"hospital", @"education"];
+    NSArray *facilities = @[@"traffic", @"education", @"hospital", @"life"];
     if (index >= 0 && index < facilities.count) {
         // click_facilities
         NSMutableDictionary *tracerDic = self.baseViewModel.detailTracerDic.mutableCopy;
@@ -483,7 +485,7 @@
         }
         AMapPOIAroundSearchRequest *requestPoi = [AMapPOIAroundSearchRequest new];
 
-        requestPoi.keywords = [categoryName isEqualToString:@"交通"] ? @"公交地铁" : categoryName;
+        requestPoi.keywords = [FHOldDetailStaticMapCell keyWordConver:categoryName];
         requestPoi.location = [AMapGeoPoint locationWithLatitude:center.latitude longitude:center.longitude];
         requestPoi.requireExtension = YES;
         requestPoi.requireSubPOIs = NO;
@@ -645,7 +647,7 @@
         }
     }
     AMapPOIKeywordsSearchRequest *searchRequest = (AMapPOIKeywordsSearchRequest *) request;
-    NSString *category = [searchRequest.keywords isEqualToString:@"公交地铁"] ? @"交通" : searchRequest.keywords;
+    NSString *category = [FHOldDetailStaticMapCell keyWordConverReverse:searchRequest.keywords];
 
     NSMutableArray *annotations = [NSMutableArray array];
     FHStaticMapAnnotation *annotation = nil;
@@ -678,9 +680,10 @@
     NSMutableArray *sectionTitleArray = [NSMutableArray new];
     for (NSInteger i = 0; i < _nameArray.count; i++) {
         if (_countCategoryDict[_nameArray[i]]) {
-            [sectionTitleArray addObject:[NSString stringWithFormat:@"%@(%ld)", _nameArray[i], [self.countCategoryDict[_nameArray[i]] integerValue]]];
+//            [sectionTitleArray addObject:[NSString stringWithFormat:@"%@(%ld)", _nameArray[i], [self.countCategoryDict[_nameArray[i]] integerValue]]];
+            [sectionTitleArray addObject:[NSString stringWithFormat:@"%@", _nameArray[i]]];
         } else {
-            [sectionTitleArray addObject:[NSString stringWithFormat:@"%@(0)", _nameArray[i]]];
+            [sectionTitleArray addObject:[NSString stringWithFormat:@"%@", _nameArray[i]]];
         }
     }
 

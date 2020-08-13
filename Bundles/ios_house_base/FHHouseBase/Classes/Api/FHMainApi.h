@@ -167,7 +167,10 @@ typedef NS_ENUM(NSInteger , FHNetworkMonitorType) {
 
 
 +(void)addRequestLog:(NSString *)path startDate:(NSDate *)startData backDate:(NSDate *)backDate serializeDate:(NSDate *)serializeDate resultType:(FHNetworkMonitorType)type errorCode:(NSInteger)errorCode errorMsg:(NSString *)errorMsg extra:(NSDictionary *)extraDict responseCode:(NSInteger)responseCode;
-+(void)addRequestLog:(NSString *)path startDate:(NSDate *)startData backDate:(NSDate *)backDate serializeDate:(NSDate *)serializeDate resultType:(FHNetworkMonitorType)type errorCode:(NSInteger)errorCode errorMsg:(NSString *)errorMsg extra:(NSDictionary *)extraDict exceptionDict:(NSDictionary *)exceptionDict responseCode:(NSInteger)responseCode;
++(void)addRequestLog:(NSString *)path startDate:(NSDate *)startData backDate:(NSDate *)backDate serializeDate:(NSDate *)serializeDate resultType:(FHNetworkMonitorType)type errorCode:(NSInteger)errorCode errorMsg:(NSString *)errorMsg extra:(NSDictionary *)extraDict exceptionDict:(NSDictionary * _Nullable)exceptionDict responseCode:(NSInteger)responseCode;
+
+
++(void)addUserOpenVCDurationLog:(NSString *)vcKey resultType:(FHNetworkMonitorType)type duration:(CGFloat)duration;
 
 @end
 

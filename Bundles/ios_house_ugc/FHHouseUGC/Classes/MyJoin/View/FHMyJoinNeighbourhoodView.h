@@ -24,6 +24,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic, strong) FHUGCSearchView *searchView;
 @property(nonatomic , weak) id<FHMyJoinNeighbourhoodViewDelegate> delegate;
 
+- (instancetype)initWithFrame:(CGRect)frame;
+
 @end
 
 NS_ASSUME_NONNULL_END

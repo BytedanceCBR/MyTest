@@ -90,13 +90,13 @@
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    [collectionView deselectItemAtIndexPath:indexPath animated:YES];
-    WDQuestionTagEntity *entity = [self tagEntities][indexPath.row];
-    if ([NSURL URLWithString:entity.schema]) {
-        [[TTRoute sharedRoute] openURLByViewController:[NSURL URLWithString:entity.schema] userInfo:nil];
-    }
-    
-    [WDListViewModel trackEvent:kWDWendaListViewControllerUMEventName label:@"click_tag_word" gdExtJson:self.viewModel.gdExtJson];
+    [collectionView deselectItemAtIndexPath:indexPath animated:NO];
+//    WDQuestionTagEntity *entity = [self tagEntities][indexPath.row];
+//    if ([NSURL URLWithString:entity.schema]) {
+//        [[TTRoute sharedRoute] openURLByViewController:[NSURL URLWithString:entity.schema] userInfo:nil];
+//    }
+//
+//    [WDListViewModel trackEvent:kWDWendaListViewControllerUMEventName label:@"click_tag_word" gdExtJson:self.viewModel.gdExtJson];
 }
 
 #pragma mark - getter

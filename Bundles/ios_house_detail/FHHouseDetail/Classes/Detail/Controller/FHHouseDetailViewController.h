@@ -7,9 +7,9 @@
 
 #import "FHBaseViewController.h"
 
+NS_ASSUME_NONNULL_BEGIN
 extern NSString *const INSTANT_DATA_KEY;
 @class FHHouseDetailBaseViewModel;
-NS_ASSUME_NONNULL_BEGIN
 
 @interface FHHouseDetailViewController : FHBaseViewController
 
@@ -20,13 +20,13 @@ NS_ASSUME_NONNULL_BEGIN
 //是否显示拨打电话
 @property (nonatomic, assign) BOOL isPhoneCallShow;
 //正在拨打电话的经纪人id
-@property (nonatomic, copy) NSString *phoneCallRealtorId;
+@property (nonatomic, copy, nullable) NSString *phoneCallRealtorId;
 //正在拨打电话对应请求虚拟电话的请求ID
-@property (nonatomic, copy) NSString *phoneCallRequestId;
+@property (nonatomic, copy, nullable) NSString *phoneCallRequestId;
 //ViewModel
 @property (nonatomic, strong)   FHHouseDetailBaseViewModel       *viewModel;
 //bizTrace
-@property (nonatomic, strong)   NSDictionary       *bizTrace;
+@property (nonatomic, copy) NSString *bizTrace;
 
 //设置状态栏
 - (void)refreshContentOffset:(CGPoint)contentOffset;

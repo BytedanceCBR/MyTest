@@ -13,6 +13,8 @@
 #import "FHTracerModel.h"
 #import "FHLynxManager.h"
 #import "TTReachability.h"
+#import "UIView+BTDAdditions.h"
+#import "TTAccountManager.h"
 @interface FHEncyclopediaViewController ()
 @property (weak, nonatomic) UICollectionView *collectionView;
 @property (weak, nonatomic) FHEncyclopediaHeader *encyclopediaHeader;
@@ -33,19 +35,23 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     [self initNav];
-    [self addDefaultEmptyViewFullScreen];
     [self checkLocalData];
 }
 - (void)checkLocalData {
     BOOL jumpLynxHeader = [[FHLynxManager sharedInstance] checkChannelTemplateIsAvalable:@"ugc_encyclopedia_lynx_header" templateKey:[FHLynxManager defaultJSFileName]];
-   BOOL jumpLynxItem = [[FHLynxManager sharedInstance] checkChannelTemplateIsAvalable:@"ugc_encyclopedia_lynx_item" templateKey:[FHLynxManager defaultJSFileName]];
-    if (jumpLynxHeader && jumpLynxItem && [TTReachability isNetworkConnected]) {
+    BOOL jumpLynxItem = [[FHLynxManager sharedInstance] checkChannelTemplateIsAvalable:@"ugc_encyclopedia_lynx_item" templateKey:[FHLynxManager defaultJSFileName]];
+    if (jumpLynxHeader && jumpLynxItem) {
         [self initUI];
+        [self addDefaultEmptyViewFullScreen];
         [self initViewModel];
-        [self.emptyView hideEmptyView];
     }else {
-       [self.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoData];
+        [self.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoData];
     }
+    
+}
+
+-(void)retryLoadData {
+    [_viewModel requestHeaderConfig];
 }
 
 - (void)initUI {
@@ -60,16 +66,80 @@
     }];
 }
 
+
 - (void)initNav {
     [self setupDefaultNavBar:NO];
     self.customNavBarView.seperatorLine.hidden = YES;
     self.customNavBarView.title.text = @"购房百科";
+    UIButton *rightbtn = [self questionBtn];
+    [self.customNavBarView addSubview:rightbtn];
+    [rightbtn setBtd_y:self.customNavBarView.leftBtn.btd_centerY];
+    [rightbtn mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.centerY.equalTo(self.customNavBarView.title);
+        make.right.equalTo(self.customNavBarView.mas_right).offset(-10);
+        make.size.mas_equalTo(CGSizeMake(90, 20));
+    }];
+}
+
+- (UIButton *)questionBtn {
+    UIButton *questionBtn = [[UIButton alloc]init];
+    [questionBtn setTitleColor:[UIColor themeOrange4] forState:UIControlStateNormal];
+    [questionBtn setTitle:@"我要提问" forState:UIControlStateNormal];
+    questionBtn.titleLabel.font = [UIFont themeFontRegular:14];
+    [questionBtn setImage:[UIImage imageNamed:@"right_write"] forState:UIControlStateNormal];
+    questionBtn.imageEdgeInsets = UIEdgeInsetsMake(0, 0, 0, 0);
+    questionBtn.titleEdgeInsets = UIEdgeInsetsMake(0, 10, 0, 0);
+    [questionBtn setAdjustsImageWhenHighlighted:NO];
+    questionBtn.contentHorizontalAlignment = UIControlContentHorizontalAlignmentCenter;
+    [questionBtn addTarget:self action:@selector(writeQuestion:) forControlEvents:UIControlEventTouchUpInside];
+    return questionBtn;
+}
+
+
+
+- (void)writeQuestion:(UIButton *)btn {
+    if ([TTAccountManager isLogin]) {
+        [self gotoWendaPublishVC];
+    } else {
+        [self gotoLogin];
+    }
+}
+
+- (void)gotoLogin {
+    NSMutableDictionary *params = [NSMutableDictionary dictionary];
+    [params setObject:@"f_house_encyclopedia" forKey:@"enter_from"];
+    [params setObject:@"want_question" forKey:@"enter_type"];
+    // 登录成功之后不自己Pop，先进行页面跳转逻辑，再pop
+    [params setObject:@(YES) forKey:@"need_pop_vc"];
+    __weak typeof(self) wSelf = self;
+    [TTAccountLoginManager showAlertFLoginVCWithParams:params completeBlock:^(TTAccountAlertCompletionEventType type, NSString * _Nullable phoneNum) {
+        if (type == TTAccountAlertCompletionEventTypeDone) {
+            // 登录成功
+            if ([TTAccountManager isLogin]) {
+                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                   [wSelf gotoWendaPublishVC];
+                });
+            }
+        }
+    }];
+}
+
+- (void)gotoWendaPublishVC {
+    NSURL *openUrl = [NSURL URLWithString:[NSString stringWithFormat:@"sslocal://ugc_wenda_publish"]];
+    NSMutableDictionary *info = @{}.mutableCopy;
+    info[@"title"] = @"提问";
+    NSMutableDictionary *dic = @{}.mutableCopy;
+    dic[@"enter_from"] = @"f_house_encyclopedia";
+    dic[@"is_wiki"] = @(1);
+    info[@"tracer"] = dic;
+    TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:info];
+    [[TTRoute sharedRoute] openURLByPresentViewController:openUrl userInfo:userInfo];
 }
 
 - (void)initViewModel {
     _viewModel = [[FHEncyclopediaViewModel alloc] initWithWithController:self collectionView:self.collectionView headerView:self.encyclopediaHeader
-                  tracerModel:self.tracerModel];
-
+                                                             tracerModel:self.tracerModel];
+    
 }
 
 - (FHEncyclopediaHeader *)encyclopediaHeader {

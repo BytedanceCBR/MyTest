@@ -51,6 +51,8 @@
 //首页购房百科头部配置
 + (NSString *)encyclopediaConfigUrlString;
 
+//小视频详情页配置
++ (NSString *)shortVideoRealtorInfoUrlString;
 //详情页CDN
 + (NSString *)detailFullPathString;
 + (NSString *)detailContentPathString;

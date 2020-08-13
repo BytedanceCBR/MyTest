@@ -65,6 +65,7 @@ static NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
 @property (nonatomic, strong) NSMutableDictionary *cacheSimilarIdsDict;
 @property (nonatomic, strong) NSMutableDictionary *cahceHouseRankidsDict;
 @property (nonatomic, strong) NSMutableDictionary *similarTraceParam;
+@property (nonatomic, assign) NSTimeInterval startMonitorTime;
 
 @end
 
@@ -75,6 +76,7 @@ static NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
     self = [super init];
     if (self) {
         _listModel = listModel;
+        _startMonitorTime = [[NSDate date] timeIntervalSince1970];
     }
     return self;
 }
@@ -553,6 +555,9 @@ static NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
         self.tableView.hasMore = model.data.hasMore;
         [self updateTableViewWithMoreData:model.data.hasMore];
         
+        if (isFirst && self.houseType == FHHouseTypeSecondHandHouse) {
+            [FHMainApi addUserOpenVCDurationLog:@"pss_homepage" resultType:FHNetworkMonitorTypeSuccess duration:[[NSDate date] timeIntervalSince1970] - _startMonitorTime];
+        }
         
         if (self.isOriginRequest || [FHEnvContext sharedInstance].isRefreshFromCitySwitch || [FHEnvContext sharedInstance].isRefreshFromAlertCitySwitch) {
             [self sendTraceEvent:FHHomeCategoryTraceTypeEnter];

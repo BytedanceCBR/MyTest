@@ -30,7 +30,7 @@
 #import "FHMessageEditView.h"
 #define kCellId @"FHMessageCell_id"
 
-@interface FHMessageViewModel () <UITableViewDelegate>
+@interface FHMessageViewModel () <UITableViewDelegate, UITableViewDataSource>
 
 @property(nonatomic, strong) UITableView *tableView;
 @property(nonatomic, weak) FHMessageViewController *viewController;
@@ -47,9 +47,7 @@
 - (instancetype)initWithTableView:(UITableView *)tableView controller:(FHMessageViewController *)viewController {
     self = [super init];
     if (self) {
-        __weak typeof(self)wself = self;
-
-        _isFirstLoad = YES;
+        _isFirstLoad = self.combiner.isFirstLoad;
         self.tableView = tableView;
 
         [tableView registerClass:[FHMessageCell class] forCellReuseIdentifier:kCellId];
@@ -241,6 +239,7 @@
             //ugc 消息列表
             if([theModel.id isEqualToString:@"309"]){
                 NSMutableDictionary *tracerDictForUgc = [NSMutableDictionary dictionary];
+                tracerDictForUgc[@"origin_from"] = @"message";
                 tracerDictForUgc[@"enter_from"] = @"messagetab";
                 tracerDictForUgc[@"enter_type"] = @"click";
                 tracerDictForUgc[@"element_from"] = @"feed_messagetab_cell";

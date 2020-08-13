@@ -118,7 +118,10 @@ static NSString *lastTabIdentifier;
 //            houseFindVC = [[FHHouseFindViewController alloc] init];
 //        }
         FHCommunityViewController *communityVC = [[FHCommunityViewController alloc] init];
-        
+        communityVC.tracerDict = @{
+            @"origin_from":@"neighborhood_tab",
+            @"enter_from":@"neighborhood_tab"
+        };
         return communityVC;
 
     } else if ([identifier isEqualToString:kFHouseMessageTabKey]) {

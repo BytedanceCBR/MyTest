@@ -143,6 +143,7 @@
     self.avatar.backgroundColor = [UIColor themeGray7];
     self.avatar.clipsToBounds = YES;
     self.avatar.layer.cornerRadius = 4;
+    self.avatar.contentMode = UIViewContentModeScaleAspectFill;
 
     /* 中间标签区 */
     self.labelContainer = [[UIView alloc] init];

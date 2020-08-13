@@ -18,6 +18,8 @@
 @property (nonatomic, copy) NSString<Optional> *verifiedContent;
 @property (nonatomic, copy) NSString<Optional> *desc;
 @property (nonatomic, copy) NSString<Optional> *userDecoration;
+@property (nonatomic, copy) NSString<Optional> *firstBizType;
+@property (nonatomic, copy) NSString<Optional> *realtorId;
 @property (nonatomic, assign) BOOL isFollowed;
 @property (nonatomic, assign) BOOL isFollowing;
 @property (nonatomic, assign) BOOL isFriend;

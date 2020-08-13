@@ -21,10 +21,14 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic, assign) BOOL hasFocusTips;
 @property(nonatomic, strong) UIButton *publishBtn;
 @property(nonatomic, strong) NSArray *categorys;
+//新的发现页面
+@property(nonatomic, assign) BOOL isNewDiscovery;
 
 - (void)hideGuideView;
 - (void)hideRedPoint;
 - (void)updateSpringView;
+- (void)viewAppearForEnterType:(NSInteger)enterType needReport:(BOOL)needReport;
+- (void)viewDisAppearForEnterType:(NSInteger)enterType;
 
 @end
 

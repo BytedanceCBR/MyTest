@@ -29,6 +29,11 @@
         cellModel.schema = model.schema;
         cellModel.type = model.articleType;
         cellModel.groupId = model.groupId;
+        NSMutableDictionary *tracerDic = [NSMutableDictionary dictionary];
+        if(model.logPb){
+            tracerDic[@"log_pb"] = model.logPb;
+        }
+        cellModel.tracer = tracerDic;
         [cards addObject:cellModel];
     }
     _cards = cards;

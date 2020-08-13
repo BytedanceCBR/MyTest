@@ -98,6 +98,7 @@ extern NSString *const INSTANT_DATA_KEY;
 @property (nonatomic, strong) NSMutableDictionary *showCache;
 //预约以后的状态暂存
 @property (nonatomic, strong) NSMutableDictionary *subscribeCache;
+@property (nonatomic, assign) NSTimeInterval startMonitorTime;
 
 @end
 
@@ -125,7 +126,8 @@ extern NSString *const INSTANT_DATA_KEY;
         _subscribeCache = [NSMutableDictionary new];
         _currentRecommendHouseDataModel = nil;
         _houseDataModel = nil;
-        
+        _startMonitorTime = [[NSDate date] timeIntervalSince1970];
+
         self.tableView = tableView;
         self.houseType = houseType;
         self.isShowSubscribeCell = NO;
@@ -707,6 +709,7 @@ extern NSString *const INSTANT_DATA_KEY;
         self.fromRecommend = fromRecommend;
 
         self.viewController.tracerModel.searchId = self.searchId;
+        BOOL isFirstLoadCopy = self.isFirstLoad;
         if (self.isFirstLoad) {
             self.viewController.tracerModel.originSearchId = self.searchId;
             self.isFirstLoad = NO;
@@ -904,6 +907,10 @@ extern NSString *const INSTANT_DATA_KEY;
         }
         
         [self.tableView reloadData];
+        
+        if (isFirstLoadCopy) {
+            [FHMainApi addUserOpenVCDurationLog:@"pss_house_list_main" resultType:FHNetworkMonitorTypeSuccess duration:[[NSDate date] timeIntervalSince1970] - _startMonitorTime];
+        }
         
         if (self.houseList.count > 10 || self.sugesstHouseList.count > 10) {
             self.tableView.mj_footer.hidden = NO;

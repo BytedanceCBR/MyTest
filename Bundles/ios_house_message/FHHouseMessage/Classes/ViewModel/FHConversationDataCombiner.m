@@ -16,6 +16,21 @@
 #import "FHEnvContext.h"
 #import "FHMessageManager.h"
 
+@interface FHCombineChannelSingleton : NSObject
+@property (nonatomic, strong) NSMutableArray *combineChannels;
++(instancetype)shareInstance;
+@end
+@implementation FHCombineChannelSingleton
+static FHCombineChannelSingleton* _instance;
++ (instancetype)shareInstance {
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        _instance = [[FHCombineChannelSingleton alloc] init];
+    });
+    return _instance;
+}
+@end
+
 @interface FHConversationDataCombiner ()
 @property (nonatomic, strong) NSArray<IMConversation*>* conversations;
 @property (nonatomic, strong) NSArray<FHUnreadMsgDataUnreadModel*>* channels;
@@ -52,7 +67,9 @@
     if(ugcUnreadMsg && ugcUnreadMsg.hasHistoryMsg){
         [combineChannels addObject:ugcUnreadMsg];
     }
-    self.channels = [combineChannels copy];
+    
+    [FHCombineChannelSingleton shareInstance].combineChannels = [combineChannels copy];
+    self.channels = [FHCombineChannelSingleton shareInstance].combineChannels;
     [self resetAllItems];
 }
 
@@ -70,6 +87,9 @@
 
 -(void)resetAllItems {
     NSMutableArray<id<ConversationComparable>>* theItems = [NSMutableArray arrayWithArray:_conversations];
+    if(self.channels.count == 0 && [FHCombineChannelSingleton shareInstance].combineChannels.count > 0) {
+        self.channels = [FHCombineChannelSingleton shareInstance].combineChannels;
+    }
     [theItems addObjectsFromArray:_channels];
     NSArray* result = [theItems sortedArrayUsingComparator:^NSComparisonResult(id<ConversationComparable>  _Nonnull obj1, id<ConversationComparable>  _Nonnull obj2) {
         return [FHConversationDataCombiner conversationComparison:obj1 toOther:obj2];
@@ -105,5 +125,9 @@
     }
 }
 
-
+- (BOOL)isFirstLoad {
+    BOOL ret = YES;
+    ret = !([FHCombineChannelSingleton shareInstance].combineChannels.count > 0 || self.allItems.count > 0);
+    return ret;
+}
 @end

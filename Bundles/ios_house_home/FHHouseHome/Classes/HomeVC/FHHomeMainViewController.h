@@ -15,9 +15,11 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FHHomeMainViewController : FHBaseViewController
 @property(nonatomic, strong) FHBaseCollectionView *collectionView;
-@property (nonatomic,strong) FHHomeMainTopView *topView;
+@property(nonatomic, strong) FHHomeMainTopView *topView;
 @property(nonatomic, strong) UIView *containerView;
 @property(nonatomic, strong) UIView *switchCityView;
+@property(nonatomic, assign) NSInteger currentTabIndex;
+@property(nonatomic , weak) id feedListVC;
 
 - (void)changeTopStatusShowHouse:(BOOL)isShowHouse;
 - (void)changeTopSearchBtn:(BOOL)isShow;
