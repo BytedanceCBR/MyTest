@@ -119,6 +119,7 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
 @property(nonatomic, strong) NSArray *houseNewAnnotions;
 @property(nonatomic , strong) NSArray *oldHouseAnnotions;
 @property (nonatomic , strong) UIView *bottomShowInfoView;
+@property (nonatomic , strong) FHMapSearchDataListModel *currentDataModel;
 
 @end
 
@@ -675,7 +676,7 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
 
 - (void)clickAround{
     if (self.currentHouseType == FHHouseTypeNewHouse) {
-        FHMapSearchDataListModel *model = self.currentSelectAnnotation.houseData;
+        FHMapSearchDataListModel *model = self.currentDataModel;
         if ([model isKindOfClass:[FHMapSearchDataListModel class]]) {
             NSMutableDictionary *infoDict = [NSMutableDictionary new];
             [infoDict setValue:@"交通" forKey:@"category"];
@@ -1915,6 +1916,8 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
     [self changeNavbarAppear:NO];
     self.showMode = FHMapSearchShowModeHalfHouseList;
     [self.tipView removeTip];
+    
+    self.currentDataModel  = model;
     
     //move annotationview to center
     CLLocationCoordinate2D center = CLLocationCoordinate2DMake(model.centerLatitude.floatValue, model.centerLongitude.floatValue);

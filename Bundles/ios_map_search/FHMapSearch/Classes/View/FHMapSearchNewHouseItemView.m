@@ -10,6 +10,8 @@
 #import "FHHouseSearcher.h"
 #import "ToastManager.h"
 #import "UIViewController+HUD.h"
+#import "TTRoute.h"
+
 //#import "FHHomeBaseTableView.h"
 #define kMapSearchCellNewHouseItemImageId @"FHHouseBaseNewHouseCell"
 #define kMapSearchCellHeight 130
@@ -103,7 +105,49 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-
+         
+            NSMutableDictionary *traceParam = [NSMutableDictionary new];
+//            traceParam[@"enter_from"] =@"";
+//            traceParam[@"log_pb"] = theModel.logPb;
+//            traceParam[@"origin_from"] = [self pageTypeString];
+//            traceParam[@"card_type"] = @"left_pic";
+//            traceParam[@"rank"] = [self getRankFromHouseId:theModel.idx indexPath:indexPath];
+//            traceParam[@"origin_search_id"] = self.originSearchId ? : @"be_null";
+//            traceParam[@"element_from"] = @"maintab_list";
+//            traceParam[@"enter_from"] = @"maintab";
+//
+//            NSInteger houseType = 0;
+//            if ([theModel.houseType isKindOfClass:[NSString class]]) {
+//                houseType = [theModel.houseType integerValue];
+//            }
+//
+//            if (houseType == 0) {
+//                houseType = self.houseType;
+//            }
+    //        if (houseType != 0) {
+    //            if (houseType != self.houseType) {
+    //                return;
+    //            }
+    //        }else
+    //        {
+    //            houseType = self.houseType;
+    //        }
+                    
+            NSMutableDictionary *dict = @{@"house_type":@(1),
+                                   @"tracer": traceParam
+                                   }.mutableCopy;
+//            dict[INSTANT_DATA_KEY] = theModel;
+//            dict[@"biz_trace"] = theModel.bizTrace;
+            NSURL *jumpUrl = nil;
+            
+           
+            jumpUrl = [NSURL URLWithString:[NSString stringWithFormat:@"sslocal://new_house_detail?court_id=%@",_itemModel.hid]];
+            
+            if (jumpUrl != nil) {
+                TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
+                [[TTRoute sharedRoute] openURLByPushViewController:jumpUrl userInfo:userInfo];
+            }
+    
 }
 
 /*
