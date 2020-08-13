@@ -1054,7 +1054,7 @@ extern NSString *const INSTANT_DATA_KEY;
     
     if (self.mapFindHouseOpenUrl.length > 0) {
         
-        NSMutableString *openUrl = self.mapFindHouseOpenUrl;
+        NSString *openUrl = self.mapFindHouseOpenUrl;
         
         NSMutableDictionary *param = @{}.mutableCopy;
         param[UT_CATEGORY_NAME] = [self categoryName] ? : @"be_null";
@@ -1300,7 +1300,7 @@ extern NSString *const INSTANT_DATA_KEY;
         }
     }
     
-    NSDictionary *logpbDict = model.logPb;
+//    NSDictionary *logpbDict = model.logPb;
 //    [self addOperationClickLog:logpbDict[@"operation_name"]];
     [self addClickIconLog:model.logPb];
 }
@@ -1458,7 +1458,7 @@ extern NSString *const INSTANT_DATA_KEY;
     
     TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc]initWithInfo:userInfoDict];
     if (popController) {
-        __weak typeof(self) wself = self;
+//        __weak typeof(self) wself = self;
         [[TTRoute sharedRoute]openURLByPushViewController:url userInfo:userInfo pushHandler:^(UINavigationController *nav, TTRouteObject *routeObj) {
             NSMutableArray *controllers = [[NSMutableArray alloc] initWithArray:nav.viewControllers];
             [controllers removeObject:popController];
@@ -1552,7 +1552,7 @@ extern NSString *const INSTANT_DATA_KEY;
 
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    UITableViewCell *cell = nil;
+//    UITableViewCell *cell = nil;
     if (_showPlaceHolder) {
         FHHomePlaceHolderCell *cell = [tableView dequeueReusableCellWithIdentifier:kPlaceCellId];
         cell.topOffset = 20;
