@@ -106,8 +106,7 @@
             }
             [FHMainApi addRequestLog:queryPath startDate:startDate backDate:backDate serializeDate:serDate resultType:resultType errorCode:code errorMsg:errMsg extra:extraDict exceptionDict:exceptionDict responseCode:responseCode];
 //            [[FHHouseErrorHubManager sharedInstance] checkRequestResponseWithHost:url requestParams:paramDic responseStatus:response response:obj analysisError:backError changeModelType:resultType errorHubType:FHErrorHubTypeRequest];
-            FHErrorHubManagerUtil *errorHubUtil = [[FHErrorHubManagerUtil alloc]init];
-             [errorHubUtil checkRequestResponseWithHost:url requestParams:paramDic responseStatus:response response:obj analysisError:backError changeModelType:resultType errorHubType:1];
+             [FHErrorHubManagerUtil checkRequestResponseWithHost:url requestParams:paramDic responseStatus:response response:obj analysisError:backError changeModelType:resultType errorHubType:1];
             
             if (completion) {
                 dispatch_async(dispatch_get_main_queue(), ^{
@@ -221,8 +220,7 @@
             }
             [FHMainApi addRequestLog:requestLogPath startDate:startDate backDate:backDate serializeDate:serDate resultType:resultType errorCode:code errorMsg:errMsg extra:extraDict exceptionDict:exceptionDict responseCode:responseCode];
 //            [[FHHouseErrorHubManager sharedInstance] checkRequestResponseWithHost:queryPath requestParams:paramDic responseStatus:response response:obj analysisError:backError changeModelType:resultType errorHubType:FHErrorHubTypeRequest];
-            FHErrorHubManagerUtil *errorHubUtil = [[FHErrorHubManagerUtil alloc]init];
-             [errorHubUtil checkRequestResponseWithHost:queryPath requestParams:paramDic responseStatus:response response:obj analysisError:backError changeModelType:resultType errorHubType:1];
+             [FHErrorHubManagerUtil checkRequestResponseWithHost:queryPath requestParams:paramDic responseStatus:response response:obj analysisError:backError changeModelType:resultType errorHubType:1];
             if (completion) {
                 dispatch_async(dispatch_get_main_queue(), ^{
                     completion(model, backError);

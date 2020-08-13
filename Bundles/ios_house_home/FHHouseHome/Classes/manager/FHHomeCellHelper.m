@@ -167,8 +167,7 @@ static NSMutableArray  * _Nullable identifierArr;
             [dictTraceParams setValue:@"maintab" forKey:@"page_type"];
             
 //            [[FHHouseErrorHubManager sharedInstance] checkBuryingPointWithEvent:@"operation_show" Params:dictTraceParams];
-            FHErrorHubManagerUtil *ErrorHub = [[FHErrorHubManagerUtil alloc]init];
-            [ErrorHub checkBuryingPointWithEvent:@"operation_show" Params:dictTraceParams];
+            [FHErrorHubManagerUtil checkBuryingPointWithEvent:@"operation_show" Params:dictTraceParams];
             [BDTrackerProtocol eventV3:@"operation_show" params:dictTraceParams];
         }];
     }
@@ -212,8 +211,7 @@ static NSMutableArray  * _Nullable identifierArr;
             [dictTraceParams setValue:@"maintab" forKey:@"page_type"];
             
 //            [[FHHouseErrorHubManager sharedInstance] checkBuryingPointWithEvent:@"operation_show" Params:dictTraceParams];
-            FHErrorHubManagerUtil *ErrorHub = [[FHErrorHubManagerUtil alloc]init];
-            [ErrorHub checkBuryingPointWithEvent:@"operation_show" Params:dictTraceParams];
+            [FHErrorHubManagerUtil checkBuryingPointWithEvent:@"operation_show" Params:dictTraceParams];
             [BDTrackerProtocol eventV3:@"operation_show" params:dictTraceParams];
         }];
     }

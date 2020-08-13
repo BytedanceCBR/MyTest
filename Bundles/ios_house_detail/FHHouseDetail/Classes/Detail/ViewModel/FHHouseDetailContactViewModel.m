@@ -351,8 +351,7 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
     [params setValue:self.houseInfoBizTrace forKey:@"biz_trace"];
     [params setValue: [[FHEnvContext sharedInstance].messageManager getTotalUnreadMessageCount] >0?@"1":@"0" forKey:@"with_tips"];
 //      [[FHHouseErrorHubManager sharedInstance] checkBuryingPointWithEvent:@"click_im_message" Params:params];
-    FHErrorHubManagerUtil *ErrorHub = [[FHErrorHubManagerUtil alloc]init];
-    [ErrorHub checkBuryingPointWithEvent:@"click_im_message" Params:params];
+    [FHErrorHubManagerUtil checkBuryingPointWithEvent:@"click_im_message" Params:params];
     [BDTrackerProtocol eventV3:@"click_im_message" params:params];
     
     
@@ -473,8 +472,7 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
         [params setValue:[_tracerDict objectForKey:@"log_pb"] forKey:@"log_pb"];
         params[@"enter_from"] = _tracerDict[@"enter_from"];
 //        [[FHHouseErrorHubManager sharedInstance] checkBuryingPointWithEvent:@"element_show" Params:params];
-        FHErrorHubManagerUtil *ErrorHub = [[FHErrorHubManagerUtil alloc]init];
-        [ErrorHub checkBuryingPointWithEvent:@"element_show" Params:params];
+        [FHErrorHubManagerUtil checkBuryingPointWithEvent:@"element_show" Params:params];
         [BDTrackerProtocol eventV3:@"element_show" params:params];
     }
 }

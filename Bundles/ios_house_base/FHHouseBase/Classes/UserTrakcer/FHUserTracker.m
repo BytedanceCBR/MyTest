@@ -33,8 +33,7 @@
     
     NSMutableDictionary *params = [NSMutableDictionary dictionaryWithDictionary:param];
     [params addEntriesFromDictionary:[self basicParam]];
-    FHErrorHubManagerUtil *ErrorHub = [[FHErrorHubManagerUtil alloc]init];
-    [ErrorHub checkBuryingPointWithEvent:event Params:params];
+    [FHErrorHubManagerUtil checkBuryingPointWithEvent:event Params:params];
     [BDTrackerProtocol eventV3:event params:params];
 }
 
@@ -45,8 +44,7 @@
     }    
     NSMutableDictionary *param = [model logDict];
     [param addEntriesFromDictionary:[self basicParam]];
-    FHErrorHubManagerUtil *ErrorHub = [[FHErrorHubManagerUtil alloc]init];
-    [ErrorHub checkBuryingPointWithEvent:event Params:param];
+    [FHErrorHubManagerUtil checkBuryingPointWithEvent:event Params:param];
 }
 
 @end

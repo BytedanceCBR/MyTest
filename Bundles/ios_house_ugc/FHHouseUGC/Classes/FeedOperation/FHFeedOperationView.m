@@ -1217,8 +1217,7 @@ didDislikeWithOptionBlock:(TTFeedDislikeOptionBlock)didDislikeWithOptionBlock {
     if (extraParameters) {
         [parameters addEntriesFromDictionary:extraParameters];
     }
-    FHErrorHubManagerUtil *ErrorHub = [[FHErrorHubManagerUtil alloc]init];
-    [ErrorHub checkBuryingPointWithEvent:event Params:parameters];
+    [FHErrorHubManagerUtil checkBuryingPointWithEvent:event Params:parameters];
     [BDTrackerProtocol eventV3:event params:parameters];
 }
 
