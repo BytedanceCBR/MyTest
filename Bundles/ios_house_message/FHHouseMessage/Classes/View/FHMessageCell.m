@@ -40,7 +40,7 @@
 @property (assign, nonatomic) BOOL cancelAnimationCompletion;
 @property (nonatomic, strong) FHMessageEditView *editView;
 @property (nonatomic, assign) BOOL index;
-@property (nonatomic, strong) IMConversation *conv;
+@property (nonatomic, weak) UITableView *tableView;
 
 @end
 
@@ -125,6 +125,12 @@
     
     self.subTitleLabel = [self LabelWithFont:[UIFont themeFontRegular:12] textColor:[UIColor themeGray3]];
     [self.backView addSubview:_subTitleLabel];
+    
+    self.muteImageView = [[UIImageView alloc] init];
+    [self.backView addSubview:self.muteImageView];
+    self.muteImageView.image = [UIImage imageNamed:@"chat_status_mute"];
+    self.muteImageView.hidden = YES;
+    
     [self.subTitleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(self.iconView.mas_right).offset(12);
         make.right.mas_equalTo(self.muteImageView.mas_left).offset(-5);
@@ -132,10 +138,6 @@
         make.height.mas_equalTo(20);
     }];
     
-    self.muteImageView = [[UIImageView alloc] init];
-    [self.backView addSubview:self.muteImageView];
-    self.muteImageView.image = [UIImage imageNamed:@"chat_status_mute"];
-    self.muteImageView.hidden = YES;
     [self.muteImageView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.size.mas_equalTo(CGSizeMake(14, 14));
         make.centerY.mas_equalTo(self.subTitleLabel.mas_centerY);
@@ -160,7 +162,7 @@
         make.right.mas_equalTo(self.iconView.mas_right).offset(4);
         make.top.mas_equalTo(self.iconView.mas_top).offset(1);
     }];
-        
+         
     self.editView = [[FHMessageEditView alloc] init];
     self.editView.backgroundColor = [UIColor themeOrange1];
     self.editView.frame = CGRectMake(CGRectGetMaxX(self.backView.frame) - 20, CGRectGetMinY(self.backView.frame), -_maxOffset + 20, self.backView.frame.size.height);
@@ -525,6 +527,13 @@
 }
 
 - (void)panAction:(UIPanGestureRecognizer *)pan {
+    if ([FHMessageEditHelp shared].currentCell && ![[FHMessageEditHelp shared].currentCell isEqual:self]) {
+        [[FHMessageEditHelp shared].currentCell openMenu:false time:0.35 springX:0];
+    }
+    CGFloat panX = [pan translationInView:pan.view].x;
+    if (self.state == SliderMenuClose && panX >= 0) {
+        return;
+    }
     if (![FHMessageEditHelp shared].currentCell) {
         [FHMessageEditHelp shared].currentCell = self;
         [FHMessageEditHelp shared].conversation = self.conv;
@@ -537,29 +546,33 @@
 //        [self.layer removeAllAnimations];
 //        [self removeAnimations];
 //    }
-    if (![[FHMessageEditHelp shared].currentCell isEqual:self]) {
-        [[FHMessageEditHelp shared].currentCell openMenu:false time:0.35 springX:0];
-        [FHMessageEditHelp shared].currentCell = self;
-        [FHMessageEditHelp shared].conversation = self.conv;
+    if (![[FHMessageEditHelp shared].currentCell isEqual:self] && [[FHMessageEditHelp shared].conversation.identifier isEqualToString:self.conv.identifier]) {
+        NSLog(@"11122 -error");
+    } else if ([[FHMessageEditHelp shared].currentCell isEqual:self] && ![[FHMessageEditHelp shared].conversation.identifier isEqualToString:self.conv.identifier]) {
+        NSLog(@"11122 -error");
     }
-    CGFloat panX = [pan translationInView:pan.view].x;
-    if (self.state == SliderMenuClose && panX >= 0) {
-        return;
-    }
+    [FHMessageEditHelp shared].currentCell = self;
+    [FHMessageEditHelp shared].conversation = self.conv;
     CGFloat offsetX = panX + _currentOffset;
     if (offsetX > 0) {
         offsetX = 0;
     }
 
     if (pan.state == UIGestureRecognizerStateBegan) {
+        for(FHMessageCell * cell in self.tableView.visibleCells)
+        {
+            if(![cell isEqual:self]) {
+                [cell cancelPan];
+            }
+        }
 //        [self.layer removeAllAnimations];
 //        [self removeAnimations];
     } else if (pan.state == UIGestureRecognizerStateChanged) {
         if (panX > 0) {
-            if (self.state == SliderMenuOpen) {
-                [self cancelPan];
-                [self openMenu:false time:0.35 springX:3];
-            }
+//            if (self.state == SliderMenuOpen) {
+//                [self cancelPan];
+//                [self openMenu:false time:0.35 springX:3];
+//            }
             return;
         }
         self.state = SliderMenuSlider;
@@ -580,22 +593,45 @@
     }
 }
 
+- (UITableView *)tableView
+{
+    if(_tableView){
+        return _tableView;
+    }
+    // 获取当前cell所在的父tableView
+    UIView *view = self.superview;
+    while (view != nil)
+    {
+        if([view isKindOfClass:[UITableView class]])
+        {
+            _tableView = (UITableView *)view;
+        }
+        view = view.superview;
+    }
+    return _tableView;
+}
 - (BOOL)gestureRecognizerShouldBegin:(UIGestureRecognizer *)gestureRecognizer{
     if (gestureRecognizer == _panGesture) {
         
         CGFloat panY = [_panGesture translationInView:gestureRecognizer.view].y;
         CGFloat panX = [_panGesture translationInView:gestureRecognizer.view].x;
-        if (ABS(panY) > ABS(panX) * 0.8) {
+        if (ABS(panY) > 0.01) {
+            NSLog(@"111222 %f %f %@", panX, panY, self.conv.conversationDisplayName);
 //            if (self.stateIsClose) {
 //                self.stateIsClose(nil);
 //            }
             if ([FHMessageEditHelp shared].currentCell) {
                 [[FHMessageEditHelp shared].currentCell openMenu:false time:0.4 springX:0];
             }
-            
+//            [self.contentView removeGestureRecognizer:_panGesture];
+//            _panGesture.delegate = nil;
+//            self.panGesture = nil;
+//            _panGesture = [[UIPanGestureRecognizer alloc]initWithTarget:self action:@selector(panAction:)];
+//            _panGesture.delegate = self;
+//            [self.backView addGestureRecognizer:_panGesture];
             return false;
         }
-        if (CGRectGetWidth(self.backView.frame) - [self.panGesture locationInView:self.backView].x > 120) {
+        if (panX > 0.01 && (![FHMessageEditHelp shared].currentCell || [FHMessageEditHelp shared].currentCell.state == SliderMenuClose)) {
             return NO;
         }
     }
@@ -639,7 +675,7 @@
 //        [self.editView removeFromSuperview];
 //        self.editView = nil;
 //    }
-//}
+//}fc
 
 - (void)openMenu:(BOOL)open time:(NSTimeInterval)time springX:(CGFloat)springX {
     if (!open) {
@@ -687,6 +723,19 @@
         self.panGesture.delegate = nil;
         self.panGesture = nil;
     }
+    if (self.backView) {
+        for (__strong UIView *view in self.backView.subviews) {
+            [view removeFromSuperview];
+            view = nil;
+        }
+        [self.backView removeFromSuperview];
+        self.backView = nil;
+    }
+    if (self.editView) {
+        [self.editView removeFromSuperview];
+        self.editView = nil;
+    }
+    [self initViews];
 }
 
 - (void)removeAnimations {
@@ -703,9 +752,7 @@
         make.left.mas_equalTo(15 + x);
     }];
     [self.contentView layoutIfNeeded];
-//    [self.backView layoutIfNeeded];
-//    [UIView commitAnimations];
-//    self.backView.frame = CGRectMake(x, self.frame.origin.y, self.frame.size.width, self.frame.size.height);
+
 }
 
 @end

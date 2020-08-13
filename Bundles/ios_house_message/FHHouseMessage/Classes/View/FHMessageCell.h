@@ -23,6 +23,7 @@ typedef void(^FHMessageCellClick)(id data);
 @property (nonatomic, copy) FHMessageCellClick stateIsClose;
 @property (nonatomic, copy) FHMessageCellClick openEditTrack;
 @property (nonatomic, copy) FHMessageCellClick closeEditTrack;
+@property (nonatomic, strong) IMConversation *conv;
 
 - (void)updateWithModel:(FHUnreadMsgDataUnreadModel *)model;
 - (void)updateWithChat:(IMConversation*)conversation;

@@ -277,9 +277,9 @@ typedef NS_ENUM(NSInteger, FHSegmentedControllerAnimatedTransitionDirection) {
     if (self.segmentedControl.sectionTitles.count) {
         NSArray<IMConversation *> *allConversations = [[IMManager shareInstance].chatService allConversations];
         if ([allConversations count] > 0) {
-            self.segmentedControl.selectedSegmentIndex = 0;
-        } else {
             self.segmentedControl.selectedSegmentIndex = 1;
+        } else {
+            self.segmentedControl.selectedSegmentIndex = 0;
         }
     }
     [self segmentedControlValueChanged];
@@ -302,7 +302,7 @@ typedef NS_ENUM(NSInteger, FHSegmentedControllerAnimatedTransitionDirection) {
 //        make.height.mas_equalTo(naviHeight);
 //    }];
     
-    HMSegmentedControl *segmentedControl = [[HMSegmentedControl alloc] initWithSectionTitles:@[@"微聊", @"通知"]];
+    HMSegmentedControl *segmentedControl = [[HMSegmentedControl alloc] initWithSectionTitles:@[@"通知", @"微聊"]];
     NSDictionary *titleTextAttributes = @{NSFontAttributeName: [UIFont themeFontRegular:16],
                                           NSForegroundColorAttributeName: [UIColor themeGray1]};
     segmentedControl.titleTextAttributes = titleTextAttributes;
@@ -379,7 +379,7 @@ typedef NS_ENUM(NSInteger, FHSegmentedControllerAnimatedTransitionDirection) {
     systemViewController.isSegmentedChildViewController = YES;
     systemViewController.dataType = FHMessageRequestDataTypeSystem;
     
-    self.viewControllers = @[imViewController,systemViewController];
+    self.viewControllers = @[systemViewController, imViewController];
     //self.segmentedControl.hidden = YES;
     
     
@@ -400,9 +400,9 @@ typedef NS_ENUM(NSInteger, FHSegmentedControllerAnimatedTransitionDirection) {
 //    }];
     NSArray<IMConversation *> *allConversations = [[IMManager shareInstance].chatService allConversations];
     if ([allConversations count] == 0) {
-        [self selectViewControllerAtIndex:1];
-    } else {
         [self selectViewControllerAtIndex:0];
+    } else {
+        [self selectViewControllerAtIndex:1];
     }
     _notNetHeader = [[FHNoNetHeaderView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, 36)];
     [self.view addSubview:_notNetHeader];
@@ -484,8 +484,8 @@ typedef NS_ENUM(NSInteger, FHSegmentedControllerAnimatedTransitionDirection) {
 
 - (void)updateRedPointWithChat:(NSInteger)chatNumber andHasChatRedPoint:(BOOL)hasRedPoint andSystemMessage:(NSInteger)systemMessageNumber {
     NSInteger boolNumber = hasRedPoint ? 1 : 0;
-    self.segmentedControl.sectionMessageTips = @[@(chatNumber), @(systemMessageNumber)];
-    self.segmentedControl.sectionRedPoints = @[@(boolNumber), @0];
+    self.segmentedControl.sectionMessageTips = @[@(systemMessageNumber), @(chatNumber)];
+    self.segmentedControl.sectionRedPoints = @[@0, @(boolNumber)];
 }
 
 - (void)applicationDidBecomeActive
