@@ -19,6 +19,8 @@ typedef NS_ENUM(NSInteger , FHMapSimpleNavbarType) {
 
 @property(nonatomic , assign) FHMapSimpleNavbarType type;
 
+@property(nonatomic , assign) NSInteger houseType;
+
 @property(nonatomic , strong) NSString *title;
 
 @property(nonatomic , copy) void (^backActionBlock)(FHMapSimpleNavbarType type);
@@ -30,6 +32,8 @@ typedef NS_ENUM(NSInteger , FHMapSimpleNavbarType) {
 - (void)updateCicleBtn:(BOOL)isShowCircle;
 
 - (void)updateSegementedTitles:(NSArray <NSString *> *)titles andSelectIndex:(NSInteger)index;
+
+- (void)updateShowBtn:(BOOL)isShow;
 
 @end
 

@@ -239,6 +239,7 @@
     }
     __weak typeof(self) wself = self;
     self.simpleNavBar = [[FHMapSimpleNavbar alloc]initWithFrame:frame];
+    self.simpleNavBar.houseType = self.configModel.houseType;
     _simpleNavBar.backActionBlock = ^(FHMapSimpleNavbarType type) {
         if (type == FHMapSimpleNavbarTypeClose) {
             [wself.viewModel exitCurrentMode];
@@ -254,6 +255,7 @@
             [wself.viewModel reDrawMapCircle];
         }
     };
+    [_simpleNavBar updateShowBtn:(self.configModel.houseTypeArray.count > 1)];
     [self.view addSubview:_simpleNavBar];
 }
 
@@ -387,7 +389,7 @@
 
     [self.sideBar mas_makeConstraints:^(MASConstraintMaker *make) {
         make.right.mas_equalTo(-11);
-        make.bottom.mas_equalTo(self.view).offset(-(176+bottomSafeInset));
+        make.bottom.mas_equalTo(self.view).offset(-(196+bottomSafeInset));
         make.width.mas_equalTo(36);
     }];
     

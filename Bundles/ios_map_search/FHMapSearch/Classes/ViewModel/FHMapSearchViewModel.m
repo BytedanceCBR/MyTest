@@ -244,6 +244,7 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
             }
             weakSelf.currentHouseType = [weakSelf.configModel.houseTypeArray[index] integerValue];
             weakSelf.configModel.houseType = [weakSelf.configModel.houseTypeArray[index] integerValue];
+            weakSelf.simpleNavBar.houseType = weakSelf.configModel.houseType;
             [weakSelf changeHouseType];
         }
     };
@@ -456,6 +457,8 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
         [self.filterView selectedWithOpenUrl:url];
         [self.filterView showInView:self.viewController.view animated:YES];
     }else{
+        [self hideAnaInfoView];
+
         NSString *query =  [self.lastNewHouseBubble query];
         NSString *url = [NSString stringWithFormat:@"https:a?%@",query];
         [self.filterViewNewHouse selectedWithOpenUrl:url];
@@ -1693,8 +1696,6 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
 #pragma mark - area house list
 -(void)showSiderHouseList
 {
-    
-    [self hideAnaInfoView];
     
     [self addSideBarHouseListLog];
     

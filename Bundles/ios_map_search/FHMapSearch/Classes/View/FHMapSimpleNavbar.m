@@ -194,6 +194,10 @@
     [self updateSegementedTitles:titlesArray andSelectIndex:0];
 }
 
+- (void)updateShowBtn:(BOOL)isShow{
+    self.houseSegmentControl.hidden = !isShow;
+}
+
 - (void)updateSegementedTitles:(NSArray <NSString *> *)titles andSelectIndex:(NSInteger)index
 {
     _houseSegmentControl.sectionTitles = titles;
@@ -257,7 +261,7 @@
         tracerParams[@"enter_from"] = @"map_search";
         
         NSMutableDictionary *infos = [NSMutableDictionary new];
-        infos[@"house_type"] = @(FHHouseTypeSecondHandHouse);
+        infos[@"house_type"] = @(self.houseType);
         infos[@"tracer"] = tracerParams;
         infos[@"from_home"] = @(1);
         TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:infos];
