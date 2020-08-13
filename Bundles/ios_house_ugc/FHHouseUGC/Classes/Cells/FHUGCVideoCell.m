@@ -98,9 +98,9 @@
     _videoView.layer.borderWidth = 0.5;
     _videoView.layer.cornerRadius = 4;
     WeakSelf;
-    _videoView.ttv_playVideoOverrideBlock = ^{
+    self.videoView.ttv_shareButtonOnMovieFinishViewDidPressBlock = ^{
         StrongSelf;
-        [self goToVideoDetail];
+        [self shareActionClicked];
     };
     [self.contentView addSubview:_videoView];
 
@@ -111,11 +111,6 @@
     
     UITapGestureRecognizer* tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(goToCommunityDetail:)];
     [self.bottomView.positionView addGestureRecognizer:tap];
-    
-    self.videoView.ttv_shareButtonOnMovieFinishViewDidPressBlock = ^{
-        StrongSelf;
-        [self shareActionClicked];
-    };
 }
 
 - (void)initConstraints {

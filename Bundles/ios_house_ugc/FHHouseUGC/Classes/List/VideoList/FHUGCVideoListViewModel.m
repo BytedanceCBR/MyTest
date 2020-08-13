@@ -90,7 +90,6 @@
     }
 
     if(isFirst){
-        [self.viewController startLoading];
         self.retryCount = 0;
     }
     
@@ -119,6 +118,8 @@
     }
     
     NSMutableDictionary *extraDic = [NSMutableDictionary dictionary];
+    //增加一个视频id字段
+    extraDic[@"video_id"] = self.viewController.currentVideo.groupId;
     NSString *fCityId = [FHEnvContext getCurrentSelectCityIdFromLocal];
     if(fCityId){
         [extraDic setObject:fCityId forKey:@"f_city_id"];
@@ -133,44 +134,24 @@
         wself.feedListModel = feedListModel;
 
         if (!wself) {
-            if(isFirst){
-                [wself.viewController endLoading];
-            }
             return;
         }
 
         if (error) {
             //TODO: show handle error
-            if(isFirst){
-                [wself.viewController endLoading];
-                if(error.code != -999){
-                    [wself.viewController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNetWorkError];
-                    wself.viewController.showenRetryButton = YES;
-                    wself.refreshFooter.hidden = YES;
-                }
-            }else{
-                [[ToastManager manager] showToast:@"网络异常"];
-                [wself updateTableViewWithMoreData:YES];
-            }
+            [[ToastManager manager] showToast:@"网络异常"];
+            [wself updateTableViewWithMoreData:YES];
             return;
         }
 
         if(model){
             dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
-                if(isHead && feedListModel.hasMore){
-//                    [wself.dataList removeAllObjects];
-                }
                 NSArray *result = [wself convertModel:feedListModel.data isHead:isHead];
                 if(isFirst){
                     [wself.clientShowDict removeAllObjects];
-//                    [wself.dataList removeAllObjects];
                 }
-                if(isHead){
-                    // 头部插入新数据
-                    [wself.dataList insertObjects:result atIndexes:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, result.count)]];
-                }else{
-                    [wself.dataList addObjectsFromArray:result];
-                }
+
+                [wself.dataList addObjectsFromArray:result];
                 
                 dispatch_async(dispatch_get_main_queue(), ^{
                     if(isHead){
@@ -180,7 +161,7 @@
                     }
 
                     //第一次拉取数据过少时，在多拉一次loadmore
-                    if(wself.dataList.count > 0 && wself.dataList.count < 5 && wself.tableView.hasMore && wself.retryCount < 1){
+                    if(wself.dataList.count > 0 && wself.dataList.count < 3 && wself.tableView.hasMore && wself.retryCount < 1){
                         wself.retryCount += 1;
                         [wself requestData:NO first:NO];
                         return;
@@ -191,10 +172,6 @@
 
                     if(wself.dataList.count > 0){
                         [wself updateTableViewWithMoreData:wself.tableView.hasMore];
-                        [wself.viewController.emptyView hideEmptyView];
-                    }else{
-                        [wself.viewController.emptyView showEmptyWithTip:@"暂无新内容，快去发布吧" errorImageName:kFHErrorMaskNetWorkErrorImageName showRetry:YES];
-                        wself.refreshFooter.hidden = YES;
                     }
                     [wself.tableView reloadData];
                 });
@@ -260,18 +237,6 @@
         /*impression统计相关*/
         SSImpressionStatus impressionStatus = self.isShowing ? SSImpressionStatusRecording : SSImpressionStatusSuspend;
         [self recordGroupWithCellModel:cellModel status:impressionStatus];
-        
-        if (![cell isKindOfClass:[FHUGCVideoCell class]]) {
-            return;
-        }
-        //视频
-        if(cellModel.hasVideo){
-            FHUGCVideoCell *cellBase = (FHUGCVideoCell *)cell;
-            [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(willFinishLoadTable) object:nil];
-            [self willFinishLoadTable];
-            
-            [cellBase willDisplay];
-        }
     }
 }
 
@@ -280,43 +245,6 @@
     if(indexPath.row < self.dataList.count){
         FHFeedUGCCellModel *cellModel = self.dataList[indexPath.row];
         [self recordGroupWithCellModel:cellModel status:SSImpressionStatusEnd];
-        
-//        if(cellModel.hasVideo){
-//            [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(willFinishLoadTable) object:nil];
-//            [self willFinishLoadTable];
-//
-//            if([cell isKindOfClass:[FHUGCVideoCell class]] && [cell conformsToProtocol:@protocol(TTVFeedPlayMovie)]) {
-//                FHUGCVideoCell<TTVFeedPlayMovie> *cellBase = (FHUGCVideoCell<TTVFeedPlayMovie> *)cell;
-//                BOOL hasMovie = NO;
-//                NSArray *indexPaths = [tableView indexPathsForVisibleRows];
-//                for (NSIndexPath *path in indexPaths) {
-//                    if (path.row < self.dataList.count) {
-//
-//                        BOOL hasMovieView = NO;
-//                        if ([cellBase respondsToSelector:@selector(cell_hasMovieView)]) {
-//                            hasMovieView = [cellBase cell_hasMovieView];
-//                        }
-//
-//                        if ([cellBase respondsToSelector:@selector(cell_movieView)]) {
-//                            UIView *view = [cellBase cell_movieView];
-//                            if (view && ![self.movieViews containsObject:view]) {
-//                                [self.movieViews addObject:view];
-//                            }
-//                        }
-//                        if (cellModel == self.movieViewCellData) {
-//                            hasMovie = YES;
-//                            break;
-//                        }
-//                    }
-//                }
-//
-//                if (self.isShowing) {
-//                    if (!hasMovie) {
-//                        [cellBase endDisplay];
-//                    }
-//                }
-//            }
-//        }
     }
 }
 
@@ -482,6 +410,11 @@
     if(row < self.dataList.count && row >= 0){
         NSIndexPath *indexPath = [NSIndexPath indexPathForRow:row inSection:0];
         [self.tableView scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionTop animated:YES];
+        
+        if(row >= (self.dataList.count - 2)){
+            //在刷一刷数据
+            [self requestData:NO first:NO];
+        }
     }
 }
 
@@ -497,6 +430,11 @@
                 FHUGCFullScreenVideoCell *vCell = (FHUGCFullScreenVideoCell *)cell;
                 [vCell play];
             }
+            
+            if(row >= (self.dataList.count - 2)){
+                //在刷一刷数据
+                [self requestData:NO first:NO];
+            }
         }
     }
 }
@@ -510,9 +448,7 @@
 }
 
 - (FHUGCFullScreenVideoCell *)getFitableVideoCell {
-    
     NSArray *cells = [self.tableView visibleCells];
-    
     for (NSInteger i = 0; i < cells.count; i++) {
         UITableViewCell *cell = cells[i];
         if([cell isKindOfClass:[FHUGCFullScreenVideoCell class]] && [cell conformsToProtocol:@protocol(TTVFeedPlayMovie)]){
@@ -523,7 +459,6 @@
             }
         }
     }
-    
     return nil;
 }
 
@@ -573,47 +508,6 @@
     }
 }
 
-#pragma mark - 视频相关
-
-- (void)willFinishLoadTable {
-    [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(didFinishLoadTable) object:nil];
-    [self performSelector:@selector(didFinishLoadTable) withObject:nil afterDelay:0.1];
-}
-
-- (void)didFinishLoadTable {
-    if ([UIApplication sharedApplication].applicationState != UIApplicationStateActive) {
-        return;
-    }
-    NSArray *cells = [self.tableView visibleCells];
-    NSMutableArray *visibleCells = [NSMutableArray arrayWithCapacity:cells.count];
-    for (id cell in cells) {
-        if([cell isKindOfClass:[FHUGCVideoCell class]] && [cell conformsToProtocol:@protocol(TTVFeedPlayMovie)]){
-            FHUGCVideoCell<TTVFeedPlayMovie> *vCell = (FHUGCVideoCell<TTVFeedPlayMovie> *)cell;
-            UIView *view = [vCell cell_movieView];
-            if (view) {
-                [visibleCells addObject:view];
-            }
-        }
-    }
-    
-    for (UIView *view in self.movieViews) {
-        if ([view isKindOfClass:[TTVPlayVideo class]]) {
-            TTVPlayVideo *movieView = (TTVPlayVideo *)view;
-            if (!movieView.player.context.isFullScreen &&
-                !movieView.player.context.isRotating && ![visibleCells containsObject:movieView]) {
-                if (movieView.player.context.playbackState != TTVVideoPlaybackStateBreak || movieView.player.context.playbackState != TTVVideoPlaybackStateFinished) {
-                    [movieView stop];
-                }
-                [movieView removeFromSuperview];
-            }
-        }
-    }
-
-    self.movieViewCellData = nil;
-    self.movieView = nil;
-    [self.movieViews removeAllObjects];
-}
-
 #pragma mark - 埋点
 
 - (void)traceClientShowAtIndexPath:(NSIndexPath*)indexPath {
@@ -627,7 +521,6 @@
         self.clientShowDict = [NSMutableDictionary new];
     }
     
-    NSString *row = [NSString stringWithFormat:@"%li",(long)indexPath.row];
     NSString *groupId = cellModel.groupId;
     if(groupId){
         if (self.clientShowDict[groupId]) {

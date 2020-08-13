@@ -367,6 +367,9 @@
         cellModel.feedVC = self.viewController;
         cellModel.tableView = self.tableView;
         cellModel.enterFrom = [self.viewController categoryName];
+        if([self.categoryId isEqualToString:@"f_shipin"]){
+//            cellModel.isVideoJumpDetail = YES;
+        }
         if(cellModel){
             if(isHead){
                 [resultArray addObject:cellModel];

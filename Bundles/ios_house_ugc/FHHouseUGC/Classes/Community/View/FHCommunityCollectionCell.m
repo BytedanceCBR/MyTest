@@ -46,6 +46,9 @@
             FHMyJoinViewController *vc = (FHMyJoinViewController *)self.vc;
             vc.withTips = self.withTips;
             [vc viewWillAppear];
+        }else if(self.type == FHCommunityCollectionCellTypeCustom){
+            FHCommunityFeedListController *vc = (FHCommunityFeedListController *)self.vc;
+            [vc viewWillAppear];
         }
     }
 }
@@ -56,6 +59,9 @@
         [vc viewWillDisappear];
     }else if(self.type == FHCommunityCollectionCellTypeMyJoin){
         FHMyJoinViewController *vc = (FHMyJoinViewController *)self.vc;
+        [vc viewWillDisappear];
+    }else if(self.type == FHCommunityCollectionCellTypeCustom){
+        FHCommunityFeedListController *vc = (FHCommunityFeedListController *)self.vc;
         [vc viewWillDisappear];
     }
 }
@@ -74,6 +80,13 @@
         FHMyJoinViewController *vc = [[FHMyJoinViewController alloc] init];
         vc.withTips = self.withTips;
         self.vc = vc;
+    }else if(self.type == FHCommunityCollectionCellTypeCustom){
+        FHCommunityFeedListController *vc = [[FHCommunityFeedListController alloc] init];
+        vc.listType = FHCommunityFeedListTypeCustom;
+        vc.isNewDiscovery = NO;
+        vc.category = @"f_shipin";
+        vc.needReportEnterCategory = YES;
+        self.vc = vc;
     }
     
     self.vc.tracerDict = [self tracerDict].mutableCopy;
@@ -81,6 +94,11 @@
     if(self.vc){
         self.vc.view.frame = self.bounds;
         [self.contentView addSubview:self.vc.view];
+        
+        if([self.vc isKindOfClass:[FHCommunityFeedListController class]]){
+            FHCommunityFeedListController *vc = (FHCommunityFeedListController *)self.vc;
+            [vc viewWillAppear];
+        }
     }
 }
 
@@ -101,6 +119,14 @@
         FHMyJoinViewController *vc = (FHMyJoinViewController *)self.vc;
         vc.feedListVC.isRefreshTypeClicked = isClick;
         [vc refreshFeedListData:isHead];
+    }else if([self.vc isKindOfClass:[FHCommunityFeedListController class]]){
+        FHCommunityFeedListController *vc = (FHCommunityFeedListController *)self.vc;
+        vc.isRefreshTypeClicked = isClick;
+        if(isHead){
+            [vc scrollToTopAndRefreshAllData];
+        }else{
+            [vc scrollToTopAndRefresh];
+        }
     }
 }
 

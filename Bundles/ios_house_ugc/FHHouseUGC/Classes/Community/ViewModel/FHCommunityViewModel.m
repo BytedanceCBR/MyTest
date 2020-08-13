@@ -64,24 +64,36 @@
         [self.cellArray addObject:[NSNull null]];
     }
     
-    self.dataArray = @[
-                       @(FHCommunityCollectionCellTypeMyJoin),
-                       @(FHCommunityCollectionCellTypeNearby),
-                       ];
+    if([FHEnvContext isHasVideoList]){
+        self.dataArray = @[
+            @(FHCommunityCollectionCellTypeCustom),
+            @(FHCommunityCollectionCellTypeNearby),
+        ];
+    }else{
+        self.dataArray = @[
+            @(FHCommunityCollectionCellTypeMyJoin),
+            @(FHCommunityCollectionCellTypeNearby),
+        ];
+    }
+    
 }
 
 - (NSArray *)getSegmentTitles {
     NSMutableArray *titles = [NSMutableArray array];
     
     NSDictionary *ugcTitles = [FHEnvContext ugcTabName];
-    if(ugcTitles[kUGCTitleMyJoinList]){
-        NSString *name = ugcTitles[kUGCTitleMyJoinList];
-        if(name.length > 2){
-            name = [name substringToIndex:2];
-        }
-        [titles addObject:name];
+    if([FHEnvContext isHasVideoList]){
+        [titles addObject:@"视频"];
     }else{
-        [titles addObject:@"关注"];
+        if(ugcTitles[kUGCTitleMyJoinList]){
+            NSString *name = ugcTitles[kUGCTitleMyJoinList];
+            if(name.length > 2){
+                name = [name substringToIndex:2];
+            }
+            [titles addObject:name];
+        }else{
+            [titles addObject:@"关注"];
+        }
     }
     
     if(ugcTitles[kUGCTitleNearbyList]){
@@ -98,7 +110,12 @@
         return titles;
     }
     
-    return @[@"关注", @"附近"];
+    NSArray *defaultTitles = @[@"关注", @"附近"];
+    if([FHEnvContext isHasVideoList]){
+        defaultTitles = @[@"视频", @"附近"];
+    }
+    
+    return defaultTitles;
 }
 
 - (void)selectCurrentTabIndex {
@@ -288,11 +305,13 @@
     
     [self initCell:@"flip"];
     
-    //关注tab，没有关注时需要隐藏关注按钮
-    if(self.currentTabIndex == 0 && [FHUGCConfig sharedInstance].followList.count <= 0){
-        self.viewController.publishBtn.hidden = YES;
-    }else{
-        self.viewController.publishBtn.hidden = NO;
+    if(![FHEnvContext isHasVideoList]){
+        //关注tab，没有关注时需要隐藏关注按钮
+        if(self.currentTabIndex == 0 && [FHUGCConfig sharedInstance].followList.count <= 0){
+            self.viewController.publishBtn.hidden = YES;
+        }else{
+            self.viewController.publishBtn.hidden = NO;
+        }
     }
 }
 

@@ -109,21 +109,18 @@
     
     self.videoViewheight = ([UIScreen mainScreen].bounds.size.width - leftMargin - rightMargin) * 188.0/335.0;
     self.videoView = [[FHUGCVideoView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width - leftMargin - rightMargin, self.videoViewheight)];
-    WeakSelf;
-    _videoView.ttv_playVideoOverrideBlock = ^{
-        StrongSelf;
-        [self goToVideoDetail];
-    };
+    _videoView.userInteractionEnabled = NO;
     [self.contentView addSubview:_videoView];
-
-    self.bottomView = [[FHUGCToolView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, bottomViewHeight)];
-    [_bottomView.commentButton addTarget:self action:@selector(commentBtnClick) forControlEvents:UIControlEventTouchUpInside];
-    [self.contentView addSubview:_bottomView];
     
+    WeakSelf;
     self.videoView.ttv_shareButtonOnMovieFinishViewDidPressBlock = ^{
         StrongSelf;
         [self shareActionClicked];
     };
+
+    self.bottomView = [[FHUGCToolView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, bottomViewHeight)];
+    [_bottomView.commentButton addTarget:self action:@selector(commentBtnClick) forControlEvents:UIControlEventTouchUpInside];
+    [self.contentView addSubview:_bottomView];
 }
 
 - (void)initConstraints {
@@ -217,7 +214,7 @@
     self.videoView.cellEntity = self.videoItem;
     WeakSelf;
     if(cellModel.isVideoJumpDetail){
-        _videoView.ttv_playVideoOverrideBlock = nil;
+        _videoView.userInteractionEnabled = YES;
         _videoView.ttv_playButtonClickedBlock = ^{
             StrongSelf;
             [self playVideoDidClicked];
@@ -227,10 +224,7 @@
             [self videoPlayFinished];
         };
     }else{
-        _videoView.ttv_playVideoOverrideBlock = ^{
-            StrongSelf;
-            [self goToVideoDetail];
-        };
+        _videoView.userInteractionEnabled = NO;
         _videoView.ttv_playButtonClickedBlock = nil;
         _videoView.ttv_videoPlayFinishedBlock = nil;
     }
@@ -294,24 +288,6 @@
 
 - (void)endDisplay {
     [[self playMovie] didEndDisplaying];
-}
-
-- (void)goToVideoDetail {
-    if(self.cellModel.isVideoJumpDetail){
-        TTVFeedCellSelectContext *context = [[TTVFeedCellSelectContext alloc] init];
-        context.refer = 1;
-        context.categoryId = self.cellModel.categoryId;
-        context.clickComment = NO;
-        context.enterType = @"feed_content_blank";
-        context.enterFrom = self.cellModel.tracerDic[@"page_type"] ?: @"be_null";
-        [self didSelectCell:context];
-    }else{
-        NSMutableDictionary *dict = [NSMutableDictionary dictionary];
-        dict[@"currentVideo"] = self.cellModel;
-        TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
-        NSURL *openUrl = [NSURL URLWithString:@"sslocal://ugc_video_list"];
-        [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:userInfo];
-    }
 }
 
 - (void)didSelectCell:(TTVFeedCellSelectContext *)context {

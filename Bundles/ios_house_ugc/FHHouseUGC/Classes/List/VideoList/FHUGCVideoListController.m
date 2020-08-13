@@ -20,6 +20,7 @@
 #import "FHUGCConfig.h"
 #import "ToastManager.h"
 #import "FHFeedCustomHeaderView.h"
+#import "UIScrollView+Refresh.h"
 
 @interface FHUGCVideoListController ()<SSImpressionProtocol>
 
@@ -39,6 +40,8 @@
     self = [super initWithRouteParamObj:paramObj];
     if(self){
         self.currentVideo = paramObj.allParams[@"currentVideo"];
+        self.currentVideo.isVideoJumpDetail = YES;
+        self.category = @"f_shipin";
     }
     return self;
 }
@@ -93,16 +96,6 @@
 //        }
 //    }else{
 //        self.noNeedAddEnterCategorylog = NO;
-//    }
-
-//    if(self.viewModel.dataList.count > 0 || self.notLoadDataWhenEmpty){
-//        if (self.needReloadData) {
-//            self.needReloadData = NO;
-//            [self scrollToTopAndRefreshAllData];
-//        }
-//    }else{
-//        self.needReloadData = NO;
-//        [self scrollToTopAndRefreshAllData];
 //    }
 
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationDidEnterBackground) name:UIApplicationDidEnterBackgroundNotification object:nil];
@@ -171,26 +164,22 @@
 }
 
 - (void)initViewModel {
-    FHUGCVideoListViewModel *viewModel = [[FHUGCVideoListViewModel alloc] initWithTableView:_tableView controller:self];;
+    FHUGCVideoListViewModel *viewModel = [[FHUGCVideoListViewModel alloc] initWithTableView:_tableView controller:self];
     viewModel.categoryId = self.category;
     self.viewModel = viewModel;
     
     if(self.currentVideo){
         [self.viewModel.dataList addObject:self.currentVideo];
         [self.tableView reloadData];
+        self.tableView.mj_footer.hidden = NO;
+        self.tableView.mj_footer.state = MJRefreshStateRefreshing;
     }
         
-    [self startLoadData];
+//    [self startLoadData];
 }
 
 - (void)startLoadData {
-    if ([TTReachability isNetworkConnected]) {
-        [_viewModel requestData:NO first:YES];
-    } else {
-        if(!self.hasValidateData){
-            [self.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoNetWorkAndRefresh];
-        }
-    }
+    [_viewModel requestData:YES first:YES];
 }
 
 - (void)retryLoadData {

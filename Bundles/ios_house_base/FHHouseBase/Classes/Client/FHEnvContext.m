@@ -1169,6 +1169,10 @@ static NSInteger kGetLightRequestRetryCount = 3;
     return NO;
 }
 
++ (BOOL)isHasVideoList {
+    return YES;
+}
+
 + (BOOL)isIntroduceOpen {
     return YES;
 }
