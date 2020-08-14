@@ -122,7 +122,7 @@
             make.top.mas_equalTo(0);
             make.left.right.mas_equalTo(self.containerView);
 //            make.height.mas_equalTo(242);
-            make.bottom.mas_equalTo(self.containerView).mas_offset(-20);
+            make.bottom.mas_equalTo(self.containerView).mas_offset(-9);
         }];
         [_colView reloadData];
     }

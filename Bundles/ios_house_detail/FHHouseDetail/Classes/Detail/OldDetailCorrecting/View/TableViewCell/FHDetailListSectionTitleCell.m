@@ -44,7 +44,7 @@
     self.backgroundColor = [UIColor colorWithHexStr:@"#FFFEFE"];
     [self.titleLab mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(self.contentView).mas_offset(15);
-        make.top.mas_equalTo(self.contentView).mas_offset(0);
+        make.top.mas_equalTo(self.contentView).mas_offset(1);
         make.centerY.equalTo(self.contentView);
     }];
 }

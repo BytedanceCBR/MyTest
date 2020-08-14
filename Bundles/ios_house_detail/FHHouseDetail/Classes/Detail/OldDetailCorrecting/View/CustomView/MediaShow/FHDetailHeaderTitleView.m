@@ -282,7 +282,7 @@
             make.left.mas_equalTo(self).offset(31);
             make.right.mas_equalTo(self).offset(-35);
             make.height.mas_equalTo(28);
-            make.top.mas_equalTo(self.mas_top).offset(40);
+            make.top.mas_equalTo(self.mas_top).offset(50);
         }];
         
         [self.tagBacView mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -330,7 +330,7 @@
     CGFloat tagHeight = tags.count > 0 ? 20 : 0.01;
     
     CGFloat topHeight = 0;
-    CGFloat tagTop = tags.count > 0 ? 16 : -5;
+    CGFloat tagTop = tags.count > 0 ? 16 : -10;//在没有tagtop的时候更向下
     CGFloat tagBottom = tags.count > 0 ? 16 : 0;
     
     if (model.isFloorPan) {
@@ -349,10 +349,12 @@
             [self.topBanner mas_updateConstraints:^(MASConstraintMaker *make) {
                 make.height.mas_equalTo(topHeight);
             }];
+            
+            CGFloat topheight = _topBanner.hidden ? 20 : 16;
             [self.nameLabel mas_makeConstraints:^(MASConstraintMaker *make) {
                 make.left.mas_equalTo(self).offset(31);
                 make.right.mas_equalTo(self).offset(-35);
-                make.top.mas_equalTo(self.topBanner.mas_bottom).offset(16);
+                make.top.mas_equalTo(self.topBanner.mas_bottom).offset(topheight);
                 //            make.height.mas_offset(25);
                 //            make.bottom.mas_equalTo(-tagBottom - tagHeight);
             }];
@@ -438,7 +440,7 @@
                 make.left.mas_equalTo(self).offset(31);
                 make.right.mas_equalTo(self).offset(-35);
                 make.top.mas_equalTo(self.tagBacView.mas_bottom).offset(tagTop);
-                make.height.mas_equalTo(28);
+                make.bottom.mas_equalTo(self);
             }];
             break;
         }

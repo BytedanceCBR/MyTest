@@ -624,8 +624,8 @@ logPB:self.listLogPB extraInfo:self.extraInfo completion:^(FHDetailOldModel * _N
         }
         paramsDict[@"page_type"] = [self pageTypeString];
         commentsModel.tracerDict = paramsDict;
-        commentsModel.topMargin = 12;
-        commentsModel.bottomMargin = 22.0f;
+        commentsModel.topMargin = 30;
+        commentsModel.bottomMargin = 35.0f;
         commentsModel.comments = model.data.comments;
         commentsModel.houseModelType = FHPlotHouseModelTypeNeighborhoodComment;
         [self.items addObject:commentsModel];
@@ -642,7 +642,7 @@ logPB:self.listLogPB extraInfo:self.extraInfo completion:^(FHDetailOldModel * _N
         }
         paramsDict[@"page_type"] = [self pageTypeString];
         qaModel.tracerDict = paramsDict;
-        qaModel.topMargin = 0.0f;
+        qaModel.topMargin = 30.f;
         qaModel.question = model.data.question;
         qaModel.houseModelType = FHPlotHouseModelTypeNeighborhoodQA;
         [self.items addObject:qaModel];

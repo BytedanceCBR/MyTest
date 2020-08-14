@@ -62,7 +62,8 @@
     
     [self.keyLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerX.mas_equalTo(self).offset(-11);
-        make.top.mas_equalTo(self).offset(14);//上一个view的最后一个空间距离底部留有一点距离
+//        make.top.mas_equalTo(self).offset(20);
+        make.centerY.mas_equalTo(self);
         make.height.mas_equalTo(18);
     }];
     [self.iconView mas_makeConstraints:^(MASConstraintMaker *make) {
