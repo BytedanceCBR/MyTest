@@ -148,7 +148,7 @@
  
     if (model.discountInfo.count > 0) {
         NSInteger itemsCount = model.discountInfo.count;
-        CGFloat vHeight = 71-5; //原高度令最后一个控件距离底部为25 故-5后变成20
+        CGFloat vHeight = 66;
         CGFloat totalHeight = 0;
         UIView *lastView = nil;
         for (NSInteger idx = 0; idx < itemsCount; idx++) {
@@ -184,10 +184,11 @@
             [itemView.titleLabel sizeToFit];
             CGFloat titleHeight  = floor(itemView.titleLabel.height);
             CGFloat topOffset = 0;
-            if (titleHeight >= 44) {
-                vHeight = 71 + titleHeight - 19;
-                topOffset = -2;
-            }
+//            if (titleHeight >= 44) {
+//                vHeight = 66 + titleHeight ;
+//                topOffset = -2;
+//            }
+            vHeight = 44 + titleHeight ;
             totalHeight += vHeight;
             [itemView.titleLabel mas_updateConstraints:^(MASConstraintMaker *make) {
                 make.top.mas_equalTo(topOffset);

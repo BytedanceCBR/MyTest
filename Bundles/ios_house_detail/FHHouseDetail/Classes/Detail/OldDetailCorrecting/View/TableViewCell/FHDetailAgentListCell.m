@@ -186,6 +186,7 @@
         else{
             [self.containerView mas_updateConstraints:^(MASConstraintMaker *make) {
                 make.bottom.mas_equalTo(self.shadowImage).offset(-40);
+                make.top.mas_equalTo(self.headerView.mas_bottom).offset(-11);
             }];
         }
     }

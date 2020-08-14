@@ -55,6 +55,7 @@
     FHDetailAveragePriceComparisonModel *model = (FHDetailAveragePriceComparisonModel *)data;
     self.shadowImage.image = model.shadowImage;
     if(model.shdowImageScopeType == FHHouseShdowImageScopeTypeBottomAll){
+        
         [self.shadowImage mas_updateConstraints:^(MASConstraintMaker *make) {
             make.bottom.equalTo(self.contentView);
         }];

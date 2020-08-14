@@ -52,8 +52,8 @@
 - (void)setupUI {
     [self.shadowImage mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.right.equalTo(self.contentView);
-        make.top.equalTo(self.contentView).offset(-12);
-        make.bottom.equalTo(self.contentView).offset(12);
+        make.top.equalTo(self.contentView).offset(-14);
+        make.bottom.equalTo(self.contentView).offset(14);
     }];
     
     _containerView = [[UIView alloc] init];
@@ -83,7 +83,7 @@
         make.top.mas_equalTo(self.shadowImage).offset(20);
         make.left.mas_equalTo(self.contentView).offset(16);
         make.right.mas_equalTo(self.contentView).offset(-16);
-        make.bottom.mas_equalTo(self.contentView);
+        make.bottom.mas_equalTo(self.shadowImage).offset(-20);
     }];
     
     [_titleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -98,7 +98,7 @@
         make.left.mas_equalTo(self.containerView).offset(16);
         make.right.mas_equalTo(self.containerView).offset(-16);
         make.height.mas_equalTo([FHCardSliderView getViewHeight]);
-        make.bottom.mas_equalTo(self.containerView);
+        make.bottom.mas_equalTo(self.containerView).offset(-20);
     }];
 }
 
