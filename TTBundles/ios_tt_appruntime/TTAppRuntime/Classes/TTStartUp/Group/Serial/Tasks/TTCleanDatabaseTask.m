@@ -22,6 +22,7 @@
 #import "GAIAEngine+TTBase.h"
 #import <TTLocationManager/TTLocationManager.h>
 #import <TTLocationManager/TTSystemGeocoder.h>
+#import <ByteDanceKit/UIDevice+BTDAdditions.h>
 #import <ByteDanceKit/NSString+BTDAdditions.h>
 #import <Heimdallr/HMDSwizzle.h>
 #import "NSString+HDMUtility.h"
