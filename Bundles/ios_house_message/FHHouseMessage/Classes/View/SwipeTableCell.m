@@ -222,6 +222,9 @@
         self.targetOffset = [self filterSwipeOffset:self.targetOffset];
         //NSLog(@"targetOffset:%f", self.targetOffset);
         [self gestureAnimationWithOffset:self.targetOffset animationView:self.targetOffset <= 0 ? self.rightSwipeView : self.leftSwipeView];
+        if (self.swipeOffset == -88) {
+            [self openCompleted];
+        }
     }
 }
 
@@ -709,6 +712,11 @@
 {
     
 }
+
+- (void)openCompleted {
+    
+}
+
 
 #pragma mark -- 懒加载
 

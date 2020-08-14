@@ -721,7 +721,11 @@
 //        }
 //    }];
 //}
-
+- (void)openCompleted {
+    if (self.openEditTrack) {
+        self.openEditTrack(nil);
+    }
+}
 //- (void)prepareForReuse
 //{
 //    [super prepareForReuse];

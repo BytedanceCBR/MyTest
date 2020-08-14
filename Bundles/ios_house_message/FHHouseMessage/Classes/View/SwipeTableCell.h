@@ -103,8 +103,6 @@ typedef NS_ENUM(NSUInteger, SwipeTableCellStyle)
 
 @property (nonatomic, assign) BOOL isCanGesture;
 
-
-
 /**
  *  隐藏滑动按钮 即将cell恢复原状
  *
@@ -116,5 +114,7 @@ typedef NS_ENUM(NSUInteger, SwipeTableCellStyle)
  *  更改滑动按钮的内容 如置顶变成取消置顶
  */
 - (void)refreshButtonContent;
+
+- (void)openCompleted;
 
 @end
