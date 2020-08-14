@@ -35,6 +35,7 @@
 @property(nonatomic, assign) NSInteger retryCount;
 @property(nonatomic, strong) FHUGCFullScreenVideoCell *currentVideoCell;
 @property(nonatomic, assign) BOOL isFirst;
+@property(nonatomic, assign) CGFloat oldY;
 
 @end
 
@@ -324,10 +325,19 @@
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
     if(self.currentVideoCell){
         CGRect frame = [self.currentVideoCell.videoView convertRect:self.currentVideoCell.videoView.bounds toView:self.viewController.view];
-        if(frame.origin.y < CGRectGetMaxY(self.viewController.customNavBarView.frame)){
-            [self pauseCurrentVideo];
+        if(scrollView.contentOffset.y - _oldY >= 0){
+            //向上滑动
+            if(frame.origin.y < CGRectGetMaxY(self.viewController.customNavBarView.frame)){
+                [self pauseCurrentVideo];
+            }
+        }else{
+            //向下滑动
+            if(CGRectGetMaxY(frame) > [UIScreen mainScreen].bounds.size.height){
+                [self pauseCurrentVideo];
+            }
         }
     }
+    self.oldY = scrollView.contentOffset.y;
 }
 
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
@@ -427,14 +437,12 @@
     NSInteger row = [self.dataList indexOfObject:cellModel];
     if(row < self.dataList.count && row >= 0){
         NSIndexPath *indexPath = [NSIndexPath indexPathForRow:row inSection:0];
+        [self.tableView scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionTop animated:YES];
         if([cell isKindOfClass:[FHUGCFullScreenVideoCell class]]){
             FHUGCFullScreenVideoCell *vCell = (FHUGCFullScreenVideoCell *)cell;
             self.currentVideoCell.contentView.userInteractionEnabled = NO;
             vCell.contentView.userInteractionEnabled = YES;
             self.currentVideoCell = vCell;
-            
-            [self.tableView scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionTop animated:YES];
-            
             [vCell play];
         }
         
@@ -451,15 +459,13 @@
         row += 1;
         if(row < self.dataList.count){
             NSIndexPath *indexPath = [NSIndexPath indexPathForRow:row inSection:0];
+            [self.tableView scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionTop animated:YES];
             UITableViewCell *cell = [self.tableView cellForRowAtIndexPath:indexPath];
             if([cell isKindOfClass:[FHUGCFullScreenVideoCell class]]){
                 FHUGCFullScreenVideoCell *vCell = (FHUGCFullScreenVideoCell *)cell;
                 self.currentVideoCell.contentView.userInteractionEnabled = NO;
                 vCell.contentView.userInteractionEnabled = YES;
                 self.currentVideoCell = vCell;
-                
-                [self.tableView scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionTop animated:YES];
-                
                 [vCell play];
             }
             
