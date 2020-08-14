@@ -6,12 +6,14 @@
 //
 
 #import "FHBaiduPanoramaViewController.h"
-#import "BaiduPanoramaView.h"
-#import "BaiduPanoUtils.h"
-#import "BMKBaseComponent.h"
-#import "BMKMapComponent.h"
-#import "BMKSearchComponent.h"
-#import "BMKUtilsComponent.h"
+#import <F100BaiduMapKit/BaiduPanoUtils.h>
+#import <F100BaiduMapKit/BaiduPanoramaView.h>
+#import <F100BaiduMapKit/BMKBaseComponent.h>
+#import <F100BaiduMapKit/BMKMapComponent.h>
+#import <F100BaiduMapKit/BMKSearchComponent.h>
+#import <F100BaiduMapKit/BMKMapComponent.h>
+#import <F100BaiduMapKit/BMKUtilsComponent.h>
+
 #import "TTSandBoxHelper.h"
 #import <ByteDanceKit/NSDictionary+BTDAdditions.h>
 #import <ByteDanceKit/NSString+BTDAdditions.h>

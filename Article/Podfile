@@ -702,6 +702,7 @@ post_install do |installer|
         target.build_configurations.each do |config|
           config.build_settings['FRAMEWORK_SEARCH_PATHS'] ||=
           [
+          '$(inherited)',
           '${PODS_ROOT}/AMap3DMap',
           '${PODS_ROOT}/AMapLocation',
           '${PODS_ROOT}/AMapSearch',
@@ -715,7 +716,6 @@ post_install do |installer|
           '${PODS_ROOT}/BDUGUnionSDK/BDUGUnionSDK/Classes',
           '${PODS_ROOT}/TTNetBusiness/ios',
           '${PODS_ROOT}/TencentQQSDK/TencentQQSDK/Classes',
-          '${PODS_ROOT}/FHMapSearch/Classes/BaiduMapKit',
           '${PODS_ROOT}/Quaterback/BDDynamically/Frameworks/News/Release',
           ]
         end
@@ -725,6 +725,14 @@ post_install do |installer|
             config.build_settings['HEADER_SEARCH_PATHS'] ||= ['$(inherited)','${PODS_ROOT}/Headers/Public/React']
           end
         end
+        
+        if target.name == "FHMapSearch"
+          target.build_configurations.each do |config|
+            config.build_settings['HEADER_SEARCH_PATHS'] ||=
+            ['$(inherited)','${PODS_ROOT}/FHMapSearch/FHMapSearch/Frameworks/F100BaiduMapKit.framework/Headers']
+          end
+        end
+
     end
     
         

@@ -8,11 +8,11 @@ Pod::Spec.new do |s|
   s.source           = { :git => 'git@code.byted.org:fproject/ios_map_search.git', :tag => s.version.to_s }
 
   s.ios.deployment_target = '8.0'
-
+  
   s.source_files = 'FHMapSearch/Classes/**/*.{h,m,mm}'
 
   s.resources = ['FHMapSearch/Assets/*.xcassets']
 
-  s.vendored_frameworks = 'FHMapSearch/Classes/*.framework'
+  s.vendored_frameworks = 'FHMapSearch/Frameworks/*.framework'
 
 end
