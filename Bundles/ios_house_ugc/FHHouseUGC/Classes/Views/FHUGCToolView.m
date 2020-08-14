@@ -23,7 +23,7 @@
 #import "TTVVideoDetailCollectService.h"
 #import "TTVFeedItem+TTVArticleProtocolSupport.h"
 
-@interface FHUGCToolView ()
+@interface FHUGCToolView ()<TTVVideoDetailCollectServiceDelegate>
 
 @property(nonatomic , strong) UIView *bottomLine;
 
@@ -235,7 +235,7 @@
     
     _collectService.originalArticle = [self.cellModel.videoFeedItem ttv_convertedArticle];
 //    _collectService.gdExtJSONDict = self.detailModel.gdExtJsonDict;
-//    _collectService.delegate = self;
+    _collectService.delegate = self;
     [_collectService changeFavoriteButtonClicked:1 viewController:self withButtonSeat:@""];
 }
 
@@ -366,6 +366,14 @@
             });
         }
     }
+}
+
+#pragma mark - TTVVideoDetailCollectServiceDelegate
+
+- (void)detailCollectService:(TTVVideoDetailCollectService *)collectService showTipMsg:(NSString *)tipMsg icon:(UIImage *)image buttonSeat:(NSString *)btnSeat
+{
+    [[ToastManager manager] showToast:tipMsg];
+    [self updateDiggButton];
 }
 
 @end

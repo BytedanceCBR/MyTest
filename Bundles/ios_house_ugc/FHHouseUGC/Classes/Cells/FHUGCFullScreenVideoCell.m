@@ -380,21 +380,6 @@
             TTVPlayVideo *movieView = (TTVPlayVideo *)shareMovie.movieView;
             
             [statParams setValue:shareMovie forKey:@"movie_shareMovie"];
-//            if ([cell conformsToProtocol:@protocol(TTVAutoPlayingCell)]) {
-//                if ([item.originData couldContinueAutoPlay]) {
-//                    shareMovie.isAutoPlaying = YES;
-//                    [[TTVAutoPlayManager sharedManager] cacheAutoPlayingCell:(id<TTVAutoPlayingCell>)cell movie:movieView fromView:cell.tableView];
-//                    TTVAutoPlayModel *model = [cell ttv_autoPlayModel];
-//                    TTVPlayVideo *movieView = nil;
-//                    if ([shareMovie.movieView isKindOfClass:[TTVPlayVideo class]]) {
-//                        movieView = (TTVPlayVideo *)shareMovie.movieView;
-//                    }
-//                    if (!movieView && [shareMovie.playerControl.movieView isKindOfClass:[TTVPlayVideo class]]) {
-//                        movieView = (TTVPlayVideo *)shareMovie.playerControl.movieView;
-//                    }
-//                    [[TTVAutoPlayManager sharedManager] trackForClickFeedAutoPlay:model movieView:movieView];
-//                }
-//            }
             [self cell_detachMovieView];
         }
         

@@ -10,6 +10,7 @@
 #import "TTReachability.h"
 #import "ToastManager.h"
 #import "FHUGCVideoCell.h"
+#import "FHUGCFullScreenVideoCell.h"
 #import "TTVFeedCellSelectContext.h"
 #import "FHUserTracker.h"
 #import "TTAccountManager.h"
@@ -111,9 +112,7 @@
 - (void)jumpToVideoDetail:(FHFeedUGCCellModel *)cellModel showComment:(BOOL)showComment enterType:(NSString *)enterType extraDic:(NSDictionary *)extraDic {
     if(cellModel.isVideoJumpDetail){
         //跳转到视频详情页
-        if(self.currentCell && [self.currentCell isKindOfClass:[FHUGCVideoCell class]]){
-            FHUGCVideoCell *cell = (FHUGCVideoCell *)self.currentCell;
-            
+        if(self.currentCell){
             TTVFeedCellSelectContext *context = [[TTVFeedCellSelectContext alloc] init];
             context.refer = self.refer;
             context.categoryId = cellModel.categoryId;
@@ -121,7 +120,13 @@
             context.enterType = enterType;
             context.enterFrom = cellModel.tracerDic[@"page_type"] ?: @"be_null";
             
-            [cell didSelectCell:context];
+            if([self.currentCell isKindOfClass:[FHUGCVideoCell class]]){
+                FHUGCVideoCell *cell = (FHUGCVideoCell *)self.currentCell;
+                [cell didSelectCell:context];
+            }else if([self.currentCell isKindOfClass:[FHUGCFullScreenVideoCell class]]){
+                FHUGCFullScreenVideoCell *cell = (FHUGCFullScreenVideoCell *)self.currentCell;
+                [cell didSelectCell:context];
+            }
         }else if (cellModel.openUrl) {
             NSURL *openUrl = [NSURL URLWithString:cellModel.openUrl];
             [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:nil];
