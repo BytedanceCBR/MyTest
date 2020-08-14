@@ -142,6 +142,7 @@
         }
         [dic setObject:model.data.realtor?:@""forKey:@"realtor"];
         [dic setObject:model.data.evaluation?:@"" forKey:@"evaluation"];
+        [dic setObject:model.data.realtorTag?:@"" forKey:@"realtor_tag"];
         [dic setObject:dicm?:@"" forKey:@"score_info"];
         [dic setObject:model.data.realtorShop?:@"" forKey:@"realtor_shop"];
         [dic setObject:model.data.certificationIcon?:@"" forKey:@"certification_icon"];

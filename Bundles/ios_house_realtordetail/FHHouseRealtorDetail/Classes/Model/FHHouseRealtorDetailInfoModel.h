@@ -120,6 +120,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong, nullable) NSDictionary *evaluation;
 ///经纪人信息
 @property (nonatomic, strong, nullable) NSDictionary *realtor;
+///经纪人标签
+@property (nonatomic, strong, nullable) NSDictionary *realtorTag;
 ///类型 string，跳转im的schema
 @property (nonatomic, copy, nullable) NSString *chatOpenUrl;
 ///经纪人店铺模块信息
