@@ -683,6 +683,7 @@
 
 - (void)trackClientShow:(FHFeedUGCCellModel *)cellModel rank:(NSInteger)rank {
     NSMutableDictionary *dict = [self trackDict:cellModel rank:rank];
+    dict[@"event_tracking_id"] = @(93415);
     TRACK_EVENT(@"feed_client_show", dict);
     
     if(cellModel.attachCardInfo){

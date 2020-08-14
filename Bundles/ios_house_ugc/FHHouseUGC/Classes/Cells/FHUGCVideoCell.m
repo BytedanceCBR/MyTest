@@ -193,6 +193,18 @@
     self.videoItem = cellModel.videoItem;
     self.videoView.cellEntity = self.videoItem;
     
+    WeakSelf;
+    if(cellModel.isVideoJumpDetail){
+        _videoView.userInteractionEnabled = YES;
+        _videoView.ttv_playButtonClickedBlock = ^{
+            StrongSelf;
+            [self playVideoDidClicked];
+        };
+    }else{
+        _videoView.userInteractionEnabled = NO;
+        _videoView.ttv_playButtonClickedBlock = nil;
+    }
+    
     [self updateCommentButton];
     [self updateDiggButton];
     
@@ -288,16 +300,6 @@
 
 - (void)endDisplay {
     [[self playMovie] didEndDisplaying];
-}
-
-- (void)goToVideoDetail {
-    TTVFeedCellSelectContext *context = [[TTVFeedCellSelectContext alloc] init];
-    context.refer = 1;
-    context.categoryId = self.cellModel.categoryId;
-    context.clickComment = NO;
-    context.enterType = @"feed_content_blank";
-    context.enterFrom = self.cellModel.tracerDic[@"page_type"] ?: @"be_null";
-    [self didSelectCell:context];
 }
 
 - (void)didSelectCell:(TTVFeedCellSelectContext *)context {
@@ -576,7 +578,12 @@
     [self.moreActionMananger shareButtonClickedWithModel:[TTVFeedCellMoreActionModel modelWithArticle:self.videoItem.originData] activityAction:^(NSString *type) {
         
     }];
+}
 
+- (void)playVideoDidClicked {
+    if(self.delegate && [self.delegate respondsToSelector:@selector(didVideoClicked:cell:)]){
+        [self.delegate didVideoClicked:self.cellModel cell:self];
+    }
 }
 
 #pragma mark - TTVFeedUserOpDataSyncMessage

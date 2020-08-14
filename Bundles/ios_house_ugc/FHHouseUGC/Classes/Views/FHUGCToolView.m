@@ -71,7 +71,7 @@
     [self addSubview:_diggButton];
     
     self.bottomLine = [[UIView alloc] initWithFrame:CGRectMake(15, self.bounds.size.height - 0.5, self.bounds.size.width - 30, 0.5)];
-    _bottomLine.backgroundColor = [UIColor themeGray6];
+    _bottomLine.backgroundColor = [UIColor themeGray7];
     [self addSubview:_bottomLine];
     
 }
@@ -375,5 +375,7 @@
     [[ToastManager manager] showToast:tipMsg];
     [self updateDiggButton];
 }
+
+#pragma mark - 埋点
 
 @end

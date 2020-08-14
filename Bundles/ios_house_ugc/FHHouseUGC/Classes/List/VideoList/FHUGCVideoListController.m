@@ -47,7 +47,7 @@
     [self initNavbar];
     [self initView];
     [self initViewModel];
-    
+    [self addEnterCategoryLog];
     [[SSImpressionManager shareInstance] addRegist:self];
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationDidBecomeActive) name:UIApplicationDidBecomeActiveNotification object:nil];
@@ -85,23 +85,13 @@
         _enterTabTimestamp = [[NSDate date]timeIntervalSince1970];
     }
 
-//    if(!self.noNeedAddEnterCategorylog){
-//        if(self.needReportEnterCategory){
-//            [self addEnterCategoryLog];
-//        }
-//    }else{
-//        self.noNeedAddEnterCategorylog = NO;
-//    }
-
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationDidEnterBackground) name:UIApplicationDidEnterBackgroundNotification object:nil];
     [self.viewModel autoPlayCurrentVideo];
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
     [self.viewModel viewWillDisappear];
-    if(self.needReportEnterCategory){
-        [self addStayCategoryLog];
-    }
+    [self addStayCategoryLog];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:UIApplicationDidEnterBackgroundNotification object:nil];
     [self.viewModel stopCurrentVideo];
 }
@@ -185,9 +175,7 @@
 }
 
 - (void)applicationDidEnterBackground {
-    if(self.needReportEnterCategory){
-        [self addStayCategoryLog];
-    }
+    [self addStayCategoryLog];
 }
 
 - (void)applicationDidBecomeActive {

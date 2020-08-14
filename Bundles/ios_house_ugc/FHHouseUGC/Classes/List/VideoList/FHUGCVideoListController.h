@@ -32,8 +32,6 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic, strong) NSArray *operations;
 //网络请求成功回调
 @property(nonatomic, copy) void (^requestSuccess)(BOOL hasFeedData);
-//是否需要上报enterCategory和stayCategory埋点，默认不报
-@property(nonatomic, assign) BOOL needReportEnterCategory;
 //埋点上报
 //是否是通过点击触发刷新
 @property(nonatomic, assign) BOOL isRefreshTypeClicked;
