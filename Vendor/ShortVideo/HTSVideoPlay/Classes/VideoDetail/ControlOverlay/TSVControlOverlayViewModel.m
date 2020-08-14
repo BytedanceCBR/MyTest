@@ -420,7 +420,6 @@ NSString *const TSVLastShareActivityName = @"TSVLastShareActivityName";
     }
      NSDictionary *fhSettings = [self fhSettings];
      BOOL openNewRealtor = fhSettings[@"f_new_realtor_detail"];
-    openNewRealtor = NO;
     NSString *position = @"detail";
     [AWEVideoDetailTracker trackEvent:@"rt_click_nickname"
                                 model:self.model
