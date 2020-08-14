@@ -544,8 +544,6 @@
 
 @end
 
-
-// FHDetailAgentItemView
 @interface FHDetailAgentItemTagsViewCell: UICollectionViewCell
 
 @property (nonatomic, strong) UILabel *tagLabel;
@@ -972,7 +970,7 @@
     [self addSubview:_scoreDescription];
     
     [self.avatorView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.height.width.mas_equalTo(46);
+        make.height.width.mas_equalTo(50);
         make.left.mas_equalTo(16);
         make.centerY.mas_equalTo(self);
     }];
