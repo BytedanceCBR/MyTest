@@ -573,11 +573,13 @@
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    FHFeedUGCCellModel *cellModel = self.dataList[indexPath.row];
-    self.currentCellModel = cellModel;
-    self.currentCell = [tableView cellForRowAtIndexPath:indexPath];
-    self.detailJumpManager.currentCell = self.currentCell;
-    [self.detailJumpManager jumpToDetail:cellModel showComment:NO enterType:@"feed_content_blank"];
+    if(indexPath.row < self.dataList.count){
+        FHFeedUGCCellModel *cellModel = self.dataList[indexPath.row];
+        self.currentCellModel = cellModel;
+        self.currentCell = [tableView cellForRowAtIndexPath:indexPath];
+        self.detailJumpManager.currentCell = self.currentCell;
+        [self.detailJumpManager jumpToDetail:cellModel showComment:NO enterType:@"feed_content_blank"];
+    }
 }
 
 #pragma UISCrollViewDelegate

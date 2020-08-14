@@ -155,7 +155,7 @@
         dict[@"tracer"] = tracerDic;
         
         TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
-        NSURL *openUrl = [NSURL URLWithString:@"sslocal://ugc_video_list"];
+        NSURL *openUrl = [NSURL URLWithString:@"sslocal://ugc_video_feed_list"];
         [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:userInfo];
     }
 }
