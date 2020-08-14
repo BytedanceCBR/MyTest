@@ -370,6 +370,7 @@ def appPods
     'MemoryGraph',
     'HMDDomestic',
     'WatchdogProtect',
+    'HMDAlogProtocol',
     'Protect'
     ]
 
@@ -737,8 +738,6 @@ post_install do |installer|
               ##            config.build_settings['HEADER_SEARCH_PATHS'] ||= ['$(inherited)','$(PROJECT_DIR)/../../Bundles/ios_map_search/FHMapSearch/Frameworks/F100BaiduMapKit.framework/Headers/']
               config.build_settings['HEADER_SEARCH_PATHS'] ||= ['$(inherited)','$(PROJECT_DIR)/../../Bundles/ios_map_search/FHMapSearch/Frameworks/F100BaiduMapKit.framework/Headers/']
 
-            end
-              
             end
           end
         end
