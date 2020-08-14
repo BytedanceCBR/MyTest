@@ -614,7 +614,7 @@
         FHDetailAccessCellModel *cellModel = [[FHDetailAccessCellModel alloc] init];
         cellModel.houseModelType = FHHouseModelTypeNewAccess;
         cellModel.strategy = model.data.strategy;
-        cellModel.bottomMargin = 30;
+        cellModel.bottomMargin = 20;
         NSMutableDictionary *paramsDict = @{}.mutableCopy;
         if (self.detailTracerDic) {
             [paramsDict addEntriesFromDictionary:self.detailTracerDic];
