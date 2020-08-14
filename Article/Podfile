@@ -338,7 +338,7 @@ def appPods
     #-----头条端监控库-----
     # pod_binary 'TTMonitor','0.7.9.58-rc.3' #这个版本还是有很多问题
     pod_binary 'MemoryGraphCapture', '1.2.4'
-    pod_binary 'Heimdallr', '0.7.18-rc.7', :subspecs => [
+    pod_binary 'Heimdallr', '0.7.19-rc.24', :subspecs => [
     'Core',
     'Monitors',
     'TTMonitor',
@@ -369,9 +369,9 @@ def appPods
     'UserException', #
     'MemoryGraph',
     'HMDDomestic',
+    'WatchdogProtect',
     'Protect'
     ]
-    pod_binary 'BDWatchdogProtector', '0.1.10'
 
     pod 'TTMacroManager','1.0.1'
     
@@ -725,14 +725,31 @@ post_install do |installer|
             config.build_settings['HEADER_SEARCH_PATHS'] ||= ['$(inherited)','${PODS_ROOT}/Headers/Public/React']
           end
         end
-        
+          
         if target.name == "FHMapSearch"
           target.build_configurations.each do |config|
-            config.build_settings['HEADER_SEARCH_PATHS'] ||=
-            ['$(inherited)','${PODS_ROOT}/FHMapSearch/FHMapSearch/Frameworks/F100BaiduMapKit.framework/Headers']
+
+            if ENV.has_key?("MBox")
+              config.build_settings['HEADER_SEARCH_PATHS'] ||=
+                  ['$(inherited)','${PODS_ROOT}/FHMapSearch/FHMapSearch/Frameworks/F100BaiduMapKit.framework/Headers']
+            else
+
+              ##            config.build_settings['HEADER_SEARCH_PATHS'] ||= ['$(inherited)','$(PROJECT_DIR)/../../Bundles/ios_map_search/FHMapSearch/Frameworks/F100BaiduMapKit.framework/Headers/']
+              config.build_settings['HEADER_SEARCH_PATHS'] ||= ['$(inherited)','$(PROJECT_DIR)/../../Bundles/ios_map_search/FHMapSearch/Frameworks/F100BaiduMapKit.framework/Headers/']
+
+            end
+              
+            end
           end
         end
-
+        
+#        if target.name == "FHMapSearch"
+#          target.build_configurations.each do |config|
+#            config.build_settings['HEADER_SEARCH_PATHS'] ||= ['$(inherited)','$(PROJECT_DIR)/../Bundles/ios_map_search/FHMapSearch/Frameworks/F100BaiduMapKit.framework/Headers/']
+#
+##            config.build_settings['HEADER_SEARCH_PATHS'] ||= ['$(inherited)','$(PROJECT_DIR)/../../Bundles/ios_map_search/FHMapSearch/Frameworks/F100BaiduMapKit.framework/Headers/']
+#          end
+#        end
     end
     
         

@@ -22,14 +22,17 @@
 #import "GAIAEngine+TTBase.h"
 #import <TTLocationManager/TTLocationManager.h>
 #import <TTLocationManager/TTSystemGeocoder.h>
-#import <BDWatchdogProtector/WPUIApplicationProtector.h>
-#import <BDWatchdogProtector/WPUtil.h>
-#import <BDWatchdogProtector/WPTimeoutWrapper.h>
+#import <ByteDanceKit/NSString+BTDAdditions.h>
+#import <Heimdallr/HMDSwizzle.h>
+#import "NSString+HDMUtility.h"
+#import <Heimdallr/HMDWPUtility.h>
+#import "pthread_extended.h"
+#import <Heimdallr/HMDWatchdogProtectManager.h>
 
 
 static NSString *const kHookSystemKeyboardMethodPlanType = @"f_settings.hook_system_keyboard_method_plan_type";
 static NSString *const kTTLocationSystemGeoDisable = @"f_settings.location_system_geo_disable";
-
+static NSString * const kHookRegisterNotificationKey = @"f_settings.hook_register_notification";
 DEC_TASK("TTCleanDatabaseTask",FHTaskTypeSerial,TASK_PRIORITY_HIGH+8);
 
 @implementation TTCleanDatabaseTask
@@ -67,8 +70,7 @@ TTFeedDidDisplayFunction() {
             [self unregisterSystemGEO];
         }
     });
-    [WPUIApplicationProtector startWithType:WPUIApplicationProtectorAll];
-    [[self class] hookUIApplicationMethod];
+    [[self class] hookMethodList];
 }
 
 #pragma mark 禁用系统geo
@@ -76,19 +78,54 @@ TTFeedDidDisplayFunction() {
     [[TTLocationManager sharedManager] unregisterReverseGeocoderForKey:NSStringFromClass([TTSystemGeocoder class])];
 }
 
-#pragma mark hookUIApplicationMethod
-+ (void)hookUIApplicationMethod
+#pragma mark hookMethodList
++ (void)hookMethodList
+
 {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        if (1) {
-            // hook applicationIconBadgeNumber
-            Class class = NSClassFromString([WPUtil base64DecodedString:@"VU5Vc2VyTm90aWZpY2F0aW9uQ2VudGVy"]/*@"UNUserNotificationCenter"*/);
-            SEL selector = NSSelectorFromString([WPUtil base64DecodedString:@"YmFkZ2VOdW1iZXI="]/*@"badgeNumber"*/);
-            WPTimeoutSupportInstanceMethod(class, selector, WPTReturnType(NSInteger), WPTReturnDefault(0), WPTArgumentsType());
-        }
+        [self hookRegisterNotification];
     });
 }
+
++ (void)hookRegisterNotification
+{
+    BOOL shouldHookNoti = [TTKitchen getBOOL:kHookRegisterNotificationKey];
+    if ([UIDevice btd_OSVersionNumber] >= 13.0 && shouldHookNoti) {
+        Class originClass = NSClassFromString([@"UEtQdXNoUmVnaXN0cnk=" btd_base64DecodedString]/*@"PKPushRegistry"*/);
+        
+        SEL originSelector =
+        NSSelectorFromString([@"c2V0RGVzaXJlZFB1c2hUeXBlczo=" btd_base64DecodedString]/*@"setDesiredPushTypes"*/);
+        Class swizzledClass = [self class];
+        SEL swizzledSelector = NSSelectorFromString(@"fhbSetDesiredPushTypes:");
+        Method method = class_getInstanceMethod(originClass, originSelector);
+        if(method != NULL) {
+            hmd_insert_and_swizzle_instance_method(originClass, originSelector, swizzledClass, swizzledSelector);
+        }
+    }
+}
+
+- (id)fhbSetDesiredPushTypes:(id)arg1
+{
+    if ([NSThread isMainThread]) {
+        __block id rst = nil;
+        static atomic_flag waitFlag = ATOMIC_FLAG_INIT;
+        [HMDWPUtility protectClass:self
+                           slector:_cmd
+                      skippedDepth:1
+                          waitFlag:&waitFlag
+                      syncWaitTime:[HMDWatchdogProtectManager sharedInstance].timeoutInterval
+                  exceptionTimeout:HMDWPExceptionTimeout
+                 exceptionCallback:^(HMDWPCapture *capture) {
+        }
+                      protectBlock:^{
+            rst = [self fhbSetDesiredPushTypes:arg1];
+        }];
+        return rst;
+    }
+    return [self fhbSetDesiredPushTypes:arg1];
+}
+
 
 + (void)cleanCoreDataIfNeeded {
     BOOL needCleanDB = [[NSUserDefaults standardUserDefaults] boolForKey:@"SSSafeMode"];
