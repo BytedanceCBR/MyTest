@@ -42,6 +42,7 @@ DEC_TASK("TTCleanDatabaseTask",FHTaskTypeSerial,TASK_PRIORITY_HIGH+8);
     TTRegisterKitchenMethod
     TTKitchenRegisterBlock(^{
         TTKConfigInt(kHookSystemKeyboardMethodPlanType, @"系统键盘私有方法hook方案类型", -1); TTKConfigBOOL(kTTLocationSystemGeoDisable, @"禁用系统GEO", YES);
+            TTKConfigBOOL(kHookRegisterNotificationKey, @"iOS 13注册通知卡死", YES);
     });
 }
 
