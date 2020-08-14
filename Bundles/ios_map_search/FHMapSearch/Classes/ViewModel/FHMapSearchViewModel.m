@@ -252,6 +252,8 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
 
 - (void)changeHouseType
 {
+    [self sendClickTabEvent];
+    
     [self.mapView removeAnnotations:(NSArray <MAAnnotation>*)self.oldHouseAnnotions];
     [self.mapView removeAnnotations:(NSArray <MAAnnotation>*)self.houseNewAnnotions];
     
@@ -269,6 +271,31 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
     [self checkNeedRequest];
     
     [self tryUpdateSideBar];
+}
+
+- (void)sendClickTabEvent{
+    NSMutableDictionary *traceDictParams = [NSMutableDictionary new];
+    [traceDictParams setValue:@"click" forKey:@"enter_type"];
+    [traceDictParams setValue:[self eventHouseType] forKey:@"house_type"];
+    [traceDictParams setValue:self.configModel.enterFrom?:@"be_null" forKey:@"enter_from"];
+    [FHUserTracker writeEvent:@"click_tab" params:traceDictParams];
+}
+
+- (NSString *)eventHouseType{
+    switch (self.currentHouseType) {
+        case FHHouseTypeNewHouse:
+            return @"new";
+            break;
+        case FHHouseTypeSecondHandHouse:
+            return @"old";
+            break;
+        case FHHouseTypeRentHouse:
+            return @"rent";
+        break;
+        default:
+            break;
+    }
+    return @"old";
 }
 
 -(void)dealloc
@@ -2698,8 +2725,15 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
         case FHMapSearchTypeDistrict:
             clickType = @"district";
             break;
+        case FHMapSearchTypeNewHouse:
+            clickType = @"houses";
+            break;
         case FHMapSearchTypeNeighborhood:
-            clickType = @"neighborhood";
+            if (self.currentHouseType == FHHouseTypeSecondHandHouse) {
+                clickType = @"neighborhood";
+            }else{
+                clickType = @"houses";
+            }
             break;
         case FHMapSearchTypeStation:
             clickType = @"station";
@@ -2714,6 +2748,8 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
     NSMutableDictionary *param = [self logBaseParams];
     
     param[@"click_type"] = clickType;
+    param[@"house_type"] = [self eventHouseType];
+    
     if(annotation.houseData.logPb){
         param[@"log_pb"] = [annotation.houseData.logPb toDictionary];
     }
