@@ -225,7 +225,9 @@
 	<key>UIApplicationShortcutItems</key>
 	<array/>
 	<key>UIBackgroundModes</key>
-	<array/>
+	<array>
+		<string>voip</string>
+	</array>
 	<key>UIPrerenderedIcon</key>
 	<true/>
 	<key>UIRequiredDeviceCapabilities</key>
