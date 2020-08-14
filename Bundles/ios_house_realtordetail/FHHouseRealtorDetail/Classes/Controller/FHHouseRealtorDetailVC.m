@@ -154,7 +154,6 @@
         [self.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoData];
     }else {
         self.viewModel = [[FHHouseRealtorDetailVM alloc] initWithController:self tracerDict:self.tracerDict realtorInfo:self.realtorDetailInfo bottomBar:self.bottomBar];
-        [self.viewModel addGoDetailLog];
         [self.viewModel updateNavBarWithAlpha:self.customNavBarView.bgView.alpha];
         [self.viewModel requestDataWithRealtorId:self.realtorDetailInfo[@"realtor_id"] refreshFeed:YES];
     }

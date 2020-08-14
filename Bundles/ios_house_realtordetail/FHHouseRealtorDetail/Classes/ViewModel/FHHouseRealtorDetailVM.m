@@ -54,6 +54,7 @@
 @property (nonatomic, copy) NSString *currentSegmentType;
 @property (nonatomic, copy) NSString *defaultType;
 @property (nonatomic, strong) NSDictionary *realtorInfo;
+@property (nonatomic, strong) NSDictionary *realtorLogpb;
 @property (nonatomic, assign) NSInteger selectedIndex;
 @property (nonatomic, strong) NSMutableArray *ugcTabList;
 @property (nonatomic, assign) NSInteger currentIndex;
@@ -107,15 +108,19 @@
                 [wSelf processDetailData:model];
                 
             }else {
+                  [self addGoDetailLog];
                 [self.viewController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoData];
             }
         }else {
+              [self addGoDetailLog];
             [self.viewController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoData];
         }
     }];
 }
 
 - (void)processDetailData:(FHHouseRealtorDetailModel *)model {
+    [self addGoDetailLog];
+    self.realtorLogpb = model.data.realtorLogpb;
     self.data = model.data;
     NSArray *commentInfo = model.data.evaluation[@"comment_info"];
     BOOL realtorLeave = [model.data.realtor.allKeys containsObject:@"is_leave"]?[model.data.realtor[@"is_leave"] boolValue]:NO;
@@ -336,6 +341,7 @@
     params[@"group_id"] = self.tracerDict[@"group_id"] ?: @"be_null";
     params[@"element_from"] = self.tracerDict[@"element_from"] ?: @"be_null";
     params[@"realtor_id"] = self.realtorInfo[@"realtor_id"] ?: @"be_null";
+    params[@"realtor_logpb"] = self.realtorLogpb?:@"be_null";
     params[@"event_tracking_id"] = @"93412";
     [FHUserTracker writeEvent:@"go_detail" params:params];
 }
