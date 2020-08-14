@@ -50,9 +50,8 @@ extern void ttuserdefaults_setFavorCount(NSInteger);
     if (!_itemAction) {
         self.itemAction = [[ExploreItemActionManager alloc] init];
     }
-    if (self.article == nil) {
-        self.article = [self.originalArticle ttv_convertedArticle];
-    }
+    
+    self.article = [self.originalArticle ttv_convertedArticle];
 
     [self favorFunc:self.gdExtJSONDict trackEventTag:@"detail" viewController:viewController source:@"video_detail_favor" buttonSeat:iconSeat];
 
