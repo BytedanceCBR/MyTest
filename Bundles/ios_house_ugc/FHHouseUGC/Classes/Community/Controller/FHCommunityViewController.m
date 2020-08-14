@@ -267,7 +267,7 @@
     
     //关注tab，没有关注时需要隐藏关注按钮
     if(!self.isNewDiscovery){
-        if(self.viewModel.currentTabIndex == 0 && [FHUGCConfig sharedInstance].followList.count <= 0){
+        if(self.viewModel.currentTabIndex == 0 && ([FHUGCConfig sharedInstance].followList.count <= 0 || [FHEnvContext isHasVideoList])){
             self.publishBtn.hidden = YES;
         }else{
             self.publishBtn.hidden = NO;
