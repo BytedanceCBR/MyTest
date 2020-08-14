@@ -11,6 +11,7 @@
 #import "ToastManager.h"
 #import "UIViewController+HUD.h"
 #import "TTRoute.h"
+#import "FHUserTracker.h"
 
 //#import "FHHomeBaseTableView.h"
 #define kMapSearchCellNewHouseItemImageId @"FHHouseBaseNewHouseCell"
@@ -74,6 +75,35 @@
     return task;
 }
 
+-(void)addHouseShowLog {
+    FHSearchHouseDataItemsModel *cellModel = _itemModel;
+    NSString *groupId = cellModel.groupId;
+    NSString *imprId = cellModel.imprId;
+    NSDictionary *logPb = cellModel.logPb;
+    
+   
+    NSMutableDictionary *tracerDict = @{}.mutableCopy;
+    tracerDict[@"house_type"] = @"new";
+    tracerDict[@"card_type"] = @"left_pic";
+    tracerDict[@"page_type"] = @"mapfind";
+    tracerDict[@"tab_name"] = @"new_tab";
+    tracerDict[@"element_type"] = @"be_null";
+    tracerDict[@"element_from"] = @"new_tab";
+    tracerDict[@"group_id"] = groupId ? : @"be_null";
+    tracerDict[@"impr_id"] = imprId ? : @"be_null";
+//    tracerDict[@"search_id"] = self.searchId ? : @"";
+    tracerDict[@"rank"] = @(0);
+    tracerDict[@"log_pb"] = logPb ? : @"be_null";
+    if (_traceDict) {
+        [tracerDict addEntriesFromDictionary:_traceDict];
+    }
+    
+    [_traceDict setValue:cellModel.searchId forKey:@"search_id"];
+    [_traceDict setValue:cellModel.searchId forKey:@"origin_search_id"];
+
+    [FHUserTracker writeEvent:@"house_show" params:tracerDict];
+}
+
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
     return 1;
@@ -102,54 +132,31 @@
 }
 
 -(void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
-    
+    if(_itemModel){
+      [self addHouseShowLog];
+    }
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-         
-            NSMutableDictionary *traceParam = [NSMutableDictionary new];
-//            traceParam[@"enter_from"] =@"";
-//            traceParam[@"log_pb"] = theModel.logPb;
-//            traceParam[@"origin_from"] = [self pageTypeString];
-//            traceParam[@"card_type"] = @"left_pic";
-//            traceParam[@"rank"] = [self getRankFromHouseId:theModel.idx indexPath:indexPath];
-//            traceParam[@"origin_search_id"] = self.originSearchId ? : @"be_null";
-//            traceParam[@"element_from"] = @"maintab_list";
-//            traceParam[@"enter_from"] = @"maintab";
-//
-//            NSInteger houseType = 0;
-//            if ([theModel.houseType isKindOfClass:[NSString class]]) {
-//                houseType = [theModel.houseType integerValue];
-//            }
-//
-//            if (houseType == 0) {
-//                houseType = self.houseType;
-//            }
-    //        if (houseType != 0) {
-    //            if (houseType != self.houseType) {
-    //                return;
-    //            }
-    //        }else
-    //        {
-    //            houseType = self.houseType;
-    //        }
-                    
-            NSMutableDictionary *dict = @{@"house_type":@(1),
-                                   @"tracer": traceParam
-                                   }.mutableCopy;
-//            dict[INSTANT_DATA_KEY] = theModel;
-//            dict[@"biz_trace"] = theModel.bizTrace;
-            NSURL *jumpUrl = nil;
-            
-           
-            jumpUrl = [NSURL URLWithString:[NSString stringWithFormat:@"sslocal://new_house_detail?court_id=%@",_itemModel.hid]];
-            
-            if (jumpUrl != nil) {
-                TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
-                [[TTRoute sharedRoute] openURLByPushViewController:jumpUrl userInfo:userInfo];
-            }
+    FHSearchHouseDataItemsModel *cellModel = _itemModel;
     
+     NSMutableDictionary *traceParam = [NSMutableDictionary new];
+     traceParam[@"card_type"] = @"left_pic";
+     traceParam[@"log_pb"] = [cellModel logPb] ? : UT_BE_NULL;;
+     traceParam[@"enter_from"] = @"mapfind";
+     traceParam[@"origin_from"] = self.traceDict[@"origin_from"] ? : UT_BE_NULL;
+     traceParam[@"origin_search_id"] = cellModel.searchId ? : UT_BE_NULL;
+     traceParam[@"search_id"] = cellModel.searchId? : UT_BE_NULL;
+     traceParam[@"rank"] = @(indexPath.row);
+     NSMutableDictionary *dict = @{@"house_type":@(1),
+                           @"tracer": traceParam
+                           }.mutableCopy;
+    NSURL *jumpUrl = [NSURL URLWithString:[NSString stringWithFormat:@"sslocal://new_house_detail?court_id=%@",_itemModel.hid]];
+    if (jumpUrl != nil) {
+        TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
+        [[TTRoute sharedRoute] openURLByPushViewController:jumpUrl userInfo:userInfo];
+    }
 }
 
 /*

@@ -252,7 +252,7 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
 
 - (void)changeHouseType
 {
-    [self sendClickTabEvent];
+    [self addClickTabLog];
     
     [self.mapView removeAnnotations:(NSArray <MAAnnotation>*)self.oldHouseAnnotions];
     [self.mapView removeAnnotations:(NSArray <MAAnnotation>*)self.houseNewAnnotions];
@@ -273,12 +273,35 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
     [self tryUpdateSideBar];
 }
 
-- (void)sendClickTabEvent{
+- (void)addClickTabLog{
     NSMutableDictionary *traceDictParams = [NSMutableDictionary new];
     [traceDictParams setValue:@"click" forKey:@"enter_type"];
-    [traceDictParams setValue:[self eventHouseType] forKey:@"house_type"];
+    [traceDictParams setValue:@"mapfind" forKey:@"page_type"];
+    [traceDictParams setValue:[self eventHouseType] forKey:@"tab_name"];
+    [traceDictParams setValue:self.configModel.originFrom?:@"be_null" forKey:@"origin_from"];
     [traceDictParams setValue:self.configModel.enterFrom?:@"be_null" forKey:@"enter_from"];
+    [traceDictParams setValue:@"93410" forKey:@"event_tracking_id"];
     [FHUserTracker writeEvent:@"click_tab" params:traceDictParams];
+}
+
+- (void)addClickOptionsLog{
+    NSMutableDictionary *traceDictParams = [NSMutableDictionary new];
+    [traceDictParams setValue:@"mapfind" forKey:@"page_type"];
+    [traceDictParams setValue:@"sizer" forKey:@"click_type"];
+    [traceDictParams setValue:[self eventHouseType] forKey:@"tab_name"];
+    [traceDictParams setValue:self.configModel.enterFrom?:@"be_null" forKey:@"enter_from"];
+    [traceDictParams setValue:self.configModel.originFrom?:@"be_null" forKey:@"origin_from"];
+    [FHUserTracker writeEvent:@"click_opions" params:traceDictParams];
+}
+
+- (void)addHouseSearchLog{
+    NSMutableDictionary *traceDictParams = [NSMutableDictionary new];
+    [traceDictParams setValue:@"mapfind" forKey:@"page_type"];
+    [traceDictParams setValue:[self eventHouseType]?:@"be_null" forKey:@"tab_name"];
+    [traceDictParams setValue:self.configModel.searchId?:@"be_null" forKey:@"search_id"];
+    [traceDictParams setValue:self.configModel.originFrom?:@"be_null" forKey:@"origin_from"];
+    [traceDictParams setValue:self.configModel.enterFrom?:@"be_null" forKey:@"enter_from"];
+    [FHUserTracker writeEvent:@"house_search" params:traceDictParams];
 }
 
 - (NSString *)eventHouseType{
@@ -485,7 +508,8 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
         [self.filterView showInView:self.viewController.view animated:YES];
     }else{
         [self hideAnaInfoView];
-
+        [self addClickOptionsLog];
+        
         NSString *query =  [self.lastNewHouseBubble query];
         NSString *url = [NSString stringWithFormat:@"https:a?%@",query];
         [self.filterViewNewHouse selectedWithOpenUrl:url];
@@ -495,6 +519,9 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
 
 -(void)changeFilter:(NSString *)query
 {
+    
+    [self addHouseSearchLog];
+    
     if (self.currentHouseType == FHHouseTypeSecondHandHouse) {
         if(self.areaHouseListController.view.superview){
             [self.areaHouseListController.viewModel refreshWithFilter:query];
@@ -739,6 +766,15 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
     }
 }
 
+- (NSMutableDictionary *)commonEventParams{
+    NSMutableDictionary *traceParams = [NSMutableDictionary new];
+    traceParams[@"enter_from"] = self.configModel.enterFrom?:@"be_null";//@"old_list";
+    traceParams[@"search_id"] = self.searchId?:@"be_null";
+    traceParams[@"origin_from"] = self.configModel.originFrom?:@"be_null";
+    traceParams[@"origin_search_id"] = self.configModel.originSearchId ?: @"be_null";
+    return traceParams;
+}
+
 -(FHMapSearchNewHouseItemView *)houseNewView
 {
     if (!_houseNewView) {
@@ -751,7 +787,7 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
         [_mapSearchBtn setFrame:CGRectMake(([UIScreen mainScreen].bounds.size.width - 80.0f)/2.0f, 140, 20, 20)];
         [_mapSearchBtn addTarget:self action:@selector(clickAround) forControlEvents:UIControlEventTouchUpInside];
         [_houseNewView addSubview:_mapSearchBtn];
-        
+        _houseNewView.traceDict = [self commonEventParams];
         
        UILabel * _mapSearchLabel = [UILabel new];
        _mapSearchLabel.text = @"周边配套";
@@ -2748,7 +2784,8 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
     NSMutableDictionary *param = [self logBaseParams];
     
     param[@"click_type"] = clickType;
-    param[@"house_type"] = [self eventHouseType];
+    param[@"tab_name"] = [self eventHouseType];
+    [param addEntriesFromDictionary:[self commonEventParams]];
     
     if(annotation.houseData.logPb){
         param[@"log_pb"] = [annotation.houseData.logPb toDictionary];
@@ -2760,9 +2797,9 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
         event = @"subwayfind_click_bubble";
     }
     
-    if (self.showMode != FHMapSearchShowModeMap) {
-        param[UT_ENTER_FROM] = @"mapfind";
-    }
+//    if (self.showMode != FHMapSearchShowModeMap) {
+//        param[UT_ENTER_FROM] = @"mapfind";
+//    }
         
     [FHUserTracker writeEvent:event params:param];
 }
