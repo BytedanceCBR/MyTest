@@ -59,12 +59,12 @@
     [self.view addSubview:_timeLineListTable];
     
     [_timeLineListTable mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.equalTo([self getNaviBar].mas_bottom);
+        make.top.equalTo([self getNaviBar].mas_bottom).offset(12);
         make.left.right.bottom.equalTo(self.view);
 //        make.bottom.equalTo([self getBottomBar].mas_top);
     }];
     
-    [_timeLineListTable setBackgroundColor:[UIColor whiteColor]];
+    [_timeLineListTable setBackgroundColor:[UIColor themeGray7]];
    
 }
 

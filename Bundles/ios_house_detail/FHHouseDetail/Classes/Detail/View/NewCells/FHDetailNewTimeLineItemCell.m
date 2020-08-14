@@ -20,6 +20,9 @@
 @property (nonatomic, strong) UIView *timeLineLeading;
 @property (nonatomic, strong) UIView *headLine;
 @property (nonatomic, strong) UIView *timeLineTailing;
+
+@property (nonatomic, strong) UIView *lineView;
+
 @end
 
 @implementation FHDetailNewTimeLineItemCell
@@ -84,29 +87,37 @@
             make.right.equalTo(self.contentView).offset(-15);
             make.bottom.equalTo(self.contentView).offset(-20);
         }];
-
-
-        _timeLineLeading = [UIView new];
-        _timeLineLeading.backgroundColor = [UIColor themeGray8];
-        [self.contentView addSubview:_timeLineLeading];
-        [_timeLineLeading mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.left.mas_equalTo(24);
+        self.lineView = [[UIView alloc] init];
+        self.lineView.backgroundColor = [UIColor colorWithHexStr:@"#fff8ef"];
+        [self.contentView addSubview:self.lineView];
+        [self.lineView mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.top.mas_equalTo(self.redDotView.mas_bottom).mas_offset(6);
             make.width.mas_equalTo(1);
-            make.top.equalTo(self.contentView);
-            make.bottom.equalTo(self.redDotView.mas_top);
+            make.bottom.mas_equalTo(self.contentLabel);
+            make.centerX.mas_equalTo(self.redDotView);
         }];
-        
 
-
-        _timeLineTailing = [UIView new];
-        _timeLineTailing.backgroundColor = [UIColor themeGray8];
-        [self.contentView addSubview:_timeLineTailing];
-        [_timeLineTailing mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.left.mas_equalTo(24);
-            make.width.mas_equalTo(0.5);
-            make.top.equalTo(self.redDotView.mas_bottom).offset(4);
-            make.bottom.equalTo(self.contentView);
-        }];
+//        _timeLineLeading = [UIView new];
+//        _timeLineLeading.backgroundColor = [UIColor colorWithHexStr:@"#fff8ef"];
+//        [self.contentView addSubview:_timeLineLeading];
+//        [_timeLineLeading mas_makeConstraints:^(MASConstraintMaker *make) {
+//            make.centerY.mas_offset(self.redDotView);
+//            make.width.mas_equalTo(1);
+//            make.top.equalTo(self.contentView);
+//            make.bottom.equalTo(self.redDotView.mas_top);
+//        }];
+//
+//
+//
+//        _timeLineTailing = [UIView new];
+//        _timeLineTailing.backgroundColor = [UIColor themeGray8];
+//        [self.contentView addSubview:_timeLineTailing];
+//        [_timeLineTailing mas_makeConstraints:^(MASConstraintMaker *make) {
+//            make.left.mas_equalTo(24);
+//            make.width.mas_equalTo(0.5);
+//            make.top.equalTo(self.redDotView.mas_bottom).offset(4);
+//            make.bottom.equalTo(self.contentView);
+//        }];
         
         
         _maskBtn = [UIButton new];
@@ -165,29 +176,29 @@
         if (model.isExpand) {
             _contentLabel.numberOfLines = 0;
         }
-        if (model.isFirstCell) {
-            [_headLine mas_updateConstraints:^(MASConstraintMaker *make) {
-                make.height.mas_equalTo(10);
-            }];
-            
-            _timeLineLeading.hidden = YES;
-            
-            
-            [_timeLineTailing mas_updateConstraints:^(MASConstraintMaker *make) {
-                make.left.mas_equalTo(24);
-                make.width.mas_equalTo(0.5);
-                make.top.equalTo(self.redDotView.mas_bottom).offset(4);
-                make.bottom.equalTo(self.contentView);
-            }];
-        }else
-        {
-            _timeLineLeading.hidden = NO;
-        }
-        if (model.isLastCell) {
-            [_timeLineTailing mas_updateConstraints:^(MASConstraintMaker *make) {
-                make.bottom.equalTo(self.contentView).offset(-20);
-            }];
-        }
+//        if (model.isFirstCell) {
+//            [_headLine mas_updateConstraints:^(MASConstraintMaker *make) {
+//                make.height.mas_equalTo(10);
+//            }];
+//
+//            _timeLineLeading.hidden = YES;
+//
+//
+//            [_timeLineTailing mas_updateConstraints:^(MASConstraintMaker *make) {
+//                make.left.mas_equalTo(24);
+//                make.width.mas_equalTo(0.5);
+//                make.top.equalTo(self.redDotView.mas_bottom).offset(4);
+//                make.bottom.equalTo(self.contentView);
+//            }];
+//        }else
+//        {
+//            _timeLineLeading.hidden = NO;
+//        }
+//        if (model.isLastCell) {
+//            [_timeLineTailing mas_updateConstraints:^(MASConstraintMaker *make) {
+//                make.bottom.equalTo(self.contentView).offset(-20);
+//            }];
+//        }
     }
 }
 

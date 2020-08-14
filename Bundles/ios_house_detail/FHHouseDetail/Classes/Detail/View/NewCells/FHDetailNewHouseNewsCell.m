@@ -152,6 +152,7 @@
 @property (nonatomic, strong) UIView *dotView;
 @property (nonatomic, strong) UILabel *timeLabel;
 @property (nonatomic, strong) UILabel *contentLabel;
+@property (nonatomic, strong) UIView *lineView;
 
 @end
 
@@ -199,6 +200,17 @@
         make.left.right.mas_equalTo(self.timeLabel);
         make.bottom.mas_equalTo(self.mas_bottom).offset(-20);
     }];
+    
+    self.lineView = [[UIView alloc] init];
+    self.lineView.backgroundColor = [UIColor colorWithHexStr:@"#fff8ef"];
+    [self addSubview:self.lineView];
+    [self.lineView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.mas_equalTo(self.dotView.mas_bottom).mas_offset(6);
+        make.width.mas_equalTo(1);
+        make.bottom.mas_equalTo(self.contentLabel);
+        make.centerX.mas_equalTo(self.dotView);
+    }];
+    
 }
 
 - (void)newsViewShowWithData:(id)data {
