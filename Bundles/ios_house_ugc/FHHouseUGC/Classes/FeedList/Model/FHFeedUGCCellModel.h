@@ -138,6 +138,8 @@ typedef NS_ENUM(NSUInteger, FHFeedUGCDiggType) {
 @property (nonatomic, copy , nullable) NSString *detailScheme;
 //原始数据
 @property (nonatomic, strong , nullable) id originData;
+//原始数据
+@property (nonatomic, strong , nullable) id originContent;
 //tableview
 @property (nonatomic, weak) UITableView *tableView;
 //cell

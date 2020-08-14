@@ -323,7 +323,11 @@
                         [wself updateTableViewWithMoreData:wself.tableView.hasMore];
                         [wself.viewController.emptyView hideEmptyView];
                     }else{
-                        [wself.viewController.emptyView showEmptyWithTip:@"暂无新内容，快去发布吧" errorImageName:kFHErrorMaskNetWorkErrorImageName showRetry:YES];
+                        NSString *tipStr = @"暂无新内容，快去发布吧";
+                        if([self.categoryId isEqualToString:@"f_house_video"]){
+                            tipStr = @"暂无新内容";
+                        }
+                        [wself.viewController.emptyView showEmptyWithTip:tipStr errorImageName:kFHErrorMaskNetWorkErrorImageName showRetry:YES];
                         wself.refreshFooter.hidden = YES;
                     }
                     [wself.tableView reloadData];
@@ -367,8 +371,8 @@
         cellModel.feedVC = self.viewController;
         cellModel.tableView = self.tableView;
         cellModel.enterFrom = [self.viewController categoryName];
-        if([self.categoryId isEqualToString:@"f_shipin"]){
-//            cellModel.isVideoJumpDetail = YES;
+        if([self.categoryId isEqualToString:@"f_house_video"]){
+            cellModel.isVideoJumpDetail = YES;
         }
         if(cellModel){
             if(isHead){

@@ -134,7 +134,7 @@
     }else{
         //跳转到轮播页
         NSMutableDictionary *dict = [NSMutableDictionary dictionary];
-        dict[@"currentVideo"] = cellModel;
+        dict[@"currentVideo"] = cellModel.originContent;
         TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
         NSURL *openUrl = [NSURL URLWithString:@"sslocal://ugc_video_list"];
         [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:userInfo];

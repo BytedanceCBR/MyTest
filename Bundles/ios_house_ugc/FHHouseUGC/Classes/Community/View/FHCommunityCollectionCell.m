@@ -84,7 +84,7 @@
         FHCommunityFeedListController *vc = [[FHCommunityFeedListController alloc] init];
         vc.listType = FHCommunityFeedListTypeCustom;
         vc.isNewDiscovery = NO;
-        vc.category = @"f_shipin";
+        vc.category = @"f_house_video";
         vc.needReportEnterCategory = YES;
         self.vc = vc;
     }

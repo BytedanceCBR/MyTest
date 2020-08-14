@@ -170,6 +170,8 @@
                 cellModel.videoItem = [FHUGCCellHelper configureVideoItem:cellModel];
             }
         }
+        
+        cellModel.originContent = content;
     }
     
     return cellModel;
@@ -245,7 +247,14 @@
             //视频
             cellModel.hasVideo = model.hasVideo;
             cellModel.content = model.title;
-            cellModel.numberOfLines = 3;
+            
+            if([model.cellCtrls.cellLayoutStyle isEqualToString:@"10001"]){
+                cellModel.cellSubType = FHUGCFeedListCellSubTypeFullVideo;
+                cellModel.numberOfLines = 2;
+            }else{
+                cellModel.cellSubType = FHUGCFeedListCellSubTypeUGCVideo;
+                cellModel.numberOfLines = 3;
+            }
             
             if (model.isFromDetail) {
                 cellModel.numberOfLines = 0;
@@ -288,12 +297,6 @@
             
             cellModel.imageList = model.largeImageList;
             cellModel.largeImageList = nil;
-            
-//            if([model.cellCtrls.cellLayoutStyle isEqualToString:@"10001"]){
-                cellModel.cellSubType = FHUGCFeedListCellSubTypeFullVideo;
-//            }else{
-//                cellModel.cellSubType = FHUGCFeedListCellSubTypeUGCVideo;
-//            }
         }else{
             //文章
             cellModel.cellSubType = FHUGCFeedListCellSubTypeArticle;

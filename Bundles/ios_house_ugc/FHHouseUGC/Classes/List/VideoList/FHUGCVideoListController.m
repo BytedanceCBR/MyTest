@@ -15,14 +15,13 @@
 #import "FHUserTracker.h"
 #import <FHHouseBase/FHBaseTableView.h>
 #import "ToastManager.h"
+#import "FHUGCCellHelper.h"
 
 @interface FHUGCVideoListController ()<SSImpressionProtocol>
 
 @property(nonatomic, strong) FHUGCVideoListViewModel *viewModel;
 @property(nonatomic, assign) NSTimeInterval enterTabTimestamp;
 @property(nonatomic, assign) BOOL noNeedAddEnterCategorylog;
-@property(nonatomic, assign) UIEdgeInsets originContentInset;
-@property(nonatomic, assign) BOOL alreadySetContentInset;
 
 @end
 
@@ -31,9 +30,13 @@
 - (instancetype)initWithRouteParamObj:(TTRouteParamObj *)paramObj {
     self = [super initWithRouteParamObj:paramObj];
     if(self){
-        self.currentVideo = paramObj.allParams[@"currentVideo"];
+        self.currentVideo = [FHFeedUGCCellModel modelFromFeed:paramObj.allParams[@"currentVideo"]];
+        self.currentVideo.cellSubType = FHUGCFeedListCellSubTypeFullVideo;
         self.currentVideo.isVideoJumpDetail = YES;
-        self.category = @"f_shipin";
+        self.currentVideo.numberOfLines = 2;
+        [FHUGCCellHelper setRichContentWithModel:self.currentVideo width:([UIScreen mainScreen].bounds.size.width - 40) numberOfLines:self.currentVideo.numberOfLines];
+        
+        self.category = @"f_house_video_flow";
     }
     return self;
 }
@@ -91,7 +94,6 @@
 //    }
 
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationDidEnterBackground) name:UIApplicationDidEnterBackgroundNotification object:nil];
-    self.currentVideo.isVideoJumpDetail = YES;
     [self.viewModel autoPlayCurrentVideo];
 }
 
@@ -101,7 +103,6 @@
         [self addStayCategoryLog];
     }
     [[NSNotificationCenter defaultCenter] removeObserver:self name:UIApplicationDidEnterBackgroundNotification object:nil];
-    self.currentVideo.isVideoJumpDetail = NO;
     [self.viewModel stopCurrentVideo];
 }
 
