@@ -199,9 +199,11 @@
 }
 
 - (void)shareBtnClicked {
+    [self addClickShareLog];
     self.moreActionMananger = [[TTVFeedCellMoreActionManager alloc] init];
     self.moreActionMananger.categoryId = self.cellModel.videoItem.categoryId;
     self.moreActionMananger.responder = self;
+    self.moreActionMananger.extraDic = self.cellModel.tracerDic;
     self.moreActionMananger.cellEntity = self.cellModel.videoItem.originData;
     self.moreActionMananger.playVideo = self.cellModel.videoItem.playVideo;
     self.moreActionMananger.didClickActivityItemAndQueryProcess = ^BOOL(NSString *type) {
@@ -234,7 +236,7 @@
 //    [detailModel setVideoArticle:self.cellModel.videoItem.article];
     
     _collectService.originalArticle = [self.cellModel.videoFeedItem ttv_convertedArticle];
-//    _collectService.gdExtJSONDict = self.detailModel.gdExtJsonDict;
+    _collectService.gdExtJSONDict = self.cellModel.tracerDic;
     _collectService.delegate = self;
     [_collectService changeFavoriteButtonClicked:1 viewController:self withButtonSeat:@""];
 }
@@ -377,5 +379,10 @@
 }
 
 #pragma mark - 埋点
+
+- (void)addClickShareLog {
+    NSMutableDictionary *dict = [self.cellModel.tracerDic mutableCopy];
+    TRACK_EVENT(@"click_share", dict);
+}
 
 @end

@@ -238,4 +238,4 @@
 "realtor_evaluation" = "FHHouseUserCommentsVC";
 
 //视频轮播列表
-"ugc_video_list" = "FHUGCVideoListController";
+"ugc_video_feed_list" = "FHUGCVideoListController";

@@ -211,6 +211,10 @@
     
 }
 
+- (BOOL)shouldAutorotate {
+    return NO;
+}
+
 #pragma mark - 埋点
 
 - (void)addEnterCategoryLog {

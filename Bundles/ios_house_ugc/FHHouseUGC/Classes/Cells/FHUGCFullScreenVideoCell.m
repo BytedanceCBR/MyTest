@@ -131,7 +131,6 @@
     
     self.userName.left = self.icon.right + 8;
     self.userName.top = self.icon.top + 1;
-    self.userName.width = [UIScreen mainScreen].bounds.size.width - 30 - 8 - 20;
     self.userName.height = 18;
     
     self.contentLabel.top = self.icon.bottom + 8;
@@ -192,6 +191,7 @@
     }
     
     self.userName.text = !isEmptyString(cellModel.user.name) ? cellModel.user.name : @"用户";
+    [self.userName sizeToFit];
     //内容
     self.contentLabel.numberOfLines = cellModel.numberOfLines;
     if(isEmptyString(cellModel.content)){
