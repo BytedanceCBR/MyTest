@@ -28,9 +28,11 @@
 #import "FHMessageEditHelp.h"
 #import <ReactiveObjC/ReactiveObjC.h>
 #import "FHMessageEditView.h"
+#import "TestModel.h"
+
 #define kCellId @"FHMessageCell_id"
 
-@interface FHMessageViewModel () <UITableViewDelegate, UITableViewDataSource>
+@interface FHMessageViewModel () <UITableViewDelegate, UITableViewDataSource, SwipeTableViewCellDelegate>
 
 @property(nonatomic, strong) UITableView *tableView;
 @property(nonatomic, weak) FHMessageViewController *viewController;
@@ -161,6 +163,7 @@
     FHMessageCell *cell = [tableView dequeueReusableCellWithIdentifier:kCellId];
     
     if ([[self items] count] > indexPath.row) {
+        cell.swipeDelegate = self;
         id model = [self items][indexPath.row];
         if ([model isKindOfClass:[FHUnreadMsgDataUnreadModel class]]) {
             [cell updateWithModel:model];
@@ -177,8 +180,9 @@
         cell.stateIsClose = ^(id data) {
             [wself reloadData];
         };
+        cell.selectionStyle = UITableViewCellSelectionStyleDefault;
         if (self.viewController.dataType == FHMessageRequestDataTypeIM) {
-            [cell initGestureWithData:model index:indexPath.row];
+            //[cell initGestureWithData:model index:indexPath.row];
         }
     }
     return cell;
@@ -463,6 +467,56 @@
             @"enter_from":@"message"
     };
     [FHUserTracker writeEvent:@"message_flip_show" params:params];
+}
+
+
+#pragma mark -- SwipeTableViewDelegate
+
+// cell的滑动样式
+- (SwipeTableCellStyle)tableView:(UITableView *)tableView styleOfSwipeButtonForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    return SwipeTableCellStyleRightToLeft;
+    //return [self.dataArray[indexPath.row] cellStyle];
+}
+
+// 左滑buttons
+- (NSArray<SwipeButton *> *)tableView:(UITableView *)tableView leftSwipeButtonsAtIndexPath:(NSIndexPath *)indexPath
+{
+    SwipeButton *checkBtn = [SwipeButton createSwipeButtonWithTitle:@"删除峰删除" font:16 textColor:[UIColor blackColor] backgroundColor:[UIColor redColor] image:[UIImage imageNamed:@"check"] touchBlock:^{
+        
+        NSLog(@"点击了check按钮");
+    }];
+    SwipeButton *menuBtn = [SwipeButton createSwipeButtonWithImage:[UIImage imageNamed:@"menu"] backgroundColor:[UIColor blueColor] touchBlock:^{
+        
+        NSLog(@"点击了menu按钮");
+    }];
+    return @[checkBtn, menuBtn];
+}
+
+- (NSArray<SwipeButton *> *)tableView:(UITableView *)tableView rightSwipeButtonsAtIndexPath:(NSIndexPath *)indexPath
+{
+    SwipeButton *deleteBtn = [SwipeButton createSwipeButtonWithTitle:@"删除" font:16 textColor:[UIColor blackColor] backgroundColor:[UIColor redColor] image:[UIImage imageNamed:@"delete"] touchBlock:^{
+        
+        NSLog(@"点击了check按钮");
+    }];
+    deleteBtn.layer.cornerRadius = 10;
+    deleteBtn.layer.masksToBounds = YES;
+    deleteBtn.hidden = YES;
+    return @[deleteBtn];
+}
+
+
+// swipeView的弹出样式
+- (SwipeViewTransfromMode)tableView:(UITableView *)tableView swipeViewTransformModeAtIndexPath:(NSIndexPath *)indexPath
+{
+    return SwipeViewTransfromModeStatic;
+}
+
+// swipeButton 距上左下右的间距  注意不能刚给负值
+- (UIEdgeInsets)tableView:(UITableView *)tableView swipeButtonEdgeAtIndexPath:(NSIndexPath *)indexPath
+{
+
+    return UIEdgeInsetsZero;
 }
 
 @end

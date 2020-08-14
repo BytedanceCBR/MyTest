@@ -10,12 +10,13 @@
 #import "TTBadgeNumberView.h"
 #import "IMConversation.h"
 #import "FHMessageEditView.h"
+#import "SwipeTableCell.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
 typedef void(^FHMessageCellClick)(id data);
 
-@interface FHMessageCell : UITableViewCell
+@interface FHMessageCell : SwipeTableCell
 
 @property(nonatomic, strong) TTBadgeNumberView *unreadView;
 @property (nonatomic, assign) SliderMenuState state;
