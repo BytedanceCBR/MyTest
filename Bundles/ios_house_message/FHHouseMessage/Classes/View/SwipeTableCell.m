@@ -121,15 +121,28 @@
     [self initDatas];
 }
 
+- (BOOL)isClose {
+    if (_swipeOffset == 0) {
+        return YES;
+    }
+    return NO;
+}
+
 - (UIView *)hitTest:(CGPoint)point withEvent:(UIEvent *)event
 {
+    CGPoint newP = [self convertPoint:point toView:_editView];
+    if ([_editView pointInside:newP withEvent:event] && self.swipeOffset == -88) {
+        return [_editView hitTest:newP withEvent:event];
+    }
     UIView *view = [super hitTest:point withEvent:event];
     
     if (!view)
     {
         // bug fixed: swipeView显示后再次拖动swipeView 会出现快速闪动现象
         NSIndexPath *indexPath = [self.tableView indexPathForRowAtPoint:point];
-        if (indexPath != nil || point.y < 0) return view;
+        if (indexPath != nil || point.y < 0) {
+            return view;
+        }
         
         // 若点击区域在tableView上 而不在cell上，滑动时也会自动隐藏swipeView
         for(SwipeTableCell *cell in self.tableView.visibleCells) // 滑动cell时，自动隐藏swipeView
@@ -372,8 +385,22 @@
 
 - (BOOL)gestureRecognizerShouldBegin:(UIGestureRecognizer *)gestureRecognizer
 {
+    if (!self.isCanGesture) {
+        return NO;
+    }
     if([gestureRecognizer isEqual:self.panGesture])
     {
+        CGFloat panX = [self.panGesture translationInView:gestureRecognizer.view].x;
+        BOOL isAllClose = YES;
+        for(SwipeTableCell *cell in self.tableView.visibleCells) {
+            if (!cell.isClose) {
+                isAllClose = NO;
+            }
+        }
+        if (isAllClose && panX > 0.1) {
+            return NO;
+        }
+        
         if(self.editing)  return NO; // tableView在编辑状态
         
         if(self.targetOffset != 0.0) return YES; // 已经在滑动状态

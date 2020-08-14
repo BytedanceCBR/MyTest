@@ -99,6 +99,11 @@ typedef NS_ENUM(NSUInteger, SwipeTableCellStyle)
 
 @property (nonatomic, strong) FHMessageEditView *editView;
 
+@property (nonatomic, assign) BOOL isClose;
+
+@property (nonatomic, assign) BOOL isCanGesture;
+
+
 
 /**
  *  隐藏滑动按钮 即将cell恢复原状

@@ -167,8 +167,10 @@
         id model = [self items][indexPath.row];
         if ([model isKindOfClass:[FHUnreadMsgDataUnreadModel class]]) {
             [cell updateWithModel:model];
+            cell.isCanGesture = NO;
         } else {
             [cell updateWithChat:model];
+            cell.isCanGesture = YES;
         }
         __weak typeof(self)wself = self;
         cell.deleteConversation = ^(id data) {
@@ -221,9 +223,11 @@
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    if ([FHMessageEditHelp shared].currentCell && [FHMessageEditHelp shared].currentCell.state == SliderMenuOpen) {
-        [[FHMessageEditHelp shared].currentCell close];
-        return;
+    for (FHMessageCell *cell in self.tableView.visibleCells) {
+        if (!cell.isClose) {
+            [cell hiddenSwipeAnimationAtCell:YES];
+            return;
+        }
     }
     [tableView deselectRowAtIndexPath:indexPath animated:NO];
     if ([[self items] count] > indexPath.row) {

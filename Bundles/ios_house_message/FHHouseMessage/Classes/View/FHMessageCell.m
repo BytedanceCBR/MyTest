@@ -661,6 +661,7 @@
 //    return [super hitTest:point withEvent:event];
 //}
 
+
 - (void)delete {
     if (self.deleteConversation) {
         self.deleteConversation(self.conv);
