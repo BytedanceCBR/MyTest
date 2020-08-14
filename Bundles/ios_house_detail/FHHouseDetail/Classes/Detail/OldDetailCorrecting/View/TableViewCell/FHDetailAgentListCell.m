@@ -610,13 +610,6 @@
     return _tagLabel;
 }
 
-- (UIImageView *)tagImageView {
-    if (!_tagImageView) {
-        _tagImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"city_star_tag"]];
-    }
-    return _tagImageView;
-}
-
 -(instancetype)initWithFrame:(CGRect)frame {
     if(self = [super initWithFrame:frame]) {
         [self.contentView addSubview:self.tagLabel];
@@ -634,7 +627,9 @@
     self.contentView.layer.borderColor = [UIColor colorWithHexStr:model.borderColor].CGColor;
     self.contentView.layer.borderWidth = .3;
     self.tagLabel.textColor = [UIColor colorWithHexStr:model.fontColor];
-    if (self.frame.size.width != 50) {
+    if (model.prefixIconUrl.length > 0) {
+        _tagImageView = [[UIImageView alloc] init];
+        [_tagImageView bd_setImageWithURL:[NSURL URLWithString:model.prefixIconUrl]];
         [self.contentView addSubview:self.tagImageView];
         [self.tagImageView mas_makeConstraints:^(MASConstraintMaker *make) {
             make.left.top.mas_equalTo(2);
@@ -811,7 +806,7 @@
          [self.tagsView mas_makeConstraints:^(MASConstraintMaker *make) {
                make.height.mas_equalTo(18);
                make.left.equalTo(self.name);
-               make.right.equalTo(self.imBtn.mas_left).offset(-10);
+               make.right.equalTo(self.imBtn.mas_right);
              make.top.equalTo(self.score.mas_bottom).offset(self.model.realtorTags.count>0?6:8);
            }];
     }else {
@@ -820,7 +815,7 @@
         [self.tagsView mas_makeConstraints:^(MASConstraintMaker *make) {
               make.height.mas_equalTo(18);
               make.left.equalTo(self.name);
-              make.right.equalTo(self.imBtn.mas_left).offset(-10);
+              make.right.equalTo(self.imBtn.mas_right);
               make.top.equalTo(self.name.mas_bottom).offset(8);
           }];
     }
@@ -1122,7 +1117,7 @@
         
         itemSize.width += 10;
         itemSize.height += 4;
-        if (indexPath.item == 0) {
+        if (tagInfo.prefixIconUrl.length > 0) {
             itemSize.width += 11;
         }
         return itemSize;
@@ -1137,6 +1132,7 @@
 }
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
+    NSLog(@"11112222 %ld", self.model.realtorTags.count);
     return self.model.realtorTags.count;
 }
 
