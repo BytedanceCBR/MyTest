@@ -40,6 +40,7 @@
 #import "FHRealtorEvaluatingPhoneCallModel.h"
 #import "TTURLUtils.h"
 #import "NSObject+YYModel.h"
+#import "NSDictionary+BTDAdditions.h"
 #define kSegmentViewHeight 44
 @interface FHHouseRealtorDetailVM () <TTHorizontalPagingViewDelegate>
 
@@ -168,7 +169,7 @@
         }
         [self.viewController.headerView reloadDataWithDic:dic];
         if ([model.data.realtor.allKeys containsObject:@"is_preferred_realtor"]) {
-            BOOL isHightScore = model.data.realtor[@"is_preferred_realtor"];
+            BOOL isHightScore = [model.data.realtor btd_boolValueForKey:@"is_preferred_realtor"];
             if (isHightScore) {
                 self.isHeightScoreRealtor = isHightScore;
                 [self.viewController.headerView updateRealtorWithHeightScore];
