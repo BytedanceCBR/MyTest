@@ -119,7 +119,7 @@
 @end
 
 @interface FHDetailNeighborhoodInfoCorrectingCell ()
-@property (nonatomic, weak) UIImageView *mainImage;
+@property (nonatomic, weak) UIImageView *coverImageView;
 @property (nonatomic, weak) FHDetailNeighborhoodTitleView *headerView;
 @property (nonatomic, weak) UIView *containerView;
 @property (nonatomic, weak) UIView *topView;
@@ -217,7 +217,7 @@
         if (model.neighborhoodInfo.neighborhoodImage.count >0) {
             FHImageModel *imageModel = model.neighborhoodInfo.neighborhoodImage[0];
             if (imageModel.url.length >0) {
-                [self.mainImage bd_setImageWithURL:[NSURL URLWithString:imageModel.url]];
+                [self.coverImageView bd_setImageWithURL:[NSURL URLWithString:imageModel.url]];
             }
         }
         CGFloat topMargin = 8 + 12;
@@ -520,18 +520,18 @@
         make.bottom.equalTo(self.shadowImage).offset(-12);
     }];
     
-    UIImageView *mainImage = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"plot_image"]];
-    mainImage.contentMode = UIViewContentModeScaleAspectFill;
-    mainImage.layer.masksToBounds = YES;
-    mainImage.layer.cornerRadius = 10.0;
+    UIImageView *coverImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"plot_image"]];
+    coverImageView.contentMode = UIViewContentModeScaleAspectFill;
+    coverImageView.layer.masksToBounds = YES;
+    coverImageView.layer.cornerRadius = 4.0;
 //    UIBezierPath *maskPath = [UIBezierPath bezierPathWithRoundedRect:mainImage.bounds byRoundingCorners:(UIRectCornerTopLeft | UIRectCornerBottomRight) cornerRadii:CGSizeMake(10,10)];
 //    CAShapeLayer *maskLayer = [CAShapeLayer layer];
 //    maskLayer.frame = CGRectMake(0, 0, ceil(AdaptOffset(81)), ceil(AdaptOffset(96)));
 //    maskLayer.path = maskPath.CGPath;
 //    mainImage.layer.mask = maskLayer;
-    [self.containerView addSubview:mainImage];
-    self.mainImage = mainImage;
-    [self.mainImage mas_makeConstraints:^(MASConstraintMaker *make) {
+    [self.containerView addSubview:coverImageView];
+    self.coverImageView = coverImageView;
+    [self.coverImageView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.equalTo(self.containerView).mas_offset(16);
         make.top.equalTo(self.containerView).mas_offset(8 + 12);
         make.width.mas_equalTo(72);
@@ -544,7 +544,7 @@
     [self.containerView addSubview:headerView];
     self.headerView = headerView;
     [self.headerView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(self.mainImage.mas_right).mas_offset(10);
+        make.left.mas_equalTo(self.coverImageView.mas_right).mas_offset(10);
         make.right.mas_equalTo(self.containerView);
         make.height.mas_equalTo(19);
         make.top.mas_equalTo(8 + 12);
