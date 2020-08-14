@@ -120,7 +120,7 @@
     }
     
     NSDictionary *settings = [FHRealtorEvaluatingPhoneCallModel fhSettings];
-     BOOL openNewRealtor = settings[@"f_new_realtor_detail"];
+     BOOL openNewRealtor =  [settings btd_boolValueForKey:@"f_new_realtor_detail"];
     if (openNewRealtor) {
             NSURL *openUrl = [NSURL URLWithString:[NSString stringWithFormat:@"sslocal://new_realtor_detail"]];
           NSMutableDictionary *info = @{}.mutableCopy;

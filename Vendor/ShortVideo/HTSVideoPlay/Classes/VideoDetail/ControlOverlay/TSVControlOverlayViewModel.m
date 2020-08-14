@@ -41,6 +41,7 @@
 #import "TTCustomAnimationNavigationController.h"
 #import "TSVRecommendCardViewModel.h"
 #import <BDTrackerProtocol/BDTrackerProtocol.h>
+#import "NSDictionary+BTDAdditions.h"
 
 #import <TTKitchen/TTKitchen.h> 
 #import <TTKitchenExtension/TTKitchenExtension.h>
@@ -419,7 +420,7 @@ NSString *const TSVLastShareActivityName = @"TSVLastShareActivityName";
         return;
     }
      NSDictionary *fhSettings = [self fhSettings];
-     BOOL openNewRealtor = fhSettings[@"f_new_realtor_detail"];
+     BOOL openNewRealtor = [fhSettings btd_boolValueForKey:@"f_new_realtor_detail"] ;
     NSString *position = @"detail";
     [AWEVideoDetailTracker trackEvent:@"rt_click_nickname"
                                 model:self.model

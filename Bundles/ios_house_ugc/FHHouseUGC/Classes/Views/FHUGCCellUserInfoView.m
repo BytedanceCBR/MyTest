@@ -26,6 +26,7 @@
 #import "UIViewAdditions.h"
 #import "UIImageView+BDWebImage.h"
 #import "FHUGCCellHelper.h"
+#import "NSDictionary+BTDAdditions.h"
 
 @interface FHUGCCellUserInfoView()
 
@@ -720,7 +721,7 @@
     if (self.cellModel.user.realtorId.length > 0) {
         if (![self.cellModel.user.firstBizType isEqualToString:@"1"]) {
             NSDictionary *fhSettings = [self fhSettings];
-            BOOL openNewRealtor = fhSettings[@"f_new_realtor_detail"];
+            BOOL openNewRealtor =  [fhSettings btd_boolValueForKey:@"f_new_realtor_detail"];
             if (openNewRealtor) {
                   NSURL *openUrl = [NSURL URLWithString:[NSString stringWithFormat:@"sslocal://new_realtor_detail"]];
                           NSMutableDictionary *info = @{}.mutableCopy;
