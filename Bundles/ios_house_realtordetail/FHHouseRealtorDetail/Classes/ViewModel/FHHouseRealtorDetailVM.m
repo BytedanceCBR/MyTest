@@ -119,8 +119,8 @@
 }
 
 - (void)processDetailData:(FHHouseRealtorDetailModel *)model {
-    [self addGoDetailLog];
     self.realtorLogpb = model.data.realtorLogpb;
+    [self addGoDetailLog];
     self.data = model.data;
     NSArray *commentInfo = model.data.evaluation[@"comment_info"];
     BOOL realtorLeave = [model.data.realtor.allKeys containsObject:@"is_leave"]?[model.data.realtor[@"is_leave"] boolValue]:NO;
