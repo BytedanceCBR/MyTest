@@ -647,108 +647,38 @@ target 'com.f100.client.FHNotificationServiceExtension' do
 end
 
 # POD POST_INSTALL
-post_install do |installer|
-
-    installer.pods_project.targets.each do |target|
-        target.build_configurations.each do |config|
-            # Fix libstdc++.6在Xcode10编译报错问题
-
-            # if target.name == "Pods-NewsLiteInHouse"
-            #     xcconfig_path = config.base_configuration_reference.real_path
-            #     xcconfig = File.read(xcconfig_path)
-            #     new_xcconfig = xcconfig.sub('stdc++.6.0.9', 'c++')
-            #     new_xcconfig = new_xcconfig.sub('stdc++.6', 'c++')
-
-            #     File.open(xcconfig_path, "w") { |file| file << new_xcconfig }
-            # end
-            # if target.name == "Pods-f100"
-            #     xcconfig_path = config.base_configuration_reference.real_path
-            #     xcconfig = File.read(xcconfig_path)
-            #     new_xcconfig = xcconfig.sub('stdc++.6.0.9', 'c++')
-            #     new_xcconfig = new_xcconfig.sub('stdc++.6', 'c++')
-
-            #     File.open(xcconfig_path, "w") { |file| file << new_xcconfig }
-            # end
-        end
-        #账号
-        if target.name == "TTAccountSDK"
-            target.build_configurations.each do |config|
-                config.build_settings['GCC_PREPROCESSOR_DEFINITIONS'] ||= ['$(inherited)', 'TTACCOUNT_OLD_SINAWEIBO_AUTH=1']
-            end
-        end
-        target.build_configurations.each do |config|
-            config.build_settings['WARNING_CFLAGS'] ||= ['$(inherited)', '-Wno-documentation']
-        end
-
-        #INHOUSE宏,生效条件为业务库：问答、视频等
-        if target.name == "TTVideoService" || target.name == "TTWenda"  || target.name == "TTUGCFeature"|| target.name == "TTUGCFoundation"
-            target.build_configurations.each do |config|
-                config.build_settings['GCC_PREPROCESSOR_DEFINITIONS'] ||= ['$(inherited)','INHOUSE=1']
-            end
-        end
-        if target.name == "TTDebug" || target.name == "TTAppRuntime"
-            target.build_configurations.each do |config|
-                config.build_settings['GCC_PREPROCESSOR_DEFINITIONS'] ||= ['$(inherited)','INHOUSE=1']
-            end
-        end
-        if target.name == "TTArticleBase"
-            target.build_configurations.each do |config|
-                config.build_settings['GCC_PREPROCESSOR_DEFINITIONS'] ||= ['$(inherited)','SD_WEBP=1']
+class Xcodeproj::Project::Object::AbstractTarget
+    def set_build_settings(setting, value=nil, &block)
+        self.build_configurations.each do |config|
+            old_value = config.build_settings[setting]
+            config.build_settings[setting] = if block_given?
+                yield old_value
+            else
+                old_value || ['$(inherited)', value].flatten
             end
         end
     end
-    
-    # 升级pod，解决framework头文件包含问题
+end
+
+post_install do |installer|
+
     installer.pods_project.targets.each do |target|
-        target.build_configurations.each do |config|
-          config.build_settings['FRAMEWORK_SEARCH_PATHS'] ||=
-          [
-          '$(inherited)',
-          '${PODS_ROOT}/AMap3DMap',
-          '${PODS_ROOT}/AMapLocation',
-          '${PODS_ROOT}/AMapSearch',
-          '${PODS_ROOT}/AMapFoundation',
-          '${PODS_ROOT}/React',
-          '${PODS_ROOT}/BDTFactoryConfigurator',
-          '${PODS_ROOT}/TYRZApiSDK/TYRZApiSDK/Classes',
-          '${PODS_ROOT}/EAccountApiSDK/EAccountApiSDK/Classes',
-          '${PODS_ROOT}/GoogleMaps/Maps/Frameworks',
-          '${PODS_ROOT}/GoogleMaps/Base/Frameworks',
-          '${PODS_ROOT}/BDUGUnionSDK/BDUGUnionSDK/Classes',
-          '${PODS_ROOT}/TTNetBusiness/ios',
-          '${PODS_ROOT}/TencentQQSDK/TencentQQSDK/Classes',
-          '${PODS_ROOT}/Quaterback/BDDynamically/Frameworks/News/Release',
-          ]
+        target.set_build_settings('IPHONEOS_DEPLOYMENT_TARGET') do |old_value|
+            old_value.to_f > 9.0 ? old_value : '9.0'
+        end
+        target.set_build_settings('WARNING_CFLAGS', '-Wno-documentation')
+
+        next unless target.is_a?(Xcodeproj::Project::Object::PBXNativeTarget)
+
+        #账号
+        if target.name == "TTAccountSDK"
+            target.set_build_settings('GCC_PREPROCESSOR_DEFINITIONS', 'TTACCOUNT_OLD_SINAWEIBO_AUTH=1')
         end
 
-        if target.name == "FHRNKit" || target.name == "TTDebug"
-          target.build_configurations.each do |config|
-            config.build_settings['HEADER_SEARCH_PATHS'] ||= ['$(inherited)','${PODS_ROOT}/Headers/Public/React']
-          end
+        #INHOUSE宏,生效条件为业务库：问答、视频等
+        if ["TTVideoService", "TTWenda", "TTUGCFeature", "TTUGCFoundation", "TTDebug", "TTAppRuntime"].include?(target.name)
+            target.set_build_settings('GCC_PREPROCESSOR_DEFINITIONS', 'INHOUSE=1')
         end
-          
-        if target.name == "FHMapSearch"
-          target.build_configurations.each do |config|
-
-            if ENV.has_key?("MBox")
-              config.build_settings['HEADER_SEARCH_PATHS'] ||=
-                  ['$(inherited)','${PODS_ROOT}/FHMapSearch/FHMapSearch/Frameworks/F100BaiduMapKit.framework/Headers']
-            else
-
-              ##            config.build_settings['HEADER_SEARCH_PATHS'] ||= ['$(inherited)','$(PROJECT_DIR)/../../Bundles/ios_map_search/FHMapSearch/Frameworks/F100BaiduMapKit.framework/Headers/']
-              config.build_settings['HEADER_SEARCH_PATHS'] ||= ['$(inherited)','$(PROJECT_DIR)/../../Bundles/ios_map_search/FHMapSearch/Frameworks/F100BaiduMapKit.framework/Headers/']
-
-            end
-          end
-        end
-        
-#        if target.name == "FHMapSearch"
-#          target.build_configurations.each do |config|
-#            config.build_settings['HEADER_SEARCH_PATHS'] ||= ['$(inherited)','$(PROJECT_DIR)/../Bundles/ios_map_search/FHMapSearch/Frameworks/F100BaiduMapKit.framework/Headers/']
-#
-##            config.build_settings['HEADER_SEARCH_PATHS'] ||= ['$(inherited)','$(PROJECT_DIR)/../../Bundles/ios_map_search/FHMapSearch/Frameworks/F100BaiduMapKit.framework/Headers/']
-#          end
-#        end
     end
     
         
