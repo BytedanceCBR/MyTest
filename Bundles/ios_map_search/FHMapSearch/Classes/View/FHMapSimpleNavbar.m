@@ -319,11 +319,13 @@
 
     _type = type;
     _isShowCircle = NO;
+    
 
     UIImage *img = nil;
     if(type == FHMapSimpleNavbarTypeClose){
         img = ICON_FONT_IMG(24, @"\U0000e673",[UIColor themeGray1]);
         _rightTitleLabel.hidden = YES;
+        _houseSegmentControl.hidden = NO;
     }else if(type == FHMapSimpleNavbarTypeDrawLine){
         img = ICON_FONT_IMG(24, @"\U0000e673",[UIColor themeGray1]);
         [_rightButton setImage:[UIImage imageNamed:@"draw_line_btn"] forState:UIControlStateNormal];
@@ -331,6 +333,7 @@
            make.right.equalTo(self).offset(-48);
         }];
         _rightTitleLabel.hidden = NO;
+        _houseSegmentControl.hidden = YES;
         _isShowCircle = YES;
     }else{
         img = ICON_FONT_IMG(22, @"\U0000e68a",[UIColor themeGray1]);
@@ -339,7 +342,7 @@
         [_rightButton mas_updateConstraints:^(MASConstraintMaker *make) {
            make.right.equalTo(self).offset(-18);
         }];
-        
+        _houseSegmentControl.hidden = NO;
         _rightTitleLabel.hidden = YES;
     }
 
