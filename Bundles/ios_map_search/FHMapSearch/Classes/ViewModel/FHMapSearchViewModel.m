@@ -669,6 +669,11 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
                 if (nid.length > 0) {
                     wself.selectedAnnotations[nid] = nid;
                 }
+                
+                [wself.mapView.selectedAnnotations enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+                      [wself.mapView deselectAnnotation:obj animated:YES];
+                }];
+                
                 wself.currentSelectAnnotation = nil;
                 wself.currentSelectHouseData = nil;
                 [wself.mapView becomeFirstResponder];
@@ -1234,6 +1239,10 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
         }
 //                [wself.viewController switchNavbarMode:FHMapSearchShowModeMap];
         [self.mapView deselectAnnotation:self.currentSelectAnnotation animated:YES];
+        [self.mapView.selectedAnnotations enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+            [self.mapView deselectAnnotation:obj animated:YES];
+        }];
+        
         [self moveAnnotationToCenter:self.currentSelectHouseData animated:YES];
         NSString *nid = self.currentSelectHouseData.nid;
         if (nid.length > 0) {
@@ -1248,7 +1257,6 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
          } completion:^(BOOL finished) {
                    
          }];
-        
     }
 }
 
