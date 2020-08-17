@@ -1050,6 +1050,11 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
 {
     self.drawLineNeighbors = nil;
     
+    FHMapSearchDataListModel *firstAnn = list.firstObject;
+    if (firstAnn && [firstAnn.type integerValue] != 1 && [firstAnn.type integerValue] != 4) {
+        [self dismissHouseListView];
+    }
+    
     if (self.showMode == FHMapSearchShowModeDrawLine) {
         //处理小区
         self->onSaleHouseCount = 0;
