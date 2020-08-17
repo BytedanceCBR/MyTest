@@ -70,9 +70,12 @@
     [self.weakVC showLoadingAlert:nil];
     __weak typeof(self) wself = self;
     TTHttpTask *task = [FHHouseSearcher houseSearchWithQuery:query param:param offset:0 class:[FHSearchHouseModel class] needCommonParams:YES callback:^(NSError * _Nullable error,FHSearchHouseModel * _Nullable houseModel) {
-        [self.weakVC dismissLoadingAlert];
+        [wself.weakVC dismissLoadingAlert];
         if (!wself) {
             return ;
+        }
+        if (error && wself.requestError) {
+            wself.requestError();
         }
         [wself processData:houseModel];
     }];

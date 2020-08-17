@@ -785,6 +785,10 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
     if (!_houseNewView) {
         _houseNewView = [[FHMapSearchNewHouseItemView alloc] initWithFrame:CGRectMake(0, 17, [UIScreen mainScreen].bounds.size.width, 201)];
         _houseNewView.weakVC = self.viewController;
+        __weak typeof(self) wself = self;
+        _houseNewView.requestError = ^{
+            [wself dismissHouseListView];
+        };
         
         UIButton * _mapSearchBtn = [UIButton buttonWithType:UIButtonTypeCustom];
         [_mapSearchBtn setImage:[UIImage imageNamed:@"home_map_icon"] forState:UIControlStateNormal];
