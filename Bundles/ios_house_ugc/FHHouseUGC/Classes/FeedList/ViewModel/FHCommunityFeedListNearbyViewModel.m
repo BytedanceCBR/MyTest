@@ -29,6 +29,7 @@
 #import "TTVFeedCellWillDisplayContext.h"
 #import "TTVFeedCellAction.h"
 #import "TTUGCDefine.h"
+#import "FHUGCFullScreenVideoCell.h"
 
 @interface FHCommunityFeedListNearbyViewModel () <UITableViewDelegate,UITableViewDataSource,FHUGCBaseCellDelegate,UIScrollViewDelegate>
 
@@ -462,12 +463,12 @@
         SSImpressionStatus impressionStatus = self.isShowing ? SSImpressionStatusRecording : SSImpressionStatusSuspend;
         [self recordGroupWithCellModel:cellModel status:impressionStatus];
         
-        if (![cell isKindOfClass:[FHUGCVideoCell class]]) {
+        if (![cell isKindOfClass:[FHUGCVideoCell class]] && ![cell isKindOfClass:[FHUGCFullScreenVideoCell class]]) {
             return;
         }
         //视频
         if(cellModel.hasVideo){
-            FHUGCVideoCell *cellBase = (FHUGCVideoCell *)cell;
+            FHUGCBaseCell *cellBase = (FHUGCBaseCell *)cell;
             [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(willFinishLoadTable) object:nil];
             [self willFinishLoadTable];
             
@@ -486,8 +487,8 @@
             [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(willFinishLoadTable) object:nil];
             [self willFinishLoadTable];
             
-            if([cell isKindOfClass:[FHUGCVideoCell class]] && [cell conformsToProtocol:@protocol(TTVFeedPlayMovie)]) {
-                FHUGCVideoCell<TTVFeedPlayMovie> *cellBase = (FHUGCVideoCell<TTVFeedPlayMovie> *)cell;
+            if([cell isKindOfClass:[FHUGCBaseCell class]] && [cell conformsToProtocol:@protocol(TTVFeedPlayMovie)]) {
+                FHUGCBaseCell<TTVFeedPlayMovie> *cellBase = (FHUGCBaseCell<TTVFeedPlayMovie> *)cell;
                 BOOL hasMovie = NO;
                 NSArray *indexPaths = [tableView indexPathsForVisibleRows];
                 for (NSIndexPath *path in indexPaths) {

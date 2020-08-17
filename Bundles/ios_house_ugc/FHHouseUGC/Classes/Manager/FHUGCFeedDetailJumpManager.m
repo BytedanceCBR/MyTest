@@ -135,6 +135,7 @@
         //跳转到轮播页
         NSMutableDictionary *dict = [NSMutableDictionary dictionary];
         dict[@"currentVideo"] = cellModel.originContent;
+        dict[@"cellModel"] = cellModel;
         
         NSMutableDictionary *tracerDic = [NSMutableDictionary dictionary];
         tracerDic[@"origin_from"] = cellModel.tracerDic[@"origin_from"] ?: @"be_null";

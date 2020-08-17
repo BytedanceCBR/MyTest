@@ -67,6 +67,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (CGFloat)heightForData:(id)data;
 
+- (void)willDisplay;
+
+- (void)endDisplay;
+
 // Cell点击事件，可以不用实现
 @property (nonatomic, copy)     dispatch_block_t       didClickCellBlk;
 

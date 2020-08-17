@@ -600,6 +600,10 @@
     [self feedCollectChanged:commentCount uniqueIDStr:uniqueIDStr forKey:@"commentCount"];
 }
 
+- (void)ttv_message_feedCollectChanged:(BOOL)collect uniqueIDStr:(NSString *)uniqueIDStr {
+    [self feedCollectChanged:collect uniqueIDStr:uniqueIDStr forKey:@"userRepin"];
+}
+
 - (void)feedCollectChanged:(int)status uniqueIDStr:(NSString *)uniqueIDStr forKey:(NSString *)key {
     if ([self.videoItem.originData.uniqueIDStr isEqualToString:uniqueIDStr]) {
         if([key isEqualToString:@"userDigg"]){
@@ -611,6 +615,8 @@
         }else if([key isEqualToString:@"commentCount"]){
             self.cellModel.videoItem.article.commentCount = status;
             [self updateCommentButton];
+        }else if([key isEqualToString:@"userRepin"]){
+            self.cellModel.videoItem.article.userRepin = status;
         }
     }
 }

@@ -36,6 +36,14 @@
         self.currentVideo.numberOfLines = 2;
         [FHUGCCellHelper setRichContentWithModel:self.currentVideo width:([UIScreen mainScreen].bounds.size.width - 40) numberOfLines:self.currentVideo.numberOfLines];
         
+        FHFeedUGCCellModel *cellModel = paramObj.allParams[@"cellModel"];
+        if(cellModel){
+            self.currentVideo.videoItem.article.diggCount = cellModel.videoItem.article.diggCount;
+            self.currentVideo.videoItem.article.userDigg = cellModel.videoItem.article.userDigg;
+            self.currentVideo.videoItem.article.commentCount = cellModel.videoItem.article.commentCount;
+            self.currentVideo.videoItem.article.userRepin = cellModel.videoItem.article.userRepin;
+        }
+        
         self.category = @"f_house_video_flow";
     }
     return self;

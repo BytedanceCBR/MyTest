@@ -646,38 +646,9 @@
 }
 
 - (void)videoPlayFinished {
-//    UIView *view = [self cell_movieView];
-//    if ([view isKindOfClass:[TTVPlayVideo class]]) {
-//        TTVPlayVideo *movieView = (TTVPlayVideo *)view;
-//
-//        UIView *tipView = movieView.player.playerView.tipView;
-//        if([tipView isKindOfClass:[TTVPlayerControlTipView class]]){
-//            TTVPlayerControlTipView *view = (TTVPlayerControlTipView *)tipView;
-//            view.finishedView.alpha = 0;
-//
-//            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-//                view.finishedView.alpha = 1;
-//            });
-//        }
-//
-//        if (!movieView.player.context.isFullScreen &&
-//            !movieView.player.context.isRotating) {
-//            if(self.delegate && [self.delegate respondsToSelector:@selector(videoPlayFinished:cell:)]){
-//                [self.delegate videoPlayFinished:self.cellModel cell:self];
-//            }
-//        }else{
-//            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-//                if(self.delegate && [self.delegate respondsToSelector:@selector(videoPlayFinished:cell:)]){
-//                    [self.delegate videoPlayFinished:self.cellModel cell:self];
-//                }
-//            });
-//        }
-//    }
-    
     if(self.delegate && [self.delegate respondsToSelector:@selector(videoPlayFinished:cell:)]){
         [self.delegate videoPlayFinished:self.cellModel cell:self];
     }
-    
 }
 
 @end
