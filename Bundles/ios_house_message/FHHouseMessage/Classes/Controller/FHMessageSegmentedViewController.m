@@ -22,6 +22,7 @@
 #import <FHCHousePush/FHPushMessageTipView.h>
 #import "FHBubbleTipManager.h"
 #import <FHPopupViewCenter/FHPopupViewManager.h>
+#import "TTAccountManager.h"
 
 typedef NS_ENUM(NSInteger, FHSegmentedControllerAnimatedTransitionDirection) {
     FHSegmentedControllerAnimatedTransitionDirectionUnknown,
@@ -224,7 +225,7 @@ typedef NS_ENUM(NSInteger, FHSegmentedControllerAnimatedTransitionDirection) {
 
 @end
 
-@interface FHMessageSegmentedViewController ()<UIGestureRecognizerDelegate,FHMessageSegmentedViewControllerDelegate, IMChatStateObserver>
+@interface FHMessageSegmentedViewController ()<UIGestureRecognizerDelegate,FHMessageSegmentedViewControllerDelegate, IMChatStateObserver, AccountStatusListener>
 
 @property (nonatomic,strong,readwrite) HMSegmentedControl *segmentedControl;
 @property (nonatomic,readwrite,weak) UIViewController *activeViewController;
@@ -241,6 +242,8 @@ typedef NS_ENUM(NSInteger, FHSegmentedControllerAnimatedTransitionDirection) {
 @property (nonatomic, assign) CGFloat notNetHeaderHeight;
 @property (nonatomic, strong) FHPushMessageTipView *pushTipView;
 @property (nonatomic, assign) CGFloat pushTipViewHeight;
+@property (nonatomic, assign) BOOL isLogin;
+@property (nonatomic, assign) BOOL loginStateChange;
 
 @end
 
@@ -335,12 +338,13 @@ typedef NS_ENUM(NSInteger, FHSegmentedControllerAnimatedTransitionDirection) {
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    _isLogin = [TTAccountManager isLogin];
+    _loginStateChange = YES;
     self.enterType = @"dafault";
     self.ttTrackStayEnable = YES;
     _dataList = [[NSMutableArray alloc] init];
     _combiner = [[FHConversationDataCombiner alloc] init];
     [[IMManager shareInstance] addChatStateObverver:self];
-    [self configureSegmentedControlUsingViewControllers:self.viewControllers];
     self.delegate = self;
     UIPanGestureRecognizer *interactivePanGestureRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handlePanGesture:)];
     interactivePanGestureRecognizer.delegate = self;
@@ -348,6 +352,7 @@ typedef NS_ENUM(NSInteger, FHSegmentedControllerAnimatedTransitionDirection) {
     self.interactivePanGestureRecognizer = interactivePanGestureRecognizer;
     
     [self setupDefaultNavBar:NO];
+    self.customNavBarView.bgView.backgroundColor = [UIColor themeGray7];
     self.customNavBarView.leftBtn.hidden = [self leftActionHidden];
     self.customNavBarView.seperatorLine.hidden = YES;
     [self.customNavBarView addSubview:_segmentedControl];
@@ -393,12 +398,7 @@ typedef NS_ENUM(NSInteger, FHSegmentedControllerAnimatedTransitionDirection) {
 //        make.height.mas_equalTo(30);
 //        make.bottom.mas_equalTo(0);
 //    }];
-    NSArray<IMConversation *> *allConversations = [[IMManager shareInstance].chatService allConversations];
-    if ([allConversations count] == 0) {
-        [self selectViewControllerAtIndex:0];
-    } else {
-        [self selectViewControllerAtIndex:1];
-    }
+    [self check];
     _notNetHeader = [[FHNoNetHeaderView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, 36)];
     [self.view addSubview:_notNetHeader];
     if ([TTReachability isNetworkConnected]) {
@@ -455,13 +455,42 @@ typedef NS_ENUM(NSInteger, FHSegmentedControllerAnimatedTransitionDirection) {
             return;
         }
     }];
+    [[IMManager shareInstance].accountCenter registerAccountStatusListener:self];
     [self updateContentView];
+}
+
+- (void)didLogin {
+    if (!_isLogin) {
+        _loginStateChange = YES;
+    }
+    _isLogin = YES;
+}
+
+- (void)didLogout {
+    if (_isLogin) {
+        _loginStateChange = YES;
+    }
+    _isLogin = NO;
 }
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     [FHBubbleTipManager shareInstance].canShowTip = NO;
+    if (_loginStateChange) {
+        _loginStateChange = NO;
+        [self check];
+    }
     [self applicationDidBecomeActive];
+    [self refreshConversationList];
+}
+
+- (void)check {
+    NSArray<IMConversation *> *allConversations = [[IMManager shareInstance].chatService allConversations];
+    if (!_isLogin || [allConversations count] == 0) {
+        [self selectViewControllerAtIndex:0];
+    } else {
+        [self selectViewControllerAtIndex:1];
+    }
 }
 
 - (void)viewDidAppear:(BOOL)animated {

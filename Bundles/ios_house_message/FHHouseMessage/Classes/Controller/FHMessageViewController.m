@@ -56,6 +56,7 @@
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
+    [self.tableView reloadData];
     [self.emptyView hideEmptyView];
     [self startLoadData];
 }
@@ -85,7 +86,7 @@
     _tableView = [[FHBaseTableView alloc] init];
     _tableView.backgroundColor = [UIColor themeGray7];
     _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
-    _tableView.contentInset = UIEdgeInsetsMake(12, 0, 0, 0);
+    _tableView.contentInset = UIEdgeInsetsMake(0, 0, 0, 0);
     self.automaticallyAdjustsScrollViewInsets = NO;
     if (@available(iOS 11.0 , *)) {
           _tableView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;

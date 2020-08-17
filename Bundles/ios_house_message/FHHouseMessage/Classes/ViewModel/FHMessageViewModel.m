@@ -32,6 +32,21 @@
 
 #define kCellId @"FHMessageCell_id"
 
+@interface DeleteAlertDelegate : NSObject <UIAlertViewDelegate>
+@property(nonatomic, strong) IMConversation *conv;
+@property(nonatomic, weak) FHMessageViewModel *viewModel;
+@end
+
+@implementation DeleteAlertDelegate
+
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
+    if (buttonIndex == 1) {
+        [_viewModel deleteConversation:_conv];
+    }
+}
+
+@end
+
 @interface FHMessageViewModel () <UITableViewDelegate, UITableViewDataSource, SwipeTableViewCellDelegate>
 
 @property(nonatomic, strong) UITableView *tableView;
@@ -41,6 +56,7 @@
 @property(nonatomic, assign) BOOL isFirstLoad;
 @property(nonatomic, strong) NSString *pageType;
 @property (nonatomic, copy)     NSString       *enterFrom;
+@property(nonatomic, strong) DeleteAlertDelegate *deleteAlertDelegate;
 
 @end
 
@@ -401,27 +417,16 @@
 }
 
 - (void)displayDeleteConversationConfirm:(IMConversation *)conversation {
-    __weak typeof(self) weakSelf = self;
-    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"删除会话"
-                                                                   message:@"确定要删除当前会话记录？"
-                                                            preferredStyle:UIAlertControllerStyleAlert];
-    UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"取消"
-                                                           style:UIAlertActionStyleCancel
-                                                         handler:^(UIAlertAction * _Nonnull action) {
-        // 点击取消按钮，调用此block
+    self.deleteAlertDelegate = [[DeleteAlertDelegate alloc] init];
+    self.deleteAlertDelegate.viewModel = self;
+    self.deleteAlertDelegate.conv = conversation;
+    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"删除会话"
+                                                        message:@"确定要删除当前会话记录？"
+                                                       delegate:self.deleteAlertDelegate
+                                              cancelButtonTitle:@"取消"
+                                              otherButtonTitles:@"删除", nil];
 
-    }];
-    [alertController addAction:cancelAction];
-    
-    UIAlertAction *defaultAction = [UIAlertAction actionWithTitle:@"删除"
-                                                            style:UIAlertActionStyleDefault
-                                                          handler:^(UIAlertAction * _Nonnull action) {
-        // 点击按钮，调用此block
-        [weakSelf deleteConversation:conversation];
-        [FHMessageEditHelp clear];
-    }];
-    [alertController addAction:defaultAction];
-    [[TTUIResponderHelper visibleTopViewController] presentViewController:alertController animated:YES completion:nil];
+    [alertView show];
 };
 
 - (NSString *)getPageTypeWithDataType{
