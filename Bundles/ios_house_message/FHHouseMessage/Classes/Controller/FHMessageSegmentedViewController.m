@@ -168,7 +168,12 @@ typedef NS_ENUM(NSInteger, FHSegmentedControllerAnimatedTransitionDirection) {
     UIViewController* toViewController = [transitionContext viewControllerForKey:UITransitionContextToViewControllerKey];
     UIViewController* fromViewController = [transitionContext viewControllerForKey:UITransitionContextFromViewControllerKey];
     
-    if ([transitionContext transitionWasCancelled]) {
+    if (!transitionContext.animated) {
+        fromViewController.view.frame = [transitionContext finalFrameForViewController:fromViewController];
+        toViewController.view.frame = [transitionContext finalFrameForViewController:toViewController];
+        [transitionContext completeTransition:![transitionContext transitionWasCancelled]];
+    }
+    else if ([transitionContext transitionWasCancelled]) {
         [UIView animateWithDuration:[self transitionDuration:transitionContext] delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
             fromViewController.view.frame = [transitionContext initialFrameForViewController:fromViewController];
             toViewController.view.frame = [transitionContext initialFrameForViewController:toViewController];
@@ -178,7 +183,7 @@ typedef NS_ENUM(NSInteger, FHSegmentedControllerAnimatedTransitionDirection) {
     } else {
         toViewController.view.frame = [transitionContext initialFrameForViewController:toViewController];
         fromViewController.view.frame = [transitionContext initialFrameForViewController:fromViewController];
-        
+
         [UIView animateWithDuration:[self transitionDuration:transitionContext] delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
             fromViewController.view.frame = [transitionContext finalFrameForViewController:fromViewController];
             toViewController.view.frame = [transitionContext finalFrameForViewController:toViewController];
@@ -285,7 +290,7 @@ typedef NS_ENUM(NSInteger, FHSegmentedControllerAnimatedTransitionDirection) {
             self.segmentedControl.selectedSegmentIndex = 0;
         }
     }
-    [self segmentedControlValueChanged];
+    [self segmentedControlValueChangedWithAnimate:NO];
 }
 
 - (void)loadView {
@@ -328,7 +333,7 @@ typedef NS_ENUM(NSInteger, FHSegmentedControllerAnimatedTransitionDirection) {
     segmentedControl.indexChangeBlock = ^(NSInteger index) {
         WeakSelf;
         self.enterType = @"click";
-        [self segmentedControlValueChanged];
+        [self segmentedControlValueChangedWithAnimate:YES];
     };
     //self.navigationItem.titleView = segmentedControl;
     //[self.customNavBarView addSubview:segmentedControl];
@@ -789,7 +794,7 @@ typedef NS_ENUM(NSInteger, FHSegmentedControllerAnimatedTransitionDirection) {
     return NO;
 }
 
-- (void)segmentedControlValueChanged {
+- (void)segmentedControlValueChangedWithAnimate:(BOOL)animated {
     if (self.viewControllers.count && self.segmentedControl.selectedSegmentIndex >= 0 && self.segmentedControl.selectedSegmentIndex < (NSInteger)self.viewControllers.count) {
         UIViewController *toViewController = self.viewControllers[self.segmentedControl.selectedSegmentIndex];
         UIViewController *fromViewController = self.activeViewController;
@@ -830,7 +835,7 @@ typedef NS_ENUM(NSInteger, FHSegmentedControllerAnimatedTransitionDirection) {
                 NSUInteger toIndex = [self.viewControllers indexOfObject:toViewController];
                 FHSegmentedControllerAnimatedTransitionContext *transitionContext = [[FHSegmentedControllerAnimatedTransitionContext alloc] initWithFromViewController:fromViewController toViewController:toViewController direction:(toIndex > fromIndex)?FHSegmentedControllerAnimatedTransitionDirectionFromRightToLeft:FHSegmentedControllerAnimatedTransitionDirectionFromLeftToRight];
                 
-                transitionContext.animated = YES;
+                transitionContext.animated = animated;
                 transitionContext.interactive = NO;
                 transitionContext.completionHandler = ^(BOOL didComplete) {
                     viewControllerTransitionCompletedHandler();
@@ -848,7 +853,7 @@ typedef NS_ENUM(NSInteger, FHSegmentedControllerAnimatedTransitionDirection) {
 
 - (void)selectViewControllerAtIndex:(NSInteger)index {
     self.segmentedControl.selectedSegmentIndex = index;
-    [self segmentedControlValueChanged];
+    [self segmentedControlValueChangedWithAnimate:NO];
 }
 
 - (void)makeNavigationControllerComputeAndApplyScrollContentInsetDeltaForViewController:(UIViewController *)viewController {
