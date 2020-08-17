@@ -74,7 +74,7 @@
         if (!wself) {
             return ;
         }
-        if (error && wself.requestError) {
+        if ((error || !houseModel || !houseModel.data) && wself.requestError) {
             wself.requestError();
         }
         [wself processData:houseModel];
@@ -159,10 +159,12 @@
      NSMutableDictionary *dict = @{@"house_type":@(1),
                            @"tracer": traceParam
                            }.mutableCopy;
-    NSURL *jumpUrl = [NSURL URLWithString:[NSString stringWithFormat:@"sslocal://new_house_detail?court_id=%@",_itemModel.hid]];
-    if (jumpUrl != nil) {
-        TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
-        [[TTRoute sharedRoute] openURLByPushViewController:jumpUrl userInfo:userInfo];
+    if (_itemModel.hid) {
+        NSURL *jumpUrl = [NSURL URLWithString:[NSString stringWithFormat:@"sslocal://new_house_detail?court_id=%@",_itemModel.hid]];
+        if (jumpUrl != nil) {
+            TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
+            [[TTRoute sharedRoute] openURLByPushViewController:jumpUrl userInfo:userInfo];
+        }
     }
 }
 
