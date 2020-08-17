@@ -28,6 +28,7 @@
 #import "TTUGCDefine.h"
 #import "FHFeedCustomHeaderView.h"
 #import "FHUGCFullScreenVideoCell.h"
+#import "BTDResponder.h"
 
 @interface FHUGCVideoListViewModel () <UITableViewDelegate,UITableViewDataSource,FHUGCBaseCellDelegate,UIScrollViewDelegate>
 
@@ -112,11 +113,6 @@
     if(isHead && listCount > 0){
         FHFeedUGCCellModel *cellModel = [self.dataList firstObject];
         behotTime = [cellModel.behotTime doubleValue];
-    }
-    
-    //下拉刷新关闭视频播放
-    if(isHead){
-        [self endDisplay];
     }
     
     NSMutableDictionary *extraDic = [NSMutableDictionary dictionary];
@@ -454,6 +450,12 @@
 }
 
 - (void)videoPlayFinished:(FHFeedUGCCellModel *)cellModel cell:(FHUGCBaseCell *)cell {
+    BOOL isTopVc = [BTDResponder isTopViewController:self.viewController];
+    
+    if(!isTopVc){
+        return;
+    }
+
     if([cell isKindOfClass:[FHUGCFullScreenVideoCell class]] && [cell conformsToProtocol:@protocol(TTVFeedPlayMovie)]){
         FHUGCFullScreenVideoCell<TTVFeedPlayMovie> *vCell = (FHUGCFullScreenVideoCell<TTVFeedPlayMovie> *)cell;
         UIView *view = [vCell cell_movieView];
