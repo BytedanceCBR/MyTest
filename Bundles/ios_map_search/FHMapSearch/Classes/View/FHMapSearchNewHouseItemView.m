@@ -23,6 +23,7 @@
 @property(nonatomic , strong) UIView *bottomLine;
 @property(nonatomic , strong) UIButton *bottomAroundButton;
 @property(nonatomic , strong) FHSearchHouseDataItemsModel *itemModel;
+@property(nonatomic , strong) TTHttpTask *requestTask;
 
 @end
 @implementation FHMapSearchNewHouseItemView
@@ -52,7 +53,10 @@
 -(void)showNewHouse:(NSString *)query param:(NSDictionary *)param
 {
     self.houseTable.hidden = YES;
-    [self requsetSecondHouse:query param:param isHead:0];
+    if (self.requestTask.state == TTHttpTaskStateRunning) {
+          [self.requestTask cancel];
+    }
+    self.requestTask = [self requsetSecondHouse:query param:param isHead:0];
 }
 
 - (void)processData:(FHSearchHouseModel *)houseModel{
