@@ -184,8 +184,8 @@
             make.width.mas_offset(0);
         }];
     }
-    if (cellModel.realtor.desc) {
-        self.infoLab.text = [NSString stringWithFormat:@"%@ %@",cellModel.realtor.desc,cellModel.createTime];
+    if (cellModel.desc) {
+        self.infoLab.text = cellModel.desc.string;
     }else {
         self.infoLab.text = [NSString stringWithFormat:@"%@",cellModel.createTime];
     }
