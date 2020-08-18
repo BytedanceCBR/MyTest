@@ -37,7 +37,6 @@
 @property (nonatomic, assign) BOOL isShowSwipeOverlayView; /**< 保证显示、隐藏swipeImageView方法只走一次*/
 
 @property (nonatomic, strong) CADisplayLink *dispalyLink; /**<定时器 一秒60次*/
-@property (nonatomic, assign) UITableViewCellSelectionStyle previousSelectStyle;/**< 先前cell的选中样式*/
 
 @end
 
@@ -535,8 +534,6 @@
     self.isShowSwipeOverlayView = YES;
     
     // 去除cell的选中状态，并保存
-    self.selected = NO;
-    self.previousSelectStyle = self.selectionStyle;
     self.selectionStyle = UITableViewCellSelectionStyleNone;
     
     // 显示swipeOverlayView,并将移动后cell上的内容裁剪到swipeImageView上
@@ -571,15 +568,6 @@
     self.editView.hidden = YES;
     self.swipeImageView.image = nil;
     self.swipeImageView.userInteractionEnabled = NO;
-    
-    // 若cell是选中状态 则滑动手势结束后还原cell的选中状态
-    self.selectionStyle = self.previousSelectStyle;
-    NSArray *selectCells = self.tableView.indexPathsForSelectedRows;
-    if([selectCells containsObject:[self.tableView indexPathForCell:self]])
-    {
-        self.selected = NO;
-        self.selected = YES;
-    }
     
     // 将cell上的内容还原
     [self hiddenAccesoryViewAndContentOfCellIfNeed:NO];

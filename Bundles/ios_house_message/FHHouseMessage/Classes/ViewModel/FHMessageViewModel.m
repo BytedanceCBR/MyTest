@@ -198,7 +198,7 @@
         cell.stateIsClose = ^(id data) {
             [wself reloadData];
         };
-        cell.selectionStyle = UITableViewCellSelectionStyleDefault;
+        cell.selectionStyle = UITableViewCellSelectionStyleNone;
         if (self.viewController.dataType == FHMessageRequestDataTypeIM) {
             //[cell initGestureWithData:model index:indexPath.row];
         }
