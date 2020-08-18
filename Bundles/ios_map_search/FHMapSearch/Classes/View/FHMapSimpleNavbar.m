@@ -50,7 +50,7 @@
         
         [self.layer addSublayer:_bgLayer];
         
-        UIImage *backImg = SYS_IMG(@"navbar_back_dark");
+        UIImage *backImg = ICON_FONT_IMG(24, @"\U0000e68a", [UIColor themeGray1]);
     
         _backButton = [UIButton buttonWithType:UIButtonTypeCustom];
         [_backButton setImage:backImg forState:UIControlStateNormal];
