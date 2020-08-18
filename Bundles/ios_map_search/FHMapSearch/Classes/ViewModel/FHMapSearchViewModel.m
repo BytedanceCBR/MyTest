@@ -266,9 +266,9 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
 //         return;
 //        }
 //    }
-    
-    self.needReload = YES;
-    [self checkNeedRequest];
+
+    [self requestHouses:NO showTip:YES];
+     
     
     [self tryUpdateSideBar];
 }
