@@ -337,30 +337,17 @@
 }
 
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
-    FHUGCFullScreenVideoCell *cell = [self getFitableVideoCell];
-    if(cell != self.currentVideoCell){
-        self.currentVideoCell.contentView.userInteractionEnabled = NO;
-        cell.contentView.userInteractionEnabled = YES;
-        self.currentVideoCell = cell;
-    }
-    
-    if(![self.currentVideoCell cell_isPlaying]){
-        [cell play];
-    }
+    [self startVideoPlay];
 }
 
 - (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate {
     if(!decelerate){
-        FHUGCFullScreenVideoCell *cell = [self getFitableVideoCell];
-        if(cell != self.currentVideoCell){
-            self.currentVideoCell.contentView.userInteractionEnabled = NO;
-            cell.contentView.userInteractionEnabled = YES;
-            self.currentVideoCell = cell;
-        }
-        if(![self.currentVideoCell cell_isPlaying]){
-            [cell play];
-        }
+        [self startVideoPlay];
     }
+}
+
+- (void)scrollViewDidScrollToTop:(UIScrollView *)scrollView {
+    [self startVideoPlay];
 }
 
 #pragma mark - FHUGCBaseCellDelegate
@@ -525,6 +512,19 @@
                 });
             }
         }
+    }
+}
+
+- (void)startVideoPlay {
+    FHUGCFullScreenVideoCell *cell = [self getFitableVideoCell];
+    if(cell != self.currentVideoCell){
+        self.currentVideoCell.contentView.userInteractionEnabled = NO;
+        cell.contentView.userInteractionEnabled = YES;
+        self.currentVideoCell = cell;
+    }
+    
+    if(![self.currentVideoCell cell_isPlaying]){
+        [cell play];
     }
 }
 

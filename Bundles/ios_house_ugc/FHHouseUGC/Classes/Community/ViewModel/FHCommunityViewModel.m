@@ -308,13 +308,10 @@
     
     [self initCell:@"flip"];
     
-    if(![FHEnvContext isHasVideoList]){
-        //关注tab，没有关注时需要隐藏关注按钮
-        if(self.currentTabIndex == 0 && [FHUGCConfig sharedInstance].followList.count <= 0){
-            self.viewController.publishBtn.hidden = YES;
-        }else{
-            self.viewController.publishBtn.hidden = NO;
-        }
+    if(self.currentTabIndex == 0 && ([FHUGCConfig sharedInstance].followList.count <= 0 || [FHEnvContext isHasVideoList])){
+        self.viewController.publishBtn.hidden = YES;
+    }else{
+        self.viewController.publishBtn.hidden = NO;
     }
 }
 
