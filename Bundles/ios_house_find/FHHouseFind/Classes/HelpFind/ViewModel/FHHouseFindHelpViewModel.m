@@ -1635,6 +1635,7 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
     params[@"origin_from"] = self.tracerDict[@"origin_from"] ?: @"be_null";
     params[@"element_from"] = self.tracerDict[@"element_from"] ?: @"be_null";
     params[@"page_type"] = [self pageTypeString];
+    params[@"event_tracking_id"] = @"93414";
     [FHUserTracker writeEvent:@"go_detail" params:params];
 }
 
@@ -1653,6 +1654,7 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
     params[@"origin_from"] = self.tracerDict[@"origin_from"] ?: @"be_null";
     params[@"enter_from"] = self.tracerDict[@"enter_from"] ? : @"be_null";
     params[@"page_type"] = [self pageTypeString];
+    params[@"event_tracking_id"] = @"93447";
     if (position.length > 0) {
         params[@"click_position"] = position;
     }
