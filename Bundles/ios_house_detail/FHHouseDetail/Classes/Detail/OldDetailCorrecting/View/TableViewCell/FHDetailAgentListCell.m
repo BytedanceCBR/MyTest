@@ -806,7 +806,7 @@
          [self.tagsView mas_makeConstraints:^(MASConstraintMaker *make) {
                make.height.mas_equalTo(18);
                make.left.equalTo(self.name);
-               make.right.equalTo(self.imBtn.mas_right);
+               make.right.equalTo(self.callBtn.mas_right);
              make.top.equalTo(self.score.mas_bottom).offset(self.model.realtorTags.count>0?6:8);
            }];
     }else {
@@ -815,7 +815,7 @@
         [self.tagsView mas_makeConstraints:^(MASConstraintMaker *make) {
               make.height.mas_equalTo(18);
               make.left.equalTo(self.name);
-              make.right.equalTo(self.imBtn.mas_right);
+              make.right.equalTo(self.callBtn.mas_right);
               make.top.equalTo(self.name.mas_bottom).offset(8);
           }];
     }
