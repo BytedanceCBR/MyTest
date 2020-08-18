@@ -199,9 +199,6 @@
             [wself reloadData];
         };
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
-        if (self.viewController.dataType == FHMessageRequestDataTypeIM) {
-            //[cell initGestureWithData:model index:indexPath.row];
-        }
     }
     return cell;
 }
@@ -287,73 +284,7 @@
     }
 }
 
-//- (NSString *)tableView:(UITableView *)tableView titleForDeleteConfirmationButtonForRowAtIndexPath:(NSIndexPath *)indexPath {
-//    return @"删除";
-//}
-
-- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
-    return NO;
-    if ([[self items] count] > indexPath.row) {
-        id item = [self items][indexPath.row];
-        if ([item isKindOfClass:[IMConversation class]]) {
-            return YES;
-        } else {
-            return NO;
-        }
-    } else {
-        return NO;
-    }
-}
-
-//- (UITableViewCellEditingStyle)tableView:(UITableView *)tableView editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath {
-//    if ([[self items] count] > indexPath.row) {
-//        id item = [self items][indexPath.row];
-//        if ([item isKindOfClass:[IMConversation class]]) {
-//            return UITableViewCellEditingStyleDelete;
-//        } else {
-//            return UITableViewCellEditingStyleNone;
-//        }
-//    } else {
-//        return UITableViewCellEditingStyleNone;
-//    }
-//}
-
-//- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
-//    if ([self items].count > indexPath.row) {
-//        id conv = [self items][indexPath.row];
-//        if ([conv isKindOfClass:[IMConversation class]]) {
-//            [self displayDeleteConversationConfirm:conv];
-//        }
-//    }
-//}
-
-- (UISwipeActionsConfiguration *)tableView:(UITableView *)tableView leadingSwipeActionsConfigurationForRowAtIndexPath:(NSIndexPath *)indexPath {
-    return nil;
-}
-
-//- (UISwipeActionsConfiguration *)tableView:(UITableView *)tableView trailingSwipeActionsConfigurationForRowAtIndexPath:(NSIndexPath *)indexPath {
-//    @weakify(self);
-//    UIContextualAction *action = [UIContextualAction contextualActionWithStyle:UIContextualActionStyleNormal title:@"删除" handler:^(UIContextualAction *_Nonnull action, __kindof UIView *_Nonnull sourceView, void (^_Nonnull completionHandler)(BOOL)) {
-//        @strongify(self);
-//        completionHandler(YES);
-//        if ([self items].count > indexPath.row) {
-//            id conv = [self items][indexPath.row];
-//            if ([conv isKindOfClass:[IMConversation class]]) {
-//                [self displayDeleteConversationConfirm:conv];
-//            }
-//        }
-//    }];
-//    action.backgroundColor = [UIColor colorWithRed:236 / 255.0 green:77 / 255.0 blue:61 / 255.0 alpha:1];
-//    UISwipeActionsConfiguration *config = [UISwipeActionsConfiguration configurationWithActions:@[action]];
-//    config.performsFirstActionWithFullSwipe = NO;
-//    return config;
-//}
-
 - (void)reloadData {
-//    [FHMessageEditHelp close];
-//    if (![FHMessageEditHelp shared].isCanReloadData) {
-//        return;
-//    }
     NSInteger chatNumber = 0;
     NSInteger systemMessageNumber = 0;
     BOOL hasChatRedPoint = NO;
@@ -485,21 +416,6 @@
 - (SwipeTableCellStyle)tableView:(UITableView *)tableView styleOfSwipeButtonForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     return SwipeTableCellStyleRightToLeft;
-    //return [self.dataArray[indexPath.row] cellStyle];
-}
-
-// 左滑buttons
-- (NSArray<SwipeButton *> *)tableView:(UITableView *)tableView leftSwipeButtonsAtIndexPath:(NSIndexPath *)indexPath
-{
-    SwipeButton *checkBtn = [SwipeButton createSwipeButtonWithTitle:@"删除峰删除" font:16 textColor:[UIColor blackColor] backgroundColor:[UIColor redColor] image:[UIImage imageNamed:@"check"] touchBlock:^{
-        
-        NSLog(@"点击了check按钮");
-    }];
-    SwipeButton *menuBtn = [SwipeButton createSwipeButtonWithImage:[UIImage imageNamed:@"menu"] backgroundColor:[UIColor blueColor] touchBlock:^{
-        
-        NSLog(@"点击了menu按钮");
-    }];
-    return @[checkBtn, menuBtn];
 }
 
 - (NSArray<SwipeButton *> *)tableView:(UITableView *)tableView rightSwipeButtonsAtIndexPath:(NSIndexPath *)indexPath

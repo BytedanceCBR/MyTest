@@ -331,7 +331,7 @@ typedef NS_ENUM(NSInteger, FHSegmentedControllerAnimatedTransitionDirection) {
     //[segmentedControl addTarget:self action:@selector(segmentedControlValueChanged) forControlEvents:UIControlEventValueChanged];
     WeakSelf;
     segmentedControl.indexChangeBlock = ^(NSInteger index) {
-        WeakSelf;
+        StrongSelf;
         self.enterType = @"click";
         [self segmentedControlValueChangedWithAnimate:YES];
     };
