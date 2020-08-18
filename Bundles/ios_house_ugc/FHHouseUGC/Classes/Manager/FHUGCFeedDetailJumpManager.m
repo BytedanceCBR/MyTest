@@ -110,7 +110,7 @@
 
 //视频详情页
 - (void)jumpToVideoDetail:(FHFeedUGCCellModel *)cellModel showComment:(BOOL)showComment enterType:(NSString *)enterType extraDic:(NSDictionary *)extraDic {
-    if(cellModel.isVideoJumpDetail){
+    if(cellModel.isVideoJumpDetail || showComment){
         //跳转到视频详情页
         if(self.currentCell){
             TTVFeedCellSelectContext *context = [[TTVFeedCellSelectContext alloc] init];
