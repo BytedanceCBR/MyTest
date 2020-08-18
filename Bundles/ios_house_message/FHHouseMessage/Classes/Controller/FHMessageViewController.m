@@ -86,7 +86,8 @@
     _tableView = [[FHBaseTableView alloc] init];
     _tableView.backgroundColor = [UIColor themeGray7];
     _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
-    _tableView.contentInset = UIEdgeInsetsMake(0, 0, 0, 0);
+    _tableView.contentInset = UIEdgeInsetsMake(4, 0, 0, 0);
+    _tableView.contentOffset = CGPointMake(0, -4);
     self.automaticallyAdjustsScrollViewInsets = NO;
     if (@available(iOS 11.0 , *)) {
           _tableView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;

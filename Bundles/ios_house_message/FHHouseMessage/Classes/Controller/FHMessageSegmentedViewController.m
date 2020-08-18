@@ -328,7 +328,6 @@ typedef NS_ENUM(NSInteger, FHSegmentedControllerAnimatedTransitionDirection) {
     segmentedControl.selectionIndicatorColor = [UIColor colorWithHexStr:@"#ff9629"];
     [segmentedControl setBackgroundColor:[UIColor clearColor]];
     segmentedControl.isMessageTab = YES;
-    //[segmentedControl addTarget:self action:@selector(segmentedControlValueChanged) forControlEvents:UIControlEventValueChanged];
     WeakSelf;
     segmentedControl.indexChangeBlock = ^(NSInteger index) {
         StrongSelf;
@@ -367,8 +366,6 @@ typedef NS_ENUM(NSInteger, FHSegmentedControllerAnimatedTransitionDirection) {
         make.height.mas_equalTo(44);
         make.bottom.mas_equalTo(-6);
         make.width.mas_equalTo(80 * count);
-        //make.left.mas_equalTo(tabMargin);
-        //make.right.mas_equalTo(-tabMargin);
     }];
 
     __weak typeof(self) weakSelf = self;
@@ -376,7 +373,6 @@ typedef NS_ENUM(NSInteger, FHSegmentedControllerAnimatedTransitionDirection) {
     imViewController.fatherVC = self;
     [imViewController setUpdateRedPoint:^(NSInteger chatNumber, BOOL hasRedPoint, NSInteger systemMessageNumber) {
         [weakSelf updateRedPointWithChat:chatNumber andHasChatRedPoint:hasRedPoint andSystemMessage:systemMessageNumber];
-        //[weakSelf.topView updateRedPointWithChat:chatNumber andHasRedPoint:hasRedPoint andSystemMessage:systemMessageNumber];
     }];
     imViewController.isSegmentedChildViewController = YES;
     imViewController.dataType = FHMessageRequestDataTypeIM;
@@ -385,7 +381,6 @@ typedef NS_ENUM(NSInteger, FHSegmentedControllerAnimatedTransitionDirection) {
     systemViewController.fatherVC = self;
     [systemViewController setUpdateRedPoint:^(NSInteger chatNumber, BOOL hasRedPoint, NSInteger systemMessageNumber) {
         [weakSelf updateRedPointWithChat:chatNumber andHasChatRedPoint:hasRedPoint andSystemMessage:systemMessageNumber];
-        //[weakSelf.topView updateRedPointWithChat:chatNumber andHasRedPoint:hasRedPoint andSystemMessage:systemMessageNumber];
     }];
     systemViewController.isSegmentedChildViewController = YES;
     systemViewController.dataType = FHMessageRequestDataTypeSystem;
