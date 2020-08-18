@@ -40,6 +40,7 @@
         _houseTable.showsVerticalScrollIndicator = NO;
         _houseTable.estimatedRowHeight = 0;
         _houseTable.scrollEnabled = NO;
+        _houseTable.separatorInset = UIEdgeInsetsMake(0, 20, 0, 20);
         [self addSubview:_houseTable];
                 
         if (@available(iOS 11.0 , *)) {
