@@ -227,6 +227,10 @@
     }
     if(!self.isNewDiscovery){
         [self addStayCategoryLog:self.stayTime];
+    }else{
+        if (![FHEnvContext sharedInstance].isShowingHomeHouseFind) {
+            [self viewDisAppearForEnterType:1 needReportSubCategory:NO];
+        }
     }
 }
 
@@ -271,6 +275,10 @@
             self.publishBtn.hidden = YES;
         }else{
             self.publishBtn.hidden = NO;
+        }
+    }else{
+        if (![FHEnvContext sharedInstance].isShowingHomeHouseFind) {
+            [self viewAppearForEnterType:1 needReportSubCategory:NO];
         }
     }
 }
@@ -772,24 +780,25 @@
 //    [FHUserTracker writeEvent:@"click_community_search" params:reportParams];
 //}
 
-- (void)viewAppearForEnterType:(NSInteger)enterType needReport:(BOOL)needReport {
-    if(needReport){
-        self.stayTime = [[NSDate date] timeIntervalSince1970];
-        NSMutableDictionary *tracerDict = [NSMutableDictionary new];
-        if (enterType == 1) {
-            tracerDict[@"enter_type"] = @"click";
-        }else{
-            tracerDict[@"enter_type"] = @"flip";
-        }
-        tracerDict[@"enter_from"] = self.tracerDict[@"enter_from"] ?: @"be_null";
-        tracerDict[@"category_name"] = self.tracerDict[@"category_name"] ?: @"be_null";
-        tracerDict[@"enter_channel"] = @"click";
-        [FHEnvContext recordEvent:tracerDict andEventKey:@"enter_category"];
+- (void)viewAppearForEnterType:(NSInteger)enterType needReportSubCategory:(BOOL)needReportSubCategory {
+    self.stayTime = [[NSDate date] timeIntervalSince1970];
+    NSMutableDictionary *tracerDict = [NSMutableDictionary new];
+    if (enterType == 1) {
+        tracerDict[@"enter_type"] = @"click";
+    }else{
+        tracerDict[@"enter_type"] = @"flip";
     }
-    [self.viewModel viewWillAppear];
+    tracerDict[@"enter_from"] = self.tracerDict[@"enter_from"] ?: @"be_null";
+    tracerDict[@"category_name"] = self.tracerDict[@"category_name"] ?: @"be_null";
+    tracerDict[@"enter_channel"] = @"click";
+    [FHEnvContext recordEvent:tracerDict andEventKey:@"enter_category"];
+    
+    if(needReportSubCategory){
+        [self.viewModel viewWillAppear];
+    }
 }
 
-- (void)viewDisAppearForEnterType:(NSInteger)enterType
+- (void)viewDisAppearForEnterType:(NSInteger)enterType needReportSubCategory:(BOOL)needReportSubCategory
 {
     NSMutableDictionary *tracerDict = [NSMutableDictionary new];
     NSTimeInterval duration = ([[NSDate date] timeIntervalSince1970] - self.stayTime) * 1000.0;
@@ -806,7 +815,10 @@
     if (((int) duration) > 0) {
         [FHEnvContext recordEvent:tracerDict andEventKey:@"stay_category"];
     }
-    [self.viewModel viewWillDisappear];
+    
+    if(needReportSubCategory){
+        [self.viewModel viewWillDisappear];
+    }
 }
 
 #pragma mark - TTUIViewControllerTrackProtocol
