@@ -28,6 +28,7 @@
 #import "TTUGCDefine.h"
 #import "FHFeedCustomHeaderView.h"
 #import "FHUGCFullScreenVideoCell.h"
+#import "FHUGCCellHelper.h"
 
 @interface FHCommunityFeedListCustomViewModel () <UITableViewDelegate,UITableViewDataSource,FHUGCBaseCellDelegate,UIScrollViewDelegate>
 
@@ -374,6 +375,12 @@
         cellModel.enterFrom = [self.viewController categoryName];
         if([self.categoryId isEqualToString:@"f_house_video"]){
             cellModel.isVideoJumpDetail = YES;
+            //兜底逻辑
+            if(cellModel.cellSubType == FHUGCFeedListCellSubTypeUGCVideo){
+                cellModel.cellSubType = FHUGCFeedListCellSubTypeFullVideo;
+                cellModel.numberOfLines = 2;
+                [FHUGCCellHelper setRichContentWithModel:cellModel width:([UIScreen mainScreen].bounds.size.width - 40) numberOfLines:cellModel.numberOfLines];
+            }
         }
         if(cellModel){
             if(isHead){

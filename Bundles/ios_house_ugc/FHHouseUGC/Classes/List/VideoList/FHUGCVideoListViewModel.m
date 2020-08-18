@@ -29,6 +29,7 @@
 #import "FHFeedCustomHeaderView.h"
 #import "FHUGCFullScreenVideoCell.h"
 #import "BTDResponder.h"
+#import "FHUGCCellHelper.h"
 
 @interface FHUGCVideoListViewModel () <UITableViewDelegate,UITableViewDataSource,FHUGCBaseCellDelegate,UIScrollViewDelegate>
 
@@ -197,6 +198,12 @@
         cellModel.tableView = self.tableView;
         cellModel.isVideoJumpDetail = YES;
         cellModel.enterFrom = [self.viewController categoryName];
+        //兜底逻辑
+        if(cellModel.cellSubType == FHUGCFeedListCellSubTypeUGCVideo){
+            cellModel.cellSubType = FHUGCFeedListCellSubTypeFullVideo;
+            cellModel.numberOfLines = 2;
+            [FHUGCCellHelper setRichContentWithModel:cellModel width:([UIScreen mainScreen].bounds.size.width - 40) numberOfLines:cellModel.numberOfLines];
+        }
         if(cellModel){
             if(isHead){
                 [resultArray addObject:cellModel];
