@@ -664,7 +664,8 @@
 
 - (void)delete {
     if (self.deleteConversation) {
-        self.deleteConversation(self.conv);
+        NSIndexPath *indexPath = [self.tableView indexPathForCell:self];
+        self.deleteConversation(indexPath.row);
     }
 }
 

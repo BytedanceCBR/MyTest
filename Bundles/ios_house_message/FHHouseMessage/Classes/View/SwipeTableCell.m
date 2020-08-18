@@ -14,7 +14,6 @@
 
 @interface SwipeTableCell ()<UIGestureRecognizerDelegate>
 
-@property (nonatomic, strong) UITableView *tableView; /**< 当前cell所在的tableView*/
 @property (nonatomic, strong) UIView *swipeOverlayView; /**< 滑动时覆盖在cell上*/
 @property (nonatomic, strong) UIImageView *swipeImageView; /**< 显示移动后的cell上的内容*/
 @property (nonatomic, strong) SwipeView *rightSwipeView; /**< 右滑展示的view*/

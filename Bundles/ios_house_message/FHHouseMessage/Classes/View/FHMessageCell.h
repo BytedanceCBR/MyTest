@@ -20,7 +20,7 @@ typedef void(^FHMessageCellClick)(id data);
 
 @property(nonatomic, strong) TTBadgeNumberView *unreadView;
 @property (nonatomic, assign) SliderMenuState state;
-@property (nonatomic, copy) FHMessageCellClick deleteConversation;
+@property (nonatomic, copy) void (^deleteConversation)(NSInteger index);
 @property (nonatomic, copy) FHMessageCellClick stateIsClose;
 @property (nonatomic, copy) FHMessageCellClick openEditTrack;
 @property (nonatomic, copy) FHMessageCellClick closeEditTrack;

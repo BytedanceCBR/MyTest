@@ -76,6 +76,8 @@ typedef NS_ENUM(NSUInteger, SwipeTableCellStyle)
 @class SwipeTableViewDelegate;
 @interface SwipeTableCell : UITableViewCell
 
+@property (nonatomic, strong) UITableView *tableView; /**< 当前cell所在的tableView*/
+
 @property (nonatomic, weak) id<SwipeTableViewCellDelegate> swipeDelegate;
 /** swipeButton下的背景色 默认透明色*/
 @property (nonatomic, strong) UIColor *swipeOverlayViewBackgroundColor;

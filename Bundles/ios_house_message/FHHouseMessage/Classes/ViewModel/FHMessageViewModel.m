@@ -189,8 +189,10 @@
             cell.isCanGesture = YES;
         }
         __weak typeof(self)wself = self;
-        cell.deleteConversation = ^(id data) {
-            [wself displayDeleteConversationConfirm:data];
+        cell.deleteConversation = ^(NSInteger index) {
+            if (index >= 0 && index < [wself items].count) {
+                [wself displayDeleteConversationConfirm:[wself items][index]];
+            }
         };
         cell.openEditTrack = ^(id data) {
             [wself openEditTrack];
@@ -386,6 +388,7 @@
             //[FHUserTracker writeEvent:@"delete_conversation" params:params];
             [FHUserTracker writeEvent:@"message_flip_click" params:params];
         }
+        
     }];
 }
 
