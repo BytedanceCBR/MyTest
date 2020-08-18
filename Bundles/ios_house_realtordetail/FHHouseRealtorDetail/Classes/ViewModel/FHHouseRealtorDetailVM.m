@@ -126,7 +126,6 @@
     self.realtorLogpb = model.data.realtorLogpb;
     [self addGoDetailLog];
     self.data = model.data;
-    NSArray *commentInfo = model.data.evaluation[@"comment_info"];
     BOOL realtorLeave = [model.data.realtor.allKeys containsObject:@"is_leave"]?[model.data.realtor[@"is_leave"] boolValue]:NO;
     
     if (model.data.realtorTab) {
@@ -134,7 +133,7 @@
     }
     
     if(self.isFirstEnter){
-        NSMutableDictionary *dic = @{}.mutableCopy;
+        NSMutableDictionary *dic = [model.data toDictionary].mutableCopy;
         NSMutableDictionary *dicm = model.data.scoreInfo.mutableCopy;
         if (dicm && [dicm.allKeys containsObject:@"open_url"]) {
             NSString *openUrl = dicm[@"open_url"];
@@ -149,25 +148,12 @@
             NSString *urlStr = [NSString stringWithFormat:@"sslocal://webview?url=%@",encodedString];
             [dicm setObject:urlStr forKey:@"open_url"];
         }
-        [dic setObject:model.data.realtor?:@""forKey:@"realtor"];
-        [dic setObject:model.data.evaluation?:@"" forKey:@"evaluation"];
-        [dic setObject:model.data.realtorTag?:@"" forKey:@"realtor_tag"];
         [dic setObject:dicm?:@"" forKey:@"score_info"];
-        [dic setObject:model.data.realtorShop?:@"" forKey:@"realtor_shop"];
-        [dic setObject:model.data.certificationIcon?:@"" forKey:@"certification_icon"];
-        [dic setObject:model.data.certificationPage?:@"" forKey:@"certification_page"];
         [dic setObject:@{@"realtor_id":self.realtorInfo[@"realtor_id"]?:@"",@"screen_width":@([UIScreen mainScreen].bounds.size.width)} forKey:@"common_params"];
         [dic setObject:self.tracerDict?:@"" forKey:@"report_params"];
         if (self.tracerDict) {
             NSString *lynxReortParams= [self.tracerDict yy_modelToJSONString];
             lynxReortParams = [lynxReortParams stringByAddingPercentEncodingWithAllowedCharacters:NSCharacterSet.URLQueryAllowedCharacterSet];
-//
-//            NSString *unencodedString = lynxReortParams;
-//            NSString *encodedString = (NSString *)CFBridgingRelease(CFURLCreateStringByAddingPercentEscapes(kCFAllocatorDefault,
-//                                                                                                            (CFStringRef)unencodedString,
-//                                                                                                            NULL,
-//                                                                                                            (CFStringRef)@"!*'();:@&=+$,/?%#[]",
-//                                                                                                            kCFStringEncodingUTF8));
             [dic setObject:lynxReortParams forKey:@"encoded_report_params"];
         }
         [self.viewController.headerView reloadDataWithDic:dic];
