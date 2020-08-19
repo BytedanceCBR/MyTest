@@ -330,7 +330,7 @@
     CGFloat tagHeight = tags.count > 0 ? 20 : 0.01;
     
     CGFloat topHeight = 0;
-    CGFloat tagTop = tags.count > 0 ? 16 : -10;//在没有tagtop的时候更向下
+    CGFloat tagTop = tags.count > 0 ? 16 : 0;//在没有tagtop的时候更向下
     CGFloat tagBottom = tags.count > 0 ? 16 : 0;
     
     if (model.isFloorPan) {
@@ -374,7 +374,7 @@
                 [self.tagBacView mas_makeConstraints:^(MASConstraintMaker *make) {
                     make.left.mas_equalTo(self).offset(15);
                     make.right.mas_equalTo(self).offset(-15);
-                    make.top.mas_equalTo(self.topBanner.mas_bottom).mas_offset(30);
+                    make.top.mas_equalTo(self.topBanner.mas_bottom).mas_offset(20);
                     make.height.mas_offset(tagHeight);
                 }];
                 [self.nameLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
@@ -392,6 +392,7 @@
                     make.top.equalTo(self.nameLabel).offset(5);
                     make.right.equalTo(self).offset(-32);
                     make.size.mas_equalTo(CGSizeMake(44, 44));
+                    make.bottom.mas_equalTo(self).offset(-5);
                 }];
                 self.addressLab.text = model.address;
             }else {
