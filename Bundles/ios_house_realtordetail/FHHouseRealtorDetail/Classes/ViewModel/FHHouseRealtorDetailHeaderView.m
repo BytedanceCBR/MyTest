@@ -217,7 +217,7 @@
     completionBlock(self.placeholderImage,nil,nil);
     if([url.absoluteString containsString:@"gecko:"]){
         NSString * imageStr = url.absoluteString;
-        NSString *imageRootPath = [IESGeckoKit rootDirForAccessKey:[FHIESGeckoManager getGeckoKey] channel:nil];
+        NSString *imageRootPath = [IESGeckoKit rootDirForAccessKey:[FHIESGeckoManager getGeckoKey] channel:@""];
         NSString *imageUrlPath = [imageStr substringFromIndex:8];
         NSString *filePath = [NSString stringWithFormat:@"%@/%@",imageRootPath,imageUrlPath];
         NSURL *fileURL = [NSURL fileURLWithPath:filePath];
