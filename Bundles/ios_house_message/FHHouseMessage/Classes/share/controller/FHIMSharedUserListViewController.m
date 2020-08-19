@@ -217,7 +217,7 @@
     // IM 透传数据模型
     FHAssociateIMModel *associateIMModel = [FHAssociateIMModel new];
     associateIMModel.houseId = queryParams[@"house_id"];
-    associateIMModel.houseType = queryParams[@"house_type"];
+    associateIMModel.houseType = [queryParams[@"house_type"] integerValue];
     associateIMModel.associateInfo = self.shareInfo.associateInfo;
     if (_extrInfo) {
       associateIMModel.extraInfo = _extrInfo;
@@ -233,14 +233,21 @@
     reportParams.cardType = self.tracerDict[@"card_type"] ? : @"be_null";
     reportParams.pageType = @"realotr_pick";
     reportParams.realtorId = _target.customerId;
-    reportParams.realtorRank = @(_rowIndex).stringValue ?: @"0";
+    reportParams.realtorRank = @(_rowIndex);
     reportParams.conversationId = @"be_null";
     reportParams.extra = @{
         
     };
     reportParams.searchId = self.tracerDict[@"search_id"] ? : @"be_null";
-    reportParams.groupId = self.tracerDict[@"group_id"]?:(self.tracerDict[@"log_pb"][@"group_id"] ? : @"be_null");
-
+    
+    if(self.tracerDict[@"group_id"]) {
+        reportParams.groupId = self.tracerDict[@"group_id"];
+    } else if([self.tracerDict[@"log_pb"] isKindOfClass:NSDictionary.class]) {
+        reportParams.groupId = (self.tracerDict[@"log_pb"][@"group_id"] ? : @"be_null");
+    } else {
+        reportParams.groupId = @"be_null";
+    }
+    
     associateIMModel.reportParams = reportParams;
 
     // IM跳转链接

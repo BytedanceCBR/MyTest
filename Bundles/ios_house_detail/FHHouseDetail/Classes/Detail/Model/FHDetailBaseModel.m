@@ -105,7 +105,8 @@
         NSDictionary *dict = @{
                                @"backgroundColor": @"background_color",
                                @"fontColor": @"font_color",
-                               @"borderColor":@"border_color"
+                               @"borderColor":@"border_color",
+                               @"prefixIconUrl":@"prefix_icon_url"
                                };
         return dict[keyName]?:keyName;
     }];

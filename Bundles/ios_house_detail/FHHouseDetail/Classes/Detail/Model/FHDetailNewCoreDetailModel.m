@@ -40,6 +40,41 @@
 }
 @end
 
+@implementation FHDetailNewCoreDetailDataItemModel
++ (JSONKeyMapper*)keyMapper
+{
+  NSDictionary *dict = @{
+    @"itemName": @"item_name",
+    @"itemValue": @"item_value",
+    @"itemType": @"item_type",
+    @"image": @"image",
+  };
+  return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+     return dict[keyName]?:keyName;
+  }];
+}
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+@end
+
+@implementation FHDetailNewCoreDetailDataMoudleModel
++ (JSONKeyMapper*)keyMapper
+{
+  NSDictionary *dict = @{
+    @"items": @"court_detail_item_list",
+  };
+  return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+     return dict[keyName]?:keyName;
+  }];
+}
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+@end
+
 @implementation FHDetailNewCoreDetailDataModel
 + (JSONKeyMapper*)keyMapper
 {
@@ -69,6 +104,7 @@
     @"buildingType": @"building_type",
     @"buildingCategory": @"building_category",
     @"deliveryDate": @"delivery_date",
+    @"modules": @"court_detail_modules",
 
     @"userStatus": @"user_status",
     @"highlightedRealtor": @"highlighted_realtor",

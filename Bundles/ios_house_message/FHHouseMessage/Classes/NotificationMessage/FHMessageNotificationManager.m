@@ -81,7 +81,6 @@ static NSString *const kNewMessageNotificationCheckIntervalKey = @"kNewMessageNo
     if (timeInterval < kMessageNotificationFetchUnreadMessageMinTimeInterval) {
         timeInterval = kMessageNotificationFetchUnreadMessageDefaultTimeInterval;
     }
-
     self.lastInterval = timeInterval;
 
     return timeInterval;

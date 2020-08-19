@@ -71,11 +71,11 @@
 }
 
 - (void)dealloc {
-//    UNREGISTER_MESSAGE(TTVFeedUserOpDataSyncMessage, self);
+    UNREGISTER_MESSAGE(TTVFeedUserOpDataSyncMessage, self);
 }
 
 - (void)initUIs {
-//    REGISTER_MESSAGE(TTVFeedUserOpDataSyncMessage, self);
+    REGISTER_MESSAGE(TTVFeedUserOpDataSyncMessage, self);
     [self initViews];
     [self initConstraints];
 }
@@ -97,6 +97,11 @@
     _videoView.layer.borderColor = [[UIColor themeGray6] CGColor];
     _videoView.layer.borderWidth = 0.5;
     _videoView.layer.cornerRadius = 4;
+    WeakSelf;
+    self.videoView.ttv_shareButtonOnMovieFinishViewDidPressBlock = ^{
+        StrongSelf;
+        [self shareActionClicked];
+    };
     [self.contentView addSubview:_videoView];
 
     self.bottomView = [[FHUGCCellBottomView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, bottomViewHeight)];
@@ -106,11 +111,6 @@
     
     UITapGestureRecognizer* tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(goToCommunityDetail:)];
     [self.bottomView.positionView addGestureRecognizer:tap];
-    
-    __weak typeof(self) wself = self;
-    self.videoView.ttv_shareButtonOnMovieFinishViewDidPressBlock = ^{
-        [wself shareActionClicked];
-    };
 }
 
 - (void)initConstraints {
@@ -192,6 +192,18 @@
     //处理视频
     self.videoItem = cellModel.videoItem;
     self.videoView.cellEntity = self.videoItem;
+    
+    WeakSelf;
+    if(cellModel.isVideoJumpDetail){
+        _videoView.userInteractionEnabled = YES;
+        _videoView.ttv_playButtonClickedBlock = ^{
+            StrongSelf;
+            [self playVideoDidClicked];
+        };
+    }else{
+        _videoView.userInteractionEnabled = NO;
+        _videoView.ttv_playButtonClickedBlock = nil;
+    }
     
     [self updateCommentButton];
     [self updateDiggButton];
@@ -278,7 +290,7 @@
 }
 
 - (void)updateDiggButton {
-    NSString *diggCount = [NSString stringWithFormat:@"%d",self.videoItem.article.diggCount];
+    NSString *diggCount = [NSString stringWithFormat:@"%lld",self.videoItem.article.diggCount];
     [self.bottomView updateLikeState:diggCount userDigg:(self.videoItem.article.userDigg ? @"1" : @"0")];
 }
 
@@ -566,44 +578,45 @@
     [self.moreActionMananger shareButtonClickedWithModel:[TTVFeedCellMoreActionModel modelWithArticle:self.videoItem.originData] activityAction:^(NSString *type) {
         
     }];
+}
 
+- (void)playVideoDidClicked {
+    if(self.delegate && [self.delegate respondsToSelector:@selector(didVideoClicked:cell:)]){
+        [self.delegate didVideoClicked:self.cellModel cell:self];
+    }
 }
 
 #pragma mark - TTVFeedUserOpDataSyncMessage
 
 - (void)ttv_message_feedDiggChanged:(BOOL)userDigg uniqueIDStr:(NSString *)uniqueIDStr {
-    id<TTVArticleProtocol> article = nil;
-    [self feedCollectChanged:userDigg uniqueIDStr:uniqueIDStr forKey:@keypath(article, userDigg)];
+    [self feedCollectChanged:userDigg uniqueIDStr:uniqueIDStr forKey:@"userDigg"];
 }
 
 - (void)ttv_message_feedDiggCountChanged:(int)diggCount uniqueIDStr:(NSString *)uniqueIDStr {
-    id<TTVArticleProtocol> article = nil;
-    [self feedCollectChanged:diggCount uniqueIDStr:uniqueIDStr forKey:@keypath(article, diggCount)];
+    [self feedCollectChanged:diggCount uniqueIDStr:uniqueIDStr forKey:@"diggCount"];
 }
 
 - (void)ttv_message_feedCommentCountChanged:(int)commentCount uniqueIDStr:(NSString *)uniqueIDStr {
-    id<TTVArticleProtocol> article = nil;
-    [self feedCollectChanged:commentCount uniqueIDStr:uniqueIDStr forKey:@keypath(article, commentCount)];
+    [self feedCollectChanged:commentCount uniqueIDStr:uniqueIDStr forKey:@"commentCount"];
+}
+
+- (void)ttv_message_feedCollectChanged:(BOOL)collect uniqueIDStr:(NSString *)uniqueIDStr {
+    [self feedCollectChanged:collect uniqueIDStr:uniqueIDStr forKey:@"userRepin"];
 }
 
 - (void)feedCollectChanged:(int)status uniqueIDStr:(NSString *)uniqueIDStr forKey:(NSString *)key {
     if ([self.videoItem.originData.uniqueIDStr isEqualToString:uniqueIDStr]) {
-        [self.videoItem.originData setValue:@(status) forKey:key];
-        TTVFeedListItem *itemA = self.videoItem;
-        [itemA.originData.savedConvertedArticle setValue:@(status) forKey:key];
-        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-            int64_t fixedgroupID = [[SSCommonLogic fixStringTypeGroupID:itemA.originData.groupModel.groupID] longLongValue];
-            NSString *primaryID = [Article primaryIDByUniqueID:fixedgroupID itemID:itemA.originData.groupModel.itemID adID:itemA.originData.adIDStr];
-            Article *cachedArticle = [Article objectForPrimaryKey:primaryID];
-            if (cachedArticle) {
-                [cachedArticle setValue:@(status) forKey:key];
-                [cachedArticle save];
-            }
-        });
-        if([key isEqualToString:@"diggCount"] || [key isEqualToString:@"userDigg"]){
+        if([key isEqualToString:@"userDigg"]){
+            self.cellModel.videoItem.article.userDigg = status;
             [self updateDiggButton];
-        }if([key isEqualToString:@"commentCount"]){
+        }else if([key isEqualToString:@"diggCount"]){
+            self.cellModel.videoItem.article.diggCount = status;
+            [self updateDiggButton];
+        }else if([key isEqualToString:@"commentCount"]){
+            self.cellModel.videoItem.article.commentCount = status;
             [self updateCommentButton];
+        }else if([key isEqualToString:@"userRepin"]){
+            self.cellModel.videoItem.article.userRepin = status;
         }
     }
 }

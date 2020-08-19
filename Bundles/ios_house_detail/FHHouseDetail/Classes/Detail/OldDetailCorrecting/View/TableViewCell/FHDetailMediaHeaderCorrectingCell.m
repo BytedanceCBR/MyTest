@@ -140,9 +140,9 @@
     _photoCellHeight += 20 + rectHeight - 21;//20是标题具体顶部的距离，21是重叠的41减去透明阴影的20 (21 = 41 - 20)
     
     if (titleModel.tags.count>0) {
-        //这里分别加上标签高度20，标签间隔16
+        //这里分别加上标签高度20，标签间隔20
         if (!titleModel.isFloorPan) { //因为户型详情页的标签和标题在同一行所以这里特判户型详情页不加上这部分高度
-            _photoCellHeight += 20 + 16;
+            _photoCellHeight += 20 + 20;
         }
     }
     if (titleModel.isFloorPan) {    //户型详情页特有的总价Label

@@ -30,7 +30,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 -(NSArray*)allItems;
 
+- (NSArray *)conversationItems;
+- (NSArray *)channelItems;
 -(BOOL)isFirstLoad;
+
 @end
 
 NS_ASSUME_NONNULL_END

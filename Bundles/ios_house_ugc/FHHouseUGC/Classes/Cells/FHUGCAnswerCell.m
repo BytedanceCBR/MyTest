@@ -203,11 +203,7 @@
         self.singleImageView.top = self.userInfoView.bottom + 20 + cellModel.contentHeight;
     }
     
-    if (cellModel.user.avatarUrl.length > 0) {
-        [self.contentImage tt_setImageWithURLString:cellModel.user.avatarUrl];
-    }else{
-        [self.contentImage setImage:[UIImage imageNamed:@"fh_mine_avatar"]];
-    }
+    [self.contentImage tt_setImageWithURLString:cellModel.user.avatarUrl];
     
     UIView *lastView = self.contentLabel;
     CGFloat topOffset = 10;

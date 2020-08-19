@@ -177,7 +177,7 @@
         [_containerView mas_remakeConstraints:^(MASConstraintMaker *make) {
             make.top.mas_equalTo(self.shadowImage).offset(14);
             make.left.right.mas_equalTo(self.contentView);
-            make.bottom.mas_equalTo(self.shadowImage).offset(-14);
+            make.bottom.mas_equalTo(self.shadowImage).offset(-20);
         }];
     }
     _titleLabel.text = cellModel.title;

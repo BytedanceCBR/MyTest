@@ -96,6 +96,7 @@ typedef NS_ENUM(NSUInteger, FHRealtorCellShowStyle) {
 @property (nonatomic, copy , nullable) NSString *backgroundColor;
 @property (nonatomic, copy , nullable) NSString *fontColor;
 @property (nonatomic, copy , nullable) NSString *borderColor;
+@property (nonatomic, copy , nullable) NSString *prefixIconUrl;
 @end
 
 @interface FHClueAssociateInfoModel: JSONModel

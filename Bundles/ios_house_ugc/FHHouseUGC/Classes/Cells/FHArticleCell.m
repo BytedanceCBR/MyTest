@@ -194,8 +194,10 @@
             if(i < imageList.count){
                 FHFeedContentImageListModel *imageModel = imageList[i];
                 imageView.hidden = NO;
-                if (imageModel && imageModel.url.length > 0) {
-                    [imageView fh_setImageWithURL:imageModel.url placeholder:nil reSize:imageView.size];
+                if (imageModel) {
+                    NSArray *urls = [FHUGCCellHelper convertToImageUrls:imageModel];
+                    [imageView fh_setImageWithURLs:urls placeholder:nil reSize:imageView.size];
+//                    [imageView fh_setImageWithURL:imageModel.url placeholder:nil reSize:imageView.size];
                 }
             }else{
                 imageView.hidden = YES;
@@ -208,8 +210,10 @@
         self.singleImageView.hidden = NO;
         //图片
         FHFeedContentImageListModel *imageModel = [cellModel.imageList firstObject];
-        if (imageModel && imageModel.url.length > 0) {
-            [self.singleImageView fh_setImageWithURL:imageModel.url placeholder:nil reSize:self.singleImageView.size];
+        if (imageModel) {
+            NSArray *urls = [FHUGCCellHelper convertToImageUrls:imageModel];
+            [self.singleImageView fh_setImageWithURLs:urls placeholder:nil reSize:self.singleImageView.size];
+//            [self.singleImageView fh_setImageWithURL:imageModel.url placeholder:nil reSize:self.singleImageView.size];
         }
         
         self.contentLabel.width = [UIScreen mainScreen].bounds.size.width - leftMargin - rightMargin - 120 - 15;
