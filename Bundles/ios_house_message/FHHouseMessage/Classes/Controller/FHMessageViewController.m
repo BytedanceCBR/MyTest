@@ -6,7 +6,6 @@
 //
 
 #import "FHMessageViewController.h"
-#import "FHMessageViewModel.h"
 #import "Masonry.h"
 #import "UIViewController+NavbarItem.h"
 #import "UIColor+Theme.h"
@@ -30,107 +29,58 @@
 #import <FHMessageNotificationManager.h>
 #import "FHEnvContext.h"
 #import <FHPopupViewCenter/FHPopupViewManager.h>
+#import "FHMessageEditHelp.h"
 
 @interface FHMessageViewController ()
 
-@property(nonatomic, strong) FHMessageViewModel *viewModel;
 @property(nonatomic, strong) FHPushMessageTipView *pushTipView;
 @property (nonatomic, copy)     NSString       *enter_from;// 外部传入
+@property(nonatomic , assign) BOOL hasEnterCategory;
+
 @end
 
 @implementation FHMessageViewController
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    _hasEnterCategory = NO;
+    [FHMessageEditHelp shared].isCanReloadData = YES;
     // Do any additional setup after loading the view.
     self.showenRetryButton = YES;
     self.ttTrackStayEnable = YES;
     self.enter_from = self.tracerDict[UT_ENTER_FROM];
-    [self initNavbar];
     [self initView];
     [self initConstraints];
     [self initViewModel];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(networkStateChange:) name:TTReachabilityChangedNotification object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationDidBecomeActive) name:UIApplicationDidBecomeActiveNotification object:nil];
-//     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(userInfoReload) name:KUSER_UPDATE_NOTIFICATION object:nil];
-    
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(periodicalFetchUnreadMessage:) name:kPeriodicalFetchUnreadMessage object:nil];
-}
-
-- (void)applicationDidBecomeActive
-{
-    BOOL isEnabled = [FHPushAuthorizeManager isMessageTipEnabled];
-    CGFloat pushTipHeight = isEnabled ? 36 : 0;
-    if (pushTipHeight > 0) {
-        [self addTipShowLog];
-    }
-    self.pushTipView.hidden = pushTipHeight > 0 ? NO : YES;
-    [self.pushTipView mas_updateConstraints:^(MASConstraintMaker *make) {
-        make.height.mas_equalTo(pushTipHeight);
-    }];
-}
-
-
-- (void)periodicalFetchUnreadMessage:(NSNotification *)notification {
     [self startLoadData];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-
-    [FHBubbleTipManager shareInstance].canShowTip = NO;
-    [self startLoadData];
-    [self applicationDidBecomeActive];
+    [self checkShouldShowEmptyMaskView];
 }
 
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
-    [self.viewModel refreshConversationList];
-    [[FHPopupViewManager shared] triggerPopupView];
-    [[FHPopupViewManager shared] triggerPendant];
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
-    [self addStayCategoryLog:self.ttTrackStayTime];
     [self tt_resetStayTime];
-    [FHBubbleTipManager shareInstance].canShowTip = YES;
 }
 
-- (void)addTipShowLog
-{
-    NSMutableDictionary *params = @{}.mutableCopy;
-    params[@"page_type"] = @"messagetab";
-    [FHUserTracker writeEvent:@"tip_show" params:params];
-
-}
-
-- (void)addTipClickLog:(FHPushMessageTipCompleteType)type
-{
-    NSMutableDictionary *params = @{}.mutableCopy;
-    params[@"page_type"] = @"messagetab";
-    if (type == FHPushMessageTipCompleteTypeDone) {
-        params[@"click_type"] = @"confirm";
-    }else {
-        params[@"click_type"] = @"cancel";
+- (void)checkShouldShowEmptyMaskView {
+    if ([TTReachability isNetworkConnected]) {
+        [_viewModel checkShouldShowEmptyMaskView];
+    } else {
+        if(!self.hasValidateData){
+            [self.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoNetWorkAndRefresh];
+        }
     }
-    [FHUserTracker writeEvent:@"tip_click" params:params];
-    
 }
 
 - (void)userInfoReload {
-    [_tableView reloadData];
-}
-
-- (void)initNavbar {
-    [self setupDefaultNavBar:NO];
-    self.customNavBarView.leftBtn.hidden = [self leftActionHidden];
-    self.customNavBarView.title.text = @"消息";
-    //消息列表页UI改版
-    self.customNavBarView.title.font = [UIFont themeFontSemibold:18];
-    self.customNavBarView.bgView.hidden = YES;
-    self.customNavBarView.seperatorLine.hidden = YES;
-    self.customNavBarView.backgroundColor = [UIColor themeGray7];
+    [self.viewModel reloadData];
 }
 
 - (BOOL)leftActionHidden {
@@ -138,30 +88,14 @@
 }
 
 - (void)initView {
+
     self.containerView = [[UIView alloc] init];
     [self.view addSubview:_containerView];
-    
-    _notNetHeader = [[FHNoNetHeaderView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, 36)];
-    if ([TTReachability isNetworkConnected]) {
-        [_notNetHeader setHidden:YES];
-    } else {
-        [_notNetHeader setHidden:NO];
-    }
-    __weak typeof(self)wself = self;
-    _pushTipView = [[FHPushMessageTipView alloc] initAuthorizeTipWithCompleted:^(FHPushMessageTipCompleteType type) {
-        [wself addTipClickLog:type];
-        if (type == FHPushMessageTipCompleteTypeDone) {
-            NSURL *url = [NSURL URLWithString:UIApplicationOpenSettingsURLString];
-            [[UIApplication sharedApplication] openURL:url];
-        } else if (type == FHPushMessageTipCompleteTypeCancel) {
-            [wself hidePushTip];
-        }
-    }];
-
     _tableView = [[FHBaseTableView alloc] init];
     _tableView.backgroundColor = [UIColor themeGray7];
     _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
-    _tableView.contentInset = UIEdgeInsetsMake(12, 0, 0, 0);
+    _tableView.contentInset = UIEdgeInsetsMake(4, 0, 0, 0);
+    _tableView.contentOffset = CGPointMake(0, -4);
     self.automaticallyAdjustsScrollViewInsets = NO;
     if (@available(iOS 11.0 , *)) {
           _tableView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
@@ -171,45 +105,26 @@
     _tableView.tableHeaderView = headerView;
 
     [self.containerView addSubview:_tableView];
-    [self.containerView addSubview:_notNetHeader];
-    [self.containerView addSubview:_pushTipView];
-
     [self addDefaultEmptyViewFullScreen];
+    __weak typeof(self)wself = self;
+    self.emptyView.loginBlock = ^{
+        [wself login];
+    };
 }
 
-- (void)hidePushTip {
-    NSInteger lastTimeShowMessageTip = (NSInteger)[[NSDate date] timeIntervalSince1970];
-    [FHPushAuthorizeHelper setLastTimeShowMessageTip:lastTimeShowMessageTip];
-    self.pushTipView.hidden = YES;
-    [self.pushTipView mas_updateConstraints:^(MASConstraintMaker *make) {
-        make.height.mas_equalTo(0);
-    }];
+- (void)login {
+    NSMutableDictionary *dict = @{}.mutableCopy;
+    dict[TRACER_KEY] = @{
+        @"enter_from": [self getPageTypeWithDataType],
+        @"enter_method": @"click_login",
+    };
+    TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
+    NSURL* url = [NSURL URLWithString:@"snssdk1370://flogin"];
+    [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
 }
-
-- (void)networkStateChange:(NSNotification *)notification {
-    if ([TTReachability isNetworkConnected]) {
-        [_notNetHeader setHidden:YES];
-        [_notNetHeader mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.height.mas_equalTo(0);
-        }];
-    } else {
-        [_notNetHeader setHidden:NO];
-        [_notNetHeader mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.height.mas_equalTo(36);
-        }];
-    }
-//    [self.tableView mas_remakeConstraints:^(MASConstraintMaker *make) {
-//        if ([TTReachability isNetworkConnected]) {
-//            make.top.left.right.bottom.mas_equalTo(self.contaicognerView);
-//        } else {
-//            make.top.mas_equalTo(self.containerView).offset(30);
-//            make.left.right.bottom.mas_equalTo(self.containerView);
-//        }
-//    }];
-}
-
 
 - (void)initConstraints {
+
     CGFloat bottom = [self getBottomMargin];
     if (@available(iOS 11.0 , *)) {
         if([self isAlignToSafeBottom]){
@@ -227,22 +142,6 @@
         make.left.right.equalTo(self.view);
         make.bottom.mas_equalTo(self.view).offset(-bottom);
     }];
-    [self.notNetHeader mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.right.top.mas_equalTo(0);
-        if ([TTReachability isNetworkConnected]) {
-            make.height.mas_equalTo(0);
-        }else {
-            make.height.mas_equalTo(36);
-        }
-    }];
-    BOOL isEnabled = [FHPushAuthorizeManager isMessageTipEnabled];
-    CGFloat pushTipHeight = isEnabled ? 36 : 0;
-    self.pushTipView.hidden = pushTipHeight > 0 ? NO : YES;
-    [self.pushTipView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.notNetHeader.mas_bottom);
-        make.left.right.mas_equalTo(0);
-        make.height.mas_equalTo(pushTipHeight);
-    }];
     [self.tableView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(self.pushTipView.mas_bottom);
         make.left.right.bottom.mas_equalTo(self.containerView);
@@ -250,7 +149,7 @@
 }
 
 - (CGFloat)getBottomMargin {
-    return 49;
+    return [self.fatherVC getBottomMargin];
 }
 
 - (void)initViewModel {
@@ -261,7 +160,29 @@
     }
 }
 
+- (void)addEnterCategoryLogWithType:(NSString *)enterType {
+//    if (_hasEnterCategory) {
+//        return;
+//    }
+//    _hasEnterCategory = YES;
+    NSDictionary *params = @{
+            @"category_name": [self getPageTypeWithDataType],
+            @"enter_from": @"message",
+            @"enter_type": enterType
+    };
+    [FHUserTracker writeEvent:@"enter_category" params:params];
+}
+
 - (NSString *)getPageType {
+    return [self.fatherVC getPageType];
+}
+
+- (NSString *)getPageTypeWithDataType {
+    if (self.dataType == FHMessageRequestDataTypeIM) {
+        return @"message_weiliao";
+    } else if (self.dataType == FHMessageRequestDataTypeSystem) {
+        return @"message_notice";
+    }
     return @"message_list";
 }
 
@@ -302,25 +223,16 @@
     TRACK_EVENT(@"stay_tab", tracerDict);
 }
 
-#pragma mark - UIViewControllerErrorHandler
-
 - (BOOL)tt_hasValidateData {
-    return _viewModel.dataList.count == 0 ? NO : YES; //默认会显示空
-}
-
-#pragma mark - TTUIViewControllerTrackProtocol
-
-- (void)trackEndedByAppWillEnterBackground {
-    [self addStayCategoryLog:self.ttTrackStayTime];
-    [self tt_resetStayTime];
-}
-
-- (void)trackStartedByAppWillEnterForground {
-    [self tt_resetStayTime];
-    self.ttTrackStartTime = [[NSDate date] timeIntervalSince1970];
+    return [[self.viewModel items]  count] == 0 ? NO : YES; //默认会显示空
 }
 
 - (BOOL) isAlignToSafeBottom {
-    return YES;
+    return [self.fatherVC isAlignToSafeBottom];
+}
+
+- (void)dealloc
+{
+    
 }
 @end
