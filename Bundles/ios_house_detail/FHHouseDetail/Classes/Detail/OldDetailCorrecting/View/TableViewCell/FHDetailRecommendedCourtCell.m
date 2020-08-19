@@ -139,7 +139,7 @@
     FHDetailRecommendedCourtModel *model = (FHDetailRecommendedCourtModel *)self.currentData;
     if (model.recommendedCourtData && model.recommendedCourtData.hasMore) {
         
-        NSString *searchId = model.recommendedCourtData.searchId;
+        //NSString *searchId = model.recommendedCourtData.searchId;
         
         NSMutableDictionary *tracerDic = self.baseViewModel.detailTracerDic.mutableCopy;
         tracerDic[@"enter_type"] = @"click";
