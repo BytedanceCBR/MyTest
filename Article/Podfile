@@ -726,7 +726,7 @@ post_install do |installer|
     # Xcode 11目前和CocoaPods有兼容问题，会导致Assets.car这个文件，由于出现在两处Output File而报错
     # 一处是Xcode自带的Copy Bundle Resources，一处是CocoaPods的[CP] Copy Pods Resources
     # 这个问题在Xcode 10上也有小概率发生，现在统一临时Fix下，参考CocoaPods/CocoaPods#8122
-#    installer.aggregate_targets.each do |target|
+    installer.aggregate_targets.each do |target|
 #        if ['Pods-f100', 'Pods-NewsLiteInHouse'].include?(target.name)
 #            patched = false
 #            target.user_targets.first.build_phases.each do |phase|
@@ -743,5 +743,5 @@ post_install do |installer|
 #            end
 #            target.user_project.save if patched
 #        end
-#    end
+    end
 end
