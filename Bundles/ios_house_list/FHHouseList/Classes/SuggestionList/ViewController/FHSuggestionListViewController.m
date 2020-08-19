@@ -268,6 +268,10 @@
                        [[FHHouseTypeManager sharedInstance] stringValueForType:FHHouseTypeRentHouse],
                        [[FHHouseTypeManager sharedInstance] stringValueForType:FHHouseTypeNeighborhood],];
     FHConfigDataModel *model = [[FHEnvContext sharedInstance] getConfigFromCache];
+    [self.houseTypeArray addObject:[NSNumber numberWithInt: FHHouseTypeSecondHandHouse]];
+    [self.houseTypeArray addObject:[NSNumber numberWithInt: FHHouseTypeNewHouse]];
+    [self.houseTypeArray addObject:[NSNumber numberWithInt: FHHouseTypeRentHouse]];
+    [self.houseTypeArray addObject:[NSNumber numberWithInt: FHHouseTypeNeighborhood]];
     if (model) {
         items = [self houseTypeSectionByConfig:model];
     }
@@ -304,6 +308,7 @@
 
 - (NSArray *)houseTypeSectionByConfig:(FHConfigDataModel *)config {
     NSMutableArray *items = [[NSMutableArray alloc] init];
+    [self.houseTypeArray removeAllObjects];
     if (config.searchTabFilter.count > 0) {
         [items addObject: [[FHHouseTypeManager sharedInstance] stringValueForType:FHHouseTypeSecondHandHouse]];
         [self.houseTypeArray addObject:[NSNumber numberWithInt: FHHouseTypeSecondHandHouse]];
