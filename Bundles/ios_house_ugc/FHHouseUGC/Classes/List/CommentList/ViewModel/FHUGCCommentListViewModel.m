@@ -26,7 +26,6 @@
 #import "TTURLUtils.h"
 #import "TSVShortVideoDetailExitManager.h"
 #import "HTSVideoPageParamHeader.h"
-#import "FHUGCVideoCell.h"
 #import "TTVFeedPlayMovie.h"
 #import "TTVPlayVideo.h"
 #import "TTVFeedCellWillDisplayContext.h"
