@@ -58,7 +58,7 @@
     _contentLabel.text = content;
     [_contentLabel sizeToFit];
     
-    CGFloat maxWidth = MIN(_contentLabel.width, 171);
+    CGFloat maxWidth = MIN(_contentLabel.width, 271);
     CGRect frame = self.frame;
     frame.size = CGSizeMake(maxWidth+60, 67);
     self.frame = frame;

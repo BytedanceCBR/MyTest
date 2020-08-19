@@ -141,6 +141,20 @@
     return strDate;
 }
 
++ (NSString *)ConvertStrToTime:(NSString *)timeStr{
+    long long time=[timeStr longLongValue];
+    NSDate *date = [[NSDate alloc]initWithTimeIntervalSince1970:time];
+
+    NSDateFormatter *formatter = [[NSDateFormatter alloc]init];
+
+    [formatter setDateFormat:@"yyyy年MM月dd日"];
+
+    NSString *timeString=[formatter stringFromDate:date];
+
+    return timeString ? timeString : @"未知";
+
+}
+
 + (NSString *)stringFromNSDateDay:(NSDate *)date
 {
     if(!date)

@@ -26,6 +26,7 @@
 #import "UIViewAdditions.h"
 #import "UIImageView+BDWebImage.h"
 #import "FHUGCCellHelper.h"
+#import "NSDictionary+BTDAdditions.h"
 
 @interface FHUGCCellUserInfoView()
 
@@ -79,13 +80,9 @@
 
 - (void)initViews {
     self.icon = [[TTAsyncCornerImageView alloc] initWithFrame:CGRectMake(20, 0, 40, 40) allowCorner:YES];
-    //    _icon.backgroundColor = [UIColor themeGray7];
     _icon.placeholderName = @"fh_mine_avatar";
     _icon.cornerRadius = 20;
-    //    _icon.imageContentMode = TTImageViewContentModeScaleAspectFill;
     _icon.contentMode = UIViewContentModeScaleAspectFill;
-    //    _icon.layer.masksToBounds = YES;
-    //    _icon.layer.cornerRadius = 20;
     _icon.borderWidth = 1;
     _icon.borderColor = [UIColor themeGray6];
     
@@ -191,21 +188,7 @@
     //设置userInfo
     self.cellModel = cellModel;
     //图片
-    FHFeedContentImageListModel *imageModel = [[FHFeedContentImageListModel alloc] init];
-    imageModel.url = cellModel.user.avatarUrl;
-    NSMutableArray *urlList = [NSMutableArray array];
-    for (NSInteger i = 0; i < 3; i++) {
-        FHFeedContentImageListUrlListModel *urlListModel = [[FHFeedContentImageListUrlListModel alloc] init];
-        urlListModel.url = cellModel.user.avatarUrl;
-        [urlList addObject:urlListModel];
-    }
-    imageModel.urlList = urlList;
-    
-    if (imageModel && imageModel.url.length > 0) {
-        [self.icon tt_setImageWithURLString:imageModel.url];
-    }else{
-        [self.icon setImage:[UIImage imageNamed:@"fh_mine_avatar"]];
-    }
+    [self.icon tt_setImageWithURLString:cellModel.user.avatarUrl];
     
     self.userName.text = !isEmptyString(cellModel.user.name) ? cellModel.user.name : @"用户";
     self.userAuthLabel.hidden = self.userAuthLabel.text.length <= 0;
@@ -719,14 +702,35 @@
 - (void)goToPersonalHomePage {
     if (self.cellModel.user.realtorId.length > 0) {
         if (![self.cellModel.user.firstBizType isEqualToString:@"1"]) {
-            NSURL *openUrl = [NSURL URLWithString:[NSString stringWithFormat:@"sslocal://new_realtor_detail"]];
-            NSMutableDictionary *info = @{}.mutableCopy;
-            info[@"title"] = @"经纪人主页";
-            info[@"realtor_id"] = self.cellModel.user.realtorId;
-            NSMutableDictionary *tracerDic = self.cellModel.tracerDic.mutableCopy;
-            info[@"tracer"] = tracerDic;
-            TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:info];
-            [[TTRoute sharedRoute]openURLByViewController:openUrl userInfo:userInfo];
+            NSDictionary *fhSettings = [self fhSettings];
+            BOOL openNewRealtor =  [fhSettings btd_boolValueForKey:@"f_new_realtor_detail"];
+            if (openNewRealtor) {
+                  NSURL *openUrl = [NSURL URLWithString:[NSString stringWithFormat:@"sslocal://new_realtor_detail"]];
+                          NSMutableDictionary *info = @{}.mutableCopy;
+                          info[@"title"] = @"经纪人主页";
+                          info[@"realtor_id"] = self.cellModel.user.realtorId;
+                          NSMutableDictionary *tracerDic = self.cellModel.tracerDic.mutableCopy;
+                          info[@"tracer"] = tracerDic;
+                          TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:info];
+                          [[TTRoute sharedRoute]openURLByViewController:openUrl userInfo:userInfo];
+            }else {
+                NSError *parseError = nil;
+                NSString *reportParams = nil;
+                NSData *jsonData = [NSJSONSerialization dataWithJSONObject:self.cellModel.tracerDic options:0 error:&parseError];
+                if (!parseError) {
+                    reportParams = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+                }
+                NSMutableDictionary *info = @{}.mutableCopy;
+                NSString * host = [FHURLSettings baseURL] ?: @"https://i.haoduofangs.com";
+                NSURL *openUrl = [NSURL URLWithString:@"sslocal://realtor_detail"];
+                NSString *jumpUrl = [NSString stringWithFormat:@"%@/f100/client/realtor_detail?realtor_id=%@&report_params=%@",host,self.cellModel.user.realtorId,reportParams ? : @""];
+                info[@"url"] = jumpUrl;
+                info[@"title"] = @"经纪人主页";
+                info[@"realtor_id"] = self.cellModel.user.realtorId;
+                info[@"trace"] = self.cellModel.tracerDic;
+                    TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc]initWithInfo:info];
+                    [[TTRoute sharedRoute]openURLByViewController:openUrl userInfo:userInfo];
+            }
         }
     }else {
         if(!isEmptyString(self.cellModel.user.schema)){
@@ -827,6 +831,14 @@
         dict[@"click_position"] = @"confrim_delete";
     }
     TRACK_EVENT(@"confirm_delete_popup_click", dict);
+}
+
+- (NSDictionary *)fhSettings {
+    if ([[NSUserDefaults standardUserDefaults] objectForKey:@"kFHSettingsKey"]){
+        return [[NSUserDefaults standardUserDefaults] dictionaryForKey:@"kFHSettingsKey"];
+    } else {
+        return nil;
+    }
 }
 
 @end

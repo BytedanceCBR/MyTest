@@ -64,15 +64,13 @@
 @property(nonatomic , assign) BOOL addEnterCategory; // 是否算enter_category
 
 @property(nonatomic , assign) BOOL showFilter;
-@property(nonatomic , copy)  void(^showNotifyDoneBlock)();
+@property(nonatomic , copy)  void(^showNotifyDoneBlock)(void);
 
 @property (nonatomic, strong) JSONModel *currentRecommendHouseDataModel;
 @property (nonatomic, strong) JSONModel *houseDataModel;
 @property(nonatomic , strong) NSArray *cellIdArray;
 
--(void)showErrorMask:(BOOL)show tip:(FHEmptyMaskViewType )type enableTap:(BOOL)enableTap showReload:(BOOL)showReload;
-
--(NSString *)pageTypeString;
+//-(void)showErrorMask:(BOOL)show tip:(FHEmptyMaskViewType )type enableTap:(BOOL)enableTap showReload:(BOOL)showReload;
 
 -(NSString *)pageTypeString;
 

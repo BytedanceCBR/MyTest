@@ -55,6 +55,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, assign) BOOL hasMore;
 @property (nonatomic, copy , nullable) NSString *userStatus;
+@property (nonatomic, copy , nullable) NSString *totalCount;
 @property (nonatomic, strong , nullable) NSArray<FHDetailNewDataTimelineListModel> *list;
 @end
 

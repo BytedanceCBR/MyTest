@@ -396,6 +396,7 @@
                            @"displayPricePerSqm": @"display_price_per_sqm",
                            @"uploadAt": @"upload_at",
                            @"imprId": @"impr_id",
+                           @"advantageDescription":@"advantage_description",
                            @"vrInfo": @"vr_info",
                            @"groupId": @"group_id",
                            @"searchId": @"search_id",

@@ -38,7 +38,7 @@
 
 #import "TTInstallIDManager.h"
 #import "UIView+SupportFullScreen.h"
-
+#import "FHUserTracker.h"
 #import "TTVShareActionsTracker.h"
 #import "TTVShareDetailTracker.h"
 #import "TTActivityShareSequenceManager.h"
@@ -748,6 +748,15 @@ static BOOL isMovieFullScreen;
         questionMarkOrAmpersand = @"?";
     }else {
         questionMarkOrAmpersand = @"&";
+    }
+    
+    if (activityType == TTActivityTypeQQShare || activityType == TTActivityTypeWeixinMoment || activityType == TTActivityTypeWeixinShare || activityType == TTActivityTypeQQZone) {
+        NSMutableDictionary *dict = [NSMutableDictionary dictionary];
+        if(self.extraDic){
+            [dict addEntriesFromDictionary:self.extraDic];
+        }
+        dict[@"platform"] = [TTActivityShareManager labelNameForShareActivityType:activityType];
+        TRACK_EVENT(@"share_platform", dict);
     }
     
     if (activityType == TTActivityTypeQQShare || activityType == TTActivityTypeWeixinMoment || activityType == TTActivityTypeWeixinShare) {

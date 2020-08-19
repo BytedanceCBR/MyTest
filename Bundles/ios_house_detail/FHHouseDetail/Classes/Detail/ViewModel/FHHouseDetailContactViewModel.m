@@ -52,7 +52,7 @@
 #import "FHHouseUGCAPI.h"
 #import "FHHouseNewDetailViewModel.h"
 #import "FHDetailBaseCell.h"
-#import "FHHouseErrorHubManager.h"
+#import "FHErrorHubManagerUtil.h"
 #import "FHDetailNewModel.h"
 #import "FHDetailOldModel.h"
 #import "FHDetailNeighborhoodModel.h"
@@ -350,7 +350,8 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
     [params setValue:[_tracerDict objectForKey:@"log_pb"] forKey:@"log_pb"];
     [params setValue:self.houseInfoBizTrace forKey:@"biz_trace"];
     [params setValue: [[FHEnvContext sharedInstance].messageManager getTotalUnreadMessageCount] >0?@"1":@"0" forKey:@"with_tips"];
-      [[FHHouseErrorHubManager sharedInstance] checkBuryingPointWithEvent:@"click_im_message" Params:params errorHubType:FHErrorHubTypeBuryingPoint];
+//      [[FHHouseErrorHubManager sharedInstance] checkBuryingPointWithEvent:@"click_im_message" Params:params];
+    [FHErrorHubManagerUtil checkBuryingPointWithEvent:@"click_im_message" Params:params];
     [BDTrackerProtocol eventV3:@"click_im_message" params:params];
     
     
@@ -470,7 +471,8 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
         [params setValue:[_tracerDict objectForKey:@"origin_search_id"] forKey:@"origin_search_id"];
         [params setValue:[_tracerDict objectForKey:@"log_pb"] forKey:@"log_pb"];
         params[@"enter_from"] = _tracerDict[@"enter_from"];
-        [[FHHouseErrorHubManager sharedInstance] checkBuryingPointWithEvent:@"element_show" Params:params errorHubType:FHErrorHubTypeBuryingPoint];
+//        [[FHHouseErrorHubManager sharedInstance] checkBuryingPointWithEvent:@"element_show" Params:params];
+        [FHErrorHubManagerUtil checkBuryingPointWithEvent:@"element_show" Params:params];
         [BDTrackerProtocol eventV3:@"element_show" params:params];
     }
 }
@@ -907,7 +909,7 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
         dict[@"chat_title"] = title;
     } else {
         NSInteger count = [[IMManager shareInstance].chatService sdkConversationWithIdentifier:convId].participantsCount;
-        NSString *title = [NSString stringWithFormat:@"%@(%ld)", self.socialInfo.socialGroupInfo.socialGroupName, count];
+        NSString *title = [NSString stringWithFormat:@"%@(%ld)", self.socialInfo.socialGroupInfo.socialGroupName, (long)count];
         dict[@"chat_title"] = title;
         dict[@"in_conversation"] = @"1";
         dict[@"conversation_id"] = self.socialInfo.socialGroupInfo.chatStatus.conversationId;
@@ -1260,10 +1262,6 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
     return _shareManager;
 }
 
-- (void)destroyRNPreLoadCache
-{
-    [self.phoneCallViewModel destoryRNPreloadCache];
-}
 
 - (void)updateLoadFinish
 {

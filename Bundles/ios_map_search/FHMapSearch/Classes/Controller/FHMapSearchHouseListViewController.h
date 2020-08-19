@@ -31,6 +31,9 @@ NS_ASSUME_NONNULL_BEGIN
 -(void)showNeighborHouses:(FHMapSearchDataListModel *)neighbor bubble:(FHMapSearchBubbleModel *)bubble;
 -(void)showWithHouseData:(FHSearchHouseDataModel *)data neighbor:(FHMapSearchDataListModel *)neighbor  bubble:(FHMapSearchBubbleModel *)bubble;
 
+-(void)showNewHouses:(FHMapSearchDataListModel *)houseData bubble:(FHMapSearchBubbleModel *)bubble;
+
+
 -(void)resetScrollViewInsetsAndOffsets;
 
 -(CGFloat)initialTop;
