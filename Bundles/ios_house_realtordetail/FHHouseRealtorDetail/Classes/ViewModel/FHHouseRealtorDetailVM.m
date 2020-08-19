@@ -42,7 +42,7 @@
 #import "NSObject+YYModel.h"
 #import "NSDictionary+BTDAdditions.h"
 #define kSegmentViewHeight 44
-@interface FHHouseRealtorDetailVM () <TTHorizontalPagingViewDelegate>
+@interface FHHouseRealtorDetailVM () <TTHorizontalPagingViewDelegate,TTHorizontalPagingSegmentViewDelegate>
 
 @property (nonatomic, weak) FHHouseRealtorDetailVC *viewController;
 @property (nonatomic, strong) FHHouseRealtorDetailBaseViewController *feedListController; //当前显示的feedVC
@@ -402,7 +402,7 @@
 - (void)pagingView:(TTHorizontalPagingView *)pagingView didSwitchIndex:(NSInteger)aIndex to:(NSInteger)toIndex {
     //前面的消失
     if(aIndex < self.subVCs.count && !self.isFirstEnter){
-        FHHouseRealtorDetailBaseViewController *feedVC = self.subVCs[aIndex];
+//        FHHouseRealtorDetailBaseViewController *feedVC = self.subVCs[aIndex];
     }
     //新的展现
     if(toIndex < self.subVCs.count){
@@ -500,8 +500,8 @@
     realtorModel.associateInfo = [self.data.associateInfo copy];
     realtorModel.realtorId = self.realtorInfo[@"realtor_id"];
     realtorModel.chatOpenurl = self.data.chatOpenUrl;
-    realtorModel.realtorLogpb = @"";
-    [self.realtorPhoneCallModel imchatActionWithPhone:realtorModel realtorRank:0 extraDic:self.tracerDict];
+    realtorModel.realtorLogpb = @{};
+    [self.realtorPhoneCallModel imchatActionWithPhone:realtorModel realtorRank:@"0" extraDic:self.tracerDict];
 }
 
 - (void)phoneAction{
