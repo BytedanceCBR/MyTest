@@ -8,11 +8,9 @@
 #import "FHIMFavoriteViewViewModel.h"
 #import "TTRoute.h"
 #import "TTHttpTask.h"
-#import "FHMessageCell.h"
 #import "FHMineAPI.h"
 #import "FHUnreadMsgModel.h"
 #import "UIViewController+Refresh_ErrorHandler.h"
-#import "FHMessageViewController.h"
 #import "FHFollowModel.h"
 #import "FHSingleImageInfoCellModel.h"
 #import <FHHouseBase/FHHouseBaseItemCell.h>

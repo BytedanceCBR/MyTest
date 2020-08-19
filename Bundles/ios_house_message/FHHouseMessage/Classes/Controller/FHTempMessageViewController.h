@@ -5,11 +5,11 @@
 //  Created by fupeidong on 2019/2/20.
 //
 
-#import "FHMessageViewController.h"
+#import "FHMessageSegmentedViewController.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface FHTempMessageViewController : FHMessageViewController
+@interface FHTempMessageViewController : FHMessageSegmentedViewController
 
 @end
 
