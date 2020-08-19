@@ -1132,7 +1132,6 @@
 }
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
-    NSLog(@"11112222 %ld", self.model.realtorTags.count);
     return self.model.realtorTags.count;
 }
 
