@@ -189,15 +189,6 @@
     return  _shadowImage;
 }
 
-- (UIImageView *)mainImage {
-    if (!_mainImage) {
-        UIImageView *mainImage = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"plot_image"]];
-        [self.containerView addSubview:mainImage];
-        _mainImage = mainImage;
-    }
-    return  _mainImage;
-}
-
 - (UIView *)containerView {
     if (!_containerView) {
         UIView *containerView = [[UIView alloc]init];
@@ -485,16 +476,26 @@
         make.bottom.equalTo(self.contentView).offset(12);
     }];
     [self.containerView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(self.contentView).mas_offset(AdaptOffset(15));
-        make.right.mas_equalTo(self.contentView).mas_offset(AdaptOffset(-15));
+        make.left.mas_equalTo(self.contentView).mas_offset(15);
+        make.right.mas_equalTo(self.contentView).mas_offset(-15);
         make.top.equalTo(self.shadowImage).offset(12);
         make.bottom.equalTo(self.shadowImage).offset(-12);
     }];
+    
+    UIImageView *mainImage = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"plot_image"]];
+    mainImage.contentMode = UIViewContentModeScaleAspectFill;
+    UIBezierPath *maskPath = [UIBezierPath bezierPathWithRoundedRect:mainImage.bounds byRoundingCorners:(UIRectCornerTopLeft | UIRectCornerBottomRight) cornerRadii:CGSizeMake(10,10)];
+    CAShapeLayer *maskLayer = [CAShapeLayer layer];
+    maskLayer.frame = CGRectMake(0, 0, ceil(AdaptOffset(81)), ceil(AdaptOffset(96)));
+    maskLayer.path = maskPath.CGPath;
+    mainImage.layer.mask = maskLayer;
+    [self.containerView addSubview:mainImage];
+    self.mainImage = mainImage;
     [self.mainImage mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.equalTo(self.containerView);
         make.top.equalTo(self.containerView).offset(8);
-        make.width.mas_equalTo(AdaptOffset(81));
-        make.height.mas_equalTo(AdaptOffset(96));
+        make.width.mas_equalTo(ceil(AdaptOffset(81)));
+        make.height.mas_equalTo(ceil(AdaptOffset(96)));
     }];
     [self.headerView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(self.mainImage.mas_right).offset(AdaptOffset(16));
