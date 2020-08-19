@@ -21,8 +21,6 @@
 
 @property (nonatomic, strong) UIStackView *stackView;
 
-@property (nonatomic, weak) UIView *detailImageView;
-
 
 @end
 

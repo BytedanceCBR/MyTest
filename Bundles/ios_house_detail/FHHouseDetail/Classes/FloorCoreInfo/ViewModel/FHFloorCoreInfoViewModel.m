@@ -290,7 +290,7 @@
 
 - (void)processDetailData:(FHDetailNewCoreDetailModel *)model {
     self.detailData = model;
-    NSMutableArray *itemsArray = [NSMutableArray new];
+    //NSMutableArray *itemsArray = [NSMutableArray new];
     
     // 添加标题
     if (_houseNameModel) {
@@ -512,7 +512,7 @@
         }
         [pItemsArray addObject:pItemModel];
     }
-    companyInfoModel.list = pItemsArray;
+    companyInfoModel.list = pItemsArray.copy;
     
     return companyInfoModel;
 }
