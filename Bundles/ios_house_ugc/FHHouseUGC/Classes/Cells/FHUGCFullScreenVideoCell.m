@@ -107,8 +107,8 @@
     _contentLabel.delegate = self;
     [self.contentView addSubview:_contentLabel];
     
-    self.videoViewheight = ([UIScreen mainScreen].bounds.size.width - leftMargin - rightMargin) * 188.0/335.0;
-    self.videoView = [[FHUGCVideoView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width - leftMargin - rightMargin, self.videoViewheight)];
+    self.videoViewheight = (screenWidth - leftMargin - rightMargin) * 188.0/335.0;
+    self.videoView = [[FHUGCVideoView alloc] initWithFrame:CGRectMake(0, 0, screenWidth - leftMargin - rightMargin, self.videoViewheight)];
     _videoView.userInteractionEnabled = NO;
     [self.contentView addSubview:_videoView];
     
@@ -118,9 +118,12 @@
         [self shareActionClicked];
     };
 
-    self.bottomView = [[FHUGCToolView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, bottomViewHeight)];
+    self.bottomView = [[FHUGCToolView alloc] initWithFrame:CGRectMake(0, 0, screenWidth, bottomViewHeight)];
     [_bottomView.commentButton addTarget:self action:@selector(commentBtnClick) forControlEvents:UIControlEventTouchUpInside];
     [self.contentView addSubview:_bottomView];
+    
+    CGFloat width = screenWidth;
+    CGFloat height = screenHeight;
 }
 
 - (void)initConstraints {
@@ -135,21 +138,21 @@
     
     self.contentLabel.top = self.icon.bottom + 8;
     self.contentLabel.left = leftMargin;
-    self.contentLabel.width = [UIScreen mainScreen].bounds.size.width - 30;
+    self.contentLabel.width = screenWidth - 30;
     self.contentLabel.height = 0;
     
     [self.videoView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(self.icon.mas_bottom).offset(10);
         make.left.mas_equalTo(self.contentView);
         make.right.mas_equalTo(self.contentView);
-        make.height.mas_equalTo(ceil([UIScreen mainScreen].bounds.size.width * 211.0/375.0));
+        make.height.mas_equalTo(ceil(screenWidth * 211.0/375.0));
     }];
     
     [self.videoView layoutIfNeeded];
     
     self.bottomView.left = 0;
     self.bottomView.top = self.videoView.bottom;
-    self.bottomView.width = [UIScreen mainScreen].bounds.size.width;
+    self.bottomView.width = screenWidth;
     self.bottomView.height = bottomViewHeight;
 }
 
@@ -244,7 +247,7 @@
             height += (cellModel.contentHeight + 8);
         }
         
-        CGFloat videoViewheight = ceil([UIScreen mainScreen].bounds.size.width * 211.0/375.0);
+        CGFloat videoViewheight = ceil(screenWidth * 211.0/375.0);
         height += (videoViewheight + 8);
         
         height += bottomViewHeight;

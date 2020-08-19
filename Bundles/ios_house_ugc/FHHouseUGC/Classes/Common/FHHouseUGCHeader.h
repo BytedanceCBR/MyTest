@@ -107,5 +107,8 @@ typedef enum : NSUInteger {
 #define tabAll @"all"                       //全部
 #define tabEssence @"essence"               //加精
 
+#define screenWidth (([UIScreen mainScreen].bounds.size.width < [UIScreen mainScreen].bounds.size.height) ? [UIScreen mainScreen].bounds.size.width : [UIScreen mainScreen].bounds.size.height)
+#define screenHeight (([UIScreen mainScreen].bounds.size.width < [UIScreen mainScreen].bounds.size.height) ? [UIScreen mainScreen].bounds.size.height : [UIScreen mainScreen].bounds.size.width)
+
 #endif /* FHHouseUGCHeader_h */
 

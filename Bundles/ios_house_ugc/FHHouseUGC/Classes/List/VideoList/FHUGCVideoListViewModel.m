@@ -172,6 +172,7 @@
                     if(wself.dataList.count > 0){
                         [wself updateTableViewWithMoreData:wself.tableView.hasMore];
                     }
+                    
                     [wself.tableView reloadData];
                 });
             });
@@ -202,7 +203,7 @@
         if(cellModel.cellSubType == FHUGCFeedListCellSubTypeUGCVideo){
             cellModel.cellSubType = FHUGCFeedListCellSubTypeFullVideo;
             cellModel.numberOfLines = 2;
-            [FHUGCCellHelper setRichContentWithModel:cellModel width:([UIScreen mainScreen].bounds.size.width - 40) numberOfLines:cellModel.numberOfLines];
+            [FHUGCCellHelper setRichContentWithModel:cellModel width:(screenWidth - 40) numberOfLines:cellModel.numberOfLines];
         }
         if(cellModel){
             if(isHead){
@@ -335,7 +336,7 @@
             }
         }else{
             //向下滑动
-            if(CGRectGetMaxY(frame) > [UIScreen mainScreen].bounds.size.height){
+            if(CGRectGetMaxY(frame) > screenHeight){
                 [self pauseCurrentVideo];
             }
         }

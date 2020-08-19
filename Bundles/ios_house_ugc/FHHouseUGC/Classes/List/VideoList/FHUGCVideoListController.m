@@ -16,6 +16,7 @@
 #import <FHHouseBase/FHBaseTableView.h>
 #import "ToastManager.h"
 #import "FHUGCCellHelper.h"
+#import "FHHouseUGCHeader.h"
 
 @interface FHUGCVideoListController ()<SSImpressionProtocol>
 
@@ -34,7 +35,7 @@
         self.currentVideo.cellSubType = FHUGCFeedListCellSubTypeFullVideo;
         self.currentVideo.isVideoJumpDetail = YES;
         self.currentVideo.numberOfLines = 2;
-        [FHUGCCellHelper setRichContentWithModel:self.currentVideo width:([UIScreen mainScreen].bounds.size.width - 40) numberOfLines:self.currentVideo.numberOfLines];
+        [FHUGCCellHelper setRichContentWithModel:self.currentVideo width:(screenWidth - 40) numberOfLines:self.currentVideo.numberOfLines];
         
         FHFeedUGCCellModel *cellModel = paramObj.allParams[@"cellModel"];
         if(cellModel){
@@ -111,7 +112,7 @@
 
 - (void)initTableView {
     if(!_tableView){
-        self.tableView = [[FHBaseTableView alloc] initWithFrame:CGRectMake(0, CGRectGetMaxY(self.customNavBarView.frame), [UIScreen mainScreen].bounds.size.width, [UIScreen mainScreen].bounds.size.height - CGRectGetMaxY(self.customNavBarView.frame)) style:UITableViewStylePlain];
+        self.tableView = [[FHBaseTableView alloc] initWithFrame:CGRectMake(0, CGRectGetMaxY(self.customNavBarView.frame), screenWidth, screenHeight - CGRectGetMaxY(self.customNavBarView.frame)) style:UITableViewStylePlain];
         _tableView.backgroundColor = [UIColor whiteColor];
         _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
         
@@ -151,7 +152,7 @@
 
 - (void)viewWillLayoutSubviews {
     [super viewWillLayoutSubviews];
-    self.tableView.frame = CGRectMake(0, CGRectGetMaxY(self.customNavBarView.frame), [UIScreen mainScreen].bounds.size.width, [UIScreen mainScreen].bounds.size.height - CGRectGetMaxY(self.customNavBarView.frame));
+    self.tableView.frame = CGRectMake(0, CGRectGetMaxY(self.customNavBarView.frame), screenWidth, screenHeight - CGRectGetMaxY(self.customNavBarView.frame));
 }
 
 - (void)initViewModel {
