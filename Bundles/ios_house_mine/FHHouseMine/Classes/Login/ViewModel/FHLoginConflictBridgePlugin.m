@@ -6,8 +6,6 @@
 //
 
 #import "FHLoginConflictBridgePlugin.h"
-#import <FHRNKit/TTBridgeRegister.h>
-#import <FHRNKit/TTBridgeDefines.h>
 #import <TTAccountSDK/TTAccount.h>
 #import <TTAccountSDK/TTAccount+NetworkTasks.h>
 #import <ByteDanceKit/NSDictionary+BTDAdditions.h>
@@ -46,9 +44,6 @@ NSString * const kFHLoginConflictResolvedBindMobile = @"kFHLoginConflictResolved
                         
                         [TTAccountMulticastDispatcher dispatchAccountLoginSuccess:entity platform:[TTAccount platformNameForAccountAuthType:TTAccountAuthTypeDouyin] reason:TTAccountStatusChangedReasonTypeAuthPlatformLogin bisectBlock:nil];
                         
-                        if (callback) {
-                            callback(TTBridgeMsgSuccess, nil);
-                        }
                         
                         //notification
                         [[NSNotificationCenter defaultCenter] postNotificationName:kFHLoginConflictResolvedSuccess object:entity];

@@ -5,7 +5,6 @@
 //  Created by bytedance on 2020/5/7.
 //
 
-#import "TTBridgePlugin.h"
 #import <TTRexxar/TTRDynamicPlugin.h>
 
 FOUNDATION_EXPORT NSString * const kFHLoginConflictResolvedSuccess;

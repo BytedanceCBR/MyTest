@@ -125,7 +125,10 @@
  
     [self tt_startUpdate];
     
-    
+    [_lynxView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.right.bottom.equalTo(self.view);
+        make.top.equalTo(self.customNavBarView.mas_bottom);
+    }];
     [self addDefaultEmptyViewFullScreen];
     // Do any additional setup after loading the view.
 }

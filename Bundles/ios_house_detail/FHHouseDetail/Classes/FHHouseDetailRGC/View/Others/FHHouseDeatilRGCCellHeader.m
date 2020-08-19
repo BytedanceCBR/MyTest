@@ -231,5 +231,10 @@
 - (void)hiddenConnectBtn:(BOOL)hidden {
     self.phoneBtn.hidden = hidden;
     self.iMBtn.hidden = hidden;
+    [self.infoLab mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.left.equalTo(self.nameLab);
+        make.bottom.equalTo(self.headerIma.mas_bottom).offset(2);
+        make.right.equalTo(self.mas_right).offset(-8);
+    }];
 }
 @end
