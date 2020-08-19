@@ -701,15 +701,21 @@ static FHLoginSharedModel *_sharedModel = nil;
     [self sendVerifyCodeWithCaptcha:nil needPushVerifyCodeView:needPush isForBindMobile:isForBindMobile];
 }
 
+/// 《用户协议》、《隐私政策》使用魔方，格式如下：
+/// 'sslocal://webview?url=' + encode后的地址 + '&title=' + encode后的标题
 + (void)goToUserProtocol {
-    NSString *urlStr = [NSString stringWithFormat:@"sslocal://webview?url=%@/f100/download/user_agreement.html&title=幸福里用户协议&hide_more=1",[FHMineAPI host]];
-    NSURL* url = [NSURL URLWithString:[urlStr stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
+    NSString *encodedUrl = [[NSString stringWithFormat:@"https://m.xflapp.com/magic/page/ejs/5f1e75ec3d3f6802d7e9ed31?appType=manyhouse"] btd_stringByURLEncode];
+    NSString *encodedTitle = [[NSString stringWithFormat:@"幸福里用户协议"] btd_stringByURLEncode];
+    NSString *urlStr = [NSString stringWithFormat:@"sslocal://webview?url=%@&title=%@", encodedUrl, encodedTitle];
+    NSURL *url = [NSURL URLWithString:urlStr];
     [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:nil];
 }
 
 + (void)goToSecretProtocol {
-    NSString *urlStr = [NSString stringWithFormat:@"sslocal://webview?url=%@/f100/download/private_policy.html&title=隐私政策&hide_more=1",[FHMineAPI host]];
-    NSURL* url = [NSURL URLWithString:[urlStr stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
+    NSString *encodedUrl = [[NSString stringWithFormat:@"https://m.xflapp.com/magic/page/ejs/5f1e5048a0741302e84cea20?appType=manyhouse"] btd_stringByURLEncode];
+    NSString *encodedTitle = [[NSString stringWithFormat:@"隐私政策"] btd_stringByURLEncode];
+    NSString *urlStr = [NSString stringWithFormat:@"sslocal://webview?url=%@&title=%@", encodedUrl, encodedTitle];
+    NSURL *url = [NSURL URLWithString:urlStr];;
     [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:nil];
 }
 

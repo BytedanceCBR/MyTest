@@ -21,8 +21,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
-NS_ASSUME_NONNULL_END
-
 @interface FHDetailMediaHeaderCorrectingModel : FHDetailBaseModel
 @property (nonatomic, strong , nullable) NSArray<FHHouseDetailImageListDataModel> *houseImageDictList;// 图片数据
 @property (nonatomic, strong, nullable)   FHMultiMediaItemModel       *vedioModel;// 视频模型
@@ -46,3 +44,5 @@ NS_ASSUME_NONNULL_END
 - (NSArray *)processTopImagesToSmallImageGroups;
 
 @end
+
+NS_ASSUME_NONNULL_END
