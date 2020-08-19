@@ -481,7 +481,20 @@ typedef NS_ENUM(NSInteger, FHSegmentedControllerAnimatedTransitionDirection) {
     [super viewWillAppear:animated];
     [FHBubbleTipManager shareInstance].canShowTip = NO;
     [self applicationDidBecomeActive];
+}
+
+- (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
+    [[FHPopupViewManager shared] triggerPopupView];
+    [[FHPopupViewManager shared] triggerPendant];
     [self refreshConversationList];
+}
+
+- (void)viewWillDisappear:(BOOL)animated {
+    [super viewWillDisappear:animated];
+    [self addStayCategoryLog:self.ttTrackStayTime];
+    [self tt_resetStayTime];
+    [FHBubbleTipManager shareInstance].canShowTip = YES;
 }
 
 - (void)check {
@@ -494,19 +507,6 @@ typedef NS_ENUM(NSInteger, FHSegmentedControllerAnimatedTransitionDirection) {
             [self selectViewControllerAtIndex:1];
         }
     }
-}
-
-- (void)viewDidAppear:(BOOL)animated {
-    [super viewDidAppear:animated];
-    [[FHPopupViewManager shared] triggerPopupView];
-    [[FHPopupViewManager shared] triggerPendant];
-}
-
-- (void)viewWillDisappear:(BOOL)animated {
-    [super viewWillDisappear:animated];
-    [self addStayCategoryLog:self.ttTrackStayTime];
-    [self tt_resetStayTime];
-    [FHBubbleTipManager shareInstance].canShowTip = YES;
 }
 
 - (void)updateRedPointWithChat:(NSInteger)chatNumber andHasChatRedPoint:(BOOL)hasRedPoint andSystemMessage:(NSInteger)systemMessageNumber {

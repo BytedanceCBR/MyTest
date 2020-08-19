@@ -52,18 +52,19 @@
     [self initView];
     [self initConstraints];
     [self initViewModel];
+    if (self.dataType == FHMessageRequestDataTypeSystem) {
+        [self startLoadData];
+    }
 }
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     [self.tableView reloadData];
     [self.emptyView hideEmptyView];
-    [self startLoadData];
 }
 
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
-    [self.fatherVC refreshConversationList];
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
