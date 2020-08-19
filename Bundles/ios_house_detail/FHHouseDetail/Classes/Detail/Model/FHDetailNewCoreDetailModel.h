@@ -34,6 +34,23 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong , nullable) NSArray<FHDetailNewCoreDetailDataDisclaimerRichTextModel> *richText;
 @end
 
+@protocol FHDetailNewCoreDetailDataItemModel <NSObject>
+@end
+
+@interface FHDetailNewCoreDetailDataItemModel : JSONModel
+@property (nonatomic, copy , nullable) NSString *itemName;
+@property (nonatomic, copy , nullable) NSString *itemValue;
+@property (nonatomic, assign) NSInteger itemType;
+@property (nonatomic, copy , nullable) FHImageModel* image;
+@end
+
+@protocol FHDetailNewCoreDetailDataMoudleModel <NSObject>
+@end
+@interface FHDetailNewCoreDetailDataMoudleModel : JSONModel
+@property (nonatomic, strong , nullable) NSArray<FHDetailNewCoreDetailDataItemModel> *items ;
+@end
+
+
 @interface FHDetailNewCoreDetailDataModel : JSONModel 
 
 @property (nonatomic, copy , nullable) NSString *buyFieldTime;
@@ -63,9 +80,10 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *propertyRight;
 @property (nonatomic, copy , nullable) NSString *buildingType;
 @property (nonatomic, copy , nullable) NSString *buildingCategory;
-@property (nonatomic, strong , nullable) FHDetailNewCoreDetailDataDisclaimerModel *disclaimer ;  
+@property (nonatomic, strong , nullable) FHDetailNewCoreDetailDataDisclaimerModel *disclaimer;
 @property (nonatomic, copy , nullable) NSString *deliveryDate;
 @property (nonatomic, copy , nullable) NSString *propertyPrice;
+@property (nonatomic, strong , nullable) NSArray<FHDetailNewCoreDetailDataMoudleModel> *modules;
 
 @property (nonatomic, strong , nullable) FHDetailContactModel *highlightedRealtor;
 @property (nonatomic, strong , nullable) NSArray<FHFillFormAgencyListItemModel> *chooseAgencyList;
