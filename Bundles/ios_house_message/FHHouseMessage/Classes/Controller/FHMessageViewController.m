@@ -52,15 +52,12 @@
     [self initView];
     [self initConstraints];
     [self initViewModel];
-    if (self.dataType == FHMessageRequestDataTypeSystem) {
-        [self startLoadData];
-    }
+    [self startLoadData];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-    [self.tableView reloadData];
-    [self.emptyView hideEmptyView];
+    [self checkShouldShowEmptyMaskView];
 }
 
 - (void)viewDidAppear:(BOOL)animated {
@@ -70,6 +67,16 @@
 - (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
     [self tt_resetStayTime];
+}
+
+- (void)checkShouldShowEmptyMaskView {
+    if ([TTReachability isNetworkConnected]) {
+        [_viewModel checkShouldShowEmptyMaskView];
+    } else {
+        if(!self.hasValidateData){
+            [self.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoNetWorkAndRefresh];
+        }
+    }
 }
 
 - (void)userInfoReload {
@@ -217,7 +224,7 @@
 }
 
 - (BOOL)tt_hasValidateData {
-    return self.fatherVC.dataList.count == 0 ? NO : YES; //默认会显示空
+    return [[self.viewModel items]  count] == 0 ? NO : YES; //默认会显示空
 }
 
 - (BOOL) isAlignToSafeBottom {

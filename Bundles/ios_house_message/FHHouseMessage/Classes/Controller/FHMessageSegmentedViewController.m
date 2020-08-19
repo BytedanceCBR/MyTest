@@ -481,6 +481,7 @@ typedef NS_ENUM(NSInteger, FHSegmentedControllerAnimatedTransitionDirection) {
     [super viewWillAppear:animated];
     [FHBubbleTipManager shareInstance].canShowTip = NO;
     [self applicationDidBecomeActive];
+    [self check];
 }
 
 - (void)viewDidAppear:(BOOL)animated {
@@ -498,15 +499,13 @@ typedef NS_ENUM(NSInteger, FHSegmentedControllerAnimatedTransitionDirection) {
 }
 
 - (void)check {
-    if (_loginStateChange) {
-        _loginStateChange = NO;
-        NSArray<IMConversation *> *allConversations = [[IMManager shareInstance].chatService allConversations];
-        if (!_isLogin || [allConversations count] == 0) {
-            [self selectViewControllerAtIndex:0];
-        } else {
-            [self selectViewControllerAtIndex:1];
-        }
+    NSArray<IMConversation *> *allConversations = [[IMManager shareInstance].chatService allConversations];
+    if (!_isLogin || [allConversations count] == 0) {
+        [self selectViewControllerAtIndex:0];
+    } else {
+        [self selectViewControllerAtIndex:1];
     }
+
 }
 
 - (void)updateRedPointWithChat:(NSInteger)chatNumber andHasChatRedPoint:(BOOL)hasRedPoint andSystemMessage:(NSInteger)systemMessageNumber {

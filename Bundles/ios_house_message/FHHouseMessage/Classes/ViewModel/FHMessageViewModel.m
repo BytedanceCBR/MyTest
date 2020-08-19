@@ -65,7 +65,7 @@
 - (instancetype)initWithTableView:(UITableView *)tableView controller:(FHMessageViewController *)viewController {
     self = [super init];
     if (self) {
-        _isFirstLoad = self.combiner.isFirstLoad;
+        _isFirstLoad = YES;
         self.tableView = tableView;
 
         [tableView registerClass:[FHMessageCell class] forCellReuseIdentifier:kCellId];
@@ -135,7 +135,7 @@
 
     self.viewController.fatherVC.dataList = [unreadMsg.data.unread mutableCopy];
     [self.viewController.fatherVC.combiner resetSystemChannels:[self dataList] ugcUnreadMsg:ugcUnread];
-    self.viewController.hasValidateData = [self dataList].count > 0;
+    self.viewController.hasValidateData = [self items].count > 0;
     [self checkShouldShowEmptyMaskView];
 }
 
