@@ -466,6 +466,7 @@ typedef NS_ENUM(NSInteger, FHSegmentedControllerAnimatedTransitionDirection) {
         _loginStateChange = YES;
     }
     _isLogin = YES;
+    [self check];
 }
 
 - (void)didLogout {
@@ -473,25 +474,25 @@ typedef NS_ENUM(NSInteger, FHSegmentedControllerAnimatedTransitionDirection) {
         _loginStateChange = YES;
     }
     _isLogin = NO;
+    [self check];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     [FHBubbleTipManager shareInstance].canShowTip = NO;
-    if (_loginStateChange) {
-        _loginStateChange = NO;
-        [self check];
-    }
     [self applicationDidBecomeActive];
     [self refreshConversationList];
 }
 
 - (void)check {
-    NSArray<IMConversation *> *allConversations = [[IMManager shareInstance].chatService allConversations];
-    if (!_isLogin || [allConversations count] == 0) {
-        [self selectViewControllerAtIndex:0];
-    } else {
-        [self selectViewControllerAtIndex:1];
+    if (_loginStateChange) {
+        _loginStateChange = NO;
+        NSArray<IMConversation *> *allConversations = [[IMManager shareInstance].chatService allConversations];
+        if (!_isLogin || [allConversations count] == 0) {
+            [self selectViewControllerAtIndex:0];
+        } else {
+            [self selectViewControllerAtIndex:1];
+        }
     }
 }
 
