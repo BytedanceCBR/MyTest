@@ -23,6 +23,7 @@
 #import "FHBubbleTipManager.h"
 #import <FHPopupViewCenter/FHPopupViewManager.h>
 #import "TTAccountManager.h"
+#import "UIViewController+NavigationBarStyle.h"
 
 typedef NS_ENUM(NSInteger, FHSegmentedControllerAnimatedTransitionDirection) {
     FHSegmentedControllerAnimatedTransitionDirectionUnknown,
@@ -342,6 +343,7 @@ typedef NS_ENUM(NSInteger, FHSegmentedControllerAnimatedTransitionDirection) {
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    self.ttDisableDragBack = YES;
     _isLogin = [TTAccountManager isLogin];
     _loginStateChange = YES;
     self.enterType = @"dafault";
@@ -872,7 +874,7 @@ typedef NS_ENUM(NSInteger, FHSegmentedControllerAnimatedTransitionDirection) {
 }
 
 - (void)segmentedViewController:(FHMessageSegmentedViewController *)segmentedViewController didChangeContentViewControllerFromViewController:(UIViewController *)fromViewController toViewController:(UIViewController *)toViewController {
-    self.topView.selectIndex = [self.viewControllers indexOfObject:toViewController];
+    //self.topView.selectIndex = [self.viewControllers indexOfObject:toViewController];
 }
 
 - (void)addTipClickLog:(FHPushMessageTipCompleteType)type
@@ -927,6 +929,11 @@ typedef NS_ENUM(NSInteger, FHSegmentedControllerAnimatedTransitionDirection) {
 - (void)trackStartedByAppWillEnterForground {
     [self tt_resetStayTime];
     self.ttTrackStartTime = [[NSDate date] timeIntervalSince1970];
+}
+
+- (void)dealloc
+{
+    
 }
 
 @end

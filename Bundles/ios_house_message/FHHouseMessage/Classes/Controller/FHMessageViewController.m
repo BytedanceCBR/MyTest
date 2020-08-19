@@ -222,4 +222,9 @@
 - (BOOL) isAlignToSafeBottom {
     return [self.fatherVC isAlignToSafeBottom];
 }
+
+- (void)dealloc
+{
+    
+}
 @end
