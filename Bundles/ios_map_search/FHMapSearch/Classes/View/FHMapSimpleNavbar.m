@@ -250,7 +250,7 @@
     }else{
         
         NSMutableDictionary *tracerParamsClick = [NSMutableDictionary new];
-        tracerParamsClick[@"page_type"] = @"map_search_detail";
+        tracerParamsClick[@"page_type"] = @"mapfind";
         tracerParamsClick[@"tab_name"] = self.houseType == FHHouseTypeSecondHandHouse ? @"old_tab" : @"new_tab";
         [FHUserTracker writeEvent:@"click_search" params:tracerParamsClick];
         

@@ -502,6 +502,8 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
 -(void)showFilter
 {
     if (self.currentHouseType == FHHouseTypeSecondHandHouse) {
+        [self addClickOptionsLog];
+
         NSString *query =  [self.lastBubble query];
         NSString *url = [NSString stringWithFormat:@"https:a?%@",query];
         [self.filterView selectedWithOpenUrl:url];
