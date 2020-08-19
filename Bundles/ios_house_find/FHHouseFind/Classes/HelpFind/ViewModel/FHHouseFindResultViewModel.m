@@ -134,7 +134,8 @@ static const NSUInteger kFHHomeHeaderViewSectionHeight = 35;
 
 #pragma mark category log
 -(void)addEnterCategoryLog {
-    
+    NSMutableDictionary *params = [self categoryLogDict].mutableCopy;
+    [params setValue:@"93413" forKey:@"event_tracking_id"];
     [FHUserTracker writeEvent:@"enter_category" params:[self categoryLogDict]];
 }
 
