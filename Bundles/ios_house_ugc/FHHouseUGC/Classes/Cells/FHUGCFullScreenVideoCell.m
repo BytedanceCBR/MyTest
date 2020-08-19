@@ -177,21 +177,7 @@
     self.currentData = data;
     self.cellModel = cellModel;
     //设置头像和用户名
-    FHFeedContentImageListModel *imageModel = [[FHFeedContentImageListModel alloc] init];
-    imageModel.url = cellModel.user.avatarUrl;
-    NSMutableArray *urlList = [NSMutableArray array];
-    for (NSInteger i = 0; i < 3; i++) {
-        FHFeedContentImageListUrlListModel *urlListModel = [[FHFeedContentImageListUrlListModel alloc] init];
-        urlListModel.url = cellModel.user.avatarUrl;
-        [urlList addObject:urlListModel];
-    }
-    imageModel.urlList = [urlList copy];
-    
-    if (imageModel && imageModel.url.length > 0) {
-        [self.icon tt_setImageWithURLString:imageModel.url];
-    }else{
-        [self.icon setImage:[UIImage imageNamed:@"fh_mine_avatar"]];
-    }
+    [self.icon tt_setImageWithURLString:cellModel.user.avatarUrl];
     
     self.userName.text = !isEmptyString(cellModel.user.name) ? cellModel.user.name : @"用户";
     [self.userName sizeToFit];
