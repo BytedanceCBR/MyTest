@@ -1,3 +1,4 @@
+
 gem 'bd_pod_extentions'
 
 require 'bd_pod_extentions'
@@ -63,10 +64,10 @@ def fhPods
     # 'Core',
     # 'DelegateForC'
     #]
-
-#    pod 'ios_house_im' ,'0.2.14-rc.19'
+#    pod 'ios_house_im' ,'0.2.14-rc.20'
 #    pod 'ios_house_im' , :path => '../../../im/1'
    pod 'ios_house_im' , :git => 'git@code.byted.org:fproject/ios_house_im.git' , :commit => '5f3e77c4704a15a7860a73f4ed8c38d279b79235'
+    
 
 end
 
@@ -501,7 +502,7 @@ def appPods
     
     #支持自动约束cell缓存高度
     pod_binary 'UITableView+FDTemplateLayoutCell', '1.6'
-    
+
     #IMSDK升级，分支依赖方式
     pod 'lz4', '1.0.1'
     pod 'ByteRtcSDK', '2.6.11'
@@ -714,8 +715,9 @@ post_install do |installer|
           '${PODS_ROOT}/BDUGUnionSDK/BDUGUnionSDK/Classes',
           '${PODS_ROOT}/TTNetBusiness/ios',
           '${PODS_ROOT}/TencentQQSDK/TencentQQSDK/Classes',
+
           '${PODS_ROOT}/Quaterback/BDDynamically/Frameworks/News/Release',
-          '${PODS_ROOT}/ByteRtcSDK'
+          '${PODS_ROOT}/ByteRtcSDK',
           ]
         end
 
