@@ -307,13 +307,13 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
 - (NSString *)eventHouseType{
     switch (self.currentHouseType) {
         case FHHouseTypeNewHouse:
-            return @"new";
+            return @"new_tab";
             break;
         case FHHouseTypeSecondHandHouse:
-            return @"old";
+            return @"old_tab";
             break;
         case FHHouseTypeRentHouse:
-            return @"rent";
+            return @"rent_tab";
         break;
         default:
             break;
