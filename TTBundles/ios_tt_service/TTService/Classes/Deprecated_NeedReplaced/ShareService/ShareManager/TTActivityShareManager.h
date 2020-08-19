@@ -106,6 +106,7 @@
 //视频share_done 事件需要用埋点字段
 @property(nonatomic, copy) NSString * _Nullable authorId;
 
+@property(nonatomic, strong) NSDictionary *extraDic;
 
 /**
  *  返回TTActivity数组

@@ -156,6 +156,13 @@ extern BOOL ttvs_isEnhancePlayerTitleFont(void);
 
 - (void)playButtonClicked
 {
+    if(self.ttv_playButtonClickedBlock){
+        self.ttv_playButtonClickedBlock();
+    }
+    [self playVideo];
+}
+
+- (void)playVideo {
     [self configurePlayMovie];
     [_playMovie play];
     self.cellEntity.playVideo = _playMovie.movieView;

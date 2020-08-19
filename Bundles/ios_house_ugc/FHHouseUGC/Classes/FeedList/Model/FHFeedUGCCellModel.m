@@ -17,6 +17,7 @@
 #import "JSONAdditions.h"
 #import "HMDTTMonitor.h"
 #import "TTSandBoxHelper+House.h"
+#import "FHHouseUGCHeader.h"
 #import "FHUtils.h"
 
 #define kRecommendSocialGroupListNil @"kRecommendSocialGroupListNil"
@@ -171,6 +172,8 @@
                 cellModel.videoItem = [FHUGCCellHelper configureVideoItem:cellModel];
             }
         }
+        
+        cellModel.originContent = content;
     }
     
     return cellModel;
@@ -255,7 +258,14 @@
             //视频
             cellModel.hasVideo = model.hasVideo;
             cellModel.content = model.title;
-            cellModel.numberOfLines = 3;
+            
+            if([model.cellCtrls.cellLayoutStyle isEqualToString:@"10001"]){
+                cellModel.cellSubType = FHUGCFeedListCellSubTypeFullVideo;
+                cellModel.numberOfLines = 2;
+            }else{
+                cellModel.cellSubType = FHUGCFeedListCellSubTypeUGCVideo;
+                cellModel.numberOfLines = 3;
+            }
             
             if (model.isFromDetail) {
                 cellModel.numberOfLines = 0;
@@ -268,7 +278,7 @@
             user.schema = model.userInfo.schema;
             cellModel.user = user;
             
-            [FHUGCCellHelper setRichContentWithModel:cellModel width:([UIScreen mainScreen].bounds.size.width - 40) numberOfLines:cellModel.numberOfLines];
+            [FHUGCCellHelper setRichContentWithModel:cellModel width:(screenWidth - 40) numberOfLines:cellModel.numberOfLines];
             
             cellModel.desc = [self generateUGCDescWithCreateTime:model.publishTime readCount:model.readCount distanceInfo:nil];
             
@@ -298,8 +308,6 @@
             
             cellModel.imageList = model.largeImageList;
             cellModel.largeImageList = nil;
-            
-            cellModel.cellSubType = FHUGCFeedListCellSubTypeUGCVideo;
         }else{
             //文章
             cellModel.cellSubType = FHUGCFeedListCellSubTypeArticle;
@@ -334,9 +342,9 @@
             cellModel.largeImageList = model.largeImageList;
             
             if(cellModel.imageList.count == 1){
-                [FHUGCCellHelper setArticleRichContentWithModel:cellModel width:([UIScreen mainScreen].bounds.size.width - 40 - 120 - 15)];
+                [FHUGCCellHelper setArticleRichContentWithModel:cellModel width:(screenWidth - 40 - 120 - 15)];
             }else{
-                [FHUGCCellHelper setArticleRichContentWithModel:cellModel width:([UIScreen mainScreen].bounds.size.width - 40)];
+                [FHUGCCellHelper setArticleRichContentWithModel:cellModel width:(screenWidth - 40)];
             }
         }
     }
@@ -382,9 +390,9 @@
         }
         
         if(cellModel.imageList.count == 1){
-            [FHUGCCellHelper setArticleRichContentWithModel:cellModel width:([UIScreen mainScreen].bounds.size.width - 40 - 120 - 15)];
+            [FHUGCCellHelper setArticleRichContentWithModel:cellModel width:(screenWidth - 40 - 120 - 15)];
         }else{
-            [FHUGCCellHelper setArticleRichContentWithModel:cellModel width:([UIScreen mainScreen].bounds.size.width - 40)];
+            [FHUGCCellHelper setArticleRichContentWithModel:cellModel width:(screenWidth - 40)];
         }
         
         //小区问答数据处理
@@ -437,13 +445,13 @@
         if(cellModel.originItemModel.imageModel){
             cellModel.originItemHeight = 80;
         }else{
-            [FHUGCCellHelper setOriginContentAttributeString:cellModel width:([UIScreen mainScreen].bounds.size.width - 60) numberOfLines:2];
+            [FHUGCCellHelper setOriginContentAttributeString:cellModel width:(screenWidth - 60) numberOfLines:2];
         }
         
         if (model.isFromDetail) {
             cellModel.numberOfLines = 0;
         }
-        [FHUGCCellHelper setRichContentImageWithModel:cellModel width:([UIScreen mainScreen].bounds.size.width - 40) numberOfLines:cellModel.numberOfLines];
+        [FHUGCCellHelper setRichContentImageWithModel:cellModel width:(screenWidth - 40) numberOfLines:cellModel.numberOfLines];
         
         //小区问答数据处理
         if([model.cellCtrls.cellLayoutStyle isEqualToString:@"10001"]){
@@ -517,7 +525,7 @@
         }
         cellModel.originItemModel = originItemModel;
         
-        [FHUGCCellHelper setOriginContentAttributeString:cellModel width:([UIScreen mainScreen].bounds.size.width - 60) numberOfLines:2];
+        [FHUGCCellHelper setOriginContentAttributeString:cellModel width:(screenWidth - 60) numberOfLines:2];
         if(cellModel.originItemModel.imageModel){
             cellModel.originItemHeight = 80;
         }
@@ -530,7 +538,7 @@
             cellModel.numberOfLines = 0;
         }
         
-        [FHUGCCellHelper setRichContentWithModel:cellModel width:([UIScreen mainScreen].bounds.size.width - 40) numberOfLines:cellModel.numberOfLines];
+        [FHUGCCellHelper setRichContentWithModel:cellModel width:(screenWidth - 40) numberOfLines:cellModel.numberOfLines];
         
     }
     else if(cellModel.cellType == FHUGCFeedListCellTypeUGCBanner || cellModel.cellType == FHUGCFeedListCellTypeUGCBanner2){
@@ -624,7 +632,7 @@
         vote.needUserLogin = model.rawData.vote.needUserLogin;
         cellModel.vote = vote;
         
-        [FHUGCCellHelper setVoteContentString:cellModel width:([UIScreen mainScreen].bounds.size.width - 78) numberOfLines:2];
+        [FHUGCCellHelper setVoteContentString:cellModel width:(screenWidth - 78) numberOfLines:2];
     } else if(cellModel.cellType == FHUGCFeedListCellTypeUGCVoteInfo){
         // UGC 投票
         cellModel.cellSubType = FHUGCFeedListCellSubTypeUGCVoteDetail;
@@ -675,7 +683,7 @@
         cellModel.commentCount = model.rawData.commentCount;
         cellModel.userDigg = model.rawData.userDigg;
         
-        [FHUGCCellHelper setUGCVoteContentString:cellModel width:([UIScreen mainScreen].bounds.size.width - 60) numberOfLines:2];
+        [FHUGCCellHelper setUGCVoteContentString:cellModel width:(screenWidth - 60) numberOfLines:2];
         cellModel.voteInfo.descHeight = 17;
     }
     else if(cellModel.cellType == FHUGCFeedListCellTypeUGCSmallVideo){
@@ -740,9 +748,9 @@
         cellModel.imageList = model.rawData.firstFrameImageList;
         cellModel.largeImageList = nil;
         if([model.cellCtrls.cellLayoutStyle isEqualToString:@"10001"]){
-        [FHUGCCellHelper setRichContentWithModel:cellModel width:([UIScreen mainScreen].bounds.size.width - 60) numberOfLines:3];
+        [FHUGCCellHelper setRichContentWithModel:cellModel width:(screenWidth - 60) numberOfLines:3];
         }else {
-        [FHUGCCellHelper setRichContentWithModel:cellModel width:([UIScreen mainScreen].bounds.size.width - 40) numberOfLines:cellModel.numberOfLines];
+        [FHUGCCellHelper setRichContentWithModel:cellModel width:(screenWidth - 40) numberOfLines:cellModel.numberOfLines];
         }
     } else if (cellModel.cellType == FHUGCFeedListCellTypeUGCRecommendCircle) {
         cellModel.cellSubType = FHUGCFeedListCellSubTypeUGCRecommendCircle;
@@ -777,9 +785,9 @@
         cellModel.avatar = model.rawData.avatar;
         cellModel.showLookMore = YES;
         if(isEmptyString(cellModel.avatar)){
-            [FHUGCCellHelper setRichContentWithModel:cellModel width:([UIScreen mainScreen].bounds.size.width - 40) numberOfLines:cellModel.numberOfLines];
+            [FHUGCCellHelper setRichContentWithModel:cellModel width:(screenWidth - 40) numberOfLines:cellModel.numberOfLines];
         }else{
-            [FHUGCCellHelper setRichContentWithModel:cellModel width:([UIScreen mainScreen].bounds.size.width - 40 - 120 - 15) numberOfLines:cellModel.numberOfLines];
+            [FHUGCCellHelper setRichContentWithModel:cellModel width:(screenWidth - 40 - 120 - 15) numberOfLines:cellModel.numberOfLines];
         }
     }
     return cellModel;
@@ -959,9 +967,9 @@
         cellModel.largeImageList = model.rawData.largeImageList;
     }
     if([model.cellCtrls.cellLayoutStyle isEqualToString:@"10001"]){
-    [FHUGCCellHelper setRichContentWithModel:cellModel width:([UIScreen mainScreen].bounds.size.width - 60) numberOfLines:cellModel.numberOfLines];
+        [FHUGCCellHelper setRichContentWithModel:cellModel width:(screenWidth - 60) numberOfLines:cellModel.numberOfLines];
     }else {
-    [FHUGCCellHelper setRichContentWithModel:cellModel width:([UIScreen mainScreen].bounds.size.width - 40) numberOfLines:cellModel.numberOfLines];
+        [FHUGCCellHelper setRichContentWithModel:cellModel width:(screenWidth - 40) numberOfLines:cellModel.numberOfLines];
     }
 
     
@@ -1057,9 +1065,9 @@
 
 - (void)setIsInNeighbourhoodQAList:(BOOL)isInNeighbourhoodQAList {
     _isInNeighbourhoodQAList = isInNeighbourhoodQAList;
-    CGFloat width = [UIScreen mainScreen].bounds.size.width - 60;
+    CGFloat width = screenWidth - 60;
     if(isInNeighbourhoodQAList){
-        width = [UIScreen mainScreen].bounds.size.width - 90;
+        width = screenWidth - 90;
     }
     self.numberOfLines = isInNeighbourhoodQAList ? 3 : 1;
     [FHUGCCellHelper setQuestionRichContentWithModel:self width:width numberOfLines:0];
@@ -1068,9 +1076,9 @@
 
 - (void)setIsInNeighbourhoodCommentsList:(BOOL)isInNeighbourhoodCommentsList {
     _isInNeighbourhoodCommentsList = isInNeighbourhoodCommentsList;
-    CGFloat width = [UIScreen mainScreen].bounds.size.width - 32;
+    CGFloat width = screenWidth - 32;
     if(isInNeighbourhoodCommentsList){
-        width = [UIScreen mainScreen].bounds.size.width - 70;
+        width = screenWidth - 70;
     }
     self.numberOfLines = self.imageList.count > 0 ? 3 : 5;
     [FHUGCCellHelper setRichContentWithModel:self width:width numberOfLines:self.numberOfLines];
@@ -1092,8 +1100,8 @@
     cellModel.cellSubType = FHUGCFeedListCellSubTypeUGCNeighbourhoodQuestion;
     cellModel.questionStr = @"语雀是一款优雅高效的在线文档编辑与协同工具， 让每个企业轻松拥有文档";
     cellModel.answerStr = @"AntV 是蚂蚁金服全新一代AntV 是蚂蚁金服全新一代";
-    [FHUGCCellHelper setQuestionRichContentWithModel:cellModel width:[UIScreen mainScreen].bounds.size.width - 100 numberOfLines:0];
-    [FHUGCCellHelper setAnswerRichContentWithModel:cellModel width:[UIScreen mainScreen].bounds.size.width - 100 numberOfLines:1];
+    [FHUGCCellHelper setQuestionRichContentWithModel:cellModel width:(screenWidth - 100) numberOfLines:0];
+    [FHUGCCellHelper setAnswerRichContentWithModel:cellModel width:(screenWidth - 100) numberOfLines:1];
     
     
     return cellModel;
@@ -1115,8 +1123,8 @@
     cellModel.cellSubType = FHUGCFeedListCellSubTypeUGCNeighbourhoodQuestion;
     cellModel.questionStr = @"语雀是一款优雅高效的在线文档编辑";
     cellModel.answerStr = @"AntV 是蚂蚁金服全新一代AntV 是蚂蚁金服全新一代AntV 是蚂蚁金服全新一代AntV 是蚂蚁金服全新一代AntV 是蚂蚁金服全新一代AntV 是蚂蚁金服全新一代AntV 是蚂蚁金服全新一代AntV 是蚂蚁金服全新一代AntV 是蚂蚁金服全新一代AntV 是蚂蚁金服全新一代";
-    [FHUGCCellHelper setQuestionRichContentWithModel:cellModel width:[UIScreen mainScreen].bounds.size.width - 100 numberOfLines:0];
-    [FHUGCCellHelper setAnswerRichContentWithModel:cellModel width:[UIScreen mainScreen].bounds.size.width - 100 numberOfLines:(cellModel.isInNeighbourhoodQAList ? 3 : 1)];
+    [FHUGCCellHelper setQuestionRichContentWithModel:cellModel width:(screenWidth - 100) numberOfLines:0];
+    [FHUGCCellHelper setAnswerRichContentWithModel:cellModel width:(screenWidth - 100) numberOfLines:(cellModel.isInNeighbourhoodQAList ? 3 : 1)];
     
     return cellModel;
 }

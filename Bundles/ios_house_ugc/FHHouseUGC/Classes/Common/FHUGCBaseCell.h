@@ -45,6 +45,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)clickRealtorHeader:(FHFeedUGCCellModel *)cellModel cell:(FHUGCBaseCell *)cell;
 
+- (void)didVideoClicked:(FHFeedUGCCellModel *)cellModel cell:(FHUGCBaseCell *)cell;
+
+- (void)videoPlayFinished:(FHFeedUGCCellModel *)cellModel cell:(FHUGCBaseCell *)cell;
+
 @end
 
 @interface FHUGCBaseCell : UITableViewCell
@@ -62,6 +66,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 
 + (CGFloat)heightForData:(id)data;
+
+- (void)willDisplay;
+
+- (void)endDisplay;
 
 // Cell点击事件，可以不用实现
 @property (nonatomic, copy)     dispatch_block_t       didClickCellBlk;
