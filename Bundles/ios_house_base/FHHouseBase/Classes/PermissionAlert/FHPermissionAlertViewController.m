@@ -34,6 +34,7 @@
 @property(nonatomic , strong) UIView *containerView;
 @property(nonatomic , strong) UILabel *titleLabel;
 @property(nonatomic , strong) YYLabel *contentLabel;
+@property(nonatomic , strong) UIScrollView *scrollView;
 @property(nonatomic , strong) UIButton *confirmButton;
 @property(nonatomic , assign) NSRange userRange;
 @property(nonatomic , assign) NSRange privacyRange;
@@ -114,6 +115,8 @@
     _contentLabel = [[YYLabel alloc] init];
     _contentLabel.numberOfLines = 0;
     
+    _scrollView = [[UIScrollView alloc] init];
+    
     NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];
     paragraphStyle.headIndent = 0;
     paragraphStyle.tailIndent = 0;
@@ -122,8 +125,8 @@
     NSString *content = [NSString stringWithContentsOfFile:path encoding:NSUTF8StringEncoding error:nil];
     NSMutableAttributedString *attrContent = [[NSMutableAttributedString alloc] initWithString:content attributes:@{NSFontAttributeName:[UIFont themeFontRegular:14],NSForegroundColorAttributeName:[UIColor themeGray2],NSParagraphStyleAttributeName:paragraphStyle}];
     
-    _userRange = [content rangeOfString:@"用户协议"];
-    _privacyRange = [content rangeOfString:@"隐私政策"];
+    _userRange = [content rangeOfString:@"《用户协议》"];
+    _privacyRange = [content rangeOfString:@"《隐私政策》"];
     
     NSDictionary *linkAttr = @{NSForegroundColorAttributeName:[UIColor themeGray1],NSUnderlineStyleAttributeName:@(NSUnderlineStyleSingle),NSUnderlineColorAttributeName:[UIColor themeGray1]};
     [attrContent addAttributes:linkAttr range:_userRange];
@@ -136,10 +139,10 @@
         if (wself) {
             if (range.location >= wself.userRange.location && range.location+range.length <= wself.userRange.location+wself.userRange.length) {
                 // 用户协议
-                [wself showProtocolDetail:@"/f100/download/user_agreement.html" title:@"用户协议"];
+                [wself showProtocolDetail:@"/magic/page/ejs/5f1e75ec3d3f6802d7e9ed31?appType=manyhouse" title:@"用户协议"];
             }else if (range.location >= wself.privacyRange.location && range.location+range.length <= wself.privacyRange.location+wself.privacyRange.length){
                     //隐私协议
-                [wself showProtocolDetail:@"/f100/download/private_policy.html" title:@"隐私政策"];
+                [wself showProtocolDetail:@"/magic/page/ejs/5f1e5048a0741302e84cea20?appType=manyhouse" title:@"隐私政策"];
             }
         }
     };
@@ -157,14 +160,19 @@
     [_confirmButton setTitleColor:[UIColor themeWhite] forState:UIControlStateNormal];
     
     [_confirmButton addTarget:self action:@selector(confirmAction:) forControlEvents:UIControlEventTouchUpInside];
-    [_confirmButton setTitle:@"我知道了" forState:UIControlStateNormal];
+    [_confirmButton setTitle:@"好的" forState:UIControlStateNormal];
     
     CGSize fitSize = [_contentLabel sizeThatFits:CGSizeMake(_contentLabel.preferredMaxLayoutWidth, CGFLOAT_MAX)];
     
     _contentLabel.bounds = CGRectMake(0, 0, fitSize.width, fitSize.height);
     
+    CGRect scrollViewBounds = CGRectMake(0, 0, fitSize.width, MIN(fitSize.height, SCREEN_HEIGHT/2));
+    _scrollView.bounds = scrollViewBounds;
+    _scrollView.contentSize = _contentLabel.bounds.size;
+    
     [self.containerView addSubview:_titleLabel];
-    [self.containerView addSubview:_contentLabel];
+    [self.containerView addSubview:_scrollView];
+    [self.scrollView addSubview:_contentLabel];
     [self.containerView addSubview:_confirmButton];
     
     [self addSubview:_bgImgView];
@@ -187,7 +195,7 @@
     [self.containerView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.center.mas_equalTo(0);
         make.width.mas_equalTo(SCREEN_WIDTH - 2*OUT_HOR_MARGIN);
-        make.height.mas_equalTo(153+ CGRectGetHeight(self.contentLabel.bounds));
+        make.height.mas_equalTo(153+ CGRectGetHeight(self.scrollView.bounds));
     }];
     
     [self.titleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -196,22 +204,27 @@
         make.top.mas_equalTo(IN_VER_MARGIN);
     }];
     
-    [self.contentLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+    [self.scrollView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.right.mas_equalTo(self.titleLabel);
         make.top.mas_equalTo(self.titleLabel.mas_bottom).offset(CONTENT_TO_TITLE);
-        make.height.mas_equalTo(CGRectGetHeight(self.contentLabel.bounds));
+        make.height.mas_equalTo(CGRectGetHeight(self.scrollView.bounds));
+    }];
+    
+    [self.contentLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.edges.equalTo(self.scrollView);
     }];
     
     [self.confirmButton mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.right.mas_equalTo(self.titleLabel);
         make.height.mas_equalTo(CONFIRM_HEIGHT);
-        make.top.mas_equalTo(self.contentLabel.mas_bottom).offset(CONFIRM_TO_CONTENT);
+        make.top.mas_equalTo(self.scrollView.mas_bottom).offset(CONFIRM_TO_CONTENT);
     }];
 }
 
 -(void)showProtocolDetail:(NSString *)urlPath title:(NSString *)title
 {
-    NSString *jumpUrl = [NSString stringWithFormat:@"%@%@",[FHURLSettings baseURL],urlPath];
+    NSString *baseUrl = @"https://m.xflapp.com";
+    NSString *jumpUrl = [NSString stringWithFormat:@"%@%@", baseUrl, urlPath];
     NSURL *openUrl = [NSURL URLWithString:jumpUrl];
     if ([[UIApplication sharedApplication] canOpenURL:openUrl]) {
         [[UIApplication sharedApplication] openURL:openUrl];

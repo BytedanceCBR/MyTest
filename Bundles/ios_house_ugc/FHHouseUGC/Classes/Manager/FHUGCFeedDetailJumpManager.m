@@ -295,10 +295,10 @@
         tracerDic[@"concern_id"] = cellModel.tracerDic[@"concern_id"];
     }
     if(cellModel.fromGid){
-        tracerDic[@"from_gid"] = cellModel.fromGid;
+        tracerDic[@"from_gid"] = cellModel.groupId;
     }
     if(cellModel.fromGroupSource){
-        tracerDic[@"from_group_source"] = cellModel.fromGroupSource;
+        tracerDic[@"from_group_source"] = cellModel.tracerDic[@"group_source"];
     }
     if(extraDic){
         [tracerDic addEntriesFromDictionary:extraDic];

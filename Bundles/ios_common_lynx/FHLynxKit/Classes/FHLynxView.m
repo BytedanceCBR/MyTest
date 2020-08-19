@@ -119,7 +119,6 @@
 - (LynxView *)lynxView
 {
     if (!_lynxView) {
-        CGRect screenFrame = [UIScreen mainScreen].bounds;
         __weak typeof(self) weakSelf = self;
         _lynxView = [[LynxView alloc] initWithBuilderBlock:^(LynxViewBuilder* builder) {
                builder.isUIRunningMode = YES;
@@ -208,7 +207,6 @@
 
 //这里接收TTLynxViewClient抛上来的sizeChange事件
 - (void)lynxViewDidChangeIntrinsicContentSize:(LynxView*)view {
-    NSLog(@"view.hight=",view.frame.size.height);
 }
 
 - (NSURL*)shouldRedirectImageUrl:(NSURL*)url {

@@ -95,6 +95,7 @@
                                            dismissBlock:(void(^)(void))dismissBlock
 {
     TTCommentDetailViewController *detailRoot = [[TTCommentDetailViewController alloc] initWithRouteParamObj:TTRouteParamObjWithDict(info.copy)];
+    detailRoot.noReportGoDetail = YES;
     TTModalContainerController *navVC = [[TTModalContainerController alloc] initWithRootViewController:detailRoot];
     navVC.containerDelegate = self;
     self.selectedBlock = dismissBlock;

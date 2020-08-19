@@ -39,6 +39,9 @@
         
         FHFeedUGCCellModel *cellModel = paramObj.allParams[@"cellModel"];
         if(cellModel){
+            self.currentVideo.diggCount = cellModel.diggCount;
+            self.currentVideo.userDigg = cellModel.userDigg;
+            self.currentVideo.commentCount = cellModel.commentCount;
             self.currentVideo.videoItem.article.diggCount = cellModel.videoItem.article.diggCount;
             self.currentVideo.videoItem.article.userDigg = cellModel.videoItem.article.userDigg;
             self.currentVideo.videoItem.article.commentCount = cellModel.videoItem.article.commentCount;

@@ -211,7 +211,6 @@
 //                                 forKey:@"category_name"];
 //                [FHEnvContext recordEvent:traceDict andEventKey:@"enter_category"];
 //            }
-            
 //            if ([self.viewController.feedListVC isKindOfClass:[FHCommunityViewController class]]) {
 //                FHCommunityViewController *vc = (FHCommunityViewController *)self.viewController.feedListVC;
 //                [vc viewAppearForEnterType:enterType needReport:NO];

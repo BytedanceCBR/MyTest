@@ -790,7 +790,6 @@
     }
     tracerDict[@"enter_from"] = self.tracerDict[@"enter_from"] ?: @"be_null";
     tracerDict[@"category_name"] = self.tracerDict[@"category_name"] ?: @"be_null";
-    tracerDict[@"enter_channel"] = @"click";
     [FHEnvContext recordEvent:tracerDict andEventKey:@"enter_category"];
     
     if(needReportSubCategory){
@@ -809,7 +808,6 @@
     }
     tracerDict[@"enter_from"] = self.tracerDict[@"enter_from"] ?: @"be_null";
     tracerDict[@"category_name"] = self.tracerDict[@"category_name"] ?: @"be_null";
-    tracerDict[@"enter_channel"] = @"click";
     tracerDict[@"stay_time"] = @((int) duration);
 
     if (((int) duration) > 0) {

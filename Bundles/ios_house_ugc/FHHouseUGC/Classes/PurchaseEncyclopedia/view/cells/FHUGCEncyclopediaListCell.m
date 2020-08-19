@@ -30,6 +30,7 @@
 }
 
 - (void)initUI {
+    self.contentView.backgroundColor = [UIColor whiteColor];
     if(self.vc){
         [self.vc.view removeFromSuperview];
         [self.vc removeFromParentViewController];
