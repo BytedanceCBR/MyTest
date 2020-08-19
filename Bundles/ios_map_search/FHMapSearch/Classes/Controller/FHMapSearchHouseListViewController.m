@@ -147,6 +147,10 @@
     [self.viewModel updateWithHouseData:data neighbor:neighbor bubble:bubble];
 }
 
+-(void)showNewHouses:(FHMapSearchDataListModel *)houseData bubble:(FHMapSearchBubbleModel *)bubble{
+   
+}
+
 -(CGFloat)initialTop
 {
     return floor(self.view.superview.height/2);
