@@ -192,6 +192,8 @@
 
 - (void)applicationDidBecomeActive {
     self.enterTabTimestamp = [[NSDate date]timeIntervalSince1970];
+    [self.tableView setContentOffset:self.tableView.contentOffset animated:NO];
+    [self.viewModel startVideoPlay];
 }
 
 #pragma mark - SSImpressionProtocol

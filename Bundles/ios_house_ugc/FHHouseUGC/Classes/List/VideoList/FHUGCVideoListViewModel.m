@@ -524,6 +524,10 @@
 }
 
 - (void)startVideoPlay {
+    if ([UIApplication sharedApplication].applicationState != UIApplicationStateActive) {
+        return;
+    }
+    
     FHUGCFullScreenVideoCell *cell = [self getFitableVideoCell];
     if(cell != self.currentVideoCell){
         self.currentVideoCell.contentView.userInteractionEnabled = NO;
