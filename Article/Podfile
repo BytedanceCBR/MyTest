@@ -598,6 +598,7 @@ end
 
 def testPods
     pod 'BDSSOAuthSDK' ,  '1.1.1-alpha.6'
+    
     pod_binary 'TTDebugAssistant', '0.2.33'
     pod_binary 'FLEX', '3.1.2'#, :configurations=>['Debug']
 #    pod_source 'BDNetworkDevMonitor', '0.1.6'
@@ -608,6 +609,9 @@ def testPods
     ]
     pod_binary 'FBRetainCycleDetector','0.1.5-alpha.3'
     pod 'LookinServer', :configurations => ['Debug']
+#        pod 'FHErrorHubManager', :git => 'git@code.byted.org:fproject/FHErrorHubManager.git' , :commit => 'b04a60e50b4564346962b47d582f78eddc007408'
+#    pod 'FHErrorHubManager', :path => '../../FHErrorHubManager'
+    pod 'FHErrorHubManager', '1.0.12'
 end
 
 target 'NewsLiteInHouse' do
