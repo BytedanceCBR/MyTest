@@ -30,10 +30,14 @@
     }];
 }
 
-- (nullable BDWebImageRequest *)fh_setImageWithURLs:(nonnull NSArray *)imageURLs placeholder:(nullable UIImage *)placeholder {
+- (nullable BDWebImageRequest *)fh_setImageWithURLs:(nonnull NSArray *)imageURLs placeholder:(nullable UIImage *)placeholder reSize:(CGSize)reSize{
     [self.layer removeAnimationForKey:@"contents"];
     WeakSelf;
-    return [self bd_setImageWithURLs:imageURLs placeholder:placeholder options:BDImageRequestSetDelaySetImage transformer:nil progress:nil completion:^(BDWebImageRequest *request, UIImage *image, NSData *data, NSError *error, BDWebImageResultFrom from) {
+    FHBlockTransformer *transform = [FHBlockTransformer transformWithBlock:^UIImage * _Nullable(UIImage * _Nullable image) {
+        StrongSelf;
+        return [self compressImage:image toSize:reSize];
+    }];
+    return [self bd_setImageWithURLs:imageURLs placeholder:placeholder options:BDImageRequestSetDelaySetImage transformer:transform progress:nil completion:^(BDWebImageRequest *request, UIImage *image, NSData *data, NSError *error, BDWebImageResultFrom from) {
         StrongSelf;
         NSMutableDictionary *imageData = [NSMutableDictionary dictionary];
         imageData[@"image"] = image;
