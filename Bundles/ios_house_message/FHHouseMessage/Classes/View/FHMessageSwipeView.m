@@ -6,7 +6,7 @@
 //  Copyright © 2016年 zhaoName. All rights reserved.
 //
 
-#import "SwipeView.h"
+#import "FHMessageSwipeView.h"
 #import "FHMessageSwipeButton.h"
 #import "FHMessageSwipeTableCell.h"
 
@@ -62,7 +62,7 @@ static inline CGFloat mgEaseInOutBounce(CGFloat t, CGFloat b, CGFloat c) {
 
 
 
-@interface SwipeView ()
+@interface FHMessageSwipeView ()
 
 @property (nonatomic, strong) UIView *containView; /**< 装swipeButton的容器*/
 @property (nonatomic, strong) NSArray *buttonArray; /**< 重新排序后的buttons*/
@@ -70,7 +70,7 @@ static inline CGFloat mgEaseInOutBounce(CGFloat t, CGFloat b, CGFloat c) {
 
 @end
 
-@implementation SwipeView
+@implementation FHMessageSwipeView
 
 - (instancetype)initWithButtons:(NSArray *)buttos fromRight:(BOOL)fromRight cellHeght:(CGFloat)cellHeight edge:(UIEdgeInsets)edge
 {

@@ -30,7 +30,7 @@ typedef NS_ENUM(NSUInteger, SwipeViewTransfromMode)
 };
 
 
-@interface SwipeView : UIView
+@interface FHMessageSwipeView : UIView
 
 @property (nonatomic, assign) CGFloat from;
 @property (nonatomic, assign) CGFloat to;

@@ -16,9 +16,9 @@
 
 @property (nonatomic, strong) UIView *swipeOverlayView; /**< 滑动时覆盖在cell上*/
 @property (nonatomic, strong) UIImageView *swipeImageView; /**< 显示移动后的cell上的内容*/
-@property (nonatomic, strong) SwipeView *rightSwipeView; /**< 右滑展示的view*/
-@property (nonatomic, strong) SwipeView *leftSwipeView; /**< 左滑展示的View*/
-@property (nonatomic, strong) SwipeView *gestureAnimationSwipeView;
+@property (nonatomic, strong) FHMessageSwipeView *rightSwipeView; /**< 右滑展示的view*/
+@property (nonatomic, strong) FHMessageSwipeView *leftSwipeView; /**< 左滑展示的View*/
+@property (nonatomic, strong) FHMessageSwipeView *gestureAnimationSwipeView;
 
 @property (nonatomic, assign) SwipeTableCellStyle swipeStyle; /**< 滑动样式 默认右滑*/
 @property (nonatomic, assign) SwipeViewTransfromMode transformMode; /**< swipeView的弹出效果*/
@@ -255,14 +255,14 @@
     }
     if(self.rightSwipeButtons.count && !self.rightSwipeView)
     {
-        _rightSwipeView = [[SwipeView alloc] initWithButtons:self.rightSwipeButtons fromRight:YES cellHeght:CELL_HEIGHT edge:edge];
+        _rightSwipeView = [[FHMessageSwipeView alloc] initWithButtons:self.rightSwipeButtons fromRight:YES cellHeght:CELL_HEIGHT edge:edge];
         // 改变rightSwipeView的frame 使其显示在swipeImageView的最右端
         _rightSwipeView.frame = CGRectMake(self.swipeImageView.bounds.size.width, 0, 108, CELL_HEIGHT);
         [self.swipeOverlayView addSubview:_rightSwipeView];
     }
     if(self.leftSwipeButtons.count && !self.leftSwipeView)
     {
-        _leftSwipeView = [[SwipeView alloc] initWithButtons:self.leftSwipeButtons fromRight:NO cellHeght:CELL_HEIGHT edge:edge];
+        _leftSwipeView = [[FHMessageSwipeView alloc] initWithButtons:self.leftSwipeButtons fromRight:NO cellHeght:CELL_HEIGHT edge:edge];
         // 改变leftSwipeView的frame 使其显示在swipeImageView的最左端
         _leftSwipeView.frame = CGRectMake(-_leftSwipeView.frame.size.width, 0, _leftSwipeView.frame.size.width, CELL_HEIGHT);
         [self.swipeOverlayView addSubview:_leftSwipeView];
@@ -328,7 +328,7 @@
  */
 - (void)hiddenSwipeAnimationAtCell:(BOOL)isAnimation
 {
-    SwipeView *aView = self.swipeOffset < 0 ? self.rightSwipeView : self.leftSwipeView;
+    FHMessageSwipeView *aView = self.swipeOffset < 0 ? self.rightSwipeView : self.leftSwipeView;
     [self gestureAnimationWithOffset:isAnimation ? 0 : self.swipeOffset animationView:aView];
 }
 
@@ -338,7 +338,7 @@
  *  @param offset        滑动按钮的偏移量
  *  @param animationView 右滑或左滑View
  */
-- (void)gestureAnimationWithOffset:(CGFloat)offset animationView:(SwipeView *)animationView
+- (void)gestureAnimationWithOffset:(CGFloat)offset animationView:(FHMessageSwipeView *)animationView
 {
     self.gestureAnimationSwipeView = animationView;
     if(self.dispalyLink){
@@ -641,7 +641,7 @@
 - (void)setSwipeOffset:(CGFloat)swipeOffset
 {
     CGFloat sign = swipeOffset > 0 ? 1 : -1;
-    SwipeView *currentSwipeView = swipeOffset < 0 ? self.rightSwipeView : self.leftSwipeView;
+    FHMessageSwipeView *currentSwipeView = swipeOffset < 0 ? self.rightSwipeView : self.leftSwipeView;
     
     _swipeOffset = swipeOffset;
     CGFloat offset = fabs(_swipeOffset);
@@ -664,10 +664,10 @@
     }
     self.swipeImageView.transform = CGAffineTransformMakeTranslation(self.swipeOffset, 0);
     
-    SwipeView *viewArray[2] = {self.rightSwipeView, self.leftSwipeView};
+    FHMessageSwipeView *viewArray[2] = {self.rightSwipeView, self.leftSwipeView};
     for (int i = 0; i< 2; i++)
     {
-        SwipeView *swipeView = viewArray[i];
+        FHMessageSwipeView *swipeView = viewArray[i];
         if(!swipeView) continue;
         
         BOOL expand = self.isAllowExpand && offset > currentSwipeView.frame.size.width * self.expandThreshold;

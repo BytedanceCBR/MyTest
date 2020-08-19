@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import "FHMessageSwipeButton.h"
-#import "SwipeView.h"
+#import "FHMessageSwipeView.h"
 #import "FHMessageEditView.h"
 
 typedef NS_ENUM(NSUInteger, SwipeTableCellStyle)

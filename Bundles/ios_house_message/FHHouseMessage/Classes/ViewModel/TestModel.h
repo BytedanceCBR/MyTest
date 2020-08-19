@@ -7,7 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "SwipeView.h"
+#import "FHMessageSwipeView.h"
 #import "FHMessageSwipeTableCell.h"
 
 @interface TestModel : NSObject
