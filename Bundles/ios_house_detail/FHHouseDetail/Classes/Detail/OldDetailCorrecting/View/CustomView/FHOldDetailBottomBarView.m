@@ -17,11 +17,12 @@
 #import "FHUIAdaptation.h"
 #import "FHUtils.h"
 #import <ByteDanceKit/UIDevice+BTDAdditions.h>
+#import <FHHouseBase/FHRealtorAvatarView.h>
 
 @interface FHOldDetailBottomBarView ()
 
 @property(nonatomic , strong) UIControl *leftView;
-@property(nonatomic , strong) UIImageView *avatarView;
+@property(nonatomic , strong) FHRealtorAvatarView *avatarView;
 //@property(nonatomic , strong) UIImageView *identifyView;
 @property(nonatomic , strong) UILabel *nameLabel;
 @property(nonatomic , strong) UILabel *agencyLabel;
@@ -74,15 +75,9 @@
     [self.avatarView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(avatarLeftMargin);
         make.centerY.mas_equalTo(self);
-        make.width.height.mas_equalTo(48);
+        make.width.height.mas_equalTo(50);
     }];
-//    CGFloat ratio = 0;
-//    [self.identifyView mas_makeConstraints:^(MASConstraintMaker *make) {
-//        make.bottom.mas_equalTo(self.avatarView).mas_offset(2);
-//        make.centerX.mas_equalTo(self.avatarView);
-//        make.height.mas_equalTo(14);
-//        make.width.mas_equalTo(14 * ratio);
-//    }];
+
     [self.nameLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(self.avatarView.mas_right).mas_offset(10);
         make.top.mas_equalTo(self.avatarView).offset(2);
@@ -197,8 +192,9 @@
 
     self.leftView.hidden = contactPhone.showRealtorinfo == 1 ? NO : YES;
     self.imChatBtn.hidden = !showIM;
-
-    [self.avatarView bd_setImageWithURL:[NSURL URLWithString:contactPhone.avatarUrl] placeholder:[UIImage imageNamed:@"detail_default_avatar"]];
+    if (contactPhone) {
+        [self.avatarView updateAvatarWithModel:contactPhone];
+    }
 
 //    FHDetailContactImageTagModel *tag = contactPhone.imageTag;
 //    [self refreshIdentifyView:self.identifyView withUrl:tag.imageUrl];
@@ -208,7 +204,7 @@
         if (contactPhone.realtorName.length > 4) {
             realtorName = [NSString stringWithFormat:@"%@...",[contactPhone.realtorName substringToIndex:4]];
             self.nameLabel.text = realtorName;
-        }else {
+        } else {
             self.nameLabel.text = realtorName;
         }
     }else {
@@ -320,13 +316,10 @@
     return _leftView;
 }
 
-- (UIImageView *)avatarView
+- (FHRealtorAvatarView *)avatarView
 {
     if (!_avatarView) {
-        _avatarView = [[UIImageView alloc]init];
-        _avatarView.contentMode = UIViewContentModeScaleAspectFill;
-        _avatarView.layer.cornerRadius = 24;
-        _avatarView.layer.masksToBounds = YES;
+        _avatarView = [[FHRealtorAvatarView alloc]init];
     }
     return _avatarView;
 }

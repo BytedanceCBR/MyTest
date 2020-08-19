@@ -562,7 +562,8 @@
     tracerDict[@"origin_from"] = origin_from ? : @"be_null";
     tracerDict[@"origin_search_id"] = origin_search_id ? : @"be_null";
     tracerDict[@"log_pb"] = logPb ? : @"be_null";
-    
+    tracerDict[@"tab_name"] = self.houseType == FHHouseTypeSecondHandHouse ? @"old_tab" : @"rent_tab";
+
     [FHUserTracker writeEvent:@"house_show" params:tracerDict];
 }
 

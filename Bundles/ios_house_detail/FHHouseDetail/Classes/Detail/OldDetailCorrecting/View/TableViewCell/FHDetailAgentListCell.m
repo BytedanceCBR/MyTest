@@ -122,25 +122,9 @@
                 itemView.name.text = [NSString stringWithFormat:@"%@...",[obj.realtorName substringToIndex:5]];
             }
             itemView.agency.text = obj.agencyName;
-            if (obj.avatarUrl.length > 0) {
-                [itemView.avator bd_setImageWithURL:[NSURL URLWithString:obj.avatarUrl] placeholder:[UIImage imageNamed:@"detail_default_avatar"]];
-            }
-            FHDetailContactImageTagModel *tag = obj.imageTag;
-            [self refreshIdentifyView:itemView.identifyView withUrl:tag.imageUrl];
-            FHDetailContactModel *model  =  (FHDetailContactModel *)obj;
-            if (tag.imageUrl.length > 0) {
-                [itemView.identifyView bd_setImageWithURL:[NSURL URLWithString:tag.imageUrl]];
-                itemView.identifyView.hidden = NO;
-            }else {
-                itemView.identifyView.hidden = YES;
-            }
-            
-            if (model.realtorCellShow == FHRealtorCellShowStyle0) {
+            [itemView.avatorView updateAvatarWithModel:obj];
+            if (obj.realtorCellShow == FHRealtorCellShowStyle0) {
                 itemView.agency.font = [UIFont themeFontRegular:14];
-                itemView.identifyView.hidden = YES;
-            }
-            if (model.realtorCellShow == FHRealtorCellShowStyle3){
-                itemView.identifyView.hidden = YES;
             }
             BOOL isLicenceIconHidden = ![self shouldShowContact:obj];
             [itemView configForLicenceIconWithHidden:isLicenceIconHidden];
@@ -183,30 +167,6 @@
         }];
     }
     [self updateItems:NO];
-}
-
-- (void)refreshIdentifyView:(UIImageView *)identifyView withUrl:(NSString *)imageUrl
-{
-    if (!identifyView) {
-        return;
-    }
-    if (imageUrl.length > 0) {
-        [[BDWebImageManager sharedManager] requestImage:[NSURL URLWithString:imageUrl] options:BDImageRequestHighPriority complete:^(BDWebImageRequest *request, UIImage *image, NSData *data, NSError *error, BDWebImageResultFrom from) {
-            if (!error && image) {
-                identifyView.image = image;
-                CGFloat ratio = 0;
-                if (image.size.height > 0) {
-                    ratio = image.size.width / image.size.height;
-                }
-                [identifyView mas_updateConstraints:^(MASConstraintMaker *make) {
-                    make.width.mas_equalTo(50);
-                }];
-            }
-        }];
-        identifyView.hidden = NO;
-    }else {
-        identifyView.hidden = YES;
-    }
 }
 
 // cell点击
@@ -346,7 +306,7 @@
             default:
                 break;
         }
-        [model.phoneCallViewModel imchatActionWithPhone:contact realtorRank:[NSString stringWithFormat:@"%d", index] extraDic:imExtra];
+        [model.phoneCallViewModel imchatActionWithPhone:contact realtorRank:[NSString stringWithFormat:@"%ld", (long)index] extraDic:imExtra];
     }
 }
 
@@ -584,8 +544,6 @@
 
 @end
 
-
-// FHDetailAgentItemView
 @interface FHDetailAgentItemTagsViewCell: UICollectionViewCell
 
 @property (nonatomic, strong) UILabel *tagLabel;
@@ -880,10 +838,10 @@
         [self.agencyDescriptionLabel setContentCompressionResistancePriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisHorizontal];
         
         [self.agencyDescriptionBac mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.left.mas_equalTo(self.avator.mas_right).offset(8);
+            make.left.mas_equalTo(self.avatorView.mas_right).offset(8);
             make.right.mas_lessThanOrEqualTo(self.imBtn.mas_left);
             make.height.mas_equalTo(18);
-            make.bottom.mas_equalTo(self.avator);
+            make.bottom.mas_equalTo(self.avatorView);
         }];
     }
     
@@ -903,12 +861,12 @@
 -(void) newHouseModifiedLayoutNameNeedShowCenter:(BOOL )showCenter{
 
     [self.name mas_remakeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(self.avator.mas_right).offset(10);
+        make.left.mas_equalTo(self.avatorView.mas_right).offset(10);
         if (showCenter) {
-            make.centerY.mas_equalTo(self.avator);
+            make.centerY.mas_equalTo(self.avatorView);
         }
         else{
-            make.top.mas_equalTo(self.avator);
+            make.top.mas_equalTo(self.avatorView);
         }
         make.height.mas_equalTo(20);
     }];
@@ -938,11 +896,11 @@
         make.left.equalTo(self.name.mas_right).offset(6);
     }];
     [self.name mas_remakeConstraints:^(MASConstraintMaker *make) {
-            make.left.mas_equalTo(self.avator.mas_right).offset(14);
+            make.left.mas_equalTo(self.avatorView.mas_right).offset(14);
             if(!showCenter){
-                make.centerY.equalTo(self.avator);
+                make.centerY.equalTo(self.avatorView);
             }else {
-                make.top.mas_equalTo(self.avator).offset(4);
+                make.top.mas_equalTo(self.avatorView).offset(4);
             }
             make.height.mas_equalTo(20);
     }];
@@ -990,13 +948,8 @@
 }
 
 - (void)setupUI {
-    _avator = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"detail_default_avatar"]];
-    _avator.layer.cornerRadius = 23;
-    _avator.contentMode = UIViewContentModeScaleAspectFill;
-    _avator.clipsToBounds = YES;
-    [self addSubview:_avator];
-    
-    [self addSubview:self.identifyView];
+    self.avatorView = [[FHRealtorAvatarView alloc] init];
+    [self addSubview:self.avatorView];
 
     _licenceIcon = [[FHExtendHotAreaButton alloc] init];
     [_licenceIcon setImage:[UIImage imageNamed:@"detail_contact"] forState:UIControlStateNormal];
@@ -1041,26 +994,20 @@
 
     [self addSubview:_scoreDescription];
     
-    [self.avator mas_makeConstraints:^(MASConstraintMaker *make) {
+    [self.avatorView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.height.width.mas_equalTo(50);
         make.left.mas_equalTo(16);
         make.centerY.mas_equalTo(self);
     }];
-    [self.identifyView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.avator).mas_offset(27);
-        make.centerX.mas_equalTo(self.avator);
-        make.height.mas_equalTo(23);
-        make.width.mas_equalTo(50);
-    }];
     [self.name mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(self.avator.mas_right).offset(14);
-        make.top.mas_equalTo(self.avator).offset(4);
+        make.left.mas_equalTo(self.avatorView.mas_right).offset(14);
+        make.top.mas_equalTo(self.avatorView).offset(4);
         make.height.mas_equalTo(22);
     }];
     [self.agency mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(self.name.mas_bottom);
         make.height.mas_equalTo(20);
-        make.left.mas_equalTo(self.avator.mas_right).offset(14);
+        make.left.mas_equalTo(self.avatorView.mas_right).offset(14);
         make.right.mas_lessThanOrEqualTo(self.imBtn.mas_left);
     }];
     [self.licenceIcon mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -1090,15 +1037,6 @@
         make.right.mas_lessThanOrEqualTo(self).offset(-20);
         make.centerY.equalTo(self.score);
     }];
-}
-
-
-- (UIImageView *)identifyView
-{
-    if (!_identifyView) {
-        _identifyView = [[UIImageView alloc]init];
-    }
-    return _identifyView;
 }
 
 #pragma mark - UICollectionViewDelegateFlowLayout

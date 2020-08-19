@@ -86,7 +86,10 @@ static MAMapView *kFHPageMapView = nil;
         _traceDict =[NSMutableDictionary dictionaryWithDictionary:paramObj.allParams[@"tracer"]];
         
         if ([paramObj.allParams objectForKey:@"latitude"] && [paramObj.allParams objectForKey:@"longitude"]) {
-            self.centerPoint = CLLocationCoordinate2DMake([[paramObj.allParams objectForKey:@"latitude"] floatValue], [[paramObj.allParams objectForKey:@"longitude"] floatValue]);
+            CGFloat latitatue = [[paramObj.allParams objectForKey:@"latitude"] doubleValue];
+            CGFloat longitude = [[paramObj.allParams objectForKey:@"longitude"] doubleValue];
+
+            self.centerPoint = CLLocationCoordinate2DMake(latitatue, longitude);
         }
         
         if ([[userInfo.allInfo objectForKey:@"category"] isKindOfClass:[NSString class]]) {
@@ -100,8 +103,6 @@ static MAMapView *kFHPageMapView = nil;
         if (paramObj.allParams[@"baiduPanoramaUrl"]) {
             self.baiduPanoramaUrl = [paramObj.allParams btd_stringValueForKey:@"baiduPanoramaUrl"];
         }
-    
-        
     }
     return self;
 }
@@ -327,7 +328,7 @@ static MAMapView *kFHPageMapView = nil;
      [self.bottomShowInfoView addSubview:bottomOriginLabel];
      CGFloat finalHeight = bottomOriginLabel.bottom + 20 + ([UIDevice btd_isIPhoneXSeries] ? 20 : 0);
 
-    if (self.bottomBarView.frame.origin.y != self.view.frame.size.height) {
+    if (self.bottomShowInfoView.frame.origin.y != self.view.frame.size.height) {
         [self.bottomShowInfoView setFrame:CGRectMake(0, self.view.frame.size.height - finalHeight, self.view.frame.size.width, finalHeight)];
         
         UIBezierPath *maskPath = [UIBezierPath bezierPathWithRoundedRect:self.bottomShowInfoView.bounds byRoundingCorners:UIRectCornerTopLeft | UIRectCornerTopRight cornerRadii:CGSizeMake(20, 20)];
@@ -371,7 +372,7 @@ static MAMapView *kFHPageMapView = nil;
 }
 
 - (void)hideAnaInfoView:(AMapAOI *)poi{
-    if (self.bottomBarView) {
+    if (self.bottomShowInfoView) {
         [UIView animateWithDuration:0.3 animations:^{
              [self.bottomShowInfoView setFrame:CGRectMake(0, self.view.frame.size.height, self.view.frame.size.width, self.bottomShowInfoView.frame.size.height)];
          } completion:^(BOOL finished) {

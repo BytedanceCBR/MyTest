@@ -77,7 +77,7 @@ static const CGFloat kBackButtonWidth = 24;
         
         [self updateBackBtnHitTest];
 
-        _showFullscreenStatusBar = YES;
+        _showFullscreenStatusBar = NO;
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(fontSizeChanged) name:kSettingFontSizeChangedNotification object:nil];
     }
     return self;
@@ -118,11 +118,11 @@ static const CGFloat kBackButtonWidth = 24;
             [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
         }
         if (self.statusbarHiddenNumber == nil) {
-            if (@available(iOS 13.0 , *)) {
-                self.statusbarHiddenNumber = @(NO);
-            }else{
+//            if (@available(iOS 13.0 , *)) {
+//                self.statusbarHiddenNumber = @(NO);
+//            }else{
                 self.statusbarHiddenNumber = @([UIApplication sharedApplication].isStatusBarHidden);
-            }
+//            }
             [[UIApplication sharedApplication] setStatusBarHidden:(!_showFullscreenStatusBar || self.alpha == 0)];
         }
         _backButton.top = _showFullscreenStatusBar ? 30 : 10;

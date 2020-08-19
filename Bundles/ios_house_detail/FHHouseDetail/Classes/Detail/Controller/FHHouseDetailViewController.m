@@ -16,7 +16,6 @@
 #import "UIViewController+Track.h"
 #import "UIView+House.h"
 #import <Heimdallr/HMDTTMonitor.h>
-#import "FHRNHelper.h"
 #import <TTArticleBase/SSCommonLogic.h>
 #import <CoreTelephony/CTCallCenter.h>
 #import <CoreTelephony/CTCall.h>
@@ -764,9 +763,8 @@
 
 - (void)didMoveToParentViewController:(UIViewController*)parent{
     [super didMoveToParentViewController:parent];
-    if (!parent) {
-        [self.viewModel.contactViewModel destroyRNPreLoadCache];
-    }
+
+    
 }
 
 - (void)updateLoadFinish

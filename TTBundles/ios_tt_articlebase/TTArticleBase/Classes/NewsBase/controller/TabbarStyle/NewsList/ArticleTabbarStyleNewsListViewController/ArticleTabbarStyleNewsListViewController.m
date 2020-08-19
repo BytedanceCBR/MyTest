@@ -138,7 +138,7 @@
     [[NSNotificationCenter defaultCenter] postNotificationName:@"MainList_ViewAppear" object:nil];
     
     if (![FHEnvContext sharedInstance].isShowingHomeHouseFind) {
-         [self viewAppearForEnterType:FHHomeMainTraceEnterTypeClick];
+         [self viewAppearForEnterType:FHHomeMainTraceEnterTypeClick needReportSubCategory:NO];
      }
 }
 
@@ -147,7 +147,7 @@
     [super viewDidDisappear:animated];
     
     if (![FHEnvContext sharedInstance].isShowingHomeHouseFind) {
-        [self viewDisAppearForEnterType:FHHomeMainTraceEnterTypeClick];
+        [self viewDisAppearForEnterType:FHHomeMainTraceEnterTypeClick needReportSubCategory:NO];
     }
 }
 
@@ -198,7 +198,7 @@
     }
 }
 
-- (void)viewAppearForEnterType:(FHHomeMainTraceEnterType)enterType
+- (void)viewAppearForEnterType:(FHHomeMainTraceEnterType)enterType needReportSubCategory:(BOOL)needReportSubCategory
 {
     self.stayTime = [self getCurrentTime];
     self.traceEnterTopTabache = [NSMutableDictionary new];
@@ -216,16 +216,18 @@
     [self.traceEnterTopTabache setValue:@"discover_stream" forKey:@"category_name"];
     [FHEnvContext recordEvent:self.traceEnterTopTabache andEventKey:@"enter_category"];
     
-    NSMutableDictionary *feedCategoryDict = [NSMutableDictionary new];
-    if (self.traceEnterTopTabache) {
-        [feedCategoryDict addEntriesFromDictionary:self.traceEnterTopTabache];
+    if(needReportSubCategory){
+        NSMutableDictionary *feedCategoryDict = [NSMutableDictionary new];
+        if (self.traceEnterTopTabache) {
+            [feedCategoryDict addEntriesFromDictionary:self.traceEnterTopTabache];
+        }
+        [feedCategoryDict setValue:self.mainVC.categorySelectorView.currentSelectedCategory.categoryID
+                            forKey:@"category_name"];
+        [FHEnvContext recordEvent:feedCategoryDict andEventKey:@"enter_category"];
     }
-    [feedCategoryDict setValue:self.mainVC.categorySelectorView.currentSelectedCategory.categoryID
-                        forKey:@"category_name"];
-    [FHEnvContext recordEvent:feedCategoryDict andEventKey:@"enter_category"];
 }
 
-- (void)viewDisAppearForEnterType:(FHHomeMainTraceEnterType)enterType
+- (void)viewDisAppearForEnterType:(FHHomeMainTraceEnterType)enterType needReportSubCategory:(BOOL)needReportSubCategory
 {
     NSMutableDictionary *tracerDict = [NSMutableDictionary new];
     if (self.traceEnterTopTabache) {
@@ -238,14 +240,15 @@
     }
     [FHEnvContext recordEvent:tracerDict andEventKey:@"stay_category"];
     
-    
-    NSMutableDictionary *feedCategoryDict = [NSMutableDictionary new];
-    if (tracerDict) {
-        [feedCategoryDict addEntriesFromDictionary:tracerDict];
+    if(needReportSubCategory){
+        NSMutableDictionary *feedCategoryDict = [NSMutableDictionary new];
+        if (tracerDict) {
+            [feedCategoryDict addEntriesFromDictionary:tracerDict];
+        }
+        [feedCategoryDict setValue:self.mainVC.categorySelectorView.currentSelectedCategory.categoryID
+                            forKey:@"category_name"];
+        [FHEnvContext recordEvent:feedCategoryDict andEventKey:@"stay_category"];
     }
-    [feedCategoryDict setValue:self.mainVC.categorySelectorView.currentSelectedCategory.categoryID
-                        forKey:@"category_name"];
-    [FHEnvContext recordEvent:feedCategoryDict andEventKey:@"stay_category"];
 }
 
 - (NSTimeInterval)getCurrentTime

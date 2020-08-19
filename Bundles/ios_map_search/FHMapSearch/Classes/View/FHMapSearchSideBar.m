@@ -69,11 +69,11 @@
 //        [_contentView addSubview:_listItem];
         
         
-        CALayer *layer = self.layer;
-        layer.shadowColor = [UIColor blackColor].CGColor;
-        layer.shadowOffset = CGSizeMake(0, 2);
-        layer.shadowRadius = 6;
-        layer.shadowOpacity = 0.1;
+//        CALayer *layer = self.layer;
+//        layer.shadowColor = [UIColor blackColor].CGColor;
+//        layer.shadowOffset = CGSizeMake(0, 2);
+//        layer.shadowRadius = 6;
+//        layer.shadowOpacity = 0.1;
         
     }
     return self;

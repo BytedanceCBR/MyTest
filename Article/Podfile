@@ -40,7 +40,6 @@ def fhPods
     #    pod 'FHCHousePush' , :git => 'git@code.byted.org:fproject/FHCHousePush.git' , :branch => 'feature/develop'
     
     pod 'FHWebView', :path => '../AKPlugins/FHWebView', :inhibit_warnings => false
-    pod 'FHRNKit' , :path => '../Bundles/ios_common_rn', :inhibit_warnings => false
     pod 'FHLynxKit' , :path => '../Bundles/ios_common_lynx', :inhibit_warnings => false
 
 #    pod 'ios_house_filter' , :git => 'git@code.byted.org:fproject/ios_house_filter.git', :commit => '60e9866a118874a07ca697cfbc4155bfa6b3d72c' #:branch => 'feature/develop'filter-triangle-open-highlighted
@@ -64,10 +63,10 @@ def fhPods
     # 'Core',
     # 'DelegateForC'
     #]
+    
 #    pod 'ios_house_im' ,'0.2.14-rc.20'
 #    pod 'ios_house_im' , :path => '../../../im/1'
    pod 'ios_house_im' , :git => 'git@code.byted.org:fproject/ios_house_im.git' , :commit => 'ec77c2406015fc2f415c330016d12b542800a143'
-    
 
 end
 
@@ -163,30 +162,6 @@ def appPods
     
     pod_binary 'IESGeckoKit', '0.4.0'
     pod_binary 'IESWebKit', '0.2.0-rc.3'
-    pod_binary 'React', '0.55.13-rc.0', :subspecs => [ #可根据需要选择相应子库以减少包大小
-    'Core',
-    'CxxBridge',
-    'RCTActionSheet',
-    'RCTImage',
-    'RCTNetwork',
-    'RCTText',
-    'jschelpers',
-    'cxxreact',
-    'PrivateDatabase',
-    'RCTBlob',
-    'fishhook',
-    'jsinspector',
-    'RCTLinkingIOS',
-    'RNFetchBlob',
-    'base',
-    'runtime',
-#    'yoga',
-    'third-party',
-    'RCTAnimation', # Needed for FlatList and animations running on native UI thread
-    'DevSupport', # Include this to enable In-App Devmenu if RN >= 0.43
-    'RCTWebSocket', # Needed for debugging
-    'Extra'
-    ]
     
     pod_binary 'TTVideoService', '0.1.71'
     pod_binary 'TTVideoService/TTBusinessService', '0.1.71'
@@ -603,6 +578,7 @@ end
 
 def testPods
     pod 'BDSSOAuthSDK' ,  '1.1.1-alpha.6'
+    
     pod_binary 'TTDebugAssistant', '0.2.33'
     pod_binary 'FLEX', '3.1.2'#, :configurations=>['Debug']
 #    pod_source 'BDNetworkDevMonitor', '0.1.6'
@@ -613,6 +589,9 @@ def testPods
     ]
     pod_binary 'FBRetainCycleDetector','0.1.5-alpha.3'
     pod 'LookinServer', :configurations => ['Debug']
+#        pod 'FHErrorHubManager', :git => 'git@code.byted.org:fproject/FHErrorHubManager.git' , :commit => 'b04a60e50b4564346962b47d582f78eddc007408'
+#    pod 'FHErrorHubManager', :path => '../../FHErrorHubManager'
+    pod 'FHErrorHubManager', '1.0.12'
 end
 
 target 'NewsLiteInHouse' do
@@ -706,7 +685,6 @@ post_install do |installer|
           '${PODS_ROOT}/AMapLocation',
           '${PODS_ROOT}/AMapSearch',
           '${PODS_ROOT}/AMapFoundation',
-          '${PODS_ROOT}/React',
           '${PODS_ROOT}/BDTFactoryConfigurator',
           '${PODS_ROOT}/TYRZApiSDK/TYRZApiSDK/Classes',
           '${PODS_ROOT}/EAccountApiSDK/EAccountApiSDK/Classes',
@@ -715,16 +693,9 @@ post_install do |installer|
           '${PODS_ROOT}/BDUGUnionSDK/BDUGUnionSDK/Classes',
           '${PODS_ROOT}/TTNetBusiness/ios',
           '${PODS_ROOT}/TencentQQSDK/TencentQQSDK/Classes',
-
           '${PODS_ROOT}/Quaterback/BDDynamically/Frameworks/News/Release',
           '${PODS_ROOT}/ByteRtcSDK',
           ]
-        end
-
-        if target.name == "FHRNKit" || target.name == "TTDebug"
-          target.build_configurations.each do |config|
-            config.build_settings['HEADER_SEARCH_PATHS'] ||= ['$(inherited)','${PODS_ROOT}/Headers/Public/React']
-          end
         end
     end
     
