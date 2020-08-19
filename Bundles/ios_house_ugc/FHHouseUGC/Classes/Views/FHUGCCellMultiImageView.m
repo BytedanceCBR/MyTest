@@ -182,8 +182,10 @@
                 self.imageHeight = self.viewHeight;
             }
 
-            if (imageModel && imageModel.url.length > 0) {
-                [imageView fh_setImageWithURL:imageModel.url placeholder:nil reSize:imageView.size];
+            if (imageModel) {
+                NSArray *urls = [FHUGCCellHelper convertToImageUrls:imageModel];
+                [imageView fh_setImageWithURLs:urls placeholder:nil reSize:imageView.size];
+//                [imageView fh_setImageWithURL:imageModel.url placeholder:nil reSize:imageView.size];
                 
             }
         }else{
