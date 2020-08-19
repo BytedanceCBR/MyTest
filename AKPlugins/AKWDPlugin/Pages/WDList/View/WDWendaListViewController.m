@@ -149,10 +149,15 @@ static NSString * const WukongListTipsHasShown = @"kWukongListTipsHasShown";
     NSMutableDictionary *extraDictsAdd = [NSMutableDictionary dictionaryWithDictionary:extraDicts];
     NSDictionary *tracer = paramObj.allParams[@"tracer"];
     if(tracer && tracer.count > 0){
-//        extraDictsAdd[@"enter_from"] = tracer[@"enter_from"];
-//        extraDictsAdd[@"origin_from"] = tracer[@"origin_from"];
-//        extraDictsAdd[@"category_name"] = tracer[@"category_name"];
         [extraDictsAdd addEntriesFromDictionary:tracer];
+    }
+    
+    id logPb = extraDictsAdd[@"log_pb"];
+    if([logPb isKindOfClass:[NSDictionary class]]){
+        NSDictionary *logPbDic = (NSDictionary *)logPb;
+        NSMutableDictionary *logPbM = [logPbDic mutableCopy];
+        [logPbM removeObjectsForKeys:@[@"group_id"]];
+        extraDictsAdd[@"log_pb"] = [logPbM copy];
     }
     
     BOOL needReturn = [[paramObj.userInfo.extra tt_stringValueForKey:kWDListNeedReturnKey] boolValue];
@@ -255,7 +260,7 @@ static NSString * const WukongListTipsHasShown = @"kWukongListTipsHasShown";
         if(logPbDic[@"group_source"]){
             v3Dic[@"group_source"] = logPbDic[@"group_source"];
         }
-        
+        [v3Dic setValue:@"89248" forKey:@"event_tracking_id"];
         [BDTrackerProtocol eventV3:@"go_detail" params:v3Dic isDoubleSending:NO];
         self.goDetailDict = v3Dic;
 

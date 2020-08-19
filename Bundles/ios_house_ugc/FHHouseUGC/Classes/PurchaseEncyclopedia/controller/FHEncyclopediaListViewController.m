@@ -31,9 +31,15 @@
     [super viewDidLoad];
     [self initUI];
     [self initViewModel];
+    [self addDefaultEmptyViewFullScreen];
 //    [self startLoadData];
 //    [self setupDefaultNavBar:NO];
     self.automaticallyAdjustsScrollViewInsets = NO;
+}
+
+- (void)retryLoadData {
+     _viewModel.channel_id = self.channel_id;
+    [_viewModel requestData:YES first:YES];
 }
 
 
@@ -50,21 +56,19 @@
         _viewModel.channel_id = self.channel_id;
         [_viewModel requestData:YES first:YES];
     }else {
-        if(!self.hasValidateData){
-            [self.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoNetWorkAndRefresh];
-        }
+         [self.emptyView showEmptyWithTip:@"网络异常，请检查网络连接" errorImageName:kFHErrorMaskNoNetWorkImageName showRetry:YES];
     }
 }
 
 - (void)initViewModel {
-    _viewModel = [[FHEncyclopediaListViewModel alloc] initWithWithController:self tableView:self.mainTable userInfo:nil];;
+    _viewModel = [[FHEncyclopediaListViewModel alloc] initWithWithController:self tableView:self.mainTable userInfo:[NSDictionary dictionary]];;
 }
 
 - (void)initUI {
     [self.mainTable mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.right.equalTo(self.view);
         make.bottom.equalTo(self.view);
-        make.top.equalTo(self.view);
+        make.top.equalTo(self.view).offset(10);
     }];
     [self initNotifyBarView];
     [self.notifyBarView mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -95,6 +99,7 @@
         }
         UIView *footerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 0, 50)];
         mainTable.tableFooterView = footerView;
+        mainTable.tableHeaderView = [[UIView alloc]initWithFrame:CGRectZero];
         [self.view addSubview:mainTable];
         _mainTable = mainTable;
     }

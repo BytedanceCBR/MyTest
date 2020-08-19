@@ -18,6 +18,7 @@
 #import "TTBusinessManager+StringUtils.h"
 #import "UIViewAdditions.h"
 #import "FHUGCCellAttachCardView.h"
+#import "TTAsyncCornerImageView.h"
 
 #define leftMargin 20
 #define rightMargin 20
@@ -39,7 +40,7 @@
 @property(nonatomic ,strong) FHUGCCellBottomView *bottomView;
 @property(nonatomic ,strong) FHFeedUGCCellModel *cellModel;
 @property(nonatomic ,strong) FHUGCCellAttachCardView *attachCardView;
-@property(nonatomic, strong) UIImageView *contentImage;
+@property(nonatomic, strong) TTAsyncCornerImageView *contentImage;
 //@property(nonatomic ,assign) CGFloat imageViewheight;
 
 @end
@@ -78,9 +79,12 @@
     _contentLabel.delegate = self;
     [self.contentView addSubview:_contentLabel];
     
-    self.contentImage = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, 20, 20)];
-    _contentImage.layer.cornerRadius = 10;
-    _contentImage.layer.masksToBounds = YES;
+    self.contentImage = [[TTAsyncCornerImageView alloc] initWithFrame:CGRectMake(0, 0, 20, 20) allowCorner:YES];
+    _contentImage.placeholderName = @"fh_mine_avatar";
+    _contentImage.cornerRadius = 10;
+    _contentImage.contentMode = UIViewContentModeScaleAspectFill;
+    _contentImage.borderWidth = 1;
+    _contentImage.borderColor = [UIColor themeGray6];
     [self.contentLabel addSubview:self.contentImage];
     
     self.multiImageView = [[FHUGCCellMultiImageView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width - leftMargin - rightMargin, 0) count:3];
@@ -199,9 +203,7 @@
         self.singleImageView.top = self.userInfoView.bottom + 20 + cellModel.contentHeight;
     }
     
-    if (cellModel.user.avatarUrl) {
-        [self.contentImage bd_setImageWithURL:[NSURL URLWithString:cellModel.user.avatarUrl]];
-    };
+    [self.contentImage tt_setImageWithURLString:cellModel.user.avatarUrl];
     
     UIView *lastView = self.contentLabel;
     CGFloat topOffset = 10;

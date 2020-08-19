@@ -2306,7 +2306,7 @@
             [dic setValue:[NSString stringWithFormat:@"%@",self.detailModel.relateReadFromGID] forKey:@"from_gid"];
         }
     }
-    
+    [dic setValue:@"89245" forKey:@"event_tracking_id"];
     [FHEnvContext recordEvent:dic andEventKey:@"go_detail"];
 //    id value = self.detailModel.article.groupModel.groupID;
 //    if (![TTTrackerWrapper isOnlyV3SendingEnable]) {
@@ -2752,7 +2752,7 @@
     [mdict setValue:self.detailModel.reportParams forKey:@"extraDic"];
 
     TTCommentDetailViewController *detailRoot = [[TTCommentDetailViewController alloc] initWithRouteParamObj:TTRouteParamObjWithDict(mdict.copy)];
-    
+    detailRoot.noReportGoDetail = YES;
     detailRoot.categoryID = self.detailModel.categoryID;
     detailRoot.enterFrom = self.detailModel.clickLabel;
     if(self.detailModel.clickLabel.length <= 0) {

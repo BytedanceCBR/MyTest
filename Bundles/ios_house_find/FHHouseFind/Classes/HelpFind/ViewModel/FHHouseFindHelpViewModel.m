@@ -33,6 +33,10 @@
 #import "FHFilterModelParser.h"
 #import "AreaSelectionTableViewVM.h"
 #import "NSDictionary+BTDAdditions.h"
+#import "FHLocManager.h"
+#import "NSData+BTDAdditions.h"
+#import "FHMainApi+Contact.h"
+#import "HMDTTMonitor.h"
 
 #define HELP_HEADER_ID @"header_id"
 #define HELP_ITEM_HOR_MARGIN 20
@@ -115,6 +119,7 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(keyboardWillShowNotifiction:) name:UIKeyboardWillShowNotification object:nil];
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(keyboardWillHideNotifiction:) name:UIKeyboardWillHideNotification object:nil];
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(textFieldDidChange:) name:UITextFieldTextDidChangeNotification object:nil];
+         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(configLoadSuccess) name:kFHAllConfigLoadSuccessNotice object:nil];
         
     }
     return self;
@@ -166,7 +171,6 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
 - (void)confirmBtnDidClick
 {
 //    [self.collectionView endEditing:YES];
-    __weak typeof(self) wself = self;
     
     FHHouseType ht = _houseType;
     FHHouseFindSelectModel *model = [self selectModelWithType:ht];
@@ -282,27 +286,46 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
     }
     
     //Step1: 提交用户选择信息，获取线索相关信息
-    NSString *associateStr = [associateDict btd_jsonStringEncoded];
+    NSString *associateStr = [associateDict btd_jsonStringEncoded] ?: @"";
     NSDictionary *params = @{
         @"from": @"app_findselfhouse",
         @"from_data": associateStr,
     };
     
-    [FHMainApi loadAssociateEntranceWithParams:params completion:^(NSError * _Nonnull error, id _Nonnull response) {
+    [FHMainApi loadAssociateEntranceWithParams:params completion:^(NSDictionary * _Nullable result, NSError * _Nullable error) {
         __strong typeof(weakSelf) strongSelf = weakSelf;
         
         if (!error) {
             //Step2: 提交线索信息
-            NSDictionary *responseDict = (NSDictionary *)response;
+            NSDictionary *responseDict = (NSDictionary *)result;
             if (responseDict && [responseDict isKindOfClass:[NSDictionary class]]) {
+                if (responseDict[@"status"]) {
+                    NSInteger status = [responseDict[@"status"] integerValue];
+                    if (status != 0) {
+                        [[ToastManager manager] showToast:@"网络错误"];
+                        return;
+                    }
+                }
+                
                 NSDictionary *data = responseDict[@"data"];
                 if (data && [data isKindOfClass:[NSDictionary class]]) {
                     NSDictionary *associateInfo = data[@"associate_info"];
-                    strongSelf.reportFormInfo = associateInfo[@"report_form_info"];
+                    if (associateInfo && [associateInfo isKindOfClass:[NSDictionary class]]) {
+                        strongSelf.reportFormInfo = associateInfo[@"report_form_info"];
+                    } else {
+                        [[ToastManager manager] showToast:@"网络错误"];
+                        return;
+                    }
+                } else {
+                    [[ToastManager manager] showToast:@"网络错误"];
+                    return;
                 }
+            } else {
+                [[ToastManager manager] showToast:@"网络错误"];
+                return;
             }
             
-            NSString *originFrom = self.tracerDict[@"origin_from"] ?: @"be_null";
+            NSString *originFrom = strongSelf.tracerDict[@"origin_from"] ?: @"be_null";
             NSDictionary *params = @{
                 @"origin_from": originFrom,
                 @"user_phone": phoneNumber,
@@ -311,9 +334,9 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
             };
             [strongSelf commitAssociateInfoWithParams:params selectedModel:selectModel phoneNumber:phoneNumber];
         } else {
-           NSString *message = error.localizedDescription ? : @"请求失败，请稍后重试";
-           [[ToastManager manager] showToast:message];
-       }
+            //接口出错统一提示“网络错误”
+            [[ToastManager manager] showToast:@"网络错误"];
+        }
     }];
     
     return YES;
@@ -322,18 +345,58 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
 - (void)commitAssociateInfoWithParams:(NSDictionary *)params selectedModel:(FHHouseFindSelectModel *)selectedModel phoneNumber:(NSString *)phoneNumber {
     __weak typeof(self) weakSelf = self;
     
-    [FHMainApi commitAssociateInfoWithParams:params completion:^(NSError * _Nonnull error, id _Nonnull response) {
+    [FHMainApi commitAssociateInfoWithParams:params completion:^(NSError *error, id response, TTHttpResponse *httpResponse) {
         __strong typeof(weakSelf) strongSelf = weakSelf;
         
-        if (!error) {
-            //Step3: 保存用户选择信息
-            [strongSelf saveSelectedInfoWithSelectedModel:selectedModel phoneNumber:phoneNumber];
-            //埋点
-            [strongSelf addClickLogWithEvent:@"click_confirm" position:nil associateInfo:strongSelf.reportFormInfo];
-        } else {
-            NSString *message = error.localizedDescription ? : @"请求失败，请稍后重试";
-            [[ToastManager manager] showToast:message];
+        NSMutableDictionary *categoryDict = @{}.mutableCopy;
+        NSMutableDictionary *extraDict = @{}.mutableCopy;
+        if (![TTReachability isNetworkConnected]) {
+            categoryDict[@"status"] = [NSString stringWithFormat:@"%ld",  FHClueErrorTypeNetFailure];
         }
+        
+        NSString *message = nil;
+        if (httpResponse.statusCode == 200) {
+            NSData *responseData = (NSData *)response;
+            if (responseData && [responseData isKindOfClass:[NSData class]]) {
+                NSDictionary *responseDict = [responseData btd_jsonDictionary];
+                if (responseDict && [responseDict isKindOfClass:[NSDictionary class]]) {
+                    if (responseDict[@"status"]) {
+                        NSInteger status = [responseDict[@"status"] integerValue];
+                        message = responseDict[@"message"];
+                        if (status == 0) {
+                            //Step3: 保存用户选择信息
+                            [strongSelf saveSelectedInfoWithSelectedModel:selectedModel phoneNumber:phoneNumber];
+                            //埋点
+                            [strongSelf addClickLogWithEvent:@"click_confirm" position:nil associateInfo:strongSelf.reportFormInfo];
+                            
+                            categoryDict[@"status"] = [NSString stringWithFormat:@"%ld", FHClueErrorTypeNone];
+                        } else {
+                            error = [NSError errorWithDomain:responseDict[@"message"] ?: @"请求错误" code:1000 userInfo:nil];
+                            extraDict[@"error_code"] = @(status);
+                        }
+                    }
+                } else {
+                    error = [NSError errorWithDomain:@"请求错误" code:1000 userInfo:nil];
+                }
+            } else {
+                error = [NSError errorWithDomain:@"请求错误" code:1000 userInfo:nil];
+            }
+        } else {
+            categoryDict[@"status"] = [NSString stringWithFormat:@"%ld", FHClueErrorTypeHttpFailure];
+            extraDict[@"error_code"] = [NSString stringWithFormat:@"%ld", httpResponse.statusCode];
+            
+            [strongSelf addClueFormErrorRateLog:categoryDict extraDict:extraDict];
+            return;
+        }
+        
+        if (error) {
+            NSString *errorMsg = message ?: error.domain;
+            extraDict[@"message"] = errorMsg ?: @"";
+            categoryDict[@"status"] = [NSString stringWithFormat:@"%ld", FHClueErrorTypeServerFailure];
+            [[ToastManager manager] showToast:@"网络错误"];
+        }
+        
+        [strongSelf addClueFormErrorRateLog:categoryDict extraDict:extraDict];
     }];
 }
 
@@ -364,10 +427,14 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
                 [weakSelf jump2HouseFindResultPage:[model toDictionary]];
             }
         } else {
-            NSString *message = error.localizedDescription ? : @"请求失败，请稍后重试";
-            [[ToastManager manager] showToast:message];
+            [[ToastManager manager] showToast:@"网络错误"];
         }
     }];
+}
+
+
+- (void)addClueFormErrorRateLog:categoryDict extraDict:(NSDictionary *)extraDict {
+    [[HMDTTMonitor defaultManager]hmdTrackService:@"clue_form_error_rate" metric:nil category:categoryDict extra:extraDict];
 }
 
 - (void)jump2HouseFindResultPage:(NSDictionary *)recommendDict
@@ -375,6 +442,10 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
     if ([self.viewController.parentViewController respondsToSelector:@selector(jump2HouseFindResultVC)]) {
         [self.viewController.parentViewController performSelector:@selector(jump2HouseFindResultVC)];
     }
+}
+
+- (void)configLoadSuccess {
+    [self setupHouseContent:nil];
 }
 
 - (void)setupHouseContent:(FHConfigDataModel *)configData
@@ -1626,8 +1697,10 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
 {
     NSMutableDictionary *params = @{}.mutableCopy;
     params[@"enter_from"] = self.tracerDict[@"enter_from"] ? : @"be_null";
+    params[@"origin_from"] = self.tracerDict[@"origin_from"] ?: @"be_null";
     params[@"element_from"] = self.tracerDict[@"element_from"] ?: @"be_null";
     params[@"page_type"] = [self pageTypeString];
+    params[@"event_tracking_id"] = @"93414";
     [FHUserTracker writeEvent:@"go_detail" params:params];
 }
 
@@ -1646,6 +1719,7 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
     params[@"origin_from"] = self.tracerDict[@"origin_from"] ?: @"be_null";
     params[@"enter_from"] = self.tracerDict[@"enter_from"] ? : @"be_null";
     params[@"page_type"] = [self pageTypeString];
+    params[@"event_tracking_id"] = @"93447";
     if (position.length > 0) {
         params[@"click_position"] = position;
     }

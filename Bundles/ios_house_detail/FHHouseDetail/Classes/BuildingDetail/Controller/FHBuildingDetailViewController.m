@@ -284,6 +284,7 @@
 //    else {
 //        contactPhone = model.data.contact;
 //    }
+
     contactPhone.isFormReport = !contactPhone.enablePhone;
     self.contactViewModel.contactPhone = contactPhone;
     

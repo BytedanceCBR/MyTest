@@ -185,7 +185,7 @@
         }];
     }
     if (cellModel.desc) {
-        self.infoLab.text = cellModel.desc.string;
+        self.infoLab.text =  cellModel.desc.string;
     }else {
         self.infoLab.text = [NSString stringWithFormat:@"%@",cellModel.createTime];
     }

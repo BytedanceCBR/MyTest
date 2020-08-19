@@ -142,11 +142,9 @@
         tracerDict[@"click_position"] = @"question_comment";
         NSString *ansid = self.ansEntity.ansid;
         if (ansid.length > 0) {
-            tracerDict[@"ansid"] = ansid;
+            tracerDict[@"group_id"] = ansid ?: @"be_null";
         }
         tracerDict[@"page_type"] = @"question";
-        NSString *qid = tracerDict[@"qid"];
-        tracerDict[@"group_id"] = qid ?: @"be_null";
         [FHUserTracker writeEvent:@"click_comment" params:tracerDict];
     }
 }
@@ -158,11 +156,9 @@
         tracerDict[@"click_position"] = @"feed_detail";
         NSString *ansid = self.ansEntity.ansid;
         if (ansid.length > 0) {
-            tracerDict[@"ansid"] = ansid;
+            tracerDict[@"group_id"] = ansid ?: @"be_null";
         }
         tracerDict[@"page_type"] = @"question";
-        NSString *qid = tracerDict[@"qid"];
-        tracerDict[@"group_id"] = qid ?: @"be_null";
         [FHUserTracker writeEvent:@"click_like" params:tracerDict];
     }
 }
@@ -174,11 +170,9 @@
         tracerDict[@"click_position"] = @"feed_detail";
         NSString *ansid = self.ansEntity.ansid;
         if (ansid.length > 0) {
-            tracerDict[@"ansid"] = ansid;
+            tracerDict[@"group_id"] = ansid ?: @"be_null";
         }
         tracerDict[@"page_type"] = @"question";
-        NSString *qid = tracerDict[@"qid"];
-        tracerDict[@"group_id"] = qid ?: @"be_null";
         [FHUserTracker writeEvent:@"click_dislike" params:tracerDict];
     }
 }

@@ -9,6 +9,7 @@
 #import "TTCategoryStayTrackManager.h"
 #import "TTTrackerWrapper.h"
 #import "TTBaseMacro.h"
+#import "FHUserTracker.h"
 
 #define kMomentListFakeCategoryID @"kMomentListFakeCategoryID"
 
@@ -96,7 +97,7 @@ static TTCategoryStayTrackManager * manager;
     //频道切换埋点
     NSString *categoryID = _trackingCategoryID;
     NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithCapacity:10];
-    [dict setValue:@"house_app2c_v2" forKey:@"event_type"];
+    [dict setValue:@"maintab" forKey:@"enter_from"];
     [dict setValue:@(((long long) (stayTime * 1000))) forKey:@"stay_time"];
     if (!isEmptyString(_trackingCategoryID)) {
         [dict setValue:_trackingCategoryID forKey:@"category_name"];
@@ -104,7 +105,8 @@ static TTCategoryStayTrackManager * manager;
     if (!isEmptyString(_enterType)) {
         [dict setValue:_enterType forKey:@"enter_type"];
     }
-    [BDTrackerProtocol eventV3:@"stay_category" params:dict isDoubleSending:NO];
+    
+    TRACK_EVENT(@"stay_category", dict);
 
     self.lastTrackingCategoryID = _trackingCategoryID;
     /* //lite 频道切换埋点代码

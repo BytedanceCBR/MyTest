@@ -75,10 +75,8 @@
     }
     [self initConstraints];
 
-    if(!self.isNewDiscovery){
+    if(!self.isNewDiscovery && ![FHEnvContext isHasVideoList]){
         [self onFocusHaveNewContents];
-    }else{
-//        [self onCommunityHaveNewContents];
     }
 
     self.isFirstLoad = YES;
@@ -92,18 +90,11 @@
             self.isUgcOpen = xConfigDataModel.ugcCitySwitch;
             [self initViewModel];
         }
-        
-//        if(![FHEnvContext isNewDiscovery] && self.isNewDiscovery != [FHEnvContext isNewDiscovery]){
-//            [self updateSegmentView];
-//        }
-        
         self.segmentControl.sectionTitles = [self getSegmentTitles];
     }];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onCommunityHaveNewContents) name:kFHUGCCommunityTabHasNewNotification object:nil];
-//    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onUnreadMessageChange) name:kTTMessageNotificationTipsChangeNotification object:nil];
-//    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onUnreadMessageChange) name:kFHUGCFollowNotification object:nil];
+    
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onFocusHaveNewContents) name:kFHUGCFocusTabHasNewNotification object:nil];
-//    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onUnreadMessageChange) name:kFHUGCLoadFollowDataFinishedNotification object:nil];
     
     //tabbar双击的通知
     if(self.isNewDiscovery){
@@ -125,53 +116,14 @@
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
-//- (void)addUgcGuide {
-//    if ([FHUGCGuideHelper shouldShowSearchGuide] && self.isUgcOpen && !self.alreadyShowGuide && !self.isNewDiscovery) {
-//        [self.guideView show:self.view dismissDelayTime:5.0f completion:^{
-//            [FHUGCGuideHelper hideSearchGuide];
-//        }];
-//        self.alreadyShowGuide = YES;
-//    }
-//}
-//
-//- (void)hideGuideView {
-//    if(_guideView){
-//        [_guideView hide];
-//        [FHUGCGuideHelper hideSearchGuide];
-//    }
-//}
-
-//- (FHUGCGuideView *)guideView {
-//    [self.view layoutIfNeeded];
-//    if (!_guideView) {
-//        _guideView = [[FHUGCGuideView alloc] initWithFrame:CGRectMake(self.view.frame.size.width - 186, CGRectGetMaxY(self.topView.frame) - 7, 176, 42) andType:FHUGCGuideViewTypeSearch];
-//    }
-//    return _guideView;
-//}
-
-//- (void)topVCChange:(NSNotification *)notification {
-//    if (self.isUgcOpen) {
-//        [self hideGuideView];
-//    }
-//}
-
-- (void)onUnreadMessageChange {
-    BOOL hasSocialGroups = [FHUGCConfig sharedInstance].followList.count > 0;
-    FHUnreadMsgDataUnreadModel *model = [FHMessageNotificationTipsManager sharedManager].tipsModel;
-    if (model && [model.unread integerValue] > 0 && hasSocialGroups && !self.isNewDiscovery) {
-        NSInteger count = [model.unread integerValue];
-        _segmentControl.sectionMessageTips = @[@(count)];
-    } else {
-        _segmentControl.sectionMessageTips = @[@(0)];
-    }
-}
-
 - (void)onFocusHaveNewContents {
-    BOOL hasSocialGroups = [FHUGCConfig sharedInstance].followList.count > 0;
-    BOOL hasNew = [FHUGCConfig sharedInstance].ugcFocusHasNew;
-    if(self.viewModel.currentTabIndex != 0 && hasSocialGroups && hasNew && !self.isNewDiscovery){
-        _segmentControl.sectionRedPoints = @[@1];
-        self.hasFocusTips = YES;
+    if(![FHEnvContext isHasVideoList]){
+        BOOL hasSocialGroups = [FHUGCConfig sharedInstance].followList.count > 0;
+        BOOL hasNew = [FHUGCConfig sharedInstance].ugcFocusHasNew;
+        if(self.viewModel.currentTabIndex != 0 && hasSocialGroups && hasNew && !self.isNewDiscovery){
+            _segmentControl.sectionRedPoints = @[@1];
+            self.hasFocusTips = YES;
+        }
     }
 }
 
@@ -275,6 +227,10 @@
     }
     if(!self.isNewDiscovery){
         [self addStayCategoryLog:self.stayTime];
+    }else{
+        if (![FHEnvContext sharedInstance].isShowingHomeHouseFind) {
+            [self viewDisAppearForEnterType:1 needReportSubCategory:NO];
+        }
     }
 }
 
@@ -286,7 +242,6 @@
     
     [self initLoginTipView];
     self.stayTime = [[NSDate date] timeIntervalSince1970];
-//    [self addUgcGuide];
 
     if(self.isUgcOpen){
         //去掉邻里tab的红点
@@ -301,7 +256,7 @@
             }
         }else{
             //去掉关注红点的同时刷新tab
-            if(self.viewModel.currentTabIndex == 0 && [FHUGCConfig sharedInstance].ugcFocusHasNew){
+            if(self.viewModel.currentTabIndex == 0 && [FHUGCConfig sharedInstance].ugcFocusHasNew && ![FHEnvContext isHasVideoList]){
                 self.hasFocusTips = NO;
                 [FHUGCConfig sharedInstance].ugcFocusHasNew = NO;
                 [self.viewModel refreshCell:YES isClick:NO];
@@ -316,10 +271,14 @@
     
     //关注tab，没有关注时需要隐藏关注按钮
     if(!self.isNewDiscovery){
-        if(self.viewModel.currentTabIndex == 0 && [FHUGCConfig sharedInstance].followList.count <= 0){
+        if(self.viewModel.currentTabIndex == 0 && ([FHUGCConfig sharedInstance].followList.count <= 0 || [FHEnvContext isHasVideoList])){
             self.publishBtn.hidden = YES;
         }else{
             self.publishBtn.hidden = NO;
+        }
+    }else{
+        if (![FHEnvContext sharedInstance].isShowingHomeHouseFind) {
+            [self viewAppearForEnterType:1 needReportSubCategory:NO];
         }
     }
 }
@@ -821,24 +780,24 @@
 //    [FHUserTracker writeEvent:@"click_community_search" params:reportParams];
 //}
 
-- (void)viewAppearForEnterType:(NSInteger)enterType needReport:(BOOL)needReport {
-    if(needReport){
-        self.stayTime = [[NSDate date] timeIntervalSince1970];
-        NSMutableDictionary *tracerDict = [NSMutableDictionary new];
-        if (enterType == 1) {
-            tracerDict[@"enter_type"] = @"click";
-        }else{
-            tracerDict[@"enter_type"] = @"flip";
-        }
-        tracerDict[@"enter_from"] = self.tracerDict[@"enter_from"] ?: @"be_null";
-        tracerDict[@"category_name"] = self.tracerDict[@"category_name"] ?: @"be_null";
-        tracerDict[@"enter_channel"] = @"click";
-        [FHEnvContext recordEvent:tracerDict andEventKey:@"enter_category"];
+- (void)viewAppearForEnterType:(NSInteger)enterType needReportSubCategory:(BOOL)needReportSubCategory {
+    self.stayTime = [[NSDate date] timeIntervalSince1970];
+    NSMutableDictionary *tracerDict = [NSMutableDictionary new];
+    if (enterType == 1) {
+        tracerDict[@"enter_type"] = @"click";
+    }else{
+        tracerDict[@"enter_type"] = @"flip";
     }
-    [self.viewModel viewWillAppear];
+    tracerDict[@"enter_from"] = self.tracerDict[@"enter_from"] ?: @"be_null";
+    tracerDict[@"category_name"] = self.tracerDict[@"category_name"] ?: @"be_null";
+    [FHEnvContext recordEvent:tracerDict andEventKey:@"enter_category"];
+    
+    if(needReportSubCategory){
+        [self.viewModel viewWillAppear];
+    }
 }
 
-- (void)viewDisAppearForEnterType:(NSInteger)enterType
+- (void)viewDisAppearForEnterType:(NSInteger)enterType needReportSubCategory:(BOOL)needReportSubCategory
 {
     NSMutableDictionary *tracerDict = [NSMutableDictionary new];
     NSTimeInterval duration = ([[NSDate date] timeIntervalSince1970] - self.stayTime) * 1000.0;
@@ -849,13 +808,15 @@
     }
     tracerDict[@"enter_from"] = self.tracerDict[@"enter_from"] ?: @"be_null";
     tracerDict[@"category_name"] = self.tracerDict[@"category_name"] ?: @"be_null";
-    tracerDict[@"enter_channel"] = @"click";
     tracerDict[@"stay_time"] = @((int) duration);
 
     if (((int) duration) > 0) {
         [FHEnvContext recordEvent:tracerDict andEventKey:@"stay_category"];
     }
-    [self.viewModel viewWillDisappear];
+    
+    if(needReportSubCategory){
+        [self.viewModel viewWillDisappear];
+    }
 }
 
 #pragma mark - TTUIViewControllerTrackProtocol

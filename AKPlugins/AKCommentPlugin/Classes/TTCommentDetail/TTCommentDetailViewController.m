@@ -152,6 +152,7 @@ NSString *const kTTCommentDetailForwardCommentNotification = @"kTTCommentDetailF
         [tracerDict addEntriesFromDictionary:self.extraDic];
     }
     [tracerDict setValue:@"comment_detail" forKey:@"page_type"];
+    [tracerDict setValue:@"89250" forKey:@"event_tracking_id"];
     [FHUserTracker writeEvent:@"go_detail" params:tracerDict];
 }
 
@@ -339,7 +340,9 @@ NSString *const kTTCommentDetailForwardCommentNotification = @"kTTCommentDetailF
     self.store.enterFrom = self.enterFrom;
     self.store.categoryID = self.categoryID;
     self.store.logPb = self.logPb;
-    [self addGoDetailLog];
+    if(!self.noReportGoDetail){
+        [self addGoDetailLog];
+    }
 }
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
