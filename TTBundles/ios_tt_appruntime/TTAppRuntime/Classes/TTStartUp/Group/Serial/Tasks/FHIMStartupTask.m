@@ -346,6 +346,13 @@ DEC_TASK("FHIMStartupTask",FHTaskTypeSerial,TASK_PRIORITY_HIGH+16);
     return ret;
 }
 
+- (BOOL)isIMInitDidEmptyEnable {
+    BOOL ret = NO;
+    BOOL isIMInitDidEmptyEnable = [[NSUserDefaults standardUserDefaults] boolForKey:@"_IM_Init_Did_Empty_Enable_"];
+    ret = isIMInitDidEmptyEnable;
+    return ret;
+}
+
 - (BOOL)isIMSingleChatRecallEnable {
     BOOL ret = NO;
     BOOL isIMSingleChatRecallEnable = [[NSUserDefaults standardUserDefaults] boolForKey:@"_IM_SingleChat_Recall_Enable_"];
@@ -365,10 +372,26 @@ DEC_TASK("FHIMStartupTask",FHTaskTypeSerial,TASK_PRIORITY_HIGH+16);
 - (BOOL)isEnableIMOnlineMonitorLogic {
     return [SSCommonLogic enableIMOnlineMonitorLogic];
 }
+- (BOOL)isEnableIMRealtorLocking {
+    return [SSCommonLogic enableIMRealtorLocking];
+}
+@end
+
+@interface FHIMStartupTask()
+@property (nonatomic, assign) BOOL isConfigIMModule;
 @end
 
 @implementation FHIMStartupTask
 
+- (instancetype)init {
+    if(self = [super init]) {
+        
+        self.isConfigIMModule = NO;
+        
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(deviceDidRefreshed:) name:@"kFHTrackerDidRefreshDeviceId" object:nil];
+    }
+    return self;
+}
 - (NSString *)taskIdentifier {
     return @"FHIMStartupTask";
 }
@@ -379,19 +402,29 @@ DEC_TASK("FHIMStartupTask",FHTaskTypeSerial,TASK_PRIORITY_HIGH+16);
 
 - (void)startWithApplication:(UIApplication *)application options:(NSDictionary *)launchOptions {
     if ([SSCommonLogic imCanStart]) {
-        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
-            FHIMAccountCenterImpl* accountCenter = [[FHIMAccountCenterImpl alloc] init];
-            [IMManager shareInstance].accountCenter = accountCenter;
-            
-            FHIMConfigDelegateImpl* delegate = [[FHIMConfigDelegateImpl alloc] init];
-            [[FHIMConfigManager shareInstance] registerDelegate:delegate];
-            
-            [IMManager shareInstance].imAlertViewListener = [FHIMAlertViewListenerImpl shareInstance];
-            
-            NSString* uid = [[TTAccount sharedAccount] userIdString];
-            [[IMManager shareInstance] startupWithUid:uid];
-        });
+        
+        FHIMAccountCenterImpl* accountCenter = [[FHIMAccountCenterImpl alloc] init];
+        [IMManager shareInstance].accountCenter = accountCenter;
+        
+        FHIMConfigDelegateImpl* delegate = [[FHIMConfigDelegateImpl alloc] init];
+        [[FHIMConfigManager shareInstance] registerDelegate:delegate];
+        
+        [IMManager shareInstance].imAlertViewListener = [FHIMAlertViewListenerImpl shareInstance];
+        
+        NSString* uid = [[TTAccount sharedAccount] userIdString];
+        [[IMManager shareInstance] startupWithUid:uid];
+        
+        self.isConfigIMModule = YES;
     }
+}
+- (void)deviceDidRefreshed:(NSNotification *)notification {
+    
+    if(!self.isConfigIMModule) {
+        return; // did刷新回调调用时如果IM模块没有被初始化，则直接跳过，因为在初始化时会正常取到刷新的did
+    }
+    
+    // did刷新回调调用时，如果IM模块已经初始化完成，则检查初始化配置的did是否为空，如果为空，则更新
+    [[IMManager shareInstance] configDeviceIdIfInitNotGet];
 }
 
 #pragma mark - 打开Watch Session

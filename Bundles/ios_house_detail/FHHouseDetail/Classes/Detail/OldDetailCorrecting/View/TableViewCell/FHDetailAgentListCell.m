@@ -94,7 +94,7 @@
         [model.recommendedRealtors enumerateObjectsUsingBlock:^(FHDetailContactModel*  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
             StrongSelf;
             if (obj.realtorScoreDescription.length >0&&obj.realtorScoreDisplay.length >0&&obj.realtorTags.count >0) {
-                vHeight = 100;
+                vHeight = 103;
             }else {
                 vHeight = 76;
             }
@@ -199,7 +199,7 @@
                     ratio = image.size.width / image.size.height;
                 }
                 [identifyView mas_updateConstraints:^(MASConstraintMaker *make) {
-                    make.width.mas_equalTo(44);
+                    make.width.mas_equalTo(50);
                 }];
             }
         }];
@@ -429,7 +429,7 @@
             for (int i = 0; i<3; i++) {
                 FHDetailContactModel *showModel = (FHDetailContactModel*) model.recommendedRealtors[i];
                 if (showModel.realtorScoreDisplay.length>0 && showModel.realtorScoreDescription.length>0&&showModel.realtorTags.count >0) {
-                    showHeight = showHeight +100;
+                    showHeight = showHeight +103;
                 }else {
                     showHeight = showHeight + 76;
                 };
@@ -443,7 +443,7 @@
             [model.recommendedRealtors enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
                 FHDetailContactModel *showModel = obj;
             if (showModel.realtorScoreDisplay.length>0 && showModel.realtorScoreDescription.length>0&&showModel.realtorTags.count >0) {
-                     showHeight = showHeight +100;
+                     showHeight = showHeight +103;
                  }else {
                      showHeight = showHeight + 76;
                  };
@@ -463,7 +463,7 @@
          [model.recommendedRealtors enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
              FHDetailContactModel *showModel = obj;
          if (showModel.realtorScoreDisplay.length>0 && showModel.realtorScoreDescription.length>0&&showModel.realtorTags.count >0) {
-                  showHeight = showHeight +100;
+                  showHeight = showHeight +103;
               }else {
                   showHeight = showHeight + 76;
               };
@@ -589,6 +589,7 @@
 @interface FHDetailAgentItemTagsViewCell: UICollectionViewCell
 
 @property (nonatomic, strong) UILabel *tagLabel;
+@property (nonatomic, strong) UIImageView *tagImageView;
 
 + (NSString *)reuseIdentifier;
 @end
@@ -612,16 +613,40 @@
 -(instancetype)initWithFrame:(CGRect)frame {
     if(self = [super initWithFrame:frame]) {
         [self.contentView addSubview:self.tagLabel];
-        [self.tagLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.edges.equalTo(self.contentView);
-            
-        }];
 
         self.contentView.layer.cornerRadius = 2;
 //        self.contentView.layer.masksToBounds = YES;
     }
     return self;
 }
+
+- (void)refreshWithData:(id)data {
+    FHRealtorTag *model = data;
+    self.tagLabel.text = model.text;
+    self.contentView.backgroundColor = [UIColor colorWithHexStr:model.backgroundColor];
+    self.contentView.layer.borderColor = [UIColor colorWithHexStr:model.borderColor].CGColor;
+    self.contentView.layer.borderWidth = .3;
+    self.tagLabel.textColor = [UIColor colorWithHexStr:model.fontColor];
+    if (model.prefixIconUrl.length > 0) {
+        _tagImageView = [[UIImageView alloc] init];
+        [_tagImageView bd_setImageWithURL:[NSURL URLWithString:model.prefixIconUrl]];
+        [self.contentView addSubview:self.tagImageView];
+        [self.tagImageView mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.left.top.mas_equalTo(2);
+            make.width.height.mas_equalTo(14);
+        }];
+        [self.tagLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.left.mas_equalTo(self.tagImageView.mas_right);
+            make.centerY.mas_equalTo(self);
+        }];
+    } else {
+        [self.tagLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.edges.equalTo(self.contentView);
+        }];
+    }
+}
+
+
 @end
 
 @interface FHDetailAgentItemTagsFlowLayout : UICollectionViewFlowLayout
@@ -779,18 +804,18 @@
     [self addSubview:self.tagsView];
     if (self.model.realtorScoreDisplay.length>0 && self.model.realtorScoreDescription.length>0) {
          [self.tagsView mas_makeConstraints:^(MASConstraintMaker *make) {
-               make.height.mas_equalTo(15);
+               make.height.mas_equalTo(18);
                make.left.equalTo(self.name);
-               make.right.equalTo(self.imBtn.mas_left).offset(-10);
+               make.right.equalTo(self.callBtn.mas_right);
              make.top.equalTo(self.score.mas_bottom).offset(self.model.realtorTags.count>0?6:8);
            }];
     }else {
         self.score.hidden = YES;
         self.scoreDescription.hidden = YES;
         [self.tagsView mas_makeConstraints:^(MASConstraintMaker *make) {
-              make.height.mas_equalTo(15);
+              make.height.mas_equalTo(18);
               make.left.equalTo(self.name);
-              make.right.equalTo(self.imBtn.mas_left).offset(-10);
+              make.right.equalTo(self.callBtn.mas_right);
               make.top.equalTo(self.name.mas_bottom).offset(8);
           }];
     }
@@ -1011,22 +1036,21 @@
     [self addSubview:_score];
     
     self.scoreDescription = [UILabel createLabel:@"" textColor:@"" fontSize:14];
-    _scoreDescription.textColor = [UIColor themeGray2];
+    _scoreDescription.textColor = [UIColor themeGray1];
     _scoreDescription.textAlignment = NSTextAlignmentLeft;
 
     [self addSubview:_scoreDescription];
     
     [self.avator mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.height.width.mas_equalTo(46);
+        make.height.width.mas_equalTo(50);
         make.left.mas_equalTo(16);
         make.centerY.mas_equalTo(self);
     }];
-    CGFloat ratio = 0;
     [self.identifyView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(self.avator).mas_offset(27);
         make.centerX.mas_equalTo(self.avator);
-        make.height.mas_equalTo(19);
-        make.width.mas_equalTo(44);
+        make.height.mas_equalTo(23);
+        make.width.mas_equalTo(50);
     }];
     [self.name mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(self.avator.mas_right).offset(14);
@@ -1091,7 +1115,11 @@
                                                   NSFontAttributeName: [UIFont themeFontRegular:10]
                                                   }];
         
-        itemSize.width += 8;
+        itemSize.width += 10;
+        itemSize.height += 4;
+        if (tagInfo.prefixIconUrl.length > 0) {
+            itemSize.width += 11;
+        }
         return itemSize;
     }
     return CGSizeZero;
@@ -1111,15 +1139,9 @@
     FHDetailAgentItemTagsViewCell *tagCell = [collectionView dequeueReusableCellWithReuseIdentifier:[FHDetailAgentItemTagsViewCell reuseIdentifier] forIndexPath:indexPath];
     
     FHRealtorTag *tagInfo = [self.model.realtorTags objectAtIndex:indexPath.row];
-    
-    tagCell.tagLabel.text = tagInfo.text;
-    tagCell.contentView.backgroundColor = [UIColor colorWithHexStr:tagInfo.backgroundColor];
-    tagCell.contentView.layer.borderColor = [UIColor colorWithHexStr:tagInfo.borderColor].CGColor;
-    tagCell.contentView.layer.borderWidth = .3;
-    tagCell.tagLabel.textColor = [UIColor colorWithHexStr:tagInfo.fontColor];
+    [tagCell refreshWithData:tagInfo];
     return tagCell;
 }
-
 @end
 
 // FHDetailAgentListModel
