@@ -38,7 +38,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    if ([[FHLynxManager sharedInstance] checkChannelTemplateIsAvalable:@"lynx_estate_info" templateKey:@"0"]) {
+    if ([[FHLynxManager sharedInstance] checkChannelTemplateIsAvalable:@"lynx_estate_info_v2" templateKey:[FHLynxManager defaultJSFileName]]) {
         [self setUpLynxView];
     }else{
         [self setUpinfoListTable];
@@ -87,7 +87,7 @@
     _lynxView = [[FHLynxView alloc] initWithFrame:CGRectMake(0, [self getNaviBar].frame.size.height, self.view.frame.size.width,self.view.frame.size.height - 80 - [self getNaviBar].frame.size.height - [self.coreInfoListViewModel getSafeTop]  - [self.coreInfoListViewModel getSafeBottom])];
     [self.view addSubview:_lynxView];
     FHLynxViewBaseParams *baesparmas = [[FHLynxViewBaseParams alloc] init];
-    baesparmas.channel = @"lynx_estate_info";
+    baesparmas.channel = @"lynx_estate_info_v2";
     baesparmas.bridgePrivate = self;
     [_lynxView loadLynxWithParams:baesparmas];
     

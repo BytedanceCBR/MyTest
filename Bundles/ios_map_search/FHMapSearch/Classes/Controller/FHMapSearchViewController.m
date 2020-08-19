@@ -85,6 +85,14 @@
             param = paramObj.allParams;
         }
         self.configModel = [[FHMapSearchConfigModel alloc] initWithDictionary:param error:nil];
+        if([self.configModel.houseTypeList isKindOfClass:[NSString class]] && self.configModel.houseTypeList.length > 2){
+            NSString *typeListStr = [self.configModel.houseTypeList substringWithRange:NSMakeRange(1, self.configModel.houseTypeList.length - 2)];
+            NSArray *typeArray = [typeListStr componentsSeparatedByString:@","];
+            self.configModel.houseTypeArray = typeArray;
+        }else{
+            self.configModel.houseTypeArray = @[@"2"];
+        }
+        
         self.configModel.mapOpenUrl = [paramObj.sourceURL absoluteString];
         if (self.configModel.houseType < FHHouseTypeNewHouse) {
             NSString *host = paramObj.sourceURL.host;
@@ -231,6 +239,7 @@
     }
     __weak typeof(self) wself = self;
     self.simpleNavBar = [[FHMapSimpleNavbar alloc]initWithFrame:frame];
+    self.simpleNavBar.houseType = self.configModel.houseType;
     _simpleNavBar.backActionBlock = ^(FHMapSimpleNavbarType type) {
         if (type == FHMapSimpleNavbarTypeClose) {
             [wself.viewModel exitCurrentMode];
@@ -246,6 +255,7 @@
             [wself.viewModel reDrawMapCircle];
         }
     };
+    [_simpleNavBar updateShowBtn:(self.configModel.houseTypeArray.count > 1)];
     [self.view addSubview:_simpleNavBar];
 }
 
@@ -379,7 +389,7 @@
 
     [self.sideBar mas_makeConstraints:^(MASConstraintMaker *make) {
         make.right.mas_equalTo(-11);
-        make.bottom.mas_equalTo(self.view).offset(-(176+bottomSafeInset));
+        make.bottom.mas_equalTo(self.view).offset(-(196+bottomSafeInset));
         make.width.mas_equalTo(36);
     }];
     

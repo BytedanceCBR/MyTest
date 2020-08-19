@@ -906,6 +906,7 @@
         realtor.realtorName  = model.realtor.realtorName;
         realtor.associateInfo  = model.realtor.associateInfo;
         realtor.realtorLogpb = model.realtor.realtorLogpb;
+         realtor.firstBizType = model.realtor.firstBizType;
         cellModel.realtor = realtor;
     } else if(model.rawData.realtor) {
         realtor.agencyName = model.rawData.realtor.agencyName;
@@ -918,6 +919,7 @@
         realtor.realtorName  = model.rawData.realtor.realtorName;
         realtor.associateInfo  = model.rawData.realtor.associateInfo;
         realtor.realtorLogpb = model.rawData.realtor.realtorLogpb;
+        realtor.firstBizType = model.rawData.realtor.firstBizType;
         cellModel.realtor = realtor;
     }
     
