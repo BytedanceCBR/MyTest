@@ -66,6 +66,8 @@
             @"associateInfo": @"realtor_home_page_associate_info",
             @"realtorTab":@"realtor_tab",
             @"certificationPage": @"certification_page",
+            @"realtorTag": @"realtor_tag",
+            @"realtorLogpb":@"realtor_log_pb",
             @"certificationIcon": @"certification_icon",
             @"scoreInfo": @"score_info",
             @"chatOpenUrl": @"chat_open_url",
