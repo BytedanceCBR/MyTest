@@ -104,7 +104,7 @@
 #import "FHLynxDebugVC.h"
 #import "IMManager.h"
 
-#import "FHHouseErrorHubDebugVC.h"
+
 
 extern BOOL ttvs_isVideoNewRotateEnabled(void);
 extern void ttvs_setIsVideoNewRotateEnabled(BOOL enabled);
@@ -1128,7 +1128,8 @@ extern NSString *const BOE_OPEN_KEY ;
 
 - (void)_openLocalTestDebugViewController
 {
-    [self.navigationController pushViewController:[[FHHouseErrorHubDebugVC alloc] init]
+    UIViewController *errroHubVC = [[NSClassFromString(@"FHHouseErrorHubDebugVC") alloc]init];
+    [self.navigationController pushViewController:errroHubVC
                                          animated:YES];
 }
 
