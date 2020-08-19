@@ -42,6 +42,7 @@
 @interface TTVFeedCellMoreActionManager : NSObject 
 @property (nonatomic, copy) NSString *categoryId;
 @property (nonatomic ,weak)UIResponder *responder;
+@property (nonatomic, strong) NSDictionary *extraDic;
 @property (nonatomic, strong) TTVFeedItem *cellEntity;
 @property (nonatomic, copy) void (^didClickDislikeSubmitButtonBlock)(TTVFeedItem *cellEntity, NSArray *filterWords, CGRect dislikeAnchorFrame, TTDislikeSourceType dislikeSourceType);
 @property (nonatomic, copy) UIViewController *(^getPresentingViewControllerOfShare)(UIResponder *responder);

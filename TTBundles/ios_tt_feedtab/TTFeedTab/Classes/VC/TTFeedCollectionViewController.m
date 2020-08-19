@@ -40,6 +40,7 @@
 #import <TTBaseLib/UIViewAdditions.h>
 #import <TTNetworkManager/TTNetworkManager.h>
 #import "TTADCellHelper.h"
+#import "FHUserTracker.h"
 
 @interface MyCollectionView : UICollectionView
 
@@ -147,14 +148,17 @@ TTFeedCollectionCellDelegate>
     
     if (!_firstLoad) {
         [self.currentCollectionPageCell willAppear];
+    }
+    
+    if (![FHEnvContext sharedInstance].isShowingHomeHouseFind) {
         //切换tab、进入文章页回来时需要b上报enter_category
-        
         TTCategory *category = self.currentCategory;
         //log3.0
         NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithCapacity:10];
         [dict setValue:category.categoryID forKey:@"category_name"];
         [dict setValue:@"house_app2c_v2" forKey:@"event_type"];
         [dict setValue:@"click" forKey:@"enter_type"];
+        [dict setValue:@"maintab" forKey:@"enter_from"];
         
         [FHHomeConfigManager sharedInstance].enterType = @"click";
         
@@ -171,20 +175,19 @@ TTFeedCollectionCellDelegate>
             [dict setValue:searchId forKey:@"origin_search_id"];
             [dict setValue:categoryName forKey:@"category_name"];
             
-            [BDTrackerProtocol eventV3:@"enter_category" params:dict isDoubleSending:NO];
+            TRACK_EVENT(@"enter_category", dict);
         }else
         {
             //切换城市之后埋点变化
             if ([FHEnvContext sharedInstance].isRefreshFromCitySwitch) {
                 if (![[FHEnvContext sharedInstance] getConfigFromCache].cityAvailability.enable.boolValue) {
-                    [BDTrackerProtocol eventV3:@"enter_category" params:dict isDoubleSending:NO];
+                    TRACK_EVENT(@"enter_category", dict);
                 }
             }else
             {
-                [BDTrackerProtocol eventV3:@"enter_category" params:dict isDoubleSending:NO];
+                TRACK_EVENT(@"enter_category", dict);
             }
         }
-        
     }
     
     self.isDisplay = YES;
@@ -239,7 +242,9 @@ TTFeedCollectionCellDelegate>
 - (void)viewDidDisappear:(BOOL)animated
 {
     [super viewDidDisappear:animated];
-    [self leaveCategory:self.currentCategory];
+    if (![FHEnvContext sharedInstance].isShowingHomeHouseFind) {
+        [self leaveCategory:self.currentCategory];
+    }
     [self.currentCollectionPageCell didDisappear];
     
     self.isDisplay = NO;
@@ -523,6 +528,7 @@ TTFeedCollectionCellDelegate>
             [dict setValue:category.categoryID forKey:@"category_name"];
             [dict setValue:@"house_app2c_v2" forKey:@"event_type"];
             [dict setValue:userDrag?@"flip":@"click" forKey:@"enter_type"];
+            [dict setValue:@"maintab" forKey:@"enter_from"];
             
             if ([FHHomeConfigManager sharedInstance].isTraceClickIcon)
             {
@@ -545,10 +551,10 @@ TTFeedCollectionCellDelegate>
                 [dict setValue:searchId forKey:@"origin_search_id"];
                 [dict setValue:categoryName forKey:@"category_name"];
 
-                [BDTrackerProtocol eventV3:@"enter_category" params:dict isDoubleSending:NO];
+                TRACK_EVENT(@"enter_category", dict);
             }else
             {
-                [BDTrackerProtocol eventV3:@"enter_category" params:dict isDoubleSending:NO];
+                TRACK_EVENT(@"enter_category", dict);
             }
                 
 //            NSDictionary *dict =  [[EnvContext shared] homePageParams].paramsGetter([:])

@@ -363,6 +363,8 @@ static NSInteger const vaildStayPageMaxInterval = 7200;
         [dic addEntriesFromDictionary:self.detailModel.reportParams];
     }
     
+    dic[@"event_tracking_id"] = @(93416);
+    
     if (![TTTrackerWrapper isOnlyV3SendingEnable]){
         if (self.detailModel.fromSource == NewsGoDetailFromSourceVideoFloat)
         {

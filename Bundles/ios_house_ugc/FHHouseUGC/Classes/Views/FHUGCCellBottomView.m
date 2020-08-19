@@ -350,6 +350,9 @@
     NSDictionary *userInfo = notification.userInfo;
     
     if(userInfo){
+        if(![[userInfo allKeys] containsObject:@"comment_conut"]){
+            return;
+        }
         NSInteger comment_conut = [userInfo[@"comment_conut"] integerValue];
         NSString *groupId = userInfo[@"group_id"];
         if (groupId.length > 0 && [groupId isEqualToString:self.cellModel.groupId]) {

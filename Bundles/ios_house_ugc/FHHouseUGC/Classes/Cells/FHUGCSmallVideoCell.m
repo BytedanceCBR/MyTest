@@ -14,6 +14,7 @@
 #import "TTBusinessManager+StringUtils.h"
 #import "UIViewAdditions.h"
 #import "UIImageView+fhUgcImage.h"
+#import "FHUGCFeedDetailJumpManager.h"
 
 #define leftMargin 20
 #define rightMargin 20
@@ -207,7 +208,8 @@
         self.videoImageView.height = self.imageViewheight;
         
         if (imageModel && imageModel.url.length > 0) {
-            [self.videoImageView fh_setImageWithURL:imageModel.url placeholder:nil reSize:self.videoImageView.size];
+            NSURL *url = [NSURL URLWithString:imageModel.url];
+            [self.videoImageView fh_setImageWithURL:url placeholder:nil reSize:self.videoImageView.size];
         }
     }
     // 时间

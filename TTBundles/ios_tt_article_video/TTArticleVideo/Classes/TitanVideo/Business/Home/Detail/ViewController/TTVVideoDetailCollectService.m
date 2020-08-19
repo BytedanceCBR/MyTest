@@ -19,6 +19,7 @@
 #import "TTUIResponderHelper.h"
 #import "NSDictionary+TTGeneratedContent.h"
 #import <TTSettingsManager/TTSettingsManager.h>
+#import "FHUserTracker.h"
 
 extern NSInteger ttsettings_favorDetailActionType(void);
 extern NSArray *ttsettings_favorDetailActionTick(void);
@@ -50,9 +51,8 @@ extern void ttuserdefaults_setFavorCount(NSInteger);
     if (!_itemAction) {
         self.itemAction = [[ExploreItemActionManager alloc] init];
     }
-    if (self.article == nil) {
-        self.article = [self.originalArticle ttv_convertedArticle];
-    }
+    
+    self.article = [self.originalArticle ttv_convertedArticle];
 
     [self favorFunc:self.gdExtJSONDict trackEventTag:@"detail" viewController:viewController source:@"video_detail_favor" buttonSeat:iconSeat];
 
@@ -175,6 +175,7 @@ extern void ttuserdefaults_setFavorCount(NSInteger);
 
 // 点击收藏的操作
 - (void)didFavor:(NSDictionary *)param trackEventTag:(NSString *)tag buttonSeat:(NSString *)btnSeat{
+    [self addClickFavorite];
     @weakify(self);
     [_itemAction favoriteForOriginalData:_article adID:[self currentADID] finishBlock:^(id userInfo ,NSError * error) {
         @strongify(self);
@@ -192,6 +193,7 @@ extern void ttuserdefaults_setFavorCount(NSInteger);
 
 // 点击取消收藏的操作
 - (void)didUnFavorWithButtonSeat:(NSString *)btnSeat {
+    [self addClickDisfavorite];
     @weakify(self);
     [_itemAction unfavoriteForOriginalData:_article adID:[self currentADID] finishBlock:^(id userInfo ,NSError * error) {
         @strongify(self);
@@ -216,6 +218,16 @@ extern void ttuserdefaults_setFavorCount(NSInteger);
     if (_delegate && [_delegate respondsToSelector:@selector(detailCollectService:showTipMsg:icon:buttonSeat:)]) {
         [_delegate detailCollectService:self showTipMsg:tip icon:image buttonSeat:btnSeat];
     }
+}
+
+- (void)addClickFavorite {
+    NSMutableDictionary *dict = [self.gdExtJSONDict mutableCopy];
+    TRACK_EVENT(@"click_favorite", dict);
+}
+
+- (void)addClickDisfavorite {
+    NSMutableDictionary *dict = [self.gdExtJSONDict mutableCopy];
+    TRACK_EVENT(@"click_disfavorite", dict);
 }
     
 
