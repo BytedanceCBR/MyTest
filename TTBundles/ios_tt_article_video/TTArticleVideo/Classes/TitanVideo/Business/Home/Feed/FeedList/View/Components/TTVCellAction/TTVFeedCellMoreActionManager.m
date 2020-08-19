@@ -383,6 +383,7 @@ typedef void(^TTActivityAction)(NSString *type);
 {
     self.activityActionManager = [[TTActivityShareManager alloc] init];
     self.activityActionManager.delegate = self;
+    self.activityActionManager.extraDic = self.extraDic;
     self.activityActionManager.isVideoSubject = YES;
     [self addClickSourceFromClickSource:clickSource];
     BOOL showReport = (clickSource == TTVActivityClickSourceFromListMore || clickSource == TTVActivityClickSourceFromPlayerMore);
@@ -607,6 +608,7 @@ typedef void(^TTActivityAction)(NSString *type);
 {
     self.model = model;
     self.activityActionManager = [[TTActivityShareManager alloc] init];
+    self.activityActionManager.extraDic = self.extraDic;
     if (ttvs_isShareIndividuatioEnable()) {
         [self ttv_directshareWithActivityType:itemType];
         TTActivityType activityType = [TTActivityShareSequenceManager activityTypeFromStringActivityType:itemType];
@@ -635,6 +637,7 @@ typedef void(^TTActivityAction)(NSString *type);
     [self directShareTrackEventV3WithActivityType:enumActivityType];
     self.model = model;
     self.activityActionManager = [[TTActivityShareManager alloc] init];
+    self.activityActionManager.extraDic = self.extraDic;
     [self ttv_directshareWithActivityType:itemType];
 }
 
@@ -645,6 +648,7 @@ typedef void(^TTActivityAction)(NSString *type);
     [self directShareTrackEventV3WithActivityType:enumActivityType];
     self.model = model;
     self.activityActionManager = [[TTActivityShareManager alloc] init];
+    self.activityActionManager.extraDic = self.extraDic;
     [self ttv_directshareWithActivityType:itemType];
 }
 

@@ -79,13 +79,9 @@
 
 - (void)initViews {
     self.icon = [[TTAsyncCornerImageView alloc] initWithFrame:CGRectMake(20, 0, 40, 40) allowCorner:YES];
-    //    _icon.backgroundColor = [UIColor themeGray7];
     _icon.placeholderName = @"fh_mine_avatar";
     _icon.cornerRadius = 20;
-    //    _icon.imageContentMode = TTImageViewContentModeScaleAspectFill;
     _icon.contentMode = UIViewContentModeScaleAspectFill;
-    //    _icon.layer.masksToBounds = YES;
-    //    _icon.layer.cornerRadius = 20;
     _icon.borderWidth = 1;
     _icon.borderColor = [UIColor themeGray6];
     
@@ -191,21 +187,7 @@
     //设置userInfo
     self.cellModel = cellModel;
     //图片
-    FHFeedContentImageListModel *imageModel = [[FHFeedContentImageListModel alloc] init];
-    imageModel.url = cellModel.user.avatarUrl;
-    NSMutableArray *urlList = [NSMutableArray array];
-    for (NSInteger i = 0; i < 3; i++) {
-        FHFeedContentImageListUrlListModel *urlListModel = [[FHFeedContentImageListUrlListModel alloc] init];
-        urlListModel.url = cellModel.user.avatarUrl;
-        [urlList addObject:urlListModel];
-    }
-    imageModel.urlList = urlList;
-    
-    if (imageModel && imageModel.url.length > 0) {
-        [self.icon tt_setImageWithURLString:imageModel.url];
-    }else{
-        [self.icon setImage:[UIImage imageNamed:@"fh_mine_avatar"]];
-    }
+    [self.icon tt_setImageWithURLString:cellModel.user.avatarUrl];
     
     self.userName.text = !isEmptyString(cellModel.user.name) ? cellModel.user.name : @"用户";
     self.userAuthLabel.hidden = self.userAuthLabel.text.length <= 0;

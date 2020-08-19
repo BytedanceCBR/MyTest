@@ -67,6 +67,7 @@
 #import "FHSpecialTopicContentModel.h"
 #import "FHSpecialTopicSectionHeaderView.h"
 #import "JSONAdditions.h"
+#import "FHUGCFullScreenVideoCell.h"
 
 #define kSegmentViewHeight 52
 #define sectionHeaderViewHeight 37
@@ -806,71 +807,65 @@
 }
 
 - (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
-    if(indexPath.section < self.dataArray.count){
-        NSArray *resultArray = self.dataArray[indexPath.section];
-        if(indexPath.row < resultArray.count){
-            [self traceClientShowAtIndexPath:indexPath];
-            FHFeedUGCCellModel *cellModel = resultArray[indexPath.row];
-            /*impression统计相关*/
-            SSImpressionStatus impressionStatus = self.isShowing ? SSImpressionStatusRecording : SSImpressionStatusSuspend;
-            [self recordGroupWithCellModel:cellModel status:impressionStatus];
+    if(indexPath.row < self.dataList.count){
+        [self traceClientShowAtIndexPath:indexPath];
+        FHFeedUGCCellModel *cellModel = self.dataList[indexPath.row];
+        /*impression统计相关*/
+        SSImpressionStatus impressionStatus = self.isShowing ? SSImpressionStatusRecording : SSImpressionStatusSuspend;
+        [self recordGroupWithCellModel:cellModel status:impressionStatus];
+        
+        if (![cell isKindOfClass:[FHUGCVideoCell class]] && ![cell isKindOfClass:[FHUGCFullScreenVideoCell class]]) {
+            return;
+        }
+        //视频
+        if(cellModel.hasVideo){
+            FHUGCBaseCell *cellBase = (FHUGCBaseCell *)cell;
+            [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(willFinishLoadTable) object:nil];
+            [self willFinishLoadTable];
             
-            if (![cell isKindOfClass:[FHUGCVideoCell class]]) {
-                return;
-            }
-            //视频
-            if(cellModel.hasVideo){
-                FHUGCVideoCell *cellBase = (FHUGCVideoCell *)cell;
-                [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(willFinishLoadTable) object:nil];
-                [self willFinishLoadTable];
-                
-                [cellBase willDisplay];
-            }
+            [cellBase willDisplay];
         }
     }
 }
 
 - (void)tableView:(UITableView *)tableView didEndDisplayingCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
-    if(indexPath.section < self.dataArray.count){
-        NSArray *resultArray = self.dataArray[indexPath.section];
-        // impression统计
-        if(indexPath.row < resultArray.count){
-            FHFeedUGCCellModel *cellModel = resultArray[indexPath.row];
-            [self recordGroupWithCellModel:cellModel status:SSImpressionStatusEnd];
+    // impression统计
+    if(indexPath.row < self.dataList.count){
+        FHFeedUGCCellModel *cellModel = self.dataList[indexPath.row];
+        [self recordGroupWithCellModel:cellModel status:SSImpressionStatusEnd];
+        
+        if(cellModel.hasVideo){
+            [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(willFinishLoadTable) object:nil];
+            [self willFinishLoadTable];
             
-            if(cellModel.hasVideo){
-                [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(willFinishLoadTable) object:nil];
-                [self willFinishLoadTable];
-                
-                if([cell isKindOfClass:[FHUGCVideoCell class]] && [cell conformsToProtocol:@protocol(TTVFeedPlayMovie)]) {
-                    FHUGCVideoCell<TTVFeedPlayMovie> *cellBase = (FHUGCVideoCell<TTVFeedPlayMovie> *)cell;
-                    BOOL hasMovie = NO;
-                    NSArray *indexPaths = [tableView indexPathsForVisibleRows];
-                    for (NSIndexPath *path in indexPaths) {
-                        if (path.row < self.dataList.count) {
-                            
-                            BOOL hasMovieView = NO;
-                            if ([cellBase respondsToSelector:@selector(cell_hasMovieView)]) {
-                                hasMovieView = [cellBase cell_hasMovieView];
+            if([cell isKindOfClass:[FHUGCBaseCell class]] && [cell conformsToProtocol:@protocol(TTVFeedPlayMovie)]) {
+                FHUGCBaseCell<TTVFeedPlayMovie> *cellBase = (FHUGCBaseCell<TTVFeedPlayMovie> *)cell;
+                BOOL hasMovie = NO;
+                NSArray *indexPaths = [tableView indexPathsForVisibleRows];
+                for (NSIndexPath *path in indexPaths) {
+                    if (path.row < self.dataList.count) {
+                        
+                        BOOL hasMovieView = NO;
+                        if ([cellBase respondsToSelector:@selector(cell_hasMovieView)]) {
+                            hasMovieView = [cellBase cell_hasMovieView];
+                        }
+
+                        if ([cellBase respondsToSelector:@selector(cell_movieView)]) {
+                            UIView *view = [cellBase cell_movieView];
+                            if (view && ![self.movieViews containsObject:view]) {
+                                [self.movieViews addObject:view];
                             }
-                            
-                            if ([cellBase respondsToSelector:@selector(cell_movieView)]) {
-                                UIView *view = [cellBase cell_movieView];
-                                if (view && ![self.movieViews containsObject:view]) {
-                                    [self.movieViews addObject:view];
-                                }
-                            }
-                            if (cellModel == self.movieViewCellData) {
-                                hasMovie = YES;
-                                break;
-                            }
+                        }
+                        if (cellModel == self.movieViewCellData) {
+                            hasMovie = YES;
+                            break;
                         }
                     }
+                }
                     
-                    if (self.isShowing) {
-                        if (!hasMovie) {
-                            [cellBase endDisplay];
-                        }
+                if (self.isShowing) {
+                    if (!hasMovie) {
+                        [cellBase endDisplay];
                     }
                 }
             }
