@@ -291,7 +291,7 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
     [traceDictParams setValue:[self eventHouseType] forKey:@"tab_name"];
     [traceDictParams setValue:self.configModel.enterFrom?:@"be_null" forKey:@"enter_from"];
     [traceDictParams setValue:self.configModel.originFrom?:@"be_null" forKey:@"origin_from"];
-    [FHUserTracker writeEvent:@"click_opions" params:traceDictParams];
+    [FHUserTracker writeEvent:@"click_options" params:traceDictParams];
 }
 
 - (void)addHouseSearchLog{
