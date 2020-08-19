@@ -19,14 +19,21 @@ typedef NS_ENUM(NSInteger , FHMapSimpleNavbarType) {
 
 @property(nonatomic , assign) FHMapSimpleNavbarType type;
 
+@property(nonatomic , assign) NSInteger houseType;
+
 @property(nonatomic , strong) NSString *title;
 
 @property(nonatomic , copy) void (^backActionBlock)(FHMapSimpleNavbarType type);
 @property(nonatomic , copy) void (^rightActionBlock)(FHMapSimpleNavbarType type);
+@property(nonatomic,copy) void (^indexHouseChangeBlock)(NSInteger index);
 
 -(CGFloat)titleBottom;
 
 - (void)updateCicleBtn:(BOOL)isShowCircle;
+
+- (void)updateSegementedTitles:(NSArray <NSString *> *)titles andSelectIndex:(NSInteger)index;
+
+- (void)updateShowBtn:(BOOL)isShow;
 
 @end
 

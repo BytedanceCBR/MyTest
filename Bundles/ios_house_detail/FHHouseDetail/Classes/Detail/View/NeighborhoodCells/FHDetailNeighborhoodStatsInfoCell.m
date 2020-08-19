@@ -139,8 +139,8 @@
 - (void)createUI {
     [self.shadowImage mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.right.equalTo(self);
-        make.top.equalTo(self.contentView).offset(-12);
-        make.bottom.equalTo(self.contentView).offset(12);
+        make.top.equalTo(self.contentView).offset(-14);
+        make.bottom.equalTo(self.contentView).offset(14);
     }];
     [self.containerView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(self.shadowImage).offset(22);

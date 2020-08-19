@@ -14,6 +14,7 @@
 #import "TTVPlayerControllerState.h"
 #import "TTVDemandPlayerContextVideo.h"
 #import "TTVPlayerDoubleTap666Delegate.h"
+#import "TTVVideoPlayerView.h"
 
 @class TTVPlayerOrientationController;
 @class TTVDemanderTrackerManager;
@@ -49,7 +50,7 @@
 @property (nonatomic, strong, readonly) TTVVideoPlayerStateStore *playerStateStore;
 //@property (nonatomic, strong ,readonly) TTVDemanderTrackerManager *commonTracker;
 @property (nonatomic, strong ,readonly) FHDemanderTrackerManager *commonTracker;
-
+@property (nonatomic, strong) TTVVideoPlayerView *playerView;
 @property (nonatomic, strong ,readonly) TTVDemandPlayerContextVideo *context;
 @property (nonatomic, weak) UIView *rotateView;//真实做旋转的view
 /**

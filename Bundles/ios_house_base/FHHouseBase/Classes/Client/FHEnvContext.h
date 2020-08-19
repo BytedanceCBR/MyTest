@@ -270,6 +270,11 @@ static NSString *const kFHUGCPromotionUser = @"is_promotion_user";
 + (BOOL)isHomeNewDiscovery;
 
 /*
+是否开启视频频道实验，默认NO
+ */
++ (BOOL)isHasVideoList;
+
+/*
 判断开启首次安装用户引导，默认YES
  */
 + (BOOL)isIntroduceOpen;

@@ -14,8 +14,6 @@ NS_ASSUME_NONNULL_BEGIN
 @class IMConversation;
 @interface FHMessageViewModel : NSObject
 
-@property(nonatomic, strong) NSMutableArray *dataList;
-
 - (instancetype)initWithTableView:(UITableView *)tableView controller:(FHMessageViewController *)viewController;
 
 - (void)requestData;
@@ -31,6 +29,15 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)setEnterFrom:(NSString *)enterFrom;
 
 - (void)refreshConversationList;
+
+- (void)refreshDataWithType:(NSInteger)tag;
+
+- (void)reloadData; //tableView reload前关闭左滑删除按钮
+
+- (void)checkShouldShowEmptyMaskView;
+
+- (NSArray *)items;
+
 @end
 
 NS_ASSUME_NONNULL_END
