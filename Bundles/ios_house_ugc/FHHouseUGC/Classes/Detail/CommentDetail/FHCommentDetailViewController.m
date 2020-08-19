@@ -466,6 +466,7 @@
 
 -(void)addGoDetailLog {
     NSMutableDictionary *tracerDict = self.tracerDict.mutableCopy;
+    [tracerDict setValue:@"89249" forKey:@"event_tracking_id"];
     [FHUserTracker writeEvent:@"go_detail" params:tracerDict];
 }
 
