@@ -14,18 +14,6 @@
 #import <FHHouseBase/FHSaleStatusModel.h>
 
 NS_ASSUME_NONNULL_BEGIN
-
-@interface FHDetailNearbyMapModel : JSONModel
-
-@property (nonatomic, weak , nullable) UITableViewCell *cell;
-@property (nonatomic, copy , nullable) NSString *gaodeLng;
-@property (nonatomic, copy , nullable) NSString *gaodeLat;
-@property (nonatomic, copy , nullable) NSString *title;
-@property (nonatomic, copy , nullable) NSString *houseId;
-@property (nonatomic, copy , nullable) NSString *houseType;
-
-@end
-
 @protocol FHDetailNewDataGlobalPricingListModel<NSObject>
 @end
 

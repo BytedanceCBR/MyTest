@@ -7,16 +7,6 @@
 
 //GENERATED CODE , DON'T EDIT
 #import "FHDetailNewModel.h"
-
-@implementation FHDetailNearbyMapModel
-
-+ (BOOL)propertyIsOptional:(NSString *)propertyName
-{
-    return YES;
-}
-
-@end
-
 @implementation FHDetailNewDataGlobalPricingModel
 + (JSONKeyMapper*)keyMapper
 {

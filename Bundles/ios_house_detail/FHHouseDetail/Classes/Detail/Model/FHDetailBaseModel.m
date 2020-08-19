@@ -340,25 +340,6 @@
 }
 @end
 
-@implementation FHDetailCommunityEntryModel
-+(JSONKeyMapper *)keyMapper {
-    NSDictionary *dict = @{
-            @"activeInfo": @"active_info",
-            @"socialGroupSchema": @"social_group_schema",
-            @"activeCountInfo": @"active_count_info",
-            @"logPb": @"log_pb"
-    };
-    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
-        return dict[keyName]?:keyName;
-    }];
-}
-+ (BOOL)propertyIsOptional:(NSString *)propertyName
-{
-    return YES;
-}
-
-@end
-
 @implementation FHDetailGaodeImageModel
 +(JSONKeyMapper *)keyMapper {
     NSDictionary *dict = @{

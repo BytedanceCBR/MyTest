@@ -256,11 +256,12 @@
         id data = self.items[row];
         NSString *identifier = NSStringFromClass([data class]);//[self cellIdentifierForEntity:data];
         if (identifier.length > 0) {
-            FHDetailBaseCell *cell = (FHDetailBaseCell *)[tableView dequeueReusableCellWithIdentifier:identifier];
+            FHDetailBaseCell *cell = (FHDetailBaseCell *)[tableView dequeueReusableCellWithIdentifier:identifier forIndexPath:indexPath];
             if (self.houseType == FHHouseTypeSecondHandHouse || self.houseType == FHHouseTypeNeighborhood || self.houseType == FHHouseTypeNewHouse) {
                 cell.backgroundColor = [UIColor clearColor];
             }
             if (cell) {
+                cell.frame = CGRectMake(0, 0, tableView.frame.size.width, cell.frame.size.height);
                 cell.baseViewModel = self;
                 [cell refreshWithData:data];
                 return cell;

@@ -11,13 +11,10 @@
 #import "FHDetailRelatedHouseResponseModel.h"
 #import "FHDetailRelatedNeighborhoodResponseModel.h"
 #import "FHDetailSameNeighborhoodHouseResponseModel.h"
-#import "FHDetailGrayLineCell.h"
-#import "FHDetailHouseNameCell.h"
 #import "FHDetailErshouHouseCoreInfoCell.h"
 #import "FHDetailPropertyListCorrectingCell.h"
 #import "FHDetailPriceChangeHistoryCell.h"
 #import "FHDetailAgentListCell.h"
-#import "FHDetailHouseOutlineInfoCell.h"
 #import "FHDetailSuggestTipCell.h"
 #import "FHDetailSurroundingAreaCell.h"
 #import "FHDetailRelatedHouseCell.h"
@@ -25,11 +22,8 @@
 #import "FHDetailPriceChartCell.h"
 #import "FHOldDetailDisclaimerCell.h"
 #import "FHDetailPriceTrendCellModel.h"
-#import "FHDetailPureTitleCell.h"
 #import "FHDetailNeighborhoodInfoCorrectingCell.h"
 #import "FHDetailMediaHeaderCorrectingCell.h"
-#import "FHDetailNeighborhoodMapInfoCell.h"
-#import "FHDetailNeighborhoodEvaluateCell.h"
 #import "FHDetailListEntranceCell.h"
 #import "FHDetailHouseSubscribeCorrectingCell.h"
 #import "FHDetailAveragePriceComparisonCell.h"
@@ -38,8 +32,6 @@
 #import <FHHouseBase/FHMainApi+Contact.h>
 #import <FHHouseBase/FHUserTrackerDefine.h>
 #import "FHDetailNewModel.h"
-#import "FHODetailCommunityEntryCorrectingCell.h"
-#import "FHDetailBlankLineCell.h"
 #import "FHDetailHouseReviewCommentCell.h"
 #import "FHDetailUserHouseCommentCell.h"
 #import <FHHouseBase/FHSearchHouseModel.h>
@@ -124,10 +116,6 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
     //均价对比
     [self.tableView registerClass:[FHDetailAveragePriceComparisonCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailAveragePriceComparisonModel class])];
     [self.tableView registerClass:[FHOldDetailStaticMapCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailStaticMapCellModel class])];
-    //舒适指数
-    [self.tableView registerClass:[FHDetailNeighborhoodMapInfoCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailNeighborhoodMapInfoModel class])];
-    //ugc入口
-    [self.tableView registerClass:[FHODetailCommunityEntryCorrectingCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailCommunityEntryModel class])];
     //经纪人带看房评
     [self.tableView registerClass:[FHDetailHouseReviewCommentCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailHouseReviewCommentCellModel class])];
     //小区问答
@@ -381,16 +369,16 @@ logPB:self.listLogPB extraInfo:self.extraInfo completion:^(FHDetailOldModel * _N
         [self.items addObject:priceChangeHistoryModel];
     }
     
-        // 价格变动
-        if (model.data.priceChangeNotice && model.data.priceChangeNotice.showType != 0) {
-            FHDetailPriceNoticeModel *priceChangeNoticeModel = [[FHDetailPriceNoticeModel alloc] init];
-            priceChangeNoticeModel.priceChangeNotice = model.data.priceChangeNotice;
-            priceChangeNoticeModel.houseModelType = FHHouseModelTypeCoreInfo;
-            priceChangeNoticeModel.associateInfo =  model.data.middleSubscriptionAssociateInfo;
-            priceChangeNoticeModel.baseViewModel = self;
-            priceChangeNoticeModel.contactModel = self.contactViewModel;
-            [self.items addObject:priceChangeNoticeModel];
-        }
+    // 价格变动
+    if (model.data.priceChangeNotice && model.data.priceChangeNotice.showType != 0) {
+        FHDetailPriceNoticeModel *priceChangeNoticeModel = [[FHDetailPriceNoticeModel alloc] init];
+        priceChangeNoticeModel.priceChangeNotice = model.data.priceChangeNotice;
+        priceChangeNoticeModel.houseModelType = FHHouseModelTypeCoreInfo;
+        priceChangeNoticeModel.associateInfo =  model.data.middleSubscriptionAssociateInfo;
+        priceChangeNoticeModel.baseViewModel = self;
+        priceChangeNoticeModel.contactModel = self.contactViewModel;
+        [self.items addObject:priceChangeNoticeModel];
+    }
     // 添加属性列表
     if (model.data.baseInfo || model.data.certificate || model.data.baseExtra) {
         FHDetailPropertyListCorrectingModel *propertyModel = [[FHDetailPropertyListCorrectingModel alloc] init];
@@ -589,7 +577,6 @@ logPB:self.listLogPB extraInfo:self.extraInfo completion:^(FHDetailOldModel * _N
     if (model.data.neighborhoodInfo.id.length > 0) {
         // 添加分割线--当存在某个数据的时候在顶部添加分割线
         //ugc 圈子入口,写在这儿是因为如果小区模块移除，那么圈子入口也不展示
-//        BOOL showUgcEntry = model.data.ugcSocialGroup && model.data.ugcSocialGroup.activeCountInfo && model.data.ugcSocialGroup.activeInfo.count > 0;
         FHDetailNeighborhoodInfoCorrectingModel *infoModel = [[FHDetailNeighborhoodInfoCorrectingModel alloc] init];
         infoModel.neighborhoodInfo = model.data.neighborhoodInfo;
         if(hasOtherNeighborhoodInfo){
@@ -601,19 +588,6 @@ logPB:self.listLogPB extraInfo:self.extraInfo completion:^(FHDetailOldModel * _N
         infoModel.contactViewModel = self.contactViewModel;
         [self.items addObject:infoModel];
         //这个功能不要了 by xsm
-//        if(showUgcEntry){
-//            model.data.ugcSocialGroup.houseType = FHHouseTypeSecondHandHouse;
-//            if(hasOtherNeighborhoodInfo){
-//                model.data.ugcSocialGroup.houseModelType = FHHouseModelTypeNeighborhoodInfo;
-//            }else{
-//                model.data.ugcSocialGroup.houseModelType = FHHouseModelTypeLocationPeriphery;
-//            }
-//            [self.items addObject:model.data.ugcSocialGroup];
-//        } else{
-            //            FHDetailBlankLineModel *whiteLine = [[FHDetailBlankLineModel alloc] init];
-            //            [self.items addObject:whiteLine];
-//        }
-        
     }
     
     // 小区评测
@@ -650,8 +624,8 @@ logPB:self.listLogPB extraInfo:self.extraInfo completion:^(FHDetailOldModel * _N
         }
         paramsDict[@"page_type"] = [self pageTypeString];
         commentsModel.tracerDict = paramsDict;
-        commentsModel.topMargin = 12;
-        commentsModel.bottomMargin = 22.0f;
+        commentsModel.topMargin = 30;
+        commentsModel.bottomMargin = 35.0f;
         commentsModel.comments = model.data.comments;
         commentsModel.houseModelType = FHPlotHouseModelTypeNeighborhoodComment;
         [self.items addObject:commentsModel];
@@ -668,7 +642,7 @@ logPB:self.listLogPB extraInfo:self.extraInfo completion:^(FHDetailOldModel * _N
         }
         paramsDict[@"page_type"] = [self pageTypeString];
         qaModel.tracerDict = paramsDict;
-        qaModel.topMargin = 0.0f;
+        qaModel.topMargin = 30.f;
         qaModel.question = model.data.question;
         qaModel.houseModelType = FHPlotHouseModelTypeNeighborhoodQA;
         [self.items addObject:qaModel];

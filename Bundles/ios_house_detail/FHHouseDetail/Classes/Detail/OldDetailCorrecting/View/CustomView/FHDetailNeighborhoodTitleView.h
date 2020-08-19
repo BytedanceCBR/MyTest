@@ -9,7 +9,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface FHDetailNeighborhoodTitleView : UIButton
+@interface FHDetailNeighborhoodTitleView : UIView
 
 @property (nonatomic, copy) NSString *titleStr;
 @property (nonatomic, assign) BOOL isShowLoadMore;

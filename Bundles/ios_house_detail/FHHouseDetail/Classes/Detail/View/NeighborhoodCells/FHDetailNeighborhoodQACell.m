@@ -63,8 +63,8 @@
 - (void)setupUI {
     [self.shadowImage mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.right.equalTo(self.contentView);
-        make.top.equalTo(self.contentView).offset(-12);
-        make.bottom.equalTo(self.contentView).offset(12);
+        make.top.equalTo(self.contentView).offset(-14);
+        make.bottom.equalTo(self.contentView).offset(14);
     }];
     _containerView = [[UIView alloc] init];
     _containerView.clipsToBounds = YES;
@@ -145,11 +145,11 @@
         make.left.mas_equalTo(self.containerView).offset(15);
         make.right.mas_equalTo(self.containerView).offset(-15);
         make.height.mas_equalTo(300);
-        make.bottom.mas_equalTo(self.containerView);
+        make.bottom.mas_equalTo(self.containerView).offset(-10);
     }];
     
     [_titleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.titleView).offset(30);
+        make.top.mas_equalTo(self.titleView).offset(20);
         make.left.mas_equalTo(self.titleView).offset(16);
         make.right.mas_equalTo(self.questionBtn.mas_left).offset(-10);
         make.height.mas_equalTo(25);
@@ -174,7 +174,7 @@
     self.tableView.tableHeaderView = _titleView;
     
     [_titleLabel mas_updateConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.titleView).offset(cellModel.topMargin);
+        make.top.mas_equalTo(self.titleView).offset(cellModel.topMargin == 30?20:cellModel.topMargin);
     }];
     
     [self.tableView mas_updateConstraints:^(MASConstraintMaker *make) {
@@ -185,6 +185,15 @@
             make.bottom.equalTo(self.contentView);
         }];
     }
+    //业主问答在不单独为卡片的时候重新布局
+    if(cellModel.shadowImageType == FHHouseShdowImageTypeLR || cellModel.shadowImageType == FHHouseShdowImageTypeLBR){
+        [_containerView mas_remakeConstraints:^(MASConstraintMaker *make) {
+            make.top.mas_equalTo(self.shadowImage).offset(14);
+            make.left.right.mas_equalTo(self.contentView);
+            make.bottom.mas_equalTo(self.shadowImage).offset(-20);
+        }];
+    }
+    
     _titleLabel.text = cellModel.title;
     [_questionBtn setTitle:cellModel.askTitle forState:UIControlStateNormal];
     

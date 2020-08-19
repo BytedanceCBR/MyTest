@@ -7,7 +7,6 @@
 
 #import <Foundation/Foundation.h>
 #import "FHLoginViewController.h"
-#import "FHLoginView.h"
 #import "TTAccountLoginManager.h"
 #import "FHLoginDefine.h"
 

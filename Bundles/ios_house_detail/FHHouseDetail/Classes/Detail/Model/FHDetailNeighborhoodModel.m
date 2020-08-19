@@ -143,24 +143,6 @@
 }
 @end
 
-@implementation FHDetailNeighborhoodNeighborhoodInfoEvaluationInfoModel
-+ (JSONKeyMapper*)keyMapper
-{
-    NSDictionary *dict = @{
-                           @"totalScore": @"total_score",
-                           @"detailUrl": @"detail_url",
-                           @"subScores": @"sub_scores",
-                           };
-    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
-        return dict[keyName]?:keyName;
-    }];
-}
-+ (BOOL)propertyIsOptional:(NSString *)propertyName
-{
-    return YES;
-}
-@end
-
 @implementation FHDetailNeighborhoodDataNeighborhoodInfoModel
 + (JSONKeyMapper*)keyMapper
 {

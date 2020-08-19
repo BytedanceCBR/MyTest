@@ -122,7 +122,7 @@
             make.top.mas_equalTo(0);
             make.left.right.mas_equalTo(self.containerView);
 //            make.height.mas_equalTo(242);
-            make.bottom.mas_equalTo(self.containerView).mas_offset(-30);
+            make.bottom.mas_equalTo(self.containerView).mas_offset(-9);
         }];
         [_colView reloadData];
     }
@@ -182,17 +182,17 @@
     [self.headerView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(self.shadowImage).offset(15);
         make.right.mas_equalTo(self.shadowImage).offset(-15);
-        make.top.mas_equalTo(self.shadowImage).offset(30);
+        make.top.mas_equalTo(self.shadowImage).offset(20);
         make.height.mas_equalTo(46);
     }];
     
     _containerView = [[UIView alloc] init];
     [self.contentView addSubview:_containerView];
     [_containerView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.headerView.mas_bottom).mas_offset(30);
+        make.top.mas_equalTo(self.headerView.mas_bottom).mas_offset(16);
         make.left.mas_equalTo(self.shadowImage).mas_offset(15);
         make.right.mas_equalTo(self.shadowImage).mas_offset(-15);
-        make.bottom.mas_equalTo(self.shadowImage).offset(-20);
+        make.bottom.mas_equalTo(self.shadowImage).mas_offset(-20);
     }];
 }
 
