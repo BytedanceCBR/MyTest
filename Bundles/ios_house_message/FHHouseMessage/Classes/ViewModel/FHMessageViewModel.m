@@ -421,9 +421,9 @@
     return SwipeTableCellStyleRightToLeft;
 }
 
-- (NSArray<SwipeButton *> *)tableView:(UITableView *)tableView rightSwipeButtonsAtIndexPath:(NSIndexPath *)indexPath
+- (NSArray<FHMessageSwipeButton *> *)tableView:(UITableView *)tableView rightSwipeButtonsAtIndexPath:(NSIndexPath *)indexPath
 {
-    SwipeButton *deleteBtn = [SwipeButton createSwipeButtonWithTitle:@"删除" font:16 textColor:[UIColor blackColor] backgroundColor:[UIColor redColor] image:[UIImage imageNamed:@"delete"] touchBlock:^{
+    FHMessageSwipeButton *deleteBtn = [FHMessageSwipeButton createSwipeButtonWithTitle:@"删除" font:16 textColor:[UIColor blackColor] backgroundColor:[UIColor redColor] image:[UIImage imageNamed:@"delete"] touchBlock:^{
         
         NSLog(@"点击了check按钮");
     }];

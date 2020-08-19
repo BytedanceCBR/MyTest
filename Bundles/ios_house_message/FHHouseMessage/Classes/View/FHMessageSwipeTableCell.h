@@ -7,7 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "SwipeButton.h"
+#import "FHMessageSwipeButton.h"
 #import "SwipeView.h"
 #import "FHMessageEditView.h"
 
@@ -18,7 +18,7 @@ typedef NS_ENUM(NSUInteger, SwipeTableCellStyle)
     SwipeTableCellStyleBoth, /**< 左滑、右滑都有*/
 };
 
-@class SwipeTableCell;
+@class FHMessageSwipeTableCell;
 @protocol SwipeTableViewCellDelegate <NSObject>
 
 @required
@@ -34,14 +34,14 @@ typedef NS_ENUM(NSUInteger, SwipeTableCellStyle)
  *
  *  @param indexPath cell的位置
  */
-- (NSArray<SwipeButton *> *)tableView:(UITableView *)tableView leftSwipeButtonsAtIndexPath:(NSIndexPath *)indexPath;
+- (NSArray<FHMessageSwipeButton *> *)tableView:(UITableView *)tableView leftSwipeButtonsAtIndexPath:(NSIndexPath *)indexPath;
 
 /**
  *  右滑cell时显示的button
  *
  *  @param indexPath cell的位置
  */
-- (NSArray<SwipeButton *> *)tableView:(UITableView *)tableView rightSwipeButtonsAtIndexPath:(NSIndexPath *)indexPath;
+- (NSArray<FHMessageSwipeButton *> *)tableView:(UITableView *)tableView rightSwipeButtonsAtIndexPath:(NSIndexPath *)indexPath;
 
 @optional
 /**
@@ -56,7 +56,7 @@ typedef NS_ENUM(NSUInteger, SwipeTableCellStyle)
  *
  *  @return 是否隐藏
  */
-- (BOOL)hideSwipeViewWhenClickSwipeButtonAtCell:(SwipeTableCell *)cell;
+- (BOOL)hideSwipeViewWhenClickSwipeButtonAtCell:(FHMessageSwipeTableCell *)cell;
 
 /**
  * 设置swipeView的弹出样式
@@ -74,7 +74,7 @@ typedef NS_ENUM(NSUInteger, SwipeTableCellStyle)
 
 
 @class SwipeTableViewDelegate;
-@interface SwipeTableCell : UITableViewCell
+@interface FHMessageSwipeTableCell : UITableViewCell
 
 @property (nonatomic, weak) UITableView *tableView; /**< 当前cell所在的tableView*/
 

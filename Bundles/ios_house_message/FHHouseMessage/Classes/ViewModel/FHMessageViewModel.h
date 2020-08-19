@@ -7,7 +7,6 @@
 
 #import <Foundation/Foundation.h>
 #import "FHMessageBridgeProtocol.h"
-#import "FHMessageTopView.h"
 
 NS_ASSUME_NONNULL_BEGIN
 

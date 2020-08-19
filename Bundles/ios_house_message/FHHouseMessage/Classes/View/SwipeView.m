@@ -7,8 +7,8 @@
 //
 
 #import "SwipeView.h"
-#import "SwipeButton.h"
-#import "SwipeTableCell.h"
+#import "FHMessageSwipeButton.h"
+#import "FHMessageSwipeTableCell.h"
 
 static inline CGFloat mgEaseLinear(CGFloat t, CGFloat b, CGFloat c) {
     return c*t + b;
@@ -78,7 +78,7 @@ static inline CGFloat mgEaseInOutBounce(CGFloat t, CGFloat b, CGFloat c) {
     CGFloat horizontalSpace = ABS(edge.left) + ABS(edge.right);
     CGFloat verticalSpace = ABS(edge.top) + ABS(edge.bottom);
     // 计算buttons的总宽度
-    for(SwipeButton *button in buttos){
+    for(FHMessageSwipeButton *button in buttos){
         containerWidth += MAX(button.frame.size.width, cellHeight - verticalSpace);
     }
     // 加上左右间距
@@ -96,7 +96,7 @@ static inline CGFloat mgEaseInOutBounce(CGFloat t, CGFloat b, CGFloat c) {
         [self addSubview:self.containView];
         
         CGFloat offset = ABS(edge.left);
-        for(SwipeButton *button in self.buttonArray)
+        for(FHMessageSwipeButton *button in self.buttonArray)
         {
             button.frame = CGRectMake(offset, 0, MAX(button.frame.size.width, cellHeight - verticalSpace), cellHeight - verticalSpace);
             offset += button.frame.size.width;
@@ -113,7 +113,7 @@ static inline CGFloat mgEaseInOutBounce(CGFloat t, CGFloat b, CGFloat c) {
 /**
  * 点击滑动按钮的响应事件
  */
-- (void)touchSwipeButton:(SwipeButton *)btn
+- (void)touchSwipeButton:(FHMessageSwipeButton *)btn
 {
     // 点击按钮隐藏滑动按钮，即将cell恢复原状
     [self hideSwipeView];
@@ -126,13 +126,13 @@ static inline CGFloat mgEaseInOutBounce(CGFloat t, CGFloat b, CGFloat c) {
  */
 - (void)hideSwipeView
 {
-    SwipeTableCell *cell = nil;
+    FHMessageSwipeTableCell *cell = nil;
     UIView *view = self.superview;
     while (view != nil)
     {
-        if([view isKindOfClass:[SwipeTableCell class]])
+        if([view isKindOfClass:[FHMessageSwipeTableCell class]])
         {
-            cell = (SwipeTableCell *)view;
+            cell = (FHMessageSwipeTableCell *)view;
             break;
         }
         view = view.superview;
@@ -195,7 +195,7 @@ static inline CGFloat mgEaseInOutBounce(CGFloat t, CGFloat b, CGFloat c) {
             CGFloat selfWidth = self.bounds.size.width;
             CGFloat offsetX = ABS(self.btnEdge.left);
             
-            for (SwipeButton *button in self.buttonArray)
+            for (FHMessageSwipeButton *button in self.buttonArray)
             {
                 CGRect frame = button.frame;
                 CGFloat x = fromRight ? offsetX * t : (selfWidth - MAX(frame.size.width, cellHeight - verticalSpace) - offsetX) * (1.0 - t) + offsetX;

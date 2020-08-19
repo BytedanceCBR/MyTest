@@ -7,7 +7,6 @@
 
 #import "FHMessageSegmentedViewController.h"
 #import "FHMessageViewController.h"
-#import "FHMessageTopView.h"
 #import "TTDeviceHelper.h"
 #import "IMManager.h"
 #import "FHMessageViewModel.h"
@@ -237,7 +236,6 @@ typedef NS_ENUM(NSInteger, FHSegmentedControllerAnimatedTransitionDirection) {
 @property (nonatomic,readwrite,weak) UIViewController *activeViewController;
 @property (nonatomic,weak) UIView *contentView;
 
-@property (nonatomic, strong) FHMessageTopView *topView;
 @property (nonatomic,weak) UIPanGestureRecognizer *interactivePanGestureRecognizer;
 @property (nonatomic) CGPoint interactivePanInitialPoint;
 @property (nonatomic) FHSegmentedControllerAnimatedTransitionDirection interactivePanDirection;
@@ -481,6 +479,7 @@ typedef NS_ENUM(NSInteger, FHSegmentedControllerAnimatedTransitionDirection) {
     [super viewWillAppear:animated];
     [FHBubbleTipManager shareInstance].canShowTip = NO;
     [self applicationDidBecomeActive];
+    [self refreshConversationList];
     [self check];
 }
 
@@ -488,7 +487,6 @@ typedef NS_ENUM(NSInteger, FHSegmentedControllerAnimatedTransitionDirection) {
     [super viewDidAppear:animated];
     [[FHPopupViewManager shared] triggerPopupView];
     [[FHPopupViewManager shared] triggerPendant];
-    [self refreshConversationList];
 }
 
 - (void)viewWillDisappear:(BOOL)animated {

@@ -6,13 +6,13 @@
 //  Copyright © 2016年 zhaoName. All rights reserved.
 //
 
-#import "SwipeTableCell.h"
+#import "FHMessageSwipeTableCell.h"
 
 #define CELL_WIDTH self.bounds.size.width
 #define CELL_HEIGHT self.bounds.size.height
 
 
-@interface SwipeTableCell ()<UIGestureRecognizerDelegate>
+@interface FHMessageSwipeTableCell ()<UIGestureRecognizerDelegate>
 
 @property (nonatomic, strong) UIView *swipeOverlayView; /**< 滑动时覆盖在cell上*/
 @property (nonatomic, strong) UIImageView *swipeImageView; /**< 显示移动后的cell上的内容*/
@@ -22,8 +22,8 @@
 
 @property (nonatomic, assign) SwipeTableCellStyle swipeStyle; /**< 滑动样式 默认右滑*/
 @property (nonatomic, assign) SwipeViewTransfromMode transformMode; /**< swipeView的弹出效果*/
-@property (nonatomic, strong) NSArray<SwipeButton *> *leftSwipeButtons; /**< 左滑buttons*/
-@property (nonatomic, strong) NSArray<SwipeButton *> *rightSwipeButtons; /**< 右滑buttons*/
+@property (nonatomic, strong) NSArray<FHMessageSwipeButton *> *leftSwipeButtons; /**< 左滑buttons*/
+@property (nonatomic, strong) NSArray<FHMessageSwipeButton *> *rightSwipeButtons; /**< 右滑buttons*/
 @property (nonatomic, strong) NSMutableSet *perviusHiddenViewSet;/**< 已经隐藏的view*/
 
 @property (nonatomic, assign) CGFloat swipeOffset; /**< 滑动偏移量*/
@@ -39,7 +39,7 @@
 
 @end
 
-@implementation SwipeTableCell
+@implementation FHMessageSwipeTableCell
 
 - (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
 {
@@ -143,7 +143,7 @@
         }
         
         // 若点击区域在tableView上 而不在cell上，滑动时也会自动隐藏swipeView
-        for(SwipeTableCell *cell in self.tableView.visibleCells) // 滑动cell时，自动隐藏swipeView
+        for(FHMessageSwipeTableCell *cell in self.tableView.visibleCells) // 滑动cell时，自动隐藏swipeView
         {
             if(cell.hideSwipeViewWhenScrollTableView && !cell.swipeOverlayView.hidden)
             {
@@ -191,7 +191,7 @@
         // 不允许多个cell同时能滑动，则移除上一个cell的滑动手势
         if(!_isAllowMultipleSwipe)
         {
-            for(SwipeTableCell * cell in self.tableView.visibleCells)
+            for(FHMessageSwipeTableCell * cell in self.tableView.visibleCells)
             {
                 if(cell != self) [cell cancelPanGesture];
             }
@@ -393,7 +393,7 @@
     {
         CGFloat panX = [self.panGesture translationInView:gestureRecognizer.view].x;
         BOOL isAllClose = YES;
-        for(SwipeTableCell *cell in self.tableView.visibleCells) {
+        for(FHMessageSwipeTableCell *cell in self.tableView.visibleCells) {
             if (!cell.isClose) {
                 isAllClose = NO;
             }
@@ -410,7 +410,7 @@
         CGPoint panPoint = [self.panGesture translationInView:self];
         if(fabs(panPoint.x) < fabs(panPoint.y))
         {
-            for(SwipeTableCell *cell in self.tableView.visibleCells) // 滑动cell时，自动隐藏swipeView
+            for(FHMessageSwipeTableCell *cell in self.tableView.visibleCells) // 滑动cell时，自动隐藏swipeView
             {
                 if(cell.hideSwipeViewWhenScrollTableView && !cell.swipeOverlayView.hidden)
                 {
@@ -707,7 +707,7 @@
 
 #pragma mark -- 懒加载
 
-- (NSArray<SwipeButton *> *)leftSwipeButtons
+- (NSArray<FHMessageSwipeButton *> *)leftSwipeButtons
 {
     if(!_leftSwipeButtons)
     {
@@ -716,7 +716,7 @@
     return _leftSwipeButtons;
 }
 
-- (NSArray<SwipeButton *> *)rightSwipeButtons
+- (NSArray<FHMessageSwipeButton *> *)rightSwipeButtons
 {
     if(!_rightSwipeButtons)
     {
