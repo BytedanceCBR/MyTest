@@ -11,6 +11,7 @@
 #import "FHHouseDetailBaseViewModel.h"
 #import "FHHouseDetailPhoneCallViewModel.h"
 #import <FHHouseBase/FHHouseFollowUpHelper.h>
+#import <FHHouseBase/FHRealtorAvatarView.h>
 NS_ASSUME_NONNULL_BEGIN
 // 推荐经纪人-列表
 @interface FHDetailAgentListCell : FHDetailBaseCell <FHDetailScrollViewDidScrollProtocol>
@@ -19,8 +20,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FHDetailAgentItemView : UIControl
 
-@property (nonatomic, strong)   UIImageView *avator;
-@property(nonatomic , strong)   UIImageView *identifyView;
+@property (nonatomic, strong)   FHRealtorAvatarView *avatorView;
 @property (nonatomic, strong)   UIButton    *licenceIcon;
 @property (nonatomic, strong)   UIButton    *callBtn;
 @property (nonatomic, strong)   UIButton    *imBtn;

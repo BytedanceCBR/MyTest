@@ -94,7 +94,7 @@
     
     self.videoImageView = [[TTImageView alloc] initWithFrame:CGRectMake(0, 0, self.imageViewWidth, self.imageViewheight)];
     _videoImageView.backgroundColor = [UIColor themeGray7];
-    _videoImageView.imageContentMode = TTImageViewContentModeScaleAspectFill;
+    _videoImageView.imageContentMode = TTImageViewContentModeScaleAspectFillRemainTop;
     _videoImageView.layer.masksToBounds = YES;
     _videoImageView.layer.cornerRadius = 4;
     [self.contentContainer addSubview:_videoImageView];

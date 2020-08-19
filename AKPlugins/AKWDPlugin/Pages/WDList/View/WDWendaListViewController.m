@@ -260,7 +260,7 @@ static NSString * const WukongListTipsHasShown = @"kWukongListTipsHasShown";
         if(logPbDic[@"group_source"]){
             v3Dic[@"group_source"] = logPbDic[@"group_source"];
         }
-        
+        [v3Dic setValue:@"89248" forKey:@"event_tracking_id"];
         [BDTrackerProtocol eventV3:@"go_detail" params:v3Dic isDoubleSending:NO];
         self.goDetailDict = v3Dic;
 

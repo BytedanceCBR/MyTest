@@ -32,7 +32,7 @@
 #import "FHHomePlaceHolderCell.h"
 #import <FHHouseBase/TTDeviceHelper+FHHouse.h>
 #import "FHHouseListBaseItemCell.h"
-#import "FHHouseErrorHubManager.h"
+#import "FHErrorHubManagerUtil.h"
 #import "FHLynxManager.h"
 static NSMutableArray  * _Nullable identifierArr;
 
@@ -166,7 +166,8 @@ static NSMutableArray  * _Nullable identifierArr;
             
             [dictTraceParams setValue:@"maintab" forKey:@"page_type"];
             
-            [[FHHouseErrorHubManager sharedInstance] checkBuryingPointWithEvent:@"operation_show" Params:dictTraceParams errorHubType:FHErrorHubTypeBuryingPoint];
+//            [[FHHouseErrorHubManager sharedInstance] checkBuryingPointWithEvent:@"operation_show" Params:dictTraceParams];
+            [FHErrorHubManagerUtil checkBuryingPointWithEvent:@"operation_show" Params:dictTraceParams];
             [BDTrackerProtocol eventV3:@"operation_show" params:dictTraceParams];
         }];
     }
@@ -209,7 +210,8 @@ static NSMutableArray  * _Nullable identifierArr;
             [dictTraceParams setValue:@"house_app2c_v2" forKey:@"event_type"];
             [dictTraceParams setValue:@"maintab" forKey:@"page_type"];
             
-            [[FHHouseErrorHubManager sharedInstance] checkBuryingPointWithEvent:@"operation_show" Params:dictTraceParams errorHubType:FHErrorHubTypeBuryingPoint];
+//            [[FHHouseErrorHubManager sharedInstance] checkBuryingPointWithEvent:@"operation_show" Params:dictTraceParams];
+            [FHErrorHubManagerUtil checkBuryingPointWithEvent:@"operation_show" Params:dictTraceParams];
             [BDTrackerProtocol eventV3:@"operation_show" params:dictTraceParams];
         }];
     }

@@ -22,6 +22,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic , copy) NSString *enterFrom;
 @property(nonatomic , copy) NSString *enterCategory;
 @property(nonatomic , strong) NSDictionary * conditionParams;
+@property(nonatomic , strong) NSArray * houseTypeArray;
+@property(nonatomic , copy) NSString * houseTypeList;
 @property(nonatomic , copy) NSString *suggestionParams;
 @property(nonatomic , copy) NSString *mapOpenUrl;
 @property(nonatomic , assign) BOOL enterFromList;

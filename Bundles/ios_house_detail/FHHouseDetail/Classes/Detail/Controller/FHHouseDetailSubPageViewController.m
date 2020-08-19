@@ -226,12 +226,12 @@
     }];
 }
 
-- (UIView *)getNaviBar
+- (FHDetailNavBar *)getNaviBar
 {
     return self.navBar;
 }
 
-- (UIView *)getBottomBar
+- (FHDetailBottomBar *)getBottomBar
 {
     return self.bottomBar;
 }

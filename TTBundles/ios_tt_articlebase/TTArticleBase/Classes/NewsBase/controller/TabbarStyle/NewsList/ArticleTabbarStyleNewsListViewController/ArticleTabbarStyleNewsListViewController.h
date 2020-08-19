@@ -15,8 +15,8 @@
 @property (nonatomic, strong) TTExploreMainViewController *mainVC;
 @property (nonatomic, assign) BOOL isShowTopSearchPanel;
 
-- (void)viewAppearForEnterType:(FHHomeMainTraceEnterType)enterType;
+- (void)viewAppearForEnterType:(FHHomeMainTraceEnterType)enterType needReportSubCategory:(BOOL)needReportSubCategory;
 
-- (void)viewDisAppearForEnterType:(FHHomeMainTraceEnterType)enterType;
+- (void)viewDisAppearForEnterType:(FHHomeMainTraceEnterType)enterType needReportSubCategory:(BOOL)needReportSubCategory;
 
 @end

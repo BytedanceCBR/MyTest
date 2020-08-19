@@ -54,15 +54,6 @@
 
         _maxFollowItem = 3;
         [_collectionView registerClass:[FHMyJoinCommnityCell class] forCellWithReuseIdentifier:cellId];
-        
-//        if(!self.viewController.isNewDiscovery){
-//            [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onUnreadMessageChange) name:kTTMessageNotificationTipsChangeNotification object:nil];
-//            
-//            UITapGestureRecognizer *singleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(onUnreadMessageClick)];
-//            [self.viewController.neighbourhoodView.messageView addGestureRecognizer:singleTap];
-//            
-//            [self onUnreadMessageChange];
-//        }
     }
 
     return self;
@@ -115,15 +106,6 @@
     model.socialGroupName = @"全部圈子";
     model.countText = @"发现精彩社区";
     [self.dataList addObject:model];
-}
-
-- (void)onUnreadMessageChange {
-    FHUnreadMsgDataUnreadModel *model = [FHMessageNotificationTipsManager sharedManager].tipsModel;
-    if (model && [model.unread integerValue] > 0) {
-        [self showMessageView];
-    }else{
-        [self hideMessageView];
-    }
 }
 
 - (void)showMessageView {

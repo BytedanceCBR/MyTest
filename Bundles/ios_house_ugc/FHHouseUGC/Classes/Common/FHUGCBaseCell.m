@@ -68,6 +68,14 @@
     return 44;
 }
 
+- (void)willDisplay {
+
+}
+
+- (void)endDisplay {
+    
+}
+
 @end
 
 // FHUGCBaseCollectionCell
