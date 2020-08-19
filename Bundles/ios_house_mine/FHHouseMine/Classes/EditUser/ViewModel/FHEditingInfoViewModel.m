@@ -97,13 +97,17 @@
             
             [[ToastManager manager] showToast:hint];
         } else {
-            TTAccountUserEntity* user = [[TTAccount sharedAccount] user];
-            if (user != nil) {
-                user.name = userEntity.name;
-                user.screenName = userEntity.screenName;
-                user.userDescription = userEntity.userDescription;
-                [[TTAccount sharedAccount] setUser:user];
-            }
+            //对认证用户来说，更新接口返回的数据和userInfo返回的数据不匹配，造成了数据显示异常的问题，所以统一使用userInfo接口更新用户数据
+//            TTAccountUserEntity* user = [[TTAccount sharedAccount] user];
+//            if (user != nil) {
+//                user.name = userEntity.name;
+//                user.screenName = userEntity.screenName;
+//                user.userDescription = userEntity.userDescription;
+//                [[TTAccount sharedAccount] setUser:user];
+//            }
+            [TTAccount getUserInfoWithScene:TTAccountRequestNormal completion:^(TTAccountUserEntity * _Nullable userEntity, NSError * _Nullable error) {
+                
+            }];
 
             NSString *username = [userEntity.auditInfoSet username];
             NSString *userDesp = [userEntity.auditInfoSet userDescription];
