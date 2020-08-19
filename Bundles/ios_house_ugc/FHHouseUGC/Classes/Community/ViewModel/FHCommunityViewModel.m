@@ -34,7 +34,11 @@
 - (instancetype)initWithCollectionView:(UICollectionView *)collectionView controller:(FHCommunityViewController *)viewController {
     self = [super initWithCollectionView:collectionView controller:viewController];
     
-    self.currentTabIndex = 1;
+    if([FHEnvContext isHasVideoList]){
+        self.currentTabIndex = 0;
+    }else{
+        self.currentTabIndex = 1;
+    }
     
     collectionView.delegate = self;
     collectionView.dataSource = self;
@@ -64,24 +68,36 @@
         [self.cellArray addObject:[NSNull null]];
     }
     
-    self.dataArray = @[
-                       @(FHCommunityCollectionCellTypeMyJoin),
-                       @(FHCommunityCollectionCellTypeNearby),
-                       ];
+    if([FHEnvContext isHasVideoList]){
+        self.dataArray = @[
+            @(FHCommunityCollectionCellTypeCustom),
+            @(FHCommunityCollectionCellTypeNearby),
+        ];
+    }else{
+        self.dataArray = @[
+            @(FHCommunityCollectionCellTypeMyJoin),
+            @(FHCommunityCollectionCellTypeNearby),
+        ];
+    }
+    
 }
 
 - (NSArray *)getSegmentTitles {
     NSMutableArray *titles = [NSMutableArray array];
     
     NSDictionary *ugcTitles = [FHEnvContext ugcTabName];
-    if(ugcTitles[kUGCTitleMyJoinList]){
-        NSString *name = ugcTitles[kUGCTitleMyJoinList];
-        if(name.length > 2){
-            name = [name substringToIndex:2];
-        }
-        [titles addObject:name];
+    if([FHEnvContext isHasVideoList]){
+        [titles addObject:@"视频"];
     }else{
-        [titles addObject:@"关注"];
+        if(ugcTitles[kUGCTitleMyJoinList]){
+            NSString *name = ugcTitles[kUGCTitleMyJoinList];
+            if(name.length > 2){
+                name = [name substringToIndex:2];
+            }
+            [titles addObject:name];
+        }else{
+            [titles addObject:@"关注"];
+        }
     }
     
     if(ugcTitles[kUGCTitleNearbyList]){
@@ -98,7 +114,12 @@
         return titles;
     }
     
-    return @[@"关注", @"附近"];
+    NSArray *defaultTitles = @[@"关注", @"附近"];
+    if([FHEnvContext isHasVideoList]){
+        defaultTitles = @[@"视频", @"附近"];
+    }
+    
+    return defaultTitles;
 }
 
 - (void)selectCurrentTabIndex {
@@ -120,8 +141,7 @@
         NSIndexPath *indexPath = [NSIndexPath indexPathForRow:index inSection:0];
         [self.collectionView scrollToItemAtIndexPath:indexPath atScrollPosition:UICollectionViewScrollPositionLeft animated:NO];
         
-        //关注tab，没有关注时需要隐藏关注按钮
-        if(self.currentTabIndex == 0 && [FHUGCConfig sharedInstance].followList.count <= 0){
+        if(self.currentTabIndex == 0 && ([FHUGCConfig sharedInstance].followList.count <= 0 || [FHEnvContext isHasVideoList])){
             self.viewController.publishBtn.hidden = YES;
         }else{
             self.viewController.publishBtn.hidden = NO;
@@ -288,8 +308,7 @@
     
     [self initCell:@"flip"];
     
-    //关注tab，没有关注时需要隐藏关注按钮
-    if(self.currentTabIndex == 0 && [FHUGCConfig sharedInstance].followList.count <= 0){
+    if(self.currentTabIndex == 0 && ([FHUGCConfig sharedInstance].followList.count <= 0 || [FHEnvContext isHasVideoList])){
         self.viewController.publishBtn.hidden = YES;
     }else{
         self.viewController.publishBtn.hidden = NO;

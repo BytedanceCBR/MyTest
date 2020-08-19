@@ -17,7 +17,6 @@
 @interface FHHomeMainViewModel()<UICollectionViewDelegate,UICollectionViewDataSource>
 @property(nonatomic , strong) UICollectionView *collectionView;
 @property(nonatomic , weak) FHHomeMainViewController *viewController;
-@property(nonatomic , weak) id feedListVC;
 @property(nonatomic , weak) FHHomeViewController *homeListVC;
 @property(nonatomic , strong) NSMutableArray *dataArray;
 @property(nonatomic , assign) CGPoint beginOffSet;
@@ -110,7 +109,7 @@
     }
     
     if ([cell.contentVC isKindOfClass:[ArticleTabBarStyleNewsListViewController class]] || [cell.contentVC isKindOfClass:[FHCommunityViewController class]]) {
-        self.feedListVC = cell.contentVC;
+        self.viewController.feedListVC = cell.contentVC;
         self.viewController.feedListVC = cell.contentVC;
     }
     
@@ -194,35 +193,35 @@
     }else
     {
         //切换城市补报
-        if (!self.feedListVC) {
-              NSMutableDictionary *traceDict = [NSMutableDictionary new];
-             if (enterType == FHHomeMainTraceEnterTypeClick) {
-                 [traceDict setValue:@"click" forKey:@"enter_type"];
-             }else
-             {
-                 [traceDict setValue:@"flip" forKey:@"enter_type"];
-             }
-                          
-             [traceDict setValue:@"maintab" forKey:@"enter_from"];
-             [traceDict setValue:@"discover_stream" forKey:@"category_name"];
-             [FHEnvContext recordEvent:traceDict andEventKey:@"enter_category"];
-            if(![FHEnvContext isHomeNewDiscovery]){
-                [traceDict setValue:@"f_house_news"
-                                 forKey:@"category_name"];
-                [FHEnvContext recordEvent:traceDict andEventKey:@"enter_category"];
-            }
-            
-            if ([self.viewController.feedListVC isKindOfClass:[FHCommunityViewController class]]) {
-                FHCommunityViewController *vc = (FHCommunityViewController *)self.viewController.feedListVC;
-                [vc viewAppearForEnterType:enterType needReport:NO];
-            }
+        if (!self.viewController.feedListVC) {
+//              NSMutableDictionary *traceDict = [NSMutableDictionary new];
+//             if (enterType == FHHomeMainTraceEnterTypeClick) {
+//                 [traceDict setValue:@"click" forKey:@"enter_type"];
+//             }else
+//             {
+//                 [traceDict setValue:@"flip" forKey:@"enter_type"];
+//             }
+//
+//             [traceDict setValue:@"maintab" forKey:@"enter_from"];
+//             [traceDict setValue:@"click" forKey:@"enter_channel"];
+//             [traceDict setValue:@"discover_stream" forKey:@"category_name"];
+//             [FHEnvContext recordEvent:traceDict andEventKey:@"enter_category"];
+//            if(![FHEnvContext isHomeNewDiscovery]){
+//                [traceDict setValue:@"f_house_news"
+//                                 forKey:@"category_name"];
+//                [FHEnvContext recordEvent:traceDict andEventKey:@"enter_category"];
+//            }
+//            if ([self.viewController.feedListVC isKindOfClass:[FHCommunityViewController class]]) {
+//                FHCommunityViewController *vc = (FHCommunityViewController *)self.viewController.feedListVC;
+//                [vc viewAppearForEnterType:enterType needReport:NO];
+//            }
         }else{
-            if ([self.feedListVC isKindOfClass:[ArticleTabBarStyleNewsListViewController class]]) {
-                ArticleTabBarStyleNewsListViewController *articleListVC = (ArticleTabBarStyleNewsListViewController *)self.feedListVC;
-                [articleListVC viewAppearForEnterType:enterType];
-            }else if ([self.feedListVC isKindOfClass:[FHCommunityViewController class]]) {
-                FHCommunityViewController *vc = (FHCommunityViewController *)self.feedListVC;
-                [vc viewAppearForEnterType:enterType needReport:YES];
+            if ([self.viewController.feedListVC isKindOfClass:[ArticleTabBarStyleNewsListViewController class]]) {
+                ArticleTabBarStyleNewsListViewController *articleListVC = (ArticleTabBarStyleNewsListViewController *)self.viewController.feedListVC;
+                [articleListVC viewAppearForEnterType:enterType needReportSubCategory:YES];
+            }else if ([self.viewController.feedListVC isKindOfClass:[FHCommunityViewController class]]) {
+                FHCommunityViewController *vc = (FHCommunityViewController *)self.viewController.feedListVC;
+                [vc viewAppearForEnterType:enterType needReportSubCategory:YES];
             }
         }
     }
@@ -234,12 +233,12 @@
         [[NSNotificationCenter defaultCenter] postNotificationName:@"FHHomeItemVCStayCategory" object:@(enterType)];
     }else
     {
-        if ([self.feedListVC isKindOfClass:[ArticleTabBarStyleNewsListViewController class]]) {
-            ArticleTabBarStyleNewsListViewController *articleListVC = (ArticleTabBarStyleNewsListViewController *)self.feedListVC;
-            [articleListVC viewDisAppearForEnterType:enterType];
-        }else if ([self.feedListVC isKindOfClass:[FHCommunityViewController class]]) {
-            FHCommunityViewController *vc = (FHCommunityViewController *)self.feedListVC;
-            [vc viewDisAppearForEnterType:enterType];
+        if ([self.viewController.feedListVC isKindOfClass:[ArticleTabBarStyleNewsListViewController class]]) {
+            ArticleTabBarStyleNewsListViewController *articleListVC = (ArticleTabBarStyleNewsListViewController *)self.viewController.feedListVC;
+            [articleListVC viewDisAppearForEnterType:enterType needReportSubCategory:YES];
+        }else if ([self.viewController.feedListVC isKindOfClass:[FHCommunityViewController class]]) {
+            FHCommunityViewController *vc = (FHCommunityViewController *)self.viewController.feedListVC;
+            [vc viewDisAppearForEnterType:enterType needReportSubCategory:YES];
         }
     }
 }

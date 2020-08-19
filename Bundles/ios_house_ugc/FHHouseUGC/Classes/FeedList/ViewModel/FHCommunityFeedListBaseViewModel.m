@@ -9,6 +9,7 @@
 #import "FHUGCSmallVideoCell.h"
 #import <FHUGCVideoCell.h>
 #import "TTVFeedPlayMovie.h"
+#import "FHUGCFullScreenVideoCell.h"
 
 
 @implementation FHCommunityFeedListBaseViewModel
@@ -108,6 +109,11 @@
     for (id cell in cells) {
         if([cell isKindOfClass:[FHUGCVideoCell class]] && [cell conformsToProtocol:@protocol(TTVFeedPlayMovie)]) {
             FHUGCVideoCell<TTVFeedPlayMovie> *cellBase = (FHUGCVideoCell<TTVFeedPlayMovie> *)cell;
+            if([cellBase cell_isPlayingMovie]){
+                [cellBase endDisplay];
+            }
+        }else if([cell isKindOfClass:[FHUGCFullScreenVideoCell class]] && [cell conformsToProtocol:@protocol(TTVFeedPlayMovie)]) {
+            FHUGCFullScreenVideoCell<TTVFeedPlayMovie> *cellBase = (FHUGCFullScreenVideoCell<TTVFeedPlayMovie> *)cell;
             if([cellBase cell_isPlayingMovie]){
                 [cellBase endDisplay];
             }
