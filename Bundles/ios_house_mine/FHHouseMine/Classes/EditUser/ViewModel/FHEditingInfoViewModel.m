@@ -105,9 +105,6 @@
 //                user.userDescription = userEntity.userDescription;
 //                [[TTAccount sharedAccount] setUser:user];
 //            }
-            [TTAccount getUserInfoWithScene:TTAccountRequestNormal completion:^(TTAccountUserEntity * _Nullable userEntity, NSError * _Nullable error) {
-                
-            }];
 
             NSString *username = [userEntity.auditInfoSet username];
             NSString *userDesp = [userEntity.auditInfoSet userDescription];
@@ -128,8 +125,8 @@
             
             // 使用新的数据刷新
             [sself.viewController.navigationController popViewControllerAnimated:YES];
-            if(sself.viewController.delegate && [sself.viewController.delegate respondsToSelector:@selector(reloadData)]){
-                [sself.viewController.delegate reloadData];
+            if(sself.viewController.delegate && [sself.viewController.delegate respondsToSelector:@selector(loadRequest)]){
+                [sself.viewController.delegate loadRequest];
             }
         }
     };
