@@ -104,25 +104,24 @@
     [FHMainApi requestRealtorHomePage:parmas completion:^(FHHouseRealtorDetailModel * _Nonnull model, NSError * _Nonnull error) {
         if (model && error == NULL) {
             if (model.data) {
-                self.viewController.emptyView.hidden = YES;
+                wSelf.viewController.emptyView.hidden = YES;
                 //                [wSelf updateUIWithData];
                 [wSelf processDetailData:model];
-                
             }else {
-                  [self addGoDetailLog];
-                [self.viewController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoData];
+                [wSelf addGoDetailLog];
+                [wSelf.viewController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoData];
             }
         }else {
-              [self addGoDetailLog];
-            [self.viewController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoData];
+            [wSelf addGoDetailLog];
+            [wSelf.viewController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoData];
         }
     }];
 }
 
 - (void)processDetailData:(FHHouseRealtorDetailModel *)model {
-    if (!self.viewController) {
-        return;
-    }
+    //    if (!self.viewController) {
+    //        return;
+    //    }
     self.realtorLogpb = model.data.realtorLogpb;
     [self addGoDetailLog];
     self.data = model.data;
@@ -163,13 +162,13 @@
                 self.isHeightScoreRealtor = isHightScore;
                 [self.viewController.headerView updateRealtorWithHeightScore];
                 self.viewController.headerView.titleImage.hidden = NO;
-               self.viewController.customNavBarView.title.textColor = [UIColor colorWithHexStr:@"#E7C494"];
-        UIImage *whiteBackArrowImage = ICON_FONT_IMG(24, @"\U0000e68a", [UIColor colorWithHexStr:@"#E7C494"]);
-        [self.viewController.customNavBarView.leftBtn setBackgroundImage:whiteBackArrowImage forState:UIControlStateNormal];
-        [self.viewController.customNavBarView.leftBtn setBackgroundImage:whiteBackArrowImage forState:UIControlStateHighlighted];
+                self.viewController.customNavBarView.title.textColor = [UIColor colorWithHexStr:@"#E7C494"];
+                UIImage *whiteBackArrowImage = ICON_FONT_IMG(24, @"\U0000e68a", [UIColor colorWithHexStr:@"#E7C494"]);
+                [self.viewController.customNavBarView.leftBtn setBackgroundImage:whiteBackArrowImage forState:UIControlStateNormal];
+                [self.viewController.customNavBarView.leftBtn setBackgroundImage:whiteBackArrowImage forState:UIControlStateHighlighted];
             }
         }
-
+        
         self.viewController.headerView.height = self.viewController.headerView.viewHeight;
         if (realtorLeave) {
             [self.viewController showRealtorLeaveHeader];
@@ -215,7 +214,7 @@
         if (self.currentIndex < tabListArr.count) {
             self.viewController.segmentView.selectedIndex = self.currentIndex;
         }else {
-             self.viewController.segmentView.selectedIndex = 0;
+            self.viewController.segmentView.selectedIndex = 0;
         }
         
         [self addEnterCategoryLog:@"realtor_all_list"];
@@ -402,7 +401,7 @@
 - (void)pagingView:(TTHorizontalPagingView *)pagingView didSwitchIndex:(NSInteger)aIndex to:(NSInteger)toIndex {
     //前面的消失
     if(aIndex < self.subVCs.count && !self.isFirstEnter){
-//        FHHouseRealtorDetailBaseViewController *feedVC = self.subVCs[aIndex];
+        //        FHHouseRealtorDetailBaseViewController *feedVC = self.subVCs[aIndex];
     }
     //新的展现
     if(toIndex < self.subVCs.count){
@@ -456,9 +455,9 @@
     [self refreshContentOffset:delta];
     if (self.isHeightScoreRealtor) {
         self.viewController.customNavBarView.title.hidden = delta<0;
-         self.viewController.customNavBarView.leftBtn.hidden = delta<0;
+        self.viewController.customNavBarView.leftBtn.hidden = delta<0;
     }
-        [self.viewController.headerView updateWhenScrolledWithContentOffset:delta isScrollTop:NO scrollView:pagingView.currentContentView];
+    [self.viewController.headerView updateWhenScrolledWithContentOffset:delta isScrollTop:NO scrollView:pagingView.currentContentView];
 }
 
 
