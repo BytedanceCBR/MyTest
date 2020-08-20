@@ -67,7 +67,7 @@
         [self.backView mas_makeConstraints:^(MASConstraintMaker *make) {
             make.top.equalTo(self.shadowImage).offset(20);
             make.left.right.mas_equalTo(self.contentView);
-            make.bottom.mas_equalTo(self.shadowImage).offset(-30);
+            make.bottom.mas_equalTo(self.shadowImage).offset(-2);
             make.height.mas_equalTo(0);
         }];
         
@@ -105,8 +105,8 @@
     [self.shadowImage mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.equalTo(self.contentView);
         make.right.equalTo(self.contentView);
-        make.top.equalTo(self.contentView).offset(-12);
-        make.bottom.equalTo(self.contentView).offset(12);
+        make.top.equalTo(self.contentView).offset(-14);
+        make.bottom.equalTo(self.contentView).offset(14);
     }];
 }
 
@@ -143,11 +143,11 @@
     //初始化poi信息列表
     [self setUpLocationListTableView];
    
-    CGFloat headerTop = (dataModel.houseType.integerValue == FHHouseTypeNeighborhood) ? 30 : dataModel.topMargin;
+    CGFloat headerTop = (dataModel.houseType.integerValue == FHHouseTypeNeighborhood) ? 16 : dataModel.topMargin;
     CGFloat headerHeight = (dataModel.houseType.integerValue == FHHouseTypeSecondHandHouse || dataModel.houseType.integerValue == FHHouseTypeNeighborhood) ? 38 : 0;
     
     self.headerView.frame = CGRectMake(15, headerTop, self.cellWidth, headerHeight);
-    self.segmentedControl.frame = CGRectMake(15 + 16, self.headerView.bottom + 17, self.cellWidth - 32, 33);
+    self.segmentedControl.frame = CGRectMake(15 + 16, self.headerView.bottom + 6, self.cellWidth - 32, 33);//往上11
     self.headerView.hidden = (headerHeight == 0);
     CGFloat mapHeight = self.cellWidth * kStaticMapHWRatio;
     CGRect mapFrame = CGRectMake(15, self.segmentedControl.bottom, self.cellWidth, mapHeight);

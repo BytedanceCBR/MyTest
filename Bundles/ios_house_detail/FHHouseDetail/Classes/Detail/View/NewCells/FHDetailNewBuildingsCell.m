@@ -50,8 +50,8 @@
 - (void)setupUI {
     [self.shadowImage mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.right.equalTo(self);
-        make.top.equalTo(self.contentView).offset(-12);
-        make.bottom.equalTo(self.contentView).offset(12);
+        make.top.equalTo(self.contentView).offset(-14);
+        make.bottom.equalTo(self.contentView).offset(14);
     }];
     
     self.headerView = [[FHDetailHeaderView alloc] init];
@@ -61,7 +61,7 @@
     [self.headerView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(self.contentView).mas_offset(15);
         make.right.mas_equalTo(self.contentView).mas_offset(-15);
-        make.top.mas_equalTo(self.contentView).offset(20);
+        make.top.mas_equalTo(self.shadowImage).offset(20);
         make.height.mas_equalTo(46);
     }];
     
@@ -71,8 +71,8 @@
     [self.stackView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_offset(30);
         make.right.mas_offset(-30);
-        make.top.mas_equalTo(self.headerView.mas_bottom).mas_offset(20);
-        make.bottom.mas_equalTo(self.contentView.mas_bottom).mas_offset(-20);
+        make.top.mas_equalTo(self.headerView.mas_bottom).mas_offset(16);
+        make.bottom.mas_equalTo(self.shadowImage).mas_offset(-20);
         make.height.mas_equalTo(0);
     }];
 }
@@ -226,10 +226,10 @@
     UIView *bottomView = [[UIView alloc] init];
     bottomView.backgroundColor = [UIColor whiteColor];
     [self.stackView addArrangedSubview:bottomView];
-    stackViewHeight += (15 + 40 + 30);
+    stackViewHeight += (15 + 40 + 20);
     [bottomView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.right.mas_equalTo(0);
-        make.height.mas_equalTo(15 + 40 + 30);
+        make.height.mas_equalTo(15 + 40 + 20);
     }];
     
     UIButton *moreButton = [UIButton buttonWithType:UIButtonTypeCustom];

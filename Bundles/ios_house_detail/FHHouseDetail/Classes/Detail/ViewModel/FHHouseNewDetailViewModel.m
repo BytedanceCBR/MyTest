@@ -9,12 +9,10 @@
 #import "FHHouseDetailAPI.h"
 #import "FHDetailNewModel.h"
 #import "FHDetailBaseCell.h"
-#import "FHDetailNearbyMapCell.h"
 #import "FHDetailPhotoHeaderCell.h"
 #import "FHDetailHouseNameCell.h"
 //#import "FHDetailNewHouseCoreInfoCell.h"
 #import "FHDetailNewHouseNewsCell.h"
-
 #import "FHDetailNewMutiFloorPanCell.h"
 #import "FHDetailRelatedHouseResponseModel.h"
 #import "FHSingleImageInfoCell.h"
@@ -22,7 +20,6 @@
 #import "FHDetailRelatedCourtModel.h"
 #import "FHNewHouseItemModel.h"
 #import "FHDetailDisclaimerCell.h"
-
 #import "FHDetailStaticMapCell.h"
 #import "HMDTTMonitor.h"
 #import <FHHouseBase/FHCommonDefines.h>
@@ -31,7 +28,6 @@
 #import "FHHouseFillFormHelper.h"
 #import "FHHouseContactConfigModel.h"
 #import "FHDetailNoticeAlertView.h"
-#import "TTDeviceHelper+FHHouse.h"
 #import "TTUIResponderHelper.h"
 #import "FHDetailAgentListCell.h"
 #import "FHDetailMediaHeaderCorrectingCell.h"
@@ -53,6 +49,7 @@
 #import "FHhouseDetailRGCListCell.h"
 #import "FHDetailNewBuildingsCell.h"
 #import "TTAccountManager.h"
+#import <ByteDanceKit/UIDevice+BTDAdditions.h>
 
 @interface FHHouseNewDetailViewModel ()
 
@@ -60,7 +57,6 @@
 
 @property (nonatomic, strong , nullable) FHDetailNewModel *dataModel;
 
-//@property (nonatomic, strong , nullable) FHDetailNewModel *newDetailDataModel;
 @property (nonatomic, weak)     FHHouseNewsSocialModel       *weakSocialInfo;
 
 @end
@@ -70,20 +66,12 @@
 // 注册cell类型
 - (void)registerCellClasses {
     
-//    [self.tableView registerClass:[FHDetailPhotoHeaderCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailPhotoHeaderModel class])];
     [self.tableView registerClass:[FHDetailMediaHeaderCorrectingCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailMediaHeaderCorrectingModel class])];
-    
-//    [self.tableView registerClass:[FHDetailHouseNameCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailHouseNameModel class])];
-    
-//    [self.tableView registerClass:[FHDetailGrayLineCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailGrayLineModel class])];
-        
+            
     [self.tableView registerClass:[FHDetailNewMutiFloorPanCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailNewMutiFloorPanCellModel class])];
     [self.tableView registerClass:[FHDetailNewHouseNewsCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailNewHouseNewsCellModel class])];
     
     [self.tableView registerClass:[FHOldDetailDisclaimerCell class] forCellReuseIdentifier:NSStringFromClass([FHOldDetailDisclaimerModel class])];
-    
-    
-//    [self.tableView registerClass:[FHDetailNearbyMapCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailNearbyMapModel class])];
     
     
     [self.tableView registerClass:[FHOldDetailStaticMapCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailStaticMapCellModel class])];
@@ -100,8 +88,6 @@
     [self.tableView registerClass:[FHDetailNewPriceNotifyCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailNewPriceNotifyCellModel class])];
     [self.tableView registerClass:[FHDetailNewPropertyListCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailNewPropertyListCellModel class])];
     
-    //周边新盘上标题
-//    [self.tableView registerClass:[FHDetailListSectionTitleCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailListSectionTitleModel class])]
     [self.tableView registerClass:[FHDetailNewRelatedCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailNewRelatedCellModel class])];
     //楼盘攻略
     [self.tableView registerClass:[FHDetailNeighborhoodAssessCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailAccessCellModel class])];
@@ -198,9 +184,9 @@
         alertView = [[FHDetailNoticeAlertView alloc] initWithTitle:@"" subtitle:@"" btnTitle:@""];
         [alertView showFrom:self.detailController.view];
     }
-    CGFloat width = 280.0 * [TTDeviceHelper scaleToScreen375];
-    if (![TTDeviceHelper isScreenWidthLarge320]) {
-        width = 280;
+    CGFloat width = 280.0;
+    if ([UIDevice btd_deviceWidthType] == BTDDeviceWidthMode320) {
+        width = 280.0 * [UIScreen mainScreen].bounds.size.width / 375.0f;
     }
     
     NSString *titleText = self.weakSocialInfo.associateActiveInfo.associateContentTitle;
@@ -626,7 +612,7 @@
         FHDetailAccessCellModel *cellModel = [[FHDetailAccessCellModel alloc] init];
         cellModel.houseModelType = FHHouseModelTypeNewAccess;
         cellModel.strategy = model.data.strategy;
-        cellModel.bottomMargin = 30;
+        cellModel.bottomMargin = 20;
         NSMutableDictionary *paramsDict = @{}.mutableCopy;
         if (self.detailTracerDic) {
             [paramsDict addEntriesFromDictionary:self.detailTracerDic];
@@ -755,41 +741,6 @@
         [self.items addObject:buildingCellModel];
     }
     
-    //    //周边配套
-    //    if (model.data.coreInfo.gaodeLat && model.data.coreInfo.gaodeLng) {
-    //        // 添加分割线--当存在某个数据的时候在顶部添加分割线
-    //        FHDetailGrayLineModel *grayLine = [[FHDetailGrayLineModel alloc] init];
-    //        [self.items addObject:grayLine];
-    //
-    //        FHDetailNearbyMapModel *nearbyMapModel = [[FHDetailNearbyMapModel alloc] init];
-    //        nearbyMapModel.gaodeLat = model.data.coreInfo.gaodeLat;
-    //        nearbyMapModel.gaodeLng = model.data.coreInfo.gaodeLng;
-    //        nearbyMapModel.title = model.data.coreInfo.name;
-    //
-    //
-    //        if (!model.data.coreInfo.gaodeLat || !model.data.coreInfo.gaodeLng) {
-    //            NSMutableDictionary *params = [NSMutableDictionary new];
-    //            [params setValue:@"用户点击详情页地图进入地图页失败" forKey:@"desc"];
-    //            [params setValue:@"经纬度缺失" forKey:@"reason"];
-    //            [params setValue:model.data.coreInfo.id forKey:@"house_id"];
-    //            [params setValue:@(1) forKey:@"house_type"];
-    //            [params setValue:model.data.coreInfo.name forKey:@"name"];
-    //            [[HMDTTMonitor defaultManager] hmdTrackService:@"detail_map_location_failed" attributes:params];
-    //        }
-    //
-    //
-    ////        nearbyMapModel.tableView = self.tableView;
-    //        [self.items addObject:nearbyMapModel];
-    //
-    //        __weak typeof(self) wSelf = self;
-    //        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-    //            if ((FHDetailNearbyMapCell *)nearbyMapModel.cell) {
-    //                ((FHDetailNearbyMapCell *)nearbyMapModel.cell).indexChangeCallBack = ^{
-    //                    [self reloadData];
-    //                };
-    //            }
-    //        });
-    //    }
     self.items = [FHNewDetailModuleHelper moduleClassificationMethod:self.items];
     
     if (model.isInstantData) {
@@ -858,7 +809,7 @@
     [self.items enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
         if ([obj isKindOfClass:[FHDetailStaticMapCellModel class]]) {
             CGRect indexRect =  [self.tableView rectForRowAtIndexPath:[NSIndexPath indexPathForRow:idx inSection:0]];
-            CGPoint scrollPoint = CGPointMake(0, indexRect.origin.y-([TTDeviceHelper isIPhoneXSeries]?84:64));
+            CGPoint scrollPoint = CGPointMake(0, indexRect.origin.y-([UIDevice btd_isIPhoneXSeries]?84:64));
             [self.tableView setContentOffset:scrollPoint animated:YES];
             //            [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:idx inSection:0] atScrollPosition:UITableViewScrollPositionBottom animated:YES];
         }

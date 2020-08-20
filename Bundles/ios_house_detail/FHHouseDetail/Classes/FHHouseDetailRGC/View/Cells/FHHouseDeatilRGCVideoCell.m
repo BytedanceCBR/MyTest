@@ -199,7 +199,7 @@
     self.bottomView.width = [UIScreen mainScreen].bounds.size.width- leftMargin - rightMargin ;
     self.bottomView.height = bottomViewHeight;
     
-    self.lineView.top = self.videoImageView.bottom + 30;
+    self.lineView.top = self.videoImageView.bottom + 16;
     self.lineView.left = leftMargin;
     self.lineView.width = [UIScreen mainScreen].bounds.size.width- leftMargin - rightMargin -30 ;
     self.lineView.height = 0.5;
@@ -214,7 +214,7 @@
         self.videoImageView.top = self.contentLabel.bottom + 10 ;
         [FHUGCCellHelper setAsyncRichContent:self.contentLabel model:cellModel];
     }
-    self.lineView.top = self.videoImageView.bottom + 30;
+    self.lineView.top = self.videoImageView.bottom + 16;
     self.bottomView.top = self.videoImageView.bottom + 10;
 }
 - (void)refreshWithData:(id)data {
@@ -313,7 +313,7 @@
         if (cellModel.isInRealtorEvaluationList) {
             height = cellModel.contentHeight  +150 + 22 + 50 + 130;
         }else {
-            height = cellModel.contentHeight  +150 + 10 + 50 + 90;
+            height = cellModel.contentHeight  +150 + 10 + 50 + 90 - 20;
         }
         return height;
     }

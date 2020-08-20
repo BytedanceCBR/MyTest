@@ -10,7 +10,7 @@
 
 @implementation UIImage (FIconFont)
 
-+ (UIImage *)imageWithIconFontSize:(CGFloat)fontSize text:(NSString *)text color:(UIColor *)color
++ (UIImage *)imageWithIconFontSize:(CGFloat)fontSize text:(NSString *)text color:(UIColor * _Nullable)color
 {
     return [self imageWithIconFontName:@"F100" fontSize:fontSize text:text color:color];
 }
@@ -31,7 +31,7 @@
  
  */
 
-+ (UIImage *)imageWithIconFontName:(NSString *)iconFontName fontSize:(CGFloat)fontSize text:(NSString *)text color:(UIColor *)color
++ (UIImage *)imageWithIconFontName:(NSString *)iconFontName fontSize:(CGFloat)fontSize text:(NSString *)text color:(UIColor * _Nullable)color
 
 {
     

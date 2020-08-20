@@ -17,7 +17,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FHHouseFillFormHelper : NSObject
 
-typedef  void(^fillFormSubmitCallBack)();
+typedef  void(^fillFormSubmitCallBack)(void);
 
 #pragma mark - associate refactor
 + (void)fillFormActionWithAssociateReport:(NSDictionary *)associateReportDict;

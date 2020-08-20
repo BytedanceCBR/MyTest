@@ -148,7 +148,7 @@
  
     if (model.discountInfo.count > 0) {
         NSInteger itemsCount = model.discountInfo.count;
-        CGFloat vHeight = 71;
+        CGFloat vHeight = 66;
         CGFloat totalHeight = 0;
         UIView *lastView = nil;
         for (NSInteger idx = 0; idx < itemsCount; idx++) {
@@ -184,10 +184,11 @@
             [itemView.titleLabel sizeToFit];
             CGFloat titleHeight  = floor(itemView.titleLabel.height);
             CGFloat topOffset = 0;
-            if (titleHeight >= 44) {
-                vHeight = 71 + titleHeight - 19;
-                topOffset = -2;
-            }
+//            if (titleHeight >= 44) {
+//                vHeight = 66 + titleHeight ;
+//                topOffset = -2;
+//            }
+            vHeight = 44 + titleHeight ;
             totalHeight += vHeight;
             [itemView.titleLabel mas_updateConstraints:^(MASConstraintMaker *make) {
                 make.top.mas_equalTo(topOffset);
@@ -280,14 +281,14 @@
     [self.shadowImage mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(self.contentView);
         make.right.mas_equalTo(self.contentView);
-        make.top.equalTo(self.contentView).offset(-12);
-        make.bottom.equalTo(self.contentView).offset(12);
+        make.top.equalTo(self.contentView).offset(-14);
+        make.bottom.equalTo(self.contentView).offset(14);
     }];
     _headerView = [[FHDetailHeaderView alloc] init];
     _headerView.label.text = @"优惠信息";
     [self.contentView addSubview:_headerView];
     [self.headerView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.shadowImage).offset(30);
+        make.top.mas_equalTo(self.shadowImage).offset(20);
         make.right.mas_equalTo(self.shadowImage).offset(-15);
         make.left.mas_equalTo(self.shadowImage).offset(15);
         make.height.mas_equalTo(46);
@@ -295,7 +296,7 @@
     _containerView = [[UIView alloc] init];
     [self.contentView addSubview:_containerView];
     [_containerView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.headerView.mas_bottom).offset(30);
+        make.top.mas_equalTo(self.headerView.mas_bottom).offset(16);
         make.left.mas_equalTo(self.shadowImage).mas_offset(15);
         make.right.mas_equalTo(self.shadowImage).mas_offset(-15);
         make.height.mas_equalTo(0);
