@@ -480,7 +480,7 @@ def appPods
 
     #IMSDK升级，分支依赖方式
     pod 'lz4', '1.0.1'
-    pod 'ByteRtcSDK', '2.6.11'
+    pod 'ByteRtcSDK', '2.6.13'
     pod 'TTIMSDK', :git => 'git@code.byted.org:im/TIMSDK.git', :branch => 'yang_branchf', :subspecs => [
         'IMKit_Default',
         'IMKit_WebSocket',
