@@ -52,7 +52,6 @@
     [self initView];
     [self initConstraints];
     [self initViewModel];
-    [self startLoadData];
 }
 
 - (void)viewWillAppear:(BOOL)animated {

@@ -481,6 +481,7 @@ typedef NS_ENUM(NSInteger, FHSegmentedControllerAnimatedTransitionDirection) {
     [self applicationDidBecomeActive];
     [self refreshConversationList];
     [self check];
+    [self startLoadData];
 }
 
 - (void)viewDidAppear:(BOOL)animated {
@@ -554,11 +555,15 @@ typedef NS_ENUM(NSInteger, FHSegmentedControllerAnimatedTransitionDirection) {
     return YES;
 }
 
-- (void)periodicalFetchUnreadMessage:(NSNotification *)notification {
+- (void)startLoadData {
     FHMessageViewController *vc = self.activeViewController;
     if (vc) {
         [vc startLoadData];
     }
+}
+
+- (void)periodicalFetchUnreadMessage:(NSNotification *)notification {
+    [self startLoadData];
 }
 
 - (void)networkStateChange:(NSNotification *)notification {
