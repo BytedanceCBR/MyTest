@@ -119,9 +119,9 @@
 }
 
 - (void)processDetailData:(FHHouseRealtorDetailModel *)model {
-    //    if (!self.viewController) {
-    //        return;
-    //    }
+    if (!self.viewController) {
+            return;
+    }
     self.realtorLogpb = model.data.realtorLogpb;
     [self addGoDetailLog];
     self.data = model.data;
