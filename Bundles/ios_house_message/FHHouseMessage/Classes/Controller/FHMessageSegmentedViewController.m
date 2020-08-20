@@ -446,6 +446,7 @@ typedef NS_ENUM(NSInteger, FHSegmentedControllerAnimatedTransitionDirection) {
     [[[[NSNotificationCenter defaultCenter] rac_addObserverForName:KUSER_UPDATE_NOTIFICATION object:nil] throttle:2] subscribeNext:^(NSNotification *_Nullable x) {
         @strongify(self)
         [self refreshConversationList];
+        //[self check];
     }];
     [[[[NSNotificationCenter defaultCenter] rac_addObserverForName:kTTMessageNotificationTipsChangeNotification object:nil] throttle:2] subscribeNext:^(NSNotification *_Nullable x) {
         @strongify(self)
@@ -464,7 +465,6 @@ typedef NS_ENUM(NSInteger, FHSegmentedControllerAnimatedTransitionDirection) {
         _loginStateChange = YES;
     }
     _isLogin = YES;
-    [self check];
 }
 
 - (void)didLogout {
@@ -472,7 +472,6 @@ typedef NS_ENUM(NSInteger, FHSegmentedControllerAnimatedTransitionDirection) {
         _loginStateChange = YES;
     }
     _isLogin = NO;
-    [self check];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -498,13 +497,15 @@ typedef NS_ENUM(NSInteger, FHSegmentedControllerAnimatedTransitionDirection) {
 }
 
 - (void)check {
-    NSArray<IMConversation *> *allConversations = [[IMManager shareInstance].chatService allConversations];
-    if (!_isLogin || [allConversations count] == 0) {
-        [self selectViewControllerAtIndex:0];
-    } else {
-        [self selectViewControllerAtIndex:1];
+    if (self.loginStateChange) {
+        self.loginStateChange = NO;
+        NSArray<IMConversation *> *allConversations = [[IMManager shareInstance].chatService allConversations];
+        if (!_isLogin || [allConversations count] == 0) {
+            [self selectViewControllerAtIndex:0];
+        } else {
+            [self selectViewControllerAtIndex:1];
+        }
     }
-
 }
 
 - (void)updateRedPointWithChat:(NSInteger)chatNumber andHasChatRedPoint:(BOOL)hasRedPoint andSystemMessage:(NSInteger)systemMessageNumber {

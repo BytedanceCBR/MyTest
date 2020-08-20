@@ -159,7 +159,9 @@
 }
 
 - (void)clearBadgeNumber {
-    [[self messageBridgeInstance] clearMessageTabBarBadgeNumber];
+    if ([[[self combiner] allItems] count] == 0) {
+        [[self messageBridgeInstance] clearMessageTabBarBadgeNumber];
+    }
 }
 
 //消息列表页刷新 埋点
