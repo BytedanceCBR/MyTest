@@ -23,7 +23,6 @@
 @property(nonatomic, strong) FHUGCMyInterestedController *interestedVC;
 @property(nonatomic, assign) BOOL showFeed;
 @property(nonatomic, assign) NSTimeInterval enterTabTimestamp;
-@property(nonatomic, assign) BOOL noNeedAddEnterCategorylog;
 @property(nonatomic, assign) BOOL noNeedRefreshData;
 
 @end
@@ -33,7 +32,6 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(topVCChange:) name:@"kExploreTopVCChangeNotification" object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationDidBecomeActive) name:UIApplicationDidBecomeActiveNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationDidEnterBackground) name:UIApplicationDidEnterBackgroundNotification object:nil];
     self.view.backgroundColor = [UIColor whiteColor];
@@ -47,11 +45,7 @@
 - (void)loadVC {
     self.showFeed = [FHUGCConfig sharedInstance].followList.count > 0;
     if(self.showFeed){
-        if(!self.noNeedAddEnterCategorylog){
-            [self addEnterCategoryLog];
-        }else{
-            self.noNeedAddEnterCategorylog = NO;
-        }
+        [self addEnterCategoryLog];
         [self initFeedListVC];
         [self.feedListVC viewWillAppear];
         [self loadData];
@@ -79,17 +73,6 @@
         [self.interestedVC viewWillDisappear];
     }
     [[NSNotificationCenter defaultCenter] removeObserver:self name:UIApplicationDidEnterBackgroundNotification object:nil];
-}
-
-- (void)topVCChange:(NSNotification *)notification {
-    TTArticleTabBarController *vc = (TTArticleTabBarController *)notification.object;
-    if ([[vc currentTabIdentifier] isEqualToString:kFHouseFindTabKey]) {
-        self.noNeedAddEnterCategorylog = YES;
-        self.noNeedRefreshData = YES;
-    }else{
-        self.noNeedAddEnterCategorylog = NO;
-        self.noNeedRefreshData = NO;
-    }
 }
 
 - (void)refreshFeedListData:(BOOL)isHead {
@@ -135,11 +118,7 @@
 
 - (void)initMyInterestListVC {
     if(self.type == FHUGCMyJoinTypeEmpty){
-        if(!self.noNeedAddEnterCategorylog){
-            [self.interestedVC viewWillAppear];
-        }else{
-            self.noNeedAddEnterCategorylog = NO;
-        }
+        [self.interestedVC viewWillAppear];
         return;
     }
     
