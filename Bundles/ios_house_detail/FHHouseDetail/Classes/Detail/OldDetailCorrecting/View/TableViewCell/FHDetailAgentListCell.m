@@ -579,7 +579,9 @@
 -(instancetype)initWithFrame:(CGRect)frame {
     if(self = [super initWithFrame:frame]) {
         [self.contentView addSubview:self.tagLabel];
-
+        [self.tagLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.edges.mas_equalTo(self.contentView);
+        }];
         self.contentView.layer.cornerRadius = 2;
 //        self.contentView.layer.masksToBounds = YES;
     }
@@ -594,19 +596,25 @@
     self.contentView.layer.borderWidth = .3;
     self.tagLabel.textColor = [UIColor colorWithHexStr:model.fontColor];
     if (model.prefixIconUrl.length > 0) {
-        _tagImageView = [[UIImageView alloc] init];
-        [_tagImageView bd_setImageWithURL:[NSURL URLWithString:model.prefixIconUrl]];
-        [self.contentView addSubview:self.tagImageView];
-        [self.tagImageView mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.left.top.mas_equalTo(2);
-            make.width.height.mas_equalTo(14);
-        }];
-        [self.tagLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        if (!_tagImageView) {
+            _tagImageView = [[UIImageView alloc] init];
+            [_tagImageView bd_setImageWithURL:[NSURL URLWithString:model.prefixIconUrl]];
+            [self.contentView addSubview:self.tagImageView];
+            [self.tagImageView mas_makeConstraints:^(MASConstraintMaker *make) {
+                make.left.top.mas_equalTo(2);
+                make.width.height.mas_equalTo(14);
+            }];
+        }
+        [self.tagLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
             make.left.mas_equalTo(self.tagImageView.mas_right);
             make.centerY.mas_equalTo(self);
         }];
     } else {
-        [self.tagLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        if (self.tagImageView) {
+            [self.tagImageView removeFromSuperview];
+            self.tagImageView = nil;
+        }
+        [self.tagLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
             make.edges.equalTo(self.contentView);
         }];
     }
