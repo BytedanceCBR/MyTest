@@ -11,6 +11,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FHHouseDeatilRGCImageCell : FHUGCBaseCell
 
++ (CGFloat)heightForData:(id)data;
+
 @end
 
 NS_ASSUME_NONNULL_END
