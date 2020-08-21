@@ -48,6 +48,7 @@
 
 @property (nonatomic, weak) FHFloorPanPicShowViewController *pictureListViewController;
 @property (nonatomic, weak) FHDetailPictureViewController *pictureDetailVC;
+@property (nonatomic, assign) NSInteger baiduPanoramaIndex;
 @end
 
 @implementation FHDetailMediaHeaderCorrectingCell
@@ -225,6 +226,12 @@
         [itemArray addObject:vedioModel];
     }
     
+    self.baiduPanoramaIndex = -1;
+    if (baiduPanoramaModel && baiduPanoramaModel.imageUrl.length > 0) {
+        self.baiduPanoramaIndex = itemArray.count;
+        [itemArray addObject:baiduPanoramaModel];
+    }
+    
     for (FHHouseDetailImageListDataModel *listModel in houseImageDict) {
         NSString *groupType = nil;
         if (listModel.usedSceneType == FHHouseDetailImageListDataUsedSceneTypeFloorPan) {
@@ -262,10 +269,6 @@
             }
             index++;
         }
-    }
-    
-    if (baiduPanoramaModel && baiduPanoramaModel.imageUrl.length > 0) {
-        [itemArray addObject:baiduPanoramaModel];
     }
     
     self.model.medias = itemArray;
@@ -774,51 +777,62 @@
         //列表页带入的数据不响应
         return;
     }
-    // 图片逻辑
-    if (index >= 0 && index < (self.imageList.count + self.vedioCount)) {
-        [self showImagesWithCurrentIndex:index];
-        return;
-    }
-    //vr
-    FHMultiMediaItemModel *itemModel = _model.medias[index];
-    if (itemModel.mediaType == FHMultiMediaTypeBaiduPanorama && itemModel.imageUrl.length) {
-        //进入百度街景
-        //shceme baidu_panorama_detail
-        if (![TTReachability isNetworkConnected]) {
-            [[ToastManager manager] showToast:@"网络异常"];
-            return;
-        }
-        
-        NSMutableDictionary *tracerDict = self.baseViewModel.detailTracerDic.mutableCopy;
-        NSMutableDictionary *param = [NSMutableDictionary new];
-        tracerDict[@"element_from"] = @"picture";
-        param[TRACER_KEY] = tracerDict.copy;
-        
-        NSString *gaodeLat = nil;
-        NSString *gaodeLon = nil;
-        // 获取图片需要的房源信息数据
-        if ([self.baseViewModel.detailData isKindOfClass:[FHDetailOldModel class]]) {
-            // 二手房数据
-            FHDetailOldModel *model = (FHDetailOldModel *)self.baseViewModel.detailData;
-            gaodeLat = model.data.neighborhoodInfo.gaodeLat;
-            gaodeLon = model.data.neighborhoodInfo.gaodeLng;
 
-        }else if ([self.baseViewModel.detailData isKindOfClass:[FHDetailNewModel class]]) {
-            FHDetailNewModel *model = (FHDetailNewModel *)self.baseViewModel.detailData;
-            gaodeLat = model.data.coreInfo.gaodeLat;
-            gaodeLon = model.data.coreInfo.gaodeLng;
-        }else if ([self.baseViewModel.detailData isKindOfClass:[FHDetailNeighborhoodModel class]]) {
-            FHDetailNeighborhoodModel *model = (FHDetailNeighborhoodModel *)self.baseViewModel.detailData;
-            gaodeLat = model.data.neighborhoodInfo.gaodeLat;
-            gaodeLon = model.data.neighborhoodInfo.gaodeLng;
-        } else if ([self.baseViewModel.detailData isKindOfClass:[FHDetailFloorPanDetailInfoModel class]]) {
-            //户型详情
-//            FHDetailFloorPanDetailInfoModel *model = (FHDetailFloorPanDetailInfoModel *)self.baseViewModel.detailData;
+    if(index >= 0 && index <self.model.medias.count){
+        // 图片逻辑
+        if(self.baiduPanoramaIndex == -1) {
+            [self showImagesWithCurrentIndex:index];
+            return;
+        } else {
+            if(index < self.baiduPanoramaIndex) {
+                [self showImagesWithCurrentIndex:index];
+                return;
+            } else if (index > self.baiduPanoramaIndex) {
+                [self showImagesWithCurrentIndex:index -1];
+                return;
+            }
         }
-        if (gaodeLat.length && gaodeLon.length) {
-            param[@"gaodeLat"] = gaodeLat;
-            param[@"gaodeLon"] = gaodeLon;
-            [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:[NSString stringWithFormat:@"sslocal://baidu_panorama_detail"]] userInfo:TTRouteUserInfoWithDict(param)];
+        //vr
+        FHMultiMediaItemModel *itemModel = _model.medias[index];
+        if (itemModel.mediaType == FHMultiMediaTypeBaiduPanorama && itemModel.imageUrl.length) {
+            //进入百度街景
+            //shceme baidu_panorama_detail
+            if (![TTReachability isNetworkConnected]) {
+                [[ToastManager manager] showToast:@"网络异常"];
+                return;
+            }
+            
+            NSMutableDictionary *tracerDict = self.baseViewModel.detailTracerDic.mutableCopy;
+            NSMutableDictionary *param = [NSMutableDictionary new];
+            tracerDict[@"element_from"] = @"picture";
+            param[TRACER_KEY] = tracerDict.copy;
+            
+            NSString *gaodeLat = nil;
+            NSString *gaodeLon = nil;
+            // 获取图片需要的房源信息数据
+            if ([self.baseViewModel.detailData isKindOfClass:[FHDetailOldModel class]]) {
+                // 二手房数据
+                FHDetailOldModel *model = (FHDetailOldModel *)self.baseViewModel.detailData;
+                gaodeLat = model.data.neighborhoodInfo.gaodeLat;
+                gaodeLon = model.data.neighborhoodInfo.gaodeLng;
+                
+            }else if ([self.baseViewModel.detailData isKindOfClass:[FHDetailNewModel class]]) {
+                FHDetailNewModel *model = (FHDetailNewModel *)self.baseViewModel.detailData;
+                gaodeLat = model.data.coreInfo.gaodeLat;
+                gaodeLon = model.data.coreInfo.gaodeLng;
+            }else if ([self.baseViewModel.detailData isKindOfClass:[FHDetailNeighborhoodModel class]]) {
+                FHDetailNeighborhoodModel *model = (FHDetailNeighborhoodModel *)self.baseViewModel.detailData;
+                gaodeLat = model.data.neighborhoodInfo.gaodeLat;
+                gaodeLon = model.data.neighborhoodInfo.gaodeLng;
+            } else if ([self.baseViewModel.detailData isKindOfClass:[FHDetailFloorPanDetailInfoModel class]]) {
+                //户型详情
+                //            FHDetailFloorPanDetailInfoModel *model = (FHDetailFloorPanDetailInfoModel *)self.baseViewModel.detailData;
+            }
+            if (gaodeLat.length && gaodeLon.length) {
+                param[@"gaodeLat"] = gaodeLat;
+                param[@"gaodeLon"] = gaodeLon;
+                [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:[NSString stringWithFormat:@"sslocal://baidu_panorama_detail"]] userInfo:TTRouteUserInfoWithDict(param)];
+            }
         }
     }
 }
