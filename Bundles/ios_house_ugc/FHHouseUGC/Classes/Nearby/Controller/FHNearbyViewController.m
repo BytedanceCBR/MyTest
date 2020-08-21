@@ -22,7 +22,6 @@
 @property(nonatomic, strong) CLLocation *currentLocaton;
 @property(nonatomic, assign) NSTimeInterval lastRequestTime;
 @property(nonatomic, assign) NSTimeInterval enterTabTimestamp;
-@property(nonatomic, assign) BOOL noNeedAddEnterCategorylog;
 @property(nonatomic, assign) BOOL needRefresh;
 @property(nonatomic, strong) TTThemedAlertController *alertVC;
 @property(nonatomic, strong) FHNearbyViewModel *viewModel;
@@ -37,7 +36,6 @@
     self.automaticallyAdjustsScrollViewInsets = NO;
     self.needRefresh = YES;
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationDidBecomeActive) name:UIApplicationDidBecomeActiveNotification object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(topVCChange:) name:@"kExploreTopVCChangeNotification" object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationDidEnterBackground) name:UIApplicationDidEnterBackgroundNotification object:nil];
     
     [self initViewModel];
@@ -66,11 +64,7 @@
         _enterTabTimestamp = [[NSDate date]timeIntervalSince1970];
     }
     
-    if(!self.noNeedAddEnterCategorylog){
-        [self addEnterCategoryLog];
-    }else{
-        self.noNeedAddEnterCategorylog = NO;
-    }
+    [self addEnterCategoryLog];
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationDidEnterBackground) name:UIApplicationDidEnterBackgroundNotification object:nil];
 }
@@ -84,15 +78,6 @@
     }
     self.needRefresh = YES;
     [[NSNotificationCenter defaultCenter] removeObserver:self name:UIApplicationDidEnterBackgroundNotification object:nil];
-}
-
-- (void)topVCChange:(NSNotification *)notification {
-    TTArticleTabBarController *vc = (TTArticleTabBarController *)notification.object;
-    if ([[vc currentTabIdentifier] isEqualToString:kFHouseFindTabKey]) {
-        self.noNeedAddEnterCategorylog = YES;
-    }else{
-        self.noNeedAddEnterCategorylog = NO;
-    }
 }
 
 - (void)initView {
