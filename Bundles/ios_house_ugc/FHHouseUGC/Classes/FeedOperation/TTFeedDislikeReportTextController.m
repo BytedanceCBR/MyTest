@@ -244,7 +244,6 @@ static UIWindow *alertWindow;
 #pragma mark - TTKeyboardListener
 
 - (void)keyboardWillShow:(NSNotification *)notification {
-    CGFloat screenHeight = [UIScreen mainScreen].bounds.size.height;
     CGFloat keyboardH = CGRectGetHeight([[notification.userInfo objectForKey:UIKeyboardFrameEndUserInfoKey] CGRectValue]);
     CGRect toFrame = self.navigationController.view.frame;
     toFrame.origin.y = screenHeight - toFrame.size.height - keyboardH;

@@ -17,7 +17,7 @@
 #import "NetworkUtilities.h"
 #import "NSDictionary+TTAdditions.h"
 #import "TTNetworkManager.h"
-#import "FHRNHTTPRequestSerializer.h"
+#import "FHJSONHTTPRequestSerializer.h"
 #import "FHUtils.h"
 #import "TTPhotoScrollViewController.h"
 #import "FHImageModel.h"
@@ -258,7 +258,7 @@ typedef void(^FHLynxBridgeCallback)(NSString *response);
         }];
     }else
     {
-        [[TTNetworkManager shareInstance] requestForBinaryWithResponse:url params:params method:method needCommonParams:needCommonParams requestSerializer:[FHRNHTTPRequestSerializer class] responseSerializer:nil autoResume:YES callback:^(NSError *error, id obj, TTHttpResponse *response) {
+        [[TTNetworkManager shareInstance] requestForBinaryWithResponse:url params:params method:method needCommonParams:needCommonParams requestSerializer:[FHJSONHTTPRequestSerializer class] responseSerializer:nil autoResume:YES callback:^(NSError *error, id obj, TTHttpResponse *response) {
             if (callback) {
                 NSString *result = @"";
                 if([obj isKindOfClass:[NSData class]]){

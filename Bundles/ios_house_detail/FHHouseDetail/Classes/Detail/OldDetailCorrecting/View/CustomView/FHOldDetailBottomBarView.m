@@ -75,7 +75,7 @@
     [self.avatarView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(avatarLeftMargin);
         make.centerY.mas_equalTo(self);
-        make.width.height.mas_equalTo(48);
+        make.width.height.mas_equalTo(50);
     }];
 
     [self.nameLabel mas_makeConstraints:^(MASConstraintMaker *make) {

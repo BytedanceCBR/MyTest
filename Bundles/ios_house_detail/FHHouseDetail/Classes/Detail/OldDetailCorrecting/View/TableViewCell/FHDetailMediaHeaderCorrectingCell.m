@@ -137,7 +137,7 @@
         rectHeight = [UIFont themeFontMedium:24].lineHeight * ((titleModel.housetype == FHHouseTypeNeighborhood || titleModel.isFloorPan)? 1: 2);
     }
     
-    _photoCellHeight += 30 + rectHeight - 21;//30是标题具体顶部的距离，21是重叠的41减去透明阴影的20 (21 = 41 - 20)
+    _photoCellHeight += 20 + rectHeight - 21;//20是标题具体顶部的距离，21是重叠的41减去透明阴影的20 (21 = 41 - 20)
     
     if (titleModel.tags.count>0) {
         //这里分别加上标签高度20，标签间隔20

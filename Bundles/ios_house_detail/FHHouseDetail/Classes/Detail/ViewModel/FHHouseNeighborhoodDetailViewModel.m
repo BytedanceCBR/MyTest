@@ -15,21 +15,10 @@
 #import "FHDetailRelatedHouseResponseModel.h"
 #import "FHRentSameNeighborhoodResponse.h"
 #import "FHDetailSameNeighborhoodHouseResponseModel.h"
-#import "FHDetailNeighborPriceChartCell.h"
-#import "FHDetailNeighborhoodNameCell.h"
 #import "FHDetailGrayLineCell.h"
 #import "FHDetailNeighborhoodStatsInfoCell.h"
 #import "FHDetailNeighborhoodPropertyInfoCell.h"
-
-#import "FHDetailNeighborhoodHouseCell.h"
-#import "FHDetailNeighborhoodTransationHistoryCell.h"
-//#import "FHODetailCommunityEntryCorrectingCell.h"
-#import "FHDetailNeighborhoodEvaluateCell.h"
-#import "FHDetailNearbyMapCell.h"
 #import "FHDetailNewModel.h"
-#import "FHDetailPureTitleCell.h"
-#import "FHDetailCommunityEntryCell.h"
-#import "FHDetailBlankLineCell.h"
 #import "FHDetailAgentListCell.h"
 #import "FHDetailStaticMapCell.h"
 #import "FHOldDetailPhotoHeaderCell.h"
@@ -78,36 +67,25 @@
     [self.tableView registerClass:[FHDetailNeighborhoodStatsInfoCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailNeighborhoodStatsInfoModel class])];
     //属性cell
      [self.tableView registerClass:[FHDetailNeighborhoodPropertyInfoCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailNeighborhoodPropertyInfoModel class])];
-//    [self.tableView registerClass:[FHDetailNeighborhoodNameCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailNeighborhoodNameModel class])];
     //小区地图
     [self.tableView registerClass:[FHOldDetailStaticMapCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailStaticMapCellModel class])];
     //均价走势
-    //    [self.tableView registerClass:[FHDetailNeighborPriceChartCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailPriceTrendCellModel class])];
     [self.tableView registerClass:[FHDetailPriceChartCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailPriceTrendCellModel class])];
     //小区问答
     [self.tableView registerClass:[FHDetailNeighborhoodQACell class] forCellReuseIdentifier:NSStringFromClass([FHDetailQACellModel class])];
     //推荐经纪人
     [self.tableView registerClass:[FHDetailAgentListCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailAgentListModel class])];
-//    [self.tableView registerClass:[FHDetailNearbyMapCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailNearbyMapModel class])];
     [self.tableView registerClass:[FHDetailGrayLineCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailGrayLineModel class])];
     //在售房源
     [self.tableView registerClass:[FHDetailNeighborhoodHouseSaleCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailNeighborhoodHouseSaleModel class])];
     //在租房源
     [self.tableView registerClass:[FHDetailNeighborhoodHouseRentCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailNeighborhoodHouseRentModel class])];
-//        [self.tableView registerClass:[FHDetailNeighborhoodHouseCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailNeighborhoodHouseModel class])];
    //周边小区
     [self.tableView registerClass:[FHDetailSurroundingAreaCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailSurroundingAreaModel class])];
     
-    
-//    [self.tableView registerClass:[FHODetailCommunityEntryCorrectingCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailCommunityEntryModel class])];
     [self.tableView registerClass:[FHDetailNeighborhoodCommentsCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailCommentsCellModel class])];
-
-//    [self.tableView registerClass:[FHDetailNeighborhoodTransationHistoryCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailNeighborhoodTransationHistoryModel class])];
-    [self.tableView registerClass:[FHDetailNeighborhoodEvaluateCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailNeighborhoodEvaluateModel class])];
     
     [self.tableView registerClass:[FHDetailNeighborhoodAssessCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailAccessCellModel class])];
-//    [self.tableView registerClass:[FHDetailPureTitleCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailPureTitleModel class])];
-//    [self.tableView registerClass:[FHDetailBlankLineCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailBlankLineModel class])];
 }
 
 // cell identifier
@@ -328,14 +306,6 @@
         [self.items addObject:infoModel];
     }
 
-    //ugc 圈子入口
-//    BOOL showUgcEntry = model.data.ugcSocialGroup && model.data.ugcSocialGroup.activeCountInfo && model.data.ugcSocialGroup.activeInfo.count > 0;
-//    if(showUgcEntry){
-//        model.data.ugcSocialGroup.houseType = FHHouseTypeNeighborhood;
-//        model.data.ugcSocialGroup.houseModelType= FHPlotHouseModelTypeCoreInfo;
-//        [self.items addObject:model.data.ugcSocialGroup];
-//    }
-
     // 属性列表
     if (model.data.baseInfo.count > 0) {
         FHDetailNeighborhoodPropertyInfoModel *infoModel = [[FHDetailNeighborhoodPropertyInfoModel alloc] init];
@@ -407,41 +377,6 @@
         [[HMDTTMonitor defaultManager] hmdTrackService:eventName metric:nil category:cat extra:params];
     }
 
-    // 周边配套
-//    if (model.data.neighborhoodInfo.gaodeLat && model.data.neighborhoodInfo.gaodeLng) {
-//        // 添加分割线--当存在某个数据的时候在顶部添加分割线
-//        FHDetailGrayLineModel *grayLine = [[FHDetailGrayLineModel alloc] init];
-//        [self.items addObject:grayLine];
-//
-//        FHDetailNearbyMapModel *nearbyMapModel = [[FHDetailNearbyMapModel alloc] init];
-//        nearbyMapModel.gaodeLat = model.data.neighborhoodInfo.gaodeLat;
-//        nearbyMapModel.gaodeLng = model.data.neighborhoodInfo.gaodeLng;
-//        nearbyMapModel.title = model.data.neighborhoodInfo.name;
-//        //        nearbyMapModel.tableView = self.tableView;
-//
-//
-//        if (!model.data.neighborhoodInfo.gaodeLat || !model.data.neighborhoodInfo.gaodeLng) {
-//            NSMutableDictionary *params = [NSMutableDictionary new];
-//            [params setValue:@"用户点击详情页地图进入地图页失败" forKey:@"desc"];
-//            [params setValue:@"经纬度缺失" forKey:@"reason"];
-//            [params setValue:model.data.neighborhoodInfo.id forKey:@"house_id"];
-//            [params setValue:@(4) forKey:@"house_type"];
-//            [params setValue:model.data.neighborhoodInfo.name forKey:@"name"];
-//            [[HMDTTMonitor defaultManager] hmdTrackService:@"detail_map_location_failed" attributes:params];
-//        }
-//
-//
-//        [self.items addObject:nearbyMapModel];
-//
-//        __weak typeof(self) wSelf = self;
-//        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-//            if ((FHDetailNearbyMapCell *)nearbyMapModel.cell) {
-//                ((FHDetailNearbyMapCell *)nearbyMapModel.cell).indexChangeCallBack = ^{
-//                    [self reloadData];
-//                };
-//            }
-//        });
-//    }
     // 均价走势
     if (model.data.priceTrend.count > 0) {
 //        FHDetailPureTitleModel *titleModel = [[FHDetailPureTitleModel alloc] init];
@@ -454,18 +389,6 @@
         priceTrendModel.tableView = self.tableView;
         [self.items addObject:priceTrendModel];
     }
-    
-
-    // 小区成交历史
-//    if (model.data.totalSales.list.count > 0) {
-//        FHDetailGrayLineModel *grayLine = [[FHDetailGrayLineModel alloc] init];
-//        [self.items addObject:grayLine];
-//        FHDetailNeighborhoodTransationHistoryModel *infoModel = [[FHDetailNeighborhoodTransationHistoryModel alloc] init];
-//        infoModel.totalSalesCount = model.data.totalSalesCount;
-//        infoModel.totalSales = model.data.totalSales;
-//        infoModel.neighborhoodId = self.houseId;
-//        [self.items addObject:infoModel];
-//    }
 
     // 推荐经纪人
     if (model.data.recommendedRealtors.count > 0) {
@@ -600,23 +523,7 @@
             infoModel.neighborhoodId = self.neighborhoodId;
             [self.items addObject:infoModel];
         }
-        //        if (self.sameNeighborhoodErshouHouseData.items.count > 0 || self.sameNeighborhoodRentHouseData.items.count > 0) {
-//            // 添加分割线--当存在某个数据的时候在顶部添加分割线
-//            FHDetailGrayLineModel *grayLine = [[FHDetailGrayLineModel alloc] init];
-//            [self.items addObject:grayLine];
-//            FHDetailNeighborhoodHouseModel *infoModel = [[FHDetailNeighborhoodHouseModel alloc] init];
-//            infoModel.tableView = self.tableView;
-////            infoModel.sameNeighborhoodErshouHouseData = self.sameNeighborhoodErshouHouseData;
-//            infoModel.sameNeighborhoodRentHouseData = self.sameNeighborhoodRentHouseData;
-//            // 租房详情页，或者地图租房半屏列表，进入小区详情
-//            if ([self.source isEqualToString:@"rent_detail"]) {
-//                if (self.sameNeighborhoodErshouHouseData.items.count > 0 && self.sameNeighborhoodRentHouseData.items.count > 0) {
-//                    // 既有二手房，同时有租房数据
-//                    infoModel.firstSelIndex = 1;
-//                }
-//            }
-//            [self.items addObject:infoModel];
-//        }
+
         self.items = [FHNeighborhoodDetailModuleHelper moduleClassificationMethod:self.items];
         [self reloadData];
     }

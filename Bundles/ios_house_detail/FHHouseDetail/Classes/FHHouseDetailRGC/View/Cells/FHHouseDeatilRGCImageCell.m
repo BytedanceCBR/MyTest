@@ -146,7 +146,7 @@
     self.bottomView.width = [UIScreen mainScreen].bounds.size.width- leftMargin - rightMargin ;
     self.bottomView.height = bottomViewHeight;
     
-    self.lineView.top = self.multiImageView.bottom + 30;
+    self.lineView.top = self.multiImageView.bottom + 16;
     self.lineView.left = leftMargin;
     self.lineView.width = [UIScreen mainScreen].bounds.size.width- leftMargin - rightMargin -30 ;
     self.lineView.height = 0.5;
@@ -168,7 +168,7 @@
     UIView *lastView = cellModel.imageList.count == 0?self.contentLabel:self.multiImageView;
     CGFloat topOffset = 15;
     self.bottomView.top = lastView.bottom + topOffset;
-    self.lineView.top = lastView.bottom + 30;
+    self.lineView.top = lastView.bottom + 16;
     //
     //    self.originView.top = self.multiImageView.bottom + 10;
     //    self.originView.left = leftMargin;
@@ -280,7 +280,7 @@
         if (cellModel.isInRealtorEvaluationList) {
             height =  cellModel.contentHeight  +(cellModel.imageList.count == 0?15:75+ 22)  + 50 + 85;
         }else {
-            height =  cellModel.contentHeight  +(cellModel.imageList.count == 0?0:75+ 30)  + 50 + 40;
+            height =  cellModel.contentHeight  +(cellModel.imageList.count == 0?0:75+ 16)  + 50 + 20;
         }
         return height;
     }

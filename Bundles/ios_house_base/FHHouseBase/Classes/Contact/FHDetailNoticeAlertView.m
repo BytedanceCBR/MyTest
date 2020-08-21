@@ -9,13 +9,12 @@
 #import "UIFont+House.h"
 #import "UIColor+Theme.h"
 #import "Masonry.h"
-#import "TTDeviceHelper.h"
 #import "TTUIResponderHelper.h"
 #import "UIView+House.h"
 #import <FHHouseBase/FHHouseAgencyListSugDelegate.h>
 #import "FHFillFormAgencyListItemModel.h"
-#import "TTDeviceHelper+FHHouse.h"
 #import "UIImage+FIconFont.h"
+#import <ByteDanceKit/UIDevice+BTDAdditions.h>
 
 @interface FHDetailNoticeAlertView () <UITextFieldDelegate, FHHouseAgencyListSugDelegate>
 
@@ -163,9 +162,9 @@
     }];
     
     [self addSubview:self.contentView];
-    CGFloat width = 280 * [TTDeviceHelper scaleToScreen375];
-    if (![TTDeviceHelper isScreenWidthLarge320]) {
-        width = 280;
+    CGFloat width = 280;
+    if ([UIDevice btd_deviceWidthType] == BTDDeviceWidthMode320) {
+        width = 280 * [UIScreen mainScreen].bounds.size.width / 375.0f;;
     }
     [self.contentView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.center.mas_equalTo(self);

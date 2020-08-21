@@ -84,15 +84,6 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *scoreValue;
 @end
 
-@interface FHDetailNeighborhoodNeighborhoodInfoEvaluationInfoModel : JSONModel
-
-@property (nonatomic, copy , nullable) NSString *content;
-@property (nonatomic, copy , nullable) NSString *totalScore;
-@property (nonatomic, copy , nullable) NSString *detailUrl;
-@property (nonatomic, strong , nullable) NSArray<FHDetailNeighborhoodNeighborhoodInfoEvaluationInfoSubScoresModel> *subScores;
-@property (nonatomic, copy , nullable) NSString *title;
-@end
-
 @protocol FHDetailNeighborhoodNeighborhoodInfoSchoolInfoModel<NSObject>
 @end
 
@@ -204,9 +195,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *abtestVersions;
 @property (nonatomic, strong , nullable) NSArray<FHImageModel> *neighborhoodImage;
 @property (nonatomic, strong , nullable) NSArray<FHDetailNeighborhoodDataCoreInfoModel> *coreInfo;
-@property (nonatomic, strong , nullable) FHDetailNeighborhoodNeighborhoodInfoEvaluationInfoModel *evaluationInfo ;
 @property (nonatomic, strong , nullable) NSArray<FHFillFormAgencyListItemModel> *chooseAgencyList;
-@property (nonatomic, strong , nullable) FHDetailCommunityEntryModel *ugcSocialGroup;
 @property (nonatomic, copy , nullable) NSString *recommendedRealtorsTitle;
 @property (nonatomic, strong , nullable) NSArray<FHDetailContactModel> *recommendedRealtors;
 @property (nonatomic, strong , nullable) FHDetailContactModel *highlightedRealtor;

@@ -176,8 +176,8 @@
             make.width.mas_offset(0);
         }];
     }
-    if (cellModel.realtor.desc) {
-        self.infoLab.text = [NSString stringWithFormat:@"%@ %@",cellModel.realtor.desc,cellModel.createTime];
+    if (cellModel.desc) {
+        self.infoLab.text =  cellModel.desc.string;
     }else {
         self.infoLab.text = [NSString stringWithFormat:@"%@",cellModel.createTime];
     }
@@ -223,5 +223,10 @@
 - (void)hiddenConnectBtn:(BOOL)hidden {
     self.phoneBtn.hidden = hidden;
     self.iMBtn.hidden = hidden;
+    [self.infoLab mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.left.equalTo(self.nameLab);
+        make.bottom.equalTo(self.avatarView.mas_bottom).offset(2);
+        make.right.equalTo(self.mas_right).offset(-8);
+    }];
 }
 @end

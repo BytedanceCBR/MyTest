@@ -24,19 +24,19 @@
 
 - (void)setupUI {
     _isShowLoadMore = NO;
-    _label = [UILabel createLabel:@"" textColor:@"" fontSize:18];
+    _label = [[UILabel alloc] init];
     _label.textColor = [UIColor themeGray1];
-    _label.font = [UIFont themeFontMedium:AdaptFont(16)];
+    _label.font = [UIFont themeFontMedium:16];
     [self addSubview:_label];
-    
-    _arrowsImg = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"arrowicon-feed-4"]];
-    _arrowsImg.hidden = YES;
-    [self addSubview:_arrowsImg];
     [self.label mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(self);
         make.right.mas_equalTo(self.arrowsImg.mas_left).offset(AdaptOffset(-10));
         make.top.bottom.mas_equalTo(self);
     }];
+    
+    _arrowsImg = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"arrowicon-feed-4"]];
+    _arrowsImg.hidden = YES;
+    [self addSubview:_arrowsImg];
     [self.arrowsImg mas_makeConstraints:^(MASConstraintMaker *make) {
         make.right.mas_equalTo(self).offset(AdaptOffset(-12));
         make.height.width.mas_equalTo(AdaptOffset(20));
