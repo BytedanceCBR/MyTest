@@ -25,10 +25,7 @@
 #import "FHEnvContext.h"
 #import "TTAccountManager.h"
 #import "FHMessageNotificationTipsManager.h"
-#import "FHMessageEditHelp.h"
 #import <ReactiveObjC/ReactiveObjC.h>
-#import "FHMessageEditView.h"
-#import "TestModel.h"
 
 #define kCellId @"FHMessageCell_id"
 
@@ -163,13 +160,6 @@
         [[self messageBridgeInstance] clearMessageTabBarBadgeNumber];
     }
 }
-
-//消息列表页刷新 埋点
-//- (void)trackRefresh {
-//    NSMutableDictionary *dict = [self.viewController.tracerModel logDict];
-//    dict[@"refresh_type"] = @"default";
-//    TRACK_EVENT(@"category_refresh", dict);
-//}
 
 #pragma mark - UITableViewDataSource
 
@@ -425,9 +415,8 @@
 
 - (NSArray<FHMessageSwipeButton *> *)tableView:(UITableView *)tableView rightSwipeButtonsAtIndexPath:(NSIndexPath *)indexPath
 {
-    FHMessageSwipeButton *deleteBtn = [FHMessageSwipeButton createSwipeButtonWithTitle:@"删除" font:16 textColor:[UIColor blackColor] backgroundColor:[UIColor redColor] image:[UIImage imageNamed:@"delete"] touchBlock:^{
+    FHMessageSwipeButton *deleteBtn = [FHMessageSwipeButton createSwipeButtonWithTitle:@"删除" font:16 textColor:[UIColor blackColor] backgroundColor:[UIColor redColor] touchBlock:^{
         
-        NSLog(@"点击了check按钮");
     }];
     deleteBtn.layer.cornerRadius = 10;
     deleteBtn.layer.masksToBounds = YES;

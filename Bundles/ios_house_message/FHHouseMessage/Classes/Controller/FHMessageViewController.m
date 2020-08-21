@@ -29,13 +29,11 @@
 #import <FHMessageNotificationManager.h>
 #import "FHEnvContext.h"
 #import <FHPopupViewCenter/FHPopupViewManager.h>
-#import "FHMessageEditHelp.h"
 
 @interface FHMessageViewController ()
 
 @property(nonatomic, strong) FHPushMessageTipView *pushTipView;
 @property (nonatomic, copy)     NSString       *enter_from;// 外部传入
-@property(nonatomic , assign) BOOL hasEnterCategory;
 
 @end
 
@@ -43,8 +41,6 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    _hasEnterCategory = NO;
-    [FHMessageEditHelp shared].isCanReloadData = YES;
     // Do any additional setup after loading the view.
     self.showenRetryButton = YES;
     self.ttTrackStayEnable = YES;
@@ -160,10 +156,6 @@
 }
 
 - (void)addEnterCategoryLogWithType:(NSString *)enterType {
-//    if (_hasEnterCategory) {
-//        return;
-//    }
-//    _hasEnterCategory = YES;
     NSDictionary *params = @{
             @"category_name": [self getPageTypeWithDataType],
             @"enter_from": @"message",
