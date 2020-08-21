@@ -1,9 +1,5 @@
 //
-//  SwipeTableCell.h
-//  SwipeTableView
-//
-//  Created by zhao on 16/8/11.
-//  Copyright © 2016年 zhaoName. All rights reserved.
+//  Created by xubinbin on 2020/8/14.
 //
 
 #import <UIKit/UIKit.h>
@@ -13,9 +9,7 @@
 
 typedef NS_ENUM(NSUInteger, SwipeTableCellStyle)
 {
-    SwipeTableCellStyleRightToLeft = 0, /**< 右滑*/
-    SwipeTableCellStyleLeftToRight , /**< 左滑*/
-    SwipeTableCellStyleBoth, /**< 左滑、右滑都有*/
+    SwipeTableCellStyleRightToLeft = 0, //< 右滑
 };
 
 @class FHMessageSwipeTableCell;
