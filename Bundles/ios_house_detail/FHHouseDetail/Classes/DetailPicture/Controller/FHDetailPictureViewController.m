@@ -27,7 +27,7 @@
 #import <Photos/Photos.h>
 #import "HTSDeviceManager.h"
 #import "FHDetailVideoInfoView.h"
-#import "NSDictionary+TTAdditions.h"
+#import <NSDictionary+BTDAdditions.h>
 #import "FHLoadingButton.h"
 #import "FHDetailBaseModel.h"
 
@@ -149,8 +149,8 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
 - (void)refreshCallBtnLoadingState:(NSNotification *)noti
 {
     NSDictionary *userInfo = noti.userInfo;
-    NSString *houseId = [userInfo tt_stringValueForKey:@"house_id"];
-    NSInteger loading = [userInfo tt_integerValueForKey:@"show_loading"];
+    NSString *houseId = [userInfo btd_stringValueForKey:@"house_id"];
+    NSInteger loading = [userInfo btd_integerValueForKey:@"show_loading"];
     if (![houseId isEqualToString:self.houseId]) {
         return;
     }
@@ -163,8 +163,8 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
 - (void)refreshFollowStatus:(NSNotification *)noti
 {
     NSDictionary *userInfo = noti.userInfo;
-    NSString *followId = [userInfo tt_stringValueForKey:@"followId"];
-    NSInteger followStatus = [userInfo tt_integerValueForKey:@"followStatus"];
+    NSString *followId = [userInfo btd_stringValueForKey:@"followId"];
+    NSInteger followStatus = [userInfo btd_integerValueForKey:@"followStatus"];
     if (![followId isEqualToString:self.houseId]) {
         return;
     }

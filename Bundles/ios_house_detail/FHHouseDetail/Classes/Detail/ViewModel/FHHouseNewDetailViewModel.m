@@ -30,7 +30,7 @@
 #import "FHDetailNoticeAlertView.h"
 #import "TTUIResponderHelper.h"
 #import "FHDetailAgentListCell.h"
-#import "FHDetailMediaHeaderCorrectingCell.h"
+#import "FHDetailNewMediaHeaderCell.h"
 #import "FHNewDetailModuleHelper.h"
 #import "FHDetailCourtInfoCell.h"
 #import "FHDetailListSectionTitleCell.h"
@@ -66,7 +66,7 @@
 // 注册cell类型
 - (void)registerCellClasses {
     
-    [self.tableView registerClass:[FHDetailMediaHeaderCorrectingCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailMediaHeaderCorrectingModel class])];
+    [self.tableView registerClass:[FHDetailNewMediaHeaderCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailNewMediaHeaderModel class])];
             
     [self.tableView registerClass:[FHDetailNewMutiFloorPanCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailNewMutiFloorPanCellModel class])];
     [self.tableView registerClass:[FHDetailNewHouseNewsCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailNewHouseNewsCellModel class])];
@@ -424,7 +424,7 @@
     if (1) {
         FHMultiMediaItemModel *itemModel = nil;
         
-        FHDetailMediaHeaderCorrectingModel *headerCellModel = [[FHDetailMediaHeaderCorrectingModel alloc] init];
+        FHDetailNewMediaHeaderModel *headerCellModel = [[FHDetailNewMediaHeaderModel alloc] init];
         headerCellModel.houseImageAssociateInfo = model.data.imageGroupAssociateInfo;
         headerCellModel.imageAlbumAssociateInfo = model.data.imageAlbumAssociateInfo;
         headerCellModel.isShowTopImageTab = model.data.isShowTopImageTab;

@@ -538,7 +538,7 @@
             self.colletionView.hidden = NO;
             self.noDataImageView.hidden = YES;
             self.totalPagesLabel.hidden = NO;
-            self.totalPagesLabel.text = [NSString stringWithFormat:@"共%lu张",model.medias.count];
+            self.totalPagesLabel.text = [NSString stringWithFormat:@"共%lu张",(unsigned long)model.medias.count];
         }
         if (!self.headerMoreStateView) {
             self.headerMoreStateView = [[FHHouseDetailHeaderMoreStateView alloc] init];

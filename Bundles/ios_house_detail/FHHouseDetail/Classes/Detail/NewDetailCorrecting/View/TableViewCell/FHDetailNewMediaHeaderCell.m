@@ -1,11 +1,11 @@
 //
-//  FHDetailMediaHeaderCell.m
+//  FHDetailNewMediaHeaderCell.m
 //  FHHouseDetail
 //
-//  Created by 谢思铭 on 2019/4/15.
+//  Created by luowentao on 2020/8/21.
 //
 
-#import "FHDetailMediaHeaderCorrectingCell.h"
+#import "FHDetailNewMediaHeaderCell.h"
 #import "FHMultiMediaCorrectingScrollView.h"
 #import "FHMultiMediaModel.h"
 #import "FHDetailOldModel.h"
@@ -29,8 +29,7 @@
 #import <TTUIWidget/TTNavigationController.h>
 #import "TTReachability.h"
 #import "ToastManager.h"
-
-@interface FHDetailMediaHeaderCorrectingCell ()<FHMultiMediaCorrectingScrollViewDelegate,FHDetailScrollViewDidScrollProtocol,FHDetailVCViewLifeCycleProtocol>
+@interface FHDetailNewMediaHeaderCell ()<FHMultiMediaCorrectingScrollViewDelegate,FHDetailScrollViewDidScrollProtocol,FHDetailVCViewLifeCycleProtocol>
 
 @property(nonatomic, strong) FHMultiMediaCorrectingScrollView *mediaView;
 @property(nonatomic, strong) FHMultiMediaModel *model;
@@ -48,20 +47,9 @@
 
 @property (nonatomic, weak) FHFloorPanPicShowViewController *pictureListViewController;
 @property (nonatomic, weak) FHDetailPictureViewController *pictureDetailVC;
+
 @end
-
-@implementation FHDetailMediaHeaderCorrectingCell
-
-- (void)awakeFromNib {
-    [super awakeFromNib];
-    // Initialization code
-}
-
-- (void)setSelected:(BOOL)selected animated:(BOOL)animated {
-    [super setSelected:selected animated:animated];
-    
-    // Configure the view for the selected state
-}
+@implementation FHDetailNewMediaHeaderCell
 
 - (void)dealloc {
     if(self.vedioCount > 0){
@@ -84,35 +72,24 @@
 }
 
 - (void)refreshWithData:(id)data {
-    if (self.currentData == data || ![data isKindOfClass:[FHDetailMediaHeaderCorrectingModel class]]) {
+    if (self.currentData == data || ![data isKindOfClass:[FHDetailNewMediaHeaderModel class]]) {
         return;
     }
     [self.imageList removeAllObjects];
     self.currentData = data;
     [self generateModel];
-    self.mediaView.isShowTopImageTab = [(FHDetailMediaHeaderCorrectingModel *)self.currentData isShowTopImageTab];
+    self.mediaView.isShowTopImageTab = [(FHDetailNewMediaHeaderModel *)self.currentData isShowTopImageTab];
     self.mediaView.baseViewModel = self.baseViewModel;
-    [self.mediaView updateModel:self.model withTitleModel: ((FHDetailMediaHeaderCorrectingModel *)self.currentData).titleDataModel];
+    [self.mediaView updateModel:self.model withTitleModel: ((FHDetailNewMediaHeaderModel *)self.currentData).titleDataModel];
     //有视频才传入埋点
     if(self.vedioCount > 0){
         self.mediaView.tracerDic = [self tracerDic];
     }
     [self reckoncollectionHeightWithData:data];
     
-    if (((FHDetailMediaHeaderCorrectingModel *)data).weakVC) {
-        self.weakDetailVC = ((FHDetailMediaHeaderCorrectingModel *)data).weakVC;
+    if (((FHDetailNewMediaHeaderModel *)data).weakVC) {
+        self.weakDetailVC = ((FHDetailNewMediaHeaderModel *)data).weakVC;
     }
-    
-    /* 一期预加载方案，先注释
-    NSDictionary *fhSettings= [[TTSettingsManager sharedManager] settingForKey:@"f_settings" defaultValue:@{} freeze:YES];
-    BOOL boolOffline = [fhSettings tt_boolValueForKey:@"f_webview_preload_close"];
-    if (!boolOffline) {
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [self  createVRPreloadWebview];
-        });
-    }
-     */
-//    [self performSelector:@selector(createVRPreloadWebview) withObject:nil afterDelay:1];
 }
 
 - (void)createVRPreloadWebview{
@@ -121,8 +98,8 @@
 }
 
 - (void)reckoncollectionHeightWithData:(id)data {
-    FHDetailHouseTitleModel *titleModel =  ((FHDetailMediaHeaderCorrectingModel *)self.currentData).titleDataModel;
-    _photoCellHeight = [FHDetailMediaHeaderCorrectingCell cellHeight];
+    FHDetailHouseTitleModel *titleModel =  ((FHDetailNewMediaHeaderModel *)self.currentData).titleDataModel;
+    _photoCellHeight = [FHDetailNewMediaHeaderCell cellHeight];
     NSDictionary *attributes = @{NSFontAttributeName: [UIFont themeFontMedium:24]};
     CGRect rect = [titleModel.titleStr boundingRectWithSize:CGSizeMake(SCREEN_WIDTH-66, CGFLOAT_MAX)
                                               options:NSStringDrawingUsesLineFragmentOrigin
@@ -133,32 +110,19 @@
     }
     
     CGFloat rectHeight = rect.size.height;
-    if (rectHeight > [UIFont themeFontMedium:24].lineHeight * ((titleModel.housetype == FHHouseTypeNeighborhood || titleModel.isFloorPan)? 1: 2)){          //如果超过两行，只显示两行，小区只显示一行，需要特判
-        rectHeight = [UIFont themeFontMedium:24].lineHeight * ((titleModel.housetype == FHHouseTypeNeighborhood || titleModel.isFloorPan)? 1: 2);
+    if (rectHeight > [UIFont themeFontMedium:24].lineHeight * 2){          //如果超过两行，只显示两行，小区只显示一行，需要特判
+        rectHeight = [UIFont themeFontMedium:24].lineHeight * 2;
     }
     
     _photoCellHeight += 20 + rectHeight - 21;//20是标题具体顶部的距离，21是重叠的41减去透明阴影的20 (21 = 41 - 20)
     
     if (titleModel.tags.count>0) {
         //这里分别加上标签高度20，标签间隔20
-        if (!titleModel.isFloorPan) { //因为户型详情页的标签和标题在同一行所以这里特判户型详情页不加上这部分高度
-            _photoCellHeight += 20 + 20;
-        }
-    }
-    if (titleModel.isFloorPan) {    //户型详情页特有的总价Label
-        if (titleModel.tags && titleModel.tags.count > 1) {
-           _photoCellHeight += 20 + 20 + 24;
-        } else {
-            _photoCellHeight += 20 + 12;
-        }
-    }
-    
-    if (((FHDetailMediaHeaderCorrectingModel *)self.currentData).vedioModel.cellHouseType == FHMultiMediaCellHouseNeiborhood) {
-        _photoCellHeight = _photoCellHeight +22;       //小区的地址Label高度
+        _photoCellHeight += 20 + 20;
     }
     
     [self.mediaView mas_updateConstraints:^(MASConstraintMaker *make) {
-        make.height.mas_offset(_photoCellHeight);
+        make.height.mas_offset(self.photoCellHeight);
     }];
 }
 - (NSDictionary *)tracerDic {
@@ -168,7 +132,7 @@
     }
     
     if([dict isKindOfClass:[NSDictionary class]]){
-        [dict removeObjectsForKeys:@[@"card_type"]];        
+        [dict removeObjectsForKeys:@[@"card_type"]];
         return dict;
     }else{
         return nil;
@@ -185,7 +149,7 @@
     return self;
 }
 - (void)createUI {
-    _photoCellHeight = [FHDetailMediaHeaderCorrectingCell cellHeight];
+    _photoCellHeight = [FHDetailNewMediaHeaderCell cellHeight];
     _pictureShowDict = [NSMutableDictionary dictionary];
     _vedioCount = 0;
     _imageList = [[NSMutableArray alloc] init];
@@ -202,10 +166,10 @@
 - (void)generateModel {
     self.model = [[FHMultiMediaModel alloc] init];
     NSMutableArray *itemArray = [NSMutableArray array];
-    NSArray *houseImageDict = ((FHDetailMediaHeaderCorrectingModel *)self.currentData).houseImageDictList;
-    FHMultiMediaItemModel *vedioModel = ((FHDetailMediaHeaderCorrectingModel *)self.currentData).vedioModel;
-    FHDetailHouseVRDataModel *vrModel = ((FHDetailMediaHeaderCorrectingModel *)self.currentData).vrModel;
-    FHMultiMediaItemModel *baiduPanoramaModel = ((FHDetailMediaHeaderCorrectingModel *)self.currentData).baiduPanoramaModel;
+    NSArray *houseImageDict = ((FHDetailNewMediaHeaderModel *)self.currentData).houseImageDictList;
+    FHMultiMediaItemModel *vedioModel = ((FHDetailNewMediaHeaderModel *)self.currentData).vedioModel;
+    FHDetailHouseVRDataModel *vrModel = ((FHDetailNewMediaHeaderModel *)self.currentData).vrModel;
+    FHMultiMediaItemModel *baiduPanoramaModel = ((FHDetailNewMediaHeaderModel *)self.currentData).baiduPanoramaModel;
     if (vrModel && [vrModel isKindOfClass:[FHDetailHouseVRDataModel class]] && vrModel.hasVr) {
         FHMultiMediaItemModel *itemModelVR = [[FHMultiMediaItemModel alloc] init];
         itemModelVR.mediaType = FHMultiMediaTypeVRPicture;
@@ -269,10 +233,6 @@
     }
     
     self.model.medias = itemArray;
-    if([self.baseViewModel.detailData isKindOfClass:[FHDetailOldModel class]]) {
-        FHDetailOldModel *detailOldModel = (FHDetailOldModel *)self.baseViewModel.detailData;
-        self.model.isShowSkyEyeLogo = detailOldModel.data.baseExtra.detective.detectiveInfo.showSkyEyeLogo;
-    }
 }
 
 -(void)showImagesWithCurrentIndex:(NSInteger)index {
@@ -289,7 +249,7 @@
         }
     }
     
-    FHDetailHouseVRDataModel *vrModel = ((FHDetailMediaHeaderCorrectingModel *)self.currentData).vrModel;
+    FHDetailHouseVRDataModel *vrModel = ((FHDetailNewMediaHeaderModel *)self.currentData).vrModel;
     //VR
     if (index < 0 && vrModel && [vrModel isKindOfClass:[FHDetailHouseVRDataModel class]] && vrModel.hasVr) {
         if (![TTReachability isNetworkConnected]) {
@@ -322,7 +282,7 @@
     }
     
     
-    FHMultiMediaItemModel *vedioModel = ((FHDetailMediaHeaderCorrectingModel *)self.currentData).vedioModel;
+    FHMultiMediaItemModel *vedioModel = ((FHDetailNewMediaHeaderModel *)self.currentData).vedioModel;
 
     if (index < 0 || index >= (images.count + self.vedioCount)) {
         return;
@@ -347,36 +307,13 @@
         pictureDetailViewController.topVC = self.baseViewModel.detailController;
     }
     
-    // 获取图片需要的房源信息数据
-    if ([self.baseViewModel.detailData isKindOfClass:[FHDetailOldModel class]]) {
-        // 二手房数据
-        FHDetailOldModel *model = (FHDetailOldModel *)self.baseViewModel.detailData;
-        NSString *priceStr = @"";
-        NSString *infoStr = @"";
-        if (vedioModel && vedioModel.videoID.length > 0) {
-            priceStr = vedioModel.infoTitle;
-            infoStr = vedioModel.infoSubTitle;
-        }
-        NSString *houseId = model.data.id;
-        pictureDetailViewController.houseId = houseId;
-        pictureDetailViewController.priceStr = priceStr;
-        pictureDetailViewController.infoStr = infoStr;
-        pictureDetailViewController.associateInfo = model.data.houseImageAssociateInfo;
-
-        pictureDetailViewController.followStatus = self.baseViewModel.contactViewModel.followStatus;
-    }else if ([self.baseViewModel.detailData isKindOfClass:[FHDetailNewModel class]]) {
+    if ([self.baseViewModel.detailData isKindOfClass:[FHDetailNewModel class]]) {
         FHDetailNewModel *model = (FHDetailNewModel *)self.baseViewModel.detailData;
         pictureDetailViewController.associateInfo = model.data.imageGroupAssociateInfo;
         if (!model.data.isShowTopImageTab) {
             //如果是新房，非北京、江州以外的城市，暂时隐藏头部
             pictureDetailViewController.isShowSegmentView = NO;
         }
-    }else if ([self.baseViewModel.detailData isKindOfClass:[FHDetailNeighborhoodModel class]]) {
-        FHDetailNeighborhoodModel *model = (FHDetailOldModel *)self.baseViewModel.detailData;
-    } else if ([self.baseViewModel.detailData isKindOfClass:[FHDetailFloorPanDetailInfoModel class]]) {
-        //户型详情
-        FHDetailFloorPanDetailInfoModel *model = (FHDetailFloorPanDetailInfoModel *)self.baseViewModel.detailData;
-        pictureDetailViewController.associateInfo = model.data.imageAssociateInfo;
     }
     
 
@@ -421,7 +358,7 @@
     };
     
     [pictureDetailViewController setMediaHeaderModel:self.currentData mediaImages:images];
-    FHDetailMediaHeaderCorrectingModel *model = ((FHDetailMediaHeaderCorrectingModel *)self.currentData);
+    FHDetailNewMediaHeaderModel *model = ((FHDetailNewMediaHeaderModel *)self.currentData);
     //去除flag判断，改为判断详情页type
     if (self.baseViewModel.houseType == FHHouseTypeNewHouse && [model.topImages isKindOfClass:[NSArray class]] && model.topImages.count > 0) {
 //        FHDetailNewTopImage *topImage = model.topImages.firstObject;
@@ -479,7 +416,7 @@
             weakSelf.isLarge = YES;
             
             NSInteger vrOffset = 0;
-            FHDetailHouseVRDataModel *vrModel = ((FHDetailMediaHeaderCorrectingModel *)weakSelf.currentData).vrModel;
+            FHDetailHouseVRDataModel *vrModel = ((FHDetailNewMediaHeaderModel *)weakSelf.currentData).vrModel;
             //VR增加偏移
             if (vrModel && [vrModel isKindOfClass:[FHDetailHouseVRDataModel class]] && vrModel.hasVr)
             {
@@ -516,7 +453,7 @@
 }
 
 - (void)showPictureList {
-    FHDetailMediaHeaderCorrectingModel *data = (FHDetailMediaHeaderCorrectingModel *)self.currentData;
+    FHDetailNewMediaHeaderModel *data = (FHDetailNewMediaHeaderModel *)self.currentData;
     NSMutableDictionary *routeParam = [NSMutableDictionary dictionary];
     FHFloorPanPicShowViewController *pictureListViewController = [[FHFloorPanPicShowViewController alloc] initWithRouteParamObj:TTRouteParamObjWithDict(routeParam)];
     pictureListViewController.modalPresentationStyle = UIModalPresentationFullScreen;
@@ -595,7 +532,7 @@
 //埋点
 - (void)trackClickTabWithIndex:(NSInteger )index element:(NSString *)element{
     index += self.vedioCount;           //如果有视频要+1
-    FHDetailHouseVRDataModel *vrModel = ((FHDetailMediaHeaderCorrectingModel *)self.currentData).vrModel;
+    FHDetailHouseVRDataModel *vrModel = ((FHDetailNewMediaHeaderModel *)self.currentData).vrModel;
     
     if (vrModel && [vrModel isKindOfClass:[FHDetailHouseVRDataModel class]] && vrModel.hasVr) {
         index ++ ;//如果有VR 再加+1
@@ -770,7 +707,7 @@
 
 - (void)didSelectItemAtIndex:(NSInteger)index {
     
-    if ([(FHDetailMediaHeaderCorrectingModel *)self.currentData isInstantData]) {
+    if ([(FHDetailNewMediaHeaderModel *)self.currentData isInstantData]) {
         //列表页带入的数据不响应
         return;
     }
@@ -825,7 +762,7 @@
 
 - (void)willDisplayCellForItemAtIndex:(NSInteger)index {
     
-    if ([(FHDetailMediaHeaderCorrectingModel *)self.currentData isInstantData]) {
+    if ([(FHDetailNewMediaHeaderModel *)self.currentData isInstantData]) {
         //列表页带入的数据不报埋点
         return;
     }
@@ -846,7 +783,7 @@
     param[UT_ELEMENT_FROM] = tracerDict[UT_ELEMENT_FROM]?:UT_BE_NULL;
     param[UT_ORIGIN_FROM] = tracerDict[UT_ORIGIN_FROM]?:UT_BE_NULL;
     param[UT_ORIGIN_SEARCH_ID] = tracerDict[UT_ORIGIN_SEARCH_ID]?:UT_BE_NULL;
-    param[UT_LOG_PB] = tracerDict[UT_LOG_PB]?:UT_BE_NULL;    
+    param[UT_LOG_PB] = tracerDict[UT_LOG_PB]?:UT_BE_NULL;
     TRACK_EVENT(UT_OF_ELEMENT_SHOW, param);
 }
 
@@ -867,7 +804,7 @@
 //进入图片页面页
 - (void)goToPictureListFrom:(NSString *)from {
     
-    if ([(FHDetailMediaHeaderCorrectingModel *)self.currentData isInstantData]) {
+    if ([(FHDetailNewMediaHeaderModel *)self.currentData isInstantData]) {
         //列表页带入的数据不响应
         return;
     }
@@ -918,7 +855,7 @@
 
 @end
 
-@implementation FHDetailMediaHeaderCorrectingModel
+@implementation FHDetailNewMediaHeaderModel
 
 - (NSArray *)processTopImagesToSmallImageGroups {
     NSMutableArray <FHHouseDetailImageGroupModel *> *pictsArray = [NSMutableArray array];
@@ -945,5 +882,4 @@
 }
 
 @end
-
 
