@@ -874,7 +874,7 @@
     
 }
 
--(void) newHouseModifiedLayoutNameNeedShowCenter:(BOOL )showCenter{
+-(void)newHouseModifiedLayoutNameNeedShowCenter:(BOOL )showCenter{
 
     [self.name mas_remakeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(self.avatorView.mas_right).offset(10);
