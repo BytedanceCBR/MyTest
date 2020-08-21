@@ -4,7 +4,9 @@
 //
 //  Created by luowentao on 2020/8/21.
 //
-
+//1.处理数据
+//2.将除了轮播图之外的所有View处理
+//3.与楼盘相册和图片详情页交互操作
 #import "FHDetailNewMediaHeaderCell.h"
 #import "FHDetailNewMediaHeaderScrollView.h"
 #import "FHMultiMediaModel.h"
@@ -29,9 +31,17 @@
 #import <TTUIWidget/TTNavigationController.h>
 #import "TTReachability.h"
 #import "ToastManager.h"
+#import "FHDetailHeaderTitleView.h"
+
 @interface FHDetailNewMediaHeaderCell ()<FHDetailNewMediaHeaderScrollViewDelegate,FHDetailScrollViewDidScrollProtocol,FHDetailVCViewLifeCycleProtocol>
 
+
 @property(nonatomic, strong) FHDetailNewMediaHeaderScrollView *mediaView;
+@property (nonatomic, weak)     UIView       *vcParentView;
+@property(nonatomic, strong) UIView *bottomGradientView;
+@property(nonatomic, strong) FHDetailHeaderTitleView *titleView;            //头图下面的标题栏
+
+
 @property(nonatomic, strong) FHMultiMediaModel *model;
 @property(nonatomic, strong) NSMutableArray *imageList;
 @property(nonatomic, strong) NSMutableDictionary *pictureShowDict;
@@ -41,8 +51,7 @@
 @property(nonatomic, assign) NSTimeInterval enterTimestamp;
 @property (nonatomic, assign)   NSInteger       vedioCount;
 @property (nonatomic, assign)   CGFloat       photoCellHeight;
-@property (nonatomic, weak)     UIView       *vcParentView;
-@property (nonatomic, strong , nullable)TTRouteObject *preloadRouteObj;
+
 @property (nonatomic, weak , nullable)UIViewController *weakDetailVC;
 
 @property (nonatomic, weak) FHFloorPanPicShowViewController *pictureListViewController;
@@ -80,12 +89,15 @@
     [self generateModel];
     self.mediaView.isShowTopImageTab = [(FHDetailNewMediaHeaderModel *)self.currentData isShowTopImageTab];
     self.mediaView.baseViewModel = self.baseViewModel;
-    [self.mediaView updateModel:self.model withTitleModel: ((FHDetailNewMediaHeaderModel *)self.currentData).titleDataModel];
+    self.titleView.baseViewModel = self.baseViewModel;
+    
+    [self.mediaView updateModel:self.model];
+    self.titleView.model = ((FHDetailNewMediaHeaderModel *)self.currentData).titleDataModel;
     //有视频才传入埋点
     if(self.vedioCount > 0){
         self.mediaView.tracerDic = [self tracerDic];
     }
-    [self reckoncollectionHeightWithData:data];
+    [self reckoncollectionHeightWithData:((FHDetailNewMediaHeaderModel *)self.currentData).titleDataModel];
     
     if (((FHDetailNewMediaHeaderModel *)data).weakVC) {
         self.weakDetailVC = ((FHDetailNewMediaHeaderModel *)data).weakVC;
@@ -97,16 +109,16 @@
          
 }
 
-- (void)reckoncollectionHeightWithData:(id)data {
-    FHDetailHouseTitleModel *titleModel =  ((FHDetailNewMediaHeaderModel *)self.currentData).titleDataModel;
-    _photoCellHeight = [FHDetailNewMediaHeaderCell cellHeight];
+- (void)reckoncollectionHeightWithData:(FHDetailHouseTitleModel *)titleModel {
+    
+    CGFloat titleHeight = 41;
     NSDictionary *attributes = @{NSFontAttributeName: [UIFont themeFontMedium:24]};
     CGRect rect = [titleModel.titleStr boundingRectWithSize:CGSizeMake(SCREEN_WIDTH-66, CGFLOAT_MAX)
                                               options:NSStringDrawingUsesLineFragmentOrigin
                                            attributes:attributes
                                               context:nil];                     //算出标题的高度
     if (titleModel.advantage.length > 0 && titleModel.businessTag.length > 0) { //如果头图下面有横幅那么高度增加40
-        _photoCellHeight += 40;
+        titleHeight += 40;
     }
     
     CGFloat rectHeight = rect.size.height;
@@ -114,15 +126,15 @@
         rectHeight = [UIFont themeFontMedium:24].lineHeight * 2;
     }
     
-    _photoCellHeight += 20 + rectHeight - 21;//20是标题具体顶部的距离，21是重叠的41减去透明阴影的20 (21 = 41 - 20)
+    titleHeight += 20 + rectHeight - 21;//20是标题具体顶部的距离，21是重叠的41减去透明阴影的20 (21 = 41 - 20)
     
     if (titleModel.tags.count>0) {
         //这里分别加上标签高度20，标签间隔20
-        _photoCellHeight += 20 + 20;
+        titleHeight += 20 + 20;
     }
     
-    [self.mediaView mas_updateConstraints:^(MASConstraintMaker *make) {
-        make.height.mas_offset(self.photoCellHeight);
+    [self.titleView mas_updateConstraints:^(MASConstraintMaker *make) {
+        make.height.mas_offset(titleHeight);
     }];
 }
 - (NSDictionary *)tracerDic {
@@ -145,6 +157,7 @@
                 reuseIdentifier:reuseIdentifier];
     if (self) {
         [self createUI];
+        [self initConstaints];
     }
     return self;
 }
@@ -156,11 +169,54 @@
     _mediaView = [[FHDetailNewMediaHeaderScrollView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, _photoCellHeight)];
     _mediaView.delegate = self;
     [self.contentView addSubview:_mediaView];
+    
+    [self.contentView addSubview:self.bottomGradientView];
+    self.titleView = [[FHDetailHeaderTitleView alloc]init];
+    [self.contentView addSubview:self.titleView];
+    
+    // 底部渐变层
+}
 
+- (void)initConstaints {
     [_mediaView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.edges.mas_equalTo(self.contentView);
+        make.top.left.right.mas_equalTo(self.contentView);
         make.height.mas_equalTo(self.photoCellHeight);
     }];
+    
+    [self.bottomGradientView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.right.equalTo(self.mediaView);
+        make.bottom.equalTo(self.mediaView);
+        make.height.mas_equalTo(self.bottomGradientView.frame.size.height);
+    }];
+    [self.titleView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.right.bottom.equalTo(self.contentView);
+        make.top.equalTo(self.mediaView.mas_bottom).offset(-41);
+        make.height.equalTo(0);
+    }];
+    
+}
+
+-(UIView *)bottomGradientView {
+    if(!_bottomGradientView){
+        
+        CGFloat aspect = 375.0 / 25;
+        CGFloat width = SCREEN_WIDTH;
+        
+        CGFloat height = round(width / aspect + 0.5);
+        CGRect frame = CGRectMake(0, 0, width, height);
+        CAGradientLayer *gradientLayer = [CAGradientLayer layer];
+        gradientLayer.frame = frame;
+        gradientLayer.colors = @[
+                                 (__bridge id)[UIColor colorWithWhite:1 alpha:0].CGColor,
+                                 (__bridge id)[UIColor themeGray7].CGColor
+                                 ];
+        gradientLayer.startPoint = CGPointMake(0.5, 0);
+        gradientLayer.endPoint = CGPointMake(0.5, 0.9);
+        
+        _bottomGradientView = [[UIView alloc] initWithFrame:frame];
+        [_bottomGradientView.layer addSublayer:gradientLayer];
+    }
+    return _bottomGradientView;
 }
 
 - (void)generateModel {
@@ -260,10 +316,6 @@
         if (vrModel.openUrl) {
             
             [self trackClickOptions:@"house_vr_icon"];
-            
-//            if ([self.preloadRouteObj.instance isKindOfClass:[UIViewController class]] && [self.weakDetailVC isKindOfClass:[UIViewController class]]) {
-//                [self.weakDetailVC.navigationController pushViewController:self.preloadRouteObj.instance animated:YES];
-//            }else{
                 NSMutableDictionary *tracerDict = self.baseViewModel.detailTracerDic.mutableCopy;
                 NSMutableDictionary *param = [NSMutableDictionary new];
                 param[UT_ELEMENT_TYPE] = @"happiness_eye_tip";

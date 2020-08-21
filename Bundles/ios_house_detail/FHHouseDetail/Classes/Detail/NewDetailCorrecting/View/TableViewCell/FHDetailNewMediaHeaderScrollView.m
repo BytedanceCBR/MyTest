@@ -16,7 +16,7 @@
 #import "FHVideoModel.h"
 #import <FHHouseBase/FHBaseCollectionView.h>
 #import "FHMultiMediaVRImageCell.h"
-#import "FHDetailHeaderTitleView.h"
+
 #import "UIViewAdditions.h"
 #import "FHHouseDetailHeaderMoreStateView.h"
 
@@ -34,7 +34,6 @@
 @property(nonatomic, strong) UIImage *placeHolder;
 @property(nonatomic, strong) NSArray *medias;
 @property(nonatomic, strong) FHVideoAndImageItemCorrectingView *itemView;   //图片户型的标签
-@property(nonatomic, strong) FHDetailHeaderTitleView *titleView;            //头图下面的标题栏
 @property(nonatomic, strong) NSMutableArray *itemIndexArray;
 @property(nonatomic, strong) NSMutableArray *itemArray;
 @property(nonatomic, strong) UICollectionViewCell *lastCell;
@@ -42,7 +41,6 @@
 @property(nonatomic, weak) FHMultiMediaVRImageCell *firstVRCell;
 @property(nonatomic, assign) CGFloat beginX;
 @property(nonatomic, strong) UIView *bottomBannerView;
-@property(nonatomic, strong) UIView *bottomGradientView;
 @property (nonatomic, strong) FHHouseDetailHeaderMoreStateView *headerMoreStateView;
 @end
 
@@ -81,8 +79,8 @@
     
     [self addSubview:_colletionView];
     
-    // 底部渐变层
-    [self addSubview:self.bottomGradientView];
+    
+    
     // 底部banner按钮
     [self addSubview:self.bottomBannerView];
     
@@ -90,8 +88,6 @@
     [self addSubview:_noDataImageView];
     _noDataImageView.hidden = YES;
         
-    _titleView = [[FHDetailHeaderTitleView alloc]init];
-    [self addSubview:_titleView];
     
     __weak typeof(self) wself = self;
     self.itemView = [[FHVideoAndImageItemCorrectingView alloc] initWithFrame:CGRectMake(0, 0, self.bounds.size.width, 20)];
@@ -152,29 +148,6 @@
 }
 
 
--(UIView *)bottomGradientView {
-    if(!_bottomGradientView){
-        
-        CGFloat aspect = 375.0 / 25;
-        CGFloat width = SCREEN_WIDTH;
-        
-        CGFloat height = round(width / aspect + 0.5);
-//        height -= round([UIScreen mainScreen].bounds.size.width / 375.0f * 30 + 0.5);
-        CGRect frame = CGRectMake(0, 0, width, height);
-        CAGradientLayer *gradientLayer = [CAGradientLayer layer];
-        gradientLayer.frame = frame;
-        gradientLayer.colors = @[
-                                 (__bridge id)[UIColor colorWithWhite:1 alpha:0].CGColor,
-                                 (__bridge id)[UIColor themeGray7].CGColor
-                                 ];
-        gradientLayer.startPoint = CGPointMake(0.5, 0);
-        gradientLayer.endPoint = CGPointMake(0.5, 0.9);
-        
-        _bottomGradientView = [[UIView alloc] initWithFrame:frame];
-        [_bottomGradientView.layer addSublayer:gradientLayer];
-    }
-    return _bottomGradientView;
-}
 
 - (FHVideoViewController *)videoVC {
     if(!_videoVC){
@@ -195,35 +168,25 @@
     }];
 
 
-    //CGFloat minus = round([UIScreen mainScreen].bounds.size.width / 375.0f * 30 + 0.5);
-    [self.titleView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.right.bottom.equalTo(self);
-        make.top.equalTo(self.colletionView.mas_bottom).offset(-41);
-    }];
-    [self.bottomGradientView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.right.equalTo(self);
-        make.bottom.equalTo(self.colletionView);
-        make.height.mas_equalTo(self.bottomGradientView.frame.size.height);
-    }];
-    [self.itemView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.centerX.mas_equalTo(self);
-        make.bottom.mas_equalTo(self.titleView.mas_top).offset(5);//
-        make.width.mas_equalTo(self.bounds.size.width);
-        make.height.mas_equalTo(20);
-    }];
-    
-    [self layoutIfNeeded];
-    
-    self.infoLabel.width = 44;
-    self.infoLabel.height = 22;
-    self.infoLabel.left = self.width - self.infoLabel.width - 15;
-    self.infoLabel.bottom = self.titleView.top + 5;
-    
-    self.totalPagesLabel.width = 54;
-    self.totalPagesLabel.height = 22;
-    self.totalPagesLabel.left = self.width - self.totalPagesLabel.width - 15;
-    self.totalPagesLabel.bottom = self.titleView.top + 5;
-    
+//    [self.itemView mas_makeConstraints:^(MASConstraintMaker *make) {
+//        make.centerX.mas_equalTo(self);
+//        make.bottom.mas_equalTo(self.titleView.mas_top).offset(5);//
+//        make.width.mas_equalTo(self.bounds.size.width);
+//        make.height.mas_equalTo(20);
+//    }];
+//
+//    [self layoutIfNeeded];
+//
+//    self.infoLabel.width = 44;
+//    self.infoLabel.height = 22;
+//    self.infoLabel.left = self.width - self.infoLabel.width - 15;
+//    self.infoLabel.bottom = self.titleView.top + 5;
+//
+//    self.totalPagesLabel.width = 54;
+//    self.totalPagesLabel.height = 22;
+//    self.totalPagesLabel.left = self.width - self.totalPagesLabel.width - 15;
+//    self.totalPagesLabel.bottom = self.titleView.top + 5;
+//
     
 }
 
@@ -517,16 +480,14 @@
 
 - (void)setBaseViewModel:(FHHouseDetailBaseViewModel *)baseViewModel {
     _baseViewModel = baseViewModel;
-    self.titleView.baseViewModel = baseViewModel;
 }
 
-- (void)updateModel:(FHMultiMediaModel *)model withTitleModel:(FHDetailHouseTitleModel *)titleModel{
+- (void)updateModel:(FHMultiMediaModel *)model {
     self.medias = model.medias;
-    self.titleView.model = titleModel;
     //如果新房详情 并且 isShowTopImageTab = true 取第一张图
     self.colletionView.alwaysBounceHorizontal = NO;
     self.totalPagesLabel.hidden = YES;
-    if (titleModel.housetype == FHHouseTypeNewHouse && self.isShowTopImageTab) {
+    if (self.isShowTopImageTab) {
         self.infoLabel.hidden = YES;
         
         self.colletionView.alwaysBounceHorizontal = YES;
@@ -567,21 +528,6 @@
             _noDataImageView.image = [UIImage imageNamed:@"default_image"];
         }
     }
-
-    
-//    BOOL isShowBottomBannerView = model.isShowSkyEyeLogo;
-//    self.bottomBannerView.hidden = !isShowBottomBannerView;
-//    if(isShowBottomBannerView && [self.delegate respondsToSelector:@selector(bottomBannerViewDidShow)]) {
-//        [self.delegate bottomBannerViewDidShow];
-//    }
-//    CGFloat topOffset = 82;
-//    if (titleModel.advantage.length > 0 && titleModel.businessTag.length > 0) {
-//        topOffset -= 40;
-//    }
-//    [self.titleView mas_updateConstraints:^(MASConstraintMaker *make) {
-//        make.left.right.bottom.equalTo(self);
-//        make.top.equalTo(self.colletionView.mas_bottom).offset(-topOffset);
-//    }];
     
     self.itemArray = [NSMutableArray array];
     self.itemIndexArray = [NSMutableArray array];
@@ -604,10 +550,6 @@
             itemViewWidth = 10 + 44 * _itemArray.count;
         }
         
-//        [self.itemView mas_updateConstraints:^(MASConstraintMaker *make) {
-////            make.width.mas_equalTo(itemViewWidth);
-//            make.bottom.equalTo(self).offset(yOffset);
-//        }];
     }else{
         self.itemView.hidden = YES;
     }
