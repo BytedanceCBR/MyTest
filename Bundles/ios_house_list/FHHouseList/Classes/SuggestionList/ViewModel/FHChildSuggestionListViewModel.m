@@ -511,7 +511,12 @@
     }
     infos[@"tracer"] = tracer;
     
-    [self.listController jumpToCategoryListVCByUrl:jumpUrl queryText:model.text placeholder:model.text infoDict:infos];
+    if([model.count isEqualToString:@"0"]){
+        [self.listController jumpToCategoryListVCByUrl2:model];
+    }
+    else {
+        [self.listController jumpToCategoryListVCByUrl:jumpUrl queryText:model.text placeholder:model.text infoDict:infos];
+    }
 }
 
 // 删除历史记录按钮点击

@@ -48,6 +48,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)doTextFieldShouldReturn:(NSString *)text;
 
 - (void)textFiledTextChange:(NSString *)text andIsCanTrack:(BOOL)isCanTrack;
+- (void)jumpToCategoryListVCByUrl2:(FHSuggestionResponseDataModel *)Themodel;
 
 @end
 
