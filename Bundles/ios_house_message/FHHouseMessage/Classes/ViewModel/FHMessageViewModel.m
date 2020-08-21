@@ -263,7 +263,7 @@
             if([theModel.id isEqualToString:@"309"]){
                 NSMutableDictionary *tracerDictForUgc = [NSMutableDictionary dictionary];
                 tracerDictForUgc[@"origin_from"] = @"interactive_messages";
-                tracerDictForUgc[@"enter_from"] = @"messagetab";
+                tracerDictForUgc[@"enter_from"] = @"message_list";
                 tracerDictForUgc[@"enter_type"] = @"click";
                 tracerDictForUgc[@"element_from"] = @"feed_messagetab_cell";
                 TTRouteUserInfo *ugcUserInfo = [[TTRouteUserInfo alloc] initWithInfo:@{@"tracer":tracerDictForUgc}];
