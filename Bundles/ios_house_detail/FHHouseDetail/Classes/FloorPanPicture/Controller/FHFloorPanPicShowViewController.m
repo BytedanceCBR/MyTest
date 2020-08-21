@@ -20,7 +20,6 @@
 
 @interface FHFloorPanPicShowViewController ()<UICollectionViewDelegate,UICollectionViewDataSource>
 
-@property (nonatomic , strong) UITableView* tableView;
 @property (nonatomic , strong) UICollectionView *collectionView;
 
 @property (nonatomic, strong) FHDetailPictureTitleView *segmentTitleView;

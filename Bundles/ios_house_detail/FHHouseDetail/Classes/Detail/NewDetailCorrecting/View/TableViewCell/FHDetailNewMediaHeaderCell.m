@@ -6,7 +6,7 @@
 //
 
 #import "FHDetailNewMediaHeaderCell.h"
-#import "FHMultiMediaCorrectingScrollView.h"
+#import "FHDetailNewMediaHeaderScrollView.h"
 #import "FHMultiMediaModel.h"
 #import "FHDetailOldModel.h"
 #import "FHDetailPictureViewController.h"
@@ -29,9 +29,9 @@
 #import <TTUIWidget/TTNavigationController.h>
 #import "TTReachability.h"
 #import "ToastManager.h"
-@interface FHDetailNewMediaHeaderCell ()<FHMultiMediaCorrectingScrollViewDelegate,FHDetailScrollViewDidScrollProtocol,FHDetailVCViewLifeCycleProtocol>
+@interface FHDetailNewMediaHeaderCell ()<FHDetailNewMediaHeaderScrollViewDelegate,FHDetailScrollViewDidScrollProtocol,FHDetailVCViewLifeCycleProtocol>
 
-@property(nonatomic, strong) FHMultiMediaCorrectingScrollView *mediaView;
+@property(nonatomic, strong) FHDetailNewMediaHeaderScrollView *mediaView;
 @property(nonatomic, strong) FHMultiMediaModel *model;
 @property(nonatomic, strong) NSMutableArray *imageList;
 @property(nonatomic, strong) NSMutableDictionary *pictureShowDict;
@@ -153,7 +153,7 @@
     _pictureShowDict = [NSMutableDictionary dictionary];
     _vedioCount = 0;
     _imageList = [[NSMutableArray alloc] init];
-    _mediaView = [[FHMultiMediaCorrectingScrollView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, _photoCellHeight)];
+    _mediaView = [[FHDetailNewMediaHeaderScrollView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, _photoCellHeight)];
     _mediaView.delegate = self;
     [self.contentView addSubview:_mediaView];
 
@@ -528,7 +528,7 @@
 //        }
     }
 }
-
+#pragma mark - 埋点
 //埋点
 - (void)trackClickTabWithIndex:(NSInteger )index element:(NSString *)element{
     index += self.vedioCount;           //如果有视频要+1
@@ -703,7 +703,7 @@
 }
 
 
-#pragma mark - FHMultiMediaCorrectingScrollViewDelegate
+#pragma mark - FHDetailNewMediaHeaderScrollViewDelegate
 
 - (void)didSelectItemAtIndex:(NSInteger)index {
     

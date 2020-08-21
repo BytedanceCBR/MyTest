@@ -748,7 +748,7 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
         FHHouseDetailImageListDataModel *listModel = self.mediaHeaderModel.houseImageDictList[titleIndex];
         self.currentTypeName = listModel.houseImageTypeName;
     }
-    self.naviView.titleLabel.text = [NSString stringWithFormat:@"%d/%d",num.unsignedIntValue - currentTitleIndex + 1,num.unsignedIntValue];
+    self.naviView.titleLabel.text = [NSString stringWithFormat:@"%ld/%d",num.unsignedIntValue - currentTitleIndex + 1,num.unsignedIntValue];
 }
 
 #pragma mark - Setter & Getter
