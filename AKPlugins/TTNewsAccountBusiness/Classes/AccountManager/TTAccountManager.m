@@ -51,7 +51,7 @@
 
 + (TTAccountUserType)accountUserType
 {
-    NSString *mediaIdString = [[[TTAccount sharedAccount] user] mediaIDString];
+    NSString *mediaIdString = [TTAccount sharedAccount].user.mediaID.stringValue;
     TTAccountUserType curUserType = TTAccountUserTypeVisitor;
     if (!isEmptyString(mediaIdString) && ![mediaIdString isEqualToString:@"0"]) {
         curUserType = TTAccountUserTypePGC;
