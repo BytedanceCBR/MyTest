@@ -158,7 +158,7 @@
     }
     
     [self.mediaView mas_updateConstraints:^(MASConstraintMaker *make) {
-        make.height.mas_offset(_photoCellHeight);
+        make.height.mas_offset(self.photoCellHeight);
     }];
 }
 - (NSDictionary *)tracerDic {
@@ -199,7 +199,7 @@
     }];
 }
 
-- (void)generateModel {
+- (void)generateModel {                                                  //外部图片滑动的数据处理   -> 外部collectionView
     self.model = [[FHMultiMediaModel alloc] init];
     NSMutableArray *itemArray = [NSMutableArray array];
     NSArray *houseImageDict = ((FHDetailMediaHeaderCorrectingModel *)self.currentData).houseImageDictList;
@@ -485,7 +485,7 @@
             {
                 vrOffset = 1;
             }
-            NSIndexPath * indexPath = [NSIndexPath indexPathForRow:currentIndex + 1 + vrOffset inSection:0];
+            NSIndexPath * indexPath = [NSIndexPath indexPathForRow:currentIndex + !model.isShowTopImageTab + vrOffset inSection:0];
             [weakSelf.mediaView scrollToItemAtIndexPath:indexPath atScrollPosition:UICollectionViewScrollPositionLeft animated:NO];
             [weakSelf.mediaView updateItemAndInfoLabel];
             [weakSelf.mediaView updateVideoState];
