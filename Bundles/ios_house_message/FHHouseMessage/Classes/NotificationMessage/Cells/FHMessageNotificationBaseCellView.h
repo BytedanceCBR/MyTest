@@ -94,6 +94,7 @@ extern CGFloat FHMNUserNameLabelMinWidth();
 @property(nonatomic, strong, nullable) UIImageView *multiTextArrow;  //展示聚合消息的箭头
 @property(nonatomic, strong, nullable) UILabel *multiTextLabel;  //展示聚合消息的内容
 @property(nonatomic, strong, nullable) UIView *bottomLineView;  //底部分割线
+@property(nonatomic, strong, nullable) NSDictionary *tracerDict;
 
 @property(nonatomic, strong, nullable) TTMessageNotificationModel *messageModel;       //cell对应的model
 

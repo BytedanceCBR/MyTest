@@ -19,6 +19,7 @@
 #import "FHUserTracker.h"
 #import "FHMessageNotificationCellHelper.h"
 #import "UIScrollView+Refresh.h"
+#import "FHMessageNotificationBaseCellView.h"
 
 @interface FHMessageListViewModel () <UITableViewDelegate, UITableViewDataSource>
 
@@ -142,6 +143,8 @@
         cell = [FHMessageNotificationCellHelper dequeueTableCellForData:model tableView:tableView atIndexPath:indexPath];
         if ([cell isKindOfClass:[FHMessageNotificationBaseCell class]]) {
             [(FHMessageNotificationBaseCell *) cell refreshWithData:model];
+            FHMessageNotificationBaseCell *baseCell = (FHMessageNotificationBaseCell *) cell;
+            baseCell.cellView.tracerDict = self.tracerDict;
         }
     }
 
@@ -210,6 +213,7 @@
     params[@"enter_from"] = self.tracerDict[@"enter_from"] ?: @"be_null";
     params[@"enter_type"] = self.tracerDict[@"enter_type"] ?: @"be_null";
     params[@"element_from"] = self.tracerDict[@"element_from"] ?: @"be_null";
+    params[@"origin_from"] = self.tracerDict[@"origin_from"] ?: @"be_null";
     params[@"show_type"] = blank ? @"message_blank" : @"message_full";
     [FHUserTracker writeEvent:@"enter_category" params:params];
 }
