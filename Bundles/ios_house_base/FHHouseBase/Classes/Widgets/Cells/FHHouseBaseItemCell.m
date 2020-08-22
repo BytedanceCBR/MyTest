@@ -1150,10 +1150,14 @@
         
         //处理标签
         BOOL imageTagHidden = self.imageTagLabelBgView.hidden;
-        if (commonModel.titleTag) {
+
+        CGSize titleSize = [_mainTitleLabel sizeThatFits:CGSizeMake(100, 22)];
+        
+        if (commonModel.titleTag.text.length > 0) {
             self.imageTagLabelBgView.hidden = YES;
             self.tagTitleLabel.hidden = NO;
             [self.mainTitleLabel configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
+                layout.width = YGPointValue(titleSize.width+3);
                 layout.maxWidth = YGPointValue([self contentSmallImageMaxWidth] - 20);
             }];
             self.tagTitleLabel.text = commonModel.titleTag.text;
@@ -1163,7 +1167,7 @@
             [_tagTitleLabel configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
                          layout.isEnabled = YES;
                          layout.marginTop = YGPointValue(1.5);
-                         layout.marginLeft = YGPointValue(4);
+                         layout.marginLeft = YGPointValue(2);
                          layout.height = YGPointValue(16);
                    layout.width = YGPointValue(commonModel.titleTag.text.length > 1 ? 28 : 16);
             }];
@@ -1171,12 +1175,13 @@
             self.imageTagLabelBgView.hidden = imageTagHidden;
             self.tagTitleLabel.hidden = YES;
             [self.mainTitleLabel configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
-                layout.maxWidth = YGPointValue([self contentSmallImageMaxWidth]);
+                layout.width = YGPointValue([self contentSmallImageMaxWidth] - 10);
             }];
         }
         [self.mainTitleLabel.yoga markDirty];
         [self.subTitleLabel.yoga markDirty];
-        
+        [self.tagTitleLabel.yoga markDirty];
+
         //企业担保标签
         [self configTopLeftTagWithTagImages:commonModel.tagImage];
     } else if (houseType == FHHouseTypeRentHouse) {
@@ -1506,36 +1511,42 @@
                     _vrLoadingView.hidden = YES;
                 }
             }
-            //处理标签
-            BOOL imageTagHidden = self.imageTagLabelBgView.hidden;
-            if (commonModel.houseTitleTag) {
-                self.imageTagLabelBgView.hidden = YES;
-                self.tagTitleLabel.hidden = NO;
-                [self.mainTitleLabel configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
-                    layout.maxWidth = YGPointValue([self contentSmallImageMaxWidth] - 20);
-                }];
-                
-                [self.subTitleLabel configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
-                    layout.maxWidth = YGPointValue([self contentSmallImageMaxWidth] - 73);
-                }];
-                
-                self.tagTitleLabel.text = commonModel.houseTitleTag.text;
-                self.tagTitleLabel.backgroundColor = [UIColor colorWithHexString:commonModel.houseTitleTag.backgroundColor];
-                self.tagTitleLabel.textColor = [UIColor colorWithHexString:commonModel.houseTitleTag.textColor];
-            } else {
-                self.imageTagLabelBgView.hidden = imageTagHidden;
-                self.tagTitleLabel.hidden = YES;
-                [self.mainTitleLabel configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
-                    layout.maxWidth = YGPointValue([self contentSmallImageMaxWidth]);
-                }];
-                
-                [self.subTitleLabel configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
-                    layout.maxWidth = YGPointValue([self contentSmallImageMaxWidth] - 73);
-                }];
-            }
-            [self.mainTitleLabel.yoga markDirty];
-            [self.subTitleLabel.yoga markDirty];
-            [self updateSamllTitlesLayout:attributeString.length > 0];
+          //处理标签
+             BOOL imageTagHidden = self.imageTagLabelBgView.hidden;
+             CGSize titleSize = [_mainTitleLabel sizeThatFits:CGSizeMake(100, 22)];
+             if (commonModel.houseTitleTag.text.length > 0) {
+                 self.imageTagLabelBgView.hidden = YES;
+                 self.tagTitleLabel.hidden = NO;
+                 [self.mainTitleLabel configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
+                     layout.width = YGPointValue(titleSize.width+3);
+                     layout.maxWidth = YGPointValue([self contentSmallImageMaxWidth] - 20);
+                 }];
+                 self.tagTitleLabel.text = commonModel.houseTitleTag.text;
+                 self.tagTitleLabel.backgroundColor = [UIColor colorWithHexString:commonModel.houseTitleTag.backgroundColor];
+                 self.tagTitleLabel.textColor = [UIColor colorWithHexString:commonModel.houseTitleTag.textColor];
+                 //修改两字标签
+                 [_tagTitleLabel configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
+                              layout.isEnabled = YES;
+                              layout.marginTop = YGPointValue(1.5);
+                              layout.marginLeft = YGPointValue(2);
+                              layout.height = YGPointValue(16);
+                        layout.width = YGPointValue(commonModel.houseTitleTag.text.length > 1 ? 28 : 16);
+                 }];
+             } else {
+                 self.imageTagLabelBgView.hidden = imageTagHidden;
+                 self.tagTitleLabel.hidden = YES;
+                 [self.mainTitleLabel configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
+                     layout.width = YGPointValue([self contentSmallImageMaxWidth]);
+                 }];
+             }
+            
+            [self.subTitleLabel configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
+                layout.maxWidth = YGPointValue([self contentSmallImageMaxWidth] - 73);
+            }];
+            
+             [self.mainTitleLabel.yoga markDirty];
+             [self.subTitleLabel.yoga markDirty];
+             [self.tagTitleLabel.yoga markDirty];
             
             //企业担保标签，tag_image字段下发
             [self configTopLeftTagWithTagImages:commonModel.tagImage];
