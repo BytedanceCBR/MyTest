@@ -1467,6 +1467,12 @@
                      self.pricePerSqmLabel.attributedText = [[NSAttributedString alloc]initWithString:commonModel.displayPricePerSqm attributes:@{NSStrikethroughStyleAttributeName:@(NSUnderlineStyleNone)}];
                 }
             }
+            CGSize priceSize = [_priceLabel sizeThatFits:CGSizeMake(SCREEN_WIDTH, 30)];
+             [_priceLabel configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
+                layout.maxWidth = YGPointValue(100);
+                layout.width = YGPointValue(priceSize.width);
+            }];
+            
             [self.pricePerSqmLabel.yoga markDirty];
             if (commonModel.houseImageTag.text && commonModel.houseImageTag.backgroundColor && commonModel.houseImageTag.textColor) {
                 self.imageTagLabel.textColor = [UIColor colorWithHexString:commonModel.houseImageTag.textColor];
