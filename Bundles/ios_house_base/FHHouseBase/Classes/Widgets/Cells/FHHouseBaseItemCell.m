@@ -1113,6 +1113,12 @@
           self.pricePerSqmLabel.attributedText =  [[NSAttributedString alloc]initWithString:(commonModel.displayPricePerSqm.length>0?commonModel.displayPricePerSqm:@"") attributes:@{NSStrikethroughStyleAttributeName:@(NSUnderlineStyleNone)}];
         }
         
+        CGSize priceSize = [_priceLabel sizeThatFits:CGSizeMake(SCREEN_WIDTH, 30)];
+         [_priceLabel configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
+            layout.maxWidth = YGPointValue(100);
+            layout.width = YGPointValue(priceSize.width + 2);
+        }];
+        
         if (self.maskVRImageView) {
             [self.maskVRImageView removeFromSuperview];
             self.maskVRImageView = nil;
@@ -1470,7 +1476,7 @@
             CGSize priceSize = [_priceLabel sizeThatFits:CGSizeMake(SCREEN_WIDTH, 30)];
              [_priceLabel configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
                 layout.maxWidth = YGPointValue(100);
-                layout.width = YGPointValue(priceSize.width);
+                layout.width = YGPointValue(priceSize.width + 2);
             }];
             
             [self.pricePerSqmLabel.yoga markDirty];
