@@ -801,4 +801,8 @@
     }
     return _groupItemView;
 }
+- (void)setTraceDict:(NSDictionary *)traceDict {
+    _traceDict = traceDict;
+    _groupItemView.tracerDict = traceDict;
+}
 @end
