@@ -13,15 +13,13 @@
 
 NS_ASSUME_NONNULL_BEGIN
 @protocol FHDetailNewMediaHeaderScrollViewDelegate <NSObject>
-
+//点击某个Cell后
 - (void)didSelectItemAtIndex:(NSInteger)index;
-
+//某个Cell展现后
 - (void)willDisplayCellForItemAtIndex:(NSInteger)index;
-
+//底部导航被点击后
 - (void)selectItem:(NSString *)title;
-
-- (void)bottomBannerViewDidShow;
-
+//进入图片相册
 - (void)goToPictureListFrom:(NSString *)from;
 @end
 
@@ -34,16 +32,17 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic, strong) NSDictionary *tracerDic;
 @property (nonatomic, weak) FHHouseDetailBaseViewModel *baseViewModel;
 @property (nonatomic, assign) BOOL isShowTopImageTab; //新房详情 展示新UI
+@property (nonatomic, assign) NSUInteger exposeImageNum; //展示几张
 
 - (void)updateModel:(FHMultiMediaModel *)model;
 
+//移动到某个Cell
 - (void)scrollToItemAtIndexPath:(NSIndexPath *)indexPath atScrollPosition:(UICollectionViewScrollPosition)scrollPosition animated:(BOOL)animated;
 
 - (void)updateItemAndInfoLabel;
 
 - (void)updateVideoState;
 
-- (void)checkVRLoadingAnimate;
 
 
 @end
