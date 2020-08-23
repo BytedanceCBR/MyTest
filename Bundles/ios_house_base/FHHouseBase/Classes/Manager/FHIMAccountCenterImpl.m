@@ -66,6 +66,10 @@
     }
 }
 
+- (NSString *)currentUserAvatar {
+    return [TTAccount sharedAccount].user.avatarURL;
+}
+
 -(void)registerAccountStatusListener:(id<AccountStatusListener>)listener {
     [_observerMulticast addWeakDelegate:listener onQueue:dispatch_get_main_queue()];
 }
