@@ -138,6 +138,7 @@
         self.guideView.left = 0;
         self.guideView.width = [UIScreen mainScreen].bounds.size.width;
         self.guideView.height = 42;
+        [self bringSubviewToFront:self.answerBtn];
     }else{
         self.guideView.hidden = YES;
     }
