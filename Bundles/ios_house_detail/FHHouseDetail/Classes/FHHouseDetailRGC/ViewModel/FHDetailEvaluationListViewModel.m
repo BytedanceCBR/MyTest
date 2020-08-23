@@ -86,7 +86,7 @@
     };
     self.tableView.mj_footer = self.refreshFooter;
     self.refreshFooter.hidden = YES;
-     [wself requestData:YES first:YES];
+    [wself requestData:YES first:YES];
     [self requestTabList];
 }
 
@@ -104,9 +104,9 @@
 
 - (void)requestTabList {
     [FHHouseUGCAPI requestTabListWithhouseId:self.houseId class:[FHHouseDetailRealtorTabListModel class] houseType:self.houseType completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
-             if (error) {
-               return;
-           }
+        if (error) {
+            return;
+        }
         if (model) {
             [self checkTabListwithModel:model];
         }
@@ -153,7 +153,7 @@
     if(!isHead && listCount > 0){
         FHFeedUGCCellModel *cellModel = [self.dataList lastObject];
         behotTime = [cellModel.behotTime doubleValue];
-         lastGroupId = cellModel.groupId;
+        lastGroupId = cellModel.groupId;
     }
     if(isHead && listCount > 0){
         FHFeedUGCCellModel *cellModel = [self.dataList firstObject];
@@ -168,16 +168,16 @@
         [extraDic setObject:self.houseId forKey:@"house_id"];
     }
     if (self.houseType) {
-         [extraDic setObject:self.houseType forKey:@"house_type"];
+        [extraDic setObject:self.houseType forKey:@"house_type"];
     }
     if (self.evaluationHeader.selectName) {
-         [extraDic setObject:self.evaluationHeader.selectName forKey:@"tab_name"];
+        [extraDic setObject:self.evaluationHeader.selectName forKey:@"tab_name"];
     }
     
     if(lastGroupId){
         [extraDic setObject:lastGroupId forKey:@"last_group_id"];
     }
-   TTHttpTask *task = [FHHouseUGCAPI requestFeedListWithCategory:self.categoryId behotTime:behotTime loadMore:!isHead listCount:listCount extraDic:extraDic completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
+    TTHttpTask *task = [FHHouseUGCAPI requestFeedListWithCategory:self.categoryId behotTime:behotTime loadMore:!isHead listCount:listCount extraDic:extraDic completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
         wself.listController.isLoadingData = NO;
         FHFeedListModel *feedListModel = (FHFeedListModel *)model;
         wself.feedListModel = feedListModel;
@@ -192,14 +192,14 @@
             if(isFirst){
                 [wself.listController endLoading];
                 if(error.code != -999){
-                                    [wself.listController.emptyView showEmptyWithTip:@"网络异常，请检查网络连接" errorImageName:kFHErrorMaskNoNetWorkImageName showRetry:YES];
-//                    [wself.listController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNetWorkError];
-//                    wself.listController.showenRetryButton = YES;
+                    [wself.listController.emptyView showEmptyWithTip:@"网络异常，请检查网络连接" errorImageName:kFHErrorMaskNoNetWorkImageName showRetry:YES];
+                    //                    [wself.listController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNetWorkError];
+                    //                    wself.listController.showenRetryButton = YES;
                     wself.refreshFooter.hidden = YES;
                 }
             }else{
                 [wself.listController.emptyView showEmptyWithTip:@"网络异常，请检查网络连接" errorImageName:kFHErrorMaskNoNetWorkImageName showRetry:NO];
-                     wself.refreshFooter.hidden = YES;
+                wself.refreshFooter.hidden = YES;
                 [[ToastManager manager] showToast:@"网络异常"];
                 [wself updateTableViewWithMoreData:YES];
             }
@@ -240,13 +240,13 @@
 }
 
 - (void)updateTableViewWithMoreData:(BOOL)hasMore {
-self.tableView.mj_footer.hidden = NO;
-if (hasMore) {
-    [self.tableView.mj_footer endRefreshing];
-}else {
-    [self.refreshFooter setUpNoMoreDataText:@"- 我是有底线的哟 -  " offsetY:-3];
-    [self.tableView.mj_footer endRefreshingWithNoMoreData];
-}
+    self.tableView.mj_footer.hidden = NO;
+    if (hasMore) {
+        [self.tableView.mj_footer endRefreshing];
+    }else {
+        [self.refreshFooter setUpNoMoreDataText:@"- 我是有底线的哟 -  " offsetY:-3];
+        [self.tableView.mj_footer endRefreshingWithNoMoreData];
+    }
 }
 
 - (NSArray *)convertModel:(NSArray *)feedList{
@@ -314,7 +314,7 @@ if (hasMore) {
         if(indexPath.row < self.dataList.count){
             [cell refreshWithData:cellModel];
         }
-
+        
         return cell;
     }
     return [[FHUGCBaseCell alloc] init];
@@ -387,7 +387,7 @@ if (hasMore) {
 }
 
 - (void)clickRealtorPhone:(FHFeedUGCCellModel *)cellModel cell:(FHUGCBaseCell *)cell {
-     NSMutableDictionary *extraDict = self.tracerDic.mutableCopy;
+    NSMutableDictionary *extraDict = self.tracerDic.mutableCopy;
     extraDict[@"realtor_id"] = cellModel.realtor.realtorId;
     extraDict[@"realtor_rank"] = @"be_null";
     extraDict[@"realtor_logpb"] = cellModel.realtor.realtorLogpb;
@@ -426,9 +426,9 @@ if (hasMore) {
 
 - (void)clickRealtorHeader:(FHFeedUGCCellModel *)cellModel cell:(FHUGCBaseCell *)cell {
     if ([self.houseType integerValue] == FHHouseTypeSecondHandHouse) {
-            NSMutableDictionary *dict = [NSMutableDictionary dictionary];
-         dict[@"element_from"] = @"old_detail_related";
-         dict[@"enter_from"] = @"realtor_evaluate_list";
+        NSMutableDictionary *dict = [NSMutableDictionary dictionary];
+        dict[@"element_from"] = @"old_detail_related";
+        dict[@"enter_from"] = @"realtor_evaluate_list";
         [self.realtorPhoneCallModel jump2RealtorDetailWithPhone:cellModel.realtor isPreLoad:NO extra:dict];
     }
 }
