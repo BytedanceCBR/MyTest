@@ -96,6 +96,7 @@ typedef NS_ENUM(NSUInteger, FHRealtorCellShowStyle) {
 @property (nonatomic, copy , nullable) NSString *backgroundColor;
 @property (nonatomic, copy , nullable) NSString *fontColor;
 @property (nonatomic, copy , nullable) NSString *borderColor;
+@property (nonatomic, copy , nullable) NSString *prefixIconUrl;
 @end
 
 @interface FHClueAssociateInfoModel: JSONModel
@@ -254,22 +255,6 @@ typedef NS_ENUM(NSUInteger, FHRealtorCellShowStyle) {
 
 @protocol FHDetailCommunityEntryActiveInfoModel;
 
-@interface FHDetailCommunityEntryModel : JSONModel
-@property (nonatomic, assign) FHHouseShdowImageType shadowImageType;
-//是否裁剪阴影图
-@property (nonatomic, assign) FHHouseShdowImageScopeType shdowImageScopeType;
-//根据houseModelType将多个cell分为一个模块
-@property (nonatomic, assign)FHHouseModelType houseModelType;
-
-
-@property (nonatomic, copy , nullable) NSString *socialGroupId;
-@property (nonatomic, strong , nullable) FHDetailCommunityEntryActiveCountInfoModel *activeCountInfo;
-@property (nonatomic, strong , nullable) NSArray<FHDetailCommunityEntryActiveInfoModel> *activeInfo;
-@property (nonatomic, copy , nullable) NSString *socialGroupSchema;
-@property (nonatomic, assign) FHHouseType houseType;
-@property (nonatomic, copy) NSDictionary *logPb;
-@end
-
 @interface FHDetailGaodeImageModel : JSONModel
 @property (nonatomic, copy , nullable) NSString *url;
 @property (nonatomic, assign) NSInteger width;
@@ -277,7 +262,6 @@ typedef NS_ENUM(NSUInteger, FHRealtorCellShowStyle) {
 @property (nonatomic, copy , nullable) NSString *latRatio;
 @property (nonatomic, copy , nullable) NSString *lngRatio;
 @end
-
 
 @protocol FHVideoHouseVideoVideoInfosModel<NSObject>
 @end
@@ -291,7 +275,6 @@ typedef NS_ENUM(NSUInteger, FHRealtorCellShowStyle) {
 @property (nonatomic, assign) NSInteger vWidth;
 @property (nonatomic, copy , nullable) NSString *coverImageUrl;
 @end
-
 
 @interface FHVideoHouseVideoModel : JSONModel
 

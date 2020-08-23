@@ -25,8 +25,10 @@
 #import "FHEnvContext.h"
 #import "TTAccountManager.h"
 #import "FHMessageNotificationTipsManager.h"
-
+#import "FHMessageEditHelp.h"
 #import <ReactiveObjC/ReactiveObjC.h>
+#import "FHMessageEditView.h"
+#import "TestModel.h"
 
 #define kCellId @"FHMessageCell_id"
 
@@ -45,8 +47,7 @@
 
 @end
 
-@interface FHMessageViewModel () <IMChatStateObserver, UITableViewDelegate>
-@property(nonatomic, strong) FHConversationDataCombiner *combiner;
+@interface FHMessageViewModel () <UITableViewDelegate, UITableViewDataSource, SwipeTableViewCellDelegate>
 
 @property(nonatomic, strong) UITableView *tableView;
 @property(nonatomic, weak) FHMessageViewController *viewController;
@@ -55,7 +56,6 @@
 @property(nonatomic, assign) BOOL isFirstLoad;
 @property(nonatomic, strong) NSString *pageType;
 @property (nonatomic, copy)     NSString       *enterFrom;
-
 @property(nonatomic, strong) DeleteAlertDelegate *deleteAlertDelegate;
 
 @end
@@ -65,9 +65,7 @@
 - (instancetype)initWithTableView:(UITableView *)tableView controller:(FHMessageViewController *)viewController {
     self = [super init];
     if (self) {
-        self.combiner = [[FHConversationDataCombiner alloc] init];
-        _dataList = [[NSMutableArray alloc] init];
-        _isFirstLoad = self.combiner.isFirstLoad;
+        _isFirstLoad = NO;
         self.tableView = tableView;
 
         [tableView registerClass:[FHMessageCell class] forCellReuseIdentifier:kCellId];
@@ -76,28 +74,8 @@
         tableView.dataSource = self;
 
         self.viewController = viewController;
-        [[IMManager shareInstance] addChatStateObverver:self];
-        @weakify(self)
-        [[[[NSNotificationCenter defaultCenter] rac_addObserverForName:KUSER_UPDATE_NOTIFICATION object:nil] throttle:2] subscribeNext:^(NSNotification *_Nullable x) {
-            @strongify(self)
-            [self refreshConversationList];
-        }];
-        [[[[NSNotificationCenter defaultCenter] rac_addObserverForName:kTTMessageNotificationTipsChangeNotification object:nil] throttle:2] subscribeNext:^(NSNotification *_Nullable x) {
-            @strongify(self)
-            if([FHMessageNotificationTipsManager sharedManager].tipsModel){
-                [_combiner resetSystemChannels:self.dataList ugcUnreadMsg:[FHMessageNotificationTipsManager sharedManager].tipsModel];
-                [self.tableView reloadData];
-                return;
-            }
-        }];
     }
     return self;
-}
-
-- (void)refreshConversationList {
-    NSArray<IMConversation *> *allConversations = [[IMManager shareInstance].chatService allConversations];
-    [_combiner resetConversations:allConversations];
-    [self.tableView reloadData];
 }
 
 - (void)setPageType:(NSString *)pageType {
@@ -137,7 +115,7 @@
     BOOL isLogin = [IMManager shareInstance].isClientLogin;
     if(isLogin) {
         NSArray<IMConversation *> *allConversations = [[IMManager shareInstance].chatService allConversations];
-        [_combiner resetConversations:allConversations];
+        [self.viewController.fatherVC.combiner resetConversations:allConversations];
     };
     
     if (self.isFirstLoad) {
@@ -146,7 +124,7 @@
 
     self.isFirstLoad = NO;
 
-    if (error && [self.combiner allItems].count == 0) {
+    if (error && [self.viewController.fatherVC.combiner allItems].count == 0) {
         //TODO: show handle error
         [self.viewController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNetWorkError];
         [self clearBadgeNumber];
@@ -155,18 +133,27 @@
 
     [self.viewController.emptyView hideEmptyView];
 
-    self.dataList = [unreadMsg.data.unread mutableCopy];
-    [self.combiner resetSystemChannels:self.dataList ugcUnreadMsg:ugcUnread];
-    self.viewController.hasValidateData = self.dataList.count > 0;
+    self.viewController.fatherVC.dataList = [unreadMsg.data.unread mutableCopy];
+    [self.viewController.fatherVC.combiner resetSystemChannels:[self dataList] ugcUnreadMsg:ugcUnread];
+    self.viewController.hasValidateData = [self items].count > 0;
     [self checkShouldShowEmptyMaskView];
 }
 
+- (NSMutableArray *)dataList {
+    return self.viewController.fatherVC.dataList;
+}
+
 - (void)checkShouldShowEmptyMaskView {
-    if ([self.combiner allItems].count > 0) {
+    if (![TTAccount sharedAccount].isLogin && self.viewController.dataType == FHMessageRequestDataTypeIM) {
+        [self.viewController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoLogin];
+        [self clearBadgeNumber];
+        return;
+    }
+    if ([self items].count > 0) {
         [self.viewController.emptyView hideEmptyView];
-        [self.tableView reloadData];
+        [self reloadData];
     } else {
-        [self.viewController.emptyView showEmptyWithType:FHEmptyMaskViewTypeEmptyMessage];
+        [self.viewController.emptyView showEmptyWithType:FHEmptyMaskViewTypeEmptyChatMessage];
         [self clearBadgeNumber];
     }
 }
@@ -185,18 +172,35 @@
 #pragma mark - UITableViewDataSource
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return [_combiner numberOfItems];
+    return [[self items] count];
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     FHMessageCell *cell = [tableView dequeueReusableCellWithIdentifier:kCellId];
-    if ([[_combiner allItems] count] > indexPath.row) {
-        id model = [_combiner allItems][indexPath.row];
+    
+    if ([[self items] count] > indexPath.row) {
+        cell.swipeDelegate = self;
+        id model = [self items][indexPath.row];
         if ([model isKindOfClass:[FHUnreadMsgDataUnreadModel class]]) {
             [cell updateWithModel:model];
+            cell.isCanGesture = NO;
         } else {
             [cell updateWithChat:model];
+            cell.isCanGesture = YES;
         }
+        __weak typeof(self)wself = self;
+        cell.deleteConversation = ^(NSInteger index) {
+            if (index >= 0 && index < [wself items].count) {
+                [wself displayDeleteConversationConfirm:[wself items][index]];
+            }
+        };
+        cell.openEditTrack = ^(id data) {
+            [wself openEditTrack];
+        };
+        cell.stateIsClose = ^(id data) {
+            [wself reloadData];
+        };
+        cell.selectionStyle = UITableViewCellSelectionStyleNone;
     }
     return cell;
 }
@@ -214,11 +218,35 @@
     return 0.01f;
 }
 
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+- (FHConversationDataCombiner *)combiner {
+    return self.viewController.fatherVC.combiner;
+}
 
+- (NSArray *)items {
+    switch (self.viewController.dataType) {
+        case FHMessageRequestDataTypeIM:
+            return [[self combiner] conversationItems];
+            break;
+        case FHMessageRequestDataTypeSystem:
+            return [[self combiner] channelItems];
+            break;
+        default:
+            return nil;
+            break;
+    }
+    return nil;
+}
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    for (FHMessageCell *cell in self.tableView.visibleCells) {
+        if (!cell.isClose) {
+            [cell hiddenSwipeAnimationAtCell:YES];
+            return;
+        }
+    }
     [tableView deselectRowAtIndexPath:indexPath animated:NO];
-    if ([[_combiner allItems] count] > indexPath.row) {
-        id item = [_combiner allItems][indexPath.row];
+    if ([[self items] count] > indexPath.row) {
+        id item = [self items][indexPath.row];
         if ([item isKindOfClass:[FHUnreadMsgDataUnreadModel class]]) {
             FHUnreadMsgDataUnreadModel *theModel = item;
             if ([theModel.unread integerValue] > 0) {
@@ -258,65 +286,26 @@
     }
 }
 
-- (NSString *)tableView:(UITableView *)tableView titleForDeleteConfirmationButtonForRowAtIndexPath:(NSIndexPath *)indexPath {
-    return @"删除";
-}
-
-- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
-    if ([[_combiner allItems] count] > indexPath.row) {
-        id item = [_combiner allItems][indexPath.row];
-        if ([item isKindOfClass:[IMConversation class]]) {
-            return YES;
-        } else {
-            return NO;
-        }
-    } else {
-        return NO;
-    }
-}
-
-- (UITableViewCellEditingStyle)tableView:(UITableView *)tableView editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath {
-    if ([[_combiner allItems] count] > indexPath.row) {
-        id item = [_combiner allItems][indexPath.row];
-        if ([item isKindOfClass:[IMConversation class]]) {
-            return UITableViewCellEditingStyleDelete;
-        } else {
-            return UITableViewCellEditingStyleNone;
-        }
-    } else {
-        return UITableViewCellEditingStyleNone;
-    }
-}
-
-- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
-    if ([self.combiner allItems].count > indexPath.row) {
-        id conv = [self.combiner allItems][indexPath.row];
-        if ([conv isKindOfClass:[IMConversation class]]) {
-            [self displayDeleteConversationConfirm:conv];
-        }
-    }
-}
-
-- (UISwipeActionsConfiguration *)tableView:(UITableView *)tableView leadingSwipeActionsConfigurationForRowAtIndexPath:(NSIndexPath *)indexPath {
-    return nil;
-}
-
-- (UISwipeActionsConfiguration *)tableView:(UITableView *)tableView trailingSwipeActionsConfigurationForRowAtIndexPath:(NSIndexPath *)indexPath {
-    @weakify(self);
-    UIContextualAction *action = [UIContextualAction contextualActionWithStyle:UIContextualActionStyleNormal title:@"删除" handler:^(UIContextualAction *_Nonnull action, __kindof UIView *_Nonnull sourceView, void (^_Nonnull completionHandler)(BOOL)) {
-        @strongify(self);
-        completionHandler(YES);
-        if ([self.combiner allItems].count > indexPath.row) {
-            id conv = [self.combiner allItems][indexPath.row];
-            if ([conv isKindOfClass:[IMConversation class]]) {
-                [self displayDeleteConversationConfirm:conv];
+- (void)reloadData {
+    NSInteger chatNumber = 0;
+    NSInteger systemMessageNumber = 0;
+    BOOL hasChatRedPoint = NO;
+    for (IMConversation *conv in [[self combiner] conversationItems]) {
+        if (conv.mute) {
+            if (conv.unreadCount > 0) {
+                hasChatRedPoint = YES;
             }
+        } else {
+            chatNumber += conv.unreadCount;
         }
-    }];
-    action.backgroundColor = [UIColor colorWithRed:236 / 255.0 green:77 / 255.0 blue:61 / 255.0 alpha:1];
-    UISwipeActionsConfiguration *config = [UISwipeActionsConfiguration configurationWithActions:@[action]];
-    config.performsFirstActionWithFullSwipe = NO;
-    return config;
+    }
+    for (FHUnreadMsgDataUnreadModel *item in [[self combiner] channelItems]) {
+        systemMessageNumber += [item.unread integerValue];
+    }
+    if (self.viewController.updateRedPoint) {
+        self.viewController.updateRedPoint(chatNumber, hasChatRedPoint, systemMessageNumber);
+    }
+    [self.tableView reloadData];
 }
 
 - (id <FHMessageBridgeProtocol>)messageBridgeInstance {
@@ -373,6 +362,15 @@
     [alertView show];
 };
 
+- (NSString *)getPageTypeWithDataType{
+    if (self.viewController.dataType == FHMessageRequestDataTypeIM) {
+        return @"message_weiliao";
+    } else if (self.viewController.dataType == FHMessageRequestDataTypeSystem) {
+        return @"message_notice";
+    }
+    return @"message_list";
+}
+
 - (void)deleteConversation:(IMConversation *)conv {
     NSString *conversationId = conv.identifier;
     NSString *targetUserId = [conv getTargetUserId:[[TTAccount sharedAccount] userIdString]];
@@ -381,13 +379,16 @@
         if (error == nil) {
             [conv setDraft:nil];
             NSDictionary *params = @{
-                    @"page_type": _pageType,
-                    @"conversation_id": conversationId,
+                    @"page_type": [self getPageTypeWithDataType],
+                    //@"conversation_id": conversationId,
                     @"realtor_id": targetUserId,
-                    @"enter_from":self.enterFrom ?: @"be_null"
+                    @"click_position": @"delete",
+                    @"enter_from":@"message"
             };
-            [FHUserTracker writeEvent:@"delete_conversation" params:params];
+            //[FHUserTracker writeEvent:@"delete_conversation" params:params];
+            [FHUserTracker writeEvent:@"message_flip_click" params:params];
         }
+        
     }];
 }
 
@@ -403,10 +404,52 @@
     [FHUserTracker writeEvent:@"click_conversation" params:params];
 }
 
-- (void)conversationUpdated:(NSString *)conversationIdentifier {
-    NSArray<IMConversation *> *allConversations = [[IMManager shareInstance].chatService allConversations];
-    [_combiner resetConversations:allConversations];
-    [self checkShouldShowEmptyMaskView];
+- (void)openEditTrack {
+    NSDictionary *params = @{
+            @"page_type": [self getPageTypeWithDataType],
+            @"enter_from":@"message"
+    };
+    [FHUserTracker writeEvent:@"message_flip_show" params:params];
+}
+
+
+#pragma mark -- SwipeTableViewDelegate
+
+// cell的滑动样式
+- (SwipeTableCellStyle)tableView:(UITableView *)tableView styleOfSwipeButtonForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    return SwipeTableCellStyleRightToLeft;
+}
+
+- (NSArray<FHMessageSwipeButton *> *)tableView:(UITableView *)tableView rightSwipeButtonsAtIndexPath:(NSIndexPath *)indexPath
+{
+    FHMessageSwipeButton *deleteBtn = [FHMessageSwipeButton createSwipeButtonWithTitle:@"删除" font:16 textColor:[UIColor blackColor] backgroundColor:[UIColor redColor] image:[UIImage imageNamed:@"delete"] touchBlock:^{
+        
+        NSLog(@"点击了check按钮");
+    }];
+    deleteBtn.layer.cornerRadius = 10;
+    deleteBtn.layer.masksToBounds = YES;
+    deleteBtn.hidden = YES;
+    return @[deleteBtn];
+}
+
+
+// swipeView的弹出样式
+- (SwipeViewTransfromMode)tableView:(UITableView *)tableView swipeViewTransformModeAtIndexPath:(NSIndexPath *)indexPath
+{
+    return SwipeViewTransfromModeStatic;
+}
+
+// swipeButton 距上左下右的间距  注意不能刚给负值
+- (UIEdgeInsets)tableView:(UITableView *)tableView swipeButtonEdgeAtIndexPath:(NSIndexPath *)indexPath
+{
+
+    return UIEdgeInsetsZero;
+}
+
+- (void)dealloc
+{
+    
 }
 
 @end

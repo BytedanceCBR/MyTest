@@ -6,21 +6,21 @@
 //
 
 #import "FHDetailBaseCell.h"
-#import "FHDetailHeaderView.h"
-
+#import "FHDetailNewModel.h"
 NS_ASSUME_NONNULL_BEGIN
 
 @interface FHDetailNewHouseNewsCell : FHDetailBaseCell
-@property (nonatomic, strong) FHDetailHeaderView *headerView;
+
 @end
 
 @interface FHDetailNewHouseNewsCellModel : FHDetailBaseModel
 
-@property (nonatomic, assign) BOOL hasMore;
-@property (nonatomic, strong) NSString * titleText;
-@property (nonatomic, strong) NSString * courtId;
-@property (nonatomic, assign) BOOL clickEnable;
+@property (nonatomic, strong) FHDetailNewDataTimelineModel *timeLineModel;
 
+@end
+
+@interface FHDetailNewHouseNewsCellItemView : UIView
+- (void)newsViewShowWithData:(id)data;
 @end
 
 NS_ASSUME_NONNULL_END

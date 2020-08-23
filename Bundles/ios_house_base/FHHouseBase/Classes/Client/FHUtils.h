@@ -44,6 +44,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (NSString *)stringFromNSDate:(NSDate *)date;
 
++ (NSString *)ConvertStrToTime:(NSString *)date;
 /*
  周边加阴影，并且同时圆角，注意这个方法必须在view已经布局完成能够获得frame的情况下使用
  */

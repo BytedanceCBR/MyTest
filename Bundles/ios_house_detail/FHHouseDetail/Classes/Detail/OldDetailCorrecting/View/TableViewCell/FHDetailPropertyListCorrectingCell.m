@@ -77,8 +77,8 @@ extern NSString *const DETAIL_SHOW_POP_LAYER_NOTIFICATION ;
     if (count > 0) {
         NSMutableArray *singles = [NSMutableArray new];
         __block NSInteger doubleCount = 0;// 两列计数
-        __block CGFloat topOffset = model.shdowImageScopeType == FHHouseShdowImageScopeTypeTopAll?18:6;// 高度
-        __block CGFloat listRowHeight = 29;// 30
+        __block CGFloat topOffset = model.shdowImageScopeType == FHHouseShdowImageScopeTypeTopAll?18:0;// 高度
+        __block CGFloat listRowHeight = 28;// 30
         __block CGFloat lastViewLeftOffset = 20;
         __block CGFloat lastTopOffset = 20;
         CGFloat viewWidth = (UIScreen.mainScreen.bounds.size.width - 40) / 2;
@@ -132,7 +132,7 @@ extern NSString *const DETAIL_SHOW_POP_LAYER_NOTIFICATION ;
         // 添加单列数据
         if (singles.count > 0) {
             // 重新计算topOffset
-            topOffset = 6 + (doubleCount / 2 + doubleCount % 2) * listRowHeight;
+            topOffset = (doubleCount / 2 + doubleCount % 2) * listRowHeight;
             [singles enumerateObjectsUsingBlock:^(FHHouseCoreInfoModel*  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
                 FHPropertyListCorrectingRowView *v = [[FHPropertyListCorrectingRowView alloc] init];
                 v.valueLabel.font = [UIFont themeFontMedium:14];
@@ -150,7 +150,7 @@ extern NSString *const DETAIL_SHOW_POP_LAYER_NOTIFICATION ;
                 lastView = v;
                 lastViewLeftOffset = 20;
                 lastTopOffset = topOffset;
-                
+        
                 topOffset += listRowHeight;
             }];
         }
@@ -322,7 +322,7 @@ extern NSString *const DETAIL_SHOW_POP_LAYER_NOTIFICATION ;
     }
     
     [lastView mas_updateConstraints:^(MASConstraintMaker *make) {
-        make.bottom.mas_equalTo(self.shadowImage.mas_bottom).offset(-50);
+        make.bottom.mas_equalTo(self.shadowImage.mas_bottom).offset(-40);
     }];
     
     [self layoutIfNeeded];
@@ -368,8 +368,8 @@ extern NSString *const DETAIL_SHOW_POP_LAYER_NOTIFICATION ;
 - (void)setupUI {
     [self.shadowImage mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.right.equalTo(self.contentView);
-        make.top.equalTo(self.contentView).offset(-12);
-        make.bottom.equalTo(self.contentView).offset(12);
+        make.top.equalTo(self.contentView).offset(-14);
+        make.bottom.equalTo(self.contentView).offset(14);
     }];
 }
 

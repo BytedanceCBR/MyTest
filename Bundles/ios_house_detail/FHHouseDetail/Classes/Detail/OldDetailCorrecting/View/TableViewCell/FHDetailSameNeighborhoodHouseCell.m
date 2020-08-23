@@ -108,7 +108,7 @@
             [wSelf collectionDisplayCell:index];
         };
         [colView mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.top.mas_equalTo(20);
+            make.top.mas_equalTo(10);
             make.left.mas_equalTo(self.containerView).offset(15);
             make.right.mas_equalTo(self.containerView).offset(-15);
             make.bottom.mas_equalTo(self.containerView).offset(-10);
@@ -142,8 +142,8 @@
     [self.shadowImage mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(self.contentView);
         make.right.mas_equalTo(self.contentView);
-        make.top.equalTo(self.contentView).offset(-12);
-        make.bottom.equalTo(self.contentView).offset(12);
+        make.top.equalTo(self.contentView).offset(-14);
+        make.bottom.equalTo(self.contentView).offset(14);
     }];
     _headerView = [[FHDetailHeaderView alloc] init];
     _headerView.label.text = @"同小区房源";
@@ -153,7 +153,7 @@
     [self.headerView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(self.contentView).offset(15);
         make.right.mas_equalTo(self.contentView).offset(-15);
-        make.top.mas_equalTo(self.shadowImage).offset(30);
+        make.top.mas_equalTo(self.shadowImage).offset(20);
         make.height.mas_equalTo(46);
     }];
     [self.headerView addTarget:self action:@selector(moreButtonClick) forControlEvents:UIControlEventTouchUpInside];
@@ -163,7 +163,7 @@
     [_containerView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(self.headerView.mas_bottom);
         make.left.right.mas_equalTo(self.contentView);
-        make.bottom.mas_equalTo(self.shadowImage).offset(-32);
+        make.bottom.mas_equalTo(self.shadowImage).offset(-30);
     }];
 }
 

@@ -27,7 +27,7 @@
 #import "TTInstallIDManager.h"
 #import "ExploreExtenstionDataHelper.h"
 #import "TTModuleBridge.h"
-#import "FHHouseErrorHubManager.h"
+#import "FHErrorHubManagerUtil.h"
 #import "FHUGCShortVideoRealtorInfoModel.h"
 
 #define DEFULT_ERROR @"请求错误"
@@ -105,7 +105,9 @@
                 }
             }
             [FHMainApi addRequestLog:queryPath startDate:startDate backDate:backDate serializeDate:serDate resultType:resultType errorCode:code errorMsg:errMsg extra:extraDict exceptionDict:exceptionDict responseCode:responseCode];
-            [[FHHouseErrorHubManager sharedInstance] checkRequestResponseWithHost:url requestParams:paramDic responseStatus:response response:obj analysisError:backError changeModelType:resultType errorHubType:FHErrorHubTypeRequest];
+//            [[FHHouseErrorHubManager sharedInstance] checkRequestResponseWithHost:url requestParams:paramDic responseStatus:response response:obj analysisError:backError changeModelType:resultType errorHubType:FHErrorHubTypeRequest];
+             [FHErrorHubManagerUtil checkRequestResponseWithHost:url requestParams:paramDic responseStatus:response response:obj analysisError:backError changeModelType:resultType];
+            
             if (completion) {
                 dispatch_async(dispatch_get_main_queue(), ^{
                     completion(model,backError);
@@ -217,7 +219,8 @@
                 }
             }
             [FHMainApi addRequestLog:requestLogPath startDate:startDate backDate:backDate serializeDate:serDate resultType:resultType errorCode:code errorMsg:errMsg extra:extraDict exceptionDict:exceptionDict responseCode:responseCode];
-            [[FHHouseErrorHubManager sharedInstance] checkRequestResponseWithHost:queryPath requestParams:paramDic responseStatus:response response:obj analysisError:backError changeModelType:resultType errorHubType:FHErrorHubTypeRequest];
+//            [[FHHouseErrorHubManager sharedInstance] checkRequestResponseWithHost:queryPath requestParams:paramDic responseStatus:response response:obj analysisError:backError changeModelType:resultType errorHubType:FHErrorHubTypeRequest];
+             [FHErrorHubManagerUtil checkRequestResponseWithHost:queryPath requestParams:paramDic responseStatus:response response:obj analysisError:backError changeModelType:resultType];
             if (completion) {
                 dispatch_async(dispatch_get_main_queue(), ^{
                     completion(model, backError);

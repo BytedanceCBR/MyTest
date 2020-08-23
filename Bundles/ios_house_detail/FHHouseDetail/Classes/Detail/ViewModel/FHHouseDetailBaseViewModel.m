@@ -22,7 +22,7 @@
 #import <TTReachability/TTReachability.h>
 #import "FHDetailQuestionPopView.h"
 #import "FHDetailMediaHeaderCorrectingCell.h"
-#import "FHHouseErrorHubManager.h"
+#import "FHErrorHubManagerUtil.h"
 #import <Heimdallr/HMDTTMonitor.h>
 #import <TTInstallService/TTInstallUtil.h>
 
@@ -256,11 +256,12 @@
         id data = self.items[row];
         NSString *identifier = NSStringFromClass([data class]);//[self cellIdentifierForEntity:data];
         if (identifier.length > 0) {
-            FHDetailBaseCell *cell = (FHDetailBaseCell *)[tableView dequeueReusableCellWithIdentifier:identifier];
+            FHDetailBaseCell *cell = (FHDetailBaseCell *)[tableView dequeueReusableCellWithIdentifier:identifier forIndexPath:indexPath];
             if (self.houseType == FHHouseTypeSecondHandHouse || self.houseType == FHHouseTypeNeighborhood || self.houseType == FHHouseTypeNewHouse) {
                 cell.backgroundColor = [UIColor clearColor];
             }
             if (cell) {
+                cell.frame = CGRectMake(0, 0, tableView.frame.size.width, cell.frame.size.height);
                 cell.baseViewModel = self;
                 [cell refreshWithData:data];
                 return cell;
@@ -351,9 +352,9 @@
             if ([element_type isEqualToString:@"building"]) {
                 tracerDic[@"event_tracking_id"] = @"70949";
             }
-            
+//            tracerDic[@"event_id"] = @"70949";
             [FHUserTracker writeEvent:@"element_show" params:tracerDic];
-            [[FHHouseErrorHubManager sharedInstance] checkBuryingPointWithEvent:@"element_show" Params:tracerDic errorHubType:FHErrorHubTypeBuryingPoint];
+            [FHErrorHubManagerUtil checkBuryingPointWithEvent:@"element_show" Params:tracerDic];
         }
         NSArray *element_array = [tempCell elementTypeStringArray:self.houseType];
         if (element_array.count > 0) {

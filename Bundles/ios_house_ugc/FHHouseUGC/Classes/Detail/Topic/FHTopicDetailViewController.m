@@ -768,6 +768,7 @@
 
 -(void)addGoDetailLog {
     NSMutableDictionary *tracerDict = self.tracerDict.mutableCopy;
+    tracerDict[@"event_tracking_id"] = @"89240";
     [FHUserTracker writeEvent:@"go_detail" params:tracerDict];
 }
 
@@ -778,6 +779,7 @@
     }
     NSMutableDictionary *tracerDict = self.tracerDict.mutableCopy;
     tracerDict[@"stay_time"] = [NSNumber numberWithInteger:duration];
+    tracerDict[@"event_tracking_id"] = @"89242";
     [FHUserTracker writeEvent:@"stay_page" params:tracerDict];
     [self tt_resetStayTime];
 }

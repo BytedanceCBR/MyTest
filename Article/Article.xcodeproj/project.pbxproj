@@ -722,7 +722,6 @@
 		A8A57F531B16F44D00783AA9 /* Resource */ = {
 			isa = PBXGroup;
 			children = (
-				170182F624597A3F00334E1B /* buryingPointCheck.json */,
 				FB6C55C923ACD41700651456 /* fireworks */,
 				FBA5892023AB64D20053EC79 /* introduce */,
 				D37495DE23965409006D44D2 /* gaode_house_detail_style_extra.data */,
@@ -1033,7 +1032,6 @@
 				FBA5894323AB872A0053EC79 /* introduce_1.json in Resources */,
 				B373CEA62174587A008F9905 /* Weather.xcassets in Resources */,
 				FBA5894223AB87270053EC79 /* introduce_2.json in Resources */,
-				170182F824597A3F00334E1B /* buryingPointCheck.json in Resources */,
 				3D2F39982270545700AE567D /* TargetLogicSetting.strings in Resources */,
 				D48E93C2233CF142005A42CD /* VRImageLoading.json in Resources */,
 				B373CEAA2174587A008F9905 /* sound3.caf in Resources */,
@@ -1102,7 +1100,6 @@
 				3D721A9F218FE7FA006C1156 /* gaode_map_style.data in Resources */,
 				FB6C55CF23ACD41800651456 /* firework.json in Resources */,
 				D37495E223965409006D44D2 /* gaode_house_detail_style.data in Resources */,
-				170182F724597A3F00334E1B /* buryingPointCheck.json in Resources */,
 				3DB49F8E2265E34900A0780E /* ProjectNightModeThemeUISetting.strings in Resources */,
 				7623E3B12275EAEE009AD3D4 /* TTVPlayerStyle.plist in Resources */,
 				3D7D2F3D22704CAA00A95FAF /* Icon.png in Resources */,
@@ -1848,11 +1845,12 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer: Created via API (7PZDQUF8CS)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Created via API (7PZDQUF8CS)";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 7.0.5.0;
+				CURRENT_PROJECT_VERSION = 7.0.6.0;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEPLOYMENT_POSTPROCESSING = YES;
 				DEVELOPMENT_TEAM = 7HSS6X2323;
 				ENABLE_BITCODE = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				EXCLUDED_SOURCE_FILE_NAMES = "";
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -1900,7 +1898,7 @@
 					"$(PROJECT_DIR)/Libs/MZSDk",
 				);
 				LLVM_LTO = NO;
-				MARKETING_VERSION = 1.0.5;
+				MARKETING_VERSION = 1.0.6;
 				ONLY_ACTIVE_ARCH = YES;
 				ORDER_FILE = "$(SRCROOT)/order_file.txt";
 				OTHER_LDFLAGS = "$(inherited)";
@@ -1937,10 +1935,11 @@
 				CODE_SIGN_IDENTITY = "iPhone Distribution: Beijing Wuxian Guangchang Technology Co., Ltd. (7HSS6X2323)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Beijing Wuxian Guangchang Technology Co., Ltd. (7HSS6X2323)";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 7.0.5.0;
+				CURRENT_PROJECT_VERSION = 7.0.6.0;
 				DEPLOYMENT_POSTPROCESSING = YES;
 				DEVELOPMENT_TEAM = 7HSS6X2323;
 				ENABLE_BITCODE = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				EXCLUDED_SOURCE_FILE_NAMES = (
 					"TTNetworkStub.*",
 					"TTNetworkStubSwitchViewController.*",
@@ -1994,7 +1993,7 @@
 					"$(PROJECT_DIR)/Libs/MZSDk",
 				);
 				LLVM_LTO = YES_THIN;
-				MARKETING_VERSION = 1.0.5;
+				MARKETING_VERSION = 1.0.6;
 				ONLY_ACTIVE_ARCH = NO;
 				ORDER_FILE = "$(SRCROOT)/order_file.txt";
 				OTHER_LDFLAGS = "$(inherited)";
@@ -2030,11 +2029,12 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer: Gong Rui (3VB7F2P4T4)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Gong Rui (3VB7F2P4T4)";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 7.0.5.0;
+				CURRENT_PROJECT_VERSION = 7.0.6.0;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEPLOYMENT_POSTPROCESSING = YES;
 				DEVELOPMENT_TEAM = X46375UBYG;
 				ENABLE_BITCODE = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				EXCLUDED_SOURCE_FILE_NAMES = "";
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -2082,7 +2082,7 @@
 					"$(PROJECT_DIR)/Libs/MZSDk",
 				);
 				LLVM_LTO = NO;
-				MARKETING_VERSION = 1.0.5;
+				MARKETING_VERSION = 1.0.6;
 				ONLY_ACTIVE_ARCH = YES;
 				ORDER_FILE = "$(SRCROOT)/order_file.txt";
 				OTHER_LDFLAGS = "$(inherited)";
@@ -2120,11 +2120,12 @@
 				CODE_SIGN_IDENTITY = "iPhone Distribution: Beijing Bytedance Network Technology Co,Ltd.";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Beijing Bytedance Network Technology Co,Ltd.";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 7.0.5.0;
+				CURRENT_PROJECT_VERSION = 7.0.6.0;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEPLOYMENT_POSTPROCESSING = YES;
 				DEVELOPMENT_TEAM = X46375UBYG;
 				ENABLE_BITCODE = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				EXCLUDED_SOURCE_FILE_NAMES = (
 					"TTNetworkStub.*",
 					"TTNetworkStubSwitchViewController.*",
@@ -2179,7 +2180,7 @@
 					"$(PROJECT_DIR)/Libs/MZSDk",
 				);
 				LLVM_LTO = YES_THIN;
-				MARKETING_VERSION = 1.0.5;
+				MARKETING_VERSION = 1.0.6;
 				ONLY_ACTIVE_ARCH = NO;
 				ORDER_FILE = "$(SRCROOT)/order_file.txt";
 				OTHER_LDFLAGS = "$(inherited)";
