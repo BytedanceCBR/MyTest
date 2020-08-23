@@ -372,7 +372,8 @@
             pictureDetailViewController.isShowSegmentView = NO;
         }
     }else if ([self.baseViewModel.detailData isKindOfClass:[FHDetailNeighborhoodModel class]]) {
-        FHDetailNeighborhoodModel *model = (FHDetailOldModel *)self.baseViewModel.detailData;
+        FHDetailNeighborhoodModel *model = (FHDetailNeighborhoodModel *)self.baseViewModel.detailData;
+        pictureDetailViewController.isShowBottomBar = NO;
     } else if ([self.baseViewModel.detailData isKindOfClass:[FHDetailFloorPanDetailInfoModel class]]) {
         //户型详情
         FHDetailFloorPanDetailInfoModel *model = (FHDetailFloorPanDetailInfoModel *)self.baseViewModel.detailData;
@@ -431,7 +432,7 @@
     //如果是小区，移除按钮 或者户型详情页也移除按钮
     //099 户型详情页 显示底部按钮
     
-    if (vedioModel.cellHouseType == FHMultiMediaCellHouseNeiborhood) {// || model.titleDataModel.isFloorPan
+    if (vedioModel && vedioModel.cellHouseType == FHMultiMediaCellHouseNeiborhood) {// || model.titleDataModel.isFloorPan
         pictureDetailViewController.isShowBottomBar = NO;
     }
     if (model.titleDataModel.isFloorPan && model.titleDataModel.titleStr.length) {
