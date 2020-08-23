@@ -273,7 +273,7 @@
     }
 }
 
-+ (CGFloat)heightForData:(id)data{
++ (CGFloat)heightForData:(id)data {
     if([data isKindOfClass:[FHFeedUGCCellModel class]]){
         FHFeedUGCCellModel *cellModel = (FHFeedUGCCellModel *)data;
         CGFloat height;
