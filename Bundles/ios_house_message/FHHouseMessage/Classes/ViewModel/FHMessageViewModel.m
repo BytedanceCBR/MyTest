@@ -365,11 +365,12 @@
 
 - (void)deleteConversation:(IMConversation *)conv {
     NSString *conversationId = conv.identifier;
-    NSString *targetUserId = [conv getTargetUserId:[[TTAccount sharedAccount] userIdString]];
-    NSDictionary *params = @{@"a:c_del": (conv.lastMessageIdentifier ? conv.lastMessageIdentifier : @"del_empty_conver")};
+    IMConversation *latestConversation = [[IMManager shareInstance].chatService conversationWithIdentifier:conversationId];
+    NSString *targetUserId = [latestConversation getTargetUserId:[[TTAccount sharedAccount] userIdString]];
+    NSDictionary *params = @{@"a:c_del": (latestConversation.lastMessageIdentifier ? latestConversation.lastMessageIdentifier : @"del_empty_conver")};
     [conv setSyncExtEntry:params completion:^(id _Nullable response, NSError *_Nullable error) {
         if (error == nil) {
-            [conv setDraft:nil];
+            [latestConversation setDraft:nil];
             NSDictionary *params = @{
                     @"page_type": [self getPageTypeWithDataType],
                     //@"conversation_id": conversationId,
