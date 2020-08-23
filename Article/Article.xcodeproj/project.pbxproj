@@ -1860,8 +1860,8 @@
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CODE_SIGN_ENTITLEMENTS = com.f100.client.FHNotificationServiceExtension/com.f100.client.FHNotificationServiceExtension.entitlements;
-				CODE_SIGN_IDENTITY = "iPhone Distribution: Beijing Wuxian Guangchang Technology Co., Ltd. (7HSS6X2323)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Beijing Wuxian Guangchang Technology Co., Ltd. (7HSS6X2323)";
+				CODE_SIGN_IDENTITY = "Apple Distribution: Beijing Wuxian Guangchang Technology Co., Ltd. (7HSS6X2323)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "Apple Distribution: Beijing Wuxian Guangchang Technology Co., Ltd. (7HSS6X2323)";
 				CODE_SIGN_STYLE = Manual;
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
@@ -1990,8 +1990,8 @@
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CODE_SIGN_ENTITLEMENTS = News/News.entitlements;
-				CODE_SIGN_IDENTITY = "iPhone Distribution: Beijing Wuxian Guangchang Technology Co., Ltd. (7HSS6X2323)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Beijing Wuxian Guangchang Technology Co., Ltd. (7HSS6X2323)";
+				CODE_SIGN_IDENTITY = "Apple Distribution: Beijing Wuxian Guangchang Technology Co., Ltd. (7HSS6X2323)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "Apple Distribution: Beijing Wuxian Guangchang Technology Co., Ltd. (7HSS6X2323)";
 				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 7.0.5.0;
 				DEPLOYMENT_POSTPROCESSING = YES;
