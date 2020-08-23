@@ -150,14 +150,14 @@
                 //                wself.viewController.showenRetryButton = YES;
                 wself.refreshFooter.hidden = YES;
             }
-            NSString *refreshTip;
+            NSString *refreshTip = @"";
             if (result.count>0) {
                 refreshTip = [NSString stringWithFormat:@"已为您更新 %ld 条数据",result.count];
             }else {
                 refreshTip = @"暂无新内容";
             }
             [wself.tableView reloadData];
-            if (isHead && ![refreshTip isEqualToString:@""] && !wself.isRefreshingTip){
+            if (isHead && refreshTip.length >0 && !wself.isRefreshingTip){
                 wself.isRefreshingTip = YES;
                 [wself.listController showNotify:refreshTip completion:^{
                     dispatch_async(dispatch_get_main_queue(), ^{
