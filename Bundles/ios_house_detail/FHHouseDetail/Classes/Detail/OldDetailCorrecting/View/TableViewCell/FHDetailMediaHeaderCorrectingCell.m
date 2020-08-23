@@ -478,6 +478,11 @@
     }
     pictureDetailViewController.indexUpdatedBlock = ^(NSInteger lastIndex, NSInteger currentIndex) {
         if (currentIndex >= 0 && currentIndex < weakSelf.model.medias.count) {
+            if(weakSelf.baiduPanoramaIndex != -1) {
+                if(currentIndex >= weakSelf.baiduPanoramaIndex){
+                    currentIndex = currentIndex + 1;
+                }
+            }
             weakSelf.currentIndex = currentIndex;
             weakSelf.isLarge = YES;
             
