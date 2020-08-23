@@ -75,10 +75,10 @@
         [self.listController startLoading];
     }
     __weak typeof(self) wself = self;
-    if(self.isRefreshingTip){
-        [self.tableView finishPullDownWithSuccess:YES];
-        return;
-    }
+//    if(self.isRefreshingTip){
+//        [self.tableView finishPullDownWithSuccess:YES];
+//        return;
+//    }
     NSInteger listCount = self.dataList.count;
     if(isFirst){
         listCount = 0;

@@ -192,12 +192,13 @@
             if(isFirst){
                 [wself.listController endLoading];
                 if(error.code != -999){
-                    [wself.listController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNetWorkError];
-                    wself.listController.showenRetryButton = YES;
+                                    [wself.listController.emptyView showEmptyWithTip:@"网络异常，请检查网络连接" errorImageName:kFHErrorMaskNoNetWorkImageName showRetry:YES];
+//                    [wself.listController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNetWorkError];
+//                    wself.listController.showenRetryButton = YES;
                     wself.refreshFooter.hidden = YES;
                 }
             }else{
-                [wself.listController.emptyView showEmptyWithTip:@"网络异常，请检查网络连接" errorImageName:kFHErrorMaskNetWorkErrorImageName showRetry:NO];
+                [wself.listController.emptyView showEmptyWithTip:@"网络异常，请检查网络连接" errorImageName:kFHErrorMaskNoNetWorkImageName showRetry:NO];
                      wself.refreshFooter.hidden = YES;
                 [[ToastManager manager] showToast:@"网络异常"];
                 [wself updateTableViewWithMoreData:YES];
