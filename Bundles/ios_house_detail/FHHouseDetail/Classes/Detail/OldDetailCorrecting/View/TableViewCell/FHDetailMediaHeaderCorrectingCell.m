@@ -137,7 +137,7 @@
         rectHeight = [UIFont themeFontMedium:24].lineHeight * ((titleModel.housetype == FHHouseTypeNeighborhood || titleModel.isFloorPan)? 1: 2);
     }
     
-    _photoCellHeight += 30 + rectHeight - 21;//30是标题具体顶部的距离，21是重叠的41减去透明阴影的20 (21 = 41 - 20)
+    _photoCellHeight += 20 + rectHeight - 21;//20是标题具体顶部的距离，21是重叠的41减去透明阴影的20 (21 = 41 - 20)
     
     if (titleModel.tags.count>0) {
         //这里分别加上标签高度20，标签间隔20
@@ -158,7 +158,7 @@
     }
     
     [self.mediaView mas_updateConstraints:^(MASConstraintMaker *make) {
-        make.height.mas_offset(_photoCellHeight);
+        make.height.mas_offset(self.photoCellHeight);
     }];
 }
 - (NSDictionary *)tracerDic {
@@ -199,7 +199,7 @@
     }];
 }
 
-- (void)generateModel {
+- (void)generateModel {                                                  //外部图片滑动的数据处理   -> 外部collectionView
     self.model = [[FHMultiMediaModel alloc] init];
     NSMutableArray *itemArray = [NSMutableArray array];
     NSArray *houseImageDict = ((FHDetailMediaHeaderCorrectingModel *)self.currentData).houseImageDictList;
@@ -372,7 +372,8 @@
             pictureDetailViewController.isShowSegmentView = NO;
         }
     }else if ([self.baseViewModel.detailData isKindOfClass:[FHDetailNeighborhoodModel class]]) {
-        FHDetailNeighborhoodModel *model = (FHDetailOldModel *)self.baseViewModel.detailData;
+        FHDetailNeighborhoodModel *model = (FHDetailNeighborhoodModel *)self.baseViewModel.detailData;
+        pictureDetailViewController.isShowBottomBar = NO;
     } else if ([self.baseViewModel.detailData isKindOfClass:[FHDetailFloorPanDetailInfoModel class]]) {
         //户型详情
         FHDetailFloorPanDetailInfoModel *model = (FHDetailFloorPanDetailInfoModel *)self.baseViewModel.detailData;
@@ -431,7 +432,7 @@
     //如果是小区，移除按钮 或者户型详情页也移除按钮
     //099 户型详情页 显示底部按钮
     
-    if (vedioModel.cellHouseType == FHMultiMediaCellHouseNeiborhood) {// || model.titleDataModel.isFloorPan
+    if (vedioModel && vedioModel.cellHouseType == FHMultiMediaCellHouseNeiborhood) {// || model.titleDataModel.isFloorPan
         pictureDetailViewController.isShowBottomBar = NO;
     }
     if (model.titleDataModel.isFloorPan && model.titleDataModel.titleStr.length) {
@@ -485,7 +486,7 @@
             {
                 vrOffset = 1;
             }
-            NSIndexPath * indexPath = [NSIndexPath indexPathForRow:currentIndex + 1 + vrOffset inSection:0];
+            NSIndexPath * indexPath = [NSIndexPath indexPathForRow:currentIndex + !model.isShowTopImageTab + vrOffset inSection:0];
             [weakSelf.mediaView scrollToItemAtIndexPath:indexPath atScrollPosition:UICollectionViewScrollPositionLeft animated:NO];
             [weakSelf.mediaView updateItemAndInfoLabel];
             [weakSelf.mediaView updateVideoState];

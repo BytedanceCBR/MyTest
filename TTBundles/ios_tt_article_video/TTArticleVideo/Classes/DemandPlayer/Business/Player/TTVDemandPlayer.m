@@ -18,7 +18,6 @@
 #import <ReactiveObjC/ReactiveObjC.h>
 #import "TTSharePanelTransformMessage.h"
 #import "TTVPasterPlayer.h"
-#import "TTVVideoPlayerView.h"
 #import "TTVPasterADURLRequestInfo.h"
 #import "TTVPlayerBackgroundManager.h"
 #import "TTVPasterADViewController.h"
@@ -71,7 +70,6 @@ extern BOOL ttvs_isDoubleTapForDiggEnabled(void);
 @property (nonatomic, strong) TTVPasterPlayer *pasterPlayer;
 @property (nonatomic, strong) TTVMidInsertADPlayer *midInsertADPlayer;
 @property (nonatomic, strong) UIView<TTVADGuideCountdownViewProtocol> *guideCountdownView;
-@property (nonatomic, strong) TTVVideoPlayerView *playerView;
 @property (nonatomic, strong) TTVVideoPlayerViewShareCointainerView *shareCointainerView;
 @property (nonatomic, strong) LOTAnimationView *doubleTap666AnimationView;
 @property (nonatomic, strong) TTVPlayerBackgroundManager *backgroundManager;

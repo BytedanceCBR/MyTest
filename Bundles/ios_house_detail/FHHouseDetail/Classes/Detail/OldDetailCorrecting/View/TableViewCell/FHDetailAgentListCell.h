@@ -17,31 +17,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
-@interface FHDetailAgentItemView : UIControl
-
-@property (nonatomic, strong)   UIImageView *avator;
-@property(nonatomic , strong)   UIImageView *identifyView;
-@property (nonatomic, strong)   UIButton    *licenceIcon;
-@property (nonatomic, strong)   UIButton    *callBtn;
-@property (nonatomic, strong)   UIButton    *imBtn;
-@property (nonatomic, strong)   UILabel     *name;
-@property (nonatomic, strong)   UILabel     *agency;
-@property (nonatomic, strong)   UIImageView *agencyBac;
-@property (nonatomic, strong)   UILabel     *score;
-@property (nonatomic, strong)   UILabel     *scoreDescription;
-@property (nonatomic, strong)   UILabel     *realtorEvaluate;  // 话术
-@property (nonatomic, strong)   UIView      *agencyDescriptionBac;
-@property (nonatomic, strong)   UILabel     *agencyDescriptionLabel;//公司介绍
-
-
--(instancetype)initWithModel:(FHDetailContactModel *)model;
-
--(void)configForLicenceIconWithHidden:(BOOL)isHidden;
-
-@end
-
-// FHDetailAgentListModel
-
 @interface FHDetailAgentListModel : FHDetailBaseModel
 
 @property (nonatomic, weak)     UITableView       *tableView;

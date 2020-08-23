@@ -154,9 +154,6 @@
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     [self.contactViewModel refreshMessageDot];
-    if (![FHEnvContext isNetworkConnected]) {
-        [self.contactViewModel hideFollowBtn];
-    }
 }
 
 - (void)setupUI
@@ -226,12 +223,12 @@
     }];
 }
 
-- (UIView *)getNaviBar
+- (FHDetailNavBar *)getNaviBar
 {
     return self.navBar;
 }
 
-- (UIView *)getBottomBar
+- (FHDetailBottomBar *)getBottomBar
 {
     return self.bottomBar;
 }

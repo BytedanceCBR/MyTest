@@ -50,7 +50,7 @@
     self.titleLabel.width = [UIScreen mainScreen].bounds.size.width - 127 - 30;
     [self.titleLabel sizeToFit];
     CGFloat titleHeight  = floor(self.titleLabel.height);
-    CGFloat bottomOffset = 28;
+    CGFloat bottomOffset = 16;
     CGFloat topOffset = 0;
     if (titleHeight < 44) {
         topOffset = (44 - titleHeight) / 2;
@@ -76,8 +76,8 @@
     [self.shadowImage mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(self.contentView);
         make.right.mas_equalTo(self.contentView);
-        make.top.equalTo(self.contentView).offset(-12);
-        make.bottom.equalTo(self.contentView).offset(12);
+        make.top.equalTo(self.contentView).offset(-14);
+        make.bottom.equalTo(self.contentView).offset(14);
     }];
     self.containerView.backgroundColor = [UIColor whiteColor];
     [self.containerView mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -93,7 +93,7 @@
         make.top.mas_equalTo(0);
     }];
     [self.mapBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.topLine.mas_bottom).mas_offset(28);
+        make.top.mas_equalTo(self.topLine.mas_bottom).mas_offset(16);
         make.left.mas_equalTo(15);
         make.width.height.mas_equalTo(44);
     }];
@@ -101,7 +101,7 @@
         make.top.equalTo(self.mapBtn);
         make.left.mas_equalTo(self.mapBtn.mas_right).mas_offset(15);
         make.right.mas_equalTo(self.rightArrow.mas_left).mas_offset(-15);
-        make.bottom.mas_equalTo(-28);
+        make.bottom.mas_equalTo(-16);
         make.height.mas_equalTo(0);
     }];
     [self.rightArrow mas_makeConstraints:^(MASConstraintMaker *make) {

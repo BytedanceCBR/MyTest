@@ -76,18 +76,18 @@
 - (void)setupUI {
     [self.shadowImage mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.right.equalTo(self.contentView);
-        make.top.equalTo(self.contentView).offset(-12);
-        make.bottom.equalTo(self.contentView).offset(12);
+        make.top.equalTo(self.contentView).offset(-14);
+        make.bottom.equalTo(self.contentView).offset(14);
     }];
     _houseShowCache = [NSMutableDictionary new];
     _containerView = [[UIView alloc] init];
     _containerView.clipsToBounds = YES;
     [self.contentView addSubview:_containerView];
     [_containerView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.shadowImage).mas_offset(30);
+        make.top.mas_equalTo(self.shadowImage).mas_offset(20);
         make.left.mas_equalTo(self.shadowImage).mas_offset(15);
         make.right.mas_equalTo(self.shadowImage).mas_offset(-15);
-        make.bottom.mas_equalTo(self.shadowImage).mas_offset(-30);
+        make.bottom.mas_equalTo(self.shadowImage).mas_offset(-20);
     }];
     UITableView *tv = [[UITableView alloc] initWithFrame:CGRectZero style:UITableViewStylePlain];
     tv.estimatedRowHeight = 104;

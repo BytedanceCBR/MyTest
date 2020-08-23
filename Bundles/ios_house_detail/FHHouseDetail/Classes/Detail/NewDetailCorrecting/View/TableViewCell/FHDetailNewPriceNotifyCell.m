@@ -52,8 +52,8 @@
     [self.shadowImage mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(self.contentView);
         make.right.mas_equalTo(self.contentView);
-        make.top.equalTo(self.contentView).offset(-12);
-        make.bottom.equalTo(self.contentView).offset(12);
+        make.top.equalTo(self.contentView).offset(-14);
+        make.bottom.equalTo(self.contentView).offset(14);
     }];
     [self.containerView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(self.contentView).mas_offset(15);
@@ -66,7 +66,7 @@
         make.right.mas_equalTo(-15);
         make.height.mas_equalTo(45);
         make.top.equalTo(0);
-        make.bottom.mas_equalTo(-30);
+        make.bottom.mas_equalTo(-20);
     }];
     _priceChangedNotify = [UIButton buttonWithType:UIButtonTypeCustom];
     _priceChangedNotify.titleLabel.font = [UIFont themeFontRegular:16];

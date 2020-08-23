@@ -174,9 +174,11 @@
     }
     NSInteger index = (int)tabIndex;
     if (index != self.listController.segmentControl.selectedSegmentIndex) {
-        self.currentTabIndex = index;
-        self.listController.segmentControl.selectedSegmentIndex = index;
-        self.listController.houseType = [self.listController.houseTypeArray[index] integerValue];
+        if (index >= 0 && index < [self.listController.houseTypeArray count]) {
+            self.currentTabIndex = index;
+            self.listController.segmentControl.selectedSegmentIndex = index;
+            self.listController.houseType = [self.listController.houseTypeArray[index] integerValue];
+        }
     } else {
         //加载数据
         CGFloat value = scrollDistance/[UIScreen mainScreen].bounds.size.width;

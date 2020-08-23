@@ -77,16 +77,31 @@ static FHCombineChannelSingleton* _instance;
     return _items;
 }
 
+- (NSArray *)conversationItems {
+    return _conversations;
+}
+
+- (NSArray *)channelItems {
+    return _channels;
+}
+
 -(void)resetAllItems {
     NSMutableArray<id<ConversationComparable>>* theItems = [NSMutableArray arrayWithArray:_conversations];
     if(self.channels.count == 0 && [FHCombineChannelSingleton shareInstance].combineChannels.count > 0) {
         self.channels = [FHCombineChannelSingleton shareInstance].combineChannels;
     }
     [theItems addObjectsFromArray:_channels];
+    self.items = [self sortItems:theItems];
+    self.conversations = [self sortItems:self.conversations];
+    self.channels = [self sortItems:self.channels];
+}
+
+- (NSArray *)sortItems:(NSArray *)items {
+    NSMutableArray<id<ConversationComparable>>* theItems = [NSMutableArray arrayWithArray:items];
     NSArray* result = [theItems sortedArrayUsingComparator:^NSComparisonResult(id<ConversationComparable>  _Nonnull obj1, id<ConversationComparable>  _Nonnull obj2) {
         return [FHConversationDataCombiner conversationComparison:obj1 toOther:obj2];
     }];
-    self.items = result;
+    return result;
 }
 
 -(NSInteger)numberOfItems {

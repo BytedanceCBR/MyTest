@@ -15,6 +15,7 @@
 #import "FHUGCFeedDetailJumpManager.h"
 #import "FHRealtorEvaluatingPhoneCallModel.h"
 #import "FHRealtorEvaluatingTracerHelper.h"
+#import "FHHouseDeatilRGCImageCell.h"
 @interface  FHhouseDetailRGCListCell ()<UITableViewDelegate,UITableViewDataSource,FHUGCBaseCellDelegate>
 @property (nonatomic , strong) NSMutableArray *dataList;
 @property (nonatomic , strong) UITableView *tableView;
@@ -49,8 +50,8 @@
 - (void)setupUI {
     [self.shadowImage mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.right.equalTo(self.contentView);
-        make.top.equalTo(self.contentView).offset(-12);
-        make.bottom.equalTo(self.contentView).offset(12);
+        make.top.equalTo(self.contentView).offset(-14);
+        make.bottom.equalTo(self.contentView).offset(14);
     }];
     _containerView = [[UIView alloc] init];
     _containerView.clipsToBounds = YES;
@@ -92,14 +93,14 @@
     }];
     
     [_headerView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.equalTo(self.containerView).offset(10);
+        make.top.equalTo(self.containerView);
         make.left.mas_equalTo(self.containerView).offset(15);
         make.right.mas_equalTo(self.containerView).offset(-15);
         make.height.mas_equalTo(65);
     }];
     
     [_tableView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.headerView.mas_bottom);
+        make.top.mas_equalTo(self.headerView.mas_bottom).offset(-8);
         make.left.mas_equalTo(self.containerView).offset(15);
         make.right.mas_equalTo(self.containerView).offset(-15);
         make.height.mas_equalTo(0);
@@ -367,7 +368,7 @@
 - (void)setContentModel:(FHDetailBrokerContentModel *)contentModel {
     _contentModel = [contentModel copy];
     NSMutableArray *dataArr = [[NSMutableArray alloc]init];
-    CGFloat contentHeight = 0;
+    CGFloat contentHeight = -10;
     for (int m = 0; m < _contentModel.data.count;  m++) {
         NSString *content = _contentModel.data[m];
         FHFeedUGCCellModel *model = [FHFeedUGCCellModel modelFromFeed:content];
@@ -376,13 +377,13 @@
         switch (model.cellType) {
             case FHUGCFeedListCellTypeUGC:
                 model.cellSubType = FHUGCFeedListCellSubTypeUGCBrokerImage;
-                ///内容高度 + 图片高度 + 距离顶部高度 + 底部高度
-                contentHeight = model.contentHeight  + (model.imageList.count == 0?0:75 + 30) + 40 +contentHeight + 40;
+                ///图片cell高度
+                contentHeight = contentHeight + [FHHouseDeatilRGCImageCell heightForData:model];
                 break;
             case FHUGCFeedListCellTypeUGCSmallVideo:
                 model.cellSubType = FHUGCFeedListCellSubTypeUGCBrokerVideo;
                 ///内容高度 + 视频高度 + 距离顶部高度 + 底部高度
-                contentHeight = model.contentHeight  +150 + 10 + 40 +contentHeight + 90;
+                contentHeight = contentHeight + model.contentHeight  +150 + 10 + 50 + 90 - 20;
                 break;
             default:
                 break;

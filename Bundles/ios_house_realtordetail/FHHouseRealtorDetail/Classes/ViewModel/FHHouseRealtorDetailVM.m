@@ -40,8 +40,9 @@
 #import "FHRealtorEvaluatingPhoneCallModel.h"
 #import "TTURLUtils.h"
 #import "NSObject+YYModel.h"
+#import "NSDictionary+BTDAdditions.h"
 #define kSegmentViewHeight 44
-@interface FHHouseRealtorDetailVM () <TTHorizontalPagingViewDelegate>
+@interface FHHouseRealtorDetailVM () <TTHorizontalPagingViewDelegate,TTHorizontalPagingSegmentViewDelegate>
 
 @property (nonatomic, weak) FHHouseRealtorDetailVC *viewController;
 @property (nonatomic, strong) FHHouseRealtorDetailBaseViewController *feedListController; //当前显示的feedVC
@@ -54,10 +55,12 @@
 @property (nonatomic, copy) NSString *currentSegmentType;
 @property (nonatomic, copy) NSString *defaultType;
 @property (nonatomic, strong) NSDictionary *realtorInfo;
+@property (nonatomic, strong) NSDictionary *realtorLogpb;
 @property (nonatomic, assign) NSInteger selectedIndex;
 @property (nonatomic, strong) NSMutableArray *ugcTabList;
 @property (nonatomic, assign) NSInteger currentIndex;
 @property (nonatomic, assign) BOOL isFirstEnter;
+@property (nonatomic, assign) BOOL isHeightScoreRealtor;
 @property (nonatomic) BOOL shouldShowUGcGuide;
 @end
 @implementation FHHouseRealtorDetailVM
@@ -71,6 +74,7 @@
         self.realtorPhoneCallModel.tracerDict = tracerDict;
         self.realtorPhoneCallModel.belongsVC = viewController;
         self.isFirstEnter = YES;
+        self.isHeightScoreRealtor = NO;
         self.viewController.segmentView.delegate = self;
         self.realtorInfo = realtorInfo;
         __weak typeof(self)ws = self;
@@ -100,22 +104,27 @@
     [FHMainApi requestRealtorHomePage:parmas completion:^(FHHouseRealtorDetailModel * _Nonnull model, NSError * _Nonnull error) {
         if (model && error == NULL) {
             if (model.data) {
-                self.viewController.emptyView.hidden = YES;
+                wSelf.viewController.emptyView.hidden = YES;
                 //                [wSelf updateUIWithData];
                 [wSelf processDetailData:model];
-                
             }else {
-                [self.viewController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoData];
+                [wSelf addGoDetailLog];
+                [wSelf.viewController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoData];
             }
         }else {
-            [self.viewController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoData];
+            [wSelf addGoDetailLog];
+            [wSelf.viewController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoData];
         }
     }];
 }
 
 - (void)processDetailData:(FHHouseRealtorDetailModel *)model {
+    if (!self.viewController) {
+            return;
+    }
+    self.realtorLogpb = model.data.realtorLogpb;
+    [self addGoDetailLog];
     self.data = model.data;
-    NSArray *commentInfo = model.data.evaluation[@"comment_info"];
     BOOL realtorLeave = [model.data.realtor.allKeys containsObject:@"is_leave"]?[model.data.realtor[@"is_leave"] boolValue]:NO;
     
     if (model.data.realtorTab) {
@@ -123,7 +132,7 @@
     }
     
     if(self.isFirstEnter){
-        NSMutableDictionary *dic = @{}.mutableCopy;
+        NSMutableDictionary *dic = [model.data toDictionary].mutableCopy;
         NSMutableDictionary *dicm = model.data.scoreInfo.mutableCopy;
         if (dicm && [dicm.allKeys containsObject:@"open_url"]) {
             NSString *openUrl = dicm[@"open_url"];
@@ -136,31 +145,30 @@
                                                                                                             (CFStringRef)@"!*'();:@&=+$,/?%#[]",
                                                                                                             kCFStringEncodingUTF8));
             NSString *urlStr = [NSString stringWithFormat:@"sslocal://webview?url=%@",encodedString];
-            NSURL *url = [TTURLUtils URLWithString:urlStr];
             [dicm setObject:urlStr forKey:@"open_url"];
         }
-        [dic setObject:model.data.realtor?:@""forKey:@"realtor"];
-        [dic setObject:model.data.evaluation?:@"" forKey:@"evaluation"];
-        NSArray *array  = model.data.evaluation[@"comment_info"];
         [dic setObject:dicm?:@"" forKey:@"score_info"];
-        [dic setObject:model.data.realtorShop?:@"" forKey:@"realtor_shop"];
-        [dic setObject:model.data.certificationIcon?:@"" forKey:@"certification_icon"];
-        [dic setObject:model.data.certificationPage?:@"" forKey:@"certification_page"];
         [dic setObject:@{@"realtor_id":self.realtorInfo[@"realtor_id"]?:@"",@"screen_width":@([UIScreen mainScreen].bounds.size.width)} forKey:@"common_params"];
         [dic setObject:self.tracerDict?:@"" forKey:@"report_params"];
         if (self.tracerDict) {
             NSString *lynxReortParams= [self.tracerDict yy_modelToJSONString];
             lynxReortParams = [lynxReortParams stringByAddingPercentEncodingWithAllowedCharacters:NSCharacterSet.URLQueryAllowedCharacterSet];
-            
-            NSString *unencodedString = lynxReortParams;
-            NSString *encodedString = (NSString *)CFBridgingRelease(CFURLCreateStringByAddingPercentEscapes(kCFAllocatorDefault,
-                                                                                                            (CFStringRef)unencodedString,
-                                                                                                            NULL,
-                                                                                                            (CFStringRef)@"!*'();:@&=+$,/?%#[]",
-                                                                                                            kCFStringEncodingUTF8));
             [dic setObject:lynxReortParams forKey:@"encoded_report_params"];
         }
         [self.viewController.headerView reloadDataWithDic:dic];
+        if ([model.data.realtor.allKeys containsObject:@"is_preferred_realtor"]) {
+            BOOL isHightScore = [model.data.realtor btd_boolValueForKey:@"is_preferred_realtor"];
+            if (isHightScore) {
+                self.isHeightScoreRealtor = isHightScore;
+                [self.viewController.headerView updateRealtorWithHeightScore];
+                self.viewController.headerView.titleImage.hidden = NO;
+                self.viewController.customNavBarView.title.textColor = [UIColor colorWithHexStr:@"#E7C494"];
+                UIImage *whiteBackArrowImage = ICON_FONT_IMG(24, @"\U0000e68a", [UIColor colorWithHexStr:@"#E7C494"]);
+                [self.viewController.customNavBarView.leftBtn setBackgroundImage:whiteBackArrowImage forState:UIControlStateNormal];
+                [self.viewController.customNavBarView.leftBtn setBackgroundImage:whiteBackArrowImage forState:UIControlStateHighlighted];
+            }
+        }
+        
         self.viewController.headerView.height = self.viewController.headerView.viewHeight;
         if (realtorLeave) {
             [self.viewController showRealtorLeaveHeader];
@@ -206,7 +214,7 @@
         if (self.currentIndex < tabListArr.count) {
             self.viewController.segmentView.selectedIndex = self.currentIndex;
         }else {
-             self.viewController.segmentView.selectedIndex = 0;
+            self.viewController.segmentView.selectedIndex = 0;
         }
         
         [self addEnterCategoryLog:@"realtor_all_list"];
@@ -233,7 +241,7 @@
     //放到最下面
     [self.viewController.view insertSubview:self.pagingView atIndex:0];
     [self.pagingView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.right.left.bottom.equalTo(self.viewController.view);
+        make.top.right.left.equalTo(self.viewController.view);
         if (@available(iOS 11.0, *)) {
             make.bottom.mas_equalTo(self.viewController.view.mas_bottom).mas_offset(-[UIApplication sharedApplication].delegate.window.safeAreaInsets.bottom -64);
         }else {
@@ -278,7 +286,7 @@
 }
 
 - (void)updateNavBarWithAlpha:(CGFloat)alpha {
-    UIImage *whiteBackArrowImage = ICON_FONT_IMG(24, @"\U0000e68a", [UIColor whiteColor]);
+    UIImage *whiteBackArrowImage = ICON_FONT_IMG(24, @"\U0000e68a",self.isHeightScoreRealtor?[UIColor colorWithHexStr:@"#E7C494"]:[UIColor whiteColor]);
     UIImage *blackBackArrowImage = ICON_FONT_IMG(24, @"\U0000e68a", [UIColor themeGray1]);
     alpha = fminf(fmaxf(0.0f, alpha), 1.0f);
     if (alpha <= 0.1f) {
@@ -286,7 +294,7 @@
         [self.viewController.customNavBarView.leftBtn setBackgroundImage:whiteBackArrowImage forState:UIControlStateNormal];
         [self.viewController.customNavBarView.leftBtn setBackgroundImage:whiteBackArrowImage forState:UIControlStateHighlighted];
         self.viewController.titleContainer.hidden = YES;
-        self.viewController.customNavBarView.title.textColor = [UIColor whiteColor];
+        self.viewController.customNavBarView.title.textColor = self.isHeightScoreRealtor?[UIColor colorWithHexStr:@"#E7C494"]: [UIColor whiteColor];
     } else if (alpha > 0.1f && alpha < 0.9f) {
         [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault];
         self.viewController.customNavBarView.title.textColor = [UIColor themeGray1];
@@ -322,6 +330,8 @@
     params[@"group_id"] = self.tracerDict[@"group_id"] ?: @"be_null";
     params[@"element_from"] = self.tracerDict[@"element_from"] ?: @"be_null";
     params[@"realtor_id"] = self.realtorInfo[@"realtor_id"] ?: @"be_null";
+    params[@"realtor_logpb"] = self.realtorLogpb?:@"be_null";
+    params[@"event_tracking_id"] = @"93412";
     [FHUserTracker writeEvent:@"go_detail" params:params];
 }
 
@@ -391,7 +401,7 @@
 - (void)pagingView:(TTHorizontalPagingView *)pagingView didSwitchIndex:(NSInteger)aIndex to:(NSInteger)toIndex {
     //前面的消失
     if(aIndex < self.subVCs.count && !self.isFirstEnter){
-        FHHouseRealtorDetailBaseViewController *feedVC = self.subVCs[aIndex];
+        //        FHHouseRealtorDetailBaseViewController *feedVC = self.subVCs[aIndex];
     }
     //新的展现
     if(toIndex < self.subVCs.count){
@@ -427,7 +437,7 @@
     CGFloat navBarH = [UIDevice btd_isIPhoneXSeries]?84:64;
     if ((delta + navBarH) >self.pagingView.headerViewHeight || (delta + navBarH) == self.pagingView.headerViewHeight) {
         [self.viewController.segmentView setUpTitleEffect:^(NSString *__autoreleasing *titleScrollViewColorKey, NSString *__autoreleasing *norColorKey, NSString *__autoreleasing *selColorKey, UIFont *__autoreleasing *titleFont, UIFont *__autoreleasing *selectedTitleFont) {
-            *titleScrollViewColorKey  = @"Background4",
+            *titleScrollViewColorKey  = @"Background4";
             *norColorKey = @"grey3"; //
             *selColorKey = @"grey1";//grey1
             *titleFont = [UIFont themeFontRegular:16];
@@ -435,15 +445,19 @@
         }];
     }else {
         [self.viewController.segmentView setUpTitleEffect:^(NSString *__autoreleasing *titleScrollViewColorKey, NSString *__autoreleasing *norColorKey, NSString *__autoreleasing *selColorKey, UIFont *__autoreleasing *titleFont, UIFont *__autoreleasing *selectedTitleFont) {
-            *titleScrollViewColorKey  = @"Background21",
+            *titleScrollViewColorKey  = @"Background21";
             *norColorKey = @"grey3"; //
             *selColorKey = @"grey1";//grey1
             *titleFont = [UIFont themeFontRegular:16];
             *selectedTitleFont = [UIFont themeFontSemibold:16];
         }];
     }
-    UIScrollView *scrollView = pagingView.currentContentView;
     [self refreshContentOffset:delta];
+    if (self.isHeightScoreRealtor) {
+        self.viewController.customNavBarView.title.hidden = delta<0;
+        self.viewController.customNavBarView.leftBtn.hidden = delta<0;
+    }
+    [self.viewController.headerView updateWhenScrolledWithContentOffset:delta isScrollTop:NO scrollView:pagingView.currentContentView];
 }
 
 
@@ -485,8 +499,8 @@
     realtorModel.associateInfo = [self.data.associateInfo copy];
     realtorModel.realtorId = self.realtorInfo[@"realtor_id"];
     realtorModel.chatOpenurl = self.data.chatOpenUrl;
-    realtorModel.realtorLogpb = @"";
-    [self.realtorPhoneCallModel imchatActionWithPhone:realtorModel realtorRank:0 extraDic:self.tracerDict];
+    realtorModel.realtorLogpb = @{};
+    [self.realtorPhoneCallModel imchatActionWithPhone:realtorModel realtorRank:@"0" extraDic:self.tracerDict];
 }
 
 - (void)phoneAction{

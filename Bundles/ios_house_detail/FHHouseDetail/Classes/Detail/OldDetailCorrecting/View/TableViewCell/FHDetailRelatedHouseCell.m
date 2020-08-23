@@ -98,7 +98,7 @@
         [tv registerClass:[FHHouseBaseItemCell  class] forCellReuseIdentifier:@"FHHomeSmallImageItemCell"];
         [self.containerView addSubview:tv];
         [tv mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.top.mas_equalTo(self.containerView).offset(5);
+            make.top.mas_equalTo(self.containerView);
             make.height.mas_equalTo(cellHeight * model.relatedHouseData.items.count);
             make.left.right.mas_equalTo(self.containerView);
             make.bottom.mas_equalTo(self.containerView).offset(-bottomOffset);
@@ -126,15 +126,15 @@
             [self.openAllView mas_makeConstraints:^(MASConstraintMaker *make) {
                 make.top.mas_equalTo(self.tableView.mas_bottom);
                 make.left.right.mas_equalTo(self.containerView);
-                make.height.mas_equalTo(48);
+                make.height.mas_equalTo(43);
                 make.bottom.mas_equalTo(self.containerView).offset(-20);
             }];
         } else {
             // 查看更多自己布局
             [self.openAllView mas_makeConstraints:^(MASConstraintMaker *make) {
-                make.top.mas_equalTo(self.containerView).offset(20);
+                make.top.mas_equalTo(self.containerView).offset(16);
                 make.left.right.mas_equalTo(self.containerView);
-                make.height.mas_equalTo(48);
+                make.height.mas_equalTo(43);
                 make.bottom.mas_equalTo(self.containerView).offset(-20);
             }];
         }
@@ -164,8 +164,8 @@
 - (void)setupUI {
     [self.shadowImage mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.right.equalTo(self.contentView);
-        make.top.equalTo(self.contentView).offset(-12);
-        make.bottom.equalTo(self.contentView).offset(12);
+        make.top.equalTo(self.contentView).offset(-14);
+        make.bottom.equalTo(self.contentView).offset(14);
     }];
     _houseShowCache = [NSMutableDictionary new];
     _headerView = [[FHDetailHeaderView alloc] init];
@@ -175,7 +175,7 @@
     [self.headerView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(self.contentView).offset(11);
         make.right.mas_equalTo(self.contentView).offset(-11);
-        make.top.equalTo(self.shadowImage).offset(22);
+        make.top.equalTo(self.shadowImage).offset(20);
         make.height.mas_equalTo(46);
     }];
     _containerView = [[UIView alloc] init];

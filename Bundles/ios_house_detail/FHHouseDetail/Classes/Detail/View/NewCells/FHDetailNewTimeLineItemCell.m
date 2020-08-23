@@ -9,6 +9,7 @@
 #import "TTRoute.h"
 #import "FHEnvContext.h"
 #import <ByteDanceKit/NSDate+BTDAdditions.h>
+#import "FHUtils.h"
 
 @interface FHDetailNewTimeLineItemCell ()
 @property (nonatomic, strong) UIButton *maskBtn;
@@ -19,6 +20,9 @@
 @property (nonatomic, strong) UIView *timeLineLeading;
 @property (nonatomic, strong) UIView *headLine;
 @property (nonatomic, strong) UIView *timeLineTailing;
+
+@property (nonatomic, strong) UIView *lineView;
+
 @end
 
 @implementation FHDetailNewTimeLineItemCell
@@ -38,22 +42,22 @@
         }];
         
         _timeLabel = [UILabel new];
-        _timeLabel.font = [UIFont themeFontRegular:18];
-        _timeLabel.textColor = [UIColor themeGray1];
+        _timeLabel.font = [UIFont themeFontRegular:12];
+        _timeLabel.textColor = [UIColor themeGray3];
         [self.contentView addSubview:_timeLabel];
         [_timeLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.left.mas_equalTo(48);
+            make.left.mas_equalTo(29);
             make.right.equalTo(self.contentView).offset(-20);
             make.top.equalTo(self.headLine.mas_bottom);
-            make.height.mas_equalTo(25);
+            make.height.mas_equalTo(17);
         }];
 
         _redDotView= [UIView new];
         _redDotView.layer.cornerRadius = 4;
-        _redDotView.backgroundColor = [UIColor themeGray4];
+        _redDotView.backgroundColor = [UIColor colorWithHexStr:@"#ff9629"];
         [self.contentView addSubview:_redDotView];
         [_redDotView mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.left.mas_equalTo(20);
+            make.left.mas_equalTo(15);
             make.centerY.equalTo(self.timeLabel);
             make.width.height.mas_equalTo(8);
         }];
@@ -63,11 +67,12 @@
         _titleLabel.font = [UIFont themeFontSemibold:16];
         _titleLabel.textColor = [UIColor themeGray1];
         [self.contentView addSubview:_titleLabel];
+        _titleLabel.numberOfLines = 0;
         [_titleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.top.equalTo(self.timeLabel.mas_bottom).offset(16);
+            make.top.equalTo(self.timeLabel.mas_bottom).offset(6);
             make.left.equalTo(self.timeLabel);
-            make.height.mas_equalTo(26);
-            make.right.equalTo(self.contentView).offset(-20);
+            make.height.mas_greaterThanOrEqualTo(24);
+            make.right.equalTo(self.contentView).offset(-15);
         }];
         
 
@@ -78,34 +83,42 @@
         _contentLabel.lineBreakMode = NSLineBreakByTruncatingTail;
         [self.contentView addSubview:_contentLabel];
         [_contentLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.top.equalTo(self.titleLabel.mas_bottom).offset(4);
+            make.top.equalTo(self.titleLabel.mas_bottom).offset(6);
             make.left.equalTo(self.titleLabel);
-            make.right.equalTo(self.contentView).offset(-20);
-            make.bottom.equalTo(self.contentView).offset(-20);
+            make.right.equalTo(self.contentView).offset(-15);
+            make.bottom.equalTo(self.contentView).offset(-15);
         }];
-
-
-        _timeLineLeading = [UIView new];
-        _timeLineLeading.backgroundColor = [UIColor themeGray8];
-        [self.contentView addSubview:_timeLineLeading];
-        [_timeLineLeading mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.left.mas_equalTo(24);
+        self.lineView = [[UIView alloc] init];
+        self.lineView.backgroundColor = [UIColor colorWithHexStr:@"#fff8ef"];
+        [self.contentView addSubview:self.lineView];
+        [self.lineView mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.top.mas_equalTo(self.redDotView.mas_bottom).mas_offset(6);
             make.width.mas_equalTo(1);
-            make.top.equalTo(self.contentView);
-            make.bottom.equalTo(self.redDotView.mas_top);
+            make.bottom.mas_equalTo(self.contentLabel);
+            make.centerX.mas_equalTo(self.redDotView);
         }];
-        
 
-
-        _timeLineTailing = [UIView new];
-        _timeLineTailing.backgroundColor = [UIColor themeGray8];
-        [self.contentView addSubview:_timeLineTailing];
-        [_timeLineTailing mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.left.mas_equalTo(24);
-            make.width.mas_equalTo(0.5);
-            make.top.equalTo(self.redDotView.mas_bottom).offset(4);
-            make.bottom.equalTo(self.contentView);
-        }];
+//        _timeLineLeading = [UIView new];
+//        _timeLineLeading.backgroundColor = [UIColor colorWithHexStr:@"#fff8ef"];
+//        [self.contentView addSubview:_timeLineLeading];
+//        [_timeLineLeading mas_makeConstraints:^(MASConstraintMaker *make) {
+//            make.centerY.mas_offset(self.redDotView);
+//            make.width.mas_equalTo(1);
+//            make.top.equalTo(self.contentView);
+//            make.bottom.equalTo(self.redDotView.mas_top);
+//        }];
+//
+//
+//
+//        _timeLineTailing = [UIView new];
+//        _timeLineTailing.backgroundColor = [UIColor themeGray8];
+//        [self.contentView addSubview:_timeLineTailing];
+//        [_timeLineTailing mas_makeConstraints:^(MASConstraintMaker *make) {
+//            make.left.mas_equalTo(24);
+//            make.width.mas_equalTo(0.5);
+//            make.top.equalTo(self.redDotView.mas_bottom).offset(4);
+//            make.bottom.equalTo(self.contentView);
+//        }];
         
         
         _maskBtn = [UIButton new];
@@ -157,7 +170,7 @@
         FHDetailNewTimeLineItemModel *model = (FHDetailNewTimeLineItemModel*)data;
         if(model.createdTime)
         {
-            _timeLabel.text = [self getTimeFromTimestamp:[model.createdTime doubleValue]];
+            _timeLabel.text = [FHUtils ConvertStrToTime:model.createdTime];
         }
         self.titleLabel.text = model.title;
         self.contentLabel.text = model.desc;
@@ -166,42 +179,33 @@
         }
         if (model.isFirstCell) {
             [_headLine mas_updateConstraints:^(MASConstraintMaker *make) {
-                make.height.mas_equalTo(10);
+                make.height.mas_equalTo(15);
             }];
-            
-            _timeLineLeading.hidden = YES;
-            
-            
-            [_timeLineTailing mas_updateConstraints:^(MASConstraintMaker *make) {
-                make.left.mas_equalTo(24);
-                make.width.mas_equalTo(0.5);
-                make.top.equalTo(self.redDotView.mas_bottom).offset(4);
-                make.bottom.equalTo(self.contentView);
-            }];
+
+//            _timeLineLeading.hidden = YES;
+
+
+//            [_timeLineTailing mas_updateConstraints:^(MASConstraintMaker *make) {
+//                make.left.mas_equalTo(24);
+//                make.width.mas_equalTo(0.5);
+//                make.top.equalTo(self.redDotView.mas_bottom).offset(4);
+//                make.bottom.equalTo(self.contentView);
+//            }];
         }else
         {
-            _timeLineLeading.hidden = NO;
-        }
-        if (model.isLastCell) {
-            [_timeLineTailing mas_updateConstraints:^(MASConstraintMaker *make) {
-                make.bottom.equalTo(self.contentView).offset(-20);
+            [_headLine mas_updateConstraints:^(MASConstraintMaker *make) {
+                make.height.mas_equalTo(0);
             }];
+//            _timeLineLeading.hidden = NO;
         }
+//        if (model.isLastCell) {
+//            [_timeLineTailing mas_updateConstraints:^(MASConstraintMaker *make) {
+//                make.bottom.equalTo(self.contentView).offset(-20);
+//            }];
+//        }
     }
 }
 
-- (NSString *)getTimeFromTimestamp:(double)timestamp{
-    //将对象类型的时间转换为NSDate类型
-    double time = timestamp;
-    NSDate *myDate = [NSDate dateWithTimeIntervalSince1970:time];
-    //设置时间格式
-    NSString *timeStr = [myDate btd_stringWithFormat:@"MM-dd"];
-    if (timeStr) {
-        return timeStr;
-    } else {
-        return @"未知";
-    }
-}
 
 - (void)awakeFromNib {
     [super awakeFromNib];

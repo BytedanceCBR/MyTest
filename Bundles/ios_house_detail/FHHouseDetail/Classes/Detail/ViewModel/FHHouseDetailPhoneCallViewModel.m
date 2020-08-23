@@ -25,7 +25,6 @@
 #import "FHUtils.h"
 #import "NSDictionary+TTAdditions.h"
 #import "FHIESGeckoManager.h"
-#import "FHRNHelper.h"
 #import <TTSettingsManager/TTSettingsManager.h>
 #import "FHHouseIMClueHelper.h"
 
@@ -211,41 +210,11 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
 
 - (void)jump2RealtorDetailWithPhone:(FHDetailContactModel *)contactPhone isPreLoad:(BOOL)isPre extra:(NSDictionary*)extra
 {
-    //如果没有资源，走H5
-    if (![FHIESGeckoManager isHasCacheForChannel:@"f_realtor_detail"] || self.rnIsUnAvalable) {
-        [self creatJump2RealtorDetailWithPhone:contactPhone isPreLoad:NO andIsOpen:YES extra:extra];
-        return;
-    }
-    
-    if ([FHHouseDetailPhoneCallViewModel isEnableCurrentChannel]) {
-        if (isPre && [FHEnvContext isNetworkConnected]) {
-            TTRouteObject *routeAgentObj = [[FHRNHelper sharedInstance] getRNCacheForCacheKey:self.hash];
-            if ([routeAgentObj.instance isKindOfClass:[UIViewController class]] && [self.belongsVC isKindOfClass:[UIViewController class]]) {
-                [self.belongsVC.navigationController pushViewController:(UIViewController *)routeAgentObj.instance animated:YES];
-            }else
-            {
-                TTRouteObject *routeObj = [self creatJump2RealtorDetailWithPhone:contactPhone isPreLoad:NO andIsOpen:NO extra:extra];
-                if ([routeObj.instance isKindOfClass:[UIViewController class]] && [self.belongsVC isKindOfClass:[UIViewController class]]) {
-                    [self.belongsVC.navigationController pushViewController:(UIViewController *)routeObj.instance animated:YES];
-                }else
-                {
-                    [self creatJump2RealtorDetailWithPhone:contactPhone isPreLoad:NO andIsOpen:YES extra:extra];
-                }
-            }
-        }else
-        {
-            TTRouteObject *routeObj = [self creatJump2RealtorDetailWithPhone:contactPhone isPreLoad:NO andIsOpen:NO extra:extra];
-            if ([routeObj.instance isKindOfClass:[UIViewController class]] && [self.belongsVC isKindOfClass:[UIViewController class]]) {
-                [self.belongsVC.navigationController pushViewController:(UIViewController *)routeObj.instance animated:YES];
-            }else
-            {
-                [self creatJump2RealtorDetailWithPhone:contactPhone isPreLoad:NO andIsOpen:YES extra:extra];
-            }
-        }
-    }else
-    {
-        [self creatJump2RealtorDetailWithPhone:contactPhone isPreLoad:NO andIsOpen:YES extra:extra];
-    }
+    TTRouteObject *routeObj = [self creatJump2RealtorDetailWithPhone:contactPhone isPreLoad:NO andIsOpen:YES extra:extra];
+          if ([routeObj.instance isKindOfClass:[UIViewController class]] && [self.belongsVC isKindOfClass:[UIViewController class]]) {
+              [self.belongsVC.navigationController pushViewController:(UIViewController *)routeObj.instance animated:YES];
+          }
+//        [self creatJump2RealtorDetailWithPhone:contactPhone isPreLoad:NO andIsOpen:YES extra:extra];
 }
 
 - (TTRouteObject *)creatJump2RealtorDetailWithPhone:(FHDetailContactModel *)contactPhone isPreLoad:(BOOL)isPre andIsOpen:(BOOL)isOpen extra:(NSDictionary*)extra
@@ -254,14 +223,12 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
         return nil;
     }
     NSDictionary *settings = [self fhSettings];
-    BOOL openNewRealtor = settings[@"f_new_realtor_detail"];
-//    BOOL openNewRealtor = NO;
+    BOOL openNewRealtor = [settings btd_boolValueForKey:@"f_new_realtor_detail"];
     if (openNewRealtor) {
             NSURL *openUrl = [NSURL URLWithString:[NSString stringWithFormat:@"sslocal://new_realtor_detail"]];
         NSMutableDictionary *info = @{}.mutableCopy;
         info[@"title"] = @"经纪人主页";
         info[@"realtor_id"] = contactPhone.realtorId;
-        info[@"delegate"] = self;
         NSMutableDictionary *tracerDic = self.tracerDict.mutableCopy;
         tracerDic[@"element_from"] = extra[@"element_from"] ? : [self elementTypeStringByHouseType:self.houseType];
         info[@"tracer"] = tracerDic;
@@ -271,11 +238,6 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
         TTRouteObject *routeObj = [[TTRoute sharedRoute] routeObjWithOpenURL:openUrl userInfo:userInfo];
         return routeObj;
     }else {
-        
-            if (![FHIESGeckoManager isHasCacheForChannel:@"f_realtor_detail"] && !isOpen) {
-                return nil;
-            }
-        
             NSString * host = [FHURLSettings baseURL] ?: @"https://i.haoduofangs.com";
             //    NSString *host = @"http://10.1.15.29:8889";
             NSURL *openUrl = [NSURL URLWithString:[NSString stringWithFormat:@"sslocal://realtor_detail?realtor_id=%@",contactPhone.realtorId]];
@@ -367,30 +329,9 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
             if (isOpen) {
                 TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc]initWithInfo:info];
                 [[TTRoute sharedRoute]openURLByViewController:openUrl userInfo:userInfo];
-                return nil;
-            }else
-            {
-                dict[@"page_type"] = @"realtor_detail";
-                BOOL islogin = [[TTAccount sharedAccount] isLogin];
-                [imdic setValue:islogin ? @"1" : @"0" forKey:@"is_login"];
-        
-                NSString *openUrlRnStr = [NSString stringWithFormat:@"sslocal://react?module_name=FHRNAgentDetailModule_home&realtorId=%@&can_multi_preload=%d&channelName=f_realtor_detail&debug=0&report_params=%@&im_params=%@&bundle_name=%@&is_login=%@",contactPhone.realtorId,isPre ? 1 : 0,[FHUtils getJsonStrFrom:dict],[FHUtils getJsonStrFrom:imdic],@"agent_detail.bundle",islogin ? @"1" : @"0"];
-        
-                NSURL *openUrlRn = [NSURL URLWithString:openUrlRnStr];
-        
-                TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:info];
-                TTRouteObject *routeObj = [[TTRoute sharedRoute] routeObjWithOpenURL:openUrlRn userInfo:userInfo];
-                if (isPre) {
-                    [[FHRNHelper sharedInstance] addCacheViewOpenUrl:openUrlRnStr andUserInfo:userInfo andCacheKey:self.hash];
-                    return nil;
-                }else
-                {
-                    return routeObj;
-                }
             }
+        return nil;
     }
-
-    
 }
 
 - (NSString *)elementTypeStringByHouseType:(FHHouseType)houseType
@@ -409,30 +350,6 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
     return @"be_null";
 }
 
-- (void)destoryRNPreloadCache
-{
-    TTRouteObject *routeAgentObj = [[FHRNHelper sharedInstance] getRNCacheForCacheKey:self.hash];
-    #pragma clang diagnostic push
-    #pragma clang diagnostic ignored "-Wundeclared-selector"
-    if ([routeAgentObj.instance respondsToSelector:@selector(destroyRNView)]) {
-        [routeAgentObj.instance performSelector:@selector(destroyRNView) withObject:nil];
-    }
-    #pragma clang diagnostic pop
-
-    routeAgentObj.instance = nil;
-    routeAgentObj.paramObj.userInfo = nil;
-    routeAgentObj.paramObj = nil;
-    routeAgentObj = nil;
-}
-
-- (void)updateLoadFinish
-{
-    TTRouteObject *routeAgentObj = [[FHRNHelper sharedInstance] getRNCacheForCacheKey:self.hash];
-    
-    if ([routeAgentObj.instance respondsToSelector:@selector(updateLoadFinish)]) {
-        [routeAgentObj.instance performSelector:@selector(updateLoadFinish) withObject:nil];
-    }
-}
 
 #pragma mark 埋点相关
 - (NSDictionary *)baseParams

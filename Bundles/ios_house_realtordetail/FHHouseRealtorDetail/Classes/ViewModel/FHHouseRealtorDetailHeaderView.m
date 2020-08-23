@@ -16,6 +16,7 @@
 #import "SDWebImageManager.h"
 #import "UIColor+Theme.h"
 #import "LynxEnv.h"
+#import "IMConsDefine.h"
 #import <BDWebImage/UIImageView+BDWebImage.h>
 #import "FHHouseRealtorDetailInfoModel.h"
 #import "UIDevice+BTDAdditions.h"
@@ -30,14 +31,17 @@
 @property (weak, nonatomic) UIView *headerMaskView;
 @property (assign, nonatomic) CGFloat navHeight;
 @property (nonatomic, assign) NSTimeInterval loadTime; //页面加载时间
+@property (nonatomic, assign) BOOL isHeightScoreRealtor; //是否为高分经纪人
+@property(nonatomic) CGFloat headerBackHeight;
 
- @end
+@end
 @implementation FHHouseRealtorDetailHeaderView
 
 - (instancetype)initWithFrame:(CGRect)frame {
     self = [super initWithFrame:frame];
     if(self) {
         self.navHeight =   ((![[UIApplication sharedApplication] isStatusBarHidden]) ? [[UIApplication sharedApplication] statusBarFrame].size.height : ([UIDevice btd_isIPhoneXSeries]?44.f:20.f));
+        self.isHeightScoreRealtor = NO;
         [self createUI];
         self.backgroundColor = [UIColor colorWithHexStr:@"#f8f8f8"];
     }
@@ -46,10 +50,9 @@
 
 
 - (void)createUI {
-    [self.headerIma mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.top.right.equalTo(self);
-        make.height.mas_offset(164);
-    }];
+    self.headerBackHeight = 164;
+    [self headerIma];
+    [self titleImage];
     [self.headerMaskView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.edges.equalTo(self.headerIma);
     }];
@@ -57,6 +60,45 @@
         make.left.right.bottom.equalTo(self);
         make.top.equalTo(self).offset(self.navHeight+44);
     }];
+}
+
+- (UIImageView *)titleImage {
+    if (!_titleImage) {
+        UIImageView *titleImage = [[UIImageView alloc]initWithFrame:CGRectMake((SCREEN_WIDTH -305)/2, 64+self.navHeight, 305, 23)];
+        titleImage.image = [UIImage imageNamed:@"image_title"];
+        titleImage.clipsToBounds = YES;
+        titleImage.contentMode = UIViewContentModeScaleAspectFill;
+        [self addSubview:titleImage];
+        titleImage.hidden = YES;
+        _titleImage = titleImage;
+    }
+    return _titleImage;
+}
+
+- (void)updateWhenScrolledWithContentOffset:(CGFloat)offset isScrollTop:(BOOL)isScrollTop scrollView:(UIScrollView *)scrollView {
+    
+    if (self.isHeightScoreRealtor) {
+        self.titleImage.frame = CGRectMake((SCREEN_WIDTH -305)/2,64 + offset+self.navHeight, 305, 23);
+        self.titleImage.hidden = offset > 0;
+    }
+        if (offset < 0 && offset>= -150) {
+            CGFloat height = SCREEN_WIDTH - offset;
+            self.headerIma.frame = CGRectMake(0,-(SCREEN_WIDTH-self.headerBackHeight) + offset, SCREEN_WIDTH, height);
+        }else if( offset< -150 && offset >= -(SCREEN_WIDTH-self.headerBackHeight)) {
+            CGFloat height = SCREEN_WIDTH + 150;
+            self.headerIma.frame = CGRectMake(0, -(SCREEN_WIDTH-self.headerBackHeight) - 150 - (offset + 150)*0.1    , SCREEN_WIDTH, height);
+        }else if ( offset < -(SCREEN_WIDTH-self.headerBackHeight)){
+            CGFloat height = SCREEN_WIDTH + 150;
+            self.headerIma.frame = CGRectMake(0, -(SCREEN_WIDTH-self.headerBackHeight) - 150 - (offset + 150)*0.1 + (offset+(SCREEN_WIDTH-self.headerBackHeight)), SCREEN_WIDTH, height);
+        } else {
+            self.headerIma.frame = CGRectMake(0, -(SCREEN_WIDTH-self.headerBackHeight), SCREEN_WIDTH, SCREEN_WIDTH);
+        }
+    
+}
+
+- (void)updateRealtorWithHeightScore {
+    self.isHeightScoreRealtor = YES;
+    self.headerIma.image = [UIImage imageNamed:@"realtor_bac"];
 }
 
 - (LynxView *)realtorInfoView {
@@ -97,16 +139,18 @@
             _loadTime = [[NSDate date] timeIntervalSince1970];
             LynxTemplateData *tem = [[LynxTemplateData alloc]initWithJson:lynxData];
             [self.realtorInfoView loadTemplate:templateData withURL:@"local" initData:tem];
-        //使用segments时小数触发计算错误
-        self.viewHeight = ceil([self.realtorInfoView intrinsicContentSize].height + self.navHeight + 44);
+            //使用segments时小数触发计算错误
+            self.viewHeight = ceil([self.realtorInfoView intrinsicContentSize].height + self.navHeight + 44);
+        }
     }
-}
 }
 
 - (UIImageView *)headerIma {
     if (!_headerIma) {
-        UIImageView *headerIma = [[UIImageView alloc]init];
+        UIImageView *headerIma = [[UIImageView alloc]initWithFrame:CGRectMake(0,-(SCREEN_WIDTH-self.headerBackHeight), SCREEN_WIDTH, SCREEN_WIDTH)];
         headerIma.image = [UIImage imageNamed:@"realtor_detail"];
+        headerIma.clipsToBounds = YES;
+        headerIma.contentMode = UIViewContentModeScaleAspectFill;
         [self addSubview:headerIma];
         _headerIma = headerIma;
     }
@@ -144,7 +188,7 @@
 {
     NSMutableDictionary * paramsExtra = [NSMutableDictionary new];
     [paramsExtra setValue:[[TTInstallIDManager sharedInstance] deviceID] forKey:@"device_id"];
-     NSMutableDictionary *uploadParams = [NSMutableDictionary new];
+    NSMutableDictionary *uploadParams = [NSMutableDictionary new];
     NSString *eventServie = [NSString stringWithFormat:@"lynx_page_duration_%@",_channel];
     if (time < 15) {
         [uploadParams setValue:@(time * 1000) forKey:@"duration"];
@@ -156,7 +200,7 @@
     
     NSMutableDictionary * paramsExtra = [NSMutableDictionary new];
     [paramsExtra setValue:[[TTInstallIDManager sharedInstance] deviceID] forKey:@"device_id"];
-     NSMutableDictionary *uploadParams = [NSMutableDictionary new];
+    NSMutableDictionary *uploadParams = [NSMutableDictionary new];
     if (perf && [[perf toDictionary] isKindOfClass:[NSDictionary class]]) {
         [uploadParams addEntriesFromDictionary:[perf toDictionary]];
     }
@@ -173,7 +217,7 @@
     completionBlock(self.placeholderImage,nil,nil);
     if([url.absoluteString containsString:@"gecko:"]){
         NSString * imageStr = url.absoluteString;
-        NSString *imageRootPath = [IESGeckoKit rootDirForAccessKey:[FHIESGeckoManager getGeckoKey] channel:nil];
+        NSString *imageRootPath = [IESGeckoKit rootDirForAccessKey:[FHIESGeckoManager getGeckoKey] channel:@""];
         NSString *imageUrlPath = [imageStr substringFromIndex:8];
         NSString *filePath = [NSString stringWithFormat:@"%@/%@",imageRootPath,imageUrlPath];
         NSURL *fileURL = [NSURL fileURLWithPath:filePath];
