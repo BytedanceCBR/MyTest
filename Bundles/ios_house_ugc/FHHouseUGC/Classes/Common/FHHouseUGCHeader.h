@@ -14,6 +14,7 @@ typedef NS_ENUM(NSInteger, FHCommunityFeedListType)
     FHCommunityFeedListTypeMyJoin,
     FHCommunityFeedListTypePostDetail,
     FHCommunityFeedListTypeSpecialTopic,
+    FHCommunityFeedListTypeVideoList,
     FHCommunityFeedListTypeCustom,
 };
 

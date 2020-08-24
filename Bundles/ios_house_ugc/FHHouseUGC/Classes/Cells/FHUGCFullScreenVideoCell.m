@@ -49,6 +49,7 @@
 @property(nonatomic ,strong) FHFeedUGCCellModel *cellModel;
 @property(nonatomic ,assign) CGFloat videoViewheight;
 @property(nonatomic ,strong) TTVFeedCellMoreActionManager *moreActionMananger;
+@property(nonatomic ,strong) UIButton *muteBtn;
 
 @end
 
@@ -203,7 +204,7 @@
     self.videoView.cellEntity = self.videoItem;
     WeakSelf;
     if(cellModel.isVideoJumpDetail){
-        _videoView.userInteractionEnabled = YES;
+        _videoView.userInteractionEnabled = !cellModel.forbidVideoClick;
         _videoView.ttv_playButtonClickedBlock = ^{
             StrongSelf;
             [self playVideoDidClicked];

@@ -255,6 +255,8 @@ typedef NS_ENUM(NSUInteger, FHFeedUGCDiggType) {
 @property (nonatomic, copy , nullable) NSString *fromGroupSource;
 //是否跳转视频详情页，默认是进入轮播页
 @property (nonatomic, assign) BOOL isVideoJumpDetail;
+//禁用视频点击
+@property (nonatomic, assign) BOOL forbidVideoClick;
 
 + (FHFeedContentModel *)contentModelFromFeedContent:(NSString *)content;
 

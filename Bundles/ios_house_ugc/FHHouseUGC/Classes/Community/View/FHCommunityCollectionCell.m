@@ -82,7 +82,7 @@
         self.vc = vc;
     }else if(self.type == FHCommunityCollectionCellTypeCustom){
         FHCommunityFeedListController *vc = [[FHCommunityFeedListController alloc] init];
-        vc.listType = FHCommunityFeedListTypeCustom;
+        vc.listType = FHCommunityFeedListTypeVideoList;
         vc.isNewDiscovery = NO;
         vc.category = @"f_house_video";
         vc.needReportEnterCategory = YES;
