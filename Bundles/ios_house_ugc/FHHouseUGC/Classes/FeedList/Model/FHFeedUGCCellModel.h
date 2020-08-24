@@ -257,6 +257,8 @@ typedef NS_ENUM(NSUInteger, FHFeedUGCDiggType) {
 @property (nonatomic, assign) BOOL isVideoJumpDetail;
 //禁用视频点击
 @property (nonatomic, assign) BOOL forbidVideoClick;
+//是否显示静音按钮，默认为NO
+@property (nonatomic, assign) BOOL showMuteBtn;
 
 + (FHFeedContentModel *)contentModelFromFeedContent:(NSString *)content;
 

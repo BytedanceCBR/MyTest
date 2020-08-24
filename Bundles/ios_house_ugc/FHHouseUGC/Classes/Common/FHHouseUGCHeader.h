@@ -111,5 +111,7 @@ typedef enum : NSUInteger {
 #define screenWidth (([UIScreen mainScreen].bounds.size.width < [UIScreen mainScreen].bounds.size.height) ? [UIScreen mainScreen].bounds.size.width : [UIScreen mainScreen].bounds.size.height)
 #define screenHeight (([UIScreen mainScreen].bounds.size.width < [UIScreen mainScreen].bounds.size.height) ? [UIScreen mainScreen].bounds.size.height : [UIScreen mainScreen].bounds.size.width)
 
+NSString *const FHUGCFullScreenVideoCellMutedStateChangeNotification = @"FHUGCFullScreenVideoCellMutedStateChangeNotification";
+
 #endif /* FHHouseUGCHeader_h */
 

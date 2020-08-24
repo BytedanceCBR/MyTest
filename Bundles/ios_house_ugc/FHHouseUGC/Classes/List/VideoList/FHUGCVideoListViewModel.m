@@ -447,7 +447,8 @@
 - (void)videoPlayFinished:(FHFeedUGCCellModel *)cellModel cell:(FHUGCBaseCell *)cell {
     BOOL isTopVc = [BTDResponder isTopViewController:self.viewController];
     
-    if(!isTopVc){
+    if(!isTopVc || self.tableView.isDragging || self.tableView.isDecelerating){
+//        [self stopCurrentVideo];
         return;
     }
 

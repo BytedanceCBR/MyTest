@@ -40,6 +40,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)playButtonClicked;
 - (void)playVideo;
 - (void)addCommodity;
+- (void)setMuted:(BOOL)muted;
 
 @end
 

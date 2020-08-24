@@ -193,18 +193,20 @@ extern BOOL ttvs_isVideoFeedURLEnabled(void);
         model.enablePasterAd = YES;
         model.pasterAdFrom = @"feed";
     }
-    BOOL isAutoPlaying = [feedItem couldAutoPlay];
-    model.isAutoPlaying = isAutoPlaying;
-    model.showMutedView = isAutoPlaying;
-    if (isAutoPlaying) {
-        //广告自动播放时每次从头播放
-        [[TTVPlayerCacheProgressController sharedInstance] removeCacheForVideoID:article.videoId];
-        model.mutedWhenStart = YES;
-        if ([[feedItem rawAdData] tta_boolForKey:@"auto_replay"]) {
-            model.isLoopPlay = YES;
-            model.disableFinishUIShow = YES;
-        }
-    }
+//    BOOL isAutoPlaying = [feedItem couldAutoPlay];
+//    model.isAutoPlaying = isAutoPlaying;
+//    model.showMutedView = isAutoPlaying;
+//    if (isAutoPlaying) {
+//        //广告自动播放时每次从头播放
+//        [[TTVPlayerCacheProgressController sharedInstance] removeCacheForVideoID:article.videoId];
+//        model.mutedWhenStart = YES;
+//        if ([[feedItem rawAdData] tta_boolForKey:@"auto_replay"]) {
+//            model.isLoopPlay = YES;
+//            model.disableFinishUIShow = YES;
+//        }
+//    }
+//    model.mutedWhenStart = self.cellEntity.mutedWhenStart;
+    
     BOOL isVideoFeedURLEnabled = [[[TTSettingsManager sharedManager] settingForKey:@"video_feed_url" defaultValue:@NO freeze:NO] boolValue];
     if (isVideoFeedURLEnabled && [self.cellEntity.originData hasVideoPlayInfoUrl] && [self.cellEntity.originData isVideoUrlValid]) {
         model.videoPlayInfo = self.cellEntity.originData.videoPlayInfo;
@@ -238,10 +240,11 @@ extern BOOL ttvs_isVideoFeedURLEnabled(void);
     [playVideo setVideoLargeImageDict:videoLargeImageDict];
     self.movieView = playVideo;
     [self.movieView.player readyToPlay];
-    if (isAutoPlaying && self.cellEntity.article.adId.longLongValue > 0) {
-        self.movieView.player.banLoading = YES;
-        self.movieView.player.muted = [self.cellEntity.originData couldAutoPlay];
-    }
+//    if (isAutoPlaying && self.cellEntity.article.adId.longLongValue > 0) {
+//        self.movieView.player.banLoading = YES;
+//        self.movieView.player.muted = [self.cellEntity.originData couldAutoPlay];
+//    }
+    self.movieView.player.muted = self.cellEntity.muted;
     [self addUrlTrackerOnPlayer:playVideo];
     [self settingMovieView:self.movieView];
     [self.movieView.player play];

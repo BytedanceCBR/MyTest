@@ -186,6 +186,10 @@ extern BOOL ttvs_isEnhancePlayerTitleFont(void);
     [self.playMovie addCommodity];
 }
 
+- (void)setMuted:(BOOL)muted {
+    self.playMovie.movieView.player.muted = muted;
+}
+
 #pragma mark TTVCellPlayMovieDelegate
 
 - (void)ttv_shareButtonOnMovieFinishViewDidPress

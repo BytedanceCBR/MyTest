@@ -49,7 +49,7 @@
 @property(nonatomic ,strong) FHFeedUGCCellModel *cellModel;
 @property(nonatomic ,assign) CGFloat videoViewheight;
 @property(nonatomic ,strong) TTVFeedCellMoreActionManager *moreActionMananger;
-@property(nonatomic ,strong) UIButton *muteBtn;
+@property(nonatomic ,strong) NSTimer *mutedBtnCloseTimer;
 
 @end
 
@@ -71,12 +71,18 @@
     return self;
 }
 
+- (void)initNotification {
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(mutedStateChange:) name:FHUGCFullScreenVideoCellMutedStateChangeNotification object:nil];
+}
+
 - (void)dealloc {
     UNREGISTER_MESSAGE(TTVFeedUserOpDataSyncMessage, self);
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 - (void)initUIs {
     REGISTER_MESSAGE(TTVFeedUserOpDataSyncMessage, self);
+    [self initNotification];
     [self initViews];
     [self initConstraints];
 }
@@ -123,8 +129,14 @@
     [_bottomView.commentButton addTarget:self action:@selector(commentBtnClick) forControlEvents:UIControlEventTouchUpInside];
     [self.contentView addSubview:_bottomView];
     
-    CGFloat width = screenWidth;
-    CGFloat height = screenHeight;
+    self.muteBtn = [[UIButton alloc] initWithFrame:CGRectMake(15, 0, 24, 24)];
+    [_muteBtn setImage:[UIImage imageNamed:@"fh_ugc_video_mute"] forState:UIControlStateNormal];
+    [_muteBtn setImage:[UIImage imageNamed:@"fh_ugc_video_mute"] forState:UIControlStateHighlighted];
+    [_muteBtn setTitleColor:[UIColor themeGray1] forState:UIControlStateNormal];
+    [_muteBtn addTarget:self action:@selector(mutedBtnClicked) forControlEvents:UIControlEventTouchUpInside];
+    _muteBtn.hitTestEdgeInsets = UIEdgeInsetsMake(-7, -15, -7, -15);
+    _muteBtn.alpha = 0;
+    [self.contentView addSubview:_muteBtn];
 }
 
 - (void)initConstraints {
@@ -155,6 +167,11 @@
     self.bottomView.top = self.videoView.bottom;
     self.bottomView.width = screenWidth;
     self.bottomView.height = bottomViewHeight;
+    
+    self.muteBtn.left = 15;
+    self.muteBtn.top = self.bottomView.top - 7 - 24;
+    self.muteBtn.width = 24;
+    self.muteBtn.height = 24;
 }
 
 - (UILabel *)LabelWithFont:(UIFont *)font textColor:(UIColor *)textColor {
@@ -223,6 +240,8 @@
     
     [self layoutIfNeeded];
     self.bottomView.top = self.videoView.bottom;
+    self.muteBtn.top = self.bottomView.top - 7 - 24;
+    [self updateMutedBtn];
 }
 
 + (CGFloat)heightForData:(id)data {
@@ -270,6 +289,68 @@
 
 - (void)updateBottomView {
     [self.bottomView refreshWithdata:self.cellModel];
+}
+
+- (void)updateMutedBtn {
+    if(self.cellModel.showMuteBtn){
+        if(self.cellModel.videoItem.muted){
+            [_muteBtn setImage:[UIImage imageNamed:@"fh_ugc_video_mute"] forState:UIControlStateNormal];
+            [_muteBtn setImage:[UIImage imageNamed:@"fh_ugc_video_mute"] forState:UIControlStateHighlighted];
+        }else{
+            [_muteBtn setImage:[UIImage imageNamed:@"fh_ugc_video_no_mute"] forState:UIControlStateNormal];
+            [_muteBtn setImage:[UIImage imageNamed:@"fh_ugc_video_no_mute"] forState:UIControlStateHighlighted];
+        }
+    }
+}
+
+- (void)mutedBtnClicked {
+    if(self.cellModel.showMuteBtn){
+        [self showMutedBtn];
+        BOOL muted = !self.cellModel.videoItem.muted;
+        NSMutableDictionary *userInfo = @{}.mutableCopy;
+        userInfo[@"muted"] = @(muted);
+        [[NSNotificationCenter defaultCenter] postNotificationName:FHUGCFullScreenVideoCellMutedStateChangeNotification object:nil userInfo:userInfo];
+    }
+}
+
+- (void)mutedStateChange:(NSNotification *)notification {
+    NSDictionary *userInfo = notification.userInfo;
+
+    if(userInfo){
+        BOOL muted = [userInfo[@"muted"] boolValue];
+        self.cellModel.videoItem.muted = muted;
+        [self.videoView setMuted:muted];
+        [self updateMutedBtn];
+    }
+}
+
+- (void)showMutedBtn {
+    if(self.cellModel.showMuteBtn){
+        self.muteBtn.alpha = 1;
+        [self startTimer];
+    }
+}
+
+- (void)hideMutedBtn {
+    [UIView animateWithDuration:0.5 animations:^{
+        self.muteBtn.alpha = 0;
+    } completion:^(BOOL finished) {
+        self.muteBtn.alpha = 0;
+        [self stopTimer];
+    }];
+}
+
+- (void)startTimer {
+    if(_mutedBtnCloseTimer){
+        [self stopTimer];
+    }
+    
+    _mutedBtnCloseTimer = [NSTimer scheduledTimerWithTimeInterval:5.0f target:self selector:@selector(hideMutedBtn) userInfo:nil repeats:NO];
+}
+
+- (void)stopTimer {
+    [_mutedBtnCloseTimer invalidate];
+    _mutedBtnCloseTimer = nil;
 }
 
 - (void)willDisplay {
@@ -600,6 +681,10 @@
     }else{
         [self.videoView playVideo];
     }
+    
+    if(self.cellModel.showMuteBtn) {
+        [self showMutedBtn];
+    }
 }
 
 - (void)stop {
@@ -614,6 +699,10 @@
             [movieView removeFromSuperview];
             [self endDisplay];
         }
+    }
+    
+    if(self.cellModel.showMuteBtn) {
+        _muteBtn.alpha = 0;
     }
 }
 

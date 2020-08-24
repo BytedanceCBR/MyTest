@@ -37,6 +37,10 @@
 @property(nonatomic, assign) NSInteger retryCount;
 @property(nonatomic, strong) FHUGCFullScreenVideoCell *currentVideoCell;
 @property(nonatomic, assign) CGFloat oldY;
+//是否静音，默认是YES
+@property(nonatomic, assign) BOOL muted;
+//在滚动中
+@property(nonatomic, assign) BOOL isScrolling;
 
 @end
 
@@ -45,12 +49,14 @@
 - (instancetype)initWithTableView:(UITableView *)tableView controller:(FHCommunityFeedListController *)viewController {
     self = [super initWithTableView:tableView controller:viewController];
     if (self) {
+        _muted = YES;
         self.dataList = [[NSMutableArray alloc] init];
         [self configTableView];
         // 删帖成功
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(postDeleteSuccess:) name:kFHUGCDelPostNotification object:nil];
         // 编辑成功
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(postEditNoti:) name:@"kTTForumPostEditedThreadSuccessNotification" object:nil]; // 编辑发送成功
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(mutedStateChange:) name:FHUGCFullScreenVideoCellMutedStateChangeNotification object:nil];
         
         if(self.viewController.isInsertFeedWhenPublish){
             // 发帖成功
@@ -69,9 +75,9 @@
 }
 
 - (void)viewWillAppear {
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        [self startVideoPlay];
-    });
+    if(!self.viewController.needReloadData){
+        [self lazyStartVideoPlay];
+    }
 }
 
 - (void)viewWillDisappear {
@@ -88,6 +94,15 @@
         headerView.frame = frame;
 
         self.viewController.tableHeaderView = headerView;
+    }
+}
+
+- (void)mutedStateChange:(NSNotification *)notification {
+    NSDictionary *userInfo = notification.userInfo;
+
+    if(userInfo){
+        BOOL muted = [userInfo[@"muted"] boolValue];
+        self.muted = muted;
     }
 }
 
@@ -359,7 +374,7 @@
                     }
                     
                     if(isHead){
-                        [wself startVideoPlay];
+                        [wself lazyStartVideoPlay];
                     }
                     
                     if(!wself.viewController.alreadyReportPageMonitor && [wself.categoryId isEqualToString:@"f_news_recommend"]){
@@ -370,6 +385,12 @@
             });
         }
     }];
+}
+
+- (void)lazyStartVideoPlay {
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        [self startVideoPlay];
+    });
 }
 
 - (void)updateTableViewWithMoreData:(BOOL)hasMore {
@@ -392,6 +413,10 @@
         cellModel.enterFrom = [self.viewController categoryName];
         cellModel.isVideoJumpDetail = YES;
         cellModel.forbidVideoClick = YES;
+        cellModel.showMuteBtn = YES;
+        if(cellModel.videoItem){
+            cellModel.videoItem.muted = self.muted;
+        }
         //兜底逻辑
         if(cellModel.cellSubType == FHUGCFeedListCellSubTypeUGCVideo){
             cellModel.cellSubType = FHUGCFeedListCellSubTypeFullVideo;
@@ -441,6 +466,7 @@
     FHUGCFullScreenVideoCell *cell = [self getFitableVideoCell];
     if(cell != self.currentVideoCell){
         self.currentVideoCell.contentView.userInteractionEnabled = NO;
+        self.currentVideoCell.muteBtn.alpha = 0;
         cell.contentView.userInteractionEnabled = YES;
         self.currentVideoCell = cell;
     }
@@ -448,18 +474,6 @@
     if(![self.currentVideoCell cell_isPlaying]){
         [cell play];
     }
-}
-
-- (void)readyCurrentVideo {
-    FHUGCFullScreenVideoCell *videoCell = [self getFitableVideoCell];
-    if(videoCell){
-        videoCell.contentView.userInteractionEnabled = YES;
-        self.currentVideoCell = videoCell;
-    }
-}
-
-- (void)autoPlayCurrentVideo {
-    [self.currentVideoCell play];
 }
 
 - (FHUGCFullScreenVideoCell *)getFitableVideoCell {
@@ -569,6 +583,9 @@
         cellModel.cell = cell;
 
         if(indexPath.row < self.dataList.count){
+            if(cellModel.videoItem){
+                cellModel.videoItem.muted = self.muted;
+            }
             [cell refreshWithData:cellModel];
         }
         return cell;
@@ -621,6 +638,8 @@
     }
         
     if(self.currentVideoCell){
+        [self.currentVideoCell showMutedBtn];
+        
         CGRect frame = [self.currentVideoCell.videoView convertRect:self.currentVideoCell.videoView.bounds toView:self.viewController.view];
         if(scrollView.contentOffset.y - _oldY >= 0){
             //向上滑动
@@ -629,7 +648,8 @@
             }
         }else{
             //向下滑动
-            if(CGRectGetMaxY(frame) > screenHeight){
+            CGFloat height = MAX(self.viewController.view.width, self.viewController.view.height);
+            if(CGRectGetMaxY(frame) > height){
                 [self pauseCurrentVideo];
             }
         }
@@ -725,6 +745,7 @@
         if([cell isKindOfClass:[FHUGCFullScreenVideoCell class]]){
             FHUGCFullScreenVideoCell *vCell = (FHUGCFullScreenVideoCell *)cell;
             self.currentVideoCell.contentView.userInteractionEnabled = NO;
+            self.currentVideoCell.muteBtn.alpha = 0;
             vCell.contentView.userInteractionEnabled = YES;
             self.currentVideoCell = vCell;
             [vCell play];
@@ -740,7 +761,8 @@
 - (void)videoPlayFinished:(FHFeedUGCCellModel *)cellModel cell:(FHUGCBaseCell *)cell {
     UIViewController *vc = [BTDResponder topViewControllerForController:self.viewController];
     
-    if(vc != self.viewController){
+    if(vc != self.viewController || self.tableView.isDragging || self.tableView.isDecelerating){
+//        [self stopCurrentVideo];
         return;
     }
 
@@ -772,6 +794,7 @@
                         if([cell isKindOfClass:[FHUGCFullScreenVideoCell class]]){
                             FHUGCFullScreenVideoCell *vCell = (FHUGCFullScreenVideoCell *)cell;
                             self.currentVideoCell.contentView.userInteractionEnabled = NO;
+                            self.currentVideoCell.muteBtn.alpha = 0;
                             vCell.contentView.userInteractionEnabled = YES;
                             self.currentVideoCell = vCell;
                             [vCell play];
@@ -797,6 +820,7 @@
                             if([cell isKindOfClass:[FHUGCFullScreenVideoCell class]]){
                                 FHUGCFullScreenVideoCell *vCell = (FHUGCFullScreenVideoCell *)cell;
                                 self.currentVideoCell.contentView.userInteractionEnabled = NO;
+                                self.currentVideoCell.muteBtn.alpha = 0;
                                 vCell.contentView.userInteractionEnabled = YES;
                                 self.currentVideoCell = vCell;
                                 [vCell play];

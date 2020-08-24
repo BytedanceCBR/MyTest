@@ -17,6 +17,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property(nonatomic ,strong) TTVFeedListItem *videoItem;
 @property(nonatomic ,strong) FHUGCVideoView *videoView;
+@property(nonatomic ,strong) UIButton *muteBtn;
 
 - (void)willDisplay;
 
@@ -27,6 +28,8 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)play;
 
 - (BOOL)cell_isPlaying;
+
+- (void)showMutedBtn;
 
 @end
 
