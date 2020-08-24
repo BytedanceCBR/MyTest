@@ -482,35 +482,31 @@ logPB:self.listLogPB extraInfo:self.extraInfo completion:^(FHDetailOldModel * _N
     
     // 推荐经纪人
     if (model.data.recommendedRealtors.count > 0) {
-        FHDetailAgentListModel *agentListModel = [[FHDetailAgentListModel alloc] init];
+        FHDetailAgentListModel *agentListModels = [[FHDetailAgentListModel alloc] init];
         NSString *searchId = self.listLogPB[@"search_id"];
         NSString *imprId = self.listLogPB[@"impr_id"];
-        agentListModel.tableView = self.tableView;
-        agentListModel.belongsVC = self.detailController;
-        agentListModel.houseModelType = FHHouseModelTypeAgentlist;
-        agentListModel.recommendedRealtorsTitle = model.data.recommendedRealtorsTitle;
-        agentListModel.recommendedRealtors = model.data.recommendedRealtors;
-        agentListModel.associateInfo = model.data.recommendRealtorsAssociateInfo;
-        agentListModel.phoneCallViewModel = [[FHHouseDetailPhoneCallViewModel alloc] initWithHouseType:FHHouseTypeSecondHandHouse houseId:self.houseId];
-        agentListModel.phoneCallViewModel.houseInfoBizTrace = self.houseInfoBizTrace;
-        [agentListModel.phoneCallViewModel generateImParams:self.houseId houseTitle:model.data.title houseCover:imgUrl houseType:houseType  houseDes:houseDes housePrice:price houseAvgPrice:avgPrice];
-        agentListModel.phoneCallViewModel.tracerDict = self.detailTracerDic.mutableCopy;
-        //        agentListModel.phoneCallViewModel.followUpViewModel = self.contactViewModel.followUpViewModel;
-        //        agentListModel.phoneCallViewModel.followUpViewModel.tracerDict = self.detailTracerDic;
+        agentListModels.tableView = self.tableView;
+        agentListModels.belongsVC = self.detailController;
+        agentListModels.houseModelType = FHHouseModelTypeAgentlist;
+        agentListModels.recommendedRealtorsTitle = model.data.recommendedRealtorsTitle;
+        agentListModels.recommendedRealtors = model.data.recommendedRealtors;
+        agentListModels.associateInfo = model.data.recommendRealtorsAssociateInfo;
+        agentListModels.phoneCallViewModel = [[FHHouseDetailPhoneCallViewModel alloc] initWithHouseType:FHHouseTypeSecondHandHouse houseId:self.houseId];
+        agentListModels.phoneCallViewModel.houseInfoBizTrace = self.houseInfoBizTrace;
+        [agentListModels.phoneCallViewModel generateImParams:self.houseId houseTitle:model.data.title houseCover:imgUrl houseType:houseType  houseDes:houseDes housePrice:price houseAvgPrice:avgPrice];
+        agentListModels.phoneCallViewModel.tracerDict = self.detailTracerDic.mutableCopy;
         NSMutableDictionary *paramsDict = @{}.mutableCopy;
         if (self.detailTracerDic) {
             [paramsDict addEntriesFromDictionary:self.detailTracerDic];
         }
         paramsDict[@"page_type"] = [self pageTypeString];
-        agentListModel.phoneCallViewModel.tracerDict = paramsDict;
-//        agentListModel.phoneCallViewModel.followUpViewModel = self.contactViewModel.followUpViewModel;
-//        agentListModel.phoneCallViewModel.followUpViewModel.tracerDict = self.detailTracerDic;
-        agentListModel.searchId = searchId;
-        agentListModel.imprId = imprId;
-        agentListModel.houseId = self.houseId;
-        agentListModel.houseType = self.houseType;
-        [self.items addObject:agentListModel];
-        self.agentListModel = agentListModel;
+        agentListModels.phoneCallViewModel.tracerDict = paramsDict;
+        agentListModels.searchId = searchId;
+        agentListModels.imprId = imprId;
+        agentListModels.houseId = self.houseId;
+        agentListModels.houseType = self.houseType;
+        [self.items addObject:agentListModels];
+        self.agentListModel = agentListModels;
     }
     
     
