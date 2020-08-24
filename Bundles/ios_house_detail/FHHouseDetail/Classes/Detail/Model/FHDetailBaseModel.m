@@ -29,7 +29,7 @@
 }
 
 - (void)setShdowImageScopeType:(FHHouseShdowImageScopeType)shdowImageScopeType {
-    if (_shdowImageScopeType ==  FHHouseShdowImageScopeTypeDefault) {
+    if (_shdowImageScopeType ==  FHHouseShdowImageScopeTypeDefault || _shdowImageScopeType ==  FHHouseShdowImageScopeTypeAll) {
                _shdowImageScopeType = shdowImageScopeType;
     }else {
         _shdowImageScopeType = FHHouseShdowImageScopeTypeAll;

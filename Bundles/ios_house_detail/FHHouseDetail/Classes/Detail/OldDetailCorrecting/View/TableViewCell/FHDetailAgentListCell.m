@@ -73,6 +73,12 @@
             make.top.bottom.equalTo(self.contentView);
         }];
     }
+    if(model.shdowImageScopeType == FHHouseShdowImageScopeTypeDefault){
+        [self.shadowImage mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.top.equalTo(self.contentView).offset(-14);
+            make.bottom.equalTo(self.contentView).offset(14);
+        }];
+    }
 
     // 设置下发标题
     if(model.recommendedRealtorsTitle.length > 0) {
