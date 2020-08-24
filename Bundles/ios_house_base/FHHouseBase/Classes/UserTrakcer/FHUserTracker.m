@@ -45,6 +45,7 @@
     NSMutableDictionary *param = [model logDict];
     [param addEntriesFromDictionary:[self basicParam]];
     [FHErrorHubManagerUtil checkBuryingPointWithEvent:event Params:param];
+    [BDTrackerProtocol eventV3:event params:param];
 }
 
 @end
