@@ -85,7 +85,11 @@
     }else{
         [self.headerView removeSubTitleWithTitle];
     }
-    
+    if([self.headerView.label.text isEqualToString:@"实勘经纪人"]) {
+        self.headerView.showTipButton.hidden = NO;
+    }else {
+        self.headerView.showTipButton.hidden = YES;
+    }
     WeakSelf;
     if (model.recommendedRealtors.count > 0) {
         __block NSInteger itemsCount = 0;
