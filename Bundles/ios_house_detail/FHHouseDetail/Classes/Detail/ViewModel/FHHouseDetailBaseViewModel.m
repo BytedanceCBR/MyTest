@@ -77,10 +77,9 @@
         _lastPointOffset = CGPointZero;
         _weakedCellTable = [NSHashTable hashTableWithOptions:NSPointerFunctionsWeakMemory];
         _weakedVCLifeCycleCellTable = [NSHashTable hashTableWithOptions:NSPointerFunctionsWeakMemory];
-        self.houseType = houseType;
-        self.detailController = viewController;
-        self.tableView = tableView;
-        self.tableView.backgroundColor = [UIColor themeGray7];
+        _houseType = houseType;
+        _detailController = viewController;
+        _tableView = tableView;
         [self configTableView];
     }
     return self;

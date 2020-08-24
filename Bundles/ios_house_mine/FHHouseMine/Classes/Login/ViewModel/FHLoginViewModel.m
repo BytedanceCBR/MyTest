@@ -29,13 +29,12 @@
 #import <ByteDanceKit/NSString+BTDAdditions.h>
 #import "FHLoginConflictBridgePlugin.h"
 #import <TTInstallService/TTInstallIDManager.h>
-#import <TTBaseLib/TTStringHelper.h>
 #import <TTBaseLib/TTUIResponderHelper.h>
 #import "FHLoginConflictBridgePlugin.h"
 #import <CoreTelephony/CTTelephonyNetworkInfo.h>
-#import <ByteDanceKit/NSDictionary+BTDAdditions.h>
-#import <ByteDanceKit/BTDWeakProxy.h>
+#import <ByteDanceKit/ByteDanceKit.h>
 #import "SSCommonLogic.h"
+#import "FHMonitor.h"
 
 extern NSString *const kFHPhoneNumberCacheKey;
 extern NSString *const kFHPLoginhoneNumberCacheKey;
@@ -99,7 +98,7 @@ static FHLoginSharedModel *_sharedModel = nil;
     }
 }
 
-- (void)loadOneKayAndDouyinConfigs:(void (^)(void))completion {
+- (void)loadOneKayAndDouyinConfigs:(nullable void (^)(void))completion {
     
     //如果在一个app开启周期内，重复进入登录页，优先查看是否有记录，这个记录为内存缓存
     if (![TTReachability isNetworkConnected]) {
@@ -115,7 +114,19 @@ static FHLoginSharedModel *_sharedModel = nil;
     __weak typeof(self) weakSelf = self;
     __block NSError *requestError = nil;
     self.hasRequestedApis = NO;
+    
     dispatch_group_t group = dispatch_group_create();
+    dispatch_group_notify(group, dispatch_get_main_queue(), ^{
+        if (requestError) {
+            self.hasRequestedApis = NO;
+        } else {
+            self.hasRequestedApis = YES;
+        }
+        if (completion) {
+            completion();
+        }
+    });
+    
     dispatch_group_enter(group);
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         BOOL disableOneKeyLogin = [self getOneKeyLoginSwitchOff];
@@ -166,18 +177,6 @@ static FHLoginSharedModel *_sharedModel = nil;
             dispatch_group_leave(group);
         }];
     });
-    
-    dispatch_group_notify(group, dispatch_get_main_queue(), ^{
-        if (requestError) {
-            self.hasRequestedApis = NO;
-        } else {
-            self.hasRequestedApis = YES;
-        }
-        if (completion) {
-            completion();
-        }
-    });
-
 }
 
 /// 运营商一键登录开关
@@ -187,12 +186,12 @@ static FHLoginSharedModel *_sharedModel = nil;
     BOOL disableUnicom = NO;
     BOOL disableMobile = NO;
     NSDictionary *fhSettings = [self.class fhSettings];
-    NSDictionary *loginSettings = [fhSettings tt_dictionaryValueForKey:@"login_settings"];
+    NSDictionary *loginSettings = [fhSettings btd_dictionaryValueForKey:@"login_settings"];
     if (loginSettings) {
-        disableOneKeyLogin = [loginSettings tt_boolValueForKey:@"disable_onekeylogin"];
-        disableTelecom = [loginSettings tt_boolValueForKey:@"disable_telecom"];
-        disableUnicom = [loginSettings tt_boolValueForKey:@"disable_unicom"];
-        disableMobile = [loginSettings tt_boolValueForKey:@"disable_mobile"];
+        disableOneKeyLogin = [loginSettings btd_boolValueForKey:@"disable_onekeylogin"];
+        disableTelecom = [loginSettings btd_boolValueForKey:@"disable_telecom"];
+        disableUnicom = [loginSettings btd_boolValueForKey:@"disable_unicom"];
+        disableMobile = [loginSettings btd_boolValueForKey:@"disable_mobile"];
     }
     if (disableOneKeyLogin) {
         return disableOneKeyLogin;
@@ -547,12 +546,11 @@ static FHLoginSharedModel *_sharedModel = nil;
 }
 
 - (NSAttributedString *)protocolAttrTextByIsOneKeyLoginViewType:(FHLoginViewType )viewType{
-    __weak typeof(self) wself = self;
     NSMutableAttributedString *attrText = [NSMutableAttributedString new];
-    NSRange serviceRange;
+//    NSRange serviceRange;
     NSRange userProtocolRange;
     NSRange privacyRange;
-    NSString *urlStr = nil;
+//    NSString *urlStr = nil;
     NSDictionary *commonTextStyle = @{
                                       NSFontAttributeName: [UIFont themeFontRegular:13],
                                       NSForegroundColorAttributeName: [UIColor themeGray3],
@@ -612,9 +610,9 @@ static FHLoginSharedModel *_sharedModel = nil;
 }
 + (NSMutableAttributedString *)protocolAttrTextForOneKeyLoginViewType {
     NSMutableAttributedString *attrText = [NSMutableAttributedString new];
-    NSRange serviceRange;
-    NSRange userProtocolRange;
-    NSRange privacyRange;
+    NSRange serviceRange = NSMakeRange(NSNotFound, 0);
+    NSRange userProtocolRange = NSMakeRange(NSNotFound, 0);
+    NSRange privacyRange = NSMakeRange(NSNotFound, 0);
     NSString *urlStr = nil;
     NSDictionary *commonTextStyle = @{
                                       NSFontAttributeName: [UIFont themeFontRegular:13],
@@ -870,7 +868,7 @@ static FHLoginSharedModel *_sharedModel = nil;
                         NSString *device_id = [[TTInstallIDManager sharedInstance] deviceID];
                         NSString *URLString = [NSString stringWithFormat:@" http://m.haoduofangs.com/passport/auth_bind_conflict/index/?aid=1370&enter_from=%@&mobile=%@&screen_name=%@&avatar_url=%@&last_login_time=%@&platform_screen_name_current=%@&platform_screen_name_conflict=%@&profile_key=%@&device_id=%@",enter_from, mobile, screen_name, avatar_url, @(last_login_time), platform_screen_name_current, platform_screen_name_conflict, profileKey, device_id];
                         
-                        ssOpenWebView([TTStringHelper URLWithURLString:URLString], nil, strongSelf.viewController.navigationController, NO, @{@"hide_nav_bar": @"1",@"hide_back_button": @"1"});
+                        ssOpenWebView([NSURL btd_URLWithString:URLString], nil, strongSelf.viewController.navigationController, NO, @{@"hide_nav_bar": @"1",@"hide_back_button": @"1"});
                     };
                     NSString *message = @"";
                     if ([error.userInfo[@"screen_name"] isKindOfClass:[NSString class]] && [error.userInfo[@"mobile"] isKindOfClass:[NSString class]] ) {
@@ -998,10 +996,9 @@ static FHLoginSharedModel *_sharedModel = nil;
         popToLoginVC();
         return;
     }
-    NSString *userID = [TTAccount sharedAccount].user.userID;
+    NSString *userID = [TTAccount sharedAccount].user.userID.stringValue;
     
     [TTAccount logoutInScene:TTAccountLogoutSceneNormal completion:^(BOOL success, NSError * _Nullable error) {
-        __strong typeof(weakSelf) strongSelf = self;
         BOOL shouldIgnoreError = NO;
         //未设置密码也可以退出登录
         if (error.code == 1037) {
@@ -1013,16 +1010,16 @@ static FHLoginSharedModel *_sharedModel = nil;
         [extra setValue:userID forKey:@"user_id"];
         
         if (error && !shouldIgnoreError) {
-            [[TTMonitor shareManager] trackService:@"account_logout" status:2 extra:extra];
+            [FHMonitor hmdTrackService:@"account_logout" status:2 extra:extra];
             [TTIndicatorView showWithIndicatorStyle:TTIndicatorViewStyleImage indicatorText:NSLocalizedString(@"退出登录失败，请稍后重试", nil) indicatorImage:[UIImage themedImageNamed:@"close_popup_textpage.png"] autoDismiss:YES dismissHandler:nil];
         } else {
-            [[TTMonitor shareManager] trackService:@"account_logout" status:1 extra:extra];
+            [FHMonitor hmdTrackService:@"account_logout" status:1 extra:extra];
             // LogV1
             if (![TTTrackerWrapper isOnlyV3SendingEnable]) {
                 wrapperTrackerEvent([TTSandBoxHelper appName], @"xiangping", @"account_setting_signout");
             }
             // LogV3
-            [TTTrackerWrapper eventV3:@"login_account_exit" params:nil isDoubleSending:YES];
+            [FHUserTracker writeEvent:@"login_account_exit" params:nil];
             YYCache *sendPhoneNumberCache = [[FHEnvContext sharedInstance].generalBizConfig sendPhoneNumberCache];
             [sendPhoneNumberCache removeObjectForKey:kFHPLoginhoneNumberCacheKey];
         }
