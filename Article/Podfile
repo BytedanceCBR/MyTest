@@ -403,7 +403,7 @@ def appPods
     'DebugResource']
     
     #-----头条推送SDK----
-    pod 'BDUGPushSDK', '2.2.3'
+    pod 'BDUGPushSDK', '2.2.5'
 
     #-----路由-----
     pod 'TTRoute','1.1.3-rc.0-f100' # git:'git@code.byted.org:TTIOS/tt_pods_route.git', :branch => 'f100'
@@ -613,13 +613,13 @@ target 'f100' do
 end
 
 target 'serviceNofExtension' do
-  pod 'BDUGPushSDK','2.2.3',:subspecs => [
+  pod 'BDUGPushSDK','2.2.5',:subspecs => [
   'Extension'
   ]
 end
 
 target 'com.f100.client.FHNotificationServiceExtension' do
-  pod 'BDUGPushSDK','2.2.3',:subspecs => [
+  pod 'BDUGPushSDK','2.2.5',:subspecs => [
   'Extension'
   ]
 end
