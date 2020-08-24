@@ -228,11 +228,11 @@
     CGFloat maxAgencyLabelWidth = [UIScreen mainScreen].bounds.size.width - 300;
     CGFloat agencyLabelWidth = [contactPhone.agencyName boundingRectWithSize:CGSizeMake(maxAgencyLabelWidth, MAXFLOAT) options:NSStringDrawingUsesLineFragmentOrigin attributes:@{NSFontAttributeName: self.agencyLabel.font} context:nil].size.width + 1;
     CGFloat realtorContentWidth = 0;
-    if ([UIDevice btd_is568Screen]) {
+    if ([UIDevice btd_deviceWidthType] == BTDDeviceWidthMode320) {
         realtorContentWidth = [UIScreen mainScreen].bounds.size.width - 178;
     } else {
         CGFloat labelWidth = MAX(nameLabelwidth, agencyLabelWidth);
-        CGFloat avatarWidth = 48;
+        CGFloat avatarWidth = 50;
         CGFloat avatarLeftMargin = 20;
         CGFloat avatarLabelMargin = 10;
         realtorContentWidth = labelWidth + avatarWidth + avatarLabelMargin + avatarLeftMargin;
