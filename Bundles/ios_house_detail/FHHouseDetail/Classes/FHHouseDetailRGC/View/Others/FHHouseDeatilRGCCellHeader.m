@@ -120,6 +120,7 @@
         UILabel *companyNameLab = [[UILabel alloc]init];
         companyNameLab.font = [UIFont themeFontMedium:10];
         companyNameLab.textColor = [UIColor colorWithHexStr:@"#929292"];
+        companyNameLab.textAlignment = NSTextAlignmentCenter;
         [self.companyBac addSubview:companyNameLab];
         _companyNameLab = companyNameLab;
     }
