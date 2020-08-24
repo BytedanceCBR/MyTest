@@ -52,6 +52,11 @@
     _arrowsImg.hidden = YES;
     [self addSubview:_arrowsImg];
     
+    _showTipButton = [[UIButton alloc] init];
+    [_showTipButton setBackgroundImage:[UIImage imageNamed:@"ic-question-line-normal"] forState:UIControlStateNormal];
+    [_showTipButton setBackgroundImage:[UIImage imageNamed:@"ic-question-line-normal"] forState:UIControlStateHighlighted];
+    [self addSubview:_showTipButton];
+    
     [self.label mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(15);
         make.right.mas_equalTo(self.loadMore.mas_left).offset(-10);
@@ -71,6 +76,13 @@
         make.width.mas_equalTo(80);
         make.right.mas_equalTo(self.arrowsImg.mas_left);
     }];
+    [self.showTipButton mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.width.height.mas_equalTo(16);
+        make.left.equalTo(self).offset(112);
+        make.centerY.equalTo(self.label);
+    }];
+    
+    
 }
 
 - (void)setIsShowLoadMore:(BOOL)isShowLoadMore {

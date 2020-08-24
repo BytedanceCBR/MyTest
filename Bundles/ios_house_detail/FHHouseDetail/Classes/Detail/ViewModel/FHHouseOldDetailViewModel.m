@@ -513,6 +513,38 @@ logPB:self.listLogPB extraInfo:self.extraInfo completion:^(FHDetailOldModel * _N
         self.agentListModel = agentListModel;
     }
     
+    
+    
+    if (model.data.surveyedRealtorInfo.items.count > 0) {
+        FHDetailAgentListModel *agentListModel = [[FHDetailAgentListModel alloc] init];
+        NSString *searchId = self.listLogPB[@"search_id"];
+        NSString *imprId = self.listLogPB[@"impr_id"];
+        agentListModel.tableView = self.tableView;
+        agentListModel.belongsVC = self.detailController;
+        agentListModel.houseModelType = FHHouseModelTypeSurveyAgentlist;
+        agentListModel.recommendedRealtorsTitle = model.data.surveyedRealtorInfo.title;
+        agentListModel.recommendedRealtors = model.data.surveyedRealtorInfo.items;
+        agentListModel.associateInfo = model.data.recommendRealtorsAssociateInfo;
+        agentListModel.phoneCallViewModel = [[FHHouseDetailPhoneCallViewModel alloc] initWithHouseType:FHHouseTypeSecondHandHouse houseId:self.houseId];
+        agentListModel.phoneCallViewModel.houseInfoBizTrace = self.houseInfoBizTrace;
+        [agentListModel.phoneCallViewModel generateImParams:self.houseId houseTitle:model.data.title houseCover:imgUrl houseType:houseType  houseDes:houseDes housePrice:price houseAvgPrice:avgPrice];
+        agentListModel.phoneCallViewModel.tracerDict = self.detailTracerDic.mutableCopy;
+        NSMutableDictionary *paramsDict = @{}.mutableCopy;
+        if (self.detailTracerDic) {
+            [paramsDict addEntriesFromDictionary:self.detailTracerDic];
+        }
+        paramsDict[@"page_type"] = [self pageTypeString];
+        agentListModel.phoneCallViewModel.tracerDict = paramsDict;
+        //        agentListModel.phoneCallViewModel.followUpViewModel = self.contactViewModel.followUpViewModel;
+        //        agentListModel.phoneCallViewModel.followUpViewModel.tracerDict = self.detailTracerDic;
+        agentListModel.searchId = searchId;
+        agentListModel.imprId = imprId;
+        agentListModel.houseId = self.houseId;
+        agentListModel.houseType = self.houseType;
+        [self.items addObject:agentListModel];
+//        self.agentListModel = agentListModel;
+    }
+    
     if(model.data.houseReviewComment.count > 0){
         
         NSString *searchId = self.listLogPB[@"search_id"];

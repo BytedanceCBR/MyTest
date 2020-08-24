@@ -28,6 +28,7 @@
     NSMutableArray *billBoard = [[NSMutableArray alloc]init];
     NSMutableArray *housingEvaluation = [[NSMutableArray alloc]init];
     NSMutableArray *agentlist = [[NSMutableArray alloc]init];
+    NSMutableArray *surveyedRealtorAgentlist = [[NSMutableArray alloc]init];
     NSMutableArray *neighborhoodInfos = [[NSMutableArray alloc]init];
     NSMutableArray *locationPeripherys = [[NSMutableArray alloc]init];
     NSMutableArray *tips = [[NSMutableArray alloc]init];
@@ -58,6 +59,9 @@
                 break;
             case FHHouseModelTypeAgentlist:
                 [agentlist addObject:obj];
+                break;
+            case FHHouseModelTypeSurveyAgentlist:
+                [surveyedRealtorAgentlist addObject:obj];
                 break;
             case FHHouseModelTypeLocationPeriphery:
                 [locationPeripherys addObject:obj];
@@ -111,6 +115,9 @@
     if (agentlist.count > 0) {
         [moduleItems addObject:@{@"agentlist":agentlist}];
     }
+    if (surveyedRealtorAgentlist.count > 0) {
+           [moduleItems addObject:@{@"surveyedRealtorAgentlist":surveyedRealtorAgentlist}];
+       }
     if (housingEvaluation.count > 0) {
         [moduleItems addObject:@{@"housingEvaluation":housingEvaluation}];
     }
@@ -139,7 +146,7 @@
         NSArray *currentItemArr = obj[[obj allKeys][0]];
 //        单个cell模块
         if([[obj allKeys] containsObject:@"subscribes"] || [[obj allKeys] containsObject:@"outlineInfo"]
-           || [[obj allKeys] containsObject:@"billBoard"] || [[obj allKeys] containsObject:@"agentlist"]
+           || [[obj allKeys] containsObject:@"billBoard"] || [[obj allKeys] containsObject:@"agentlist"] || [[obj allKeys] containsObject:@"surveyedRealtorAgentlist"]
            || [[obj allKeys] containsObject:@"tips"] || [[obj allKeys] containsObject:@"peripherys"]
            || [[obj allKeys] containsObject:@"advisoryLoans"] || [[obj allKeys] containsObject:@"recommendedCourt"]) {
             [currentItemArr enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
