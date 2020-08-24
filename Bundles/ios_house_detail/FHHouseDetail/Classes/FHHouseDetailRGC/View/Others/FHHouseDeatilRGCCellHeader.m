@@ -177,6 +177,15 @@
     self.nameLab.text = cellModel.realtor.realtorName;
     if (cellModel.realtor.agencyName.length>0) {
         self.companyNameLab.text = cellModel.realtor.agencyName;
+        [self.companyNameLab sizeToFit];
+        if (self.companyNameLab.bounds.size.width < 50) {
+            [self.companyBac mas_remakeConstraints:^(MASConstraintMaker *make) {
+                make.left.equalTo(self.nameLab.mas_right).offset(4);
+                make.centerY.equalTo(self.nameLab);
+                make.width.mas_offset(50);
+                make.height.mas_offset(16);
+            }];
+        }
     }else {
         [self.companyBac mas_remakeConstraints:^(MASConstraintMaker *make) {
             make.left.equalTo(self.nameLab.mas_right).offset(0);
