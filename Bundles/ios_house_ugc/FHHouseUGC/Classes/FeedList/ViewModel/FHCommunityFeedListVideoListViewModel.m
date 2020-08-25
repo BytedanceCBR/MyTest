@@ -620,6 +620,9 @@
     self.currentCell = [tableView cellForRowAtIndexPath:indexPath];
     
     if(self.currentCell == self.currentVideoCell){
+        if(self.isScrolling){
+            return;
+        }
         self.detailJumpManager.currentCell = self.currentCell;
         [self.detailJumpManager jumpToDetail:cellModel showComment:NO enterType:@"feed_content_blank"];
     }else{
@@ -631,6 +634,12 @@
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
     [self.viewController.scrollViewDelegate scrollViewDidScroll:scrollView];
+    
+    [NSObject cancelPreviousPerformRequestsWithTarget:self];
+    [self performSelector:@selector(scrollViewDidEndScrollingAnimation:) withObject:nil afterDelay:0.3];
+//    NSLog(@"___111____滑动中");
+    self.isScrolling = YES ;
+    
     if(scrollView == self.tableView){
         if (scrollView.isDragging) {
             [self.viewController.notifyBarView performSelector:@selector(hideIfNeeds) withObject:nil];
@@ -669,6 +678,12 @@
 
 - (void)scrollViewDidScrollToTop:(UIScrollView *)scrollView {
     [self startVideoPlay];
+}
+
+- (void)scrollViewDidEndScrollingAnimation:(UIScrollView *)scrollView {
+    [NSObject cancelPreviousPerformRequestsWithTarget:self];
+    self.isScrolling = NO;
+//    NSLog(@"___111____滑动停止");
 }
 
 #pragma mark - FHUGCBaseCellDelegate
@@ -737,32 +752,41 @@
     }
 }
 
+- (void)scrollToVideo:(NSInteger)row {
+    if(self.isScrolling){
+        return;
+    }
+    
+    NSIndexPath *indexPath = [NSIndexPath indexPathForRow:row inSection:0];
+    [self.tableView scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionTop animated:YES];
+    UITableViewCell *cell = [self.tableView cellForRowAtIndexPath:indexPath];
+    if([cell isKindOfClass:[FHUGCFullScreenVideoCell class]]){
+        FHUGCFullScreenVideoCell *vCell = (FHUGCFullScreenVideoCell *)cell;
+        self.currentVideoCell.contentView.userInteractionEnabled = NO;
+        self.currentVideoCell.muteBtn.alpha = 0;
+        vCell.contentView.userInteractionEnabled = YES;
+        self.currentVideoCell = vCell;
+        [vCell play];
+    }
+    
+    if(row >= (self.dataList.count - 3)){
+        //在刷一刷数据
+        [self requestData:NO first:NO];
+    }
+}
+
 - (void)didVideoClicked:(FHFeedUGCCellModel *)cellModel cell:(FHUGCBaseCell *)cell {
     NSInteger row = [self.dataList indexOfObject:cellModel];
     if(row < self.dataList.count && row >= 0){
-        NSIndexPath *indexPath = [NSIndexPath indexPathForRow:row inSection:0];
-        [self.tableView scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionTop animated:YES];
-        if([cell isKindOfClass:[FHUGCFullScreenVideoCell class]]){
-            FHUGCFullScreenVideoCell *vCell = (FHUGCFullScreenVideoCell *)cell;
-            self.currentVideoCell.contentView.userInteractionEnabled = NO;
-            self.currentVideoCell.muteBtn.alpha = 0;
-            vCell.contentView.userInteractionEnabled = YES;
-            self.currentVideoCell = vCell;
-            [vCell play];
-        }
-        
-        if(row >= (self.dataList.count - 3)){
-            //在刷一刷数据
-            [self requestData:NO first:NO];
-        }
+        [self scrollToVideo:row];
     }
 }
 
 - (void)videoPlayFinished:(FHFeedUGCCellModel *)cellModel cell:(FHUGCBaseCell *)cell {
     UIViewController *vc = [BTDResponder topViewControllerForController:self.viewController];
     
-    if(vc != self.viewController || self.tableView.isDragging || self.tableView.isDecelerating){
-//        [self stopCurrentVideo];
+    if(vc != self.viewController || self.tableView.isDragging || self.tableView.isDecelerating || self.isScrolling){
+        [self stopCurrentVideo];
         return;
     }
 
@@ -788,24 +812,7 @@
                 if(row >= 0){
                     row += 1;
                     if(row < self.dataList.count){
-                        NSIndexPath *indexPath = [NSIndexPath indexPathForRow:row inSection:0];
-                        [self.tableView scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionTop animated:YES];
-                        UITableViewCell *cell = [self.tableView cellForRowAtIndexPath:indexPath];
-                        if([cell isKindOfClass:[FHUGCFullScreenVideoCell class]]){
-                            FHUGCFullScreenVideoCell *vCell = (FHUGCFullScreenVideoCell *)cell;
-                            self.currentVideoCell.contentView.userInteractionEnabled = NO;
-                            self.currentVideoCell.muteBtn.alpha = 0;
-                            vCell.contentView.userInteractionEnabled = YES;
-                            self.currentVideoCell = vCell;
-                            [vCell play];
-                        }
-
-                        if(row >= (self.dataList.count - 3)){
-                            //在刷一刷数据
-                            [self requestData:NO first:NO];
-                        }
-                    }else{
-
+                        [self scrollToVideo:row];
                     }
                 }
             }else{
@@ -814,24 +821,7 @@
                     if(row >= 0){
                         row += 1;
                         if(row < self.dataList.count){
-                            NSIndexPath *indexPath = [NSIndexPath indexPathForRow:row inSection:0];
-                            [self.tableView scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionTop animated:YES];
-                            UITableViewCell *cell = [self.tableView cellForRowAtIndexPath:indexPath];
-                            if([cell isKindOfClass:[FHUGCFullScreenVideoCell class]]){
-                                FHUGCFullScreenVideoCell *vCell = (FHUGCFullScreenVideoCell *)cell;
-                                self.currentVideoCell.contentView.userInteractionEnabled = NO;
-                                self.currentVideoCell.muteBtn.alpha = 0;
-                                vCell.contentView.userInteractionEnabled = YES;
-                                self.currentVideoCell = vCell;
-                                [vCell play];
-                            }
-
-                            if(row >= (self.dataList.count - 3)){
-                                //在刷一刷数据
-                                [self requestData:NO first:NO];
-                            }
-                        }else{
-
+                            [self scrollToVideo:row];
                         }
                     }
                 });
@@ -894,7 +884,6 @@
         self.clientShowDict = [NSMutableDictionary new];
     }
     
-    NSString *row = [NSString stringWithFormat:@"%i",indexPath.row];
     NSString *groupId = cellModel.groupId;
     if(groupId){
         if (self.clientShowDict[groupId]) {

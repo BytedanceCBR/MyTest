@@ -124,6 +124,11 @@
         StrongSelf;
         [self shareActionClicked];
     };
+    
+    self.videoView.ttv_playerPlaybackStateBlock = ^(TTVVideoPlaybackState state) {
+        StrongSelf;
+        [self playerPlaybackState:state];
+    };
 
     self.bottomView = [[FHUGCToolView alloc] initWithFrame:CGRectMake(0, 0, screenWidth, bottomViewHeight)];
     [_bottomView.commentButton addTarget:self action:@selector(commentBtnClick) forControlEvents:UIControlEventTouchUpInside];
@@ -219,9 +224,10 @@
     [self stop];
     self.videoItem = cellModel.videoItem;
     self.videoView.cellEntity = self.videoItem;
+//    self.videoView.forbidVideoClick = cellModel.forbidVideoClick;
     WeakSelf;
     if(cellModel.isVideoJumpDetail){
-        _videoView.userInteractionEnabled = !cellModel.forbidVideoClick;
+        _videoView.userInteractionEnabled = YES;
         _videoView.ttv_playButtonClickedBlock = ^{
             StrongSelf;
             [self playVideoDidClicked];
@@ -303,6 +309,24 @@
     }
 }
 
+- (void)playerPlaybackState:(TTVVideoPlaybackState) state {
+    if(self.cellModel.forbidVideoClick){
+        if(state == TTVVideoPlaybackStatePlaying){
+            self.userInteractionEnabled = NO;
+        }else{
+            self.userInteractionEnabled = YES;
+        }
+    }
+    
+    if(self.cellModel.showMuteBtn){
+        if(state == TTVVideoPlaybackStatePlaying){
+            [self showMutedBtn];
+        }else{
+            self.muteBtn.alpha = 0;
+        }
+    }
+}
+
 - (void)mutedBtnClicked {
     if(self.cellModel.showMuteBtn){
         [self showMutedBtn];
@@ -324,8 +348,27 @@
     }
 }
 
+- (BOOL)shouldShowMutedBtn {
+    if ([UIApplication sharedApplication].applicationState != UIApplicationStateActive) {
+        return NO;
+    }
+ 
+    UIView *view = [self cell_movieView];
+    if ([view isKindOfClass:[TTVPlayVideo class]]) {
+        TTVPlayVideo *movieView = (TTVPlayVideo *)view;
+        if (!movieView.player.context.isFullScreen &&
+            !movieView.player.context.isRotating) {
+            if (movieView.player.context.playbackState == TTVVideoPlaybackStatePlaying) {
+                return YES;
+            }
+        }
+    }
+    
+    return NO;
+}
+
 - (void)showMutedBtn {
-    if(self.cellModel.showMuteBtn){
+    if(self.cellModel.showMuteBtn && [self shouldShowMutedBtn]){
         self.muteBtn.alpha = 1;
         [self startTimer];
     }
@@ -680,10 +723,6 @@
         }
     }else{
         [self.videoView playVideo];
-    }
-    
-    if(self.cellModel.showMuteBtn) {
-        [self showMutedBtn];
     }
 }
 

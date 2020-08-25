@@ -136,7 +136,6 @@ extern BOOL ttvs_isEnhancePlayerTitleFont(void);
         [_playButton addTarget:self action:@selector(playButtonClicked) forControlEvents:UIControlEventTouchUpInside];
         [self.logo addSubview:_playButton];
         self.playMovie = [[TTVCellPlayMovie alloc] init];
-        
     }
     return self;
 }
@@ -191,6 +190,12 @@ extern BOOL ttvs_isEnhancePlayerTitleFont(void);
 }
 
 #pragma mark TTVCellPlayMovieDelegate
+
+- (void)playerPlaybackState:(TTVVideoPlaybackState)state {
+    if (self.ttv_playerPlaybackStateBlock) {
+        self.ttv_playerPlaybackStateBlock(state);
+    }
+}
 
 - (void)ttv_shareButtonOnMovieFinishViewDidPress
 {

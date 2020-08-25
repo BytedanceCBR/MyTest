@@ -370,6 +370,9 @@ extern BOOL ttvs_isVideoFeedURLEnabled(void);
 
 - (void)playerPlaybackState:(TTVVideoPlaybackState)state
 {
+    if ([self.delegate respondsToSelector:@selector(playerPlaybackState:)]) {
+        [self.delegate playerPlaybackState:state];
+    }
     if (state == TTVVideoPlaybackStateFinished ||
         state == TTVVideoPlaybackStateError) {
         self.logo.userInteractionEnabled = YES;

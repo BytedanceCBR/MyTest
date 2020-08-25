@@ -11,6 +11,8 @@
 #import "TTAlphaThemedButton.h"
 #import "TTVFeedContainerBaseView.h"
 #import "TTVFullscreenProtocol.h"
+#import "TTVPlayerControllerState.h"
+
 @class TTVCellPlayMovie;
 @protocol TTVCellPlayMovieProtocol;
 
@@ -35,6 +37,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy) void (^ttv_videoPlayFinishedBlock)();
 @property (nonatomic, copy) void (^ttv_videoReplayActionBlock)();
 @property (nonatomic, copy) void (^ttv_playButtonClickedBlock)();
+@property (nonatomic, copy) void (^ttv_playerPlaybackStateBlock)(TTVVideoPlaybackState state);
 
 + (CGFloat)obtainHeightForFeed:(TTVFeedListItem *)cellEntity cellWidth:(CGFloat)width;
 - (void)playButtonClicked;

@@ -10,6 +10,7 @@
 #import "ExploreVideoSP.h"
 #import "ExploreCellBase.h"
 #import "TTVideoFeedListEnum.h"
+#import "TTVPlayerControllerState.h"
 
 @protocol TTVCellPlayMovieDelegate <NSObject>
 
@@ -19,6 +20,7 @@
 - (void)playerPlaybackFailed;
 - (void)playerPlaybackPlaying;
 - (void)playerPlaybackPause;
+- (void)playerPlaybackState:(TTVVideoPlaybackState)state;
 
 - (void)ttv_shareButtonOnMovieTopViewDidPress;
 - (void)ttv_moreButtonOnMovieTopViewDidPress;
