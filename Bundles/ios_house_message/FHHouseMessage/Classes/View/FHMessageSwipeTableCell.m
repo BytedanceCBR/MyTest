@@ -1,9 +1,5 @@
 //
-//  SwipeTableCell.m
-//  SwipeTableView
-//
-//  Created by zhao on 16/8/11.
-//  Copyright © 2016年 zhaoName. All rights reserved.
+//  Created by xubinbin on 2020/8/14.
 //
 
 #import "FHMessageSwipeTableCell.h"
@@ -14,28 +10,27 @@
 
 @interface FHMessageSwipeTableCell ()<UIGestureRecognizerDelegate>
 
-@property (nonatomic, strong) UIView *swipeOverlayView; /**< 滑动时覆盖在cell上*/
-@property (nonatomic, strong) UIImageView *swipeImageView; /**< 显示移动后的cell上的内容*/
-@property (nonatomic, strong) FHMessageSwipeView *rightSwipeView; /**< 右滑展示的view*/
-@property (nonatomic, strong) FHMessageSwipeView *leftSwipeView; /**< 左滑展示的View*/
+@property (nonatomic, strong) UIView *swipeOverlayView; // 滑动时覆盖在cell上
+@property (nonatomic, strong) UIImageView *swipeImageView; //显示移动后的cell上的内容
+@property (nonatomic, strong) FHMessageSwipeView *rightSwipeView; // 右滑展示的view
+@property (nonatomic, strong) FHMessageSwipeView *leftSwipeView; //左滑展示的View
 @property (nonatomic, strong) FHMessageSwipeView *gestureAnimationSwipeView;
 
-@property (nonatomic, assign) SwipeTableCellStyle swipeStyle; /**< 滑动样式 默认右滑*/
-@property (nonatomic, assign) SwipeViewTransfromMode transformMode; /**< swipeView的弹出效果*/
-@property (nonatomic, strong) NSArray<FHMessageSwipeButton *> *leftSwipeButtons; /**< 左滑buttons*/
-@property (nonatomic, strong) NSArray<FHMessageSwipeButton *> *rightSwipeButtons; /**< 右滑buttons*/
-@property (nonatomic, strong) NSMutableSet *perviusHiddenViewSet;/**< 已经隐藏的view*/
+@property (nonatomic, assign) SwipeTableCellStyle swipeStyle; // 滑动样式 默认右滑
+@property (nonatomic, assign) SwipeViewTransfromMode transformMode; // swipeView的弹出效果
+@property (nonatomic, strong) NSArray<FHMessageSwipeButton *> *rightSwipeButtons; // 右滑buttons
+@property (nonatomic, strong) NSMutableSet *perviusHiddenViewSet;//已经隐藏的view
 
-@property (nonatomic, assign) CGFloat swipeOffset; /**< 滑动偏移量*/
-@property (nonatomic, assign) CGFloat targetOffset; /**< 最终目标偏移量*/
-@property (nonatomic, strong) UIPanGestureRecognizer *panGesture; /**< 滑动手势*/
-@property (nonatomic, strong) UITapGestureRecognizer *tapGesture; /**< 点击手势*/
+@property (nonatomic, assign) CGFloat swipeOffset; //滑动偏移量
+@property (nonatomic, assign) CGFloat targetOffset; // 最终目标偏移量
+@property (nonatomic, strong) UIPanGestureRecognizer *panGesture; // 滑动手势
+@property (nonatomic, strong) UITapGestureRecognizer *tapGesture; // 点击手势
 
-@property (nonatomic, assign) CGPoint panStartPoint; /**<滑动手势开始点击的坐标*/
-@property (nonatomic, assign) CGFloat panStartOffset; /**<滑动手势的偏移量*/
-@property (nonatomic, assign) BOOL isShowSwipeOverlayView; /**< 保证显示、隐藏swipeImageView方法只走一次*/
+@property (nonatomic, assign) CGPoint panStartPoint; //滑动手势开始点击的坐标
+@property (nonatomic, assign) CGFloat panStartOffset; //滑动手势的偏移量
+@property (nonatomic, assign) BOOL isShowSwipeOverlayView; // 保证显示、隐藏swipeImageView方法只走一次
 
-@property (nonatomic, strong) CADisplayLink *dispalyLink; /**<定时器 一秒60次*/
+@property (nonatomic, strong) CADisplayLink *dispalyLink; //定时器 一秒60次
 
 @end
 
@@ -71,7 +66,7 @@
 - (void)initDatas
 {
     self.swipeStyle = SwipeTableCellStyleRightToLeft; //默认右滑
-    self.transformMode = SwipeViewTransfromModeDefault;
+    self.transformMode = SwipeViewTransfromModeStatic;
     self.swipeOffset = 0.0;
     self.targetOffset = 0.0;
     self.swipeThreshold = 0.5;
@@ -109,7 +104,6 @@
         self.swipeOverlayView = nil;
         _rightSwipeView = _leftSwipeView = nil;
         self.rightSwipeButtons = @[];
-        self.leftSwipeButtons = @[];
     }
     if(self.dispalyLink)
     {
@@ -162,13 +156,7 @@
         [self.rightSwipeView removeFromSuperview];
         self.rightSwipeView = nil;
     }
-    if(self.leftSwipeView)
-    {
-        [self.leftSwipeView removeFromSuperview];
-        self.leftSwipeView = nil;
-    }
     self.rightSwipeButtons = @[];
-    self.leftSwipeButtons = @[];
     
     [self getSwipeButtons];
     [self createSwipeOverlayViewIfNeed];
@@ -218,7 +206,6 @@
         }
         
         self.targetOffset = [self filterSwipeOffset:self.targetOffset];
-        //NSLog(@"targetOffset:%f", self.targetOffset);
         [self gestureAnimationWithOffset:self.targetOffset animationView:self.targetOffset <= 0 ? self.rightSwipeView : self.leftSwipeView];
         if (self.swipeOffset == -88) {
             [self openCompleted];
@@ -260,13 +247,6 @@
         _rightSwipeView.frame = CGRectMake(self.swipeImageView.bounds.size.width, 0, 108, CELL_HEIGHT);
         [self.swipeOverlayView addSubview:_rightSwipeView];
     }
-    if(self.leftSwipeButtons.count && !self.leftSwipeView)
-    {
-        _leftSwipeView = [[FHMessageSwipeView alloc] initWithButtons:self.leftSwipeButtons fromRight:NO cellHeght:CELL_HEIGHT edge:edge];
-        // 改变leftSwipeView的frame 使其显示在swipeImageView的最左端
-        _leftSwipeView.frame = CGRectMake(-_leftSwipeView.frame.size.width, 0, _leftSwipeView.frame.size.width, CELL_HEIGHT);
-        [self.swipeOverlayView addSubview:_leftSwipeView];
-    }
 }
 
 /**
@@ -276,10 +256,6 @@
 {
     UIView *swipeView = offset > 0 ? self.leftSwipeView : self.rightSwipeView;
     if(!swipeView)
-    {
-        return 0.0;
-    }
-    else if(self.swipeStyle == SwipeTableCellStyleLeftToRight && offset < 0)
     {
         return 0.0;
     }
@@ -424,7 +400,6 @@
     {
         //解决和didSelect冲突问题
         CGPoint tapPoint = [self.tapGesture locationInView:self];
-        //NSLog(@"%@,%@", NSStringFromCGRect(self.swipeOverlayView.frame), NSStringFromCGPoint(tapPoint));
         return CGRectContainsPoint(self.swipeImageView.frame, tapPoint);
     }
     return YES;
@@ -454,25 +429,6 @@
         if([self.swipeDelegate respondsToSelector:@selector(tableView: rightSwipeButtonsAtIndexPath:)])
         {
             self.rightSwipeButtons = [[self.swipeDelegate tableView:self.tableView rightSwipeButtonsAtIndexPath:indexPath] mutableCopy];
-        }
-    }
-    else if(self.swipeStyle == SwipeTableCellStyleLeftToRight)
-    {
-        if([self.swipeDelegate respondsToSelector:@selector(tableView : leftSwipeButtonsAtIndexPath:)])
-        {
-            self.leftSwipeButtons = [self.swipeDelegate tableView:self.tableView leftSwipeButtonsAtIndexPath:indexPath];
-        }
-    }
-    else if(self.swipeStyle == SwipeTableCellStyleBoth)
-    {
-        if([self.swipeDelegate respondsToSelector:@selector(tableView: rightSwipeButtonsAtIndexPath:)])
-        {
-            self.rightSwipeButtons = [self.swipeDelegate tableView:self.tableView rightSwipeButtonsAtIndexPath:indexPath];
-        }
-        
-        if([self.swipeDelegate respondsToSelector:@selector(tableView : leftSwipeButtonsAtIndexPath:)])
-        {
-            self.leftSwipeButtons = [self.swipeDelegate tableView:self.tableView leftSwipeButtonsAtIndexPath:indexPath];
         }
     }
 }
@@ -540,8 +496,6 @@
     self.swipeImageView.image = [self getImageFromImage:image];
     self.swipeImageView.layer.cornerRadius = 10;
     self.swipeImageView.layer.masksToBounds = YES;
-//    self.swipeOverlayView.layer.cornerRadius = 25;
-//    self.swipeOverlayView.layer.masksToBounds = YES;
     self.swipeOverlayView.hidden = NO;
     self.editView.hidden = NO;
     self.swipeImageView.userInteractionEnabled = YES;
@@ -618,7 +572,7 @@
 
 #pragma mark -- getter或setter
 
-/**重写tableView的getter方法 获取cell所在的tableView*/
+//重写tableView的getter方法 获取cell所在的tableView
 - (UITableView *)tableView
 {
     if(_tableView){
@@ -637,7 +591,7 @@
     return _tableView;
 }
 
-/** 重写swipeOffset的setter方法 监测滑动手势*/
+// 重写swipeOffset的setter方法 监测滑动手势
 - (void)setSwipeOffset:(CGFloat)swipeOffset
 {
     CGFloat sign = swipeOffset > 0 ? 1 : -1;
@@ -657,7 +611,6 @@
         [self showSwipeOverlayViewIfNeed];
         self.targetOffset = offset > currentSwipeView.bounds.size.width*self.swipeThreshold ? currentSwipeView.bounds.size.width*sign : 0;
     }
-    //NSLog(@"self.swipeOffset:%f", self.swipeOffset);
     // 平移swipeImageView，显示滑动后cell的内容
     if (swipeOffset < -88) {
         _swipeOffset = -88;
@@ -706,15 +659,6 @@
 
 
 #pragma mark -- 懒加载
-
-- (NSArray<FHMessageSwipeButton *> *)leftSwipeButtons
-{
-    if(!_leftSwipeButtons)
-    {
-        _leftSwipeButtons = [NSArray array];
-    }
-    return _leftSwipeButtons;
-}
 
 - (NSArray<FHMessageSwipeButton *> *)rightSwipeButtons
 {

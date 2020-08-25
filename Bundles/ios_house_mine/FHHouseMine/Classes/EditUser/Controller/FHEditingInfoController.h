@@ -11,7 +11,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @protocol FHEditingInfoControllerDelegate <NSObject>
 
-- (void)reloadData;
+- (void)loadRequest;
 
 @end
 
