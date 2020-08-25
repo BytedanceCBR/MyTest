@@ -312,15 +312,17 @@
 - (void)playerPlaybackState:(TTVVideoPlaybackState) state {
     if(self.cellModel.forbidVideoClick){
         if(state == TTVVideoPlaybackStatePlaying){
-            self.userInteractionEnabled = NO;
+            self.videoView.userInteractionEnabled = NO;
         }else{
-            self.userInteractionEnabled = YES;
+            self.videoView.userInteractionEnabled = YES;
         }
     }
     
     if(self.cellModel.showMuteBtn){
         if(state == TTVVideoPlaybackStatePlaying){
             [self showMutedBtn];
+        }else if(state == TTVVideoPlaybackStatePaused){
+            //do nothing
         }else{
             self.muteBtn.alpha = 0;
         }
