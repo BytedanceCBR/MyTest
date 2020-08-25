@@ -539,7 +539,7 @@ logPB:self.listLogPB extraInfo:self.extraInfo completion:^(FHDetailOldModel * _N
         agentListModel.houseId = self.houseId;
         agentListModel.houseType = self.houseType;
         [self.items addObject:agentListModel];
-//        self.agentListModel = agentListModel;
+        self.tipName = model.data.surveyedRealtorInfo.toastText;
     }
     
     if(model.data.houseReviewComment.count > 0){
@@ -1108,10 +1108,15 @@ logPB:self.listLogPB extraInfo:self.extraInfo completion:^(FHDetailOldModel * _N
     TRACK_EVENT(@"click_options", param);
 }
 
+- (void)showSurveyTip {
+    if(self.tipView){
+        self.tipView.hidden = NO;
+    }
+    [self startTimer];
+}
 - (void)hiddenSurveyTip {
-    UIView *tipView = [self.tableView viewWithTag:5201314];
-    if(tipView){
-        tipView.hidden = YES;
+    if(self.tipView){
+        self.tipView.hidden = YES;
     }
     [self stopTimer];
 }

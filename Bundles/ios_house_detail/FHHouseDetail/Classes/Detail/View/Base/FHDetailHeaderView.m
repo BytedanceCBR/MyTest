@@ -138,40 +138,25 @@
     return nil;
 }
 
--(UIView *)tipView {
-    if(_tipView == nil) {
-        self.tipView = [[UIView alloc] init];
-        self.tipView.backgroundColor = [UIColor themeBlack];
-        self.tipView.tag = 5201314;
-        self.tipView.hidden = YES;
-    }
-    return _tipView;
-}
-
-
 - (void)showTipButtonClick {
-    CGRect buttonRect = self.showTipButton.frame;
     UIViewController *topVC = [self getViewController];
     if(topVC) {
         if([topVC isKindOfClass:[FHHouseDetailViewController class]]) {
             FHHouseDetailViewController *detailVC = (FHHouseDetailViewController *)topVC;
             if([detailVC.viewModel isKindOfClass:[FHHouseOldDetailViewModel class]]) {
                 FHHouseOldDetailViewModel *detailVM = (FHHouseOldDetailViewModel *) detailVC.viewModel;
-                UITableView *tableView = detailVM.tableView;
-                CGPoint point = [self convertPoint:CGPointMake(buttonRect.origin.x+buttonRect.size.width/2, buttonRect.origin.y) toView:tableView];
-                [tableView addSubview:self.tipView];
-                [tableView bringSubviewToFront:self.tipView];
-                if(self.tipView.hidden) {
-                    self.tipView.hidden = NO;
-                    [self.tipView mas_remakeConstraints:^(MASConstraintMaker *make) {
-                        make.bottom.mas_equalTo(point.y);
-                        make.left.mas_equalTo(point.x);
-                        make.width.height.mas_equalTo(50);
-                    }];
-                    [detailVM startTimer];
-                } else {
+                if(self.tipView == nil) {
+                    self.tipView = [[FHBubbleView alloc] initWithTitle:detailVM.tipName font:[UIFont themeFontRegular:10]];
                     self.tipView.hidden = YES;
-                    [detailVM stopTimer];
+                    [detailVC.view addSubview:self.tipView];
+                    [detailVC.view bringSubviewToFront:self.tipView];
+                    detailVM.tipView = self.tipView;
+                }
+                if(self.tipView.hidden) {
+                    [self.tipView showWithsubView:self.showTipButton toView:detailVC.view];
+                    [detailVM showSurveyTip];
+                } else {
+                    [detailVM hiddenSurveyTip];
                 }
                 
             }
