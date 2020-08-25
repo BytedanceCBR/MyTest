@@ -70,6 +70,7 @@ extern NSString *const DETAIL_SHOW_POP_LAYER_NOTIFICATION ; //详情页点击显
 // 刷新数据
 - (void)reloadData;
 -(void)scrollViewDidScroll:(UIScrollView *)scrollView;
+-(void)scrollViewWillBeginDragging:(UIScrollView *)scrollView;
 
 // 二级页所需数据
 - (NSDictionary *)subPageParams;

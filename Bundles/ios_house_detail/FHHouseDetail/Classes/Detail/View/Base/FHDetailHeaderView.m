@@ -12,6 +12,8 @@
 #import "FHCommonDefines.h"
 #import "UILabel+House.h"
 #import "UIColor+Theme.h"
+#import "FHHouseDetailViewController.h"
+#import "FHHouseOldDetailViewModel.h"
 
 @interface FHDetailHeaderView ()
 @property (nonatomic, strong)   UIImageView       *arrowsImg;
@@ -57,6 +59,7 @@
     [_showTipButton setBackgroundImage:[UIImage imageNamed:@"ic-question-line-normal"] forState:UIControlStateNormal];
     [_showTipButton setBackgroundImage:[UIImage imageNamed:@"ic-question-line-normal"] forState:UIControlStateHighlighted];
     [self addSubview:_showTipButton];
+    [_showTipButton addTarget:self action:@selector(showTipButtonClick) forControlEvents:UIControlEventTouchUpInside];
     
     [self.label mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(15);
@@ -123,6 +126,57 @@
         make.top.mas_equalTo(20);
         make.height.mas_equalTo(26);
     }];
+}
+
+- (UIViewController *)getViewController {
+    for(UIView *nextView = self.superview;nextView;nextView = nextView.superview) {
+        UIResponder *responder = [nextView nextResponder];
+        if([responder isKindOfClass:[UIViewController class]]) {
+            return (UIViewController *) responder;
+        }
+    }
+    return nil;
+}
+
+-(UIView *)tipView {
+    if(_tipView == nil) {
+        self.tipView = [[UIView alloc] init];
+        self.tipView.backgroundColor = [UIColor themeBlack];
+        self.tipView.tag = 5201314;
+        self.tipView.hidden = YES;
+    }
+    return _tipView;
+}
+
+
+- (void)showTipButtonClick {
+    CGRect buttonRect = self.showTipButton.frame;
+    UIViewController *topVC = [self getViewController];
+    if(topVC) {
+        if([topVC isKindOfClass:[FHHouseDetailViewController class]]) {
+            FHHouseDetailViewController *detailVC = (FHHouseDetailViewController *)topVC;
+            if([detailVC.viewModel isKindOfClass:[FHHouseOldDetailViewModel class]]) {
+                FHHouseOldDetailViewModel *detailVM = (FHHouseOldDetailViewModel *) detailVC.viewModel;
+                UITableView *tableView = detailVM.tableView;
+                CGPoint point = [self convertPoint:CGPointMake(buttonRect.origin.x+buttonRect.size.width/2, buttonRect.origin.y) toView:tableView];
+                [tableView addSubview:self.tipView];
+                [tableView bringSubviewToFront:self.tipView];
+                if(self.tipView.hidden) {
+                    self.tipView.hidden = NO;
+                    [self.tipView mas_remakeConstraints:^(MASConstraintMaker *make) {
+                        make.bottom.mas_equalTo(point.y);
+                        make.left.mas_equalTo(point.x);
+                        make.width.height.mas_equalTo(50);
+                    }];
+                    [detailVM startTimer];
+                } else {
+                    self.tipView.hidden = YES;
+                    [detailVM stopTimer];
+                }
+                
+            }
+        }
+    }
 }
 
 

@@ -12,6 +12,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FHHouseOldDetailViewModel : FHHouseDetailBaseViewModel
 
+- (void) startTimer;
+- (void) stopTimer;
 @end
 
 NS_ASSUME_NONNULL_END

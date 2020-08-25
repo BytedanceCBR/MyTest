@@ -63,7 +63,7 @@
 extern NSString *const kFHPhoneNumberCacheKey;
 extern NSString *const kFHSubscribeHouseCacheKey;
 extern NSString *const kFHPLoginhoneNumberCacheKey;
-@interface FHHouseOldDetailViewModel ()
+@interface FHHouseOldDetailViewModel () <UIScrollViewDelegate>
 @property (nonatomic, assign)   NSInteger       requestRelatedCount;
 @property (nonatomic, strong , nullable) FHDetailSameNeighborhoodHouseResponseDataModel *sameNeighborhoodHouseData;
 @property (nonatomic, strong , nullable) FHDetailRelatedNeighborhoodResponseDataModel *relatedNeighborhoodData;
@@ -71,6 +71,7 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
 @property (nonatomic, strong , nullable) FHHouseListDataModel *oldHouseRecommendedCourtData;
 @property (nonatomic, copy , nullable) NSString *neighborhoodId;// 周边小区房源id
 @property (nonatomic, weak , nullable) FHDetailAgentListModel *agentListModel;
+@property (nonatomic, strong) dispatch_source_t timer;
 @end
 @implementation FHHouseOldDetailViewModel
 // 注册cell类型
@@ -788,6 +789,7 @@ logPB:self.listLogPB extraInfo:self.extraInfo completion:^(FHDetailOldModel * _N
 {
     [super vc_viewDidDisappear:animated];
     [self.agentListModel.phoneCallViewModel vc_viewDidDisappear:animated];
+    [self hiddenSurveyTip];
 }
 
 - (void)vc_viewDidAppear:(BOOL)animated
@@ -1106,4 +1108,41 @@ logPB:self.listLogPB extraInfo:self.extraInfo completion:^(FHDetailOldModel * _N
     TRACK_EVENT(@"click_options", param);
 }
 
+- (void)hiddenSurveyTip {
+    UIView *tipView = [self.tableView viewWithTag:5201314];
+    if(tipView){
+        tipView.hidden = YES;
+    }
+    [self stopTimer];
+}
+
+- (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView {
+    if(scrollView != self.tableView) {
+        return;
+    }
+    [super scrollViewWillBeginDragging:scrollView];
+    [self hiddenSurveyTip];
+}
+
+- (void) startTimer {
+    if(_timer == nil){
+        _timer = dispatch_source_create(DISPATCH_SOURCE_TYPE_TIMER, 0, 0, dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0));
+        dispatch_source_set_timer(_timer, dispatch_walltime(NULL, 3 * NSEC_PER_SEC), 0, 0);
+        __weak typeof(self) weakSelf = self;
+        dispatch_source_set_event_handler(_timer, ^{
+            __strong typeof(weakSelf) strongSelf = weakSelf;
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [strongSelf hiddenSurveyTip];
+            });
+        });
+        dispatch_resume(_timer);
+    }
+}
+
+- (void) stopTimer {
+    if(_timer) {
+        dispatch_source_cancel(_timer);
+        _timer = nil;
+    }
+}
 @end

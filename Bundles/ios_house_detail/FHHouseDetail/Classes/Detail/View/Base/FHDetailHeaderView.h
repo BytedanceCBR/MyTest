@@ -21,6 +21,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, assign)   BOOL       isShowLoadMore;
 @property (nonatomic, strong) UIButton *showTipButton;
+@property (nonatomic ,strong) UIView *tipView;
 -(void)setSubTitleWithTitle:(NSString *)subTitle;
 - (void)removeSubTitleWithTitle;
 @end
