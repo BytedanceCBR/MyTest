@@ -69,6 +69,7 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
 @property (nonatomic , strong) FHSearchFilterConfigItem *regionConfigItem;
 @property (nonatomic , strong) FHSearchFilterConfigItem *priceConfigItem;
 @property (nonatomic , strong) FHSearchFilterConfigItem *roomConfigItem;
+@property (nonatomic , strong) FHSearchFilterConfigItem *houseTypeConfigItem;
 
 @property (nonatomic , strong) FHHouseFindSelectItemModel *selectRegionItem;
 @property (nonatomic , strong) FHHouseFindHelpRegionSheet *regionSheet;
@@ -490,10 +491,25 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
                 roomItem = configItem;
             }
         }
+        
+        FHSearchFilterConfigItem *houseTypeConfigItem = [[FHSearchFilterConfigItem alloc] init];
+        houseTypeConfigItem.tabId = @"7";
+        FHSearchFilterConfigOption *optionSecond = [[FHSearchFilterConfigOption alloc] init];
+        optionSecond.text = @"二手房";
+        FHSearchFilterConfigOption *optionNew = [[FHSearchFilterConfigOption alloc] init];
+        optionNew.text = @"新房";
+        houseTypeConfigItem.options = (NSArray <FHSearchFilterConfigOption> * _Nullable )@[optionSecond,optionNew];
+        
         if (priceItem) {
             [filterArray addObject:priceItem];
             [titles addObject:@"您的购房预算是多少？"];
         }
+        
+        if (houseTypeConfigItem) {
+            [filterArray addObject:houseTypeConfigItem];
+            [titles addObject:@"您想买的类型是？"];
+        }
+        
         if (roomItem) {
             [filterArray addObject:roomItem];
             [titles addObject:@"您想买的户型是？"];
@@ -505,6 +521,7 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
         self.priceConfigItem = priceItem;
         self.regionConfigItem = regionItem;
         self.roomConfigItem = roomItem;
+        self.houseTypeConfigItem = houseTypeConfigItem;
         
         self.secondFilter = filterArray;
         self.titlesArray = titles;
@@ -1029,6 +1046,8 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
             return options.options.count;
         }else if ([item.tabId integerValue] == FHSearchTabIdTypeRegion) {
             return 1;
+        }else if ([item.tabId integerValue] == FHSearchTabIdTypeHouse) {
+            return self.houseTypeConfigItem.options.count;
         }
         return options.options.count;
     }
@@ -1090,6 +1109,25 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
                 return tcell;
             }
             
+        }else if ([item.tabId integerValue] == FHSearchTabIdTypeHouse) {
+            
+            FHHouseFindTextItemCell *tcell = [collectionView dequeueReusableCellWithReuseIdentifier:HELP_NORMAL_CELL_ID forIndexPath:indexPath];
+            tcell.titleFont = [TTDeviceHelper isScreenWidthLarge320] ? [UIFont themeFontRegular:12] : [UIFont themeFontRegular:10];
+            NSString *text = nil;
+            
+//            FHSearchFilterConfigOption *options = [item.options firstObject];
+            if (item.options.count > indexPath.item) {
+                FHSearchFilterConfigOption *option = item.options[indexPath.item];
+                text = option.text;
+            }
+            
+            BOOL selected = NO;
+            if (model) {
+                FHHouseFindSelectItemModel *selectItem = [model selectItemWithTabId:[item.tabId integerValue]];
+                selected = [model selecteItem:selectItem containIndex:indexPath.item];
+            }
+            [tcell updateWithTitle:text highlighted:selected];
+            return tcell;
         }else if ([item.tabId integerValue] == FHSearchTabIdTypeRegion) {
             
             FHHouseFindHelpRegionCell *pcell = [collectionView dequeueReusableCellWithReuseIdentifier:HELP_REGION_CELL_ID forIndexPath:indexPath];
@@ -1264,6 +1302,17 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
                         [[ToastManager manager]showToast:[NSString stringWithFormat:@"最多选择%ld种户型",ROOM_MAX_COUNT]];
                         return;
                     }
+                    //添加选择
+                    FHSearchFilterConfigOption *option = nil;
+                    if (item.options.count > 0) {
+                        option = [item.options firstObject];
+                    }
+                    if ([option.supportMulti boolValue]) {
+                        [model addSelecteItem:selectItem withIndex:indexPath.item];
+                    }else{
+                        [model clearAddSelecteItem:selectItem withIndex:indexPath.item];
+                    }
+                }else if (item.tabId.integerValue == FHSearchTabIdTypeHouse) {
                     //添加选择
                     FHSearchFilterConfigOption *option = nil;
                     if (item.options.count > 0) {

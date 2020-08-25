@@ -15,6 +15,7 @@ typedef NS_ENUM(NSInteger , FHSearchTabIdType) {
     FHSearchTabIdTypeRoom  = 3,
     FHSearchTabIdTypeDirection = 6,
     FHSearchTabIdTypeAge = 5,
+    FHSearchTabIdTypeHouse = 7,
     FHSearchTabIdTypePayType = 12,
     FHSearchTabIdTypeRentType = 13,
     FHSearchTabIdTypeRentTime = 14,
