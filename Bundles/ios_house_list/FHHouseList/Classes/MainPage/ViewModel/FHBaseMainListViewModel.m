@@ -28,6 +28,7 @@
 #import <FHHouseBase/FHSearchHouseModel.h>
 #import <FHHouseBase/FHRecommendSecondhandHouseTitleModel.h>
 //#import <FHHouseBase/FHSingleImageInfoCellModel.h>
+#import "FHHouseSearchSecondHouseCell.h"
 #import <FHHouseBase/FHRecommendSecondhandHouseTitleCell.h>
 #import <FHHouseBase/FHHouseBaseItemCell.h>
 #import <FHHouseBase/FHHomePlaceHolderCell.h>
@@ -196,6 +197,7 @@ extern NSString *const INSTANT_DATA_KEY;
      [_tableView registerClass:[FHHouseListBaseItemCell class] forCellReuseIdentifier:@"FHListSynchysisNewHouseCell"];
     [_tableView registerClass:[FHHouseAgentCardCell class] forCellReuseIdentifier:NSStringFromClass([FHHouseAgentCardCell class])];
     [_tableView registerClass:[FHFindHouseHelperCell class] forCellReuseIdentifier:@"FHFindHouseHelperCell"];
+    [_tableView registerClass:[FHHouseSearchSecondHouseCell class] forCellReuseIdentifier:@"FHHouseSearchSecondHouseCell"];
     for (NSString *className in self.cellIdArray) {
         [self registerCellClassBy:className];
     }
@@ -219,6 +221,10 @@ extern NSString *const INSTANT_DATA_KEY;
             if (houseModel.cellStyles ==6) {
                return [FHHouseListBaseItemCell class];
             }
+        }
+        houseModel.cellStyles = 7;
+        if (houseModel.cellStyles == 7) {
+            return [FHHouseSearchSecondHouseCell class];
         }
         return [FHHouseBaseItemCell class];
     }else if ([model isKindOfClass:[FHSugSubscribeDataDataSubscribeInfoModel class]]) {
@@ -264,6 +270,10 @@ extern NSString *const INSTANT_DATA_KEY;
         }
         if(houseModel.cardType == FHSearchCardTypeAgentCard){
                return NSStringFromClass([FHHouseAgentCardCell class]);
+        }
+        houseModel.cellStyles = 7;
+        if (houseModel.cellStyles == 7) {
+            return NSStringFromClass([FHHouseSearchSecondHouseCell class]);
         }
         return [FHSearchHouseItemModel cellIdentifierByHouseType:houseModel.houseType.integerValue];
     }

@@ -373,6 +373,17 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
+@interface FHSearchHouseItemTitleTagModel : JSONModel
+
+@property (nonatomic, assign) BOOL isGradient;
+@property (nonatomic, copy , nullable) NSString *text;
+@property (nonatomic, copy , nullable) NSString *textColor;
+@property (nonatomic, copy , nullable) NSString *backgroundColor;
+@property (nonatomic, copy , nullable) NSString *topBackGroundColor;
+@property (nonatomic, copy , nullable) NSString *bottomBackGroundColor;
+
+@end
+
 @interface  FHSearchHouseItemModel  : FHSearchBaseItemModel
 
 @property (nonatomic, copy , nullable) NSString *houseStatus;
@@ -451,6 +462,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign) BOOL isLastCell;
 @property (nonatomic, strong , nullable) NSArray<FHHouseTagsModel> *reasonTags;
 @property (nonatomic, copy , nullable) NSString *addrData;
+@property (nonatomic, strong, nullable) FHSearchHouseItemTitleTagModel *titleTags;
 
 + (NSString *)cellIdentifierByHouseType:(FHHouseType)houseType;
 
