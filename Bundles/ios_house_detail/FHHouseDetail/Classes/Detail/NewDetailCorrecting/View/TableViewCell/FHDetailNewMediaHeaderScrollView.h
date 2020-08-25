@@ -12,39 +12,26 @@
 #import "FHDetailHouseTitleModel.h"
 
 NS_ASSUME_NONNULL_BEGIN
-@protocol FHDetailNewMediaHeaderScrollViewDelegate <NSObject>
-//点击某个Cell后
-- (void)didSelectItemAtIndex:(NSInteger)index;
-//某个Cell展现后
-- (void)willDisplayCellForItemAtIndex:(NSInteger)index;
-//底部导航被点击后
-- (void)selectItem:(NSString *)title;
-//进入图片相册
-- (void)goToPictureListFrom:(NSString *)from;
-@end
+typedef void(^FHDetailNewMediaHeaderViewEventByIndex)(NSInteger index);
+typedef void(^FHDetailNewMediaHeaderViewEventByString)(NSString *name);
 
 @interface FHDetailNewMediaHeaderScrollView : UIView
 
-@property (nonatomic, assign) BOOL isShowenPictureVC;
-@property(nonatomic, strong) FHVideoViewController *videoVC;
-@property(nonatomic, strong) FHMultiMediaVideoCell *currentMediaCell;
-@property(nonatomic , weak) id<FHDetailNewMediaHeaderScrollViewDelegate> delegate;
-@property(nonatomic, strong) NSDictionary *tracerDic;
-@property (nonatomic, weak) FHHouseDetailBaseViewModel *baseViewModel;
-@property (nonatomic, assign) BOOL isShowTopImageTab; //新房详情 展示新UI
-@property (nonatomic, assign) NSUInteger exposeImageNum; //展示几张
+@property (nonatomic, assign) BOOL closeInfinite; //关闭无限轮播
+//点击了某个Cell
+@property (nonatomic, copy) FHDetailNewMediaHeaderViewEventByIndex didSelectiItemAtIndex;
+//某个Cell展示时
+@property (nonatomic, copy) FHDetailNewMediaHeaderViewEventByIndex willDisplayCellForItemAtIndex;
+//从头图进入图片相册
+@property (nonatomic, copy) FHDetailNewMediaHeaderViewEventByString goToPictureListFrom;
+//滑动到某处
+@property (nonatomic, copy) FHDetailNewMediaHeaderViewEventByIndex scrollToIndex;
 
 - (void)updateModel:(FHMultiMediaModel *)model;
 
 //移动到某个Cell
 - (void)scrollToItemAtIndexPath:(NSIndexPath *)indexPath atScrollPosition:(UICollectionViewScrollPosition)scrollPosition animated:(BOOL)animated;
-
-- (void)updateItemAndInfoLabel;
-
-- (void)updateVideoState;
-
-
-
+- (NSInteger)getCurPagae;
 @end
 
 NS_ASSUME_NONNULL_END

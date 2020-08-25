@@ -5,7 +5,6 @@
 //  Created by luowentao on 2020/8/21.
 //
 //1.处理数据
-//2.将除了轮播图之外的所有View处理
 //3.与楼盘相册和图片详情页交互操作
 #import "FHDetailNewMediaHeaderCell.h"
 #import "FHDetailNewMediaHeaderScrollView.h"
@@ -18,7 +17,7 @@
 #import "NSString+URLEncoding.h"
 #import "FHUtils.h"
 #import "FHMultiMediaModel.h"
-#import "FHCommonDefines.h"
+
 #import "FHDetailNewModel.h"
 #import <FHVRDetailWebViewController.h>
 //#import "FHVRCacheManager.h"
@@ -30,16 +29,15 @@
 #import <TTUIWidget/TTNavigationController.h>
 #import "TTReachability.h"
 #import "ToastManager.h"
-#import "FHDetailHeaderTitleView.h"
+
 #import "FHDetailNewMediaHeaderDataHelper.h"
+#import "FHDetailNewMediaHeaderView.h"
 
-@interface FHDetailNewMediaHeaderCell ()<FHDetailNewMediaHeaderScrollViewDelegate, FHDetailScrollViewDidScrollProtocol, FHDetailVCViewLifeCycleProtocol>
+@interface FHDetailNewMediaHeaderCell ()<FHDetailScrollViewDidScrollProtocol, FHDetailVCViewLifeCycleProtocol>
 
-@property (nonatomic, strong) FHDetailNewMediaHeaderScrollView *mediaView;
-@property (nonatomic, weak)     UIView *vcParentView;
-@property (nonatomic, strong) UIView *bottomGradientView;
-@property (nonatomic, strong) FHDetailHeaderTitleView *titleView;            //头图下面的标题栏
-
+@property (nonatomic, strong) FHDetailNewMediaHeaderView *headerView;
+@property (nonatomic, weak)   UIView *vcParentView;
+@property (nonatomic, strong) FHDetailNewMediaHeaderModel *headerModel;
 @property (nonatomic, strong) FHMultiMediaModel *model;
 @property (nonatomic, strong) NSArray *imageList;
 @property (nonatomic, strong) NSMutableDictionary *pictureShowDict;
@@ -50,8 +48,6 @@
 @property (nonatomic, assign)   NSInteger vedioCount;
 @property (nonatomic, assign)   CGFloat photoCellHeight;
 
-@property (nonatomic, weak, nullable) UIViewController *weakDetailVC;
-
 @property (nonatomic, weak) FHFloorPanPicShowViewController *pictureListViewController;
 @property (nonatomic, weak) FHDetailPictureViewController *pictureDetailVC;
 
@@ -60,22 +56,11 @@
 
 - (void)dealloc {
     if (self.vedioCount > 0) {
-        [self.mediaView.videoVC close];
     }
-//    [[FHVRCacheManager sharedInstance] removeVRPreloadCache:self.hash];
 }
 
 - (NSString *)elementTypeString:(FHHouseType)houseType {
-    if (self.vedioCount > 0) {
-        return @"video";
-    }
     return @"picture";
-}
-
-+ (CGFloat)cellHeight {
-    CGFloat photoCellHeight = 281;
-    photoCellHeight = round([UIScreen mainScreen].bounds.size.width / 375.0f * photoCellHeight + 0.5);
-    return photoCellHeight;
 }
 
 - (void)refreshWithData:(id)data {
@@ -83,57 +68,16 @@
         return;
     }
     self.imageList = [NSArray array];
-    self.currentData = data;
+
     FHDetailNewMediaHeaderDataHelperData *nData = [FHDetailNewMediaHeaderDataHelper generateModel:(FHDetailNewMediaHeaderModel *)data];
     self.model = [[FHMultiMediaModel alloc] init];
     self.model.medias = nData.itemArray;
     self.imageList = nData.imageList;
-    
-    self.mediaView.isShowTopImageTab = [(FHDetailNewMediaHeaderModel *)self.currentData isShowTopImageTab];
-    self.mediaView.baseViewModel = self.baseViewModel;
-    self.titleView.baseViewModel = self.baseViewModel;
+    self.headerView.showHeaderImageNewType = ((FHDetailNewMediaHeaderModel *)data).isShowTopImageTab;
+    [self.headerView updateMultiMediaModel:self.model];
+    [self.headerView setTotalPagesLabelText:[NSString stringWithFormat:@"共%ld张", self.model.medias.count]];
 
-    [self.mediaView updateModel:self.model];
-    FHDetailHouseTitleModel *titleModel = ((FHDetailNewMediaHeaderModel *)self.currentData).titleDataModel;
-    self.titleView.model = titleModel;
-    //有视频才传入埋点
-    if (self.vedioCount > 0) {
-        self.mediaView.tracerDic = [self tracerDic];
-    }
-    [self reckoncollectionHeightWithData:titleModel];
-
-    if (((FHDetailNewMediaHeaderModel *)data).weakVC) {
-        self.weakDetailVC = ((FHDetailNewMediaHeaderModel *)data).weakVC;
-    }
-}
-
-
-- (void)reckoncollectionHeightWithData:(FHDetailHouseTitleModel *)titleModel {
-    CGFloat titleHeight = 40;
-    NSDictionary *attributes = @{ NSFontAttributeName: [UIFont themeFontMedium:24] };
-    CGRect rect = [titleModel.titleStr boundingRectWithSize:CGSizeMake(SCREEN_WIDTH - 66, CGFLOAT_MAX)
-                                                    options:NSStringDrawingUsesLineFragmentOrigin
-                                                 attributes:attributes
-                                                    context:nil];          //算出标题的高度
-    if (titleModel.advantage.length > 0 && titleModel.businessTag.length > 0) { //如果头图下面有横幅那么高度增加40
-        titleHeight += 40;
-    }
-
-    CGFloat rectHeight = rect.size.height;
-    if (rectHeight > [UIFont themeFontMedium:24].lineHeight * 2) {         //如果超过两行，只显示两行，小区只显示一行，需要特判
-        rectHeight = [UIFont themeFontMedium:24].lineHeight * 2;
-    }
-
-    titleHeight += 20 + rectHeight - 21;//20是标题具体顶部的距离，21是重叠的41减去透明阴影的20 (21 = 41 - 20)
-
-    if (titleModel.tags.count > 0) {
-        //这里分别加上标签高度20，标签间隔20
-        titleHeight += 20 + 20;
-    }
-
-    [self.titleView mas_updateConstraints:^(MASConstraintMaker *make) {
-        make.height.mas_offset(titleHeight);
-    }];
+    [self.headerView updateTitleModel:((FHDetailNewMediaHeaderModel *)data).titleDataModel];
 }
 
 - (NSDictionary *)tracerDic {
@@ -141,7 +85,6 @@
     if (!dict) {
         dict = [NSMutableDictionary dictionary];
     }
-
     if ([dict isKindOfClass:[NSDictionary class]]) {
         [dict removeObjectsForKeys:@[@"card_type"]];
         return dict;
@@ -155,67 +98,36 @@
                 reuseIdentifier :reuseIdentifier];
     if (self) {
         [self createUI];
-        [self initConstaints];
     }
     return self;
 }
 
 #pragma mark - UI
 - (void)createUI {
-    _photoCellHeight = [FHDetailNewMediaHeaderCell cellHeight];
-    _pictureShowDict = [NSMutableDictionary dictionary];
-    _vedioCount = 0;
-    _imageList = [[NSMutableArray alloc] init];
-    _mediaView = [[FHDetailNewMediaHeaderScrollView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, _photoCellHeight)];
-    _mediaView.exposeImageNum = 5;
-    _mediaView.delegate = self;
-    [self.contentView addSubview:_mediaView];
-
-    [self.contentView addSubview:self.bottomGradientView];
-    self.titleView = [[FHDetailHeaderTitleView alloc]init];
-    [self.contentView addSubview:self.titleView];
-
-    // 底部渐变层
-}
-
-- (void)initConstaints {
-    [_mediaView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.left.right.mas_equalTo(self.contentView);
-        make.height.mas_equalTo(self.photoCellHeight);
+    self.pictureShowDict = [NSMutableDictionary dictionary];
+    self.vedioCount = 0;
+    self.imageList = [[NSMutableArray alloc] init];
+    self.headerView = [[FHDetailNewMediaHeaderView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, 0)];
+    [self.contentView addSubview:self.headerView];
+    [self.headerView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.edges.equalTo(self.contentView);
     }];
-
-    [self.bottomGradientView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.right.equalTo(self.mediaView);
-        make.bottom.equalTo(self.mediaView);
-        make.height.mas_equalTo(self.bottomGradientView.frame.size.height);
-    }];
-    [self.titleView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.right.bottom.equalTo(self.contentView);
-        make.top.equalTo(self.mediaView.mas_bottom).offset(-40);
-        make.height.equalTo(0);
-    }];
-}
-
-- (UIView *)bottomGradientView {
-    if (!_bottomGradientView) {
-        CGFloat aspect = 375.0 / 25;
-        CGFloat width = SCREEN_WIDTH;
-
-        CGFloat height = round(width / aspect + 0.5);
-        CGRect frame = CGRectMake(0, 0, width, height);
-        CAGradientLayer *gradientLayer = [CAGradientLayer layer];
-        gradientLayer.frame = frame;
-        gradientLayer.colors = @[
-            (__bridge id)[UIColor colorWithWhite:1 alpha:0].CGColor,
-            (__bridge id)[UIColor themeGray7].CGColor
-        ];
-        gradientLayer.startPoint = CGPointMake(0.5, 0);
-        gradientLayer.endPoint = CGPointMake(0.5, 0.9);
-
-        _bottomGradientView = [[UIView alloc] initWithFrame:frame];
-        [_bottomGradientView.layer addSublayer:gradientLayer];
-    }
-    return _bottomGradientView;
+    __weak typeof(self) weakSelf = self;
+    self.headerView.didClickItemViewName = ^(NSString *_Nonnull name) {
+        [weakSelf selectItem:name];
+    };
+    self.headerView.willDisplayCellForItemAtIndex = ^(NSInteger index) {
+        [weakSelf willDisplayCellForItemAtIndex:index];
+    };
+    self.headerView.goToPictureListFrom = ^(NSString *_Nonnull name) {
+        [weakSelf goToPictureListFrom:name];
+    };
+    self.headerView.scrollToIndex = ^(NSInteger index) {
+        [weakSelf willDisplayCellForItemAtIndex:index];
+    };
+    self.headerView.didSelectiItemAtIndex = ^(NSInteger index) {
+        [weakSelf didSelectItemAtIndex:index];
+    };
 }
 
 - (void)showImagesWithCurrentIndex:(NSInteger)index {
@@ -257,9 +169,6 @@
         }
         return;
     }
-
-    FHMultiMediaItemModel *vedioModel = ((FHDetailNewMediaHeaderModel *)self.currentData).vedioModel;
-
     if (index < 0 || index >= (images.count + self.vedioCount)) {
         return;
     }
@@ -285,30 +194,30 @@
     // 分享
     pictureDetailViewController.shareActionBlock = ^{
         NSString *v_id = @"be_null";
-        if (weakSelf.mediaView.videoVC.model.videoID.length > 0) {
-            v_id = weakSelf.mediaView.videoVC.model.videoID;
-        }
+//        if (weakSelf.mediaView.videoVC.model.videoID.length > 0) {
+//            v_id = weakSelf.mediaView.videoVC.model.videoID;
+//        }
         NSDictionary *dict = @{ @"item_id": v_id,
                                 @"element_from": @"video" };
         [weakSelf.baseViewModel.contactViewModel shareActionWithShareExtra:dict];
     };
     // 收藏
-    pictureDetailViewController.collectActionBlock = ^(BOOL followStatus) {
-        if (followStatus) {
-            [weakSelf.baseViewModel.contactViewModel cancelFollowAction];
-        } else {
-            NSString *v_id = @"be_null";
-            if (weakSelf.mediaView.videoVC.model.videoID.length > 0) {
-                v_id = weakSelf.mediaView.videoVC.model.videoID;
-            }
-            NSDictionary *dict = @{ @"item_id": v_id,
-                                    @"element_from": @"video" };
-            [weakSelf.baseViewModel.contactViewModel followActionWithExtra:dict];
-        }
-    };
+//    pictureDetailViewController.collectActionBlock = ^(BOOL followStatus) {
+//        if (followStatus) {
+//            [weakSelf.baseViewModel.contactViewModel cancelFollowAction];
+//        } else {
+//            NSString *v_id = @"be_null";
+//            if (weakSelf.mediaView.videoVC.model.videoID.length > 0) {
+//                v_id = weakSelf.mediaView.videoVC.model.videoID;
+//            }
+//            NSDictionary *dict = @{ @"item_id": v_id,
+//                                    @"element_from": @"video" };
+//            [weakSelf.baseViewModel.contactViewModel followActionWithExtra:dict];
+//        }
+//    };
     pictureDetailViewController.dragToCloseDisabled = YES;
     if (self.vedioCount > 0) {
-        pictureDetailViewController.videoVC = self.mediaView.videoVC;
+//        pictureDetailViewController.videoVC = self.mediaView.videoVC;
     }
     pictureDetailViewController.startWithIndex = index;
     pictureDetailViewController.albumImageBtnClickBlock = ^(NSInteger index) {
@@ -328,25 +237,6 @@
 //        FHDetailNewTopImage *topImage = model.topImages.firstObject;
 //        pictureDetailViewController.smallImageInfosModels = topImage.smallImageGroup;
         pictureDetailViewController.smallImageInfosModels = [model processTopImagesToSmallImageGroups];
-    }
-    //如果是小区，移除按钮 或者户型详情页也移除按钮
-    //099 户型详情页 显示底部按钮
-
-    if (vedioModel.cellHouseType == FHMultiMediaCellHouseNeiborhood) {// || model.titleDataModel.isFloorPan
-        pictureDetailViewController.isShowBottomBar = NO;
-    }
-    if (model.titleDataModel.isFloorPan && model.titleDataModel.titleStr.length) {
-        NSMutableString *bottomBarTitle = model.titleDataModel.titleStr.mutableCopy;
-        if (model.titleDataModel.squaremeter.length) {
-            [bottomBarTitle appendFormat:@" %@", model.titleDataModel.squaremeter];
-        }
-        if (model.titleDataModel.facingDirection.length) {
-            [bottomBarTitle appendFormat:@" %@", model.titleDataModel.facingDirection];
-        }
-        if (model.titleDataModel.saleStatus.length) {
-            [bottomBarTitle appendFormat:@" %@", model.titleDataModel.saleStatus];
-        }
-        pictureDetailViewController.bottomBarTitle = bottomBarTitle.copy;
     }
 
     UIImage *placeholder = [UIImage imageNamed:@"default_image"];
@@ -386,31 +276,31 @@
                 vrOffset = 1;
             }
             NSIndexPath *indexPath = [NSIndexPath indexPathForRow:currentIndex + 1 + vrOffset inSection:0];
-            [weakSelf.mediaView scrollToItemAtIndexPath:indexPath atScrollPosition:UICollectionViewScrollPositionLeft animated:NO];
-            [weakSelf.mediaView updateItemAndInfoLabel];
-            [weakSelf.mediaView updateVideoState];
+//            [weakSelf.mediaView scrollToItemAtIndexPath:indexPath atScrollPosition:UICollectionViewScrollPositionLeft animated:NO];
+//            [weakSelf.mediaView updateItemAndInfoLabel];
+//            [weakSelf.mediaView updateVideoState];
         }
     };
-    self.mediaView.isShowenPictureVC = YES;
-    [pictureDetailViewController presentPhotoScrollViewWithDismissBlock:^{
-        weakSelf.mediaView.isShowenPictureVC = NO;
-        if ([weakSelf.mediaView.currentMediaCell isKindOfClass:[FHMultiMediaVideoCell class]]) {
-            [weakSelf resetVideoCell:frame];
-        }
-
-        weakSelf.isLarge = NO;
-        [weakSelf trackPictureShowWithIndex:weakSelf.currentIndex];
-        [weakSelf trackPictureLargeStayWithIndex:weakSelf.currentIndex];
-    }];
-
-    pictureDetailViewController.saveImageBlock = ^(NSInteger currentIndex) {
-        [weakSelf trackSavePictureWithIndex:currentIndex];
-    };
-
-    self.isLarge = YES;
-    [self trackPictureShowWithIndex:index];
-    self.enterTimestamp = [[NSDate date] timeIntervalSince1970];
-    self.pictureDetailVC = pictureDetailViewController;
+//    self.mediaView.isShowenPictureVC = YES;
+//    [pictureDetailViewController presentPhotoScrollViewWithDismissBlock:^{
+//        weakSelf.mediaView.isShowenPictureVC = NO;
+//        if ([weakSelf.mediaView.currentMediaCell isKindOfClass:[FHMultiMediaVideoCell class]]) {
+//            [weakSelf resetVideoCell:frame];
+//        }
+//
+//        weakSelf.isLarge = NO;
+//        [weakSelf trackPictureShowWithIndex:weakSelf.currentIndex];
+//        [weakSelf trackPictureLargeStayWithIndex:weakSelf.currentIndex];
+//    }];
+//
+//    pictureDetailViewController.saveImageBlock = ^(NSInteger currentIndex) {
+//        [weakSelf trackSavePictureWithIndex:currentIndex];
+//    };
+//
+//    self.isLarge = YES;
+//    [self trackPictureShowWithIndex:index];
+//    self.enterTimestamp = [[NSDate date] timeIntervalSince1970];
+//    self.pictureDetailVC = pictureDetailViewController;
 }
 
 - (void)showPictureList {
@@ -462,20 +352,20 @@
     self.pictureListViewController = pictureListViewController;
 }
 
-// 重置视频view，注意状态以及是否是首屏幕图片
-- (void)resetVideoCell:(CGRect)frame {
-    CGRect bound = CGRectMake(0, 0, frame.size.width, frame.size.height);
-    __weak typeof(self) weakSelf = self;
-    if ([self.mediaView.currentMediaCell isKindOfClass:[FHMultiMediaVideoCell class]]) {
-        FHMultiMediaVideoCell *tempCell = self.mediaView.currentMediaCell;
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.35 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-            weakSelf.mediaView.videoVC.view.frame = bound;
-            [weakSelf.mediaView.videoVC pause];
-            weakSelf.mediaView.currentMediaCell.playerView = weakSelf.mediaView.videoVC.view;
-            [tempCell showCoverView];
-        });
-    }
-}
+//// 重置视频view，注意状态以及是否是首屏幕图片
+//- (void)resetVideoCell:(CGRect)frame {
+//    CGRect bound = CGRectMake(0, 0, frame.size.width, frame.size.height);
+//    __weak typeof(self) weakSelf = self;
+//    if ([self.mediaView.currentMediaCell isKindOfClass:[FHMultiMediaVideoCell class]]) {
+//        FHMultiMediaVideoCell *tempCell = self.mediaView.currentMediaCell;
+//        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.35 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+//            weakSelf.mediaView.videoVC.view.frame = bound;
+//            [weakSelf.mediaView.videoVC pause];
+//            weakSelf.mediaView.currentMediaCell.playerView = weakSelf.mediaView.videoVC.view;
+//            [tempCell showCoverView];
+//        });
+//    }
+//}
 
 #pragma mark - 埋点
 //埋点
@@ -515,7 +405,6 @@
     if (_pictureShowDict[row]) {
         return;
     }
-
     _pictureShowDict[row] = row;
 
     NSMutableDictionary *dict = [self.baseViewModel.detailTracerDic mutableCopy];
@@ -654,81 +543,19 @@
 #pragma mark - FHDetailNewMediaHeaderScrollViewDelegate
 
 - (void)didSelectItemAtIndex:(NSInteger)index {
-    if ([(FHDetailNewMediaHeaderModel *)self.currentData isInstantData]) {
-        //列表页带入的数据不响应
-        return;
-    }
     // 图片逻辑
     if (index >= 0 && index < (self.imageList.count + self.vedioCount)) {
         [self showImagesWithCurrentIndex:index];
         return;
     }
-    //vr
-    FHMultiMediaItemModel *itemModel = _model.medias[index];
-    if (itemModel.mediaType == FHMultiMediaTypeBaiduPanorama && itemModel.imageUrl.length) {
-        //进入百度街景
-        //shceme baidu_panorama_detail
-        if (![TTReachability isNetworkConnected]) {
-            [[ToastManager manager] showToast:@"网络异常"];
-            return;
-        }
-
-        NSMutableDictionary *tracerDict = self.baseViewModel.detailTracerDic.mutableCopy;
-        NSMutableDictionary *param = [NSMutableDictionary new];
-        tracerDict[@"element_from"] = @"picture";
-        param[TRACER_KEY] = tracerDict.copy;
-
-        NSString *gaodeLat = nil;
-        NSString *gaodeLon = nil;
-        // 获取图片需要的房源信息数据
-        if ([self.baseViewModel.detailData isKindOfClass:[FHDetailOldModel class]]) {
-            // 二手房数据
-            FHDetailOldModel *model = (FHDetailOldModel *)self.baseViewModel.detailData;
-            gaodeLat = model.data.neighborhoodInfo.gaodeLat;
-            gaodeLon = model.data.neighborhoodInfo.gaodeLng;
-        } else if ([self.baseViewModel.detailData isKindOfClass:[FHDetailNewModel class]]) {
-            FHDetailNewModel *model = (FHDetailNewModel *)self.baseViewModel.detailData;
-            gaodeLat = model.data.coreInfo.gaodeLat;
-            gaodeLon = model.data.coreInfo.gaodeLng;
-        } else if ([self.baseViewModel.detailData isKindOfClass:[FHDetailNeighborhoodModel class]]) {
-            FHDetailNeighborhoodModel *model = (FHDetailNeighborhoodModel *)self.baseViewModel.detailData;
-            gaodeLat = model.data.neighborhoodInfo.gaodeLat;
-            gaodeLon = model.data.neighborhoodInfo.gaodeLng;
-        } else if ([self.baseViewModel.detailData isKindOfClass:[FHDetailFloorPanDetailInfoModel class]]) {
-            //户型详情
-//            FHDetailFloorPanDetailInfoModel *model = (FHDetailFloorPanDetailInfoModel *)self.baseViewModel.detailData;
-        }
-        if (gaodeLat.length && gaodeLon.length) {
-            param[@"gaodeLat"] = gaodeLat;
-            param[@"gaodeLon"] = gaodeLon;
-            [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:[NSString stringWithFormat:@"sslocal://baidu_panorama_detail"]] userInfo:TTRouteUserInfoWithDict(param)];
-        }
-    }
 }
 
 - (void)willDisplayCellForItemAtIndex:(NSInteger)index {
-    if ([(FHDetailNewMediaHeaderModel *)self.currentData isInstantData]) {
-        //列表页带入的数据不报埋点
-        return;
-    }
-
     [self trackPictureShowWithIndex:index];
 }
 
 - (void)selectItem:(NSString *)title {
     [self trackClickOptions:title];
-}
-
-- (void)bottomBannerViewDidShow {
-    NSMutableDictionary *tracerDict = self.baseViewModel.detailTracerDic.mutableCopy;
-    NSMutableDictionary *param = [NSMutableDictionary new];
-    param[UT_ELEMENT_TYPE] = @"happiness_eye_tip";
-    param[UT_PAGE_TYPE] = tracerDict[UT_PAGE_TYPE] ? : UT_BE_NULL;
-    param[UT_ELEMENT_FROM] = tracerDict[UT_ELEMENT_FROM] ? : UT_BE_NULL;
-    param[UT_ORIGIN_FROM] = tracerDict[UT_ORIGIN_FROM] ? : UT_BE_NULL;
-    param[UT_ORIGIN_SEARCH_ID] = tracerDict[UT_ORIGIN_SEARCH_ID] ? : UT_BE_NULL;
-    param[UT_LOG_PB] = tracerDict[UT_LOG_PB] ? : UT_BE_NULL;
-    TRACK_EVENT(UT_OF_ELEMENT_SHOW, param);
 }
 
 - (void)trackVRElementShow
@@ -745,12 +572,8 @@
     TRACK_EVENT(UT_OF_ELEMENT_SHOW, param);
 }
 
-//进入图片页面页
+//进入图片相册页
 - (void)goToPictureListFrom:(NSString *)from {
-    if ([(FHDetailNewMediaHeaderModel *)self.currentData isInstantData]) {
-        //列表页带入的数据不响应
-        return;
-    }
     [self enterPictureShowPictureWithIndex:NSUIntegerMax from:from];
     [self showPictureList];
     if (self.pictureListViewController) {
@@ -761,23 +584,23 @@
 #pragma mark - FHDetailScrollViewDidScrollProtocol
 
 - (void)fhDetail_scrollViewDidScroll:(UIView *)vcParentView {
-    if (vcParentView && self.vedioCount > 0) {
-        self.vcParentView = vcParentView;
-        CGPoint point = [self convertPoint:CGPointZero toView:vcParentView];
-        CGFloat navBarHeight = ([TTDeviceHelper isIPhoneXSeries] ? 44 : 20) + 44.0;
-        CGFloat cellHei = [FHDetailMediaHeaderCell cellHeight];
-        if (-point.y + navBarHeight > cellHei) {
-            // 暂停播放
-            if (self.mediaView.videoVC.playbackState == TTVPlaybackState_Playing) {
-                [self.mediaView.videoVC pause];
-            }
-        } else {
-            // 如果可以重新播放
+//    if (vcParentView && self.vedioCount > 0) {
+//        self.vcParentView = vcParentView;
+//        CGPoint point = [self convertPoint:CGPointZero toView:vcParentView];
+//        CGFloat navBarHeight = ([TTDeviceHelper isIPhoneXSeries] ? 44 : 20) + 44.0;
+//        CGFloat cellHei = [FHDetailMediaHeaderCell cellHeight];
+//        if (-point.y + navBarHeight > cellHei) {
+//             暂停播放
+//            if (self.mediaView.videoVC.playbackState == TTVPlaybackState_Playing) {
+//                [self.mediaView.videoVC pause];
+//            }
+//        } else {
+//             如果可以重新播放
 //            if (self.mediaView.videoVC.playbackState == TTVPlaybackState_Paused) {
 //                [self.mediaView.videoVC play];
 //            }
-        }
-    }
+//        }
+//    }
 }
 
 #pragma mark - FHDetailVCViewLifeCycleProtocol
@@ -790,9 +613,6 @@
 }
 
 - (void)vc_viewDidDisappear:(BOOL)animated {
-    if (self.vedioCount > 0 && self.mediaView.videoVC.playbackState == TTVPlaybackState_Playing && !self.mediaView.videoVC.isFullScreen) {
-        [self.mediaView.videoVC pause];
-    }
 }
 
 @end

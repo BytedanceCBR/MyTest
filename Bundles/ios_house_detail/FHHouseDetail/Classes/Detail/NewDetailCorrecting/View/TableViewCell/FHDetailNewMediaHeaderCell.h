@@ -16,8 +16,6 @@ NS_ASSUME_NONNULL_BEGIN
 @class FHDetailNewTopImage;
 @interface FHDetailNewMediaHeaderCell : FHDetailBaseCell
 
-+ (CGFloat)cellHeight;
-
 @end
 
 @interface FHDetailNewMediaHeaderModel : FHDetailBaseModel
