@@ -164,6 +164,7 @@
             if(self.tipView.hidden) {
                 [self.tipView showWithsubView:self.showTipButton toView:self.detailVC.view];
                 [detailVM showSurveyTip];
+                [self addClickOptionsLog];
             } else {
                 [detailVM hiddenSurveyTip];
             }
@@ -171,5 +172,13 @@
     }
 }
 
+//埋点
+- (void)addClickOptionsLog {
+    NSMutableDictionary *params = @{}.mutableCopy;
+    params[@"page_type"] = [self.detailVC.viewModel pageTypeString];
+    params[@"element_type"] = self.tracerDict[@"element_type"];
+    params[@"click_position"] = @"question_mark_explain";
+    TRACK_EVENT(@"click_options", params);
+}
 
 @end

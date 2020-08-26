@@ -91,7 +91,10 @@
     }else{
         [self.headerView removeSubTitleWithTitle];
     }
-    if(model.houseModelType == FHHouseModelTypeSurveyAgentlist){
+    if(model.houseModelType == FHHouseModelTypeSurveyAgentlist) {
+        NSMutableDictionary *dict = @{}.mutableCopy;
+        dict[@"element_type"] = [self elementTypeStringByHouseType:model.houseType];
+        self.headerView.tracerDict = dict;
         self.headerView.showTipButton.hidden = NO;
     }else {
         self.headerView.showTipButton.hidden = YES;
@@ -186,7 +189,7 @@
         FHDetailContactModel *contact = model.recommendedRealtors[index];
         model.phoneCallViewModel.belongsVC = model.belongsVC;
         NSMutableDictionary *dict = [NSMutableDictionary dictionary];
-        dict[@"element_from"] = [self elementTypeStringByHouseType:self.baseViewModel.houseType];
+        dict[@"element_from"] = model.houseModelType == FHHouseModelTypeSurveyAgentlist ? @"actually_survey" : [self elementTypeStringByHouseType:self.baseViewModel.houseType];
         dict[@"enter_from"] = [self.baseViewModel pageTypeString];
         [model.phoneCallViewModel jump2RealtorDetailWithPhone:contact isPreLoad:NO extra:dict];
     }
@@ -211,7 +214,7 @@
         NSMutableDictionary *extraDict = @{}.mutableCopy;
         extraDict[@"realtor_id"] = contact.realtorId;
         extraDict[@"realtor_rank"] = @(index);
-        extraDict[@"realtor_position"] = @"detail_related";
+        extraDict[@"realtor_position"] = model.houseModelType == FHHouseModelTypeSurveyAgentlist ? @"actually_survey" : @"detail_related";
         extraDict[@"realtor_logpb"] = contact.realtorLogpb;
         if (self.baseViewModel.detailTracerDic) {
             [extraDict addEntriesFromDictionary:self.baseViewModel.detailTracerDic];
@@ -276,7 +279,7 @@
     if (index >= 0 && model.recommendedRealtors.count > 0 && index < model.recommendedRealtors.count) {
         FHDetailContactModel *contact = model.recommendedRealtors[index];
         NSMutableDictionary *imExtra = @{}.mutableCopy;
-        imExtra[@"realtor_position"] = @"detail_related";
+        imExtra[@"realtor_position"] = model.houseModelType == FHHouseModelTypeSurveyAgentlist ? @"actually_survey" : @"detail_related";
         
         switch (self.baseViewModel.houseType) {
             case FHHouseTypeNewHouse:
@@ -291,6 +294,10 @@
                 break;
             case FHHouseTypeSecondHandHouse:
             {
+                if(model.houseModelType == FHHouseModelTypeSurveyAgentlist) {
+                    imExtra[kFHAssociateInfo] =  model.associateInfo;
+                    break;
+                }
                 if([self.baseViewModel.detailData isKindOfClass:FHDetailOldModel.class]) {
                     FHDetailOldModel *detailOldModel = (FHDetailOldModel *)self.baseViewModel.detailData;
                     if(detailOldModel.data.recommendRealtorsAssociateInfo) {
@@ -511,7 +518,7 @@
             tracerDic[@"element_type"] = [self elementTypeStringByHouseType:self.baseViewModel.houseType];
             tracerDic[@"realtor_id"] = contact.realtorId ?: @"be_null";
             tracerDic[@"realtor_rank"] = @(i);
-            tracerDic[@"realtor_position"] = @"detail_related";
+            tracerDic[@"realtor_position"] = model.houseModelType == FHHouseModelTypeSurveyAgentlist ? @"actually_survey" : @"detail_related";
             tracerDic[@"realtor_logpb"] = contact.realtorLogpb;
             tracerDic[@"biz_trace"] = contact.bizTrace;
             [tracerDic setValue:contact.enablePhone ? @"1" : @"0" forKey:@"phone_show"];
