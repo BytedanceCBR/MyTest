@@ -472,9 +472,9 @@
 }
 
 - (void)videoPlayFinished:(FHFeedUGCCellModel *)cellModel cell:(FHUGCBaseCell *)cell {
-    UIViewController *vc = [BTDResponder topViewControllerForController:self.viewController];
-    
-    if(vc != self.viewController || self.tableView.isDragging || self.tableView.isDecelerating || self.isScrolling){
+    BOOL isTopVc = [BTDResponder isTopViewController:self.viewController];
+        
+    if(!isTopVc || self.tableView.isDragging || self.tableView.isDecelerating || self.isScrolling){
         [self stopCurrentVideo];
         return;
     }

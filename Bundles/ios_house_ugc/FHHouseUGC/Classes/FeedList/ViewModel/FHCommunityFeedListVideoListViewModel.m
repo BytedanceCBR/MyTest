@@ -41,6 +41,7 @@
 @property(nonatomic, assign) BOOL muted;
 //在滚动中
 @property(nonatomic, assign) BOOL isScrolling;
+@property(nonatomic, assign) BOOL isViewAppear;
 
 @end
 
@@ -50,6 +51,7 @@
     self = [super initWithTableView:tableView controller:viewController];
     if (self) {
         _muted = YES;
+        _isViewAppear = YES;
         self.dataList = [[NSMutableArray alloc] init];
         [self configTableView];
         // 删帖成功
@@ -75,12 +77,14 @@
 }
 
 - (void)viewWillAppear {
+    self.isViewAppear = YES;
     if(!self.viewController.needReloadData){
         [self lazyStartVideoPlay];
     }
 }
 
 - (void)viewWillDisappear {
+    self.isViewAppear = NO;
     [self stopCurrentVideo];
 }
 
@@ -784,9 +788,7 @@
 }
 
 - (void)videoPlayFinished:(FHFeedUGCCellModel *)cellModel cell:(FHUGCBaseCell *)cell {
-    UIViewController *vc = [BTDResponder topViewControllerForController:self.viewController];
-    
-    if(vc != self.viewController || self.tableView.isDragging || self.tableView.isDecelerating || self.isScrolling){
+    if(!self.isViewAppear || self.tableView.isDragging || self.tableView.isDecelerating || self.isScrolling){
         [self stopCurrentVideo];
         return;
     }
