@@ -13,7 +13,8 @@
 @interface FHBubbleView ()
 
 @property(nonatomic,strong) UIImageView *arrowView;
-@property(nonatomic,strong) UIButton *titleView;
+@property(nonatomic,strong) UIImageView *titleView;
+@property(nonatomic,strong) UILabel *titleLabel;
 @property(nonatomic,copy) NSString *titleName;
 @property(nonatomic,strong) UIFont *textFont;
 
@@ -33,23 +34,22 @@
 }
 
 - (void)initView {
-    _titleView = [[UIButton alloc] init];
+    _titleView = [[UIImageView alloc] init];
     UIImage *backgroundImage = [UIImage imageNamed:@"surveyAgentBackgroud"];
     backgroundImage = [backgroundImage stretchableImageWithLeftCapWidth:backgroundImage.size.width/2 topCapHeight:backgroundImage.size.height/2];
-    [_titleView setBackgroundImage:backgroundImage forState:UIControlStateNormal];
-    [_titleView setBackgroundImage:backgroundImage forState:UIControlStateHighlighted];
-    [_titleView setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-    [_titleView setTitleColor:[UIColor whiteColor] forState:UIControlStateHighlighted];
-    _titleView.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;
-    _titleView.contentVerticalAlignment = UIControlContentVerticalAlignmentTop;
-    _titleView.titleLabel.lineBreakMode = NSLineBreakByCharWrapping;
-    _titleView.contentEdgeInsets = UIEdgeInsetsZero;
-    _titleView.titleEdgeInsets = UIEdgeInsetsMake(6, 8, 7, 8);
-    _titleView.titleLabel.font = self.textFont;
-    _titleView.userInteractionEnabled = NO;
-    [self.titleView setTitle:self.titleName forState:UIControlStateNormal];
-    [self.titleView setTitle:self.titleName forState:UIControlStateHighlighted];
+    _titleView.image = backgroundImage;
     [self addSubview:_titleView];
+    
+    _titleLabel = [[UILabel alloc] init];
+    _titleLabel.lineBreakMode = NSLineBreakByCharWrapping;
+    _titleLabel.numberOfLines = 0;
+    _titleLabel.font = self.textFont;
+    _titleLabel.text = self.titleName;
+    _titleLabel.textColor = [UIColor whiteColor];
+    [_titleView addSubview:_titleLabel];
+    [_titleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.edges.mas_equalTo(UIEdgeInsetsMake(6, 8, 7, 8));
+    }];
     
     _arrowView = [[UIImageView alloc] init];
     _arrowView.image = [UIImage imageNamed:@"surveyAgentArrow"];
