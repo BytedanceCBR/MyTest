@@ -623,6 +623,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *centerLatitude;
 @property (nonatomic, copy , nullable) NSString *centerLongitude;
 @property (nonatomic, copy , nullable) NSString *resizeLevel;
+@property (nonatomic, assign) NSInteger houseType;
 
 @end
 
@@ -638,6 +639,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong , nullable) NSNumber *supportMulti;
 @property (nonatomic, strong, nullable) NSNumber *rate;
 @property (nonatomic, strong , nullable) NSArray<FHSearchFilterConfigOption> *options;
+
 @end
 
 @interface  FHSearchConfigModel  : JSONModel

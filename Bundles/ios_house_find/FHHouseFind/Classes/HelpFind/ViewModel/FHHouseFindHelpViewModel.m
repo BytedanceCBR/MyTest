@@ -64,7 +64,9 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
 @property (nonatomic , strong) NSArray<NSString *> *titlesArray;
 @property (nonatomic , strong) RACDisposable *configDisposable;
 @property (nonatomic , assign) BOOL available;
+@property (nonatomic , assign) BOOL userHouseTypeSelected;
 @property (nonatomic , assign) FHHouseType houseType;
+@property (nonatomic , assign) FHHouseType houseTypeSelectedValue;
 @property (nonatomic , strong) NSMutableDictionary *selectMap; // housetype : FHHouseFindSelectModel
 @property (nonatomic , strong) FHSearchFilterConfigItem *regionConfigItem;
 @property (nonatomic , strong) FHSearchFilterConfigItem *priceConfigItem;
@@ -93,7 +95,7 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
 
 @implementation FHHouseFindHelpViewModel
 
-- (instancetype)initWithCollectionView:(UICollectionView *)collectionView recommendModel:(FHHouseFindRecommendDataModel *)recommendModel
+- (instancetype)initWithCollectionView:(UICollectionView *)collectionView recommendModel:(FHHouseFindRecommendDataModel *)recommendModel andHouseType:(NSInteger) houseType
 {
     self = [super init];
     if (self) {
@@ -109,6 +111,7 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
         collectionView.delegate = self;
         collectionView.dataSource = self;
         _collectionView.allowsMultipleSelection = YES;
+        _houseTypeSelectedValue = houseType;
 //        UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(onTap)];
 //        tapGesture.delegate = self;
 //        tapGesture.cancelsTouchesInView = NO;
@@ -440,8 +443,8 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
 
 - (void)jump2HouseFindResultPage:(NSDictionary *)recommendDict
 {
-    if ([self.viewController.parentViewController respondsToSelector:@selector(jump2HouseFindResultVC)]) {
-        [self.viewController.parentViewController performSelector:@selector(jump2HouseFindResultVC)];
+    if ([self.viewController.parentViewController respondsToSelector:@selector(jumpHouseFindResultVC:)]) {
+        [self.viewController.parentViewController performSelector:@selector(jumpHouseFindResultVC:) withObject:@(_houseTypeSelectedValue)];
     }
 }
 
@@ -494,11 +497,31 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
         
         FHSearchFilterConfigItem *houseTypeConfigItem = [[FHSearchFilterConfigItem alloc] init];
         houseTypeConfigItem.tabId = @"7";
+        
+        NSMutableArray *houseTypeArray = [NSMutableArray new];
+        NSArray *houstTypeList = [[FHEnvContext sharedInstance] getConfigFromCache].houseTypeList;
+        
         FHSearchFilterConfigOption *optionSecond = [[FHSearchFilterConfigOption alloc] init];
         optionSecond.text = @"二手房";
-        FHSearchFilterConfigOption *optionNew = [[FHSearchFilterConfigOption alloc] init];
-        optionNew.text = @"新房";
-        houseTypeConfigItem.options = (NSArray <FHSearchFilterConfigOption> * _Nullable )@[optionSecond,optionNew];
+        optionSecond.houseType = 2;
+        
+        
+        if ([houstTypeList containsObject:@(FHHouseTypeSecondHandHouse)] || !houstTypeList) {
+            [houseTypeArray addObject:optionSecond];
+        }else{
+            self.houseTypeSelectedValue = FHHouseTypeNewHouse;
+        }
+        
+        
+        if ([houstTypeList containsObject:@(FHHouseTypeSecondHandHouse)]) {
+             FHSearchFilterConfigOption *optionNew = [[FHSearchFilterConfigOption alloc] init];
+             optionNew.text = @"新房";
+             optionNew.houseType = FHHouseTypeNewHouse;
+             [houseTypeArray addObject:optionNew];
+        }
+        
+        
+        houseTypeConfigItem.options = (NSArray<FHSearchFilterConfigOption> * )houseTypeArray;
         
         if (priceItem) {
             [filterArray addObject:priceItem];
@@ -1126,6 +1149,15 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
                 FHHouseFindSelectItemModel *selectItem = [model selectItemWithTabId:[item.tabId integerValue]];
                 selected = [model selecteItem:selectItem containIndex:indexPath.item];
             }
+            
+            if (item.options.count > indexPath.item) {
+                FHSearchFilterConfigOption *option = item.options[indexPath.item];
+                if (self.houseTypeSelectedValue == option.houseType && !self.userHouseTypeSelected) {
+                  selected = YES;
+                }
+            }
+      
+            
             [tcell updateWithTitle:text highlighted:selected];
             return tcell;
         }else if ([item.tabId integerValue] == FHSearchTabIdTypeRegion) {
@@ -1289,7 +1321,11 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
             if([model selecteItem:selectItem containIndex:indexPath.item]){
                 //反选
                 if (item.tabId.integerValue != FHSearchTabIdTypePrice) {
-                    [model delSelecteItem:selectItem withIndex:indexPath.item];
+                    if (item.tabId.integerValue == FHSearchTabIdTypeHouse){
+                        self.userHouseTypeSelected = YES;
+                    }else{
+                        [model delSelecteItem:selectItem withIndex:indexPath.item];
+                    }
                 }
             }else{
                 if (item.tabId.integerValue == FHSearchTabIdTypePrice) {
@@ -1313,6 +1349,7 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
                         [model clearAddSelecteItem:selectItem withIndex:indexPath.item];
                     }
                 }else if (item.tabId.integerValue == FHSearchTabIdTypeHouse) {
+                    self.userHouseTypeSelected = YES;
                     //添加选择
                     FHSearchFilterConfigOption *option = nil;
                     if (item.options.count > 0) {
@@ -1321,6 +1358,10 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
                     if ([option.supportMulti boolValue]) {
                         [model addSelecteItem:selectItem withIndex:indexPath.item];
                     }else{
+                        if (item.options.count > indexPath.item) {
+                            option = item.options[indexPath.item];
+                            _houseTypeSelectedValue = option.houseType;
+                        }
                         [model clearAddSelecteItem:selectItem withIndex:indexPath.item];
                     }
                 }

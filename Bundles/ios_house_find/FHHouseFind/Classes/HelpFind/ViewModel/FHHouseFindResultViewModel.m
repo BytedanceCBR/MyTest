@@ -69,7 +69,7 @@ static const NSUInteger kFHHomeHeaderViewSectionHeight = 35;
         _currentViewController = viewController;
         
         NSString *houseTypeStr = paramObj.allParams[@"house_type"];
-        self.houseType = FHHouseTypeSecondHandHouse;
+        self.houseType = houseTypeStr ? [houseTypeStr integerValue] : FHHouseTypeSecondHandHouse;
         self.houseSearchDic = [NSMutableDictionary new];
         
         NSDictionary *tracerDict = paramObj.allParams[@"tracer"];

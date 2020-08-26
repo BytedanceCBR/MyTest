@@ -17,8 +17,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)addHouseFindHelpVC;
 - (void)addHouseFindResultVC;
-- (void)jump2HouseFindHelpVC;
-- (void)jump2HouseFindResultVC;
+- (void)jumpHouseFindHelpVC:(NSNumber *)houseTypeNum;
+- (void)jumpHouseFindResultVC:(NSNumber *)houseTypeNum;
+- (void)changeHouseType:(NSNumber *)houseNum;
 
 @end
 

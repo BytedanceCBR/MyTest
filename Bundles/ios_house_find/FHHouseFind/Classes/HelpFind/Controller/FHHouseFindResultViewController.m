@@ -10,7 +10,7 @@
 #import "FHErrorView.h"
 #import "UIViewController+Track.h"
 #import <FHHouseBase/FHBaseTableView.h>
-
+#import "FHHouseType.h"
 @interface FHHouseFindResultViewController () <TTRouteInitializeProtocol>
 
 @property (nonatomic , strong) FHHouseFindResultViewModel *viewModel;
@@ -18,6 +18,7 @@
 @property (nonatomic , strong) UIView *containerView;
 @property (nonatomic , strong) UIButton *rightBtn;
 @property (nonatomic, assign)   BOOL     isViewDidDisapper;
+@property (nonatomic, assign)   FHHouseType  currentHouseType;
 
 @property (nonatomic , strong) FHErrorView *errorMaskView;
 @property (nonatomic , strong) TTRouteParamObj *paramObj;
@@ -33,6 +34,7 @@
     if (self) {
         _paramObj = paramObj;
         NSDictionary *recommendHouseParam = paramObj.allParams[@"recommend_house"];
+        _currentHouseType = paramObj.allParams[@"house_type"] ? [paramObj.allParams[@"house_type"] integerValue] :FHHouseTypeSecondHandHouse;
         
         if (recommendHouseParam && [recommendHouseParam isKindOfClass:[NSDictionary class]]) {
            self.recommendModel = [[FHHouseFindRecommendDataModel alloc] initWithDictionary:recommendHouseParam error:nil];
@@ -141,8 +143,8 @@
 
 - (void)rightBtnClick
 {
-    if ([self.parentViewController respondsToSelector:@selector(jump2HouseFindHelpVC)]) {
-        [self.parentViewController performSelector:@selector(jump2HouseFindHelpVC)];
+    if ([self.parentViewController respondsToSelector:@selector(jumpHouseFindHelpVC:)]) {
+        [self.parentViewController performSelector:@selector(jumpHouseFindHelpVC:) withObject:@(_currentHouseType)];
     }
 }
 
@@ -156,9 +158,10 @@
     return self.viewModel.recommendModel;
 }
 
-- (void)refreshRecommendModel:(FHHouseFindRecommendDataModel *)recommendModel
+- (void)refreshRecommendModel:(FHHouseFindRecommendDataModel *)recommendModel andHouseType:(NSInteger)houseType
 {
     self.viewModel.recommendModel = recommendModel;
+    _currentHouseType = houseType;
 }
 
 - (void)setNavBar:(BOOL)error {

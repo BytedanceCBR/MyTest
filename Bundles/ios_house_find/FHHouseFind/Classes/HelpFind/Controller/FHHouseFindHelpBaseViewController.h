@@ -14,7 +14,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface FHHouseFindHelpBaseViewController : FHBaseViewController
 
 - (FHHouseFindRecommendDataModel *)getRecommendModel;
-- (void)refreshRecommendModel:(FHHouseFindRecommendDataModel *)recommendModel;
+- (void)refreshRecommendModel:(FHHouseFindRecommendDataModel *)recommendModel andHouseType:(NSInteger)houseType;
 - (void)endEditing:(BOOL)isHideKeyBoard;
 
 @end

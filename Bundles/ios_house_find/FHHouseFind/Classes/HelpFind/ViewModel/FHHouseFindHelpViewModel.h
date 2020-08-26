@@ -21,7 +21,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic , strong) FHHouseFindRecommendDataModel *recommendModel;
 @property(nonatomic , strong) NSMutableDictionary *tracerDict;
 
-- (instancetype)initWithCollectionView:(UICollectionView *)collectionView recommendModel:(FHHouseFindRecommendDataModel *)recommendModel;
+- (instancetype)initWithCollectionView:(UICollectionView *)collectionView recommendModel:(FHHouseFindRecommendDataModel *)recommendModel andHouseType:(NSInteger) houseType;
 - (void)addGoDetailLog;
 
 @end

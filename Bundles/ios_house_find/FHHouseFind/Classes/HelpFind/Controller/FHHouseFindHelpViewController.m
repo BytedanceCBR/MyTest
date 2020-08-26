@@ -15,13 +15,14 @@
 #import <TTBaseLib/NSDictionary+TTAdditions.h>
 #import "FHHouseFindRecommendModel.h"
 #import "FHHouseFindCollectionView.h"
-
+#import "FHHouseType.h"
 @interface FHHouseFindHelpViewController ()
 
 @property (nonatomic , strong) FHErrorView *errorMaskView;
 @property (nonatomic , strong) UICollectionView *contentView;
 @property (nonatomic , strong) FHHouseFindHelpViewModel *viewModel;
 @property (nonatomic , strong) FHHouseFindRecommendDataModel *recommendModel;
+@property (nonatomic , assign) FHHouseType houseType;
 
 @end
 
@@ -35,6 +36,7 @@
         if (recommendDict.count > 0) {
             _recommendModel = [[FHHouseFindRecommendDataModel alloc]initWithDictionary:recommendDict error:nil];
         }
+        _houseType = paramObj.allParams[@"house_type"] ? [paramObj.allParams[@"house_type"] integerValue] : FHHouseTypeSecondHandHouse;
     }
     return self;
 }
@@ -71,10 +73,11 @@
     return self.viewModel.recommendModel;
 }
 
-- (void)refreshRecommendModel:(FHHouseFindRecommendDataModel *)recommendModel
+- (void)refreshRecommendModel:(FHHouseFindRecommendDataModel *)recommendModel andHouseType:(NSInteger)houseType
 {
     self.viewModel.recommendModel = recommendModel;
     [self.contentView reloadData];
+    _houseType = houseType;
 }
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSKeyValueChangeKey,id> *)change context:(void *)context
@@ -118,7 +121,7 @@
     
     [self.view addSubview:_contentView];
 
-    _viewModel = [[FHHouseFindHelpViewModel alloc]initWithCollectionView:_contentView recommendModel:self.recommendModel];
+    _viewModel = [[FHHouseFindHelpViewModel alloc]initWithCollectionView:_contentView recommendModel:self.recommendModel andHouseType:_houseType];
     _viewModel.viewController = self;
     _viewModel.tracerDict = self.tracerDict;
     _viewModel.showNoDataBlock = ^(BOOL noData,BOOL available) {
