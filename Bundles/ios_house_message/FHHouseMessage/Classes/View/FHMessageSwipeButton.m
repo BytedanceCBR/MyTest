@@ -1,9 +1,5 @@
 //
-//  SwipeButton.m
-//  SwipeTableView
-//
-//  Created by zhao on 16/8/11.
-//  Copyright © 2016年 zhaoName. All rights reserved.
+//  Created by xubinbin on 2020/8/14.
 //
 
 #import "FHMessageSwipeButton.h"
@@ -12,28 +8,10 @@
 
 @implementation FHMessageSwipeButton
 
-//只有title
-+ (FHMessageSwipeButton *)createSwipeButtonWithTitle:(NSString *)title backgroundColor:(UIColor *)backgroundColor touchBlock:(TouchSwipeButtonBlock)block
-{
-    return [self createSwipeButtonWithTitle:title font:15 textColor:[UIColor blackColor] backgroundColor:backgroundColor  touchBlock:block];
-}
 
 + (FHMessageSwipeButton *)createSwipeButtonWithTitle:(NSString *)title font:(CGFloat)font textColor:(UIColor *)textColor backgroundColor:(UIColor *)backgroundColor touchBlock:(TouchSwipeButtonBlock)block
 {
     return [self createSwipeButtonWithTitle:title font:font textColor:textColor backgroundColor:backgroundColor image:nil touchBlock:block];
-}
-
-
-//只有图片
-+ (FHMessageSwipeButton *)createSwipeButtonWithImage:(UIImage *)image backgroundColor:(UIColor *)color touchBlock:(TouchSwipeButtonBlock)block
-{
-    return [self createSwipeButtonWithTitle:nil font:15 textColor:[UIColor blackColor] backgroundColor:color image:image touchBlock:block];
-}
-
-//图片、文字都有，且图片在上 文字在下
-+ (FHMessageSwipeButton *)createSwipeButtonWithTitle:(NSString *)title backgroundColor:(UIColor *)backgroundColor image:(UIImage *)image touchBlock:(TouchSwipeButtonBlock)block
-{
-    return [self createSwipeButtonWithTitle:title font:15 textColor:[UIColor blackColor] backgroundColor:backgroundColor image:image touchBlock:block];
 }
 
 + (FHMessageSwipeButton *)createSwipeButtonWithTitle:(NSString *)title font:(CGFloat)font textColor:(UIColor *)textColor backgroundColor:(UIColor *)backgroundColor image:(UIImage *)image touchBlock:(TouchSwipeButtonBlock)block

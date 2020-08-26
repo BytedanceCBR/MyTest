@@ -1,9 +1,5 @@
 //
-//  SwipeView.m
-//  SwipeTableView
-//
-//  Created by zhao on 16/8/29.
-//  Copyright © 2016年 zhaoName. All rights reserved.
+//  Created by xubinbin on 2020/8/14.
 //
 
 #import "FHMessageSwipeView.h"
@@ -173,10 +169,9 @@ static inline CGFloat mgEaseInOutBounce(CGFloat t, CGFloat b, CGFloat c) {
 // swipeView的弹出动画效果
 - (void)swipeViewAnimationFromRight:(BOOL)fromRight effect:(CGFloat)t cellHeight:(CGFloat)cellHeight
 {
-    CGFloat verticalSpace = self.btnEdge.top + self.btnEdge.bottom;
+    //CGFloat verticalSpace = self.btnEdge.top + self.btnEdge.bottom;
     switch (self.mode)
     {
-        case SwipeViewTransfromModeDefault:break; // 默认的效果
         case SwipeViewTransfromModeStatic:
         {
             const CGFloat dx = self.bounds.size.width * (1.0 - t);
@@ -189,35 +184,7 @@ static inline CGFloat mgEaseInOutBounce(CGFloat t, CGFloat b, CGFloat c) {
                 offsetX += frame.size.width;
             }
         }
-            break;
-        case SwipeViewTransfromModeBorder: // 渐出
-        {
-            CGFloat selfWidth = self.bounds.size.width;
-            CGFloat offsetX = ABS(self.btnEdge.left);
-            
-            for (FHMessageSwipeButton *button in self.buttonArray)
-            {
-                CGRect frame = button.frame;
-                CGFloat x = fromRight ? offsetX * t : (selfWidth - MAX(frame.size.width, cellHeight - verticalSpace) - offsetX) * (1.0 - t) + offsetX;
-                button.frame = CGRectMake(x, 0,  MAX(frame.size.width, cellHeight - verticalSpace), 80);
-                offsetX += MAX(frame.size.width, cellHeight - verticalSpace);
-            }
-        }
-            break;
-        case SwipeViewTransfromMode3D: // 3D
-        {
-            const CGFloat invert = fromRight ? -1.0 : 1.0;
-            const CGFloat angle = M_PI_2 * (1.0 - t) * invert;
-            CATransform3D transform = CATransform3DIdentity;
-            transform.m34 = -1.0/400.0f;
-            const CGFloat dx = -_containView.frame.size.width * 0.5 * invert;
-            const CGFloat offset = dx * 2 * (1.0-t);
-            transform = CATransform3DTranslate(transform, dx - offset, 0, 0);
-            transform = CATransform3DRotate(transform, angle, 0.0, 1.0, 0.0);
-            transform = CATransform3DTranslate(transform, -dx, 0, 0);
-            self.containView.layer.transform = transform;
-        }
-            break;
+        break;
     }
 }
 
