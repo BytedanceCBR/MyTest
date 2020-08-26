@@ -222,7 +222,6 @@ extern NSString *const INSTANT_DATA_KEY;
                return [FHHouseListBaseItemCell class];
             }
         }
-        houseModel.cellStyles = 7;
         if (houseModel.cellStyles == 7) {
             return [FHHouseSearchSecondHouseCell class];
         }
@@ -271,7 +270,6 @@ extern NSString *const INSTANT_DATA_KEY;
         if(houseModel.cardType == FHSearchCardTypeAgentCard){
                return NSStringFromClass([FHHouseAgentCardCell class]);
         }
-        houseModel.cellStyles = 7;
         if (houseModel.cellStyles == 7) {
             return NSStringFromClass([FHHouseSearchSecondHouseCell class]);
         }

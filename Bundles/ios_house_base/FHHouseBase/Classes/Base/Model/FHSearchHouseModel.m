@@ -731,6 +731,7 @@
                            @"dealOpenUrl": @"deal_open_url",
                            @"reasonTags": @"reason_tags",
                            @"addrData": @"addr_data",
+                           @"titleTags": @"title_tags",
                            };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
         return dict[keyName]?:keyName;
