@@ -15,6 +15,7 @@
 #import "FHUGCFeedDetailJumpManager.h"
 #import "FHRealtorEvaluatingPhoneCallModel.h"
 #import "FHRealtorEvaluatingTracerHelper.h"
+#import "FHHouseDeatilRGCImageCell.h"
 @interface  FHhouseDetailRGCListCell ()<UITableViewDelegate,UITableViewDataSource,FHUGCBaseCellDelegate>
 @property (nonatomic , strong) NSMutableArray *dataList;
 @property (nonatomic , strong) UITableView *tableView;
@@ -376,8 +377,8 @@
         switch (model.cellType) {
             case FHUGCFeedListCellTypeUGC:
                 model.cellSubType = FHUGCFeedListCellSubTypeUGCBrokerImage;
-                ///内容高度 + 图片高度 + 距离顶部高度 + 底部高度
-                contentHeight = contentHeight + model.contentHeight  +(model.imageList.count == 0?0:75+ 16)  + 50 + 20;
+                ///图片cell高度
+                contentHeight = contentHeight + [FHHouseDeatilRGCImageCell heightForData:model];
                 break;
             case FHUGCFeedListCellTypeUGCSmallVideo:
                 model.cellSubType = FHUGCFeedListCellSubTypeUGCBrokerVideo;

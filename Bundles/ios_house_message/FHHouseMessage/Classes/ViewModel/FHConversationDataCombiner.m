@@ -90,6 +90,7 @@ static FHCombineChannelSingleton* _instance;
     if(self.channels.count == 0 && [FHCombineChannelSingleton shareInstance].combineChannels.count > 0) {
         self.channels = [FHCombineChannelSingleton shareInstance].combineChannels;
     }
+    [theItems addObjectsFromArray:_channels];
     self.items = [self sortItems:theItems];
     self.conversations = [self sortItems:self.conversations];
     self.channels = [self sortItems:self.channels];
