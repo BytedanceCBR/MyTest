@@ -419,19 +419,6 @@
     }
 }
 
-- (void)jumpToCategoryListVCByUrl2:(FHSuggestionResponseDataModel *)theModel
-{
-    NSMutableDictionary *traceParam = @{}.mutableCopy;
-    NSMutableDictionary *dict = @{@"house_type":@(theModel.houseType.integerValue) ,
-    @"tracer": traceParam
-    }.mutableCopy;
-    
-    
-    NSString *urlStr = [NSString stringWithFormat:@"sslocal://new_house_detail?court_id=%@",theModel.id];
-    TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
-    NSURL *url = [NSURL URLWithString:urlStr];
-    [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:nil];
-}
 #pragma mark - Request
 
 // 执行网络请求
