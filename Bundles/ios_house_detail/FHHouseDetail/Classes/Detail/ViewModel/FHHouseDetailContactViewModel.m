@@ -196,11 +196,6 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
     }
 }
 
-- (void)hideFollowBtn
-{
-    [self.navBar hideFollowBtn];
-}
-
 - (void)setTracerDict:(NSDictionary *)tracerDict
 {
     _tracerDict = tracerDict;

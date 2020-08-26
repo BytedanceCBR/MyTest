@@ -12,9 +12,9 @@
 #import "TTThemeConst.h"
 #import "UIImage+TTThemeExtension.h"
 #import "UIViewAdditions.h"
-#import "TTDeviceHelper.h"
+#import <ByteDanceKit/UIDevice+BTDAdditions.h>
+#import <ByteDanceKit/ByteDanceKit.h>
 #import <BDTrackerProtocol/BDTrackerProtocol.h>
-
 #import "TTImagePreviewAnimateManager.h"
 #import "ALAssetsLibrary+TTImagePicker.h"
 #import "UIColor+Theme.h"
@@ -27,7 +27,6 @@
 #import <Photos/Photos.h>
 #import "HTSDeviceManager.h"
 #import "FHDetailVideoInfoView.h"
-#import "NSDictionary+TTAdditions.h"
 #import "FHLoadingButton.h"
 #import "FHDetailBaseModel.h"
 
@@ -45,9 +44,10 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
     BOOL _statusBarHidden;
     UIStatusBarStyle _lastStatusBarStyle;
     BOOL _isRotating;
-    BOOL _reachDismissCondition; //是否满足关闭图片控件条件
     BOOL _reachDragCondition; //是否满足过一次触发手势条件
 }
+@property (nonatomic, assign) BOOL reachDismissCondition; //是否满足关闭图片控件条件
+
 @property(nonatomic, copy)TTPhotoScrollViewDismissBlock dismissBlock;
 @property(nonatomic, strong)UIView *containerView;
 
@@ -149,8 +149,8 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
 - (void)refreshCallBtnLoadingState:(NSNotification *)noti
 {
     NSDictionary *userInfo = noti.userInfo;
-    NSString *houseId = [userInfo tt_stringValueForKey:@"house_id"];
-    NSInteger loading = [userInfo tt_integerValueForKey:@"show_loading"];
+    NSString *houseId = [userInfo btd_stringValueForKey:@"house_id"];
+    NSInteger loading = [userInfo btd_integerValueForKey:@"show_loading"];
     if (![houseId isEqualToString:self.houseId]) {
         return;
     }
@@ -163,8 +163,8 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
 - (void)refreshFollowStatus:(NSNotification *)noti
 {
     NSDictionary *userInfo = noti.userInfo;
-    NSString *followId = [userInfo tt_stringValueForKey:@"followId"];
-    NSInteger followStatus = [userInfo tt_integerValueForKey:@"followStatus"];
+    NSString *followId = [userInfo btd_stringValueForKey:@"followId"];
+    NSInteger followStatus = [userInfo btd_integerValueForKey:@"followStatus"];
     if (![followId isEqualToString:self.houseId]) {
         return;
     }
@@ -201,7 +201,6 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
 {
     [super viewDidLoad];
     [self setCurrentStatusStyle];
-    self.topVC.ttStatusBarStyle = UIStatusBarStyleLightContent;
     // 修复iOS7下，photoScrollView 子视图初始化位置不正确的问题
     if ([self respondsToSelector:@selector(edgesForExtendedLayout)]){
         self.edgesForExtendedLayout = UIRectEdgeNone;
@@ -444,9 +443,9 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
         [_animateManager registeredPanBackWithGestureView:self.view];
         [self frameTransform];
     }
-    TTNavigationController *navi = self.topVC.navigationController;
+    UINavigationController *navi = self.topVC.navigationController;
     if (navi && [navi isKindOfClass:[TTNavigationController class]]) {
-        navi.panRecognizer.enabled = NO;
+        [(TTNavigationController *)navi panRecognizer].enabled = NO;
     }
     // 是否正在显示 视频
     self.isShowenVideo = self.currentIndex < self.vedioCount;
@@ -612,7 +611,7 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
 - (void)viewWillLayoutSubviews
 {
     [super viewWillLayoutSubviews];
-    if ([TTDeviceHelper isPadDevice]) {
+    if ([UIDevice btd_isPadDevice]) {
         [self refreshUI];
     }
     CGFloat topInset = 0;
@@ -646,9 +645,9 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
-    TTNavigationController *navi = self.topVC.navigationController;
+    UINavigationController *navi = self.topVC.navigationController;
     if (navi && [navi isKindOfClass:[TTNavigationController class]]) {
-        navi.panRecognizer.enabled = NO;
+        [(TTNavigationController *)navi panRecognizer].enabled = NO;
     }
     [self setCurrentStatusStyle];
     __weak typeof(self) weakSelf = self;
@@ -669,9 +668,9 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
 
 - (void)viewDidDisappear:(BOOL)animated {
     [super viewDidDisappear:animated];
-    TTNavigationController *navi = self.topVC.navigationController;
+    UINavigationController *navi = self.topVC.navigationController;
     if (navi && [navi isKindOfClass:[TTNavigationController class]]) {
-        navi.panRecognizer.enabled = YES;
+        [(TTNavigationController *)navi panRecognizer].enabled = YES;
     }
     if (self.currentIndex < self.vedioCount && !self.startDismissSelf && !self.disableAutoPlayVideo) {
         // 视频
@@ -730,9 +729,9 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
 
 - (void)updateNavHeaderTitle {
     NSInteger count = 0;
-    NSInteger currentTitleIndex;
+    NSInteger currentTitleIndex = 0;
     NSInteger titleIndex = 0;
-    for (int i = 0; i < self.pictureNumbers.count; i++) {
+    for (NSUInteger i = 0; i < self.pictureNumbers.count; i++) {
         NSNumber *num = self.pictureNumbers[i];
         NSInteger tempCount = [num integerValue];
         count += tempCount;
@@ -748,7 +747,7 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
         FHHouseDetailImageListDataModel *listModel = self.mediaHeaderModel.houseImageDictList[titleIndex];
         self.currentTypeName = listModel.houseImageTypeName;
     }
-    self.naviView.titleLabel.text = [NSString stringWithFormat:@"%d/%d",num.unsignedIntValue - currentTitleIndex + 1,num.unsignedIntValue];
+    self.naviView.titleLabel.text = [NSString stringWithFormat:@"%ld/%d",num.unsignedIntValue - currentTitleIndex + 1,num.unsignedIntValue];
 }
 
 #pragma mark - Setter & Getter
@@ -1560,13 +1559,13 @@ static BOOL kFHStaticPhotoBrowserAtTop = NO;
         //距离判断+速度判断
         if (verticle) {
             if (yFraction > 0.2) {
-                _reachDismissCondition = YES;
+                self.reachDismissCondition = YES;
             } else {
-                _reachDismissCondition  = NO;
+                self.reachDismissCondition  = NO;
             }
             
             if (velocity.y > 1500) {
-                _reachDismissCondition = YES;
+                self.reachDismissCondition = YES;
             }
         }
         
@@ -1597,7 +1596,7 @@ static BOOL kFHStaticPhotoBrowserAtTop = NO;
     CGRect endRect = [self frameForPagingScrollView];
     CGFloat opacity = 1;
     
-    if (_reachDismissCondition) {
+    if (self.reachDismissCondition) {
         if (self.direction == TTPhotoScrollViewMoveDirectionVerticalBottom)
         {
             endRect.origin.y += CGRectGetHeight(self.photoScrollView.frame);
@@ -1614,7 +1613,7 @@ static BOOL kFHStaticPhotoBrowserAtTop = NO;
         [self addAnimatedViewToContainerView: 1 - opacity];
     } completion:^(BOOL finished) {
         self.direction = TTPhotoScrollViewMoveDirectionNone;
-        if (_reachDismissCondition) {
+        if (self.reachDismissCondition) {
             [self finished];
         } else {
             [self removeAnimatedViewToContainerView];
@@ -1752,7 +1751,7 @@ static BOOL kFHStaticPhotoBrowserAtTop = NO;
     self.pictureTitleView.hidden = YES;
     self.videoInfoView.hidden = YES;
     
-    if (_reachDismissCondition) {
+    if (self.reachDismissCondition) {
         [[UIApplication sharedApplication] beginIgnoringInteractionEvents];
         
         [UIView animateWithDuration:.25f animations:^{
@@ -1902,7 +1901,7 @@ static BOOL kFHStaticPhotoBrowserAtTop = NO;
             }
             break;
         case TTPreviewAnimateStateDidFinish:
-            _reachDismissCondition = YES;
+            self.reachDismissCondition = YES;
             self.containerView.alpha = 0;
             [self resetStatusStyle];
             [self finished];

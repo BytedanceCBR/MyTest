@@ -375,7 +375,7 @@
 - (void)detailCollectService:(TTVVideoDetailCollectService *)collectService showTipMsg:(NSString *)tipMsg icon:(UIImage *)image buttonSeat:(NSString *)btnSeat
 {
     [[ToastManager manager] showToast:tipMsg];
-    [self updateDiggButton];
+    [self updateCollectionButton];
 }
 
 #pragma mark - 埋点

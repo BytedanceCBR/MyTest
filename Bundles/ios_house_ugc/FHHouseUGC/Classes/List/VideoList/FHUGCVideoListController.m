@@ -22,7 +22,6 @@
 
 @property(nonatomic, strong) FHUGCVideoListViewModel *viewModel;
 @property(nonatomic, assign) NSTimeInterval enterTabTimestamp;
-@property(nonatomic, assign) BOOL noNeedAddEnterCategorylog;
 
 @end
 
@@ -59,7 +58,6 @@
     [self initNavbar];
     [self initView];
     [self initViewModel];
-    [self addEnterCategoryLog];
     [[SSImpressionManager shareInstance] addRegist:self];
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationDidBecomeActive) name:UIApplicationDidBecomeActiveNotification object:nil];
@@ -97,6 +95,7 @@
         _enterTabTimestamp = [[NSDate date]timeIntervalSince1970];
     }
 
+    [self addEnterCategoryLog];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationDidEnterBackground) name:UIApplicationDidEnterBackgroundNotification object:nil];
     [self.viewModel autoPlayCurrentVideo];
 }
