@@ -532,8 +532,6 @@ logPB:self.listLogPB extraInfo:self.extraInfo completion:^(FHDetailOldModel * _N
         }
         paramsDict[@"page_type"] = [self pageTypeString];
         agentListModel.phoneCallViewModel.tracerDict = paramsDict;
-        //        agentListModel.phoneCallViewModel.followUpViewModel = self.contactViewModel.followUpViewModel;
-        //        agentListModel.phoneCallViewModel.followUpViewModel.tracerDict = self.detailTracerDic;
         agentListModel.searchId = searchId;
         agentListModel.imprId = imprId;
         agentListModel.houseId = self.houseId;

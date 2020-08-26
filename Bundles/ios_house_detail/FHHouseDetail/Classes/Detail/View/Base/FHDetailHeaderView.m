@@ -17,7 +17,7 @@
 
 @interface FHDetailHeaderView ()
 @property (nonatomic, strong)   UIImageView       *arrowsImg;
-
+@property (nonatomic, weak) FHHouseDetailViewController *detailVC;
 @end
 
 @implementation FHDetailHeaderView
@@ -138,27 +138,34 @@
     return nil;
 }
 
-- (void)showTipButtonClick {
-    UIViewController *topVC = [self getViewController];
-    if(topVC) {
+-(FHHouseDetailViewController *)detailVC {
+    if(_detailVC == nil) {
+        UIViewController *topVC = [self getViewController];
         if([topVC isKindOfClass:[FHHouseDetailViewController class]]) {
-            FHHouseDetailViewController *detailVC = (FHHouseDetailViewController *)topVC;
-            if([detailVC.viewModel isKindOfClass:[FHHouseOldDetailViewModel class]]) {
-                FHHouseOldDetailViewModel *detailVM = (FHHouseOldDetailViewModel *) detailVC.viewModel;
-                if(self.tipView == nil) {
-                    self.tipView = [[FHBubbleView alloc] initWithTitle:detailVM.tipName font:[UIFont themeFontRegular:10]];
-                    self.tipView.hidden = YES;
-                    [detailVC.view addSubview:self.tipView];
-                    [detailVC.view bringSubviewToFront:self.tipView];
-                    detailVM.tipView = self.tipView;
-                }
-                if(self.tipView.hidden) {
-                    [self.tipView showWithsubView:self.showTipButton toView:detailVC.view];
-                    [detailVM showSurveyTip];
-                } else {
-                    [detailVM hiddenSurveyTip];
-                }
-                
+            _detailVC = (FHHouseDetailViewController *)topVC;
+        }
+    }
+    return _detailVC;
+}
+
+
+
+- (void)showTipButtonClick {
+    if(self.detailVC){
+        if([self.detailVC.viewModel isKindOfClass:[FHHouseOldDetailViewModel class]]) {
+            FHHouseOldDetailViewModel *detailVM = (FHHouseOldDetailViewModel *) self.detailVC.viewModel;
+            if(self.tipView == nil) {
+                self.tipView = [[FHBubbleView alloc] initWithTitle:detailVM.tipName font:[UIFont themeFontRegular:10]];
+                self.tipView.hidden = YES;
+                [self.detailVC.view addSubview:self.tipView];
+                [self.detailVC.view bringSubviewToFront:self.tipView];
+                detailVM.tipView = self.tipView;
+            }
+            if(self.tipView.hidden) {
+                [self.tipView showWithsubView:self.showTipButton toView:self.detailVC.view];
+                [detailVM showSurveyTip];
+            } else {
+                [detailVM hiddenSurveyTip];
             }
         }
     }

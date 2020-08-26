@@ -42,7 +42,7 @@
     [_titleView setTitleColor:[UIColor whiteColor] forState:UIControlStateHighlighted];
     _titleView.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;
     _titleView.contentVerticalAlignment = UIControlContentVerticalAlignmentTop;
-    _titleView.titleLabel.lineBreakMode = NSLineBreakByWordWrapping;
+    _titleView.titleLabel.lineBreakMode = NSLineBreakByCharWrapping;
     _titleView.contentEdgeInsets = UIEdgeInsetsZero;
     _titleView.titleEdgeInsets = UIEdgeInsetsMake(6, 8, 7, 8);
     _titleView.titleLabel.font = self.textFont;
@@ -57,11 +57,13 @@
 }
 
 
-
 - (CGSize)bubbleSize {
-    NSDictionary *attrs=@{NSFontAttributeName:self.textFont};
+    NSMutableParagraphStyle *style = [[NSParagraphStyle defaultParagraphStyle] mutableCopy];
+    style.lineBreakMode = NSLineBreakByCharWrapping;
+    style.alignment = NSTextAlignmentLeft;
+    NSAttributedString *text = [[NSAttributedString alloc] initWithString:self.titleName attributes:@{NSFontAttributeName:self.textFont, NSParagraphStyleAttributeName:style}];
     CGSize maxSize = CGSizeMake(220, MAXFLOAT);
-    CGSize textSize = [self.titleName boundingRectWithSize:maxSize options:NSStringDrawingUsesLineFragmentOrigin attributes:attrs context:nil].size;
+    CGSize textSize = [text boundingRectWithSize:maxSize options:NSStringDrawingUsesLineFragmentOrigin context:nil].size;
     return CGSizeMake(textSize.width+16, textSize.height+21);
 }
 
@@ -78,11 +80,12 @@
     if(point.y > navBarHeight + bubbleSize.height) {
         [_titleView mas_remakeConstraints:^(MASConstraintMaker *make) {
             make.left.right.top.equalTo(self);
+            make.bottom.equalTo(self.arrowView.mas_top);
         }];
         _arrowView.transform = CGAffineTransformIdentity;
         [_arrowView mas_remakeConstraints:^(MASConstraintMaker *make) {
             make.width.height.mas_equalTo(8);
-            make.top.equalTo(self.titleView.mas_bottom);
+            make.bottom.equalTo(self);
             make.left.equalTo(self).offset(arrowOffset);
         }];
         [self mas_remakeConstraints:^(MASConstraintMaker *make) {
@@ -95,11 +98,12 @@
         point = [subview convertPoint:botMidPoint toView:view];
         [_titleView mas_remakeConstraints:^(MASConstraintMaker *make) {
             make.left.right.bottom.equalTo(self);
+            make.top.equalTo(self.arrowView.mas_bottom);
         }];
         _arrowView.transform = CGAffineTransformMakeRotation(M_PI);
         [_arrowView mas_remakeConstraints:^(MASConstraintMaker *make) {
             make.width.height.mas_equalTo(8);
-            make.bottom.equalTo(self.titleView.mas_top);
+            make.top.equalTo(self);
             make.left.equalTo(self).offset(arrowOffset);
         }];
         [self mas_remakeConstraints:^(MASConstraintMaker *make) {
