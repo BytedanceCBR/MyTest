@@ -353,10 +353,7 @@
                         [wself updateTableViewWithMoreData:wself.tableView.hasMore];
                         [wself.viewController.emptyView hideEmptyView];
                     }else{
-                        NSString *tipStr = @"暂无新内容，快去发布吧";
-                        if([self.categoryId isEqualToString:@"f_house_video"]){
-                            tipStr = @"暂无新内容";
-                        }
+                        NSString *tipStr = @"暂无新内容";
                         [wself.viewController.emptyView showEmptyWithTip:tipStr errorImageName:kFHErrorMaskNetWorkErrorImageName showRetry:YES];
                         wself.refreshFooter.hidden = YES;
                     }
@@ -388,7 +385,7 @@
 }
 
 - (void)lazyStartVideoPlay {
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         [self startVideoPlay];
     });
 }
@@ -760,18 +757,24 @@
     NSIndexPath *indexPath = [NSIndexPath indexPathForRow:row inSection:0];
     [self.tableView scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionTop animated:YES];
     UITableViewCell *cell = [self.tableView cellForRowAtIndexPath:indexPath];
-    if([cell isKindOfClass:[FHUGCFullScreenVideoCell class]]){
-        FHUGCFullScreenVideoCell *vCell = (FHUGCFullScreenVideoCell *)cell;
-        self.currentVideoCell.contentView.userInteractionEnabled = NO;
-        self.currentVideoCell.mutedBgView.alpha = 0;
-        vCell.contentView.userInteractionEnabled = YES;
-        self.currentVideoCell = vCell;
-        [vCell play];
-    }
+    self.currentVideoCell.contentView.userInteractionEnabled = NO;
+    self.currentVideoCell.mutedBgView.alpha = 0;
+    self.tableView.scrollEnabled = NO;
+    
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        if([cell isKindOfClass:[FHUGCFullScreenVideoCell class]]){
+            FHUGCFullScreenVideoCell *vCell = (FHUGCFullScreenVideoCell *)cell;
+            vCell.contentView.userInteractionEnabled = YES;
+            self.currentVideoCell = vCell;
+            [vCell play];
+        }
+        
+        self.tableView.scrollEnabled = YES;
+    });
     
     if(row >= (self.dataList.count - 3)){
-        //在刷一刷数据
-        [self requestData:NO first:NO];
+         //在刷一刷数据
+         [self requestData:NO first:NO];
     }
 }
 
