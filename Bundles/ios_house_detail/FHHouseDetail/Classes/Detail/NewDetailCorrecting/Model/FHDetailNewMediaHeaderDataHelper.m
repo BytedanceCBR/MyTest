@@ -36,14 +36,14 @@
 
 - (FHDetailNewMediaHeaderDataHelperPictureDetailData *)pictureDetailData {
     if (!_pictureDetailData) {
-        
+        _pictureDetailData = [FHDetailNewMediaHeaderDataHelper generatePictureDetailData:self.mediaHeaderModel];
     }
     return _pictureDetailData;
 }
 
 - (FHDetailNewMediaHeaderDataHelperPhotoAlbumData *)photoAlbumData {
     if (!_photoAlbumData) {
-        
+        _photoAlbumData = [FHDetailNewMediaHeaderDataHelper generatePhotoAlbumData:self.mediaHeaderModel];
     }
     return _photoAlbumData;
 }
@@ -110,13 +110,11 @@
 
 //大图详情页的数据
 + (FHDetailNewMediaHeaderDataHelperPictureDetailData *)generatePictureDetailData:(FHDetailNewMediaHeaderModel *)newMediaHeaderModel {
-    NSMutableArray *imageList = [NSMutableArray array];
-    
+    FHDetailNewMediaHeaderDataHelperPictureDetailData *pictureDetailData = [[FHDetailNewMediaHeaderDataHelperPictureDetailData alloc] init];
+    NSMutableArray<FHDetailPhotoHeaderModelProtocol> *imageList = [NSMutableArray<FHDetailPhotoHeaderModelProtocol> array];
+    NSMutableArray *itemArray = [NSMutableArray array];
     NSArray *houseImageDict = newMediaHeaderModel.houseImageDictList;
     for (FHHouseDetailImageListDataModel *listModel in houseImageDict) {
-        NSInteger index = 0;
-        NSArray<FHImageModel> *instantHouseImageList = listModel.instantHouseImageList;
-
         for (FHImageModel *imageModel in listModel.houseImageList) {
             if (imageModel.url.length > 0) {
                 FHMultiMediaItemModel *itemModel = [[FHMultiMediaItemModel alloc] init];
@@ -124,19 +122,18 @@
                 itemModel.imageUrl = imageModel.url;
                 itemModel.pictureType = listModel.houseImageType;
                 itemModel.pictureTypeName = listModel.houseImageTypeName;
-                if (instantHouseImageList.count > index) {
-                    FHImageModel *instantImgModel = instantHouseImageList[index];
-                    itemModel.instantImageUrl = instantImgModel.url;
-                }
                 [imageList addObject:imageModel];
+                [itemArray addObject:itemModel];
             }
-            index++;
         }
     }
-    return imageList;
+    pictureDetailData.mediaItemArray = itemArray.copy;
+    pictureDetailData.photoArray = imageList.copy;
+    return pictureDetailData;
 }
 
-+ (NSArray<FHHouseDetailImageGroupModel *> *)generateSmallImageGroupsModel:(FHDetailNewMediaHeaderModel *)newMediaHeaderModel {
++ (FHDetailNewMediaHeaderDataHelperPhotoAlbumData *)generatePhotoAlbumData:(FHDetailNewMediaHeaderModel *)newMediaHeaderModel {
+    FHDetailNewMediaHeaderDataHelperPhotoAlbumData *photoAlbumData = [[FHDetailNewMediaHeaderDataHelperPhotoAlbumData alloc] init];
     NSMutableArray <FHHouseDetailImageGroupModel *> *pictsArray = [NSMutableArray array];
     //之前传入fisrtTopImage 表示数据不全，需要全部传入
     for (FHDetailNewTopImage *topImage in newMediaHeaderModel.topImages) {
@@ -157,7 +154,8 @@
             }
         }
     }
-    return pictsArray.copy;
+    photoAlbumData.photoAlbumArray = pictsArray.copy;
+    return photoAlbumData;
 }
 
 @end

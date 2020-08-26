@@ -27,8 +27,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 
 + (FHDetailNewMediaHeaderDataHelperHeaderViewData *)generateMediaHeaderViewData:(FHDetailNewMediaHeaderModel *)newMediaHeaderModel;
-+ (NSArray<FHMultiMediaItemModel *> *)generatePictureDetailModel:(FHDetailNewMediaHeaderModel *)newMediaHeaderModel;
-+ (NSArray<FHHouseDetailImageGroupModel *> *)generateSmallImageGroupsModel:(FHDetailNewMediaHeaderModel *)newMediaHeaderModel;
++ (FHDetailNewMediaHeaderDataHelperPictureDetailData *)generatePictureDetailData:(FHDetailNewMediaHeaderModel *)newMediaHeaderModel;
++ (FHDetailNewMediaHeaderDataHelperPhotoAlbumData *)generatePhotoAlbumData:(FHDetailNewMediaHeaderModel *)newMediaHeaderModel;
 
 @end
 

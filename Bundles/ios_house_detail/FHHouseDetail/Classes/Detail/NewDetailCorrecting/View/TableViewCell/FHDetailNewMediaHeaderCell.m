@@ -62,8 +62,8 @@
     self.currentData = data;
     self.model = [[FHMultiMediaModel alloc] init];
     [self.dataHelper setMediaHeaderModel:data];
-    self.model.medias = self.dataHelper.headerViewItemArray;
-    self.imageList = self.dataHelper.pictureDetailItemArray;
+    self.model.medias = self.dataHelper.headerViewData.mediaItemArray;
+    self.imageList = self.dataHelper.pictureDetailData.photoArray;
     self.headerView.showHeaderImageNewType = ((FHDetailNewMediaHeaderModel *)data).isShowTopImageTab;
     [self.headerView updateMultiMediaModel:self.model];
     [self.headerView setTotalPagesLabelText:[NSString stringWithFormat:@"共%ld张", self.model.medias.count]];       //后面要变成全部图片个数+VR个数+视频个数
@@ -171,7 +171,7 @@
     FHDetailNewMediaHeaderModel *model = ((FHDetailNewMediaHeaderModel *)self.currentData);
     //去除flag判断，改为判断详情页type
     if (self.baseViewModel.houseType == FHHouseTypeNewHouse && [model.topImages isKindOfClass:[NSArray class]] && model.topImages.count > 0) {
-        pictureDetailViewController.smallImageInfosModels = self.dataHelper.smallImageGroups;
+        pictureDetailViewController.smallImageInfosModels = self.dataHelper.photoAlbumData.photoAlbumArray;
     }
 
     UIImage *placeholder = [UIImage imageNamed:@"default_image"];
@@ -247,7 +247,7 @@
         pictureListViewController.contactViewModel = data.contactViewModel;
         pictureListViewController.elementFrom = @"new_detail";
     } else {
-        pictureListViewController.pictsArray = self.dataHelper.smallImageGroups;
+        pictureListViewController.pictsArray = self.dataHelper.photoAlbumData.photoAlbumArray;
     }
     __weak typeof(self) weakSelf = self;
     pictureListViewController.albumImageStayBlock = ^(NSInteger index, NSInteger stayTime) {
@@ -315,7 +315,7 @@
 
 //轮播图 埋点
 - (void)trackHeaderViewMediaShowWithIndex:(NSInteger)index isLarge:(BOOL)isLarge {
-    FHMultiMediaItemModel *itemModel = isLarge ? self.dataHelper.pictureDetailItemArray[index] : self.dataHelper.headerViewItemArray[index];
+    FHMultiMediaItemModel *itemModel = isLarge ? self.dataHelper.pictureDetailData.mediaItemArray[index] : self.dataHelper.headerViewData.mediaItemArray[index];
     NSString *showType = isLarge ? @"large" : @"small";
     NSString *row = [NSString stringWithFormat:@"%@_%li", showType, (long)index];
     self.isLarge = NO;
@@ -460,7 +460,7 @@
 #pragma mark - FHDetailNewMediaHeaderViewBlocks
 
 - (void)didSelectItemAtIndex:(NSInteger)index {
-    FHMultiMediaItemModel *itemModel = self.dataHelper.headerViewItemArray[index];
+    FHMultiMediaItemModel *itemModel = self.dataHelper.headerViewData.mediaItemArray[index];
     switch (itemModel.mediaType) {
         case FHMultiMediaTypeVRPicture:
             [self gotoVRDetail:itemModel];
