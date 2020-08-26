@@ -634,8 +634,7 @@
     
     [NSObject cancelPreviousPerformRequestsWithTarget:self];
     [self performSelector:@selector(scrollViewDidEndScrollingAnimation:) withObject:nil afterDelay:0.3];
-//    NSLog(@"___111____滑动中");
-    self.isScrolling = YES ;
+    self.isScrolling = YES;
     
     if(scrollView == self.tableView){
         if (scrollView.isDragging) {
@@ -680,7 +679,6 @@
 - (void)scrollViewDidEndScrollingAnimation:(UIScrollView *)scrollView {
     [NSObject cancelPreviousPerformRequestsWithTarget:self];
     self.isScrolling = NO;
-//    NSLog(@"___111____滑动停止");
 }
 
 #pragma mark - FHUGCBaseCellDelegate
@@ -831,47 +829,6 @@
             }
         }
     }
-}
-
-#pragma mark - 视频相关
-
-- (void)willFinishLoadTable {
-    [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(didFinishLoadTable) object:nil];
-    [self performSelector:@selector(didFinishLoadTable) withObject:nil afterDelay:0.1];
-}
-
-- (void)didFinishLoadTable {
-    if ([UIApplication sharedApplication].applicationState != UIApplicationStateActive) {
-        return;
-    }
-    NSArray *cells = [self.tableView visibleCells];
-    NSMutableArray *visibleCells = [NSMutableArray arrayWithCapacity:cells.count];
-    for (id cell in cells) {
-        if([cell isKindOfClass:[FHUGCBaseCell class]] && [cell conformsToProtocol:@protocol(TTVFeedPlayMovie)]){
-            FHUGCBaseCell<TTVFeedPlayMovie> *vCell = (FHUGCBaseCell<TTVFeedPlayMovie> *)cell;
-            UIView *view = [vCell cell_movieView];
-            if (view) {
-                [visibleCells addObject:view];
-            }
-        }
-    }
-    
-    for (UIView *view in self.movieViews) {
-        if ([view isKindOfClass:[TTVPlayVideo class]]) {
-            TTVPlayVideo *movieView = (TTVPlayVideo *)view;
-            if (!movieView.player.context.isFullScreen &&
-                !movieView.player.context.isRotating && ![visibleCells containsObject:movieView]) {
-                if (movieView.player.context.playbackState != TTVVideoPlaybackStateBreak || movieView.player.context.playbackState != TTVVideoPlaybackStateFinished) {
-                    [movieView stop];
-                }
-                [movieView removeFromSuperview];
-            }
-        }
-    }
-
-    self.movieViewCellData = nil;
-    self.movieView = nil;
-    [self.movieViews removeAllObjects];
 }
 
 #pragma mark - 埋点
