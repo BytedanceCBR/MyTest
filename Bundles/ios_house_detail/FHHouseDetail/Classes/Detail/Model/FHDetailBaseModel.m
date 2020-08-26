@@ -456,7 +456,8 @@
 + (JSONKeyMapper*)keyMapper
 {
     NSDictionary *dict = @{
-        @"toastText": @"toast_text"
+        @"toastText": @"toast_text",
+        @"associateInfo": @"associate_info"
     };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
         return dict[keyName]?:keyName;

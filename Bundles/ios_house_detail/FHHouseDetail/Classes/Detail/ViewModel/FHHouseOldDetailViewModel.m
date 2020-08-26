@@ -521,7 +521,7 @@ logPB:self.listLogPB extraInfo:self.extraInfo completion:^(FHDetailOldModel * _N
         agentListModel.houseModelType = FHHouseModelTypeSurveyAgentlist;
         agentListModel.recommendedRealtorsTitle = model.data.surveyedRealtorInfo.title;
         agentListModel.recommendedRealtors = model.data.surveyedRealtorInfo.items;
-        agentListModel.associateInfo = model.data.recommendRealtorsAssociateInfo;
+        agentListModel.associateInfo = model.data.surveyedRealtorInfo.associateInfo;
         agentListModel.phoneCallViewModel = [[FHHouseDetailPhoneCallViewModel alloc] initWithHouseType:FHHouseTypeSecondHandHouse houseId:self.houseId];
         agentListModel.phoneCallViewModel.houseInfoBizTrace = self.houseInfoBizTrace;
         [agentListModel.phoneCallViewModel generateImParams:self.houseId houseTitle:model.data.title houseCover:imgUrl houseType:houseType  houseDes:houseDes housePrice:price houseAvgPrice:avgPrice];

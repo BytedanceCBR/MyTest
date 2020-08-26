@@ -91,7 +91,7 @@
     }else{
         [self.headerView removeSubTitleWithTitle];
     }
-    if([self.headerView.label.text isEqualToString:@"实勘经纪人"]) {
+    if(model.houseModelType == FHHouseModelTypeSurveyAgentlist){
         self.headerView.showTipButton.hidden = NO;
     }else {
         self.headerView.showTipButton.hidden = YES;
