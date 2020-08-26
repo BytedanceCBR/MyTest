@@ -567,6 +567,17 @@ extern BOOL ttvs_isDoubleTapForDiggEnabled(void);
             }
         }];
     }];
+    
+    [self.KVOController observe:self.playerStateStore.state keyPath:@keypath(self.playerStateStore.state,currentPlaybackTime) options:NSKeyValueObservingOptionNew | NSKeyValueObservingOptionOld block:^(id  _Nullable observer, id  _Nonnull object, NSDictionary<NSString *,id> * _Nonnull change) {
+        @strongify(self);
+        [self runOnMainThread:^{
+            for (id <TTVDemandPlayerDelegate> delegate in self.map) {
+                if ([delegate respondsToSelector:@selector(playerCurrentPlayBackTimeChange:duration:)]) {
+                    [delegate playerCurrentPlayBackTimeChange:self.playerStateStore.state.currentPlaybackTime duration:self.playerStateStore.state.duration];
+                }
+            }
+        }];
+    }];
 }
 
 - (void)ttv_addTipView

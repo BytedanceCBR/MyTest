@@ -382,6 +382,12 @@ extern BOOL ttvs_isVideoFeedURLEnabled(void);
     }
 }
 
+- (void)playerCurrentPlayBackTimeChange:(NSTimeInterval)currentPlayBackTime duration:(NSTimeInterval)duration {
+    if ([self.delegate respondsToSelector:@selector(playerCurrentPlayBackTimeChange:duration:)]) {
+        [self.delegate playerCurrentPlayBackTimeChange:currentPlayBackTime duration:duration];
+    }
+}
+
 - (void)playerOrientationState:(BOOL)isFullScreen {
     if(self.cellEntity.hideTitleAndWatchCount){
         if(isFullScreen){

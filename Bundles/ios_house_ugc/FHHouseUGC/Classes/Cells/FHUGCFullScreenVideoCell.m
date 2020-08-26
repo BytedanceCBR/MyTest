@@ -30,6 +30,7 @@
 #import "SSCommonLogic.h"
 #import "TTVFeedItem+TTVConvertToArticle.h"
 #import "UIViewAdditions.h"
+#import "UIViewController+TTMovieUtil.h"
 
 #define leftMargin 15
 #define rightMargin 15
@@ -50,6 +51,8 @@
 @property(nonatomic ,assign) CGFloat videoViewheight;
 @property(nonatomic ,strong) TTVFeedCellMoreActionManager *moreActionMananger;
 @property(nonatomic ,strong) NSTimer *mutedBtnCloseTimer;
+@property(nonatomic ,strong) UIButton *muteBtn;
+@property(nonatomic ,strong) UILabel *videoLeftTime;
 
 @end
 
@@ -129,19 +132,32 @@
         StrongSelf;
         [self playerPlaybackState:state];
     };
+    
+    self.videoView.ttv_playerCurrentPlayBackTimeChangeBlock = ^(NSTimeInterval currentPlayBackTime, NSTimeInterval duration) {
+        StrongSelf;
+        [self playerCurrentPlayBackTimeChange:currentPlayBackTime duration:duration];
+    };
 
     self.bottomView = [[FHUGCToolView alloc] initWithFrame:CGRectMake(0, 0, screenWidth, bottomViewHeight)];
     [_bottomView.commentButton addTarget:self action:@selector(commentBtnClick) forControlEvents:UIControlEventTouchUpInside];
     [self.contentView addSubview:_bottomView];
     
-    self.muteBtn = [[UIButton alloc] initWithFrame:CGRectMake(15, 0, 24, 24)];
+    self.mutedBgView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, screenWidth, 34)];
+    _mutedBgView.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"fh_ugc_video_mute_bg"]];
+    _mutedBgView.alpha = 0;
+    [self.contentView addSubview:_mutedBgView];
+    
+    self.muteBtn = [[UIButton alloc] initWithFrame:CGRectMake(15, 5, 24, 24)];
     [_muteBtn setImage:[UIImage imageNamed:@"fh_ugc_video_mute"] forState:UIControlStateNormal];
     [_muteBtn setImage:[UIImage imageNamed:@"fh_ugc_video_mute"] forState:UIControlStateHighlighted];
     [_muteBtn setTitleColor:[UIColor themeGray1] forState:UIControlStateNormal];
     [_muteBtn addTarget:self action:@selector(mutedBtnClicked) forControlEvents:UIControlEventTouchUpInside];
-    _muteBtn.hitTestEdgeInsets = UIEdgeInsetsMake(-7, -15, -7, -15);
-    _muteBtn.alpha = 0;
-    [self.contentView addSubview:_muteBtn];
+    _muteBtn.hitTestEdgeInsets = UIEdgeInsetsMake(-5, -15, -5, -15);
+    [self.mutedBgView addSubview:_muteBtn];
+    
+    self.videoLeftTime = [self LabelWithFont:[UIFont themeFontRegular:10] textColor:[UIColor whiteColor]];
+    _videoLeftTime.textAlignment = NSTextAlignmentLeft;
+    [self.mutedBgView addSubview:_videoLeftTime];
 }
 
 - (void)initConstraints {
@@ -173,10 +189,20 @@
     self.bottomView.width = screenWidth;
     self.bottomView.height = bottomViewHeight;
     
+    self.mutedBgView.left = 0;
+    self.mutedBgView.top = self.bottomView.top - 34;
+    self.mutedBgView.width = screenWidth;
+    self.mutedBgView.height = 34;
+    
     self.muteBtn.left = 15;
-    self.muteBtn.top = self.bottomView.top - 7 - 24;
+    self.muteBtn.top = 5;
     self.muteBtn.width = 24;
     self.muteBtn.height = 24;
+    
+    self.videoLeftTime.left = screenWidth - 42;
+    self.videoLeftTime.top = 10;
+    self.videoLeftTime.width = 42;
+    self.videoLeftTime.height = 14;
 }
 
 - (UILabel *)LabelWithFont:(UIFont *)font textColor:(UIColor *)textColor {
@@ -246,7 +272,9 @@
     
     [self layoutIfNeeded];
     self.bottomView.top = self.videoView.bottom;
-    self.muteBtn.top = self.bottomView.top - 7 - 24;
+    self.mutedBgView.top = self.bottomView.top - 34;
+    [self updateVideoLeftTime:self.cellModel.videoItem.durationTimeString];
+    self.videoLeftTime.hidden = self.cellModel.videoItem.durationTimeString ? NO : YES;
     [self updateMutedBtn];
 }
 
@@ -297,6 +325,20 @@
     [self.bottomView refreshWithdata:self.cellModel];
 }
 
+- (void)updateVideoLeftTime:(NSString *)leftTime {
+    self.videoLeftTime.text = leftTime;
+    CGFloat width = [self.videoLeftTime sizeThatFits:CGSizeMake(CGFLOAT_MAX, 14)].width;
+    // 27,42
+    if(width < 32){
+        width = 42;
+    }else{
+        width = 57;
+    }
+    
+    self.videoLeftTime.left = screenWidth - width;
+    self.videoLeftTime.width = width;
+}
+
 - (void)updateMutedBtn {
     if(self.cellModel.showMuteBtn){
         if(self.cellModel.videoItem.muted){
@@ -324,9 +366,18 @@
         }else if(state == TTVVideoPlaybackStatePaused){
             //do nothing
         }else{
-            self.muteBtn.alpha = 0;
+            self.mutedBgView.alpha = 0;
         }
     }
+}
+
+- (void)playerCurrentPlayBackTimeChange:(NSTimeInterval)currentPlayBackTime duration:(NSTimeInterval)duration {
+    if (currentPlayBackTime > duration) {
+        currentPlayBackTime = duration;
+    }
+    
+    NSTimeInterval leftTime = duration - currentPlayBackTime;
+    [self updateVideoLeftTime:ttv_getFormattedTimeStrOfPlay(leftTime)];
 }
 
 - (void)mutedBtnClicked {
@@ -371,16 +422,16 @@
 
 - (void)showMutedBtn {
     if(self.cellModel.showMuteBtn && [self shouldShowMutedBtn]){
-        self.muteBtn.alpha = 1;
+        self.mutedBgView.alpha = 1;
         [self startTimer];
     }
 }
 
 - (void)hideMutedBtn {
     [UIView animateWithDuration:0.5 animations:^{
-        self.muteBtn.alpha = 0;
+        self.mutedBgView.alpha = 0;
     } completion:^(BOOL finished) {
-        self.muteBtn.alpha = 0;
+        self.mutedBgView.alpha = 0;
         [self stopTimer];
     }];
 }
@@ -742,9 +793,9 @@
         }
     }
     
-    if(self.cellModel.showMuteBtn) {
-        _muteBtn.alpha = 0;
-    }
+//    if(self.cellModel.showMuteBtn) {
+//        _muteBtn.alpha = 0;
+//    }
 }
 
 - (void)playVideoDidClicked {

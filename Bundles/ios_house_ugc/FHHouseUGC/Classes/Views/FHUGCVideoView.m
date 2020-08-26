@@ -44,6 +44,7 @@ extern BOOL ttvs_isEnhancePlayerTitleFont(void);
 @property (nonatomic, strong) SSThemedLabel *videoTitleLabel;
 @property (nonatomic, strong) UILabel *playTimesLabel;
 @property (nonatomic, strong) TTAlphaThemedButton *playButton;
+@property (nonatomic ,strong) NSString *videoLeftTime;
 //下面的分割线
 @property (nonatomic, strong) UIImageView *topMaskView;
 @property (nonatomic, strong) TTImageView *logo;
@@ -194,6 +195,12 @@ extern BOOL ttvs_isEnhancePlayerTitleFont(void);
 - (void)playerPlaybackState:(TTVVideoPlaybackState)state {
     if (self.ttv_playerPlaybackStateBlock) {
         self.ttv_playerPlaybackStateBlock(state);
+    }
+}
+
+- (void)playerCurrentPlayBackTimeChange:(NSTimeInterval)currentPlayBackTime duration:(NSTimeInterval)duration {
+    if(self.ttv_playerCurrentPlayBackTimeChangeBlock){
+        self.ttv_playerCurrentPlayBackTimeChangeBlock(currentPlayBackTime, duration);
     }
 }
 

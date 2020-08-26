@@ -466,7 +466,7 @@
     FHUGCFullScreenVideoCell *cell = [self getFitableVideoCell];
     if(cell != self.currentVideoCell){
         self.currentVideoCell.contentView.userInteractionEnabled = NO;
-        self.currentVideoCell.muteBtn.alpha = 0;
+        self.currentVideoCell.mutedBgView.alpha = 0;
         cell.contentView.userInteractionEnabled = YES;
         self.currentVideoCell = cell;
     }
@@ -763,7 +763,7 @@
     if([cell isKindOfClass:[FHUGCFullScreenVideoCell class]]){
         FHUGCFullScreenVideoCell *vCell = (FHUGCFullScreenVideoCell *)cell;
         self.currentVideoCell.contentView.userInteractionEnabled = NO;
-        self.currentVideoCell.muteBtn.alpha = 0;
+        self.currentVideoCell.mutedBgView.alpha = 0;
         vCell.contentView.userInteractionEnabled = YES;
         self.currentVideoCell = vCell;
         [vCell play];
