@@ -17,7 +17,6 @@
 
 @interface FHDetailHeaderView ()
 @property (nonatomic, strong)   UIImageView       *arrowsImg;
-@property (nonatomic, weak) FHHouseDetailViewController *detailVC;
 @end
 
 @implementation FHDetailHeaderView
@@ -127,28 +126,6 @@
         make.height.mas_equalTo(26);
     }];
 }
-
-- (UIViewController *)getViewController {
-    for(UIView *nextView = self.superview;nextView;nextView = nextView.superview) {
-        UIResponder *responder = [nextView nextResponder];
-        if([responder isKindOfClass:[UIViewController class]]) {
-            return (UIViewController *) responder;
-        }
-    }
-    return nil;
-}
-
--(FHHouseDetailViewController *)detailVC {
-    if(_detailVC == nil) {
-        UIViewController *topVC = [self getViewController];
-        if([topVC isKindOfClass:[FHHouseDetailViewController class]]) {
-            _detailVC = (FHHouseDetailViewController *)topVC;
-        }
-    }
-    return _detailVC;
-}
-
-
 
 - (void)showTipButtonClick {
     if(self.detailVC){

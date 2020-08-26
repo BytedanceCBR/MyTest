@@ -59,6 +59,7 @@
 #import "FHhouseDetailRGCListCell.h"
 #import "TTAccountManager.h"
 #import <ByteDanceKit/NSDictionary+BTDAdditions.h>
+#import "FHDetailSurveyAgentListCell.h"
 
 extern NSString *const kFHPhoneNumberCacheKey;
 extern NSString *const kFHSubscribeHouseCacheKey;
@@ -90,6 +91,7 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
     [self.tableView registerClass:[FHDetailAdvisoryLoanCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailAdvisoryLoanModel class])];
     //推荐经纪人
     [self.tableView registerClass:[FHDetailAgentListCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailAgentListModel class])];
+    [self.tableView registerClass:[FHDetailSurveyAgentListCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailSurveyAgentListModel class])];
     //用户房源评价
     [self.tableView registerClass:[FHDetailUserHouseCommentCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailUserHouseCommentModel class])];
     //房源概况
@@ -511,9 +513,9 @@ logPB:self.listLogPB extraInfo:self.extraInfo completion:^(FHDetailOldModel * _N
     }
     
     
-    
+    //实勘经纪人
     if (model.data.surveyedRealtorInfo.items.count > 0) {
-        FHDetailAgentListModel *agentListModel = [[FHDetailAgentListModel alloc] init];
+        FHDetailSurveyAgentListModel *agentListModel = [[FHDetailSurveyAgentListModel alloc] init];
         NSString *searchId = self.listLogPB[@"search_id"];
         NSString *imprId = self.listLogPB[@"impr_id"];
         agentListModel.tableView = self.tableView;

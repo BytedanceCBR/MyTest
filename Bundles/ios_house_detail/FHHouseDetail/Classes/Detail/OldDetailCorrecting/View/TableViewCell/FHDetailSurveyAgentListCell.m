@@ -1,11 +1,11 @@
 //
-//  FHDetailAgentListCell.m
+//  FHDetailSurveyAgentListCell.m
 //  FHHouseDetail
 //
-//  Created by 张元科 on 2019/2/14.
+//  Created by bytedance on 2020/08/26.
 //
 
-#import "FHDetailAgentListCell.h"
+#import "FHDetailSurveyAgentListCell.h"
 #import "Masonry.h"
 #import "UIFont+House.h"
 #import "UIImageView+BDWebImage.h"
@@ -23,7 +23,7 @@
 #import "BTDMacros.h"
 #import "FHDetailAgentItemView.h"
 
-@interface FHDetailAgentListCell ()
+@interface FHDetailSurveyAgentListCell ()
 
 @property (nonatomic, strong)   FHDetailHeaderView       *headerView;
 @property (nonatomic, strong)   UIView       *containerView;
@@ -33,7 +33,7 @@
 
 @end
 
-@implementation FHDetailAgentListCell
+@implementation FHDetailSurveyAgentListCell
 
 - (void)awakeFromNib {
     [super awakeFromNib];
@@ -47,7 +47,7 @@
 }
 
 - (void)refreshWithData:(id)data {
-    if (self.currentData == data || ![data isKindOfClass:[FHDetailAgentListModel class]]) {
+    if (self.currentData == data || ![data isKindOfClass:[FHDetailSurveyAgentListModel class]]) {
         return;
     }
     self.currentData = data;
@@ -55,7 +55,7 @@
     for (UIView *v in self.containerView.subviews) {
         [v removeFromSuperview];
     }
-    FHDetailAgentListModel *model = (FHDetailAgentListModel *)data;
+    FHDetailSurveyAgentListModel *model = (FHDetailSurveyAgentListModel *)data;
     
     self.shadowImage.image = model.shadowImage;
     if(model.shdowImageScopeType == FHHouseShdowImageScopeTypeBottomAll){
@@ -91,6 +91,13 @@
     }else{
         [self.headerView removeSubTitleWithTitle];
     }
+    
+    NSMutableDictionary *dict = @{}.mutableCopy;
+    dict[@"element_type"] = [self elementTypeStringByHouseType:model.houseType];
+    self.headerView.tracerDict = dict;
+    self.headerView.showTipButton.hidden = NO;
+    self.headerView.detailVC = (FHHouseDetailViewController *)model.belongsVC;
+    
     WeakSelf;
     if (model.recommendedRealtors.count > 0) {
         __block NSInteger itemsCount = 0;
@@ -173,7 +180,7 @@
 // cell点击
 - (void)cellClick:(UIControl *)control {
     NSInteger index = control.tag;
-    FHDetailAgentListModel *model = (FHDetailAgentListModel *)self.currentData;
+    FHDetailSurveyAgentListModel *model = (FHDetailSurveyAgentListModel *)self.currentData;
     if (model.houseType == FHHouseTypeNewHouse) {
         return;
     }
@@ -181,7 +188,7 @@
         FHDetailContactModel *contact = model.recommendedRealtors[index];
         model.phoneCallViewModel.belongsVC = model.belongsVC;
         NSMutableDictionary *dict = [NSMutableDictionary dictionary];
-        dict[@"element_from"] = [self elementTypeStringByHouseType:self.baseViewModel.houseType];
+        dict[@"element_from"] = @"actually_survey";
         dict[@"enter_from"] = [self.baseViewModel pageTypeString];
         [model.phoneCallViewModel jump2RealtorDetailWithPhone:contact isPreLoad:NO extra:dict];
     }
@@ -190,7 +197,7 @@
 // 证书点击
 - (void)licenseClick:(UIControl *)control {
     NSInteger index = control.tag;
-    FHDetailAgentListModel *model = (FHDetailAgentListModel *)self.currentData;
+    FHDetailSurveyAgentListModel *model = (FHDetailSurveyAgentListModel *)self.currentData;
     if (index >= 0 && model.recommendedRealtors.count > 0 && index < model.recommendedRealtors.count) {
         FHDetailContactModel *contact = model.recommendedRealtors[index];
         [model.phoneCallViewModel licenseActionWithPhone:contact];
@@ -200,13 +207,13 @@
 // 电话点击
 - (void)phoneClick:(UIControl *)control {
     NSInteger index = control.tag;
-    FHDetailAgentListModel *model = (FHDetailAgentListModel *)self.currentData;
+    FHDetailSurveyAgentListModel *model = (FHDetailSurveyAgentListModel *)self.currentData;
     if (index >= 0 && model.recommendedRealtors.count > 0 && index < model.recommendedRealtors.count) {
         FHDetailContactModel *contact = model.recommendedRealtors[index];
         NSMutableDictionary *extraDict = @{}.mutableCopy;
         extraDict[@"realtor_id"] = contact.realtorId;
         extraDict[@"realtor_rank"] = @(index);
-        extraDict[@"realtor_position"] = @"detail_related";
+        extraDict[@"realtor_position"] = @"actually_survey";
         extraDict[@"realtor_logpb"] = contact.realtorLogpb;
         if (self.baseViewModel.detailTracerDic) {
             [extraDict addEntriesFromDictionary:self.baseViewModel.detailTracerDic];
@@ -267,11 +274,11 @@
 // 点击会话
 - (void)imclick:(UIControl *)control {
     NSInteger index = control.tag;
-    FHDetailAgentListModel *model = (FHDetailAgentListModel *)self.currentData;
+    FHDetailSurveyAgentListModel *model = (FHDetailSurveyAgentListModel *)self.currentData;
     if (index >= 0 && model.recommendedRealtors.count > 0 && index < model.recommendedRealtors.count) {
         FHDetailContactModel *contact = model.recommendedRealtors[index];
         NSMutableDictionary *imExtra = @{}.mutableCopy;
-        imExtra[@"realtor_position"] = @"detail_related";
+        imExtra[@"realtor_position"] = @"actually_survey";
         
         switch (self.baseViewModel.houseType) {
             case FHHouseTypeNewHouse:
@@ -286,12 +293,7 @@
                 break;
             case FHHouseTypeSecondHandHouse:
             {
-                if([self.baseViewModel.detailData isKindOfClass:FHDetailOldModel.class]) {
-                    FHDetailOldModel *detailOldModel = (FHDetailOldModel *)self.baseViewModel.detailData;
-                    if(detailOldModel.data.recommendRealtorsAssociateInfo) {
-                        imExtra[kFHAssociateInfo] =  detailOldModel.data.recommendRealtorsAssociateInfo;
-                    }
-                }
+                imExtra[kFHAssociateInfo] =  model.associateInfo;
             }
                 break;
             case FHHouseTypeNeighborhood:
@@ -312,7 +314,7 @@
 }
 
 - (void)foldButtonClick:(UIButton *)button {
-    FHDetailAgentListModel *model = (FHDetailAgentListModel *)self.currentData;
+    FHDetailSurveyAgentListModel *model = (FHDetailSurveyAgentListModel *)self.currentData;
     model.isFold = !model.isFold;
     self.foldButton.isFold = model.isFold;
     [self updateItems:YES];
@@ -379,7 +381,7 @@
 }
 
 - (void)updateItems:(BOOL)animated {
-    FHDetailAgentListModel *model = (FHDetailAgentListModel *)self.currentData;
+    FHDetailSurveyAgentListModel *model = (FHDetailSurveyAgentListModel *)self.currentData;
     NSInteger realtorShowCount = 0;
     if (model.recommendedRealtors.count > 3) {
         if (animated) {
@@ -452,7 +454,7 @@
 // 滑动house_show埋点
 - (void)fhDetail_scrollViewDidScroll:(UIView *)vcParentView {
     CGPoint point = [self convertPoint:CGPointZero toView:vcParentView];
-    FHDetailAgentListModel *model = (FHDetailAgentListModel *) self.currentData;
+    FHDetailSurveyAgentListModel *model = (FHDetailSurveyAgentListModel *) self.currentData;
     CGFloat showHeight = 0;
     for (int m = 0; m <model.recommendedRealtors.count; m++) {
         FHDetailContactModel *showModel = model.recommendedRealtors[m];
@@ -469,7 +471,7 @@
 }
 
 -(void)addRealtorShowLog{
-    FHDetailAgentListModel *model = (FHDetailAgentListModel *) self.currentData;
+    FHDetailSurveyAgentListModel *model = (FHDetailSurveyAgentListModel *) self.currentData;
     NSInteger showCount = model.isFold ? MIN(model.recommendedRealtors.count, 2): model.recommendedRealtors.count;
     [self tracerRealtorShowToIndex:showCount];
 }
@@ -499,14 +501,14 @@
             continue;
         }
         self.tracerDicCache[cahceKey] = @(YES);
-        FHDetailAgentListModel *model = (FHDetailAgentListModel *)self.currentData;
+        FHDetailSurveyAgentListModel *model = (FHDetailSurveyAgentListModel *)self.currentData;
         if (i < model.recommendedRealtors.count) {
             FHDetailContactModel *contact = model.recommendedRealtors[i];
             NSMutableDictionary *tracerDic = self.baseViewModel.detailTracerDic.mutableCopy;
             tracerDic[@"element_type"] = [self elementTypeStringByHouseType:self.baseViewModel.houseType];
             tracerDic[@"realtor_id"] = contact.realtorId ?: @"be_null";
             tracerDic[@"realtor_rank"] = @(i);
-            tracerDic[@"realtor_position"] = @"detail_related";
+            tracerDic[@"realtor_position"] = @"actually_survey";
             tracerDic[@"realtor_logpb"] = contact.realtorLogpb;
             tracerDic[@"biz_trace"] = contact.bizTrace;
             [tracerDic setValue:contact.enablePhone ? @"1" : @"0" forKey:@"phone_show"];
@@ -546,8 +548,8 @@
 
 @end
 
-// FHDetailAgentListModel
-@implementation FHDetailAgentListModel
+// FHDetailSurveyAgentListModel
+@implementation FHDetailSurveyAgentListModel
 
 - (instancetype)init
 {
