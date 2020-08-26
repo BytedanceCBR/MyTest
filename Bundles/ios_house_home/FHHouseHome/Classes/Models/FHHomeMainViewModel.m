@@ -110,7 +110,6 @@
     
     if ([cell.contentVC isKindOfClass:[ArticleTabBarStyleNewsListViewController class]] || [cell.contentVC isKindOfClass:[FHCommunityViewController class]]) {
         self.viewController.feedListVC = cell.contentVC;
-        self.viewController.feedListVC = cell.contentVC;
     }
     
     if ([cell.contentVC isKindOfClass:[FHHomeViewController class]]) {

@@ -67,10 +67,11 @@
         _titleLabel.font = [UIFont themeFontSemibold:16];
         _titleLabel.textColor = [UIColor themeGray1];
         [self.contentView addSubview:_titleLabel];
+        _titleLabel.numberOfLines = 0;
         [_titleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
             make.top.equalTo(self.timeLabel.mas_bottom).offset(6);
             make.left.equalTo(self.timeLabel);
-            make.height.mas_equalTo(24);
+            make.height.mas_greaterThanOrEqualTo(24);
             make.right.equalTo(self.contentView).offset(-15);
         }];
         
