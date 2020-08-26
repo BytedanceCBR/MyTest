@@ -118,6 +118,8 @@
 + (NSString*)functionExtensionURLString;
 + (NSString*)userPrivateProtocolURLString;
 + (NSString*)appBusinessLicenseURLString;
++ (NSString*)thirdPartySDKURLString;
++ (NSString*)applyPermissionURLString;
 + (NSString*)protectedProtocolURLString;
 
 #pragma mark -- 删除

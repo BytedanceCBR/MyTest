@@ -362,6 +362,23 @@
     return urlStr;
 }
 
++ (NSString*)thirdPartySDKURLString
+{
+    NSString *encodedUrl = [[NSString stringWithFormat:@"https://m.xflapp.com/f100/activity/client/private_sdk_explain"] btd_stringByURLEncode];
+    NSString *encodedTitle = [[NSString stringWithFormat:@"第三方SDK列表"] btd_stringByURLEncode];
+    NSString *urlStr = [NSString stringWithFormat:@"%@&title=%@", encodedUrl, encodedTitle];
+    return urlStr;
+}
+
+
++ (NSString*)applyPermissionURLString
+{
+    NSString *encodedUrl = [[NSString stringWithFormat:@"https://m.xflapp.com/f100/activity/client/private_app_privilege"] btd_stringByURLEncode];
+    NSString *encodedTitle = [[NSString stringWithFormat:@"申请使用权限"] btd_stringByURLEncode];
+    NSString *urlStr = [NSString stringWithFormat:@"%@&title=%@", encodedUrl, encodedTitle];
+    return urlStr;
+}
+
 
 + (NSString*)appBusinessLicenseURLString {
     return [NSString stringWithFormat:@"%@/f101/client/preview/license&title=证件资质",[FHURLSettings baseURL]];
