@@ -15,6 +15,7 @@ NS_ASSUME_NONNULL_BEGIN
 //空态页具体顶部offset
 @property (nonatomic, assign) CGFloat errorViewTopOffset;
 @property (nonatomic, assign) CGFloat errorViewHeight;
+@property (nonatomic, assign) CGFloat placeHolderCellHeight;
 @property (strong, nonatomic) NSDictionary *realtorInfo;
 @property (copy, nonatomic) NSString *tabName;
 @end

@@ -285,7 +285,7 @@
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     if (indexPath.row == 0) {
-        return 15;
+        return self.detailController.placeHolderCellHeight;
     }
     
     if(indexPath.row < self.dataList.count + 1){
@@ -316,7 +316,7 @@
             }
             //设置footer来占位
             UIView *tableFooterView = [[UIView alloc] initWithFrame:CGRectMake(0, 15, [UIScreen mainScreen].bounds.size.width, self.detailController.errorViewHeight - height - refreshFooterBottomHeight)];
-            tableFooterView.backgroundColor = [UIColor colorWithHexStr:@"#f8f8f8"];
+            tableFooterView.backgroundColor = [UIColor clearColor];
             self.tableView.tableFooterView = tableFooterView;
         }else{
             self.tableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width,0.001)];
@@ -325,11 +325,11 @@
     }else{
         [self.errorView showEmptyWithTip:@"暂无内容" errorImageName:kFHErrorMaskNetWorkErrorImageName showRetry:NO];
         UIView *tableFooterView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, self.detailController.errorViewHeight)];
-        tableFooterView.backgroundColor = [UIColor colorWithHexStr:@"#f8f8f8"];
+        tableFooterView.backgroundColor = [UIColor clearColor];
         [tableFooterView addSubview:self.errorView];
         self.tableView.tableFooterView = tableFooterView;
         self.refreshFooter.hidden = YES;
-        self.tableView.backgroundColor = [UIColor whiteColor];
+//        self.tableView.backgroundColor = [UIColor whiteColor];
         [self.tableView reloadData];
     }
 }
@@ -447,11 +447,11 @@
 - (void)showErrorViewNoNetWork {
     [self.errorView showEmptyWithTip:@"网络异常" errorImageName:kFHErrorMaskNoNetWorkImageName showRetry:YES];
     UIView *tableFooterView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, self.detailController.errorViewHeight)];
-    tableFooterView.backgroundColor = [UIColor colorWithHexStr:@"#f8f8f8"];
+    tableFooterView.backgroundColor = [UIColor clearColor];
     [tableFooterView addSubview:self.errorView];
     self.tableView.tableFooterView = tableFooterView;
     self.refreshFooter.hidden = YES;
-    self.tableView.backgroundColor = [UIColor whiteColor];
+//    self.tableView.backgroundColor = [UIColor whiteColor];
     [self.tableView reloadData];
 }
 

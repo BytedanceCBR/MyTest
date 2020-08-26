@@ -61,6 +61,7 @@
 @property (nonatomic, assign) NSInteger currentIndex;
 @property (nonatomic, assign) BOOL isFirstEnter;
 @property (nonatomic, assign) BOOL isHeightScoreRealtor;
+@property (nonatomic, assign) CGFloat placeHolderCellHeight;
 @property (nonatomic) BOOL shouldShowUGcGuide;
 @end
 @implementation FHHouseRealtorDetailVM
@@ -226,6 +227,11 @@
 
 - (void)initSubVCinitWithTabInfoArr:(NSArray *)tabListArr {
     [self.subVCs removeAllObjects];
+    if (tabListArr.count == 1) {
+        self.placeHolderCellHeight = CGFLOAT_MIN;
+    }else {
+         self.placeHolderCellHeight = 15;
+    }
     
     if(tabListArr && tabListArr.count > 0) {
         for(NSInteger i = 0;i < tabListArr.count;i++) {
@@ -256,6 +262,7 @@
         FHHouseRealtorDetailController *realtorDetailController =  [[FHHouseRealtorDetailController alloc]init];
         realtorDetailController.realtorInfo = self.realtorInfo;
         realtorDetailController.tracerDict = self.tracerDict;
+        realtorDetailController.placeHolderCellHeight = self.placeHolderCellHeight;
         realtorDetailController.tabName = name;
         //错误页高度
         if(self.ugcTabList && self.ugcTabList.count > 0){
@@ -269,6 +276,7 @@
         realtorDetailController.realtorInfo = self.realtorInfo;
         realtorDetailController.tracerDict = self.tracerDict;
         realtorDetailController.tabName = name;
+        realtorDetailController.placeHolderCellHeight = self.placeHolderCellHeight;
         //错误页高度
         if(self.ugcTabList && self.ugcTabList.count > 0){
             CGFloat errorViewHeight = [UIScreen mainScreen].bounds.size.height - self.viewController.customNavBarView.height;
