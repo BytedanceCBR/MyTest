@@ -8,36 +8,112 @@
 #import "FHDetailNewMediaHeaderDataHelper.h"
 #import "FHMultiMediaModel.h"
 #import "FHDetailNewMediaHeaderCell.h"
+
+@interface FHDetailNewMediaHeaderDataHelper ()
+
+@property (nonatomic, copy, readwrite) FHDetailNewMediaHeaderDataHelperHeaderViewData *headerViewData;
+//提供给图片详情页的数据
+@property (nonatomic, copy, readwrite) FHDetailNewMediaHeaderDataHelperPictureDetailData *pictureDetailData;
+//提供给图片相册的数据
+@property (nonatomic, copy, readwrite) FHDetailNewMediaHeaderDataHelperPhotoAlbumData *photoAlbumData;
+@end
+
 @implementation FHDetailNewMediaHeaderDataHelper
 
+- (void)setNewMediaHeaderModel:(FHDetailNewMediaHeaderModel *)mediaHeaderModel {
+    _mediaHeaderModel = mediaHeaderModel;
+    _headerViewData = nil;
+    _pictureDetailData = nil;
+    _photoAlbumData = nil;
+}
+
+- (FHDetailNewMediaHeaderDataHelperHeaderViewData *)headerViewData {
+    if (!_headerViewData) {
+        _headerViewData = [FHDetailNewMediaHeaderDataHelper generateMediaHeaderViewData:self.mediaHeaderModel];
+    }
+    return _headerViewData;
+}
+
+- (FHDetailNewMediaHeaderDataHelperPictureDetailData *)pictureDetailData {
+    if (!_pictureDetailData) {
+        
+    }
+    return _pictureDetailData;
+}
+
+- (FHDetailNewMediaHeaderDataHelperPhotoAlbumData *)photoAlbumData {
+    if (!_photoAlbumData) {
+        
+    }
+    return _photoAlbumData;
+}
+
+
+
+
+
+
 #pragma mark - data manage
-//产出完整的头图内容 全部VR+全部视频+图片
-+ (FHDetailNewMediaHeaderDataHelperData *)generateModel:(FHDetailNewMediaHeaderModel *)newMediaHeaderModel {
-    FHDetailNewMediaHeaderDataHelperData *data = [[FHDetailNewMediaHeaderDataHelperData alloc] init];
-
+//针对新版头图滑动数据改造
+//对于每种VR只要一个可以用位运算，a|= 1<<x;
+//全部VR + 图片
++ (FHDetailNewMediaHeaderDataHelperHeaderViewData *)generateMediaHeaderViewData:(FHDetailNewMediaHeaderModel *)newMediaHeaderModel {
+    FHDetailNewMediaHeaderDataHelperHeaderViewData *headerViewData = [[FHDetailNewMediaHeaderDataHelperHeaderViewData alloc] init];
+    NSInteger vrNumber = 0;
+    NSInteger pictureNumber = 0;
     NSMutableArray *itemArray = [NSMutableArray array];
-    NSMutableArray *imageList = [NSMutableArray array];
     NSArray *houseImageDict = newMediaHeaderModel.houseImageDictList;
-    FHDetailHouseVRDataModel *vrModel = newMediaHeaderModel.vrModel;
-    if (vrModel && [vrModel isKindOfClass:[FHDetailHouseVRDataModel class]] && vrModel.hasVr) {
-        FHMultiMediaItemModel *itemModelVR = [[FHMultiMediaItemModel alloc] init];
-        itemModelVR.mediaType = FHMultiMediaTypeVRPicture;
-
-        if (vrModel.vrImage.url) {
-            itemModelVR.imageUrl = vrModel.vrImage.url;
+    FHDetailNewVRInfo *vrInfo = newMediaHeaderModel.vrModel;
+    if (vrInfo.items.count > 0 && newMediaHeaderModel.isShowTopImageTab) {
+        for (FHDetailHouseVRDataModel *vrData in vrInfo.items) {
+            FHMultiMediaItemModel *itemModelVR = [[FHMultiMediaItemModel alloc] init];
+            itemModelVR.mediaType = FHMultiMediaTypeVRPicture;
+            if (vrData.vrImage.url.length > 0) {
+                itemModelVR.imageUrl = vrData.vrImage.url;
+            }
+            itemModelVR.vrOpenUrl = vrData.openUrl;
+            itemModelVR.groupType = @"VR";
+            [itemArray addObject:itemModelVR];
+            vrNumber += 1;
         }
-        itemModelVR.groupType = @"VR";
-        [itemArray addObject:itemModelVR];
-        [imageList addObject:itemModelVR];
     }
     for (FHHouseDetailImageListDataModel *listModel in houseImageDict) {
         NSString *groupType = nil;
-        if (listModel.houseImageType == FHDetailHouseImageTypeApartment) {
+        if (listModel.houseImageType == FHDetailHouseImageTypeApartment && !newMediaHeaderModel.isShowTopImageTab) {
             groupType = @"户型";
         } else {
             groupType = @"图片";
         }
+        for (FHImageModel *imageModel in listModel.houseImageList) {
+            if (pictureNumber >= 5 && newMediaHeaderModel.isShowTopImageTab) {
+                break;
+            }
+            if (imageModel.url.length > 0) {
+                FHMultiMediaItemModel *itemModel = [[FHMultiMediaItemModel alloc] init];
+                itemModel.mediaType = FHMultiMediaTypePicture;
+                itemModel.imageUrl = imageModel.url;
+                itemModel.pictureType = listModel.houseImageType;
+                itemModel.pictureTypeName = listModel.houseImageTypeName;
+                itemModel.groupType = groupType;
+                [itemArray addObject:itemModel];
+                pictureNumber += 1;
+            }
+        }
+    }
+    headerViewData.mediaItemArray = itemArray.copy;
+    headerViewData.pictureNumber = pictureNumber;
+    headerViewData.vrNumber = vrNumber;
+    return headerViewData;
+}
 
+
+
+//大图详情页的数据
++ (FHDetailNewMediaHeaderDataHelperPictureDetailData *)generatePictureDetailData:(FHDetailNewMediaHeaderModel *)newMediaHeaderModel {
+    NSMutableArray *imageList = [NSMutableArray array];
+    
+    NSArray *houseImageDict = newMediaHeaderModel.houseImageDictList;
+    for (FHHouseDetailImageListDataModel *listModel in houseImageDict) {
         NSInteger index = 0;
         NSArray<FHImageModel> *instantHouseImageList = listModel.instantHouseImageList;
 
@@ -48,30 +124,53 @@
                 itemModel.imageUrl = imageModel.url;
                 itemModel.pictureType = listModel.houseImageType;
                 itemModel.pictureTypeName = listModel.houseImageTypeName;
-                itemModel.groupType = groupType;
                 if (instantHouseImageList.count > index) {
                     FHImageModel *instantImgModel = instantHouseImageList[index];
                     itemModel.instantImageUrl = instantImgModel.url;
                 }
-                [itemArray addObject:itemModel];
                 [imageList addObject:imageModel];
             }
             index++;
         }
     }
-
-    data.itemArray = itemArray.copy;
-    data.imageList = imageList.copy;
-    return data;
+    return imageList;
 }
 
-//针对新版头图滑动数据改造
-//对于每种VR只要一个可以用位运算，a|= 1<<x;
-
-
++ (NSArray<FHHouseDetailImageGroupModel *> *)generateSmallImageGroupsModel:(FHDetailNewMediaHeaderModel *)newMediaHeaderModel {
+    NSMutableArray <FHHouseDetailImageGroupModel *> *pictsArray = [NSMutableArray array];
+    //之前传入fisrtTopImage 表示数据不全，需要全部传入
+    for (FHDetailNewTopImage *topImage in newMediaHeaderModel.topImages) {
+        for (FHHouseDetailImageGroupModel *groupModel in topImage.smallImageGroup) {
+            //type类型相同的数据归为一类
+            __block NSUInteger index = NSNotFound;
+            [pictsArray enumerateObjectsUsingBlock:^(FHHouseDetailImageGroupModel *_Nonnull obj, NSUInteger idx, BOOL *_Nonnull stop) {
+                if ([obj.type isEqualToString:groupModel.type]) {
+                    index = idx;
+                    *stop = YES;
+                }
+            }];
+            if (index != NSNotFound) {
+                FHHouseDetailImageGroupModel *existGroupModel = pictsArray[index];
+                existGroupModel.images = [[NSArray arrayWithArray:existGroupModel.images] arrayByAddingObjectsFromArray:groupModel.images];
+            } else {
+                [pictsArray addObject:groupModel.copy];
+            }
+        }
+    }
+    return pictsArray.copy;
+}
 
 @end
 
-@implementation FHDetailNewMediaHeaderDataHelperData
+@implementation FHDetailNewMediaHeaderDataHelperHeaderViewData
+
+
+@end
+@implementation FHDetailNewMediaHeaderDataHelperPictureDetailData
+
+
+@end
+@implementation FHDetailNewMediaHeaderDataHelperPhotoAlbumData
+
 
 @end

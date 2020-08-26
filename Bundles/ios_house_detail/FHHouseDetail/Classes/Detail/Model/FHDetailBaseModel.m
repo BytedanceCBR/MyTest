@@ -394,6 +394,28 @@
 }
 @end
 
+@implementation FHDetailHouseVRDataModel
+
++ (JSONKeyMapper*)keyMapper
+{
+    NSDictionary *dict = @{
+                                   @"hasVr": @"has_vr",
+                                   @"vrImage": @"vr_image",
+                                   @"openUrl":@"open_url",
+                                   @"vrType":@"vr_type"
+                                   };
+    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+        return dict[keyName]?:keyName;
+    }];
+}
+
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+
+@end
+
 @implementation FHHouseDetailImageListDataModel
 + (JSONKeyMapper*)keyMapper
 {

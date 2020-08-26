@@ -16,8 +16,8 @@ typedef void(^FHDetailNewMediaHeaderViewEventByIndex)(NSInteger index);
 typedef void(^FHDetailNewMediaHeaderViewEventByString)(NSString *name);
 
 @interface FHDetailNewMediaHeaderScrollView : UIView
-
-@property (nonatomic, assign) BOOL closeInfinite; //关闭无限轮播
+ //关闭无限轮播
+@property (nonatomic, assign) BOOL closeInfinite;
 //点击了某个Cell
 @property (nonatomic, copy) FHDetailNewMediaHeaderViewEventByIndex didSelectiItemAtIndex;
 //某个Cell展示时

@@ -411,9 +411,7 @@
             [wSelf processDetailRelatedData];
         }];
     }
-//    BOOL hasVideo = NO;
-//    BOOL hasVR = NO;
-//    BOOL isInstant = model.isInstantData;
+    
     BOOL showTitleMapBtn = NO;
     if (model.data.coreInfo.gaodeLat.length>0 && model.data.coreInfo.gaodeLng.length>0) {
         showTitleMapBtn = YES;
@@ -421,109 +419,42 @@
         showTitleMapBtn = NO;
     }
     // 添加头滑动图片 && 视频
-    if (1) {
-        FHMultiMediaItemModel *itemModel = nil;
-        
-        FHDetailNewMediaHeaderModel *headerCellModel = [[FHDetailNewMediaHeaderModel alloc] init];
-        headerCellModel.houseImageAssociateInfo = model.data.imageGroupAssociateInfo;
-        headerCellModel.imageAlbumAssociateInfo = model.data.imageAlbumAssociateInfo;
-        headerCellModel.isShowTopImageTab = model.data.isShowTopImageTab;
-        if ([model.data.topImages isKindOfClass:[NSArray class]] && model.data.topImages.count > 0) {
-            NSMutableArray *houseImageList = [NSMutableArray array];
-            //只有新房详情传递了 topImages 数据，用户对接图片列表页页
-            headerCellModel.topImages = model.data.topImages;
-            //这个地方组合的图片列表，如果isShowTopImageTab为true，头图只显示一张图片，大图详情和图片列表需要重新组合
-            //false的话提供给头图使用，以及大图详情
-            for (FHDetailNewTopImage *topImage in model.data.topImages) {
-                FHHouseDetailImageListDataModel *houseImageDictList = [[FHHouseDetailImageListDataModel alloc] init];
-                NSMutableArray *houseImages = [NSMutableArray array];
-                for (FHHouseDetailImageGroupModel * groupModel in topImage.imageGroup) {
-                    for (NSInteger j = 0; j < groupModel.images.count; j++) {
-                        [houseImages addObject:groupModel.images[j]];
-                    }
-                }
-                houseImageDictList.houseImageTypeName = topImage.name;
-                houseImageDictList.usedSceneType = FHHouseDetailImageListDataUsedSceneTypeNew;
-                houseImageDictList.houseImageList = houseImages.copy;
-                houseImageDictList.houseImageType = topImage.type;
-                [houseImageList addObject:houseImageDictList];
-            }
-            headerCellModel.houseImageDictList = houseImageList.copy;
-            
-        }
-        
-        FHDetailHouseTitleModel *houseTitleModel = [[FHDetailHouseTitleModel alloc] init];
-        houseTitleModel.advantage = model.data.topBanner.advantage;
-        houseTitleModel.businessTag = model.data.topBanner.businessTag;
-        houseTitleModel.titleStr = model.data.coreInfo.name;
-        houseTitleModel.tags = model.data.tags;
-        houseTitleModel.housetype = self.houseType;
-        headerCellModel.vedioModel = itemModel;// 添加视频模型数据
-        headerCellModel.contactViewModel = self.contactViewModel;
-        headerCellModel.isInstantData = model.isInstantData;
-        headerCellModel.titleDataModel = houseTitleModel;
-        [self.items addObject:headerCellModel];
-    }else {
-        // 添加头滑动图片
-        
-        FHDetailPhotoHeaderModel *headerCellModel = [[FHDetailPhotoHeaderModel alloc] init];
-        if (model.data.imageGroup.count > 0) {
-            NSMutableArray *arrayHouseImage = [NSMutableArray new];
-            for (NSInteger i = 0; i < model.data.imageGroup.count; i++) {
-                FHHouseDetailImageGroupModel * groupModel = model.data.imageGroup[i];
+    FHDetailNewMediaHeaderModel *headerCellModel = [[FHDetailNewMediaHeaderModel alloc] init];
+    headerCellModel.imageAlbumAssociateInfo = model.data.imageAlbumAssociateInfo;
+    headerCellModel.isShowTopImageTab = model.data.isShowTopImageTab;
+    headerCellModel.vrModel = model.data.vrInfo;
+    if ([model.data.topImages isKindOfClass:[NSArray class]] && model.data.topImages.count > 0) {
+        NSMutableArray *houseImageList = [NSMutableArray array];
+        //只有新房详情传递了 topImages 数据，用户对接图片列表页页
+        headerCellModel.topImages = model.data.topImages;
+        //这个地方组合的图片列表，如果isShowTopImageTab为true，头图只显示一张图片，大图详情和图片列表需要重新组合
+        //false的话提供给头图使用，以及大图详情
+        for (FHDetailNewTopImage *topImage in model.data.topImages) {
+            FHHouseDetailImageListDataModel *houseImageDictList = [[FHHouseDetailImageListDataModel alloc] init];
+            NSMutableArray *houseImages = [NSMutableArray array];
+            for (FHHouseDetailImageGroupModel * groupModel in topImage.imageGroup) {
                 for (NSInteger j = 0; j < groupModel.images.count; j++) {
-                    [arrayHouseImage addObject:groupModel.images[j]];
+                    [houseImages addObject:groupModel.images[j]];
                 }
             }
-            //            headerCellModel.isNewHouse = YES;
-            //            headerCellModel.smallImageGroup = model.data.smallImageGroup;
-            headerCellModel.houseImage = arrayHouseImage;
-            //            FHDetailHouseTitleModel *houseTitleModel = [[FHDetailHouseTitleModel alloc] init];
-            //            houseTitleModel.titleStr = model.data.coreInfo.name;
-            //            houseTitleModel.address = model.data.coreInfo.courtAddress;
-            //            houseTitleModel.showMapBtn = showTitleMapBtn;
-            //            houseTitleModel.housetype = self.houseType;
-            ////            houseTitleModel.neighborhoodInfoModel = model.data.coreInfo;
-            //            __weak typeof(self)weakself = self;
-            ////            houseTitleModel.mapImageClick = ^{
-            ////                [weakself mapImageClick];
-            ////            };
-            //            houseTitleModel.tags = model.data.tags;
-            //            headerCellModel.titleDataModel = houseTitleModel;
-            //            headerCellModel.isInstantData = model.isInstantData;
-        }else{
-            //无图片时增加默认图
-            FHImageModel *imgModel = [FHImageModel new];
-            headerCellModel.houseImage = @[imgModel];
+            houseImageDictList.houseImageTypeName = topImage.name;
+            houseImageDictList.usedSceneType = FHHouseDetailImageListDataUsedSceneTypeNew;
+            houseImageDictList.houseImageList = houseImages.copy;
+            houseImageDictList.houseImageType = topImage.type;
+            [houseImageList addObject:houseImageDictList];
         }
-        [self.items addObject:headerCellModel];
-        
+        headerCellModel.houseImageDictList = houseImageList.copy;
     }
-    //    FHDetailPhotoHeaderModel *headerCellModel = [[FHDetailPhotoHeaderModel alloc] init];
-    //    if (model.data.imageGroup) {
-    //        NSMutableArray *arrayHouseImage = [NSMutableArray new];
-    //        for (NSInteger i = 0; i < model.data.imageGroup.count; i++) {
-    //            FHHouseDetailImageGroupModel * groupModel = model.data.imageGroup[i];
-    //            for (NSInteger j = 0; j < groupModel.images.count; j++) {
-    //                [arrayHouseImage addObject:groupModel.images[j]];
-    //            }
-    //        }
-    //
-    //        headerCellModel.isNewHouse = YES;
-    //        headerCellModel.smallImageGroup = model.data.smallImageGroup;
-    //        headerCellModel.houseImage = arrayHouseImage;
-    //        if (!model.isInstantData) {
-    //            headerCellModel.instantHouseImages = [self instantHouseImages];
-    //        }
-    //        headerCellModel.isInstantData = model.isInstantData;
-    //
-    //    }else{
-    //        //无图片时增加默认图
-    //        FHImageModel *imgModel = [FHImageModel new];
-    //        headerCellModel.houseImage = @[imgModel];
-    //    }
-    //    [self.items addObject:headerCellModel];
-    //
+    FHDetailHouseTitleModel *houseTitleModel = [[FHDetailHouseTitleModel alloc] init];
+    houseTitleModel.advantage = model.data.topBanner.advantage;
+    houseTitleModel.businessTag = model.data.topBanner.businessTag;
+    houseTitleModel.titleStr = model.data.coreInfo.name;
+    houseTitleModel.tags = model.data.tags;
+    houseTitleModel.housetype = self.houseType;
+    headerCellModel.contactViewModel = self.contactViewModel;
+    headerCellModel.titleDataModel = houseTitleModel;
+    [self.items addObject:headerCellModel];
+    
     FHDetailHouseNameModel *houseName = [[FHDetailHouseNameModel alloc] init];
     // 添加标题
     if (model.data) {

@@ -401,11 +401,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign) BOOL addFoldDirect;//标识评论高度，非服务端字段
 @end
 
-@interface FHDetailHouseVRDataModel: JSONModel
-@property (nonatomic, assign) BOOL hasVr;
-@property (nonatomic, strong , nullable) FHImageModel *vrImage;
-@property (nonatomic, copy , nullable) NSString *openUrl;
-@end
+
 
 @protocol FHDetailDataQuickQuestionItemModel
 @end
