@@ -84,7 +84,7 @@
     if(model.recommendedRealtorsTitle.length > 0) {
         self.headerView.label.text = model.recommendedRealtorsTitle;
     }else {
-        self.headerView.label.text = (model.houseType == FHHouseTypeNewHouse) ? @"优选顾问" : @"推荐经纪人";
+        self.headerView.label.text = (model.houseType == FHHouseTypeNewHouse) ? @"优选顾问" : @"实勘经纪人";
     }
     if ((model.houseType == FHHouseTypeNewHouse)) {
         [self.headerView setSubTitleWithTitle:model.recommendedRealtorsSubTitle];
@@ -293,7 +293,16 @@
                 break;
             case FHHouseTypeSecondHandHouse:
             {
-                imExtra[kFHAssociateInfo] =  model.associateInfo;
+                if(model.associateInfo) {
+                    imExtra[kFHAssociateInfo] = model.associateInfo;
+                    break;
+                }
+                if([self.baseViewModel.detailData isKindOfClass:FHDetailOldModel.class]) {
+                    FHDetailOldModel *detailOldModel = (FHDetailOldModel *)self.baseViewModel.detailData;
+                    if(detailOldModel.data.recommendRealtorsAssociateInfo) {
+                        imExtra[kFHAssociateInfo] =  detailOldModel.data.recommendRealtorsAssociateInfo;
+                    }
+                }
             }
                 break;
             case FHHouseTypeNeighborhood:
@@ -351,7 +360,7 @@
         make.bottom.equalTo(self.contentView).offset(14);
     }];
     _headerView = [[FHDetailHeaderView alloc] init];
-    _headerView.label.text = @"推荐经纪人";
+    _headerView.label.text = @"实勘经纪人";
     [self.contentView addSubview:_headerView];
     [self.headerView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(self.shadowImage).offset(20);
