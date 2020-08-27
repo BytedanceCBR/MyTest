@@ -16,6 +16,8 @@
 #import <lottie-ios/Lottie/LOTAnimationView.h>
 #import "UIImage+FIconFont.h"
 #import "FHCornerView.h"
+#import <YYText/YYLabel.h>
+#import "FHSingleImageInfoCellModel.h"
 
 @interface FHHouseSearchSecondHouseCell()
 
@@ -31,6 +33,7 @@
 @property (nonatomic, strong) UIView *mainTitleView;
 @property (nonatomic, strong) UILabel *subTitleLabel;
 @property (nonatomic, strong) UIView *tagContainerView;
+@property (nonatomic, strong) YYLabel *tagLabel;
 
 @property (nonatomic, strong) UIView *priceInfoView;
 @property (nonatomic, strong) UILabel *priceLabel;
@@ -166,6 +169,12 @@
         make.left.mas_equalTo(4);
         make.height.mas_equalTo(18);
         make.top.mas_equalTo(self.subTitleLabel.mas_bottom).offset(4);
+    }];
+    
+    [self.tagContainerView addSubview:self.tagLabel];
+    [self.tagLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.mas_equalTo(-2);
+        make.right.top.bottom.mas_equalTo(0);
     }];
     
     _priceInfoView = [[UIView alloc] init];
@@ -322,25 +331,27 @@
 }
 
 - (void)updateTagContainerView:(FHSearchHouseItemModel *)model {
-    CGFloat left = 0;
-    for (NSInteger i = 0; i < [model.tags count]; i++) {
-        FHHouseTagsModel *tagModel = model.tags[i];
-        UILabel *label = [[UILabel alloc] init];
-        label.textAlignment = NSTextAlignmentCenter;
-        label.font = [UIFont themeFontRegular:10];
-        label.text = tagModel.content;
-        label.layer.cornerRadius = 2;
-        label.textColor = [UIColor colorWithHexStr:tagModel.textColor];
-        label.layer.backgroundColor = [UIColor colorWithHexStr:tagModel.backgroundColor].CGColor;
-        label.layer.borderColor = [UIColor colorWithHexStr:tagModel.borderColor].CGColor;
-        CGFloat width = [FHHouseSearchSecondHouseCell getWidthFromText:tagModel.content textFont:[UIFont themeFontRegular:10]] + 8;
-        if (left + width > self.bottomView.frame.size.width) {
-            break;
-        }
-        [self.tagContainerView addSubview:label];
-        label.frame = CGRectMake(left, 0, width, 18);
-        left += width + 4;
-    }
+    NSAttributedString *attributeString =  [FHSingleImageInfoCellModel tagsStringWithTagList:model.tags];
+    self.tagLabel.attributedText = attributeString;
+//    CGFloat left = 0;
+//    for (NSInteger i = 0; i < [model.tags count]; i++) {
+//        FHHouseTagsModel *tagModel = model.tags[i];
+//        UILabel *label = [[UILabel alloc] init];
+//        label.textAlignment = NSTextAlignmentCenter;
+//        label.font = [UIFont themeFontRegular:10];
+//        label.text = tagModel.content;
+//        label.layer.cornerRadius = 2;
+//        label.textColor = [UIColor colorWithHexStr:tagModel.textColor];
+//        label.layer.backgroundColor = [UIColor colorWithHexStr:tagModel.backgroundColor].CGColor;
+//        label.layer.borderColor = [UIColor colorWithHexStr:tagModel.borderColor].CGColor;
+//        CGFloat width = [FHHouseSearchSecondHouseCell getWidthFromText:tagModel.content textFont:[UIFont themeFontRegular:10]] + 8;
+//        if (left + width > self.bottomView.frame.size.width) {
+//            break;
+//        }
+//        [self.tagContainerView addSubview:label];
+//        label.frame = CGRectMake(left, 0, width, 18);
+//        left += width + 4;
+//    }
 }
 
 - (void)updateBottomView:(FHSearchHouseItemModel *)model {
@@ -418,12 +429,23 @@
     for (UIView *view in self.mainTitleView.subviews) {
         [view removeFromSuperview];
     }
-    for (UIView *view in self.tagContainerView.subviews) {
-        [view removeFromSuperview];
-    }
+//    for (UIView *view in self.tagContainerView.subviews) {
+//        [view removeFromSuperview];
+//    }
     for (UIView *view in self.bottomView.subviews) {
         [view removeFromSuperview];
     }
+}
+
+-(YYLabel *)tagLabel
+{
+    if (!_tagLabel) {
+        _tagLabel = [[YYLabel alloc]init];
+        _tagLabel.numberOfLines = 0;
+        _tagLabel.font = [UIFont themeFontRegular:10];
+        _tagLabel.lineBreakMode = NSLineBreakByWordWrapping;
+    }
+    return _tagLabel;
 }
 
 - (UIView *)containerView {

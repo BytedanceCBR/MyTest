@@ -8,7 +8,7 @@
 #import "FHListBaseCell.h"
 
 NS_ASSUME_NONNULL_BEGIN
-
+//新二手房列表页、搜索页cell
 @interface FHHouseSearchSecondHouseCell : FHListBaseCell
 
 @end
