@@ -84,6 +84,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign) NSInteger cardType;
 @property (nonatomic, copy , nullable) NSString *title;
 @property (nonatomic, copy , nullable) NSString *buttonText;
+@property (nonatomic, assign) BOOL setHistory;
 
 @end
 
@@ -112,6 +113,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *historyId;
 @property (nonatomic, copy , nullable) NSString *userOriginEnter;
 @property (nonatomic, copy , nullable) NSString *extinfo;
+@property (nonatomic, assign) BOOL setHistory;
 
 @end
 
@@ -168,6 +170,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign ) NSInteger rank;
 @property (nonatomic, copy , nullable) NSString *extinfo;
 @property (nonatomic, copy , nullable) NSString *id;
+@property (nonatomic, assign) BOOL setHistory;
 @end
 
 @interface FHGuessYouWantExtraInfoModel : JSONModel

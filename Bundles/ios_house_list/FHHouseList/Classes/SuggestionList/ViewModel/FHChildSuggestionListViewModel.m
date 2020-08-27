@@ -398,7 +398,9 @@
         }
     }
     infos[@"tracer"] = tracer;
-    
+    if(model.setHistory){
+        [self setHistoryWithURl:model.openUrl displayText:model.text extInfo:model.extinfo];
+    }
     [self.listController jumpToCategoryListVCByUrl:jumpUrl queryText:model.text placeholder:model.text infoDict:infos];
 }
 
@@ -451,6 +453,9 @@
         }
         infos[@"tracer"] = tracer;
 
+        if(model.setHistory){
+            [self setHistoryWithURl:jumpUrl displayText:model.text extInfo:model.extinfo];
+        }
         [self.listController jumpToCategoryListVCByUrl:jumpUrl queryText:queryText placeholder:queryText infoDict:infos];
     }
 }
@@ -511,6 +516,9 @@
     }
     infos[@"tracer"] = tracer;
     
+    if(model.setHistory){
+        [self setHistoryWithURl:model.openUrl displayText:model.text extInfo:nil];
+    }
     [self.listController jumpToCategoryListVCByUrl:jumpUrl queryText:model.text placeholder:model.text infoDict:infos];
 }
 
@@ -1150,6 +1158,24 @@
 }
 
 #pragma mark - Request
+
+-(void)setHistoryWithURl:(NSString *)openUrl displayText:(NSString *)displayText extInfo:(NSString *)extinfo;
+{
+    NSString *queryPath = @"/f100/api/set_history";
+    NSMutableDictionary *paramDic = [NSMutableDictionary new];
+    paramDic[@"house_type"] = @(FHHouseTypeNewHouse);
+    paramDic[@"display_text"] = displayText ?: @"";
+    paramDic[@"open_url"] = openUrl ?: @"";
+//    paramDic[@"extinfo"] = extinfo ?: @"";
+    
+//    [FHMainApi getRequest:queryPath query:nil params:paramDic completion:^(NSDictionary * _Nullable result, NSError * _Nullable error) {
+//
+//    }];
+    [FHMainApi postJsonRequest:queryPath query:nil params:paramDic completion:^(NSDictionary * _Nullable result, NSError * _Nullable error) {
+
+    }];
+    
+}
 
 - (void)requestSearchHistoryByHouseType:(NSString *)houseType {
     if (self.historyHttpTask) {
