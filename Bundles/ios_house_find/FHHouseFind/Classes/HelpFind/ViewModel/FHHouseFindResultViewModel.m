@@ -668,7 +668,7 @@ static const NSUInteger kFHHomeHeaderViewSectionHeight = 35;
     NSMutableDictionary *tracerDict = @{}.mutableCopy;
     tracerDict[@"house_type"] = [self houseTypeString];
     tracerDict[@"card_type"] = @"left_pic";
-    tracerDict[@"page_type"] = [self pageTypeString];
+    tracerDict[@"page_type"] = @"driving_find_house_list";
     tracerDict[@"element_type"] = @"be_null";
     tracerDict[@"search_id"] = self.searchId ? : @"be_null";
     tracerDict[@"group_id"] = [cellModel groupId] ? : @"be_null";
@@ -727,7 +727,7 @@ static const NSUInteger kFHHomeHeaderViewSectionHeight = 35;
 -(void)jump2HouseDetailPage:(FHHouseListBaseItemModel *)cellModel withRank: (NSInteger) rank  {
     NSMutableDictionary *traceParam = @{}.mutableCopy;
 
-    traceParam[@"enter_from"] = [self pageTypeString];
+    traceParam[@"enter_from"] = @"driving_find_house_list";
     traceParam[@"element_from"] = @"be_null";
     traceParam[@"search_id"] = self.searchId;
     traceParam[@"card_type"] = @"left_pic";
