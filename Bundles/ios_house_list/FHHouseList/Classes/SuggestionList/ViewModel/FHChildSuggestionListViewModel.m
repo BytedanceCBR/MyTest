@@ -1159,22 +1159,15 @@
 
 #pragma mark - Request
 
--(void)setHistoryWithURl:(NSString *)openUrl displayText:(NSString *)displayText extInfo:(NSString *)extinfo;
-{
-    NSString *queryPath = @"/f100/api/set_history";
+-(void)setHistoryWithURl:(NSString *)openUrl displayText:(NSString *)displayText extInfo:(NSString *)extinfo {
     NSMutableDictionary *paramDic = [NSMutableDictionary new];
     paramDic[@"house_type"] = @(FHHouseTypeNewHouse);
     paramDic[@"display_text"] = displayText ?: @"";
     paramDic[@"open_url"] = openUrl ?: @"";
 //    paramDic[@"extinfo"] = extinfo ?: @"";
-    
-//    [FHMainApi getRequest:queryPath query:nil params:paramDic completion:^(NSDictionary * _Nullable result, NSError * _Nullable error) {
-//
-//    }];
-    [FHMainApi postJsonRequest:queryPath query:nil params:paramDic completion:^(NSDictionary * _Nullable result, NSError * _Nullable error) {
-
+    [FHHouseListAPI requestAddHistory:paramDic.copy completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
+        
     }];
-    
 }
 
 - (void)requestSearchHistoryByHouseType:(NSString *)houseType {
