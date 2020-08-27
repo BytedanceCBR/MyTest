@@ -495,6 +495,7 @@
             }
             // 移除字段
             [tracerDic removeObjectsForKeys:@[@"card_type",@"element_from",@"search_id"]];
+            tracerDic[@"event_tracking_id"] = @"104150";
             [FHUserTracker writeEvent:@"realtor_show" params:tracerDic];
         }
     }

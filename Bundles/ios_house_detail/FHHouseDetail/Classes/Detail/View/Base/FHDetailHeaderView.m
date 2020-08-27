@@ -155,6 +155,7 @@
     params[@"page_type"] = [self.detailVC.viewModel pageTypeString];
     params[@"element_type"] = self.tracerDict[@"element_type"];
     params[@"click_position"] = @"question_mark_explain";
+    params[@"event_tracking_id"] = @"104154";
     TRACK_EVENT(@"click_options", params);
 }
 
