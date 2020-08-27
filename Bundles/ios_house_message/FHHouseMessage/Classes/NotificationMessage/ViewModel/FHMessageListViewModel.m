@@ -215,6 +215,7 @@
     params[@"element_from"] = self.tracerDict[@"element_from"] ?: @"be_null";
     params[@"origin_from"] = self.tracerDict[@"origin_from"] ?: @"be_null";
     params[@"show_type"] = blank ? @"message_blank" : @"message_full";
+    params[@"event_tracking_id"] = @"104259";
     [FHUserTracker writeEvent:@"enter_category" params:params];
 }
 
