@@ -180,6 +180,11 @@
 }
 
 -(void)displaySendState:(ChatMsg *)msg isMute:(BOOL)isMute {
+    
+    if(!msg.isDisplaySendingState) {
+        return;
+    }
+    
     if (msg.type == ChatMstTypeNotice) {
         [self.msgStateView setHidden:YES];
         [self updateLayoutForMsgState:ChatMsgStateSuccess isMute:isMute];
