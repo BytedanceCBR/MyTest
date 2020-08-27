@@ -9,7 +9,6 @@
 #import "FHDetailHeaderTitleView.h"
 #import "FHVideoAndImageItemCorrectingView.h"
 #import "FHCommonDefines.h"
-#import "UIViewAdditions.h"
 
 @interface FHDetailNewMediaHeaderView ()
 
@@ -134,14 +133,14 @@
     [self.infoLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.width.mas_equalTo(44);
         make.height.mas_equalTo(22);
-        make.right.mas_equalTo(self.scrollView.right).offset(-15);
+        make.right.mas_equalTo(self.scrollView.mas_right).offset(-15);
         make.bottom.mas_equalTo(self.scrollView.mas_bottom).offset(-35);
     }];
 
     [self.totalPagesLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.width.mas_equalTo(54);
         make.height.mas_equalTo(22);
-        make.right.mas_equalTo(self.scrollView.right).offset(-15);
+        make.right.mas_equalTo(self.scrollView.mas_right).offset(-15);
         make.bottom.mas_equalTo(self.scrollView.mas_bottom).offset(-35);
     }];
     [self layoutIfNeeded];
@@ -225,7 +224,7 @@
     }
     [self.infoLabel mas_updateConstraints:^(MASConstraintMaker *make) {
         make.width.mas_equalTo(width);
-        make.right.mas_equalTo(self.scrollView.right).offset(-15);
+        make.right.mas_equalTo(self.scrollView.mas_right).offset(-15);
     }];
     [self layoutIfNeeded];
 }

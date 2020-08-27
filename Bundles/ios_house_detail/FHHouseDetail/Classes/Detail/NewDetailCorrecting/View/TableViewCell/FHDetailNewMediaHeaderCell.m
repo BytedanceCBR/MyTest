@@ -314,6 +314,7 @@
         dict[@"picture_id"] = itemModel.imageUrl;
         dict[@"picture_type"] = itemModel.pictureTypeName;
         dict[@"show_type"] = showType;
+        dict[@"event_tracking_id"] = @"104162";
         TRACK_EVENT(@"picture_show", dict);
     } else {
         NSAssert(NO, @"传入的detailTracerDic不是字典");
@@ -404,6 +405,7 @@
         }
 
         dict[@"rank"] = @"be_null";
+        dict[@"event_tracking_id"] = @"104163";
 
         TRACK_EVENT(@"click_options", dict);
     } else {

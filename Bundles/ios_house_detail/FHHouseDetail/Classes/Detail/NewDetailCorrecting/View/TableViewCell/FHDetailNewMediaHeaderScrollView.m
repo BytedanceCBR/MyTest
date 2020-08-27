@@ -6,17 +6,11 @@
 //
 
 #import "FHDetailNewMediaHeaderScrollView.h"
-#import "Masonry.h"
-#import "UIFont+House.h"
-#import "UIImageView+BDWebImage.h"
 #import "FHCommonDefines.h"
 #import "FHMultiMediaImageCell.h"
-#import "FHMultiMediaVideoCell.h"
 #import "FHVideoModel.h"
 #import <FHHouseBase/FHBaseCollectionView.h>
 #import "FHMultiMediaVRImageCell.h"
-
-
 #import "FHHouseDetailHeaderMoreStateView.h"
 
 #define k_VIDEOCELLID @"video_cell_id"
