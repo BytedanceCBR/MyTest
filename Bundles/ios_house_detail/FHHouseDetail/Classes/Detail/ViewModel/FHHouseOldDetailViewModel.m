@@ -72,7 +72,7 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
 @property (nonatomic, strong , nullable) FHHouseListDataModel *oldHouseRecommendedCourtData;
 @property (nonatomic, copy , nullable) NSString *neighborhoodId;// 周边小区房源id
 @property (nonatomic, weak , nullable) FHDetailAgentListModel *agentListModel;
-@property (nonatomic, strong) dispatch_source_t timer;
+@property (nonatomic, strong) dispatch_source_t surveyTimer; 
 @end
 @implementation FHHouseOldDetailViewModel
 // 注册cell类型
@@ -539,7 +539,7 @@ logPB:self.listLogPB extraInfo:self.extraInfo completion:^(FHDetailOldModel * _N
         agentListModel.houseId = self.houseId;
         agentListModel.houseType = self.houseType;
         [self.items addObject:agentListModel];
-        self.tipName = model.data.surveyedRealtorInfo.toastText;
+        self.surveyTipName = model.data.surveyedRealtorInfo.toastText;
     }
     
     if(model.data.houseReviewComment.count > 0){
@@ -1109,16 +1109,16 @@ logPB:self.listLogPB extraInfo:self.extraInfo completion:^(FHDetailOldModel * _N
 }
 
 - (void)showSurveyTip {
-    if(self.tipView){
-        self.tipView.hidden = NO;
+    if(self.surveyTipView){
+        self.surveyTipView.hidden = NO;
     }
-    [self startTimer];
+    [self startSurveyTimer];
 }
 - (void)hiddenSurveyTip {
-    if(self.tipView){
-        self.tipView.hidden = YES;
+    if(self.surveyTipView){
+        self.surveyTipView.hidden = YES;
     }
-    [self stopTimer];
+    [self stopSurveyTimer];
 }
 
 - (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView {
@@ -1129,25 +1129,25 @@ logPB:self.listLogPB extraInfo:self.extraInfo completion:^(FHDetailOldModel * _N
     [self hiddenSurveyTip];
 }
 
-- (void) startTimer {
-    if(_timer == nil){
-        _timer = dispatch_source_create(DISPATCH_SOURCE_TYPE_TIMER, 0, 0, dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0));
-        dispatch_source_set_timer(_timer, dispatch_walltime(NULL, 3 * NSEC_PER_SEC), 0, 0);
+- (void) startSurveyTimer {
+    if(_surveyTimer == nil){
+        _surveyTimer = dispatch_source_create(DISPATCH_SOURCE_TYPE_TIMER, 0, 0, dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0));
+        dispatch_source_set_timer(_surveyTimer, dispatch_walltime(NULL, 3 * NSEC_PER_SEC), 0, 0);
         __weak typeof(self) weakSelf = self;
-        dispatch_source_set_event_handler(_timer, ^{
+        dispatch_source_set_event_handler(_surveyTimer, ^{
             __strong typeof(weakSelf) strongSelf = weakSelf;
             dispatch_async(dispatch_get_main_queue(), ^{
                 [strongSelf hiddenSurveyTip];
             });
         });
-        dispatch_resume(_timer);
+        dispatch_resume(_surveyTimer);
     }
 }
 
-- (void) stopTimer {
-    if(_timer) {
-        dispatch_source_cancel(_timer);
-        _timer = nil;
+- (void) stopSurveyTimer {
+    if(_surveyTimer) {
+        dispatch_source_cancel(_surveyTimer);
+        _surveyTimer = nil;
     }
 }
 @end

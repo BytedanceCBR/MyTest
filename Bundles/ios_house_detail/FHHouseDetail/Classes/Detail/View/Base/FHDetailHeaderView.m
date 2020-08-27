@@ -131,15 +131,15 @@
     if(self.detailVC){
         if([self.detailVC.viewModel isKindOfClass:[FHHouseOldDetailViewModel class]]) {
             FHHouseOldDetailViewModel *detailVM = (FHHouseOldDetailViewModel *) self.detailVC.viewModel;
-            if(self.tipView == nil) {
-                self.tipView = [[FHBubbleView alloc] initWithTitle:detailVM.tipName font:[UIFont themeFontRegular:10]];
-                self.tipView.hidden = YES;
-                [self.detailVC.view addSubview:self.tipView];
-                [self.detailVC.view bringSubviewToFront:self.tipView];
-                detailVM.tipView = self.tipView;
+            if(self.surveyTipView == nil) {
+                self.surveyTipView = [[FHSurveyBubbleView alloc] initWithTitle:detailVM.surveyTipName font:[UIFont themeFontRegular:10]];
+                self.surveyTipView.hidden = YES;
+                [self.detailVC.view addSubview:self.surveyTipView];
+                [self.detailVC.view bringSubviewToFront:self.surveyTipView];
+                detailVM.surveyTipView = self.surveyTipView;
             }
-            if(self.tipView.hidden) {
-                [self.tipView showWithsubView:self.showTipButton toView:self.detailVC.view];
+            if(self.surveyTipView.hidden) {
+                [self.surveyTipView showWithsubView:self.showTipButton toView:self.detailVC.view];
                 [detailVM showSurveyTip];
                 [self addClickOptionsLog];
             } else {

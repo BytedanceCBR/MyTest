@@ -84,7 +84,7 @@
     if(model.recommendedRealtorsTitle.length > 0) {
         self.headerView.label.text = model.recommendedRealtorsTitle;
     }else {
-        self.headerView.label.text = (model.houseType == FHHouseTypeNewHouse) ? @"优选顾问" : @"实勘经纪人";
+        self.headerView.label.text = @"实勘经纪人";
     }
     if ((model.houseType == FHHouseTypeNewHouse)) {
         [self.headerView setSubTitleWithTitle:model.recommendedRealtorsSubTitle];
@@ -280,43 +280,10 @@
         NSMutableDictionary *imExtra = @{}.mutableCopy;
         imExtra[@"realtor_position"] = @"actually_survey";
         
-        switch (self.baseViewModel.houseType) {
-            case FHHouseTypeNewHouse:
-            {
-                if([self.baseViewModel.detailData isKindOfClass:FHDetailNewModel.class]) {
-                    FHDetailNewModel *detailNewModel = (FHDetailNewModel *)self.baseViewModel.detailData;
-                    if(detailNewModel.data.recommendRealtorsAssociateInfo) {
-                        imExtra[kFHAssociateInfo] =  detailNewModel.data.recommendRealtorsAssociateInfo;
-                    }
-                }
+        if(self.baseViewModel.houseType == FHHouseTypeSecondHandHouse) {
+            if(model.associateInfo) {
+                imExtra[kFHAssociateInfo] = model.associateInfo;
             }
-                break;
-            case FHHouseTypeSecondHandHouse:
-            {
-                if(model.associateInfo) {
-                    imExtra[kFHAssociateInfo] = model.associateInfo;
-                    break;
-                }
-                if([self.baseViewModel.detailData isKindOfClass:FHDetailOldModel.class]) {
-                    FHDetailOldModel *detailOldModel = (FHDetailOldModel *)self.baseViewModel.detailData;
-                    if(detailOldModel.data.recommendRealtorsAssociateInfo) {
-                        imExtra[kFHAssociateInfo] =  detailOldModel.data.recommendRealtorsAssociateInfo;
-                    }
-                }
-            }
-                break;
-            case FHHouseTypeNeighborhood:
-            {
-                if([self.baseViewModel.detailData isKindOfClass:FHDetailNeighborhoodModel.class]) {
-                    FHDetailNeighborhoodModel *detailNeighborhoodModel = (FHDetailNeighborhoodModel *)self.baseViewModel.detailData;
-                    if(detailNeighborhoodModel.data.recommendRealtorsAssociateInfo) {
-                        imExtra[kFHAssociateInfo] =  detailNeighborhoodModel.data.recommendRealtorsAssociateInfo;
-                    }
-                }
-            }
-                break;
-            default:
-                break;
         }
         [model.phoneCallViewModel imchatActionWithPhone:contact realtorRank:[NSString stringWithFormat:@"%ld", (long)index] extraDic:imExtra];
     }

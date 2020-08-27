@@ -1,16 +1,16 @@
 //
-//  FHBubbleView.m
+//  FHSurveyBubbleView.m
 //  BubbleViewTest
 //
 //  Created by bytedance on 2020/8/25.
 //  Copyright © 2020 bytedance. All rights reserved.
 //
 
-#import "FHBubbleView.h"
+#import "FHSurveyBubbleView.h"
 #import "UIFont+House.h"
 #import <Masonry/Masonry.h>
 
-@interface FHBubbleView ()
+@interface FHSurveyBubbleView ()
 
 @property(nonatomic,strong) UIImageView *arrowView;
 @property(nonatomic,strong) UIImageView *titleView;
@@ -21,7 +21,7 @@
 @end
 
 
-@implementation FHBubbleView
+@implementation FHSurveyBubbleView
 
 -(instancetype)initWithTitle:(NSString *)titleName font:(UIFont *)font {
     self = [super init];

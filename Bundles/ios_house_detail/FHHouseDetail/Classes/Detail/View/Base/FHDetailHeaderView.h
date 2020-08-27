@@ -7,7 +7,7 @@
 
 #import <UIKit/UIKit.h>
 #import "FHDetailBaseCell.h"
-#import "FHBubbleView.h"
+#import "FHSurveyBubbleView.h"
 NS_ASSUME_NONNULL_BEGIN
 
 // 使用的时候布局需要设置高度：>= 46
@@ -21,7 +21,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, assign)   BOOL       isShowLoadMore;
 @property (nonatomic, strong) UIButton *showTipButton;
-@property (nonatomic ,strong) FHBubbleView *tipView;
+@property (nonatomic ,strong) FHSurveyBubbleView *surveyTipView;
 @property (nonatomic, weak) FHHouseDetailViewController *detailVC;
 @property(nonatomic, strong) NSDictionary *tracerDict;
 -(void)setSubTitleWithTitle:(NSString *)subTitle;

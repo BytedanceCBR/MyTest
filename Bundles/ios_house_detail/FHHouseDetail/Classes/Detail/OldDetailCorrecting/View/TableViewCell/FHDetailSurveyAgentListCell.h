@@ -12,7 +12,7 @@
 #import "FHHouseDetailPhoneCallViewModel.h"
 #import <FHHouseBase/FHHouseFollowUpHelper.h>
 NS_ASSUME_NONNULL_BEGIN
-// 推荐经纪人-列表
+// 实勘经纪人-列表
 @interface FHDetailSurveyAgentListCell : FHDetailBaseCell <FHDetailScrollViewDidScrollProtocol>
 
 @end
@@ -21,8 +21,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, weak)     UITableView       *tableView;
 @property (nonatomic, assign)   BOOL       isFold; // 折叠
-@property (nonatomic, copy , nullable) NSString *recommendedRealtorsTitle; // 推荐经纪人标题文案
-@property (nonatomic, copy , nullable) NSString *recommendedRealtorsSubTitle; // 推荐经纪人副标题文案
+@property (nonatomic, copy , nullable) NSString *recommendedRealtorsTitle; // 实勘经纪人标题文案
+@property (nonatomic, copy , nullable) NSString *recommendedRealtorsSubTitle; // 实勘经纪人副标题文案
 @property (nonatomic, strong , nullable) NSArray<FHDetailContactModel> *recommendedRealtors;
 @property (nonatomic, strong, nullable) FHClueAssociateInfoModel *associateInfo;
 @property (nonatomic, copy) NSString *searchId;

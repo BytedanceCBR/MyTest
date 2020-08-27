@@ -1,5 +1,5 @@
 //
-//  FHBubbleView.h
+//  FHSurveyBubbleView.h
 //  BubbleViewTest
 //
 //  Created by bytedance on 2020/8/25.
@@ -10,7 +10,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface FHBubbleView : UIView
+@interface FHSurveyBubbleView : UIView
 - (instancetype)initWithTitle:(NSString *)titleName font:(UIFont *)font;
 - (void)showWithsubView:(UIView *)subview toView:(UIView *)view;
 @end
