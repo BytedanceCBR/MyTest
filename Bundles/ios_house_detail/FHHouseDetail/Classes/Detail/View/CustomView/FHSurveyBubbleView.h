@@ -11,8 +11,12 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @interface FHSurveyBubbleView : UIView
+@property(nonatomic,assign) CGFloat arrowOffset;
+@property(nonatomic,assign) UIEdgeInsets labelInsets;
+@property(nonatomic,assign) CGFloat maxWidth;
 - (instancetype)initWithTitle:(NSString *)titleName font:(UIFont *)font;
-- (void)showWithsubView:(UIView *)subview toView:(UIView *)view;
+- (CGRect)calcFrameWithSubView:(UIView *)subview toView:(UIView *)view;
+- (void)updateView;
 @end
 
 NS_ASSUME_NONNULL_END

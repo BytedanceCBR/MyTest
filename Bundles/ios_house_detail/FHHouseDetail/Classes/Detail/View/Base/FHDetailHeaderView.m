@@ -14,6 +14,7 @@
 #import "UIColor+Theme.h"
 #import "FHHouseDetailViewController.h"
 #import "FHHouseOldDetailViewModel.h"
+#import "UIView+BTDAdditions.h"
 
 @interface FHDetailHeaderView ()
 @property (nonatomic, strong)   UIImageView       *arrowsImg;
@@ -55,6 +56,7 @@
     
     _showTipButton = [[UIButton alloc] init];
     _showTipButton.hidden = YES;
+    _showTipButton.btd_hitTestEdgeInsets = UIEdgeInsetsMake(-7, -7, -7, -7);
     [_showTipButton setBackgroundImage:[UIImage imageNamed:@"ic-question-line-normal"] forState:UIControlStateNormal];
     [_showTipButton setBackgroundImage:[UIImage imageNamed:@"ic-question-line-normal"] forState:UIControlStateHighlighted];
     [self addSubview:_showTipButton];
@@ -132,14 +134,18 @@
         if([self.detailVC.viewModel isKindOfClass:[FHHouseOldDetailViewModel class]]) {
             FHHouseOldDetailViewModel *detailVM = (FHHouseOldDetailViewModel *) self.detailVC.viewModel;
             if(self.surveyTipView == nil) {
-                self.surveyTipView = [[FHSurveyBubbleView alloc] initWithTitle:detailVM.surveyTipName font:[UIFont themeFontRegular:10]];
+                self.surveyTipView = [[FHSurveyBubbleView alloc] initWithTitle:detailVM.surveyTipName font:[UIFont themeFontRegular:12]];
+                self.surveyTipView.maxWidth = 264;
+                self.surveyTipView.labelInsets = UIEdgeInsetsMake(4, 10, 6, 10);
+                self.surveyTipView.arrowOffset = 55;
                 self.surveyTipView.hidden = YES;
                 [self.detailVC.view addSubview:self.surveyTipView];
                 [self.detailVC.view bringSubviewToFront:self.surveyTipView];
                 detailVM.surveyTipView = self.surveyTipView;
             }
             if(self.surveyTipView.hidden) {
-                [self.surveyTipView showWithsubView:self.showTipButton toView:self.detailVC.view];
+                self.surveyTipView.frame = [self.surveyTipView calcFrameWithSubView:self.showTipButton toView:self.detailVC.view];
+                [self.surveyTipView updateView];
                 [detailVM showSurveyTip];
                 [self addClickOptionsLog];
             } else {
