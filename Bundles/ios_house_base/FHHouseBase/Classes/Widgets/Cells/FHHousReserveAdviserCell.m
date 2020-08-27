@@ -27,8 +27,7 @@
 #import "FHEnvContext.h"
 #import "ToastManager.h"
 #import "FHMainApi+Contact.h"
-
-extern NSString *const kFHPhoneNumberCacheKey;
+#import <FHHouseBase/FHUserInfoManager.h>
 
 @interface FHHousReserveAdviserCell ()<UITextFieldDelegate>
 
@@ -239,23 +238,7 @@ extern NSString *const kFHPhoneNumberCacheKey;
 }
 
 - (void)setPhoneNumber {
-    YYCache *sendPhoneNumberCache = [[FHEnvContext sharedInstance].generalBizConfig sendPhoneNumberCache];
-    id phoneCache = [sendPhoneNumberCache objectForKey:kFHPhoneNumberCacheKey];
-    id loginPhoneCache = [sendPhoneNumberCache objectForKey:kFHPLoginhoneNumberCacheKey];
-    
-    NSString *phoneNum = nil;
-    if ([phoneCache isKindOfClass:[NSString class]]) {
-        NSString *cacheNum = (NSString *)phoneCache;
-        if (cacheNum.length > 0) {
-            phoneNum = cacheNum;
-        }
-    }else if ([loginPhoneCache isKindOfClass:[NSString class]]) {
-        NSString *cacheNum = (NSString *)loginPhoneCache;
-        if (cacheNum.length > 0) {
-            phoneNum = cacheNum;
-        }
-    }
-    self.phoneNum = phoneNum;
+    self.phoneNum = [FHUserInfoManager getPhoneNumberIfExist];
     [self showFullPhoneNum:NO];
 }
 
@@ -367,13 +350,12 @@ extern NSString *const kFHPhoneNumberCacheKey;
 
 - (void)subscribe {
     NSString *phoneNum = self.phoneNum;
-    if (phoneNum.length == 11 && [phoneNum hasPrefix:@"1"] && [self isPureInt:phoneNum]) {
+    if (phoneNum.length == 11 && [phoneNum hasPrefix:@"1"] && [FHUserInfoManager checkPureIntFormatted:phoneNum]) {
         NSMutableDictionary *tracerDic = self.modelData.tracerDict.mutableCopy;
         tracerDic[@"position"] = @"card";
         tracerDic[kFHAssociateInfo] = self.modelData.associateInfo.reportFormInfo;
         [FHUserTracker writeEvent:@"click_confirm" params:tracerDic];
-
-        [self subscribeFormRequest:self.phoneNum];
+        [self subscribeFormRequest:phoneNum];
     }else {
         [[ToastManager manager] showToast:@"手机格式错误"];
         self.textField.textColor = [UIColor themeOrange1];
@@ -397,12 +379,6 @@ extern NSString *const kFHPhoneNumberCacheKey;
     [self.modelData.tableView endUpdates];
 }
 
-- (BOOL)isPureInt:(NSString*)string{
-    NSScanner* scan = [NSScanner scannerWithString:string];
-    int val;
-    return[scan scanInt:&val] && [scan isAtEnd];
-}
-
 - (void)legalAnnouncementClick{
     [self.modelData.belongsVC.view endEditing:YES];
     NSString *privateUrlStr = [NSString stringWithFormat:@"%@/f100/client/user_privacy&title=个人信息保护声明&hide_more=1",[FHURLSettings baseURL]];
@@ -414,14 +390,13 @@ extern NSString *const kFHPhoneNumberCacheKey;
 - (void)showFullPhoneNum:(BOOL)isShow {
     if (self.phoneNum.length > 0) {
         if(isShow){
-            self.textField.text = self.phoneNum;
-        }else{
-            // 显示 151*****010
-            NSString *tempPhone = self.phoneNum;
-            if (self.phoneNum.length == 11 && [self.phoneNum hasPrefix:@"1"] && [self isPureInt:self.phoneNum]) {
-                tempPhone = [NSString stringWithFormat:@"%@****%@",[self.phoneNum substringToIndex:3],[self.phoneNum substringFromIndex:7]];
+            if ([FHUserInfoManager isLoginPhoneNumber:self.phoneNum]) {
+                self.textField.text = @"";
+            } else {
+                self.textField.text = self.phoneNum;
             }
-            self.textField.text = tempPhone;
+        }else{
+            self.textField.text = [FHUserInfoManager formattMaskPhoneNumber:self.phoneNum];
             if (self.textField.text.length > 0) {
                 self.subscribeBtn.enabled = YES;
                 [self.subscribeBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
@@ -451,8 +426,7 @@ extern NSString *const kFHPhoneNumberCacheKey;
             NSString *toast = @"已为您预约顾问，稍后将会和您联系";
             [[ToastManager manager] showToast:toast];
             [wself subscribeSuccess];
-            YYCache *sendPhoneNumberCache = [[FHEnvContext sharedInstance].generalBizConfig sendPhoneNumberCache];
-            [sendPhoneNumberCache setObject:phoneNum forKey:kFHPhoneNumberCacheKey];
+            [FHUserInfoManager savePhoneNumber:phoneNum];
         }else {
             [[ToastManager manager] showToast:[NSString stringWithFormat:@"提交失败 %@",model.message]];
         }

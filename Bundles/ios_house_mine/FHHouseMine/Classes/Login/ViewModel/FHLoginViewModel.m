@@ -36,7 +36,6 @@
 #import "SSCommonLogic.h"
 #import "FHMonitor.h"
 
-extern NSString *const kFHPhoneNumberCacheKey;
 extern NSString *const kFHPLoginhoneNumberCacheKey;
 
 NSString * const kFHLoginSIMStatusChangeNotification = @"kFHLoginSIMStatusChangeNotification";
@@ -1142,7 +1141,6 @@ static FHLoginSharedModel *_sharedModel = nil;
 - (void)handleLoginSuccess:(NSString *)phoneNumber {
     if (phoneNumber.length > 0) {
         YYCache *sendPhoneNumberCache = [[FHEnvContext sharedInstance].generalBizConfig sendPhoneNumberCache];
-        //            [sendPhoneNumberCache setObject:phoneNumber forKey:kFHPhoneNumberCacheKey];
         [sendPhoneNumberCache setObject:phoneNumber forKey:kFHPLoginhoneNumberCacheKey];
     }
     if (self.needPopVC) {

@@ -37,6 +37,7 @@
 #import "NSData+BTDAdditions.h"
 #import "FHMainApi+Contact.h"
 #import "HMDTTMonitor.h"
+#import <FHHouseBase/FHUserInfoManager.h>
 
 #define HELP_HEADER_ID @"header_id"
 #define HELP_ITEM_HOR_MARGIN 20
@@ -51,11 +52,6 @@
 
 #define ROOM_MAX_COUNT 2
 #define REGION_MAX_COUNT 3
-
-
-extern NSString *const kFHPhoneNumberCacheKey;
-extern NSString *const kFHPLoginhoneNumberCacheKey;
-extern NSString *const kFHPLoginhoneNumberCacheKey;
 
 @interface FHHouseFindHelpViewModel ()<UICollectionViewDataSource,UICollectionViewDelegate,UITableViewDataSource, UITableViewDelegate, FHHouseFindPriceCellDelegate, UITextFieldDelegate, UIGestureRecognizerDelegate>
 
@@ -326,13 +322,16 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
             }
             
             NSString *originFrom = strongSelf.tracerDict[@"origin_from"] ?: @"be_null";
-            NSDictionary *params = @{
+            NSMutableDictionary *params = @{
                 @"origin_from": originFrom,
                 @"user_phone": phoneNumber,
                 @"report_form_info": strongSelf.reportFormInfo ?: @{},
                 @"city_id": cityId ?: @"",
-            };
-            [strongSelf commitAssociateInfoWithParams:params selectedModel:selectModel phoneNumber:phoneNumber];
+            }.mutableCopy;
+            if (phoneNumber.length && [TTAccount sharedAccount].isLogin && [[TTAccount sharedAccount].user.mobile isEqualToString:phoneNumber]) {
+                params[@"use_login_phone"] = @(YES);
+            }
+            [strongSelf commitAssociateInfoWithParams:params.copy selectedModel:selectModel phoneNumber:phoneNumber];
         } else {
             //接口出错统一提示“网络错误”
             [[ToastManager manager] showToast:@"网络错误"];
@@ -942,25 +941,8 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
     }
 }
 
-//手机号单独保存，不复用表单的缓存
-- (NSString *)loadPhoneNumber {
-    YYCache *findHousePhoneNumberCache = [[FHEnvContext sharedInstance].generalBizConfig findHousePhoneNumberCache];
-    id phoneCache = [findHousePhoneNumberCache objectForKey:kFHFindHousePhoneNumberCacheKey];
-    
-    NSString *phoneNum = nil;
-    if ([phoneCache isKindOfClass:[NSString class]]) {
-        NSString *cacheNum = (NSString *)phoneCache;
-        if (cacheNum.length > 0) {
-            phoneNum = cacheNum;
-        }
-    }
-   
-    return phoneNum;
-}
-
 - (void)storePhoneNumber:(NSString *)phoneNumber {
-    YYCache *findHousePhoneNumberCache = [[FHEnvContext sharedInstance].generalBizConfig findHousePhoneNumberCache];
-    [findHousePhoneNumberCache setObject:phoneNumber ?: @"" forKey:kFHFindHousePhoneNumberCacheKey];
+    [FHUserInfoManager savePhoneNumber:phoneNumber];
 }
 
 #pragma mark - price cell delegate
@@ -1149,7 +1131,7 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
 //        pcell.varifyCodeInput.delegate = self;
         pcell.delegate = self;
         self.contactCell = pcell;
-        pcell.phoneNum = [self loadPhoneNumber];
+        pcell.phoneNum = [FHUserInfoManager getPhoneNumberIfExist];
         [pcell showFullPhoneNum:NO];
         
 //        if([TTAccount sharedAccount].isLogin){

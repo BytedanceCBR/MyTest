@@ -16,10 +16,9 @@
 #import <FHHouseBase/FHEnvContext.h>
 #import "TTReachability.h"
 #import "FHUserTracker.h"
+#import <FHHouseBase/FHUserInfoManager.h>
 
-extern NSString *const kFHPhoneNumberCacheKey;
 extern NSString *const kFHToastCountKey;
-extern NSString *const kFHPLoginhoneNumberCacheKey;
 
 @interface FHPriceValuationResultViewModel()<FHPriceValuationResultViewDelegate,FHHouseBaseDataProtocel>
 
@@ -376,20 +375,12 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
 - (void)houseSale {
     //埋点
     [self addInfomationTracer:@"information_show"];
-    
     __weak typeof(self)wself = self;
+    NSString *phoneNum = @"";
     YYCache *sendPhoneNumberCache = [[FHEnvContext sharedInstance].generalBizConfig sendPhoneNumberCache];
     id phoneCache = [sendPhoneNumberCache objectForKey:kFHPhoneNumberCacheKey];
-    id loginPhoneCache = [sendPhoneNumberCache objectForKey:kFHPLoginhoneNumberCacheKey];
-    
-    NSString *phoneNum = nil;
     if ([phoneCache isKindOfClass:[NSString class]]) {
         NSString *cacheNum = (NSString *)phoneCache;
-        if (cacheNum.length > 0) {
-            phoneNum = cacheNum;
-        }
-    }else if ([loginPhoneCache isKindOfClass:[NSString class]]) {
-        NSString *cacheNum = (NSString *)loginPhoneCache;
         if (cacheNum.length > 0) {
             phoneNum = cacheNum;
         }
@@ -414,7 +405,7 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
             
             [alert endEditing:YES];
             NSMutableDictionary *info = @{}.mutableCopy;
-            info[@"choose_agency_list"] = [alert selectAgencyList] ? : _neighborhoodDetailModel.data.chooseAgencyList;
+            info[@"choose_agency_list"] = [alert selectAgencyList] ? : wself.neighborhoodDetailModel.data.chooseAgencyList;
             NSHashTable *delegateTable = [NSHashTable hashTableWithOptions:NSPointerFunctionsWeakMemory];
             [delegateTable addObject:alert];
             info[@"delegate"] = delegateTable;
@@ -463,8 +454,7 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
         if(success && !error){
             [wself.alertView dismiss];
             [[ToastManager manager] showToast:@"提交成功，经纪人将尽快与您联系"];
-            YYCache *sendPhoneNumberCache = [[FHEnvContext sharedInstance].generalBizConfig sendPhoneNumberCache];
-            [sendPhoneNumberCache setObject:phoneNum forKey:kFHPhoneNumberCacheKey];
+            [FHUserInfoManager savePhoneNumber:phoneNum];
         }else {
             [[ToastManager manager] showToast:@"提交失败"];
         }

@@ -15,6 +15,7 @@
 #import "FHFillFormAgencyListItemModel.h"
 #import "UIImage+FIconFont.h"
 #import <ByteDanceKit/UIDevice+BTDAdditions.h>
+#import "FHUserInfoManager.h"
 
 @interface FHDetailNoticeAlertView () <UITextFieldDelegate, FHHouseAgencyListSugDelegate>
 
@@ -123,17 +124,11 @@
     return _agencyList;
 }
 
-- (void)setPhoneNum:(NSString *)phoneNum
-{
+- (void)setPhoneNum:(NSString *)phoneNum {
     _phoneNum = phoneNum;
     if (phoneNum.length > 0) {
-        // 显示 151*****010
-        NSString *tempPhone = phoneNum;
-        if (phoneNum.length == 11) {
-            tempPhone = [NSString stringWithFormat:@"%@****%@",[phoneNum substringToIndex:3],[phoneNum substringFromIndex:7]];
-            self.originPhoneNumber = phoneNum;
-        }
-        self.phoneTextField.text = tempPhone;
+        self.originPhoneNumber = phoneNum;
+        self.phoneTextField.text = [FHUserInfoManager formattMaskPhoneNumber:phoneNum];
         if (self.phoneTextField.text.length > 0) {
             [self refreshBtnState:YES];
         }else {
@@ -141,11 +136,9 @@
         }
     }
     // 有手机号，不弹出弹窗
-    if (self.originPhoneNumber.length < 1) {
-        
+    if (!self.originPhoneNumber.length) {
         //需要在下一个loop唤醒键盘
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.4 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-            
             dispatch_async(dispatch_get_main_queue(), ^{
                 [self.phoneTextField becomeFirstResponder];
             });
@@ -354,7 +347,11 @@
 {
     // 有手机号，显示原来的手机号
     if (self.originPhoneNumber.length > 0) {
-        self.phoneTextField.text = self.originPhoneNumber;
+        if ([FHUserInfoManager isLoginPhoneNumber:self.originPhoneNumber]) {
+            self.phoneTextField.text = @"";
+        } else {
+            self.phoneTextField.text = self.originPhoneNumber;
+        }
         self.originPhoneNumber = nil;
     }
     return YES;
@@ -375,9 +372,6 @@
 // 当前输入手机号(有*号的特殊处理)
 - (NSString *)currentInputPhoneNumber
 {
-    if (self.originPhoneNumber.length > 0) {
-        return self.originPhoneNumber;
-    }
     return self.phoneTextField.text;
 }
 
@@ -526,7 +520,7 @@
 {
     if (!_phoneTextField) {
         _phoneTextField = [[UITextField alloc]init];
-        _phoneTextField.keyboardType = UIKeyboardTypePhonePad;
+        _phoneTextField.keyboardType = UIKeyboardTypeNumberPad;
         _phoneTextField.font = [UIFont themeFontRegular:14];
         _phoneTextField.textColor = [UIColor themeGray1];
         _phoneTextField.placeholder = @"请输入您的手机号";

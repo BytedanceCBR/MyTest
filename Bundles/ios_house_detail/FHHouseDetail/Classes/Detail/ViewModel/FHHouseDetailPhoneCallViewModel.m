@@ -31,8 +31,6 @@
 #define IM_OPEN_URL @"im_open_url"
 
 extern NSString *const kFHToastCountKey;
-extern NSString *const kFHPhoneNumberCacheKey;
-extern NSString *const kFHPLoginhoneNumberCacheKey;
 
 @interface FHHouseDetailPhoneCallViewModel ()
 

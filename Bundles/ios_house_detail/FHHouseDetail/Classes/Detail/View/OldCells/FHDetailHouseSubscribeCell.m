@@ -8,11 +8,8 @@
 #import "FHDetailHouseSubscribeCell.h"
 #import "UILabel+House.h"
 #import "FHTextField.h"
-#import "FHEnvContext.h"
 #import "ToastManager.h"
-
-extern NSString *const kFHPhoneNumberCacheKey;
-extern NSString *const kFHPLoginhoneNumberCacheKey;
+#import <FHHouseBase/FHUserInfoManager.h>
 
 @interface FHDetailHouseSubscribeCell()<UITextFieldDelegate>
 
@@ -166,23 +163,7 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
 }
 
 - (void)setPhoneNumber {
-    YYCache *sendPhoneNumberCache = [[FHEnvContext sharedInstance].generalBizConfig sendPhoneNumberCache];
-    id phoneCache = [sendPhoneNumberCache objectForKey:kFHPhoneNumberCacheKey];
-    id loginPhoneCache = [sendPhoneNumberCache objectForKey:kFHPLoginhoneNumberCacheKey];
-    
-    NSString *phoneNum = nil;
-    if ([phoneCache isKindOfClass:[NSString class]]) {
-        NSString *cacheNum = (NSString *)phoneCache;
-        if (cacheNum.length > 0) {
-            phoneNum = cacheNum;
-        }
-    }else if ([loginPhoneCache isKindOfClass:[NSString class]]) {
-        NSString *cacheNum = (NSString *)loginPhoneCache;
-        if (cacheNum.length > 0) {
-            phoneNum = cacheNum;
-        }
-    }
-    self.phoneNum = phoneNum;
+    self.phoneNum = [FHUserInfoManager getPhoneNumberIfExist];
     [self showFullPhoneNum:NO];
 }
 

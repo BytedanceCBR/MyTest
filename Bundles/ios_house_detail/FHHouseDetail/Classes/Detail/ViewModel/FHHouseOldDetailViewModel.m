@@ -59,10 +59,9 @@
 #import "FHhouseDetailRGCListCell.h"
 #import "TTAccountManager.h"
 #import <ByteDanceKit/NSDictionary+BTDAdditions.h>
+#import <FHHouseBase/FHUserInfoManager.h>
 
-extern NSString *const kFHPhoneNumberCacheKey;
 extern NSString *const kFHSubscribeHouseCacheKey;
-extern NSString *const kFHPLoginhoneNumberCacheKey;
 @interface FHHouseOldDetailViewModel ()
 @property (nonatomic, assign)   NSInteger       requestRelatedCount;
 @property (nonatomic, strong , nullable) FHDetailSameNeighborhoodHouseResponseDataModel *sameNeighborhoodHouseData;
@@ -933,9 +932,7 @@ logPB:self.listLogPB extraInfo:self.extraInfo completion:^(FHDetailOldModel * _N
                 toast = model.data.subscriptionToast;
             }
             [[ToastManager manager] showToast:toast];
-            YYCache *sendPhoneNumberCache = [[FHEnvContext sharedInstance].generalBizConfig sendPhoneNumberCache];
-            [sendPhoneNumberCache setObject:phoneNum forKey:kFHPhoneNumberCacheKey];
-            
+            [FHUserInfoManager savePhoneNumber:phoneNum];
             YYCache *subscribeHouseCache = [[FHEnvContext sharedInstance].generalBizConfig subscribeHouseCache];
             [subscribeHouseCache setObject:@"1" forKey:wself.houseId];
             
