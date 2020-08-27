@@ -420,6 +420,7 @@
     }
     // 添加头滑动图片 && 视频
     FHDetailNewMediaHeaderModel *headerCellModel = [[FHDetailNewMediaHeaderModel alloc] init];
+    headerCellModel.houseImageAssociateInfo = model.data.imageGroupAssociateInfo;
     headerCellModel.imageAlbumAssociateInfo = model.data.imageAlbumAssociateInfo;
     headerCellModel.isShowTopImageTab = model.data.isShowTopImageTab;
     headerCellModel.vrModel = model.data.vrInfo;

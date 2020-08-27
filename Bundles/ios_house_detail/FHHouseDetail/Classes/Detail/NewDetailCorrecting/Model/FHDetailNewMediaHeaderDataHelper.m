@@ -20,7 +20,7 @@
 
 @implementation FHDetailNewMediaHeaderDataHelper
 
-- (void)setNewMediaHeaderModel:(FHDetailNewMediaHeaderModel *)mediaHeaderModel {
+- (void)setMediaHeaderModel:(FHDetailNewMediaHeaderModel *)mediaHeaderModel {
     _mediaHeaderModel = mediaHeaderModel;
     _headerViewData = nil;
     _pictureDetailData = nil;
@@ -48,11 +48,6 @@
     return _photoAlbumData;
 }
 
-
-
-
-
-
 #pragma mark - data manage
 //针对新版头图滑动数据改造
 //对于每种VR只要一个可以用位运算，a|= 1<<x;
@@ -72,6 +67,7 @@
                 itemModelVR.imageUrl = vrData.vrImage.url;
             }
             itemModelVR.vrOpenUrl = vrData.openUrl;
+            itemModelVR.pictureTypeName = @"house_vr";
             itemModelVR.groupType = @"VR";
             [itemArray addObject:itemModelVR];
             vrNumber += 1;
@@ -105,8 +101,6 @@
     headerViewData.vrNumber = vrNumber;
     return headerViewData;
 }
-
-
 
 //大图详情页的数据
 + (FHDetailNewMediaHeaderDataHelperPictureDetailData *)generatePictureDetailData:(FHDetailNewMediaHeaderModel *)newMediaHeaderModel {
@@ -162,13 +156,10 @@
 
 @implementation FHDetailNewMediaHeaderDataHelperHeaderViewData
 
-
 @end
 @implementation FHDetailNewMediaHeaderDataHelperPictureDetailData
 
-
 @end
 @implementation FHDetailNewMediaHeaderDataHelperPhotoAlbumData
-
 
 @end

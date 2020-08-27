@@ -27,6 +27,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (strong, nonatomic) FHDetailHouseTitleModel *titleDataModel;//标题，标签模型
 @property (nonatomic, strong , nullable) NSArray<FHDetailNewTopImage *> *topImages;
 @property (nonatomic, weak) UIViewController *weakVC;
+@property (nonatomic, strong, nullable) FHClueAssociateInfoModel *houseImageAssociateInfo;
 @property (nonatomic, assign) BOOL isShowTopImageTab;
 //1.0.0 新增楼盘相册页线索
 @property (nonatomic, strong , nullable) FHClueAssociateInfoModel *imageAlbumAssociateInfo;

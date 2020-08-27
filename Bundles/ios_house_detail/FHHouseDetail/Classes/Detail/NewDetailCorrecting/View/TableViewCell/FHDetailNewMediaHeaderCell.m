@@ -6,7 +6,6 @@
 //
 //3.与楼盘相册和图片详情页交互操作
 #import "FHDetailNewMediaHeaderCell.h"
-#import "FHDetailNewMediaHeaderScrollView.h"
 #import "FHMultiMediaModel.h"
 #import "FHDetailPictureViewController.h"
 #import "FHUserTracker.h"
@@ -24,7 +23,6 @@
 #import <TTUIWidget/TTNavigationController.h>
 #import "TTReachability.h"
 #import "ToastManager.h"
-
 #import "FHDetailNewMediaHeaderDataHelper.h"
 #import "FHDetailNewMediaHeaderView.h"
 
@@ -33,9 +31,7 @@
 @property (nonatomic, strong) FHDetailNewMediaHeaderView *headerView;
 @property (nonatomic, strong) FHDetailNewMediaHeaderDataHelper *dataHelper;
 @property (nonatomic, strong) FHMultiMediaModel *model;
-@property (nonatomic, strong) NSArray *imageList;
 @property (nonatomic, strong) NSMutableDictionary *pictureShowDict;
-@property (nonatomic, assign) BOOL isLarge;
 @property (nonatomic, assign) BOOL isHasClickVR;
 @property (nonatomic, assign) NSInteger currentIndex;
 @property (nonatomic, assign) NSTimeInterval enterTimestamp;
@@ -58,15 +54,14 @@
     if (self.currentData == data || ![data isKindOfClass:[FHDetailNewMediaHeaderModel class]]) {
         return;
     }
-    self.imageList = [NSArray array];
     self.currentData = data;
     self.model = [[FHMultiMediaModel alloc] init];
     [self.dataHelper setMediaHeaderModel:data];
     self.model.medias = self.dataHelper.headerViewData.mediaItemArray;
-    self.imageList = self.dataHelper.pictureDetailData.photoArray;
     self.headerView.showHeaderImageNewType = ((FHDetailNewMediaHeaderModel *)data).isShowTopImageTab;
     [self.headerView updateMultiMediaModel:self.model];
-    [self.headerView setTotalPagesLabelText:[NSString stringWithFormat:@"共%ld张", self.model.medias.count]];       //后面要变成全部图片个数+VR个数+视频个数
+    //后面要变成全部图片个数+VR个数+视频个数
+    [self.headerView setTotalPagesLabelText:[NSString stringWithFormat:@"共%ld张", self.dataHelper.headerViewData.vrNumber + self.dataHelper.pictureDetailData.photoArray.count]];
 
     [self.headerView updateTitleModel:((FHDetailNewMediaHeaderModel *)data).titleDataModel];
 }
@@ -97,8 +92,7 @@
 #pragma mark - UI
 - (void)createUI {
     self.pictureShowDict = [NSMutableDictionary dictionary];
-    self.imageList = [[NSMutableArray alloc] init];
-    self.headerView = [[FHDetailNewMediaHeaderView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, 0)];
+    self.headerView = [[FHDetailNewMediaHeaderView alloc] init];
     [self.contentView addSubview:self.headerView];
     [self.headerView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.edges.equalTo(self.contentView);
@@ -122,17 +116,7 @@
 }
 
 - (void)showImagesWithCurrentIndex:(NSInteger)index {
-    NSArray *images = self.imageList;
-
-    if ([images.firstObject isKindOfClass:[FHMultiMediaItemModel class]]) {
-        FHMultiMediaItemModel *model = (FHMultiMediaItemModel *)images.firstObject;
-        if (model.mediaType == FHMultiMediaTypeVRPicture) {
-            NSMutableArray *imageListArray = [NSMutableArray arrayWithArray:images];
-            [imageListArray removeObjectAtIndex:0];
-            images = imageListArray;
-            index = index - 1;
-        }
-    }
+    NSArray<FHDetailPhotoHeaderModelProtocol> *images = self.dataHelper.pictureDetailData.photoArray;
     if (index < 0 || index >= (images.count)) {
         return;
     }
@@ -200,17 +184,15 @@
         }];
     }
     [pictureDetailViewController presentPhotoScrollViewWithDismissBlock:^{
-        weakSelf.isLarge = NO;
         [weakSelf trackPictureLargeStayWithIndex:weakSelf.currentIndex];
     }];
 
     pictureDetailViewController.saveImageBlock = ^(NSInteger currentIndex) {
         [weakSelf trackSavePictureWithIndex:currentIndex];
     };
-
-    self.isLarge = YES;
     [self trackHeaderViewMediaShowWithIndex:index isLarge:YES];
     self.enterTimestamp = [[NSDate date] timeIntervalSince1970];
+    self.pictureDetailVC = pictureDetailViewController;
 }
 
 - (void)gotoVRDetail:(FHMultiMediaItemModel *)itemModel {
@@ -288,37 +270,36 @@
 #pragma mark - 埋点
 //埋点
 - (void)trackClickTabWithIndex:(NSInteger)index element:(NSString *)element {
-//    FHDetailHouseVRDataModel *vrModel = ((FHDetailNewMediaHeaderModel *)self.currentData).vrModel;
-//
-//    if (vrModel && [vrModel isKindOfClass:[FHDetailHouseVRDataModel class]] && vrModel.hasVr) {
-//        index++;  //如果有VR 再加+1
-//    }
-    if (index >= 0 && index < _model.medias.count) {//删
-        FHMultiMediaItemModel *itemModel = _model.medias[index];
-        NSMutableDictionary *dict = [self.baseViewModel.detailTracerDic mutableCopy];
-        if (!dict) {
-            dict = [NSMutableDictionary dictionary];
+    if (index < 0 || index >= self.dataHelper.pictureDetailData.mediaItemArray.count) {
+        return;
+    }
+    FHMultiMediaItemModel *itemModel = self.dataHelper.pictureDetailData.mediaItemArray[index];
+    NSMutableDictionary *dict = [self.baseViewModel.detailTracerDic mutableCopy];
+    if (!dict) {
+        dict = [NSMutableDictionary dictionary];
+    }
+    if ([dict isKindOfClass:[NSDictionary class]]) {
+        [dict removeObjectsForKeys:@[@"card_type", @"rank", @"element_from"]];
+        dict[@"picture_id"] = itemModel.imageUrl;
+        dict[@"tab_name"] = itemModel.pictureTypeName;
+        if (element) {
+            dict[@"element_type"] = element;
         }
-        if ([dict isKindOfClass:[NSDictionary class]]) {
-            [dict removeObjectsForKeys:@[@"card_type", @"rank", @"element_from"]];
-            dict[@"picture_id"] = itemModel.imageUrl;
-            dict[@"tab_name"] = itemModel.pictureTypeName;
-            if (element) {
-                dict[@"element_type"] = element;
-            }
-            TRACK_EVENT(@"click_tab", dict);
-        } else {
-            NSAssert(NO, @"传入的detailTracerDic不是字典");
-        }
+        TRACK_EVENT(@"click_tab", dict);
+    } else {
+        NSAssert(NO, @"传入的detailTracerDic不是字典");
     }
 }
 
 //轮播图 埋点
 - (void)trackHeaderViewMediaShowWithIndex:(NSInteger)index isLarge:(BOOL)isLarge {
+    NSInteger limit = isLarge ? self.dataHelper.pictureDetailData.mediaItemArray.count : self.dataHelper.headerViewData.mediaItemArray.count;
+    if (index < 0 || index >= limit) {
+        return;
+    }
     FHMultiMediaItemModel *itemModel = isLarge ? self.dataHelper.pictureDetailData.mediaItemArray[index] : self.dataHelper.headerViewData.mediaItemArray[index];
     NSString *showType = isLarge ? @"large" : @"small";
     NSString *row = [NSString stringWithFormat:@"%@_%li", showType, (long)index];
-    self.isLarge = NO;
     if (_pictureShowDict[row]) {
         return;
     }
@@ -341,7 +322,10 @@
 
 //埋点
 - (void)trackPictureLargeStayWithIndex:(NSInteger)index {
-    FHMultiMediaItemModel *itemModel = _model.medias[index];
+    if (index < 0 || index >= self.dataHelper.pictureDetailData.mediaItemArray.count) {
+        return;
+    }
+    FHMultiMediaItemModel *itemModel = self.dataHelper.pictureDetailData.mediaItemArray[index];
     NSMutableDictionary *dict = [self.baseViewModel.detailTracerDic mutableCopy];
     if (!dict) {
         dict = [NSMutableDictionary dictionary];
@@ -367,7 +351,10 @@
 
 //埋点
 - (void)trackSavePictureWithIndex:(NSInteger)index {
-    FHMultiMediaItemModel *itemModel = _model.medias[index];
+    if (index < 0 || index >= self.dataHelper.pictureDetailData.mediaItemArray.count) {
+        return;
+    }
+    FHMultiMediaItemModel *itemModel = self.dataHelper.pictureDetailData.mediaItemArray[index];
     NSMutableDictionary *dict = [self.baseViewModel.detailTracerDic mutableCopy];
     if (!dict) {
         dict = [NSMutableDictionary dictionary];
@@ -427,8 +414,8 @@
 - (NSMutableDictionary *)traceParamsForGallery:(NSInteger)index
 {
     NSMutableDictionary *dict = [self.baseViewModel.detailTracerDic mutableCopy];
-    if (_model.medias.count > index) {
-        FHMultiMediaItemModel *itemModel = _model.medias[index];
+    if (self.dataHelper.pictureDetailData.mediaItemArray.count > index && index >= 0) {
+        FHMultiMediaItemModel *itemModel = self.dataHelper.pictureDetailData.mediaItemArray[index];
         if (!dict) {
             dict = [NSMutableDictionary dictionary];
         }
@@ -466,6 +453,7 @@
             [self gotoVRDetail:itemModel];
             break;
         case FHMultiMediaTypePicture:
+            index -= self.dataHelper.headerViewData.vrNumber;
             [self showImagesWithCurrentIndex:index];
             break;
         default:
@@ -481,19 +469,19 @@
     [self trackClickOptions:title];
 }
 
-- (void)trackVRElementShow
-{
-    NSMutableDictionary *tracerDict = self.baseViewModel.detailTracerDic.mutableCopy;
-    NSMutableDictionary *param = [NSMutableDictionary new];
-    param[UT_ELEMENT_TYPE] = @"house_vr";
-    param[UT_PAGE_TYPE] = tracerDict[UT_PAGE_TYPE] ? : UT_BE_NULL;
-    param[UT_ORIGIN_FROM] = tracerDict[UT_ORIGIN_FROM] ? : UT_BE_NULL;
-    param[UT_ORIGIN_SEARCH_ID] = tracerDict[UT_ORIGIN_SEARCH_ID] ? : UT_BE_NULL;
-    param[UT_LOG_PB] = tracerDict[UT_LOG_PB] ? : UT_BE_NULL;
-    param[UT_RANK] = tracerDict[UT_RANK] ? : UT_BE_NULL;
-    param[UT_ENTER_FROM] = tracerDict[UT_ENTER_FROM] ? : UT_BE_NULL;
-    TRACK_EVENT(UT_OF_ELEMENT_SHOW, param);
-}
+//- (void)trackVRElementShow
+//{
+//    NSMutableDictionary *tracerDict = self.baseViewModel.detailTracerDic.mutableCopy;
+//    NSMutableDictionary *param = [NSMutableDictionary new];
+//    param[UT_ELEMENT_TYPE] = @"house_vr";
+//    param[UT_PAGE_TYPE] = tracerDict[UT_PAGE_TYPE] ? : UT_BE_NULL;
+//    param[UT_ORIGIN_FROM] = tracerDict[UT_ORIGIN_FROM] ? : UT_BE_NULL;
+//    param[UT_ORIGIN_SEARCH_ID] = tracerDict[UT_ORIGIN_SEARCH_ID] ? : UT_BE_NULL;
+//    param[UT_LOG_PB] = tracerDict[UT_LOG_PB] ? : UT_BE_NULL;
+//    param[UT_RANK] = tracerDict[UT_RANK] ? : UT_BE_NULL;
+//    param[UT_ENTER_FROM] = tracerDict[UT_ENTER_FROM] ? : UT_BE_NULL;
+//    TRACK_EVENT(UT_OF_ELEMENT_SHOW, param);
+//}
 
 //进入图片相册页
 - (void)goToPictureListFrom:(NSString *)from {

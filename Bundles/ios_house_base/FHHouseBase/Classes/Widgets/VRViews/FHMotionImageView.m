@@ -78,7 +78,7 @@ static CGFloat multiplier = 2;
 
     
     [self addSubview:self.vrLoadingView];
-    [_vrLoadingView play];
+    [self.vrLoadingView play];
     [_vrLoadingView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerX.mas_equalTo(self);
         make.centerY.mas_equalTo(self);
@@ -159,7 +159,7 @@ static CGFloat multiplier = 2;
             if (animationFinished) {
                 [weakSelf.vrLoadingView playWithCompletion:^(BOOL animationFinished) {
                     [weakSelf.vrLoadingView playWithCompletion:^(BOOL animationFinished) {
-                        
+
                     }];
                 }];
             }
@@ -186,11 +186,30 @@ static CGFloat multiplier = 2;
     return _manager;
 }
 
+- (void)resetVRLoadingAnimate {
+    if (_vrLoadingView && _vrLoadingView.isAnimationPlaying) {
+        [_vrLoadingView stop];
+    }
+    self.playCount = 3;
+    [self playOneAnimate];
+}
+
+- (void)playOneAnimate {
+    if (_vrLoadingView && _playCount > 0) {
+        __weak typeof(self) weakSelf = self;
+        [_vrLoadingView playWithCompletion:^(BOOL animationFinished) {
+            if (animationFinished) {
+                weakSelf.playCount -= 1;
+                [weakSelf playOneAnimate];
+            }
+        }];
+    }
+}
+
 - (void)checkLoadingState
 {
-//    if (_vrLoadingView) {
-//        [_vrLoadingView play];
-//    }
+    if (_vrLoadingView) {
+    }
 }
 
 - (void)dealloc

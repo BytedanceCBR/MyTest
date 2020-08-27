@@ -32,6 +32,7 @@
 
 @property (nonatomic, assign) CGFloat beginX;
 @property (nonatomic, strong) FHHouseDetailHeaderMoreStateView *headerMoreStateView;
+@property (nonatomic, weak) FHMultiMediaVRImageCell *vrImageCell;
 @end
 
 @implementation FHDetailNewMediaHeaderScrollView
@@ -111,7 +112,16 @@
     if (self.willDisplayCellForItemAtIndex) {
         self.willDisplayCellForItemAtIndex(index);
     }
+    if ([cell isKindOfClass:[FHMultiMediaVRImageCell class]]) {
+        if (self.vrImageCell != cell) {
+            [((FHMultiMediaVRImageCell *)cell) resetVRLoadingAnimate];
+        }
+        self.vrImageCell = (FHMultiMediaVRImageCell *)cell;
+    } else {
+        self.vrImageCell = nil;
+    }
 }
+
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
     [self updateState];
 }

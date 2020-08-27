@@ -15,7 +15,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)updateImageUrl:(NSURL *)imageUrl andPlaceHolder:(UIImage *)placeHolderImage;
 
 - (void)checkLoadingState;
-
+- (void)resetVRLoadingAnimate;
 @end
 
 NS_ASSUME_NONNULL_END
