@@ -20,6 +20,7 @@
 #import "FHSuggestionEmptyCell.h"
 #import "FHFindHouseHelperCell.h"
 #import "FHHouseListRecommendTipCell.h"
+#import "FHEnvContext.h"
 
 @interface FHChildSuggestionListViewModel () <UITableViewDelegate, UITableViewDataSource, FHSugSubscribeListDelegate>
 
@@ -515,7 +516,6 @@
         }
     }
     infos[@"tracer"] = tracer;
-    
     if(model.setHistory){
         [self setHistoryWithURl:model.openUrl displayText:model.text extInfo:nil];
     }
@@ -1164,9 +1164,14 @@
     paramDic[@"house_type"] = @(FHHouseTypeNewHouse);
     paramDic[@"display_text"] = displayText ?: @"";
     paramDic[@"open_url"] = openUrl ?: @"";
-//    paramDic[@"extinfo"] = extinfo ?: @"";
+    paramDic[@"extinfo"] = extinfo ?: @"";
+    NSString *cityid = [FHEnvContext getCurrentSelectCityIdFromLocal];
+    if(cityid){
+        paramDic[@"city_id"] = @([cityid intValue]);
+    }
+    
     [FHHouseListAPI requestAddHistory:paramDic.copy completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
-        
+
     }];
 }
 
