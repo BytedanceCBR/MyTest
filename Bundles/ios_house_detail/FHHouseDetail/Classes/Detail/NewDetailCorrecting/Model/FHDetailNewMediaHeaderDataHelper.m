@@ -11,11 +11,11 @@
 
 @interface FHDetailNewMediaHeaderDataHelper ()
 
-@property (nonatomic, copy, readwrite) FHDetailNewMediaHeaderDataHelperHeaderViewData *headerViewData;
+@property (nonatomic, strong, readwrite) FHDetailNewMediaHeaderDataHelperHeaderViewData *headerViewData;
 //提供给图片详情页的数据
-@property (nonatomic, copy, readwrite) FHDetailNewMediaHeaderDataHelperPictureDetailData *pictureDetailData;
+@property (nonatomic, strong, readwrite) FHDetailNewMediaHeaderDataHelperPictureDetailData *pictureDetailData;
 //提供给图片相册的数据
-@property (nonatomic, copy, readwrite) FHDetailNewMediaHeaderDataHelperPhotoAlbumData *photoAlbumData;
+@property (nonatomic, strong, readwrite) FHDetailNewMediaHeaderDataHelperPhotoAlbumData *photoAlbumData;
 @end
 
 @implementation FHDetailNewMediaHeaderDataHelper

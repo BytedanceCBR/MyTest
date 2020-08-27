@@ -13,11 +13,11 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FHDetailNewMediaHeaderDataHelper : NSObject
 //提供给头图的数据
-@property (nonatomic, copy, readonly) FHDetailNewMediaHeaderDataHelperHeaderViewData *headerViewData;
+@property (nonatomic, strong, readonly) FHDetailNewMediaHeaderDataHelperHeaderViewData *headerViewData;
 //提供给图片详情页的数据
-@property (nonatomic, copy, readonly) FHDetailNewMediaHeaderDataHelperPictureDetailData *pictureDetailData;
+@property (nonatomic, strong, readonly) FHDetailNewMediaHeaderDataHelperPictureDetailData *pictureDetailData;
 //提供给图片相册的数据
-@property (nonatomic, copy, readonly) FHDetailNewMediaHeaderDataHelperPhotoAlbumData *photoAlbumData;
+@property (nonatomic, strong, readonly) FHDetailNewMediaHeaderDataHelperPhotoAlbumData *photoAlbumData;
 
 
 
