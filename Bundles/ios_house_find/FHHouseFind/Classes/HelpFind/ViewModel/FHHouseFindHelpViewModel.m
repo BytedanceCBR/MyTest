@@ -328,7 +328,7 @@
                 @"report_form_info": strongSelf.reportFormInfo ?: @{},
                 @"city_id": cityId ?: @"",
             }.mutableCopy;
-            if (phoneNumber.length && [TTAccount sharedAccount].isLogin && [[TTAccount sharedAccount].user.mobile isEqualToString:phoneNumber]) {
+            if ([FHUserInfoManager isLoginPhoneNumber:phoneNumber]) {
                 params[@"use_login_phone"] = @(YES);
             }
             [strongSelf commitAssociateInfoWithParams:params.copy selectedModel:selectModel phoneNumber:phoneNumber];

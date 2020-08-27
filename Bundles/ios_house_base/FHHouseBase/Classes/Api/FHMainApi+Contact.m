@@ -19,6 +19,7 @@
 #import <FHHouseBase/FHHouseContactDefines.h>
 #import <JSONModel/JSONModel.h>
 #import "FHUtils.h"
+#import "FHUserInfoManager.h"
 
 #define GET @"GET"
 #define POST @"POST"
@@ -389,7 +390,7 @@ completion:(void(^)(FHDetailResponseModel * _Nullable model , NSError * _Nullabl
         paramDic[@"user_phone"] = phone;
     }
     //use_login_phone 类型 bool，是否使用登录uid对应的手机号
-    if (phone.length && [TTAccount sharedAccount].isLogin && [[TTAccount sharedAccount].user.mobile isEqualToString:phone]) {
+    if ([FHUserInfoManager isLoginPhoneNumber:phone]) {
         paramDic[@"use_login_phone"] = @(YES);
     }
     if (targetType) {

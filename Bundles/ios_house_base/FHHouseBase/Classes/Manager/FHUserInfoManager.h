@@ -34,6 +34,9 @@ NS_ASSUME_NONNULL_BEGIN
  */
 + (BOOL)isLoginPhoneNumber:(NSString *)phoneNumber;
 
+/**
+ 判断手机号是否合法，如果是登录手机号，返回YES，否则进行整形类型判断
+ */
 + (BOOL)checkPureIntFormatted:(NSString *)phoneNumber;
 
 /**
