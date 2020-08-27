@@ -365,7 +365,7 @@
 + (NSString*)thirdPartySDKURLString
 {
     NSString *encodedUrl = [[NSString stringWithFormat:@"https://m.xflapp.com/f100/activity/client/private_sdk_explain"] btd_stringByURLEncode];
-    NSString *encodedTitle = [[NSString stringWithFormat:@"第三方SDK列表"] btd_stringByURLEncode];
+    NSString *encodedTitle = [[NSString stringWithFormat:@"第三方SDK目录"] btd_stringByURLEncode];
     NSString *urlStr = [NSString stringWithFormat:@"%@&title=%@", encodedUrl, encodedTitle];
     return urlStr;
 }
