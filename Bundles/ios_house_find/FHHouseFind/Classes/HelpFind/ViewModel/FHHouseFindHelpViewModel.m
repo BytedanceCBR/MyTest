@@ -292,7 +292,7 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
     //Step1: 提交用户选择信息，获取线索相关信息
     NSString *associateStr = [associateDict btd_jsonStringEncoded] ?: @"";
     NSDictionary *params = @{
-        @"from": @"app_findselfhouse",
+        @"from": (_houseTypeSelectedValue == FHHouseTypeNewHouse ? @"app_newhouse_findselfhouse" : @"app_findselfhouse"),
         @"from_data": associateStr,
     };
     
