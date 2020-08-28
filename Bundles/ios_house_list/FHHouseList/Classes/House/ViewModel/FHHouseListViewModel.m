@@ -62,6 +62,8 @@
 #import <FHHouseBase/FHRelevantDurationTracker.h>
 #import "FHHouseListBaseItemCell.h"
 #import "FHFindHouseHelperCell.h"
+#import "FHHouseSearchSecondHouseCell.h"
+#import "FHHouseSearchNewHouseCell.h"
 
 extern NSString *const INSTANT_DATA_KEY;
 
@@ -267,6 +269,8 @@ extern NSString *const INSTANT_DATA_KEY;
     [_tableView registerClass:[FHHouseBaseItemCell class] forCellReuseIdentifier:@"FHHouseBaseItemCellList"];
     [_tableView registerClass:[FHHouseListBaseItemCell class] forCellReuseIdentifier:@"FHListSynchysisNewHouseCell"];
     [_tableView registerClass:[FHFindHouseHelperCell class] forCellReuseIdentifier:@"FHFindHouseHelperCell"];
+    [_tableView registerClass:[FHHouseSearchSecondHouseCell class] forCellReuseIdentifier:@"FHHouseSearchSecondHouseCell"];
+    [_tableView registerClass:[FHHouseSearchNewHouseCell class] forCellReuseIdentifier:@"FHHouseSearchNewHouseCell"];
 
     if(self.commute){  
         [self.tableView registerClass:[FHPlaceHolderCell class] forCellReuseIdentifier:kFHHouseListPlaceholderCellId];
@@ -290,8 +294,14 @@ extern NSString *const INSTANT_DATA_KEY;
             if (houseModel.cellStyles == 6) {
                      return [FHHouseListBaseItemCell class];
                 }
+            else if (houseModel.cellStyles == 8) {
+                return [FHHouseSearchNewHouseCell class];
+            }
             return [FHHouseBaseNewHouseCell class];
         }else {
+            if (houseModel.cellStyles == 7) {
+                return [FHHouseSearchSecondHouseCell class];
+            }
             return [FHHouseBaseItemCell class];
         }
     }else if ([model isKindOfClass:[FHSugSubscribeDataDataSubscribeInfoModel class]]) {
@@ -334,10 +344,16 @@ extern NSString *const INSTANT_DATA_KEY;
     }
     if ([model isKindOfClass:[FHSearchHouseItemModel class]]) {
         FHSearchHouseItemModel *houseModel = (FHSearchHouseItemModel *)model;
-        if(houseModel.houseType.integerValue == FHHouseTypeNewHouse && houseModel.cellStyles == 6){
-            return @"FHListSynchysisNewHouseCell";
+        if(houseModel.houseType.integerValue == FHHouseTypeNewHouse) {
+            if (houseModel.cellStyles == 6) {
+                return @"FHListSynchysisNewHouseCell";
+            } else if (houseModel.cellStyles == 8) {
+                return NSStringFromClass([FHHouseSearchNewHouseCell class]);
+            }
         }
-        
+        if (houseModel.cellStyles == 7) {
+            return NSStringFromClass([FHHouseSearchSecondHouseCell class]);
+        }
         return [FHSearchHouseItemModel cellIdentifierByHouseType:houseModel.houseType.integerValue];
     }
     Class cls = [self cellClassForEntity:model];
@@ -1601,6 +1617,7 @@ extern NSString *const INSTANT_DATA_KEY;
         if ([cell isKindOfClass:[FHHouseBaseNewHouseCell class]]) {
             FHHouseBaseNewHouseCell *theCell = (FHHouseBaseNewHouseCell *)cell;
             [theCell updateHouseListNewHouseCellModel:data];
+            [theCell updateVrInfo:data];
         }
         
         if ([cell isKindOfClass:[FHFindHouseHelperCell class]]) {

@@ -14,6 +14,7 @@
     NSDictionary *dict = @{
                            @"backgroundColor": @"background_color",
                            @"textColor": @"text_color",
+                           @"borderColor": @"border_color"
                            };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
         return dict[keyName]?:keyName;
