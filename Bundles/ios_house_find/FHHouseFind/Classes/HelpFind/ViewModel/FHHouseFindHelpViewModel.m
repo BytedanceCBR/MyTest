@@ -528,7 +528,7 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
             [titles addObject:@"您的购房预算是多少？"];
         }
         
-        if (houseTypeConfigItem) {
+        if (houseTypeConfigItem && houseTypeConfigItem.options.count > 1) {
             [filterArray addObject:houseTypeConfigItem];
             [titles addObject:@"您想买的类型是？"];
         }
