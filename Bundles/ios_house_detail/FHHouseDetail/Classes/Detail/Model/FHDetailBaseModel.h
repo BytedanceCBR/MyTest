@@ -290,7 +290,7 @@ typedef NS_ENUM(NSUInteger, FHRealtorCellShowStyle) {
 @property (nonatomic, assign) BOOL hasVr;
 @property (nonatomic, strong , nullable) FHImageModel *vrImage;
 @property (nonatomic, copy , nullable) NSString *openUrl;
-@property (nonatomic, assign) NSInteger vrType;       //（售楼处：0  鸟瞰图：1   样板间：2）
+@property (nonatomic, assign) NSInteger spaceType;       //（售楼处：0  鸟瞰图：1   样板间：2）
 @end
 
 @protocol FHHouseDetailImageListDataModel<NSObject>

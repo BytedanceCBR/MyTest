@@ -402,7 +402,7 @@
                                    @"hasVr": @"has_vr",
                                    @"vrImage": @"vr_image",
                                    @"openUrl":@"open_url",
-                                   @"vrType":@"vr_type"
+                                   @"spaceType":@"space_type"
                                    };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
         return dict[keyName]?:keyName;

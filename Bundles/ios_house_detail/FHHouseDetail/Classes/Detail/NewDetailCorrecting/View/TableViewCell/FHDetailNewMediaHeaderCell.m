@@ -32,10 +32,8 @@
 @property (nonatomic, strong) FHDetailNewMediaHeaderDataHelper *dataHelper;
 @property (nonatomic, strong) FHMultiMediaModel *model;
 @property (nonatomic, strong) NSMutableDictionary *pictureShowDict;
-@property (nonatomic, assign) BOOL isHasClickVR;
 @property (nonatomic, assign) NSInteger currentIndex;
 @property (nonatomic, assign) NSTimeInterval enterTimestamp;
-@property (nonatomic, assign)   CGFloat photoCellHeight;
 
 @property (nonatomic, weak) FHFloorPanPicShowViewController *pictureListViewController;
 @property (nonatomic, weak) FHDetailPictureViewController *pictureDetailVC;
@@ -61,7 +59,7 @@
     self.headerView.showHeaderImageNewType = ((FHDetailNewMediaHeaderModel *)data).isShowTopImageTab;
     [self.headerView updateMultiMediaModel:self.model];
     //后面要变成全部图片个数+VR个数+视频个数
-    [self.headerView setTotalPagesLabelText:[NSString stringWithFormat:@"共%ld张", self.dataHelper.headerViewData.vrNumber + self.dataHelper.pictureDetailData.photoArray.count]];
+    [self.headerView setTotalPagesLabelText:[NSString stringWithFormat:@"共%u张", self.dataHelper.headerViewData.vrNumber + self.dataHelper.pictureDetailData.photoArray.count]];
 
     [self.headerView updateTitleModel:((FHDetailNewMediaHeaderModel *)data).titleDataModel];
 }
@@ -213,7 +211,6 @@
         param[UT_LOG_PB] = tracerDict[UT_LOG_PB] ? : UT_BE_NULL;
         NSString *reportParams = [FHUtils getJsonStrFrom:param];
         NSString *openUrl = [NSString stringWithFormat:@"%@&report_params=%@", itemModel.vrOpenUrl, reportParams];
-        self.isHasClickVR = YES;
         [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:[NSString stringWithFormat:@"sslocal://house_vr_web?back_button_color=white&hide_bar=true&hide_back_button=true&hide_nav_bar=true&url=%@", [openUrl btd_stringByURLEncode]]]];
     }
 }
