@@ -155,7 +155,7 @@ typedef NS_ENUM(NSUInteger, TTSettingCellType) {
     SettingCellTypeUserProtocol,            // 用户协议
     SettingCellTypePrivacyProtocol,         // 隐私政策
     SettingCellTypeThirdPartySDK,           //第三方SDK目录
-    SettingCellTypeApplyPermission,         //申请使用权限
+    SettingCellTypeApplyPermission,         //系统权限列表
     SettingCellTypeBusinessLicense,         // 证照资质
     SettingCellTypeFHAccountBindingSetting, // 幸福里账号设置
     SettingCellTypeLogoutUnRegister         // 注销登录
@@ -764,7 +764,7 @@ TTEditUserProfileViewControllerDelegate
         cell.accessoryView = accessoryImage;
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
     } else if (cellType == SettingCellTypeApplyPermission) {
-        cell.textLabel.text = @"申请使用权限";
+        cell.textLabel.text = @"系统权限列表";
         UIImageView *accessoryImage = [[UIImageView alloc] initWithImage:[UIImage themedImageNamed:@"icon-youjiantou-hui"]];
         cell.accessoryView = accessoryImage;
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
@@ -1397,7 +1397,7 @@ TTEditUserProfileViewControllerDelegate
             [[TTRoute sharedRoute]openURLByPushViewController:[NSURL URLWithString:[NSString stringWithFormat:@"sslocal://webview?url=%@", urlStr]]];
         }
     } else if (cellType == SettingCellTypeApplyPermission) {
-        // 申请使用权限
+        // 系统权限列表
         NSString *urlStr = [ArticleURLSetting applyPermissionURLString];
         if (urlStr.length > 0) {
             [[TTRoute sharedRoute]openURLByPushViewController:[NSURL URLWithString:[NSString stringWithFormat:@"sslocal://webview?url=%@", urlStr]]];

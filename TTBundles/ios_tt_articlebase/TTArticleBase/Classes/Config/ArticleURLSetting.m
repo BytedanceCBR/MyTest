@@ -374,7 +374,7 @@
 + (NSString*)applyPermissionURLString
 {
     NSString *encodedUrl = [[NSString stringWithFormat:@"https://m.xflapp.com/f100/activity/client/private_app_privilege"] btd_stringByURLEncode];
-    NSString *encodedTitle = [[NSString stringWithFormat:@"申请使用权限"] btd_stringByURLEncode];
+    NSString *encodedTitle = [[NSString stringWithFormat:@"系统权限列表"] btd_stringByURLEncode];
     NSString *urlStr = [NSString stringWithFormat:@"%@&title=%@", encodedUrl, encodedTitle];
     return urlStr;
 }
