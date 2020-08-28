@@ -382,9 +382,7 @@ static const NSUInteger kFHHomeHeaderViewSectionHeight = 35;
             NSString *tipStr = @"未找到符合条件的房源";
             
             if (self.houseType == FHHouseTypeSecondHandHouse) {
-                if(itemArray.count == 0){
-                    
-                }else{
+                if(itemArray.count != 0){
                     tipStr = [NSString stringWithFormat:@"为您找到%ld套二手房",itemArray.count];
                 }
                 [self.currentViewController setNaviBarTitle:tipStr];
