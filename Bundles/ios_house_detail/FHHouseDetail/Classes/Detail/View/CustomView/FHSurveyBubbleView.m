@@ -10,11 +10,19 @@
 #import "UIFont+House.h"
 #import <Masonry/Masonry.h>
 
+@implementation MLLabel
+
+- (void)drawRect:(CGRect)rect {
+    [super drawTextInRect:UIEdgeInsetsInsetRect(rect, UIEdgeInsetsZero)];
+}
+
+@end
+
 @interface FHSurveyBubbleView ()
 
 @property(nonatomic,strong) UIImageView *arrowView;
 @property(nonatomic,strong) UIImageView *titleView;
-@property(nonatomic,strong) UILabel *titleLabel;
+@property(nonatomic,strong) MLLabel *titleLabel;
 @property(nonatomic,copy) NSString *titleName;
 @property(nonatomic,strong) UIFont *textFont;
 @property(nonatomic,assign) BOOL isPositive;
@@ -41,7 +49,7 @@
     _titleView.image = backgroundImage;
     [self addSubview:_titleView];
     
-    _titleLabel = [[UILabel alloc] init];
+    _titleLabel = [[MLLabel alloc] init];
     _titleLabel.lineBreakMode = NSLineBreakByCharWrapping;
     _titleLabel.numberOfLines = 0;
     _titleLabel.font = self.textFont;

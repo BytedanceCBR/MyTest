@@ -343,7 +343,7 @@
         make.left.mas_equalTo(self.shadowImage).mas_offset(15);
         make.right.mas_equalTo(self.shadowImage).mas_offset(-15);
         make.height.mas_equalTo(0);
-        make.bottom.mas_equalTo(self.shadowImage).offset(-30);
+        make.bottom.mas_equalTo(self.shadowImage).offset(-40);
     }];
 }
 
@@ -437,7 +437,7 @@
         if (showModel.realtorScoreDisplay.length>0 && showModel.realtorScoreDescription.length>0&&showModel.realtorTags.count >0) {
             showHeight = showHeight + 90;
         }else {
-            showHeight = showHeight + 70;
+            showHeight = showHeight + 65;
         };
         if (UIScreen.mainScreen.bounds.size.height - point.y > showHeight) {
             NSInteger showCount = model.isFold ? MIN(m, 2):MIN(model.recommendedRealtors.count, m);

@@ -135,9 +135,9 @@
             FHHouseOldDetailViewModel *detailVM = (FHHouseOldDetailViewModel *) self.detailVC.viewModel;
             if(self.surveyTipView == nil) {
                 self.surveyTipView = [[FHSurveyBubbleView alloc] initWithTitle:detailVM.surveyTipName font:[UIFont themeFontRegular:12]];
-                self.surveyTipView.maxWidth = 264;
+                self.surveyTipView.maxWidth = [UIScreen mainScreen].bounds.size.width - 82;
                 self.surveyTipView.labelInsets = UIEdgeInsetsMake(4, 10, 6, 10);
-                self.surveyTipView.arrowOffset = 55;
+                self.surveyTipView.arrowOffset = 108;
                 self.surveyTipView.hidden = YES;
                 [self.detailVC.view addSubview:self.surveyTipView];
                 [self.detailVC.view bringSubviewToFront:self.surveyTipView];

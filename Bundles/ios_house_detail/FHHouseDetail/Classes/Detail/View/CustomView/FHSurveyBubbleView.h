@@ -10,6 +10,9 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+@interface MLLabel : UILabel
+@end
+
 @interface FHSurveyBubbleView : UIView
 @property(nonatomic,assign) CGFloat arrowOffset;
 @property(nonatomic,assign) UIEdgeInsets labelInsets;
