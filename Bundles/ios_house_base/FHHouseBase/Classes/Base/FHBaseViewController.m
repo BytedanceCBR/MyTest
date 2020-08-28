@@ -19,6 +19,7 @@
 #import "FHIntroduceManager.h"
 #import <FHIntroduceManager.h>
 #import <TTBaseLib/TTDeviceHelper.h>
+#import <ByteDanceKit/ByteDanceKit.h>
 
 @interface FHBaseViewController ()<TTRouteInitializeProtocol, UIViewControllerErrorHandler>
 
@@ -52,20 +53,59 @@
         }
         if ([tracer isKindOfClass:[FHTracerModel class]]) {
             self.tracerModel = (FHTracerModel *)tracer;
-            self.tracerDict = [NSMutableDictionary new];
-            if (self.tracerModel.toDictionary) {
-                [self.tracerDict addEntriesFromDictionary:self.tracerModel.toDictionary];
-            }
         }else if([tracer isKindOfClass:[NSDictionary class]]){
-            self.tracerDict = [NSMutableDictionary new];
             [self.tracerDict addEntriesFromDictionary:tracer];
             self.tracerModel = [FHTracerModel makerTracerModelWithDic:self.tracerDict];
         } else {
-            self.tracerDict = [NSMutableDictionary new];
-            self.tracerModel = [[FHTracerModel alloc] init];
+            self.tracerModel = [FHTracerModel makerTracerModelWithDic:paramObj.allParams];
         }
+        [self complementTrackerDataIfNeeded:paramObj.allParams];
     }
     return self;
+}
+
+- (void)complementTrackerDataIfNeeded:(NSDictionary *)allParams {
+    if (!allParams || ![allParams isKindOfClass:[NSDictionary class]]) {
+        return;
+    }
+    NSString *(^shouldUpdateTrackValueIfNeed)(NSString *trackerKey, NSString *currentValue) = ^NSString *(NSString *trackerKey, NSString *currentValue) {
+        //异常状态
+        if (!trackerKey.length) {
+            return currentValue;
+        }
+        NSString *trackerValue =  [allParams btd_stringValueForKey:trackerKey default:@""];
+        //allParams 不包含通用埋点字段
+        if (!trackerValue.length) {
+            return currentValue;
+        }
+        //allParams 包含通用埋点字段， 并且tracerModel中为有值，赋值
+        if (!currentValue.length) {
+            return trackerValue;
+        }
+        return currentValue;
+    };
+    
+    self.tracerModel.originFrom = shouldUpdateTrackValueIfNeed(@"origin_from", self.tracerModel.originFrom);
+
+    self.tracerModel.elementFrom = shouldUpdateTrackValueIfNeed(@"element_from", self.tracerModel.elementFrom);
+    
+    self.tracerModel.enterFrom = shouldUpdateTrackValueIfNeed(@"enter_from", self.tracerModel.enterFrom);
+    
+    self.tracerModel.enterType = shouldUpdateTrackValueIfNeed(@"enter_type", self.tracerModel.enterType);
+    
+    self.tracerModel.categoryName = shouldUpdateTrackValueIfNeed(@"category_name", self.tracerModel.categoryName);
+    
+    self.tracerModel.searchId = shouldUpdateTrackValueIfNeed(@"search_id", self.tracerModel.searchId);
+    
+    self.tracerModel.originSearchId = shouldUpdateTrackValueIfNeed(@"origin_search_id", self.tracerModel.originSearchId);
+    
+    id logPb = allParams[@"log_pb"];
+    if (logPb && [logPb isKindOfClass:[NSDictionary class]]) {
+        self.tracerModel.logPb = (NSDictionary *)logPb;
+    } else if (logPb && [logPb isKindOfClass:[NSString class]]){
+        self.tracerModel.logPb = [(NSString *)logPb btd_jsonDictionary];
+    }
+    [self.tracerDict addEntriesFromDictionary:[self.tracerModel toDictionary]];
 }
 
 -(void)initNavbar
@@ -80,6 +120,13 @@
     
     self.ttHideNavigationBar = NO;
     self.navigationController.navigationBar.hidden = NO;
+}
+
+- (NSMutableDictionary *)tracerDict {
+    if (!_tracerDict) {
+        _tracerDict = [NSMutableDictionary dictionary];
+    }
+    return _tracerDict;
 }
 
 -(void)setTitle:(NSString *)title
