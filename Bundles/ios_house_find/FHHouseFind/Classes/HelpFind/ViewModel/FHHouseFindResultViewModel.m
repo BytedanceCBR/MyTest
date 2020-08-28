@@ -377,15 +377,29 @@ static const NSUInteger kFHHomeHeaderViewSectionHeight = 35;
             
             [self addEnterCategoryLog];
             
-            [self.topHeader setTitleStr:itemArray.count];
+            
+            
+            NSString *tipStr = @"未找到符合条件的房源";
             
             if (self.houseType == FHHouseTypeSecondHandHouse) {
-                [self.currentViewController setNaviBarTitle:[NSString stringWithFormat:@"为您找到%ld套二手房",itemArray.count]];
+                if(itemArray.count == 0){
+                    
+                }else{
+                    tipStr = [NSString stringWithFormat:@"为您找到%ld套二手房",itemArray.count];
+                }
+                [self.currentViewController setNaviBarTitle:tipStr];
             }else{
                 if (isRefresh) {
-                    [self.currentViewController setNaviBarTitle:[NSString stringWithFormat:@"为您找到%ld个楼盘",[houseModel.total integerValue]]];
+                    if([houseModel.total integerValue] == 0){
+                        tipStr = @"未找到符合条件的楼盘";
+                    }else{
+                        tipStr = [NSString stringWithFormat:@"为您找到%ld个楼盘",[houseModel.total integerValue]];
+                    }
+                    [self.currentViewController setNaviBarTitle:tipStr];
                 }
             }
+            [self.topHeader setTitleStr:tipStr];
+
             
             [self.tableView reloadData];
             self.bottomView.hidden = NO;
