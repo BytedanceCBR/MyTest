@@ -100,6 +100,7 @@
     _icon.contentMode = UIViewContentModeScaleAspectFill;
     _icon.borderWidth = 1;
     _icon.borderColor = [UIColor themeGray6];
+    _icon.hitTestEdgeInsets = UIEdgeInsetsMake(-10, -20, -10, -10);
     [self.contentView addSubview:_icon];
     
     _icon.userInteractionEnabled = YES;
@@ -107,6 +108,7 @@
     [_icon addGestureRecognizer:tap];
     
     self.userName = [self LabelWithFont:[UIFont themeFontRegular:12] textColor:[UIColor themeGray1]];
+    _userName.hitTestEdgeInsets = UIEdgeInsetsMake(-5, 0, -5, 0);
     [self.contentView addSubview:_userName];
     
     _userName.userInteractionEnabled = YES;
