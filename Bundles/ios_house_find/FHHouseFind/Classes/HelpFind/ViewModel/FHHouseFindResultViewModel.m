@@ -555,8 +555,6 @@ static const NSUInteger kFHHomeHeaderViewSectionHeight = 35;
        FHHouseListBaseItemCell *cell = [tableView dequeueReusableCellWithIdentifier:kBaseCellId];
         if (indexPath.row < self.houseList.count) {
             FHHouseListBaseItemModel *cellModel = self.houseList[indexPath.row];
-
-    //        [cell refreshTopMargin: 20];
             [cell refreshWithData:cellModel];
         }
         return cell;
@@ -569,6 +567,7 @@ static const NSUInteger kFHHomeHeaderViewSectionHeight = 35;
              FHHouseBaseNewHouseCell *cell = [tableView dequeueReusableCellWithIdentifier:kFindNewHouseCellId];
              if (indexPath.row < _houseList.count) {
                  [cell refreshTopMargin:([UIDevice btd_is896Screen]) ? 4 : 0];
+//                 [cell refreshTopMargin: 20];
                  [cell updateHouseListNewHouseCellModel:cellModel];
              }
              return cell;
@@ -626,7 +625,7 @@ static const NSUInteger kFHHomeHeaderViewSectionHeight = 35;
         if(self.houseType == FHHouseTypeNewHouse){
             FHSearchHouseItemModel *cellModel = self.houseList[indexPath.row];
            if ([cellModel isKindOfClass:[FHSearchHouseItemModel class]]) {
-                return 118;
+                return [FHHouseBaseNewHouseCell heightForData:cellModel];
             }else if([cellModel isKindOfClass:[FHSearchGuessYouWantContentModel class]]){
                 if (cellModel.cardType == 10) {
                     return [FHRecommendSecondhandHouseTitleCell heightForData:cellModel];
