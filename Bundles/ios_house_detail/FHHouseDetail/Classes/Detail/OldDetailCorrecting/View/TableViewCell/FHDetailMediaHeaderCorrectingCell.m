@@ -372,7 +372,7 @@
             pictureDetailViewController.isShowSegmentView = NO;
         }
     }else if ([self.baseViewModel.detailData isKindOfClass:[FHDetailNeighborhoodModel class]]) {
-        FHDetailNeighborhoodModel *model = (FHDetailNeighborhoodModel *)self.baseViewModel.detailData;
+//        FHDetailNeighborhoodModel *model = (FHDetailNeighborhoodModel *)self.baseViewModel.detailData;
         pictureDetailViewController.isShowBottomBar = NO;
     } else if ([self.baseViewModel.detailData isKindOfClass:[FHDetailFloorPanDetailInfoModel class]]) {
         //户型详情

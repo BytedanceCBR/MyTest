@@ -57,36 +57,36 @@
     return self;
 }
 
-- (instancetype)initWithTitle:(NSString *)title subtitle:(NSString *)subtitle btnTitle:(NSString *)btnTitle leftBtnTitle:(NSString *)leftBtnTitle
-{
-    self = [self initWithFrame:[UIScreen mainScreen].bounds];
-    if (self) {
-        [self setupUI];
-        self.titleLabel.text = title;
-        self.subtitleLabel.text = subtitle;
-        [self.submitBtn setTitle:btnTitle forState:UIControlStateNormal];
-        [self.submitBtn setTitle:btnTitle forState:UIControlStateHighlighted];
-        if (leftBtnTitle.length > 0) {
-            
-            [self.leftBtn setTitle:leftBtnTitle forState:UIControlStateNormal];
-            [self.leftBtn setTitle:leftBtnTitle forState:UIControlStateHighlighted];
-            [self.leftBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-                make.left.mas_equalTo(20);
-                make.width.height.centerY.mas_equalTo(self.submitBtn);
-            }];
-            [self.submitBtn mas_remakeConstraints:^(MASConstraintMaker *make) {
-                make.height.mas_equalTo(40);
-                make.top.mas_equalTo(self.agencyView.mas_bottom).mas_offset(20);
-                make.left.mas_equalTo(self.leftBtn.mas_right).mas_offset(10);
-                make.right.mas_equalTo(-20);
-            }];
-            [self.submitBtn addTarget:self action:@selector(rightBtnDidClick:) forControlEvents:UIControlEventTouchUpInside];
-        } else {
-            [self.submitBtn addTarget:self action:@selector(submitBtnDidClick:) forControlEvents:UIControlEventTouchUpInside];
-        }
-    }
-    return self;
-}
+//- (instancetype)initWithTitle:(NSString *)title subtitle:(NSString *)subtitle btnTitle:(NSString *)btnTitle leftBtnTitle:(NSString *)leftBtnTitle
+//{
+//    self = [self initWithFrame:[UIScreen mainScreen].bounds];
+//    if (self) {
+//        [self setupUI];
+//        self.titleLabel.text = title;
+//        self.subtitleLabel.text = subtitle;
+//        [self.submitBtn setTitle:btnTitle forState:UIControlStateNormal];
+//        [self.submitBtn setTitle:btnTitle forState:UIControlStateHighlighted];
+//        if (leftBtnTitle.length > 0) {
+//
+//            [self.leftBtn setTitle:leftBtnTitle forState:UIControlStateNormal];
+//            [self.leftBtn setTitle:leftBtnTitle forState:UIControlStateHighlighted];
+//            [self.leftBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+//                make.left.mas_equalTo(20);
+//                make.width.height.centerY.mas_equalTo(self.submitBtn);
+//            }];
+//            [self.submitBtn mas_remakeConstraints:^(MASConstraintMaker *make) {
+//                make.height.mas_equalTo(40);
+//                make.top.mas_equalTo(self.agencyView.mas_bottom).mas_offset(20);
+//                make.left.mas_equalTo(self.leftBtn.mas_right).mas_offset(10);
+//                make.right.mas_equalTo(-20);
+//            }];
+//            [self.submitBtn addTarget:self action:@selector(rightBtnDidClick:) forControlEvents:UIControlEventTouchUpInside];
+//        } else {
+//            [self.submitBtn addTarget:self action:@selector(submitBtnDidClick:) forControlEvents:UIControlEventTouchUpInside];
+//        }
+//    }
+//    return self;
+//}
 
 - (void)updateAgencyTitle:(NSString *)agencyTitle
 {
@@ -378,7 +378,7 @@
 - (void)submitBtnDidClick:(UIButton *)btn
 {
     NSString *phoneNum = [self currentInputPhoneNumber];
-    if (phoneNum.length == 11 && [phoneNum hasPrefix:@"1"] && [self isPureInt:phoneNum]) {
+    if (phoneNum.length == 11 && [phoneNum hasPrefix:@"1"] && [FHUserInfoManager checkPureIntFormatted:phoneNum]) {
         if (self.confirmClickBlock) {
             self.confirmClickBlock(phoneNum,self);
         }
@@ -389,14 +389,14 @@
 
 - (void)leftBtnDidClick:(UIButton *)btn
 {
-    NSString *phoneNum = [self currentInputPhoneNumber];
-    if (phoneNum.length == 11 && [phoneNum hasPrefix:@"1"] && [self isPureInt:phoneNum]) {
-        if (self.leftClickBlock) {
-            self.leftClickBlock(phoneNum,self);
-        }
-    }else {
-        [self showErrorText];
-    }
+//    NSString *phoneNum = [self currentInputPhoneNumber];
+//    if (phoneNum.length == 11 && [phoneNum hasPrefix:@"1"] && [self isPureInt:phoneNum]) {
+//        if (self.leftClickBlock) {
+//            self.leftClickBlock(phoneNum,self);
+//        }
+//    }else {
+//        [self showErrorText];
+//    }
 }
 
 - (void)rightBtnDidClick:(UIButton *)btn
@@ -412,13 +412,6 @@
     if (self.agencyClickBlock) {
         self.agencyClickBlock(self);
     }
-}
-
-
-- (BOOL)isPureInt:(NSString*)string{
-    NSScanner* scan = [NSScanner scannerWithString:string];
-    int val;
-    return[scan scanInt:&val] && [scan isAtEnd];
 }
 
 - (void)showErrorText
