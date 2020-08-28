@@ -19,23 +19,24 @@
 
 @interface FHHouseSearchNewHouseCell()
 
-@property(nonatomic, strong) UIView *leftInfoView;
-@property(nonatomic, strong) UIView *maskVRImageView;
+@property (nonatomic, strong) UIView *leftInfoView;
+@property (nonatomic, strong) UIView *maskVRImageView;
 @property (nonatomic, weak) UIImageView *mainImaTag;
-@property(nonatomic, strong) UIImageView *mainImageView;
+@property (nonatomic, strong) UIImageView *mainImageView;
 @property (nonatomic, strong) LOTAnimationView *vrLoadingView;
 
-@property(nonatomic, strong) UIView *rightInfoView;
-@property(nonatomic, strong) UILabel *mainTitleLabel; //主title lable
-@property(nonatomic, strong) UILabel *subTitleLabel; // sub title lable
-@property(nonatomic, strong) YYLabel *tagLabel; // 标签 label
-@property(nonatomic, strong) UILabel *priceLabel; //总价
+@property (nonatomic, strong) UIView *rightInfoView;
+@property (nonatomic, strong) UILabel *mainTitleLabel; //主title lable
+@property (nonatomic, strong) UILabel *subTitleLabel; // sub title lable
+@property (nonatomic, strong) YYLabel *tagLabel; // 标签 label
+@property (nonatomic, strong) UILabel *priceLabel; //总价
 
-@property(nonatomic, strong) UIView *bottomRecommendView;//底部推荐理由
-@property(nonatomic, strong) UIImageView *bottomIconImageView; //活动icon
-@property(nonatomic, strong) UILabel *bottomRecommendLabel; //活动title
-@property(nonatomic, strong) UIView *containerView;//圆角背景
-@property(nonatomic, strong) FHCornerItemLabel *tagTitleLabel; //降 新 榜等标签
+@property (nonatomic, strong) UIView *bottomRecommendView;//底部推荐理由
+@property (nonatomic, strong) UIImageView *bottomIconImageView; //活动icon
+@property (nonatomic, strong) UILabel *bottomRecommendLabel; //活动title
+@property (nonatomic, strong) UIView *containerView;//圆角背景
+@property (nonatomic, strong) FHCornerItemLabel *tagTitleLabel; //降 新 榜等标签
+@property (nonatomic, strong) UILabel *propertyTagLabel;
 
 @end
 
@@ -125,6 +126,14 @@
         make.height.mas_equalTo(22);
     }];
     
+    [self.rightInfoView addSubview:self.propertyTagLabel];
+    [self.propertyTagLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.mas_equalTo(3);
+        make.right.mas_equalTo(0);
+        make.height.mas_equalTo(16);
+        make.width.mas_equalTo(0);
+    }];
+    
     [self.rightInfoView addSubview:self.priceLabel];
     [self.priceLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(0);
@@ -169,6 +178,26 @@
             [self.mainImaTag bd_setImageWithURL:[NSURL URLWithString:tagimageModel.url]];
         }
         self.mainTitleLabel.text = model.displayTitle;
+        if (model.propertyTag && [model.propertyTag.content length] > 0) {
+            self.propertyTagLabel.hidden = NO;
+            self.propertyTagLabel.text = model.propertyTag.content;
+            self.propertyTagLabel.layer.borderColor = [UIColor colorWithHexStr:model.propertyTag.borderColor].CGColor;
+            UILabel *label = [[UILabel alloc] init];
+            label.font = [UIFont themeFontRegular:10];
+            label.text = model.propertyTag.content;
+            CGFloat width = [label sizeThatFits:CGSizeZero].width + 6;
+            [self.propertyTagLabel mas_updateConstraints:^(MASConstraintMaker *make) {
+                make.width.mas_equalTo(width);
+            }];
+            [self.mainTitleLabel mas_updateConstraints:^(MASConstraintMaker *make) {
+                make.right.mas_equalTo(-width - 1);
+            }];
+        } else {
+            self.propertyTagLabel.hidden = NO;
+            [self.mainTitleLabel mas_updateConstraints:^(MASConstraintMaker *make) {
+                make.right.mas_equalTo(0);
+            }];
+        }
         self.priceLabel.text = model.displayPricePerSqm;
         self.subTitleLabel.text = model.displayDescription;
         NSAttributedString *attributeString =  [FHSingleImageInfoCellModel tagsStringWithTagList:model.tags];
@@ -377,6 +406,17 @@
         _containerView.layer.masksToBounds = YES;
     }
     return _containerView;
+}
+
+- (UILabel *)propertyTagLabel {
+    if (!_propertyTagLabel) {
+        _propertyTagLabel = [[UILabel alloc] init];
+        _propertyTagLabel.font = [UIFont themeFontRegular:10];
+        _propertyTagLabel.layer.cornerRadius = 2;
+        _propertyTagLabel.textAlignment = NSTextAlignmentCenter;
+        _propertyTagLabel.layer.borderWidth = 0.5;
+    }
+    return _propertyTagLabel;
 }
 
 @end

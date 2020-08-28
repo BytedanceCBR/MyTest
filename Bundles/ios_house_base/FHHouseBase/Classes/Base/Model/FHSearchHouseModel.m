@@ -732,6 +732,7 @@
                            @"reasonTags": @"reason_tags",
                            @"addrData": @"addr_data",
                            @"titleTags": @"title_tags",
+                           @"propertyTag": @"property_tag",
                            };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
         return dict[keyName]?:keyName;

@@ -131,6 +131,7 @@
         [wself.viewModel showInputSearch];
     };
     [self.view addSubview:_navbar];
+    _navbar.backgroundColor = [UIColor redColor];
     
 }
 
@@ -150,9 +151,7 @@
     _viewModel = [[FHBaseMainListViewModel alloc] initWithTableView:self.tableView houseType:_houseType routeParam:self.paramObj];
     
     [_viewModel addNotiWithNaviBar:self.navbar];
-    
     _topView = [[FHMainListTopView alloc] initWithBannerView:self.viewModel.topBannerView filterView:self.viewModel.filterPanel filterTagsView:self.viewModel.topTagsView];
-    
     UIEdgeInsets insets = self.tableView.contentInset;
     insets.top = CGRectGetHeight(_topView.bounds);
     self.tableView.contentInset = insets;
@@ -300,7 +299,7 @@
         bgColor = [UIColor themeGray8];
     }
     [self.navbar refreshAlpha:alpha];
-    self.navbar.backgroundColor = bgColor;
+    self.navbar.backgroundColor = [UIColor whiteColor];
     if (!self.isViewDidDisapper) {
         [[UIApplication sharedApplication]setStatusBarStyle:statusBarStyle];
     }

@@ -291,8 +291,8 @@
             if (tag.isGradient) {
                 CAGradientLayer *gradientLayer = [CAGradientLayer layer];
                 gradientLayer.colors = @[(__bridge id)[UIColor colorWithHexStr:tag.topBackgroundColor].CGColor, (__bridge id)[UIColor colorWithHexStr:tag.bottomBackgroundColor].CGColor];
-                gradientLayer.startPoint = CGPointMake(0, 0.5);
-                gradientLayer.endPoint = CGPointMake(1, 0.5);
+                gradientLayer.startPoint = CGPointMake(0, 0);
+                gradientLayer.endPoint = CGPointMake(1, 1);
                 gradientLayer.cornerRadius = 2;
                 gradientLayer.frame = view.bounds;
                 [view.layer insertSublayer:gradientLayer atIndex:0];
