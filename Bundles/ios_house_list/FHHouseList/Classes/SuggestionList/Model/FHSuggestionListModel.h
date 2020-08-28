@@ -52,19 +52,12 @@ NS_ASSUME_NONNULL_BEGIN
 @end
 
 
-@interface  FHSuggestionResponseDataLogPbModel  : JSONModel
-
-@property (nonatomic, copy , nullable) NSString *imprId;
-
-@end
-
-
 @interface  FHSuggestionResponseDataModel  : JSONModel
 
 @property (nonatomic, strong , nullable) FHSuggestionResponseDataInfoModel *info ;
 @property (nonatomic, copy , nullable) NSString *count;
 @property (nonatomic, copy , nullable) NSString *openUrl;
-@property (nonatomic, strong , nullable) FHSuggestionResponseDataLogPbModel *logPb ;
+@property (nonatomic, strong , nullable) NSDictionary *logPb ;
 @property (nonatomic, copy , nullable) NSString *text;
 @property (nonatomic, copy , nullable) NSString *name;
 @property (nonatomic, copy , nullable) NSString *oldName;

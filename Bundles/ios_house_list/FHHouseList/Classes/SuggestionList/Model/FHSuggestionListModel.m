@@ -53,26 +53,6 @@
 @end
 
 
-@implementation  FHSuggestionResponseDataLogPbModel
-
-+ (JSONKeyMapper*)keyMapper
-{
-    NSDictionary *dict = @{
-                           @"imprId": @"impr_id",
-                           };
-    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
-        return dict[keyName]?:keyName;
-    }];
-}
-
-+ (BOOL)propertyIsOptional:(NSString *)propertyName
-{
-    return YES;
-}
-
-@end
-
-
 @implementation  FHSuggestionResponseModel
 
 + (BOOL)propertyIsOptional:(NSString *)propertyName
