@@ -616,18 +616,20 @@
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    FHFeedUGCCellModel *cellModel = self.dataList[indexPath.row];
-    self.currentCellModel = cellModel;
-    self.currentCell = [tableView cellForRowAtIndexPath:indexPath];
-    
-    if(self.currentCell == self.currentVideoCell){
-        if(self.isScrolling){
-            return;
+    if(indexPath.row < self.dataList.count){
+        FHFeedUGCCellModel *cellModel = self.dataList[indexPath.row];
+        self.currentCellModel = cellModel;
+        self.currentCell = [tableView cellForRowAtIndexPath:indexPath];
+        
+        if(self.currentCell == self.currentVideoCell){
+            if(self.isScrolling){
+                return;
+            }
+            self.detailJumpManager.currentCell = self.currentCell;
+            [self.detailJumpManager jumpToDetail:cellModel showComment:NO enterType:@"feed_content_blank"];
+        }else{
+            [self didVideoClicked:cellModel cell:self.currentCell];
         }
-        self.detailJumpManager.currentCell = self.currentCell;
-        [self.detailJumpManager jumpToDetail:cellModel showComment:NO enterType:@"feed_content_blank"];
-    }else{
-        [self didVideoClicked:cellModel cell:self.currentCell];
     }
 }
 

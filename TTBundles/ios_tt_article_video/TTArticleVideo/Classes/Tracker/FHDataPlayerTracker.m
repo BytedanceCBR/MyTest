@@ -138,6 +138,10 @@
     [traceParams setValue:[self.playerStateStore.state ttv_position] forKey:@"position"];
     [traceParams setValue:dictVideo[@"duration"] forKey:@"duration"];
     [traceParams setValue:dictVideo[@"percent"] forKey:@"percent"];
+    NSTimeInterval stayTime = (self.playerStateStore.state.currentPlaybackTime * 1000);
+    if (stayTime > 0) {
+        [traceParams setValue:@(stayTime) forKey:@"stay_time"];
+    }
     
     if(self.extraDic.count > 0){
         [traceParams addEntriesFromDictionary:self.extraDic];
@@ -161,7 +165,7 @@
         [dict setValue:self.categoryName forKey:@"category_name"];
         [dict setValue:self.playerStateStore.state.playerModel.fromGid forKey:@"from_gid"];
         [dict setValue:[self.playerStateStore.state ttv_position] forKey:@"position"];
-        
+        [dict setValue:(self.playerStateStore.state.muted ? @"mute" : @"play") forKey:@"play_status"];
         if(self.extraDic.count > 0){
             [dict addEntriesFromDictionary:self.extraDic];
         }
@@ -193,9 +197,9 @@
                 [dict addEntriesFromDictionary:[self extraFromEvent:@"video_over"]];
             }
             _hasSendEndTrack = YES;
-            if (![TTTrackerWrapper isOnlyV3SendingEnable]){
-                [TTTrackerWrapper eventData:dict];
-            }
+//            if (![TTTrackerWrapper isOnlyV3SendingEnable]){
+//                [TTTrackerWrapper eventData:dict];
+//            }
             [self sendEndTrackV3];
         }
     }

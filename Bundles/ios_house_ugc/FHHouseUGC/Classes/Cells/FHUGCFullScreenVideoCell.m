@@ -31,6 +31,7 @@
 #import "TTVFeedItem+TTVConvertToArticle.h"
 #import "UIViewAdditions.h"
 #import "UIViewController+TTMovieUtil.h"
+#import "FHUserTracker.h"
 
 #define leftMargin 15
 #define rightMargin 15
@@ -387,6 +388,7 @@
         NSMutableDictionary *userInfo = @{}.mutableCopy;
         userInfo[@"muted"] = @(muted);
         [[NSNotificationCenter defaultCenter] postNotificationName:FHUGCFullScreenVideoCellMutedStateChangeNotification object:nil userInfo:userInfo];
+        [self addClickOptionsLog:muted];
     }
 }
 
@@ -820,6 +822,14 @@
     if(self.delegate && [self.delegate respondsToSelector:@selector(videoPlayFinished:cell:)]){
         [self.delegate videoPlayFinished:self.cellModel cell:self];
     }
+}
+
+- (void)addClickOptionsLog:(BOOL)muted {
+    NSMutableDictionary *dict = [self.cellModel.tracerDic mutableCopy];
+    NSString *playStatus = muted ? @"mute" : @"play";
+    dict[@"play_status"] = playStatus;
+    dict[@"click_position"] = @"silent_play_button";
+    TRACK_EVENT(@"click_options", dict);
 }
 
 @end
