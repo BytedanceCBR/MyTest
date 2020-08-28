@@ -17,6 +17,7 @@
 #import "UIImage+FIconFont.h"
 #import "FHCornerView.h"
 #import <YYText/YYLabel.h>
+#import "TTLabelTextHelper.h"
 #import "FHSingleImageInfoCellModel.h"
 
 @interface FHHouseSearchSecondHouseCell()
@@ -68,7 +69,8 @@
         if ([adModel.text length] > 0 || (adModel.icon && [adModel.icon.url length] > 0)) {
             height += 25;
         }
-        height += [self getMaintitleHeight:model] - 22;
+        CGFloat temp = [self getMaintitleHeight:model];
+        height += temp - 22;
         return height;
     }
     return 124;
@@ -84,7 +86,6 @@
 
 + (CGFloat)getMaintitleHeight:(FHSearchHouseItemModel *)model {
     CGFloat width = SCREEN_WIDTH - 152;
-    CGFloat tmp = width;
     if ([model.titleTags count] > 0) {
         for (NSInteger i = 0; i < [model.titleTags count]; i++) {
             FHSearchHouseItemTitleTagModel *tag = model.titleTags[i];
@@ -97,24 +98,8 @@
             }
             width -= tagWidth;
         }
-        NSTextAttachment *attch = [[NSTextAttachment alloc] init];
-        attch.bounds = CGRectMake(0, 0, width, 1);
-        attch.image = [[UIImage alloc] init];
-        NSAttributedString *string = [NSAttributedString attributedStringWithAttachment:attch];
-        NSMutableAttributedString *attributedString =  [[NSMutableAttributedString alloc]initWithString:model.displayTitle attributes:@{NSFontAttributeName:[UIFont themeFontSemibold:16]}];
-        [attributedString insertAttributedString:string atIndex:0];
-        CGRect size = [attributedString boundingRectWithSize:CGSizeMake(tmp, CGFLOAT_MAX) options:NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading context:nil];
-        return size.size.height;
-    } else {
-        UILabel *label = [[UILabel alloc] init];
-        label.font = [UIFont themeFontSemibold:16];
-        label.text = model.displayTitle;
-        label.lineBreakMode = NSLineBreakByWordWrapping;
-        label.numberOfLines = 0;
-        CGSize size = [label sizeThatFits:CGSizeMake(tmp, CGFLOAT_MAX)];
-        return size.height;
     }
-    return 22;
+    return [TTLabelTextHelper heightOfText:model.displayTitle fontSize:16 forWidth:width constraintToMaxNumberOfLines:2];
 }
 
 - (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
@@ -279,9 +264,6 @@
 
 - (void)updateMainTitleView:(FHSearchHouseItemModel *)model {
     CGFloat height = [FHHouseSearchSecondHouseCell getMaintitleHeight:model];
-    if (height == 0) {
-        
-    }
     [self.mainTitleView mas_updateConstraints:^(MASConstraintMaker *make) {
         make.height.mas_equalTo(height);
     }];
@@ -332,8 +314,7 @@
         mainTitleLabel.numberOfLines = 0;
         [self.mainTitleView insertSubview:mainTitleLabel atIndex:0];
         [mainTitleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.top.mas_equalTo(0);
-            make.left.right.mas_equalTo(0);
+            make.left.right.top.mas_equalTo(0);
         }];
 
     } else {
@@ -416,7 +397,7 @@
             self.bottomRecommendLabel.text = adModel.text;
         }
     } else {
-        [self.bottomRecommendLabel mas_updateConstraints:^(MASConstraintMaker *make) {
+        [self.bottomView mas_updateConstraints:^(MASConstraintMaker *make) {
             make.height.mas_equalTo(10);
         }];
     }
@@ -448,6 +429,9 @@
     [super prepareForReuse];
     for (UIView *view in self.mainTitleView.subviews) {
         [view removeFromSuperview];
+        for (UIView *view2 in view.subviews) {
+            [view2 removeFromSuperview];
+        }
     }
 //    for (UIView *view in self.tagContainerView.subviews) {
 //        [view removeFromSuperview];
