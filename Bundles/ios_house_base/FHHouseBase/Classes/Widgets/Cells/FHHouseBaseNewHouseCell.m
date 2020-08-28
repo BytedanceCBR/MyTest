@@ -333,7 +333,7 @@
 
 - (void)resumeVRIcon
 {
-    if (self.vrLoadingView && !self.vrLoadingView.hidden) {
+    if (_vrLoadingView && !self.vrLoadingView.hidden) {
         [self.vrLoadingView play];
     }
 }
