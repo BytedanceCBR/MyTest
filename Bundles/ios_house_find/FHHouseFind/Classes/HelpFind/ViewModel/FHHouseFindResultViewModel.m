@@ -27,11 +27,15 @@
 #import "MJRefresh.h"
 #import "FHRefreshCustomFooter.h"
 #import "FHRecommendSecondhandHouseTitleCell.h"
+#import "UIScrollView+Refresh.h"
+#import "FHHouseListRecommendTipCell.h"
+#import "UIDevice+BTDAdditions.h"
 
 #define kBaseCellId @"kBaseCellId"
 #define kFindNewHouseCellId @"kFindNewHouseCellId"
 #define kBaseErrorCellId @"kErrorCell"
 #define kFindHouseTitileCellId @"kFHRecommendSecondhandHouseTitleCell"
+#define kFindNoHouseTitileCellId @"kFHNoHouseTitleCell"
 
 static const NSUInteger kFHHomeHeaderViewSectionHeight = 35;
 
@@ -76,7 +80,8 @@ static const NSUInteger kFHHomeHeaderViewSectionHeight = 35;
         }];
         
         self.tableView.mj_footer = self.refreshFooter;
-
+        self.refreshFooter.hidden = YES;
+        
         _topHeader = [[FHHouseFindResultTopHeader alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, 191)];
         [_topHeader setBackgroundColor:[UIColor whiteColor]];
         
@@ -266,6 +271,7 @@ static const NSUInteger kFHHomeHeaderViewSectionHeight = 35;
     [self.tableView registerClass:[UITableViewCell class] forCellReuseIdentifier:kBaseErrorCellId];
     [self.tableView registerClass:[FHHouseBaseNewHouseCell class] forCellReuseIdentifier:kFindNewHouseCellId];
     [self.tableView registerClass:[FHRecommendSecondhandHouseTitleCell class] forCellReuseIdentifier:kFindHouseTitileCellId];
+    [self.tableView registerClass:[FHHouseListRecommendTipCell class] forCellReuseIdentifier:kFindNoHouseTitileCellId];
     
 }
 
@@ -307,7 +313,9 @@ static const NSUInteger kFHHomeHeaderViewSectionHeight = 35;
         
         self.requestTask = task;
     }else{
-        self.refreshFooter.hidden = NO;
+        if (!isRefresh) {
+            self.refreshFooter.hidden = NO;
+        }
         
         if (self.houseType == FHHouseTypeNewHouse) {
             __weak typeof(self) wself = self;
@@ -384,10 +392,20 @@ static const NSUInteger kFHHomeHeaderViewSectionHeight = 35;
             
             self.tableView.scrollEnabled = YES;
             
-            if (hasMore && self.houseType == FHHouseTypeNewHouse) {
-                [self.tableView.mj_footer endRefreshing];
+            if(self.houseType == FHHouseTypeNewHouse){
                 self.refreshFooter.hidden = NO;
+                if (hasMore) {
+                    [self.tableView.mj_footer endRefreshing];
+                    self.tableView.hasMore = YES;
+                }else{
+                    [self.refreshFooter setUpNoMoreDataText:@"没有更多信息了" offsetY:0];
+                    [self.tableView.mj_footer endRefreshingWithNoMoreData];
+                    self.tableView.hasMore = NO;
+                }
+            }else{
+                self.refreshFooter.hidden = YES;
             }
+
         }else
         {
             [self.topHeader setTitleStr:0];
@@ -550,15 +568,22 @@ static const NSUInteger kFHHomeHeaderViewSectionHeight = 35;
        if ([cellModel isKindOfClass:[FHSearchHouseItemModel class]]) {
              FHHouseBaseNewHouseCell *cell = [tableView dequeueReusableCellWithIdentifier:kFindNewHouseCellId];
              if (indexPath.row < _houseList.count) {
-   //              [cell refreshTopMargin:([TTDeviceHelper is896Screen3X] || [TTDeviceHelper is896Screen2X]) ? 4 : 0];
-         //        [cell refreshTopMargin: 20];
+                 [cell refreshTopMargin:([UIDevice btd_is896Screen]) ? 4 : 0];
                  [cell updateHouseListNewHouseCellModel:cellModel];
              }
              return cell;
        }else if([cellModel isKindOfClass:[FHSearchGuessYouWantContentModel class]]){
-         FHRecommendSecondhandHouseTitleCell *cell = [tableView dequeueReusableCellWithIdentifier:kFindHouseTitileCellId];
-         [cell refreshWithData:(FHSearchGuessYouWantContentModel *)cellModel];
-         return cell;
+           if (cellModel.cardType == 10) {
+               FHRecommendSecondhandHouseTitleCell *cell = [tableView dequeueReusableCellWithIdentifier:kFindHouseTitileCellId];
+               [cell refreshWithData:(FHSearchGuessYouWantContentModel *)cellModel];
+               return cell;
+           }
+       }else if([cellModel isKindOfClass:[FHSearchGuessYouWantTipsModel class]]){
+           if (cellModel.cardType == 9) {
+               FHHouseListRecommendTipCell *cell = [tableView dequeueReusableCellWithIdentifier:kFindNoHouseTitileCellId];
+               [cell refreshWithData:(FHSearchGuessYouWantContentModel *)cellModel];
+               return cell;
+           }
        }
 
     }
@@ -603,7 +628,13 @@ static const NSUInteger kFHHomeHeaderViewSectionHeight = 35;
            if ([cellModel isKindOfClass:[FHSearchHouseItemModel class]]) {
                 return 118;
             }else if([cellModel isKindOfClass:[FHSearchGuessYouWantContentModel class]]){
-              return [FHRecommendSecondhandHouseTitleCell heightForData:cellModel];
+                if (cellModel.cardType == 10) {
+                    return [FHRecommendSecondhandHouseTitleCell heightForData:cellModel];
+                }
+            }else if([cellModel isKindOfClass:[FHSearchGuessYouWantTipsModel class]]){
+                if (cellModel.cardType == 9) {
+                   return [FHHouseListRecommendTipCell heightForData:cellModel];
+                }
             }
             return 0;
         }
