@@ -16,6 +16,9 @@
 {
     BOOL _hasSendEndTrack;
 }
+
+@property(nonatomic, assign) NSTimeInterval startPlaybackTime;
+
 @end
 
 
@@ -26,6 +29,7 @@
 {
     self = [super init];
     if (self) {
+    
     }
     return self;
 }
@@ -138,16 +142,20 @@
     [traceParams setValue:[self.playerStateStore.state ttv_position] forKey:@"position"];
     [traceParams setValue:dictVideo[@"duration"] forKey:@"duration"];
     [traceParams setValue:dictVideo[@"percent"] forKey:@"percent"];
-    NSTimeInterval stayTime = (self.playerStateStore.state.currentPlaybackTime * 1000);
+    NSTimeInterval stayTime = ([[NSDate date] timeIntervalSince1970] - self.startPlaybackTime) * 1000;
+    NSTimeInterval maxTime = (self.playerStateStore.state.currentPlaybackTime > 0 ? self.playerStateStore.state.currentPlaybackTime : self.playerStateStore.state.duration) * 1000;
     if (stayTime > 0) {
-        [traceParams setValue:@(stayTime) forKey:@"stay_time"];
+        if(stayTime > maxTime){
+            stayTime = maxTime;
+        }
+        [traceParams setValue:@(ceil(stayTime)) forKey:@"stay_time"];
     }
     
     if(self.extraDic.count > 0){
         [traceParams addEntriesFromDictionary:self.extraDic];
     }
     
-    [BDTrackerProtocol eventV3:@"video_over" params:traceParams];
+    [FHEnvContext recordEvent:traceParams andEventKey:@"video_over"];
 }
 
 
@@ -169,11 +177,9 @@
         if(self.extraDic.count > 0){
             [dict addEntriesFromDictionary:self.extraDic];
         }
-
-        if (![TTTrackerWrapper isOnlyV3SendingEnable]){
-//            [[EnvContext shared].tracer writeEvent:@"video_play" params:dict];
-            [FHEnvContext recordEvent:dict andEventKey:@"video_play"];
-        }
+        
+        [FHEnvContext recordEvent:dict andEventKey:@"video_play"];
+        self.startPlaybackTime = [[NSDate date] timeIntervalSince1970];
     }
 }
 
@@ -293,6 +299,5 @@
     [dict setValue:@"high" forKey:@"version_type"];
     [TTTrackerWrapper eventData:dict];
 }
-
 
 @end

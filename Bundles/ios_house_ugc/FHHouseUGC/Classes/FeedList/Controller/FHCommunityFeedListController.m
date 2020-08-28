@@ -18,7 +18,6 @@
 #import "TTDeviceHelper.h"
 #import "TTRoute.h"
 #import "TTAccountManager.h"
-#import "TTAccount+Multicast.h"
 #import "FHEnvContext.h"
 #import "FHUserTracker.h"
 #import "UIScrollView+Refresh.h"
@@ -60,7 +59,6 @@
     [self initViewModel];
     
     [[SSImpressionManager shareInstance] addRegist:self];
-    [TTAccount addMulticastDelegate:self];
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationDidBecomeActive) name:UIApplicationDidBecomeActiveNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationDidEnterBackground) name:UIApplicationDidEnterBackgroundNotification object:nil];
@@ -81,7 +79,6 @@
 
 - (void)dealloc {
     [[SSImpressionManager shareInstance] removeRegist:self];
-    [TTAccount removeMulticastDelegate:self];
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
@@ -355,15 +352,6 @@
 
 - (void)applicationDidBecomeActive {
     self.enterTabTimestamp = [[NSDate date]timeIntervalSince1970];
-}
-
-#pragma mark - TTAccountMulticaastProtocol
-
-// 帐号切换
-- (void)onAccountStatusChanged:(TTAccountStatusChangedReasonType)reasonType platform:(NSString *)platformName {
-//    if(self.listType == FHCommunityFeedListTypeNearby || self.listType == FHCommunityFeedListTypeMyJoin) {
-//        self.needReloadData = YES;
-//    }
 }
 
 #pragma mark - SSImpressionProtocol
