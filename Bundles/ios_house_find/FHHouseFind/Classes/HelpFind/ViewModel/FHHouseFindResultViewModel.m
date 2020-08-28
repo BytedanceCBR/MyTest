@@ -367,7 +367,7 @@ static const NSUInteger kFHHomeHeaderViewSectionHeight = 35;
         }
 
 
-        if (_houseList.count > 0) {
+        if (_houseList) {
             if (houseModel.searchId) {
                 self.originSearchId = houseModel.searchId;
                 self.searchId = houseModel.searchId;

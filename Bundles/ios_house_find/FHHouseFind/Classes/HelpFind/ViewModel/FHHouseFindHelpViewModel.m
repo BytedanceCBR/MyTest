@@ -513,7 +513,7 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
         }
         
         
-        if ([houstTypeList containsObject:@(FHHouseTypeSecondHandHouse)]) {
+        if ([houstTypeList containsObject:@(FHHouseTypeNewHouse)]) {
              FHSearchFilterConfigOption *optionNew = [[FHSearchFilterConfigOption alloc] init];
              optionNew.text = @"新房";
              optionNew.houseType = FHHouseTypeNewHouse;
