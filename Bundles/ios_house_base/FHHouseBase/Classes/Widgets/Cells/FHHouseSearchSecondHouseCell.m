@@ -83,8 +83,8 @@
 }
 
 + (CGFloat)getMaintitleHeight:(FHSearchHouseItemModel *)model {
-    CGFloat height = 22;
-    CGFloat width = SCREEN_WIDTH - 45 - 107;
+    CGFloat width = SCREEN_WIDTH - 152;
+    CGFloat tmp = width;
     if ([model.titleTags count] > 0) {
         for (NSInteger i = 0; i < [model.titleTags count]; i++) {
             FHSearchHouseItemTitleTagModel *tag = model.titleTags[i];
@@ -97,12 +97,24 @@
             }
             width -= tagWidth;
         }
+        NSTextAttachment *attch = [[NSTextAttachment alloc] init];
+        attch.bounds = CGRectMake(0, 0, width, 1);
+        attch.image = [[UIImage alloc] init];
+        NSAttributedString *string = [NSAttributedString attributedStringWithAttachment:attch];
+        NSMutableAttributedString *attributedString =  [[NSMutableAttributedString alloc]initWithString:model.displayTitle attributes:@{NSFontAttributeName:[UIFont themeFontSemibold:16]}];
+        [attributedString insertAttributedString:string atIndex:0];
+        CGRect size = [attributedString boundingRectWithSize:CGSizeMake(tmp, CGFLOAT_MAX) options:NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading context:nil];
+        return size.size.height;
+    } else {
+        UILabel *label = [[UILabel alloc] init];
+        label.font = [UIFont themeFontSemibold:16];
+        label.text = model.displayTitle;
+        label.lineBreakMode = NSLineBreakByWordWrapping;
+        label.numberOfLines = 0;
+        CGSize size = [label sizeThatFits:CGSizeMake(tmp, CGFLOAT_MAX)];
+        return size.height;
     }
-    width -= [self getWidthFromText:model.displayTitle textFont:[UIFont themeFontSemibold:16]];
-    if (width < 0) {
-        height += 22;
-    }
-    return height;
+    return 22;
 }
 
 - (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
@@ -218,6 +230,13 @@
     
 }
 
+- (void)resumeVRIcon
+{
+    if (self.vrLoadingView && !self.vrLoadingView.hidden) {
+        [self.vrLoadingView play];
+    }
+}
+
 - (void)refreshWithData:(id)data {
     if ([data isKindOfClass:[FHSearchHouseItemModel class]]) {
         self.model = data;
@@ -260,6 +279,9 @@
 
 - (void)updateMainTitleView:(FHSearchHouseItemModel *)model {
     CGFloat height = [FHHouseSearchSecondHouseCell getMaintitleHeight:model];
+    if (height == 0) {
+        
+    }
     [self.mainTitleView mas_updateConstraints:^(MASConstraintMaker *make) {
         make.height.mas_equalTo(height);
     }];
@@ -303,9 +325,7 @@
         attch.bounds = CGRectMake(0, 0, left, 1);
         attch.image = [[UIImage alloc] init];
         NSAttributedString *string = [NSAttributedString attributedStringWithAttachment:attch];
-        NSMutableParagraphStyle *paraStyle = [[NSMutableParagraphStyle alloc] init];
-        paraStyle.lineSpacing = 2;
-        NSMutableAttributedString *attributedString =  [[NSMutableAttributedString alloc] initWithString:model.displayTitle attributes:@{NSFontAttributeName:[UIFont themeFontSemibold:16], NSParagraphStyleAttributeName:paraStyle}];
+        NSMutableAttributedString *attributedString =  [[NSMutableAttributedString alloc] initWithString:model.displayTitle attributes:@{NSFontAttributeName:[UIFont themeFontSemibold:16]}];
         [attributedString insertAttributedString:string atIndex:0];
         UILabel *mainTitleLabel = [[UILabel alloc] init];
         mainTitleLabel.attributedText = attributedString;
@@ -313,7 +333,7 @@
         [self.mainTitleView insertSubview:mainTitleLabel atIndex:0];
         [mainTitleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
             make.top.mas_equalTo(0);
-            make.left.right.bottom.mas_equalTo(0);
+            make.left.right.mas_equalTo(0);
         }];
 
     } else {
@@ -324,7 +344,7 @@
         mainTitleLabel.textAlignment = NSTextAlignmentLeft;
         [self.mainTitleView addSubview:mainTitleLabel];
         [mainTitleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.edges.mas_equalTo(self.mainTitleView);
+            make.left.right.top.mas_equalTo(0);
         }];
     }
     
@@ -529,7 +549,7 @@
 - (UIButton *)closeBtn {
     if (!_closeBtn) {
         _closeBtn = [[UIButton alloc] init];
-        //_closeBtn.hidden = YES;
+        _closeBtn.hidden = YES;
         UIImage *img = ICON_FONT_IMG(16, @"\U0000e673", [UIColor themeGray5]);
         [_closeBtn setImage:img forState:UIControlStateNormal];
         [_closeBtn addTarget:self action:@selector(dislike) forControlEvents:UIControlEventTouchUpInside];

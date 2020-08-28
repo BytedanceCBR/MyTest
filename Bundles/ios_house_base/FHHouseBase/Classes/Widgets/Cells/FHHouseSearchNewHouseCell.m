@@ -51,11 +51,6 @@
     return placeholderImage;
 }
 
-+(CGFloat)recommendReasonHeight
-{
-    return 22;
-}
-
 -(instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
 {
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
@@ -185,6 +180,13 @@
         }
         [self updateAdvantage:model];
         [self updateVRInfo:model];
+    }
+}
+
+- (void)resumeVRIcon
+{
+    if (self.vrLoadingView && !self.vrLoadingView.hidden) {
+        [self.vrLoadingView play];
     }
 }
 
@@ -375,18 +377,6 @@
         _containerView.layer.masksToBounds = YES;
     }
     return _containerView;
-}
-
-#pragma mark 字符串处理
--(NSAttributedString *)originPriceAttr:(NSString *)originPrice {
-    
-    if (originPrice.length < 1) {
-        return nil;
-    }
-    NSMutableAttributedString *attri = [[NSMutableAttributedString alloc] initWithString:originPrice];
-    [attri addAttribute:NSStrikethroughStyleAttributeName value:@(NSUnderlineStyleSingle) range:NSMakeRange(0, originPrice.length)];
-    [attri addAttribute:NSStrikethroughColorAttributeName value:[UIColor themeGray3] range:NSMakeRange(0, originPrice.length)];
-    return attri;
 }
 
 @end

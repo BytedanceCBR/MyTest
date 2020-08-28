@@ -12,6 +12,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FHHouseSearchNewHouseCell : FHListBaseCell
 
+- (void)resumeVRIcon;
+
 @end
 
 NS_ASSUME_NONNULL_END

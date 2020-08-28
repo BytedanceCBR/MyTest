@@ -1617,6 +1617,7 @@ extern NSString *const INSTANT_DATA_KEY;
         if ([cell isKindOfClass:[FHHouseBaseNewHouseCell class]]) {
             FHHouseBaseNewHouseCell *theCell = (FHHouseBaseNewHouseCell *)cell;
             [theCell updateHouseListNewHouseCellModel:data];
+            [theCell updateVrInfo:data];
         }
         
         if ([cell isKindOfClass:[FHFindHouseHelperCell class]]) {

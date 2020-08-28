@@ -11,6 +11,8 @@ NS_ASSUME_NONNULL_BEGIN
 //新二手房列表页、搜索页cell
 @interface FHHouseSearchSecondHouseCell : FHListBaseCell
 
+- (void)resumeVRIcon;
+
 @end
 
 NS_ASSUME_NONNULL_END

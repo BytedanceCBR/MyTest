@@ -331,6 +331,13 @@
     return  SCREEN_WIDTH - HOR_MARGIN * 2  - MAIN_IMG_WIDTH - INFO_TO_ICON_MARGIN - 7; //根据UI图 直接计算出来
 }
 
+- (void)resumeVRIcon
+{
+    if (self.vrLoadingView && !self.vrLoadingView.hidden) {
+        [self.vrLoadingView play];
+    }
+}
+
 -(void)initUI
 {
     [self.contentView configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
@@ -403,17 +410,17 @@
         layout.height = YGPointValue(20.0f);
     }];
     
-    [self.leftInfoView addSubview:self.vrLoadingView];
-    self.vrLoadingView.hidden = YES;
+//    [self.leftInfoView addSubview:self.vrLoadingView];
+//    self.vrLoadingView.hidden = YES;
     //    [self.vrLoadingView setBackgroundColor:[UIColor redColor]];
-    [self.vrLoadingView configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
-        layout.isEnabled = YES;
-        layout.position = YGPositionTypeAbsolute;
-        layout.top = YGPointValue(25.0f);
-        layout.left = YGPointValue(23.0f);
-        layout.width = YGPointValue(24);
-        layout.height = YGPointValue(24);
-    }];
+//    [self.vrLoadingView configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
+//        layout.isEnabled = YES;
+//        layout.position = YGPositionTypeAbsolute;
+//        layout.top = YGPointValue(25.0f);
+//        layout.left = YGPointValue(23.0f);
+//        layout.width = YGPointValue(24);
+//        layout.height = YGPointValue(24);
+//    }];
     
     [_imageTagLabelBgView configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
         layout.isEnabled = YES;
@@ -771,6 +778,24 @@
     [self updateTitlesLayout:attributeString.length > 0];
     
     [self.contentView.yoga applyLayoutPreservingOrigin:NO];
+}
+
+- (void)updateVrInfo:(id)data {
+    FHSearchHouseItemModel *model = (FHSearchHouseItemModel *)data;
+    if (model.vrInfo.hasVr) {
+        if (!_vrLoadingView) {
+            [self.leftInfoView addSubview:self.vrLoadingView];
+            [self.vrLoadingView mas_makeConstraints:^(MASConstraintMaker *make) {
+                make.bottom.mas_equalTo(self.mainImageView).offset(-6);
+                make.left.mas_equalTo(self.mainImageView).offset(6);
+                make.width.height.mas_equalTo(16);
+            }];
+        }
+        self.vrLoadingView.hidden = NO;
+        [self.vrLoadingView play];
+    } else if (_vrLoadingView) {
+        _vrLoadingView.hidden = YES;
+    }
 }
 
 
