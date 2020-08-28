@@ -54,6 +54,7 @@
 @property(nonatomic ,strong) NSTimer *mutedBtnCloseTimer;
 @property(nonatomic ,strong) UIButton *muteBtn;
 @property(nonatomic ,strong) UILabel *videoLeftTime;
+@property(nonatomic ,assign) BOOL isStartPlaying;
 
 @end
 
@@ -87,6 +88,7 @@
 - (void)initUIs {
     REGISTER_MESSAGE(TTVFeedUserOpDataSyncMessage, self);
     [self initNotification];
+    self.isStartPlaying = NO;
     [self initViews];
     [self initConstraints];
 }
@@ -765,6 +767,11 @@
 }
 
 - (void)play {
+    if(self.isStartPlaying){
+        return;
+    }
+    
+    self.isStartPlaying = YES;
     UIView *view = [self cell_movieView];
     if(view){
         if ([view isKindOfClass:[TTVPlayVideo class]]) {
@@ -779,6 +786,7 @@
     }else{
         [self.videoView playVideo];
     }
+    self.isStartPlaying = NO;
 }
 
 - (void)stop {
