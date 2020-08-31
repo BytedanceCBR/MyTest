@@ -404,7 +404,8 @@
         tracer[@"element_from"] = @"history";
         tracer[@"enter_from"] = @"search_detail";
         tracer[@"card_type"] = @"left_pic";
-        tracer[@"rank"] = [NSString stringWithFormat: @"%d",index];
+        tracer[@"log_pb"] = model.logPb;
+        tracer[@"rank"] = [NSString stringWithFormat: @"%ld",index];
     }
     infos[@"tracer"] = tracer;
     [self.listController jumpToCategoryListVCByUrl:jumpUrl queryText:model.text placeholder:model.text infoDict:infos];

@@ -107,6 +107,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *userOriginEnter;
 @property (nonatomic, copy , nullable) NSString *extinfo;
 @property (nonatomic, assign) BOOL setHistory;
+@property (nonatomic, strong , nullable) NSDictionary *logPb ;
 
 @end
 

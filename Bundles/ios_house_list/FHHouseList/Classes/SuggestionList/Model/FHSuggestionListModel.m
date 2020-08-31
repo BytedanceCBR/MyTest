@@ -124,6 +124,7 @@
                            @"userOriginEnter": @"user_origin_enter",
                            @"historyId": @"history_id",
                            @"setHistory":@"set_history",
+                           @"logPb": @"log_pb",
                            };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
         return dict[keyName]?:keyName;
