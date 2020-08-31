@@ -66,7 +66,7 @@ def fhPods
     
 #   pod 'ios_house_im' ,'0.2.15'
 #   pod 'ios_house_im' , :path => '../../../im/1'
-    pod 'ios_house_im' , :git => 'git@code.byted.org:fproject/ios_house_im.git' , :commit => 'adca3e4f5f44937f4c269e8d6ccc3a593d4060d9'
+    pod 'ios_house_im' , :git => 'git@code.byted.org:fproject/ios_house_im.git' , :commit => 'e913289d191663d4b756a4f41db4ace0c6d10b5f'
 
 end
 
@@ -481,7 +481,8 @@ def appPods
     #IMSDK升级，分支依赖方式
     pod 'lz4', '1.0.1'
     pod 'ByteRtcSDK', '2.6.13'
-    pod 'TTIMSDK', :git => 'git@code.byted.org:im/TIMSDK.git', :branch => 'yang_branchf', :subspecs => [
+#    pod 'TTIMSDK', :git => 'git@code.byted.org:im/TIMSDK.git', :branch => 'yang_branchf', :subspecs => [
+    pod 'TTIMSDK', :git => 'git@code.byted.org:im/TIMSDK.git', :commit => '8f6be111e5ab09566f33459fc3e5d7ccaad72c31', :subspecs => [
         'IMKit_Default',
         'IMKit_WebSocket',
         'IMKit_Core',
