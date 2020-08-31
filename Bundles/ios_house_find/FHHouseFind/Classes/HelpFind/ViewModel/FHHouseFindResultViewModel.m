@@ -611,8 +611,8 @@ static const NSUInteger kFHHomeHeaderViewSectionHeight = 35;
             
             FHHouseListBaseItemModel *cellModel = self.houseList[indexPath.row];
             if (self.houseType == FHHouseTypeNewHouse) {
-                if ([cellModel isKindOfClass:[FHNewHouseItemModel class]]) {
-                    houseId = ((FHNewHouseItemModel *)cellModel).id;
+                if ([cellModel isKindOfClass:[FHSearchHouseItemModel class]]) {
+                    houseId = ((FHSearchHouseItemModel *)cellModel).id;
                 }
             }else {
                houseId = cellModel.houseid;
@@ -621,8 +621,7 @@ static const NSUInteger kFHHomeHeaderViewSectionHeight = 35;
             if (![self.houseShowCache.allKeys containsObject:houseId] && houseId) {
                    [self addHouseShowLog:cellModel withRank:indexPath.row];
                    self.houseShowCache[houseId] = @"1";
-             }
-
+            }
         }
     }
 }
@@ -713,12 +712,27 @@ static const NSUInteger kFHHomeHeaderViewSectionHeight = 35;
     tracerDict[@"page_type"] = @"driving_find_house_list";
     tracerDict[@"element_type"] = @"be_null";
     tracerDict[@"search_id"] = self.searchId ? : @"be_null";
-    tracerDict[@"group_id"] = [cellModel groupId] ? : @"be_null";
-    tracerDict[@"impr_id"] = [cellModel imprId] ? : @"be_null";
     tracerDict[@"rank"] = @(rank);
     tracerDict[@"origin_from"] = originFrom;
     tracerDict[@"origin_search_id"] = self.originSearchId ? : @"be_null";
-    tracerDict[@"log_pb"] = [cellModel logPb] ? : @"be_null";
+
+    if (self.houseType == FHHouseTypeNewHouse) {
+        FHSearchHouseItemModel *houseItem = (FHSearchHouseItemModel *)cellModel;
+        if ([houseItem.logPb isKindOfClass:[NSDictionary class]]) {
+            tracerDict[@"group_id"] = houseItem.logPb[@"group_id"] ? : @"be_null";
+        }
+        
+        tracerDict[@"impr_id"] = [houseItem imprId] ? : @"be_null";
+        tracerDict[@"log_pb"] = [houseItem logPb] ? : @"be_null";
+    }else{
+        tracerDict[@"group_id"] = [cellModel groupId] ? : @"be_null";
+        tracerDict[@"impr_id"] = [cellModel imprId] ? : @"be_null";
+        tracerDict[@"log_pb"] = [cellModel logPb] ? : @"be_null";
+    }
+
+    if(cellModel.recommendType == 1){
+        tracerDict[@"element_type"] = @"search_related";
+    }
     
     [FHUserTracker writeEvent:@"house_show" params:tracerDict];
 }
@@ -770,7 +784,12 @@ static const NSUInteger kFHHomeHeaderViewSectionHeight = 35;
     NSMutableDictionary *traceParam = @{}.mutableCopy;
 
     traceParam[@"enter_from"] = @"driving_find_house_list";
-    traceParam[@"element_from"] = @"be_null";
+    if(cellModel.recommendType == 1){
+        traceParam[@"element_from"] = @"search_related";
+    }else{
+        traceParam[@"element_from"] = @"be_null";
+    }
+    
     traceParam[@"search_id"] = self.searchId;
     traceParam[@"card_type"] = @"left_pic";
     traceParam[@"log_pb"] = [cellModel logPb];
@@ -789,15 +808,17 @@ static const NSUInteger kFHHomeHeaderViewSectionHeight = 35;
     
     switch (self.houseType) {
         case FHHouseTypeNewHouse:
-            if ([cellModel isKindOfClass:[FHNewHouseItemModel class]]) {
-                urlStr = [NSString stringWithFormat:@"sslocal://new_house_detail?court_id=%@",((FHNewHouseItemModel *)cellModel).id];
+            if ([cellModel isKindOfClass:[FHSearchHouseItemModel class]]) {
+                urlStr = [NSString stringWithFormat:@"sslocal://new_house_detail?court_id=%@",((FHSearchHouseItemModel *)cellModel).id];
             }
             break;
         case FHHouseTypeSecondHandHouse:
 //            if (cellModel.secondModel) {
                 
 //                FHSearchHouseDataItemsModel *theModel = cellModel.secondModel;
-               urlStr = [NSString stringWithFormat:@"sslocal://old_house_detail?house_id=%@",cellModel.houseid];
+            if ([cellModel isKindOfClass:[FHHouseListBaseItemModel class]]) {
+                urlStr = [NSString stringWithFormat:@"sslocal://old_house_detail?house_id=%@",cellModel.houseid];
+            }
 //            }
             break;
         case FHHouseTypeRentHouse:
