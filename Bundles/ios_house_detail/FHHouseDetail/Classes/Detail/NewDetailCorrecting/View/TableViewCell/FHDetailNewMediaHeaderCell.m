@@ -149,7 +149,7 @@
         [weakSelf trackClickTabWithIndex:index element:@"big_photo_album"];
     };
     pictureDetailViewController.indexUpdatedBlock = ^(NSInteger lastIndex, NSInteger currentIndex) {
-        [weakSelf trackHeaderViewMediaShowWithIndex:index isLarge:YES];
+        [weakSelf trackHeaderViewMediaShowWithIndex:currentIndex isLarge:YES];
     };
 
     [pictureDetailViewController setMediaHeaderModel:self.currentData mediaImages:images];
