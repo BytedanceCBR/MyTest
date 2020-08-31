@@ -154,7 +154,7 @@
     if(self.extraDic.count > 0){
         [traceParams addEntriesFromDictionary:self.extraDic];
     }
-    
+    traceParams[@"event_tracking_id"] = @(104166);
     [FHEnvContext recordEvent:traceParams andEventKey:@"video_over"];
 }
 
@@ -177,6 +177,7 @@
         if(self.extraDic.count > 0){
             [dict addEntriesFromDictionary:self.extraDic];
         }
+        dict[@"event_tracking_id"] = @(104165);
         
         [FHEnvContext recordEvent:dict andEventKey:@"video_play"];
         self.startPlaybackTime = [[NSDate date] timeIntervalSince1970];
