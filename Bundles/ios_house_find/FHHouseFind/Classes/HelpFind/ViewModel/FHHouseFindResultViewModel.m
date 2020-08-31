@@ -379,7 +379,7 @@ static const NSUInteger kFHHomeHeaderViewSectionHeight = 35;
             
             
             
-            NSString *tipStr = @"未找到符合条件的房源";
+            NSString *tipStr = @"未能找到符合条件的房源";
             
             if (self.houseType == FHHouseTypeSecondHandHouse) {
                 if(itemArray.count != 0){
@@ -389,7 +389,7 @@ static const NSUInteger kFHHomeHeaderViewSectionHeight = 35;
             }else{
                 if (isRefresh) {
                     if([houseModel.total integerValue] == 0){
-                        tipStr = @"未找到符合条件的楼盘";
+                        tipStr = @"未能找到符合条件的楼盘";
                     }else{
                         tipStr = [NSString stringWithFormat:@"为您找到%ld个楼盘",[houseModel.total integerValue]];
                     }
@@ -587,6 +587,7 @@ static const NSUInteger kFHHomeHeaderViewSectionHeight = 35;
            if (cellModel.cardType == 10) {
                FHRecommendSecondhandHouseTitleCell *cell = [tableView dequeueReusableCellWithIdentifier:kFindHouseTitileCellId];
                [cell refreshWithData:(FHSearchGuessYouWantContentModel *)cellModel];
+               [cell refreshLeftOffset:25];
                return cell;
            }
        }else if([cellModel isKindOfClass:[FHSearchGuessYouWantTipsModel class]]){
@@ -596,7 +597,6 @@ static const NSUInteger kFHHomeHeaderViewSectionHeight = 35;
                return cell;
            }
        }
-
     }
      
     return [UITableViewCell new];

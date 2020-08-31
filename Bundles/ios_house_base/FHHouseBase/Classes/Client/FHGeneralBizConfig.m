@@ -25,6 +25,7 @@ NSString *const kFHPhoneNumberCacheKey = @"phonenumber";
 NSString *const kFHPLoginhoneNumberCacheKey = @"loginPhoneNumber";
 //帮我找房保存的电话号码（单独存放）
 NSString *const kFHFindHousePhoneNumberCacheKey = @"findHousePhoneNumber";
+NSString *const kFHFindHouseTypeNumberCacheKey = @"findHouseTypeNumber";
 static NSString *const kFHSubscribeHouseCacheKey = @"subscribeHouse";
 static NSString *const kFHDetailFeedbackCacheKey = @"detailFeedback";
 static NSString *const kFHEpidemicSituationCacheKey = @"EpidemicSituation";

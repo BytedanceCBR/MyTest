@@ -56,6 +56,8 @@
 extern NSString *const kFHPhoneNumberCacheKey;
 extern NSString *const kFHPLoginhoneNumberCacheKey;
 extern NSString *const kFHPLoginhoneNumberCacheKey;
+extern NSString *const kFHFindHouseTypeNumberCacheKey;
+
 
 @interface FHHouseFindHelpViewModel ()<UICollectionViewDataSource,UICollectionViewDelegate,UITableViewDataSource, UITableViewDelegate, FHHouseFindPriceCellDelegate, UITextFieldDelegate, UIGestureRecognizerDelegate>
 
@@ -204,7 +206,8 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
         return;
     }
     [self storePhoneNumber:phoneNumber];
-    
+    [self storeHouseTypeNumber:[NSString stringWithFormat:@"%ld",_houseTypeSelectedValue]];
+
     if (![self submitActionWithPhoneNumber:phoneNumber]) {
         [[ToastManager manager] showToast:@"请输入正确的手机号"];
         return;
@@ -1001,6 +1004,17 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
 - (void)storePhoneNumber:(NSString *)phoneNumber {
     YYCache *findHousePhoneNumberCache = [[FHEnvContext sharedInstance].generalBizConfig findHousePhoneNumberCache];
     [findHousePhoneNumberCache setObject:phoneNumber ?: @"" forKey:kFHFindHousePhoneNumberCacheKey];
+}
+
+
+- (void)storeHouseTypeNumber:(NSString *)phoneNumber {
+    YYCache *findHousePhoneNumberCache = [[FHEnvContext sharedInstance].generalBizConfig findHousePhoneNumberCache];
+    [findHousePhoneNumberCache setObject:phoneNumber ?: @"" forKey:kFHFindHouseTypeNumberCacheKey];
+}
+
+- (NSString *)readHouseTypeNum{
+    YYCache *findHousePhoneNumberCache = [[FHEnvContext sharedInstance].generalBizConfig findHousePhoneNumberCache];
+    return (NSString *)[findHousePhoneNumberCache objectForKey:kFHFindHouseTypeNumberCacheKey];
 }
 
 #pragma mark - price cell delegate

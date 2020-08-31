@@ -13,6 +13,10 @@
 #import <TTBaseLib/NSDictionary+TTAdditions.h>
 #import "FHHouseFindHelpViewController.h"
 #import "FHHouseType.h"
+#import "FHEnvContext.h"
+
+extern NSString *const kFHFindHouseTypeNumberCacheKey;
+
 @interface FHHouseFindMainViewController ()
 
 @property (nonatomic , strong) FHErrorView *errorMaskView;
@@ -99,7 +103,13 @@
         [infoDict addEntriesFromDictionary:paramObj.userInfo.allInfo];
     }
     infoDict[@"recommend_house"] = recommendDict;
-    infoDict[@"house_type"] = @(_houseType);
+    
+    if ([[self readHouseTypeNum] isKindOfClass:[NSString class]]) {
+        infoDict[@"house_type"] = @([[self readHouseTypeNum] integerValue]);
+    }else{
+        infoDict[@"house_type"] = @(_houseType);
+    }
+    
     paramObj.userInfo = [[TTRouteUserInfo alloc]initWithInfo:infoDict];
     _childVC = [[FHHouseFindResultViewController alloc]initWithRouteParamObj:paramObj];
     [self addChildViewController:_childVC];
@@ -107,6 +117,11 @@
     [self.view bringSubviewToFront:self.emptyView];
 }
 
+
+- (NSString *)readHouseTypeNum{
+    YYCache *findHousePhoneNumberCache = [[FHEnvContext sharedInstance].generalBizConfig findHousePhoneNumberCache];
+    return (NSString *)[findHousePhoneNumberCache objectForKey:kFHFindHouseTypeNumberCacheKey];
+}
 
 - (void)jumpHouseFindHelpVC:(NSNumber *)houseTypeNum
 {
