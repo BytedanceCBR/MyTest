@@ -405,7 +405,6 @@
         tracer[@"enter_from"] = @"search_detail";
         tracer[@"card_type"] = @"left_pic";
         tracer[@"log_pb"] = model.logPb;
-        tracer[@"event_tracking_id"] = @"104161";
         tracer[@"rank"] = [NSString stringWithFormat: @"%ld",index];
     }
     infos[@"tracer"] = tracer;
@@ -465,7 +464,6 @@
             tracer[@"enter_from"] = @"search_detail";
             tracer[@"log_pb"] = model.logPb;
             tracer[@"card_type"] = @"left_pic";
-            tracer[@"event_tracking_id"] = @"104161";
             tracer[@"rank"] = [NSString stringWithFormat: @"%ld",rank];
         }
         infos[@"tracer"] = tracer;
@@ -534,7 +532,6 @@
         tracer[@"enter_from"] = @"search_detail";
         tracer[@"log_pb"] = model.logPb;
         tracer[@"card_type"] = @"left_pic";
-        tracer[@"event_tracking_id"] = @"104161";
         tracer[@"rank"] = [NSString stringWithFormat: @"%ld",rank];
     }
     infos[@"tracer"] = tracer;
