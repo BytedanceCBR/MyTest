@@ -822,9 +822,13 @@
 #pragma mark - TTUIViewControllerTrackProtocol
 
 - (void)trackEndedByAppWillEnterBackground {
+    if(!self.isNewDiscovery){
+        [self addStayCategoryLog:self.stayTime];
+    }
 }
 
 - (void)trackStartedByAppWillEnterForground {
+    self.stayTime = [[NSDate date] timeIntervalSince1970];
 }
 
 @end
