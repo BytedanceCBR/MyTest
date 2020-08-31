@@ -56,7 +56,7 @@
     static UIImage *placeholderImage = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        placeholderImage = [UIImage imageNamed: @"default_image"];
+        placeholderImage = [UIImage imageNamed:@"house_cell_placeholder_square"];
     });
     return placeholderImage;
 }
@@ -108,6 +108,7 @@
         if ([reuseIdentifier isEqualToString:@"FHHouseSearchSecondHouseCell"]) {
             [self initUI];
         }
+        self.selectionStyle = UITableViewCellSelectionStyleNone;
     }
     return self;
 }
@@ -364,8 +365,6 @@
     
         UIView *bottomLine = [[UIView alloc] init];
         bottomLine.backgroundColor = [UIColor themeGray7];
-        bottomLine.layer.shadowColor = [UIColor themeGray7].CGColor;
-        bottomLine.layer.shadowOffset = CGSizeMake(0, 0.5);
         [self.bottomView addSubview:bottomLine];
         [bottomLine mas_makeConstraints:^(MASConstraintMaker *make) {
             make.right.mas_equalTo(0);
@@ -433,9 +432,6 @@
             [view2 removeFromSuperview];
         }
     }
-//    for (UIView *view in self.tagContainerView.subviews) {
-//        [view removeFromSuperview];
-//    }
     for (UIView *view in self.bottomView.subviews) {
         [view removeFromSuperview];
     }

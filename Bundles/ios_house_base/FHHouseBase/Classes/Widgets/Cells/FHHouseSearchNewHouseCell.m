@@ -47,7 +47,7 @@
     static UIImage *placeholderImage = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        placeholderImage = [UIImage imageNamed: @"house_cell_placeholder"];
+        placeholderImage = [UIImage imageNamed:@"house_cell_placeholder_square"];
     });
     return placeholderImage;
 }
@@ -241,8 +241,6 @@
     if (adModel && ([adModel.text length] > 0 || (adModel.icon && [adModel.icon.url length] > 0))) {
         UIView *bottomLine = [[UIView alloc] init];
         bottomLine.backgroundColor = [UIColor themeGray7];
-        bottomLine.layer.shadowColor = [UIColor themeGray7].CGColor;
-        bottomLine.layer.shadowOffset = CGSizeMake(0, 0.5);
         [self.bottomRecommendView addSubview:bottomLine];
         [bottomLine mas_makeConstraints:^(MASConstraintMaker *make) {
             make.right.mas_equalTo(0);
