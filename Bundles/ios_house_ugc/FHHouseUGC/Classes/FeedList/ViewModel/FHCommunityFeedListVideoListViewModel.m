@@ -422,7 +422,7 @@
         if(cellModel.cellSubType == FHUGCFeedListCellSubTypeUGCVideo){
             cellModel.cellSubType = FHUGCFeedListCellSubTypeFullVideo;
             cellModel.numberOfLines = 2;
-            [FHUGCCellHelper setRichContentWithModel:cellModel width:([UIScreen mainScreen].bounds.size.width - 40) numberOfLines:cellModel.numberOfLines];
+            [FHUGCCellHelper setRichContentWithModel:cellModel width:(screenWidth - 30) numberOfLines:cellModel.numberOfLines];
         }
         
         if(cellModel){

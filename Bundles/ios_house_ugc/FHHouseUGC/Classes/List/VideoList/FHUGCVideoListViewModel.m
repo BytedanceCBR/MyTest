@@ -205,7 +205,7 @@
         if(cellModel.cellSubType == FHUGCFeedListCellSubTypeUGCVideo){
             cellModel.cellSubType = FHUGCFeedListCellSubTypeFullVideo;
             cellModel.numberOfLines = 2;
-            [FHUGCCellHelper setRichContentWithModel:cellModel width:(screenWidth - 40) numberOfLines:cellModel.numberOfLines];
+            [FHUGCCellHelper setRichContentWithModel:cellModel width:(screenWidth - 30) numberOfLines:cellModel.numberOfLines font:[UIFont themeFontMedium:16]];
         }
         if(cellModel){
             if(isHead){

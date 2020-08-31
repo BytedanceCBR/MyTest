@@ -118,6 +118,7 @@
     self.contentLabel = [[TTUGCAsyncLabel alloc] initWithFrame:CGRectZero];
     _contentLabel.numberOfLines = maxLines;
     _contentLabel.layer.masksToBounds = YES;
+    _contentLabel.font = [UIFont themeFontMedium:16];
     _contentLabel.backgroundColor = [UIColor whiteColor];
     _contentLabel.delegate = self;
     [self.contentView addSubview:_contentLabel];

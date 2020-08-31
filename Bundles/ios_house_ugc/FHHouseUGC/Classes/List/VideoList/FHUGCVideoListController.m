@@ -34,7 +34,7 @@
         self.currentVideo.cellSubType = FHUGCFeedListCellSubTypeFullVideo;
         self.currentVideo.isVideoJumpDetail = YES;
         self.currentVideo.numberOfLines = 2;
-        [FHUGCCellHelper setRichContentWithModel:self.currentVideo width:(screenWidth - 40) numberOfLines:self.currentVideo.numberOfLines];
+        [FHUGCCellHelper setRichContentWithModel:self.currentVideo width:(screenWidth - 30) numberOfLines:self.currentVideo.numberOfLines font:[UIFont themeFontMedium:16]];
         
         FHFeedUGCCellModel *cellModel = paramObj.allParams[@"cellModel"];
         if(cellModel){
