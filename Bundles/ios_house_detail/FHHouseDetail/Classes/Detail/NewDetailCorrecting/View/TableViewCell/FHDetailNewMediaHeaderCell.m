@@ -148,6 +148,9 @@
     pictureDetailViewController.topImageClickTabBlock = ^(NSInteger index) {
         [weakSelf trackClickTabWithIndex:index element:@"big_photo_album"];
     };
+    pictureDetailViewController.indexUpdatedBlock = ^(NSInteger lastIndex, NSInteger currentIndex) {
+        [weakSelf trackHeaderViewMediaShowWithIndex:index isLarge:YES];
+    };
 
     [pictureDetailViewController setMediaHeaderModel:self.currentData mediaImages:images];
     FHDetailNewMediaHeaderModel *model = ((FHDetailNewMediaHeaderModel *)self.currentData);
