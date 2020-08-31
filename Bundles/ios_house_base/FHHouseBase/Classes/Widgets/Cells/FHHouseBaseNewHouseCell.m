@@ -926,6 +926,17 @@
     }
 }
 
+-(void)refreshLeftAndRightMargin:(CGFloat)leftAndRight{
+    if (self.contentView.yoga.paddingLeft.value != leftAndRight) {
+        [self.contentView configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
+            layout.paddingLeft = YGPointValue(leftAndRight);
+            layout.paddingRight = YGPointValue(leftAndRight);
+        }];
+        [self.contentView.yoga markDirty];
+    }
+}
+
+
 -(void)refreshBottomMargin:(CGFloat)bottom
 {
     if (self.contentView.yoga.paddingBottom.value != bottom) {

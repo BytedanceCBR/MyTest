@@ -579,7 +579,7 @@ static const NSUInteger kFHHomeHeaderViewSectionHeight = 35;
              FHHouseBaseNewHouseCell *cell = [tableView dequeueReusableCellWithIdentifier:kFindNewHouseCellId];
              if (indexPath.row < _houseList.count) {
                  [cell refreshTopMargin:([UIDevice btd_is896Screen]) ? 4 : 0];
-//                 [cell refreshTopMargin: 20];
+                 [cell refreshLeftAndRightMargin: 15];
                  [cell updateHouseListNewHouseCellModel:cellModel];
              }
              return cell;
@@ -587,7 +587,7 @@ static const NSUInteger kFHHomeHeaderViewSectionHeight = 35;
            if (cellModel.cardType == 10) {
                FHRecommendSecondhandHouseTitleCell *cell = [tableView dequeueReusableCellWithIdentifier:kFindHouseTitileCellId];
                [cell refreshWithData:(FHSearchGuessYouWantContentModel *)cellModel];
-               [cell refreshLeftOffset:25];
+               [cell refreshLeftOffset:20];
                return cell;
            }
        }else if([cellModel isKindOfClass:[FHSearchGuessYouWantTipsModel class]]){
