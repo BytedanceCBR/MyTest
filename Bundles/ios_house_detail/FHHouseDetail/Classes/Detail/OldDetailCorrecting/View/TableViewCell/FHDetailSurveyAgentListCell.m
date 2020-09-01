@@ -86,14 +86,9 @@
     }else {
         self.headerView.label.text = @"实勘经纪人";
     }
-    if ((model.houseType == FHHouseTypeNewHouse)) {
-        [self.headerView setSubTitleWithTitle:model.recommendedRealtorsSubTitle];
-    }else{
-        [self.headerView removeSubTitleWithTitle];
-    }
-    
+
     NSMutableDictionary *dict = @{}.mutableCopy;
-    dict[@"element_type"] = [self elementTypeStringByHouseType:model.houseType];
+    dict[@"element_type"] = [self elementTypeStringByHouseType];
     self.headerView.tracerDict = dict;
     self.headerView.showTipButton.hidden = NO;
     self.headerView.detailVC = (FHHouseDetailViewController *)model.belongsVC;
@@ -181,9 +176,6 @@
 - (void)cellClick:(UIControl *)control {
     NSInteger index = control.tag;
     FHDetailSurveyAgentListModel *model = (FHDetailSurveyAgentListModel *)self.currentData;
-    if (model.houseType == FHHouseTypeNewHouse) {
-        return;
-    }
     if (index >= 0 && model.recommendedRealtors.count > 0 && index < model.recommendedRealtors.count) {
         FHDetailContactModel *contact = model.recommendedRealtors[index];
         model.phoneCallViewModel.belongsVC = model.belongsVC;
@@ -234,22 +226,6 @@
         if (contact.bizTrace) {
             associatePhone.extraDict = @{@"biz_trace":contact.bizTrace};
         }
-        
-        //        FHHouseContactConfigModel *contactConfig = [[FHHouseContactConfigModel alloc]initWithDictionary:extraDict error:nil];
-//        contactConfig.houseType = self.baseViewModel.houseType;
-//        contactConfig.houseId = self.baseViewModel.houseId;
-//        contactConfig.phone = contact.phone;
-//        contactConfig.realtorId = contact.realtorId;
-//        contactConfig.searchId = model.searchId;
-//        contactConfig.imprId = model.imprId;
-//        contactConfig.realtorType = contact.realtorType;
-//        if (self.baseViewModel.houseType == FHHouseTypeNeighborhood) {
-//            contactConfig.cluePage = @(FHClueCallPageTypeCNeighborhoodMulrealtor);
-//        }else if (self.baseViewModel.houseType == FHHouseTypeNewHouse) {
-//            contactConfig.cluePage = @(FHClueCallPageTypeCNewHouseMulrealtor);
-//        }else {
-//            contactConfig.from = contact.realtorType == FHRealtorTypeNormal ? @"app_oldhouse_mulrealtor" : @"app_oldhouse_expert_mid";
-//        }
         
         [FHHousePhoneCallUtils callWithAssociatePhoneModel:associatePhone completion:^(BOOL success, NSError * _Nonnull error, FHDetailVirtualNumModel * _Nonnull virtualPhoneNumberModel) {
 
@@ -452,22 +428,9 @@
     [self tracerRealtorShowToIndex:showCount];
 }
 
-- (NSString *)elementTypeStringByHouseType:(FHHouseType)houseType
+- (NSString *)elementTypeStringByHouseType
 {
-    switch (houseType) {
-        case FHHouseTypeNeighborhood:
-            return @"neighborhood_detail_related";
-            break;
-        case FHHouseTypeSecondHandHouse:
-            return @"old_detail_related";
-            break;
-        case FHHouseTypeNewHouse:
-            return @"new_detail_related";
-            break;
-        default:
-            break;
-    }
-    return @"be_null";
+    return @"old_detail_related";
 }
 
 - (void)tracerRealtorShowToIndex:(NSInteger)index {
@@ -481,7 +444,7 @@
         if (i < model.recommendedRealtors.count) {
             FHDetailContactModel *contact = model.recommendedRealtors[i];
             NSMutableDictionary *tracerDic = self.baseViewModel.detailTracerDic.mutableCopy;
-            tracerDic[@"element_type"] = [self elementTypeStringByHouseType:self.baseViewModel.houseType];
+            tracerDic[@"element_type"] = [self elementTypeStringByHouseType];
             tracerDic[@"realtor_id"] = contact.realtorId ?: @"be_null";
             tracerDic[@"realtor_rank"] = @(i);
             tracerDic[@"realtor_position"] = @"actually_survey";
@@ -508,20 +471,6 @@
     [FHUserTracker writeEvent:@"realtor_click_more" params:tracerDic];
 }
 
-- (NSString *)elementTypeString:(FHHouseType)houseType {
-    switch (houseType) {
-        case FHHouseTypeSecondHandHouse:
-            return @"old_detail_related";
-            break;
-        case FHHouseTypeNeighborhood:
-            return @"neighborhood_detail_related";
-        case FHHouseTypeNewHouse:
-               return @"new_detail_related";
-        default:
-            break;
-    }
-    return @"be_null";
-}
 
 @end
 
