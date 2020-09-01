@@ -184,7 +184,7 @@
             curPage = 1;
             indexPath = [NSIndexPath indexPathForItem:1 inSection:0];
         }
-        if (indexPath) {
+        if (indexPath && !_closeInfinite) {
             //循环滚动
             [self.colletionView scrollToItemAtIndexPath:indexPath atScrollPosition:UICollectionViewScrollPositionLeft animated:NO];
         }
