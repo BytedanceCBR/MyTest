@@ -152,7 +152,7 @@
     [_contentView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.right.mas_equalTo(self.view);
         make.top.mas_equalTo(self.customNavBarView.mas_bottom);
-        make.bottom.mas_equalTo(-bottomHeight);
+        make.bottom.mas_equalTo(0);
     }];
 }
 
