@@ -34,7 +34,7 @@
 }
 
 - (void)initViews {
-    self.contentView.backgroundColor = [UIColor whiteColor];
+    //self.contentView.backgroundColor = [UIColor whiteColor];
   
     _containerView = [[UIView alloc] init];
     _containerView.backgroundColor = [UIColor themeWhite];
