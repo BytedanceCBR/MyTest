@@ -77,11 +77,7 @@
 - (void)showFullPhoneNum:(BOOL)isShow {
     if (self.phoneNum.length > 0) {
         if(isShow){
-            if ([FHUserInfoManager isLoginPhoneNumber:self.phoneNum]) {
-                self.phoneInput.text = @"";
-            } else {
-                self.phoneInput.text = self.phoneNum;
-            }
+            self.phoneInput.text = @"";
         }else{
             self.phoneInput.text = [FHUserInfoManager formattMaskPhoneNumber:self.phoneNum];
         }

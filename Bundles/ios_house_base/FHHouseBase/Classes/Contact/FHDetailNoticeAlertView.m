@@ -347,11 +347,7 @@
 {
     // 有手机号，显示原来的手机号
     if (self.originPhoneNumber.length > 0) {
-        if ([FHUserInfoManager isLoginPhoneNumber:self.originPhoneNumber]) {
-            self.phoneTextField.text = @"";
-        } else {
-            self.phoneTextField.text = self.originPhoneNumber;
-        }
+        self.phoneTextField.text = @"";
         self.originPhoneNumber = nil;
     }
     return YES;

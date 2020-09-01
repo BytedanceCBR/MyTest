@@ -225,11 +225,7 @@
 - (void)showFullPhoneNum:(BOOL)isShow {
     if (self.phoneNum.length > 0) {
         if(isShow){
-            if ([FHUserInfoManager isLoginPhoneNumber:self.phoneNum]) {
-                self.textField.text = @"";
-            } else {
-                self.textField.text = self.phoneNum;
-            }
+            self.textField.text = @"";
         }else{
             self.textField.text = [FHUserInfoManager formattMaskPhoneNumber:self.phoneNum];
         }
