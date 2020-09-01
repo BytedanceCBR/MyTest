@@ -167,7 +167,7 @@ extern NSString *const kFHFindHouseTypeNumberCacheKey;
     FHHouseType ht = _houseType;
     FHHouseFindSelectModel *model = [self selectModelWithType:ht];
     for (FHHouseFindSelectItemModel *itemModel in model.items) {
-        [itemModel.selectIndexes removeAllObjects];
+       [itemModel.selectIndexes removeAllObjects];
     }
     [self selectDefaultItems];
     [self.collectionView reloadData];
@@ -950,6 +950,13 @@ extern NSString *const kFHFindHouseTypeNumberCacheKey;
     }else {
         [model clearAddSelecteItem:selectItem withIndex:1];
     }
+    
+    FHSearchFilterConfigOption *optionHouse = self.houseTypeConfigItem.options.firstObject;
+    if ([optionHouse isKindOfClass:[FHSearchFilterConfigOption class]]) {
+        _houseTypeSelectedValue = optionHouse.houseType;
+        self.userHouseTypeSelected = NO;
+    }
+    
 }
 
 - (void)fillPriceItem:(FHSearchFilterConfigItem *)configItem selectItem:(FHHouseFindSelectItemModel *)selectItem priceItem:(id)priceItem rate:(NSNumber *)rate
