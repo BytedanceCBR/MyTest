@@ -340,5 +340,16 @@ typedef NS_ENUM (NSUInteger, FHHouseDetailImageListDataUsedSceneType) {
 @property (nonatomic, assign) NSInteger courtSubStatus;
 @end
 
+@protocol FHDetailSurveyContactModel <NSObject>
+@end
+
+@interface FHDetailSurveyContactModel : JSONModel
+
+@property(nonatomic,copy,nullable) NSString *title;
+@property(nonatomic,copy,nullable) NSString *toastText;
+@property(nonatomic,strong,nullable) NSArray<FHDetailContactModel> *items;
+@property(nonatomic,strong,nullable) FHClueAssociateInfoModel *associateInfo;
+@end
+
 
 NS_ASSUME_NONNULL_END
