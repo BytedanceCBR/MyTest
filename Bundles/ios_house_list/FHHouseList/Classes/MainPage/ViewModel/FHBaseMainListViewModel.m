@@ -101,6 +101,7 @@ extern NSString *const INSTANT_DATA_KEY;
 //预约以后的状态暂存
 @property (nonatomic, strong) NSMutableDictionary *subscribeCache;
 @property (nonatomic, assign) NSTimeInterval startMonitorTime;
+@property (nonatomic, assign) BOOL isAbtest;//106二手房、新房UI改版ab实验
 
 @end
 
@@ -121,6 +122,7 @@ extern NSString *const INSTANT_DATA_KEY;
     self = [super init];
     if (self) {
         
+        _isAbtest = NO;
         _houseList = [NSMutableArray new];
         _sugesstHouseList = [NSMutableArray new];
         _showHouseDict = [NSMutableDictionary new];
@@ -771,6 +773,9 @@ extern NSString *const INSTANT_DATA_KEY;
                         itemModel.topMargin = 10;
                     }
                     theItemModel = itemModel;
+                    if ((itemModel.houseType.integerValue == FHHouseTypeSecondHandHouse && itemModel.cellStyles == 7) || (itemModel.houseType.integerValue == FHHouseTypeNewHouse && itemModel.cellStyles == 8)) {
+                        _isAbtest = YES;
+                    }
                 }else if ([theItemModel isKindOfClass:[FHSearchRealHouseAgencyInfo class]]) {
                     FHSearchRealHouseAgencyInfo *agencyInfoModel = (FHSearchRealHouseAgencyInfo *)theItemModel;
                     if (agencyInfoModel.agencyTotal.integerValue != 0 && agencyInfoModel.houseTotal.integerValue != 0) {
@@ -921,7 +926,9 @@ extern NSString *const INSTANT_DATA_KEY;
                 [self.houseList addObject:cellModel];
             }
         }
-        
+        if (_isAbtest) {
+            self.tableView.backgroundColor = [UIColor themeGray7];
+        }
         [self.tableView reloadData];
         
         if (isFirstLoadCopy) {
@@ -1596,6 +1603,9 @@ extern NSString *const INSTANT_DATA_KEY;
         __weak typeof(self)wself = self;
         if (identifier.length > 0) {
              FHListBaseCell *cell = (FHListBaseCell *)[tableView dequeueReusableCellWithIdentifier:identifier];
+            if (_isAbtest) {
+                cell.backgroundColor = [UIColor themeGray7];
+            }
             if ([data isKindOfClass:[FHSearchHouseItemModel class]]) {
                 FHSearchHouseItemModel *item = (FHSearchHouseItemModel *)data;
                 if (item.houseType.integerValue == FHHouseTypeNewHouse && item.cellStyles == 6) {
