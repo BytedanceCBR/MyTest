@@ -17,7 +17,6 @@
 #import "UIImage+FIconFont.h"
 #import "FHCornerView.h"
 #import <YYText/YYLabel.h>
-#import "TTLabelTextHelper.h"
 #import "FHSingleImageInfoCellModel.h"
 
 @interface FHHouseSearchSecondHouseCell()
@@ -64,13 +63,12 @@
 + (CGFloat)heightForData:(id)data {
     if ([data isKindOfClass:[FHSearchHouseItemModel class]]) {
         FHSearchHouseItemModel *model = (FHSearchHouseItemModel *)data;
-        CGFloat height = 124;
+        CGFloat height = 102;
         FHHouseListHouseAdvantageTagModel *adModel = model.advantageDescription;
         if ([adModel.text length] > 0 || (adModel.icon && [adModel.icon.url length] > 0)) {
             height += 25;
         }
-        CGFloat temp = [self getMaintitleHeight:model];
-        height += temp - 22;
+        height += [self getMaintitleHeight:model];
         return height;
     }
     return 124;
@@ -86,6 +84,7 @@
 
 + (CGFloat)getMaintitleHeight:(FHSearchHouseItemModel *)model {
     CGFloat width = SCREEN_WIDTH - 152;
+    CGFloat indent = 0;
     if ([model.titleTags count] > 0) {
         for (NSInteger i = 0; i < [model.titleTags count]; i++) {
             FHSearchHouseItemTitleTagModel *tag = model.titleTags[i];
@@ -96,10 +95,36 @@
             } else {
                 tagWidth += 2;
             }
-            width -= tagWidth;
+            indent += tagWidth;
         }
     }
-    return [TTLabelTextHelper heightOfText:model.displayTitle fontSize:16 forWidth:width constraintToMaxNumberOfLines:2];
+    return [self sizeOfText:model.displayTitle fontSize:16 forWidth:width - indent forLineHeight:[UIFont themeFontSemibold:16].lineHeight constraintToMaxNumberOfLines:2 firstLineIndent:0 textAlignment:NSTextAlignmentLeft lineBreakMode:NSLineBreakByCharWrapping];
+}
+
++ (CGFloat)sizeOfText:(NSString *)text fontSize:(CGFloat)fontSize forWidth:(CGFloat)width forLineHeight:(CGFloat)lineHeight constraintToMaxNumberOfLines:(NSInteger)numberOfLines firstLineIndent:(CGFloat)indent textAlignment:(NSTextAlignment)alignment lineBreakMode:(NSLineBreakMode)lineBreakMode
+{
+    CGSize size = CGSizeZero;
+    if ([text length] > 0) {
+        UIFont *font = [UIFont themeFontSemibold:16];
+        CGFloat constraintHeight = numberOfLines ? numberOfLines * (lineHeight + 1) : 9999.f;
+        CGFloat lineHeightMultiple = lineHeight / font.lineHeight;
+        NSMutableParagraphStyle *style = [[NSMutableParagraphStyle alloc] init];
+        style.lineBreakMode = lineBreakMode;
+        style.alignment = alignment;
+        style.lineHeightMultiple = lineHeightMultiple;
+        style.minimumLineHeight = font.lineHeight * lineHeightMultiple;
+        style.maximumLineHeight = font.lineHeight * lineHeightMultiple;
+        style.firstLineHeadIndent = indent;
+        
+        size = [text boundingRectWithSize:CGSizeMake(width, constraintHeight)
+                                  options:NSStringDrawingUsesLineFragmentOrigin
+                               attributes:@{NSFontAttributeName:font,
+                                            NSParagraphStyleAttributeName:style,
+                                            }
+                                  context:nil].size;
+    }
+    size.height = ceil(size.height);
+    return size.height;
 }
 
 - (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
@@ -269,6 +294,7 @@
         make.height.mas_equalTo(height);
     }];
     CGFloat left = 0;
+    UILabel *mainTitleLabel = [[UILabel alloc] init];
     if ([model.titleTags count] > 0) {
         for (NSInteger i = 0; i < [model.titleTags count]; i++) {
             FHSearchHouseItemTitleTagModel *tag = model.titleTags[i];
@@ -304,56 +330,31 @@
             left += width;
         }
         left += 4;
-        NSTextAttachment *attch = [[NSTextAttachment alloc] init];
-        attch.bounds = CGRectMake(0, 0, left, 1);
-        attch.image = [[UIImage alloc] init];
-        NSAttributedString *string = [NSAttributedString attributedStringWithAttachment:attch];
-        NSMutableAttributedString *attributedString =  [[NSMutableAttributedString alloc] initWithString:model.displayTitle attributes:@{NSFontAttributeName:[UIFont themeFontSemibold:16]}];
-        [attributedString insertAttributedString:string atIndex:0];
-        UILabel *mainTitleLabel = [[UILabel alloc] init];
-        mainTitleLabel.attributedText = attributedString;
-        mainTitleLabel.numberOfLines = 0;
-        [self.mainTitleView insertSubview:mainTitleLabel atIndex:0];
-        [mainTitleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.left.right.top.mas_equalTo(0);
-        }];
-
-    } else {
-        UILabel *mainTitleLabel = [[UILabel alloc] init];
-        mainTitleLabel.text = model.displayTitle;
-        mainTitleLabel.font = [UIFont themeFontSemibold:16];
-        mainTitleLabel.numberOfLines = 0;
-        mainTitleLabel.textAlignment = NSTextAlignmentLeft;
-        [self.mainTitleView addSubview:mainTitleLabel];
-        [mainTitleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.left.right.top.mas_equalTo(0);
-        }];
     }
-    
+    CGFloat lineHeight = [UIFont themeFontSemibold:16].lineHeight;
+    UIFont *font = [UIFont themeFontSemibold:16];
+    CGFloat lineHeightMultiple = lineHeight / font.lineHeight;
+    NSMutableParagraphStyle *style = [[NSMutableParagraphStyle alloc] init];
+    style.lineBreakMode = NSLineBreakByTruncatingTail;
+    style.alignment = NSTextAlignmentLeft;
+    style.lineHeightMultiple = lineHeightMultiple;
+    style.minimumLineHeight = font.lineHeight * lineHeightMultiple;
+    style.maximumLineHeight = font.lineHeight * lineHeightMultiple;
+    style.firstLineHeadIndent = left;
+    NSMutableAttributedString *attrStr = [[NSMutableAttributedString alloc] initWithString:model.displayTitle];
+    [attrStr addAttributes:@{NSFontAttributeName:[UIFont themeFontSemibold:16], NSParagraphStyleAttributeName:style} range:[model.displayTitle  rangeOfString:model.displayTitle]];
+    mainTitleLabel.attributedText = attrStr;
+    mainTitleLabel.numberOfLines = 0;
+    [self.mainTitleView insertSubview:mainTitleLabel atIndex:0];
+    [mainTitleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.top.right.mas_equalTo(0);
+        make.height.mas_equalTo(height);
+    }];
 }
 
 - (void)updateTagContainerView:(FHSearchHouseItemModel *)model {
     NSAttributedString *attributeString =  [FHSingleImageInfoCellModel tagsStringWithTagList:model.tags];
     self.tagLabel.attributedText = attributeString;
-//    CGFloat left = 0;
-//    for (NSInteger i = 0; i < [model.tags count]; i++) {
-//        FHHouseTagsModel *tagModel = model.tags[i];
-//        UILabel *label = [[UILabel alloc] init];
-//        label.textAlignment = NSTextAlignmentCenter;
-//        label.font = [UIFont themeFontRegular:10];
-//        label.text = tagModel.content;
-//        label.layer.cornerRadius = 2;
-//        label.textColor = [UIColor colorWithHexStr:tagModel.textColor];
-//        label.layer.backgroundColor = [UIColor colorWithHexStr:tagModel.backgroundColor].CGColor;
-//        label.layer.borderColor = [UIColor colorWithHexStr:tagModel.borderColor].CGColor;
-//        CGFloat width = [FHHouseSearchSecondHouseCell getWidthFromText:tagModel.content textFont:[UIFont themeFontRegular:10]] + 8;
-//        if (left + width > self.bottomView.frame.size.width) {
-//            break;
-//        }
-//        [self.tagContainerView addSubview:label];
-//        label.frame = CGRectMake(left, 0, width, 18);
-//        left += width + 4;
-//    }
 }
 
 - (void)updateBottomView:(FHSearchHouseItemModel *)model {
@@ -362,7 +363,6 @@
         [self.bottomView mas_updateConstraints:^(MASConstraintMaker *make) {
             make.height.mas_equalTo(35);
         }];
-    
         UIView *bottomLine = [[UIView alloc] init];
         bottomLine.backgroundColor = [UIColor themeGray7];
         [self.bottomView addSubview:bottomLine];
