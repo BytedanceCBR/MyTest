@@ -372,6 +372,9 @@
 // 当前输入手机号(有*号的特殊处理)
 - (NSString *)currentInputPhoneNumber
 {
+    if (self.originPhoneNumber.length > 0) {
+        return self.originPhoneNumber;
+    }
     return self.phoneTextField.text;
 }
 

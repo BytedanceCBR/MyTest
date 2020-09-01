@@ -746,7 +746,8 @@ logPB:self.listLogPB extraInfo:self.extraInfo completion:^(FHDetailOldModel * _N
     }else{
         [self reloadData];
     }
-    
+    self.firstReloadInterval = CFAbsoluteTimeGetCurrent();
+    [self addPageLoadLog];
     [self.detailController updateLayout:model.isInstantData];
     
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
@@ -842,9 +843,6 @@ logPB:self.listLogPB extraInfo:self.extraInfo completion:^(FHDetailOldModel * _N
          self.items = [FHOldDetailModuleHelper moduleClassificationMethod:self.items];
         //
         [self reloadData];
-//        self.detailController
-        self.firstReloadInterval = CFAbsoluteTimeGetCurrent();
-        [self addPageLoadLog];
     }
 }
 

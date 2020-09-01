@@ -232,13 +232,13 @@
             }
         }else{
             self.textField.text = [FHUserInfoManager formattMaskPhoneNumber:self.phoneNum];
-            if (self.textField.text.length > 0) {
-                self.subscribeBtn.enabled = YES;
-                self.subscribeBtn.alpha = 1;
-            }else {
-                self.subscribeBtn.enabled = NO;
-                self.subscribeBtn.alpha = 0.6;
-            }
+        }
+        if (self.textField.text.length > 0) {
+            self.subscribeBtn.enabled = YES;
+            self.subscribeBtn.alpha = 1;
+        }else {
+            self.subscribeBtn.enabled = NO;
+            self.subscribeBtn.alpha = 0.6;
         }
     }
 }

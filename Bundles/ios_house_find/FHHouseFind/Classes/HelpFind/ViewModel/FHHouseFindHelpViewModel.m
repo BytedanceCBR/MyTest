@@ -191,7 +191,7 @@
     if ([phoneNumber containsString:@"*"]) {
         phoneNumber = self.contactCell.phoneNum;
     }
-    if (phoneNumber.length < 1 || ![phoneNumber hasPrefix:@"1"] || phoneNumber.length != 11 || ![self isPureInt:phoneNumber]) {
+    if (phoneNumber.length < 1 || ![phoneNumber hasPrefix:@"1"] || phoneNumber.length != 11 || ![FHUserInfoManager checkPureIntFormatted:phoneNumber]) {
         [[ToastManager manager] showToast:@"请输入正确的手机号"];
         return;
     }
@@ -1596,13 +1596,6 @@
 //{
 //    [self.contactCell enableSendVerifyCodeBtn:(enabled && self.verifyCodeRetryTime <= 0)];
 //}
-
-- (BOOL)isPureInt:(NSString *)str
-{
-    NSScanner *scanner = [[NSScanner alloc] initWithString:str];
-    int val = 0;
-    return [scanner scanInt:&val] && scanner.isAtEnd;
-}
 
 - (void)requestSendVerifyCode:(NSString *)phoneNumber completion:(void(^_Nullable)(NSNumber *retryTime, UIImage *captchaImage, NSError *error))completion
 {

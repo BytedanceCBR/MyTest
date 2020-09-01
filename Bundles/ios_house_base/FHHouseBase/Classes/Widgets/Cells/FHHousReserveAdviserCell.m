@@ -397,15 +397,15 @@
             }
         }else{
             self.textField.text = [FHUserInfoManager formattMaskPhoneNumber:self.phoneNum];
-            if (self.textField.text.length > 0) {
-                self.subscribeBtn.enabled = YES;
-                [self.subscribeBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-                self.subscribeBtn.backgroundColor = [UIColor colorWithHexStr:@"#c8a572"];
-            }else {
-                self.subscribeBtn.enabled = NO;
-                [self.subscribeBtn setTitleColor:[UIColor colorWithHexStr:@"#a57d59"] forState:UIControlStateNormal];
-                self.subscribeBtn.backgroundColor = [UIColor whiteColor];
-            }
+        }
+        if (self.textField.text.length > 0) {
+            self.subscribeBtn.enabled = YES;
+            [self.subscribeBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+            self.subscribeBtn.backgroundColor = [UIColor colorWithHexStr:@"#c8a572"];
+        }else {
+            self.subscribeBtn.enabled = NO;
+            [self.subscribeBtn setTitleColor:[UIColor colorWithHexStr:@"#a57d59"] forState:UIControlStateNormal];
+            self.subscribeBtn.backgroundColor = [UIColor whiteColor];
         }
     }
 }
