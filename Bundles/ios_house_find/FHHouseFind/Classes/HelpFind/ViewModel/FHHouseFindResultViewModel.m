@@ -367,7 +367,7 @@ static const NSUInteger kFHHomeHeaderViewSectionHeight = 35;
         }
 
 
-        if (_houseList) {
+        if (_houseList.count > 0) {
             if (houseModel.searchId) {
                 self.originSearchId = houseModel.searchId;
                 self.searchId = houseModel.searchId;
@@ -538,12 +538,14 @@ static const NSUInteger kFHHomeHeaderViewSectionHeight = 35;
                 [categoryDict setValue:@"old_list" forKey:@"page_type"];
                 [categoryDict setValue:@"driving_find_house" forKey:@"element_from"];
                 [FHUserTracker writeEvent:@"click_loadmore" params:categoryDict];
-            
-                NSURL *url1 = [NSURL URLWithString:@"sslocal://house_list?house_type=2"];
+                NSString *schemaUrl = [NSString stringWithFormat:@"sslocal://house_list?house_type=%ld",weakSelf.houseType];
+                NSURL *url1 = [NSURL URLWithString:schemaUrl];
                 [[TTRoute sharedRoute] openURLByPushViewController:url1 userInfo:nil];
         };
         
-        [noDataErrorView showEmptyWithTip:@"没有找到符合要求的房源" errorImageName:@"group-9"
+        NSString *tipString  = self.houseType == FHHouseTypeSecondHandHouse ? @"没有找到符合要求的二手房源" : @"没有找到符合要求的新房楼盘";
+        
+        [noDataErrorView showEmptyWithTip:tipString errorImageName:@"group-9"
                                 showRetry:YES];
         noDataErrorView.retryButton.userInteractionEnabled = YES;
         [noDataErrorView.retryButton setTitle:@"查看其它房源" forState:UIControlStateNormal];
