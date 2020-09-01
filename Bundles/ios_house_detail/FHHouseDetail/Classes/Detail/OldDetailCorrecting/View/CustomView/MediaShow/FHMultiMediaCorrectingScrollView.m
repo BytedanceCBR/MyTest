@@ -213,10 +213,12 @@
     
     [self layoutIfNeeded];
     
-    self.infoLabel.width = 44;
-    self.infoLabel.height = 22;
-    self.infoLabel.left = self.width - self.infoLabel.width - 15;
-    self.infoLabel.bottom = self.titleView.top + 5;
+    [self.infoLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.width.mas_equalTo(44);
+        make.height.mas_equalTo(22);
+        make.right.mas_equalTo(-15);
+        make.bottom.mas_equalTo(self.titleView.mas_top).offset(5);
+    }];
     
     self.totalPagesLabel.width = 54;
     self.totalPagesLabel.height = 22;
@@ -462,9 +464,9 @@
         width = 43;
     }
 
-    self.infoLabel.width = width;
-    self.infoLabel.height = 22;
-    self.infoLabel.left = self.width - self.infoLabel.width - 15;
+    [self.infoLabel mas_updateConstraints:^(MASConstraintMaker *make) {
+        make.width.mas_equalTo(width);
+    }];
 }
 
 - (void)updateVideoState {

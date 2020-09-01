@@ -154,9 +154,6 @@
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     [self.contactViewModel refreshMessageDot];
-    if (![FHEnvContext isNetworkConnected]) {
-        [self.contactViewModel hideFollowBtn];
-    }
 }
 
 - (void)setupUI

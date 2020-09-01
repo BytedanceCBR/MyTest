@@ -27,7 +27,6 @@ typedef enum : NSUInteger {
 - (void)displayMessageDot:(NSInteger)dotNumber;
 - (void)setFollowStatus:(NSInteger)followStatus;
 - (void)showRightItems:(BOOL)showItem;
-- (void)hideFollowBtn;
 - (void)removeBottomLine;
 - (void)showMessageNumber;
 

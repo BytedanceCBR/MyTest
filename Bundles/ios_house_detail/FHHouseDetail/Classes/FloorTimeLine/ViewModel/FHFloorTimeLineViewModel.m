@@ -75,7 +75,7 @@
     }
     if (_courtId) {
         [self.detailController startLoading];
-        NSString *stringQuery = [NSString stringWithFormat:@"court_id=%@&count=%@&page=%@",_courtId,@"10",[NSString stringWithFormat:@"%ld",_currentPage]];
+        NSString *stringQuery = [NSString stringWithFormat:@"court_id=%@&count=%@&page=%@",_courtId,@"10",[NSString stringWithFormat:@"%ld",(long)_currentPage]];
         
         __weak typeof(self) wSelf = self;
         [FHHouseDetailAPI requestFloorTimeLineSearch:_courtId query:stringQuery completion:^(FHDetailNewTimeLineResponseModel * _Nullable model, NSError * _Nullable error) {

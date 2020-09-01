@@ -25,10 +25,7 @@
 #import "FHEnvContext.h"
 #import "TTAccountManager.h"
 #import "FHMessageNotificationTipsManager.h"
-#import "FHMessageEditHelp.h"
 #import <ReactiveObjC/ReactiveObjC.h>
-#import "FHMessageEditView.h"
-#import "TestModel.h"
 
 #define kCellId @"FHMessageCell_id"
 
@@ -159,15 +156,10 @@
 }
 
 - (void)clearBadgeNumber {
-    [[self messageBridgeInstance] clearMessageTabBarBadgeNumber];
+    if ([[[self combiner] allItems] count] == 0) {
+        [[self messageBridgeInstance] clearMessageTabBarBadgeNumber];
+    }
 }
-
-//消息列表页刷新 埋点
-//- (void)trackRefresh {
-//    NSMutableDictionary *dict = [self.viewController.tracerModel logDict];
-//    dict[@"refresh_type"] = @"default";
-//    TRACK_EVENT(@"category_refresh", dict);
-//}
 
 #pragma mark - UITableViewDataSource
 
@@ -373,11 +365,12 @@
 
 - (void)deleteConversation:(IMConversation *)conv {
     NSString *conversationId = conv.identifier;
-    NSString *targetUserId = [conv getTargetUserId:[[TTAccount sharedAccount] userIdString]];
-    NSDictionary *params = @{@"a:c_del": (conv.lastMessageIdentifier ? conv.lastMessageIdentifier : @"del_empty_conver")};
+    IMConversation *latestConversation = [[IMManager shareInstance].chatService conversationWithIdentifier:conversationId];
+    NSString *targetUserId = [latestConversation getTargetUserId:[[TTAccount sharedAccount] userIdString]];
+    NSDictionary *params = @{@"a:c_del": (latestConversation.lastMessageIdentifier ? latestConversation.lastMessageIdentifier : @"del_empty_conver")};
     [conv setSyncExtEntry:params completion:^(id _Nullable response, NSError *_Nullable error) {
         if (error == nil) {
-            [conv setDraft:nil];
+            [latestConversation setDraft:nil];
             NSDictionary *params = @{
                     @"page_type": [self getPageTypeWithDataType],
                     //@"conversation_id": conversationId,
@@ -423,9 +416,8 @@
 
 - (NSArray<FHMessageSwipeButton *> *)tableView:(UITableView *)tableView rightSwipeButtonsAtIndexPath:(NSIndexPath *)indexPath
 {
-    FHMessageSwipeButton *deleteBtn = [FHMessageSwipeButton createSwipeButtonWithTitle:@"删除" font:16 textColor:[UIColor blackColor] backgroundColor:[UIColor redColor] image:[UIImage imageNamed:@"delete"] touchBlock:^{
+    FHMessageSwipeButton *deleteBtn = [FHMessageSwipeButton createSwipeButtonWithTitle:@"删除" font:16 textColor:[UIColor blackColor] backgroundColor:[UIColor redColor] touchBlock:^{
         
-        NSLog(@"点击了check按钮");
     }];
     deleteBtn.layer.cornerRadius = 10;
     deleteBtn.layer.masksToBounds = YES;

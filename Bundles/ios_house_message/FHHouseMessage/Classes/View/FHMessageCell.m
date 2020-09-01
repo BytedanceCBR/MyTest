@@ -18,7 +18,6 @@
 #import "TIMMessageStoreBridge.h"
 #import "FHShadowLabel.h"
 #import "FHMessageEditView.h"
-#import "FHMessageEditHelp.h"
 
 #define CURRENT_CALENDAR [NSCalendar currentCalendar]
 
@@ -250,21 +249,6 @@
 - (void)updateWithChat:(IMConversation*)conversation {
     IMConversation* conv = conversation;
     self.conv = conversation;
-//    if ([[FHMessageEditHelp shared].conversation.identifier isEqualToString:conversation.identifier]) {
-//        //更新 删除 layout
-//        [self.backView mas_updateConstraints:^(MASConstraintMaker *make) {
-//            make.left.mas_equalTo(15 + self.maxOffset);
-//        }];
-//        self.state = SliderMenuOpen;
-//        [FHMessageEditHelp shared].currentCell = self;
-//        self.currentOffset = self.maxOffset;
-//    } else {
-//        self.state = SliderMenuClose;
-//        self.currentOffset = 0;
-//        [self.backView mas_updateConstraints:^(MASConstraintMaker *make) {
-//            make.left.mas_equalTo(15);
-//        }];
-//    }
     if (conv.mute) {
         if (conv.unreadCount > 0) {
             self.unreadView.badgeNumber = TTBadgeNumberPoint;

@@ -280,7 +280,7 @@
         if (cellModel.isInRealtorEvaluationList) {
             height =  cellModel.contentHeight  +(cellModel.imageList.count == 0?15:75+ 22)  + 50 + 85;
         }else {
-            height =  cellModel.contentHeight  +(cellModel.imageList.count == 0?0:75+ 16)  + 50 + 20;
+            height =  cellModel.contentHeight + 10  +(cellModel.imageList.count == 0?0:[FHHouseDetailRGCMultiImageView viewHeightForCount:3 width:[UIScreen mainScreen].bounds.size.width - leftMargin - rightMargin -30 ]+ 16)  + 50 + 16;
         }
         return height;
     }

@@ -81,8 +81,6 @@ typedef enum : NSUInteger {
 //为IM提供房源卡片
 - (void)generateImParams:(NSString *)houseId houseTitle:(NSString *)houseTitle houseCover:(NSString *)houseCover houseType:(NSString *)houseType houseDes:(NSString *)houseDes housePrice:(NSString *)housePrice houseAvgPrice:(NSString *)houseAvgPrice;
 - (void)refreshMessageDot;
-- (void)hideFollowBtn;
-
 
 - (void)updateLoadFinish;
 

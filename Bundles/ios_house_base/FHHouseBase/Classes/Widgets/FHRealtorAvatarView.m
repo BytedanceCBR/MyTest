@@ -19,12 +19,12 @@
 - (instancetype)initWithFrame:(CGRect)frame {
     if (self = [super initWithFrame:frame]) {
         self.clipsToBounds = YES;
+        self.userInteractionEnabled = NO;
         
         UIImageView *avatarImageView = [[UIImageView alloc] init];
         avatarImageView.layer.masksToBounds = YES;
         avatarImageView.contentMode = UIViewContentModeScaleAspectFill;
         avatarImageView.image = [UIImage imageNamed:@"detail_default_avatar"];
-        avatarImageView.userInteractionEnabled = YES;
         [self addSubview:avatarImageView];
         self.avatarImageView = avatarImageView;
         [self.avatarImageView mas_makeConstraints:^(MASConstraintMaker *make) {

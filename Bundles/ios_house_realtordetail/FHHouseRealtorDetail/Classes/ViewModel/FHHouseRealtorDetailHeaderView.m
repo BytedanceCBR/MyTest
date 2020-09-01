@@ -31,7 +31,7 @@
 @property (weak, nonatomic) UIView *headerMaskView;
 @property (assign, nonatomic) CGFloat navHeight;
 @property (nonatomic, assign) NSTimeInterval loadTime; //页面加载时间
-@property (nonatomic, assign) BOOL isHeightScoreRealtor; //页面加载时间
+@property (nonatomic, assign) BOOL isHeightScoreRealtor; //是否为高分经纪人
 @property(nonatomic) CGFloat headerBackHeight;
 
 @end

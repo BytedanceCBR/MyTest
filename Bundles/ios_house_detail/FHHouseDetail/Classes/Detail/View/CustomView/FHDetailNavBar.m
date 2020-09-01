@@ -94,11 +94,6 @@
     }
 }
 
-- (void)hideFollowBtn
-{
-    self.collectBtn.hidden = YES;
-}
-
 - (void)removeBottomLine
 {
     _bottomLine.hidden = YES;
