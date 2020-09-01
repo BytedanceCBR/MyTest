@@ -349,7 +349,7 @@
         infos[@"tracer"] = tracer;
 
         // 参数都在jumpUrl中
-        [self.listController jumpToCategoryListVCByUrl:jumpUrl queryText:nil placeholder:nil infoDict:infos];
+        [self.listController jumpToCategoryListVCByUrl:jumpUrl queryText:nil placeholder:nil infoDict:infos IsGoDetail:NO];
     }
 }
 
@@ -408,7 +408,7 @@
         tracer[@"rank"] = [NSString stringWithFormat: @"%ld",index];
     }
     infos[@"tracer"] = tracer;
-    [self.listController jumpToCategoryListVCByUrl:jumpUrl queryText:model.text placeholder:model.text infoDict:infos];
+    [self.listController jumpToCategoryListVCByUrl:jumpUrl queryText:model.text placeholder:model.text infoDict:infos IsGoDetail:model.setHistory];
 }
 
 - (void)trackClickEventData:(FHGuessYouWantResponseDataDataModel *)model rank:(NSInteger)rank {
@@ -467,7 +467,7 @@
             tracer[@"rank"] = [NSString stringWithFormat: @"%ld",rank];
         }
         infos[@"tracer"] = tracer;
-        [self.listController jumpToCategoryListVCByUrl:jumpUrl queryText:queryText placeholder:queryText infoDict:infos];
+        [self.listController jumpToCategoryListVCByUrl:jumpUrl queryText:queryText placeholder:queryText infoDict:infos IsGoDetail:model.setHistory];
     }
 }
 
@@ -535,7 +535,7 @@
         tracer[@"rank"] = [NSString stringWithFormat: @"%ld",rank];
     }
     infos[@"tracer"] = tracer;
-    [self.listController jumpToCategoryListVCByUrl:jumpUrl queryText:model.text placeholder:model.text infoDict:infos];
+    [self.listController jumpToCategoryListVCByUrl:jumpUrl queryText:model.text placeholder:model.text infoDict:infos IsGoDetail:model.setHistory];
 }
 
 // 删除历史记录按钮点击
