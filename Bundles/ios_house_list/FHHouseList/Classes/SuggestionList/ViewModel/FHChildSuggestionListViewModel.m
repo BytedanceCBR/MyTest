@@ -401,7 +401,6 @@
     }
     if(model.setHistory){
         [self setHistoryWithURl:model.openUrl displayText:model.text extInfo:model.extinfo];
-        tracer[@"event_tracking_id"] = @"104161";
         tracer[@"element_from"] = @"history";
         tracer[@"enter_from"] = @"search_detail";
         tracer[@"card_type"] = @"left_pic";
@@ -461,7 +460,6 @@
         }
         if(model.setHistory){
             [self setHistoryWithURl:jumpUrl displayText:model.text extInfo:model.extinfo];
-            tracer[@"event_tracking_id"] = @"104161";
             tracer[@"element_from"] = @"hot";
             tracer[@"enter_from"] = @"search_detail";
             tracer[@"log_pb"] = model.logPb;
@@ -530,7 +528,6 @@
     }
     if(model.setHistory){
         [self setHistoryWithURl:model.openUrl displayText:model.text extInfo:nil];
-        tracer[@"event_tracking_id"] = @"104161";
         tracer[@"element_from"] = @"associate";
         tracer[@"enter_from"] = @"search_detail";
         tracer[@"log_pb"] = model.logPb;

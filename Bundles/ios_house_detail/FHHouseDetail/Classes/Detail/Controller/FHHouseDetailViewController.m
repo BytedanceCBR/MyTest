@@ -633,7 +633,6 @@
     detailTracerDic[@"origin_search_id"] = self.tracerDict[@"origin_search_id"] ? : @"be_null";
     detailTracerDic[@"log_pb"] = self.tracerDict[@"log_pb"] ? : @"be_null";
     detailTracerDic[@"from_gid"] = self.tracerDict[@"from_gid"];
-    detailTracerDic[@"event_tracking_id"] = self.tracerDict[@"event_tracking_id"] ? : @"be_null";
     // 以下3个参数都在:log_pb中
     // group_id
     // impr_id
