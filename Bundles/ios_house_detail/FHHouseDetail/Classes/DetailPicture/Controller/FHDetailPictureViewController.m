@@ -1280,7 +1280,7 @@ static BOOL kFHStaticPhotoBrowserAtTop = NO;
         };
         
         showVC.albumImageStayBlock = ^(NSInteger index, NSInteger stayTime) {
-            [self stayCallBack:stayTime];
+            [weakSelf stayCallBack:stayTime];
         };
         
         [self presentViewController:showVC animated:YES completion:nil];
