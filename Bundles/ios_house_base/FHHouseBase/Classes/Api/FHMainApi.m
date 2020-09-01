@@ -622,7 +622,7 @@
         NSDate *requestDoneDate = [NSDate date];
         __block NSError *backError = error;
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
-            id rmodel = [self  generateModel:obj class:clazz error:&backError];
+                id rmodel = [self  generateModel:obj class:clazz error:&backError];
             NSDate *serializeDate = [NSDate date];
             NSInteger code = 0;
             NSString *errMsg = nil;
