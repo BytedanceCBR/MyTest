@@ -800,7 +800,7 @@
         }
         //vr
         FHMultiMediaItemModel *itemModel = _model.medias[index];
-        if (itemModel.mediaType == FHMultiMediaTypeBaiduPanorama && itemModel.imageUrl.length) {
+        if (itemModel.mediaType == FHMultiMediaTypeBaiduPanorama && itemModel.imageUrl.length > 0) {
             //进入百度街景
             //shceme baidu_panorama_detail
             if (![TTReachability isNetworkConnected]) {
