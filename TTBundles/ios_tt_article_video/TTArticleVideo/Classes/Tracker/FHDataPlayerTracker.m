@@ -154,7 +154,15 @@
     if(self.extraDic.count > 0){
         [traceParams addEntriesFromDictionary:self.extraDic];
     }
-    traceParams[@"event_tracking_id"] = @(104166);
+    
+    if([[self.playerStateStore.state ttv_position] isEqualToString:@"detail"]){
+        if(traceParams[@"page_type"]){
+            traceParams[@"enter_from"] = traceParams[@"page_type"];
+        }
+        traceParams[@"page_type"] = @"video_detail";
+    }
+    
+    traceParams[@"event_tracking_id"] = @"104166";
     [FHEnvContext recordEvent:traceParams andEventKey:@"video_over"];
 }
 
@@ -177,7 +185,14 @@
         if(self.extraDic.count > 0){
             [dict addEntriesFromDictionary:self.extraDic];
         }
-        dict[@"event_tracking_id"] = @(104165);
+        dict[@"event_tracking_id"] = @"104165";
+        
+        if([[self.playerStateStore.state ttv_position] isEqualToString:@"detail"]){
+            if(dict[@"page_type"]){
+                dict[@"enter_from"] = dict[@"page_type"];
+            }
+            dict[@"page_type"] = @"video_detail";
+        }
         
         [FHEnvContext recordEvent:dict andEventKey:@"video_play"];
         self.startPlaybackTime = [[NSDate date] timeIntervalSince1970];
@@ -238,7 +253,7 @@
         }
             break;
         case TTVPlayerEventTypeFinishUIReplay:{
-            [self sendPlayTrack];
+//            [self sendPlayTrack];
         }
             break;
         case TTVPlayerEventTypeGoToDetail:{
@@ -246,7 +261,7 @@
         }
             break;
         case TTVPlayerEventTypeRetry:{
-            [self sendPlayTrack];
+//            [self sendPlayTrack];
         }
             break;
         case TTVPlayerEventTypeShowVideoFirstFrame:{

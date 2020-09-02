@@ -840,7 +840,7 @@
     NSString *playStatus = muted ? @"mute" : @"play";
     dict[@"play_status"] = playStatus;
     dict[@"click_position"] = @"silent_play_button";
-    dict[@"event_tracking_id"] = @(104167);
+    dict[@"event_tracking_id"] = @"104167";
     TRACK_EVENT(@"click_options", dict);
 }
 
