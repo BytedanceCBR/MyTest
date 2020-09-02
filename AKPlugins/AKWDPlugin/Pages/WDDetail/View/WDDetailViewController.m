@@ -1086,11 +1086,15 @@ static NSUInteger const kOldAnimationViewTag = 20161221;
 
 - (void)p_showCommentViewWithCondtions:(NSDictionary *)conditions switchToEmojiInput:(BOOL)switchToEmojiInput
 {
+    //用于解决push直接打开间盘后立马点击输入框焦点消失的问题
+    if ([self.commentWriteView.inputTextView isFirstResponder]) {
+        return;
+    }
     if (self.detailModel.answerEntity.banComment) {
         [TTIndicatorView showWithIndicatorStyle:TTIndicatorViewStyleImage indicatorText:@"该回答禁止评论" indicatorImage:[UIImage themedImageNamed:@"close_popup_textpage"] autoDismiss:YES dismissHandler:nil];
         return;
     }
-
+    
     NSString *fwID = self.detailModel.answerEntity.ansid;
 
     TTArticleReadQualityModel *qualityModel = [[TTArticleReadQualityModel alloc] init];
@@ -1118,6 +1122,7 @@ static NSUInteger const kOldAnimationViewTag = 20161221;
     }
 
     [self.commentWriteView showInView:self.view animated:YES];
+    
 }
 
 - (BOOL)banEmojiInput

@@ -25,11 +25,11 @@
 
 @interface FHDetailSurveyAgentListCell ()
 
-@property (nonatomic, strong)   FHDetailHeaderView       *headerView;
-@property (nonatomic, strong)   UIView       *containerView;
+@property (nonatomic, strong) FHDetailHeaderView *headerView;
+@property (nonatomic, strong) UIView *containerView;
 @property (nonatomic, weak) UIImageView *shadowImage;
-@property (nonatomic, strong)   FHDetailFoldViewButton       *foldButton;
-@property (nonatomic, strong)   NSMutableDictionary       *tracerDicCache;
+@property (nonatomic, strong) FHDetailFoldViewButton *foldButton;
+@property (nonatomic, strong) NSMutableDictionary *tracerDicCache;
 
 @end
 
@@ -125,14 +125,8 @@
             marginTop = marginTop +vHeight;
 
             itemView.name.text = obj.realtorName;
-            if (obj.realtorName.length >5 && obj.realtorCellShow == FHRealtorCellShowStyle3) {
-                itemView.name.text = [NSString stringWithFormat:@"%@...",[obj.realtorName substringToIndex:5]];
-            }
             itemView.agency.text = obj.agencyName;
             [itemView.avatorView updateAvatarWithModel:obj];
-            if (obj.realtorCellShow == FHRealtorCellShowStyle0) {
-                itemView.agency.font = [UIFont themeFontRegular:14];
-            }
             BOOL isLicenceIconHidden = ![self shouldShowContact:obj];
             [itemView configForLicenceIconWithHidden:isLicenceIconHidden];
             if(obj.realtorEvaluate.length > 0) {
@@ -343,7 +337,7 @@
             CGFloat showHeight = 0;
             for (int i = 0; i<3; i++) {
                 FHDetailContactModel *showModel = (FHDetailContactModel*) model.recommendedRealtors[i];
-                if (showModel.realtorScoreDisplay.length>0 && showModel.realtorScoreDescription.length>0&&showModel.realtorTags.count >0) {
+                if (showModel.realtorScoreDisplay.length > 0 && showModel.realtorScoreDescription.length > 0 && showModel.realtorTags.count > 0) {
                     showHeight = showHeight + 90;
                 }else {
                     showHeight = showHeight + 65;
@@ -357,7 +351,7 @@
            __block CGFloat showHeight = 0;
             [model.recommendedRealtors enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
                 FHDetailContactModel *showModel = obj;
-            if (showModel.realtorScoreDisplay.length>0 && showModel.realtorScoreDescription.length>0&&showModel.realtorTags.count >0) {
+            if (showModel.realtorScoreDisplay.length > 0 && showModel.realtorScoreDescription.length > 0 && showModel.realtorTags.count > 0) {
                      showHeight = showHeight + 90;
                  }else {
                      showHeight = showHeight + 65;
@@ -410,7 +404,7 @@
     CGFloat showHeight = 0;
     for (int m = 0; m <model.recommendedRealtors.count; m++) {
         FHDetailContactModel *showModel = model.recommendedRealtors[m];
-        if (showModel.realtorScoreDisplay.length>0 && showModel.realtorScoreDescription.length>0&&showModel.realtorTags.count >0) {
+        if (showModel.realtorScoreDisplay.length > 0 && showModel.realtorScoreDescription.length > 0 && showModel.realtorTags.count > 0) {
             showHeight = showHeight + 90;
         }else {
             showHeight = showHeight + 65;
@@ -428,8 +422,7 @@
     [self tracerRealtorShowToIndex:showCount];
 }
 
-- (NSString *)elementTypeStringByHouseType
-{
+- (NSString *)elementTypeStringByHouseType{
     return @"old_detail_related";
 }
 
