@@ -52,19 +52,12 @@ NS_ASSUME_NONNULL_BEGIN
 @end
 
 
-@interface  FHSuggestionResponseDataLogPbModel  : JSONModel
-
-@property (nonatomic, copy , nullable) NSString *imprId;
-
-@end
-
-
 @interface  FHSuggestionResponseDataModel  : JSONModel
 
 @property (nonatomic, strong , nullable) FHSuggestionResponseDataInfoModel *info ;
 @property (nonatomic, copy , nullable) NSString *count;
 @property (nonatomic, copy , nullable) NSString *openUrl;
-@property (nonatomic, strong , nullable) FHSuggestionResponseDataLogPbModel *logPb ;
+@property (nonatomic, strong , nullable) NSDictionary *logPb ;
 @property (nonatomic, copy , nullable) NSString *text;
 @property (nonatomic, copy , nullable) NSString *name;
 @property (nonatomic, copy , nullable) NSString *oldName;
@@ -84,6 +77,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign) NSInteger cardType;
 @property (nonatomic, copy , nullable) NSString *title;
 @property (nonatomic, copy , nullable) NSString *buttonText;
+@property (nonatomic, assign) BOOL setHistory;
 
 @end
 
@@ -112,6 +106,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *historyId;
 @property (nonatomic, copy , nullable) NSString *userOriginEnter;
 @property (nonatomic, copy , nullable) NSString *extinfo;
+@property (nonatomic, assign) BOOL setHistory;
+@property (nonatomic, strong , nullable) NSDictionary *logPb ;
 
 @end
 
@@ -168,6 +164,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign ) NSInteger rank;
 @property (nonatomic, copy , nullable) NSString *extinfo;
 @property (nonatomic, copy , nullable) NSString *id;
+@property (nonatomic, assign) BOOL setHistory;
 @end
 
 @interface FHGuessYouWantExtraInfoModel : JSONModel

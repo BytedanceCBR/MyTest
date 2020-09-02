@@ -135,16 +135,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *priceMin;
 @end
 
-@interface FHDetailOldDataHousePricingRankBuySuggestionModel : JSONModel
-
-@property (nonatomic, copy , nullable) NSString *content;
-@property (nonatomic, copy , nullable) NSString *type;//(1 建议,2普通,3不建议)
-@property (nonatomic, copy , nullable) NSString *score;
-@end
-
 @interface FHDetailOldDataHousePricingRankModel : JSONModel
 
-@property (nonatomic, strong , nullable) FHDetailOldDataHousePricingRankBuySuggestionModel *buySuggestion ;
 @property (nonatomic, copy , nullable) NSString *position;
 @property (nonatomic, copy , nullable) NSString *total;
 @property (nonatomic, copy , nullable) NSString *analyseDetail;
