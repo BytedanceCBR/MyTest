@@ -67,7 +67,7 @@
                 itemModelVR.imageUrl = vrData.vrImage.url;
             }
             itemModelVR.vrOpenUrl = vrData.openUrl;
-            itemModelVR.pictureTypeName = @"house_vr";
+            itemModelVR.pictureTypeName = @"VR";
             itemModelVR.groupType = @"VR";
             [itemArray addObject:itemModelVR];
             vrNumber += 1;

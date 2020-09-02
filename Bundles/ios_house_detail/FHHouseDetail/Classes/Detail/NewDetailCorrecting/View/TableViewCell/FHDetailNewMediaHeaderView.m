@@ -9,7 +9,7 @@
 #import "FHDetailHeaderTitleView.h"
 #import "FHVideoAndImageItemCorrectingView.h"
 #import "FHCommonDefines.h"
-
+#import "NSString+BTDAdditions.h"
 @interface FHDetailNewMediaHeaderView ()
 
 @property (nonatomic, strong) FHDetailHeaderTitleView *titleView;            //头图下面的标题栏
@@ -215,17 +215,13 @@
 
 - (void)setInfoLabelText:(NSString *)text {
     self.infoLabel.text = text;
-    [self.infoLabel sizeToFit];
-    CGSize itemSize = [self.infoLabel sizeThatFits:CGSizeMake(CGFLOAT_MAX, 20)];
-    CGFloat width = itemSize.width;
-    width += 14.0;
-    if (width < 43) {
-        width = 43;
-    }
+    CGFloat width = [text btd_widthWithFont:[UIFont themeFontRegular:12] height:20];
+    width += 14;
     [self.infoLabel mas_updateConstraints:^(MASConstraintMaker *make) {
         make.width.mas_equalTo(width);
-        make.right.mas_equalTo(self.scrollView.mas_right).offset(-15);
+        
     }];
+    [self setNeedsLayout];
     [self layoutIfNeeded];
 }
 
