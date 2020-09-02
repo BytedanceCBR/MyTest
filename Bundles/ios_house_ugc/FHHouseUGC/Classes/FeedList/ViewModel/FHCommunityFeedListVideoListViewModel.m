@@ -460,7 +460,7 @@
 }
 
 - (void)startVideoPlay {
-    if ([UIApplication sharedApplication].applicationState != UIApplicationStateActive || self.dataList.count <= 0) {
+    if ([UIApplication sharedApplication].applicationState != UIApplicationStateActive || self.dataList.count <= 0 || !self.isViewAppear) {
         return;
     }
     

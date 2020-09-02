@@ -40,6 +40,7 @@
 @property(nonatomic, assign) CGFloat oldY;
 //在滚动中
 @property(nonatomic, assign) BOOL isScrolling;
+@property(nonatomic, assign) BOOL isViewAppear;
 
 @end
 
@@ -49,6 +50,7 @@
     self = [super initWithTableView:tableView controller:viewController];
     if (self) {
         self.isFirst = YES;
+        self.isViewAppear = YES;
         self.dataList = [[NSMutableArray alloc] init];
         [self configTableView];
     }
@@ -68,6 +70,14 @@
     }];
     self.tableView.mj_footer = self.refreshFooter;
     self.refreshFooter.hidden = YES;
+}
+
+- (void)viewWillAppear {
+    self.isViewAppear = YES;
+}
+
+- (void)viewWillDisappear {
+    self.isViewAppear = NO;
 }
 
 - (void)requestData:(BOOL)isHead first:(BOOL)isFirst {
@@ -520,7 +530,7 @@
 }
 
 - (void)startVideoPlay {
-    if ([UIApplication sharedApplication].applicationState != UIApplicationStateActive) {
+    if ([UIApplication sharedApplication].applicationState != UIApplicationStateActive || !self.isViewAppear) {
         return;
     }
     
