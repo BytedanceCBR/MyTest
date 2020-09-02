@@ -246,11 +246,11 @@
 -(TTHttpTask *)requsetSecondHouse:(NSString *)query param:(NSDictionary *)param isHead:(BOOL)isHead
 {
     __weak typeof(self) wself = self;
-    TTHttpTask *task = [FHHouseSearcher houseSearchWithQuery:query param:param offset:isHead?0:self.currentHouseModel.offset class:[FHSearchHouseModel class] needCommonParams:YES callback:^(NSError * _Nullable error,FHSearchHouseModel * _Nullable houseModel) {
+    TTHttpTask *task = [FHHouseSearcher houseSearchWithQuery:query param:param offset:isHead?0:self.currentHouseModel.offset class:[FHSearchHouseModel class] needCommonParams:YES callback:^(NSError * _Nullable error,id<FHBaseModelProtocol> _Nullable houseModel) {
         if (!wself) {
             return ;
         }
-        [wself processQueryData:houseModel.data error:error isHead:isHead];
+        [wself processQueryData:((FHSearchHouseModel *)houseModel).data error:error isHead:isHead];
         
     }];
     return task;
@@ -260,7 +260,7 @@
 {
     __weak typeof(self) wself = self;
     
-    TTHttpTask *task = [FHMainApi searchRent:query params:param offset:isHead?0:self.currentRentModel.offset searchId:self.searchId sugParam:nil class:[FHHouseRentModel class] completion:^(FHHouseRentModel * _Nonnull model, NSError * _Nonnull error) {
+    TTHttpTask *task = [FHMainApi searchRent:query params:param offset:isHead?0:self.currentRentModel.offset searchId:self.searchId sugParam:nil class:[FHHouseRentModel class] completion:(FHMainApiCompletion)^(FHHouseRentModel * _Nonnull model, NSError * _Nonnull error) {
         
         if (!wself) {
             return ;

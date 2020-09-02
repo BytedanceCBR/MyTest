@@ -130,14 +130,18 @@ def appDevelopPods
     pod_binary 'TTAudio', '0.1.6'
     
     #----弹窗互斥---
-    pod 'TTDialogDirector', '0.1.4' , :subspecs => [
-    'Core',
-    'PhotoLibrary',
-    'Microphone',
-    'Camera',
-    'UserNotification'
+#    pod 'TTDialogDirector', '0.1.4' , :subspecs => [
+#    'Core',
+#    'PhotoLibrary',
+#    'Microphone',
+#    'Camera',
+#    'UserNotification'
 #    'Contacts',
     #    'Location'
+#    ]
+    pod 'TTDialogDirector' , :git => 'git@code.byted.org:TTIOS/TTDialogDirector.git' ,:commit => '8ed5beb' , :subspecs => [
+##    pod_source 'TTDialogDirector' , '0.1.4', :subspecs => [
+        'Core'
     ]
     #-----视频业务库-----#
     pod 'TTVPlayerPod', :path => '../AKPlugins/TTVPlayer'

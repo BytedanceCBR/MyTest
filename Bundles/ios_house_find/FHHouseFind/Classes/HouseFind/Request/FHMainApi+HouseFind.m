@@ -18,7 +18,7 @@
     NSMutableDictionary *paramDic = [NSMutableDictionary new];
     paramDic[@"house_type"] = houseType;
     
-    return [FHMainApi queryData:queryPath params:paramDic class:[FHHFHistoryModel class] completion:completion];
+    return [FHMainApi queryData:queryPath params:paramDic class:[FHHFHistoryModel class] completion:(FHMainApiCompletion)completion];
 }
 
 + (TTHttpTask *)clearHFHistoryByHouseType:(NSString *)houseType completion:(void(^_Nullable)(FHFHClearHistoryModel * model , NSError *error))completion
@@ -27,7 +27,7 @@
     NSMutableDictionary *paramDic = [NSMutableDictionary new];
     paramDic[@"house_type"] = houseType;
     
-    return [FHMainApi queryData:queryPath params:paramDic class:[FHFHClearHistoryModel class] completion:completion];
+    return [FHMainApi queryData:queryPath params:paramDic class:[FHFHClearHistoryModel class] completion:(FHMainApiCompletion)completion];
 }
 
 + (TTHttpTask *)requestHFHelpUsedByHouseType:(NSString *)houseType completion:(void(^_Nullable)(FHHouseFindRecommendModel * model , NSError *error))completion
@@ -36,7 +36,7 @@
     NSMutableDictionary *paramDic = [NSMutableDictionary new];
     paramDic[@"house_type"] = houseType;
     
-    return [FHMainApi queryData:queryPath params:paramDic class:[FHHouseFindRecommendModel class] completion:completion];
+    return [FHMainApi queryData:queryPath params:paramDic class:[FHHouseFindRecommendModel class] completion:(FHMainApiCompletion)completion];
 }
 
 + (TTHttpTask *)saveHFHelpFindByHouseType:(NSString *)houseType query:(NSString *)query phoneNum:(NSString *)phoneNum completion:(void(^_Nullable)(FHHouseFindRecommendModel * model , NSError *error))completion
@@ -52,7 +52,7 @@
     if (phoneNum.length > 0) {
         paramDic[@"tel_num"] = phoneNum;
     }
-    return [FHMainApi queryData:queryPath params:paramDic class:[FHHouseFindRecommendModel class] completion:completion];
+    return [FHMainApi queryData:queryPath params:paramDic class:[FHHouseFindRecommendModel class] completion:(FHMainApiCompletion)completion];
 }
 
 /**

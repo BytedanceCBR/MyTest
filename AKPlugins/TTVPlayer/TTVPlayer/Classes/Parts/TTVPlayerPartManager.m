@@ -406,9 +406,9 @@
 
 - (void)viewDidLayoutSubviews:(TTVPlayer *)playerVC {
     // 如果 各 part 需要布局
-    [self.allLoadedPartsDic.allValues enumerateObjectsUsingBlock:^(id<TTVPlayerContexts,TTVPlayerPartProtocol,TTVReduxStateObserver>  _Nonnull part, NSUInteger idx, BOOL * _Nonnull stop) {
+    [self.allLoadedPartsDic.allValues enumerateObjectsUsingBlock:^(NSObject<TTVPlayerPartProtocol>  * _Nonnull part, NSUInteger idx, BOOL * _Nonnull stop) {
         if ([part respondsToSelector:@selector(viewDidLayoutSubviews:)]) {
-            [part viewDidLayoutSubviews:playerVC];
+            [(id<TTVPlayerContexts>)part viewDidLayoutSubviews:playerVC];
         }
     }];
 

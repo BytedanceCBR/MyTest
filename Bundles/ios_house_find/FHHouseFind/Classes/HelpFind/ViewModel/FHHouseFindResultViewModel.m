@@ -271,7 +271,7 @@ static const NSUInteger kFHHomeHeaderViewSectionHeight = 35;
 //    }
     
     __weak typeof(self) wself = self;
-    TTHttpTask *task = [FHHouseListAPI searchErshouHouseList:query params:paramsRequest offset:offset searchId:searchId sugParam:nil class:[FHListResultHouseModel class] completion:^(FHListResultHouseModel *  _Nullable model, NSError * _Nullable error) {
+    TTHttpTask *task = [FHHouseListAPI searchErshouHouseList:query params:paramsRequest offset:offset searchId:searchId sugParam:nil class:[FHListResultHouseModel class] completion:(FHMainApiCompletion)^(FHListResultHouseModel *  _Nullable model, NSError * _Nullable error) {
     
             if (!wself) {
                 return ;
