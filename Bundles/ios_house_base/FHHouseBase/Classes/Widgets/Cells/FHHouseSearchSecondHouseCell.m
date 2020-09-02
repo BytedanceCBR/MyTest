@@ -428,9 +428,6 @@
     [super prepareForReuse];
     for (UIView *view in self.mainTitleView.subviews) {
         [view removeFromSuperview];
-        for (UIView *view2 in view.subviews) {
-            [view2 removeFromSuperview];
-        }
     }
     for (UIView *view in self.bottomView.subviews) {
         [view removeFromSuperview];

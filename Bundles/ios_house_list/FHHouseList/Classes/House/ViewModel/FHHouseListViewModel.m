@@ -499,8 +499,10 @@ extern NSString *const INSTANT_DATA_KEY;
         [self requestCommute:isRefresh query:query offset:offset searchId:searchId];
         return;
     }
-    _showPlaceHolder = YES;
-    [self.tableView reloadData];
+    if (offset == 0) {
+        _showPlaceHolder = YES;
+        [self.tableView reloadData];
+    }
     switch (self.houseType) {
         case FHHouseTypeNewHouse:
             
