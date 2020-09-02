@@ -482,7 +482,9 @@ static NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
         requestDictonary[CHANNEL_ID] = CHANNEL_ID_RECOMMEND_RENT;
     }
 
-    self.requestTask = nil;
+    if (self.requestTask) {
+        [self.requestTask cancel];
+    }
     
     WeakSelf;
     self.requestTask = [FHHomeRequestAPI requestRecommendForLoadMore:requestDictonary completion:^(FHHomeHouseModel * _Nonnull model, NSError * _Nonnull error) {

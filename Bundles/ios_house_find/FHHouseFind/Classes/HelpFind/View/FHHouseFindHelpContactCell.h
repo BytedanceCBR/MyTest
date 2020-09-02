@@ -13,8 +13,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)confirm;
 
-- (void)sendVerifyCode;
-
+//- (void)sendVerifyCode;
 @end
 
 @interface FHHouseFindHelpContactCell : UICollectionViewCell

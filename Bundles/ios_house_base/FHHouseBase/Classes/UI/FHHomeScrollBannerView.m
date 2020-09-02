@@ -10,7 +10,7 @@
 #import "UIColor+Theme.h"
 #import "FHUtils.h"
 #import <BDWebImage/UIImageView+BDWebImage.h>
-#import "FHWeakProxy.h"
+#import <ByteDanceKit/BTDWeakProxy.h>
 #import "NSDictionary+TTAdditions.h"
 #import "TTSettingsManager.h"
 
@@ -215,7 +215,7 @@
     if (self.totalCount <= 1) {
         return;
     }
-    NSTimer *timer = [NSTimer timerWithTimeInterval:self.timeDuration target:[FHWeakProxy proxyWithTarget:self] selector:@selector(timerRun:) userInfo:nil repeats:YES];
+    NSTimer *timer = [NSTimer timerWithTimeInterval:self.timeDuration target:[BTDWeakProxy proxyWithTarget:self] selector:@selector(timerRun:) userInfo:nil repeats:YES];
     [[NSRunLoop mainRunLoop] addTimer:timer forMode:NSRunLoopCommonModes];
     self.timer = timer;
 }
