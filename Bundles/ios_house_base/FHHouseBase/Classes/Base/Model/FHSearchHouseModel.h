@@ -238,6 +238,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong , nullable) FHSearchHouseDataItemsSkyEyeTagModel *skyEyeTag ;
 
 @property (nonatomic, assign) BOOL isRecommendCell;
+@property (nonatomic, assign) NSInteger recommendType;
 @property (nonatomic, strong, nullable) FHClueAssociateInfoModel *associateInfo;
 
 @property (nonatomic, strong, nullable) NSArray<FHImageModel> *tagImage;  //企业担保图标
@@ -406,6 +407,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, copy , nullable) NSString *searchId;
 @property (nonatomic, assign) NSInteger cellStyles;
+@property (nonatomic, assign) NSInteger recommendType;
 @property (nonatomic, strong, nullable) NSMutableAttributedString *tagString;
 @property (nonatomic, strong , nullable) NSArray<FHImageModel> *tagImage;
 @property (nonatomic, copy , nullable) NSString *displayPriceColor;

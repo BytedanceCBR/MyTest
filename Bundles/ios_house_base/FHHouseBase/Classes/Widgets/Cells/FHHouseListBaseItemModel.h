@@ -108,6 +108,10 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign)FHHouseModelType houseModelType;
 
 @property (nonatomic, strong, nullable) NSArray<FHImageModel> *tagImage;  //企业担保图标
+
+//帮我找房新房
+@property (nonatomic, assign) NSInteger recommendType;
+
 @end
 
 @interface  FHHouseListDataModel  : JSONModel

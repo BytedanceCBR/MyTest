@@ -30,6 +30,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 -(void)refreshTopMargin:(CGFloat)top;
 
+-(void)refreshLeftAndRightMargin:(CGFloat)leftAndRight;
+
 - (void)refreshWithData:(id)data;
 
 -(void)refreshIndexCorner:(BOOL)isFirst andLast:(BOOL)isLast;

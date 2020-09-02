@@ -10,6 +10,8 @@
 #import "FHErrorView.h"
 #import "UIViewController+Track.h"
 #import <FHHouseBase/FHBaseTableView.h>
+#import "FHHouseType.h"
+#import "UIImage+FIconFont.h"
 
 @interface FHHouseFindResultViewController () <TTRouteInitializeProtocol>
 
@@ -18,6 +20,7 @@
 @property (nonatomic , strong) UIView *containerView;
 @property (nonatomic , strong) UIButton *rightBtn;
 @property (nonatomic, assign)   BOOL     isViewDidDisapper;
+@property (nonatomic, assign)   FHHouseType  currentHouseType;
 
 @property (nonatomic , strong) FHErrorView *errorMaskView;
 @property (nonatomic , strong) TTRouteParamObj *paramObj;
@@ -33,6 +36,7 @@
     if (self) {
         _paramObj = paramObj;
         NSDictionary *recommendHouseParam = paramObj.allParams[@"recommend_house"];
+        _currentHouseType = paramObj.allParams[@"house_type"] ? [paramObj.allParams[@"house_type"] integerValue] :FHHouseTypeSecondHandHouse;
         
         if (recommendHouseParam && [recommendHouseParam isKindOfClass:[NSDictionary class]]) {
            self.recommendModel = [[FHHouseFindRecommendDataModel alloc] initWithDictionary:recommendHouseParam error:nil];
@@ -101,7 +105,7 @@
     self.tableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, self.view.frame.size.width, 0.001)]; //to do:设置header0.1，防止系统自动设置高度
   
     self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
-    self.tableView.bounces = NO;
+    self.tableView.bounces = YES;
 
     [_containerView addSubview:self.tableView];
     [self.tableView mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -127,8 +131,7 @@
     [self.customNavBarView setNaviBarTransparent:YES];
     
     _rightBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    [_rightBtn setImage:[UIImage imageNamed:@"house_find_help_right_btn_white"] forState:UIControlStateNormal];
-    [_rightBtn setImage:[UIImage imageNamed:@"house_find_help_right_btn_white"] forState:UIControlStateHighlighted];
+    [self changRightBtnImage:YES];
     [_rightBtn addTarget:self action:@selector(rightBtnClick) forControlEvents:UIControlEventTouchUpInside];
     [self.customNavBarView addSubview:_rightBtn];
     
@@ -141,8 +144,8 @@
 
 - (void)rightBtnClick
 {
-    if ([self.parentViewController respondsToSelector:@selector(jump2HouseFindHelpVC)]) {
-        [self.parentViewController performSelector:@selector(jump2HouseFindHelpVC)];
+    if ([self.parentViewController respondsToSelector:@selector(jumpHouseFindHelpVC:)]) {
+        [self.parentViewController performSelector:@selector(jumpHouseFindHelpVC:) withObject:@(_currentHouseType)];
     }
 }
 
@@ -156,26 +159,47 @@
     return self.viewModel.recommendModel;
 }
 
-- (void)refreshRecommendModel:(FHHouseFindRecommendDataModel *)recommendModel
+- (void)refreshRecommendModel:(FHHouseFindRecommendDataModel *)recommendModel andHouseType:(NSInteger)houseType
 {
+    self.viewModel.houseType = houseType;
     self.viewModel.recommendModel = recommendModel;
+    _currentHouseType = houseType;
 }
 
 - (void)setNavBar:(BOOL)error {
     if(error){
         self.customNavBarView.title.textColor = [UIColor themeGray1];
-        [self.customNavBarView.leftBtn setBackgroundImage:[UIImage imageNamed:@"icon-return"] forState:UIControlStateNormal];
-        [self.customNavBarView.leftBtn setBackgroundImage:[UIImage imageNamed:@"icon-return"] forState:UIControlStateHighlighted];
-        [_rightBtn setImage:[UIImage imageNamed:@"house_find_help_right_btn_black"] forState:UIControlStateNormal];
-        [_rightBtn setImage:[UIImage imageNamed:@"house_find_help_right_btn_black"] forState:UIControlStateHighlighted];
+        [self changLeftBtnImage:NO];
+        [self changRightBtnImage:NO];
+        
         [self.customNavBarView setNaviBarTransparent:NO];
     }else{
         self.customNavBarView.title.textColor = [UIColor whiteColor];
-        [self.customNavBarView.leftBtn setBackgroundImage:[UIImage imageNamed:@"icon-return-white"] forState:UIControlStateNormal];
-        [self.customNavBarView.leftBtn setBackgroundImage:[UIImage imageNamed:@"icon-return-white"] forState:UIControlStateHighlighted];
-        [_rightBtn setImage:[UIImage imageNamed:@"house_find_help_right_btn_white"] forState:UIControlStateNormal];
-        [_rightBtn setImage:[UIImage imageNamed:@"house_find_help_right_btn_white"] forState:UIControlStateHighlighted];
+        
+        [self changLeftBtnImage:YES];
+        [self changRightBtnImage:YES];
+        
         [self.customNavBarView setNaviBarTransparent:YES];
+    }
+}
+
+- (void)changRightBtnImage:(BOOL)isWhite{
+    if (isWhite) {
+        [_rightBtn setImage:ICON_FONT_IMG(24,@"\U0000e681",[UIColor whiteColor])  forState:UIControlStateNormal];
+        [_rightBtn setImage:ICON_FONT_IMG(24,@"\U0000e681",[UIColor whiteColor])  forState:UIControlStateHighlighted];
+    }else{
+        [_rightBtn setImage:ICON_FONT_IMG(24,@"\U0000e681",[UIColor blackColor])  forState:UIControlStateNormal];
+        [_rightBtn setImage:ICON_FONT_IMG(24,@"\U0000e681",[UIColor blackColor])  forState:UIControlStateHighlighted];
+    }
+}
+
+- (void)changLeftBtnImage:(BOOL)isWhite{
+    if (isWhite) {
+        [self.customNavBarView.leftBtn setBackgroundImage:ICON_FONT_IMG(24,@"\U0000e68a",[UIColor whiteColor])  forState:UIControlStateNormal];
+        [self.customNavBarView.leftBtn setBackgroundImage:ICON_FONT_IMG(24,@"\U0000e68a",[UIColor whiteColor])  forState:UIControlStateHighlighted];
+    }else{
+        [self.customNavBarView.leftBtn setBackgroundImage:ICON_FONT_IMG(24,@"\U0000e68a",[UIColor blackColor])  forState:UIControlStateNormal];
+        [self.customNavBarView.leftBtn setBackgroundImage:ICON_FONT_IMG(24,@"\U0000e68a",[UIColor blackColor])  forState:UIControlStateHighlighted];
     }
 }
 
@@ -190,16 +214,15 @@
             self.customNavBarView.title.hidden = NO;
         }
         self.customNavBarView.title.textColor = [UIColor themeGray1];
-        [self.customNavBarView.leftBtn setBackgroundImage:[UIImage imageNamed:@"icon-return"] forState:UIControlStateNormal];
-        [self.customNavBarView.leftBtn setBackgroundImage:[UIImage imageNamed:@"icon-return"] forState:UIControlStateHighlighted];
-        [_rightBtn setImage:[UIImage imageNamed:@"house_find_help_right_btn_black"] forState:UIControlStateNormal];
 
+        [self changLeftBtnImage:NO];
+        [self changRightBtnImage:NO];
     }else {
         self.customNavBarView.title.hidden = YES;
         self.customNavBarView.title.textColor = [UIColor whiteColor];
-        [self.customNavBarView.leftBtn setBackgroundImage:[UIImage imageNamed:@"icon-return-white"] forState:UIControlStateNormal];
-        [self.customNavBarView.leftBtn setBackgroundImage:[UIImage imageNamed:@"icon-return-white"] forState:UIControlStateHighlighted];
-        [_rightBtn setImage:[UIImage imageNamed:@"house_find_help_right_btn_white"] forState:UIControlStateNormal];
+        
+        [self changLeftBtnImage:YES];
+        [self changRightBtnImage:YES];
     }
     [self.customNavBarView refreshAlpha:alpha];
     if (!self.isViewDidDisapper) {

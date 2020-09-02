@@ -94,6 +94,8 @@
         
         //企业担保
         @"tagImage": @"tag_image",
+        //帮我找房新房
+        @"recommendType": @"recommend_type",
     };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
         return dict[keyName]?:keyName;

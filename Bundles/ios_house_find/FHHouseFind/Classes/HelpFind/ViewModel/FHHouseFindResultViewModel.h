@@ -16,6 +16,8 @@ NS_ASSUME_NONNULL_BEGIN
 @interface FHHouseFindResultViewModel : NSObject
 
 @property (nonatomic , strong) FHHouseFindRecommendDataModel *recommendModel;
+@property (nonatomic , assign) NSInteger houseType;
+
 - (instancetype)initWithTableView:(UITableView *)tableView viewController:(FHHouseFindResultViewController *)viewController routeParam:(TTRouteParamObj *)paramObj;
 
 -(void)addStayCategoryLog:(NSTimeInterval)stayTime;

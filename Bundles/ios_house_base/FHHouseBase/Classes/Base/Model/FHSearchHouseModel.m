@@ -417,6 +417,7 @@
                            @"skyEyeTag": @"sky_eye_tag",
                            @"associateInfo": @"associate_info",
                            @"tagImage": @"tag_image",
+                           @"recommendType": @"recommend_type",
                            };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
         return dict[keyName]?:keyName;
@@ -731,6 +732,7 @@
                            @"dealOpenUrl": @"deal_open_url",
                            @"reasonTags": @"reason_tags",
                            @"addrData": @"addr_data",
+                           @"recommendType":@"recommend_type",
                            @"titleTags": @"title_tags",
                            @"propertyTag": @"property_tag",
                            };
