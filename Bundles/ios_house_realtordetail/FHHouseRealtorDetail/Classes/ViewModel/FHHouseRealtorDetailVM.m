@@ -331,7 +331,7 @@
     params[@"element_from"] = self.tracerDict[@"element_from"] ?: @"be_null";
     params[@"realtor_id"] = self.realtorInfo[@"realtor_id"] ?: @"be_null";
     params[@"realtor_logpb"] = self.realtorLogpb?:@"be_null";
-    params[@"event_tracking_id"] = @"93412";
+    params[@"event_tracking_id"] = @"104153";
     [FHUserTracker writeEvent:@"go_detail" params:params];
 }
 

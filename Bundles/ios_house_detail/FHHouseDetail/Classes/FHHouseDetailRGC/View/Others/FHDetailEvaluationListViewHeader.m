@@ -77,7 +77,7 @@
         [btn setTitleColor:[UIColor themeGray1] forState:UIControlStateNormal];
         [btn setTitleColor:[UIColor whiteColor] forState:UIControlStateSelected];
         [btn setBackgroundImage:[self imageWithColor:[UIColor whiteColor]] forState:UIControlStateNormal];
-        [btn setBackgroundImage:[self imageWithColor:[UIColor themeIMOrange]] forState:UIControlStateSelected];
+        [btn setBackgroundImage:[self imageWithColor:[UIColor themeOrange4]] forState:UIControlStateSelected];
         [btn setAdjustsImageWhenHighlighted:NO];
         btn.tag = m;
         btn.selected = m == 0;

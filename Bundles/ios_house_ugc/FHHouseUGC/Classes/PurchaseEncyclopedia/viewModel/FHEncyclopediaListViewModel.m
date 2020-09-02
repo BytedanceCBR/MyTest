@@ -60,7 +60,6 @@
     _tracerHelper.tracerModel = tracerModel;
 }
 - (void)requestData:(BOOL)isHead first:(BOOL)isFirst {
-
     if (![TTReachability isNetworkConnected]) {
         [self.listController.emptyView showEmptyWithTip:@"网络异常，请检查网络连接" errorImageName:kFHErrorMaskNoNetWorkImageName showRetry:YES];
         return;
@@ -76,6 +75,10 @@
         [self.listController startLoading];
     }
     __weak typeof(self) wself = self;
+//    if(self.isRefreshingTip){
+//        [self.tableView finishPullDownWithSuccess:YES];
+//        return;
+//    }
     NSInteger listCount = self.dataList.count;
     if(isFirst){
         listCount = 0;
@@ -102,7 +105,6 @@
     self.requestTask = [FHHouseUGCAPI requestEncyclopediaListWithCategory:self.categoryId channelid:self.channel_id lastGroupId:groupId behotTime:behotTime loadMore:!isHead isFirst:isFirst listCount:10 extraDic:extraDic completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
         wself.listController.isLoadingData = NO;
         [wself.tableView finishPullDownWithSuccess:YES];
-        
         if (error) {
             //TODO: show handle error
             if(isFirst){
@@ -148,9 +150,14 @@
                 //                wself.viewController.showenRetryButton = YES;
                 wself.refreshFooter.hidden = YES;
             }
+            NSString *refreshTip = @"";
+            if (result.count>0) {
+                refreshTip = [NSString stringWithFormat:@"已为您更新 %ld 条数据",result.count];
+            }else {
+                refreshTip = @"暂无新内容";
+            }
             [wself.tableView reloadData];
-            NSString *refreshTip = [NSString stringWithFormat:@"已为您更新 %ld 条数据",result.count];
-            if (isHead && result.count > 0 && ![refreshTip isEqualToString:@""] && !wself.isRefreshingTip){
+            if (isHead && refreshTip.length >0 && !wself.isRefreshingTip){
                 wself.isRefreshingTip = YES;
                 [wself.listController showNotify:refreshTip completion:^{
                     dispatch_async(dispatch_get_main_queue(), ^{

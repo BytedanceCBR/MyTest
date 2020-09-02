@@ -12,10 +12,12 @@
 #import "FHCommonDefines.h"
 #import "UILabel+House.h"
 #import "UIColor+Theme.h"
+#import "FHHouseDetailViewController.h"
+#import "FHHouseOldDetailViewModel.h"
+#import "UIView+BTDAdditions.h"
 
 @interface FHDetailHeaderView ()
 @property (nonatomic, strong)   UIImageView       *arrowsImg;
-
 @end
 
 @implementation FHDetailHeaderView
@@ -52,6 +54,14 @@
     _arrowsImg.hidden = YES;
     [self addSubview:_arrowsImg];
     
+    _showTipButton = [[UIButton alloc] init];
+    _showTipButton.hidden = YES;
+    _showTipButton.btd_hitTestEdgeInsets = UIEdgeInsetsMake(-7, -7, -7, -7);
+    [_showTipButton setBackgroundImage:[UIImage imageNamed:@"ic-question-line-normal"] forState:UIControlStateNormal];
+    [_showTipButton setBackgroundImage:[UIImage imageNamed:@"ic-question-line-normal"] forState:UIControlStateHighlighted];
+    [self addSubview:_showTipButton];
+    [_showTipButton addTarget:self action:@selector(showTipButtonClick) forControlEvents:UIControlEventTouchUpInside];
+    
     [self.label mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(15);
         make.right.mas_equalTo(self.loadMore.mas_left).offset(-10);
@@ -71,6 +81,13 @@
         make.width.mas_equalTo(80);
         make.right.mas_equalTo(self.arrowsImg.mas_left);
     }];
+    [self.showTipButton mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.width.height.mas_equalTo(16);
+        make.left.equalTo(self).offset(120);
+        make.centerY.equalTo(self.label);
+    }];
+    
+    
 }
 
 - (void)setIsShowLoadMore:(BOOL)isShowLoadMore {
@@ -112,5 +129,40 @@
     }];
 }
 
+- (void)showTipButtonClick {
+    if(self.detailVC){
+        if([self.detailVC.viewModel isKindOfClass:[FHHouseOldDetailViewModel class]]) {
+            FHHouseOldDetailViewModel *detailVM = (FHHouseOldDetailViewModel *) self.detailVC.viewModel;
+            if(self.surveyTipView == nil) {
+                self.surveyTipView = [[FHSurveyBubbleView alloc] initWithTitle:detailVM.surveyTipName font:[UIFont themeFontRegular:12]];
+                self.surveyTipView.maxWidth = [UIScreen mainScreen].bounds.size.width - 82;
+                self.surveyTipView.labelInsets = UIEdgeInsetsMake(4, 10, 6, 10);
+                self.surveyTipView.arrowOffset = 108;
+                self.surveyTipView.hidden = YES;
+                [self.detailVC.view addSubview:self.surveyTipView];
+                [self.detailVC.view bringSubviewToFront:self.surveyTipView];
+                detailVM.surveyTipView = self.surveyTipView;
+            }
+            if(self.surveyTipView.hidden) {
+                self.surveyTipView.frame = [self.surveyTipView calcFrameWithSubView:self.showTipButton toView:self.detailVC.view];
+                [self.surveyTipView updateView];
+                [detailVM showSurveyTip];
+                [self addClickOptionsLog];
+            } else {
+                [detailVM hiddenSurveyTip];
+            }
+        }
+    }
+}
+
+//埋点
+- (void)addClickOptionsLog {
+    NSMutableDictionary *params = @{}.mutableCopy;
+    params[@"page_type"] = [self.detailVC.viewModel pageTypeString];
+    params[@"element_type"] = self.tracerDict[@"element_type"];
+    params[@"click_position"] = @"question_mark_explain";
+    params[@"event_tracking_id"] = @"104154";
+    TRACK_EVENT(@"click_options", params);
+}
 
 @end
