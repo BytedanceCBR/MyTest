@@ -131,7 +131,6 @@
         [wself.viewModel showInputSearch];
     };
     [self.view addSubview:_navbar];
-    _navbar.backgroundColor = [UIColor redColor];
     
 }
 
@@ -299,7 +298,7 @@
         bgColor = [UIColor themeGray8];
     }
     [self.navbar refreshAlpha:alpha];
-    self.navbar.backgroundColor = [UIColor whiteColor];
+    self.navbar.backgroundColor = bgColor;
     if (!self.isViewDidDisapper) {
         [[UIApplication sharedApplication]setStatusBarStyle:statusBarStyle];
     }

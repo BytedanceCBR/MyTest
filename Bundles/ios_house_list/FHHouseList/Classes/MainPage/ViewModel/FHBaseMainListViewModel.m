@@ -622,7 +622,8 @@ extern NSString *const INSTANT_DATA_KEY;
         }
         return;
     }
-    
+    _showPlaceHolder = YES;
+    [self.tableView reloadData];
     __weak typeof(self) wself = self;
     if (_mainListPage && self.houseType == FHHouseTypeRentHouse) {
         
