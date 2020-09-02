@@ -63,9 +63,10 @@ def fhPods
     # 'Core',
     # 'DelegateForC'
     #]
-
-#     pod 'ios_house_im' , :path => '../../../im/3'
-    pod 'ios_house_im' ,'0.2.15'
+    
+    pod 'ios_house_im' ,'0.2.16-rc.2'
+#    pod 'ios_house_im' , :path => '../../../im/1'
+#    pod 'ios_house_im' , :git => 'git@code.byted.org:fproject/ios_house_im.git' , :commit => '81e75f5f1ffbb533074f2235d3397092a504fa57'
 
 end
 
@@ -477,7 +478,11 @@ def appPods
     #支持自动约束cell缓存高度
     pod_binary 'UITableView+FDTemplateLayoutCell', '1.6'
 
-    pod 'TTIMSDK', '1.0.0-rc.34.2-bugfix', :subspecs => [
+    #IMSDK升级，分支依赖方式
+    pod 'lz4', '1.0.1'
+    pod 'ByteRtcSDK', '2.6.13'
+#    pod 'TTIMSDK', :git => 'git@code.byted.org:im/TIMSDK.git', :branch => 'yang_branchf', :subspecs => [
+    pod 'TTIMSDK', :git => 'git@code.byted.org:im/TIMSDK.git', :commit => '8f6be111e5ab09566f33459fc3e5d7ccaad72c31', :subspecs => [
         'IMKit_Default',
         'IMKit_WebSocket',
         'IMKit_Core',
@@ -498,8 +503,10 @@ def appPods
         'Feature_Core_Setting',
         'Feature_Core_ReadReceipt',
         'Feature_Core_Default',
+        'Feature_Core_BroadCast',
         'Feature_ApplicationStatus',
         'IMSugar_MediaFileUploader',
+        'IMSugar_RTCVideo',
         'Protocols',
         'Bridges'
     ]
@@ -688,6 +695,7 @@ post_install do |installer|
           '${PODS_ROOT}/TTNetBusiness/ios',
           '${PODS_ROOT}/TencentQQSDK/TencentQQSDK/Classes',
           '${PODS_ROOT}/Quaterback/BDDynamically/Frameworks/News/Release',
+          '${PODS_ROOT}/ByteRtcSDK',
           ]
         end
     end

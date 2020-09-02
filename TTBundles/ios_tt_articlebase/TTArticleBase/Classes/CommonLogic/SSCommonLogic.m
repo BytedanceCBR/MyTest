@@ -5483,6 +5483,14 @@ static NSString *const kFFeedRefreshStrategy = @"feed_refresh_settings";
     }
     return NO;
 }
++ (BOOL)enableVoIPAudioCall {
+    NSDictionary *fhSettings = [self fhSettings];
+    if (fhSettings != nil && [fhSettings objectForKey:@"f_im_voip_audio_call_enable"] != nil) {
+        BOOL isEnable = [[fhSettings objectForKey:@"f_im_voip_audio_call_enable"] boolValue];
+        return isEnable;
+    }
+    return NO;
+}
 
 + (BOOL)disableDouyinIconLoginLogic {
     NSDictionary *fhSettings = [self fhSettings];
@@ -5505,8 +5513,6 @@ static NSString *const kFFeedRefreshStrategy = @"feed_refresh_settings";
     return NO;
 }
 @end
-
-
 
 #endif
 
