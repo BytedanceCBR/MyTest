@@ -432,7 +432,28 @@
         return [FHHouseListAPI querySearchData:queryPath uploadLog:YES params:qparam class:cls logPath:nil completion:completion];
     }
     return [FHMainApi queryData:queryPath uploadLog:YES params:qparam class:cls completion:completion];
+}
 
++(TTHttpTask *)searchNewHouseListForFindHouse:(NSString *_Nullable)query params:(NSDictionary *_Nullable)param offset:(NSInteger)offset searchId:(NSString *_Nullable)searchId sugParam:(NSString *_Nullable)sugParam class:(Class)cls completion:(void(^_Nullable)(id<FHBaseModelProtocol> _Nullable model , NSError * _Nullable error))completion{
+    NSString *queryPath = @"/f100/api/search_court";
+
+    NSMutableDictionary *qparam = [NSMutableDictionary new];
+    if (query.length > 0) {
+        queryPath = [NSString stringWithFormat:@"%@?%@",queryPath,query];
+    }
+    if (param) {
+        [qparam addEntriesFromDictionary:param];
+    }
+    qparam[@"offset"] = @(offset);
+    qparam[@"search_id"] = searchId?:@"";
+    if (sugParam) {
+        qparam[@"suggestion_params"] = sugParam;
+    }
+//    qparam[CHANNEL_ID] = CHANNEL_ID_SEARCH_COURT;
+    if ([NSStringFromClass(cls) isEqualToString:NSStringFromClass([FHListSearchHouseModel class])]) {
+        return [FHHouseListAPI querySearchData:queryPath uploadLog:YES params:qparam class:cls logPath:nil completion:completion];
+    }
+    return [FHMainApi queryData:queryPath uploadLog:YES params:qparam class:cls completion:completion];
 }
 
 /*

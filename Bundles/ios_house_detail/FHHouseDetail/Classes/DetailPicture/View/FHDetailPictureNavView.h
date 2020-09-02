@@ -19,8 +19,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FHDetailPictureNavView : UIView
 
-@property(nonatomic , copy) void (^backActionBlock)();
-@property(nonatomic , copy) void (^albumActionBlock)();
+@property(nonatomic , copy) void (^backActionBlock)(void);
+@property(nonatomic , copy) void (^albumActionBlock)(void);
 
 @property (nonatomic, strong)   UILabel       *titleLabel;// 图片
 //@property (nonatomic, assign)   BOOL       hasVideo;// 是否有视频

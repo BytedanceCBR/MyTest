@@ -54,4 +54,8 @@
     [_imageView checkLoadingState];
 }
 
+- (void)resetVRLoadingAnimate {
+    [_imageView resetVRLoadingAnimate];
+}
+
 @end
