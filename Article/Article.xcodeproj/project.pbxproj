@@ -7,8 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		170182F724597A3F00334E1B /* buryingPointCheck.json in Resources */ = {isa = PBXBuildFile; fileRef = 170182F624597A3F00334E1B /* buryingPointCheck.json */; };
-		170182F824597A3F00334E1B /* buryingPointCheck.json in Resources */ = {isa = PBXBuildFile; fileRef = 170182F624597A3F00334E1B /* buryingPointCheck.json */; };
 		30B80968186F20525FA8F916 /* libPods-f100.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 9024DDF5E410548C9797A57D /* libPods-f100.a */; };
 		3D2F39962270545700AE567D /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 3D2F398A2270545700AE567D /* InfoPlist.strings */; };
 		3D2F39982270545700AE567D /* TargetLogicSetting.strings in Resources */ = {isa = PBXBuildFile; fileRef = 3D2F398E2270545700AE567D /* TargetLogicSetting.strings */; };
@@ -47,7 +45,6 @@
 		3DB49F8F2265E34900A0780E /* ProjectNightModeThemeUISetting.strings in Resources */ = {isa = PBXBuildFile; fileRef = 3DB49EE32265E34900A0780E /* ProjectNightModeThemeUISetting.strings */; };
 		3DB49F922265E34900A0780E /* iconfont_new.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 3DB49EE42265E34900A0780E /* iconfont_new.ttf */; };
 		3DB49F932265E34900A0780E /* iconfont_new.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 3DB49EE42265E34900A0780E /* iconfont_new.ttf */; };
-		3DB7A72F21A4136D00B4D017 /* BubbleImages.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3DB7A72D21A4136D00B4D017 /* BubbleImages.xcassets */; };
 		3DB7A73021A4136D00B4D017 /* BubbleImages.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3DB7A72D21A4136D00B4D017 /* BubbleImages.xcassets */; };
 		3DC75FF923BB4ABE00614BFF /* permission_tip.txt in Resources */ = {isa = PBXBuildFile; fileRef = 3DC75FF823BB4ABE00614BFF /* permission_tip.txt */; };
 		3DC75FFA23BB4ABE00614BFF /* permission_tip.txt in Resources */ = {isa = PBXBuildFile; fileRef = 3DC75FF823BB4ABE00614BFF /* permission_tip.txt */; };
@@ -116,7 +113,6 @@
 		B373CEFF2174587A008F9905 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3AA5028815876A1F00EB27FA /* CoreGraphics.framework */; };
 		B373CF012174587A008F9905 /* libz.1.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 3AA5058C15876AE500EB27FA /* libz.1.dylib */; };
 		B373CF022174587A008F9905 /* AssetsLibrary.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 48C000AF16F7426D00FC365B /* AssetsLibrary.framework */; };
-		B388CB272142652A00653188 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B388C9E32142652800653188 /* Assets.xcassets */; };
 		B388CB292142652A00653188 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B388C9E52142652800653188 /* LaunchScreen.storyboard */; };
 		D37495E023965409006D44D2 /* gaode_house_detail_style_extra.data in Resources */ = {isa = PBXBuildFile; fileRef = D37495DE23965409006D44D2 /* gaode_house_detail_style_extra.data */; };
 		D37495E123965409006D44D2 /* gaode_house_detail_style_extra.data in Resources */ = {isa = PBXBuildFile; fileRef = D37495DE23965409006D44D2 /* gaode_house_detail_style_extra.data */; };
@@ -143,21 +139,12 @@
 		FEFA59C8205FB1A8001F50D8 /* sound6.caf in Resources */ = {isa = PBXBuildFile; fileRef = 2E14CCEB1FE007C20093E05D /* sound6.caf */; };
 		FEFA59CE205FB1A8001F50D8 /* yw_1222.jpg in Resources */ = {isa = PBXBuildFile; fileRef = FE700DC91B8D98F8004A435E /* yw_1222.jpg */; };
 		FEFA59CF205FB1A8001F50D8 /* tt_video_doubleClickApprove.bundle in Resources */ = {isa = PBXBuildFile; fileRef = F8893C801FCE5F4100C76EBB /* tt_video_doubleClickApprove.bundle */; };
-		FEFA59D2205FB1A8001F50D8 /* Settings.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 438724811BE32BB500854877 /* Settings.xcassets */; };
 		FEFA59D6205FB1A8001F50D8 /* sound4.caf in Resources */ = {isa = PBXBuildFile; fileRef = 2E14CCEA1FE007C10093E05D /* sound4.caf */; };
 		FEFA59DB205FB1A8001F50D8 /* sound1.caf in Resources */ = {isa = PBXBuildFile; fileRef = 2E14CCE61FE007BD0093E05D /* sound1.caf */; };
-		FEFA59EE205FB1A8001F50D8 /* PushNotification.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2D33175D1F30AE6D009D2936 /* PushNotification.xcassets */; };
-		FEFA59F0205FB1A8001F50D8 /* Weather.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6B50C7B41F5D44EF00BF89A1 /* Weather.xcassets */; };
 		FEFA59F6205FB1A8001F50D8 /* sound3.caf in Resources */ = {isa = PBXBuildFile; fileRef = 2E14CCE71FE007BE0093E05D /* sound3.caf */; };
-		FEFA59FB205FB1A8001F50D8 /* CommonResource.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D0A4FC4E1B897287000240C6 /* CommonResource.xcassets */; };
 		FEFA59FC205FB1A8001F50D8 /* sound2.caf in Resources */ = {isa = PBXBuildFile; fileRef = 2E14CCE91FE007C00093E05D /* sound2.caf */; };
 		FEFA5A06205FB1A8001F50D8 /* sound5.caf in Resources */ = {isa = PBXBuildFile; fileRef = 2E14CCE81FE007BF0093E05D /* sound5.caf */; };
-		FEFA5A1C205FB1A8001F50D8 /* NewsResource.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B1E15E061D77117900B551D9 /* NewsResource.xcassets */; };
-		FEFA5A1D205FB1A8001F50D8 /* FrameworkResource.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D08BFBDA1B8729AA00E6D9A1 /* FrameworkResource.xcassets */; };
-		FEFA5A1E205FB1A8001F50D8 /* Account.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8416BB2D1C8EAE9A00BB9C97 /* Account.xcassets */; };
-		FEFA5A21205FB1A8001F50D8 /* AuthorizeHintResource.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4175CE3C1D16850900F2CFC2 /* AuthorizeHintResource.xcassets */; };
 		FEFA5A22205FB1A8001F50D8 /* default_profile_background_image.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 6BD907021DB877E40072138C /* default_profile_background_image.jpg */; };
-		FEFA5A24205FB1A8001F50D8 /* VideoResource.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D97EB6AF1E1CA04200EE4473 /* VideoResource.xcassets */; };
 		FEFA5A26205FB1A8001F50D8 /* libresolv.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = D013795E1DFE8BEF0020C6BD /* libresolv.tbd */; };
 		FEFA5A27205FB1A8001F50D8 /* libbz2.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = B119472C1CF7FF4700561B49 /* libbz2.tbd */; };
 		FEFA5A28205FB1A8001F50D8 /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A89B0DC91C60C3DA00ECC955 /* WebKit.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
@@ -259,7 +246,6 @@
 		01FA60521E9F5D7300CE6FD3 /* area.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = area.plist; sourceTree = "<group>"; };
 		06479D701ACD71FB00A44FB9 /* OpenGLES.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGLES.framework; path = System/Library/Frameworks/OpenGLES.framework; sourceTree = SDKROOT; };
 		0695AFD018EEEEE50009444F /* ImageIO.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ImageIO.framework; path = System/Library/Frameworks/ImageIO.framework; sourceTree = SDKROOT; };
-		170182F624597A3F00334E1B /* buryingPointCheck.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = buryingPointCheck.json; sourceTree = "<group>"; };
 		2B1A0B4B24C053C2009D40FF /* F100BaiduMapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = F100BaiduMapKit.framework; path = ../Bundles/BaiduMapKit/BaiduMapKit/F100BaiduMapKit.framework; sourceTree = "<group>"; };
 		2B53A10C24C5787200923B3C /* libsqlite3.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.tbd; path = usr/lib/libsqlite3.tbd; sourceTree = SDKROOT; };
 		2D33175D1F30AE6D009D2936 /* PushNotification.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = PushNotification.xcassets; sourceTree = "<group>"; };
@@ -1077,22 +1063,17 @@
 				FEFA59CF205FB1A8001F50D8 /* tt_video_doubleClickApprove.bundle in Resources */,
 				3D7D2F4922704CAB00A95FAF /* Icon@2x.png in Resources */,
 				FBA5893F23AB64E20053EC79 /* images in Resources */,
-				FEFA59D2205FB1A8001F50D8 /* Settings.xcassets in Resources */,
 				FEFA59D6205FB1A8001F50D8 /* sound4.caf in Resources */,
 				FEFA59DB205FB1A8001F50D8 /* sound1.caf in Resources */,
 				6114B09E21B3E78C00331D12 /* house_refresh.json in Resources */,
 				D48E93C1233CF142005A42CD /* VRImageLoading.json in Resources */,
-				FEFA59EE205FB1A8001F50D8 /* PushNotification.xcassets in Resources */,
 				3DB49F922265E34900A0780E /* iconfont_new.ttf in Resources */,
-				FEFA59F0205FB1A8001F50D8 /* Weather.xcassets in Resources */,
 				FBA5893023AB64D20053EC79 /* introduce_3.json in Resources */,
 				FBA5893123AB64D20053EC79 /* introduce_2.json in Resources */,
 				FEFA59F6205FB1A8001F50D8 /* sound3.caf in Resources */,
 				3DC75FF923BB4ABE00614BFF /* permission_tip.txt in Resources */,
 				FBA5893D23AB64D20053EC79 /* introduce_1.json in Resources */,
 				3D83DD122306A933008B583E /* gaode_style_extra.data in Resources */,
-				3DB7A72F21A4136D00B4D017 /* BubbleImages.xcassets in Resources */,
-				FEFA59FB205FB1A8001F50D8 /* CommonResource.xcassets in Resources */,
 				FEFA59FC205FB1A8001F50D8 /* sound2.caf in Resources */,
 				3D7D2F4122704CAB00A95FAF /* Icon-72.png in Resources */,
 				3D7D2F4522704CAB00A95FAF /* Icon-72@2x.png in Resources */,
@@ -1103,17 +1084,11 @@
 				3DB49F8E2265E34900A0780E /* ProjectNightModeThemeUISetting.strings in Resources */,
 				7623E3B12275EAEE009AD3D4 /* TTVPlayerStyle.plist in Resources */,
 				3D7D2F3D22704CAA00A95FAF /* Icon.png in Resources */,
-				FEFA5A1C205FB1A8001F50D8 /* NewsResource.xcassets in Resources */,
-				FEFA5A1D205FB1A8001F50D8 /* FrameworkResource.xcassets in Resources */,
-				FEFA5A1E205FB1A8001F50D8 /* Account.xcassets in Resources */,
 				D37495E023965409006D44D2 /* gaode_house_detail_style_extra.data in Resources */,
-				FEFA5A21205FB1A8001F50D8 /* AuthorizeHintResource.xcassets in Resources */,
 				FEFA5A22205FB1A8001F50D8 /* default_profile_background_image.jpg in Resources */,
 				D45F59FC2458039F00A14982 /* LynxLocalChannels in Resources */,
-				B388CB272142652A00653188 /* Assets.xcassets in Resources */,
 				3DB49F8A2265E34900A0780E /* ProjectDayModeThemeUISetting.strings in Resources */,
 				3DB49F862265E34900A0780E /* IPhoneProjectLogicSetting.strings in Resources */,
-				FEFA5A24205FB1A8001F50D8 /* VideoResource.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
