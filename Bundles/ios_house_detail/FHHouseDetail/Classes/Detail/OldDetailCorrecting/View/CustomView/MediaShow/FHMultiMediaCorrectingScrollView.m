@@ -456,7 +456,6 @@
 
 - (void)setInfoLabelText:(NSString *)text {
     self.infoLabel.text = text;
-    [self.infoLabel sizeToFit];
     CGSize itemSize = [self.infoLabel sizeThatFits:CGSizeMake(CGFLOAT_MAX, 20)];
     CGFloat width = itemSize.width;
     width += 14.0;
