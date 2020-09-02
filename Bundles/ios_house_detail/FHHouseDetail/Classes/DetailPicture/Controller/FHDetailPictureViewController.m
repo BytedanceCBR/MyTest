@@ -27,6 +27,7 @@
 #import <Photos/Photos.h>
 #import "HTSDeviceManager.h"
 #import "FHDetailVideoInfoView.h"
+#import <NSDictionary+BTDAdditions.h>
 #import "FHLoadingButton.h"
 #import "FHDetailBaseModel.h"
 
@@ -1282,7 +1283,7 @@ static BOOL kFHStaticPhotoBrowserAtTop = NO;
         };
         
         showVC.albumImageStayBlock = ^(NSInteger index, NSInteger stayTime) {
-            [self stayCallBack:stayTime];
+            [weakSelf stayCallBack:stayTime];
         };
         
         [self presentViewController:showVC animated:YES completion:nil];

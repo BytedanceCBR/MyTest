@@ -289,13 +289,7 @@
     [[FHPopupViewManager shared] triggerPendant];
 }
 
--(BOOL)shouldAutorotate
-{
-    return YES;
-}
-
--(BOOL)prefersStatusBarHidden
-{
+- (BOOL)prefersStatusBarHidden {
     return NO;
 }
 
@@ -822,9 +816,13 @@
 #pragma mark - TTUIViewControllerTrackProtocol
 
 - (void)trackEndedByAppWillEnterBackground {
+    if(!self.isNewDiscovery){
+        [self addStayCategoryLog:self.stayTime];
+    }
 }
 
 - (void)trackStartedByAppWillEnterForground {
+    self.stayTime = [[NSDate date] timeIntervalSince1970];
 }
 
 @end

@@ -579,7 +579,7 @@
     __weak typeof(self) weakSelf = self;
     if ([self.mediaView.currentMediaCell isKindOfClass:[FHMultiMediaVideoCell class]]) {
         FHMultiMediaVideoCell *tempCell = self.mediaView.currentMediaCell;
-        FHMultiMediaItemModel *vedioModel = ((FHDetailMediaHeaderCorrectingModel *)self.currentData).vedioModel;
+//        FHMultiMediaItemModel *vedioModel = ((FHDetailMediaHeaderCorrectingModel *)self.currentData).vedioModel;
 //        if (vedioModel.cellHouseType == FHMultiMediaCellHouseNeiborhood) {
             dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.35 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
                 weakSelf.mediaView.videoVC.view.frame = bound;
