@@ -805,10 +805,6 @@
             [self endDisplay];
         }
     }
-    
-//    if(self.cellModel.showMuteBtn) {
-//        _muteBtn.alpha = 0;
-//    }
 }
 
 - (void)playVideoDidClicked {
