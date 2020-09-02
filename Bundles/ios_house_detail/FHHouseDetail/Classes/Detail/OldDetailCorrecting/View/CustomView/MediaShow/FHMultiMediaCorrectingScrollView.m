@@ -458,10 +458,10 @@
 - (void)setInfoLabelText:(NSString *)text {
     self.infoLabel.text = text;
     CGFloat width = [text btd_widthWithFont:[UIFont themeFontRegular:12] height:20];
-    if (width < 44) {
-        return;
-    }
     width += 14;
+    if (width < 43) {
+        width = 43;
+    }
     [self.infoLabel mas_updateConstraints:^(MASConstraintMaker *make) {
         make.width.mas_equalTo(width);
     }];
@@ -484,7 +484,7 @@
             curPage = 1;
             indexPath = [NSIndexPath indexPathForItem:1 inSection:0];
         }
-        if (indexPath) {
+        if (indexPath  && !self.isShowTopImageTab) {
             //循环滚动
             [self.colletionView scrollToItemAtIndexPath:indexPath atScrollPosition:UICollectionViewScrollPositionLeft animated:NO];
         }
@@ -540,7 +540,7 @@
             self.colletionView.hidden = NO;
             self.noDataImageView.hidden = YES;
             self.totalPagesLabel.hidden = NO;
-            self.totalPagesLabel.text = [NSString stringWithFormat:@"共%lu张",model.medias.count];
+            self.totalPagesLabel.text = [NSString stringWithFormat:@"共%lu张",(unsigned long)model.medias.count];
         }
         if (!self.headerMoreStateView) {
             self.headerMoreStateView = [[FHHouseDetailHeaderMoreStateView alloc] init];
