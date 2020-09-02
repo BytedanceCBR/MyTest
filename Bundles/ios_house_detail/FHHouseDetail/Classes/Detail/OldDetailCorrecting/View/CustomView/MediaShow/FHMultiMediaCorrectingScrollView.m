@@ -19,6 +19,7 @@
 #import "FHDetailHeaderTitleView.h"
 #import "UIViewAdditions.h"
 #import "FHHouseDetailHeaderMoreStateView.h"
+#import <ByteDanceKit/ByteDanceKit.h>
 
 #define k_VIDEOCELLID @"video_cell_id"
 #define k_IMAGECELLID @"image_cell_id"
@@ -456,16 +457,16 @@
 
 - (void)setInfoLabelText:(NSString *)text {
     self.infoLabel.text = text;
-    CGSize itemSize = [self.infoLabel sizeThatFits:CGSizeMake(CGFLOAT_MAX, 20)];
-    CGFloat width = itemSize.width;
-    width += 14.0;
+    CGFloat width = [text btd_widthWithFont:[UIFont themeFontRegular:12] height:20];
+    width += 14;
     if (width < 43) {
         width = 43;
     }
-
     [self.infoLabel mas_updateConstraints:^(MASConstraintMaker *make) {
         make.width.mas_equalTo(width);
     }];
+    [self setNeedsLayout];
+    [self layoutIfNeeded];
 }
 
 - (void)updateVideoState {
