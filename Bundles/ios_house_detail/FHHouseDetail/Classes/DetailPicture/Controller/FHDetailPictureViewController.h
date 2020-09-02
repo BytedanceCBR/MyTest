@@ -57,20 +57,20 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic , copy) void (^collectActionBlock)(BOOL followStatus);
 
 /// 查看全部图片的block，如果没有block，执行默认操作
-@property(nonatomic , copy) void (^allPhotoActionBlock)();
+@property(nonatomic , copy) void (^allPhotoActionBlock)(void);
 
 /** 图片URL数组*/
 @property(nonatomic, strong)NSArray * imageURLs; //every item also is array, and it contains url and header infos
 
 /** TTImageInfosModel数组*/
-@property(nonatomic, strong)NSArray * imageInfosModels;
+@property(nonatomic, strong, nullable) NSArray *imageInfosModels;
 
 @property(nonatomic, strong)NSArray * smallImageInfosModels;
 
 /** Extended by luohuaqing to support selecting image on preview */
 //@property (nonatomic, assign)PhotosScrollViewMode mode;
-@property (nonatomic, strong)NSArray * images;
-@property (nonatomic, strong)NSArray * assetsImages;
+@property (nonatomic, strong, nullable) NSArray *images;
+@property (nonatomic, strong, nullable) NSArray *assetsImages;
 
 /** 是否支持长按保存，默认YES */
 @property (nonatomic, assign)BOOL longPressToSave;
@@ -93,7 +93,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 
 /** Extended by xuzichao to support multiple type of image,including  url,assets,image,imageinfomodel,NSUrl 相册资源路径 */
-@property (nonatomic, strong)NSArray * multipleTypeImages;
+@property (nonatomic, strong, nullable) NSArray *multipleTypeImages;
 
 /** UIImage(s); Optional ([NSNull null] is used to represent the absence) */
 @property (nonatomic, strong)NSArray * placeholders;

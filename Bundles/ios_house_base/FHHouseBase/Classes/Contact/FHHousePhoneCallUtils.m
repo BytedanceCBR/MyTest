@@ -198,7 +198,7 @@ typedef enum : NSUInteger {
     if (reportParams[@"item_id"]) {
         params[@"item_id"] = reportParams[@"item_id"];
     }
-
+    params[@"event_tracking_id"] = @"104152";
     [FHUserTracker writeEvent:@"click_call" params:params];
 }
 

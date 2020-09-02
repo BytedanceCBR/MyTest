@@ -9,14 +9,10 @@
 #import "TTRApp.h"
 #import "TTJSBAuthManager.h"
 #import "TTInstallIDManager.h"
-
 #import <TTRexxar/TTRexxarNotificationCenter.h>
 #import <TTRexxar/TTRJSBForwarding.h>
-//#import <TTNewsAccountBusiness/TTAccountManager.h>
 #import <TTBaseLib/NetworkUtilities.h>
-#import <TTBaseLib/TTStringHelper.h>
 #import <TTBaseLib/TTSandBoxHelper.h>
-#import "NSDictionary+TTAdditions.h"
 #import <TTBaseLib/TTBaseMacro.h>
 #import "TTAccount.h"
 #import "TTDeviceHelper.h"
@@ -25,6 +21,8 @@
 #import "SSCommonLogic.h"
 #import "IESFalconManager.h"
 #import "FHIESGeckoManager.h"
+#import <ByteDanceKit/ByteDanceKit.h>
+#import <FHHouseBase/FHUserInfoManager.h>
 
 extern NSString *const kFHPLoginhoneNumberCacheKey;
 
@@ -53,7 +51,7 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
 
 - (void)isAppInstalledWithParam:(NSDictionary *)param callback:(TTRJSBResponse)callback webView:(UIView<TTRexxarEngine> *)webview controller:(UIViewController *)controller {
     NSString * openURL = [param valueForKey:@"open_url"];
-    NSURL * URL = [TTStringHelper URLWithURLString:openURL];
+    NSURL * URL = [NSURL btd_URLWithString:openURL];
     BOOL installed = NO;
     if (URL && [[UIApplication sharedApplication] canOpenURL:URL]) {
         installed = YES;
@@ -62,7 +60,7 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
 }
 
 - (void)copyToClipboardWithParam:(NSDictionary *)param callback:(TTRJSBResponse)callback webView:(UIView<TTRexxarEngine> *)webview controller:(UIViewController *)controller {
-    NSString *content = [param stringValueForKey:@"content" defaultValue:nil];
+    NSString *content = [param btd_stringValueForKey:@"content"];
     NSDictionary *callbackResult = nil;
     if (!isEmptyString(content)) {
         [[UIPasteboard generalPasteboard] setString:content];
@@ -126,7 +124,7 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
     [data setValue:phoneNumLogin forKey:@"login_phone"];
 
     
-    NSString *idfaString = [TTDeviceHelper idfaString];
+    NSString *idfaString = [UIDevice btd_idfaString];
     [data setValue:idfaString forKey:@"idfa"];
     
     if (callback) {
@@ -137,15 +135,14 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
 - (void)saveWebPhoneWithParam:(NSDictionary *)param callback:(TTRJSBResponse)callback webView:(UIView<TTRexxarEngine> *)webview controller:(UIViewController *)controller
 {
     NSString *phoneNum = [param objectForKey:@"phone"];
-    YYCache *sendPhoneNumberCache = [[FHEnvContext sharedInstance].generalBizConfig sendPhoneNumberCache];
     if (phoneNum) {
-        [sendPhoneNumberCache setObject:phoneNum forKey:kFHPhoneNumberCacheKey];
+        [FHUserInfoManager savePhoneNumber:phoneNum];
     }
 }
 
 - (void)setGeckoWithParam:(NSDictionary *)param callback:(TTRJSBResponse)callback webView:(UIView<TTRexxarEngine> *)webview controller:(UIViewController *)controller
 {
-    BOOL open = [param tt_boolValueForKey:@"open"];
+    BOOL open = [param btd_boolValueForKey:@"open"];
 
     IESFalconManager.interceptionWKHttpScheme = open;
     IESFalconManager.interceptionEnable = open;
@@ -171,8 +168,8 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
 
 
 - (void)sendNotificationWithParam:(NSDictionary *)param callback:(TTRJSBResponse)callback webView:(UIView<TTRexxarEngine> *)webview controller:(UIViewController *)controller {
-    NSString *name = [param tt_stringValueForKey:@"type"];
-    NSDictionary *data = [param tt_dictionaryValueForKey:@"data"];
+    NSString *name = [param btd_stringValueForKey:@"type"];
+    NSDictionary *data = [param btd_dictionaryValueForKey:@"data"];
     
     if (!name.length) {
         TTR_CALLBACK_WITH_MSG(TTRJSBMsgParamError, @"type不能为空");

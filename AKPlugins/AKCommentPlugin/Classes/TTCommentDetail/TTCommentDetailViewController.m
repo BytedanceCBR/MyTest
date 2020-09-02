@@ -1155,7 +1155,8 @@ NSString *const kTTCommentDetailForwardCommentNotification = @"kTTCommentDetailF
         _headerView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
         _headerView.hidePost = self.hidePost;
         NSMutableDictionary *dict = @{}.mutableCopy;
-        dict[@"enter_from"] = self.enterFrom;
+        dict[@"origin_from"] = self.extraDic[@"origin_from"];
+        dict[@"enter_from"] = @"comment_detail";
         _headerView.traceDict = dict;
         
         //headView主评论出现的时间

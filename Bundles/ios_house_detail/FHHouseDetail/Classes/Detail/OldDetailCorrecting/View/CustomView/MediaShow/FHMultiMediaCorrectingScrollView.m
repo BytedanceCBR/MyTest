@@ -19,6 +19,7 @@
 #import "FHDetailHeaderTitleView.h"
 #import "UIViewAdditions.h"
 #import "FHHouseDetailHeaderMoreStateView.h"
+#import <ByteDanceKit/ByteDanceKit.h>
 
 #define k_VIDEOCELLID @"video_cell_id"
 #define k_IMAGECELLID @"image_cell_id"
@@ -213,10 +214,12 @@
     
     [self layoutIfNeeded];
     
-    self.infoLabel.width = 44;
-    self.infoLabel.height = 22;
-    self.infoLabel.left = self.width - self.infoLabel.width - 15;
-    self.infoLabel.bottom = self.titleView.top + 5;
+    [self.infoLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.width.mas_equalTo(44);
+        make.height.mas_equalTo(22);
+        make.right.mas_equalTo(-15);
+        make.bottom.mas_equalTo(self.titleView.mas_top).offset(5);
+    }];
     
     self.totalPagesLabel.width = 54;
     self.totalPagesLabel.height = 22;
@@ -454,17 +457,16 @@
 
 - (void)setInfoLabelText:(NSString *)text {
     self.infoLabel.text = text;
-    [self.infoLabel sizeToFit];
-    CGSize itemSize = [self.infoLabel sizeThatFits:CGSizeMake(CGFLOAT_MAX, 20)];
-    CGFloat width = itemSize.width;
-    width += 14.0;
-    if (width < 43) {
-        width = 43;
+    CGFloat width = [text btd_widthWithFont:[UIFont themeFontRegular:12] height:20];
+    if (width < 44) {
+        return;
     }
-
-    self.infoLabel.width = width;
-    self.infoLabel.height = 22;
-    self.infoLabel.left = self.width - self.infoLabel.width - 15;
+    width += 14;
+    [self.infoLabel mas_updateConstraints:^(MASConstraintMaker *make) {
+        make.width.mas_equalTo(width);
+    }];
+    [self setNeedsLayout];
+    [self layoutIfNeeded];
 }
 
 - (void)updateVideoState {

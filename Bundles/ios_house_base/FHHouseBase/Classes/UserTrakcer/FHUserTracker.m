@@ -28,9 +28,7 @@
     return [basic copy];
 }
 
-+(void)writeEvent:(NSString *)event params:(NSDictionary *)param
-{
-    
++ (void)writeEvent:(NSString *)event params:(NSDictionary *_Nullable)param {
     NSMutableDictionary *params = [NSMutableDictionary dictionaryWithDictionary:param];
     [params addEntriesFromDictionary:[self basicParam]];
     [FHErrorHubManagerUtil checkBuryingPointWithEvent:event Params:params];
@@ -45,6 +43,7 @@
     NSMutableDictionary *param = [model logDict];
     [param addEntriesFromDictionary:[self basicParam]];
     [FHErrorHubManagerUtil checkBuryingPointWithEvent:event Params:param];
+    [BDTrackerProtocol eventV3:event params:param];
 }
 
 @end

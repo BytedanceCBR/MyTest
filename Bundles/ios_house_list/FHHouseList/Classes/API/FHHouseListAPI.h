@@ -141,6 +141,9 @@ NS_ASSUME_NONNULL_BEGIN
 // 查成交小区搜索
 + (TTHttpTask *)requestDealSuggestionCityId:(NSInteger)cityId houseType:(NSInteger)houseType query:(NSString *)query searchType:(NSString *)searchType class:(Class)cls completion:(void(^_Nullable)(id<FHBaseModelProtocol> model , NSError *error))completion;
 
+//上报跳转详情页信息到浏览历史
++ (TTHttpTask *)requestAddHistory:(NSDictionary *)params completion:(void(^_Nullable)(id<FHBaseModelProtocol> model , NSError *error))completion;
+
 @end
 
 NS_ASSUME_NONNULL_END
