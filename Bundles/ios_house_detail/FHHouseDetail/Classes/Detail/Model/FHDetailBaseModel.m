@@ -29,7 +29,7 @@
 }
 
 - (void)setShdowImageScopeType:(FHHouseShdowImageScopeType)shdowImageScopeType {
-    if (_shdowImageScopeType ==  FHHouseShdowImageScopeTypeDefault) {
+    if (_shdowImageScopeType ==  FHHouseShdowImageScopeTypeDefault || _shdowImageScopeType ==  FHHouseShdowImageScopeTypeAll) {
                _shdowImageScopeType = shdowImageScopeType;
     }else {
         _shdowImageScopeType = FHHouseShdowImageScopeTypeAll;
@@ -471,4 +471,23 @@
 {
     return YES;
 }
+@end
+
+@implementation FHDetailSurveyContactModel
+
++ (JSONKeyMapper*)keyMapper
+{
+    NSDictionary *dict = @{
+        @"toastText": @"toast_text",
+        @"associateInfo": @"associate_info"
+    };
+    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+        return dict[keyName]?:keyName;
+    }];
+}
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+
 @end
