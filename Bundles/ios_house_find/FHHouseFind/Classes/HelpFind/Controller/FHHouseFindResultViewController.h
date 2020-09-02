@@ -17,6 +17,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)rightBtnClick;
 
+- (void)refreshRecommendModel:(FHHouseFindRecommendDataModel *)recommendModel andHouseType:(NSInteger)houseType;
+
 @end
 
 NS_ASSUME_NONNULL_END

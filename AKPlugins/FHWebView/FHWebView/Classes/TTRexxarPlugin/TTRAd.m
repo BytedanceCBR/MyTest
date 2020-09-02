@@ -140,7 +140,7 @@
     }
     
     if (latitude) {
-        [locationDict setValue:@(longitude) forKey:@"latitude"];
+        [locationDict setValue:@(latitude) forKey:@"latitude"];
     }
     
     if (gCityId) {
