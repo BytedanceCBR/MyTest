@@ -417,6 +417,7 @@
         cellModel.showMuteBtn = YES;
         if(cellModel.videoItem){
             cellModel.videoItem.muted = self.muted;
+            cellModel.videoItem.forbidRotate = YES;
         }
         //兜底逻辑
         if(cellModel.cellSubType == FHUGCFeedListCellSubTypeUGCVideo){

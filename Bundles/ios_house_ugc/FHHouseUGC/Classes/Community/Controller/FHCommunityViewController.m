@@ -289,13 +289,7 @@
     [[FHPopupViewManager shared] triggerPendant];
 }
 
--(BOOL)shouldAutorotate
-{
-    return YES;
-}
-
--(BOOL)prefersStatusBarHidden
-{
+- (BOOL)prefersStatusBarHidden {
     return NO;
 }
 

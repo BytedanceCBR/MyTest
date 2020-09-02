@@ -231,7 +231,7 @@ extern BOOL ttvs_isVideoFeedURLEnabled(void);
             playVideo.player.tipCreator = [[TTVPlayerTipShareCreater alloc] init];
         }
     }
-    playVideo.player.enableRotate = ![article showPortrait];
+    playVideo.player.enableRotate = !self.cellEntity.forbidRotate;
     
     NSDictionary *videoLargeImageDict = feedItem.largeImageDict;
     if (!videoLargeImageDict) {
