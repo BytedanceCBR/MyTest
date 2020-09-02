@@ -1111,7 +1111,7 @@
     params[@"page_type"] = self.tracerDict[@"page_type"] ?: @"be_null";
     params[@"social_group_id"] = self.tracerDict[@"group_id"] ?: @"be_null";
     params[@"element_from"] = self.tracerDict[@"element_from"] ?: @"be_null";
-    params[@"event_tracking_id"] = @"89239";
+    params[@"event_tracking_id"] = @"104257";
     [FHUserTracker writeEvent:@"go_detail" params:params];
 }
 
