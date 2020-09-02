@@ -660,6 +660,7 @@
                            @"coreInfo": @"core_info",
                            @"highlightedRealtor": @"highlighted_realtor",
                            @"recommendedRealtors": @"recommended_realtors",
+                           @"surveyedRealtorInfo":@"surveyed_realtor_info",
                            @"listEntrance": @"list_entrance",
                            @"imShareInfo": @"im_share_info",
                            @"neighborEval": @"neighbor_eval",

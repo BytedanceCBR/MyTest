@@ -58,11 +58,12 @@
 #import "FHhouseDetailRGCListCell.h"
 #import "TTAccountManager.h"
 #import <ByteDanceKit/NSDictionary+BTDAdditions.h>
+#import "FHDetailSurveyAgentListCell.h"
 
 extern NSString *const kFHPhoneNumberCacheKey;
 extern NSString *const kFHSubscribeHouseCacheKey;
 extern NSString *const kFHPLoginhoneNumberCacheKey;
-@interface FHHouseOldDetailViewModel ()
+@interface FHHouseOldDetailViewModel () <UIScrollViewDelegate>
 @property (nonatomic, assign)   NSInteger       requestRelatedCount;
 @property (nonatomic, strong , nullable) FHDetailSameNeighborhoodHouseResponseDataModel *sameNeighborhoodHouseData;
 @property (nonatomic, strong , nullable) FHDetailRelatedNeighborhoodResponseDataModel *relatedNeighborhoodData;
@@ -70,6 +71,7 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
 @property (nonatomic, strong , nullable) FHHouseListDataModel *oldHouseRecommendedCourtData;
 @property (nonatomic, copy , nullable) NSString *neighborhoodId;// 周边小区房源id
 @property (nonatomic, weak , nullable) FHDetailAgentListModel *agentListModel;
+@property (nonatomic, strong) dispatch_source_t surveyTimer; 
 @end
 @implementation FHHouseOldDetailViewModel
 // 注册cell类型
@@ -88,6 +90,7 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
     [self.tableView registerClass:[FHDetailAdvisoryLoanCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailAdvisoryLoanModel class])];
     //推荐经纪人
     [self.tableView registerClass:[FHDetailAgentListCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailAgentListModel class])];
+    [self.tableView registerClass:[FHDetailSurveyAgentListCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailSurveyAgentListModel class])];
     //用户房源评价
     [self.tableView registerClass:[FHDetailUserHouseCommentCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailUserHouseCommentModel class])];
     //房源概况
@@ -479,35 +482,61 @@ logPB:self.listLogPB extraInfo:self.extraInfo completion:^(FHDetailOldModel * _N
     
     // 推荐经纪人
     if (model.data.recommendedRealtors.count > 0) {
-        FHDetailAgentListModel *agentListModel = [[FHDetailAgentListModel alloc] init];
+        FHDetailAgentListModel *agentListModels = [[FHDetailAgentListModel alloc] init];
+        NSString *searchId = self.listLogPB[@"search_id"];
+        NSString *imprId = self.listLogPB[@"impr_id"];
+        agentListModels.tableView = self.tableView;
+        agentListModels.belongsVC = self.detailController;
+        agentListModels.houseModelType = FHHouseModelTypeAgentlist;
+        agentListModels.recommendedRealtorsTitle = model.data.recommendedRealtorsTitle;
+        agentListModels.recommendedRealtors = model.data.recommendedRealtors;
+        agentListModels.associateInfo = model.data.recommendRealtorsAssociateInfo;
+        agentListModels.phoneCallViewModel = [[FHHouseDetailPhoneCallViewModel alloc] initWithHouseType:FHHouseTypeSecondHandHouse houseId:self.houseId];
+        agentListModels.phoneCallViewModel.houseInfoBizTrace = self.houseInfoBizTrace;
+        [agentListModels.phoneCallViewModel generateImParams:self.houseId houseTitle:model.data.title houseCover:imgUrl houseType:houseType  houseDes:houseDes housePrice:price houseAvgPrice:avgPrice];
+        agentListModels.phoneCallViewModel.tracerDict = self.detailTracerDic.mutableCopy;
+        NSMutableDictionary *paramsDict = @{}.mutableCopy;
+        if (self.detailTracerDic) {
+            [paramsDict addEntriesFromDictionary:self.detailTracerDic];
+        }
+        paramsDict[@"page_type"] = [self pageTypeString];
+        agentListModels.phoneCallViewModel.tracerDict = paramsDict;
+        agentListModels.searchId = searchId;
+        agentListModels.imprId = imprId;
+        agentListModels.houseId = self.houseId;
+        agentListModels.houseType = self.houseType;
+        [self.items addObject:agentListModels];
+        self.agentListModel = agentListModels;
+    }
+    
+    
+    //实勘经纪人
+    if (model.data.surveyedRealtorInfo.items.count > 0) {
+        FHDetailSurveyAgentListModel *agentListModel = [[FHDetailSurveyAgentListModel alloc] init];
         NSString *searchId = self.listLogPB[@"search_id"];
         NSString *imprId = self.listLogPB[@"impr_id"];
         agentListModel.tableView = self.tableView;
         agentListModel.belongsVC = self.detailController;
-        agentListModel.houseModelType = FHHouseModelTypeAgentlist;
-        agentListModel.recommendedRealtorsTitle = model.data.recommendedRealtorsTitle;
-        agentListModel.recommendedRealtors = model.data.recommendedRealtors;
-        agentListModel.associateInfo = model.data.recommendRealtorsAssociateInfo;
+        agentListModel.houseModelType = FHHouseModelTypeSurveyAgentlist;
+        agentListModel.recommendedRealtorsTitle = model.data.surveyedRealtorInfo.title;
+        agentListModel.recommendedRealtors = model.data.surveyedRealtorInfo.items;
+        agentListModel.associateInfo = model.data.surveyedRealtorInfo.associateInfo;
         agentListModel.phoneCallViewModel = [[FHHouseDetailPhoneCallViewModel alloc] initWithHouseType:FHHouseTypeSecondHandHouse houseId:self.houseId];
         agentListModel.phoneCallViewModel.houseInfoBizTrace = self.houseInfoBizTrace;
         [agentListModel.phoneCallViewModel generateImParams:self.houseId houseTitle:model.data.title houseCover:imgUrl houseType:houseType  houseDes:houseDes housePrice:price houseAvgPrice:avgPrice];
         agentListModel.phoneCallViewModel.tracerDict = self.detailTracerDic.mutableCopy;
-        //        agentListModel.phoneCallViewModel.followUpViewModel = self.contactViewModel.followUpViewModel;
-        //        agentListModel.phoneCallViewModel.followUpViewModel.tracerDict = self.detailTracerDic;
         NSMutableDictionary *paramsDict = @{}.mutableCopy;
         if (self.detailTracerDic) {
             [paramsDict addEntriesFromDictionary:self.detailTracerDic];
         }
         paramsDict[@"page_type"] = [self pageTypeString];
         agentListModel.phoneCallViewModel.tracerDict = paramsDict;
-//        agentListModel.phoneCallViewModel.followUpViewModel = self.contactViewModel.followUpViewModel;
-//        agentListModel.phoneCallViewModel.followUpViewModel.tracerDict = self.detailTracerDic;
         agentListModel.searchId = searchId;
         agentListModel.imprId = imprId;
         agentListModel.houseId = self.houseId;
         agentListModel.houseType = self.houseType;
         [self.items addObject:agentListModel];
-        self.agentListModel = agentListModel;
+        self.surveyTipName = model.data.surveyedRealtorInfo.toastText;
     }
     
     if(model.data.houseReviewComment.count > 0){
@@ -742,6 +771,7 @@ logPB:self.listLogPB extraInfo:self.extraInfo completion:^(FHDetailOldModel * _N
 {
     [super vc_viewDidDisappear:animated];
     [self.agentListModel.phoneCallViewModel vc_viewDidDisappear:animated];
+    [self hiddenSurveyTip];
 }
 
 - (void)vc_viewDidAppear:(BOOL)animated
@@ -1060,4 +1090,46 @@ logPB:self.listLogPB extraInfo:self.extraInfo completion:^(FHDetailOldModel * _N
     TRACK_EVENT(@"click_options", param);
 }
 
+- (void)showSurveyTip {
+    if(self.surveyTipView){
+        self.surveyTipView.hidden = NO;
+    }
+    [self startSurveyTimer];
+}
+- (void)hiddenSurveyTip {
+    if(self.surveyTipView){
+        self.surveyTipView.hidden = YES;
+    }
+    [self stopSurveyTimer];
+}
+
+- (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView {
+    if(scrollView != self.tableView) {
+        return;
+    }
+    [super scrollViewWillBeginDragging:scrollView];
+    [self hiddenSurveyTip];
+}
+
+- (void) startSurveyTimer {
+    if(_surveyTimer == nil){
+        _surveyTimer = dispatch_source_create(DISPATCH_SOURCE_TYPE_TIMER, 0, 0, dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0));
+        dispatch_source_set_timer(_surveyTimer, dispatch_walltime(NULL, 3 * NSEC_PER_SEC), 0, 0);
+        __weak typeof(self) weakSelf = self;
+        dispatch_source_set_event_handler(_surveyTimer, ^{
+            __strong typeof(weakSelf) strongSelf = weakSelf;
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [strongSelf hiddenSurveyTip];
+            });
+        });
+        dispatch_resume(_surveyTimer);
+    }
+}
+
+- (void) stopSurveyTimer {
+    if(_surveyTimer) {
+        dispatch_source_cancel(_surveyTimer);
+        _surveyTimer = nil;
+    }
+}
 @end

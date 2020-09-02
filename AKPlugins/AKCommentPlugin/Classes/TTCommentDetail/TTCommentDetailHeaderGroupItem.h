@@ -12,6 +12,7 @@
 
 @interface TTCommentDetailHeaderGroupItem : SSThemedView
 
+@property (nonatomic , strong) NSDictionary *tracerDict;
 - (void)refreshWithDetailModel:(TTCommentDetailModel *)detailModel;
 
 @end
