@@ -193,7 +193,7 @@
                 make.right.mas_equalTo(-width - 1);
             }];
         } else {
-            self.propertyTagLabel.hidden = NO;
+            self.propertyTagLabel.hidden = YES;
             [self.mainTitleLabel mas_updateConstraints:^(MASConstraintMaker *make) {
                 make.right.mas_equalTo(0);
             }];
