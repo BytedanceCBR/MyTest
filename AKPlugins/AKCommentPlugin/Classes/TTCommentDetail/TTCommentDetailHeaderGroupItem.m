@@ -60,7 +60,8 @@
 }
 
 - (void)backgroundOnClick:(id)sender {
-    [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:self.model.groupOpenURL]];
+    TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:self.tracerDict];
+    [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:self.model.groupOpenURL] userInfo:userInfo];
 }
 
 #pragma mark - getter & setter

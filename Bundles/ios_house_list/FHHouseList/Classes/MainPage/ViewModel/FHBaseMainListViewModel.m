@@ -2155,7 +2155,7 @@ extern NSString *const INSTANT_DATA_KEY;
     
     if (self.viewController.tracerModel) {
         FHTracerModel *model = self.viewController.tracerModel;
-        TRACK_MODEL(UT_ENTER_CATEOGRY,model);
+        TRACK_EVENT(UT_ENTER_CATEOGRY, [model logDict]);
         self.stayTraceDict = [model logDict];
     }
     

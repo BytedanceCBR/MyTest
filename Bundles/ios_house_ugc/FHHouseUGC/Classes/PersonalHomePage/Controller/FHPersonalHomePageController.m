@@ -439,7 +439,7 @@
 - (void)addGoDetailLog {
     NSMutableDictionary *tracerDict = self.tracerDict.mutableCopy;
     tracerDict[@"user_id"] = self.userId;
-    tracerDict[@"event_tracking_id"] = @"89243";
+    tracerDict[@"event_tracking_id"] = @"104260";
     [FHUserTracker writeEvent:@"go_detail" params:tracerDict];
     
     tracerDict[@"category_name"] = @"personal_homepage";

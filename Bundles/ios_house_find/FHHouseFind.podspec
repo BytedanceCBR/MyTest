@@ -18,6 +18,7 @@ Pod::Spec.new do |s|
   s.ios.deployment_target = '8.0'
 
   s.source_files = 'FHHouseFind/Classes/**/*.{h,m}'
+  s.exclude_files = "FHHouseFind/Classes/FastQA/**/*.{h,m}"
   
   s.resources = ['FHHouseFind/Assets/*.xcassets','FHHouseFind/Assets/*.jpg']
 

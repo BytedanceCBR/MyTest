@@ -557,7 +557,8 @@ NS_INLINE CGFloat kBottomLineViewHeight() {
     if(self.messageModel.user.userID && ![self.messageModel.user.userID isEqualToString:@"0"]){
         NSString *url = [NSString stringWithFormat:@"sslocal://profile?uid=%@&from_page=feed_message_list",self.messageModel.user.userID];
         NSURL *openUrl = [NSURL URLWithString:url];
-        [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:nil];
+        TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:self.tracerDict];
+        [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:userInfo];
     }
 }
 
