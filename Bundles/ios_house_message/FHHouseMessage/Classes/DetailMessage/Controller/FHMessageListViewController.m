@@ -106,6 +106,8 @@
             case FHMessageTypeHouseRent:
                 originFrom = @"messagetab_recommend_rent";
                 break;
+            case FHMessageTypeSystem:
+                originFrom = @"system_messages";
                 
             default:
                 break;
