@@ -30,6 +30,8 @@
 #import "SSCommonLogic.h"
 #import "TTVFeedItem+TTVConvertToArticle.h"
 #import "UIViewAdditions.h"
+#import "UIViewController+TTMovieUtil.h"
+#import "FHUserTracker.h"
 
 #define leftMargin 15
 #define rightMargin 15
@@ -49,6 +51,9 @@
 @property(nonatomic ,strong) FHFeedUGCCellModel *cellModel;
 @property(nonatomic ,assign) CGFloat videoViewheight;
 @property(nonatomic ,strong) TTVFeedCellMoreActionManager *moreActionMananger;
+@property(nonatomic ,strong) NSTimer *mutedBtnCloseTimer;
+@property(nonatomic ,strong) UIButton *muteBtn;
+@property(nonatomic ,strong) UILabel *videoLeftTime;
 @property(nonatomic ,assign) BOOL isStartPlaying;
 
 @end
@@ -71,12 +76,18 @@
     return self;
 }
 
+- (void)initNotification {
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(mutedStateChange:) name:FHUGCFullScreenVideoCellMutedStateChangeNotification object:nil];
+}
+
 - (void)dealloc {
     UNREGISTER_MESSAGE(TTVFeedUserOpDataSyncMessage, self);
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 - (void)initUIs {
     REGISTER_MESSAGE(TTVFeedUserOpDataSyncMessage, self);
+    [self initNotification];
     self.isStartPlaying = NO;
     [self initViews];
     [self initConstraints];
@@ -89,6 +100,7 @@
     _icon.contentMode = UIViewContentModeScaleAspectFill;
     _icon.borderWidth = 1;
     _icon.borderColor = [UIColor themeGray6];
+    _icon.hitTestEdgeInsets = UIEdgeInsetsMake(-10, -20, -10, -10);
     [self.contentView addSubview:_icon];
     
     _icon.userInteractionEnabled = YES;
@@ -96,6 +108,7 @@
     [_icon addGestureRecognizer:tap];
     
     self.userName = [self LabelWithFont:[UIFont themeFontRegular:12] textColor:[UIColor themeGray1]];
+    _userName.hitTestEdgeInsets = UIEdgeInsetsMake(-5, 0, -5, 0);
     [self.contentView addSubview:_userName];
     
     _userName.userInteractionEnabled = YES;
@@ -105,6 +118,7 @@
     self.contentLabel = [[TTUGCAsyncLabel alloc] initWithFrame:CGRectZero];
     _contentLabel.numberOfLines = maxLines;
     _contentLabel.layer.masksToBounds = YES;
+    _contentLabel.font = [UIFont themeFontMedium:16];
     _contentLabel.backgroundColor = [UIColor whiteColor];
     _contentLabel.delegate = self;
     [self.contentView addSubview:_contentLabel];
@@ -119,13 +133,37 @@
         StrongSelf;
         [self shareActionClicked];
     };
+    
+    self.videoView.ttv_playerPlaybackStateBlock = ^(TTVVideoPlaybackState state) {
+        StrongSelf;
+        [self playerPlaybackState:state];
+    };
+    
+    self.videoView.ttv_playerCurrentPlayBackTimeChangeBlock = ^(NSTimeInterval currentPlayBackTime, NSTimeInterval duration) {
+        StrongSelf;
+        [self playerCurrentPlayBackTimeChange:currentPlayBackTime duration:duration];
+    };
 
     self.bottomView = [[FHUGCToolView alloc] initWithFrame:CGRectMake(0, 0, screenWidth, bottomViewHeight)];
     [_bottomView.commentButton addTarget:self action:@selector(commentBtnClick) forControlEvents:UIControlEventTouchUpInside];
     [self.contentView addSubview:_bottomView];
     
-    CGFloat width = screenWidth;
-    CGFloat height = screenHeight;
+    self.mutedBgView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, screenWidth, 34)];
+    _mutedBgView.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"fh_ugc_video_mute_bg"]];
+    _mutedBgView.alpha = 0;
+    [self.contentView addSubview:_mutedBgView];
+    
+    self.muteBtn = [[UIButton alloc] initWithFrame:CGRectMake(15, 5, 24, 24)];
+    [_muteBtn setImage:[UIImage imageNamed:@"fh_ugc_video_mute"] forState:UIControlStateNormal];
+    [_muteBtn setImage:[UIImage imageNamed:@"fh_ugc_video_mute"] forState:UIControlStateHighlighted];
+    [_muteBtn setTitleColor:[UIColor themeGray1] forState:UIControlStateNormal];
+    [_muteBtn addTarget:self action:@selector(mutedBtnClicked) forControlEvents:UIControlEventTouchUpInside];
+    _muteBtn.hitTestEdgeInsets = UIEdgeInsetsMake(-5, -15, -5, -15);
+    [self.mutedBgView addSubview:_muteBtn];
+    
+    self.videoLeftTime = [self LabelWithFont:[UIFont themeFontRegular:10] textColor:[UIColor whiteColor]];
+    _videoLeftTime.textAlignment = NSTextAlignmentLeft;
+    [self.mutedBgView addSubview:_videoLeftTime];
 }
 
 - (void)initConstraints {
@@ -156,6 +194,21 @@
     self.bottomView.top = self.videoView.bottom;
     self.bottomView.width = screenWidth;
     self.bottomView.height = bottomViewHeight;
+    
+    self.mutedBgView.left = 0;
+    self.mutedBgView.top = self.bottomView.top - 34;
+    self.mutedBgView.width = screenWidth;
+    self.mutedBgView.height = 34;
+    
+    self.muteBtn.left = 15;
+    self.muteBtn.top = 5;
+    self.muteBtn.width = 24;
+    self.muteBtn.height = 24;
+    
+    self.videoLeftTime.left = screenWidth - 42;
+    self.videoLeftTime.top = 10;
+    self.videoLeftTime.width = 42;
+    self.videoLeftTime.height = 14;
 }
 
 - (UILabel *)LabelWithFont:(UIFont *)font textColor:(UIColor *)textColor {
@@ -203,6 +256,7 @@
     [self stop];
     self.videoItem = cellModel.videoItem;
     self.videoView.cellEntity = self.videoItem;
+//    self.videoView.forbidVideoClick = cellModel.forbidVideoClick;
     WeakSelf;
     if(cellModel.isVideoJumpDetail){
         _videoView.userInteractionEnabled = YES;
@@ -224,6 +278,10 @@
     
     [self layoutIfNeeded];
     self.bottomView.top = self.videoView.bottom;
+    self.mutedBgView.top = self.bottomView.top - 34;
+    [self updateVideoLeftTime:self.cellModel.videoItem.durationTimeString];
+    self.videoLeftTime.hidden = self.cellModel.videoItem.durationTimeString ? NO : YES;
+    [self updateMutedBtn];
 }
 
 + (CGFloat)heightForData:(id)data {
@@ -271,6 +329,131 @@
 
 - (void)updateBottomView {
     [self.bottomView refreshWithdata:self.cellModel];
+}
+
+- (void)updateVideoLeftTime:(NSString *)leftTime {
+    self.videoLeftTime.text = leftTime;
+    CGFloat width = [self.videoLeftTime sizeThatFits:CGSizeMake(CGFLOAT_MAX, 14)].width;
+    // 27,42
+    if(width < 32){
+        width = 42;
+    }else{
+        width = 57;
+    }
+    
+    self.videoLeftTime.left = screenWidth - width;
+    self.videoLeftTime.width = width;
+}
+
+- (void)updateMutedBtn {
+    if(self.cellModel.showMuteBtn){
+        if(self.cellModel.videoItem.muted){
+            [_muteBtn setImage:[UIImage imageNamed:@"fh_ugc_video_mute"] forState:UIControlStateNormal];
+            [_muteBtn setImage:[UIImage imageNamed:@"fh_ugc_video_mute"] forState:UIControlStateHighlighted];
+        }else{
+            [_muteBtn setImage:[UIImage imageNamed:@"fh_ugc_video_no_mute"] forState:UIControlStateNormal];
+            [_muteBtn setImage:[UIImage imageNamed:@"fh_ugc_video_no_mute"] forState:UIControlStateHighlighted];
+        }
+    }
+}
+
+- (void)playerPlaybackState:(TTVVideoPlaybackState) state {
+    if(self.cellModel.forbidVideoClick){
+        if(state == TTVVideoPlaybackStatePlaying || state == TTVVideoPlaybackStatePaused){
+            self.videoView.userInteractionEnabled = NO;
+        }else{
+            self.videoView.userInteractionEnabled = YES;
+        }
+    }
+    
+    if(self.cellModel.showMuteBtn){
+        if(state == TTVVideoPlaybackStatePlaying){
+            [self showMutedBtn];
+        }else if(state == TTVVideoPlaybackStatePaused){
+            //do nothing
+        }else{
+            self.mutedBgView.alpha = 0;
+        }
+    }
+}
+
+- (void)playerCurrentPlayBackTimeChange:(NSTimeInterval)currentPlayBackTime duration:(NSTimeInterval)duration {
+    if (currentPlayBackTime > duration) {
+        currentPlayBackTime = duration;
+    }
+    
+    NSTimeInterval leftTime = duration - currentPlayBackTime;
+    [self updateVideoLeftTime:ttv_getFormattedTimeStrOfPlay(leftTime)];
+}
+
+- (void)mutedBtnClicked {
+    if(self.cellModel.showMuteBtn){
+        [self showMutedBtn];
+        BOOL muted = !self.cellModel.videoItem.muted;
+        NSMutableDictionary *userInfo = @{}.mutableCopy;
+        userInfo[@"muted"] = @(muted);
+        [[NSNotificationCenter defaultCenter] postNotificationName:FHUGCFullScreenVideoCellMutedStateChangeNotification object:nil userInfo:userInfo];
+        [self addClickOptionsLog:muted];
+    }
+}
+
+- (void)mutedStateChange:(NSNotification *)notification {
+    NSDictionary *userInfo = notification.userInfo;
+
+    if(userInfo){
+        BOOL muted = [userInfo[@"muted"] boolValue];
+        self.cellModel.videoItem.muted = muted;
+        [self.videoView setMuted:muted];
+        [self updateMutedBtn];
+    }
+}
+
+- (BOOL)shouldShowMutedBtn {
+    if ([UIApplication sharedApplication].applicationState != UIApplicationStateActive) {
+        return NO;
+    }
+ 
+    UIView *view = [self cell_movieView];
+    if ([view isKindOfClass:[TTVPlayVideo class]]) {
+        TTVPlayVideo *movieView = (TTVPlayVideo *)view;
+        if (!movieView.player.context.isFullScreen &&
+            !movieView.player.context.isRotating) {
+            if (movieView.player.context.playbackState == TTVVideoPlaybackStatePlaying) {
+                return YES;
+            }
+        }
+    }
+    
+    return NO;
+}
+
+- (void)showMutedBtn {
+    if(self.cellModel.showMuteBtn && [self shouldShowMutedBtn]){
+        self.mutedBgView.alpha = 1;
+        [self startTimer];
+    }
+}
+
+- (void)hideMutedBtn {
+    [UIView animateWithDuration:0.5 animations:^{
+        self.mutedBgView.alpha = 0;
+    } completion:^(BOOL finished) {
+        self.mutedBgView.alpha = 0;
+        [self stopTimer];
+    }];
+}
+
+- (void)startTimer {
+    if(_mutedBtnCloseTimer){
+        [self stopTimer];
+    }
+    
+    _mutedBtnCloseTimer = [NSTimer scheduledTimerWithTimeInterval:5.0f target:self selector:@selector(hideMutedBtn) userInfo:nil repeats:NO];
+}
+
+- (void)stopTimer {
+    [_mutedBtnCloseTimer invalidate];
+    _mutedBtnCloseTimer = nil;
 }
 
 - (void)willDisplay {
@@ -646,6 +829,15 @@
     if(self.delegate && [self.delegate respondsToSelector:@selector(videoPlayFinished:cell:)]){
         [self.delegate videoPlayFinished:self.cellModel cell:self];
     }
+}
+
+- (void)addClickOptionsLog:(BOOL)muted {
+    NSMutableDictionary *dict = [self.cellModel.tracerDic mutableCopy];
+    NSString *playStatus = muted ? @"mute" : @"play";
+    dict[@"play_status"] = playStatus;
+    dict[@"click_position"] = @"silent_play_button";
+    dict[@"event_tracking_id"] = @"104167";
+    TRACK_EVENT(@"click_options", dict);
 }
 
 @end

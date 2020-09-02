@@ -373,15 +373,7 @@
         cellModel.feedVC = self.viewController;
         cellModel.tableView = self.tableView;
         cellModel.enterFrom = [self.viewController categoryName];
-        if([self.categoryId isEqualToString:@"f_house_video"]){
-            cellModel.isVideoJumpDetail = YES;
-            //兜底逻辑
-            if(cellModel.cellSubType == FHUGCFeedListCellSubTypeUGCVideo){
-                cellModel.cellSubType = FHUGCFeedListCellSubTypeFullVideo;
-                cellModel.numberOfLines = 2;
-                [FHUGCCellHelper setRichContentWithModel:cellModel width:([UIScreen mainScreen].bounds.size.width - 40) numberOfLines:cellModel.numberOfLines];
-            }
-        }
+        
         if(cellModel){
             if(isHead){
                 [resultArray addObject:cellModel];
@@ -539,11 +531,13 @@
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    FHFeedUGCCellModel *cellModel = self.dataList[indexPath.row];
-    self.currentCellModel = cellModel;
-    self.currentCell = [tableView cellForRowAtIndexPath:indexPath];
-    self.detailJumpManager.currentCell = self.currentCell;
-    [self.detailJumpManager jumpToDetail:cellModel showComment:NO enterType:@"feed_content_blank"];
+    if(indexPath.row < self.dataList.count){
+        FHFeedUGCCellModel *cellModel = self.dataList[indexPath.row];
+        self.currentCellModel = cellModel;
+        self.currentCell = [tableView cellForRowAtIndexPath:indexPath];
+        self.detailJumpManager.currentCell = self.currentCell;
+        [self.detailJumpManager jumpToDetail:cellModel showComment:NO enterType:@"feed_content_blank"];
+    }
 }
 
 #pragma UISCrollViewDelegate

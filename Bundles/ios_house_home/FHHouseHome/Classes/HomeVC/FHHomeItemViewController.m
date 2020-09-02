@@ -157,7 +157,7 @@ static NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
 }
 
 - (void)applicationWillEnterForeground:(NSNotification *)notification {
-    if (self.houseType == FHHouseTypeSecondHandHouse) {
+    if (self.houseType == FHHouseTypeSecondHandHouse || self.houseType == FHHouseTypeNewHouse) {
         [self resumeVRIcon];
     }
 }
@@ -285,7 +285,7 @@ static NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
 }
 
 - (void)resumeVRIcon{
-    if (self.houseType == FHHouseTypeSecondHandHouse) {
+    if (self.houseType == FHHouseTypeSecondHandHouse || self.houseType == FHHouseTypeNewHouse) {
         NSArray *tableCells = [self.tableView visibleCells];
         if (tableCells) {
             [tableCells enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
@@ -935,6 +935,7 @@ static NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
                 JSONModel *model = self.houseDataItemsModel[indexPath.row];
                 [cell refreshTopMargin:([TTDeviceHelper is896Screen3X] || [TTDeviceHelper is896Screen2X]) ? 4 : 0];
                 [cell updateHomeNewHouseCellModel:model];
+                [cell updateVrInfo:model];
             }
             [cell refreshIndexCorner:(indexPath.row == 0) andLast:(indexPath.row == (self.houseDataItemsModel.count - 1) && !self.hasMore)];
             return cell;

@@ -306,7 +306,7 @@
 {
     if (!_bottomContainerView) {
         _bottomContainerView = [[FHListEntrancesView alloc]init];
-        _bottomContainerView.backgroundColor = [UIColor themeGray8];
+        _bottomContainerView.backgroundColor = [UIColor whiteColor];
         _bottomContainerView.countPerRow = kFHMainEntranceCountPerRow;
     }
     return _bottomContainerView;
