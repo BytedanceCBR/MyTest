@@ -417,6 +417,7 @@ static const NSUInteger kFHHomeHeaderViewSectionHeight = 35;
             }else{
                 self.refreshFooter.hidden = YES;
             }
+        
 
         }else
         {
@@ -427,6 +428,9 @@ static const NSUInteger kFHHomeHeaderViewSectionHeight = 35;
             [self.tableView reloadData];
             self.bottomView.hidden = YES;
             self.tableView.scrollEnabled = NO;
+            if (self.refreshFooter) {
+                self.refreshFooter.hidden = YES;
+            }
         }
         
     }else
@@ -437,6 +441,9 @@ static const NSUInteger kFHHomeHeaderViewSectionHeight = 35;
         [self.tableView reloadData];
         self.bottomView.hidden = YES;
         self.tableView.scrollEnabled = NO;
+        if (self.refreshFooter) {
+                       self.refreshFooter.hidden = YES;
+        }
     }
     
     [self addHouseSearchLog];
