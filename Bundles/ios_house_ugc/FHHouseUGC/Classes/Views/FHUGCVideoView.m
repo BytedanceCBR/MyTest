@@ -44,6 +44,7 @@ extern BOOL ttvs_isEnhancePlayerTitleFont(void);
 @property (nonatomic, strong) SSThemedLabel *videoTitleLabel;
 @property (nonatomic, strong) UILabel *playTimesLabel;
 @property (nonatomic, strong) TTAlphaThemedButton *playButton;
+@property (nonatomic ,strong) NSString *videoLeftTime;
 //下面的分割线
 @property (nonatomic, strong) UIImageView *topMaskView;
 @property (nonatomic, strong) TTImageView *logo;
@@ -136,7 +137,6 @@ extern BOOL ttvs_isEnhancePlayerTitleFont(void);
         [_playButton addTarget:self action:@selector(playButtonClicked) forControlEvents:UIControlEventTouchUpInside];
         [self.logo addSubview:_playButton];
         self.playMovie = [[TTVCellPlayMovie alloc] init];
-        
     }
     return self;
 }
@@ -186,7 +186,23 @@ extern BOOL ttvs_isEnhancePlayerTitleFont(void);
     [self.playMovie addCommodity];
 }
 
+- (void)setMuted:(BOOL)muted {
+    self.playMovie.movieView.player.muted = muted;
+}
+
 #pragma mark TTVCellPlayMovieDelegate
+
+- (void)playerPlaybackState:(TTVVideoPlaybackState)state {
+    if (self.ttv_playerPlaybackStateBlock) {
+        self.ttv_playerPlaybackStateBlock(state);
+    }
+}
+
+- (void)playerCurrentPlayBackTimeChange:(NSTimeInterval)currentPlayBackTime duration:(NSTimeInterval)duration {
+    if(self.ttv_playerCurrentPlayBackTimeChangeBlock){
+        self.ttv_playerCurrentPlayBackTimeChangeBlock(currentPlayBackTime, duration);
+    }
+}
 
 - (void)ttv_shareButtonOnMovieFinishViewDidPress
 {

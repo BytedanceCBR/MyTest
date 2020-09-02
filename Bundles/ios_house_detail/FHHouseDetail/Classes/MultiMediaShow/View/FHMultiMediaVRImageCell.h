@@ -13,7 +13,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)checkVRLoadingAnimate;
 
-- (void)play;
+- (void)resetVRLoadingAnimate;
 
 @end
 

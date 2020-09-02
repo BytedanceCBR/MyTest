@@ -17,7 +17,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)refreshUI:(FHHouseFindRecommendDataModel *)model;
 
-- (void)setTitleStr:(NSInteger)houseCount;
+- (void)setTitleStr:(NSString *)str;
 
 @end
 

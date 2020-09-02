@@ -148,14 +148,9 @@
     }
 }
 
-- (void)setTitleStr:(NSInteger)houseCount
+- (void)setTitleStr:(NSString *)str
 {
-    if (houseCount != 0) {
-        _titleLabel.text = [NSString stringWithFormat:@"为您找到%ld套二手房",houseCount];
-    }else
-    {
-        _titleLabel.text = @"未能找到符合条件房源";
-    }
+    _titleLabel.text = str;
     _titleLabel.hidden = NO;
 }
 

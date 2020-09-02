@@ -23,6 +23,10 @@ static NSString *const kUserDefaultSelectKey = @"userdefaultselect";
 static NSString *const kUserDefaultCityNamePre05_Key = @"currentcitytext"; // 0.5版本之前保存的当前城市名称
 NSString *const kFHPhoneNumberCacheKey = @"phonenumber";
 NSString *const kFHPLoginhoneNumberCacheKey = @"loginPhoneNumber";
+//帮我找房保存的电话号码（单独存放）
+NSString *const kFHFindHousePhoneNumberCacheKey = @"findHousePhoneNumber";
+NSString *const kFHFindHouseTypeNumberCacheKey = @"findHouseTypeNumber";
+
 static NSString *const kFHSubscribeHouseCacheKey = @"subscribeHouse";
 static NSString *const kFHDetailFeedbackCacheKey = @"detailFeedback";
 static NSString *const kFHEpidemicSituationCacheKey = @"EpidemicSituation";
