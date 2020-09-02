@@ -372,6 +372,9 @@ DEC_TASK("FHIMStartupTask",FHTaskTypeSerial,TASK_PRIORITY_HIGH+16);
 - (BOOL)isEnableIMOnlineMonitorLogic {
     return [SSCommonLogic enableIMOnlineMonitorLogic];
 }
+- (BOOL)enableVoIPAudioCall {
+    return [SSCommonLogic enableVoIPAudioCall];
+}
 - (BOOL)isEnableIMRealtorLocking {
     return [SSCommonLogic enableIMRealtorLocking];
 }

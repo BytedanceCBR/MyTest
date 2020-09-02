@@ -34,10 +34,9 @@
 #import <FHHouseBase/FHHouseRentModel.h>
 #import "FHHouseListBaseItemModel.h"
 #import "TTAccountManager.h"
+#import <FHHouseBase/FHUserInfoManager.h>
 
-extern NSString *const kFHPhoneNumberCacheKey;
 extern NSString *const kFHSubscribeHouseCacheKey;
-extern NSString *const kFHPLoginhoneNumberCacheKey;
 
 @interface FHHouseRentDetailViewModel ()
 
@@ -322,7 +321,7 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
         staticMapModel.gaodeLat = model.data.neighborhoodInfo.gaodeLat;
         staticMapModel.gaodeLng = model.data.neighborhoodInfo.gaodeLng;
         staticMapModel.houseId = model.data.id;
-        staticMapModel.houseType = [NSString stringWithFormat:@"%d",FHHouseTypeRentHouse];
+        staticMapModel.houseType = [NSString stringWithFormat:@"%ld",(long)FHHouseTypeRentHouse];
         staticMapModel.tableView = self.tableView;
         staticMapModel.staticImage = model.data.neighborhoodInfo.gaodeImage;
         staticMapModel.mapOnly = YES;
@@ -398,7 +397,7 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
         if (self.sameNeighborhoodHouseData && self.sameNeighborhoodHouseData.items.count > 0) {
             // 添加分割线--当存在某个数据的时候在顶部添加分割线
             if (self.items.count > 0) {
-                id item = [self.items lastObject];
+//                id item = [self.items lastObject];
                 // 地图模块
                 FHDetailGrayLineModel *grayLine = [[FHDetailGrayLineModel alloc] init];
                 [self.items addObject:grayLine];
@@ -411,7 +410,7 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
         if (self.relatedHouseData && self.relatedHouseData.items.count > 0) {
             // 添加分割线--当存在某个数据的时候在顶部添加分割线
             if (self.items.count > 0) {
-                id item = [self.items lastObject];
+//                id item = [self.items lastObject];
                 // 地图模块
                 FHDetailGrayLineModel *grayLine = [[FHDetailGrayLineModel alloc] init];
                 [self.items addObject:grayLine];
@@ -491,9 +490,7 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
 
         if (model.status.integerValue == 0 && !error) {
             [[ToastManager manager] showToast:@"提交成功，经纪人将尽快与您联系"];
-            YYCache *sendPhoneNumberCache = [[FHEnvContext sharedInstance].generalBizConfig sendPhoneNumberCache];
-            [sendPhoneNumberCache setObject:phoneNum forKey:kFHPhoneNumberCacheKey];
-            
+            [FHUserInfoManager savePhoneNumber:phoneNum];
             YYCache *subscribeHouseCache = [[FHEnvContext sharedInstance].generalBizConfig subscribeHouseCache];
             [subscribeHouseCache setObject:@"1" forKey:self.houseId];
             
@@ -544,7 +541,7 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
         return;
     }
     
-    id model = notification.userInfo[@"model"];
+//    id model = notification.userInfo[@"model"];
     
     FHDetailPropertyListModel *propertyModel = nil;
     for (id item in self.items) {

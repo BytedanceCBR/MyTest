@@ -135,16 +135,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *priceMin;
 @end
 
-@interface FHDetailOldDataHousePricingRankBuySuggestionModel : JSONModel
-
-@property (nonatomic, copy , nullable) NSString *content;
-@property (nonatomic, copy , nullable) NSString *type;//(1 建议,2普通,3不建议)
-@property (nonatomic, copy , nullable) NSString *score;
-@end
-
 @interface FHDetailOldDataHousePricingRankModel : JSONModel
 
-@property (nonatomic, strong , nullable) FHDetailOldDataHousePricingRankBuySuggestionModel *buySuggestion ;
 @property (nonatomic, copy , nullable) NSString *position;
 @property (nonatomic, copy , nullable) NSString *total;
 @property (nonatomic, copy , nullable) NSString *analyseDetail;
@@ -401,11 +393,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign) BOOL addFoldDirect;//标识评论高度，非服务端字段
 @end
 
-@interface FHDetailHouseVRDataModel: JSONModel
-@property (nonatomic, assign) BOOL hasVr;
-@property (nonatomic, strong , nullable) FHImageModel *vrImage;
-@property (nonatomic, copy , nullable) NSString *openUrl;
-@end
+
 
 @protocol FHDetailDataQuickQuestionItemModel
 @end
@@ -475,6 +463,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong , nullable) FHDetailContactModel *contact;
 @property (nonatomic, copy , nullable) NSString *recommendedRealtorsTitle;
 @property (nonatomic, strong , nullable) NSArray<FHDetailContactModel> *recommendedRealtors;
+@property (nonatomic, strong , nullable) FHDetailSurveyContactModel *surveyedRealtorInfo;
 @property (nonatomic, strong , nullable) NSArray<FHUserHouseCommentModel> *userHouseComments;
 @property (nonatomic, strong , nullable) FHDetailContactModel *highlightedRealtor;
 @property (nonatomic, copy , nullable) NSString *abtestVersions;

@@ -355,22 +355,22 @@
                       @"tracer": self.tracerDict
                       };
         }
-        [self jumpToCategoryListVCByUrl:openUrl queryText:placeHolderStr placeholder:placeHolderStr infoDict:infos];
+        [self jumpToCategoryListVCByUrl:openUrl queryText:placeHolderStr placeholder:placeHolderStr infoDict:infos isGoDetail:NO];
     } else {
         self.tracerDict[@"category_name"] = [self.viewModel categoryNameByHouseType];
         NSDictionary *infos = @{@"houseSearch":houseSearchParams,
                                @"tracer": self.tracerDict
                                };
-        [self jumpToCategoryListVCByUrl:openUrl queryText:placeHolderStr placeholder:placeHolderStr infoDict:infos];
+        [self jumpToCategoryListVCByUrl:openUrl queryText:placeHolderStr placeholder:placeHolderStr infoDict:infos isGoDetail:NO];
     }
 }
 
-- (void)jumpToCategoryListVCByUrl:(NSString *)jumpUrl queryText:(NSString *)queryText placeholder:(NSString *)placeholder infoDict:(NSDictionary *)infos {
+- (void)jumpToCategoryListVCByUrl:(NSString *)jumpUrl queryText:(NSString *)queryText placeholder:(NSString *)placeholder infoDict:(NSDictionary *)infos isGoDetail:(BOOL)isGoDetail{
     NSString *openUrl = jumpUrl;
     if (openUrl.length <= 0) {
         openUrl = [NSString stringWithFormat:@"fschema://house_list?house_type=%ld&full_text=%@&placeholder=%@",self.houseType,queryText,placeholder];
     }
-    if (self.suggestDelegate != NULL && ![openUrl containsString:@"webview"]) {
+    if (self.suggestDelegate != NULL && ![openUrl containsString:@"webview"] && !isGoDetail) {
         // 1、suggestDelegate说明需要回传sug数据
         // 2、如果是从租房大类页和二手房大类页向下个页面跳转，则需要移除搜索列表相关的页面
         // 3、如果是从列表页和找房Tab列表页进入搜索，则还需pop到对应的列表页

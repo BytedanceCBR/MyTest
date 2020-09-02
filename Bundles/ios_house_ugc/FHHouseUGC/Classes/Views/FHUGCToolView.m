@@ -290,7 +290,7 @@
     
     [self trackClickLike];
     //刷新UI
-    NSInteger user_digg = [self.cellModel.userDigg integerValue] == 0 ? 1 : 0;
+    NSInteger user_digg = !self.cellModel.videoFeedItem.article.userDigg ? 1 : 0;
 
     NSMutableDictionary *dict = [NSMutableDictionary new];
     dict[@"enter_from"] = self.cellModel.tracerDic[@"enter_from"];
@@ -301,8 +301,7 @@
 
 - (void)trackClickLike {
     NSMutableDictionary *dict = [self.cellModel.tracerDic mutableCopy];
-    NSInteger user_digg = [self.cellModel.userDigg integerValue];
-    if(user_digg == 1){
+    if(self.cellModel.videoFeedItem.article.userDigg){
         TRACK_EVENT(@"click_dislike", dict);
     }else{
         TRACK_EVENT(@"click_like", dict);
@@ -314,7 +313,7 @@
     
     if(userInfo){
         NSInteger user_digg = [userInfo[@"action"] integerValue];
-        NSInteger diggCount = [self.cellModel.diggCount integerValue];
+        NSInteger diggCount = self.cellModel.videoItem.article.diggCount;
         NSInteger groupType = [userInfo[@"group_type"] integerValue];
         NSString *groupId = userInfo[@"group_id"];
         
@@ -336,17 +335,12 @@
                 }
             }
             
-            self.cellModel.diggCount = [NSString stringWithFormat:@"%li",(long)diggCount];
-            
             if (self.cellModel.hasVideo) {
                 // 视频点赞
                 self.cellModel.videoFeedItem.article.diggCount = diggCount;
                 self.cellModel.videoFeedItem.article.userDigg = user_digg;
-                NSString *unique_id = self.cellModel.groupId;
-                SAFECALL_MESSAGE(TTVFeedUserOpDataSyncMessage, @selector(ttv_message_feedDiggChanged:uniqueIDStr:), ttv_message_feedDiggChanged:(user_digg == 1) uniqueIDStr:unique_id);
-                SAFECALL_MESSAGE(TTVFeedUserOpDataSyncMessage, @selector(ttv_message_feedDiggCountChanged:uniqueIDStr:), ttv_message_feedDiggCountChanged:diggCount uniqueIDStr:unique_id);
             }
-            [self updateLikeState:self.cellModel.diggCount userDigg:self.cellModel.userDigg];
+            [self updateDiggButton];
         }
     }
 }

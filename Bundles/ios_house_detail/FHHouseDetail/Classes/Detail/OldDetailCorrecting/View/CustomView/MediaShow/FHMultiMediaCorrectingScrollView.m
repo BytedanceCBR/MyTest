@@ -19,6 +19,7 @@
 #import "FHDetailHeaderTitleView.h"
 #import "UIViewAdditions.h"
 #import "FHHouseDetailHeaderMoreStateView.h"
+#import <ByteDanceKit/ByteDanceKit.h>
 
 #define k_VIDEOCELLID @"video_cell_id"
 #define k_IMAGECELLID @"image_cell_id"
@@ -456,17 +457,16 @@
 
 - (void)setInfoLabelText:(NSString *)text {
     self.infoLabel.text = text;
-    [self.infoLabel sizeToFit];
-    CGSize itemSize = [self.infoLabel sizeThatFits:CGSizeMake(CGFLOAT_MAX, 20)];
-    CGFloat width = itemSize.width;
-    width += 14.0;
+    CGFloat width = [text btd_widthWithFont:[UIFont themeFontRegular:12] height:20];
+    width += 14;
     if (width < 43) {
         width = 43;
     }
-
     [self.infoLabel mas_updateConstraints:^(MASConstraintMaker *make) {
         make.width.mas_equalTo(width);
     }];
+    [self setNeedsLayout];
+    [self layoutIfNeeded];
 }
 
 - (void)updateVideoState {
@@ -484,7 +484,7 @@
             curPage = 1;
             indexPath = [NSIndexPath indexPathForItem:1 inSection:0];
         }
-        if (indexPath) {
+        if (indexPath  && !self.isShowTopImageTab) {
             //循环滚动
             [self.colletionView scrollToItemAtIndexPath:indexPath atScrollPosition:UICollectionViewScrollPositionLeft animated:NO];
         }
@@ -540,7 +540,7 @@
             self.colletionView.hidden = NO;
             self.noDataImageView.hidden = YES;
             self.totalPagesLabel.hidden = NO;
-            self.totalPagesLabel.text = [NSString stringWithFormat:@"共%lu张",model.medias.count];
+            self.totalPagesLabel.text = [NSString stringWithFormat:@"共%lu张",(unsigned long)model.medias.count];
         }
         if (!self.headerMoreStateView) {
             self.headerMoreStateView = [[FHHouseDetailHeaderMoreStateView alloc] init];

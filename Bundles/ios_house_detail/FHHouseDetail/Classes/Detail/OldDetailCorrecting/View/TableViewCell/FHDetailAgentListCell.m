@@ -73,6 +73,12 @@
             make.top.bottom.equalTo(self.contentView);
         }];
     }
+    if(model.shdowImageScopeType == FHHouseShdowImageScopeTypeDefault){
+        [self.shadowImage mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.top.equalTo(self.contentView).offset(-14);
+            make.bottom.equalTo(self.contentView).offset(14);
+        }];
+    }
 
     // 设置下发标题
     if(model.recommendedRealtorsTitle.length > 0) {
@@ -85,7 +91,6 @@
     }else{
         [self.headerView removeSubTitleWithTitle];
     }
-    
     WeakSelf;
     if (model.recommendedRealtors.count > 0) {
         __block NSInteger itemsCount = 0;
@@ -140,12 +145,12 @@
             itemsCount += 1;
         }];
     }
+    if (_foldButton) {
+        [_foldButton removeFromSuperview];
+        _foldButton = nil;
+    }
     // > 3 添加折叠展开
     if (model.recommendedRealtors.count > 3) {
-        if (_foldButton) {
-            [_foldButton removeFromSuperview];
-            _foldButton = nil;
-        }
         _foldButton = [[FHDetailFoldViewButton alloc] initWithDownText:@"查看全部" upText:@"收起" isFold:YES];
         _foldButton.openImage = [UIImage imageNamed:@"message_more_arrow"];
         _foldButton.foldImage = [UIImage imageNamed:@"message_flod_arrow"];

@@ -1037,7 +1037,7 @@
         [self.selectionIndicatorStripLayer removeFromSuperlayer];
         [self.selectionIndicatorBoxLayer removeFromSuperlayer];
     } else {
-        [self scrollToSelectedSegmentIndex:animated];
+        [self scrollToSelectedSegmentIndex:YES];
         
         if (animated) {
             // If the selected segment layer is not added to the super layer, that means no

@@ -751,7 +751,10 @@
     }
     
     NSArray<FHStaticMapAnnotation *> *annotations = self.poiAnnotations[self.curCategory];
-    FHStaticMapAnnotation *annotation = annotations[indexPath.row];
+    FHStaticMapAnnotation *annotation = nil;
+    if (indexPath.row < annotations.count) {
+        annotation = annotations[indexPath.row];
+    }
     
     MAMapPoint from = MAMapPointForCoordinate(self.centerPoint);
     NSString *stringName = @"暂无信息";

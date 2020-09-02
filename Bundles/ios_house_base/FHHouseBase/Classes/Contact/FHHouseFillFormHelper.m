@@ -15,21 +15,18 @@
 #import "TTReachability.h"
 #import "TTAccount.h"
 #import <BDTrackerProtocol/BDTrackerProtocol.h>
-
 #import <FHHouseBase/FHUserTracker.h>
 #import <FHHouseBase/FHGeneralBizConfig.h>
 #import <FHHouseBase/FHEnvContext.h>
 #import "IMManager.h"
 #import "HMDTTMonitor.h"
-
 #import "FHHouseFollowUpHelper.h"
 #import "FHFillFormAgencyListItemModel.h"
 #import "FHHouseDetailViewController.h"
 #import "FHHouseNewDetailViewModel.h"
+#import <FHHouseBase/FHUserInfoManager.h>
 
-extern NSString *const kFHPhoneNumberCacheKey;
 extern NSString *const kFHToastCountKey;
-extern NSString *const kFHPLoginhoneNumberCacheKey;
 @implementation FHHouseFillFormHelper
 
 + (NSString *)fromStrByHouseType:(FHHouseType)houseType
@@ -139,25 +136,10 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
     NSString *subtitle = associateReport.subtitle;
     NSString *btnTitle = associateReport.btnTitle;
 
-    YYCache *sendPhoneNumberCache = [[FHEnvContext sharedInstance].generalBizConfig sendPhoneNumberCache];
-    id phoneCache = [sendPhoneNumberCache objectForKey:kFHPhoneNumberCacheKey];
-    id loginPhoneCache = [sendPhoneNumberCache objectForKey:kFHPLoginhoneNumberCacheKey];
-
-    NSString *phoneNum = nil;
-    if ([phoneCache isKindOfClass:[NSString class]]) {
-        NSString *cacheNum = (NSString *)phoneCache;
-        if (cacheNum.length > 0) {
-            phoneNum = cacheNum;
-        }
-    }else if ([loginPhoneCache isKindOfClass:[NSString class]]) {
-        NSString *cacheNum = (NSString *)loginPhoneCache;
-        if (cacheNum.length > 0) {
-            phoneNum = cacheNum;
-        }
-    }
-    if (phoneNum.length > 0) {
-        subtitle = [NSString stringWithFormat:@"%@\n已为您填写上次提交时使用的手机号",subtitle];
-    }
+    NSString *phoneNum = [FHUserInfoManager getPhoneNumberIfExist];
+//    if (phoneNum.length > 0) {
+//        subtitle = [NSString stringWithFormat:@"%@\n已为您填写上次提交时使用的手机号",subtitle];
+//    }
     [self addInformShowLogWithAssociateReport:associateReport];
     __weak typeof(self)wself = self;
     FHDetailNoticeAlertView *alertView = [[FHDetailNoticeAlertView alloc]initWithTitle:title subtitle:subtitle btnTitle:btnTitle];
@@ -219,8 +201,7 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
     [FHMainApi requestCallReportByHouseId:associateReport.houseId phone:phone from:nil cluePage:nil clueEndpoint:nil targetType:nil reportAssociate:associateReport.associateInfo agencyList:selectAgencyList extraInfo:associateReport.extraInfo completion:^(FHDetailResponseModel * _Nullable model, NSError * _Nullable error) {
 
         if (model.status.integerValue == 0 && !error) {
-            YYCache *sendPhoneNumberCache = [[FHEnvContext sharedInstance].generalBizConfig sendPhoneNumberCache];
-            [sendPhoneNumberCache setObject:phone forKey:kFHPhoneNumberCacheKey];
+            [FHUserInfoManager savePhoneNumber:phone];
             NSString *toast = @"提交成功，经纪人将尽快与您联系";
             if (associateReport.toast && associateReport.toast.length > 0) {
                 toast = associateReport.toast;

@@ -201,7 +201,7 @@
         [dict addEntriesFromDictionary:reportParams.extra];
         dict[@"im_open_url"] = nil;
     }
-
+    dict[@"event_tracking_id"] = @"104151";
     [FHUserTracker writeEvent:@"click_im" params:dict];
 }
 

@@ -15,10 +15,6 @@ NS_ASSUME_NONNULL_BEGIN
 ///返回上一级VC
 - (void)popLastViewController;
 
-- (void)goToUserProtocol;
-
-- (void)goToSecretProtocol;
-
 /// 跳转手机登录，内部判断是否支持运营商一键登录，不支持跳转输入手机号界面
 - (void)goToOneKeyLogin;
 
