@@ -25,23 +25,23 @@ typedef NS_ENUM(NSUInteger, FHClueErrorType) {
 @interface FHMainApi (Contact)
 
 //快速问答 表单
-+ (TTHttpTask*)requestQuickQuestionByHouseId:(NSString*)houseId
-                                       phone:(NSString*)phone
-                                        from:(NSString*)from
-                                        type:(NSNumber*)type
-                                  extraInfo:(NSDictionary*)extra
-                                  completion:(void(^)(FHDetailResponseModel * _Nullable model , NSError * _Nullable error))completion;
+//+ (TTHttpTask*)requestQuickQuestionByHouseId:(NSString*)houseId
+//                                       phone:(NSString*)phone
+//                                        from:(NSString*)from
+//                                        type:(NSNumber*)type
+//                                  extraInfo:(NSDictionary*)extra
+//                                  completion:(void(^)(FHDetailResponseModel * _Nullable model , NSError * _Nullable error))completion;
 
 // 详情页线索提交表单
-+ (TTHttpTask*)requestSendPhoneNumbserByHouseId:(NSString*)houseId
-                                          phone:(NSString*)phone
-                                           from:(NSString*)from
-                                       cluePage:(NSNumber*)cluePage
-                                   clueEndpoint:(NSNumber*)clueEndpoint
-                                     targetType:(NSNumber *)targetType
-                                    extraInfo:(NSDictionary*)extra
-                                     agencyList:(NSArray<FHFillFormAgencyListItemModel *> *)agencyList
-                                     completion:(void(^)(FHDetailResponseModel * _Nullable model , NSError * _Nullable error))completion;
+//+ (TTHttpTask*)requestSendPhoneNumbserByHouseId:(NSString*)houseId
+//                                          phone:(NSString*)phone
+//                                           from:(NSString*)from
+//                                       cluePage:(NSNumber*)cluePage
+//                                   clueEndpoint:(NSNumber*)clueEndpoint
+//                                     targetType:(NSNumber *)targetType
+//                                    extraInfo:(NSDictionary*)extra
+//                                     agencyList:(NSArray<FHFillFormAgencyListItemModel *> *)agencyList
+//                                     completion:(void(^)(FHDetailResponseModel * _Nullable model , NSError * _Nullable error))completion;
 
 // 中介转接电话
 

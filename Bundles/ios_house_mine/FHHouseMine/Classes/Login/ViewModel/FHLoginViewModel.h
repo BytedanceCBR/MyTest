@@ -19,13 +19,13 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign) BOOL hasPushedLoginProcess;
 @property (nonatomic, assign) BOOL hasRequestedApis;
 
-- (void)loadOneKayAndDouyinConfigs:(void (^)(void))completion;
+- (void)loadOneKayAndDouyinConfigs:(nullable void (^)(void))completion;
 
 @property (nonatomic, assign) BOOL disableDouyinOneClickLoginSetting;
 
 @property (nonatomic, assign) BOOL isOneKeyLogin;
-@property (nonatomic, copy) NSString *mobileNumber;
-@property (nonatomic, assign) BOOL *douyinCanQucikLogin;
+@property (nonatomic, copy, nullable) NSString *mobileNumber;
+@property (nonatomic, assign) BOOL douyinCanQucikLogin;
 
 
 @end
