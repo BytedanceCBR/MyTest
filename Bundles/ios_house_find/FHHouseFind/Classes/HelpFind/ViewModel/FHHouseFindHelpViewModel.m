@@ -1830,6 +1830,7 @@ extern NSString *const kFHFindHouseTypeNumberCacheKey;
     params[@"origin_from"] = self.tracerDict[@"origin_from"] ?: @"be_null";
     params[@"enter_from"] = self.tracerDict[@"enter_from"] ? : @"be_null";
     params[@"page_type"] = [self pageTypeString];
+    params[@"house_type"] =  _houseTypeSelectedValue == FHHouseTypeSecondHandHouse ? @"old" : @"new";
     params[@"event_tracking_id"] = @"93447";
     if (position.length > 0) {
         params[@"click_position"] = position;

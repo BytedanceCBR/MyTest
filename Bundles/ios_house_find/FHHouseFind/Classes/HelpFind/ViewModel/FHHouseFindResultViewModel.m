@@ -211,7 +211,7 @@ static const NSUInteger kFHHomeHeaderViewSectionHeight = 35;
 -(NSDictionary *)categoryLogDict {
     
     NSMutableDictionary *tracerDict = @{}.mutableCopy;
-    tracerDict[@"category_name"] = [self categoryName] ? : @"be_null";
+    tracerDict[@"category_name"] = @"driving_find_house_list";
     tracerDict[@"enter_from"] = self.tracerModel.enterFrom ? : @"be_null";
     tracerDict[@"enter_type"] = @"click";
     tracerDict[@"element_from"] = self.tracerModel.elementFrom ? : @"be_null";
@@ -420,7 +420,8 @@ static const NSUInteger kFHHomeHeaderViewSectionHeight = 35;
 
         }else
         {
-            [self.topHeader setTitleStr:0];
+            NSString *tipStr = self.houseType == FHHouseTypeSecondHandHouse ? @"未能找到符合条件的房源" : @"未能找到符合条件的楼盘";
+            [self.topHeader setTitleStr:tipStr];
             self.isShowErrorPage = YES;
 
             [self.tableView reloadData];
@@ -430,7 +431,8 @@ static const NSUInteger kFHHomeHeaderViewSectionHeight = 35;
         
     }else
     {
-        [self.topHeader setTitleStr:0];
+        NSString *tipStr = self.houseType == FHHouseTypeSecondHandHouse ? @"未能找到符合条件的房源" : @"未能找到符合条件的楼盘";
+        [self.topHeader setTitleStr:tipStr];
         self.isShowErrorPage = YES;
         [self.tableView reloadData];
         self.bottomView.hidden = YES;
