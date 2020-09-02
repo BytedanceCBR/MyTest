@@ -39,7 +39,7 @@
         [_retryButton setTitleColor:[UIColor tt_defaultColorForKey:kColorText12] forState:UIControlStateNormal];
         _retryButton.layer.borderColor = [UIColor tt_defaultColorForKey:kColorLine12].CGColor;
         _retryButton.layer.borderWidth = 1;
-        _retryButton.layer.cornerRadius = 6;
+        _retryButton.layer.cornerRadius = 14;
         _retryButton.layer.masksToBounds = YES;
         __weak typeof(self) wself = self;
         [_retryButton addTarget:self withActionBlock:^{

@@ -129,4 +129,12 @@
     
 }
 
+- (void)startVideoPlay {
+    
+}
+
+- (void)stopCurrentVideo {
+    
+}
+
 @end

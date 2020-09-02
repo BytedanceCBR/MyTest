@@ -12,12 +12,12 @@
 #import "FHCommunityFeedListMyJoinViewModel.h"
 #import "FHCommunityFeedListPostDetailViewModel.h"
 #import "FHCommunityFeedListCustomViewModel.h"
+#import "FHCommunityFeedListVideoListViewModel.h"
 #import "TTReachability.h"
 #import "UIViewAdditions.h"
 #import "TTDeviceHelper.h"
 #import "TTRoute.h"
 #import "TTAccountManager.h"
-#import "TTAccount+Multicast.h"
 #import "FHEnvContext.h"
 #import "FHUserTracker.h"
 #import "UIScrollView+Refresh.h"
@@ -59,7 +59,6 @@
     [self initViewModel];
     
     [[SSImpressionManager shareInstance] addRegist:self];
-    [TTAccount addMulticastDelegate:self];
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationDidBecomeActive) name:UIApplicationDidBecomeActiveNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationDidEnterBackground) name:UIApplicationDidEnterBackgroundNotification object:nil];
@@ -80,7 +79,6 @@
 
 - (void)dealloc {
     [[SSImpressionManager shareInstance] removeRegist:self];
-    [TTAccount removeMulticastDelegate:self];
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
@@ -229,6 +227,10 @@
         postDetailViewModel.tabName = self.tabName;
         postDetailViewModel.categoryId = @"f_project_social";
         viewModel = postDetailViewModel;
+    }else if(self.listType == FHCommunityFeedListTypeVideoList) {
+        FHCommunityFeedListVideoListViewModel *videoListViewModel = [[FHCommunityFeedListVideoListViewModel alloc] initWithTableView:_tableView controller:self];
+        videoListViewModel.categoryId = self.category;
+        viewModel = videoListViewModel;
     }else if(self.listType == FHCommunityFeedListTypeCustom) {
         viewModel = [[FHCommunityFeedListCustomViewModel alloc] initWithTableView:_tableView controller:self];
         viewModel.categoryId = self.category;
@@ -350,15 +352,8 @@
 
 - (void)applicationDidBecomeActive {
     self.enterTabTimestamp = [[NSDate date]timeIntervalSince1970];
-}
-
-#pragma mark - TTAccountMulticaastProtocol
-
-// 帐号切换
-- (void)onAccountStatusChanged:(TTAccountStatusChangedReasonType)reasonType platform:(NSString *)platformName {
-//    if(self.listType == FHCommunityFeedListTypeNearby || self.listType == FHCommunityFeedListTypeMyJoin) {
-//        self.needReloadData = YES;
-//    }
+    [self.tableView setContentOffset:self.tableView.contentOffset animated:NO];
+    [self.viewModel startVideoPlay];
 }
 
 #pragma mark - SSImpressionProtocol
