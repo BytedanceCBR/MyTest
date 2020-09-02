@@ -1,11 +1,11 @@
 //
-//  FHCommunityFeedListCustomViewModel.m
+//  FHCommunityFeedListVideoListViewModel.m
 //  FHHouseUGC
 //
-//  Created by 谢思铭 on 2020/4/21.
+//  Created by 谢思铭 on 2020/8/23.
 //
 
-#import "FHCommunityFeedListCustomViewModel.h"
+#import "FHCommunityFeedListVideoListViewModel.h"
 #import "FHUGCBaseCell.h"
 #import "FHHouseUGCAPI.h"
 #import "FHFeedListModel.h"
@@ -29,25 +29,36 @@
 #import "FHFeedCustomHeaderView.h"
 #import "FHUGCFullScreenVideoCell.h"
 #import "FHUGCCellHelper.h"
+#import "BTDResponder.h"
 
-@interface FHCommunityFeedListCustomViewModel () <UITableViewDelegate,UITableViewDataSource,FHUGCBaseCellDelegate,UIScrollViewDelegate>
+@interface FHCommunityFeedListVideoListViewModel () <UITableViewDelegate,UITableViewDataSource,FHUGCBaseCellDelegate,UIScrollViewDelegate>
 
 //当第一刷数据不足5个，同时feed还有新内容时，会继续刷下一刷的数据，这个值用来记录请求的次数
 @property(nonatomic, assign) NSInteger retryCount;
+@property(nonatomic, strong) FHUGCFullScreenVideoCell *currentVideoCell;
+@property(nonatomic, assign) CGFloat oldY;
+//是否静音，默认是YES
+@property(nonatomic, assign) BOOL muted;
+//在滚动中
+@property(nonatomic, assign) BOOL isScrolling;
+@property(nonatomic, assign) BOOL isViewAppear;
 
 @end
 
-@implementation FHCommunityFeedListCustomViewModel
+@implementation FHCommunityFeedListVideoListViewModel
 
 - (instancetype)initWithTableView:(UITableView *)tableView controller:(FHCommunityFeedListController *)viewController {
     self = [super initWithTableView:tableView controller:viewController];
     if (self) {
+        _muted = YES;
+        _isViewAppear = YES;
         self.dataList = [[NSMutableArray alloc] init];
         [self configTableView];
         // 删帖成功
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(postDeleteSuccess:) name:kFHUGCDelPostNotification object:nil];
         // 编辑成功
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(postEditNoti:) name:@"kTTForumPostEditedThreadSuccessNotification" object:nil]; // 编辑发送成功
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(mutedStateChange:) name:FHUGCFullScreenVideoCellMutedStateChangeNotification object:nil];
         
         if(self.viewController.isInsertFeedWhenPublish){
             // 发帖成功
@@ -65,6 +76,18 @@
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
+- (void)viewWillAppear {
+    self.isViewAppear = YES;
+    if(!self.viewController.needReloadData){
+        [self lazyStartVideoPlay];
+    }
+}
+
+- (void)viewWillDisappear {
+    self.isViewAppear = NO;
+    [self stopCurrentVideo];
+}
+
 // 更新发帖进度视图
 - (void)updateJoinProgressView {
     CGRect frame = self.viewController.tableHeaderView.frame;
@@ -75,6 +98,15 @@
         headerView.frame = frame;
 
         self.viewController.tableHeaderView = headerView;
+    }
+}
+
+- (void)mutedStateChange:(NSNotification *)notification {
+    NSDictionary *userInfo = notification.userInfo;
+
+    if(userInfo){
+        BOOL muted = [userInfo[@"muted"] boolValue];
+        self.muted = muted;
     }
 }
 
@@ -325,10 +357,7 @@
                         [wself updateTableViewWithMoreData:wself.tableView.hasMore];
                         [wself.viewController.emptyView hideEmptyView];
                     }else{
-                        NSString *tipStr = @"暂无新内容，快去发布吧";
-                        if([self.categoryId isEqualToString:@"f_house_video"]){
-                            tipStr = @"暂无新内容";
-                        }
+                        NSString *tipStr = @"暂无新内容";
                         [wself.viewController.emptyView showEmptyWithTip:tipStr errorImageName:kFHErrorMaskNetWorkErrorImageName showRetry:YES];
                         wself.refreshFooter.hidden = YES;
                     }
@@ -345,14 +374,24 @@
                         [wself.tableView scrollRectToVisible:CGRectMake(0, 0, 1, 1) animated:NO];
                     }
                     
-                    if(!self.viewController.alreadyReportPageMonitor && [self.categoryId isEqualToString:@"f_news_recommend"]){
+                    if(isHead){
+                        [wself lazyStartVideoPlay];
+                    }
+                    
+                    if(!wself.viewController.alreadyReportPageMonitor && [wself.categoryId isEqualToString:@"f_news_recommend"]){
                         [FHMainApi addUserOpenVCDurationLog:@"pss_discovery_recommend" resultType:FHNetworkMonitorTypeSuccess duration:[[NSDate date] timeIntervalSince1970] - self.viewController.startMonitorTime];
-                        self.viewController.alreadyReportPageMonitor = YES;
+                        wself.viewController.alreadyReportPageMonitor = YES;
                     }
                 });
             });
         }
     }];
+}
+
+- (void)lazyStartVideoPlay {
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        [self startVideoPlay];
+    });
 }
 
 - (void)updateTableViewWithMoreData:(BOOL)hasMore {
@@ -373,6 +412,19 @@
         cellModel.feedVC = self.viewController;
         cellModel.tableView = self.tableView;
         cellModel.enterFrom = [self.viewController categoryName];
+        cellModel.isVideoJumpDetail = YES;
+        cellModel.forbidVideoClick = YES;
+        cellModel.showMuteBtn = YES;
+        if(cellModel.videoItem){
+            cellModel.videoItem.muted = self.muted;
+            cellModel.videoItem.forbidRotate = YES;
+        }
+        //兜底逻辑
+        if(cellModel.cellSubType == FHUGCFeedListCellSubTypeUGCVideo){
+            cellModel.cellSubType = FHUGCFeedListCellSubTypeFullVideo;
+            cellModel.numberOfLines = 2;
+            [FHUGCCellHelper setRichContentWithModel:cellModel width:(screenWidth - 30) numberOfLines:cellModel.numberOfLines];
+        }
         
         if(cellModel){
             if(isHead){
@@ -387,6 +439,7 @@
             }
         }
     }
+    
     return resultArray;
 }
 
@@ -407,6 +460,85 @@
     }
 }
 
+- (void)startVideoPlay {
+    if ([UIApplication sharedApplication].applicationState != UIApplicationStateActive || self.dataList.count <= 0 || !self.isViewAppear) {
+        return;
+    }
+    
+    FHUGCFullScreenVideoCell *cell = [self getFitableVideoCell];
+    if(cell != self.currentVideoCell){
+        self.currentVideoCell.contentView.userInteractionEnabled = NO;
+        self.currentVideoCell.mutedBgView.alpha = 0;
+        cell.contentView.userInteractionEnabled = YES;
+        self.currentVideoCell = cell;
+    }
+    
+    if(![self.currentVideoCell cell_isPlaying]){
+        [cell play];
+    }
+}
+
+- (FHUGCFullScreenVideoCell *)getFitableVideoCell {
+    NSArray *cells = [self.tableView visibleCells];
+    for (NSInteger i = 0; i < cells.count; i++) {
+        UITableViewCell *cell = cells[i];
+        if([cell isKindOfClass:[FHUGCFullScreenVideoCell class]] && [cell conformsToProtocol:@protocol(TTVFeedPlayMovie)]){
+            FHUGCFullScreenVideoCell<TTVFeedPlayMovie> *vCell = (FHUGCFullScreenVideoCell<TTVFeedPlayMovie> *)cell;
+            CGRect frame = [vCell.videoView convertRect:vCell.videoView.bounds toView:self.viewController.view];
+            if(frame.origin.y >= CGRectGetMaxY(self.viewController.customNavBarView.frame)){
+                return vCell;
+            }
+        }
+    }
+    return nil;
+}
+
+- (void)stopCurrentVideo {
+    if ([UIApplication sharedApplication].applicationState != UIApplicationStateActive) {
+        return;
+    }
+    
+    if(self.currentVideoCell){
+        if([self.currentVideoCell isKindOfClass:[FHUGCFullScreenVideoCell class]] && [self.currentVideoCell conformsToProtocol:@protocol(TTVFeedPlayMovie)]){
+            FHUGCFullScreenVideoCell<TTVFeedPlayMovie> *vCell = (FHUGCFullScreenVideoCell<TTVFeedPlayMovie> *)self.currentVideoCell;
+            UIView *view = [vCell cell_movieView];
+            if ([view isKindOfClass:[TTVPlayVideo class]]) {
+                TTVPlayVideo *movieView = (TTVPlayVideo *)view;
+                if (!movieView.player.context.isFullScreen &&
+                    !movieView.player.context.isRotating) {
+                    if (movieView.player.context.playbackState != TTVVideoPlaybackStateBreak || movieView.player.context.playbackState != TTVVideoPlaybackStateFinished) {
+                        [movieView stop];
+                    }
+                    [movieView removeFromSuperview];
+                }
+            }
+            [vCell endDisplay];
+        }
+    }
+}
+
+- (void)pauseCurrentVideo {
+    if ([UIApplication sharedApplication].applicationState != UIApplicationStateActive) {
+        return;
+    }
+    
+    if(self.currentVideoCell){
+        if([self.currentVideoCell isKindOfClass:[FHUGCFullScreenVideoCell class]] && [self.currentVideoCell conformsToProtocol:@protocol(TTVFeedPlayMovie)]){
+            FHUGCFullScreenVideoCell<TTVFeedPlayMovie> *vCell = (FHUGCFullScreenVideoCell<TTVFeedPlayMovie> *)self.currentVideoCell;
+            UIView *view = [vCell cell_movieView];
+            if ([view isKindOfClass:[TTVPlayVideo class]]) {
+                TTVPlayVideo *movieView = (TTVPlayVideo *)view;
+                if (!movieView.player.context.isFullScreen &&
+                    !movieView.player.context.isRotating) {
+                    if (movieView.player.context.playbackState != TTVVideoPlaybackStateBreak || movieView.player.context.playbackState != TTVVideoPlaybackStateFinished) {
+                        [movieView.player pause];
+                    }
+                }
+            }
+        }
+    }
+}
+
 #pragma mark - UITableViewDataSource
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
@@ -420,18 +552,6 @@
         /*impression统计相关*/
         SSImpressionStatus impressionStatus = self.isShowing ? SSImpressionStatusRecording : SSImpressionStatusSuspend;
         [self recordGroupWithCellModel:cellModel status:impressionStatus];
-        
-        if (![cell isKindOfClass:[FHUGCVideoCell class]] && ![cell isKindOfClass:[FHUGCFullScreenVideoCell class]]) {
-            return;
-        }
-        //视频
-        if(cellModel.hasVideo){
-            FHUGCBaseCell *cellBase = (FHUGCBaseCell *)cell;
-            [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(willFinishLoadTable) object:nil];
-            [self willFinishLoadTable];
-            
-            [cellBase willDisplay];
-        }
     }
 }
 
@@ -440,43 +560,6 @@
     if(indexPath.row < self.dataList.count){
         FHFeedUGCCellModel *cellModel = self.dataList[indexPath.row];
         [self recordGroupWithCellModel:cellModel status:SSImpressionStatusEnd];
-        
-        if(cellModel.hasVideo){
-            [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(willFinishLoadTable) object:nil];
-            [self willFinishLoadTable];
-            
-            if([cell isKindOfClass:[FHUGCBaseCell class]] && [cell conformsToProtocol:@protocol(TTVFeedPlayMovie)]) {
-                FHUGCBaseCell<TTVFeedPlayMovie> *cellBase = (FHUGCBaseCell<TTVFeedPlayMovie> *)cell;
-                BOOL hasMovie = NO;
-                NSArray *indexPaths = [tableView indexPathsForVisibleRows];
-                for (NSIndexPath *path in indexPaths) {
-                    if (path.row < self.dataList.count) {
-                        
-                        BOOL hasMovieView = NO;
-                        if ([cellBase respondsToSelector:@selector(cell_hasMovieView)]) {
-                            hasMovieView = [cellBase cell_hasMovieView];
-                        }
-
-                        if ([cellBase respondsToSelector:@selector(cell_movieView)]) {
-                            UIView *view = [cellBase cell_movieView];
-                            if (view && ![self.movieViews containsObject:view]) {
-                                [self.movieViews addObject:view];
-                            }
-                        }
-                        if (cellModel == self.movieViewCellData) {
-                            hasMovie = YES;
-                            break;
-                        }
-                    }
-                }
-                    
-                if (self.isShowing) {
-                    if (!hasMovie) {
-                        [cellBase endDisplay];
-                    }
-                }
-            }
-        }
     }
 }
 
@@ -502,6 +585,9 @@
         cellModel.cell = cell;
 
         if(indexPath.row < self.dataList.count){
+            if(cellModel.videoItem){
+                cellModel.videoItem.muted = self.muted;
+            }
             [cell refreshWithData:cellModel];
         }
         return cell;
@@ -535,8 +621,16 @@
         FHFeedUGCCellModel *cellModel = self.dataList[indexPath.row];
         self.currentCellModel = cellModel;
         self.currentCell = [tableView cellForRowAtIndexPath:indexPath];
-        self.detailJumpManager.currentCell = self.currentCell;
-        [self.detailJumpManager jumpToDetail:cellModel showComment:NO enterType:@"feed_content_blank"];
+        
+        if(self.currentCell == self.currentVideoCell){
+            if(self.isScrolling){
+                return;
+            }
+            self.detailJumpManager.currentCell = self.currentCell;
+            [self.detailJumpManager jumpToDetail:cellModel showComment:NO enterType:@"feed_content_blank"];
+        }else{
+            [self didVideoClicked:cellModel cell:self.currentCell];
+        }
     }
 }
 
@@ -544,11 +638,54 @@
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
     [self.viewController.scrollViewDelegate scrollViewDidScroll:scrollView];
+    
+    [NSObject cancelPreviousPerformRequestsWithTarget:self];
+    [self performSelector:@selector(scrollViewDidEndScrollingAnimation:) withObject:nil afterDelay:0.3];
+    self.isScrolling = YES;
+    
     if(scrollView == self.tableView){
         if (scrollView.isDragging) {
             [self.viewController.notifyBarView performSelector:@selector(hideIfNeeds) withObject:nil];
         }
     }
+        
+    if(self.currentVideoCell){
+        [self.currentVideoCell showMutedBtn];
+        
+        CGRect frame = [self.currentVideoCell.videoView convertRect:self.currentVideoCell.videoView.bounds toView:self.viewController.view];
+        if(scrollView.contentOffset.y - _oldY >= 0){
+            //向上滑动
+            if(frame.origin.y < CGRectGetMaxY(self.viewController.customNavBarView.frame)){
+                [self pauseCurrentVideo];
+            }
+        }else{
+            //向下滑动
+            CGFloat height = MAX(self.viewController.view.width, self.viewController.view.height);
+            if(CGRectGetMaxY(frame) > height){
+                [self pauseCurrentVideo];
+            }
+        }
+    }
+    self.oldY = scrollView.contentOffset.y;
+}
+
+- (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
+    [self startVideoPlay];
+}
+
+- (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate {
+    if(!decelerate){
+        [self startVideoPlay];
+    }
+}
+
+- (void)scrollViewDidScrollToTop:(UIScrollView *)scrollView {
+    [self startVideoPlay];
+}
+
+- (void)scrollViewDidEndScrollingAnimation:(UIScrollView *)scrollView {
+    [NSObject cancelPreviousPerformRequestsWithTarget:self];
+    self.isScrolling = NO;
 }
 
 #pragma mark - FHUGCBaseCellDelegate
@@ -617,45 +754,86 @@
     }
 }
 
-#pragma mark - 视频相关
-
-- (void)willFinishLoadTable {
-    [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(didFinishLoadTable) object:nil];
-    [self performSelector:@selector(didFinishLoadTable) withObject:nil afterDelay:0.1];
-}
-
-- (void)didFinishLoadTable {
-    if ([UIApplication sharedApplication].applicationState != UIApplicationStateActive) {
+- (void)scrollToVideo:(NSInteger)row {
+    if(self.isScrolling){
         return;
     }
-    NSArray *cells = [self.tableView visibleCells];
-    NSMutableArray *visibleCells = [NSMutableArray arrayWithCapacity:cells.count];
-    for (id cell in cells) {
-        if([cell isKindOfClass:[FHUGCBaseCell class]] && [cell conformsToProtocol:@protocol(TTVFeedPlayMovie)]){
-            FHUGCBaseCell<TTVFeedPlayMovie> *vCell = (FHUGCBaseCell<TTVFeedPlayMovie> *)cell;
-            UIView *view = [vCell cell_movieView];
-            if (view) {
-                [visibleCells addObject:view];
-            }
-        }
-    }
     
-    for (UIView *view in self.movieViews) {
-        if ([view isKindOfClass:[TTVPlayVideo class]]) {
-            TTVPlayVideo *movieView = (TTVPlayVideo *)view;
-            if (!movieView.player.context.isFullScreen &&
-                !movieView.player.context.isRotating && ![visibleCells containsObject:movieView]) {
-                if (movieView.player.context.playbackState != TTVVideoPlaybackStateBreak || movieView.player.context.playbackState != TTVVideoPlaybackStateFinished) {
-                    [movieView stop];
-                }
-                [movieView removeFromSuperview];
-            }
+    NSIndexPath *indexPath = [NSIndexPath indexPathForRow:row inSection:0];
+    [self.tableView scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionTop animated:YES];
+    UITableViewCell *cell = [self.tableView cellForRowAtIndexPath:indexPath];
+    self.currentVideoCell.contentView.userInteractionEnabled = NO;
+    self.currentVideoCell.mutedBgView.alpha = 0;
+    self.tableView.scrollEnabled = NO;
+    
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        if([cell isKindOfClass:[FHUGCFullScreenVideoCell class]]){
+            FHUGCFullScreenVideoCell *vCell = (FHUGCFullScreenVideoCell *)cell;
+            vCell.contentView.userInteractionEnabled = YES;
+            self.currentVideoCell = vCell;
+            [vCell play];
         }
+        
+        self.tableView.scrollEnabled = YES;
+    });
+    
+    if(row >= (self.dataList.count - 3)){
+         //在刷一刷数据
+         [self requestData:NO first:NO];
+    }
+}
+
+- (void)didVideoClicked:(FHFeedUGCCellModel *)cellModel cell:(FHUGCBaseCell *)cell {
+    NSInteger row = [self.dataList indexOfObject:cellModel];
+    if(row < self.dataList.count && row >= 0){
+        [self scrollToVideo:row];
+    }
+}
+
+- (void)videoPlayFinished:(FHFeedUGCCellModel *)cellModel cell:(FHUGCBaseCell *)cell {
+    if(!self.isViewAppear || self.tableView.isDragging || self.tableView.isDecelerating || self.isScrolling){
+        [self stopCurrentVideo];
+        return;
     }
 
-    self.movieViewCellData = nil;
-    self.movieView = nil;
-    [self.movieViews removeAllObjects];
+    if([cell isKindOfClass:[FHUGCFullScreenVideoCell class]] && [cell conformsToProtocol:@protocol(TTVFeedPlayMovie)]){
+        FHUGCFullScreenVideoCell<TTVFeedPlayMovie> *vCell = (FHUGCFullScreenVideoCell<TTVFeedPlayMovie> *)cell;
+        UIView *view = [vCell cell_movieView];
+        if ([view isKindOfClass:[TTVPlayVideo class]]) {
+            TTVPlayVideo *movieView = (TTVPlayVideo *)view;
+            
+            UIView *tipView = movieView.player.playerView.tipView;
+            if([tipView isKindOfClass:[TTVPlayerControlTipView class]]){
+                TTVPlayerControlTipView *view = (TTVPlayerControlTipView *)tipView;
+                view.finishedView.alpha = 0;
+                
+                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                    view.finishedView.alpha = 1;
+                });
+            }
+            
+            if (!movieView.player.context.isFullScreen &&
+                !movieView.player.context.isRotating) {
+                NSInteger row = [self.dataList indexOfObject:cellModel];
+                if(row >= 0){
+                    row += 1;
+                    if(row < self.dataList.count){
+                        [self scrollToVideo:row];
+                    }
+                }
+            }else{
+                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                    NSInteger row = [self.dataList indexOfObject:cellModel];
+                    if(row >= 0){
+                        row += 1;
+                        if(row < self.dataList.count){
+                            [self scrollToVideo:row];
+                        }
+                    }
+                });
+            }
+        }
+    }
 }
 
 #pragma mark - 埋点
@@ -671,7 +849,6 @@
         self.clientShowDict = [NSMutableDictionary new];
     }
     
-    NSString *row = [NSString stringWithFormat:@"%i",indexPath.row];
     NSString *groupId = cellModel.groupId;
     if(groupId){
         if (self.clientShowDict[groupId]) {
@@ -685,7 +862,7 @@
 
 - (void)trackClientShow:(FHFeedUGCCellModel *)cellModel rank:(NSInteger)rank {
     NSMutableDictionary *dict = [self trackDict:cellModel rank:rank];
-    dict[@"event_tracking_id"] = @"93415";
+    dict[@"event_tracking_id"] = @(93415);
     TRACK_EVENT(@"feed_client_show", dict);
     
     if(cellModel.attachCardInfo){

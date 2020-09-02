@@ -19,6 +19,7 @@
 #import "TTSandBoxHelper+House.h"
 #import "FHHouseUGCHeader.h"
 #import "FHUtils.h"
+#import "UIFont+House.h"
 
 #define kRecommendSocialGroupListNil @"kRecommendSocialGroupListNil"
 #define kHotTopicListNil @"kHotTopicListNil"
@@ -278,7 +279,11 @@
             user.schema = model.userInfo.schema;
             cellModel.user = user;
             
-            [FHUGCCellHelper setRichContentWithModel:cellModel width:(screenWidth - 40) numberOfLines:cellModel.numberOfLines];
+            if([model.cellCtrls.cellLayoutStyle isEqualToString:@"10001"]){
+                [FHUGCCellHelper setRichContentWithModel:cellModel width:(screenWidth - 30) numberOfLines:cellModel.numberOfLines font:[UIFont themeFontMedium:16]];
+            }else{
+                [FHUGCCellHelper setRichContentWithModel:cellModel width:(screenWidth - 40) numberOfLines:cellModel.numberOfLines font:[UIFont themeFontRegular:16]];
+            }
             
             cellModel.desc = [self generateUGCDescWithCreateTime:model.publishTime readCount:model.readCount distanceInfo:nil];
             
