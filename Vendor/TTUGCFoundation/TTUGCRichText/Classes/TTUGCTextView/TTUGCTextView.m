@@ -63,6 +63,7 @@
     return self;
 }
 
+
 - (void)dealloc {
 
     _internalGrowingTextView.delegate = nil;
