@@ -444,11 +444,11 @@
                 }
                 houseImageDictList.houseImageTypeName = topImage.name;
                 houseImageDictList.usedSceneType = FHHouseDetailImageListDataUsedSceneTypeNew;
-                houseImageDictList.houseImageList = houseImages;
+                houseImageDictList.houseImageList = houseImages.copy;
                 houseImageDictList.houseImageType = topImage.type;
                 [houseImageList addObject:houseImageDictList];
             }
-            headerCellModel.houseImageDictList = houseImageList;
+            headerCellModel.houseImageDictList = houseImageList.copy;
             
         }
         

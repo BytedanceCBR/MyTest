@@ -49,6 +49,7 @@
 @property(nonatomic ,strong) FHFeedUGCCellModel *cellModel;
 @property(nonatomic ,assign) CGFloat videoViewheight;
 @property(nonatomic ,strong) TTVFeedCellMoreActionManager *moreActionMananger;
+@property(nonatomic ,assign) BOOL isStartPlaying;
 
 @end
 
@@ -76,6 +77,7 @@
 
 - (void)initUIs {
     REGISTER_MESSAGE(TTVFeedUserOpDataSyncMessage, self);
+    self.isStartPlaying = NO;
     [self initViews];
     [self initConstraints];
 }
@@ -585,6 +587,11 @@
 }
 
 - (void)play {
+    if(self.isStartPlaying){
+        return;
+    }
+    
+    self.isStartPlaying = YES;
     UIView *view = [self cell_movieView];
     if(view){
         if ([view isKindOfClass:[TTVPlayVideo class]]) {
@@ -599,6 +606,7 @@
     }else{
         [self.videoView playVideo];
     }
+    self.isStartPlaying = NO;
 }
 
 - (void)stop {

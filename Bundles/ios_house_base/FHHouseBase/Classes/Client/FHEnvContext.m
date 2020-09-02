@@ -1154,19 +1154,11 @@ static NSInteger kGetLightRequestRetryCount = 3;
 }
 
 + (BOOL)isNewDiscovery {
-//    FHConfigDataModel *configData = [[FHEnvContext sharedInstance] getConfigFromCache];
-//    if([configData.channelType isEqualToString:@"1"]){
-//        return YES;
-//    }
     return NO;
 }
 
 + (BOOL)isHomeNewDiscovery {
-    id res = [BDABTestManager getExperimentValueForKey:@"f_find_revision_v103" withExposure:YES];
-    if(res){
-        return [res boolValue];
-    }
-    return NO;
+    return YES;
 }
 
 + (BOOL)isHasVideoList {

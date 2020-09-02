@@ -1,9 +1,5 @@
 //
-//  SwipeView.h
-//  SwipeTableView
-//
-//  Created by zhao on 16/8/29.
-//  Copyright © 2016年 zhaoName. All rights reserved.
+//  Created by xubinbin on 2020/8/14.
 //
 
 #import <UIKit/UIKit.h>
@@ -23,10 +19,7 @@ typedef NS_ENUM(NSInteger, MGSwipeEasingFunction) {
 
 typedef NS_ENUM(NSUInteger, SwipeViewTransfromMode)
 {
-    SwipeViewTransfromModeDefault = 0, /**< 默认效果，拖拽*/
-    SwipeViewTransfromModeStatic, /**< 静态效果*/
-    SwipeViewTransfromModeBorder, /**< 渐出效果*/
-    SwipeViewTransfromMode3D, /**< 3D效果*/
+    SwipeViewTransfromModeStatic, // 静态效果
 };
 
 
@@ -35,9 +28,9 @@ typedef NS_ENUM(NSUInteger, SwipeViewTransfromMode)
 @property (nonatomic, assign) CGFloat from;
 @property (nonatomic, assign) CGFloat to;
 @property (nonatomic, assign) CFTimeInterval start;
-@property (nonatomic, assign) CGFloat duration; /**<动画持续时间 默认0.3*/
-@property (nonatomic, assign) MGSwipeEasingFunction easingFunction; /**< 手势动画执行节奏*/
-@property (nonatomic, assign) SwipeViewTransfromMode mode;/**< swipeView的弹出效果*/
+@property (nonatomic, assign) CGFloat duration; //动画持续时间 默认0.3
+@property (nonatomic, assign) MGSwipeEasingFunction easingFunction; // 手势动画执行节奏
+@property (nonatomic, assign) SwipeViewTransfromMode mode;// swipeView的弹出效果
 
 /**
  *  初始化swipeView，添加滑动按钮

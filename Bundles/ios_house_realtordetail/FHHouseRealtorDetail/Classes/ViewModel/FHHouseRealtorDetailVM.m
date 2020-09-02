@@ -61,6 +61,7 @@
 @property (nonatomic, assign) NSInteger currentIndex;
 @property (nonatomic, assign) BOOL isFirstEnter;
 @property (nonatomic, assign) BOOL isHeightScoreRealtor;
+@property (nonatomic, assign) CGFloat placeHolderCellHeight;
 @property (nonatomic) BOOL shouldShowUGcGuide;
 @end
 @implementation FHHouseRealtorDetailVM
@@ -104,24 +105,23 @@
     [FHMainApi requestRealtorHomePage:parmas completion:^(FHHouseRealtorDetailModel * _Nonnull model, NSError * _Nonnull error) {
         if (model && error == NULL) {
             if (model.data) {
-                self.viewController.emptyView.hidden = YES;
+                wSelf.viewController.emptyView.hidden = YES;
                 //                [wSelf updateUIWithData];
                 [wSelf processDetailData:model];
-                
             }else {
-                  [self addGoDetailLog];
-                [self.viewController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoData];
+                [wSelf addGoDetailLog];
+                [wSelf.viewController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoData];
             }
         }else {
-              [self addGoDetailLog];
-            [self.viewController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoData];
+            [wSelf addGoDetailLog];
+            [wSelf.viewController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoData];
         }
     }];
 }
 
 - (void)processDetailData:(FHHouseRealtorDetailModel *)model {
     if (!self.viewController) {
-        return;
+            return;
     }
     self.realtorLogpb = model.data.realtorLogpb;
     [self addGoDetailLog];
@@ -163,13 +163,13 @@
                 self.isHeightScoreRealtor = isHightScore;
                 [self.viewController.headerView updateRealtorWithHeightScore];
                 self.viewController.headerView.titleImage.hidden = NO;
-               self.viewController.customNavBarView.title.textColor = [UIColor colorWithHexStr:@"#E7C494"];
-        UIImage *whiteBackArrowImage = ICON_FONT_IMG(24, @"\U0000e68a", [UIColor colorWithHexStr:@"#E7C494"]);
-        [self.viewController.customNavBarView.leftBtn setBackgroundImage:whiteBackArrowImage forState:UIControlStateNormal];
-        [self.viewController.customNavBarView.leftBtn setBackgroundImage:whiteBackArrowImage forState:UIControlStateHighlighted];
+                self.viewController.customNavBarView.title.textColor = [UIColor colorWithHexStr:@"#E7C494"];
+                UIImage *whiteBackArrowImage = ICON_FONT_IMG(24, @"\U0000e68a", [UIColor colorWithHexStr:@"#E7C494"]);
+                [self.viewController.customNavBarView.leftBtn setBackgroundImage:whiteBackArrowImage forState:UIControlStateNormal];
+                [self.viewController.customNavBarView.leftBtn setBackgroundImage:whiteBackArrowImage forState:UIControlStateHighlighted];
             }
         }
-
+        
         self.viewController.headerView.height = self.viewController.headerView.viewHeight;
         if (realtorLeave) {
             [self.viewController showRealtorLeaveHeader];
@@ -215,7 +215,7 @@
         if (self.currentIndex < tabListArr.count) {
             self.viewController.segmentView.selectedIndex = self.currentIndex;
         }else {
-             self.viewController.segmentView.selectedIndex = 0;
+            self.viewController.segmentView.selectedIndex = 0;
         }
         
         [self addEnterCategoryLog:@"realtor_all_list"];
@@ -226,6 +226,11 @@
 
 - (void)initSubVCinitWithTabInfoArr:(NSArray *)tabListArr {
     [self.subVCs removeAllObjects];
+    if (tabListArr.count == 1) {
+        self.placeHolderCellHeight = CGFLOAT_MIN;
+    }else {
+         self.placeHolderCellHeight = 15;
+    }
     
     if(tabListArr && tabListArr.count > 0) {
         for(NSInteger i = 0;i < tabListArr.count;i++) {
@@ -256,6 +261,7 @@
         FHHouseRealtorDetailController *realtorDetailController =  [[FHHouseRealtorDetailController alloc]init];
         realtorDetailController.realtorInfo = self.realtorInfo;
         realtorDetailController.tracerDict = self.tracerDict;
+        realtorDetailController.placeHolderCellHeight = self.placeHolderCellHeight;
         realtorDetailController.tabName = name;
         //错误页高度
         if(self.ugcTabList && self.ugcTabList.count > 0){
@@ -269,6 +275,7 @@
         realtorDetailController.realtorInfo = self.realtorInfo;
         realtorDetailController.tracerDict = self.tracerDict;
         realtorDetailController.tabName = name;
+        realtorDetailController.placeHolderCellHeight = self.placeHolderCellHeight;
         //错误页高度
         if(self.ugcTabList && self.ugcTabList.count > 0){
             CGFloat errorViewHeight = [UIScreen mainScreen].bounds.size.height - self.viewController.customNavBarView.height;
@@ -332,7 +339,7 @@
     params[@"element_from"] = self.tracerDict[@"element_from"] ?: @"be_null";
     params[@"realtor_id"] = self.realtorInfo[@"realtor_id"] ?: @"be_null";
     params[@"realtor_logpb"] = self.realtorLogpb?:@"be_null";
-    params[@"event_tracking_id"] = @"93412";
+    params[@"event_tracking_id"] = @"104153";
     [FHUserTracker writeEvent:@"go_detail" params:params];
 }
 
@@ -402,7 +409,7 @@
 - (void)pagingView:(TTHorizontalPagingView *)pagingView didSwitchIndex:(NSInteger)aIndex to:(NSInteger)toIndex {
     //前面的消失
     if(aIndex < self.subVCs.count && !self.isFirstEnter){
-//        FHHouseRealtorDetailBaseViewController *feedVC = self.subVCs[aIndex];
+        //        FHHouseRealtorDetailBaseViewController *feedVC = self.subVCs[aIndex];
     }
     //新的展现
     if(toIndex < self.subVCs.count){
@@ -456,9 +463,9 @@
     [self refreshContentOffset:delta];
     if (self.isHeightScoreRealtor) {
         self.viewController.customNavBarView.title.hidden = delta<0;
-         self.viewController.customNavBarView.leftBtn.hidden = delta<0;
+        self.viewController.customNavBarView.leftBtn.hidden = delta<0;
     }
-        [self.viewController.headerView updateWhenScrolledWithContentOffset:delta isScrollTop:NO scrollView:pagingView.currentContentView];
+    [self.viewController.headerView updateWhenScrolledWithContentOffset:delta isScrollTop:NO scrollView:pagingView.currentContentView];
 }
 
 

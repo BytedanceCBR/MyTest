@@ -282,12 +282,26 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
     }
     // 房源概况
     if (model.data.houseOverview.list.count > 0) {
-        FHDetailGrayLineModel *grayLine = [[FHDetailGrayLineModel alloc] init];
-        [self.items addObject:grayLine];
-        FHDetailRentHouseOutlineInfoModel *infoModel = [[FHDetailRentHouseOutlineInfoModel alloc] init];
-        infoModel.houseOverreview = model.data.houseOverview;
-        infoModel.baseViewModel = self;
-        [self.items addObject:infoModel];
+        NSMutableArray *list = [NSMutableArray arrayWithCapacity:model.data.houseOverview.list.count];
+        /**
+         Android 在获取房源概况信息的时候，同时做了内部字段是否有值的判断，1.0.5版本加上
+         */
+        for (FHRentDetailResponseDataHouseOverviewListDataModel *overviewItem in model.data.houseOverview.list) {
+            if (overviewItem && [overviewItem isKindOfClass:[FHRentDetailResponseDataHouseOverviewListDataModel class]]) {
+                if (overviewItem.content.length) {
+                    [list addObject:overviewItem];
+                }
+            }
+        }
+        if (list.count) {
+            FHDetailGrayLineModel *grayLine = [[FHDetailGrayLineModel alloc] init];
+            [self.items addObject:grayLine];
+            FHDetailRentHouseOutlineInfoModel *infoModel = [[FHDetailRentHouseOutlineInfoModel alloc] init];
+            infoModel.houseOverreview = model.data.houseOverview;
+            infoModel.houseOverreview.list = list.copy;
+            infoModel.baseViewModel = self;
+            [self.items addObject:infoModel];
+        }
     }
     // 小区信息
     if (model.data.neighborhoodInfo.id.length > 0) {

@@ -33,7 +33,6 @@
 @property(nonatomic, copy) void(^notifyCompletionBlock)(void);
 @property(nonatomic, assign) NSInteger currentCityId;
 @property(nonatomic, assign) NSTimeInterval enterTabTimestamp;
-@property(nonatomic, assign) BOOL noNeedAddEnterCategorylog;
 @property(nonatomic, assign) UIEdgeInsets originContentInset;
 @property(nonatomic, assign) BOOL alreadySetContentInset;
 
@@ -93,13 +92,7 @@
         _enterTabTimestamp = [[NSDate date]timeIntervalSince1970];
     }
     
-    if(!self.noNeedAddEnterCategorylog){
-        if(self.needReportEnterCategory){
-            [self addEnterCategoryLog];
-        }
-    }else{
-        self.noNeedAddEnterCategorylog = NO;
-    }
+    [self addEnterCategoryLog];
     
     if(self.viewModel.dataList.count > 0 || self.notLoadDataWhenEmpty){
         if (self.needReloadData) {

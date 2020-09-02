@@ -65,8 +65,7 @@ def fhPods
     #]
 
 #     pod 'ios_house_im' , :path => '../../../im/3'
-#    pod 'ios_house_im' ,'0.2.14-rc.19'
-    pod 'ios_house_im' ,'0.2.14'
+    pod 'ios_house_im' ,'0.2.15'
 
 end
 
@@ -586,7 +585,7 @@ def testPods
     pod 'LookinServer', :configurations => ['Debug']
 #        pod 'FHErrorHubManager', :git => 'git@code.byted.org:fproject/FHErrorHubManager.git' , :commit => 'b04a60e50b4564346962b47d582f78eddc007408'
 #    pod 'FHErrorHubManager', :path => '../../FHErrorHubManager'
-    pod 'FHErrorHubManager', '1.0.12'
+    pod 'FHErrorHubManager', '1.0.13'
 end
 
 target 'NewsLiteInHouse' do

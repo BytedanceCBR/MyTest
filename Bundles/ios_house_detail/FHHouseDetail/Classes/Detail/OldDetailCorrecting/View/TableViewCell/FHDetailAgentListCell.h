@@ -11,36 +11,11 @@
 #import "FHHouseDetailBaseViewModel.h"
 #import "FHHouseDetailPhoneCallViewModel.h"
 #import <FHHouseBase/FHHouseFollowUpHelper.h>
-#import <FHHouseBase/FHRealtorAvatarView.h>
 NS_ASSUME_NONNULL_BEGIN
 // 推荐经纪人-列表
 @interface FHDetailAgentListCell : FHDetailBaseCell <FHDetailScrollViewDidScrollProtocol>
 
 @end
-
-@interface FHDetailAgentItemView : UIControl
-
-@property (nonatomic, strong)   FHRealtorAvatarView *avatorView;
-@property (nonatomic, strong)   UIButton    *licenceIcon;
-@property (nonatomic, strong)   UIButton    *callBtn;
-@property (nonatomic, strong)   UIButton    *imBtn;
-@property (nonatomic, strong)   UILabel     *name;
-@property (nonatomic, strong)   UILabel     *agency;
-@property (nonatomic, strong)   UIImageView *agencyBac;
-@property (nonatomic, strong)   UILabel     *score;
-@property (nonatomic, strong)   UILabel     *scoreDescription;
-@property (nonatomic, strong)   UILabel     *realtorEvaluate;  // 话术
-@property (nonatomic, strong)   UIView      *agencyDescriptionBac;
-@property (nonatomic, strong)   UILabel     *agencyDescriptionLabel;//公司介绍
-
-
--(instancetype)initWithModel:(FHDetailContactModel *)model;
-
--(void)configForLicenceIconWithHidden:(BOOL)isHidden;
-
-@end
-
-// FHDetailAgentListModel
 
 @interface FHDetailAgentListModel : FHDetailBaseModel
 

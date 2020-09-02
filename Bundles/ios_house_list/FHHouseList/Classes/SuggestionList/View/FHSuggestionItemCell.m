@@ -186,7 +186,7 @@
     [_label mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(20);
         make.top.mas_equalTo(11);
-        make.width.mas_greaterThanOrEqualTo(250);
+        make.width.mas_greaterThanOrEqualTo(240);
     }];
     // secondaryLabel
     _secondaryLabel = [[UILabel alloc] init];
