@@ -254,4 +254,14 @@ static NSString *const kFHEpidemicSituationCacheKey = @"EpidemicSituation";
     }
     return _epidemicSituationCache;
 }
+
+- (YYCache *)findHousePhoneNumberCache
+{
+    if (!_findHousePhoneNumberCache) {
+        _findHousePhoneNumberCache = [YYCache cacheWithName:kFHFindHousePhoneNumberCacheKey];
+    }
+    return _findHousePhoneNumberCache;
+}
+
+
 @end
