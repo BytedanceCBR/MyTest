@@ -59,7 +59,7 @@
     self.headerView.showHeaderImageNewType = ((FHDetailNewMediaHeaderModel *)data).isShowTopImageTab;
     [self.headerView updateMultiMediaModel:self.model];
     //后面要变成全部图片个数+VR个数+视频个数
-    [self.headerView setTotalPagesLabelText:[NSString stringWithFormat:@"共%u张", self.dataHelper.headerViewData.vrNumber + self.dataHelper.pictureDetailData.photoArray.count]];
+    [self.headerView setTotalPagesLabelText:[NSString stringWithFormat:@"共%lu张", self.dataHelper.headerViewData.vrNumber + self.dataHelper.pictureDetailData.photoArray.count]];
 
     [self.headerView updateTitleModel:((FHDetailNewMediaHeaderModel *)data).titleDataModel];
 }
@@ -104,9 +104,6 @@
     };
     self.headerView.goToPictureListFrom = ^(NSString *_Nonnull name) {
         [weakSelf goToPictureListFrom:name];
-    };
-    self.headerView.scrollToIndex = ^(NSInteger index) {
-        [weakSelf willDisplayCellForItemAtIndex:index];
     };
     self.headerView.didSelectiItemAtIndex = ^(NSInteger index) {
         [weakSelf didSelectItemAtIndex:index];
