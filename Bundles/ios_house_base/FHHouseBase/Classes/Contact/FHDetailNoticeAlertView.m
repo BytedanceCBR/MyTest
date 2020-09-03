@@ -128,7 +128,7 @@
     _phoneNum = phoneNum;
     if (phoneNum.length > 0) {
         self.originPhoneNumber = phoneNum;
-        self.phoneTextField.text = [FHUserInfoManager formattMaskPhoneNumber:phoneNum];
+        self.phoneTextField.text = [FHUserInfoManager formatMaskPhoneNumber:phoneNum];
         if (self.phoneTextField.text.length > 0) {
             [self refreshBtnState:YES];
         }else {
