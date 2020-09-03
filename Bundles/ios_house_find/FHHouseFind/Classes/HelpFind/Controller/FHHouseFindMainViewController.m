@@ -14,6 +14,7 @@
 #import "FHHouseFindHelpViewController.h"
 #import "FHHouseType.h"
 #import "FHEnvContext.h"
+#import "NSURL+BTDAdditions.h"
 
 extern NSString *const kFHFindHouseTypeNumberCacheKey;
 
@@ -104,11 +105,22 @@ extern NSString *const kFHFindHouseTypeNumberCacheKey;
     }
     infoDict[@"recommend_house"] = recommendDict;
     
-    if ([[self readHouseTypeNum] isKindOfClass:[NSString class]]) {
-        infoDict[@"house_type"] = @([[self readHouseTypeNum] integerValue]);
+    //增加服务端逻辑控制,如果没下发用本地兜底
+    if ([recommendDict[@"open_url"] isKindOfClass:[NSString class]]) {
+        NSURL *openUrl = [NSURL URLWithString:recommendDict[@"open_url"]];
+        NSDictionary *queryDict = [openUrl btd_queryItems];
+        if (queryDict && queryDict[@"house_type"]) {
+            infoDict[@"house_type"]  = @([queryDict[@"house_type"] integerValue]);
+        }
     }else{
-        infoDict[@"house_type"] = @(_houseType);
+        if ([[self readHouseTypeNum] isKindOfClass:[NSString class]] && [[[FHEnvContext sharedInstance] getConfigFromCache].houseTypeList containsObject:@([[self readHouseTypeNum] integerValue])]) {
+            infoDict[@"house_type"] = @([[self readHouseTypeNum] integerValue]);
+        }else{
+            infoDict[@"house_type"] = @(_houseType);
+        }
     }
+    
+    
     
     paramObj.userInfo = [[TTRouteUserInfo alloc]initWithInfo:infoDict];
     _childVC = [[FHHouseFindResultViewController alloc]initWithRouteParamObj:paramObj];
