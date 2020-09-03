@@ -58,11 +58,11 @@
 #import "FHhouseDetailRGCListCell.h"
 #import "TTAccountManager.h"
 #import <ByteDanceKit/NSDictionary+BTDAdditions.h>
+#import <FHHouseBase/FHUserInfoManager.h>
 #import "FHDetailSurveyAgentListCell.h"
 
-extern NSString *const kFHPhoneNumberCacheKey;
 extern NSString *const kFHSubscribeHouseCacheKey;
-extern NSString *const kFHPLoginhoneNumberCacheKey;
+
 @interface FHHouseOldDetailViewModel () <UIScrollViewDelegate>
 @property (nonatomic, assign)   NSInteger       requestRelatedCount;
 @property (nonatomic, strong , nullable) FHDetailSameNeighborhoodHouseResponseDataModel *sameNeighborhoodHouseData;
@@ -758,7 +758,8 @@ logPB:self.listLogPB extraInfo:self.extraInfo completion:^(FHDetailOldModel * _N
     }else{
         [self reloadData];
     }
-    
+    self.firstReloadInterval = CFAbsoluteTimeGetCurrent();
+    [self addPageLoadLog];
     [self.detailController updateLayout:model.isInstantData];
     
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
@@ -855,9 +856,6 @@ logPB:self.listLogPB extraInfo:self.extraInfo completion:^(FHDetailOldModel * _N
          self.items = [FHOldDetailModuleHelper moduleClassificationMethod:self.items];
         //
         [self reloadData];
-//        self.detailController
-        self.firstReloadInterval = CFAbsoluteTimeGetCurrent();
-        [self addPageLoadLog];
     }
 }
 
@@ -945,9 +943,7 @@ logPB:self.listLogPB extraInfo:self.extraInfo completion:^(FHDetailOldModel * _N
                 toast = model.data.subscriptionToast;
             }
             [[ToastManager manager] showToast:toast];
-            YYCache *sendPhoneNumberCache = [[FHEnvContext sharedInstance].generalBizConfig sendPhoneNumberCache];
-            [sendPhoneNumberCache setObject:phoneNum forKey:kFHPhoneNumberCacheKey];
-            
+            [FHUserInfoManager savePhoneNumber:phoneNum];
             YYCache *subscribeHouseCache = [[FHEnvContext sharedInstance].generalBizConfig subscribeHouseCache];
             [subscribeHouseCache setObject:@"1" forKey:wself.houseId];
             

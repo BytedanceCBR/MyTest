@@ -8,18 +8,13 @@ Pod::Spec.new do |s|
   s.source           = { :git => 'git@code.byted.org:fproject/ios_map_search.git', :tag => s.version.to_s }
 
   s.ios.deployment_target = '8.0'
-
+  
   s.source_files = 'FHMapSearch/Classes/**/*.{h,m,mm}'
 
   s.resources = ['FHMapSearch/Assets/*.xcassets']
-    
-  s.pod_target_xcconfig = { "HEADER_SEARCH_PATHS" =>"$(SRCROOT)/../../Bundles/BaiduMapKit/BaiduMapKit/F100BaiduMapKit.framework/**"}
-  # s.resource_bundles = {
-  #   ' FHMapSearch' => [' FHMapSearch/Assets/*.png']
-  # }
 
-  # s.public_header_files = 'Pod/Classes/**/*.h'
-  # s.frameworks = 'UIKit', 'MapKit'
-  s.vendored_frameworks = '../BaiduMapKit/**/*.framework'
-#  s.dependency 'BaiduMapKit', '5.3.0'
+  s.vendored_frameworks = 'FHMapSearch/Frameworks/*.framework'
+  s.pod_target_xcconfig = {
+    'HEADER_SEARCH_PATHS' => '"${PODS_TARGET_SRCROOT}/FHMapSearch/Frameworks/F100BaiduMapKit.framework/Headers"',
+  }
 end

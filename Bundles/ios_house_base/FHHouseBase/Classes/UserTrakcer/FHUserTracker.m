@@ -28,9 +28,7 @@
     return [basic copy];
 }
 
-+(void)writeEvent:(NSString *)event params:(NSDictionary *)param
-{
-    
++ (void)writeEvent:(NSString *)event params:(NSDictionary *_Nullable)param {
     NSMutableDictionary *params = [NSMutableDictionary dictionaryWithDictionary:param];
     [params addEntriesFromDictionary:[self basicParam]];
     [FHErrorHubManagerUtil checkBuryingPointWithEvent:event Params:params];

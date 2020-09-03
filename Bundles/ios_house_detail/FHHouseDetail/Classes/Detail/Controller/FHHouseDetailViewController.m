@@ -338,9 +338,10 @@
     [self.view addSubview:_navBar];
     self.viewModel.navBar = _navBar;
 
-    _bottomMaskView = [[UIView alloc] init];
-    _bottomMaskView.backgroundColor = [UIColor whiteColor];
-    [self.view addSubview:_bottomMaskView];
+    self.bottomMaskView = [[UIView alloc] init];
+    self.bottomMaskView.backgroundColor = [UIColor whiteColor];
+    [self.view addSubview:self.bottomMaskView];
+    self.bottomMaskView.hidden = YES;
     
     if  (_houseType == FHHouseTypeRentHouse ) {
         _bottomBar = [[FHDetailBottomBarView alloc]initWithFrame:CGRectZero];
@@ -709,19 +710,21 @@
 }
 
 - (void)configTableView {
-    _tableView = [[FHBaseTableView alloc] initWithFrame:CGRectZero style:UITableViewStylePlain];
-    _tableView.keyboardDismissMode = UIScrollViewKeyboardDismissModeOnDrag;
-    _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+    self.tableView = [[FHBaseTableView alloc] initWithFrame:CGRectZero style:UITableViewStylePlain];
+    self.tableView.keyboardDismissMode = UIScrollViewKeyboardDismissModeOnDrag;
+    self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     UITapGestureRecognizer *tapGesturRecognizer=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(tapAction:)];
     tapGesturRecognizer.cancelsTouchesInView = NO;
     tapGesturRecognizer.delegate = self;
-    [_tableView addGestureRecognizer:tapGesturRecognizer];
+    [self.tableView addGestureRecognizer:tapGesturRecognizer];
     if (@available(iOS 11.0 , *)) {
-        _tableView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
+        self.tableView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
     }
-    _tableView.estimatedRowHeight = UITableViewAutomaticDimension;
-    _tableView.estimatedSectionFooterHeight = 0;
-    _tableView.estimatedSectionHeaderHeight = 0;
+    self.tableView.estimatedRowHeight = UITableViewAutomaticDimension;
+    self.tableView.estimatedSectionFooterHeight = 0;
+    self.tableView.estimatedSectionHeaderHeight = 0;
+    self.tableView.backgroundColor = [UIColor themeGray7];
+    self.view.backgroundColor = self.tableView.backgroundColor;
 }
 
 - (void)tapAction:(id)tap {
