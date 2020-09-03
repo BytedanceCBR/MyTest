@@ -66,9 +66,9 @@ def fhPods
     # 'DelegateForC'
     #]
     
-    pod 'ios_house_im' ,'0.2.16-rc.2'
-#    pod 'ios_house_im' , :path => '../../../im/1'
-#    pod 'ios_house_im' , :git => 'git@code.byted.org:fproject/ios_house_im.git' , :commit => '81e75f5f1ffbb533074f2235d3397092a504fa57'
+#    pod 'ios_house_im' ,'0.2.16-rc.2', :inhibit_warnings => false
+#    pod 'ios_house_im' , :path => '../../../im/bugfix', :inhibit_warnings => false
+    pod 'ios_house_im' , :git => 'git@code.byted.org:fproject/ios_house_im.git' , :commit => '2bf5409fd1b730509bb205239a5cd4596288acd8', :inhibit_warnings => false
 
 end
 
@@ -492,7 +492,7 @@ def appPods
     pod 'lz4', '1.0.1'
     pod 'ByteRtcSDK', '2.6.13'
 #    pod 'TTIMSDK', :git => 'git@code.byted.org:im/TIMSDK.git', :branch => 'yang_branchf', :subspecs => [
-    pod 'TTIMSDK', :git => 'git@code.byted.org:im/TIMSDK.git', :commit => '8f6be111e5ab09566f33459fc3e5d7ccaad72c31', :subspecs => [
+    pod 'TTIMSDK', :git => 'git@code.byted.org:im/TIMSDK.git', :commit => '5e023fe88ae17fc613dcdac1ca2c0b632b771116', :subspecs => [
         'IMKit_Default',
         'IMKit_WebSocket',
         'IMKit_Core',
