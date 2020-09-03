@@ -104,7 +104,7 @@ extern NSString *const kFHFindHouseTypeNumberCacheKey;
     }
     infoDict[@"recommend_house"] = recommendDict;
     
-    if ([[self readHouseTypeNum] isKindOfClass:[NSString class]]) {
+    if ([[self readHouseTypeNum] isKindOfClass:[NSString class]] && [[[FHEnvContext sharedInstance] getConfigFromCache].houseTypeList containsObject:@([[self readHouseTypeNum] integerValue])]) {
         infoDict[@"house_type"] = @([[self readHouseTypeNum] integerValue]);
     }else{
         infoDict[@"house_type"] = @(_houseType);
