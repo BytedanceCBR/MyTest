@@ -38,6 +38,9 @@
 @property(nonatomic, strong) FHUGCFullScreenVideoCell *currentVideoCell;
 @property(nonatomic, assign) BOOL isFirst;
 @property(nonatomic, assign) CGFloat oldY;
+//在滚动中
+@property(nonatomic, assign) BOOL isScrolling;
+@property(nonatomic, assign) BOOL isViewAppear;
 
 @end
 
@@ -47,6 +50,7 @@
     self = [super initWithTableView:tableView controller:viewController];
     if (self) {
         self.isFirst = YES;
+        self.isViewAppear = YES;
         self.dataList = [[NSMutableArray alloc] init];
         [self configTableView];
     }
@@ -66,6 +70,14 @@
     }];
     self.tableView.mj_footer = self.refreshFooter;
     self.refreshFooter.hidden = YES;
+}
+
+- (void)viewWillAppear {
+    self.isViewAppear = YES;
+}
+
+- (void)viewWillDisappear {
+    self.isViewAppear = NO;
 }
 
 - (void)requestData:(BOOL)isHead first:(BOOL)isFirst {
@@ -203,7 +215,7 @@
         if(cellModel.cellSubType == FHUGCFeedListCellSubTypeUGCVideo){
             cellModel.cellSubType = FHUGCFeedListCellSubTypeFullVideo;
             cellModel.numberOfLines = 2;
-            [FHUGCCellHelper setRichContentWithModel:cellModel width:(screenWidth - 40) numberOfLines:cellModel.numberOfLines];
+            [FHUGCCellHelper setRichContentWithModel:cellModel width:(screenWidth - 30) numberOfLines:cellModel.numberOfLines font:[UIFont themeFontMedium:16]];
         }
         if(cellModel){
             if(isHead){
@@ -327,6 +339,10 @@
 #pragma UISCrollViewDelegate
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
+    [NSObject cancelPreviousPerformRequestsWithTarget:self];
+    [self performSelector:@selector(scrollViewDidEndScrollingAnimation:) withObject:nil afterDelay:0.3];
+    self.isScrolling = YES;
+    
     if(self.currentVideoCell){
         CGRect frame = [self.currentVideoCell.videoView convertRect:self.currentVideoCell.videoView.bounds toView:self.viewController.view];
         if(scrollView.contentOffset.y - _oldY >= 0){
@@ -356,6 +372,11 @@
 
 - (void)scrollViewDidScrollToTop:(UIScrollView *)scrollView {
     [self startVideoPlay];
+}
+
+- (void)scrollViewDidEndScrollingAnimation:(UIScrollView *)scrollView {
+    [NSObject cancelPreviousPerformRequestsWithTarget:self];
+    self.isScrolling = NO;
 }
 
 #pragma mark - FHUGCBaseCellDelegate
@@ -424,30 +445,47 @@
     }
 }
 
-- (void)didVideoClicked:(FHFeedUGCCellModel *)cellModel cell:(FHUGCBaseCell *)cell {
-    NSInteger row = [self.dataList indexOfObject:cellModel];
-    if(row < self.dataList.count && row >= 0){
-        NSIndexPath *indexPath = [NSIndexPath indexPathForRow:row inSection:0];
-        [self.tableView scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionTop animated:YES];
+- (void)scrollToVideo:(NSInteger)row {
+    if(self.isScrolling){
+        return;
+    }
+    
+    NSIndexPath *indexPath = [NSIndexPath indexPathForRow:row inSection:0];
+    [self.tableView scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionTop animated:YES];
+    UITableViewCell *cell = [self.tableView cellForRowAtIndexPath:indexPath];
+    self.currentVideoCell.contentView.userInteractionEnabled = NO;
+    self.currentVideoCell.mutedBgView.alpha = 0;
+    self.tableView.scrollEnabled = NO;
+    
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         if([cell isKindOfClass:[FHUGCFullScreenVideoCell class]]){
             FHUGCFullScreenVideoCell *vCell = (FHUGCFullScreenVideoCell *)cell;
-            self.currentVideoCell.contentView.userInteractionEnabled = NO;
             vCell.contentView.userInteractionEnabled = YES;
             self.currentVideoCell = vCell;
             [vCell play];
         }
         
-        if(row >= (self.dataList.count - 3)){
-            //在刷一刷数据
-            [self requestData:NO first:NO];
-        }
+        self.tableView.scrollEnabled = YES;
+    });
+    
+    if(row >= (self.dataList.count - 3)){
+         //在刷一刷数据
+         [self requestData:NO first:NO];
+    }
+}
+
+- (void)didVideoClicked:(FHFeedUGCCellModel *)cellModel cell:(FHUGCBaseCell *)cell {
+    NSInteger row = [self.dataList indexOfObject:cellModel];
+    if(row < self.dataList.count && row >= 0){
+        [self scrollToVideo:row];
     }
 }
 
 - (void)videoPlayFinished:(FHFeedUGCCellModel *)cellModel cell:(FHUGCBaseCell *)cell {
     BOOL isTopVc = [BTDResponder isTopViewController:self.viewController];
-    
-    if(!isTopVc){
+        
+    if(!isTopVc || self.tableView.isDragging || self.tableView.isDecelerating || self.isScrolling){
+        [self stopCurrentVideo];
         return;
     }
 
@@ -473,23 +511,7 @@
                 if(row >= 0){
                     row += 1;
                     if(row < self.dataList.count){
-                        NSIndexPath *indexPath = [NSIndexPath indexPathForRow:row inSection:0];
-                        [self.tableView scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionTop animated:YES];
-                        UITableViewCell *cell = [self.tableView cellForRowAtIndexPath:indexPath];
-                        if([cell isKindOfClass:[FHUGCFullScreenVideoCell class]]){
-                            FHUGCFullScreenVideoCell *vCell = (FHUGCFullScreenVideoCell *)cell;
-                            self.currentVideoCell.contentView.userInteractionEnabled = NO;
-                            vCell.contentView.userInteractionEnabled = YES;
-                            self.currentVideoCell = vCell;
-                            [vCell play];
-                        }
-
-                        if(row >= (self.dataList.count - 3)){
-                            //在刷一刷数据
-                            [self requestData:NO first:NO];
-                        }
-                    }else{
-
+                        [self scrollToVideo:row];
                     }
                 }
             }else{
@@ -498,23 +520,7 @@
                     if(row >= 0){
                         row += 1;
                         if(row < self.dataList.count){
-                            NSIndexPath *indexPath = [NSIndexPath indexPathForRow:row inSection:0];
-                            [self.tableView scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionTop animated:YES];
-                            UITableViewCell *cell = [self.tableView cellForRowAtIndexPath:indexPath];
-                            if([cell isKindOfClass:[FHUGCFullScreenVideoCell class]]){
-                                FHUGCFullScreenVideoCell *vCell = (FHUGCFullScreenVideoCell *)cell;
-                                self.currentVideoCell.contentView.userInteractionEnabled = NO;
-                                vCell.contentView.userInteractionEnabled = YES;
-                                self.currentVideoCell = vCell;
-                                [vCell play];
-                            }
-
-                            if(row >= (self.dataList.count - 3)){
-                                //在刷一刷数据
-                                [self requestData:NO first:NO];
-                            }
-                        }else{
-
+                            [self scrollToVideo:row];
                         }
                     }
                 });
@@ -524,7 +530,7 @@
 }
 
 - (void)startVideoPlay {
-    if ([UIApplication sharedApplication].applicationState != UIApplicationStateActive) {
+    if ([UIApplication sharedApplication].applicationState != UIApplicationStateActive || !self.isViewAppear) {
         return;
     }
     

@@ -53,26 +53,6 @@
 @end
 
 
-@implementation  FHSuggestionResponseDataLogPbModel
-
-+ (JSONKeyMapper*)keyMapper
-{
-    NSDictionary *dict = @{
-                           @"imprId": @"impr_id",
-                           };
-    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
-        return dict[keyName]?:keyName;
-    }];
-}
-
-+ (BOOL)propertyIsOptional:(NSString *)propertyName
-{
-    return YES;
-}
-
-@end
-
-
 @implementation  FHSuggestionResponseModel
 
 + (BOOL)propertyIsOptional:(NSString *)propertyName
@@ -96,6 +76,7 @@
                            @"countDisplay":@"count_display",
                            @"cardType": @"card_type",
                            @"buttonText": @"button_text",
+                           @"setHistory":@"set_history",
                            };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
         return dict[keyName]?:keyName;
@@ -142,6 +123,8 @@
                            @"listText": @"list_text",
                            @"userOriginEnter": @"user_origin_enter",
                            @"historyId": @"history_id",
+                           @"setHistory":@"set_history",
+                           @"logPb": @"log_pb",
                            };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
         return dict[keyName]?:keyName;
@@ -210,6 +193,7 @@
     @"houseType": @"house_type",
     @"guessSearchType": @"guess_search_type",
     @"recommendReason": @"recommend_reason",
+    @"setHistory":@"set_history",
   };
   return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
      return dict[keyName]?:keyName;

@@ -6,12 +6,14 @@
 //
 
 #import "FHBaiduPanoramaViewController.h"
-#import "BaiduPanoramaView.h"
-#import "BaiduPanoUtils.h"
-#import "BMKBaseComponent.h"
-#import "BMKMapComponent.h"
-#import "BMKSearchComponent.h"
-#import "BMKUtilsComponent.h"
+#import <F100BaiduMapKit/BaiduPanoUtils.h>
+#import <F100BaiduMapKit/BaiduPanoramaView.h>
+#import <F100BaiduMapKit/BMKBaseComponent.h>
+#import <F100BaiduMapKit/BMKMapComponent.h>
+#import <F100BaiduMapKit/BMKSearchComponent.h>
+#import <F100BaiduMapKit/BMKMapComponent.h>
+#import <F100BaiduMapKit/BMKUtilsComponent.h>
+
 #import "TTSandBoxHelper.h"
 #import <ByteDanceKit/NSDictionary+BTDAdditions.h>
 #import <ByteDanceKit/NSString+BTDAdditions.h>
@@ -471,7 +473,7 @@ static NSInteger overlayIndex = 0;
             }
             
             BMKPOIDetailInfo *detailInfo = poiInfo.detailInfo;
-            NSString *type = detailInfo.type;
+//            NSString *type = detailInfo.type;
             if ([detailInfo.tag containsString:@"atm"]) {
                 continue;
             }
@@ -482,7 +484,7 @@ static NSInteger overlayIndex = 0;
             if (detailInfo.distance < 10) {
                 continue;
             }
-            NSString *name = poiInfo.name;
+//            NSString *name = poiInfo.name;
             NSString *typeName = keyword;
             //tag
 
@@ -703,7 +705,7 @@ static NSInteger overlayIndex = 0;
     infoLabel.textColor = [UIColor themeWhite];
     NSMutableAttributedString *infoString = [[NSMutableAttributedString alloc] initWithString:@"直线距离约 "];
     [infoString addAttributes:@{NSForegroundColorAttributeName : [UIColor themeWhite]} range:NSMakeRange(0, infoString.length)];
-    [infoString appendAttributedString:[[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@"%dm",distance] attributes:@{NSForegroundColorAttributeName : [UIColor themeOrange1]}]];
+    [infoString appendAttributedString:[[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@"%ldm",(long)distance] attributes:@{NSForegroundColorAttributeName : [UIColor themeOrange1]}]];
     infoLabel.attributedText = infoString;
     [overlayView addSubview:infoLabel];
     

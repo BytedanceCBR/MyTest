@@ -15,7 +15,6 @@
 #import "FHDetailPropertyListCorrectingCell.h"
 #import "FHDetailPriceChangeHistoryCell.h"
 #import "FHDetailAgentListCell.h"
-#import "FHDetailSuggestTipCell.h"
 #import "FHDetailSurroundingAreaCell.h"
 #import "FHDetailRelatedHouseCell.h"
 #import "FHDetailSameNeighborhoodHouseCell.h"
@@ -59,11 +58,11 @@
 #import "FHhouseDetailRGCListCell.h"
 #import "TTAccountManager.h"
 #import <ByteDanceKit/NSDictionary+BTDAdditions.h>
+#import <FHHouseBase/FHUserInfoManager.h>
 #import "FHDetailSurveyAgentListCell.h"
 
-extern NSString *const kFHPhoneNumberCacheKey;
 extern NSString *const kFHSubscribeHouseCacheKey;
-extern NSString *const kFHPLoginhoneNumberCacheKey;
+
 @interface FHHouseOldDetailViewModel () <UIScrollViewDelegate>
 @property (nonatomic, assign)   NSInteger       requestRelatedCount;
 @property (nonatomic, strong , nullable) FHDetailSameNeighborhoodHouseResponseDataModel *sameNeighborhoodHouseData;
@@ -96,8 +95,6 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
     [self.tableView registerClass:[FHDetailUserHouseCommentCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailUserHouseCommentModel class])];
     //房源概况
     [self.tableView registerClass:[FHDetailHouseOutlineInfoCorrectingCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailHouseOutlineInfoCorrectingModel class])];
-    //购房小建议
-    [self.tableView registerClass:[FHDetailSuggestTipCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailSuggestTipModel class])];
     [self.tableView registerClass:[FHDetailSurroundingAreaCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailSurroundingAreaModel class])];
     //周边房源
     [self.tableView registerClass:[FHDetailRelatedHouseCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailRelatedHouseModel class])];
@@ -727,7 +724,7 @@ logPB:self.listLogPB extraInfo:self.extraInfo completion:^(FHDetailOldModel * _N
         if (model.data.neighborhoodPriceRange && model.data.priceAnalyze) {
             priceTrendModel.bottomHeight = 0;
         }else {
-            priceTrendModel.bottomHeight = (model.data.housePricingRank.buySuggestion.content.length > 0) ? 0 : 20;
+            priceTrendModel.bottomHeight = 20;
         }
         priceTrendModel.tableView = self.tableView;
         [self.items addObject:priceTrendModel];
@@ -742,22 +739,7 @@ logPB:self.listLogPB extraInfo:self.extraInfo completion:^(FHDetailOldModel * _N
         infoModel.rangeModel = model.data.neighborhoodPriceRange;
         [self.items addObject:infoModel];
     }
-    // 购房小建议
-    if (model.data.housePricingRank.buySuggestion.content.length > 0) {
-        // 添加分割线--当存在某个数据的时候在顶部添加分割线
-        FHDetailSuggestTipModel *infoModel = [[FHDetailSuggestTipModel alloc] init];
-        NSMutableDictionary *paramsDict = @{}.mutableCopy;
-        if (self.detailTracerDic) {
-            [paramsDict addEntriesFromDictionary:self.detailTracerDic];
-        }
-        paramsDict[@"page_type"] = [self pageTypeString];
-        infoModel.buySuggestion = model.data.housePricingRank.buySuggestion;
-                infoModel.extraInfo = model.data.baseExtra;
-        infoModel.contactViewModel = self.contactViewModel;
-        infoModel.contactPhone = contactPhone;
-        infoModel.houseModelType = FHHouseModelTypeTips;
-        [self.items addObject:infoModel];
-    }
+   
     self.items = [FHOldDetailModuleHelper moduleClassificationMethod:self.items];
     
     // --
@@ -776,7 +758,8 @@ logPB:self.listLogPB extraInfo:self.extraInfo completion:^(FHDetailOldModel * _N
     }else{
         [self reloadData];
     }
-    
+    self.firstReloadInterval = CFAbsoluteTimeGetCurrent();
+    [self addPageLoadLog];
     [self.detailController updateLayout:model.isInstantData];
     
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
@@ -873,9 +856,6 @@ logPB:self.listLogPB extraInfo:self.extraInfo completion:^(FHDetailOldModel * _N
          self.items = [FHOldDetailModuleHelper moduleClassificationMethod:self.items];
         //
         [self reloadData];
-//        self.detailController
-        self.firstReloadInterval = CFAbsoluteTimeGetCurrent();
-        [self addPageLoadLog];
     }
 }
 
@@ -945,7 +925,7 @@ logPB:self.listLogPB extraInfo:self.extraInfo completion:^(FHDetailOldModel * _N
         return;
     }
     NSString *houseId = self.houseId;
-    NSString *from = @"app_oldhouse_subscription";
+//    NSString *from = @"app_oldhouse_subscription";
     NSDictionary *extraInfo = nil;
     
     if (self.houseInfoBizTrace) {
@@ -963,9 +943,7 @@ logPB:self.listLogPB extraInfo:self.extraInfo completion:^(FHDetailOldModel * _N
                 toast = model.data.subscriptionToast;
             }
             [[ToastManager manager] showToast:toast];
-            YYCache *sendPhoneNumberCache = [[FHEnvContext sharedInstance].generalBizConfig sendPhoneNumberCache];
-            [sendPhoneNumberCache setObject:phoneNum forKey:kFHPhoneNumberCacheKey];
-            
+            [FHUserInfoManager savePhoneNumber:phoneNum];
             YYCache *subscribeHouseCache = [[FHEnvContext sharedInstance].generalBizConfig subscribeHouseCache];
             [subscribeHouseCache setObject:@"1" forKey:wself.houseId];
             

@@ -75,6 +75,10 @@ NS_ASSUME_NONNULL_BEGIN
 // 更新发帖进度视图
 - (void)updateJoinProgressView;
 
+- (void)stopCurrentVideo;
+
+- (void)startVideoPlay;
+
 @end
 
 NS_ASSUME_NONNULL_END

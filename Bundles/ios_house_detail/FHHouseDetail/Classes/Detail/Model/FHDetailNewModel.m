@@ -171,6 +171,15 @@
 }
 @end
 
+@implementation FHDetailNewVRInfo
+
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+
+@end
+
 @implementation FHDetailNewDataDisclaimerModel
 + (JSONKeyMapper*)keyMapper
 {
@@ -361,6 +370,7 @@
                            @"recommendedRealtorsSubTitle":@"recommended_realtors_sub_title",
                            @"socialInfo":@"ugc_social_group",
                            @"houseVideo": @"house_video",
+                           @"vrInfo":@"vr_info",
                            @"baseInfo": @"base_info",
                            @"discountInfo": @"discount_info",
                            @"relatedCourtInfo": @"related_court_info",
