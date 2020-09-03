@@ -734,7 +734,7 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     if (tableView.tag == 1) {
-        // 历史记录
+        // 猜你想搜
         return self.guessYouWantData.count > 0 ? self.guessYouWantData.count + 1 : 0;
     } else if (tableView.tag == 2) {
         // 联想词
@@ -867,7 +867,7 @@
         if (indexPath.row - 1 < self.guessYouWantData.count) {
             FHGuessYouWantResponseDataDataModel *model  = self.guessYouWantData[indexPath.row - 1];
             [self trackClickEventData:model rank:indexPath.row - 1];
-            [self guessYouWantCellClick:model rank:indexPath.row];
+            [self guessYouWantCellClick:model rank:indexPath.row - 1];//
             
         }
     } else if (tableView.tag == 2) {
