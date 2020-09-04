@@ -371,7 +371,7 @@
             smallImageGroupModel.images = smallImageList.copy;
             [smallImageGroup addObject:smallImageGroupModel];
         }
-        [titles addObject:[NSString stringWithFormat:@"%@（%ld）",topImage.name?:@"",tempCount]];
+        [titles addObject:[NSString stringWithFormat:@"%@（%ld）",topImage.name?:@"",(long)tempCount]];
         [numbers addObject:@(tempCount)];
     }
     self.pictsArray = smallImageGroup.copy;
@@ -498,10 +498,10 @@
                     //户型图后面不带计数
                     titleView.titleLabel.text = [NSString stringWithFormat:@"%@",groupModel.name];
                 } else {
-                    titleView.titleLabel.text = [NSString stringWithFormat:@"%@ (%ld)",groupModel.name,groupModel.images.count];
+                    titleView.titleLabel.text = [NSString stringWithFormat:@"%@ (%lu)",groupModel.name,(unsigned long)groupModel.images.count];
                 }
             } else {
-                titleView.titleLabel.text = [NSString stringWithFormat:@"(%ld)",groupModel.images.count];
+                titleView.titleLabel.text = [NSString stringWithFormat:@"(%lu)",(unsigned long)groupModel.images.count];
             }
         }
         reusableView = titleView;
@@ -516,7 +516,7 @@
     if (!self.topImages) {
         [self dismissViewControllerAnimated:NO completion:nil];
     }
-    
+    //可以使用前缀和！！！
     if (self.albumImageBtnClickBlock && self.pictsArray.count > indexPath.section) {
         NSInteger total = 0;
       
@@ -550,7 +550,7 @@
 //    CGPoint centerPoint = [self.view convertPoint:CGPointMake(20, 55) toView:self.mainCollectionView];
     //1 6 2
     NSIndexPath *indexPath = [self.collectionView indexPathForItemAtPoint:centerPoint];
-    NSLog(@"centerPoint :%@ section:%d,row:%d",NSStringFromCGPoint(centerPoint),indexPath.section,indexPath.item);
+    NSLog(@"centerPoint :%@ section:%ld,row:%d",NSStringFromCGPoint(centerPoint),(long)indexPath.section,indexPath.item);
     if (indexPath && self.lastIndexPath.section != indexPath.section) {
         self.lastIndexPath = indexPath;
         if (indexPath.section < self.pictsArray.count) {
