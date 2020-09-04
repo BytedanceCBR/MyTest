@@ -430,9 +430,6 @@
     for (UIView *view in self.mainTitleView.subviews) {
         [view removeFromSuperview];
     }
-    for (UIView *view in self.bottomView.subviews) {
-        [view removeFromSuperview];
-    }
 }
 
 -(YYLabel *)tagLabel
