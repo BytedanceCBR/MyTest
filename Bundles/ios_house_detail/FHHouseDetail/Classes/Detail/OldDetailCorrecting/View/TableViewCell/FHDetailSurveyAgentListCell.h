@@ -19,20 +19,19 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FHDetailSurveyAgentListModel : FHDetailBaseModel
 
-@property (nonatomic, weak)     UITableView       *tableView;
-@property (nonatomic, assign)   BOOL       isFold; // 折叠
-@property (nonatomic, copy , nullable) NSString *recommendedRealtorsTitle; // 实勘经纪人标题文案
-@property (nonatomic, copy , nullable) NSString *recommendedRealtorsSubTitle; // 实勘经纪人副标题文案
-@property (nonatomic, strong , nullable) NSArray<FHDetailContactModel> *recommendedRealtors;
+@property (nonatomic, weak) UITableView *tableView;
+@property (nonatomic, assign) BOOL isFold;                                   // 折叠
+@property (nonatomic, copy, nullable) NSString *recommendedRealtorsTitle;    // 实勘经纪人标题文案
+@property (nonatomic, copy, nullable) NSString *recommendedRealtorsSubTitle; // 实勘经纪人副标题文案
+@property (nonatomic, strong, nullable) NSArray<FHDetailContactModel> *recommendedRealtors;
 @property (nonatomic, strong, nullable) FHClueAssociateInfoModel *associateInfo;
 @property (nonatomic, copy) NSString *searchId;
 @property (nonatomic, copy) NSString *imprId;
-@property (nonatomic, copy)   NSString* houseId; // 房源id
+@property (nonatomic, copy) NSString *houseId;       // 房源id
 @property (nonatomic, assign) FHHouseType houseType; // 房源类型
 @property (nonatomic, strong) FHHouseDetailPhoneCallViewModel *phoneCallViewModel;
 @property (nonatomic, weak) UIViewController *belongsVC;
 
 @end
-
 
 NS_ASSUME_NONNULL_END

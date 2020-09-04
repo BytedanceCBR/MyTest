@@ -35,7 +35,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *pricingPerSqm;
 @property (nonatomic, copy , nullable) NSString *squaremeter;
 @property (nonatomic, copy , nullable) NSString *imprId;
-@property (nonatomic, strong , nullable) NSArray<FHImageModel *> *images;
+@property (nonatomic, strong , nullable) NSArray<FHImageModel > *images;
 @property (nonatomic, strong , nullable) FHSaleStatusModel *saleStatus ;
 @property (nonatomic, copy , nullable) NSString *searchId;
 @property (nonatomic, assign) NSInteger index;

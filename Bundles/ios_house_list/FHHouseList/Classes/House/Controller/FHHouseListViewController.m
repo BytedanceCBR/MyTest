@@ -717,7 +717,7 @@
     [self tt_resetStayTime];
     self.ttTrackStartTime = [[NSDate date] timeIntervalSince1970];
     
-    if (self.houseType == FHHouseTypeSecondHandHouse) {
+    if (self.houseType == FHHouseTypeSecondHandHouse || self.houseType == FHHouseTypeNewHouse) {
         NSArray *tableCells = [self.tableView visibleCells];
         if (tableCells) {
             [tableCells enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {

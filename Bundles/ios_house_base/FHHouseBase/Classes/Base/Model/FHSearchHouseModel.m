@@ -417,6 +417,7 @@
                            @"skyEyeTag": @"sky_eye_tag",
                            @"associateInfo": @"associate_info",
                            @"tagImage": @"tag_image",
+                           @"recommendType": @"recommend_type",
                            };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
         return dict[keyName]?:keyName;
@@ -627,6 +628,28 @@
 
 @end
 
+@implementation FHSearchHouseItemTitleTagModel
+
++ (JSONKeyMapper*)keyMapper
+{
+    NSDictionary *dict = @{@"isGradient": @"is_gradient",
+                           @"textColor": @"text_color",
+                           @"backgroundColor": @"background_color",
+                           @"topBackgroundColor": @"top_background_color",
+                           @"bottomBackgroundColor": @"bottom_background_color",
+                           };
+    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+        return dict[keyName]?:keyName;
+    }];
+}
+
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+
+@end
+
 #pragma mark - 后续统一用FHSearchBaseItemModel 和 FHSearchHouseItemModel
 
 @implementation  FHSearchHouseItemModel
@@ -709,6 +732,9 @@
                            @"dealOpenUrl": @"deal_open_url",
                            @"reasonTags": @"reason_tags",
                            @"addrData": @"addr_data",
+                           @"recommendType":@"recommend_type",
+                           @"titleTags": @"title_tags",
+                           @"propertyTag": @"property_tag",
                            };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
         return dict[keyName]?:keyName;

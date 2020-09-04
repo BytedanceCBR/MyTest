@@ -238,6 +238,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong , nullable) FHSearchHouseDataItemsSkyEyeTagModel *skyEyeTag ;
 
 @property (nonatomic, assign) BOOL isRecommendCell;
+@property (nonatomic, assign) NSInteger recommendType;
 @property (nonatomic, strong, nullable) FHClueAssociateInfoModel *associateInfo;
 
 @property (nonatomic, strong, nullable) NSArray<FHImageModel> *tagImage;  //企业担保图标
@@ -373,6 +374,21 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
+@protocol FHSearchHouseItemTitleTagModel<NSObject>
+
+@end
+
+@interface FHSearchHouseItemTitleTagModel : JSONModel
+
+@property (nonatomic, assign) BOOL isGradient;
+@property (nonatomic, copy , nullable) NSString *text;
+@property (nonatomic, copy , nullable) NSString *textColor;
+@property (nonatomic, copy , nullable) NSString *backgroundColor;
+@property (nonatomic, copy , nullable) NSString *topBackgroundColor;
+@property (nonatomic, copy , nullable) NSString *bottomBackgroundColor;
+
+@end
+
 @interface  FHSearchHouseItemModel  : FHSearchBaseItemModel
 
 @property (nonatomic, copy , nullable) NSString *houseStatus;
@@ -391,6 +407,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, copy , nullable) NSString *searchId;
 @property (nonatomic, assign) NSInteger cellStyles;
+@property (nonatomic, assign) NSInteger recommendType;
 @property (nonatomic, strong, nullable) NSMutableAttributedString *tagString;
 @property (nonatomic, strong , nullable) NSArray<FHImageModel> *tagImage;
 @property (nonatomic, copy , nullable) NSString *displayPriceColor;
@@ -451,6 +468,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign) BOOL isLastCell;
 @property (nonatomic, strong , nullable) NSArray<FHHouseTagsModel> *reasonTags;
 @property (nonatomic, copy , nullable) NSString *addrData;
+@property (nonatomic, strong, nullable) NSArray<FHSearchHouseItemTitleTagModel> *titleTags;
+@property (nonatomic, strong, nullable) FHHouseTagsModel *propertyTag;
 
 + (NSString *)cellIdentifierByHouseType:(FHHouseType)houseType;
 

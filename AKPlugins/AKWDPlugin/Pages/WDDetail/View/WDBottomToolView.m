@@ -144,6 +144,14 @@ static NSString * const kWDHasTipSupportsEmojiInputDefaultKey = @"WDHasTipSuppor
         NSString *commentCount = [change tt_stringValueForKey:NSKeyValueChangeNewKey];
         WDBottomToolView *bottomToolView = observer;
         [bottomToolView setCommentBadgeValue:commentCount];
+        //评论完成后发送通知修改评论数
+        NSMutableDictionary *userInfo = @{}.mutableCopy;
+        userInfo[@"group_id"] = self.detailModel.answerEntity.ansid;
+        userInfo[@"comment_conut"] = commentCount;
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"kPostMessageFinishedNotification"
+                                                                       object:nil
+                                                                     userInfo:userInfo];
+        
     }];
     
     self.digButton.selected = self.detailModel.answerEntity.isDigg;

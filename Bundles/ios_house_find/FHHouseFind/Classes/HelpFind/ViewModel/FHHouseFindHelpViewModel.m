@@ -37,6 +37,7 @@
 #import "NSData+BTDAdditions.h"
 #import "FHMainApi+Contact.h"
 #import "HMDTTMonitor.h"
+#import <FHHouseBase/FHUserInfoManager.h>
 
 #define HELP_HEADER_ID @"header_id"
 #define HELP_ITEM_HOR_MARGIN 20
@@ -52,10 +53,7 @@
 #define ROOM_MAX_COUNT 2
 #define REGION_MAX_COUNT 3
 
-
-extern NSString *const kFHPhoneNumberCacheKey;
-extern NSString *const kFHPLoginhoneNumberCacheKey;
-extern NSString *const kFHPLoginhoneNumberCacheKey;
+extern NSString *const kFHFindHouseTypeNumberCacheKey;
 
 @interface FHHouseFindHelpViewModel ()<UICollectionViewDataSource,UICollectionViewDelegate,UITableViewDataSource, UITableViewDelegate, FHHouseFindPriceCellDelegate, UITextFieldDelegate, UIGestureRecognizerDelegate>
 
@@ -64,11 +62,14 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
 @property (nonatomic , strong) NSArray<NSString *> *titlesArray;
 @property (nonatomic , strong) RACDisposable *configDisposable;
 @property (nonatomic , assign) BOOL available;
+@property (nonatomic , assign) BOOL userHouseTypeSelected;
 @property (nonatomic , assign) FHHouseType houseType;
+@property (nonatomic , assign) FHHouseType houseTypeSelectedValue;
 @property (nonatomic , strong) NSMutableDictionary *selectMap; // housetype : FHHouseFindSelectModel
 @property (nonatomic , strong) FHSearchFilterConfigItem *regionConfigItem;
 @property (nonatomic , strong) FHSearchFilterConfigItem *priceConfigItem;
 @property (nonatomic , strong) FHSearchFilterConfigItem *roomConfigItem;
+@property (nonatomic , strong) FHSearchFilterConfigItem *houseTypeConfigItem;
 
 @property (nonatomic , strong) FHHouseFindSelectItemModel *selectRegionItem;
 @property (nonatomic , strong) FHHouseFindHelpRegionSheet *regionSheet;
@@ -92,7 +93,7 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
 
 @implementation FHHouseFindHelpViewModel
 
-- (instancetype)initWithCollectionView:(UICollectionView *)collectionView recommendModel:(FHHouseFindRecommendDataModel *)recommendModel
+- (instancetype)initWithCollectionView:(UICollectionView *)collectionView recommendModel:(FHHouseFindRecommendDataModel *)recommendModel andHouseType:(NSInteger) houseType
 {
     self = [super init];
     if (self) {
@@ -108,6 +109,7 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
         collectionView.delegate = self;
         collectionView.dataSource = self;
         _collectionView.allowsMultipleSelection = YES;
+        _houseTypeSelectedValue = houseType;
 //        UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(onTap)];
 //        tapGesture.delegate = self;
 //        tapGesture.cancelsTouchesInView = NO;
@@ -161,7 +163,7 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
     FHHouseType ht = _houseType;
     FHHouseFindSelectModel *model = [self selectModelWithType:ht];
     for (FHHouseFindSelectItemModel *itemModel in model.items) {
-        [itemModel.selectIndexes removeAllObjects];
+       [itemModel.selectIndexes removeAllObjects];
     }
     [self selectDefaultItems];
     [self.collectionView reloadData];
@@ -195,12 +197,13 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
     if ([phoneNumber containsString:@"*"]) {
         phoneNumber = self.contactCell.phoneNum;
     }
-    if (phoneNumber.length < 1 || ![phoneNumber hasPrefix:@"1"] || phoneNumber.length != 11 || ![self isPureInt:phoneNumber]) {
+    if (phoneNumber.length < 1 || ![phoneNumber hasPrefix:@"1"] || phoneNumber.length != 11 || ![FHUserInfoManager checkPureIntFormatted:phoneNumber]) {
         [[ToastManager manager] showToast:@"请输入正确的手机号"];
         return;
     }
     [self storePhoneNumber:phoneNumber];
-    
+    [self storeHouseTypeNumber:[NSString stringWithFormat:@"%ld",_houseTypeSelectedValue]];
+
     if (![self submitActionWithPhoneNumber:phoneNumber]) {
         [[ToastManager manager] showToast:@"请输入正确的手机号"];
         return;
@@ -288,7 +291,7 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
     //Step1: 提交用户选择信息，获取线索相关信息
     NSString *associateStr = [associateDict btd_jsonStringEncoded] ?: @"";
     NSDictionary *params = @{
-        @"from": @"app_findselfhouse",
+        @"from": (_houseTypeSelectedValue == FHHouseTypeNewHouse ? @"app_newhouse_findselfhouse" : @"app_findselfhouse"),
         @"from_data": associateStr,
     };
     
@@ -326,13 +329,16 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
             }
             
             NSString *originFrom = strongSelf.tracerDict[@"origin_from"] ?: @"be_null";
-            NSDictionary *params = @{
+            NSMutableDictionary *params = @{
                 @"origin_from": originFrom,
                 @"user_phone": phoneNumber,
                 @"report_form_info": strongSelf.reportFormInfo ?: @{},
                 @"city_id": cityId ?: @"",
-            };
-            [strongSelf commitAssociateInfoWithParams:params selectedModel:selectModel phoneNumber:phoneNumber];
+            }.mutableCopy;
+            if ([FHUserInfoManager isLoginPhoneNumber:phoneNumber]) {
+                params[@"use_login_phone"] = @(YES);
+            }
+            [strongSelf commitAssociateInfoWithParams:params.copy selectedModel:selectModel phoneNumber:phoneNumber];
         } else {
             //接口出错统一提示“网络错误”
             [[ToastManager manager] showToast:@"网络错误"];
@@ -439,8 +445,8 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
 
 - (void)jump2HouseFindResultPage:(NSDictionary *)recommendDict
 {
-    if ([self.viewController.parentViewController respondsToSelector:@selector(jump2HouseFindResultVC)]) {
-        [self.viewController.parentViewController performSelector:@selector(jump2HouseFindResultVC)];
+    if ([self.viewController.parentViewController respondsToSelector:@selector(jumpHouseFindResultVC:)]) {
+        [self.viewController.parentViewController performSelector:@selector(jumpHouseFindResultVC:) withObject:@(_houseTypeSelectedValue)];
     }
 }
 
@@ -490,10 +496,45 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
                 roomItem = configItem;
             }
         }
+        
+        FHSearchFilterConfigItem *houseTypeConfigItem = [[FHSearchFilterConfigItem alloc] init];
+        houseTypeConfigItem.tabId = @"7";
+        
+        NSMutableArray *houseTypeArray = [NSMutableArray new];
+        NSArray *houstTypeList = [[FHEnvContext sharedInstance] getConfigFromCache].houseTypeList;
+        
+        FHSearchFilterConfigOption *optionSecond = [[FHSearchFilterConfigOption alloc] init];
+        optionSecond.text = @"二手房";
+        optionSecond.houseType = 2;
+        
+        
+        if ([houstTypeList containsObject:@(FHHouseTypeSecondHandHouse)] || !houstTypeList) {
+            [houseTypeArray addObject:optionSecond];
+        }else{
+            self.houseTypeSelectedValue = FHHouseTypeNewHouse;
+        }
+        
+        
+        if ([houstTypeList containsObject:@(FHHouseTypeNewHouse)]) {
+             FHSearchFilterConfigOption *optionNew = [[FHSearchFilterConfigOption alloc] init];
+             optionNew.text = @"新房";
+             optionNew.houseType = FHHouseTypeNewHouse;
+             [houseTypeArray addObject:optionNew];
+        }
+        
+        
+        houseTypeConfigItem.options = (NSArray<FHSearchFilterConfigOption> * )houseTypeArray;
+        
         if (priceItem) {
             [filterArray addObject:priceItem];
             [titles addObject:@"您的购房预算是多少？"];
         }
+        
+        if (houseTypeConfigItem && houseTypeConfigItem.options.count > 1) {
+            [filterArray addObject:houseTypeConfigItem];
+            [titles addObject:@"您想买的类型是？"];
+        }
+        
         if (roomItem) {
             [filterArray addObject:roomItem];
             [titles addObject:@"您想买的户型是？"];
@@ -505,6 +546,7 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
         self.priceConfigItem = priceItem;
         self.regionConfigItem = regionItem;
         self.roomConfigItem = roomItem;
+        self.houseTypeConfigItem = houseTypeConfigItem;
         
         self.secondFilter = filterArray;
         self.titlesArray = titles;
@@ -907,6 +949,13 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
     }else {
         [model clearAddSelecteItem:selectItem withIndex:1];
     }
+    
+    FHSearchFilterConfigOption *optionHouse = self.houseTypeConfigItem.options.firstObject;
+    if ([optionHouse isKindOfClass:[FHSearchFilterConfigOption class]]) {
+        _houseTypeSelectedValue = optionHouse.houseType;
+        self.userHouseTypeSelected = NO;
+    }
+    
 }
 
 - (void)fillPriceItem:(FHSearchFilterConfigItem *)configItem selectItem:(FHHouseFindSelectItemModel *)selectItem priceItem:(id)priceItem rate:(NSNumber *)rate
@@ -942,25 +991,19 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
     }
 }
 
-//手机号单独保存，不复用表单的缓存
-- (NSString *)loadPhoneNumber {
-    YYCache *findHousePhoneNumberCache = [[FHEnvContext sharedInstance].generalBizConfig findHousePhoneNumberCache];
-    id phoneCache = [findHousePhoneNumberCache objectForKey:kFHFindHousePhoneNumberCacheKey];
-    
-    NSString *phoneNum = nil;
-    if ([phoneCache isKindOfClass:[NSString class]]) {
-        NSString *cacheNum = (NSString *)phoneCache;
-        if (cacheNum.length > 0) {
-            phoneNum = cacheNum;
-        }
-    }
-   
-    return phoneNum;
+- (void)storePhoneNumber:(NSString *)phoneNumber {
+    [FHUserInfoManager savePhoneNumber:phoneNumber];
 }
 
-- (void)storePhoneNumber:(NSString *)phoneNumber {
+
+- (void)storeHouseTypeNumber:(NSString *)phoneNumber {
     YYCache *findHousePhoneNumberCache = [[FHEnvContext sharedInstance].generalBizConfig findHousePhoneNumberCache];
-    [findHousePhoneNumberCache setObject:phoneNumber ?: @"" forKey:kFHFindHousePhoneNumberCacheKey];
+    [findHousePhoneNumberCache setObject:phoneNumber ?: @"" forKey:kFHFindHouseTypeNumberCacheKey];
+}
+
+- (NSString *)readHouseTypeNum{
+    YYCache *findHousePhoneNumberCache = [[FHEnvContext sharedInstance].generalBizConfig findHousePhoneNumberCache];
+    return (NSString *)[findHousePhoneNumberCache objectForKey:kFHFindHouseTypeNumberCacheKey];
 }
 
 #pragma mark - price cell delegate
@@ -1029,6 +1072,8 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
             return options.options.count;
         }else if ([item.tabId integerValue] == FHSearchTabIdTypeRegion) {
             return 1;
+        }else if ([item.tabId integerValue] == FHSearchTabIdTypeHouse) {
+            return self.houseTypeConfigItem.options.count;
         }
         return options.options.count;
     }
@@ -1090,6 +1135,34 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
                 return tcell;
             }
             
+        }else if ([item.tabId integerValue] == FHSearchTabIdTypeHouse) {
+            
+            FHHouseFindTextItemCell *tcell = [collectionView dequeueReusableCellWithReuseIdentifier:HELP_NORMAL_CELL_ID forIndexPath:indexPath];
+            tcell.titleFont = [TTDeviceHelper isScreenWidthLarge320] ? [UIFont themeFontRegular:12] : [UIFont themeFontRegular:10];
+            NSString *text = nil;
+            
+//            FHSearchFilterConfigOption *options = [item.options firstObject];
+            if (item.options.count > indexPath.item) {
+                FHSearchFilterConfigOption *option = item.options[indexPath.item];
+                text = option.text;
+            }
+            
+            BOOL selected = NO;
+            if (model) {
+                FHHouseFindSelectItemModel *selectItem = [model selectItemWithTabId:[item.tabId integerValue]];
+                selected = [model selecteItem:selectItem containIndex:indexPath.item];
+            }
+            
+            if (item.options.count > indexPath.item) {
+                FHSearchFilterConfigOption *option = item.options[indexPath.item];
+                if (self.houseTypeSelectedValue == option.houseType && !self.userHouseTypeSelected) {
+                  selected = YES;
+                }
+            }
+      
+            
+            [tcell updateWithTitle:text highlighted:selected];
+            return tcell;
         }else if ([item.tabId integerValue] == FHSearchTabIdTypeRegion) {
             
             FHHouseFindHelpRegionCell *pcell = [collectionView dequeueReusableCellWithReuseIdentifier:HELP_REGION_CELL_ID forIndexPath:indexPath];
@@ -1149,7 +1222,7 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
 //        pcell.varifyCodeInput.delegate = self;
         pcell.delegate = self;
         self.contactCell = pcell;
-        pcell.phoneNum = [self loadPhoneNumber];
+        pcell.phoneNum = [FHUserInfoManager getPhoneNumberIfExist];
         [pcell showFullPhoneNum:NO];
         
 //        if([TTAccount sharedAccount].isLogin){
@@ -1251,7 +1324,11 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
             if([model selecteItem:selectItem containIndex:indexPath.item]){
                 //反选
                 if (item.tabId.integerValue != FHSearchTabIdTypePrice) {
-                    [model delSelecteItem:selectItem withIndex:indexPath.item];
+                    if (item.tabId.integerValue == FHSearchTabIdTypeHouse){
+                        self.userHouseTypeSelected = YES;
+                    }else{
+                        [model delSelecteItem:selectItem withIndex:indexPath.item];
+                    }
                 }
             }else{
                 if (item.tabId.integerValue == FHSearchTabIdTypePrice) {
@@ -1272,6 +1349,22 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
                     if ([option.supportMulti boolValue]) {
                         [model addSelecteItem:selectItem withIndex:indexPath.item];
                     }else{
+                        [model clearAddSelecteItem:selectItem withIndex:indexPath.item];
+                    }
+                }else if (item.tabId.integerValue == FHSearchTabIdTypeHouse) {
+                    self.userHouseTypeSelected = YES;
+                    //添加选择
+                    FHSearchFilterConfigOption *option = nil;
+                    if (item.options.count > 0) {
+                        option = [item.options firstObject];
+                    }
+                    if ([option.supportMulti boolValue]) {
+                        [model addSelecteItem:selectItem withIndex:indexPath.item];
+                    }else{
+                        if (item.options.count > indexPath.item) {
+                            option = item.options[indexPath.item];
+                            _houseTypeSelectedValue = option.houseType;
+                        }
                         [model clearAddSelecteItem:selectItem withIndex:indexPath.item];
                     }
                 }
@@ -1615,13 +1708,6 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
 //    [self.contactCell enableSendVerifyCodeBtn:(enabled && self.verifyCodeRetryTime <= 0)];
 //}
 
-- (BOOL)isPureInt:(NSString *)str
-{
-    NSScanner *scanner = [[NSScanner alloc] initWithString:str];
-    int val = 0;
-    return [scanner scanInt:&val] && scanner.isAtEnd;
-}
-
 - (void)requestSendVerifyCode:(NSString *)phoneNumber completion:(void(^_Nullable)(NSNumber *retryTime, UIImage *captchaImage, NSError *error))completion
 {
     [TTAccountManager startSendCodeWithPhoneNumber:phoneNumber captcha:nil type:TTASMSCodeScenarioQuickLogin unbindExist:NO completion:completion];
@@ -1719,6 +1805,7 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
     params[@"origin_from"] = self.tracerDict[@"origin_from"] ?: @"be_null";
     params[@"enter_from"] = self.tracerDict[@"enter_from"] ? : @"be_null";
     params[@"page_type"] = [self pageTypeString];
+    params[@"house_type"] =  _houseTypeSelectedValue == FHHouseTypeSecondHandHouse ? @"old" : @"new";
     params[@"event_tracking_id"] = @"93447";
     if (position.length > 0) {
         params[@"click_position"] = position;

@@ -16,6 +16,9 @@
 {
     BOOL _hasSendEndTrack;
 }
+
+@property(nonatomic, assign) NSTimeInterval startPlaybackTime;
+
 @end
 
 
@@ -26,6 +29,7 @@
 {
     self = [super init];
     if (self) {
+    
     }
     return self;
 }
@@ -138,12 +142,28 @@
     [traceParams setValue:[self.playerStateStore.state ttv_position] forKey:@"position"];
     [traceParams setValue:dictVideo[@"duration"] forKey:@"duration"];
     [traceParams setValue:dictVideo[@"percent"] forKey:@"percent"];
+    NSTimeInterval stayTime = ([[NSDate date] timeIntervalSince1970] - self.startPlaybackTime) * 1000;
+    NSTimeInterval maxTime = (self.playerStateStore.state.currentPlaybackTime > 0 ? self.playerStateStore.state.currentPlaybackTime : self.playerStateStore.state.duration) * 1000;
+    if (stayTime > 0) {
+        if(stayTime > maxTime){
+            stayTime = maxTime;
+        }
+        [traceParams setValue:@(ceil(stayTime)) forKey:@"stay_time"];
+    }
     
     if(self.extraDic.count > 0){
         [traceParams addEntriesFromDictionary:self.extraDic];
     }
     
-    [BDTrackerProtocol eventV3:@"video_over" params:traceParams];
+    if([[self.playerStateStore.state ttv_position] isEqualToString:@"detail"]){
+        if(traceParams[@"page_type"]){
+            traceParams[@"enter_from"] = traceParams[@"page_type"];
+        }
+        traceParams[@"page_type"] = @"video_detail";
+    }
+    
+    traceParams[@"event_tracking_id"] = @"104166";
+    [FHEnvContext recordEvent:traceParams andEventKey:@"video_over"];
 }
 
 
@@ -161,15 +181,21 @@
         [dict setValue:self.categoryName forKey:@"category_name"];
         [dict setValue:self.playerStateStore.state.playerModel.fromGid forKey:@"from_gid"];
         [dict setValue:[self.playerStateStore.state ttv_position] forKey:@"position"];
-        
+        [dict setValue:(self.playerStateStore.state.muted ? @"mute" : @"play") forKey:@"play_status"];
         if(self.extraDic.count > 0){
             [dict addEntriesFromDictionary:self.extraDic];
         }
-
-        if (![TTTrackerWrapper isOnlyV3SendingEnable]){
-//            [[EnvContext shared].tracer writeEvent:@"video_play" params:dict];
-            [FHEnvContext recordEvent:dict andEventKey:@"video_play"];
+        dict[@"event_tracking_id"] = @"104165";
+        
+        if([[self.playerStateStore.state ttv_position] isEqualToString:@"detail"]){
+            if(dict[@"page_type"]){
+                dict[@"enter_from"] = dict[@"page_type"];
+            }
+            dict[@"page_type"] = @"video_detail";
         }
+        
+        [FHEnvContext recordEvent:dict andEventKey:@"video_play"];
+        self.startPlaybackTime = [[NSDate date] timeIntervalSince1970];
     }
 }
 
@@ -193,9 +219,9 @@
                 [dict addEntriesFromDictionary:[self extraFromEvent:@"video_over"]];
             }
             _hasSendEndTrack = YES;
-            if (![TTTrackerWrapper isOnlyV3SendingEnable]){
-                [TTTrackerWrapper eventData:dict];
-            }
+//            if (![TTTrackerWrapper isOnlyV3SendingEnable]){
+//                [TTTrackerWrapper eventData:dict];
+//            }
             [self sendEndTrackV3];
         }
     }
@@ -227,7 +253,7 @@
         }
             break;
         case TTVPlayerEventTypeFinishUIReplay:{
-            [self sendPlayTrack];
+//            [self sendPlayTrack];
         }
             break;
         case TTVPlayerEventTypeGoToDetail:{
@@ -235,7 +261,7 @@
         }
             break;
         case TTVPlayerEventTypeRetry:{
-            [self sendPlayTrack];
+//            [self sendPlayTrack];
         }
             break;
         case TTVPlayerEventTypeShowVideoFirstFrame:{
@@ -289,6 +315,5 @@
     [dict setValue:@"high" forKey:@"version_type"];
     [TTTrackerWrapper eventData:dict];
 }
-
 
 @end
