@@ -449,6 +449,9 @@
 #pragma mark - FHDetailNewMediaHeaderViewBlocks
 
 - (void)didSelectItemAtIndex:(NSInteger)index {
+    if (index < 0 || index >= self.dataHelper.headerViewData.mediaItemArray.count) {
+        return;
+    }
     FHMultiMediaItemModel *itemModel = self.dataHelper.headerViewData.mediaItemArray[index];
     switch (itemModel.mediaType) {
         case FHMultiMediaTypeVRPicture:
