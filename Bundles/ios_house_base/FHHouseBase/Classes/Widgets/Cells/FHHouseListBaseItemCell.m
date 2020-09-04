@@ -328,7 +328,6 @@
 {
     if (!_houseMainImageBackView) {
         UIView *houseMainImageBackView = [[UIView alloc] init];
-        houseMainImageBackView.backgroundColor = [UIColor whiteColor];
         CALayer * layer = houseMainImageBackView.layer;
         layer.shadowOffset = CGSizeMake(0, 4);
         layer.shadowRadius = 6;
