@@ -934,8 +934,8 @@ static NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
             if (indexPath.row < self.houseDataItemsModel.count) {
                 JSONModel *model = self.houseDataItemsModel[indexPath.row];
 //                [cell refreshTopMargin:([TTDeviceHelper is896Screen3X] || [TTDeviceHelper is896Screen2X]) ? 4 : 0];
-                [cell updateHomeNewHouseCellModel:model];
                 [cell updateVrInfo:model];
+                [cell updateHomeNewHouseCellModel:model];
             }
             [cell refreshIndexCorner:(indexPath.row == 0) andLast:(indexPath.row == (self.houseDataItemsModel.count - 1) && !self.hasMore)];
             return cell;
