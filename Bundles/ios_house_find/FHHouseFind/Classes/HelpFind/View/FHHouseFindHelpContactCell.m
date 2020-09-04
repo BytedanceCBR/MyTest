@@ -79,7 +79,7 @@
         if(isShow){
             self.phoneInput.text = @"";
         }else{
-            self.phoneInput.text = [FHUserInfoManager formattMaskPhoneNumber:self.phoneNum];
+            self.phoneInput.text = [FHUserInfoManager formatMaskPhoneNumber:self.phoneNum];
         }
     }
 }
