@@ -217,8 +217,11 @@
     self.infoLabel.text = text;
     CGFloat width = [text btd_widthWithFont:[UIFont themeFontRegular:12] height:20];
     width += 14;
-    if (width < 43) {
-        width = 43;
+    if (width < 44) {
+        width = 44;
+    }
+    if (width == self.infoLabel.frame.size.width) {
+        return;
     }
     [self.infoLabel mas_updateConstraints:^(MASConstraintMaker *make) {
         make.width.mas_equalTo(width);
