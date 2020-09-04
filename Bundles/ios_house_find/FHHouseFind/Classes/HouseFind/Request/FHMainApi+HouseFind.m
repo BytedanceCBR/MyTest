@@ -34,7 +34,7 @@
 {
     NSString *queryPath = @"/f100/api/help_find_is_used?";
     NSMutableDictionary *paramDic = [NSMutableDictionary new];
-    paramDic[@"house_type"] = houseType;
+//    paramDic[@"house_type"] = houseType;
     
     return [FHMainApi queryData:queryPath params:paramDic class:[FHHouseFindRecommendModel class] completion:completion];
 }
