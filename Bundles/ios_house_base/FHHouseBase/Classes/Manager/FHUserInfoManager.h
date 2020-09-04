@@ -27,7 +27,7 @@ NS_ASSUME_NONNULL_BEGIN
  格式化手机号 ，返回带掩码的格式，统一处理
  15901218853 -> 159*****853
  */
-+ (NSString *)formattMaskPhoneNumber:(NSString *)phoneNumber;
++ (NSString *)formatMaskPhoneNumber:(NSString *)phoneNumber;
 
 /**
  判断手机号是否是登录用户的手机号
