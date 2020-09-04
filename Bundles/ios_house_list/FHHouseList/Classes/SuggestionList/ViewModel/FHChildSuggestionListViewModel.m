@@ -484,7 +484,7 @@
                                 @"associate_type":[[FHHouseTypeManager sharedInstance] traceValueForType:self.houseType],
                                 @"word_id":model.info.wordid.length > 0 ? model.info.wordid : @"be_null",
                                 @"element_type":@"search",
-                                @"impr_id":impr_id,
+                                @"impr_id":impr_id ?: @"be_null",
                                 @"rank":@(rank)
                                 };
     [FHUserTracker writeEvent:@"associate_word_click" params:tracerDic];
@@ -568,7 +568,6 @@
     if (self.sugListData.count > 0) {
         FHSuggestionResponseDataModel *item = self.sugListData[0];
         impr_id = [item.logPb btd_stringValueForKey:@"impr_id" default:@"be_null"];
-        
     }
     
     NSDictionary *tracerDic = @{
@@ -577,7 +576,7 @@
                                 @"associate_type":[[FHHouseTypeManager sharedInstance] traceValueForType:self.houseType],
                                 @"word_cnt":@(wordList.count),
                                 @"element_type":@"search",
-                                @"impr_id":impr_id
+                                @"impr_id":impr_id ?: @"be_null",
                                 };
 
     if (_isAssociatedCanTrack) {
