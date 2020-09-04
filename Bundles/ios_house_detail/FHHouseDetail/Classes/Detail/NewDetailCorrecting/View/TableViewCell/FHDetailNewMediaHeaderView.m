@@ -165,20 +165,17 @@
             [self.itemIndexArray addObject:@(i)];
         }
     }
+    [self.scrollView updateModel:model];
     if (_itemArray.count > 1) {
         self.itemView.hidden = NO;
+        [self setNeedsLayout];
+        [self layoutIfNeeded];
         self.itemView.titleArray = _itemArray;
         [self.itemView selectedItem:_itemArray[0]];
-
-        CGFloat itemViewWidth = 0;
-        if (_itemArray.count > 0) {
-            itemViewWidth = 10 + 44 * _itemArray.count;
-        }
     } else {
         self.itemView.hidden = YES;
     }
-
-    [self.scrollView updateModel:model];
+    
 }
 
 - (void)updateTitleModel:(FHDetailHouseTitleModel *)model {
