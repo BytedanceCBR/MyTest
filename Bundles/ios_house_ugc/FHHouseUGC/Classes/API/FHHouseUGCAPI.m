@@ -29,6 +29,8 @@
 #import "TTModuleBridge.h"
 #import "FHErrorHubManagerUtil.h"
 #import "FHUGCShortVideoRealtorInfoModel.h"
+#import "TTSandBoxHelper+House.h"
+#import "FHFeedListModel.h"
 
 #define DEFULT_ERROR @"请求错误"
 #define API_ERROR_CODE  10000
@@ -119,7 +121,7 @@
 //    return [FHMainApi queryData:queryPath params:paramDic class:cls completion:completion];
 }
 
-+ (TTHttpTask *)requestFeedListWithCategory:(NSString *)category behotTime:(double)behotTime loadMore:(BOOL)loadMore listCount:(NSInteger)listCount extraDic:(NSDictionary *)extraDic completion:(void (^ _Nullable)(id <FHBaseModelProtocol> model, NSError *error))completion {
++ (TTHttpTask *)requestFeedListWithCategory:(NSString *)category behotTime:(double)behotTime loadMore:(BOOL)loadMore isFirst:(BOOL)isFirst listCount:(NSInteger)listCount extraDic:(NSDictionary *)extraDic completion:(void (^ _Nullable)(id <FHBaseModelProtocol> model, NSError *error))completion {
 
     NSString *queryPath = [ArticleURLSetting encrpytionStreamUrlString];
 
@@ -215,6 +217,15 @@
                             errMsg = backError.domain;
                             resultType = FHNetworkMonitorTypeBizFailed+code;
                         }
+                    }
+                    FHFeedListModel *feedListModel = (FHFeedListModel *) model;
+                    if(isFirst && feedListModel.data.count == 0) {
+                        NSMutableDictionary *categoryDict = @{}.mutableCopy;
+                        categoryDict[@"version_code"] = [TTSandBoxHelper fhVersionCode];
+                        categoryDict[@"isEmpty"] = @(1);
+                        categoryDict[@"category"] = category;
+                        categoryDict[@"x_tt_logid"] = response.allHeaderFields[@"x_tt_logid"];
+                        [[HMDTTMonitor defaultManager] hmdTrackService:@"ugc_feed_list_fisrt_empty" metric:nil category:categoryDict extra:nil];
                     }
                 }
             }
