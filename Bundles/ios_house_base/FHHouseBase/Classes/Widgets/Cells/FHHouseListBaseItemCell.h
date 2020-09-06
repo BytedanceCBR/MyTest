@@ -14,6 +14,7 @@ NS_ASSUME_NONNULL_BEGIN
 //更新首页混排新房cell
 - (void)updateSynchysisNewHouseCellWithModel:(FHHomeHouseDataItemsModel *)model;
 -(void)refreshIndexCorner:(BOOL)isFirst andLast:(BOOL)isLast;
+- (void)resumeVRIcon;
 
 ////更新大类页混排新房cell
 - (void)updateSynchysisNewHouseCellWithSearchHouseModel:(FHSearchHouseItemModel *)model;

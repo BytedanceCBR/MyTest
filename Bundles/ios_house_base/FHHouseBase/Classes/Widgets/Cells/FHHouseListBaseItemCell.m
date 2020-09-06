@@ -502,6 +502,21 @@
         NSAttributedString *attributeString = [FHSingleImageInfoCellModel newTagsStringWithTagList:model.tags maxWidth:maxWidth];
 //             _tagLabel.lineBreakMode = NSLineBreakByWordWrapping;
         self.tagLabel.attributedText = attributeString;
+        if (model.vrInfo.hasVr) {
+            if (!_vrLoadingView) {
+                [self.vrLoadingView mas_makeConstraints:^(MASConstraintMaker *make) {
+                    make.left.equalTo(self.mainIma).offset(6);
+                    make.bottom.equalTo(self.mainIma).offset(-6);
+                    make.size.mas_equalTo(CGSizeMake(16, 16));
+                }];
+            }
+            _vrLoadingView.hidden = NO;
+            [_vrLoadingView play];
+        } else {
+            if (_vrLoadingView) {
+                _vrLoadingView.hidden = YES;
+            }
+        }
     }
 }
 #pragma mark 更新大类页混排新房cell
@@ -525,6 +540,28 @@
         NSAttributedString *attributeString = [FHSingleImageInfoCellModel newTagsStringWithTagList:model.tags maxWidth:maxWidth];
 //             _tagLabel.lineBreakMode = NSLineBreakByWordWrapping;
         self.tagLabel.attributedText = attributeString;
+        if (model.vrInfo.hasVr) {
+            if (!_vrLoadingView) {
+                [self.vrLoadingView mas_makeConstraints:^(MASConstraintMaker *make) {
+                    make.left.equalTo(self.mainIma).offset(6);
+                    make.bottom.equalTo(self.mainIma).offset(-6);
+                    make.size.mas_equalTo(CGSizeMake(16, 16));
+                }];
+            }
+            _vrLoadingView.hidden = NO;
+            [_vrLoadingView play];
+        } else {
+            if (_vrLoadingView) {
+                _vrLoadingView.hidden = YES;
+            }
+        }
+    }
+}
+
+- (void)resumeVRIcon
+{
+    if (_vrLoadingView && !self.vrLoadingView.hidden) {
+        [self.vrLoadingView play];
     }
 }
 

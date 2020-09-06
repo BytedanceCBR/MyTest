@@ -81,6 +81,14 @@
             reportDict[@"group_id"] = logPbDic[@"group_id"];
         }
         
+        NSDictionary *params = paramObj.allParams;
+        if(params[@"origin_from"]) {
+            reportDict[@"origin_from"] = params[@"origin_from"];
+        }
+        if(params[@"enter_from"]) {
+            reportDict[@"enter_from"] = params[@"enter_from"];
+        }
+        
         if([reportDict isKindOfClass:[NSDictionary class]])
         {
             viewModel.reportParams = reportDict;

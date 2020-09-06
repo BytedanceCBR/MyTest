@@ -276,6 +276,7 @@ static struct timeval commentTimeval;
     if (self.commentManager) {
         [self.commentManager commentViewShow];
     }
+
 }
 
 - (UIViewController *)shouldShowedInViewControllerForView:(UIView *)view {

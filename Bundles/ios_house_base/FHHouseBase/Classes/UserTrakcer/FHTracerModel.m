@@ -89,6 +89,7 @@
         model.originFrom = dicParams[@"origin_from"];
         model.elementFrom = dicParams[@"element_from"];
         model.enterFrom = dicParams[@"enter_from"];
+        model.enterType = dicParams[@"enter_type"];
         model.categoryName = dicParams[@"category_name"];
         model.searchId = dicParams[@"search_id"];
         model.originSearchId = dicParams[@"origin_search_id"];

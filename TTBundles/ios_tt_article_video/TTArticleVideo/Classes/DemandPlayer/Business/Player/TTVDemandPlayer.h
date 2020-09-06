@@ -37,6 +37,7 @@
 - (void)playerOrientationState:(BOOL)isFullScreen;
 - (void)actionChangeCallbackWithAction:(TTVPlayerStateAction *)action;
 - (CGRect)ttv_movieViewFrameAfterExitFullscreen;
+- (void)playerCurrentPlayBackTimeChange:(NSTimeInterval)currentPlayBackTime duration:(NSTimeInterval)duration;
 @end
 
 @interface TTVDemandPlayer : UIView

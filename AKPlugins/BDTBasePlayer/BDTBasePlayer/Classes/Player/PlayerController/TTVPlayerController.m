@@ -17,10 +17,9 @@
 #import "TTVPlayerSettingUtility.h"
 #import "TTVPlayerCacheProgressController.h"
 #import <AVFoundation/AVFoundation.h>
-#import "TTVPalyerTrafficAlert.h"
+//#import "TTVPalyerTrafficAlert.h"
 #import "TTVPlayerAudioWave.h"
 #import "TTVFullscreeenController.h"
-#import "TTVPalyerTrafficAlert.h"
 #import "TTVResolutionStore.h"
 #import "UIColor+TTThemeExtension.h"
 #import "TTVAudioActiveCenter.h"
@@ -30,6 +29,7 @@
 #import "TTVChangeResolutionView.h"
 #import "TTVChangeResolutionAlertView.h"
 #import "FHHMDTManager.h"
+#import "ToastManager.h"
 
 static __weak TTVPlayerController *currentPlayerController = nil;
 
@@ -40,7 +40,7 @@ static __weak TTVPlayerController *currentPlayerController = nil;
 @property (nonatomic, strong) TTVPlayerEventController *eventController;
 @property (nonatomic, strong) TTVPlayerOrientationController *orientationController;//新旋转
 @property (nonatomic, strong) TTVFullscreeenController *fullscreeenController;//旧旋转
-@property (nonatomic, strong) TTVPalyerTrafficAlert *trafficAlert;
+//@property (nonatomic, strong) TTVPalyerTrafficAlert *trafficAlert;
 @property (nonatomic, strong) TTVPlayerAudioWave *audioWave;
 @property(nonatomic, strong)TTVChangeResolutionView *changeResolutionView;
 @property(nonatomic, strong)TTVChangeResolutionAlertView *changeResolutionAlertView;
@@ -79,7 +79,7 @@ static __weak TTVPlayerController *currentPlayerController = nil;
     [self ttv_addPlayerView];
     [self ttv_addControlView];
 //    [self performSelector:@selector(ttv_addControlView) withObject:nil afterDelay:0];
-    [self ttv_addTrafficView];
+//    [self ttv_addTrafficView];
     if ([_playerDataSource respondsToSelector:@selector(videoPlayerTipView)]) {
         _playerView.tipView = [_playerDataSource videoPlayerTipView];
     }
@@ -126,17 +126,17 @@ static __weak TTVPlayerController *currentPlayerController = nil;
     _orientationController.rotateView = self.rotateView;
 }
 
-- (void)ttv_addTrafficView
-{
-    TTVPalyerTrafficAlert *alert = [[TTVPalyerTrafficAlert alloc] init];
-    alert.playerStateStore = self.playerStateStore;
-    if ([_playerDataSource respondsToSelector:@selector(videoPlayerTrafficView)]) {
-        [alert setTrafficView:[_playerDataSource videoPlayerTrafficView]];
-        _playerView.trafficView = alert;
-        _playerView.trafficView.hidden = YES;
-        self.trafficAlert = alert;
-    }
-}
+//- (void)ttv_addTrafficView
+//{
+//    TTVPalyerTrafficAlert *alert = [[TTVPalyerTrafficAlert alloc] init];
+//    alert.playerStateStore = self.playerStateStore;
+//    if ([_playerDataSource respondsToSelector:@selector(videoPlayerTrafficView)]) {
+//        [alert setTrafficView:[_playerDataSource videoPlayerTrafficView]];
+//        _playerView.trafficView = alert;
+//        _playerView.trafficView.hidden = YES;
+//        self.trafficAlert = alert;
+//    }
+//}
 
 - (void)ttv_addControlView
 {
@@ -265,7 +265,9 @@ static __weak TTVPlayerController *currentPlayerController = nil;
     }
     switch (action.actionType) {
         case TTVPlayerEventTypeShowVideoFirstFrame:{
-            [self.trafficAlert setTrafficVideoDuration:self.playerStateStore.state.duration videoSize:self.playerStateStore.state.videoSize inDetail:self.playerStateStore.state.isInDetail];
+            //show toast
+            [self showFlowToast];
+//            [self.trafficAlert setTrafficVideoDuration:self.playerStateStore.state.duration videoSize:self.playerStateStore.state.videoSize inDetail:self.playerStateStore.state.isInDetail];
         }
             break;
         case TTVPlayerEventTypeFinished:
@@ -321,11 +323,11 @@ static __weak TTVPlayerController *currentPlayerController = nil;
                 [self exitFullScreen:YES completion:^(BOOL finished) {
                     __strong typeof(wself) self = wself;
                     self.playerStateStore.state.exitFullScreeenType = TTVPlayerExitFullScreeenTypeUnknow;
-                    [self.trafficAlert showFreeFlowTipView:NO didOverFlow:NO userInfo:nil];
+//                    [self.trafficAlert showFreeFlowTipView:NO didOverFlow:NO userInfo:nil];
                 }];
             } else {
                 
-                [self.trafficAlert showFreeFlowTipView:NO didOverFlow:NO userInfo:nil];
+//                [self.trafficAlert showFreeFlowTipView:NO didOverFlow:NO userInfo:nil];
             }
         }
             break;
@@ -337,11 +339,11 @@ static __weak TTVPlayerController *currentPlayerController = nil;
                 [self exitFullScreen:YES completion:^(BOOL finished) {
                     __strong typeof(wself) self = wself;
                     self.playerStateStore.state.exitFullScreeenType = TTVPlayerExitFullScreeenTypeUnknow;
-                    [self.trafficAlert showFreeFlowTipView:NO didOverFlow:YES userInfo:nil];
+//                    [self.trafficAlert showFreeFlowTipView:NO didOverFlow:YES userInfo:nil];
                 }];
             } else {
                 
-                [self.trafficAlert showFreeFlowTipView:NO didOverFlow:YES userInfo:nil];
+//                [self.trafficAlert showFreeFlowTipView:NO didOverFlow:YES userInfo:nil];
             }
         }
             break;
@@ -361,10 +363,10 @@ static __weak TTVPlayerController *currentPlayerController = nil;
                 [self exitFullScreen:YES completion:^(BOOL finished) {
                     __strong typeof(wself) self = wself;
                     self.playerStateStore.state.exitFullScreeenType = TTVPlayerExitFullScreeenTypeUnknow;
-                    [self.trafficAlert showFreeFlowTipView:YES didOverFlow:NO userInfo:nil];
+//                    [self.trafficAlert showFreeFlowTipView:YES didOverFlow:NO userInfo:nil];
                 }];
             } else {
-                [self.trafficAlert showFreeFlowTipView:YES didOverFlow:NO userInfo:params];
+//                [self.trafficAlert showFreeFlowTipView:YES didOverFlow:NO userInfo:params];
             }
         }
             break;
@@ -396,7 +398,9 @@ static __weak TTVPlayerController *currentPlayerController = nil;
     @weakify(self);
     [self.KVOController observe:self.playerStateStore.state keyPath:@keypath(self.playerStateStore.state,isInDetail) options:NSKeyValueObservingOptionNew | NSKeyValueObservingOptionOld block:^(id  _Nullable observer, id  _Nonnull object, NSDictionary<NSString *,id> * _Nonnull change) {
         @strongify(self);
-        [self.trafficAlert setTrafficVideoDuration:self.playerStateStore.state.duration videoSize:self.playerStateStore.state.videoSize inDetail:self.playerStateStore.state.isInDetail];
+//        [self.trafficAlert setTrafficVideoDuration:self.playerStateStore.state.duration videoSize:self.playerStateStore.state.videoSize inDetail:self.playerStateStore.state.isInDetail];
+        //show toast
+        [self showFlowToast];
     }];
 }
 
@@ -426,6 +430,17 @@ static __weak TTVPlayerController *currentPlayerController = nil;
 - (void)setBanLoading:(BOOL)banLoading{
     _banLoading = banLoading;
     self.playerStateStore.state.banLoading = banLoading;
+}
+
+- (void)showFlowToast {
+    if (TTNetworkWifiConnected() || !TTNetworkConnected()) {
+        return;
+    }
+    
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        [[ToastManager manager] showToast:@"当前处在非WiFi环境，注意流量消耗哦！"];
+    });
 }
 
 #pragma mark - TTVOrientationDelegate

@@ -64,13 +64,13 @@
 - (void)setTitleArray:(NSArray *)titleArray {
     _titleArray = titleArray;
     NSMutableArray *otherTypeArr = [_titleArray mutableCopy];
-    BOOL hasvr = [_titleArray containsObject:@"VR"];
-    if (hasvr) {
-        [otherTypeArr removeObject: @"VR"];
-        _titleTypeArr = [NSArray arrayWithObjects:@[@"VR"],otherTypeArr, nil];
-    }else {
-        _titleTypeArr =  [NSArray arrayWithObjects:otherTypeArr, nil];
-    }
+//    BOOL hasvr = [_titleArray containsObject:@"VR"];
+//    if (hasvr) {
+//        [otherTypeArr removeObject: @"VR"];
+//        _titleTypeArr = [NSArray arrayWithObjects:@[@"VR"],otherTypeArr, nil];
+//    }else {
+    _titleTypeArr =  [NSArray arrayWithObjects:otherTypeArr, nil];
+//    }
     [self calculateRow];
     if(self.row > 0){
         [self initViews];

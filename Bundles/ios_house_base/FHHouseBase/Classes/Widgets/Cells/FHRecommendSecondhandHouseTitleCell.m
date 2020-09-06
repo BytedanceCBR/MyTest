@@ -56,9 +56,17 @@
 }
 
 - (void)setupUI {
-
     [self.titleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(self.contentView).offset(15);
+        make.right.mas_equalTo(self.contentView).offset(-15);
+        make.centerY.mas_equalTo(self.contentView);
+        make.height.mas_equalTo(24);
+    }];
+}
+
+- (void)refreshLeftOffset:(CGFloat)leftV{
+    [self.titleLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.left.mas_equalTo(self.contentView).offset(leftV);
         make.right.mas_equalTo(self.contentView).offset(-15);
         make.centerY.mas_equalTo(self.contentView);
         make.height.mas_equalTo(24);

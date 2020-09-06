@@ -161,6 +161,7 @@
     _houseSegmentControl.selectionStyle = HMSegmentedControlSelectionStyleTextWidthStripe;
     _houseSegmentControl.segmentWidthStyle = HMSegmentedControlSegmentWidthStyleFixed;
     _houseSegmentControl.isNeedNetworkCheck = NO;
+    _houseSegmentControl.userDraggable = NO;
     _houseSegmentControl.segmentEdgeInset = UIEdgeInsetsMake(8, 10, 0, 10);
     _houseSegmentControl.selectionIndicatorLocation = HMSegmentedControlSelectionIndicatorLocationDown;
     _houseSegmentControl.selectionIndicatorWidth = 20.0f;
