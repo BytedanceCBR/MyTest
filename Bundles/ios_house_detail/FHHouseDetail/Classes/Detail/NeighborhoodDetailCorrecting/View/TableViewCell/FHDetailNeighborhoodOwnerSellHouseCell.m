@@ -37,13 +37,14 @@
 -(void)setupUI {
     UIImage *helpMeSellHouseImage = [UIImage imageNamed:@"helpMeSellHouse"];
     _helpMeSellHouseImageView = [[UIImageView alloc] initWithImage:helpMeSellHouseImage];
-    CGFloat imageHeight = helpMeSellHouseImage.size.height * SCREEN_WIDTH / helpMeSellHouseImage.size.width;
+    CGFloat imageHeight = helpMeSellHouseImage.size.height * (SCREEN_WIDTH - 30) / helpMeSellHouseImage.size.width;
     [self.contentView addSubview:_helpMeSellHouseImageView];
     [_helpMeSellHouseImageView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.equalTo(self.contentView).offset(15);
         make.right.equalTo(self.contentView).offset(-15);
         make.height.mas_equalTo(imageHeight);
-        make.top.bottom.equalTo(self.contentView);
+        make.top.equalTo(self.contentView).offset(6);
+        make.bottom.equalTo(self.contentView).offset(-6);
     }];
     WeakSelf;
     self.didClickCellBlk = ^{
