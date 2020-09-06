@@ -53,18 +53,18 @@ def fhPods
 #    pod 'FHCommonUI', :git => 'git@code.byted.org:fproject/ios_common_ui.git', :commit => 'df694e57a8c75b599b241fbd5114c55c767bf0a5'
 
 
-    pod 'FHPopupViewCenter', '0.0.2-rc.7', :inhibit_warnings => false, :subspecs => [
+#    pod 'FHPopupViewCenter', '0.0.2-rc.7', :inhibit_warnings => false, :subspecs => [
+#    'Core',
+#    'DelegateForC'
+#    ]
+#    pod 'FHPopupViewCenter', :path => '../../../FHPopupViewCenter', :subspecs => [
+#    'Core',
+#    'DelegateForC'
+#    ]
+    pod 'FHPopupViewCenter', :git => 'git@code.byted.org:fproject/FHPopupViewCenter.git', :commit => '65472a085fc094cdcb17a8b50b6326ac3474e6e3', :subspecs => [
     'Core',
     'DelegateForC'
     ]
-    #    pod 'FHPopupViewCenter', :path => '../../../FHPopupViewCenter', :subspecs => [
-    #    'Core',
-    #    'DelegateForC'
-    #    ]
-    # pod 'FHPopupViewCenter', :git => 'git@code.byted.org:fproject/FHPopupViewCenter.git', :commit => '819997a3afbc7eb3e1eaf2b0d8cc3ecb488b71c1', :subspecs => [
-    # 'Core',
-    # 'DelegateForC'
-    #]
     
 #    pod 'ios_house_im' ,'0.2.16-rc.2'
 #     pod 'ios_house_im' , :path => '../../../im/bugfix'
