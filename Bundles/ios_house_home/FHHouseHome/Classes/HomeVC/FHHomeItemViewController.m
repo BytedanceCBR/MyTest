@@ -933,9 +933,9 @@ static NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
             cell.delegate = self;
             if (indexPath.row < self.houseDataItemsModel.count) {
                 JSONModel *model = self.houseDataItemsModel[indexPath.row];
-                [cell refreshTopMargin:([TTDeviceHelper is896Screen3X] || [TTDeviceHelper is896Screen2X]) ? 4 : 0];
-                [cell updateHomeNewHouseCellModel:model];
+//                [cell refreshTopMargin:([TTDeviceHelper is896Screen3X] || [TTDeviceHelper is896Screen2X]) ? 4 : 0];
                 [cell updateVrInfo:model];
+                [cell updateHomeNewHouseCellModel:model];
             }
             [cell refreshIndexCorner:(indexPath.row == 0) andLast:(indexPath.row == (self.houseDataItemsModel.count - 1) && !self.hasMore)];
             return cell;
@@ -1120,6 +1120,7 @@ static NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
                 [parmasIds setValue:self.currentSearchId forKey:@"search_id"];
                 [parmasIds setValue:theModel.idx forKey:@"house_id"];
                 [parmasIds setValue:@"94349544675" forKey:@"channel_id"];
+                [parmasIds setValue:@(self.houseType) forKey:@"house_type"];
                 if (theModel.idx && [FHEnvContext isNetworkConnected]) {
                     [[FHHouseSimilarManager sharedInstance] requestForSimilarHouse:parmasIds];
                     [self.cacheClickIds addObject:theModel.idx];

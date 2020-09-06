@@ -227,7 +227,7 @@
         if(isShow){
             self.textField.text = @"";
         }else{
-            self.textField.text = [FHUserInfoManager formattMaskPhoneNumber:self.phoneNum];
+            self.textField.text = [FHUserInfoManager formatMaskPhoneNumber:self.phoneNum];
         }
         if (self.textField.text.length > 0) {
             self.subscribeBtn.enabled = YES;
