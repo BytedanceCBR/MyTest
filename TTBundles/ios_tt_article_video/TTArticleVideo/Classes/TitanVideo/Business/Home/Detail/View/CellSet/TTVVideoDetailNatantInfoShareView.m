@@ -84,27 +84,27 @@ typedef NS_ENUM(NSInteger, TTVVideoDetailNatantInfoShareViewShareAction)
 - (void)initializeViews
 {
     [self addSubview:self.digButton];
-    if ([self.viewModel showExtendLink]){
-        if (!_videoExtendLinkButton) {
-            NSString *title = [_viewModel.infoModel.VExtendLinkDic valueForKey:@"button_text"];
-            title = title.length > 0 ? title : @"查看更多";
-            if ([_viewModel.infoModel.VExtendLinkDic valueForKey:@"is_download_app"])
-            {
-                if (title.length <= 0) {
-                    title = NSLocalizedString(@"立即下载", nil);
-                }
-            }
-        UIImage *extendImage = [UIImage themedImageNamed:@"link"];
-        self.videoExtendLinkButton = [self buttonWithImage:extendImage  title:title itemType:TTVVideodetailNatantInfoShareViewExtendLink];
-        [self addSubview:self.videoExtendLinkButton];
-        }
-    }
+//    if ([self.viewModel showExtendLink]){
+//        if (!_videoExtendLinkButton) {
+//            NSString *title = [_viewModel.infoModel.VExtendLinkDic valueForKey:@"button_text"];
+//            title = title.length > 0 ? title : @"查看更多";
+//            if ([_viewModel.infoModel.VExtendLinkDic valueForKey:@"is_download_app"])
+//            {
+//                if (title.length <= 0) {
+//                    title = NSLocalizedString(@"立即下载", nil);
+//                }
+//            }
+//        UIImage *extendImage = [UIImage themedImageNamed:@"link"];
+//        self.videoExtendLinkButton = [self buttonWithImage:extendImage  title:title itemType:TTVVideodetailNatantInfoShareViewExtendLink];
+//        [self addSubview:self.videoExtendLinkButton];
+//        }
+//    }
     
-    if (!self.videoExtendLinkButton ) {
+//    if (!self.videoExtendLinkButton ) {
         [self addDirectShareButtons];
-    }else{
-        [self addShareButton];
-    }
+//    }else{
+//        [self addShareButton];
+//    }
 }
 
 - (void)addShareButton
