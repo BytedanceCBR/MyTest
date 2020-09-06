@@ -11,4 +11,5 @@
 @interface SettingPushCell : SSThemedTableViewCell
 @property (nonatomic, retain) SSThemedLabel *pushTitleLabel;
 @property (nonatomic, retain) SSThemedLabel *pushDetailLabel;
+@property (nonatomic, retain) UIView *topLine;
 @end

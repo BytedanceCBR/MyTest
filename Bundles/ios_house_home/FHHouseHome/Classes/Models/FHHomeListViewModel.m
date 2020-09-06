@@ -74,6 +74,7 @@
 {
     self = [super init];
     if (self) {
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(changeForPersonalRecommend) name:@"personalrecommend" object:nil];
         self.categoryView = [[FHHomeSectionHeader alloc] initWithFrame:CGRectMake(0.0, 0.0, [UIScreen mainScreen].bounds.size.width, KFHHomeSectionHeight)];
         self.tableViewV = tableView;
         self.homeViewController = homeVC;
@@ -911,6 +912,11 @@
         mainVC = (FHHomeMainViewController *)self.homeViewController.parentViewController;
     };
     [mainVC changeTopSearchBtn:isShow];
+}
+
+- (void)changeForPersonalRecommend
+{
+    self.categoryView.categoryLabel.text = [FHEnvContext getPersonalRecommend]? @"为你推荐":@"为你找到";
 }
 
 - (void)dealloc

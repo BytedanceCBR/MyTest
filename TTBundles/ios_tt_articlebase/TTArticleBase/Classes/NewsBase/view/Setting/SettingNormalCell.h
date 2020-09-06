@@ -10,4 +10,6 @@
 
 @interface SettingNormalCell : SSThemedTableViewCell
 
+@property (nonatomic,retain)UIView *topLine;
+
 @end

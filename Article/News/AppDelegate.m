@@ -86,6 +86,8 @@ extern NSString *const kTTAppseeEnableKey;
 - (void)initWebViewCommonQueryStatus
 {
     [[NSUserDefaults standardUserDefaults] registerDefaults:@{SSCommonLogicSettingWebViewQueryStringEnableKey : @(1),SSCommonLogicSettingWebViewQueryStringListKey : @[@"snssdk.com", @"bytedance.com"]}];
+    //默认开启 个性化推荐
+    [[NSUserDefaults standardUserDefaults] registerDefaults:@{@"PersonalRommend" : @(YES)}];
 }
 
 - (void)dealloc

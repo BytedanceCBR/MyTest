@@ -824,6 +824,20 @@ static NSInteger kGetLightRequestRetryCount = 3;
     [FHUtils setContent:cityName forKey:kUserDefaultCityName];
 }
 
+//获取当前个性化推荐设置
++ (BOOL)getPersonalRecommend
+{
+    BOOL PersonalRecommend = [[NSUserDefaults standardUserDefaults] boolForKey:@"PersonalRecommend"];
+    return PersonalRecommend;
+}
+
+//保存当前个性化推荐设置
++ (void)savePersonalRecommend:(BOOL *)isPersonalRecommend
+{
+     [[NSUserDefaults standardUserDefaults] setBool:isPersonalRecommend forKey:@"PersonalRecommend"];
+     [[NSUserDefaults standardUserDefaults] synchronize];
+}
+
 //获取当前选中城市cityid
 + (NSString *)getCurrentSelectCityIdFromLocal
 {
