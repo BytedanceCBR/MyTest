@@ -1120,6 +1120,7 @@ static NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
                 [parmasIds setValue:self.currentSearchId forKey:@"search_id"];
                 [parmasIds setValue:theModel.idx forKey:@"house_id"];
                 [parmasIds setValue:@"94349544675" forKey:@"channel_id"];
+                [parmasIds setValue:@(self.houseType) forKey:@"house_type"];
                 if (theModel.idx && [FHEnvContext isNetworkConnected]) {
                     [[FHHouseSimilarManager sharedInstance] requestForSimilarHouse:parmasIds];
                     [self.cacheClickIds addObject:theModel.idx];
