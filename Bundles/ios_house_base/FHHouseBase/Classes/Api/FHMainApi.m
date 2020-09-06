@@ -469,7 +469,7 @@
                            NSInteger houseType = [[param valueForKey:@"house_type"] integerValue];
                            if (houseType) {
                                resultType = FHNetworkMonitorTypeSuccess;
-                           }else{
+                           } else {
                                resultType = FHNetworkMonitorTypeBizFailed;
                            }
                            exceptionDict = @{@"data_type":(param[@"house_type"]?:@"-1")};
