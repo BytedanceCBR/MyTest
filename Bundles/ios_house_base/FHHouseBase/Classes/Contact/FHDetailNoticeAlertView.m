@@ -15,6 +15,7 @@
 #import "FHFillFormAgencyListItemModel.h"
 #import "UIImage+FIconFont.h"
 #import <ByteDanceKit/UIDevice+BTDAdditions.h>
+#import "FHUserInfoManager.h"
 
 @interface FHDetailNoticeAlertView () <UITextFieldDelegate, FHHouseAgencyListSugDelegate>
 
@@ -56,36 +57,36 @@
     return self;
 }
 
-- (instancetype)initWithTitle:(NSString *)title subtitle:(NSString *)subtitle btnTitle:(NSString *)btnTitle leftBtnTitle:(NSString *)leftBtnTitle
-{
-    self = [self initWithFrame:[UIScreen mainScreen].bounds];
-    if (self) {
-        [self setupUI];
-        self.titleLabel.text = title;
-        self.subtitleLabel.text = subtitle;
-        [self.submitBtn setTitle:btnTitle forState:UIControlStateNormal];
-        [self.submitBtn setTitle:btnTitle forState:UIControlStateHighlighted];
-        if (leftBtnTitle.length > 0) {
-            
-            [self.leftBtn setTitle:leftBtnTitle forState:UIControlStateNormal];
-            [self.leftBtn setTitle:leftBtnTitle forState:UIControlStateHighlighted];
-            [self.leftBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-                make.left.mas_equalTo(20);
-                make.width.height.centerY.mas_equalTo(self.submitBtn);
-            }];
-            [self.submitBtn mas_remakeConstraints:^(MASConstraintMaker *make) {
-                make.height.mas_equalTo(40);
-                make.top.mas_equalTo(self.agencyView.mas_bottom).mas_offset(20);
-                make.left.mas_equalTo(self.leftBtn.mas_right).mas_offset(10);
-                make.right.mas_equalTo(-20);
-            }];
-            [self.submitBtn addTarget:self action:@selector(rightBtnDidClick:) forControlEvents:UIControlEventTouchUpInside];
-        } else {
-            [self.submitBtn addTarget:self action:@selector(submitBtnDidClick:) forControlEvents:UIControlEventTouchUpInside];
-        }
-    }
-    return self;
-}
+//- (instancetype)initWithTitle:(NSString *)title subtitle:(NSString *)subtitle btnTitle:(NSString *)btnTitle leftBtnTitle:(NSString *)leftBtnTitle
+//{
+//    self = [self initWithFrame:[UIScreen mainScreen].bounds];
+//    if (self) {
+//        [self setupUI];
+//        self.titleLabel.text = title;
+//        self.subtitleLabel.text = subtitle;
+//        [self.submitBtn setTitle:btnTitle forState:UIControlStateNormal];
+//        [self.submitBtn setTitle:btnTitle forState:UIControlStateHighlighted];
+//        if (leftBtnTitle.length > 0) {
+//
+//            [self.leftBtn setTitle:leftBtnTitle forState:UIControlStateNormal];
+//            [self.leftBtn setTitle:leftBtnTitle forState:UIControlStateHighlighted];
+//            [self.leftBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+//                make.left.mas_equalTo(20);
+//                make.width.height.centerY.mas_equalTo(self.submitBtn);
+//            }];
+//            [self.submitBtn mas_remakeConstraints:^(MASConstraintMaker *make) {
+//                make.height.mas_equalTo(40);
+//                make.top.mas_equalTo(self.agencyView.mas_bottom).mas_offset(20);
+//                make.left.mas_equalTo(self.leftBtn.mas_right).mas_offset(10);
+//                make.right.mas_equalTo(-20);
+//            }];
+//            [self.submitBtn addTarget:self action:@selector(rightBtnDidClick:) forControlEvents:UIControlEventTouchUpInside];
+//        } else {
+//            [self.submitBtn addTarget:self action:@selector(submitBtnDidClick:) forControlEvents:UIControlEventTouchUpInside];
+//        }
+//    }
+//    return self;
+//}
 
 - (void)updateAgencyTitle:(NSString *)agencyTitle
 {
@@ -123,17 +124,11 @@
     return _agencyList;
 }
 
-- (void)setPhoneNum:(NSString *)phoneNum
-{
+- (void)setPhoneNum:(NSString *)phoneNum {
     _phoneNum = phoneNum;
     if (phoneNum.length > 0) {
-        // 显示 151*****010
-        NSString *tempPhone = phoneNum;
-        if (phoneNum.length == 11) {
-            tempPhone = [NSString stringWithFormat:@"%@****%@",[phoneNum substringToIndex:3],[phoneNum substringFromIndex:7]];
-            self.originPhoneNumber = phoneNum;
-        }
-        self.phoneTextField.text = tempPhone;
+        self.originPhoneNumber = phoneNum;
+        self.phoneTextField.text = [FHUserInfoManager formatMaskPhoneNumber:phoneNum];
         if (self.phoneTextField.text.length > 0) {
             [self refreshBtnState:YES];
         }else {
@@ -141,11 +136,9 @@
         }
     }
     // 有手机号，不弹出弹窗
-    if (self.originPhoneNumber.length < 1) {
-        
+    if (!self.originPhoneNumber.length) {
         //需要在下一个loop唤醒键盘
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.4 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-            
             dispatch_async(dispatch_get_main_queue(), ^{
                 [self.phoneTextField becomeFirstResponder];
             });
@@ -354,7 +347,7 @@
 {
     // 有手机号，显示原来的手机号
     if (self.originPhoneNumber.length > 0) {
-        self.phoneTextField.text = self.originPhoneNumber;
+        self.phoneTextField.text = @"";
         self.originPhoneNumber = nil;
     }
     return YES;
@@ -384,7 +377,7 @@
 - (void)submitBtnDidClick:(UIButton *)btn
 {
     NSString *phoneNum = [self currentInputPhoneNumber];
-    if (phoneNum.length == 11 && [phoneNum hasPrefix:@"1"] && [self isPureInt:phoneNum]) {
+    if (phoneNum.length == 11 && [phoneNum hasPrefix:@"1"] && [FHUserInfoManager checkPureIntFormatted:phoneNum]) {
         if (self.confirmClickBlock) {
             self.confirmClickBlock(phoneNum,self);
         }
@@ -395,14 +388,14 @@
 
 - (void)leftBtnDidClick:(UIButton *)btn
 {
-    NSString *phoneNum = [self currentInputPhoneNumber];
-    if (phoneNum.length == 11 && [phoneNum hasPrefix:@"1"] && [self isPureInt:phoneNum]) {
-        if (self.leftClickBlock) {
-            self.leftClickBlock(phoneNum,self);
-        }
-    }else {
-        [self showErrorText];
-    }
+//    NSString *phoneNum = [self currentInputPhoneNumber];
+//    if (phoneNum.length == 11 && [phoneNum hasPrefix:@"1"] && [self isPureInt:phoneNum]) {
+//        if (self.leftClickBlock) {
+//            self.leftClickBlock(phoneNum,self);
+//        }
+//    }else {
+//        [self showErrorText];
+//    }
 }
 
 - (void)rightBtnDidClick:(UIButton *)btn
@@ -418,13 +411,6 @@
     if (self.agencyClickBlock) {
         self.agencyClickBlock(self);
     }
-}
-
-
-- (BOOL)isPureInt:(NSString*)string{
-    NSScanner* scan = [NSScanner scannerWithString:string];
-    int val;
-    return[scan scanInt:&val] && [scan isAtEnd];
 }
 
 - (void)showErrorText
@@ -526,7 +512,7 @@
 {
     if (!_phoneTextField) {
         _phoneTextField = [[UITextField alloc]init];
-        _phoneTextField.keyboardType = UIKeyboardTypePhonePad;
+        _phoneTextField.keyboardType = UIKeyboardTypeNumberPad;
         _phoneTextField.font = [UIFont themeFontRegular:14];
         _phoneTextField.textColor = [UIColor themeGray1];
         _phoneTextField.placeholder = @"请输入您的手机号";

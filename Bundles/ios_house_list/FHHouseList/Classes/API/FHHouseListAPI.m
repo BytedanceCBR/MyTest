@@ -12,7 +12,7 @@
 #import <TTBaseLib/NSDictionary+TTAdditions.h>
 #import <FHHouseBase/FHHouseNeighborModel.h>
 #import "FHErrorHubManagerUtil.h"
-
+#import "FHPostDataHTTPRequestSerializer.h"
 #define QURL(QPATH) [[FHMainApi host] stringByAppendingString:QPATH]
 #define GET @"GET"
 #define POST @"POST"
@@ -432,7 +432,28 @@
         return [FHHouseListAPI querySearchData:queryPath uploadLog:YES params:qparam class:cls logPath:nil completion:completion];
     }
     return [FHMainApi queryData:queryPath uploadLog:YES params:qparam class:cls completion:completion];
+}
 
++(TTHttpTask *)searchNewHouseListForFindHouse:(NSString *_Nullable)query params:(NSDictionary *_Nullable)param offset:(NSInteger)offset searchId:(NSString *_Nullable)searchId sugParam:(NSString *_Nullable)sugParam class:(Class)cls completion:(void(^_Nullable)(id<FHBaseModelProtocol> _Nullable model , NSError * _Nullable error))completion{
+    NSString *queryPath = @"/f100/api/search_court";
+
+    NSMutableDictionary *qparam = [NSMutableDictionary new];
+    if (query.length > 0) {
+        queryPath = [NSString stringWithFormat:@"%@?%@",queryPath,query];
+    }
+    if (param) {
+        [qparam addEntriesFromDictionary:param];
+    }
+    qparam[@"offset"] = @(offset);
+    qparam[@"search_id"] = searchId?:@"";
+    if (sugParam) {
+        qparam[@"suggestion_params"] = sugParam;
+    }
+//    qparam[CHANNEL_ID] = CHANNEL_ID_SEARCH_COURT;
+    if ([NSStringFromClass(cls) isEqualToString:NSStringFromClass([FHListSearchHouseModel class])]) {
+        return [FHHouseListAPI querySearchData:queryPath uploadLog:YES params:qparam class:cls logPath:nil completion:completion];
+    }
+    return [FHMainApi queryData:queryPath uploadLog:YES params:qparam class:cls completion:completion];
 }
 
 /*
@@ -665,6 +686,13 @@
     return [FHMainApi queryData:queryPath params:paramDic class:cls completion:completion];
 }
 
-
+//上报跳转详情页信息到浏览历史
++ (TTHttpTask *)requestAddHistory:(NSDictionary *)params completion:(void(^_Nullable)(id<FHBaseModelProtocol> model , NSError *error))completion {
+    NSString * host = [FHURLSettings baseURL] ?: @"https://i.haoduofangs.com";
+    NSString* url = [host stringByAppendingString:@"/f100/api/set_history"];
+        
+    return [[TTNetworkManager shareInstance] requestForBinaryWithResponse:url params:params method:POST needCommonParams:YES requestSerializer:[FHPostDataHTTPRequestSerializer class] responseSerializer:[[TTNetworkManager shareInstance]defaultBinaryResponseSerializerClass] autoResume:YES callback:^(NSError *error, id jsonObj, TTHttpResponse *response) {
+    }];
+}
 
 @end

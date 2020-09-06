@@ -180,6 +180,11 @@
 }
 
 -(void)displaySendState:(ChatMsg *)msg isMute:(BOOL)isMute {
+    
+    if(!msg.isDisplaySendingState) {
+        return;
+    }
+    
     if (msg.type == ChatMstTypeNotice) {
         [self.msgStateView setHidden:YES];
         [self updateLayoutForMsgState:ChatMsgStateSuccess isMute:isMute];
@@ -311,12 +316,7 @@
                 if ([lastMsg.mentionedUsers containsObject:uid] && ![self lastMsgHasReadInConversation:conv]) {
                     self.subTitleLabel.attributedText = [self getAtAttributeString:cutStr];;
                 } else {
-                    if([conv lastChatMsg].type != ChatMsgTypeVoiceSegment) {
-                        self.subTitleLabel.attributedText = nil;
-                        self.subTitleLabel.text = cutStr;
-                    } else {
-                        [self processVoiceLastMessage:conv lastMessage:cutStr];
-                    }
+                    [self composeSubTitleLabelTextForConversation:conv msgText:cutStr isCutLineBreak:NO];
                 }
             } else {
                 [[FHChatUserInfoManager shareInstance] getUserInfoSync:[[NSNumber numberWithLongLong:lastMsg.userId] stringValue] block:^(NSString * _Nonnull userId, FHChatUserInfo * _Nonnull userInfo) {
@@ -324,24 +324,13 @@
                     if ([lastMsg.mentionedUsers containsObject:uid] && ![self lastMsgHasReadInConversation:conv]) {
                         self.subTitleLabel.attributedText = [self getAtAttributeString:tipMsg];;
                     } else {
-                        
-                        if([conv lastChatMsg].type != ChatMsgTypeVoiceSegment) {
-                            self.subTitleLabel.attributedText = nil;
-                            self.subTitleLabel.text = tipMsg;
-                        } else {
-                            [self processVoiceLastMessage:conv lastMessage:tipMsg];
-                        }
+                        [self composeSubTitleLabelTextForConversation:conv msgText:tipMsg isCutLineBreak:NO];
                     }
                 }];
             }
         } else {
             NSString *lastMessage = [conv lastMessage];
-            if([conv lastChatMsg].type != ChatMsgTypeVoiceSegment) {
-                self.subTitleLabel.attributedText = nil;
-                self.subTitleLabel.text = [self cutLineBreak:lastMessage];
-            } else {
-                [self processVoiceLastMessage:conv lastMessage:lastMessage];
-            }
+            [self composeSubTitleLabelTextForConversation:conv msgText:lastMessage isCutLineBreak:YES];
         }
     }
     
@@ -365,6 +354,21 @@
 
     [self displaySendState:lastMsg isMute:conv.mute];
     self.timeLabel.text = [self timeLabelByDate:conv.updatedAt];
+}
+- (void)composeSubTitleLabelTextForConversation:(IMConversation *)conv msgText: (NSString *)text isCutLineBreak:(BOOL)cutLineBreak {
+    switch ([conv lastChatMsg].type) {
+        case ChatMsgTypeVoiceSegment:
+        {
+            [self processVoiceLastMessage:conv lastMessage:text];
+        }
+            break;
+        default:
+        {
+            self.subTitleLabel.attributedText = nil;
+            self.subTitleLabel.text = cutLineBreak?[self cutLineBreak:text]:text;
+        }
+            break;
+    }
 }
 - (void)processVoiceLastMessage:(IMConversation *)conv lastMessage:(NSString *)lastMessage {
         NSRange range = [lastMessage rangeOfString:@"[语音]"];

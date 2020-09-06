@@ -20,6 +20,8 @@
 #import "FHSuggestionEmptyCell.h"
 #import "FHFindHouseHelperCell.h"
 #import "FHHouseListRecommendTipCell.h"
+#import "FHEnvContext.h"
+#import <ByteDanceKit/ByteDanceKit.h>
 
 @interface FHChildSuggestionListViewModel () <UITableViewDelegate, UITableViewDataSource, FHSugSubscribeListDelegate>
 
@@ -347,7 +349,7 @@
         infos[@"tracer"] = tracer;
 
         // 参数都在jumpUrl中
-        [self.listController jumpToCategoryListVCByUrl:jumpUrl queryText:nil placeholder:nil infoDict:infos];
+        [self.listController jumpToCategoryListVCByUrl:jumpUrl queryText:nil placeholder:nil infoDict:infos isGoDetail:NO];
     }
 }
 
@@ -397,9 +399,16 @@
             tracer[@"origin_from"] = self.listController.tracerDict[@"origin_from"];
         }
     }
+    if(model.setHistory){
+        [self setHistoryWithURl:model.openUrl displayText:model.text extInfo:model.extinfo];
+        tracer[@"element_from"] = @"history";
+        tracer[@"enter_from"] = @"search_detail";
+        tracer[@"card_type"] = @"left_pic";
+        tracer[@"log_pb"] = model.logPb;
+        tracer[@"rank"] = [NSString stringWithFormat: @"%ld",index];
+    }
     infos[@"tracer"] = tracer;
-    
-    [self.listController jumpToCategoryListVCByUrl:jumpUrl queryText:model.text placeholder:model.text infoDict:infos];
+    [self.listController jumpToCategoryListVCByUrl:jumpUrl queryText:model.text placeholder:model.text infoDict:infos isGoDetail:model.setHistory];
 }
 
 - (void)trackClickEventData:(FHGuessYouWantResponseDataDataModel *)model rank:(NSInteger)rank {
@@ -415,7 +424,7 @@
     [FHUserTracker writeEvent:@"hot_word_click" params:tracerDic];
 }
 
-- (void)guessYouWantCellClick:(FHGuessYouWantResponseDataDataModel *)model {
+- (void)guessYouWantCellClick:(FHGuessYouWantResponseDataDataModel *)model rank:(NSInteger)rank{
     NSString *jumpUrl = model.openUrl;
     if (jumpUrl.length > 0) {
         NSString *placeHolder = [model.text stringByAddingPercentEncodingWithAllowedCharacters:NSCharacterSet.URLQueryAllowedCharacterSet];
@@ -449,9 +458,16 @@
                 tracer[@"origin_from"] = self.listController.tracerDict[@"origin_from"];
             }
         }
+        if(model.setHistory){
+            [self setHistoryWithURl:jumpUrl displayText:model.text extInfo:model.extinfo];
+            tracer[@"element_from"] = @"hot";
+            tracer[@"enter_from"] = @"search_detail";
+            tracer[@"log_pb"] = model.logPb;
+            tracer[@"card_type"] = @"left_pic";
+            tracer[@"rank"] = [NSString stringWithFormat: @"%ld",rank];
+        }
         infos[@"tracer"] = tracer;
-
-        [self.listController jumpToCategoryListVCByUrl:jumpUrl queryText:queryText placeholder:queryText infoDict:infos];
+        [self.listController jumpToCategoryListVCByUrl:jumpUrl queryText:queryText placeholder:queryText infoDict:infos isGoDetail:model.setHistory];
     }
 }
 
@@ -460,14 +476,15 @@
 - (void)associateWordCellClick:(FHSuggestionResponseDataModel *)model rank:(NSInteger)rank {
     
     // 点击埋点
-    NSString *impr_id = model.logPb.imprId.length > 0 ? model.logPb.imprId : @"be_null";
+    NSString *impr_id = [model.logPb btd_stringValueForKey:@"impr_id" default:@"be_null"];
+    
     NSDictionary *tracerDic = @{
                                 @"word_text":model.text.length > 0 ? model.text : @"be_null",
                                 @"associate_cnt":@(self.associatedCount),
                                 @"associate_type":[[FHHouseTypeManager sharedInstance] traceValueForType:self.houseType],
                                 @"word_id":model.info.wordid.length > 0 ? model.info.wordid : @"be_null",
                                 @"element_type":@"search",
-                                @"impr_id":impr_id,
+                                @"impr_id":impr_id ?: @"be_null",
                                 @"rank":@(rank)
                                 };
     [FHUserTracker writeEvent:@"associate_word_click" params:tracerDic];
@@ -509,9 +526,16 @@
             tracer[@"origin_from"] = self.listController.tracerDict[@"origin_from"];
         }
     }
+    if(model.setHistory){
+        [self setHistoryWithURl:model.openUrl displayText:model.text extInfo:nil];
+        tracer[@"element_from"] = @"associate";
+        tracer[@"enter_from"] = @"search_detail";
+        tracer[@"log_pb"] = model.logPb;
+        tracer[@"card_type"] = @"left_pic";
+        tracer[@"rank"] = [NSString stringWithFormat: @"%ld",rank];
+    }
     infos[@"tracer"] = tracer;
-    
-    [self.listController jumpToCategoryListVCByUrl:jumpUrl queryText:model.text placeholder:model.text infoDict:infos];
+    [self.listController jumpToCategoryListVCByUrl:jumpUrl queryText:model.text placeholder:model.text infoDict:infos isGoDetail:model.setHistory];
 }
 
 // 删除历史记录按钮点击
@@ -543,7 +567,7 @@
     NSString *impr_id = @"be_null";
     if (self.sugListData.count > 0) {
         FHSuggestionResponseDataModel *item = self.sugListData[0];
-        impr_id = item.logPb.imprId.length > 0 ? item.logPb.imprId : @"be_null";
+        impr_id = [item.logPb btd_stringValueForKey:@"impr_id" default:@"be_null"];
     }
     
     NSDictionary *tracerDic = @{
@@ -552,7 +576,7 @@
                                 @"associate_type":[[FHHouseTypeManager sharedInstance] traceValueForType:self.houseType],
                                 @"word_cnt":@(wordList.count),
                                 @"element_type":@"search",
-                                @"impr_id":impr_id
+                                @"impr_id":impr_id ?: @"be_null",
                                 };
 
     if (_isAssociatedCanTrack) {
@@ -709,7 +733,7 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     if (tableView.tag == 1) {
-        // 历史记录
+        // 猜你想搜
         return self.guessYouWantData.count > 0 ? self.guessYouWantData.count + 1 : 0;
     } else if (tableView.tag == 2) {
         // 联想词
@@ -842,7 +866,7 @@
         if (indexPath.row - 1 < self.guessYouWantData.count) {
             FHGuessYouWantResponseDataDataModel *model  = self.guessYouWantData[indexPath.row - 1];
             [self trackClickEventData:model rank:indexPath.row - 1];
-            [self guessYouWantCellClick:model];
+            [self guessYouWantCellClick:model rank:indexPath.row - 1];//
             
         }
     } else if (tableView.tag == 2) {
@@ -1150,6 +1174,22 @@
 }
 
 #pragma mark - Request
+
+-(void)setHistoryWithURl:(NSString *)openUrl displayText:(NSString *)displayText extInfo:(NSString *)extinfo {
+    NSMutableDictionary *paramDic = [NSMutableDictionary new];
+    paramDic[@"house_type"] = @(FHHouseTypeNewHouse);
+    paramDic[@"display_text"] = displayText ?: @"";
+    paramDic[@"open_url"] = openUrl ?: @"";
+    paramDic[@"extinfo"] = extinfo ?: @"";
+    NSString *cityid = [FHEnvContext getCurrentSelectCityIdFromLocal];
+    if(cityid){
+        paramDic[@"city_id"] = @([cityid intValue]);
+    }
+    
+    [FHHouseListAPI requestAddHistory:paramDic.copy completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
+
+    }];
+}
 
 - (void)requestSearchHistoryByHouseType:(NSString *)houseType {
     if (self.historyHttpTask) {

@@ -467,7 +467,11 @@
                            errMsg = error.domain;
                            
                            NSInteger houseType = [[param valueForKey:@"house_type"] integerValue];
-                           resultType = FHNetworkMonitorTypeBizFailed+houseType;
+                           if (houseType) {
+                               resultType = FHNetworkMonitorTypeSuccess;
+                           } else {
+                               resultType = FHNetworkMonitorTypeBizFailed;
+                           }
                            exceptionDict = @{@"data_type":(param[@"house_type"]?:@"-1")};
                        }
                    }
@@ -622,7 +626,7 @@
         NSDate *requestDoneDate = [NSDate date];
         __block NSError *backError = error;
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
-            id rmodel = [self  generateModel:obj class:clazz error:&backError];
+                id rmodel = [self  generateModel:obj class:clazz error:&backError];
             NSDate *serializeDate = [NSDate date];
             NSInteger code = 0;
             NSString *errMsg = nil;

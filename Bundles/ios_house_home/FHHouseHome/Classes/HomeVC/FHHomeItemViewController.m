@@ -157,7 +157,7 @@ static NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
 }
 
 - (void)applicationWillEnterForeground:(NSNotification *)notification {
-    if (self.houseType == FHHouseTypeSecondHandHouse) {
+    if (self.houseType == FHHouseTypeSecondHandHouse || self.houseType == FHHouseTypeNewHouse) {
         [self resumeVRIcon];
     }
 }
@@ -285,7 +285,7 @@ static NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
 }
 
 - (void)resumeVRIcon{
-    if (self.houseType == FHHouseTypeSecondHandHouse) {
+    if (self.houseType == FHHouseTypeSecondHandHouse || self.houseType == FHHouseTypeNewHouse) {
         NSArray *tableCells = [self.tableView visibleCells];
         if (tableCells) {
             [tableCells enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
@@ -482,7 +482,9 @@ static NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
         requestDictonary[CHANNEL_ID] = CHANNEL_ID_RECOMMEND_RENT;
     }
 
-    self.requestTask = nil;
+    if (self.requestTask) {
+        [self.requestTask cancel];
+    }
     
     WeakSelf;
     self.requestTask = [FHHomeRequestAPI requestRecommendForLoadMore:requestDictonary completion:^(FHHomeHouseModel * _Nonnull model, NSError * _Nonnull error) {
@@ -931,7 +933,8 @@ static NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
             cell.delegate = self;
             if (indexPath.row < self.houseDataItemsModel.count) {
                 JSONModel *model = self.houseDataItemsModel[indexPath.row];
-                [cell refreshTopMargin:([TTDeviceHelper is896Screen3X] || [TTDeviceHelper is896Screen2X]) ? 4 : 0];
+//                [cell refreshTopMargin:([TTDeviceHelper is896Screen3X] || [TTDeviceHelper is896Screen2X]) ? 4 : 0];
+                [cell updateVrInfo:model];
                 [cell updateHomeNewHouseCellModel:model];
             }
             [cell refreshIndexCorner:(indexPath.row == 0) andLast:(indexPath.row == (self.houseDataItemsModel.count - 1) && !self.hasMore)];
@@ -1117,6 +1120,7 @@ static NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
                 [parmasIds setValue:self.currentSearchId forKey:@"search_id"];
                 [parmasIds setValue:theModel.idx forKey:@"house_id"];
                 [parmasIds setValue:@"94349544675" forKey:@"channel_id"];
+                [parmasIds setValue:@(self.houseType) forKey:@"house_type"];
                 if (theModel.idx && [FHEnvContext isNetworkConnected]) {
                     [[FHHouseSimilarManager sharedInstance] requestForSimilarHouse:parmasIds];
                     [self.cacheClickIds addObject:theModel.idx];

@@ -283,6 +283,16 @@ typedef NS_ENUM(NSUInteger, FHRealtorCellShowStyle) {
 @property (nonatomic, copy , nullable) NSString *infoTitle;
 @end
 
+@protocol FHDetailHouseVRDataModel <NSObject>
+@end
+
+@interface FHDetailHouseVRDataModel: JSONModel
+@property (nonatomic, assign) BOOL hasVr;
+@property (nonatomic, strong , nullable) FHImageModel *vrImage;
+@property (nonatomic, copy , nullable) NSString *openUrl;
+@property (nonatomic, assign) NSInteger spaceType;       //（售楼处：0  鸟瞰图：1   样板间：2）
+@end
+
 @protocol FHHouseDetailImageListDataModel<NSObject>
 @end
 
@@ -338,6 +348,17 @@ typedef NS_ENUM (NSUInteger, FHHouseDetailImageListDataUsedSceneType) {
 @property (nonatomic, copy , nullable) NSString *courtOpenSubStatus;
 @property (nonatomic, copy , nullable) NSString *pricingSubStatus;
 @property (nonatomic, assign) NSInteger courtSubStatus;
+@end
+
+@protocol FHDetailSurveyContactModel <NSObject>
+@end
+
+@interface FHDetailSurveyContactModel : JSONModel
+
+@property(nonatomic,copy,nullable) NSString *title;
+@property(nonatomic,copy,nullable) NSString *toastText;
+@property(nonatomic,strong,nullable) NSArray<FHDetailContactModel> *items;
+@property(nonatomic,strong,nullable) FHClueAssociateInfoModel *associateInfo;
 @end
 
 

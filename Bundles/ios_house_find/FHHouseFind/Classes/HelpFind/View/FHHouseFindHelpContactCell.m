@@ -8,11 +8,11 @@
 #import "FHHouseFindHelpContactCell.h"
 #import "TTRoute.h"
 #import "FHURLSettings.h"
-
 #import <FHCommonUI/UIFont+House.h>
 #import <FHCommonUI/UIColor+Theme.h>
 #import "Masonry.h"
 #import <TTBaseLib/TTDeviceHelper.h>
+#import <FHHouseBase/FHUserInfoManager.h>
 
 @interface FHHouseFindHelpContactCell()
 
@@ -77,22 +77,11 @@
 - (void)showFullPhoneNum:(BOOL)isShow {
     if (self.phoneNum.length > 0) {
         if(isShow){
-            self.phoneInput.text = self.phoneNum;
+            self.phoneInput.text = @"";
         }else{
-            // 显示 151****0010
-            NSString *tempPhone = self.phoneNum;
-            if (self.phoneNum.length == 11 && [self.phoneNum hasPrefix:@"1"] && [self isPureInt:self.phoneNum]) {
-                tempPhone = [NSString stringWithFormat:@"%@****%@",[self.phoneNum substringToIndex:3],[self.phoneNum substringFromIndex:7]];
-            }
-            self.phoneInput.text = tempPhone;
+            self.phoneInput.text = [FHUserInfoManager formatMaskPhoneNumber:self.phoneNum];
         }
     }
-}
-
-- (BOOL)isPureInt:(NSString *)string {
-    NSScanner* scan = [NSScanner scannerWithString:string];
-    int val;
-    return[scan scanInt:&val] && [scan isAtEnd];
 }
 
 - (UITextField *)phoneInput

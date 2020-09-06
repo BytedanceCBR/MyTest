@@ -28,6 +28,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic, copy) NSString *pictureTypeName;
 @property(nonatomic, assign) FHDetailHouseImageType pictureType;
 @property(nonatomic, assign) FHMultiMediaType mediaType;
+@property(nonatomic, copy) NSString *vrOpenUrl;
 @property(nonatomic, copy) NSString *groupType;
 @property(nonatomic, assign) FHMultiMediaCellHouseType cellHouseType;
 @property(nonatomic, copy) NSString *videoID;

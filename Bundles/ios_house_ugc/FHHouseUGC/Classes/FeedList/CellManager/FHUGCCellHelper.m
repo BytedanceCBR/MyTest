@@ -205,6 +205,16 @@
 }
 
 + (void)setRichContentWithModel:(FHFeedUGCCellModel *)model width:(CGFloat)width numberOfLines:(NSInteger)numberOfLines {
+    [self setRichContentWithModel:model width:width numberOfLines:numberOfLines font:nil];
+}
+
++ (void)setRichContentWithModel:(FHFeedUGCCellModel *)model width:(CGFloat)width numberOfLines:(NSInteger)numberOfLines font:(UIFont *)font {
+
+    CGFloat fontSize = font.pointSize;
+    if(!font){
+        fontSize = 16.0f;
+        font = [UIFont themeFontRegular:fontSize];
+    }
     
     TTRichSpans *richSpans = [TTRichSpans richSpansForJSONString:model.contentRichSpan];
     TTRichSpanText *richContent = [[[TTRichSpanText alloc] initWithText:model.content richSpans:richSpans] replaceWhitelistLinks];
@@ -225,8 +235,6 @@
         NSAttributedString *attrStr = [TTUGCEmojiParser parseInTextKitContext:threadContent.text fontSize:16 topAdjust:1.5];
         
         if (attrStr) {
-            CGFloat fontSize = 16.0f;
-            UIFont *font = [UIFont themeFontRegular:fontSize];
             CGFloat lineHeight = ceil(fontSize * 1.4);
             NSMutableAttributedString *mutableAttributedString = [attrStr mutableCopy];
             NSMutableDictionary *attributes = @{}.mutableCopy;
@@ -337,15 +345,19 @@
 }
 
 + (void)setAsyncRichContent:(TTUGCAsyncLabel *)label model:(FHFeedUGCCellModel *)model truncatedToken:(NSAttributedString *)truncatedToken {
+    UIFont *font = label.font;
+    if(!font){
+        font = [UIFont themeFontRegular:16];
+    }
     //内容
     TTUGCTextRender *textRender = [[TTUGCTextRender alloc] initWithAttributedText:model.contentAStr];
     textRender.maximumNumberOfLines = model.numberOfLines;
-    textRender.font = [UIFont themeFontRegular:16];
+    textRender.font = font;
     if(model.showLookMore){
         if (truncatedToken) {
             textRender.truncatedToken = truncatedToken;
         }else {
-            textRender.truncatedToken = [FHUGCCellHelper truncationFont:[UIFont themeFontRegular:16]
+            textRender.truncatedToken = [FHUGCCellHelper truncationFont:font
             contentColor:[UIColor themeGray1]
                    color:[UIColor themeRed3]];
         }

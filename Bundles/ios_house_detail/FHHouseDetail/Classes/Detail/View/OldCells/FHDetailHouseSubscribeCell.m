@@ -8,11 +8,8 @@
 #import "FHDetailHouseSubscribeCell.h"
 #import "UILabel+House.h"
 #import "FHTextField.h"
-#import "FHEnvContext.h"
 #import "ToastManager.h"
-
-extern NSString *const kFHPhoneNumberCacheKey;
-extern NSString *const kFHPLoginhoneNumberCacheKey;
+#import <FHHouseBase/FHUserInfoManager.h>
 
 @interface FHDetailHouseSubscribeCell()<UITextFieldDelegate>
 
@@ -166,44 +163,23 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
 }
 
 - (void)setPhoneNumber {
-    YYCache *sendPhoneNumberCache = [[FHEnvContext sharedInstance].generalBizConfig sendPhoneNumberCache];
-    id phoneCache = [sendPhoneNumberCache objectForKey:kFHPhoneNumberCacheKey];
-    id loginPhoneCache = [sendPhoneNumberCache objectForKey:kFHPLoginhoneNumberCacheKey];
-    
-    NSString *phoneNum = nil;
-    if ([phoneCache isKindOfClass:[NSString class]]) {
-        NSString *cacheNum = (NSString *)phoneCache;
-        if (cacheNum.length > 0) {
-            phoneNum = cacheNum;
-        }
-    }else if ([loginPhoneCache isKindOfClass:[NSString class]]) {
-        NSString *cacheNum = (NSString *)loginPhoneCache;
-        if (cacheNum.length > 0) {
-            phoneNum = cacheNum;
-        }
-    }
-    self.phoneNum = phoneNum;
+    self.phoneNum = [FHUserInfoManager getPhoneNumberIfExist];
     [self showFullPhoneNum:NO];
 }
 
 - (void)showFullPhoneNum:(BOOL)isShow {
     if (self.phoneNum.length > 0) {
         if(isShow){
-            self.textField.text = self.phoneNum;
+            self.textField.text = @"";
         }else{
-            // 显示 151*****010
-            NSString *tempPhone = self.phoneNum;
-            if (self.phoneNum.length == 11 && [self.phoneNum hasPrefix:@"1"] && [self isPureInt:self.phoneNum]) {
-                tempPhone = [NSString stringWithFormat:@"%@****%@",[self.phoneNum substringToIndex:3],[self.phoneNum substringFromIndex:7]];
-            }
-            self.textField.text = tempPhone;
-            if (self.textField.text.length > 0) {
-                self.subscribeBtn.enabled = YES;
-                self.subscribeBtn.alpha = 1;
-            }else {
-                self.subscribeBtn.enabled = NO;
-                self.subscribeBtn.alpha = 0.6;
-            }
+            self.textField.text = [FHUserInfoManager formatMaskPhoneNumber:self.phoneNum];;
+        }
+        if (self.textField.text.length > 0) {
+            self.subscribeBtn.enabled = YES;
+            self.subscribeBtn.alpha = 1;
+        }else {
+            self.subscribeBtn.enabled = NO;
+            self.subscribeBtn.alpha = 0.6;
         }
     }
 }
@@ -216,7 +192,7 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
 
 - (void)subscribe {
     NSString *phoneNum = self.phoneNum;
-    if (phoneNum.length == 11 && [phoneNum hasPrefix:@"1"] && [self isPureInt:phoneNum]) {
+    if (phoneNum.length == 11 && [phoneNum hasPrefix:@"1"] && [FHUserInfoManager checkPureIntFormatted:phoneNum]) {
         
         FHDetailHouseSubscribeModel *model = (FHDetailHouseSubscribeModel *)self.currentData;
         NSMutableDictionary *tracerDic = self.baseViewModel.detailTracerDic.mutableCopy;
@@ -233,12 +209,6 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
         [[ToastManager manager] showToast:@"手机格式错误"];
         self.textField.textColor = [UIColor themeOrange1];
     }
-}
-
-- (BOOL)isPureInt:(NSString*)string{
-    NSScanner* scan = [NSScanner scannerWithString:string];
-    int val;
-    return[scan scanInt:&val] && [scan isAtEnd];
 }
 
 #pragma mark - 键盘通知

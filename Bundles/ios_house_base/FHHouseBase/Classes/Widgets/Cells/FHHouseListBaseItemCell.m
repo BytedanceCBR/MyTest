@@ -141,6 +141,11 @@
          make.left.equalTo(self.contentView).offset(15);
          make.size.mas_equalTo(CGSizeMake(106, 80));
      }];
+    [self.vrLoadingView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.equalTo(self.mainIma).offset(12);
+        make.bottom.equalTo(self.mainIma).offset(-10);
+        make.size.mas_equalTo(CGSizeMake(16, 16));
+    }];
     [self.maintitle mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.equalTo(self.mainIma.mas_right).offset(12);
         make.top.equalTo(self.mainIma);
@@ -161,7 +166,7 @@
         make.left.equalTo(self.maintitle);
         make.top.equalTo(self.positionInformation.mas_bottom).offset(5);
         make.right.equalTo(self.contentView).offset(-15);
-    }];
+    }]; 
 }
 
 #pragma mark ----二手房，小区，租房
@@ -328,7 +333,6 @@
 {
     if (!_houseMainImageBackView) {
         UIView *houseMainImageBackView = [[UIView alloc] init];
-        houseMainImageBackView.backgroundColor = [UIColor whiteColor];
         CALayer * layer = houseMainImageBackView.layer;
         layer.shadowOffset = CGSizeMake(0, 4);
         layer.shadowRadius = 6;
@@ -502,6 +506,21 @@
         NSAttributedString *attributeString = [FHSingleImageInfoCellModel newTagsStringWithTagList:model.tags maxWidth:maxWidth];
 //             _tagLabel.lineBreakMode = NSLineBreakByWordWrapping;
         self.tagLabel.attributedText = attributeString;
+        if (model.vrInfo.hasVr) {
+            if (!_vrLoadingView) {
+                [self.vrLoadingView mas_makeConstraints:^(MASConstraintMaker *make) {
+                    make.left.equalTo(self.mainIma).offset(6);
+                    make.bottom.equalTo(self.mainIma).offset(-6);
+                    make.size.mas_equalTo(CGSizeMake(16, 16));
+                }];
+            }
+            _vrLoadingView.hidden = NO;
+            [_vrLoadingView play];
+        } else {
+            if (_vrLoadingView) {
+                _vrLoadingView.hidden = YES;
+            }
+        }
     }
 }
 #pragma mark 更新大类页混排新房cell
@@ -525,6 +544,28 @@
         NSAttributedString *attributeString = [FHSingleImageInfoCellModel newTagsStringWithTagList:model.tags maxWidth:maxWidth];
 //             _tagLabel.lineBreakMode = NSLineBreakByWordWrapping;
         self.tagLabel.attributedText = attributeString;
+        if (model.vrInfo.hasVr) {
+            if (!_vrLoadingView) {
+                [self.vrLoadingView mas_makeConstraints:^(MASConstraintMaker *make) {
+                    make.left.equalTo(self.mainIma).offset(6);
+                    make.bottom.equalTo(self.mainIma).offset(-6);
+                    make.size.mas_equalTo(CGSizeMake(16, 16));
+                }];
+            }
+            _vrLoadingView.hidden = NO;
+            [_vrLoadingView play];
+        } else {
+            if (_vrLoadingView) {
+                _vrLoadingView.hidden = YES;
+            }
+        }
+    }
+}
+
+- (void)resumeVRIcon
+{
+    if (_vrLoadingView && !self.vrLoadingView.hidden) {
+        [self.vrLoadingView play];
     }
 }
 

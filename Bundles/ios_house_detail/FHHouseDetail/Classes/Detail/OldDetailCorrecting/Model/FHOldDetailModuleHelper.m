@@ -9,25 +9,31 @@
 #import "FHDetailBaseModel.h"
 #import "FHHouseShadowImageType.h"
 #import "FHDetailListSectionTitleCell.h"
+#import "SSCommonLogic.h"
 
 @implementation FHOldDetailModuleHelper
 
 + (NSMutableArray *)moduleClassificationMethod:(NSMutableArray *)moduleArr{
     NSArray *filterArr = [moduleArr copy];
     for (FHDetailBaseModel *model in filterArr) {
-        model.shdowImageScopeType = FHHouseShdowImageScopeTypeDefault;
         if ([model isKindOfClass:[FHDetailListSectionTitleModel class]]) {
             [moduleArr removeObject:model];
         }
     }
     
+    for (FHDetailBaseModel *model in moduleArr) {
+        model.shdowImageScopeType = FHHouseShdowImageScopeTypeDefault;
+        model.shadowImageType = FHHouseShdowImageTypeLR;
+    }
+    
     NSMutableArray *coreInfos = [[NSMutableArray alloc]init];
-     NSMutableArray *advisoryLoans = [[NSMutableArray alloc]init];
+    NSMutableArray *advisoryLoans = [[NSMutableArray alloc]init];
     NSMutableArray *subscribes = [[NSMutableArray alloc]init];
     NSMutableArray *outlineInfo = [[NSMutableArray alloc]init];
     NSMutableArray *billBoard = [[NSMutableArray alloc]init];
     NSMutableArray *housingEvaluation = [[NSMutableArray alloc]init];
     NSMutableArray *agentlist = [[NSMutableArray alloc]init];
+    NSMutableArray *surveyedRealtorAgentlist = [[NSMutableArray alloc]init];
     NSMutableArray *neighborhoodInfos = [[NSMutableArray alloc]init];
     NSMutableArray *locationPeripherys = [[NSMutableArray alloc]init];
     NSMutableArray *tips = [[NSMutableArray alloc]init];
@@ -58,6 +64,9 @@
                 break;
             case FHHouseModelTypeAgentlist:
                 [agentlist addObject:obj];
+                break;
+            case FHHouseModelTypeSurveyAgentlist:
+                [surveyedRealtorAgentlist addObject:obj];
                 break;
             case FHHouseModelTypeLocationPeriphery:
                 [locationPeripherys addObject:obj];
@@ -97,7 +106,7 @@
         [moduleItems addObject:@{@"coreInfos":coreInfos}];
     }
     if (advisoryLoans.count>0) {
-         [moduleItems addObject:@{@"advisoryLoans":advisoryLoans}];
+        [moduleItems addObject:@{@"advisoryLoans":advisoryLoans}];
     }
     if (subscribes.count > 0) {
         [moduleItems addObject:@{@"subscribes":subscribes}];
@@ -108,8 +117,21 @@
     if (billBoard.count > 0) {
         [moduleItems addObject:@{@"billBoard":billBoard}];
     }
-    if (agentlist.count > 0) {
-        [moduleItems addObject:@{@"agentlist":agentlist}];
+    BOOL isSurveyRealtorFirst = [SSCommonLogic isSurveyRealtorFirst];
+    if(isSurveyRealtorFirst) {
+        if (surveyedRealtorAgentlist.count > 0) {
+            [moduleItems addObject:@{@"surveyedRealtorAgentlist":surveyedRealtorAgentlist}];
+        }
+        if (agentlist.count > 0) {
+            [moduleItems addObject:@{@"agentlist":agentlist}];
+        }
+    } else {
+        if (agentlist.count > 0) {
+            [moduleItems addObject:@{@"agentlist":agentlist}];
+        }
+        if (surveyedRealtorAgentlist.count > 0) {
+            [moduleItems addObject:@{@"surveyedRealtorAgentlist":surveyedRealtorAgentlist}];
+        }
     }
     if (housingEvaluation.count > 0) {
         [moduleItems addObject:@{@"housingEvaluation":housingEvaluation}];
@@ -137,9 +159,9 @@
     }
     [moduleItems enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
         NSArray *currentItemArr = obj[[obj allKeys][0]];
-//        单个cell模块
+        //        单个cell模块
         if([[obj allKeys] containsObject:@"subscribes"] || [[obj allKeys] containsObject:@"outlineInfo"]
-           || [[obj allKeys] containsObject:@"billBoard"] || [[obj allKeys] containsObject:@"agentlist"]
+           || [[obj allKeys] containsObject:@"billBoard"] || [[obj allKeys] containsObject:@"agentlist"] || [[obj allKeys] containsObject:@"surveyedRealtorAgentlist"]
            || [[obj allKeys] containsObject:@"tips"] || [[obj allKeys] containsObject:@"peripherys"]
            || [[obj allKeys] containsObject:@"advisoryLoans"] || [[obj allKeys] containsObject:@"recommendedCourt"]) {
             [currentItemArr enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
@@ -147,7 +169,7 @@
                 model.shadowImageType = FHHouseShdowImageTypeRound;;
             }];
         }
-//        多个cell模块
+        //        多个cell模块
         if ([[obj allKeys] containsObject:@"locationPeripherys"] || [[obj allKeys] containsObject:@"plots"]|| [[obj allKeys] containsObject:@"housingEvaluation"] || [[obj allKeys] containsObject:@"neighborhoodInfos"]) {
             [currentItemArr enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
                 FHDetailBaseModel *model = (FHDetailBaseModel *)obj;

@@ -27,6 +27,7 @@
 #import <Photos/Photos.h>
 #import "HTSDeviceManager.h"
 #import "FHDetailVideoInfoView.h"
+#import <NSDictionary+BTDAdditions.h>
 #import "FHLoadingButton.h"
 #import "FHDetailBaseModel.h"
 
@@ -461,6 +462,9 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
     if (isShowenVideo) {
 //        _pictureTitleView.hidden = YES;
         _videoInfoView.hidden = NO;
+        if (self.videoVC.view.alpha < 1.0) {
+            self.videoVC.view.alpha = 1.0;
+        }
         [self.videoVC play];
     } else {
 //        _pictureTitleView.hidden = NO;
@@ -1279,7 +1283,7 @@ static BOOL kFHStaticPhotoBrowserAtTop = NO;
         };
         
         showVC.albumImageStayBlock = ^(NSInteger index, NSInteger stayTime) {
-            [self stayCallBack:stayTime];
+            [weakSelf stayCallBack:stayTime];
         };
         
         [self presentViewController:showVC animated:YES completion:nil];

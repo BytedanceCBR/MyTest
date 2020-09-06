@@ -60,7 +60,7 @@
     _containerView.clipsToBounds = YES;
     [self.contentView addSubview:_containerView];
     
-    self.titleLabel = [self LabelWithFont:[UIFont themeFontMedium:18] textColor:[UIColor themeGray1]];
+    self.titleLabel = [self LabelWithFont:[UIFont themeFontMedium:20] textColor:[UIColor themeGray1]];
     _titleLabel.text = @"小区攻略";
     [self.containerView addSubview:_titleLabel];
 

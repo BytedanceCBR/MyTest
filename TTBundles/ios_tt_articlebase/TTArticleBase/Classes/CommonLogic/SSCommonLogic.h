@@ -1415,10 +1415,14 @@ typedef NS_ENUM(NSInteger, SSCommentType)  {
 + (BOOL)enableRecordVoiceSegment;
 // 是否开启IM模块在线监控逻辑开关
 + (BOOL)enableIMOnlineMonitorLogic;
+//  是否开启IM语音通话开关
++ (BOOL)enableVoIPAudioCall;
 // 是否开启抖音苹果登录，默认关闭
 + (BOOL)disableDouyinIconLoginLogic;
 /// 是否开启IM会话页跳转房源详情页经纪人锁定功能
 + (BOOL)enableIMRealtorLocking;
+// 实勘经纪人是否在最前
++ (BOOL)isSurveyRealtorFirst;
 @end
 
 

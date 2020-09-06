@@ -331,6 +331,13 @@
     return  SCREEN_WIDTH - HOR_MARGIN * 2  - MAIN_IMG_WIDTH - INFO_TO_ICON_MARGIN - 7; //根据UI图 直接计算出来
 }
 
+- (void)resumeVRIcon
+{
+    if (_vrLoadingView && !self.vrLoadingView.hidden) {
+        [self.vrLoadingView play];
+    }
+}
+
 -(void)initUI
 {
     [self.contentView configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
@@ -390,6 +397,15 @@
         layout.height = YGPointValue(MAIN_IMG_HEIGHT);
     }];
     
+    [self.mainImageView addSubview:self.vrLoadingView];
+    self.vrLoadingView.hidden = YES;
+    [self.vrLoadingView configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
+        layout.isEnabled = YES;
+        layout.marginLeft = YGPointValue(6);
+        layout.marginTop = YGPointValue(58);
+        layout.width = YGPointValue(16);
+        layout.height = YGPointValue(16);
+    }];
     
     [self.leftInfoView addSubview:self.houseVideoImageView];
     _houseVideoImageView.image = [UIImage imageNamed:@"icon_list_house_video_small"];
@@ -401,18 +417,6 @@
         layout.left = YGPointValue(25.0f);
         layout.width = YGPointValue(20.0f);
         layout.height = YGPointValue(20.0f);
-    }];
-    
-    [self.leftInfoView addSubview:self.vrLoadingView];
-    self.vrLoadingView.hidden = YES;
-    //    [self.vrLoadingView setBackgroundColor:[UIColor redColor]];
-    [self.vrLoadingView configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
-        layout.isEnabled = YES;
-        layout.position = YGPositionTypeAbsolute;
-        layout.top = YGPointValue(25.0f);
-        layout.left = YGPointValue(23.0f);
-        layout.width = YGPointValue(24);
-        layout.height = YGPointValue(24);
     }];
     
     [_imageTagLabelBgView configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
@@ -773,6 +777,16 @@
     [self.contentView.yoga applyLayoutPreservingOrigin:NO];
 }
 
+- (void)updateVrInfo:(id)data {
+    FHSearchHouseItemModel *model = (FHSearchHouseItemModel *)data;
+    if (model.vrInfo.hasVr) {
+        self.vrLoadingView.hidden = NO;
+        [self.vrLoadingView play];
+    } else {
+        self.vrLoadingView.hidden = YES;
+    }
+}
+
 
 -(void)updateWithHouseCellModel:(FHSingleImageInfoCellModel *)cellModel
 {
@@ -925,6 +939,17 @@
         [self.contentView.yoga markDirty];
     }
 }
+
+-(void)refreshLeftAndRightMargin:(CGFloat)leftAndRight{
+    if (self.contentView.yoga.paddingLeft.value != leftAndRight) {
+        [self.contentView configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
+            layout.paddingLeft = YGPointValue(leftAndRight);
+            layout.paddingRight = YGPointValue(leftAndRight);
+        }];
+        [self.contentView.yoga markDirty];
+    }
+}
+
 
 -(void)refreshBottomMargin:(CGFloat)bottom
 {

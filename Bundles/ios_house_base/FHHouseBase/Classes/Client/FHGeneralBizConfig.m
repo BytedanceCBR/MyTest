@@ -14,7 +14,7 @@
 #import "FHUGCConfigModel.h"
 #import <Heimdallr/HMDTTMonitor.h>
 #import <TTBaseLib/TTSandBoxHelper.h>
-
+#import <ByteDanceKit/ByteDanceKit.h>
 
 static NSString *const kGeneralCacheName = @"general_config";
 static NSString *const kGeneralKey = @"config";
@@ -25,10 +25,11 @@ NSString *const kFHPhoneNumberCacheKey = @"phonenumber";
 NSString *const kFHPLoginhoneNumberCacheKey = @"loginPhoneNumber";
 //帮我找房保存的电话号码（单独存放）
 NSString *const kFHFindHousePhoneNumberCacheKey = @"findHousePhoneNumber";
+NSString *const kFHFindHouseTypeNumberCacheKey = @"findHouseTypeNumber";
+
 static NSString *const kFHSubscribeHouseCacheKey = @"subscribeHouse";
 static NSString *const kFHDetailFeedbackCacheKey = @"detailFeedback";
 static NSString *const kFHEpidemicSituationCacheKey = @"EpidemicSituation";
-
 
 @interface FHGeneralBizConfig ()
 @property (nonatomic, strong) YYCache *generalConfigCache;
@@ -36,12 +37,11 @@ static NSString *const kFHEpidemicSituationCacheKey = @"EpidemicSituation";
 @property (nonatomic, strong) YYCache *searchConfigCache;
 @property (nonatomic, strong) YYCache *userSelectCache;
 @property (nonatomic, strong) YYCache *userDefaultSelectCityCache;
-@property(nonatomic , strong) YYCache *sendPhoneNumberCache;
-@property(nonatomic , strong) YYCache *subscribeHouseCache;
-@property(nonatomic , strong) YYCache *detailFeedbackCache;
-@property(nonatomic , strong) YYCache *epidemicSituationCache;
-@property(nonatomic , strong) YYCache *findHousePhoneNumberCache;
-
+@property (nonatomic, strong) YYCache *sendPhoneNumberCache;
+@property (nonatomic, strong) YYCache *subscribeHouseCache;
+@property (nonatomic, strong) YYCache *detailFeedbackCache;
+@property (nonatomic, strong) YYCache *epidemicSituationCache;
+@property (nonatomic, strong) YYCache *findHousePhoneNumberCache;
 @end
 
 @implementation FHGeneralBizConfig
@@ -81,7 +81,6 @@ static NSString *const kFHEpidemicSituationCacheKey = @"EpidemicSituation";
     return _userDefaultSelectCityCache;
 }
 
-
 - (YYCache *)userSelectCache
 {
     if (!_userSelectCache) {
@@ -98,7 +97,8 @@ static NSString *const kFHEpidemicSituationCacheKey = @"EpidemicSituation";
     }
 }
 
-- (FHConfigDataModel *)configCache {
+- (FHConfigDataModel *)configCache
+{
     if (_configCache == nil) {
         _configCache = [self getGeneralConfigFromLocal];
     }
@@ -107,15 +107,13 @@ static NSString *const kFHEpidemicSituationCacheKey = @"EpidemicSituation";
 
 - (void)updataCurrentConfigCache
 {
-    
 }
 
 - (void)saveCurrentConfigCache:(FHConfigModel *)configValue
 {
     //    self.configCache = configValuedata;
-    
-    if([configValue.data isKindOfClass:[FHConfigDataModel class]])
-    {
+
+    if ([configValue.data isKindOfClass:[FHConfigDataModel class]]) {
         NSString *configJsonStr = configValue.data.toJSONString;
         if ([configJsonStr isKindOfClass:[NSString class]]) {
             [self.generalConfigCache setObject:configJsonStr forKey:kGeneralKey];
@@ -126,9 +124,8 @@ static NSString *const kFHEpidemicSituationCacheKey = @"EpidemicSituation";
 - (void)saveCurrentConfigDataCache:(FHConfigDataModel *)configValue
 {
     //    self.configCache = configValue;
-    
-    if([configValue isKindOfClass:[FHConfigDataModel class]])
-    {
+
+    if ([configValue isKindOfClass:[FHConfigDataModel class]]) {
         NSString *configJsonStr = configValue.toJSONString;
         if ([configJsonStr isKindOfClass:[NSString class]]) {
             [self.generalConfigCache setObject:configJsonStr forKey:kGeneralKey];
@@ -138,8 +135,7 @@ static NSString *const kFHEpidemicSituationCacheKey = @"EpidemicSituation";
 
 - (void)saveUGCConfigCache:(FHUGCConfigModel *)configValue
 {
-    if([configValue.data isKindOfClass:[FHUGCConfigModel class]])
-    {
+    if ([configValue.data isKindOfClass:[FHUGCConfigModel class]]) {
         NSString *configJsonStr = configValue.data.toJSONString;
         if ([configJsonStr isKindOfClass:[NSString class]]) {
             [self.generalConfigCache setObject:configJsonStr forKey:kUGCConfigKey];
@@ -158,11 +154,10 @@ static NSString *const kFHEpidemicSituationCacheKey = @"EpidemicSituation";
 {
     NSObject *objectIndex = [self.userSelectCache objectForKey:kUserDefaultSelectKey];
     if ([objectIndex isKindOfClass:[NSNumber class]]) {
-        return  objectIndex;
+        return objectIndex;
     }
-    return  @(0);
+    return @(0);
 }
-
 
 - (FHConfigDataModel *)getGeneralConfigFromLocal
 {
@@ -171,7 +166,7 @@ static NSString *const kFHEpidemicSituationCacheKey = @"EpidemicSituation";
         configJsonStr = [self.legacyGeneralConfigCache objectForKey:kGeneralKey];
     }
     NSDictionary *configDict = [FHUtils dictionaryWithJsonString:configJsonStr];
-    
+
     if ([configDict isKindOfClass:[NSDictionary class]]) {
         FHConfigDataModel *configModel = [self lazyInitConfig:configDict];
         self.configCache = configModel;
@@ -180,33 +175,33 @@ static NSString *const kFHEpidemicSituationCacheKey = @"EpidemicSituation";
                 [FHUtils setContent:@(configModel.cityAvailability.enable.boolValue) forKey:kFHCityIsOpenKey];
             }
             return configModel;
-        }else
-        {
+        } else {
             [self addNilLocalConfigMonitor:@"get model failed"];
             return nil;
         }
-    }else
-    {
+    } else {
         [self addNilLocalConfigMonitor:@"load cache failed"];
         return nil;
     }
 }
 
--(void)addNilLocalConfigMonitor:(NSString *)msg
+- (void)addNilLocalConfigMonitor:(NSString *)msg
 {
     if ([TTSandBoxHelper isAPPFirstLaunch]) {
         //首次启动 没有本地缓存
         return;
     }
-    [[HMDTTMonitor defaultManager] hmdTrackService:@"config_load_local_failed" attributes:@{@"message":msg?:@"load local error"}];
+    [[HMDTTMonitor defaultManager] hmdTrackService:@"config_load_local_failed" attributes:@{ @"message" : msg ?: @"load local error" }];
 }
 
--(FHConfigDataModel*)lazyInitConfig:(NSDictionary*)config {
+- (FHConfigDataModel *)lazyInitConfig:(NSDictionary *)config
+{
     FHConfigDataModel *configModel = [[FHConfigDataModel alloc] initShadowWithDictionary:config error:nil];
     return configModel;
 }
 
--(FHLazyLoadModel*)modelWithClass:(NSString*)className withData:(NSArray*)data {
+- (FHLazyLoadModel *)modelWithClass:(NSString *)className withData:(NSArray *)data
+{
     return [FHLazyLoadModel proxyWithClass:className withData:data];
 }
 
@@ -227,7 +222,6 @@ static NSString *const kFHEpidemicSituationCacheKey = @"EpidemicSituation";
     }
     return nil;
 }
-
 
 - (YYCache *)sendPhoneNumberCache
 {
@@ -253,7 +247,8 @@ static NSString *const kFHEpidemicSituationCacheKey = @"EpidemicSituation";
     return _detailFeedbackCache;
 }
 
-- (YYCache *)epidemicSituationCache {
+- (YYCache *)epidemicSituationCache
+{
     if (!_epidemicSituationCache) {
         _epidemicSituationCache = [YYCache cacheWithName:kFHEpidemicSituationCacheKey];
     }
@@ -267,4 +262,6 @@ static NSString *const kFHEpidemicSituationCacheKey = @"EpidemicSituation";
     }
     return _findHousePhoneNumberCache;
 }
+
+
 @end
