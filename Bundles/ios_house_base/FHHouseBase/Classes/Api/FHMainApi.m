@@ -467,7 +467,11 @@
                            errMsg = error.domain;
                            
                            NSInteger houseType = [[param valueForKey:@"house_type"] integerValue];
-                           resultType = FHNetworkMonitorTypeBizFailed+houseType;
+                           if (houseType) {
+                               resultType = FHNetworkMonitorTypeSuccess;
+                           }else{
+                               resultType = FHNetworkMonitorTypeBizFailed;
+                           }
                            exceptionDict = @{@"data_type":(param[@"house_type"]?:@"-1")};
                        }
                    }
