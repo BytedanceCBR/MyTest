@@ -1421,6 +1421,8 @@ typedef NS_ENUM(NSInteger, SSCommentType)  {
 + (BOOL)disableDouyinIconLoginLogic;
 /// 是否开启IM会话页跳转房源详情页经纪人锁定功能
 + (BOOL)enableIMRealtorLocking;
+// 实勘经纪人是否在最前
++ (BOOL)isSurveyRealtorFirst;
 @end
 
 

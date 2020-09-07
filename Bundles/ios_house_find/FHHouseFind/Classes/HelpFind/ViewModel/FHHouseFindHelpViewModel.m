@@ -426,7 +426,7 @@ extern NSString *const kFHFindHouseTypeNumberCacheKey;
         }
     }
     
-    [FHMainApi saveHFHelpFindByHouseType:[NSString stringWithFormat:@"%ld",_houseType] query:query phoneNum:phoneNumber completion:^(FHHouseFindRecommendModel * _Nonnull model, NSError * _Nonnull error) {
+    [FHMainApi saveHFHelpFindByHouseType:[NSString stringWithFormat:@"%ld",_houseTypeSelectedValue] query:query phoneNum:phoneNumber completion:^(FHHouseFindRecommendModel * _Nonnull model, NSError * _Nonnull error) {
         if (model && error == NULL) {
             if (model.data) {
                 weakSelf.recommendModel = model.data;
