@@ -141,6 +141,11 @@
          make.left.equalTo(self.contentView).offset(15);
          make.size.mas_equalTo(CGSizeMake(106, 80));
      }];
+    [self.vrLoadingView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.equalTo(self.mainIma).offset(12);
+        make.bottom.equalTo(self.mainIma).offset(-10);
+        make.size.mas_equalTo(CGSizeMake(16, 16));
+    }];
     [self.maintitle mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.equalTo(self.mainIma.mas_right).offset(12);
         make.top.equalTo(self.mainIma);
@@ -161,7 +166,7 @@
         make.left.equalTo(self.maintitle);
         make.top.equalTo(self.positionInformation.mas_bottom).offset(5);
         make.right.equalTo(self.contentView).offset(-15);
-    }];
+    }]; 
 }
 
 #pragma mark ----二手房，小区，租房
@@ -328,7 +333,6 @@
 {
     if (!_houseMainImageBackView) {
         UIView *houseMainImageBackView = [[UIView alloc] init];
-        houseMainImageBackView.backgroundColor = [UIColor whiteColor];
         CALayer * layer = houseMainImageBackView.layer;
         layer.shadowOffset = CGSizeMake(0, 4);
         layer.shadowRadius = 6;

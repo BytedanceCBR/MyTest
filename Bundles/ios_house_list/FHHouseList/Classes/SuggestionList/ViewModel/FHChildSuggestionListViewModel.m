@@ -484,7 +484,7 @@
                                 @"associate_type":[[FHHouseTypeManager sharedInstance] traceValueForType:self.houseType],
                                 @"word_id":model.info.wordid.length > 0 ? model.info.wordid : @"be_null",
                                 @"element_type":@"search",
-                                @"impr_id":impr_id,
+                                @"impr_id":impr_id ?: @"be_null",
                                 @"rank":@(rank)
                                 };
     [FHUserTracker writeEvent:@"associate_word_click" params:tracerDic];
@@ -568,7 +568,6 @@
     if (self.sugListData.count > 0) {
         FHSuggestionResponseDataModel *item = self.sugListData[0];
         impr_id = [item.logPb btd_stringValueForKey:@"impr_id" default:@"be_null"];
-        
     }
     
     NSDictionary *tracerDic = @{
@@ -577,7 +576,7 @@
                                 @"associate_type":[[FHHouseTypeManager sharedInstance] traceValueForType:self.houseType],
                                 @"word_cnt":@(wordList.count),
                                 @"element_type":@"search",
-                                @"impr_id":impr_id
+                                @"impr_id":impr_id ?: @"be_null",
                                 };
 
     if (_isAssociatedCanTrack) {
@@ -734,7 +733,7 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     if (tableView.tag == 1) {
-        // 历史记录
+        // 猜你想搜
         return self.guessYouWantData.count > 0 ? self.guessYouWantData.count + 1 : 0;
     } else if (tableView.tag == 2) {
         // 联想词
@@ -867,7 +866,7 @@
         if (indexPath.row - 1 < self.guessYouWantData.count) {
             FHGuessYouWantResponseDataDataModel *model  = self.guessYouWantData[indexPath.row - 1];
             [self trackClickEventData:model rank:indexPath.row - 1];
-            [self guessYouWantCellClick:model rank:indexPath.row];
+            [self guessYouWantCellClick:model rank:indexPath.row - 1];//
             
         }
     } else if (tableView.tag == 2) {
