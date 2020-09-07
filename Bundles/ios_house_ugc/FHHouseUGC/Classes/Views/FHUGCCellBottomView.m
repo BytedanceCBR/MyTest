@@ -330,16 +330,7 @@
                 }
             }
             
-            self.cellModel.diggCount = [NSString stringWithFormat:@"%i",diggCount];
-            
-            if (self.cellModel.hasVideo) {
-                // 视频点赞
-                self.cellModel.videoFeedItem.article.diggCount = diggCount;
-                self.cellModel.videoFeedItem.article.userDigg = user_digg;
-                NSString *unique_id = self.cellModel.groupId;
-                SAFECALL_MESSAGE(TTVFeedUserOpDataSyncMessage, @selector(ttv_message_feedDiggChanged:uniqueIDStr:), ttv_message_feedDiggChanged:(user_digg == 1) uniqueIDStr:unique_id);
-                SAFECALL_MESSAGE(TTVFeedUserOpDataSyncMessage, @selector(ttv_message_feedDiggCountChanged:uniqueIDStr:), ttv_message_feedDiggCountChanged:diggCount uniqueIDStr:unique_id);
-            }
+            self.cellModel.diggCount = [NSString stringWithFormat:@"%li",(long)diggCount];
             [self updateLikeState:self.cellModel.diggCount userDigg:self.cellModel.userDigg];
         }
     }

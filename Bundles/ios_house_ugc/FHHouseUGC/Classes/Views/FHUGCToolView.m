@@ -173,8 +173,8 @@
 }
 
 - (void)updateDiggButton {
-    NSString *diggCount = [NSString stringWithFormat:@"%lld",self.cellModel.videoItem.article.diggCount];
-    [self updateLikeState:diggCount userDigg:(self.cellModel.videoItem.article.userDigg ? @"1" : @"0")];
+    NSString *diggCount = self.cellModel.diggCount;
+    [self updateLikeState:diggCount userDigg:self.cellModel.userDigg];
 }
 
 - (void)updateLikeState:(NSString *)diggCount userDigg:(NSString *)userDigg {
@@ -290,7 +290,7 @@
     
     [self trackClickLike];
     //刷新UI
-    NSInteger user_digg = !self.cellModel.videoFeedItem.article.userDigg ? 1 : 0;
+    NSInteger user_digg = [self.cellModel.userDigg integerValue] == 0 ? 1 : 0;
 
     NSMutableDictionary *dict = [NSMutableDictionary new];
     dict[@"enter_from"] = self.cellModel.tracerDic[@"enter_from"];
@@ -301,7 +301,8 @@
 
 - (void)trackClickLike {
     NSMutableDictionary *dict = [self.cellModel.tracerDic mutableCopy];
-    if(self.cellModel.videoFeedItem.article.userDigg){
+    NSInteger user_digg = [self.cellModel.userDigg integerValue];
+    if(user_digg == 1){
         TRACK_EVENT(@"click_dislike", dict);
     }else{
         TRACK_EVENT(@"click_like", dict);
@@ -313,7 +314,7 @@
     
     if(userInfo){
         NSInteger user_digg = [userInfo[@"action"] integerValue];
-        NSInteger diggCount = self.cellModel.videoItem.article.diggCount;
+        NSInteger diggCount = [self.cellModel.diggCount integerValue];
         NSInteger groupType = [userInfo[@"group_type"] integerValue];
         NSString *groupId = userInfo[@"group_id"];
         
@@ -335,11 +336,7 @@
                 }
             }
             
-            if (self.cellModel.hasVideo) {
-                // 视频点赞
-                self.cellModel.videoFeedItem.article.diggCount = diggCount;
-                self.cellModel.videoFeedItem.article.userDigg = user_digg;
-            }
+            self.cellModel.diggCount = [NSString stringWithFormat:@"%li",(long)diggCount];
             [self updateDiggButton];
         }
     }
