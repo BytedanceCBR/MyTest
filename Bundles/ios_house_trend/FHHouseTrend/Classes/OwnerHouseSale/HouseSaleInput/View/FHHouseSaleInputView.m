@@ -300,16 +300,16 @@
     }];
 }
 
-//- (void)setEvaluateBtnEnabled:(BOOL)enabled {
-//    if(self.evaluateBtn.enabled != enabled){
-//        self.evaluateBtn.enabled = enabled;
-//        if(enabled){
-//            self.evaluateBtn.alpha = 1.0;
-//        }else{
-//            self.evaluateBtn.alpha = 0.3;
-//        }
-//    }
-//}
+- (void)setSubmitBtnEnabled:(BOOL)enabled {
+    if(self.bottomBtn.enabled != enabled){
+        self.bottomBtn.enabled = enabled;
+        if(enabled){
+            self.bottomBtn.alpha = 1.0;
+        }else{
+            self.bottomBtn.alpha = 0.3;
+        }
+    }
+}
 
 - (NSDictionary *)commonTextStyle {
     return @{

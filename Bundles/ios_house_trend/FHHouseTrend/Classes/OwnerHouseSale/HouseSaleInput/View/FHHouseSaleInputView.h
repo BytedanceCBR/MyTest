@@ -34,6 +34,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic , weak) id<FHHouseSaleInputViewDelegate> delegate;
 
 - (instancetype)initWithFrame:(CGRect)frame naviBarHeight:(CGFloat)naviBarHeight;
+- (void)setSubmitBtnEnabled:(BOOL)enabled;
 
 @end
 

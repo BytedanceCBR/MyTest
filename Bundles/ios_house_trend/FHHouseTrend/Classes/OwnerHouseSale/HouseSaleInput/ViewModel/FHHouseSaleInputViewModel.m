@@ -40,6 +40,7 @@
     self.inputModel.neighbourhoodId = self.viewController.neighbourhoodId;
     self.inputModel.neighbourhoodName = self.viewController.neighbourhoodName;
     self.view.neiborhoodItemView.contentText = self.viewController.neighbourhoodName;
+    [self checkSubmitEnabled];
 }
 
 - (void)viewWillAppear {
@@ -48,6 +49,18 @@
 
 - (void)viewWillDisappear {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
+- (void)checkSubmitEnabled {
+    NSString *neiborhoodName = self.inputModel.neighbourhoodName;
+    NSString *area = self.inputModel.area;
+    NSString *floor = self.inputModel.floor;
+    
+    if(neiborhoodName && ![neiborhoodName isEqualToString:@""] && area && ![area isEqualToString:@""] && floor && ![floor isEqualToString:@""]){
+        [self.view setSubmitBtnEnabled:YES];
+    }else{
+        [self.view setSubmitBtnEnabled:NO];
+    }
 }
 
 #pragma mark -- textFieldDidChange
@@ -142,10 +155,10 @@
 
 - (void)callBackDataInfo:(NSDictionary *)info {
     if (info && [info isKindOfClass:[NSDictionary class]]) {
-//        self.infoModel.neighborhoodName = info[@"neighborhood_name"];
-//        self.infoModel.neighborhoodId = info[@"neighborhood_id"];
-//        self.view.neiborhoodItemView.contentLabel.text = self.infoModel.neighborhoodName;
-//        [self checkEvaluateEnabled];
+        self.inputModel.neighbourhoodName = info[@"neighborhood_name"];
+        self.inputModel.neighbourhoodId = info[@"neighborhood_id"];
+        self.view.neiborhoodItemView.contentText = self.inputModel.neighbourhoodName;
+        [self checkSubmitEnabled];
     }
 }
 
