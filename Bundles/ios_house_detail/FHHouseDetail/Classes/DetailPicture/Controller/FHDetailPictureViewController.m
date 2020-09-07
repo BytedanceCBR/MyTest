@@ -751,7 +751,7 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
         FHHouseDetailImageListDataModel *listModel = self.mediaHeaderModel.houseImageDictList[titleIndex];
         self.currentTypeName = listModel.houseImageTypeName;
     }
-    self.naviView.titleLabel.text = [NSString stringWithFormat:@"%ld/%d",num.unsignedIntValue - currentTitleIndex + 1,num.unsignedIntValue];
+    self.naviView.titleLabel.text = [NSString stringWithFormat:@"%u/%d",num.unsignedIntValue - currentTitleIndex + 1,num.unsignedIntValue];
 }
 
 #pragma mark - Setter & Getter
@@ -780,7 +780,7 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
         if (self.vedioCount) {
             //把视频添加到第一个图片归类中
             //1.0.0 需求 视频单独分类
-            [titles addObject:[NSString stringWithFormat:@"视频（%ld）",self.vedioCount]];
+            [titles addObject:[NSString stringWithFormat:@"视频（%lu）",(unsigned long)self.vedioCount]];
             [numbers addObject:@(self.vedioCount)];
         }
         for (FHHouseDetailImageListDataModel *listModel in mediaHeaderModel.houseImageDictList) {
@@ -792,7 +792,7 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
                     }
                 }
                 if (tempCount > 0) {
-                    [titles addObject:[NSString stringWithFormat:@"%@（%ld）",listModel.houseImageTypeName,tempCount]];
+                    [titles addObject:[NSString stringWithFormat:@"%@（%ld）",listModel.houseImageTypeName,(long)tempCount]];
                     [numbers addObject:@(tempCount)];
                 }
             }
@@ -1402,7 +1402,7 @@ static BOOL kFHStaticPhotoBrowserAtTop = NO;
 {
     // Return YES for supported orientations
     BOOL result = NO;
-    if([TTDeviceHelper isPadDevice])
+    if([UIDevice btd_isPadDevice])
     {
         result = YES;
     }
@@ -1416,7 +1416,7 @@ static BOOL kFHStaticPhotoBrowserAtTop = NO;
 
 - (UIInterfaceOrientationMask)supportedInterfaceOrientations
 {
-    if (![TTDeviceHelper isPadDevice]) {
+    if (![UIDevice btd_isPadDevice]) {
         return UIInterfaceOrientationMaskPortrait;
     }
     else {
