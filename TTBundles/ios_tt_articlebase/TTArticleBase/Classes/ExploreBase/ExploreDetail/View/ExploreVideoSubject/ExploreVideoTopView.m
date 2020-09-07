@@ -57,9 +57,8 @@
 {
     [super themeChanged:notification];
     self.backgroundColor = [UIColor clearColor];
-    NSString *imgName = [TTDeviceHelper isPadDevice] ? @"leftbackbutton_video_detais" : @"shadow_lefterback_titlebar";
-    [_backButton setImage:[UIImage imageNamed:imgName] forState:UIControlStateNormal];
-    [_backButton setImage:[UIImage imageNamed:@"shadow_lefterback_titlebar_press"] forState:UIControlStateHighlighted];
+    [_backButton setImage:[UIImage imageNamed:@"icon-return-white"] forState:UIControlStateNormal];
+    [_backButton setImage:[UIImage imageNamed:@"icon-return-white"] forState:UIControlStateHighlighted];
 }
 
 - (BOOL)pointInside:(CGPoint)point withEvent:(UIEvent *)event
