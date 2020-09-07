@@ -68,7 +68,7 @@ def fhPods
     
 #    pod 'ios_house_im' ,'0.2.16-rc.3', :inhibit_warnings => false
 #     pod 'ios_house_im' , :path => '../../../im/feature', :inhibit_warnings => false
-    pod 'ios_house_im' , :git => 'git@code.byted.org:fproject/ios_house_im.git' , :commit => '40acf9d34c83afb07a813a5725faa9c8e1aa8a5b', :inhibit_warnings => false
+    pod 'ios_house_im' , :git => 'git@code.byted.org:fproject/ios_house_im.git' , :commit => '0b2fa69bbb502db29ec914c2e7c25296ef0f76cc', :inhibit_warnings => false
 
 end
 
@@ -488,7 +488,7 @@ def appPods
     pod 'lz4', '1.0.1'
     pod 'ByteRtcSDK', '2.6.13'
 #    pod 'TTIMSDK', :git => 'git@code.byted.org:im/TIMSDK.git', :branch => 'yang_branchf', :subspecs => [
-    pod 'TTIMSDK', :git => 'git@code.byted.org:im/TIMSDK.git', :commit => '8f6be111e5ab09566f33459fc3e5d7ccaad72c31', :subspecs => [
+    pod 'TTIMSDK', :git => 'git@code.byted.org:im/TIMSDK.git', :commit => 'a80acf235e8ac541dc8322487b0eadbfc19349be', :subspecs => [
         'IMKit_Default',
         'IMKit_WebSocket',
         'IMKit_Core',
@@ -517,7 +517,8 @@ def appPods
         'Bridges'
     ]
     
-    pod_binary 'IGListKit','3.4.0'
+    pod_binary 'IGListKit','4.0.0'
+    pod_binary 'IGListDiffKit','4.0.0'
     pod_binary 'Bolts', '1.9.0'
     pod_binary 'ToutiaoFrontierWebSocket' , '0.2.5'
     # pod_binary 'WCDB', '1.0.7.5'
