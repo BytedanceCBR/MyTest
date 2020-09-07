@@ -290,8 +290,8 @@
 }
 
 - (void)updateDiggButton {
-    NSString *diggCount = [NSString stringWithFormat:@"%lld",self.videoItem.article.diggCount];
-    [self.bottomView updateLikeState:diggCount userDigg:(self.videoItem.article.userDigg ? @"1" : @"0")];
+    NSString *diggCount = self.cellModel.diggCount;
+    [self.bottomView updateLikeState:diggCount userDigg:self.cellModel.userDigg];
 }
 
 - (void)willDisplay {
