@@ -11,13 +11,12 @@
 #import "FHUserTracker.h"
 #import "UIViewController+NavigationBarStyle.h"
 #import <FHHouseBase/FHUserTrackerDefine.h>
-#import <NSString+BTDAdditions.h>
+#import <ByteDanceKit/NSString+BTDAdditions.h>
 #import "FHUtils.h"
 #import "FHMultiMediaModel.h"
 #import "FHDetailNewModel.h"
 #import <FHVRDetailWebViewController.h>
 #import "TTSettingsManager.h"
-#import "NSDictionary+TTAdditions.h"
 #import "FHFloorPanPicShowViewController.h"
 #import <TTBaseLib/TTUIResponderHelper.h>
 #import <TTUIWidget/TTNavigationController.h>
@@ -470,20 +469,6 @@
 - (void)selectItem:(NSString *)title {
     [self trackClickOptions:title];
 }
-
-//- (void)trackVRElementShow
-//{
-//    NSMutableDictionary *tracerDict = self.baseViewModel.detailTracerDic.mutableCopy;
-//    NSMutableDictionary *param = [NSMutableDictionary new];
-//    param[UT_ELEMENT_TYPE] = @"house_vr";
-//    param[UT_PAGE_TYPE] = tracerDict[UT_PAGE_TYPE] ? : UT_BE_NULL;
-//    param[UT_ORIGIN_FROM] = tracerDict[UT_ORIGIN_FROM] ? : UT_BE_NULL;
-//    param[UT_ORIGIN_SEARCH_ID] = tracerDict[UT_ORIGIN_SEARCH_ID] ? : UT_BE_NULL;
-//    param[UT_LOG_PB] = tracerDict[UT_LOG_PB] ? : UT_BE_NULL;
-//    param[UT_RANK] = tracerDict[UT_RANK] ? : UT_BE_NULL;
-//    param[UT_ENTER_FROM] = tracerDict[UT_ENTER_FROM] ? : UT_BE_NULL;
-//    TRACK_EVENT(UT_OF_ELEMENT_SHOW, param);
-//}
 
 //进入图片相册页
 - (void)goToPictureListFrom:(NSString *)from {

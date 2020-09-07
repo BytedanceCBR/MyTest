@@ -21,6 +21,9 @@
 @implementation FHDetailNewMediaHeaderDataHelper
 
 - (void)setMediaHeaderModel:(FHDetailNewMediaHeaderModel *)mediaHeaderModel {
+    if (![mediaHeaderModel isKindOfClass:[FHDetailNewMediaHeaderModel class]]) {
+        return;
+    }
     _mediaHeaderModel = mediaHeaderModel;
     _headerViewData = nil;
     _pictureDetailData = nil;
@@ -58,7 +61,7 @@
     NSUInteger pictureNumber = 0;
     NSMutableArray *itemArray = [NSMutableArray array];
     NSArray *houseImageDict = newMediaHeaderModel.houseImageDictList;
-    FHDetailNewVRInfo *vrInfo = newMediaHeaderModel.vrModel;
+    FHDetailVRInfo *vrInfo = newMediaHeaderModel.vrModel;
     if (vrInfo.items.count > 0 && newMediaHeaderModel.isShowTopImageTab) {
         for (FHDetailHouseVRDataModel *vrData in vrInfo.items) {
             FHMultiMediaItemModel *itemModelVR = [[FHMultiMediaItemModel alloc] init];

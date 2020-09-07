@@ -21,7 +21,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FHDetailNewMediaHeaderModel : FHDetailBaseModel
 @property (nonatomic, strong , nullable) NSArray<FHHouseDetailImageListDataModel> *houseImageDictList;// 图片数据
-@property (nonatomic, strong , nullable) FHDetailNewVRInfo *vrModel;                                  // vr数据
+@property (nonatomic, strong , nullable) FHDetailVRInfo *vrModel;                                  // vr数据
 @property (nonatomic, strong, nullable)   FHMultiMediaItemModel       *vedioModel;// 视频模型
 @property (nonatomic, weak) FHHouseDetailContactViewModel *contactViewModel;
 @property (strong, nonatomic) FHDetailHouseTitleModel *titleDataModel;//标题，标签模型

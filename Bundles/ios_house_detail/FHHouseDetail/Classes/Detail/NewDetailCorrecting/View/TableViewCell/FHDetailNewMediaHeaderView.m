@@ -9,7 +9,7 @@
 #import "FHDetailHeaderTitleView.h"
 #import "FHVideoAndImageItemCorrectingView.h"
 #import "FHCommonDefines.h"
-#import "NSString+BTDAdditions.h"
+#import <ByteDanceKit/NSString+BTDAdditions.h>
 @interface FHDetailNewMediaHeaderView ()
 
 @property (nonatomic, strong) FHDetailHeaderTitleView *titleView;            //头图下面的标题栏
@@ -175,7 +175,6 @@
     } else {
         self.itemView.hidden = YES;
     }
-    
 }
 
 - (void)updateTitleModel:(FHDetailHouseTitleModel *)model {

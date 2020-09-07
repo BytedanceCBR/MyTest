@@ -171,14 +171,6 @@
 }
 @end
 
-@implementation FHDetailNewVRInfo
-
-+ (BOOL)propertyIsOptional:(NSString *)propertyName
-{
-    return YES;
-}
-
-@end
 
 @implementation FHDetailNewDataDisclaimerModel
 + (JSONKeyMapper*)keyMapper

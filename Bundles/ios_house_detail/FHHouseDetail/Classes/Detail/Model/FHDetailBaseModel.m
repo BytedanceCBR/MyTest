@@ -38,6 +38,15 @@
 
 @end
 
+@implementation FHDetailVRInfo
+
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+
+@end
+
 @implementation FHDetailPhotoHeaderModel
 
 @end

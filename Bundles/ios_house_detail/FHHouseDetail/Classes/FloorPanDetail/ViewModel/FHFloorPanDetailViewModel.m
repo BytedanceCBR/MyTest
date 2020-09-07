@@ -14,13 +14,11 @@
 #import "FHDetailNewCoreDetailModel.h"
 #import "FHFloorPanCorePropertyCell.h"
 #import "FHDetailFloorPanDetailInfoModel.h"
-#import "FHDetailPhotoHeaderCell.h"
 #import "FHFloorPanTitleCell.h"
 #import "FHFloorPanDetailPropertyCell.h"
 #import "FHFloorPanDetailMutiFloorPanCell.h"
 #import "FHHouseDetailSubPageViewController.h"
 #import "FHDetailBottomBar.h"
-#import "FHDetailMediaHeaderCorrectingCell.h"
 #import "FHDetailPropertyListCorrectingCell.h"
 #import "FHFloorPanDetailModuleHelper.h"
 #import "FHOldDetailDisclaimerCell.h"
@@ -28,6 +26,7 @@
 #import "FHFloorPanDetailPropertyListCell.h"
 #import "FHDetailBaseModel.h"
 #import "FHDetailSalesCell.h"
+#import "FHFloorPanDetailMediaHeaderCell.h"
 
 @interface FHFloorPanDetailViewModel()<UITableViewDelegate,UITableViewDataSource>
 @property (copy, readwrite, nonatomic) NSString *floorPanId;
@@ -52,11 +51,9 @@
         FHDetailBottomBar *bottomBar = [_subPageVC getBottomBar];
         if ([bottomBar isKindOfClass:[FHDetailBottomBar class]]) {
             bottomBar.bottomBarContactBlock = ^{
-                StrongSelf;
                 [wself contactAction];
             };
             bottomBar.bottomBarImBlock = ^{
-                StrongSelf;
                 [wself imAction];
             };
         }
@@ -91,7 +88,7 @@
 // 注册cell类型
 - (void)registerCellClasses {
     //头部轮播
-    [self.infoListTable registerClass:[FHDetailMediaHeaderCorrectingCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailMediaHeaderCorrectingModel class])];
+    [self.infoListTable registerClass:[FHFloorPanDetailMediaHeaderCell class] forCellReuseIdentifier:NSStringFromClass([FHFloorPanDetailMediaHeaderModel class])];
     
     //户型信息
     [self.infoListTable registerClass:[FHFloorPanDetailPropertyListCell class] forCellReuseIdentifier:NSStringFromClass([FHFloorPanDetailPropertyListModel class])];
@@ -151,12 +148,11 @@
 }
 
 - (void)processDetailData:(FHDetailFloorPanDetailInfoModel *)model {
-    NSMutableArray *itemsArray = [NSMutableArray new];
     self.detailData = model;
     self.currentModel = model;
     //头部轮播图
     FHMultiMediaItemModel *itemModel = nil;
-    FHDetailMediaHeaderCorrectingModel *headerCellModel = [[FHDetailMediaHeaderCorrectingModel alloc] init];
+    FHFloorPanDetailMediaHeaderModel *headerCellModel = [[FHFloorPanDetailMediaHeaderModel alloc] init];
     if (model.data.imageDictList && [model.data.imageDictList isKindOfClass:[NSArray class]] && model.data.imageDictList.count > 0) {
         NSMutableArray *houseImageList = [NSMutableArray array];
         for (FHHouseDetailImageListDataModel *imageInfo in model.data.imageDictList) {
@@ -191,7 +187,6 @@
     houseTitleModel.priceConsult = model.data.priceConsult;
     headerCellModel.vedioModel = itemModel;
     headerCellModel.contactViewModel = self.contactViewModel;
-    headerCellModel.isInstantData = nil;
     headerCellModel.titleDataModel = houseTitleModel;
     [self.items addObject:headerCellModel];
     
