@@ -60,6 +60,7 @@
 #import <ByteDanceKit/NSDictionary+BTDAdditions.h>
 #import <FHHouseBase/FHUserInfoManager.h>
 #import "FHDetailSurveyAgentListCell.h"
+#import "FHOldDetailOwnerSellHouseCell.h"
 
 extern NSString *const kFHSubscribeHouseCacheKey;
 
@@ -126,6 +127,8 @@ extern NSString *const kFHSubscribeHouseCacheKey;
     [self.tableView registerClass:[FHDetailNeighborhoodAssessCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailAccessCellModel class])];
     //经纪人评测
     [self.tableView registerClass:[FHhouseDetailRGCListCell class] forCellReuseIdentifier:NSStringFromClass([FHhouseDetailRGCListCellModel class])];
+    //帮我卖房入口
+    [self.tableView registerClass:[FHOldDetailOwnerSellHouseCell class] forCellReuseIdentifier:NSStringFromClass([FHOldDetailOwnerSellHouseModel class])];
 }
 
 // cell identifier
@@ -839,6 +842,9 @@ logPB:self.listLogPB extraInfo:self.extraInfo completion:^(FHDetailOldModel * _N
             infoModel.relatedHouseData = self.relatedHouseData;
             [self.items addObject:infoModel];
         }
+        //帮我卖房入口
+        FHOldDetailOwnerSellHouseModel *ownerSellHouseModel = [[FHOldDetailOwnerSellHouseModel alloc] init];
+        [self.items addObject:ownerSellHouseModel];
         // 免责声明
         FHDetailOldModel * model = (FHDetailOldModel *)self.detailData;
         if (model.data.contact || model.data.disclaimer) {

@@ -42,6 +42,7 @@
 #import "FHDetailNeighborhoodHouseStatusModel.h"
 #import "FHDetailSurroundingAreaCell.h"
 #import "TTAccountManager.h"
+#import "FHDetailNeighborhoodOwnerSellHouseCell.h"
 
 @interface FHHouseNeighborhoodDetailViewModel ()
 
@@ -76,6 +77,8 @@
     //推荐经纪人
     [self.tableView registerClass:[FHDetailAgentListCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailAgentListModel class])];
     [self.tableView registerClass:[FHDetailGrayLineCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailGrayLineModel class])];
+    //帮我卖房入口
+    [self.tableView registerClass:[FHDetailNeighborhoodOwnerSellHouseCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailNeighborhoodOwnerSellHouseModel class])];
     //在售房源
     [self.tableView registerClass:[FHDetailNeighborhoodHouseSaleCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailNeighborhoodHouseSaleModel class])];
     //在租房源
@@ -421,7 +424,12 @@
         [self.items addObject:agentListModel];
 //        self.agentListModel = agentListModel;
     }
-        self.items = [FHNeighborhoodDetailModuleHelper moduleClassificationMethod:self.items];
+    //帮我卖房入口
+    FHDetailNeighborhoodOwnerSellHouseModel *ownerSellHouseModel = [[FHDetailNeighborhoodOwnerSellHouseModel alloc] init];
+    [self.items addObject:ownerSellHouseModel];
+    
+    
+    self.items = [FHNeighborhoodDetailModuleHelper moduleClassificationMethod:self.items];
     if (model.isInstantData) {
         [self.tableView reloadData];
     }else{
