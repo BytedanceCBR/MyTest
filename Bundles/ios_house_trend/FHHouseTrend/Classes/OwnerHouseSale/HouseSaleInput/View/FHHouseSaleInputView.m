@@ -16,6 +16,7 @@
 #import "FHHouseSaleServiceView.h"
 #import <TTRoute.h>
 #import "FHURLSettings.h"
+#import "FHEnvContext.h"
 
 @interface FHHouseSaleInputView()
 
@@ -76,7 +77,8 @@
     
     self.locationLabel = [self LabelWithFont:[UIFont themeFontRegular:16] textColor:[UIColor themeGray1]];
     _locationLabel.backgroundColor = [UIColor whiteColor];
-    _locationLabel.text = @"当前定位城市：北京";
+    _locationLabel.text = [NSString stringWithFormat:@"当前定位城市：%@",[FHEnvContext getCurrentUserDeaultCityNameFromLocal]];
+    [FHEnvContext getCurrentUserDeaultCityNameFromLocal];
     _locationLabel.textAlignment = NSTextAlignmentCenter;
     [self.inputViewOne addSubview:_locationLabel];
 
@@ -103,6 +105,7 @@
     _areaItemView.titleLabel.text = @"面积";
     _areaItemView.placeholder = @"请输入";
     _areaItemView.textField.keyboardType = UIKeyboardTypeDecimalPad;
+    _areaItemView.scrollView = self.scrollView;
     _areaItemView.rightText = @"m²";
     [self.inputViewOne addSubview:_areaItemView];
     
@@ -115,6 +118,7 @@
     _nameItemView.rightImage.hidden = YES;
     _nameItemView.titleLabel.text = @"称呼";
     _nameItemView.placeholder = @"请输入";
+    _nameItemView.scrollView = self.scrollView;
     [self.inputViewTwo addSubview:_nameItemView];
     
     self.phoneItemView = [[FHPriceValuationItemView alloc] initWithFrame:CGRectZero type:FHPriceValuationItemViewTypeTextField];
@@ -122,7 +126,8 @@
     _phoneItemView.rightImage.hidden = YES;
     _phoneItemView.titleLabel.text = @"手机号";
     _phoneItemView.placeholder = @"填写手机号获得专业顾问服务";
-    _phoneItemView.textField.keyboardType = UIKeyboardTypeDecimalPad;
+    _phoneItemView.scrollView = self.scrollView;
+    _phoneItemView.textField.keyboardType = UIKeyboardTypeNumberPad;
     [self.inputViewTwo addSubview:_phoneItemView];
     
     self.flowView = [[FHHouseSaleFlowView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width - 30, 116)];
@@ -168,13 +173,6 @@
     _bottomBtn.layer.masksToBounds = YES;
     [_bottomBtn addTarget:self action:@selector(houseSale) forControlEvents:UIControlEventTouchUpInside];
     [self.bottomView addSubview:_bottomBtn];
-    
-//    self.descLabel = [self LabelWithFont:[UIFont themeFontRegular:11] textColor:[UIColor themeGray4]];
-//    _descLabel.textAlignment = NSTextAlignmentLeft;
-//    _descLabel.numberOfLines = 0;
-//    _descLabel.text = @"基于幸福里APP海量二手房挂牌和成交大数据，综合市场行情和房屋信息，预估房屋市场价值，仅供参考";
-//    [self addSubview:_descLabel];
-
 }
 
 - (void)initConstraints {
@@ -256,12 +254,6 @@
         make.right.mas_equalTo(self).offset(-15);
         make.height.mas_equalTo(height);
     }];
-
-//    [self.evaluateBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-//        make.top.mas_equalTo(self.inputView.mas_bottom).offset(40);
-//        make.left.right.mas_equalTo(self.inputViewOne);
-//        make.height.mas_equalTo(44);
-//    }];
     
     [self setAgreementContent];
     
@@ -269,11 +261,6 @@
         make.top.left.right.mas_equalTo(self);
         make.bottom.mas_equalTo(self.bottomView.mas_top);
     }];
-
-//    CGFloat bottom = 10;
-//    if (@available(iOS 11.0 , *)) {
-//        bottom += [[[[UIApplication sharedApplication] delegate] window] safeAreaInsets].bottom;
-//    }
     
     CGFloat bottom = 64;
     if (@available(iOS 11.0 , *)) {
@@ -291,15 +278,6 @@
         make.right.mas_equalTo(self).offset(-15);
         make.height.mas_equalTo(40);
     }];
-
-//    [self.descLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-//        make.left.mas_equalTo(self).offset(15);
-//        make.right.mas_equalTo(self).offset(-15);
-//        make.bottom.mas_equalTo(-bottom);
-//    }];
-
-    [self layoutIfNeeded];
-//    [FHUtils addShadowToView:self.inputViewOne withOpacity:0.1 shadowColor:[UIColor blackColor] shadowOffset:CGSizeMake(2, 6) shadowRadius:8 andCornerRadius:4];
 }
 
 - (void)setAgreementContent {
@@ -375,11 +353,7 @@
 - (void)goToUserProtocol {
     [self endEditing:YES];
     NSString *privateUrlStr = [NSString stringWithFormat:@"%@/f100/client/user_privacy&title=个人信息保护声明&hide_more=1",[FHURLSettings baseURL]];
-//    NSString *urlStr = [privateUrlStr stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
-//    stringByAddingPercentEncodingWithAllowedCharacters
     NSString *urlStr = [privateUrlStr stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLQueryAllowedCharacterSet]];
-
-//    NSString *urlStr = [privateUrlStr stringByAddingPercentEncodingWithAllowedCharacters:NSUTF8StringEncoding];
     NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"fschema://webview?url=%@",urlStr]];
     [[TTRoute sharedRoute]openURLByPushViewController:url];
 }

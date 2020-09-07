@@ -17,6 +17,7 @@
 
 @property(nonatomic, strong) UIView *contentView;
 @property(nonatomic, strong) UILabel *rightLabel;
+@property(nonatomic, assign) CGFloat offsetY;
 
 @end
 
@@ -30,8 +31,20 @@
         self.backgroundColor = [UIColor whiteColor];
         [self initViews];
         [self initConstraints];
+        if(type == FHPriceValuationItemViewTypeTextField){
+            [self initNotification];
+        }
     }
     return self;
+}
+
+- (void)initNotification {
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(keyboardWillShowNotifiction:) name:UIKeyboardWillShowNotification object:nil];
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(keyboardWillHideNotifiction:) name:UIKeyboardWillHideNotification object:nil];
+}
+
+- (void)dealloc {
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 - (void)initViews {
@@ -221,6 +234,52 @@
 - (void)clickAction:(id)tap {
     if(self.tapBlock){
         self.tapBlock();
+    }
+}
+
+#pragma mark - 键盘通知
+- (void)keyboardWillShowNotifiction:(NSNotification *)notification {
+    if (!self.textField.isFirstResponder || !self.scrollView) {
+        return;
+    }
+    NSNumber *duration = notification.userInfo[UIKeyboardAnimationDurationUserInfoKey];
+    NSNumber *curve = notification.userInfo[UIKeyboardAnimationCurveUserInfoKey];
+    CGFloat height = [notification.userInfo[UIKeyboardFrameEndUserInfoKey] CGRectValue].size.height;
+    
+    CGRect frame = [self convertRect:self.bounds toView:nil];
+    CGFloat y = [UIScreen mainScreen].bounds.size.height - frame.origin.y - frame.size.height - height;
+    self.offsetY = y;
+    
+    if(y < 0){
+        [UIView animateWithDuration:[duration floatValue] delay:0 options:(UIViewAnimationOptions)[curve integerValue] animations:^{
+            [UIView setAnimationBeginsFromCurrentState:YES];
+            CGPoint point = self.scrollView.contentOffset;
+            point.y -= y;
+            self.scrollView.contentOffset = point;
+        } completion:^(BOOL finished) {
+            
+        }];
+    }
+}
+
+- (void)keyboardWillHideNotifiction:(NSNotification *)notification {
+    if (!self.scrollView) {
+        return;
+    }
+    
+    self.offsetY = 0;
+    if(self.scrollView.contentOffset.y + self.scrollView.frame.size.height > self.scrollView.contentSize.height){
+        //剩余不满一屏幕
+        NSNumber *duration = notification.userInfo[UIKeyboardAnimationDurationUserInfoKey];
+        NSNumber *curve = notification.userInfo[UIKeyboardAnimationCurveUserInfoKey];
+        [UIView animateWithDuration:[duration floatValue] delay:0 options:(UIViewAnimationOptions)[curve integerValue] animations:^{
+            [UIView setAnimationBeginsFromCurrentState:YES];
+            CGPoint point = self.scrollView.contentOffset;
+            point.y = (self.scrollView.contentSize.height - self.scrollView.frame.size.height);
+            self.scrollView.contentOffset = point;
+        } completion:^(BOOL finished) {
+            
+        }];
     }
 }
 

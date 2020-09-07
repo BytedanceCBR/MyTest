@@ -77,9 +77,9 @@
     [self.customNavBarView refreshAlpha:alpha];
     
     if (contentOffset.y > 0) {
-        self.statusBarStyle = UIStatusBarStyleDefault;
+        [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault];
     }else {
-        self.statusBarStyle = UIStatusBarStyleLightContent;
+        [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
     }
 }
 

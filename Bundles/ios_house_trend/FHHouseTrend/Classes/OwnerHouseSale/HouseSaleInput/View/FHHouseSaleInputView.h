@@ -13,11 +13,11 @@ NS_ASSUME_NONNULL_BEGIN
 
 @protocol FHHouseSaleInputViewDelegate <NSObject>
 
+@optional
+
 - (void)goToNeighborhoodSearch;
 
 - (void)evaluate;
-
-- (void)goToUserProtocol;
 
 - (void)chooseFloor;
 

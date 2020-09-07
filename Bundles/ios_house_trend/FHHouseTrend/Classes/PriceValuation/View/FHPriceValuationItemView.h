@@ -26,6 +26,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic, copy) NSString *rightText;
 @property(nonatomic, copy) NSString *placeholder;
 @property(nonatomic, copy) NSString *contentText;
+@property(nonatomic, weak) UIScrollView *scrollView;
 
 //点击事件
 @property(nonatomic, copy) void(^tapBlock)(void);

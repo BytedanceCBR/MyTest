@@ -6,11 +6,13 @@
 //
 
 #import "FHHouseSaleInputViewModel.h"
+#import "FHHouseSaleInputModel.h"
 
-@interface FHHouseSaleInputViewModel ()
+@interface FHHouseSaleInputViewModel ()<FHHouseSaleInputViewDelegate>
 
 @property(nonatomic , weak) FHHouseSaleInputController *viewController;
 @property(nonatomic , weak) FHHouseSaleInputView *view;
+@property(nonatomic , strong) FHHouseSaleInputModel *inputModel;
 
 @end
 
@@ -21,10 +23,12 @@
     self = [super init];
     if (self) {
         _view = view;
-//        _view.delegate = self;
+        _view.delegate = self;
 //        _view.areaItemView.textField.delegate = self;
         _viewController = viewController;
-//        _infoModel = [[FHPriceValuationHistoryDataHistoryHouseListHouseInfoHouseInfoDictModel alloc] init];
+        _inputModel = [[FHHouseSaleInputModel alloc] init];
+        
+        [self configData];
         
         //埋点
 //        [self addGoDetailTracer];
@@ -32,9 +36,13 @@
     return self;
 }
 
+- (void)configData {
+    self.inputModel.neighbourhoodId = self.viewController.neighbourhoodId;
+    self.inputModel.neighbourhoodName = self.viewController.neighbourhoodName;
+    self.view.neiborhoodItemView.contentText = self.viewController.neighbourhoodName;
+}
+
 - (void)viewWillAppear {
-    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(keyboardWillShowNotifiction:) name:UIKeyboardWillShowNotification object:nil];
-    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(keyboardWillHideNotifiction:) name:UIKeyboardWillHideNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(textFieldDidChange:) name:UITextFieldTextDidChangeNotification object:nil];
 }
 
@@ -45,6 +53,7 @@
 #pragma mark -- textFieldDidChange
 
 - (void)textFieldDidChange:(NSNotification *)notification {
+    NSLog(@"11");
 //    UITextField *textField = (UITextField *)notification.object;
 //    NSString *text = textField.text;
 //
@@ -129,16 +138,31 @@
 //    }
 //}
 
-#pragma mark - 键盘通知
+#pragma mark - FHHouseSaleInputViewDelegate
 
-- (void)keyboardWillShowNotifiction:(NSNotification *)notification {
-    if(_isHideKeyBoard){
-        return;
+- (void)callBackDataInfo:(NSDictionary *)info {
+    if (info && [info isKindOfClass:[NSDictionary class]]) {
+//        self.infoModel.neighborhoodName = info[@"neighborhood_name"];
+//        self.infoModel.neighborhoodId = info[@"neighborhood_id"];
+//        self.view.neiborhoodItemView.contentLabel.text = self.infoModel.neighborhoodName;
+//        [self checkEvaluateEnabled];
     }
 }
 
-- (void)keyboardWillHideNotifiction:(NSNotification *)notification {
+- (void)goToNeighborhoodSearch {
+    [self.view endEditing:YES];
+    //埋点
+//    [self addClickOptionsTracer:self.view.neiborhoodItemView.titleLabel.text];
     
+    NSHashTable *delegate = [NSHashTable hashTableWithOptions:NSPointerFunctionsWeakMemory];
+    [delegate addObject:self];
+    NSMutableDictionary *dict = @{}.mutableCopy;
+    dict[@"title"] = @"输入小区";
+    dict[@"delegate"] = delegate;
+    TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
+    
+    NSURL* url = [NSURL URLWithString:@"sslocal://price_valuation_neighborhood_search"];
+    [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
 }
 
 @end
