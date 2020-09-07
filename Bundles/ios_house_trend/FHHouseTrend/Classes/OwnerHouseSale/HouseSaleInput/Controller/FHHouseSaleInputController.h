@@ -11,6 +11,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FHHouseSaleInputController : FHBaseViewController
 
+@property(nonatomic ,copy) NSString *neighbourhoodId;
+@property(nonatomic ,copy) NSString *neighbourhoodName;
+
 @end
 
 NS_ASSUME_NONNULL_END
