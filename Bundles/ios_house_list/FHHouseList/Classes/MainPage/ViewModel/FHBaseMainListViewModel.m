@@ -863,6 +863,9 @@ extern NSString *const INSTANT_DATA_KEY;
                     itemModel.isRecommendCell = YES;
                     itemModel.isLastCell = (idx == items.count - 1);
                     theItemModel = itemModel;
+                    if ((itemModel.houseType.integerValue == FHHouseTypeSecondHandHouse && itemModel.cellStyles == 7) || (itemModel.houseType.integerValue == FHHouseTypeNewHouse && itemModel.cellStyles == 8)) {
+                        _isAbtest = YES;
+                    }
                 }
 
                 if ([theItemModel isKindOfClass:[FHSugListRealHouseTopInfoModel class]]) {

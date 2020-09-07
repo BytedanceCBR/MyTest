@@ -597,7 +597,7 @@
 - (void)bindItemVCTrace
 {
     for (FHHomeItemViewController *vc in self.itemsVCArray) {
-        if ([vc isKindOfClass:[FHHomeItemViewController class]] && vc.houseType == self.previousHouseType) {
+        if ([vc isKindOfClass:[FHHomeItemViewController class]]) {
             [vc initNotifications];
         }else
         {

@@ -54,8 +54,8 @@
 //全部VR + 图片
 + (FHDetailNewMediaHeaderDataHelperHeaderViewData *)generateMediaHeaderViewData:(FHDetailNewMediaHeaderModel *)newMediaHeaderModel {
     FHDetailNewMediaHeaderDataHelperHeaderViewData *headerViewData = [[FHDetailNewMediaHeaderDataHelperHeaderViewData alloc] init];
-    NSInteger vrNumber = 0;
-    NSInteger pictureNumber = 0;
+    NSUInteger vrNumber = 0;
+    NSUInteger pictureNumber = 0;
     NSMutableArray *itemArray = [NSMutableArray array];
     NSArray *houseImageDict = newMediaHeaderModel.houseImageDictList;
     FHDetailNewVRInfo *vrInfo = newMediaHeaderModel.vrModel;

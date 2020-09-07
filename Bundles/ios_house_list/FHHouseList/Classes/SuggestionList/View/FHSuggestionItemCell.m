@@ -12,6 +12,7 @@
 #import "TTDeviceHelper.h"
 #import "BDWebImage.h"
 #import "FHExtendHotAreaButton.h"
+#import "UILabel+BTDAdditions.h"
 
 @interface FHSuggestionItemCell ()
 
@@ -96,27 +97,39 @@
         make.width.mas_equalTo(36);
     }];
     
+    self.displayPriceLabel = [[UILabel alloc] init];
+    [self.contentView addSubview:_displayPriceLabel];
+    self.displayPriceLabel.font = [UIFont themeFontSemibold:16];
+    self.displayPriceLabel.textColor = [UIColor themeOrange1];
+    self.displayPriceLabel.textAlignment = NSTextAlignmentRight;
+    [self.displayPriceLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.right.mas_equalTo(-15);
+        make.top.mas_equalTo(14);
+        make.height.mas_equalTo(22);
+        make.width.mas_equalTo(0);
+    }];
+    
     self.titleLabel = [[UILabel alloc] init];
     [self.contentView addSubview:_titleLabel];
     self.titleLabel.font = [UIFont themeFontSemibold:16];
     [self.titleLabel sizeToFit];
+    [self.titleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.mas_equalTo(self.recommendTypeLabel.mas_right).offset(15);
+        make.top.mas_equalTo(15);
+        make.height.mas_equalTo(22);
+        make.right.mas_equalTo(self.displayPriceLabel.mas_left);
+    }];
     
     self.recommendResonLabel = [[UILabel alloc] init];
     [self.contentView addSubview:_recommendResonLabel];
     self.recommendResonLabel.font = [UIFont themeFontRegular:14];
     self.recommendResonLabel.hidden = YES;
     [self.recommendResonLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(_titleLabel);
-        make.top.mas_equalTo(_titleLabel.mas_bottom).offset(3);
+        make.left.mas_equalTo(self.titleLabel);
+        make.top.mas_equalTo(self.titleLabel.mas_bottom).offset(3);
         make.right.mas_equalTo(-15);
         make.height.mas_equalTo(20);
     }];
-    
-    self.displayPriceLabel = [[UILabel alloc] init];
-    [self.contentView addSubview:_displayPriceLabel];
-    self.displayPriceLabel.font = [UIFont themeFontSemibold:16];
-    self.displayPriceLabel.textColor = [UIColor themeOrange1];
-    self.displayPriceLabel.textAlignment = NSTextAlignmentRight;
 }
 
 - (void)refreshData:(id)data
@@ -124,10 +137,9 @@
     if ([data isKindOfClass:[FHGuessYouWantResponseDataDataModel class]]) {
         FHGuessYouWantResponseDataDataModel *model = data;
         self.displayPriceLabel.text = model.displayPrice;
-        [self.displayPriceLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
-            make.right.mas_equalTo(-15);
-            make.top.mas_equalTo(14);
-            make.height.mas_equalTo(22);
+        CGFloat displayPriceWidth = [self.displayPriceLabel btd_widthWithHeight:22];
+        [self.displayPriceLabel mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.width.mas_equalTo(displayPriceWidth);
         }];
         if (model.recommendType.content.length > 0) {
             self.recommendTypeLabel.hidden = NO;
@@ -141,12 +153,6 @@
             }];
         }
         self.titleLabel.text = model.text;
-        [self.titleLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
-            make.left.mas_equalTo(self.recommendTypeLabel.mas_right).offset(15);
-            make.right.mas_equalTo(self.displayPriceLabel.mas_left).offset(-15);
-            make.top.mas_equalTo(15);
-            make.height.mas_equalTo(22);
-        }];
         if (model.recommendReason.content > 0) {
             self.recommendResonLabel.hidden = NO;
             self.recommendResonLabel.text = model.recommendReason.content;

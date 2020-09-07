@@ -9,6 +9,7 @@
 #import "FHDetailBaseModel.h"
 #import "FHHouseShadowImageType.h"
 #import "FHDetailListSectionTitleCell.h"
+#import "SSCommonLogic.h"
 
 @implementation FHOldDetailModuleHelper
 
@@ -116,11 +117,21 @@
     if (billBoard.count > 0) {
         [moduleItems addObject:@{@"billBoard":billBoard}];
     }
-    if (agentlist.count > 0) {
-        [moduleItems addObject:@{@"agentlist":agentlist}];
-    }
-    if (surveyedRealtorAgentlist.count > 0) {
-        [moduleItems addObject:@{@"surveyedRealtorAgentlist":surveyedRealtorAgentlist}];
+    BOOL isSurveyRealtorFirst = [SSCommonLogic isSurveyRealtorFirst];
+    if(isSurveyRealtorFirst) {
+        if (surveyedRealtorAgentlist.count > 0) {
+            [moduleItems addObject:@{@"surveyedRealtorAgentlist":surveyedRealtorAgentlist}];
+        }
+        if (agentlist.count > 0) {
+            [moduleItems addObject:@{@"agentlist":agentlist}];
+        }
+    } else {
+        if (agentlist.count > 0) {
+            [moduleItems addObject:@{@"agentlist":agentlist}];
+        }
+        if (surveyedRealtorAgentlist.count > 0) {
+            [moduleItems addObject:@{@"surveyedRealtorAgentlist":surveyedRealtorAgentlist}];
+        }
     }
     if (housingEvaluation.count > 0) {
         [moduleItems addObject:@{@"housingEvaluation":housingEvaluation}];

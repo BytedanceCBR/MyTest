@@ -288,7 +288,7 @@ static const NSUInteger kFHHomeHeaderViewSectionHeight = 35;
 
     
     self.bottomView.hidden = YES;
-    self.topHeader.titleLabel.text = @"";
+//    self.topHeader.titleLabel.text = @"";
     if (self.isShowErrorPage) {
         self.isShowErrorPage = NO;
     }
@@ -385,6 +385,8 @@ static const NSUInteger kFHHomeHeaderViewSectionHeight = 35;
                 if(itemArray.count != 0){
                     tipStr = [NSString stringWithFormat:@"为您找到%ld套二手房",itemArray.count];
                 }
+                
+                [self.topHeader setTitleStr:tipStr];
                 [self.currentViewController setNaviBarTitle:tipStr];
             }else{
                 if (isRefresh) {
@@ -393,10 +395,13 @@ static const NSUInteger kFHHomeHeaderViewSectionHeight = 35;
                     }else{
                         tipStr = [NSString stringWithFormat:@"为您找到%ld个楼盘",[houseModel.total integerValue]];
                     }
+                    
+                    [self.topHeader setTitleStr:tipStr];
                     [self.currentViewController setNaviBarTitle:tipStr];
                 }
             }
-            [self.topHeader setTitleStr:tipStr];
+            
+    
 
             
             [self.tableView reloadData];
@@ -589,7 +594,7 @@ static const NSUInteger kFHHomeHeaderViewSectionHeight = 35;
        if ([cellModel isKindOfClass:[FHSearchHouseItemModel class]]) {
              FHHouseBaseNewHouseCell *cell = [tableView dequeueReusableCellWithIdentifier:kFindNewHouseCellId];
              if (indexPath.row < _houseList.count) {
-                 [cell refreshTopMargin:([UIDevice btd_is896Screen]) ? 4 : 0];
+//                 [cell refreshTopMargin:([UIDevice btd_is896Screen]) ? 4 : 0];
                  [cell refreshLeftAndRightMargin: 15];
                  [cell updateHouseListNewHouseCellModel:cellModel];
              }

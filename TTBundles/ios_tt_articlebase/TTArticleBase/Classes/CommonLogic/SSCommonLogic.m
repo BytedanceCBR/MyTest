@@ -5512,6 +5512,16 @@ static NSString *const kFFeedRefreshStrategy = @"feed_refresh_settings";
     }
     return NO;
 }
+
++ (BOOL)isSurveyRealtorFirst {
+    NSDictionary *fhSettings = [self fhSettings];
+    if (fhSettings != nil && [fhSettings objectForKey:@"f_realtor_surveyed"] != nil) {
+        BOOL isFirst = [[fhSettings objectForKey:@"f_realtor_surveyed"] boolValue];
+        return isFirst;
+    }
+    return NO;
+}
+
 @end
 
 #endif
