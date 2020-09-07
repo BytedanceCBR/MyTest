@@ -21,8 +21,8 @@
 - (instancetype)initWithRouteParamObj:(nullable TTRouteParamObj *)paramObj {
     self = [super initWithRouteParamObj:paramObj];
     if (self) {
-        _neighbourhoodId = paramObj.allParams[@"neighbourhoodId"];
-        _neighbourhoodName = paramObj.allParams[@"neighbourhoodName"];
+        _neighbourhoodId = paramObj.allParams[@"neighbourhood_id"];
+        _neighbourhoodName = paramObj.allParams[@"neighbourhood_name"];
     }
     return self;
 }
