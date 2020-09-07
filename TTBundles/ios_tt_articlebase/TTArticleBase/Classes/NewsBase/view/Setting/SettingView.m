@@ -1404,8 +1404,9 @@ TTEditUserProfileViewControllerDelegate
         wrapperTrackEvent(@"ad_register", @"setting_ad_register_clk");
     } else if (cellType == SettingCellTypeAbout) {
         [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:@"fschema://aboutUs"]];
-    }
-    else if (cellType == SettingCellTypeUserProtocol) {
+    }else if(cellType == SettingCellTypeNormalProblem){
+        [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:@"sslocal://sample_lynx_page?channel=lynx_common_question&title=%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98&report_params=%7B%22enter_from%22%3A%22minetab%22%2C%22origin_from%22%3A%22minetab%22%7D"]];
+    }else if (cellType == SettingCellTypeUserProtocol) {
         // 用户协议
         NSString *urlStr = [ArticleURLSetting userProtocolURLString];
         if (urlStr.length > 0) {
