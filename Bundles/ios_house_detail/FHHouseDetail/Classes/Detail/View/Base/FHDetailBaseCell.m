@@ -74,6 +74,10 @@
     return [self class];
 }
 
++ (CGSize )cellSizeWithData:(id)data width:(CGFloat )width {
+    return CGSizeMake(width, 0);
+}
+
 + (NSString *)cellIdentifier {
     return NSStringFromClass([self cellViewClass]);
 }

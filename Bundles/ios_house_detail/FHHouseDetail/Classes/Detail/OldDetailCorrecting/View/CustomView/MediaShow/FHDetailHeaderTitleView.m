@@ -331,7 +331,7 @@
     
     CGFloat topHeight = 0;
     CGFloat tagTop = tags.count > 0 ? 16 : 0;//在没有tagtop的时候更向下
-    CGFloat tagBottom = tags.count > 0 ? 16 : 0;
+//    CGFloat tagBottom = tags.count > 0 ? 16 : 0;
     
     if (model.isFloorPan) {
         [self setFloorPanModel];

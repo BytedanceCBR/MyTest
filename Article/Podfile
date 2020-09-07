@@ -487,8 +487,8 @@ def appPods
     #IMSDK升级，分支依赖方式
     pod 'lz4', '1.0.1'
     pod 'ByteRtcSDK', '2.6.13'
-#    pod 'TTIMSDK', :git => 'git@code.byted.org:im/TIMSDK.git', :branch => 'yang_branchf', :subspecs => [
-    pod 'TTIMSDK', :git => 'git@code.byted.org:im/TIMSDK.git', :commit => '8f6be111e5ab09566f33459fc3e5d7ccaad72c31', :subspecs => [
+    pod 'TTIMSDK', :git => 'git@code.byted.org:im/TIMSDK.git', :branch => 'yang_release_1.0', :subspecs => [
+#    pod 'TTIMSDK', :git => 'git@code.byted.org:im/TIMSDK.git', :commit => '8f6be111e5ab09566f33459fc3e5d7ccaad72c31', :subspecs => [
         'IMKit_Default',
         'IMKit_WebSocket',
         'IMKit_Core',
@@ -517,7 +517,9 @@ def appPods
         'Bridges'
     ]
     
-    pod_binary 'IGListKit','3.4.0'
+    #pod_binary 'IGListKit','3.4.0'
+    pod 'IGListKit','4.0.0'
+    pod 'IGListDiffKit','4.0.0'
     pod_binary 'Bolts', '1.9.0'
     pod_binary 'ToutiaoFrontierWebSocket' , '0.2.5'
     # pod_binary 'WCDB', '1.0.7.5'

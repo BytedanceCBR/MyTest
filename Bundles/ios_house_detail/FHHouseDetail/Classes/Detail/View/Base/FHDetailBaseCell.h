@@ -9,12 +9,14 @@
 #import "Masonry.h"
 #import "UIFont+House.h"
 #import "UIColor+Theme.h"
+#import "UILabel+House.h"
 #import "TTDeviceHelper.h"
 #import "FHUserTracker.h"
 #import "FHHouseTypeManager.h"
 #import "FHHouseDetailBaseViewModel.h"
 #import "FHHouseShadowImageType.h"
 #import "FHDetailCommonDefine.h"
+#import <FHHouseBase/UIImage+FIconFont.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -75,6 +77,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 // 子类需要重写的方法，根据数据源刷新当前Cell，以及布局
 - (void)refreshWithData:(id)data;
+
++ (CGSize )cellSizeWithData:(id)data width:(CGFloat )width;
 
 // Cell点击事件，可以不用实现
 @property (nonatomic, copy)     dispatch_block_t       didClickCellBlk;
