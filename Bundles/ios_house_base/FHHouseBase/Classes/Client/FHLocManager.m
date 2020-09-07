@@ -484,7 +484,7 @@ NSString * const kFHTopSwitchCityLocalKey = @"f_switch_city_top_time_local_key";
                 
                 
                 // 拉取小端运营窗口弹窗配置信息
-                [[FHPopupViewManager shared] fetchData];
+                [[FHPopupViewManager shared] fetchDataForCityId:cityId];
                 
                 [FHEnvContext sharedInstance].isSendConfigFromFirstRemote = YES;
                 [wSelf updateAllConfig:model isNeedDiff:NO];
@@ -658,7 +658,7 @@ NSString * const kFHTopSwitchCityLocalKey = @"f_switch_city_top_time_local_key";
             
                 
                 // 拉取小端运营窗口弹窗配置信息
-                [[FHPopupViewManager shared] fetchData];
+                [[FHPopupViewManager shared] fetchDataForCityId:cityId];
                 
                 [FHEnvContext sharedInstance].isSendConfigFromFirstRemote = YES;
                 [wSelf updateAllConfig:model isNeedDiff:NO];
@@ -715,7 +715,7 @@ NSString * const kFHTopSwitchCityLocalKey = @"f_switch_city_top_time_local_key";
         
         if (model.data && completion) {
             completion(YES, model);
-            [[FHPopupViewManager shared] fetchData];
+            [[FHPopupViewManager shared] fetchDataForCityId:cityId];
         }else
         {
             completion(NO, model);
