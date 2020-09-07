@@ -11,10 +11,11 @@
 #import "Masonry.h"
 #import "TTDeviceHelper.h"
 
+#define defaultTitleWidth 58
+
 @interface FHPriceValuationItemView()
 
 @property(nonatomic, strong) UIView *contentView;
-@property(nonatomic, strong) UIImageView *rightImage;
 @property(nonatomic, strong) UILabel *rightLabel;
 
 @end
@@ -81,11 +82,13 @@
     
     if(self.type == FHPriceValuationItemViewTypeNormal){
         [self.contentLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.edges.mas_equalTo(self.contentView);
+            make.left.right.mas_equalTo(self.contentView);
+            make.centerY.mas_equalTo(self.titleLabel);
         }];
     }else{
         [self.textField mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.edges.mas_equalTo(self.contentView);
+            make.left.right.mas_equalTo(self.contentView);
+            make.centerY.mas_equalTo(self.titleLabel).offset(1);
         }];
     }
     
@@ -122,7 +125,7 @@
     if(!_textField){
         _textField = [[UITextField alloc] init];
         _textField.font = [UIFont themeFontRegular:16];
-        _textField.attributedPlaceholder = [[NSAttributedString alloc] initWithString:@"" attributes:@{NSForegroundColorAttributeName: [UIColor themeGray3]}];
+//        _textField.attributedPlaceholder = [[NSAttributedString alloc] initWithString:@"" attributes:@{NSForegroundColorAttributeName: [UIColor redColor]}];
         [_textField setTintColor:[UIColor themeRed3]];
     }
     return _textField;
@@ -185,6 +188,34 @@
     [self.titleLabel mas_updateConstraints:^(MASConstraintMaker *make) {
         make.width.mas_equalTo(titleWidth);
     }];
+}
+
+- (void)setPlaceholder:(NSString *)placeholder {
+    _placeholder = placeholder;
+    if(self.type == FHPriceValuationItemViewTypeTextField){
+        self.textField.placeholder = placeholder;
+        self.textField.attributedPlaceholder = [[NSAttributedString alloc] initWithString:placeholder attributes:@{NSForegroundColorAttributeName: [UIColor themeGray3]}];
+    }else{
+        if(self.contentLabel.text.length > 0){
+            //do nothing
+        }else{
+            self.contentLabel.text = self.placeholder;
+            self.contentLabel.textColor = [UIColor themeGray3];
+        }
+    }
+}
+
+- (void)setContentText:(NSString *)contentText {
+    if(contentText.length > 0){
+        self.contentLabel.text = contentText;
+        self.contentLabel.textColor = [UIColor themeGray1];
+    }else if(self.placeholder.length > 0){
+        self.contentLabel.text = self.placeholder;
+        self.contentLabel.textColor = [UIColor themeGray3];
+    }else{
+        self.contentLabel.text = contentText;
+        self.contentLabel.textColor = [UIColor themeGray1];
+    }
 }
 
 - (void)clickAction:(id)tap {

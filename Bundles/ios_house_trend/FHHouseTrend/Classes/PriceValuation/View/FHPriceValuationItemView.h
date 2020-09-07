@@ -20,9 +20,12 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic, strong) UILabel *titleLabel;
 @property(nonatomic, strong) UILabel *contentLabel;
 @property(nonatomic, strong) UITextField *textField;
+@property(nonatomic, strong) UIImageView *rightImage;
 @property(nonatomic, strong) UIView *bottomLine;
 @property(nonatomic, assign) CGFloat titleWidth;
-@property(nonatomic, strong) NSString *rightText;
+@property(nonatomic, copy) NSString *rightText;
+@property(nonatomic, copy) NSString *placeholder;
+@property(nonatomic, copy) NSString *contentText;
 
 //点击事件
 @property(nonatomic, copy) void(^tapBlock)(void);
