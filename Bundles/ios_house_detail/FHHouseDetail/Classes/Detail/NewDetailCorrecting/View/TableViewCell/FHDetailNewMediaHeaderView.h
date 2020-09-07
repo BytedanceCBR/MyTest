@@ -23,8 +23,6 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy) FHDetailNewMediaHeaderViewEventByIndex willDisplayCellForItemAtIndex;
 //从头图进入图片相册
 @property (nonatomic, copy) FHDetailNewMediaHeaderViewEventByString goToPictureListFrom;
-//滑动到某处
-@property (nonatomic, copy) FHDetailNewMediaHeaderViewEventByIndex scrollToIndex;
 //点击itemView （VR,视频,图片,户型）
 @property (nonatomic, copy) FHDetailNewMediaHeaderViewEventByString didClickItemViewName;
 

@@ -16,6 +16,7 @@
 #import <FHCommonUI/UIFont+House.h>
 #import "FHSearchHouseModel.h"
 #import "FHSingleImageInfoCellModel.h"
+#import "UILabel+BTDAdditions.h"
 
 @interface FHHouseSearchNewHouseCell()
 
@@ -182,10 +183,7 @@
             self.propertyTagLabel.hidden = NO;
             self.propertyTagLabel.text = model.propertyTag.content;
             self.propertyTagLabel.layer.borderColor = [UIColor colorWithHexStr:model.propertyTag.borderColor].CGColor;
-            UILabel *label = [[UILabel alloc] init];
-            label.font = [UIFont themeFontRegular:10];
-            label.text = model.propertyTag.content;
-            CGFloat width = [label sizeThatFits:CGSizeZero].width + 6;
+            CGFloat width = [self.propertyTagLabel btd_widthWithHeight:16] + 6;
             [self.propertyTagLabel mas_updateConstraints:^(MASConstraintMaker *make) {
                 make.width.mas_equalTo(width);
             }];

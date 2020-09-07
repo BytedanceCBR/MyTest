@@ -37,7 +37,7 @@
     return phoneNumber;
 }
 
-+ (NSString *)formattMaskPhoneNumber:(NSString *)phoneNumber {
++ (NSString *)formatMaskPhoneNumber:(NSString *)phoneNumber {
     if (phoneNumber.length >= 11) {
         //151*****010
         NSString *maskPhoneNumber = [NSString stringWithFormat:@"%@*****%@",[phoneNumber substringWithRange:NSMakeRange(0, 3)],[phoneNumber substringWithRange:NSMakeRange(8, 3)]];
@@ -67,7 +67,7 @@
     if (!phoneNumber.length) {
         return;
     }
-    if ([TTAccount sharedAccount].isLogin && [[TTAccount sharedAccount].user.mobile isEqualToString:phoneNumber]) {
+    if ([self isLoginPhoneNumber:phoneNumber]) {
         return;
     }
     YYCache *sendPhoneNumberCache = [[FHEnvContext sharedInstance].generalBizConfig sendPhoneNumberCache];

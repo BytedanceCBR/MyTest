@@ -35,8 +35,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FHDetailNewMediaHeaderDataHelperHeaderViewData : NSObject
 @property (nonatomic, copy) NSArray<FHMultiMediaItemModel*> *mediaItemArray;
-@property (nonatomic, assign) NSInteger pictureNumber;
-@property (nonatomic, assign) NSInteger vrNumber;
+@property (nonatomic, assign) NSUInteger pictureNumber;
+@property (nonatomic, assign) NSUInteger vrNumber;
 @end
 
 @interface FHDetailNewMediaHeaderDataHelperPictureDetailData : NSObject
