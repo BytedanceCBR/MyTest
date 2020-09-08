@@ -66,9 +66,8 @@ def fhPods
     # 'DelegateForC'
     #]
     
-#    pod 'ios_house_im' ,'0.2.16-rc.2'
-#     pod 'ios_house_im' , :path => '../../../im/bugfix'
-#    pod 'ios_house_im' ,'0.2.16-rc.3'
+#   pod 'ios_house_im' , :path => '../../../im/bugfix'
+#   pod 'ios_house_im' ,'0.2.16-rc.3'
     pod 'ios_house_im' , :git => 'git@code.byted.org:fproject/ios_house_im.git' , :commit => '2bf5409fd1b730509bb205239a5cd4596288acd8', :inhibit_warnings => false
 
 end
@@ -489,11 +488,10 @@ def appPods
     #支持自动约束cell缓存高度
     pod_binary 'UITableView+FDTemplateLayoutCell', '1.6'
 
-    #IMSDK升级，分支依赖方式
+    #IMSDK升级
     pod 'lz4', '1.0.1'
     pod 'ByteRtcSDK', '2.6.13'
-#    pod 'TTIMSDK', :git => 'git@code.byted.org:im/TIMSDK.git', :branch => 'yang_branchf', :subspecs => [
-    pod 'TTIMSDK', :git => 'git@code.byted.org:im/TIMSDK.git', :commit => '71b17a7441e1b2c895858420498dcf0af6518e68', :subspecs => [
+    pod 'TTIMSDK', '1.1.3-rc.1-xingfuli', :subspecs => [
         'IMKit_Default',
         'IMKit_WebSocket',
         'IMKit_Core',
@@ -522,7 +520,8 @@ def appPods
         'Bridges'
     ]
     
-    pod_binary 'IGListKit','3.4.0'
+    pod_binary 'IGListKit','4.0.0'
+    pod_binary 'IGListDiffKit','4.0.0'
     pod_binary 'Bolts', '1.9.0'
     pod_binary 'ToutiaoFrontierWebSocket' , '0.2.5'
     # pod_binary 'WCDB', '1.0.7.5'
