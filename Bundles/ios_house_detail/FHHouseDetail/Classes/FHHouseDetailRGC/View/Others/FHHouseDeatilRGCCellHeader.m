@@ -81,8 +81,9 @@
 - (FHRealtorAvatarView *)avatarView {
     if (!_avatarView) {
         _avatarView = [[FHRealtorAvatarView alloc] init];
+        _avatarView.userInteractionEnabled = YES;
         UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(clickImage)];
-        [_avatarView.avatarImageView addGestureRecognizer:tapGesture];
+        [_avatarView addGestureRecognizer:tapGesture];
         [self addSubview:_avatarView];
     }
     return _avatarView;

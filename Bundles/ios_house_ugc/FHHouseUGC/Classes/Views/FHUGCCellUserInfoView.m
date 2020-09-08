@@ -83,11 +83,11 @@
     _avatarView = [[FHRealtorAvatarView alloc] init];
     _avatarView.avatarImageView.layer.borderWidth = 1;
     _avatarView.avatarImageView.layer.borderColor = [UIColor themeGray6].CGColor;
-
+    _avatarView.userInteractionEnabled = YES;
     [self addSubview:_avatarView];
     
     UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(goToPersonalHomePage)];
-    [_avatarView.avatarImageView addGestureRecognizer:tap];
+    [_avatarView addGestureRecognizer:tap];
     
     self.userName = [self LabelWithFont:[UIFont themeFontMedium:16] textColor:[UIColor themeGray1]];
     [self addSubview:_userName];
@@ -293,10 +293,10 @@
     NSString *pageType = self.cellModel.tracerDic[@"page_type"];
     if(pageType && [pageType isEqualToString:@"personal_homepage_detail"]){
         //在个人主页页面 头像和名字不可点击
-        _avatarView.avatarImageView.userInteractionEnabled = NO;
+        _avatarView.userInteractionEnabled = NO;
         _userName.userInteractionEnabled = NO;
     }else{
-        _avatarView.avatarImageView.userInteractionEnabled = YES;
+        _avatarView.userInteractionEnabled = YES;
         _userName.userInteractionEnabled = YES;
     }
     

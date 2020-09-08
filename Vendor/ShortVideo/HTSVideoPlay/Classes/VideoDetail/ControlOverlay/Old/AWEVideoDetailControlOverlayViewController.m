@@ -266,6 +266,7 @@ static const CGFloat kCheckChallengeButtonLeftPadding = 28;
         _userInfoContainerView.backgroundColor = [UIColor clearColor];
 
         _avatarView = [[FHRealtorAvatarView alloc] init];
+        _avatarView.userInteractionEnabled = YES;
         [_userInfoContainerView addSubview:_avatarView];
         // add by zjing 去掉小视频关注
         [_avatarView addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleAvatarClick:)]];
