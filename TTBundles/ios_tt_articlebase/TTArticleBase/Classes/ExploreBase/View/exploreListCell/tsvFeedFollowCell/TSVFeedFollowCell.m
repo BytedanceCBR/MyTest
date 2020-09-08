@@ -318,20 +318,20 @@ static NSString * const kTSVOpenTabHost = @"ugc_video_tab";
 //            fetchManager = [[TSVShortVideoCategoryFetchManager alloc] initWithOrderedDataArray:@[self.orderedData] cardID:nil];
 //            fetchManager.currentIndex = index;
 //        } else {
-            if (self.orderedData.shortVideoOriginalData.shortVideo) {
-                TTShortVideoModel *model = self.orderedData.shortVideoOriginalData.shortVideo;
-                model.listIndex = @0;
-                NSDictionary *trackParams = [self trackParamsDictForData:self.orderedData];
-                model.categoryName = trackParams[@"category_name"];
-                model.enterFrom = trackParams[@"enter_from"];
-                fetchManager = [[TSVShortVideoDecoupledFetchManager alloc] initWithItems:@[model]
-                                                                       requestCategoryID:[NSString stringWithFormat:@"%@_feed_detail_draw", kTTUGCVideoCategoryID]
-                                                                      trackingCategoryID:kTTUGCVideoCategoryID
-                                                                            listEntrance:@"more_shortvideo"];
-                fetchManager.shouldShowNoMoreVideoToast = NO;
-                fetchManager.hasMoreToLoad = NO;
-//            }
-        }
+//            if (self.orderedData.shortVideoOriginalData.shortVideo) {
+//                TTShortVideoModel *model = self.orderedData.shortVideoOriginalData.shortVideo;
+//                model.listIndex = @0;
+//                NSDictionary *trackParams = [self trackParamsDictForData:self.orderedData];
+//                model.categoryName = trackParams[@"category_name"];
+//                model.enterFrom = trackParams[@"enter_from"];
+//                fetchManager = [[TSVShortVideoDecoupledFetchManager alloc] initWithItems:@[model]
+//                                                                       requestCategoryID:[NSString stringWithFormat:@"%@_feed_detail_draw", kTTUGCVideoCategoryID]
+//                                                                      trackingCategoryID:kTTUGCVideoCategoryID
+//                                                                            listEntrance:@"more_shortvideo"];
+//                fetchManager.shouldShowNoMoreVideoToast = NO;
+//                fetchManager.hasMoreToLoad = NO;
+////            }
+//        }
         
         WeakSelf;
         TSVShortVideoDetailExitManager *exitManager = [[TSVShortVideoDetailExitManager alloc] initWithUpdateBlock:^CGRect{
