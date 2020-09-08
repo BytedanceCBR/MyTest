@@ -221,13 +221,11 @@
 //    }
 
     //楼盘动态
-//    if (model.data.timeline.list.count > 0) {
-//
-//        FHDetailNewHouseNewsCellModel *newsCellModel = [[FHDetailNewHouseNewsCellModel alloc] init];
-//        newsCellModel.houseModelType = FHHouseModelTypeNewTimeline;
-//        newsCellModel.timeLineModel = model.data.timeline;
-//        [self.items addObject:newsCellModel];
-//    }
+    if (model.data.timeline.list.count > 0) {
+        FHNewHouseDetailTimelineSM *timeLineSM = [[FHNewHouseDetailTimelineSM alloc] initWithDetailModel:self.detailData];
+        timeLineSM.sectionType = FHNewHouseDetailSectionTypeTimeline;
+        [sectionModels addObject:timeLineSM];
+    }
     
 //    if (model.data.surroundingInfo) {
 //        FHDetailCourtInfoCellModel *infoModel = [[FHDetailCourtInfoCellModel alloc] init];
