@@ -11,6 +11,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FHNewHouseDetailPriceNotifyCollectionCell : FHDetailBaseCollectionCell
 
+@property (nonatomic, copy) void (^openNotifyActionBlock)(void);
+@property (nonatomic, copy) void (^priceChangedNotifyActionBlock)(void);
+
 @end
 
 @interface FHNewHouseDetailPriceNotifyCellModel : NSObject

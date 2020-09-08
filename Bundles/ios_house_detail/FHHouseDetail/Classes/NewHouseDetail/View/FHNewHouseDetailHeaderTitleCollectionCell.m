@@ -40,6 +40,8 @@
         CGFloat tagHeight = tags.count > 0 ? 20 : 0.01;
         
         height += tagHeight;
+        
+        height += 4;
         return CGSizeMake(width, height);
     }
     return CGSizeZero;
@@ -142,7 +144,7 @@
             [self.tagBacView addSubview:label];
             [label mas_makeConstraints:^(MASConstraintMaker *make) {
                 if (idx == 0) {
-                    make.left.equalTo(lastView).offset(16);
+                    make.left.equalTo(lastView).offset(0);
                 }else {
                     make.left.equalTo(lastView.mas_right).offset(inset);
                 }

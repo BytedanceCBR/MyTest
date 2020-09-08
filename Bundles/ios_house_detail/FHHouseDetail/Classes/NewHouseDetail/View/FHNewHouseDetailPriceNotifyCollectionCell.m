@@ -96,51 +96,16 @@
 //    FHNewHouseDetailPriceNotifyCellModel *model = (FHNewHouseDetailPriceNotifyCellModel *)data;
 }
 
-- (void)openNotifyActionClick
-{
-//    FHNewHouseDetailPriceNotifyCellModel *model = (FHNewHouseDetailPriceNotifyCellModel *)self.currentData;
-//    if ([model.contactModel isKindOfClass:[FHHouseDetailContactViewModel class]]) {
-//        FHHouseDetailContactViewModel *contactViewModel = (FHHouseDetailContactViewModel *)model.contactModel;
-//
-//        NSString *title = @"开盘通知";
-//        NSString *subtitle = @"订阅开盘通知，楼盘开盘信息会及时发送到您的手机";
-//        NSString *btnTitle = @"提交";
-//        NSMutableDictionary *associateParamDict = @{}.mutableCopy;
-//        associateParamDict[kFHAssociateInfo] = model.openAssociateInfo.reportFormInfo;
-//        NSMutableDictionary *reportParamsDict = [contactViewModel baseParams].mutableCopy;
-//        reportParamsDict[@"position"] = @"on_sell";
-//        associateParamDict[kFHReportParams] = reportParamsDict;
-//
-//        associateParamDict[@"title"] = title;
-//        associateParamDict[@"subtitle"] = subtitle;
-//        associateParamDict[@"btn_title"] = btnTitle;
-//        associateParamDict[@"toast"] = @"订阅成功，稍后会有置业顾问联系您";
-//
-//        [contactViewModel fillFormActionWithParams:associateParamDict];
-//    }
+- (void)openNotifyActionClick {
+    if (self.openNotifyActionBlock) {
+        self.openNotifyActionBlock();
+    }
 }
 
-- (void)priceChangedNotifyActionClick
-{
-//    FHDetailNewPriceNotifyCellModel *model = (FHDetailNewPriceNotifyCellModel *)self.currentData;
-//    if ([model.contactModel isKindOfClass:[FHHouseDetailContactViewModel class]]) {
-//        FHHouseDetailContactViewModel *contactViewModel = (FHHouseDetailContactViewModel *)model.contactModel;
-//        NSString *title = @"变价通知";
-//        NSString *subtitle = @"订阅变价通知，楼盘变价信息会及时发送到您的手机";
-//        NSString *btnTitle = @"提交";
-//        NSMutableDictionary *associateParamDict = @{}.mutableCopy;
-//        associateParamDict[kFHAssociateInfo] = model.priceAssociateInfo.reportFormInfo;
-//        NSMutableDictionary *reportParamsDict = [contactViewModel baseParams].mutableCopy;
-//        reportParamsDict[@"position"] = @"change_price";
-//        associateParamDict[kFHReportParams] = reportParamsDict;
-//        
-//        associateParamDict[@"title"] = title;
-//        associateParamDict[@"subtitle"] = subtitle;
-//        associateParamDict[@"btn_title"] = btnTitle;
-//        associateParamDict[@"toast"] = @"订阅成功，稍后会有置业顾问联系您";
-//
-//        [contactViewModel fillFormActionWithParams:associateParamDict];
-//    }
+- (void)priceChangedNotifyActionClick {
+    if (self.priceChangedNotifyActionBlock) {
+        self.priceChangedNotifyActionBlock();
+    }
 }
 
 - (NSString *)elementTypeString:(FHHouseType)houseType

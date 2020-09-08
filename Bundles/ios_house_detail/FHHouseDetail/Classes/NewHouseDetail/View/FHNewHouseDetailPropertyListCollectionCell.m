@@ -33,6 +33,7 @@
         CGFloat height = 0;
         height += singles.count * 28;
         height += ceilf(doubleCount/2.0) * 28;
+        height += 10;
         return CGSizeMake(width, height);
     }
     return CGSizeZero;
@@ -76,7 +77,6 @@
         __block NSInteger doubleCount = 0;// 两列计数
         __block CGFloat topOffset = 2;// 高度
         __block CGFloat listRowHeight = 28;//  原来间距是10 现在调整为8,文字距离item的顶部10,文字高20
-        __block CGFloat lastViewLeftOffset = 20;
         __block CGFloat lastTopOffset = 20;
         CGFloat viewWidth = (self.contentView.bounds.size.width - 30 - 24) / 2;
         
@@ -88,49 +88,34 @@
                 [singles addObject:obj];
             } else {
                 // 两列
+                FHPropertyListCorrectingRowView *rowView = [[FHPropertyListCorrectingRowView alloc] init];
+                rowView.tag = 100+idx;
+                [rowView addTarget:self action:@selector(openUrlDidClick:) forControlEvents:UIControlEventTouchUpInside];
+                [self.contentView addSubview:rowView];
+                [self.itemArray addObject:rowView];
+                rowView.keyLabel.text = obj.attr;
+                rowView.valueLabel.text = obj.value;
+                rowView.keyLabel.font = [UIFont themeFontRegular:14];
+                rowView.valueLabel.font = [UIFont themeFontMedium:14];
+                rowView.valueLabel.textColor = obj.color.length > 0 ? [UIColor colorWithHexString:obj.color] : [UIColor themeGray1];
+                lastView = rowView;
+                lastTopOffset = topOffset;
                 if (doubleCount % 2 == 0) {
                     // 第1列
-                    FHPropertyListCorrectingRowView *v = [[FHPropertyListCorrectingRowView alloc] init];
-                    v.tag = 100+idx;
-                    [v addTarget:self action:@selector(openUrlDidClick:) forControlEvents:UIControlEventTouchUpInside];
-                    [self.contentView addSubview:v];
-                    [self.itemArray addObject:v];
-                    [v mas_makeConstraints:^(MASConstraintMaker *make) {
+                    [rowView mas_makeConstraints:^(MASConstraintMaker *make) {
                         make.top.mas_equalTo(topOffset);
                         make.left.mas_equalTo(15);
                         make.width.mas_equalTo(viewWidth);
                         make.height.mas_equalTo(listRowHeight);
                     }];
-                    v.keyLabel.text = obj.attr;
-                    v.valueLabel.text = obj.value;
-                    v.keyLabel.font = [UIFont themeFontRegular:14];
-                    v.valueLabel.font = [UIFont themeFontMedium:14];
-                    v.valueLabel.textColor = obj.color.length > 0 ? [UIColor colorWithHexString:obj.color] : [UIColor themeGray1];
-                    lastView = v;
-                    lastViewLeftOffset = 20;
-                    lastTopOffset = topOffset;
                 } else {
                     // 第2列
-                    FHPropertyListCorrectingRowView *v = [[FHPropertyListCorrectingRowView alloc] init];
-                    v.tag = 100+idx;
-                    [v addTarget:self action:@selector(openUrlDidClick:) forControlEvents:UIControlEventTouchUpInside];
-                    [self.contentView addSubview:v];
-                    [self.itemArray addObject:v];
-                    [v mas_makeConstraints:^(MASConstraintMaker *make) {
+                    [rowView mas_makeConstraints:^(MASConstraintMaker *make) {
                         make.top.mas_equalTo(topOffset);
                         make.left.mas_equalTo(15 + viewWidth);
                         make.width.mas_equalTo(viewWidth);
                         make.height.mas_equalTo(listRowHeight);
                     }];
-                    v.keyLabel.text = obj.attr;
-                    v.valueLabel.text = obj.value;
-                    v.keyLabel.font = [UIFont themeFontRegular:14];
-                    v.valueLabel.font = [UIFont themeFontMedium:14];
-                    v.valueLabel.textColor = obj.color.length > 0 ? [UIColor colorWithHexString:obj.color] : [UIColor themeGray1];
-                    lastView = v;
-                    lastViewLeftOffset = 20 + viewWidth;
-                    lastTopOffset = topOffset;
-                    //
                     topOffset += listRowHeight;
                 }
                 doubleCount += 1;
@@ -141,38 +126,28 @@
             // 重新计算topOffset
             topOffset = 6 + (doubleCount / 2 + doubleCount % 2) * listRowHeight;
             [singles enumerateObjectsUsingBlock:^(FHHouseBaseInfoModel*  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-                FHPropertyListCorrectingRowView *v = [[FHPropertyListCorrectingRowView alloc] init];
-                v.tag = 100+obj.realIndex;
-                [v addTarget:self action:@selector(openUrlDidClick:) forControlEvents:UIControlEventTouchUpInside];
-                [self.contentView addSubview:v];
-                [self.itemArray addObject:v];
-                [v mas_makeConstraints:^(MASConstraintMaker *make) {
+                FHPropertyListCorrectingRowView *rowView = [[FHPropertyListCorrectingRowView alloc] init];
+                rowView.tag = 100+obj.realIndex;
+                [rowView addTarget:self action:@selector(openUrlDidClick:) forControlEvents:UIControlEventTouchUpInside];
+                [self.contentView addSubview:rowView];
+                [self.itemArray addObject:rowView];
+                [rowView mas_makeConstraints:^(MASConstraintMaker *make) {
                     make.top.mas_equalTo(topOffset);
                     make.left.mas_equalTo(15);
                     make.width.mas_equalTo(viewWidth * 2);
                     make.height.mas_equalTo(listRowHeight);
                 }];
-                v.keyLabel.text = obj.attr;
-                v.valueLabel.text = obj.value;
-                v.keyLabel.font = [UIFont themeFontRegular:14];
-                v.valueLabel.font = [UIFont themeFontMedium:14];
-                v.valueLabel.textColor = obj.color.length > 0 ? [UIColor colorWithHexString:obj.color] : [UIColor themeGray1];
-                lastView = v;
-                lastViewLeftOffset = 20;
+                rowView.keyLabel.text = obj.attr;
+                rowView.valueLabel.text = obj.value;
+                rowView.keyLabel.font = [UIFont themeFontRegular:14];
+                rowView.valueLabel.font = [UIFont themeFontMedium:14];
+                rowView.valueLabel.textColor = obj.color.length > 0 ? [UIColor colorWithHexString:obj.color] : [UIColor themeGray1];
+                lastView = rowView;
                 lastTopOffset = topOffset;
-    
                 topOffset += listRowHeight;
             }];
         }
-        CGFloat btnTop = 6;
-        [self.detailBtn mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.top.mas_equalTo(btnTop + 14);
-        }];
     }
-//    [lastView mas_updateConstraints:^(MASConstraintMaker *make) {
-//        make.bottom.mas_equalTo(self).offset(-16);
-//    }];
-
 }
 
 - (void)openUrlDidClick:(UIControl *)btn

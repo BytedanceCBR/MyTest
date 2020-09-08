@@ -17,8 +17,6 @@ NS_ASSUME_NONNULL_BEGIN
 @interface FHNewHouseDetailMultiFloorpanCellModel : NSObject
 
 @property (nonatomic, strong , nullable) FHDetailNewDataFloorpanListModel *floorPanList;
-//@property (nonatomic, weak)     UITableView       *tableView;
-//@property (nonatomic, weak) FHHouseDetailContactViewModel *contactViewModel;
 
 @end
 
