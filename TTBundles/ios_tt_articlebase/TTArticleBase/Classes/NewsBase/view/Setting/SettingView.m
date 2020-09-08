@@ -1585,7 +1585,7 @@ TTEditUserProfileViewControllerDelegate
             param[@"click_position"] = @"close";
             TRACK_EVENT(@"popup_click", param);
             [[NSNotificationCenter defaultCenter] postNotificationName:@"personalrecommend" object:self];
-            [self setPersonalizedStatus:1];//1表示关闭个性化推荐
+            [self setPersonalizedStatus:0];//1表示打开个性化推荐
         }];
         [alert addActionWithTitle:NSLocalizedString(@"我在想想", nil) actionType:TTThemedAlertActionTypeNormal actionBlock:^{
             [_personalRecommendSwitch setOn:YES];
@@ -1605,11 +1605,11 @@ TTEditUserProfileViewControllerDelegate
         [alert showFrom:self.viewController animated:YES];
     }else{
         [FHEnvContext savePersonalRecommend:YES];
-        [self setPersonalizedStatus:0];//0表示打开个性化推荐
+        [self setPersonalizedStatus:1];//0表示关闭个性化推荐
         [[NSNotificationCenter defaultCenter] postNotificationName:@"personalrecommend" object:self];
     }
 }
-
+//上报个性化推荐状态的接口
 - (void)setPersonalizedStatus:(int)personalizedStatus
 {
     NSString* queryPath = @"/f100/api/set_personalized_status";
