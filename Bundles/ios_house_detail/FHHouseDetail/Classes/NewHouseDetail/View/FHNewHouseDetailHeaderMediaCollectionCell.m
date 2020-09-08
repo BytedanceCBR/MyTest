@@ -123,13 +123,13 @@
         return;
     }
     __weak typeof(self) weakSelf = self;
-    self.detailViewController.ttNeedIgnoreZoomAnimation = YES;
+   // self.detailViewController.ttNeedIgnoreZoomAnimation = YES;
     FHDetailPictureViewController *pictureDetailViewController = [[FHDetailPictureViewController alloc] init];
     pictureDetailViewController.houseType = FHHouseTypeNewHouse;
     if (self.pictureListViewController) {
         pictureDetailViewController.topVC = self.pictureListViewController;
     } else {
-        pictureDetailViewController.topVC = self.detailViewController;
+        pictureDetailViewController.topVC = [TTUIResponderHelper topViewControllerFor:self];
     }
 
     FHNewHouseDetailHeaderMediaModel *model = (FHNewHouseDetailHeaderMediaModel *)self.currentData;

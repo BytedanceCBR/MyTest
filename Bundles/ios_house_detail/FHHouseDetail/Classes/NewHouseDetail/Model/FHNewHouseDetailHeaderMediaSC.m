@@ -42,7 +42,6 @@
     if (model.items[index] == model.headerCellModel) {
         FHNewHouseDetailHeaderMediaCollectionCell *cell = [self.collectionContext dequeueReusableCellOfClass:[FHNewHouseDetailHeaderMediaCollectionCell class] withReuseIdentifier:NSStringFromClass([model.headerCellModel class]) forSectionController:self atIndex:index];
         cell.detailTracerDict = self.detailTracerDict.copy;
-        cell.detailViewController = [self detailViewController];
         [cell refreshWithData:model.headerCellModel];
         return cell;
     }

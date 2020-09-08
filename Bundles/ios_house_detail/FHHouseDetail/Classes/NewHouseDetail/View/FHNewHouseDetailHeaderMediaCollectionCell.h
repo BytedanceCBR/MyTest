@@ -16,7 +16,6 @@ NS_ASSUME_NONNULL_BEGIN
 @interface FHNewHouseDetailHeaderMediaCollectionCell : FHDetailBaseCollectionCell
 
 @property (nonatomic, strong, nullable) NSDictionary *detailTracerDict;
-@property (nonatomic, weak) FHNewHouseDetailViewController *detailViewController;
 @end
 
 @interface FHNewHouseDetailHeaderMediaModel : FHDetailBaseModel
