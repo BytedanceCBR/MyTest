@@ -11,7 +11,6 @@
 
 @interface FHNewHouseDetailMultiFloorpanCollectionCell ()<UICollectionViewDelegate,UICollectionViewDataSource>
 
-@property (nonatomic, strong) FHDetailHeaderView *headerView;
 @property (nonatomic, strong) NSMutableDictionary *houseShowCache;
 @property (nonatomic, strong) NSMutableDictionary *subHouseShowCache;
 @property (strong, nonatomic) UICollectionView *collectionView;
@@ -52,19 +51,7 @@
     if (self = [super initWithFrame:frame]) {
         self.houseShowCache = [NSMutableDictionary new];
         self.subHouseShowCache = [NSMutableDictionary new];
-        
-        _headerView = [[FHDetailHeaderView alloc] init];
-        _headerView.label.text = @"楼盘户型";
-        _headerView.backgroundColor = [UIColor clearColor];
-        [self.headerView addTarget:self action:@selector(moreButtonClick:) forControlEvents:UIControlEventTouchUpInside];
-        [self.contentView addSubview:_headerView];
-        [self.headerView mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.left.mas_equalTo(0);
-            make.right.mas_equalTo(0);
-            make.top.mas_equalTo(0);
-            make.height.mas_equalTo(46);
-        }];
-        
+    
         self.flowLayout = [[UICollectionViewFlowLayout alloc] init];
         self.flowLayout.sectionInset = UIEdgeInsetsMake(0, 16, 0, 16);
         self.flowLayout.itemSize = CGSizeMake(120, 190);
@@ -78,7 +65,7 @@
         [self.collectionView registerClass:[FHDetailNewMutiFloorPanCollectionCell class] forCellWithReuseIdentifier:NSStringFromClass([FHDetailNewMutiFloorPanCollectionCell class])];
         
         [self.collectionView mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.top.mas_equalTo(self.headerView.mas_bottom);
+            make.top.mas_equalTo(0);
             make.left.right.mas_equalTo(self.contentView);
             make.bottom.mas_equalTo(self.contentView).mas_offset(-9);
         }];
@@ -105,20 +92,7 @@
                 hasIM = YES;
             }
         }
-        if (model.totalNumber.length > 0) {
-            self.headerView.label.text = [NSString stringWithFormat:@"户型介绍（%@）",model.totalNumber];
-            if (model.totalNumber.integerValue >= 3) {
-                self.headerView.isShowLoadMore = YES;
-                self.headerView.userInteractionEnabled = YES;
-            } else {
-                self.headerView.isShowLoadMore = NO;
-                self.headerView.userInteractionEnabled = NO;
-            }
-        } else {
-            self.headerView.label.text = @"户型介绍";
-            self.headerView.isShowLoadMore = NO;
-            self.headerView.userInteractionEnabled = NO;
-        }
+
         CGFloat itemHeight = 190;
         if (hasIM) {
             itemHeight = 190 + 30;

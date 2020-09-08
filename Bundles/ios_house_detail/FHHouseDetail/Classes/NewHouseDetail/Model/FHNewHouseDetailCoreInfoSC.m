@@ -22,12 +22,6 @@
     return self;
 }
 
-- (void)didUpdateToObject:(id)object {
-    if (object && [object isKindOfClass:[FHNewHouseDetailCoreInfoSM class]]) {
-        self.sectionModel = object;
-    }
-}
-
 - (NSInteger)numberOfItems {
     FHNewHouseDetailCoreInfoSM *model = (FHNewHouseDetailCoreInfoSM *)self.sectionModel;
     return model.items.count;

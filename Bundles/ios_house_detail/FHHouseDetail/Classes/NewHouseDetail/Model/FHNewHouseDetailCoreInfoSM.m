@@ -63,7 +63,7 @@
 }
 
 - (BOOL)isEqualToDiffableObject:(id<IGListDiffable>)object {
-    return YES;
+    return self == object;
 }
 
 @end

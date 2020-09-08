@@ -5,15 +5,18 @@
 //  Created by bytedance on 2020/9/6.
 //
 
-#import "IGListSectionController.h"
+#import <IGListKit/IGListKit.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
-@class FHNewHouseDetailSectionModel;
+@class FHNewHouseDetailSectionModel,FHNewHouseDetailViewController;
 @interface FHNewHouseDetailSectionController : IGListSectionController
 
-@property (nonatomic, strong) FHNewHouseDetailSectionModel *sectionModel;
+@property (nonatomic, strong, nullable, readonly) FHNewHouseDetailSectionModel *sectionModel;
 
+@property (nonatomic, weak, nullable, readonly) FHNewHouseDetailViewController *detailViewController;
+
+- (void)didUpdateToObject:(id)object NS_REQUIRES_SUPER;
 @end
 
 NS_ASSUME_NONNULL_END

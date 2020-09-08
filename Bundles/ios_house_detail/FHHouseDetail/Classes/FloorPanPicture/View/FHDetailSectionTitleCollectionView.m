@@ -22,8 +22,25 @@
             make.left.mas_equalTo(15);
             make.centerY.mas_equalTo(self);
         }];
+        
+        self.arrowsImg = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"arrowicon-feed-4"]];
+        self.arrowsImg.hidden = YES;
+        [self addSubview:self.arrowsImg];
+        [self.arrowsImg mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.right.mas_equalTo(self).offset(-12);
+            make.height.width.mas_equalTo(20);
+            make.centerY.mas_equalTo(self);
+        }];
+        
+        [self addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(moreAction:)]];
     }
     return self;
+}
+
+- (void)moreAction:(UITapGestureRecognizer *)tapGesture {
+    if (self.moreActionBlock) {
+        self.moreActionBlock();
+    }
 }
 
 @end

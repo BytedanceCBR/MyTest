@@ -13,6 +13,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, strong) UILabel *titleLabel;
 
+@property (nonatomic, strong) UIImageView *arrowsImg;
+
+@property (nonatomic, copy) void (^moreActionBlock)(void);
+
 @end
 
 NS_ASSUME_NONNULL_END

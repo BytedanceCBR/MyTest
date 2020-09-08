@@ -7,13 +7,21 @@
 
 #import "FHNewHouseDetailSectionController.h"
 #import "FHNewHouseDetailSectionModel.h"
+#import "FHNewHouseDetailViewController.h"
 
 @implementation FHNewHouseDetailSectionController
 
-- (void)didUpdateToObject:(id)object {
+- (void)didUpdateToObject:(id)object{
     if (object && [object isKindOfClass:[FHNewHouseDetailSectionModel class]]) {
-        self.sectionModel = (FHNewHouseDetailSectionModel *)object;
+        _sectionModel = (FHNewHouseDetailSectionModel *)object;
     }
+}
+
+- (FHNewHouseDetailViewController *)detailViewController {
+    if (self.viewController && [self.viewController isKindOfClass:[FHNewHouseDetailViewController class]]) {
+        return (FHNewHouseDetailViewController *)self.viewController;
+    }
+    return nil;
 }
 
 @end
