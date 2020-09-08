@@ -9,7 +9,11 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+@class FHNewHouseDetailSectionModel;
+
 @interface FHNewHouseDetailFlowLayout : UICollectionViewFlowLayout
+
+@property (nonatomic, copy) NSArray<FHNewHouseDetailSectionModel *> *sectionModels;
 
 @end
 

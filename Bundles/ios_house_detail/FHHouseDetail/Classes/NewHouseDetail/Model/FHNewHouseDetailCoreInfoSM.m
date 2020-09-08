@@ -6,6 +6,7 @@
 //
 
 #import "FHNewHouseDetailCoreInfoSM.h"
+#import "FHDetailHouseNameCell.h"
 
 @implementation FHNewHouseDetailCoreInfoSM
 
@@ -29,7 +30,18 @@
 //        disclaimerModel.disclaimer =  [[FHDisclaimerModel alloc] initWithData:[model.data.disclaimer toJSONData] error:nil];
 //        disclaimerModel.contact = model.data.contact ;
 //        houseCore.disclaimerModel = disclaimerModel;
-//        houseCore.houseName = houseName;
+        
+        FHDetailHouseNameModel *houseName = [[FHDetailHouseNameModel alloc] init];
+        // 添加标题
+        if (model.data) {
+            houseName.type = 1;
+            houseName.name = model.data.coreInfo.name;
+            houseName.aliasName = model.data.coreInfo.aliasName;
+            houseName.type = 2;
+            houseName.tags = model.data.tags;
+            //        [self.items addObject:houseName];
+        }
+        houseCore.houseName = houseName;
         houseCore.courtId = model.data.coreInfo.id;
         self.propertyListCellModel = houseCore;
         [items addObject:self.propertyListCellModel];

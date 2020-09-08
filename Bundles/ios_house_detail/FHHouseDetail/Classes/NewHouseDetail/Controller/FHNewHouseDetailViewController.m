@@ -232,6 +232,7 @@
     __weak typeof(self) weakSelf = self;
     [self.KVOController observe:self.viewModel keyPath:@"sectionModels" options:NSKeyValueObservingOptionNew block:^(id  _Nullable observer, id  _Nonnull object, NSDictionary<NSString *,id> * _Nonnull change) {
         if (change[NSKeyValueChangeNewKey] && [change[NSKeyValueChangeNewKey] isKindOfClass:[NSArray class]]) {
+            weakSelf.detailFlowLayout.sectionModels = weakSelf.viewModel.sectionModels;
             [weakSelf.listAdapter performUpdatesAnimated:NO completion:^(BOOL finished) {
                 
             }];

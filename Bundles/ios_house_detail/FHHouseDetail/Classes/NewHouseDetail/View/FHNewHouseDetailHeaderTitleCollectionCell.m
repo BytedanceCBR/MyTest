@@ -56,6 +56,12 @@
         }];
         self.topBanner.hidden = YES;
         
+        [self.topBanner.containerView mas_remakeConstraints:^(MASConstraintMaker *make) {
+            make.top.bottom.mas_equalTo(0);
+            make.left.mas_equalTo(0);
+            make.right.mas_equalTo(0);
+        }];
+        
         UILabel *nameLabel = [UILabel createLabel:@"" textColor:@"" fontSize:24];
         nameLabel.textColor = [UIColor themeGray1];
         nameLabel.font = [UIFont themeFontMedium:24];

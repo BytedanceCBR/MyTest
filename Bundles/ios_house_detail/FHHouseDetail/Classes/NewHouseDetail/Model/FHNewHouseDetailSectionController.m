@@ -24,4 +24,12 @@
     return nil;
 }
 
+- (NSDictionary *)detailTracerDict {
+    return self.detailViewController.viewModel.detailTracerDic;
+}
+
+- (NSDictionary *)subPageParams {
+    return self.detailViewController.viewModel.subPageParams;
+}
+
 @end

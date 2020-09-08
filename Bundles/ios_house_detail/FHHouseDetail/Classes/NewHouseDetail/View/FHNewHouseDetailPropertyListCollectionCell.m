@@ -40,18 +40,21 @@
 
 - (instancetype)initWithFrame:(CGRect)frame {
     if (self = [super initWithFrame:frame]) {
-        _detailBtn = [[UIButton alloc]init];
-        UIImage *img = ICON_FONT_IMG(16, @"\U0000e670", [UIColor themeGray3]);
-        [_detailBtn setImage:img forState:UIControlStateNormal];
-        _detailBtn.backgroundColor = [UIColor colorWithHexString:@"#f7f7f7"];
-        _detailBtn.layer.cornerRadius = 4;
-        _detailBtn.layer.masksToBounds = YES;
+        self.detailBtn = [[UIButton alloc] init];
+//        UIImage *img = ICON_FONT_IMG(16, @"\U0000e670", [UIColor themeGray3]);
+//        [_detailBtn setImage:img forState:UIControlStateNormal];
+        self.detailBtn.backgroundColor = [UIColor colorWithHexString:@"#f7f7f7"];
+        self.detailBtn.layer.cornerRadius = 4;
+        self.detailBtn.layer.masksToBounds = YES;
+        [self.detailBtn setTitle:@"详\n情" forState:UIControlStateNormal];
+        self.detailBtn.titleLabel.numberOfLines = 0;
+        [self.detailBtn setTitleColor:[UIColor themeGray2] forState:UIControlStateNormal];
+        self.detailBtn.titleLabel.font = [UIFont themeFontRegular:12];
         [self.contentView addSubview:self.detailBtn];
-
         [self.detailBtn mas_makeConstraints:^(MASConstraintMaker *make) {
             make.right.mas_equalTo(-15);
-            make.height.mas_equalTo(67);
-            make.width.mas_equalTo(21);
+            make.height.mas_equalTo(48);
+            make.width.mas_equalTo(22);
             make.centerY.mas_equalTo(self.contentView);
         }];
         [self.detailBtn addTarget:self action:@selector(detailBtnDidClick:) forControlEvents:UIControlEventTouchUpInside];
@@ -189,31 +192,8 @@
 
 - (void)detailBtnDidClick:(UIButton *)btn
 {
-    FHNewHouseDetailPropertyListCellModel *model = (FHNewHouseDetailPropertyListCellModel *)self.currentData;
-
-    NSString *courtId = model.courtId;
-    if (courtId) {
-//        NSDictionary *dictTrace = self.baseViewModel.detailTracerDic;
-//
-//        NSMutableDictionary *mutableDict = [NSMutableDictionary new];
-//        [mutableDict setValue:dictTrace[@"page_type"] forKey:@"page_type"];
-//        [mutableDict setValue:dictTrace[@"rank"] forKey:@"rank"];
-//        [mutableDict setValue:dictTrace[@"origin_from"] forKey:@"origin_from"];
-//        [mutableDict setValue:dictTrace[@"origin_search_id"] forKey:@"origin_search_id"];
-//        [mutableDict setValue:dictTrace[@"log_pb"] forKey:@"log_pb"];
-//
-//        [FHUserTracker writeEvent:@"click_house_info" params:mutableDict];
-//
-//        NSMutableDictionary *infoDict = [NSMutableDictionary new];
-//        [infoDict addEntriesFromDictionary:[self.baseViewModel subPageParams]];
-//        [infoDict setValue:model.houseName forKey:@"courtInfo"];
-//        if (model.disclaimerModel) {
-//            [infoDict setValue:model.disclaimerModel forKey:@"disclaimerInfo"];
-//        }
-//
-//        TTRouteUserInfo *info = [[TTRouteUserInfo alloc] initWithInfo:infoDict];
-//
-//        [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:[NSString stringWithFormat:@"sslocal://floor_coreinfo_detail?court_id=%@",courtId]] userInfo:info];
+    if (self.detailActionBlock) {
+        self.detailActionBlock();
     }
 }
 

@@ -14,7 +14,11 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, strong, nullable, readonly) FHNewHouseDetailSectionModel *sectionModel;
 
-@property (nonatomic, weak, nullable, readonly) FHNewHouseDetailViewController *detailViewController;
+- (FHNewHouseDetailViewController *)detailViewController;
+
+- (NSDictionary *)detailTracerDict;
+
+- (NSDictionary *)subPageParams;
 
 - (void)didUpdateToObject:(id)object NS_REQUIRES_SUPER;
 @end

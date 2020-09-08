@@ -13,13 +13,15 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FHNewHouseDetailPropertyListCollectionCell : FHDetailBaseCollectionCell
 
+@property (nonatomic, copy) void (^detailActionBlock)(void);
+
 @end
 
 @interface FHNewHouseDetailPropertyListCellModel : NSObject
 
 @property (nonatomic, strong , nullable) NSArray<FHHouseCoreInfoModel> *baseInfo;
 @property (nonatomic, copy, nullable) NSString *courtId;
-//@property (nonatomic, strong)   FHDetailHouseNameModel *houseName;
+@property (nonatomic, strong)   FHDetailHouseNameModel *houseName;
 @property (nonatomic, strong, nullable) FHDetailDisclaimerModel *disclaimerModel;
 
 @end
