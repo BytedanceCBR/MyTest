@@ -34,7 +34,7 @@
         self.pushDetailLabel = [[SSThemedLabel alloc] initWithFrame:CGRectZero];
         self.pushDetailLabel.backgroundColor = [UIColor clearColor];
         self.pushDetailLabel.font = [UIFont systemFontOfSize:kPushCellFontSize];
-        self.pushDetailLabel.textColor = [UIColor grayColor];
+        self.pushDetailLabel.textColor = [UIColor colorWithHexString:@"#999999"];
         self.pushDetailLabel.numberOfLines = 0;
         self.pushDetailLabel.lineBreakMode = NSLineBreakByWordWrapping;
         [self.contentView addSubview:self.pushDetailLabel];
@@ -58,7 +58,7 @@
         self.pushDetailLabel.size = size;
         CGFloat totalHeight = self.pushTitleLabel.height + kPushCellDetailLabelTopPadding + self.pushDetailLabel.height;
         self.pushTitleLabel.origin = CGPointMake(kPushCellLeftPadding, kPushCellTopPadding);
-        self.pushDetailLabel.origin = CGPointMake(kPushCellLeftPadding, self.pushTitleLabel.bottom + 13);
+        self.pushDetailLabel.origin = CGPointMake(kPushCellLeftPadding, self.pushTitleLabel.bottom + [TTDeviceUIUtils tt_padding:11]);
         self.accessoryView.origin = CGPointMake([TTDeviceUIUtils tt_padding:313.f], self.pushTitleLabel.top);
     }
     self.topLine.frame = CGRectMake(kPushCellLeftPadding, 0, self.width - kPushCellLeftPadding, [TTDeviceHelper ssOnePixel]);

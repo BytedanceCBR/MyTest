@@ -12,8 +12,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FHHomeSectionHeader : UIView
 
-@property (nonatomic, strong) UILabel * categoryLabel;
-
 @property (nonatomic, copy) void (^clickIndexCallBack)(NSInteger indexValue);
 
 @property (nonatomic, strong) HMSegmentedControl *segmentedControl;

@@ -20,7 +20,7 @@ static const float kSegementedPadingTop = 0;
 static const NSInteger kTopScrollViewTag = 100;
 
 @interface FHHomeSectionHeader ()
-
+@property (nonatomic, strong) UILabel * categoryLabel;
 @property (nonatomic, strong) NSArray <NSString *> * sectionTitleArray;
 @property (nonatomic, assign) NSInteger currentIndex;
 @property (nonatomic, strong) UIView *topStyleContainer;
@@ -40,7 +40,7 @@ static const NSInteger kTopScrollViewTag = 100;
         self.categoryLabel = [UILabel new];
         self.categoryLabel.font = [UIFont themeFontSemibold:[TTDeviceHelper isScreenWidthLarge320] ? 18 : 14];
         self.categoryLabel.textColor = [UIColor themeGray1];
-         self.categoryLabel.text = [FHEnvContext getPersonalRecommend]? @"为你推荐":@"为你找到";
+        self.categoryLabel.text = @"为你推荐";
         self.backgroundColor = [UIColor themeHomeColor];
         [self addSubview:self.categoryLabel];
         self.categoryLabel.frame = CGRectMake(15, 0, 100, 30);

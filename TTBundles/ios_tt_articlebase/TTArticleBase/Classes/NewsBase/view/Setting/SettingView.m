@@ -1406,6 +1406,11 @@ TTEditUserProfileViewControllerDelegate
         [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:@"fschema://aboutUs"]];
     }else if(cellType == SettingCellTypeNormalProblem){
         [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:@"sslocal://sample_lynx_page?channel=lynx_common_question&title=%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98&report_params=%7B%22enter_from%22%3A%22minetab%22%2C%22origin_from%22%3A%22minetab%22%7D"]];
+        NSMutableDictionary *param = [NSMutableDictionary new];
+        param[@"orgin_from"] = @"minetab";
+        param[@"enter_from"] = @"minetab";
+        param[@"page_type"] = @"setting";
+        TRACK_EVENT(@"click_icon", param);
     }else if (cellType == SettingCellTypeUserProtocol) {
         // 用户协议
         NSString *urlStr = [ArticleURLSetting userProtocolURLString];
@@ -1570,21 +1575,37 @@ TTEditUserProfileViewControllerDelegate
 {
     if(_personalRecommendSwitch.on == NO){
         TTThemedAlertController *alert = [[TTThemedAlertController alloc] initWithTitle:nil message:NSLocalizedString(@"关闭个性化推荐之后，您将无法接收到幸福里的专属推荐的精选房源", nil) preferredType:TTThemedAlertControllerTypeAlert];
-        [alert addActionWithGrayTitle:NSLocalizedString(@"关闭", nil) actionType:TTThemedAlertActionTypeNormal actionBlock:^{
+        [alert addActionWithGrayTitle:NSLocalizedString(@"坚持关闭", nil) actionType:TTThemedAlertActionTypeNormal actionBlock:^{
             [FHEnvContext savePersonalRecommend:NO];
+            NSMutableDictionary *param = [NSMutableDictionary new];
+            param[@"popup_name"] = @"personal_recommend_settings";
+            param[@"page_type"] = @"setting";
+            param[@"click_position"] = @"close";
+            TRACK_EVENT(@"popup_click", param);
             [[NSNotificationCenter defaultCenter] postNotificationName:@"personalrecommend" object:self];
         }];
         
         [alert addActionWithTitle:NSLocalizedString(@"我在想想", nil) actionType:TTThemedAlertActionTypeNormal actionBlock:^{
             [_personalRecommendSwitch setOn:YES];
             [FHEnvContext savePersonalRecommend:YES];
+            NSMutableDictionary *param = [NSMutableDictionary new];
+            param[@"popup_name"] = @"personal_recommend_settings";
+            param[@"page_type"] = @"setting";
+            param[@"click_position"] = @"cancel";
+            TRACK_EVENT(@"popup_click", param);
             [[NSNotificationCenter defaultCenter] postNotificationName:@"personalrecommend" object:self];
         }];
         [alert showFrom:self.viewController animated:YES];
-        
+        NSMutableDictionary *param = [NSMutableDictionary new];
+        param[@"status"] = @"open";
+        param[@"popup_name"] = @"personal_recommend_settings";
+        param[@"page_type"] = @"setting";
+        TRACK_EVENT(@"popup_show", param);
     }
     else{
         [FHEnvContext savePersonalRecommend:YES];
+        
+        NSMutableDictionary *param = [NSMutableDictionary new];
         [[NSNotificationCenter defaultCenter] postNotificationName:@"personalrecommend" object:self];
     }
 }
