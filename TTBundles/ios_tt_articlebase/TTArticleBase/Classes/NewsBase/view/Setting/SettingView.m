@@ -1570,9 +1570,10 @@ TTEditUserProfileViewControllerDelegate
     UIViewController *topController = [TTUIResponderHelper topViewControllerFor: self];
     [topController.navigationController pushViewController:feedbackViewController animated:YES];
 }
-
+//关闭个性化推荐二次弹窗确认
 - (void)secondCondirmation
 {
+    //如果点击后switch的状态变为NO
     if(_personalRecommendSwitch.on == NO){
         TTThemedAlertController *alert = [[TTThemedAlertController alloc] initWithTitle:nil message:NSLocalizedString(@"关闭个性化推荐之后，您将无法接收到幸福里的专属推荐的精选房源", nil) preferredType:TTThemedAlertControllerTypeAlert];
         [alert addActionWithGrayTitle:NSLocalizedString(@"坚持关闭", nil) actionType:TTThemedAlertActionTypeNormal actionBlock:^{
@@ -1584,7 +1585,6 @@ TTEditUserProfileViewControllerDelegate
             TRACK_EVENT(@"popup_click", param);
             [[NSNotificationCenter defaultCenter] postNotificationName:@"personalrecommend" object:self];
         }];
-        
         [alert addActionWithTitle:NSLocalizedString(@"我在想想", nil) actionType:TTThemedAlertActionTypeNormal actionBlock:^{
             [_personalRecommendSwitch setOn:YES];
             [FHEnvContext savePersonalRecommend:YES];
@@ -1595,17 +1595,14 @@ TTEditUserProfileViewControllerDelegate
             TRACK_EVENT(@"popup_click", param);
             [[NSNotificationCenter defaultCenter] postNotificationName:@"personalrecommend" object:self];
         }];
-        [alert showFrom:self.viewController animated:YES];
         NSMutableDictionary *param = [NSMutableDictionary new];
         param[@"status"] = @"open";
         param[@"popup_name"] = @"personal_recommend_settings";
         param[@"page_type"] = @"setting";
         TRACK_EVENT(@"popup_show", param);
-    }
-    else{
+        [alert showFrom:self.viewController animated:YES];
+    }else{
         [FHEnvContext savePersonalRecommend:YES];
-        
-        NSMutableDictionary *param = [NSMutableDictionary new];
         [[NSNotificationCenter defaultCenter] postNotificationName:@"personalrecommend" object:self];
     }
 }
