@@ -7,6 +7,7 @@
 
 #import "FHFloorPanPicShowViewController.h"
 #import "FHFloorPanPicCollectionCell.h"
+#import "FHFloorPanVideoCollectionCell.h"
 #import "UIColor+Theme.h"
 #import "UIFont+House.h"
 #import "TTDeviceHelper.h"
@@ -186,6 +187,7 @@
     //3.注册collectionViewCell
     //注意，此处的ReuseIdentifier 必须和 cellForItemAtIndexPath 方法中 一致 均为 cellId
     [_collectionView registerClass:[FHFloorPanPicCollectionCell class] forCellWithReuseIdentifier:NSStringFromClass([FHFloorPanPicCollectionCell class])];
+    [_collectionView registerClass:[FHFloorPanVideoCollectionCell class] forCellWithReuseIdentifier:NSStringFromClass([FHFloorPanVideoCollectionCell class])];
     
     //注册headerView  此处的ReuseIdentifier 必须和 cellForItemAtIndexPath 方法中 一致  均为reusableView
     [_collectionView registerClass:[FHDetailSectionTitleCollectionView class] forSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:NSStringFromClass([FHDetailSectionTitleCollectionView class])];
