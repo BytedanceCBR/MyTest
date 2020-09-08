@@ -14,7 +14,8 @@ NS_ASSUME_NONNULL_BEGIN
 @end
 
 @interface FHDetailNeighborhoodOwnerSellHouseModel : FHDetailBaseModel
-
+@property(nonatomic,copy) NSString *imgUrl;
+@property(nonatomic,copy) NSString *helpMeSellHouseOpenUrl;
 @end
 
 NS_ASSUME_NONNULL_END

@@ -426,6 +426,8 @@
     }
     //帮我卖房入口
     FHDetailNeighborhoodOwnerSellHouseModel *ownerSellHouseModel = [[FHDetailNeighborhoodOwnerSellHouseModel alloc] init];
+    ownerSellHouseModel.imgUrl = model.data.saleHouseEntrance.img.url;
+    ownerSellHouseModel.helpMeSellHouseOpenUrl = model.data.saleHouseEntrance.openUrl;
     [self.items addObject:ownerSellHouseModel];
     
     
