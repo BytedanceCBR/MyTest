@@ -251,8 +251,7 @@
     };
     TRACK_EVENT(@"click_minetab", clickTrackDic);
     
-//    NSURL* url = [NSURL URLWithString:@"sslocal://more"];
-    NSURL* url = [NSURL URLWithString:@"sslocal://house_sale_input"];
+    NSURL* url = [NSURL URLWithString:@"sslocal://more"];
     [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:nil];
 }
 

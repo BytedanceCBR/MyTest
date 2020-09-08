@@ -13,6 +13,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface FHPriceValuationNSearchView : UIView
 
 @property (nonatomic, strong)   UITextField       *searchInput;
+@property (nonatomic, assign)   BOOL supportConfirmReturn;
 - (void)setSearchPlaceHolderText:(NSString *)text;
 
 @end

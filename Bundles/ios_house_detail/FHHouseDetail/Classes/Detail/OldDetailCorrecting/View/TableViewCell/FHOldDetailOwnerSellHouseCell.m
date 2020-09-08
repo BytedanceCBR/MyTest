@@ -88,7 +88,7 @@
 
 -(void)jumpToOwnerSellHouse {
     NSDictionary *dict = @{}.mutableCopy;
-    NSURL *openUrl = [NSURL URLWithString:@"sslocal://house_sale_input"];
+    NSURL *openUrl = [NSURL URLWithString:@"sslocal://house_sale_input?neighbourhood_id=6697827211568742659&neighbourhood_name=%e8%8a%8d%e8%8d%af%e5%b1%85&report_params=%7b%22enter_from%22%3a%22old_detail%22%2c%22element_from%22%3a%22driving_sale_house%22%7d"];
     TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
     [[TTRoute sharedRoute] openURLByViewController:openUrl userInfo:userInfo];
 }
