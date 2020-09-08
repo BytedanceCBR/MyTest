@@ -7,10 +7,11 @@
 
 #import "FHDetailNeighborhoodOwnerSellHouseCell.h"
 #import "FHCommonDefines.h"
+#import "BDWebImageManager.h"
 
 @interface FHDetailNeighborhoodOwnerSellHouseCell ()
 @property(nonatomic,strong) UIImageView *helpMeSellHouseImageView;
-
+@property(nonatomic,copy) NSString *helpMeSellHouseOpenUrl;
 @end
 
 @implementation FHDetailNeighborhoodOwnerSellHouseCell
@@ -34,15 +35,39 @@
     return self;
 }
 
+-(void)refreshWithData:(id)data {
+    if(self.currentData == data || ![data isKindOfClass:[FHDetailNeighborhoodOwnerSellHouseModel class]]) {
+        return;
+    }
+    self.currentData = data;
+    FHDetailNeighborhoodOwnerSellHouseModel *model = (FHDetailNeighborhoodOwnerSellHouseModel *) data;
+    if(model.imgUrl.length > 0) {
+        WeakSelf;
+        [[BDWebImageManager sharedManager] requestImage:[NSURL URLWithString:model.imgUrl] options:BDImageRequestHighPriority complete:^(BDWebImageRequest *request, UIImage *image, NSData *data, NSError *error, BDWebImageResultFrom from) {
+            if(!error && image) {
+                CGFloat imageHeight = image.size.height * (SCREEN_WIDTH - 30) / image.size.width;
+                wself.helpMeSellHouseImageView.image = image;
+                [wself.helpMeSellHouseImageView mas_updateConstraints:^(MASConstraintMaker *make) {
+                    make.height.mas_equalTo(imageHeight);
+                }];
+            }
+        }];
+    } else {
+        UIImage *helpMeSellHouseImage = [UIImage imageNamed:@"helpMeSellHouse"];
+        CGFloat imageHeight = helpMeSellHouseImage.size.height * (SCREEN_WIDTH - 30) / helpMeSellHouseImage.size.width;
+        self.helpMeSellHouseImageView.image = helpMeSellHouseImage;
+        [self.helpMeSellHouseImageView mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.height.mas_equalTo(imageHeight);
+        }];
+    }
+}
+
 -(void)setupUI {
-    UIImage *helpMeSellHouseImage = [UIImage imageNamed:@"helpMeSellHouse"];
-    _helpMeSellHouseImageView = [[UIImageView alloc] initWithImage:helpMeSellHouseImage];
-    CGFloat imageHeight = helpMeSellHouseImage.size.height * (SCREEN_WIDTH - 30) / helpMeSellHouseImage.size.width;
+    _helpMeSellHouseImageView = [[UIImageView alloc] init];
     [self.contentView addSubview:_helpMeSellHouseImageView];
     [_helpMeSellHouseImageView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.equalTo(self.contentView).offset(15);
         make.right.equalTo(self.contentView).offset(-15);
-        make.height.mas_equalTo(imageHeight);
         make.top.equalTo(self.contentView).offset(6);
         make.bottom.equalTo(self.contentView).offset(-6);
     }];
@@ -54,8 +79,8 @@
 
 
 -(void)jumpToOwnerSellHouse {
-    NSDictionary *dict = @{}.mutableCopy;
-    NSURL *openUrl = [NSURL URLWithString:@"sslocal://house_sale_input"];
+    NSMutableDictionary *dict = @{}.mutableCopy;
+    NSURL *openUrl = [NSURL URLWithString:self.helpMeSellHouseOpenUrl];
     TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
     [[TTRoute sharedRoute] openURLByViewController:openUrl userInfo:userInfo];
 }

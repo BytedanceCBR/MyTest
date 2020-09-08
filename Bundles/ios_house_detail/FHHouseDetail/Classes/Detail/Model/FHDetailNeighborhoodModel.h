@@ -156,6 +156,21 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *value;
 @end
 
+//帮我卖房入口
+@interface FHDetailNeighborhoodSaleHouseEntranceImgModel : JSONModel
+
+@property (nonatomic, copy , nullable) NSString *url;
+@property (nonatomic, copy , nullable) NSString *width;
+@property (nonatomic, strong , nullable) NSArray *urlList;
+@property (nonatomic, copy , nullable) NSString *uri;
+@property (nonatomic, copy , nullable) NSString *height;
+@end
+
+@interface FHDetailNeighborhoodSaleHouseEntranceModel : JSONModel
+
+@property (nonatomic, copy , nullable) NSString *openUrl;
+@property (nonatomic, strong , nullable) FHDetailNeighborhoodSaleHouseEntranceImgModel *img ;
+@end
 
 // 小区点评
 @interface FHDetailNeighborhoodDataCommentsContentModel : JSONModel
@@ -198,6 +213,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong , nullable) NSArray<FHFillFormAgencyListItemModel> *chooseAgencyList;
 @property (nonatomic, copy , nullable) NSString *recommendedRealtorsTitle;
 @property (nonatomic, strong , nullable) NSArray<FHDetailContactModel> *recommendedRealtors;
+@property (nonatomic, strong , nullable) FHDetailNeighborhoodSaleHouseEntranceModel *saleHouseEntrance;
 @property (nonatomic, strong , nullable) FHDetailContactModel *highlightedRealtor;
 @property (nonatomic, strong , nullable) FHDetailContactModel *contact;
 @property (nonatomic, strong , nullable) FHDetailNeighborhoodDataQuestionModel *question;
@@ -215,7 +231,5 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong , nullable) FHDetailNeighborhoodDataModel *data ;
 @property (nonatomic, assign) BOOL isInstantData;//是否是列表页带入的
 @end
-
-
 NS_ASSUME_NONNULL_END
 //END OF HEADER

@@ -6,12 +6,14 @@
 //
 
 #import "FHOldDetailOwnerSellHouseCell.h"
-
+#import "FHCommonDefines.h"
+#import "NSString+BTDAdditions.h"
 
 @interface FHOldDetailOwnerSellHouseCell ()
 @property(nonatomic,strong) UIButton *helpMeSellHouseButton;
 @property(nonatomic,strong) UILabel *questionLabel;
-@property(nonatomic,strong) UILabel *HintLabel;
+@property(nonatomic,strong) UILabel *hintLabel;
+@property(nonatomic,copy) NSString *helpMeSellHouseOpenUrl;
 @end
 
 @implementation FHOldDetailOwnerSellHouseCell
@@ -36,18 +38,52 @@
     return self;
 }
 
+-(void)refreshWithData:(id)data {
+    if(self.currentData == data || ![data isKindOfClass:[FHOldDetailOwnerSellHouseModel class]]) {
+        return;
+    }
+    self.currentData = data;
+    FHOldDetailOwnerSellHouseModel *model = (FHOldDetailOwnerSellHouseModel *) data;
+    if(model.questionText.length > 0) {
+        self.questionLabel.text = model.questionText;
+    }else {
+        self.questionLabel.text = @"要卖房吗？安心无忧委托";
+    }
+    CGSize questionSize = [self.questionLabel.text btd_sizeWithFont:[UIFont themeFontRegular:16] width:(SCREEN_WIDTH - 30)];
+    [self.questionLabel mas_updateConstraints:^(MASConstraintMaker *make) {
+        make.size.mas_equalTo(questionSize);
+    }];
+    if(model.hintText.length > 0) {
+        self.hintLabel.text = model.hintText;
+    } else {
+        self.hintLabel.text = @"在线委托，专属顾问全程贴心一条龙服务";
+    }
+    CGSize hintSize = [self.hintLabel.text btd_sizeWithFont:[UIFont themeFontRegular:12] width:(SCREEN_WIDTH - 30)];
+    [self.hintLabel mas_updateConstraints:^(MASConstraintMaker *make) {
+        make.size.mas_equalTo(hintSize);
+    }];
+    if(model.helpMeSellHouseText.length > 0) {
+        [_helpMeSellHouseButton setTitle:model.helpMeSellHouseText forState:UIControlStateNormal];
+        [_helpMeSellHouseButton setTitle:model.helpMeSellHouseText forState:UIControlStateHighlighted];
+    } else {
+        [_helpMeSellHouseButton setTitle:@"帮我买房" forState:UIControlStateNormal];
+        [_helpMeSellHouseButton setTitle:@"帮我买房" forState:UIControlStateHighlighted];
+    }
+    self.helpMeSellHouseOpenUrl = model.helpMeSellHouseOpenUrl;
+}
+
 -(void)setupUI {
     _questionLabel = [[UILabel alloc] init];
-    _questionLabel.text = @"要卖房吗？安心无忧委托";
     _questionLabel.font = [UIFont themeFontRegular:16];
     _questionLabel.textColor = [UIColor themeGray1];
+    _questionLabel.numberOfLines = 0;
     [self.contentView addSubview:_questionLabel];
 
-    _HintLabel = [[UILabel alloc] init];
-    _HintLabel.text = @"在线委托，专属顾问全程贴心一条龙服务";
-    _HintLabel.font = [UIFont themeFontRegular:12];
-    _HintLabel.textColor = [UIColor themeGray2];
-    [self.contentView addSubview:_HintLabel];
+    _hintLabel = [[UILabel alloc] init];
+    _hintLabel.font = [UIFont themeFontRegular:12];
+    _hintLabel.textColor = [UIColor themeGray2];
+    _hintLabel.numberOfLines = 0;
+    [self.contentView addSubview:_hintLabel];
 
     _helpMeSellHouseButton = [[UIButton alloc] init];
     _helpMeSellHouseButton.layer.borderWidth = 0.5;
@@ -57,20 +93,14 @@
     _helpMeSellHouseButton.titleLabel.font = [UIFont themeFontRegular:16];
     [_helpMeSellHouseButton setTitleColor:[UIColor themeGray1] forState:UIControlStateNormal];
     [_helpMeSellHouseButton setTitleColor:[UIColor themeGray1] forState:UIControlStateHighlighted];
-    [_helpMeSellHouseButton setTitle:@"帮我买房" forState:UIControlStateNormal];
-    [_helpMeSellHouseButton setTitle:@"帮我买房" forState:UIControlStateHighlighted];
     [self.contentView addSubview:_helpMeSellHouseButton];
     
     [_questionLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.width.mas_equalTo(176);
-        make.height.mas_equalTo(22);
         make.top.equalTo(self.contentView);
         make.centerX.equalTo(self.contentView);
     }];
     
-    [_HintLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.width.mas_equalTo(216);
-        make.height.mas_equalTo(17);
+    [_hintLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(self.questionLabel.mas_bottom).offset(10);
         make.centerX.equalTo(self.contentView);
     }];
@@ -78,7 +108,7 @@
     [_helpMeSellHouseButton mas_makeConstraints:^(MASConstraintMaker *make) {
         make.width.mas_equalTo(182);
         make.height.mas_equalTo(38);
-        make.top.equalTo(self.HintLabel.mas_bottom).offset(10);
+        make.top.equalTo(self.hintLabel.mas_bottom).offset(10);
         make.centerX.equalTo(self.contentView);
         make.bottom.equalTo(self.contentView).offset(-12);
     }];
@@ -87,8 +117,8 @@
 }
 
 -(void)jumpToOwnerSellHouse {
-    NSDictionary *dict = @{}.mutableCopy;
-    NSURL *openUrl = [NSURL URLWithString:@"sslocal://house_sale_input"];
+    NSMutableDictionary *dict = @{}.mutableCopy;
+    NSURL *openUrl = [NSURL URLWithString:self.helpMeSellHouseOpenUrl];
     TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
     [[TTRoute sharedRoute] openURLByViewController:openUrl userInfo:userInfo];
 }
