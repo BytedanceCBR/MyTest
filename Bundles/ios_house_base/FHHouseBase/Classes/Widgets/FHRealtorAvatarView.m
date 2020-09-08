@@ -10,6 +10,7 @@
 #import <Masonry/Masonry.h>
 #import <FHHouseDetail/FHDetailBaseModel.h>
 #import <FHFeedUGCCellModel.h>
+#import <TTShortVideoModel.h>
 
 @interface FHRealtorAvatarView ()
 
@@ -100,8 +101,18 @@
     if(cellModel.realtor.avatarUrl.length) {
         [self updateAvatarImageURL:cellModel.realtor.avatarUrl];
     }
-    
+    if(cellModel.realtor.avatarTagUrl.length) {
+        [self updateIdentifyImageURL:cellModel.realtor.avatarTagUrl];
+    }
 }
 
+-(void)updateAvatarWithTSVUserModel:(TSVUserModel *)userModel {
+    if(userModel.avatarURL.length) {
+        [self updateAvatarImageURL:userModel.avatarURL];
+    }
+    if(userModel.avatarTagUrl.length) {
+        [self updateIdentifyImageURL:userModel.avatarTagUrl];
+    }
+}
 
 @end

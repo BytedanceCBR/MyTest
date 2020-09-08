@@ -860,7 +860,7 @@ static const CGFloat kCheckChallengeButtonLeftPadding = 28;
 
     [self.view setNeedsUpdateConstraints];
 
-    [self.avatarView updateAvatarImageURL:model.author.avatarURL];
+    [self.avatarView updateAvatarWithTSVUserModel:model.author];
 
     self.nameLabel.text = self.model.author.name;
 

@@ -12,6 +12,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @class FHDetailContactModel;
 @class FHFeedUGCCellModel;
+@class TSVUserModel;
 
 @interface FHRealtorAvatarView : UIView
 
@@ -28,6 +29,7 @@ NS_ASSUME_NONNULL_BEGIN
 /// @param contactModel 如果api下发的是经纪人model接口，可以直接调用更新model的接口
 - (void)updateAvatarWithModel:(FHDetailContactModel *)contactModel;
 - (void)updateAvatarWithUGCCellModel:(FHFeedUGCCellModel *)cellModel;
+-(void)updateAvatarWithTSVUserModel:(TSVUserModel *)userModel;
 
 @end
 
