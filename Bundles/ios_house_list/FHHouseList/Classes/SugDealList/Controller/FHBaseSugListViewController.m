@@ -23,6 +23,7 @@
 @property (nonatomic, assign)   FHHouseType      houseType;
 @property (nonatomic, assign)   FHSugListSearchType      searchType;
 @property (nonatomic, strong)   FHPriceValuationNSearchView       *searchView;
+@property (nonatomic, assign)   BOOL supportConfirmReturn;
 
 @end
 
@@ -39,6 +40,7 @@
         } else if ([paramObj.host isEqualToString:@"price_valuation_neighborhood_search"]) {
             self.houseType = FHHouseTypeNeighborhood;
             self.searchType = FHSugListSearchTypePriceValuation;
+            self.supportConfirmReturn = [paramObj.allParams[@"supportConfirmReturn"] boolValue];
         }
     }
     return self;
@@ -89,6 +91,7 @@
     self.emptyView.hidden = NO;
     if (self.searchType == FHSugListSearchTypePriceValuation) {
         self.searchView = [[FHPriceValuationNSearchView alloc] init];
+        _searchView.supportConfirmReturn = self.supportConfirmReturn;
         [self.view addSubview:self.searchView];
         self.viewModel.searchView = _searchView;
     }

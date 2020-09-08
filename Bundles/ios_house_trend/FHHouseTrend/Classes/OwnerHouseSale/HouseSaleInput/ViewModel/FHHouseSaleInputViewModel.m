@@ -171,6 +171,7 @@
     [delegate addObject:self];
     NSMutableDictionary *dict = @{}.mutableCopy;
     dict[@"title"] = @"输入小区";
+    dict[@"supportConfirmReturn"] = @(YES);
     dict[@"delegate"] = delegate;
     TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
     
