@@ -52,7 +52,6 @@ def fhPods
 #    pod 'FHCommonUI',:path => '../../ios_common_ui/'
 #    pod 'FHCommonUI', :git => 'git@code.byted.org:fproject/ios_common_ui.git', :commit => 'df694e57a8c75b599b241fbd5114c55c767bf0a5'
 
-
     pod 'FHPopupViewCenter', '0.0.2-rc.7', :inhibit_warnings => false, :subspecs => [
     'Core',
     'DelegateForC'
@@ -68,7 +67,7 @@ def fhPods
     
 #    pod 'ios_house_im' ,'0.2.16-rc.3', :inhibit_warnings => false
 #     pod 'ios_house_im' , :path => '../../../im/feature', :inhibit_warnings => false
-    pod 'ios_house_im' , :git => 'git@code.byted.org:fproject/ios_house_im.git' , :commit => '0b2fa69bbb502db29ec914c2e7c25296ef0f76cc', :inhibit_warnings => false
+    pod 'ios_house_im' , :git => 'git@code.byted.org:fproject/ios_house_im.git' , :commit => '184efe5c92035f92115bcb40eaed09dea29dfef4', :inhibit_warnings => false
 
 end
 
@@ -488,7 +487,7 @@ def appPods
     pod 'lz4', '1.0.1'
     pod 'ByteRtcSDK', '2.6.13'
 #    pod 'TTIMSDK', :git => 'git@code.byted.org:im/TIMSDK.git', :branch => 'yang_branchf', :subspecs => [
-    pod 'TTIMSDK', :git => 'git@code.byted.org:im/TIMSDK.git', :commit => 'a80acf235e8ac541dc8322487b0eadbfc19349be', :subspecs => [
+    pod 'TTIMSDK', :git => 'git@code.byted.org:im/TIMSDK.git', :commit => '2ebad9bb6e336336ea202e169f230c9dcd685ba1', :subspecs => [
         'IMKit_Default',
         'IMKit_WebSocket',
         'IMKit_Core',
