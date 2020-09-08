@@ -16,6 +16,7 @@
 #import "NewsUserSettingManager.h"
 #import "ArticleTitleImageView.h"
 #import "APNsManager.h"
+#import "FHMainApi.h"
 
 #import "NewsDetailLogicManager.h"
 #import "SSFeedbackManager.h"
@@ -1584,6 +1585,7 @@ TTEditUserProfileViewControllerDelegate
             param[@"click_position"] = @"close";
             TRACK_EVENT(@"popup_click", param);
             [[NSNotificationCenter defaultCenter] postNotificationName:@"personalrecommend" object:self];
+            [self setPersonalizedStatus:1];//1表示关闭个性化推荐
         }];
         [alert addActionWithTitle:NSLocalizedString(@"我在想想", nil) actionType:TTThemedAlertActionTypeNormal actionBlock:^{
             [_personalRecommendSwitch setOn:YES];
@@ -1603,8 +1605,18 @@ TTEditUserProfileViewControllerDelegate
         [alert showFrom:self.viewController animated:YES];
     }else{
         [FHEnvContext savePersonalRecommend:YES];
+        [self setPersonalizedStatus:0];//0表示打开个性化推荐
         [[NSNotificationCenter defaultCenter] postNotificationName:@"personalrecommend" object:self];
     }
+}
+
+- (void)setPersonalizedStatus:(int)personalizedStatus
+{
+    NSString* queryPath = @"/f100/api/set_personalized_status";
+    NSMutableDictionary* paramDict = [NSMutableDictionary dictionary];
+    [paramDict setValue:@(personalizedStatus) forKey:@"personalized_status"];
+    [FHMainApi postJsonRequest:queryPath query:nil params:paramDict completion:^(NSDictionary * _Nullable result, NSError * _Nullable error) {
+    }];
 }
 
 - (void)pushNotificationChanged:(id)sender
