@@ -325,47 +325,6 @@ DEC_TASK("FHIMStartupTask",FHTaskTypeSerial,TASK_PRIORITY_HIGH+16);
     }
     return evaluationModel;
 }
-- (BOOL)isEnableIMShortConnect {
-    BOOL ret = NO;
-    BOOL isShortConnectEnable = [[NSUserDefaults standardUserDefaults] boolForKey:@"_IM_ShortConnection_Enable_"];
-    ret = isShortConnectEnable;
-    return ret;
-}
-
-- (BOOL)isFakeToken {
-    BOOL ret = NO;
-    BOOL isFakeToken = [[NSUserDefaults standardUserDefaults] boolForKey:@"_IM_Fake_Token_Enable_"];
-    ret = isFakeToken;
-    return ret;
-}
-
-- (BOOL)isIMFrequenceControlDisable {
-    BOOL ret = NO;
-    BOOL isIMFrequenceControlDisable = [[NSUserDefaults standardUserDefaults] boolForKey:@"_IM_Frequenct_Control_Disable_"];
-    ret = isIMFrequenceControlDisable;
-    return ret;
-}
-
-- (BOOL)isIMInitDidEmptyEnable {
-    BOOL ret = NO;
-    BOOL isIMInitDidEmptyEnable = [[NSUserDefaults standardUserDefaults] boolForKey:@"_IM_Init_Did_Empty_Enable_"];
-    ret = isIMInitDidEmptyEnable;
-    return ret;
-}
-
-- (BOOL)isIMSingleChatRecallEnable {
-    BOOL ret = NO;
-    BOOL isIMSingleChatRecallEnable = [[NSUserDefaults standardUserDefaults] boolForKey:@"_IM_SingleChat_Recall_Enable_"];
-    ret = isIMSingleChatRecallEnable;
-    return ret;
-}
-
-- (BOOL)isEnableIMReadReceiptRequestClosed {
-    BOOL ret = NO;
-    BOOL isIMReadReceiptRequestClosed =  [[NSUserDefaults standardUserDefaults] boolForKey:@"_IM_Read_Receipt_Request_Close_"];
-    ret = isIMReadReceiptRequestClosed;
-    return ret;
-}
 - (BOOL)isEnableRecordVoiceSegment {
     return [SSCommonLogic enableRecordVoiceSegment];
 }
