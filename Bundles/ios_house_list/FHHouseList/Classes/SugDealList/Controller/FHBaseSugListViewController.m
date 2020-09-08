@@ -85,6 +85,7 @@
     self.viewModel = [[FHBaseSugListViewModel alloc] initWithTableView:self.suggestTableView paramObj:_paramObj];
     self.viewModel.houseType = self.houseType;
     self.viewModel.searchType = self.searchType;
+    self.viewModel.supportConfirmReturn = self.supportConfirmReturn;
     self.viewModel.listController = self;
     self.viewModel.naviBar = _naviBar;
     [self addDefaultEmptyViewWithEdgeInsets:UIEdgeInsetsMake(0, 0, 0, 0)];

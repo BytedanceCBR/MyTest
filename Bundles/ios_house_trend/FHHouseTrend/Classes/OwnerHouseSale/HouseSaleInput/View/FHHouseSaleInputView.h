@@ -17,7 +17,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)goToNeighborhoodSearch;
 
-- (void)evaluate;
+- (void)houseSale;
 
 - (void)chooseFloor;
 

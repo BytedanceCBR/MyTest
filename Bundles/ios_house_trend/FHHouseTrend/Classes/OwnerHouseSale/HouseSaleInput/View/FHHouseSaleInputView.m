@@ -345,8 +345,8 @@
 }
 
 - (void)houseSale {
-    if(self.delegate && [self.delegate respondsToSelector:@selector(evaluate)]){
-        [self.delegate evaluate];
+    if(self.delegate && [self.delegate respondsToSelector:@selector(houseSale)]){
+        [self.delegate houseSale];
     }
 }
 

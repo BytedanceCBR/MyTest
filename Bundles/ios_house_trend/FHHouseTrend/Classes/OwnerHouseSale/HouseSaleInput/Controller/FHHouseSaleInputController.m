@@ -8,11 +8,15 @@
 #import "FHHouseSaleInputController.h"
 #import "FHHouseSaleInputViewModel.h"
 #import "FHHouseSaleInputView.h"
+#import "UIViewController+NavigationBarStyle.h"
+#import "TTBaseMacro.h"
+#import "FHHouseSaleLeaveView.h"
 
 @interface FHHouseSaleInputController ()<UIGestureRecognizerDelegate,UIScrollViewDelegate>
 
 @property(nonatomic, strong) FHHouseSaleInputViewModel *viewModel;
 @property(nonatomic ,strong) FHHouseSaleInputView *inputView;
+@property(nonatomic ,strong) FHHouseSaleLeaveView *leaveView;
 
 @end
 
@@ -31,6 +35,8 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     self.automaticallyAdjustsScrollViewInsets = NO;
+    self.ttStatusBarStyle = UIStatusBarStyleLightContent;
+    
     [self initNavbar];
     [self initView];
     [self initConstraints];
@@ -56,6 +62,16 @@
 
 - (void)initNavbar {
     [self setupDefaultNavBar:NO];
+    WeakSelf;
+    self.customNavBarView.leftButtonBlock = ^{
+        StrongSelf;
+        [self showLeaveView];
+    };
+}
+
+- (void)showLeaveView {
+    [self.view addSubview:self.leaveView];
+    [self.leaveView show];
 }
 
 - (void)refreshContentOffset:(CGPoint)contentOffset {
@@ -77,8 +93,10 @@
     [self.customNavBarView refreshAlpha:alpha];
     
     if (contentOffset.y > 0) {
+        self.ttStatusBarStyle = UIStatusBarStyleDefault;
         [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault];
     }else {
+        self.ttStatusBarStyle = UIStatusBarStyleLightContent;
         [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
     }
 }
@@ -119,6 +137,18 @@
 
 -(void)handleSingleTap:(UITapGestureRecognizer *)sender {
     [self.view endEditing:YES];
+}
+
+- (FHHouseSaleLeaveView *)leaveView {
+    if(!_leaveView){
+        _leaveView = [[FHHouseSaleLeaveView alloc] initWithFrame:[UIScreen mainScreen].bounds];
+        WeakSelf;
+        _leaveView.alpha = 0;
+        _leaveView.quitBlock = ^{
+            [wself goBack];
+        };
+    }
+    return _leaveView;
 }
 
 #pragma mark - UIGestureRecognizerDelegate

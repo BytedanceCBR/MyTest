@@ -40,7 +40,7 @@
     self.inputModel.neighbourhoodId = self.viewController.neighbourhoodId;
     self.inputModel.neighbourhoodName = self.viewController.neighbourhoodName;
     self.view.neiborhoodItemView.contentText = self.viewController.neighbourhoodName;
-    [self checkSubmitEnabled];
+//    [self checkSubmitEnabled];
 }
 
 - (void)viewWillAppear {
@@ -177,6 +177,27 @@
     
     NSURL* url = [NSURL URLWithString:@"sslocal://price_valuation_neighborhood_search"];
     [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
+}
+
+- (void)houseSale {
+    NSMutableDictionary *dict = @{}.mutableCopy;
+    dict[@"title"] = @"发布成功";
+    TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
+    NSURL* url = [NSURL URLWithString:@"sslocal://house_sale_result"];
+    [[TTRoute sharedRoute] openURLByPresentViewController:url userInfo:userInfo];
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        [self goBack];
+    });
+}
+
+- (void)goBack {
+    UIViewController *popVC = [self.viewController.navigationController popViewControllerAnimated:NO];
+    
+    if (nil == popVC) {
+        [self.viewController dismissViewControllerAnimated:NO completion:^{
+            
+        }];
+    }
 }
 
 @end
