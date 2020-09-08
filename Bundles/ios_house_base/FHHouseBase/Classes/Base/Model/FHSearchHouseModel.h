@@ -542,4 +542,32 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong , nullable) FHListSearchHouseDataModel *data ;
 
 @end
+
+// 动态Lynx混排卡片
+@interface FHDynamicLynxLynxDataReportParamsModel : JSONModel
+
+@property (nonatomic, copy , nullable) NSString *searchId;
+@property (nonatomic, copy , nullable) NSString *originFrom;
+@property (nonatomic, copy , nullable) NSString *elementType;
+@property (nonatomic, copy , nullable) NSString *pageType;
+@property (nonatomic, copy , nullable) NSString *enterFrom;
+@end
+
+@interface FHDynamicLynxLynxDataModel : JSONModel
+
+@property (nonatomic, strong , nullable) FHDynamicLynxLynxDataReportParamsModel *reportParams ;
+@property (nonatomic, copy , nullable) NSString *subtitle;
+@property (nonatomic, copy , nullable) NSString *buttonText;
+@property (nonatomic, copy , nullable) NSString *openUrl;
+@property (nonatomic, copy , nullable) NSString *title;
+@end
+
+@interface FHDynamicLynxModel : JSONModel
+
+@property (nonatomic, copy , nullable) NSString *cardType;
+@property (nonatomic, copy , nullable) NSString *height;
+@property (nonatomic, copy , nullable) NSString *cellStyle;
+@property (nonatomic, copy , nullable) NSString *channel;
+@property (nonatomic, strong , nullable) FHDynamicLynxLynxDataModel *lynxData ;
+@end
 NS_ASSUME_NONNULL_END

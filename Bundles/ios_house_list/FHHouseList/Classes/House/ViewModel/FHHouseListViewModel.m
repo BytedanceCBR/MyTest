@@ -64,6 +64,7 @@
 #import "FHFindHouseHelperCell.h"
 #import "FHHouseSearchSecondHouseCell.h"
 #import "FHHouseSearchNewHouseCell.h"
+#import "FHDynamicLynxCell.h"
 
 extern NSString *const INSTANT_DATA_KEY;
 
@@ -272,6 +273,7 @@ extern NSString *const INSTANT_DATA_KEY;
     [_tableView registerClass:[FHFindHouseHelperCell class] forCellReuseIdentifier:@"FHFindHouseHelperCell"];
     [_tableView registerClass:[FHHouseSearchSecondHouseCell class] forCellReuseIdentifier:@"FHHouseSearchSecondHouseCell"];
     [_tableView registerClass:[FHHouseSearchNewHouseCell class] forCellReuseIdentifier:@"FHHouseSearchNewHouseCell"];
+    [_tableView registerClass:[FHDynamicLynxCell class] forCellReuseIdentifier:@"FHDynamicLynxCell"];
 
     if(self.commute){  
         [self.tableView registerClass:[FHPlaceHolderCell class] forCellReuseIdentifier:kFHHouseListPlaceholderCellId];
@@ -331,6 +333,8 @@ extern NSString *const INSTANT_DATA_KEY;
         return [FHHousReserveAdviserCell class];
     }else if ([model isKindOfClass:[FHSearchFindHouseHelperModel class]]) {
         return [FHFindHouseHelperCell class];
+    }else if ([model isKindOfClass:[FHDynamicLynxModel class]]) {
+        return [FHDynamicLynxCell class];
     }
     return [FHListBaseCell class];
 }

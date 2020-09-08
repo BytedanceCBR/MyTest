@@ -336,6 +336,9 @@
         case FHSearchCardTypeFindHouseHelper:
             itemModel = [[FHSearchFindHouseHelperModel alloc]initWithDictionary:itemDict error:&jerror];
             break;
+        case FHSearchCardTypeDynamicLynx:
+            itemModel = [[FHDynamicLynxModel alloc] initWithDictionary:itemDict error:&jerror];
+            break;
         default:
             break;
     }
