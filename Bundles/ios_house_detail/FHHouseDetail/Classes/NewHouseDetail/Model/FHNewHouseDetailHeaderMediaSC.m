@@ -7,6 +7,11 @@
 
 #import "FHNewHouseDetailHeaderMediaSC.h"
 #import "FHNewHouseDetailHeaderMediaSM.h"
+#import "FHNewHouseDetailHeaderMediaCollectionCell.h"
+
+@interface FHNewHouseDetailHeaderMediaSC ()
+
+@end
 
 @implementation FHNewHouseDetailHeaderMediaSC
 
@@ -17,23 +22,33 @@
     return self;
 }
 
-- (void)didUpdateToObject:(id)object {
-    if (object && [object isKindOfClass:[FHNewHouseDetailHeaderMediaSM class]]) {
-        
-    }
-}
-
 - (NSInteger)numberOfItems {
-    return 0;
+    FHNewHouseDetailHeaderMediaSM *model = (FHNewHouseDetailHeaderMediaSM *)self.sectionModel;
+    return model.items.count;
 }
 
 - (CGSize)sizeForItemAtIndex:(NSInteger)index {
+    CGFloat width = self.collectionContext.containerSize.width;
+    FHNewHouseDetailHeaderMediaSM *model = (FHNewHouseDetailHeaderMediaSM *)self.sectionModel;
+    if (model.items[index] == model.headerCellModel) {
+        return [FHNewHouseDetailHeaderMediaCollectionCell cellSizeWithData:model.headerCellModel width:width];
+    }
     return CGSizeZero;
 }
 
 
 - (__kindof UICollectionViewCell *)cellForItemAtIndex:(NSInteger)index {
+    FHNewHouseDetailHeaderMediaSM *model = (FHNewHouseDetailHeaderMediaSM *)self.sectionModel;
+    if (model.items[index] == model.headerCellModel) {
+        FHNewHouseDetailHeaderMediaCollectionCell *cell = [self.collectionContext dequeueReusableCellOfClass:[FHNewHouseDetailHeaderMediaCollectionCell class] withReuseIdentifier:NSStringFromClass([model.headerCellModel class]) forSectionController:self atIndex:index];
+        cell.detailTracerDict = self.detailTracerDict.copy;
+        [cell refreshWithData:model.headerCellModel];
+        return cell;
+    }
     return nil;
 }
+
+#pragma mark - Action
+
 
 @end

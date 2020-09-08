@@ -6,14 +6,12 @@
 //
 
 #import "FHNewHouseDetailSectionModel.h"
-
+#import "FHNewHouseDetailHeaderMediaCollectionCell.h"
 NS_ASSUME_NONNULL_BEGIN
-
-@class FHDetailNewMediaHeaderModel;
 
 @interface FHNewHouseDetailHeaderMediaSM : FHNewHouseDetailSectionModel
 
-@property (nonatomic, strong) FHDetailNewMediaHeaderModel *headerCellModel;
+@property (nonatomic, strong) FHNewHouseDetailHeaderMediaModel *headerCellModel;
 
 @end
 

@@ -1,29 +1,28 @@
 //
-//  FHDetailNewMediaHeaderCell.h
+//  FHNewHouseDetailHeaderMediaCollectionCell.h
 //  FHHouseDetail
 //
-//  Created by luowentao on 2020/8/21.
+//  Created by luowentao on 2020/9/8.
 //
 
-//新房专用头图
 #import "FHDetailBaseCell.h"
 #import "FHMultiMediaModel.h"
 #import "FHHouseDetailContactViewModel.h"
 #import "FHDetailHouseTitleModel.h"
 #import "FHDetailNewModel.h"
+@class FHNewHouseDetailViewController;
 NS_ASSUME_NONNULL_BEGIN
-@class FHDetailNewTopImage;
 
-@interface FHDetailNewMediaHeaderCell : FHDetailBaseCell
+@interface FHNewHouseDetailHeaderMediaCollectionCell : FHDetailBaseCollectionCell
 
+@property (nonatomic, strong, nullable) NSDictionary *detailTracerDict;
 @end
 
-@interface FHDetailNewMediaHeaderModel : FHDetailBaseModel
+@interface FHNewHouseDetailHeaderMediaModel : FHDetailBaseModel
 @property (nonatomic, strong , nullable) NSArray<FHHouseDetailImageListDataModel> *houseImageDictList;// 图片数据
 @property (nonatomic, strong , nullable) FHDetailNewVRInfo *vrModel;                                  // vr数据
 @property (nonatomic, strong, nullable)   FHMultiMediaItemModel       *vedioModel;// 视频模型
 @property (nonatomic, weak) FHHouseDetailContactViewModel *contactViewModel;
-@property (strong, nonatomic) FHDetailHouseTitleModel *titleDataModel;//标题，标签模型
 @property (nonatomic, strong , nullable) NSArray<FHDetailNewTopImage *> *topImages;
 @property (nonatomic, weak) UIViewController *weakVC;
 @property (nonatomic, strong, nullable) FHClueAssociateInfoModel *houseImageAssociateInfo;

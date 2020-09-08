@@ -6,7 +6,6 @@
 //
 
 #import "FHNewHouseDetailHeaderMediaSM.h"
-#import "FHDetailNewMediaHeaderCell.h"
 
 @implementation FHNewHouseDetailHeaderMediaSM
 
@@ -20,7 +19,7 @@
 
 - (void)updateDetailModel:(FHDetailNewModel *)model {
     // 添加头滑动图片 && 视频
-    FHDetailNewMediaHeaderModel *headerCellModel = [[FHDetailNewMediaHeaderModel alloc] init];
+    FHNewHouseDetailHeaderMediaModel *headerCellModel = [[FHNewHouseDetailHeaderMediaModel alloc] init];
     headerCellModel.houseImageAssociateInfo = model.data.imageGroupAssociateInfo;
     headerCellModel.imageAlbumAssociateInfo = model.data.imageAlbumAssociateInfo;
     headerCellModel.isShowTopImageTab = model.data.isShowTopImageTab;
@@ -48,6 +47,7 @@
         headerCellModel.houseImageDictList = houseImageList.copy;
     }
     self.headerCellModel = headerCellModel;
+    self.items = [NSArray arrayWithObject:self.headerCellModel];
 }
 
 @end

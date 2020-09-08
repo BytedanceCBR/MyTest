@@ -23,7 +23,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FHNewHouseDetailViewModel : NSObject
 @property (nonatomic, copy)   NSString* houseId; // 房源id
-
+@property (nonatomic, assign) FHHouseType houseType; // 房源类型
 @property (nonatomic, copy) NSArray *sectionModels;
 
 @property (nonatomic, copy)   NSString *ridcode; // 经纪人id，用来锁定经纪人展位
