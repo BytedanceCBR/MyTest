@@ -25,7 +25,6 @@
 #import "ToastManager.h"
 #import "FHDetailNewMediaHeaderDataHelper.h"
 #import "FHDetailNewMediaHeaderView.h"
-#import "FHNewHouseDetailViewController.h"
 
 @interface FHNewHouseDetailHeaderMediaCollectionCell ()
 

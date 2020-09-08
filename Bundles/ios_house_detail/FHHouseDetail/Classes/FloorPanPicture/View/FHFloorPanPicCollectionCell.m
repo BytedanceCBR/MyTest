@@ -13,6 +13,12 @@
 #import "FHHouseBaseItemCell.h"
 #import "TTDeviceHelper.h"
 #import <FHHouseBase/TTDeviceHelper+FHHouse.h>
+#import "FHDetailNewModel.h"
+
+@interface FHFloorPanPicCollectionCell ()
+@property (nonatomic,strong) UIImageView *imageV;
+
+@end
 
 @implementation FHFloorPanPicCollectionCell
 - (instancetype)initWithFrame:(CGRect)frame

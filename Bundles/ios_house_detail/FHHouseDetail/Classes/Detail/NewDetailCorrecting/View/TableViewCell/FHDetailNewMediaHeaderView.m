@@ -284,7 +284,6 @@
         //这里分别加上标签高度20，标签间隔20
         titleHeight += 20 + 20;
     }
-
     [self.titleView mas_updateConstraints:^(MASConstraintMaker *make) {
         make.height.mas_offset(titleHeight);
     }];
