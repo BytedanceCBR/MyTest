@@ -397,6 +397,15 @@
         layout.height = YGPointValue(MAIN_IMG_HEIGHT);
     }];
     
+    [self.mainImageView addSubview:self.vrLoadingView];
+    self.vrLoadingView.hidden = YES;
+    [self.vrLoadingView configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
+        layout.isEnabled = YES;
+        layout.marginLeft = YGPointValue(6);
+        layout.marginTop = YGPointValue(58);
+        layout.width = YGPointValue(16);
+        layout.height = YGPointValue(16);
+    }];
     
     [self.leftInfoView addSubview:self.houseVideoImageView];
     _houseVideoImageView.image = [UIImage imageNamed:@"icon_list_house_video_small"];
@@ -409,18 +418,6 @@
         layout.width = YGPointValue(20.0f);
         layout.height = YGPointValue(20.0f);
     }];
-    
-//    [self.leftInfoView addSubview:self.vrLoadingView];
-//    self.vrLoadingView.hidden = YES;
-    //    [self.vrLoadingView setBackgroundColor:[UIColor redColor]];
-//    [self.vrLoadingView configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
-//        layout.isEnabled = YES;
-//        layout.position = YGPositionTypeAbsolute;
-//        layout.top = YGPointValue(25.0f);
-//        layout.left = YGPointValue(23.0f);
-//        layout.width = YGPointValue(24);
-//        layout.height = YGPointValue(24);
-//    }];
     
     [_imageTagLabelBgView configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
         layout.isEnabled = YES;
@@ -783,18 +780,10 @@
 - (void)updateVrInfo:(id)data {
     FHSearchHouseItemModel *model = (FHSearchHouseItemModel *)data;
     if (model.vrInfo.hasVr) {
-        if (!_vrLoadingView) {
-            [self.leftInfoView addSubview:self.vrLoadingView];
-            [self.vrLoadingView mas_makeConstraints:^(MASConstraintMaker *make) {
-                make.bottom.mas_equalTo(self.mainImageView).offset(-6);
-                make.left.mas_equalTo(self.mainImageView).offset(6);
-                make.width.height.mas_equalTo(16);
-            }];
-        }
         self.vrLoadingView.hidden = NO;
         [self.vrLoadingView play];
-    } else if (_vrLoadingView) {
-        _vrLoadingView.hidden = YES;
+    } else {
+        self.vrLoadingView.hidden = YES;
     }
 }
 
