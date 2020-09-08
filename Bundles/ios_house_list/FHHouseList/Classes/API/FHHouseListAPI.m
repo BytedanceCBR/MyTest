@@ -623,7 +623,7 @@
     return [FHMainApi queryData:queryPath params:qparam class:cls completion:completion];
 }
 
-+ (TTHttpTask *)requestDeleteSugSubscribe:(NSString *)subscribeId class:(Class)cls completion:(void(^_Nullable)(id<FHBaseModelProtocol> model , NSError *error))completion {
++ (TTHttpTask *)requestDeleteSugSubscribe:(NSString *)subscribeId class:(Class _Nullable)cls completion:(void(^_Nullable)(id<FHBaseModelProtocol> model , NSError *error))completion {
     NSString *queryPath = @"/f100/api/delete_subscribe";
     NSMutableDictionary *paramDic = [NSMutableDictionary new];
     paramDic[@"subscribe_id"] = subscribeId;

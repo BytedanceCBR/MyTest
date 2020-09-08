@@ -65,6 +65,7 @@
 #import "FHHouseSearchSecondHouseCell.h"
 #import "FHHouseSearchNewHouseCell.h"
 #import "FHDynamicLynxCell.h"
+#import "NSDictionary+BTDAdditions.h"
 
 extern NSString *const INSTANT_DATA_KEY;
 
@@ -458,7 +459,6 @@ extern NSString *const INSTANT_DATA_KEY;
         query = [NSString stringWithFormat:@"enter_from=%@",enterFrom];
     }
     NSInteger offset = 0;
-    NSMutableDictionary *param = [NSMutableDictionary new];
 
     if (isRefresh) {
         if (!_isFirstLoad && _canChangeHouseSearchDic) {
@@ -476,7 +476,6 @@ extern NSString *const INSTANT_DATA_KEY;
                 self.houseSearchDic = dic;
             }
         }else if (self.isCommute && self.houseSearchDic.count <= 0){
-             NSString *searchKey = [FHCommuteManager sharedInstance].destLocation;
             self.houseSearchDic = @{@"query_type":@"mutiple",UT_PAGE_TYPE:[self pageTypeString]};
         }
         self.tableView.mj_footer.hidden = YES;
@@ -858,8 +857,6 @@ extern NSString *const INSTANT_DATA_KEY;
         NSString *refreshTip;
         FHSearchHouseDataRedirectTipsModel *redirectTips;
         FHListSearchHouseDataModel *recommendHouseDataModel = nil;
-        FHHouseNeighborAgencyModel *neighbourAgencyCardModel;//小区搜索卡片
-        BOOL needUploadMapFindHouseUrlEvent = NO;
         BOOL fromRecommend = NO;
 
         if ([model isKindOfClass:[FHListSearchHouseModel class]]) {
@@ -1417,7 +1414,7 @@ extern NSString *const INSTANT_DATA_KEY;
     
     if (self.mapFindHouseOpenUrl.length > 0) {
 
-        NSMutableString *openUrl = self.mapFindHouseOpenUrl;
+        NSString *openUrl = self.mapFindHouseOpenUrl;
         NSMutableDictionary *param = [self categoryLogDict].mutableCopy;
         param[@"click_type"] = @"map";
         param[@"enter_type"] = @"click";
@@ -1593,7 +1590,7 @@ extern NSString *const INSTANT_DATA_KEY;
             return cell;
         }
     }
-    UITableViewCell *cell = nil;
+    
     CGFloat topMargin = 10;
     if (self.isCommute) {
         //通勤找房 筛选器没有底部线
@@ -1722,7 +1719,7 @@ extern NSString *const INSTANT_DATA_KEY;
         }
         return height;
     }
-    NSString *identifier = @"";
+    
     BOOL isFirstCell = NO;
     BOOL isLastCell = NO;
     CGFloat normalHeight = height;
@@ -1827,12 +1824,10 @@ extern NSString *const INSTANT_DATA_KEY;
 
 - (void)jump2NeighborhoodDealPage:(id)cellModel
 {
-    NSString *logPb = @"";
     NSString *urlStr = nil;
 
     if ([cellModel isKindOfClass:[FHSearchHouseItemModel class]]) {
         FHSearchHouseItemModel *model = (FHSearchHouseItemModel *)cellModel;
-        logPb = model.logPb;
         urlStr = model.dealOpenUrl;
         if (!model.dealStatus && self.searchType == FHHouseListSearchTypeNeighborhoodDeal) {
             [[ToastManager manager]showToast:@"成交数据暂缺"];
@@ -1874,7 +1869,6 @@ extern NSString *const INSTANT_DATA_KEY;
     }
     if ([model isKindOfClass:[FHSearchRealHouseAgencyInfo class]] &&[model.openUrl isKindOfClass:[NSString class]]) {
         
-        NSMutableDictionary *tracerDict = [self categoryLogDict].mutableCopy;
         NSString *urlStr = model.openUrl;
         
         if ([urlStr isKindOfClass:[NSString class]]) {
@@ -1888,10 +1882,9 @@ extern NSString *const INSTANT_DATA_KEY;
 -(void)jump2HouseDetailPage:(id)cellModel withRank:(NSInteger)rank
 {
     
-    NSString *logPb = @"";
+    NSDictionary *logPb = @{};
     NSString *urlStr = nil;
     NSString *elementFrom = [self elementTypeString];
-    NSString *searchId = self.searchId;
     NSMutableDictionary *traceParam = @{}.mutableCopy;
     FHSearchHouseItemModel *theModel = nil;
     
@@ -2237,6 +2230,9 @@ extern NSString *const INSTANT_DATA_KEY;
                                  @"element_type":@"driving_find_house_card",
                                 };
         [FHUserTracker writeEvent:@"element_show" params:params];
+    }else if ([cellModel isKindOfClass:[FHDynamicLynxModel class]]) {
+        //TODO: 帮我找房动态卡片埋点
+//        [FHUserTracker writeEvent:@"" params:nil];
     }
 }
 
@@ -2371,8 +2367,6 @@ extern NSString *const INSTANT_DATA_KEY;
 
 -(void)addCommuteSearchLog
 {
-    NSString *location = [FHCommuteManager sharedInstance].destLocation;
-    
     NSMutableDictionary *param = [NSMutableDictionary new];
     param[UT_PAGE_TYPE] = @"commuter_detail";
     param[UT_HOUSE_TYPE] = @"rent";
@@ -2461,7 +2455,7 @@ extern NSString *const INSTANT_DATA_KEY;
 
 + (id)searchItemModelByDict:(NSDictionary *)itemDict
 {
-    NSInteger cardType = [itemDict tt_integerValueForKey:@"card_type"];
+    NSInteger cardType = [itemDict btd_integerValueForKey:@"card_type"];
     id itemModel = nil;
     NSError *jerror = nil;
     
