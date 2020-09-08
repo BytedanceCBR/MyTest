@@ -11,6 +11,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FHNewHouseDetailAddressInfoCollectionCell : FHDetailBaseCollectionCell
 
+@property (nonatomic, copy) void (^mapDetailActionBlock)(void);
+
 @end
 
 @interface FHNewHouseDetailAddressInfoCellModel : NSObject

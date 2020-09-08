@@ -89,39 +89,9 @@
 
 - (void)clickMapAction:(UIButton *)btn
 {
-    //地图页调用示例
-//    FHNewHouseDetailAddressInfoCellModel *model = (FHNewHouseDetailAddressInfoCellModel *)self.currentData;
-//    double longitude = [model.gaodeLng doubleValue] ? [model.gaodeLng doubleValue] : 0;
-//    double latitude = [model.gaodeLat doubleValue] ? [model.gaodeLat doubleValue] : 0;
-//    NSNumber *latitudeNum = @(latitude);
-//    NSNumber *longitudeNum = @(longitude);
-//
-//    NSMutableDictionary *infoDict = [NSMutableDictionary new];
-//    [infoDict setValue:@"公交" forKey:@"category"];
-//    [infoDict setValue:latitudeNum forKey:@"latitude"];
-//    [infoDict setValue:longitudeNum forKey:@"longitude"];
-//    if (model.name) {
-//        [infoDict setValue:model.name forKey:@"title"];
-//    }
-//
-//    if (!longitude || !latitude) {
-//        NSMutableDictionary *params = [NSMutableDictionary new];
-//        [params setValue:@"用户点击详情页地图进入地图页失败" forKey:@"desc"];
-//        [params setValue:@"经纬度缺失" forKey:@"reason"];
-//        [params setValue:model.courtId forKey:@"house_id"];
-//        [params setValue:@(1) forKey:@"house_type"];
-//        [params setValue:infoDict[@"title"] forKey:@"name"];
-//        [[HMDTTMonitor defaultManager] hmdTrackService:@"detail_map_location_failed" attributes:params];
-//    }
-//
-//    NSMutableDictionary *tracer = [NSMutableDictionary dictionaryWithDictionary:self.baseViewModel.detailTracerDic];
-//    [tracer setValue:@"address" forKey:@"click_type"];
-//    [tracer setValue:@"house_info" forKey:@"element_from"];
-//    [tracer setObject:tracer[@"page_type"] forKey:@"enter_from"];
-//    [infoDict setValue:tracer forKey:@"tracer"];
-//
-//    TTRouteUserInfo *info = [[TTRouteUserInfo alloc] initWithInfo:infoDict];
-//    [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:@"sslocal://fh_map_detail"] userInfo:info];
+    if (self.mapDetailActionBlock) {
+        self.mapDetailActionBlock();
+    }
 }
 
 - (NSString *)elementTypeString:(FHHouseType)houseType

@@ -41,8 +41,9 @@
 #import "FHNewHouseDetailSurroundingSC.h"
 #import "FHNewHouseDetailBuildingsSC.h"
 #import "FHNewHouseDetailRecommendSC.h"
+#import "FHDetailPictureTitleView.h"
 
-@interface FHNewHouseDetailViewController () <UIGestureRecognizerDelegate,IGListAdapterDataSource>
+@interface FHNewHouseDetailViewController () <UIGestureRecognizerDelegate,IGListAdapterDataSource,UICollectionViewDelegate,UIScrollViewDelegate>
 @property (nonatomic, assign) FHHouseType houseType; // 房源类型
 @property (nonatomic, copy) NSString *source;        // 特殊标记，从哪进入的小区详情，比如地图租房列表“rent_detail”，此时小区房源展示租房列表
 @property (nonatomic, copy) NSString *houseId;       // 房源id
@@ -75,6 +76,10 @@
 
 @property (nonatomic, strong) IGListAdapter *listAdapter;
 @property (nonatomic, strong) IGListAdapterUpdater *listAdapterUpdater;
+
+@property (nonatomic, strong) FHDetailPictureTitleView *segmentTitleView;
+@property (nonatomic, strong) NSIndexPath *lastIndexPath;
+
 @end
 
 @implementation FHNewHouseDetailViewController
@@ -216,6 +221,8 @@
     self.listAdapter = [[IGListAdapter alloc] initWithUpdater:self.listAdapterUpdater viewController:self workingRangeSize:2];
     self.listAdapter.collectionView = self.collectionView;
     self.listAdapter.dataSource = self;
+    self.listAdapter.scrollViewDelegate = self;
+    self.listAdapter.collectionViewDelegate = self;
     
     self.viewModel = [[FHNewHouseDetailViewModel alloc] init];
     self.viewModel.detailController = self;
@@ -715,4 +722,82 @@
 - (nullable UIView *)emptyViewForListAdapter:(IGListAdapter *)listAdapter {
     return nil;
 }
+
+#pragma mark - UICollectionViewDelegate
+- (void)collectionView:(UICollectionView *)collectionView willDisplayCell:(UICollectionViewCell *)cell forItemAtIndexPath:(NSIndexPath *)indexPath {
+    
+}
+
+- (void)collectionView:(UICollectionView *)collectionView didEndDisplayingCell:(UICollectionViewCell *)cell forItemAtIndexPath:(NSIndexPath *)indexPath {
+    
+}
+
+#pragma mark - UIScrollViewDelegate
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView {
+
+//    if (self.segmentViewChangedFlag) {
+//        return;
+//    }
+    //locate the scrollview which is in the centre
+//    CGPoint centerPoint = CGPointMake(20, scrollView.contentOffset.y + 55);
+    
+//    CGPoint centerPoint = [self.view convertPoint:CGPointMake(20, 55) toView:self.mainCollectionView];
+    //1 6 2
+//    NSIndexPath *indexPath = [self.collectionView indexPathForItemAtPoint:centerPoint];
+//    NSLog(@"centerPoint :%@ section:%d,row:%d",NSStringFromCGPoint(centerPoint),indexPath.section,indexPath.item);
+//    if (indexPath && self.lastIndexPath.section != indexPath.section) {
+//        self.lastIndexPath = indexPath;
+//        if (indexPath.section < self.pictsArray.count) {
+//            NSInteger currentIndex = 0;
+//            for (int i = 0; i < indexPath.section; i++) {
+//                FHHouseDetailImageGroupModel *smallImageGroupModel = self.pictsArray[i];
+//                currentIndex += smallImageGroupModel.images.count;
+//            }
+//            if (self.segmentTitleView) {
+//                self.segmentTitleView.selectIndex = currentIndex;
+//            }
+//        }
+//    }
+}
+
+//- (void)scrollToCurrentIndex:(NSInteger )toIndex {
+//    //segmentview 的index 和 collectionview的index 不一一对应
+//    //需要通过计算得出，
+//    NSInteger count = 0;
+//    NSInteger titleIndex = 0;
+//    
+//    for (int i = 0; i < self.pictsArray.count; i++) {
+//        FHHouseDetailImageGroupModel *smallImageGroupModel = self.pictsArray[i];
+//        NSInteger tempCount = smallImageGroupModel.images.count;
+//        count += tempCount;
+//        if (toIndex < count) {
+//            titleIndex = i;
+//            break;
+//        }
+//    }
+//    self.lastIndexPath = [NSIndexPath indexPathForItem:0 inSection:titleIndex];
+//    UICollectionViewLayoutAttributes *attributes = [self.collectionView layoutAttributesForItemAtIndexPath:self.lastIndexPath];
+//    CGRect frame = attributes.frame;
+//    frame.origin.y -= 65;
+//    //section header frame
+//    //需要滚到到顶部，如果滚动的距离超过contengsize，则滚动到底部
+//    CGPoint contentOffset = self.collectionView.contentOffset;
+//    contentOffset.y = frame.origin.y;
+//    if (contentOffset.y + CGRectGetHeight(self.collectionView.frame) > (self.collectionView.contentSize.height + self.collectionView.contentInset.bottom)) {
+//        contentOffset.y = self.collectionView.contentSize.height - CGRectGetHeight(self.collectionView.frame) + self.collectionView.contentInset.bottom;
+//    }
+//    //防止向上滑动
+//    if (contentOffset.y < 0) {
+//        contentOffset.y = 0;
+//    }
+//    self.segmentViewChangedFlag = YES;
+//    [UIView animateWithDuration:0.2 animations:^{
+//        [self.collectionView setContentOffset:contentOffset];
+//    } completion:^(BOOL finished) {
+//        self.segmentViewChangedFlag = NO;
+//    }];
+//    
+////    [self.mainCollectionView scrollRectToVisible:frame animated:YES];
+////    [self.mainCollectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:titleIndex] atScrollPosition:UICollectionViewScrollPositionBottom animated:YES];
+//}
 @end
