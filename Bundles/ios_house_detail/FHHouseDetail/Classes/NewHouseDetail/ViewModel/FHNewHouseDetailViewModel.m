@@ -37,6 +37,8 @@
 #import "FHNewHouseDetailSurroundingSC.h"
 #import "FHNewHouseDetailTimelineSM.h"
 #import "FHNewHouseDetailTimelineSC.h"
+#import "FHNewHouseDetailDisclaimerSC.h"
+#import "FHNewHouseDetailDisclaimerSM.h"
 #import "FHNewHouseDetailViewController.h"
 #import "FHNewHouseDetailRelatedSC.h"
 #import "FHNewHouseDetailRelatedSM.h"
@@ -144,6 +146,13 @@
 //        [self.items addObject:salesModel];
     }
     
+//     推荐经纪人
+    if (model.data.recommendedRealtors.count > 0) {
+        // 添加分割线--当存在某个数据的时候在顶部添加分割线
+        FHNewHouseDetailAgentSM *agentSM = [[FHNewHouseDetailAgentSM alloc] initWithDetailModel:self.detailData];
+        agentSM.sectionType = FHNewHouseDetailSectionTypeAgent;
+        [sectionModels addObject:agentSM];
+    }
 
     
     // 小区评测
@@ -166,35 +175,6 @@
 //        paramsDict[@"impr_id"] = imprId.length > 0 ? imprId : @"be_null";
 //        cellModel.tracerDic = paramsDict;
 //        [self.items addObject:cellModel];
-//    }
-    // 推荐经纪人
-//    if (model.data.recommendedRealtors.count > 0) {
-//        // 添加分割线--当存在某个数据的时候在顶部添加分割线
-//        FHDetailAgentListModel *agentListModel = [[FHDetailAgentListModel alloc] init];
-//        NSString *searchId = self.listLogPB[@"search_id"];
-//        NSString *imprId = self.listLogPB[@"impr_id"];
-//        agentListModel.tableView = self.tableView;
-//        agentListModel.belongsVC = self.detailController;
-//        agentListModel.houseModelType = FHHouseModelTypeNewAgentList;
-//        agentListModel.recommendedRealtorsTitle = model.data.recommendedRealtorsTitle;
-//        agentListModel.recommendedRealtorsSubTitle = model.data.recommendedRealtorsSubTitle;
-//        agentListModel.recommendedRealtors = model.data.recommendedRealtors;
-//        agentListModel.associateInfo = model.data.recommendRealtorsAssociateInfo;
-//
-//        /******* 这里的 逻辑   ********/
-//        agentListModel.phoneCallViewModel = [[FHHouseDetailPhoneCallViewModel alloc] initWithHouseType:FHHouseTypeNewHouse houseId:self.houseId];
-//        NSMutableDictionary *paramsDict = @{}.mutableCopy;
-//        if (self.detailTracerDic) {
-//            [paramsDict addEntriesFromDictionary:self.detailTracerDic];
-//        }
-//        paramsDict[@"page_type"] = [self pageTypeString];
-//        agentListModel.phoneCallViewModel.tracerDict = paramsDict;
-//        agentListModel.searchId = searchId;
-//        agentListModel.imprId = imprId;
-//        agentListModel.houseId = self.houseId;
-//        agentListModel.houseType = self.houseType;
-//
-//        [self.items addObject:agentListModel];
 //    }
     
     //用户房源评价
@@ -272,12 +252,11 @@
 //    }
     
     //楼栋信息
-//    if (model.data.buildingInfo && model.data.buildingInfo.list.count) {
-//        FHDetailNewBuildingsCellModel *buildingCellModel = [[FHDetailNewBuildingsCellModel alloc] init];
-//        buildingCellModel.houseModelType = FHHouseModelTypeNewBuildingInfo;
-//        buildingCellModel.buildingInfo = model.data.buildingInfo;
-//        [self.items addObject:buildingCellModel];
-//    }
+    if (model.data.buildingInfo && model.data.buildingInfo.list.count) {
+        FHNewHouseDetailBuildingsSM *BuildingSM = [[FHNewHouseDetailBuildingsSM alloc] initWithDetailModel:self.detailData];
+        BuildingSM.sectionType = FHNewHouseDetailSectionTypeBuildings;
+        [sectionModels addObject:BuildingSM];
+    }
     
     self.sectionModels = sectionModels.copy;
     [self.detailController updateLayout:model.isInstantData];
@@ -294,6 +273,7 @@
 // 处理详情页周边新盘请求数据
 - (void)processDetailRelatedData {
     self.detailController.isLoadingData = NO;
+    NSMutableArray *sectionModels = self.sectionModels.mutableCopy;
     if(_relatedHouseData.data && self.relatedHouseData.data.items.count > 0)
     {
 //        FHDetailNewRelatedCellModel *infoModel = [[FHDetailNewRelatedCellModel alloc] init];
@@ -304,17 +284,11 @@
     // 免责声明
     FHDetailNewModel * model = (FHDetailNewModel *)self.detailData;
     if (model.data.contact || model.data.disclaimer) {
-//        FHOldDetailDisclaimerModel *infoModel = [[FHOldDetailDisclaimerModel alloc] init];
-//        infoModel.disclaimer = model.data.disclaimer;
-//        infoModel.houseModelType = FHHouseModelTypeDisclaimer;
-//        if (!model.data.highlightedRealtor) {
-//            // 当且仅当没有合作经纪人时，才在disclaimer中显示 经纪人 信息
-//            infoModel.contact = model.data.contact;
-//        } else {
-//            infoModel.contact = nil;
-//        }
-//        [self.items addObject:infoModel];
+        FHNewHouseDetailDisclaimerSM *disclaimerSM = [[FHNewHouseDetailDisclaimerSM alloc] initWithDetailModel:self.detailData];
+        disclaimerSM.sectionType = FHNewHouseDetailSectionTypeDisclaimer;
+        [sectionModels addObject:disclaimerSM];
     }
+    self.sectionModels = sectionModels.copy;
 }
 
 - (NSString *)pageTypeString {

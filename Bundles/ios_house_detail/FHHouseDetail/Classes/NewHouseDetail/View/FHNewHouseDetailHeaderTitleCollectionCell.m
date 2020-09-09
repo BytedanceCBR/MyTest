@@ -47,6 +47,10 @@
     return CGSizeZero;
 }
 
+- (NSString *)elementType {
+    return @"house_info";
+}
+
 - (instancetype)initWithFrame:(CGRect)frame {
     if (self = [super initWithFrame:frame]) {
         self.topBanner = [[FHDetailTopBannerView alloc] init];

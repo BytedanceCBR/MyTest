@@ -17,6 +17,7 @@
 #import "FHHouseShadowImageType.h"
 #import "FHDetailCommonDefine.h"
 #import <FHHouseBase/UIImage+FIconFont.h>
+#import <FHHouseBase/FHEventShowProtocol.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -64,7 +65,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 // FHDetailBaseCollectionCell
-@interface FHDetailBaseCollectionCell : UICollectionViewCell
+@interface FHDetailBaseCollectionCell : UICollectionViewCell<FHEventShowProtocol>
 
 // 当前cell的模型数据
 @property (nonatomic, weak , nullable) id currentData;

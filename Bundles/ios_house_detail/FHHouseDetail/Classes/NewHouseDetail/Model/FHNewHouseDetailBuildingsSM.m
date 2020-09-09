@@ -9,4 +9,11 @@
 
 @implementation FHNewHouseDetailBuildingsSM
 
+- (void)updateDetailModel:(FHDetailNewModel *)model {
+    FHNewHouseDetailBuildingModel * building = [[FHNewHouseDetailBuildingModel alloc] init];
+    building.buildingInfo = model.data.buildingInfo;
+    self.buildingCellModel = building;
+    self.items = [NSArray arrayWithObject:building];
+}
+
 @end

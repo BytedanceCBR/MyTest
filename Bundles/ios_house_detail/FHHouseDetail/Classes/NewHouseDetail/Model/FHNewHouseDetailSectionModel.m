@@ -9,6 +9,12 @@
 
 @implementation FHNewHouseDetailSectionModel
 
+//禁用外部可见的init方法
+- (id)init {
+    NSAssert(false,@"this class init method is initWithDetailModel");
+    return nil;
+}
+
 - (instancetype)initWithDetailModel:(FHDetailNewModel *)model {
     if (self = [super init]) {
         _detailModel = model;
@@ -46,7 +52,7 @@
 // @return `YES` if the receiver and object are equal, otherwise `NO`.
 // */
 - (BOOL)isEqualToDiffableObject:(nullable id<IGListDiffable>)object {
-    return YES;
+    return self == object;
 }
 
 @end
