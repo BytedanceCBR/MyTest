@@ -13,7 +13,7 @@
 
 #define defaultTitleWidth 58
 
-@interface FHPriceValuationItemView()
+@interface FHPriceValuationItemView()<UITextFieldDelegate>
 
 @property(nonatomic, strong) UIView *contentView;
 @property(nonatomic, strong) UILabel *rightLabel;
@@ -41,6 +41,7 @@
 - (void)initNotification {
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(keyboardWillShowNotifiction:) name:UIKeyboardWillShowNotification object:nil];
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(keyboardWillHideNotifiction:) name:UIKeyboardWillHideNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(textFieldDidChange:) name:UITextFieldTextDidChangeNotification object:nil];
 }
 
 - (void)dealloc {
@@ -138,8 +139,8 @@
     if(!_textField){
         _textField = [[UITextField alloc] init];
         _textField.font = [UIFont themeFontRegular:16];
-//        _textField.attributedPlaceholder = [[NSAttributedString alloc] initWithString:@"" attributes:@{NSForegroundColorAttributeName: [UIColor redColor]}];
         [_textField setTintColor:[UIColor themeRed3]];
+        _textField.delegate = self;
     }
     return _textField;
 }
@@ -281,6 +282,31 @@
             
         }];
     }
+}
+
+#pragma mark - 代理
+
+- (void)textFieldDidChange:(NSNotification *)notification {
+    UITextField *textField = (UITextField *)notification.object;
+    NSString *text = textField.text;
+    
+    if(self.delegate && [self.delegate respondsToSelector:@selector(itemView:textFieldDidChange:)] && self.textField == textField){
+        [self.delegate itemView:self textFieldDidChange:text];
+    }
+}
+
+- (void)textFieldDidBeginEditing:(UITextField *)textField {
+    if(self.delegate && [self.delegate respondsToSelector:@selector(itemView:textFieldDidBeginEditing:)]){
+        return [self.delegate itemView:self textFieldDidBeginEditing:textField];
+    }
+}
+
+- (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string {
+    if(self.delegate && [self.delegate respondsToSelector:@selector(itemView:shouldChangeCharactersInRange:replacementString:)]){
+        return [self.delegate itemView:self shouldChangeCharactersInRange:range replacementString:string];
+    }
+    
+    return YES;
 }
 
 @end

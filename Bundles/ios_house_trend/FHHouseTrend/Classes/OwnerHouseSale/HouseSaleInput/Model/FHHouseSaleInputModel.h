@@ -14,14 +14,18 @@ NS_ASSUME_NONNULL_BEGIN
 //小区信息
 @property(nonatomic ,copy ,nullable) NSString *neighbourhoodId;
 @property(nonatomic ,copy ,nullable) NSString *neighbourhoodName;
-//户型
-@property(nonatomic ,copy ,nullable) NSString *floor;
 //面积
 @property(nonatomic ,copy ,nullable) NSString *area;
 //称呼
 @property(nonatomic ,copy ,nullable) NSString *name;
 //手机号
 @property(nonatomic ,copy ,nullable) NSString *phoneNumber;
+//卫
+@property (nonatomic, copy , nullable) NSString *floorPlanBath;
+//厅
+@property (nonatomic, copy , nullable) NSString *floorPlanHall;
+//室
+@property (nonatomic, copy , nullable) NSString *floorPlanRoom;
 
 @end
 
