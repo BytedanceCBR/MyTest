@@ -138,6 +138,13 @@
 //        [self.items addObject:salesModel];
 //    }
     
+//     推荐经纪人
+    if (model.data.recommendedRealtors.count > 0) {
+        // 添加分割线--当存在某个数据的时候在顶部添加分割线
+        FHNewHouseDetailAgentSM *agentSM = [[FHNewHouseDetailAgentSM alloc] initWithDetailModel:self.detailData];
+        agentSM.sectionType = FHNewHouseDetailSectionTypeAgent;
+        [sectionModels addObject:agentSM];
+    }
 
     
     // 小区评测
@@ -160,35 +167,6 @@
 //        paramsDict[@"impr_id"] = imprId.length > 0 ? imprId : @"be_null";
 //        cellModel.tracerDic = paramsDict;
 //        [self.items addObject:cellModel];
-//    }
-    // 推荐经纪人
-//    if (model.data.recommendedRealtors.count > 0) {
-//        // 添加分割线--当存在某个数据的时候在顶部添加分割线
-//        FHDetailAgentListModel *agentListModel = [[FHDetailAgentListModel alloc] init];
-//        NSString *searchId = self.listLogPB[@"search_id"];
-//        NSString *imprId = self.listLogPB[@"impr_id"];
-//        agentListModel.tableView = self.tableView;
-//        agentListModel.belongsVC = self.detailController;
-//        agentListModel.houseModelType = FHHouseModelTypeNewAgentList;
-//        agentListModel.recommendedRealtorsTitle = model.data.recommendedRealtorsTitle;
-//        agentListModel.recommendedRealtorsSubTitle = model.data.recommendedRealtorsSubTitle;
-//        agentListModel.recommendedRealtors = model.data.recommendedRealtors;
-//        agentListModel.associateInfo = model.data.recommendRealtorsAssociateInfo;
-//
-//        /******* 这里的 逻辑   ********/
-//        agentListModel.phoneCallViewModel = [[FHHouseDetailPhoneCallViewModel alloc] initWithHouseType:FHHouseTypeNewHouse houseId:self.houseId];
-//        NSMutableDictionary *paramsDict = @{}.mutableCopy;
-//        if (self.detailTracerDic) {
-//            [paramsDict addEntriesFromDictionary:self.detailTracerDic];
-//        }
-//        paramsDict[@"page_type"] = [self pageTypeString];
-//        agentListModel.phoneCallViewModel.tracerDict = paramsDict;
-//        agentListModel.searchId = searchId;
-//        agentListModel.imprId = imprId;
-//        agentListModel.houseId = self.houseId;
-//        agentListModel.houseType = self.houseType;
-//
-//        [self.items addObject:agentListModel];
 //    }
     
     //用户房源评价

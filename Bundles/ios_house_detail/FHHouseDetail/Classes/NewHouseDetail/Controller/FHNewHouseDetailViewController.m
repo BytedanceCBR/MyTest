@@ -42,8 +42,9 @@
 #import "FHNewHouseDetailBuildingsSC.h"
 #import "FHNewHouseDetailRecommendSC.h"
 #import "FHDetailPictureTitleView.h"
+#import <FHHouseBase/FHEventShowProtocol.h>
 
-@interface FHNewHouseDetailViewController () <UIGestureRecognizerDelegate,IGListAdapterDataSource,UICollectionViewDelegate,UIScrollViewDelegate>
+@interface FHNewHouseDetailViewController () <UIGestureRecognizerDelegate, IGListAdapterDataSource, UICollectionViewDelegate, UIScrollViewDelegate>
 @property (nonatomic, assign) FHHouseType houseType; // 房源类型
 @property (nonatomic, copy) NSString *source;        // 特殊标记，从哪进入的小区详情，比如地图租房列表“rent_detail”，此时小区房源展示租房列表
 @property (nonatomic, copy) NSString *houseId;       // 房源id
@@ -80,15 +81,17 @@
 @property (nonatomic, strong) FHDetailPictureTitleView *segmentTitleView;
 @property (nonatomic, strong) NSIndexPath *lastIndexPath;
 
+@property (nonatomic, strong) NSMutableDictionary *elementShowCaches;
+
 @end
 
 @implementation FHNewHouseDetailViewController
 
 - (void)dealloc
 {
-    if (@available(iOS 10.0 , *)) {
+    if (@available(iOS 10.0, *)) {
         _callObserver = nil;
-    }else {
+    } else {
         _callCenter = nil;
     }
 }
@@ -139,7 +142,8 @@
     return self;
 }
 
-- (void)viewDidLoad {
+- (void)viewDidLoad
+{
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     self.automaticallyAdjustsScrollViewInsets = NO;
@@ -158,72 +162,77 @@
     });
 }
 
-- (void)viewWillAppear:(BOOL)animated {
+- (void)viewWillAppear:(BOOL)animated
+{
     [super viewWillAppear:animated];
     [self.viewModel.contactViewModel refreshMessageDot];
     [self.view addObserver:self forKeyPath:@"userInteractionEnabled" options:NSKeyValueObservingOptionNew context:nil];
 }
 
-- (void)viewDidAppear:(BOOL)animated {
+- (void)viewDidAppear:(BOOL)animated
+{
     [super viewDidAppear:animated];
     self.isViewDidDisapper = NO;
     [self updateStatusBar:self.collectionView.contentOffset];
     [self refreshContentOffset:self.collectionView.contentOffset];
     [self.view endEditing:YES];
-//    [self.viewModel vc_viewDidAppear:animated];
+    //    [self.viewModel vc_viewDidAppear:animated];
 }
 
--(void)viewWillDisappear:(BOOL)animated
+- (void)viewWillDisappear:(BOOL)animated
 {
     [super viewWillDisappear:animated];
     [self.viewModel addStayPageLog:self.ttTrackStayTime];
-    [self sendCurrentPageStayTime: self.ttTrackStayTime * 1000.0];
+    [self sendCurrentPageStayTime:self.ttTrackStayTime * 1000.0];
     [self tt_resetStayTime];
     [self.view removeObserver:self forKeyPath:@"userInteractionEnabled"];
     [[NSNotificationCenter defaultCenter] removeObserver:self];
-    
+
     //有些页面禁用了pan手势，但是在某些情况下比如直接push切换tab等操作 不会触发关闭当前的view，导致没有设置回来 by xsm
-    if([self.navigationController isKindOfClass:[TTNavigationController class]]){
+    if ([self.navigationController isKindOfClass:[TTNavigationController class]]) {
         TTNavigationController *naviVC = (TTNavigationController *)self.navigationController;
         naviVC.panRecognizer.enabled = YES;
     }
 }
 
-- (void)viewDidDisappear:(BOOL)animated {
+- (void)viewDidDisappear:(BOOL)animated
+{
     [super viewDidDisappear:animated];
     self.isViewDidDisapper = YES;
-//    [self.viewModel vc_viewDidDisappear:animated];
+    //    [self.viewModel vc_viewDidDisappear:animated];
 }
 
 #pragma mark - Setup UI
-- (IGListAdapterUpdater *)listAdapterUpdater {
+- (IGListAdapterUpdater *)listAdapterUpdater
+{
     if (!_listAdapterUpdater) {
         _listAdapterUpdater = [[IGListAdapterUpdater alloc] init];
     }
     return _listAdapterUpdater;
 }
 
-- (void)setupUI {
+- (void)setupUI
+{
     self.detailFlowLayout = [[FHNewHouseDetailFlowLayout alloc] init];
     self.collectionView = [[FHBaseCollectionView alloc] initWithFrame:self.view.bounds collectionViewLayout:self.detailFlowLayout];
     self.collectionView.keyboardDismissMode = UIScrollViewKeyboardDismissModeOnDrag;
-    UITapGestureRecognizer *tapGesturRecognizer=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(tapAction:)];
+    UITapGestureRecognizer *tapGesturRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapAction:)];
     tapGesturRecognizer.cancelsTouchesInView = NO;
     tapGesturRecognizer.delegate = self;
     [self.collectionView addGestureRecognizer:tapGesturRecognizer];
-    if (@available(iOS 11.0 , *)) {
+    if (@available(iOS 11.0, *)) {
         self.collectionView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
     }
     self.collectionView.backgroundColor = [UIColor themeGray7];
     self.view.backgroundColor = self.collectionView.backgroundColor;
     [self.view addSubview:self.collectionView];
-    
+
     self.listAdapter = [[IGListAdapter alloc] initWithUpdater:self.listAdapterUpdater viewController:self workingRangeSize:2];
     self.listAdapter.collectionView = self.collectionView;
     self.listAdapter.dataSource = self;
     self.listAdapter.scrollViewDelegate = self;
     self.listAdapter.collectionViewDelegate = self;
-    
+
     self.viewModel = [[FHNewHouseDetailViewModel alloc] init];
     self.viewModel.detailController = self;
     self.viewModel.houseInfoOriginBizTrace = self.bizTrace;
@@ -237,21 +246,25 @@
     self.viewModel.extraInfo = self.extraInfo;
     self.viewModel.initTimeInterval = self.initTimeInterval;
     __weak typeof(self) weakSelf = self;
-    [self.KVOController observe:self.viewModel keyPath:@"sectionModels" options:NSKeyValueObservingOptionNew block:^(id  _Nullable observer, id  _Nonnull object, NSDictionary<NSString *,id> * _Nonnull change) {
-        if (change[NSKeyValueChangeNewKey] && [change[NSKeyValueChangeNewKey] isKindOfClass:[NSArray class]]) {
-            weakSelf.detailFlowLayout.sectionModels = weakSelf.viewModel.sectionModels;
-            [weakSelf.listAdapter performUpdatesAnimated:NO completion:^(BOOL finished) {
-                
-            }];
-//            [weakSelf.listAdapter reloadDataWithCompletion:^(BOOL finished) {
-//            }];
-        }
-    }];
+    [self.KVOController observe:self.viewModel
+                        keyPath:@"sectionModels"
+                        options:NSKeyValueObservingOptionNew
+                          block:^(id _Nullable observer, id _Nonnull object, NSDictionary<NSString *, id> *_Nonnull change) {
+                              if (change[NSKeyValueChangeNewKey] && [change[NSKeyValueChangeNewKey] isKindOfClass:[NSArray class]]) {
+                                  weakSelf.detailFlowLayout.sectionModels = weakSelf.viewModel.sectionModels;
+                                  [weakSelf.listAdapter performUpdatesAnimated:NO
+                                                                    completion:^(BOOL finished) {
 
-    __weak typeof(self)wself = self;
-//    CGRect screenBounds = [UIScreen mainScreen].bounds;
-//    CGFloat navBarHeight = [TTDeviceHelper isIPhoneXDevice] ? 44 : 20;
-    _navBar = [[FHDetailNavBar alloc]initWithType:FHDetailNavBarTypeDefault];
+                                                                    }];
+                                  //            [weakSelf.listAdapter reloadDataWithCompletion:^(BOOL finished) {
+                                  //            }];
+                              }
+                          }];
+
+    __weak typeof(self) wself = self;
+    //    CGRect screenBounds = [UIScreen mainScreen].bounds;
+    //    CGFloat navBarHeight = [TTDeviceHelper isIPhoneXDevice] ? 44 : 20;
+    _navBar = [[FHDetailNavBar alloc] initWithType:FHDetailNavBarTypeDefault];
     _navBar.backActionBlock = ^{
         [wself.navigationController popViewControllerAnimated:YES];
     };
@@ -262,19 +275,19 @@
     self.bottomMaskView.backgroundColor = [UIColor whiteColor];
     [self.view addSubview:self.bottomMaskView];
     self.bottomMaskView.hidden = YES;
-    
-    self.bottomBar = [[FHOldDetailBottomBarView alloc]initWithFrame:CGRectZero];
-    
+
+    self.bottomBar = [[FHOldDetailBottomBarView alloc] initWithFrame:CGRectZero];
+
     [self.view addSubview:_bottomBar];
     self.viewModel.bottomBar = _bottomBar;
     _bottomBar.hidden = YES;
-    
+
     self.bottomGroupChatBtn = [[FHDetailUGCGroupChatButton alloc] initWithFrame:CGRectZero];
     [self.view addSubview:_bottomGroupChatBtn];
-    self.bottomBar.bottomGroupChatBtn = _bottomGroupChatBtn;// 这样子改动最小
+    self.bottomBar.bottomGroupChatBtn = _bottomGroupChatBtn; // 这样子改动最小
     _bottomGroupChatBtn.hidden = YES;
-    
-    _bottomStatusBar = [[UILabel alloc]init];
+
+    _bottomStatusBar = [[UILabel alloc] init];
     _bottomStatusBar.textAlignment = NSTextAlignmentCenter;
     _bottomStatusBar.backgroundColor = [UIColor colorWithWhite:0 alpha:0.7];
     _bottomStatusBar.text = @"该房源已停售";
@@ -290,7 +303,7 @@
     self.viewModel.contactViewModel.tracerDict = [self makeDetailTracerData];
     self.viewModel.contactViewModel.belongsVC = self;
     self.viewModel.contactViewModel.houseInfoOriginBizTrace = self.bizTrace;
-    
+
     [self addDefaultEmptyViewFullScreen];
 
     [self.collectionView mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -302,7 +315,7 @@
         make.height.mas_equalTo(self.houseType == FHHouseTypeRentHouse ? 64 : 80);
         if (@available(iOS 11.0, *)) {
             make.bottom.mas_equalTo(self.view.mas_bottom).mas_offset(-[UIApplication sharedApplication].delegate.window.safeAreaInsets.bottom);
-        }else {
+        } else {
             make.bottom.mas_equalTo(self.view);
         }
     }];
@@ -311,22 +324,23 @@
         make.bottom.mas_equalTo(self.bottomBar.mas_top);
         make.height.mas_equalTo(0);
     }];
-    
+
     [_bottomMaskView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(self.bottomBar.mas_top);
         make.left.right.bottom.mas_equalTo(self.view);
     }];
-    
+
     [_bottomGroupChatBtn mas_makeConstraints:^(MASConstraintMaker *make) {
         make.height.mas_equalTo(32);
         make.right.mas_equalTo(self.view);
         make.bottom.mas_equalTo(self.bottomBar.mas_top).offset(-30);
     }];
-    
+
     [self.view bringSubviewToFront:_navBar];
 }
 
-- (void)setNavBarTitle:(NSString *)navTitle {
+- (void)setNavBarTitle:(NSString *)navTitle
+{
     UILabel *titleLabel = [UILabel new];
     FHDetailNavBar *navbar = (FHDetailNavBar *)[self getNaviBar];
     titleLabel.text = navTitle;
@@ -340,10 +354,11 @@
     }];
 }
 
-- (void)refreshContentOffset:(CGPoint)contentOffset {
+- (void)refreshContentOffset:(CGPoint)contentOffset
+{
     CGFloat alpha = contentOffset.y / 139 * 2;
     [self.navBar refreshAlpha:alpha];
-    
+
     if ((contentOffset.y <= 0 && _lastContentOffset.y <= 0) || (contentOffset.y > 0 && _lastContentOffset.y > 0)) {
         return;
     }
@@ -351,7 +366,8 @@
     [self updateStatusBar:contentOffset];
 }
 
-- (void)updateStatusBar:(CGPoint)contentOffset {
+- (void)updateStatusBar:(CGPoint)contentOffset
+{
     UIStatusBarStyle style = UIStatusBarStyleLightContent;
     if (contentOffset.y > 0) {
         style = UIStatusBarStyleDefault;
@@ -361,23 +377,23 @@
     }
 }
 
--(void)updateLayout:(BOOL)isInstant
+- (void)updateLayout:(BOOL)isInstant
 {
     [self.collectionView mas_remakeConstraints:^(MASConstraintMaker *make) {
         make.top.left.right.mas_equalTo(self.view);
         if (isInstant) {
             make.bottom.mas_equalTo(self.view);
-        }else{
+        } else {
             make.bottom.mas_equalTo(self.bottomBar.mas_top);
         }
     }];
     self.bottomBar.hidden = isInstant;
     self.bottomMaskView.hidden = isInstant;
     self.bottomStatusBar.hidden = isInstant;
-    
+
     if (isInstant) {
         [self.view bringSubviewToFront:self.collectionView];
-    }else{
+    } else {
         [self.view sendSubviewToBack:self.collectionView];
     }
     [self.view setNeedsUpdateConstraints];
@@ -394,37 +410,40 @@
 }
 
 #pragma mark - Request
-- (void)startLoadData {
+- (void)startLoadData
+{
     if ([TTReachability isNetworkConnected]) {
-//        if (!self.instantData) {
-            [self startLoading];
-//        }
+        //        if (!self.instantData) {
+        [self startLoading];
+        //        }
         self.isLoadingData = YES;
         [self.viewModel startLoadData];
     } else {
         //无网就显示蒙层
-//        if (!self.instantData) {
-            [self.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoNetWorkAndRefresh];
-//        }
+        //        if (!self.instantData) {
+        [self.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoNetWorkAndRefresh];
+        //        }
     }
 }
 
 // 重新加载
-- (void)retryLoadData {
+- (void)retryLoadData
+{
     if (!self.isLoadingData) {
         [self startLoadData];
     }
 }
 
 #pragma mark - Phone
-- (void)setupCallCenter {
-    if (@available(iOS 10.0 , *)) {
-        _callObserver = [[CXCallObserver alloc]init];
+- (void)setupCallCenter
+{
+    if (@available(iOS 10.0, *)) {
+        _callObserver = [[CXCallObserver alloc] init];
         [_callObserver setDelegate:(id)self queue:dispatch_get_main_queue()];
-    }else {
+    } else {
         @weakify(self);
         _callCenter = [[CTCallCenter alloc] init];
-        _callCenter.callEventHandler = ^(CTCall* call){
+        _callCenter.callEventHandler = ^(CTCall *call) {
             @strongify(self);
             dispatch_async(dispatch_get_main_queue(), ^{
                 [self callHandlerWith:call];
@@ -433,12 +452,12 @@
     }
 }
 
-- (void)callObserver:(CXCallObserver *)callObserver callChanged:(CXCall *)call API_AVAILABLE(ios(10.0)){
-    
+- (void)callObserver:(CXCallObserver *)callObserver callChanged:(CXCall *)call API_AVAILABLE(ios(10.0))
+{
     if (![self isTopestViewController]) {
-        return ;
+        return;
     }
-//    NSLog(@"outgoing :%d  onHold :%d   hasConnected :%d   hasEnded :%d",call.outgoing,call.onHold,call.hasConnected,call.hasEnded);
+    //    NSLog(@"outgoing :%d  onHold :%d   hasConnected :%d   hasEnded :%d",call.outgoing,call.onHold,call.hasConnected,call.hasEnded);
     /** 以下为我手动测试 如有错误欢迎指出
       拨通:  outgoing :1  onHold :0   hasConnected :0   hasEnded :0
       拒绝:  outgoing :1  onHold :0   hasConnected :0   hasEnded :1
@@ -461,36 +480,35 @@
     }
     //挂断
     if (call.hasEnded) {
-
         [self checkShowSocialAlert];
         self.isPhoneCalled = NO;
     }
 }
 
-- (void)callHandlerWith:(CTCall*)call
+- (void)callHandlerWith:(CTCall *)call
 {
     if (![self isTopestViewController]) {
-        return ;
+        return;
     }
 
-    if ([call.callState isEqualToString:CTCallStateDisconnected]){
-
+    if ([call.callState isEqualToString:CTCallStateDisconnected]) {
         [self checkShowSocialAlert];
         self.isPhoneCalled = NO;
-    }else if ([call.callState isEqualToString:CTCallStateConnected]){
+    } else if ([call.callState isEqualToString:CTCallStateConnected]) {
         //通话中
         self.isPhoneCallPickUp = YES;
-    }else if([call.callState isEqualToString:CTCallStateIncoming]){
+    } else if ([call.callState isEqualToString:CTCallStateIncoming]) {
         //来电话
-    }else if ([call.callState isEqualToString:CTCallStateDialing]){
+    } else if ([call.callState isEqualToString:CTCallStateDialing]) {
         //正在拨号
         self.isPhoneCalled = YES;
-    }else{
+    } else {
         //doNothing
     }
 }
 
-- (void)checkShowSocialAlert {
+- (void)checkShowSocialAlert
+{
     // 新房留资后弹窗
     if (self.isPhoneCalled) {
         self.isPhoneCalled = NO;
@@ -501,7 +519,8 @@
 }
 
 #pragma mark - Method
-- (BOOL)isTopestViewController {
+- (BOOL)isTopestViewController
+{
     /**
          经纪人评价页面原本只应该出现在房源详情页
          目前会在房源详情页后面的所有页面只要触发手机号拨通就会弹出
@@ -514,21 +533,23 @@
 }
 
 // page_type
--(NSString *)pageTypeString {
+- (NSString *)pageTypeString
+{
     return @"new_detail";
 }
 
 // 构建详情页基础埋点数据
-- (NSMutableDictionary *)makeDetailTracerData {
+- (NSMutableDictionary *)makeDetailTracerData
+{
     NSMutableDictionary *detailTracerDic = [NSMutableDictionary new];
     detailTracerDic[@"page_type"] = [self pageTypeString];
-    detailTracerDic[@"card_type"] = self.tracerDict[@"card_type"] ? : @"be_null";
-    detailTracerDic[@"enter_from"] = self.tracerDict[@"enter_from"] ? : @"be_null";
-    detailTracerDic[@"element_from"] = self.tracerDict[@"element_from"] ? : @"be_null";
-    detailTracerDic[@"rank"] = self.tracerDict[@"rank"] ? : @"be_null";
-    detailTracerDic[@"origin_from"] = self.tracerDict[@"origin_from"] ? : @"be_null";
-    detailTracerDic[@"origin_search_id"] = self.tracerDict[@"origin_search_id"] ? : @"be_null";
-    detailTracerDic[@"log_pb"] = self.tracerDict[@"log_pb"] ? : @"be_null";
+    detailTracerDic[@"card_type"] = self.tracerDict[@"card_type"] ?: @"be_null";
+    detailTracerDic[@"enter_from"] = self.tracerDict[@"enter_from"] ?: @"be_null";
+    detailTracerDic[@"element_from"] = self.tracerDict[@"element_from"] ?: @"be_null";
+    detailTracerDic[@"rank"] = self.tracerDict[@"rank"] ?: @"be_null";
+    detailTracerDic[@"origin_from"] = self.tracerDict[@"origin_from"] ?: @"be_null";
+    detailTracerDic[@"origin_search_id"] = self.tracerDict[@"origin_search_id"] ?: @"be_null";
+    detailTracerDic[@"log_pb"] = self.tracerDict[@"log_pb"] ?: @"be_null";
     detailTracerDic[@"from_gid"] = self.tracerDict[@"from_gid"];
     // 以下3个参数都在:log_pb中
     // group_id
@@ -539,7 +560,8 @@
     return detailTracerDic;
 }
 
-- (void)tapAction:(id)tap {
+- (void)tapAction:(id)tap
+{
     [self.collectionView endEditing:YES];
 }
 
@@ -554,18 +576,20 @@
 }
 
 #pragma mark - TTUIViewControllerTrackProtocol
-- (void)trackEndedByAppWillEnterBackground {
-    
+- (void)trackEndedByAppWillEnterBackground
+{
     [self.viewModel addStayPageLog:self.ttTrackStayTime * 1000.0];
     [self trySendCurrentPageStayTime];
 }
 
-- (void)trackStartedByAppWillEnterForground {
+- (void)trackStartedByAppWillEnterForground
+{
     [self tt_resetStayTime];
     self.ttTrackStartTime = [[NSDate date] timeIntervalSince1970];
 }
 
-- (void)sendCurrentPageStayTime:(double)duration {
+- (void)sendCurrentPageStayTime:(double)duration
+{
     if (self.houseType != FHHouseTypeSecondHandHouse) {
         return;
     }
@@ -575,7 +599,7 @@
 
     if ([elementFrom isEqualToString:@"be_null"]) {
         enterFrom = [NSString stringWithFormat:@"click_%@", _categoryName];
-    }else {
+    } else {
         enterFrom = [NSString stringWithFormat:@"click_%@", elementFrom];
     }
     //新加的详情页关联时长
@@ -584,27 +608,28 @@
                                                                        enterFrom:enterFrom
                                                                     categoryName:_categoryName
                                                                         stayTime:(NSInteger)(duration)
-                                                                           logPb:self.listLogPB];
+                                                                                 logPb:self.listLogPB];
 }
 
-- (void)trySendCurrentPageStayTime {
-    if (self.ttTrackStartTime == 0) {//当前页面没有在展示过
+- (void)trySendCurrentPageStayTime
+{
+    if (self.ttTrackStartTime == 0) { //当前页面没有在展示过
         return;
     }
     double duration = self.ttTrackStayTime * 1000.0;
-    if (duration <= 200) {//低于200毫秒，忽略
+    if (duration <= 200) { //低于200毫秒，忽略
         self.ttTrackStartTime = 0;
         [self tt_resetStayTime];
         return;
     }
     [self sendCurrentPageStayTime:duration];
-    
+
     self.ttTrackStartTime = 0;
     [self tt_resetStayTime];
 }
 
 #pragma mark - for keyboard show
--(void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSKeyValueChangeKey,id> *)change context:(void *)context
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSKeyValueChangeKey, id> *)change context:(void *)context
 {
     if ([keyPath isEqualToString:@"userInteractionEnabled"]) {
         [self.view endEditing:YES];
@@ -612,8 +637,9 @@
 }
 
 #pragma mark - UIGestureRecognizerDelegate
-- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer {
-    if([otherGestureRecognizer.view isKindOfClass:[UITextField class]] || [otherGestureRecognizer isKindOfClass:NSClassFromString(@"UIScrollViewPanGestureRecognizer")]){
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer
+{
+    if ([otherGestureRecognizer.view isKindOfClass:[UITextField class]] || [otherGestureRecognizer isKindOfClass:NSClassFromString(@"UIScrollViewPanGestureRecognizer")]) {
         return NO;
     }
     return YES;
@@ -625,9 +651,10 @@
 {
     UIViewController *popVC = [self.navigationController popViewControllerAnimated:YES];
     if (nil == popVC) {
-        [self dismissViewControllerAnimated:YES completion:^{
-            
-        }];
+        [self dismissViewControllerAnimated:YES
+                                 completion:^ {
+
+                                 }];
     }
 }
 
@@ -645,7 +672,8 @@
 
  @return An array of objects for the list.
  */
-- (NSArray<id <IGListDiffable>> *)objectsForListAdapter:(IGListAdapter *)listAdapter {
+- (NSArray<id<IGListDiffable>> *)objectsForListAdapter:(IGListAdapter *)listAdapter
+{
     return self.viewModel.sectionModels;
 }
 
@@ -664,7 +692,8 @@
  Section controllers are reused when objects are moved or updated. Maintaining the `-[IGListDiffable diffIdentifier]`
  guarantees this.
  */
-- (IGListSectionController *)listAdapter:(IGListAdapter *)listAdapter sectionControllerForObject:(id)object {
+- (IGListSectionController *)listAdapter:(IGListAdapter *)listAdapter sectionControllerForObject:(id)object
+{
     if (object && [object isKindOfClass:[FHNewHouseDetailSectionModel class]]) {
         FHNewHouseDetailSectionModel *sectionModel = (FHNewHouseDetailSectionModel *)object;
         switch (sectionModel.sectionType) {
@@ -719,45 +748,80 @@
  but for performance reasons you may want to retain the view and return it here. The infra is only responsible for
  adding the background view and maintaining its visibility.
  */
-- (nullable UIView *)emptyViewForListAdapter:(IGListAdapter *)listAdapter {
+- (nullable UIView *)emptyViewForListAdapter:(IGListAdapter *)listAdapter
+{
     return nil;
 }
 
 #pragma mark - UICollectionViewDelegate
-- (void)collectionView:(UICollectionView *)collectionView willDisplayCell:(UICollectionViewCell *)cell forItemAtIndexPath:(NSIndexPath *)indexPath {
-    
+- (NSMutableDictionary *)elementShowCaches {
+    if (!_elementShowCaches) {
+        _elementShowCaches = [NSMutableDictionary dictionary];
+    }
+    return _elementShowCaches;
 }
 
-- (void)collectionView:(UICollectionView *)collectionView didEndDisplayingCell:(UICollectionViewCell *)cell forItemAtIndexPath:(NSIndexPath *)indexPath {
-    
+- (void)collectionView:(UICollectionView *)collectionView willDisplayCell:(UICollectionViewCell *)cell forItemAtIndexPath:(NSIndexPath *)indexPath {
+    NSString *tempKey = [NSString stringWithFormat:@"%ld_%ld", (long)indexPath.section, (long)indexPath.item];
+    if (self.elementShowCaches[tempKey]) {
+        return;
+    }
+    self.elementShowCaches[tempKey] = @(YES);
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        if ([cell conformsToProtocol:@protocol(FHEventShowProtocol)]) {
+            UICollectionViewCell<FHEventShowProtocol> *showCell = (UICollectionViewCell<FHEventShowProtocol> *)cell;
+            if ([showCell respondsToSelector:@selector(elementType)]) {
+                [self trackElementType:[showCell elementType]];
+            } else if ([showCell respondsToSelector:@selector(elementTypes)]) {
+                NSArray *elementArray = [showCell elementTypes];
+                for (NSString *elementType in elementArray) {
+                    [self trackElementType:elementType];
+                }
+            }
+        }
+    });
+}
+
+- (void)trackElementType:(NSString *)elementType
+{
+    if (elementType.length) {
+        NSMutableDictionary *tracerDic = self.tracerDict.mutableCopy;
+        tracerDic[@"element_type"] = elementType;
+        [tracerDic removeObjectForKey:@"element_from"];
+        [FHUserTracker writeEvent:@"element_show" params:tracerDic];
+    }
+}
+
+- (void)collectionView:(UICollectionView *)collectionView didEndDisplayingCell:(UICollectionViewCell *)cell forItemAtIndexPath:(NSIndexPath *)indexPath
+{
 }
 
 #pragma mark - UIScrollViewDelegate
-- (void)scrollViewDidScroll:(UIScrollView *)scrollView {
-
-//    if (self.segmentViewChangedFlag) {
-//        return;
-//    }
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView
+{
+    //    if (self.segmentViewChangedFlag) {
+    //        return;
+    //    }
     //locate the scrollview which is in the centre
-//    CGPoint centerPoint = CGPointMake(20, scrollView.contentOffset.y + 55);
-    
-//    CGPoint centerPoint = [self.view convertPoint:CGPointMake(20, 55) toView:self.mainCollectionView];
+    //    CGPoint centerPoint = CGPointMake(20, scrollView.contentOffset.y + 55);
+
+    //    CGPoint centerPoint = [self.view convertPoint:CGPointMake(20, 55) toView:self.mainCollectionView];
     //1 6 2
-//    NSIndexPath *indexPath = [self.collectionView indexPathForItemAtPoint:centerPoint];
-//    NSLog(@"centerPoint :%@ section:%d,row:%d",NSStringFromCGPoint(centerPoint),indexPath.section,indexPath.item);
-//    if (indexPath && self.lastIndexPath.section != indexPath.section) {
-//        self.lastIndexPath = indexPath;
-//        if (indexPath.section < self.pictsArray.count) {
-//            NSInteger currentIndex = 0;
-//            for (int i = 0; i < indexPath.section; i++) {
-//                FHHouseDetailImageGroupModel *smallImageGroupModel = self.pictsArray[i];
-//                currentIndex += smallImageGroupModel.images.count;
-//            }
-//            if (self.segmentTitleView) {
-//                self.segmentTitleView.selectIndex = currentIndex;
-//            }
-//        }
-//    }
+    //    NSIndexPath *indexPath = [self.collectionView indexPathForItemAtPoint:centerPoint];
+    //    NSLog(@"centerPoint :%@ section:%d,row:%d",NSStringFromCGPoint(centerPoint),indexPath.section,indexPath.item);
+    //    if (indexPath && self.lastIndexPath.section != indexPath.section) {
+    //        self.lastIndexPath = indexPath;
+    //        if (indexPath.section < self.pictsArray.count) {
+    //            NSInteger currentIndex = 0;
+    //            for (int i = 0; i < indexPath.section; i++) {
+    //                FHHouseDetailImageGroupModel *smallImageGroupModel = self.pictsArray[i];
+    //                currentIndex += smallImageGroupModel.images.count;
+    //            }
+    //            if (self.segmentTitleView) {
+    //                self.segmentTitleView.selectIndex = currentIndex;
+    //            }
+    //        }
+    //    }
 }
 
 //- (void)scrollToCurrentIndex:(NSInteger )toIndex {
@@ -765,7 +829,7 @@
 //    //需要通过计算得出，
 //    NSInteger count = 0;
 //    NSInteger titleIndex = 0;
-//    
+//
 //    for (int i = 0; i < self.pictsArray.count; i++) {
 //        FHHouseDetailImageGroupModel *smallImageGroupModel = self.pictsArray[i];
 //        NSInteger tempCount = smallImageGroupModel.images.count;
@@ -796,7 +860,7 @@
 //    } completion:^(BOOL finished) {
 //        self.segmentViewChangedFlag = NO;
 //    }];
-//    
+//
 ////    [self.mainCollectionView scrollRectToVisible:frame animated:YES];
 ////    [self.mainCollectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:titleIndex] atScrollPosition:UICollectionViewScrollPositionBottom animated:YES];
 //}

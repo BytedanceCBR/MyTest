@@ -21,7 +21,7 @@
 
 - (instancetype)init {
     if (self = [super init]) {
-        self.inset = UIEdgeInsetsMake(-20, 15, 20, 15);
+        self.inset = UIEdgeInsetsMake(-20, 15, 12, 15);
 //        self.minimumLineSpacing = 20;
     }
     return self;

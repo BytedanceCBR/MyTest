@@ -19,7 +19,7 @@
 
 - (instancetype)init {
     if (self = [super init]) {
-        self.inset = UIEdgeInsetsMake(0, 15, 20, 15);
+        
 //        self.minimumLineSpacing = 20;
         self.supplementaryViewSource = self;
     }
