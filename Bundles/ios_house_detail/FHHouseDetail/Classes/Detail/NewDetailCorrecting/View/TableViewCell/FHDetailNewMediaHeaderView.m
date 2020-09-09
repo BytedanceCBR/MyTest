@@ -165,20 +165,17 @@
             [self.itemIndexArray addObject:@(i)];
         }
     }
+    [self.scrollView updateModel:model];
     if (_itemArray.count > 1) {
         self.itemView.hidden = NO;
+        [self setNeedsLayout];
+        [self layoutIfNeeded];
         self.itemView.titleArray = _itemArray;
         [self.itemView selectedItem:_itemArray[0]];
-
-        CGFloat itemViewWidth = 0;
-        if (_itemArray.count > 0) {
-            itemViewWidth = 10 + 44 * _itemArray.count;
-        }
     } else {
         self.itemView.hidden = YES;
     }
-
-    [self.scrollView updateModel:model];
+    
 }
 
 - (void)updateTitleModel:(FHDetailHouseTitleModel *)model {
@@ -217,8 +214,11 @@
     self.infoLabel.text = text;
     CGFloat width = [text btd_widthWithFont:[UIFont themeFontRegular:12] height:20];
     width += 14;
-    if (width < 43) {
-        width = 43;
+    if (width < 44) {
+        width = 44;
+    }
+    if (width == self.infoLabel.frame.size.width) {
+        return;
     }
     [self.infoLabel mas_updateConstraints:^(MASConstraintMaker *make) {
         make.width.mas_equalTo(width);

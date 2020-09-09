@@ -324,15 +324,20 @@
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    FHFeedUGCCellModel *cellModel = self.dataList[indexPath.row];
-    self.currentCellModel = cellModel;
-    self.currentCell = [tableView cellForRowAtIndexPath:indexPath];
-    
-    if(self.currentCell == self.currentVideoCell){
-        self.detailJumpManager.currentCell = self.currentCell;
-        [self.detailJumpManager jumpToDetail:cellModel showComment:NO enterType:@"feed_content_blank"];
-    }else{
-        [self didVideoClicked:cellModel cell:self.currentCell];
+    if(indexPath.row < self.dataList.count){
+        FHFeedUGCCellModel *cellModel = self.dataList[indexPath.row];
+        self.currentCellModel = cellModel;
+        self.currentCell = [tableView cellForRowAtIndexPath:indexPath];
+        
+        if(self.currentCell == self.currentVideoCell || ![self.currentCell isKindOfClass:[FHUGCFullScreenVideoCell class]]){
+            if(self.isScrolling){
+                return;
+            }
+            self.detailJumpManager.currentCell = self.currentCell;
+            [self.detailJumpManager jumpToDetail:cellModel showComment:NO enterType:@"feed_content_blank"];
+        }else{
+            [self didVideoClicked:cellModel cell:self.currentCell];
+        }
     }
 }
 
@@ -352,7 +357,7 @@
             }
         }else{
             //向下滑动
-            if(CGRectGetMaxY(frame) > screenHeight){
+            if((CGRectGetMaxY(frame) - 50) > screenHeight){
                 [self pauseCurrentVideo];
             }
         }
@@ -451,26 +456,28 @@
     }
     
     NSIndexPath *indexPath = [NSIndexPath indexPathForRow:row inSection:0];
-    [self.tableView scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionTop animated:YES];
     UITableViewCell *cell = [self.tableView cellForRowAtIndexPath:indexPath];
-    self.currentVideoCell.contentView.userInteractionEnabled = NO;
-    self.currentVideoCell.mutedBgView.alpha = 0;
-    self.tableView.scrollEnabled = NO;
-    
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        if([cell isKindOfClass:[FHUGCFullScreenVideoCell class]]){
-            FHUGCFullScreenVideoCell *vCell = (FHUGCFullScreenVideoCell *)cell;
-            vCell.contentView.userInteractionEnabled = YES;
-            self.currentVideoCell = vCell;
-            [vCell play];
-        }
+    if([cell isKindOfClass:[FHUGCFullScreenVideoCell class]]){
+        [self.tableView scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionTop animated:YES];
+        self.currentVideoCell.contentView.userInteractionEnabled = NO;
+        self.currentVideoCell.mutedBgView.alpha = 0;
+        self.tableView.scrollEnabled = NO;
         
-        self.tableView.scrollEnabled = YES;
-    });
-    
-    if(row >= (self.dataList.count - 3)){
-         //在刷一刷数据
-         [self requestData:NO first:NO];
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            if([cell isKindOfClass:[FHUGCFullScreenVideoCell class]]){
+                FHUGCFullScreenVideoCell *vCell = (FHUGCFullScreenVideoCell *)cell;
+                vCell.contentView.userInteractionEnabled = YES;
+                self.currentVideoCell = vCell;
+                [vCell play];
+            }
+            
+            self.tableView.scrollEnabled = YES;
+        });
+        
+        if(row >= (self.dataList.count - 3)){
+             //在刷一刷数据
+             [self requestData:NO first:NO];
+        }
     }
 }
 
@@ -559,13 +566,14 @@
 }
 
 - (FHUGCFullScreenVideoCell *)getFitableVideoCell {
+    CGFloat maxY = screenHeight;
     NSArray *cells = [self.tableView visibleCells];
     for (NSInteger i = 0; i < cells.count; i++) {
         UITableViewCell *cell = cells[i];
         if([cell isKindOfClass:[FHUGCFullScreenVideoCell class]] && [cell conformsToProtocol:@protocol(TTVFeedPlayMovie)]){
             FHUGCFullScreenVideoCell<TTVFeedPlayMovie> *vCell = (FHUGCFullScreenVideoCell<TTVFeedPlayMovie> *)cell;
             CGRect frame = [vCell.videoView convertRect:vCell.videoView.bounds toView:self.viewController.view];
-            if(frame.origin.y >= CGRectGetMaxY(self.viewController.customNavBarView.frame)){
+            if(frame.origin.y >= CGRectGetMaxY(self.viewController.customNavBarView.frame) && (CGRectGetMaxY(frame) - 50) < maxY){
                 return vCell;
             }
         }
