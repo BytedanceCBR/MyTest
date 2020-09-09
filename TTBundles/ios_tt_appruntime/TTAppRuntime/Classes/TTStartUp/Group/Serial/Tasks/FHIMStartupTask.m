@@ -32,6 +32,7 @@
 #import "FHMainApi+Contact.h"
 #import "FHHousePhoneCallUtils.h"
 #import "FHDetailBaseModel.h"
+#import "FIMDebugManager.h"
 
 DEC_TASK("FHIMStartupTask",FHTaskTypeSerial,TASK_PRIORITY_HIGH+16);
 
@@ -377,6 +378,31 @@ DEC_TASK("FHIMStartupTask",FHTaskTypeSerial,TASK_PRIORITY_HIGH+16);
         [[IMManager shareInstance] startupWithUid:uid];
         
         self.isConfigIMModule = YES;
+        
+    
+#if DEBUG && !TARGET_IPHONE_SIMULATOR
+        [[FIMDebugManager shared] setupDebugShakeGestureWithEventBlk:^(BOOL isEnable) {
+            
+            if(!isEnable) {
+                return ;
+            }
+            
+            if (![TTSandBoxHelper isInHouseApp]) {
+                return;
+            }
+
+            UIViewController *topVC = [TTUIResponderHelper visibleTopViewController];
+            Class debugVCClass = NSClassFromString(@"SSDebugViewController");
+            if(!debugVCClass || [topVC isKindOfClass:debugVCClass]) {
+                return;
+            }
+            
+            UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:[debugVCClass new]];
+            navigationController.modalPresentationStyle = UIModalPresentationFullScreen;
+            [topVC presentViewController:navigationController animated:YES completion:NULL];
+            [[FIMMediaTool sharedInstance] shakeOnceTime];
+        }];
+#endif
     }
 }
 - (void)deviceDidRefreshed:(NSNotification *)notification {
