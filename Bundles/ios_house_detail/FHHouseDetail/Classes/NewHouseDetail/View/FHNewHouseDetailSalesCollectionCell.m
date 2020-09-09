@@ -302,10 +302,10 @@
 -(void)addClickOptionLog:(NSNumber *)actionType
 {
 //    click_position: recieve（领取），subscribe（预约）
-    NSMutableDictionary *tracerDic = self.baseViewModel.detailTracerDic.mutableCopy;
-    tracerDic[@"element_type"] = @"coupon";
-    tracerDic[@"action_type"] = actionType;
-    TRACK_EVENT(@"click_options", tracerDic);
+//    NSMutableDictionary *tracerDic = self.baseViewModel.detailTracerDic.mutableCopy;
+//    tracerDic[@"element_type"] = @"coupon";
+//    tracerDic[@"action_type"] = actionType;
+//    TRACK_EVENT(@"click_options", tracerDic);
 }
 
 
