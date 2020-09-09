@@ -53,13 +53,14 @@
 - (__kindof UICollectionViewCell *)cellForItemAtIndex:(NSInteger)index {
     __weak typeof(self) weakSelf = self;
     FHNewHouseDetailAgentSM *agentSM = (FHNewHouseDetailAgentSM *)self.sectionModel;
-    if (index == agentSM.recommendedRealtors.count) {
+    if ((!agentSM.isFold && agentSM.recommendedRealtors.count > 3 && index == 3) || (agentSM.isFold && agentSM.recommendedRealtors.count > 3 && index == agentSM.recommendedRealtors.count)) {
         //展开，收起
         FHNewHouseDetailReleatorMoreCell *cell = [self.collectionContext dequeueReusableCellOfClass:[FHNewHouseDetailReleatorMoreCell class] forSectionController:self atIndex:index];
         __weak FHNewHouseDetailAgentSM *weakAgentSM = agentSM;
         [cell setFoldButtonActionBlock:^{
             weakAgentSM.isFold = !weakAgentSM.isFold;
             [weakSelf.collectionContext performBatchAnimated:YES updates:^(id<IGListBatchContext>  _Nonnull batchContext) {
+//                [batchContext reloadInSectionController:weakAgentSM atIndexes:[[NSIndexSet alloc] initWithIndexesInRange:NSMakeRange(3, <#NSUInteger len#>)]
                 [batchContext reloadSectionController:weakSelf];
             } completion:^(BOOL finished) {
                 
