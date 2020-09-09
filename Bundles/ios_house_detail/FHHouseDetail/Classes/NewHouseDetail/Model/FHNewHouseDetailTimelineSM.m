@@ -12,7 +12,7 @@
 
 - (void)updateDetailModel:(FHDetailNewModel *)model {
     NSMutableArray *items = [NSMutableArray array];
-    FHNewHouseDetailNewHouseNewsCellModel *newsCellModel = [[FHNewHouseDetailNewHouseNewsCellModel alloc] init];
+    FHNewHouseDetailTimeLineCellModel *newsCellModel = [[FHNewHouseDetailTimeLineCellModel alloc] init];
     if (model.data.timeline.list.count > 0) {
         newsCellModel.timeLineModel = model.data.timeline;
         self.newsCellModel = newsCellModel;

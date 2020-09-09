@@ -6,13 +6,13 @@
 //
 
 #import "FHNewHouseDetailSectionModel.h"
-#import "FHNewHouseDetailNewHouseNewsCollectionCell.h"
+#import "FHNewHouseDetailTimeLineCollectionCell.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
 @interface FHNewHouseDetailTimelineSM : FHNewHouseDetailSectionModel
 
-@property (nonatomic, strong, nullable) FHNewHouseDetailNewHouseNewsCellModel *newsCellModel;
+@property (nonatomic, strong, nullable) FHNewHouseDetailTimeLineCellModel *newsCellModel;
 
 @end
 
