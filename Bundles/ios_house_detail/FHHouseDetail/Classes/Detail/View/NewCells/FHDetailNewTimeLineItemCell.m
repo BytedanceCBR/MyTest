@@ -157,7 +157,7 @@
         }];
         self.titleLabel.text = model.title;
         CGFloat width = [self.titleLabel btd_widthWithHeight:17] + 12;
-        CGFloat maxWidth = CGRectGetMaxX(self.contentView.frame) - 15 - CGRectGetMaxX(self.timeLabel.frame);
+        CGFloat maxWidth = MAIN_SCREEN_WIDTH - 15 - 33 - timeWidth - 4;
         [self.titleLabel mas_updateConstraints:^(MASConstraintMaker *make) {
             make.width.mas_equalTo(MIN(width, maxWidth));
         }];

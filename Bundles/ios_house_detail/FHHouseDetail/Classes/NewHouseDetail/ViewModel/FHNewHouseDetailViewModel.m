@@ -40,6 +40,8 @@
 #import "FHNewHouseDetailDisclaimerSC.h"
 #import "FHNewHouseDetailDisclaimerSM.h"
 #import "FHNewHouseDetailViewController.h"
+#import "FHNewHouseDetailRelatedSC.h"
+#import "FHNewHouseDetailRelatedSM.h"
 
 @interface FHNewHouseDetailViewModel ()
 
@@ -131,14 +133,18 @@
     }
 
     
+    
     // 优惠信息
-//    if (model.data.discountInfo) {
+    if (model.data.discountInfo) {
+        FHNewHouseDetailSalesSM *salesSM = [[FHNewHouseDetailSalesSM alloc] initWithDetailModel:self.detailData];
+        salesSM.sectionType = FHNewHouseDetailSectionTypeSales;
+        [sectionModels addObject:salesSM];
 //        FHDetailSalesCellModel *salesModel = [[FHDetailSalesCellModel alloc] init];
 //        salesModel.discountInfo = model.data.discountInfo;
 //        salesModel.houseModelType = FHHouseModelTypeNewSales;
 //        salesModel.contactViewModel = self.contactViewModel;
 //        [self.items addObject:salesModel];
-//    }
+    }
     
 //     推荐经纪人
     if (model.data.recommendedRealtors.count > 0) {
