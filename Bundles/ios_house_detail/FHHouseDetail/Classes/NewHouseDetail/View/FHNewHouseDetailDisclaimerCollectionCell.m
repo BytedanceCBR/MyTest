@@ -37,8 +37,11 @@
         return CGSizeZero;
     }
     FHNewHouseDetailDisclaimerModel *model = (FHNewHouseDetailDisclaimerModel *)data;
-    CGFloat height = [model.disclaimer.text btd_heightWithFont:[UIFont themeFontRegular:11] width:width];
-    height += 25;
+    CGFloat height = 0;
+    if (model.disclaimer && model.disclaimer.text.length > 0) {
+        height += [model.disclaimer.text btd_heightWithFont:[UIFont themeFontRegular:11] width:width];
+        height += 25;
+    }
     if (model.contact.realtorName.length > 0 || model.contact.agencyName.length > 0) {
         height += 14 + 2;
     }
