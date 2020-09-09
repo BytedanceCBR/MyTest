@@ -129,10 +129,18 @@
     if (data && [data isKindOfClass:[FHNewHouseDetailSalesCellModel class]]) {
         FHNewHouseDetailSalesCellModel *model = (FHNewHouseDetailSalesCellModel *)data;
         if (model.discountInfo.count > 0) {
-            CGFloat height = 66 * model.discountInfo.count;
-            return CGSizeMake(width, 16 + height);
-        } else {
-            return CGSizeMake(width, 64);
+            CGFloat height = 16;
+            for (NSInteger idx = 0; idx < model.discountInfo.count; idx++) {
+                FHDetailNewDiscountInfoItemModel *item = model.discountInfo[idx];
+                UILabel *label = [[UILabel alloc] init];
+                label.font = [UIFont themeFontMedium:16];
+                label.numberOfLines = 2;
+                label.text = item.discountContent;
+                label.width = [UIScreen mainScreen].bounds.size.width - 100 - 40 - 42 * 2;
+                [label sizeToFit];
+                height = height + 44 + floor(label.height);
+            }
+            return CGSizeMake(width, height);
         }
     }
     return CGSizeZero;
@@ -210,10 +218,6 @@
             [itemView.titleLabel sizeToFit];
             CGFloat titleHeight  = floor(itemView.titleLabel.height);
             CGFloat topOffset = 0;
-    //            if (titleHeight >= 44) {
-    //                vHeight = 66 + titleHeight ;
-    //                topOffset = -2;
-    //            }
             vHeight = 44 + titleHeight ;
             totalHeight += vHeight;
             [itemView.titleLabel mas_updateConstraints:^(MASConstraintMaker *make) {
@@ -237,77 +241,6 @@
         }];
     }
 }
-
-- (void)submitBtnDidClick:(UIButton *)btn
-{
-    NSInteger index = btn.tag - 100;
-
-    FHNewHouseDetailSalesCellModel *model = (FHNewHouseDetailSalesCellModel *)self.currentData;
-    if (index <0 || index >= model.discountInfo.count) {
-        return;
-    }
-    FHDetailNewDiscountInfoItemModel *itemInfo = model.discountInfo[index];
-
-//    [self addClickOptionLog:@(itemInfo.actionType)];
-//
-//    //099 优惠跳转类型
-//    if (itemInfo.actionType == 3 && itemInfo.activityURLString.length) {
-//        NSString *urlString = itemInfo.activityURLString.copy;
-//        //@"https://m.xflapp.com/magic/page/ejs/5ecb69c9d7ff73025f6ea4e0?appType=manyhouse";
-//        if([urlString hasPrefix:@"http://"] ||
-//           [urlString hasPrefix:@"https://"]) {
-//            UIViewController *topController = [TTUIResponderHelper topViewControllerFor:self];
-//            ssOpenWebView([NSURL URLWithString:urlString], @"", topController.navigationController, NO, nil);
-//            return;
-//        }
-//        [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:urlString]];
-//        return;
-//    }
-
-//    NSString *title = itemInfo.discountReportTitle;
-//    NSString *subtitle = itemInfo.discountReportSubTitle;
-//    NSString *toast = [NSString stringWithFormat:@"%@，%@",itemInfo.discountReportDoneTitle,itemInfo.discountReportDoneSubTitle];
-//    NSString *btnTitle = itemInfo.discountButtonText;
-//    NSMutableDictionary *extraDic = @{@"position":@"coupon"
-//                                      }.mutableCopy;
-//    extraDic[kFHCluePage] = itemInfo.page;
-//    extraDic[@"title"] = title;
-//    extraDic[@"subtitle"] = subtitle;
-//    extraDic[@"btn_title"] = btnTitle;
-//    extraDic[@"toast"] = toast;
-//
-//    NSMutableDictionary *associateParamDict = @{}.mutableCopy;
-//    associateParamDict[kFHAssociateInfo] = itemInfo.associateInfo.reportFormInfo;
-//    NSMutableDictionary *reportParamsDict = [model.contactViewModel baseParams].mutableCopy;
-//    reportParamsDict[@"position"] = @"coupon";
-//    if (extraDic.count > 0) {
-//        [associateParamDict addEntriesFromDictionary:extraDic];
-//        reportParamsDict[kFHAssociateInfo] = itemInfo.associateInfo.reportFormInfo;
-//    }
-//    associateParamDict[kFHReportParams] = reportParamsDict;
-//
-//    [model.contactViewModel fillFormActionWithParams:associateParamDict];
-//    [model.contactViewModel fillFormActionWithExtraDict:extraDic];
-}
-
-
-#pragma mark - FHDetailScrollViewDidScrollProtocol
-
-- (NSString *)elementTypeString:(FHHouseType)houseType
-{
-    
-    return @"coupon";
-}
-
--(void)addClickOptionLog:(NSNumber *)actionType
-{
-//    click_position: recieve（领取），subscribe（预约）
-//    NSMutableDictionary *tracerDic = self.baseViewModel.detailTracerDic.mutableCopy;
-//    tracerDic[@"element_type"] = @"coupon";
-//    tracerDic[@"action_type"] = actionType;
-//    TRACK_EVENT(@"click_options", tracerDic);
-}
-
 
 - (void)awakeFromNib {
     [super awakeFromNib];

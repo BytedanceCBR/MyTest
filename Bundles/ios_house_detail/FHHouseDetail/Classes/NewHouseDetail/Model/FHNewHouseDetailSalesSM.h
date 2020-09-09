@@ -14,6 +14,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, strong) FHNewHouseDetailSalesCellModel *salesCellModel;
 
+- (void)updateDetailModel:(FHDetailNewModel *)model contactViewModel:(FHHouseDetailContactViewModel *)contactViewModel;
+
 @end
 
 NS_ASSUME_NONNULL_END

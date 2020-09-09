@@ -9,9 +9,10 @@
 
 @implementation FHNewHouseDetailSalesSM
 
-- (void)updateDetailModel:(FHDetailNewModel *)model {
+- (void)updateDetailModel:(FHDetailNewModel *)model contactViewModel:(nonnull FHHouseDetailContactViewModel *)contactViewModel{
+    
     FHNewHouseDetailSalesCellModel *salesCellModel = [[FHNewHouseDetailSalesCellModel alloc] init];
-    //salesCellModel.contactViewModel = model.cont
+    salesCellModel.contactViewModel = contactViewModel;
     salesCellModel.discountInfo = model.data.discountInfo;
     self.salesCellModel = salesCellModel;
 }

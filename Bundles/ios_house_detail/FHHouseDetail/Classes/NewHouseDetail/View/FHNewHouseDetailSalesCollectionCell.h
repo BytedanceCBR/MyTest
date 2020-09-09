@@ -10,7 +10,12 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+typedef void(^FHNewHouseDetailSalesCellClick)(id data);
+
 @interface FHNewHouseDetailSalesCollectionCell : FHDetailBaseCollectionCell
+
+@property (nonatomic, copy) FHNewHouseDetailSalesCellClick clickRecive;
+@property (nonatomic, copy) FHNewHouseDetailSalesCellClick clickConsult;
 
 @end
 

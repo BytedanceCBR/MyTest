@@ -10,6 +10,8 @@
 #import "FHNewHouseDetailSalesCollectionCell.h"
 #import "FHNewHouseDetailViewController.h"
 #import "FHDetailSectionTitleCollectionView.h"
+#import <TTBaseLib/TTUIResponderHelper.h>
+#import <FHWebView/SSWebViewController.h>
 
 @interface FHNewHouseDetailSalesSC()<IGListSupplementaryViewSource>
 
@@ -40,7 +42,79 @@
     FHNewHouseDetailSalesSM *model = (FHNewHouseDetailSalesSM *)self.sectionModel;
     FHNewHouseDetailSalesCollectionCell *cell = [self.collectionContext dequeueReusableCellOfClass:[FHNewHouseDetailSalesCollectionCell class] withReuseIdentifier:NSStringFromClass([model.salesCellModel class]) forSectionController:self atIndex:index];
     [cell refreshWithData:model.salesCellModel];
+    __weak typeof(self) wself = self;
+    cell.clickRecive = ^(id  _Nonnull data) {
+        [wself clickRecive:data];
+    };
+    cell.clickConsult = ^(id  _Nonnull data) {
+        [wself clickConsult:data];
+    };
     return cell;
+}
+
+- (void)clickRecive:(id)data {
+    FHDetailNewDiscountInfoItemModel *itemInfo = (FHDetailNewDiscountInfoItemModel *)data;
+    [self addClickOptionLog:@(itemInfo.actionType)];
+    [self addClickOptionLog:@(itemInfo.actionType)];
+
+    //099 优惠跳转类型
+    if (itemInfo.actionType == 3 && itemInfo.activityURLString.length) {
+        NSString *urlString = itemInfo.activityURLString.copy;
+        //@"https://m.xflapp.com/magic/page/ejs/5ecb69c9d7ff73025f6ea4e0?appType=manyhouse";
+        if([urlString hasPrefix:@"http://"] ||
+           [urlString hasPrefix:@"https://"]) {
+            UIViewController *topController = [TTUIResponderHelper topViewControllerFor:self];
+            ssOpenWebView([NSURL URLWithString:urlString], @"", topController.navigationController, NO, nil);
+            return;
+        }
+        [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:urlString]];
+        return;
+    }
+
+    NSString *title = itemInfo.discountReportTitle;
+    NSString *subtitle = itemInfo.discountReportSubTitle;
+    NSString *toast = [NSString stringWithFormat:@"%@，%@",itemInfo.discountReportDoneTitle,itemInfo.discountReportDoneSubTitle];
+    NSString *btnTitle = itemInfo.discountButtonText;
+    NSMutableDictionary *extraDic = @{@"position":@"coupon"
+                                      }.mutableCopy;
+    extraDic[kFHCluePage] = itemInfo.page;
+    extraDic[@"title"] = title;
+    extraDic[@"subtitle"] = subtitle;
+    extraDic[@"btn_title"] = btnTitle;
+    extraDic[@"toast"] = toast;
+
+    NSMutableDictionary *associateParamDict = @{}.mutableCopy;
+    associateParamDict[kFHAssociateInfo] = itemInfo.associateInfo.reportFormInfo;
+    FHNewHouseDetailSalesSM *model = (FHNewHouseDetailSalesSM *)self.sectionModel;
+    FHNewHouseDetailViewController *vc = self.detailViewController;
+    NSMutableDictionary *reportParamsDict = [model.salesCellModel.contactViewModel baseParams];
+    reportParamsDict[@"position"] = @"coupon";
+    if (extraDic.count > 0) {
+        [associateParamDict addEntriesFromDictionary:extraDic];
+        reportParamsDict[kFHAssociateInfo] = itemInfo.associateInfo.reportFormInfo;
+    }
+    associateParamDict[kFHReportParams] = reportParamsDict;
+
+    [model.salesCellModel.contactViewModel fillFormActionWithParams:associateParamDict];
+    //[model.salesCellModel.contactViewModel fillFormActionWithExtraDict:extraDic];
+}
+
+- (void)clickConsult:(id)data {
+    
+}
+
+- (NSString *)elementTypeString:(FHHouseType)houseType
+{
+    return @"coupon";
+}
+
+-(void)addClickOptionLog:(NSNumber *)actionType
+{
+    //click_position: recieve（领取），subscribe（预约）
+    NSMutableDictionary *tracerDic = self.detailTracerDict.mutableCopy;
+    tracerDic[@"element_type"] = @"coupon";
+    tracerDic[@"action_type"] = actionType;
+    TRACK_EVENT(@"click_options", tracerDic);
 }
 
 #pragma mark - IGListSupplementaryViewSource

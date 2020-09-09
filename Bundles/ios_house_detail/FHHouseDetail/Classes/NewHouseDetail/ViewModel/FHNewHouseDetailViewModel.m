@@ -138,6 +138,7 @@
     if (model.data.discountInfo) {
         FHNewHouseDetailSalesSM *salesSM = [[FHNewHouseDetailSalesSM alloc] initWithDetailModel:self.detailData];
         salesSM.sectionType = FHNewHouseDetailSectionTypeSales;
+        [salesSM updateDetailModel:self.detailData contactViewModel:self.contactViewModel];
         [sectionModels addObject:salesSM];
 //        FHDetailSalesCellModel *salesModel = [[FHDetailSalesCellModel alloc] init];
 //        salesModel.discountInfo = model.data.discountInfo;
