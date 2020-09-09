@@ -5,10 +5,10 @@
 //  Created by xubinbin on 2020/9/8.
 //
 
-#import "FHNewHouseDetailNewHouseNewsCollectionCell.h"
+#import "FHNewHouseDetailTimeLineCollectionCell.h"
 #import "FHUtils.h"
 
-@interface FHNewHouseDetailNewHouseNewsCollectionCell()<UICollectionViewDelegate, UICollectionViewDataSource>
+@interface FHNewHouseDetailTimeLineCollectionCell()<UICollectionViewDelegate, UICollectionViewDataSource>
 
 @property (nonatomic, strong) UIView *containerView;
 @property (nonatomic, strong) UICollectionView *collectionView;
@@ -20,10 +20,10 @@
 
 @end
 
-@implementation FHNewHouseDetailNewHouseNewsCollectionCell
+@implementation FHNewHouseDetailTimeLineCollectionCell
 
 + (CGSize)cellSizeWithData:(id)data width:(CGFloat)width {
-    if (data && [data isKindOfClass:[FHNewHouseDetailNewHouseNewsCellModel class]]) {
+    if (data && [data isKindOfClass:[FHNewHouseDetailTimeLineCellModel class]]) {
         return CGSizeMake(width, 152);
     }
     return CGSizeZero;
@@ -58,7 +58,7 @@
     self.collectionView.delegate = self;
     self.collectionView.dataSource = self;
     [self.containerView addSubview:self.collectionView];
-    [self.collectionView registerClass:[FHNewHouseDetailNewHouseNewsItemCollectionCell class] forCellWithReuseIdentifier:NSStringFromClass([FHNewHouseDetailNewHouseNewsItemCollectionCell class])];
+    [self.collectionView registerClass:[FHNewHouseDetailTimeLineItemCollectionCell class] forCellWithReuseIdentifier:NSStringFromClass([FHNewHouseDetailTimeLineItemCollectionCell class])];
     [self.collectionView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(16);
         make.left.right.mas_equalTo(0);
@@ -108,11 +108,11 @@
 }
 
 - (void)refreshWithData:(id)data {
-    if (self.currentData == data || ![data isKindOfClass:[FHNewHouseDetailNewHouseNewsCellModel class]]) {
+    if (self.currentData == data || ![data isKindOfClass:[FHNewHouseDetailTimeLineCellModel class]]) {
         return;
     }
     self.currentData = data;
-    FHDetailNewDataTimelineModel *model = [(FHNewHouseDetailNewHouseNewsCellModel *)data timeLineModel];
+    FHDetailNewDataTimelineModel *model = [(FHNewHouseDetailTimeLineCellModel *)data timeLineModel];
     if (model.list && model.list.count > 0) {
         self.contentLabel.hidden = NO;
         self.collectionView.hidden = NO;
@@ -131,12 +131,12 @@
 }
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
-    return [(FHNewHouseDetailNewHouseNewsCellModel *)self.currentData timeLineModel].list.count;
+    return [(FHNewHouseDetailTimeLineCellModel *)self.currentData timeLineModel].list.count;
 }
 
 - (__kindof UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
-    FHNewHouseDetailNewHouseNewsCellModel *model = self.currentData;
-    FHNewHouseDetailNewHouseNewsItemCollectionCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:NSStringFromClass([FHNewHouseDetailNewHouseNewsItemCollectionCell class]) forIndexPath:indexPath];
+    FHNewHouseDetailTimeLineCellModel *model = self.currentData;
+    FHNewHouseDetailTimeLineItemCollectionCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:NSStringFromClass([FHNewHouseDetailTimeLineItemCollectionCell class]) forIndexPath:indexPath];
     if (indexPath.row < model.timeLineModel.list.count) {
         if (indexPath.row == self.selectedRow) {
             [cell updateTitleColor:[UIColor themeOrange1] timeColor:[UIColor themeOrange1] dotColor:[UIColor themeOrange1]];
@@ -151,7 +151,7 @@
 }
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
-    FHDetailNewDataTimelineModel *model = [(FHNewHouseDetailNewHouseNewsCellModel *)self.currentData timeLineModel];
+    FHDetailNewDataTimelineModel *model = [(FHNewHouseDetailTimeLineCellModel *)self.currentData timeLineModel];
     if (indexPath.row >= model.list.count) {
         return;
     }
@@ -168,7 +168,7 @@
 
 @end
 
-@interface FHNewHouseDetailNewHouseNewsItemCollectionCell()
+@interface FHNewHouseDetailTimeLineItemCollectionCell()
 
 @property (nonatomic, strong) UIView *containerView;
 @property (nonatomic, strong) UILabel *titleLabel;
@@ -178,7 +178,7 @@
 
 @end
 
-@implementation FHNewHouseDetailNewHouseNewsItemCollectionCell
+@implementation FHNewHouseDetailTimeLineItemCollectionCell
 
 - (instancetype)initWithFrame:(CGRect)frame
 {
@@ -261,6 +261,6 @@
 
 @end
 
-@implementation FHNewHouseDetailNewHouseNewsCellModel
+@implementation FHNewHouseDetailTimeLineCellModel
 
 @end

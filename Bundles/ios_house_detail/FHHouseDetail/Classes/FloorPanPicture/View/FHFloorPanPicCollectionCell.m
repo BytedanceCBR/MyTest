@@ -35,6 +35,8 @@
 //    _imageV.layer.borderColor = [UIColor themeGray6].CGColor;
     _imageV.layer.cornerRadius = 4.0;
     _imageV.layer.masksToBounds = YES;
+    _imageV.layer.borderColor = [UIColor colorWithHexStr:@"#ededed"].CGColor;
+    _imageV.layer.borderWidth = 0.7;
     [self addSubview:_imageV];
     
     [_imageV mas_makeConstraints:^(MASConstraintMaker *make) {

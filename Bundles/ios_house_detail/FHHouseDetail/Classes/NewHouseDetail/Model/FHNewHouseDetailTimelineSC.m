@@ -32,12 +32,12 @@
 - (CGSize)sizeForItemAtIndex:(NSInteger)index {
     CGFloat width = self.collectionContext.containerSize.width - 30;
     FHNewHouseDetailTimelineSM *model = (FHNewHouseDetailTimelineSM *)self.sectionModel;
-    return [FHNewHouseDetailNewHouseNewsCollectionCell cellSizeWithData:model.newsCellModel width:width];
+    return [FHNewHouseDetailTimeLineCollectionCell cellSizeWithData:model.newsCellModel width:width];
 }
 
 - (__kindof UICollectionViewCell *)cellForItemAtIndex:(NSInteger)index {
     FHNewHouseDetailTimelineSM *model = (FHNewHouseDetailTimelineSM *)self.sectionModel;
-    FHNewHouseDetailNewHouseNewsCollectionCell *cell = [self.collectionContext dequeueReusableCellOfClass:[FHNewHouseDetailNewHouseNewsCollectionCell class] withReuseIdentifier:NSStringFromClass([model.newsCellModel class]) forSectionController:self atIndex:index];
+    FHNewHouseDetailTimeLineCollectionCell *cell = [self.collectionContext dequeueReusableCellOfClass:[FHNewHouseDetailTimeLineCollectionCell class] withReuseIdentifier:NSStringFromClass([model.newsCellModel class]) forSectionController:self atIndex:index];
     [cell refreshWithData:model.newsCellModel];
     return cell;
 }
@@ -64,7 +64,6 @@
 
 - (void)moreButtonClick {
     FHNewHouseDetailTimelineSM *model = (FHNewHouseDetailTimelineSM *)self.sectionModel;
-
     if (model.newsCellModel) {
         FHNewHouseDetailViewController *vc = self.detailViewController;
         NSString *courtId = vc.viewModel.houseId;
@@ -72,8 +71,8 @@
         TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc]initWithInfo:dict];
         [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:[NSString stringWithFormat:@"sslocal://floor_timeline_detail?court_id=%@",courtId]] userInfo:userInfo];
     }
-
 }
+
 - (CGSize)sizeForSupplementaryViewOfKind:(NSString *)elementKind
                                  atIndex:(NSInteger)index {
     if ([elementKind isEqualToString:UICollectionElementKindSectionHeader]) {

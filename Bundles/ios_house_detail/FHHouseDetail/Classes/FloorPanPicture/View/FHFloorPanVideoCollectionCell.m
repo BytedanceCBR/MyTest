@@ -32,6 +32,8 @@
     _imageV.contentMode = UIViewContentModeScaleAspectFill;
     _imageV.layer.cornerRadius = 4.0;
     _imageV.layer.masksToBounds = YES;
+    _imageV.layer.borderColor = [UIColor colorWithHexStr:@"#ededed"].CGColor;
+    _imageV.layer.borderWidth = 0.7;
     [self addSubview:_imageV];
 
     [_imageV mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -39,12 +41,12 @@
     }];
 
 
-    _maskImageView = [UIView new];
-    _maskImageView.backgroundColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:0.1];
-    [self addSubview:_maskImageView];
-    [_maskImageView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.edges.mas_equalTo(UIEdgeInsetsZero);
-    }];
+//    _maskImageView = [UIView new];
+//    _maskImageView.backgroundColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:0.1];
+//    [self addSubview:_maskImageView];
+//    [_maskImageView mas_makeConstraints:^(MASConstraintMaker *make) {
+//        make.edges.mas_equalTo(UIEdgeInsetsZero);
+//    }];
     
     _videoImage = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"video_icon_small"]];
     [self addSubview:_videoImage];

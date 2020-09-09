@@ -37,6 +37,8 @@
 #import "FHNewHouseDetailSurroundingSC.h"
 #import "FHNewHouseDetailTimelineSM.h"
 #import "FHNewHouseDetailTimelineSC.h"
+#import "FHNewHouseDetailDisclaimerSC.h"
+#import "FHNewHouseDetailDisclaimerSM.h"
 #import "FHNewHouseDetailViewController.h"
 
 @interface FHNewHouseDetailViewModel ()
@@ -244,12 +246,11 @@
 //    }
     
     //楼栋信息
-//    if (model.data.buildingInfo && model.data.buildingInfo.list.count) {
-//        FHDetailNewBuildingsCellModel *buildingCellModel = [[FHDetailNewBuildingsCellModel alloc] init];
-//        buildingCellModel.houseModelType = FHHouseModelTypeNewBuildingInfo;
-//        buildingCellModel.buildingInfo = model.data.buildingInfo;
-//        [self.items addObject:buildingCellModel];
-//    }
+    if (model.data.buildingInfo && model.data.buildingInfo.list.count) {
+        FHNewHouseDetailBuildingsSM *BuildingSM = [[FHNewHouseDetailBuildingsSM alloc] initWithDetailModel:self.detailData];
+        BuildingSM.sectionType = FHNewHouseDetailSectionTypeBuildings;
+        [sectionModels addObject:BuildingSM];
+    }
     
     self.sectionModels = sectionModels.copy;
     [self.detailController updateLayout:model.isInstantData];
@@ -266,6 +267,7 @@
 // 处理详情页周边新盘请求数据
 - (void)processDetailRelatedData {
     self.detailController.isLoadingData = NO;
+    NSMutableArray *sectionModels = self.sectionModels.mutableCopy;
     if(_relatedHouseData.data && self.relatedHouseData.data.items.count > 0)
     {
 //        FHDetailNewRelatedCellModel *infoModel = [[FHDetailNewRelatedCellModel alloc] init];
@@ -276,17 +278,11 @@
     // 免责声明
     FHDetailNewModel * model = (FHDetailNewModel *)self.detailData;
     if (model.data.contact || model.data.disclaimer) {
-//        FHOldDetailDisclaimerModel *infoModel = [[FHOldDetailDisclaimerModel alloc] init];
-//        infoModel.disclaimer = model.data.disclaimer;
-//        infoModel.houseModelType = FHHouseModelTypeDisclaimer;
-//        if (!model.data.highlightedRealtor) {
-//            // 当且仅当没有合作经纪人时，才在disclaimer中显示 经纪人 信息
-//            infoModel.contact = model.data.contact;
-//        } else {
-//            infoModel.contact = nil;
-//        }
-//        [self.items addObject:infoModel];
+        FHNewHouseDetailDisclaimerSM *disclaimerSM = [[FHNewHouseDetailDisclaimerSM alloc] initWithDetailModel:self.detailData];
+        disclaimerSM.sectionType = FHNewHouseDetailSectionTypeDisclaimer;
+        [sectionModels addObject:disclaimerSM];
     }
+    self.sectionModels = sectionModels.copy;
 }
 
 - (NSString *)pageTypeString {

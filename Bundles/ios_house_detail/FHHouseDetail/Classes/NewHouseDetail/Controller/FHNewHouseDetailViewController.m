@@ -41,6 +41,7 @@
 #import "FHNewHouseDetailSurroundingSC.h"
 #import "FHNewHouseDetailBuildingsSC.h"
 #import "FHNewHouseDetailRecommendSC.h"
+#import "FHNewHouseDetailDisclaimerSC.h"
 #import "FHDetailPictureTitleView.h"
 #import <FHHouseBase/FHEventShowProtocol.h>
 
@@ -730,6 +731,8 @@
             case FHNewHouseDetailSectionTypeRecommend:
                 return [[FHNewHouseDetailRecommendSC alloc] init];
                 break;
+            case FHNewHouseDetailSectionTypeDisclaimer:
+                return [[FHNewHouseDetailDisclaimerSC alloc] init];
             default:
                 break;
         }
