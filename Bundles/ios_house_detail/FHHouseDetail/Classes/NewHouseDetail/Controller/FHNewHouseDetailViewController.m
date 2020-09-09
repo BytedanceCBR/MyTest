@@ -41,6 +41,7 @@
 #import "FHNewHouseDetailSurroundingSC.h"
 #import "FHNewHouseDetailBuildingsSC.h"
 #import "FHNewHouseDetailRecommendSC.h"
+#import "FHNewHouseDetailDisclaimerSC.h"
 #import "FHDetailPictureTitleView.h"
 
 @interface FHNewHouseDetailViewController () <UIGestureRecognizerDelegate,IGListAdapterDataSource,UICollectionViewDelegate,UIScrollViewDelegate>
@@ -701,6 +702,8 @@
             case FHNewHouseDetailSectionTypeRecommend:
                 return [[FHNewHouseDetailRecommendSC alloc] init];
                 break;
+            case FHNewHouseDetailSectionTypeDisclaimer:
+                return [[FHNewHouseDetailDisclaimerSC alloc] init];
             default:
                 break;
         }

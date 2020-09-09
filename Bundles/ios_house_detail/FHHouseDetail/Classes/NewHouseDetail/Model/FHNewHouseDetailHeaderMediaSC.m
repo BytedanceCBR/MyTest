@@ -17,7 +17,7 @@
 
 - (instancetype)init {
     if (self = [super init]) {
-        
+        self.inset = UIEdgeInsetsZero;
     }
     return self;
 }
