@@ -36,7 +36,7 @@
     // Do any additional setup after loading the view.
     self.automaticallyAdjustsScrollViewInsets = NO;
     self.ttStatusBarStyle = UIStatusBarStyleLightContent;
-    
+    self.ttDisableDragBack = YES;
     [self initNavbar];
     [self initView];
     [self initConstraints];
