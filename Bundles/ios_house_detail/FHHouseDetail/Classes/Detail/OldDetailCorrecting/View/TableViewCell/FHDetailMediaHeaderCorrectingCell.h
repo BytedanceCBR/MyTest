@@ -25,7 +25,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong , nullable) NSArray<FHHouseDetailImageListDataModel> *houseImageDictList;// 图片数据
 @property (nonatomic, strong, nullable)   FHMultiMediaItemModel       *vedioModel;// 视频模型
 @property (nonatomic, strong, nullable)   FHMultiMediaItemModel       *baiduPanoramaModel;// 街景
-
+@property (nonatomic, strong, nullable) FHHouseDetailAlbumInfo *albumInfo;
 @property (nonatomic, weak) FHHouseDetailContactViewModel *contactViewModel;
 @property (nonatomic, assign) BOOL isInstantData;
 @property (nonatomic, strong, nullable)   FHDetailHouseVRDataModel  *vrModel;// 视频模型
@@ -42,7 +42,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong , nullable) FHClueAssociateInfoModel *imageAlbumAssociateInfo;
 /// 合并，组合，处理
 - (NSArray *)processTopImagesToSmallImageGroups;
-
+- (NSArray *)processAlbumInfoGroups;
 @end
 
 NS_ASSUME_NONNULL_END
