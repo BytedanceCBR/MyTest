@@ -563,6 +563,11 @@
     NSDictionary *cat = @{@"status":@(type),@"response_code":@(responseCode)};
     [[HMDTTMonitor defaultManager] hmdTrackService:key metric:metricDict category:cat extra:extra];
     
+    NSString *requestStatus = extraDict[@"status"];
+    if (![requestStatus isEqualToString:@"0"]) {
+            NSDictionary *cat = @{@"api":path,@"request_status":@(responseCode)};
+           [[HMDTTMonitor defaultManager] hmdTrackService:@"f_api_performance_request_error" metric:metricDict category:cat extra:extra];
+    }
     if (type != FHNetworkMonitorTypeSuccess && type != FHNetworkMonitorTypeNetFailed) {
         NSMutableDictionary *filterDict = [NSMutableDictionary new];
         filterDict[@"path"] = key;
@@ -581,6 +586,11 @@
         [[HMDUserExceptionTracker sharedTracker] trackUserExceptionWithExceptionType:@"NetworkError" title:@"api_error" subTitle:sPath?:@"" customParams:customDict filters:filterDict callback:^(NSError * _Nullable error) {
             
         }];
+        ///专门用来区分服务端返回status非0的状态
+        if (![requestStatus isEqualToString:@"0"]) {
+            [[HMDUserExceptionTracker sharedTracker] trackUserExceptionWithExceptionType:@"RequestStatusError" title:@"request_error" subTitle:sPath?:@"" customParams:customDict filters:filterDict callback:^(NSError * _Nullable error) {
+            }];
+        }
     }
     
 }
