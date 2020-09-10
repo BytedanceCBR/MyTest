@@ -60,6 +60,7 @@
 #import <ByteDanceKit/NSDictionary+BTDAdditions.h>
 #import <FHHouseBase/FHUserInfoManager.h>
 #import "FHDetailSurveyAgentListCell.h"
+#import "SSCommonLogic.h"
 
 extern NSString *const kFHSubscribeHouseCacheKey;
 
@@ -481,8 +482,9 @@ logPB:self.listLogPB extraInfo:self.extraInfo completion:^(FHDetailOldModel * _N
     }
     
     // 推荐经纪人
+    FHDetailAgentListModel *agentListModels = nil;
     if (model.data.recommendedRealtors.count > 0) {
-        FHDetailAgentListModel *agentListModels = [[FHDetailAgentListModel alloc] init];
+        agentListModels = [[FHDetailAgentListModel alloc] init];
         NSString *searchId = self.listLogPB[@"search_id"];
         NSString *imprId = self.listLogPB[@"impr_id"];
         agentListModels.tableView = self.tableView;
@@ -505,38 +507,53 @@ logPB:self.listLogPB extraInfo:self.extraInfo completion:^(FHDetailOldModel * _N
         agentListModels.imprId = imprId;
         agentListModels.houseId = self.houseId;
         agentListModels.houseType = self.houseType;
-        [self.items addObject:agentListModels];
         self.agentListModel = agentListModels;
     }
     
     
     //实勘经纪人
+    FHDetailSurveyAgentListModel *surveyAgentListModel = nil;
     if (model.data.surveyedRealtorInfo.items.count > 0) {
-        FHDetailSurveyAgentListModel *agentListModel = [[FHDetailSurveyAgentListModel alloc] init];
+        surveyAgentListModel = [[FHDetailSurveyAgentListModel alloc] init];
         NSString *searchId = self.listLogPB[@"search_id"];
         NSString *imprId = self.listLogPB[@"impr_id"];
-        agentListModel.tableView = self.tableView;
-        agentListModel.belongsVC = self.detailController;
-        agentListModel.houseModelType = FHHouseModelTypeSurveyAgentlist;
-        agentListModel.recommendedRealtorsTitle = model.data.surveyedRealtorInfo.title;
-        agentListModel.recommendedRealtors = model.data.surveyedRealtorInfo.items;
-        agentListModel.associateInfo = model.data.surveyedRealtorInfo.associateInfo;
-        agentListModel.phoneCallViewModel = [[FHHouseDetailPhoneCallViewModel alloc] initWithHouseType:FHHouseTypeSecondHandHouse houseId:self.houseId];
-        agentListModel.phoneCallViewModel.houseInfoBizTrace = self.houseInfoBizTrace;
-        [agentListModel.phoneCallViewModel generateImParams:self.houseId houseTitle:model.data.title houseCover:imgUrl houseType:houseType  houseDes:houseDes housePrice:price houseAvgPrice:avgPrice];
-        agentListModel.phoneCallViewModel.tracerDict = self.detailTracerDic.mutableCopy;
+        surveyAgentListModel.tableView = self.tableView;
+        surveyAgentListModel.belongsVC = self.detailController;
+        surveyAgentListModel.houseModelType = FHHouseModelTypeSurveyAgentlist;
+        surveyAgentListModel.recommendedRealtorsTitle = model.data.surveyedRealtorInfo.title;
+        surveyAgentListModel.recommendedRealtors = model.data.surveyedRealtorInfo.items;
+        surveyAgentListModel.associateInfo = model.data.surveyedRealtorInfo.associateInfo;
+        surveyAgentListModel.phoneCallViewModel = [[FHHouseDetailPhoneCallViewModel alloc] initWithHouseType:FHHouseTypeSecondHandHouse houseId:self.houseId];
+        surveyAgentListModel.phoneCallViewModel.houseInfoBizTrace = self.houseInfoBizTrace;
+        [surveyAgentListModel.phoneCallViewModel generateImParams:self.houseId houseTitle:model.data.title houseCover:imgUrl houseType:houseType  houseDes:houseDes housePrice:price houseAvgPrice:avgPrice];
+        surveyAgentListModel.phoneCallViewModel.tracerDict = self.detailTracerDic.mutableCopy;
         NSMutableDictionary *paramsDict = @{}.mutableCopy;
         if (self.detailTracerDic) {
             [paramsDict addEntriesFromDictionary:self.detailTracerDic];
         }
         paramsDict[@"page_type"] = [self pageTypeString];
-        agentListModel.phoneCallViewModel.tracerDict = paramsDict;
-        agentListModel.searchId = searchId;
-        agentListModel.imprId = imprId;
-        agentListModel.houseId = self.houseId;
-        agentListModel.houseType = self.houseType;
-        [self.items addObject:agentListModel];
+        surveyAgentListModel.phoneCallViewModel.tracerDict = paramsDict;
+        surveyAgentListModel.searchId = searchId;
+        surveyAgentListModel.imprId = imprId;
+        surveyAgentListModel.houseId = self.houseId;
+        surveyAgentListModel.houseType = self.houseType;
         self.surveyTipName = model.data.surveyedRealtorInfo.toastText;
+    }
+    BOOL isSurveyRealtorFirst = [SSCommonLogic isSurveyRealtorFirst];
+    if(isSurveyRealtorFirst) {
+        if(surveyAgentListModel != nil) {
+            [self.items addObject:surveyAgentListModel];
+        }
+        if(agentListModels != nil) {
+            [self.items addObject:agentListModels];
+        }
+    } else {
+        if(agentListModels != nil) {
+            [self.items addObject:agentListModels];
+        }
+        if(surveyAgentListModel != nil) {
+            [self.items addObject:surveyAgentListModel];
+        }
     }
     
     if(model.data.houseReviewComment.count > 0){
