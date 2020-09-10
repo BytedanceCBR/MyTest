@@ -12,11 +12,18 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FHNewHouseDetailMultiFloorpanCollectionCell : FHDetailBaseCollectionCell
 
+@property (nonatomic, copy) void (^didSelectItem)(NSInteger atIndex);
+
+@property (nonatomic, copy) void (^willShowItem)(NSIndexPath *indexPath);
+
+@property (nonatomic, copy) void (^imItemClick)(NSInteger atIndex);
 @end
 
 @interface FHNewHouseDetailMultiFloorpanCellModel : NSObject
 
 @property (nonatomic, strong , nullable) FHDetailNewDataFloorpanListModel *floorPanList;
+
+
 
 @end
 

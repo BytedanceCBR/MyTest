@@ -21,6 +21,9 @@ NS_ASSUME_NONNULL_BEGIN
 - (NSDictionary *)subPageParams;
 
 - (void)didUpdateToObject:(id)object NS_REQUIRES_SUPER;
+
+@property (nonatomic, weak, readonly) NSMutableDictionary *elementShowCaches;
+
 @end
 
 NS_ASSUME_NONNULL_END

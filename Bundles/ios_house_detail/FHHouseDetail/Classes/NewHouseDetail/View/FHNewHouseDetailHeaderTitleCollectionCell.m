@@ -97,10 +97,11 @@
 }
 
 - (void)refreshWithData:(id)data {
-    if (data && [data isKindOfClass:[FHNewHouseDetailHeaderTitleCellModel class]]) {
-        self.currentData = data;
-        [self updateModel:(FHNewHouseDetailHeaderTitleCellModel *)data];
+    if (self.currentData == data || ![data isKindOfClass:[FHNewHouseDetailHeaderTitleCellModel class]]) {
+        return;
     }
+    self.currentData = data;
+    [self updateModel:(FHNewHouseDetailHeaderTitleCellModel *)data];
 }
 
 - (void)updateModel:(FHNewHouseDetailHeaderTitleCellModel *)model {

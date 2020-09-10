@@ -39,4 +39,8 @@
     return self.detailViewController.viewModel.subPageParams;
 }
 
+- (NSMutableDictionary *)elementShowCaches {
+    return self.detailViewController.elementShowCaches;
+}
+
 @end

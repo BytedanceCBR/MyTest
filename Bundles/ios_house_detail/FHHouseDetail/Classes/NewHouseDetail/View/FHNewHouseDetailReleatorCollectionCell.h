@@ -21,8 +21,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
-@interface FHNewHouseDetailReleatorCellModel : NSObject
-
-@end
+//@interface FHNewHouseDetailReleatorCellModel : NSObject
+//
+//@property (nonatomic, strong) FHDetailContactModel *model;
+//
+//@end
 
 NS_ASSUME_NONNULL_END

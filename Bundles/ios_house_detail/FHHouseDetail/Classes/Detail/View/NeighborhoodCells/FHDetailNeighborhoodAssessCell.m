@@ -17,7 +17,7 @@
 
 #define cellId @"cellId"
 
-@interface FHDetailNeighborhoodAssessCell () <UITableViewDelegate,UITableViewDataSource>
+@interface FHDetailNeighborhoodAssessCell ()
 
 @property(nonatomic , strong) NSMutableArray *dataList;
 @property(nonatomic, strong) UIView *containerView;

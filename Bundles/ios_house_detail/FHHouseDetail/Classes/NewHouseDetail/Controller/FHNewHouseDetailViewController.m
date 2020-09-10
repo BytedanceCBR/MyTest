@@ -81,9 +81,6 @@
 
 @property (nonatomic, strong) FHDetailPictureTitleView *segmentTitleView;
 @property (nonatomic, strong) NSIndexPath *lastIndexPath;
-
-@property (nonatomic, strong) NSMutableDictionary *elementShowCaches;
-
 @end
 
 @implementation FHNewHouseDetailViewController
@@ -411,6 +408,15 @@
 }
 
 #pragma mark - Request
+- (void)reloadData {
+//    [self.listAdapter performUpdatesAnimated:YES
+//                                      completion:^(BOOL finished) {
+//
+//                                      }];
+    [self.listAdapter reloadDataWithCompletion:^(BOOL finished) {
+    }];
+}
+
 - (void)startLoadData
 {
     if ([TTReachability isNetworkConnected]) {
@@ -765,7 +771,7 @@
 }
 
 - (void)collectionView:(UICollectionView *)collectionView willDisplayCell:(UICollectionViewCell *)cell forItemAtIndexPath:(NSIndexPath *)indexPath {
-    NSString *tempKey = [NSString stringWithFormat:@"%ld_%ld", (long)indexPath.section, (long)indexPath.item];
+    NSString *tempKey = [NSString stringWithFormat:@"%@_%ld_%ld",NSStringFromClass([self class]), (long)indexPath.section, (long)indexPath.item];
     if (self.elementShowCaches[tempKey]) {
         return;
     }

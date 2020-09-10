@@ -26,7 +26,11 @@ NS_ASSUME_NONNULL_BEGIN
 //是否显示
 @property (nonatomic, assign) BOOL isViewDidDisapper;
 
+@property (nonatomic, strong) NSMutableDictionary *elementShowCaches;
+
 - (void)updateLayout:(BOOL)isInstant;
+
+- (void)reloadData;
 
 @end
 

@@ -9,10 +9,8 @@
 #import "FHDetailHeaderView.h"
 #import <FHHouseBase/FHHouseIMClueHelper.h>
 
-@interface FHNewHouseDetailMultiFloorpanCollectionCell ()<UICollectionViewDelegate,UICollectionViewDataSource>
+@interface FHNewHouseDetailMultiFloorpanCollectionCell ()<UICollectionViewDelegate,UICollectionViewDataSource,FHDetailBaseCollectionCellDelegate>
 
-@property (nonatomic, strong) NSMutableDictionary *houseShowCache;
-@property (nonatomic, strong) NSMutableDictionary *subHouseShowCache;
 @property (strong, nonatomic) UICollectionView *collectionView;
 @property (strong, nonatomic) UICollectionViewFlowLayout *flowLayout;
 
@@ -49,9 +47,6 @@
 
 - (instancetype)initWithFrame:(CGRect)frame {
     if (self = [super initWithFrame:frame]) {
-        self.houseShowCache = [NSMutableDictionary new];
-        self.subHouseShowCache = [NSMutableDictionary new];
-    
         self.flowLayout = [[UICollectionViewFlowLayout alloc] init];
         self.flowLayout.sectionInset = UIEdgeInsetsMake(0, 16, 0, 16);
         self.flowLayout.itemSize = CGSizeMake(120, 190);
@@ -59,6 +54,7 @@
         self.flowLayout.scrollDirection = UICollectionViewScrollDirectionHorizontal;
         self.collectionView = [[UICollectionView alloc] initWithFrame:CGRectMake(0, 0, CGRectGetWidth(self.contentView.bounds), CGRectGetHeight(self.contentView.bounds)) collectionViewLayout:self.flowLayout];
         self.collectionView.backgroundColor = [UIColor clearColor];
+        self.collectionView.showsHorizontalScrollIndicator = NO;
         self.collectionView.delegate = self;
         self.collectionView.dataSource = self;
         [self.contentView addSubview:self.collectionView];
@@ -105,160 +101,10 @@
     [self layoutIfNeeded];
 }
 
-// 不重复调用
-- (void)collectionDisplayCell:(NSInteger)index
-{
-//    FHDetailNewMutiFloorPanCellModel *currentModel = (FHDetailNewMutiFloorPanCellModel *)self.currentData;
-//    FHDetailNewDataFloorpanListModel *model = currentModel.floorPanList;
-//    if (model.list && model.list.count > 0 && index >= 0 && index < model.list.count) {
-//        // 点击cell处理
-//        FHDetailNewDataFloorpanListListModel *itemModel = model.list[index];
-//        // house_show
-//        NSMutableDictionary *tracerDic = self.baseViewModel.detailTracerDic.mutableCopy;
-//        tracerDic[@"rank"] = @(index);
-//        tracerDic[@"card_type"] = @"slide";
-//        tracerDic[@"log_pb"] = itemModel.logPb ? itemModel.logPb : @"be_null";
-//        tracerDic[@"house_type"] = @"house_model";
-//        tracerDic[@"element_type"] = @"house_model";
-//        if (itemModel.logPb) {
-//            [tracerDic addEntriesFromDictionary:itemModel.logPb];
-//        }
-//        if (itemModel.searchId) {
-//            [tracerDic setValue:itemModel.searchId forKey:@"search_id"];
-//        }
-//        if ([itemModel.groupId isKindOfClass:[NSString class]] && itemModel.groupId.length > 0) {
-//            [tracerDic setValue:itemModel.groupId forKey:@"group_id"];
-//        }else
-//        {
-//            [tracerDic setValue:itemModel.id forKey:@"group_id"];
-//        }
-//        if (itemModel.imprId) {
-//            [tracerDic setValue:itemModel.imprId forKey:@"impr_id"];
-//        }
-//        [tracerDic removeObjectForKey:@"enter_from"];
-//        [tracerDic removeObjectForKey:@"element_from"];
-//        [FHUserTracker writeEvent:@"house_show" params:tracerDic];
-//    }
-}
-
-// 查看更多
-- (void)moreButtonClick:(UIButton *)button {
-    FHNewHouseDetailMultiFloorpanCellModel *currentModel = (FHNewHouseDetailMultiFloorpanCellModel *)self.currentData;
-    FHDetailNewDataFloorpanListModel *model = currentModel.floorPanList;
-
-//    if ([model isKindOfClass:[FHDetailNewDataFloorpanListModel class]]) {
-//        NSMutableDictionary *infoDict = [NSMutableDictionary new];
-//        [infoDict setValue:model.list forKey:@"court_id"];
-//        [infoDict addEntriesFromDictionary:[self.baseViewModel subPageParams]];
-//        infoDict[@"house_type"] = @(1);
-//        TTRouteUserInfo *info = [[TTRouteUserInfo alloc] initWithInfo:infoDict];
-//        [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:@"sslocal://floor_pan_list"] userInfo:info];
-//    }
-
-}
-// cell 点击
-- (void)collectionCellClick:(NSInteger)index {
-    FHNewHouseDetailMultiFloorpanCellModel *currentModel = (FHNewHouseDetailMultiFloorpanCellModel *)self.currentData;
-    FHDetailNewDataFloorpanListModel *model = currentModel.floorPanList;
-    if ([model isKindOfClass:[FHDetailNewDataFloorpanListModel class]]) {
-        if (model.list.count > index) {
-            FHDetailNewDataFloorpanListListModel *floorPanInfoModel = model.list[index];
-            if ([floorPanInfoModel isKindOfClass:[FHDetailNewDataFloorpanListListModel class]]) {
-                NSMutableDictionary *traceParam = [NSMutableDictionary new];
-                traceParam[@"enter_from"] = @"new_detail";
-                traceParam[@"log_pb"] = floorPanInfoModel.logPb;
-//                traceParam[@"origin_from"] = self.baseViewModel.detailTracerDic[@"origin_from"];
-                traceParam[@"card_type"] = @"left_pic";
-                traceParam[@"rank"] = @(floorPanInfoModel.index);
-//                traceParam[@"origin_search_id"] = self.baseViewModel.detailTracerDic[@"origin_search_id"];
-                traceParam[@"element_from"] = @"house_model";
-                NSMutableDictionary *infoDict = [NSMutableDictionary dictionary];
-                infoDict[@"house_type"] = @(1);
-                [infoDict setValue:floorPanInfoModel.id forKey:@"floor_plan_id"];
-//                NSMutableDictionary *subPageParams = [self.baseViewModel subPageParams].mutableCopy;
-//                subPageParams[@"contact_phone"] = nil;
-//                [infoDict addEntriesFromDictionary:subPageParams];
-                infoDict[@"tracer"] = traceParam;
-                TTRouteUserInfo *info = [[TTRouteUserInfo alloc] initWithInfo:infoDict];
-
-                [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:@"sslocal://floor_plan_detail"] userInfo:info];
-            }
-        }
-    }
-}
-
-- (void)collectionCellItemClick:(NSInteger)index item:(UIView *)itemView cell:(FHDetailBaseCollectionCell *)cell
-{
-    FHDetailNewMutiFloorPanCollectionCell *collectionCell = (FHDetailNewMutiFloorPanCollectionCell *)cell;
-    if (![collectionCell isKindOfClass:[FHDetailNewMutiFloorPanCollectionCell class]]) {
-        return;
-    }
-    // 一键咨询户型按钮点击
-    FHNewHouseDetailMultiFloorpanCellModel *currentModel = (FHNewHouseDetailMultiFloorpanCellModel *)self.currentData;
-    FHDetailNewDataFloorpanListModel *model = currentModel.floorPanList;
-    if(collectionCell.consultDetailButton != itemView || ![model isKindOfClass:[FHDetailNewDataFloorpanListModel class]]) {
-        return;
-    }
-    if (index < 0 || index >= model.list.count ) {
-        return;
-    }
-    FHDetailNewDataFloorpanListListModel *floorPanInfoModel = model.list[index];
-    if (![floorPanInfoModel isKindOfClass:[FHDetailNewDataFloorpanListListModel class]]) {
-        return;
-    }
-    
-    // IM 透传数据模型
-//    FHAssociateIMModel *associateIMModel = [FHAssociateIMModel new];
-//    associateIMModel.houseId = self.baseViewModel.houseId;
-//    associateIMModel.houseType = self.baseViewModel.houseType;
-//    associateIMModel.associateInfo = floorPanInfoModel.associateInfo;
-
-    // IM 相关埋点上报参数
-//    FHAssociateReportParams *reportParams = [FHAssociateReportParams new];
-//    reportParams.enterFrom = self.baseViewModel.detailTracerDic[@"enter_from"];
-//    reportParams.elementFrom = @"house_model";
-//    reportParams.logPb = floorPanInfoModel.logPb;
-//    reportParams.originFrom = self.baseViewModel.detailTracerDic[@"origin_from"];
-//    reportParams.rank = self.baseViewModel.detailTracerDic[@"rank"];
-//    reportParams.originSearchId = self.baseViewModel.detailTracerDic[@"origin_search_id"];
-//    reportParams.searchId = self.baseViewModel.detailTracerDic[@"search_id"];
-//    reportParams.pageType = [self.baseViewModel pageTypeString];
-//    FHDetailContactModel *contactPhone = self.baseViewModel.contactViewModel.contactPhone;
-//    reportParams.realtorId = contactPhone.realtorId;
-//    reportParams.realtorRank = @(0);
-//    reportParams.conversationId = @"be_null";
-//    reportParams.realtorLogpb = contactPhone.realtorLogpb;
-//    reportParams.realtorPosition = @"house_model";
-//    reportParams.sourceFrom = @"house_model";
-//    reportParams.extra = @{@"house_model_rank":@(index)};
-//    associateIMModel.reportParams = reportParams;
-    
-    // IM跳转链接
-//    associateIMModel.imOpenUrl = floorPanInfoModel.imOpenUrl;
-    // 跳转IM
-//    [FHHouseIMClueHelper jump2SessionPageWithAssociateIM:associateIMModel];
-}
-
-- (void)fhDetail_scrollViewDidScroll:(UIView *)vcParentView {
-    if (vcParentView) {
-        //            UIWindow* window = [UIApplication sharedApplication].keyWindow;
-        CGFloat SH = [UIScreen mainScreen].bounds.size.height;
-        CGPoint point = [self convertPoint:CGPointZero toView:vcParentView];
-        CGFloat bottombarHight = 80;
-        if (SH - bottombarHight > point.y) {
-            if ([self.houseShowCache valueForKey:@"isShowFloorPan"]) {
-                return;
-            }else {
-                NSArray * visibles = self.collectionView.indexPathsForVisibleItems;
-                [self.houseShowCache setValue:@(YES) forKey:@"isShowFloorPan"];
-                [visibles enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-                    NSIndexPath *indexPath = (NSIndexPath *)obj;
-                    [self collectionDisplayCell:indexPath.row];
-                    NSString *tempKey = [NSString stringWithFormat:@"%ld_%ld",indexPath.section,indexPath.row];
-                    [self.subHouseShowCache setValue:@(YES) forKey:tempKey];
-                }];
-            }
-        }
+- (void)clickCellItem:(UIView *)itemView onCell:(FHDetailBaseCollectionCell*)cell {
+    NSIndexPath *indexPath = [self.collectionView indexPathForCell:cell];
+    if(self.imItemClick) {
+        self.imItemClick(indexPath.row);
     }
 }
 
@@ -266,10 +112,6 @@
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
     return [(FHNewHouseDetailMultiFloorpanCellModel *)self.currentData floorPanList].list.count;
-}
-
-- (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView {
-    return 1;
 }
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
@@ -280,13 +122,23 @@
     }
     cell.backgroundColor = [UIColor clearColor];
     cell.contentView.backgroundColor = [UIColor clearColor];
+    cell.delegate = self;
     return cell;
 }
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 {
     [collectionView deselectItemAtIndexPath:indexPath animated:NO];
+    if (self.didSelectItem) {
+        self.didSelectItem(indexPath.row);
+    }
+}
 
+// 不重复调用
+- (void)collectionView:(UICollectionView *)collectionView willDisplayCell:(UICollectionViewCell *)cell forItemAtIndexPath:(NSIndexPath *)indexPath {
+    if (self.willShowItem) {
+        self.willShowItem(indexPath);
+    }
 }
 
 @end

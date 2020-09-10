@@ -173,28 +173,29 @@ CGFloat const FHNewHouseDetailReleatorCollectionCellTopMargin = 10;
 }
 
 - (void)refreshWithData:(id)data {
-    if (data && [data isKindOfClass:[FHDetailContactModel class]]) {
-        FHDetailContactModel *model = (FHDetailContactModel *)data;
-        
-        self.name.text = model.realtorName;
-        self.agency.text = model.agencyName;
-        [self.avatorView updateAvatarWithModel:model];
-        
-        [self newHouseModifiedLayoutNameNeedShowCenter:model.agencyDescription.length <= 0];
-        
-        BOOL result  = NO;
-        if (model.businessLicense.length > 0) {
-            result = YES;
-        }
-        if (model.certificate.length > 0) {
-            result = YES;
-        }
-        self.licenceIcon.hidden = !result;
+    if (self.currentData == data || ![data isKindOfClass:[FHDetailContactModel class]]) {
+        return;
     }
+    self.currentData = data;
+    FHDetailContactModel *model = (FHDetailContactModel *)data;
+    
+    self.name.text = model.realtorName;
+    self.agency.text = model.agencyName;
+    [self.avatorView updateAvatarWithModel:model];
+    
+    [self newHouseModifiedLayoutNameNeedShowCenter:model.agencyDescription.length <= 0];
+    
+    BOOL result  = NO;
+    if (model.businessLicense.length > 0) {
+        result = YES;
+    }
+    if (model.certificate.length > 0) {
+        result = YES;
+    }
+    self.licenceIcon.hidden = !result;
 }
 
 @end
 
-@implementation FHNewHouseDetailReleatorCellModel
-
-@end
+//@implementation FHNewHouseDetailReleatorCellModel
+//@end
