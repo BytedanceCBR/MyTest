@@ -8,6 +8,7 @@
 #import "FHDetailNewMediaHeaderDataHelper.h"
 #import "FHMultiMediaModel.h"
 #import "FHDetailNewMediaHeaderCell.h"
+#import "FHFloorPanPicShowModel.h"
 
 @interface FHDetailNewMediaHeaderDataHelper ()
 
@@ -127,6 +128,7 @@
 }
 
 + (FHDetailNewMediaHeaderDataHelperPhotoAlbumData *)generatePhotoAlbumData:(FHDetailNewMediaHeaderModel *)newMediaHeaderModel {
+    
     FHDetailNewMediaHeaderDataHelperPhotoAlbumData *photoAlbumData = [[FHDetailNewMediaHeaderDataHelperPhotoAlbumData alloc] init];
     NSMutableArray <FHHouseDetailImageGroupModel *> *pictsArray = [NSMutableArray array];
     //之前传入fisrtTopImage 表示数据不全，需要全部传入
@@ -148,7 +150,38 @@
             }
         }
     }
+    
     photoAlbumData.photoAlbumArray = pictsArray.copy;
+    
+    FHHouseDetailAlbumInfo *albumInfo = [[FHHouseDetailAlbumInfo alloc] init];
+    NSMutableArray *tabArr = [NSMutableArray array];
+    for (FHHouseDetailImageGroupModel *groupModel in photoAlbumData.photoAlbumArray) {
+        FHHouseDetailImageTabInfo *tabInfoModel = [[FHHouseDetailImageTabInfo alloc] init];
+        tabInfoModel.tabName = groupModel.name;
+        NSMutableArray *tabContent = [NSMutableArray arrayWithCapacity:groupModel.images.count];
+        for (FHImageModel *image in groupModel.images) {
+            FHHouseDetailImageStruct *imageStruct = [[FHHouseDetailImageStruct alloc] init];
+            imageStruct.smallImage = image;
+            [tabContent addObject:imageStruct];
+        }
+        tabInfoModel.tabContent = tabContent.copy;
+        [tabArr addObject:tabInfoModel];
+    }
+    albumInfo.tabList = tabArr.copy;
+    
+    photoAlbumData.detailAlbumInfo = albumInfo;
+    
+    FHFloorPanPicShowModel *picShowModel = [[FHFloorPanPicShowModel alloc] init];
+    NSMutableArray *mArr = [NSMutableArray array];
+    for (FHHouseDetailImageTabInfo *tabInfo in albumInfo.tabList) {
+        [mArr addObjectsFromArray:[FHFloorPanPicShowGroupModel getTabGroupInfo:tabInfo rootName:tabInfo.tabName]];
+    }
+    picShowModel.itemGroupList = mArr.copy;
+    photoAlbumData.floorPanModel = picShowModel;
+    
+    
+    
+    
     return photoAlbumData;
 }
 

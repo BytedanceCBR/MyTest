@@ -10,6 +10,7 @@
 #import "TTPhotoScrollViewController.h"
 #import "FHDetailMediaHeaderCell.h"
 #import "FHVideoViewController.h"
+#import "FHFloorPanPicShowModel.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -65,7 +66,7 @@ NS_ASSUME_NONNULL_BEGIN
 /** TTImageInfosModel数组*/
 @property(nonatomic, strong, nullable) NSArray *imageInfosModels;
 
-@property(nonatomic, strong)NSArray * smallImageInfosModels;
+@property(nonatomic, strong) FHFloorPanPicShowModel * smallImageInfosModels;
 
 /** Extended by luohuaqing to support selecting image on preview */
 //@property (nonatomic, assign)PhotosScrollViewMode mode;

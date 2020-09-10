@@ -12,6 +12,7 @@
 #import "TTDeviceHelper.h"
 #import <FHHouseBase/TTDeviceHelper+FHHouse.h>
 #import "FHDetailNewModel.h"
+#import "FHFloorPanPicShowModel.h"
 
 @interface FHFloorPanPicCollectionCell ()
 @property (nonatomic,strong) UIImageView *imageV;
@@ -44,12 +45,12 @@
     }];
 }
 
-- (void)setDataModel:(FHImageModel *)dataModel
-{
-    if ([dataModel isKindOfClass:[FHImageModel class]]) {
-        FHImageModel *model = (FHImageModel *)dataModel;
-        if (model.url) {
-            [_imageV bd_setImageWithURL:[NSURL URLWithString:model.url] placeholder:[UIImage imageNamed: @"default_image"]];
+
+- (void)refreshWithData:(id)data {
+    if ([data isKindOfClass:[FHFloorPanPicShowItemPictureModel class]]) {
+        FHFloorPanPicShowItemPictureModel *model = (FHFloorPanPicShowItemPictureModel *)data;
+        if (model.image && model.image.url) {
+            [_imageV bd_setImageWithURL:[NSURL URLWithString:model.image.url] placeholder:[UIImage imageNamed: @"default_image"]];
         }
     }
 }

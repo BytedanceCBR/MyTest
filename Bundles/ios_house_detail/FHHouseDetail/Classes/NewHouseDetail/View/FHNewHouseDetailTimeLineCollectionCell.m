@@ -51,7 +51,7 @@
     self.flowLayout.sectionInset = UIEdgeInsetsMake(0, 15, 0, 0);
     self.flowLayout.scrollDirection = UICollectionViewScrollDirectionHorizontal;
     self.collectionView = [[UICollectionView alloc] initWithFrame:CGRectZero collectionViewLayout:self.flowLayout];
-    
+    self.collectionView.showsHorizontalScrollIndicator = NO;
     self.collectionView.backgroundColor = [UIColor clearColor];
     self.collectionView.delegate = self;
     self.collectionView.dataSource = self;
@@ -154,11 +154,13 @@
         return;
     }
     self.selectedRow = indexPath.row;
+    if (self.selectedIndexChange) {
+        self.selectedIndexChange(indexPath.row);
+    }
     FHDetailNewDataTimelineListModel *item = model.list[indexPath.row];
     self.contentLabel.text = item.desc;
     [self.collectionView reloadData];
 }
-
 
 - (CGFloat)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout minimumLineSpacingForSectionAtIndex:(NSInteger)section {
     return 0;

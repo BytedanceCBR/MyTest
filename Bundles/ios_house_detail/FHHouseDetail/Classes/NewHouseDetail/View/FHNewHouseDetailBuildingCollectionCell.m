@@ -46,7 +46,7 @@
     return CGSizeMake(width, height);
 }
 
-- (NSString *)elementTypeString:(FHHouseType)houseType {
+- (NSString *)elementType {
     return @"building";
 }
 

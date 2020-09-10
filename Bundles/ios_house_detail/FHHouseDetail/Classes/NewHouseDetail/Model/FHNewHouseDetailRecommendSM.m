@@ -13,6 +13,7 @@
     FHNewHouseDetailTRelatedCollectionCellModel *relatedCellModel = [[FHNewHouseDetailTRelatedCollectionCellModel alloc] init];
     relatedCellModel.relatedModel = model.data;
     self.relatedCellModel = relatedCellModel;
+    self.items = self.relatedCellModel.relatedModel.items;
 }
 
 - (id<NSObject>)diffIdentifier {

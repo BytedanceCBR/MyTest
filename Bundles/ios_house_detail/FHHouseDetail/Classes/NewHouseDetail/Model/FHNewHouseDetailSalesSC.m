@@ -12,6 +12,7 @@
 #import "FHDetailSectionTitleCollectionView.h"
 #import <TTBaseLib/TTUIResponderHelper.h>
 #import <FHWebView/SSWebViewController.h>
+#import <TTAccountSDK/TTAccount.h>
 
 @interface FHNewHouseDetailSalesSC()<IGListSupplementaryViewSource>
 
@@ -57,7 +58,15 @@
     [self addClickOptionLog:@(itemInfo.actionType)];
 
     //099 优惠跳转类型
-    if (itemInfo.actionType == 3 && itemInfo.activityURLString.length) {
+    if ((itemInfo.actionType == 3 || itemInfo.actionType == 4) && itemInfo.activityURLString.length) {
+        if (itemInfo.actionType == 4) {
+            NSMutableDictionary *tracerDic = self.detailTracerDict.mutableCopy;
+            tracerDic[@"position"] = @"coupon";
+            tracerDic[@"associate_info"] = itemInfo.associateInfo.imInfo;
+            tracerDic[@"realtor_id"] = itemInfo.realtorId;
+            tracerDic[@"is_login"] = [[TTAccount sharedAccount] isLogin] ? @"1" : @"0";
+            TRACK_EVENT(@"click_im", tracerDic);
+        }
         NSString *urlString = itemInfo.activityURLString.copy;
         //@"https://m.xflapp.com/magic/page/ejs/5ecb69c9d7ff73025f6ea4e0?appType=manyhouse";
         if([urlString hasPrefix:@"http://"] ||
