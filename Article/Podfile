@@ -486,7 +486,7 @@ def appPods
     #IMSDK依赖
     pod 'lz4', '1.0.1'
     pod 'ByteRtcSDK', '2.6.13'
-    pod 'TTIMSDK', 'xingfuli_1.0', :subspecs => [
+    pod 'TTIMSDK', '1.1.3-rc.1-xingfuli', :subspecs => [
         'IMKit_Default',
         'IMKit_WebSocket',
         'IMKit_Core',
