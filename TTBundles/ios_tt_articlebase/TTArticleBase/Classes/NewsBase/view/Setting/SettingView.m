@@ -19,6 +19,7 @@
 #import "FHMainApi.h"
 #import "ToastManager.h"
 #import "TTReachability.h"
+#import "NSString+BTDAdditions.h"
 
 #import "NewsDetailLogicManager.h"
 #import "SSFeedbackManager.h"
@@ -505,16 +506,15 @@ TTEditUserProfileViewControllerDelegate
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     SettingCellType cellType = [self cellTypeAtIndexPath:indexPath];
-//    if (cellType == SettingCellTypePushNotification
-//        && ((![self isAPNSEnabled] || [TTUserSettingsManager apnsNewAlertClosed]))
-//        ) {
-//        if ([TTDeviceHelper isPadDevice]) {
-//            return 90.0f;
-//        }
-//        return [TTDeviceUIUtils tt_padding:kTTSettingNotificationCellHeight];
-//    }
-    if(cellType == SettingCellTypePushNotification || cellType == SettingCellTypePersonalRecommend){
-        return [TTDeviceUIUtils tt_padding:78];
+    if(cellType == SettingCellTypePushNotification){
+        NSString *aString = @"关闭后将无法接收到精选房源推送";
+        CGSize size =  [aString btd_sizeWithFont:[UIFont systemFontOfSize:14] width:self.width - 30];
+        return [TTDeviceUIUtils tt_padding: 53 + size.height];
+    }
+    else if(cellType == SettingCellTypePersonalRecommend){
+        NSString *aString = @"关闭后您将无法接收到幸福里的专属推荐的精选房内容";
+        CGSize size =  [aString btd_sizeWithFont:[UIFont systemFontOfSize:14] width:self.width - 30];
+        return [TTDeviceUIUtils tt_padding: 53 + size.height];
     }
     return [SettingView heightOfCell];
 }
@@ -705,12 +705,11 @@ TTEditUserProfileViewControllerDelegate
     else if (cellType == SettingCellTypePersonalRecommend) {
         cell.textLabel.text = nil;
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
-        [self refreshswitch:_personalRecommendSwitch];
         _personalRecommendSwitch.transform = CGAffineTransformMakeScale(0.8 ,0.8);
         cell.accessoryView = _personalRecommendSwitch;
         [_personalRecommendSwitch setOn: [FHEnvContext getPersonalRecommend]];
         ((SettingPushCell *)cell).pushTitleLabel.text = @"个性化推荐设置";
-        ((SettingPushCell *)cell).pushDetailLabel.text = @"关闭后您将无法接受到幸福里专属推荐的精选房源";
+        ((SettingPushCell *)cell).pushDetailLabel.text = @"关闭后您将无法接收到幸福里的专属推荐的精选房内容";
     }
     else if (cellType == SettingCellTypeShowBtn4Refresh) {
         cell.textLabel.text = NSLocalizedString(@"列表页显示刷新按钮", nil);
