@@ -51,7 +51,7 @@
     self.flowLayout.sectionInset = UIEdgeInsetsMake(0, 15, 0, 0);
     self.flowLayout.scrollDirection = UICollectionViewScrollDirectionHorizontal;
     self.collectionView = [[UICollectionView alloc] initWithFrame:CGRectZero collectionViewLayout:self.flowLayout];
-    
+    self.collectionView.showsHorizontalScrollIndicator = NO;
     self.collectionView.backgroundColor = [UIColor clearColor];
     self.collectionView.delegate = self;
     self.collectionView.dataSource = self;
