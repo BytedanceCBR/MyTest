@@ -50,8 +50,12 @@
     if (self.timeLineModel) {
         [self.timeLineListViewModel processDetailData:self.timeLineModel];
     }
-    [self.timeLineListViewModel scrollToItemAtRow:self.topIndex];
 
+}
+
+- (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
+    [self.timeLineListViewModel scrollToItemAtRow:self.topIndex];
 }
 
 - (void)setUpTimeLineListTable

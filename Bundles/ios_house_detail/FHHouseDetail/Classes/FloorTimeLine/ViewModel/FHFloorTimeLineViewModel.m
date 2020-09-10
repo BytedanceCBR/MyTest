@@ -51,7 +51,7 @@
 
 - (void)scrollToItemAtRow:(NSInteger)index {
     if (index < [self.currentItems count]) {
-        [self.timeLineListTable scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:index inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:YES];
+        [self.timeLineListTable scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:index inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:NO];
     }
 }
 
@@ -75,6 +75,7 @@
     bottomBar.hidden = YES;
 
     [_timeLineListTable reloadData];
+    [_timeLineListTable layoutIfNeeded];
 }
 
 
