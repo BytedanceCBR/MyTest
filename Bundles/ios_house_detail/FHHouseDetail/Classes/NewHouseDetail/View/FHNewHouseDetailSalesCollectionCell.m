@@ -242,6 +242,20 @@
     }
 }
 
+- (void)submitBtnDidClick:(UIButton *)btn
+{
+    NSInteger index = btn.tag - 100;
+
+    FHNewHouseDetailSalesCellModel *model = (FHNewHouseDetailSalesCellModel *)self.currentData;
+    if (index <0 || index >= model.discountInfo.count) {
+        return;
+    }
+    FHDetailNewDiscountInfoItemModel *itemInfo = model.discountInfo[index];
+    if (self.clickRecive) {
+        self.clickRecive(itemInfo);
+    }
+}
+    
 - (void)awakeFromNib {
     [super awakeFromNib];
     // Initialization code

@@ -137,9 +137,9 @@
     FHNewHouseDetailTimeLineItemCollectionCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:NSStringFromClass([FHNewHouseDetailTimeLineItemCollectionCell class]) forIndexPath:indexPath];
     if (indexPath.row < model.timeLineModel.list.count) {
         if (indexPath.row == self.selectedRow) {
-            [cell updateTitleColor:[UIColor themeOrange1] timeColor:[UIColor themeOrange1] dotColor:[UIColor themeOrange1]];
+            [cell updateTitleColor:[UIColor themeOrange1] timeColor:[UIColor themeOrange1] dotColor:[UIColor themeOrange1] backgroundColor:[UIColor colorWithHexStr:@"#fefaf4"]];
         } else {
-            [cell updateTitleColor:[UIColor themeGray1] timeColor:[UIColor themeGray3] dotColor:[UIColor themeGray2]];
+            [cell updateTitleColor:[UIColor themeGray1] timeColor:[UIColor themeGray3] dotColor:[UIColor themeGray2] backgroundColor:[UIColor themeGray7]];
         }
         [cell refreshWithData:model.timeLineModel.list[indexPath.row]];
     }
@@ -241,10 +241,11 @@
     }];
 }
 
-- (void)updateTitleColor:(UIColor *)titleColor timeColor:(UIColor *)timeColor dotColor:(UIColor *)dotColor {
+- (void)updateTitleColor:(UIColor *)titleColor timeColor:(UIColor *)timeColor dotColor:(UIColor *)dotColor backgroundColor:(UIColor *)backgroundColor {
     self.titleLabel.textColor = titleColor;
     self.timeLabel.textColor = timeColor;
     self.dotView.backgroundColor = dotColor;
+    self.containerView.backgroundColor = backgroundColor;
 }
 
 - (void)refreshWithData:(id)data {

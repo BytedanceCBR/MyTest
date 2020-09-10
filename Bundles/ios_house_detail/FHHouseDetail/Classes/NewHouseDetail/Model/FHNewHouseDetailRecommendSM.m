@@ -9,13 +9,10 @@
 
 @implementation FHNewHouseDetailRecommendSM
 
-- (instancetype)initWithRelatedModel:(FHListResultHouseModel *)model {
-    if (self = [super init]) {
-        FHNewHouseDetailTRelatedCollectionCellModel *relatedCellModel = [[FHNewHouseDetailTRelatedCollectionCellModel alloc] init];
-        relatedCellModel.relatedModel = model.data;
-        self.relatedCellModel = relatedCellModel;
-    }
-    return self;
+- (void)updateRelatedModel:(FHListResultHouseModel *)model {
+    FHNewHouseDetailTRelatedCollectionCellModel *relatedCellModel = [[FHNewHouseDetailTRelatedCollectionCellModel alloc] init];
+    relatedCellModel.relatedModel = model.data;
+    self.relatedCellModel = relatedCellModel;
 }
 
 - (id<NSObject>)diffIdentifier {
