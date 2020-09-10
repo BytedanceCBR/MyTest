@@ -154,11 +154,13 @@
         return;
     }
     self.selectedRow = indexPath.row;
+    if (self.selectedIndexChange) {
+        self.selectedIndexChange(indexPath.row);
+    }
     FHDetailNewDataTimelineListModel *item = model.list[indexPath.row];
     self.contentLabel.text = item.desc;
     [self.collectionView reloadData];
 }
-
 
 - (CGFloat)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout minimumLineSpacingForSectionAtIndex:(NSInteger)section {
     return 0;
