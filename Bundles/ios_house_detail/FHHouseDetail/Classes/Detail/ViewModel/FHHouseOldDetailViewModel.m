@@ -864,12 +864,15 @@ logPB:self.listLogPB extraInfo:self.extraInfo completion:^(FHDetailOldModel * _N
             [self.items addObject:infoModel];
         }
         //帮我卖房入口
-        FHOldDetailOwnerSellHouseModel *ownerSellHouseModel = [[FHOldDetailOwnerSellHouseModel alloc] init];
-        ownerSellHouseModel.questionText = model.data.saleHouseEntrance.title;
-        ownerSellHouseModel.hintText = model.data.saleHouseEntrance.subtitle;
-        ownerSellHouseModel.helpMeSellHouseText = model.data.saleHouseEntrance.buttonText;
-        ownerSellHouseModel.helpMeSellHouseOpenUrl = model.data.saleHouseEntrance.openUrl;
-        [self.items addObject:ownerSellHouseModel];
+        FHDetailOldSaleHouseEntranceModel *saleHouseEntrance = model.data.saleHouseEntrance;
+        if(saleHouseEntrance.title.length > 0 && saleHouseEntrance.subtitle.length > 0 && saleHouseEntrance.buttonText.length > 0 && saleHouseEntrance.openUrl.length > 0) {
+            FHOldDetailOwnerSellHouseModel *ownerSellHouseModel = [[FHOldDetailOwnerSellHouseModel alloc] init];
+            ownerSellHouseModel.questionText = saleHouseEntrance.title;
+            ownerSellHouseModel.hintText = saleHouseEntrance.subtitle;
+            ownerSellHouseModel.helpMeSellHouseText = saleHouseEntrance.buttonText;
+            ownerSellHouseModel.helpMeSellHouseOpenUrl = saleHouseEntrance.openUrl;
+            [self.items addObject:ownerSellHouseModel];
+        }
         // 免责声明
         if (model.data.contact || model.data.disclaimer) {
             FHOldDetailDisclaimerModel *infoModel = [[FHOldDetailDisclaimerModel alloc] init];

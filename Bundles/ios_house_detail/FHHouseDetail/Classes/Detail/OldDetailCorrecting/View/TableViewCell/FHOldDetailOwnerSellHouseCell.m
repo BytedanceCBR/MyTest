@@ -44,31 +44,18 @@
     }
     self.currentData = data;
     FHOldDetailOwnerSellHouseModel *model = (FHOldDetailOwnerSellHouseModel *) data;
-    if(model.questionText.length > 0) {
-        self.questionLabel.text = model.questionText;
-    }else {
-        self.questionLabel.text = @"要卖房吗？安心无忧委托";
-    }
+    self.questionLabel.text = model.questionText;
     CGSize questionSize = [self.questionLabel.text btd_sizeWithFont:[UIFont themeFontRegular:16] width:(SCREEN_WIDTH - 30)];
     [self.questionLabel mas_updateConstraints:^(MASConstraintMaker *make) {
         make.size.mas_equalTo(questionSize);
     }];
-    if(model.hintText.length > 0) {
-        self.hintLabel.text = model.hintText;
-    } else {
-        self.hintLabel.text = @"在线委托，专属顾问全程贴心一条龙服务";
-    }
+    self.hintLabel.text = model.hintText;
     CGSize hintSize = [self.hintLabel.text btd_sizeWithFont:[UIFont themeFontRegular:12] width:(SCREEN_WIDTH - 30)];
     [self.hintLabel mas_updateConstraints:^(MASConstraintMaker *make) {
         make.size.mas_equalTo(hintSize);
     }];
-    if(model.helpMeSellHouseText.length > 0) {
-        [_helpMeSellHouseButton setTitle:model.helpMeSellHouseText forState:UIControlStateNormal];
-        [_helpMeSellHouseButton setTitle:model.helpMeSellHouseText forState:UIControlStateHighlighted];
-    } else {
-        [_helpMeSellHouseButton setTitle:@"帮我买房" forState:UIControlStateNormal];
-        [_helpMeSellHouseButton setTitle:@"帮我买房" forState:UIControlStateHighlighted];
-    }
+    [_helpMeSellHouseButton setTitle:model.helpMeSellHouseText forState:UIControlStateNormal];
+    [_helpMeSellHouseButton setTitle:model.helpMeSellHouseText forState:UIControlStateHighlighted];
     self.helpMeSellHouseOpenUrl = model.helpMeSellHouseOpenUrl;
 }
 
@@ -120,8 +107,7 @@
     [self addClickOptionsLog];
     NSMutableDictionary *dict = @{}.mutableCopy;
     dict[@"origin_from"] = self.baseViewModel.detailTracerDic[@"origin_from"];
-//    NSURL *openUrl = [NSURL URLWithString:self.helpMeSellHouseOpenUrl];
-    NSURL *openUrl = [NSURL URLWithString:@"sslocal://house_sale_input?neighbourhood_id=6697827211568742659&neighbourhood_name=%e8%8a%8d%e8%8d%af%e5%b1%85&report_params=%7b%22enter_from%22%3a%22old_detail%22%2c%22element_from%22%3a%22driving_sale_house%22%7d"];
+    NSURL *openUrl = [NSURL URLWithString:self.helpMeSellHouseOpenUrl];
     TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
     [[TTRoute sharedRoute] openURLByViewController:openUrl userInfo:userInfo];
 }
