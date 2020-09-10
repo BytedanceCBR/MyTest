@@ -1578,28 +1578,21 @@ TTEditUserProfileViewControllerDelegate
     if(_personalRecommendSwitch.on == NO){
         TTThemedAlertController *alert = [[TTThemedAlertController alloc] initWithTitle:nil message:NSLocalizedString(@"关闭个性化推荐之后，您将无法接收到幸福里的专属推荐的精选房源", nil) preferredType:TTThemedAlertControllerTypeAlert];
         [alert addActionWithGrayTitle:NSLocalizedString(@"坚持关闭", nil) actionType:TTThemedAlertActionTypeNormal actionBlock:^{
-            [FHEnvContext savePersonalRecommend:NO];
-            
             NSMutableDictionary *param = [NSMutableDictionary new];
             param[@"popup_name"] = @"personal_recommend_settings";
             param[@"page_type"] = @"setting";
             param[@"click_position"] = @"close";
             TRACK_EVENT(@"popup_click", param);
-            
-            [[NSNotificationCenter defaultCenter] postNotificationName:@"personalrecommend" object:self];
             [self setPersonalizedStatus:0];//0表示关闭个性化推荐
         }];
         [alert addActionWithTitle:NSLocalizedString(@"我在想想", nil) actionType:TTThemedAlertActionTypeNormal actionBlock:^{
             [_personalRecommendSwitch setOn:YES];
             [FHEnvContext savePersonalRecommend:YES];
-            
             NSMutableDictionary *param = [NSMutableDictionary new];
             param[@"popup_name"] = @"personal_recommend_settings";
             param[@"page_type"] = @"setting";
             param[@"click_position"] = @"cancel";
             TRACK_EVENT(@"popup_click", param);
-            
-            [[NSNotificationCenter defaultCenter] postNotificationName:@"personalrecommend" object:self];
         }];
         
         NSMutableDictionary *param = [NSMutableDictionary new];
@@ -1610,7 +1603,6 @@ TTEditUserProfileViewControllerDelegate
         [alert showFrom:self.viewController animated:YES];
     }else{
         [self setPersonalizedStatus:1];//1表示打开个性化推荐
-        [FHEnvContext savePersonalRecommend:YES];
     }
 }
 //上报个性化推荐状态的接口
@@ -1618,8 +1610,7 @@ TTEditUserProfileViewControllerDelegate
 {
     if (![TTReachability isNetworkConnected]) {
         [[ToastManager manager] showToast:@"网络不给力，请稍后重试"];
-        [_personalRecommendSwitch setOn:!personalizedStatus];
-        [FHEnvContext savePersonalRecommend:!personalizedStatus];
+        [_personalRecommendSwitch setOn:[FHEnvContext getPersonalRecommend]];
         return;
     }
     NSString* queryPath = @"/f100/api/set_personalized_status";
@@ -1628,12 +1619,10 @@ TTEditUserProfileViewControllerDelegate
     [FHMainApi postJsonRequest:queryPath query:nil params:paramDict completion:^(NSDictionary * _Nullable result, NSError * _Nullable error) {
         if(error){
             [[ToastManager manager] showToast:@"网络不给力，请稍后重试"];
-            [_personalRecommendSwitch setOn:!personalizedStatus];
-            [FHEnvContext savePersonalRecommend:!personalizedStatus];
-            return;
+            [_personalRecommendSwitch setOn:[FHEnvContext getPersonalRecommend]];
         }
         else{
-            
+            [FHEnvContext savePersonalRecommend:personalizedStatus];
         }
     }];
 }
