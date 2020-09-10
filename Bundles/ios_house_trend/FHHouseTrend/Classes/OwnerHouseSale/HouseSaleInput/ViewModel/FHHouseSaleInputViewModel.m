@@ -197,13 +197,11 @@
 - (void)houseSale {
     [self addHousePublishClickLog];
     if([self canSubmitInfo]){
-//        NSMutableDictionary *associateDict = [[NSMutableDictionary alloc] init];
-//
-//        NSString *associateStr = [associateDict btd_jsonStringEncoded] ?: @"";
-//        NSDictionary *params = @{
-//            @"from": @"app_newhouse_findselfhouse",
-//            @"from_data": associateStr,
-//        };
+        NSString *associateStr = [self generateAssociateStr];
+        NSDictionary *params = @{
+            @"from": @"app_ownersalehouse",
+            @"from_data": associateStr,
+        };
 //
 //        WeakSelf;
 //        [FHMainApi loadAssociateEntranceWithParams:params completion:^(NSDictionary * _Nullable result, NSError * _Nullable error) {
@@ -331,6 +329,40 @@
     [[HMDTTMonitor defaultManager]hmdTrackService:@"clue_form_error_rate" metric:nil category:categoryDict extra:extraDict];
 }
 
+- (NSString *)generateAssociateStr {
+    NSMutableDictionary *associateDict = [[NSMutableDictionary alloc] init];
+    if(self.inputModel.neighbourhoodId.length > 0){
+        associateDict[@"neighborhood_id"] = self.inputModel.neighbourhoodId;
+    }
+    
+    if(self.inputModel.neighbourhoodName.length > 0){
+        associateDict[@"neighborhood_name"] = self.inputModel.neighbourhoodName;
+    }
+    
+    if(self.inputModel.area.length > 0){
+        associateDict[@"area"] = self.inputModel.area;
+    }
+    
+    if(self.inputModel.floorPlanRoom.length > 0){
+        associateDict[@"bedroom_count"] = self.inputModel.floorPlanRoom;
+    }
+    
+    if(self.inputModel.floorPlanHall.length > 0){
+        associateDict[@"hallroom_count"] = self.inputModel.floorPlanHall;
+    }
+    
+    if(self.inputModel.floorPlanBath.length > 0){
+        associateDict[@"bathroom_count"] = self.inputModel.floorPlanBath;
+    }
+    
+    if(self.inputModel.name.length > 0){
+        associateDict[@"customer_name"] = self.inputModel.name;
+    }
+
+    NSString *associateStr = [associateDict btd_jsonStringEncoded] ?: @"";
+    return associateStr;
+}
+
 - (void)goBack {
     UIViewController *popVC = [self.viewController.navigationController popViewControllerAnimated:NO];
     if (nil == popVC) {
@@ -409,12 +441,15 @@
     if(itemView == self.view.areaItemView){
         if(text.length > 0){
             unichar single = [text characterAtIndex:(text.length - 1)];
-            if(single == "."){
+            if(single == '.'){
                 text = [text substringToIndex:(text.length - 1)];
             }
         }
         self.inputModel.area = text;
     }else if (itemView == self.view.nameItemView){
+        if(text.length > 0){
+            text  =  [text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+        }
         self.inputModel.name = text;
     }else if (itemView == self.view.phoneItemView){
         NSInteger limit = 11;

@@ -74,7 +74,7 @@
     
     if(text.length > 0){
         unichar single = [text characterAtIndex:(text.length - 1)];
-        if(single == "."){
+        if(single == '.'){
             text = [text substringToIndex:(text.length - 1)];
         }
     }

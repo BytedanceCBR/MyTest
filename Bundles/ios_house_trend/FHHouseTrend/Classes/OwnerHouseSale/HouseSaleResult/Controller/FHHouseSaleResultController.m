@@ -93,10 +93,10 @@
     
     CGFloat btnWidth = ([UIScreen mainScreen].bounds.size.width - 30 - 1)/2;
     
-    self.strategyBtn = [self buttonWithFrame:CGRectMake(0, 0, btnWidth, 72) title:@"买房攻略" imageName:@"house_sale_strategy_icon" action:@selector(goToStrategy)];
+    self.strategyBtn = [self buttonWithFrame:CGRectMake(0, 0, btnWidth, 72) title:@"卖房攻略" imageName:@"house_sale_strategy_icon" action:@selector(goToStrategy)];
     [self.bottomContentView addSubview:_strategyBtn];
     
-    self.phoneBtn = [self buttonWithFrame:CGRectMake(0, 0, btnWidth, 72) title:@"电话客服" imageName:@"house_sale_phone_icon" action:@selector(goToPhone)];
+    self.phoneBtn = [self buttonWithFrame:CGRectMake(0, 0, btnWidth, 72) title:@"咨询客服" imageName:@"house_sale_phone_icon" action:@selector(goToPhone)];
     [self.bottomContentView addSubview:_phoneBtn];
 
 }
@@ -185,7 +185,7 @@
     dict[@"tracer"] = tracer;
     TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
         
-    NSURL* url = [NSURL URLWithString:@"sslocal://detail?groupid=6865159951162016268&item_id=6865159951162016268&report_params=%7b%22enter_from%22%3a%22publisher_success_detail%22%2c%22log_pb%22%3a%7b%22group_id%22%3a%226865159951162016268%22%2c%22group_source%22%3a%222%22%7d%2c%22page_type%22%3a%22article_detail%22%2c%22element_from%22%3a%22selling_strategy%22%7d"];
+    NSURL* url = [NSURL URLWithString:@"sslocal://detail?group_id=6865159951162016268&item_id=6865159951162016268&report_params=%7b%22enter_from%22%3a%22publisher_success_detail%22%2c%22log_pb%22%3a%7b%22group_id%22%3a%226865159951162016268%22%2c%22group_source%22%3a%222%22%7d%2c%22page_type%22%3a%22article_detail%22%2c%22element_from%22%3a%22selling_strategy%22%7d"];
     [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
 }
 
