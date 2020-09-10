@@ -152,8 +152,8 @@
     [pictureDetailViewController setMediaHeaderModel:self.currentData mediaImages:images];
     FHDetailNewMediaHeaderModel *model = ((FHDetailNewMediaHeaderModel *)self.currentData);
     //去除flag判断，改为判断详情页type
-    if (self.baseViewModel.houseType == FHHouseTypeNewHouse && [model.topImages isKindOfClass:[NSArray class]] && model.topImages.count > 0) {
-        pictureDetailViewController.smallImageInfosModels = self.dataHelper.photoAlbumData.photoAlbumArray;
+    if ([model.topImages isKindOfClass:[NSArray class]] && model.topImages.count > 0) {
+        pictureDetailViewController.smallImageInfosModels = self.dataHelper.photoAlbumData.floorPanModel;
     }
 
     UIImage *placeholder = [UIImage imageNamed:@"default_image"];
@@ -221,12 +221,14 @@
     FHFloorPanPicShowViewController *pictureListViewController = [[FHFloorPanPicShowViewController alloc] initWithRouteParamObj:TTRouteParamObjWithDict(routeParam)];
     pictureListViewController.modalPresentationStyle = UIModalPresentationFullScreen;
     if (data.isShowTopImageTab) {
-        pictureListViewController.topImages = data.topImages;
+        pictureListViewController.floorPanShowModel = self.dataHelper.photoAlbumData.floorPanModel;
+        pictureListViewController.isShowSegmentTitleView = YES;
         pictureListViewController.associateInfo = data.imageAlbumAssociateInfo;
         pictureListViewController.contactViewModel = data.contactViewModel;
         pictureListViewController.elementFrom = @"new_detail";
     } else {
-        pictureListViewController.pictsArray = self.dataHelper.photoAlbumData.photoAlbumArray;
+        pictureListViewController.isShowSegmentTitleView = NO;
+        pictureListViewController.floorPanShowModel = self.dataHelper.photoAlbumData.floorPanModel;
     }
     __weak typeof(self) weakSelf = self;
     pictureListViewController.albumImageStayBlock = ^(NSInteger index, NSInteger stayTime) {

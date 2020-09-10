@@ -252,7 +252,7 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
     
     __weak typeof(self) weakSelf = self;
     self.naviView = [[FHDetailPictureNavView alloc] initWithFrame:CGRectMake(0, topInset, self.view.width, kFHDPTopBarHeight)];
-    self.naviView.showAlbum = self.smallImageInfosModels > 0;
+    self.naviView.showAlbum = self.smallImageInfosModels.itemGroupList.count > 0;
     self.naviView.backActionBlock = ^{
         [weakSelf finished];
     };
@@ -1274,7 +1274,13 @@ static BOOL kFHStaticPhotoBrowserAtTop = NO;
     } else {
         FHFloorPanPicShowViewController *showVC = [[FHFloorPanPicShowViewController alloc] init];
         showVC.modalPresentationStyle = UIModalPresentationFullScreen;
-        showVC.pictsArray = self.smallImageInfosModels;
+        showVC.floorPanShowModel = self.smallImageInfosModels;
+        showVC.isShowSegmentTitleView = self.isShowSegmentView;
+        
+        if (self.houseType == FHHouseTypeNeighborhood) {
+            showVC.navBarName = @"小区相册";
+        }
+        
         __weak typeof(self)weakSelf = self;
         showVC.albumImageBtnClickBlock = ^(NSInteger index){
             if (index >= 0) {

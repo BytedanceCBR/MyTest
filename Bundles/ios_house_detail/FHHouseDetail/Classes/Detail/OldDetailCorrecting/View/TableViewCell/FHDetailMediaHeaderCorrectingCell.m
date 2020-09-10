@@ -367,7 +367,7 @@
         pictureDetailViewController.associateInfo = model.data.houseImageAssociateInfo;
 
         pictureDetailViewController.followStatus = self.baseViewModel.contactViewModel.followStatus;
-    }else if ([self.baseViewModel.detailData isKindOfClass:[FHDetailNewModel class]]) {
+    } else if ([self.baseViewModel.detailData isKindOfClass:[FHDetailNewModel class]]) {
         FHDetailNewModel *model = (FHDetailNewModel *)self.baseViewModel.detailData;
         pictureDetailViewController.associateInfo = model.data.imageGroupAssociateInfo;
         if (!model.data.isShowTopImageTab) {
@@ -430,7 +430,10 @@
     if (self.baseViewModel.houseType == FHHouseTypeNewHouse && [model.topImages isKindOfClass:[NSArray class]] && model.topImages.count > 0) {
 //        FHDetailNewTopImage *topImage = model.topImages.firstObject;
 //        pictureDetailViewController.smallImageInfosModels = topImage.smallImageGroup;
-        pictureDetailViewController.smallImageInfosModels = [model processTopImagesToSmallImageGroups];
+      //  pictureDetailViewController.smallImageInfosModels = [model processTopImagesToSmallImageGroups];
+    }
+    if (self.baseViewModel.houseType == FHHouseTypeNeighborhood) {
+        pictureDetailViewController.smallImageInfosModels = [model processFloorPanPicShowModel];
     }
     //如果是小区，移除按钮 或者户型详情页也移除按钮
     //099 户型详情页 显示底部按钮
@@ -529,13 +532,11 @@
     NSMutableDictionary *routeParam = [NSMutableDictionary dictionary];
     FHFloorPanPicShowViewController *pictureListViewController = [[FHFloorPanPicShowViewController alloc] initWithRouteParamObj:TTRouteParamObjWithDict(routeParam)];
     pictureListViewController.modalPresentationStyle = UIModalPresentationFullScreen;
-    if (data.isShowTopImageTab) {
-        pictureListViewController.topImages = data.topImages;
-        pictureListViewController.associateInfo = data.imageAlbumAssociateInfo;
-        pictureListViewController.contactViewModel = data.contactViewModel;
-        pictureListViewController.elementFrom = @"new_detail";
-    } else {
-        pictureListViewController.pictsArray = [data processTopImagesToSmallImageGroups];
+    if (self.baseViewModel.houseType == FHHouseTypeNeighborhood) {
+
+        pictureListViewController.floorPanShowModel = [data processFloorPanPicShowModel];
+        pictureListViewController.isShowSegmentTitleView = YES;
+        pictureListViewController.navBarName = @"小区相册";
     }
     __weak typeof(self)weakSelf = self;
     pictureListViewController.albumImageStayBlock = ^(NSInteger index, NSInteger stayTime) {
@@ -964,6 +965,15 @@
     return pictsArray.copy;
 }
 
+- (FHFloorPanPicShowModel *)processFloorPanPicShowModel {
+    FHFloorPanPicShowModel *picShowModel = [[FHFloorPanPicShowModel alloc] init];
+    NSMutableArray *mArr = [NSMutableArray array];
+    for (FHHouseDetailImageTabInfo *tabInfo in self.albumInfo.tabList) {
+        [mArr addObjectsFromArray:[FHFloorPanPicShowGroupModel getTabGroupInfo:tabInfo rootName:tabInfo.tabName]];
+    }
+    picShowModel.itemGroupList = mArr.copy;
+    return picShowModel;
+}
 @end
 
 

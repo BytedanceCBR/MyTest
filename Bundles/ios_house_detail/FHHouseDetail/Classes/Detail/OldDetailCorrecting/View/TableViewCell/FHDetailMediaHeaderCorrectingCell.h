@@ -13,7 +13,7 @@
 #import "FHDetailNewModel.h"
 NS_ASSUME_NONNULL_BEGIN
 
-@class FHDetailNewTopImage;
+@class FHDetailNewTopImage,FHFloorPanPicShowModel;
 
 @interface FHDetailMediaHeaderCorrectingCell : FHDetailBaseCell
 
@@ -42,7 +42,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong , nullable) FHClueAssociateInfoModel *imageAlbumAssociateInfo;
 /// 合并，组合，处理
 - (NSArray *)processTopImagesToSmallImageGroups;
-- (NSArray *)processAlbumInfoGroups;
+- (FHFloorPanPicShowModel *)processFloorPanPicShowModel;
 @end
 
 NS_ASSUME_NONNULL_END

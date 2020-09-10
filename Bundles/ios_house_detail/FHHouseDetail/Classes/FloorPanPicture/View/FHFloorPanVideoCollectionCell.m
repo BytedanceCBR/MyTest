@@ -8,6 +8,7 @@
 #import "FHFloorPanVideoCollectionCell.h"
 #import "UIImageView+BDWebImage.h"
 #import "Masonry.h"
+#import "FHFloorPanPicShowModel.h"
 
 @interface FHFloorPanVideoCollectionCell ()
 @property (nonatomic, strong) UIImageView *imageV;
@@ -58,14 +59,13 @@
     }];
 }
 
-- (void)setDataModel:(FHImageModel *)dataModel {
-    if ([dataModel isKindOfClass:[FHImageModel class]]) {
-        FHImageModel *model = (FHImageModel *)dataModel;
-        if (model.url) {
-            [_imageV bd_setImageWithURL:[NSURL URLWithString:model.url] placeholder:[UIImage imageNamed: @"default_image"]];
+- (void)refreshWithData:(id)data {
+    if ([data isKindOfClass:[FHFloorPanPicShowItemVideoModel class]]) {
+        FHFloorPanPicShowItemVideoModel *model = (FHFloorPanPicShowItemVideoModel *)data;
+        if (model.image && model.image.url) {
+            [_imageV bd_setImageWithURL:[NSURL URLWithString:model.image.url] placeholder:[UIImage imageNamed: @"default_image"]];
         }
     }
 }
-
 
 @end
