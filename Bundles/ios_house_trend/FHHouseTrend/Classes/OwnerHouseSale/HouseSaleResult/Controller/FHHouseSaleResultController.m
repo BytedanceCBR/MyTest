@@ -7,6 +7,7 @@
 
 #import "FHHouseSaleResultController.h"
 #import "UIColor+Theme.h"
+#import "FHUserTracker.h"
 
 @interface FHHouseSaleResultController ()
 
@@ -24,12 +25,21 @@
 
 @implementation FHHouseSaleResultController
 
+- (instancetype)initWithRouteParamObj:(nullable TTRouteParamObj *)paramObj {
+    self = [super initWithRouteParamObj:paramObj];
+    if (self) {
+        self.tracerDict[@"page_type"] = @"publisher_success_detail";
+    }
+    return self;
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     [self initNavbar];
     [self initView];
     [self initConstraints];
+    [self addGoDetailLog];
 }
 
 - (void)initNavbar {
@@ -170,17 +180,38 @@
 
 - (void)goToStrategy {
     NSMutableDictionary *dict = @{}.mutableCopy;
-//    dict[@"title"] = @"发布成功";
+    NSMutableDictionary *tracer = [NSMutableDictionary dictionary];
+    tracer[@"origin_from"] = self.tracerDict[@"origin_from"] ?: @"be_null";
+    dict[@"tracer"] = tracer;
     TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
         
-    NSURL* url = [NSURL URLWithString:@"sslocal://detail?groupid=6865159951162016268"];
+    NSURL* url = [NSURL URLWithString:@"sslocal://detail?groupid=6865159951162016268&item_id=6865159951162016268&report_params=%7b%22enter_from%22%3a%22publisher_success_detail%22%2c%22log_pb%22%3a%7b%22group_id%22%3a%226865159951162016268%22%2c%22group_source%22%3a%222%22%7d%2c%22page_type%22%3a%22article_detail%22%2c%22element_from%22%3a%22selling_strategy%22%7d"];
     [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
 }
 
 - (void)goToPhone {
+    [self addClickCustomerServicePhoneLog];
     NSString *phoneUrl = [NSString stringWithFormat:@"telprompt://%@",@"400-6124-360"];
     NSURL *url = [NSURL URLWithString:phoneUrl];
     [[UIApplication sharedApplication]openURL:url];
+}
+
+#pragma mark - 埋点
+- (void)addGoDetailLog {
+    NSMutableDictionary *tracerDict = [NSMutableDictionary dictionary];
+    tracerDict[@"origin_from"] = self.tracerDict[@"origin_from"] ? : @"be_null";
+    tracerDict[@"enter_from"] = self.tracerDict[@"enter_from"] ? : @"be_null";
+    tracerDict[@"page_type"] = self.tracerDict[@"page_type"] ? : @"be_null";
+    tracerDict[@"event_tracking_id"] = @"107639";
+    TRACK_EVENT(@"go_detail", tracerDict);
+}
+
+- (void)addClickCustomerServicePhoneLog {
+    NSMutableDictionary *tracerDict = [NSMutableDictionary dictionary];
+    tracerDict[@"enter_from"] = self.tracerDict[@"page_type"] ? : @"be_null";
+    tracerDict[@"page_type"] = self.tracerDict[@"page_type"] ? : @"be_null";
+    tracerDict[@"event_tracking_id"] = @"107641";
+    TRACK_EVENT(@"click_customer_service_phone", tracerDict);
 }
 
 @end

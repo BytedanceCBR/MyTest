@@ -12,6 +12,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface FHHouseSaleLeaveView : UIView
 
 @property(nonatomic , copy) void (^quitBlock)(void);
+@property(nonatomic , copy) void (^continueBlock)(void);
 
 - (void)show;
 

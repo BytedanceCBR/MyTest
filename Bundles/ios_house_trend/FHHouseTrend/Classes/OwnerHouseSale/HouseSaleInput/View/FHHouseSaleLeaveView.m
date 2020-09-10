@@ -76,7 +76,7 @@
     _continueBtn.backgroundColor = [UIColor themeOrange1];
     _continueBtn.layer.masksToBounds = YES;
     _continueBtn.layer.cornerRadius = 20;
-    [_continueBtn addTarget:self action:@selector(close) forControlEvents:UIControlEventTouchUpInside];
+    [_continueBtn addTarget:self action:@selector(continueInput) forControlEvents:UIControlEventTouchUpInside];
     [self.contentView addSubview:_continueBtn];
 }
 
@@ -151,6 +151,13 @@
     [self close];
     if(self.quitBlock){
         self.quitBlock();
+    }
+}
+
+- (void)continueInput {
+    [self close];
+    if(self.continueBlock){
+        self.continueBlock();
     }
 }
 

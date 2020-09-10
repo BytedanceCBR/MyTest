@@ -11,6 +11,7 @@
 #import "UIViewController+NavigationBarStyle.h"
 #import "TTBaseMacro.h"
 #import "FHHouseSaleLeaveView.h"
+#import "FHUserTracker.h"
 
 @interface FHHouseSaleInputController ()<UIGestureRecognizerDelegate,UIScrollViewDelegate>
 
@@ -27,6 +28,16 @@
     if (self) {
         _neighbourhoodId = paramObj.allParams[@"neighbourhood_id"];
         _neighbourhoodName = paramObj.allParams[@"neighbourhood_name"];
+        
+        NSString *report_params = paramObj.allParams[@"report_params"];
+        if ([report_params isKindOfClass:[NSString class]]) {
+            NSDictionary *report_params_dic = [self getDictionaryFromJSONString:report_params];
+            if (report_params_dic) {
+                [self.tracerDict addEntriesFromDictionary:report_params_dic];
+            }
+        }
+        
+        self.tracerDict[@"page_type"] = @"house_publisher";
     }
     return self;
 }
@@ -41,6 +52,7 @@
     [self initView];
     [self initConstraints];
     [self initViewModel];
+    [self addGoDetailLog];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -72,6 +84,7 @@
 - (void)showLeaveView {
     [self.view addSubview:self.leaveView];
     [self.leaveView show];
+    [self addPopupShowLog];
 }
 
 - (void)refreshContentOffset:(CGPoint)contentOffset {
@@ -146,9 +159,28 @@
         _leaveView.alpha = 0;
         _leaveView.quitBlock = ^{
             [wself goBack];
+            [wself addPopupClickLog:@"exit"];
+        };
+        _leaveView.continueBlock = ^{
+            [wself addPopupClickLog:@"continue"];
         };
     }
     return _leaveView;
+}
+
+- (NSDictionary *)getDictionaryFromJSONString:(NSString *)jsonString {
+    NSMutableDictionary *retDic = nil;
+    if (jsonString.length > 0) {
+        NSData *jsonData = [jsonString dataUsingEncoding:NSUTF8StringEncoding];
+        NSError *error = nil;
+        retDic = [NSJSONSerialization JSONObjectWithData:jsonData options:NSJSONReadingMutableContainers error:&error];
+        if ([retDic isKindOfClass:[NSDictionary class]] && error == nil) {
+            return retDic;
+        } else {
+            return nil;
+        }
+    }
+    return retDic;
 }
 
 #pragma mark - UIGestureRecognizerDelegate
@@ -159,6 +191,33 @@
 #pragma mark - UIScrollViewDelegate
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
     [self refreshContentOffset:scrollView.contentOffset];
+}
+
+#pragma mark - 埋点
+- (void)addGoDetailLog {
+    NSMutableDictionary *tracerDict = [NSMutableDictionary dictionary];
+    tracerDict[@"enter_from"] = self.tracerDict[@"enter_from"] ? : @"be_null";
+    tracerDict[@"page_type"] = self.tracerDict[@"page_type"] ? : @"be_null";
+    tracerDict[@"element_from"] = self.tracerDict[@"element_from"] ? : @"be_null";
+    tracerDict[@"event_tracking_id"] = @"107634";
+    TRACK_EVENT(@"go_detail", tracerDict);
+}
+
+- (void)addPopupShowLog {
+    NSMutableDictionary *tracerDict = [NSMutableDictionary dictionary];
+    tracerDict[@"popup_name"] = @"unpublished";
+    tracerDict[@"page_type"] = self.tracerDict[@"page_type"] ? : @"be_null";
+    tracerDict[@"event_tracking_id"] = @"107637";
+    TRACK_EVENT(@"popup_show", tracerDict);
+}
+
+- (void)addPopupClickLog:(NSString *)clickPosition {
+    NSMutableDictionary *tracerDict = [NSMutableDictionary dictionary];
+    tracerDict[@"popup_name"] = @"unpublished";
+    tracerDict[@"click_position"] = clickPosition;
+    tracerDict[@"page_type"] = self.tracerDict[@"page_type"] ? : @"be_null";
+    tracerDict[@"event_tracking_id"] = @"107638";
+    TRACK_EVENT(@"popup_click", tracerDict);
 }
 
 @end
