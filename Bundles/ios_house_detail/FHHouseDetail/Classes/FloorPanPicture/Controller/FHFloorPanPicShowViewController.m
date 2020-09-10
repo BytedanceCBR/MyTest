@@ -373,7 +373,7 @@
             smallImageGroupModel.images = smallImageList.copy;
             [smallImageGroup addObject:smallImageGroupModel];
         }
-        [titles addObject:[NSString stringWithFormat:@"%@（%ld）",topImage.name?:@"",tempCount]];
+        [titles addObject:[NSString stringWithFormat:@"%@（%ld）",topImage.name?:@"",(long)tempCount]];
         [numbers addObject:@(tempCount)];
     }
     self.pictsArray = smallImageGroup.copy;
