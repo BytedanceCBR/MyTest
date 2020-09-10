@@ -939,6 +939,7 @@
     @"enterFrom": @"enter_from",
     @"searchId": @"search_id",
     @"pageType": @"page_type",
+    @"elementFrom": @"element_from",
   };
   return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
      return dict[keyName]?:keyName;

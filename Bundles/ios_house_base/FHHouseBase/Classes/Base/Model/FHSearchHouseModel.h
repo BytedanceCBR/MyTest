@@ -551,6 +551,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *elementType;
 @property (nonatomic, copy , nullable) NSString *pageType;
 @property (nonatomic, copy , nullable) NSString *enterFrom;
+@property (nonatomic, copy , nullable) NSString *elementFrom;
 @end
 
 @interface FHDynamicLynxLynxDataModel : JSONModel
@@ -562,11 +563,9 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *title;
 @end
 
-@interface FHDynamicLynxModel : JSONModel
+@interface FHDynamicLynxModel : FHSearchBaseItemModel
 
-@property (nonatomic, copy , nullable) NSString *cardType;
 @property (nonatomic, copy , nullable) NSString *height;
-@property (nonatomic, copy , nullable) NSString *cellStyle;
 @property (nonatomic, copy , nullable) NSString *channel;
 @property (nonatomic, strong , nullable) FHDynamicLynxLynxDataModel *lynxData ;
 @end

@@ -2231,8 +2231,16 @@ extern NSString *const INSTANT_DATA_KEY;
                                 };
         [FHUserTracker writeEvent:@"element_show" params:params];
     }else if ([cellModel isKindOfClass:[FHDynamicLynxModel class]]) {
-        //TODO: 帮我找房动态卡片埋点
-//        [FHUserTracker writeEvent:@"" params:nil];
+        FHDynamicLynxLynxDataReportParamsModel *reportModel = ((FHDynamicLynxModel *)cellModel).lynxData.reportParams;
+        NSDictionary *params = @{@"origin_from":reportModel.originFrom ?: @"be_null",
+                                 @"enter_from":reportModel.enterFrom ?: @"be_null",
+                                 @"event_type":@"house_app2c_v2",
+                                 @"page_type":reportModel.pageType ?: @"be_null",
+                                 @"element_type":reportModel.elementType ?: @"be_null",
+                                 @"search_id":reportModel.searchId ?: @"be_null",
+                                 @"event_tracking_id":@"107653",
+                                };
+        [FHUserTracker writeEvent:@"element_show" params:params];
     }
 }
 

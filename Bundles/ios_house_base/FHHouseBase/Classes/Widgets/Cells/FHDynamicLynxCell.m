@@ -17,7 +17,6 @@ static const CGFloat kDefaultCellHeight = 93.0;
 @interface FHDynamicLynxCell ()
 
 @property (nonatomic, strong) FHLynxView *lynxView;
-@property (nonatomic, strong) FHDynamicLynxModel *cellModel;
 
 @end
 
@@ -52,10 +51,16 @@ static const CGFloat kDefaultCellHeight = 93.0;
 }
 
 - (void)refreshWithData:(id)data {
-    self.cellModel = (FHDynamicLynxModel *)data;
-    FHDynamicLynxLynxDataModel *lynxModel = self.cellModel.lynxData;
-    if (lynxModel && self.lynxView) {
-        [self.lynxView updateData:lynxModel.toDictionary];
+    if (!data) {
+        return;
+    }
+    
+    FHDynamicLynxModel *model = (FHDynamicLynxModel *)data;
+    if ([model isKindOfClass:[FHDynamicLynxModel class]]) {
+        FHDynamicLynxLynxDataModel *lynxModel = model.lynxData;
+        if (lynxModel && self.lynxView) {
+            [self.lynxView updateData:lynxModel.toDictionary];
+        }
     }
 }
 
@@ -65,7 +70,7 @@ static const CGFloat kDefaultCellHeight = 93.0;
         return [model.height floatValue];
     }
     
-    return kDefaultCellHeight;
+    return 0;  //未下发数据或者model类型不正确则隐藏cell
 }
 
 @end
