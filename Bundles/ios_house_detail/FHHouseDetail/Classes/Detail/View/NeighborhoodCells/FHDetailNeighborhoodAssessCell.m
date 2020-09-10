@@ -15,8 +15,6 @@
 #import "FHCardSliderView.h"
 #import "FHDetailAccessCellModel.h"
 
-#define cellId @"cellId"
-
 @interface FHDetailNeighborhoodAssessCell ()
 
 @property(nonatomic , strong) NSMutableArray *dataList;

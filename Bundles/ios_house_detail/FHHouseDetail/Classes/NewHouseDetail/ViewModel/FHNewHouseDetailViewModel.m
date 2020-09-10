@@ -148,64 +148,39 @@
         [sectionModels addObject:agentSM];
     }
 
-    
-    // 小区评测
-//    if (model.data.strategy && model.data.strategy.articleList.count > 0) {
-//
-//        FHDetailAccessCellModel *cellModel = [[FHDetailAccessCellModel alloc] init];
-//        cellModel.houseModelType = FHHouseModelTypeNewAccess;
-//        cellModel.strategy = model.data.strategy;
-//        cellModel.bottomMargin = 20;
-//        NSMutableDictionary *paramsDict = @{}.mutableCopy;
-//        if (self.detailTracerDic) {
-//            [paramsDict addEntriesFromDictionary:self.detailTracerDic];
-//        }
-//        paramsDict[@"page_type"] = [self pageTypeString];
-//        paramsDict[@"from_gid"] = self.houseId;
-//        paramsDict[@"element_type"] = @"guide";
-//        NSString *searchId = self.listLogPB[@"search_id"];
-//        NSString *imprId = self.listLogPB[@"impr_id"];
-//        paramsDict[@"search_id"] = searchId.length > 0 ? searchId : @"be_null";
-//        paramsDict[@"impr_id"] = imprId.length > 0 ? imprId : @"be_null";
-//        cellModel.tracerDic = paramsDict;
-//        [self.items addObject:cellModel];
-//    }
-    
-    //用户房源评价
-//    if (model.data.realtorContent.content.data.count > 0) {
-//        FHhouseDetailRGCListCellModel *detailRGCListCellModel = [[FHhouseDetailRGCListCellModel alloc] init];
-//        detailRGCListCellModel.detailTracerDic = self.detailTracerDic;
-//        NSString *searchId = self.listLogPB[@"search_id"];
-//        NSString *imprId = self.listLogPB[@"impr_id"];
-//        NSDictionary *extraDic = @{
-//            @"searchId":searchId?:@"be_null",
-//            @"imprId":imprId?:@"be_null",
-//            @"houseId":self.houseId,
-//            @"houseType":@(self.houseType),
-//            @"channelId":@"f_hosue_wtt"
-//        };
-//        detailRGCListCellModel.extraDic = extraDic;
-//        detailRGCListCellModel.title = model.data.realtorContent.title;
-//        detailRGCListCellModel.houseModelType = FHHouseModelTypeAgentEvaluationList;
-//        detailRGCListCellModel.count = model.data.realtorContent.content.count;
-//        detailRGCListCellModel.contentModel = model.data.realtorContent.content;
-//        [self.items addObject:detailRGCListCellModel];
-//    }
-    // UGC社区入口
-//    if (model.data.socialInfo && model.data.socialInfo.socialGroupInfo && model.data.socialInfo.socialGroupInfo.socialGroupId.length > 0) {
-//
-//        FHDetailNewUGCSocialCellModel *socialInfoCM = [[FHDetailNewUGCSocialCellModel alloc]init];
-//        socialInfoCM.houseModelType = FHHouseModelTypeNewSocialInfo;
-//        socialInfoCM.socialInfo = model.data.socialInfo;
-//        [self.items addObject:socialInfoCM];
-//    }
-
     //楼盘动态
     if (model.data.timeline.list.count > 0) {
         FHNewHouseDetailTimelineSM *timeLineSM = [[FHNewHouseDetailTimelineSM alloc] initWithDetailModel:self.detailData];
         timeLineSM.sectionType = FHNewHouseDetailSectionTypeTimeline;
         [sectionModels addObject:timeLineSM];
     }
+    
+    // 小区评测
+    if (model.data.strategy && model.data.strategy.articleList.count > 0) {
+        FHNewHouseDetailAssessSM *assessSM = [[FHNewHouseDetailAssessSM alloc] initWithDetailModel:self.detailData];
+        assessSM.sectionType = FHNewHouseDetailSectionTypeAssess;
+        [sectionModels addObject:assessSM];
+    }
+    
+//    用户房源评价
+    if (model.data.realtorContent.content.data.count > 0) {
+        FHNewHouseDetailRGCListSM *RGCListModel = [[FHNewHouseDetailRGCListSM alloc] initWithDetailModel:self.detailData];
+        RGCListModel.sectionType = FHNewHouseDetailSectionTypeRGC;
+        RGCListModel.detailTracerDic = self.detailTracerDic;
+        NSString *searchId = self.listLogPB[@"search_id"];
+        NSString *imprId = self.listLogPB[@"impr_id"];
+        NSDictionary *extraDic = @{
+            @"searchId":searchId?:@"be_null",
+            @"imprId":imprId?:@"be_null",
+            @"houseId":self.houseId,
+            @"houseType":@(FHHouseTypeNewHouse),
+            @"channelId":@"f_hosue_wtt"
+        };
+        RGCListModel.extraDic = extraDic;
+        [sectionModels addObject:RGCListModel];
+    }
+    
+    
     
 //    if (model.data.surroundingInfo) {
 //        FHDetailCourtInfoCellModel *infoModel = [[FHDetailCourtInfoCellModel alloc] init];
