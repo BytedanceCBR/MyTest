@@ -270,13 +270,11 @@
     NSMutableArray *sectionModels = self.sectionModels.mutableCopy;
     if(_relatedHouseData.data && self.relatedHouseData.data.items.count > 0)
     {
-        FHNewHouseDetailRecommendSM *recommendSM = [[FHNewHouseDetailRecommendSM alloc] initWithRelatedModel:self.relatedHouseData];
+        
+        FHNewHouseDetailRecommendSM *recommendSM = [[FHNewHouseDetailRecommendSM alloc] initWithDetailModel:self.detailData];
         recommendSM.sectionType = FHNewHouseDetailSectionTypeRecommend;
+        [recommendSM updateRelatedModel:self.relatedHouseData];
         [sectionModels addObject:recommendSM];
-//        FHDetailNewRelatedCellModel *infoModel = [[FHDetailNewRelatedCellModel alloc] init];
-//        infoModel.houseModelType = FHHouseModelTypeNewRelated;
-//        infoModel.relatedHouseData = self.relatedHouseData.data;
-//        [self.items addObject:infoModel];
     }
     // 免责声明
     FHDetailNewModel * model = (FHDetailNewModel *)self.detailData;

@@ -55,7 +55,6 @@
 - (void)clickRecive:(id)data {
     FHDetailNewDiscountInfoItemModel *itemInfo = (FHDetailNewDiscountInfoItemModel *)data;
     [self addClickOptionLog:@(itemInfo.actionType)];
-    [self addClickOptionLog:@(itemInfo.actionType)];
 
     //099 优惠跳转类型
     if (itemInfo.actionType == 3 && itemInfo.activityURLString.length) {

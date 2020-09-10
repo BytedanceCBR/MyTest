@@ -57,6 +57,8 @@
         _titleLabel = [UILabel new];
         _titleLabel.font = [UIFont themeFontMedium:12];
         _titleLabel.textColor = [UIColor themeOrange1];
+        _timeLabel.layer.cornerRadius = 2;
+        _timeLabel.layer.masksToBounds = YES;
         _titleLabel.textAlignment = NSTextAlignmentCenter;
         _titleLabel.backgroundColor = [UIColor colorWithHexStr:@"#fff8ef"];
         [self.contentView addSubview:_titleLabel];
@@ -76,7 +78,7 @@
         [_contentLabel mas_makeConstraints:^(MASConstraintMaker *make) {
             make.top.equalTo(self.titleLabel.mas_bottom).offset(10);
             make.left.equalTo(self.timeLabel);
-            make.right.equalTo(self.contentView).offset(-48);
+            make.right.equalTo(self.contentView).offset(-38);
             make.bottom.equalTo(self.contentView).offset(-20);
         }];
         self.lineView = [[UIView alloc] init];

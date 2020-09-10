@@ -12,7 +12,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FHNewHouseDetailRecommendSM : FHNewHouseDetailSectionModel
 
-- (instancetype)initWithRelatedModel:(FHListResultHouseModel *)model;
+- (void)updateRelatedModel:(FHListResultHouseModel *)model;
 
 @property (nonatomic, strong, nullable) FHNewHouseDetailTRelatedCollectionCellModel *relatedCellModel;
 
