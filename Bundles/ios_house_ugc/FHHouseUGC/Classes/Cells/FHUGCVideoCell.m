@@ -290,8 +290,8 @@
 }
 
 - (void)updateDiggButton {
-    NSString *diggCount = [NSString stringWithFormat:@"%lld",self.videoItem.article.diggCount];
-    [self.bottomView updateLikeState:diggCount userDigg:(self.videoItem.article.userDigg ? @"1" : @"0")];
+    NSString *diggCount = self.cellModel.diggCount;
+    [self.bottomView updateLikeState:diggCount userDigg:self.cellModel.userDigg];
 }
 
 - (void)willDisplay {
@@ -589,11 +589,11 @@
 #pragma mark - TTVFeedUserOpDataSyncMessage
 
 - (void)ttv_message_feedDiggChanged:(BOOL)userDigg uniqueIDStr:(NSString *)uniqueIDStr {
-    [self feedCollectChanged:userDigg uniqueIDStr:uniqueIDStr forKey:@"userDigg"];
+//    [self feedCollectChanged:userDigg uniqueIDStr:uniqueIDStr forKey:@"userDigg"];
 }
 
 - (void)ttv_message_feedDiggCountChanged:(int)diggCount uniqueIDStr:(NSString *)uniqueIDStr {
-    [self feedCollectChanged:diggCount uniqueIDStr:uniqueIDStr forKey:@"diggCount"];
+//    [self feedCollectChanged:diggCount uniqueIDStr:uniqueIDStr forKey:@"diggCount"];
 }
 
 - (void)ttv_message_feedCommentCountChanged:(int)commentCount uniqueIDStr:(NSString *)uniqueIDStr {
