@@ -65,8 +65,8 @@ def fhPods
     # 'DelegateForC'
     #]
     
+#    pod 'ios_house_im' , :path => '../../../im/feature', :inhibit_warnings => false
 #    pod 'ios_house_im' ,'0.2.16-rc.3', :inhibit_warnings => false
-#     pod 'ios_house_im' , :path => '../../../im/feature', :inhibit_warnings => false
     pod 'ios_house_im' , :git => 'git@code.byted.org:fproject/ios_house_im.git' , :commit => '8393cb936a748e872fbd562a052e39f08eedd6a7', :inhibit_warnings => false
 
 end
@@ -486,7 +486,7 @@ def appPods
     #IMSDK依赖
     pod 'lz4', '1.0.1'
     pod 'ByteRtcSDK', '2.6.13'
-    pod 'TTIMSDK', '1.1.3-rc.1-xingfuli', :subspecs => [
+    pod 'TTIMSDK', 'xingfuli_1.0', :subspecs => [
         'IMKit_Default',
         'IMKit_WebSocket',
         'IMKit_Core',
