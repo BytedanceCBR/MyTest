@@ -40,8 +40,6 @@
 #import "FHNewHouseDetailDisclaimerSC.h"
 #import "FHNewHouseDetailDisclaimerSM.h"
 #import "FHNewHouseDetailViewController.h"
-#import "FHNewHouseDetailRelatedSC.h"
-#import "FHNewHouseDetailRelatedSM.h"
 
 @interface FHNewHouseDetailViewModel ()
 
@@ -140,11 +138,6 @@
         salesSM.sectionType = FHNewHouseDetailSectionTypeSales;
         [salesSM updateDetailModel:self.detailData contactViewModel:self.contactViewModel];
         [sectionModels addObject:salesSM];
-//        FHDetailSalesCellModel *salesModel = [[FHDetailSalesCellModel alloc] init];
-//        salesModel.discountInfo = model.data.discountInfo;
-//        salesModel.houseModelType = FHHouseModelTypeNewSales;
-//        salesModel.contactViewModel = self.contactViewModel;
-//        [self.items addObject:salesModel];
     }
     
 //     推荐经纪人
@@ -277,6 +270,9 @@
     NSMutableArray *sectionModels = self.sectionModels.mutableCopy;
     if(_relatedHouseData.data && self.relatedHouseData.data.items.count > 0)
     {
+        FHNewHouseDetailRecommendSM *recommendSM = [[FHNewHouseDetailRecommendSM alloc] initWithRelatedModel:self.relatedHouseData];
+        recommendSM.sectionType = FHNewHouseDetailSectionTypeRecommend;
+        [sectionModels addObject:recommendSM];
 //        FHDetailNewRelatedCellModel *infoModel = [[FHDetailNewRelatedCellModel alloc] init];
 //        infoModel.houseModelType = FHHouseModelTypeNewRelated;
 //        infoModel.relatedHouseData = self.relatedHouseData.data;

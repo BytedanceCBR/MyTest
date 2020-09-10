@@ -45,8 +45,6 @@
     [self.containerView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.edges.mas_equalTo(0);
     }];
-    
-    
 
     self.flowLayout = [[UICollectionViewFlowLayout alloc] init];
     self.flowLayout.itemSize = CGSizeMake(99, 56);

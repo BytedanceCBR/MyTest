@@ -10,10 +10,10 @@
 @implementation FHNewHouseDetailSectionModel
 
 //禁用外部可见的init方法
-- (id)init {
-    NSAssert(false,@"this class init method is initWithDetailModel");
-    return nil;
-}
+//- (id)init {
+//    NSAssert(false,@"this class init method is initWithDetailModel");
+//    return nil;
+//}
 
 - (instancetype)initWithDetailModel:(FHDetailNewModel *)model {
     if (self = [super init]) {

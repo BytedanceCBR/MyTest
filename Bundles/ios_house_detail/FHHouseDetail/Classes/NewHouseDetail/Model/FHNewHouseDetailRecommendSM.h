@@ -6,10 +6,15 @@
 //
 
 #import "FHNewHouseDetailSectionModel.h"
+#import "FHNewHouseDetailRelatedCollectionCell.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
 @interface FHNewHouseDetailRecommendSM : FHNewHouseDetailSectionModel
+
+- (instancetype)initWithRelatedModel:(FHListResultHouseModel *)model;
+
+@property (nonatomic, strong, nullable) FHNewHouseDetailTRelatedCollectionCellModel *relatedCellModel;
 
 @end
 
