@@ -12,6 +12,8 @@
 
 @interface FHNewHouseDetailTimelineSC()<IGListSupplementaryViewSource>
 
+@property (nonatomic, assign) NSInteger selectedIndex;
+
 @end
 
 @implementation FHNewHouseDetailTimelineSC
@@ -21,6 +23,7 @@
     self = [super init];
     if (self) {
         self.supplementaryViewSource = self;
+        _selectedIndex = 0;
     }
     return self;
 }
@@ -39,6 +42,10 @@
     FHNewHouseDetailTimelineSM *model = (FHNewHouseDetailTimelineSM *)self.sectionModel;
     FHNewHouseDetailTimeLineCollectionCell *cell = [self.collectionContext dequeueReusableCellOfClass:[FHNewHouseDetailTimeLineCollectionCell class] withReuseIdentifier:NSStringFromClass([model.newsCellModel class]) forSectionController:self atIndex:index];
     [cell refreshWithData:model.newsCellModel];
+    __weak typeof(self) wself = self;
+    cell.selectedIndexChange = ^(NSInteger index) {
+        wself.selectedIndex = index;
+    };
     return cell;
 }
 
@@ -67,7 +74,11 @@
     if (model.newsCellModel) {
         FHNewHouseDetailViewController *vc = self.detailViewController;
         NSString *courtId = vc.viewModel.houseId;
-        NSDictionary *dict = [self subPageParams];
+        NSMutableDictionary *mutableDict = [self subPageParams].mutableCopy;
+        mutableDict[@"top_index"] = @(self.selectedIndex);
+        FHNewHouseDetailTimelineSM *model = (FHNewHouseDetailTimelineSM *)self.sectionModel;
+        mutableDict[@"time_line_model"] = model.newsCellModel.timeLineModel;
+        NSDictionary *dict = mutableDict.copy;
         TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc]initWithInfo:dict];
         [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:[NSString stringWithFormat:@"sslocal://floor_timeline_detail?court_id=%@",courtId]] userInfo:userInfo];
     }

@@ -18,6 +18,8 @@
 @property (nonatomic , strong) FHFloorTimeLineViewModel *timeLineListViewModel;
 @property (nonatomic , strong) NSString *courtId;
 @property (nonatomic , strong) FHHouseDetailContactViewModel *contactViewModel;
+@property (nonatomic, assign) NSInteger topIndex;
+@property (nonatomic, strong) FHDetailNewDataTimelineModel *timeLineModel;
 
 @end
 
@@ -27,6 +29,9 @@
     self = [super initWithRouteParamObj:paramObj];
     if (self) {
         _courtId = paramObj.allParams[@"court_id"];
+        self.topIndex = [paramObj.allParams[@"top_index"] integerValue];
+        self.timeLineModel =  paramObj.allParams[@"time_line_model"];
+        
     }
     return self;
 }
@@ -42,6 +47,10 @@
     _timeLineListViewModel.navBar = [self getNaviBar];
     [self setNavBarTitle:@"楼盘动态"];
     [self.view bringSubviewToFront:[self getNaviBar]];
+    if (self.timeLineModel) {
+        [self.timeLineListViewModel processDetailData:self.timeLineModel];
+    }
+    [self.timeLineListViewModel scrollToItemAtRow:self.topIndex];
 
 }
 
@@ -66,11 +75,6 @@
     
     [_timeLineListTable setBackgroundColor:[UIColor themeGray7]];
    
-}
-
-- (void)retryLoadData
-{
-    [self.timeLineListViewModel startLoadData];
 }
 
 /*
