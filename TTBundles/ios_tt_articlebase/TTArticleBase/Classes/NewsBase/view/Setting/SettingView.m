@@ -509,12 +509,11 @@ TTEditUserProfileViewControllerDelegate
     if(cellType == SettingCellTypePushNotification){
         NSString *aString = @"关闭后将无法接收到精选房源推送";
         CGSize size =  [aString btd_sizeWithFont:[UIFont systemFontOfSize:14] width:self.width - 30];
-        return [TTDeviceUIUtils tt_padding: 53 + size.height];
-    }
-    else if(cellType == SettingCellTypePersonalRecommend){
+        return [TTDeviceUIUtils tt_padding: 58 + size.height];
+    }else if(cellType == SettingCellTypePersonalRecommend){
         NSString *aString = @"关闭后您将无法接收到幸福里的专属推荐的精选房内容";
         CGSize size =  [aString btd_sizeWithFont:[UIFont systemFontOfSize:14] width:self.width - 30];
-        return [TTDeviceUIUtils tt_padding: 53 + size.height];
+        return [TTDeviceUIUtils tt_padding: 58 + size.height];
     }
     return [SettingView heightOfCell];
 }
