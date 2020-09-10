@@ -50,7 +50,7 @@
 - (void)dealloc {
 }
 
-- (NSString *)elementTypeString:(FHHouseType)houseType {
+- (NSString *)elementType {
     return @"picture";
 }
 
