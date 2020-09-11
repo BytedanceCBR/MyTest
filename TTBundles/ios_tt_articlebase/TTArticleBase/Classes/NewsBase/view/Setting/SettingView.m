@@ -1625,6 +1625,7 @@ TTEditUserProfileViewControllerDelegate
             [FHEnvContext savePersonalRecommend:personalizedStatus];
         }
     }];
+//    [FHEnvContext savePersonalRecommend:personalizedStatus];
 }
 
 - (void)pushNotificationChanged:(id)sender

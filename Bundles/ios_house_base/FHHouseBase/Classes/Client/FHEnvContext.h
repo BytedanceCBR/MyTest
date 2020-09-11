@@ -129,7 +129,7 @@ static NSString *const kFHUGCPromotionUser = @"is_promotion_user";
 //获取是否开启推荐
 + (BOOL)getPersonalRecommend;
 
-+ (void)savePersonalRecommend:(BOOL *)isPersonalRommend;
++ (void)savePersonalRecommend:(BOOL)isPersonalRommend;
 /*
  修改第二个tab名称
  */

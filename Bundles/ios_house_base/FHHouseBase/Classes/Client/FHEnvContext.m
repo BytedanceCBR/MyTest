@@ -709,6 +709,7 @@ static NSInteger kGetLightRequestRetryCount = 3;
         [FHEnvContext saveCurrentUserCityId:configModel.currentCityId];
         //        [self.generalBizConfig saveCurrentConfigDataCache:configModel];
         [self.configDataReplay sendNext:configModel];
+        [FHEnvContext savePersonalRecommend:configModel.personalizedStatus];
     }
 }
 
@@ -832,7 +833,7 @@ static NSInteger kGetLightRequestRetryCount = 3;
 }
 
 //保存当前个性化推荐设置
-+ (void)savePersonalRecommend:(BOOL *)isPersonalRecommend
++ (void)savePersonalRecommend:(BOOL)isPersonalRecommend
 {
      [[NSUserDefaults standardUserDefaults] setBool:isPersonalRecommend forKey:@"PersonalRecommend"];
      [[NSUserDefaults standardUserDefaults] synchronize];
