@@ -933,7 +933,6 @@ extern NSString *const INSTANT_DATA_KEY;
             }
         }
         if (_isAbtest) {
-            self.tableView.contentInset = UIEdgeInsetsMake(5, 0, 0, 0);
             self.tableView.backgroundColor = [UIColor themeGray7];
         }
         [self.tableView reloadData];
@@ -1642,8 +1641,14 @@ extern NSString *const INSTANT_DATA_KEY;
                     [wself jump2HouseFindPageWithUrl:url];
                 };
             }
-            
-               [cell refreshWithData:data];
+            if ([cell isKindOfClass:[FHHouseSearchSecondHouseCell class]]) {
+                FHHouseSearchSecondHouseCell *secondCell = (FHHouseSearchSecondHouseCell *)cell;
+                [secondCell updateHeightByIsFirst:isFirstCell];
+            } else if ([cell isKindOfClass:[FHHouseSearchNewHouseCell class]]) {
+                FHHouseSearchNewHouseCell *newCell = (FHHouseSearchNewHouseCell *)cell;
+                [newCell updateHeightByIsFirst:isFirstCell];
+            }
+            [cell refreshWithData:data];
             if ([cell isKindOfClass:[FHHouseListAgencyInfoCell class]]) {
                 FHHouseListAgencyInfoCell *agencyInfoCell = (FHHouseListAgencyInfoCell *)cell;
                 if (!agencyInfoCell.btnClickBlock) {
@@ -1730,6 +1735,13 @@ extern NSString *const INSTANT_DATA_KEY;
                 item.topMargin = 10;
             }else {
                 item.topMargin = 0;
+            }
+            if (_isAbtest) {
+                if (isFirstCell) {
+                    item.topMargin = 5;
+                } else {
+                    item.topMargin = 0;
+                }
             }
             data = item;
         }
