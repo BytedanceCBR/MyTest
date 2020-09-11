@@ -508,11 +508,11 @@ TTEditUserProfileViewControllerDelegate
     SettingCellType cellType = [self cellTypeAtIndexPath:indexPath];
     if(cellType == SettingCellTypePushNotification){
         NSString *aString = @"关闭后将无法接收到精选房源推送";
-        CGSize size =  [aString btd_sizeWithFont:[UIFont systemFontOfSize:14] width:self.width - 30];
+        CGSize size =  [aString btd_sizeWithFont:[UIFont systemFontOfSize:14] width:self.width - 30];//适配小机型多行文案
         return [TTDeviceUIUtils tt_padding: 58 + size.height];
     }else if(cellType == SettingCellTypePersonalRecommend){
         NSString *aString = @"关闭后您将无法接收到幸福里的专属推荐的精选房内容";
-        CGSize size =  [aString btd_sizeWithFont:[UIFont systemFontOfSize:14] width:self.width - 30];
+        CGSize size =  [aString btd_sizeWithFont:[UIFont systemFontOfSize:14] width:self.width - 30];//适配小机型多行文案
         return [TTDeviceUIUtils tt_padding: 58 + size.height];
     }
     return [SettingView heightOfCell];
@@ -843,12 +843,11 @@ TTEditUserProfileViewControllerDelegate
         return @[@(kTTSettingSectionTypeAbout),
                  @(kTTSettingSectionTypeNotification),
                  @(kTTSettingSectionTypeTTCover),
-                 @(kTTSettingSectionTypeLogout),
-                 @(kTTSettingSectionTypeLogoutUnRegister)];
+                 @(kTTSettingSectionTypeLogout)];
     } else {
         return @[@(kTTSettingSectionTypeAbout),
         @(kTTSettingSectionTypeNotification),
-        @(kTTSettingSectionTypeTTCover),];
+        @(kTTSettingSectionTypeTTCover)];
     }
 }
 
@@ -862,23 +861,25 @@ TTEditUserProfileViewControllerDelegate
                 @(SettingCellTypeThirdPartySDK),
                 @(SettingCellTypeApplyPermission),
                 @(SettingCellTypeBusinessLicense),]];
-            if ([TTAccountManager isLogin] && ![SSCommonLogic disableDouyinIconLoginLogic]) {
-                [array addObject:@(SettingCellTypeFHAccountBindingSetting)];
-            }
             return array;
         }
         case kTTSettingSectionTypeNotification:{
             NSMutableArray *array = [NSMutableArray arrayWithArray:@[
                 @(SettingCellTypePushNotification),
-                @(SettingCellTypePersonalRecommend),
-                @(SettingCellTypeClearCache),]];
+                @(SettingCellTypeClearCache)]];
+            if ([[AKTaskSettingHelper shareInstance] settingRecommendEnable]) {
+                [array insertObject:@(SettingCellTypePersonalRecommend) atIndex:1];
+            }
             return array;
         }
         case kTTSettingSectionTypeTTCover:{
             NSMutableArray *array = [NSMutableArray arrayWithArray:@[
                 @(SettingCellTypeCheckNewVersion),
                 @(SettingCellTypeNormalProblem),
-                @(SettingCellTypeAbout),]];
+                @(SettingCellTypeAbout)]];
+            if ([TTAccountManager isLogin] && ![SSCommonLogic disableDouyinIconLoginLogic]) {
+                [array addObject:@(SettingCellTypeFHAccountBindingSetting)];
+            }
             return array;
         }
         case kTTSettingSectionTypeLogout:{
@@ -1574,7 +1575,7 @@ TTEditUserProfileViewControllerDelegate
 //关闭个性化推荐二次弹窗确认
 - (void)secondCondirmation
 {
-    //如果点击后switch的状态变为NO
+    //点击后switch的状态变为NO
     if(_personalRecommendSwitch.on == NO){
         TTThemedAlertController *alert = [[TTThemedAlertController alloc] initWithTitle:nil message:NSLocalizedString(@"关闭个性化推荐之后，您将无法接收到幸福里的专属推荐的精选房源", nil) preferredType:TTThemedAlertControllerTypeAlert];
         [alert addActionWithGrayTitle:NSLocalizedString(@"坚持关闭", nil) actionType:TTThemedAlertActionTypeNormal actionBlock:^{
@@ -1587,7 +1588,6 @@ TTEditUserProfileViewControllerDelegate
         }];
         [alert addActionWithTitle:NSLocalizedString(@"我在想想", nil) actionType:TTThemedAlertActionTypeNormal actionBlock:^{
             [_personalRecommendSwitch setOn:YES];
-            [FHEnvContext savePersonalRecommend:YES];
             NSMutableDictionary *param = [NSMutableDictionary new];
             param[@"popup_name"] = @"personal_recommend_settings";
             param[@"page_type"] = @"setting";
@@ -1605,7 +1605,7 @@ TTEditUserProfileViewControllerDelegate
         [self setPersonalizedStatus:1];//1表示打开个性化推荐
     }
 }
-//上报个性化推荐状态的接口
+//上报个性化推荐状态的接口,只有网络请求成功才修改本地FHEnvContext的字段
 - (void)setPersonalizedStatus:(int)personalizedStatus
 {
     if (![TTReachability isNetworkConnected]) {

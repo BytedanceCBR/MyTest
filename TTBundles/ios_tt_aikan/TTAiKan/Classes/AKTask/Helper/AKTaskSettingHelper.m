@@ -53,6 +53,13 @@ static AKTaskSettingHelper *shareInstance = nil;
     return enable;
 }
 
+- (BOOL)settingRecommendEnable
+{
+    NSDictionary *setting = [[TTSettingsManager sharedManager] settingForKey:@"f_settings" defaultValue:@{} freeze:YES];
+    BOOL enable = [setting tt_boolValueForKey:@"f_setting_recommend_enable"];
+    return enable;
+}
+
 - (BOOL)appIsReviewing
 {
     NSDictionary *setting = [[TTSettingsManager sharedManager] settingForKey:@"tt_aikan_benefit_setting" defaultValue:@{} freeze:NO];
