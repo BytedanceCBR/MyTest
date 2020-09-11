@@ -6,13 +6,18 @@
 //
 
 #import "FHFloorPanPicCollectionCell.h"
-#import "UIColor+Theme.h"
-#import "UIFont+House.h"
 #import "Masonry.h"
 #import "UIImageView+BDWebImage.h"
 #import "FHHouseBaseItemCell.h"
 #import "TTDeviceHelper.h"
 #import <FHHouseBase/TTDeviceHelper+FHHouse.h>
+#import "FHDetailNewModel.h"
+#import "FHFloorPanPicShowModel.h"
+
+@interface FHFloorPanPicCollectionCell ()
+@property (nonatomic,strong) UIImageView *imageV;
+
+@end
 
 @implementation FHFloorPanPicCollectionCell
 - (instancetype)initWithFrame:(CGRect)frame
@@ -31,6 +36,8 @@
 //    _imageV.layer.borderColor = [UIColor themeGray6].CGColor;
     _imageV.layer.cornerRadius = 4.0;
     _imageV.layer.masksToBounds = YES;
+    _imageV.layer.borderColor = [UIColor colorWithHexStr:@"#ededed"].CGColor;
+    _imageV.layer.borderWidth = 0.7;
     [self addSubview:_imageV];
     
     [_imageV mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -38,12 +45,12 @@
     }];
 }
 
-- (void)setDataModel:(FHImageModel *)dataModel
-{
-    if ([dataModel isKindOfClass:[FHImageModel class]]) {
-        FHImageModel *model = (FHImageModel *)dataModel;
-        if (model.url) {
-            [_imageV bd_setImageWithURL:[NSURL URLWithString:model.url] placeholder:[UIImage imageNamed: @"default_image"]];
+
+- (void)refreshWithData:(id)data {
+    if ([data isKindOfClass:[FHFloorPanPicShowItemPictureModel class]]) {
+        FHFloorPanPicShowItemPictureModel *model = (FHFloorPanPicShowItemPictureModel *)data;
+        if (model.image && model.image.url) {
+            [_imageV bd_setImageWithURL:[NSURL URLWithString:model.image.url] placeholder:[UIImage imageNamed: @"default_image"]];
         }
     }
 }

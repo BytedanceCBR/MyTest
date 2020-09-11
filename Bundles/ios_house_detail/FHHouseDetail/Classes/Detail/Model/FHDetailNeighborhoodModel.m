@@ -48,6 +48,7 @@
                            @"recommendRealtorsAssociateInfo": @"recommend_realtors_associate_info",
                            @"highlightedRealtorAssociateInfo":@"highlighted_realtor_associate_info",
                            @"highlightedRealtor": @"highlighted_realtor",
+                           @"albumInfo": @"album_info"
     };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
         return dict[keyName]?:keyName;

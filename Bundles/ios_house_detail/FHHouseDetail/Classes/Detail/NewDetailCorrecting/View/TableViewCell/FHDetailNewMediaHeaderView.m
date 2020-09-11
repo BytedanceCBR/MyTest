@@ -120,7 +120,7 @@
     [self.titleView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.right.bottom.equalTo(self);
         make.top.equalTo(self.scrollView.mas_bottom).offset(-40);
-        make.height.equalTo(0);
+        make.height.mas_offset(40);
     }];
 
     [self.itemView mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -284,7 +284,6 @@
         //这里分别加上标签高度20，标签间隔20
         titleHeight += 20 + 20;
     }
-
     [self.titleView mas_updateConstraints:^(MASConstraintMaker *make) {
         make.height.mas_offset(titleHeight);
     }];
