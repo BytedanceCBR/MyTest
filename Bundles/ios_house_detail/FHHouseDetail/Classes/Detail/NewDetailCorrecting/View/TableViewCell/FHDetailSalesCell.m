@@ -190,6 +190,12 @@
 //                topOffset = -2;
 //            }
             vHeight = 44 + titleHeight ;
+            if (!item.discountSubContent || item.discountSubContent.length == 0) {
+                vHeight -= 18;
+                itemView.subtitleLabel.hidden = YES;
+            } else {
+                itemView.subtitleLabel.hidden = NO;
+            }
             totalHeight += vHeight;
             [itemView.titleLabel mas_updateConstraints:^(MASConstraintMaker *make) {
                 make.top.mas_equalTo(topOffset);
