@@ -1576,7 +1576,7 @@ TTEditUserProfileViewControllerDelegate
 - (void)secondCondirmation
 {
     //点击后switch的状态变为NO
-    if(_personalRecommendSwitch.on == NO){
+    if([FHEnvContext getPersonalRecommend] == YES){
         TTThemedAlertController *alert = [[TTThemedAlertController alloc] initWithTitle:nil message:NSLocalizedString(@"关闭个性化推荐之后，您将无法接收到幸福里的专属推荐的精选房源", nil) preferredType:TTThemedAlertControllerTypeAlert];
         [alert addActionWithGrayTitle:NSLocalizedString(@"坚持关闭", nil) actionType:TTThemedAlertActionTypeNormal actionBlock:^{
             NSMutableDictionary *param = [NSMutableDictionary new];
@@ -1587,7 +1587,7 @@ TTEditUserProfileViewControllerDelegate
             [self setPersonalizedStatus:0];//0表示关闭个性化推荐
         }];
         [alert addActionWithTitle:NSLocalizedString(@"我在想想", nil) actionType:TTThemedAlertActionTypeNormal actionBlock:^{
-            [_personalRecommendSwitch setOn:YES];
+            [_personalRecommendSwitch setOn:[FHEnvContext getPersonalRecommend]];
             NSMutableDictionary *param = [NSMutableDictionary new];
             param[@"popup_name"] = @"personal_recommend_settings";
             param[@"page_type"] = @"setting";
@@ -1625,7 +1625,6 @@ TTEditUserProfileViewControllerDelegate
             [FHEnvContext savePersonalRecommend:personalizedStatus];
         }
     }];
-//    [FHEnvContext savePersonalRecommend:personalizedStatus];
 }
 
 - (void)pushNotificationChanged:(id)sender
