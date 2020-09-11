@@ -185,7 +185,7 @@
     dict[@"tracer"] = tracer;
     TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
         
-    NSURL* url = [NSURL URLWithString:@"sslocal://detail?group_id=6870475392612827661&item_id=6870475392612827661&report_params=%7b%22enter_from%22%3a%22publisher_success_detail%22%2c%22log_pb%22%3a%7b%22group_id%22%3a%6870475392612827661%22%2c%22group_source%22%3a%222%22%7d%2c%22page_type%22%3a%22article_detail%22%2c%22element_from%22%3a%22selling_strategy%22%7d"];
+    NSURL* url = [NSURL URLWithString:@"sslocal://detail?group_id=6865159951162016268&item_id=6865159951162016268&report_params=%7b%22enter_from%22%3a%22publisher_success_detail%22%2c%22log_pb%22%3a%7b%22group_id%22%3a%6865159951162016268%22%2c%22group_source%22%3a%222%22%7d%2c%22page_type%22%3a%22article_detail%22%2c%22element_from%22%3a%22selling_strategy%22%7d"];
     [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
 }
 
