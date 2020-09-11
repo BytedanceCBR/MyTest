@@ -225,7 +225,7 @@
     self.view.backgroundColor = self.collectionView.backgroundColor;
     [self.view addSubview:self.collectionView];
 
-    self.listAdapter = [[IGListAdapter alloc] initWithUpdater:self.listAdapterUpdater viewController:self workingRangeSize:2];
+    self.listAdapter = [[IGListAdapter alloc] initWithUpdater:self.listAdapterUpdater viewController:self workingRangeSize:5];
     self.listAdapter.collectionView = self.collectionView;
     self.listAdapter.dataSource = self;
     self.listAdapter.scrollViewDelegate = self;
@@ -431,13 +431,21 @@
 }
 
 #pragma mark - Request
-- (void)reloadData {
+ - (void)refreshSectionModel:(FHNewHouseDetailSectionModel *)sectionModel animated:(BOOL )animated {
+     if ([self.viewModel.sectionModels containsObject:sectionModel]) {
+         NSUInteger index = [self.viewModel.sectionModels indexOfObject:sectionModel];
+         if (index < self.viewModel.sectionModels.count) {
+             [self.listAdapterUpdater reloadCollectionView:self.collectionView sections:[NSIndexSet indexSetWithIndex:index]];
+             
+//             [self.listAdapterUpdater reloadItemInCollectionView:self.collectionView fromIndexPath:<#(nonnull NSIndexPath *)#> toIndexPath:<#(nonnull NSIndexPath *)#>]
+         }
+     }
 //    [self.listAdapter performUpdatesAnimated:YES
 //                                      completion:^(BOOL finished) {
 //
 //                                      }];
-    [self.listAdapter reloadDataWithCompletion:^(BOOL finished) {
-    }];
+//    [self.listAdapter reloadDataWithCompletion:^(BOOL finished) {
+//    }];
 }
 
 - (void)startLoadData

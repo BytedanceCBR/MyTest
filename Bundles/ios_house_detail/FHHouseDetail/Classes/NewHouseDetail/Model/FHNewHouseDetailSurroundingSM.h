@@ -9,7 +9,14 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+@class FHNewHouseDetailSurroundingCellModel;
+@class FHNewHouseDetailMapCellModel;
+
 @interface FHNewHouseDetailSurroundingSM : FHNewHouseDetailSectionModel
+
+@property (nonatomic, strong) FHNewHouseDetailSurroundingCellModel *surroundingCellModel;
+
+@property (nonatomic, strong) FHNewHouseDetailMapCellModel *mapCellModel;
 
 @end
 

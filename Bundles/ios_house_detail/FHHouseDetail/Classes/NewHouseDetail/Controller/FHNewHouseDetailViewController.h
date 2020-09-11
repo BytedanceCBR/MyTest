@@ -10,6 +10,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+@class FHNewHouseDetailSectionModel;
 @interface FHNewHouseDetailViewController : FHBaseViewController
 
 //是否显示拨打电话
@@ -30,7 +31,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)updateLayout:(BOOL)isInstant;
 
-- (void)reloadData;
+- (void)refreshSectionModel:(FHNewHouseDetailSectionModel *)sectionModel animated:(BOOL )animated;
 
 @end
 

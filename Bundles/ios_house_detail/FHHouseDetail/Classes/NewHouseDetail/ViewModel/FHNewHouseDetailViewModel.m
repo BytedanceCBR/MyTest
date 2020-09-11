@@ -129,8 +129,6 @@
         floorpanSM.sectionType = FHNewHouseDetailSectionTypeFloorpan;
         [sectionModels addObject:floorpanSM];
     }
-
-    
     
     // 优惠信息
     if (model.data.discountInfo) {
@@ -180,16 +178,12 @@
         [sectionModels addObject:RGCListModel];
     }
     
-    
-    
-//    if (model.data.surroundingInfo) {
-//        FHDetailCourtInfoCellModel *infoModel = [[FHDetailCourtInfoCellModel alloc] init];
-//        infoModel.surroundingInfo = model.data.surroundingInfo;
-//        infoModel.houseModelType = FHHouseModelTypeNewLocation;
-//        infoModel.tableView = self.tableView;
-//        infoModel.contactViewModel = self.contactViewModel;
-//        [self.items addObject:infoModel];
-//    }
+    if (model.data.surroundingInfo || (model.data.coreInfo.gaodeLat && model.data.coreInfo.gaodeLng)) {
+        FHNewHouseDetailSurroundingSM *surroundingSM = [[FHNewHouseDetailSurroundingSM alloc] initWithDetailModel:self.detailData];
+        surroundingSM.sectionType = FHNewHouseDetailSectionTypeSurrounding;
+        [sectionModels addObject:surroundingSM];
+
+    }
     //地图
 //    if(model.data.coreInfo.gaodeLat && model.data.coreInfo.gaodeLng){
 //        FHDetailStaticMapCellModel *staticMapModel = [[FHDetailStaticMapCellModel alloc] init];

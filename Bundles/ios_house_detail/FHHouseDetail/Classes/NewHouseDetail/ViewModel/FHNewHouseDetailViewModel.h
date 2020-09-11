@@ -65,6 +65,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (NSString *)pageTypeString;
 - (void)addGoDetailLog;
 - (void)addStayPageLog:(NSTimeInterval)stayTime;
+- (void)addClickOptionLog:(NSString *)position;
 
 // excetionLog
 - (void)addDetailCoreInfoExcetionLog;
