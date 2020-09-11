@@ -49,7 +49,6 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy) NSArray<FHHouseDetailImageGroupModel *> *photoAlbumArray;
 @property (nonatomic, strong) FHHouseDetailAlbumInfo *detailAlbumInfo;
 @property (nonatomic, strong) FHFloorPanPicShowModel *floorPanModel;
-@property (nonatomic, strong) FHFloorPanPicShowModel *newFloorPanModel;
 @end
 
 

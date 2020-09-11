@@ -968,6 +968,23 @@
 - (FHFloorPanPicShowModel *)processFloorPanPicShowModel {
     FHFloorPanPicShowModel *picShowModel = [[FHFloorPanPicShowModel alloc] init];
     NSMutableArray *mArr = [NSMutableArray array];
+    
+    if (self.vedioModel.videoID.length) {
+        FHFloorPanPicShowGroupModel *videoGroupModel = [[FHFloorPanPicShowGroupModel alloc] init];
+        videoGroupModel.rootGroupName = self.vedioModel.groupType;
+        videoGroupModel.groupName = self.vedioModel.groupType;
+        FHFloorPanPicShowItemVideoModel *itemModel = [[FHFloorPanPicShowItemVideoModel alloc] init];
+        FHImageModel *image = [[FHImageModel alloc] init];
+        image.height = [@(self.vedioModel.vHeight) stringValue];
+        image.height = [@(self.vedioModel.vWidth) stringValue];
+        image.url = self.vedioModel.imageUrl;
+        itemModel.image = image;
+        itemModel.itemType = FHFloorPanPicShowModelTypeVideo;
+        videoGroupModel.items = [NSArray<FHFloorPanPicShowItemModel> arrayWithObject:itemModel];
+        [mArr addObject:videoGroupModel];
+        
+    }
+    
     for (FHHouseDetailImageTabInfo *tabInfo in self.albumInfo.tabList) {
         [mArr addObjectsFromArray:[FHFloorPanPicShowGroupModel getTabGroupInfo:tabInfo rootName:tabInfo.tabName]];
     }

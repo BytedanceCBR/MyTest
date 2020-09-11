@@ -154,11 +154,11 @@
     };
 
     [pictureDetailViewController setMediaHeaderModel:self.currentData mediaImages:images];
-    //去除flag判断，改为判断详情页type
-    if ([model.topImages isKindOfClass:[NSArray class]] && model.topImages.count > 0) {
-        
+    
+    if (model.isShowTopImageTab) {
         pictureDetailViewController.smallImageInfosModels = self.dataHelper.photoAlbumData.floorPanModel;
-        
+    } else {
+        pictureDetailViewController.smallImageInfosModels = self.dataHelper.photoAlbumData.floorPanModel;
     }
 
     UIImage *placeholder = [UIImage imageNamed:@"default_image"];

@@ -49,7 +49,7 @@
 //        make.edges.mas_equalTo(UIEdgeInsetsZero);
 //    }];
     
-    _videoImage = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"video_icon_small"]];
+    _videoImage = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"detail_video_start"]];
     [self addSubview:_videoImage];
     
     [_videoImage mas_makeConstraints:^(MASConstraintMaker *make) {

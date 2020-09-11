@@ -13,6 +13,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, strong) FHNewHouseDetailHeaderMediaModel *headerCellModel;
 
+- (void)updatewithContactViewModel:(FHHouseDetailContactViewModel *)contactViewModel;
 @end
 
 NS_ASSUME_NONNULL_END

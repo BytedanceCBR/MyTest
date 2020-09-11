@@ -50,4 +50,8 @@
     self.items = [NSArray arrayWithObject:self.headerCellModel];
 }
 
+- (void)updatewithContactViewModel:(FHHouseDetailContactViewModel *)contactViewModel {
+    self.headerCellModel.contactViewModel = contactViewModel;
+}
+
 @end
