@@ -462,6 +462,12 @@
         }
         self.inputModel.area = text;
     }else if (itemView == self.view.nameItemView){
+        NSInteger limit = 10;
+        if(text.length > limit) {
+            text = [text substringToIndex:limit];
+            itemView.textField.text = text;
+        }
+        
         if(text.length > 0){
             text  =  [text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
         }
