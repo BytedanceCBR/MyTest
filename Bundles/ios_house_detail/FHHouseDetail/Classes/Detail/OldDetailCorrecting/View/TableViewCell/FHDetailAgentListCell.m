@@ -106,11 +106,11 @@
             FHDetailAgentItemView *itemView = [[FHDetailAgentItemView alloc] initWithModel:obj topMargin:15];
             // 添加事件
             itemView.tag = idx;
-            itemView.licenceIcon.tag = idx;
+            itemView.licenseIcon.tag = idx;
             itemView.callBtn.tag = idx;
             itemView.imBtn.tag = idx;
             [itemView addTarget:self action:@selector(cellClick:) forControlEvents:UIControlEventTouchUpInside];
-            [itemView.licenceIcon addTarget:self action:@selector(licenseClick:) forControlEvents:UIControlEventTouchUpInside];
+            [itemView.licenseIcon addTarget:self action:@selector(licenseClick:) forControlEvents:UIControlEventTouchUpInside];
             [itemView.callBtn addTarget:self action:@selector(phoneClick:) forControlEvents:UIControlEventTouchUpInside];
             [itemView.imBtn addTarget:self action:@selector(imclick:) forControlEvents:UIControlEventTouchUpInside];
             
@@ -131,8 +131,13 @@
             if (obj.realtorCellShow == FHRealtorCellShowStyle0) {
                 itemView.agency.font = [UIFont themeFontRegular:14];
             }
-            BOOL isLicenceIconHidden = ![self shouldShowContact:obj];
-            [itemView configForLicenceIconWithHidden:isLicenceIconHidden];
+            /// 北京商业化开城需求的新样式，这个优先级更高
+            BOOL showNewLicenseStyle = ![self shouldShowNewLicenseStyle:obj];
+            [itemView configForNewLicenseIconStyle:showNewLicenseStyle];
+            if (!showNewLicenseStyle) {
+                BOOL isLicenceIconHidden = ![self shouldShowContact:obj];
+                [itemView configForLicenceIconWithHidden:isLicenceIconHidden];
+            }
             if(obj.realtorEvaluate.length > 0) {
                 itemView.realtorEvaluate.text = obj.realtorEvaluate;
             }
@@ -317,6 +322,15 @@
     self.foldButton.isFold = model.isFold;
     [self updateItems:YES];
     [self addRealtorShowLog];
+}
+
+/// 北京商业化开城需求新增逻辑
+- (BOOL)shouldShowNewLicenseStyle:(FHDetailContactModel *)contact {
+    BOOL result  = NO;
+    FHContactCertificationModel *certificationModel = contact.certification;
+    result = /*(certificationModel.iconUrl.length > 0) && */(certificationModel.openUrl.length > 0);
+    
+    return result;
 }
 
 - (BOOL)shouldShowContact:(FHDetailContactModel* )contact {

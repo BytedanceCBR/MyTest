@@ -13,7 +13,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface FHDetailAgentItemView : UIControl
 
 @property (nonatomic, strong)   FHRealtorAvatarView *avatorView;
-@property (nonatomic, strong)   UIButton    *licenceIcon;
+@property (nonatomic, strong)   UIButton    *licenseIcon;
 @property (nonatomic, strong)   UIButton    *callBtn;
 @property (nonatomic, strong)   UIButton    *imBtn;
 @property (nonatomic, strong)   UILabel     *name;
@@ -29,6 +29,7 @@ NS_ASSUME_NONNULL_BEGIN
 -(instancetype)initWithModel:(FHDetailContactModel *)model topMargin:(CGFloat )topMargin;
 
 -(void)configForLicenceIconWithHidden:(BOOL)isHidden;
+-(void)configForNewLicenseIconStyle:(BOOL)showLicense;
 
 @end
 

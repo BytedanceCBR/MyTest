@@ -18,6 +18,7 @@
 @class FHDetailHouseTitleModel;
 @class FHHouseDetailImageGroupModel;
 @class FHClueAssociateInfoModel;
+@class FHContactCertificationModel;
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -150,6 +151,9 @@ typedef NS_ENUM(NSUInteger, FHRealtorCellShowStyle) {
 
 @property (nonatomic, assign) BOOL isInstantData;//是否是列表页带入的
 @property (nonatomic, strong , nullable) NSDictionary *realtorLogpb;
+
+//1.0.7 紧急需求：北京商业化开城
+@property (nonatomic, strong , nullable) FHContactCertificationModel *certification;
 @end
 
 
@@ -361,5 +365,10 @@ typedef NS_ENUM (NSUInteger, FHHouseDetailImageListDataUsedSceneType) {
 @property(nonatomic,strong,nullable) FHClueAssociateInfoModel *associateInfo;
 @end
 
+@interface FHContactCertificationModel : JSONModel
+
+@property (nonatomic, copy , nullable) NSString *iconUrl;
+@property (nonatomic, copy , nullable) NSString *openUrl;
+@end
 
 NS_ASSUME_NONNULL_END

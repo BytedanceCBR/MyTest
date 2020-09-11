@@ -27,7 +27,7 @@
 @property(nonatomic , strong) UILabel *nameLabel;
 @property(nonatomic , strong) UILabel *agencyLabel;
 @property(nonatomic , strong) FHLoadingButton *contactBtn;
-@property(nonatomic , strong) UIButton *licenceIcon;
+@property(nonatomic , strong) UIButton *licenseIcon;
 @property(nonatomic , strong) UIButton *imChatBtn;
 @property(nonatomic , assign) CGFloat imBtnWidth;
 @property(nonatomic , assign) BOOL instantHasShow;
@@ -65,7 +65,7 @@
 //    [self.leftView addSubview:self.identifyView];
     [self.leftView addSubview:self.nameLabel];
     [self.leftView addSubview:self.agencyLabel];
-    [self.leftView addSubview:self.licenceIcon];
+    [self.leftView addSubview:self.licenseIcon];
     
     CGFloat avatarLeftMargin = 20;
     if ([UIDevice btd_is568Screen]) {
@@ -82,7 +82,7 @@
         make.left.mas_equalTo(self.avatarView.mas_right).mas_offset(10);
         make.top.mas_equalTo(self.avatarView).offset(2);
     }];
-    [self.licenceIcon mas_makeConstraints:^(MASConstraintMaker *make) {
+    [self.licenseIcon mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(self.nameLabel.mas_right).offset(4);
         make.height.width.mas_equalTo(20);
         make.centerY.mas_equalTo(self.nameLabel);
@@ -120,7 +120,7 @@
 
     
     [self.contactBtn addTarget:self action:@selector(contactBtnDidClick:) forControlEvents:UIControlEventTouchUpInside];
-    [self.licenceIcon addTarget:self action:@selector(licenseBtnDidClick:) forControlEvents:UIControlEventTouchUpInside];
+    [self.licenseIcon addTarget:self action:@selector(licenseBtnDidClick:) forControlEvents:UIControlEventTouchUpInside];
     [self.imChatBtn addTarget:self action:@selector(imBtnClick:) forControlEvents:UIControlEventTouchUpInside];
     self.leftView.userInteractionEnabled = YES;
     UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(jump2RealtorDetail)];
@@ -156,13 +156,13 @@
 
 - (void)displayLicense:(BOOL)isDisplay
 {
-    self.licenceIcon.hidden = !isDisplay;
+    self.licenseIcon.hidden = !isDisplay;
     if (isDisplay) {
         [self.nameLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
             make.left.mas_equalTo(self.avatarView.mas_right).mas_offset(10);
             make.top.mas_equalTo(self.avatarView).offset(2);
         }];
-        [self.licenceIcon mas_remakeConstraints:^(MASConstraintMaker *make) {
+        [self.licenseIcon mas_remakeConstraints:^(MASConstraintMaker *make) {
             make.left.mas_equalTo(self.nameLabel.mas_right).offset(4);
             make.height.width.mas_equalTo(20);
             make.centerY.mas_equalTo(self.nameLabel);
@@ -212,7 +212,8 @@
     }
     CGFloat nameLabelwidth = [realtorName boundingRectWithSize:CGSizeMake(MAXFLOAT, MAXFLOAT) options:NSStringDrawingUsesLineFragmentOrigin attributes:@{NSFontAttributeName: self.nameLabel.font} context:nil].size.width + 1;
 //    NSMutableArray *licenseViews = @[].mutableCopy;
-    if (contactPhone.businessLicense.length > 0 || contactPhone.certificate.length > 0) {
+    BOOL shouldDisplayLicense = contactPhone.businessLicense.length > 0 || contactPhone.certificate.length > 0 || (/*contactPhone.certification.iconUrl.length > 0 && */contactPhone.certification.openUrl.length > 0);
+    if (shouldDisplayLicense) {
         [self displayLicense:YES];
         nameLabelwidth += 24;
     }else {
@@ -402,15 +403,15 @@
     return _imChatBtn;
 }
 
-- (UIButton *)licenceIcon
+- (UIButton *)licenseIcon
 {
-    if (!_licenceIcon) {
-        _licenceIcon = [[UIButton alloc]init];
+    if (!_licenseIcon) {
+        _licenseIcon = [[UIButton alloc]init];
         UIImage *img = SYS_IMG(@"detail_contact");
-        [_licenceIcon setImage:img forState:UIControlStateNormal];
-        [_licenceIcon setImage:img forState:UIControlStateHighlighted];
+        [_licenseIcon setImage:img forState:UIControlStateNormal];
+        [_licenseIcon setImage:img forState:UIControlStateHighlighted];
     }
-    return _licenceIcon;
+    return _licenseIcon;
 }
 
 @end
