@@ -1556,7 +1556,13 @@
                 layout.maxWidth = YGPointValue([self contentSmallImageMaxWidth] - 73);
             }];
             
+            self.tagLabel.lineBreakMode = NSLineBreakByTruncatingTail;
+            [self.tagLabel configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
+                 layout.width = YGPointValue([self contentSmallImageTagMaxWidth] + 10);
+            }];
+            
              [self.mainTitleLabel.yoga markDirty];
+             [self.tagLabel.yoga markDirty];
              [self.subTitleLabel.yoga markDirty];
              [self.tagTitleLabel.yoga markDirty];
             
