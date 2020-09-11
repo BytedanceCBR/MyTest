@@ -132,8 +132,9 @@
                 itemView.agency.font = [UIFont themeFontRegular:14];
             }
             /// 北京商业化开城需求的新样式，这个优先级更高
-            BOOL showNewLicenseStyle = ![self shouldShowNewLicenseStyle:obj];
-            [itemView configForNewLicenseIconStyle:showNewLicenseStyle];
+            BOOL showNewLicenseStyle = [self shouldShowNewLicenseStyle:obj];
+            NSURL *iconURL = [NSURL URLWithString:obj.certification.iconUrl];
+            [itemView configForNewLicenseIconStyle:showNewLicenseStyle imageURL:iconURL];
             if (!showNewLicenseStyle) {
                 BOOL isLicenceIconHidden = ![self shouldShowContact:obj];
                 [itemView configForLicenceIconWithHidden:isLicenceIconHidden];
@@ -328,7 +329,7 @@
 - (BOOL)shouldShowNewLicenseStyle:(FHDetailContactModel *)contact {
     BOOL result  = NO;
     FHContactCertificationModel *certificationModel = contact.certification;
-    result = /*(certificationModel.iconUrl.length > 0) && */(certificationModel.openUrl.length > 0);
+    result = certificationModel.openUrl.length > 0;
     
     return result;
 }

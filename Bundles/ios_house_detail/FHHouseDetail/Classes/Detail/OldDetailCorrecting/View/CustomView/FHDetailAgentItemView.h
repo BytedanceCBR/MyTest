@@ -29,7 +29,7 @@ NS_ASSUME_NONNULL_BEGIN
 -(instancetype)initWithModel:(FHDetailContactModel *)model topMargin:(CGFloat )topMargin;
 
 -(void)configForLicenceIconWithHidden:(BOOL)isHidden;
--(void)configForNewLicenseIconStyle:(BOOL)showLicense;
+-(void)configForNewLicenseIconStyle:(BOOL)showLicense imageURL:(NSURL *)imageURL;
 
 @end
 

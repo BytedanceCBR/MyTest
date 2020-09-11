@@ -431,20 +431,25 @@
     }
 }
 
-- (void)configForNewLicenseIconStyle:(BOOL)showLicense {
+- (void)configForNewLicenseIconStyle:(BOOL)showLicense imageURL:(NSURL *)imageURL {
     self.licenseIcon.hidden = !showLicense;
     self.agency.hidden = showLicense;
+    self.vSepLine.hidden = showLicense;
     
     switch (self.model.realtorCellShow) {
         case FHRealtorCellShowStyle1:
         {
             if (showLicense) {
                 [self.licenseIcon mas_remakeConstraints:^(MASConstraintMaker *make) {
-                    make.left.equalTo(self.name.mas_rightMargin).offset(6);
+                    make.left.equalTo(self.name.mas_right).offset(6);
                     make.right.mas_lessThanOrEqualTo(self.imBtn.mas_left).offset(-12);
                     make.size.mas_equalTo(CGSizeMake(18, 16));
-                    make.centerY.mas_equalTo(self.name);
+                    make.centerY.mas_equalTo(self.name.mas_centerY);
                 }];
+                
+                if (imageURL) {
+                    [self.licenseIcon bd_setImageWithURL:imageURL forState:UIControlStateNormal];
+                }
             } else {
                 [self.licenseIcon mas_remakeConstraints:^(MASConstraintMaker *make) {
                     make.left.mas_equalTo(self.name.mas_right).offset(4);
@@ -452,6 +457,8 @@
                     make.centerY.mas_equalTo(self.name);
                     make.right.mas_lessThanOrEqualTo(self.imBtn.mas_left).offset(-10);
                 }];
+                
+                [self.licenseIcon setImage:[UIImage imageNamed:@"detail_contact"] forState:UIControlStateNormal];
             }
         }
             break;

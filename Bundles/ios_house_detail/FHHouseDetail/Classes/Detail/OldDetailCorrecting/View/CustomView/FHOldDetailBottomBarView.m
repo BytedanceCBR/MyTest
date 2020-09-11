@@ -18,6 +18,7 @@
 #import "FHUtils.h"
 #import <ByteDanceKit/UIDevice+BTDAdditions.h>
 #import <FHHouseBase/FHRealtorAvatarView.h>
+#import "UIButton+BDWebImage.h"
 
 @interface FHOldDetailBottomBarView ()
 
@@ -154,19 +155,28 @@
     }
 }
 
-- (void)displayLicense:(BOOL)isDisplay
+- (void)displayLicense:(BOOL)isDisplay imageURL:(NSURL *)imageURL
 {
+    BOOL isNewStyle = imageURL != nil;  //北京商业化开城新样式
     self.licenseIcon.hidden = !isDisplay;
     if (isDisplay) {
+        [self.nameLabel setContentHuggingPriority:UILayoutPriorityDefaultHigh forAxis:UILayoutConstraintAxisHorizontal];
         [self.nameLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
             make.left.mas_equalTo(self.avatarView.mas_right).mas_offset(10);
             make.top.mas_equalTo(self.avatarView).offset(2);
         }];
+        CGSize licenseIconSize = isNewStyle ? CGSizeMake(18, 16) : CGSizeMake(20, 20);
+        CGFloat leftMargin = isNewStyle ? 6 : 4;
         [self.licenseIcon mas_remakeConstraints:^(MASConstraintMaker *make) {
-            make.left.mas_equalTo(self.nameLabel.mas_right).offset(4);
-            make.height.width.mas_equalTo(20);
+            make.left.mas_equalTo(self.nameLabel.mas_right).offset(leftMargin);
+            make.size.mas_equalTo(licenseIconSize);
             make.centerY.mas_equalTo(self.nameLabel);
+            make.right.mas_lessThanOrEqualTo(self.imChatBtn.mas_left).offset(-10);
         }];
+        
+        if (imageURL) {
+            [self.licenseIcon bd_setImageWithURL:imageURL forState:UIControlStateNormal];
+        }
     } else {
         [self.nameLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
             make.left.mas_equalTo(self.avatarView.mas_right).mas_offset(10);
@@ -212,12 +222,17 @@
     }
     CGFloat nameLabelwidth = [realtorName boundingRectWithSize:CGSizeMake(MAXFLOAT, MAXFLOAT) options:NSStringDrawingUsesLineFragmentOrigin attributes:@{NSFontAttributeName: self.nameLabel.font} context:nil].size.width + 1;
 //    NSMutableArray *licenseViews = @[].mutableCopy;
-    BOOL shouldDisplayLicense = contactPhone.businessLicense.length > 0 || contactPhone.certificate.length > 0 || (/*contactPhone.certification.iconUrl.length > 0 && */contactPhone.certification.openUrl.length > 0);
+    BOOL shouldDisplayLicense = contactPhone.businessLicense.length > 0 || contactPhone.certificate.length > 0 || contactPhone.certification.openUrl.length > 0;
     if (shouldDisplayLicense) {
-        [self displayLicense:YES];
-        nameLabelwidth += 24;
+        if (contactPhone.certification.iconUrl.length > 0) {
+            NSURL *imageURL = [NSURL URLWithString:contactPhone.certification.iconUrl];
+            [self displayLicense:YES imageURL:imageURL];
+        } else {
+            [self displayLicense:YES imageURL:nil];
+            nameLabelwidth += 24;
+        }
     }else {
-        [self displayLicense:NO];
+        [self displayLicense:NO imageURL:nil];
     }
 
     if (contactPhone.agencyName.length > 0) {
