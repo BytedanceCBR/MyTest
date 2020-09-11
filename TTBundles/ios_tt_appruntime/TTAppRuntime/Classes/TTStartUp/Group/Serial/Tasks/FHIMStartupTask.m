@@ -340,21 +340,8 @@ DEC_TASK("FHIMStartupTask",FHTaskTypeSerial,TASK_PRIORITY_HIGH+16);
 }
 @end
 
-@interface FHIMStartupTask()
-@property (nonatomic, assign) BOOL isConfigIMModule;
-@end
-
 @implementation FHIMStartupTask
 
-- (instancetype)init {
-    if(self = [super init]) {
-        
-        self.isConfigIMModule = NO;
-        
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(deviceDidRefreshed:) name:@"kFHTrackerDidRefreshDeviceId" object:nil];
-    }
-    return self;
-}
 - (NSString *)taskIdentifier {
     return @"FHIMStartupTask";
 }
@@ -376,8 +363,6 @@ DEC_TASK("FHIMStartupTask",FHTaskTypeSerial,TASK_PRIORITY_HIGH+16);
         
         NSString* uid = [[TTAccount sharedAccount] userIdString];
         [[IMManager shareInstance] startupWithUid:uid];
-        
-        self.isConfigIMModule = YES;
         
     
 #if DEBUG && !TARGET_IPHONE_SIMULATOR
@@ -404,15 +389,6 @@ DEC_TASK("FHIMStartupTask",FHTaskTypeSerial,TASK_PRIORITY_HIGH+16);
         }];
 #endif
     }
-}
-- (void)deviceDidRefreshed:(NSNotification *)notification {
-    
-    if(!self.isConfigIMModule) {
-        return; // did刷新回调调用时如果IM模块没有被初始化，则直接跳过，因为在初始化时会正常取到刷新的did
-    }
-    
-    // did刷新回调调用时，如果IM模块已经初始化完成，则检查初始化配置的did是否为空，如果为空，则更新
-    [[IMManager shareInstance] configDeviceIdIfInitNotGet];
 }
 
 #pragma mark - 打开Watch Session
