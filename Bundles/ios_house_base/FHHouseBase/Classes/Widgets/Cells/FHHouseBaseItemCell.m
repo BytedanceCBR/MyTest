@@ -1283,9 +1283,34 @@
     [self configTopLeftTagWithTagImages:model.tagImage];
     
     self.tagTitleLabel.hidden = YES;
-    [self.mainTitleLabel configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
-        layout.maxWidth = YGPointValue([self contentSmallImageMaxWidth]);
-    }];
+    BOOL imageTagHidden = self.imageTagLabelBgView.hidden;
+    CGSize titleSize = [_mainTitleLabel sizeThatFits:CGSizeMake(100, 22)];
+    if (model.houseTitleTag.text.length > 0) {
+          self.imageTagLabelBgView.hidden = YES;
+          self.tagTitleLabel.hidden = NO;
+          [self.mainTitleLabel configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
+              layout.width = YGPointValue(titleSize.width+3);
+              layout.maxWidth = YGPointValue([self contentSmallImageMaxWidth] - 20);
+          }];
+          self.tagTitleLabel.text = model.houseTitleTag.text;
+          self.tagTitleLabel.backgroundColor = [UIColor colorWithHexString:model.houseTitleTag.backgroundColor];
+          self.tagTitleLabel.textColor = [UIColor colorWithHexString:model.houseTitleTag.textColor];
+          //修改两字标签
+          [_tagTitleLabel configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
+                       layout.isEnabled = YES;
+                       layout.marginTop = YGPointValue(1.5);
+                       layout.marginLeft = YGPointValue(2);
+                       layout.height = YGPointValue(16);
+                 layout.width = YGPointValue(model.houseTitleTag.text.length > 1 ? 28 : 16);
+          }];
+     } else {
+          self.imageTagLabelBgView.hidden = imageTagHidden;
+          self.tagTitleLabel.hidden = YES;
+          [self.mainTitleLabel configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
+              layout.width = YGPointValue([self contentSmallImageMaxWidth]);
+          }];
+    }
+    
     [self.mainTitleLabel.yoga markDirty];
     
     [self.contentView.yoga applyLayoutPreservingOrigin:NO];
