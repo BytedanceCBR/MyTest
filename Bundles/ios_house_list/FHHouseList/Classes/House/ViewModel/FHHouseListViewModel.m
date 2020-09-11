@@ -1117,6 +1117,7 @@ extern NSString *const INSTANT_DATA_KEY;
             }
         }
         if (_isAbtest) {
+            self.tableView.contentInset = UIEdgeInsetsMake(5, 0, 0, 0);
             self.tableView.backgroundColor = [UIColor themeGray7];
         }
         [self.tableView reloadData];
