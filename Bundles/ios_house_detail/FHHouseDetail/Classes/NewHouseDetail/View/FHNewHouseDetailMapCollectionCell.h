@@ -6,10 +6,12 @@
 //
 
 #import "FHDetailBaseCell.h"
-
+#import "FHDetailStaticMap.h"
 NS_ASSUME_NONNULL_BEGIN
 
 @interface FHNewHouseDetailMapCollectionCell : FHDetailBaseCollectionCell
+
+@property (nonatomic, copy) void (^refreshActionBlock)(void);
 
 @end
 
@@ -29,6 +31,9 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic, assign) CGFloat bottomMargin;
 
 @property (nonatomic, copy, nullable) NSString *baiduPanoramaUrl;
+
+@property (nonatomic, copy, nullable) NSString *emptyString;
+@property (nonatomic, copy, nullable) NSArray<FHStaticMapAnnotation *> *annotations;
 
 @end
 

@@ -47,6 +47,7 @@
 //        FHNewHouseDetailMapCellModel *cellModel = (FHNewHouseDetailMapCellModel *)data;
         CGFloat mapHeight = width * kStaticMapHWRatio;
         mapHeight += 33;
+        mapHeight += 10;
         return CGSizeMake(width, mapHeight);
     }
     return CGSizeZero;
@@ -98,7 +99,7 @@
 
 - (void)setupViews:(BOOL)useNativeMap {
     
-    FHDetailStaticMapCellModel *dataModel = (FHDetailStaticMapCellModel *) self.currentData;
+//    FHNewHouseDetailMapCellModel *dataModel = (FHNewHouseDetailMapCellModel *) self.currentData;
     
     //初始化左右切换
     [self setUpSegmentedControl];
@@ -113,7 +114,7 @@
         make.height.mas_equalTo(33);
     }];
     CGFloat mapHeight = CGRectGetWidth(self.contentView.bounds) * kStaticMapHWRatio;
-    CGRect mapFrame = CGRectMake(15, 33, CGRectGetWidth(self.contentView.bounds), mapHeight);
+    CGRect mapFrame = CGRectMake(0, 33, CGRectGetWidth(self.contentView.bounds), mapHeight);
     self.mapView.frame = mapFrame;
     self.nativeMapImageView.frame = mapFrame;
     self.mapMaskBtn.frame = mapFrame;
@@ -213,7 +214,7 @@
 }
 
 - (void)mapMaskBtnClick:(UIButton *)sender {
-    FHDetailStaticMapCellModel *dataModel = (FHDetailStaticMapCellModel *) self.currentData;
+    FHNewHouseDetailMapCellModel *dataModel = (FHNewHouseDetailMapCellModel *) self.currentData;
     
     //地图页调用示例
     double longitude = self.centerPoint.longitude;
@@ -255,7 +256,7 @@
     }
 
 //    NSMutableDictionary *param = [NSMutableDictionary new];
-//    FHDetailStaticMapCellModel *dataModel = (FHDetailStaticMapCellModel *) self.currentData;
+//    FHNewHouseDetailMapCellModel *dataModel = (FHNewHouseDetailMapCellModel *) self.currentData;
 //    NSMutableDictionary *tracerDict = self.baseViewModel.detailTracerDic.mutableCopy;
 //    tracerDict[@"element_from"] = @"map";
 //    if ([self.baseViewModel.detailData isKindOfClass:[FHDetailOldModel class]]) {
@@ -275,11 +276,10 @@
 }
 
 - (void)refreshWithData:(id)data {
-    if (![data isKindOfClass:[FHDetailStaticMapCellModel class]]) {
+    if (![data isKindOfClass:[FHNewHouseDetailMapCellModel class]]) {
         return;
     }
-    FHDetailStaticMapCellModel *dataModel = (FHDetailStaticMapCellModel *) data;
-    adjustImageScopeType(dataModel)
+    FHNewHouseDetailMapCellModel *dataModel = (FHNewHouseDetailMapCellModel *) data;
     if (self.currentData == data) {
         return;
     }
@@ -298,7 +298,7 @@
 }
 
 - (void)refreshWithDataPoiDetail {
-    FHDetailStaticMapCellModel *dataModel = (FHDetailStaticMapCellModel *) self.currentData;
+    FHNewHouseDetailMapCellModel *dataModel = (FHNewHouseDetailMapCellModel *) self.currentData;
     
     self.baiduPanoButton.hidden = !dataModel.baiduPanoramaUrl.length;
     if (!dataModel.useNativeMap) {
@@ -421,7 +421,7 @@
     if (success) {
         return;
     }
-    FHDetailStaticMapCellModel *dataModel = (FHDetailStaticMapCellModel *) self.currentData;
+    FHNewHouseDetailMapCellModel *dataModel = (FHNewHouseDetailMapCellModel *) self.currentData;
     //失败回退 报警
     NSString *eventName = @"f_static_map_bad_data";
     NSDictionary *cat = @{@"status": @(1)};
@@ -587,7 +587,7 @@
     self.centerAnnotation.coordinate = self.centerPoint;
     [annotations addObject:self.centerAnnotation];
     
-    FHDetailStaticMapCellModel *dataModel = (FHDetailStaticMapCellModel *) self.currentData;
+    FHNewHouseDetailMapCellModel *dataModel = (FHNewHouseDetailMapCellModel *) self.currentData;
     
     if (dataModel.useNativeMap) {
         [self takeSnapWith:category annotations:annotations];
@@ -595,55 +595,17 @@
         [self.mapView removeAllAnnotations];
         [self.mapView addAnnotations:annotations];
     }
+    
+    dataModel.annotations = self.poiAnnotations[self.curCategory];
+    if (dataModel.annotations.count) {
+        dataModel.emptyString = [NSString stringWithFormat:@""];
+    } else {
+        dataModel.emptyString = [NSString stringWithFormat:@"附近没有%@信息", category];
+    }
+    if (self.refreshActionBlock) {
+        self.refreshActionBlock();
+    }
 }
-
-#pragma UITableViewDataSource
-
-//- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-//    NSArray<FHStaticMapAnnotation *> *annotations = self.poiAnnotations[self.curCategory];
-//    return annotations.count;
-//}
-//
-//- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-//    return 1;
-//}
-//
-//- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-//    return 35;
-//}
-//
-//- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-//    FHDetailNearbyMapItemCell *cell = [tableView dequeueReusableCellWithIdentifier:@"item"];
-//    if (!cell) {
-//        cell = [[FHDetailNearbyMapItemCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:@"item"];
-//    }
-//
-//    NSArray<FHStaticMapAnnotation *> *annotations = self.poiAnnotations[self.curCategory];
-//    FHStaticMapAnnotation *annotation = nil;
-//    if (indexPath.row < annotations.count) {
-//        annotation = annotations[indexPath.row];
-//    }
-//
-//    MAMapPoint from = MAMapPointForCoordinate(self.centerPoint);
-//    NSString *stringName = @"暂无信息";
-//    if (!isEmptyString(annotation.title)) {
-//        stringName = annotation.title;
-//    }
-//
-//    NSString *stringDistance = @"未知";
-//    if (annotation) {
-//        MAMapPoint to = MAMapPointForCoordinate(CLLocationCoordinate2DMake(annotation.coordinate.latitude, annotation.coordinate.longitude));
-//        CLLocationDistance distance = MAMetersBetweenMapPoints(from, to);
-//        if (distance < 1000) {
-//            stringDistance = [NSString stringWithFormat:@"%d米", (int) distance];
-//        } else {
-//            stringDistance = [NSString stringWithFormat:@"%.1f公里", ((CGFloat) distance) / 1000.0];
-//        }
-//    }
-//
-//    [cell updateText:stringName andDistance:stringDistance];
-//    return cell;
-//}
 
 - (NSDictionary *)fhSettings {
     if ([[NSUserDefaults standardUserDefaults] objectForKey:@"kFHSettingsKey"]) {
@@ -656,4 +618,8 @@
 - (NSString *)elementTypeString:(FHHouseType)houseType {
     return @"map";
 }
+@end
+
+@implementation FHNewHouseDetailMapCellModel
+
 @end

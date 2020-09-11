@@ -47,6 +47,23 @@
         
         [[HMDTTMonitor defaultManager] hmdTrackService:eventName metric:nil category:cat extra:params];
     }
+    
+    self.items = items.copy;
+}
+
+- (NSArray *)dataItems {
+    if (self.mapCellModel.annotations.count) {
+        return [[[NSArray arrayWithArray:self.items] arrayByAddingObjectsFromArray:self.mapCellModel.annotations] arrayByAddingObject:@""];
+    }
+    return [[NSArray arrayWithArray:self.items] arrayByAddingObject:self.mapCellModel.emptyString?:@"附近没有交通信息"];
+}
+
+- (id<NSObject>)diffIdentifier {
+    return self;
+}
+
+- (BOOL)isEqualToDiffableObject:(id<IGListDiffable>)object {
+    return self == object;
 }
 
 @end

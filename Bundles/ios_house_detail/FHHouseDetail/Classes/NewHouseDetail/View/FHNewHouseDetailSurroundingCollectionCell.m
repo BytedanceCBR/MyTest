@@ -92,14 +92,14 @@
             make.width.mas_equalTo(42);
         }];
         
-        self.locationValueLabel = [[UILabel alloc] init];
-        self.locationValueLabel.font = self.locationTitleLabel.font;
-        self.locationValueLabel.numberOfLines = 1;
-        self.locationValueLabel.textColor = [UIColor colorWithHexStr:@"#ff9629"];
-        self.locationValueLabel.lineBreakMode = NSLineBreakByTruncatingTail;
-        [self.locationContentView addSubview:self.locationValueLabel];
-        [self.locationValueLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.left.mas_equalTo(self.locationTitleLabel.mas_right);
+        self.consultValueLabel = [[UILabel alloc] init];
+        self.consultValueLabel.font = self.consultValueLabel.font;
+        self.consultValueLabel.numberOfLines = 1;
+        self.consultValueLabel.textColor = [UIColor colorWithHexStr:@"#ff9629"];
+        self.consultValueLabel.lineBreakMode = NSLineBreakByTruncatingTail;
+        [self.consultContentView addSubview:self.consultValueLabel];
+        [self.consultValueLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.left.mas_equalTo(self.consultTitleLabel.mas_right);
             make.top.bottom.mas_equalTo(0);
             make.right.mas_lessThanOrEqualTo(-30);;
         }];
@@ -117,14 +117,14 @@
         
         __weak typeof(self) weakSelf = self;
         self.actionBtn = [[UIButton alloc]init];
-        [self addSubview:self.actionBtn];
+        [self.locationContentView addSubview:self.actionBtn];
         [self.actionBtn btd_addActionBlockForTouchUpInside:^(__kindof UIButton * _Nonnull sender) {
             if (weakSelf.imActionBlock) {
                 weakSelf.imActionBlock();
             }
         }];
         [self.actionBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.left.top.bottom.mas_equalTo(self.locationValueLabel);
+            make.left.top.bottom.mas_equalTo(self.consultValueLabel);
             make.right.mas_equalTo(self.consultContentView.mas_right);
         }];
     }

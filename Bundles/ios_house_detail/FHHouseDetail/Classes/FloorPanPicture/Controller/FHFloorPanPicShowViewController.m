@@ -328,9 +328,7 @@
     } completion:^(BOOL finished) {
         self.segmentViewChangedFlag = NO;
     }];
-    
-//    [self.mainCollectionView scrollRectToVisible:frame animated:YES];
-//    [self.mainCollectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:titleIndex] atScrollPosition:UICollectionViewScrollPositionBottom animated:YES];
+
 }
 
 - (void)processImagesList {

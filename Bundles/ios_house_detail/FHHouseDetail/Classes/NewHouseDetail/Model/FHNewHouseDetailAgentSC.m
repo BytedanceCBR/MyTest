@@ -166,7 +166,7 @@
             if (!weakAgentSM.isFold) {
                 [weakSelf addRealtorClickMore];
             }
-            [weakSelf.detailViewController reloadData];
+            [weakSelf.detailViewController refreshSectionModel:weakAgentSM animated:YES];
 //            [weakSelf.collectionContext performBatchAnimated:YES updates:^(id<IGListBatchContext>  _Nonnull batchContext) {
 //                [batchContext reloadInSectionController:weakSelf atIndexes:[[NSIndexSet alloc] initWithIndexesInRange:NSMakeRange(3, weakAgentSM.recommendedRealtors.count - 3 + 1)]];
 ////                [batchContext reloadSectionController:weakSelf];

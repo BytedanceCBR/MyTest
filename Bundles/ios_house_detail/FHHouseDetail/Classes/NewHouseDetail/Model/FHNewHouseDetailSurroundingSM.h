@@ -18,6 +18,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, strong) FHNewHouseDetailMapCellModel *mapCellModel;
 
+- (NSArray *)dataItems;
+
 @end
 
 NS_ASSUME_NONNULL_END
