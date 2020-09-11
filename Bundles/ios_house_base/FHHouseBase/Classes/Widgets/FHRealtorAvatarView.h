@@ -16,14 +16,15 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FHRealtorAvatarView : UIView
 
-@property (nonatomic, weak) UIImageView *avatarImageView;
-@property (nonatomic, weak) UIImageView *identifyImageView;
+@property (nonatomic, strong) UIImageView *avatarImageView;
+@property (nonatomic, strong) UIImageView *identifyImageView;
+@property (nonatomic, copy) NSString *placeHoldName;
 
 
 
-- (void)updateAvatarImageURL:(NSString *)url;
+- (void)updateAvatarImageURL:(nullable NSString *)url;
 
-- (void)updateIdentifyImageURL:(NSString *)url;
+- (void)updateIdentifyImageURL:(nullable NSString *)url;
 
 /// 经纪人Model
 /// @param contactModel 如果api下发的是经纪人model接口，可以直接调用更新model的接口

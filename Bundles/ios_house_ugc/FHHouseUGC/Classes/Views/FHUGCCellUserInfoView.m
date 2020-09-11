@@ -83,6 +83,7 @@
     _avatarView = [[FHRealtorAvatarView alloc] init];
     _avatarView.avatarImageView.layer.borderWidth = 1;
     _avatarView.avatarImageView.layer.borderColor = [UIColor themeGray6].CGColor;
+    _avatarView.placeHoldName = @"fh_mine_avatar";
     _avatarView.userInteractionEnabled = YES;
     [self addSubview:_avatarView];
     
@@ -185,16 +186,6 @@
     //设置userInfo
     self.cellModel = cellModel;
     //图片
-    FHFeedContentImageListModel *imageModel = [[FHFeedContentImageListModel alloc] init];
-    imageModel.url = cellModel.user.avatarUrl;
-    NSMutableArray *urlList = [NSMutableArray array];
-    for (NSInteger i = 0; i < 3; i++) {
-        FHFeedContentImageListUrlListModel *urlListModel = [[FHFeedContentImageListUrlListModel alloc] init];
-        urlListModel.url = cellModel.user.avatarUrl;
-        [urlList addObject:urlListModel];
-    }
-    imageModel.urlList = urlList;
-    
     [self.avatarView updateAvatarWithUGCCellModel:cellModel];
 
     self.userName.text = !isEmptyString(cellModel.user.name) ? cellModel.user.name : @"用户";
