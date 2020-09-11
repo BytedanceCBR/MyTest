@@ -82,6 +82,7 @@
 }
 
 - (void)showLeaveView {
+    [self.view endEditing:YES];
     [self.view addSubview:self.leaveView];
     [self.leaveView show];
     [self addPopupShowLog];

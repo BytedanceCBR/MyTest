@@ -18,6 +18,7 @@
 #import "NSData+BTDAdditions.h"
 #import "HMDTTMonitor.h"
 #import "FHUserTracker.h"
+#import "FHEnvContext.h"
 
 @interface FHHouseSaleInputViewModel ()<FHHouseSaleInputViewDelegate,FHPriceValuationItemViewDelegate>
 
@@ -202,70 +203,65 @@
             @"from": @"app_ownersalehouse",
             @"from_data": associateStr,
         };
-//
-//        WeakSelf;
-//        [FHMainApi loadAssociateEntranceWithParams:params completion:^(NSDictionary * _Nullable result, NSError * _Nullable error) {
-//            StrongSelf;
-//            if (!error) {
-//                //Step2: 提交线索信息
-//                NSDictionary *responseDict = (NSDictionary *)result;
-//                if (responseDict && [responseDict isKindOfClass:[NSDictionary class]]) {
-//                    if (responseDict[@"status"]) {
-//                        NSInteger status = [responseDict[@"status"] integerValue];
-//                        if (status != 0) {
-//                            [[ToastManager manager] showToast:@"网络错误"];
-//                            return;
-//                        }
-//                    }
-//
-//                    NSDictionary *data = responseDict[@"data"];
-//                    if (data && [data isKindOfClass:[NSDictionary class]]) {
-//                        NSDictionary *associateInfo = data[@"associate_info"];
-//                        if (associateInfo && [associateInfo isKindOfClass:[NSDictionary class]]) {
-//                            strongSelf.reportFormInfo = associateInfo[@"report_form_info"];
-//                        } else {
-//                            [[ToastManager manager] showToast:@"网络错误"];
-//                            return;
-//                        }
-//                    } else {
-//                        [[ToastManager manager] showToast:@"网络错误"];
-//                        return;
-//                    }
-//                } else {
-//                    [[ToastManager manager] showToast:@"网络错误"];
-//                    return;
-//                }
-//
-//                NSString *originFrom = strongSelf.tracerDict[@"origin_from"] ?: @"be_null";
-//                NSMutableDictionary *params = @{
-//                    @"origin_from": originFrom,
-//                    @"user_phone": phoneNumber,
-//                    @"report_form_info": strongSelf.reportFormInfo ?: @{},
-//                    @"city_id": cityId ?: @"",
-//                }.mutableCopy;
-//                if ([FHUserInfoManager isLoginPhoneNumber:phoneNumber]) {
-//                    params[@"use_login_phone"] = @(YES);
-//                }
-//                [strongSelf commitAssociateInfoWithParams:params.copy selectedModel:selectModel phoneNumber:phoneNumber];
-//            } else {
-//                //接口出错统一提示“网络错误”
-//                [[ToastManager manager] showToast:@"网络错误"];
-//            }
-//        }];
-        
-        NSMutableDictionary *dict = @{}.mutableCopy;
-        dict[@"title"] = @"发布成功";
-        NSMutableDictionary *tracer = @{}.mutableCopy;
-        tracer[@"origin_from"] = self.viewController.tracerDict[@"origin_from"] ?: @"be_null";
-        tracer[@"enter_from"] = self.viewController.tracerDict[@"page_type"] ?: @"be_null";
-        dict[@"tracer"] = tracer;
-        TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
-        NSURL* url = [NSURL URLWithString:@"sslocal://house_sale_result"];
-        [[TTRoute sharedRoute] openURLByPresentViewController:url userInfo:userInfo];
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-            [self goBack];
-        });
-        [self addhousePublishSuccessLog];
+
+        WeakSelf;
+        [FHMainApi loadAssociateEntranceWithParams:params completion:^(NSDictionary * _Nullable result, NSError * _Nullable error) {
+            StrongSelf;
+            if (!error) {
+                NSDictionary *reportFormInfo = nil;
+                //Step2: 提交线索信息
+                NSDictionary *responseDict = (NSDictionary *)result;
+                if (responseDict && [responseDict isKindOfClass:[NSDictionary class]]) {
+                    if (responseDict[@"status"]) {
+                        NSInteger status = [responseDict[@"status"] integerValue];
+                        if (status != 0) {
+                            [[ToastManager manager] showToast:@"网络错误"];
+                            return;
+                        }
+                    }
+
+                    NSDictionary *data = responseDict[@"data"];
+                    if (data && [data isKindOfClass:[NSDictionary class]]) {
+                        NSDictionary *associateInfo = data[@"associate_info"];
+                        if (associateInfo && [associateInfo isKindOfClass:[NSDictionary class]]) {
+                            reportFormInfo = associateInfo[@"report_form_info"];
+                        } else {
+                            [[ToastManager manager] showToast:@"网络错误"];
+                            return;
+                        }
+                    } else {
+                        [[ToastManager manager] showToast:@"网络错误"];
+                        return;
+                    }
+                } else {
+                    [[ToastManager manager] showToast:@"网络错误"];
+                    return;
+                }
+
+                NSString *originFrom = self.viewController.tracerDict[@"origin_from"] ?: @"be_null";
+                NSString *phoneNumber = self.inputModel.phoneNumber;
+                //包含*说明没有编辑过电话号码，直接取真实的手机号
+                if ([phoneNumber containsString:@"*"]) {
+                    phoneNumber = self.phoneNum;
+                }
+                [self storePhoneNumber:phoneNumber];
+                NSString *cityId = [FHEnvContext getCurrentSelectCityIdFromLocal];
+                
+                NSMutableDictionary *params = @{
+                    @"origin_from": originFrom,
+                    @"user_phone": phoneNumber,
+                    @"report_form_info": reportFormInfo ?: @{},
+                    @"city_id": cityId ?: @"",
+                }.mutableCopy;
+                if ([FHUserInfoManager isLoginPhoneNumber:phoneNumber]) {
+                    params[@"use_login_phone"] = @(YES);
+                }
+                [self commitAssociateInfoWithParams:params];
+            } else {
+                //接口出错统一提示“网络错误”
+                [[ToastManager manager] showToast:@"网络错误"];
+            }
+        }];
     }
 }
 
@@ -289,10 +285,20 @@
                         NSInteger status = [responseDict[@"status"] integerValue];
                         message = responseDict[@"message"];
                         if (status == 0) {
-                            //Step3: 保存用户选择信息
-//                            [strongSelf saveSelectedInfoWithSelectedModel:selectedModel phoneNumber:phoneNumber];
-                            //埋点
-//                            [strongSelf addClickLogWithEvent:@"click_confirm" position:nil associateInfo:strongSelf.reportFormInfo];
+                            //请求成功
+                            NSMutableDictionary *dict = @{}.mutableCopy;
+                            dict[@"title"] = @"发布成功";
+                            NSMutableDictionary *tracer = @{}.mutableCopy;
+                            tracer[@"origin_from"] = self.viewController.tracerDict[@"origin_from"] ?: @"be_null";
+                            tracer[@"enter_from"] = self.viewController.tracerDict[@"page_type"] ?: @"be_null";
+                            dict[@"tracer"] = tracer;
+                            TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
+                            NSURL* url = [NSURL URLWithString:@"sslocal://house_sale_result"];
+                            [[TTRoute sharedRoute] openURLByPresentViewController:url userInfo:userInfo];
+                            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                                [self goBack];
+                            });
+                            [self addhousePublishSuccessLog:responseDict[@"data"][@"associate_id"]];
                             
                             categoryDict[@"status"] = [NSString stringWithFormat:@"%ld", FHClueErrorTypeNone];
                         } else {
@@ -325,6 +331,10 @@
     }];
 }
 
+- (void)storePhoneNumber:(NSString *)phoneNumber {
+    [FHUserInfoManager savePhoneNumber:phoneNumber];
+}
+
 - (void)addClueFormErrorRateLog:categoryDict extraDict:(NSDictionary *)extraDict {
     [[HMDTTMonitor defaultManager]hmdTrackService:@"clue_form_error_rate" metric:nil category:categoryDict extra:extraDict];
 }
@@ -344,19 +354,24 @@
     }
     
     if(self.inputModel.floorPlanRoom.length > 0){
-        associateDict[@"bedroom_count"] = self.inputModel.floorPlanRoom;
+        associateDict[@"bedroom_count"] = @([self.inputModel.floorPlanRoom integerValue]);
     }
     
     if(self.inputModel.floorPlanHall.length > 0){
-        associateDict[@"hallroom_count"] = self.inputModel.floorPlanHall;
+        associateDict[@"hallroom_count"] = @([self.inputModel.floorPlanHall integerValue]);
     }
     
     if(self.inputModel.floorPlanBath.length > 0){
-        associateDict[@"bathroom_count"] = self.inputModel.floorPlanBath;
+        associateDict[@"bathroom_count"] = @([self.inputModel.floorPlanBath integerValue]);
     }
     
     if(self.inputModel.name.length > 0){
         associateDict[@"customer_name"] = self.inputModel.name;
+    }
+    
+    NSString *cityId = [FHEnvContext getCurrentSelectCityIdFromLocal];
+    if (cityId.length > 0) {
+        associateDict[@"city_id"] = cityId;
     }
 
     NSString *associateStr = [associateDict btd_jsonStringEncoded] ?: @"";
@@ -489,10 +504,13 @@
     TRACK_EVENT(@"house_publish_click", tracerDict);
 }
 
-- (void)addhousePublishSuccessLog {
+- (void)addhousePublishSuccessLog:(NSString *)associateId {
     NSMutableDictionary *tracerDict = [NSMutableDictionary dictionary];
     tracerDict[@"enter_from"] = self.viewController.tracerDict[@"enter_from"] ? : @"be_null";
     tracerDict[@"page_type"] = self.viewController.tracerDict[@"page_type"] ? : @"be_null";
+    if(associateId.length > 0){
+        tracerDict[@"associate_id"] = associateId;
+    }
     tracerDict[@"event_tracking_id"] = @"107636";
     TRACK_EVENT(@"house_publish_success", tracerDict);
 }
