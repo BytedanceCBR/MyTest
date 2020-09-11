@@ -9,60 +9,58 @@
 #import <ByteDanceKit/ByteDanceKit.h>
 
 @interface FHNewHouseDetailAddressInfoCollectionCell ()
-@property (nonatomic, strong) UIView *topLine;
+@property (nonatomic, strong) UIView *containerView;
 @property (nonatomic, strong) UILabel *titleLabel;
-@property (nonatomic, strong) UIButton *mapBtn;
+@property (nonatomic, strong) UILabel *nameLablel;
 @property (nonatomic, strong) UIImageView *rightArrow;
 @property (nonatomic, strong) UIControl *actionBtn;
+@property (nonatomic, strong) UIButton *detailBtn;
 @end
 
 @implementation FHNewHouseDetailAddressInfoCollectionCell
 
 + (CGSize)cellSizeWithData:(id)data width:(CGFloat)width {
-    return CGSizeMake(width, 44 + 15 * 2);
+    return CGSizeMake(width, 54 + 20);
 }
 
 - (instancetype)initWithFrame:(CGRect)frame {
     if (self = [super initWithFrame:frame]) {
-        
-        self.topLine = [[UIView alloc] init];
-        self.topLine.backgroundColor = [UIColor colorWithHexString:@"#e7e7e7"];
-        [self.contentView addSubview:self.topLine];
-        [self.topLine mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.left.mas_equalTo(self.contentView).mas_offset(15);
-            make.right.mas_equalTo(self.contentView).mas_offset(-15);
-            make.height.mas_equalTo([UIDevice btd_onePixel]);
-            make.top.mas_equalTo(0);
+        self.containerView = [[UIView alloc] init];
+        [self.contentView addSubview:self.containerView];
+        [self.containerView mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.top.left.right.mas_equalTo(0);
+            make.height.mas_equalTo(20);
         }];
         
-        self.mapBtn = [[UIButton alloc] init];
-        [self.mapBtn setImage:[UIImage imageNamed:@"plot_mapbtn"] forState:UIControlStateNormal];
-        [self.contentView addSubview:self.mapBtn];
-        [self.mapBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+        self.nameLablel = [[UILabel alloc] init];
+        self.nameLablel.font = [UIFont themeFontRegular:14];
+        self.nameLablel.textColor = [UIColor colorWithHexStr:@"#aeadad"];
+        [self.containerView addSubview:self.nameLablel];
+        [self.nameLablel mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.centerY.mas_equalTo(self.containerView);
             make.left.mas_equalTo(15);
-            make.width.height.mas_equalTo(44);
-            make.centerY.mas_equalTo(self.contentView);
+            make.width.mas_equalTo(28);
         }];
         
         UIImage *img = ICON_FONT_IMG(16, @"\U0000e670", [UIColor themeGray3]); //@"detail_entrance_arrow"
         self.rightArrow = [[UIImageView alloc] initWithImage:img];
-        [self.contentView addSubview:self.rightArrow];
+        [self.containerView addSubview:self.rightArrow];
         [self.rightArrow mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.right.mas_equalTo(self.contentView).mas_offset(-15);
+            make.right.mas_equalTo(self.containerView).mas_offset(-15);
             make.width.height.mas_equalTo(18);
-            make.centerY.equalTo(self.contentView);
+            make.centerY.equalTo(self.containerView);
         }];
         
         self.titleLabel = [[UILabel alloc] init];
-        self.titleLabel.font = [UIFont themeFontMedium:16];
+        self.titleLabel.font = [UIFont themeFontMedium:14];
         self.titleLabel.textColor = [UIColor themeGray2];
-        self.titleLabel.numberOfLines = 2;
+        self.titleLabel.numberOfLines = 1;
         self.titleLabel.lineBreakMode = NSLineBreakByTruncatingTail;
-        [self.contentView addSubview:self.titleLabel];
+        [self.containerView addSubview:self.titleLabel];
         [self.titleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.left.mas_equalTo(self.mapBtn.mas_right).mas_offset(15);
+            make.left.mas_equalTo(self.nameLablel.mas_right).mas_offset(10);
             make.right.mas_equalTo(self.rightArrow.mas_left).mas_offset(-15);
-            make.centerY.mas_equalTo(self.contentView);
+            make.centerY.mas_equalTo(self.containerView);
         }];
 
         self.actionBtn = [[UIControl alloc]init];
@@ -70,9 +68,25 @@
         [self.contentView addSubview:self.actionBtn];
         [self.actionBtn mas_makeConstraints:^(MASConstraintMaker *make) {
             make.right.mas_equalTo(self.rightArrow);
-            make.left.mas_equalTo(self.mapBtn);
+            make.left.mas_equalTo(self.nameLablel);
             make.top.bottom.equalTo(self.titleLabel);
         }];
+        self.detailBtn = [[UIButton alloc] init];
+        self.detailBtn.backgroundColor = [UIColor colorWithHexString:@"#f7f7f7"];
+        self.detailBtn.layer.cornerRadius = 4;
+        self.detailBtn.layer.masksToBounds = YES;
+        [self.detailBtn setTitle:@"更多详细信息" forState:UIControlStateNormal];
+        self.detailBtn.titleLabel.numberOfLines = 0;
+        [self.detailBtn setTitleColor:[UIColor themeGray2] forState:UIControlStateNormal];
+                self.detailBtn.titleLabel.font = [UIFont themeFontRegular:12];
+        [self.contentView addSubview:self.detailBtn];
+        [self.detailBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.top.mas_equalTo(self.containerView.mas_bottom).offset(12);
+            make.height.mas_equalTo(30);
+            make.left.mas_equalTo(15);
+            make.right.mas_equalTo(-15);
+        }];
+        [self.detailBtn addTarget:self action:@selector(clickMoreDetailAction:) forControlEvents:UIControlEventTouchUpInside];
     }
     return self;
 }
@@ -85,6 +99,13 @@
     self.currentData = data;
     FHNewHouseDetailAddressInfoCellModel *model = (FHNewHouseDetailAddressInfoCellModel *)data;
     self.titleLabel.text = model.courtAddress;
+    self.nameLablel.text = @"地址";
+}
+
+- (void)clickMoreDetailAction:(UIButton *)btn {
+    if (self.propertyDetailActionBlock) {
+        self.propertyDetailActionBlock();
+    }
 }
 
 - (void)clickMapAction:(UIButton *)btn

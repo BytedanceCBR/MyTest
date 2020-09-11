@@ -13,8 +13,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FHNewHouseDetailPropertyListCollectionCell : FHDetailBaseCollectionCell
 
-@property (nonatomic, copy) void (^detailActionBlock)(void);
-
 @end
 
 @interface FHNewHouseDetailPropertyListCellModel : NSObject

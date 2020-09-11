@@ -9,7 +9,11 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+@class FHNewHouseDetailAssessCellModel;
+
 @interface FHNewHouseDetailAssessSM : FHNewHouseDetailSectionModel
+
+@property (nonatomic, strong) FHNewHouseDetailAssessCellModel *assessCellModel;
 
 @end
 

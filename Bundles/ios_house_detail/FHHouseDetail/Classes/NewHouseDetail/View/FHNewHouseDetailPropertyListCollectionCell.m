@@ -12,7 +12,6 @@
 @interface FHNewHouseDetailPropertyListCollectionCell ()
 
 @property (nonatomic, strong) NSMutableArray *itemArray;
-@property (nonatomic, strong) UIButton *detailBtn;
 
 @end
 
@@ -41,24 +40,7 @@
 
 - (instancetype)initWithFrame:(CGRect)frame {
     if (self = [super initWithFrame:frame]) {
-        self.detailBtn = [[UIButton alloc] init];
-//        UIImage *img = ICON_FONT_IMG(16, @"\U0000e670", [UIColor themeGray3]);
-//        [_detailBtn setImage:img forState:UIControlStateNormal];
-        self.detailBtn.backgroundColor = [UIColor colorWithHexString:@"#f7f7f7"];
-        self.detailBtn.layer.cornerRadius = 4;
-        self.detailBtn.layer.masksToBounds = YES;
-        [self.detailBtn setTitle:@"详\n情" forState:UIControlStateNormal];
-        self.detailBtn.titleLabel.numberOfLines = 0;
-        [self.detailBtn setTitleColor:[UIColor themeGray2] forState:UIControlStateNormal];
-        self.detailBtn.titleLabel.font = [UIFont themeFontRegular:12];
-        [self.contentView addSubview:self.detailBtn];
-        [self.detailBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.right.mas_equalTo(-15);
-            make.height.mas_equalTo(48);
-            make.width.mas_equalTo(22);
-            make.centerY.mas_equalTo(self.contentView);
-        }];
-        [self.detailBtn addTarget:self action:@selector(detailBtnDidClick:) forControlEvents:UIControlEventTouchUpInside];
+        
     }
     return self;
 }
@@ -162,13 +144,6 @@
     if (obj.openUrl.length > 0) {
         NSURL *url = [NSURL URLWithString:obj.openUrl];
         [[TTRoute sharedRoute]openURLByPushViewController:url];
-    }
-}
-
-- (void)detailBtnDidClick:(UIButton *)btn
-{
-    if (self.detailActionBlock) {
-        self.detailActionBlock();
     }
 }
 

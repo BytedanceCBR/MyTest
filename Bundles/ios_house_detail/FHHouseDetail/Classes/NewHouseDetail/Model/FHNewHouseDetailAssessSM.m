@@ -6,7 +6,25 @@
 //
 
 #import "FHNewHouseDetailAssessSM.h"
+#import "FHNewHouseDetailAssessCollectionCell.h"
 
 @implementation FHNewHouseDetailAssessSM
+
+- (void)updateDetailModel:(FHDetailNewModel *)model {
+    [super updateDetailModel:model];
+    
+    FHNewHouseDetailAssessCellModel *cellModel = [[FHNewHouseDetailAssessCellModel alloc] init];
+    cellModel.strategy = model.data.strategy;
+    self.assessCellModel = cellModel;
+}
+
+- (id<NSObject>)diffIdentifier {
+    return self;
+}
+
+- (BOOL)isEqualToDiffableObject:(id<IGListDiffable>)object {
+    return self == object;
+}
+
 
 @end

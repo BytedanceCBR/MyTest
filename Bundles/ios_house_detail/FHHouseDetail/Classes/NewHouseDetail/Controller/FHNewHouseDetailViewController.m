@@ -263,6 +263,7 @@
     //    CGRect screenBounds = [UIScreen mainScreen].bounds;
     //    CGFloat navBarHeight = [TTDeviceHelper isIPhoneXDevice] ? 44 : 20;
     _navBar = [[FHDetailNavBar alloc] initWithType:FHDetailNavBarTypeDefault];
+    [_navBar removeBottomLine];
     _navBar.backActionBlock = ^{
         [wself.navigationController popViewControllerAnimated:YES];
     };
@@ -335,6 +336,28 @@
     }];
 
     [self.view bringSubviewToFront:_navBar];
+    
+//    self.segmentTitleView = [[FHDetailPictureTitleView alloc] initWithFrame:CGRectMake(0, CGRectGetMaxY(self.navBar.frame), CGRectGetWidth(self.view.bounds), 42)];
+//    self.segmentTitleView.backgroundColor = [UIColor clearColor];
+//    self.segmentTitleView.usedInPictureList = YES;
+//    self.segmentTitleView.seperatorLine.hidden = NO;
+//    self.segmentTitleView.titleNames = self.navTitles;
+//    __weak typeof(self) weakSelf = self;
+//    [self.segmentTitleView setCurrentIndexBlock:^(NSInteger currentIndex) {
+//        __strong typeof(weakSelf) strongSelf = weakSelf;
+//        if (strongSelf.topImageClickTabBlock) {
+//            strongSelf.topImageClickTabBlock(currentIndex);
+//        }
+//        [strongSelf scrollToCurrentIndex:currentIndex];
+//    }];
+//    [self.view addSubview:self.segmentTitleView];
+//    [self.segmentTitleView mas_makeConstraints:^(MASConstraintMaker *make) {
+//        make.left.right.mas_equalTo(0);
+//        make.height.mas_equalTo(42);
+//        make.top.mas_equalTo(self.customNavBarView.mas_bottom);
+//    }];
+//    [self.segmentTitleView reloadData];
+//    self.segmentTitleView.selectIndex = 0;
 }
 
 - (void)setNavBarTitle:(NSString *)navTitle
@@ -808,6 +831,7 @@
 #pragma mark - UIScrollViewDelegate
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView
 {
+    [self refreshContentOffset:scrollView.contentOffset];
     //    if (self.segmentViewChangedFlag) {
     //        return;
     //    }
