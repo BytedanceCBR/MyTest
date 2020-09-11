@@ -115,6 +115,7 @@
     }
     //头图
     FHNewHouseDetailHeaderMediaSM *headerMediaSM = [[FHNewHouseDetailHeaderMediaSM alloc] initWithDetailModel:self.detailData];
+    [headerMediaSM updatewithContactViewModel:self.contactViewModel];
     headerMediaSM.sectionType = FHNewHouseDetailSectionTypeHeader;
     [sectionModels addObject:headerMediaSM];
     

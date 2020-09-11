@@ -125,15 +125,13 @@
         pictureDetailViewController.topVC = self.baseViewModel.detailController;
     }
 
-    if ([self.baseViewModel.detailData isKindOfClass:[FHDetailNewModel class]]) {
-        FHDetailNewModel *model = (FHDetailNewModel *)self.baseViewModel.detailData;
-        pictureDetailViewController.associateInfo = model.data.imageGroupAssociateInfo;
-        if (!model.data.isShowTopImageTab) {
-            //如果是新房，非北京、江州以外的城市，暂时隐藏头部
-            pictureDetailViewController.isShowSegmentView = NO;
-        }
+    FHDetailNewMediaHeaderModel *model = (FHDetailNewMediaHeaderModel *)self.currentData;
+    pictureDetailViewController.associateInfo = model.houseImageAssociateInfo;
+    if (!model.isShowTopImageTab) {
+        //如果是新房，非北京、江州以外的城市，暂时隐藏头部
+        pictureDetailViewController.isShowSegmentView = NO;
     }
-
+    
     pictureDetailViewController.dragToCloseDisabled = YES;
     pictureDetailViewController.startWithIndex = index;
     pictureDetailViewController.albumImageBtnClickBlock = ^(NSInteger index) {
@@ -150,9 +148,10 @@
     };
 
     [pictureDetailViewController setMediaHeaderModel:self.currentData mediaImages:images];
-    FHDetailNewMediaHeaderModel *model = ((FHDetailNewMediaHeaderModel *)self.currentData);
     //去除flag判断，改为判断详情页type
-    if ([model.topImages isKindOfClass:[NSArray class]] && model.topImages.count > 0) {
+    if (model.isShowTopImageTab) {
+        pictureDetailViewController.smallImageInfosModels = self.dataHelper.photoAlbumData.floorPanModel;
+    } else {
         pictureDetailViewController.smallImageInfosModels = self.dataHelper.photoAlbumData.floorPanModel;
     }
 

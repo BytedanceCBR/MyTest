@@ -340,7 +340,8 @@
     
     for (FHFloorPanPicShowGroupModel *groupModel in self.floorPanShowModel.itemGroupList) {
         if ([groupModel.rootGroupName isEqualToString:rootGroupName.lastObject]) {
-            NSNumber *itemCount = [NSNumber numberWithUnsignedInteger:(NSUInteger)numbers.lastObject + groupModel.items.count];
+            NSNumber *lastNumber = numbers.lastObject;
+            NSNumber *itemCount = [NSNumber numberWithUnsignedInteger: lastNumber.unsignedIntegerValue + groupModel.items.count];
             
             [numbers removeLastObject];
             [numbers addObject:itemCount];
@@ -483,7 +484,7 @@
         if (self.floorPanShowModel.itemGroupList.count > indexPath.section) {
            FHFloorPanPicShowGroupModel *groupModel = self.floorPanShowModel.itemGroupList[indexPath.section];
             if([groupModel.groupName length] > 0) {
-                if ([groupModel.type isEqualToString:@"2"]) {
+                if ([groupModel.rootGroupType isEqualToString:@"2"]) {
                     //户型图后面不带计数
                     titleView.titleLabel.text = [NSString stringWithFormat:@"%@",groupModel.groupName];
                 } else {

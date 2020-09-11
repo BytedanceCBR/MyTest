@@ -17,6 +17,7 @@
 @property (nonatomic, strong, readwrite) FHDetailNewMediaHeaderDataHelperPictureDetailData *pictureDetailData;
 //提供给图片相册的数据
 @property (nonatomic, strong, readwrite) FHDetailNewMediaHeaderDataHelperPhotoAlbumData *photoAlbumData;
+
 @end
 
 @implementation FHDetailNewMediaHeaderDataHelper
@@ -130,57 +131,99 @@
 + (FHDetailNewMediaHeaderDataHelperPhotoAlbumData *)generatePhotoAlbumData:(FHDetailNewMediaHeaderModel *)newMediaHeaderModel {
     
     FHDetailNewMediaHeaderDataHelperPhotoAlbumData *photoAlbumData = [[FHDetailNewMediaHeaderDataHelperPhotoAlbumData alloc] init];
-    NSMutableArray <FHHouseDetailImageGroupModel *> *pictsArray = [NSMutableArray array];
-    //之前传入fisrtTopImage 表示数据不全，需要全部传入
-    for (FHDetailNewTopImage *topImage in newMediaHeaderModel.topImages) {
-        for (FHHouseDetailImageGroupModel *groupModel in topImage.smallImageGroup) {
-            //type类型相同的数据归为一类
-            __block NSUInteger index = NSNotFound;
-            [pictsArray enumerateObjectsUsingBlock:^(FHHouseDetailImageGroupModel *_Nonnull obj, NSUInteger idx, BOOL *_Nonnull stop) {
-                if ([obj.type isEqualToString:groupModel.type]) {
-                    index = idx;
-                    *stop = YES;
+
+    if (newMediaHeaderModel.isShowTopImageTab) {
+        //新房新的数据版本
+        FHFloorPanPicShowModel *newFloorPanPicShowModel = [[FHFloorPanPicShowModel alloc] init];
+        NSMutableArray *newFloorPanArr = [NSMutableArray array];
+                
+        for (FHDetailNewTopImage *topImage in newMediaHeaderModel.topImages) {
+            
+            FHFloorPanPicShowGroupModel *showGroupModel = [[FHFloorPanPicShowGroupModel alloc] init];
+            showGroupModel.rootGroupName = topImage.name;
+            showGroupModel.rootGroupType = [@(topImage.type) stringValue];
+            
+            NSMutableArray *smallImageList = [NSMutableArray array];
+            
+            for (FHHouseDetailImageGroupModel *smallGoupModel in topImage.smallImageGroup) {
+                for (FHImageModel *image in smallGoupModel.images) {
+                    FHFloorPanPicShowItemPictureModel *pictureModel = [[FHFloorPanPicShowItemPictureModel alloc] init];
+                    pictureModel.image = image;
+                    pictureModel.itemType = FHFloorPanPicShowModelTypePicture;
+                    [smallImageList addObject:pictureModel];
                 }
-            }];
-            if (index != NSNotFound) {
-                FHHouseDetailImageGroupModel *existGroupModel = pictsArray[index];
-                existGroupModel.images = [[NSArray arrayWithArray:existGroupModel.images] arrayByAddingObjectsFromArray:groupModel.images];
-            } else {
-                [pictsArray addObject:groupModel.copy];
+                if (topImage.type == FHDetailHouseImageTypeApartment) {
+                    FHFloorPanPicShowGroupModel *newGroupModel = [[FHFloorPanPicShowGroupModel alloc] init];
+                    newGroupModel.rootGroupName = showGroupModel.rootGroupName;
+                    newGroupModel.rootGroupType = showGroupModel.rootGroupType;
+                    newGroupModel.groupName = smallGoupModel.name;
+                    newGroupModel.items = smallImageList.copy;
+                    [newFloorPanArr addObject:newGroupModel];
+                    [smallImageList removeAllObjects];
+                    continue;
+                }
+            }
+            if (smallImageList.count) {
+                showGroupModel.items = smallImageList.copy;
+                showGroupModel.groupName = topImage.name;
+                [newFloorPanArr addObject:showGroupModel];
             }
         }
-    }
-    
-    photoAlbumData.photoAlbumArray = pictsArray.copy;
-    
-    FHHouseDetailAlbumInfo *albumInfo = [[FHHouseDetailAlbumInfo alloc] init];
-    NSMutableArray *tabArr = [NSMutableArray array];
-    for (FHHouseDetailImageGroupModel *groupModel in photoAlbumData.photoAlbumArray) {
-        FHHouseDetailImageTabInfo *tabInfoModel = [[FHHouseDetailImageTabInfo alloc] init];
-        tabInfoModel.tabName = groupModel.name;
-        NSMutableArray *tabContent = [NSMutableArray arrayWithCapacity:groupModel.images.count];
-        for (FHImageModel *image in groupModel.images) {
-            FHHouseDetailImageStruct *imageStruct = [[FHHouseDetailImageStruct alloc] init];
-            imageStruct.smallImage = image;
-            [tabContent addObject:imageStruct];
+        newFloorPanPicShowModel.itemGroupList = newFloorPanArr.copy;
+        photoAlbumData.floorPanModel = newFloorPanPicShowModel;
+        
+        
+    } else {
+        //新房旧的数据版本
+        NSMutableArray <FHHouseDetailImageGroupModel *> *pictsArray = [NSMutableArray array];
+        //之前传入fisrtTopImage 表示数据不全，需要全部传入
+        for (FHDetailNewTopImage *topImage in newMediaHeaderModel.topImages) {
+            for (FHHouseDetailImageGroupModel *groupModel in topImage.smallImageGroup) {
+                //type类型相同的数据归为一类
+                __block NSUInteger index = NSNotFound;
+                [pictsArray enumerateObjectsUsingBlock:^(FHHouseDetailImageGroupModel *_Nonnull obj, NSUInteger idx, BOOL *_Nonnull stop) {
+                    if ([obj.type isEqualToString:groupModel.type]) {
+                        index = idx;
+                        *stop = YES;
+                    }
+                }];
+                if (index != NSNotFound) {
+                    FHHouseDetailImageGroupModel *existGroupModel = pictsArray[index];
+                    existGroupModel.images = [[NSArray arrayWithArray:existGroupModel.images] arrayByAddingObjectsFromArray:groupModel.images];
+                } else {
+                    [pictsArray addObject:groupModel.copy];
+                }
+            }
         }
-        tabInfoModel.tabContent = tabContent.copy;
-        [tabArr addObject:tabInfoModel];
+        
+        photoAlbumData.photoAlbumArray = pictsArray.copy;
+        
+        FHHouseDetailAlbumInfo *albumInfo = [[FHHouseDetailAlbumInfo alloc] init];
+        NSMutableArray *tabArr = [NSMutableArray array];
+        for (FHHouseDetailImageGroupModel *groupModel in photoAlbumData.photoAlbumArray) {
+            FHHouseDetailImageTabInfo *tabInfoModel = [[FHHouseDetailImageTabInfo alloc] init];
+            tabInfoModel.tabName = groupModel.name;
+            NSMutableArray *tabContent = [NSMutableArray arrayWithCapacity:groupModel.images.count];
+            for (FHImageModel *image in groupModel.images) {
+                FHHouseDetailImageStruct *imageStruct = [[FHHouseDetailImageStruct alloc] init];
+                imageStruct.smallImage = image;
+                [tabContent addObject:imageStruct];
+            }
+            tabInfoModel.tabContent = tabContent.copy;
+            [tabArr addObject:tabInfoModel];
+        }
+        albumInfo.tabList = tabArr.copy;
+        
+        photoAlbumData.detailAlbumInfo = albumInfo;
+        
+        FHFloorPanPicShowModel *picShowModel = [[FHFloorPanPicShowModel alloc] init];
+        NSMutableArray *mArr = [NSMutableArray array];
+        for (FHHouseDetailImageTabInfo *tabInfo in albumInfo.tabList) {
+            [mArr addObjectsFromArray:[FHFloorPanPicShowGroupModel getTabGroupInfo:tabInfo rootName:tabInfo.tabName]];
+        }
+        picShowModel.itemGroupList = mArr.copy;
+        photoAlbumData.floorPanModel = picShowModel;
     }
-    albumInfo.tabList = tabArr.copy;
-    
-    photoAlbumData.detailAlbumInfo = albumInfo;
-    
-    FHFloorPanPicShowModel *picShowModel = [[FHFloorPanPicShowModel alloc] init];
-    NSMutableArray *mArr = [NSMutableArray array];
-    for (FHHouseDetailImageTabInfo *tabInfo in albumInfo.tabList) {
-        [mArr addObjectsFromArray:[FHFloorPanPicShowGroupModel getTabGroupInfo:tabInfo rootName:tabInfo.tabName]];
-    }
-    picShowModel.itemGroupList = mArr.copy;
-    photoAlbumData.floorPanModel = picShowModel;
-    
-    
-    
     
     return photoAlbumData;
 }
