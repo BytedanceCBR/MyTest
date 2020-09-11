@@ -166,7 +166,6 @@ static NSMutableArray  * _Nullable identifierArr;
             
             [dictTraceParams setValue:@"maintab" forKey:@"page_type"];
             [FHUserTracker writeEvent:@"operation_show" params:dictTraceParams];
-            [FHErrorHubManagerUtil checkBuryingPointWithEvent:@"operation_show" Params:dictTraceParams]
         }];
     }
     

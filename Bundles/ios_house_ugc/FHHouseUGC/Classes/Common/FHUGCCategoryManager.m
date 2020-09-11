@@ -119,7 +119,7 @@
         FHNetworkMonitorType resultType = FHNetworkMonitorTypeSuccess;
         NSInteger code = 0;
         NSString *errMsg = nil;
-        NSMutableDictionary *extraDict = nil;
+        NSMutableDictionary *extraDict = @{}.mutableCopy;
         NSDictionary *exceptionDict = nil;
         id <FHBaseModelProtocol> model = nil;
         NSInteger responseCode = -1;
@@ -130,12 +130,13 @@
         if (backError && !obj) {
             code = backError.code;
             resultType = FHNetworkMonitorTypeNetFailed;
-            
+            extraDict[@"status"] = @(resultType);
             if (self.completionRequest) {
                 self.completionRequest(NO);
             }
         } else {
             model = (id <FHBaseModelProtocol>) [FHMainApi generateModel:obj class:cls error:&backError];
+            extraDict[@"status"] = model.status;
             if([model isKindOfClass:[FHUGCCategoryModel class]]){
                 FHUGCCategoryModel *categoryModel = (FHUGCCategoryModel *)model;
 
