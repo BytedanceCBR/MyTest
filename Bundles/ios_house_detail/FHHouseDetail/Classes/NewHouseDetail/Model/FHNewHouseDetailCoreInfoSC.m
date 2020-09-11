@@ -163,15 +163,15 @@
         return cell;
     } else if (model.items[index] == model.propertyListCellModel) {
         FHNewHouseDetailPropertyListCollectionCell *cell = [self.collectionContext dequeueReusableCellOfClass:[FHNewHouseDetailPropertyListCollectionCell class] withReuseIdentifier:NSStringFromClass([model.propertyListCellModel class]) forSectionController:self atIndex:index];
-        [cell setDetailActionBlock:^{
-            [weakSelf goToInfoDetail];
-        }];
         [cell refreshWithData:model.propertyListCellModel];
         return cell;
     } else if (model.items[index] == model.addressInfoCellModel) {
         FHNewHouseDetailAddressInfoCollectionCell *cell = [self.collectionContext dequeueReusableCellOfClass:[FHNewHouseDetailAddressInfoCollectionCell class] withReuseIdentifier:NSStringFromClass([model.addressInfoCellModel class]) forSectionController:self atIndex:index];
         [cell setMapDetailActionBlock:^{
             [weakSelf goToMapDetail];
+        }];
+        [cell setPropertyDetailActionBlock:^{
+            [weakSelf goToInfoDetail];
         }];
         [cell refreshWithData:model.addressInfoCellModel];
         return cell;
