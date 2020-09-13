@@ -99,10 +99,15 @@
             if (self.usedInPictureList || self.usedInNewHouseDetail) {
                 UICollectionViewLayoutAttributes *attributes = [self.colletionView layoutAttributesForItemAtIndexPath:indexPath];
                 CGRect frame = attributes.frame;
+                
+                CGFloat bottomSpace = 13;
+                if (self.usedInNewHouseDetail) {
+                    bottomSpace = 9;
+                }
 
                 [self.colletionView bringSubviewToFront:self.indicatorView];
                 [UIView animateWithDuration:0.2 animations:^{
-                    self.indicatorView.frame = CGRectMake(frame.origin.x + frame.size.width/2 - 10, CGRectGetHeight(self.colletionView.frame) - 13, 20, 4);
+                    self.indicatorView.frame = CGRectMake(frame.origin.x + frame.size.width/2 - 10, CGRectGetHeight(self.colletionView.frame) - bottomSpace, 20, 4);
                 }];
             }
         }

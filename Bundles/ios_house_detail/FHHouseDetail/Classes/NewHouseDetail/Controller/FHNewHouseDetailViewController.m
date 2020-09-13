@@ -404,6 +404,9 @@
     
     self.segmentTitleView.titleNames = titles.copy;
     [self.segmentTitleView reloadData];
+    if (self.segmentTitleView.selectIndex == 0) {
+        self.segmentTitleView.selectIndex = 0;
+    }
 }
 
 - (void)scrollToCurrentIndex:(NSInteger )toIndex {

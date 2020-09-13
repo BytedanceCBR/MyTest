@@ -67,7 +67,7 @@
         return [FHNewHouseDetailMapResultCollectionCell cellSizeWithData:model.dataItems[index] width:width];
     } else if ([model.dataItems[index] isKindOfClass:[NSString class]]) {
         NSString *emptyString = model.dataItems[index];
-        if (emptyString) {
+        if (emptyString && emptyString.length) {
             return [FHNewHouseDetailMapResultCollectionCell cellSizeWithData:model.dataItems[index] width:width];
         } else {
             return CGSizeMake(width, 20);

@@ -109,7 +109,7 @@
         self.consultImageView.contentMode = UIViewContentModeScaleAspectFit;
         [self.consultContentView addSubview:self.consultImageView];
         [self.consultImageView mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.left.mas_equalTo(self.locationTitleLabel.mas_right).offset(3);
+            make.left.mas_equalTo(self.consultValueLabel.mas_right).offset(3);
             make.centerY.mas_equalTo(self.consultContentView).offset(-1);
             make.height.mas_equalTo(15);
             make.width.mas_equalTo(16);
