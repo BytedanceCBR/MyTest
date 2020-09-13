@@ -516,7 +516,7 @@
 - (void)updateStatusBar:(CGPoint)contentOffset
 {
     UIStatusBarStyle style = UIStatusBarStyleLightContent;
-    if (contentOffset.y > 2.0) {
+    if (contentOffset.y > 0) {
         style = UIStatusBarStyleDefault;
     }
     if (!self.isViewDidDisapper) {
