@@ -43,11 +43,6 @@ static const CGFloat kDefaultCellHeight = 83.0;
 - (void)setupLynxView {
     self.lynxView = [[FHLynxView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, kDefaultCellHeight)];
     [self.contentView addSubview:self.lynxView];
-    FHLynxViewBaseParams *baesparmas = [[FHLynxViewBaseParams alloc] init];
-    baesparmas.channel = @"lynx_house_find_card";
-    baesparmas.bridgePrivate = self;
-    baesparmas.clsPrivate = [FHLynxRealtorBridge class];
-    [self.lynxView loadLynxWithParams:baesparmas];
 }
 
 - (void)refreshWithData:(id)data {
@@ -57,6 +52,12 @@ static const CGFloat kDefaultCellHeight = 83.0;
     
     FHDynamicLynxModel *model = (FHDynamicLynxModel *)data;
     if ([model isKindOfClass:[FHDynamicLynxModel class]]) {
+        FHLynxViewBaseParams *baesparmas = [[FHLynxViewBaseParams alloc] init];
+        baesparmas.channel = model.channel ?: @"";
+        baesparmas.bridgePrivate = self;
+        baesparmas.clsPrivate = [FHLynxRealtorBridge class];
+        [self.lynxView loadLynxWithParams:baesparmas];
+        
         FHDynamicLynxLynxDataModel *lynxModel = model.lynxData;
         if (lynxModel && self.lynxView) {
             [self.lynxView updateData:lynxModel.toDictionary];
