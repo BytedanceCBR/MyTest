@@ -136,7 +136,10 @@
             }
         } else {
             model = (id <FHBaseModelProtocol>) [FHMainApi generateModel:obj class:cls error:&backError];
-            extraDict[@"status"] = model.status;
+            if ([model respondsToSelector:@selector(status)]) {
+                NSString *status = [model performSelector:@selector(status)];
+                extraDict[@"status"] = status;
+            }
             if([model isKindOfClass:[FHUGCCategoryModel class]]){
                 FHUGCCategoryModel *categoryModel = (FHUGCCategoryModel *)model;
 
