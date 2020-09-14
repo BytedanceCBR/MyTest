@@ -33,7 +33,7 @@ typedef NS_ENUM(NSUInteger, FHFloorPanPicShowModelType) {
 @property (nonatomic, strong) NSArray<FHFloorPanPicShowItemModel> *items;
 @property (nonatomic, copy) NSString *groupName;
 @property (nonatomic, copy) NSString *rootGroupName;
-@property (nonatomic, copy) NSString *rootGroupType;
+@property (nonatomic, assign) BOOL showQuantity;
 
 + (NSArray<FHFloorPanPicShowGroupModel> *)getTabGroupInfo:(FHHouseDetailImageTabInfo *)tabInfo rootName:(NSString *)rootName;
 @end

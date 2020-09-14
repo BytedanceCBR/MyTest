@@ -17,6 +17,7 @@
 
 @property (nonatomic, strong) UIView *indicatorView;
 @property (nonatomic, copy) NSArray *preTitleSums;
+@property (nonatomic, assign) NSInteger titleIndex;
 @end
 
 @implementation FHDetailPictureTitleView
@@ -97,8 +98,9 @@
 - (void)setSelectIndex:(NSInteger)selectIndex {
     if (_selectIndex != selectIndex || selectIndex == 0) {
         _selectIndex = selectIndex; // 图片索引
-        [self.colletionView reloadData];
         NSInteger titleIndex = [self titleIndexBySelectIndex];
+        _titleIndex = titleIndex;
+        [self.colletionView reloadData];
         if (titleIndex >= 0 && titleIndex < self.titleNames.count) {
             NSIndexPath *indexPath = [NSIndexPath indexPathForRow:titleIndex inSection:0];
             if (indexPath) {
@@ -186,8 +188,6 @@
         NSString *title = self.titleNames[index];
         cell.titleLabel.text = title;
     }
-    NSInteger titleIndex = [self titleIndexBySelectIndex];
-
     UIColor *selectColor = [UIColor whiteColor];
     UIColor *normalColor = [UIColor colorWithHexString:@"#ffffff" alpha:0.4];
     UIFont *selectFont = [UIFont themeFontRegular:16];
@@ -202,7 +202,7 @@
             make.centerX.mas_equalTo(cell.contentView);
         }];
     }
-    if (titleIndex == index) {
+    if (self.titleIndex == index) {
         cell.titleLabel.textColor = selectColor;
         cell.titleLabel.font = selectFont;
     } else {

@@ -139,7 +139,6 @@
         for (FHDetailNewTopImage *topImage in newMediaHeaderModel.topImages) {
             FHFloorPanPicShowGroupModel *showGroupModel = [[FHFloorPanPicShowGroupModel alloc] init];
             showGroupModel.rootGroupName = topImage.name;
-            showGroupModel.rootGroupType = [@(topImage.type) stringValue];
 
             NSMutableArray *smallImageList = [NSMutableArray array];
 
@@ -153,9 +152,9 @@
                 if (topImage.type == FHDetailHouseImageTypeApartment) {
                     FHFloorPanPicShowGroupModel *newGroupModel = [[FHFloorPanPicShowGroupModel alloc] init];
                     newGroupModel.rootGroupName = showGroupModel.rootGroupName;
-                    newGroupModel.rootGroupType = showGroupModel.rootGroupType;
                     newGroupModel.groupName = smallGoupModel.name;
                     newGroupModel.items = smallImageList.copy;
+                    newGroupModel.showQuantity = NO;
                     [newFloorPanArr addObject:newGroupModel];
                     [smallImageList removeAllObjects];
                     continue;

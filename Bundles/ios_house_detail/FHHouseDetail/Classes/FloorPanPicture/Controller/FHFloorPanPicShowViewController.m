@@ -486,11 +486,11 @@
         if (self.floorPanShowModel.itemGroupList.count > indexPath.section) {
             FHFloorPanPicShowGroupModel *groupModel = self.floorPanShowModel.itemGroupList[indexPath.section];
             if ([groupModel.groupName length] > 0) {
-                if ([groupModel.rootGroupType isEqualToString:@"2"]) {
+                if (groupModel.showQuantity) {
                     //户型图后面不带计数
-                    titleView.titleLabel.text = [NSString stringWithFormat:@"%@", groupModel.groupName];
-                } else {
                     titleView.titleLabel.text = [NSString stringWithFormat:@"%@ (%lu)", groupModel.groupName, (unsigned long)groupModel.items.count];
+                } else {
+                    titleView.titleLabel.text = [NSString stringWithFormat:@"%@", groupModel.groupName];
                 }
             } else {
                 titleView.titleLabel.text = [NSString stringWithFormat:@"(%lu)", (unsigned long)groupModel.items.count];
