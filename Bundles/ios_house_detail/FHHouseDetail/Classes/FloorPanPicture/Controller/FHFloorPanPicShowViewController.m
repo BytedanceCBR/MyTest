@@ -26,6 +26,7 @@
 @property (nonatomic, strong) FHDetailPictureTitleView *segmentTitleView;
 @property (nonatomic, copy)   NSArray       *pictureTitles;
 @property (nonatomic, copy)   NSArray       *pictureNumbers;
+@property (nonatomic, copy)   NSArray       *prePictureSum;
 
 @property (nonatomic, strong) NSIndexPath *lastIndexPath;
 
@@ -57,6 +58,11 @@
         _lastStatusBarStyle = [[UIApplication sharedApplication] statusBarStyle];
     }
     return self;
+}
+
+- (void)setFloorPanShowModel:(FHFloorPanPicShowModel *)floorPanShowModel {
+    _floorPanShowModel = floorPanShowModel;
+    [self processImagesList];
 }
 
 - (instancetype)initWithRouteParamObj:(TTRouteParamObj *)paramObj {
@@ -137,7 +143,6 @@
 - (void)setupUserInterface {
     // Do any additional setup after loading the view.
     self.view.backgroundColor = [UIColor whiteColor];
-    [self processImagesList];
     if (self.isShowSegmentTitleView && self.pictureTitles.count > 1) {
         self.segmentTitleView = [[FHDetailPictureTitleView alloc] initWithFrame:CGRectMake(0, CGRectGetMaxY(self.customNavBarView.frame), CGRectGetWidth(self.view.bounds), 42)];
         self.segmentTitleView.backgroundColor = [UIColor clearColor];
@@ -286,8 +291,6 @@
 }
 
 - (void)setNavBar:(BOOL)error {
-//    [self.customNavBarView.leftBtn setBackgroundImage:[UIImage imageNamed:@"icon-return"] forState:UIControlStateNormal];
-//    [self.customNavBarView.leftBtn setBackgroundImage:[UIImage imageNamed:@"icon-return"] forState:UIControlStateHighlighted];
     [self.customNavBarView setNaviBarTransparent:NO];
     
 }
@@ -295,18 +298,19 @@
 - (void)scrollToCurrentIndex:(NSInteger )toIndex {
     //segmentview 的index 和 collectionview的index 不一一对应
     //需要通过计算得出，
-    NSInteger count = 0;
     NSInteger titleIndex = 0;
-    
-    for (int i = 0; i < self.floorPanShowModel.itemGroupList.count; i++) {
-        FHFloorPanPicShowGroupModel *imageGroupModel = self.floorPanShowModel.itemGroupList[i];
-        NSInteger tempCount = imageGroupModel.items.count;
-        count += tempCount;
-        if (toIndex < count) {
-            titleIndex = i;
-            break;
+    NSInteger left = 0, right = self.prePictureSum.count - 1;
+    while (left <= right) {
+        NSInteger mid = (left + right) / 2;
+        NSNumber *midSum = self.prePictureSum[mid];
+        if (toIndex < midSum.unsignedIntegerValue) {
+            titleIndex = mid;
+            right = mid - 1;
+        } else {
+            left = mid + 1;
         }
     }
+    
     self.lastIndexPath = [NSIndexPath indexPathForItem:0 inSection:titleIndex];
     UICollectionViewLayoutAttributes *attributes = [self.collectionView layoutAttributesForItemAtIndexPath:self.lastIndexPath];
     CGRect frame = attributes.frame;
@@ -337,6 +341,7 @@
     NSMutableArray *rootGroupName = [NSMutableArray array];
     NSMutableArray *numbers = [NSMutableArray array];
     NSMutableArray *titles = [NSMutableArray array];
+    NSMutableArray *preSum = [NSMutableArray arrayWithCapacity:self.floorPanShowModel.itemGroupList.count];
     
     for (FHFloorPanPicShowGroupModel *groupModel in self.floorPanShowModel.itemGroupList) {
         if ([groupModel.rootGroupName isEqualToString:rootGroupName.lastObject]) {
@@ -350,6 +355,10 @@
             [numbers addObject:itemCount];
             [rootGroupName addObject:groupModel.rootGroupName];
         }
+        NSNumber *lastSum = preSum.lastObject;
+        [preSum addObject:[NSNumber numberWithUnsignedInteger:lastSum.unsignedIntegerValue + groupModel.items.count]];
+        
+        NSLog(@"%@ , %ld luowentao , %@ ",lastSum, lastSum.unsignedIntegerValue,preSum);
     }
     
     for (NSUInteger i = 0; i < rootGroupName.count; i++) {
@@ -357,7 +366,7 @@
         NSString *groupName = rootGroupName[i];
         [titles addObject:[NSString stringWithFormat:@"%@（%lu）",groupName,number.unsignedIntegerValue]];
     }
-    
+    self.prePictureSum = preSum.copy;
     self.pictureTitles = titles.copy;
     self.pictureNumbers = numbers.copy;
 }
@@ -504,23 +513,15 @@
 //点击item方法
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    if (!self.topImages) {
-        [self dismissViewControllerAnimated:NO completion:nil];
-    }
-    
     if (self.albumImageBtnClickBlock && self.floorPanShowModel.itemGroupList.count > indexPath.section) {
         NSInteger total = 0;
-      
-        for (NSInteger i = 0; i <= indexPath.section; i++) {
-            if (i < indexPath.section) {
-                FHFloorPanPicShowGroupModel *groupModel = self.floorPanShowModel.itemGroupList[i];
-                total += groupModel.items.count;
-            }else
-            {
-                total += indexPath.row; 
-            }
+        total += indexPath.row;
+        if (indexPath.section > 0) {
+            NSNumber *preSum = self.prePictureSum[indexPath.section - 1];
+            total += preSum.unsignedIntegerValue;
         }
         self.albumImageBtnClickBlock(total);
+        [self dismissViewControllerAnimated:NO completion:nil];
     }
     
 //    if (self.albumImageStayBlock) {
@@ -541,14 +542,14 @@
 //    CGPoint centerPoint = [self.view convertPoint:CGPointMake(20, 55) toView:self.mainCollectionView];
     //1 6 2
     NSIndexPath *indexPath = [self.collectionView indexPathForItemAtPoint:centerPoint];
-    NSLog(@"centerPoint :%@ section:%d,row:%d",NSStringFromCGPoint(centerPoint),indexPath.section,indexPath.item);
+    NSLog(@"centerPoint :%@ section:%ld,row:%ld",NSStringFromCGPoint(centerPoint),(long)indexPath.section,(long)indexPath.item);
     if (indexPath && self.lastIndexPath.section != indexPath.section) {
         self.lastIndexPath = indexPath;
         if (indexPath.section < self.floorPanShowModel.itemGroupList.count) {
             NSInteger currentIndex = 0;
-            for (int i = 0; i < indexPath.section; i++) {
-                FHFloorPanPicShowGroupModel *groupModel = self.floorPanShowModel.itemGroupList[i];
-                currentIndex += groupModel.items.count;
+            if (indexPath.section > 0) {
+                NSNumber *preSum = self.prePictureSum[indexPath.section - 1];
+                currentIndex = preSum.unsignedIntegerValue;
             }
             if (self.segmentTitleView) {
                 self.segmentTitleView.selectIndex = currentIndex;
