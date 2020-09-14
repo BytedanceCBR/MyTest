@@ -51,7 +51,6 @@
 //键盘遮挡猜你想搜cell影响埋点上报准确性
 @property (nonatomic, strong) NSMutableArray *trackerCacheArr;
 @property (nonatomic, assign) BOOL isFirstShow;  //标记是否是首次进入页面
-@property (nonatomic, assign) NSTimeInterval startMonitorTime;
 @property (nonatomic, assign) BOOL isUploadedPss;
 
 @end
@@ -72,7 +71,6 @@
         self.sectionHeaderView.backgroundColor = [UIColor whiteColor];
         self.isFirstShow = YES;
         self.isUploadedPss = NO;
-        _startMonitorTime = [[NSDate date] timeIntervalSince1970];
 
         [self setupSubscribeView];
         [self setupHistoryView];
@@ -1172,9 +1170,9 @@
         if (self.guessYouWantData.count > 0) {
             [self.listController.historyTableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:NO];
         }
-        if (!self.isUploadedPss && ([[NSDate date] timeIntervalSince1970] - _startMonitorTime > 0.05) && self.houseType == FHHouseTypeSecondHandHouse) {
+        if (!self.isUploadedPss && ([[NSDate date] timeIntervalSince1970] - [self startTime] > 0.05) && self.houseType == FHHouseTypeSecondHandHouse) {
             _isUploadedPss = YES;
-            [FHMainApi addUserOpenVCDurationLog:@"pss_search" resultType:FHNetworkMonitorTypeSuccess duration:[[NSDate date] timeIntervalSince1970] - _startMonitorTime];
+            [FHMainApi addUserOpenVCDurationLog:@"pss_search" resultType:FHNetworkMonitorTypeSuccess duration:[[NSDate date] timeIntervalSince1970] - [self startTime]];
         }
     }
 }
