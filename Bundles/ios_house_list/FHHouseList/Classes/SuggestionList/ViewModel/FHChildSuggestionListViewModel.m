@@ -52,6 +52,7 @@
 @property (nonatomic, strong) NSMutableArray *trackerCacheArr;
 @property (nonatomic, assign) BOOL isFirstShow;  //标记是否是首次进入页面
 @property (nonatomic, assign) NSTimeInterval startMonitorTime;
+@property (nonatomic, assign) BOOL isUploadedPss;
 
 @end
 
@@ -70,6 +71,7 @@
         self.sectionHeaderView = [[UIView alloc] init];
         self.sectionHeaderView.backgroundColor = [UIColor whiteColor];
         self.isFirstShow = YES;
+        self.isUploadedPss = NO;
         _startMonitorTime = [[NSDate date] timeIntervalSince1970];
 
         [self setupSubscribeView];
@@ -1170,10 +1172,18 @@
         if (self.guessYouWantData.count > 0) {
             [self.listController.historyTableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:NO];
         }
+        if (!self.isUploadedPss && ([[NSDate date] timeIntervalSince1970] - _startMonitorTime > 0.05) && self.houseType == FHHouseTypeSecondHandHouse) {
+            _isUploadedPss = YES;
+            [FHMainApi addUserOpenVCDurationLog:@"pss_search" resultType:FHNetworkMonitorTypeSuccess duration:[[NSDate date] timeIntervalSince1970] - _startMonitorTime];
+        }
     }
 }
 
 #pragma mark - Request
+
+- (NSTimeInterval) startTime {
+    return self.listController.fatherVC.startMonitorTime;
+}
 
 -(void)setHistoryWithURl:(NSString *)openUrl displayText:(NSString *)displayText extInfo:(NSString *)extinfo {
     NSMutableDictionary *paramDic = [NSMutableDictionary new];
@@ -1266,9 +1276,6 @@
             wself.guessYouWantData = model.data.data;
             wself.guessYouWantExtraInfo = model.data.extraInfo;
             [wself reloadHistoryTableView];
-            if (wself.isFirstShow) {
-                [FHMainApi addUserOpenVCDurationLog:@"pss_search" resultType:FHNetworkMonitorTypeSuccess duration:[[NSDate date] timeIntervalSince1970] - _startMonitorTime];
-            }
         }  else {
             if (error && ![error.userInfo[@"NSLocalizedDescription"] isEqualToString:@"the request was cancelled"]) {
                 wself.listController.isLoadingData = NO;
