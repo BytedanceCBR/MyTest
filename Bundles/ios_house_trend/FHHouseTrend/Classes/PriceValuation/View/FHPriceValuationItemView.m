@@ -232,6 +232,25 @@
     }
 }
 
+- (void)setHiddenRightItem:(BOOL)hiddenRightItem {
+    _hiddenRightItem = hiddenRightItem;
+    _rightImage.hidden = hiddenRightItem;
+    _rightLabel.hidden = hiddenRightItem;
+    if(hiddenRightItem){
+        [self.contentView mas_remakeConstraints:^(MASConstraintMaker *make) {
+            make.right.mas_equalTo(self).offset(-15);
+            make.top.bottom.mas_equalTo(self);
+            make.left.mas_equalTo(self.titleLabel.mas_right);
+        }];
+    }else{
+        [self.contentView mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.right.mas_equalTo(self.rightImage.mas_left).offset(-5);
+            make.top.bottom.mas_equalTo(self);
+            make.left.mas_equalTo(self.titleLabel.mas_right);
+        }];
+    }
+}
+
 - (void)clickAction:(id)tap {
     if(self.tapBlock){
         self.tapBlock();

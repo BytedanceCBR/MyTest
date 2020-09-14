@@ -105,7 +105,7 @@
     
     CGFloat fontSize = 12;
     if([UIDevice btd_is480Screen] || [UIDevice btd_is568Screen]){
-        fontSize = 10;
+        fontSize = 9;
     }
     
     UILabel *descLabel = [self LabelWithFont:[UIFont themeFontRegular:fontSize] textColor:[UIColor whiteColor]];

@@ -123,7 +123,7 @@
     
     self.phoneItemView = [[FHPriceValuationItemView alloc] initWithFrame:CGRectZero type:FHPriceValuationItemViewTypeTextField];
     _phoneItemView.bottomLine.hidden = YES;
-    _phoneItemView.rightImage.hidden = YES;
+    _phoneItemView.hiddenRightItem = YES;
     _phoneItemView.titleLabel.text = @"手机号";
     _phoneItemView.placeholder = @"填写手机号获得专业顾问服务";
     _phoneItemView.scrollView = self.scrollView;
