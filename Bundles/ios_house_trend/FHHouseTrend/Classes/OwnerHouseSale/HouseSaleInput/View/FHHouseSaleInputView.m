@@ -125,7 +125,7 @@
     _phoneItemView.bottomLine.hidden = YES;
     _phoneItemView.hiddenRightItem = YES;
     _phoneItemView.titleLabel.text = @"手机号";
-    _phoneItemView.placeholder = @"填写手机号获得专业顾问服务";
+    _phoneItemView.placeholder = @"填写号码可获得专业服务";
     _phoneItemView.scrollView = self.scrollView;
     _phoneItemView.textField.keyboardType = UIKeyboardTypeNumberPad;
     [self.inputViewTwo addSubview:_phoneItemView];
