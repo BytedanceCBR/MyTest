@@ -12,7 +12,7 @@
 #import "FHLynxManager.h"
 #import "FHSearchHouseModel.h"
 
-static const CGFloat kDefaultCellHeight = 93.0;
+static const CGFloat kDefaultCellHeight = 83.0;
 
 @interface FHDynamicLynxCell ()
 
