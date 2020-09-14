@@ -170,7 +170,7 @@ extern NSString *const kFHToastCountKey;
     // "从业人员信息卡"，北京商业化开城
     if (contactPhone.certification) {
         FHContactCertificationModel *certification = contactPhone.certification;
-        if (/*certification.iconUrl.length > 0 && */certification.openUrl.length > 0) {
+        if (certification.openUrl.length > 0) {
             NSURL *url = [NSURL URLWithString:certification.openUrl];
             if ([[TTRoute sharedRoute] canOpenURL:url]) {
                 [[TTRoute sharedRoute] openURLByPushViewController:url];

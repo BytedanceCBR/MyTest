@@ -229,8 +229,8 @@
             [self displayLicense:YES imageURL:imageURL];
         } else {
             [self displayLicense:YES imageURL:nil];
-            nameLabelwidth += 24;
         }
+        nameLabelwidth += 24;
     }else {
         [self displayLicense:NO imageURL:nil];
     }
