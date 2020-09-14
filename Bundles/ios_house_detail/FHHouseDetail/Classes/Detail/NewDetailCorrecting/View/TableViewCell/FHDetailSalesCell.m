@@ -177,14 +177,6 @@
             if (item.discountSubContent.length == 0) {
                 topOffset = 3;
             }
-            [itemView.tagView mas_updateConstraints:^(MASConstraintMaker *make) {
-                make.width.mas_equalTo(iconWidth);
-                make.top.mas_equalTo(2 + topOffset);
-            }];
-
-            [itemView.submitBtn mas_updateConstraints:^(MASConstraintMaker *make) {
-                make.width.mas_equalTo(btnWidth);
-            }];
             itemView.titleLabel.width = [UIScreen mainScreen].bounds.size.width - btnWidth - iconWidth - 42 * 2;
             [itemView.titleLabel sizeToFit];
             CGFloat titleHeight  = floor(itemView.titleLabel.height);
@@ -192,6 +184,9 @@
 //                vHeight = 66 + titleHeight ;
 //                topOffset = -2;
 //            }
+            if (titleHeight >= 44) {
+                topOffset = 0;
+            }
             vHeight = 44 + titleHeight ;
             if (!item.discountSubContent || item.discountSubContent.length == 0) {
                 vHeight -= 18;
@@ -200,6 +195,14 @@
                 itemView.subtitleLabel.hidden = NO;
             }
             totalHeight += vHeight;
+            [itemView.tagView mas_updateConstraints:^(MASConstraintMaker *make) {
+                make.width.mas_equalTo(iconWidth);
+                make.top.mas_equalTo(2 + topOffset);
+            }];
+
+            [itemView.submitBtn mas_updateConstraints:^(MASConstraintMaker *make) {
+                make.width.mas_equalTo(btnWidth);
+            }];
             [itemView.titleLabel mas_updateConstraints:^(MASConstraintMaker *make) {
                 make.top.mas_equalTo(topOffset);
                 make.height.mas_equalTo(titleHeight);
@@ -242,6 +245,7 @@
             tracerDic[@"associate_info"] = itemInfo.associateInfo.imInfo;
             tracerDic[@"realtor_id"] = itemInfo.realtorId;
             tracerDic[@"is_login"] = [[TTAccount sharedAccount] isLogin] ? @"1" : @"0";
+            tracerDic[@"event_tracking_id"] = @"107646";
             TRACK_EVENT(@"click_im", tracerDic);
         }
         NSString *urlString = itemInfo.activityURLString.copy;
@@ -272,6 +276,7 @@
     associateParamDict[kFHAssociateInfo] = itemInfo.associateInfo.reportFormInfo;
     NSMutableDictionary *reportParamsDict = [model.contactViewModel baseParams].mutableCopy;
     reportParamsDict[@"position"] = @"coupon";
+    //reportParamsDict[@"event_tracking_id"] = @"107647";
     if (extraDic.count > 0) {
         [associateParamDict addEntriesFromDictionary:extraDic];
         reportParamsDict[kFHAssociateInfo] = itemInfo.associateInfo.reportFormInfo;
