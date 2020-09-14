@@ -41,6 +41,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign)     BOOL isTrackerCacheDisabled;
 
 - (void)requestDeleteHistory;
+@property (nonatomic, assign) NSTimeInterval startMonitorTime;
 
 @end
 
