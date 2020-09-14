@@ -107,8 +107,11 @@
 
     if (model) {
         NSString *courtId = self.baseViewModel.houseId;
-
-        NSDictionary *dict = [self.baseViewModel subPageParams];
+        NSMutableDictionary *mutableTempDict = [self.baseViewModel subPageParams].mutableCopy;
+        mutableTempDict[@"top_index"] = @(0);
+        FHDetailNewHouseNewsCellModel *model = (FHDetailNewHouseNewsCellModel *)self.currentData;
+        mutableTempDict[@"time_line_model"] = model.timeLineModel;
+        NSDictionary *dict = mutableTempDict.copy;
         TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc]initWithInfo:dict];
         [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:[NSString stringWithFormat:@"sslocal://floor_timeline_detail?court_id=%@",courtId]] userInfo:userInfo];
     }

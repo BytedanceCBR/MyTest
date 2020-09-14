@@ -129,7 +129,7 @@
     if (data && [data isKindOfClass:[FHNewHouseDetailSalesCellModel class]]) {
         FHNewHouseDetailSalesCellModel *model = (FHNewHouseDetailSalesCellModel *)data;
         if (model.discountInfo.count > 0) {
-            CGFloat height = 16;
+            CGFloat height = 0;
             for (NSInteger idx = 0; idx < model.discountInfo.count; idx++) {
                 FHDetailNewDiscountInfoItemModel *item = model.discountInfo[idx];
                 UILabel *label = [[UILabel alloc] init];
@@ -139,6 +139,10 @@
                 label.width = [UIScreen mainScreen].bounds.size.width - 100 - 40 - 42 * 2;
                 [label sizeToFit];
                 height = height + 44 + floor(label.height);
+                if (item.discountSubContent.length == 0) {
+                    height -= 18;
+                }
+                
             }
             return CGSizeMake(width, height);
         }
@@ -164,7 +168,7 @@
     [_containerView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(0);
         make.right.mas_equalTo(0);
-        make.top.mas_equalTo(16);
+        make.top.mas_equalTo(0);
         make.bottom.mas_equalTo(-20);
         make.height.mas_equalTo(0);
     }];
@@ -207,8 +211,13 @@
 
             CGFloat btnWidth = itemView.submitBtn.width + 34;
             CGFloat iconWidth = itemView.tagView.width + 10;
+            CGFloat topOffset = 0;
+            if (item.discountSubContent.length == 0) {
+                topOffset = 3;
+            }
             [itemView.tagView mas_updateConstraints:^(MASConstraintMaker *make) {
                 make.width.mas_equalTo(iconWidth);
+                make.top.mas_equalTo(2 + topOffset);
             }];
 
             [itemView.submitBtn mas_updateConstraints:^(MASConstraintMaker *make) {
@@ -217,8 +226,13 @@
             itemView.titleLabel.width = [UIScreen mainScreen].bounds.size.width - btnWidth - iconWidth - 42 * 2;
             [itemView.titleLabel sizeToFit];
             CGFloat titleHeight  = floor(itemView.titleLabel.height);
-            CGFloat topOffset = 0;
-            vHeight = 44 + titleHeight ;
+            vHeight = 44 + titleHeight;
+            if (item.discountSubContent.length == 0) {
+                vHeight -= 18;
+                itemView.subtitleLabel.hidden = YES;
+            } else {
+                itemView.subtitleLabel.hidden = NO;
+            }
             totalHeight += vHeight;
             [itemView.titleLabel mas_updateConstraints:^(MASConstraintMaker *make) {
                 make.top.mas_equalTo(topOffset);

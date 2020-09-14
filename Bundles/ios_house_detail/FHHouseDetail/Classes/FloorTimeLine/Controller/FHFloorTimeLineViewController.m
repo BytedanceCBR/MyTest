@@ -76,9 +76,6 @@
         make.left.right.bottom.equalTo(self.view);
 //        make.bottom.equalTo([self getBottomBar].mas_top);
     }];
-    
-    [_timeLineListTable setBackgroundColor:[UIColor themeGray7]];
-   
 }
 
 /*

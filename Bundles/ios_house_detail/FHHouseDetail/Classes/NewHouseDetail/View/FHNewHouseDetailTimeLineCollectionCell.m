@@ -24,7 +24,7 @@
 
 + (CGSize)cellSizeWithData:(id)data width:(CGFloat)width {
     if (data && [data isKindOfClass:[FHNewHouseDetailTimeLineCellModel class]]) {
-        return CGSizeMake(width, 152);
+        return CGSizeMake(width, 136);
     }
     return CGSizeZero;
 }
@@ -58,7 +58,7 @@
     [self.containerView addSubview:self.collectionView];
     [self.collectionView registerClass:[FHNewHouseDetailTimeLineItemCollectionCell class] forCellWithReuseIdentifier:NSStringFromClass([FHNewHouseDetailTimeLineItemCollectionCell class])];
     [self.collectionView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(16);
+        make.top.mas_equalTo(0);
         make.left.right.mas_equalTo(0);
         make.height.mas_equalTo(56);
     }];
@@ -67,30 +67,30 @@
     [self.containerView addSubview:self.leftGradientView];
     [self.leftGradientView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(0);
-        make.top.mas_equalTo(16);
-        make.height.mas_equalTo(52);
+        make.top.mas_equalTo(0);
+        make.height.mas_equalTo(56);
         make.width.mas_equalTo(22);
     }];
     CAGradientLayer *leftGradientLayer = [CAGradientLayer layer];
     leftGradientLayer.colors = @[(__bridge id)[UIColor colorWithRed:255.0/255.0 green:255.0/255.0 blue:255.0/255.0 alpha:0].CGColor, (__bridge id)[UIColor colorWithHexStr:@"#ffffff"].CGColor];
     leftGradientLayer.startPoint = CGPointMake(1, 0.5);
     leftGradientLayer.endPoint = CGPointMake(0, 0.5);
-    leftGradientLayer.frame = CGRectMake(0, 0, 22, 52);
+    leftGradientLayer.frame = CGRectMake(0, 0, 22, 56);
     [_leftGradientView.layer addSublayer:leftGradientLayer];
     
     self.rightGradientView = [[UIView alloc] init];
     [self.containerView addSubview:self.rightGradientView];
     [self.rightGradientView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.right.mas_equalTo(0);
-        make.top.mas_equalTo(16);
-        make.height.mas_equalTo(52);
+        make.top.mas_equalTo(0);
+        make.height.mas_equalTo(56);
         make.width.mas_equalTo(22);
     }];
     CAGradientLayer *rightGradientLayer = [CAGradientLayer layer];
     rightGradientLayer.colors = @[(__bridge id)[UIColor colorWithRed:255.0/255.0 green:255.0/255.0 blue:255.0/255.0 alpha:0].CGColor, (__bridge id)[UIColor colorWithHexStr:@"#ffffff"].CGColor];
     rightGradientLayer.startPoint = CGPointMake(0, 0.5);
     rightGradientLayer.endPoint = CGPointMake(1, 0.5);
-    rightGradientLayer.frame = CGRectMake(0, 0, 22, 52);
+    rightGradientLayer.frame = CGRectMake(0, 0, 22, 56);
     [_rightGradientView.layer addSublayer:rightGradientLayer];
     
     self.contentLabel = [[UILabel alloc] init];
@@ -234,12 +234,12 @@
     }];
     
     self.dotView = [[UIView alloc] init];
-    self.dotView.layer.cornerRadius = 4;
+    self.dotView.layer.cornerRadius = 3;
     self.dotView.backgroundColor = [UIColor themeGray2];
     [self.contentView addSubview:self.dotView];
     [self.dotView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.bottom.mas_equalTo(0);
-        make.height.width.mas_equalTo(8);
+        make.height.width.mas_equalTo(6);
     }];
 }
 

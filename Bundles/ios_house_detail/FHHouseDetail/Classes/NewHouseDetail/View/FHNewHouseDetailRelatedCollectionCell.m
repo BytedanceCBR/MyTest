@@ -62,13 +62,6 @@
 
 - (void)setupUI
 {
-    UILabel *totalPrice = [[UILabel alloc]init];
-    totalPrice.font = [UIFont themeFontMedium:16];
-    totalPrice.textColor = [UIColor themeOrange1];
-    [self.contentView addSubview:totalPrice];
-    _totalPrice = totalPrice;
-    self.totalPrice.hidden = YES;
-    
     UILabel *unitPrice = [[UILabel alloc]init];
     unitPrice.font = [UIFont themeFontRegular:12];
     unitPrice.textColor = [UIColor themeGray1];
@@ -76,6 +69,15 @@
     _unitPrice = unitPrice;
     self.unitPrice.font = [UIFont themeFontMedium:16];
     self.unitPrice.textColor = [UIColor themeOrange1];
+    
+    UIView *houseMainImageBackView = [[UIView alloc] init];
+    CALayer * layer = houseMainImageBackView.layer;
+    layer.shadowOffset = CGSizeMake(0, 4);
+    layer.shadowRadius = 6;
+    layer.shadowColor = [UIColor blackColor].CGColor;;
+    layer.shadowOpacity = 0.2;
+    [self.contentView addSubview:houseMainImageBackView];
+    _houseMainImageBackView = houseMainImageBackView;
     [self.houseMainImageBackView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerY.equalTo(self.mainIma);
         make.left.top.equalTo(self.mainIma);
@@ -88,7 +90,7 @@
     [self.contentView addSubview:mainIma];
     _mainIma = mainIma;
     [self.mainIma mas_makeConstraints:^(MASConstraintMaker *make) {
-         make.centerY.equalTo(self.contentView);
+         make.top.mas_equalTo(0);
          make.left.equalTo(self.contentView).offset(15);
          make.size.mas_equalTo(CGSizeMake(106, 80));
      }];

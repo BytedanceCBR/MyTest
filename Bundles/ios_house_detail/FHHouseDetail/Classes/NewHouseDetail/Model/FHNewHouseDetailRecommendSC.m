@@ -154,10 +154,6 @@
     titleView.titleLabel.textColor = [UIColor themeGray1];
     titleView.titleLabel.text = @"猜你喜欢";
     titleView.arrowsImg.hidden = YES;
-    [titleView.titleLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(15);
-        make.bottom.mas_equalTo(0);
-    }];
     titleView.userInteractionEnabled = NO;
     return titleView;
 }
@@ -165,7 +161,7 @@
 - (CGSize)sizeForSupplementaryViewOfKind:(NSString *)elementKind
                                  atIndex:(NSInteger)index {
     if ([elementKind isEqualToString:UICollectionElementKindSectionHeader]) {
-        return CGSizeMake(self.collectionContext.containerSize.width - 15 * 2, 46);
+        return CGSizeMake(self.collectionContext.containerSize.width - 15 * 2, 61);
     }
     return CGSizeZero;
 }
