@@ -129,22 +129,20 @@
 }
 
 + (FHDetailNewMediaHeaderDataHelperPhotoAlbumData *)generatePhotoAlbumData:(FHDetailNewMediaHeaderModel *)newMediaHeaderModel {
-    
     FHDetailNewMediaHeaderDataHelperPhotoAlbumData *photoAlbumData = [[FHDetailNewMediaHeaderDataHelperPhotoAlbumData alloc] init];
 
     if (newMediaHeaderModel.isShowTopImageTab) {
         //新房新的数据版本
         FHFloorPanPicShowModel *newFloorPanPicShowModel = [[FHFloorPanPicShowModel alloc] init];
         NSMutableArray *newFloorPanArr = [NSMutableArray array];
-                
+
         for (FHDetailNewTopImage *topImage in newMediaHeaderModel.topImages) {
-            
             FHFloorPanPicShowGroupModel *showGroupModel = [[FHFloorPanPicShowGroupModel alloc] init];
             showGroupModel.rootGroupName = topImage.name;
             showGroupModel.rootGroupType = [@(topImage.type) stringValue];
-            
+
             NSMutableArray *smallImageList = [NSMutableArray array];
-            
+
             for (FHHouseDetailImageGroupModel *smallGoupModel in topImage.smallImageGroup) {
                 for (FHImageModel *image in smallGoupModel.images) {
                     FHFloorPanPicShowItemPictureModel *pictureModel = [[FHFloorPanPicShowItemPictureModel alloc] init];
@@ -171,8 +169,6 @@
         }
         newFloorPanPicShowModel.itemGroupList = newFloorPanArr.copy;
         photoAlbumData.floorPanModel = newFloorPanPicShowModel;
-        
-        
     } else {
         //新房旧的数据版本
         NSMutableArray <FHHouseDetailImageGroupModel *> *pictsArray = [NSMutableArray array];
@@ -195,9 +191,9 @@
                 }
             }
         }
-        
+
         photoAlbumData.photoAlbumArray = pictsArray.copy;
-        
+
         FHHouseDetailAlbumInfo *albumInfo = [[FHHouseDetailAlbumInfo alloc] init];
         NSMutableArray *tabArr = [NSMutableArray array];
         for (FHHouseDetailImageGroupModel *groupModel in photoAlbumData.photoAlbumArray) {
@@ -213,9 +209,9 @@
             [tabArr addObject:tabInfoModel];
         }
         albumInfo.tabList = tabArr.copy;
-        
+
         photoAlbumData.detailAlbumInfo = albumInfo;
-        
+
         FHFloorPanPicShowModel *picShowModel = [[FHFloorPanPicShowModel alloc] init];
         NSMutableArray *mArr = [NSMutableArray array];
         for (FHHouseDetailImageTabInfo *tabInfo in albumInfo.tabList) {
@@ -224,7 +220,7 @@
         picShowModel.itemGroupList = mArr.copy;
         photoAlbumData.floorPanModel = picShowModel;
     }
-    
+
     return photoAlbumData;
 }
 

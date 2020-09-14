@@ -131,7 +131,7 @@
         //如果是新房，非北京、江州以外的城市，暂时隐藏头部
         pictureDetailViewController.isShowSegmentView = NO;
     }
-    
+
     pictureDetailViewController.dragToCloseDisabled = YES;
     pictureDetailViewController.startWithIndex = index;
     pictureDetailViewController.albumImageBtnClickBlock = ^(NSInteger index) {

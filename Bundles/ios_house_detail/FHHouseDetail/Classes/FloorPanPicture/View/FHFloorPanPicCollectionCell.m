@@ -16,7 +16,6 @@
 
 @interface FHFloorPanPicCollectionCell ()
 @property (nonatomic,strong) UIImageView *imageV;
-
 @end
 
 @implementation FHFloorPanPicCollectionCell

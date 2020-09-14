@@ -1,21 +1,21 @@
 //
-//  FHFloorPanVideoCollectionCell.m
+//  FHFloorPanVRCollectionCell.m
 //  FHHouseDetail
 //
-//  Created by luowentao on 2020/9/8.
+//  Created by luowentao on 2020/9/14.
 //
 
-#import "FHFloorPanVideoCollectionCell.h"
+#import "FHFloorPanVRCollectionCell.h"
 #import "UIImageView+BDWebImage.h"
 #import "Masonry.h"
 #import "FHFloorPanPicShowModel.h"
 
-@interface FHFloorPanVideoCollectionCell ()
+@interface FHFloorPanVRCollectionCell ()
 @property (nonatomic, strong) UIImageView *imageV;
-@property (nonatomic, strong) UIImageView *videoImage;
+@property (nonatomic, strong) UIImageView *vrImage;
 @end
 
-@implementation FHFloorPanVideoCollectionCell
+@implementation FHFloorPanVRCollectionCell
 
 - (instancetype)initWithFrame:(CGRect)frame
 {
@@ -39,12 +39,10 @@
     [_imageV mas_makeConstraints:^(MASConstraintMaker *make) {
         make.edges.mas_equalTo(UIEdgeInsetsZero);
     }];
-
+    _vrImage = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"detail_vr_movie_icon"]];
+    [self addSubview:_vrImage];
     
-    _videoImage = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"detail_video_start"]];
-    [self addSubview:_videoImage];
-    
-    [_videoImage mas_makeConstraints:^(MASConstraintMaker *make) {
+    [_vrImage mas_makeConstraints:^(MASConstraintMaker *make) {
         make.size.mas_equalTo(CGSizeMake(16, 16));
         make.bottom.mas_equalTo(self.imageV.mas_bottom).offset(-5);
         make.left.mas_equalTo(self.imageV.mas_left).offset(6);
@@ -52,8 +50,8 @@
 }
 
 - (void)refreshWithData:(id)data {
-    if ([data isKindOfClass:[FHFloorPanPicShowItemVideoModel class]]) {
-        FHFloorPanPicShowItemVideoModel *model = (FHFloorPanPicShowItemVideoModel *)data;
+    if ([data isKindOfClass:[FHFloorPanPicShowItemVRModel class]]) {
+        FHFloorPanPicShowItemVRModel *model = (FHFloorPanPicShowItemVRModel *)data;
         if (model.image && model.image.url) {
             [_imageV bd_setImageWithURL:[NSURL URLWithString:model.image.url] placeholder:[UIImage imageNamed: @"default_image"]];
         }
