@@ -444,9 +444,28 @@
 
 - (NSArray *)getFloorDefaultSelection {
     NSMutableArray *defaultArray = [NSMutableArray array];
-    [defaultArray addObject:@"2室"];
-    [defaultArray addObject:@"1厅"];
-    [defaultArray addObject:@"1卫"];
+    
+    if(self.inputModel.floorPlanRoom){
+        NSString *room = [NSString stringWithFormat:@"%@室",self.inputModel.floorPlanRoom];
+        [defaultArray addObject:room];
+    }else{
+        [defaultArray addObject:@"2室"];
+    }
+    
+    if(self.inputModel.floorPlanHall){
+        NSString *hall = [NSString stringWithFormat:@"%@厅",self.inputModel.floorPlanHall];
+        [defaultArray addObject:hall];
+    }else{
+        [defaultArray addObject:@"1厅"];
+    }
+    
+    if(self.inputModel.floorPlanBath){
+        NSString *bath = [NSString stringWithFormat:@"%@卫",self.inputModel.floorPlanBath];
+        [defaultArray addObject:bath];
+    }else{
+        [defaultArray addObject:@"1卫"];
+    }
+    
     return defaultArray;
 }
 
