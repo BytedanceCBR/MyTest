@@ -171,11 +171,15 @@
             [self.containerView addSubview:itemView];
             [itemView.tagView sizeToFit];
             [itemView.submitBtn sizeToFit];
-
+            CGFloat topOffset = 0;
             CGFloat btnWidth = itemView.submitBtn.width + 34;
             CGFloat iconWidth = itemView.tagView.width + 10;
+            if (item.discountSubContent.length == 0) {
+                topOffset = 3;
+            }
             [itemView.tagView mas_updateConstraints:^(MASConstraintMaker *make) {
                 make.width.mas_equalTo(iconWidth);
+                make.top.mas_equalTo(2 + topOffset);
             }];
 
             [itemView.submitBtn mas_updateConstraints:^(MASConstraintMaker *make) {
@@ -184,7 +188,6 @@
             itemView.titleLabel.width = [UIScreen mainScreen].bounds.size.width - btnWidth - iconWidth - 42 * 2;
             [itemView.titleLabel sizeToFit];
             CGFloat titleHeight  = floor(itemView.titleLabel.height);
-            CGFloat topOffset = 0;
 //            if (titleHeight >= 44) {
 //                vHeight = 66 + titleHeight ;
 //                topOffset = -2;
