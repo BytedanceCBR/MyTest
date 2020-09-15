@@ -33,6 +33,7 @@
 
 @interface FHUGCCommentListViewModel () <UITableViewDelegate,UITableViewDataSource,FHUGCBaseCellDelegate>
 
+@property(nonatomic, weak) FHUGCCommentListController *viewController;
 @property (nonatomic, assign) NSInteger count;
 @property (nonatomic, assign) NSInteger feedOffset;
 @property (nonatomic, assign) BOOL hasMore;
@@ -42,8 +43,9 @@
 @implementation FHUGCCommentListViewModel
 
 - (instancetype)initWithTableView:(UITableView *)tableView controller:(FHUGCCommentListController *)viewController {
-    self = [super initWithTableView:tableView controller:viewController];
+    self = [super initWithTableView:tableView];
     if (self) {
+        self.viewController = viewController;
         self.dataList = [[NSMutableArray alloc] init];
         [self configTableView];
         // 删帖成功
@@ -87,8 +89,6 @@
     }
     
     __weak typeof(self) wself = self;
-    
-    NSInteger listCount = self.dataList.count;
     
     if(isFirst){
         self.feedOffset = 0;

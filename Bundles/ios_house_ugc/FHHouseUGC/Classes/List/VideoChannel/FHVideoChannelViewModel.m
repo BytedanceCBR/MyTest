@@ -33,6 +33,7 @@
 
 @interface FHVideoChannelViewModel () <UITableViewDelegate,UITableViewDataSource,FHUGCBaseCellDelegate,UIScrollViewDelegate>
 
+@property(nonatomic, weak) FHVideoChannelController *viewController;
 @property(nonatomic, strong) FHUGCFullScreenVideoCell *currentVideoCell;
 @property(nonatomic, assign) CGFloat oldY;
 //是否静音，默认是YES
@@ -46,8 +47,9 @@
 @implementation FHVideoChannelViewModel
 
 - (instancetype)initWithTableView:(UITableView *)tableView controller:(FHVideoChannelController *)viewController {
-    self = [super initWithTableView:tableView controller:viewController];
+    self = [super initWithTableView:tableView];
     if (self) {
+        self.viewController = viewController;
         _muted = YES;
         _isViewAppear = YES;
         self.dataList = [[NSMutableArray alloc] init];

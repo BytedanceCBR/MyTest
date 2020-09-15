@@ -12,7 +12,6 @@
 #import "FHCommunityFeedListMyJoinViewModel.h"
 #import "FHCommunityFeedListPostDetailViewModel.h"
 #import "FHCommunityFeedListCustomViewModel.h"
-#import "FHCommunityFeedListVideoListViewModel.h"
 #import "TTReachability.h"
 #import "UIViewAdditions.h"
 #import "TTRoute.h"
@@ -227,10 +226,6 @@
         postDetailViewModel.tabName = self.tabName;
         postDetailViewModel.categoryId = @"f_project_social";
         viewModel = postDetailViewModel;
-    }else if(self.listType == FHCommunityFeedListTypeVideoList) {
-        FHCommunityFeedListVideoListViewModel *videoListViewModel = [[FHCommunityFeedListVideoListViewModel alloc] initWithTableView:_tableView controller:self];
-        videoListViewModel.categoryId = self.category;
-        viewModel = videoListViewModel;
     }else if(self.listType == FHCommunityFeedListTypeCustom) {
         viewModel = [[FHCommunityFeedListCustomViewModel alloc] initWithTableView:_tableView controller:self];
         viewModel.categoryId = self.category;

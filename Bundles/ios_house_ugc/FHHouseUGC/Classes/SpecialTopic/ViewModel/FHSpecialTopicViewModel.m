@@ -99,8 +99,9 @@
 @implementation FHSpecialTopicViewModel
 
 - (instancetype)initWithTableView:(UITableView *)tableView controller:(FHSpecialTopicViewController *)viewController {
-    self = [super initWithTableView:tableView controller:viewController];
+    self = [super initWithTableView:tableView];
     if (self) {
+        self.viewController = viewController;
         [self initView];
         self.dataArray = [[NSMutableArray alloc] init];
         self.dataList = [[NSMutableArray alloc] init];
@@ -1106,8 +1107,6 @@
         return;
     }
     
-    FHFeedUGCCellModel *cellModel = self.dataArray[indexPath.section];
-
     NSArray *resultArray = self.dataArray[indexPath.section];
     if(indexPath.row < resultArray.count){
         FHFeedUGCCellModel *cellModel = resultArray[indexPath.row];

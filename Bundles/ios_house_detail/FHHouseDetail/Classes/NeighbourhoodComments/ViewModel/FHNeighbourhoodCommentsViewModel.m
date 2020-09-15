@@ -32,6 +32,7 @@
 
 @interface FHNeighbourhoodCommentsViewModel () <UITableViewDelegate,UITableViewDataSource,FHUGCBaseCellDelegate,UIScrollViewDelegate>
 
+@property(nonatomic, weak) FHNeighbourhoodCommentsController *viewController;
 @property(nonatomic, strong) FHFeedUGCCellModel *guideCellModel;
 @property(nonatomic, assign) BOOL alreadShowFeedGuide;
 
@@ -40,8 +41,9 @@
 @implementation FHNeighbourhoodCommentsViewModel
 
 - (instancetype)initWithTableView:(UITableView *)tableView controller:(FHNeighbourhoodCommentsController *)viewController {
-    self = [super initWithTableView:tableView controller:viewController];
+    self = [super initWithTableView:tableView];
     if (self) {
+        self.viewController = viewController;
         self.dataList = [[NSMutableArray alloc] init];
         [self configTableView];
     }
@@ -223,7 +225,6 @@
         cellModel.isInNeighbourhoodCommentsList = YES;
         cellModel.cellSubType = FHUGCFeedListCellSubTypeUGCNeighbourhoodComments;
         cellModel.categoryId = self.categoryId;
-        cellModel.feedVC = self.viewController;
         cellModel.tableView = self.tableView;
         cellModel.enterFrom = [self.viewController categoryName];
         if(cellModel){

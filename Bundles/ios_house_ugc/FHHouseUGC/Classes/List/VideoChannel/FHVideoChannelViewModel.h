@@ -14,8 +14,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (instancetype)initWithTableView:(UITableView *)tableView controller:(FHVideoChannelController *)viewController;
 
-@property(nonatomic, weak) FHVideoChannelController *viewController;
-
 @end
 
 NS_ASSUME_NONNULL_END
