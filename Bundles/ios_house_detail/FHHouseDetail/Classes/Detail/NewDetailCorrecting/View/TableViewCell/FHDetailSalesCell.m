@@ -44,12 +44,12 @@
     [self addSubview:self.submitBtn];
     
     [self.tagView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.top.mas_equalTo(3);
+        make.left.top.mas_equalTo(5);
         make.width.mas_equalTo(30);
         make.height.mas_equalTo(18);
     }];
     [self.titleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(0);
+        make.top.mas_equalTo(3);
         make.height.mas_equalTo(19);
         make.left.mas_equalTo(self.tagView.mas_right).mas_offset(12);
         make.right.mas_equalTo(self.submitBtn.mas_left).mas_offset(-12);
@@ -177,25 +177,22 @@
             itemView.titleLabel.width = [UIScreen mainScreen].bounds.size.width - btnWidth - iconWidth - 42 * 2;
             [itemView.titleLabel sizeToFit];
             CGFloat titleHeight  = floor(itemView.titleLabel.height);
-            totalTitleHeight += titleHeight;
-            if (item.discountSubContent.length > 0) {
-                totalTitleHeight += 24;
-            }
-            CGFloat top = 0;
-            if (totalTitleHeight >= 28) {
-                top = (totalTitleHeight - 28) / 2;
-            }
             vHeight = 44 + titleHeight ;
             if (!item.discountSubContent || item.discountSubContent.length == 0) {
                 vHeight -= 18;
                 itemView.subtitleLabel.hidden = YES;
             } else {
+                totalTitleHeight += 24;
                 itemView.subtitleLabel.hidden = NO;
             }
             totalHeight += vHeight;
+            totalTitleHeight += titleHeight;
+            CGFloat top = 0;
+            if (totalTitleHeight >= 28) {
+                top = (totalTitleHeight - 28) / 2;
+            }
             [itemView.tagView mas_updateConstraints:^(MASConstraintMaker *make) {
                 make.width.mas_equalTo(iconWidth);
-                make.top.mas_equalTo(5);
             }];
 
             [itemView.submitBtn mas_updateConstraints:^(MASConstraintMaker *make) {
@@ -203,7 +200,6 @@
                 make.top.mas_equalTo(top);
             }];
             [itemView.titleLabel mas_updateConstraints:^(MASConstraintMaker *make) {
-                make.top.mas_equalTo(3);
                 make.height.mas_equalTo(titleHeight);
             }];
             [itemView mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -239,8 +235,7 @@
     
     if (itemInfo.actionType == 4 && itemInfo.activityURLString.length) {
         if (itemInfo.activityURLString.length && self.baseViewModel.contactViewModel) {
-            NSMutableDictionary *extraDic = self.baseViewModel.detailTracerDic;
-            //extraDic[@"click_position"] = self.model.priceConsult.text?:@"be_null";
+            NSMutableDictionary *extraDic = self.baseViewModel.detailTracerDic.mutableCopy;
             extraDic[@"im_open_url"] = itemInfo.activityURLString;
             if (itemInfo.associateInfo.imInfo) {
                 extraDic[kFHAssociateInfo] = itemInfo.associateInfo;
@@ -280,7 +275,6 @@
     associateParamDict[kFHAssociateInfo] = itemInfo.associateInfo.reportFormInfo;
     NSMutableDictionary *reportParamsDict = [model.contactViewModel baseParams].mutableCopy;
     reportParamsDict[@"position"] = @"coupon";
-    //reportParamsDict[@"event_tracking_id"] = @"107647";
     if (extraDic.count > 0) {
         [associateParamDict addEntriesFromDictionary:extraDic];
         reportParamsDict[kFHAssociateInfo] = itemInfo.associateInfo.reportFormInfo;
