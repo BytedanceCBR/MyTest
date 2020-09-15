@@ -767,6 +767,13 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
             [tracer setValue:@"map_search" forKey:@"enter_from"];
             [infoDict setValue:tracer forKey:@"tracer"];
             
+            
+            NSMutableDictionary *params = [NSMutableDictionary new];
+            [params setValue:@"mapfind" forKey:@"page_type"];
+            [params setValue:@"related" forKey:@"click_position"];
+            [FHUserTracker writeEvent:@"click_options" params:params];
+            
+            
             TTRouteUserInfo *info = [[TTRouteUserInfo alloc] initWithInfo:infoDict];
             [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:@"sslocal://fh_map_detail"] userInfo:info];
         }
