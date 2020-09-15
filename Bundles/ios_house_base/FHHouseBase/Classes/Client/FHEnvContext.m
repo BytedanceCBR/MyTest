@@ -828,8 +828,8 @@ static NSInteger kGetLightRequestRetryCount = 3;
 //获取当前个性化推荐设置
 + (BOOL)getPersonalRecommend
 {
-    BOOL PersonalRecommend = [[NSUserDefaults standardUserDefaults] boolForKey:@"PersonalRecommend"];
-    return PersonalRecommend;
+    BOOL personalRecommend = [[NSUserDefaults standardUserDefaults] boolForKey:@"PersonalRecommend"];
+    return personalRecommend;
 }
 
 //保存当前个性化推荐设置

@@ -59,7 +59,7 @@
         CGFloat totalHeight = self.pushTitleLabel.height + kPushCellDetailLabelTopPadding + self.pushDetailLabel.height;
         self.pushTitleLabel.origin = CGPointMake(kPushCellLeftPadding, kPushCellTopPadding);
         self.pushDetailLabel.origin = CGPointMake(kPushCellLeftPadding, self.pushTitleLabel.bottom + [TTDeviceUIUtils tt_padding:11]);
-        self.accessoryView.origin = CGPointMake([TTDeviceUIUtils tt_padding:313.f], self.pushTitleLabel.top);
+        self.accessoryView.origin = CGPointMake([TTDeviceUIUtils tt_padding:313.f], self.pushTitleLabel.top - 7);
     }
     self.topLine.frame = CGRectMake(kPushCellLeftPadding, 0, self.width - kPushCellLeftPadding, [TTDeviceHelper ssOnePixel]);
 }

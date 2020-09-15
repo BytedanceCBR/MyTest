@@ -675,7 +675,6 @@ TTEditUserProfileViewControllerDelegate
         cell.textLabel.text = nil;//NSLocalizedString(@"推送通知", nil);
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
         [self refreshswitch:_pushNotificatoinSwitch];
-        _pushNotificatoinSwitch.transform = CGAffineTransformMakeScale(0.8 ,0.8);
         cell.accessoryView = _pushNotificatoinSwitch;
         
         NSString *detailText;
@@ -704,7 +703,6 @@ TTEditUserProfileViewControllerDelegate
     else if (cellType == SettingCellTypePersonalRecommend) {
         cell.textLabel.text = nil;
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
-        _personalRecommendSwitch.transform = CGAffineTransformMakeScale(0.8 ,0.8);
         cell.accessoryView = _personalRecommendSwitch;
         [_personalRecommendSwitch setOn: [FHEnvContext getPersonalRecommend]];
         ((SettingPushCell *)cell).pushTitleLabel.text = @"个性化推荐设置";
