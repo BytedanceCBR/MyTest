@@ -526,11 +526,6 @@
     return model.data.neighborhoodInfo.name.length < 1;
 }
 
-- (BOOL)isMissImage
-{
-    FHDetailNeighborhoodModel *model = (FHDetailNeighborhoodModel *)self.detailData;
-    return model.data.neighborhoodImage.count < 1;
-}
 
 - (BOOL)isMissCoreInfo
 {
