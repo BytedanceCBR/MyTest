@@ -133,9 +133,10 @@
             }
             /// 北京商业化开城需求的新样式，这个优先级更高
             BOOL showNewLicenseStyle = [self shouldShowNewLicenseStyle:obj];
-            NSURL *iconURL = [NSURL URLWithString:obj.certification.iconUrl];
-            [itemView configForNewLicenseIconStyle:showNewLicenseStyle imageURL:iconURL];
-            if (!showNewLicenseStyle) {
+            if (showNewLicenseStyle) {
+                NSURL *iconURL = [NSURL URLWithString:obj.certification.iconUrl];
+                [itemView configForNewLicenseIconStyle:showNewLicenseStyle imageURL:iconURL];
+            } else {
                 BOOL isLicenceIconHidden = ![self shouldShowContact:obj];
                 [itemView configForLicenceIconWithHidden:isLicenceIconHidden];
             }
