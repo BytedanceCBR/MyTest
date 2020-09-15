@@ -44,7 +44,8 @@
     [self addSubview:self.submitBtn];
     
     [self.tagView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.top.mas_equalTo(5);
+        make.left.mas_equalTo(3);
+        make.top.mas_equalTo(5);
         make.width.mas_equalTo(30);
         make.height.mas_equalTo(18);
     }];
