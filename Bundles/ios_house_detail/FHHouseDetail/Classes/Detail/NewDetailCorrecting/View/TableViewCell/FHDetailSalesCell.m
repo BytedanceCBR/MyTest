@@ -171,21 +171,19 @@
             [self.containerView addSubview:itemView];
             [itemView.tagView sizeToFit];
             [itemView.submitBtn sizeToFit];
-            CGFloat topOffset = 0;
+            CGFloat totalTitleHeight = 3;
             CGFloat btnWidth = itemView.submitBtn.width + 34;
             CGFloat iconWidth = itemView.tagView.width + 10;
-            if (item.discountSubContent.length == 0) {
-                topOffset = 3;
-            }
             itemView.titleLabel.width = [UIScreen mainScreen].bounds.size.width - btnWidth - iconWidth - 42 * 2;
             [itemView.titleLabel sizeToFit];
             CGFloat titleHeight  = floor(itemView.titleLabel.height);
-//            if (titleHeight >= 44) {
-//                vHeight = 66 + titleHeight ;
-//                topOffset = -2;
-//            }
-            if (titleHeight >= 44) {
-                topOffset = 0;
+            totalTitleHeight += titleHeight;
+            if (item.discountSubContent.length > 0) {
+                totalTitleHeight += 24;
+            }
+            CGFloat top = 0;
+            if (totalTitleHeight >= 28) {
+                top = (totalTitleHeight - 28) / 2;
             }
             vHeight = 44 + titleHeight ;
             if (!item.discountSubContent || item.discountSubContent.length == 0) {
@@ -197,14 +195,15 @@
             totalHeight += vHeight;
             [itemView.tagView mas_updateConstraints:^(MASConstraintMaker *make) {
                 make.width.mas_equalTo(iconWidth);
-                make.top.mas_equalTo(2 + topOffset);
+                make.top.mas_equalTo(5);
             }];
 
             [itemView.submitBtn mas_updateConstraints:^(MASConstraintMaker *make) {
                 make.width.mas_equalTo(btnWidth);
+                make.top.mas_equalTo(top);
             }];
             [itemView.titleLabel mas_updateConstraints:^(MASConstraintMaker *make) {
-                make.top.mas_equalTo(topOffset);
+                make.top.mas_equalTo(3);
                 make.height.mas_equalTo(titleHeight);
             }];
             [itemView mas_makeConstraints:^(MASConstraintMaker *make) {
