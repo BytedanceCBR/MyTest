@@ -245,7 +245,6 @@
     };
     self.mediaView.isShowenPictureVC = YES;
     [pictureDetailViewController presentPhotoScrollViewWithDismissBlock:^{
-        weakSelf.mediaView.isShowenPictureVC = NO;
         if ([weakSelf.mediaView.currentMediaCell isKindOfClass:[FHMultiMediaVideoCell class]]) {
             [weakSelf resetVideoCell:frame];
         }
@@ -260,6 +259,7 @@
         [weakSelf.mediaView updateItemAndInfoLabel];
         [weakSelf.mediaView updateVideoState];
         [weakSelf trackPictureLargeStayWithIndex:weakSelf.currentIndex];
+        weakSelf.mediaView.isShowenPictureVC = NO;
     }];
 
     pictureDetailViewController.saveImageBlock = ^(NSInteger currentIndex) {
