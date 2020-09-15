@@ -542,8 +542,8 @@ static MAMapView *kFHPageMapView = nil;
 
 - (void)cleanAllAnnotations
 {
-    [self.mapView removeAnnotation:self.pointCenterAnnotation];
-    [self.mapView removeAnnotation:self.baiduPanoAnnotation];
+//    [self.mapView removeAnnotation:self.pointCenterAnnotation];
+//    [self.mapView removeAnnotation:self.baiduPanoAnnotation];
     [self.mapView removeAnnotations:self.poiAnnotations];
     [self.poiAnnotations removeAllObjects];
 }
@@ -637,7 +637,13 @@ static MAMapView *kFHPageMapView = nil;
 
 - (void)dealloc
 {
-    [self cleanAllAnnotations];
+    if (self.mapView) {
+        [self.mapView removeAnnotation:self.pointCenterAnnotation];
+        [self.mapView removeAnnotation:self.baiduPanoAnnotation];
+        [self.mapView removeAnnotations:self.poiAnnotations];
+        [self.poiAnnotations removeAllObjects];
+    }
+
     if (self.locationCircle) {
         [self.mapView removeOverlay:self.locationCircle];
     }
