@@ -193,7 +193,6 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *imprId;
 @property (nonatomic, strong , nullable) FHVideoHouseVideoModel *neighborhoodVideo;
 @property (nonatomic, copy , nullable) NSString *abtestVersions;
-@property (nonatomic, strong , nullable) NSArray<FHImageModel> *neighborhoodImage;
 @property (nonatomic, strong , nullable) NSArray<FHDetailNeighborhoodDataCoreInfoModel> *coreInfo;
 @property (nonatomic, strong , nullable) NSArray<FHFillFormAgencyListItemModel> *chooseAgencyList;
 @property (nonatomic, copy , nullable) NSString *recommendedRealtorsTitle;

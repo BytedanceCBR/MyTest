@@ -37,7 +37,6 @@
                            @"neighbordhoodStatus": @"neighbordhood_status",
                            @"imprId": @"impr_id",
                            @"abtestVersions": @"abtest_versions",
-                           @"neighborhoodImage": @"neighborhood_image",
                            @"coreInfo": @"core_info",
                            @"neighborhoodVideo": @"neighborhood_video",
                            @"evaluationInfo": @"evaluation_info",
