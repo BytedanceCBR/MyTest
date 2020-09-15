@@ -66,7 +66,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic, assign) BOOL alreadyReportPageMonitor;
 
 - (void)showNotify:(NSString *)message ;
-- (void)showNotify:(NSString *)message completion:(void(^)())completion;
+- (void)showNotify:(NSString *)message completion:(nullable void(^)(void))completion;
 //下拉刷新数据
 - (void)startLoadData;
 //下拉刷新数据,不清之前的数据

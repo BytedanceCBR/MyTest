@@ -15,7 +15,6 @@
 #import "FHCommunityFeedListVideoListViewModel.h"
 #import "TTReachability.h"
 #import "UIViewAdditions.h"
-#import "TTDeviceHelper.h"
 #import "TTRoute.h"
 #import "TTAccountManager.h"
 #import "FHEnvContext.h"
@@ -26,6 +25,7 @@
 #import "FHUGCConfig.h"
 #import "ToastManager.h"
 #import "FHFeedCustomHeaderView.h"
+#import "UIDevice+BTDAdditions.h"
 
 @interface FHCommunityFeedListController ()<SSImpressionProtocol>
 
@@ -151,7 +151,7 @@
             _tableView.estimatedSectionHeaderHeight = 0;
         }
         
-        if ([TTDeviceHelper isIPhoneXDevice]) {
+        if ([UIDevice btd_isIPhoneXSeries]) {
             _tableView.contentInset = UIEdgeInsetsMake(0, 0, 34, 0);
         }
         
@@ -159,7 +159,7 @@
     }
 }
 
-- (FHFeedCustomHeaderView *)customTableHeaderView {
+- (UIView *)customTableHeaderView {
     if(!_tableHeaderView){
         _headerViewHeight = CGFLOAT_MIN;
         FHFeedCustomHeaderView *tableHeaderView = [[FHFeedCustomHeaderView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, _headerViewHeight) addProgressView:self.isInsertFeedWhenPublish];
@@ -301,7 +301,7 @@
     [self showNotify:message completion:nil];
 }
 
-- (void)showNotify:(NSString *)message completion:(void(^)())completion {
+- (void)showNotify:(NSString *)message completion:(void(^)(void))completion {
     if(!self.alreadySetContentInset){
         self.originContentInset = self.tableView.contentInset;
         self.alreadySetContentInset = YES;
