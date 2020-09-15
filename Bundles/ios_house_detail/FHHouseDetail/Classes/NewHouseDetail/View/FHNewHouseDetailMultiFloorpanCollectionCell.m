@@ -20,7 +20,7 @@
 
 + (CGSize)cellSizeWithData:(id)data width:(CGFloat)width {
     if (data && [data isKindOfClass:[FHNewHouseDetailMultiFloorpanCellModel class]]) {
-        CGFloat height = 46;
+        CGFloat height = 46 - 37;
         height += 190;
         FHNewHouseDetailMultiFloorpanCellModel *model = (FHNewHouseDetailMultiFloorpanCellModel *)data;
         BOOL hasIM = NO;

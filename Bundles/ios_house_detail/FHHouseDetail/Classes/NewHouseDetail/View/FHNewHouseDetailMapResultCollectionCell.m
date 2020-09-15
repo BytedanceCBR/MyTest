@@ -19,7 +19,7 @@
 - (void)prepareForReuse {
     [super prepareForReuse];
     self.titleLabel.textAlignment = NSTextAlignmentLeft;
-    self.titleLabel.font = [UIFont themeFontRegular:12];
+    self.titleLabel.font = [UIFont themeFontRegular:14];
     self.titleLabel.textColor = [UIColor themeGray1];
     self.subTitleLabel.font = [UIFont themeFontRegular:12];
     self.subTitleLabel.textColor = [UIColor themeGray3];
@@ -29,7 +29,7 @@
     if (self = [super initWithFrame:frame]) {
         
         self.titleLabel = [[UILabel alloc] init];
-        self.titleLabel.font = [UIFont themeFontRegular:12];
+        self.titleLabel.font = [UIFont themeFontRegular:14];
         self.titleLabel.textColor = [UIColor themeGray1];
         self.titleLabel.textAlignment = NSTextAlignmentLeft;
         [self addSubview:self.titleLabel];

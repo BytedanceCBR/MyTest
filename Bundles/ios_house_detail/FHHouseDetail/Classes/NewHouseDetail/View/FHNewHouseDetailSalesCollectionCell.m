@@ -38,12 +38,13 @@
     [self addSubview:self.submitBtn];
     
     [self.tagView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.top.mas_equalTo(3);
+        make.left.mas_equalTo(3);
+        make.top.mas_equalTo(5);
         make.width.mas_equalTo(30);
         make.height.mas_equalTo(18);
     }];
     [self.titleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(0);
+        make.top.mas_equalTo(3);
         make.height.mas_equalTo(19);
         make.left.mas_equalTo(self.tagView.mas_right).mas_offset(12);
         make.right.mas_equalTo(self.submitBtn.mas_left).mas_offset(-12);
@@ -209,33 +210,35 @@
             [itemView.tagView sizeToFit];
             [itemView.submitBtn sizeToFit];
 
+            CGFloat totalTitleHeight = 3;
             CGFloat btnWidth = itemView.submitBtn.width + 34;
             CGFloat iconWidth = itemView.tagView.width + 10;
-            CGFloat topOffset = 0;
-            if (item.discountSubContent.length == 0) {
-                topOffset = 3;
+            itemView.titleLabel.width = [UIScreen mainScreen].bounds.size.width - btnWidth - iconWidth - 42 * 2;
+            [itemView.titleLabel sizeToFit];
+            CGFloat titleHeight  = floor(itemView.titleLabel.height);
+            vHeight = 44 + titleHeight ;
+            if (!item.discountSubContent || item.discountSubContent.length == 0) {
+                vHeight -= 18;
+                itemView.subtitleLabel.hidden = YES;
+            } else {
+                totalTitleHeight += 24;
+                itemView.subtitleLabel.hidden = NO;
+            }
+            totalHeight += vHeight;
+            totalTitleHeight += titleHeight;
+            CGFloat top = 0;
+            if (totalTitleHeight >= 28) {
+                top = (totalTitleHeight - 28) / 2;
             }
             [itemView.tagView mas_updateConstraints:^(MASConstraintMaker *make) {
                 make.width.mas_equalTo(iconWidth);
-                make.top.mas_equalTo(2 + topOffset);
             }];
 
             [itemView.submitBtn mas_updateConstraints:^(MASConstraintMaker *make) {
                 make.width.mas_equalTo(btnWidth);
+                make.top.mas_equalTo(top);
             }];
-            itemView.titleLabel.width = [UIScreen mainScreen].bounds.size.width - btnWidth - iconWidth - 42 * 2;
-            [itemView.titleLabel sizeToFit];
-            CGFloat titleHeight  = floor(itemView.titleLabel.height);
-            vHeight = 44 + titleHeight;
-            if (item.discountSubContent.length == 0) {
-                vHeight -= 18;
-                itemView.subtitleLabel.hidden = YES;
-            } else {
-                itemView.subtitleLabel.hidden = NO;
-            }
-            totalHeight += vHeight;
             [itemView.titleLabel mas_updateConstraints:^(MASConstraintMaker *make) {
-                make.top.mas_equalTo(topOffset);
                 make.height.mas_equalTo(titleHeight);
             }];
             [itemView mas_makeConstraints:^(MASConstraintMaker *make) {

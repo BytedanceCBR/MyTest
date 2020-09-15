@@ -75,8 +75,7 @@
         };
         [self.contentView addSubview:_headerView];
         [self.headerView mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.top.mas_equalTo(5);
-            make.left.right.mas_equalTo(0);
+            make.top.left.right.mas_equalTo(0);
             make.height.mas_equalTo(40);
         }];
 

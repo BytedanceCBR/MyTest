@@ -26,7 +26,7 @@
         [self addSubview:self.titleLabel];
         [self.titleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
             make.left.mas_equalTo(15);
-            make.centerY.mas_equalTo(self);
+            make.centerY.mas_equalTo(self).offset(2);
         }];
         
         self.arrowsImg = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"arrowicon-feed-4"]];
@@ -35,7 +35,7 @@
         [self.arrowsImg mas_makeConstraints:^(MASConstraintMaker *make) {
             make.right.mas_equalTo(self).offset(-12);
             make.height.width.mas_equalTo(20);
-            make.centerY.mas_equalTo(self);
+            make.centerY.mas_equalTo(self.titleLabel);
         }];
         
         self.subTitleLabel = [[UILabel alloc] init];

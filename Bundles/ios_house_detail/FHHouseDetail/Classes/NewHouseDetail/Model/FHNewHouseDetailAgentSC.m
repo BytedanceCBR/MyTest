@@ -167,13 +167,6 @@
                 [weakSelf addRealtorClickMore];
             }
             [weakSelf.detailViewController refreshSectionModel:weakAgentSM animated:YES];
-//            [weakSelf.collectionContext performBatchAnimated:YES updates:^(id<IGListBatchContext>  _Nonnull batchContext) {
-//                [batchContext reloadInSectionController:weakSelf atIndexes:[[NSIndexSet alloc] initWithIndexesInRange:NSMakeRange(3, weakAgentSM.recommendedRealtors.count - 3 + 1)]];
-////                [batchContext reloadSectionController:weakSelf];
-//            } completion:^(BOOL finished) {
-//
-//            }];
-//            weakSelf.collectionContext relo
         }];
         cell.foldButton.isFold = agentSM.isFold;
         return cell;
@@ -226,7 +219,7 @@
 - (CGSize)sizeForSupplementaryViewOfKind:(NSString *)elementKind
                                  atIndex:(NSInteger)index {
     if ([elementKind isEqualToString:UICollectionElementKindSectionHeader]) {
-        return CGSizeMake(self.collectionContext.containerSize.width - 15 * 2, 46);
+        return CGSizeMake(self.collectionContext.containerSize.width - 15 * 2, 61);
     }
     return CGSizeZero;
 }

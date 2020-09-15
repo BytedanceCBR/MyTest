@@ -44,7 +44,7 @@
         self.locationContentView = [[UIView alloc] init];
         [self.contentView addSubview:self.locationContentView];
         [self.locationContentView mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.top.mas_equalTo(10);
+            make.top.mas_equalTo(0);
             make.height.mas_equalTo(20);
             make.left.mas_equalTo(15);
             make.right.mas_equalTo(-15);

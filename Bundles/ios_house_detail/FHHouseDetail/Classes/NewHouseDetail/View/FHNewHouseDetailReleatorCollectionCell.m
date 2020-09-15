@@ -10,8 +10,6 @@
 #import "FHExtendHotAreaButton.h"
 #import <ByteDanceKit/ByteDanceKit.h>
 
-CGFloat const FHNewHouseDetailReleatorCollectionCellTopMargin = 10;
-
 @interface FHNewHouseDetailReleatorCollectionCell ()
 @property (nonatomic, strong)   FHRealtorAvatarView *avatorView;
 @property (nonatomic, strong)   UIButton    *licenceIcon;
@@ -33,7 +31,7 @@ CGFloat const FHNewHouseDetailReleatorCollectionCellTopMargin = 10;
         [self.avatorView mas_makeConstraints:^(MASConstraintMaker *make) {
             make.height.width.mas_equalTo(50);
             make.left.mas_equalTo(16);
-            make.top.mas_equalTo(FHNewHouseDetailReleatorCollectionCellTopMargin);
+            make.top.mas_equalTo(0);
         }];
         
         self.name = [[UILabel alloc] init];
@@ -184,7 +182,12 @@ CGFloat const FHNewHouseDetailReleatorCollectionCellTopMargin = 10;
     [self.avatorView updateAvatarWithModel:model];
     
     [self newHouseModifiedLayoutNameNeedShowCenter:model.agencyDescription.length <= 0];
-    
+    if (model.agencyDescription.length > 0) {
+        self.agencyDescriptionBac.hidden = NO;
+    } else {
+        self.agencyDescriptionBac.hidden = YES;
+    }
+    self.agencyDescriptionLabel.text = model.agencyDescription;
     BOOL result  = NO;
     if (model.businessLicense.length > 0) {
         result = YES;
