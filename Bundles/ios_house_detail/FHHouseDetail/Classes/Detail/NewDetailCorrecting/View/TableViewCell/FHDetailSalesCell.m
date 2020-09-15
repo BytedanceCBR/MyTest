@@ -237,17 +237,22 @@
 
     [self addClickOptionLog:@(itemInfo.actionType)];
     
-    //099 优惠跳转类型
-    if ((itemInfo.actionType == 3 || itemInfo.actionType == 4) && itemInfo.activityURLString.length) {
-        if (itemInfo.actionType == 4) {
-            NSMutableDictionary *tracerDic = self.baseViewModel.detailTracerDic.mutableCopy;
-            tracerDic[@"position"] = @"coupon";
-            tracerDic[@"associate_info"] = itemInfo.associateInfo.imInfo;
-            tracerDic[@"realtor_id"] = itemInfo.realtorId;
-            tracerDic[@"is_login"] = [[TTAccount sharedAccount] isLogin] ? @"1" : @"0";
-            tracerDic[@"event_tracking_id"] = @"107646";
-            TRACK_EVENT(@"click_im", tracerDic);
+    
+    if (itemInfo.actionType == 4 && itemInfo.activityURLString.length) {
+        if (itemInfo.activityURLString.length && self.baseViewModel.contactViewModel) {
+            NSMutableDictionary *extraDic = self.baseViewModel.detailTracerDic;
+            //extraDic[@"click_position"] = self.model.priceConsult.text?:@"be_null";
+            extraDic[@"im_open_url"] = itemInfo.activityURLString;
+            if (itemInfo.associateInfo.imInfo) {
+                extraDic[kFHAssociateInfo] = itemInfo.associateInfo;
+            }
+            [self.baseViewModel.contactViewModel onlineActionWithExtraDict:extraDic];
         }
+        return;
+    }
+    
+    //099 优惠跳转类型
+    if (itemInfo.actionType == 3  && itemInfo.activityURLString.length) {
         NSString *urlString = itemInfo.activityURLString.copy;
         //@"https://m.xflapp.com/magic/page/ejs/5ecb69c9d7ff73025f6ea4e0?appType=manyhouse";
         if([urlString hasPrefix:@"http://"] ||
