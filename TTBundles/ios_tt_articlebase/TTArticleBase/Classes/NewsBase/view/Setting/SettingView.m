@@ -1410,6 +1410,7 @@ TTEditUserProfileViewControllerDelegate
         param[@"orgin_from"] = @"minetab";
         param[@"enter_from"] = @"minetab";
         param[@"page_type"] = @"setting";
+        param[@"event_tracking_id"] = @"107642";
         TRACK_EVENT(@"click_icon", param);
     }else if (cellType == SettingCellTypeUserProtocol) {
         // 用户协议
@@ -1581,6 +1582,7 @@ TTEditUserProfileViewControllerDelegate
             param[@"popup_name"] = @"personal_recommend_settings";
             param[@"page_type"] = @"setting";
             param[@"click_position"] = @"close";
+            param[@"event_tracking_id"] = @"107644";
             TRACK_EVENT(@"popup_click", param);
             [self setPersonalizedStatus:0];//0表示关闭个性化推荐
         }];
@@ -1590,6 +1592,7 @@ TTEditUserProfileViewControllerDelegate
             param[@"popup_name"] = @"personal_recommend_settings";
             param[@"page_type"] = @"setting";
             param[@"click_position"] = @"cancel";
+            param[@"event_tracking_id"] = @"107644";
             TRACK_EVENT(@"popup_click", param);
         }];
         
@@ -1597,6 +1600,7 @@ TTEditUserProfileViewControllerDelegate
         param[@"status"] = @"open";
         param[@"popup_name"] = @"personal_recommend_settings";
         param[@"page_type"] = @"setting";
+        param[@"event_tracking_id"] = @"107643";
         TRACK_EVENT(@"popup_show", param);
         [alert showFrom:self.viewController animated:YES];
     }else{
