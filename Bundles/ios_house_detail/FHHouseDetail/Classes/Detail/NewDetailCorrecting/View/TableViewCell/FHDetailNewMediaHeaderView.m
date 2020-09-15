@@ -150,6 +150,7 @@
     self.totalPagesLabel.hidden = !self.showHeaderImageNewType;
     self.infoLabel.hidden = self.showHeaderImageNewType;
     self.medias = model.medias.copy;
+    [self.scrollView updateModel:model];
     if (self.medias.count > 0) {
         [self setInfoLabelText:[NSString stringWithFormat:@"%d/%lu", 1, (unsigned long)self.medias.count]];
     } else {
@@ -165,7 +166,6 @@
             [self.itemIndexArray addObject:@(i)];
         }
     }
-    [self.scrollView updateModel:model];
     if (_itemArray.count > 1) {
         self.itemView.hidden = NO;
         [self setNeedsLayout];
