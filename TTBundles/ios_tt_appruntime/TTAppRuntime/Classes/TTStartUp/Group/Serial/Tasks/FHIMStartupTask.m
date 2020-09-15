@@ -32,6 +32,7 @@
 #import "FHMainApi+Contact.h"
 #import "FHHousePhoneCallUtils.h"
 #import "FHDetailBaseModel.h"
+#import "FIMDebugManager.h"
 
 DEC_TASK("FHIMStartupTask",FHTaskTypeSerial,TASK_PRIORITY_HIGH+16);
 
@@ -325,47 +326,6 @@ DEC_TASK("FHIMStartupTask",FHTaskTypeSerial,TASK_PRIORITY_HIGH+16);
     }
     return evaluationModel;
 }
-- (BOOL)isEnableIMShortConnect {
-    BOOL ret = NO;
-    BOOL isShortConnectEnable = [[NSUserDefaults standardUserDefaults] boolForKey:@"_IM_ShortConnection_Enable_"];
-    ret = isShortConnectEnable;
-    return ret;
-}
-
-- (BOOL)isFakeToken {
-    BOOL ret = NO;
-    BOOL isFakeToken = [[NSUserDefaults standardUserDefaults] boolForKey:@"_IM_Fake_Token_Enable_"];
-    ret = isFakeToken;
-    return ret;
-}
-
-- (BOOL)isIMFrequenceControlDisable {
-    BOOL ret = NO;
-    BOOL isIMFrequenceControlDisable = [[NSUserDefaults standardUserDefaults] boolForKey:@"_IM_Frequenct_Control_Disable_"];
-    ret = isIMFrequenceControlDisable;
-    return ret;
-}
-
-- (BOOL)isIMInitDidEmptyEnable {
-    BOOL ret = NO;
-    BOOL isIMInitDidEmptyEnable = [[NSUserDefaults standardUserDefaults] boolForKey:@"_IM_Init_Did_Empty_Enable_"];
-    ret = isIMInitDidEmptyEnable;
-    return ret;
-}
-
-- (BOOL)isIMSingleChatRecallEnable {
-    BOOL ret = NO;
-    BOOL isIMSingleChatRecallEnable = [[NSUserDefaults standardUserDefaults] boolForKey:@"_IM_SingleChat_Recall_Enable_"];
-    ret = isIMSingleChatRecallEnable;
-    return ret;
-}
-
-- (BOOL)isEnableIMReadReceiptRequestClosed {
-    BOOL ret = NO;
-    BOOL isIMReadReceiptRequestClosed =  [[NSUserDefaults standardUserDefaults] boolForKey:@"_IM_Read_Receipt_Request_Close_"];
-    ret = isIMReadReceiptRequestClosed;
-    return ret;
-}
 - (BOOL)isEnableRecordVoiceSegment {
     return [SSCommonLogic enableRecordVoiceSegment];
 }
@@ -380,21 +340,8 @@ DEC_TASK("FHIMStartupTask",FHTaskTypeSerial,TASK_PRIORITY_HIGH+16);
 }
 @end
 
-@interface FHIMStartupTask()
-@property (nonatomic, assign) BOOL isConfigIMModule;
-@end
-
 @implementation FHIMStartupTask
 
-- (instancetype)init {
-    if(self = [super init]) {
-        
-        self.isConfigIMModule = NO;
-        
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(deviceDidRefreshed:) name:@"kFHTrackerDidRefreshDeviceId" object:nil];
-    }
-    return self;
-}
 - (NSString *)taskIdentifier {
     return @"FHIMStartupTask";
 }
@@ -417,17 +364,31 @@ DEC_TASK("FHIMStartupTask",FHTaskTypeSerial,TASK_PRIORITY_HIGH+16);
         NSString* uid = [[TTAccount sharedAccount] userIdString];
         [[IMManager shareInstance] startupWithUid:uid];
         
-        self.isConfigIMModule = YES;
-    }
-}
-- (void)deviceDidRefreshed:(NSNotification *)notification {
     
-    if(!self.isConfigIMModule) {
-        return; // did刷新回调调用时如果IM模块没有被初始化，则直接跳过，因为在初始化时会正常取到刷新的did
+#if DEBUG && !TARGET_IPHONE_SIMULATOR
+        [[FIMDebugManager shared] setupDebugShakeGestureWithEventBlk:^(BOOL isEnable) {
+            
+            if(!isEnable) {
+                return ;
+            }
+            
+            if (![TTSandBoxHelper isInHouseApp]) {
+                return;
+            }
+
+            UIViewController *topVC = [TTUIResponderHelper visibleTopViewController];
+            Class debugVCClass = NSClassFromString(@"SSDebugViewController");
+            if(!debugVCClass || [topVC isKindOfClass:debugVCClass]) {
+                return;
+            }
+            
+            UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:[debugVCClass new]];
+            navigationController.modalPresentationStyle = UIModalPresentationFullScreen;
+            [topVC presentViewController:navigationController animated:YES completion:NULL];
+            [[FIMMediaTool sharedInstance] shakeOnceTime];
+        }];
+#endif
     }
-    
-    // did刷新回调调用时，如果IM模块已经初始化完成，则检查初始化配置的did是否为空，如果为空，则更新
-    [[IMManager shareInstance] configDeviceIdIfInitNotGet];
 }
 
 #pragma mark - 打开Watch Session
