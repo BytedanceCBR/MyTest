@@ -554,7 +554,6 @@
         [self.colletionView reloadData];
     } else if (_medias.count > 0) {
         [self.colletionView reloadData];
-        [self setInfoLabelText:[NSString stringWithFormat:@"%d/%lu",1,(unsigned long)_medias.count]];
         self.infoLabel.hidden = NO;
         self.colletionView.hidden = NO;
         self.noDataImageView.hidden = YES;
@@ -562,6 +561,7 @@
             NSIndexPath *indexPath = [NSIndexPath indexPathForItem:1 inSection:0];
             [self.colletionView scrollToItemAtIndexPath:indexPath atScrollPosition:UICollectionViewScrollPositionLeft animated:NO];
         }
+        [self setInfoLabelText:[NSString stringWithFormat:@"%d/%lu",1,(unsigned long)_medias.count]];
     } else {
         [self.colletionView reloadData];
         self.infoLabel.hidden = YES;
