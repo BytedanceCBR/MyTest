@@ -250,7 +250,7 @@
             [weakSelf resetVideoCell:frame];
         }
         NSInteger currentIndex = weakSelf.currentIndex;
-        if(self.dataHelper.headerViewData.baiduPanoramaIndex != -1) {
+        if(weakSelf.dataHelper.headerViewData.baiduPanoramaIndex != -1) {
             if(currentIndex >= weakSelf.dataHelper.headerViewData.baiduPanoramaIndex){
                 currentIndex = currentIndex + 1;
             }
