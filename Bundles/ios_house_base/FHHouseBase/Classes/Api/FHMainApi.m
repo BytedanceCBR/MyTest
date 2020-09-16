@@ -574,12 +574,18 @@
     NSDictionary *cat = @{@"status":@(type),@"response_code":@(responseCode)};
     [[HMDTTMonitor defaultManager] hmdTrackService:key metric:metricDict category:cat extra:extra];
     
-    NSString *requestStatus = extraDict[@"status"];
-    if (![requestStatus isEqualToString:@"0"]) {
-        if (requestStatus ) {
-            NSDictionary *cats = @{@"api":path,@"request_status":@(responseCode),@"status":requestStatus};
+    NSInteger requestStatus = 0;
+    if ([extraDict[@"status"] isKindOfClass:[NSString class]]) {
+        NSString *str = extraDict[@"status"];
+        requestStatus = [str integerValue];
+    }
+    if ([extraDict[@"status"] isKindOfClass:[NSNumber class]]) {
+        NSNumber *num = extraDict[@"status"];
+        requestStatus = [num integerValue];
+    }
+    if (requestStatus != 0) {
+            NSDictionary *cats = @{@"api":path,@"request_status":@(responseCode),@"status":@(requestStatus)};
             [[HMDTTMonitor defaultManager] hmdTrackService:@"f_api_performance_request_error" metric:metricDict category:cats extra:extra];
-        }
     }
     if (type != FHNetworkMonitorTypeSuccess && type != FHNetworkMonitorTypeNetFailed) {
         NSMutableDictionary *filterDict = [NSMutableDictionary new];
