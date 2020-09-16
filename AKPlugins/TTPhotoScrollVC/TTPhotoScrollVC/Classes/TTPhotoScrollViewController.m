@@ -356,14 +356,14 @@
         [self.view addSubview:_clonseBtn];
         
         
-        if (self.smallImageInfosModels.count != 0) {
-            _albumBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-            [_albumBtn setTitle:@"全部图片" forState:UIControlStateNormal];
-            [_albumBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-            [_albumBtn setFrame:CGRectMake(self.view.frame.size.width - 100, height, 100, 48)];
-            [_albumBtn addTarget:self action:@selector(albumBtnClick) forControlEvents:UIControlEventTouchUpInside];
-            [self.view addSubview:_albumBtn];
-        }
+//        if (self.smallImageInfosModels.count != 0) {
+//            _albumBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+//            [_albumBtn setTitle:@"全部图片" forState:UIControlStateNormal];
+//            [_albumBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+//            [_albumBtn setFrame:CGRectMake(self.view.frame.size.width - 100, height, 100, 48)];
+//            [_albumBtn addTarget:self action:@selector(albumBtnClick) forControlEvents:UIControlEventTouchUpInside];
+//            [self.view addSubview:_albumBtn];
+//        }
     }
     
 }
@@ -376,9 +376,9 @@
 
 - (void)albumBtnClick
 {
-    if (self.smallImageInfosModels.count == 0) {
-        return;
-    }
+//    if (self.smallImageInfosModels.count == 0) {
+//        return;
+//    }
     
     if (self.albumImageBtnClickBlock) {
         self.albumImageBtnClickBlock(self.currentIndex);
@@ -386,7 +386,6 @@
     
     FHFloorPanPicShowViewController *showVC = [[FHFloorPanPicShowViewController alloc] init];
     showVC.modalPresentationStyle = UIModalPresentationFullScreen;
-    showVC.pictsArray = _smallImageInfosModels;
     __weak TTPhotoScrollViewController * weakSelf = self;
     showVC.albumImageBtnClickBlock = ^(NSInteger index){
         if (index >= 0) {

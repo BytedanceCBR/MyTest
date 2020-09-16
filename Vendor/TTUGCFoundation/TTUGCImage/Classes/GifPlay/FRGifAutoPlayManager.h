@@ -7,8 +7,8 @@
 
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
-#import <IGListKit/IGListDiff.h>
-#import <IGListKit/IGListAssert.h>
+#import <IGListDiffKit/IGListDiff.h>
+#import <IGListDiffKit/IGListAssert.h>
 
 extern NSString *const kGifAutoPlayOverNotification;
 
