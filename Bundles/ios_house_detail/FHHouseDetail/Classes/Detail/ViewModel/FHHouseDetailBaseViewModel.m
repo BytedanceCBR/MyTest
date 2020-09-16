@@ -353,7 +353,6 @@
             }
 //            tracerDic[@"event_id"] = @"70949";
             [FHUserTracker writeEvent:@"element_show" params:tracerDic];
-            [FHErrorHubManagerUtil checkBuryingPointWithEvent:@"element_show" Params:tracerDic];
         }
         NSArray *element_array = [tempCell elementTypeStringArray:self.houseType];
         if (element_array.count > 0) {
