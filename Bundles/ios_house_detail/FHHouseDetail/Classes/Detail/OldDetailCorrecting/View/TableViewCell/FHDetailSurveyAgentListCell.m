@@ -126,6 +126,9 @@
 
             itemView.name.text = obj.realtorName;
             itemView.agency.text = obj.agencyName;
+            /// 如果门店信息和从业资格都为空则不展示名字右侧的分割线
+            BOOL hideVSepLine = obj.agencyName.length == 0 && obj.certificate.length == 0;
+            itemView.vSepLine.hidden = hideVSepLine;
             [itemView.avatorView updateAvatarWithModel:obj];
             /// 北京商业化开城需求的新样式，这个优先级更高
             BOOL showNewLicenseStyle = [self shouldShowNewLicenseStyle:obj];
