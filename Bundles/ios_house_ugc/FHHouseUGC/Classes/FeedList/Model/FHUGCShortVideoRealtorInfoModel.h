@@ -9,6 +9,11 @@
 #import "FHBaseModelProtocol.h"
 #import "FHDetailBaseModel.h"
 NS_ASSUME_NONNULL_BEGIN
+
+@interface FHUGCShortVideoRealtorImageTagModel : JSONModel
+@property (nonatomic, copy , nullable) NSString *imageUrl;
+@end
+
 @interface FHUGCShortVideoRealtorInfo : JSONModel
 @property (nonatomic, copy, nullable) NSString *realtorId;
 @property (nonatomic, copy, nullable) NSString *realtorName;
@@ -16,6 +21,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy, nullable) NSString *mainPageInfo;
 @property (nonatomic, copy, nullable) NSString *firstBizType;
 @property (nonatomic, copy, nullable) NSString *avatarUrl;
+@property (nonatomic, strong, nullable) FHUGCShortVideoRealtorImageTagModel *imageTag;
 @property (nonatomic, strong, nullable) FHClueAssociateInfoModel *associateInfo;
 @property (nonatomic, copy, nullable) NSDictionary *realtorLogPb;
 @property (nonatomic, copy, nullable) NSString *certificationIcon;

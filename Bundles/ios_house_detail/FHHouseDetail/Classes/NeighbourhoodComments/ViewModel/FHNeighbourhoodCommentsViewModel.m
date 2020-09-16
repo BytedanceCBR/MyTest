@@ -32,6 +32,7 @@
 
 @interface FHNeighbourhoodCommentsViewModel () <UITableViewDelegate,UITableViewDataSource,FHUGCBaseCellDelegate,UIScrollViewDelegate>
 
+@property(nonatomic, weak) FHNeighbourhoodCommentsController *viewController;
 @property(nonatomic, strong) FHFeedUGCCellModel *guideCellModel;
 @property(nonatomic, assign) BOOL alreadShowFeedGuide;
 
@@ -40,8 +41,9 @@
 @implementation FHNeighbourhoodCommentsViewModel
 
 - (instancetype)initWithTableView:(UITableView *)tableView controller:(FHNeighbourhoodCommentsController *)viewController {
-    self = [super initWithTableView:tableView controller:viewController];
+    self = [super initWithTableView:tableView];
     if (self) {
+        self.viewController = viewController;
         self.dataList = [[NSMutableArray alloc] init];
         [self configTableView];
     }
@@ -124,7 +126,7 @@
         [extraDic setObject:vc.neighborhoodId forKey:@"neighborhood_id"];
     }
     @weakify(self);
-    self.requestTask = [FHHouseUGCAPI requestFeedListWithCategory:self.categoryId behotTime:behotTime loadMore:!isHead listCount:listCount extraDic:extraDic completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
+    self.requestTask = [FHHouseUGCAPI requestFeedListWithCategory:self.categoryId behotTime:behotTime loadMore:!isHead isFirst:isFirst listCount:listCount extraDic:extraDic completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
         @strongify(self);
         wself.viewController.isLoadingData = NO;
         if(isFirst){
@@ -223,7 +225,6 @@
         cellModel.isInNeighbourhoodCommentsList = YES;
         cellModel.cellSubType = FHUGCFeedListCellSubTypeUGCNeighbourhoodComments;
         cellModel.categoryId = self.categoryId;
-        cellModel.feedVC = self.viewController;
         cellModel.tableView = self.tableView;
         cellModel.enterFrom = [self.viewController categoryName];
         if(cellModel){

@@ -6,10 +6,13 @@
 //
 
 #import "FHCommunityFeedListBaseViewModel.h"
+#import "FHCommunityFeedListController.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
 @interface FHCommunityFeedListMyJoinViewModel : FHCommunityFeedListBaseViewModel
+
+- (instancetype)initWithTableView:(UITableView *)tableView controller:(FHCommunityFeedListController *)viewController;
 
 @end
 

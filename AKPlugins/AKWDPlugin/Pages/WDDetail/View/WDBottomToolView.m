@@ -138,7 +138,7 @@ static NSString * const kWDHasTipSupportsEmojiInputDefaultKey = @"WDHasTipSuppor
 - (void)addKVO
 {
     [self.KVOController unobserveAll];
-    
+    WeakSelf;
     [self setCommentBadgeValue:[self.detailModel.answerEntity.commentCount stringValue]];
     [self.KVOController observe:self.detailModel.answerEntity keyPath:NSStringFromSelector(@selector(commentCount)) options:NSKeyValueObservingOptionNew block:^(id  _Nullable observer, id  _Nonnull object, NSDictionary<NSString *,id> * _Nonnull change) {
         NSString *commentCount = [change tt_stringValueForKey:NSKeyValueChangeNewKey];
@@ -146,7 +146,7 @@ static NSString * const kWDHasTipSupportsEmojiInputDefaultKey = @"WDHasTipSuppor
         [bottomToolView setCommentBadgeValue:commentCount];
         //评论完成后发送通知修改评论数
         NSMutableDictionary *userInfo = @{}.mutableCopy;
-        userInfo[@"group_id"] = self.detailModel.answerEntity.ansid;
+        userInfo[@"group_id"] = wself.detailModel.answerEntity.ansid;
         userInfo[@"comment_conut"] = commentCount;
         [[NSNotificationCenter defaultCenter] postNotificationName:@"kPostMessageFinishedNotification"
                                                                        object:nil
