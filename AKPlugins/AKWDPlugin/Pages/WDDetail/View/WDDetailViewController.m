@@ -1974,15 +1974,8 @@ static NSUInteger const kOldAnimationViewTag = 20161221;
     [BDTrackerProtocol eventData:[dict copy]];
 }
 
-- (void)bottomView:(WDBottomToolView *)bottomView nextButtonClicked:(SSThemedButton *)nextButton
-{
-    [self p_tryNextAnswer];
-    NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithDictionary:self.detailModel.gdExtJsonDict];
-    [dict setValue:@"umeng" forKey:@"category"];
-    [dict setValue:kWDDetailViewControllerUMEventName forKey:@"tag"];
-    [dict setValue:@"click_next_answer" forKey:@"label"];
-    [dict setValue:self.detailModel.answerEntity.ansid forKey:@"value"];
-    [BDTrackerProtocol eventData:[dict copy]];
+-(void)bottomView:(WDBottomToolView *)bottomView shareButtonClicked:(SSThemedButton *)shareButton {
+    
 }
 
 #pragma mark - TTCommentDataSource

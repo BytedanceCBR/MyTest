@@ -35,6 +35,7 @@ static NSString * const kWDHasTipSupportsEmojiInputDefaultKey = @"WDHasTipSuppor
 
 @property (nonatomic, strong) TTBubbleView *bubbleView;
 @property(nonatomic,strong) TTMultiDiggManager *diggManager;
+@property(nonatomic,strong) NSArray *imageArray;
 
 @end
 
@@ -106,20 +107,14 @@ static NSString * const kWDHasTipSupportsEmojiInputDefaultKey = @"WDHasTipSuppor
         [_digButton addTarget:self action:@selector(diggButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
         [self addSubview:digButton];
         
-        NSMutableArray *imageArray = [[NSMutableArray alloc] initWithContentsOfFile: [[NSBundle mainBundle] pathForResource:@"like_emoji" ofType:@"plist"]];
-        for(int i = 0;i < imageArray.count; i++) {
-            imageArray[i] = [NSString stringWithFormat:@"emoji_%@",imageArray[i]];
-        }
-        self.diggManager = [[TTMultiDiggManager alloc] initWithButton:_digButton withTransformAngle:0 contentInset:nil buttonPosition:TTMultiDiggButtonPositionRight animationImageNames:imageArray];
+        self.diggManager = [[TTMultiDiggManager alloc] initWithButton:_digButton withTransformAngle:0 contentInset:nil buttonPosition:TTMultiDiggButtonPositionRight animationImageNames:self.imageArray];
 
-        SSThemedButton *nextButton = [SSThemedButton buttonWithType:UIButtonTypeCustom];
-        [self addSubview:nextButton];
-        _nextButton = nextButton;
-        UIImage *backArrowImage = ICON_FONT_IMG(24, @"\U0000e68a", [UIColor themeGray1]);
-        UIImage *nextArrowImage = [UIImage imageWithCGImage:backArrowImage.CGImage scale:backArrowImage.scale orientation:UIImageOrientationDown];
-        [_nextButton setImage:nextArrowImage forState:UIControlStateNormal];
-        _nextButton.hitTestEdgeInsets = toolBarButtonHitTestInsets;
-        [_nextButton addTarget:self action:@selector(nextButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
+        TTAlphaThemedButton *shareButton = [TTAlphaThemedButton buttonWithType:UIButtonTypeCustom];
+        _shareButton = shareButton;
+        _shareButton.hitTestEdgeInsets = toolBarButtonHitTestInsets;
+        [self addSubview:shareButton];
+        [_shareButton setImage:ICON_FONT_IMG(24, @"\U0000e692", [UIColor themeGray1])forState:UIControlStateNormal];
+        [_shareButton addTarget:self action:@selector(shareButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
         
         _separatorView = [[SSThemedView alloc] init];
         _separatorView.backgroundColorThemeKey = kColorLine7;
@@ -168,22 +163,6 @@ static NSString * const kWDHasTipSupportsEmojiInputDefaultKey = @"WDHasTipSuppor
         WDBottomToolView *bottomToolView = observer;
         bottomToolView.digButton.selected = isDigg;
     }];
-    
-    [self updateNextButtonWithHasNext:self.detailModel.hasNext];
-    [self.KVOController observe:self.detailModel keyPath:NSStringFromSelector(@selector(hasNext)) options:NSKeyValueObservingOptionNew block:^(id  _Nullable observer, id  _Nonnull object, NSDictionary<NSString *,id> * _Nonnull change) {
-        WDBottomToolView *bottomToolView = observer;
-        BOOL hasNext = [change tt_boolValueForKey:NSKeyValueChangeNewKey];
-        [bottomToolView updateNextButtonWithHasNext:hasNext];
-    }];
-}
-
-- (void)updateNextButtonWithHasNext:(BOOL)hasNext
-{
-    if (hasNext) {
-        self.nextButton.alpha = 1.0f;
-    } else {
-        self.nextButton.alpha = 0.5f;
-    }
 }
 
 - (void)updateWriteTitle:(NSNotification *)notification {
@@ -206,20 +185,20 @@ static NSString * const kWDHasTipSupportsEmojiInputDefaultKey = @"WDHasTipSuppor
     CGFloat writeButtonHeight = [TTDeviceHelper isPadDevice] ? 36 : 32;
     CGFloat writeTopMargin = ((NSInteger)self.height - writeButtonHeight - bottomSafeInset) / 2;
     CGFloat iconTopMargin = ((NSInteger)self.height - 24 - bottomSafeInset) / 2;
-    CGRect writeFrame = CGRectZero, emojiFrame = CGRectZero, commentFrame = CGRectZero, nextFrame = CGRectZero, digFrame = CGRectZero;
+    CGRect writeFrame = CGRectZero, emojiFrame = CGRectZero, commentFrame = CGRectZero, shareFrame = CGRectZero, digFrame = CGRectZero;
     CGFloat width = self.width;
     CGFloat margin = [TTDeviceHelper is736Screen] ? 10 : ([TTDeviceHelper is667Screen] || [TTDeviceHelper isIPhoneXDevice]?5:0);
     writeFrame = CGRectMake(15 + leftInset, writeTopMargin, width - (169 + margin * 3) - hInset, writeButtonHeight);
     emojiFrame = CGRectMake(CGRectGetMaxX(writeFrame) - 22 - 6, CGRectGetMinY(writeFrame) + 5, 22, 22);
     commentFrame = CGRectMake(CGRectGetMaxX(writeFrame) + 22 + margin, iconTopMargin, 24, 24);
-    nextFrame = CGRectMake(width - 38 - rightInset, iconTopMargin, 24, 24);
-    digFrame = CGRectMake(CGRectGetMinX(nextFrame) - 46 - margin, iconTopMargin, 24, 24);
+    shareFrame = CGRectMake(width - 38 - rightInset, iconTopMargin, 24, 24);
+    digFrame = CGRectMake(CGRectGetMinX(shareFrame) - 46 - margin, iconTopMargin, 24, 24);
     
     _writeButton.frame = writeFrame;
     _emojiButton.frame = emojiFrame;
     _commentButton.frame = commentFrame;
     _digButton.frame = digFrame;
-    _nextButton.frame = nextFrame;
+    _shareButton.frame = shareFrame;
     
     BOOL _isIPad = [TTDeviceHelper isPadDevice];
 //    _writeButton.titleEdgeInsets = UIEdgeInsetsMake(0, _isIPad ? 25 : 8, 0, _emojiButton.width + 4);
@@ -284,7 +263,7 @@ static NSString * const kWDHasTipSupportsEmojiInputDefaultKey = @"WDHasTipSuppor
     CGFloat baseItemMargin;
     CGFloat edgeMargin = [TTUIResponderHelper paddingForViewWidth:self.width];
   
-    CGFloat fixWidthOfRightItems = _commentButton.width + _nextButton.width + _digButton.width;
+    CGFloat fixWidthOfRightItems = _commentButton.width + _shareButton.width + _digButton.width;
     CGFloat checkWidth = self.width - edgeMargin * 2 - fixWidthOfRightItems;
     _writeButton.left = edgeMargin;
     if (checkWidth < writeMinLen + mSumMinLen) {
@@ -294,7 +273,7 @@ static NSString * const kWDHasTipSupportsEmojiInputDefaultKey = @"WDHasTipSuppor
         _commentButton.left = _writeButton.right + baseItemMargin * firstMarginAspect;
         _emojiButton.right = _commentButton.right - 22 - 6;
         _digButton.left = _commentButton.right + baseItemMargin * firstMarginAspect;
-        _nextButton.left = _digButton.right + baseItemMargin;
+        _shareButton.left = _digButton.right + baseItemMargin;
     }
     else if (checkWidth < writeMaxLen + mSumMinLen) {
         //case(2)
@@ -302,7 +281,7 @@ static NSString * const kWDHasTipSupportsEmojiInputDefaultKey = @"WDHasTipSuppor
         _emojiButton.right = _commentButton.right - 22 - 6;
         _commentButton.left = _writeButton.right + 44.f;
         _digButton.left = _commentButton.right + 44.f;
-        _nextButton.left = _digButton.right + 40.f;
+        _shareButton.left = _digButton.right + 40.f;
     }
     else if (checkWidth < writeMaxLen + mSumMaxLen) {
         //case(3)
@@ -311,7 +290,7 @@ static NSString * const kWDHasTipSupportsEmojiInputDefaultKey = @"WDHasTipSuppor
         baseItemMargin = (checkWidth - _writeButton.width)/marginAspects;
         _commentButton.left = _writeButton.right + baseItemMargin * firstMarginAspect;
         _digButton.left = _commentButton.right + baseItemMargin * firstMarginAspect;
-        _nextButton.left = _digButton.right + baseItemMargin;
+        _shareButton.left = _digButton.right + baseItemMargin;
     }
     else {
         //case(4)
@@ -319,7 +298,7 @@ static NSString * const kWDHasTipSupportsEmojiInputDefaultKey = @"WDHasTipSuppor
         _emojiButton.right = _commentButton.right - 22 - 6;
         _commentButton.left = _writeButton.right + 110.f;
         _digButton.left = _commentButton.right + 110.f;
-        _nextButton.left = _digButton.right + 106.f;
+        _shareButton.left = _digButton.right + 106.f;
     }
 }
 
@@ -443,10 +422,10 @@ static NSString * const kWDHasTipSupportsEmojiInputDefaultKey = @"WDHasTipSuppor
     }
 }
 
-- (void)nextButtonClicked:(SSThemedButton *)nextButton
+- (void)shareButtonClicked:(SSThemedButton *)shareButton
 {
-    if ([self.delegate respondsToSelector:@selector(bottomView:nextButtonClicked:)]) {
-        [self.delegate bottomView:self nextButtonClicked:nextButton];
+    if ([self.delegate respondsToSelector:@selector(bottomView:shareButtonClicked:)]) {
+        [self.delegate bottomView:self shareButtonClicked:shareButton];
     }
 }
 
@@ -495,7 +474,7 @@ static NSString * const kWDHasTipSupportsEmojiInputDefaultKey = @"WDHasTipSuppor
         return;
     }
     
-    TTBubbleView *bubbleView = [[TTBubbleView alloc] initWithAnchorPoint:CGPointMake(self.nextButton.origin.x + 11, 0.0f) imageName:@"detail_close_icon" tipText:@"查看下一个回答" attributedText:nil arrowDirection:TTBubbleViewArrowDown lineHeight:0 viewType:1];
+    TTBubbleView *bubbleView = [[TTBubbleView alloc] initWithAnchorPoint:CGPointMake(self.shareButton.origin.x + 11, 0.0f) imageName:@"detail_close_icon" tipText:@"查看下一个回答" attributedText:nil arrowDirection:TTBubbleViewArrowDown lineHeight:0 viewType:1];
     [self addSubview:bubbleView];
     
     WeakSelf;
@@ -548,6 +527,13 @@ static NSString * const kWDHasTipSupportsEmojiInputDefaultKey = @"WDHasTipSuppor
 - (NSString *)_photoShareIconName
 {
     return @"icon_details_share";
+}
+
+-(NSArray *)imageArray {
+    if(!_imageArray) {
+        _imageArray = @[@"emoji_2", @"emoji_8", @"emoji_11", @"emoji_15", @"emoji_16", @"emoji_17", @"emoji_18", @"emoji_21", @"emoji_24", @"emoji_28", @"emoji_32", @"emoji_46", @"emoji_52", @"emoji_53", @"emoji_54", @"emoji_58", @"emoji_65", @"emoji_96"];
+    }
+    return _imageArray;
 }
 
 @end
