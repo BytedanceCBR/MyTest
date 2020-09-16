@@ -238,6 +238,7 @@
         if (itemInfo.activityURLString.length && self.baseViewModel.contactViewModel) {
             NSMutableDictionary *extraDic = self.baseViewModel.detailTracerDic.mutableCopy;
             extraDic[@"im_open_url"] = itemInfo.activityURLString;
+            extraDic[@"position"] = @"coupon";
             if (itemInfo.associateInfo.imInfo) {
                 extraDic[kFHAssociateInfo] = itemInfo.associateInfo;
             }
