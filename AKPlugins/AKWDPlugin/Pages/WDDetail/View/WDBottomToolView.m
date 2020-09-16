@@ -25,6 +25,7 @@
 #import "UIImage+FIconFont.h"
 #import "UIColor+Theme.h"
 #import "TTAccountManager.h"
+#import "TTMultiDigManager.h"
 
 //#import "TTUGCEmojiTextAttachment.h"
 
@@ -33,6 +34,7 @@ static NSString * const kWDHasTipSupportsEmojiInputDefaultKey = @"WDHasTipSuppor
 @interface WDBottomToolView ()
 
 @property (nonatomic, strong) TTBubbleView *bubbleView;
+@property(nonatomic,strong) TTMultiDiggManager *diggManager;
 
 @end
 
@@ -104,6 +106,12 @@ static NSString * const kWDHasTipSupportsEmojiInputDefaultKey = @"WDHasTipSuppor
         [_digButton addTarget:self action:@selector(diggButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
         [self addSubview:digButton];
         
+        NSMutableArray *imageArray = [[NSMutableArray alloc] initWithContentsOfFile: [[NSBundle mainBundle] pathForResource:@"like_emoji" ofType:@"plist"]];
+        for(int i = 0;i < imageArray.count; i++) {
+            imageArray[i] = [NSString stringWithFormat:@"emoji_%@",imageArray[i]];
+        }
+        self.diggManager = [[TTMultiDiggManager alloc] initWithButton:_digButton withTransformAngle:0 contentInset:nil buttonPosition:TTMultiDiggButtonPositionRight animationImageNames:imageArray];
+
         SSThemedButton *nextButton = [SSThemedButton buttonWithType:UIButtonTypeCustom];
         [self addSubview:nextButton];
         _nextButton = nextButton;

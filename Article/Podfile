@@ -579,6 +579,8 @@ def appPods
     ]
     
     pod_binary 'BDXElement', '1.0.0', :subspecs=> ['Core', 'ScrollView', 'ImpressionView']
+    #头条连续点赞组件
+    pod_binary 'TTMultiDiggManager', '0.1.18-rc.4'
 end
 
 
