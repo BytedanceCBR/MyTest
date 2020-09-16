@@ -46,6 +46,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, copy , nullable) NSString *agencyName;
 @property (nonatomic, copy , nullable) NSString *avatarUrl;
+@property (nonatomic, copy , nullable) NSString *avatarTagUrl;
 @property (nonatomic, copy , nullable) NSString *certificationIcon;
 @property (nonatomic, copy , nullable) NSString *certificationPage;
 @property (nonatomic, copy , nullable) NSString *chatOpenurl;
@@ -113,7 +114,7 @@ typedef NS_ENUM(NSUInteger, FHFeedUGCDiggType) {
 @property (nonatomic, strong , nullable) NSArray<FHFeedContentImageListModel *> *largeImageList;
 //帖子相关
 @property (nonatomic, strong , nullable) FHFeedUGCCellUserModel *user ;
-@property (nonatomic, strong , nullable) FHFeedUGCCellRealtorModel*realtor ;
+@property (nonatomic, strong , nullable) FHFeedUGCCellRealtorModel *realtor ;
 @property (nonatomic, copy , nullable) NSString *diggCount;
 @property (nonatomic, copy , nullable) NSString *createTime;
 @property (nonatomic, copy , nullable) NSString *readCount;
