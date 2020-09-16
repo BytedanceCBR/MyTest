@@ -379,8 +379,7 @@
     trace[@"conversation_id"] = self.shareViewModel.conversactionId ? : @"";
     trace[@"log_pb"] = @"be_null";
     trace[@"send_total"] = @([self.shareViewModel.selectedItems count]);
-     [FHErrorHubManagerUtil checkBuryingPointWithEvent:@"click_send" Params:trace];
-    [BDTrackerProtocol eventV3:@"click_send" params:trace];
+    [FHUserTracker writeEvent:@"click_send" params:trace];
 }
 
 -(NSString*)houseTypeByIndex:(NSUInteger)index {

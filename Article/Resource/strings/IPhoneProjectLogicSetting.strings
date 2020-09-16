@@ -239,3 +239,9 @@
 
 //视频轮播列表
 "ugc_video_feed_list" = "FHUGCVideoListController";
+
+//业务卖房录入
+"house_sale_input" = "FHHouseSaleInputController";
+
+//业务卖房提交结果
+"house_sale_result" = "FHHouseSaleResultController";

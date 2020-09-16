@@ -30,9 +30,11 @@
 #import "TTVFeedCellWillDisplayContext.h"
 #import "TTVFeedCellAction.h"
 #import "FHUGCFullScreenVideoCell.h"
+#import "FHCommunityFeedListController.h"
 
-@interface FHCommunityFeedListMyJoinViewModel () <UITableViewDelegate, UITableViewDataSource>
+@interface FHCommunityFeedListMyJoinViewModel () <UITableViewDelegate, UITableViewDataSource,FHUGCBaseCellDelegate>
 
+@property(nonatomic, weak) FHCommunityFeedListController *viewController;
 @property(nonatomic, assign) BOOL needDealFollowData;
 @property (nonatomic, strong)   NSMutableArray       *lastGroupIdArr;
 //当第一刷数据不足5个，同时feed还有新内容时，会继续刷下一刷的数据，这个值用来记录请求的次数
@@ -43,8 +45,9 @@
 @implementation FHCommunityFeedListMyJoinViewModel
 
 - (instancetype)initWithTableView:(UITableView *)tableView controller:(FHCommunityFeedListController *)viewController {
-    self = [super initWithTableView:tableView controller:viewController];
+    self = [super initWithTableView:tableView];
     if (self) {
+        self.viewController = viewController;
         self.dataList = [[NSMutableArray alloc] init];
         self.lastGroupIdArr = [[NSMutableArray alloc] init];
         [self configTableView];
@@ -622,7 +625,6 @@
         self.clientShowDict = [NSMutableDictionary new];
     }
     
-    NSString *row = [NSString stringWithFormat:@"%i",indexPath.row];
     NSString *groupId = cellModel.groupId;
     if(groupId){
         if (self.clientShowDict[groupId]) {
@@ -636,6 +638,11 @@
 
 - (void)trackClientShow:(FHFeedUGCCellModel *)cellModel rank:(NSInteger)rank {
     NSMutableDictionary *dict =  [self trackDict:cellModel rank:rank];
+    if(cellModel.cellSubType == FHUGCFeedListCellSubTypeFullVideo || cellModel.cellSubType == FHUGCFeedListCellSubTypeUGCVideo){
+        dict[@"video_type"] = @"video";
+    }else if(cellModel.cellSubType == FHUGCFeedListCellSubTypeUGCSmallVideo){
+        dict[@"video_type"] = @"small_video";
+    }
     TRACK_EVENT(@"feed_client_show", dict);
     
     if(cellModel.attachCardInfo){

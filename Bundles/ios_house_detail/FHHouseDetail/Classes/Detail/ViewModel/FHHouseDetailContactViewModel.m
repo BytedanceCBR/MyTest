@@ -345,9 +345,7 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
     [params setValue:[_tracerDict objectForKey:@"log_pb"] forKey:@"log_pb"];
     [params setValue:self.houseInfoBizTrace forKey:@"biz_trace"];
     [params setValue: [[FHEnvContext sharedInstance].messageManager getTotalUnreadMessageCount] >0?@"1":@"0" forKey:@"with_tips"];
-//      [[FHHouseErrorHubManager sharedInstance] checkBuryingPointWithEvent:@"click_im_message" Params:params];
-    [FHErrorHubManagerUtil checkBuryingPointWithEvent:@"click_im_message" Params:params];
-    [BDTrackerProtocol eventV3:@"click_im_message" params:params];
+    [FHUserTracker writeEvent:@"click_im_message" params:params];
     
     
     NSString *messageSchema = @"sslocal://message_conversation_list";
@@ -466,9 +464,7 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
         [params setValue:[_tracerDict objectForKey:@"origin_search_id"] forKey:@"origin_search_id"];
         [params setValue:[_tracerDict objectForKey:@"log_pb"] forKey:@"log_pb"];
         params[@"enter_from"] = _tracerDict[@"enter_from"];
-//        [[FHHouseErrorHubManager sharedInstance] checkBuryingPointWithEvent:@"element_show" Params:params];
-        [FHErrorHubManagerUtil checkBuryingPointWithEvent:@"element_show" Params:params];
-        [BDTrackerProtocol eventV3:@"element_show" params:params];
+        [FHUserTracker writeEvent:@"element_show" params:params];
     }
 }
 
