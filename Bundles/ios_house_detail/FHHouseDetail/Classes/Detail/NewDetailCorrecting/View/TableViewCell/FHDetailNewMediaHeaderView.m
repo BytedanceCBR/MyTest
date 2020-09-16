@@ -120,7 +120,7 @@
     [self.titleView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.right.bottom.equalTo(self);
         make.top.equalTo(self.scrollView.mas_bottom).offset(-40);
-        make.height.equalTo(0);
+        make.height.mas_offset(40);
     }];
 
     [self.itemView mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -150,6 +150,7 @@
     self.totalPagesLabel.hidden = !self.showHeaderImageNewType;
     self.infoLabel.hidden = self.showHeaderImageNewType;
     self.medias = model.medias.copy;
+    [self.scrollView updateModel:model];
     if (self.medias.count > 0) {
         [self setInfoLabelText:[NSString stringWithFormat:@"%d/%lu", 1, (unsigned long)self.medias.count]];
     } else {
@@ -165,7 +166,6 @@
             [self.itemIndexArray addObject:@(i)];
         }
     }
-    [self.scrollView updateModel:model];
     if (_itemArray.count > 1) {
         self.itemView.hidden = NO;
         [self setNeedsLayout];
@@ -283,7 +283,6 @@
         //这里分别加上标签高度20，标签间隔20
         titleHeight += 20 + 20;
     }
-
     [self.titleView mas_updateConstraints:^(MASConstraintMaker *make) {
         make.height.mas_offset(titleHeight);
     }];

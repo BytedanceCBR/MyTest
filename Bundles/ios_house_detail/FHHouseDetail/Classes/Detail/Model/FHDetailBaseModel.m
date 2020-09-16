@@ -500,3 +500,60 @@
 }
 
 @end
+
+@implementation FHHouseDetailImageStruct
+
++ (JSONKeyMapper*)keyMapper
+{
+    NSDictionary *dict = @{
+        @"image": @"image",
+        @"smallImage": @"small_image"
+    };
+    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+        return dict[keyName]?:keyName;
+    }];
+}
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+
+@end
+
+@implementation FHHouseDetailImageTabInfo
+
++ (JSONKeyMapper*)keyMapper
+{
+    NSDictionary *dict = @{
+        @"tabName": @"tab_name",
+        @"tabContent": @"tab_content",
+        @"subTab": @"sub_tab"
+    };
+    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+        return dict[keyName]?:keyName;
+    }];
+}
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+
+@end
+
+@implementation FHHouseDetailAlbumInfo
+
++ (JSONKeyMapper*)keyMapper
+{
+    NSDictionary *dict = @{
+        @"tabList": @"tab_list"
+    };
+    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+        return dict[keyName]?:keyName;
+    }];
+}
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+
+@end

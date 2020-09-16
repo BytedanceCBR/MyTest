@@ -7,7 +7,6 @@
 
 //新房专用头图
 #import "FHDetailBaseCell.h"
-#import "FHDetailOldModel.h"
 #import "FHMultiMediaModel.h"
 #import "FHHouseDetailContactViewModel.h"
 #import "FHDetailHouseTitleModel.h"

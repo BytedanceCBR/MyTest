@@ -213,7 +213,6 @@
     NSMutableDictionary *routeParam = [NSMutableDictionary dictionary];
     FHFloorPanPicShowViewController *pictureListViewController = [[FHFloorPanPicShowViewController alloc] initWithRouteParamObj:TTRouteParamObjWithDict(routeParam)];
     pictureListViewController.modalPresentationStyle = UIModalPresentationFullScreen;
-    pictureListViewController.pictsArray = self.dataHelper.photoAlbumData.photoAlbumArray;
     
     __weak typeof(self) weakSelf = self;
     pictureListViewController.albumImageStayBlock = ^(NSInteger index, NSInteger stayTime) {
