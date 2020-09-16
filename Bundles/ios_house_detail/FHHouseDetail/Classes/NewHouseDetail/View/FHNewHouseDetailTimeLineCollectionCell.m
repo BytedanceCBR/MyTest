@@ -24,7 +24,7 @@
 
 + (CGSize)cellSizeWithData:(id)data width:(CGFloat)width {
     if (data && [data isKindOfClass:[FHNewHouseDetailTimeLineCellModel class]]) {
-        return CGSizeMake(width, 136);
+        return CGSizeMake(width, 133);
     }
     return CGSizeZero;
 }

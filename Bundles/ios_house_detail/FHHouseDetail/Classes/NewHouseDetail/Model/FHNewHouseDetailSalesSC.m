@@ -58,6 +58,7 @@
         if (itemInfo.activityURLString.length && model.salesCellModel.contactViewModel) {
             NSMutableDictionary *extraDic = self.detailTracerDict.mutableCopy;
             extraDic[@"im_open_url"] = itemInfo.activityURLString;
+            extraDic[@"position"] = @"coupon";
             if (itemInfo.associateInfo.imInfo) {
                 extraDic[kFHAssociateInfo] = itemInfo.associateInfo;
             }

@@ -593,6 +593,9 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
         if(extraDict[kFHIMLoginSchema]) {
             imExtra[kFHIMLoginSchema] = extraDict[kFHIMLoginSchema];
         }
+        if (extraDict[@"position"]) {
+            imExtra[@"position"] = extraDict[@"position"];
+        }
     }
     [self.phoneCallViewModel imchatActionWithPhone:self.contactPhone realtorRank:@"0" extraDic:imExtra];
 }

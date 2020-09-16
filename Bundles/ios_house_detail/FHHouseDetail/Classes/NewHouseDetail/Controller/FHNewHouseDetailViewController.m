@@ -427,13 +427,13 @@
             }
         }
         if ([title isEqualToString:@"优惠"]) {
-            if (model.sectionType == FHNewHouseDetailSectionTypeTimeline || model.sectionType == FHNewHouseDetailSectionTypeAgent) {
+            if (model.sectionType == FHNewHouseDetailSectionTypeSales || model.sectionType == FHNewHouseDetailSectionTypeAgent) {
                 index = idx;
                 *stop = YES;
             }
         }
         if ([title isEqualToString:@"动态"]) {
-            if (model.sectionType == FHNewHouseDetailSectionTypeSales || model.sectionType == FHNewHouseDetailSectionTypeAssess || model.sectionType == FHNewHouseDetailSectionTypeRGC) {
+            if (model.sectionType == FHNewHouseDetailSectionTypeTimeline|| model.sectionType == FHNewHouseDetailSectionTypeAssess || model.sectionType == FHNewHouseDetailSectionTypeRGC) {
                 index = idx;
                 *stop = YES;
             }
@@ -471,7 +471,7 @@
     //section header frame
     //需要滚到到顶部，如果滚动的距离超过contengsize，则滚动到底部
     CGPoint contentOffset = self.collectionView.contentOffset;
-    contentOffset.y = frame.origin.y;
+    contentOffset.y = frame.origin.y - (self.navBar.btd_height + self.segmentTitleView.btd_height);
     if (contentOffset.y + CGRectGetHeight(self.collectionView.frame) > (self.collectionView.contentSize.height + self.collectionView.contentInset.bottom)) {
         contentOffset.y = self.collectionView.contentSize.height - CGRectGetHeight(self.collectionView.frame) + self.collectionView.contentInset.bottom;
     }
@@ -479,12 +479,17 @@
     if (contentOffset.y < 0) {
         contentOffset.y = 0;
     }
-    self.segmentViewChangedFlag = YES;
-    [UIView animateWithDuration:0.2 animations:^{
-        [self.collectionView setContentOffset:contentOffset];
-    } completion:^(BOOL finished) {
-        self.segmentViewChangedFlag = NO;
-    }];
+    if (index == 1) {
+        contentOffset.y = 0;
+    }
+    //self.segmentViewChangedFlag = YES;
+    [self.collectionView scrollToItemAtIndexPath:_lastIndexPath atScrollPosition:UICollectionViewScrollPositionTop animated:NO];
+    [self.collectionView setContentOffset:contentOffset];
+//    [UIView animateWithDuration:0.2 animations:^{
+//        [self.collectionView setContentOffset:contentOffset];
+//    } completion:^(BOOL finished) {
+//        self.segmentViewChangedFlag = NO;
+//    }];
 
 }
 
@@ -971,8 +976,11 @@
         return;
     }
     //locate the scrollview which is in the centre
-    CGPoint centerPoint = CGPointMake(20, scrollView.contentOffset.y + 55);
+    CGPoint centerPoint = CGPointMake(20, scrollView.contentOffset.y + self.navBar.btd_height + self.segmentTitleView.btd_height);
     NSIndexPath *indexPath = [self.collectionView indexPathForItemAtPoint:centerPoint];
+    if (!indexPath) {
+        indexPath = [self.collectionView indexPathForItemAtPoint:CGPointMake(centerPoint.x, centerPoint.y + 61)];
+    }
     if (indexPath && self.lastIndexPath.section != indexPath.section) {
         self.lastIndexPath = indexPath;
         FHNewHouseDetailSectionModel *model = self.viewModel.sectionModels[indexPath.section];
