@@ -14,15 +14,35 @@ typedef NS_ENUM(NSUInteger, FHPriceValuationItemViewType) {
 
 NS_ASSUME_NONNULL_BEGIN
 
+@class FHPriceValuationItemView;
+
+@protocol FHPriceValuationItemViewDelegate <NSObject>
+
+@optional
+
+- (void)itemView:(FHPriceValuationItemView *)itemView textFieldDidChange:(NSString *)text;
+
+- (BOOL)itemView:(FHPriceValuationItemView *)itemView shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string;
+
+- (void)itemView:(FHPriceValuationItemView *)itemView textFieldDidBeginEditing:(UITextField *)textField;
+
+@end
+
 @interface FHPriceValuationItemView : UIView
 
 @property(nonatomic, assign) FHPriceValuationItemViewType type;
 @property(nonatomic, strong) UILabel *titleLabel;
 @property(nonatomic, strong) UILabel *contentLabel;
 @property(nonatomic, strong) UITextField *textField;
+@property(nonatomic, strong) UIImageView *rightImage;
 @property(nonatomic, strong) UIView *bottomLine;
 @property(nonatomic, assign) CGFloat titleWidth;
-@property(nonatomic, strong) NSString *rightText;
+@property(nonatomic, copy) NSString *rightText;
+@property(nonatomic, copy) NSString *placeholder;
+@property(nonatomic, copy) NSString *contentText;
+@property(nonatomic, assign) BOOL hiddenRightItem;
+@property(nonatomic, weak) UIScrollView *scrollView;
+@property(nonatomic, weak) id<FHPriceValuationItemViewDelegate> delegate;
 
 //点击事件
 @property(nonatomic, copy) void(^tapBlock)(void);
