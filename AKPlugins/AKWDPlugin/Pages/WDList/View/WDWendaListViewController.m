@@ -58,6 +58,8 @@
 #import "UIColor+Theme.h"
 #import "UIFont+House.h"
 #import "FHUtils.h"
+#import "FHCommonDefines.h"
+#import "FHAnswerListTitleView.h"
 
 #define kListBottomBarHeight (self.view.tt_safeAreaInsets.bottom ? self.view.tt_safeAreaInsets.bottom + 44 : 44)
 
@@ -72,6 +74,7 @@ static NSString * const WukongListTipsHasShown = @"kWukongListTipsHasShown";
 
 @property (nonatomic, strong) WDWendaListFooterView *listFooterView;
 @property (nonatomic, strong) WDWendaListTabView *bottomTabView;
+@property (nonatomic, strong) FHAnswerListTitleView *titleView;
 
 @property (nonatomic, strong) SSThemedView *topBgView; // 顶部白色背景条
 
@@ -357,7 +360,12 @@ static NSString * const WukongListTipsHasShown = @"kWukongListTipsHasShown";
     
 //    UIBarButtonItem *moreButtonItem = [[UIBarButtonItem alloc] initWithCustomView:[self moreButton]];
     self.navigationItem.rightBarButtonItems = @[moreButtonItem];
- 
+    
+    self.titleView = [[FHAnswerListTitleView alloc] init];
+    self.titleView.size = CGSizeMake(SCREEN_WIDTH - 165, 44);
+    self.titleView.hidden = YES;
+    self.navigationItem.titleView = self.titleView;
+    
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(postAnswerSuccess:) name:@"kFHWDAnswerPictureTextPostSuccessNotification" object:nil];
     
     [self firstLoadContent];
@@ -538,6 +546,7 @@ static void extracted(WDWendaListViewController *object, WDWendaListViewControll
             }
             //刷新底部tab按钮数据
             //            [self.bottomTabView refresh];
+            [self.titleView updateWithViewModel:self.viewModel];
         } else {
             if (error.code == 67686) {
                 self.ttErrorView.viewType = TTFullScreenErrorViewTypeDeleted;
@@ -966,6 +975,11 @@ static void extracted(WDWendaListViewController *object, WDWendaListViewControll
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView
 {
+    if(scrollView.contentOffset.y > self.questionHeader.frame.size.height && self.titleView.hidden) {
+        self.titleView.hidden = NO;
+    }else if(scrollView.contentOffset.y < self.questionHeader.frame.size.height && !self.titleView.hidden) {
+        self.titleView.hidden = YES;
+    }
     CGFloat offsetY = -scrollView.contentOffset.y;
     if (offsetY <= 0) {
         offsetY = 0;

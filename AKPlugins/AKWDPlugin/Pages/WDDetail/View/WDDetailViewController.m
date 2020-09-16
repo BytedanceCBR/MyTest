@@ -66,6 +66,8 @@
 #import <TTVideoService/TTFFantasyTracker.h>
 #import "TTCommentViewController.h"
 #import <BDTrackerProtocol/BDTrackerProtocol.h>
+#import "FHAnswerDetailTitleView.h"
+#import "FHCommonDefines.h"
 
 
 extern NSInteger const kWDPostCommentBindingErrorCode;
@@ -92,11 +94,9 @@ static NSUInteger const kOldAnimationViewTag = 20161221;
 @property (nonatomic, strong) UIViewController<TTCommentViewControllerProtocol> *commentViewController;
 
 @property (nonatomic, strong) WDDetailNatantContainerView *natantContainerView;
-@property (nonatomic, strong) TTAlphaThemedButton *rightBarButtonItemView;
-@property (nonatomic, strong) TTFollowThemeButton *rightFollowButton;
 
 @property (nonatomic, strong) SSThemedImageView *logoTitleView;
-@property (nonatomic, strong) WDNewDetailTitleView *profileTitleView;
+@property (nonatomic, strong) FHAnswerDetailTitleView *profileTitleView;
 @property (nonatomic, strong) UIView<WDDetailHeaderView> *headerView;
 @property (nonatomic, strong) WDDetailView *detailView;
 @property (nonatomic, strong) SSThemedView *whiteGapView; // iPad适配专用顶部白底View，配合wrapperView
@@ -657,26 +657,16 @@ static NSUInteger const kOldAnimationViewTag = 20161221;
 
 - (void)p_buildTitleView
 {
-    self.profileTitleView = [[WDNewDetailTitleView alloc] initWithFrame:CGRectZero];
-    [self.navigationItem setTitleView:self.profileTitleView];
-    WeakSelf;
-    [self.profileTitleView setTapHandler:^{
-        StrongSelf;
-        [WDServiceHelper openProfileForUserID:[self.detailModel.answerEntity.user.userID longLongValue]];
-    }];
+    self.profileTitleView = [[FHAnswerDetailTitleView alloc] init];
+    self.profileTitleView.size = CGSizeMake(SCREEN_WIDTH - 95, 44);
+    self.profileTitleView.isShow = NO;
+    self.navigationItem.titleView = self.profileTitleView;
+    self.profileTitleView.userInteractionEnabled = YES;
+    [self.profileTitleView addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(titleViewTaped:)]];
+    UIView *view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 20, 0)];
     
-    [self.KVOController observe:self.detailModel.answerEntity.user keyPath:NSStringFromSelector(@selector(followerCount)) options:NSKeyValueObservingOptionNew block:^(id  _Nullable observer, id  _Nonnull object, NSDictionary<NSString *,id> * _Nonnull change) {
-        StrongSelf;
-        [self.profileTitleView updateNavigationTitle:self.detailModel.answerEntity.user.name imageURL:self.detailModel.answerEntity.user.avatarURLString verifyInfo:self.detailModel.answerEntity.user.userAuthInfo decoration:self.detailModel.answerEntity.user.userDecoration fansNum:self.detailModel.answerEntity.user.followerCount];
-    }];
-    
-//    SSThemedImageView *imageView = [[SSThemedImageView alloc] initWithFrame:CGRectZero];
-//    imageView.imageName = @"wukonglogo_ask_bar";
-//    [imageView sizeToFit];
-//    imageView.userInteractionEnabled = YES;
-//    [imageView addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(titleViewTaped:)]];
-//    self.logoTitleView = imageView;
-//    self.navigationItem.titleView = imageView;
+    UIBarButtonItem *buttonItem = [[UIBarButtonItem alloc] initWithCustomView:view];
+    self.navigationItem.rightBarButtonItems = @[buttonItem];
 }
 
 - (void)p_buildNaviBar
@@ -696,32 +686,15 @@ static NSUInteger const kOldAnimationViewTag = 20161221;
         return;
     }
     
-    NSMutableArray *buttons = [[NSMutableArray alloc] init];
-    _rightBarButtonItemView = [self p_generateBarButtonWithImageName:@"new_more_titlebar"];
-    [_rightBarButtonItemView addTarget:self action:@selector(p_showSharePanel) forControlEvents:UIControlEventTouchUpInside];
-    
-    CGFloat padding = 16.0f;
-    if ([TTDeviceHelper is480Screen] || [TTDeviceHelper is568Screen]) {
-        padding = 0.0;
-    }
-    SSThemedView *view = [[SSThemedView alloc] initWithFrame:CGRectMake(0, 0, self.rightFollowButton.width + [TTDeviceUIUtils tt_newPadding:padding], self.rightFollowButton.height)];
-    self.rightFollowButton.centerX = view.width / 2;
-    [view addSubview:self.rightFollowButton];
-
-    [buttons addObject:[[UIBarButtonItem alloc] initWithCustomView:_rightBarButtonItemView]];
-    if (![[TTAccountManager userID] isEqualToString:[self.detailModel.answerEntity.user userID]]) {
-        [buttons addObject:[[UIBarButtonItem alloc] initWithCustomView:view]];
-    }
-    
-    
-    self.navigationItem.rightBarButtonItems = buttons;
 }
 
 - (void)titleViewTaped:(UITapGestureRecognizer *)gesture
 {
-    NSString *urlString = [WDCommonLogic wukongURL];
-    if (!isEmptyString(urlString) && [NSURL URLWithString:urlString]) {
-        [[TTRoute sharedRoute] openURLByViewController:[NSURL URLWithString:urlString] userInfo:nil];
+    SSJSBridgeWebView *webView = self.detailView.detailWebView.webView;
+    if ([webView canGoBack]) {
+        [webView goBack];
+    } else {
+        [self.navigationController popViewControllerAnimated:YES];
     }
 }
 
@@ -747,24 +720,7 @@ static NSUInteger const kOldAnimationViewTag = 20161221;
 
 - (void)p_updateNavigationTitleView
 {
-    [self.profileTitleView updateNavigationTitle:self.detailModel.answerEntity.user.name imageURL:self.detailModel.answerEntity.user.avatarURLString verifyInfo:self.detailModel.answerEntity.user.userAuthInfo decoration:self.detailModel.answerEntity.user.userDecoration fansNum:self.detailModel.answerEntity.user.followerCount];
-
-    self.rightFollowButton.hidden = YES;
-
-    if (self.detailModel.redPack) {
-        self.rightFollowButton.unfollowedType = [TTFollowThemeButton redpacketButtonUnfollowTypeButtonStyle:self.detailModel.redPack.button_style.integerValue defaultType:TTUnfollowedType201];
-    } else {
-        self.rightFollowButton.unfollowedType = TTUnfollowedType101;
-    }
-    
-    CGPoint followButtonCenter = self.rightFollowButton.center;
-    CGFloat width = self.rightFollowButton.width;
-    [self.rightFollowButton refreshUI];
-    if (width > self.rightFollowButton.width) {
-        self.rightFollowButton.constWidth = kRedPacketFollowButtonWidth();
-        [self.rightFollowButton refreshUI];
-    }
-    self.rightFollowButton.center = followButtonCenter;
+    [self.profileTitleView updateWithDetailModel:self.detailModel];
 }
 
 - (void)p_preloadNextPage
@@ -784,7 +740,7 @@ static NSUInteger const kOldAnimationViewTag = 20161221;
 
 - (void)p_updateNavigationTitleViewWithScrollViewContentOffset:(CGFloat)offset
 {
-    BOOL show = offset > self.detailView.titleViewAnimationTriggerPosY;
+    BOOL show = offset > 0;
     [self p_showTitle:show];
     self.wasTitleViewShowed = show;
 }
@@ -794,9 +750,8 @@ static NSUInteger const kOldAnimationViewTag = 20161221;
     if (show) {
         self.navigationItem.titleView = self.profileTitleView;
     }
-    self.rightFollowButton.hidden = YES;
     if(show != self.profileTitleView.isShow) {
-        [self.profileTitleView show:show animated:YES];
+        [self.profileTitleView viewShouldShow:show];
     }
 }
 
@@ -1256,7 +1211,6 @@ static NSUInteger const kOldAnimationViewTag = 20161221;
     }
     [self.detailView.detailWebView openFooterView:NO];
     self.wasTitleViewShowed = self.profileTitleView.isShow;
-    self.rightFollowButton.hidden = YES;
     self.navigationItem.titleView = self.profileTitleView;
 }
 
@@ -1426,80 +1380,9 @@ static NSUInteger const kOldAnimationViewTag = 20161221;
 
 #pragma mark - TTDetailViewController protocol (NavBarItems)
 
-- (TTFollowThemeButton *)rightFollowButton {
-    if (!_rightFollowButton) {
-        _rightFollowButton = [[TTFollowThemeButton alloc] initWithUnfollowedType:TTUnfollowedType101 followedType:TTFollowedType101];
-        _rightFollowButton.followed = self.detailModel.answerEntity.user.isFollowing;
-        
-        WeakSelf;
-        [_rightFollowButton.KVOController observe:self.detailModel.answerEntity.user keyPath:NSStringFromSelector(@selector(isFollowing)) options:NSKeyValueObservingOptionNew block:^(id  _Nullable observer, id  _Nonnull object, NSDictionary<NSString *,id> * _Nonnull change) {
-            StrongSelf;
-            BOOL isFollowing = [change tt_boolValueForKey:NSKeyValueChangeNewKey];
-            self.rightFollowButton.followed = isFollowing;
-            if (self.detailModel.redPack && isFollowing) {
-                self.rightFollowButton.unfollowedType = [TTFollowThemeButton redpacketButtonUnfollowTypeButtonStyle:self.detailModel.redPack.button_style.integerValue defaultType:TTUnfollowedType201];
-            } else {
-                self.rightFollowButton.unfollowedType = TTUnfollowedType101;
-            }
-            [self.rightFollowButton refreshUI];
-        }];
-        [_rightFollowButton addTarget:self withActionBlock:^{
-            StrongSelf;
-            if (!TTNetworkConnected()) {
-                [TTIndicatorView showWithIndicatorStyle:TTIndicatorViewStyleImage
-                                          indicatorText:@"网络不给力，请稍后重试"
-                                         indicatorImage:[UIImage themedImageNamed:@"close_popup_textpage"]
-                                            autoDismiss:YES
-                                         dismissHandler:nil];
-                return;
-            }
-            
-            BOOL isFollowed = self.detailModel.answerEntity.user.isFollowing;
-            self.rightFollowButton.followed = isFollowed;
-            [self.rightFollowButton startLoading];
-            
-            BOOL isFollowing = self.detailModel.answerEntity.user.isFollowing;
-            NSString *event = isFollowing ? @"rt_unfollow" : @"rt_follow";
-            NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithDictionary:self.detailModel.gdExtJsonDict];
-            [dict setValue:@"answer_detail_top_banner" forKey:@"source"];
-            [dict setValue:@"detail" forKey:@"position"];
-            [dict setValue:self.detailModel.answerEntity.ansid forKey:@"group_id"];
-            [dict setValue:self.detailModel.answerEntity.user.userID forKey:@"to_user_id"];
-            [dict setValue:@"from_group" forKey:@"follow_type"];
-            if (self.detailModel.needSendRedPackFlag) {
-                if (isFollowing) {
-                    self.detailModel.needSendRedPackFlag = NO;
-                }
-                [dict setValue:@1 forKey:@"is_redpacket"];
-            }
-            [BDTrackerProtocol eventV3:event params:[dict copy]];
-            
-            NSMutableDictionary *followDic = [NSMutableDictionary dictionary];
-            [followDic setValue:self.detailModel.answerEntity.user.userID forKey:@"id"];
-            [followDic setValue:@(101) forKey:@"new_source"];
-            [followDic setValue:@(32) forKey:@"new_reason"];//FriendFollowNewReasonUnknown
-            [followDic setValue:kWDDetailViewControllerUMEventName forKey:@"from"];
-            
-            FriendActionType actionType = self.detailModel.answerEntity.user.isFollowing ? FriendActionTypeUnfollow: FriendActionTypeFollow;
-            if (actionType == FriendActionTypeFollow) {
-                [[TTFollowManager  sharedManager] follow:followDic completion:^(NSError * _Nullable error, NSDictionary * _Nullable result) {
-                    [self finishActionType:actionType error:error result:result];
-                }];
-            } else {
-                [[TTFollowManager  sharedManager] unfollow:followDic completion:^(NSError * _Nullable error, NSDictionary * _Nullable result) {
-                    [self finishActionType:actionType error:error result:result];
-                }];
-            }
-            
-        } forControlEvent:UIControlEventTouchUpInside];
-    }
-    return _rightFollowButton;
-}
 
 - (void)finishActionType:(FriendActionType)type error:(nullable NSError*)error result:(nullable NSDictionary*)result
 {
-    [self.rightFollowButton stopLoading:nil];
-    
     if (!error) {
         NSDictionary *response = [result tt_dictionaryValueForKey:@"result"];
         NSDictionary *data = [response tt_dictionaryValueForKey:@"data"];
