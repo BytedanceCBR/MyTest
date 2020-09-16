@@ -68,6 +68,8 @@
 #import <BDTrackerProtocol/BDTrackerProtocol.h>
 #import "FHAnswerDetailTitleView.h"
 #import "FHCommonDefines.h"
+#import "UIColor+Theme.h"
+#import "UIFont+House.h"
 
 
 extern NSInteger const kWDPostCommentBindingErrorCode;
@@ -106,6 +108,7 @@ static NSUInteger const kOldAnimationViewTag = 20161221;
 @property (nonatomic, strong) WDNewsHelpView *sliderHelpView;
 @property (nonatomic, strong) WDBottomToolView *toolbarView;
 @property (nonatomic, strong) TTBubbleView *bubbleView;
+@property (nonatomic, strong) UIButton *nextButton;
 
 @property (nonatomic, strong) TTCommentWriteView *commentWriteView;
 
@@ -767,6 +770,26 @@ static NSUInteger const kOldAnimationViewTag = 20161221;
     [self.view addSubview:self.toolbarView];
     self.toolbarView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleTopMargin;
     self.toolbarView.banEmojiInput = YES;
+    [self initNextButton];
+}
+
+-(void)initNextButton {
+    self.nextButton = [[UIButton alloc] init];
+    [self.nextButton setBackgroundColor:[UIColor themeWhite]];
+    [self.nextButton setTitle:@"下一个回答" forState:UIControlStateNormal];
+    [self.nextButton setTitleColor:[UIColor themeBlack] forState:UIControlStateNormal];
+    self.nextButton.titleLabel.font = [UIFont themeFontRegular:12];
+    self.nextButton.layer.cornerRadius = 15;
+    self.nextButton.layer.borderWidth = 1;
+    self.nextButton.layer.borderColor = [UIColor themeGray5].CGColor;
+    [self.view addSubview:self.nextButton];
+    [self.nextButton mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.width.mas_equalTo(80);
+        make.height.mas_equalTo(30);
+        make.right.equalTo(self).offset(-15);
+        make.bottom.equalTo(self.toolbarView.mas_top).offset(-15);
+    }];
+    [self.nextButton addTarget:self action:@selector(nextButtonClicked) forControlEvents:UIControlEventTouchUpInside];
 }
 
 - (void)p_buildCommentViewController
@@ -1939,6 +1962,16 @@ static NSUInteger const kOldAnimationViewTag = 20161221;
     } else {
         [BDTrackerProtocol eventV3:@"click_dislike" params:[dict copy]];
     }
+}
+
+-(void)nextButtonClicked {
+    [self p_tryNextAnswer];
+    NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithDictionary:self.detailModel.gdExtJsonDict];
+    [dict setValue:@"umeng" forKey:@"category"];
+    [dict setValue:kWDDetailViewControllerUMEventName forKey:@"tag"];
+    [dict setValue:@"click_next_answer" forKey:@"label"];
+    [dict setValue:self.detailModel.answerEntity.ansid forKey:@"value"];
+    [BDTrackerProtocol eventData:[dict copy]];
 }
 
 - (void)bottomView:(WDBottomToolView *)bottomView nextButtonClicked:(SSThemedButton *)nextButton
