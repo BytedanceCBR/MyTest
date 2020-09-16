@@ -25,6 +25,7 @@ typedef enum : NSUInteger {
 @property (nonatomic, weak) FHErrorView *emptyView;
 @property (nonatomic, assign) FHSugListSearchType searchType;
 @property (nonatomic, assign) FHHouseType houseType;
+@property (nonatomic, assign) BOOL supportConfirmReturn;
 
 - (instancetype)initWithTableView:(UITableView *)tableView paramObj:(TTRouteParamObj *)paramObj;
 - (void)clearSugTableView;

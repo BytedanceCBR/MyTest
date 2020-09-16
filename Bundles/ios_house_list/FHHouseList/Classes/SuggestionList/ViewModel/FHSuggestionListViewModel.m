@@ -28,6 +28,7 @@
         self.listController = viewController;
         self.cellDict = [NSMutableDictionary new];
         [self initNotification];
+        self.listController.startMonitorTime = [[NSDate date] timeIntervalSince1970];
     }
     return self;
 }

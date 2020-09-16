@@ -434,6 +434,11 @@
     }
     [self.showHouseCache addObject:itemData.groupId];
     NSMutableDictionary *dict = [self trackDict:itemData rank:rank];
+    if(itemData.cellSubType == FHUGCFeedListCellSubTypeFullVideo || itemData.cellSubType == FHUGCFeedListCellSubTypeUGCVideo){
+        dict[@"video_type"] = @"video";
+    }else if(itemData.cellSubType == FHUGCFeedListCellSubTypeUGCSmallVideo){
+        dict[@"video_type"] = @"small_video";
+    }
     TRACK_EVENT(@"feed_client_show", dict);
 }
 

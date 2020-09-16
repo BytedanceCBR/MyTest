@@ -32,6 +32,7 @@
 
 @interface FHNeighbourhoodQuestionViewModel () <UITableViewDelegate,UITableViewDataSource,FHUGCBaseCellDelegate,UIScrollViewDelegate>
 
+@property(nonatomic, weak) FHNeighbourhoodQuestionController *viewController;
 @property(nonatomic, strong) FHFeedUGCCellModel *guideCellModel;
 @property(nonatomic, assign) BOOL alreadShowFeedGuide;
 
@@ -40,8 +41,9 @@
 @implementation FHNeighbourhoodQuestionViewModel
 
 - (instancetype)initWithTableView:(UITableView *)tableView controller:(FHNeighbourhoodQuestionController *)viewController {
-    self = [super initWithTableView:tableView controller:viewController];
+    self = [super initWithTableView:tableView];
     if (self) {
+        self.viewController = viewController;
         self.dataList = [[NSMutableArray alloc] init];
         [self configTableView];
     }
@@ -233,7 +235,6 @@
         FHFeedUGCCellModel *cellModel = [FHFeedUGCCellModel modelFromFeed:itemModel.content];
         cellModel.isInNeighbourhoodQAList = YES;
         cellModel.categoryId = self.categoryId;
-        cellModel.feedVC = self.viewController;
         cellModel.tableView = self.tableView;
         cellModel.enterFrom = [self.viewController categoryName];
         if(cellModel){
@@ -509,7 +510,6 @@
         self.clientShowDict = [NSMutableDictionary new];
     }
     
-    NSString *row = [NSString stringWithFormat:@"%i",indexPath.row];
     NSString *groupId = cellModel.groupId;
     if(groupId){
         if (self.clientShowDict[groupId]) {
