@@ -70,6 +70,10 @@
     return [TTAccount sharedAccount].user.avatarURL;
 }
 
+- (NSString *)currentUserMobile {
+    return [TTAccount sharedAccount].user.mobile;
+}
+
 -(void)registerAccountStatusListener:(id<AccountStatusListener>)listener {
     [_observerMulticast addWeakDelegate:listener onQueue:dispatch_get_main_queue()];
 }

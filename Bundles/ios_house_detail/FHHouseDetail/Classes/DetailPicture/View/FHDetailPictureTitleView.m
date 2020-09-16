@@ -16,7 +16,8 @@
 @interface FHDetailPictureTitleView()<UICollectionViewDelegate,UICollectionViewDataSource,UICollectionViewDelegateFlowLayout>
 
 @property (nonatomic, strong) UIView *indicatorView;
-
+@property (nonatomic, copy) NSArray *preTitleSums;
+@property (nonatomic, assign) NSInteger titleIndex;
 @end
 
 @implementation FHDetailPictureTitleView
@@ -28,6 +29,17 @@
         [self setupUI];
     }
     return self;
+}
+
+- (void)setTitleNums:(NSArray *)titleNums {
+    _titleNums = titleNums;
+    NSMutableArray *preTitleSums = [NSMutableArray arrayWithCapacity:titleNums.count];
+    
+    for (NSNumber *preNum in titleNums) {
+        NSNumber *lastSum = preTitleSums.lastObject;
+        [preTitleSums addObject:[NSNumber numberWithUnsignedInteger:lastSum.unsignedIntegerValue + preNum.unsignedIntegerValue]];
+    }
+    self.preTitleSums = preTitleSums.copy;
 }
 
 - (UIView *)indicatorView {
@@ -86,8 +98,9 @@
 - (void)setSelectIndex:(NSInteger)selectIndex {
     if (_selectIndex != selectIndex || selectIndex == 0) {
         _selectIndex = selectIndex; // 图片索引
-        [self.colletionView reloadData];
         NSInteger titleIndex = [self titleIndexBySelectIndex];
+        _titleIndex = titleIndex;
+        [self.colletionView reloadData];
         if (titleIndex >= 0 && titleIndex < self.titleNames.count) {
             NSIndexPath *indexPath = [NSIndexPath indexPathForRow:titleIndex inSection:0];
             if (indexPath) {
@@ -116,15 +129,16 @@
 }
 
 - (NSInteger)titleIndexBySelectIndex {
-    NSInteger count = 0;
     NSInteger titleIndex = 0;
-    for (int i = 0; i < self.titleNums.count; i++) {
-        NSNumber *num = self.titleNums[i];
-        NSInteger tempCount = [num integerValue];
-        count += tempCount;
-        if (_selectIndex < count) {
-            titleIndex = i;
-            break;
+    NSInteger left = 0 , right = self.titleNums.count - 1;
+    while (left <= right) {
+        NSInteger mid = (left + right) / 2;
+        NSNumber *midSum = self.preTitleSums[mid];
+        if (_selectIndex < midSum.unsignedIntegerValue) {
+            titleIndex = mid;
+            right = mid -1;
+        } else {
+            left = mid + 1;
         }
     }
     return titleIndex;
@@ -133,10 +147,9 @@
 - (NSInteger)currentSelectIndexByTitleIndex:(NSInteger)titleIndex {
     NSInteger currentSelectIndex = 0;
     if (titleIndex >= 0 && titleIndex < self.titleNums.count) {
-        for (int i = 0; i < titleIndex; i++) {
-            NSNumber *num = self.titleNums[i];
-            NSInteger tempCount = [num integerValue];
-            currentSelectIndex += tempCount;
+        if (titleIndex > 0) {
+            NSNumber *number = self.preTitleSums[titleIndex - 1];
+            currentSelectIndex = number.unsignedIntegerValue;
         }
     }
     return currentSelectIndex;
@@ -175,8 +188,6 @@
         NSString *title = self.titleNames[index];
         cell.titleLabel.text = title;
     }
-    NSInteger titleIndex = [self titleIndexBySelectIndex];
-
     UIColor *selectColor = [UIColor whiteColor];
     UIColor *normalColor = [UIColor colorWithHexString:@"#ffffff" alpha:0.4];
     UIFont *selectFont = [UIFont themeFontRegular:16];
@@ -191,7 +202,7 @@
             make.centerX.mas_equalTo(cell.contentView);
         }];
     }
-    if (titleIndex == index) {
+    if (self.titleIndex == index) {
         cell.titleLabel.textColor = selectColor;
         cell.titleLabel.font = selectFont;
     } else {
