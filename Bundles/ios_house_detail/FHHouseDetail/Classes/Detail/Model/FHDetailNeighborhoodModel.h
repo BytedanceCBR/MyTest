@@ -208,7 +208,6 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *imprId;
 @property (nonatomic, strong , nullable) FHVideoHouseVideoModel *neighborhoodVideo;
 @property (nonatomic, copy , nullable) NSString *abtestVersions;
-@property (nonatomic, strong , nullable) NSArray<FHImageModel> *neighborhoodImage;
 @property (nonatomic, strong , nullable) NSArray<FHDetailNeighborhoodDataCoreInfoModel> *coreInfo;
 @property (nonatomic, strong , nullable) NSArray<FHFillFormAgencyListItemModel> *chooseAgencyList;
 @property (nonatomic, copy , nullable) NSString *recommendedRealtorsTitle;
@@ -221,6 +220,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong , nullable) FHDetailNeighborhoodDataStrategyModel *strategy;
 @property (nonatomic, strong , nullable) FHClueAssociateInfoModel *recommendRealtorsAssociateInfo;
 @property (nonatomic, strong , nullable) FHClueAssociateInfoModel *highlightedRealtorAssociateInfo;
+@property (nonatomic, strong , nullable) FHHouseDetailAlbumInfo *albumInfo;
 
 @end
 

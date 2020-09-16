@@ -97,7 +97,7 @@
 #import "IMManager.h"
 #import "FHLynxScanVC.h"
 #import "FHLynxDebugVC.h"
-#import "IMManager.h"
+#import "FIMDebugManager.h"
 
 
 
@@ -730,42 +730,34 @@ extern NSString *const BOE_OPEN_KEY ;
     //    }
     
     {
-        // im相关调试选项
-        STTableViewCellItem *toggleIMConnectionItem = [[STTableViewCellItem alloc] initWithTitle:@"IM走短连接(重启生效)" target:self action:nil];
-        toggleIMConnectionItem.switchStyle = YES;
-        toggleIMConnectionItem.checked = [[NSUserDefaults standardUserDefaults] boolForKey:@"_IM_ShortConnection_Enable_"];
-        toggleIMConnectionItem.switchAction = @selector(toggleIMConnection);
-        toggleIMConnectionItem.detail = [NSString stringWithFormat:@"https抓包 /message/send  请求，验证是否生效"];
-        
-        STTableViewCellItem *toggleIMReadReceiptRequestItem = [[STTableViewCellItem alloc] initWithTitle:@"IM已读回执请求轮询关闭" target:self action:nil];
-        toggleIMReadReceiptRequestItem.switchStyle = YES;
-        toggleIMReadReceiptRequestItem.checked = [self isIMReadReceiptRequestClosed];
-        toggleIMReadReceiptRequestItem.switchAction = @selector(toggleIMReadReceiptRequest);
-        
-        STTableViewCellItem *toggleIMFakeTokenItem = [[STTableViewCellItem alloc] initWithTitle:@"模拟IM服务端返回失效Token" target:self action:nil];
-        toggleIMFakeTokenItem.switchStyle = YES;
-        toggleIMFakeTokenItem.checked = [[NSUserDefaults standardUserDefaults] boolForKey:@"_IM_Fake_Token_Enable_"];
-        toggleIMFakeTokenItem.switchAction = @selector(toggleIMFakeToken);
-        
-        STTableViewCellItem *invalidIMToken = [[STTableViewCellItem alloc] initWithTitle:@"IM手动触发token失效更新" target:self action:@selector(triggerIMTokenInvalide)];
-        
-        STTableViewCellItem *frequenceControlDisable = [[STTableViewCellItem alloc] initWithTitle:@"IM房源卡片自动文本频控关闭" target:self action:nil];
-        frequenceControlDisable.switchStyle = YES;
-        frequenceControlDisable.checked = [[NSUserDefaults standardUserDefaults] boolForKey:@"_IM_Frequenct_Control_Disable_"];
-        frequenceControlDisable.switchAction = @selector(toggleIMFrequencyControlDisable);
-        
-        STTableViewCellItem *enableSingleChatRecallItem = [[STTableViewCellItem alloc] initWithTitle:@"IM单聊支持撤回开关" target:self action:nil];
-        enableSingleChatRecallItem.switchStyle = YES;
-        enableSingleChatRecallItem.checked = [[NSUserDefaults standardUserDefaults] boolForKey:@"_IM_SingleChat_Recall_Enable_"];
-        enableSingleChatRecallItem.switchAction = @selector(toggleIMSingleChatRecallEnable);
-        
-    
-        STTableViewCellItem *enableIMInitDeviceIDEmptyItem = [[STTableViewCellItem alloc] initWithTitle:@"模拟IM初始化DID为空开关(重启生效)" target:self action:@selector(showIMDidConfigInfo)];
-        enableIMInitDeviceIDEmptyItem.switchStyle = YES;
-        enableIMInitDeviceIDEmptyItem.checked = [[NSUserDefaults standardUserDefaults] boolForKey:@"_IM_Init_Did_Empty_Enable_"];
-        enableIMInitDeviceIDEmptyItem.switchAction = @selector(toggleIMInitDeviceIDEmptyEnable);
-        
-        STTableViewSectionItem *section = [[STTableViewSectionItem alloc] initWithSectionTitle:@"IM相关调试选项" items:@[toggleIMConnectionItem, toggleIMReadReceiptRequestItem, toggleIMFakeTokenItem, invalidIMToken, frequenceControlDisable, enableSingleChatRecallItem, enableIMInitDeviceIDEmptyItem]];
+        /// IM调试选项
+        NSArray *items = [[FIMDebugManager shared].debugOptions btd_compactMap:^id _Nullable(FIMDebugOption * _Nonnull option) {
+            STTableViewCellItem *item = nil;
+            
+            switch (option.type) {
+                case FIMDebugOptionTypeSwitch:
+                {
+                    item = [[STTableViewCellItem alloc] initWithTitle:option.title target:option action:nil];
+                    item.detail = option.subtitle;
+                    item.switchStyle = YES;
+                    item.checked = option.enable;
+                    item.switchAction = @selector(toggleSwitchOption);
+                }
+                    break;
+                    
+                case FIMDebugOptionTypeButton:
+                {
+                    item = [[STTableViewCellItem alloc] initWithTitle:option.title target:option action:@selector(triggerButtonOptionAction)];
+                }
+                    break;
+                default:
+                    break;
+            }
+            
+            return item;
+        }];
+
+        STTableViewSectionItem *section = [[STTableViewSectionItem alloc] initWithSectionTitle:@"IM相关调试选项" items:items];
         
         [dataSource addObject:section];
     }
@@ -773,67 +765,6 @@ extern NSString *const BOE_OPEN_KEY ;
     
     return dataSource;
 }
-
-- (void)toggleIMConnection {
-    BOOL isShortConnectEnable = [[NSUserDefaults standardUserDefaults] boolForKey:@"_IM_ShortConnection_Enable_"];
-    [[NSUserDefaults standardUserDefaults] setBool:!isShortConnectEnable forKey:@"_IM_ShortConnection_Enable_"];
-    [[NSUserDefaults standardUserDefaults] synchronize];
-}
-
-- (void)toggleIMFakeToken {
-    BOOL isFakeTokenEnable = [[NSUserDefaults standardUserDefaults] boolForKey:@"_IM_Fake_Token_Enable_"];
-    [[NSUserDefaults standardUserDefaults] setBool:!isFakeTokenEnable forKey:@"_IM_Fake_Token_Enable_"];
-    [[NSUserDefaults standardUserDefaults] synchronize];
-    
-    if(!isFakeTokenEnable) {
-        [self triggerIMTokenInvalide];
-    }
-}
-
-- (void)toggleIMFrequencyControlDisable {
-    BOOL isDisableIMFrequenceControl = [[NSUserDefaults standardUserDefaults] boolForKey:@"_IM_Frequenct_Control_Disable_"];
-    [[NSUserDefaults standardUserDefaults] setBool:!isDisableIMFrequenceControl forKey:@"_IM_Frequenct_Control_Disable_"];
-    [[NSUserDefaults standardUserDefaults] synchronize];
-}
-
-- (void)toggleIMSingleChatRecallEnable {
-    BOOL isSingleChatRecallEnable = [[NSUserDefaults standardUserDefaults] boolForKey:@"_IM_SingleChat_Recall_Enable_"];
-    [[NSUserDefaults standardUserDefaults] setBool:!isSingleChatRecallEnable forKey:@"_IM_SingleChat_Recall_Enable_"];
-    [[NSUserDefaults standardUserDefaults] synchronize];
-}
-
-- (void)toggleIMInitDeviceIDEmptyEnable {
-    BOOL isIMInitDidEmptyEnable = [[NSUserDefaults standardUserDefaults] boolForKey:@"_IM_Init_Did_Empty_Enable_"];
-    [[NSUserDefaults standardUserDefaults] setBool:!isIMInitDidEmptyEnable forKey:@"_IM_Init_Did_Empty_Enable_"];
-    [[NSUserDefaults standardUserDefaults] synchronize];
-}
-
-- (void)showIMDidConfigInfo {
-    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"IM相关DID配置信息" message:[NSString stringWithFormat: @"初始化DID:%@\n当前DID:%@",[[IMManager shareInstance] getIMInitConfigDid],[[IMManager shareInstance] getIMCurrentConfigDid]] preferredStyle:UIAlertControllerStyleAlert];
-    
-    UIAlertAction *cancel = [UIAlertAction actionWithTitle:@"了解了" style:UIAlertActionStyleCancel handler:nil];
-    [alert addAction:cancel];
-    
-    [self presentViewController:alert animated:YES completion:nil];
-}
-
-- (void)triggerIMTokenInvalide {
-    [[IMManager shareInstance] invalidTokenForDebug];
-}
-
-- (BOOL)isIMReadReceiptRequestClosed {
-    return [[NSUserDefaults standardUserDefaults] boolForKey:@"_IM_Read_Receipt_Request_Close_"];
-}
-
-- (void)toggleIMReadReceiptRequest {
-    
-    BOOL isCloseReadReceiptReq = [[NSUserDefaults standardUserDefaults] boolForKey:@"_IM_Read_Receipt_Request_Close_"];
-    [[NSUserDefaults standardUserDefaults] setBool:!isCloseReadReceiptReq forKey:@"_IM_Read_Receipt_Request_Close_"];
-    [[NSUserDefaults standardUserDefaults] synchronize];
-    
-    [self.tableView reloadData];
-}
-
 -(void)makeACrash {
     NSArray * array = [NSArray array];
     NSLog(@"array=%@", array[3]);
