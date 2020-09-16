@@ -67,10 +67,21 @@
     if ([data isKindOfClass:[JSONModel class]]) {
         FHSearchHouseItemModel *itemModel = (FHSearchHouseItemModel *)data;
         if (itemModel.advantageDescription.text) {
-            return 146;
+            return 146 + itemModel.topMargin;
         }
+        return 124 + itemModel.topMargin;
     }
     return 124;
+}
+
+- (void)updateHeightByIsFirst:(BOOL)isFirst {
+    CGFloat top = 5;
+    if (isFirst) {
+        top = 10;
+    }
+    [self.containerView mas_updateConstraints:^(MASConstraintMaker *make) {
+        make.top.mas_equalTo(top);
+    }];
 }
 
 -(void)initUI
@@ -80,8 +91,8 @@
     [self.containerView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(15);
         make.right.mas_equalTo(-15);
-        make.top.mas_equalTo(10);
-        make.bottom.mas_equalTo(0);
+        make.top.mas_equalTo(5);
+        make.bottom.mas_equalTo(-5);
     }];
     
     _leftInfoView = [[UIView alloc] init];

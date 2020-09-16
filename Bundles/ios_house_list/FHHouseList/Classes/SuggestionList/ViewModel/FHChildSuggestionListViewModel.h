@@ -13,7 +13,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface FHChildSuggestionListViewModel : NSObject
+@interface FHChildSuggestionListViewModel : NSObject <UITableViewDelegate, UITableViewDataSource>
 
 @property (nonatomic, assign)     FHHouseType       houseType;
 @property (nonatomic, strong)   NSDictionary       *homePageRollDic;
@@ -26,7 +26,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (NSString *)pageTypeString;
 - (NSString *)categoryNameByHouseType;
-- (NSString *)createQueryCondition:(NSDictionary *)conditionDic;
 
 -(instancetype)initWithController:(FHChildSuggestionListViewController *)viewController;
 - (void)clearSugTableView;
