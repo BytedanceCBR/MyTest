@@ -33,6 +33,7 @@
 
 @interface FHUGCVideoListViewModel () <UITableViewDelegate,UITableViewDataSource,FHUGCBaseCellDelegate,UIScrollViewDelegate>
 
+@property(nonatomic, weak) FHUGCVideoListController *viewController;
 //当第一刷数据不足5个，同时feed还有新内容时，会继续刷下一刷的数据，这个值用来记录请求的次数
 @property(nonatomic, assign) NSInteger retryCount;
 @property(nonatomic, strong) FHUGCFullScreenVideoCell *currentVideoCell;
@@ -47,8 +48,9 @@
 @implementation FHUGCVideoListViewModel
 
 - (instancetype)initWithTableView:(UITableView *)tableView controller:(FHUGCVideoListController *)viewController {
-    self = [super initWithTableView:tableView controller:viewController];
+    self = [super initWithTableView:tableView];
     if (self) {
+        self.viewController = viewController;
         self.isFirst = YES;
         self.isViewAppear = YES;
         self.dataList = [[NSMutableArray alloc] init];
@@ -653,6 +655,11 @@
 
 - (void)trackClientShow:(FHFeedUGCCellModel *)cellModel rank:(NSInteger)rank {
     NSMutableDictionary *dict = [self trackDict:cellModel rank:rank];
+    if(cellModel.cellSubType == FHUGCFeedListCellSubTypeFullVideo || cellModel.cellSubType == FHUGCFeedListCellSubTypeUGCVideo){
+        dict[@"video_type"] = @"video";
+    }else if(cellModel.cellSubType == FHUGCFeedListCellSubTypeUGCSmallVideo){
+        dict[@"video_type"] = @"small_video";
+    }
     TRACK_EVENT(@"feed_client_show", dict);
     
     if(cellModel.attachCardInfo){

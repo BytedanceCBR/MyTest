@@ -44,8 +44,7 @@
 
 - (void)initView {
     _titleView = [[UIImageView alloc] init];
-    UIImage *backgroundImage = [UIImage imageNamed:@"surveyAgentBackgroud"];
-    backgroundImage = [backgroundImage stretchableImageWithLeftCapWidth:backgroundImage.size.width/2 topCapHeight:backgroundImage.size.height/2];
+    UIImage *backgroundImage = [[UIImage imageNamed:@"surveyAgentBackgroud"] resizableImageWithCapInsets:UIEdgeInsetsMake(10, 10, 10, 10) resizingMode:UIImageResizingModeStretch];
     _titleView.image = backgroundImage;
     [self addSubview:_titleView];
     
