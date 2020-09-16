@@ -1557,6 +1557,10 @@ TTEditUserProfileViewControllerDelegate
             
             YYCache *sendPhoneNumberCache = [[FHEnvContext sharedInstance].generalBizConfig sendPhoneNumberCache];
             [sendPhoneNumberCache removeObjectForKey:kFHPLoginhoneNumberCacheKey];
+            
+            [FHMainApi getRequest:@"/f100/api/get_personalized_status" query:nil params:nil jsonClass:[FHConfigModel class] completion:^(JSONModel * _Nullable model, NSError * _Nullable error) {
+                [FHEnvContext savePersonalRecommend:((FHConfigModel*)model).data.personalizedStatus];
+            }];
         }
     }];
 //    [TTAccountManager startLogoutUserWithCompletion:^(BOOL success, NSError *error) {
