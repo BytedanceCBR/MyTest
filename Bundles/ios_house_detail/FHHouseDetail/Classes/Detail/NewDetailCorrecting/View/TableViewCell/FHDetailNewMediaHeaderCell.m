@@ -125,13 +125,11 @@
         pictureDetailViewController.topVC = self.baseViewModel.detailController;
     }
 
-    if ([self.baseViewModel.detailData isKindOfClass:[FHDetailNewModel class]]) {
-        FHDetailNewModel *model = (FHDetailNewModel *)self.baseViewModel.detailData;
-        pictureDetailViewController.associateInfo = model.data.imageGroupAssociateInfo;
-        if (!model.data.isShowTopImageTab) {
-            //如果是新房，非北京、江州以外的城市，暂时隐藏头部
-            pictureDetailViewController.isShowSegmentView = NO;
-        }
+    FHDetailNewMediaHeaderModel *model = (FHDetailNewMediaHeaderModel *)self.currentData;
+    pictureDetailViewController.associateInfo = model.houseImageAssociateInfo;
+    if (!model.isShowTopImageTab) {
+        //如果是新房，非北京、江州以外的城市，暂时隐藏头部
+        pictureDetailViewController.isShowSegmentView = NO;
     }
 
     pictureDetailViewController.dragToCloseDisabled = YES;
@@ -146,14 +144,16 @@
         [weakSelf trackClickTabWithIndex:index element:@"big_photo_album"];
     };
     pictureDetailViewController.indexUpdatedBlock = ^(NSInteger lastIndex, NSInteger currentIndex) {
+        weakSelf.currentIndex = currentIndex;
         [weakSelf trackHeaderViewMediaShowWithIndex:currentIndex isLarge:YES];
     };
 
     [pictureDetailViewController setMediaHeaderModel:self.currentData mediaImages:images];
-    FHDetailNewMediaHeaderModel *model = ((FHDetailNewMediaHeaderModel *)self.currentData);
     //去除flag判断，改为判断详情页type
-    if (self.baseViewModel.houseType == FHHouseTypeNewHouse && [model.topImages isKindOfClass:[NSArray class]] && model.topImages.count > 0) {
-        pictureDetailViewController.smallImageInfosModels = self.dataHelper.photoAlbumData.photoAlbumArray;
+    if (model.isShowTopImageTab) {
+        pictureDetailViewController.smallImageInfosModels = self.dataHelper.photoAlbumData.floorPanModel;
+    } else {
+        pictureDetailViewController.smallImageInfosModels = self.dataHelper.photoAlbumData.floorPanModel;
     }
 
     UIImage *placeholder = [UIImage imageNamed:@"default_image"];
@@ -221,12 +221,14 @@
     FHFloorPanPicShowViewController *pictureListViewController = [[FHFloorPanPicShowViewController alloc] initWithRouteParamObj:TTRouteParamObjWithDict(routeParam)];
     pictureListViewController.modalPresentationStyle = UIModalPresentationFullScreen;
     if (data.isShowTopImageTab) {
-        pictureListViewController.topImages = data.topImages;
+        pictureListViewController.floorPanShowModel = self.dataHelper.photoAlbumData.floorPanModel;
+        pictureListViewController.isShowSegmentTitleView = YES;
         pictureListViewController.associateInfo = data.imageAlbumAssociateInfo;
         pictureListViewController.contactViewModel = data.contactViewModel;
         pictureListViewController.elementFrom = @"new_detail";
     } else {
-        pictureListViewController.pictsArray = self.dataHelper.photoAlbumData.photoAlbumArray;
+        pictureListViewController.isShowSegmentTitleView = NO;
+        pictureListViewController.floorPanShowModel = self.dataHelper.photoAlbumData.floorPanModel;
     }
     __weak typeof(self) weakSelf = self;
     pictureListViewController.albumImageStayBlock = ^(NSInteger index, NSInteger stayTime) {
@@ -236,7 +238,6 @@
         __strong typeof(weakSelf) strongSelf = weakSelf;
         //如果是从大图进入的图片列表，dismiss picturelist
         if (strongSelf.pictureDetailVC) {
-            [strongSelf.pictureListViewController dismissViewControllerAnimated:NO completion:nil];
             if (index >= 0) {
                 [strongSelf.pictureDetailVC.photoScrollView setContentOffset:CGPointMake(weakSelf.pictureDetailVC.view.frame.size.width * index, 0) animated:NO];
             }
