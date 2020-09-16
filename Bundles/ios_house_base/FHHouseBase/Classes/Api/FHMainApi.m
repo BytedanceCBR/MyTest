@@ -112,7 +112,11 @@
             FHConfigModel *model = [self generateModel:obj class:[FHConfigModel class] error:&backError];
             
             NSDate *serializeDate = [NSDate date];
-            NSMutableDictionary *extraDict = nil;
+            NSMutableDictionary *extraDict = @{}.mutableCopy;
+            if ([model respondsToSelector:@selector(status)]) {
+                NSString *status = [model performSelector:@selector(status)];
+                extraDict[@"status"] = status;
+            }
             NSInteger responseCode = -1;
             if (response.statusCode) {
                 responseCode = response.statusCode;
@@ -128,7 +132,6 @@
                 extraDict[@"request_url"] = response.URL.absoluteString;
                 extraDict[@"response_headers"] = response.allHeaderFields;
                 extraDict[@"error"] = error.domain;
-                extraDict[@"status"] = model.status;
                 extraDict[@"response_code"] = @(responseCode);
             }
             [self addRequestLog:@"config" startDate:startDate backDate:backDate serializeDate:serializeDate resultType:resultType errorCode:code errorMsg:errMsg extra:extraDict responseCode:responseCode];
@@ -177,7 +180,7 @@
         FHNetworkMonitorType resultType = FHNetworkMonitorTypeSuccess;
         NSInteger code = 0;
         NSString *errMsg = nil;
-        NSMutableDictionary *extraDict = nil;
+        NSMutableDictionary *extraDict = @{}.mutableCopy;
         NSInteger responseCode = -1;
         if (response.statusCode) {
             responseCode = response.statusCode;
@@ -188,16 +191,17 @@
                 resultType = FHNetworkMonitorTypeNetFailed;
             }
         }
-        
+        if ([model respondsToSelector:@selector(status)]) {
+            NSString *status = [model performSelector:@selector(status)];
+            extraDict[@"status"] = status;
+        }
         if (response.statusCode == 200 && [model isKindOfClass:[FHHouseRentModel class]]) {
             if ([model respondsToSelector:@selector(status)]) {
                 NSString *status = [model performSelector:@selector(status)];
                 if (status.integerValue != 0 || error != nil) {
-                    extraDict = @{}.mutableCopy;
                     extraDict[@"request_url"] = response.URL.absoluteString;
                     extraDict[@"response_headers"] = response.allHeaderFields;
                     extraDict[@"error"] = error.domain;
-                    extraDict[@"status"] = model.status;
                     extraDict[@"response_code"] = @(responseCode);
                     
                     code = [status integerValue];
@@ -329,9 +333,11 @@
             FHNetworkMonitorType resultType = FHNetworkMonitorTypeSuccess;
             NSInteger code = 0;
             NSString *errMsg = nil;
-            NSMutableDictionary *extraDict = nil;
-            
-            BOOL success = NO;
+            NSMutableDictionary *extraDict = @{}.mutableCopy;
+            if ([model respondsToSelector:@selector(status)]) {
+                NSString *status = [model performSelector:@selector(status)];
+                extraDict[@"status"] = status;
+            }
             NSInteger responseCode = -1;
             if (response.statusCode) {
                 responseCode = response.statusCode;
@@ -341,7 +347,6 @@
                     NSString *status = [model performSelector:@selector(status)];
                     if (status.integerValue != 0 || error != nil) {
                         if (uploadLog) {
-                            extraDict = @{}.mutableCopy;
                             extraDict[@"request_url"] = response.URL.absoluteString;
                             extraDict[@"response_headers"] = response.allHeaderFields;
                             extraDict[@"error"] = error.domain;
@@ -396,7 +401,11 @@
             FHNetworkMonitorType resultType = FHNetworkMonitorTypeSuccess;
             NSInteger code = 0;
             NSString *errMsg = nil;
-            NSMutableDictionary *extraDict = nil;
+            NSMutableDictionary *extraDict = @{}.mutableCopy;
+            if ([model respondsToSelector:@selector(status)]) {
+                NSString *status = [model performSelector:@selector(status)];
+                extraDict[@"status"] = status;
+            }
             NSDictionary *exceptionDict = nil;
             NSInteger responseCode = -1;
             if (response.statusCode) {
@@ -406,7 +415,6 @@
                 if ([model respondsToSelector:@selector(status)]) {
                     NSString *status = [model performSelector:@selector(status)];
                     if (status.integerValue != 0 || error != nil || model.data.items.count == 0) {
-                        extraDict = @{}.mutableCopy;
                         extraDict[@"request_url"] = response.URL.absoluteString;
                         extraDict[@"response_headers"] = response.allHeaderFields;
                         extraDict[@"error"] = error.domain;
@@ -448,17 +456,20 @@
                FHNetworkMonitorType resultType = FHNetworkMonitorTypeSuccess;
                NSInteger code = 0;
                NSString *errMsg = nil;
-               NSMutableDictionary *extraDict = nil;
+               NSMutableDictionary *extraDict = @{}.mutableCopy;
                NSDictionary *exceptionDict = nil;
                NSInteger responseCode = -1;
                if (response.statusCode) {
                    responseCode = response.statusCode;
                }
+               if ([model respondsToSelector:@selector(status)]) {
+                   NSString *status = [model performSelector:@selector(status)];
+                   extraDict[@"status"] = status;
+               }
                if (response.statusCode == 200  && [model isKindOfClass:[FHHomeHouseModel class]]) {
                    if ([model respondsToSelector:@selector(status)]) {
                        NSString *status = [model performSelector:@selector(status)];
                        if (status.integerValue != 0 || error != nil || model.data.items.count == 0) {
-                           extraDict = @{}.mutableCopy;
                            extraDict[@"request_url"] = response.URL.absoluteString;
                            extraDict[@"response_headers"] = response.allHeaderFields;
                            extraDict[@"error"] = error.domain;
@@ -563,6 +574,19 @@
     NSDictionary *cat = @{@"status":@(type),@"response_code":@(responseCode)};
     [[HMDTTMonitor defaultManager] hmdTrackService:key metric:metricDict category:cat extra:extra];
     
+    NSInteger requestStatus = 0;
+    if ([extraDict[@"status"] isKindOfClass:[NSString class]]) {
+        NSString *str = extraDict[@"status"];
+        requestStatus = [str integerValue];
+    }
+    if ([extraDict[@"status"] isKindOfClass:[NSNumber class]]) {
+        NSNumber *num = extraDict[@"status"];
+        requestStatus = [num integerValue];
+    }
+    if (requestStatus != 0) {
+            NSDictionary *cats = @{@"api":path,@"request_status":@(responseCode),@"status":@(requestStatus)};
+            [[HMDTTMonitor defaultManager] hmdTrackService:@"f_api_performance_request_error" metric:metricDict category:cats extra:extra];
+    }
     if (type != FHNetworkMonitorTypeSuccess && type != FHNetworkMonitorTypeNetFailed) {
         NSMutableDictionary *filterDict = [NSMutableDictionary new];
         filterDict[@"path"] = key;
@@ -630,12 +654,17 @@
             NSDate *serializeDate = [NSDate date];
             NSInteger code = 0;
             NSString *errMsg = nil;
-            NSMutableDictionary *extraDict = nil;
+            NSMutableDictionary *extraDict = @{}.mutableCopy;
             NSInteger responseCode = -1;
             if (response.statusCode) {
                 responseCode = response.statusCode;
             }
             FHNetworkMonitorType resultType = FHNetworkMonitorTypeSuccess;
+            
+            if ([rmodel respondsToSelector:@selector(status)]) {
+                NSString *status = [rmodel performSelector:@selector(status)];
+                extraDict[@"status"] =  status;
+            }
             if (error) {
                 code = response.statusCode;
                 errMsg = [error description];
@@ -643,7 +672,6 @@
             }else if(backError){
                 
                 NSInteger status = backError.code;
-                extraDict = @{}.mutableCopy;
                 extraDict[@"request_url"] = response.URL.absoluteString;
                 extraDict[@"response_headers"] = response.allHeaderFields;
                 extraDict[@"error"] = error.domain;
@@ -654,7 +682,6 @@
                 errMsg = [backError description];
                 resultType = status;
             }
-            
             [self addRequestLog:response.URL.path startDate:startDate backDate:requestDoneDate serializeDate:serializeDate resultType:resultType errorCode:code errorMsg:errMsg extra:extraDict responseCode:responseCode];
             [FHErrorHubManagerUtil checkRequestResponseWithHost:url requestParams:param responseStatus:response response:obj analysisError:backError changeModelType:resultType];
             
@@ -709,7 +736,11 @@
             NSDate *serializeDate = [NSDate date];
             NSInteger code = 0;
             NSString *errMsg = nil;
-            NSMutableDictionary *extraDict = nil;
+            NSMutableDictionary *extraDict = @{}.mutableCopy;;
+            if ([model respondsToSelector:@selector(status)]) {
+                NSString *status = [model performSelector:@selector(status)];
+                extraDict[@"status"] = status;
+            }
             FHNetworkMonitorType resultType = FHNetworkMonitorTypeSuccess;
             NSInteger responseCode = -1;
             if (response.statusCode) {
@@ -721,11 +752,9 @@
                     NSString *status = [model performSelector:@selector(status)];
                     if (status.integerValue != 0 || error != nil) {
                         if(uploadLog) {
-                            extraDict = @{}.mutableCopy;
                             extraDict[@"request_url"] = response.URL.absoluteString;
                             extraDict[@"response_headers"] = response.allHeaderFields;
                             extraDict[@"error"] = error.domain;
-                            extraDict[@"status"] = status;
                             extraDict[@"response_code"] = @(responseCode);
                         }
                         code = [status integerValue];
@@ -771,7 +800,7 @@
             NSDate *backDate = [NSDate date];
             NSInteger code = 0;
             NSString *errMsg = nil;
-            NSMutableDictionary *extraDict = nil;
+            NSMutableDictionary *extraDict = @{}.mutableCopy;;
             FHNetworkMonitorType resultType = FHNetworkMonitorTypeSuccess;
             NSInteger responseCode = -1;
             if (response.statusCode) {
@@ -794,7 +823,6 @@
                 if ([json isKindOfClass:[NSDictionary class]] && json[@"status"]) {
                     NSInteger status = [json[@"status"] integerValue];
                     if (status != 0) {
-                        extraDict = @{}.mutableCopy;
                         extraDict[@"request_url"] = response.URL.absoluteString;
                         extraDict[@"response_headers"] = response.allHeaderFields;
                         extraDict[@"error"] = error.domain;
@@ -804,6 +832,10 @@
                     }
                 }
             }
+               if ([json isKindOfClass:[NSDictionary class]] && json[@"status"]) {
+                   NSInteger status = [json[@"status"] integerValue];
+                   extraDict[@"status"] = @(status);
+               }
             [self addRequestLog:response.URL.path startDate:startDate backDate:backDate serializeDate:nil resultType:resultType errorCode:code errorMsg:errMsg extra:extraDict responseCode:responseCode];
             completion(json,error);
         }
@@ -1006,7 +1038,11 @@
             FHNetworkMonitorType resultType = FHNetworkMonitorTypeSuccess;
             NSInteger code = 0;
             NSString *errMsg = nil;
-            NSMutableDictionary *extraDict = nil;
+            NSMutableDictionary *extraDict = @{}.mutableCopy;
+            if ([model respondsToSelector:@selector(status)]) {
+                NSString *status = [model performSelector:@selector(status)];
+                extraDict[@"status"] = status;
+            }
             NSDictionary *exceptionDict = nil;
             NSInteger responseCode = -1;
             if (response.statusCode) {
@@ -1016,14 +1052,11 @@
                 if ([model respondsToSelector:@selector(status)]) {
                     NSString *status = [model performSelector:@selector(status)];
                     if (status.integerValue != 0 || error != nil) {
-                        extraDict = @{}.mutableCopy;
                         extraDict[@"request_url"] = response.URL.absoluteString;
                         extraDict[@"response_headers"] = response.allHeaderFields;
                         extraDict[@"error"] = error.domain;
-                        
                         code = [status integerValue];
                         errMsg = error.domain;
-                        
                         NSInteger houseType = [[param valueForKey:@"house_type"] integerValue];
                         resultType = FHNetworkMonitorTypeBizFailed+houseType;
                         exceptionDict = @{@"data_type":(param[@"house_type"]?:@"-1")};
@@ -1058,7 +1091,11 @@
             FHNetworkMonitorType resultType = FHNetworkMonitorTypeSuccess;
             NSInteger code = 0;
             NSString *errMsg = nil;
-            NSMutableDictionary *extraDict = nil;
+            NSMutableDictionary *extraDict = @{}.mutableCopy;
+            if ([model respondsToSelector:@selector(status)]) {
+                NSString *status = [model performSelector:@selector(status)];
+                extraDict[@"status"] = status;
+            };
             NSDictionary *exceptionDict = nil;
             NSInteger responseCode = -1;
             if (response.statusCode) {
@@ -1111,7 +1148,11 @@
             FHNetworkMonitorType resultType = FHNetworkMonitorTypeSuccess;
             NSInteger code = 0;
             NSString *errMsg = nil;
-            NSMutableDictionary *extraDict = nil;
+            NSMutableDictionary *extraDict = @{}.mutableCopy;
+            if ([model respondsToSelector:@selector(status)]) {
+                NSString *status = [model performSelector:@selector(status)];
+                extraDict[@"status"] = status;
+            }
             NSDictionary *exceptionDict = nil;
             NSInteger responseCode = -1;
             if (response.statusCode) {
@@ -1121,7 +1162,6 @@
                 if ([model respondsToSelector:@selector(status)]) {
                     NSString *status = [model performSelector:@selector(status)];
                     if (status.integerValue != 0 || error != nil ) {
-                        extraDict = @{}.mutableCopy;
                         extraDict[@"request_url"] = response.URL.absoluteString;
                         extraDict[@"response_headers"] = response.allHeaderFields;
                         extraDict[@"error"] = error.domain;
@@ -1160,7 +1200,11 @@
             FHNetworkMonitorType resultType = FHNetworkMonitorTypeSuccess;
             NSInteger code = 0;
             NSString *errMsg = nil;
-            NSMutableDictionary *extraDict = nil;
+            NSMutableDictionary *extraDict = @{}.mutableCopy;
+            if ([model respondsToSelector:@selector(status)]) {
+                NSString *status = [model performSelector:@selector(status)];
+                extraDict[@"status"] = status;
+            }
             NSDictionary *exceptionDict = nil;
             NSInteger responseCode = -1;
             if (response.statusCode) {
