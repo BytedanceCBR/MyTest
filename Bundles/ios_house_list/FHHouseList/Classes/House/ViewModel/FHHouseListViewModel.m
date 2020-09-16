@@ -422,6 +422,10 @@ extern NSString *const INSTANT_DATA_KEY;
 #pragma mark - 网络请求
 -(void)loadData:(BOOL)isRefresh fromRecommend:(BOOL)isFromRecommend
 {
+    if (isRefresh) {
+        self.showPlaceHolder = YES;
+        [self.tableView reloadData];
+    }
     if (![TTReachability isNetworkConnected]) {
         if (isRefresh) {
             [self.maskView showEmptyWithType:FHEmptyMaskViewTypeNoNetWorkAndRefresh];
@@ -498,10 +502,6 @@ extern NSString *const INSTANT_DATA_KEY;
     if (self.isCommute) {
         [self requestCommute:isRefresh query:query offset:offset searchId:searchId];
         return;
-    }
-    if (offset == 0) {
-        _showPlaceHolder = YES;
-        [self.tableView reloadData];
     }
     switch (self.houseType) {
         case FHHouseTypeNewHouse:
