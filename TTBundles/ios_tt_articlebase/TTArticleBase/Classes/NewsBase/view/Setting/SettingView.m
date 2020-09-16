@@ -511,7 +511,7 @@ TTEditUserProfileViewControllerDelegate
         CGSize size =  [aString btd_sizeWithFont:[UIFont systemFontOfSize:14] width:self.width - 30];//适配小机型多行文案
         return [TTDeviceUIUtils tt_padding: 58 + size.height];
     }else if(cellType == SettingCellTypePersonalRecommend){
-        NSString *aString = @"关闭后您将无法接收到幸福里专属推荐的精选房内容";
+        NSString *aString = @"关闭后您将无法接收到幸福里专属推荐的精选房源内容";
         CGSize size =  [aString btd_sizeWithFont:[UIFont systemFontOfSize:14] width:self.width - 30];//适配小机型多行文案
         return [TTDeviceUIUtils tt_padding: 58 + size.height];
     }
@@ -706,7 +706,7 @@ TTEditUserProfileViewControllerDelegate
         cell.accessoryView = _personalRecommendSwitch;
         [_personalRecommendSwitch setOn: [FHEnvContext getPersonalRecommend]];
         ((SettingPushCell *)cell).pushTitleLabel.text = @"个性化推荐设置";
-        ((SettingPushCell *)cell).pushDetailLabel.text = @"关闭后您将无法接收到幸福里专属推荐的精选房内容";
+        ((SettingPushCell *)cell).pushDetailLabel.text = @"关闭后您将无法接收到幸福里专属推荐的精选房源内容";
     }
     else if (cellType == SettingCellTypeShowBtn4Refresh) {
         cell.textLabel.text = NSLocalizedString(@"列表页显示刷新按钮", nil);
@@ -1580,7 +1580,7 @@ TTEditUserProfileViewControllerDelegate
 {
     //点击后switch的状态变为NO
     if([FHEnvContext getPersonalRecommend] == YES){
-        TTThemedAlertController *alert = [[TTThemedAlertController alloc] initWithTitle:nil message:NSLocalizedString(@"关闭后您将无法接收到幸福里专属推荐的精选房内容。", nil) preferredType:TTThemedAlertControllerTypeAlert];
+        TTThemedAlertController *alert = [[TTThemedAlertController alloc] initWithTitle:nil message:NSLocalizedString(@"关闭后您将无法接收到幸福里专属推荐的精选房源内容", nil) preferredType:TTThemedAlertControllerTypeAlert];
         [alert addActionWithGrayTitle:NSLocalizedString(@"坚持关闭", nil) actionType:TTThemedAlertActionTypeNormal actionBlock:^{
             NSMutableDictionary *param = [NSMutableDictionary new];
             param[@"popup_name"] = @"personal_recommend_settings";
