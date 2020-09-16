@@ -1275,9 +1275,6 @@
             strongSelf.guessYouWantData = [NSMutableArray<FHGuessYouWantResponseDataDataModel> arrayWithArray:model.data.data];
             strongSelf.guessYouWantExtraInfo = model.data.extraInfo;
             [strongSelf reloadHistoryTableView];
-            if (strongSelf.isFirstShow) {
-                [FHMainApi addUserOpenVCDurationLog:@"pss_search" resultType:FHNetworkMonitorTypeSuccess duration:[[NSDate date] timeIntervalSince1970] - strongSelf.startMonitorTime];
-            }
         }  else {
             if (error && ![error.userInfo[@"NSLocalizedDescription"] isEqualToString:@"the request was cancelled"]) {
                 wself.listController.isLoadingData = NO;
