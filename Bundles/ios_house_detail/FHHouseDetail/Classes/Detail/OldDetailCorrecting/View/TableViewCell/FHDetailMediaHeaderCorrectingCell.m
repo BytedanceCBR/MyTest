@@ -367,7 +367,7 @@
         pictureDetailViewController.associateInfo = model.data.houseImageAssociateInfo;
 
         pictureDetailViewController.followStatus = self.baseViewModel.contactViewModel.followStatus;
-    }else if ([self.baseViewModel.detailData isKindOfClass:[FHDetailNewModel class]]) {
+    } else if ([self.baseViewModel.detailData isKindOfClass:[FHDetailNewModel class]]) {
         FHDetailNewModel *model = (FHDetailNewModel *)self.baseViewModel.detailData;
         pictureDetailViewController.associateInfo = model.data.imageGroupAssociateInfo;
         if (!model.data.isShowTopImageTab) {
@@ -430,7 +430,10 @@
     if (self.baseViewModel.houseType == FHHouseTypeNewHouse && [model.topImages isKindOfClass:[NSArray class]] && model.topImages.count > 0) {
 //        FHDetailNewTopImage *topImage = model.topImages.firstObject;
 //        pictureDetailViewController.smallImageInfosModels = topImage.smallImageGroup;
-        pictureDetailViewController.smallImageInfosModels = [model processTopImagesToSmallImageGroups];
+      //  pictureDetailViewController.smallImageInfosModels = [model processTopImagesToSmallImageGroups];
+    }
+    if (self.baseViewModel.houseType == FHHouseTypeNeighborhood) {
+        pictureDetailViewController.smallImageInfosModels = [model processFloorPanPicShowModel];
     }
     //如果是小区，移除按钮 或者户型详情页也移除按钮
     //099 户型详情页 显示底部按钮
@@ -466,17 +469,16 @@
         pictureDetailViewController.placeholderSourceViewFrames = frames;
         pictureDetailViewController.placeholders = placeholders;
     }
-    if (model.isShowTopImageTab) {
-        __weak FHDetailPictureViewController * weakPictureController = pictureDetailViewController;
-        [pictureDetailViewController setAllPhotoActionBlock:^{
-            __strong typeof(weakSelf) strongSelf = weakSelf;
-            if (strongSelf.pictureListViewController) {
-                [weakPictureController dismissSelf];
-            } else {
-                [strongSelf showPictureList];
-            }
-        }];
-    }
+    __weak FHDetailPictureViewController * weakPictureController = pictureDetailViewController;
+    [pictureDetailViewController setAllPhotoActionBlock:^{
+        __strong typeof(weakSelf) strongSelf = weakSelf;
+        if (strongSelf.pictureListViewController) {
+            [weakPictureController dismissSelf];
+        } else {
+            [strongSelf showPictureList];
+        }
+    }];
+    
     pictureDetailViewController.indexUpdatedBlock = ^(NSInteger lastIndex, NSInteger currentIndex) {
         if (currentIndex >= 0 && currentIndex < weakSelf.model.medias.count) {
             if(weakSelf.baiduPanoramaIndex != -1) {
@@ -529,13 +531,11 @@
     NSMutableDictionary *routeParam = [NSMutableDictionary dictionary];
     FHFloorPanPicShowViewController *pictureListViewController = [[FHFloorPanPicShowViewController alloc] initWithRouteParamObj:TTRouteParamObjWithDict(routeParam)];
     pictureListViewController.modalPresentationStyle = UIModalPresentationFullScreen;
-    if (data.isShowTopImageTab) {
-        pictureListViewController.topImages = data.topImages;
-        pictureListViewController.associateInfo = data.imageAlbumAssociateInfo;
-        pictureListViewController.contactViewModel = data.contactViewModel;
-        pictureListViewController.elementFrom = @"new_detail";
-    } else {
-        pictureListViewController.pictsArray = [data processTopImagesToSmallImageGroups];
+    if (self.baseViewModel.houseType == FHHouseTypeNeighborhood) {
+
+        pictureListViewController.floorPanShowModel = [data processFloorPanPicShowModel];
+        pictureListViewController.isShowSegmentTitleView = YES;
+        pictureListViewController.navBarName = @"小区相册";
     }
     __weak typeof(self)weakSelf = self;
     pictureListViewController.albumImageStayBlock = ^(NSInteger index, NSInteger stayTime) {
@@ -621,6 +621,9 @@
             dict[@"tab_name"] = itemModel.pictureTypeName;
             if (element) {
                 dict[@"element_type"] = element;
+            }
+            if (self.baseViewModel.houseType == FHHouseTypeNeighborhood) {
+                dict[@"event_tracking_id"] = @"107651";
             }
             TRACK_EVENT(@"click_tab", dict);
         }else{
@@ -734,7 +737,7 @@
         }
 
         dict[@"rank"] = @"be_null";
-        
+
         TRACK_EVENT(@"click_options", dict);
     }else{
         NSAssert(NO, @"传入的detailTracerDic不是字典");
@@ -763,6 +766,9 @@
     NSMutableDictionary *dict = [self traceParamsForGallery:index];
     if (from.length) {
         dict[@"element_from"] = from;
+    }
+    if (self.baseViewModel.houseType == FHHouseTypeNeighborhood) {
+        dict[@"event_tracking_id"] = @"107652";
     }
     TRACK_EVENT(@"picture_gallery", dict);
 }
@@ -964,6 +970,32 @@
     return pictsArray.copy;
 }
 
+- (FHFloorPanPicShowModel *)processFloorPanPicShowModel {
+    FHFloorPanPicShowModel *picShowModel = [[FHFloorPanPicShowModel alloc] init];
+    NSMutableArray *mArr = [NSMutableArray array];
+    
+    if (self.vedioModel.videoID.length) {
+        FHFloorPanPicShowGroupModel *videoGroupModel = [[FHFloorPanPicShowGroupModel alloc] init];
+        videoGroupModel.rootGroupName = self.vedioModel.groupType;
+        videoGroupModel.groupName = self.vedioModel.groupType;
+        FHFloorPanPicShowItemVideoModel *itemModel = [[FHFloorPanPicShowItemVideoModel alloc] init];
+        FHImageModel *image = [[FHImageModel alloc] init];
+        image.height = [@(self.vedioModel.vHeight) stringValue];
+        image.height = [@(self.vedioModel.vWidth) stringValue];
+        image.url = self.vedioModel.imageUrl;
+        itemModel.image = image;
+        itemModel.itemType = FHFloorPanPicShowModelTypeVideo;
+        videoGroupModel.items = [NSArray<FHFloorPanPicShowItemModel> arrayWithObject:itemModel];
+        [mArr addObject:videoGroupModel];
+        
+    }
+    
+    for (FHHouseDetailImageTabInfo *tabInfo in self.albumInfo.tabList) {
+        [mArr addObjectsFromArray:[FHFloorPanPicShowGroupModel getTabGroupInfo:tabInfo rootName:tabInfo.tabName]];
+    }
+    picShowModel.itemGroupList = mArr.copy;
+    return picShowModel;
+}
 @end
 
 

@@ -6,15 +6,11 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "FHDetailNewModel.h"
-
+#import "FHDetailBaseCell.h"
 NS_ASSUME_NONNULL_BEGIN
 
-@interface FHFloorPanPicCollectionCell : UICollectionViewCell
+@interface FHFloorPanPicCollectionCell : FHDetailBaseCollectionCell
 
-@property (nonatomic,strong) UIImageView *imageV;
-@property (nonatomic,strong) UILabel *lab;
-@property (nonatomic,strong) FHImageModel *dataModel;
 
 @end
 
