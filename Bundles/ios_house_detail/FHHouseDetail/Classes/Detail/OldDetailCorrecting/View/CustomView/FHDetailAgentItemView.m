@@ -139,7 +139,6 @@
 @property (nonatomic, assign) CGFloat topMargin;
 @property (nonatomic, strong) FHDetailContactModel *model;
 @property (nonatomic, strong) UICollectionView *tagsView;
-@property (nonatomic, strong) UIView *vSepLine;
 
 @end
 
@@ -394,12 +393,12 @@
         make.centerY.equalTo(self.name);
         make.height.mas_equalTo(20);
         make.left.equalTo(self.vSepLine.mas_right).offset(6);
-        make.right.equalTo(self.licenceIcon.mas_left).offset(-5);
+        make.right.equalTo(self.licenseIcon.mas_left).offset(-5);
     }];
     
     [self.agency setContentCompressionResistancePriority:UILayoutPriorityDefaultLow forAxis:UILayoutConstraintAxisHorizontal];
     
-    [self.licenceIcon mas_remakeConstraints:^(MASConstraintMaker *make) {
+    [self.licenseIcon mas_remakeConstraints:^(MASConstraintMaker *make) {
         make.left.equalTo(self.agency.mas_right).offset(5);
         make.width.height.mas_equalTo(20);
         make.centerY.mas_equalTo(self.name);
@@ -409,22 +408,59 @@
 
 -(void)configForLicenceIconWithHidden:(BOOL)isHidden {
     
-    self.licenceIcon.hidden = isHidden;
+    self.licenseIcon.hidden = isHidden;
     
     switch (self.model.realtorCellShow) {
         case FHRealtorCellShowStyle1:
         case FHRealtorCellShowStyle2:
         {
             [self.agency mas_updateConstraints:^(MASConstraintMaker *make) {
-                if(self.licenceIcon.hidden){
+                if(self.licenseIcon.hidden){
                     make.right.equalTo(self.imBtn.mas_left).offset(-10);
                 } else {
-                    make.right.equalTo(self.licenceIcon.mas_left).offset(-5);
+                    make.right.equalTo(self.licenseIcon.mas_left).offset(-5);
                 }
             }];
         }
             break;
         case FHRealtorCellShowStyle0:
+        default:
+            NSLog(@"Do nothing!");
+            break;
+    }
+}
+
+- (void)configForNewLicenseIconStyle:(BOOL)showLicense imageURL:(NSURL *)imageURL {
+    self.licenseIcon.hidden = !showLicense;
+    self.agency.hidden = showLicense;
+    self.vSepLine.hidden = showLicense;
+    
+    switch (self.model.realtorCellShow) {
+        case FHRealtorCellShowStyle1:
+        {
+            if (showLicense) {
+                [self.licenseIcon mas_remakeConstraints:^(MASConstraintMaker *make) {
+                    make.left.equalTo(self.name.mas_right).offset(6);
+                    make.right.mas_lessThanOrEqualTo(self.imBtn.mas_left).offset(-12);
+                    make.size.mas_equalTo(CGSizeMake(18, 16));
+                    make.centerY.mas_equalTo(self.name.mas_centerY);
+                }];
+                
+                if (imageURL) {
+                    [self.licenseIcon bd_setImageWithURL:imageURL forState:UIControlStateNormal];
+                }
+            } else {
+                [self.licenseIcon mas_remakeConstraints:^(MASConstraintMaker *make) {
+                    make.left.mas_equalTo(self.name.mas_right).offset(4);
+                    make.width.height.mas_equalTo(20);
+                    make.centerY.mas_equalTo(self.name);
+                    make.right.mas_lessThanOrEqualTo(self.imBtn.mas_left).offset(-10);
+                }];
+                
+                [self.licenseIcon setImage:[UIImage imageNamed:@"detail_contact"] forState:UIControlStateNormal];
+            }
+        }
+            break;
         default:
             NSLog(@"Do nothing!");
             break;
@@ -473,12 +509,12 @@
         make.top.mas_equalTo(self.callBtn.mas_top);
     }];
 
-    self.licenceIcon = [[FHExtendHotAreaButton alloc] init];
-    [self.licenceIcon setImage:[UIImage imageNamed:@"detail_contact"] forState:UIControlStateNormal];
-    [self.licenceIcon setImage:[UIImage imageNamed:@"detail_contact"] forState:UIControlStateSelected];
-    [self.licenceIcon setImage:[UIImage imageNamed:@"detail_contact"] forState:UIControlStateHighlighted];
-    [self addSubview:self.licenceIcon];
-    [self.licenceIcon mas_makeConstraints:^(MASConstraintMaker *make) {
+    self.licenseIcon = [[FHExtendHotAreaButton alloc] init];
+    [self.licenseIcon setImage:[UIImage imageNamed:@"detail_contact"] forState:UIControlStateNormal];
+    [self.licenseIcon setImage:[UIImage imageNamed:@"detail_contact"] forState:UIControlStateSelected];
+    [self.licenseIcon setImage:[UIImage imageNamed:@"detail_contact"] forState:UIControlStateHighlighted];
+    [self addSubview:self.licenseIcon];
+    [self.licenseIcon mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(self.name.mas_right).offset(4);
         make.width.height.mas_equalTo(20);
         make.centerY.mas_equalTo(self.name);

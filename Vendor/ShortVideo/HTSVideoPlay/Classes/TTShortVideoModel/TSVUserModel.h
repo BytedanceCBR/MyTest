@@ -11,6 +11,7 @@
 @interface TSVUserModel : JSONModel
 
 @property (nonatomic, copy) NSString<Optional> *avatarURL;
+@property (nonatomic, copy) NSString<Optional> *avatarTagUrl;
 @property (nonatomic, copy) NSString<Optional> *name;
 @property (nonatomic, copy) NSString<Optional> *schema;
 @property (nonatomic, copy) NSString<Optional> *userAuthInfo;
