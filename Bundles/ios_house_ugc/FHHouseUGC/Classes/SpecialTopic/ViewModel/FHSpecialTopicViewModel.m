@@ -1129,6 +1129,11 @@
 
 - (void)trackClientShow:(FHFeedUGCCellModel *)cellModel rank:(NSInteger)rank section:(NSInteger)section{
     NSMutableDictionary *dict =  [self trackDict:cellModel rank:rank section:section];
+    if(cellModel.cellSubType == FHUGCFeedListCellSubTypeFullVideo || cellModel.cellSubType == FHUGCFeedListCellSubTypeUGCVideo){
+        dict[@"video_type"] = @"video";
+    }else if(cellModel.cellSubType == FHUGCFeedListCellSubTypeUGCSmallVideo){
+        dict[@"video_type"] = @"small_video";
+    }
     TRACK_EVENT(@"feed_client_show", dict);
     
     if(cellModel.attachCardInfo){
