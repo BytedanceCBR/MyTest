@@ -19,7 +19,7 @@
 @class FHHouseDetailImageGroupModel;
 @class FHClueAssociateInfoModel;
 @class FHContactCertificationModel;
-
+@class FHHouseDetailImageTabInfo;
 NS_ASSUME_NONNULL_BEGIN
 
 @protocol FHDetailPhotoHeaderModelProtocol <AbstractJSONModelProtocol>
@@ -337,6 +337,26 @@ typedef NS_ENUM (NSUInteger, FHHouseDetailImageListDataUsedSceneType) {
 @property (nonatomic, strong , nullable) NSArray<FHImageModel> *instantHouseImageList;
 @end
 
+@protocol FHHouseDetailImageStruct <NSObject>
+@end
+
+@interface FHHouseDetailImageStruct : JSONModel
+@property (nonatomic, strong, nullable) FHImageModel *image;
+@property (nonatomic, strong, nullable) FHImageModel *smallImage;
+@end
+
+@protocol FHHouseDetailImageTabInfo <NSObject>
+@end
+
+@interface FHHouseDetailImageTabInfo : JSONModel
+@property (nonatomic, strong, nullable) NSString *tabName;
+@property (nonatomic, strong, nullable) NSArray<FHHouseDetailImageStruct>  *tabContent;
+@property (nonatomic, strong, nullable) NSArray<FHHouseDetailImageTabInfo> *subTab;
+@end
+
+@interface FHHouseDetailAlbumInfo : JSONModel
+@property (nonatomic, strong, nullable) NSArray<FHHouseDetailImageTabInfo> *tabList;
+@end
 
 
 

@@ -10,6 +10,8 @@
 #import "FHNavBarView.h"
 #import "FHErrorView.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 extern NSString *const TRACER_KEY ;
 extern NSString *const VCTITLE_KEY ;
 
@@ -28,8 +30,6 @@ extern NSString *const VCTITLE_KEY ;
 - (void)callBackDataInfo:(NSDictionary *)info;
 
 @end
-
-NS_ASSUME_NONNULL_BEGIN
 
 /*
  Route传参：TTRouteParamObj中的TTRouteUserInfo
