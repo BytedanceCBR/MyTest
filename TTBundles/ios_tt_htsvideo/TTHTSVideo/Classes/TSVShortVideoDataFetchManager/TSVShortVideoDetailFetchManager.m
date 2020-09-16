@@ -128,6 +128,7 @@
                     userModel.name = _realtorInfo.realtorName;
                     userModel.firstBizType = _realtorInfo.firstBizType;
                     userModel.realtorId = _realtorInfo.realtorId;
+                    userModel.avatarTagUrl = _realtorInfo.imageTag.imageUrl;
                     model.author = userModel;
                 }
                 NSMutableArray *awemeDetailItems = [NSMutableArray array];

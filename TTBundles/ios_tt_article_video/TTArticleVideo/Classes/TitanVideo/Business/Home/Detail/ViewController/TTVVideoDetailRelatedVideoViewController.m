@@ -318,6 +318,8 @@
                     traceParams[@"group_source"] = logPbDic[@"group_source"];
                 }
                 
+                traceParams[@"video_type"] = @"video";
+                
                 [FHUserTracker writeEvent:@"feed_client_show" params:traceParams];
 
                 [self.traceIdDict setObject:@"" forKey:itemId];
