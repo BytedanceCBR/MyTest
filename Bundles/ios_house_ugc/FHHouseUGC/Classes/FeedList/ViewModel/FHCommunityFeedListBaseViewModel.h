@@ -6,7 +6,6 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "FHCommunityFeedListController.h"
 #import "TTHttpTask.h"
 #import "FHUGCCellManager.h"
 #import <FHCommonUI/FHRefreshCustomFooter.h>
@@ -27,7 +26,6 @@ NS_ASSUME_NONNULL_BEGIN
 @interface FHCommunityFeedListBaseViewModel : NSObject
 
 @property(nonatomic, strong) UITableView *tableView;
-@property(nonatomic, weak) FHCommunityFeedListController *viewController;
 @property(nonatomic, weak) TTHttpTask *requestTask;
 @property(nonatomic, strong) NSMutableArray *dataList;
 @property(nonatomic, strong) FHUGCCellManager *cellManager;
@@ -44,11 +42,11 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic, assign) BOOL isShowing;
 //视频相关
 @property(nonatomic, strong) NSMutableArray *movieViews;
-@property(nonatomic, strong) UIView *movieView;
-@property(nonatomic, strong) FHFeedUGCCellModel *movieViewCellData;
+@property(nonatomic, strong, nullable) UIView *movieView;
+@property(nonatomic, strong, nullable) FHFeedUGCCellModel *movieViewCellData;
 
 
-- (instancetype)initWithTableView:(UITableView *)tableView controller:(FHCommunityFeedListController *)viewController;
+- (instancetype)initWithTableView:(UITableView *)tableView;
 
 - (void)requestData:(BOOL)isHead first:(BOOL)isFirst;
 
