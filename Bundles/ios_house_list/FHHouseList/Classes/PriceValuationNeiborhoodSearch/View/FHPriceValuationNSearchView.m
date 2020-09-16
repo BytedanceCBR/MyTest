@@ -83,6 +83,15 @@
     [self setSearchPlaceHolderText:@"请输入小区名称"];
 }
 
+- (void)setSupportConfirmReturn:(BOOL)supportConfirmReturn {
+    _supportConfirmReturn = supportConfirmReturn;
+    if(supportConfirmReturn){
+        _searchInput.returnKeyType = UIReturnKeyDone;
+    }else{
+        _searchInput.returnKeyType = UIReturnKeySearch;
+    }
+}
+
 - (void)setSearchPlaceHolderText:(NSString *)text {
     if (text.length > 0) {
         NSDictionary *attr = @{NSFontAttributeName:[UIFont themeFontRegular:15],NSForegroundColorAttributeName:[UIColor themeGray3]};

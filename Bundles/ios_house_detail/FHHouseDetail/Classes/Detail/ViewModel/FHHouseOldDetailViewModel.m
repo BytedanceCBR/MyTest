@@ -60,6 +60,7 @@
 #import <ByteDanceKit/NSDictionary+BTDAdditions.h>
 #import <FHHouseBase/FHUserInfoManager.h>
 #import "FHDetailSurveyAgentListCell.h"
+#import "FHOldDetailOwnerSellHouseCell.h"
 #import "SSCommonLogic.h"
 
 extern NSString *const kFHSubscribeHouseCacheKey;
@@ -72,7 +73,8 @@ extern NSString *const kFHSubscribeHouseCacheKey;
 @property (nonatomic, strong , nullable) FHHouseListDataModel *oldHouseRecommendedCourtData;
 @property (nonatomic, copy , nullable) NSString *neighborhoodId;// 周边小区房源id
 @property (nonatomic, weak , nullable) FHDetailAgentListModel *agentListModel;
-@property (nonatomic, strong) dispatch_source_t surveyTimer; 
+@property (nonatomic, strong) dispatch_source_t surveyTimer;
+@property (nonatomic, strong) FHDetailOldSaleHouseEntranceModel *saleHouseEntranceData;
 @end
 @implementation FHHouseOldDetailViewModel
 // 注册cell类型
@@ -127,6 +129,8 @@ extern NSString *const kFHSubscribeHouseCacheKey;
     [self.tableView registerClass:[FHDetailNeighborhoodAssessCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailAccessCellModel class])];
     //经纪人评测
     [self.tableView registerClass:[FHhouseDetailRGCListCell class] forCellReuseIdentifier:NSStringFromClass([FHhouseDetailRGCListCellModel class])];
+    //帮我卖房入口
+    [self.tableView registerClass:[FHOldDetailOwnerSellHouseCell class] forCellReuseIdentifier:NSStringFromClass([FHOldDetailOwnerSellHouseModel class])];
 }
 
 // cell identifier
@@ -756,6 +760,8 @@ logPB:self.listLogPB extraInfo:self.extraInfo completion:^(FHDetailOldModel * _N
         infoModel.rangeModel = model.data.neighborhoodPriceRange;
         [self.items addObject:infoModel];
     }
+    //帮我卖房数据
+    self.saleHouseEntranceData = model.data.saleHouseEntrance;
    
     self.items = [FHOldDetailModuleHelper moduleClassificationMethod:self.items];
     
@@ -826,6 +832,7 @@ logPB:self.listLogPB extraInfo:self.extraInfo completion:^(FHDetailOldModel * _N
 - (void)processDetailRelatedData {
     if (self.requestRelatedCount >= 4) {
         self.detailController.isLoadingData = NO;
+        FHDetailOldModel * model = (FHDetailOldModel *)self.detailData;
         //  同小区房源
         if (self.sameNeighborhoodHouseData && self.sameNeighborhoodHouseData.items.count > 0) {
             FHDetailSameNeighborhoodHouseModel *infoModel = [[FHDetailSameNeighborhoodHouseModel alloc] init];
@@ -856,8 +863,17 @@ logPB:self.listLogPB extraInfo:self.extraInfo completion:^(FHDetailOldModel * _N
             infoModel.relatedHouseData = self.relatedHouseData;
             [self.items addObject:infoModel];
         }
+        //帮我卖房入口
+        FHDetailOldSaleHouseEntranceModel *saleHouseEntrance = model.data.saleHouseEntrance;
+        if(saleHouseEntrance.title.length > 0 && saleHouseEntrance.subtitle.length > 0 && saleHouseEntrance.buttonText.length > 0 && saleHouseEntrance.openUrl.length > 0) {
+            FHOldDetailOwnerSellHouseModel *ownerSellHouseModel = [[FHOldDetailOwnerSellHouseModel alloc] init];
+            ownerSellHouseModel.questionText = saleHouseEntrance.title;
+            ownerSellHouseModel.hintText = saleHouseEntrance.subtitle;
+            ownerSellHouseModel.helpMeSellHouseText = saleHouseEntrance.buttonText;
+            ownerSellHouseModel.helpMeSellHouseOpenUrl = saleHouseEntrance.openUrl;
+            [self.items addObject:ownerSellHouseModel];
+        }
         // 免责声明
-        FHDetailOldModel * model = (FHDetailOldModel *)self.detailData;
         if (model.data.contact || model.data.disclaimer) {
             FHOldDetailDisclaimerModel *infoModel = [[FHOldDetailDisclaimerModel alloc] init];
             infoModel.disclaimer = model.data.disclaimer;

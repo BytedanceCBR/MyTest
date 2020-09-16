@@ -31,6 +31,7 @@
 #import "FHUserTracker.h"
 #import "UIViewController+Track.h"
 #import "TTAccountManager.h"
+#import "UIImage+FIconFont.h"
 
 @interface FHPersonalHomePageController ()<UIScrollViewDelegate,TTUIViewControllerTrackProtocol,SSImpressionProtocol>
 
@@ -140,6 +141,11 @@
     self.isTopIsCanNotMoveTabViewPre = NO;
     
     [self setupDefaultNavBar:NO];
+    UIImage *image = ICON_FONT_IMG(24, @"\U0000E68A", [UIColor themeGray1]);
+    [self.customNavBarView.leftBtn setImage:image forState:UIControlStateHighlighted];
+    [self.customNavBarView.leftBtn setImage:image forState:UIControlStateNormal];
+    [self.customNavBarView.leftBtn setBackgroundImage:nil forState:UIControlStateNormal];
+    [self.customNavBarView.leftBtn setBackgroundImage:nil forState:UIControlStateHighlighted];
     self.customNavBarView.title.text = [[TTAccountManager userID] isEqualToString:self.userId] ? @"我的主页" : @"TA的主页";
      
     self.defaultTopHeight = 100;

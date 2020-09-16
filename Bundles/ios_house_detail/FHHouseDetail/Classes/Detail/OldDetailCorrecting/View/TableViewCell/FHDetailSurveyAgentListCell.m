@@ -108,11 +108,11 @@
             FHDetailAgentItemView *itemView = [[FHDetailAgentItemView alloc] initWithModel:obj topMargin:15];
             // 添加事件
             itemView.tag = idx;
-            itemView.licenceIcon.tag = idx;
+            itemView.licenseIcon.tag = idx;
             itemView.callBtn.tag = idx;
             itemView.imBtn.tag = idx;
             [itemView addTarget:self action:@selector(cellClick:) forControlEvents:UIControlEventTouchUpInside];
-            [itemView.licenceIcon addTarget:self action:@selector(licenseClick:) forControlEvents:UIControlEventTouchUpInside];
+            [itemView.licenseIcon addTarget:self action:@selector(licenseClick:) forControlEvents:UIControlEventTouchUpInside];
             [itemView.callBtn addTarget:self action:@selector(phoneClick:) forControlEvents:UIControlEventTouchUpInside];
             [itemView.imBtn addTarget:self action:@selector(imclick:) forControlEvents:UIControlEventTouchUpInside];
             
@@ -126,9 +126,19 @@
 
             itemView.name.text = obj.realtorName;
             itemView.agency.text = obj.agencyName;
+            /// 如果门店信息和从业资格都为空则不展示名字右侧的分割线
+            BOOL hideVSepLine = obj.agencyName.length == 0 && obj.certificate.length == 0;
+            itemView.vSepLine.hidden = hideVSepLine;
             [itemView.avatorView updateAvatarWithModel:obj];
-            BOOL isLicenceIconHidden = ![self shouldShowContact:obj];
-            [itemView configForLicenceIconWithHidden:isLicenceIconHidden];
+            /// 北京商业化开城需求的新样式，这个优先级更高
+            BOOL showNewLicenseStyle = [self shouldShowNewLicenseStyle:obj];
+            if (showNewLicenseStyle) {
+                NSURL *iconURL = [NSURL URLWithString:obj.certification.iconUrl];
+                [itemView configForNewLicenseIconStyle:showNewLicenseStyle imageURL:iconURL];
+            } else {
+                BOOL isLicenceIconHidden = ![self shouldShowContact:obj];
+                [itemView configForLicenceIconWithHidden:isLicenceIconHidden];
+            }
             if(obj.realtorEvaluate.length > 0) {
                 itemView.realtorEvaluate.text = obj.realtorEvaluate;
             }
@@ -265,6 +275,15 @@
     self.foldButton.isFold = model.isFold;
     [self updateItems:YES];
     [self addRealtorShowLog];
+}
+
+/// 北京商业化开城需求新增逻辑
+- (BOOL)shouldShowNewLicenseStyle:(FHDetailContactModel *)contact {
+    BOOL result  = NO;
+    FHContactCertificationModel *certificationModel = contact.certification;
+    result = certificationModel.openUrl.length > 0;
+    
+    return result;
 }
 
 - (BOOL)shouldShowContact:(FHDetailContactModel* )contact {

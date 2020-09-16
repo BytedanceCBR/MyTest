@@ -44,6 +44,7 @@
 #import "FHUGCCategoryManager.h"
 #import "FHUserTracker.h"
 #import "BDABTestManager.h"
+#import "TTSandBoxHelper.h"
 
 #define kFHHouseMixedCategoryID   @"f_house_news" // 推荐频道
 
@@ -1177,6 +1178,10 @@ static NSInteger kGetLightRequestRetryCount = 3;
 }
 
 + (BOOL)isHasVideoList {
+    if ([TTSandBoxHelper isInHouseApp]) {
+        return YES;
+    }
+    
     id res = [BDABTestManager getExperimentValueForKey:@"f_ugc_video_category_open" withExposure:YES];
     if(res){
         return [res boolValue];

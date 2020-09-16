@@ -32,9 +32,12 @@
 #import "TTVFeedCellWillDisplayContext.h"
 #import "TTVFeedCellAction.h"
 #import "FHUGCFullScreenVideoCell.h"
+#import "FHCommunityFeedListController.h"
+#import "UIDevice+BTDAdditions.h"
 
-@interface FHCommunityFeedListPostDetailViewModel () <UITableViewDelegate, UITableViewDataSource>
+@interface FHCommunityFeedListPostDetailViewModel () <UITableViewDelegate, UITableViewDataSource,FHUGCBaseCellDelegate>
 
+@property(nonatomic, weak) FHCommunityFeedListController *viewController;
 @property(nonatomic, strong) FHErrorView *errorView;
 //当第一刷数据不足5个，同时feed还有新内容时，会继续刷下一刷的数据，这个值用来记录请求的次数
 @property(nonatomic, assign) NSInteger retryCount;
@@ -44,8 +47,9 @@
 @implementation FHCommunityFeedListPostDetailViewModel
 
 - (instancetype)initWithTableView:(UITableView *)tableView controller:(FHCommunityFeedListController *)viewController {
-    self = [super initWithTableView:tableView controller:viewController];
+    self = [super initWithTableView:tableView];
     if (self) {
+        self.viewController = viewController;
         self.dataList = [[NSMutableArray alloc] init];
         [self configTableView];
         // 删帖成功
@@ -265,7 +269,7 @@
         [extraDic setObject:self.tabName forKey:@"tab_name"];
     }
     
-    self.requestTask = [FHHouseUGCAPI requestFeedListWithCategory:self.categoryId behotTime:behotTime loadMore:!isHead listCount:listCount extraDic:extraDic completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
+    self.requestTask = [FHHouseUGCAPI requestFeedListWithCategory:self.categoryId behotTime:behotTime loadMore:!isHead isFirst:isFirst listCount:listCount extraDic:extraDic completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
         wself.viewController.isLoadingData = NO;
         if(isFirst){
             wself.tableView.scrollEnabled = YES;
@@ -364,7 +368,7 @@
         if(height < self.viewController.errorViewHeight && height > 0 && self.viewController.errorViewHeight > 0){
             [self.tableView reloadData];
             CGFloat refreshFooterBottomHeight = self.tableView.mj_footer.height;
-            if ([TTDeviceHelper isIPhoneXSeries]) {
+            if ([UIDevice btd_isIPhoneXSeries]) {
                 refreshFooterBottomHeight += 34;
             }
             //设置footer来占位
@@ -792,7 +796,6 @@
         self.clientShowDict = [NSMutableDictionary new];
     }
     
-    NSString *row = [NSString stringWithFormat:@"%i",indexPath.row];
     NSString *groupId = cellModel.groupId;
     if(groupId){
         if (self.clientShowDict[groupId]) {
@@ -806,6 +809,11 @@
 
 - (void)trackClientShow:(FHFeedUGCCellModel *)cellModel rank:(NSInteger)rank {
     NSMutableDictionary *dict =  [self trackDict:cellModel rank:rank];
+    if(cellModel.cellSubType == FHUGCFeedListCellSubTypeFullVideo || cellModel.cellSubType == FHUGCFeedListCellSubTypeUGCVideo){
+        dict[@"video_type"] = @"video";
+    }else if(cellModel.cellSubType == FHUGCFeedListCellSubTypeUGCSmallVideo){
+        dict[@"video_type"] = @"small_video";
+    }
     TRACK_EVENT(@"feed_client_show", dict);
     
     if(cellModel.attachCardInfo){

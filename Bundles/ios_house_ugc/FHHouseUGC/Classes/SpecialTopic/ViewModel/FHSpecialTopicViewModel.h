@@ -34,8 +34,6 @@
 
 - (void)addStayPageLog:(NSTimeInterval)stayTime;
 
-- (void)addPublicationsShowLog;
-
 - (void)gotoPostThreadVC;
 
 - (void)updateNavBarWithAlpha:(CGFloat)alpha;

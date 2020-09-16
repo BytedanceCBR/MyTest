@@ -1,11 +1,11 @@
 //
-//  FHCommunityFeedListVideoListViewModel.m
+//  FHVideoChannelViewModel.m
 //  FHHouseUGC
 //
-//  Created by 谢思铭 on 2020/8/23.
+//  Created by 谢思铭 on 2020/9/15.
 //
 
-#import "FHCommunityFeedListVideoListViewModel.h"
+#import "FHVideoChannelViewModel.h"
 #import "FHUGCBaseCell.h"
 #import "FHHouseUGCAPI.h"
 #import "FHFeedListModel.h"
@@ -31,8 +31,9 @@
 #import "FHUGCCellHelper.h"
 #import "BTDResponder.h"
 
-@interface FHCommunityFeedListVideoListViewModel () <UITableViewDelegate,UITableViewDataSource,FHUGCBaseCellDelegate,UIScrollViewDelegate>
+@interface FHVideoChannelViewModel () <UITableViewDelegate,UITableViewDataSource,FHUGCBaseCellDelegate,UIScrollViewDelegate>
 
+@property(nonatomic, weak) FHVideoChannelController *viewController;
 @property(nonatomic, strong) FHUGCFullScreenVideoCell *currentVideoCell;
 @property(nonatomic, assign) CGFloat oldY;
 //是否静音，默认是YES
@@ -43,11 +44,12 @@
 
 @end
 
-@implementation FHCommunityFeedListVideoListViewModel
+@implementation FHVideoChannelViewModel
 
-- (instancetype)initWithTableView:(UITableView *)tableView controller:(FHCommunityFeedListController *)viewController {
-    self = [super initWithTableView:tableView controller:viewController];
+- (instancetype)initWithTableView:(UITableView *)tableView controller:(FHVideoChannelController *)viewController {
+    self = [super initWithTableView:tableView];
     if (self) {
+        self.viewController = viewController;
         _muted = YES;
         _isViewAppear = YES;
         self.dataList = [[NSMutableArray alloc] init];
@@ -281,7 +283,7 @@
         [extraDic setObject:fCityId forKey:@"f_city_id"];
     }
 
-    self.requestTask = [FHHouseUGCAPI requestFeedListWithCategory:self.categoryId behotTime:behotTime loadMore:!isHead listCount:listCount extraDic:extraDic completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
+    self.requestTask = [FHHouseUGCAPI requestFeedListWithCategory:self.categoryId behotTime:behotTime loadMore:!isHead isFirst:isFirst listCount:listCount extraDic:extraDic completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
         wself.viewController.isLoadingData = NO;
 
         [wself.tableView finishPullDownWithSuccess:YES];
@@ -854,6 +856,11 @@
 
 - (void)trackClientShow:(FHFeedUGCCellModel *)cellModel rank:(NSInteger)rank {
     NSMutableDictionary *dict = [self trackDict:cellModel rank:rank];
+    if(cellModel.cellSubType == FHUGCFeedListCellSubTypeFullVideo || cellModel.cellSubType == FHUGCFeedListCellSubTypeUGCVideo){
+        dict[@"video_type"] = @"video";
+    }else if(cellModel.cellSubType == FHUGCFeedListCellSubTypeUGCSmallVideo){
+        dict[@"video_type"] = @"small_video";
+    }
     dict[@"event_tracking_id"] = @(93415);
     TRACK_EVENT(@"feed_client_show", dict);
     
