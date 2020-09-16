@@ -1116,7 +1116,6 @@ static NSString * const kkHasShownCommentPolicyIndicatorViewKey = @"HasShownCome
     self.toolbarView = [[WDBottomToolView alloc] initWithFrame:[self p_frameForToolBarViewIsStatusHeightChanged:NO]];
     self.toolbarView.detailModel = self.slideViewModel.initialDetailModel;
     self.toolbarView.delegate = self;
-    self.toolbarView.banEmojiInput = YES;
     [self.view addSubview:self.toolbarView];
 }
 

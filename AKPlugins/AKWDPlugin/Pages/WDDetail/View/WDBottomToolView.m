@@ -13,7 +13,6 @@
 #import "WDAnswerEntity.h"
 #import "TTBusinessManager+StringUtils.h"
 #import "WDAnswerService.h"
-#import <TTUIWidget/TTBubbleView.h>
 #import <TTBaseLib/NSDictionary+TTAdditions.h>
 #import <TTBaseLib/UIViewAdditions.h>
 #import <TTBaseLib/TTDeviceHelper.h>
@@ -33,7 +32,6 @@ static NSString * const kWDHasTipSupportsEmojiInputDefaultKey = @"WDHasTipSuppor
 
 @interface WDBottomToolView ()
 
-@property (nonatomic, strong) TTBubbleView *bubbleView;
 @property(nonatomic,strong) TTMultiDiggManager *diggManager;
 @property(nonatomic,strong) NSArray *imageArray;
 
@@ -73,16 +71,6 @@ static NSString * const kWDHasTipSupportsEmojiInputDefaultKey = @"WDHasTipSuppor
         
         UIEdgeInsets toolBarButtonHitTestInsets = UIEdgeInsetsMake(-8.f, -12.f, -15.f, -12.f);
         
-        TTAlphaThemedButton *emojiButton = [TTAlphaThemedButton buttonWithType:UIButtonTypeCustom];
-        [self addSubview:emojiButton];
-        _emojiButton = emojiButton;
-        [_emojiButton addTarget:self action:@selector(emojiButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
-        _emojiButton.hitTestEdgeInsets = toolBarButtonHitTestInsets;
-        _emojiButton.imageName = @"input_emoji";
-        if ([TTDeviceHelper isPadDevice]) { // iPad 暂时不支持
-            [self setBanEmojiInput:YES];
-        }
-
         TTAlphaThemedButton *commentButton = [TTAlphaThemedButton buttonWithType:UIButtonTypeCustom];
         [self addSubview:commentButton];
         _commentButton = commentButton;
@@ -195,15 +183,9 @@ static NSString * const kWDHasTipSupportsEmojiInputDefaultKey = @"WDHasTipSuppor
     digFrame = CGRectMake(CGRectGetMinX(shareFrame) - 46 - margin, iconTopMargin, 24, 24);
     
     _writeButton.frame = writeFrame;
-    _emojiButton.frame = emojiFrame;
     _commentButton.frame = commentFrame;
     _digButton.frame = digFrame;
     _shareButton.frame = shareFrame;
-    
-    BOOL _isIPad = [TTDeviceHelper isPadDevice];
-//    _writeButton.titleEdgeInsets = UIEdgeInsetsMake(0, _isIPad ? 25 : 8, 0, _emojiButton.width + 4);
-    
-    [self relayoutItems];
 }
 
 - (void)safeAreaInsetsDidChange
@@ -229,79 +211,6 @@ static NSString * const kWDHasTipSupportsEmojiInputDefaultKey = @"WDHasTipSuppor
     [super setFrame:frame];
 }
 
-/*
- *  ipad上根据屏幕宽度重刷item位置
- */
-- (void)relayoutItems
-{
-    if (![TTDeviceHelper isPadDevice]) {
-        return;
-    }
-    /*
-     *  ipad下toolbarItem布局规则: l表示_writeButton宽度，m0_m1_m2表示四个item的三个间距；
-     *  整个toolbar两边边距按基本规则算出；
-     *  屏幕最窄时，l取最小宽度120, m0_m1_m2压缩；
-     *  (1)屏幕逐渐变宽，m0_m1_m2持续拉伸；
-     *  (2)m0_m1_m2到达44_44_40后不再拉伸，l开始拉伸；
-     *  (3)l拉伸至最大宽度465后不再拉伸，转而拉伸m0_m1_m2；
-     *  (4)m0_m1_m2再次拉伸至最大值110_110_106后不再拉伸，转而拉伸l，直至无限大；
-     *
-     *  特殊情况：图集详情界面会多出个下载按钮，
-     *          与上述最后一个 Button 的间距为 44(对应上述情况(2)) 和 110(对应上述情况(4))，
-     *          间距变化计算规则同上述。
-     */
-    
-    
-    static CGFloat writeMinLen = 120.f;
-    static CGFloat writeMaxLen = 465.f;
-    static CGFloat firstMarginAspect = 1.1f;
-    
-    CGFloat mSumMinLen = 44.f + 44.f + 40.f;
-    CGFloat mSumMaxLen = 110.f + 110.f + 106.f;
-    CGFloat marginAspects = 1.1f + 1.1f + 1.0f;
-    
-    CGFloat baseItemMargin;
-    CGFloat edgeMargin = [TTUIResponderHelper paddingForViewWidth:self.width];
-  
-    CGFloat fixWidthOfRightItems = _commentButton.width + _shareButton.width + _digButton.width;
-    CGFloat checkWidth = self.width - edgeMargin * 2 - fixWidthOfRightItems;
-    _writeButton.left = edgeMargin;
-    if (checkWidth < writeMinLen + mSumMinLen) {
-        //case(1)
-        _writeButton.width = writeMinLen;
-        baseItemMargin = (checkWidth - _writeButton.width)/marginAspects;
-        _commentButton.left = _writeButton.right + baseItemMargin * firstMarginAspect;
-        _emojiButton.right = _commentButton.right - 22 - 6;
-        _digButton.left = _commentButton.right + baseItemMargin * firstMarginAspect;
-        _shareButton.left = _digButton.right + baseItemMargin;
-    }
-    else if (checkWidth < writeMaxLen + mSumMinLen) {
-        //case(2)
-        _writeButton.width = checkWidth - mSumMinLen;
-        _emojiButton.right = _commentButton.right - 22 - 6;
-        _commentButton.left = _writeButton.right + 44.f;
-        _digButton.left = _commentButton.right + 44.f;
-        _shareButton.left = _digButton.right + 40.f;
-    }
-    else if (checkWidth < writeMaxLen + mSumMaxLen) {
-        //case(3)
-        _writeButton.width = writeMaxLen;
-        _emojiButton.right = _commentButton.right - 22 - 6;
-        baseItemMargin = (checkWidth - _writeButton.width)/marginAspects;
-        _commentButton.left = _writeButton.right + baseItemMargin * firstMarginAspect;
-        _digButton.left = _commentButton.right + baseItemMargin * firstMarginAspect;
-        _shareButton.left = _digButton.right + baseItemMargin;
-    }
-    else {
-        //case(4)
-        _writeButton.width = checkWidth - mSumMaxLen;
-        _emojiButton.right = _commentButton.right - 22 - 6;
-        _commentButton.left = _writeButton.right + 110.f;
-        _digButton.left = _commentButton.right + 110.f;
-        _shareButton.left = _digButton.right + 106.f;
-    }
-}
-
 - (void)setCommentBadgeValue:(NSString *)commentBadgeValue {
     int64_t value = [commentBadgeValue longLongValue];
     commentBadgeValue = [TTBusinessManager formatCommentCount:value];
@@ -322,45 +231,12 @@ static NSString * const kWDHasTipSupportsEmojiInputDefaultKey = @"WDHasTipSuppor
     }
 }
 
-- (void)setBanEmojiInput:(BOOL)banEmojiInput {
-    if ([TTDeviceHelper isPadDevice]) { // iPad 暂时不支持
-        banEmojiInput = YES;
-    }
-    
-    _banEmojiInput = banEmojiInput;
-    
-    self.emojiButton.hidden = banEmojiInput;
-    self.emojiButton.enabled = !banEmojiInput;
-    
-    if (banEmojiInput && self.bubbleView && self.bubbleView.isShowing) {
-        [self.bubbleView hideTipWithAnimation:NO forceHide:YES];
-    }
-}
-
-- (UIView *)hitTest:(CGPoint)point withEvent:(UIEvent *)event
-{
-    if (self.bubbleView && self.bubbleView.isShowing) {
-        if (CGRectContainsPoint(self.bubbleView.frame, point)) {
-            return self.bubbleView;
-        }
-    }
-    
-    return [super hitTest:point withEvent:event];
-}
-
 #pragma mark - Action & Reponse
 
 - (void)writeButtonClicked:(SSThemedButton *)writeButton
 {
     if ([self.delegate respondsToSelector:@selector(bottomView:writeButtonClicked:)]) {
         [self.delegate bottomView:self writeButtonClicked:writeButton];
-    }
-}
-
-- (void)emojiButtonClicked:(SSThemedButton *)writeButton
-{
-    if ([self.delegate respondsToSelector:@selector(bottomView:emojiButtonClicked:)]) {
-        [self.delegate bottomView:self emojiButtonClicked:writeButton];
     }
 }
 
@@ -451,82 +327,9 @@ static NSString * const kWDHasTipSupportsEmojiInputDefaultKey = @"WDHasTipSuppor
     }];
 }
 
-#pragma mark - TTBubbleView supportsEmojiInput
-
-- (void)showSupportsEmojiInputBubbleViewIfNeeded {
-    if (!self.detailModel.hasNext) {
-        return;
-    }
-    
-    // 避免重复展现
-    if (self.bubbleView && self.bubbleView.isShowing) {
-        return;
-    }
-
-    // 展现过一次
-    BOOL hasSupportsEmojiInputTip = [[NSUserDefaults standardUserDefaults] boolForKey:kWDHasTipSupportsEmojiInputDefaultKey];
-    if (hasSupportsEmojiInputTip) {
-        return;
-    }
-    
-    // iPad 不展现
-    if ([TTDeviceHelper isPadDevice]) {
-        return;
-    }
-    
-    TTBubbleView *bubbleView = [[TTBubbleView alloc] initWithAnchorPoint:CGPointMake(self.shareButton.origin.x + 11, 0.0f) imageName:@"detail_close_icon" tipText:@"查看下一个回答" attributedText:nil arrowDirection:TTBubbleViewArrowDown lineHeight:0 viewType:1];
-    [self addSubview:bubbleView];
-    
-    WeakSelf;
-    [bubbleView showTipWithAnimation:YES
-                       automaticHide:YES
-             animationCompleteHandle:nil
-                      autoHideHandle:^{
-                          StrongSelf;
-                          self.bubbleView = nil;
-                      } tapHandle:^{
-                          StrongSelf;
-                          [self dismissBubbleView:nil];
-                      } closeHandle:^{
-                          StrongSelf;
-                          [self dismissBubbleView:nil];
-                      }];
-    
-    self.bubbleView = bubbleView;
-    
-    [[NSUserDefaults standardUserDefaults] setBool:YES forKey:kWDHasTipSupportsEmojiInputDefaultKey];
-    [[NSUserDefaults standardUserDefaults] synchronize];
-}
-
-- (void)hideSupportsEmojiInputBubbleViewIfNeeded {
-    [self dismissBubbleView:nil];
-}
-
-#pragma mark - target-action
-- (void)dismissBubbleView:(id)sender {
-    if (self.bubbleView && self.bubbleView.isShowing) {
-        [self.bubbleView hideTipWithAnimation:NO forceHide:YES];
-    }
-}
-
-- (void)shareButtonOnClicked:(id)sender
-{
-}
-
 - (void)themeChanged:(NSNotification *)notification
 {
     _writeButton.tintColor = [UIColor tt_themedColorForKey:kColorText1];
-}
-
-
-- (NSString *)_shareIconName
-{
-    return @"tab_share";
-}
-
-- (NSString *)_photoShareIconName
-{
-    return @"icon_details_share";
 }
 
 -(NSArray *)imageArray {

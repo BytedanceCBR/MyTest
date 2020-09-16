@@ -18,7 +18,6 @@ NS_ASSUME_NONNULL_BEGIN
 @protocol WDBottomToolViewDelegate <NSObject>
 
 - (void)bottomView:(WDBottomToolView *)bottomView writeButtonClicked:(SSThemedButton *)wirteButton;
-- (void)bottomView:(WDBottomToolView *)bottomView emojiButtonClicked:(SSThemedButton *)wirteButton;
 - (void)bottomView:(WDBottomToolView *)bottomView commentButtonClicked:(SSThemedButton *)commentButton;
 - (void)bottomView:(WDBottomToolView *)bottomView diggButtonClicked:(SSThemedButton *)diggButton;
 - (void)bottomView:(WDBottomToolView *)bottomView shareButtonClicked:(SSThemedButton *)shareButton;
@@ -28,7 +27,6 @@ NS_ASSUME_NONNULL_BEGIN
 @interface WDBottomToolView : SSThemedView
 
 @property (nonatomic, strong, readonly) TTAlphaThemedButton *writeButton;
-@property (nonatomic, strong, readonly) TTAlphaThemedButton *emojiButton;
 @property (nonatomic, strong, readonly) TTAlphaThemedButton *commentButton;
 @property (nonatomic, strong, readonly) TTAlphaThemedButton *digButton;
 @property (nonatomic, strong, readonly) TTAlphaThemedButton *shareButton;
@@ -41,15 +39,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property(nullable, nonatomic, copy) NSString *commentBadgeValue;
 
-@property (nonatomic, assign) BOOL banEmojiInput; // 是否支持表情输入
-
 @property (nonatomic, weak) id<WDBottomToolViewDelegate> delegate;
-
-- (void)relayoutItems;
-
-- (void)showSupportsEmojiInputBubbleViewIfNeeded;
-
-- (void)hideSupportsEmojiInputBubbleViewIfNeeded;
 
 @end
 

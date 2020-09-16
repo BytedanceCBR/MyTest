@@ -340,10 +340,6 @@ static NSUInteger const kOldAnimationViewTag = 20161221;
     [self.detailView didAppear];
     
     _hasDisappear = NO;
-    __weak typeof(self) weakSelf = self;
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(3.0f * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        [weakSelf.toolbarView showSupportsEmojiInputBubbleViewIfNeeded];
-    });
 }
 
 - (void)viewWillDisappear:(BOOL)animated
@@ -769,7 +765,6 @@ static NSUInteger const kOldAnimationViewTag = 20161221;
     self.toolbarView.delegate = self;
     [self.view addSubview:self.toolbarView];
     self.toolbarView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleTopMargin;
-    self.toolbarView.banEmojiInput = YES;
     [self initNextButton];
 }
 
@@ -2055,24 +2050,7 @@ static NSUInteger const kOldAnimationViewTag = 20161221;
         [self.toolbarView.writeButton setTitle:isEmptyString(userName)? @"写评论": [NSString stringWithFormat:@"回复 %@：", userName] forState:UIControlStateNormal];
     }
     
-    // toolbar 禁表情
-    if ([self.commentViewController respondsToSelector:@selector(tt_banEmojiInput)]) {
-        BOOL isBanRepostOrEmoji = ![[WDAdapterSetting sharedInstance] commentToolBarEnable];
-        self.toolbarView.banEmojiInput = self.commentViewController.tt_banEmojiInput || isBanRepostOrEmoji;
-    }
-    self.toolbarView.banEmojiInput = YES;
-    
     [self.detailView tt_serverRequestTimeMonitorWithName:WDDetailCommentTimeService error:error];
-}
-
-- (void)tt_commentViewController:(id<TTCommentViewControllerProtocol>)ttController didClickCommentCellWithCommentModel:(nonnull id<TTCommentModelProtocol>)model
-{
-    [self.toolbarView hideSupportsEmojiInputBubbleViewIfNeeded];
-}
-
-- (void)tt_commentViewController:(id<TTCommentViewControllerProtocol>)ttController didClickReplyButtonWithCommentModel:(id<TTCommentModelProtocol>)model
-{
-    [self.toolbarView hideSupportsEmojiInputBubbleViewIfNeeded];
 }
 
 - (void)tt_commentViewController:(id<TTCommentViewControllerProtocol>)ttController avatarTappedWithCommentModel:(id<TTCommentModelProtocol>)model
@@ -2087,8 +2065,6 @@ static NSUInteger const kOldAnimationViewTag = 20161221;
     
     NSString *result = [WDTrackerHelper schemaTrackForPersonalHomeSchema:schema categoryName:categoryName fromPage:@"comment_list" groupId:self.detailModel.answerEntity.ansid profileUserId:userID];
     [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:result]];
-    
-    [self.toolbarView hideSupportsEmojiInputBubbleViewIfNeeded];
 }
 
 - (void)tt_commentViewController:(id<TTCommentViewControllerProtocol>)ttController tappedWithUserID:(NSString *)userID
@@ -2099,8 +2075,6 @@ static NSUInteger const kOldAnimationViewTag = 20161221;
     NSString *userIDstr = [NSString stringWithFormat:@"%@", userID];
     NSMutableString *linkURLString = [NSMutableString stringWithFormat:@"sslocal://profile?uid=%@&from_page=at_user_profile_comment", userIDstr];
     [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:linkURLString]];
-
-    [self.toolbarView hideSupportsEmojiInputBubbleViewIfNeeded];
 }
 
 - (void)tt_commentViewController:(id<TTCommentViewControllerProtocol>)ttController startWriteComment:(id<TTCommentModelProtocol>)model
@@ -2152,8 +2126,6 @@ static NSUInteger const kOldAnimationViewTag = 20161221;
             self.commentShowDate = [NSDate date];
         }];
     }
-    
-    [self.toolbarView hideSupportsEmojiInputBubbleViewIfNeeded];
     
     //停止评论时间
     if (self.commentShowDate) {
