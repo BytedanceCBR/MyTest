@@ -17,6 +17,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong)   UIButton    *callBtn;
 @property (nonatomic, strong)   UIButton    *imBtn;
 @property (nonatomic, strong)   UILabel     *name;
+@property (nonatomic, strong)   UIView      *vSepLine;
 @property (nonatomic, strong)   UILabel     *agency;
 @property (nonatomic, strong)   UIImageView *agencyBac;
 @property (nonatomic, strong)   UILabel     *score;

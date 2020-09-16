@@ -127,6 +127,9 @@
                 itemView.name.text = [NSString stringWithFormat:@"%@...",[obj.realtorName substringToIndex:5]];
             }
             itemView.agency.text = obj.agencyName;
+            /// 如果门店信息和从业资格都为空则不展示名字右侧的分割线
+            BOOL hideVSepLine = obj.agencyName.length == 0 && obj.certificate.length == 0;
+            itemView.vSepLine.hidden = hideVSepLine;
             [itemView.avatorView updateAvatarWithModel:obj];
             if (obj.realtorCellShow == FHRealtorCellShowStyle0) {
                 itemView.agency.font = [UIFont themeFontRegular:14];

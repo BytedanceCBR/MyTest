@@ -139,7 +139,6 @@
 @property (nonatomic, assign) CGFloat topMargin;
 @property (nonatomic, strong) FHDetailContactModel *model;
 @property (nonatomic, strong) UICollectionView *tagsView;
-@property (nonatomic, strong) UIView *vSepLine;
 
 @end
 
