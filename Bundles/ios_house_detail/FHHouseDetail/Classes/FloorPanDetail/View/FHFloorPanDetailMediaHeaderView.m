@@ -218,7 +218,13 @@
     if (self.didClickItemViewName) {
         self.didClickItemViewName(self.itemArray[index]);
     }
+}
 
+- (void)scrollToItemAtIndex:(NSInteger)index {
+    NSInteger item = index + 1;
+    NSIndexPath *indexPath = [NSIndexPath indexPathForItem:item inSection:0];
+    [self.scrollView scrollToItemAtIndexPath:indexPath atScrollPosition:UICollectionViewScrollPositionNone animated:NO];
+    [self updateItemAndInfoLabel:index];
 }
 
 - (void)updateItemAndInfoLabel:(NSInteger)index {

@@ -27,6 +27,7 @@
 #import "TTReachability.h"
 #import "ToastManager.h"
 #import "FHDetailNeighborhoodMediaHeaderDataHelper.h"
+#import "FHDetailMediaUtils.h"
 
 @interface FHDetailNeighborhoodMediaHeaderCell ()<FHMultiMediaCorrectingScrollViewDelegate, FHDetailScrollViewDidScrollProtocol, FHDetailVCViewLifeCycleProtocol>
 
@@ -446,21 +447,7 @@
     if ([dict isKindOfClass:[NSDictionary class]]) {
         [dict removeObjectsForKeys:@[@"card_type", @"rank", @"element_from", @"origin_search_id", @"log_pb", @"origin_from"]];
 
-        if ([str isEqualToString:@"图片"]) {
-            dict[@"click_position"] = @"picture";
-        } else if ([str isEqualToString:@"户型"]) {
-            dict[@"click_position"] = @"house_model";
-        } else if ([str isEqualToString:@"视频"]) {
-            dict[@"click_position"] = @"video";
-        } else if ([str isEqualToString:@"house_vr_icon"]) {
-            dict[@"click_position"] = @"house_vr_icon";
-        } else if ([str isEqualToString:@"VR"]) {
-            dict[@"click_position"] = @"house_vr";
-        } else if ([str isEqualToString:@"样板间"]) {
-            dict[@"click_position"] = @"prototype";
-        } else if ([str isEqualToString:@"街景"]) {
-            dict[@"click_position"] = @"panorama";
-        }
+        dict[@"click_position"] = [FHDetailMediaUtils optionFromName:str];
 
         dict[@"rank"] = @"be_null";
 

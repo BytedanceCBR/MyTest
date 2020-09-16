@@ -128,27 +128,7 @@
 
 + (FHFloorPanDetailMediaHeaderDataHelperPhotoAlbumData *)generatePhotoAlbumData:(FHFloorPanDetailMediaHeaderModel *)newMediaHeaderModel {
     FHFloorPanDetailMediaHeaderDataHelperPhotoAlbumData *photoAlbumData = [[FHFloorPanDetailMediaHeaderDataHelperPhotoAlbumData alloc] init];
-//    NSMutableArray <FHHouseDetailImageGroupModel *> *pictsArray = [NSMutableArray array];
-//    //之前传入fisrtTopImage 表示数据不全，需要全部传入
-//    for (FHDetailNewTopImage *topImage in newMediaHeaderModel.topImages) {
-//        for (FHHouseDetailImageGroupModel *groupModel in topImage.smallImageGroup) {
-//            //type类型相同的数据归为一类
-//            __block NSUInteger index = NSNotFound;
-//            [pictsArray enumerateObjectsUsingBlock:^(FHHouseDetailImageGroupModel *_Nonnull obj, NSUInteger idx, BOOL *_Nonnull stop) {
-//                if ([obj.type isEqualToString:groupModel.type]) {
-//                    index = idx;
-//                    *stop = YES;
-//                }
-//            }];
-//            if (index != NSNotFound) {
-//                FHHouseDetailImageGroupModel *existGroupModel = pictsArray[index];
-//                existGroupModel.images = [[NSArray arrayWithArray:existGroupModel.images] arrayByAddingObjectsFromArray:groupModel.images];
-//            } else {
-//                [pictsArray addObject:groupModel.copy];
-//            }
-//        }
-//    }
-//    photoAlbumData.photoAlbumArray = pictsArray.copy;
+    
     return photoAlbumData;
 }
 

@@ -23,6 +23,7 @@
 #import "ToastManager.h"
 #import "FHFloorPanDetailMediaHeaderDataHelper.h"
 #import "FHFloorPanDetailMediaHeaderView.h"
+#import "FHDetailMediaUtils.h"
 
 @interface FHFloorPanDetailMediaHeaderCell ()
 
@@ -33,7 +34,6 @@
 @property (nonatomic, assign) NSInteger currentIndex;
 @property (nonatomic, assign) NSTimeInterval enterTimestamp;
 
-@property (nonatomic, weak) FHFloorPanPicShowViewController *pictureListViewController;
 @property (nonatomic, weak) FHDetailPictureViewController *pictureDetailVC;
 
 @end
@@ -100,9 +100,6 @@
     self.headerView.willDisplayCellForItemAtIndex = ^(NSInteger index) {
         [weakSelf willDisplayCellForItemAtIndex:index];
     };
-    self.headerView.goToPictureListFrom = ^(NSString *_Nonnull name) {
-        [weakSelf goToPictureListFrom:name];
-    };
     self.headerView.didSelectiItemAtIndex = ^(NSInteger index) {
         [weakSelf didSelectItemAtIndex:index];
     };
@@ -120,13 +117,11 @@
     pictureDetailViewController.associateInfo = ((FHDetailFloorPanDetailInfoModel *)self.baseViewModel.detailData).data.imageAssociateInfo;
     
     pictureDetailViewController.houseType = self.baseViewModel.houseType;
-    if (self.pictureListViewController) {
-        pictureDetailViewController.topVC = self.pictureListViewController;
-    } else {
-        pictureDetailViewController.topVC = self.baseViewModel.detailController;
-    }
+    pictureDetailViewController.topVC = self.baseViewModel.detailController;
+    
     pictureDetailViewController.dragToCloseDisabled = YES;
     pictureDetailViewController.startWithIndex = index;
+    self.currentIndex = index;
     pictureDetailViewController.albumImageBtnClickBlock = ^(NSInteger index) {
         [weakSelf enterPictureShowPictureWithIndex:index from:@"all_pic"];
     };
@@ -137,14 +132,20 @@
         [weakSelf trackClickTabWithIndex:index element:@"big_photo_album"];
     };
     pictureDetailViewController.indexUpdatedBlock = ^(NSInteger lastIndex, NSInteger currentIndex) {
+        weakSelf.currentIndex = currentIndex;
         [weakSelf trackHeaderViewMediaShowWithIndex:currentIndex isLarge:YES];
+    };
+
+
+    pictureDetailViewController.saveImageBlock = ^(NSInteger currentIndex) {
+        [weakSelf trackSavePictureWithIndex:currentIndex];
     };
 
     [pictureDetailViewController setMediaHeaderModel:self.currentData mediaImages:images];
     
     FHFloorPanDetailMediaHeaderModel *model = ((FHFloorPanDetailMediaHeaderModel *)self.currentData);
     
-    if (model.titleDataModel.isFloorPan && model.titleDataModel.titleStr.length) {
+    if (model.titleDataModel.titleStr.length) {
         NSMutableString *bottomBarTitle = model.titleDataModel.titleStr.mutableCopy;
         if (model.titleDataModel.squaremeter.length) {
             [bottomBarTitle appendFormat:@" %@",model.titleDataModel.squaremeter];
@@ -168,17 +169,14 @@
         NSValue *frameValue = [NSValue valueWithCGRect:frame];
         [frames addObject:frameValue];
     }
-    if (!self.pictureListViewController) {
-        pictureDetailViewController.placeholderSourceViewFrames = frames;
-        pictureDetailViewController.placeholders = placeholders;
-    }
+    pictureDetailViewController.placeholderSourceViewFrames = frames;
+    pictureDetailViewController.placeholders = placeholders;
+    
     [pictureDetailViewController presentPhotoScrollViewWithDismissBlock:^{
+        NSInteger currentIndex = weakSelf.currentIndex;
+        [weakSelf.headerView scrollToItemAtIndex:currentIndex];
         [weakSelf trackPictureLargeStayWithIndex:weakSelf.currentIndex];
     }];
-
-    pictureDetailViewController.saveImageBlock = ^(NSInteger currentIndex) {
-        [weakSelf trackSavePictureWithIndex:currentIndex];
-    };
     [self trackHeaderViewMediaShowWithIndex:index isLarge:YES];
     self.enterTimestamp = [[NSDate date] timeIntervalSince1970];
     self.pictureDetailVC = pictureDetailViewController;
@@ -206,50 +204,6 @@
         [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:[NSString stringWithFormat:@"sslocal://house_vr_web?back_button_color=white&hide_bar=true&hide_back_button=true&hide_nav_bar=true&url=%@", [openUrl btd_stringByURLEncode]]]];
     }
 }
-
-
-- (void)showPictureList {
-    FHFloorPanDetailMediaHeaderModel *data = (FHFloorPanDetailMediaHeaderModel *)self.currentData;
-    NSMutableDictionary *routeParam = [NSMutableDictionary dictionary];
-    FHFloorPanPicShowViewController *pictureListViewController = [[FHFloorPanPicShowViewController alloc] initWithRouteParamObj:TTRouteParamObjWithDict(routeParam)];
-    pictureListViewController.modalPresentationStyle = UIModalPresentationFullScreen;
-    
-    __weak typeof(self) weakSelf = self;
-    pictureListViewController.albumImageStayBlock = ^(NSInteger index, NSInteger stayTime) {
-        [weakSelf stayPictureShowPictureWithIndex:index andTime:stayTime];
-    };
-    pictureListViewController.albumImageBtnClickBlock = ^(NSInteger index) {
-        __strong typeof(weakSelf) strongSelf = weakSelf;
-        //如果是从大图进入的图片列表，dismiss picturelist
-        if (strongSelf.pictureDetailVC) {
-            [strongSelf.pictureListViewController dismissViewControllerAnimated:NO completion:nil];
-            if (index >= 0) {
-                [strongSelf.pictureDetailVC.photoScrollView setContentOffset:CGPointMake(weakSelf.pictureDetailVC.view.frame.size.width * index, 0) animated:NO];
-            }
-        } else {
-            [strongSelf showImagesWithCurrentIndex:index];
-        }
-    };
-    pictureListViewController.topImageClickTabBlock = ^(NSInteger index) {
-        [weakSelf trackClickTabWithIndex:index element:@"photo_album"];
-    };
-
-    UIViewController *presentedVC;
-    if (self.pictureDetailVC) {
-        presentedVC = self.pictureDetailVC;
-    }
-    if (!presentedVC) {
-        presentedVC = data.weakVC;
-    }
-    if (!presentedVC) {
-        presentedVC = [TTUIResponderHelper visibleTopViewController];
-    }
-    TTNavigationController *navigationController = [[TTNavigationController alloc] initWithRootViewController:pictureListViewController];
-    navigationController.modalPresentationStyle = UIModalPresentationFullScreen;
-    [presentedVC presentViewController:navigationController animated:YES completion:nil];
-    self.pictureListViewController = pictureListViewController;
-}
-
 
 #pragma mark - 埋点
 //埋点
@@ -370,22 +324,8 @@
 
     if ([dict isKindOfClass:[NSDictionary class]]) {
         [dict removeObjectsForKeys:@[@"card_type", @"rank", @"element_from", @"origin_search_id", @"log_pb", @"origin_from"]];
-
-        if ([str isEqualToString:@"图片"]) {
-            dict[@"click_position"] = @"picture";
-        } else if ([str isEqualToString:@"户型"]) {
-            dict[@"click_position"] = @"house_model";
-        } else if ([str isEqualToString:@"视频"]) {
-            dict[@"click_position"] = @"video";
-        } else if ([str isEqualToString:@"house_vr_icon"]) {
-            dict[@"click_position"] = @"house_vr_icon";
-        } else if ([str isEqualToString:@"VR"]) {
-            dict[@"click_position"] = @"house_vr";
-        } else if ([str isEqualToString:@"样板间"]) {
-            dict[@"click_position"] = @"prototype";
-        } else if ([str isEqualToString:@"街景"]) {
-            dict[@"click_position"] = @"panorama";
-        }
+        
+        dict[@"click_position"] = [FHDetailMediaUtils optionFromName:str];
 
         dict[@"rank"] = @"be_null";
 
@@ -456,14 +396,6 @@
     [self trackClickOptions:title];
 }
 
-//进入图片相册页
-- (void)goToPictureListFrom:(NSString *)from {
-    [self enterPictureShowPictureWithIndex:NSUIntegerMax from:from];
-    [self showPictureList];
-    if (self.pictureListViewController) {
-        self.pictureListViewController.elementFrom = from;
-    }
-}
 
 @end
 

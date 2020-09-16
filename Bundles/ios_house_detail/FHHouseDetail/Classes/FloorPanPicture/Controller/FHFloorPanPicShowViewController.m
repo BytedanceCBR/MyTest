@@ -360,7 +360,7 @@
     for (NSUInteger i = 0; i < rootGroupName.count; i++) {
         NSNumber *number = numbers[i];
         NSString *groupName = rootGroupName[i];
-        [titles addObject:[NSString stringWithFormat:@"%@（%lu）", groupName, number.unsignedIntegerValue]];
+        [titles addObject:[NSString stringWithFormat:@"%@（%lu）", groupName, (unsigned long)number.unsignedIntegerValue]];
     }
     self.prePictureSum = preSum.copy;
     self.pictureTitles = titles.copy;
