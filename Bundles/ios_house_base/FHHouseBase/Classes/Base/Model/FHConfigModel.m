@@ -408,7 +408,8 @@
              @"jumpPageOnStartup":@"jump_page_on_startup",
              @"tabWidget": @"tab_widget",
              @"channelType": @"channel_type",
-             @"barConfig": @"bar_config"
+             @"barConfig": @"bar_config",
+             @"personalizedStatus":@"personalized_status"
              };
 }
 

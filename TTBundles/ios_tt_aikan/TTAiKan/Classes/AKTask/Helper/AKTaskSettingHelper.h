@@ -21,6 +21,7 @@
 - (BOOL)isEnableShowTaskEntrance;
 - (void)setShowTaskEntrance:(BOOL)enable;
 - (BOOL)akBenefitEnable;
+- (BOOL)settingRecommendEnable;//个性化推荐cell是否下发
 - (BOOL)appIsReviewing;//审核期间的开关，主要控一些敏感信息
 
 - (BOOL)isEnableWith:(NSString *)key;
