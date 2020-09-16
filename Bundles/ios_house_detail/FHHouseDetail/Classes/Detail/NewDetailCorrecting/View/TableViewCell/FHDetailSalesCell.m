@@ -14,6 +14,7 @@
 #import "FHUIAdaptation.h"
 #import <TTBaseLib/TTUIResponderHelper.h>
 #import <FHWebView/SSWebViewController.h>
+#import <TTAccountSDK/TTAccount.h>
 
 @interface FHDetailSalesItemView: UIView
 
@@ -43,12 +44,13 @@
     [self addSubview:self.submitBtn];
     
     [self.tagView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.top.mas_equalTo(3);
+        make.left.mas_equalTo(3);
+        make.top.mas_equalTo(5);
         make.width.mas_equalTo(30);
         make.height.mas_equalTo(18);
     }];
     [self.titleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(0);
+        make.top.mas_equalTo(3);
         make.height.mas_equalTo(19);
         make.left.mas_equalTo(self.tagView.mas_right).mas_offset(12);
         make.right.mas_equalTo(self.submitBtn.mas_left).mas_offset(-12);
@@ -170,28 +172,35 @@
             [self.containerView addSubview:itemView];
             [itemView.tagView sizeToFit];
             [itemView.submitBtn sizeToFit];
-
+            CGFloat totalTitleHeight = 3;
             CGFloat btnWidth = itemView.submitBtn.width + 34;
             CGFloat iconWidth = itemView.tagView.width + 10;
+            itemView.titleLabel.width = [UIScreen mainScreen].bounds.size.width - btnWidth - iconWidth - 42 * 2;
+            [itemView.titleLabel sizeToFit];
+            CGFloat titleHeight  = floor(itemView.titleLabel.height);
+            vHeight = 44 + titleHeight ;
+            if (!item.discountSubContent || item.discountSubContent.length == 0) {
+                vHeight -= 18;
+                itemView.subtitleLabel.hidden = YES;
+            } else {
+                totalTitleHeight += 24;
+                itemView.subtitleLabel.hidden = NO;
+            }
+            totalHeight += vHeight;
+            totalTitleHeight += titleHeight;
+            CGFloat top = 0;
+            if (totalTitleHeight >= 28) {
+                top = (totalTitleHeight - 28) / 2;
+            }
             [itemView.tagView mas_updateConstraints:^(MASConstraintMaker *make) {
                 make.width.mas_equalTo(iconWidth);
             }];
 
             [itemView.submitBtn mas_updateConstraints:^(MASConstraintMaker *make) {
                 make.width.mas_equalTo(btnWidth);
+                make.top.mas_equalTo(top);
             }];
-            itemView.titleLabel.width = [UIScreen mainScreen].bounds.size.width - btnWidth - iconWidth - 42 * 2;
-            [itemView.titleLabel sizeToFit];
-            CGFloat titleHeight  = floor(itemView.titleLabel.height);
-            CGFloat topOffset = 0;
-//            if (titleHeight >= 44) {
-//                vHeight = 66 + titleHeight ;
-//                topOffset = -2;
-//            }
-            vHeight = 44 + titleHeight ;
-            totalHeight += vHeight;
             [itemView.titleLabel mas_updateConstraints:^(MASConstraintMaker *make) {
-                make.top.mas_equalTo(topOffset);
                 make.height.mas_equalTo(titleHeight);
             }];
             [itemView mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -224,8 +233,22 @@
 
     [self addClickOptionLog:@(itemInfo.actionType)];
     
+    
+    if (itemInfo.actionType == 4 && itemInfo.activityURLString.length) {
+        if (itemInfo.activityURLString.length && self.baseViewModel.contactViewModel) {
+            NSMutableDictionary *extraDic = self.baseViewModel.detailTracerDic.mutableCopy;
+            extraDic[@"im_open_url"] = itemInfo.activityURLString;
+            extraDic[@"position"] = @"coupon";
+            if (itemInfo.associateInfo.imInfo) {
+                extraDic[kFHAssociateInfo] = itemInfo.associateInfo;
+            }
+            [self.baseViewModel.contactViewModel onlineActionWithExtraDict:extraDic];
+        }
+        return;
+    }
+    
     //099 优惠跳转类型
-    if (itemInfo.actionType == 3 && itemInfo.activityURLString.length) {
+    if (itemInfo.actionType == 3  && itemInfo.activityURLString.length) {
         NSString *urlString = itemInfo.activityURLString.copy;
         //@"https://m.xflapp.com/magic/page/ejs/5ecb69c9d7ff73025f6ea4e0?appType=manyhouse";
         if([urlString hasPrefix:@"http://"] ||

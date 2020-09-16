@@ -710,6 +710,7 @@
         FHFeedUGCCellRealtorModel *realtor = [[FHFeedUGCCellRealtorModel alloc] init];
         realtor.agencyName = model.rawData.realtor.agencyName;
         realtor.avatarUrl  = model.rawData.realtor.avatarUrl;
+        realtor.avatarTagUrl = model.rawData.realtor.imageTag.imageUrl;
         realtor.certificationIcon  = model.rawData.realtor.certificationIcon;
         realtor.certificationPage  = model.rawData.realtor.certificationPage;
         realtor.chatOpenurl  = model.rawData.realtor.chatOpenurl;
@@ -903,6 +904,7 @@
     if(model.realtor) {
         realtor.agencyName = model.realtor.agencyName;
         realtor.avatarUrl  = model.realtor.avatarUrl;
+        realtor.avatarTagUrl = model.realtor.imageTag.imageUrl;
         realtor.certificationIcon  = model.realtor.certificationIcon;
         realtor.certificationPage  = model.realtor.certificationPage;
         realtor.chatOpenurl  = model.realtor.chatOpenurl;
@@ -916,6 +918,7 @@
     } else if(model.rawData.realtor) {
         realtor.agencyName = model.rawData.realtor.agencyName;
         realtor.avatarUrl  = model.rawData.realtor.avatarUrl;
+        realtor.avatarTagUrl = model.rawData.realtor.imageTag.imageUrl;
         realtor.certificationIcon  = model.rawData.realtor.certificationIcon;
         realtor.certificationPage  = model.rawData.realtor.certificationPage;
         realtor.chatOpenurl  = model.rawData.realtor.chatOpenurl;

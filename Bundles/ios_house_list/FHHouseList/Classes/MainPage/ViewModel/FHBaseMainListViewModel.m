@@ -610,6 +610,7 @@ extern NSString *const INSTANT_DATA_KEY;
     
     if (isHead) {
         self.showPlaceHolder = YES;
+        [self.tableView reloadData];
     }
     
     if (![TTReachability isNetworkConnected]) {
@@ -621,10 +622,6 @@ extern NSString *const INSTANT_DATA_KEY;
             [self.tableView.mj_footer endRefreshing];
         }
         return;
-    }
-    if (offset == 0) {
-        _showPlaceHolder = YES;
-        [self.tableView reloadData];
     }
     __weak typeof(self) wself = self;
     if (_mainListPage && self.houseType == FHHouseTypeRentHouse) {
