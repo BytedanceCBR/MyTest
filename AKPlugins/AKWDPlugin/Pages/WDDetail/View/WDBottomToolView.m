@@ -25,8 +25,7 @@
 #import "UIColor+Theme.h"
 #import "TTAccountManager.h"
 #import "TTMultiDigManager.h"
-
-//#import "TTUGCEmojiTextAttachment.h"
+#import "FHCommonDefines.h"
 
 static NSString * const kWDHasTipSupportsEmojiInputDefaultKey = @"WDHasTipSupportsEmojiInputDefaultKey";
 
@@ -46,64 +45,63 @@ static NSString * const kWDHasTipSupportsEmojiInputDefaultKey = @"WDHasTipSuppor
 - (instancetype)initWithFrame:(CGRect)frame {
     self = [super initWithFrame:frame];
     if (self) {
-        BOOL _isIPad = [TTDeviceHelper isPadDevice];
-        TTAlphaThemedButton *writeButton = [TTAlphaThemedButton buttonWithType:UIButtonTypeCustom];
-        [writeButton setTitle:@"写评论..." forState:UIControlStateNormal];
-        writeButton.height = [TTDeviceHelper isPadDevice] ? [TTDeviceUIUtils tt_newPadding:36] : [TTDeviceUIUtils tt_newPadding:32];
-        writeButton.titleLabel.font = [UIFont systemFontOfSize:(_isIPad ? 18 : 13)];
-        writeButton.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;
-        writeButton.imageEdgeInsets = UIEdgeInsetsMake(0, 16.f, 0, 0);
-        writeButton.titleEdgeInsets = UIEdgeInsetsMake(0, _isIPad ? 25 : 16, 0, 0);
-        writeButton.titleLabel.textAlignment = NSTextAlignmentLeft;
-        [writeButton addTarget:self action:@selector(writeButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
-        [self addSubview:writeButton];
-        _writeButton = writeButton;
+        _writeButton = [TTAlphaThemedButton buttonWithType:UIButtonTypeCustom];
+        [_writeButton setTitle:@"写评论..." forState:UIControlStateNormal];
+        _writeButton.titleLabel.font = [UIFont systemFontOfSize:13];
+        _writeButton.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;
+        _writeButton.imageEdgeInsets = UIEdgeInsetsMake(0, 16, 0, 0);
+        _writeButton.titleEdgeInsets = UIEdgeInsetsMake(0, 16, 0, 0);
+        _writeButton.titleLabel.textAlignment = NSTextAlignmentLeft;
         _writeButton.borderColors = nil;
         _writeButton.borderColorThemeKey = kColorLine1;
-        _writeButton.layer.borderWidth = [TTDeviceHelper ssOnePixel];
+        _writeButton.layer.borderWidth = 0.5;
         _writeButton.titleColorThemeKey = @"grey3";
-        _writeButton.layer.cornerRadius = _writeButton.height / 2.f;
+        _writeButton.layer.cornerRadius = 16;
         _writeButton.backgroundColorThemeKey = @"grey7";
         _writeButton.layer.masksToBounds = YES;
-        
-//        [_writeButton setImageName:@"write_new"];
         _writeButton.tintColor = [UIColor tt_themedColorForKey:kColorText1];
+        [_writeButton addTarget:self action:@selector(writeButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
+        [self addSubview:_writeButton];
+
+        UIEdgeInsets toolBarButtonHitTestInsets = UIEdgeInsetsMake(-8, -12, -15, -12);
         
-        UIEdgeInsets toolBarButtonHitTestInsets = UIEdgeInsetsMake(-8.f, -12.f, -15.f, -12.f);
-        
-        TTAlphaThemedButton *commentButton = [TTAlphaThemedButton buttonWithType:UIButtonTypeCustom];
-        [self addSubview:commentButton];
-        _commentButton = commentButton;
-        [_commentButton addTarget:self action:@selector(commentButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
+        _commentButton = [TTAlphaThemedButton buttonWithType:UIButtonTypeCustom];
         _commentButton.hitTestEdgeInsets = toolBarButtonHitTestInsets;
         [_commentButton setImage:ICON_FONT_IMG(24, @"\U0000e699", [UIColor themeGray1]) forState:UIControlStateNormal];
+        [_commentButton addTarget:self action:@selector(commentButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
+        [self addSubview:_commentButton];
 
-        self.badgeLabel = [[SSThemedLabel alloc] init];
-        self.badgeLabel.backgroundColorThemeKey = kColorBackground7;
-        self.badgeLabel.textColorThemeKey = kColorText8;
-        self.badgeLabel.font = [UIFont systemFontOfSize:8];
-        self.badgeLabel.layer.cornerRadius = 5;
-        self.badgeLabel.layer.masksToBounds = YES;
-        self.badgeLabel.textAlignment = NSTextAlignmentCenter;
-        [_commentButton addSubview:self.badgeLabel];
+        _badgeLabel = [[SSThemedLabel alloc] init];
+        _badgeLabel.backgroundColorThemeKey = kColorBackground7;
+        _badgeLabel.textColorThemeKey = kColorText8;
+        _badgeLabel.font = [UIFont systemFontOfSize:8];
+        _badgeLabel.layer.cornerRadius = 5;
+        _badgeLabel.layer.masksToBounds = YES;
+        _badgeLabel.textAlignment = NSTextAlignmentCenter;
+        [self.commentButton addSubview:_badgeLabel];
         
-        TTAlphaThemedButton *digButton = [TTAlphaThemedButton buttonWithType:UIButtonTypeCustom];
-        _digButton = digButton;
+        _digButton = [TTAlphaThemedButton buttonWithType:UIButtonTypeCustom];
         _digButton.hitTestEdgeInsets = toolBarButtonHitTestInsets;
         [_digButton setImage:ICON_FONT_IMG(24, @"\U0000e69c", [UIColor themeGray1]) forState:UIControlStateNormal];
         [_digButton setImage:ICON_FONT_IMG(24, @"\U0000e6b1", [UIColor themeOrange4]) forState:UIControlStateSelected];
         [_digButton addTarget:self action:@selector(diggButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
-        [self addSubview:digButton];
+        [self addSubview:_digButton];
         
-        self.diggManager = [[TTMultiDiggManager alloc] initWithButton:_digButton withTransformAngle:0 contentInset:nil buttonPosition:TTMultiDiggButtonPositionRight animationImageNames:self.imageArray];
+        _diggManager = [[TTMultiDiggManager alloc] initWithButton:_digButton withTransformAngle:0 contentInset:nil buttonPosition:TTMultiDiggButtonPositionRight animationImageNames:self.imageArray];
 
-        TTAlphaThemedButton *shareButton = [TTAlphaThemedButton buttonWithType:UIButtonTypeCustom];
-        _shareButton = shareButton;
+        _collectButton = [TTAlphaThemedButton buttonWithType:UIButtonTypeCustom];
+        _collectButton.hitTestEdgeInsets = toolBarButtonHitTestInsets;
+        [_collectButton setImage:ICON_FONT_IMG(24, @"\U0000e696", [UIColor themeGray1]) forState:UIControlStateNormal];
+        [_collectButton setImage:ICON_FONT_IMG(24, @"\U0000e6b2", [UIColor themeOrange4]) forState:UIControlStateSelected];
+        [_collectButton addTarget:self action:@selector(collectButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
+        [self addSubview:_collectButton];
+
+        _shareButton = [TTAlphaThemedButton buttonWithType:UIButtonTypeCustom];
         _shareButton.hitTestEdgeInsets = toolBarButtonHitTestInsets;
-        [self addSubview:shareButton];
         [_shareButton setImage:ICON_FONT_IMG(24, @"\U0000e692", [UIColor themeGray1])forState:UIControlStateNormal];
         [_shareButton addTarget:self action:@selector(shareButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
-        
+        [self addSubview:_shareButton];
+
         _separatorView = [[SSThemedView alloc] init];
         _separatorView.backgroundColorThemeKey = kColorLine7;
         _separatorView.frame = CGRectMake(0, 0, self.width, [TTDeviceHelper ssOnePixel]);
@@ -166,26 +164,56 @@ static NSString * const kWDHasTipSupportsEmojiInputDefaultKey = @"WDHasTipSuppor
 - (void)layoutSubviews
 {
     [super layoutSubviews];
-    CGFloat leftInset = self.tt_safeAreaInsets.left;
-    CGFloat rightInset = self.tt_safeAreaInsets.right;
-    CGFloat hInset = leftInset + rightInset;//水平缩进
-    CGFloat bottomSafeInset = self.tt_safeAreaInsets.bottom;
-    CGFloat writeButtonHeight = [TTDeviceHelper isPadDevice] ? 36 : 32;
-    CGFloat writeTopMargin = ((NSInteger)self.height - writeButtonHeight - bottomSafeInset) / 2;
-    CGFloat iconTopMargin = ((NSInteger)self.height - 24 - bottomSafeInset) / 2;
-    CGRect writeFrame = CGRectZero, emojiFrame = CGRectZero, commentFrame = CGRectZero, shareFrame = CGRectZero, digFrame = CGRectZero;
-    CGFloat width = self.width;
-    CGFloat margin = [TTDeviceHelper is736Screen] ? 10 : ([TTDeviceHelper is667Screen] || [TTDeviceHelper isIPhoneXDevice]?5:0);
-    writeFrame = CGRectMake(15 + leftInset, writeTopMargin, width - (169 + margin * 3) - hInset, writeButtonHeight);
-    emojiFrame = CGRectMake(CGRectGetMaxX(writeFrame) - 22 - 6, CGRectGetMinY(writeFrame) + 5, 22, 22);
-    commentFrame = CGRectMake(CGRectGetMaxX(writeFrame) + 22 + margin, iconTopMargin, 24, 24);
-    shareFrame = CGRectMake(width - 38 - rightInset, iconTopMargin, 24, 24);
-    digFrame = CGRectMake(CGRectGetMinX(shareFrame) - 46 - margin, iconTopMargin, 24, 24);
-    
-    _writeButton.frame = writeFrame;
-    _commentButton.frame = commentFrame;
-    _digButton.frame = digFrame;
-    _shareButton.frame = shareFrame;
+    NSInteger buttonNumber = 4;
+    CGFloat writeButtonWidth = SCREEN_WIDTH - 24 * buttonNumber - 15 * (buttonNumber + 2);
+    [self.writeButton mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.equalTo(self).offset(15);
+        make.top.equalTo(self).offset(6);
+        make.width.mas_equalTo(writeButtonWidth);
+        make.height.mas_equalTo(32);
+    }];
+    [self.commentButton mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.width.height.mas_equalTo(24);
+        make.left.equalTo(self.writeButton.mas_right).offset(15);
+        make.top.equalTo(self).offset(10);
+    }];
+    [self.digButton mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.width.height.mas_equalTo(24);
+        make.left.equalTo(self.commentButton.mas_right).offset(15);
+        make.top.equalTo(self).offset(10);
+    }];
+    [self.collectButton mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.width.height.mas_equalTo(24);
+        make.left.equalTo(self.digButton.mas_right).offset(15);
+        make.top.equalTo(self).offset(10);
+    }];
+    [self.shareButton mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.width.height.mas_equalTo(24);
+        make.left.equalTo(self.collectButton.mas_right).offset(15);
+        make.top.equalTo(self).offset(10);
+    }];
+//
+//
+//    CGFloat leftInset = self.tt_safeAreaInsets.left;
+//    CGFloat rightInset = self.tt_safeAreaInsets.right;
+//    CGFloat hInset = leftInset + rightInset;//水平缩进
+//    CGFloat bottomSafeInset = self.tt_safeAreaInsets.bottom;
+//    CGFloat writeButtonHeight = [TTDeviceHelper isPadDevice] ? 36 : 32;
+//    CGFloat writeTopMargin = ((NSInteger)self.height - writeButtonHeight - bottomSafeInset) / 2;
+//    CGFloat iconTopMargin = ((NSInteger)self.height - 24 - bottomSafeInset) / 2;
+//    CGRect writeFrame = CGRectZero, emojiFrame = CGRectZero, commentFrame = CGRectZero, shareFrame = CGRectZero, digFrame = CGRectZero;
+//    CGFloat width = self.width;
+//    CGFloat margin = [TTDeviceHelper is736Screen] ? 10 : ([TTDeviceHelper is667Screen] || [TTDeviceHelper isIPhoneXDevice]?5:0);
+//    writeFrame = CGRectMake(15 + leftInset, writeTopMargin, width - (169 + margin * 3) - hInset, writeButtonHeight);
+//    emojiFrame = CGRectMake(CGRectGetMaxX(writeFrame) - 22 - 6, CGRectGetMinY(writeFrame) + 5, 22, 22);
+//    commentFrame = CGRectMake(CGRectGetMaxX(writeFrame) + 22 + margin, iconTopMargin, 24, 24);
+//    shareFrame = CGRectMake(width - 38 - rightInset, iconTopMargin, 24, 24);
+//    digFrame = CGRectMake(CGRectGetMinX(shareFrame) - 46 - margin, iconTopMargin, 24, 24);
+//
+//    _writeButton.frame = writeFrame;
+//    _commentButton.frame = commentFrame;
+//    _digButton.frame = digFrame;
+//    _shareButton.frame = shareFrame;
 }
 
 - (void)safeAreaInsetsDidChange
@@ -305,6 +333,13 @@ static NSString * const kWDHasTipSupportsEmojiInputDefaultKey = @"WDHasTipSuppor
     }
 }
 
+- (void)collectButtonClicked:(SSThemedButton *)collectButton
+{
+    if ([self.delegate respondsToSelector:@selector(bottomView:collectButtonClicked:)]) {
+        [self.delegate bottomView:self shareButtonClicked:collectButton];
+    }
+}
+
 #pragma mark - Animation
 
 - (void)diggAnimationWith:(SSThemedButton *)button
@@ -342,6 +377,6 @@ static NSString * const kWDHasTipSupportsEmojiInputDefaultKey = @"WDHasTipSuppor
 @end
 
 CGFloat WDDetailGetToolbarHeight(void) {
-    return ([TTDeviceHelper isPadDevice] ? 50 : 44) + [TTDeviceHelper ssOnePixel];
+    return 44;
 }
 

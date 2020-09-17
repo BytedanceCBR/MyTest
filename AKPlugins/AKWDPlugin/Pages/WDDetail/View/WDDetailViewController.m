@@ -1969,6 +1969,10 @@ static NSUInteger const kOldAnimationViewTag = 20161221;
     [BDTrackerProtocol eventData:[dict copy]];
 }
 
+-(void)bottomView:(WDBottomToolView *)bottomView collectButtonClicked:(SSThemedButton *)collectButton {
+    
+}
+
 -(void)bottomView:(WDBottomToolView *)bottomView shareButtonClicked:(SSThemedButton *)shareButton {
     
 }

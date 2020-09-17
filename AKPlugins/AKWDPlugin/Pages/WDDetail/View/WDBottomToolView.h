@@ -20,6 +20,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)bottomView:(WDBottomToolView *)bottomView writeButtonClicked:(SSThemedButton *)wirteButton;
 - (void)bottomView:(WDBottomToolView *)bottomView commentButtonClicked:(SSThemedButton *)commentButton;
 - (void)bottomView:(WDBottomToolView *)bottomView diggButtonClicked:(SSThemedButton *)diggButton;
+- (void)bottomView:(WDBottomToolView *)bottomView collectButtonClicked:(SSThemedButton *)collectButton;
 - (void)bottomView:(WDBottomToolView *)bottomView shareButtonClicked:(SSThemedButton *)shareButton;
 
 @end
@@ -29,6 +30,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong, readonly) TTAlphaThemedButton *writeButton;
 @property (nonatomic, strong, readonly) TTAlphaThemedButton *commentButton;
 @property (nonatomic, strong, readonly) TTAlphaThemedButton *digButton;
+@property (nonatomic, strong, readonly) TTAlphaThemedButton *collectButton;
 @property (nonatomic, strong, readonly) TTAlphaThemedButton *shareButton;
 
 @property (nonatomic, strong, readonly) SSThemedView   *separatorView;
