@@ -676,7 +676,11 @@
     
     if (commonModel.advantageDescription.text) {
         self.bottomRecommendLabel.hidden = NO;
-        self.bottomRecommendLabel.text = commonModel.advantageDescription.text;
+        if (commonModel.advantageDescription.text.length <= 17) {
+            self.bottomRecommendLabel.text = commonModel.advantageDescription.text;
+        } else {
+            self.bottomRecommendLabel.text = [commonModel.advantageDescription.text substringToIndex:17];
+        }
         if (commonModel.advantageDescription.textColor) {
             self.bottomRecommendLabel.textColor = [UIColor colorWithHexStr:commonModel.advantageDescription.textColor];
         }
@@ -749,7 +753,11 @@
     
     if (commonModel.advantageDescription.text) {
         self.bottomRecommendLabel.hidden = NO;
-        self.bottomRecommendLabel.text = commonModel.advantageDescription.text;
+        if (commonModel.advantageDescription.text.length <= 17) {
+            self.bottomRecommendLabel.text = commonModel.advantageDescription.text;
+        } else {
+            self.bottomRecommendLabel.text = [commonModel.advantageDescription.text substringToIndex:17];
+        }
         if (commonModel.advantageDescription.textColor) {
             self.bottomRecommendLabel.textColor = [UIColor colorWithHexStr:commonModel.advantageDescription.textColor];
         }
