@@ -25,6 +25,7 @@
 #import "UIColor+Theme.h"
 #import "FHSearchHouseModel.h"
 #import "Masonry.h"
+#import "UILabel+BTDAdditions.h"
 
 #define MAIN_NORMAL_TOP     10
 #define MAIN_FIRST_TOP      20
@@ -681,6 +682,10 @@
         } else {
             self.bottomRecommendLabel.text = [commonModel.advantageDescription.text substringToIndex:17];
         }
+        CGFloat width = MIN([self.bottomRecommendLabel btd_widthWithHeight:13] + 2, [UIScreen mainScreen].bounds.size.width - MAIN_IMG_WIDTH - 80);
+        [self.bottomRecommendLabel configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
+            layout.width = YGPointValue(width);
+        }];
         if (commonModel.advantageDescription.textColor) {
             self.bottomRecommendLabel.textColor = [UIColor colorWithHexStr:commonModel.advantageDescription.textColor];
         }
@@ -758,6 +763,10 @@
         } else {
             self.bottomRecommendLabel.text = [commonModel.advantageDescription.text substringToIndex:17];
         }
+        CGFloat width = MIN([self.bottomRecommendLabel btd_widthWithHeight:13] + 2, [UIScreen mainScreen].bounds.size.width - MAIN_IMG_WIDTH - 80);
+        [self.bottomRecommendLabel configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
+            layout.width = YGPointValue(width);
+        }];
         if (commonModel.advantageDescription.textColor) {
             self.bottomRecommendLabel.textColor = [UIColor colorWithHexStr:commonModel.advantageDescription.textColor];
         }
