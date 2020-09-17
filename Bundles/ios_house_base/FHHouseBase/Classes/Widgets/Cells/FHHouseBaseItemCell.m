@@ -1147,6 +1147,7 @@
             self.maskVRImageView.backgroundColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:0.1];
             [self.mainImageView addSubview:self.maskVRImageView];
             [self.maskVRImageView setFrame:CGRectMake(0.0f, 0.0f, MAIN_IMG_WIDTH, MAIN_IMG_HEIGHT)];
+            [self bringTagImageToTopIfExist];
         }else
         {
             if (_vrLoadingView) {
@@ -1363,6 +1364,13 @@
     }
 }
 
+///把左上角的标签放在最上面，防止被VC蒙层遮挡
+- (void)bringTagImageToTopIfExist {
+    if (self.topLeftTagImageView) {
+        [self.mainImageView bringSubviewToFront:self.topLeftTagImageView];
+    }
+}
+
 #pragma mark 新房
 -(void)updateWithNewHouseModel:(FHNewHouseItemModel *)model {
     self.houseVideoImageView.hidden = YES;
@@ -1517,6 +1525,7 @@
                 self.maskVRImageView.backgroundColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:0.1];
                 [self.mainImageView addSubview:self.maskVRImageView];
                 [self.maskVRImageView setFrame:CGRectMake(0.0f, 0.0f, MAIN_IMG_WIDTH, MAIN_IMG_HEIGHT)];
+                [self bringTagImageToTopIfExist];
             }else
             {
                 if (_vrLoadingView) {
