@@ -26,6 +26,7 @@
 @property(nonatomic, weak) FHHouseSaleInputView *view;
 @property(nonatomic, strong) FHHouseSaleInputModel *inputModel;
 @property(nonatomic, strong) NSString *phoneNum;
+@property(nonatomic, assign) BOOL isSubmiting;
 
 @end
 
@@ -41,6 +42,7 @@
         _view.nameItemView.delegate = self;
         _view.phoneItemView.delegate = self;
         _viewController = viewController;
+        _isSubmiting = NO;
         
         [self configData];
     }
@@ -196,6 +198,10 @@
 }
 
 - (void)houseSale {
+    if(self.isSubmiting){
+        return;
+    }
+    self.isSubmiting = YES;
     [self addHousePublishClickLog];
     if([self canSubmitInfo]){
         NSString *associateStr = [self generateAssociateStr];
@@ -216,6 +222,7 @@
                         NSInteger status = [responseDict[@"status"] integerValue];
                         if (status != 0) {
                             [[ToastManager manager] showToast:@"网络错误"];
+                            self.isSubmiting = NO;
                             return;
                         }
                     }
@@ -227,14 +234,17 @@
                             reportFormInfo = associateInfo[@"report_form_info"];
                         } else {
                             [[ToastManager manager] showToast:@"网络错误"];
+                            self.isSubmiting = NO;
                             return;
                         }
                     } else {
                         [[ToastManager manager] showToast:@"网络错误"];
+                        self.isSubmiting = NO;
                         return;
                     }
                 } else {
                     [[ToastManager manager] showToast:@"网络错误"];
+                    self.isSubmiting = NO;
                     return;
                 }
 
@@ -260,8 +270,11 @@
             } else {
                 //接口出错统一提示“网络错误”
                 [[ToastManager manager] showToast:@"网络错误"];
+                self.isSubmiting = NO;
             }
         }];
+    }else{
+        self.isSubmiting = NO;
     }
 }
 
@@ -317,6 +330,7 @@
             extraDict[@"error_code"] = [NSString stringWithFormat:@"%ld", httpResponse.statusCode];
             
             [self addClueFormErrorRateLog:categoryDict extraDict:extraDict];
+            self.isSubmiting = NO;
             return;
         }
         
@@ -328,6 +342,7 @@
         }
         
         [self addClueFormErrorRateLog:categoryDict extraDict:extraDict];
+        self.isSubmiting = NO;
     }];
 }
 
