@@ -336,7 +336,7 @@ static NSString * const kWDHasTipSupportsEmojiInputDefaultKey = @"WDHasTipSuppor
 - (void)collectButtonClicked:(SSThemedButton *)collectButton
 {
     if ([self.delegate respondsToSelector:@selector(bottomView:collectButtonClicked:)]) {
-        [self.delegate bottomView:self shareButtonClicked:collectButton];
+        [self.delegate bottomView:self collectButtonClicked:collectButton];
     }
 }
 

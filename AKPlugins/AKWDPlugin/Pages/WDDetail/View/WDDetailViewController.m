@@ -70,6 +70,9 @@
 #import "FHCommonDefines.h"
 #import "UIColor+Theme.h"
 #import "UIFont+House.h"
+#import <TTFavouriteContentItem.h>
+#import <TTActivityPanelDefine.h>
+#import <TTActivitiesManager.h>
 
 
 extern NSInteger const kWDPostCommentBindingErrorCode;
@@ -1970,7 +1973,22 @@ static NSUInteger const kOldAnimationViewTag = 20161221;
 }
 
 -(void)bottomView:(WDBottomToolView *)bottomView collectButtonClicked:(SSThemedButton *)collectButton {
-    
+    collectButton.selected = !collectButton.selected;
+    NSArray *activityItems = [self.natantViewModel wd_customItems];
+    __block TTFavouriteContentItem *collecItem = nil;
+    [activityItems enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        if([obj isKindOfClass:[TTFavouriteContentItem class]]) {
+            collecItem = obj;
+            stop =YES;
+        }
+    }];
+    if(collecItem != nil) {
+        id <TTActivityProtocol> collectActivity= [[TTActivitiesManager sharedInstance] getActivityByItem:collecItem];
+        [self shareManager:self.shareManager clickedWith:collectActivity sharePanel:nil];
+        [collectActivity performActivityWithCompletion:^(id<TTActivityProtocol> activity, NSError *error, NSString *desc) {
+            [self shareManager:self.shareManager completedWith:activity sharePanel:nil error:error desc:desc];
+        }];
+    }
 }
 
 -(void)bottomView:(WDBottomToolView *)bottomView shareButtonClicked:(SSThemedButton *)shareButton {
