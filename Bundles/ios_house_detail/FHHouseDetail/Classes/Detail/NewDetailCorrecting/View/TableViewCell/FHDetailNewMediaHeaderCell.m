@@ -170,17 +170,16 @@
         pictureDetailViewController.placeholderSourceViewFrames = frames;
         pictureDetailViewController.placeholders = placeholders;
     }
-    if (model.isShowTopImageTab) {
-        __weak FHDetailPictureViewController *weakPictureController = pictureDetailViewController;
-        [pictureDetailViewController setAllPhotoActionBlock:^{
-            __strong typeof(weakSelf) strongSelf = weakSelf;
-            if (strongSelf.pictureListViewController) {
-                [weakPictureController dismissSelf];
-            } else {
-                [strongSelf showPictureList];
-            }
-        }];
-    }
+    __weak FHDetailPictureViewController *weakPictureController = pictureDetailViewController;
+    [pictureDetailViewController setAllPhotoActionBlock:^{
+        __strong typeof(weakSelf) strongSelf = weakSelf;
+        if (strongSelf.pictureListViewController) {
+            [weakPictureController dismissSelf];
+        } else {
+            [strongSelf showPictureList];
+        }
+    }];
+    
     [pictureDetailViewController presentPhotoScrollViewWithDismissBlock:^{
         [weakSelf trackPictureLargeStayWithIndex:weakSelf.currentIndex];
     }];
@@ -238,6 +237,7 @@
         __strong typeof(weakSelf) strongSelf = weakSelf;
         //如果是从大图进入的图片列表，dismiss picturelist
         if (strongSelf.pictureDetailVC) {
+            [strongSelf.pictureListViewController dismissViewControllerAnimated:NO completion:nil];
             if (index >= 0) {
                 [strongSelf.pictureDetailVC.photoScrollView setContentOffset:CGPointMake(weakSelf.pictureDetailVC.view.frame.size.width * index, 0) animated:NO];
             }
