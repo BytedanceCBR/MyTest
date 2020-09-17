@@ -180,7 +180,7 @@
     __block NSInteger insterIndex = 0 ;
     FHDetailListSectionTitleModel *titleMolde = [[FHDetailListSectionTitleModel alloc]init];
     if (model.houseModelType == FHHouseModelTypeNewRelated) {
-        titleMolde.title = @"周边新盘";
+        titleMolde.title = @"猜你喜欢";
     }
     [returnArr enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
         if ([obj isEqual:model]) {
