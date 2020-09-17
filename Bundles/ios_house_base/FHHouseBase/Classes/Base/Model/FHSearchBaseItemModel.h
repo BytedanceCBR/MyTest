@@ -42,6 +42,7 @@ typedef NS_ENUM(NSUInteger, FHSearchCardType) {
     FHSearchCardTypeAgentCard = 14,
     FHSearchCardTypeFindHouseHelper = 15,   //帮我找房卡片
     FHSearchCardTypeBrowseHistoryTip = 17,
+    FHSearchCardTypeDynamicLynx = 20,       //列表页动态Lynx卡片
 };
 
 @interface FHSearchBaseItemModel : JSONModel

@@ -21,7 +21,8 @@
                            @"realtorLogPb": @"realtor_log_pb",
                            @"certificationIcon": @"certification_icon",
                            @"certificationPage": @"certification_page",
-                           @"chatOpenUrl": @"chat_openurl"
+                           @"chatOpenUrl": @"chat_openurl",
+                           @"imageTag": @"image_tag",
                            };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
         return dict[keyName]?:keyName;
@@ -42,6 +43,22 @@
 @end
 @implementation FHUGCShortVideoRealtorInfoModel
 
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+@end
+
+@implementation FHUGCShortVideoRealtorImageTagModel
++ (JSONKeyMapper*)keyMapper
+{
+    NSDictionary *dict = @{
+        @"imageUrl": @"image_url",
+    };
+    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+        return dict[keyName]?:keyName;
+    }];
+}
 + (BOOL)propertyIsOptional:(NSString *)propertyName
 {
     return YES;

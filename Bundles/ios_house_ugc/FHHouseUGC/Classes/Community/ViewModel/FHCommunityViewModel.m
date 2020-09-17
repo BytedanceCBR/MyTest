@@ -70,7 +70,7 @@
     
     if([FHEnvContext isHasVideoList]){
         self.dataArray = @[
-            @(FHCommunityCollectionCellTypeCustom),
+            @(FHCommunityCollectionCellTypeVideo),
             @(FHCommunityCollectionCellTypeNearby),
         ];
     }else{

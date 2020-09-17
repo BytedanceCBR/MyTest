@@ -71,7 +71,7 @@
             height += 25;
         }
         height += [self getMaintitleHeight:model];
-        return height;
+        return height + model.topMargin;
     }
     return 124;
 }
@@ -140,14 +140,24 @@
     return self;
 }
 
+- (void)updateHeightByIsFirst:(BOOL)isFirst {
+    CGFloat top = 5;
+    if (isFirst) {
+        top = 10;
+    }
+    [self.containerView mas_updateConstraints:^(MASConstraintMaker *make) {
+        make.top.mas_equalTo(top);
+    }];
+}
+
 - (void)initUI {
     self.contentView.backgroundColor = [UIColor themeGray7];
     [self.contentView addSubview:self.containerView];
     [self.containerView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(15);
         make.right.mas_equalTo(-15);
-        make.top.mas_equalTo(10);
-        make.bottom.mas_equalTo(0);
+        make.top.mas_equalTo(5);
+        make.bottom.mas_equalTo(-5);
     }];
     
     _leftInfoView = [[UIView alloc] init];
@@ -253,6 +263,7 @@
     if ([data isKindOfClass:[FHSearchHouseItemModel class]]) {
         self.model = data;
         FHSearchHouseItemModel *model = (FHSearchHouseItemModel *)data;
+        
         [self updateMainTitleView:model];
         [self updateTagContainerView:model];
         [self updateBottomView:model];

@@ -312,7 +312,7 @@ def appPods
     #-----头条端监控库-----
     # pod_binary 'TTMonitor','0.7.9.58-rc.3' #这个版本还是有很多问题
     pod_binary 'MemoryGraphCapture', '1.2.4'
-    pod_binary 'Heimdallr', '0.7.19-rc.24', :subspecs => [
+    pod_binary 'Heimdallr', '0.7.19-rc.31', :subspecs => [
     'Core',
     'Monitors',
     'TTMonitor',
@@ -393,7 +393,7 @@ def appPods
       'Data',
     ]
     
-    pod 'Lynx','1.0.52',:subspecs =>[
+    pod 'Lynx','1.3.7-alpha.29',:subspecs =>[
     'Framework',
 #    'InspectorFramework',
     'Native',
@@ -559,7 +559,7 @@ def appPods
     pod_binary 'BDPainter', '1.0.0'
     
     # 开启依赖加速后需要指定依赖的库
-    pod 'AWECloudCommand', '1.0.13'
+    pod 'AWECloudCommand', '1.1.1'
     pod 'BDUGSecGuardInterface', '1.0.2.1-binary-debug'
     pod 'BDUGTuringInterface', '1.0.3.1-binary-debug'
     pod 'BDWCDB', '1.0.3'
@@ -597,7 +597,7 @@ def testPods
     pod 'LookinServer', :configurations => ['Debug']
 #        pod 'FHErrorHubManager', :git => 'git@code.byted.org:fproject/FHErrorHubManager.git' , :commit => 'b04a60e50b4564346962b47d582f78eddc007408'
 #    pod 'FHErrorHubManager', :path => '../../FHErrorHubManager'
-    pod 'FHErrorHubManager', '1.0.13'
+    pod 'FHErrorHubManager', '1.0.15'
 end
 
 target 'NewsLiteInHouse' do

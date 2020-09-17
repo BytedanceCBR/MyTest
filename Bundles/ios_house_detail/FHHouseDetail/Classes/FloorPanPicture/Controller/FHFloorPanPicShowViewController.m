@@ -514,7 +514,6 @@
             total += preSum.unsignedIntegerValue;
         }
         self.albumImageBtnClickBlock(total);
-        [self dismissViewControllerAnimated:NO completion:nil];
     }
 
 //    if (self.albumImageStayBlock) {

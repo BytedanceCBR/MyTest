@@ -745,13 +745,15 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
             break;
         }
     }
-    NSNumber *num = self.pictureNumbers[titleIndex];
-//    self.currentTypeName = self.pictureTitles[titleIndex];
-    if (titleIndex < self.mediaHeaderModel.houseImageDictList.count) {
-        FHHouseDetailImageListDataModel *listModel = self.mediaHeaderModel.houseImageDictList[titleIndex];
-        self.currentTypeName = listModel.houseImageTypeName;
+    if (titleIndex < self.pictureNumbers.count) {
+        NSNumber *num = self.pictureNumbers[titleIndex];
+    //    self.currentTypeName = self.pictureTitles[titleIndex];
+        if (titleIndex < self.mediaHeaderModel.houseImageDictList.count) {
+            FHHouseDetailImageListDataModel *listModel = self.mediaHeaderModel.houseImageDictList[titleIndex];
+            self.currentTypeName = listModel.houseImageTypeName;
+        }
+        self.naviView.titleLabel.text = [NSString stringWithFormat:@"%u/%d",num.unsignedIntValue - currentTitleIndex + 1,num.unsignedIntValue];
     }
-    self.naviView.titleLabel.text = [NSString stringWithFormat:@"%u/%d",num.unsignedIntValue - currentTitleIndex + 1,num.unsignedIntValue];
 }
 
 #pragma mark - Setter & Getter
@@ -784,17 +786,15 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
             [numbers addObject:@(self.vedioCount)];
         }
         for (FHHouseDetailImageListDataModel *listModel in mediaHeaderModel.houseImageDictList) {
-            if (listModel.houseImageTypeName.length > 0) {
-                NSInteger tempCount = 0;
-                for (FHImageModel *imageModel in listModel.houseImageList) {
-                    if (imageModel.url.length > 0) {
-                        tempCount += 1;
-                    }
+            NSInteger tempCount = 0;
+            for (FHImageModel *imageModel in listModel.houseImageList) {
+                if (imageModel.url.length > 0) {
+                    tempCount += 1;
                 }
-                if (tempCount > 0) {
-                    [titles addObject:[NSString stringWithFormat:@"%@（%ld）",listModel.houseImageTypeName,(long)tempCount]];
-                    [numbers addObject:@(tempCount)];
-                }
+            }
+            if (tempCount > 0) {
+                [titles addObject:[NSString stringWithFormat:@"%@（%ld）",listModel.houseImageTypeName,(long)tempCount]];
+                [numbers addObject:@(tempCount)];
             }
         }
         // 只有一个分类时隐藏
