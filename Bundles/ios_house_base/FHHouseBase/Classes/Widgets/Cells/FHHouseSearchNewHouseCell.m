@@ -16,6 +16,7 @@
 #import <FHCommonUI/UIFont+House.h>
 #import "FHSearchHouseModel.h"
 #import "FHSingleImageInfoCellModel.h"
+#import "UILabel+BTDAdditions.h"
 
 @interface FHHouseSearchNewHouseCell()
 
@@ -34,6 +35,7 @@
 @property (nonatomic, strong) UIView *bottomRecommendView;//底部推荐理由
 @property (nonatomic, strong) UIImageView *bottomIconImageView; //活动icon
 @property (nonatomic, strong) UILabel *bottomRecommendLabel; //活动title
+@property (nonatomic, strong) UIView *bottomLine;
 @property (nonatomic, strong) UIView *containerView;//圆角背景
 @property (nonatomic, strong) FHCornerItemLabel *tagTitleLabel; //降 新 榜等标签
 @property (nonatomic, strong) UILabel *propertyTagLabel;
@@ -66,10 +68,21 @@
     if ([data isKindOfClass:[JSONModel class]]) {
         FHSearchHouseItemModel *itemModel = (FHSearchHouseItemModel *)data;
         if (itemModel.advantageDescription.text) {
-            return 146;
+            return 146 + itemModel.topMargin;
         }
+        return 124 + itemModel.topMargin;
     }
     return 124;
+}
+
+- (void)updateHeightByIsFirst:(BOOL)isFirst {
+    CGFloat top = 5;
+    if (isFirst) {
+        top = 10;
+    }
+    [self.containerView mas_updateConstraints:^(MASConstraintMaker *make) {
+        make.top.mas_equalTo(top);
+    }];
 }
 
 -(void)initUI
@@ -79,8 +92,8 @@
     [self.containerView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(15);
         make.right.mas_equalTo(-15);
-        make.top.mas_equalTo(10);
-        make.bottom.mas_equalTo(0);
+        make.top.mas_equalTo(5);
+        make.bottom.mas_equalTo(-5);
     }];
     
     _leftInfoView = [[UIView alloc] init];
@@ -165,6 +178,32 @@
         make.right.mas_equalTo(-15);
         make.bottom.mas_equalTo(0);
     }];
+    
+    UIView *bottomLine = [[UIView alloc] init];
+    bottomLine.backgroundColor = [UIColor themeGray7];
+    self.bottomLine = bottomLine;
+    [self.bottomRecommendView addSubview:self.bottomLine];
+    [self.bottomLine mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.right.mas_equalTo(0);
+        make.left.mas_equalTo(4);
+        make.bottom.mas_equalTo(-28);
+        make.height.mas_equalTo(1);
+    }];
+    
+    [self.bottomRecommendView addSubview:self.bottomIconImageView];
+    [self.bottomIconImageView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.bottom.mas_equalTo(-4);
+        make.left.mas_equalTo(0);
+        make.height.width.mas_equalTo(20);
+    }];
+    
+    [self.bottomRecommendView addSubview:self.bottomRecommendLabel];
+    [self.bottomRecommendLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.mas_equalTo(20);
+        make.bottom.mas_equalTo(-9);
+        make.height.mas_equalTo(10);
+        make.right.mas_equalTo(0);
+    }];
 }
 
 - (void)refreshWithData:(id)data {
@@ -182,10 +221,7 @@
             self.propertyTagLabel.hidden = NO;
             self.propertyTagLabel.text = model.propertyTag.content;
             self.propertyTagLabel.layer.borderColor = [UIColor colorWithHexStr:model.propertyTag.borderColor].CGColor;
-            UILabel *label = [[UILabel alloc] init];
-            label.font = [UIFont themeFontRegular:10];
-            label.text = model.propertyTag.content;
-            CGFloat width = [label sizeThatFits:CGSizeZero].width + 6;
+            CGFloat width = [self.propertyTagLabel btd_widthWithHeight:16] + 6;
             [self.propertyTagLabel mas_updateConstraints:^(MASConstraintMaker *make) {
                 make.width.mas_equalTo(width);
             }];
@@ -239,34 +275,19 @@
 - (void)updateAdvantage:(FHSearchHouseItemModel *)model {
     FHHouseListHouseAdvantageTagModel *adModel = model.advantageDescription;
     if (adModel && ([adModel.text length] > 0 || (adModel.icon && [adModel.icon.url length] > 0))) {
-        UIView *bottomLine = [[UIView alloc] init];
-        bottomLine.backgroundColor = [UIColor themeGray7];
-        [self.bottomRecommendView addSubview:bottomLine];
-        [bottomLine mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.right.mas_equalTo(0);
-            make.left.mas_equalTo(4);
-            make.bottom.mas_equalTo(-28);
-            make.height.mas_equalTo(1);
-        }];
+        self.bottomRecommendView.hidden = NO;
         if (adModel.icon && [adModel.icon.url length] > 0) {
-            [self.bottomRecommendView addSubview:self.bottomIconImageView];
-            [self.bottomIconImageView mas_makeConstraints:^(MASConstraintMaker *make) {
-                make.bottom.mas_equalTo(-4);
-                make.left.mas_equalTo(0);
-                make.height.width.mas_equalTo(20);
-            }];
             [self.bottomIconImageView bd_setImageWithURL:[NSURL URLWithString:adModel.icon.url]];
         }
         if ([adModel.text length] > 0) {
-            [self.bottomRecommendView addSubview:self.bottomRecommendLabel];
-            [self.bottomRecommendLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-                make.left.mas_equalTo(20);
-                make.bottom.mas_equalTo(-9);
-                make.height.mas_equalTo(10);
-                make.right.mas_equalTo(0);
-            }];
-            self.bottomRecommendLabel.text = adModel.text;
+            if (adModel.text.length <= 17) {
+                self.bottomRecommendLabel.text = adModel.text;
+            } else {
+                self.bottomRecommendLabel.text = [adModel.text substringToIndex:17];
+            }
         }
+    } else {
+        self.bottomRecommendView.hidden = YES;
     }
 }
 
@@ -277,13 +298,6 @@
         [self.mainImageView bd_setImageWithURL:imgUrl placeholder:[FHHouseSearchNewHouseCell placeholderImage]];
     }else{
         self.mainImageView.image = [FHHouseSearchNewHouseCell placeholderImage];
-    }
-}
-
-- (void)prepareForReuse {
-    [super prepareForReuse];
-    for (UIView *view in self.bottomRecommendView.subviews) {
-        [view removeFromSuperview];
     }
 }
 

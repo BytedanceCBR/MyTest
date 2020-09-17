@@ -18,6 +18,7 @@
 #import "FHCornerView.h"
 #import <YYText/YYLabel.h>
 #import "FHSingleImageInfoCellModel.h"
+#import "UILabel+BTDAdditions.h"
 
 @interface FHHouseSearchSecondHouseCell()
 
@@ -43,6 +44,7 @@
 @property (nonatomic, strong) UIView *bottomView;
 @property (nonatomic, strong) UIImageView *bottomIconImageView;
 @property (nonatomic, strong) UILabel *bottomRecommendLabel;
+@property (nonatomic, strong) UIView *bottomLine;
 
 @property (nonatomic, strong) FHSearchHouseItemModel *model;
 
@@ -69,7 +71,7 @@
             height += 25;
         }
         height += [self getMaintitleHeight:model];
-        return height;
+        return height + model.topMargin;
     }
     return 124;
 }
@@ -138,14 +140,24 @@
     return self;
 }
 
+- (void)updateHeightByIsFirst:(BOOL)isFirst {
+    CGFloat top = 5;
+    if (isFirst) {
+        top = 10;
+    }
+    [self.containerView mas_updateConstraints:^(MASConstraintMaker *make) {
+        make.top.mas_equalTo(top);
+    }];
+}
+
 - (void)initUI {
     self.contentView.backgroundColor = [UIColor themeGray7];
     [self.contentView addSubview:self.containerView];
     [self.containerView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(15);
         make.right.mas_equalTo(-15);
-        make.top.mas_equalTo(10);
-        make.bottom.mas_equalTo(0);
+        make.top.mas_equalTo(5);
+        make.bottom.mas_equalTo(-5);
     }];
     
     _leftInfoView = [[UIView alloc] init];
@@ -236,7 +248,6 @@
     [self.bottomView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(self.priceInfoView.mas_bottom);
         make.left.right.bottom.mas_equalTo(0);
-        make.height.mas_equalTo(10);
     }];
     
 }
@@ -252,6 +263,7 @@
     if ([data isKindOfClass:[FHSearchHouseItemModel class]]) {
         self.model = data;
         FHSearchHouseItemModel *model = (FHSearchHouseItemModel *)data;
+        
         [self updateMainTitleView:model];
         [self updateTagContainerView:model];
         [self updateBottomView:model];
@@ -303,8 +315,7 @@
             label.text = tag.text;
             label.textColor = [UIColor colorWithHexStr:tag.textColor];
             label.font = [UIFont themeFontMedium:10];
-            CGSize size = [label sizeThatFits:CGSizeZero];
-            CGFloat width = size.width + 6;
+            CGFloat width = [label btd_widthWithHeight:16] + 6;
             if (i > 0) {
                 left += 2;
             }
@@ -360,45 +371,46 @@
 - (void)updateBottomView:(FHSearchHouseItemModel *)model {
     FHHouseListHouseAdvantageTagModel *adModel = model.advantageDescription;
     if ([adModel.text length] > 0 || (adModel.icon && [adModel.icon.url length] > 0)) {
-        [self.bottomView mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.height.mas_equalTo(35);
-        }];
-        UIView *bottomLine = [[UIView alloc] init];
-        bottomLine.backgroundColor = [UIColor themeGray7];
-        [self.bottomView addSubview:bottomLine];
-        [bottomLine mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.right.mas_equalTo(0);
-            make.left.mas_equalTo(4);
-            make.bottom.mas_equalTo(-28);
-            make.height.mas_equalTo(1);
-        }];
-        
+        [self.bottomView setHidden:NO];
+        if (!_bottomLine) {
+            _bottomLine = [[UIView alloc] init];
+            _bottomLine.backgroundColor = [UIColor themeGray7];
+            [self.bottomView addSubview:_bottomLine];
+            [self.bottomLine mas_makeConstraints:^(MASConstraintMaker *make) {
+                make.right.mas_equalTo(0);
+                make.left.mas_equalTo(4);
+                make.bottom.mas_equalTo(-28);
+                make.height.mas_equalTo(1);
+            }];
+        }
         CGFloat left = 0;
         if (adModel.icon && [adModel.icon.url length] > 0) {
             left += 20;
-            [self.bottomView addSubview:self.bottomIconImageView];
-            [self.bottomIconImageView mas_makeConstraints:^(MASConstraintMaker *make) {
-                make.bottom.mas_equalTo(-4);
-                make.left.mas_equalTo(0);
-                make.height.width.mas_equalTo(20);
-            }];
+            if (!_bottomIconImageView) {
+                [self.bottomView addSubview:self.bottomIconImageView];
+                [self.bottomIconImageView mas_makeConstraints:^(MASConstraintMaker *make) {
+                    make.bottom.mas_equalTo(-4);
+                    make.left.mas_equalTo(0);
+                    make.height.width.mas_equalTo(20);
+                }];
+            }
             [self.bottomIconImageView bd_setImageWithURL:[NSURL URLWithString:adModel.icon.url]];
             self.bottomIconImageView.hidden = NO;
         }
         if ([adModel.text length] > 0) {
-            [self.bottomView addSubview:self.bottomRecommendLabel];
-            [self.bottomRecommendLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-                make.left.mas_equalTo(left);
-                make.bottom.mas_equalTo(-9);
-                make.height.mas_equalTo(10);
-                make.right.mas_equalTo(0);
-            }];
+            if (!_bottomRecommendLabel) {
+                [self.bottomView addSubview:self.bottomRecommendLabel];
+                [self.bottomRecommendLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+                    make.left.mas_equalTo(left);
+                    make.bottom.mas_equalTo(-9);
+                    make.height.mas_equalTo(10);
+                    make.right.mas_equalTo(0);
+                }];
+            }
             self.bottomRecommendLabel.text = adModel.text;
         }
     } else {
-        [self.bottomView mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.height.mas_equalTo(10);
-        }];
+        [self.bottomView setHidden:YES];
     }
 }
 
@@ -414,9 +426,9 @@
 
 - (void)resetPriceFrame {
     self.priceLabel.text = self.model.displayPrice;
-    CGSize size = [self.priceLabel sizeThatFits:CGSizeZero];
+    CGFloat width = [self.priceLabel btd_widthWithHeight:22];
     [self.priceLabel mas_updateConstraints:^(MASConstraintMaker *make) {
-        make.width.mas_equalTo(size.width);
+        make.width.mas_equalTo(width);
     }];
 }
 
@@ -427,9 +439,6 @@
 - (void)prepareForReuse {
     [super prepareForReuse];
     for (UIView *view in self.mainTitleView.subviews) {
-        [view removeFromSuperview];
-    }
-    for (UIView *view in self.bottomView.subviews) {
         [view removeFromSuperview];
     }
 }

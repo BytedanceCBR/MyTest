@@ -25,6 +25,7 @@
 #import "UIColor+Theme.h"
 #import "FHSearchHouseModel.h"
 #import "Masonry.h"
+#import "UILabel+BTDAdditions.h"
 
 #define MAIN_NORMAL_TOP     10
 #define MAIN_FIRST_TOP      20
@@ -397,6 +398,15 @@
         layout.height = YGPointValue(MAIN_IMG_HEIGHT);
     }];
     
+    [self.mainImageView addSubview:self.vrLoadingView];
+    self.vrLoadingView.hidden = YES;
+    [self.vrLoadingView configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
+        layout.isEnabled = YES;
+        layout.marginLeft = YGPointValue(6);
+        layout.marginTop = YGPointValue(58);
+        layout.width = YGPointValue(16);
+        layout.height = YGPointValue(16);
+    }];
     
     [self.leftInfoView addSubview:self.houseVideoImageView];
     _houseVideoImageView.image = [UIImage imageNamed:@"icon_list_house_video_small"];
@@ -409,18 +419,6 @@
         layout.width = YGPointValue(20.0f);
         layout.height = YGPointValue(20.0f);
     }];
-    
-//    [self.leftInfoView addSubview:self.vrLoadingView];
-//    self.vrLoadingView.hidden = YES;
-    //    [self.vrLoadingView setBackgroundColor:[UIColor redColor]];
-//    [self.vrLoadingView configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
-//        layout.isEnabled = YES;
-//        layout.position = YGPositionTypeAbsolute;
-//        layout.top = YGPointValue(25.0f);
-//        layout.left = YGPointValue(23.0f);
-//        layout.width = YGPointValue(24);
-//        layout.height = YGPointValue(24);
-//    }];
     
     [_imageTagLabelBgView configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
         layout.isEnabled = YES;
@@ -679,7 +677,15 @@
     
     if (commonModel.advantageDescription.text) {
         self.bottomRecommendLabel.hidden = NO;
-        self.bottomRecommendLabel.text = commonModel.advantageDescription.text;
+        if (commonModel.advantageDescription.text.length <= 17) {
+            self.bottomRecommendLabel.text = commonModel.advantageDescription.text;
+        } else {
+            self.bottomRecommendLabel.text = [commonModel.advantageDescription.text substringToIndex:17];
+        }
+        CGFloat width = MIN([self.bottomRecommendLabel btd_widthWithHeight:13] + 2, [UIScreen mainScreen].bounds.size.width - MAIN_IMG_WIDTH - 80);
+        [self.bottomRecommendLabel configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
+            layout.width = YGPointValue(width);
+        }];
         if (commonModel.advantageDescription.textColor) {
             self.bottomRecommendLabel.textColor = [UIColor colorWithHexStr:commonModel.advantageDescription.textColor];
         }
@@ -752,7 +758,15 @@
     
     if (commonModel.advantageDescription.text) {
         self.bottomRecommendLabel.hidden = NO;
-        self.bottomRecommendLabel.text = commonModel.advantageDescription.text;
+        if (commonModel.advantageDescription.text.length <= 17) {
+            self.bottomRecommendLabel.text = commonModel.advantageDescription.text;
+        } else {
+            self.bottomRecommendLabel.text = [commonModel.advantageDescription.text substringToIndex:17];
+        }
+        CGFloat width = MIN([self.bottomRecommendLabel btd_widthWithHeight:13] + 2, [UIScreen mainScreen].bounds.size.width - MAIN_IMG_WIDTH - 80);
+        [self.bottomRecommendLabel configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
+            layout.width = YGPointValue(width);
+        }];
         if (commonModel.advantageDescription.textColor) {
             self.bottomRecommendLabel.textColor = [UIColor colorWithHexStr:commonModel.advantageDescription.textColor];
         }
@@ -783,18 +797,10 @@
 - (void)updateVrInfo:(id)data {
     FHSearchHouseItemModel *model = (FHSearchHouseItemModel *)data;
     if (model.vrInfo.hasVr) {
-        if (!_vrLoadingView) {
-            [self.leftInfoView addSubview:self.vrLoadingView];
-            [self.vrLoadingView mas_makeConstraints:^(MASConstraintMaker *make) {
-                make.bottom.mas_equalTo(self.mainImageView).offset(-6);
-                make.left.mas_equalTo(self.mainImageView).offset(6);
-                make.width.height.mas_equalTo(16);
-            }];
-        }
         self.vrLoadingView.hidden = NO;
         [self.vrLoadingView play];
-    } else if (_vrLoadingView) {
-        _vrLoadingView.hidden = YES;
+    } else {
+        self.vrLoadingView.hidden = YES;
     }
 }
 

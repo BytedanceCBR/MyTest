@@ -167,6 +167,19 @@ extern NSString *const kFHToastCountKey;
     NSMutableArray *images = @[].mutableCopy;
     NSMutableArray *imageTitles = @[].mutableCopy;
     
+    // "从业人员信息卡"，北京商业化开城
+    if (contactPhone.certification) {
+        FHContactCertificationModel *certification = contactPhone.certification;
+        if (certification.openUrl.length > 0) {
+            NSURL *url = [NSURL URLWithString:certification.openUrl];
+            if ([[TTRoute sharedRoute] canOpenURL:url]) {
+                [[TTRoute sharedRoute] openURLByPushViewController:url];
+            }
+            
+            return;
+        }
+    }
+    
     // "营业执照"
     if (contactPhone.businessLicense.length > 0) {
         TTImageInfosModel *model = [[TTImageInfosModel alloc] initWithURL:contactPhone.businessLicense];

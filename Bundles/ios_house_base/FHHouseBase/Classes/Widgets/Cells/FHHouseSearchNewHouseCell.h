@@ -14,6 +14,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)resumeVRIcon;
 
+- (void)updateHeightByIsFirst:(BOOL)isFirst;
+
 @end
 
 NS_ASSUME_NONNULL_END

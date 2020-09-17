@@ -7,6 +7,8 @@
 
 #import "FHFloorPanPicShowViewController.h"
 #import "FHFloorPanPicCollectionCell.h"
+#import "FHFloorPanVideoCollectionCell.h"
+#import "FHFloorPanVRCollectionCell.h"
 #import "UIColor+Theme.h"
 #import "UIFont+House.h"
 #import "TTDeviceHelper.h"
@@ -18,19 +20,20 @@
 #import "FHLoadingButton.h"
 #import <FHHouseBase/UIImage+FIconFont.h>
 
-@interface FHFloorPanPicShowViewController ()<UICollectionViewDelegate,UICollectionViewDataSource>
+@interface FHFloorPanPicShowViewController ()<UICollectionViewDelegate, UICollectionViewDataSource>
 
-@property (nonatomic , strong) UICollectionView *collectionView;
+@property (nonatomic, strong) UICollectionView *collectionView;
 
 @property (nonatomic, strong) FHDetailPictureTitleView *segmentTitleView;
-@property (nonatomic, copy)   NSArray       *pictureTitles;
-@property (nonatomic, copy)   NSArray       *pictureNumbers;
+@property (nonatomic, copy)   NSArray *pictureTitles;
+@property (nonatomic, copy)   NSArray *pictureNumbers;
+@property (nonatomic, copy)   NSArray *prePictureSum;
 
 @property (nonatomic, strong) NSIndexPath *lastIndexPath;
 
-@property(nonatomic, strong) UIView *bottomBar;
-@property (nonatomic, strong)   UIButton       *onlineBtn;
-@property (nonatomic, strong)   FHLoadingButton       *contactBtn;
+@property (nonatomic, strong) UIView *bottomBar;
+@property (nonatomic, strong)   UIButton *onlineBtn;
+@property (nonatomic, strong)   FHLoadingButton *contactBtn;
 
 @property (nonatomic, assign) UIStatusBarStyle lastStatusBarStyle;
 
@@ -38,15 +41,6 @@
 @end
 
 @implementation FHFloorPanPicShowViewController
-
-//- (UIStatusBarStyle)preferredStatusBarStyle {
-//    return UIStatusBarStyleDefault;;
-//}
-
-- (void)setTopImages:(NSArray<FHDetailNewTopImage *> *)topImages {
-    _topImages = topImages;
-    [self processImagesList];
-}
 
 - (BOOL)automaticallyAdjustsScrollViewInsets {
     return NO;
@@ -66,6 +60,11 @@
     return self;
 }
 
+- (void)setFloorPanShowModel:(FHFloorPanPicShowModel *)floorPanShowModel {
+    _floorPanShowModel = floorPanShowModel;
+    [self processImagesList];
+}
+
 - (instancetype)initWithRouteParamObj:(TTRouteParamObj *)paramObj {
     if (self = [super initWithRouteParamObj:paramObj]) {
         self.ttTrackStayEnable = YES;
@@ -78,7 +77,7 @@
     [super viewDidLoad];
     [self initNavbar];
     [self setupUserInterface];
-    
+
     // Do any additional setup after loading the view.
 }
 
@@ -118,7 +117,7 @@
         [_onlineBtn setTitle:@"在线联系" forState:UIControlStateNormal];
         [_onlineBtn setTitle:@"在线联系" forState:UIControlStateHighlighted];
         [_onlineBtn addTarget:self action:@selector(onlineButtonClick:) forControlEvents:UIControlEventTouchUpInside];
-        _onlineBtn.layer.shadowColor = [UIColor colorWithRed:255/255.0 green:143/255.0 blue:0 alpha:0.3].CGColor;
+        _onlineBtn.layer.shadowColor = [UIColor colorWithRed:255 / 255.0 green:143 / 255.0 blue:0 alpha:0.3].CGColor;
         _onlineBtn.layer.shadowOffset = CGSizeMake(4, 10);
     }
     return _onlineBtn;
@@ -135,7 +134,7 @@
         [_contactBtn setTitle:@"电话咨询" forState:UIControlStateNormal];
         [_contactBtn setTitle:@"电话咨询" forState:UIControlStateHighlighted];
         [_contactBtn addTarget:self action:@selector(contactButtonClick:) forControlEvents:UIControlEventTouchUpInside];
-        _contactBtn.layer.shadowColor = [UIColor colorWithRed:254/255.0 green:85/255.0 blue:0 alpha:0.3].CGColor;
+        _contactBtn.layer.shadowColor = [UIColor colorWithRed:254 / 255.0 green:85 / 255.0 blue:0 alpha:0.3].CGColor;
         _contactBtn.layer.shadowOffset = CGSizeMake(4, 10);
     }
     return _contactBtn;
@@ -144,7 +143,7 @@
 - (void)setupUserInterface {
     // Do any additional setup after loading the view.
     self.view.backgroundColor = [UIColor whiteColor];
-    if (self.topImages && self.pictureTitles.count > 1) {
+    if (self.isShowSegmentTitleView && self.pictureTitles.count > 1) {
         self.segmentTitleView = [[FHDetailPictureTitleView alloc] initWithFrame:CGRectMake(0, CGRectGetMaxY(self.customNavBarView.frame), CGRectGetWidth(self.view.bounds), 42)];
         self.segmentTitleView.backgroundColor = [UIColor clearColor];
         self.segmentTitleView.usedInPictureList = YES;
@@ -176,24 +175,25 @@
     layout.headerReferenceSize = CGSizeMake(self.view.frame.size.width, 40);
     //该方法也可以设置itemSize
 //    layout.itemSize =CGSizeMake(110, 150);
-    
+
     //2.初始化collectionView
     self.collectionView = [[FHBaseCollectionView alloc] initWithFrame:self.view.bounds collectionViewLayout:layout];
     self.collectionView.alwaysBounceVertical = YES;
     [self.view addSubview:_collectionView];
     _collectionView.backgroundColor = [UIColor clearColor];
-    
+
     //3.注册collectionViewCell
     //注意，此处的ReuseIdentifier 必须和 cellForItemAtIndexPath 方法中 一致 均为 cellId
-    [_collectionView registerClass:[FHFloorPanPicCollectionCell class] forCellWithReuseIdentifier:NSStringFromClass([FHFloorPanPicCollectionCell class])];
-    
+    [_collectionView registerClass:[FHFloorPanPicCollectionCell class] forCellWithReuseIdentifier:NSStringFromClass([FHFloorPanPicShowItemPictureModel class])];
+    [_collectionView registerClass:[FHFloorPanVideoCollectionCell class] forCellWithReuseIdentifier:NSStringFromClass([FHFloorPanPicShowItemVideoModel class])];
+    [_collectionView registerClass:[FHFloorPanVRCollectionCell class] forCellWithReuseIdentifier:NSStringFromClass([FHFloorPanPicShowItemVRModel class])];
+
     //注册headerView  此处的ReuseIdentifier 必须和 cellForItemAtIndexPath 方法中 一致  均为reusableView
     [_collectionView registerClass:[FHDetailSectionTitleCollectionView class] forSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:NSStringFromClass([FHDetailSectionTitleCollectionView class])];
     //设置代理
     _collectionView.delegate = self;
     _collectionView.dataSource = self;
-  
-    
+
     [self.view addSubview:self.collectionView];
     [self.collectionView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.right.equalTo(self.view);
@@ -207,7 +207,7 @@
     _collectionView.showsVerticalScrollIndicator = NO;
     _collectionView.showsHorizontalScrollIndicator = NO;
     [_collectionView setBackgroundColor:[UIColor whiteColor]];
-    
+
     if (self.contactViewModel) {
         // lead_show 埋点
         [self addLeadShowLog:self.contactViewModel.contactPhone baseParams:[self.contactViewModel baseParams]];
@@ -219,7 +219,7 @@
             make.height.mas_equalTo(64);
             make.bottom.mas_equalTo(0);
         }];
-        
+
         BOOL showenOnline = self.contactViewModel.showenOnline;
         CGFloat itemWidth = CGRectGetWidth(self.view.bounds) - 30;
         if (showenOnline) {
@@ -229,7 +229,7 @@
             if (self.contactViewModel.onLineName.length > 0) {
                 title = self.contactViewModel.onLineName;
             }
-            NSMutableAttributedString *buttonTitle = [[NSMutableAttributedString alloc] initWithString:title?:@"" attributes:@{NSFontAttributeName : [UIFont themeFontRegular:16], NSForegroundColorAttributeName : [UIColor whiteColor]}];
+            NSMutableAttributedString *buttonTitle = [[NSMutableAttributedString alloc] initWithString:title ? : @"" attributes:@{ NSFontAttributeName: [UIFont themeFontRegular:16], NSForegroundColorAttributeName: [UIColor whiteColor] }];
 //            [buttonTitle appendAttributedString:[[NSAttributedString alloc] initWithString:@"\n线上联系更方便" attributes:@{NSFontAttributeName : [UIFont themeFontRegular:10], NSForegroundColorAttributeName : [UIColor whiteColor]}]];
             self.onlineBtn.titleLabel.numberOfLines = 0;
             [self.onlineBtn setAttributedTitle:buttonTitle.copy forState:UIControlStateNormal];
@@ -241,13 +241,13 @@
                 make.width.mas_equalTo(itemWidth);
                 make.height.mas_equalTo(40);
             }];
-            
+
             // 电话咨询
             NSString *photoTitle = @"电话咨询";
             if (self.contactViewModel.phoneCallName.length > 0) {
                 photoTitle = self.contactViewModel.phoneCallName;
             }
-            NSMutableAttributedString *buttonPhoneTitle = [[NSMutableAttributedString alloc] initWithString:photoTitle?:@"" attributes:@{NSFontAttributeName : [UIFont themeFontRegular:16], NSForegroundColorAttributeName : [UIColor whiteColor]}];
+            NSMutableAttributedString *buttonPhoneTitle = [[NSMutableAttributedString alloc] initWithString:photoTitle ? : @"" attributes:@{ NSFontAttributeName: [UIFont themeFontRegular:16], NSForegroundColorAttributeName: [UIColor whiteColor] }];
 //            [buttonPhoneTitle appendAttributedString:[[NSAttributedString alloc] initWithString:@"\n隐私保护更安全" attributes:@{NSFontAttributeName : [UIFont themeFontRegular:10], NSForegroundColorAttributeName : [UIColor whiteColor]}]];
             self.contactBtn.titleLabel.numberOfLines = 0;
             [self.contactBtn setAttributedTitle:buttonPhoneTitle.copy forState:UIControlStateNormal];
@@ -264,7 +264,7 @@
             if (self.contactViewModel.phoneCallName.length > 0) {
                 photoTitle = self.contactViewModel.phoneCallName;
             }
-            NSMutableAttributedString *buttonPhoneTitle = [[NSMutableAttributedString alloc] initWithString:photoTitle?:@"" attributes:@{NSFontAttributeName : [UIFont themeFontRegular:16], NSForegroundColorAttributeName : [UIColor whiteColor]}];
+            NSMutableAttributedString *buttonPhoneTitle = [[NSMutableAttributedString alloc] initWithString:photoTitle ? : @"" attributes:@{ NSFontAttributeName: [UIFont themeFontRegular:16], NSForegroundColorAttributeName: [UIColor whiteColor] }];
 //            [buttonPhoneTitle appendAttributedString:[[NSAttributedString alloc] initWithString:@"\n隐私保护更安全" attributes:@{NSFontAttributeName : [UIFont themeFontRegular:10], NSForegroundColorAttributeName : [UIColor whiteColor]}]];
             self.contactBtn.titleLabel.numberOfLines = 0;
             [self.contactBtn setAttributedTitle:buttonPhoneTitle.copy forState:UIControlStateNormal];
@@ -280,38 +280,35 @@
     }
 }
 
-
 - (void)initNavbar {
     [self setupDefaultNavBar:NO];
     [self setNavBar:NO];
     [self.customNavBarView setNaviBarTransparent:YES];
-    self.customNavBarView.title.text = @"楼盘相册";
+    self.customNavBarView.title.text = self.navBarName.length ? self.navBarName : @"楼盘相册";
     [self.customNavBarView.leftBtn setBackgroundImage:ICON_FONT_IMG(24, @"\U0000e68a", [UIColor themeGray1]) forState:UIControlStateNormal];
     [self.customNavBarView.leftBtn setBackgroundImage:ICON_FONT_IMG(24, @"\U0000e68a", [UIColor themeGray1]) forState:UIControlStateHighlighted];
 }
 
 - (void)setNavBar:(BOOL)error {
-//    [self.customNavBarView.leftBtn setBackgroundImage:[UIImage imageNamed:@"icon-return"] forState:UIControlStateNormal];
-//    [self.customNavBarView.leftBtn setBackgroundImage:[UIImage imageNamed:@"icon-return"] forState:UIControlStateHighlighted];
     [self.customNavBarView setNaviBarTransparent:NO];
-    
 }
 
-- (void)scrollToCurrentIndex:(NSInteger )toIndex {
+- (void)scrollToCurrentIndex:(NSInteger)toIndex {
     //segmentview 的index 和 collectionview的index 不一一对应
     //需要通过计算得出，
-    NSInteger count = 0;
     NSInteger titleIndex = 0;
-    
-    for (int i = 0; i < self.pictsArray.count; i++) {
-        FHHouseDetailImageGroupModel *smallImageGroupModel = self.pictsArray[i];
-        NSInteger tempCount = smallImageGroupModel.images.count;
-        count += tempCount;
-        if (toIndex < count) {
-            titleIndex = i;
-            break;
+    NSInteger left = 0, right = self.prePictureSum.count - 1;
+    while (left <= right) {
+        NSInteger mid = (left + right) / 2;
+        NSNumber *midSum = self.prePictureSum[mid];
+        if (toIndex < midSum.unsignedIntegerValue) {
+            titleIndex = mid;
+            right = mid - 1;
+        } else {
+            left = mid + 1;
         }
     }
+
     self.lastIndexPath = [NSIndexPath indexPathForItem:0 inSection:titleIndex];
     UICollectionViewLayoutAttributes *attributes = [self.collectionView layoutAttributesForItemAtIndexPath:self.lastIndexPath];
     CGRect frame = attributes.frame;
@@ -333,49 +330,39 @@
     } completion:^(BOOL finished) {
         self.segmentViewChangedFlag = NO;
     }];
-    
+
 //    [self.mainCollectionView scrollRectToVisible:frame animated:YES];
 //    [self.mainCollectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:titleIndex] atScrollPosition:UICollectionViewScrollPositionBottom animated:YES];
 }
 
 - (void)processImagesList {
-    NSMutableArray *smallImageGroup = [NSMutableArray array];
-
-    NSMutableArray *titles = [NSMutableArray array];
+    NSMutableArray *rootGroupName = [NSMutableArray array];
     NSMutableArray *numbers = [NSMutableArray array];
-    
-    for (FHDetailNewTopImage *topImage in self.topImages) {
-        FHHouseDetailImageGroupModel *smallImageGroupModel = [[FHHouseDetailImageGroupModel alloc] init];
-        smallImageGroupModel.type = [@(topImage.type) stringValue];
-        smallImageGroupModel.name = topImage.name;
-        
-        NSInteger tempCount = 0;
-        
-        NSMutableArray *smallImageList = [NSMutableArray array];
-        for (FHHouseDetailImageGroupModel * groupModel in topImage.smallImageGroup) {
-            for (NSInteger j = 0; j < groupModel.images.count; j++) {
-                [smallImageList addObject:groupModel.images[j]];
-                tempCount += 1;
-            }
-            
-            if (topImage.type == FHDetailHouseImageTypeApartment) {
-                smallImageGroupModel.name = groupModel.name;
-                smallImageGroupModel.images = smallImageList.copy;
-                [smallImageGroup addObject:smallImageGroupModel.copy];
-                [smallImageList removeAllObjects];
-                continue;
-            }
+    NSMutableArray *titles = [NSMutableArray array];
+    NSMutableArray *preSum = [NSMutableArray arrayWithCapacity:self.floorPanShowModel.itemGroupList.count];
+
+    for (FHFloorPanPicShowGroupModel *groupModel in self.floorPanShowModel.itemGroupList) {
+        if ([groupModel.rootGroupName isEqualToString:rootGroupName.lastObject]) {
+            NSNumber *lastNumber = numbers.lastObject;
+            NSNumber *itemCount = [NSNumber numberWithUnsignedInteger:lastNumber.unsignedIntegerValue + groupModel.items.count];
+
+            [numbers removeLastObject];
+            [numbers addObject:itemCount];
+        } else {
+            NSNumber *itemCount = [NSNumber numberWithUnsignedInteger:groupModel.items.count];
+            [numbers addObject:itemCount];
+            [rootGroupName addObject:groupModel.rootGroupName];
         }
-        
-        if (smallImageList.count) {
-            smallImageGroupModel.images = smallImageList.copy;
-            [smallImageGroup addObject:smallImageGroupModel];
-        }
-        [titles addObject:[NSString stringWithFormat:@"%@（%ld）",topImage.name?:@"",tempCount]];
-        [numbers addObject:@(tempCount)];
+        NSNumber *lastSum = preSum.lastObject;
+        [preSum addObject:[NSNumber numberWithUnsignedInteger:lastSum.unsignedIntegerValue + groupModel.items.count]];
     }
-    self.pictsArray = smallImageGroup.copy;
-    
+
+    for (NSUInteger i = 0; i < rootGroupName.count; i++) {
+        NSNumber *number = numbers[i];
+        NSString *groupName = rootGroupName[i];
+        [titles addObject:[NSString stringWithFormat:@"%@（%lu）", groupName, number.unsignedIntegerValue]];
+    }
+    self.prePictureSum = preSum.copy;
     self.pictureTitles = titles.copy;
     self.pictureNumbers = numbers.copy;
 }
@@ -384,20 +371,19 @@
 // 电话咨询点击
 - (void)contactButtonClick:(UIButton *)btn {
     if (self.contactViewModel) {
-
         NSMutableDictionary *extraDic = @{
-            @"realtor_position":@"phone_button",
-            @"position":@"report_button",
-            @"element_from":self.elementFrom?:@"be_null"
-        }.mutableCopy;
-        
+                @"realtor_position": @"phone_button",
+                @"position": @"report_button",
+                @"element_from": self.elementFrom ? : @"be_null"
+            }.mutableCopy;
+
 //        extraDic[@"from"] = @"app_newhouse_property_picture";
 //        if (cluePage) {
 //            extraDic[kFHCluePage] = cluePage;
 //        }
         FHDetailContactModel *contactPhone = self.contactViewModel.contactPhone;
         NSDictionary *associateInfoDict = contactPhone.enablePhone ? self.associateInfo.phoneInfo : self.associateInfo.reportFormInfo;
-        extraDic[kFHAssociateInfo] = associateInfoDict?:@{};
+        extraDic[kFHAssociateInfo] = associateInfoDict ? : @{};
         [self.contactViewModel contactActionWithExtraDict:extraDic];
     }
 }
@@ -408,61 +394,68 @@
         NSMutableDictionary *extraDic = @{}.mutableCopy;
         extraDic[@"realtor_position"] = @"online";
         extraDic[@"position"] = @"online";
-        extraDic[@"element_from"] = self.elementFrom?:@"be_null";
+        extraDic[@"element_from"] = self.elementFrom ? : @"be_null";
         extraDic[@"from"] = @"app_newhouse_property_picture";
         // 头图im入口线索透传
-        if(self.associateInfo) {
+        if (self.associateInfo) {
             extraDic[kFHAssociateInfo] = self.associateInfo;
         }
         [self.contactViewModel onlineActionWithExtraDict:extraDic];
     }
 }
 
-
 #pragma mark - collectionView代理方法
 //返回section个数
 - (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView
 {
-    return self.pictsArray.count;
+    return self.floorPanShowModel.itemGroupList.count;
 }
 
 //每个section的item个数
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
 {
-    if (section < self.pictsArray.count) {
-        FHHouseDetailImageGroupModel *groupModel = self.pictsArray[section];
-        if ([groupModel isKindOfClass:[FHHouseDetailImageGroupModel class]]) {
-            return groupModel.images.count;
+    if (section < self.floorPanShowModel.itemGroupList.count) {
+        FHFloorPanPicShowGroupModel *groupModel =  self.floorPanShowModel.itemGroupList[section];
+        if ([groupModel isKindOfClass:[FHFloorPanPicShowGroupModel class]]) {
+            return groupModel.items.count;
         }
     }
     return 0;
 }
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
-    FHFloorPanPicCollectionCell *cell =[collectionView dequeueReusableCellWithReuseIdentifier:NSStringFromClass([FHFloorPanPicCollectionCell class]) forIndexPath:indexPath];
-    if (indexPath.section < self.pictsArray.count) {
-        FHHouseDetailImageGroupModel *groupModel = self.pictsArray[indexPath.section];
-        if ([groupModel isKindOfClass:[FHHouseDetailImageGroupModel class]] && groupModel.images.count > indexPath.row) {
-            cell.dataModel = groupModel.images[indexPath.row];
-        }
+    if (indexPath.section >= self.floorPanShowModel.itemGroupList.count) {
+        return [[UICollectionViewCell alloc] init];
     }
- 
-    cell.backgroundColor = [UIColor whiteColor];
+
+    FHFloorPanPicShowGroupModel *groupModel = self.floorPanShowModel.itemGroupList[indexPath.section];
+    if (indexPath.row >= groupModel.items.count) {
+        return [[UICollectionViewCell alloc] init];
+    }
+
+    id data = groupModel.items[indexPath.row];
+    NSString *identifier = NSStringFromClass([data class]);
+
+    if (identifier.length <= 0) {
+        return [[UICollectionViewCell alloc] init];
+    }
+
+    FHDetailBaseCollectionCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:identifier forIndexPath:indexPath];
+    [cell refreshWithData:data];
     return cell;
 }
 
 //设置每个item的尺寸 81 * 61
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath {
-    
     CGFloat itemWidth = floor((CGRectGetWidth(collectionView.frame) - 15 * 2 - 6 * 3) / 4.0);
     CGFloat itemHeight = floor(itemWidth / 81.0 * 61.0);
     return CGSizeMake(itemWidth, itemHeight);
 }
 
 //header的size
--(CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout referenceSizeForHeaderInSection:(NSInteger)section
+- (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout referenceSizeForHeaderInSection:(NSInteger)section
 {
-    return CGSizeMake(CGRectGetWidth(collectionView.frame) , 30 + 15 + 20);
+    return CGSizeMake(CGRectGetWidth(collectionView.frame), 30 + 15 + 20);
 }
 
 //设置每个item的UIEdgeInsets
@@ -490,18 +483,17 @@
     UICollectionReusableView *reusableView = nil;
     if ([kind isEqualToString:UICollectionElementKindSectionHeader]) {
         FHDetailSectionTitleCollectionView *titleView = (FHDetailSectionTitleCollectionView *)[collectionView dequeueReusableSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:NSStringFromClass([FHDetailSectionTitleCollectionView class]) forIndexPath:indexPath];
-        if (self.pictsArray.count > indexPath.section) {
-
-           FHHouseDetailImageGroupModel *groupModel = self.pictsArray[indexPath.section];
-            if([groupModel.name length] > 0) {
-                if ([groupModel.type isEqualToString:@"2"]) {
+        if (self.floorPanShowModel.itemGroupList.count > indexPath.section) {
+            FHFloorPanPicShowGroupModel *groupModel = self.floorPanShowModel.itemGroupList[indexPath.section];
+            if ([groupModel.groupName length] > 0) {
+                if (groupModel.showQuantity) {
                     //户型图后面不带计数
-                    titleView.titleLabel.text = [NSString stringWithFormat:@"%@",groupModel.name];
+                    titleView.titleLabel.text = [NSString stringWithFormat:@"%@ (%lu)", groupModel.groupName, (unsigned long)groupModel.items.count];
                 } else {
-                    titleView.titleLabel.text = [NSString stringWithFormat:@"%@ (%ld)",groupModel.name,groupModel.images.count];
+                    titleView.titleLabel.text = [NSString stringWithFormat:@"%@", groupModel.groupName];
                 }
             } else {
-                titleView.titleLabel.text = [NSString stringWithFormat:@"(%ld)",groupModel.images.count];
+                titleView.titleLabel.text = [NSString stringWithFormat:@"(%lu)", (unsigned long)groupModel.items.count];
             }
         }
         reusableView = titleView;
@@ -513,51 +505,40 @@
 //点击item方法
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    if (!self.topImages) {
-        [self dismissViewControllerAnimated:NO completion:nil];
-    }
-    
-    if (self.albumImageBtnClickBlock && self.pictsArray.count > indexPath.section) {
+    if (self.albumImageBtnClickBlock && self.floorPanShowModel.itemGroupList.count > indexPath.section) {
         NSInteger total = 0;
-      
-        for (NSInteger i = 0; i <= indexPath.section; i++) {
-            if (i < indexPath.section) {
-                FHHouseDetailImageGroupModel *groupModel = self.pictsArray[i];
-                total += groupModel.images.count;
-            }else
-            {
-                total += indexPath.row; 
-            }
+        total += indexPath.row;
+        if (indexPath.section > 0) {
+            NSNumber *preSum = self.prePictureSum[indexPath.section - 1];
+            total += preSum.unsignedIntegerValue;
         }
         self.albumImageBtnClickBlock(total);
     }
-    
+
 //    if (self.albumImageStayBlock) {
 //        self.albumImageStayBlock(0,self.ttTrackStartTime);
 //    }
-
 }
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
-
     if (self.segmentViewChangedFlag) {
         return;
     }
     //locate the scrollview which is in the centre
     CGPoint centerPoint = CGPointMake(20, scrollView.contentOffset.y + 55);
 //    NSIndexPath *indexPathOfCentralCell = [self.mainCollectionView indexPathForItemAtPoint:centerPoint];
-    
+
 //    CGPoint centerPoint = [self.view convertPoint:CGPointMake(20, 55) toView:self.mainCollectionView];
     //1 6 2
     NSIndexPath *indexPath = [self.collectionView indexPathForItemAtPoint:centerPoint];
-    NSLog(@"centerPoint :%@ section:%d,row:%d",NSStringFromCGPoint(centerPoint),indexPath.section,indexPath.item);
+    NSLog(@"centerPoint :%@ section:%ld,row:%ld", NSStringFromCGPoint(centerPoint), (long)indexPath.section, (long)indexPath.item);
     if (indexPath && self.lastIndexPath.section != indexPath.section) {
         self.lastIndexPath = indexPath;
-        if (indexPath.section < self.pictsArray.count) {
+        if (indexPath.section < self.floorPanShowModel.itemGroupList.count) {
             NSInteger currentIndex = 0;
-            for (int i = 0; i < indexPath.section; i++) {
-                FHHouseDetailImageGroupModel *smallImageGroupModel = self.pictsArray[i];
-                currentIndex += smallImageGroupModel.images.count;
+            if (indexPath.section > 0) {
+                NSNumber *preSum = self.prePictureSum[indexPath.section - 1];
+                currentIndex = preSum.unsignedIntegerValue;
             }
             if (self.segmentTitleView) {
                 self.segmentTitleView.selectIndex = currentIndex;
@@ -565,8 +546,6 @@
         }
     }
 }
-
-
 
 #pragma mark - TTUIViewControllerTrackProtocol
 
@@ -579,7 +558,6 @@
     self.ttTrackStartTime = [[NSDate date] timeIntervalSince1970];
 }
 
-
 //- (void)goBack
 //{
 //    if (self.albumImageStayBlock) {
@@ -591,7 +569,7 @@
 {
     [super viewDidDisappear:animated];
     if (self.albumImageStayBlock) {
-        self.albumImageStayBlock(0,self.ttTrackStayTime);
+        self.albumImageStayBlock(0, self.ttTrackStayTime);
     }
 }
 

@@ -16,6 +16,10 @@
 #import "NewsUserSettingManager.h"
 #import "ArticleTitleImageView.h"
 #import "APNsManager.h"
+#import "FHMainApi.h"
+#import "ToastManager.h"
+#import "TTReachability.h"
+#import "NSString+BTDAdditions.h"
 
 #import "NewsDetailLogicManager.h"
 #import "SSFeedbackManager.h"
@@ -117,11 +121,11 @@ typedef NS_ENUM(NSUInteger, TTSettingSectionType) {
     kTTSettingSectionTypeAccount,      // 编辑资料、帐号与绑定设置、黑名单
     kTTSettingSectionTypeAbstractFont, // 列表显示摘要、字体大小
     //    kTTSettingSectionTypeFlowCache,    // 非wifi网络流量、清理缓存
-    //    kTTSettingSectionTypeNotification, // 推送通知、收藏时转发、自动播放视频
-    kTTSettingSectionTypeTTCover,      // 头条封面、当前版本、使用帮助
+    kTTSettingSectionTypeNotification, // 推送通知、个性化推荐,清除缓存
+    kTTSettingSectionTypeTTCover,      // 当前版本 常见问题 关于我们
     kTTSettingSectionTypeLogout,       // 退出登录
     //    kTTSettingSectionTypeUmengDebug,   // 友盟Debug
-    kTTSettingSectionTypeAbout,
+    kTTSettingSectionTypeAbout,                      //用户协议 隐私政策 第三方sdk列表 申请权限列表 证明资质
     kTTSettingSectionTypeLogoutUnRegister
 };
 
@@ -141,6 +145,7 @@ typedef NS_ENUM(NSUInteger, TTSettingCellType) {
     SettingCellTypeNatantSwitch,            // 浮层开关
     SettingCellTypeClientEscapeSwitch,      // 自动优化阅读
     SettingCellTypeShowBtn4Refresh,         // 显示列表悬浮刷新按钮
+    SettingCellTypeNormalProblem,            //常见问题
     
     SettingCellTypeADRegisterEntrance,      // 广告主注册入口
     SettingCellTypeShowADSplash,            // 展示开屏广告图
@@ -158,7 +163,8 @@ typedef NS_ENUM(NSUInteger, TTSettingCellType) {
     SettingCellTypeApplyPermission,         //系统权限列表
     SettingCellTypeBusinessLicense,         // 证照资质
     SettingCellTypeFHAccountBindingSetting, // 幸福里账号设置
-    SettingCellTypeLogoutUnRegister         // 注销登录
+    SettingCellTypeLogoutUnRegister,         // 注销登录
+    SettingCellTypePersonalRecommend         //个性化推荐设置
 
 };
 typedef TTSettingCellType SettingCellType;
@@ -198,6 +204,7 @@ TTEditUserProfileViewControllerDelegate
 @property (nonatomic, strong) SettingSwitch * resourceModeSwitch;
 @property (nonatomic, strong) SettingSwitch * readModeSwitch;
 @property (nonatomic, strong) SettingSwitch * pushNotificatoinSwitch;
+@property (nonatomic, strong) SettingSwitch * personalRecommendSwitch;
 //@property (nonatomic, strong) SettingSwitch * shareWhenFavoriteSwitch;
 //@property (nonatomic, strong) SettingSwitch * umengDebugSwitch;
 @property (nonatomic, strong) SettingSwitch * showBtn4RefreshSwitch;
@@ -276,6 +283,9 @@ TTEditUserProfileViewControllerDelegate
         self.pushNotificatoinSwitch = [[SettingSwitch alloc] initWithFrame:CGRectZero];
         self.pushNotificatoinSwitch.onTintColor = [UIColor tt_themedColorForKey:@"orange4"];
         [_pushNotificatoinSwitch addTarget:self action:@selector(pushNotificationChanged:) forControlEvents:UIControlEventValueChanged];
+        self.personalRecommendSwitch = [[SettingSwitch alloc]initWithFrame:CGRectZero];
+        self.personalRecommendSwitch.onTintColor = [UIColor tt_themedColorForKey:@"orange4"];
+        [_personalRecommendSwitch addTarget:self action:@selector(secondCondirmation) forControlEvents:UIControlEventValueChanged];
         self.showAwardCoinTipSwitch = [[SettingSwitch alloc] initWithFrame:CGRectZero];
         [_showAwardCoinTipSwitch addTarget:self action:@selector(showAwardCoinTipSwitchAction:) forControlEvents:UIControlEventValueChanged];
         //        self.shareWhenFavoriteSwitch = [[SettingSwitch alloc] initWithFrame:CGRectZero];
@@ -496,15 +506,15 @@ TTEditUserProfileViewControllerDelegate
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     SettingCellType cellType = [self cellTypeAtIndexPath:indexPath];
-//    if (cellType == SettingCellTypePushNotification
-//        && ((![self isAPNSEnabled] || [TTUserSettingsManager apnsNewAlertClosed]))
-//        ) {
-//        if ([TTDeviceHelper isPadDevice]) {
-//            return 90.0f;
-//        }
-//        return [TTDeviceUIUtils tt_padding:kTTSettingNotificationCellHeight];
-//    }
-    
+    if(cellType == SettingCellTypePushNotification){
+        NSString *aString = @"关闭后将无法接收到精选房源推送";
+        CGSize size =  [aString btd_sizeWithFont:[UIFont systemFontOfSize:14] width:self.width - 30];//适配小机型多行文案
+        return [TTDeviceUIUtils tt_padding: 58 + size.height];
+    }else if(cellType == SettingCellTypePersonalRecommend){
+        NSString *aString = @"关闭后您将无法接收到幸福里专属推荐的精选房源内容";
+        CGSize size =  [aString btd_sizeWithFont:[UIFont systemFontOfSize:14] width:self.width - 30];//适配小机型多行文案
+        return [TTDeviceUIUtils tt_padding: 58 + size.height];
+    }
     return [SettingView heightOfCell];
 }
 
@@ -528,15 +538,22 @@ TTEditUserProfileViewControllerDelegate
     
     NSString *cellIndenitfier = @"";
     UITableViewCell *cell;
-    if (cellType == SettingCellTypePushNotification) {
+    if (cellType == SettingCellTypePushNotification || cellType == SettingCellTypePersonalRecommend) {
         cell = [[SettingPushCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:cellIndenitfier];
         self.pushCell = (SettingPushCell *)cell;
         self.pushCell.pushTitleLabel.font = [UIFont systemFontOfSize:[SettingView fontSizeOfCellLeftLabel]];
+        if(indexPath.row == 0){
+            ((SettingPushCell
+              *)cell).topLine.hidden = YES;
+        }
     } else if (cellType == SettingCellTypeAccountManagement) {
         cell = [[TTEditUserProfileItemCell alloc] initWithReuseIdentifier:cellIndenitfier];
     } else {
         // SettingCellTypeLogout
         cell = [[SettingNormalCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:cellIndenitfier];
+        if(indexPath.row == 0){
+            ((SettingNormalCell *)cell).topLine.hidden = YES;
+        }
     }
     cell.backgroundColor = nil;
     SSThemedView * bgView = [[SSThemedView alloc] init];
@@ -658,7 +675,6 @@ TTEditUserProfileViewControllerDelegate
         cell.textLabel.text = nil;//NSLocalizedString(@"推送通知", nil);
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
         [self refreshswitch:_pushNotificatoinSwitch];
-        _pushNotificatoinSwitch.frame = CGRectMake(0, 0, 100, 40);
         cell.accessoryView = _pushNotificatoinSwitch;
         
         NSString *detailText;
@@ -680,9 +696,17 @@ TTEditUserProfileViewControllerDelegate
                 detailText = nil;
             }
         }
-        
+        detailText = @"关闭后将无法接收到精选房源推送";
         self.pushCell.pushTitleLabel.text = NSLocalizedString(@"推送通知", nil);
-//        self.pushCell.pushDetailLabel.text = detailText;
+        self.pushCell.pushDetailLabel.text = detailText;
+    }
+    else if (cellType == SettingCellTypePersonalRecommend) {
+        cell.textLabel.text = nil;
+        cell.selectionStyle = UITableViewCellSelectionStyleNone;
+        cell.accessoryView = _personalRecommendSwitch;
+        [_personalRecommendSwitch setOn: [FHEnvContext getPersonalRecommend]];
+        ((SettingPushCell *)cell).pushTitleLabel.text = @"个性化推荐设置";
+        ((SettingPushCell *)cell).pushDetailLabel.text = @"关闭后您将无法接收到幸福里专属推荐的精选房源内容";
     }
     else if (cellType == SettingCellTypeShowBtn4Refresh) {
         cell.textLabel.text = NSLocalizedString(@"列表页显示刷新按钮", nil);
@@ -748,7 +772,12 @@ TTEditUserProfileViewControllerDelegate
         UIImageView *accessoryImage = [[UIImageView alloc] initWithImage:[UIImage themedImageNamed:@"icon-youjiantou-hui"]];
         cell.accessoryView = accessoryImage;
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
-    } else if (cellType == SettingCellTypeUserProtocol) {
+    }else if (cellType == SettingCellTypeNormalProblem) {
+        cell.textLabel.text = @"常见问题";
+        UIImageView *accessoryImage = [[UIImageView alloc] initWithImage:[UIImage themedImageNamed:@"icon-youjiantou-hui"]];
+        cell.accessoryView = accessoryImage;
+        cell.selectionStyle = UITableViewCellSelectionStyleNone;
+    }else if (cellType == SettingCellTypeUserProtocol) {
         cell.textLabel.text = @"用户协议";
         UIImageView *accessoryImage = [[UIImageView alloc] initWithImage:[UIImage themedImageNamed:@"icon-youjiantou-hui"]];
         cell.accessoryView = accessoryImage;
@@ -809,54 +838,51 @@ TTEditUserProfileViewControllerDelegate
 {
     if ([TTAccountManager isLogin]) {
 //        return @[@(kTTSettingSectionTypeAccount),
-        return @[@(kTTSettingSectionTypeAbstractFont),
-                 @(kTTSettingSectionTypeAbout),
-                 @(kTTSettingSectionTypeLogout),@(kTTSettingSectionTypeLogoutUnRegister)];
+        return @[@(kTTSettingSectionTypeAbout),
+                 @(kTTSettingSectionTypeNotification),
+                 @(kTTSettingSectionTypeTTCover),
+                 @(kTTSettingSectionTypeLogout)];
     } else {
-        return @[@(kTTSettingSectionTypeAbstractFont),@(kTTSettingSectionTypeAbout)];
+        return @[@(kTTSettingSectionTypeAbout),
+        @(kTTSettingSectionTypeNotification),
+        @(kTTSettingSectionTypeTTCover)];
     }
 }
 
 - (NSArray *)supportSettingCellTypeArrayWithSectionType:(TTSettingSectionType)type
 {
     switch (type) {
-        case kTTSettingSectionTypeAccount:
-            return @[@(SettingCellTypeAccountManagement)];
-            break;
-        case kTTSettingSectionTypeAbstractFont:
-        {
+        case kTTSettingSectionTypeAbout:{
             NSMutableArray *array = [NSMutableArray arrayWithArray:@[
-                                                                     @(SettingCellTypeClearCache),
-//                                                                     @(SettingCellTypeFontMode),
-//                                                                     @(SettingCellTypeLoadImageMode),
-//                                                                     @(SettingCellTypeVideoTrafficTip),
-                                                                     @(SettingCellTypePushNotification),
-                                                                     @(SettingCellTypeCheckNewVersion),]];
-            if ([AKTaskSettingHelper shareInstance].akBenefitEnable) {
-                [array addObject:@(SettingCellTypeCoinTaskSetting)];
-            }
-            if (_shouldShowBtn4RefreshSetting) {
-                [array insertObject:@(SettingCellTypeShowBtn4Refresh) atIndex:3];
+                @(SettingCellTypeUserProtocol),
+                @(SettingCellTypePrivacyProtocol),
+                @(SettingCellTypeThirdPartySDK),
+                @(SettingCellTypeApplyPermission),
+                @(SettingCellTypeBusinessLicense),]];
+            return array;
+        }
+        case kTTSettingSectionTypeNotification:{
+            NSMutableArray *array = [NSMutableArray arrayWithArray:@[
+                @(SettingCellTypePushNotification),
+                @(SettingCellTypeClearCache)]];
+            if ([[AKTaskSettingHelper shareInstance] settingRecommendEnable]) {
+                [array insertObject:@(SettingCellTypePersonalRecommend) atIndex:1];
             }
             return array;
         }
-        case kTTSettingSectionTypeAbout:{
+        case kTTSettingSectionTypeTTCover:{
             NSMutableArray *array = [NSMutableArray arrayWithArray:@[
-                                                                     @(SettingCellTypeAbout),
-                                                                      @(SettingCellTypeUserProtocol),
-                                                                      @(SettingCellTypePrivacyProtocol),
-                                                                     @(SettingCellTypeThirdPartySDK),
-                                                                     @(SettingCellTypeApplyPermission),
-                                                                     @(SettingCellTypeBusinessLicense),]];
+                @(SettingCellTypeCheckNewVersion),
+                @(SettingCellTypeNormalProblem),
+                @(SettingCellTypeAbout)]];
             if ([TTAccountManager isLogin] && ![SSCommonLogic disableDouyinIconLoginLogic]) {
                 [array addObject:@(SettingCellTypeFHAccountBindingSetting)];
             }
             return array;
         }
-        case kTTSettingSectionTypeLogout:
+        case kTTSettingSectionTypeLogout:{
             return @[@(SettingCellTypeLogout)];
-//        case kTTSettingSectionTypeLogoutUnRegister:
-//            return @[@(SettingCellTypeLogoutUnRegister)];
+        }
         default:
             return @[];
     }
@@ -1378,7 +1404,15 @@ TTEditUserProfileViewControllerDelegate
         wrapperTrackEvent(@"ad_register", @"setting_ad_register_clk");
     } else if (cellType == SettingCellTypeAbout) {
         [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:@"fschema://aboutUs"]];
-    } else if (cellType == SettingCellTypeUserProtocol) {
+    }else if(cellType == SettingCellTypeNormalProblem){
+        [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:@"sslocal://sample_lynx_page?channel=lynx_common_question&title=%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98&report_params=%7B%22enter_from%22%3A%22minetab%22%2C%22origin_from%22%3A%22minetab%22%7D"]];
+        NSMutableDictionary *param = [NSMutableDictionary new];
+        param[@"orgin_from"] = @"minetab";
+        param[@"enter_from"] = @"minetab";
+        param[@"page_type"] = @"setting";
+        param[@"event_tracking_id"] = @"107642";
+        TRACK_EVENT(@"click_icon", param);
+    }else if (cellType == SettingCellTypeUserProtocol) {
         // 用户协议
         NSString *urlStr = [ArticleURLSetting userProtocolURLString];
         if (urlStr.length > 0) {
@@ -1523,6 +1557,10 @@ TTEditUserProfileViewControllerDelegate
             
             YYCache *sendPhoneNumberCache = [[FHEnvContext sharedInstance].generalBizConfig sendPhoneNumberCache];
             [sendPhoneNumberCache removeObjectForKey:kFHPLoginhoneNumberCacheKey];
+            
+            [FHMainApi getRequest:@"/f100/api/get_personalized_status" query:nil params:nil jsonClass:[FHConfigModel class] completion:^(JSONModel * _Nullable model, NSError * _Nullable error) {
+                [FHEnvContext savePersonalRecommend:((FHConfigModel*)model).data.personalizedStatus];
+            }];
         }
     }];
 //    [TTAccountManager startLogoutUserWithCompletion:^(BOOL success, NSError *error) {
@@ -1536,6 +1574,63 @@ TTEditUserProfileViewControllerDelegate
     SSFeedbackViewController * feedbackViewController = [[SSFeedbackViewController alloc] init];
     UIViewController *topController = [TTUIResponderHelper topViewControllerFor: self];
     [topController.navigationController pushViewController:feedbackViewController animated:YES];
+}
+//关闭个性化推荐二次弹窗确认
+- (void)secondCondirmation
+{
+    //点击后switch的状态变为NO
+    if([FHEnvContext getPersonalRecommend] == YES){
+        TTThemedAlertController *alert = [[TTThemedAlertController alloc] initWithTitle:nil message:NSLocalizedString(@"关闭后您将无法接收到幸福里专属推荐的精选房源内容", nil) preferredType:TTThemedAlertControllerTypeAlert];
+        [alert addActionWithGrayTitle:NSLocalizedString(@"坚持关闭", nil) actionType:TTThemedAlertActionTypeNormal actionBlock:^{
+            NSMutableDictionary *param = [NSMutableDictionary new];
+            param[@"popup_name"] = @"personal_recommend_settings";
+            param[@"page_type"] = @"setting";
+            param[@"click_position"] = @"close";
+            param[@"event_tracking_id"] = @"107644";
+            TRACK_EVENT(@"popup_click", param);
+            [self setPersonalizedStatus:0];//0表示关闭个性化推荐
+        }];
+        [alert addActionWithTitle:NSLocalizedString(@"我在想想", nil) actionType:TTThemedAlertActionTypeNormal actionBlock:^{
+            [_personalRecommendSwitch setOn:[FHEnvContext getPersonalRecommend]];
+            NSMutableDictionary *param = [NSMutableDictionary new];
+            param[@"popup_name"] = @"personal_recommend_settings";
+            param[@"page_type"] = @"setting";
+            param[@"click_position"] = @"cancel";
+            param[@"event_tracking_id"] = @"107644";
+            TRACK_EVENT(@"popup_click", param);
+        }];
+        
+        NSMutableDictionary *param = [NSMutableDictionary new];
+        param[@"status"] = @"open";
+        param[@"popup_name"] = @"personal_recommend_settings";
+        param[@"page_type"] = @"setting";
+        param[@"event_tracking_id"] = @"107643";
+        TRACK_EVENT(@"popup_show", param);
+        [alert showFrom:self.viewController animated:YES];
+    }else{
+        [self setPersonalizedStatus:1];//1表示打开个性化推荐
+    }
+}
+//上报个性化推荐状态的接口,只有网络请求成功才修改本地FHEnvContext的字段
+- (void)setPersonalizedStatus:(int)personalizedStatus
+{
+    if (![TTReachability isNetworkConnected]) {
+        [[ToastManager manager] showToast:@"网络不给力，请稍后重试"];
+        [_personalRecommendSwitch setOn:[FHEnvContext getPersonalRecommend]];
+        return;
+    }
+    NSString* queryPath = @"/f100/api/set_personalized_status";
+    NSMutableDictionary* paramDict = [NSMutableDictionary dictionary];
+    [paramDict setValue:@(personalizedStatus) forKey:@"personalized_status"];
+    [FHMainApi postJsonRequest:queryPath query:nil params:paramDict completion:^(NSDictionary * _Nullable result, NSError * _Nullable error) {
+        if(error){
+            [[ToastManager manager] showToast:@"网络不给力，请稍后重试"];
+            [_personalRecommendSwitch setOn:[FHEnvContext getPersonalRecommend]];
+        }
+        else{
+            [FHEnvContext savePersonalRecommend:personalizedStatus];
+        }
+    }];
 }
 
 - (void)pushNotificationChanged:(id)sender

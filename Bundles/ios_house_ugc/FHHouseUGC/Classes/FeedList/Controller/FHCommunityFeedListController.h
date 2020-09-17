@@ -12,10 +12,11 @@
 #import "SSImpressionManager.h"
 #import "ArticleImpressionHelper.h"
 #import "FHHouseUGCAPI.h"
+#import "FHUGCFeedListProtocol.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface FHCommunityFeedListController : FHBaseViewController
+@interface FHCommunityFeedListController : FHBaseViewController<FHUGCFeedListProtocol>
 
 @property(nonatomic, assign) FHCommunityFeedListType listType;
 @property(nonatomic, strong) ArticleListNotifyBarView *notifyBarView;
@@ -38,7 +39,7 @@ NS_ASSUME_NONNULL_BEGIN
 //小区群聊的conversation id
 @property(nonatomic, strong) NSString *conversationId;
 //传入以后点击三个点以后显示该数组的内容
-@property(nonatomic, strong) NSArray *operations;
+@property(nonatomic, strong , nullable) NSArray<FHUGCConfigDataPermissionModel> *operations;
 //当接口返回空数据的时候是否显示空态页，默认为YES
 @property(nonatomic, assign) BOOL showErrorView;
 //网络请求成功回调
@@ -66,7 +67,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic, assign) BOOL alreadyReportPageMonitor;
 
 - (void)showNotify:(NSString *)message ;
-- (void)showNotify:(NSString *)message completion:(void(^)())completion;
+- (void)showNotify:(NSString *)message completion:(nullable void(^)(void))completion;
 //下拉刷新数据
 - (void)startLoadData;
 //下拉刷新数据,不清之前的数据

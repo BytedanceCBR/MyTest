@@ -252,7 +252,7 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
     
     __weak typeof(self) weakSelf = self;
     self.naviView = [[FHDetailPictureNavView alloc] initWithFrame:CGRectMake(0, topInset, self.view.width, kFHDPTopBarHeight)];
-    self.naviView.showAlbum = self.smallImageInfosModels > 0;
+    self.naviView.showAlbum = self.smallImageInfosModels.itemGroupList.count > 0;
     self.naviView.backActionBlock = ^{
         [weakSelf finished];
     };
@@ -745,13 +745,15 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
             break;
         }
     }
-    NSNumber *num = self.pictureNumbers[titleIndex];
-//    self.currentTypeName = self.pictureTitles[titleIndex];
-    if (titleIndex < self.mediaHeaderModel.houseImageDictList.count) {
-        FHHouseDetailImageListDataModel *listModel = self.mediaHeaderModel.houseImageDictList[titleIndex];
-        self.currentTypeName = listModel.houseImageTypeName;
+    if (titleIndex < self.pictureNumbers.count) {
+        NSNumber *num = self.pictureNumbers[titleIndex];
+    //    self.currentTypeName = self.pictureTitles[titleIndex];
+        if (titleIndex < self.mediaHeaderModel.houseImageDictList.count) {
+            FHHouseDetailImageListDataModel *listModel = self.mediaHeaderModel.houseImageDictList[titleIndex];
+            self.currentTypeName = listModel.houseImageTypeName;
+        }
+        self.naviView.titleLabel.text = [NSString stringWithFormat:@"%u/%d",num.unsignedIntValue - currentTitleIndex + 1,num.unsignedIntValue];
     }
-    self.naviView.titleLabel.text = [NSString stringWithFormat:@"%ld/%d",num.unsignedIntValue - currentTitleIndex + 1,num.unsignedIntValue];
 }
 
 #pragma mark - Setter & Getter
@@ -780,21 +782,19 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
         if (self.vedioCount) {
             //把视频添加到第一个图片归类中
             //1.0.0 需求 视频单独分类
-            [titles addObject:[NSString stringWithFormat:@"视频（%ld）",self.vedioCount]];
+            [titles addObject:[NSString stringWithFormat:@"视频（%lu）",(unsigned long)self.vedioCount]];
             [numbers addObject:@(self.vedioCount)];
         }
         for (FHHouseDetailImageListDataModel *listModel in mediaHeaderModel.houseImageDictList) {
-            if (listModel.houseImageTypeName.length > 0) {
-                NSInteger tempCount = 0;
-                for (FHImageModel *imageModel in listModel.houseImageList) {
-                    if (imageModel.url.length > 0) {
-                        tempCount += 1;
-                    }
+            NSInteger tempCount = 0;
+            for (FHImageModel *imageModel in listModel.houseImageList) {
+                if (imageModel.url.length > 0) {
+                    tempCount += 1;
                 }
-                if (tempCount > 0) {
-                    [titles addObject:[NSString stringWithFormat:@"%@（%ld）",listModel.houseImageTypeName,tempCount]];
-                    [numbers addObject:@(tempCount)];
-                }
+            }
+            if (tempCount > 0) {
+                [titles addObject:[NSString stringWithFormat:@"%@（%ld）",listModel.houseImageTypeName,(long)tempCount]];
+                [numbers addObject:@(tempCount)];
             }
         }
         // 只有一个分类时隐藏
@@ -1274,7 +1274,13 @@ static BOOL kFHStaticPhotoBrowserAtTop = NO;
     } else {
         FHFloorPanPicShowViewController *showVC = [[FHFloorPanPicShowViewController alloc] init];
         showVC.modalPresentationStyle = UIModalPresentationFullScreen;
-        showVC.pictsArray = self.smallImageInfosModels;
+        showVC.floorPanShowModel = self.smallImageInfosModels;
+        showVC.isShowSegmentTitleView = self.isShowSegmentView;
+        
+        if (self.houseType == FHHouseTypeNeighborhood) {
+            showVC.navBarName = @"小区相册";
+        }
+        
         __weak typeof(self)weakSelf = self;
         showVC.albumImageBtnClickBlock = ^(NSInteger index){
             if (index >= 0) {

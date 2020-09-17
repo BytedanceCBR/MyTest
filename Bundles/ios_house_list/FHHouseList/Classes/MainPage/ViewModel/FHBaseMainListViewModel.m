@@ -610,6 +610,7 @@ extern NSString *const INSTANT_DATA_KEY;
     
     if (isHead) {
         self.showPlaceHolder = YES;
+        [self.tableView reloadData];
     }
     
     if (![TTReachability isNetworkConnected]) {
@@ -621,10 +622,6 @@ extern NSString *const INSTANT_DATA_KEY;
             [self.tableView.mj_footer endRefreshing];
         }
         return;
-    }
-    if (offset == 0) {
-        _showPlaceHolder = YES;
-        [self.tableView reloadData];
     }
     __weak typeof(self) wself = self;
     if (_mainListPage && self.houseType == FHHouseTypeRentHouse) {
@@ -863,6 +860,9 @@ extern NSString *const INSTANT_DATA_KEY;
                     itemModel.isRecommendCell = YES;
                     itemModel.isLastCell = (idx == items.count - 1);
                     theItemModel = itemModel;
+                    if ((itemModel.houseType.integerValue == FHHouseTypeSecondHandHouse && itemModel.cellStyles == 7) || (itemModel.houseType.integerValue == FHHouseTypeNewHouse && itemModel.cellStyles == 8)) {
+                        _isAbtest = YES;
+                    }
                 }
 
                 if ([theItemModel isKindOfClass:[FHSugListRealHouseTopInfoModel class]]) {
@@ -1638,8 +1638,14 @@ extern NSString *const INSTANT_DATA_KEY;
                     [wself jump2HouseFindPageWithUrl:url];
                 };
             }
-            
-               [cell refreshWithData:data];
+            if ([cell isKindOfClass:[FHHouseSearchSecondHouseCell class]]) {
+                FHHouseSearchSecondHouseCell *secondCell = (FHHouseSearchSecondHouseCell *)cell;
+                [secondCell updateHeightByIsFirst:isFirstCell];
+            } else if ([cell isKindOfClass:[FHHouseSearchNewHouseCell class]]) {
+                FHHouseSearchNewHouseCell *newCell = (FHHouseSearchNewHouseCell *)cell;
+                [newCell updateHeightByIsFirst:isFirstCell];
+            }
+            [cell refreshWithData:data];
             if ([cell isKindOfClass:[FHHouseListAgencyInfoCell class]]) {
                 FHHouseListAgencyInfoCell *agencyInfoCell = (FHHouseListAgencyInfoCell *)cell;
                 if (!agencyInfoCell.btnClickBlock) {
@@ -1726,6 +1732,13 @@ extern NSString *const INSTANT_DATA_KEY;
                 item.topMargin = 10;
             }else {
                 item.topMargin = 0;
+            }
+            if (_isAbtest) {
+                if (isFirstCell) {
+                    item.topMargin = 5;
+                } else {
+                    item.topMargin = 0;
+                }
             }
             data = item;
         }

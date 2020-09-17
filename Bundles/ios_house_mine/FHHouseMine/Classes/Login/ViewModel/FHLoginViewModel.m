@@ -1155,6 +1155,10 @@ static FHLoginSharedModel *_sharedModel = nil;
     if (self.isNeedCheckUGCAdUser) {
         [[FHEnvContext sharedInstance] checkUGCADUserIsLaunch:YES];
     }
+  
+    [FHMainApi getRequest:@"/f100/api/get_personalized_status" query:nil params:nil jsonClass:[FHConfigModel class] completion:^(JSONModel * _Nullable model, NSError * _Nullable error) {
+        [FHEnvContext savePersonalRecommend:((FHConfigModel*)model).data.personalizedStatus];
+    }];
 }
 
 - (void)handleLoginError:(NSError *)error isOneKey:(BOOL )isOneKey {

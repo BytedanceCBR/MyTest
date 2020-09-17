@@ -10,7 +10,7 @@
 @class FHMultiMediaItemModel,FHDetailNewMediaHeaderDataHelperHeaderViewData,FHDetailNewMediaHeaderDataHelperPictureDetailData,FHDetailNewMediaHeaderDataHelperPhotoAlbumData;
 NS_ASSUME_NONNULL_BEGIN
 @class FHDetailNewMediaHeaderDataHelperData,FHDetailNewMediaHeaderModel,FHHouseDetailImageGroupModel;
-
+@class FHFloorPanPicShowModel;
 @interface FHDetailNewMediaHeaderDataHelper : NSObject
 //提供给头图的数据
 @property (nonatomic, strong, readonly) FHDetailNewMediaHeaderDataHelperHeaderViewData *headerViewData;
@@ -35,8 +35,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FHDetailNewMediaHeaderDataHelperHeaderViewData : NSObject
 @property (nonatomic, copy) NSArray<FHMultiMediaItemModel*> *mediaItemArray;
-@property (nonatomic, assign) NSInteger pictureNumber;
-@property (nonatomic, assign) NSInteger vrNumber;
+@property (nonatomic, assign) NSUInteger pictureNumber;
+@property (nonatomic, assign) NSUInteger vrNumber;
 @end
 
 @interface FHDetailNewMediaHeaderDataHelperPictureDetailData : NSObject
@@ -47,6 +47,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FHDetailNewMediaHeaderDataHelperPhotoAlbumData : NSObject
 @property (nonatomic, copy) NSArray<FHHouseDetailImageGroupModel *> *photoAlbumArray;
+@property (nonatomic, strong) FHHouseDetailAlbumInfo *detailAlbumInfo;
+@property (nonatomic, strong) FHFloorPanPicShowModel *floorPanModel;
 @end
 
 
