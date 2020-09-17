@@ -26,6 +26,7 @@
 #import "TTAccountManager.h"
 #import "TTMultiDigManager.h"
 #import "FHCommonDefines.h"
+#import <ReactiveObjC/ReactiveObjC.h>
 
 static NSString * const kWDHasTipSupportsEmojiInputDefaultKey = @"WDHasTipSupportsEmojiInputDefaultKey";
 
@@ -142,7 +143,12 @@ static NSString * const kWDHasTipSupportsEmojiInputDefaultKey = @"WDHasTipSuppor
                                                                      userInfo:userInfo];
         
     }];
-    
+    self.writeButton.selected = self.detailModel.answerEntity.userRepined;
+    [RACObserve(self.detailModel.answerEntity, userRepined) subscribeNext:^(id  _Nullable x) {
+        if([x isKindOfClass:[NSValue class]]) {
+            wself.collectButton.selected = [x boolValue];
+        }
+    }];
     self.digButton.selected = self.detailModel.answerEntity.isDigg;
     [self.KVOController observe:self.detailModel.answerEntity keyPath:NSStringFromSelector(@selector(isDigg)) options:NSKeyValueObservingOptionNew block:^(id  _Nullable observer, id  _Nonnull object, NSDictionary<NSString *,id> * _Nonnull change) {
         BOOL isDigg = [change tt_boolValueForKey:NSKeyValueChangeNewKey];
@@ -192,28 +198,6 @@ static NSString * const kWDHasTipSupportsEmojiInputDefaultKey = @"WDHasTipSuppor
         make.left.equalTo(self.collectButton.mas_right).offset(15);
         make.top.equalTo(self).offset(10);
     }];
-//
-//
-//    CGFloat leftInset = self.tt_safeAreaInsets.left;
-//    CGFloat rightInset = self.tt_safeAreaInsets.right;
-//    CGFloat hInset = leftInset + rightInset;//水平缩进
-//    CGFloat bottomSafeInset = self.tt_safeAreaInsets.bottom;
-//    CGFloat writeButtonHeight = [TTDeviceHelper isPadDevice] ? 36 : 32;
-//    CGFloat writeTopMargin = ((NSInteger)self.height - writeButtonHeight - bottomSafeInset) / 2;
-//    CGFloat iconTopMargin = ((NSInteger)self.height - 24 - bottomSafeInset) / 2;
-//    CGRect writeFrame = CGRectZero, emojiFrame = CGRectZero, commentFrame = CGRectZero, shareFrame = CGRectZero, digFrame = CGRectZero;
-//    CGFloat width = self.width;
-//    CGFloat margin = [TTDeviceHelper is736Screen] ? 10 : ([TTDeviceHelper is667Screen] || [TTDeviceHelper isIPhoneXDevice]?5:0);
-//    writeFrame = CGRectMake(15 + leftInset, writeTopMargin, width - (169 + margin * 3) - hInset, writeButtonHeight);
-//    emojiFrame = CGRectMake(CGRectGetMaxX(writeFrame) - 22 - 6, CGRectGetMinY(writeFrame) + 5, 22, 22);
-//    commentFrame = CGRectMake(CGRectGetMaxX(writeFrame) + 22 + margin, iconTopMargin, 24, 24);
-//    shareFrame = CGRectMake(width - 38 - rightInset, iconTopMargin, 24, 24);
-//    digFrame = CGRectMake(CGRectGetMinX(shareFrame) - 46 - margin, iconTopMargin, 24, 24);
-//
-//    _writeButton.frame = writeFrame;
-//    _commentButton.frame = commentFrame;
-//    _digButton.frame = digFrame;
-//    _shareButton.frame = shareFrame;
 }
 
 - (void)safeAreaInsetsDidChange

@@ -1973,7 +1973,6 @@ static NSUInteger const kOldAnimationViewTag = 20161221;
 }
 
 -(void)bottomView:(WDBottomToolView *)bottomView collectButtonClicked:(SSThemedButton *)collectButton {
-    collectButton.selected = !collectButton.selected;
     NSArray *activityItems = [self.natantViewModel wd_customItems];
     __block TTFavouriteContentItem *collecItem = nil;
     [activityItems enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
