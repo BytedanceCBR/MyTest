@@ -204,10 +204,15 @@ typedef NS_ENUM(NSUInteger, FHFeedContentStickStyle) {
 @property (nonatomic, strong , nullable) FHFeedContentRawDataCommentBaseUserBlockModel *block ;
 @end
 
+@interface FHFeedContentRawDataRealtorImageTagModel : JSONModel
+@property (nonatomic, copy , nullable) NSString *imageUrl;
+@end
+
 @interface FHFeedContentRawDataRealtorModel : JSONModel
 
 @property (nonatomic, copy , nullable) NSString *agencyName;
 @property (nonatomic, copy , nullable) NSString *avatarUrl;
+@property (nonatomic, strong , nullable) FHFeedContentRawDataRealtorImageTagModel *imageTag;  
 @property (nonatomic, copy , nullable) NSString *certificationIcon;
 @property (nonatomic, copy , nullable) NSString *certificationPage;
 @property (nonatomic, copy , nullable) NSString *chatOpenurl;

@@ -586,6 +586,9 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
         if (extraDict[@"event_tracking_id"]) {
             imExtra[@"event_tracking_id"] = extraDict[@"event_tracking_id"];
         }
+        if (extraDict[@"position"]) {
+            imExtra[@"position"] = extraDict[@"position"];
+        }
         if(extraDict[kFHIMLoginSchema]) {
             imExtra[kFHIMLoginSchema] = extraDict[kFHIMLoginSchema];
         }

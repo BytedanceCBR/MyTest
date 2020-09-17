@@ -73,7 +73,7 @@
     }
 }
 
-- (void)setHistoryItems:(NSArray *)historyItems {
+- (void)setHistoryItems:(NSArray<FHSuggestionSearchHistoryResponseDataDataModel> *)historyItems {
     _historyItems = historyItems;
     [self reAddViews];
     if (self.vc.isCanTrack) {
