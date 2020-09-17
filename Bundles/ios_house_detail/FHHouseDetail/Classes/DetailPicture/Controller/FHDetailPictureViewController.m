@@ -351,7 +351,7 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
         }];
         
         UIImageView *bottomBgImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"picture_detail_bottombar_bg"]];
-        bottomBgImageView.frame = self.topBar.bounds;
+        bottomBgImageView.frame = self.bottomBar.bounds;
         [self.bottomBar addSubview:bottomBgImageView];
         [bottomBgImageView mas_makeConstraints:^(MASConstraintMaker *make) {
             make.edges.mas_equalTo(UIEdgeInsetsZero);
