@@ -70,7 +70,6 @@
 #import "FHCommonDefines.h"
 #import "UIColor+Theme.h"
 #import "UIFont+House.h"
-#import <TTFavouriteContentItem.h>
 #import <TTActivityPanelDefine.h>
 #import <TTActivitiesManager.h>
 
@@ -1919,27 +1918,6 @@ static NSUInteger const kOldAnimationViewTag = 20161221;
     [self p_sendDetailLogicTrackWithLabel:@"write_button"];
 }
 
-- (void)bottomView:(WDBottomToolView *)bottomView emojiButtonClicked:(SSThemedButton *)wirteButton
-{
-    if ([self.commentViewController respondsToSelector:@selector(tt_defaultReplyCommentModel)] && self.commentViewController.tt_defaultReplyCommentModel) {
-        [self tt_commentViewController:self.commentViewController didSelectWithInfo:({
-            NSMutableDictionary *baseCondition = [[NSMutableDictionary alloc] init];
-            TTGroupModel *groupModel = [[TTGroupModel alloc] initWithGroupID:self.detailModel.answerEntity.ansid];
-            [baseCondition setValue:groupModel forKey:@"groupModel"];
-            [baseCondition setValue:@(1) forKey:@"from"];
-            [baseCondition setValue:@(YES) forKey:@"writeComment"];
-            [baseCondition setValue:self.commentViewController.tt_defaultReplyCommentModel forKey:@"commentModel"];
-            baseCondition;
-        })];
-        if ([self.commentViewController respondsToSelector:@selector(tt_clearDefaultReplyCommentModel)]) {
-            [self.commentViewController tt_clearDefaultReplyCommentModel];
-        }
-        [self.toolbarView.writeButton setTitle:@"写评论" forState:UIControlStateNormal];
-        return;
-    }
-    [self p_willOpenWriteCommentViewWithReservedText:nil switchToEmojiInput:YES];
-}
-
 - (void)bottomView:(WDBottomToolView *)bottomView commentButtonClicked:(SSThemedButton *)commentButton
 {
     [self p_willShowComment];
@@ -1973,14 +1951,7 @@ static NSUInteger const kOldAnimationViewTag = 20161221;
 }
 
 -(void)bottomView:(WDBottomToolView *)bottomView collectButtonClicked:(SSThemedButton *)collectButton {
-    NSArray *activityItems = [self.natantViewModel wd_customItems];
-    __block TTFavouriteContentItem *collecItem = nil;
-    [activityItems enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-        if([obj isKindOfClass:[TTFavouriteContentItem class]]) {
-            collecItem = obj;
-            stop =YES;
-        }
-    }];
+    TTFavouriteContentItem *collecItem = [self.natantViewModel favItem];
     if(collecItem != nil) {
         id <TTActivityProtocol> collectActivity= [[TTActivitiesManager sharedInstance] getActivityByItem:collecItem];
         [self shareManager:self.shareManager clickedWith:collectActivity sharePanel:nil];

@@ -25,7 +25,6 @@
 #import "TTWechatContentItem.h"
 #import "TTQQFriendContentItem.h"
 #import "TTQQZoneContentItem.h"
-#import "TTFavouriteContentItem.h"
 #import "TTReportContentItem.h"
 #import "TTDislikeContentItem.h"
 #import "TTDeleteContentItem.h"

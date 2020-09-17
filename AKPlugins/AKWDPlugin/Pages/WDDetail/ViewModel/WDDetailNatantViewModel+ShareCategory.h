@@ -7,6 +7,7 @@
 //
 
 #import "WDDetailNatantViewModel.h"
+#import "TTFavouriteContentItem.h"
 
 @protocol TTActivityContentItemProtocol;
 
@@ -14,5 +15,6 @@
 
 - (NSArray<id<TTActivityContentItemProtocol>> *)wd_customItems;
 - (NSArray<id<TTActivityContentItemProtocol>> *)wd_shareItems;
+- (TTFavouriteContentItem *)favItem;
 
 @end
