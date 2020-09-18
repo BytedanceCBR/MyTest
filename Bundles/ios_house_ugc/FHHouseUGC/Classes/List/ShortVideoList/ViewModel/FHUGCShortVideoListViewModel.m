@@ -276,7 +276,7 @@
     NSMutableArray *resultArray = [[NSMutableArray alloc] init];
     for (FHFeedListDataModel *itemModel in feedList) {
         FHFeedUGCCellModel *cellModel = [FHFeedUGCCellModel modelFromFeed:itemModel.content];
-        if(cellModel.cellSubType == FHUGCFeedListCellTypeUGCSmallVideo || cellModel.cellSubType == FHUGCFeedListCellTypeUGCSmallVideo2){
+        if(cellModel.cellType == FHUGCFeedListCellTypeUGCSmallVideo || cellModel.cellType == FHUGCFeedListCellTypeUGCSmallVideo2){
             cellModel.categoryId = self.categoryId;
             cellModel.enterFrom = [self.viewController categoryName];
             
