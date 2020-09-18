@@ -6,13 +6,28 @@
 //
 
 #import "FHCommunityFeedListBaseViewModel.h"
-#import "FHCommunityFeedListController.h"
+#import "FHUGCShortVideoListController.h"
+#import "FHBaseCollectionView.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface FHUGCShortVideoListViewModel : FHCommunityFeedListBaseViewModel
+@interface FHUGCShortVideoListViewModel : NSObject
 
-- (instancetype)initWithTableView:(UITableView *)tableView controller:(FHCommunityFeedListController *)viewController;
+@property(nonatomic, copy) NSString *categoryId;
+@property(nonatomic, assign) BOOL isRefreshingTip;
+@property(nonatomic, strong) NSMutableArray *dataList;
+@property(nonatomic, assign) NSInteger refer;
+@property(nonatomic, assign) BOOL isShowing;
+
+- (instancetype)initWithCollectionView:(FHBaseCollectionView *)collectionView controller:(FHUGCShortVideoListController *)viewController;
+
+- (void)requestData:(BOOL)isHead first:(BOOL)isFirst;
+
+- (void)viewWillAppear;
+
+- (void)viewWillDisappear;
+
+- (void)recordGroupWithCellModel:(FHFeedUGCCellModel *)cellModel status:(SSImpressionStatus)status;
 
 @end
 

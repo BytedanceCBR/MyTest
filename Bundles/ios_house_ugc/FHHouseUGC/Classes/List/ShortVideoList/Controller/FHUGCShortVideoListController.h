@@ -21,9 +21,6 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic, strong) NSArray *dataList;
 //内容分类
 @property(nonatomic, strong) NSString *category;
-//附加在feed上面的自定义view
-@property(nonatomic, strong) UIView *tableHeaderView;
-@property(nonatomic, strong) UITableView *tableView;
 //是否需要下拉刷新，默认为YES
 @property(nonatomic, assign) BOOL tableViewNeedPullDown;
 //是否需要在返回这个页面时候去刷新数据
@@ -45,8 +42,6 @@ NS_ASSUME_NONNULL_BEGIN
 //埋点上报
 //是否是通过点击触发刷新
 @property(nonatomic, assign) BOOL isRefreshTypeClicked;
-//是否需要强插
-@property(nonatomic, assign) BOOL isInsertFeedWhenPublish;
 @property(nonatomic, assign) CGFloat headerViewHeight;
 //圈子详情页使用
 //空态页具体顶部offset

@@ -1,5 +1,5 @@
 //
-//  FHUGCShortVideoCell.h
+//  FHUGCShortVideoFlowLayout.h
 //  FHHouseUGC
 //
 //  Created by 谢思铭 on 2020/9/18.
@@ -9,9 +9,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface FHUGCShortVideoCell : UICollectionViewCell
-
-- (void)refreshWithData:(id)data;
+@interface FHUGCShortVideoFlowLayout : UICollectionViewFlowLayout
 
 @end
 

@@ -21,6 +21,8 @@
 #import "ToastManager.h"
 #import "FHFeedCustomHeaderView.h"
 #import "UIDevice+BTDAdditions.h"
+#import "FHUGCShortVideoFlowLayout.h"
+#import "FHBaseCollectionView.h"
 
 @interface FHUGCShortVideoListController ()<SSImpressionProtocol>
 
@@ -30,6 +32,9 @@
 @property(nonatomic, assign) NSTimeInterval enterTabTimestamp;
 @property(nonatomic, assign) UIEdgeInsets originContentInset;
 @property(nonatomic, assign) BOOL alreadySetContentInset;
+
+@property(nonatomic ,strong) FHBaseCollectionView *collectionView;
+@property(nonatomic, strong) FHUGCShortVideoFlowLayout *flowLayout;
 
 @end
 
@@ -50,7 +55,6 @@
     self.startMonitorTime = [[NSDate date] timeIntervalSince1970];
     self.automaticallyAdjustsScrollViewInsets = NO;
     [self initView];
-//    [self initConstraints];
     [self initViewModel];
     
     [[SSImpressionManager shareInstance] addRegist:self];
@@ -110,7 +114,7 @@
 }
 
 - (void)initView {
-    [self initTableView];
+    [self initCollectionView];
     [self initNotifyBarView];
     if(self.showErrorView){
         [self addDefaultEmptyViewFullScreen];
@@ -123,59 +127,62 @@
     }
 }
 
-- (void)initTableView {
-    if(!_tableView){
-        self.tableView = [[FHBaseTableView alloc] initWithFrame:self.view.bounds style:UITableViewStylePlain];
-        _tableView.backgroundColor = [UIColor themeGray7];
-        _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
-        
-        UIView *headerView = self.tableHeaderView ? self.tableHeaderView : [self customTableHeaderView];
-        _tableView.tableHeaderView = headerView;
-        
-        UIView *footerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 0, 0.001)];
-        _tableView.tableFooterView = footerView;
-        
-        _tableView.sectionFooterHeight = 0.0;
-        
-        _tableView.estimatedRowHeight = 0;
-        
-        if (@available(iOS 11.0 , *)) {
-            _tableView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
-            _tableView.estimatedRowHeight = 0;
-            _tableView.estimatedSectionFooterHeight = 0;
-            _tableView.estimatedSectionHeaderHeight = 0;
-        }
-        
-        if ([UIDevice btd_isIPhoneXSeries]) {
-            _tableView.contentInset = UIEdgeInsetsMake(0, 0, 34, 0);
-        }
-        
-        [self.view addSubview:_tableView];
+- (void)initCollectionView {
+    self.flowLayout = [[FHUGCShortVideoFlowLayout alloc] init];
+    _flowLayout.sectionInset = UIEdgeInsetsMake(0, 4, 0, 4);
+    _flowLayout.minimumLineSpacing = 4;
+    _flowLayout.scrollDirection = UICollectionViewScrollDirectionVertical;
+    
+    self.collectionView = [[FHBaseCollectionView alloc] initWithFrame:self.view.bounds collectionViewLayout:_flowLayout];
+    _collectionView.showsHorizontalScrollIndicator = NO;
+    _collectionView.backgroundColor = [UIColor whiteColor];
+    
+    [self.view addSubview:_collectionView];
+    
+    if ([UIDevice btd_isIPhoneXSeries]) {
+        _collectionView.contentInset = UIEdgeInsetsMake(0, 0, 34, 0);
     }
+    
+//    [_collectionView registerClass:[FHUGCHotCommunitySubCell class] forCellWithReuseIdentifier:cellId];
 }
 
-- (UIView *)customTableHeaderView {
-    if(!_tableHeaderView){
-        _headerViewHeight = CGFLOAT_MIN;
-        FHFeedCustomHeaderView *tableHeaderView = [[FHFeedCustomHeaderView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, _headerViewHeight) addProgressView:self.isInsertFeedWhenPublish];
-        if(self.isInsertFeedWhenPublish){
-            WeakSelf;
-            tableHeaderView.progressView.refreshViewBlk = ^{
-                StrongSelf;
-                [self.viewModel updateJoinProgressView];
-            };
-        }
-        _tableHeaderView = tableHeaderView;
-    }
-    return _tableHeaderView;
-}
+//- (void)initTableView {
+//    if(!_tableView){
+//        self.tableView = [[FHBaseTableView alloc] initWithFrame:self.view.bounds style:UITableViewStylePlain];
+//        _tableView.backgroundColor = [UIColor themeGray7];
+//        _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+//
+//        UIView *headerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 0, 0.001)];
+//        _tableView.tableHeaderView = headerView;
+//
+//        UIView *footerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 0, 0.001)];
+//        _tableView.tableFooterView = footerView;
+//
+//        _tableView.sectionFooterHeight = 0.0;
+//
+//        _tableView.estimatedRowHeight = 0;
+//
+//        if (@available(iOS 11.0 , *)) {
+//            _tableView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
+//            _tableView.estimatedRowHeight = 0;
+//            _tableView.estimatedSectionFooterHeight = 0;
+//            _tableView.estimatedSectionHeaderHeight = 0;
+//        }
+//
+//        if ([UIDevice btd_isIPhoneXSeries]) {
+//            _tableView.contentInset = UIEdgeInsetsMake(0, 0, 34, 0);
+//        }
+//
+//        [self.view addSubview:_tableView];
+//    }
+//}
 
-- (void)setTableHeaderView:(UIView *)tableHeaderView {
-    _tableHeaderView = tableHeaderView;
-    if(self.tableView){
-        self.tableView.tableHeaderView = tableHeaderView;
-    }
-}
+//- (void)setTableHeaderView:(UIView *)tableHeaderView {
+//    _tableHeaderView = tableHeaderView;
+//    if(self.tableView){
+//        self.tableView.tableHeaderView = tableHeaderView;
+//    }
+//}
 
 - (void)setErrorViewTopOffset:(CGFloat)errorViewTopOffset {
     _errorViewTopOffset = errorViewTopOffset;
@@ -193,22 +200,11 @@
 
 - (void)viewWillLayoutSubviews {
     [super viewWillLayoutSubviews];
-    self.tableView.frame = self.view.bounds;
+    self.collectionView.frame = self.view.bounds;
 }
 
-//- (void)initConstraints {
-//    [self.tableView mas_makeConstraints:^(MASConstraintMaker *make) {
-//        make.edges.equalTo(self.view);
-//    }];
-//
-//    [self.notifyBarView mas_makeConstraints:^(MASConstraintMaker *make) {
-//        make.top.left.right.mas_equalTo(self.tableView);
-//        make.height.mas_equalTo(32);
-//    }];
-//}
-
 - (void)initViewModel {
-    self.viewModel = [[FHUGCShortVideoListViewModel alloc] initWithTableView:self.tableView controller:self];
+    self.viewModel = [[FHUGCShortVideoListViewModel alloc] initWithCollectionView:self.collectionView controller:self];
     _viewModel.categoryId = @"f_hotsoon_video";
     [self startLoadData];
 }
@@ -218,11 +214,7 @@
         [_viewModel requestData:YES first:YES];
     } else {
         if(!self.hasValidateData){
-            if(!self.showErrorView && self.errorViewHeight > 0){
-                [self.viewModel showCustomErrorView:FHEmptyMaskViewTypeNoNetWorkAndRefresh];
-            }else{
-                [self.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoNetWorkAndRefresh];
-            }
+            [self.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoNetWorkAndRefresh];
         }
     }
 }
@@ -232,17 +224,13 @@
         [_viewModel requestData:YES first:isFirst];
     } else {
         if(!self.hasValidateData){
-            if(!self.showErrorView && self.errorViewHeight > 0){
-                [self.viewModel showCustomErrorView:FHEmptyMaskViewTypeNoNetWorkAndRefresh];
-            }else{
-                [self.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoNetWorkAndRefresh];
-            }
+            [self.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoNetWorkAndRefresh];
         }
     }
 }
 
 - (void)scrollToTopAndRefreshAllData {
-    [self.tableView scrollRectToVisible:CGRectMake(0, 0, 1, 1) animated:NO];
+    [self.collectionView scrollRectToVisible:CGRectMake(0, 0, 1, 1) animated:NO];
     [self startLoadData];
 }
 
@@ -250,8 +238,8 @@
     if(self.viewModel.isRefreshingTip || self.isLoadingData){
         return;
     }
-    [self.tableView scrollRectToVisible:CGRectMake(0, 0, 1, 1) animated:NO];
-    [self.tableView triggerPullDown];
+    [self.collectionView scrollRectToVisible:CGRectMake(0, 0, 1, 1) animated:NO];
+    [self.collectionView triggerPullDown];
 }
 
 - (void)retryLoadData {
@@ -266,13 +254,13 @@
 
 - (void)showNotify:(NSString *)message completion:(void(^)(void))completion {
     if(!self.alreadySetContentInset){
-        self.originContentInset = self.tableView.contentInset;
+        self.originContentInset = self.collectionView.contentInset;
         self.alreadySetContentInset = YES;
     }
-    UIEdgeInsets inset = self.tableView.contentInset;
+    UIEdgeInsets inset = self.collectionView.contentInset;
     inset.top = self.notifyBarView.height;
-    self.tableView.contentInset = inset;
-    self.tableView.contentOffset = CGPointMake(0, -inset.top);
+    self.collectionView.contentInset = inset;
+    self.collectionView.contentOffset = CGPointMake(0, -inset.top);
     self.notifyCompletionBlock = completion;
     WeakSelf;
     [self.notifyBarView showMessage:message actionButtonTitle:@"" delayHide:YES duration:1 bgButtonClickAction:nil actionButtonClickBlock:nil didHideBlock:nil willHideBlock:^(ArticleListNotifyBarView *barView, BOOL isImmediately) {
@@ -288,11 +276,11 @@
 
 - (void)hideIfNeeds {
     [UIView animateWithDuration:0.3 animations:^{
-        self.tableView.contentInset = self.originContentInset;
-        self.tableView.originContentInset = UIEdgeInsetsMake(0.0f, 0.0f, 0.0f, 0.0f);
+        self.collectionView.contentInset = self.originContentInset;
+        self.collectionView.originContentInset = UIEdgeInsetsMake(0.0f, 0.0f, 0.0f, 0.0f);
         
     }completion:^(BOOL finished) {
-        self.tableView.originContentInset = self.originContentInset;
+        self.collectionView.originContentInset = self.originContentInset;
         if (self.notifyCompletionBlock) {
             self.notifyCompletionBlock();
         }
@@ -315,8 +303,6 @@
 
 - (void)applicationDidBecomeActive {
     self.enterTabTimestamp = [[NSDate date]timeIntervalSince1970];
-    [self.tableView setContentOffset:self.tableView.contentOffset animated:NO];
-    [self.viewModel startVideoPlay];
 }
 
 #pragma mark - SSImpressionProtocol
@@ -330,7 +316,7 @@
         SSImpressionParams *params = [[SSImpressionParams alloc] init];
         params.refer = self.viewModel.refer;
         
-        for (FHUGCBaseCell *cell in [self.tableView visibleCells]) {
+        for (FHUGCBaseCell *cell in [self.collectionView visibleCells]) {
             if ([cell isKindOfClass:[FHUGCBaseCell class]]) {
                 id data = cell.currentData;
                 if ([data isKindOfClass:[FHFeedUGCCellModel class]]) {
@@ -345,7 +331,6 @@
             }
         }
     });
-    
 }
 
 #pragma mark - 埋点
