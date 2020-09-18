@@ -11,10 +11,11 @@
 #import "ArticleImpressionHelper.h"
 #import "FHHouseUGCAPI.h"
 #import "FHFeedUGCCellModel.h"
+#import "FHUGCFeedListProtocol.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface FHUGCVideoListController : FHBaseViewController
+@interface FHUGCVideoListController : FHBaseViewController<FHUGCFeedListProtocol>
 
 @property(nonatomic, strong) NSArray *dataList;
 //内容分类
@@ -29,7 +30,7 @@ NS_ASSUME_NONNULL_BEGIN
 //小区群聊的conversation id
 @property(nonatomic, strong) NSString *conversationId;
 //传入以后点击三个点以后显示该数组的内容
-@property(nonatomic, strong) NSArray *operations;
+@property(nonatomic, strong , nullable) NSArray<FHUGCConfigDataPermissionModel> *operations;
 //网络请求成功回调
 @property(nonatomic, copy) void (^requestSuccess)(BOOL hasFeedData);
 //埋点上报

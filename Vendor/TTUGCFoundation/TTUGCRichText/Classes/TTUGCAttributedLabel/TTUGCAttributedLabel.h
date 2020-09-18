@@ -23,6 +23,9 @@
 #import <UIKit/UIKit.h>
 #import <CoreText/CoreText.h>
 
+
+NS_ASSUME_NONNULL_BEGIN
+
 //! Project version number for TTUGCAttributedLabel.
 FOUNDATION_EXPORT double TTUGCAttributedLabelVersionNumber;
 
@@ -74,7 +77,7 @@ extern NSString * const kTTUGCBackgroundCornerRadiusAttributeName;
 
 // Override UILabel @property to accept both NSString and NSAttributedString
 @protocol TTUGCAttributedLabel <NSObject>
-@property (nonatomic, copy) IBInspectable id text;
+@property (nonatomic, copy, nullable) IBInspectable id text;
 @end
 
 IB_DESIGNABLE
@@ -301,7 +304,7 @@ IB_DESIGNABLE
   
  @discussion This method overrides `UILabel -setText:` to accept both `NSString` and `NSAttributedString` objects. This string is `nil` by default.
  */
-- (void)setText:(id)text;
+- (void)setText:(nullable id)text;
 
 /**
  Sets the text displayed by the label, after configuring an attributed string containing the text attributes inherited from the label in a block.
@@ -528,3 +531,4 @@ typedef void (^TTUGCAttributedLabelLinkBlock) (TTUGCAttributedLabel *, TTUGCAttr
 
 @end
 
+NS_ASSUME_NONNULL_END
