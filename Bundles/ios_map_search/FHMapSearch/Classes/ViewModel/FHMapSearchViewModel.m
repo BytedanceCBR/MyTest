@@ -139,7 +139,7 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
         if (self.configModel.mapOpenUrl) {
             dispatch_async(dispatch_get_main_queue(), ^{                
                 [self updateBubble:self.configModel.mapOpenUrl];
-                if (_lastBubble && _currentHouseType == FHHouseTypeSecondHandHouse) {
+                if (_lastBubble && (_currentHouseType == FHHouseTypeSecondHandHouse || _currentHouseType == FHHouseTypeRentHouse)) {
                     if (_lastBubble.resizeLevel > 1) {
                         _configModel.resizeLevel = _lastBubble.resizeLevel;
                     }
@@ -1466,7 +1466,7 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
         
         self.currentSelectAnnotation = houseAnnotation;
         self.currentSelectHouseData = houseAnnotation.houseData;
-        if (self.currentHouseType == FHHouseTypeSecondHandHouse) {
+        if (self.currentHouseType == FHHouseTypeSecondHandHouse || self.currentHouseType == FHHouseTypeRentHouse ) {
             [self showNeighborHouseList:houseAnnotation.houseData];
         }else{
             [self showNewHouseList:houseAnnotation.houseData];
@@ -1778,7 +1778,7 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
 {
     CGPoint ccenter = [_mapView convertCoordinate:currentCenter toPointToView:_mapView];
     CGPoint lcenter = [_mapView convertCoordinate:_lastRequestCenter toPointToView:_mapView];
-    CGFloat threshold = MIN(self.viewController.view.width/2, self.viewController.view.height/3);    
+    CGFloat threshold = MIN(self.viewController.view.width/3, self.viewController.view.height/4);
     if (_mapView.zoomLevel < 16) {
         //商圈和区域视野
         threshold *= (_mapView.zoomLevel/10);
