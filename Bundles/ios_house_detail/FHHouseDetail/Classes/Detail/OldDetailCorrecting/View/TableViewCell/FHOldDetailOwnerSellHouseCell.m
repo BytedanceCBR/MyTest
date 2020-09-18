@@ -107,9 +107,11 @@
     [self addClickOptionsLog];
     NSMutableDictionary *dict = @{}.mutableCopy;
     dict[@"origin_from"] = self.baseViewModel.detailTracerDic[@"origin_from"];
-    NSURL *openUrl = [NSURL URLWithString:self.helpMeSellHouseOpenUrl];
     TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
-    [[TTRoute sharedRoute] openURLByViewController:openUrl userInfo:userInfo];
+    if(self.helpMeSellHouseOpenUrl.length) {
+        NSURL *openUrl = [NSURL URLWithString:self.helpMeSellHouseOpenUrl];
+        [[TTRoute sharedRoute] openURLByViewController:openUrl userInfo:userInfo];
+    }
 }
 
 //埋点
