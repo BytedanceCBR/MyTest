@@ -10,12 +10,15 @@
 #import "UIColor+Theme.h"
 #import "FHFeedUGCCellModel.h"
 #import "UIImageView+fhUgcImage.h"
+#import "UIFont+House.h"
 
 @interface FHUGCShortVideoCell ()
 
 // 当前cell的模型数据
 @property (nonatomic, weak , nullable) id currentData;
 @property(nonatomic, strong) UIImageView *bgView;
+@property(nonatomic, strong) UIView *blackCoverView;
+@property(nonatomic, strong) UILabel *titleLabel;
 
 @end
 
@@ -40,15 +43,16 @@
     _bgView.layer.borderColor = [[UIColor themeGray6] CGColor];
     [self.contentView addSubview:_bgView];
     
-//    self.blackCoverView = [[UIView alloc] init];
-//    _blackCoverView.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0.4];
+    self.blackCoverView = [[UIView alloc] init];
+    _blackCoverView.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0.4];
 //    _blackCoverView.hidden = YES;
-//    [self.bgView addSubview:_blackCoverView];
-//
-//    self.titleLabel = [self LabelWithFont:[UIFont themeFontMedium:14] textColor:[UIColor whiteColor]];
-//    _titleLabel.textAlignment = NSTextAlignmentLeft;
-//    _titleLabel.numberOfLines = 2;
-//    [self.bgView addSubview:_titleLabel];
+    [self.bgView addSubview:_blackCoverView];
+
+    self.titleLabel = [self LabelWithFont:[UIFont themeFontMedium:14] textColor:[UIColor whiteColor]];
+    _titleLabel.textAlignment = NSTextAlignmentLeft;
+    _titleLabel.numberOfLines = 2;
+    _titleLabel.lineBreakMode = NSLineBreakByTruncatingTail;
+    [self.bgView addSubview:_titleLabel];
 //
 //    self.descLabel = [self LabelWithFont:[UIFont themeFontRegular:10] textColor:[UIColor whiteColor]];
 //    _descLabel.textAlignment = NSTextAlignmentLeft;
@@ -80,15 +84,19 @@
 }
 
 - (void)initConstains {
-    self.bgView.top = 0;
-    self.bgView.left = 0;
-    self.bgView.width = self.width;
-    self.bgView.height = self.height;
+    [self.bgView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.edges.mas_equalTo(self.contentView);
+    }];
     
+    [self.blackCoverView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.edges.mas_equalTo(self.contentView);
+    }];
     
-//    [self.blackCoverView mas_makeConstraints:^(MASConstraintMaker *make) {
-//        make.edges.mas_equalTo(self.contentView);
-//    }];
+    [self.titleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.mas_equalTo(self.bgView).offset(5);
+        make.right.mas_equalTo(self.bgView).offset(-5);
+        make.bottom.mas_equalTo(self.bgView).offset(-5);
+    }];
 //
 //    [self.titleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
 //        make.top.mas_equalTo(self.bgView).offset(28);
@@ -175,11 +183,14 @@
     //图片
     if (cellModel.imageList.count > 0) {
         FHFeedContentImageListModel *imageModel = [cellModel.imageList firstObject];
-        
         if (imageModel && imageModel.url.length > 0) {
             NSURL *url = [NSURL URLWithString:imageModel.url];
-            [self.bgView fh_setImageWithURL:url placeholder:nil reSize:self.bgView.size];
+            [self.bgView fh_setImageWithURL:url placeholder:nil reSize:self.contentView.bounds.size];
+        }else{
+            self.bgView.image = nil;
         }
+    }else{
+        self.bgView.image = nil;
     }
 //    // 时间
 //    NSString *timeStr = @"00:00";
@@ -204,16 +215,13 @@
 //    // [self.timeLabel sizeToFit];
 //    [self.timeLabel layoutIfNeeded];
 //
-//    if(isEmptyString(cellModel.content)){
-//        self.contentLabel.hidden = YES;
-//        self.contentLabel.height = 0;
-//        self.videoImageView.top = self.userInfoView.bottom + 10;
-//    }else{
-//        self.contentLabel.hidden = NO;
-//        self.contentLabel.height = cellModel.contentHeight;
-//        self.videoImageView.top = self.contentLabel.bottom + 10;
-//        [FHUGCCellHelper setAsyncRichContent:self.contentLabel model:cellModel];
-//    }
+    if(isEmptyString(cellModel.content)){
+        self.titleLabel.hidden = YES;
+        self.titleLabel.text = @"";
+    }else{
+        self.titleLabel.hidden = NO;
+        self.titleLabel.text = cellModel.content;
+    }
 //
 //    self.bottomView.top = self.videoImageView.bottom + 10;
 //    [self showGuideView];

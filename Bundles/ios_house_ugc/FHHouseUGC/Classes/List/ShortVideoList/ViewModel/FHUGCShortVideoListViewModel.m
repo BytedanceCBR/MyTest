@@ -232,10 +232,7 @@
                         [wself updateTableViewWithMoreData:wself.collectionView.hasMore];
                         [wself.viewController.emptyView hideEmptyView];
                     }else{
-                        NSString *tipStr = @"暂无新内容，快去发布吧";
-                        if([self.categoryId isEqualToString:@"f_house_video"]){
-                            tipStr = @"暂无新内容";
-                        }
+                        NSString *tipStr = @"暂无新内容";
                         [wself.viewController.emptyView showEmptyWithTip:tipStr errorImageName:kFHErrorMaskNetWorkErrorImageName showRetry:YES];
                         wself.refreshFooter.hidden = YES;
                     }
@@ -378,7 +375,6 @@
 #pragma UISCrollViewDelegate
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
-    [self.viewController.scrollViewDelegate scrollViewDidScroll:scrollView];
     if(scrollView == self.collectionView){
         if (scrollView.isDragging) {
             [self.viewController.notifyBarView performSelector:@selector(hideIfNeeds) withObject:nil];

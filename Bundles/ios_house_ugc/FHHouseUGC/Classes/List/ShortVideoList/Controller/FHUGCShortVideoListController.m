@@ -11,7 +11,6 @@
 #import "TTReachability.h"
 #import "UIViewAdditions.h"
 #import "TTRoute.h"
-#import "TTAccountManager.h"
 #import "FHEnvContext.h"
 #import "FHUserTracker.h"
 #import "UIScrollView+Refresh.h"
@@ -81,7 +80,8 @@
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
-- (void)viewWillAppear {
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
     [self.viewModel viewWillAppear];
     
     if ([[NSDate date]timeIntervalSince1970] - _enterTabTimestamp > 24*60*60) {
@@ -91,20 +91,21 @@
     
     [self addEnterCategoryLog];
     
-//    if(self.viewModel.dataList.count > 0 || self.notLoadDataWhenEmpty){
-//        if (self.needReloadData) {
-//            self.needReloadData = NO;
-//            [self scrollToTopAndRefreshAllData];
-//        }
-//    }else{
-//        self.needReloadData = NO;
-//        [self scrollToTopAndRefreshAllData];
-//    }
+    if(self.viewModel.dataList.count > 0 || self.notLoadDataWhenEmpty){
+        if (self.needReloadData) {
+            self.needReloadData = NO;
+            [self scrollToTopAndRefreshAllData];
+        }
+    }else{
+        self.needReloadData = NO;
+        [self scrollToTopAndRefreshAllData];
+    }
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationDidEnterBackground) name:UIApplicationDidEnterBackgroundNotification object:nil];
 }
 
-- (void)viewWillDisappear {
+- (void)viewWillDisappear:(BOOL)animated {
+    [super viewWillDisappear:animated];
     [self.viewModel viewWillDisappear];
     if(self.needReportEnterCategory){
         [self addStayCategoryLog];
@@ -118,12 +119,6 @@
     [self initNotifyBarView];
     if(self.showErrorView){
         [self addDefaultEmptyViewFullScreen];
-        if(self.errorViewTopOffset != 0){
-            [self.emptyView mas_remakeConstraints:^(MASConstraintMaker *make) {
-                make.left.right.bottom.mas_equalTo(self.view);
-                make.top.mas_equalTo(self.view).offset(self.errorViewTopOffset);
-            }];
-        }
     }
 }
 
@@ -142,55 +137,6 @@
     if ([UIDevice btd_isIPhoneXSeries]) {
         _collectionView.contentInset = UIEdgeInsetsMake(0, 0, 34, 0);
     }
-    
-//    [_collectionView registerClass:[FHUGCHotCommunitySubCell class] forCellWithReuseIdentifier:cellId];
-}
-
-//- (void)initTableView {
-//    if(!_tableView){
-//        self.tableView = [[FHBaseTableView alloc] initWithFrame:self.view.bounds style:UITableViewStylePlain];
-//        _tableView.backgroundColor = [UIColor themeGray7];
-//        _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
-//
-//        UIView *headerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 0, 0.001)];
-//        _tableView.tableHeaderView = headerView;
-//
-//        UIView *footerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 0, 0.001)];
-//        _tableView.tableFooterView = footerView;
-//
-//        _tableView.sectionFooterHeight = 0.0;
-//
-//        _tableView.estimatedRowHeight = 0;
-//
-//        if (@available(iOS 11.0 , *)) {
-//            _tableView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
-//            _tableView.estimatedRowHeight = 0;
-//            _tableView.estimatedSectionFooterHeight = 0;
-//            _tableView.estimatedSectionHeaderHeight = 0;
-//        }
-//
-//        if ([UIDevice btd_isIPhoneXSeries]) {
-//            _tableView.contentInset = UIEdgeInsetsMake(0, 0, 34, 0);
-//        }
-//
-//        [self.view addSubview:_tableView];
-//    }
-//}
-
-//- (void)setTableHeaderView:(UIView *)tableHeaderView {
-//    _tableHeaderView = tableHeaderView;
-//    if(self.tableView){
-//        self.tableView.tableHeaderView = tableHeaderView;
-//    }
-//}
-
-- (void)setErrorViewTopOffset:(CGFloat)errorViewTopOffset {
-    _errorViewTopOffset = errorViewTopOffset;
-    
-    [self.emptyView mas_remakeConstraints:^(MASConstraintMaker *make) {
-        make.left.right.bottom.mas_equalTo(self.view);
-        make.top.mas_equalTo(self.view).offset(errorViewTopOffset);
-    }];
 }
 
 - (void)initNotifyBarView {
@@ -206,7 +152,7 @@
 - (void)initViewModel {
     self.viewModel = [[FHUGCShortVideoListViewModel alloc] initWithCollectionView:self.collectionView controller:self];
     _viewModel.categoryId = @"f_hotsoon_video";
-    [self startLoadData];
+    self.needReloadData = YES;
 }
 
 - (void)startLoadData {
