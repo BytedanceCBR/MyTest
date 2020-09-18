@@ -1517,15 +1517,8 @@ static NSUInteger const kOldAnimationViewTag = 20161221;
     [self p_removeIndicatorPolicyView];
     
     NSMutableArray *contentItems = @[].mutableCopy;
-    NSDictionary *dictSetting = [[NSUserDefaults standardUserDefaults] objectForKey:@"kFHSettingsKey"];
-    
-    if ([dictSetting tta_boolForKey:@"f_wenda_share_enable"]){
-        [contentItems addObject:[self.natantViewModel wd_shareItems]];
-    }
-    [contentItems addObject:[self.natantViewModel wd_customItems]];
+    [contentItems addObject:[self.natantViewModel wd_shareItems]];
     [self.shareManager displayActivitySheetWithContent:[contentItems copy]];
-    
-    [BDTrackerProtocol category:@"umeng" event:kWDDetailViewControllerUMEventName label:@"more_clicked" dict:self.detailModel.gdExtJsonDict];
 }
 
 #pragma mark - Tracker
@@ -1962,7 +1955,7 @@ static NSUInteger const kOldAnimationViewTag = 20161221;
 }
 
 -(void)bottomView:(WDBottomToolView *)bottomView shareButtonClicked:(SSThemedButton *)shareButton {
-    
+    [self p_showSharePanel];
 }
 
 #pragma mark - TTCommentDataSource
