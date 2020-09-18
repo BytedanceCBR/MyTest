@@ -59,6 +59,7 @@
         }
 
         self.contactViewModel = [[FHHouseDetailContactViewModel alloc] initWithNavBar:nil bottomBar:nil houseType:FHHouseTypeNewHouse houseId:self.houseId];
+        self.contactViewModel.belongsVC = self;
         self.contactViewModel.tracerDict = self.tracerDict.mutableCopy;
         if (paramObj.allParams[@"contactViewModel"]) {
             FHHouseDetailContactViewModel *contactViewModel = paramObj.allParams[@"contactViewModel"];

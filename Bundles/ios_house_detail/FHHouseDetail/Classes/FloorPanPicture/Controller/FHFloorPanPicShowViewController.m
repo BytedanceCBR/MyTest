@@ -372,10 +372,10 @@
 - (void)contactButtonClick:(UIButton *)btn {
     if (self.contactViewModel) {
         NSMutableDictionary *extraDic = @{
-                @"realtor_position": @"phone_button",
-                @"position": @"report_button",
-                @"element_from": self.elementFrom ? : @"be_null"
-            }.mutableCopy;
+            @"realtor_position": @"phone_button",
+            @"position": @"report_button",
+            @"element_from": self.elementFrom ? : @"be_null"
+        }.mutableCopy;
 
 //        extraDic[@"from"] = @"app_newhouse_property_picture";
 //        if (cluePage) {
