@@ -17,7 +17,6 @@ static const CGFloat kDefaultCellHeight = 0;
 @interface FHDynamicLynxCell ()
 
 @property (nonatomic, strong) FHLynxView *dynamicView;
-@property (nonatomic, strong) FHDynamicLynxCellModel *cellModel;
 
 @end
 
@@ -52,8 +51,6 @@ static const CGFloat kDefaultCellHeight = 0;
     }
     
     if ([cellModel isKindOfClass:[FHDynamicLynxCellModel class]]) {
-        self.cellModel = cellModel;
-        
         FHDynamicLynxModel *model = cellModel.model;
         if (model && [model isKindOfClass:[FHDynamicLynxModel class]]) {
             FHLynxViewBaseParams *baesparmas = [[FHLynxViewBaseParams alloc] init];

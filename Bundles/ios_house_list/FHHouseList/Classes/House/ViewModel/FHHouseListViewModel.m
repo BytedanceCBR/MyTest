@@ -2255,8 +2255,9 @@ extern NSString *const INSTANT_DATA_KEY;
                                  @"element_type":@"driving_find_house_card",
                                 };
         [FHUserTracker writeEvent:@"element_show" params:params];
-    }else if ([cellModel isKindOfClass:[FHDynamicLynxModel class]]) {
-        NSDictionary *reportData = [((FHDynamicLynxModel *)cellModel).lynxData objectForKey:@"report_data"];
+    }else if ([cellModel isKindOfClass:[FHDynamicLynxCellModel class]]) {
+        FHDynamicLynxModel *model = ((FHDynamicLynxCellModel *)cellModel).model;
+        NSDictionary *reportData = [((FHDynamicLynxModel *)model).lynxData objectForKey:@"report_params"];
         if (reportData && [reportData isKindOfClass:[NSDictionary class]]) {
             NSDictionary *params = @{@"origin_from":reportData[@"origin_from"] ?: @"be_null",
                                      @"enter_from":reportData[@"enter_from"] ?: @"be_null",
