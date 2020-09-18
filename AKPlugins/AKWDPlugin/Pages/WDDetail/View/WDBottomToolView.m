@@ -27,6 +27,7 @@
 #import "TTMultiDigManager.h"
 #import "FHCommonDefines.h"
 #import <ReactiveObjC/ReactiveObjC.h>
+#import <UIView+BTDAdditions.h>
 
 static NSString * const kWDHasTipSupportsEmojiInputDefaultKey = @"WDHasTipSupportsEmojiInputDefaultKey";
 
@@ -88,7 +89,10 @@ static NSString * const kWDHasTipSupportsEmojiInputDefaultKey = @"WDHasTipSuppor
         [_digButton addTarget:self action:@selector(diggButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
         [self addSubview:_digButton];
         
-        _diggManager = [[TTMultiDiggManager alloc] initWithButton:_digButton withTransformAngle:0 contentInset:nil buttonPosition:TTMultiDiggButtonPositionRight animationImageNames:self.imageArray];
+        self.diggManager = [[TTMultiDiggManager alloc] initWithButton:_digButton withTransformAngle:0 contentInset:nil buttonPosition:TTMultiDiggButtonPositionRight animationImageNames:self.imageArray];
+        self.digButton.manualMultiDiggDisableBlock = ^BOOL{
+            return ![TTAccountManager isLogin] ;
+        };
 
         _collectButton = [TTAlphaThemedButton buttonWithType:UIButtonTypeCustom];
         _collectButton.hitTestEdgeInsets = toolBarButtonHitTestInsets;
@@ -183,19 +187,19 @@ static NSString * const kWDHasTipSupportsEmojiInputDefaultKey = @"WDHasTipSuppor
         make.left.equalTo(self.writeButton.mas_right).offset(15);
         make.top.equalTo(self).offset(10);
     }];
-    [self.digButton mas_makeConstraints:^(MASConstraintMaker *make) {
+    [self.collectButton mas_makeConstraints:^(MASConstraintMaker *make) {
         make.width.height.mas_equalTo(24);
         make.left.equalTo(self.commentButton.mas_right).offset(15);
         make.top.equalTo(self).offset(10);
     }];
-    [self.collectButton mas_makeConstraints:^(MASConstraintMaker *make) {
+    [self.digButton mas_makeConstraints:^(MASConstraintMaker *make) {
         make.width.height.mas_equalTo(24);
-        make.left.equalTo(self.digButton.mas_right).offset(15);
+        make.left.equalTo(self.collectButton.mas_right).offset(15);
         make.top.equalTo(self).offset(10);
     }];
     [self.shareButton mas_makeConstraints:^(MASConstraintMaker *make) {
         make.width.height.mas_equalTo(24);
-        make.left.equalTo(self.collectButton.mas_right).offset(15);
+        make.left.equalTo(self.digButton.mas_right).offset(15);
         make.top.equalTo(self).offset(10);
     }];
 }
