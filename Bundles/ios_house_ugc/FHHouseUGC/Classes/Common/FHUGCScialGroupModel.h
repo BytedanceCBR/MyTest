@@ -79,6 +79,7 @@ typedef NS_ENUM(NSUInteger, UserCoversationStatus) {
 @property (nonatomic, strong) FHUGCScialGroupDataChatStatusModel *chatStatus;
 @property (nonatomic, strong, nullable)   FHUGCShareInfoModel *shareInfo;
 @property (nonatomic, strong , nullable) NSArray<FHUGCScialGroupDataTabInfoModel> *tabInfo;
+@property (nonatomic, strong , nullable) NSArray *cityIds;
 
 @end
 

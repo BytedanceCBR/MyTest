@@ -15,6 +15,7 @@
     if (self.sugHttpTask) {
         [self.sugHttpTask cancel];
     }
+    query  =  [query stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
     self.highlightedText = query;
     __weak typeof(self) wself = self;
     

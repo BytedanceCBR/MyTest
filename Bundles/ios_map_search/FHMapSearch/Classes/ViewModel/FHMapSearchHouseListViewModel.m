@@ -338,7 +338,7 @@
 {
     if (self.listController.view.top > self.listController.view.height*0.6) {
         [self handleDismiss:0.3];
-    }else if((self.listController.view.top > [self.listController minTop]) && (self.listController.view.top - [self.listController minTop]  < 100)){
+    }else if((self.listController.view.top > [self.listController minTop]) && (self.listController.view.top - [self.listController minTop]  < [UIScreen mainScreen].bounds.size.height/3)){
         //吸附都顶部
         [self.headerView hideTopTip:YES];
         [self.listController moveTop:0];

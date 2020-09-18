@@ -19,6 +19,9 @@
     if (self) {
         //iPad下 留白
         self.needMargin = YES;
+        _topLine = [[UIView alloc]init];
+        _topLine.backgroundColor = [UIColor colorWithHexString:@"#e7e7e7"];
+        [self.contentView addSubview:_topLine];
         
     }
     return self;
@@ -32,6 +35,7 @@
     self.textLabel.frame = CGRectIntegral(self.textLabel.frame);
     self.textLabel.centerY = self.height / 2;
     self.textLabel.left = kPushCellLeftPadding;
+    self.topLine.frame = CGRectMake(kPushCellLeftPadding, 0, self.width - kPushCellLeftPadding, [TTDeviceHelper ssOnePixel]);
 }
 
 @end

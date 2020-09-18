@@ -15,7 +15,8 @@
 #import "TTVFeedListItem.h"
 #import "FHUGCScialGroupModel.h"
 #import "FHDetailBaseModel.h"
-@class FHCommunityFeedListController;
+#import "FHUGCFeedListProtocol.h"
+#import "FHBaseViewController.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -45,6 +46,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, copy , nullable) NSString *agencyName;
 @property (nonatomic, copy , nullable) NSString *avatarUrl;
+@property (nonatomic, copy , nullable) NSString *avatarTagUrl;
 @property (nonatomic, copy , nullable) NSString *certificationIcon;
 @property (nonatomic, copy , nullable) NSString *certificationPage;
 @property (nonatomic, copy , nullable) NSString *chatOpenurl;
@@ -112,7 +114,7 @@ typedef NS_ENUM(NSUInteger, FHFeedUGCDiggType) {
 @property (nonatomic, strong , nullable) NSArray<FHFeedContentImageListModel *> *largeImageList;
 //帖子相关
 @property (nonatomic, strong , nullable) FHFeedUGCCellUserModel *user ;
-@property (nonatomic, strong , nullable) FHFeedUGCCellRealtorModel*realtor ;
+@property (nonatomic, strong , nullable) FHFeedUGCCellRealtorModel *realtor ;
 @property (nonatomic, copy , nullable) NSString *diggCount;
 @property (nonatomic, copy , nullable) NSString *createTime;
 @property (nonatomic, copy , nullable) NSString *readCount;
@@ -144,9 +146,8 @@ typedef NS_ENUM(NSUInteger, FHFeedUGCDiggType) {
 @property (nonatomic, weak) UITableView *tableView;
 //cell
 @property (nonatomic, weak) UITableViewCell *cell;
-
 //feedVC
-@property (nonatomic, weak) FHCommunityFeedListController *feedVC;
+@property (nonatomic, weak) FHBaseViewController<FHUGCFeedListProtocol> *feedVC;
 //感兴趣的小区
 @property (nonatomic, strong , nullable) NSArray<FHFeedContentRecommendSocialGroupListModel> *recommendSocialGroupList;
 //唯一Id
@@ -184,7 +185,7 @@ typedef NS_ENUM(NSUInteger, FHFeedUGCDiggType) {
 // 置顶类型：精华或其它
 @property (nonatomic, assign) FHFeedContentStickStyle stickStyle;
 // 内容装饰
-@property (nonatomic, strong) FHFeedUGCCellContentDecorationModel *contentDecoration;
+@property (nonatomic, strong ,nullable) FHFeedUGCCellContentDecorationModel *contentDecoration;
 // 隐藏...,默认为显示
 @property (nonatomic, assign) BOOL hiddenMore;
 // 数据内容是否有变化，如果有则刷新数据时候会刷新，没有则不会刷新，在对cellModel改动需要刷新页面时候，需要设置成YES

@@ -11,11 +11,13 @@
 #import "Masonry.h"
 #import "TTDeviceHelper.h"
 
-@interface FHPriceValuationItemView()
+#define defaultTitleWidth 58
+
+@interface FHPriceValuationItemView()<UITextFieldDelegate>
 
 @property(nonatomic, strong) UIView *contentView;
-@property(nonatomic, strong) UIImageView *rightImage;
 @property(nonatomic, strong) UILabel *rightLabel;
+@property(nonatomic, assign) CGFloat offsetY;
 
 @end
 
@@ -29,8 +31,21 @@
         self.backgroundColor = [UIColor whiteColor];
         [self initViews];
         [self initConstraints];
+        if(type == FHPriceValuationItemViewTypeTextField){
+            [self initNotification];
+        }
     }
     return self;
+}
+
+- (void)initNotification {
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(keyboardWillShowNotifiction:) name:UIKeyboardWillShowNotification object:nil];
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(keyboardWillHideNotifiction:) name:UIKeyboardWillHideNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(textFieldDidChange:) name:UITextFieldTextDidChangeNotification object:nil];
+}
+
+- (void)dealloc {
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 - (void)initViews {
@@ -81,11 +96,13 @@
     
     if(self.type == FHPriceValuationItemViewTypeNormal){
         [self.contentLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.edges.mas_equalTo(self.contentView);
+            make.left.right.mas_equalTo(self.contentView);
+            make.centerY.mas_equalTo(self.titleLabel);
         }];
     }else{
         [self.textField mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.edges.mas_equalTo(self.contentView);
+            make.left.right.mas_equalTo(self.contentView);
+            make.centerY.mas_equalTo(self.titleLabel).offset(1);
         }];
     }
     
@@ -122,8 +139,8 @@
     if(!_textField){
         _textField = [[UITextField alloc] init];
         _textField.font = [UIFont themeFontRegular:16];
-        _textField.attributedPlaceholder = [[NSAttributedString alloc] initWithString:@"" attributes:@{NSForegroundColorAttributeName: [UIColor themeGray3]}];
         [_textField setTintColor:[UIColor themeRed3]];
+        _textField.delegate = self;
     }
     return _textField;
 }
@@ -187,10 +204,128 @@
     }];
 }
 
+- (void)setPlaceholder:(NSString *)placeholder {
+    _placeholder = placeholder;
+    if(self.type == FHPriceValuationItemViewTypeTextField){
+        self.textField.placeholder = placeholder;
+        self.textField.attributedPlaceholder = [[NSAttributedString alloc] initWithString:placeholder attributes:@{NSForegroundColorAttributeName: [UIColor themeGray3]}];
+    }else{
+        if(self.contentLabel.text.length > 0){
+            //do nothing
+        }else{
+            self.contentLabel.text = self.placeholder;
+            self.contentLabel.textColor = [UIColor themeGray3];
+        }
+    }
+}
+
+- (void)setContentText:(NSString *)contentText {
+    if(contentText.length > 0){
+        self.contentLabel.text = contentText;
+        self.contentLabel.textColor = [UIColor themeGray1];
+    }else if(self.placeholder.length > 0){
+        self.contentLabel.text = self.placeholder;
+        self.contentLabel.textColor = [UIColor themeGray3];
+    }else{
+        self.contentLabel.text = contentText;
+        self.contentLabel.textColor = [UIColor themeGray1];
+    }
+}
+
+- (void)setHiddenRightItem:(BOOL)hiddenRightItem {
+    _hiddenRightItem = hiddenRightItem;
+    _rightImage.hidden = hiddenRightItem;
+    _rightLabel.hidden = hiddenRightItem;
+    if(hiddenRightItem){
+        [self.contentView mas_remakeConstraints:^(MASConstraintMaker *make) {
+            make.right.mas_equalTo(self).offset(-15);
+            make.top.bottom.mas_equalTo(self);
+            make.left.mas_equalTo(self.titleLabel.mas_right);
+        }];
+    }else{
+        [self.contentView mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.right.mas_equalTo(self.rightImage.mas_left).offset(-5);
+            make.top.bottom.mas_equalTo(self);
+            make.left.mas_equalTo(self.titleLabel.mas_right);
+        }];
+    }
+}
+
 - (void)clickAction:(id)tap {
     if(self.tapBlock){
         self.tapBlock();
     }
+}
+
+#pragma mark - 键盘通知
+- (void)keyboardWillShowNotifiction:(NSNotification *)notification {
+    if (!self.textField.isFirstResponder || !self.scrollView) {
+        return;
+    }
+    NSNumber *duration = notification.userInfo[UIKeyboardAnimationDurationUserInfoKey];
+    NSNumber *curve = notification.userInfo[UIKeyboardAnimationCurveUserInfoKey];
+    CGFloat height = [notification.userInfo[UIKeyboardFrameEndUserInfoKey] CGRectValue].size.height;
+    
+    CGRect frame = [self convertRect:self.bounds toView:nil];
+    CGFloat y = [UIScreen mainScreen].bounds.size.height - frame.origin.y - frame.size.height - height;
+    self.offsetY = y;
+    
+    if(y < 0){
+        [UIView animateWithDuration:[duration floatValue] delay:0 options:(UIViewAnimationOptions)[curve integerValue] animations:^{
+            [UIView setAnimationBeginsFromCurrentState:YES];
+            CGPoint point = self.scrollView.contentOffset;
+            point.y -= y;
+            self.scrollView.contentOffset = point;
+        } completion:^(BOOL finished) {
+            
+        }];
+    }
+}
+
+- (void)keyboardWillHideNotifiction:(NSNotification *)notification {
+    if (!self.scrollView) {
+        return;
+    }
+    
+    self.offsetY = 0;
+    if(self.scrollView.contentOffset.y + self.scrollView.frame.size.height > self.scrollView.contentSize.height){
+        //剩余不满一屏幕
+        NSNumber *duration = notification.userInfo[UIKeyboardAnimationDurationUserInfoKey];
+        NSNumber *curve = notification.userInfo[UIKeyboardAnimationCurveUserInfoKey];
+        [UIView animateWithDuration:[duration floatValue] delay:0 options:(UIViewAnimationOptions)[curve integerValue] animations:^{
+            [UIView setAnimationBeginsFromCurrentState:YES];
+            CGPoint point = self.scrollView.contentOffset;
+            point.y = (self.scrollView.contentSize.height - self.scrollView.frame.size.height);
+            self.scrollView.contentOffset = point;
+        } completion:^(BOOL finished) {
+            
+        }];
+    }
+}
+
+#pragma mark - 代理
+
+- (void)textFieldDidChange:(NSNotification *)notification {
+    UITextField *textField = (UITextField *)notification.object;
+    NSString *text = textField.text;
+    
+    if(self.delegate && [self.delegate respondsToSelector:@selector(itemView:textFieldDidChange:)] && self.textField == textField){
+        [self.delegate itemView:self textFieldDidChange:text];
+    }
+}
+
+- (void)textFieldDidBeginEditing:(UITextField *)textField {
+    if(self.delegate && [self.delegate respondsToSelector:@selector(itemView:textFieldDidBeginEditing:)]){
+        return [self.delegate itemView:self textFieldDidBeginEditing:textField];
+    }
+}
+
+- (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string {
+    if(self.delegate && [self.delegate respondsToSelector:@selector(itemView:shouldChangeCharactersInRange:replacementString:)]){
+        return [self.delegate itemView:self shouldChangeCharactersInRange:range replacementString:string];
+    }
+    
+    return YES;
 }
 
 @end

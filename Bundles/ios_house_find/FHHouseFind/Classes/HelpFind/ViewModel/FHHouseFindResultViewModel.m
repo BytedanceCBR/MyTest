@@ -37,8 +37,6 @@
 #define kFindHouseTitileCellId @"kFHRecommendSecondhandHouseTitleCell"
 #define kFindNoHouseTitileCellId @"kFHNoHouseTitleCell"
 
-static const NSUInteger kFHHomeHeaderViewSectionHeight = 35;
-
 @interface FHHouseFindResultViewModel () <UITableViewDelegate,UITableViewDataSource>
 
 
@@ -375,8 +373,6 @@ static const NSUInteger kFHHomeHeaderViewSectionHeight = 35;
                         
             self.isShowErrorPage = NO;
             
-            [self addEnterCategoryLog];
-            
             
             
             NSString *tipStr = @"未能找到符合条件的房源";
@@ -451,6 +447,7 @@ static const NSUInteger kFHHomeHeaderViewSectionHeight = 35;
         }
     }
     
+    [self addEnterCategoryLog];
     [self addHouseSearchLog];
     
     [self.currentViewController endLoading];
@@ -462,27 +459,22 @@ static const NSUInteger kFHHomeHeaderViewSectionHeight = 35;
     
     if ([obj isKindOfClass:[FHSearchHouseDataItemsModel class]]) {
         
-        FHSearchHouseDataItemsModel *item = (FHSearchHouseDataItemsModel *)obj;
         cellModel.secondModel = obj;
         
     }else if ([obj isKindOfClass:[FHNewHouseItemModel class]]) {
         
-        FHSearchHouseDataItemsModel *item = (FHSearchHouseDataItemsModel *)obj;
         cellModel.houseModel = obj;
         
     }else if ([obj isKindOfClass:[FHHouseRentDataItemsModel class]]) {
         
-        FHHouseRentDataItemsModel *item = (FHHouseRentDataItemsModel *)obj;
         cellModel.rentModel = obj;
         
     } else if ([obj isKindOfClass:[FHHouseNeighborDataItemsModel class]]) {
         
-        FHHouseNeighborDataItemsModel *item = (FHHouseNeighborDataItemsModel *)obj;
         cellModel.neighborModel = obj;
         
     }else if ([obj isKindOfClass:[FHSugSubscribeDataDataSubscribeInfoModel class]]) {
         
-        FHSugSubscribeDataDataSubscribeInfoModel *item = (FHSugSubscribeDataDataSubscribeInfoModel *)obj;
         cellModel.subscribModel = obj;
         
     }

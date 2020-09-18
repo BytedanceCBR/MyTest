@@ -123,10 +123,6 @@
     [self addSubview:_totalPagesLabel];
 }
 
-//- (void)initVideoVC {
-//    self.videoVC = [[FHVideoViewController alloc] init];
-//    _videoVC.view.frame = self.bounds;
-//}
 - (UIView *)bottomBannerView {
     if(!_bottomBannerView) {
         
@@ -179,7 +175,8 @@
 - (FHVideoViewController *)videoVC {
     if(!_videoVC){
         _videoVC = [[FHVideoViewController alloc] init];
-        _videoVC.view.frame = self.bounds;
+        CGFloat photoHeight = round([UIScreen mainScreen].bounds.size.width / 375.0f * 281 + 0.5);
+        _videoVC.view.frame = CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, photoHeight);
     }
     return _videoVC;
 }
@@ -554,7 +551,6 @@
         [self.colletionView reloadData];
     } else if (_medias.count > 0) {
         [self.colletionView reloadData];
-        [self setInfoLabelText:[NSString stringWithFormat:@"%d/%lu",1,(unsigned long)_medias.count]];
         self.infoLabel.hidden = NO;
         self.colletionView.hidden = NO;
         self.noDataImageView.hidden = YES;
@@ -562,6 +558,7 @@
             NSIndexPath *indexPath = [NSIndexPath indexPathForItem:1 inSection:0];
             [self.colletionView scrollToItemAtIndexPath:indexPath atScrollPosition:UICollectionViewScrollPositionLeft animated:NO];
         }
+        [self setInfoLabelText:[NSString stringWithFormat:@"%d/%lu",1,(unsigned long)_medias.count]];
     } else {
         [self.colletionView reloadData];
         self.infoLabel.hidden = YES;

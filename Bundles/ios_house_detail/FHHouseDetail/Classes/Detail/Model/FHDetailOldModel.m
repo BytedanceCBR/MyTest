@@ -671,7 +671,8 @@
                            @"downPaymentInfo":@"down_payment_info",
                            @"vouchModel":@"vouch_info",
                            @"realtorContent":@"realtor_content",
-                           @"reportUrl":@"report_url"
+                           @"reportUrl":@"report_url",
+                           @"saleHouseEntrance":@"sale_house_entrance"
                            };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
         return dict[keyName]?:keyName;
@@ -807,6 +808,22 @@
 }
 @end
 
+@implementation FHDetailOldSaleHouseEntranceModel
++ (JSONKeyMapper*)keyMapper
+{
+    NSDictionary *dict = @{
+        @"openUrl": @"open_url",
+        @"buttonText": @"button_text",
+    };
+    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+        return dict[keyName]?:keyName;
+    }];
+}
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+@end
 
 // MARK 自定义类型
 
