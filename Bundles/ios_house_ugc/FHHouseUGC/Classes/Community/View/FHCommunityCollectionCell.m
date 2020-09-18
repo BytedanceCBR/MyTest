@@ -7,7 +7,7 @@
 
 #import "FHCommunityCollectionCell.h"
 #import "ArticleTabbarStyleNewsListViewController.h"
-#import "FHCommunityFeedListController.h"
+#import "FHVideoChannelController.h"
 #import "FHNearbyViewController.h"
 #import "FHMyJoinViewController.h"
 #import "FHHouseFindViewController.h"
@@ -46,8 +46,8 @@
             FHMyJoinViewController *vc = (FHMyJoinViewController *)self.vc;
             vc.withTips = self.withTips;
             [vc viewWillAppear];
-        }else if(self.type == FHCommunityCollectionCellTypeCustom){
-            FHCommunityFeedListController *vc = (FHCommunityFeedListController *)self.vc;
+        }else if(self.type == FHCommunityCollectionCellTypeVideo){
+            FHVideoChannelController *vc = (FHVideoChannelController *)self.vc;
             [vc viewWillAppear];
         }
     }
@@ -60,8 +60,8 @@
     }else if(self.type == FHCommunityCollectionCellTypeMyJoin){
         FHMyJoinViewController *vc = (FHMyJoinViewController *)self.vc;
         [vc viewWillDisappear];
-    }else if(self.type == FHCommunityCollectionCellTypeCustom){
-        FHCommunityFeedListController *vc = (FHCommunityFeedListController *)self.vc;
+    }else if(self.type == FHCommunityCollectionCellTypeVideo){
+        FHVideoChannelController *vc = (FHVideoChannelController *)self.vc;
         [vc viewWillDisappear];
     }
 }
@@ -80,8 +80,8 @@
         FHMyJoinViewController *vc = [[FHMyJoinViewController alloc] init];
         vc.withTips = self.withTips;
         self.vc = vc;
-    }else if(self.type == FHCommunityCollectionCellTypeCustom){
-        FHCommunityFeedListController *vc = [[FHCommunityFeedListController alloc] init];
+    }else if(self.type == FHCommunityCollectionCellTypeVideo){
+        FHVideoChannelController *vc = [[FHVideoChannelController alloc] init];
         vc.listType = FHCommunityFeedListTypeVideoList;
         vc.isNewDiscovery = NO;
         vc.category = @"f_house_video";
@@ -95,8 +95,8 @@
         self.vc.view.frame = self.bounds;
         [self.contentView addSubview:self.vc.view];
         
-        if([self.vc isKindOfClass:[FHCommunityFeedListController class]]){
-            FHCommunityFeedListController *vc = (FHCommunityFeedListController *)self.vc;
+        if([self.vc isKindOfClass:[FHVideoChannelController class]]){
+            FHVideoChannelController *vc = (FHVideoChannelController *)self.vc;
             [vc viewWillAppear];
         }
     }
@@ -119,8 +119,8 @@
         FHMyJoinViewController *vc = (FHMyJoinViewController *)self.vc;
         vc.feedListVC.isRefreshTypeClicked = isClick;
         [vc refreshFeedListData:isHead];
-    }else if([self.vc isKindOfClass:[FHCommunityFeedListController class]]){
-        FHCommunityFeedListController *vc = (FHCommunityFeedListController *)self.vc;
+    }else if([self.vc isKindOfClass:[FHVideoChannelController class]]){
+        FHVideoChannelController *vc = (FHVideoChannelController *)self.vc;
         vc.isRefreshTypeClicked = isClick;
         if(isHead){
             [vc scrollToTopAndRefreshAllData];

@@ -21,6 +21,7 @@
 #import "FHSuggestionEmptyCell.h"
 #import "FHFindHouseHelperCell.h"
 #import "FHHouseListRecommendTipCell.h"
+#import "UIDevice+BTDAdditions.h"
 
 @interface FHChildSuggestionListViewController ()<UITextFieldDelegate>
 
@@ -221,7 +222,7 @@
 }
 
 - (FHSuggectionTableView *)createTableView {
-    BOOL isIphoneX = [TTDeviceHelper isIPhoneXDevice];
+    BOOL isIphoneX = [UIDevice btd_isIPhoneXSeries];
     FHSuggectionTableView *tableView = [[FHSuggectionTableView alloc] initWithFrame:CGRectZero style:UITableViewStyleGrouped];
     __weak typeof(self) weakSelf = self;
     tableView.handleTouch = ^{
@@ -344,7 +345,7 @@
     NSString * fullText = [userInputText stringByAddingPercentEncodingWithAllowedCharacters:NSCharacterSet.URLQueryAllowedCharacterSet];
     NSString * placeHolderStr = (fullText.length > 0 ? fullText : userInputText);
     
-    NSString *openUrl = [NSString stringWithFormat:@"fschema://house_list?house_type=%ld&full_text=%@&placeholder=%@",self.houseType,placeHolderStr,placeHolderStr];
+    NSString *openUrl = [NSString stringWithFormat:@"fschema://house_list?house_type=%zi&full_text=%@&placeholder=%@",self.houseType,placeHolderStr,placeHolderStr];
     if (self.suggestDelegate != NULL) {
         NSDictionary *infos = @{
                                 @"houseSearch":houseSearchParams
@@ -365,10 +366,10 @@
     }
 }
 
-- (void)jumpToCategoryListVCByUrl:(NSString *)jumpUrl queryText:(NSString *)queryText placeholder:(NSString *)placeholder infoDict:(NSDictionary *)infos isGoDetail:(BOOL)isGoDetail{
+- (void)jumpToCategoryListVCByUrl:(NSString *)jumpUrl queryText:(NSString * _Nullable)queryText placeholder:(NSString * _Nullable)placeholder infoDict:(NSDictionary *)infos isGoDetail:(BOOL)isGoDetail{
     NSString *openUrl = jumpUrl;
     if (openUrl.length <= 0) {
-        openUrl = [NSString stringWithFormat:@"fschema://house_list?house_type=%ld&full_text=%@&placeholder=%@",self.houseType,queryText,placeholder];
+        openUrl = [NSString stringWithFormat:@"fschema://house_list?house_type=%zi&full_text=%@&placeholder=%@",self.houseType,queryText,placeholder];
     }
     if (self.suggestDelegate != NULL && ![openUrl containsString:@"webview"] && !isGoDetail) {
         // 1、suggestDelegate说明需要回传sug数据
@@ -458,7 +459,7 @@
     } else {
         [self startLoading];
         self.isLoadingData = YES;
-        [self.viewModel requestSearchHistoryByHouseType:[NSString stringWithFormat:@"%ld",_houseType]];
+        [self.viewModel requestSearchHistoryByHouseType:[NSString stringWithFormat:@"%zi",_houseType]];
     }
 }
 
@@ -469,7 +470,7 @@
         [self.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoNetWorkAndRefresh];
     } else {
         self.isLoadingData = YES;
-        [self.viewModel requestDeleteHistoryByHouseType:[NSString stringWithFormat:@"%ld",_houseType]];
+        [self.viewModel requestDeleteHistoryByHouseType:[NSString stringWithFormat:@"%zi",_houseType]];
     }
 }
 

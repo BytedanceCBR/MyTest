@@ -25,7 +25,7 @@ typedef void(^FHHistoryItemClick)(FHSuggestionSearchHistoryResponseDataDataModel
 
 @property (nonatomic, copy)     FHHistoryItemClick       clickBlk;
 @property (nonatomic, assign)   CGFloat       historyViewHeight; // 默认是128，2行
-@property (nonatomic, strong)   NSArray<FHSuggestionSearchHistoryResponseDataDataModel>       *historyItems;
+@property (nonatomic, strong, nullable)   NSArray<FHSuggestionSearchHistoryResponseDataDataModel>       *historyItems;
 @property (nonatomic, copy)     dispatch_block_t       delClick;
 @property (nonatomic, copy)     dispatch_block_t       moreClick;
 @property (nonatomic, weak)     FHChildSuggestionListViewController *vc;

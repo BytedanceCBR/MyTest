@@ -219,9 +219,13 @@
 
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    FHHouseMsgDataItemsModel *model = self.dataList[section];
-    NSArray *houses = model.items;
-    return [houses count];
+    if(section < self.dataList.count){
+        FHHouseMsgDataItemsModel *model = self.dataList[section];
+        NSArray *houses = model.items;
+        return [houses count];
+    }else{
+        return 0;
+    }
 }
 
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath

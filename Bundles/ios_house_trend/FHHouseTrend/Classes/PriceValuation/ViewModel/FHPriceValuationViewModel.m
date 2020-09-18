@@ -74,7 +74,7 @@
     
     if(text.length > 0){
         unichar single = [text characterAtIndex:(text.length - 1)];
-        if(single == "."){
+        if(single == '.'){
             text = [text substringToIndex:(text.length - 1)];
         }
     }
@@ -261,7 +261,7 @@
 - (void)goToUserProtocol {
     [self.view endEditing:YES];
     NSString *privateUrlStr = [NSString stringWithFormat:@"%@/f100/client/user_privacy&title=个人信息保护声明&hide_more=1",[FHURLSettings baseURL]];
-    NSString *urlStr = [privateUrlStr stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+    NSString *urlStr = [privateUrlStr stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLQueryAllowedCharacterSet]];
     NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"fschema://webview?url=%@",urlStr]];
     [[TTRoute sharedRoute]openURLByPushViewController:url];
 }
@@ -306,17 +306,17 @@
     
     NSMutableArray *roomArray = [NSMutableArray array];
     for (NSInteger i = 1; i <= 9; i++) {
-        [roomArray addObject:[NSString stringWithFormat:@"%i室",i]];
+        [roomArray addObject:[NSString stringWithFormat:@"%li室",(long)i]];
     }
     
     NSMutableArray *lobbyArray = [NSMutableArray array];
     for (NSInteger i = 0; i <= 9; i++) {
-        [lobbyArray addObject:[NSString stringWithFormat:@"%i厅",i]];
+        [lobbyArray addObject:[NSString stringWithFormat:@"%li厅",(long)i]];
     }
     
     NSMutableArray *toiletArray = [NSMutableArray array];
     for (NSInteger i = 0; i <= 9; i++) {
-        [toiletArray addObject:[NSString stringWithFormat:@"%i卫",i]];
+        [toiletArray addObject:[NSString stringWithFormat:@"%li卫",(long)i]];
     }
     
     [sourceArray addObject:roomArray];

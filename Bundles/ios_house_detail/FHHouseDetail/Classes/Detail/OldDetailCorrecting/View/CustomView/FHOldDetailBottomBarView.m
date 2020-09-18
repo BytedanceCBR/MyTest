@@ -18,6 +18,7 @@
 #import "FHUtils.h"
 #import <ByteDanceKit/UIDevice+BTDAdditions.h>
 #import <FHHouseBase/FHRealtorAvatarView.h>
+#import "UIButton+BDWebImage.h"
 
 @interface FHOldDetailBottomBarView ()
 
@@ -27,7 +28,7 @@
 @property(nonatomic , strong) UILabel *nameLabel;
 @property(nonatomic , strong) UILabel *agencyLabel;
 @property(nonatomic , strong) FHLoadingButton *contactBtn;
-@property(nonatomic , strong) UIButton *licenceIcon;
+@property(nonatomic , strong) UIButton *licenseIcon;
 @property(nonatomic , strong) UIButton *imChatBtn;
 @property(nonatomic , assign) CGFloat imBtnWidth;
 @property(nonatomic , assign) BOOL instantHasShow;
@@ -65,7 +66,7 @@
 //    [self.leftView addSubview:self.identifyView];
     [self.leftView addSubview:self.nameLabel];
     [self.leftView addSubview:self.agencyLabel];
-    [self.leftView addSubview:self.licenceIcon];
+    [self.leftView addSubview:self.licenseIcon];
     
     CGFloat avatarLeftMargin = 20;
     if ([UIDevice btd_is568Screen]) {
@@ -82,7 +83,7 @@
         make.left.mas_equalTo(self.avatarView.mas_right).mas_offset(10);
         make.top.mas_equalTo(self.avatarView).offset(2);
     }];
-    [self.licenceIcon mas_makeConstraints:^(MASConstraintMaker *make) {
+    [self.licenseIcon mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(self.nameLabel.mas_right).offset(4);
         make.height.width.mas_equalTo(20);
         make.centerY.mas_equalTo(self.nameLabel);
@@ -120,7 +121,7 @@
 
     
     [self.contactBtn addTarget:self action:@selector(contactBtnDidClick:) forControlEvents:UIControlEventTouchUpInside];
-    [self.licenceIcon addTarget:self action:@selector(licenseBtnDidClick:) forControlEvents:UIControlEventTouchUpInside];
+    [self.licenseIcon addTarget:self action:@selector(licenseBtnDidClick:) forControlEvents:UIControlEventTouchUpInside];
     [self.imChatBtn addTarget:self action:@selector(imBtnClick:) forControlEvents:UIControlEventTouchUpInside];
     self.leftView.userInteractionEnabled = YES;
     UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(jump2RealtorDetail)];
@@ -154,19 +155,29 @@
     }
 }
 
-- (void)displayLicense:(BOOL)isDisplay
+- (void)displayLicense:(BOOL)isDisplay imageURL:(NSURL *)imageURL
 {
-    self.licenceIcon.hidden = !isDisplay;
+    BOOL isNewStyle = imageURL != nil;  //北京商业化开城新样式
+    self.licenseIcon.hidden = !isDisplay;
     if (isDisplay) {
+        [self.nameLabel setContentHuggingPriority:UILayoutPriorityDefaultHigh forAxis:UILayoutConstraintAxisHorizontal];
         [self.nameLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
             make.left.mas_equalTo(self.avatarView.mas_right).mas_offset(10);
             make.top.mas_equalTo(self.avatarView).offset(2);
         }];
-        [self.licenceIcon mas_remakeConstraints:^(MASConstraintMaker *make) {
-            make.left.mas_equalTo(self.nameLabel.mas_right).offset(4);
-            make.height.width.mas_equalTo(20);
+        CGSize licenseIconSize = isNewStyle ? CGSizeMake(18, 16) : CGSizeMake(20, 20);
+        CGFloat leftMargin = isNewStyle ? 6 : 4;
+        CGFloat rightMargin = ([UIDevice btd_deviceWidthType] == BTDDeviceWidthMode320) ? -2 : -10;//兼容一下5s，否则在5s上两个字的名字都展示不了
+        [self.licenseIcon mas_remakeConstraints:^(MASConstraintMaker *make) {
+            make.left.mas_equalTo(self.nameLabel.mas_right).offset(leftMargin);
+            make.size.mas_equalTo(licenseIconSize);
             make.centerY.mas_equalTo(self.nameLabel);
+            make.right.mas_lessThanOrEqualTo(self.imChatBtn.mas_left).offset(rightMargin);
         }];
+        
+        if (imageURL) {
+            [self.licenseIcon bd_setImageWithURL:imageURL forState:UIControlStateNormal];
+        }
     } else {
         [self.nameLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
             make.left.mas_equalTo(self.avatarView.mas_right).mas_offset(10);
@@ -212,11 +223,17 @@
     }
     CGFloat nameLabelwidth = [realtorName boundingRectWithSize:CGSizeMake(MAXFLOAT, MAXFLOAT) options:NSStringDrawingUsesLineFragmentOrigin attributes:@{NSFontAttributeName: self.nameLabel.font} context:nil].size.width + 1;
 //    NSMutableArray *licenseViews = @[].mutableCopy;
-    if (contactPhone.businessLicense.length > 0 || contactPhone.certificate.length > 0) {
-        [self displayLicense:YES];
+    BOOL shouldDisplayLicense = contactPhone.businessLicense.length > 0 || contactPhone.certificate.length > 0 || contactPhone.certification.openUrl.length > 0;
+    if (shouldDisplayLicense) {
+        if (contactPhone.certification.iconUrl.length > 0) {
+            NSURL *imageURL = [NSURL URLWithString:contactPhone.certification.iconUrl];
+            [self displayLicense:YES imageURL:imageURL];
+        } else {
+            [self displayLicense:YES imageURL:nil];
+        }
         nameLabelwidth += 24;
     }else {
-        [self displayLicense:NO];
+        [self displayLicense:NO imageURL:nil];
     }
 
     if (contactPhone.agencyName.length > 0) {
@@ -402,15 +419,15 @@
     return _imChatBtn;
 }
 
-- (UIButton *)licenceIcon
+- (UIButton *)licenseIcon
 {
-    if (!_licenceIcon) {
-        _licenceIcon = [[UIButton alloc]init];
+    if (!_licenseIcon) {
+        _licenseIcon = [[UIButton alloc]init];
         UIImage *img = SYS_IMG(@"detail_contact");
-        [_licenceIcon setImage:img forState:UIControlStateNormal];
-        [_licenceIcon setImage:img forState:UIControlStateHighlighted];
+        [_licenseIcon setImage:img forState:UIControlStateNormal];
+        [_licenseIcon setImage:img forState:UIControlStateHighlighted];
     }
-    return _licenceIcon;
+    return _licenseIcon;
 }
 
 @end
