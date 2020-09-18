@@ -1944,14 +1944,11 @@ static NSUInteger const kOldAnimationViewTag = 20161221;
 }
 
 -(void)bottomView:(WDBottomToolView *)bottomView collectButtonClicked:(SSThemedButton *)collectButton {
-    TTFavouriteContentItem *collecItem = [self.natantViewModel favItem];
-    if(collecItem != nil) {
-        id <TTActivityProtocol> collectActivity= [[TTActivitiesManager sharedInstance] getActivityByItem:collecItem];
-        [self shareManager:self.shareManager clickedWith:collectActivity sharePanel:nil];
-        [collectActivity performActivityWithCompletion:^(id<TTActivityProtocol> activity, NSError *error, NSString *desc) {
-            [self shareManager:self.shareManager completedWith:activity sharePanel:nil error:error desc:desc];
-        }];
+    if(!TTNetworkConnected()){
+        [TTIndicatorView showWithIndicatorStyle:TTIndicatorViewStyleImage indicatorText:NSLocalizedString(@"没有网络连接", nil) indicatorImage:[UIImage themedImageNamed:@"close_popup_textpage.png"] autoDismiss:YES dismissHandler:nil];
+        return;
     }
+    [self.natantViewModel tt_willChangeArticleFavoriteState];
 }
 
 -(void)bottomView:(WDBottomToolView *)bottomView shareButtonClicked:(SSThemedButton *)shareButton {

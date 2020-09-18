@@ -319,9 +319,22 @@ static NSString * const kWDHasTipSupportsEmojiInputDefaultKey = @"WDHasTipSuppor
 
 - (void)collectButtonClicked:(SSThemedButton *)collectButton
 {
-    if ([self.delegate respondsToSelector:@selector(bottomView:collectButtonClicked:)]) {
-        [self.delegate bottomView:self collectButtonClicked:collectButton];
-    }
+    self.collectButton.imageView.contentMode = UIViewContentModeCenter;
+    self.collectButton.imageView.transform = CGAffineTransformMakeScale(1, 1);
+    self.collectButton.alpha = 1;
+    [UIView animateWithDuration:0.1 delay:0.f options:UIViewAnimationOptionCurveEaseOut animations:^{
+        self.collectButton.imageView.transform = CGAffineTransformMakeScale(0.6, 0.6);
+        self.collectButton.alpha = 0;
+    } completion:^(BOOL finished){
+        if ([self.delegate respondsToSelector:@selector(bottomView:collectButtonClicked:)]) {
+            [self.delegate bottomView:self collectButtonClicked:collectButton];
+        }
+        [UIView animateWithDuration:0.2 delay:0 options:UIViewAnimationOptionCurveEaseIn animations:^{
+            self.collectButton.imageView.transform = CGAffineTransformMakeScale(1, 1);
+            self.collectButton.alpha = 1.f;
+        } completion:^(BOOL finished){
+        }];
+    }];
 }
 
 #pragma mark - Animation

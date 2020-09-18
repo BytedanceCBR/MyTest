@@ -14,6 +14,5 @@
 @interface WDDetailNatantViewModel (ShareCategory)
 
 - (NSArray<id<TTActivityContentItemProtocol>> *)wd_shareItems;
-- (TTFavouriteContentItem *)favItem;
 
 @end
