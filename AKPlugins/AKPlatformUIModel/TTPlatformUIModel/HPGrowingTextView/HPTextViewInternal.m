@@ -108,12 +108,12 @@
         {
             NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];
             paragraphStyle.alignment = self.textAlignment;
-            CGRect rect = CGRectMake(5, self.textContainerInset.top + self.contentInset.top, self.frame.size.width-self.contentInset.left, self.frame.size.height- self.contentInset.top);
+            CGRect rect = CGRectMake(MAX(5, self.textContainerInset.left + 4), self.textContainerInset.top + self.contentInset.top, self.frame.size.width-self.contentInset.left, self.frame.size.height- self.contentInset.top);
             [self.placeholder drawInRect:rect withAttributes:@{NSFontAttributeName:self.font, NSForegroundColorAttributeName:self.placeholderColor, NSParagraphStyleAttributeName:paragraphStyle}];
         }
         else {
             [self.placeholderColor set];
-            [self.placeholder drawInRect:CGRectMake(8.0f, 8.0f, self.frame.size.width - 16.0f, self.frame.size.height - 16.0f) withAttributes:@{NSFontAttributeName: self.font}];
+            [self.placeholder drawInRect:CGRectMake(MAX(8.0f, self.textContainerInset.left + 4), 8.0f, self.frame.size.width - 16.0f, self.frame.size.height - 16.0f) withAttributes:@{NSFontAttributeName: self.font}];
         }
     }
 }
