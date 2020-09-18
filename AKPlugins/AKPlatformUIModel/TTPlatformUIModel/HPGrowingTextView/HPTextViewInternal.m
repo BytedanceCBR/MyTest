@@ -108,7 +108,8 @@
         {
             NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];
             paragraphStyle.alignment = self.textAlignment;
-            CGRect rect = CGRectMake(MAX(5, self.textContainerInset.left + 4), self.textContainerInset.top + self.contentInset.top, self.frame.size.width-self.contentInset.left, self.frame.size.height- self.contentInset.top);
+            paragraphStyle.lineBreakMode = NSLineBreakByCharWrapping;
+            CGRect rect = CGRectMake(MAX(5, self.textContainerInset.left + 4), self.textContainerInset.top + self.contentInset.top, self.frame.size.width-self.contentInset.left -10, self.frame.size.height- self.contentInset.top);
             [self.placeholder drawInRect:rect withAttributes:@{NSFontAttributeName:self.font, NSForegroundColorAttributeName:self.placeholderColor, NSParagraphStyleAttributeName:paragraphStyle}];
         }
         else {
