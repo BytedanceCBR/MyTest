@@ -13,7 +13,6 @@
 #import "SSThemed.h"
 
 @class TTShortVideoModel;
-@class AWEVideoDetailViewController;
 
 extern NSString * const TSVVideoDetailVisibilityDidChangeNotification;
 extern NSString * const TSVVideoDetailVisibilityDidChangeNotificationVisibilityKey;

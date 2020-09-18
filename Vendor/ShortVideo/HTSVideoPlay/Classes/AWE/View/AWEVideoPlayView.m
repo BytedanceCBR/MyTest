@@ -38,7 +38,7 @@
 #import "IESVideoPlayer.h"
 #import "IESVideoPlayerProtocol.h"
 #import "IESVideoCacheProtocol.h"
-#import "IESSysPlayerWrapper.h"
+#import "IESOwnPlayerWrapper.h"
 #import "AWEVideoDetailFirstFrameConfig.h"
 #import "TTHTSVideoConfiguration.h"
 #import "TTImageInfosModel.h"
@@ -48,6 +48,8 @@
 #import <BDWebImage/SDWebImageAdapter.h>
 #import "TTReachability.h"
 #import "FHHMDTManager.h"
+#import "UIViewAdditions.h"
+#import "UIView+BTDAdditions.h"
 
 static NSString * const VideoPlayTimeKey =  @"video_play_time";
 static NSString * const VideoStallTimeKey =  @"video_stall_time";
@@ -75,6 +77,9 @@ static NSString * const VideoPrepareTimeTechKey = @"prepare_time_tech";
 @property (nonatomic, assign) NSInteger videoStalledCount;
 @property (nonatomic, assign) BOOL usingFirstFrameCover;
 @property (nonatomic, readwrite, assign) NSTimeInterval videoDuration;
+@property (nonatomic,strong) CADisplayLink *displayLink;
+
+
 
 @end
 
@@ -85,6 +90,13 @@ static NSString * const VideoPrepareTimeTechKey = @"prepare_time_tech";
 {
     [self _removeObservers];
 }
+
+- (void)removeFromSuperview {
+    [self.displayLink invalidate];
+    self.displayLink = nil;
+    [super removeFromSuperview];
+}
+
 
 - (instancetype)initWithFrame:(CGRect)frame
 {
@@ -274,7 +286,22 @@ static NSString * const VideoPrepareTimeTechKey = @"prepare_time_tech";
             });
         }
     }]];
+        _displayLink = [CADisplayLink displayLinkWithTarget:self selector:@selector(getVideoTimers)];
+         [_displayLink addToRunLoop:[NSRunLoop currentRunLoop] forMode:NSRunLoopCommonModes];
+         _displayLink.frameInterval = 1;
+
 }
+- (void)getVideoTimers {
+          IESOwnPlayerWrapper *player = (IESOwnPlayerWrapper *)self.playerController;
+        if (player.currPlaybackTime) {
+            NSLog(@"%f ----- abcd current",player.currPlaybackTime);
+            CGFloat watch = (player.currPlaybackTime/player.videoDuration)*100;
+            NSLog(@"%f------- %f---- abcd",watch,player.videoDuration);
+            [self.miniSlider setWatchedProgress:(player.currPlaybackTime/player.videoDuration) *100];
+            [self.miniSlider setCacheProgress:(player.currPlayableDuration/player.videoDuration) *100];
+
+        };
+    }
 
 - (void)_removeObservers
 {
@@ -406,6 +433,17 @@ static NSString * const VideoPrepareTimeTechKey = @"prepare_time_tech";
     _playerController.deleagte = self;
     [self addSubview:_playerController.view];
     [self addSubview:_backgroundView];
+
+    CGFloat bottomInset = 0;
+    if (@available(iOS 11.0, *)) {
+        bottomInset = [UIApplication sharedApplication].keyWindow.safeAreaInsets.bottom;
+    }
+    _miniSlider = [[ExploreMovieMiniSliderView alloc] initWithFrame:CGRectMake(0, CGRectGetMaxY(self.frame) - bottomInset - 52,
+    CGRectGetWidth(self.frame), 2)];
+    _miniSlider.autoresizingMask = UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleTopMargin;
+    _miniSlider.userInteractionEnabled = NO;
+    [self addSubview:_miniSlider];
+    _miniSlider.hidden = NO;
 
     
     static dispatch_once_t onceToken;
