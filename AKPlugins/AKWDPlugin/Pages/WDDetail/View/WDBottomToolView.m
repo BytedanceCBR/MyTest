@@ -24,16 +24,15 @@
 #import "UIImage+FIconFont.h"
 #import "UIColor+Theme.h"
 #import "TTAccountManager.h"
-#import "TTMultiDigManager.h"
 #import "FHCommonDefines.h"
 #import <ReactiveObjC/ReactiveObjC.h>
 #import <UIView+BTDAdditions.h>
+#import "UIButton+FHUGCMultiDigg.h"
 
 static NSString * const kWDHasTipSupportsEmojiInputDefaultKey = @"WDHasTipSupportsEmojiInputDefaultKey";
 
 @interface WDBottomToolView ()
 
-@property(nonatomic,strong) TTMultiDiggManager *diggManager;
 @property(nonatomic,strong) NSArray *imageArray;
 
 @end
@@ -88,11 +87,7 @@ static NSString * const kWDHasTipSupportsEmojiInputDefaultKey = @"WDHasTipSuppor
         [_digButton setImage:ICON_FONT_IMG(24, @"\U0000e6b1", [UIColor themeOrange4]) forState:UIControlStateSelected];
         [_digButton addTarget:self action:@selector(diggButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
         [self addSubview:_digButton];
-        
-        self.diggManager = [[TTMultiDiggManager alloc] initWithButton:_digButton withTransformAngle:0 contentInset:nil buttonPosition:TTMultiDiggButtonPositionRight animationImageNames:self.imageArray];
-        self.digButton.manualMultiDiggDisableBlock = ^BOOL{
-            return ![TTAccountManager isLogin] ;
-        };
+        [_digButton registMulitDiggEmojiAnimation];
 
         _collectButton = [TTAlphaThemedButton buttonWithType:UIButtonTypeCustom];
         _collectButton.hitTestEdgeInsets = toolBarButtonHitTestInsets;
@@ -149,8 +144,9 @@ static NSString * const kWDHasTipSupportsEmojiInputDefaultKey = @"WDHasTipSuppor
     }];
     self.writeButton.selected = self.detailModel.answerEntity.userRepined;
     [RACObserve(self.detailModel.answerEntity, userRepined) subscribeNext:^(id  _Nullable x) {
+        StrongSelf;
         if([x isKindOfClass:[NSValue class]]) {
-            wself.collectButton.selected = [x boolValue];
+            self.collectButton.selected = [x boolValue];
         }
     }];
     self.digButton.selected = self.detailModel.answerEntity.isDigg;
@@ -366,13 +362,6 @@ static NSString * const kWDHasTipSupportsEmojiInputDefaultKey = @"WDHasTipSuppor
 - (void)themeChanged:(NSNotification *)notification
 {
     _writeButton.tintColor = [UIColor tt_themedColorForKey:kColorText1];
-}
-
--(NSArray *)imageArray {
-    if(!_imageArray) {
-        _imageArray = @[@"emoji_2", @"emoji_8", @"emoji_11", @"emoji_15", @"emoji_16", @"emoji_17", @"emoji_18", @"emoji_21", @"emoji_24", @"emoji_28", @"emoji_32", @"emoji_46", @"emoji_52", @"emoji_53", @"emoji_54", @"emoji_58", @"emoji_65", @"emoji_96"];
-    }
-    return _imageArray;
 }
 
 @end
