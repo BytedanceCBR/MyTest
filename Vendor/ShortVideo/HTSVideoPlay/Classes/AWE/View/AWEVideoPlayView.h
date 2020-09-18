@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "ExploreMovieMiniSliderView.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -38,6 +39,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy, nullable) NSDictionary *commonTrackingParameter;
 @property (nonatomic, readonly, assign) NSTimeInterval videoDuration;
 @property (nonatomic, weak, nullable) id<AWEVideoPlayViewDelegate> delegate;
+@property(nonatomic, strong)ExploreMovieMiniSliderView * miniSlider;
 /// 自动改变frame以适配视频大小，默认YES
 @property (nonatomic, assign) BOOL autoAdjustViewFrame;
 

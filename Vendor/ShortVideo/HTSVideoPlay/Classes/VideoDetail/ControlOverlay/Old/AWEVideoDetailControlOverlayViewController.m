@@ -101,6 +101,8 @@ static const CGFloat kCheckChallengeButtonLeftPadding = 28;
 @property (nonatomic, strong) UIView *userInfoContainerView;
 @property (nonatomic, strong) UIView *layoutContainerView;
 
+@property (nonatomic, strong) UIView *rightInfoView;
+
 // Buttom controls
 @property (nonatomic, strong) TTUGCAttributedLabel *titleLabel;
 @property (nonatomic, strong) AWEDetailLogoViewController *logoViewController;
@@ -267,9 +269,6 @@ static const CGFloat kCheckChallengeButtonLeftPadding = 28;
 
         _avatarView = [[FHRealtorAvatarView alloc] init];
         _avatarView.userInteractionEnabled = YES;
-        [_userInfoContainerView addSubview:_avatarView];
-        // add by zjing 去掉小视频关注
-        [_avatarView addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleAvatarClick:)]];
         
         _nameLabel = [[UILabel alloc] init];
         _nameLabel.textColor = [UIColor whiteColor];
@@ -357,7 +356,11 @@ static const CGFloat kCheckChallengeButtonLeftPadding = 28;
 - (void)setupTopBarViews
 {
     self.topBarView = [[UIView alloc] init];
-    self.topBarView.frame = CGRectMake(0, 0, CGRectGetWidth(self.view.bounds), 64.0);
+        CGFloat topInset = 0;
+    if (@available(iOS 11.0, *)) {
+        topInset = [UIApplication sharedApplication].keyWindow.safeAreaInsets.top;
+    }
+    self.topBarView.frame = CGRectMake(0, topInset, CGRectGetWidth(self.view.bounds), 64.0);
     self.topBarView.autoresizingMask = UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleBottomMargin;
     [self.view addSubview:self.topBarView];
 
@@ -425,7 +428,7 @@ static const CGFloat kCheckChallengeButtonLeftPadding = 28;
     }];
 }
 
-- (void)setupBottomBarViews
+- (void)oBottomBarViews
 {
     //height 140
     _bottomGradientLayer = [CAGradientLayer layer];
@@ -450,6 +453,10 @@ static const CGFloat kCheckChallengeButtonLeftPadding = 28;
 
     _operationView = [[UIView alloc] init];
     [self.view addSubview:_operationView];
+    
+    _rightInfoView = [[UIView alloc]init];
+     [self.view addSubview:_rightInfoView];
+
 
     _inputButton = [[TSVWriteCommentButton alloc] init];
     [_inputButton addTarget:self action:@selector(_onInputButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
@@ -457,23 +464,23 @@ static const CGFloat kCheckChallengeButtonLeftPadding = 28;
 
     _commentButton = [[TSVIconLabelButton alloc] initWithImage:@"hts_vp_comments" label:nil];
     _commentButton.iconImageView.image = ICON_FONT_IMG(24, @"\U0000e699", [UIColor themeWhite]);
-    _commentButton.label.textAlignment = NSTextAlignmentLeft;
+    _commentButton.label.textAlignment = NSTextAlignmentCenter;
     _commentButton.label.textColor = [UIColor tt_defaultColorForKey:kColorText7];
     [_commentButton addTarget:self action:@selector(_onCommentButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
-    [self.operationView addSubview:_commentButton];
+    [self.rightInfoView addSubview:_commentButton];
 
     _likeButton = [[TSVIconLabelButton alloc] initWithImage:@"hts_vp_like" label:nil];
     _likeButton.iconImageView.image = ICON_FONT_IMG(24, @"\U0000e69c", [UIColor themeWhite]);
     _likeButton.label.textAlignment = NSTextAlignmentLeft;
     _likeButton.label.textColor = [UIColor themeWhite];
     [_likeButton addTarget:self action:@selector(_onLikeButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
-    [self.operationView addSubview:_likeButton];
+    [self.rightInfoView addSubview:_likeButton];
     
     self.shareButton = [[UIButton alloc] init];
     self.shareButton.hitTestEdgeInsets = UIEdgeInsetsMake(-20, -20, -20, -20);
     [self.shareButton setImage:ICON_FONT_IMG(24, @"\U0000E692",[UIColor themeWhite]) forState:UIControlStateNormal];
     [self.shareButton addTarget:self action:@selector(_onShareButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
-    [self.operationView addSubview:self.shareButton];
+    [self.rightInfoView addSubview:self.shareButton];
 
     [self.view addSubview:self.userInfoContainerView];
     [self.view addSubview:self.followButton];
@@ -489,6 +496,11 @@ static const CGFloat kCheckChallengeButtonLeftPadding = 28;
     
     [self.view addSubview:self.recArrowButton];
     self.recArrowButton.hidden = YES;
+    
+    [self.rightInfoView addSubview:_avatarView];
+    // add by zjing 去掉小视频关注
+    [_avatarView addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleAvatarClick:)]];
+
 }
 
 - (void)setupTagViews
@@ -539,19 +551,66 @@ static const CGFloat kCheckChallengeButtonLeftPadding = 28;
     }];
     
     CGFloat avatarSize = 40;
-
-    [_avatarView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.centerY.equalTo(self.userInfoContainerView);
-        make.left.equalTo(_userInfoContainerView);
-        make.width.height.equalTo(@(avatarSize));
+    
+    CGFloat bottomInset = 0;
+    if (@available(iOS 11.0, *)) {
+        bottomInset = [UIApplication sharedApplication].keyWindow.safeAreaInsets.bottom;
+    }
+    [_operationView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.right.equalTo(self.view);
+        make.bottom.equalTo(self.view);
+        make.height.mas_offset( 50+bottomInset);
+    }];
+    [_inputButton mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.edges.equalTo(self.operationView);
     }];
 
+    
+    [_rightInfoView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.right.equalTo(self.view).offset(-15);
+        make.bottom.equalTo(self.operationView.mas_top).offset(-10);
+        make.size.mas_equalTo(CGSizeMake(60, 190));
+    }];
+
+
+    [_rightInfoView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.right.equalTo(self.view).offset(-15);
+        make.bottom.equalTo(self.view);
+        make.size.mas_equalTo(CGSizeMake(60, 270));
+    }];
+    
+    [_avatarView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.equalTo(self.rightInfoView).offset;
+        make.width.height.equalTo(@(avatarSize));
+        make.centerX.equalTo(self.rightInfoView);
+    }];
+    
+    [_commentButton mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.equalTo(self.avatarView.mas_bottom).offset(15);
+        make.centerX.equalTo(self.rightInfoView);
+        make.size.mas_equalTo(CGSizeMake(60, 40));
+    }];
+    
+    [_likeButton mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.equalTo(self.commentButton.mas_bottom).offset(10);
+        make.centerX.equalTo(self.rightInfoView);
+        make.size.mas_equalTo(CGSizeMake(60, 40));
+    }];
+    
+    [_shareButton mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.equalTo(self.likeButton.mas_bottom).offset(5);
+        make.centerX.equalTo(self.rightInfoView);
+        make.size.mas_equalTo(CGSizeMake(60, 40));
+    }];
+
+    
     [_nameLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerY.equalTo(self.userInfoContainerView);
-        make.left.equalTo(_avatarView.mas_right).offset(8.0);
-        make.right.equalTo(_userInfoContainerView);
+        make.left.equalTo(self.userInfoContainerView).offset(8.0);
+        make.right.equalTo(self.userInfoContainerView);
         make.height.equalTo(@24.0);
     }];
+
 
     UIView *topmostView;
     if ([self.titleLabel.attributedText length]) {
@@ -600,8 +659,8 @@ static const CGFloat kCheckChallengeButtonLeftPadding = 28;
     if (self.musicInfoView.hidden == NO) {
         [self.titleLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
             make.left.equalTo(self.view).offset(15);
-            make.width.equalTo(self.view.mas_width).offset(-titleLeftAndRightMargin);
-            make.bottom.equalTo(self.musicInfoView.mas_top).offset(-10);
+            make.right.equalTo(self.rightInfoView.mas_left).offset(-15);
+            make.bottom.equalTo(self.operationView.mas_top).offset(-5);
         }];
     } else {
         [self.titleLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
@@ -697,38 +756,6 @@ static const CGFloat kCheckChallengeButtonLeftPadding = 28;
    
     self.bottomGradientLayer.frame = CGRectMake(0, CGRectGetHeight(self.view.bounds) - 140, CGRectGetWidth(self.view.bounds), 140);
 
-    self.operationView.frame = CGRectMake(0, CGRectGetMaxY(self.view.frame) - 50 - self.viewSafeAreaInsets.bottom,
-                                          CGRectGetWidth(self.view.frame), 50);
-
-    [self.operationView configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
-        layout.isEnabled = YES;
-        layout.width = YGPercentValue(100);
-        layout.height = YGPointValue(50);
-        layout.paddingLeft = YGPointValue(15);
-        layout.paddingRight = YGPointValue(15);
-        layout.flexDirection = YGFlexDirectionRow;
-        layout.justifyContent = YGJustifySpaceBetween;
-        layout.alignItems = YGAlignCenter;
-    }];
-    [self.inputButton configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
-        layout.isEnabled = YES;
-        layout.height = YGPointValue(32);
-        if (![TTDeviceHelper isScreenWidthLarge320]) {
-            layout.width = YGPointValue(106);
-        } else if (self.viewModel.showShareIconOnBottomBar) {
-            if ([TTDeviceHelper is736Screen]) {
-                layout.width = YGPointValue(120);
-            } else {
-                layout.width = YGPointValue(106);
-            }
-        } else {
-            if ([TTDeviceHelper is736Screen]) {
-                layout.width = YGPointValue(176);
-            } else {
-                layout.width = YGPointValue(160);
-            }
-        } 
-    }];
     [self.likeButton configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
         layout.isEnabled = YES;
         layout.marginRight = YGPointValue(5);
@@ -741,7 +768,6 @@ static const CGFloat kCheckChallengeButtonLeftPadding = 28;
     if ([[TSVDebugInfoConfig config] debugInfoEnabled]) {
         self.debugInfoView.frame = CGRectMake(0, 100, 100, 200);
     }
-    [self.operationView.yoga applyLayoutPreservingOrigin:YES];
 
     [self updateViewFrameForSafeAreaIfNeeded];
     
@@ -1100,8 +1126,10 @@ static const CGFloat kCheckChallengeButtonLeftPadding = 28;
 - (void)updateViewFrameForSafeAreaIfNeeded
 {
     if ([TTDeviceHelper isIPhoneXDevice]) {
-        CGFloat safeAreaTop = self.viewSafeAreaInsets.top;
-        
+        CGFloat safeAreaTop = 0;
+        if (@available(iOS 11.0, *)) {
+            safeAreaTop = [UIApplication sharedApplication].keyWindow.safeAreaInsets.top;
+        }
         self.topBarView.top = safeAreaTop - 17;
         self.topBarGradientLayer.frame = CGRectMake(0, 0, self.view.bounds.size.width, 120);
         self.bottomGradientLayer.frame = CGRectMake(0, self.view.bounds.size.height - 220, CGRectGetWidth(self.view.bounds), 220);

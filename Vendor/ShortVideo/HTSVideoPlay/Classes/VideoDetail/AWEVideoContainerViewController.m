@@ -91,7 +91,6 @@ static BOOL kTSVCellularAlertShouldShow = YES;
 @property (nonatomic, assign) BOOL firstPageShown;  //用于区分发 go_detail 还是 go_detail_draw
 @property (nonatomic, strong, nullable) AWEVideoDetailTracker *tracker;
 @property (nullable, nonatomic, copy) NSIndexPath *currentIndexPath;
-@property (nonatomic, assign) BOOL cellularAlertHasShown;
 @property (nonatomic, assign) BOOL loadingCellOnScreen;
 @property (nonatomic, assign) BOOL needsLoadingCell;
 @property (nonatomic, assign) BOOL showingNoMoreVideoIndicator;
@@ -298,6 +297,8 @@ const static CGFloat kAWEVideoContainerSpacing = 2;
 
 - (void)refresh
 {
+    [self.currentVideoCell.videoPlayView.miniSlider setWatchedProgress:0];
+    [self.currentVideoCell.videoPlayView.miniSlider setCacheProgress:0];
     // 动画可能导致 loading cell 一闪而过
     [UIView performWithoutAnimation:^{
         [self.collectionView performBatchUpdates:^{

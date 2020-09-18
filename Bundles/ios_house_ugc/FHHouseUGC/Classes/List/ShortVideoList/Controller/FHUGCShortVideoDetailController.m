@@ -6,6 +6,7 @@
 //  Copyright © 2016年 Bytedance. All rights reserved.
 //
 
+#import "FHUGCShortVideoDetailController.h"
 #import "AWEVideoDetailViewController.h"
 #import "AWEReportViewController.h"
 // View
@@ -119,9 +120,6 @@
 
 @import AVFoundation;
 
-NSString * const TSVVideoDetailVisibilityDidChangeNotification = @"TSVVideoDetailVisibilityDidChangeNotification";
-NSString * const TSVVideoDetailVisibilityDidChangeNotificationVisibilityKey = @"TSVVideoDetailVisibilityDidChangeNotificationVisibilityKey";
-NSString * const TSVVideoDetailVisibilityDidChangeNotificationEntranceKey = @"TSVVideoDetailVisibilityDidChangeNotificationEntranceKey";
 
 ///评论页状态 未弹出/点击弹出／上滑弹出
 typedef NS_ENUM(NSInteger, TSVDetailCommentViewStatus) {
@@ -130,76 +128,55 @@ typedef NS_ENUM(NSInteger, TSVDetailCommentViewStatus) {
     TSVDetailCommentViewStatusPopBySlideUp,
 };
 
-@interface AWEVideoDetailViewController () <UITableViewDataSource, UITableViewDelegate, UIGestureRecognizerDelegate, AWEVideoCommentCellOperateDelegate, TTRouteInitializeProtocol, TTPreviewPanBackDelegate, TTShareManagerDelegate, TTInteractExitProtocol>
+@interface FHUGCShortVideoDetailController () <UITableViewDataSource, UITableViewDelegate, UIGestureRecognizerDelegate, AWEVideoCommentCellOperateDelegate, TTRouteInitializeProtocol, TTPreviewPanBackDelegate, TTShareManagerDelegate, TTInteractExitProtocol>
 
 // View
 @property (nonatomic, strong) SSThemedView *commentView;
-///评论数量
 @property (nonatomic, strong) SSThemedLabel *commentHeaderLabel;
-///评论table
 @property (nonatomic, strong) UITableView *tableView;
-///小视频控制器
 @property (nonatomic, strong) AWEVideoContainerViewController *videoContainerViewController;
 //@property (nonatomic, strong) TSVProfileViewController *profileViewController;
-///暂无评论沙发视图
 @property (nonatomic, strong) UIView *emptyHintView;
 //@property (nonatomic, strong) AWECommentInputBar *inputBar;
 @property (nonatomic, strong) UIView *keyboardMaskView;
-///评论举报，目前好像未使用
 @property (nonatomic, strong) AWEReportViewController *commentReportVC;
-///视频举报功能，点击右上角查看更多->举报操作
 @property (nonatomic, strong) AWEReportViewController *videoReportVC;
-///点击评论按钮弹出table上面的输入框
 @property (nonatomic, strong) SSThemedView *fakeInputBar;
 // Data
 @property (nonatomic, strong) TSVDetailViewModel *viewModel;
-///评论区工具类
 @property (nonatomic, strong) AWEVideoCommentDataManager *commentManager;
-///小视频数据处理工具类，包括请求等等
 @property (nonatomic, strong) id<TSVShortVideoDataFetchManagerProtocol> dataFetchManager;
 @property (nonatomic, strong) id<TSVShortVideoDataFetchManagerProtocol> originalDataFetchManager;
-///页面所有数据
 @property (nonatomic, copy) NSDictionary *pageParams;
-///小视频gid
 @property (nonnull, copy) NSString *groupID;
-///类型
 @property (nonatomic, copy) NSString *groupSource;
-///渠道名
 @property (nonatomic, copy) NSString *categoryName;
-//自动弹起输入框或者评论
 @property (nonatomic, strong) NSNumber *showComment;//0不弹，1弹起评论浮层，2弹输入框
 @property (nonatomic, copy) NSDictionary *commonTrackingParameter;
 @property (nonatomic, copy) NSDictionary *initialLogPb;
 //外面传的埋点信息 by xsm
 @property (nonatomic, strong) NSDictionary *extraDic;
-///是否为第一次请求
+// 状态
 @property (nonatomic, assign) BOOL firstLoadFinished;
-///目前未使用到
 @property (nonatomic, assign) BOOL isFirstTimeShowCommentListOrKeyboard;
 
 @property (nonatomic, assign) BOOL isDisliked;
-/// 还有没有评论数据可以拉取
-@property (nonatomic, assign) BOOL hasMore;
-/// 请求新数据的时候，offet参数
-@property (nonatomic, assign) NSInteger offset;
-/// 关闭类型
+@property (nonatomic, assign) BOOL hasMore;      // 还有没有评论数据可以拉取
+@property (nonatomic, assign) NSInteger offset;  // 请求新数据的时候，offet参数
 @property (nonatomic, assign) AWEVideoDetailCloseStyle closeStyle;
 @property (nonatomic, assign) NSTimeInterval totalDuration;
-///当前详情页数据
+// 详情页数据
 @property (nonatomic, strong) TTShortVideoModel *model;
-//用户举报信息
 @property (nonatomic, strong) NSArray<NSDictionary *> *userReportOptions;
-///视频举报信息
 @property (nonatomic, strong) NSArray<NSDictionary *> *videoReportOptions;
 // 用于避免重复digg
 @property (nonatomic, strong) NSLock *diggLock;
 @property (nonatomic, strong) NSLock *commentDiggLock;
-/// observers
+// observers
 @property (nonatomic, strong) NSMutableArray *observerArray;
 
-///点击close相关属性
+///下拉关闭相关属性
 @property (nonatomic, strong) TTImagePreviewAnimateManager *animateManager;
-///推出视频详情页的回调
 @property (nonatomic, strong) TSVShortVideoDetailExitManager *exitManager;
 @property (nonatomic, strong) UIView *finishBackView;
 @property (nonatomic, strong) SSThemedView *blackMaskView;
@@ -246,28 +223,27 @@ typedef NS_ENUM(NSInteger, TSVDetailCommentViewStatus) {
 
 //push
 @property (nonatomic, copy) NSString *ruleID;   //推送gid对应的唯一标识
-///schema中的初始gid
-@property (nonatomic, copy) NSString *originalGroupID;
+@property (nonatomic, copy) NSString *originalGroupID;  //schema中的初始gid
 
 @property (nonatomic, strong) ExploreOrderedData            *orderedData;
 
 @property (nonatomic, assign) BOOL loadingShareImage;//加载分享图片时 点击分享按钮
-///评论相关
+
 @property (nonatomic, strong) FHPostDetailCommentWriteView *commentWriteView;
 @property (nonatomic, strong) TTGroupModel *groupModel;
-///埋点数据
+
 @property (nonatomic, strong) NSDictionary *tracerDic;
 @end
 
 static const CGFloat kFloatingViewOriginY = 230;
 
-@implementation AWEVideoDetailViewController
+@implementation FHUGCShortVideoDetailController
 
 + (void)load
 {
-//    RegisterRouteObjWithEntryName(@"awemevideo");
-//    RegisterRouteObjWithEntryName(@"ugc_video_recommend");
-//    RegisterRouteObjWithEntryName(@"huoshanvideo");
+    RegisterRouteObjWithEntryName(@"awemevideo");
+    RegisterRouteObjWithEntryName(@"ugc_video_recommend");
+    RegisterRouteObjWithEntryName(@"huoshanvideo");
 }
 
 - (instancetype)initWithRouteParamObj:(TTRouteParamObj *)paramObj
@@ -472,7 +448,7 @@ static const CGFloat kFloatingViewOriginY = 230;
     self.view.clipsToBounds = YES;
 
     self.ttStatusBarStyle = UIStatusBarStyleLightContent;
-    self.modeChangeActionType = ModeChangeActionTypeNone;
+
 
     // Views
     self.videoContainerViewController = ({
