@@ -710,6 +710,7 @@ static NSInteger kGetLightRequestRetryCount = 3;
         [FHEnvContext saveCurrentUserCityId:configModel.currentCityId];
         //        [self.generalBizConfig saveCurrentConfigDataCache:configModel];
         [self.configDataReplay sendNext:configModel];
+        [FHEnvContext savePersonalRecommend:configModel.personalizedStatus];
     }
 }
 
@@ -823,6 +824,20 @@ static NSInteger kGetLightRequestRetryCount = 3;
 + (void)saveCurrentUserDeaultCityName:(NSString *)cityName
 {
     [FHUtils setContent:cityName forKey:kUserDefaultCityName];
+}
+
+//获取当前个性化推荐设置
++ (BOOL)getPersonalRecommend
+{
+    BOOL personalRecommend = [[NSUserDefaults standardUserDefaults] boolForKey:@"PersonalRecommend"];
+    return personalRecommend;
+}
+
+//保存当前个性化推荐设置
++ (void)savePersonalRecommend:(BOOL)isPersonalRecommend
+{
+     [[NSUserDefaults standardUserDefaults] setBool:isPersonalRecommend forKey:@"PersonalRecommend"];
+     [[NSUserDefaults standardUserDefaults] synchronize];
 }
 
 //获取当前选中城市cityid
@@ -1163,15 +1178,7 @@ static NSInteger kGetLightRequestRetryCount = 3;
 }
 
 + (BOOL)isHasVideoList {
-    if ([TTSandBoxHelper isInHouseApp]) {
-        return YES;
-    }
-    
-    id res = [BDABTestManager getExperimentValueForKey:@"f_ugc_video_category_open" withExposure:YES];
-    if(res){
-        return [res boolValue];
-    }
-    return NO;
+    return YES;
 }
 
 + (BOOL)isIntroduceOpen {
