@@ -13,6 +13,7 @@
 #import "ArticleTabbarStyleNewsListViewController.h"
 #import "FHHomeViewController.h"
 #import "FHCommunityViewController.h"
+#import "FHUGCShortVideoListController.h"
 
 @interface FHHomeMainViewModel()<UICollectionViewDelegate,UICollectionViewDataSource>
 @property(nonatomic , strong) UICollectionView *collectionView;
@@ -103,12 +104,12 @@
     }
 
     FHHomeMainBaseCollectionCell *cell = (FHHomeMainBaseCollectionCell *)[collectionView dequeueReusableCellWithReuseIdentifier:cellIdentifier forIndexPath:indexPath];
-    NSInteger row = indexPath.row;
+
     if (cell.contentVC && ![self.viewController.childViewControllers containsObject:cell.contentVC]) {
         [self.viewController addChildViewController:cell.contentVC];
     }
     
-    if ([cell.contentVC isKindOfClass:[ArticleTabBarStyleNewsListViewController class]] || [cell.contentVC isKindOfClass:[FHCommunityViewController class]]) {
+    if ([cell.contentVC isKindOfClass:[ArticleTabBarStyleNewsListViewController class]] || [cell.contentVC isKindOfClass:[FHCommunityViewController class]] || [cell.contentVC isKindOfClass:[FHUGCShortVideoListController class]]) {
         self.viewController.feedListVC = cell.contentVC;
     }
     
@@ -130,16 +131,6 @@
     self.beginOffSet = CGPointMake(self.viewController.currentTabIndex * [UIScreen mainScreen].bounds.size.width, scrollView.contentOffset.y);
     self.oldX = scrollView.contentOffset.x;
 }
-
-//- (void)scrollViewDidScroll:(UIScrollView *)scrollView {
-//    NSInteger resultIndex = (NSInteger)((scrollView.contentOffset.x + [UIScreen mainScreen].bounds.size.width/2)/[UIScreen mainScreen].bounds.size.width);
-//    self.currentIndex = resultIndex;
-//    self.viewController.topView.segmentControl.selectedSegmentIndex = resultIndex;
-//
-//    if (resultIndex == 1) {
-//        [self.viewController changeTopStatusShowHouse:NO];
-//    }
-//}
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
     
@@ -192,29 +183,7 @@
     }else
     {
         //切换城市补报
-        if (!self.viewController.feedListVC) {
-//              NSMutableDictionary *traceDict = [NSMutableDictionary new];
-//             if (enterType == FHHomeMainTraceEnterTypeClick) {
-//                 [traceDict setValue:@"click" forKey:@"enter_type"];
-//             }else
-//             {
-//                 [traceDict setValue:@"flip" forKey:@"enter_type"];
-//             }
-//
-//             [traceDict setValue:@"maintab" forKey:@"enter_from"];
-//             [traceDict setValue:@"click" forKey:@"enter_channel"];
-//             [traceDict setValue:@"discover_stream" forKey:@"category_name"];
-//             [FHEnvContext recordEvent:traceDict andEventKey:@"enter_category"];
-//            if(![FHEnvContext isHomeNewDiscovery]){
-//                [traceDict setValue:@"f_house_news"
-//                                 forKey:@"category_name"];
-//                [FHEnvContext recordEvent:traceDict andEventKey:@"enter_category"];
-//            }
-//            if ([self.viewController.feedListVC isKindOfClass:[FHCommunityViewController class]]) {
-//                FHCommunityViewController *vc = (FHCommunityViewController *)self.viewController.feedListVC;
-//                [vc viewAppearForEnterType:enterType needReport:NO];
-//            }
-        }else{
+        if (self.viewController.feedListVC) {
             if ([self.viewController.feedListVC isKindOfClass:[ArticleTabBarStyleNewsListViewController class]]) {
                 ArticleTabBarStyleNewsListViewController *articleListVC = (ArticleTabBarStyleNewsListViewController *)self.viewController.feedListVC;
                 [articleListVC viewAppearForEnterType:enterType needReportSubCategory:YES];

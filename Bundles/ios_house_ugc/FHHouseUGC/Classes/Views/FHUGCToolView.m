@@ -121,6 +121,7 @@
                     self.diggType = FHDetailDiggTypeTHREAD;
                 break;
                 case FHUGCFeedListCellTypeUGCSmallVideo:
+                case FHUGCFeedListCellTypeUGCSmallVideo2:
                     self.diggType = FHDetailDiggTypeSMALLVIDEO;
                 break;
                 case FHUGCFeedListCellTypeUGCVoteInfo:

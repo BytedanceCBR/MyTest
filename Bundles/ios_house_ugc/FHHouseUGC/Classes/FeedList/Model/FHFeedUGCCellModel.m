@@ -138,6 +138,7 @@
                  type == FHUGCFeedListCellTypeUGCHotTopic ||
                  type == FHUGCFeedListCellTypeUGCVote ||
                  type == FHUGCFeedListCellTypeUGCSmallVideo ||
+                 type == FHUGCFeedListCellTypeUGCSmallVideo2 ||
                  type == FHUGCFeedListCellTypeUGCVoteInfo ||
                  type == FHUGCFeedListCellTypeUGCRecommendCircle ||
                  type == FHUGCFeedListCellTypeUGCEncyclopedias ){
@@ -691,7 +692,7 @@
         [FHUGCCellHelper setUGCVoteContentString:cellModel width:(screenWidth - 60) numberOfLines:2];
         cellModel.voteInfo.descHeight = 17;
     }
-    else if(cellModel.cellType == FHUGCFeedListCellTypeUGCSmallVideo){
+    else if(cellModel.cellType == FHUGCFeedListCellTypeUGCSmallVideo || cellModel.cellType == FHUGCFeedListCellTypeUGCSmallVideo2){
         cellModel.cellSubType = FHUGCFeedListCellSubTypeUGCSmallVideo;
         cellModel.groupId = model.rawData.groupId;
         cellModel.openUrl = model.rawData.detailSchema;

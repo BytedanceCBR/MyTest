@@ -58,7 +58,7 @@
     }else if(cellModel.cellType == FHUGCFeedListCellTypeUGCVote){
         //投票pk
         [self jumpToVotePKDetail:cellModel value:0 extraDic:extraDic];
-    }else if(cellModel.cellType == FHUGCFeedListCellTypeUGCSmallVideo){
+    }else if(cellModel.cellType == FHUGCFeedListCellTypeUGCSmallVideo || cellModel.cellType == FHUGCFeedListCellTypeUGCSmallVideo2){
         //小视频
         [self jumpToSmallVideoDetail:cellModel showComment:showComment enterType:enterType extraDic:extraDic];
     }  else if(cellModel.cellType == FHUGCFeedListCellTypeUGCVoteInfo) {
