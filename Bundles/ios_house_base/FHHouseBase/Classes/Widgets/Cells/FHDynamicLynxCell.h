@@ -6,12 +6,13 @@
 //
 
 #import "FHListBaseCell.h"
+#import "FHSearchHouseModel.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
 @interface FHDynamicLynxCell : FHListBaseCell
 
-@property(nonatomic, strong) NSMutableDictionary *traceParams;
+- (void)updateWithCellModel:(FHDynamicLynxCellModel *)cellModel;
 
 @end
 
