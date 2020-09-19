@@ -8,19 +8,25 @@
 #import "UIButton+FHUGCMultiDigg.h"
 #import <TTMultiDigManager.h>
 #import <TTAccountManager.h>
+#import <ReactiveObjC/ReactiveObjC.h>
+#import <Masonry/Masonry.h>
 @implementation UIButton (FHUGCMultiDigg)
 
 
-- (void)registMulitDiggEmojiAnimation {
+-(void)enableMulitDiggEmojiAnimation {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         [TTMultiDiggManager registerAnimationImageIfNeedWithImageNames:[self imageArray]];
     });
-    
-    [TTMultiDiggManager registMulitDiggEmojiAnimationWithButton:self withTransformAngle:0 contentInset:nil buttonPosition:TTMultiDiggButtonPositionRight];
-    self.manualMultiDiggDisableBlock = ^BOOL{
-        return ![TTAccountManager isLogin];
-    };
+    if(![TTMultiDiggManager isMulitDiggEmojiAnimationAlreadyRegisteredWithButton:self]) {
+        [TTMultiDiggManager registMulitDiggEmojiAnimationWithButton:self withTransformAngle:0 contentInset:nil buttonPosition:TTMultiDiggButtonPositionRight];
+        self.manualMultiDiggDisableBlock = ^BOOL{
+            return ![TTAccountManager isLogin];
+        };
+        [self.diggView mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.edges.equalTo(self);
+        }];
+    }
 }
 
 

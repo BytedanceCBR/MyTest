@@ -12,7 +12,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface UIButton (FHUGCMultiDigg)
 
 //调用前，保证button已经被加到一个view中
-- (void)registMulitDiggEmojiAnimation;
+- (void)enableMulitDiggEmojiAnimation;
 
 @end
 
