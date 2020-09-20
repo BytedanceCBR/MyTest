@@ -118,7 +118,6 @@
         btnBetween = 5;
         btnRightMargin = -15;
     }
-
     
     [self.contactBtn addTarget:self action:@selector(contactBtnDidClick:) forControlEvents:UIControlEventTouchUpInside];
     [self.licenseIcon addTarget:self action:@selector(licenseBtnDidClick:) forControlEvents:UIControlEventTouchUpInside];
@@ -242,7 +241,7 @@
     }else {
         self.agencyLabel.hidden = YES;
     }
-    CGFloat maxAgencyLabelWidth = [UIScreen mainScreen].bounds.size.width - 300;
+    CGFloat maxAgencyLabelWidth = [UIScreen mainScreen].bounds.size.width - 124 -AdaptOffset(176);//176为两个按钮大小
     CGFloat agencyLabelWidth = [contactPhone.agencyName boundingRectWithSize:CGSizeMake(maxAgencyLabelWidth, MAXFLOAT) options:NSStringDrawingUsesLineFragmentOrigin attributes:@{NSFontAttributeName: self.agencyLabel.font} context:nil].size.width + 1;
     CGFloat realtorContentWidth = 0;
     if ([UIDevice btd_deviceWidthType] == BTDDeviceWidthMode320) {

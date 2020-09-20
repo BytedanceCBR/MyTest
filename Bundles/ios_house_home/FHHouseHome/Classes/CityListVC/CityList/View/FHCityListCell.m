@@ -84,7 +84,7 @@
     self.label = [[UILabel alloc] init];
     self.label.textColor = [UIColor themeGray4];
     self.label.font = [UIFont themeFontRegular:16];
-    [self addSubview:self.label];
+    [self.contentView addSubview:self.label];
     [self.label mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(20);
         make.height.mas_equalTo(22);
@@ -116,7 +116,7 @@
         btn.tag = index;
         [btn addTarget:self action:@selector(buttonClick:) forControlEvents:UIControlEventTouchUpInside];
         btn.label.text = cityName;
-        [self addSubview:btn];
+        [self.contentView addSubview:btn];
         [self.rowViews addObject:btn];
         index += 1;
         if (index % 4 == 0) {

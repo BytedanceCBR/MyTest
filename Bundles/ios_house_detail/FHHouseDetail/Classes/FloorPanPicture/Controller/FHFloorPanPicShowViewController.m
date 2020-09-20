@@ -85,6 +85,9 @@
     [super viewWillAppear:animated];
 //    [self setNeedsStatusBarAppearanceUpdate];
     [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault animated:YES];
+    if (self.customNavBarView && self.collectionView) {
+        [self.view insertSubview:self.customNavBarView aboveSubview:self.collectionView];
+    }
 }
 
 - (void)viewWillLayoutSubviews
@@ -281,15 +284,10 @@
 
 - (void)initNavbar {
     [self setupDefaultNavBar:NO];
-    [self setNavBar:NO];
     [self.customNavBarView setNaviBarTransparent:YES];
     self.customNavBarView.title.text = self.navBarName.length ? self.navBarName : @"楼盘相册";
     [self.customNavBarView.leftBtn setBackgroundImage:ICON_FONT_IMG(24, @"\U0000e68a", [UIColor themeGray1]) forState:UIControlStateNormal];
     [self.customNavBarView.leftBtn setBackgroundImage:ICON_FONT_IMG(24, @"\U0000e68a", [UIColor themeGray1]) forState:UIControlStateHighlighted];
-}
-
-- (void)setNavBar:(BOOL)error {
-    [self.customNavBarView setNaviBarTransparent:NO];
 }
 
 - (void)scrollToCurrentIndex:(NSInteger)toIndex {
@@ -367,10 +365,10 @@
 - (void)contactButtonClick:(UIButton *)btn {
     if (self.contactViewModel) {
         NSMutableDictionary *extraDic = @{
-                @"realtor_position": @"phone_button",
-                @"position": @"report_button",
-                @"element_from": self.elementFrom ? : @"be_null"
-            }.mutableCopy;
+            @"realtor_position": @"phone_button",
+            @"position": @"report_button",
+            @"element_from": self.elementFrom ? : @"be_null"
+        }.mutableCopy;
 
 //        extraDic[@"from"] = @"app_newhouse_property_picture";
 //        if (cluePage) {
@@ -434,6 +432,7 @@
     if (identifier.length <= 0) {
         return [[UICollectionViewCell alloc] init];
     }
+
     FHDetailBaseCollectionCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:identifier forIndexPath:indexPath];
     [cell refreshWithData:data];
     return cell;

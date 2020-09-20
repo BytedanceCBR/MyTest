@@ -29,7 +29,7 @@
 
 - (void)setUpViews
 {
-    [self addSubview:self.contentTableView];
+    [self.contentView addSubview:self.contentTableView];
 
     [self.contentTableView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.edges.equalTo(self);

@@ -45,9 +45,9 @@
     self.layer.cornerRadius = 4;
     
     //这里有个坑，加上手势会导致@不能点击
-    self.userInteractionEnabled = YES;
-//    UITapGestureRecognizer* singleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(goToDetail:)];
-//    singleTap
+//    self.userInteractionEnabled = YES;
+//    UITapGestureRecognizer* singleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(goToDetail)];
+//    singleTap.delegate = self;
 //    [self addGestureRecognizer:singleTap];
     
     self.iconView = [[UIImageView alloc] init];
@@ -130,22 +130,23 @@
     }
 }
 
-- (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
-    //这里由于单击和长按都会触发这个方法，长按可能会导致黑屏的问题，所以这个只保留单击跳转，屏蔽长按的情况
-    UITouch *touch = [touches anyObject];
-    
-    for (UIGestureRecognizer *gesture in touch.gestureRecognizers) {
-        NSString *otherGesClsStr = NSStringFromClass([gesture class]);
-        if ([otherGesClsStr isEqualToString:@"UIScrollViewPanGestureRecognizer"] || [otherGesClsStr isEqualToString:@"UIScrollViewDelayedTouchesBeganGestureRecognizer"] || [gesture isKindOfClass:[UILongPressGestureRecognizer class]]) {
-            return;
-        }
-    }
-    
-    [self goToDetail];
-}
+//- (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
+//    //这里由于单击和长按都会触发这个方法，长按可能会导致黑屏的问题，所以这个只保留单击跳转，屏蔽长按的情况
+//    UITouch *touch = [touches anyObject];
+//
+////    for (UIGestureRecognizer *gesture in touch.gestureRecognizers) {
+////        NSString *otherGesClsStr = NSStringFromClass([gesture class]);
+////        if ([otherGesClsStr isEqualToString:@"UIScrollViewPanGestureRecognizer"] || [otherGesClsStr isEqualToString:@"UIScrollViewDelayedTouchesBeganGestureRecognizer"] || [gesture isKindOfClass:[UILongPressGestureRecognizer class]]) {
+////            return;
+////        }
+////    }
+////
+////    [self goToDetail];
+//}
 
 - (void)touchesEnded:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
-//    NSLog(@"touch_end");
+//    NSLog(@"——————————touch_end");
+    [self goToDetail];
 }
 
 #pragma mark - TTUGCAsyncLabelDelegate

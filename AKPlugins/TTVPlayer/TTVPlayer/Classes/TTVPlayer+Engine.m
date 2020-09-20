@@ -27,11 +27,11 @@ static NSString *platformString;
 @interface TTVPlayer (Engine)<TTVideoEngineDelegate, TTVideoEngineDataSource, TTVideoEngineResolutionDelegate>
 
 @property (nonatomic, strong) TTVideoEngine         *videoEngine;   // 包装了 videoEngine
-@property (nonatomic, copy)   NSString              *videoID;
+//@property (nonatomic, copy)   NSString              *videoID;
 @property (nonatomic, assign) NSInteger             playStateVirtualStack; // 播放/暂停 状态堆栈
-@property (nonatomic, strong) TTVPlaybackTime       *playbackTime;
+//@property (nonatomic, strong) TTVPlaybackTime       *playbackTime;
 @property (nonatomic, strong) TTVPlayFinishStatus   *finishStatus; //// 结束状态: nil 就是没结束，如果!nil 就是结束了
-@property (nonatomic, assign) BOOL                  isLocalVideo;
+//@property (nonatomic, assign) BOOL                  isLocalVideo;
 @property (nonatomic, copy)   NSString              *host;
 @property (nonatomic, copy)   NSDictionary          *commonParameters;
 @property (nonatomic, copy) dispatch_block_t        customTimeBlock;

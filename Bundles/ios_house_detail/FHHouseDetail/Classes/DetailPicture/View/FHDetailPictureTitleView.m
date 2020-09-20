@@ -195,7 +195,6 @@
     if (self.usedInNewHouseDetail) {
         titleIndex = self.selectIndex;
     }
-
     UIColor *selectColor = [UIColor whiteColor];
     UIColor *normalColor = [UIColor colorWithHexString:@"#ffffff" alpha:0.4];
     UIFont *selectFont = [UIFont themeFontRegular:16];

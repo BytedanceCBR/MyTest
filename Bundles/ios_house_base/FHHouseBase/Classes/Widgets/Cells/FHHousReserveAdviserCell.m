@@ -28,6 +28,7 @@
 #import "ToastManager.h"
 #import "FHMainApi+Contact.h"
 #import <FHHouseBase/FHUserInfoManager.h>
+#import <FHHouseBase/NSObject+FHOptimize.h>
 
 @interface FHHousReserveAdviserCell ()<UITextFieldDelegate>
 
@@ -388,21 +389,22 @@
 }
 
 - (void)showFullPhoneNum:(BOOL)isShow {
-    if (self.phoneNum.length > 0) {
-        if(isShow){
-            self.textField.text = @"";
-        }else{
-            self.textField.text = [FHUserInfoManager formatMaskPhoneNumber:self.phoneNum];
-        }
-        if (self.textField.text.length > 0) {
-            self.subscribeBtn.enabled = YES;
-            [self.subscribeBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-            self.subscribeBtn.backgroundColor = [UIColor colorWithHexStr:@"#c8a572"];
-        }else {
-            self.subscribeBtn.enabled = NO;
-            [self.subscribeBtn setTitleColor:[UIColor colorWithHexStr:@"#a57d59"] forState:UIControlStateNormal];
-            self.subscribeBtn.backgroundColor = [UIColor whiteColor];
-        }
+    if(isShow){
+        __weak typeof(self) weakSelf = self;
+        [self executeOnce:^{
+            weakSelf.textField.text = @"";
+        } token:FHExecuteOnceUniqueTokenForCurrentContext];
+    }else{
+        self.textField.text = [FHUserInfoManager formatMaskPhoneNumber:self.phoneNum];
+    }
+    if (self.textField.text.length > 0) {
+        self.subscribeBtn.enabled = YES;
+        [self.subscribeBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+        self.subscribeBtn.backgroundColor = [UIColor colorWithHexStr:@"#c8a572"];
+    }else {
+        self.subscribeBtn.enabled = NO;
+        [self.subscribeBtn setTitleColor:[UIColor colorWithHexStr:@"#a57d59"] forState:UIControlStateNormal];
+        self.subscribeBtn.backgroundColor = [UIColor whiteColor];
     }
 }
 
