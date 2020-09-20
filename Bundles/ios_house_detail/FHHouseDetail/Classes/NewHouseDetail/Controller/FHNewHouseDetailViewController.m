@@ -175,6 +175,7 @@
     [self updateStatusBar:self.collectionView.contentOffset];
     [self refreshContentOffset:self.collectionView.contentOffset];
     [self.view endEditing:YES];
+    [self clickTabTrackWithEnterType:@"default" sectionType:FHNewHouseDetailSectionTypeBaseInfo];
     //    [self.viewModel vc_viewDidAppear:animated];
 }
 
@@ -244,6 +245,10 @@
     self.viewModel.source = self.source;
     self.viewModel.extraInfo = self.extraInfo;
     self.viewModel.initTimeInterval = self.initTimeInterval;
+    self.viewModel.houseType = self.houseType;
+    if (self.tracerDict[@"event_tracking_id"] && [self.tracerDict[@"event_tracking_id"] isKindOfClass:[NSString class]]) {
+        self.viewModel.trackingId = self.tracerDict[@"event_tracking_id"];
+    }
     __weak typeof(self) weakSelf = self;
     [self.KVOController observe:self.viewModel
                         keyPath:@"sectionModels"
@@ -461,6 +466,8 @@
         return;
     }
     self.lastIndexPath = [NSIndexPath indexPathForItem:0 inSection:index];
+    FHNewHouseDetailSectionModel *model = self.viewModel.sectionModels[index];
+    [self clickTabTrackWithEnterType:@"click_tab" sectionType:model.sectionType];
     UICollectionViewLayoutAttributes *attributes = [self.detailFlowLayout layoutAttributesForSupplementaryViewOfKind:UICollectionElementKindSectionHeader atIndexPath:self.lastIndexPath];
     if (attributes.frame.size.height < 0.1) {
         attributes = [self.detailFlowLayout layoutAttributesForItemAtIndexPath:self.lastIndexPath];
@@ -954,6 +961,23 @@
     });
 }
 
+- (void)clickTabTrackWithEnterType:(NSString *)enterType sectionType:(FHNewHouseDetailSectionType)sectionType {
+    switch (sectionType) {
+        case FHNewHouseDetailSectionTypeHeader:
+        case FHNewHouseDetailSectionTypeDisclaimer:
+            return;
+        default:
+            break;
+    }
+    NSMutableDictionary *tracerDic = [[NSMutableDictionary alloc] init];
+    tracerDic[@"event_tracking_id"] = @"107645";
+    tracerDic[@"event_type"] = @"house_app2c_v2";
+    tracerDic[@"enter_type"] = enterType;
+    tracerDic[@"tab_name"] = [self getTabNameBySectionType:sectionType];
+    tracerDic[@"page_type"] = [self pageTypeString];
+    [FHUserTracker writeEvent:@"click_tab" params:tracerDic];
+}
+
 - (void)trackElementType:(NSString *)elementType
 {
     if (elementType.length) {
@@ -962,6 +986,31 @@
         [tracerDic removeObjectForKey:@"element_from"];
         [FHUserTracker writeEvent:@"element_show" params:tracerDic];
     }
+}
+
+- (NSString *)getTabNameBySectionType:(FHNewHouseDetailSectionType)sectionType {
+    switch (sectionType) {
+        case FHNewHouseDetailSectionTypeBaseInfo:
+            return @"basic_info";
+        case FHNewHouseDetailSectionTypeFloorpan:
+            return @"house_model";
+        case FHNewHouseDetailSectionTypeSales:
+        case FHNewHouseDetailSectionTypeAgent:
+            return @"discounts";
+        case FHNewHouseDetailSectionTypeTimeline:
+        case FHNewHouseDetailSectionTypeAssess:
+        case FHNewHouseDetailSectionTypeRGC:
+            return @"dynamic";
+        case FHNewHouseDetailSectionTypeSurrounding:
+            return @"related";
+        case FHNewHouseDetailSectionTypeBuildings:
+            return @"building";
+        case FHNewHouseDetailSectionTypeRecommend:
+            return @"recommend";
+        default:
+            return @"";
+    }
+    return @"";
 }
 
 - (void)collectionView:(UICollectionView *)collectionView didEndDisplayingCell:(UICollectionViewCell *)cell forItemAtIndexPath:(NSIndexPath *)indexPath
@@ -1019,6 +1068,10 @@
         }
         NSUInteger selectIndex = [self.segmentTitleView.titleNames indexOfObject:title];
         if (selectIndex < self.segmentTitleView.titleNames.count) {
+            if (selectIndex != self.segmentTitleView.selectIndex) {
+                FHNewHouseDetailSectionModel *model = self.viewModel.sectionModels[indexPath.section];
+                [self clickTabTrackWithEnterType:@"slide" sectionType:model.sectionType];
+            }
             if (self.segmentTitleView) {
                 self.segmentTitleView.selectIndex = selectIndex;
             }

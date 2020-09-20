@@ -41,6 +41,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong) NSDictionary *extraInfo;
 @property (nonatomic, copy)   NSString* houseInfoBizTrace; // 房源详情下发通用bizTrace
 @property (nonatomic, strong)   NSString* houseInfoOriginBizTrace; // 房源详情原始bizTrace
+@property (nonatomic, copy) NSString *trackingId;
 
 - (void)startLoadData;
 
