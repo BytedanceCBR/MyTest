@@ -54,10 +54,6 @@
         NSIndexPath *indexPath = [NSIndexPath indexPathForItem:i inSection:0];
         // 获取indexPath位置cell对应的布局属性
         UICollectionViewLayoutAttributes *attrs = [self layoutAttributesForItemAtIndexPath:indexPath];
-//        if(i < self.dataList.count){
-//            FHFeedContentRawDataHotCellListModel *model = self.dataList[i];
-//            model.itemSize = attrs.bounds.size;
-//        }
         [self.attrsArray addObject:attrs];
     }
 }
@@ -98,7 +94,7 @@
 - (CGSize)smallItemSize {
     if(_smallItemSize.width == 0 && _smallItemSize.height == 0){
         CGFloat width = ceil(([UIScreen mainScreen].bounds.size.width - self.sectionInset.left - self.sectionInset.right - self.minimumInteritemSpacing)/2);
-        CGFloat height = ceil(270.0f/168 * width);
+        CGFloat height = ceil(270.0f/168.0f * width);
         _smallItemSize = CGSizeMake(width, height);
     }
     

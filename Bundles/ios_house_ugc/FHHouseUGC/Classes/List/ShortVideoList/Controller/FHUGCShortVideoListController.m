@@ -126,7 +126,7 @@
 
 - (void)initCollectionView {
     self.flowLayout = [[FHUGCShortVideoFlowLayout alloc] init];
-    _flowLayout.sectionInset = UIEdgeInsetsMake(10, 15, 0, 15);
+    _flowLayout.sectionInset = UIEdgeInsetsMake(10, 15, 10, 15);
     _flowLayout.minimumLineSpacing = 12;
     _flowLayout.minimumInteritemSpacing = 9;
     _flowLayout.scrollDirection = UICollectionViewScrollDirectionVertical;
