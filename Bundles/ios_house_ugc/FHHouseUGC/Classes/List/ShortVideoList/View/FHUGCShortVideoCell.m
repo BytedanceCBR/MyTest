@@ -15,11 +15,11 @@
 @interface FHUGCShortVideoCell ()
 
 // 当前cell的模型数据
-@property (nonatomic, weak , nullable) id currentData;
+@property(nonatomic, weak, nullable) id currentData;
 @property(nonatomic, strong) UIImageView *bgView;
 @property(nonatomic, strong) UIView *blackCoverView;
 @property(nonatomic, strong) UILabel *titleLabel;
-@property (nonatomic ,strong) CAGradientLayer *gradientLayer;
+@property(nonatomic, strong) CAGradientLayer *gradientLayer;
 
 @end
 
@@ -54,22 +54,21 @@
 }
 
 - (void)initConstains {
-    [self.bgView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.edges.mas_equalTo(self.contentView);
-    }];
+    self.bgView.left = 0;
+    self.bgView.top = 0;
+    self.bgView.width = self.width;
+    self.bgView.height = self.height;
     
-    [self.blackCoverView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.right.bottom.mas_equalTo(self.contentView);
-        make.height.mas_equalTo(64);
-    }];
+    self.blackCoverView.left = 0;
+    self.blackCoverView.top = self.height - 64;
+    self.blackCoverView.width = self.width;
+    self.blackCoverView.height = 64;
     
-    [self.titleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(self.bgView).offset(10);
-        make.right.mas_equalTo(self.bgView).offset(-10);
-        make.bottom.mas_equalTo(self.bgView).offset(-10);
-    }];
+    self.titleLabel.top = self.blackCoverView.top + 14;
+    self.titleLabel.left = 10;
+    self.titleLabel.width = self.width - 20;
+    self.titleLabel.height = 0;
 
-    [self.contentView layoutIfNeeded];
     //背景渐变
     self.gradientLayer = [CAGradientLayer layer];
     _gradientLayer.frame = self.blackCoverView.bounds;
@@ -116,6 +115,9 @@
     }else{
         self.titleLabel.hidden = NO;
         self.titleLabel.text = cellModel.content;
+        CGSize size = [self.titleLabel sizeThatFits:CGSizeMake(self.titleLabel.width, MAXFLOAT)];
+        self.titleLabel.top = self.height - 10 - size.height;
+        self.titleLabel.height = size.height;
     }
 }
 
