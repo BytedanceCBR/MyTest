@@ -19,7 +19,7 @@ extern NSString * const kTTUGCImageSource;
 
 @interface NSURL (TTUGCSource)
 
-@property (nonatomic, strong) NSString *ttugc_source;
+//@property (nonatomic, strong) NSString *ttugc_source;
 
 @end
 
