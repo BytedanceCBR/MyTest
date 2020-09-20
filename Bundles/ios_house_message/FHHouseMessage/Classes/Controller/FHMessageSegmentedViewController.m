@@ -23,6 +23,7 @@
 #import <FHPopupViewCenter/FHPopupViewManager.h>
 #import "TTAccountManager.h"
 #import "UIViewController+NavigationBarStyle.h"
+#import "FHCommonDefines.h"
 
 typedef NS_ENUM(NSInteger, FHSegmentedControllerAnimatedTransitionDirection) {
     FHSegmentedControllerAnimatedTransitionDirectionUnknown,

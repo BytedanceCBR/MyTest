@@ -16,12 +16,13 @@
 #import "SDWebImageManager.h"
 #import "UIColor+Theme.h"
 #import "LynxEnv.h"
-#import "IMConsDefine.h"
+#import "FHCommonDefines.h"
 #import <BDWebImage/UIImageView+BDWebImage.h>
 #import "FHHouseRealtorDetailInfoModel.h"
 #import "UIDevice+BTDAdditions.h"
 #import "TTInstallIDManager.h"
 #import "HMDTTMonitor.h"
+
 
 @interface FHHouseRealtorDetailHeaderView ()
 @property (weak, nonatomic)LynxView *realtorInfoView;
