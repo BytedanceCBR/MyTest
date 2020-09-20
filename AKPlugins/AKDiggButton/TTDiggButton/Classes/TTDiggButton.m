@@ -253,9 +253,6 @@
     if (self.selected) {
         type = TTDiggButtonClickTypeAlreadyDigg;
     }
-    else {
-        [SSMotionRender motionInView:self.imageView byType:SSMotionTypeZoomInAndDisappear image:[UIImage themedImageNamed:@"add_all_dynamic.png"] offsetPoint:CGPointMake(4.f, -9.f)];
-    }
     if (!self.selected){
         self.imageView.transform = CGAffineTransformMakeScale(1.f, 1.f);
         self.imageView.contentMode = UIViewContentModeCenter;

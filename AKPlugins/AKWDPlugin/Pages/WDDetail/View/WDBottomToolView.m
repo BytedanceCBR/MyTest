@@ -333,8 +333,6 @@ static NSString * const kWDHasTipSupportsEmojiInputDefaultKey = @"WDHasTipSuppor
 
 - (void)diggAnimationWith:(SSThemedButton *)button
 {
-    [SSMotionRender motionInView:button.imageView byType:SSMotionTypeZoomInAndDisappear image:[UIImage themedImageNamed:@"add_all_dynamic.png"] offsetPoint:CGPointMake(10.f, 2.0f)];
-    
     button.imageView.transform = CGAffineTransformMakeScale(1.f, 1.f);
     button.imageView.contentMode = UIViewContentModeCenter;
     [UIView animateWithDuration:0.1f delay:0.f options:UIViewAnimationOptionCurveEaseOut animations:^{
