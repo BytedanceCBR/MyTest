@@ -22,7 +22,7 @@
 #import "FHDetailAgentListCell.h"
 #import "FHDetailStaticMapCell.h"
 #import "FHOldDetailPhotoHeaderCell.h"
-#import "FHDetailMediaHeaderCorrectingCell.h"
+#import "FHDetailNeighborhoodMediaHeaderCell.h"
 #import "HMDTTMonitor.h"
 #import <FHHouseBase/FHHouseNeighborModel.h>
 #import <FHHouseBase/FHHomeHouseModel.h>
@@ -42,6 +42,7 @@
 #import "FHDetailNeighborhoodHouseStatusModel.h"
 #import "FHDetailSurroundingAreaCell.h"
 #import "TTAccountManager.h"
+#import "FHDetailNeighborhoodOwnerSellHouseCell.h"
 
 @interface FHHouseNeighborhoodDetailViewModel ()
 
@@ -59,8 +60,7 @@
 // 注册cell类型
 - (void)registerCellClasses {
     //l轮播图
-    [self.tableView registerClass:[FHOldDetailPhotoHeaderCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailPhotoHeaderModel class])];
-    [self.tableView registerClass:[FHDetailMediaHeaderCorrectingCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailMediaHeaderCorrectingModel class])];
+    [self.tableView registerClass:[FHDetailNeighborhoodMediaHeaderCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailNeighborhoodMediaHeaderModel class])];
     //信息cell
     [self.tableView registerClass:[FHNeighborhoodDetailSubMessageCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailNeighborhoodSubMessageModel class])];
     //状态cell
@@ -76,6 +76,8 @@
     //推荐经纪人
     [self.tableView registerClass:[FHDetailAgentListCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailAgentListModel class])];
     [self.tableView registerClass:[FHDetailGrayLineCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailGrayLineModel class])];
+    //帮我卖房入口
+    [self.tableView registerClass:[FHDetailNeighborhoodOwnerSellHouseCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailNeighborhoodOwnerSellHouseModel class])];
     //在售房源
     [self.tableView registerClass:[FHDetailNeighborhoodHouseSaleCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailNeighborhoodHouseSaleModel class])];
     //在租房源
@@ -190,7 +192,7 @@
         showTitleMapBtn = NO;
     }
     
-    FHDetailMediaHeaderCorrectingModel *headerCellModel = [[FHDetailMediaHeaderCorrectingModel alloc] init];
+    FHDetailNeighborhoodMediaHeaderModel *headerCellModel = [[FHDetailNeighborhoodMediaHeaderModel alloc] init];
     NSMutableArray<FHHouseDetailImageListDataModel> *imageListDataList = [NSMutableArray<FHHouseDetailImageListDataModel> arrayWithCapacity:model.data.albumInfo.tabList.count];
     
     for (FHHouseDetailImageTabInfo *tabInfo in model.data.albumInfo.tabList) {
@@ -218,7 +220,6 @@
     
     headerCellModel.titleDataModel = houseTitleModel;
     headerCellModel.contactViewModel = self.contactViewModel;
-    headerCellModel.isInstantData = model.isInstantData;
     houseTitleModel.neighborhoodInfoModel = neighborhoodInfoModel;
     houseTitleModel.showMapBtn = showTitleMapBtn;
     houseTitleModel.housetype = self.houseType;
@@ -235,6 +236,7 @@
         itemModel.infoTitle = model.data.neighborhoodVideo.infoTitle;
         itemModel.infoSubTitle = model.data.neighborhoodVideo.infoSubTitle;
         itemModel.groupType = @"视频";
+        itemModel.pictureTypeName = @"视频";
         headerCellModel.vedioModel = itemModel;// 添加视频模型数据
     }
     if (model.data.neighborhoodInfo.baiduPanoramaUrl.length) {
@@ -243,6 +245,7 @@
         itemModel.mediaType = FHMultiMediaTypeBaiduPanorama;
         itemModel.imageUrl = model.data.neighborhoodInfo.baiduPanoramaUrl;
         itemModel.groupType = @"街景";
+        itemModel.pictureTypeName = @"街景";
         headerCellModel.baiduPanoramaModel = itemModel;// 添加百度街景数据
     }
     [self.items addObject:headerCellModel];
@@ -380,7 +383,16 @@
         [self.items addObject:agentListModel];
 //        self.agentListModel = agentListModel;
     }
-        self.items = [FHNeighborhoodDetailModuleHelper moduleClassificationMethod:self.items];
+    //帮我卖房入口
+    FHDetailNeighborhoodSaleHouseEntranceModel *saleHouseEntrance = model.data.saleHouseEntrance;
+    if(saleHouseEntrance.img.url.length > 0 && saleHouseEntrance.openUrl.length > 0) {
+        FHDetailNeighborhoodOwnerSellHouseModel *ownerSellHouseModel = [[FHDetailNeighborhoodOwnerSellHouseModel alloc] init];
+        ownerSellHouseModel.imgUrl = saleHouseEntrance.img.url;
+        ownerSellHouseModel.helpMeSellHouseOpenUrl = saleHouseEntrance.openUrl;
+        [self.items addObject:ownerSellHouseModel];
+    }
+
+    self.items = [FHNeighborhoodDetailModuleHelper moduleClassificationMethod:self.items];
     if (model.isInstantData) {
         [self.tableView reloadData];
     }else{
@@ -526,11 +538,6 @@
     return model.data.neighborhoodInfo.name.length < 1;
 }
 
-- (BOOL)isMissImage
-{
-    FHDetailNeighborhoodModel *model = (FHDetailNeighborhoodModel *)self.detailData;
-    return model.data.neighborhoodImage.count < 1;
-}
 
 - (BOOL)isMissCoreInfo
 {

@@ -37,7 +37,6 @@
                            @"neighbordhoodStatus": @"neighbordhood_status",
                            @"imprId": @"impr_id",
                            @"abtestVersions": @"abtest_versions",
-                           @"neighborhoodImage": @"neighborhood_image",
                            @"coreInfo": @"core_info",
                            @"neighborhoodVideo": @"neighborhood_video",
                            @"evaluationInfo": @"evaluation_info",
@@ -48,6 +47,7 @@
                            @"recommendRealtorsAssociateInfo": @"recommend_realtors_associate_info",
                            @"highlightedRealtorAssociateInfo":@"highlighted_realtor_associate_info",
                            @"highlightedRealtor": @"highlighted_realtor",
+                           @"saleHouseEntrance": @"sale_house_entrance",
                            @"albumInfo": @"album_info"
     };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
@@ -345,3 +345,36 @@
     return YES;
 }
 @end
+
+@implementation FHDetailNeighborhoodSaleHouseEntranceModel
++ (JSONKeyMapper*)keyMapper
+{
+    NSDictionary *dict = @{
+        @"openUrl": @"open_url",
+    };
+    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+        return dict[keyName]?:keyName;
+    }];
+}
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+@end
+
+@implementation FHDetailNeighborhoodSaleHouseEntranceImgModel
++ (JSONKeyMapper*)keyMapper
+{
+    NSDictionary *dict = @{
+        @"urlList": @"url_list",
+    };
+    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+        return dict[keyName]?:keyName;
+    }];
+}
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+@end
+

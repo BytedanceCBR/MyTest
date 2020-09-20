@@ -144,6 +144,7 @@
         [weakSelf trackClickTabWithIndex:index element:@"big_photo_album"];
     };
     pictureDetailViewController.indexUpdatedBlock = ^(NSInteger lastIndex, NSInteger currentIndex) {
+        weakSelf.currentIndex = currentIndex;
         [weakSelf trackHeaderViewMediaShowWithIndex:currentIndex isLarge:YES];
     };
 
@@ -169,17 +170,16 @@
         pictureDetailViewController.placeholderSourceViewFrames = frames;
         pictureDetailViewController.placeholders = placeholders;
     }
-    if (model.isShowTopImageTab) {
-        __weak FHDetailPictureViewController *weakPictureController = pictureDetailViewController;
-        [pictureDetailViewController setAllPhotoActionBlock:^{
-            __strong typeof(weakSelf) strongSelf = weakSelf;
-            if (strongSelf.pictureListViewController) {
-                [weakPictureController dismissSelf];
-            } else {
-                [strongSelf showPictureList];
-            }
-        }];
-    }
+    __weak FHDetailPictureViewController *weakPictureController = pictureDetailViewController;
+    [pictureDetailViewController setAllPhotoActionBlock:^{
+        __strong typeof(weakSelf) strongSelf = weakSelf;
+        if (strongSelf.pictureListViewController) {
+            [weakPictureController dismissSelf];
+        } else {
+            [strongSelf showPictureList];
+        }
+    }];
+    
     [pictureDetailViewController presentPhotoScrollViewWithDismissBlock:^{
         [weakSelf trackPictureLargeStayWithIndex:weakSelf.currentIndex];
     }];

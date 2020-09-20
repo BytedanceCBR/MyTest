@@ -469,17 +469,16 @@
         pictureDetailViewController.placeholderSourceViewFrames = frames;
         pictureDetailViewController.placeholders = placeholders;
     }
-    if (model.isShowTopImageTab) {
-        __weak FHDetailPictureViewController * weakPictureController = pictureDetailViewController;
-        [pictureDetailViewController setAllPhotoActionBlock:^{
-            __strong typeof(weakSelf) strongSelf = weakSelf;
-            if (strongSelf.pictureListViewController) {
-                [weakPictureController dismissSelf];
-            } else {
-                [strongSelf showPictureList];
-            }
-        }];
-    }
+    __weak FHDetailPictureViewController * weakPictureController = pictureDetailViewController;
+    [pictureDetailViewController setAllPhotoActionBlock:^{
+        __strong typeof(weakSelf) strongSelf = weakSelf;
+        if (strongSelf.pictureListViewController) {
+            [weakPictureController dismissSelf];
+        } else {
+            [strongSelf showPictureList];
+        }
+    }];
+    
     pictureDetailViewController.indexUpdatedBlock = ^(NSInteger lastIndex, NSInteger currentIndex) {
         if (currentIndex >= 0 && currentIndex < weakSelf.model.medias.count) {
             if(weakSelf.baiduPanoramaIndex != -1) {
@@ -623,6 +622,9 @@
             if (element) {
                 dict[@"element_type"] = element;
             }
+            if (self.baseViewModel.houseType == FHHouseTypeNeighborhood) {
+                dict[@"event_tracking_id"] = @"107651";
+            }
             TRACK_EVENT(@"click_tab", dict);
         }else{
             NSAssert(NO, @"传入的detailTracerDic不是字典");
@@ -735,7 +737,7 @@
         }
 
         dict[@"rank"] = @"be_null";
-        
+
         TRACK_EVENT(@"click_options", dict);
     }else{
         NSAssert(NO, @"传入的detailTracerDic不是字典");
@@ -764,6 +766,9 @@
     NSMutableDictionary *dict = [self traceParamsForGallery:index];
     if (from.length) {
         dict[@"element_from"] = from;
+    }
+    if (self.baseViewModel.houseType == FHHouseTypeNeighborhood) {
+        dict[@"event_tracking_id"] = @"107652";
     }
     TRACK_EVENT(@"picture_gallery", dict);
 }

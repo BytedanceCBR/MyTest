@@ -13,7 +13,6 @@
 @interface FHFloorPanVideoCollectionCell ()
 @property (nonatomic, strong) UIImageView *imageV;
 @property (nonatomic, strong) UIImageView *videoImage;
-@property (nonatomic, strong) UIView *maskImageView;
 @end
 
 @implementation FHFloorPanVideoCollectionCell
@@ -41,13 +40,6 @@
         make.edges.mas_equalTo(UIEdgeInsetsZero);
     }];
 
-
-//    _maskImageView = [UIView new];
-//    _maskImageView.backgroundColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:0.1];
-//    [self addSubview:_maskImageView];
-//    [_maskImageView mas_makeConstraints:^(MASConstraintMaker *make) {
-//        make.edges.mas_equalTo(UIEdgeInsetsZero);
-//    }];
     
     _videoImage = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"detail_video_start"]];
     [self addSubview:_videoImage];

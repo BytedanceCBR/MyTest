@@ -14,7 +14,7 @@
 #import "FHFloorPanPicShowModel.h"
 
 NS_ASSUME_NONNULL_BEGIN
-
+//使用时必须把传入floorPanShowModel;
 @interface FHFloorPanPicShowViewController : FHBaseViewController
 @property (nonatomic, copy) NSString *navBarName;
 @property(nonatomic, assign) BOOL isShowSegmentTitleView;
@@ -23,7 +23,6 @@ NS_ASSUME_NONNULL_BEGIN
 /**点击头图的tab栏出现的埋点*/
 @property(nonatomic, copy) void (^topImageClickTabBlock)(NSInteger index);
 
-@property (nonatomic, copy , nullable) NSArray<FHDetailNewTopImage *> *topImages;
 @property (nonatomic, strong) FHHouseDetailContactViewModel *contactViewModel;
 @property (nonatomic, strong, nullable) FHClueAssociateInfoModel *associateInfo;
 

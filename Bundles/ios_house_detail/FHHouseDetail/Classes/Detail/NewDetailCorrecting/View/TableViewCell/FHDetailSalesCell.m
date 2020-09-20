@@ -247,7 +247,7 @@
     }
     
     //099 优惠跳转类型
-    if (itemInfo.actionType == 3 && itemInfo.activityURLString.length) {
+    if (itemInfo.actionType == 3  && itemInfo.activityURLString.length) {
         NSString *urlString = itemInfo.activityURLString.copy;
         //@"https://m.xflapp.com/magic/page/ejs/5ecb69c9d7ff73025f6ea4e0?appType=manyhouse";
         if([urlString hasPrefix:@"http://"] ||

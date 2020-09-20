@@ -434,6 +434,14 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *vouchText;
 @end
 
+//帮我卖房入口
+@interface FHDetailOldSaleHouseEntranceModel : JSONModel
+@property (nonatomic, copy , nullable) NSString *openUrl;
+@property (nonatomic, copy , nullable) NSString *subtitle;
+@property (nonatomic, copy , nullable) NSString *buttonText;
+@property (nonatomic, copy , nullable) NSString *title;
+@end
+
 @interface FHDetailOldDataModel : JSONModel
 
 @property (nonatomic, assign) NSInteger status;
@@ -502,6 +510,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong) FHDetailOldVouchModel *vouchModel;
 //1.0.3将举报按钮从房源概括提出来
 @property (nonatomic, copy , nullable) NSString *reportUrl;
+@property (nonatomic, strong , nullable) FHDetailOldSaleHouseEntranceModel *saleHouseEntrance;
 @end
 
 @interface FHDetailOldModel : JSONModel

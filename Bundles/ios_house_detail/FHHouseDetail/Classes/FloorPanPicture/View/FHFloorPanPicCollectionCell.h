@@ -10,7 +10,6 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @interface FHFloorPanPicCollectionCell : FHDetailBaseCollectionCell
-@property (nonatomic,strong) FHImageModel *dataModel;
 
 
 @end

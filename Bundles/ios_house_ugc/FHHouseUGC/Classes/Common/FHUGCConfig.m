@@ -251,8 +251,31 @@ static const NSString *kFHUGCPublisherHistoryDataKey = @"key_ugc_publisher_histo
 - (void)followSuccessWith:(FHUGCScialGroupDataModel *)social_group {
     // 关注成功
     if (social_group) {
+        BOOL canAdd = NO;
+        NSArray *cityIds = social_group.cityIds;
+        if(cityIds && cityIds.count > 0){
+            NSString *currentCityId = [FHEnvContext getCurrentSelectCityIdFromLocal];
+            for (id cityId in cityIds) {
+                if([cityId isKindOfClass:[NSString class]]){
+                    NSString *cityIdStr = (NSString *)cityId;
+                    if([cityIdStr isEqualToString:currentCityId]){
+                        canAdd = YES;
+                        break;
+                    }
+                }else{
+                    NSString *cityIdStr = [NSString stringWithFormat:@"%@",cityId];
+                    if([cityIdStr isEqualToString:currentCityId]){
+                        canAdd = YES;
+                        break;
+                    }
+                }
+            }
+        }else{
+            canAdd = YES;
+        }
+        
         NSString *social_group_id = social_group.socialGroupId;
-        if (social_group_id.length > 0) {
+        if (social_group_id.length > 0 && canAdd) {
             NSMutableArray<FHUGCScialGroupDataModel> *sGroups = [NSMutableArray new];
             if (self.followData.data.userFollowSocialGroups.count > 0) {
                 [sGroups addObjectsFromArray:self.followData.data.userFollowSocialGroups];

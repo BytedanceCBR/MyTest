@@ -34,6 +34,15 @@
 
 @implementation FHFloorPanPicShowGroupModel
 
+- (instancetype)init
+{
+    self = [super init];
+    if (self) {
+        self.showQuantity = YES;
+    }
+    return self;
+}
+
 + (NSArray<FHFloorPanPicShowGroupModel> *)getTabGroupInfo:(FHHouseDetailImageTabInfo *)tabInfo rootName:(NSString *)rootName {
     NSMutableArray *groupModels = [[NSMutableArray alloc] init];
     if (tabInfo.tabContent) {

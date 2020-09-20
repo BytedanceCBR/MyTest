@@ -102,10 +102,6 @@
     _noDataImageView.hidden = YES;
 }
 
-//- (void)initVideoVC {
-//    self.videoVC = [[FHVideoViewController alloc] init];
-//    _videoVC.view.frame = self.bounds;
-//}
 - (UIView *)bottomBannerView {
     if(!_bottomBannerView) {
         
@@ -156,7 +152,8 @@
 - (FHVideoViewController *)videoVC {
     if(!_videoVC){
         _videoVC = [[FHVideoViewController alloc] init];
-        _videoVC.view.frame = self.bounds;
+        CGFloat photoHeight = round([UIScreen mainScreen].bounds.size.width / 375.0f * 281 + 0.5);
+        _videoVC.view.frame = CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, photoHeight);
     }
     return _videoVC;
 }
