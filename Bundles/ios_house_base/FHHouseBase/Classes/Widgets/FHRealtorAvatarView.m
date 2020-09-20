@@ -11,6 +11,7 @@
 #import <FHHouseDetail/FHDetailBaseModel.h>
 #import <FHFeedUGCCellModel.h>
 #import <TTShortVideoModel.h>
+#import <FHCommonDefines.h>
 
 @interface FHRealtorAvatarView ()
 
@@ -65,16 +66,17 @@
 - (void)updateIdentifyImageURL:(NSString *)url {
     if (url.length) {
         self.identifyImageView.hidden = NO;
-        __weak typeof(self) weakSelf = self;
+        WeakSelf;
         [[BDWebImageManager sharedManager] requestImage:[NSURL URLWithString:url] options:BDImageRequestHighPriority complete:^(BDWebImageRequest *request, UIImage *image, NSData *data, NSError *error, BDWebImageResultFrom from) {
+            StrongSelf;
             if (!error && image) {
-                weakSelf.identifyImageView.image = image;
+                self.identifyImageView.image = image;
                 CGFloat ratio = 0;
                 if (image.size.height > 0 && image.size.width) {
                     ratio = image.size.height / image.size.width;
                 }
-                [weakSelf.identifyImageView mas_updateConstraints:^(MASConstraintMaker *make) {
-                    make.height.mas_equalTo(weakSelf.avatarImageView.mas_width).multipliedBy(ratio);
+                [self.identifyImageView mas_updateConstraints:^(MASConstraintMaker *make) {
+                    make.height.mas_equalTo(self.avatarImageView.mas_width).multipliedBy(ratio);
                 }];
             }
         }];

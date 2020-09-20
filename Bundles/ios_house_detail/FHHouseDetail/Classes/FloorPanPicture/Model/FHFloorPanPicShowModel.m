@@ -45,7 +45,7 @@
 
 + (NSArray<FHFloorPanPicShowGroupModel> *)getTabGroupInfo:(FHHouseDetailImageTabInfo *)tabInfo rootName:(NSString *)rootName {
     NSMutableArray *groupModels = [[NSMutableArray alloc] init];
-    if (tabInfo.tabContent) {
+    if (tabInfo.tabContent.count > 0) {
         FHFloorPanPicShowGroupModel *groupModel = [[FHFloorPanPicShowGroupModel alloc] init];
         groupModel.groupName = tabInfo.tabName;
         groupModel.rootGroupName = rootName;

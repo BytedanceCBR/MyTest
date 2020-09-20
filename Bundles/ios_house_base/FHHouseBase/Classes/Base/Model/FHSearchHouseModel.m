@@ -894,24 +894,6 @@
 
 @end
 
-@implementation FHDynamicLynxLynxDataModel
-+ (JSONKeyMapper*)keyMapper
-{
-  NSDictionary *dict = @{
-    @"reportParams": @"report_params",
-    @"buttonText": @"button_text",
-    @"openUrl": @"open_url",
-  };
-  return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
-     return dict[keyName]?:keyName;
-  }];
-}
-+ (BOOL)propertyIsOptional:(NSString *)propertyName
-{
-    return YES;
-}
-@end
-
 @implementation FHDynamicLynxModel
 + (JSONKeyMapper*)keyMapper
 {
@@ -930,23 +912,6 @@
 }
 @end
 
-@implementation FHDynamicLynxLynxDataReportParamsModel
-+ (JSONKeyMapper*)keyMapper
-{
-  NSDictionary *dict = @{
-    @"originFrom": @"origin_from",
-    @"elementType": @"element_type",
-    @"enterFrom": @"enter_from",
-    @"searchId": @"search_id",
-    @"pageType": @"page_type",
-    @"elementFrom": @"element_from",
-  };
-  return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
-     return dict[keyName]?:keyName;
-  }];
-}
-+ (BOOL)propertyIsOptional:(NSString *)propertyName
-{
-    return YES;
-}
+@implementation FHDynamicLynxCellModel
+
 @end
