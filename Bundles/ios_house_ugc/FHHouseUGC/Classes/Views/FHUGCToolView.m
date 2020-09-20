@@ -22,6 +22,7 @@
 #import "TTVFeedCellMoreActionManager.h"
 #import "TTVVideoDetailCollectService.h"
 #import "TTVFeedItem+TTVArticleProtocolSupport.h"
+#import "UIButton+FHUGCMultiDigg.h"
 
 @interface FHUGCToolView ()<TTVVideoDetailCollectServiceDelegate>
 
@@ -69,6 +70,7 @@
     
     self.diggButton = [self buttonWithFrame:CGRectMake(3 * self.bounds.size.width/4, 0, self.bounds.size.width/4, self.bounds.size.height) title:@"赞" imageName:@"fh_ugc_digg_normal" action:@selector(diggBtnClicked)];
     [self addSubview:_diggButton];
+    [self.diggButton enableMulitDiggEmojiAnimation];
     
     self.bottomLine = [[UIView alloc] initWithFrame:CGRectMake(15, self.bounds.size.height - 0.5, self.bounds.size.width - 30, 0.5)];
     _bottomLine.backgroundColor = [UIColor themeGray7];
@@ -185,10 +187,12 @@
         [self.diggButton setTitle:[TTBusinessManager formatCommentCount: count] forState:UIControlStateNormal];
     }
     if([userDigg boolValue]){
+        self.diggButton.selected = YES;
         [self.diggButton setImage:[UIImage imageNamed:@"fh_ugc_digg_selected"] forState:UIControlStateNormal];
         [self.diggButton setTitleColor:[UIColor themeOrange4] forState:UIControlStateNormal];
         
     }else{
+        self.diggButton.selected = NO;
         [self.diggButton setImage:[UIImage imageNamed:@"fh_ugc_digg_normal"] forState:UIControlStateNormal];
         [self.diggButton setTitleColor:[UIColor themeGray1] forState:UIControlStateNormal];
     }

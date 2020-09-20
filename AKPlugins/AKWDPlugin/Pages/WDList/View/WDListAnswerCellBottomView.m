@@ -15,6 +15,7 @@
 #import "FHUserTracker.h"
 #import "UIImage+FIconFont.h"
 #import "TTAccountManager.h"
+#import "UIButton+FHUGCMultiDigg.h"
 
 @interface WDListAnswerCellBottomView ()
 
@@ -48,6 +49,7 @@
     self.followBtn.textLabel.text = @"0";
     [self.followBtn addTarget:self action:@selector(followBtnClick) forControlEvents:UIControlEventTouchUpInside];
     [self addSubview:self.followBtn];
+    [self.followBtn enableMulitDiggEmojiAnimation];
     
     [self setupConstraints];
 }
@@ -72,10 +74,12 @@
         self.followBtn.textLabel.text = [NSString stringWithFormat:@"%lld",[ansEntity.diggCount longLongValue]];
         if (ansEntity.isDigg) {
             self.followBtn.followed = YES;
+            self.followBtn.selected = YES;
             self.followBtn.icon.image = ICON_FONT_IMG(20, @"\U0000e6b1", [UIColor themeOrange4]);
             self.followBtn.textLabel.textColor = [UIColor themeOrange4];
         } else {
             self.followBtn.followed = NO;
+            self.followBtn.selected = NO;
             self.followBtn.icon.image = ICON_FONT_IMG(20, @"\U0000e69c", [UIColor themeGray1]);
             self.followBtn.textLabel.textColor = [UIColor themeGray1];
         }
