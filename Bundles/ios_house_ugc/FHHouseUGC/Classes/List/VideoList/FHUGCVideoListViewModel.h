@@ -24,8 +24,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)startVideoPlay;
 
-@property(nonatomic, weak) FHUGCVideoListController *viewController;
-
 @end
 
 NS_ASSUME_NONNULL_END

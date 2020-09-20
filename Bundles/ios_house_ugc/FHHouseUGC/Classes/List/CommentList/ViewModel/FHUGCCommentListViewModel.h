@@ -28,6 +28,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property(nonatomic, copy) NSString *socialGroupId;
 
+- (instancetype)initWithTableView:(UITableView *)tableView controller:(FHUGCCommentListController *)viewController;
+
 @end
 
 NS_ASSUME_NONNULL_END

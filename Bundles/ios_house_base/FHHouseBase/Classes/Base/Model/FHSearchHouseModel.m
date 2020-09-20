@@ -893,3 +893,25 @@
 }
 
 @end
+
+@implementation FHDynamicLynxModel
++ (JSONKeyMapper*)keyMapper
+{
+  NSDictionary *dict = @{
+    @"cardType": @"card_type",
+    @"cellStyle": @"cell_style",
+    @"lynxData": @"lynx_data",
+  };
+  return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+     return dict[keyName]?:keyName;
+  }];
+}
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+@end
+
+@implementation FHDynamicLynxCellModel
+
+@end

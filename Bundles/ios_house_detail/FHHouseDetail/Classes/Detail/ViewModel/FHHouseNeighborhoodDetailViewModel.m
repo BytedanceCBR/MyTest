@@ -22,7 +22,7 @@
 #import "FHDetailAgentListCell.h"
 #import "FHDetailStaticMapCell.h"
 #import "FHOldDetailPhotoHeaderCell.h"
-#import "FHDetailMediaHeaderCorrectingCell.h"
+#import "FHDetailNeighborhoodMediaHeaderCell.h"
 #import "HMDTTMonitor.h"
 #import <FHHouseBase/FHHouseNeighborModel.h>
 #import <FHHouseBase/FHHomeHouseModel.h>
@@ -42,6 +42,7 @@
 #import "FHDetailNeighborhoodHouseStatusModel.h"
 #import "FHDetailSurroundingAreaCell.h"
 #import "TTAccountManager.h"
+#import "FHDetailNeighborhoodOwnerSellHouseCell.h"
 
 @interface FHHouseNeighborhoodDetailViewModel ()
 
@@ -59,8 +60,7 @@
 // 注册cell类型
 - (void)registerCellClasses {
     //l轮播图
-    [self.tableView registerClass:[FHOldDetailPhotoHeaderCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailPhotoHeaderModel class])];
-    [self.tableView registerClass:[FHDetailMediaHeaderCorrectingCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailMediaHeaderCorrectingModel class])];
+    [self.tableView registerClass:[FHDetailNeighborhoodMediaHeaderCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailNeighborhoodMediaHeaderModel class])];
     //信息cell
     [self.tableView registerClass:[FHNeighborhoodDetailSubMessageCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailNeighborhoodSubMessageModel class])];
     //状态cell
@@ -76,6 +76,8 @@
     //推荐经纪人
     [self.tableView registerClass:[FHDetailAgentListCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailAgentListModel class])];
     [self.tableView registerClass:[FHDetailGrayLineCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailGrayLineModel class])];
+    //帮我卖房入口
+    [self.tableView registerClass:[FHDetailNeighborhoodOwnerSellHouseCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailNeighborhoodOwnerSellHouseModel class])];
     //在售房源
     [self.tableView registerClass:[FHDetailNeighborhoodHouseSaleCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailNeighborhoodHouseSaleModel class])];
     //在租房源
@@ -131,21 +133,6 @@
 }
 
 
--(NSArray *)instantHouseImages
-{
-    id data = self.detailController.instantData;
-    if ([data isKindOfClass:[FHHomeHouseDataItemsModel class]]) {
-        
-        FHHomeHouseDataItemsModel *item = (FHHomeHouseDataItemsModel *)data;
-        return item.houseImage;
-        
-    }else if ([data isKindOfClass:[FHHouseNeighborDataItemsModel class]]){
-        FHHouseNeighborDataItemsModel *item = (FHHouseNeighborDataItemsModel *)data;
-        return item.images;
-    }
-    return nil;
-}
-
 - (void)vc_viewDidAppear:(BOOL)animated
 {
     [super vc_viewDidAppear:animated];
@@ -192,7 +179,6 @@
     [self.items removeAllObjects];
     
     BOOL hasVideo = NO;
-    BOOL isInstant = model.isInstantData;
     BOOL showTitleMapBtn = NO;
     if (model.data.neighborhoodVideo && model.data.neighborhoodVideo.videoInfos.count > 0) {
         hasVideo = YES;
@@ -205,89 +191,65 @@
     }else {
         showTitleMapBtn = NO;
     }
-    if (hasVideo || model.data.neighborhoodInfo.baiduPanoramaUrl.length) {
-        
-        FHDetailMediaHeaderCorrectingModel *headerCellModel = [[FHDetailMediaHeaderCorrectingModel alloc] init];
+    
+    FHDetailNeighborhoodMediaHeaderModel *headerCellModel = [[FHDetailNeighborhoodMediaHeaderModel alloc] init];
+    NSMutableArray<FHHouseDetailImageListDataModel> *imageListDataList = [NSMutableArray<FHHouseDetailImageListDataModel> arrayWithCapacity:model.data.albumInfo.tabList.count];
+    
+    for (FHHouseDetailImageTabInfo *tabInfo in model.data.albumInfo.tabList) {
         FHHouseDetailImageListDataModel *houseImageDictList = [[FHHouseDetailImageListDataModel alloc] init];
+        houseImageDictList.houseImageTypeName = tabInfo.tabName;
         houseImageDictList.usedSceneType = FHHouseDetailImageListDataUsedSceneTypeNeighborhood;
-        if ([model.data.neighborhoodImage isKindOfClass:[NSArray class]] && model.data.neighborhoodImage.count > 0) {
-            houseImageDictList.houseImageList = model.data.neighborhoodImage;
-            houseImageDictList.houseImageTypeName = @"图片";
-            if ([houseImageDictList isKindOfClass:[FHHouseDetailImageListDataModel class]]) {
-                headerCellModel.houseImageDictList = @[houseImageDictList];
-            }
-            if (!isInstant) {
-                FHHouseDetailImageListDataModel *imgModel = [headerCellModel.houseImageDictList firstObject];
-                imgModel.instantHouseImageList = [self instantHouseImages];
-            }
+        NSMutableArray *imageArr = [NSMutableArray array];
+        for (FHHouseDetailImageStruct *imageStruct in tabInfo.tabContent) {
+            [imageArr addObject:imageStruct.image];
         }
-        FHDetailHouseTitleModel *houseTitleModel = [[FHDetailHouseTitleModel alloc] init];
-        houseTitleModel.titleStr = model.data.name;
-        __weak typeof(self)weakself = self;
-        houseTitleModel.mapImageClick = ^{
-            [weakself mapImageClick];
-        };
-        houseTitleModel.address = model.data.neighborhoodInfo.address;
-//        houseTitleModel.tags = model.data.tags;
-        
-        headerCellModel.titleDataModel = houseTitleModel;
-        headerCellModel.contactViewModel = self.contactViewModel;
-        headerCellModel.isInstantData = model.isInstantData;
-        houseTitleModel.neighborhoodInfoModel = neighborhoodInfoModel;
-        houseTitleModel.showMapBtn = showTitleMapBtn;
-        houseTitleModel.housetype = self.houseType;
-        
-        if (hasVideo) {
-            FHVideoHouseVideoVideoInfosModel *info = model.data.neighborhoodVideo.videoInfos[0];
-            FHMultiMediaItemModel * itemModel = [[FHMultiMediaItemModel alloc] init];
-            itemModel.cellHouseType = FHMultiMediaCellHouseNeiborhood;
-            itemModel.mediaType = FHMultiMediaTypeVideo;
-            itemModel.videoID = info.vid;
-            itemModel.imageUrl = info.coverImageUrl;
-            itemModel.vWidth = info.vWidth;
-            itemModel.vHeight = info.vHeight;
-            itemModel.infoTitle = model.data.neighborhoodVideo.infoTitle;
-            itemModel.infoSubTitle = model.data.neighborhoodVideo.infoSubTitle;
-            itemModel.groupType = @"视频";
-            headerCellModel.vedioModel = itemModel;// 添加视频模型数据
-        }
-        if (model.data.neighborhoodInfo.baiduPanoramaUrl.length) {
-            FHMultiMediaItemModel * itemModel = [[FHMultiMediaItemModel alloc] init];
-            itemModel.cellHouseType = FHMultiMediaCellHouseNeiborhood;
-            itemModel.mediaType = FHMultiMediaTypeBaiduPanorama;
-            itemModel.imageUrl = model.data.neighborhoodInfo.baiduPanoramaUrl;
-            itemModel.groupType = @"街景";
-            headerCellModel.baiduPanoramaModel = itemModel;// 添加百度街景数据
-        }
-        [self.items addObject:headerCellModel];
-    }else {
-        // 添加头滑动图片
-        FHDetailPhotoHeaderModel *headerCellModel = [[FHDetailPhotoHeaderModel alloc] init];
-        if (model.data.neighborhoodImage.count > 0) {
-            headerCellModel.houseImage = model.data.neighborhoodImage;
-            if (!model.isInstantData) {
-                headerCellModel.instantHouseImages =  [self instantHouseImages];
-            }
-            FHDetailHouseTitleModel *houseTitleModel = [[FHDetailHouseTitleModel alloc] init];
-            houseTitleModel.titleStr = model.data.name;
-            houseTitleModel.address = model.data.neighborhoodInfo.address;
-            houseTitleModel.showMapBtn = showTitleMapBtn;
-            houseTitleModel.housetype = self.houseType;
-            houseTitleModel.neighborhoodInfoModel = neighborhoodInfoModel;
-            __weak typeof(self)weakself = self;
-            houseTitleModel.mapImageClick = ^{
-                [weakself mapImageClick];
-            };
-//            houseTitleModel.tags = model.data.tags;
-            headerCellModel.titleDataModel = houseTitleModel;
-            headerCellModel.isInstantData = model.isInstantData;
-        }else{
-            //无图片时增加默认图
-            FHImageModel *imgModel = [FHImageModel new];
-            headerCellModel.houseImage = @[imgModel];
-        }
-        [self.items addObject:headerCellModel];
+        houseImageDictList.houseImageList = imageArr.copy;
+        [imageListDataList addObject:houseImageDictList];
     }
+    headerCellModel.houseImageDictList = imageListDataList.copy;
+    headerCellModel.albumInfo = model.data.albumInfo;
+    
+    FHDetailHouseTitleModel *houseTitleModel = [[FHDetailHouseTitleModel alloc] init];
+    houseTitleModel.titleStr = model.data.name;
+    __weak typeof(self)weakself = self;
+    houseTitleModel.mapImageClick = ^{
+        [weakself mapImageClick];
+    };
+    houseTitleModel.address = model.data.neighborhoodInfo.address;
+//        houseTitleModel.tags = model.data.tags;
+    
+    headerCellModel.titleDataModel = houseTitleModel;
+    headerCellModel.contactViewModel = self.contactViewModel;
+    houseTitleModel.neighborhoodInfoModel = neighborhoodInfoModel;
+    houseTitleModel.showMapBtn = showTitleMapBtn;
+    houseTitleModel.housetype = self.houseType;
+    
+    if (hasVideo) {
+        FHVideoHouseVideoVideoInfosModel *info = model.data.neighborhoodVideo.videoInfos[0];
+        FHMultiMediaItemModel * itemModel = [[FHMultiMediaItemModel alloc] init];
+        itemModel.cellHouseType = FHMultiMediaCellHouseNeiborhood;
+        itemModel.mediaType = FHMultiMediaTypeVideo;
+        itemModel.videoID = info.vid;
+        itemModel.imageUrl = info.coverImageUrl;
+        itemModel.vWidth = info.vWidth;
+        itemModel.vHeight = info.vHeight;
+        itemModel.infoTitle = model.data.neighborhoodVideo.infoTitle;
+        itemModel.infoSubTitle = model.data.neighborhoodVideo.infoSubTitle;
+        itemModel.groupType = @"视频";
+        itemModel.pictureTypeName = @"视频";
+        headerCellModel.vedioModel = itemModel;// 添加视频模型数据
+    }
+    if (model.data.neighborhoodInfo.baiduPanoramaUrl.length) {
+        FHMultiMediaItemModel * itemModel = [[FHMultiMediaItemModel alloc] init];
+        itemModel.cellHouseType = FHMultiMediaCellHouseNeiborhood;
+        itemModel.mediaType = FHMultiMediaTypeBaiduPanorama;
+        itemModel.imageUrl = model.data.neighborhoodInfo.baiduPanoramaUrl;
+        itemModel.groupType = @"街景";
+        itemModel.pictureTypeName = @"街景";
+        headerCellModel.baiduPanoramaModel = itemModel;// 添加百度街景数据
+    }
+    [self.items addObject:headerCellModel];
+    
 
     
     // 添加标题
@@ -421,7 +383,16 @@
         [self.items addObject:agentListModel];
 //        self.agentListModel = agentListModel;
     }
-        self.items = [FHNeighborhoodDetailModuleHelper moduleClassificationMethod:self.items];
+    //帮我卖房入口
+    FHDetailNeighborhoodSaleHouseEntranceModel *saleHouseEntrance = model.data.saleHouseEntrance;
+    if(saleHouseEntrance.img.url.length > 0 && saleHouseEntrance.openUrl.length > 0) {
+        FHDetailNeighborhoodOwnerSellHouseModel *ownerSellHouseModel = [[FHDetailNeighborhoodOwnerSellHouseModel alloc] init];
+        ownerSellHouseModel.imgUrl = saleHouseEntrance.img.url;
+        ownerSellHouseModel.helpMeSellHouseOpenUrl = saleHouseEntrance.openUrl;
+        [self.items addObject:ownerSellHouseModel];
+    }
+
+    self.items = [FHNeighborhoodDetailModuleHelper moduleClassificationMethod:self.items];
     if (model.isInstantData) {
         [self.tableView reloadData];
     }else{
@@ -567,11 +538,6 @@
     return model.data.neighborhoodInfo.name.length < 1;
 }
 
-- (BOOL)isMissImage
-{
-    FHDetailNeighborhoodModel *model = (FHDetailNeighborhoodModel *)self.detailData;
-    return model.data.neighborhoodImage.count < 1;
-}
 
 - (BOOL)isMissCoreInfo
 {

@@ -98,7 +98,7 @@
         _loginBtn.titleLabel.font = [UIFont themeFontMedium:14];
         _loginBtn.userInteractionEnabled = NO;
         [_loginBtn setTitle:@"登录" forState:UIControlStateNormal];
-        _loginBtn.layer.cornerRadius = 22;
+        _loginBtn.layer.cornerRadius = 20;
         [self addSubview:_loginBtn];
         [self setDeaultShowTypeByLogin:NO];
     }

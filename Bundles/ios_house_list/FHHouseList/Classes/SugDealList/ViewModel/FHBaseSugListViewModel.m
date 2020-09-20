@@ -327,6 +327,22 @@
             }
             infos[@"tracer"] = tracer;
             [self jumpToDealListVCByUrl:openUrl infoDict:infos];
+        }else if (self.searchType == FHSugListSearchTypePriceValuation && self.supportConfirmReturn){
+            if(result.length > 0){
+                // 联想词
+                for (FHSuggestionResponseDataModel *model in self.sugListData) {
+                    if (model && [model isKindOfClass:[FHSuggestionResponseDataModel class]]) {
+                        NSString *originText = model.text;
+                        NSString *neigbordId = model.info.neigbordId;
+                        if([result isEqualToString:originText]){
+                            [self cellDidClick:originText neigbordId:neigbordId];
+                            return YES;
+                        }
+                    }
+                }
+                
+                [self cellDidClick:result neigbordId:@""];
+            }
         }
     }
     return YES;

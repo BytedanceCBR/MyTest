@@ -126,7 +126,10 @@ static NSString *const kFHUGCPromotionUser = @"is_promotion_user";
 + (void)hideFindTabRedDotsLimitCount;
 
 + (void)showRedPointForNoUgc;
+//获取是否开启推荐
++ (BOOL)getPersonalRecommend;
 
++ (void)savePersonalRecommend:(BOOL)isPersonalRommend;
 /*
  修改第二个tab名称
  */
@@ -270,7 +273,7 @@ static NSString *const kFHUGCPromotionUser = @"is_promotion_user";
 + (BOOL)isHomeNewDiscovery;
 
 /*
-是否开启视频频道实验，默认NO
+是否开启视频频道实验，已全量，为YES
  */
 + (BOOL)isHasVideoList;
 

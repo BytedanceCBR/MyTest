@@ -139,7 +139,7 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
         if (self.configModel.mapOpenUrl) {
             dispatch_async(dispatch_get_main_queue(), ^{                
                 [self updateBubble:self.configModel.mapOpenUrl];
-                if (_lastBubble && _currentHouseType == FHHouseTypeSecondHandHouse) {
+                if (_lastBubble && (_currentHouseType == FHHouseTypeSecondHandHouse || _currentHouseType == FHHouseTypeRentHouse)) {
                     if (_lastBubble.resizeLevel > 1) {
                         _configModel.resizeLevel = _lastBubble.resizeLevel;
                     }
@@ -766,6 +766,13 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
             [tracer setValue:@"map_search" forKey:@"element_from"];
             [tracer setValue:@"map_search" forKey:@"enter_from"];
             [infoDict setValue:tracer forKey:@"tracer"];
+            
+            
+            NSMutableDictionary *params = [NSMutableDictionary new];
+            [params setValue:@"mapfind" forKey:@"page_type"];
+            [params setValue:@"related" forKey:@"click_position"];
+            [FHUserTracker writeEvent:@"click_options" params:params];
+            
             
             TTRouteUserInfo *info = [[TTRouteUserInfo alloc] initWithInfo:infoDict];
             [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:@"sslocal://fh_map_detail"] userInfo:info];
@@ -1459,7 +1466,7 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
         
         self.currentSelectAnnotation = houseAnnotation;
         self.currentSelectHouseData = houseAnnotation.houseData;
-        if (self.currentHouseType == FHHouseTypeSecondHandHouse) {
+        if (self.currentHouseType == FHHouseTypeSecondHandHouse || self.currentHouseType == FHHouseTypeRentHouse ) {
             [self showNeighborHouseList:houseAnnotation.houseData];
         }else{
             [self showNewHouseList:houseAnnotation.houseData];
@@ -1771,7 +1778,7 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
 {
     CGPoint ccenter = [_mapView convertCoordinate:currentCenter toPointToView:_mapView];
     CGPoint lcenter = [_mapView convertCoordinate:_lastRequestCenter toPointToView:_mapView];
-    CGFloat threshold = MIN(self.viewController.view.width/2, self.viewController.view.height/3);    
+    CGFloat threshold = MIN(self.viewController.view.width/3, self.viewController.view.height/4);
     if (_mapView.zoomLevel < 16) {
         //商圈和区域视野
         threshold *= (_mapView.zoomLevel/10);
@@ -2174,7 +2181,7 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
             NSMutableDictionary *addDict = [NSMutableDictionary new];
             for (NSString *key in bubble.queryDict.allKeys) {
                 if ([key isEqualToString:@"area[]"] || [key isEqualToString:@"district[]"] || [key isEqualToString:@"line[]"]
-                    || [key isEqualToString:@"station[]"] || [key isEqualToString:NEIGHBORHOOD_IDS]) {
+                    || [key isEqualToString:@"station[]"] || [key isEqualToString:@"school[]"] || [key isEqualToString:@"school_district[]"]  || [key isEqualToString:NEIGHBORHOOD_IDS]) {
                     addDict[key] = bubble.queryDict[key];
                 }
             }
