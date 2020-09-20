@@ -229,6 +229,7 @@
 - (void)addEnterCategoryLog {
     NSMutableDictionary *tracerDict = self.tracerDict.mutableCopy;
     tracerDict[@"category_name"] = self.category;
+    tracerDict[@"page_type"] = self.category;
     TRACK_EVENT(@"enter_category", tracerDict);
     
     self.enterTabTimestamp = [[NSDate date] timeIntervalSince1970];
@@ -241,6 +242,7 @@
     }
     NSMutableDictionary *tracerDict = self.tracerDict.mutableCopy;
     tracerDict[@"category_name"] = self.category;
+    tracerDict[@"page_type"] = self.category;
     tracerDict[@"stay_time"] = [NSNumber numberWithInteger:(duration * 1000)];
     TRACK_EVENT(@"stay_category", tracerDict);
     

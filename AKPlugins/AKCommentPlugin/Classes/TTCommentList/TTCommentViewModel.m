@@ -371,7 +371,7 @@
     }
 
     __block TTCommentModel *toDeletedCommentModel = nil;
-    [[self tt_curCommentModels] enumerateObjectsUsingBlock:^(TTCommentModel * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+    [[self tt_curCommentModels] enumerateObjectsUsingBlock:^(id<TTCommentModelProtocol> _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
         if ([obj.commentID.stringValue isEqualToString:commentID]) {
             toDeletedCommentModel = obj;
             *stop = YES;
