@@ -86,9 +86,9 @@
     
     self.likeBtn = [[UIButton alloc] init];
     _likeBtn.imageView.contentMode = UIViewContentModeCenter;
-    [_likeBtn setImage:ICON_FONT_IMG(24, @"\U0000e69c", [UIColor themeGray1]) forState:UIControlStateNormal];// @"fh_ugc_comment"
+    [_likeBtn setImage:ICON_FONT_IMG(20, @"\U0000e69c", [UIColor themeGray1]) forState:UIControlStateNormal];// @"fh_ugc_comment"
     [_likeBtn setTitleColor:[UIColor themeGray1] forState:UIControlStateNormal];
-    [self.likeBtn setImage:ICON_FONT_IMG(24, @"\U0000e6b1", [UIColor themeOrange4]) forState:UIControlStateSelected];
+    [self.likeBtn setImage:ICON_FONT_IMG(20, @"\U0000e6b1", [UIColor themeOrange4]) forState:UIControlStateSelected];
     [self.likeBtn setTitleColor:[UIColor themeOrange4] forState:UIControlStateSelected];
     _likeBtn.titleLabel.font = [UIFont themeFontRegular:14];
     [_likeBtn setImageEdgeInsets:UIEdgeInsetsMake(0, -2, 0, 2)];

@@ -70,8 +70,8 @@
     [self addSubview:_commentButton];
     
     self.diggButton = [self buttonWithFrame:CGRectMake(3 * self.bounds.size.width/4, 0, self.bounds.size.width/4, self.bounds.size.height) title:@"赞" imageName:@"fh_ugc_digg_normal" action:@selector(diggBtnClicked)];
-    [self.diggButton setImage:ICON_FONT_IMG(24, @"\U0000e69c", [UIColor themeGray1]) forState:UIControlStateNormal];
-    [self.diggButton setImage:ICON_FONT_IMG(24, @"\U0000e6b1", [UIColor themeOrange4]) forState:UIControlStateSelected];
+    [self.diggButton setImage:ICON_FONT_IMG(20, @"\U0000e69c", [UIColor themeGray1]) forState:UIControlStateNormal];
+    [self.diggButton setImage:ICON_FONT_IMG(20, @"\U0000e6b1", [UIColor themeOrange4]) forState:UIControlStateSelected];
     [self.diggButton setTitleColor:[UIColor themeGray1] forState:UIControlStateNormal];
     [self.diggButton setTitleColor:[UIColor themeOrange4] forState:UIControlStateSelected];
     [self addSubview:_diggButton];
