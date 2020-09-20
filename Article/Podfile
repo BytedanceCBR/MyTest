@@ -56,6 +56,7 @@ def fhPods
     'Core',
     'DelegateForC'
     ]
+
 #    pod 'FHPopupViewCenter', :path => '../../../FHPopupViewCenter', :subspecs => [
 #    'Core',
 #    'DelegateForC'
@@ -66,8 +67,8 @@ def fhPods
 #    ]
     
 #    pod 'ios_house_im' , :path => '../../../im/feature', :inhibit_warnings => false
-#    pod 'ios_house_im' ,'0.2.16-rc.8', :inhibit_warnings => false
-     pod 'ios_house_im' , :git => 'git@code.byted.org:fproject/ios_house_im.git' , :commit => 'b5fd1121a29fc9a59345a0908b75e689d758ed09', :inhibit_warnings => false
+#    pod 'ios_house_im' ,'0.2.16-rc.9', :inhibit_warnings => false
+     pod 'ios_house_im' , :git => 'git@code.byted.org:fproject/ios_house_im.git' , :commit => '6128ac2e6b366b67c6d5df5335c0d7007b91411a', :inhibit_warnings => false
 
 end
 
@@ -132,14 +133,18 @@ def appDevelopPods
     pod_binary 'TTAudio', '0.1.6'
     
     #----弹窗互斥---
-    pod 'TTDialogDirector', '0.1.4' , :subspecs => [
-    'Core',
-    'PhotoLibrary',
-    'Microphone',
-    'Camera',
-    'UserNotification'
+#    pod 'TTDialogDirector', '0.1.4' , :subspecs => [
+#    'Core',
+#    'PhotoLibrary',
+#    'Microphone',
+#    'Camera',
+#    'UserNotification'
 #    'Contacts',
     #    'Location'
+#    ]
+    pod 'TTDialogDirector' , :git => 'git@code.byted.org:TTIOS/TTDialogDirector.git' ,:commit => '8ed5beb' , :subspecs => [
+##    pod_source 'TTDialogDirector' , '0.1.4', :subspecs => [
+        'Core'
     ]
     #-----视频业务库-----#
     pod 'TTVPlayerPod', :path => '../AKPlugins/TTVPlayer'

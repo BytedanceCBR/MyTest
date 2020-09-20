@@ -745,9 +745,9 @@ typedef NS_ENUM(NSInteger, FRPhotoBrowserCellStatus) {
     __block NSURL *schema = self.qrURL;
     FRUgcThreadLinkV1ConvertRequestModel *requestModel = [[FRUgcThreadLinkV1ConvertRequestModel alloc] init];
     requestModel.url = schema.absoluteString;
-    [TTUGCRequestManager requestModel:requestModel callBackWithMonitor:^(NSError *error, FRUgcThreadLinkV1ConvertResponseModel *responseModel, TTUGCRequestMonitorModel *monitorModel) {
-        if (error == nil && responseModel != nil && responseModel.url_info.url != nil) {
-            schema = [NSURL URLWithString:responseModel.url_info.url];
+    [TTUGCRequestManager requestModel:requestModel callBackWithMonitor:^(NSError *error, id<TTResponseModelProtocol> responseModel, TTUGCRequestMonitorModel *monitorModel) {
+        if (error == nil && responseModel != nil && ((FRUgcThreadLinkV1ConvertResponseModel *)responseModel).url_info.url != nil) {
+            schema = [NSURL URLWithString:((FRUgcThreadLinkV1ConvertResponseModel *)responseModel).url_info.url];
         }
         BOOL dismiss = NO;
         if ([[TTRoute sharedRoute] canOpenURL:schema]) {

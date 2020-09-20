@@ -300,7 +300,7 @@
     if (self.houseType == FHHouseTypeSecondHandHouse) {
         self.refreshFooter.hidden = YES;
         __weak typeof(self) wself = self;
-        TTHttpTask *task = [FHHouseListAPI searchErshouHouseList:query params:paramsRequest offset:offset searchId:searchId sugParam:nil class:[FHListResultHouseModel class] completion:^(FHListResultHouseModel *  _Nullable model, NSError * _Nullable error) {
+        TTHttpTask *task = [FHHouseListAPI searchErshouHouseList:query params:paramsRequest offset:offset searchId:searchId sugParam:nil class:[FHListResultHouseModel class] completion:(FHMainApiCompletion)^(FHListResultHouseModel *  _Nullable model, NSError * _Nullable error) {
         
                 if (!wself) {
                     return ;
@@ -318,7 +318,7 @@
         if (self.houseType == FHHouseTypeNewHouse) {
             __weak typeof(self) wself = self;
             paramsRequest[CHANNEL_ID] = @"94349556491";
-            TTHttpTask *task = [FHHouseListAPI searchNewHouseListForFindHouse:query params:paramsRequest offset:offset searchId:searchId sugParam:nil class:[FHListSearchHouseModel class] completion:^(FHListResultHouseModel *  _Nullable model, NSError * _Nullable error) {
+            TTHttpTask *task = [FHHouseListAPI searchNewHouseListForFindHouse:query params:paramsRequest offset:offset searchId:searchId sugParam:nil class:[FHListSearchHouseModel class] completion:(FHMainApiCompletion)^(FHListResultHouseModel *  _Nullable model, NSError * _Nullable error) {
                     if (!wself) {
                         return ;
                     }
