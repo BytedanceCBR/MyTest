@@ -8,6 +8,15 @@
 #import "NSObject+FHOptimize.h"
 #import <objc/runtime.h>
 
+
+static char * const WANSObjectExecuteOnceExecutionInfoAssociationKey;
+
+@interface NSObject (ApplicationKit_ExecuteOnce_Private)
+
+@property (readwrite) NSDictionary *excuteOnce_executionInfo;
+
+@end
+
 @implementation NSObject (FHOptimize)
 
 +(void)load {
@@ -32,6 +41,28 @@
         dispatch_async(dispatch_get_main_queue(), ^{
             [self swizzeled_optimize];
         });
+    }
+}
+
+- (NSDictionary *)excuteOnce_executionInfo {
+    return objc_getAssociatedObject(self, &WANSObjectExecuteOnceExecutionInfoAssociationKey);
+}
+
+- (void)setExcuteOnce_executionInfo:(NSDictionary *)excuteOnce_executionInfo {
+    objc_setAssociatedObject(self, &WANSObjectExecuteOnceExecutionInfoAssociationKey, excuteOnce_executionInfo, OBJC_ASSOCIATION_COPY);
+}
+
+- (void)executeOnce:(void (^)(void))code token:(NSString *)token {
+    @synchronized(self) {
+        if (!token) return;
+        
+        BOOL executed = [[self excuteOnce_executionInfo][token] boolValue];
+        if (!executed) {
+            code();
+            NSMutableDictionary *executionInfo = [NSMutableDictionary dictionaryWithDictionary:self.excuteOnce_executionInfo];
+            executionInfo[token] = @(YES);
+            self.excuteOnce_executionInfo = executionInfo;
+        }
     }
 }
 
