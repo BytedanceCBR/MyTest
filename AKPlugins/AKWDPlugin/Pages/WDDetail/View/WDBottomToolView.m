@@ -277,7 +277,6 @@ static NSString * const kWDHasTipSupportsEmojiInputDefaultKey = @"WDHasTipSuppor
         [TTIndicatorView showWithIndicatorStyle:TTIndicatorViewStyleImage indicatorText:NSLocalizedString(@"您已经反对过", nil) indicatorImage:nil autoDismiss:YES dismissHandler:nil];
     } else {
         if (![self.detailModel.answerEntity isDigg]) {
-            [self diggAnimationWith:diggButton];
             self.detailModel.answerEntity.diggCount = @([self.detailModel.answerEntity.diggCount longLongValue] + 1);
             self.detailModel.answerEntity.isDigg = YES;
             [WDAnswerService digWithAnswerID:self.detailModel.answerEntity.ansid
@@ -325,26 +324,6 @@ static NSString * const kWDHasTipSupportsEmojiInputDefaultKey = @"WDHasTipSuppor
             self.collectButton.imageView.transform = CGAffineTransformMakeScale(1, 1);
             self.collectButton.alpha = 1.f;
         } completion:^(BOOL finished){
-        }];
-    }];
-}
-
-#pragma mark - Animation
-
-- (void)diggAnimationWith:(SSThemedButton *)button
-{
-    button.imageView.transform = CGAffineTransformMakeScale(1.f, 1.f);
-    button.imageView.contentMode = UIViewContentModeCenter;
-    [UIView animateWithDuration:0.1f delay:0.f options:UIViewAnimationOptionCurveEaseOut animations:^{
-        button.imageView.transform = CGAffineTransformMakeScale(0.6f, 0.6f);
-        button.alpha = 0;
-    } completion:^(BOOL finished) {
-        button.selected = YES;
-        button.alpha = 0;
-        [UIView animateWithDuration:0.2f delay:0.f options:UIViewAnimationOptionCurveEaseIn animations:^{
-            button.imageView.transform = CGAffineTransformMakeScale(1.f,1.f);
-            button.alpha = 1;
-        } completion:^(BOOL finished) {
         }];
     }];
 }

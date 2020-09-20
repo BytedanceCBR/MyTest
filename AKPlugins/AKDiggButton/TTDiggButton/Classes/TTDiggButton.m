@@ -252,30 +252,12 @@
     TTDiggButtonClickType type = TTDiggButtonClickTypeDigg;
     if (self.selected) {
         type = TTDiggButtonClickTypeAlreadyDigg;
-    }
-    if (!self.selected){
-        self.imageView.transform = CGAffineTransformMakeScale(1.f, 1.f);
-        self.imageView.contentMode = UIViewContentModeCenter;
-        [UIView animateWithDuration:0.1f delay:0.f options:UIViewAnimationOptionCurveEaseOut animations:^{
-            self.imageView.transform = CGAffineTransformMakeScale(0.6f, 0.6f);
-            self.alpha = 0;
-        } completion:^(BOOL finished) {
-            self.selected = YES;
-            self.alpha = 0;
-            if (self.buttonClickBlock) {
-                self.buttonClickBlock(type);
-            }
-            [UIView animateWithDuration:0.2f delay:0.f options:UIViewAnimationOptionCurveEaseIn animations:^{
-                self.imageView.transform = CGAffineTransformMakeScale(1.f,1.f);
-                self.alpha = 1;
-            } completion:^(BOOL finished) {
-            }];
-        }];
-    } else {
-        if (_buttonClickBlock) {
-            _buttonClickBlock(type);
-        }
         self.selected = NO;
+    } else {
+        self.selected = YES;
+    }
+    if (self.buttonClickBlock) {
+        self.buttonClickBlock(type);
     }
 }
 
