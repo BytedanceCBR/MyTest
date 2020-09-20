@@ -654,7 +654,7 @@
         path = [NSString stringWithFormat:@"%@?%@",path,query];
     }
 
-    return [FHHouseListAPI querySearchData:path uploadLog:YES params:mparam class:[FHListSearchHouseModel class] logPath:nil completion:completion];
+    return [FHHouseListAPI querySearchData:path uploadLog:YES params:mparam class:[FHListSearchHouseModel class] logPath:nil completion:(FHMainApiCompletion)completion];
 //    return [FHMainApi queryData:path params:mparam class:[FHHouseRentModel class] completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
 //        if (completion) {
 //            completion(model , error);

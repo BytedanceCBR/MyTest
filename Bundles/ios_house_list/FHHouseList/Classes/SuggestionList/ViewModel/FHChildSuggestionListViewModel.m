@@ -1204,7 +1204,7 @@
         [self.historyHttpTask cancel];
     }
     __weak typeof(self) wself = self;
-    self.historyHttpTask = [FHHouseListAPI requestSearchHistoryByHouseType:houseType class:[FHSuggestionSearchHistoryResponseModel class] completion:^(FHSuggestionSearchHistoryResponseModel *  _Nonnull model, NSError * _Nonnull error) {
+    self.historyHttpTask = [FHHouseListAPI requestSearchHistoryByHouseType:houseType class:[FHSuggestionSearchHistoryResponseModel class] completion:(FHMainApiCompletion)^(FHSuggestionSearchHistoryResponseModel *  _Nonnull model, NSError * _Nonnull error) {
         wself.loadRequestTimes += 1;
         if (model != NULL && error == NULL) {
             // 构建数据源
@@ -1230,7 +1230,7 @@
     }
     __weak typeof(self) wself = self;
     // "subscribe_list_type": 2(搜索页) / 3(独立展示页) 请求总数50
-    self.sugSubscribeTask = [FHHouseListAPI requestSugSubscribe:cityId houseType:houseType subscribe_type:2 subscribe_count:50 class:[FHSugSubscribeModel class] completion:^(FHSugSubscribeModel *  _Nonnull model, NSError * _Nonnull error) {
+    self.sugSubscribeTask = [FHHouseListAPI requestSugSubscribe:cityId houseType:houseType subscribe_type:2 subscribe_count:50 class:[FHSugSubscribeModel class] completion:(FHMainApiCompletion)^(FHSugSubscribeModel *  _Nonnull model, NSError * _Nonnull error) {
         wself.loadRequestTimes += 1;
         wself.subscribeView.totalCount = 0;
         if (model != NULL && error == NULL) {
@@ -1268,7 +1268,7 @@
         [self.guessHttpTask cancel];
     }
     __weak typeof(self) wself = self;
-    self.guessHttpTask = [FHHouseListAPI requestGuessYouWant:cityId houseType:houseType class:[FHGuessYouWantResponseModel class] completion:^(FHGuessYouWantResponseModel *  _Nonnull model, NSError * _Nonnull error) {
+    self.guessHttpTask = [FHHouseListAPI requestGuessYouWant:cityId houseType:houseType class:[FHGuessYouWantResponseModel class] completion:(FHMainApiCompletion)^(FHGuessYouWantResponseModel *  _Nonnull model, NSError * _Nonnull error) {
         wself.loadRequestTimes += 1;
         if (model != NULL && error == NULL) {
             __strong typeof(wself) strongSelf = wself;
@@ -1293,7 +1293,7 @@
     self.highlightedText = query;
     self.associatedCount += 1;
     __weak typeof(self) wself = self;
-    self.sugHttpTask = [FHHouseListAPI requestSuggestionCityId:cityId houseType:houseType query:query class:[FHSuggestionResponseModel class] completion:^(FHSuggestionResponseModel *  _Nonnull model, NSError * _Nonnull error) {
+    self.sugHttpTask = [FHHouseListAPI requestSuggestionCityId:cityId houseType:houseType query:query class:[FHSuggestionResponseModel class] completion:(FHMainApiCompletion)^(FHSuggestionResponseModel *  _Nonnull model, NSError * _Nonnull error) {
         if (model != NULL && error == NULL) {
             // 构建数据源
             wself.sugListData = model.data;
@@ -1317,7 +1317,7 @@
         [self.delHistoryHttpTask cancel];
     }
     __weak typeof(self) wself = self;
-    self.delHistoryHttpTask = [FHHouseListAPI requestDeleteSearchHistoryByHouseType:houseType class:[FHSuggestionClearHistoryResponseModel class] completion:^(FHSuggestionClearHistoryResponseModel *  _Nonnull model, NSError * _Nonnull error) {
+    self.delHistoryHttpTask = [FHHouseListAPI requestDeleteSearchHistoryByHouseType:houseType class:[FHSuggestionClearHistoryResponseModel class] completion:(FHMainApiCompletion)^(FHSuggestionClearHistoryResponseModel *  _Nonnull model, NSError * _Nonnull error) {
         if (model != NULL && error == NULL) {
             wself.historyData = NULL;
             [wself.listController.emptyView hideEmptyView];
