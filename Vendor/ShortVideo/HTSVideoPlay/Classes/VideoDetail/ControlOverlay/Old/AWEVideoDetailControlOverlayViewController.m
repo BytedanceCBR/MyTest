@@ -428,7 +428,7 @@ static const CGFloat kCheckChallengeButtonLeftPadding = 28;
     }];
 }
 
-- (void)oBottomBarViews
+- (void)setupBottomBarViews
 {
     //height 140
     _bottomGradientLayer = [CAGradientLayer layer];

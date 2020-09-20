@@ -35,6 +35,8 @@
 
 - (void)initView {
     self.contentView.backgroundColor = [UIColor whiteColor];
+    self.contentView.layer.masksToBounds = YES;
+    self.contentView.layer.cornerRadius = 10;
     
     self.bgView = [[UIImageView alloc] init];
     _bgView.contentMode = UIViewContentModeScaleAspectFill;
@@ -44,8 +46,8 @@
     [self.contentView addSubview:_bgView];
     
     self.blackCoverView = [[UIView alloc] init];
-    _blackCoverView.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0.4];
-//    _blackCoverView.hidden = YES;
+    _blackCoverView.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"fh_ugc_video_mute_bg"]];
+//    _blackCoverView.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0.4];
     [self.bgView addSubview:_blackCoverView];
 
     self.titleLabel = [self LabelWithFont:[UIFont themeFontMedium:14] textColor:[UIColor whiteColor]];
@@ -89,7 +91,8 @@
     }];
     
     [self.blackCoverView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.edges.mas_equalTo(self.contentView);
+        make.left.right.bottom.mas_equalTo(self.contentView);
+        make.top.mas_equalTo(self.titleLabel.mas_top).offset(-5);
     }];
     
     [self.titleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
