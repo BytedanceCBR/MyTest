@@ -33,6 +33,7 @@
 #import "FHHousePhoneCallUtils.h"
 #import "FHDetailBaseModel.h"
 #import "FIMDebugManager.h"
+#import <TTUIWidget/TTNavigationController.h>
 
 DEC_TASK("FHIMStartupTask",FHTaskTypeSerial,TASK_PRIORITY_HIGH+16);
 
@@ -383,7 +384,7 @@ DEC_TASK("FHIMStartupTask",FHTaskTypeSerial,TASK_PRIORITY_HIGH+16);
                     return;
                 }
                 
-                UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:[debugVCClass new]];
+                TTNavigationController *navigationController = [[TTNavigationController alloc] initWithRootViewController:[debugVCClass new]];
                 navigationController.modalPresentationStyle = UIModalPresentationFullScreen;
                 [topVC presentViewController:navigationController animated:YES completion:NULL];
                 [[FIMMediaTool sharedInstance] shakeOnceTime];
