@@ -22,6 +22,7 @@
 #import "UIDevice+BTDAdditions.h"
 #import "FHUGCShortVideoFlowLayout.h"
 #import "FHBaseCollectionView.h"
+#import "UIViewController+Track.h"
 
 @interface FHUGCShortVideoListController ()<SSImpressionProtocol>
 
@@ -31,7 +32,6 @@
 @property(nonatomic, assign) NSTimeInterval enterTabTimestamp;
 @property(nonatomic, assign) UIEdgeInsets originContentInset;
 @property(nonatomic, assign) BOOL alreadySetContentInset;
-
 @property(nonatomic ,strong) FHBaseCollectionView *collectionView;
 @property(nonatomic, strong) FHUGCShortVideoFlowLayout *flowLayout;
 
@@ -89,8 +89,6 @@
         _enterTabTimestamp = [[NSDate date]timeIntervalSince1970];
     }
     
-    [self addEnterCategoryLog];
-    
     if(self.viewModel.dataList.count > 0 || self.notLoadDataWhenEmpty){
         if (self.needReloadData) {
             self.needReloadData = NO;
@@ -101,14 +99,18 @@
         [self scrollToTopAndRefreshAllData];
     }
     
+    if (![FHEnvContext sharedInstance].isShowingHomeHouseFind) {
+        [self viewAppearForEnterType:1];
+    }
+    
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationDidEnterBackground) name:UIApplicationDidEnterBackgroundNotification object:nil];
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
     [self.viewModel viewWillDisappear];
-    if(self.needReportEnterCategory){
-        [self addStayCategoryLog];
+    if (![FHEnvContext sharedInstance].isShowingHomeHouseFind) {
+        [self viewDisAppearForEnterType:1];
     }
     [FHFeedOperationView dismissIfVisible];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:UIApplicationDidEnterBackgroundNotification object:nil];
@@ -124,8 +126,9 @@
 
 - (void)initCollectionView {
     self.flowLayout = [[FHUGCShortVideoFlowLayout alloc] init];
-    _flowLayout.sectionInset = UIEdgeInsetsMake(0, 10, 0, 10);
-    _flowLayout.minimumLineSpacing = 10;
+    _flowLayout.sectionInset = UIEdgeInsetsMake(10, 15, 0, 15);
+    _flowLayout.minimumLineSpacing = 12;
+    _flowLayout.minimumInteritemSpacing = 9;
     _flowLayout.scrollDirection = UICollectionViewScrollDirectionVertical;
     
     self.collectionView = [[FHBaseCollectionView alloc] initWithFrame:self.view.bounds collectionViewLayout:_flowLayout];
@@ -153,6 +156,16 @@
     self.viewModel = [[FHUGCShortVideoListViewModel alloc] initWithCollectionView:self.collectionView controller:self];
     _viewModel.categoryId = @"f_hotsoon_video";
     self.needReloadData = YES;
+    //切换开关
+    WeakSelf;
+    [[FHEnvContext sharedInstance].configDataReplay subscribeNext:^(id  _Nullable x) {
+        StrongSelf;
+        NSInteger cityId = [[FHEnvContext getCurrentSelectCityIdFromLocal] integerValue];
+        if(self.currentCityId != cityId){
+            self.needReloadData = YES;
+            self.currentCityId = cityId;
+        }
+    }];
 }
 
 - (void)startLoadData {
@@ -300,6 +313,41 @@
     TRACK_EVENT(@"stay_category", tracerDict);
     
     self.enterTabTimestamp = [[NSDate date]timeIntervalSince1970];
+}
+
+- (void)viewAppearForEnterType:(NSInteger)enterType {
+    self.enterTabTimestamp = [[NSDate date] timeIntervalSince1970];
+    NSMutableDictionary *tracerDict = [NSMutableDictionary new];
+    if (enterType == 1) {
+        tracerDict[@"enter_type"] = @"click";
+    }else{
+        tracerDict[@"enter_type"] = @"flip";
+    }
+    tracerDict[@"enter_from"] = self.tracerDict[@"enter_from"] ?: @"be_null";
+    tracerDict[@"category_name"] = self.tracerDict[@"category_name"] ?: @"be_null";
+    [FHEnvContext recordEvent:tracerDict andEventKey:@"enter_category"];
+    
+    [self addEnterCategoryLog];
+}
+
+- (void)viewDisAppearForEnterType:(NSInteger)enterType
+{
+    NSMutableDictionary *tracerDict = [NSMutableDictionary new];
+    NSTimeInterval duration = ([[NSDate date] timeIntervalSince1970] - self.enterTabTimestamp) * 1000.0;
+    if (enterType == 1) {
+        tracerDict[@"enter_type"] = @"click";
+    }else{
+        tracerDict[@"enter_type"] = @"flip";
+    }
+    tracerDict[@"enter_from"] = self.tracerDict[@"enter_from"] ?: @"be_null";
+    tracerDict[@"category_name"] = self.tracerDict[@"category_name"] ?: @"be_null";
+    tracerDict[@"stay_time"] = @((int) duration);
+
+    if (((int) duration) > 0) {
+        [FHEnvContext recordEvent:tracerDict andEventKey:@"stay_category"];
+    }
+    
+    [self addStayCategoryLog];
 }
 
 @end

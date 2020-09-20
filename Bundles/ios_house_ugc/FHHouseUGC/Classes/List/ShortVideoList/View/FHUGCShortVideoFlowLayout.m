@@ -78,7 +78,7 @@
     //在第几列
     NSInteger destRow = indexPath.row % eachRowItemCount;
     
-    x = self.sectionInset.left + destRow * (w + self.minimumLineSpacing);
+    x = self.sectionInset.left + destRow * (w + self.minimumInteritemSpacing);
     y = self.sectionInset.top + destColumn * (h + self.minimumLineSpacing);
     
     attrs.frame = CGRectMake(x, y, w, h);
@@ -97,8 +97,8 @@
 
 - (CGSize)smallItemSize {
     if(_smallItemSize.width == 0 && _smallItemSize.height == 0){
-        CGFloat width = ceil(([UIScreen mainScreen].bounds.size.width - self.sectionInset.left - self.sectionInset.right - self.minimumLineSpacing)/2);
-        CGFloat height = ceil(1.6 * width);
+        CGFloat width = ceil(([UIScreen mainScreen].bounds.size.width - self.sectionInset.left - self.sectionInset.right - self.minimumInteritemSpacing)/2);
+        CGFloat height = ceil(270.0f/168 * width);
         _smallItemSize = CGSizeMake(width, height);
     }
     

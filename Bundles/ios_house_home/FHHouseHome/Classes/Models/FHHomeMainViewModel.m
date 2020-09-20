@@ -190,6 +190,9 @@
             }else if ([self.viewController.feedListVC isKindOfClass:[FHCommunityViewController class]]) {
                 FHCommunityViewController *vc = (FHCommunityViewController *)self.viewController.feedListVC;
                 [vc viewAppearForEnterType:enterType needReportSubCategory:YES];
+            }else if ([self.viewController.feedListVC isKindOfClass:[FHUGCShortVideoListController class]]) {
+                FHUGCShortVideoListController *vc = (FHUGCShortVideoListController *)self.viewController.feedListVC;
+                [vc viewAppearForEnterType:enterType];
             }
         }
     }
@@ -207,6 +210,9 @@
         }else if ([self.viewController.feedListVC isKindOfClass:[FHCommunityViewController class]]) {
             FHCommunityViewController *vc = (FHCommunityViewController *)self.viewController.feedListVC;
             [vc viewDisAppearForEnterType:enterType needReportSubCategory:YES];
+        }else if ([self.viewController.feedListVC isKindOfClass:[FHUGCShortVideoListController class]]) {
+            FHUGCShortVideoListController *vc = (FHUGCShortVideoListController *)self.viewController.feedListVC;
+            [vc viewDisAppearForEnterType:enterType];
         }
     }
 }
