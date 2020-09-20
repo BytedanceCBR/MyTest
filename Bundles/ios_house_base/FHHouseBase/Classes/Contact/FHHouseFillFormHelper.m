@@ -188,6 +188,9 @@ extern NSString *const kFHToastCountKey;
     if (topViewController.navigationController) {
         topViewController = topViewController.navigationController.viewControllers.lastObject;
     }
+    if ([topViewController isKindOfClass:[UINavigationController class]] ) {
+        topViewController = [(UINavigationController *)topViewController viewControllers].lastObject;
+    }
     [alertView showFrom:topViewController.view];
 }
 
