@@ -13,6 +13,7 @@
 #import "Masonry.h"
 #import <TTBaseLib/TTDeviceHelper.h>
 #import <FHHouseBase/FHUserInfoManager.h>
+#import <FHHouseBase/NSObject+FHOptimize.h>
 
 @interface FHHouseFindHelpContactCell()
 
@@ -75,12 +76,13 @@
 }
 
 - (void)showFullPhoneNum:(BOOL)isShow {
-    if (self.phoneNum.length > 0) {
-        if(isShow){
-            self.phoneInput.text = @"";
-        }else{
-            self.phoneInput.text = [FHUserInfoManager formatMaskPhoneNumber:self.phoneNum];
-        }
+    if(isShow){
+        __weak typeof(self) weakSelf = self;
+        [self executeOnce:^{
+            weakSelf.phoneInput.text = @"";
+        } token:FHExecuteOnceUniqueTokenForCurrentContext];
+    }else{
+        self.phoneInput.text = [FHUserInfoManager formatMaskPhoneNumber:self.phoneNum];
     }
 }
 

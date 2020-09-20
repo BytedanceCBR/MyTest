@@ -66,6 +66,7 @@
 #import "FHHouseSearchNewHouseCell.h"
 #import "FHDynamicLynxCell.h"
 #import "NSDictionary+BTDAdditions.h"
+#import "NSArray+BTDAdditions.h"
 
 extern NSString *const INSTANT_DATA_KEY;
 
@@ -334,7 +335,7 @@ extern NSString *const INSTANT_DATA_KEY;
         return [FHHousReserveAdviserCell class];
     }else if ([model isKindOfClass:[FHSearchFindHouseHelperModel class]]) {
         return [FHFindHouseHelperCell class];
-    }else if ([model isKindOfClass:[FHDynamicLynxModel class]]) {
+    }else if ([model isKindOfClass:[FHDynamicLynxCellModel class]]) {
         return [FHDynamicLynxCell class];
     }
     return [FHListBaseCell class];
@@ -1652,6 +1653,13 @@ extern NSString *const INSTANT_DATA_KEY;
             FHHouseSearchNewHouseCell *newCell = (FHHouseSearchNewHouseCell *)cell;
             [newCell updateHeightByIsFirst:isFirstCell];
         }
+        if ([cell isKindOfClass:[FHDynamicLynxCell class]]) {
+            FHDynamicLynxCellModel *cellModel = [self.houseList btd_objectAtIndex:indexPath.row];
+            if (cellModel) {
+                cellModel.cell = cell;
+                [(FHDynamicLynxCell *)cell updateWithCellModel:cellModel];
+            }
+        }
         [cell refreshWithData:data];
         if ([cell isKindOfClass:[FHHouseListAgencyInfoCell class]]) {
             FHHouseListAgencyInfoCell *agencyInfoCell = (FHHouseListAgencyInfoCell *)cell;
@@ -2247,17 +2255,20 @@ extern NSString *const INSTANT_DATA_KEY;
                                  @"element_type":@"driving_find_house_card",
                                 };
         [FHUserTracker writeEvent:@"element_show" params:params];
-    }else if ([cellModel isKindOfClass:[FHDynamicLynxModel class]]) {
-        FHDynamicLynxLynxDataReportParamsModel *reportModel = ((FHDynamicLynxModel *)cellModel).lynxData.reportParams;
-        NSDictionary *params = @{@"origin_from":reportModel.originFrom ?: @"be_null",
-                                 @"enter_from":reportModel.enterFrom ?: @"be_null",
-                                 @"event_type":@"house_app2c_v2",
-                                 @"page_type":reportModel.pageType ?: @"be_null",
-                                 @"element_type":reportModel.elementType ?: @"be_null",
-                                 @"search_id":reportModel.searchId ?: @"be_null",
-                                 @"event_tracking_id":@"107653",
-                                };
-        [FHUserTracker writeEvent:@"element_show" params:params];
+    }else if ([cellModel isKindOfClass:[FHDynamicLynxCellModel class]]) {
+        FHDynamicLynxModel *model = ((FHDynamicLynxCellModel *)cellModel).model;
+        NSDictionary *reportData = [((FHDynamicLynxModel *)model).lynxData objectForKey:@"report_params"];
+        if (reportData && [reportData isKindOfClass:[NSDictionary class]]) {
+            NSDictionary *params = @{@"origin_from":reportData[@"origin_from"] ?: @"be_null",
+                                     @"enter_from":reportData[@"enter_from"] ?: @"be_null",
+                                     @"event_type":@"house_app2c_v2",
+                                     @"page_type":reportData[@"page_type"] ?: @"be_null",
+                                     @"element_type":reportData[@"element_type"] ?: @"be_null",
+                                     @"search_id":reportData[@"search_id"] ?: @"be_null",
+                                     @"event_tracking_id":@"107653",
+                                    };
+            [FHUserTracker writeEvent:@"element_show" params:params];
+        }
     }
 }
 
