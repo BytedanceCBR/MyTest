@@ -6,6 +6,7 @@
 //
 
 #import "FHNewHouseDetailSectionModel.h"
+#import "MAMapKit.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -13,6 +14,11 @@ NS_ASSUME_NONNULL_BEGIN
 @class FHNewHouseDetailMapCellModel;
 
 @interface FHNewHouseDetailSurroundingSM : FHNewHouseDetailSectionModel
+
+@property (nonatomic, copy) NSString *baiduPanoramaUrl;
+@property (nonatomic, assign) CLLocationCoordinate2D centerPoint;
+@property (nonatomic, copy) NSString *mapCentertitle;
+@property(nonatomic, copy) NSString *curCategory;
 
 @property (nonatomic, strong) FHNewHouseDetailSurroundingCellModel *surroundingCellModel;
 

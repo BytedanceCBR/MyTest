@@ -117,7 +117,7 @@
         
         __weak typeof(self) weakSelf = self;
         self.actionBtn = [[UIButton alloc]init];
-        [self.locationContentView addSubview:self.actionBtn];
+        [self.consultContentView addSubview:self.actionBtn];
         [self.actionBtn btd_addActionBlockForTouchUpInside:^(__kindof UIButton * _Nonnull sender) {
             if (weakSelf.imActionBlock) {
                 weakSelf.imActionBlock();
