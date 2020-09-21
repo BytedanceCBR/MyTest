@@ -133,17 +133,21 @@
             CGFloat height = 0;
             for (NSInteger idx = 0; idx < model.discountInfo.count; idx++) {
                 FHDetailNewDiscountInfoItemModel *item = model.discountInfo[idx];
-                UILabel *label = [[UILabel alloc] init];
-                label.font = [UIFont themeFontMedium:16];
-                label.numberOfLines = 2;
-                label.text = item.discountContent;
-                label.width = [UIScreen mainScreen].bounds.size.width - 100 - 40 - 42 * 2;
-                [label sizeToFit];
-                height = height + 44 + floor(label.height);
+                FHNewHouseDetailSalesItemView *itemView = [[FHNewHouseDetailSalesItemView alloc]initWithFrame:CGRectZero];
+                [itemView.tagView setTitle:item.itemDesc forState:UIControlStateNormal];
+                [itemView.submitBtn setTitle:item.actionDesc forState:UIControlStateNormal];
+                itemView.titleLabel.text = item.discountContent;
+                [itemView.tagView sizeToFit];
+                [itemView.submitBtn sizeToFit];
+                CGFloat btnWidth = itemView.submitBtn.width + 34;
+                CGFloat iconWidth = itemView.tagView.width + 10;
+                itemView.titleLabel.width = [UIScreen mainScreen].bounds.size.width - btnWidth - iconWidth - 42 * 2;
+                [itemView.titleLabel sizeToFit];
+                CGFloat titleHeight  = floor(itemView.titleLabel.height);
+                height += 44 + titleHeight;
                 if (item.discountSubContent.length == 0) {
                     height -= 18;
                 }
-                
             }
             return CGSizeMake(width, height);
         }
