@@ -10,6 +10,7 @@
 #import "FHTextField.h"
 #import "ToastManager.h"
 #import <FHHouseBase/FHUserInfoManager.h>
+#import <FHHouseBase/NSObject+FHOptimize.h>
 
 @interface FHDetailHouseSubscribeCell()<UITextFieldDelegate>
 
@@ -168,19 +169,20 @@
 }
 
 - (void)showFullPhoneNum:(BOOL)isShow {
-    if (self.phoneNum.length > 0) {
-        if(isShow){
-            self.textField.text = @"";
-        }else{
-            self.textField.text = [FHUserInfoManager formatMaskPhoneNumber:self.phoneNum];;
-        }
-        if (self.textField.text.length > 0) {
-            self.subscribeBtn.enabled = YES;
-            self.subscribeBtn.alpha = 1;
-        }else {
-            self.subscribeBtn.enabled = NO;
-            self.subscribeBtn.alpha = 0.6;
-        }
+    if(isShow){
+        __weak typeof(self) weakSelf = self;
+        [self executeOnce:^{
+            weakSelf.textField.text = @"";
+        } token:FHExecuteOnceUniqueTokenForCurrentContext];
+    }else{
+        self.textField.text = [FHUserInfoManager formatMaskPhoneNumber:self.phoneNum];;
+    }
+    if (self.textField.text.length > 0) {
+        self.subscribeBtn.enabled = YES;
+        self.subscribeBtn.alpha = 1;
+    }else {
+        self.subscribeBtn.enabled = NO;
+        self.subscribeBtn.alpha = 0.6;
     }
 }
 

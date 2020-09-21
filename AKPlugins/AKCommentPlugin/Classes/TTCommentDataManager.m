@@ -537,7 +537,7 @@ static TTCommentDataManager *sharedManager;
     request.group_id = @(groupID.longLongValue);
     request.action_type = @(1);
 
-    [FRRequestManager requestModel:request callBackWithMonitor:^(NSError *error, NSObject <TTResponseModelProtocol> *responseModel, FRForumMonitorModel *monitorModel) {
+    [FRRequestManager requestModel:request callBackWithMonitor:^(NSError *error, id<TTResponseModelProtocol> responseModel, FRForumMonitorModel *monitorModel) {
         if (finishBlock) {
             finishBlock(error);
         }
@@ -550,7 +550,7 @@ static TTCommentDataManager *sharedManager;
     request.reply_id = @(commentReplyID.longLongValue);
     request.action_type = @(2);
 
-    [FRRequestManager requestModel:request callBackWithMonitor:^(NSError *error, NSObject <TTResponseModelProtocol> *responseModel, FRForumMonitorModel *monitorModel) {
+    [FRRequestManager requestModel:request callBackWithMonitor:^(NSError *error, id<TTResponseModelProtocol> responseModel, FRForumMonitorModel *monitorModel) {
         if (finishBlock) {
             finishBlock(error);
         }

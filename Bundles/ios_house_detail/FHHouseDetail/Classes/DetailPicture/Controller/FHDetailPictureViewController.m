@@ -1727,6 +1727,7 @@ static BOOL kFHStaticPhotoBrowserAtTop = NO;
                 [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
                 
                 [[UIApplication sharedApplication] endIgnoringInteractionEvents];
+                [self didMoveToParentViewController:rootViewController];
             }];
         };
         
@@ -1746,6 +1747,7 @@ static BOOL kFHStaticPhotoBrowserAtTop = NO;
             [containerView removeFromSuperview];
             [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
             [[UIApplication sharedApplication] endIgnoringInteractionEvents];
+            [self didMoveToParentViewController:rootViewController];
         }];
     }
 }
@@ -1755,6 +1757,8 @@ static BOOL kFHStaticPhotoBrowserAtTop = NO;
     self.startDismissSelf = YES;
     [[UIApplication sharedApplication] setStatusBarHidden:_statusBarHidden
                                             withAnimation:NO];
+    
+    [self willMoveToParentViewController:nil];
     // 关闭 页面时隐藏
     self.topBar.hidden = YES;
     self.bottomBar.hidden = YES;
@@ -1771,6 +1775,7 @@ static BOOL kFHStaticPhotoBrowserAtTop = NO;
             [self.view removeFromSuperview];
             [self removeFromParentViewController];
             [[UIApplication sharedApplication] endIgnoringInteractionEvents];
+            [self removeFromParentViewController];
         }];
     } else {
         if (self.placeholderSourceViewFrames.count > _currentIndex && [self.placeholderSourceViewFrames objectAtIndex:_currentIndex] != [NSNull null]) {
@@ -1787,6 +1792,7 @@ static BOOL kFHStaticPhotoBrowserAtTop = NO;
                     [self.view removeFromSuperview];
                     [self removeFromParentViewController];
                     [[UIApplication sharedApplication] endIgnoringInteractionEvents];
+                    [self removeFromParentViewController];
                 }];
                 return;
             }
@@ -1870,6 +1876,7 @@ static BOOL kFHStaticPhotoBrowserAtTop = NO;
                 [self.view removeFromSuperview];
                 [self removeFromParentViewController];
                 [[UIApplication sharedApplication] endIgnoringInteractionEvents];
+                [self removeFromParentViewController];
             }];
             
         } else {
@@ -1883,6 +1890,7 @@ static BOOL kFHStaticPhotoBrowserAtTop = NO;
                 [self.view removeFromSuperview];
                 [self removeFromParentViewController];
                 [[UIApplication sharedApplication] endIgnoringInteractionEvents];
+                [self removeFromParentViewController];
             }];
         }
     }

@@ -119,7 +119,7 @@
 
     [[HMDTTMonitor defaultManager] hmdTrackService:kTTUGCPublishBehaviorMonitor metric:nil category:@{@"status" : @(kTTBehaviorFunnelBeforeRequest)} extra:@{kTTUGCMonitorType : kTTPostBehaviorTypeRepost}];
 
-    [TTUGCRequestManager requestModel:request callBackWithMonitor:^(NSError *error, NSObject<TTResponseModelProtocol> * responseModel,TTUGCRequestMonitorModel *monitorModel) {
+    [TTUGCRequestManager requestModel:request callBackWithMonitor:^(NSError *error, id<TTResponseModelProtocol>  responseModel,TTUGCRequestMonitorModel *monitorModel) {
 
         if (!error && [responseModel isKindOfClass:[FRPublishRePostResponseModel class]]) {
             [[HMDTTMonitor defaultManager] hmdTrackService:kTTUGCPublishBehaviorMonitor metric:nil category:@{@"status" : @(kTTBehaviorFunnelRequestSuccess)} extra:@{kTTUGCMonitorType : kTTPostBehaviorTypeRepost}];
@@ -190,7 +190,7 @@
 
     [[HMDTTMonitor defaultManager] hmdTrackService:kTTUGCPublishBehaviorMonitor metric:nil category:@{@"status" : @(kTTBehaviorFunnelBeforeRequest)} extra:@{kTTUGCMonitorType : kTTPostBehaviorTypePost}];
 
-    [TTUGCRequestManager requestModel:publishModel callBackWithMonitor:^(NSError *error, NSObject<TTResponseModelProtocol> *responseModel, TTUGCRequestMonitorModel *monitorModel) {
+    [TTUGCRequestManager requestModel:publishModel callBackWithMonitor:^(NSError *error, id<TTResponseModelProtocol> responseModel, TTUGCRequestMonitorModel *monitorModel) {
         
         uint64_t endTime = [NSObject currentUnixTime];
         uint64_t total = [NSObject machTimeToSecs:endTime - startTime] * 1000;
@@ -255,7 +255,7 @@
 
     [[HMDTTMonitor defaultManager] hmdTrackService:kTTUGCPublishBehaviorMonitor metric:nil category:@{@"status" : @(kTTBehaviorFunnelBeforeRequest)} extra:@{kTTUGCMonitorType : kTTPostBehaviorTypePost}];
 
-    [TTUGCRequestManager requestModel:publishEditedModel callBackWithMonitor:^(NSError *error, NSObject<TTResponseModelProtocol> *responseModel, TTUGCRequestMonitorModel *monitorModel) {
+    [TTUGCRequestManager requestModel:publishEditedModel callBackWithMonitor:^(NSError *error, id<TTResponseModelProtocol> responseModel, TTUGCRequestMonitorModel *monitorModel) {
         
         uint64_t endTime = [NSObject currentUnixTime];
         uint64_t total = [NSObject machTimeToSecs:endTime - startTime] * 1000;

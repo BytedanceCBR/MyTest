@@ -105,7 +105,7 @@
     }
     self.inputText = query;
     __weak typeof(self) wself = self;
-    self.httpTask = [FHHomeRequestAPI requestCitySearchByQuery:query class:[FHCitySearchModel class] completion:^(FHCitySearchModel *  _Nonnull model, NSError * _Nonnull error) {
+    self.httpTask = [FHHomeRequestAPI requestCitySearchByQuery:query class:[FHCitySearchModel class] completion:(FHMainApiCompletion)^(FHCitySearchModel *  _Nonnull model, NSError * _Nonnull error) {
         if (model != NULL && error == NULL) {
             // 构建数据源
             wself.cityList = model.data.data;
