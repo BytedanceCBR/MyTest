@@ -15,6 +15,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)updateRelatedModel:(FHListResultHouseModel *)model;
 
 @property (nonatomic, strong, nullable) FHNewHouseDetailTRelatedCollectionCellModel *relatedCellModel;
+@property (nonatomic, copy) NSString *title;
 
 @end
 

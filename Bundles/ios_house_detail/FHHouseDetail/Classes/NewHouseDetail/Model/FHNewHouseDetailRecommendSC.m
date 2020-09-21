@@ -152,9 +152,10 @@
 - (__kindof UICollectionReusableView *)viewForSupplementaryElementOfKind:(NSString *)elementKind
                                                                  atIndex:(NSInteger)index {
     FHDetailSectionTitleCollectionView *titleView = [self.collectionContext dequeueReusableSupplementaryViewOfKind:UICollectionElementKindSectionHeader forSectionController:self class:[FHDetailSectionTitleCollectionView class] atIndex:index];
+    FHNewHouseDetailRecommendSM *model = (FHNewHouseDetailRecommendSM *)self.sectionModel;
     titleView.titleLabel.font = [UIFont themeFontMedium:18];
     titleView.titleLabel.textColor = [UIColor themeGray1];
-    titleView.titleLabel.text = @"猜你喜欢";
+    titleView.titleLabel.text = model.title;
     titleView.arrowsImg.hidden = YES;
     titleView.userInteractionEnabled = NO;
     return titleView;

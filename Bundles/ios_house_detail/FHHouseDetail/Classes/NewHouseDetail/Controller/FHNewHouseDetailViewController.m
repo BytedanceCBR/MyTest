@@ -1026,10 +1026,9 @@
     }
     //locate the scrollview which is in the centre
     CGPoint centerPoint = CGPointMake(20, scrollView.contentOffset.y + self.navBar.btd_height + self.segmentTitleView.btd_height);
-    NSIndexPath *indexPath = [self.collectionView indexPathForItemAtPoint:centerPoint];
-    if (!indexPath) {
-        indexPath = [self.collectionView indexPathForItemAtPoint:CGPointMake(centerPoint.x, centerPoint.y + 61)];
-    }
+    NSArray *attributesArray = [self.detailFlowLayout layoutAttributesForElementsInRect:CGRectMake(centerPoint.x, centerPoint.y, 1, 1)];
+    UICollectionViewLayoutAttributes *attributes = attributesArray.firstObject;
+    NSIndexPath *indexPath = attributes.indexPath;
     if (indexPath && self.lastIndexPath.section != indexPath.section) {
         self.lastIndexPath = indexPath;
         FHNewHouseDetailSectionModel *model = self.viewModel.sectionModels[indexPath.section];
