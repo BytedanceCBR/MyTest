@@ -31,12 +31,14 @@
     TTRouteParamObj *paramObj = [[TTRoute sharedRoute]routeParamObjWithURL:origURL];
     NSDictionary *allParams = paramObj.allParams;
     NSMutableDictionary *resultDict = @{}.mutableCopy;
-    if (commonParam) {
-        [resultDict addEntriesFromDictionary:commonParam];
-    }
-    if (allParams) {
-        [resultDict addEntriesFromDictionary:allParams];
-    }
+    [commonParam enumerateKeysAndObjectsUsingBlock:^(NSString *  _Nonnull key, id  _Nonnull obj, BOOL * _Nonnull stop) {
+        if (![allParams.allKeys containsObject:key]) {
+            [resultDict setValue:obj forKey:key];
+        }else {
+//            NSLog(@"zjing test replace key:%@, value:%@", key, obj);
+        }
+    }];
+    
     commonParam = [self commonParams:resultDict byRemoveParams:params];
     
     TTHttpRequest *mutableURLRequest = [super URLRequestWithURL:convertUrl.absoluteString params:params method:method constructingBodyBlock:bodyBlock commonParams:commonParam];
