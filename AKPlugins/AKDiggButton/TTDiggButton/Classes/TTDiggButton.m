@@ -14,6 +14,7 @@
 #import <TTThemed/UIImage+TTThemeExtension.h>
 #import "UIColor+Theme.h"
 #import "UIImage+FIconFont.h"
+#import "UIButton+FHUGCMultiDigg.h"
 
 
 @interface TTDiggButton()
@@ -266,7 +267,10 @@
 }
 
 - (void)didMoveToSuperview {
-    
+    [super didMoveToSuperview];
+    if(self.superview) {
+        [self enableMulitDiggEmojiAnimation];
+    }
 }
 
 - (void)setSelected:(BOOL)selected {

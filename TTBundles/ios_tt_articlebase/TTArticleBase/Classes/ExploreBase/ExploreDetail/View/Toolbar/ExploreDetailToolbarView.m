@@ -24,6 +24,7 @@
 #import <TTPlatformBaseLib/TTTrackerWrapper.h>
 #import "UIImage+FIconFont.h"
 #import "UIColor+Theme.h"
+#import "UIButton+FHUGCMultiDigg.h"
 
 @interface ExploreDetailToolbarView ()
 
@@ -98,6 +99,7 @@
         _digButton = digButton;
         _digButton.hitTestEdgeInsets = toolBarButtonHitTestInsets;
         [self addSubview:digButton];
+        [self.digButton enableMulitDiggEmojiAnimation];
         
         _separatorView = [[SSThemedView alloc] init];
         _separatorView.backgroundColorThemeKey = kColorLine7;

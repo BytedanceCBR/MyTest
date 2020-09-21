@@ -18,7 +18,7 @@
 #import "UIFont+House.h"
 #import "Masonry.h"
 #import "UIImage+FIconFont.h"
-
+#import "UIButton+FHUGCMultiDigg.h"
 
 @interface TTCommentDetailToolbarView ()
 
@@ -84,6 +84,7 @@
         _diggButton = digButton;
         _diggButton.hitTestEdgeInsets = toolBarButtonHitTestInsets;
         [self addSubview:digButton];
+        [self.diggButton enableMulitDiggEmojiAnimation];
 
         _separatorView = [[SSThemedView alloc] init];
         _separatorView.backgroundColorThemeKey = kColorLine7;

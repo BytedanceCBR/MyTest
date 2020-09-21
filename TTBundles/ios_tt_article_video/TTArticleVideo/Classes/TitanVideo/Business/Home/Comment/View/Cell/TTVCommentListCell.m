@@ -34,7 +34,6 @@
 #import "TTSandBoxHelper.h"
 #import "TTIndicatorView.h"
 #import "UIColor+Theme.h"
-#import "UIButton+FHUGCMultiDigg.h"
 
 #define kTTCommentCellDigButtonHitTestInsets UIEdgeInsetsMake(-30, -30, -10, -30)
 #define kTTCommentContentLabelQuotedCommentUserURLString @"com.bytedance.kTTCommentContentLabelQuotedCommentUserURLString"
@@ -133,7 +132,6 @@
     [self.contentView addSubview:self.deleteButton];
     [self.contentView addSubview:self.digButton];
     [self.contentView addSubview:self.debugGidLabel];
-    [self.digButton enableMulitDiggEmojiAnimation];
     if ([TTSandBoxHelper isInHouseApp] && [self shouldShowDebug]) {
         UILongPressGestureRecognizer *gesture = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(didLongPressSelectorView:)];
         gesture.minimumPressDuration = 1.0;
