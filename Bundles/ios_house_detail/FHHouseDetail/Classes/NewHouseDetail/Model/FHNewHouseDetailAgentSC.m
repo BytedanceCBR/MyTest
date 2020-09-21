@@ -148,7 +148,7 @@
     CGFloat width = self.collectionContext.containerSize.width - 15 * 2;
     CGFloat height = 65;
     if (index == agentSM.recommendedRealtors.count) {
-        height = 55;
+        height = 45;
     }
     return CGSizeMake(width, height);
 }

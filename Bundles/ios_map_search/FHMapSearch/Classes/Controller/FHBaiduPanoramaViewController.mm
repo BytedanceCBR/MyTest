@@ -238,10 +238,6 @@ char *const FHBaiduPanoramaPOISearchResultTypeName = "FHBaiduPanoramaPOISearchRe
     }];
         
     [self setupDefaultNavBar:NO];
-    [self.customNavBarView.leftBtn setBackgroundImage:ICON_FONT_IMG(24, @"\U0000e68a", [UIColor whiteColor]) forState:UIControlStateNormal];
-    [self.customNavBarView.leftBtn setBackgroundImage:ICON_FONT_IMG(24, @"\U0000e68a", [UIColor whiteColor]) forState:UIControlStateHighlighted];
-    //    self.customNavBarView.backgroundColor = [UIColor clearColor];
-    //    self.customNavBarView.seperatorLine.hidden = YES;
     self.customNavBarView.title.textColor = [UIColor themeWhite];
     [self.customNavBarView cleanStyle:YES];
     [self.customNavBarView setNaviBarTransparent:YES];

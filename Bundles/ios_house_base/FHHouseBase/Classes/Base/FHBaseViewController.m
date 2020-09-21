@@ -20,6 +20,7 @@
 #import <FHIntroduceManager.h>
 #import <TTBaseLib/TTDeviceHelper.h>
 #import <ByteDanceKit/ByteDanceKit.h>
+#import "UIImage+FIconFont.h"
 
 @interface FHBaseViewController ()<TTRouteInitializeProtocol, UIViewControllerErrorHandler>
 
@@ -253,7 +254,9 @@
         // 自定义NaviBar
         self.ttHideNavigationBar = YES;
         self.navigationController.navigationBar.hidden = YES;
-        _customNavBarView = [[FHNavBarView alloc] init];
+        self.customNavBarView = [[FHNavBarView alloc] init];
+        [self.customNavBarView.leftBtn setBackgroundImage:FHBackBlackImage forState:UIControlStateNormal];
+        [self.customNavBarView.leftBtn setBackgroundImage:FHBackBlackImage forState:UIControlStateHighlighted];
         [self.view addSubview:_customNavBarView];
         _customNavBarView.title.text = self.titleName;
         [_customNavBarView mas_makeConstraints:^(MASConstraintMaker *maker) {

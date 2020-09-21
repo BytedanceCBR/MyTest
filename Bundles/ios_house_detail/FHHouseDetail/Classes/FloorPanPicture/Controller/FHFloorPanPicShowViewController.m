@@ -286,8 +286,6 @@
     [self setupDefaultNavBar:NO];
     [self.customNavBarView setNaviBarTransparent:YES];
     self.customNavBarView.title.text = self.navBarName.length ? self.navBarName : @"楼盘相册";
-    [self.customNavBarView.leftBtn setBackgroundImage:ICON_FONT_IMG(24, @"\U0000e68a", [UIColor themeGray1]) forState:UIControlStateNormal];
-    [self.customNavBarView.leftBtn setBackgroundImage:ICON_FONT_IMG(24, @"\U0000e68a", [UIColor themeGray1]) forState:UIControlStateHighlighted];
 }
 
 - (void)scrollToCurrentIndex:(NSInteger)toIndex {

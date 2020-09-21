@@ -55,8 +55,6 @@ static const float kSegementedOneWidth = 50;
 - (void)initNavBar {
     self.title = @"浏览历史";
     [self setupDefaultNavBar:NO];
-    [self.customNavBarView.leftBtn setBackgroundImage:ICON_FONT_IMG(24, @"\U0000e68a", [UIColor themeGray1]) forState:UIControlStateNormal];
-    [self.customNavBarView.leftBtn setBackgroundImage:ICON_FONT_IMG(24, @"\U0000e68a", [UIColor themeGray1]) forState:UIControlStateHighlighted];
     self.customNavBarView.seperatorLine.hidden = NO;
 }
 
