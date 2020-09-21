@@ -463,7 +463,7 @@ static const CGFloat kCheckChallengeButtonLeftPadding = 28;
     [self.operationView addSubview:_commentButton];
 
     _likeButton = [[TSVIconLabelButton alloc] initWithImage:@"hts_vp_like" label:nil];
-    _likeButton.iconImageView.image = ICON_FONT_IMG(24, @"\U0000e69c", [UIColor themeWhite]);
+    _likeButton.iconImageView.image = ICON_FONT_IMG(20, @"\U0000e69c", [UIColor themeWhite]);
     _likeButton.label.textAlignment = NSTextAlignmentLeft;
     _likeButton.label.textColor = [UIColor themeWhite];
     [_likeButton addTarget:self action:@selector(_onLikeButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
@@ -832,7 +832,7 @@ static const CGFloat kCheckChallengeButtonLeftPadding = 28;
     
     self.likeButton.labelString = [TTBusinessManager formatCommentCount:self.model.diggCount];
     self.likeButton.imageString = self.model.userDigg ? @"hts_vp_like_press" : @"hts_vp_like";
-    self.likeButton.iconImageView.image = self.model.userDigg ? ICON_FONT_IMG(24, @"\U0000e6b1", [UIColor themeOrange4]) : ICON_FONT_IMG(24, @"\U0000e69c", [UIColor themeWhite]);
+    self.likeButton.iconImageView.image = self.model.userDigg ? ICON_FONT_IMG(20, @"\U0000e6b1", [UIColor themeOrange4]) : ICON_FONT_IMG(20, @"\U0000e69c", [UIColor themeWhite]);
     self.likeButton.selected = self.model.userDigg;
     self.likeButton.label.textColor = self.model.userDigg ? [UIColor themeOrange4] : [UIColor themeWhite];
 
@@ -902,7 +902,7 @@ static const CGFloat kCheckChallengeButtonLeftPadding = 28;
 {
     self.likeButton.labelString = [TTBusinessManager formatCommentCount:self.model.diggCount];
     self.likeButton.imageString = self.model.userDigg ? @"hts_vp_like_press" : @"hts_vp_like";
-    self.likeButton.iconImageView.image = self.model.userDigg ? ICON_FONT_IMG(24, @"\U0000e6b1", [UIColor themeOrange4]) : ICON_FONT_IMG(24, @"\U0000e69c", [UIColor themeWhite]);
+    self.likeButton.iconImageView.image = self.model.userDigg ? ICON_FONT_IMG(20, @"\U0000e6b1", [UIColor themeOrange4]) : ICON_FONT_IMG(20, @"\U0000e69c", [UIColor themeWhite]);
     self.likeButton.selected = self.model.userDigg;
     self.likeButton.label.textColor = self.model.userDigg ? [UIColor themeOrange4] : [UIColor themeWhite];
     [self.view setNeedsLayout];

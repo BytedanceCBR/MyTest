@@ -30,12 +30,6 @@
 
 static NSString * const kWDHasTipSupportsEmojiInputDefaultKey = @"WDHasTipSupportsEmojiInputDefaultKey";
 
-@interface WDBottomToolView ()
-
-@property(nonatomic,strong) NSArray *imageArray;
-
-@end
-
 @implementation WDBottomToolView
 
 - (void)dealloc {
