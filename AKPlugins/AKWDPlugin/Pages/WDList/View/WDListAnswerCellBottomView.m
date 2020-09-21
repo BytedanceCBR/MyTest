@@ -50,11 +50,7 @@
     [self addSubview:self.commentButton];
     // 点赞
     self.digButton = [[UIButton alloc] init];
-    [self.digButton setImage:ICON_FONT_IMG(20, @"\U0000e69c", [UIColor themeGray1]) forState:UIControlStateNormal] ;
-    [self.digButton setImage:ICON_FONT_IMG(20, @"\U0000e6b1", [UIColor themeOrange4]) forState:UIControlStateSelected];
     [self.digButton setTitle:@"0" forState:UIControlStateNormal];
-    [self.digButton setTitleColor:[UIColor themeGray1] forState:UIControlStateNormal];
-    [self.digButton setTitleColor:[UIColor themeOrange4] forState:UIControlStateSelected];
     [self.digButton setImageEdgeInsets:UIEdgeInsetsMake(0, 0, 0, 2)];
     [self.digButton setTitleEdgeInsets:UIEdgeInsetsMake(0, 2, 0, -2)];
     self.digButton.titleLabel.font = [UIFont themeFontRegular:14];

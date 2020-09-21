@@ -84,8 +84,6 @@ static NSString * const kWDHasTipSupportsEmojiInputDefaultKey = @"WDHasTipSuppor
     
     _digButton = [TTAlphaThemedButton buttonWithType:UIButtonTypeCustom];
     _digButton.hitTestEdgeInsets = toolBarButtonHitTestInsets;
-    [_digButton setImage:ICON_FONT_IMG(20, @"\U0000e69c", [UIColor themeGray1]) forState:UIControlStateNormal];
-    [_digButton setImage:ICON_FONT_IMG(20, @"\U0000e6b1", [UIColor themeOrange4]) forState:UIControlStateSelected];
     [_digButton addTarget:self action:@selector(diggButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
     [self addSubview:_digButton];
     [_digButton enableMulitDiggEmojiAnimation];

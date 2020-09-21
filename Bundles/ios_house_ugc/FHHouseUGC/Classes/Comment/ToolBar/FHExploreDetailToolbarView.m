@@ -71,8 +71,6 @@
         TTAlphaThemedButton *digButton = [TTAlphaThemedButton buttonWithType:UIButtonTypeCustom];
         _digButton = digButton;
         _digButton.hitTestEdgeInsets = toolBarButtonHitTestInsets;
-        [_digButton setImage:ICON_FONT_IMG(20, @"\U0000e69c", [UIColor themeGray1]) forState:UIControlStateNormal];
-        [_digButton setImage:ICON_FONT_IMG(20, @"\U0000e6b1", [UIColor themeOrange4]) forState:UIControlStateSelected];
         [self addSubview:digButton];
         [self.digButton enableMulitDiggEmojiAnimation];
         

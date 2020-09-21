@@ -152,14 +152,10 @@
         }];
         
         self.likeButton = [UIButton new];
-        [self.likeButton setTitleColor:[UIColor themeGray1] forState:UIControlStateNormal];
-        [self.likeButton setTitleColor:[UIColor themeOrange4] forState:UIControlStateSelected];
         [self.likeButton setTitle:@"赞" forState:UIControlStateNormal];
         [self.likeButton setTitle:@"赞" forState:UIControlStateSelected];
         self.likeButton.titleLabel.font = [UIFont systemFontOfSize:13.0];
         self.likeButton.titleEdgeInsets = UIEdgeInsetsMake(0, 6, 0, 0);
-        [self.likeButton setImage:ICON_FONT_IMG(20, @"\U0000e69c", [UIColor themeGray1]) forState:UIControlStateNormal];
-        [self.likeButton setImage:ICON_FONT_IMG(20, @"\U0000e6b1", [UIColor themeOrange4]) forState:UIControlStateSelected];
         [self.likeButton addTarget:self action:@selector(likeButtonTapped) forControlEvents:UIControlEventTouchUpInside];
         UIEdgeInsets insets = self.likeButton.titleEdgeInsets;
         self.likeButton.titleEdgeInsets = UIEdgeInsetsMake(4, insets.left, insets.bottom, insets.right);

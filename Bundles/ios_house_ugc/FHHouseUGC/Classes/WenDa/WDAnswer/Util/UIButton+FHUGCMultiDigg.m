@@ -10,6 +10,8 @@
 #import <TTAccountManager.h>
 #import <ReactiveObjC/ReactiveObjC.h>
 #import <Masonry/Masonry.h>
+#import "UIImage+FIconFont.h"
+#import "UIColor+Theme.h"
 @implementation UIButton (FHUGCMultiDigg)
 
 
@@ -26,6 +28,10 @@
         [self.diggView mas_makeConstraints:^(MASConstraintMaker *make) {
             make.edges.equalTo(self);
         }];
+        [self setTitleColor:[UIColor themeGray1] forState:UIControlStateNormal];
+        [self setTitleColor:[UIColor themeOrange4] forState:UIControlStateSelected];
+        [self setImage:ICON_FONT_IMG(20, @"\U0000e69c", [UIColor themeGray1]) forState:UIControlStateNormal];
+        [self setImage:ICON_FONT_IMG(20, @"\U0000e6b1", [UIColor themeOrange4]) forState:UIControlStateSelected];
     }
 }
 
