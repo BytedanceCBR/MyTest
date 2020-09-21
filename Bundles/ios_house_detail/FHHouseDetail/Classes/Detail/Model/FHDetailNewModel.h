@@ -270,7 +270,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, strong , nullable) NSArray<FHDetailNewDiscountInfoItemModel> *discountInfo;
 @property (nonatomic, copy , nullable) NSString *relatedCourtInfo;
-@property (nonatomic, strong , nullable) FHDetailNewSurroundingInfo *surroundingInfo ;
+@property (nonatomic, strong , nullable) FHDetailNewSurroundingInfo *surroundingInfo;
 @property(nonatomic , strong) FHDetailNewTopBanner *topBanner;
 @property (nonatomic, strong , nullable) FHClueAssociateInfoModel *changePriceNotifyAssociateInfo;
 @property (nonatomic, strong , nullable) FHClueAssociateInfoModel *beginSellingNotifyAssociateInfo;
@@ -287,6 +287,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 //1.0.2 新增楼盘楼栋信息
 @property (nonatomic, strong, nullable) FHDetailNewBuildingInfoModel *buildingInfo;
+
+//1.0.8 增加树形楼盘相册和楼盘头图信息
+@property (nonatomic, strong, nullable) FHHouseDetailMediaInfo *albumInfo;
+@property (nonatomic, strong, nullable) FHHouseDetailMediaInfo *courtTopImages;
 @end
 
 @interface FHDetailNewTimeLineDataModel : JSONModel

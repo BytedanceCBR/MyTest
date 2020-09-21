@@ -409,6 +409,7 @@
 {
     NSDictionary *dict = @{
                                    @"hasVr": @"has_vr",
+                                   @"vrId": @"vr_id",
                                    @"vrImage": @"vr_image",
                                    @"openUrl":@"open_url",
                                    @"spaceType":@"space_type"
@@ -517,11 +518,13 @@
 }
 @end
 
-@implementation FHHouseDetailImageStruct
+@implementation FHHouseDetailMediaStruct
 
 + (JSONKeyMapper*)keyMapper
 {
     NSDictionary *dict = @{
+        @"videoInfo": @"video_info",
+        @"vrInfo": @"vr_info",
         @"image": @"image",
         @"smallImage": @"small_image"
     };
@@ -536,7 +539,7 @@
 
 @end
 
-@implementation FHHouseDetailImageTabInfo
+@implementation FHHouseDetailMediaTabInfo
 
 + (JSONKeyMapper*)keyMapper
 {
@@ -556,7 +559,7 @@
 
 @end
 
-@implementation FHHouseDetailAlbumInfo
+@implementation FHHouseDetailMediaInfo
 
 + (JSONKeyMapper*)keyMapper
 {

@@ -148,7 +148,7 @@ FHDetailNeighborhoodMediaHeaderDataHelperHeaderViewData *headerViewData = [[FHDe
         
     }
     
-    for (FHHouseDetailImageTabInfo *tabInfo in newMediaHeaderModel.albumInfo.tabList) {
+    for (FHHouseDetailMediaTabInfo *tabInfo in newMediaHeaderModel.albumInfo.tabList) {
         [mArr addObjectsFromArray:[FHFloorPanPicShowGroupModel getTabGroupInfo:tabInfo rootName:tabInfo.tabName]];
     }
     picShowModel.itemGroupList = mArr.copy;

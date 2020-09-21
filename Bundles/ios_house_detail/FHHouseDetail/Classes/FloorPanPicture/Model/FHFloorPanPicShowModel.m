@@ -43,14 +43,14 @@
     return self;
 }
 
-+ (NSArray<FHFloorPanPicShowGroupModel> *)getTabGroupInfo:(FHHouseDetailImageTabInfo *)tabInfo rootName:(NSString *)rootName {
++ (NSArray<FHFloorPanPicShowGroupModel> *)getTabGroupInfo:(FHHouseDetailMediaTabInfo *)tabInfo rootName:(NSString *)rootName {
     NSMutableArray *groupModels = [[NSMutableArray alloc] init];
     if (tabInfo.tabContent.count > 0) {
         FHFloorPanPicShowGroupModel *groupModel = [[FHFloorPanPicShowGroupModel alloc] init];
         groupModel.groupName = tabInfo.tabName;
         groupModel.rootGroupName = rootName;
         NSMutableArray *itemModels = [[NSMutableArray alloc] init];
-        for (FHHouseDetailImageStruct *imageStruct in tabInfo.tabContent) {
+        for (FHHouseDetailMediaStruct *imageStruct in tabInfo.tabContent) {
             FHFloorPanPicShowItemPictureModel *itemModel = [[FHFloorPanPicShowItemPictureModel alloc] init];
             itemModel.image = imageStruct.smallImage;
             itemModel.itemType = FHFloorPanPicShowModelTypePicture;

@@ -379,7 +379,9 @@
                            @"isShowTopImageTab": @"is_show_top_image_tab",
                            @"imageAlbumAssociateInfo": @"image_album_associate_info",
                            @"realtorContent": @"realtor_content",
-                           @"buildingInfo": @"building_info"
+                           @"buildingInfo": @"building_info",
+                           @"albumInfo": @"album_info",
+                           @"courtTopImages":@"court_top_images"
                            };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
         return dict[keyName]?:keyName;

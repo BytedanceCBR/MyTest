@@ -195,12 +195,12 @@
     FHDetailNeighborhoodMediaHeaderModel *headerCellModel = [[FHDetailNeighborhoodMediaHeaderModel alloc] init];
     NSMutableArray<FHHouseDetailImageListDataModel> *imageListDataList = [NSMutableArray<FHHouseDetailImageListDataModel> arrayWithCapacity:model.data.albumInfo.tabList.count];
     
-    for (FHHouseDetailImageTabInfo *tabInfo in model.data.albumInfo.tabList) {
+    for (FHHouseDetailMediaTabInfo *tabInfo in model.data.albumInfo.tabList) {
         FHHouseDetailImageListDataModel *houseImageDictList = [[FHHouseDetailImageListDataModel alloc] init];
         houseImageDictList.houseImageTypeName = tabInfo.tabName;
         houseImageDictList.usedSceneType = FHHouseDetailImageListDataUsedSceneTypeNeighborhood;
         NSMutableArray *imageArr = [NSMutableArray array];
-        for (FHHouseDetailImageStruct *imageStruct in tabInfo.tabContent) {
+        for (FHHouseDetailMediaStruct *imageStruct in tabInfo.tabContent) {
             [imageArr addObject:imageStruct.image];
         }
         houseImageDictList.houseImageList = imageArr.copy;
