@@ -8,7 +8,7 @@
 #import "BDTDefaultHTTPRequestSerializer.h"
 #import "TTNetworkManager.h"
 #import "TTAccountSDK.h"
-
+#import <TTRoute/TTRoute.h>
 
 
 @interface BDTDefaultHTTPRequestSerializer()
@@ -27,7 +27,18 @@
 {
     NSURL *origURL = [NSURL URLWithString:URL];
     NSURL *convertUrl = [self _transferedURL:origURL];
-    commonParam = [self commonParams:commonParam byRemoveParams:params];
+    
+    TTRouteParamObj *paramObj = [[TTRoute sharedRoute]routeParamObjWithURL:origURL];
+    NSDictionary *allParams = paramObj.allParams;
+    NSMutableDictionary *resultDict = @{}.mutableCopy;
+    if (commonParam) {
+        [resultDict addEntriesFromDictionary:commonParam];
+    }
+    if (allParams) {
+        [resultDict addEntriesFromDictionary:allParams];
+    }
+    commonParam = [self commonParams:resultDict byRemoveParams:params];
+    
     TTHttpRequest *mutableURLRequest = [super URLRequestWithURL:convertUrl.absoluteString params:params method:method constructingBodyBlock:bodyBlock commonParams:commonParam];
     
     //我们自己的 一些Header 在这一步加入
