@@ -9,6 +9,10 @@
 
 @implementation FHNewHouseDetailRecommendSM
 
+- (void)updateDetailModel:(FHDetailNewModel *)model {
+    self.title = model.data.relatedCourtInfo;
+}
+
 - (void)updateRelatedModel:(FHListResultHouseModel *)model {
     FHNewHouseDetailTRelatedCollectionCellModel *relatedCellModel = [[FHNewHouseDetailTRelatedCollectionCellModel alloc] init];
     relatedCellModel.relatedModel = model.data;
