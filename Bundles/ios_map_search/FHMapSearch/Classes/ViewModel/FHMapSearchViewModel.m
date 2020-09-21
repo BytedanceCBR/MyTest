@@ -2181,7 +2181,7 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
             NSMutableDictionary *addDict = [NSMutableDictionary new];
             for (NSString *key in bubble.queryDict.allKeys) {
                 if ([key isEqualToString:@"area[]"] || [key isEqualToString:@"district[]"] || [key isEqualToString:@"line[]"]
-                    || [key isEqualToString:@"station[]"] || [key isEqualToString:NEIGHBORHOOD_IDS]) {
+                    || [key isEqualToString:@"station[]"] || [key isEqualToString:@"school[]"] || [key isEqualToString:@"school_district[]"]  || [key isEqualToString:NEIGHBORHOOD_IDS]) {
                     addDict[key] = bubble.queryDict[key];
                 }
             }

@@ -544,29 +544,17 @@ NS_ASSUME_NONNULL_BEGIN
 @end
 
 // 动态Lynx混排卡片
-@interface FHDynamicLynxLynxDataReportParamsModel : JSONModel
-
-@property (nonatomic, copy , nullable) NSString *searchId;
-@property (nonatomic, copy , nullable) NSString *originFrom;
-@property (nonatomic, copy , nullable) NSString *elementType;
-@property (nonatomic, copy , nullable) NSString *pageType;
-@property (nonatomic, copy , nullable) NSString *enterFrom;
-@property (nonatomic, copy , nullable) NSString *elementFrom;
-@end
-
-@interface FHDynamicLynxLynxDataModel : JSONModel
-
-@property (nonatomic, strong , nullable) FHDynamicLynxLynxDataReportParamsModel *reportParams ;
-@property (nonatomic, copy , nullable) NSString *subtitle;
-@property (nonatomic, copy , nullable) NSString *buttonText;
-@property (nonatomic, copy , nullable) NSString *openUrl;
-@property (nonatomic, copy , nullable) NSString *title;
-@end
-
 @interface FHDynamicLynxModel : FHSearchBaseItemModel
 
 @property (nonatomic, copy , nullable) NSString *height;
 @property (nonatomic, copy , nullable) NSString *channel;
-@property (nonatomic, strong , nullable) FHDynamicLynxLynxDataModel *lynxData ;
+@property (nonatomic, strong , nullable) NSDictionary *lynxData;
+@end
+
+@interface FHDynamicLynxCellModel : FHSearchBaseItemModel
+
+@property (nonatomic, strong, nullable) FHDynamicLynxModel *model;
+//cell
+@property (nonatomic, weak) UITableViewCell *cell;
 @end
 NS_ASSUME_NONNULL_END

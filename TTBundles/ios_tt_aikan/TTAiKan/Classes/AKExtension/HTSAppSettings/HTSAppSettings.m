@@ -51,7 +51,7 @@ static NSString * const BASE_URL_SANDBOX    = @"https://hotsoon.snssdk.com/sandb
     }
     
     Class <MTLModel> modelClass = [HTSAppSettingsModel class];
-    void (^completion)(NSError *, id<MTLModel>) = ^(NSError *error, HTSAppSettingsModel *model) {
+    void (^completion)(NSError *, id<MTLModel>) = ^(NSError *error, id<MTLModel> model) {
         if (error || !model) {
             return;
         }
