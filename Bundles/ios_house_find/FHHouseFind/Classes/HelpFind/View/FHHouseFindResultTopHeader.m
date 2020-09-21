@@ -50,7 +50,7 @@
         
         _iconContainerView = [UIView new];
         _iconContainerView.layer.masksToBounds = YES;
-        _iconContainerView.layer.cornerRadius = 4;
+        _iconContainerView.layer.cornerRadius = 10;
         [_iconContainerView setBackgroundColor:[UIColor whiteColor]];
         [self addSubview:_iconContainerView];
         
