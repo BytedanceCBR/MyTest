@@ -285,6 +285,9 @@
     if (self.houseId.length) {
         params[@"group_id"] = self.houseId;
     }
+    if (self.trackingId && self.trackingId.length) {
+        params[@"event_tracking_id"] = self.trackingId;
+    }
     [FHUserTracker writeEvent:@"go_detail" params:params];
 }
 

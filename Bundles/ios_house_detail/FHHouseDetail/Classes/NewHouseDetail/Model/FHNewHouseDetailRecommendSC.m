@@ -112,6 +112,7 @@
     tracerDic[@"house_type"] = [[FHHouseTypeManager sharedInstance] traceValueForType:vc.viewModel.houseType];
     tracerDic[@"element_from"] = @"search_related";
     tracerDic[@"enter_from"] = @"new_detail";
+    tracerDic[@"event_tracking_id"] = @"107650";
     TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:@{@"tracer":tracerDic,@"house_type":@(FHHouseTypeNewHouse)}];
     NSString * urlStr = [NSString stringWithFormat:@"sslocal://new_house_detail?court_id=%@",dataItem.houseid];
     if (urlStr.length > 0) {
@@ -129,7 +130,7 @@
     // house_show
     NSMutableDictionary *tracerDic = self.detailTracerDict.mutableCopy;
     tracerDic[@"rank"] = @(index);
-    tracerDic[@"card_type"] = @"left_pic";
+    tracerDic[@"card_type"] = @"slide";
     tracerDic[@"log_pb"] = dataItem.logPb ? dataItem.logPb : @"be_null";
     FHNewHouseDetailViewController *vc = self.detailViewController;
     tracerDic[@"house_type"] = [[FHHouseTypeManager sharedInstance] traceValueForType:vc.viewModel.houseType];
@@ -137,6 +138,7 @@
     tracerDic[@"search_id"] = dataItem.searchId.length > 0 ? dataItem.searchId : @"be_null";
     tracerDic[@"group_id"] = dataItem.houseid ? : @"be_null";
     tracerDic[@"impr_id"] = dataItem.imprId.length > 0 ? dataItem.imprId : @"be_null";
+    tracerDic[@"event_tracking_id"] = @"107649";
     [tracerDic removeObjectsForKeys:@[@"element_from"]];
     [FHUserTracker writeEvent:@"house_show" params:tracerDic];
     
