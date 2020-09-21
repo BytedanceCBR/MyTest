@@ -489,14 +489,14 @@
     if (index == 1) {
         contentOffset.y = 0;
     }
-    //self.segmentViewChangedFlag = YES;
-    [self.collectionView scrollToItemAtIndexPath:_lastIndexPath atScrollPosition:UICollectionViewScrollPositionTop animated:NO];
-    [self.collectionView setContentOffset:contentOffset];
-//    [UIView animateWithDuration:0.2 animations:^{
-//        [self.collectionView setContentOffset:contentOffset];
-//    } completion:^(BOOL finished) {
-//        self.segmentViewChangedFlag = NO;
-//    }];
+//    [self.collectionView scrollToItemAtIndexPath:_lastIndexPath atScrollPosition:UICollectionViewScrollPositionTop animated:NO];
+//    [self.collectionView setContentOffset:contentOffset];
+    self.segmentViewChangedFlag = YES;
+    [UIView animateWithDuration:0.2 animations:^{
+        [self.collectionView setContentOffset:contentOffset];
+    } completion:^(BOOL finished) {
+        self.segmentViewChangedFlag = NO;
+    }];
 
 }
 
