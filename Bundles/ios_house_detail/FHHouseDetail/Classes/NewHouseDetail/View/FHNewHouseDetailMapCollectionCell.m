@@ -53,6 +53,13 @@
     return CGSizeZero;
 }
 
+- (void)setCurCategory:(NSString *)curCategory {
+    _curCategory = curCategory;
+    if (self.categoryChangeBlock) {
+        self.categoryChangeBlock(curCategory);
+    }
+}
+
 - (instancetype)initWithFrame:(CGRect)frame {
     if (self = [super initWithFrame:frame]) {
         self.curCategory = @"交通";
@@ -214,39 +221,9 @@
 }
 
 - (void)mapMaskBtnClick:(UIButton *)sender {
-    FHNewHouseDetailMapCellModel *dataModel = (FHNewHouseDetailMapCellModel *) self.currentData;
-    
-    //地图页调用示例
-    double longitude = self.centerPoint.longitude;
-    double latitude = self.centerPoint.latitude;
-    NSNumber *latitudeNum = @(latitude);
-    NSNumber *longitudeNum = @(longitude);
-    
-    NSString *selectCategory = [self.curCategory isEqualToString:@"交通"] ? @"公交" : self.curCategory;
-    NSMutableDictionary *infoDict = [NSMutableDictionary new];
-    [infoDict setValue:selectCategory forKey:@"category"];
-    [infoDict setValue:latitudeNum forKey:@"latitude"];
-    [infoDict setValue:longitudeNum forKey:@"longitude"];
-    [infoDict setValue:dataModel.mapCentertitle forKey:@"title"];
-    if (dataModel.baiduPanoramaUrl.length) {
-        infoDict[@"baiduPanoramaUrl"] = dataModel.baiduPanoramaUrl;
+    if (self.mapBtnClickBlock) {
+        self.mapBtnClickBlock(@"map");
     }
-    
-//    NSMutableDictionary *tracer = [NSMutableDictionary dictionaryWithDictionary:self.baseViewModel.detailTracerDic];
-//    if (sender == _mapMaskBtnLocation) {
-//        [tracer setValue:@"map_list" forKey:@"click_type"];
-//    }
-//
-//    if (sender == _mapMaskBtn) {
-//        [tracer setValue:@"map" forKey:@"click_type"];
-//    }
-//
-//    [tracer setValue:@"map" forKey:@"element_from"];
-//    [tracer setObject:tracer[@"page_type"] forKey:@"enter_from"];
-//    [infoDict setValue:tracer forKey:@"tracer"];
-//
-//    TTRouteUserInfo *info = [[TTRouteUserInfo alloc] initWithInfo:infoDict];
-//    [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:@"sslocal://fh_map_detail"] userInfo:info];
 }
 
 - (void)baiduPanoButtonAction {

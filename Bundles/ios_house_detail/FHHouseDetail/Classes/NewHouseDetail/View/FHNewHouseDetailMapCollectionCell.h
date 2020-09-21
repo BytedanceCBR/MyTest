@@ -12,6 +12,8 @@ NS_ASSUME_NONNULL_BEGIN
 @interface FHNewHouseDetailMapCollectionCell : FHDetailBaseCollectionCell
 
 @property (nonatomic, copy) void (^refreshActionBlock)(void);
+@property (nonatomic, copy) void(^mapBtnClickBlock)(NSString *);
+@property (nonatomic, copy) void(^categoryChangeBlock)(NSString *);
 
 @end
 

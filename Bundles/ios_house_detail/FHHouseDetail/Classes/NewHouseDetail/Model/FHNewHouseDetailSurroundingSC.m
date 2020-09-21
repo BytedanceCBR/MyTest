@@ -51,6 +51,33 @@
     }
 }
 
+//跳转
+- (void)mapMaskBtnClick:(NSString *)clickType {
+    FHNewHouseDetailSurroundingSM *model = (FHNewHouseDetailSurroundingSM *)self.sectionModel;
+    double longitude = model.centerPoint.longitude;
+    double latitude = model.centerPoint.latitude;
+    NSNumber *latitudeNum = @(latitude);
+    NSNumber *longitudeNum = @(longitude);
+    
+    NSString *selectCategory = [model.curCategory isEqualToString:@"交通"] ? @"公交" : model.curCategory;
+    NSMutableDictionary *infoDict = [NSMutableDictionary new];
+    [infoDict setValue:selectCategory forKey:@"category"];
+    [infoDict setValue:latitudeNum forKey:@"latitude"];
+    [infoDict setValue:longitudeNum forKey:@"longitude"];
+    [infoDict setValue:model.mapCentertitle forKey:@"title"];
+    if (model.baiduPanoramaUrl.length) {
+        infoDict[@"baiduPanoramaUrl"] = model.baiduPanoramaUrl;
+    }
+    NSMutableDictionary *tracer = [NSMutableDictionary dictionaryWithDictionary:self.detailTracerDict];
+    [tracer setValue:clickType forKey:@"click_type"];
+    [tracer setValue:@"map" forKey:@"element_from"];
+    [tracer setObject:tracer[@"page_type"] forKey:@"enter_from"];
+    [infoDict setValue:tracer forKey:@"tracer"];
+
+    TTRouteUserInfo *info = [[TTRouteUserInfo alloc] initWithInfo:infoDict];
+    [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:@"sslocal://fh_map_detail"] userInfo:info];
+}
+
 - (NSInteger)numberOfItems {
     FHNewHouseDetailSurroundingSM *model = (FHNewHouseDetailSurroundingSM *)self.sectionModel;
     return model.dataItems.count;
@@ -83,11 +110,20 @@
     FHNewHouseDetailSurroundingSM *model = (FHNewHouseDetailSurroundingSM *)self.sectionModel;
     if (model.dataItems[index] == model.surroundingCellModel) {
         FHNewHouseDetailSurroundingCollectionCell *cell = [self.collectionContext dequeueReusableCellOfClass:[FHNewHouseDetailSurroundingCollectionCell class] withReuseIdentifier:NSStringFromClass([model.surroundingCellModel class]) forSectionController:self atIndex:index];
+        cell.imActionBlock = ^{
+            [weakSelf imAction];
+        };
         [cell refreshWithData:model.surroundingCellModel];
         return cell;
     } else if (model.dataItems[index] == model.mapCellModel) {
         FHNewHouseDetailMapCollectionCell *cell = [self.collectionContext dequeueReusableCellOfClass:[FHNewHouseDetailMapCollectionCell class] withReuseIdentifier:NSStringFromClass([model.mapCellModel class]) forSectionController:self atIndex:index];
         [cell refreshWithData:model.mapCellModel];
+        cell.categoryChangeBlock = ^(NSString * _Nonnull category) {
+            model.curCategory = category;
+        };
+        cell.mapBtnClickBlock = ^(NSString * _Nonnull clickType) {
+            [weakSelf mapMaskBtnClick:clickType];
+        };
         [cell setRefreshActionBlock:^{
             [weakSelf.detailViewController refreshSectionModel:weakSelf.sectionModel animated:YES];
         }];
@@ -141,6 +177,10 @@
 - (void)didSelectItemAtIndex:(NSInteger)index {
     //新房暂时不需要跳转
 //    FHNewHouseDetailAgentSM *agentSM = (FHNewHouseDetailAgentSM *)self.sectionModel;
+    FHNewHouseDetailSurroundingSM *model = (FHNewHouseDetailSurroundingSM *)self.sectionModel;
+    if ([model.dataItems[index] isKindOfClass:[FHStaticMapAnnotation class]] || [model.dataItems[index] isKindOfClass:[NSString class]]) {
+        [self mapMaskBtnClick:@"map_click"];
+    }
 }
 
 #pragma mark - IGListSupplementaryViewSource
@@ -167,4 +207,5 @@
     }
     return CGSizeZero;
 }
+
 @end

@@ -14,6 +14,7 @@
 
 - (void)updateDetailModel:(FHDetailNewModel *)model {
     NSMutableArray *items = [NSMutableArray array];
+    self.centerPoint = CLLocationCoordinate2DMake(39.98269504123264, 116.3078908962674);
     if (model.data.surroundingInfo) {
         FHNewHouseDetailSurroundingCellModel *cellModel = [[FHNewHouseDetailSurroundingCellModel alloc] init];
         cellModel.surroundingInfo = model.data.surroundingInfo;
@@ -32,6 +33,9 @@
         staticMapModel.houseType = [NSString stringWithFormat:@"%ld",(long)FHHouseTypeNewHouse];
         staticMapModel.staticImage = model.data.coreInfo.gaodeImage;
         staticMapModel.mapOnly = NO;
+        self.baiduPanoramaUrl = staticMapModel.baiduPanoramaUrl;
+        self.centerPoint = CLLocationCoordinate2DMake([staticMapModel.gaodeLat floatValue], [staticMapModel.gaodeLng floatValue]);
+        self.mapCentertitle = staticMapModel.mapCentertitle;
         [items addObject:staticMapModel];
         self.mapCellModel = staticMapModel;
     } else{
