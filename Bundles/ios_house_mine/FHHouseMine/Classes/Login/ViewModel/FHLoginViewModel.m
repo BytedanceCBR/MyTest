@@ -115,16 +115,6 @@ static FHLoginSharedModel *_sharedModel = nil;
     self.hasRequestedApis = NO;
     
     dispatch_group_t group = dispatch_group_create();
-    dispatch_group_notify(group, dispatch_get_main_queue(), ^{
-        if (requestError) {
-            self.hasRequestedApis = NO;
-        } else {
-            self.hasRequestedApis = YES;
-        }
-        if (completion) {
-            completion();
-        }
-    });
     
     dispatch_group_enter(group);
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
@@ -175,6 +165,17 @@ static FHLoginSharedModel *_sharedModel = nil;
             }
             dispatch_group_leave(group);
         }];
+    });
+    
+    dispatch_group_notify(group, dispatch_get_main_queue(), ^{
+        if (requestError) {
+            self.hasRequestedApis = NO;
+        } else {
+            self.hasRequestedApis = YES;
+        }
+        if (completion) {
+            completion();
+        }
     });
 }
 
@@ -1155,6 +1156,10 @@ static FHLoginSharedModel *_sharedModel = nil;
     if (self.isNeedCheckUGCAdUser) {
         [[FHEnvContext sharedInstance] checkUGCADUserIsLaunch:YES];
     }
+  
+    [FHMainApi getRequest:@"/f100/api/get_personalized_status" query:nil params:nil jsonClass:[FHConfigModel class] completion:^(JSONModel * _Nullable model, NSError * _Nullable error) {
+        [FHEnvContext savePersonalRecommend:((FHConfigModel*)model).data.personalizedStatus];
+    }];
 }
 
 - (void)handleLoginError:(NSError *)error isOneKey:(BOOL )isOneKey {

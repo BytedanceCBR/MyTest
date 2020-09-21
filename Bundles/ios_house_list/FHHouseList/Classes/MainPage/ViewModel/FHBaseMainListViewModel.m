@@ -75,6 +75,8 @@
 #import "FHMainListTableView.h"
 #import "FHFindHouseHelperCell.h"
 #import "FHHouseSearchNewHouseCell.h"
+#import "FHDynamicLynxCell.h"
+#import "NSArray+BTDAdditions.h"
 
 #define kPlaceCellId @"placeholder_cell_id"
 #define kSingleCellId @"single_cell_id"
@@ -202,6 +204,7 @@ extern NSString *const INSTANT_DATA_KEY;
     [_tableView registerClass:[FHFindHouseHelperCell class] forCellReuseIdentifier:@"FHFindHouseHelperCell"];
     [_tableView registerClass:[FHHouseSearchSecondHouseCell class] forCellReuseIdentifier:@"FHHouseSearchSecondHouseCell"];
     [_tableView registerClass:[FHHouseSearchNewHouseCell class] forCellReuseIdentifier:@"FHHouseSearchNewHouseCell"];
+    [_tableView registerClass:[FHDynamicLynxCell class] forCellReuseIdentifier:@"FHDynamicLynxCell"];
     for (NSString *className in self.cellIdArray) {
         [self registerCellClassBy:className];
     }
@@ -258,6 +261,8 @@ extern NSString *const INSTANT_DATA_KEY;
         return [FHHousReserveAdviserCell class];
     }else if ([model isKindOfClass:[FHSearchFindHouseHelperModel class]]) {
         return [FHFindHouseHelperCell class];
+    }else if ([model isKindOfClass:[FHDynamicLynxCellModel class]]) {
+        return [FHDynamicLynxCell class];
     }
     return [FHListBaseCell class];
 }
@@ -610,6 +615,7 @@ extern NSString *const INSTANT_DATA_KEY;
     
     if (isHead) {
         self.showPlaceHolder = YES;
+        [self.tableView reloadData];
     }
     
     if (![TTReachability isNetworkConnected]) {
@@ -621,10 +627,6 @@ extern NSString *const INSTANT_DATA_KEY;
             [self.tableView.mj_footer endRefreshing];
         }
         return;
-    }
-    if (offset == 0) {
-        _showPlaceHolder = YES;
-        [self.tableView reloadData];
     }
     __weak typeof(self) wself = self;
     if (_mainListPage && self.houseType == FHHouseTypeRentHouse) {
@@ -1641,8 +1643,21 @@ extern NSString *const INSTANT_DATA_KEY;
                     [wself jump2HouseFindPageWithUrl:url];
                 };
             }
-            
-               [cell refreshWithData:data];
+            if ([cell isKindOfClass:[FHHouseSearchSecondHouseCell class]]) {
+                FHHouseSearchSecondHouseCell *secondCell = (FHHouseSearchSecondHouseCell *)cell;
+                [secondCell updateHeightByIsFirst:isFirstCell];
+            } else if ([cell isKindOfClass:[FHHouseSearchNewHouseCell class]]) {
+                FHHouseSearchNewHouseCell *newCell = (FHHouseSearchNewHouseCell *)cell;
+                [newCell updateHeightByIsFirst:isFirstCell];
+            }
+            if ([cell isKindOfClass:[FHDynamicLynxCell class]]) {
+                FHDynamicLynxCellModel *cellModel = [self.houseList btd_objectAtIndex:indexPath.row];
+                if (cellModel) {
+                    cellModel.cell = cell;
+                    [(FHDynamicLynxCell *)cell updateWithCellModel:cellModel];
+                }
+            }
+            [cell refreshWithData:data];
             if ([cell isKindOfClass:[FHHouseListAgencyInfoCell class]]) {
                 FHHouseListAgencyInfoCell *agencyInfoCell = (FHHouseListAgencyInfoCell *)cell;
                 if (!agencyInfoCell.btnClickBlock) {
@@ -1729,6 +1744,13 @@ extern NSString *const INSTANT_DATA_KEY;
                 item.topMargin = 10;
             }else {
                 item.topMargin = 0;
+            }
+            if (_isAbtest) {
+                if (isFirstCell) {
+                    item.topMargin = 5;
+                } else {
+                    item.topMargin = 0;
+                }
             }
             data = item;
         }
@@ -2427,6 +2449,20 @@ extern NSString *const INSTANT_DATA_KEY;
                                  @"element_type":@"driving_find_house_card",
                                 };
         [FHUserTracker writeEvent:@"element_show" params:params];
+    }else if ([cellModel isKindOfClass:[FHDynamicLynxModel class]]) {
+        FHDynamicLynxModel *model = ((FHDynamicLynxCellModel *)cellModel).model;
+        NSDictionary *reportData = [((FHDynamicLynxModel *)model).lynxData objectForKey:@"report_params"];
+        if (reportData && [reportData isKindOfClass:[NSDictionary class]]) {
+            NSDictionary *params = @{@"origin_from":reportData[@"origin_from"] ?: @"be_null",
+                                     @"enter_from":reportData[@"enter_from"] ?: @"be_null",
+                                     @"event_type":@"house_app2c_v2",
+                                     @"page_type":reportData[@"page_type"] ?: @"be_null",
+                                     @"element_type":reportData[@"element_type"] ?: @"be_null",
+                                     @"search_id":reportData[@"search_id"] ?: @"be_null",
+                                     @"event_tracking_id":@"107653",
+                                    };
+            [FHUserTracker writeEvent:@"element_show" params:params];
+        }
     }
 }
 

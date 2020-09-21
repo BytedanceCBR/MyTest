@@ -338,7 +338,7 @@
 {
     if (self.listController.view.top > self.listController.view.height*0.6) {
         [self handleDismiss:0.3];
-    }else if((self.listController.view.top > [self.listController minTop]) && (self.listController.view.top - [self.listController minTop]  < 100)){
+    }else if((self.listController.view.top > [self.listController minTop]) && (self.listController.view.top - [self.listController minTop]  < [UIScreen mainScreen].bounds.size.height/3)){
         //吸附都顶部
         [self.headerView hideTopTip:YES];
         [self.listController moveTop:0];
@@ -470,7 +470,7 @@
     }
     
     __weak typeof(self) wself = self;
-    TTHttpTask *task = [FHHouseSearcher houseSearchWithQuery:query param:param offset:self.currentHouseDataModel.offset class:[FHListResultHouseModel class] needCommonParams:YES callback:^(NSError * _Nullable error, FHListResultHouseModel * _Nullable modelData) {
+    TTHttpTask *task = [FHHouseSearcher houseSearchWithQuery:query param:param offset:self.currentHouseDataModel.offset class:[FHListResultHouseModel class] needCommonParams:YES callback:^(NSError * _Nullable error, id<FHBaseModelProtocol> _Nullable modelData) {
         
         if (!wself) {
             return ;
@@ -480,7 +480,7 @@
         }
                 
         if (!error && modelData) {
-            FHHouseListDataModel *houseModel = (FHHouseListDataModel*) modelData.data;
+            FHHouseListDataModel *houseModel = (FHHouseListDataModel*)((FHListResultHouseModel *)modelData).data;
             wself.searchId = houseModel.searchId;
             wself.currentHouseDataModel = houseModel;
             [wself addEnterListPageLog];
@@ -595,7 +595,7 @@
     /*
      +(TTHttpTask *)searchRent:(NSString *_Nullable)query params:(NSDictionary *_Nullable)param offset:(NSInteger)offset searchId:(NSString *_Nullable)searchId sugParam:(NSString *_Nullable)sugParam completion:(void(^_Nullable)(FHHouseRentModel *model , NSError *error))completion
      */
-    TTHttpTask *task = [FHMainApi searchRent:query params:param offset:self.houseList.count searchId:self.searchId sugParam:nil class:[FHListResultHouseModel class] completion:^(FHListResultHouseModel * _Nonnull model, NSError * _Nonnull error) {
+    TTHttpTask *task = [FHMainApi searchRent:query params:param offset:self.houseList.count searchId:self.searchId sugParam:nil class:[FHListResultHouseModel class] completion:(FHMainApiCompletion)^(FHListResultHouseModel * _Nonnull model, NSError * _Nonnull error) {
         
         if (!wself) {
             return ;

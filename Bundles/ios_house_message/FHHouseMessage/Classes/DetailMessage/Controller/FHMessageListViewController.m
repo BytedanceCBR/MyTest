@@ -21,6 +21,7 @@
 #import "UIViewController+Track.h"
 #import <FHHouseBase/FHBaseTableView.h>
 #import "NSDictionary+BTDAdditions.h"
+#import "UIImage+FIconFont.h"
 
 @interface FHMessageListViewController ()<TTRouteInitializeProtocol,UIViewControllerErrorHandler>
 
@@ -144,6 +145,11 @@
 
 - (void)initNavbar {
     [self setupDefaultNavBar:NO];
+    UIImage *image = ICON_FONT_IMG(24, @"\U0000E68A", [UIColor themeGray1]);
+    [self.customNavBarView.leftBtn setImage:image forState:UIControlStateHighlighted];
+    [self.customNavBarView.leftBtn setImage:image forState:UIControlStateNormal];
+    [self.customNavBarView.leftBtn setBackgroundImage:nil forState:UIControlStateNormal];
+    [self.customNavBarView.leftBtn setBackgroundImage:nil forState:UIControlStateHighlighted];
     self.customNavBarView.title.text = self.title;
 }
 

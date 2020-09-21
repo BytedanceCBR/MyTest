@@ -15,10 +15,11 @@
     if (self.sugHttpTask) {
         [self.sugHttpTask cancel];
     }
+    query  =  [query stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
     self.highlightedText = query;
     __weak typeof(self) wself = self;
     
-    self.sugHttpTask = [FHHouseListAPI requestSuggestionOnlyNeiborhoodCityId:cityId houseType:houseType query:query class:[FHSuggestionResponseModel class] completion:^(FHSuggestionResponseModel *  _Nonnull model, NSError * _Nonnull error) {
+    self.sugHttpTask = [FHHouseListAPI requestSuggestionOnlyNeiborhoodCityId:cityId houseType:houseType query:query class:[FHSuggestionResponseModel class] completion:(FHMainApiCompletion)^(FHSuggestionResponseModel *  _Nonnull model, NSError * _Nonnull error) {
         if (error.code == NSURLErrorCancelled) {
             return ;
         }

@@ -15,9 +15,7 @@
 #import "UIViewAdditions.h"
 
 #define maxLines 3
-#define vGap 10
 #define userInfoViewHeight 40
-#define bottomViewHeight 49
 
 #define minImageCount 1
 #define maxImageCount 3
@@ -108,7 +106,9 @@
         
         CGFloat leftPadding = 16;
         CGFloat rightPadding = 16;
-        CGFloat topPadding = 20;
+        CGFloat topPadding = 15;
+        
+        CGFloat elementMargin = 10; //元素之间的间距
         
         if(cellModel.isInNeighbourhoodCommentsList) {
             topMargin = 15;
@@ -117,28 +117,28 @@
             
             leftPadding = 20;
             rightPadding = 20;
+            
+            elementMargin = 20;
         }
         
         BOOL isContentEmpty = isEmptyString(cellModel.content);
         
         CGFloat height = topMargin + topPadding + userInfoViewHeight;
-        height += isContentEmpty ? 0 : vGap;
+        height += isContentEmpty ? 0 : elementMargin;
         height += (isContentEmpty ? 0 : cellModel.contentHeight);
 //        height += vGap;
         if(cellModel.imageList.count > 0) {
+            if(cellModel.isInNeighbourhoodCommentsList){
+                height += elementMargin;
+            }
             NSInteger count = (cellModel.imageList.count == 1) ? 1 : 3;
             CGFloat imageViewheight = [FHUGCCellMultiImageView viewHeightForCount:count width:[UIScreen mainScreen].bounds.size.width - leftMargin - leftPadding - rightMargin - rightPadding];
             height += imageViewheight;
-            
-            if(cellModel.isInNeighbourhoodCommentsList){
-                height += vGap;
-            }
         }
         
         if(cellModel.isInNeighbourhoodCommentsList){
-            height += vGap;
+            height += 15;
         }
-//        height += bottomViewHeight;
 
         return height;
     }
@@ -153,7 +153,9 @@
     
     CGFloat leftPadding = 16;
     CGFloat rightPadding = 16;
-    CGFloat topPadding = 10;//往上10个像素剩余10+6
+    CGFloat topPadding = 15;//往上10个像素剩余10+6
+    
+    CGFloat elementMargin = 10; //元素之间的间距
     
     CGFloat cellWidth = [UIScreen mainScreen].bounds.size.width - 30;
     if(self.cellModel.isInNeighbourhoodCommentsList) {
@@ -165,11 +167,13 @@
         rightPadding = 20;
         
         cellWidth = [UIScreen mainScreen].bounds.size.width;
+        
+        elementMargin = 20;
     }
 
     CGFloat cellHeight = [self.class heightForData:self.cellModel];
     
-    self.contentContainer.frame = CGRectMake(leftMargin, topMargin, cellWidth - leftMargin - rightMargin, cellHeight - topMargin - 10);
+    self.contentContainer.frame = CGRectMake(leftMargin, topMargin, cellWidth - leftMargin - rightMargin, cellHeight - topMargin);
     
     if(self.cellModel.isInNeighbourhoodCommentsList) {
         self.contentContainer.layer.masksToBounds = YES;
@@ -191,7 +195,7 @@
     self.userInfoView.moreBtn.hidden = YES;
     
     // 文本内容标签
-    self.contentLabel.frame = CGRectMake(leftPadding, self.userInfoView.bottom + vGap , self.contentContainer.width - leftPadding - rightPadding, 0);
+    self.contentLabel.frame = CGRectMake(leftPadding, self.userInfoView.bottom + elementMargin, self.contentContainer.width - leftPadding - rightPadding, 0);
     self.contentLabel.numberOfLines = self.cellModel.numberOfLines;
     BOOL isContentEmpty = isEmptyString(self.cellModel.content);
     self.contentLabel.hidden = isContentEmpty;
@@ -199,7 +203,7 @@
     [FHUGCCellHelper setAsyncRichContent:self.contentLabel model:self.cellModel ];
     
     // 设置图片
-    CGFloat imageViewTop = isContentEmpty ? (self.userInfoView.bottom + vGap) : self.userInfoView.bottom + vGap + self.cellModel.contentHeight + vGap;
+    CGFloat imageViewTop = isContentEmpty ? (self.userInfoView.bottom + elementMargin) : self.userInfoView.bottom + elementMargin + self.cellModel.contentHeight + elementMargin;
     NSInteger imageCount = self.cellModel.imageList.count;
     if(imageCount == minImageCount) {
         [self.multiImageView removeFromSuperview];

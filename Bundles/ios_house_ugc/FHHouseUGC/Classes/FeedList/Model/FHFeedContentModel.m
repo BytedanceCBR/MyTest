@@ -709,7 +709,8 @@
                            @"realtorName": @"realtor_name",
                            @"associateInfo": @"associate_info",
                            @"realtorLogpb":@"realtor_log_pb",
-                           @"firstBizType":@"first_biz_type"
+                           @"firstBizType":@"first_biz_type",
+                           @"imageTag": @"image_tag",
                            };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
         return dict[keyName]?:keyName;
@@ -1182,3 +1183,18 @@
 }
 @end
 
+@implementation FHFeedContentRawDataRealtorImageTagModel
++ (JSONKeyMapper*)keyMapper
+{
+    NSDictionary *dict = @{
+        @"imageUrl": @"image_url",
+    };
+    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+        return dict[keyName]?:keyName;
+    }];
+}
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+@end

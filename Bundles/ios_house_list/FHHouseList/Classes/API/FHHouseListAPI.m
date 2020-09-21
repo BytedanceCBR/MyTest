@@ -336,6 +336,13 @@
         case FHSearchCardTypeFindHouseHelper:
             itemModel = [[FHSearchFindHouseHelperModel alloc]initWithDictionary:itemDict error:&jerror];
             break;
+        case FHSearchCardTypeDynamicLynx:
+        {
+            FHDynamicLynxModel *model = [[FHDynamicLynxModel alloc] initWithDictionary:itemDict error:&jerror];
+            itemModel = [[FHDynamicLynxCellModel alloc] init];
+            ((FHDynamicLynxCellModel *)itemModel).model = model;
+        }
+            break;
         default:
             break;
     }
@@ -620,7 +627,7 @@
     return [FHMainApi queryData:queryPath params:qparam class:cls completion:completion];
 }
 
-+ (TTHttpTask *)requestDeleteSugSubscribe:(NSString *)subscribeId class:(Class)cls completion:(void(^_Nullable)(id<FHBaseModelProtocol> model , NSError *error))completion {
++ (TTHttpTask *)requestDeleteSugSubscribe:(NSString *)subscribeId class:(Class _Nullable)cls completion:(void(^_Nullable)(id<FHBaseModelProtocol> model , NSError *error))completion {
     NSString *queryPath = @"/f100/api/delete_subscribe";
     NSMutableDictionary *paramDic = [NSMutableDictionary new];
     paramDic[@"subscribe_id"] = subscribeId;
@@ -647,7 +654,7 @@
         path = [NSString stringWithFormat:@"%@?%@",path,query];
     }
 
-    return [FHHouseListAPI querySearchData:path uploadLog:YES params:mparam class:[FHListSearchHouseModel class] logPath:nil completion:completion];
+    return [FHHouseListAPI querySearchData:path uploadLog:YES params:mparam class:[FHListSearchHouseModel class] logPath:nil completion:(FHMainApiCompletion)completion];
 //    return [FHMainApi queryData:path params:mparam class:[FHHouseRentModel class] completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
 //        if (completion) {
 //            completion(model , error);

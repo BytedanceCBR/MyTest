@@ -542,4 +542,19 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong , nullable) FHListSearchHouseDataModel *data ;
 
 @end
+
+// 动态Lynx混排卡片
+@interface FHDynamicLynxModel : FHSearchBaseItemModel
+
+@property (nonatomic, copy , nullable) NSString *height;
+@property (nonatomic, copy , nullable) NSString *channel;
+@property (nonatomic, strong , nullable) NSDictionary *lynxData;
+@end
+
+@interface FHDynamicLynxCellModel : FHSearchBaseItemModel
+
+@property (nonatomic, strong, nullable) FHDynamicLynxModel *model;
+//cell
+@property (nonatomic, weak) UITableViewCell *cell;
+@end
 NS_ASSUME_NONNULL_END

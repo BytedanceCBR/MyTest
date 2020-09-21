@@ -23,7 +23,7 @@
 #import "FHEnvContext.h"
 #import <ByteDanceKit/ByteDanceKit.h>
 
-@interface FHChildSuggestionListViewModel () <UITableViewDelegate, UITableViewDataSource, FHSugSubscribeListDelegate>
+@interface FHChildSuggestionListViewModel () <FHSugSubscribeListDelegate>
 
 @property(nonatomic , weak) FHChildSuggestionListViewController *listController;
 @property(nonatomic , weak) TTHttpTask *sugHttpTask;
@@ -51,7 +51,7 @@
 //键盘遮挡猜你想搜cell影响埋点上报准确性
 @property (nonatomic, strong) NSMutableArray *trackerCacheArr;
 @property (nonatomic, assign) BOOL isFirstShow;  //标记是否是首次进入页面
-@property (nonatomic, assign) NSTimeInterval startMonitorTime;
+@property (nonatomic, assign) BOOL isUploadedPss;
 
 @end
 
@@ -62,15 +62,15 @@
     if (self) {
         self.listController = viewController;
         self.loadRequestTimes = 0;
-        self.guessYouWantData = [NSMutableArray new];
-        self.subscribeItems = [NSMutableArray new];
+        self.guessYouWantData = [NSMutableArray<FHGuessYouWantResponseDataDataModel> new];
+        self.subscribeItems = [NSMutableArray<FHSugSubscribeDataDataItemsModel> new];
         self.guessYouWantShowTracerDic = [NSMutableDictionary new];
         self.associatedCount = 0;
         self.hasShowKeyboard = NO;
         self.sectionHeaderView = [[UIView alloc] init];
         self.sectionHeaderView.backgroundColor = [UIColor whiteColor];
         self.isFirstShow = YES;
-        _startMonitorTime = [[NSDate date] timeIntervalSince1970];
+        self.isUploadedPss = NO;
 
         [self setupSubscribeView];
         [self setupHistoryView];
@@ -257,7 +257,7 @@
     NSHashTable *subscribeDelegateTable = [NSHashTable hashTableWithOptions:NSPointerFunctionsWeakMemory];
     [subscribeDelegateTable addObject:self];
     
-    NSString *openUrl = [NSString stringWithFormat:@"fschema://sug_subscribe_list?house_type=%ld",self.houseType];
+    NSString *openUrl = [NSString stringWithFormat:@"fschema://sug_subscribe_list?house_type=%zi",self.houseType];
     NSMutableDictionary *tracer = [NSMutableDictionary new];
     tracer[@"enter_type"] = @"click";
     tracer[@"element_from"] = @"search_detail";
@@ -279,7 +279,7 @@
 }
 
 // 订阅搜索item点击
-- (void)subscribeItemClick:(FHGuessYouWantResponseDataDataModel *)model {
+- (void)subscribeItemClick:(FHSugSubscribeDataDataItemsModel *)model {
     NSString *enter_from = @"search_detail";
     NSString *element_from = @"be_null";
     switch (self.houseType) {
@@ -405,7 +405,7 @@
         tracer[@"enter_from"] = @"search_detail";
         tracer[@"card_type"] = @"left_pic";
         tracer[@"log_pb"] = model.logPb;
-        tracer[@"rank"] = [NSString stringWithFormat: @"%ld",index];
+        tracer[@"rank"] = [NSString stringWithFormat: @"%zi",index];
     }
     infos[@"tracer"] = tracer;
     [self.listController jumpToCategoryListVCByUrl:jumpUrl queryText:model.text placeholder:model.text infoDict:infos isGoDetail:model.setHistory];
@@ -464,7 +464,7 @@
             tracer[@"enter_from"] = @"search_detail";
             tracer[@"log_pb"] = model.logPb;
             tracer[@"card_type"] = @"left_pic";
-            tracer[@"rank"] = [NSString stringWithFormat: @"%ld",rank];
+            tracer[@"rank"] = [NSString stringWithFormat: @"%zi",rank];
         }
         infos[@"tracer"] = tracer;
         [self.listController jumpToCategoryListVCByUrl:jumpUrl queryText:queryText placeholder:queryText infoDict:infos isGoDetail:model.setHistory];
@@ -532,7 +532,7 @@
         tracer[@"enter_from"] = @"search_detail";
         tracer[@"log_pb"] = model.logPb;
         tracer[@"card_type"] = @"left_pic";
-        tracer[@"rank"] = [NSString stringWithFormat: @"%ld",rank];
+        tracer[@"rank"] = [NSString stringWithFormat: @"%zi",rank];
     }
     infos[@"tracer"] = tracer;
     [self.listController jumpToCategoryListVCByUrl:jumpUrl queryText:model.text placeholder:model.text infoDict:infos isGoDetail:model.setHistory];
@@ -559,7 +559,7 @@
         [wordList addObject:dic];
     }
     NSError *error = NULL;
-    NSData *data = [NSJSONSerialization dataWithJSONObject:wordList options:NSJSONReadingAllowFragments error:&error];
+    NSData *data = [NSJSONSerialization dataWithJSONObject:wordList options:0 error:&error];
     NSString *wordListStr = @"";
     if (data && error == NULL) {
         wordListStr = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
@@ -584,14 +584,14 @@
     }
 }
 
-- (NSString *)createQueryCondition:(NSDictionary *)conditionDic {
+- (NSString *)createQueryCondition:(id)conditionDic {
     NSString *retStr = @"";
     if ([conditionDic isKindOfClass:[NSString class]]) {
         retStr = conditionDic;
         return retStr;
     }
     NSError *error = NULL;
-    NSData *data = [NSJSONSerialization dataWithJSONObject:conditionDic options:NSJSONReadingAllowFragments error:&error];
+    NSData *data = [NSJSONSerialization dataWithJSONObject:conditionDic options:0 error:&error];
     if (data && error == NULL) {
         retStr = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
     }
@@ -970,7 +970,7 @@
         if (indexPath.row - 1 < self.guessYouWantData.count) {
             FHGuessYouWantResponseDataDataModel *model  = self.guessYouWantData[indexPath.row - 1];
             NSInteger rank = indexPath.row - 1;
-            NSString *recordKey = [NSString stringWithFormat:@"%ld",rank];
+            NSString *recordKey = [NSString stringWithFormat:@"%zi",rank];
             if (!self.guessYouWantShowTracerDic[recordKey] && self.listController.isCanTrack) {
                 // 埋点
                 self.guessYouWantShowTracerDic[recordKey] = @(YES);
@@ -1170,10 +1170,18 @@
         if (self.guessYouWantData.count > 0) {
             [self.listController.historyTableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:NO];
         }
+        if (!self.isUploadedPss && ([[NSDate date] timeIntervalSince1970] - [self startTime] > 0.05) && self.houseType == FHHouseTypeSecondHandHouse) {
+            _isUploadedPss = YES;
+            [FHMainApi addUserOpenVCDurationLog:@"pss_search" resultType:FHNetworkMonitorTypeSuccess duration:[[NSDate date] timeIntervalSince1970] - [self startTime]];
+        }
     }
 }
 
 #pragma mark - Request
+
+- (NSTimeInterval) startTime {
+    return self.listController.fatherVC.startMonitorTime;
+}
 
 -(void)setHistoryWithURl:(NSString *)openUrl displayText:(NSString *)displayText extInfo:(NSString *)extinfo {
     NSMutableDictionary *paramDic = [NSMutableDictionary new];
@@ -1196,7 +1204,7 @@
         [self.historyHttpTask cancel];
     }
     __weak typeof(self) wself = self;
-    self.historyHttpTask = [FHHouseListAPI requestSearchHistoryByHouseType:houseType class:[FHSuggestionSearchHistoryResponseModel class] completion:^(FHSuggestionSearchHistoryResponseModel *  _Nonnull model, NSError * _Nonnull error) {
+    self.historyHttpTask = [FHHouseListAPI requestSearchHistoryByHouseType:houseType class:[FHSuggestionSearchHistoryResponseModel class] completion:(FHMainApiCompletion)^(FHSuggestionSearchHistoryResponseModel *  _Nonnull model, NSError * _Nonnull error) {
         wself.loadRequestTimes += 1;
         if (model != NULL && error == NULL) {
             // 构建数据源
@@ -1205,7 +1213,7 @@
             [wself.listController.emptyView hideEmptyView];
             [wself reloadHistoryTableView];
         } else {
-            wself.historyView.historyItems = NULL;
+            wself.historyView.historyItems = nil;
             if (error && ![error.userInfo[@"NSLocalizedDescription"] isEqualToString:@"the request was cancelled"]) {
                 wself.listController.isLoadingData = NO;
                 [wself.listController endLoading];
@@ -1222,7 +1230,7 @@
     }
     __weak typeof(self) wself = self;
     // "subscribe_list_type": 2(搜索页) / 3(独立展示页) 请求总数50
-    self.sugSubscribeTask = [FHHouseListAPI requestSugSubscribe:cityId houseType:houseType subscribe_type:2 subscribe_count:50 class:[FHSugSubscribeModel class] completion:^(FHSugSubscribeModel *  _Nonnull model, NSError * _Nonnull error) {
+    self.sugSubscribeTask = [FHHouseListAPI requestSugSubscribe:cityId houseType:houseType subscribe_type:2 subscribe_count:50 class:[FHSugSubscribeModel class] completion:(FHMainApiCompletion)^(FHSugSubscribeModel *  _Nonnull model, NSError * _Nonnull error) {
         wself.loadRequestTimes += 1;
         wself.subscribeView.totalCount = 0;
         if (model != NULL && error == NULL) {
@@ -1260,15 +1268,13 @@
         [self.guessHttpTask cancel];
     }
     __weak typeof(self) wself = self;
-    self.guessHttpTask = [FHHouseListAPI requestGuessYouWant:cityId houseType:houseType class:[FHGuessYouWantResponseModel class] completion:^(FHGuessYouWantResponseModel *  _Nonnull model, NSError * _Nonnull error) {
+    self.guessHttpTask = [FHHouseListAPI requestGuessYouWant:cityId houseType:houseType class:[FHGuessYouWantResponseModel class] completion:(FHMainApiCompletion)^(FHGuessYouWantResponseModel *  _Nonnull model, NSError * _Nonnull error) {
         wself.loadRequestTimes += 1;
         if (model != NULL && error == NULL) {
-            wself.guessYouWantData = model.data.data;
-            wself.guessYouWantExtraInfo = model.data.extraInfo;
-            [wself reloadHistoryTableView];
-            if (wself.isFirstShow) {
-                [FHMainApi addUserOpenVCDurationLog:@"pss_search" resultType:FHNetworkMonitorTypeSuccess duration:[[NSDate date] timeIntervalSince1970] - _startMonitorTime];
-            }
+            __strong typeof(wself) strongSelf = wself;
+            strongSelf.guessYouWantData = [NSMutableArray<FHGuessYouWantResponseDataDataModel> arrayWithArray:model.data.data];
+            strongSelf.guessYouWantExtraInfo = model.data.extraInfo;
+            [strongSelf reloadHistoryTableView];
         }  else {
             if (error && ![error.userInfo[@"NSLocalizedDescription"] isEqualToString:@"the request was cancelled"]) {
                 wself.listController.isLoadingData = NO;
@@ -1287,7 +1293,7 @@
     self.highlightedText = query;
     self.associatedCount += 1;
     __weak typeof(self) wself = self;
-    self.sugHttpTask = [FHHouseListAPI requestSuggestionCityId:cityId houseType:houseType query:query class:[FHSuggestionResponseModel class] completion:^(FHSuggestionResponseModel *  _Nonnull model, NSError * _Nonnull error) {
+    self.sugHttpTask = [FHHouseListAPI requestSuggestionCityId:cityId houseType:houseType query:query class:[FHSuggestionResponseModel class] completion:(FHMainApiCompletion)^(FHSuggestionResponseModel *  _Nonnull model, NSError * _Nonnull error) {
         if (model != NULL && error == NULL) {
             // 构建数据源
             wself.sugListData = model.data;
@@ -1311,7 +1317,7 @@
         [self.delHistoryHttpTask cancel];
     }
     __weak typeof(self) wself = self;
-    self.delHistoryHttpTask = [FHHouseListAPI requestDeleteSearchHistoryByHouseType:houseType class:[FHSuggestionClearHistoryResponseModel class] completion:^(FHSuggestionClearHistoryResponseModel *  _Nonnull model, NSError * _Nonnull error) {
+    self.delHistoryHttpTask = [FHHouseListAPI requestDeleteSearchHistoryByHouseType:houseType class:[FHSuggestionClearHistoryResponseModel class] completion:(FHMainApiCompletion)^(FHSuggestionClearHistoryResponseModel *  _Nonnull model, NSError * _Nonnull error) {
         if (model != NULL && error == NULL) {
             wself.historyData = NULL;
             [wself.listController.emptyView hideEmptyView];

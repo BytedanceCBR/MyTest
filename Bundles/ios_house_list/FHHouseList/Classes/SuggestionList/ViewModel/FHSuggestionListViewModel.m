@@ -28,6 +28,7 @@
         self.listController = viewController;
         self.cellDict = [NSMutableDictionary new];
         [self initNotification];
+        self.listController.startMonitorTime = [[NSDate date] timeIntervalSince1970];
     }
     return self;
 }
@@ -38,7 +39,7 @@
 
 - (void)updateSubVCTrackStatus
 {
-    NSString *rowStr = [NSString stringWithFormat:@"%ld", _currentTabIndex];
+    NSString *rowStr = [NSString stringWithFormat:@"%zi", _currentTabIndex];
     FHSuggestionCollectionViewCell *cell = _cellDict[rowStr];
     if (cell && cell.vc) {
         cell.vc.isCanTrack = YES;
@@ -47,14 +48,14 @@
 
 - (void)textFieldShouldReturn:(NSString *)text
 {
-    NSString *rowStr = [NSString stringWithFormat:@"%ld", _currentTabIndex];
+    NSString *rowStr = [NSString stringWithFormat:@"%zi", _currentTabIndex];
     FHSuggestionCollectionViewCell *cell = _cellDict[rowStr];
     [cell.vc doTextFieldShouldReturn:text];
 }
 
 - (void)textFieldTextChange:(NSString *)text
 {
-    NSString *rowStr = [NSString stringWithFormat:@"%ld", _currentTabIndex];
+    NSString *rowStr = [NSString stringWithFormat:@"%zi", _currentTabIndex];
     FHSuggestionCollectionViewCell *cell = _cellDict[rowStr];
     [cell.vc textFiledTextChange:text andIsCanTrack:YES];
 }
@@ -80,7 +81,6 @@
 - (void)initNotification {
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(keyboardWillShowNotifiction:) name:UIKeyboardWillShowNotification object:nil];
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(keyboardWillHideNotifiction:) name:UIKeyboardWillHideNotification object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(sugSubscribeNoti:) name:@"kFHSugSubscribeNotificationName" object:nil];
 }
 
 - (void)keyboardWillShowNotifiction:(NSNotification *)notification {
@@ -124,7 +124,7 @@
 {
     if ([cell isKindOfClass: [FHSuggestionCollectionViewCell class]]) {
         NSInteger row = indexPath.item;
-        NSString *rowStr = [NSString stringWithFormat:@"%ld", row];
+        NSString *rowStr = [NSString stringWithFormat:@"%zi", row];
         if (!self.cellDict[rowStr]) {
             self.cellDict[rowStr] = cell;
             [self initCellWithIndex:row];
@@ -140,13 +140,13 @@
     FHSuggestionCollectionViewCell *cell = NULL;
     if (row >= 0 && row < self.listController.houseTypeArray.count) {
         
-        NSString *rowStr = [NSString stringWithFormat:@"%ld", row];
+        NSString *rowStr = [NSString stringWithFormat:@"%zi", row];
         if (self.cellDict[rowStr]) {
            cell = self.cellDict[rowStr];
         } else {
             NSString *cellIdentifier = NSStringFromClass([FHSuggestionCollectionViewCell class]);
             
-            cellIdentifier = [NSString stringWithFormat:@"%@_%ld", cellIdentifier, row];
+            cellIdentifier = [NSString stringWithFormat:@"%@_%zi", cellIdentifier, row];
             [collectionView registerClass:[FHSuggestionCollectionViewCell class] forCellWithReuseIdentifier:cellIdentifier];
             cell = (FHSuggestionCollectionViewCell *)[collectionView dequeueReusableCellWithReuseIdentifier:cellIdentifier forIndexPath:indexPath];
         }
@@ -189,7 +189,7 @@
 
 -(void)initCellWithIndex:(NSInteger)index;
 {
-    NSString *rowStr = [NSString stringWithFormat:@"%ld", index];
+    NSString *rowStr = [NSString stringWithFormat:@"%zi", index];
     if (index < self.listController.houseTypeArray.count && index >= 0 && self.cellDict[rowStr]) {
         FHSuggestionCollectionViewCell *cell = self.cellDict[rowStr];
         [cell refreshData:self.listController.paramObj andHouseType:[self.listController.houseTypeArray[index] integerValue]];
