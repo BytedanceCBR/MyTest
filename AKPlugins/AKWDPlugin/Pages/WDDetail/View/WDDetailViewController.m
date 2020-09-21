@@ -1944,6 +1944,13 @@ static NSUInteger const kOldAnimationViewTag = 20161221;
 }
 
 -(void)bottomView:(WDBottomToolView *)bottomView collectButtonClicked:(SSThemedButton *)collectButton {
+    if(!collectButton.selected) {
+        if (@available(iOS 10.0, *)){
+            UIImpactFeedbackGenerator *generator = [[UIImpactFeedbackGenerator alloc] initWithStyle: UIImpactFeedbackStyleLight];
+            [generator prepare];
+            [generator impactOccurred];
+        }
+    }
     if(!TTNetworkConnected()){
         [TTIndicatorView showWithIndicatorStyle:TTIndicatorViewStyleImage indicatorText:NSLocalizedString(@"没有网络连接", nil) indicatorImage:[UIImage themedImageNamed:@"close_popup_textpage.png"] autoDismiss:YES dismissHandler:nil];
         return;

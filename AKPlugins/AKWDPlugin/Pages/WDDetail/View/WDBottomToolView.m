@@ -238,6 +238,11 @@ static NSString * const kWDHasTipSupportsEmojiInputDefaultKey = @"WDHasTipSuppor
 
 - (void)commentButtonClicked:(SSThemedButton *)commentButton
 {
+    if (@available(iOS 10.0, *)){
+        UIImpactFeedbackGenerator *generator = [[UIImpactFeedbackGenerator alloc] initWithStyle: UIImpactFeedbackStyleLight];
+        [generator prepare];
+        [generator impactOccurred];
+    }
     if ([self.delegate respondsToSelector:@selector(bottomView:commentButtonClicked:)]) {
         [self.delegate bottomView:self commentButtonClicked:commentButton];
     }
