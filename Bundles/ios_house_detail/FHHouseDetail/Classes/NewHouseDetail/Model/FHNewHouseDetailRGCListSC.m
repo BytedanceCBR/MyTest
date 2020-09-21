@@ -42,6 +42,16 @@
     return self;
 }
 
+- (FHRealtorEvaluatingPhoneCallModel *)realtorPhoneCallModel {
+    if (!_realtorPhoneCallModel) {
+        FHNewHouseDetailRGCListSM *sectionModel = (FHNewHouseDetailRGCListSM *)self.sectionModel;
+        _realtorPhoneCallModel = [[FHRealtorEvaluatingPhoneCallModel alloc]initWithHouseType:FHHouseTypeNewHouse houseId:self.detailViewController.viewModel.houseId];
+        _realtorPhoneCallModel.tracerDict = sectionModel.detailTracerDic;
+        _realtorPhoneCallModel.belongsVC = self.viewController;
+    }
+    return _realtorPhoneCallModel;
+}
+
 #pragma mark - Action
 - (void)commentClicked:(FHFeedUGCCellModel *)cellModel {
     [self trackClickComment:cellModel];
@@ -51,7 +61,8 @@
 
 - (void)gotoLinkUrl:(FHFeedUGCCellModel *)cellModel url:(NSURL *)url {
     // PM要求点富文本链接也进入详情页
-    [self lookAllLinkClicked:cellModel cell:nil];
+    [self.detailJumpManager jumpToDetail:cellModel showComment:NO enterType:@"feed_content_blank"];
+
 }
 
 - (void)clickRealtorIm:(FHFeedUGCCellModel *)cellModel {
@@ -96,7 +107,7 @@
     [self.realtorPhoneCallModel phoneChatActionWithAssociateModel:associatePhone];
 }
 
-- (void)clickRealtorHeader:(FHFeedUGCCellModel *)cellModel cell:(FHUGCBaseCell *)cell {
+- (void)clickRealtorHeader:(FHFeedUGCCellModel *)cellModel {
     FHNewHouseDetailRGCListSM *sectionModel = (FHNewHouseDetailRGCListSM *)self.sectionModel;
     NSDictionary *houseInfo = sectionModel.extraDic;
     if ([houseInfo[@"houseType"] integerValue] == FHHouseTypeSecondHandHouse) {
@@ -126,16 +137,12 @@
     [self.detailJumpManager goToCommunityDetail:cellModel];
 }
 
-- (void)lookAllLinkClicked:(FHFeedUGCCellModel *)cellModel cell:(nonnull FHUGCBaseCell *)cell {
-//    self.detailJumpManager.currentCell = self.currentCell;
-    [self.detailJumpManager jumpToDetail:cellModel showComment:NO enterType:@"feed_content_blank"];
-}
-
 - (void)trackClickComment:(FHFeedUGCCellModel *)cellModel {
     NSMutableDictionary *dict = [cellModel.tracerDic mutableCopy];
     TRACK_EVENT(@"click_comment", dict);
 }
 
+#pragma mark -
 - (NSInteger)numberOfItems {
     FHNewHouseDetailRGCListSM *model = (FHNewHouseDetailRGCListSM *)self.sectionModel;
     return model.items.count;
@@ -146,25 +153,54 @@
     CGFloat width = self.collectionContext.containerSize.width - 15 * 2;
     FHNewHouseDetailRGCListSM *model = (FHNewHouseDetailRGCListSM *)self.sectionModel;
     FHFeedUGCCellModel *cellModel = model.items[index];
+    CGSize size = CGSizeZero;
     if (cellModel.cellType == FHUGCFeedListCellTypeUGC) {
-        return [FHNewHouseDetailRGCImageCollectionCell cellSizeWithData:cellModel width:width];
+        size = [FHNewHouseDetailRGCImageCollectionCell cellSizeWithData:cellModel width:width];
     } else if (cellModel.cellType == FHUGCFeedListCellTypeUGCSmallVideo) {
-        return [FHNewHouseDetailRGCVideoCollectionCell cellSizeWithData:cellModel width:width];
+        size = [FHNewHouseDetailRGCVideoCollectionCell cellSizeWithData:cellModel width:width];
     }
-    return CGSizeZero;
+    if (index < model.items.count - 1) {
+        size.height += 10;
+    }
+    return size;
 }
 
 - (__kindof UICollectionViewCell *)cellForItemAtIndex:(NSInteger)index
 {
     FHNewHouseDetailRGCListSM *model = (FHNewHouseDetailRGCListSM *)self.sectionModel;
     FHFeedUGCCellModel *cellModel = model.items[index];
+    __weak typeof(self) weakSelf = self;
     if (cellModel.cellType == FHUGCFeedListCellTypeUGC) {
         FHNewHouseDetailRGCImageCollectionCell *cell = [self.collectionContext dequeueReusableCellOfClass:[FHNewHouseDetailRGCImageCollectionCell class] withReuseIdentifier:@"FHUGCFeedListCellTypeUGC" forSectionController:self atIndex:index];
         [cell refreshWithData:cellModel];
+        [cell setClickIMBlock:^(FHFeedUGCCellModel * _Nonnull model) {
+            [weakSelf clickRealtorIm:model];
+        }];
+        [cell setClickPhoneBlock:^(FHFeedUGCCellModel * _Nonnull model) {
+            [weakSelf clickRealtorPhone:model];
+        }];
+        [cell setClickRealtorHeaderBlock:^(FHFeedUGCCellModel * _Nonnull model) {
+            [weakSelf clickRealtorHeader:model];
+        }];
+        [cell setClickLinkBlock:^(FHFeedUGCCellModel * _Nonnull model, NSURL * _Nonnull url) {
+            [weakSelf gotoLinkUrl:model url:url];
+        }];
         return cell;
     } else if (cellModel.cellType == FHUGCFeedListCellTypeUGCSmallVideo) {
         FHNewHouseDetailRGCVideoCollectionCell *cell = [self.collectionContext dequeueReusableCellOfClass:[FHNewHouseDetailRGCVideoCollectionCell class] withReuseIdentifier:@"FHUGCFeedListCellTypeUGCSmallVideo" forSectionController:self atIndex:index];
         [cell refreshWithData:cellModel];
+        [cell setClickIMBlock:^(FHFeedUGCCellModel * _Nonnull model) {
+            [weakSelf clickRealtorIm:model];
+        }];
+        [cell setClickPhoneBlock:^(FHFeedUGCCellModel * _Nonnull model) {
+            [weakSelf clickRealtorPhone:model];
+        }];
+        [cell setClickRealtorHeaderBlock:^(FHFeedUGCCellModel * _Nonnull model) {
+            [weakSelf clickRealtorHeader:model];
+        }];
+        [cell setClickLinkBlock:^(FHFeedUGCCellModel * _Nonnull model, NSURL * _Nonnull url) {
+            [weakSelf gotoLinkUrl:model url:url];
+        }];
         return cell;
     }
     return nil;

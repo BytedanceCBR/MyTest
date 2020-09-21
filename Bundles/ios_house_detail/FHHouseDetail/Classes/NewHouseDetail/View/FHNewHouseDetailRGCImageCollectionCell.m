@@ -69,9 +69,6 @@
         self.headerView.headerClick = ^{
             [weakSelf clickHeader];
         };
-        self.headerView.headerLicenseBlock = ^{
-            [weakSelf clickHeaderLicense];
-        };
         [self.contentView addSubview:_headerView];
         [self.headerView mas_makeConstraints:^(MASConstraintMaker *make) {
             make.top.mas_equalTo(5);
@@ -165,41 +162,29 @@
 // 点击经纪人IM
 
 - (void)clickImAction {
-//    if(self.delegate && [self.delegate respondsToSelector:@selector(clickRealtorIm:cell:)]){
-//        [self.delegate clickRealtorIm:self.cellModel cell:self];
-//    }
+    if (self.clickIMBlock) {
+        self.clickIMBlock(self.currentData);
+    }
 }
 
 - (void)clickPhoneAction {
-//        if(self.delegate && [self.delegate respondsToSelector:@selector(clickRealtorPhone:cell:)]){
-//        [self.delegate clickRealtorPhone:self.cellModel cell:self];
-//    }
+    if (self.clickPhoneBlock) {
+        self.clickPhoneBlock(self.currentData);
+    }
 }
 
 - (void)clickHeader {
-//        if(self.delegate && [self.delegate respondsToSelector:@selector(clickRealtorHeader:cell:)]){
-//        [self.delegate clickRealtorHeader:self.cellModel cell:self];
-//    }
-}
-
-- (void)clickHeaderLicense {
-//    if(self.delegate && [self.delegate respondsToSelector:@selector(clickRealtorIm:cell:)]){
-//        [self.delegate clickRealtorHeaderLicense:self.cellModel cell:self];
-//    }
+    if (self.clickRealtorHeaderBlock) {
+        self.clickRealtorHeaderBlock(self.currentData);
+    }
 }
 
 #pragma mark - TTUGCAsyncLabelDelegate
 
 - (void)asyncLabel:(TTUGCAsyncLabel *)label didSelectLinkWithURL:(NSURL *)url {
-    if([url.absoluteString isEqualToString:defaultTruncationLinkURLString]){
-//        if(self.delegate && [self.delegate respondsToSelector:@selector(lookAllLinkClicked:cell:)]){
-//            [self.delegate lookAllLinkClicked:self.cellModel cell:self];
-//        }
-    } else {
-        if (url) {
-//            if(self.delegate && [self.delegate respondsToSelector:@selector(gotoLinkUrl:url:)]){
-//                [self.delegate gotoLinkUrl:self.cellModel url:url];
-//            }
+    if([url.absoluteString isEqualToString:defaultTruncationLinkURLString] || url){
+        if (self.clickLinkBlock) {
+            self.clickLinkBlock(self.currentData, url);
         }
     }
 }
