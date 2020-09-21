@@ -238,11 +238,7 @@ static NSString * const kWDHasTipSupportsEmojiInputDefaultKey = @"WDHasTipSuppor
 
 - (void)commentButtonClicked:(SSThemedButton *)commentButton
 {
-    if (@available(iOS 10.0, *)){
-        UIImpactFeedbackGenerator *generator = [[UIImpactFeedbackGenerator alloc] initWithStyle: UIImpactFeedbackStyleLight];
-        [generator prepare];
-        [generator impactOccurred];
-    }
+    [self generateImpactFeedback];
     if ([self.delegate respondsToSelector:@selector(bottomView:commentButtonClicked:)]) {
         [self.delegate bottomView:self commentButtonClicked:commentButton];
     }
@@ -307,6 +303,7 @@ static NSString * const kWDHasTipSupportsEmojiInputDefaultKey = @"WDHasTipSuppor
 
 - (void)collectButtonClicked:(SSThemedButton *)collectButton
 {
+    [self generateImpactFeedback];
     self.collectButton.imageView.contentMode = UIViewContentModeCenter;
     self.collectButton.imageView.transform = CGAffineTransformMakeScale(1, 1);
     self.collectButton.alpha = 1;
@@ -330,9 +327,16 @@ static NSString * const kWDHasTipSupportsEmojiInputDefaultKey = @"WDHasTipSuppor
     _writeButton.tintColor = [UIColor tt_themedColorForKey:kColorText1];
 }
 
+- (void)generateImpactFeedback {
+    if (@available(iOS 10.0, *)){
+        UIImpactFeedbackGenerator *generator = [[UIImpactFeedbackGenerator alloc] initWithStyle: UIImpactFeedbackStyleLight];
+        [generator prepare];
+        [generator impactOccurred];
+    }
+}
+
 @end
 
 CGFloat WDDetailGetToolbarHeight(void) {
     return 44;
 }
-
