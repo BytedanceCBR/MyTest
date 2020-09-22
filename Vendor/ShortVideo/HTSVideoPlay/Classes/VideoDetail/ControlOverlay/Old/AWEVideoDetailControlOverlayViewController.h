@@ -10,8 +10,7 @@
 #import "TSVDetailViewModel.h"
 #import "TSVControlOverlayViewModel.h"
 #import "TSVControlOverlayViewController.h"
-
-@class TTShortVideoModel;
+#import "FHFeedUGCCellModel.h"
 @class AWEVideoDetailControlOverlayViewController;
 @class TSVVideoDetailPromptManager;
 
@@ -19,7 +18,7 @@ NS_ASSUME_NONNULL_BEGIN;
 
 @interface AWEVideoDetailControlOverlayViewController : UIViewController<TSVControlOverlayViewController>
 
-@property (nonatomic, strong, nullable) TTShortVideoModel *model;
+@property (nonatomic, strong, nullable) FHFeedUGCCellModel *model;
 @property (nonatomic, copy, nullable) NSDictionary *commonTrackingParameter;
 @property (nonatomic, strong, nullable) TSVControlOverlayViewModel *viewModel;
 

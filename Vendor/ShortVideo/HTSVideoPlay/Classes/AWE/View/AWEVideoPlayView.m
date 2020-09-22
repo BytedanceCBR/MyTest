@@ -18,7 +18,7 @@
 // View
 #import "SSThemed.h"
 // Model
-#import "TTShortVideoModel.h"
+#import "FHFeedUGCCellModel.h"
 // Manager Service
 #import "TTFlowStatisticsManager+Helper.h"
 // Track
@@ -59,7 +59,7 @@ static NSString * const VideoPrepareTimeTechKey = @"prepare_time_tech";
 @interface AWEVideoPlayView () <IESVideoPlayerDelegate>
 
 // 详情页数据
-@property (nonatomic, strong) TTShortVideoModel *model;
+@property (nonatomic, strong) FHFeedUGCCellModel *model;
 // 视频播放器
 @property (nonatomic, strong) id<IESVideoPlayerProtocol> playerController;
 // UI交互组件
@@ -135,7 +135,7 @@ static NSString * const VideoPrepareTimeTechKey = @"prepare_time_tech";
 
 #pragma mark - Public Methods
 
-- (void)updateWithModel:(TTShortVideoModel *)model usingFirstFrameCover:(BOOL)usingFirstFrameCover
+- (void)updateWithModel:(FHFeedUGCCellModel *)model usingFirstFrameCover:(BOOL)usingFirstFrameCover
 {
     _backgroundView.hidden = NO;
     //避免复用时首帧时长统计不对
@@ -152,27 +152,30 @@ static NSString * const VideoPrepareTimeTechKey = @"prepare_time_tech";
 
     if (self.usingFirstFrameCover && [AWEVideoDetailFirstFrameConfig firstFrameEnabled]) {
         // 滑动切换视频时，背景图使用首帧图
-        if ([model.firstFrameImageModel.urlWithHeader count] > 0) {
-            NSURL *url = [NSURL URLWithString:[model.firstFrameImageModel.urlWithHeader firstObject][@"url"] ?:@""];
+        if ([model.imageList count] > 0) {
+            FHFeedContentImageListModel *urlContent = [model.imageList firstObject];
+            NSURL *url = [NSURL URLWithString:urlContent.url?:@""];
             [self.backgroundView sda_setImageWithURL:url placeholderImage:[UIImage imageNamed:@"img_video_loading"] completed:nil];
         }
-    } else {
-        NSURL *URL = [NSURL URLWithString:[model.animatedImageModel.urlWithHeader firstObject][@"url"] ?:@""];
-        NSString *cacheKey = [[YYWebImageManager sharedManager] cacheKeyForURL:URL];
-        if ([[[YYWebImageManager sharedManager] cache] containsImageForKey:cacheKey]) {
-            [self.backgroundView yy_setImageWithURL:URL placeholder:nil];
-        } else if (model.detailCoverImageModel.urlWithHeader) {
-            NSURL *stillImageURL = [NSURL URLWithString:[model.detailCoverImageModel.urlWithHeader firstObject][@"url"] ?:@""];
-            NSString *stillImageCacheKey = [[YYWebImageManager sharedManager] cacheKeyForURL:stillImageURL];
-            if ([[[YYWebImageManager sharedManager] cache] containsImageForKey:stillImageCacheKey]) {
-                [self.backgroundView yy_setImageWithURL:stillImageURL placeholder:nil];
-            } else {
-                [self.backgroundView sda_setImageWithURL:stillImageURL placeholderImage:[UIImage imageNamed:@"img_video_loading"] completed:nil];
-            }
-        }
     }
+    
+//    else {
+//        NSURL *URL = [NSURL URLWithString:[model.imageList firstObject].url ?:@""];
+//        NSString *cacheKey = [[YYWebImageManager sharedManager] cacheKeyForURL:URL];
+//        if ([[[YYWebImageManager sharedManager] cache] containsImageForKey:cacheKey]) {
+//            [self.backgroundView yy_setImageWithURL:URL placeholder:nil];
+//        } else if (model.imageList) {
+//            NSURL *stillImageURL = [NSURL URLWithString:[model.detailCoverImageModel.urlWithHeader firstObject][@"url"] ?:@""];
+//            NSString *stillImageCacheKey = [[YYWebImageManager sharedManager] cacheKeyForURL:stillImageURL];
+//            if ([[[YYWebImageManager sharedManager] cache] containsImageForKey:stillImageCacheKey]) {
+//                [self.backgroundView yy_setImageWithURL:stillImageURL placeholder:nil];
+//            } else {
+//                [self.backgroundView sda_setImageWithURL:stillImageURL placeholderImage:[UIImage imageNamed:@"img_video_loading"] completed:nil];
+//            }
+//        }
+//    }
 
-    self.isVideoDeleted = self.model.isDelete;
+//    self.isVideoDeleted = self.model..isde;
 
     if ((widthChanged || heightChanged) && self.autoAdjustViewFrame) {
         [self _updateFrame];
@@ -200,14 +203,14 @@ static NSString * const VideoPrepareTimeTechKey = @"prepare_time_tech";
 
 - (void)resetVideoPlayAddress
 {
-    NSString *videoLocalPlayAddr = self.model.videoLocalPlayAddr;
-    if (!isEmptyString(videoLocalPlayAddr)) {
-         [self.playerController resetLocalVideoURLPath:videoLocalPlayAddr];
-    } else {
+//    NSString *videoLocalPlayAddr = self.model.videoLocalPlayAddr;
+//    if (!isEmptyString(videoLocalPlayAddr)) {
+//         [self.playerController resetLocalVideoURLPath:videoLocalPlayAddr];
+//    } else {
         if (self.model.video.playAddr.uri.length > 0 || self.model.video.playAddr.urlList.count > 0) {
             [self.playerController resetVideoID:self.model.video.playAddr.uri andPlayURLs:self.model.video.playAddr.urlList];
         }
-    }
+//    }
     // 如果不prepareToPlay，playerController不会发开始播放的Notification，会导致菊花不消失、首帧端监控不结束
     [self.playerController prepareToPlay];
 }
@@ -278,7 +281,7 @@ static NSString * const VideoPrepareTimeTechKey = @"prepare_time_tech";
             [dict setValue:@(stallCountRate) forKey:@"count_rate"];
             [dict setValue:@(duration) forKey:@"block_duration"];
             [dict setValue:@(self.videoStalledCount) forKey:@"block_count"];
-            [dict setValue:self.model.itemID.description forKey:@"mediaId"];
+            [dict setValue:self.model.groupId forKey:@"mediaId"];
             [dict setValue:self.model.video.playAddr.uri forKey:@"videoUri"];
             [dict setValue:@(IESVideoPlayerTypeTTOwn) forKey:@"playerType"];
             dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
@@ -295,9 +298,7 @@ static NSString * const VideoPrepareTimeTechKey = @"prepare_time_tech";
 - (void)getVideoTimers {
           IESOwnPlayerWrapper *player = (IESOwnPlayerWrapper *)self.playerController;
         if (player.currPlaybackTime) {
-            NSLog(@"%f ----- abcd current",player.currPlaybackTime);
             CGFloat watch = (player.currPlaybackTime/player.videoDuration)*100;
-            NSLog(@"%f------- %f---- abcd",watch,player.videoDuration);
             [self.miniSlider setWatchedProgress:(player.currPlaybackTime/player.videoDuration) *100];
             [self.miniSlider setCacheProgress:(player.currPlayableDuration/player.videoDuration) *100];
 
@@ -471,7 +472,7 @@ static NSString * const VideoPrepareTimeTechKey = @"prepare_time_tech";
 - (void)_updateFrame
 {
     if (self.model.video.width > 0) {
-        CGFloat height = self.model.video.height / self.model.video.width * CGRectGetWidth(self.frame);
+        CGFloat height = [self.model.video.height floatValue]/ [self.model.video.width floatValue] * CGRectGetWidth(self.frame);
         CGFloat dHeight = CGRectGetHeight(self.superview.bounds) - height;
         if (dHeight > 0 && dHeight < 5) { // 兼容视频与屏幕宽高比差一点点引起的底部白条问题
             height += dHeight;
@@ -650,7 +651,7 @@ static NSString * const VideoPrepareTimeTechKey = @"prepare_time_tech";
                 [dict setValue:@(stallCountRate) forKey:@"count_rate"];
                 [dict setValue:@(duration) forKey:@"block_duration"];
                 [dict setValue:@(self.videoStalledCount) forKey:@"block_count"];
-                [dict setValue:self.model.itemID.description forKey:@"mediaId"];
+                [dict setValue:self.model.groupId forKey:@"mediaId"];
                 [dict setValue:self.model.video.playAddr.uri forKey:@"videoUri"];
                 [dict setValue:@(IESVideoPlayerTypeTTOwn) forKey:@"playerType"];
                 dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{

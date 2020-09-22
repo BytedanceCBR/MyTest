@@ -22,7 +22,7 @@
 @property (nonatomic, strong) AWEVideoPlayView *videoPlayView;
 @property (nonatomic, assign) NSTimeInterval totalPlayTime;
 @property (nonatomic, assign) BOOL usingFirstFrameCover;
-@property (nonatomic, strong, readwrite) TTShortVideoModel *videoDetail;
+@property (nonatomic, strong, readwrite) FHFeedUGCCellModel *videoDetail;
 
 @end
 
@@ -69,7 +69,7 @@
                                 model:self.videoDetail
                       commonParameter:self.commonTrackingParameter
                        extraParameter:@{
-                                        @"user_id": self.videoDetail.author.userID,
+                                        @"user_id": self.videoDetail.user.userId,
                                         @"position": @"double_like",
                                         }];
 
@@ -122,25 +122,25 @@
                                                                       freeze:NO] boolValue];
     if (useEdgeToEdgeUI) {
         CGFloat videoAspectRatio;
-        NSString *videoLocalPlayAddr = self.videoDetail.videoLocalPlayAddr;
-        if (videoLocalPlayAddr.length > 0) {
-            //获取视频尺寸
-            AVURLAsset *asset = [AVURLAsset assetWithURL:[NSURL fileURLWithPath:videoLocalPlayAddr]];
-            NSArray *array = asset.tracks;
-            CGSize videoSize = CGSizeZero;
-            for (AVAssetTrack *track in array) {
-                if ([track.mediaType isEqualToString:AVMediaTypeVideo]) {
-                    videoSize = track.naturalSize;
-                }
-            }
-            if (videoSize.width > 0 && videoSize.height > 0) {
-                videoAspectRatio = videoSize.height / videoSize.width;
-            } else {
-                videoAspectRatio = 16 / 9;
-            }
-        } else {
-            videoAspectRatio = self.videoDetail.video.height / self.videoDetail.video.width;
-        }
+//        NSString *videoLocalPlayAddr = self.videoDetail.videoLocalPlayAddr;
+//        if (videoLocalPlayAddr.length > 0) {
+//            //获取视频尺寸
+//            AVURLAsset *asset = [AVURLAsset assetWithURL:[NSURL fileURLWithPath:videoLocalPlayAddr]];
+//            NSArray *array = asset.tracks;
+//            CGSize videoSize = CGSizeZero;
+//            for (AVAssetTrack *track in array) {
+//                if ([track.mediaType isEqualToString:AVMediaTypeVideo]) {
+//                    videoSize = track.naturalSize;
+//                }
+//            }
+//            if (videoSize.width > 0 && videoSize.height > 0) {
+//                videoAspectRatio = videoSize.height / videoSize.width;
+//            } else {
+//                videoAspectRatio = 16 / 9;
+//            }
+//        } else {
+            videoAspectRatio = [self.videoDetail.video.height floatValue] / [self.videoDetail.video.width floatValue];
+//        }
         if ([TTDeviceHelper isIPhoneXDevice]) {
             if (videoAspectRatio > 1.7) {
                 self.videoPlayView.contentMode = UIViewContentModeScaleAspectFill;
@@ -205,7 +205,7 @@
     self.videoPlayView.commonTrackingParameter = self.commonTrackingParameter;
 }
 
-- (void)updateWithModel:(TTShortVideoModel *)videoDetail usingFirstFrameCover:(BOOL)usingFirstFrameCover
+- (void)updateWithModel:(FHFeedUGCCellModel *)videoDetail usingFirstFrameCover:(BOOL)usingFirstFrameCover
 {
     self.videoDetail = videoDetail;
     self.usingFirstFrameCover = usingFirstFrameCover;

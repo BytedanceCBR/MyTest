@@ -33,6 +33,7 @@
         _label.numberOfLines = 1;
         _label.textColor = [UIColor whiteColor];
         _label.font = [UIFont systemFontOfSize:12];
+        _label.textAlignment = NSTextAlignmentCenter;
         _label.layer.shadowOffset = CGSizeZero;
         _label.layer.shadowColor = [UIColor colorWithWhite:0x66/255.0 alpha:0.9].CGColor;
         _label.layer.shadowRadius = 1.0;
@@ -45,7 +46,7 @@
         [self.label mas_makeConstraints:^(MASConstraintMaker *make) {
             make.centerX.equalTo(self);
             make.top.equalTo(self.iconImageView.mas_bottom).offset(-4);
-            make.size.mas_equalTo(CGSizeMake(60, 20));
+            make.size.mas_equalTo(CGSizeMake(50, 20));
         }];
 
     }

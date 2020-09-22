@@ -696,6 +696,10 @@
         cellModel.cellSubType = FHUGCFeedListCellSubTypeUGCSmallVideo;
         cellModel.groupId = model.rawData.groupId;
         cellModel.openUrl = model.rawData.detailSchema;
+        cellModel.video = model.rawData.video;
+        cellModel.itemId  = model.rawData.itemId;
+        cellModel.userRepin = model.rawData.userRepin;
+        cellModel.videoAction = [model.rawData.action copy];
         cellModel.showLookMore = YES;
         cellModel.numberOfLines = 3;
         cellModel.createTime = [FHBusinessManager ugcCustomtimeAndCustomdateStringSince1970:model.rawData.createTime.doubleValue type:@"onlyDate"];
@@ -736,7 +740,8 @@
             user.name = model.rawData.user.info.name;
             user.avatarUrl = model.rawData.user.info.avatarUrl;
         }
-
+        user.relation = [model.rawData.user.relation copy];
+        user.relationCount = [model.rawData.user.relationCount copy];
         user.userId = model.rawData.user.info.userId;
         user.schema = model.rawData.user.info.schema;
         cellModel.user = user;

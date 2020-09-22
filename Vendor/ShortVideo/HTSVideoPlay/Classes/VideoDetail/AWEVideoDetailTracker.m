@@ -13,6 +13,7 @@
 #import "TTCategoryDefine.h"
 #import "NSDictionary+TTAdditions.h"
 
+
 @interface AWEVideoDetailTracker ()
 
 @property (nonatomic, copy, nullable) NSDate *stayPageStartTime;
@@ -22,7 +23,7 @@
 @implementation AWEVideoDetailTracker
 
 + (void)trackEvent:(NSString *)event
-             model:(TTShortVideoModel *)model
+             model:(FHFeedUGCCellModel *)model
    commonParameter:(NSDictionary *)commonParameter
     extraParameter:(NSDictionary *)extraParameter
 {
@@ -32,8 +33,8 @@
         NSMutableDictionary *parameterDictionary = [NSMutableDictionary dictionary];
         [parameterDictionary addEntriesFromDictionary:commonParameter];
         NSMutableDictionary *paramters = @{}.mutableCopy;
-        paramters[@"group_id"] = model.groupID;
-        paramters[@"item_id"] =  model.itemID;
+        paramters[@"group_id"] = model.groupId;
+        paramters[@"item_id"] =  model.itemId;
 //        paramters[@"user_id"] =  model.author.userID;
         paramters[@"group_source"] = model.groupSource;
         [parameterDictionary addEntriesFromDictionary:paramters];
@@ -55,8 +56,8 @@
 //            parameterDictionary[@"list_entrance"] = model.listEntrance;
 //        }
 
-        if (!isEmptyString(model.categoryName)) {
-            NSString *categoryName = model.categoryName;
+        if (!isEmptyString(model.categoryId)) {
+            NSString *categoryName = model.categoryId;
             parameterDictionary[@"category_name"] = categoryName;
         }
         
@@ -68,8 +69,8 @@
 //        parameterDictionary[@"is_friend"] = @(model.author.isFriend);
         parameterDictionary[@"event_type"] = @"house_app2c_v2";
         
-        if(model.extraDic.count > 0){
-            [parameterDictionary addEntriesFromDictionary:model.extraDic];
+        if(model.tracerDic.count > 0){
+            [parameterDictionary addEntriesFromDictionary:model.tracerDic];
         }
         if ([event isEqualToString:@"go_detail_draw"] || [event isEqualToString:@"video_play_draw"] || [event isEqualToString:@"go_detail"] || [event isEqualToString:@"video_play"]) {
             

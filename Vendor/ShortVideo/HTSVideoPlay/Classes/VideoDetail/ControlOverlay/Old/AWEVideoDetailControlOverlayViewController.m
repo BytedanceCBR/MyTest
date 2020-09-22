@@ -81,6 +81,7 @@
 #import "UIColor+Theme.h"
 #import "UIImage+FIconFont.h"
 #import <FHHouseBase/FHRealtorAvatarView.h>
+#import "NSString+BTDAdditions.h"
 
 static const CGFloat kCheckChallengeButtonWidth = 72;
 static const CGFloat kCheckChallengeButtonHeight = 28;
@@ -95,7 +96,6 @@ static const CGFloat kCheckChallengeButtonLeftPadding = 28;
 @property (nonatomic, strong) CAGradientLayer *topBarGradientLayer;
 @property (nonatomic, strong) FHRealtorAvatarView *avatarView;
 @property (nonatomic, strong) UILabel *nameLabel;
-@property (nonatomic, strong) TTFollowThemeButton *followButton;
 @property (nonatomic, strong) UIButton *moreButton;
 @property (nonatomic, strong) UIButton *closeButton;
 @property (nonatomic, strong) UIView *userInfoContainerView;
@@ -112,23 +112,12 @@ static const CGFloat kCheckChallengeButtonLeftPadding = 28;
 @property (nonatomic, strong) TSVIconLabelButton *likeButton;
 @property (nonatomic, strong) UIButton *shareButton;
 @property (nonatomic, strong) CAGradientLayer *bottomGradientLayer;
-@property (nonatomic, strong) AWEAwemeMusicInfoView *musicInfoView;
+//@property (nonatomic, strong) AWEAwemeMusicInfoView *musicInfoView;
 
 @property (nonatomic, strong) TSVRecommendCardViewController *recViewController;
 @property (nonatomic, strong) UIButton *recArrowButton;
 
 @property (nonatomic, strong) NSLock *diggLock;     // Seems overkill to me, a boolean will do the trick
-
-@property (nonatomic, strong) UIView *tagContainerView;
-@property (nonatomic, strong) UIView *horizontalTopTagsContainerView;/*第一行*/
-@property (nonatomic, strong) UIView *horizontalBottomTagsContainerView;/*第二行*/
-@property (nonatomic, strong) TSVTagInfoView *tagInfoView;
-@property (nonatomic, strong) TSVTagInfoView *interactTag;
-@property (nonatomic, strong) TSVTagInfoView *activityTag;
-@property (nonatomic, strong) TSVTagInfoView *challengeTag;/*挑战标签*/
-@property (nonatomic, strong) UIButton *checkChallengeButton;/*查看挑战*/
-
-@property (nonatomic, strong) TSVDebugInfoView *debugInfoView;
 @property (nonatomic, assign) BOOL challengeTagHasShowed;
 
 @end
@@ -158,18 +147,11 @@ static const CGFloat kCheckChallengeButtonLeftPadding = 28;
     [self setupTopBarViews];
     [self setupBottomBarViews];
 
-    [self setupTagViews];
-
     @weakify(self);
-    if ([[TSVDebugInfoConfig config] debugInfoEnabled]) {
-        self.debugInfoView = [[TSVDebugInfoView alloc] init];
-        [self.view addSubview:self.debugInfoView];
-    }
 
-    [RACObserve(self, model.author.isFollowing) subscribeNext:^(id  _Nullable x) {
+    [RACObserve(self, model.user.relation.isFollowing) subscribeNext:^(id  _Nullable x) {
         @strongify(self);
         BOOL isFollowing = [x boolValue];
-        self.followButton.followed = isFollowing;
         if (!isFollowing && !self.recArrowButton.hidden) {
             [self dismissRecommendCardView];
             [self dismissRecommendArrow];
@@ -179,54 +161,9 @@ static const CGFloat kCheckChallengeButtonLeftPadding = 28;
     RAC(self, commentButton.labelString) = [RACObserve(self, model.commentCount) map:^id(NSNumber *commentCount) {
         return [TTBusinessManager formatCommentCount:[commentCount longLongValue]];
     }];
-    [[[[RACObserve(self, model.checkChallenge.allowCheck)
-        distinctUntilChanged]
-       takeUntil:self.rac_willDeallocSignal]
-      deliverOn:[RACScheduler mainThreadScheduler]]
-     subscribeNext:^(NSNumber *allowCheck) {
-         @strongify(self);
-         if (self.checkChallengeButton.hidden == [allowCheck boolValue]) {
-             self.checkChallengeButton.hidden = ![allowCheck boolValue];
-             [self refreshTitleLabel];
-             [self.view setNeedsUpdateConstraints];
-         }
-     }];
     
-    [[[[RACObserve(self, model.challengeInfo.allowChallenge)
-         distinctUntilChanged]
-       takeUntil:self.rac_willDeallocSignal]
-      deliverOn:[RACScheduler mainThreadScheduler]]
-     subscribeNext:^(NSNumber *allowChallenge) {
-         @strongify(self);
-         if (self.challengeTag.hidden == [allowChallenge boolValue]) {
-             if ([allowChallenge boolValue] && !self.challengeTagHasShowed) {
-                 //恢复展示时报
-                 self.challengeTagHasShowed = YES;
-                 [AWEVideoDetailTracker trackEvent:@"shortvideo_pk_show"
-                                             model:self.model
-                                   commonParameter:self.commonTrackingParameter
-                                    extraParameter:nil];
-             }
-             self.challengeTag.hidden = ![allowChallenge boolValue];
-             [self.view setNeedsLayout];
-         }
-     }];
-
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(skStoreViewDidDisappear:) name:@"SKStoreProductViewDidDisappearKey" object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationWillEnterForeground:) name:UIApplicationWillEnterForegroundNotification object:nil];
-
-    [[[RACObserve(self, viewModel.isStartFollowLoading)
-       deliverOnMainThread]
-      distinctUntilChanged]
-     subscribeNext:^(id x) {
-         @strongify(self);
-         BOOL isStartFollowLoading = [x boolValue];
-         if (isStartFollowLoading) {
-             [self.followButton startLoading];
-         } else {
-             [self.followButton stopLoading:nil];
-         }
-     }];
 
     [RACObserve(self, viewModel.likeCountString) subscribeNext:^(id  _Nullable x) {
         [self updateDiggState];
@@ -290,34 +227,6 @@ static const CGFloat kCheckChallengeButtonLeftPadding = 28;
     return _userInfoContainerView;
 }
 
-- (TTFollowThemeButton *)followButton
-{
-    if (!_followButton) {
-        _followButton = [[TTFollowThemeButton alloc] initWithUnfollowedType:TTUnfollowedType101
-                                                               followedType:TTFollowedType103
-                                                         followedMutualType:TTFollowedMutualType103];
-        [_followButton addTarget:self action:@selector(handleFollowClick:) forControlEvents:UIControlEventTouchUpInside];
-        _followButton.hidden = YES;
-        _followButton.forbidNightMode = YES;
-    }
-
-    return _followButton;
-}
-
-- (UIButton *)checkChallengeButton
-{
-    if (!_checkChallengeButton) {
-        _checkChallengeButton = [[UIButton alloc] init];
-        _checkChallengeButton.layer.cornerRadius = 4;
-        _checkChallengeButton.layer.borderWidth = 1;
-        _checkChallengeButton.layer.borderColor = [UIColor whiteColor].CGColor;
-        _checkChallengeButton.titleLabel.font = [UIFont boldSystemFontOfSize:14];
-        [_checkChallengeButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-        [_checkChallengeButton setTitle:@"查看挑战" forState:UIControlStateNormal];
-        [_checkChallengeButton addTarget:self action:@selector(_onCheckChallengeButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
-    }
-    return _checkChallengeButton;
-}
 
 - (AWEDetailLogoViewController *)logoViewController
 {
@@ -446,9 +355,9 @@ static const CGFloat kCheckChallengeButtonLeftPadding = 28;
     });
     [self.view addSubview:self.titleLabel];
 
-    _musicInfoView = [AWEAwemeMusicInfoView new];
-    _musicInfoView.userInteractionEnabled = NO;
-    [self.view addSubview:_musicInfoView];
+//    _musicInfoView = [AWEAwemeMusicInfoView new];
+//    _musicInfoView.userInteractionEnabled = NO;
+//    [self.view addSubview:_musicInfoView];
 
 
     _operationView = [[UIView alloc] init];
@@ -462,32 +371,25 @@ static const CGFloat kCheckChallengeButtonLeftPadding = 28;
     [_inputButton addTarget:self action:@selector(_onInputButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
     [_operationView addSubview:_inputButton];
 
-    _commentButton = [[TSVIconLabelButton alloc] initWithImage:@"hts_vp_comments" label:nil];
-    _commentButton.iconImageView.image = ICON_FONT_IMG(24, @"\U0000e699", [UIColor themeWhite]);
-    _commentButton.label.textAlignment = NSTextAlignmentCenter;
+    _commentButton = [[TSVIconLabelButton alloc] initWithImage:@"shortvideo_comment" label:nil];
     _commentButton.label.textColor = [UIColor tt_defaultColorForKey:kColorText7];
     [_commentButton addTarget:self action:@selector(_onCommentButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
     [self.rightInfoView addSubview:_commentButton];
 
-    _likeButton = [[TSVIconLabelButton alloc] initWithImage:@"hts_vp_like" label:nil];
+    _likeButton = [[TSVIconLabelButton alloc] initWithImage:@"shortvideo_dig_normal" label:nil];
     _likeButton.iconImageView.image = ICON_FONT_IMG(24, @"\U0000e69c", [UIColor themeWhite]);
-    _likeButton.label.textAlignment = NSTextAlignmentLeft;
     _likeButton.label.textColor = [UIColor themeWhite];
     [_likeButton addTarget:self action:@selector(_onLikeButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
     [self.rightInfoView addSubview:_likeButton];
     
     self.shareButton = [[UIButton alloc] init];
     self.shareButton.hitTestEdgeInsets = UIEdgeInsetsMake(-20, -20, -20, -20);
-    [self.shareButton setImage:ICON_FONT_IMG(24, @"\U0000E692",[UIColor themeWhite]) forState:UIControlStateNormal];
+    
+    [self.shareButton setImage:[UIImage imageNamed:@"shortvideo_share"] forState:UIControlStateNormal];
     [self.shareButton addTarget:self action:@selector(_onShareButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
     [self.rightInfoView addSubview:self.shareButton];
 
     [self.view addSubview:self.userInfoContainerView];
-    [self.view addSubview:self.followButton];
-    self.followButton.hidden = YES;
-    
-    [self.view addSubview:self.checkChallengeButton];
-    self.checkChallengeButton.hidden = YES;
 
     [self addChildViewController:self.recViewController];
     [self.view addSubview:self.recViewController.view];
@@ -495,7 +397,7 @@ static const CGFloat kCheckChallengeButtonLeftPadding = 28;
     self.recViewController.view.hidden = YES;
     
     [self.view addSubview:self.recArrowButton];
-    self.recArrowButton.hidden = YES;
+//    self.recArrowButton.hidden = YES;
     
     [self.rightInfoView addSubview:_avatarView];
     // add by zjing 去掉小视频关注
@@ -503,33 +405,6 @@ static const CGFloat kCheckChallengeButtonLeftPadding = 28;
 
 }
 
-- (void)setupTagViews
-{
-    self.tagContainerView = [[UIView alloc] initWithFrame:CGRectZero];
-    [self.view addSubview:self.tagContainerView];
-    
-    self.horizontalTopTagsContainerView = [[UIView alloc] initWithFrame:CGRectZero];
-    [self.tagContainerView addSubview:self.horizontalTopTagsContainerView];
-    
-    self.activityTag = [[TSVTagInfoView alloc] initWithNightThemeEnabled:NO];
-    self.activityTag.style = TSVTagInfoViewStyleActivity;
-    [self.activityTag addTarget:self action:@selector(activityTagTap:)];
-    [self.horizontalTopTagsContainerView addSubview:self.activityTag];
-    
-    self.challengeTag = [[TSVTagInfoView alloc] initWithNightThemeEnabled:NO];
-    self.challengeTag.style = TSVTagInfoViewStyleChallenge;
-    [self.challengeTag addTarget:self action:@selector(challengeTagTap:)];
-    [self.horizontalTopTagsContainerView addSubview:self.challengeTag];
-    
-    self.horizontalBottomTagsContainerView = [[UIView alloc] initWithFrame:CGRectZero];
-    [self.tagContainerView addSubview:self.horizontalBottomTagsContainerView];
-    
-    self.tagInfoView = [[TSVTagInfoView alloc] initWithNightThemeEnabled:NO];
-    [self.horizontalBottomTagsContainerView addSubview:self.tagInfoView];
-    
-    self.interactTag = [[TSVTagInfoView alloc] initWithNightThemeEnabled:NO];
-    [self.horizontalBottomTagsContainerView addSubview:self.interactTag];
-}
 
 - (void)activityTagTap:(id)sender
 {
@@ -543,12 +418,6 @@ static const CGFloat kCheckChallengeButtonLeftPadding = 28;
 
 - (void)updateViewConstraints
 {
-    [self.checkChallengeButton mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.right.equalTo(self.view).offset(-15);
-        make.bottom.equalTo(self.operationView.mas_top).offset(-14);
-        make.width.equalTo(@(kCheckChallengeButtonWidth));
-        make.height.equalTo(@(kCheckChallengeButtonHeight));
-    }];
     
     CGFloat avatarSize = 40;
     
@@ -559,7 +428,7 @@ static const CGFloat kCheckChallengeButtonLeftPadding = 28;
     [_operationView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.right.equalTo(self.view);
         make.bottom.equalTo(self.view);
-        make.height.mas_offset( 50+bottomInset);
+        make.height.mas_offset(50+bottomInset);
     }];
     [_inputButton mas_makeConstraints:^(MASConstraintMaker *make) {
         make.edges.equalTo(self.operationView);
@@ -567,42 +436,35 @@ static const CGFloat kCheckChallengeButtonLeftPadding = 28;
 
     
     [_rightInfoView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.right.equalTo(self.view).offset(-15);
-        make.bottom.equalTo(self.operationView.mas_top).offset(-10);
-        make.size.mas_equalTo(CGSizeMake(60, 190));
-    }];
-
-
-    [_rightInfoView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.right.equalTo(self.view).offset(-15);
-        make.bottom.equalTo(self.view);
-        make.size.mas_equalTo(CGSizeMake(60, 270));
-    }];
-    
-    [_avatarView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.equalTo(self.rightInfoView).offset;
-        make.width.height.equalTo(@(avatarSize));
-        make.centerX.equalTo(self.rightInfoView);
-    }];
-    
-    [_commentButton mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.equalTo(self.avatarView.mas_bottom).offset(15);
-        make.centerX.equalTo(self.rightInfoView);
-        make.size.mas_equalTo(CGSizeMake(60, 40));
-    }];
-    
-    [_likeButton mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.equalTo(self.commentButton.mas_bottom).offset(10);
-        make.centerX.equalTo(self.rightInfoView);
-        make.size.mas_equalTo(CGSizeMake(60, 40));
+        make.right.equalTo(self.view).offset(-10);
+        make.bottom.equalTo(self.operationView.mas_top).offset(-60);
+        make.width.mas_offset(40);
     }];
     
     [_shareButton mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.equalTo(self.likeButton.mas_bottom).offset(5);
+        make.bottom.equalTo(self.rightInfoView);
         make.centerX.equalTo(self.rightInfoView);
-        make.size.mas_equalTo(CGSizeMake(60, 40));
+        make.size.mas_equalTo(CGSizeMake(40, 50));
     }];
-
+    
+    [_commentButton mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.bottom.equalTo(self.shareButton.mas_top).offset(-15);
+        make.centerX.equalTo(self.rightInfoView);
+        make.size.mas_equalTo(CGSizeMake(40, 50));
+    }];
+    
+    [_likeButton mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.bottom.equalTo(self.commentButton.mas_top).offset(-15);
+        make.centerX.equalTo(self.rightInfoView);
+        make.size.mas_equalTo(CGSizeMake(40, 50));
+    }];
+    
+    [_avatarView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.bottom.equalTo(self.likeButton.mas_top).offset(-15);
+        make.width.height.equalTo(@(avatarSize));
+        make.centerX.equalTo(self.rightInfoView);
+        make.top.equalTo(self.rightInfoView);
+    }];
     
     [_nameLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerY.equalTo(self.userInfoContainerView);
@@ -611,71 +473,54 @@ static const CGFloat kCheckChallengeButtonLeftPadding = 28;
         make.height.equalTo(@24.0);
     }];
 
-
     UIView *topmostView;
     if ([self.titleLabel.attributedText length]) {
         topmostView = self.titleLabel;
-    } else if (self.musicInfoView.hidden == NO) {
-        topmostView = self.musicInfoView;
+//    } else if (self.musicInfoView.hidden == NO) {
+//        topmostView = self.musicInfoView;
     } else {
         topmostView = self.operationView;
     }
     
-    if (self.recViewController.view.hidden) {
+//    if (self.recViewController.view.hidden) {
+//        [self.userInfoContainerView mas_remakeConstraints:^(MASConstraintMaker *make) {
+//            make.left.equalTo(self.view).offset(15);
+//            make.height.equalTo(@24);
+//            make.bottom.equalTo(topmostView.mas_top).offset(-16);
+//        }];
+//    } else {
         [self.userInfoContainerView mas_remakeConstraints:^(MASConstraintMaker *make) {
             make.left.equalTo(self.view).offset(15);
             make.height.equalTo(@24);
-            make.bottom.equalTo(topmostView.mas_top).offset(-16);
+            make.bottom.equalTo(self.titleLabel.mas_top).offset(-2);
         }];
-    } else {
-        [self.userInfoContainerView mas_remakeConstraints:^(MASConstraintMaker *make) {
-            make.left.equalTo(self.view).offset(15);
-            make.height.equalTo(@24);
-            make.bottom.equalTo(self.operationView.mas_top).offset(-171);
-        }];
-    }
+//    }
 
 
     CGFloat followButtonMinRightMargin;
     CGFloat musicLeftAndRightMargin;
     CGFloat titleLeftAndRightMargin;
-    if (!self.checkChallengeButton.hidden) {
-        followButtonMinRightMargin = kCheckChallengeButtonLeftPadding + kCheckChallengeButtonWidth + 15;
-        musicLeftAndRightMargin = kCheckChallengeButtonLeftPadding + kCheckChallengeButtonWidth + 30;
-        titleLeftAndRightMargin = kCheckChallengeButtonLeftPadding + kCheckChallengeButtonWidth + 30;
-    } else {
-        followButtonMinRightMargin = 58;
-        musicLeftAndRightMargin = 30;
-        titleLeftAndRightMargin = 30;
-    }
-    [self.followButton mas_remakeConstraints:^(MASConstraintMaker *make) {
-        make.left.equalTo(self.userInfoContainerView.mas_right).offset(8);
-        make.centerY.equalTo(self.userInfoContainerView);
-        make.width.equalTo(@58.0);
-        make.height.equalTo(@28.0);
-        make.right.lessThanOrEqualTo(self.view.mas_right).offset(-followButtonMinRightMargin);
-    }];
     
-    if (self.musicInfoView.hidden == NO) {
+//    if (self.musicInfoView.hidden == NO) {
+//        [self.titleLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
+//            make.left.equalTo(self.view).offset(15);
+//            make.right.equalTo(self.rightInfoView.mas_left).offset(-30);
+//            make.bottom.equalTo(self.musicInfoView.mas_top).offset(-10);
+//        }];
+//    } else {
         [self.titleLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
             make.left.equalTo(self.view).offset(15);
             make.right.equalTo(self.rightInfoView.mas_left).offset(-15);
-            make.bottom.equalTo(self.operationView.mas_top).offset(-5);
+            make.bottom.equalTo(self.operationView.mas_top).offset(-20);
         }];
-    } else {
-        [self.titleLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
-            make.left.equalTo(self.view).offset(15);
-            make.width.equalTo(self.view.mas_width).offset(-titleLeftAndRightMargin);
-            make.bottom.equalTo(self.operationView.mas_top);
-        }];
-    }
+//    }
     
-    [self.musicInfoView mas_remakeConstraints:^(MASConstraintMaker *make) {
-        make.left.equalTo(@16.0);
-        make.bottom.equalTo(self.operationView.mas_top);
-        make.width.equalTo(self.view.mas_width).offset(-musicLeftAndRightMargin);
-        make.height.equalTo(@16);
-    }];
+//    [self.musicInfoView mas_remakeConstraints:^(MASConstraintMaker *make) {
+//        make.left.equalTo(@16.0);
+//        make.right.equalTo(self.rightInfoView).offset(-15);
+//        make.bottom.equalTo(self.operationView.mas_top).offset(-5);
+//        make.height.equalTo(@16);
+//    }];
     
     [self.logoViewController.view mas_updateConstraints:^(MASConstraintMaker *make) {
         make.width.equalTo(@100);
@@ -687,56 +532,31 @@ static const CGFloat kCheckChallengeButtonLeftPadding = 28;
         make.top.equalTo(self.userInfoContainerView.mas_bottom).offset(15);
     }];
     
-    [self.recArrowButton mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.equalTo(self.followButton.mas_right).offset(5);
-        make.centerY.equalTo(self.followButton.mas_centerY);
-        make.height.equalTo(@28);
-        make.width.equalTo(@28);
-    }];
-
-    CGFloat tagContainerViewHeight;
-    if ( !(self.tagInfoView.hidden && self.interactTag.hidden) && !(self.activityTag.hidden && self.challengeTag.hidden)) {
-        tagContainerViewHeight = 20 + 6 + 20;
-    } else if (!(self.tagInfoView.hidden && self.interactTag.hidden) || !(self.activityTag.hidden && self.challengeTag.hidden)) {
-        tagContainerViewHeight = 20;
-    } else {
-        tagContainerViewHeight = 0;
-    }
-    
-    [self.tagContainerView mas_remakeConstraints:^(MASConstraintMaker *make) {
-        make.width.equalTo(self.view.mas_width);
-        make.bottom.equalTo(self.userInfoContainerView.mas_top).offset(-16);
-        make.height.equalTo([NSNumber numberWithFloat:tagContainerViewHeight]);
-    }];
-    
     [super updateViewConstraints];
 }
 
 - (CGFloat)titleLabelWidth
 {
-    if (self.checkChallengeButton.hidden) {
-        return self.view.bounds.size.width - 30;
-    } else {
-        return self.view.bounds.size.width - 30 - (kCheckChallengeButtonLeftPadding + kCheckChallengeButtonWidth);
-    }
+        return self.view.bounds.size.width - 90;
+
 }
 
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
 
-    if (!isEmptyString(self.viewModel.musicLabelString)) {
-        [self.musicInfoView startAnimation];
-    }
+//    if (!isEmptyString(self.viewModel.musicLabelString)) {
+//        [self.musicInfoView startAnimation];
+//    }
 }
 
 - (void)viewWillDisappear:(BOOL)animated
 {
     [super viewWillDisappear:animated];
-
-    if (!isEmptyString(self.viewModel.musicLabelString)) {
-        [self.musicInfoView stopAnimation];
-    }
+//
+//    if (!isEmptyString(self.viewModel.musicLabelString)) {
+//        [self.musicInfoView stopAnimation];
+//    }
 }
 
 - (UIEdgeInsets)viewSafeAreaInsets
@@ -756,86 +576,7 @@ static const CGFloat kCheckChallengeButtonLeftPadding = 28;
    
     self.bottomGradientLayer.frame = CGRectMake(0, CGRectGetHeight(self.view.bounds) - 140, CGRectGetWidth(self.view.bounds), 140);
 
-    [self.likeButton configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
-        layout.isEnabled = YES;
-        layout.marginRight = YGPointValue(5);
-    }];
-    [self.shareButton configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
-        layout.isEnabled = YES;
-        layout.width = YGPointValue(24);
-        layout.height = YGPointValue(24);
-    }];
-    if ([[TSVDebugInfoConfig config] debugInfoEnabled]) {
-        self.debugInfoView.frame = CGRectMake(0, 100, 100, 200);
-    }
-
     [self updateViewFrameForSafeAreaIfNeeded];
-    
-    [self.tagContainerView configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
-        layout.isEnabled = YES;
-        layout.paddingHorizontal = YGPointValue(15);
-        layout.flexDirection = YGFlexDirectionColumn;
-        layout.alignItems = YGAlignFlexStart;
-    }];
-    
-    [self.horizontalTopTagsContainerView configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
-        layout.isEnabled = YES;
-        layout.height = YGPointValue(20);
-        layout.width = YGPercentValue(100);
-        layout.marginBottom = YGPointValue(6);
-        layout.flexDirection = YGFlexDirectionRow;
-        layout.alignItems = YGAlignCenter;
-    }];
-    
-    [self.activityTag configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
-        layout.isEnabled = YES;
-        layout.height = YGPointValue(20);
-        layout.width = YGPointValue([self.activityTag originalContainerWidth]);
-        layout.maxWidth = YGPercentValue(100);
-        layout.marginRight = YGPointValue(6);
-        layout.flexShrink = 1;
-    }];
-    
-    [self.challengeTag configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
-        layout.isEnabled = YES;
-        layout.height = YGPointValue(20);
-        layout.width = YGPointValue([self.challengeTag originalContainerWidth]);
-        layout.maxWidth = YGPercentValue(100);
-    }];
-    
-    [self.horizontalBottomTagsContainerView configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
-        layout.isEnabled = YES;
-        layout.width = YGPercentValue(100);
-        layout.height = YGPointValue(20);
-        layout.flexDirection = YGFlexDirectionRow;
-        layout.alignItems = YGAlignCenter;
-    }];
-
-    [self.tagInfoView configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
-        layout.isEnabled = YES;
-        layout.height = YGPointValue(20);
-        layout.maxWidth = YGPointValue([[TSVTagInfoView class] maxContainerWidth]);
-        layout.width = YGPointValue([self.tagInfoView originalContainerWidth]);
-        layout.marginRight = YGPointValue(6);
-    }];
-    
-    [self.interactTag configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
-        layout.isEnabled = YES;
-        layout.height = YGPointValue(20);
-        layout.width = YGPointValue([self.interactTag originalContainerWidth]);
-        layout.flexShrink = 1;
-    }];
-    
-    self.tagInfoView.yoga.isIncludedInLayout = !self.tagInfoView.hidden;
-    self.interactTag.yoga.isIncludedInLayout = !self.interactTag.hidden;
-    self.horizontalBottomTagsContainerView.yoga.isIncludedInLayout = !(self.tagInfoView.hidden && self.interactTag.hidden);
-    self.activityTag.yoga.isIncludedInLayout = !self.activityTag.hidden;
-    self.challengeTag.yoga.isIncludedInLayout = !self.challengeTag.hidden;
-    self.horizontalTopTagsContainerView.yoga.isIncludedInLayout = !(self.activityTag.hidden && self.challengeTag.hidden);
-    
-    [self.tagContainerView.yoga applyLayoutPreservingOrigin:YES];
-    
-    [CATransaction commit];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -845,62 +586,46 @@ static const CGFloat kCheckChallengeButtonLeftPadding = 28;
 
 - (void)dealloc
 {
-    if ([self.model.groupSource isEqualToString:AwemeGroupSource]){
-        [self.musicInfoView stopAnimation];
-    }
+//    if ([self.model.groupSource isEqualToString:AwemeGroupSource]){
+//        [self.musicInfoView stopAnimation];
+//    }
 
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
-- (void)setModel:(TTShortVideoModel *)model
+- (void)setModel:(FHFeedUGCCellModel *)model
 {
     _model = model;
     
-    self.likeButton.labelString = [TTBusinessManager formatCommentCount:self.model.diggCount];
-    self.likeButton.imageString = self.model.userDigg ? @"hts_vp_like_press" : @"hts_vp_like";
-    self.likeButton.iconImageView.image = self.model.userDigg ? ICON_FONT_IMG(24, @"\U0000e6b1", [UIColor themeOrange4]) : ICON_FONT_IMG(24, @"\U0000e69c", [UIColor themeWhite]);
-    self.likeButton.selected = self.model.userDigg;
-    self.likeButton.label.textColor = self.model.userDigg ? [UIColor themeOrange4] : [UIColor themeWhite];
+    self.likeButton.labelString = [TTBusinessManager formatCommentCount:[self.model.diggCount intValue]];
+    self.likeButton.imageString =  [self.model.userDigg boolValue]? @"shortvideo_dig_select" : @"shortvideo_dig_normal";
+//    self.likeButton.iconImageView.image = self.model.userDigg ? ICON_FONT_IMG(24, @"\U0000e6b1", [UIColor themeOrange4]) : ICON_FONT_IMG(24, @"\U0000e69c", [UIColor themeWhite]);
+    self.likeButton.selected = [self.model.userDigg boolValue];
+    self.likeButton.label.textColor = [self.model.userDigg boolValue] ? [UIColor themeOrange4] : [UIColor themeWhite];
 
-    NSString *musicLabelString = self.viewModel.musicLabelString;
-    if (!isEmptyString(musicLabelString)) {
-        [self.musicInfoView configRollingAnimationWithLabelString:musicLabelString];
-        [self.musicInfoView startAnimation];
-        self.musicInfoView.hidden = NO;
-    } else {
-        self.musicInfoView.hidden = YES;
-    }
+//    NSString *musicLabelString = self.viewModel.musicLabelString;
+//    if (!isEmptyString(musicLabelString)) {
+//        [self.musicInfoView configRollingAnimationWithLabelString:musicLabelString];
+//        [self.musicInfoView startAnimation];
+//        self.musicInfoView.hidden = NO;
+//    } else {
+//        self.musicInfoView.hidden = YES;
+//    }
     
-    self.musicInfoView.alpha = 1;
+//    self.musicInfoView.alpha = 1;
     self.titleLabel.alpha = 1;
     self.recViewController.view.hidden = YES;
     self.recArrowButton.hidden = YES;
-    
-    [self.activityTag refreshTagWithText:model.activity.name];
-    [self.challengeTag refreshTagWithText:model.challengeInfo.challengeAward];
-    [self.tagInfoView refreshTagWithText:model.labelForDetail];
-    [self.interactTag refreshTagWithText:model.labelForInteract];
-    
-    [self refreshTagHiddenStatusWithModel:model];
 
     [self refreshTitleLabel];
 
     [self.view setNeedsUpdateConstraints];
 
-    [self.avatarView updateAvatarWithTSVUserModel:model.author];
+    [self.avatarView updateAvatarWithTSVUserModel:model];
 
-    self.nameLabel.text = self.model.author.name;
+    self.nameLabel.text = self.model.user.name;
 
     self.logoViewController.view.hidden = ![self shouldShowLogoViewController];
-    
-    // add by zjing 隐藏小视频关注按钮
-    self.followButton.hidden = YES;
-
-//    self.followButton.hidden = self.viewModel.followButtonHidden;
-
-    if ([[TSVDebugInfoConfig config] debugInfoEnabled]) {
-        self.debugInfoView.debugInfo = model.debugInfo;
-    }
 
 }
 
@@ -908,14 +633,14 @@ static const CGFloat kCheckChallengeButtonLeftPadding = 28;
 {
     @weakify(self);
     [TSVTitleLabelConfigurator updateAttributeTitleForLabel:self.titleLabel
-                                               trimHashTags:!self.activityTag.hidden
-                                                       text:self.model.title
-                                        richTextStyleConfig:self.model.titleRichSpanJSONString
+                                               trimHashTags:NO
+                                                       text:self.model.content
+                                        richTextStyleConfig:@""
                                                 allBoldFont:NO
                                                    fontSize:14
-                                               activityName:self.model.activity.name
+                                               activityName:@""
                                             prependUserName:NO
-                                                   userName:self.model.author.name
+                                                   userName:self.model.user.name
                                                linkTapBlock:[self.viewModel titleLinkClickBlock]
                                            userNameTapBlock:^{
                                                @strongify(self);
@@ -926,11 +651,12 @@ static const CGFloat kCheckChallengeButtonLeftPadding = 28;
 
 - (void)updateDiggState
 {
-    self.likeButton.labelString = [TTBusinessManager formatCommentCount:self.model.diggCount];
-    self.likeButton.imageString = self.model.userDigg ? @"hts_vp_like_press" : @"hts_vp_like";
-    self.likeButton.iconImageView.image = self.model.userDigg ? ICON_FONT_IMG(24, @"\U0000e6b1", [UIColor themeOrange4]) : ICON_FONT_IMG(24, @"\U0000e69c", [UIColor themeWhite]);
-    self.likeButton.selected = self.model.userDigg;
-    self.likeButton.label.textColor = self.model.userDigg ? [UIColor themeOrange4] : [UIColor themeWhite];
+    BOOL userDigg = [self.model.userDigg boolValue];
+    self.likeButton.labelString = [TTBusinessManager formatCommentCount:[self.model.diggCount intValue]];
+    self.likeButton.imageString = userDigg ? @"shortvideo_dig_select" : @"shortvideo_dig_normal";
+//    self.likeButton.iconImageView.image = self.model.userDigg ? ICON_FONT_IMG(24, @"\U0000e6b1", [UIColor themeOrange4]) : ICON_FONT_IMG(24, @"\U0000e69c", [UIColor themeWhite]);
+    self.likeButton.selected = userDigg;
+    self.likeButton.label.textColor = userDigg ? [UIColor themeOrange4] : [UIColor themeWhite];
     [self.view setNeedsLayout];
 }
 
@@ -938,10 +664,10 @@ static const CGFloat kCheckChallengeButtonLeftPadding = 28;
 
 - (BOOL)alertIfNotValid
 {
-    if (self.model.isDelete) {
-        [HTSVideoPlayToast show:@"视频已被删除"];
-        return YES;
-    }
+//    if (self.model.isDelete) {
+//        [HTSVideoPlayToast show:@"视频已被删除"];
+//        return YES;
+//    }
     return !self.model;
 }
 
@@ -966,7 +692,7 @@ static const CGFloat kCheckChallengeButtonLeftPadding = 28;
         return;
     }
 
-    if (!self.model.userDigg) {
+    if (![self.model.userDigg boolValue]) {
         [self.viewModel doubleTapView];
         [self updateDiggState];
         //point:视频点赞
@@ -979,7 +705,7 @@ static const CGFloat kCheckChallengeButtonLeftPadding = 28;
         return;
     }
 
-    if (self.model.userDigg) {
+    if ([self.model.userDigg boolValue]) {
         [self doSafeCancelDigg];
     }
 }
@@ -990,9 +716,9 @@ static const CGFloat kCheckChallengeButtonLeftPadding = 28;
     if (!self.model) {
         return;
     }
-    
+    BOOL userDigg = [self.model.userDigg boolValue];
     NSString *eventName;
-    if (!self.model.userDigg) {
+    if (!userDigg) {
         eventName = @"click_like";
     } else {
         eventName = @"click_dislike";
@@ -1001,11 +727,11 @@ static const CGFloat kCheckChallengeButtonLeftPadding = 28;
                                 model:self.model
                       commonParameter:self.commonTrackingParameter
                        extraParameter:@{
-                                        @"user_id": self.model.author.userID ?: @"",
+                                        @"user_id": self.model.user.userId ?: @"",
                                         @"position": @"feed_detail",
                                         }];
 
-    if (!self.model.userDigg) {
+    if (!userDigg) {
             [self digg];
             //point:视频点赞
     } else {
@@ -1036,21 +762,21 @@ static const CGFloat kCheckChallengeButtonLeftPadding = 28;
 - (void)doSafeCancelDigg
 {
 
-    self.model.diggCount -= 1;
-    self.model.userDigg = NO;
+    self.model.diggCount = [NSString stringWithFormat:@"%ld",[self.model.diggCount intValue] - 1];
+    self.model.userDigg = @"0";
     [self postDiggCountSyncNotification];
-    [self.model save];
+//    [self.model save];
     [self updateDiggState];
     // [AWEVideoDetailManager cancelDiggVideoItemWithID:self.model.groupID completion:nil];
-    [FHCommonApi requestCommonDigg:[NSString stringWithFormat:@"%@", self.model.groupID] groupType:FHDetailDiggTypeSMALLVIDEO action:0 completion:nil];
+    [FHCommonApi requestCommonDigg:[NSString stringWithFormat:@"%@", self.model.groupId] groupType:FHDetailDiggTypeSMALLVIDEO action:0 completion:nil];
 }
 
 - (void)postDiggCountSyncNotification
 {
     [[NSNotificationCenter defaultCenter] postNotificationName:@"TSVShortVideoDiggCountSyncNotification"
                                                         object:nil
-                                                      userInfo:@{@"group_id" : self.model.groupID ?:@"",
-                                                                 @"user_digg" : @(self.model.userDigg),}];
+                                                      userInfo:@{@"group_id" : self.model.groupId ?:@"",
+                                                                 @"user_digg" : @([self.model.userDigg intValue]),}];
 }
 
 - (void)_onInputButtonClicked:(UIButton *)sender
@@ -1136,50 +862,18 @@ static const CGFloat kCheckChallengeButtonLeftPadding = 28;
     }
 }
 
-#pragma mark -
-- (void)refreshTagHiddenStatusWithModel:(TTShortVideoModel *)model
-{
-    if (!isEmptyString(model.labelForDetail)) {
-        self.tagInfoView.hidden = NO;
-    } else {
-        self.tagInfoView.hidden = YES;
-    }
-    
-    if (!isEmptyString(model.labelForInteract)) {
-        self.interactTag.hidden = NO;
-    } else {
-        self.interactTag.hidden = YES;
-    }
-    
-    if (!isEmptyString(model.activity.name) && ![HTSVideoSwitch shouldHideActivityTag]) {
-        self.activityTag.hidden = NO;
-    } else {
-        self.activityTag.hidden = YES;
-    }
-
-    if (model.challengeInfo.allowChallenge) {
-        [AWEVideoDetailTracker trackEvent:@"shortvideo_pk_show"
-                                    model:self.model
-                          commonParameter:self.commonTrackingParameter
-                           extraParameter:nil];
-        self.challengeTagHasShowed = YES;
-        self.challengeTag.hidden = NO;
-    } else {
-        self.challengeTag.hidden = YES;
-    }
-}
 
 - (BOOL)shouldShowLogoViewController
 {
-    if ([self.model isAuthorMyself]) {
+//    if ([self.model isAuthorMyself]) {
         return NO;
-    }
-    
-    NSDictionary *configDic = [AWEVideoPlayTransitionBridge getConfigDictWithGroupSource:self.model.groupSource];
-    if ([configDic[@"should_display"] integerValue] == 0) {
-        return NO;
-    }
-    return YES;
+//    }
+//
+//    NSDictionary *configDic = [AWEVideoPlayTransitionBridge getConfigDictWithGroupSource:self.model.groupSource];
+//    if ([configDic[@"should_display"] integerValue] == 0) {
+//        return NO;
+//    }
+//    return YES;
 }
 
 #pragma mark - Recommend Card
@@ -1213,7 +907,7 @@ static const CGFloat kCheckChallengeButtonLeftPadding = 28;
             self.recViewController.view.alpha = 1;
             self.recArrowButton.alpha = 1;
             self.titleLabel.alpha = 0;
-            self.musicInfoView.alpha = 0;
+//            self.musicInfoView.alpha = 0;
             if (!self.viewModel.isArrowRotationBackground) {
                 self.recArrowButton.imageView.transform = CGAffineTransformMakeRotation(0);
             }
@@ -1227,8 +921,8 @@ static const CGFloat kCheckChallengeButtonLeftPadding = 28;
     UIView *topmostView;
     if ([self.titleLabel.attributedText length]) {
         topmostView = self.titleLabel;
-    } else if (self.musicInfoView.hidden == NO) {
-        topmostView = self.musicInfoView;
+//    } else if (self.musicInfoView.hidden == NO) {
+//        topmostView = self.musicInfoView;
     } else {
         topmostView = self.operationView;
     }
@@ -1243,7 +937,7 @@ static const CGFloat kCheckChallengeButtonLeftPadding = 28;
     [UIView animateWithDuration:0.22f customTimingFunction:CustomTimingFunctionSineOut animation:^{
         [self.view layoutIfNeeded];
         self.titleLabel.alpha = 1;
-        self.musicInfoView.alpha = 1;
+//        self.musicInfoView.alpha = 1;
         if (!self.viewModel.isArrowRotationBackground) {
             self.recArrowButton.imageView.transform = CGAffineTransformMakeRotation(M_PI);
         }

@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import "ExploreMovieMiniSliderView.h"
+#import "FHFeedUGCCellModel.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -34,7 +35,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface AWEVideoPlayView : UIView
 
-@property (nonatomic, strong, readonly) TTShortVideoModel *model;
+@property (nonatomic, strong, readonly) FHFeedUGCCellModel *model;
 @property (nonatomic, assign, readonly) BOOL isPlaying;
 @property (nonatomic, copy, nullable) NSDictionary *commonTrackingParameter;
 @property (nonatomic, readonly, assign) NSTimeInterval videoDuration;
@@ -43,7 +44,7 @@ NS_ASSUME_NONNULL_BEGIN
 /// 自动改变frame以适配视频大小，默认YES
 @property (nonatomic, assign) BOOL autoAdjustViewFrame;
 
-- (void)updateWithModel:(TTShortVideoModel *)model usingFirstFrameCover:(BOOL)usingFirstFrameCover;
+- (void)updateWithModel:(FHFeedUGCCellModel *)model usingFirstFrameCover:(BOOL)usingFirstFrameCover;
 
 - (void)prepareToPlay;
 

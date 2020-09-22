@@ -493,7 +493,8 @@
                            @"lynxData":@"lynx_data",
                            @"hidelLine":@"hide_line",
                            @"fromGid":@"from_gid",
-                           @"fromGroupSource":@"from_group_source"
+                           @"fromGroupSource":@"from_group_source",
+                           @"userRepin":@"user_repin"
                            };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
         return dict[keyName]?:keyName;
@@ -769,6 +770,51 @@
 @end
 
 @implementation FHFeedContentRawDataCommentBaseUserModel
++ (JSONKeyMapper*)keyMapper
+{
+    NSDictionary *dict = @{
+                           @"relationCount": @"relation_count",
+                           };
+    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+        return dict[keyName]?:keyName;
+    }];
+}
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+@end
+
+@implementation FHFeedContentRawDataCommentRelationModel
++ (JSONKeyMapper*)keyMapper
+{
+    NSDictionary *dict = @{
+                           @"followersCount": @"followers_count",
+                           @"followingsCount": @"followings_count",
+                           };
+    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+        return dict[keyName]?:keyName;
+    }];
+}
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+@end
+
+@implementation FHFeedContentRawDataCommentRelationCountModel
++ (JSONKeyMapper*)keyMapper
+{
+    NSDictionary *dict = @{
+                           @"isFollowed": @"is_followed",
+                           @"isFollowing": @"is_following",
+                           @"isFriend": @"is_friend",
+                           @"isRealFriend": @"is_real_friend",
+                           };
+    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+        return dict[keyName]?:keyName;
+    }];
+}
 + (BOOL)propertyIsOptional:(NSString *)propertyName
 {
     return YES;

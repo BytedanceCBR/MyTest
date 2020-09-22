@@ -7,6 +7,7 @@
 
 #import "FHBaseViewController.h"
 #import "SSThemed.h"
+#import "FHFeedUGCCellModel.h"
 @class TTShortVideoModel;
 @class AWEVideoDetailViewController;
 NS_ASSUME_NONNULL_BEGIN
@@ -18,7 +19,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, strong, readonly) SSThemedView *commentView;
 
-@property (nonatomic, strong, readonly) TTShortVideoModel *model;
+@property (nonatomic, strong, readonly) FHFeedUGCCellModel *model;
 @end
 
 NS_ASSUME_NONNULL_END
