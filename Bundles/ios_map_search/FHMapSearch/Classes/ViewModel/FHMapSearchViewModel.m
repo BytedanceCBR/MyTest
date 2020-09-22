@@ -58,6 +58,9 @@
 extern NSString *const COORDINATE_ENCLOSURE;
 extern NSString *const NEIGHBORHOOD_IDS ;
 
+
+static NSString *const kRegionPointerKey = @"polygon_muti_box";
+
 typedef NS_ENUM(NSInteger , FHMapZoomTrigerType) {
     FHMapZoomTrigerTypeZoomMap = 0,// 缩放地图
     FHMapZoomTrigerTypeClickAnnotation , //点击气泡
@@ -258,6 +261,7 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
 
 - (void)changeHouseType
 {
+    [self doClear];
     [self addClickTabLog];
     
     [self.mapView removeAnnotations:(NSArray <MAAnnotation>*)self.oldHouseAnnotions];
@@ -1756,11 +1760,18 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
     } else if ([overlay isKindOfClass:[MAPolygon class]]) {
         
         MAPolygonRenderer *polygonRenderer = [[MAPolygonRenderer alloc] initWithPolygon:overlay];
-        polygonRenderer.lineWidth   = 10.f;
-        polygonRenderer.strokeColor = [UIColor themeOrange1];
-        polygonRenderer.fillColor   = RGBA(0xfe, 0x55, 0x00,0.1);
-        
+
+        if ([overlay.title isEqualToString:kRegionPointerKey]) {
+          polygonRenderer.lineWidth   = 1.f;
+          polygonRenderer.strokeColor = [UIColor themeOrange4];
+          polygonRenderer.fillColor   = RGBA(0xfe, 0x55, 0x00,0.1);
+        }else{
+            polygonRenderer.lineWidth   = 10.f;
+            polygonRenderer.strokeColor = [UIColor themeOrange1];
+            polygonRenderer.fillColor   = RGBA(0xfe, 0x55, 0x00,0.1);
+        }
         return polygonRenderer;
+
     }else if ([overlay isKindOfClass:[MAPolyline class]]){
         MAPolylineRenderer *polygonRenderer = [[MAPolylineRenderer alloc] initWithPolyline:overlay];
         polygonRenderer.lineWidth   = 12.f;
@@ -2966,13 +2977,13 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
 //添加多边形围栏按钮点击
 - (void)addGeoFencePolygonRegion:(NSArray *)points {
     NSInteger count = 4;
-    CLLocationCoordinate2D *coorArr = malloc(sizeof(CLLocationCoordinate2D) * count);
+    CLLocationCoordinate2D *coorArr = malloc(sizeof(CLLocationCoordinate2D) * points.count);
     
     for (NSInteger i = 0; i < points.count; i++) {
         NSDictionary *poinstDict = points[i];
         if ([poinstDict isKindOfClass:[NSDictionary class]]) {
-            CGFloat latRegin = [poinstDict[@"latitude"] floatValue];
-            CGFloat longitudeRegin = [poinstDict[@"longitude"] floatValue];
+            CLLocationDegrees latRegin = [poinstDict[@"latitude"] floatValue];
+            CLLocationDegrees longitudeRegin = [poinstDict[@"longitude"] floatValue];
             coorArr[i] = CLLocationCoordinate2DMake(latRegin,longitudeRegin);     //平安里地铁站
         }
     }
@@ -2983,7 +2994,7 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
 //    coorArr[3] = CLLocationCoordinate2DMake(39.941949, 116.435497);     //东直门地铁站
     
     [self doClear];
-    [self.geoFenceManager addPolygonRegionForMonitoringWithCoordinates:coorArr count:points.count customID:@"polygon_1"];
+    [self.geoFenceManager addPolygonRegionForMonitoringWithCoordinates:coorArr count:points.count customID:kRegionPointerKey];
     
     free(coorArr);
     coorArr = NULL;
@@ -3028,6 +3039,7 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
 //地图上显示多边形
 - (MAPolygon *)showPolygonInMap:(CLLocationCoordinate2D *)coordinates count:(NSInteger)count {
     MAPolygon *polygonOverlay = [MAPolygon polygonWithCoordinates:coordinates count:count];
+    polygonOverlay.title = kRegionPointerKey;
     [self.mapView addOverlay:polygonOverlay];
     return polygonOverlay;
 }
@@ -3044,13 +3056,13 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
     
     if ([customID hasPrefix:@"circle"]) {
       
-    } else if ([customID isEqualToString:@"polygon_1"]) {
+    } else if ([customID isEqualToString:kRegionPointerKey]) {
         if (error) {
             NSLog(@"=======polygon error %@",error);
         } else {
             AMapGeoFencePolygonRegion *polygonRegion = (AMapGeoFencePolygonRegion *)regions.firstObject;
             MAPolygon *polygonOverlay = [self showPolygonInMap:polygonRegion.coordinates count:polygonRegion.count];
-            [self.mapView setVisibleMapRect:polygonOverlay.boundingMapRect edgePadding:UIEdgeInsetsMake(20, 20, 20, 20) animated:YES];
+//            [self.mapView setVisibleMapRect:polygonOverlay.boundingMapRect edgePadding:UIEdgeInsetsMake(20, 20, 20, 20) animated:YES];
         }
     }
        
