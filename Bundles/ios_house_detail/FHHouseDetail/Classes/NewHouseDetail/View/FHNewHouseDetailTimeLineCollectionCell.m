@@ -13,6 +13,7 @@
 @property (nonatomic, strong) UIView *containerView;
 @property (nonatomic, strong) UICollectionView *collectionView;
 @property (nonatomic, strong) UILabel *contentLabel;
+@property (nonatomic, strong) UIControl *contentBtn;
 @property (nonatomic, strong) UICollectionViewFlowLayout *flowLayout;
 @property (nonatomic, strong) UIView *leftGradientView;
 @property (nonatomic, strong) UIView *rightGradientView;
@@ -103,6 +104,18 @@
         make.right.mas_equalTo(-15);
     }];
     
+    self.contentBtn = [[UIControl alloc] init];
+    [self.containerView addSubview:self.contentBtn];
+    [self.contentBtn addTarget:self action:@selector(clickContent) forControlEvents:UIControlEventTouchUpInside];
+    [self.contentBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.edges.mas_equalTo(self.contentLabel);
+    }];
+}
+
+- (void)clickContent {
+    if (self.clickContentBlock) {
+        self.clickContentBlock();
+    }
 }
 
 - (void)refreshWithData:(id)data {

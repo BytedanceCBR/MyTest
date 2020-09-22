@@ -12,6 +12,7 @@
 @interface FHNewHouseDetailTimeLineCollectionCell : FHDetailBaseCollectionCell
 
 @property (nonatomic, copy) void(^selectedIndexChange)(NSInteger index);
+@property (nonatomic, copy) void(^clickContentBlock)(void);
 
 @end
 
