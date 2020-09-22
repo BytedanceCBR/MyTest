@@ -1654,8 +1654,8 @@ extern NSString *const INSTANT_DATA_KEY;
             [newCell updateHeightByIsFirst:isFirstCell];
         }
         if ([cell isKindOfClass:[FHDynamicLynxCell class]]) {
-            FHDynamicLynxCellModel *cellModel = [self.houseList btd_objectAtIndex:indexPath.row];
-            if (cellModel) {
+            FHDynamicLynxCellModel *cellModel = data;
+            if (cellModel && [cellModel isKindOfClass:[FHDynamicLynxCellModel class]]) {
                 cellModel.cell = cell;
                 [(FHDynamicLynxCell *)cell updateWithCellModel:cellModel];
             }
