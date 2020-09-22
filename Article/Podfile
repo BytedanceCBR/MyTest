@@ -552,7 +552,7 @@ def appPods
     # ab test sdk
     pod_binary  'BDABTestSDK', '1.0.2-rc.3'
 
-    pod 'BDUGDeepLink', '1.1.1'
+    pod 'BDUGDeepLink', '1.6.6'
     
     pod_binary 'TTAppStoreStarManager', '1.0.12'
 
