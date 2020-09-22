@@ -7,6 +7,9 @@
 
 #import "FHMapSearchViewModel.h"
 #import <AMapFoundationKit/AMapFoundationKit.h>
+#import <AMapLocationKit/AMapLocationKit.h>
+#import <MAMapKit/MAMapKit.h>
+
 #import "UIViewAdditions.h"
 #import "FHHouseType.h"
 #import "TTNetworkManager.h"
@@ -68,7 +71,7 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
 };
 
 
-@interface FHMapSearchViewModel ()<FHMapSearchWayChooseViewDelegate,FHMapDrawMaskViewDelegate>
+@interface FHMapSearchViewModel ()<FHMapSearchWayChooseViewDelegate,FHMapDrawMaskViewDelegate,AMapGeoFenceManagerDelegate,MAMapViewDelegate>
 {
     MAMapPoint *drawLinePoints;//用户画圈选择的坐标点
     int drawLinePointCount;
@@ -120,6 +123,7 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
 @property(nonatomic , strong) NSArray *oldHouseAnnotions;
 @property (nonatomic , strong) UIView *bottomShowInfoView;
 @property (nonatomic , strong) FHMapSearchDataListModel *currentDataModel;
+@property (nonatomic, strong) AMapGeoFenceManager *geoFenceManager;
 
 @end
 
@@ -205,6 +209,8 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
             self.subwayData = [self loadSubwayData];
         }
         
+        
+        [self configGeoFenceManager];
 //        if (self.configModel.originSearchId.length == 0 || [self.configModel.originSearchId isEqualToString:@"be_null"]) {
 //            //从租房或者city market 进入时没有origin search id 使用map search返回的search id
 //            self.configModel.originSearchId = nil;
@@ -1048,6 +1054,7 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
         //handle open url
         [wself updateBubble:model.mapFindHouseOpenUrl];
         
+        
         if (moveCenter.latitude != 0 && moveCenter.longitude != 0 && zoomLevel) {
             [self.mapView setCenterCoordinate:moveCenter animated:YES];
             [self.mapView setZoomLevel:zoomLevel animated:YES]; //atP
@@ -1342,6 +1349,7 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
 
 -(void)handleSelect:(MAAnnotationView *)annotationView
 {
+    
     if (![annotationView.annotation isKindOfClass:[FHHouseAnnotation class]]) {
         return;
     }
@@ -1443,6 +1451,9 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
         [self tryAddMapZoomLevelTrigerby:FHMapZoomTrigerTypeClickAnnotation currentLevel:zoomLevel];
         [self.mapView setCenterCoordinate:moveCenter animated:YES];
         [self.mapView setZoomLevel:zoomLevel animated:YES]; //atPivot:annotationView.center
+        
+        [self addGeoFencePolygonRegion:model.coordinateEnclosure];
+        
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
             //待地图缩放完之后
             [self requestHouses:NO showTip:YES];
@@ -2941,5 +2952,119 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
         [self.houseListViewController.viewModel reloadingHouseData:self.houseListViewController.viewModel.condition];
     }
 }
+
+#pragma mark 地理围栏
+
+//初始化地理围栏manager
+- (void)configGeoFenceManager {
+    self.geoFenceManager = [[AMapGeoFenceManager alloc] init];
+    self.geoFenceManager.delegate = self;
+    self.geoFenceManager.activeAction = AMapGeoFenceActiveActionInside | AMapGeoFenceActiveActionOutside | AMapGeoFenceActiveActionStayed; //进入，离开，停留都要进行通知
+//    self.geoFenceManager.allowsBackgroundLocationUpdates = YES;  //允许后台定位
+}
+
+//添加多边形围栏按钮点击
+- (void)addGeoFencePolygonRegion:(NSArray *)points {
+    NSInteger count = 4;
+    CLLocationCoordinate2D *coorArr = malloc(sizeof(CLLocationCoordinate2D) * count);
+    
+    for (NSInteger i = 0; i < points.count; i++) {
+        NSDictionary *poinstDict = points[i];
+        if ([poinstDict isKindOfClass:[NSDictionary class]]) {
+            CGFloat latRegin = [poinstDict[@"latitude"] floatValue];
+            CGFloat longitudeRegin = [poinstDict[@"longitude"] floatValue];
+            coorArr[i] = CLLocationCoordinate2DMake(latRegin,longitudeRegin);     //平安里地铁站
+        }
+    }
+    
+//    coorArr[0] = CLLocationCoordinate2DMake(39.933921, 116.372927);     //平安里地铁站
+//    coorArr[1] = CLLocationCoordinate2DMake(39.907261, 116.376532);     //西单地铁站
+//    coorArr[2] = CLLocationCoordinate2DMake(39.900611, 116.418161);     //崇文门地铁站
+//    coorArr[3] = CLLocationCoordinate2DMake(39.941949, 116.435497);     //东直门地铁站
+    
+    [self doClear];
+    [self.geoFenceManager addPolygonRegionForMonitoringWithCoordinates:coorArr count:points.count customID:@"polygon_1"];
+    
+    free(coorArr);
+    coorArr = NULL;
+}
+
+- (BOOL)pauseGeoFenceRegion
+{
+    BOOL ret = NO;
+    NSArray *geoFenceRegions = [self.geoFenceManager monitoringGeoFenceRegionsWithCustomID:nil];
+    for (AMapGeoFenceRegion *region in geoFenceRegions) {
+//        [self.geoFenceManager pauseTheGeoFenceRegion:region];
+        [self.geoFenceManager pauseGeoFenceRegionsWithCustomID:[region customID]];
+        ret = YES;
+    }
+    [self.mapView removeOverlays:self.mapView.overlays];  //把之前添加的Overlay都移除掉
+
+    return ret;
+}
+
+- (BOOL)startGeoFenceRegion
+{
+    BOOL ret = NO;
+    NSArray *geoFenceRegions = [self.geoFenceManager pausedGeoFenceRegionsWithCustomID:nil];
+    for (AMapGeoFenceRegion *region in geoFenceRegions) {
+        if ([[self.geoFenceManager startGeoFenceRegionsWithCustomID:[region customID]] count] > 0)
+        {
+            ret = YES;
+        }
+    }
+    return ret;
+}
+
+
+// 清除上一次按钮点击创建的围栏
+- (void)doClear {
+    [self.mapView removeOverlays:self.mapView.overlays];  //把之前添加的Overlay都移除掉
+    [self.geoFenceManager removeAllGeoFenceRegions];  //移除所有已经添加的围栏，如果有正在请求的围栏也会丢弃
+//    [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(removeRegionStatusLable) object:nil];
+//    [self removeRegionStatusLable];
+}
+
+//地图上显示多边形
+- (MAPolygon *)showPolygonInMap:(CLLocationCoordinate2D *)coordinates count:(NSInteger)count {
+    MAPolygon *polygonOverlay = [MAPolygon polygonWithCoordinates:coordinates count:count];
+    [self.mapView addOverlay:polygonOverlay];
+    return polygonOverlay;
+}
+
+
+//// 如果需要后台定位权限时，需要实现
+//- (void)amapGeoFenceManager:(AMapGeoFenceManager *)manager doRequireLocationAuth:(CLLocationManager *)locationManager
+//{
+//    [locationManager requestAlwaysAuthorization];
+//}
+
+//添加地理围栏完成后的回调，成功与失败都会调用
+- (void)amapGeoFenceManager:(AMapGeoFenceManager *)manager didAddRegionForMonitoringFinished:(NSArray<AMapGeoFenceRegion *> *)regions customID:(NSString *)customID error:(NSError *)error {
+    
+    if ([customID hasPrefix:@"circle"]) {
+      
+    } else if ([customID isEqualToString:@"polygon_1"]) {
+        if (error) {
+            NSLog(@"=======polygon error %@",error);
+        } else {
+            AMapGeoFencePolygonRegion *polygonRegion = (AMapGeoFencePolygonRegion *)regions.firstObject;
+            MAPolygon *polygonOverlay = [self showPolygonInMap:polygonRegion.coordinates count:polygonRegion.count];
+            [self.mapView setVisibleMapRect:polygonOverlay.boundingMapRect edgePadding:UIEdgeInsetsMake(20, 20, 20, 20) animated:YES];
+        }
+    }
+       
+}
+
+//地理围栏状态改变时回调，当围栏状态的值发生改变，定位失败都会调用
+- (void)amapGeoFenceManager:(AMapGeoFenceManager *)manager didGeoFencesStatusChangedForRegion:(AMapGeoFenceRegion *)region customID:(NSString *)customID error:(NSError *)error {
+    if (error) {
+        NSLog(@"status changed error %@",error);
+    }else{
+
+    }
+}
+
+
 
 @end
