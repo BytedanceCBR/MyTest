@@ -80,7 +80,8 @@
             return currentValue;
         }
         //allParams 包含通用埋点字段， 并且tracerModel中为有值，赋值
-        if (!currentValue.length) {
+        //或者传be_null 的时候也需要调换
+        if (!currentValue.length || [currentValue isEqualToString:@"be_null"]) {
             return trackerValue;
         }
         return currentValue;
@@ -107,6 +108,14 @@
         self.tracerModel.logPb = [(NSString *)logPb btd_jsonDictionary];
     }
     [self.tracerDict addEntriesFromDictionary:[self.tracerModel toDictionary]];
+    
+    NSString *report_params = allParams[@"report_params"];
+    if (report_params && [report_params isKindOfClass:[NSString class]]) {
+        NSDictionary *report_params_dic = [report_params btd_jsonDictionary];
+        if (report_params_dic && report_params_dic.count) {
+            [self.tracerDict addEntriesFromDictionary:report_params_dic];
+        }
+    }
 }
 
 -(void)initNavbar
