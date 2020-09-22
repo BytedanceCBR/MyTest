@@ -33,7 +33,7 @@
 }
 
 - (void)setVideoVC:(FHVideoViewController *)videoVC {
-    if (videoVC != _videoVC) {
+//    if (videoVC != _videoVC) {
         _videoVC = videoVC;
         videoVC.delegate = self;
         // 状态维护
@@ -45,7 +45,7 @@
         _vedioView = _videoVC.view;
         
         [self addSubview:_vedioView];
-    }
+//    }
 }
 
 // 不支持手势放大

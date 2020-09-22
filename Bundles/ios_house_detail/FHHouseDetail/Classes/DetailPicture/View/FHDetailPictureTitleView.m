@@ -16,7 +16,7 @@
 @interface FHDetailPictureTitleView()<UICollectionViewDelegate,UICollectionViewDataSource,UICollectionViewDelegateFlowLayout>
 
 @property (nonatomic, strong) UIView *indicatorView;
-@property (nonatomic, copy) NSArray *preTitleSums;
+@property (nonatomic, copy) NSArray <NSNumber *>* preTitleSums;
 @property (nonatomic, assign) NSInteger titleIndex;
 @end
 

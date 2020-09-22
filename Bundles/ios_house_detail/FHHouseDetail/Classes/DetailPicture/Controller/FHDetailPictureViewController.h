@@ -10,7 +10,7 @@
 #import "TTPhotoScrollViewController.h"
 #import "FHDetailMediaHeaderCell.h"
 #import "FHVideoViewController.h"
-#import "FHFloorPanPicShowModel.h"
+#import "FHDetailPictureModel.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -19,17 +19,31 @@ NS_ASSUME_NONNULL_BEGIN
 // 支持房源图片以及视频相关功能
 @interface FHDetailPictureViewController : FHBaseViewController
 
+/** 图片数据 */
+//创建一个新的数据结构
+@property (nonatomic, strong) FHDetailPictureModel *detailPictureModel;
+
+//线索数据
+@property (nonatomic, weak) FHHouseDetailContactViewModel *contactViewModel;
+//im线索
+@property (nonatomic, strong, nullable) FHClueAssociateInfoModel *houseImageAssociateInfo;
+
+
 @property (nonatomic, weak)     UIViewController       *topVC;
 @property(nonatomic, strong) UIScrollView * photoScrollView;
 /** 当前index */
 @property(nonatomic, assign, readonly)NSInteger currentIndex;
 /** 打开的时候需要展示的index */
 @property(nonatomic, assign)NSUInteger startWithIndex;
-
+/**如果外面传了视频控制器就用外面的，如果没有就自己生成一个，但是退出该控制器后视频进度不会保存*/
 @property (nonatomic, weak)     FHVideoViewController      *videoVC;
 
 /** 图片个数 */
 @property(nonatomic, assign, readonly)NSInteger photoCount;
+
+/**点击图片 */
+@property(nonatomic, copy) void (^clickImageBlock)(NSInteger currentIndex);
+
 /** 滚动引起index改变的时候调用 */
 @property(nonatomic, copy) void (^indexUpdatedBlock)(NSInteger lastIndex, NSInteger currentIndex);
 /** 图片保存的时候调用 */
@@ -38,35 +52,27 @@ NS_ASSUME_NONNULL_BEGIN
 /**点击全部图片*/
 @property(nonatomic, copy) void (^albumImageBtnClickBlock)(NSInteger index);
 
-@property(nonatomic, copy) void (^albumImageStayBlock)(NSInteger index,NSInteger stayTime);
 /**点击头图的tab栏出现的埋点*/
-@property(nonatomic, copy) void (^topImageClickTabBlock)(NSInteger index);
+@property(nonatomic, copy) void (^clickTitleTabBlock)(NSInteger index);
 
-/** 图片数据 */
-
-- (void)setMediaHeaderModel:(FHDetailMediaHeaderModel *)mediaHeaderModel mediaImages:(NSArray *)images;
 
 /** 详情页数据 */
 @property (nonatomic, copy)     NSString       *houseId;
 @property (nonatomic, assign)     FHHouseType       houseType;
+
 @property (nonatomic, copy)     NSString       *priceStr;
 @property (nonatomic, copy)     NSString       *infoStr;
+
 @property (nonatomic, assign)   NSInteger       followStatus;// 收藏状态
-@property (nonatomic, strong, nullable) FHClueAssociateInfoModel *associateInfo;
 
 @property(nonatomic , copy) void (^shareActionBlock)(void);
 @property(nonatomic , copy) void (^collectActionBlock)(BOOL followStatus);
-
-/// 查看全部图片的block，如果没有block，执行默认操作
-@property(nonatomic , copy) void (^allPhotoActionBlock)(void);
 
 /** 图片URL数组*/
 @property(nonatomic, strong)NSArray * imageURLs; //every item also is array, and it contains url and header infos
 
 /** TTImageInfosModel数组*/
 @property(nonatomic, strong, nullable) NSArray *imageInfosModels;
-
-@property(nonatomic, strong) FHFloorPanPicShowModel * smallImageInfosModels;
 
 /** Extended by luohuaqing to support selecting image on preview */
 //@property (nonatomic, assign)PhotosScrollViewMode mode;

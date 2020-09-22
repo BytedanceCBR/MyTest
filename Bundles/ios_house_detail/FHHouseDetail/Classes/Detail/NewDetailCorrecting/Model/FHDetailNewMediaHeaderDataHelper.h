@@ -5,8 +5,11 @@
 //  Created by luowentao on 2020/8/23.
 //
 //负责头图部分的数据处理，包括轮播图数据，大图展示数据，图片相册数据
+
+//数据包括了，埋点所需的数据，展示的数据，一些数组。
 #import <Foundation/Foundation.h>
 #import "FHDetailBaseModel.h"
+#import "FHDetailPictureModel.h"
 @class FHMultiMediaItemModel,FHDetailNewMediaHeaderDataHelperHeaderViewData,FHDetailNewMediaHeaderDataHelperPictureDetailData,FHDetailNewMediaHeaderDataHelperPhotoAlbumData;
 NS_ASSUME_NONNULL_BEGIN
 @class FHDetailNewMediaHeaderDataHelperData,FHDetailNewMediaHeaderModel,FHHouseDetailImageGroupModel;
@@ -35,19 +38,15 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FHDetailNewMediaHeaderDataHelperHeaderViewData : NSObject
 @property (nonatomic, copy) NSArray<FHMultiMediaItemModel*> *mediaItemArray;
-@property (nonatomic, assign) NSUInteger pictureNumber;
-@property (nonatomic, assign) NSUInteger vrNumber;
 @end
 
 @interface FHDetailNewMediaHeaderDataHelperPictureDetailData : NSObject
 
 @property (nonatomic, copy) NSArray<FHMultiMediaItemModel*> *mediaItemArray;
-@property (nonatomic, copy) NSArray<FHDetailPhotoHeaderModelProtocol> *photoArray;
+@property (nonatomic, strong) FHDetailPictureModel *detailPictureModel;
 @end
 
 @interface FHDetailNewMediaHeaderDataHelperPhotoAlbumData : NSObject
-@property (nonatomic, copy) NSArray<FHHouseDetailImageGroupModel *> *photoAlbumArray;
-@property (nonatomic, strong) FHHouseDetailAlbumInfo *detailAlbumInfo;
 @property (nonatomic, strong) FHFloorPanPicShowModel *floorPanModel;
 @end
 

@@ -47,7 +47,7 @@
     }];
     
     [self.startBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-             make.width.height.mas_equalTo(60);
+             make.width.height.mas_equalTo(70);
             make.center.equalTo(self);
     }];
 }

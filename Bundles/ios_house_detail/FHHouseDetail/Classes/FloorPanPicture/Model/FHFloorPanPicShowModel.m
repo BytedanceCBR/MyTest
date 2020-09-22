@@ -50,16 +50,28 @@
         groupModel.groupName = tabInfo.tabName;
         groupModel.rootGroupName = rootName;
         NSMutableArray *itemModels = [[NSMutableArray alloc] init];
-        for (FHHouseDetailMediaStruct *imageStruct in tabInfo.tabContent) {
-            FHFloorPanPicShowItemPictureModel *itemModel = [[FHFloorPanPicShowItemPictureModel alloc] init];
-            itemModel.image = imageStruct.smallImage;
-            itemModel.itemType = FHFloorPanPicShowModelTypePicture;
-            [itemModels addObject:itemModel];
+        for (FHHouseDetailMediaStruct *mediaStr in tabInfo.tabContent) {
+            if (mediaStr.videoInfo) {   //视频
+                FHFloorPanPicShowItemVideoModel *videoItemModel = [[FHFloorPanPicShowItemVideoModel alloc] init];
+                videoItemModel.itemType = FHFloorPanPicShowModelTypeVideo;
+                videoItemModel.image = mediaStr.smallImage;
+                [itemModels addObject:videoItemModel];
+            } else if (mediaStr.vrInfo) {   //VR
+                FHFloorPanPicShowItemVRModel *vrItemModel = [[FHFloorPanPicShowItemVRModel alloc] init];
+                vrItemModel.itemType = FHFloorPanPicShowModelTypeVR;
+                vrItemModel.image = mediaStr.smallImage;
+                [itemModels addObject:vrItemModel];
+            } else {                        //图片
+                FHFloorPanPicShowItemPictureModel *pictureItemModel = [[FHFloorPanPicShowItemPictureModel alloc] init];
+                pictureItemModel.itemType = FHFloorPanPicShowModelTypePicture;
+                pictureItemModel.image = mediaStr.smallImage;
+                [itemModels addObject:pictureItemModel];
+            }
         }
         groupModel.items = itemModels.copy;
         [groupModels addObject:groupModel];
-    } else if (tabInfo.subTab) {
-        for (FHHouseDetailImageTabInfo *otherTabInfo in tabInfo.subTab) {
+    } else if (tabInfo.subTab.count > 0) {
+        for (FHHouseDetailMediaTabInfo *otherTabInfo in tabInfo.subTab) {
             NSArray *otherArr = [FHFloorPanPicShowGroupModel getTabGroupInfo:otherTabInfo rootName:rootName];
             [groupModels addObjectsFromArray:otherArr];
         }

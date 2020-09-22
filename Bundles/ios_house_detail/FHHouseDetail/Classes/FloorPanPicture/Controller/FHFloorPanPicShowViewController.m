@@ -25,9 +25,9 @@
 @property (nonatomic, strong) UICollectionView *collectionView;
 
 @property (nonatomic, strong) FHDetailPictureTitleView *segmentTitleView;
-@property (nonatomic, copy)   NSArray *pictureTitles;
-@property (nonatomic, copy)   NSArray *pictureNumbers;
-@property (nonatomic, copy)   NSArray *prePictureSum;
+@property (nonatomic, copy)   NSArray <NSString *>* pictureTitles;
+@property (nonatomic, copy)   NSArray <NSNumber *>* pictureNumbers;
+@property (nonatomic, copy)   NSArray <NSNumber *>* prePictureSum;
 
 @property (nonatomic, strong) NSIndexPath *lastIndexPath;
 
@@ -513,10 +513,6 @@
         }
         self.albumImageBtnClickBlock(total);
     }
-
-//    if (self.albumImageStayBlock) {
-//        self.albumImageStayBlock(0,self.ttTrackStartTime);
-//    }
 }
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {

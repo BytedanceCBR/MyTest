@@ -35,10 +35,7 @@
     if (model && !self.isShowenPictureVC) {
         self.model = model;
         self.playerView = model.playerView;
-        
-        if (model.cellHouseType == FHMultiMediaCellHouseNeiborhood || model.cellHouseType == FHMultiMediaCellHouseSecond) {
-            [self showCoverView];
-        }
+        [self showCoverView];
     }
 }
 
@@ -54,15 +51,16 @@
 - (void)showCoverView
 {
     if (self.coverView) {
-        [self bringSubviewToFront:self.coverView];
+        [self.contentView bringSubviewToFront:self.coverView];
+    } else {
+
+        self.coverView = [[FHVideoCoverView alloc] init];
+        [self.coverView setFrame:CGRectMake(0.0, 0.0, [UIScreen mainScreen].bounds.size.width, [FHDetailMediaHeaderCell cellHeight])];
+        //    self.coverView.houseType = self.model.cellHouseType;
+        [_coverView setBackgroundColor:[UIColor colorWithRed:1 green:1 blue:1 alpha:1]];
+        _coverView.startBtn.enabled = NO;
+        [self.contentView addSubview:_coverView];
     }
-    
-    self.coverView = [[FHVideoCoverView alloc] init];
-    [self.coverView setFrame:CGRectMake(0.0, 0.0, [UIScreen mainScreen].bounds.size.width, [FHDetailMediaHeaderCell cellHeight])];
-//    self.coverView.houseType = self.model.cellHouseType;
-    [_coverView setBackgroundColor:[UIColor colorWithRed:1 green:1 blue:1 alpha:1]];
-    _coverView.startBtn.enabled = NO;
-    [self.contentView addSubview:_coverView];
     
     NSString *placeHolderImageUrl = [self.model.imageUrl stringByReplacingOccurrencesOfString:@"/origin/" withString:@"/large/"];
     NSString *key = [[BDWebImageManager sharedManager]  requestKeyWithURL:[NSURL URLWithString:placeHolderImageUrl]];

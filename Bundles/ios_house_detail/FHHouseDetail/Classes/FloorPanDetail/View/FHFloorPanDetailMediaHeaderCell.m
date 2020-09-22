@@ -114,72 +114,72 @@
     __weak typeof(self) weakSelf = self;
     self.baseViewModel.detailController.ttNeedIgnoreZoomAnimation = YES;
     FHDetailPictureViewController *pictureDetailViewController = [[FHDetailPictureViewController alloc] init];
-    pictureDetailViewController.associateInfo = ((FHDetailFloorPanDetailInfoModel *)self.baseViewModel.detailData).data.imageAssociateInfo;
-    
-    pictureDetailViewController.houseType = self.baseViewModel.houseType;
-    pictureDetailViewController.topVC = self.baseViewModel.detailController;
-    
-    pictureDetailViewController.dragToCloseDisabled = YES;
-    pictureDetailViewController.startWithIndex = index;
-    self.currentIndex = index;
-    pictureDetailViewController.albumImageBtnClickBlock = ^(NSInteger index) {
-        [weakSelf enterPictureShowPictureWithIndex:index from:@"all_pic"];
-    };
-    pictureDetailViewController.albumImageStayBlock = ^(NSInteger index, NSInteger stayTime) {
-        [weakSelf stayPictureShowPictureWithIndex:index andTime:stayTime];
-    };
-    pictureDetailViewController.topImageClickTabBlock = ^(NSInteger index) {
-        [weakSelf trackClickTabWithIndex:index element:@"big_photo_album"];
-    };
-    pictureDetailViewController.indexUpdatedBlock = ^(NSInteger lastIndex, NSInteger currentIndex) {
-        weakSelf.currentIndex = currentIndex;
-        [weakSelf trackHeaderViewMediaShowWithIndex:currentIndex isLarge:YES];
-    };
-
-
-    pictureDetailViewController.saveImageBlock = ^(NSInteger currentIndex) {
-        [weakSelf trackSavePictureWithIndex:currentIndex];
-    };
-
-    [pictureDetailViewController setMediaHeaderModel:self.currentData mediaImages:images];
-    
-    FHFloorPanDetailMediaHeaderModel *model = ((FHFloorPanDetailMediaHeaderModel *)self.currentData);
-    
-    if (model.titleDataModel.titleStr.length) {
-        NSMutableString *bottomBarTitle = model.titleDataModel.titleStr.mutableCopy;
-        if (model.titleDataModel.squaremeter.length) {
-            [bottomBarTitle appendFormat:@" %@",model.titleDataModel.squaremeter];
-        }
-        if (model.titleDataModel.facingDirection.length) {
-            [bottomBarTitle appendFormat:@" %@",model.titleDataModel.facingDirection];
-        }
-        if (model.titleDataModel.saleStatus.length) {
-             [bottomBarTitle appendFormat:@" %@",model.titleDataModel.saleStatus];
-        }
-        pictureDetailViewController.bottomBarTitle = bottomBarTitle.copy;
-    }
-
-    UIImage *placeholder = [UIImage imageNamed:@"default_image"];
-    UIWindow *window = [[[UIApplication sharedApplication] delegate] window];
-    CGRect frame = [self convertRect:self.bounds toView:window];
-    NSMutableArray *frames = [[NSMutableArray alloc] initWithCapacity:index + 1];
-    NSMutableArray *placeholders = [[NSMutableArray alloc] initWithCapacity:images.count];
-    for (NSInteger i = 0; i < images.count; i++) {
-        [placeholders addObject:placeholder];
-        NSValue *frameValue = [NSValue valueWithCGRect:frame];
-        [frames addObject:frameValue];
-    }
-    pictureDetailViewController.placeholderSourceViewFrames = frames;
-    pictureDetailViewController.placeholders = placeholders;
-    
-    [pictureDetailViewController presentPhotoScrollViewWithDismissBlock:^{
-        NSInteger currentIndex = weakSelf.currentIndex;
-        [weakSelf.headerView scrollToItemAtIndex:currentIndex];
-        [weakSelf trackPictureLargeStayWithIndex:weakSelf.currentIndex];
-    }];
-    [self trackHeaderViewMediaShowWithIndex:index isLarge:YES];
-    self.enterTimestamp = [[NSDate date] timeIntervalSince1970];
-    self.pictureDetailVC = pictureDetailViewController;
+//    pictureDetailViewController.associateInfo = ((FHDetailFloorPanDetailInfoModel *)self.baseViewModel.detailData).data.imageAssociateInfo;
+//
+//    pictureDetailViewController.houseType = self.baseViewModel.houseType;
+//    pictureDetailViewController.topVC = self.baseViewModel.detailController;
+//
+//    pictureDetailViewController.dragToCloseDisabled = YES;
+//    pictureDetailViewController.startWithIndex = index;
+//    self.currentIndex = index;
+//    pictureDetailViewController.albumImageBtnClickBlock = ^(NSInteger index) {
+//        [weakSelf enterPictureShowPictureWithIndex:index from:@"all_pic"];
+//    };
+//    pictureDetailViewController.albumImageStayBlock = ^(NSInteger index, NSInteger stayTime) {
+//        [weakSelf stayPictureShowPictureWithIndex:index andTime:stayTime];
+//    };
+//    pictureDetailViewController.clickTabBlock = ^(NSInteger index) {
+//        [weakSelf trackClickTabWithIndex:index element:@"big_photo_album"];
+//    };
+//    pictureDetailViewController.indexUpdatedBlock = ^(NSInteger lastIndex, NSInteger currentIndex) {
+//        weakSelf.currentIndex = currentIndex;
+//        [weakSelf trackHeaderViewMediaShowWithIndex:currentIndex isLarge:YES];
+//    };
+//
+//
+//    pictureDetailViewController.saveImageBlock = ^(NSInteger currentIndex) {
+//        [weakSelf trackSavePictureWithIndex:currentIndex];
+//    };
+//
+//    [pictureDetailViewController setMediaHeaderModel:self.currentData mediaImages:images];
+//
+//    FHFloorPanDetailMediaHeaderModel *model = ((FHFloorPanDetailMediaHeaderModel *)self.currentData);
+//
+//    if (model.titleDataModel.titleStr.length) {
+//        NSMutableString *bottomBarTitle = model.titleDataModel.titleStr.mutableCopy;
+//        if (model.titleDataModel.squaremeter.length) {
+//            [bottomBarTitle appendFormat:@" %@",model.titleDataModel.squaremeter];
+//        }
+//        if (model.titleDataModel.facingDirection.length) {
+//            [bottomBarTitle appendFormat:@" %@",model.titleDataModel.facingDirection];
+//        }
+//        if (model.titleDataModel.saleStatus.length) {
+//             [bottomBarTitle appendFormat:@" %@",model.titleDataModel.saleStatus];
+//        }
+//        pictureDetailViewController.bottomBarTitle = bottomBarTitle.copy;
+//    }
+//
+//    UIImage *placeholder = [UIImage imageNamed:@"default_image"];
+//    UIWindow *window = [[[UIApplication sharedApplication] delegate] window];
+//    CGRect frame = [self convertRect:self.bounds toView:window];
+//    NSMutableArray *frames = [[NSMutableArray alloc] initWithCapacity:index + 1];
+//    NSMutableArray *placeholders = [[NSMutableArray alloc] initWithCapacity:images.count];
+//    for (NSInteger i = 0; i < images.count; i++) {
+//        [placeholders addObject:placeholder];
+//        NSValue *frameValue = [NSValue valueWithCGRect:frame];
+//        [frames addObject:frameValue];
+//    }
+//    pictureDetailViewController.placeholderSourceViewFrames = frames;
+//    pictureDetailViewController.placeholders = placeholders;
+//
+//    [pictureDetailViewController presentPhotoScrollViewWithDismissBlock:^{
+//        NSInteger currentIndex = weakSelf.currentIndex;
+//        [weakSelf.headerView scrollToItemAtIndex:currentIndex];
+//        [weakSelf trackPictureLargeStayWithIndex:weakSelf.currentIndex];
+//    }];
+//    [self trackHeaderViewMediaShowWithIndex:index isLarge:YES];
+//    self.enterTimestamp = [[NSDate date] timeIntervalSince1970];
+//    self.pictureDetailVC = pictureDetailViewController;
 }
 
 
