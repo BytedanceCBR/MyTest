@@ -25,5 +25,6 @@
 @interface FHNewHouseDetailTimeLineItemCollectionCell : FHDetailBaseCollectionCell
 
 - (void)updateTitleColor:(UIColor *)titleColor timeColor:(UIColor *)timeColor dotColor:(UIColor *)dotColor backgroundColor:(UIColor *)backgroundColor;
+- (void)refreshWithData:(id)data isLast:(bool)isLast;
 
 @end

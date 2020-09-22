@@ -154,7 +154,11 @@
         } else {
             [cell updateTitleColor:[UIColor themeGray1] timeColor:[UIColor themeGray3] dotColor:[UIColor themeGray2] backgroundColor:[UIColor themeGray7]];
         }
-        [cell refreshWithData:model.timeLineModel.list[indexPath.row]];
+        bool isLast = NO;
+        if (indexPath.row == model.timeLineModel.list.count - 1) {
+            isLast = YES;
+        }
+        [cell refreshWithData:model.timeLineModel.list[indexPath.row] isLast:isLast];
     }
     cell.backgroundColor = [UIColor clearColor];
     cell.contentView.backgroundColor = [UIColor clearColor];
@@ -263,13 +267,22 @@
     self.containerView.backgroundColor = backgroundColor;
 }
 
-- (void)refreshWithData:(id)data {
+- (void)refreshWithData:(id)data isLast:(bool)isLast {
     FHDetailNewDataTimelineListModel *item = (FHDetailNewDataTimelineListModel *)data;
     self.titleLabel.text = item.title;
     if (item.createdTime.length) {
         self.timeLabel.text = [FHUtils ConvertStrToTimeForm:item.createdTime];
     } else {
         self.timeLabel.text = @"未知";
+    }
+    if (isLast) {
+        [self.bottomLineView mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.right.mas_equalTo(-17);
+        }];
+    } else {
+        [self.bottomLineView mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.right.mas_equalTo(0);
+        }];
     }
 }
 
