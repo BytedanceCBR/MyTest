@@ -17,6 +17,8 @@
 #import "FHHouseRealtorUserCommentDataModel.h"
 @class TTHttpTask;
 
+typedef void(^FHMainApiCompletion)(id<FHBaseModelProtocol> _Nullable model , NSError * _Nullable error);
+
 NS_ASSUME_NONNULL_BEGIN
 
 typedef NS_ENUM(NSInteger , FHNetworkMonitorType) {

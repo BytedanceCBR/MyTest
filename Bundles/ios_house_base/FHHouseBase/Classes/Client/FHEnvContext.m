@@ -1178,15 +1178,7 @@ static NSInteger kGetLightRequestRetryCount = 3;
 }
 
 + (BOOL)isHasVideoList {
-    if ([TTSandBoxHelper isInHouseApp]) {
-        return YES;
-    }
-    
-    id res = [BDABTestManager getExperimentValueForKey:@"f_ugc_video_category_open" withExposure:YES];
-    if(res){
-        return [res boolValue];
-    }
-    return NO;
+    return YES;
 }
 
 + (BOOL)isHasShortVideoList {

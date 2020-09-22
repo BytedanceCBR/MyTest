@@ -16,7 +16,7 @@
             queryData:queryPath
             params:nil
             class:[FHCityMarketDetailResponseModel class]
-            completion:completion];
+            completion:(FHMainApiCompletion)completion];
 }
 
 
