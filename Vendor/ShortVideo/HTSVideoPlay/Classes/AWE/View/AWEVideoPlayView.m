@@ -50,6 +50,7 @@
 #import "FHHMDTManager.h"
 #import "UIViewAdditions.h"
 #import "UIView+BTDAdditions.h"
+#import <TTVideoEngine/TTVideoEngine.h>
 
 static NSString * const VideoPlayTimeKey =  @"video_play_time";
 static NSString * const VideoStallTimeKey =  @"video_stall_time";
@@ -279,7 +280,7 @@ static NSString * const VideoPrepareTimeTechKey = @"prepare_time_tech";
             [dict setValue:@(self.videoStalledCount) forKey:@"block_count"];
             [dict setValue:self.model.itemID.description forKey:@"mediaId"];
             [dict setValue:self.model.video.playAddr.uri forKey:@"videoUri"];
-            [dict setValue:@(IESVideoPlayerTypeSpecify) forKey:@"playerType"];
+            [dict setValue:@(IESVideoPlayerTypeTTOwn) forKey:@"playerType"];
             dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
                 [dict setValue:[TTNetworkHelper connectMethodName] forKey:@"app_network_type"];
                 [[TTMonitor shareManager] trackService:@"short_video_media_play_log" attributes:dict];
@@ -364,7 +365,7 @@ static NSString * const VideoPrepareTimeTechKey = @"prepare_time_tech";
     // 清空当前视频缓存
     NSString *urlStr = [self.playerController.videoPlayURLs firstObject];
     if (!isEmptyString(urlStr) && !isEmptyString(self.model.video.playAddr.uri)) {
-        id<IESVideoCacheProtocol> AWEVideoCache = [IESVideoCache cacheWithType:IESVideoPlayerTypeSpecify];
+        id<IESVideoCacheProtocol> AWEVideoCache = [IESVideoCache cacheWithType:IESVideoPlayerTypeTTOwn];
         [AWEVideoCache clearCacheForVideoID:self.model.video.playAddr.uri URLString:urlStr];
     }
     
@@ -421,7 +422,7 @@ static NSString * const VideoPrepareTimeTechKey = @"prepare_time_tech";
     _backgroundView.enableNightCover = NO;
 
     // 播放视图层
-    _playerController = [IESVideoPlayer playerWithType:IESVideoPlayerTypeSpecify];
+    _playerController = [IESVideoPlayer playerWithType:IESVideoPlayerTypeTTOwn];
     _playerController.scalingMode = IESVideoScaleModeAspectFit;
     _playerController.view.backgroundColor = [UIColor clearColor];
     _playerController.view.frame = self.bounds;
@@ -433,6 +434,15 @@ static NSString * const VideoPrepareTimeTechKey = @"prepare_time_tech";
     _playerController.deleagte = self;
     [self addSubview:_playerController.view];
     [self addSubview:_backgroundView];
+    
+    if([_playerController isKindOfClass:[IESOwnPlayerWrapper class]]){
+        IESOwnPlayerWrapper *playerWrapper = (IESOwnPlayerWrapper *)_playerController;
+        id player = [playerWrapper valueForKey:@"player"];
+        if([player isKindOfClass:[TTVideoEngine class]]){
+            TTVideoEngine *videoEngine = (TTVideoEngine *)player;
+            [videoEngine setTag:@"short_video"];
+        }
+    }
 
     CGFloat bottomInset = 0;
     if (@available(iOS 11.0, *)) {
@@ -642,7 +652,7 @@ static NSString * const VideoPrepareTimeTechKey = @"prepare_time_tech";
                 [dict setValue:@(self.videoStalledCount) forKey:@"block_count"];
                 [dict setValue:self.model.itemID.description forKey:@"mediaId"];
                 [dict setValue:self.model.video.playAddr.uri forKey:@"videoUri"];
-                [dict setValue:@(IESVideoPlayerTypeSpecify) forKey:@"playerType"];
+                [dict setValue:@(IESVideoPlayerTypeTTOwn) forKey:@"playerType"];
                 dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
                     [dict setValue:[TTNetworkHelper connectMethodName] forKey:@"app_network_type"];
                     [[TTMonitor shareManager] trackService:@"short_video_media_play_log" attributes:dict];
