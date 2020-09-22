@@ -334,11 +334,11 @@
 
 //小视频
 - (void)jumpToSmallVideoDetail:(FHFeedUGCCellModel *)cellModel showComment:(BOOL)showComment enterType:(NSString *)enterType extraDic:(NSDictionary *)extraDic {
-    [self jumpToSmallVideoDetail:cellModel otherVideos:nil showComment:showComment enterType:enterType extraDic:extraDic];
+    [self jumpToSmallVideoDetail:cellModel allVideos:nil currentIndex:0 showComment:showComment enterType:enterType extraDic:extraDic];
 }
 
 //小视频
-- (void)jumpToSmallVideoDetail:(FHFeedUGCCellModel *)cellModel otherVideos:(NSArray<FHFeedUGCCellModel *> *)otherVideos showComment:(BOOL)showComment enterType:(NSString *)enterType extraDic:(NSDictionary *)extraDic {
+- (void)jumpToSmallVideoDetail:(FHFeedUGCCellModel *)cellModel allVideos:(NSArray<FHFeedUGCCellModel *> *)allVideos currentIndex:(NSInteger)currentIndex showComment:(BOOL)showComment enterType:(NSString *)enterType extraDic:(NSDictionary *)extraDic {
     if (![TTReachability isNetworkConnected]) {
         [[ToastManager manager] showToast:@"网络异常"];
         return;
@@ -357,9 +357,10 @@
     if(cellModel){
         [info setValue:cellModel forKey:@"current_video"];
     }
-    if(otherVideos){
-        [info setValue:otherVideos forKey:@"other_videos"];
+    if(allVideos){
+        [info setValue:allVideos forKey:@"all_videos"];
     }
+    [info setValue:@(currentIndex) forKey:@"current_index"];
     [info setValue:exitManager forKey:HTSVideoDetailExitManager];
     if (showComment) {
         [info setValue:@(1) forKey:AWEVideoShowComment];

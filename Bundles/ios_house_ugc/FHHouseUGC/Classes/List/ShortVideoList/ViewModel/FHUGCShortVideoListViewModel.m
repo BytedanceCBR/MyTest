@@ -368,11 +368,7 @@
     if(indexPath.row < self.dataList.count){
         FHFeedUGCCellModel *cellModel = self.dataList[indexPath.row];
         self.currentCellModel = cellModel;
-        NSArray *otherCellModels = nil;
-        if((indexPath.row + 1) < self.dataList.count){
-            otherCellModels = [self.dataList subarrayWithRange:NSMakeRange(indexPath.row + 1, self.dataList.count - indexPath.row - 1)];
-        }
-        [self.detailJumpManager jumpToSmallVideoDetail:cellModel otherVideos:otherCellModels showComment:NO enterType:@"feed_content_blank" extraDic:nil];
+        [self.detailJumpManager jumpToSmallVideoDetail:cellModel allVideos:self.dataList currentIndex:indexPath.row showComment:NO enterType:@"feed_content_blank" extraDic:nil];
     }
 }
 
