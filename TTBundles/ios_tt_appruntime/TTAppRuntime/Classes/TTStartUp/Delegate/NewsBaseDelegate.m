@@ -562,7 +562,8 @@ static NSTimeInterval lastTime;
 }
 #endif
 
-- (BOOL)application:(UIApplication *)application continueUserActivity:(NSUserActivity *)userActivity restorationHandler:(void(^)(NSArray *restorableObjects))restorationHandler {
+
+- (BOOL)application:(UIApplication *)application continueUserActivity:(NSUserActivity *)userActivity restorationHandler:(void (^)(NSArray<id<UIUserActivityRestoring>> * _Nullable))restorationHandler {
     
     if (![[FHEnvContext sharedInstance] hasConfirmPermssionProtocol]) {
         [[FHEnvContext sharedInstance] addContinueActivity:application activity:userActivity restorationHandler:restorationHandler];
