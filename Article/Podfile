@@ -317,6 +317,7 @@ def appPods
     #-----头条端监控库-----
     # pod_binary 'TTMonitor','0.7.9.58-rc.3' #这个版本还是有很多问题
     pod_binary 'MemoryGraphCapture', '1.2.4'
+    pod 'BDMonitorProtocol', '1.2.2'
     pod_binary 'Heimdallr', '0.7.19-rc.31', :subspecs => [
     'Core',
     'Monitors',
@@ -350,7 +351,8 @@ def appPods
     'HMDDomestic',
     'WatchdogProtect',
     'HMDAlogProtocol',
-    'Protect'
+    'Protect',
+    'HMDSDKMonitor'
     ]
 
     pod 'TTMacroManager','1.0.1'

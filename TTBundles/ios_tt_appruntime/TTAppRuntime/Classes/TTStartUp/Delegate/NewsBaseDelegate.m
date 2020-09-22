@@ -438,11 +438,6 @@ static NSTimeInterval lastTime;
         }
 #pragma clang diagnostic pop
     }];
-    
-//    if ([TTAccountAuthWeibo handleOpenURL:url]) {
-//        return YES;
-//    }
-    
     [[BDUGDeepLinkManager shareInstance] deepLinkWithType:BDUGDeepLinkTypeScheme uri:[url absoluteString]];
     return YES;
 }
@@ -582,8 +577,6 @@ static NSTimeInterval lastTime;
         }
     }
 #pragma clang diagnostic pop
-    NSURL *webpageURL = userActivity.webpageURL;
-    [[BDUGDeepLinkManager shareInstance] deepLinkWithType:BDUGDeepLinkTypeUniversalLink uri:[webpageURL absoluteString]];
     return YES;
 }
 

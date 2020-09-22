@@ -21,6 +21,7 @@
 #import <TTPlatformBaseLib/TTTrackerWrapper.h>
 #import <TTBaseLib/TTBaseMacro.h>
 #import "TTLaunchDefine.h"
+#import "BDUGDeepLinkManager.h"
 
 DEC_TASK("TTUniversalLinksTask",FHTaskTypeService,TASK_PRIORITY_HIGH+7);
 
@@ -87,7 +88,9 @@ DEC_TASK("TTUniversalLinksTask",FHTaskTypeService,TASK_PRIORITY_HIGH+7);
             }
         }
     }
+    // 埋点
+    NSURL *webpageURL = userActivity.webpageURL;
+    [[BDUGDeepLinkManager shareInstance] deepLinkWithType:BDUGDeepLinkTypeUniversalLink uri:[webpageURL absoluteString]];
     return YES;
 }
-
 @end
