@@ -27,6 +27,7 @@ static const CGFloat kDefaultCellHeight = 0;
     if (self) {
         [self initUI];
         self.selectionStyle = UITableViewCellSelectionStyleNone;
+        self.clipsToBounds = YES;
     }
 
     return self;
