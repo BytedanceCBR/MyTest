@@ -6,7 +6,7 @@
 //
 
 #import "UIButton+FHUGCMultiDigg.h"
-#import <TTMultiDigManager.h>
+#import <TTMultiDiggManager+FHUGC.h>
 #import <TTAccountManager.h>
 #import <ReactiveObjC/ReactiveObjC.h>
 #import <Masonry/Masonry.h>
