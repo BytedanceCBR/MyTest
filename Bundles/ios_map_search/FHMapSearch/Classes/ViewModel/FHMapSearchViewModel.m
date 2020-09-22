@@ -51,6 +51,7 @@
 #import "FHMapSimpleNavbar.h"
 #import "UIDevice+BTDAdditions.h"
 #import "FHMapSearchNewHouseItemView.h"
+#import <FHHouseBase/FHCommonDefines.h>
 
 #define kTipDuration 3
 #define CHANNEL_ID_MAP_FIND_NEW_HOUSE  @"94349556026"
@@ -83,11 +84,15 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
 @property(nonatomic , strong) FHMapSearchConfigModel *configModel;
 @property(nonatomic , assign) NSInteger requestMapLevel;
 @property(nonatomic , weak)   TTHttpTask *requestHouseTask;
+
+
 @property(nonatomic , strong) FHMapSearchHouseListViewController *houseListViewController;//小区房源
 @property(nonatomic , strong) FHMapSearchNewHouseItemView *houseNewView;//新房房源
 
 @property(nonatomic , strong) NSString *searchId;
 @property(nonatomic , strong) NSString *houseTypeName;
+@property(nonatomic , strong) NSString *currentSelectNid;//选中区域与商圈气泡变色
+@property(nonatomic , weak)   FHDistrictAreaAnnotationView *houseAnnotationSlectNidView;
 @property(nonatomic , weak)   FHHouseAnnotation *currentSelectAnnotation;
 @property(nonatomic , strong) FHMapSearchDataListModel *currentSelectHouseData;
 @property(nonatomic , strong) NSMutableDictionary<NSString * , NSString *> *selectedAnnotations;
@@ -112,6 +117,7 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
 @property(nonatomic , strong) NSDictionary *filterParam;
 @property(nonatomic , strong) FHSearchFilterConfigOption *selectedLine;
 @property(nonatomic , strong) FHSearchFilterConfigOption *selectionStation;
+
 @property(nonatomic , strong) FHMapSubwayPickerView *subwayPicker;
 @property(nonatomic , strong) FHSearchFilterConfigOption *subwayData;
 @property(nonatomic , strong) NSArray *subwayLines;//地铁以一段一段的方式拼接
@@ -1451,12 +1457,18 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
             self.selectionStation.text = houseAnnotation.houseData.name;
         }
         
+        
         _movingToCenter = NO;
         [self tryAddMapZoomLevelTrigerby:FHMapZoomTrigerTypeClickAnnotation currentLevel:zoomLevel];
         [self.mapView setCenterCoordinate:moveCenter animated:YES];
         [self.mapView setZoomLevel:zoomLevel animated:YES]; //atPivot:annotationView.center
         
         [self addGeoFencePolygonRegion:model.coordinateEnclosure];
+        self.currentSelectNid = houseAnnotation.houseData.nid;
+        
+        
+        UIImage *bgImg = SYS_IMG(@"mapsearch_area_bg");
+        self.houseAnnotationSlectNidView.layer.contents = (id)[bgImg CGImage];
         
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
             //待地图缩放完之后
@@ -1626,6 +1638,17 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
             //设置中心点偏移，使得标注底部中间点成为经纬度对应点
             annotationView.centerOffset = CGPointMake(0, 0);
             annotationView.canShowCallout = NO;
+            if([houseAnnotation.houseData.nid isEqualToString:self.currentSelectNid]){
+                annotationView.frame = CGRectMake(0, 0, annotationView.frame.size.width, annotationView.frame.size.height);
+                UIImage *bgImg = SYS_IMG(@"mapsearch_area_bg_red");
+                annotationView.layer.contents = (id)[bgImg CGImage];
+                self.houseAnnotationSlectNidView = annotationView;
+            }else{
+                annotationView.frame = CGRectMake(0, 0, annotationView.frame.size.width, annotationView.frame.size.height);
+                UIImage *bgImg = SYS_IMG(@"mapsearch_area_bg");
+                annotationView.layer.contents = (id)[bgImg CGImage];
+            }
+
             return annotationView;
             
         }else if (houseAnnotation.searchType == FHMapSearchTypeFakeStation){
