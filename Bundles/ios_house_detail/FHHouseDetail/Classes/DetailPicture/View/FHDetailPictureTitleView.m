@@ -212,7 +212,7 @@
     if (self.usedInNewHouseDetail) {
         normalColor = [UIColor themeGray1];
         selectFont = [UIFont themeFontMedium:18];
-        selectColor = [UIColor themeOrange1];
+        selectColor = [UIColor themeGray1];
         [cell.titleLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
             make.centerY.mas_equalTo(cell.contentView);
             make.centerX.mas_equalTo(cell.contentView);
