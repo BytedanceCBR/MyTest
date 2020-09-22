@@ -13,6 +13,7 @@
 @property (nonatomic, strong) UIView *containerView;
 @property (nonatomic, strong) UICollectionView *collectionView;
 @property (nonatomic, strong) UILabel *contentLabel;
+@property (nonatomic, strong) UIControl *contentBtn;
 @property (nonatomic, strong) UICollectionViewFlowLayout *flowLayout;
 @property (nonatomic, strong) UIView *leftGradientView;
 @property (nonatomic, strong) UIView *rightGradientView;
@@ -103,6 +104,18 @@
         make.right.mas_equalTo(-15);
     }];
     
+    self.contentBtn = [[UIControl alloc] init];
+    [self.containerView addSubview:self.contentBtn];
+    [self.contentBtn addTarget:self action:@selector(clickContent) forControlEvents:UIControlEventTouchUpInside];
+    [self.contentBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.edges.mas_equalTo(self.contentLabel);
+    }];
+}
+
+- (void)clickContent {
+    if (self.clickContentBlock) {
+        self.clickContentBlock();
+    }
 }
 
 - (void)refreshWithData:(id)data {
@@ -141,7 +154,11 @@
         } else {
             [cell updateTitleColor:[UIColor themeGray1] timeColor:[UIColor themeGray3] dotColor:[UIColor themeGray2] backgroundColor:[UIColor themeGray7]];
         }
-        [cell refreshWithData:model.timeLineModel.list[indexPath.row]];
+        bool isLast = NO;
+        if (indexPath.row == model.timeLineModel.list.count - 1) {
+            isLast = YES;
+        }
+        [cell refreshWithData:model.timeLineModel.list[indexPath.row] isLast:isLast];
     }
     cell.backgroundColor = [UIColor clearColor];
     cell.contentView.backgroundColor = [UIColor clearColor];
@@ -250,13 +267,22 @@
     self.containerView.backgroundColor = backgroundColor;
 }
 
-- (void)refreshWithData:(id)data {
+- (void)refreshWithData:(id)data isLast:(bool)isLast {
     FHDetailNewDataTimelineListModel *item = (FHDetailNewDataTimelineListModel *)data;
     self.titleLabel.text = item.title;
     if (item.createdTime.length) {
         self.timeLabel.text = [FHUtils ConvertStrToTimeForm:item.createdTime];
     } else {
         self.timeLabel.text = @"未知";
+    }
+    if (isLast) {
+        [self.bottomLineView mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.right.mas_equalTo(-17);
+        }];
+    } else {
+        [self.bottomLineView mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.right.mas_equalTo(0);
+        }];
     }
 }
 

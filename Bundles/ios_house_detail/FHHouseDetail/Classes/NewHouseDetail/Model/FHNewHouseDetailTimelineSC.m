@@ -46,6 +46,9 @@
     cell.selectedIndexChange = ^(NSInteger index) {
         wself.selectedIndex = index;
     };
+    cell.clickContentBlock = ^{
+        [wself gotoTimeLineDetail];
+    };
     return cell;
 }
 
@@ -64,12 +67,12 @@
     titleView.userInteractionEnabled = YES;
     __weak typeof(self) wself = self;
     titleView.moreActionBlock = ^{
-        [wself moreButtonClick];
+        [wself gotoTimeLineDetail];
     };
     return titleView;
 }
 
-- (void)moreButtonClick {
+- (void)gotoTimeLineDetail {
     FHNewHouseDetailTimelineSM *model = (FHNewHouseDetailTimelineSM *)self.sectionModel;
     if (model.newsCellModel) {
         FHNewHouseDetailViewController *vc = self.detailViewController;

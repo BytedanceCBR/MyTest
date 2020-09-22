@@ -32,6 +32,12 @@
         _currentItems = [NSMutableArray new];
         _currentPage = 0;
         [self configTableView];
+        self.refreshFooter = [FHRefreshCustomFooter footerWithRefreshingBlock:^{
+            
+        }];
+        self.timeLineListTable.mj_footer = self.refreshFooter;
+        [self.refreshFooter setUpNoMoreDataText:@"无更多动态"];
+        [self.timeLineListTable.mj_footer endRefreshingWithNoMoreData];
     }
     return self;
 }

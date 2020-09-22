@@ -13,15 +13,11 @@
 #import "UILabel+BTDAdditions.h"
 
 @interface FHDetailNewTimeLineItemCell ()
-@property (nonatomic, strong) UIButton *maskBtn;
+
 @property (nonatomic, strong) UILabel *timeLabel;
 @property (nonatomic, strong) UIView *redDotView;
 @property (nonatomic, strong) UILabel *titleLabel;
 @property (nonatomic, strong) UILabel *contentLabel;
-@property (nonatomic, strong) UIView *timeLineLeading;
-@property (nonatomic, strong) UIView *headLine;
-@property (nonatomic, strong) UIView *timeLineTailing;
-
 @property (nonatomic, strong) UIView *lineView;
 
 @end
@@ -33,15 +29,6 @@
     self = [super initWithStyle:style
                 reuseIdentifier:reuseIdentifier];
     if (self) {
-        
-        _headLine = [UIView new];
-        _headLine.backgroundColor = [UIColor whiteColor];
-        [self.contentView addSubview:_headLine];
-        [_headLine mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.top.left.right.equalTo(self.contentView);
-            make.height.mas_equalTo(0);
-        }];
-        
         _timeLabel = [UILabel new];
         _timeLabel.font = [UIFont themeFontSemibold:16];
         _timeLabel.textColor = [UIColor themeGray1];
@@ -49,7 +36,7 @@
         [_timeLabel mas_makeConstraints:^(MASConstraintMaker *make) {
             make.left.mas_equalTo(33);
             make.width.mas_equalTo(MAXFLOAT);
-            make.top.equalTo(self.headLine.mas_bottom);
+            make.top.equalTo(0);
             make.height.mas_equalTo(22);
         }];
 
@@ -101,47 +88,9 @@
             make.centerY.equalTo(self.timeLabel);
             make.width.height.mas_equalTo(10);
         }];
-        
-//        _maskBtn = [UIButton new];
-//        [_maskBtn addTarget:self action:@selector(maskButtonClick:) forControlEvents:UIControlEventTouchUpInside];
-//        _maskBtn.backgroundColor = [UIColor clearColor];
-//        [self.contentView addSubview:_maskBtn];
-//        [_maskBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-//            make.edges.equalTo(self.contentView);
-//        }];
-
     }
     return self;
 }
-
-//- (void)maskButtonClick:(UIButton *)button {
-//
-//    if ([self.currentData isKindOfClass:[FHDetailNewTimeLineItemModel class]]) {
-//
-//        FHDetailNewTimeLineItemModel *model = (FHDetailNewTimeLineItemModel *)self.currentData;
-//        if (!model.isExpand) {
-//            NSDictionary *dictTrace = self.baseViewModel.detailTracerDic;
-//            
-//            NSMutableDictionary *mutableDict = [NSMutableDictionary new];
-//            [mutableDict setValue:dictTrace[@"page_type"] forKey:@"page_type"];
-//            [mutableDict setValue:dictTrace[@"rank"] forKey:@"rank"];
-//            [mutableDict setValue:dictTrace[@"origin_from"] forKey:@"origin_from"];
-//            [mutableDict setValue:dictTrace[@"origin_search_id"] forKey:@"origin_search_id"];
-//            [mutableDict setValue:dictTrace[@"log_pb"] forKey:@"log_pb"];
-//
-//            [FHEnvContext recordEvent:mutableDict andEventKey:@"click_house_history"];
-//            
-//            NSString *courtId = ((FHDetailNewTimeLineItemModel *)self.currentData).courtId;
-//            NSDictionary *dict = [self.baseViewModel subPageParams];
-//            TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc]initWithInfo:dict];
-//            [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:[NSString stringWithFormat:@"sslocal://floor_timeline_detail?court_id=%@",courtId]] userInfo:userInfo];
-//            
-//            
-//        }
-//    }
-//}
-
-
 
 - (void)refreshWithData:(id)data
 {
@@ -168,31 +117,20 @@
             _contentLabel.numberOfLines = 0;
         }
         if (model.isFirstCell) {
-            [_headLine mas_updateConstraints:^(MASConstraintMaker *make) {
-                make.height.mas_equalTo(15);
+            [self.timeLabel mas_updateConstraints:^(MASConstraintMaker *make) {
+                make.top.mas_equalTo(15);
             }];
-
-//            _timeLineLeading.hidden = YES;
-
-
-//            [_timeLineTailing mas_updateConstraints:^(MASConstraintMaker *make) {
-//                make.left.mas_equalTo(24);
-//                make.width.mas_equalTo(0.5);
-//                make.top.equalTo(self.redDotView.mas_bottom).offset(4);
-//                make.bottom.equalTo(self.contentView);
-//            }];
-        }else
-        {
-            [_headLine mas_updateConstraints:^(MASConstraintMaker *make) {
-                make.height.mas_equalTo(0);
+            [self.lineView mas_updateConstraints:^(MASConstraintMaker *make) {
+                make.top.mas_equalTo(21);
             }];
-//            _timeLineLeading.hidden = NO;
+        } else {
+            [self.timeLabel mas_updateConstraints:^(MASConstraintMaker *make) {
+                make.top.mas_equalTo(0);
+            }];
+            [self.lineView mas_updateConstraints:^(MASConstraintMaker *make) {
+                make.top.mas_equalTo(0);
+            }];
         }
-//        if (model.isLastCell) {
-//            [_timeLineTailing mas_updateConstraints:^(MASConstraintMaker *make) {
-//                make.bottom.equalTo(self.contentView).offset(-20);
-//            }];
-//        }
     }
 }
 
