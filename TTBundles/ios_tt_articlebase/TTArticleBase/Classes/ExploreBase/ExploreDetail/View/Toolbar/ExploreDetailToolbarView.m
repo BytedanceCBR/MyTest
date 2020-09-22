@@ -477,7 +477,7 @@
     _viewStyle = viewStyle;
     
     UIImage *input_emoji = ICON_FONT_IMG(24, @"\U0000e651", [UIColor themeGray1]);
-    UIImage *tab_comment = ICON_FONT_IMG(24, @"\U0000e699", [UIColor themeGray1]);
+    UIImage *tab_comment = ICON_FONT_IMG(20, @"\U0000e699", [UIColor themeGray1]);
     UIImage *tab_collect = ICON_FONT_IMG(24, @"\U0000e696", [UIColor themeGray1]);
     UIImage *tab_collect_press = ICON_FONT_IMG(24, @"\U0000e6b2", [UIColor themeOrange4]);
     UIImage *tab_share = ICON_FONT_IMG(24, @"\U0000e692", [UIColor themeGray1]);

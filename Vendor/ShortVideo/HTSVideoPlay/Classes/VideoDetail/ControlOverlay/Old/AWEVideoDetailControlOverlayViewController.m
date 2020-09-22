@@ -456,7 +456,7 @@ static const CGFloat kCheckChallengeButtonLeftPadding = 28;
     [_operationView addSubview:_inputButton];
 
     _commentButton = [[TSVIconLabelButton alloc] initWithImage:@"hts_vp_comments" label:nil];
-    _commentButton.iconImageView.image = ICON_FONT_IMG(24, @"\U0000e699", [UIColor themeWhite]);
+    _commentButton.iconImageView.image = ICON_FONT_IMG(20, @"\U0000e699", [UIColor themeWhite]);
     _commentButton.label.textAlignment = NSTextAlignmentLeft;
     _commentButton.label.textColor = [UIColor tt_defaultColorForKey:kColorText7];
     [_commentButton addTarget:self action:@selector(_onCommentButtonClicked:) forControlEvents:UIControlEventTouchUpInside];

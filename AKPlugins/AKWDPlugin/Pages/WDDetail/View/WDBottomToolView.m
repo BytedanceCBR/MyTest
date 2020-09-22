@@ -69,7 +69,7 @@ static NSString * const kWDHasTipSupportsEmojiInputDefaultKey = @"WDHasTipSuppor
 
     _commentButton = [TTAlphaThemedButton buttonWithType:UIButtonTypeCustom];
     _commentButton.hitTestEdgeInsets = toolBarButtonHitTestInsets;
-    [_commentButton setImage:ICON_FONT_IMG(24, @"\U0000e699", [UIColor themeGray1]) forState:UIControlStateNormal];
+    [_commentButton setImage:ICON_FONT_IMG(20, @"\U0000e699", [UIColor themeGray1]) forState:UIControlStateNormal];
     [_commentButton addTarget:self action:@selector(commentButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
     [self addSubview:_commentButton];
     
