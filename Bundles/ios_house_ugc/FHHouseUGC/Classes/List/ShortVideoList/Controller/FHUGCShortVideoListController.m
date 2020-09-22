@@ -154,7 +154,7 @@
 
 - (void)initViewModel {
     self.viewModel = [[FHUGCShortVideoListViewModel alloc] initWithCollectionView:self.collectionView controller:self];
-    _viewModel.categoryId = @"f_hotsoon_video";
+    _viewModel.categoryId = @"f_house_smallvideo";
     self.needReloadData = YES;
     //切换开关
     WeakSelf;
