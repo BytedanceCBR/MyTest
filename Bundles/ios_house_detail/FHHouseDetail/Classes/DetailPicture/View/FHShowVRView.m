@@ -26,7 +26,7 @@
 }
 
 - (void)setupUI {
-    self.vrIconView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"dingding"]];
+    self.vrIconView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"ic-movic-vr"]];
     
     [self addSubview:self.vrIconView];
     [self.vrIconView mas_makeConstraints:^(MASConstraintMaker *make) {
