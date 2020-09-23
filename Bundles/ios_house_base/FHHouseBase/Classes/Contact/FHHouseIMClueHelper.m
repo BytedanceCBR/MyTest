@@ -106,32 +106,26 @@
         userInfoDict[@"extra_info"] = associateIM.extraInfo;
         TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:userInfoDict];
         
-        
-        // ab实验: f_im_login_type  https://data.bytedance.net/libra/flight/449156
-        NSNumber *loginSchema = associateIM.reportParams.extra[kFHIMLoginSchema];
-        void (^loginFullPageBlock)(void) = ^() {
-            if(![TTAccount sharedAccount].isLogin) {
-                //先弹IM会话页
-                [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:userInfo pushHandler:^(UINavigationController *nav, TTRouteObject *routeObj) {
-                    [nav pushViewController:routeObj.instance animated:NO];
-                }];
-                // 登录页盖在上一层
-                NSURL *URL = [NSURL URLWithString:@"sslocal://flogin"];
-                NSMutableDictionary *params = [NSMutableDictionary dictionary];
-                params[@"ttDisableDragBack"] = @(YES);
-                params[@"enter_type"] = @"click_im";
-                params[@"enter_from"] = @"conversation_detail";
-                TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:params];
-                [[TTRoute sharedRoute] openURLByPushViewController:URL userInfo:userInfo];
-            }
-            else {
-                [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:userInfo];
-            }
-        };
-        NSInteger loginType = loginSchema.integerValue;
-        if(loginType == 1) {
-            loginFullPageBlock();
-        } 
+        // 跳转全屏登录页面
+        if(![TTAccount sharedAccount].isLogin) {
+            //先弹IM会话页
+            [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:userInfo pushHandler:^(UINavigationController *nav, TTRouteObject *routeObj) {
+                if([routeObj.instance isKindOfClass:UIViewController.class])
+                {
+                    UIViewController *vc = (UIViewController *)routeObj.instance;
+                    [nav pushViewController:vc animated:NO];
+                }
+            }];
+            // 登录页盖在上一层
+            NSURL *URL = [NSURL URLWithString:@"sslocal://flogin"];
+            NSMutableDictionary *params = [NSMutableDictionary dictionary];
+            params[@"ttDisableDragBack"] = @(YES);
+            params[@"enter_type"] = @"click_im";
+            params[@"enter_from"] = @"conversation_detail";
+            TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:params];
+            [[TTRoute sharedRoute] openURLByPushViewController:URL userInfo:userInfo];
+        }
+        // 直接跳转IM会话页
         else {
             [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:userInfo];
         }
