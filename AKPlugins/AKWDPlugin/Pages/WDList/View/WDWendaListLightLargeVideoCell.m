@@ -235,6 +235,7 @@
 }
 
 - (void)refreshFooterViewLayout:(CGFloat)top {
+    top = self.cellBottomView.frame.origin.y + self.cellBottomView.frame.size.height;
     self.footerView.frame = CGRectMake(0, top, self.cellWidth, [WDListCellLayoutModel heightForFooterView]);
 }
 

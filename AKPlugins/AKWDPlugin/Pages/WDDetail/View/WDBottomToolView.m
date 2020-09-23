@@ -157,7 +157,7 @@ static NSString * const kWDHasTipSupportsEmojiInputDefaultKey = @"WDHasTipSuppor
 
 - (void)initConstraints {
     NSInteger buttonNumber = 4;
-    CGFloat writeButtonWidth = SCREEN_WIDTH - 44 * buttonNumber - 8 * (buttonNumber + 2);
+    CGFloat writeButtonWidth = SCREEN_WIDTH - 44 * buttonNumber - 8 * (buttonNumber + 4);
     [self.writeButton mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.equalTo(self).offset(16);
         make.top.equalTo(self).offset(6);

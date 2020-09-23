@@ -368,7 +368,7 @@
 }
 
 + (CGFloat)answerReadCountsLineHeight {
-    return WDConstraintPadding(30.0);// 本来是20 为了扩大按钮的点击范围
+    return WDConstraintPadding(40.0);// 本来是20 为了扩大按钮的点击范围
 }
 
 + (CGFloat)moreImageCountsFontSize {

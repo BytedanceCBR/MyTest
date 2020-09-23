@@ -65,12 +65,12 @@
 
 - (void)setupConstraints {
     [self.digButton mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self).offset(5);
+        make.top.mas_equalTo(self).offset(10);
         make.right.mas_equalTo(self).offset(-20);
         make.height.mas_equalTo(20);
     }];
     [self.commentButton mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self).offset(5);
+        make.top.mas_equalTo(self).offset(10);
         make.right.mas_equalTo(self.digButton.mas_left).offset(-20);
         make.height.mas_equalTo(20);
     }];

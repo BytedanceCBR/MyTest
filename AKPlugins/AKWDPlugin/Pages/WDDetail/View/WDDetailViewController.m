@@ -91,7 +91,6 @@ static NSUInteger const kOldAnimationViewTag = 20161221;
     BOOL _headerViewPulled;
 }
 
-@property (nonatomic, strong) TTViewWrapper *wrapperView;
 @property (nonatomic, strong) UIViewController<TTCommentViewControllerProtocol> *commentViewController;
 
 @property (nonatomic, strong) WDDetailNatantContainerView *natantContainerView;
@@ -100,7 +99,6 @@ static NSUInteger const kOldAnimationViewTag = 20161221;
 @property (nonatomic, strong) FHAnswerDetailTitleView *profileTitleView;
 @property (nonatomic, strong) UIView<WDDetailHeaderView> *headerView;
 @property (nonatomic, strong) WDDetailView *detailView;
-@property (nonatomic, strong) SSThemedView *whiteGapView; // iPad适配专用顶部白底View，配合wrapperView
 
 @property (nonatomic, strong) SSWebViewBackButtonView *backButtonView;
 
@@ -308,17 +306,15 @@ static NSUInteger const kOldAnimationViewTag = 20161221;
     
     if (_isNewVersion) {
         if (self.showSlideType == AnswerDetailShowSlideTypeBlueHeaderWithHint) {
-            if (![TTDeviceHelper isPadDevice]) {
-                if ([[TTThemeManager sharedInstance_tt] currentThemeMode] == TTThemeModeDay) {
-                    BOOL isDefault = [[WDSettingHelper sharedInstance_tt] wdDetailStatusBarStyleIsDefault];
-                    if (isDefault) {
-                        self.ttStatusBarStyle = UIStatusBarStyleDefault;
-                        [UIApplication sharedApplication].statusBarStyle = UIStatusBarStyleDefault;
-                    }
-                    else {
-                        self.ttStatusBarStyle = UIStatusBarStyleLightContent;
-                        [UIApplication sharedApplication].statusBarStyle = UIStatusBarStyleLightContent;
-                    }
+            if ([[TTThemeManager sharedInstance_tt] currentThemeMode] == TTThemeModeDay) {
+                BOOL isDefault = [[WDSettingHelper sharedInstance_tt] wdDetailStatusBarStyleIsDefault];
+                if (isDefault) {
+                    self.ttStatusBarStyle = UIStatusBarStyleDefault;
+                    [UIApplication sharedApplication].statusBarStyle = UIStatusBarStyleDefault;
+                }
+                else {
+                    self.ttStatusBarStyle = UIStatusBarStyleLightContent;
+                    [UIApplication sharedApplication].statusBarStyle = UIStatusBarStyleLightContent;
                 }
             }
         }
@@ -375,20 +371,6 @@ static NSUInteger const kOldAnimationViewTag = 20161221;
 - (void)viewDidLayoutSubviews
 {
     [super viewDidLayoutSubviews];
-    if ([TTDeviceHelper isPadDevice]) {
-        CGFloat natantWidth = [TTUIResponderHelper splitViewFrameForView:self.view].size.width;
-        self.natantContainerView.width = natantWidth;
-        [self.natantContainerView.items enumerateObjectsUsingBlock:^(WDDetailNatantViewBase * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-            WDDetailNatantViewBase * natantViewItem = (WDDetailNatantViewBase *)obj;
-            natantViewItem.width = natantWidth-30;
-        }];
-        // 文章页有
-        self.commentViewController.commentTableView.tableHeaderView = self.natantContainerView;
-        if (!_isNewVersion) {
-            self.toolbarView.frame = [self p_frameForToolBarView];
-            [self.toolbarView layoutIfNeeded];
-        }
-    }
 }
 
 - (void)viewSafeAreaInsetsDidChange
@@ -589,22 +571,10 @@ static NSUInteger const kOldAnimationViewTag = 20161221;
 
 - (void)p_buildMainView
 {
-    if (!_isNewVersion && [TTDeviceHelper isPadDevice]) {
-        self.wrapperView = [[TTViewWrapper alloc] initWithFrame:self.view.bounds];
-        [self p_buildHeaderViewIfNeed];
-        [self p_buildDetailView];
-        self.wrapperView.targetView = self.detailView;
-        [self.view addSubview:self.wrapperView];
-        [self.view addSubview:self.whiteGapView];
-        [self.view addSubview:self.detailView];
-        [self.view addSubview:self.headerView];
-    } else {
-        [self p_buildHeaderViewIfNeed];
-        [self p_buildDetailView];
-        [self.view addSubview:self.detailView];
-        [self.view addSubview:self.headerView];
-    }
-    
+    [self p_buildHeaderViewIfNeed];
+    [self p_buildDetailView];
+    [self.view addSubview:self.detailView];
+    [self.view addSubview:self.headerView];
     self.headerView.frame = [self p_frameForHeaderView];
     [self.detailView willAppear];
     self.detailView.frame = [self p_frameForDetailView];
@@ -951,13 +921,7 @@ static NSUInteger const kOldAnimationViewTag = 20161221;
     if (yOffset < 64) {
         yOffset = 64;
     }
-    if (!_isNewVersion && [TTDeviceHelper isPadDevice]) {
-        CGSize windowSize = [TTUIResponderHelper windowSize];
-        CGFloat edgePadding = [TTUIResponderHelper paddingForViewWidth:windowSize.width];
-        return CGRectMake(edgePadding, yOffset, windowSize.width - edgePadding*2, SSHeight(self.headerView));
-    } else {
-        return CGRectMake(0, yOffset, self.view.width, SSHeight(self.headerView));
-    }
+    return CGRectMake(0, yOffset, self.view.width, SSHeight(self.headerView));
 }
 
 - (CGRect)p_frameForDetailView
@@ -966,35 +930,20 @@ static NSUInteger const kOldAnimationViewTag = 20161221;
     CGFloat bottomHeight = _isNewVersion ? 0 : [self DetailGetToolbarHeight];
     CGFloat headerBottom = _isNewVersion ? 0 : self.headerView.bottom;
     
-    if (!_isNewVersion && [TTDeviceHelper isPadDevice]) {
-        CGSize windowSize = [TTUIResponderHelper windowSize];
-        CGFloat edgePadding = [TTUIResponderHelper paddingForViewWidth:windowSize.width];
-        rect = CGRectMake(edgePadding, headerBottom, windowSize.width - edgePadding*2, SSHeight(self.view) - bottomHeight);
-    } else {
-        rect = CGRectMake(0, headerBottom, SSWidth(self.view), SSHeight(self.view) - bottomHeight);
-    }
-    
+    rect = CGRectMake(0, headerBottom, SSWidth(self.view), SSHeight(self.view) - bottomHeight);
     return rect;
 }
 
 - (CGFloat)DetailGetToolbarHeight
 {
-    return ([TTDeviceHelper isPadDevice] ? 50 : self.view.tt_safeAreaInsets.bottom ? self.view.tt_safeAreaInsets.bottom + 44 : 44) + [TTDeviceHelper ssOnePixel];
+    return (self.view.tt_safeAreaInsets.bottom ? self.view.tt_safeAreaInsets.bottom + 44 : 44) + [TTDeviceHelper ssOnePixel];
 }
 
 - (CGRect)p_frameForToolBarView
 {
     CGRect rect;
     CGFloat barHeight = [self DetailGetToolbarHeight];
-    
-    if (!_isNewVersion && [TTDeviceHelper isPadDevice]) {
-        CGSize windowSize = [TTUIResponderHelper windowSize];
-        rect = CGRectMake(0, self.view.height - barHeight, windowSize.width, barHeight);
-    }
-    else {
-        rect = CGRectMake(0, self.view.height - barHeight, SSWidth(self.view), barHeight);
-    }
-    
+    rect = CGRectMake(0, self.view.height - barHeight, SSWidth(self.view), barHeight);
     return rect;
 }
 
@@ -1797,16 +1746,6 @@ static NSUInteger const kOldAnimationViewTag = 20161221;
         }
         [self headerViewDidPull:self.headerView];
     }
-    
-    if (!_isNewVersion && [TTDeviceHelper isPadDevice]) {
-        if (self.headerView.top > kNavigationBarHeight) {
-            self.whiteGapView.height = self.headerView.top - kNavigationBarHeight;
-            [self.view bringSubviewToFront:self.whiteGapView];
-        } else {
-            self.whiteGapView.height = 0.0f;
-            [self.view sendSubviewToBack:self.whiteGapView];
-        }
-    }
 }
 
 - (void)tt_WDDetailViewWillShowLargeImage
@@ -2254,18 +2193,6 @@ static NSUInteger const kOldAnimationViewTag = 20161221;
         [barButton setImageEdgeInsets:UIEdgeInsetsMake(0, 0, 0, -4)];
     }
     return barButton;
-}
-
-- (SSThemedView *)whiteGapView
-{
-    if (!_whiteGapView) {
-        CGSize windowSize = [TTUIResponderHelper windowSize];
-        CGFloat edgePadding = [TTUIResponderHelper paddingForViewWidth:windowSize.width];
-        SSThemedView *whiteView = [[SSThemedView alloc] initWithFrame:CGRectMake(edgePadding, kNavigationBarHeight, windowSize.width - edgePadding*2, 0.0f)];
-        whiteView.backgroundColorThemeKey = kColorBackground4;
-        _whiteGapView = whiteView;
-    }
-    return _whiteGapView;
 }
 
 - (WDDetailNatantViewModel *)natantViewModel
