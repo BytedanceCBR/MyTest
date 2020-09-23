@@ -413,73 +413,12 @@
 
 - (void)trackClientShow:(FHFeedUGCCellModel *)cellModel rank:(NSInteger)rank {
     NSMutableDictionary *dict = [self trackDict:cellModel rank:rank];
-    if(cellModel.cellSubType == FHUGCFeedListCellSubTypeFullVideo || cellModel.cellSubType == FHUGCFeedListCellSubTypeUGCVideo){
-        dict[@"video_type"] = @"video";
-    }else if(cellModel.cellSubType == FHUGCFeedListCellSubTypeUGCSmallVideo){
+    if(cellModel.cellType == FHUGCFeedListCellTypeUGCSmallVideo || cellModel.cellType == FHUGCFeedListCellTypeUGCSmallVideo2){
         dict[@"video_type"] = @"small_video";
     }
+
     dict[@"event_tracking_id"] = @"93415";
     TRACK_EVENT(@"feed_client_show", dict);
-    
-    if(cellModel.attachCardInfo){
-        [self trackCardShow:cellModel rank:rank];
-    }
-    
-    if(cellModel.cellType == FHUGCFeedListCellTypeUGCRecommend){
-        //对于热门小区的展现，在cell里面报，这里就不报了
-        if(![cellModel.hotCommunityCellType isEqualToString:@"hot_social"]){
-            [self trackElementShow:rank elementType:@"like_neighborhood"];
-        }
-    }else if(cellModel.cellType == FHUGCFeedListCellTypeUGCHotTopic){
-        [self trackElementShow:rank elementType:@"hot_topic"];
-    }else if(cellModel.cellType == FHUGCFeedListCellTypeUGCBanner || cellModel.cellType == FHUGCFeedListCellTypeUGCBanner2) {
-        NSMutableDictionary *guideDict = [NSMutableDictionary dictionary];
-        guideDict[@"origin_from"] = self.viewController.tracerDict[@"origin_from"];
-        guideDict[@"page_type"] = [self pageType];
-        guideDict[@"description"] = cellModel.desc;
-        guideDict[@"item_title"] = cellModel.title;
-        guideDict[@"item_id"] = cellModel.groupId;
-        guideDict[@"rank"] = @(rank);
-        TRACK_EVENT(@"banner_show", guideDict);
-    }
-}
-
-- (void)trackCardShow:(FHFeedUGCCellModel *)cellModel rank:(NSInteger)rank {
-    NSMutableDictionary *dic =  [self trackDict:cellModel rank:rank];
-    if(cellModel.attachCardInfo.extra && cellModel.attachCardInfo.extra.event.length > 0){
-        //是房源卡片
-        NSMutableDictionary *dict = [NSMutableDictionary dictionary];
-        dict[@"origin_from"] = dic[@"origin_from"] ?: @"be_null";
-        dict[@"page_type"] = [self pageType];
-        dict[@"enter_from"] = dic[@"enter_from"] ? dic[@"enter_from"] : @"be_null";
-        dict[@"group_id"] = cellModel.attachCardInfo.extra.groupId ?: @"be_null";
-        dict[@"from_gid"] = cellModel.attachCardInfo.extra.fromGid ?: @"be_null";
-        dict[@"group_source"] = cellModel.attachCardInfo.extra.groupSource ?: @"be_null";
-        dict[@"impr_id"] = cellModel.attachCardInfo.extra.imprId ?: @"be_null";
-        dict[@"house_type"] = cellModel.attachCardInfo.extra.houseType ?: @"be_null";
-        TRACK_EVENT(cellModel.attachCardInfo.extra.event ?: @"card_show", dict);
-    }else{
-        NSMutableDictionary *dict = [NSMutableDictionary dictionary];
-        dict[@"origin_from"] = dic[@"origin_from"] ?: @"be_null";
-        dict[@"page_type"] = [self pageType];
-        dict[@"enter_from"] = dic[@"enter_from"] ? dic[@"enter_from"] : @"be_null";
-        dict[@"from_gid"] = cellModel.groupId;
-        dict[@"group_source"] = @(5);
-        dict[@"impr_id"] = cellModel.tracerDic[@"log_pb"][@"impr_id"] ?: @"be_null";
-        dict[@"card_type"] = cellModel.attachCardInfo.cardType ?: @"be_null";
-        dict[@"card_id"] = cellModel.attachCardInfo.id ?: @"be_null";
-        TRACK_EVENT(@"card_show", dict);
-    }
-}
-
-- (void)trackElementShow:(NSInteger)rank elementType:(NSString *)elementType {
-    NSMutableDictionary *dict = [NSMutableDictionary dictionary];
-    dict[@"element_type"] = elementType ? elementType : @"be_null";
-    dict[@"page_type"] = [self pageType];
-    dict[@"enter_from"] = self.viewController.tracerDict[@"origin_from"];
-    dict[@"rank"] = @(rank);
-    
-    TRACK_EVENT(@"element_show", dict);
 }
 
 - (NSMutableDictionary *)trackDict:(FHFeedUGCCellModel *)cellModel rank:(NSInteger)rank {
