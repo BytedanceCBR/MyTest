@@ -44,6 +44,7 @@
     if(self){
         _tableViewNeedPullDown = YES;
         _showErrorView = YES;
+        _category = @"f_house_smallvideo";
     }
     return self;
 }
@@ -154,7 +155,7 @@
 
 - (void)initViewModel {
     self.viewModel = [[FHUGCShortVideoListViewModel alloc] initWithCollectionView:self.collectionView controller:self];
-    _viewModel.categoryId = @"f_house_smallvideo";
+    _viewModel.categoryId = self.category;
     self.needReloadData = YES;
     //切换开关
     WeakSelf;
@@ -256,7 +257,7 @@
 
 - (void)applicationDidEnterBackground {
     if(self.needReportEnterCategory){
-        [self addStayCategoryLog];
+        [self addStayCategoryLog:nil];
     }
 }
 
@@ -294,21 +295,23 @@
 
 #pragma mark - 埋点
 
-- (void)addEnterCategoryLog {
+- (void)addEnterCategoryLog:(NSString *)enterType {
     NSMutableDictionary *tracerDict = self.tracerDict.mutableCopy;
     tracerDict[@"category_name"] = self.category;
+    tracerDict[@"enter_type"] = enterType;
     TRACK_EVENT(@"enter_category", tracerDict);
     
     self.enterTabTimestamp = [[NSDate date] timeIntervalSince1970];
 }
 
-- (void)addStayCategoryLog {
+- (void)addStayCategoryLog:(NSString *)enterType {
     NSTimeInterval duration = [[NSDate date] timeIntervalSince1970] - _enterTabTimestamp;
     if (duration <= 0 || duration >= 24*60*60) {
         return;
     }
     NSMutableDictionary *tracerDict = self.tracerDict.mutableCopy;
     tracerDict[@"category_name"] = self.category;
+    tracerDict[@"enter_type"] = enterType;
     tracerDict[@"stay_time"] = [NSNumber numberWithInteger:(duration * 1000)];
     TRACK_EVENT(@"stay_category", tracerDict);
     
@@ -327,7 +330,7 @@
     tracerDict[@"category_name"] = self.tracerDict[@"category_name"] ?: @"be_null";
     [FHEnvContext recordEvent:tracerDict andEventKey:@"enter_category"];
     
-    [self addEnterCategoryLog];
+    [self addEnterCategoryLog:tracerDict[@"enter_type"]];
 }
 
 - (void)viewDisAppearForEnterType:(NSInteger)enterType
@@ -347,7 +350,7 @@
         [FHEnvContext recordEvent:tracerDict andEventKey:@"stay_category"];
     }
     
-    [self addStayCategoryLog];
+    [self addStayCategoryLog:tracerDict[@"enter_type"]];
 }
 
 @end
