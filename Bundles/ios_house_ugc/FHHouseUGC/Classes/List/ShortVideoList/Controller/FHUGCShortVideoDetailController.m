@@ -486,6 +486,42 @@ static const CGFloat kFloatingViewOriginY = 230;
     [self.view addSubview:self.videoContainerViewController.view];
     [self.videoContainerViewController didMoveToParentViewController:self];
 
+    self.topBarView = [[UIView alloc] init];
+    self.topBarView.frame = CGRectMake(15, topInset, CGRectGetWidth(self.view.bounds) -30, 64.0);
+    self.topBarView.autoresizingMask = UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleBottomMargin;
+    [self.view addSubview:self.topBarView];
+
+    _closeButton = [[UIButton alloc] init];
+    [_closeButton setImage:[UIImage imageNamed:@"shortvideo_close"] forState:UIControlStateNormal];
+    [_closeButton setImageEdgeInsets:UIEdgeInsetsMake(8, 0, 8, 0)];
+    [_closeButton addTarget:self action:@selector(handleCloseClick:) forControlEvents:UIControlEventTouchUpInside];
+    _closeButton.hitTestEdgeInsets = UIEdgeInsetsMake(-12, -12, -12, -12);
+
+    [self.topBarView addSubview:_closeButton];
+    
+    [_closeButton mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.left.equalTo(self.topBarView);
+        make.height.equalTo(@48.0);
+        make.width.equalTo(@30.0);
+    }];
+    
+    _operationView = [[UIView alloc] init];
+    [self.view addSubview:_operationView];
+
+    _inputButton = [[TSVWriteCommentButton alloc] init];
+    [_inputButton addTarget:self action:@selector(_onInputButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
+    [_operationView addSubview:_inputButton];
+
+    [_operationView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.right.equalTo(self.view);
+        make.bottom.equalTo(self.view);
+        make.height.mas_offset(50+bottomInset);
+    }];
+    [_inputButton mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.edges.equalTo(self.operationView);
+    }];
+    
+    
     self.commentView = [[SSThemedView alloc] initWithFrame:CGRectMake(0, CGRectGetHeight([UIScreen mainScreen].bounds), CGRectGetWidth(self.view.bounds), CGRectGetHeight([UIScreen mainScreen].bounds) - kFloatingViewOriginY)];
 //    self.commentView.autoresizingMask = UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight;
     self.commentView.layer.cornerRadius = 6.0;
@@ -624,41 +660,7 @@ static const CGFloat kFloatingViewOriginY = 230;
 //        }
 //    }]];
     
-    self.topBarView = [[UIView alloc] init];
-    self.topBarView.frame = CGRectMake(15, topInset, CGRectGetWidth(self.view.bounds) -30, 64.0);
-    self.topBarView.autoresizingMask = UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleBottomMargin;
-    [self.view addSubview:self.topBarView];
 
-    _closeButton = [[UIButton alloc] init];
-    [_closeButton setImage:[UIImage imageNamed:@"shortvideo_close"] forState:UIControlStateNormal];
-    [_closeButton setImageEdgeInsets:UIEdgeInsetsMake(8, 0, 8, 0)];
-    [_closeButton addTarget:self action:@selector(handleCloseClick:) forControlEvents:UIControlEventTouchUpInside];
-    _closeButton.hitTestEdgeInsets = UIEdgeInsetsMake(-12, -12, -12, -12);
-
-    [self.topBarView addSubview:_closeButton];
-    
-    [_closeButton mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.left.equalTo(self.topBarView);
-        make.height.equalTo(@48.0);
-        make.width.equalTo(@30.0);
-    }];
-    
-    _operationView = [[UIView alloc] init];
-    [self.view addSubview:_operationView];
-
-    _inputButton = [[TSVWriteCommentButton alloc] init];
-    [_inputButton addTarget:self action:@selector(_onInputButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
-    [_operationView addSubview:_inputButton];
-
-    [_operationView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.right.equalTo(self.view);
-        make.bottom.equalTo(self.view);
-        make.height.mas_offset(50+bottomInset);
-    }];
-    [_inputButton mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.edges.equalTo(self.operationView);
-    }];
-    
     [self.observerArray addObject:[[NSNotificationCenter defaultCenter] addObserverForName:@"RelationActionSuccessNotification" object:nil queue:[NSOperationQueue mainQueue] usingBlock:^(NSNotification * _Nonnull note) { // 头条关注通知
         @strongify(self);
         NSString *userID = note.userInfo[@"kRelationActionSuccessNotificationUserIDKey"];

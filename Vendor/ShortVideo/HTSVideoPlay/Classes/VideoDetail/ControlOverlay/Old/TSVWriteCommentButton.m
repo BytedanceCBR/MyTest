@@ -42,6 +42,11 @@
 - (void)layoutSubviews
 {
     [super layoutSubviews];
+    
+    CGFloat bottomInset = 0;
+    if (@available(iOS 11.0, *)) {
+         bottomInset = [UIApplication sharedApplication].keyWindow.safeAreaInsets.bottom;
+    }
 
     [UIView performWithoutAnimation:^{
 //        self.iconImageView.bounds = CGRectMake(0, 0, 24, 24);
@@ -53,7 +58,7 @@
         
         self.label.frame = CGRectMake(20, 0,
                                       CGRectGetWidth(self.frame) - 20,
-                                      CGRectGetHeight(self.frame));
+                                       CGRectGetHeight(self.frame) - bottomInset);
     }];
 }
 
