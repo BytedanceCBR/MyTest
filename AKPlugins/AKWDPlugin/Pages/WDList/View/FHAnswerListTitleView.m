@@ -21,7 +21,8 @@
 -(instancetype)initWithFrame:(CGRect)frame {
     if(self = [super initWithFrame:frame]) {
         _titleLabel = [[UILabel alloc] init];
-        _titleLabel.font = [UIFont themeFontRegular:14];
+        _titleLabel.font = [UIFont themeFontMedium:16];
+        _titleLabel.textColor = [UIColor themeGray1];
         _titleLabel.numberOfLines = 1;
         _titleLabel.textAlignment = NSTextAlignmentLeft;
         [self addSubview:_titleLabel];

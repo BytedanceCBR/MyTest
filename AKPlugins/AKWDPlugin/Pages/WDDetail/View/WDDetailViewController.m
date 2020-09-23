@@ -8,20 +8,17 @@
 
 #import "WDDetailViewController.h"
 #import "WDBottomToolView.h"
-#import "WDNewDetailTitleView.h"
 #import "WDDetailModel.h"
 #import "WDServiceHelper.h"
 #import "WDAnswerService.h"
 #import "WDMonitorManager.h"
 #import "WDSettingHelper.h"
 #import "WDDetailHeaderView.h"
-#import "WDNewDetailHeaderView.h"
 #import "WDDetailView.h"
 #import "WDDefines.h"
 #import "WDDetailViewModel.h"
 #import "WDDetailNatantViewModel.h"
 #import "WDDetailNatantViewModel+ShareCategory.h"
-#import "WDParseHelper.h"
 #import "WDAnswerEntity.h"
 #import "WDCommonLogic.h"
 #import "WDNewsHelpView.h"
@@ -628,11 +625,6 @@ static NSUInteger const kOldAnimationViewTag = 20161221;
         return;
     }
     Class headerViewClass = [WDDetailHeaderView class];
-//    if ([WDSettingHelper sharedInstance_tt].wendaDetailHeaderViewStyle == WDDetailHeaderViewStyleNew) {
-//        headerViewClass = [WDNewDetailHeaderView class];
-//    } else {
-//        headerViewClass = [WDDetailHeaderView class];
-//    }
     self.headerView = [[headerViewClass alloc] initWithFrame:[self p_frameForHeaderView] detailModel:self.detailModel];
     self.headerView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
     self.headerView.delegate = self;
@@ -691,11 +683,10 @@ static NSUInteger const kOldAnimationViewTag = 20161221;
 
 - (void)titleViewTaped:(UITapGestureRecognizer *)gesture
 {
-    SSJSBridgeWebView *webView = self.detailView.detailWebView.webView;
-    if ([webView canGoBack]) {
-        [webView goBack];
+    if ([self.detailModel needReturn]) {
+        [self dismissSelf];
     } else {
-        [self.navigationController popViewControllerAnimated:YES];
+        [self.detailModel openListPage];
     }
 }
 
@@ -770,11 +761,11 @@ static NSUInteger const kOldAnimationViewTag = 20161221;
     self.nextButton = [[UIButton alloc] init];
     [self.nextButton setBackgroundColor:[UIColor themeWhite]];
     [self.nextButton setTitle:@"下一个回答" forState:UIControlStateNormal];
-    [self.nextButton setTitleColor:[UIColor themeBlack] forState:UIControlStateNormal];
+    [self.nextButton setTitleColor:[UIColor themeGray1] forState:UIControlStateNormal];
     self.nextButton.titleLabel.font = [UIFont themeFontRegular:12];
     self.nextButton.layer.cornerRadius = 15;
-    self.nextButton.layer.borderWidth = 1;
-    self.nextButton.layer.borderColor = [UIColor themeGray5].CGColor;
+    self.nextButton.layer.borderWidth = 0.5;
+    self.nextButton.layer.borderColor = [UIColor themeGray6].CGColor;
     [self.view addSubview:self.nextButton];
     [self.nextButton mas_makeConstraints:^(MASConstraintMaker *make) {
         make.width.mas_equalTo(80);

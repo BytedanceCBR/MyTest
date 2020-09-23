@@ -55,6 +55,7 @@
     [self.digButton setTitleEdgeInsets:UIEdgeInsetsMake(0, 2, 0, -2)];
     self.digButton.titleLabel.font = [UIFont themeFontRegular:14];
     self.digButton.titleLabel.layer.masksToBounds = YES;
+    self.digButton.hitTestEdgeInsets = UIEdgeInsetsMake(-10, -10, -10, -10);
     [self.digButton addTarget:self action:@selector(digButtonClick) forControlEvents:UIControlEventTouchUpInside];
     [self addSubview:self.digButton];
     [self.digButton enableMulitDiggEmojiAnimation];
@@ -64,12 +65,12 @@
 
 - (void)setupConstraints {
     [self.digButton mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self);
+        make.top.mas_equalTo(self).offset(5);
         make.right.mas_equalTo(self).offset(-20);
         make.height.mas_equalTo(20);
     }];
     [self.commentButton mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self);
+        make.top.mas_equalTo(self).offset(5);
         make.right.mas_equalTo(self.digButton.mas_left).offset(-20);
         make.height.mas_equalTo(20);
     }];

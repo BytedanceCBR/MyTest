@@ -18,7 +18,6 @@
 #import "WDListCellViewModel.h"
 #import "WDListCellDataModel.h"
 #import "WDWendaListCellUserHeaderView.h"
-#import "WDWendaListCellActionFooterView.h"
 #import <TTImage/TTImageInfosModel.h>
 
 @interface WDListCellLayoutModel ()
@@ -158,8 +157,6 @@
     }
     self.bottomLabelBottomPadding = 10;
     totalHeight += self.bottomLabelTopPadding + [self heightForBottomLabel] + self.bottomLabelBottomPadding;
-    
-//    totalHeight += [WDWendaListCellActionFooterView actionFooterHeight];
     
     return totalHeight;
 }

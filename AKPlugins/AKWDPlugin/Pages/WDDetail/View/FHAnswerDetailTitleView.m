@@ -26,14 +26,14 @@
         _questionTitleLabel = [[UILabel alloc] init];
         _questionTitleLabel.numberOfLines = 1;
         _questionTitleLabel.textAlignment = NSTextAlignmentLeft;
-        _questionTitleLabel.textColor = [UIColor themeBlack];
-        _questionTitleLabel.font = [UIFont themeFontRegular:14];
+        _questionTitleLabel.textColor = [UIColor themeGray1];
+        _questionTitleLabel.font = [UIFont themeFontMedium:14];
         [self addSubview:_questionTitleLabel];
         
         _answerCountLabel = [[UILabel alloc] init];
         _answerCountLabel.numberOfLines = 1;
         _answerCountLabel.textAlignment = NSTextAlignmentLeft;
-        _answerCountLabel.textColor = [UIColor themeBlack];
+        _answerCountLabel.textColor = [UIColor themeGray1];
         _answerCountLabel.font = [UIFont themeFontRegular:12];
         [self addSubview:_answerCountLabel];
         

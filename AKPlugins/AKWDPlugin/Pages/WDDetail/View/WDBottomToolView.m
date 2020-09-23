@@ -23,6 +23,7 @@
 #import <KVOController/NSObject+FBKVOController.h>
 #import "UIImage+FIconFont.h"
 #import "UIColor+Theme.h"
+#import <UIFont+House.h>
 #import "TTAccountManager.h"
 #import "FHCommonDefines.h"
 #import <ReactiveObjC/ReactiveObjC.h>
@@ -48,11 +49,11 @@ static NSString * const kWDHasTipSupportsEmojiInputDefaultKey = @"WDHasTipSuppor
 }
 
 -(void)initView {
-    UIEdgeInsets toolBarButtonHitTestInsets = UIEdgeInsetsMake(-6, -6, -6, -6);
+    UIEdgeInsets toolBarButtonHitTestInsets = UIEdgeInsetsMake(-10, -10, -10, -10);
     
     _writeButton = [TTAlphaThemedButton buttonWithType:UIButtonTypeCustom];
     [_writeButton setTitle:@"写评论..." forState:UIControlStateNormal];
-    _writeButton.titleLabel.font = [UIFont systemFontOfSize:13];
+    _writeButton.titleLabel.font = [UIFont themeFontLight:14];
     _writeButton.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;
     _writeButton.imageEdgeInsets = UIEdgeInsetsMake(0, 16, 0, 0);
     _writeButton.titleEdgeInsets = UIEdgeInsetsMake(0, 16, 0, 0);
@@ -156,31 +157,31 @@ static NSString * const kWDHasTipSupportsEmojiInputDefaultKey = @"WDHasTipSuppor
 
 - (void)initConstraints {
     NSInteger buttonNumber = 4;
-    CGFloat writeButtonWidth = SCREEN_WIDTH - 24 * buttonNumber - 15 * (buttonNumber + 2);
+    CGFloat writeButtonWidth = SCREEN_WIDTH - 44 * buttonNumber - 8 * (buttonNumber + 2);
     [self.writeButton mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.equalTo(self).offset(15);
+        make.left.equalTo(self).offset(16);
         make.top.equalTo(self).offset(6);
         make.width.mas_equalTo(writeButtonWidth);
         make.height.mas_equalTo(32);
     }];
     [self.commentButton mas_makeConstraints:^(MASConstraintMaker *make) {
         make.width.height.mas_equalTo(24);
-        make.left.equalTo(self.writeButton.mas_right).offset(15);
+        make.left.equalTo(self.writeButton.mas_right).offset(18);
         make.top.equalTo(self).offset(10);
     }];
     [self.collectButton mas_makeConstraints:^(MASConstraintMaker *make) {
         make.width.height.mas_equalTo(24);
-        make.left.equalTo(self.commentButton.mas_right).offset(15);
+        make.left.equalTo(self.commentButton.mas_right).offset(28);
         make.top.equalTo(self).offset(10);
     }];
     [self.digButton mas_makeConstraints:^(MASConstraintMaker *make) {
         make.width.height.mas_equalTo(24);
-        make.left.equalTo(self.collectButton.mas_right).offset(15);
+        make.left.equalTo(self.collectButton.mas_right).offset(28);
         make.top.equalTo(self).offset(10);
     }];
     [self.shareButton mas_makeConstraints:^(MASConstraintMaker *make) {
         make.width.height.mas_equalTo(24);
-        make.left.equalTo(self.digButton.mas_right).offset(15);
+        make.left.equalTo(self.digButton.mas_right).offset(28);
         make.top.equalTo(self).offset(10);
     }];
 }

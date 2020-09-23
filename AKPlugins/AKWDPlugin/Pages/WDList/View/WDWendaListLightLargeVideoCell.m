@@ -7,7 +7,6 @@
 
 #import "WDWendaListLightLargeVideoCell.h"
 #import "WDWendaListCellUserHeaderView.h"
-#import "WDWendaListCellActionFooterView.h"
 #import "WDWendaListCellPureCharacterView.h"
 #import "WDCommonLogic.h"
 #import "NSObject+FBKVOController.h"
@@ -36,10 +35,9 @@
 #import <BDTBasePlayer/TTVFullscreenProtocol.h>
 #import "WDListAnswerCellBottomView.h"
 
-@interface WDWendaListLightLargeVideoCell ()<WDWendaListCellUserHeaderViewDelegate,WDWendaListCellActionFooterViewDelegate,WDVideoPlayerTransferReceiver,TTVFullscreenCellProtocol,TTShareManagerDelegate>
+@interface WDWendaListLightLargeVideoCell ()<WDWendaListCellUserHeaderViewDelegate,WDVideoPlayerTransferReceiver,TTVFullscreenCellProtocol,TTShareManagerDelegate>
 
 @property (nonatomic, strong) WDWendaListCellUserHeaderView *headerView;
-@property (nonatomic, strong) WDWendaListCellActionFooterView *actionView;
 @property (nonatomic, strong) WDWendaListCellPureCharacterView *characterView;
 
 @property (nonatomic, strong) TTImageView *videoCoverPicView;
@@ -138,7 +136,6 @@
     }
     [self createSubviewsIfNeeded];
     self.headerView.width = cellWidth;
-    self.actionView.width = cellWidth;
     self.characterView.width = cellWidth;
     if (self.cellLayoutModel.cellCacheHeight == 0) {
         [cellLayoutModel calculateLayoutIfNeedWithCellWidth:cellWidth];
@@ -151,7 +148,6 @@
     originY = [self refreshAnswerTextContentAndLayout:originY];
     originY = [self refreshAnswerVideoContentAndLayout:originY + self.cellLayoutModel.videoCoverTopPadding];
     originY = [self refreshBottomViewContentAndLayout:originY];
-//    originY = [self refreshActionViewContentAndLayout:originY];
     [self refreshFooterViewLayout:originY];
     
     [self addObserveKVO];
@@ -238,12 +234,6 @@
     return self.bottomLabel.bottom + self.cellLayoutModel.bottomLabelBottomPadding;
 }
 
-- (CGFloat)refreshActionViewContentAndLayout:(CGFloat)top {
-    self.actionView.top = top;
-    [self.actionView refreshForwardCount:self.cellViewModel.forwardCount commentCount:self.cellViewModel.commentCount diggCount:self.cellViewModel.diggCount isDigg:self.cellViewModel.ansEntity.isDigg];
-    return self.actionView.bottom;
-}
-
 - (void)refreshFooterViewLayout:(CGFloat)top {
     self.footerView.frame = CGRectMake(0, top, self.cellWidth, [WDListCellLayoutModel heightForFooterView]);
 }
@@ -291,18 +281,6 @@
     self.cellBottomView.gdExtJson = self.gdExtJson;
 }
 
-- (void)refreshDiggCount {
-    [self.actionView refreshDiggCount:self.cellViewModel.diggCount isDigg:self.cellViewModel.ansEntity.isDigg];
-}
-
-- (void)refreshCommentCount {
-    [self.actionView refreshCommentCount:self.cellViewModel.commentCount];
-}
-
-- (void)refreshForwardCount {
-    [self.actionView refreshForwardCount:self.cellViewModel.forwardCount];
-}
-
 #pragma mark - Create & Add Obbserve
 
 - (void)createSubviewsIfNeeded {
@@ -314,7 +292,6 @@
     [self.contentView addSubview:self.rewardLabel];
     [self.contentView addSubview:self.bottomLabel];
     [self.contentView addSubview:self.cellBottomView];
-//    [self.contentView addSubview:self.actionView];
     [self.contentView addSubview:self.footerView];
 }
 
@@ -445,59 +422,6 @@
                                                  [self refreshFollowButtonState];
                                              }
                                          }];
-}
-
-#pragma mark - WDWendaListCellActionFooterViewDelegate
-
-- (void)listCellActionFooterViewDiggButtonClick:(TTAlphaThemedButton *)diggButton {
-    if ([self.ansEntity isBuryed]) {
-        [TTIndicatorView showWithIndicatorStyle:TTIndicatorViewStyleImage indicatorText:NSLocalizedString(@"您已经反对过", nil) indicatorImage:nil autoDismiss:YES dismissHandler:nil];
-    } else {
-        WDDiggType digType = WDDiggTypeDigg;
-        if (![self.ansEntity isDigg]) {
-            [self diggAnimationWith:diggButton];
-            NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithDictionary:self.gdExtJson];
-            [dict setValue:@"answer_list_answer_cell" forKey:@"source"];
-            [dict setValue:@"answer_list" forKey:@"position"];
-            [dict setValue:self.ansEntity.ansid forKey:@"group_id"];
-            [BDTrackerProtocol eventV3:@"rt_like" params:[dict copy]];
-        } else {
-            NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithDictionary:self.gdExtJson];
-            [dict setValue:@"answer_list_answer_cell" forKey:@"source"];
-            [dict setValue:@"answer_list" forKey:@"position"];
-            [dict setValue:self.ansEntity.ansid forKey:@"group_id"];
-            [BDTrackerProtocol eventV3:@"rt_unlike" params:[dict copy]];
-            if (diggButton.selected) {
-                diggButton.selected = NO;
-            }
-            self.ansEntity.diggCount = (self.ansEntity.diggCount.longLongValue >= 1) ? @(self.ansEntity.diggCount.longLongValue - 1) : @0;
-            self.ansEntity.isDigg = NO;
-            [self.ansEntity save];
-            digType = WDDiggTypeUnDigg;
-        }
-        [WDAnswerService digWithAnswerID:self.ansEntity.ansid diggType:digType enterFrom:kWDWendaListViewControllerUMEventName apiParam:self.apiParams finishBlock:nil];
-    }
-}
-
-- (void)listCellActionFooterViewCommentButtonClick {
-    [self.cellViewModel enterAnswerDetailPageFromComment];
-    NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithDictionary:self.gdExtJson];
-    [dict setValue:@"answer_list_answer_cell" forKey:@"source"];
-    [dict setValue:@"answer_list" forKey:@"position"];
-    [dict setValue:self.ansEntity.ansid forKey:@"group_id"];
-    [BDTrackerProtocol eventV3:@"cell_comment" params:[dict copy]];
-}
-
-- (void)listCellActionFooterViewForwardButtonClick {
-    [self.cellViewModel forwardCurrentAnswerToUGC];
-    NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithDictionary:self.gdExtJson];
-    [dict setValue:@"answer_list_answer_cell" forKey:@"source"];
-    [dict setValue:@"answer_list" forKey:@"position"];
-    [dict setValue:self.ansEntity.ansid forKey:@"group_id"];
-    [dict setValue:@"weitoutiao" forKey:@"share_platform"];
-    dict[@"event_type"] = @"house_app2c_v2";
-
-    [BDTrackerProtocol eventV3:@"rt_share_to_platform" params:[dict copy]];
 }
 
 #pragma mark - WDVideoPlayerTransferReceiver
@@ -662,14 +586,6 @@
         _headerView.delegate = self;
     }
     return _headerView;
-}
-
-- (WDWendaListCellActionFooterView *)actionView {
-    if (!_actionView) {
-        _actionView = [[WDWendaListCellActionFooterView alloc] initWithFrame:CGRectMake(0, 0, self.width, 0) answerEntity:self.ansEntity];
-        _actionView.delegate = self;
-    }
-    return _actionView;
 }
 
 - (WDWendaListCellPureCharacterView *)characterView {
