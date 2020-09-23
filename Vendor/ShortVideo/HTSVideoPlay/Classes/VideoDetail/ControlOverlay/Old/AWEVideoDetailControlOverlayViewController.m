@@ -82,6 +82,7 @@
 #import "UIImage+FIconFont.h"
 #import <FHHouseBase/FHRealtorAvatarView.h>
 #import "NSString+BTDAdditions.h"
+#import <BDWebImage/UIImageView+BDWebImage.h>
 
 static const CGFloat kCheckChallengeButtonWidth = 72;
 static const CGFloat kCheckChallengeButtonHeight = 28;
@@ -96,8 +97,8 @@ static const CGFloat kCheckChallengeButtonLeftPadding = 28;
 @property (nonatomic, strong) CAGradientLayer *topBarGradientLayer;
 @property (nonatomic, strong) FHRealtorAvatarView *avatarView;
 @property (nonatomic, strong) UILabel *nameLabel;
-@property (nonatomic, strong) UIButton *moreButton;
-@property (nonatomic, strong) UIButton *closeButton;
+@property (nonatomic, strong) UIImageView *sourceImage;
+//@property (nonatomic, strong) UIButton *moreButton;
 @property (nonatomic, strong) UIView *userInfoContainerView;
 @property (nonatomic, strong) UIView *layoutContainerView;
 
@@ -106,8 +107,6 @@ static const CGFloat kCheckChallengeButtonLeftPadding = 28;
 // Buttom controls
 @property (nonatomic, strong) TTUGCAttributedLabel *titleLabel;
 @property (nonatomic, strong) AWEDetailLogoViewController *logoViewController;
-@property (nonatomic, strong) UIView *operationView;
-@property (nonatomic, strong) UIButton *inputButton;
 @property (nonatomic, strong) TSVIconLabelButton *commentButton;
 @property (nonatomic, strong) TSVIconLabelButton *likeButton;
 @property (nonatomic, strong) UIButton *shareButton;
@@ -288,34 +287,22 @@ static const CGFloat kCheckChallengeButtonLeftPadding = 28;
     _layoutContainerView.backgroundColor = [UIColor clearColor];
     [self.topBarView addSubview:_layoutContainerView];
 
-    _moreButton = [[UIButton alloc] init];
-    [_moreButton setImage:[UIImage imageNamed:@"hts_vp_white_more_titlebar"] forState:UIControlStateNormal];
-    [_moreButton setImageEdgeInsets:UIEdgeInsetsMake(8, 0, 8, 0)];
-    [_moreButton addTarget:self action:@selector(handleReportClick:) forControlEvents:UIControlEventTouchUpInside];
-    _moreButton.hitTestEdgeInsets = UIEdgeInsetsMake(-12, -12, -12, -12);
+//    _moreButton = [[UIButton alloc] init];
+//    [_moreButton setImage:[UIImage imageNamed:@"hts_vp_white_more_titlebar"] forState:UIControlStateNormal];
+//    [_moreButton setImageEdgeInsets:UIEdgeInsetsMake(8, 0, 8, 0)];
+//    [_moreButton addTarget:self action:@selector(handleReportClick:) forControlEvents:UIControlEventTouchUpInside];
+//    _moreButton.hitTestEdgeInsets = UIEdgeInsetsMake(-12, -12, -12, -12);
+//
+//    [self.topBarView addSubview:_moreButton];
 
-    [self.topBarView addSubview:_moreButton];
-
-    _closeButton = [[UIButton alloc] init];
-    [_closeButton setImage:[UIImage imageNamed:@"hts_vp_close"] forState:UIControlStateNormal];
-    [_closeButton setImageEdgeInsets:UIEdgeInsetsMake(8, 0, 8, 0)];
-    [_closeButton addTarget:self action:@selector(handleCloseClick:) forControlEvents:UIControlEventTouchUpInside];
-    _closeButton.hitTestEdgeInsets = UIEdgeInsetsMake(-12, -12, -12, -12);
-
-    [_layoutContainerView addSubview:_closeButton];
     
-    [_layoutContainerView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.equalTo(self.topBarView);
-        make.left.equalTo(self.topBarView).offset(12.0);
-        make.height.equalTo(@48.0);
-        make.right.equalTo(_moreButton.mas_left).offset(-8.0);
-    }];
+//    [_layoutContainerView mas_makeConstraints:^(MASConstraintMaker *make) {
+//        make.top.equalTo(self.topBarView);
+//        make.left.equalTo(self.topBarView).offset(12.0);
+//        make.height.equalTo(@48.0);
+//        make.right.equalTo(_moreButton.mas_left).offset(-8.0);
+//    }];
 
-    [_closeButton mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.left.equalTo(_layoutContainerView);
-        make.height.equalTo(@48.0);
-        make.width.equalTo(@30.0);
-    }];
 
     [self addChildViewController:self.logoViewController];
     [self.topBarView addSubview:self.logoViewController.view];
@@ -326,15 +313,15 @@ static const CGFloat kCheckChallengeButtonLeftPadding = 28;
         make.centerX.equalTo(self.view);
         make.width.equalTo(@100);
         make.height.equalTo(@28);
-        make.centerY.equalTo(self.closeButton.mas_centerY);
+        make.centerY.equalTo(self.topBarView.mas_centerY);
     }];
 
-    [_moreButton mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.centerY.equalTo(_closeButton);
-        make.right.equalTo(self.view).offset(-12.0);
-        make.height.equalTo(@50.0);
-        make.width.equalTo(@30.0);
-    }];
+//    [_moreButton mas_makeConstraints:^(MASConstraintMaker *make) {
+//        make.centerY.equalTo(self.topBarView);
+//        make.right.equalTo(self.view).offset(-12.0);
+//        make.height.equalTo(@50.0);
+//        make.width.equalTo(@30.0);
+//    }];
 }
 
 - (void)setupBottomBarViews
@@ -359,17 +346,11 @@ static const CGFloat kCheckChallengeButtonLeftPadding = 28;
 //    _musicInfoView.userInteractionEnabled = NO;
 //    [self.view addSubview:_musicInfoView];
 
-
-    _operationView = [[UIView alloc] init];
-    [self.view addSubview:_operationView];
     
     _rightInfoView = [[UIView alloc]init];
      [self.view addSubview:_rightInfoView];
 
 
-    _inputButton = [[TSVWriteCommentButton alloc] init];
-    [_inputButton addTarget:self action:@selector(_onInputButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
-    [_operationView addSubview:_inputButton];
 
     _commentButton = [[TSVIconLabelButton alloc] initWithImage:@"shortvideo_comment" label:nil];
     _commentButton.label.textColor = [UIColor tt_defaultColorForKey:kColorText7];
@@ -386,10 +367,14 @@ static const CGFloat kCheckChallengeButtonLeftPadding = 28;
     self.shareButton.hitTestEdgeInsets = UIEdgeInsetsMake(-20, -20, -20, -20);
     
     [self.shareButton setImage:[UIImage imageNamed:@"shortvideo_share"] forState:UIControlStateNormal];
-    [self.shareButton addTarget:self action:@selector(_onShareButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
+    [self.shareButton addTarget:self action:@selector(handleReportClick:) forControlEvents:UIControlEventTouchUpInside];
     [self.rightInfoView addSubview:self.shareButton];
 
     [self.view addSubview:self.userInfoContainerView];
+    
+    self.sourceImage = [[UIImageView alloc]init];
+    self.sourceImage.contentMode = UIViewContentModeScaleAspectFit;
+    [self.view addSubview: self.sourceImage];
 
     [self addChildViewController:self.recViewController];
     [self.view addSubview:self.recViewController.view];
@@ -420,24 +405,9 @@ static const CGFloat kCheckChallengeButtonLeftPadding = 28;
 {
     
     CGFloat avatarSize = 40;
-    
-    CGFloat bottomInset = 0;
-    if (@available(iOS 11.0, *)) {
-        bottomInset = [UIApplication sharedApplication].keyWindow.safeAreaInsets.bottom;
-    }
-    [_operationView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.right.equalTo(self.view);
-        make.bottom.equalTo(self.view);
-        make.height.mas_offset(50+bottomInset);
-    }];
-    [_inputButton mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.edges.equalTo(self.operationView);
-    }];
-
-    
     [_rightInfoView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.right.equalTo(self.view).offset(-10);
-        make.bottom.equalTo(self.operationView.mas_top).offset(-60);
+        make.bottom.equalTo(self.view).offset(-60);
         make.width.mas_offset(40);
     }];
     
@@ -468,9 +438,15 @@ static const CGFloat kCheckChallengeButtonLeftPadding = 28;
     
     [_nameLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerY.equalTo(self.userInfoContainerView);
-        make.left.equalTo(self.userInfoContainerView).offset(8.0);
+        make.left.equalTo(self.userInfoContainerView);
         make.right.equalTo(self.userInfoContainerView);
         make.height.equalTo(@24.0);
+    }];
+    
+    [_sourceImage mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.equalTo(self.userInfoContainerView);
+        make.bottom.equalTo(self.userInfoContainerView.mas_top).offset(-5);
+        make.size.mas_offset(25);
     }];
 
     UIView *topmostView;
@@ -479,7 +455,7 @@ static const CGFloat kCheckChallengeButtonLeftPadding = 28;
 //    } else if (self.musicInfoView.hidden == NO) {
 //        topmostView = self.musicInfoView;
     } else {
-        topmostView = self.operationView;
+//        topmostView = self.operationView;
     }
     
 //    if (self.recViewController.view.hidden) {
@@ -511,7 +487,7 @@ static const CGFloat kCheckChallengeButtonLeftPadding = 28;
         [self.titleLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
             make.left.equalTo(self.view).offset(15);
             make.right.equalTo(self.rightInfoView.mas_left).offset(-15);
-            make.bottom.equalTo(self.operationView.mas_top).offset(-20);
+            make.bottom.equalTo(self.view).offset(-20);
         }];
 //    }
     
@@ -622,7 +598,7 @@ static const CGFloat kCheckChallengeButtonLeftPadding = 28;
     [self.view setNeedsUpdateConstraints];
 
     [self.avatarView updateAvatarWithTSVUserModel:model];
-
+    [self.sourceImage bd_setImageWithURL:[NSURL URLWithString:model.videoSourceIcon]];
     self.nameLabel.text = self.model.user.name;
 
     self.logoViewController.view.hidden = ![self shouldShowLogoViewController];
@@ -779,14 +755,6 @@ static const CGFloat kCheckChallengeButtonLeftPadding = 28;
                                                                  @"user_digg" : @([self.model.userDigg intValue]),}];
 }
 
-- (void)_onInputButtonClicked:(UIButton *)sender
-{
-    if (!self.model) {
-        return;
-    }
-    
-    [self.viewModel clickWriteCommentButton];
-}
 
 - (void)_onCommentButtonClicked:(UIButton *)sender
 {
@@ -823,11 +791,6 @@ static const CGFloat kCheckChallengeButtonLeftPadding = 28;
 - (void)handleReportClick:(id)sender
 {
     [self.viewModel clickMoreButton];
-}
-
-- (void)handleCloseClick:(id)sender
-{
-    [self.viewModel clickCloseButton];
 }
 
 #pragma mark -
@@ -879,6 +842,12 @@ static const CGFloat kCheckChallengeButtonLeftPadding = 28;
 #pragma mark - Recommend Card
 - (void)showRecommendCardView
 {
+    CGFloat bottomInset = 0;
+    if (@available(iOS 11.0, *)) {
+        bottomInset = [UIApplication sharedApplication].keyWindow.safeAreaInsets.bottom;
+    }
+
+    CGFloat bottomInputFieldHeight = 50 + bottomInset;
     if (self.recViewController.viewModel.userCards.count > 0) {
         
         [self.viewModel trackFollowCardEvent];
@@ -897,7 +866,7 @@ static const CGFloat kCheckChallengeButtonLeftPadding = 28;
         [self.userInfoContainerView mas_remakeConstraints:^(MASConstraintMaker *make) {
             make.left.equalTo(self.view).offset(15);
             make.height.equalTo(@24);
-            make.bottom.equalTo(self.operationView.mas_top).offset(-171);
+            make.bottom.equalTo(self.view).offset(-171 - bottomInputFieldHeight);
         }];
         [self.userInfoContainerView updateConstraintsIfNeeded];
   
@@ -918,19 +887,25 @@ static const CGFloat kCheckChallengeButtonLeftPadding = 28;
 
 - (void)dismissRecommendCardView
 {
-    UIView *topmostView;
-    if ([self.titleLabel.attributedText length]) {
-        topmostView = self.titleLabel;
+    CGFloat bottomInset = 0;
+    if (@available(iOS 11.0, *)) {
+        bottomInset = [UIApplication sharedApplication].keyWindow.safeAreaInsets.bottom;
+    }
+
+    CGFloat bottomInputFieldHeight = 50 + bottomInset;
+//    UIView *topmostView;
+//    if ([self.titleLabel.attributedText length]) {
+//        topmostView = self.titleLabel;
 //    } else if (self.musicInfoView.hidden == NO) {
 //        topmostView = self.musicInfoView;
-    } else {
-        topmostView = self.operationView;
-    }
+//    } else {
+//        topmostView = self.operationView;
+//    }
     [self.userInfoContainerView setNeedsUpdateConstraints];
     [self.userInfoContainerView mas_remakeConstraints:^(MASConstraintMaker *make) {
         make.left.equalTo(self.view).offset(15);
         make.height.equalTo(@24);
-        make.bottom.equalTo(topmostView.mas_top).offset(-16);
+        make.bottom.equalTo(self.view).offset(-16-bottomInputFieldHeight);
     }];
     [self.userInfoContainerView updateConstraintsIfNeeded];
 

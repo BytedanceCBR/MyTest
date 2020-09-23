@@ -114,6 +114,7 @@
 #import "SSCommonLogic.h"
 #import "SSCommentInputHeader.h"
 #import "FHUserTracker.h"
+#import "TSVWriteCommentButton.h"
 
 #define kPostMessageFinishedNotification    @"kPostMessageFinishedNotification"
 
@@ -257,6 +258,11 @@ typedef NS_ENUM(NSInteger, TSVDetailCommentViewStatus) {
 @property (nonatomic, strong) TTGroupModel *groupModel;
 ///埋点数据
 @property (nonatomic, strong) NSDictionary *tracerDic;
+
+@property (nonatomic, strong) UIView *topBarView;
+@property (nonatomic, strong) UIButton *closeButton;
+@property (nonatomic, strong) UIView *operationView;
+@property (nonatomic, strong) UIButton *inputButton;
 @end
 
 static const CGFloat kFloatingViewOriginY = 230;
@@ -497,14 +503,6 @@ static const CGFloat kFloatingViewOriginY = 230;
                 TSVControlOverlayViewModel *viewModel = [[TSVControlOverlayViewModel alloc] init];
                 viewModel.commonTrackingParameter = self.commonTrackingParameter;
                 viewModel.listEntrance = [self entrance];
-                viewModel.closeButtonDidClick = ^{
-                    @strongify(self);
-                    [self dismissByClickingCloseButton];
-                };
-                viewModel.writeCommentButtonDidClick = ^{
-                    @strongify(self);
-                    [self playView:nil didClickInputWithModel:self.model];
-                };
                 viewModel.showProfilePopupBlock = ^{
                     @strongify(self);
 //                    [self layoutProfileViewController];
@@ -672,6 +670,47 @@ static const CGFloat kFloatingViewOriginY = 230;
 //            [[UIApplication sharedApplication] setStatusBarHidden:[self shouldHideStatusBar] withAnimation:UIStatusBarAnimationNone];
 //        }
 //    }]];
+    
+    self.topBarView = [[UIView alloc] init];
+        CGFloat topInset = 0;
+    CGFloat bottomInset = 0;
+    if (@available(iOS 11.0, *)) {
+        topInset = [UIApplication sharedApplication].keyWindow.safeAreaInsets.top;
+         bottomInset = [UIApplication sharedApplication].keyWindow.safeAreaInsets.bottom;
+    }
+    self.topBarView.frame = CGRectMake(15, topInset, CGRectGetWidth(self.view.bounds) -30, 64.0);
+    self.topBarView.autoresizingMask = UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleBottomMargin;
+    [self.view addSubview:self.topBarView];
+
+    _closeButton = [[UIButton alloc] init];
+    [_closeButton setImage:[UIImage imageNamed:@"shortvideo_close"] forState:UIControlStateNormal];
+    [_closeButton setImageEdgeInsets:UIEdgeInsetsMake(8, 0, 8, 0)];
+    [_closeButton addTarget:self action:@selector(handleCloseClick:) forControlEvents:UIControlEventTouchUpInside];
+    _closeButton.hitTestEdgeInsets = UIEdgeInsetsMake(-12, -12, -12, -12);
+
+    [self.topBarView addSubview:_closeButton];
+    
+    [_closeButton mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.left.equalTo(self.topBarView);
+        make.height.equalTo(@48.0);
+        make.width.equalTo(@30.0);
+    }];
+    
+    _operationView = [[UIView alloc] init];
+    [self.view addSubview:_operationView];
+
+    _inputButton = [[TSVWriteCommentButton alloc] init];
+    [_inputButton addTarget:self action:@selector(_onInputButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
+    [_operationView addSubview:_inputButton];
+
+    [_operationView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.right.equalTo(self.view);
+        make.bottom.equalTo(self.view);
+        make.height.mas_offset(50+bottomInset);
+    }];
+    [_inputButton mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.edges.equalTo(self.operationView);
+    }];
     [self.observerArray addObject:[[NSNotificationCenter defaultCenter] addObserverForName:@"RelationActionSuccessNotification" object:nil queue:[NSOperationQueue mainQueue] usingBlock:^(NSNotification * _Nonnull note) { // 头条关注通知
         @strongify(self);
         NSString *userID = note.userInfo[@"kRelationActionSuccessNotificationUserIDKey"];
@@ -737,6 +776,18 @@ static const CGFloat kFloatingViewOriginY = 230;
     RAC(self, viewModel.dataFetchManager) = RACObserve(self, dataFetchManager);
     RAC(self, viewModel.commonTrackingParameter) = RACObserve(self, commonTrackingParameter);
     RAC(self, videoContainerViewController.viewModel) = RACObserve(self, viewModel);
+}
+
+- (void)handleCloseClick:(UIButton *)btn {
+      [self dismissByClickingCloseButton];
+}
+
+- (void)_onInputButtonClicked:(UIButton *)sender
+{
+    if (!self.model) {
+        return;
+    }
+     [self playView:nil didClickInputWithModel:self.model];
 }
 
 - (void)viewWillAppear:(BOOL)animated

@@ -183,8 +183,13 @@ const static CGFloat kAWEVideoContainerSpacing = 2;
         }
         layout.minimumLineSpacing = 0;
         layout.minimumInteritemSpacing = 0;
-        AWEVideoContainerCollectionView *view = [[AWEVideoContainerCollectionView alloc] initWithFrame:self.view.bounds collectionViewLayout:layout];
-        CGRect frame = self.view.bounds;
+        CGFloat bottomInset = 0;
+        if (@available(iOS 11.0, *)) {
+             bottomInset = [UIApplication sharedApplication].keyWindow.safeAreaInsets.bottom;
+        }
+        CGRect collectionFrame = CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height - 50 -bottomInset);
+        AWEVideoContainerCollectionView *view = [[AWEVideoContainerCollectionView alloc] initWithFrame:collectionFrame collectionViewLayout:layout];
+        CGRect frame = collectionFrame;
         switch ([AWEVideoDetailScrollConfig direction]) {
             case AWEVideoDetailScrollDirectionHorizontal:
                 view.alwaysBounceHorizontal = self.dataFetchManager.shouldShowNoMoreVideoToast;
@@ -383,6 +388,10 @@ const static CGFloat kAWEVideoContainerSpacing = 2;
 
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath
 {
+    CGFloat bottomInset = 0;
+    if (@available(iOS 11.0, *)) {
+         bottomInset = [UIApplication sharedApplication].keyWindow.safeAreaInsets.bottom;
+    }
     CGSize size = self.view.bounds.size;
     switch ([AWEVideoDetailScrollConfig direction]) {
         case AWEVideoDetailScrollDirectionHorizontal:

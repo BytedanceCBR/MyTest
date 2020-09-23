@@ -118,6 +118,7 @@
 
 
 #import "FHShortVideoDetailFetchManager.h"
+#import "TSVWriteCommentButton.h"
 
 #define kPostMessageFinishedNotification    @"kPostMessageFinishedNotification"
 
@@ -236,6 +237,11 @@ typedef NS_ENUM(NSInteger, TSVDetailCommentViewStatus) {
 @property (nonatomic, strong) TTGroupModel *groupModel;
 
 @property (nonatomic, strong) NSDictionary *tracerDic;
+
+@property (nonatomic, strong) UIView *topBarView;
+@property (nonatomic, strong) UIButton *closeButton;
+@property (nonatomic, strong) UIView *operationView;
+@property (nonatomic, strong) UIButton *inputButton;
 @end
 
 static const CGFloat kFloatingViewOriginY = 230;
@@ -299,44 +305,7 @@ static const CGFloat kFloatingViewOriginY = 230;
         self.dataFetchManager.currentShortVideoModel = extraParams[@"current_video"];
         self.dataFetchManager.otherShortVideoModels = extraParams[@"other_videos"];
         self.dataFetchManager.shouldShowNoMoreVideoToast = YES;
-        self.dataFetchManager.categoryId = @"f_house_smallvideo";
-
-//        if (extraParams[HTSVideoListFetchManager]) {
-//            self.dataFetchManager = extraParams[HTSVideoListFetchManager];
-//        } else if ([params[@"load_more"] integerValue] == 1) {
-//            self.dataFetchManager = [[TSVShortVideoDetailFetchManager alloc] initWithGroupID:self.groupID
-//                                                                             loadMoreType:TSVShortVideoListLoadMoreTypePersonalHome];
-//            self.dataFetchManager.shouldShowNoMoreVideoToast = YES;
-//        } else if ([params[@"load_more"] integerValue] == 2) {
-//            self.dataFetchManager = [[TSVShortVideoCategoryFetchManager alloc] init];
-//        } else if ([params[@"load_more"] integerValue] == 3) {
-//            NSString *forumID = [params tt_stringValueForKey:@"forum_id"];
-//            NSString *topCursor = [params tt_stringValueForKey:@"top_cursor"];
-//            NSString *cursor = [params tt_stringValueForKey:@"cursor"];
-//            NSString *seq = [params tt_stringValueForKey:@"seq"];
-//            NSString *sortType = [params tt_stringValueForKey:@"sort_type"];
-//            self.dataFetchManager = [[TSVShortVideoDetailFetchManager alloc] initWithGroupID:self.groupID
-//                                                                                loadMoreType:TSVShortVideoListLoadMoreTypeActivity
-//                                                                             activityForumID:forumID
-//                                                                           activityTopCursor:topCursor
-//                                                                              activityCursor:cursor
-//                                                                                 activitySeq:seq
-//                                                                            activitySortType:sortType];
-//            self.dataFetchManager.shouldShowNoMoreVideoToast = YES;
-//        } else if ([params[@"load_more"] integerValue] == 4) {
-//            self.dataFetchManager = [[TSVShortVideoDetailFetchManager alloc] initWithGroupID:self.groupID
-//                                                                                loadMoreType:TSVShortVideoListLoadMoreTypeWeiTouTiao];
-//            self.dataFetchManager.shouldShowNoMoreVideoToast = YES;
-//        } else if ([params[@"load_more"] integerValue] == 5) {
-//            self.dataFetchManager = [[TSVShortVideoDetailFetchManager alloc] initWithGroupID:self.groupID
-//                                                                                loadMoreType:TSVShortVideoListLoadMoreTypePush];
-//            self.dataFetchManager.shouldShowNoMoreVideoToast = YES;
-//        } else {
-//            self.dataFetchManager = [[TSVShortVideoDetailFetchManager alloc] initWithGroupID:self.groupID
-//                                                                             loadMoreType:TSVShortVideoListLoadMoreTypeNone];
-//            self.dataFetchManager.shouldShowNoMoreVideoToast = NO;
-//        }
-//        self.originalDataFetchManager = self.dataFetchManager;
+        self.dataFetchManager.categoryId = @"f_house_smallvideo_flow";
 
         @weakify(self);
 //        [RACObserve(self, dataFetchManager) subscribeNext:^(id  _Nullable x) {
@@ -445,7 +414,7 @@ static const CGFloat kFloatingViewOriginY = 230;
         blackMaskView.backgroundColor = [UIColor colorWithHexString:@"#000000"];
         blackMaskView;
     });
-
+    
     if (![AWEVideoPlayAccountBridge isLogin]) {
         [AWEVideoPlayAccountBridge fetchTTAccount];
 //        [AWEVideoPlayAccountBridge checkin];
@@ -456,7 +425,12 @@ static const CGFloat kFloatingViewOriginY = 230;
     self.view.clipsToBounds = YES;
 
     self.ttStatusBarStyle = UIStatusBarStyleLightContent;
-
+        CGFloat topInset = 0;
+    CGFloat bottomInset = 0;
+    if (@available(iOS 11.0, *)) {
+        topInset = [UIApplication sharedApplication].keyWindow.safeAreaInsets.top;
+         bottomInset = [UIApplication sharedApplication].keyWindow.safeAreaInsets.bottom;
+    }
 
     // Views
     self.videoContainerViewController = ({
@@ -466,10 +440,10 @@ static const CGFloat kFloatingViewOriginY = 230;
         controller.extraDic = self.extraDic;
         controller.needCellularAlert = (self.pageParams[AWEVideoPageParamNonWiFiAlert] && [self.pageParams[AWEVideoPageParamNonWiFiAlert] isKindOfClass:[NSNumber class]]) ? [self.pageParams[AWEVideoPageParamNonWiFiAlert] boolValue] : YES;
         @weakify(self)
-        controller.wantToClosePage = ^{
-            @strongify(self);
-            [self dismissByClickingCloseButton];
-        };
+//        controller.wantToClosePage = ^{
+//            @strongify(self);
+          
+//        };
         controller.loadMoreBlock = ^(BOOL preload) {
             @strongify(self);
             [self loadMoreAutomatically:preload];
@@ -481,16 +455,8 @@ static const CGFloat kFloatingViewOriginY = 230;
                 TSVControlOverlayViewModel *viewModel = [[TSVControlOverlayViewModel alloc] init];
                 viewModel.commonTrackingParameter = self.commonTrackingParameter;
                 viewModel.listEntrance = [self entrance];
-                viewModel.closeButtonDidClick = ^{
-                    @strongify(self);
-                    [self dismissByClickingCloseButton];
-                };
-                viewModel.writeCommentButtonDidClick = ^{
-                    @strongify(self);
-                    [self playView:nil didClickInputWithModel:self.model];
-                };
                 viewModel.showProfilePopupBlock = ^{
-                    @strongify(self);
+//                    @strongify(self);
 //                    [self layoutProfileViewController];
 //                    [self updateProfileViewModelIfNeeded];
 //                    [self showProfileView];
@@ -515,7 +481,8 @@ static const CGFloat kFloatingViewOriginY = 230;
     @weakify(self);
 
     [self addChildViewController:self.videoContainerViewController];
-    self.videoContainerViewController.view.frame = self.view.bounds;
+    
+    self.videoContainerViewController.view.frame = CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height - 50 -bottomInset);
     [self.view addSubview:self.videoContainerViewController.view];
     [self.videoContainerViewController didMoveToParentViewController:self];
 
@@ -656,6 +623,42 @@ static const CGFloat kFloatingViewOriginY = 230;
 //            [[UIApplication sharedApplication] setStatusBarHidden:[self shouldHideStatusBar] withAnimation:UIStatusBarAnimationNone];
 //        }
 //    }]];
+    
+    self.topBarView = [[UIView alloc] init];
+    self.topBarView.frame = CGRectMake(15, topInset, CGRectGetWidth(self.view.bounds) -30, 64.0);
+    self.topBarView.autoresizingMask = UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleBottomMargin;
+    [self.view addSubview:self.topBarView];
+
+    _closeButton = [[UIButton alloc] init];
+    [_closeButton setImage:[UIImage imageNamed:@"shortvideo_close"] forState:UIControlStateNormal];
+    [_closeButton setImageEdgeInsets:UIEdgeInsetsMake(8, 0, 8, 0)];
+    [_closeButton addTarget:self action:@selector(handleCloseClick:) forControlEvents:UIControlEventTouchUpInside];
+    _closeButton.hitTestEdgeInsets = UIEdgeInsetsMake(-12, -12, -12, -12);
+
+    [self.topBarView addSubview:_closeButton];
+    
+    [_closeButton mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.left.equalTo(self.topBarView);
+        make.height.equalTo(@48.0);
+        make.width.equalTo(@30.0);
+    }];
+    
+    _operationView = [[UIView alloc] init];
+    [self.view addSubview:_operationView];
+
+    _inputButton = [[TSVWriteCommentButton alloc] init];
+    [_inputButton addTarget:self action:@selector(_onInputButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
+    [_operationView addSubview:_inputButton];
+
+    [_operationView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.right.equalTo(self.view);
+        make.bottom.equalTo(self.view);
+        make.height.mas_offset(50+bottomInset);
+    }];
+    [_inputButton mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.edges.equalTo(self.operationView);
+    }];
+    
     [self.observerArray addObject:[[NSNotificationCenter defaultCenter] addObserverForName:@"RelationActionSuccessNotification" object:nil queue:[NSOperationQueue mainQueue] usingBlock:^(NSNotification * _Nonnull note) { // 头条关注通知
         @strongify(self);
         NSString *userID = note.userInfo[@"kRelationActionSuccessNotificationUserIDKey"];
@@ -721,6 +724,18 @@ static const CGFloat kFloatingViewOriginY = 230;
     RAC(self, viewModel.dataFetchManager) = RACObserve(self, dataFetchManager);
     RAC(self, viewModel.commonTrackingParameter) = RACObserve(self, commonTrackingParameter);
     RAC(self, videoContainerViewController.viewModel) = RACObserve(self, viewModel);
+}
+
+- (void)handleCloseClick:(UIButton *)btn {
+      [self dismissByClickingCloseButton];
+}
+
+- (void)_onInputButtonClicked:(UIButton *)sender
+{
+    if (!self.model) {
+        return;
+    }
+     [self playView:nil didClickInputWithModel:self.model];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -1740,7 +1755,7 @@ static const CGFloat kFloatingViewOriginY = 230;
     [self.animateManager dismissWithoutGesture];
 }
 
-- (void)topView:(UIViewController *)viewController didClickReportWithModel:(TTShortVideoModel *)model
+- (void)topView:(UIViewController *)viewController didClickReportWithModel:(FHFeedUGCCellModel *)model
 {
     if (!self.model) {
         return;
@@ -1785,7 +1800,7 @@ static const CGFloat kFloatingViewOriginY = 230;
 
 #pragma mark -
 
-- (void)playView:(AWEVideoPlayView *)view didClickInputWithModel:(TTShortVideoModel *)model
+- (void)playView:(AWEVideoPlayView *)view didClickInputWithModel:(FHFeedUGCCellModel *)model
 {
    //point:在详情页点击写评论
     [AWEVideoDetailTracker trackEvent:@"comment_write_button"
@@ -1813,7 +1828,7 @@ static const CGFloat kFloatingViewOriginY = 230;
     [self p_willOpenWriteCommentViewWithReservedText:nil switchToEmojiInput:NO replyToCommentID:nil];
 }
 
-- (void)playView:(AWEVideoPlayView *)view didClickCommentWithModel:(TTShortVideoModel *)model
+- (void)playView:(AWEVideoPlayView *)view didClickCommentWithModel:(FHFeedUGCCellModel *)model
 {
     [AWEVideoDetailTracker trackEvent:@"comment_list_show"
                                 model:self.model

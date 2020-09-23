@@ -237,12 +237,6 @@ NSString *const TSVLastShareActivityName = @"TSVLastShareActivityName";
     self.playCount = 0;
 }
 
-- (void)clickCloseButton
-{
-    if (self.closeButtonDidClick) {
-        self.closeButtonDidClick();
-    }
-}
 
 #pragma mark - Logo
 
@@ -261,12 +255,6 @@ NSString *const TSVLastShareActivityName = @"TSVLastShareActivityName";
     }
 }
 
-- (void)clickWriteCommentButton
-{
-    if (self.writeCommentButtonDidClick) {
-        self.writeCommentButtonDidClick();
-    }
-}
 
 - (void)clickActivityTag
 {

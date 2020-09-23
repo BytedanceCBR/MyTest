@@ -494,7 +494,8 @@
                            @"hidelLine":@"hide_line",
                            @"fromGid":@"from_gid",
                            @"fromGroupSource":@"from_group_source",
-                           @"userRepin":@"user_repin"
+                           @"userRepin":@"user_repin",
+                           @"videoSourceIcon":@"video_source_icon"
                            };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
         return dict[keyName]?:keyName;
@@ -1103,6 +1104,26 @@
     @"showOrigin": @"show_origin",
     @"idStr": @"id_str",
     @"showTips": @"show_tips",
+  };
+  return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+     return dict[keyName]?:keyName;
+  }];
+}
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+@end
+
+@implementation FHFeedContentRawDataSmallVideoShareModel
++ (JSONKeyMapper*)keyMapper
+{
+  NSDictionary *dict = @{
+    @"shareCover": @"share_cover",
+    @"shareDesc": @"share_desc",
+    @"shareTitle": @"share_title",
+    @"shareUrl": @"share_url",
+    @"shareWeiboDesc": @"share_weibo_desc",
   };
   return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
      return dict[keyName]?:keyName;

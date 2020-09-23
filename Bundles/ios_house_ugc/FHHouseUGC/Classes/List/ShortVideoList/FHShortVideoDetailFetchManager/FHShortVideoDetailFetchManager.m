@@ -76,7 +76,7 @@
         [extraDic setObject:fCityId forKey:@"f_city_id"];
     }
     __weak typeof(self)wself = self;
-    self.requestTask = [FHHouseUGCAPI requestFeedListWithCategory:self.categoryId behotTime:behotTime loadMore:YES isFirst:NO listCount:listCount extraDic:extraDic completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
+    self.requestTask = [FHHouseUGCAPI requestFeedListWithCategory:self.categoryId behotTime:behotTime loadMore:YES isFirst:NO listCount:10 extraDic:extraDic completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
         FHFeedListModel *feedListModel = (FHFeedListModel *)model;
         if (error) {
             return;
@@ -98,6 +98,11 @@
 
 - (void)setOtherShortVideoModels:(NSArray<FHFeedUGCCellModel *> *)otherShortVideoModels {
     [self.awemedDetailItems addObjectsFromArray:otherShortVideoModels];
+    NSInteger numberOfItemLeft = self.numberOfShortVideoItems - self.currentIndex;
+    if (numberOfItemLeft<=4) {
+        [self requestDataAutomatically:YES finishBlock:^(NSUInteger increaseCount, NSError *error) {
+        }];
+    }
 }
 
 - (NSArray *)convertModel:(NSArray *)feedList isHead:(BOOL)isHead {
@@ -107,18 +112,18 @@
         if(cellModel.cellType == FHUGCFeedListCellTypeUGCSmallVideo || cellModel.cellType == FHUGCFeedListCellTypeUGCSmallVideo2){
             cellModel.categoryId = self.categoryId;
             cellModel.enterFrom = self.enterFrom;
-            if(cellModel){
-                if(isHead){
+//            if(cellModel){
+//                if(isHead){
                     [resultArray addObject:cellModel];
-                    //去重逻辑
-                    [self removeDuplicaionModel:cellModel.groupId];
-                }else{
-                    NSInteger index = [self getCellIndex:cellModel];
-                    if(index < 0){
-                        [resultArray addObject:cellModel];
-                    }
-                }
-            }
+//                    //去重逻辑
+//                    [self removeDuplicaionModel:cellModel.groupId];
+//                }else{
+//                    NSInteger index = [self getCellIndex:cellModel];
+//                    if(index < 0){
+//                        [resultArray addObject:cellModel];
+//                    }
+//                }
+//            }
         }
     }
     return resultArray;

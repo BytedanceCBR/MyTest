@@ -669,6 +669,15 @@ typedef NS_ENUM(NSUInteger, FHFeedContentStickStyle) {
 @property (nonatomic, copy , nullable) NSString *id;
 @end
 
+@interface FHFeedContentRawDataSmallVideoShareModel : JSONModel
+
+@property (nonatomic, copy , nullable) NSString *shareCover;
+@property (nonatomic, copy , nullable) NSString *shareDesc;
+@property (nonatomic, copy , nullable) NSString *shareTitle;
+@property (nonatomic, copy , nullable) NSString *shareUrl;
+@property (nonatomic, copy , nullable) NSString *shareWeiboDesc;
+@end
+
 @interface FHFeedContentRawDataModel : JSONModel
 
 @property (nonatomic, strong , nullable) FHFeedContentRawDataOperationModel *operation ;
@@ -745,6 +754,9 @@ typedef NS_ENUM(NSUInteger, FHFeedContentStickStyle) {
 @property (nonatomic, copy , nullable) NSString *fromGid;
 //转评来源类型
 @property (nonatomic, copy , nullable) NSString *fromGroupSource;
+
+@property (nonatomic, strong, nullable) FHFeedContentRawDataSmallVideoShareModel *share;
+@property (nonatomic, copy, nullable) NSString *videoSourceIcon;
 
 @end
 

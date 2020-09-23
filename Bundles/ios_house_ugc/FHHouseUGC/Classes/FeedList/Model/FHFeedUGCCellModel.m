@@ -698,6 +698,8 @@
         cellModel.openUrl = model.rawData.detailSchema;
         cellModel.video = model.rawData.video;
         cellModel.itemId  = model.rawData.itemId;
+        cellModel.share = [model.rawData.share copy];
+        cellModel.videoSourceIcon = model.rawData.videoSourceIcon;
         cellModel.userRepin = model.rawData.userRepin;
         cellModel.videoAction = [model.rawData.action copy];
         cellModel.showLookMore = YES;

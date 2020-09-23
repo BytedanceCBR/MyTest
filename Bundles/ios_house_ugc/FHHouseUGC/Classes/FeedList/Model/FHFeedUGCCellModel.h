@@ -264,8 +264,10 @@ typedef NS_ENUM(NSUInteger, FHFeedUGCDiggType) {
 //小视频使用
 @property (nonatomic, strong , nullable) FHFeedContentRawDataVideoModel *video ;
 @property (nonatomic, strong , nullable) FHFeedContentRawDataCommentBaseActionModel *videoAction;
+@property (nonatomic, strong , nullable) FHFeedContentRawDataSmallVideoShareModel *share;
 @property (nonatomic, copy , nullable) NSString *itemId;
 @property (nonatomic, assign ) BOOL userRepin;
+@property (nonatomic, copy, nullable) NSString *videoSourceIcon;
 
 + (FHFeedContentModel *)contentModelFromFeedContent:(NSString *)content;
 

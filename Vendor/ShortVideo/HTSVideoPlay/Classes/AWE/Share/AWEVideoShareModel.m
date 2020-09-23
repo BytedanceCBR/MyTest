@@ -20,6 +20,8 @@
 #import "TTAccountAuthWeChat.h"
 #import <TencentOpenAPI/QQApiInterface.h>
 #import "TTCopyContentItem.h"
+#import "FHFeedUGCCellModel.h"
+#import "TTAccountManager.h"
 @interface AWEVideoShareModel ()
 
 @property (nonatomic, copy) NSString *shareTitle;
@@ -30,7 +32,7 @@
 @property (nonatomic, strong) UIImage *shareImage;
 @property (nonatomic, assign) BOOL isFavorite;
 @property (nonatomic, assign) AWEVideoShareType shareType;
-@property (nonatomic, strong) TTShortVideoModel *model;
+@property (nonatomic, strong) FHFeedUGCCellModel *model;
 
 @end
 
@@ -48,7 +50,7 @@
     return [dict objectForKey:contentItemType];
 }
 
-- (instancetype)initWithModel:(TTShortVideoModel *)model image:(UIImage *)shareImage shareType:(AWEVideoShareType)shareType
+- (instancetype)initWithModel:(FHFeedUGCCellModel *)model image:(UIImage *)shareImage shareType:(AWEVideoShareType)shareType
 {
     self = [super init];
     if (self) {
@@ -63,13 +65,13 @@
             _shareImage = [UIImage drawImage:videoImage inImage:shareImage atPoint:CGPointMake(shareImage.size.width / 2, shareImage.size.height / 2)];
         }
         
-        if (model.shareTitle.length > 0) {
-            _shareTitle = model.shareTitle;
+        if (model.share.shareTitle.length > 0) {
+            _shareTitle = model.share.shareTitle;
         } else {
-            _shareTitle = [NSString stringWithFormat:@"%@的精彩视频", model.author.name];
+            _shareTitle = [NSString stringWithFormat:@"%@的精彩视频", model.user.name];
         }
         
-        NSString *desc = model.shareDesc;
+        NSString *desc = model.share.shareDesc;
         if (desc.length > 0) {
             NSString *content = [desc length] > 30 ? [[desc substringToIndex:30] stringByAppendingString:@"..."] : desc;
             _shareDesc = content;
@@ -78,16 +80,16 @@
         }
         
         if ([model.groupSource isEqualToString:AwemeGroupSource]) {
-            _shareCopyContent = [NSString stringWithFormat:@"%@在幸福里上分享了视频，快来围观！传送门戳我>>%@", model.author.name, model.shareUrl];
+            _shareCopyContent = [NSString stringWithFormat:@"%@在幸福里上分享了视频，快来围观！传送门戳我>>%@", model.user.name, model.share.shareUrl];
         } else if ([model.groupSource isEqualToString:HotsoonGroupSource]) {
-            _shareCopyContent = [NSString stringWithFormat:@"%@在幸福里上分享了视频，快来围观！传送门戳我>>%@", model.author.name, model.shareUrl];
+            _shareCopyContent = [NSString stringWithFormat:@"%@在幸福里上分享了视频，快来围观！传送门戳我>>%@", model.user.name, model.share.shareUrl];
         } else if ([model.groupSource isEqualToString:ToutiaoGroupSource]) {
-            _shareCopyContent = [NSString stringWithFormat:@"%@在幸福里上分享了视频，快来围观！传送门戳我>>%@", model.author.name, model.shareUrl];
+            _shareCopyContent = [NSString stringWithFormat:@"%@在幸福里上分享了视频，快来围观！传送门戳我>>%@", model.user.name, model.share.shareUrl];
         } else {
-            _shareCopyContent = [NSString stringWithFormat:@"%@分享了视频，快来围观！传送门戳我>>%@", model.author.name, model.shareUrl];
+            _shareCopyContent = [NSString stringWithFormat:@"%@分享了视频，快来围观！传送门戳我>>%@", model.user.name, model.share.shareUrl];
         }
         
-        _shareURL = model.shareUrl;
+        _shareURL = model.share.shareUrl;
         _shareImageURL = [model.video.originCover.urlList firstObject];
         _shareType = shareType;
     }
@@ -102,6 +104,8 @@
                                                                                      [self qqZoneContentItem]]];
     return array;
 }
+
+
 
 - (NSArray<id<TTActivityContentItemProtocol>> *)shareContentItems
 {
@@ -155,9 +159,9 @@
                 
                 [secondArray addObject:[self favoriteContentItem]];
                 
-                if (![self.model isAuthorMyself]) {
+                if (![self.model.user.userId isEqualToString:[TTAccountManager userID]]) {
                     //自己发的小视频不支持保存视频、举报、保存视频、分享链接
-                    [secondArray addObject:[self dislikeContentItem]];
+//                    [secondArray addObject:[self dislikeContentItem]];
                     [secondArray addObject:[self reportContentItem]];
 //                    [secondArray addObject:[self saveVideoContentItem]];
                     [secondArray addObject:[self copyContentItem]];
@@ -169,7 +173,7 @@
                                            [secondArray copy],
                                            ];
             } else {
-                if (![self.model isAuthorMyself]) {
+                if (![self.model.user.userId isEqualToString:[TTAccountManager userID]]) {
                     //自己发的小视频不支持保存视频、举报、保存视频、分享链接
                     [secondArray addObject:[self reportContentItem]];
                 } else {

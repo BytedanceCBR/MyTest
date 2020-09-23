@@ -28,9 +28,7 @@ typedef NS_ENUM(NSInteger, TSVGroupSource) {
 // Configuration
 @property (nonatomic, copy, nullable) NSDictionary *commonTrackingParameter;
 @property (nonatomic, strong, nullable) FHFeedUGCCellModel *model;
-@property (nonatomic, copy, nullable) void (^closeButtonDidClick)();
 @property (nonatomic, copy, nullable) void (^moreButtonDidClick)();
-@property (nonatomic, copy, nullable) void (^writeCommentButtonDidClick)();
 @property (nonatomic, copy, nullable) void (^showProfilePopupBlock)();
 @property (nonatomic, copy, nullable) void (^showCommentPopupBlock)();
 @property (nonatomic, strong) TSVVideoDetailPromptManager *detailPromptManager;
