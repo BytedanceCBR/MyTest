@@ -13,7 +13,6 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic,assign) CGSize size;
 @property(nonatomic,assign) BOOL isShow;
 -(void)updateWithDetailModel:(WDDetailModel *)detailModel;
--(void)viewShouldShow:(BOOL)show;
 @end
 
 NS_ASSUME_NONNULL_END

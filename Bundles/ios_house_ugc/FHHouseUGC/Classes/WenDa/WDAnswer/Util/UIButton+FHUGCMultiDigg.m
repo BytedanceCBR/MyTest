@@ -40,4 +40,12 @@
     return @[@"emoji_2", @"emoji_8", @"emoji_11", @"emoji_15", @"emoji_16", @"emoji_17", @"emoji_18", @"emoji_21", @"emoji_24", @"emoji_28", @"emoji_32", @"emoji_46", @"emoji_52", @"emoji_53", @"emoji_54", @"emoji_58", @"emoji_65", @"emoji_96"];
 }
 
+- (void)generateImpactFeedback {
+    if (@available(iOS 10.0, *)){
+        UIImpactFeedbackGenerator *generator = [[UIImpactFeedbackGenerator alloc] initWithStyle: UIImpactFeedbackStyleLight];
+        [generator prepare];
+        [generator impactOccurred];
+    }
+}
+
 @end

@@ -27,6 +27,7 @@
 #import "FHCommonDefines.h"
 #import <ReactiveObjC/ReactiveObjC.h>
 #import "UIButton+FHUGCMultiDigg.h"
+#import "UIDevice+BTDAdditions.h"
 
 static NSString * const kWDHasTipSupportsEmojiInputDefaultKey = @"WDHasTipSupportsEmojiInputDefaultKey";
 
@@ -238,7 +239,7 @@ static NSString * const kWDHasTipSupportsEmojiInputDefaultKey = @"WDHasTipSuppor
 
 - (void)commentButtonClicked:(SSThemedButton *)commentButton
 {
-    [self generateImpactFeedback];
+    [commentButton generateImpactFeedback];
     if ([self.delegate respondsToSelector:@selector(bottomView:commentButtonClicked:)]) {
         [self.delegate bottomView:self commentButtonClicked:commentButton];
     }
@@ -253,12 +254,13 @@ static NSString * const kWDHasTipSupportsEmojiInputDefaultKey = @"WDHasTipSuppor
         // 登录成功之后不自己Pop，先进行页面跳转逻辑，再pop
         [params setObject:@(YES) forKey:@"need_pop_vc"];
         params[@"from_ugc"] = @(YES);
-        __weak typeof(self) wSelf = self;
+        WeakSelf;
         [TTAccountLoginManager showAlertFLoginVCWithParams:params completeBlock:^(TTAccountAlertCompletionEventType type, NSString * _Nullable phoneNum) {
+            StrongSelf;
             if (type == TTAccountAlertCompletionEventTypeDone) {
                 // 登录成功
                 if ([TTAccountManager isLogin]) {
-                    [wSelf diggButtonClicked:diggButton];
+                    [self diggButtonClicked:diggButton];
                 }
             }
         }];
@@ -303,20 +305,20 @@ static NSString * const kWDHasTipSupportsEmojiInputDefaultKey = @"WDHasTipSuppor
 
 - (void)collectButtonClicked:(SSThemedButton *)collectButton
 {
-    [self generateImpactFeedback];
-    self.collectButton.imageView.contentMode = UIViewContentModeCenter;
-    self.collectButton.imageView.transform = CGAffineTransformMakeScale(1, 1);
-    self.collectButton.alpha = 1;
+    [collectButton generateImpactFeedback];
+    collectButton.imageView.contentMode = UIViewContentModeCenter;
+    collectButton.imageView.transform = CGAffineTransformMakeScale(1, 1);
+    collectButton.alpha = 1;
     [UIView animateWithDuration:0.1 delay:0.f options:UIViewAnimationOptionCurveEaseOut animations:^{
-        self.collectButton.imageView.transform = CGAffineTransformMakeScale(0.6, 0.6);
-        self.collectButton.alpha = 0;
+        collectButton.imageView.transform = CGAffineTransformMakeScale(0.6, 0.6);
+        collectButton.alpha = 0;
     } completion:^(BOOL finished){
         if ([self.delegate respondsToSelector:@selector(bottomView:collectButtonClicked:)]) {
             [self.delegate bottomView:self collectButtonClicked:collectButton];
         }
         [UIView animateWithDuration:0.2 delay:0 options:UIViewAnimationOptionCurveEaseIn animations:^{
-            self.collectButton.imageView.transform = CGAffineTransformMakeScale(1, 1);
-            self.collectButton.alpha = 1.f;
+            collectButton.imageView.transform = CGAffineTransformMakeScale(1, 1);
+            collectButton.alpha = 1.f;
         } completion:^(BOOL finished){
         }];
     }];
@@ -327,16 +329,8 @@ static NSString * const kWDHasTipSupportsEmojiInputDefaultKey = @"WDHasTipSuppor
     _writeButton.tintColor = [UIColor tt_themedColorForKey:kColorText1];
 }
 
-- (void)generateImpactFeedback {
-    if (@available(iOS 10.0, *)){
-        UIImpactFeedbackGenerator *generator = [[UIImpactFeedbackGenerator alloc] initWithStyle: UIImpactFeedbackStyleLight];
-        [generator prepare];
-        [generator impactOccurred];
-    }
-}
-
 @end
 
 CGFloat WDDetailGetToolbarHeight(void) {
-    return 44;
+    return 44 + [UIDevice btd_onePixel];
 }

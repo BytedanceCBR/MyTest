@@ -74,12 +74,6 @@
     self.hidden = !isShow;
 }
 
--(void)viewShouldShow:(BOOL)show {
-    if(show != self.isShow) {
-        self.isShow = show;
-    }
-}
-
 - (CGSize)intrinsicContentSize {
     return self.size;
 }

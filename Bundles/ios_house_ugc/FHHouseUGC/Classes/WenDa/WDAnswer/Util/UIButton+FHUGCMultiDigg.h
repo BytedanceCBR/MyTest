@@ -13,6 +13,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 //调用前，保证button已经被加到一个view中
 - (void)enableMulitDiggEmojiAnimation;
+- (void)generateImpactFeedback;
 
 @end
 

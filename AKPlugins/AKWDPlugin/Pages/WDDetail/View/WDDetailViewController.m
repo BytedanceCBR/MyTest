@@ -748,12 +748,8 @@ static NSUInteger const kOldAnimationViewTag = 20161221;
 
 - (void)p_showTitle:(BOOL)show
 {
-    if (show) {
-        self.navigationItem.titleView = self.profileTitleView;
-    }
-    if(show != self.profileTitleView.isShow) {
-        [self.profileTitleView viewShouldShow:show];
-    }
+    self.navigationItem.titleView = self.profileTitleView;
+    self.profileTitleView.isShow = show;
 }
 
 - (void)p_buildToolbarViewIfNeeded
