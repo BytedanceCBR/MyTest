@@ -22,6 +22,7 @@
 #import "FHCommuteManager.h"
 #import "FHEnvContext.h"
 #import "FHUtils.h"
+#import "FHCustomerServicePage.h"
 
 #define mutiItemCellId @"mutiItemCellId"
 
@@ -256,9 +257,9 @@
 }
 
 - (void)callPhone {
-    NSString *phoneUrl = [NSString stringWithFormat:@"telprompt://%@",@"400-6124-360"];
-    NSURL *url = [NSURL URLWithString:phoneUrl];
-    [[UIApplication sharedApplication]openURL:url];
+    [FHCustomerServicePage jumpToLinkChatPage:@{
+        UT_ENTER_FROM: @"minetab"
+    }];
 }
 
 - (void)updateFocusTitles {
