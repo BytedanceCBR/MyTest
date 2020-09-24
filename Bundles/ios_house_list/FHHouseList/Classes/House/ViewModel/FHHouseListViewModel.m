@@ -509,8 +509,11 @@ extern NSString *const INSTANT_DATA_KEY;
     }
     switch (self.houseType) {
         case FHHouseTypeNewHouse:
-            
-            [self requestNewHouseListData:isRefresh query:query offset:offset searchId:searchId];
+            if (isFromRecommend) {
+                [self requestRecommendErshouHouseListData:isRefresh query:query offset:offset searchId:self.recommendSearchId];
+            } else {
+                [self requestNewHouseListData:isRefresh query:query offset:offset searchId:searchId];
+            }
             break;
         case FHHouseTypeSecondHandHouse:
             if (isFromRecommend) {
@@ -830,7 +833,22 @@ extern NSString *const INSTANT_DATA_KEY;
     self.requestTask = task;
 }
 
-
+-(void)requestRecommendNewHouseListData:(BOOL)isRefresh query: (NSString *)query offset: (NSInteger)offset searchId: (NSString *)searchId{
+    
+    [self.requestTask cancel];
+    
+    __weak typeof(self) wself = self;
+    
+    TTHttpTask *task = [FHHouseListAPI recommendNewHouseList:query params:nil offset:offset searchId:searchId class:[FHListSearchHouseModel class] completion:(FHMainApiCompletion)^(FHListSearchHouseModel *  _Nullable model, NSError * _Nullable error) {
+        
+        if (!wself) {
+            return ;
+        }
+        [wself processData:model error:error isRecommendSearch:YES];
+    }];
+    
+    self.requestTask = task;
+}
 
 - (void)processData:(id<FHBaseModelProtocol>)model error: (NSError *)error isRecommendSearch:(BOOL)isRecommendSearch
 {

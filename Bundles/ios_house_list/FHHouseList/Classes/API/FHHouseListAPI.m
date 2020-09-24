@@ -411,6 +411,35 @@
 }
 
 /*
+ *  新房猜你想找列表请求
+ *  @param: query 筛选等请求
+ *  @param: param 其他请求参数
+ *  @param: offset 偏移
+ *  @param: searchId 请求id
+ */
+
++ (TTHttpTask *)recommendNewHouseList:(NSString *_Nullable)query params:(NSDictionary *_Nullable)param offset:(NSInteger)offset searchId:(NSString *_Nullable)searchId class:(Class)cls completion:(void(^_Nullable)(id<FHBaseModelProtocol> _Nullable model , NSError * _Nullable error))completion
+{
+    NSString *queryPath = @"/f100/api/recommend_search";
+    
+    NSMutableDictionary *qparam = [NSMutableDictionary new];
+    if (query.length > 0) {
+        queryPath = [NSString stringWithFormat:@"%@?%@",queryPath,query];
+    }
+    if (param) {
+        [qparam addEntriesFromDictionary:param];
+    }
+    qparam[@"offset"] = @(offset);
+    qparam[@"search_id"] = searchId?:@"";
+    qparam[CHANNEL_ID] = CHANNEL_ID_RECOMMEND_SEARCH_NEW;
+    if ([NSStringFromClass(cls) isEqualToString:NSStringFromClass([FHListSearchHouseModel class])]) {
+        return [FHHouseListAPI querySearchData:queryPath uploadLog:YES params:qparam class:cls logPath:nil completion:completion];
+    }
+    return [FHMainApi queryData:queryPath uploadLog:YES params:qparam class:cls completion:completion];
+    
+}
+
+/*
  *  新房列表请求
  *  @param: query 筛选等请求
  *  @param: param 其他请求参数
@@ -420,7 +449,7 @@
  */
 +(TTHttpTask *)searchNewHouseList:(NSString *_Nullable)query params:(NSDictionary *_Nullable)param offset:(NSInteger)offset searchId:(NSString *_Nullable)searchId sugParam:(NSString *_Nullable)sugParam class:(Class)cls completion:(void(^_Nullable)(id<FHBaseModelProtocol> _Nullable model , NSError * _Nullable error))completion;
 {
-    NSString *queryPath = @"/f100/api/search_court";
+    NSString *queryPath = @"/f100/api/search";
 
     NSMutableDictionary *qparam = [NSMutableDictionary new];
     if (query.length > 0) {
@@ -434,7 +463,8 @@
     if (sugParam) {
         qparam[@"suggestion_params"] = sugParam;
     }
-    qparam[CHANNEL_ID] = CHANNEL_ID_SEARCH_COURT;
+    const NSString * _Nonnull extractedExpr = CHANNEL_ID_SEARCH_COURT;
+    qparam[CHANNEL_ID] = extractedExpr;
     if ([NSStringFromClass(cls) isEqualToString:NSStringFromClass([FHListSearchHouseModel class])]) {
         return [FHHouseListAPI querySearchData:queryPath uploadLog:YES params:qparam class:cls logPath:nil completion:completion];
     }
