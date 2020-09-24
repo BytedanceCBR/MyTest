@@ -87,6 +87,7 @@
     if ([self.overlayViewController isKindOfClass:[AWEVideoDetailControlOverlayViewController class]]) {
         [(AWEVideoDetailControlOverlayViewController *)self.overlayViewController tapToFoldRecCard];
     }
+    [self.videoPlayView pauseOrPlayVideo];
 }
 # pragma mark - Digg Animation
 

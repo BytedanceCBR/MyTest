@@ -70,6 +70,7 @@ static NSString * const VideoPrepareTimeTechKey = @"prepare_time_tech";
 @property (nonatomic, assign) BOOL isPlaying;
 @property (nonatomic, assign) BOOL isVideoDeleted;
 @property (nonatomic, assign) BOOL isFirstInit;
+@property (nonatomic, strong) UIImageView *playImage;
 @property (nonatomic, strong) HTSVideoTimingTracker *timingTracker;
 
 // observers
@@ -244,6 +245,20 @@ static NSString * const VideoPrepareTimeTechKey = @"prepare_time_tech";
         [self _showLoadingIndicator:NO];
         [self.playerController pause];
     }
+}
+
+- (void)pauseOrPlayVideo {
+    if (!self.model) {
+        return;
+    }
+    if (self.isPlaying) {
+        [self.playerController pause];
+    }else {
+         [self.playerController play];
+    }
+    self.isPlaying = !self.isPlaying;
+    self.playImage.hidden = self.isPlaying;
+    
 }
 
 - (void)stop
@@ -456,6 +471,9 @@ static NSString * const VideoPrepareTimeTechKey = @"prepare_time_tech";
     [self addSubview:_miniSlider];
     _miniSlider.hidden = NO;
 
+    [self.playImage mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.center.equalTo(self);
+    }];
     
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
@@ -494,6 +512,18 @@ static NSString * const VideoPrepareTimeTechKey = @"prepare_time_tech";
 - (void)_showLoadingIndicator
 {
     [self _showLoadingIndicator:YES];
+}
+
+
+- (UIImageView *)playImage {
+    if (!_playImage) {
+        UIImageView *playImage = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, 48, 48)];
+        playImage.image = [UIImage imageNamed:@"short_video_play"];
+        [self addSubview:playImage];
+        playImage.hidden = YES;
+        _playImage = playImage;
+    }
+    return _playImage;
 }
 
 - (void)_showLoadingIndicator:(BOOL)show

@@ -54,6 +54,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)pause;
 
+- (void)pauseOrPlayVideo;
+
 @end
 
 NS_ASSUME_NONNULL_END
