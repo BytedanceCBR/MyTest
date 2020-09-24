@@ -3004,15 +3004,28 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
 
 //添加多边形围栏按钮点击
 - (void)addGeoFencePolygonRegion:(NSArray *)points {
-    NSInteger count = 4;
-    CLLocationCoordinate2D *coorArr = malloc(sizeof(CLLocationCoordinate2D) * points.count);
-    
+    [self doClear];
+
     for (NSInteger i = 0; i < points.count; i++) {
-        NSDictionary *poinstDict = points[i];
-        if ([poinstDict isKindOfClass:[NSDictionary class]]) {
-            CLLocationDegrees latRegin = [poinstDict[@"latitude"] floatValue];
-            CLLocationDegrees longitudeRegin = [poinstDict[@"longitude"] floatValue];
-            coorArr[i] = CLLocationCoordinate2DMake(latRegin,longitudeRegin);     //平安里地铁站
+        NSArray *poinstArray = points[i];
+        if ([poinstArray isKindOfClass:[NSArray class]]) {
+
+        CLLocationCoordinate2D *coorArr = malloc(sizeof(CLLocationCoordinate2D) * poinstArray.count);
+
+        for (NSInteger j = 0; j < poinstArray.count; j++) {
+            NSDictionary *poinstItemDict = poinstArray[j];
+            if([poinstItemDict isKindOfClass:[NSDictionary class]]){
+                CLLocationDegrees latRegin = [poinstItemDict[@"latitude"] floatValue];
+                CLLocationDegrees longitudeRegin = [poinstItemDict[@"longitude"] floatValue];
+                coorArr[j] = CLLocationCoordinate2DMake(latRegin,longitudeRegin);     //平安里地铁站
+            }
+        }
+        
+        [self.geoFenceManager addPolygonRegionForMonitoringWithCoordinates:coorArr count:poinstArray.count customID:kRegionPointerKey];
+
+        
+        free(coorArr);
+        coorArr = NULL;
         }
     }
     
@@ -3021,11 +3034,6 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
 //    coorArr[2] = CLLocationCoordinate2DMake(39.900611, 116.418161);     //崇文门地铁站
 //    coorArr[3] = CLLocationCoordinate2DMake(39.941949, 116.435497);     //东直门地铁站
     
-    [self doClear];
-    [self.geoFenceManager addPolygonRegionForMonitoringWithCoordinates:coorArr count:points.count customID:kRegionPointerKey];
-    
-    free(coorArr);
-    coorArr = NULL;
 }
 
 - (BOOL)pauseGeoFenceRegion
