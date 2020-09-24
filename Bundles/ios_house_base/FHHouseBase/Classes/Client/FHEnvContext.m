@@ -1182,11 +1182,11 @@ static NSInteger kGetLightRequestRetryCount = 3;
 }
 
 + (BOOL)isHasShortVideoList {
-//    id res = [BDABTestManager getExperimentValueForKey:@"f_ugc_video_category_open" withExposure:YES];
-//    if(res){
-//        return [res boolValue];
-//    }
-    return YES;
+    id res = [BDABTestManager getExperimentValueForKey:@"discover_type" withExposure:YES];
+    if(res){
+        return [res boolValue];
+    }
+    return NO;
 }
 
 + (BOOL)isIntroduceOpen {
