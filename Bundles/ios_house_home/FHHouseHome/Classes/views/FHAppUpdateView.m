@@ -57,8 +57,8 @@
         }];
         
         UIView *borderView = [[UIView alloc] initWithFrame:CGRectMake(62, 127, 155, 119)];
-        borderView.layer.borderWidth = 1.0/UIScreen.mainScreen.scale;
-        borderView.layer.borderColor = [UIColor colorWithHexString:@"#ff3c00"].CGColor;
+//        borderView.layer.borderWidth = 1.0/UIScreen.mainScreen.scale;
+//        borderView.layer.borderColor = [UIColor colorWithHexString:@"#ff3c00"].CGColor;
         borderView.backgroundColor = [UIColor clearColor];
         [self.contentView addSubview:borderView];
         self.borderView = borderView;
