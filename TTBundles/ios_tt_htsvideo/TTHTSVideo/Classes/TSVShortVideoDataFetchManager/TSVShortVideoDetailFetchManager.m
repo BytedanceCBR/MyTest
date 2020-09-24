@@ -17,13 +17,14 @@
 #import <TTBaseLib/NSDictionary+TTAdditions.h>
 #import "FHHouseUGCAPI.h"
 #import "FHUGCShortVideoRealtorInfoModel.h"
+#import "FHFeedUGCCellModel.h"
 
 
 @interface TSVShortVideoDetailFetchManager ()
 
 @property (nonatomic, copy) NSString *groupID;
 @property (nonatomic, assign) TSVShortVideoListLoadMoreType loadMoreType;
-@property (nonatomic, copy) NSArray<TTShortVideoModel *> *awemedDetailItems;
+@property (nonatomic, copy) NSArray<FHFeedUGCCellModel *> *awemedDetailItems;
 @property (nonatomic, strong) TSVShortVideoDecoupledFetchManager *decoupledFetchManager;
 
 @property (nonatomic, copy) NSString *activityForumID;
@@ -115,25 +116,38 @@
             NSError *mappingError = nil;
             NSMutableDictionary *fixedDict = [NSMutableDictionary dictionary];
             [fixedDict setValue:jsonObj[@"data"] forKey:@"raw_data"];
-            TTShortVideoModel *model = [[TTShortVideoModel alloc] initWithDictionary:fixedDict error:&mappingError];
             
+            NSDictionary *dic = @{@"raw_data":jsonObj[@"data"],@"cell_type":@(FHUGCFeedListCellTypeUGCSmallVideo)};
+            FHFeedUGCCellModel *cellModle = [FHFeedUGCCellModel modelFromFeed:dic];
+            if (!cellModle) {
+                return;
+            }
             [FHHouseUGCAPI requestShortVideoWithGroupId:self.groupID completion:^(id<FHBaseModelProtocol>  _Nonnull models, NSError * _Nonnull errors) {
                  if (!errors && models) {
                      FHUGCShortVideoRealtor *realtor = [(FHUGCShortVideoRealtorInfoModel *)models data];
                      _realtorInfo = realtor.realtor;
                  }
                 if (_realtorInfo) {
-                    TSVUserModel *userModel = model.author;
-                    userModel.avatarURL = _realtorInfo.avatarUrl;
-                    userModel.name = _realtorInfo.realtorName;
-                    userModel.firstBizType = _realtorInfo.firstBizType;
-                    userModel.realtorId = _realtorInfo.realtorId;
-                    userModel.avatarTagUrl = _realtorInfo.imageTag.imageUrl;
-                    model.author = userModel;
+                    FHFeedUGCCellRealtorModel *realtor = [[FHFeedUGCCellRealtorModel alloc] init];
+                    realtor.avatarUrl  = _realtorInfo.avatarUrl;
+                    realtor.avatarTagUrl =  _realtorInfo.imageTag.imageUrl;
+                    realtor.realtorId  = _realtorInfo.realtorId;
+                    realtor.realtorName  =  _realtorInfo.realtorName;
+                    realtor.firstBizType = _realtorInfo.firstBizType;
+                    cellModle.realtor = realtor;
+                    
+                    FHFeedUGCCellUserModel *user = cellModle.user;
+                    
+                    if (realtor.realtorId.length>0) {
+                          user.name = realtor.realtorName;
+                          user.avatarUrl = realtor.avatarUrl;
+                          user.realtorId = realtor.realtorId;
+                          user.firstBizType = realtor.firstBizType;
+                      }
                 }
                 NSMutableArray *awemeDetailItems = [NSMutableArray array];
-                if (model) {
-                    [awemeDetailItems addObject:model];
+                if (cellModle) {
+                    [awemeDetailItems addObject:cellModle];
                 }
                 self.awemedDetailItems = awemeDetailItems;
                 self.isLoadingRequest = NO;

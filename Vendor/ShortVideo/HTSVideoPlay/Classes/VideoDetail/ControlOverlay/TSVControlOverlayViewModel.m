@@ -401,11 +401,14 @@ NSString *const TSVLastShareActivityName = @"TSVLastShareActivityName";
 - (void)clickUserNameButton
 {
         [self goRealtorHomePage];
-//    [self handleAvatarOrUserNameClick];
 }
 
 - (void)goRealtorHomePage {
     if ([self.model.user.firstBizType isEqualToString:@"1"]) {
+        return;
+    }
+    if (!self.model.user.firstBizType) {
+          [self handleAvatarOrUserNameClick];
         return;
     }
      NSDictionary *fhSettings = [self fhSettings];

@@ -1198,12 +1198,18 @@ static const CGFloat kFloatingViewOriginY = 230;
 
     self.commentView.hidden = NO;
 
-    [UIView animateWithDuration:0.2 customTimingFunction:CustomTimingFunctionCubicOut animation:^{
+    [UIView animateWithDuration:.2 customTimingFunction:CustomTimingFunctionCubicOut animation:^{
         self.commentView.frame = CGRectMake(0, kFloatingViewOriginY, CGRectGetWidth(self.view.bounds), CGRectGetHeight(self.view.bounds) - kFloatingViewOriginY);
+    } completion:^(BOOL finished) {
+        if ([self.model.commentCount intValue] == 0) {
+            [self p_willOpenWriteCommentViewWithReservedText:nil switchToEmojiInput:NO replyToCommentID:nil];
+        };
     }];
-
     [self showCommentViewMaskView:YES];
     [self.detailPromptManager updateVisibleFloatingViewCountForVisibility:YES];
+    
+  
+    
 }
 
 - (void)dismissCommentListWithCancelType:(NSString *)cancelType
@@ -1744,7 +1750,7 @@ static const CGFloat kFloatingViewOriginY = 230;
 
 #pragma mark - HTSVideoDetailTopViewDelegate
 
-- (void)topView:(UIViewController *)viewController didClickCloseWithModel:(TTShortVideoModel *)model
+- (void)topView:(UIViewController *)viewController didClickCloseWithModel:(FHFeedUGCCellModel *)model
 {
     [self dismissByClickingCloseButton];
 }
