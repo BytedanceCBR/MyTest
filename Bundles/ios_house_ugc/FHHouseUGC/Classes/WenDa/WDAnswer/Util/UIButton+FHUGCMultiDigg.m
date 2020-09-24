@@ -22,8 +22,15 @@
     });
     if(![TTMultiDiggManager isMulitDiggEmojiAnimationAlreadyRegisteredWithButton:self]) {
         [TTMultiDiggManager registMulitDiggEmojiAnimationWithButton:self withTransformAngle:0 contentInset:nil buttonPosition:TTMultiDiggButtonPositionRight];
+        WeakSelf;
         self.manualMultiDiggDisableBlock = ^BOOL{
-            return ![TTAccountManager isLogin];
+            StrongSelf;
+            if(![TTAccountManager isLogin]) {
+                [self sendActionsForControlEvents:UIControlEventTouchUpInside];
+                return YES;
+            } else {
+                return NO;
+            }
         };
         [self.diggView mas_makeConstraints:^(MASConstraintMaker *make) {
             make.edges.equalTo(self);

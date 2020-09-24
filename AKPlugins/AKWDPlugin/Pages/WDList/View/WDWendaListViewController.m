@@ -708,8 +708,8 @@ static void extracted(WDWendaListViewController *object, WDWendaListViewControll
 
 - (CGRect)p_frameForListView
 {
-    CGRect rect = CGRectMake(0, kNavigationBarHeight, SSWidth(self.view), SSHeight(self.view) - kNavigationBarHeight);
-    return rect;
+    CGFloat offset = self.ttNavigationBar.bottom;
+    return CGRectMake(0,offset, SSWidth(self.view), SSHeight(self.view) - offset);
 }
 
 #pragma mark - Notification

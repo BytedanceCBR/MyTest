@@ -551,7 +551,7 @@ static NSUInteger const kOldAnimationViewTag = 20161221;
     if (self.headerView) {
         self.headerView.hidden = NO;
         if (self.detailModel.shouldHideHeader) {
-            CGFloat minTop = kNavigationBarHeight - self.headerView.height;
+            CGFloat minTop = self.ttNavigationBar.bottom - self.headerView.height;
             self.headerView.top = minTop;
             self.detailView.top = self.headerView.bottom;
         }
@@ -917,7 +917,7 @@ static NSUInteger const kOldAnimationViewTag = 20161221;
 
 - (CGRect)p_frameForHeaderView
 {
-    CGFloat yOffset = kNavigationBarHeight;
+    CGFloat yOffset = self.ttNavigationBar.bottom;
     if (yOffset < 64) {
         yOffset = 64;
     }
@@ -1725,7 +1725,7 @@ static NSUInteger const kOldAnimationViewTag = 20161221;
 - (void)updateHeaderViewWithOffset:(CGFloat)offsetY scrollView:(UIScrollView *)scrollView
 {
     if (offsetY >= 0) {
-        CGFloat minTop = kNavigationBarHeight - self.headerView.height;
+        CGFloat minTop = self.ttNavigationBar.bottom - self.headerView.height;
         if ((self.headerView.top - offsetY) < minTop) {
             self.headerView.top = minTop;
             self.detailView.top = self.headerView.bottom;
@@ -1735,7 +1735,7 @@ static NSUInteger const kOldAnimationViewTag = 20161221;
             [scrollView setContentOffset:CGPointMake(0.0f, 0.0f)];
         }
     } else {
-        CGFloat maxTop = kNavigationBarHeight;
+        CGFloat maxTop = self.ttNavigationBar.bottom;
         if ((self.headerView.top - offsetY) >= maxTop) {
             self.headerView.top = maxTop - offsetY;
             self.detailView.top = maxTop + self.headerView.height;
