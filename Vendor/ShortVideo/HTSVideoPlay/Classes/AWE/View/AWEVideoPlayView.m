@@ -457,6 +457,7 @@ static NSString * const VideoPrepareTimeTechKey = @"prepare_time_tech";
         if([player isKindOfClass:[TTVideoEngine class]]){
             TTVideoEngine *videoEngine = (TTVideoEngine *)player;
             [videoEngine setTag:@"short_video"];
+            [videoEngine configResolution:TTVideoEngineResolutionType1080P];
         }
     }
 

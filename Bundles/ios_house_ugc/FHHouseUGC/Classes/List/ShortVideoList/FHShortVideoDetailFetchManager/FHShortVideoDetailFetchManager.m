@@ -20,10 +20,11 @@
 #import "FHHouseUGCAPI.h"
 #import "TTHttpTask.h"
 #import "FHFeedListModel.h"
+#import "FHMainApi.h"
+#import "NSDictionary+BTDAdditions.h"
 
 
 @interface FHShortVideoDetailFetchManager()
-@property (nonatomic, copy) NSString *groupID;
 @property (nonatomic, strong) NSMutableArray<FHFeedUGCCellModel *> *awemedDetailItems;
 @property (nonatomic, strong) TSVShortVideoDecoupledFetchManager *decoupledFetchManager;
 @property(nonatomic, weak) TTHttpTask *requestTask;
@@ -55,6 +56,38 @@
 //    return nil;
 //}
 
+
+- (void)requestDataForGroupIdAutomatically:(BOOL)isAutomatically
+                               finishBlock:(TTFetchListFinishBlock)finishBlock
+{
+    NSString *urlStr = [ArticleURLSetting shortVideoInfoURL];
+    NSDictionary *params = @{
+        @"group_id" : self.groupID,
+    };
+    WeakSelf;
+    [[TTNetworkManager shareInstance] requestForJSONWithURL:urlStr params:params method:@"POST" needCommonParams:YES requestSerializer:nil responseSerializer:[HTSVideoPlayJSONResponseSerializer class] autoResume:YES callback:^(NSError *error, id jsonObj) {
+        StrongSelf;
+        if (error || jsonObj == nil || jsonObj[@"data"] == nil) {
+            if (finishBlock){
+                finishBlock(0,error);
+            }
+            return;
+        }
+        if (![jsonObj isKindOfClass:[NSDictionary class]]) {
+            return;
+        }
+        NSDictionary *dic = @{@"raw_data":jsonObj[@"data"],@"cell_type":@(FHUGCFeedListCellTypeUGCSmallVideo)};
+        FHFeedUGCCellModel *cellModle = [FHFeedUGCCellModel modelFromFeed:dic];
+        if (!cellModle) {
+            return;
+        }
+        [self.awemedDetailItems addObject:cellModle];
+        if (wself.dataDidChangeBlock) {
+            wself.dataDidChangeBlock();
+        }
+    }];
+}
+
 - (void)requestDataAutomatically:(BOOL)isAutomatically
                      finishBlock:(TTFetchListFinishBlock)finishBlock
 {
@@ -85,6 +118,11 @@
             dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
                 NSArray *result = [wself convertModel:feedListModel.data isHead:NO];
                 [wself.awemedDetailItems addObjectsFromArray:result];
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    if (wself.dataDidChangeBlock) {
+                        wself.dataDidChangeBlock();
+                    }
+                });
             });
         }
     }];
@@ -93,7 +131,12 @@
 
 - (void)setCurrentShortVideoModel:(FHFeedUGCCellModel *)currentShortVideoModel {
     self.awemedDetailItems = [[NSMutableArray alloc]init];
-    [self.awemedDetailItems addObject:currentShortVideoModel];
+    if (currentShortVideoModel) {
+            [self.awemedDetailItems addObject:currentShortVideoModel];
+    }else {
+        [self requestDataForGroupIdAutomatically:YES finishBlock:^(NSUInteger increaseCount, NSError *error) {
+        }];
+    }
 }
 
 - (void)setOtherShortVideoModels:(NSArray<FHFeedUGCCellModel *> *)otherShortVideoModels {

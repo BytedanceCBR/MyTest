@@ -27,7 +27,7 @@ static TTVResolutionStore *resolutionStore;
 {
     self = [super init];
     if (self) {
-        _lastResolution = TTVPlayerResolutionTypeSD;
+        _lastResolution = TTVPlayerResolutionTypeFullHD;
         _autoResolution = _lastResolution;
         if ([[NSUserDefaults standardUserDefaults] integerForKey:kLastResolution]) {
             _lastResolution = [[NSUserDefaults standardUserDefaults] integerForKey:kLastResolution];

@@ -291,7 +291,6 @@ static const CGFloat kFloatingViewOriginY = 230;
                                                      @"url": [paramObj.sourceURL absoluteString] ?: @"",
                                                      }];
         }
-
         if (params[@"log_pb"]) {
             id logPb = [NSJSONSerialization JSONObjectWithData:[params[@"log_pb"] dataUsingEncoding:NSUTF8StringEncoding] options:0 error:nil];
             NSAssert(logPb, @"logPb must not be nil");
@@ -302,21 +301,21 @@ static const CGFloat kFloatingViewOriginY = 230;
         [self initReportOptions];
         [self initProperty];
         self.dataFetchManager = [[FHShortVideoDetailFetchManager alloc]init];
-        self.dataFetchManager.currentShortVideoModel = extraParams[@"current_video"];
-        self.dataFetchManager.otherShortVideoModels = extraParams[@"other_videos"];
         self.dataFetchManager.shouldShowNoMoreVideoToast = YES;
         self.dataFetchManager.categoryId = @"f_house_smallvideo_flow";
-
+        self.dataFetchManager.groupID = self.groupID;
+        self.dataFetchManager.currentShortVideoModel = extraParams[@"current_video"];
+        self.dataFetchManager.otherShortVideoModels = extraParams[@"other_videos"];
         @weakify(self);
-//        [RACObserve(self, dataFetchManager) subscribeNext:^(id  _Nullable x) {
-//            @strongify(self);
-//            if ([self.dataFetchManager respondsToSelector:@selector(dataDidChangeBlock)]) {
-//                self.dataFetchManager.dataDidChangeBlock = ^{
-//                    @strongify(self);
-//                    [self updateData];
-//                };
-//            }
-//        }];
+        [RACObserve(self, dataFetchManager) subscribeNext:^(id  _Nullable x) {
+            @strongify(self);
+            if ([self.dataFetchManager respondsToSelector:@selector(dataDidChangeBlock)]) {
+                self.dataFetchManager.dataDidChangeBlock = ^{
+                    @strongify(self);
+                    [self updateData];
+                };
+            }
+        }];
 
         if (extraParams[HTSVideoDetailExitManager]) {
             self.exitManager = extraParams[HTSVideoDetailExitManager];
@@ -855,7 +854,7 @@ static const CGFloat kFloatingViewOriginY = 230;
 
 #pragma mark - getter & setter
 
-- (void)setModel:(TTShortVideoModel *)model
+- (void)setModel:(FHFeedUGCCellModel *)model
 {
     if ([model isEqual:_model]) {
         return;
