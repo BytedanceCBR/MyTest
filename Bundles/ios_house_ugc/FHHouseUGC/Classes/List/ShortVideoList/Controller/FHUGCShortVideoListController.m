@@ -23,6 +23,7 @@
 #import "FHUGCShortVideoFlowLayout.h"
 #import "FHBaseCollectionView.h"
 #import "UIViewController+Track.h"
+#import "ExploreLogicSetting.h"
 
 @interface FHUGCShortVideoListController ()<SSImpressionProtocol>
 
@@ -61,6 +62,7 @@
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationDidBecomeActive) name:UIApplicationDidBecomeActiveNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationDidEnterBackground) name:UIApplicationDidEnterBackgroundNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(refreshData) name:kExploreMixedListRefreshTypeNotification object:nil];
 }
 
 - (void)setTracerDict:(NSMutableDictionary *)tracerDict {
@@ -169,6 +171,12 @@
     }];
 }
 
+- (void)refreshData {
+    if(![FHEnvContext sharedInstance].isShowingHomeHouseFind){
+        [self scrollToTopAndRefresh];
+    }
+}
+
 - (void)startLoadData {
     if ([TTReachability isNetworkConnected]) {
         [_viewModel requestData:YES first:YES];
@@ -190,16 +198,24 @@
 }
 
 - (void)scrollToTopAndRefreshAllData {
-    [self.collectionView scrollRectToVisible:CGRectMake(0, 0, 1, 1) animated:NO];
+    CGPoint offset = self.collectionView.contentOffset;
+    offset.y = 0;
+    [self.collectionView setContentOffset:offset animated:NO];
     [self startLoadData];
 }
 
 - (void)scrollToTopAndRefresh {
-    if(self.viewModel.isRefreshingTip || self.isLoadingData){
+    if(self.viewModel.isRefreshingTip || self.isLoadingData || self.dataList.count <= 0){
         return;
     }
-    [self.collectionView scrollRectToVisible:CGRectMake(0, 0, 1, 1) animated:NO];
-    [self.collectionView triggerPullDown];
+    
+    CGPoint offset = self.collectionView.contentOffset;
+    offset.y = 0;
+    [self.collectionView setContentOffset:offset animated:NO];
+    
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        [self.collectionView triggerPullDown];
+    });
 }
 
 - (void)retryLoadData {

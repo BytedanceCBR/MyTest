@@ -11,6 +11,7 @@
 #import "FHFeedUGCCellModel.h"
 #import "UIImageView+fhUgcImage.h"
 #import "UIFont+House.h"
+#import "FHUGCCellHelper.h"
 
 @interface FHUGCShortVideoCell ()
 
@@ -99,9 +100,9 @@
     //图片
     if (cellModel.imageList.count > 0) {
         FHFeedContentImageListModel *imageModel = [cellModel.imageList firstObject];
-        if (imageModel && imageModel.url.length > 0) {
-            NSURL *url = [NSURL URLWithString:imageModel.url];
-            [self.bgView fh_setImageWithURL:url placeholder:nil reSize:self.contentView.bounds.size];
+        if (imageModel) {
+            NSArray *urls = [FHUGCCellHelper convertToImageUrls:imageModel];
+            [self.bgView fh_setImageWithURLs:urls placeholder:nil reSize:self.bgView.size];
         }else{
             self.bgView.image = nil;
         }

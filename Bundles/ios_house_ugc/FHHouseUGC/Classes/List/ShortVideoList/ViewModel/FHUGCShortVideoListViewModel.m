@@ -236,6 +236,7 @@
                         [wself.viewController.emptyView showEmptyWithTip:tipStr errorImageName:kFHErrorMaskNetWorkErrorImageName showRetry:YES];
                         wself.refreshFooter.hidden = YES;
                     }
+                    
                     [wself.collectionView reloadData];
 
                     NSString *refreshTip = feedListModel.tips.displayInfo;
