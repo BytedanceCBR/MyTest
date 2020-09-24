@@ -267,7 +267,10 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
 
 - (void)changeHouseType
 {
-    [self doClear];
+    if (self.mapView.zoomLevel > 13){
+        [self doClear];
+    }
+    
     [self addClickTabLog];
     
     [self.mapView removeAnnotations:(NSArray <MAAnnotation>*)self.oldHouseAnnotions];
@@ -1648,10 +1651,12 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
                 UIImage *bgImg = SYS_IMG(@"mapsearch_area_bg_red");
                 annotationView.layer.contents = (id)[bgImg CGImage];
                 self.houseAnnotationSlectNidView = annotationView;
+                annotationView.zIndex = 1;
             }else{
                 annotationView.frame = CGRectMake(0, 0, annotationView.frame.size.width, annotationView.frame.size.height);
                 UIImage *bgImg = SYS_IMG(@"mapsearch_area_bg");
                 annotationView.layer.contents = (id)[bgImg CGImage];
+                annotationView.zIndex = 0;
             }
 
             return annotationView;
@@ -2535,6 +2540,7 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
 -(void)chooseSubWay
 {
     self.selectionStation = nil;
+    [self doClear];
     
     [self.tipView removeFromSuperview];
     self.showMode = FHMapSearchShowModeSubway;
@@ -2560,6 +2566,8 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
 //    }
     
     [self.requestHouseTask cancel];
+    
+    [self doClear];
     
     [self addClickDrawLineOrSubwayLog:@"click_circlefind" clickType:@"circlefind"];
     [self addEnterDrawOrSubwayLog:@"enter_circlefind"];
