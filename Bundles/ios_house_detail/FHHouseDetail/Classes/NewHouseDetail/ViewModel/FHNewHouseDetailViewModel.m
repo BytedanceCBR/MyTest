@@ -183,36 +183,7 @@
         FHNewHouseDetailSurroundingSM *surroundingSM = [[FHNewHouseDetailSurroundingSM alloc] initWithDetailModel:self.detailData];
         surroundingSM.sectionType = FHNewHouseDetailSectionTypeSurrounding;
         [sectionModels addObject:surroundingSM];
-
     }
-    //地图
-//    if(model.data.coreInfo.gaodeLat && model.data.coreInfo.gaodeLng){
-//        FHDetailStaticMapCellModel *staticMapModel = [[FHDetailStaticMapCellModel alloc] init];
-//        staticMapModel.baiduPanoramaUrl = model.data.coreInfo.baiduPanoramaUrl;
-//        staticMapModel.mapCentertitle = model.data.coreInfo.name;
-//        staticMapModel.gaodeLat = model.data.coreInfo.gaodeLat;
-//        staticMapModel.gaodeLng = model.data.coreInfo.gaodeLng;
-//        staticMapModel.houseId = model.data.coreInfo.id;
-//        staticMapModel.houseType = [NSString stringWithFormat:@"%ld",(long)FHHouseTypeNewHouse];
-//        //        staticMapModel.title = model.data.coreInfo.name;
-//        staticMapModel.tableView = self.tableView;
-//        staticMapModel.staticImage = model.data.coreInfo.gaodeImage;
-//        staticMapModel.houseModelType = FHHouseModelTypeNewLocation;
-//        [self.items addObject:staticMapModel];
-//
-//    } else{
-//        NSString *eventName = @"detail_map_location_failed";
-//        NSDictionary *cat = @{@"status": @(1)};
-//
-//        NSMutableDictionary *params = [NSMutableDictionary new];
-//        [params setValue:@"用户点击详情页地图进入地图页失败" forKey:@"desc"];
-//        [params setValue:@"经纬度缺失" forKey:@"reason"];
-//        [params setValue:model.data.coreInfo.id forKey:@"house_id"];
-//        [params setValue:@(FHHouseTypeNewHouse) forKey:@"house_type"];
-//        [params setValue:model.data.coreInfo.name forKey:@"name"];
-//
-//        [[HMDTTMonitor defaultManager] hmdTrackService:eventName metric:nil category:cat extra:params];
-//    }
     
     //楼栋信息
     if (model.data.buildingInfo && model.data.buildingInfo.list.count) {
@@ -220,7 +191,6 @@
         BuildingSM.sectionType = FHNewHouseDetailSectionTypeBuildings;
         [sectionModels addObject:BuildingSM];
     }
-    
     self.sectionModels = sectionModels.copy;
     [self.detailController updateLayout:model.isInstantData];
     

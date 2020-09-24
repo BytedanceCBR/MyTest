@@ -18,7 +18,7 @@
 @property (nonatomic, weak) UIView *contentView;
 @property (nonatomic, weak) UIImageView *bgImageView;
 @property (nonatomic, weak) UIView *borderView;
-@property (nonatomic, weak) UILabel *versionLabel;
+//@property (nonatomic, weak) UILabel *versionLabel;
 @property (nonatomic, weak) UILabel *contentLabel;
 
 @property (nonatomic, weak) UIButton *closeButton;
@@ -66,20 +66,20 @@
             make.edges.mas_equalTo(UIEdgeInsetsMake(127, 62, 154, 62));
         }];
         
-        UILabel *versionLabel = [[UILabel alloc] initWithFrame:CGRectMake(CGRectGetMidX(self.contentView.frame), 105, 0, 14)];
-        versionLabel.font = [UIFont themeFontRegular:10];
-        versionLabel.textColor = [UIColor colorWithHexString:@"#ff3c00"];
-        versionLabel.backgroundColor = [UIColor clearColor];
-        [self.contentView addSubview:versionLabel];
-        self.versionLabel = versionLabel;
-        [self.versionLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.centerX.mas_equalTo(self.contentView);
-            make.top.mas_equalTo(105);
-            make.height.mas_equalTo(14);
-        }];
+//        UILabel *versionLabel = [[UILabel alloc] initWithFrame:CGRectMake(CGRectGetMidX(self.contentView.frame), 105, 0, 14)];
+//        versionLabel.font = [UIFont themeFontRegular:10];
+//        versionLabel.textColor = [UIColor colorWithHexString:@"#ff3c00"];
+//        versionLabel.backgroundColor = [UIColor clearColor];
+//        [self.contentView addSubview:versionLabel];
+//        self.versionLabel = versionLabel;
+//        [self.versionLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+//            make.centerX.mas_equalTo(self.contentView);
+//            make.top.mas_equalTo(105);
+//            make.height.mas_equalTo(14);
+//        }];
         
         UILabel *contentLabel = [[UILabel alloc] init];
-        contentLabel.textColor = versionLabel.textColor;
+        contentLabel.textColor = [UIColor colorWithHexString:@"#ff3c00"];;
         contentLabel.font = [UIFont themeFontRegular:12];
         contentLabel.numberOfLines = 0;
         contentLabel.backgroundColor = [UIColor clearColor];
@@ -96,7 +96,7 @@
 }
 
 - (void)updateInfoWithVersion:(NSString *)version content:(NSString *)content forceUpdate:(BOOL )forceUpdate {
-    self.versionLabel.text = version;
+//    self.versionLabel.text = version;
     if (content.length) {
         NSMutableAttributedString *string = [[NSMutableAttributedString alloc] initWithString:content attributes:@{NSForegroundColorAttributeName : [UIColor colorWithHexString:@"#ff3c00"], NSFontAttributeName : [UIFont themeFontRegular:12]}];
         NSMutableParagraphStyle *style = [NSParagraphStyle defaultParagraphStyle].mutableCopy;
@@ -115,47 +115,30 @@
     [updateButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     updateButton.titleLabel.font = [UIFont themeFontRegular:12];
     [updateButton setTitle:@"立即升级" forState:UIControlStateNormal];
-    updateButton.layer.shadowColor = [UIColor colorWithHexString:@"#CD2020"].CGColor;
-    updateButton.layer.shadowOffset = CGSizeMake(0, 2);
     [self.contentView addSubview:updateButton];
     self.updateButton = updateButton;
-    if (forceUpdate) {
-        updateButton.layer.shadowRadius = 90;
-        [self.updateButton mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.left.mas_equalTo(40);
-            make.right.mas_equalTo(-40);
-            make.bottom.mas_equalTo(-75);
-            make.height.mas_equalTo(32);
-        }];
-    } else {
+    [self.updateButton mas_updateConstraints:^(MASConstraintMaker *make) {
+        make.left.mas_equalTo(35);
+        make.right.mas_equalTo(-35);
+        make.bottom.mas_equalTo(-62);
+        make.height.mas_equalTo(51);
+    }];
+    
+    if (!forceUpdate) {
         UIButton *closeButton = [UIButton buttonWithType:UIButtonTypeCustom];
         [closeButton btd_addActionBlockForTouchUpInside:^(__kindof UIButton * _Nonnull sender) {
             if (weakSelf.closeBlock) {
                 weakSelf.closeBlock();
             }
         }];
-        closeButton.layer.masksToBounds = YES;
-        closeButton.layer.borderWidth = 1.0/UIScreen.mainScreen.scale;
-        closeButton.layer.borderColor = [UIColor colorWithHexString:@"#ffd576"].CGColor;
-        closeButton.layer.cornerRadius = 16;
-        [closeButton setTitle:@"暂不升级" forState:UIControlStateNormal];
-        [closeButton setTitleColor:[UIColor colorWithHexString:@"#ffd576"] forState:UIControlStateNormal];
-        closeButton.titleLabel.font = [UIFont themeFontRegular:12];
+        [closeButton setImage:[UIImage imageNamed:@"app_update_close"] forState:UIControlStateNormal];
         [self.contentView addSubview:closeButton];
         self.closeButton = closeButton;
         [self.closeButton mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.left.mas_equalTo(23);
-            make.bottom.mas_equalTo(-75);
-            make.width.mas_equalTo(114);
-            make.height.mas_equalTo(32);
-        }];
-        
-        updateButton.layer.shadowRadius = 50;
-        [self.updateButton mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.right.mas_equalTo(-23);
-            make.bottom.mas_equalTo(-75);
-            make.width.mas_equalTo(114);
-            make.height.mas_equalTo(32);
+            make.centerX.mas_equalTo(self.contentView);
+            make.bottom.mas_equalTo(-13);
+//            make.width.mas_equalTo(114);
+//            make.height.mas_equalTo(32);
         }];
     }
 }

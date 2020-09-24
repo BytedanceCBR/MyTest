@@ -46,7 +46,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)startLoadData;
 
 // 刷新数据
-- (void)reloadData;
+//- (void)reloadData;
 
 // 是否弹出ugc表单
 // FHHouseFillFormConfigModel

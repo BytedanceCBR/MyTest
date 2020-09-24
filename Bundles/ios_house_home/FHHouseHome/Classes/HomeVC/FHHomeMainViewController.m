@@ -447,11 +447,11 @@ static NSString * const kFUGCPrefixStr = @"fugc";
     //    NSString * baseUrl = @"https://i.snssdk.com";
     self.appUpdateHelper = [[TTAppUpdateHelper alloc] initWithInstallID:iidValue deviceID:didValue channel:channelValue aid:@"1370" delegate:self];
     [self.appUpdateHelper startCheckVersion];
-#if DEBUG
-    self.appUpdateHelper.maxAppStorePopTimes = 10;
+//#if DEBUG
+    self.appUpdateHelper.maxAppStorePopTimes = 100;
     self.appUpdateHelper.maxTestFlightPopTimes = 100;
-    self.appUpdateHelper.maxInhousePopTimes = 10;
-#endif
+    self.appUpdateHelper.maxInhousePopTimes = 100;
+//#endif
 }
 
 #pragma mark - TTAppUpdateHelperProtocol
