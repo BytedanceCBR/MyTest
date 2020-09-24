@@ -47,6 +47,7 @@
 #import "AWEVideoContainerAdCollectionViewCell.h"
 #import "AWEVideoDetailControlAdOverlayViewController.h"
 #import "TTShortVideoModel+TTAdFactory.h"
+#import "ToastManager.h"
 
 // 与西瓜视频共用的流量播放开关，全局变量哦，名字别乱改
 BOOL kBDTAllowCellularVideoPlay = NO;
@@ -949,10 +950,15 @@ const static CGFloat kAWEVideoContainerSpacing = 2;
     BOOL isFreeFlow = [[TTFlowStatisticsManager sharedInstance] hts_isFreeFlow];
 
     if (!isFreeFlow && self.needCellularAlert && BTDNetworkConnected() && !BTDNetworkWifiConnected()) {
-        if (kTSVCellularAlertShouldShow) {
-            kTSVCellularAlertShouldShow = NO;
-            [TTIndicatorView showWithIndicatorStyle:TTIndicatorViewStyleImage indicatorText:@"正在使用流量播放" indicatorImage:nil autoDismiss:YES dismissHandler:nil];
-        }
+        static dispatch_once_t onceToken;
+        dispatch_once(&onceToken, ^{
+            [[ToastManager manager] showToast:@"当前处在非WiFi环境，注意流量消耗哦！"];
+        });
+//        if (kTSVCellularAlertShouldShow) {
+//            kTSVCellularAlertShouldShow = NO;
+//
+//            [TTIndicatorView showWithIndicatorStyle:TTIndicatorViewStyleImage indicatorText:@"当前处在非WiFi环境，注意流量消耗哦！" indicatorImage:nil autoDismiss:YES dismissHandler:nil];
+//        }
     }
     
     !completion ?: completion(YES);
