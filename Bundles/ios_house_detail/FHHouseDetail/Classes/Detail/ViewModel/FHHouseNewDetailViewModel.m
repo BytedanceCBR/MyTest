@@ -647,7 +647,6 @@
         //        staticMapModel.title = model.data.coreInfo.name;
         staticMapModel.tableView = self.tableView;
         staticMapModel.staticImage = model.data.coreInfo.gaodeImage;
-        staticMapModel.mapOnly = NO;
         staticMapModel.houseModelType = FHHouseModelTypeNewLocation;
         [self.items addObject:staticMapModel];
         

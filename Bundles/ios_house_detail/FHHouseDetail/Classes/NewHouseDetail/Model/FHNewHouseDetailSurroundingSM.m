@@ -32,7 +32,6 @@
         staticMapModel.houseId = model.data.coreInfo.id;
         staticMapModel.houseType = [NSString stringWithFormat:@"%ld",(long)FHHouseTypeNewHouse];
         staticMapModel.staticImage = model.data.coreInfo.gaodeImage;
-        staticMapModel.mapOnly = NO;
         self.baiduPanoramaUrl = staticMapModel.baiduPanoramaUrl;
         self.centerPoint = CLLocationCoordinate2DMake([staticMapModel.gaodeLat floatValue], [staticMapModel.gaodeLng floatValue]);
         self.mapCentertitle = staticMapModel.mapCentertitle;

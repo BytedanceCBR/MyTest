@@ -29,6 +29,7 @@
 #import "TTAccountManager.h"
 #import "UIDevice+BTDAdditions.h"
 #import <FHHouseBase/NSObject+FHOptimize.h>
+#import "FHAppUpdateView.h"
 
 static NSString * const kFUGCPrefixStr = @"fugc";
 
@@ -43,6 +44,7 @@ static NSString * const kFUGCPrefixStr = @"fugc";
 @property (nonatomic, assign) BOOL isShowLoginTip;
 @property (nonatomic, assign) BOOL firstLanchCanShowLogin;
 @property (nonatomic, strong) TTAppUpdateHelper *appUpdateHelper;
+@property (nonatomic, weak) FHAppUpdateView *appUpdateView;
 @end
 
 @implementation FHHomeMainViewController
@@ -445,6 +447,11 @@ static NSString * const kFUGCPrefixStr = @"fugc";
     //    NSString * baseUrl = @"https://i.snssdk.com";
     self.appUpdateHelper = [[TTAppUpdateHelper alloc] initWithInstallID:iidValue deviceID:didValue channel:channelValue aid:@"1370" delegate:self];
     [self.appUpdateHelper startCheckVersion];
+#if DEBUG
+    self.appUpdateHelper.maxAppStorePopTimes = 10;
+    self.appUpdateHelper.maxTestFlightPopTimes = 100;
+    self.appUpdateHelper.maxInhousePopTimes = 10;
+#endif
 }
 
 #pragma mark - TTAppUpdateHelperProtocol
@@ -459,13 +466,36 @@ static NSString * const kFUGCPrefixStr = @"fugc";
         [[FHPopupViewManager shared] outerPopupViewHide];
         return;
     }
-    
+    CGFloat delay = 0;
+    if (model.latency.floatValue > 0) {
+        delay = model.latency.floatValue;
+    }
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delay * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        __weak typeof(self) weakSelf = self;
+        FHAppUpdateView *appUpdateView = [[FHAppUpdateView alloc] initWithFrame:self.view.bounds];
+        [appUpdateView setUpdateBlock:^{
+            if (weakSelf.appUpdateHelper.updateBlock) {
+                weakSelf.appUpdateHelper.updateBlock();
+            }
+        }];
+        [appUpdateView setCloseBlock:^{
+            if (weakSelf.appUpdateHelper.closeBlock) {
+                weakSelf.appUpdateHelper.closeBlock();
+            }
+        }];
+        [appUpdateView updateInfoWithVersion:model.tipsVersionName content:model.whatsNew forceUpdate:model.forceUpdate.boolValue];
+        [appUpdateView show];
+        self.appUpdateView = appUpdateView;
+    });
 }
 
 /**
  告诉代理需要关闭弹窗,代理对象应该只在该方法中关闭弹窗
  */
 - (void)dismissTipView {
+    if (self.appUpdateView) {
+        [self.appUpdateView dismiss];
+    }
     [[FHPopupViewManager shared] outerPopupViewHide];
 }
 
@@ -480,7 +510,12 @@ static NSString * const kFUGCPrefixStr = @"fugc";
  TF弹窗必须实现，在此处理TF跳转下载链接的网页
  */
 - (void)openWithDownloadUrl:(NSString *)downloadUrl {
-    
+    if([downloadUrl hasPrefix:@"http://"] ||
+       [downloadUrl hasPrefix:@"https://"]) {
+        NSURL *url = [NSURL URLWithString:[[NSString stringWithFormat:@"sslocal://webview?url=%@",downloadUrl] stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLQueryAllowedCharacterSet]]];
+        TTRouteUserInfo *routeInfo = [[TTRouteUserInfo alloc] initWithInfo:@{@"hide_more":@(YES)}];
+        [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:routeInfo];
+    }
 }
 
 /*
@@ -488,6 +523,7 @@ static NSString * const kFUGCPrefixStr = @"fugc";
  也可以通过实现此方法自行进行判断
  */
 - (BOOL)decideIsInhouseApp {
+    return NO;
     return [TTSandBoxHelper isInHouseApp];
 }
 
