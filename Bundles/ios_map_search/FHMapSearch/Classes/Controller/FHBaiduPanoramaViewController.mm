@@ -238,6 +238,8 @@ char *const FHBaiduPanoramaPOISearchResultTypeName = "FHBaiduPanoramaPOISearchRe
     }];
         
     [self setupDefaultNavBar:NO];
+    [self.customNavBarView.leftBtn setBackgroundImage:FHBackWhiteImage forState:UIControlStateNormal];
+    [self.customNavBarView.leftBtn setBackgroundImage:FHBackWhiteImage forState:UIControlStateHighlighted];
     self.customNavBarView.title.textColor = [UIColor themeWhite];
     [self.customNavBarView cleanStyle:YES];
     [self.customNavBarView setNaviBarTransparent:YES];
