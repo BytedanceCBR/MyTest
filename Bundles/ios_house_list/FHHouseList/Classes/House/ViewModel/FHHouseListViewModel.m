@@ -1147,7 +1147,8 @@ extern NSString *const INSTANT_DATA_KEY;
         }else{
             [self updateTableViewWithMoreData:hasMore];
         }
-        if (self.houseType != FHHouseTypeSecondHandHouse) {
+        ///TODO: 确认一下新房列表底部展示“没有更多信息了”文案是否正确？
+        if (self.houseType != FHHouseTypeSecondHandHouse && self.houseType != FHHouseTypeNewHouse) {
             if (!hasMore && self.houseList.count < 10) {
                 self.refreshFooter.hidden = YES;
             }
