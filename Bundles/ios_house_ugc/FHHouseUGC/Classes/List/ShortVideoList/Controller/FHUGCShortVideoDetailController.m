@@ -119,6 +119,7 @@
 
 #import "FHShortVideoDetailFetchManager.h"
 #import "TSVWriteCommentButton.h"
+#import "TTReachability.h"
 
 #define kPostMessageFinishedNotification    @"kPostMessageFinishedNotification"
 
@@ -950,10 +951,10 @@ static const CGFloat kFloatingViewOriginY = 230;
 
 - (void)loadMoreAutomatically:(BOOL)isAuto
 {
-    if (!BTDNetworkConnected()) {
-        [HTSVideoPlayToast show:@"没有网络"];
+    if(![TTReachability isNetworkConnected]){
         return;
     }
+
     if (self.dataFetchManager.isLoadingRequest) {
         return;
     }
