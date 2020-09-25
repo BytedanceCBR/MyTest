@@ -197,28 +197,18 @@ extern NSString *const INSTANT_DATA_KEY;
             self.searchType = FHHouseListSearchTypeNeighborhoodDeal;
         }
         self.houseSearchDic = paramObj.userInfo.allInfo[@"houseSearch"];
-        NSDictionary *tracerDict = paramObj.allParams[@"tracer"];
         
-        NSMutableDictionary *traceDictParams = [NSMutableDictionary new];
-        if (tracerDict) {
-            [traceDictParams addEntriesFromDictionary:tracerDict];
-        }
-        
-        NSString *report_params = paramObj.allParams[@"report_params"];
-        if ([report_params isKindOfClass:[NSString class]]) {
-            NSDictionary *report_params_dic = [self getDictionaryFromJSONString:report_params];
-            if (report_params_dic) {
-                [traceDictParams addEntriesFromDictionary:report_params_dic];
-            }
-        }
-        
-        if (traceDictParams) {
-            self.tracerModel = [FHTracerModel makerTracerModelWithDic:traceDictParams];
-            self.originFrom = self.tracerModel.originFrom;
-        }
+
         [self configTableView];
     }
     return self;
+}
+
+- (void)updateTracerDict:(NSDictionary *)tracerDict {
+    if (tracerDict && tracerDict.count) {
+        self.tracerModel = [FHTracerModel makerTracerModelWithDic:tracerDict];
+        self.originFrom = self.tracerModel.originFrom;
+    }
 }
 
 - (void)addTagsViewClick:(NSString *)value_id

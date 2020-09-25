@@ -149,6 +149,7 @@
     photoAlbumData.floorPanModel = picShowModel;
     photoAlbumData.imageAlbumAssociateInfo = newMediaHeaderModel.albumInfo.imageAlbumAssociateInfo;
     photoAlbumData.contactViewModel = newMediaHeaderModel.contactViewModel;
+    
     return photoAlbumData;
 }
 

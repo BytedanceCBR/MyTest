@@ -11,6 +11,9 @@ NS_ASSUME_NONNULL_BEGIN
 // text使用Unicode格式，需求在前面加  \U0000
 #define ICON_FONT_IMG(fontSize,t,c)  [UIImage imageWithIconFontSize:fontSize text:t color:c]
 
+#define FHBackBlackImage ICON_FONT_IMG(24, @"\U0000e68a", [UIColor themeGray1])
+#define FHBackWhiteImage ICON_FONT_IMG(24, @"\U0000e68a", [UIColor whiteColor])
+
 @interface UIImage (FIconFont)
 
 + (UIImage *)imageWithIconFontSize:(CGFloat)fontSize text:(NSString *)text color:(UIColor * _Nullable)color;

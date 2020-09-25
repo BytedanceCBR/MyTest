@@ -195,11 +195,11 @@
 
 - (void)changLeftBtnImage:(BOOL)isWhite{
     if (isWhite) {
-        [self.customNavBarView.leftBtn setBackgroundImage:ICON_FONT_IMG(24,@"\U0000e68a",[UIColor whiteColor])  forState:UIControlStateNormal];
-        [self.customNavBarView.leftBtn setBackgroundImage:ICON_FONT_IMG(24,@"\U0000e68a",[UIColor whiteColor])  forState:UIControlStateHighlighted];
+        [self.customNavBarView.leftBtn setBackgroundImage:FHBackWhiteImage  forState:UIControlStateNormal];
+        [self.customNavBarView.leftBtn setBackgroundImage:FHBackWhiteImage  forState:UIControlStateHighlighted];
     }else{
-        [self.customNavBarView.leftBtn setBackgroundImage:ICON_FONT_IMG(24,@"\U0000e68a",[UIColor blackColor])  forState:UIControlStateNormal];
-        [self.customNavBarView.leftBtn setBackgroundImage:ICON_FONT_IMG(24,@"\U0000e68a",[UIColor blackColor])  forState:UIControlStateHighlighted];
+        [self.customNavBarView.leftBtn setBackgroundImage:FHBackBlackImage  forState:UIControlStateNormal];
+        [self.customNavBarView.leftBtn setBackgroundImage:FHBackBlackImage  forState:UIControlStateHighlighted];
     }
 }
 

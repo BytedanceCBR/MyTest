@@ -230,10 +230,7 @@
         return;
     }
     FHDetailNewDiscountInfoItemModel *itemInfo = model.discountInfo[index];
-
     [self addClickOptionLog:@(itemInfo.actionType)];
-    
-    
     if (itemInfo.actionType == 4 && itemInfo.activityURLString.length) {
         if (itemInfo.activityURLString.length && self.baseViewModel.contactViewModel) {
             NSMutableDictionary *extraDic = self.baseViewModel.detailTracerDic.mutableCopy;

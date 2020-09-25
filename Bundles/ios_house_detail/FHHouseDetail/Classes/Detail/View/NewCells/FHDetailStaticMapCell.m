@@ -6,13 +6,12 @@
 //
 
 #import "FHEnvContext.h"
-#import <FHHouseDetail/FHDetailHeaderView.h>
+//#import <FHHouseDetail/FHDetailHeaderView.h>
 #import <TTBaseLib/NSDictionary+TTAdditions.h>
 #import "FHDetailStaticMapCell.h"
 #import "AMapSearchAPI.h"
 #import "MAMapKit.h"
-#import "FHDetailStarHeaderView.h"
-#import "HMSegmentedControl.h"
+#import "FHSegmentControl.h"
 #import "FHBaseTableView.h"
 #import "FHDetailNearbyMapItemCell.h"
 #import "UIViewAdditions.h"
@@ -78,9 +77,9 @@
 
 @interface FHDetailStaticMapCell () <AMapSearchDelegate, UITableViewDelegate, UITableViewDataSource, FHDetailVCViewLifeCycleProtocol, FHStaticMapDelegate, MAMapViewDelegate>
 //ui
-@property(nonatomic, strong) FHDetailStarHeaderView *starHeaderView;
-@property(nonatomic, strong) FHDetailHeaderView *headerView;
-@property(nonatomic, strong) HMSegmentedControl *segmentedControl;
+
+//@property(nonatomic, strong) FHDetailHeaderView *headerView;
+@property(nonatomic, strong) FHSegmentControl *segmentedControl;
 @property(nonatomic, strong) FHDetailStaticMap *mapView;
 @property(nonatomic, strong) UIImageView *nativeMapImageView;
 @property(nonatomic, strong) UITableView *locationList;
@@ -88,7 +87,7 @@
 @property(nonatomic, strong) UIButton *mapMaskBtn;
 @property(nonatomic, strong) UIButton *mapMaskBtnLocation;
 @property(nonatomic, strong) UIView *backView;
-
+@property(nonatomic, strong) UIView *bottomGradientView;
 //data
 @property(nonatomic, copy) NSString *curCategory;
 @property(nonatomic, assign) CLLocationCoordinate2D centerPoint;
@@ -140,49 +139,25 @@
     return self;
 }
 
-- (void)setupViewMapOnly:(BOOL)useNativeMap {
-    //初始化静态地图
-    [self setUpMapView:useNativeMap];
-
-    CGFloat mapHeight = MAIN_SCREEN_WIDTH * kStaticMapHWRatio;
-    CGRect mapFrame = CGRectMake(0, 0, MAIN_SCREEN_WIDTH, mapHeight);
-    self.mapView.frame = mapFrame;
-    self.nativeMapImageView.frame = mapFrame;
-    self.mapMaskBtn.frame = mapFrame;
-    self.baiduPanoButton.frame = CGRectMake(MAIN_SCREEN_WIDTH - 8 - 40, CGRectGetMaxY(mapFrame) - 8 - 40, 40, 40);
-    [self.contentView mas_remakeConstraints:^(MASConstraintMaker *make) {
-        make.top.left.right.mas_equalTo(self.mapMaskBtn);
-        make.bottom.mas_greaterThanOrEqualTo(self.mapMaskBtn).offset(30);
-    }];
-}
-
-//TODO zlj 判断使用native地图
-- (void)addCenterAnnotationMapOnly:(BOOL)useNativeMap {
-    self.centerAnnotation.coordinate = self.centerPoint;
-    CGFloat mapHeight = MAIN_SCREEN_WIDTH * kStaticMapHWRatio;
-    CGRect frame = CGRectMake(0, 0, MAIN_SCREEN_WIDTH, mapHeight);
-
-    if (!useNativeMap) {
-        [self.mapView removeAllAnnotations];
-        [self.mapView addAnnotations:@[self.centerAnnotation]];
-        return;
+- (UIView *)bottomGradientView {
+    if(!_bottomGradientView){
+        CGRect frame = CGRectMake(0, 0, UIScreen.mainScreen.bounds.size.width, 29);
+        CAGradientLayer *gradientLayer = [CAGradientLayer layer];
+        gradientLayer.frame = frame;
+        gradientLayer.colors = @[
+            (__bridge id)[UIColor colorWithWhite:1 alpha:1].CGColor,
+            (__bridge id)[UIColor colorWithWhite:1 alpha:0].CGColor
+        ];
+        gradientLayer.startPoint = CGPointMake(0.5, 0.2);
+        gradientLayer.endPoint = CGPointMake(0.5, 1);
+        
+        _bottomGradientView = [[UIView alloc] initWithFrame:frame];
+        [_bottomGradientView.layer addSublayer:gradientLayer];
     }
-
-    WeakSelf;
-    [[FHDetailMapViewSnapService sharedInstance] takeSnapWith:self.centerPoint frame:frame targetRect:frame annotations:@[self.centerAnnotation] delegate:self block:^(FHDetailMapSnapTask *task, UIImage *image, BOOL success) {
-        StrongSelf;
-        if (!success) {
-            return;
-        }
-        wself.nativeMapImageView.image = image;
-    }];
-
+    return _bottomGradientView;
 }
 
 - (void)setupViews:(BOOL)useNativeMap {
-    //初始化Header
-    [self setUpHeaderView];
-
     //初始化左右切换
     [self setUpSegmentedControl];
 
@@ -192,17 +167,16 @@
     //初始化poi信息列表
     [self setUpLocationListTableView];
 
-    self.headerView.frame = CGRectMake(0, 0, MAIN_SCREEN_WIDTH, 46);
-    self.starHeaderView.frame = CGRectMake(0, 0, MAIN_SCREEN_WIDTH, 110);
-    self.segmentedControl.frame = CGRectMake(0,self.headerView.bottom, MAIN_SCREEN_WIDTH, 50);
+//    self.headerView.frame = CGRectMake(0, 0, MAIN_SCREEN_WIDTH, 50);
+    self.segmentedControl.frame = CGRectMake(16, 0, MAIN_SCREEN_WIDTH - 16 * 2, 33);
 
     CGFloat mapHeight = MAIN_SCREEN_WIDTH * kStaticMapHWRatio;
     CGRect mapFrame = CGRectMake(0, self.segmentedControl.bottom, MAIN_SCREEN_WIDTH, mapHeight);
     self.mapView.frame = mapFrame;
     self.nativeMapImageView.frame = mapFrame;
     self.mapMaskBtn.frame = mapFrame;
-    self.locationList.frame = CGRectMake(0, self.mapMaskBtn.bottom + 20, MAIN_SCREEN_WIDTH, 105);
-    self.emptyInfoLabel.frame = self.locationList.bounds;
+    self.locationList.frame = CGRectMake(0, self.mapMaskBtn.bottom + 10, MAIN_SCREEN_WIDTH, 40);
+    self.emptyInfoLabel.frame = CGRectMake(0, 10, self.locationList.width, 20);
     self.mapMaskBtnLocation.frame = self.locationList.frame;
     self.baiduPanoButton.frame = CGRectMake(MAIN_SCREEN_WIDTH - 8 - 40, CGRectGetMaxY(mapFrame) - 8 - 40, 40, 40);
 
@@ -213,11 +187,8 @@
 }
 
 - (void)cleanSubViews {
-    [self.headerView removeFromSuperview];
-    self.headerView = nil;
-
-    [self.starHeaderView removeFromSuperview];
-    self.starHeaderView = nil;
+//    [self.headerView removeFromSuperview];
+//    self.headerView = nil;
 
     [self.segmentedControl removeFromSuperview];
     self.segmentedControl = nil;
@@ -241,31 +212,18 @@
     self.mapMaskBtnLocation = nil;
 }
 
-- (void)setUpHeaderView{
-    _headerView = [[FHDetailHeaderView alloc] init];
-    [self.contentView addSubview:_headerView];
-    _headerView.label.text = @"周边配套";
-    [self.contentView sendSubviewToBack:_headerView];
-}
-
 - (void)setUpSegmentedControl {
-    _segmentedControl = [HMSegmentedControl new];
+    _segmentedControl = [FHSegmentControl new];
     _segmentedControl.sectionTitles = @[@"交通", @"教育", @"医疗", @"生活"];
-    _segmentedControl.selectionIndicatorHeight = 2;
-    _segmentedControl.selectionIndicatorColor = [UIColor themeOrange1];
-    _segmentedControl.selectionStyle = HMSegmentedControlSelectionStyleTextWidthStripe;
-    _segmentedControl.segmentWidthStyle = HMSegmentedControlSegmentWidthStyleFixed;
-    _segmentedControl.isNeedNetworkCheck = NO;
-
+    _segmentedControl.selectionIndicatorSize = CGSizeMake(12, 3);
+    _segmentedControl.selectionIndicatorCornerRadius = 1.5;
+    _segmentedControl.selectionIndicatorColor = [UIColor themeGray1];
     NSDictionary *attributeNormal = @{NSFontAttributeName: [UIFont themeFontRegular:16], NSForegroundColorAttributeName: [UIColor themeGray3]};
-    NSDictionary *attributeSelect = @{NSFontAttributeName: [UIFont themeFontRegular:16], NSForegroundColorAttributeName: [UIColor themeOrange1]};
-
+    NSDictionary *attributeSelect = @{NSFontAttributeName: [UIFont themeFontMedium:16], NSForegroundColorAttributeName: [UIColor themeGray1]};
+    _segmentedControl.backgroundColor = [UIColor whiteColor];
     _segmentedControl.titleTextAttributes = attributeNormal;
     _segmentedControl.selectedTitleTextAttributes = attributeSelect;
-    _segmentedControl.selectionIndicatorEdgeInsets = UIEdgeInsetsMake(0, 3, 0, 3);
-    _segmentedControl.selectionIndicatorLocation = HMSegmentedControlSelectionIndicatorLocationDown;
-    _segmentedControl.backgroundColor = [UIColor clearColor];
-
+    
     WeakSelf;
     _segmentedControl.indexChangeBlock = ^(NSInteger index) {
         StrongSelf;
@@ -295,6 +253,7 @@
 
     _mapMaskBtn = [UIButton buttonWithType:UIButtonTypeCustom];
     [self.contentView addSubview:_mapMaskBtn];
+    [self.mapMaskBtn addSubview:self.bottomGradientView];
 
     [_mapMaskBtn setBackgroundColor:[UIColor clearColor]];
     [_mapMaskBtn addTarget:self action:@selector(mapMaskBtnClick:) forControlEvents:UIControlEventTouchUpInside];
@@ -418,27 +377,8 @@
     dataModel.useNativeMap = [fhSettings tt_unsignedIntegerValueForKey:@"f_use_static_map"] == 0;
 
     [self cleanSubViews];
-    if (dataModel.mapOnly) {
-        [self setupViewMapOnly:dataModel.useNativeMap];
-        [self refreshWithDataMapOnly];
-    } else {
-        [self setupViews:dataModel.useNativeMap];
-        [self refreshWithDataPoiDetail];
-    }
-}
-
-- (void)refreshWithDataMapOnly {
-    FHDetailStaticMapCellModel *dataModel = (FHDetailStaticMapCellModel *) self.currentData;
-    self.baiduPanoButton.hidden = !dataModel.baiduPanoramaUrl.length;
-    if (!dataModel.useNativeMap) {
-        if (!dataModel.staticImage || isEmptyString(dataModel.staticImage.url) || isEmptyString(dataModel.staticImage.latRatio) || isEmptyString(dataModel.staticImage.lngRatio)) {
-            NSString *message = !dataModel.staticImage ? @"static_image_null" : @"bad_static_image";
-            [self mapView:self.mapView loadFinished:NO message:message];
-            return;
-        }
-        [self.mapView loadMap:dataModel.staticImage.url center:self.centerPoint latRatio:[dataModel.staticImage.latRatio floatValue] lngRatio:[dataModel.staticImage.lngRatio floatValue]];
-    }
-    [self addCenterAnnotationMapOnly:dataModel.useNativeMap];
+    [self setupViews:dataModel.useNativeMap];
+    [self refreshWithDataPoiDetail];
 }
 
 - (void)refreshWithDataPoiDetail {
@@ -453,9 +393,9 @@
         [self.mapView loadMap:dataModel.staticImage.url center:self.centerPoint latRatio:[dataModel.staticImage.latRatio floatValue] lngRatio:[dataModel.staticImage.lngRatio floatValue]];
     }
 
-    if (dataModel.title.length > 0) {
-        self.headerView.titleLabel.text = dataModel.title;
-    }
+//    if (dataModel.title.length > 0) {
+//        self.headerView.titleLabel.text = dataModel.title;
+//    }
     if ([self isPoiSearchDone:self.curCategory]) {
         [self showPoiResultInfo];
     } else {
@@ -551,13 +491,9 @@
 
     dataModel.useNativeMap = YES;
     [self cleanSubViews];
-    if (dataModel.mapOnly) {
-        [self setupViewMapOnly:dataModel.useNativeMap];
-        [self refreshWithDataMapOnly];
-    } else {
-        [self setupViews:dataModel.useNativeMap];
-        [self refreshWithDataPoiDetail];
-    }
+    [self setupViews:dataModel.useNativeMap];
+    [self refreshWithDataPoiDetail];
+
 }
 
 #pragma

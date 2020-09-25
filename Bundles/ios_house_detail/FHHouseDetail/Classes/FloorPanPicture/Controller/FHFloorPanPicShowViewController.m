@@ -190,7 +190,6 @@
     [_collectionView registerClass:[FHFloorPanPicCollectionCell class] forCellWithReuseIdentifier:NSStringFromClass([FHFloorPanPicShowItemPictureModel class])];
     [_collectionView registerClass:[FHFloorPanVideoCollectionCell class] forCellWithReuseIdentifier:NSStringFromClass([FHFloorPanPicShowItemVideoModel class])];
     [_collectionView registerClass:[FHFloorPanVRCollectionCell class] forCellWithReuseIdentifier:NSStringFromClass([FHFloorPanPicShowItemVRModel class])];
-
     //注册headerView  此处的ReuseIdentifier 必须和 cellForItemAtIndexPath 方法中 一致  均为reusableView
     [_collectionView registerClass:[FHDetailSectionTitleCollectionView class] forSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:NSStringFromClass([FHDetailSectionTitleCollectionView class])];
     //设置代理
@@ -287,8 +286,6 @@
     [self setupDefaultNavBar:NO];
     [self.customNavBarView setNaviBarTransparent:YES];
     self.customNavBarView.title.text = self.navBarName.length ? self.navBarName : @"楼盘相册";
-    [self.customNavBarView.leftBtn setBackgroundImage:ICON_FONT_IMG(24, @"\U0000e68a", [UIColor themeGray1]) forState:UIControlStateNormal];
-    [self.customNavBarView.leftBtn setBackgroundImage:ICON_FONT_IMG(24, @"\U0000e68a", [UIColor themeGray1]) forState:UIControlStateHighlighted];
 }
 
 - (void)scrollToCurrentIndex:(NSInteger)toIndex {
@@ -328,9 +325,6 @@
     } completion:^(BOOL finished) {
         self.segmentViewChangedFlag = NO;
     }];
-
-//    [self.mainCollectionView scrollRectToVisible:frame animated:YES];
-//    [self.mainCollectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:titleIndex] atScrollPosition:UICollectionViewScrollPositionBottom animated:YES];
 }
 
 - (void)processImagesList {
@@ -343,7 +337,6 @@
         if ([groupModel.rootGroupName isEqualToString:rootGroupName.lastObject]) {
             NSNumber *lastNumber = numbers.lastObject;
             NSNumber *itemCount = [NSNumber numberWithUnsignedInteger:lastNumber.unsignedIntegerValue + groupModel.items.count];
-
             [numbers removeLastObject];
             [numbers addObject:itemCount];
         } else {
@@ -493,6 +486,7 @@
             } else {
                 titleView.titleLabel.text = [NSString stringWithFormat:@"(%lu)", (unsigned long)groupModel.items.count];
             }
+            
         }
         reusableView = titleView;
     }

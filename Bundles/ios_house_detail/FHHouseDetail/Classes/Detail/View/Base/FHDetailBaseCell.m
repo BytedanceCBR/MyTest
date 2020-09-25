@@ -74,6 +74,10 @@
     return [self class];
 }
 
++ (CGSize )cellSizeWithData:(id)data width:(CGFloat )width {
+    return CGSizeMake(width, 0);
+}
+
 + (NSString *)cellIdentifier {
     return NSStringFromClass([self cellViewClass]);
 }
@@ -82,7 +86,8 @@
 {
     self = [super initWithFrame:frame];
     if (self) {
-        self.backgroundColor = [UIColor whiteColor];
+        self.backgroundColor = [UIColor clearColor];
+        self.contentView.backgroundColor = [UIColor clearColor];
     }
     return self;
 }

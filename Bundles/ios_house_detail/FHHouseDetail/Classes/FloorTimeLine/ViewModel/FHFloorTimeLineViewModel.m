@@ -8,7 +8,6 @@
 #import "FHFloorTimeLineViewModel.h"
 #import "FHHouseDetailAPI.h"
 #import "FHDetailNewTimeLineItemCell.h"
-#import "FHDetailNewModel.h"
 #import "FHRefreshCustomFooter.h"
 #import "FHEnvContext.h"
 
@@ -33,24 +32,12 @@
         _currentItems = [NSMutableArray new];
         _currentPage = 0;
         [self configTableView];
-
-    
-        [self startLoadData];
-
-        WeakSelf;
         self.refreshFooter = [FHRefreshCustomFooter footerWithRefreshingBlock:^{
-            StrongSelf;
-            if ([FHEnvContext isNetworkConnected]) {
-                [self startLoadData];
-            }else
-            {
-                [self.timeLineListTable.mj_footer endRefreshing];
-                [[ToastManager manager] showToast:@"网络异常"];
-            }
+            
         }];
-        self.refreshFooter.hidden = YES;
-        
         self.timeLineListTable.mj_footer = self.refreshFooter;
+        [self.refreshFooter setUpNoMoreDataText:@"无更多动态"];
+        [self.timeLineListTable.mj_footer endRefreshingWithNoMoreData];
     }
     return self;
 }
@@ -67,40 +54,18 @@
     _timeLineListTable.dataSource = self;
 }
 
-- (void)startLoadData
-{
-    if (![TTReachability isNetworkConnected]) {
-        [self.detailController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoNetWorkNotRefresh];
-        return;
-    }
-    if (_courtId) {
-        [self.detailController startLoading];
-        NSString *stringQuery = [NSString stringWithFormat:@"court_id=%@&count=%@&page=%@",_courtId,@"10",[NSString stringWithFormat:@"%ld",(long)_currentPage]];
-        
-        __weak typeof(self) wSelf = self;
-        [FHHouseDetailAPI requestFloorTimeLineSearch:_courtId query:stringQuery completion:^(FHDetailNewTimeLineResponseModel * _Nullable model, NSError * _Nullable error) {
-            if(model.data.list.count != 0 && !error)
-            {
-                [wSelf.detailController.emptyView hideEmptyView];
-                wSelf.detailController.hasValidateData = YES;
-                wSelf.refreshFooter.hidden = NO;
-                wSelf.currentPage ++;
-                [wSelf processDetailData:model];
-                [wSelf.navBar showMessageNumber];
-            }else
-            {
-                wSelf.detailController.hasValidateData = NO;
-                [wSelf.detailController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoData];
-            }
-        }];
+
+- (void)scrollToItemAtRow:(NSInteger)index {
+    if (index < [self.currentItems count]) {
+        [self.timeLineListTable scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:index inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:NO];
     }
 }
 
-- (void)processDetailData:(FHDetailNewTimeLineResponseModel *)model {
+- (void)processDetailData:(FHDetailNewDataTimelineModel *)model {
     NSMutableArray *itemsArray = [NSMutableArray new];
 
-    for (NSInteger i = 0; i < model.data.list.count; i++) {
-        FHDetailNewDataTimelineListModel *itemModel = model.data.list[i];
+    for (NSInteger i = 0; i < model.list.count; i++) {
+        FHDetailNewDataTimelineListModel *itemModel = model.list[i];
         FHDetailNewTimeLineItemModel *item = [[FHDetailNewTimeLineItemModel alloc] init];
         item.desc = itemModel.desc;
         item.title = itemModel.title;
@@ -110,30 +75,17 @@
         item.isExpand = YES;
         [itemsArray addObject:item];
     }
-    
-    [self updateTableViewWithMoreData:model.data.hasMore];
-
     [self.currentItems addObjectsFromArray:itemsArray];
     
     UIView *bottomBar = [self.detailController getBottomBar];
     bottomBar.hidden = YES;
 
     [_timeLineListTable reloadData];
-}
-
-- (void)updateTableViewWithMoreData:(BOOL)hasMore {
-    self.timeLineListTable.mj_footer.hidden = NO;
-    if (hasMore == NO) {
-        [self.refreshFooter setUpNoMoreDataText:@"没有更多信息了"];
-        [self.timeLineListTable.mj_footer endRefreshingWithNoMoreData];
-    }else {
-        [self.timeLineListTable.mj_footer endRefreshing];
-    }
+    [_timeLineListTable layoutIfNeeded];
 }
 
 
 #pragma UITableViewDelegate
-
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     return [self.currentItems count];

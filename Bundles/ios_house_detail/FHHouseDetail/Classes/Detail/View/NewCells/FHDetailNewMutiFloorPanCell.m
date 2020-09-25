@@ -16,7 +16,6 @@
 #import "FHDetailHeaderView.h"
 #import "FHHouseNewDetailViewModel.h"
 #import "FHDetailMultitemCollectionView.h"
-#import <TTAccountSDK/TTAccount.h>
 #import <FHHouseBase/FHHouseIMClueHelper.h>
 #import "FHEnvContext.h"
 

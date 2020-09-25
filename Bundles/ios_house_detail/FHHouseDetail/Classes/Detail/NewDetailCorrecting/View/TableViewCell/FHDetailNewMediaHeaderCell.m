@@ -153,7 +153,7 @@
         //如果是新房，非北京、江州以外的城市，暂时隐藏头部
         pictureDetailViewController.isShowSegmentView = NO;
     }
-
+    
     pictureDetailViewController.dragToCloseDisabled = YES;
     pictureDetailViewController.startWithIndex = index;
     __weak FHDetailPictureViewController *weakPictureController = pictureDetailViewController;

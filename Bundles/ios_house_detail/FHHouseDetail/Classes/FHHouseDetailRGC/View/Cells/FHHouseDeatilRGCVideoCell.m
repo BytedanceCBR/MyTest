@@ -27,6 +27,7 @@
 @property (strong, nonatomic) FHHouseDeatilRGCCellHeader *headerView;
 @property (strong ,nonatomic) FHUGCCellUserInfoView *userInfoView;
 @property (strong ,nonatomic) FHUGCCellUserInfoView *lineView;
+@property(nonatomic ,strong) TTImageView *videoImageView;
 @property (nonatomic ,assign) CGFloat imageViewheight;
 @property (nonatomic  ,assign) CGFloat imageViewWidth;
 @property (nonatomic ,strong) UIImageView *playIcon;

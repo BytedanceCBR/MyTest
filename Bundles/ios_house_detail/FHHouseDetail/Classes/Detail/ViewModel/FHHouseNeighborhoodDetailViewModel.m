@@ -317,7 +317,6 @@
         staticMapModel.title = @"周边配套";
         staticMapModel.tableView = self.tableView;
         staticMapModel.staticImage = model.data.neighborhoodInfo.gaodeImage;
-        staticMapModel.mapOnly = NO;
         //小区攻略底部有10px的留白，防止滑动时，放大的卡片底部被下面的cell挡住，所以这里的高度根据留白距离减10
         if([[self.items lastObject] isKindOfClass:[FHDetailAccessCellModel class]]){
             staticMapModel.topMargin = 20;
