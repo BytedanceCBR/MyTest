@@ -11,6 +11,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface UIButton (FHUGCMultiDigg)
 
+@property(nonatomic,assign) BOOL longPressNeedSend;
 //调用前，保证button已经被加到一个view中
 - (void)enableMulitDiggEmojiAnimation;
 - (void)generateImpactFeedback;

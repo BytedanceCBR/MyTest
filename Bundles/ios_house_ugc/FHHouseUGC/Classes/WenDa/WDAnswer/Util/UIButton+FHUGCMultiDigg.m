@@ -6,11 +6,13 @@
 //
 
 #import "UIButton+FHUGCMultiDigg.h"
-#import <TTMultiDigManager.h>
+#import "TTMultiDiggManager+FHUGC.h"
 #import <TTAccountManager.h>
 #import <Masonry/Masonry.h>
 #import "UIImage+FIconFont.h"
 #import "UIColor+Theme.h"
+#include <objc/runtime.h>
+
 @implementation UIButton (FHUGCMultiDigg)
 
 
@@ -47,7 +49,23 @@
 -(void)sendActionsForControlEvents:(UIControlEvents)controlEvents{
     TTMultiDiggManager *multiDiggManager = [self valueForKey:@"multiDiggManager"];
     [multiDiggManager setValue:[NSNumber numberWithBool:self.selected] forKey:@"buttonSelected"];
-    [super sendActionsForControlEvents:controlEvents];
+    BOOL longPress = [[multiDiggManager valueForKey:@"longPress"] boolValue];
+    if(longPress) {
+        if(self.longPressNeedSend) {
+            [super sendActionsForControlEvents:controlEvents];
+            self.longPressNeedSend = NO;
+        }
+    } else {
+        [super sendActionsForControlEvents:controlEvents];
+    }
+}
+
+-(BOOL)longPressNeedSend {
+     return [objc_getAssociatedObject(self, @selector(longPressNeedSend)) boolValue];
+}
+
+-(void)setLongPressNeedSend:(BOOL)longPressNeedSend {
+    objc_setAssociatedObject(self, @selector(longPressNeedSend), @(longPressNeedSend), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
 @end
