@@ -12,7 +12,7 @@
 @interface FHVideoCoverView ()
 
 @property(nonatomic, strong) UIImage *placeHolder;
-
+@property (nonatomic, strong) UIView *maskView;
 @end
 
 @implementation FHVideoCoverView
@@ -33,6 +33,12 @@
     _coverView.clipsToBounds = YES;
     _coverView.autoresizingMask = UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight;
     [self addSubview:_coverView];
+    _maskView = [[UIView alloc] init];
+    _maskView.backgroundColor = [UIColor colorWithWhite:0 alpha:0.1];
+    [self.coverView addSubview:self.maskView];
+    [_maskView mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.edges.mas_equalTo(self.coverView);
+    }];
     
     self.startBtn = [[UIButton alloc] init];
     [_startBtn setImage:[UIImage imageNamed:@"detail_video_start"] forState:UIControlStateNormal];
