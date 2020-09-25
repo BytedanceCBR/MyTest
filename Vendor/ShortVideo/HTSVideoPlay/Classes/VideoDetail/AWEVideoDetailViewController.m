@@ -116,6 +116,7 @@
 #import "FHUserTracker.h"
 #import "TSVWriteCommentButton.h"
 #import "TTReachability.h"
+#import "ToastManager.h"
 
 
 #define kPostMessageFinishedNotification    @"kPostMessageFinishedNotification"
@@ -1494,10 +1495,10 @@ static const CGFloat kFloatingViewOriginY = 230;
             if (!isEmptyString(self.model.groupId)){
                 [self.dislikeGroupIDArray addObject:self.model.groupId];
             }
-            [HTSVideoPlayToast show:@"将减少推荐类似内容"];
+            [[ToastManager manager] showToast:@"将减少推荐类似内容"];
             self.isDisliked = YES;
         } else {
-            [HTSVideoPlayToast show:@"操作失败"];
+            [[ToastManager manager] showToast:@"操作失败"];
         }
     };
     [self.actionManager setContext:context];
@@ -1906,7 +1907,7 @@ static const CGFloat kFloatingViewOriginY = 230;
         }
 
         if (![AWEVideoPlayAccountBridge isCurrentLoginUser:[commentModel.userId stringValue]]) {// 加保护
-            [HTSVideoPlayToast show:@"不能删除别人的评论！"];
+            [[ToastManager manager] showToast:@"不能删除别人的评论！"];
             return;
         }
 
@@ -1916,7 +1917,7 @@ static const CGFloat kFloatingViewOriginY = 230;
                 dispatch_async(dispatch_get_main_queue(), ^{
                     @strongify(self);
                     [self.tableView reloadData];
-                    [HTSVideoPlayToast show:@"评论删除成功！"];
+                    [[ToastManager manager] showToast:@"评论删除成功！"];
                     if ([self.commentManager isEmpty]) {
                         [self showEmptyHint:YES];
                     }
@@ -1933,7 +1934,7 @@ static const CGFloat kFloatingViewOriginY = 230;
                     
                 });
             }else{
-                [HTSVideoPlayToast show:@"操作失败，请重试"];
+                [[ToastManager manager] showToast:@"操作失败，请重试"];
             }
         }];
 }
@@ -1947,9 +1948,9 @@ static const CGFloat kFloatingViewOriginY = 230;
         @strongify(self);
         [self.commentManager reportCommentWithType:parameters[@"report"] userInputText:parameters[@"criticism"] userID:[commentModel.userId stringValue] commentID:commentModel.id momentID:nil groupID:self.model.groupId postID:self.model.itemId completion:^(id response, NSError *error) {
             if(error || response[@"extra"]){
-                [HTSVideoPlayToast show:@"举报失败"];
+                [[ToastManager manager] showToast:@"举报失败"];
             }else{
-                [HTSVideoPlayToast show:@"举报成功"];
+                [[ToastManager manager] showToast:@"举报成功"];
             }
         }];
     }];
