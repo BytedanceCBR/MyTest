@@ -17,7 +17,7 @@
 
 @property (nonatomic, weak) UIView *contentView;
 @property (nonatomic, weak) UIImageView *bgImageView;
-@property (nonatomic, weak) UIView *borderView;
+//@property (nonatomic, weak) UIView *borderView;
 //@property (nonatomic, weak) UILabel *versionLabel;
 @property (nonatomic, weak) UILabel *contentLabel;
 
@@ -38,12 +38,16 @@
             make.edges.mas_equalTo(UIEdgeInsetsZero);
         }];
         //279 400
-        UIView *contentView = [[UIView alloc] initWithFrame:CGRectMake(CGRectGetMidX(frame) - 140, CGRectGetMaxY(frame) - 200 - 35, 279, 400)];
+        UIView *contentView = [[UIView alloc] initWithFrame:CGRectMake(CGRectGetMidX(frame) - 327/2, CGRectGetMidY(frame) - 476/2 - 35, 327, 476)];
         [self addSubview:contentView];
         self.contentView = contentView;
         [self.contentView mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.width.mas_equalTo(279);
-            make.height.mas_equalTo(400);
+            if ([UIDevice btd_deviceWidthType] == BTDDeviceWidthMode320) {
+                make.width.mas_equalTo(320);
+            } else {
+                make.width.mas_equalTo(327);
+                make.height.mas_equalTo(476);
+            }
             make.centerX.mas_equalTo(self);
             make.centerY.mas_equalTo(self).mas_offset(-35);
         }];
@@ -56,15 +60,15 @@
             make.edges.mas_equalTo(UIEdgeInsetsZero);
         }];
         
-        UIView *borderView = [[UIView alloc] initWithFrame:CGRectMake(62, 127, 155, 119)];
+//        UIView *borderView = [[UIView alloc] initWithFrame:CGRectMake(62, 127, 155, 119)];
 //        borderView.layer.borderWidth = 1.0/UIScreen.mainScreen.scale;
 //        borderView.layer.borderColor = [UIColor colorWithHexString:@"#ff3c00"].CGColor;
-        borderView.backgroundColor = [UIColor clearColor];
-        [self.contentView addSubview:borderView];
-        self.borderView = borderView;
-        [self.borderView mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.edges.mas_equalTo(UIEdgeInsetsMake(127, 62, 154, 62));
-        }];
+//        borderView.backgroundColor = [UIColor clearColor];
+//        [self.contentView addSubview:borderView];
+//        self.borderView = borderView;
+//        [self.borderView mas_makeConstraints:^(MASConstraintMaker *make) {
+//            make.edges.mas_equalTo(UIEdgeInsetsMake(127, 62, 154, 62));
+//        }];
         
 //        UILabel *versionLabel = [[UILabel alloc] initWithFrame:CGRectMake(CGRectGetMidX(self.contentView.frame), 105, 0, 14)];
 //        versionLabel.font = [UIFont themeFontRegular:10];
@@ -80,16 +84,16 @@
         
         UILabel *contentLabel = [[UILabel alloc] init];
         contentLabel.textColor = [UIColor colorWithHexString:@"#ff3c00"];;
-        contentLabel.font = [UIFont themeFontRegular:12];
+        contentLabel.font = [UIFont themeFontRegular:14];
         contentLabel.numberOfLines = 0;
         contentLabel.backgroundColor = [UIColor clearColor];
         [self.contentView addSubview:contentLabel];
         self.contentLabel = contentLabel;
         [self.contentLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.top.mas_equalTo(self.borderView.mas_top).mas_offset(8);
-            make.left.mas_equalTo(self.borderView.mas_left).mas_offset(8);
-            make.width.mas_equalTo(self.borderView.mas_width).mas_offset(-16);
-            make.height.mas_lessThanOrEqualTo(self.borderView.mas_height).mas_offset(-16);
+            make.top.mas_equalTo(150);
+            make.left.mas_equalTo(72);
+            make.right.mas_equalTo(-72);
+//            make.height.mas_lessThanOrEqualTo(self.borderView.mas_height).mas_offset(-16);
         }];
     }
     return self;
@@ -98,7 +102,7 @@
 - (void)updateInfoWithVersion:(NSString *)version content:(NSString *)content forceUpdate:(BOOL )forceUpdate {
 //    self.versionLabel.text = version;
     if (content.length) {
-        NSMutableAttributedString *string = [[NSMutableAttributedString alloc] initWithString:content attributes:@{NSForegroundColorAttributeName : [UIColor colorWithHexString:@"#ff3c00"], NSFontAttributeName : [UIFont themeFontRegular:12]}];
+        NSMutableAttributedString *string = [[NSMutableAttributedString alloc] initWithString:content attributes:@{NSForegroundColorAttributeName : [UIColor colorWithHexString:@"#ff3c00"], NSFontAttributeName : [UIFont themeFontRegular:14]}];
         NSMutableParagraphStyle *style = [NSParagraphStyle defaultParagraphStyle].mutableCopy;
         style.lineSpacing = 10;
         [string addAttributes:@{NSParagraphStyleAttributeName: style.copy} range:NSMakeRange(0, string.length)];
@@ -111,17 +115,17 @@
             weakSelf.updateBlock();
         }
     }];
-    [updateButton setBackgroundImage:[[UIImage imageNamed:@"app_update_ok"] resizableImageWithCapInsets:UIEdgeInsetsMake(10, 20, 10, 20)] forState:UIControlStateNormal];
+    [updateButton setBackgroundImage:[UIImage imageNamed:@"app_update_ok"] forState:UIControlStateNormal];
     [updateButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-    updateButton.titleLabel.font = [UIFont themeFontRegular:12];
+    updateButton.titleLabel.font = [UIFont themeFontRegular:15];
     [updateButton setTitle:@"立即升级" forState:UIControlStateNormal];
     [self.contentView addSubview:updateButton];
     self.updateButton = updateButton;
     [self.updateButton mas_updateConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(35);
-        make.right.mas_equalTo(-35);
-        make.bottom.mas_equalTo(-62);
-        make.height.mas_equalTo(51);
+        make.left.mas_equalTo(54);
+        make.right.mas_equalTo(-64);
+        make.bottom.mas_equalTo(-73);
+        make.height.mas_equalTo(56);
     }];
     
     if (!forceUpdate) {
@@ -135,7 +139,7 @@
         [self.contentView addSubview:closeButton];
         self.closeButton = closeButton;
         [self.closeButton mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.centerX.mas_equalTo(self.contentView);
+            make.centerX.mas_equalTo(self.updateButton.mas_centerX);
             make.bottom.mas_equalTo(-13);
 //            make.width.mas_equalTo(114);
 //            make.height.mas_equalTo(32);

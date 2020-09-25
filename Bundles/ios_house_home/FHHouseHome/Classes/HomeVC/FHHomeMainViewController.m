@@ -30,6 +30,7 @@
 #import "UIDevice+BTDAdditions.h"
 #import <FHHouseBase/NSObject+FHOptimize.h>
 #import "FHAppUpdateView.h"
+#import <FHHouseBase/FHUserTracker.h>
 
 static NSString * const kFUGCPrefixStr = @"fugc";
 
@@ -477,15 +478,41 @@ static NSString * const kFUGCPrefixStr = @"fugc";
             if (weakSelf.appUpdateHelper.updateBlock) {
                 weakSelf.appUpdateHelper.updateBlock();
             }
+            [FHUserTracker writeEvent:@"popup_click"
+                               params:@{
+                                   @"page_type": @"maintab",
+                                   @"popup_name": @"version_upgrade",
+                                   @"ab_sdk_version": model.tipsVersionCode.stringValue?:@"be_null",
+                                   @"is_preload": @"0",
+                                   @"click_position": @"instant_upgrade",
+                                   @"event_tracking_id": @"110831"
+                               }];
         }];
         [appUpdateView setCloseBlock:^{
             if (weakSelf.appUpdateHelper.closeBlock) {
                 weakSelf.appUpdateHelper.closeBlock();
             }
+            [FHUserTracker writeEvent:@"popup_click"
+                               params:@{
+                                   @"page_type": @"maintab",
+                                   @"popup_name": @"version_upgrade",
+                                   @"ab_sdk_version": model.tipsVersionCode.stringValue?:@"be_null",
+                                   @"is_preload": @"0",
+                                   @"click_position": @"close",
+                                   @"event_tracking_id": @"110831"
+                               }];
         }];
         [appUpdateView updateInfoWithVersion:model.tipsVersionName content:model.whatsNew forceUpdate:model.forceUpdate.boolValue];
         [appUpdateView show];
         self.appUpdateView = appUpdateView;
+        [FHUserTracker writeEvent:@"popup_show"
+                           params:@{
+                               @"page_type": @"maintab",
+                               @"popup_name": @"version_upgrade",
+                               @"ab_sdk_version": model.tipsVersionCode.stringValue?:@"be_null",
+                               @"is_preload": @"0",
+                               @"event_tracking_id": @"110830"
+                           }];
     });
 }
 
