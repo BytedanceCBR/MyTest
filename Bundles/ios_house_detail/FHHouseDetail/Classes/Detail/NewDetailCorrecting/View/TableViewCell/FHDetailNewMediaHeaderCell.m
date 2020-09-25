@@ -129,6 +129,14 @@
     self.baseViewModel.detailController.ttNeedIgnoreZoomAnimation = YES;
     FHDetailPictureViewController *pictureDetailViewController = [[FHDetailPictureViewController alloc] init];
     pictureDetailViewController.detailPictureModel = self.dataHelper.pictureDetailData.detailPictureModel;
+    pictureDetailViewController.contactViewModel = self.dataHelper.pictureDetailData.contactViewModel;
+    //大图图片线索
+    pictureDetailViewController.imageGroupAssociateInfo = self.dataHelper.pictureDetailData.imageGroupAssociateInfo;
+    //VR线索
+    pictureDetailViewController.vrImageAssociateInfo = self.dataHelper.pictureDetailData.vrImageAssociateInfo;
+    //视频线索
+    pictureDetailViewController.videoImageAssociateInfo = self.dataHelper.pictureDetailData.videoImageAssociateInfo;
+    
     
     pictureDetailViewController.videoVC = self.videoVC;
     pictureDetailViewController.houseType = self.baseViewModel.houseType;
@@ -139,7 +147,7 @@
     }
 
     FHDetailNewMediaHeaderModel *model = (FHDetailNewMediaHeaderModel *)self.currentData;
-    pictureDetailViewController.houseImageAssociateInfo = model.houseImageAssociateInfo;
+    
     if (!model.isShowTopImageTab) {
         //如果是新房，非北京、江州以外的城市，暂时隐藏头部
         pictureDetailViewController.isShowSegmentView = NO;
@@ -228,8 +236,8 @@
     if (data.isShowTopImageTab) {
         pictureListViewController.floorPanShowModel = self.dataHelper.photoAlbumData.floorPanModel;
         pictureListViewController.isShowSegmentTitleView = YES;
-        pictureListViewController.associateInfo = data.imageAlbumAssociateInfo;
-        pictureListViewController.contactViewModel = data.contactViewModel;
+        pictureListViewController.imageAlbumAssociateInfo = self.dataHelper.photoAlbumData.imageAlbumAssociateInfo;
+        pictureListViewController.contactViewModel = self.dataHelper.photoAlbumData.contactViewModel;
         pictureListViewController.elementFrom = @"new_detail";
     } else {
         pictureListViewController.isShowSegmentTitleView = NO;

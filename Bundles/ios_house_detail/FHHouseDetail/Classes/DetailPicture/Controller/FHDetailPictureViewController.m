@@ -56,6 +56,7 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
 @property(nonatomic, assign, readwrite)NSInteger currentIndex;
 @property(nonatomic, assign, readwrite)NSInteger photoCount;
 
+@property (nonatomic, copy) NSArray <NSString *>* rootGroupName;
 @property (nonatomic, copy) NSArray <NSString *>* titleNames;
 @property (nonatomic, copy) NSArray <NSNumber *>* titleNums;
 @property (nonatomic, copy) NSArray <NSNumber *>* pretitleSum;
@@ -287,7 +288,7 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
             if (weakSelf.clickTitleTabBlock) {
                 weakSelf.clickTitleTabBlock(currentIndex);
             }
-            if (currentIndex >= 0 && currentIndex < weakSelf.photoCount) {
+            if (currentIndex >= 0 && currentIndex < weakSelf.detailPictureModel.itemList.count) {
                 CGFloat pageWidth = weakSelf.photoScrollView.frame.size.width;
                 [weakSelf.photoScrollView setContentOffset:CGPointMake(pageWidth * currentIndex, 0) animated:NO];
             }
@@ -461,8 +462,7 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
 
 - (NSString *)elementFrom {
     NSString *element_from = @"be_null";
-    FHDetailPictureItemModel *itemModel = self.detailPictureModel.itemList[self.currentIndex];
-    if (itemModel.itemType == FHDetailPictureModelTypeVideo) {
+    if ([self isVideoImageView:self.currentIndex]) {
         element_from = @"video";
     } else {
         element_from = @"large";
@@ -472,10 +472,9 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
 
 - (NSString *)videoId {
     NSString *video_id = @"";
-    FHDetailPictureItemModel *itemModel = self.detailPictureModel.itemList[self.currentIndex];
-    if (itemModel.itemType == FHDetailPictureModelTypeVideo) {
+    if ([self isVideoImageView:self.currentIndex]) {
+        FHDetailPictureItemModel *itemModel = self.detailPictureModel.itemList[self.currentIndex];
         FHDetailPictureItemVideoModel *videoModel = (FHDetailPictureItemVideoModel *)itemModel;
-        
         video_id = videoModel.videoModel.videoID.length ? videoModel.videoModel.videoID : @"";
     } else {
         video_id = @"";
@@ -496,9 +495,8 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
             extraDic[@"item_id"] = vid;
         }
         // 头图im入口线索透传
-        if(self.houseImageAssociateInfo) {
-            extraDic[kFHAssociateInfo] = self.houseImageAssociateInfo;
-        }
+        extraDic[kFHAssociateInfo] = [self associateInfoFromIndex:self.currentIndex];
+        
         [self.contactViewModel onlineActionWithExtraDict:extraDic];
     }
 }
@@ -519,14 +517,28 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
         
         NSDictionary *associateInfoDict = nil;
         FHDetailContactModel *contactPhone = self.contactViewModel.contactPhone;
+        
+        FHClueAssociateInfoModel *associateInfoModel = [self associateInfoFromIndex:self.currentIndex];
         if (contactPhone.enablePhone) {
-            associateInfoDict = self.houseImageAssociateInfo.phoneInfo;
+            associateInfoDict = associateInfoModel.phoneInfo;
         }else {
-            associateInfoDict = self.houseImageAssociateInfo.reportFormInfo;
+            associateInfoDict = associateInfoModel.reportFormInfo;
         }
         extraDic[kFHAssociateInfo] = associateInfoDict;
         [self.contactViewModel contactActionWithExtraDict:extraDic];
     }
+}
+
+- (FHClueAssociateInfoModel *)associateInfoFromIndex:(NSUInteger)index {
+    FHClueAssociateInfoModel *associateInfoModel = nil;
+    if ([self isVideoImageView:index] && self.videoImageAssociateInfo) {
+        associateInfoModel = self.videoImageAssociateInfo;
+    } else if ([self isVRImageView:index] && self.vrImageAssociateInfo) {
+        associateInfoModel = self.vrImageAssociateInfo;
+    } else if ([self isImageView:index] && self.imageGroupAssociateInfo) {
+        associateInfoModel = self.imageGroupAssociateInfo;
+    }
+    return associateInfoModel;
 }
 
 - (UIButton *)onlineBtn {
@@ -681,28 +693,31 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
 }
 
 - (void)updateNavHeaderTitle {
-    NSInteger count = 0;
-    NSInteger currentTitleIndex = 0;
     NSInteger titleIndex = 0;
-    for (NSUInteger i = 0; i < self.titleNums.count; i++) {
-        NSNumber *num = self.titleNums[i];
-        NSInteger tempCount = [num integerValue];
-        count += tempCount;
-        if (self.currentIndex < count) {
-            titleIndex = i;
-            currentTitleIndex = count - self.currentIndex;
-            break;
+    NSInteger left = 0, right = self.pretitleSum.count - 1;
+    while (left <= right) {
+        NSInteger mid = (left + right) / 2;
+        NSNumber *midNum = self.pretitleSum[mid];
+        if (self.currentIndex < midNum.unsignedIntegerValue) {
+            titleIndex = mid;
+            right = mid - 1;
+        } else {
+            left = mid + 1;
         }
     }
-//    if (titleIndex < self.detailPictureModel.titleNums.count) {
-//        NSNumber *num = self.detailPictureModel.titleNums[titleIndex];
-//    //    self.currentTypeName = self.pictureTitles[titleIndex];
-//        if (titleIndex < self.mediaHeaderModel.houseImageDictList.count) {
-//            FHHouseDetailImageListDataModel *listModel = self.mediaHeaderModel.houseImageDictList[titleIndex];
-//            self.currentTypeName = listModel.houseImageTypeName;
-//        }
-//        self.naviView.titleLabel.text = [NSString stringWithFormat:@"%u/%d",num.unsignedIntValue - currentTitleIndex + 1,num.unsignedIntValue];
-//    }
+    
+    if (titleIndex < self.titleNums.count && titleIndex < self.pretitleSum.count) {
+        NSNumber *num = self.titleNums[titleIndex];
+        NSNumber *sum = [NSNumber numberWithInteger:0];
+        if (titleIndex > 0) {
+            sum = self.pretitleSum[titleIndex - 1];
+        }
+        if (titleIndex < self.rootGroupName.count) {
+            self.currentTypeName = self.rootGroupName[titleIndex];
+        }
+        
+        self.naviView.titleLabel.text = [NSString stringWithFormat:@"%ld/%d",self.currentIndex - sum.unsignedIntValue + 1,num.unsignedIntValue];
+    }
 }
 
 #pragma mark - Setter & Getter
@@ -734,9 +749,10 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
         [preSum addObject:[NSNumber numberWithUnsignedInteger:lastSum.unsignedIntegerValue + number.unsignedIntegerValue]];
     }
     
-    self.titleNums = numbers;
-    self.titleNames = titles;
-    self.pretitleSum = preSum;
+    self.titleNums = numbers.copy;
+    self.titleNames = titles.copy;
+    self.pretitleSum = preSum.copy;
+    self.rootGroupName = rootGroupName.copy;
     
     NSMutableArray *models = [NSMutableArray arrayWithCapacity:detailPictureModel.itemList.count];
     for (FHDetailPictureItemModel *item in detailPictureModel.itemList) {
@@ -897,6 +913,17 @@ static BOOL kFHStaticPhotoBrowserAtTop = NO;
     }
     FHDetailPictureItemModel *itemModel = self.detailPictureModel.itemList[index];
     if (itemModel.itemType == FHDetailPictureModelTypeVideo && [itemModel isKindOfClass:[FHDetailPictureItemVideoModel class]]) {
+        return YES;
+    }
+    return NO;
+}
+
+- (BOOL)isImageView: (NSInteger)index {
+    if (index < 0 || index >= self.detailPictureModel.itemList.count) {
+        return NO;
+    }
+    FHDetailPictureItemModel *itemModel = self.detailPictureModel.itemList[index];
+    if (itemModel.itemType == FHDetailPictureModelTypePicture && [itemModel isKindOfClass:[FHDetailPictureItemPictureModel class]]) {
         return YES;
     }
     return NO;
@@ -1326,7 +1353,7 @@ static BOOL kFHStaticPhotoBrowserAtTop = NO;
 #pragma mark - FHVideoViewDelegate
 
 - (void)videoFrameChanged:(CGRect)videoFrame isVerticalVideo:(BOOL)isVerticalVideo {
-    if (self.currentIndex < 0 || self.currentIndex >= _photoCount) {
+    if (self.currentIndex < 0 || self.currentIndex >= self.detailPictureModel.itemList.count) {
         return;
     }
     if (![self isVideoImageView:self.currentIndex]) {
@@ -1399,7 +1426,7 @@ static BOOL kFHStaticPhotoBrowserAtTop = NO;
 
 - (void)pan:(UIPanGestureRecognizer *)recognizer
 {
-    if (self.currentIndex < 0 || self.currentIndex >= _photoCount) {
+    if (self.currentIndex < 0 || self.currentIndex >= self.detailPictureModel.itemList.count) {
         return;
     }
     if ([self isVideoImageView:self.currentIndex]) {
@@ -1436,11 +1463,11 @@ static BOOL kFHStaticPhotoBrowserAtTop = NO;
         return;
     }
     
-    if (self.currentIndex < 0 || self.currentIndex >= _photoCount) {
+    if (self.currentIndex < 0 || self.currentIndex >= self.detailPictureModel.itemList.count) {
         return;
     }
     if ([self isVideoImageView:self.currentIndex]) {
-        // 非视频
+        // 视频不支持
         return;
     }
     

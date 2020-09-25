@@ -25,8 +25,13 @@ NS_ASSUME_NONNULL_BEGIN
 
 //线索数据
 @property (nonatomic, weak) FHHouseDetailContactViewModel *contactViewModel;
-//im线索
-@property (nonatomic, strong, nullable) FHClueAssociateInfoModel *houseImageAssociateInfo;
+
+//大图图片线索
+@property (nonatomic, strong, nullable) FHClueAssociateInfoModel *imageGroupAssociateInfo;
+//VR线索
+@property (nonatomic, strong, nullable) FHClueAssociateInfoModel *vrImageAssociateInfo;
+//视频线索
+@property (nonatomic, strong, nullable) FHClueAssociateInfoModel *videoImageAssociateInfo;
 
 
 @property (nonatomic, weak)     UIViewController       *topVC;

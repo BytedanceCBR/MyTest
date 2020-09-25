@@ -127,6 +127,11 @@
     pictureDetailData.mediaItemArray = itemArray.copy;
     pictureDetailData.detailPictureModel = pictureModel;
     
+    pictureDetailData.imageGroupAssociateInfo = newMediaHeaderModel.albumInfo.imageGroupAssociateInfo;
+    pictureDetailData.vrImageAssociateInfo = newMediaHeaderModel.albumInfo.vrImageAssociateInfo;
+    pictureDetailData.videoImageAssociateInfo = newMediaHeaderModel.albumInfo.videoImageAssociateInfo;
+    pictureDetailData.contactViewModel = newMediaHeaderModel.contactViewModel;
+    
     return pictureDetailData;
 }
 
@@ -142,6 +147,8 @@
     picShowModel.itemGroupList = mArr.copy;
     
     photoAlbumData.floorPanModel = picShowModel;
+    photoAlbumData.imageAlbumAssociateInfo = newMediaHeaderModel.albumInfo.imageAlbumAssociateInfo;
+    photoAlbumData.contactViewModel = newMediaHeaderModel.contactViewModel;
     return photoAlbumData;
 }
 

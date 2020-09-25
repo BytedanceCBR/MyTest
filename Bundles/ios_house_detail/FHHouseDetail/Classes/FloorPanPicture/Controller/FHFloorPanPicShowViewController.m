@@ -380,7 +380,7 @@
 //            extraDic[kFHCluePage] = cluePage;
 //        }
         FHDetailContactModel *contactPhone = self.contactViewModel.contactPhone;
-        NSDictionary *associateInfoDict = contactPhone.enablePhone ? self.associateInfo.phoneInfo : self.associateInfo.reportFormInfo;
+        NSDictionary *associateInfoDict = contactPhone.enablePhone ? self.imageAlbumAssociateInfo.phoneInfo : self.imageAlbumAssociateInfo.reportFormInfo;
         extraDic[kFHAssociateInfo] = associateInfoDict ? : @{};
         [self.contactViewModel contactActionWithExtraDict:extraDic];
     }
@@ -395,8 +395,8 @@
         extraDic[@"element_from"] = self.elementFrom ? : @"be_null";
         extraDic[@"from"] = @"app_newhouse_property_picture";
         // 头图im入口线索透传
-        if (self.associateInfo) {
-            extraDic[kFHAssociateInfo] = self.associateInfo;
+        if (self.imageAlbumAssociateInfo) {
+            extraDic[kFHAssociateInfo] = self.imageAlbumAssociateInfo;
         }
         [self.contactViewModel onlineActionWithExtraDict:extraDic];
     }

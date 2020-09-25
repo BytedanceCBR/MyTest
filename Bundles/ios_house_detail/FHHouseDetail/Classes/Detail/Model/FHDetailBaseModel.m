@@ -564,7 +564,11 @@
 + (JSONKeyMapper*)keyMapper
 {
     NSDictionary *dict = @{
-        @"tabList": @"tab_list"
+        @"tabList": @"tab_list",
+        @"imageGroupAssociateInfo": @"image_group_associate_info",
+        @"imageAlbumAssociateInfo": @"image_album_associate_info",
+        @"vrImageAssociateInfo"   : @"vr_image_associate_info",
+        @"videoImageAssociateInfo": @"video_image_associate_info"
     };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
         return dict[keyName]?:keyName;

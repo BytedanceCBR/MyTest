@@ -44,10 +44,23 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, copy) NSArray<FHMultiMediaItemModel*> *mediaItemArray;
 @property (nonatomic, strong) FHDetailPictureModel *detailPictureModel;
+
+//大图图片线索
+@property (nonatomic, strong, nullable) FHClueAssociateInfoModel *imageGroupAssociateInfo;
+//VR线索
+@property (nonatomic, strong, nullable) FHClueAssociateInfoModel *vrImageAssociateInfo;
+//视频线索
+@property (nonatomic, strong, nullable) FHClueAssociateInfoModel *videoImageAssociateInfo;
+//经纪人信息
+@property (nonatomic, weak) FHHouseDetailContactViewModel *contactViewModel;
 @end
 
 @interface FHDetailNewMediaHeaderDataHelperPhotoAlbumData : NSObject
 @property (nonatomic, strong) FHFloorPanPicShowModel *floorPanModel;
+//相册线索
+@property (nonatomic, strong, nullable) FHClueAssociateInfoModel *imageAlbumAssociateInfo;
+//经纪人信息
+@property (nonatomic, weak) FHHouseDetailContactViewModel *contactViewModel;
 @end
 
 

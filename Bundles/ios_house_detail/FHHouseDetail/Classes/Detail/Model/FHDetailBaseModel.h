@@ -363,6 +363,14 @@ typedef NS_ENUM (NSUInteger, FHHouseDetailImageListDataUsedSceneType) {
 
 @interface FHHouseDetailMediaInfo : JSONModel
 @property (nonatomic, strong, nullable) NSArray<FHHouseDetailMediaTabInfo> *tabList;
+//大图图片线索
+@property (nonatomic, strong, nullable) FHClueAssociateInfoModel *imageGroupAssociateInfo;
+//相册线索
+@property (nonatomic, strong, nullable) FHClueAssociateInfoModel *imageAlbumAssociateInfo;
+//VR线索
+@property (nonatomic, strong, nullable) FHClueAssociateInfoModel *vrImageAssociateInfo;
+//视频线索
+@property (nonatomic, strong, nullable) FHClueAssociateInfoModel *videoImageAssociateInfo;
 @end
 
 
