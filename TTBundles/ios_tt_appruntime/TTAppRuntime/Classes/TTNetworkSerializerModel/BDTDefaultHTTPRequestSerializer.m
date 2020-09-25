@@ -8,7 +8,7 @@
 #import "BDTDefaultHTTPRequestSerializer.h"
 #import "TTNetworkManager.h"
 #import "TTAccountSDK.h"
-
+#import <TTRoute/TTRoute.h>
 
 
 @interface BDTDefaultHTTPRequestSerializer()
@@ -27,6 +27,20 @@
 {
     NSURL *origURL = [NSURL URLWithString:URL];
     NSURL *convertUrl = [self _transferedURL:origURL];
+    
+    TTRouteParamObj *paramObj = [[TTRoute sharedRoute]routeParamObjWithURL:origURL];
+    NSDictionary *allParams = paramObj.allParams;
+    NSMutableDictionary *resultDict = @{}.mutableCopy;
+    [commonParam enumerateKeysAndObjectsUsingBlock:^(NSString *  _Nonnull key, id  _Nonnull obj, BOOL * _Nonnull stop) {
+        if (![allParams.allKeys containsObject:key]) {
+            [resultDict setValue:obj forKey:key];
+        }else {
+//            NSLog(@"zjing test replace key:%@, value:%@", key, obj);
+        }
+    }];
+    
+    commonParam = [self commonParams:resultDict byRemoveParams:params];
+    
     TTHttpRequest *mutableURLRequest = [super URLRequestWithURL:convertUrl.absoluteString params:params method:method constructingBodyBlock:bodyBlock commonParams:commonParam];
     
     //我们自己的 一些Header 在这一步加入
@@ -45,6 +59,7 @@
     NSURL *origURL = [NSURL URLWithString:URL];
     NSURL *convertUrl = [self _transferedURL:origURL];
     
+    commonParam = [self commonParams:commonParam byRemoveParams:params];
     TTHttpRequest *mutableURLRequest = [super URLRequestWithURL:convertUrl.absoluteString headerField:headField params:params method:method constructingBodyBlock:bodyBlock commonParams:commonParam];
     
     //我们自己的 一些Header 在这一步加入
@@ -220,6 +235,30 @@
 - (void)applySessionKeyXToRequest:(TTHttpRequest *)toRequest
 {
     [toRequest setValue:[TTAccount sharedAccount].sessionKey forHTTPHeaderField:@"x-ss-sessionid"];
+}
+
+-(NSDictionary *)commonParams:(NSDictionary *)commonParams byRemoveParams:(NSDictionary *)params
+{
+    if (params.count == 0 || commonParams.count == 0) {
+        return commonParams;
+    }
+    
+    NSSet *commonKeys = [[NSSet alloc] initWithArray:commonParams.allKeys];
+    NSSet *paramKeys = [[NSSet alloc] initWithArray:params.allKeys];
+    
+    if ([commonKeys intersectsSet:paramKeys]) {
+        
+        NSMutableDictionary *mCommonParams = [[NSMutableDictionary alloc] initWithDictionary:commonParams];
+        for (NSString *key in params.allKeys) {
+            if ([commonKeys containsObject:key]) {
+                [mCommonParams removeObjectForKey:key];
+            }
+        }
+        return mCommonParams;
+    }
+    
+    return commonParams;
+    
 }
 
 @end
