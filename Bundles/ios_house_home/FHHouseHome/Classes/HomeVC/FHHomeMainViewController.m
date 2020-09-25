@@ -449,9 +449,9 @@ static NSString * const kFUGCPrefixStr = @"fugc";
     self.appUpdateHelper = [[TTAppUpdateHelper alloc] initWithInstallID:iidValue deviceID:didValue channel:channelValue aid:@"1370" delegate:self];
     [self.appUpdateHelper startCheckVersion];
 //#if DEBUG
-    self.appUpdateHelper.maxAppStorePopTimes = 100;
-    self.appUpdateHelper.maxTestFlightPopTimes = 100;
-    self.appUpdateHelper.maxInhousePopTimes = 100;
+//    self.appUpdateHelper.maxAppStorePopTimes = 100;
+//    self.appUpdateHelper.maxTestFlightPopTimes = 100;
+//    self.appUpdateHelper.maxInhousePopTimes = 100;
 //#endif
 }
 
@@ -550,7 +550,6 @@ static NSString * const kFUGCPrefixStr = @"fugc";
  也可以通过实现此方法自行进行判断
  */
 - (BOOL)decideIsInhouseApp {
-    return NO;
     return [TTSandBoxHelper isInHouseApp];
 }
 

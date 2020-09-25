@@ -62,7 +62,7 @@
         }];
         [self layoutIfNeeded];
 
-        [FHUtils addShadowToView:self.iconContainerView withOpacity:0.1 shadowColor:[UIColor blackColor] shadowOffset:CGSizeMake(2, 6) shadowRadius:8 andCornerRadius:4];
+        [FHUtils addShadowToView:self.iconContainerView withOpacity:0.1 shadowColor:[UIColor blackColor] shadowOffset:CGSizeMake(2, 6) shadowRadius:8 andCornerRadius:10];
         
     }
     return self;

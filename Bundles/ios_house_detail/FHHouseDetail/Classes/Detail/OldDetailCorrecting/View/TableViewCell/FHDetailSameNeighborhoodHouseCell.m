@@ -315,7 +315,7 @@
             if (model.houseImageTag.text) {
                 self.imageTagLabel.textColor = [UIColor whiteColor];
                 self.imageTagLabel.text = model.houseImageTag.text;
-                self.imageTagLabelBgView.backgroundColor = [UIColor themeOrange1];
+                self.imageTagLabelBgView.backgroundColor = [UIColor themeOrange4];
                 self.imageTagLabelBgView.hidden = NO;
             }else {
                 self.imageTagLabelBgView.hidden = YES;
@@ -495,7 +495,7 @@
 {
     if (!_imageTagLabelBgView) {
         _imageTagLabelBgView = [[FHSameHouseTagView alloc]init];
-        _imageTagLabelBgView.backgroundColor = [UIColor themeOrange1];
+        _imageTagLabelBgView.backgroundColor = [UIColor themeOrange4];
         _imageTagLabelBgView.hidden = YES;
     }
     return _imageTagLabelBgView;

@@ -144,12 +144,14 @@
     [_buttonOpenMore setBackgroundColor:[UIColor themeGray7]];
     [_buttonOpenMore setTitleColor:[UIColor themeGray1] forState:UIControlStateNormal];
     [_buttonOpenMore.titleLabel setFont:[UIFont themeFontRegular:14]];
+    _buttonOpenMore.layer.masksToBounds = YES;
+    _buttonOpenMore.layer.cornerRadius = 10;
     [_buttonOpenMore addTarget:self action:@selector(openMoreClick) forControlEvents:UIControlEventTouchUpInside];
     
     [self.bottomView addSubview:_buttonOpenMore];
     [_buttonOpenMore mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(20);
-        make.right.mas_equalTo(-20);
+        make.left.mas_equalTo(15);
+        make.right.mas_equalTo(-15);
         make.centerY.equalTo(self.buttonOpenMore);
         make.height.mas_equalTo(40);
     }];

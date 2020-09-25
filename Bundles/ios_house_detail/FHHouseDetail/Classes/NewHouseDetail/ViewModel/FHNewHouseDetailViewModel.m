@@ -40,6 +40,7 @@
 #import "FHNewHouseDetailDisclaimerSC.h"
 #import "FHNewHouseDetailDisclaimerSM.h"
 #import "FHNewHouseDetailViewController.h"
+#import <FHHouseBase/NSObject+FHOptimize.h>
 
 @interface FHNewHouseDetailViewModel ()
 
@@ -88,7 +89,8 @@
 - (void)processDetailData:(FHDetailNewModel *)model{
     self.detailData = model;
     [self addDetailCoreInfoExcetionLog];
-    
+//    
+//    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, <#uintptr_t flags#>), <#^(void)block#>)
     // 清空数据源
     NSMutableArray *sectionModels = [NSMutableArray array];
     FHDetailContactModel *contactPhone = nil;
@@ -195,6 +197,10 @@
     [self.detailController updateLayout:model.isInstantData];
     
     __weak typeof(self) weakSelf = self;
+    [self executeOnce:^{
+        [weakSelf addPageLoadLog];
+    } token:FHExecuteOnceUniqueTokenForCurrentContext];
+    
     if (!model.isInstantData && model.data) {
         [FHHouseDetailAPI requestRelatedFloorSearch:self.houseId offset:@"0" query:nil count:0 completion:^(FHListResultHouseModel * _Nullable model, NSError * _Nullable error) {
             weakSelf.relatedHouseData = model;

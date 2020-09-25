@@ -45,6 +45,7 @@
         self.isFirstViewDidAppear = YES;
         self.needRemoveLastVC = NO;
         self.isResetStatusBar = YES;
+        self.ttDragBackLeftEdge = UIScreen.mainScreen.bounds.size.width * 0.2;
 
         self.titleName = [paramObj.allParams objectForKey:VCTITLE_KEY];
         NSDictionary *tracer = paramObj.allParams[TRACER_KEY];

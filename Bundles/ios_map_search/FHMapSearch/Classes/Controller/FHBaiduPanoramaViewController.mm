@@ -143,7 +143,7 @@ char *const FHBaiduPanoramaPOISearchResultTypeName = "FHBaiduPanoramaPOISearchRe
         self.isResetStatusBar = NO;
         
         self.ttDisableDragBack = NO;
-        self.ttDragBackLeftEdge = 20;
+        self.ttDragBackLeftEdge = UIScreen.mainScreen.bounds.size.width * 0.2;
         if (paramObj.allParams[@"gaodeLat"]) {
             self.gaodeLat = [paramObj.allParams btd_doubleValueForKey:@"gaodeLat"];
         }

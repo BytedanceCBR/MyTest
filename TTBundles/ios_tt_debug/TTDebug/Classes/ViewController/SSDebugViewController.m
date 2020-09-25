@@ -999,7 +999,7 @@ extern NSString *const BOE_OPEN_KEY ;
             return ;
         }
         
-        if([urlStrInput containsString:@"sslocal://"]){
+        if([urlStrInput containsString:@"sslocal://"] || [urlStrInput containsString:@"snssdk1370://"]){
             NSString *stringToSave = [NSString stringWithString:urlStrInput];
              [FHUtils setContent:stringToSave forKey:@"k_fh_debug_h5_bridge_test"];
              
