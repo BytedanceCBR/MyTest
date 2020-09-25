@@ -131,6 +131,15 @@
                 make.top.mas_equalTo(0);
             }];
         }
+        if (model.isLastCell) {
+            [self.lineView mas_updateConstraints:^(MASConstraintMaker *make) {
+                make.bottom.mas_equalTo(-20);
+            }];
+        } else {
+            [self.lineView mas_updateConstraints:^(MASConstraintMaker *make) {
+                make.bottom.mas_equalTo(0);
+            }];
+        }
     }
 }
 

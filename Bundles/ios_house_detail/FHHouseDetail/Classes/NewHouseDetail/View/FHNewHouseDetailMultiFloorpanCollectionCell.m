@@ -135,6 +135,7 @@
 }
 
 // 不重复调用
+
 - (void)collectionView:(UICollectionView *)collectionView willDisplayCell:(UICollectionViewCell *)cell forItemAtIndexPath:(NSIndexPath *)indexPath {
     if (self.willShowItem) {
         self.willShowItem(indexPath);

@@ -71,7 +71,7 @@
         item.title = itemModel.title;
         item.createdTime = itemModel.createdTime;
         item.isFirstCell = (i == 0);
-        item.isLastCell = (i == self.currentItems.count - 1);
+        item.isLastCell = (i == model.list.count - 1);
         item.isExpand = YES;
         [itemsArray addObject:item];
     }
