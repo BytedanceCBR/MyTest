@@ -10,17 +10,22 @@
 #import "FHDetailTagBackgroundView.h"
 #import "FHCommonDefines.h"
 #import <BDWebImage/BDWebImage.h>
+#import <lottie-ios/Lottie/LOTAnimationView.h>
 
 @interface FHFloorPanListCell ()
-@property (nonatomic , strong) UIImageView *iconView;
-@property (nonatomic , strong) UILabel *nameLabel;
-@property (nonatomic , strong) UILabel *roomSpaceLabel;
-@property (nonatomic , strong) UILabel *priceLabel;
+
+@property (nonatomic, strong) UIImageView *iconView;
+@property (nonatomic, strong) UILabel *nameLabel;
+@property (nonatomic, strong) UILabel *roomSpaceLabel;
+@property (nonatomic, strong) UILabel *priceLabel;
 @property (nonatomic, strong) FHDetailTagBackgroundView        *tagBacView;
-@property (nonatomic , strong) UIButton *mapMaskBtn;
-@property (nonatomic , strong) UIView *statusBGView;
-@property (nonatomic , strong) UIView *topLine;
-@property (nonatomic , strong) UIView *cellBackView;
+@property (nonatomic, strong) UIButton *mapMaskBtn;
+@property (nonatomic, strong) UIView *statusBGView;
+@property (nonatomic, strong) UIView *topLine;
+@property (nonatomic, strong) UIView *cellBackView;
+@property (nonatomic, strong) LOTAnimationView *vrLoadingView;
+@property (nonatomic, strong) UIView *vrBackView;
+
 @end
 
 @implementation FHFloorPanListCell
@@ -56,6 +61,29 @@
             make.bottom.mas_equalTo(-20);
             make.width.mas_equalTo(66);
             make.height.mas_equalTo(66);
+        }];
+        
+        _vrBackView = [[UIView alloc] init];
+        _vrBackView.layer.cornerRadius = 9;
+        _vrBackView.layer.masksToBounds = YES;
+        _vrBackView.backgroundColor = RGBA(0, 0, 0, 0.4);
+        _vrBackView.hidden = YES;
+        [self.contentView addSubview:_vrBackView];
+        [self.vrBackView mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.left.mas_equalTo(self.iconView.mas_left).offset(6);
+            make.bottom.mas_equalTo(self.iconView.mas_bottom).offset(-6);
+            make.width.height.mas_equalTo(18);
+        }];
+        
+        NSString *path = [[NSBundle mainBundle] pathForResource:@"VRImageLoading" ofType:@"json"];
+        _vrLoadingView = [LOTAnimationView animationWithFilePath:path];
+        _vrLoadingView.loopAnimation = YES;
+        _vrLoadingView.hidden = YES;
+        [self.contentView addSubview:_vrLoadingView];
+        [self.vrLoadingView mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.left.mas_equalTo(self.iconView.mas_left).offset(8);
+            make.bottom.mas_equalTo(self.iconView.mas_bottom).offset(-8);
+            make.height.width.mas_equalTo(14);
         }];
         
         _nameLabel = [UILabel new];
@@ -216,6 +244,14 @@
             [self.nameLabel mas_updateConstraints:^(MASConstraintMaker *make) {
                 make.top.mas_equalTo(20 + 12);
             }];
+        }
+        if (model.vrInfo.hasVr) {
+            self.vrBackView.hidden = NO;
+            self.vrLoadingView.hidden = NO;
+            [self.vrLoadingView play];
+        } else {
+            self.vrBackView.hidden = YES;
+            self.vrLoadingView.hidden = YES;
         }
 
     }

@@ -25,6 +25,7 @@
 @property (nonatomic, weak) UIImageView *mainImaTag;
 @property (nonatomic, strong) UIImageView *mainImageView;
 @property (nonatomic, strong) LOTAnimationView *vrLoadingView;
+@property (nonatomic, strong) UIImageView *videoImageView;
 
 @property (nonatomic, strong) UIView *rightInfoView;
 @property (nonatomic, strong) UILabel *mainTitleLabel; //主title lable
@@ -124,6 +125,14 @@
     }];
     self.vrLoadingView.hidden = YES;
     
+    [self.leftInfoView addSubview:self.videoImageView];
+    [self.videoImageView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.mas_equalTo(8);
+        make.bottom.mas_equalTo(-8);
+        make.width.height.mas_equalTo(16);
+    }];
+    self.videoImageView.hidden = YES;
+
     _rightInfoView = [[UIView alloc] init];
     [self.containerView addSubview:self.rightInfoView];
     [self.rightInfoView mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -244,7 +253,7 @@
             self.priceLabel.textColor = [UIColor themeOrange1];
         }
         [self updateAdvantage:model];
-        [self updateVRInfo:model];
+        [self updateVRAndVideoInfo:model];
     }
 }
 
@@ -255,12 +264,13 @@
     }
 }
 
-- (void)updateVRInfo:(FHSearchHouseItemModel *)model {
+- (void)updateVRAndVideoInfo:(FHSearchHouseItemModel *)model {
     if (self.maskVRImageView) {
         [self.maskVRImageView removeFromSuperview];
         self.maskVRImageView = nil;
     }
     if (model.vrInfo.hasVr) {
+        self.videoImageView.hidden = YES;
         self.vrLoadingView.hidden = NO;
         [self.vrLoadingView play];
         self.maskVRImageView = [UIView new];
@@ -269,6 +279,11 @@
         [self.maskVRImageView setFrame:CGRectMake(0.0f, 0.0f, 84, 84)];
     } else {
         self.vrLoadingView.hidden = YES;
+        if (model.videoInfo.hasVideo) {
+            self.videoImageView.hidden = NO;
+        } else {
+            self.videoImageView.hidden = YES;
+        }
     }
 }
 
@@ -348,6 +363,13 @@
         _vrLoadingView.loopAnimation = YES;
     }
     return _vrLoadingView;
+}
+
+- (UIImageView *)videoImageView {
+    if (!_videoImageView) {
+        _videoImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"video_image"]];
+    }
+    return _videoImageView;
 }
 
 -(FHCornerItemLabel *)tagTitleLabel {

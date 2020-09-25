@@ -59,6 +59,14 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong , nullable) NSArray<FHDetailNewDataTimelineListModel> *list;
 @end
 
+@interface FHDetailHouseFloorpanListVRDataModel: JSONModel
+@property (nonatomic, assign) BOOL hasVr;
+@property (nonatomic, strong , nullable) FHImageModel *vrImage;
+@property (nonatomic, copy , nullable) NSString *openUrl;
+@property (nonatomic, assign) NSInteger spaceType;       //（售楼处：0  鸟瞰图：1   样板间：2）
+@property (nonatomic, copy , nullable) NSString *vrId;
+@end
+
 @protocol FHDetailNewDataFloorpanListListModel<NSObject>
 @end
 
@@ -82,6 +90,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *facingDirection;
 @property (nonatomic, copy) NSString *imOpenUrl;
 @property (nonatomic, strong , nullable) FHClueAssociateInfoModel *associateInfo;
+@property (nonatomic, strong, nullable) FHDetailHouseFloorpanListVRDataModel *vrInfo;
 
 @end
 
