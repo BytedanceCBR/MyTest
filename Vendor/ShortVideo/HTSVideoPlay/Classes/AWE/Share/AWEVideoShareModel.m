@@ -43,9 +43,9 @@
     NSDictionary *dict = @{TTActivityContentItemTypeWechatTimeLine: @"weixin_moments",
                            TTActivityContentItemTypeWechat: @"weixin",
                            TTActivityContentItemTypeQQFriend: @"qq",
-                           TTActivityContentItemTypeQQZone: @"qzone"};
+                           TTActivityContentItemTypeQQZone: @"qzone",
 //                           TTActivityContentItemTypeSystem: @"system",
-//                           TTActivityContentItemTypeCopy: @"copy"};
+                           TTActivityContentItemTypeCopy: @"copy"};
     
     return [dict objectForKey:contentItemType];
 }
@@ -79,16 +79,17 @@
             _shareDesc = @"这是我私藏的视频。一般人我才不分享！";
         }
         
-        if ([model.groupSource isEqualToString:AwemeGroupSource]) {
-            _shareCopyContent = [NSString stringWithFormat:@"%@在幸福里上分享了视频，快来围观！传送门戳我>>%@", model.user.name, model.share.shareUrl];
-        } else if ([model.groupSource isEqualToString:HotsoonGroupSource]) {
-            _shareCopyContent = [NSString stringWithFormat:@"%@在幸福里上分享了视频，快来围观！传送门戳我>>%@", model.user.name, model.share.shareUrl];
-        } else if ([model.groupSource isEqualToString:ToutiaoGroupSource]) {
-            _shareCopyContent = [NSString stringWithFormat:@"%@在幸福里上分享了视频，快来围观！传送门戳我>>%@", model.user.name, model.share.shareUrl];
-        } else {
-            _shareCopyContent = [NSString stringWithFormat:@"%@分享了视频，快来围观！传送门戳我>>%@", model.user.name, model.share.shareUrl];
-        }
+//        if ([model.groupSource isEqualToString:AwemeGroupSource]) {
+//            _shareCopyContent = [NSString stringWithFormat:@"%@在幸福里上分享了视频，快来围观！传送门戳我>>%@", model.user.name, model.share.shareUrl];
+//        } else if ([model.groupSource isEqualToString:HotsoonGroupSource]) {
+//            _shareCopyContent = [NSString stringWithFormat:@"%@在幸福里上分享了视频，快来围观！传送门戳我>>%@", model.user.name, model.share.shareUrl];
+//        } else if ([model.groupSource isEqualToString:ToutiaoGroupSource]) {
+//            _shareCopyContent = [NSString stringWithFormat:@"%@在幸福里上分享了视频，快来围观！传送门戳我>>%@", model.user.name, model.share.shareUrl];
+//        } else {
+//            _shareCopyContent = [NSString stringWithFormat:@"%@分享了视频，快来围观！传送门戳我>>%@", model.user.name, model.share.shareUrl];
+//        }
         
+        _shareCopyContent = model.share.shareUrl;
         _shareURL = model.share.shareUrl;
         _shareImageURL = [model.video.originCover.urlList firstObject];
         _shareType = shareType;

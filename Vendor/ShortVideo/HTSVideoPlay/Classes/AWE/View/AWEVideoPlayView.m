@@ -25,7 +25,6 @@
 #import "HTSVideoTimingTracker.h"
 // Util
 #import <Masonry/Masonry.h>
-#import "HTSVideoPlayToast.h"
 #import "HTSVideoPlayColor.h"
 #import "UIImageView+WebCache.h"
 #import "AWEVideoConstants.h"
@@ -51,6 +50,7 @@
 #import "UIViewAdditions.h"
 #import "UIView+BTDAdditions.h"
 #import <TTVideoEngine/TTVideoEngine.h>
+#import "ToastManager.h"
 
 static NSString * const VideoPlayTimeKey =  @"video_play_time";
 static NSString * const VideoStallTimeKey =  @"video_stall_time";
@@ -229,7 +229,7 @@ static NSString * const VideoPrepareTimeTechKey = @"prepare_time_tech";
             self.isPlaying = YES;
             [self _doPlay];
         } else {
-            [HTSVideoPlayToast show:(self.isVideoDeleted ? @"视频已删除，播放失败" : @"视频信息加载失败")];
+            [[ToastManager manager] showToast:(self.isVideoDeleted ? @"视频已删除，播放失败" : @"视频信息加载失败")];
             
             if (!self.isVideoDeleted) {
                 [[TSVMonitorManager sharedManager] trackVideoPlayStatus:TSVMonitorVideoPlayFailed model:self.model error:[[NSError alloc] initWithDomain:@"TSVVideoPlayFailed" code:1 userInfo:@{NSLocalizedDescriptionKey : @"视频信息加载失败"}]];
@@ -397,9 +397,9 @@ static NSString * const VideoPrepareTimeTechKey = @"prepare_time_tech";
         self.isPlaying = NO;
         [self _showLoadingIndicator:NO];
         if ([TTReachability isNetworkConnected]) {
-            [HTSVideoPlayToast show:@"播放失败"];
+            [[ToastManager manager] showToast:@"播放失败"];
         } else {
-            [HTSVideoPlayToast show:@"网络不可用"];
+            [[ToastManager manager] showToast:@"网络异常"];
         }
         
         // 停止并关闭缓存

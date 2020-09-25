@@ -339,10 +339,10 @@
 
 //小视频
 - (void)jumpToSmallVideoDetail:(FHFeedUGCCellModel *)cellModel otherVideos:(NSArray<FHFeedUGCCellModel *> *)otherVideos showComment:(BOOL)showComment enterType:(NSString *)enterType extraDic:(NSDictionary *)extraDic {
-    if (![TTReachability isNetworkConnected]) {
-        [[ToastManager manager] showToast:@"网络异常"];
-        return;
-    }
+//    if (![TTReachability isNetworkConnected]) {
+//        [[ToastManager manager] showToast:@"网络异常"];
+//        return;
+//    }
     WeakSelf;
     TSVShortVideoDetailExitManager *exitManager = [[TSVShortVideoDetailExitManager alloc] initWithUpdateBlock:^CGRect{
         StrongSelf;
