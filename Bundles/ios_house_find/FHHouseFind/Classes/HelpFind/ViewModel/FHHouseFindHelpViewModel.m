@@ -1809,12 +1809,13 @@ static const NSInteger kDefaultPriceIndex = 4;  //1.0.8版本将价格区间的�
 #pragma mark - 埋点
 - (void)addGoDetailLog
 {
+    NSString *trackingID = self.houseType == FHHouseTypeSecondHandHouse ? @"93414" : @"110833";
     NSMutableDictionary *params = @{}.mutableCopy;
     params[@"enter_from"] = self.tracerDict[@"enter_from"] ? : @"be_null";
     params[@"origin_from"] = self.tracerDict[@"origin_from"] ?: @"be_null";
     params[@"element_from"] = self.tracerDict[@"element_from"] ?: @"be_null";
     params[@"page_type"] = [self pageTypeString];
-    params[@"event_tracking_id"] = @"93414";
+    params[@"event_tracking_id"] = trackingID;
     [FHUserTracker writeEvent:@"go_detail" params:params];
 }
 

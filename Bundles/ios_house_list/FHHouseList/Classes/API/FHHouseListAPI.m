@@ -463,8 +463,8 @@
     if (sugParam) {
         qparam[@"suggestion_params"] = sugParam;
     }
-    const NSString * _Nonnull extractedExpr = CHANNEL_ID_SEARCH_COURT;
-    qparam[CHANNEL_ID] = extractedExpr;
+    
+    qparam[CHANNEL_ID] = CHANNEL_ID_SEARCH_COURT;
     if ([NSStringFromClass(cls) isEqualToString:NSStringFromClass([FHListSearchHouseModel class])]) {
         return [FHHouseListAPI querySearchData:queryPath uploadLog:YES params:qparam class:cls logPath:nil completion:completion];
     }

@@ -510,7 +510,7 @@ extern NSString *const INSTANT_DATA_KEY;
     switch (self.houseType) {
         case FHHouseTypeNewHouse:
             if (isFromRecommend) {
-                [self requestRecommendErshouHouseListData:isRefresh query:query offset:offset searchId:self.recommendSearchId];
+                [self requestRecommendNewHouseListData:isRefresh query:query offset:offset searchId:self.recommendSearchId];
             } else {
                 [self requestNewHouseListData:isRefresh query:query offset:offset searchId:searchId];
             }
@@ -2276,6 +2276,7 @@ extern NSString *const INSTANT_DATA_KEY;
     }else if ([cellModel isKindOfClass:[FHDynamicLynxCellModel class]]) {
         FHDynamicLynxModel *model = ((FHDynamicLynxCellModel *)cellModel).model;
         NSDictionary *reportData = [((FHDynamicLynxModel *)model).lynxData objectForKey:@"report_params"];
+        NSString *trackingID = self.houseType == FHHouseTypeSecondHandHouse ? @"107653" : @"110832";
         if (reportData && [reportData isKindOfClass:[NSDictionary class]]) {
             NSDictionary *params = @{@"origin_from":reportData[@"origin_from"] ?: @"be_null",
                                      @"enter_from":reportData[@"enter_from"] ?: @"be_null",
@@ -2283,7 +2284,7 @@ extern NSString *const INSTANT_DATA_KEY;
                                      @"page_type":reportData[@"page_type"] ?: @"be_null",
                                      @"element_type":reportData[@"element_type"] ?: @"be_null",
                                      @"search_id":reportData[@"search_id"] ?: @"be_null",
-                                     @"event_tracking_id":@"107653",
+                                     @"event_tracking_id":trackingID,
                                     };
             [FHUserTracker writeEvent:@"element_show" params:params];
         }
