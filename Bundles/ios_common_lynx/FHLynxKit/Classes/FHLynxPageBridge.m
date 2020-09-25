@@ -108,26 +108,12 @@
 }
  
 - (void)clickPhone:(id)param {
-    // 点击埋点
-    NSMutableDictionary *reportParams = [[NSMutableDictionary alloc] init];
-    reportParams[UT_PAGE_TYPE] = @"common_problem";
-    reportParams[@"click_position"] = @"call_button";
-    reportParams[@"event_tracking_id"] = @(110837).stringValue;
-    TRACK_EVENT(@"click_options", reportParams);
-    
     [FHCustomerServicePage callCustomerService];
 }
 
-- (void)clickIM:(id)param {
-    // 点击埋点
-    NSMutableDictionary *reportParams = [[NSMutableDictionary alloc] init];
-    reportParams[UT_PAGE_TYPE] = @"common_problem";
-    reportParams[@"click_position"] = @"online_consult";
-    reportParams[@"event_tracking_id"] = @(110837).stringValue;
-    TRACK_EVENT(@"click_options", reportParams);
-    
+- (void)clickIM:(id)param {    
     [FHCustomerServicePage jumpToLinkChatPage:@{
-        UT_ENTER_FROM: reportParams[UT_PAGE_TYPE],
+        UT_ENTER_FROM: @"common_problem",
     }];
 }
 @end
