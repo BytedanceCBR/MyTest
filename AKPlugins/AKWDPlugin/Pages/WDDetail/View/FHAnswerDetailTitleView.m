@@ -11,6 +11,7 @@
 #import <Masonry/Masonry.h>
 #import "WDAnswerEntity.h"
 #import <NSString+BTDAdditions.h>
+#import <FHCommonDefines.h>
 
 @interface FHAnswerDetailTitleView ()
 @property(nonatomic,strong) UILabel *questionTitleLabel;
@@ -75,7 +76,7 @@
 }
 
 - (CGSize)intrinsicContentSize {
-    return self.size;
+    return CGSizeMake(SCREEN_WIDTH, 44);
 }
 
 

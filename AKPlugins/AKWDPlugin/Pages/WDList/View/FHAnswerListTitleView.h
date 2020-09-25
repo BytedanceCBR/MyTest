@@ -10,7 +10,6 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @interface FHAnswerListTitleView : UIView
-@property(nonatomic,assign) CGSize size;
 -(void)updateWithViewModel:(WDListViewModel *)viewModel;
 @end
 

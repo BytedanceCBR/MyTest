@@ -10,6 +10,7 @@
 #import <UIColor+Theme.h>
 #import <UIFont+House.h>
 #import <WDQuestionEntity.h>
+#import <FHCommonDefines.h>
 
 @interface FHAnswerListTitleView ()
 @property(nonatomic,strong) UILabel *titleLabel;
@@ -38,7 +39,7 @@
 }
 
 -(CGSize)intrinsicContentSize {
-    return self.size;
+    return CGSizeMake(SCREEN_WIDTH, 44);
 }
 
 @end

@@ -6,9 +6,8 @@
 //
 
 #import "UIButton+FHUGCMultiDigg.h"
-#import <TTMultiDiggManager+FHUGC.h>
+#import <TTMultiDigManager.h>
 #import <TTAccountManager.h>
-#import <ReactiveObjC/ReactiveObjC.h>
 #import <Masonry/Masonry.h>
 #import "UIImage+FIconFont.h"
 #import "UIColor+Theme.h"
@@ -22,16 +21,6 @@
     });
     if(![TTMultiDiggManager isMulitDiggEmojiAnimationAlreadyRegisteredWithButton:self]) {
         [TTMultiDiggManager registMulitDiggEmojiAnimationWithButton:self withTransformAngle:0 contentInset:nil buttonPosition:TTMultiDiggButtonPositionRight];
-        WeakSelf;
-        self.manualMultiDiggDisableBlock = ^BOOL{
-            StrongSelf;
-            if(![TTAccountManager isLogin]) {
-                [self sendActionsForControlEvents:UIControlEventTouchUpInside];
-                return YES;
-            } else {
-                return NO;
-            }
-        };
         [self.diggView mas_makeConstraints:^(MASConstraintMaker *make) {
             make.edges.equalTo(self);
         }];
@@ -53,6 +42,12 @@
         [generator prepare];
         [generator impactOccurred];
     }
+}
+
+-(void)sendActionsForControlEvents:(UIControlEvents)controlEvents{
+    TTMultiDiggManager *multiDiggManager = [self valueForKey:@"multiDiggManager"];
+    [multiDiggManager setValue:[NSNumber numberWithBool:self.selected] forKey:@"buttonSelected"];
+    [super sendActionsForControlEvents:controlEvents];
 }
 
 @end

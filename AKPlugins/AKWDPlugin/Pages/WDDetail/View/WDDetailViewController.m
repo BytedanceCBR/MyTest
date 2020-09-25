@@ -620,8 +620,7 @@ static NSUInteger const kOldAnimationViewTag = 20161221;
 
 - (void)p_buildTitleView
 {
-    self.profileTitleView = [[FHAnswerDetailTitleView alloc] init];
-    self.profileTitleView.size = CGSizeMake(SCREEN_WIDTH - 95, 44);
+    self.profileTitleView = [[FHAnswerDetailTitleView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, 44)];
     self.profileTitleView.isShow = NO;
     self.navigationItem.titleView = self.profileTitleView;
     self.profileTitleView.userInteractionEnabled = YES;
@@ -918,9 +917,6 @@ static NSUInteger const kOldAnimationViewTag = 20161221;
 - (CGRect)p_frameForHeaderView
 {
     CGFloat yOffset = self.ttNavigationBar.bottom;
-    if (yOffset < 64) {
-        yOffset = 64;
-    }
     return CGRectMake(0, yOffset, self.view.width, SSHeight(self.headerView));
 }
 
@@ -1737,8 +1733,9 @@ static NSUInteger const kOldAnimationViewTag = 20161221;
     } else {
         CGFloat maxTop = self.ttNavigationBar.bottom;
         if ((self.headerView.top - offsetY) >= maxTop) {
-            self.headerView.top = maxTop - offsetY;
-            self.detailView.top = maxTop + self.headerView.height;
+            self.headerView.top = maxTop;
+            self.detailView.top = self.headerView.bottom;
+            [scrollView setContentOffset:CGPointMake(0.0f, 0.0f)];
         } else {
             self.headerView.top = self.headerView.top - offsetY;
             self.detailView.top = self.headerView.bottom;

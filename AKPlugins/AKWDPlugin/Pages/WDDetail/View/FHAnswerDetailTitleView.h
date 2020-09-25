@@ -10,7 +10,6 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @interface FHAnswerDetailTitleView : UIView
-@property(nonatomic,assign) CGSize size;
 @property(nonatomic,assign) BOOL isShow;
 -(void)updateWithDetailModel:(WDDetailModel *)detailModel;
 @end

@@ -339,8 +339,7 @@ static NSString * const WukongListTipsHasShown = @"kWukongListTipsHasShown";
 //    UIBarButtonItem *moreButtonItem = [[UIBarButtonItem alloc] initWithCustomView:[self moreButton]];
     self.navigationItem.rightBarButtonItems = @[moreButtonItem];
     
-    self.titleView = [[FHAnswerListTitleView alloc] init];
-    self.titleView.size = CGSizeMake(SCREEN_WIDTH - 165, 44);
+    self.titleView = [[FHAnswerListTitleView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, 44)];
     self.titleView.hidden = YES;
     self.navigationItem.titleView = self.titleView;
     
