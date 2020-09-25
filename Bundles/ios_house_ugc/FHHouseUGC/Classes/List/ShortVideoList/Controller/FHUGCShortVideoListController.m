@@ -315,6 +315,7 @@
     NSMutableDictionary *tracerDict = self.tracerDict.mutableCopy;
     tracerDict[@"category_name"] = self.category;
     tracerDict[@"enter_type"] = enterType;
+    tracerDict[@"event_tracking_id"] = @"110838";
     TRACK_EVENT(@"enter_category", tracerDict);
     
     self.enterTabTimestamp = [[NSDate date] timeIntervalSince1970];
@@ -329,6 +330,7 @@
     tracerDict[@"category_name"] = self.category;
     tracerDict[@"enter_type"] = enterType;
     tracerDict[@"stay_time"] = [NSNumber numberWithInteger:(duration * 1000)];
+    tracerDict[@"event_tracking_id"] = @"110839";
     TRACK_EVENT(@"stay_category", tracerDict);
     
     self.enterTabTimestamp = [[NSDate date]timeIntervalSince1970];
