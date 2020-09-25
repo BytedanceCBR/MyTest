@@ -32,6 +32,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)flushStayPageTime;
 - (NSTimeInterval)timeIntervalForStayPage;
+
++ (NSString *)pageType ;
 @end
 
 NS_ASSUME_NONNULL_END

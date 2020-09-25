@@ -447,7 +447,7 @@ const static CGFloat kAWEVideoContainerSpacing = 2;
         [self addChildViewController:cell.overlayViewController];
         [cell.contentView addSubview:cell.overlayViewController.view];
         [cell.overlayViewController didMoveToParentViewController:self];
-        cell.overlayViewController.selfIndex = self.initialItemIndex;
+        cell.overlayViewController.selfIndex = self.initialItemIndex?:0;
         cell.overlayViewController.viewModel.model = [self.dataFetchManager itemAtIndex:indexPath.item];
 
         [cell setNeedsLayout];

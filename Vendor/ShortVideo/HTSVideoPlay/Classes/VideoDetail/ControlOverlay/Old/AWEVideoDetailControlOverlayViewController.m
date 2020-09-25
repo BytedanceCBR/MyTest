@@ -84,6 +84,7 @@
 #import "NSString+BTDAdditions.h"
 #import <BDWebImage/UIImageView+BDWebImage.h>
 #import "FHShortVideoTracerUtil.h"
+#import "TTAccountManager.h"
 
 static const CGFloat kCheckChallengeButtonWidth = 72;
 static const CGFloat kCheckChallengeButtonHeight = 28;
@@ -212,7 +213,7 @@ static const CGFloat kCheckChallengeButtonLeftPadding = 28;
         _nameLabel.numberOfLines = 1;
         _nameLabel.textAlignment = NSTextAlignmentLeft;
         _nameLabel.layer.shadowOffset = CGSizeZero;
-        _nameLabel.font = [UIFont fontWithName:@"PingFangSC-Medium" size:17] ? : [UIFont boldSystemFontOfSize:17.0];
+        _nameLabel.font = [UIFont fontWithName:@"PingFangSC-Medium" size:16] ? : [UIFont boldSystemFontOfSize:16.0];
         _nameLabel.layer.shadowColor = [[UIColor blackColor] colorWithAlphaComponent:0.6].CGColor;
         _nameLabel.layer.shadowRadius = 1.0;
         _nameLabel.layer.shadowOpacity = 1.0;
@@ -697,27 +698,49 @@ static const CGFloat kCheckChallengeButtonLeftPadding = 28;
     if (!self.model) {
         return;
     }
-    BOOL userDigg = [self.model.userDigg boolValue];
-    NSString *eventName;
-    if (!userDigg) {
-        eventName = @"click_like";
-    } else {
-        eventName = @"click_dislike";
+    
+    if (![TTAccountManager isLogin]) {
+        NSMutableDictionary *params = [NSMutableDictionary dictionary];
+        NSString *page_type = [FHShortVideoTracerUtil pageType];
+        [params setObject:page_type forKey:@"enter_from"];
+        [params setObject:@"click_publisher" forKey:@"enter_type"];
+        // 登录成功之后不自己Pop，先进行页面跳转逻辑，再pop
+        [params setObject:@(YES) forKey:@"need_pop_vc"];
+        [TTAccountLoginManager showAlertFLoginVCWithParams:params completeBlock:^(TTAccountAlertCompletionEventType type, NSString * _Nullable phoneNum) {
+               if (type == TTAccountAlertCompletionEventTypeDone) {
+                   //登录成功 走发送逻辑
+                   if ([TTAccountManager isLogin]) {
+                       [self diggAction];
+                   }
+               }
+           }];
+    }else {
+        [self diggAction];
     }
-//    [AWEVideoDetailTracker trackEvent:eventName
-//                                model:self.model
-//                      commonParameter:self.commonTrackingParameter
-//                       extraParameter:@{
-//                                        @"user_id": self.model.user.userId ?: @"",
-//                                        @"position": @"feed_detail",
-//                                        }];
-        [FHShortVideoTracerUtil clickLikeOrdisLikeWithWithName:eventName eventPosition:@"video" eventModel:self.model eventIndex:self.selfIndex commentId:nil];
-    if (!userDigg) {
-            [self digg];
-            //point:视频点赞
-    } else {
-        [self cancelDigg];
-    }
+}
+
+- (void)diggAction {
+        BOOL userDigg = [self.model.userDigg boolValue];
+        NSString *eventName;
+        if (!userDigg) {
+            eventName = @"click_like";
+        } else {
+            eventName = @"click_dislike";
+        }
+    //    [AWEVideoDetailTracker trackEvent:eventName
+    //                                model:self.model
+    //                      commonParameter:self.commonTrackingParameter
+    //                       extraParameter:@{
+    //                                        @"user_id": self.model.user.userId ?: @"",
+    //                                        @"position": @"feed_detail",
+    //                                        }];
+            [FHShortVideoTracerUtil clickLikeOrdisLikeWithWithName:eventName eventPosition:@"video" eventModel:self.model eventIndex:self.selfIndex commentId:nil];
+        if (!userDigg) {
+                [self digg];
+                //point:视频点赞
+        } else {
+            [self cancelDigg];
+        }
 }
 
 - (void)_showPlusOneDiggAnimation

@@ -387,18 +387,18 @@ static const CGFloat kFloatingViewOriginY = 230;
 {
     [super viewDidLoad];
     
-    [[TTCustomAnimationManager sharedManager] registerFromVCClass:[self class] toVCClass:[self class] animationClass:[TSVProfileVCEnterDetailAnimation class]];
-    [TSVDetailRouteHelper registerCustomPushAnimationFromVCClass:[self class]];
-    
-    self.animateManager = ({
-        TTImagePreviewAnimateManager *manager = [[TTImagePreviewAnimateManager alloc] init];
-        if (!isEmptyString(self.exitManager.maskViewThemeColorKey)) {
-            manager.maskViewThemeColorKey = self.exitManager.maskViewThemeColorKey;
-        }
-        manager.panDelegate = self;
-        [manager registeredPanBackWithGestureView:self.view];
-        manager;
-    });
+//    [[TTCustomAnimationManager sharedManager] registerFromVCClass:[self class] toVCClass:[self class] animationClass:[TSVProfileVCEnterDetailAnimation class]];
+//    [TSVDetailRouteHelper registerCustomPushAnimationFromVCClass:[self class]];
+//
+//    self.animateManager = ({
+//        TTImagePreviewAnimateManager *manager = [[TTImagePreviewAnimateManager alloc] init];
+//        if (!isEmptyString(self.exitManager.maskViewThemeColorKey)) {
+//            manager.maskViewThemeColorKey = self.exitManager.maskViewThemeColorKey;
+//        }
+//        manager.panDelegate = self;
+//        [manager registeredPanBackWithGestureView:self.view];
+//        manager;
+//    });
 
     //黑色背景
     self.blackMaskView = ({
@@ -1754,7 +1754,8 @@ static const CGFloat kFloatingViewOriginY = 230;
 {
     self.closeStyle = AWEVideoDetailCloseStyleCloseButton;
     self.blackMaskView.hidden = YES;
-    [self.animateManager dismissWithoutGesture];
+    [self.navigationController popViewControllerAnimated:YES];
+//    [self.animateManager dismissWithoutGesture];
 }
 
 - (void)topView:(UIViewController *)viewController didClickReportWithModel:(FHFeedUGCCellModel *)model
@@ -1795,7 +1796,6 @@ static const CGFloat kFloatingViewOriginY = 230;
 //            shareType = AWEVideoShareTypeAd;
 //        }
         AWEVideoShareModel *shareModel = [[AWEVideoShareModel alloc] initWithModel:self.model image:image shareType:shareType];
-
         [self.shareManager displayActivitySheetWithContent:[shareModel shareContentItems]];
     }];
 }
