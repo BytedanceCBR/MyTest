@@ -80,7 +80,7 @@
 
 - (void)collectionCellShow:(NSIndexPath *)indexPath {
     NSString *tempKey = [NSString stringWithFormat:@"%@_%ld_%ld",NSStringFromClass([self class]),(long)indexPath.section,(long)indexPath.row];
-    if (!self.elementShowCaches[tempKey]) {
+    if (self.elementShowCaches[tempKey]) {
         return;
     }
     self.elementShowCaches[tempKey] = @(YES);
@@ -177,7 +177,6 @@
 - (__kindof UICollectionViewCell *)cellForItemAtIndex:(NSInteger)index {
     FHNewHouseDetailFloorpanSM *model = (FHNewHouseDetailFloorpanSM *)self.sectionModel;
     FHNewHouseDetailMultiFloorpanCollectionCell *cell = [self.collectionContext dequeueReusableCellOfClass:[FHNewHouseDetailMultiFloorpanCollectionCell class] withReuseIdentifier:NSStringFromClass([model.floorpanCellModel class]) forSectionController:self atIndex:index];
-    [cell refreshWithData:model.floorpanCellModel];
     __weak typeof(self) weakSelf = self;
     [cell setDidSelectItem:^(NSInteger atIndex) {
         [weakSelf collectionCellClick:atIndex];
@@ -188,6 +187,7 @@
     [cell setImItemClick:^(NSInteger atIndex) {
         [weakSelf imButtonClick:atIndex];
     }];
+    [cell refreshWithData:model.floorpanCellModel];
     return cell;
 }
 

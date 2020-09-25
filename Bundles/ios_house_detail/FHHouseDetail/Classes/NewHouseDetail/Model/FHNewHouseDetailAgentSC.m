@@ -147,8 +147,8 @@
     FHNewHouseDetailAgentSM *agentSM = (FHNewHouseDetailAgentSM *)self.sectionModel;
     CGFloat width = self.collectionContext.containerSize.width - 15 * 2;
     CGFloat height = 65;
-    if (index == agentSM.recommendedRealtors.count) {
-        height = 45;
+    if ((!agentSM.isFold && agentSM.recommendedRealtors.count > 3 && index == agentSM.recommendedRealtors.count) || (agentSM.isFold && agentSM.recommendedRealtors.count > 3 && index == 3)) {
+        height = 44;
     }
     return CGSizeMake(width, height);
 }
