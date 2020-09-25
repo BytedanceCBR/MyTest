@@ -20,17 +20,11 @@ NS_ASSUME_NONNULL_BEGIN
 @end
 
 @interface FHFloorPanDetailMediaHeaderModel : FHDetailBaseModel
-@property (nonatomic, strong , nullable) NSArray<FHHouseDetailImageListDataModel> *houseImageDictList;// 图片数据
-@property (nonatomic, strong , nullable) FHDetailVRInfo *vrModel;                                  // vr数据
-@property (nonatomic, strong, nullable)   FHMultiMediaItemModel       *vedioModel;// 视频模型
 @property (nonatomic, weak) FHHouseDetailContactViewModel *contactViewModel;
 @property (strong, nonatomic) FHDetailHouseTitleModel *titleDataModel;//标题，标签模型
 @property (nonatomic, weak) UIViewController *weakVC;
-@property (nonatomic, strong, nullable) FHClueAssociateInfoModel *houseImageAssociateInfo;
-//1.0.0 新增楼盘相册页线索
-@property (nonatomic, strong , nullable) FHClueAssociateInfoModel *imageAlbumAssociateInfo;
-/// 合并，组合，处理
-
+@property (nonatomic, strong) FHHouseDetailMediaInfo *albumInfo;
+@property (nonatomic, strong) FHHouseDetailMediaInfo *topImages;
 @end
 
 NS_ASSUME_NONNULL_END

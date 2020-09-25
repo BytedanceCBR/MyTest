@@ -151,21 +151,7 @@
     self.detailData = model;
     self.currentModel = model;
     //头部轮播图
-    FHMultiMediaItemModel *itemModel = nil;
     FHFloorPanDetailMediaHeaderModel *headerCellModel = [[FHFloorPanDetailMediaHeaderModel alloc] init];
-    if (model.data.imageDictList && [model.data.imageDictList isKindOfClass:[NSArray class]] && model.data.imageDictList.count > 0) {
-        NSMutableArray *houseImageList = [NSMutableArray array];
-        for (FHHouseDetailImageListDataModel *imageInfo in model.data.imageDictList) {
-            FHHouseDetailImageListDataModel *houseImageDictList = [[FHHouseDetailImageListDataModel alloc] init];
-            houseImageDictList.usedSceneType = FHHouseDetailImageListDataUsedSceneTypeFloorPan;
-            houseImageDictList.houseImageType = imageInfo.houseImageType;
-            houseImageDictList.houseImageTypeName = imageInfo.houseImageTypeName;
-            houseImageDictList.houseImageList = imageInfo.houseImageList.copy;
-            [houseImageList addObject:houseImageDictList];
-        }
-        headerCellModel.houseImageDictList = houseImageList.copy;
-    }
-    headerCellModel.houseImageAssociateInfo = model.data.imageAssociateInfo;
     
     FHDetailHouseTitleModel *houseTitleModel = [[FHDetailHouseTitleModel alloc] init];
     houseTitleModel.titleStr = model.data.title;
@@ -173,20 +159,15 @@
     houseTitleModel.facingDirection = model.data.facingDirection;
     houseTitleModel.saleStatus = model.data.saleStatus.content;
     houseTitleModel.tags = model.data.tags;
-//    if (model.data.tags) {
-//        FHHouseTagsModel *tag = [[FHHouseTagsModel alloc]init];
-//        tag.backgroundColor = model.data.saleStatus.backgroundColor;
-//        tag.content = model.data.saleStatus.content;
-//        tag.id = model.data.saleStatus.id;
-//        tag.textColor = model.data.saleStatus.textColor;
-//        houseTitleModel.tags = @[tag];
-//    }
+    
+    
     houseTitleModel.Picing = model.data.pricing;
     houseTitleModel.displayPrice = model.data.displayPrice;
     houseTitleModel.isFloorPan = YES;
     houseTitleModel.priceConsult = model.data.priceConsult;
-    headerCellModel.vedioModel = itemModel;
     headerCellModel.contactViewModel = self.contactViewModel;
+    headerCellModel.albumInfo = model.data.albumInfo;
+    headerCellModel.topImages = model.data.albumInfo;
     headerCellModel.titleDataModel = houseTitleModel;
     [self.items addObject:headerCellModel];
     

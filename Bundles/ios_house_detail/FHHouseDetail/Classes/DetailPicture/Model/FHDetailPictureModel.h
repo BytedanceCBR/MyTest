@@ -27,6 +27,7 @@ typedef NS_ENUM(NSUInteger, FHDetailPictureModelType) {
 @property (nonatomic, strong) FHImageModel *image;
 @property (nonatomic, assign) FHDetailPictureModelType itemType;
 @property (nonatomic, copy) NSString *rootGroupName;
+@property (nonatomic, strong) NSString *desc;
 
 + (NSArray<FHDetailPictureItemModel> *)getPictureTabInfo:(FHHouseDetailMediaTabInfo *)tabInfo rootName:(NSString *)rootName;
 @end

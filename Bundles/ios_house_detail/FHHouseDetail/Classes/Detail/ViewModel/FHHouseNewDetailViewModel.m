@@ -421,7 +421,7 @@
     // 添加头滑动图片 && 视频
     FHDetailNewMediaHeaderModel *headerCellModel = [[FHDetailNewMediaHeaderModel alloc] init];
     headerCellModel.albumInfo = model.data.albumInfo;
-    headerCellModel.courtTopImage = model.data.albumInfo;
+    headerCellModel.courtTopImage = model.data.courtTopImages;
     headerCellModel.isShowTopImageTab = model.data.isShowTopImageTab;
     headerCellModel.contactViewModel = self.contactViewModel;
     

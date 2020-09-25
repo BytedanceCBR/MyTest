@@ -7,6 +7,8 @@
 
 #import <Foundation/Foundation.h>
 #import "FHDetailBaseModel.h"
+#import "FHDetailPictureModel.h"
+#import "FHFloorPanPicShowModel.h"
 @class FHMultiMediaItemModel,FHFloorPanDetailMediaHeaderDataHelperHeaderViewData,FHFloorPanDetailMediaHeaderDataHelperPictureDetailData,FHFloorPanDetailMediaHeaderDataHelperPhotoAlbumData,FHFloorPanDetailMediaHeaderModel;
 NS_ASSUME_NONNULL_BEGIN
 
@@ -29,18 +31,30 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FHFloorPanDetailMediaHeaderDataHelperHeaderViewData : NSObject
 @property (nonatomic, copy) NSArray<FHMultiMediaItemModel*> *mediaItemArray;
-@property (nonatomic, assign) NSUInteger pictureNumber;
-@property (nonatomic, assign) NSUInteger vrNumber;
 @end
 
 @interface FHFloorPanDetailMediaHeaderDataHelperPictureDetailData : NSObject
 
 @property (nonatomic, copy) NSArray<FHMultiMediaItemModel*> *mediaItemArray;
-@property (nonatomic, copy) NSArray<FHDetailPhotoHeaderModelProtocol> *photoArray;
+@property (nonatomic, strong) FHDetailPictureModel *detailPictureModel;
+
+//大图图片线索
+@property (nonatomic, strong, nullable) FHClueAssociateInfoModel *imageGroupAssociateInfo;
+//VR线索
+@property (nonatomic, strong, nullable) FHClueAssociateInfoModel *vrImageAssociateInfo;
+//视频线索
+@property (nonatomic, strong, nullable) FHClueAssociateInfoModel *videoImageAssociateInfo;
+//经纪人信息
+@property (nonatomic, weak) FHHouseDetailContactViewModel *contactViewModel;
+
 @end
 
 @interface FHFloorPanDetailMediaHeaderDataHelperPhotoAlbumData : NSObject
-@property (nonatomic, copy) NSArray<FHHouseDetailImageGroupModel *> *photoAlbumArray;
+@property (nonatomic, strong) FHFloorPanPicShowModel *floorPanModel;
+//相册线索
+@property (nonatomic, strong, nullable) FHClueAssociateInfoModel *imageAlbumAssociateInfo;
+//经纪人信息
+@property (nonatomic, weak) FHHouseDetailContactViewModel *contactViewModel;
 @end
 
 NS_ASSUME_NONNULL_END

@@ -29,6 +29,7 @@
 
 @interface FHDetailNewMediaHeaderCell ()
 
+
 @property (nonatomic, strong) FHVideoViewController *videoVC;
 @property (nonatomic, strong) FHDetailNewMediaHeaderView *headerView;
 @property (nonatomic, strong) FHDetailNewMediaHeaderDataHelper *dataHelper;
@@ -61,7 +62,7 @@
     self.headerView.showHeaderImageNewType = ((FHDetailNewMediaHeaderModel *)data).isShowTopImageTab;
     [self.headerView updateMultiMediaModel:self.model];
     //后面要变成全部图片个数+VR个数+视频个数
-    [self.headerView setTotalPagesLabelText:[NSString stringWithFormat:@"共%lu张", self.dataHelper.pictureDetailData.detailPictureModel.itemList.count]];
+    [self.headerView setTotalPagesLabelText:[NSString stringWithFormat:@"共%lu张", (unsigned long)self.dataHelper.pictureDetailData.detailPictureModel.itemList.count]];
 
     [self.headerView updateTitleModel:((FHDetailNewMediaHeaderModel *)data).titleDataModel];
 }
@@ -234,15 +235,15 @@
     FHFloorPanPicShowViewController *pictureListViewController = [[FHFloorPanPicShowViewController alloc] initWithRouteParamObj:TTRouteParamObjWithDict(routeParam)];
     pictureListViewController.modalPresentationStyle = UIModalPresentationFullScreen;
     if (data.isShowTopImageTab) {
-        pictureListViewController.floorPanShowModel = self.dataHelper.photoAlbumData.floorPanModel;
         pictureListViewController.isShowSegmentTitleView = YES;
         pictureListViewController.imageAlbumAssociateInfo = self.dataHelper.photoAlbumData.imageAlbumAssociateInfo;
         pictureListViewController.contactViewModel = self.dataHelper.photoAlbumData.contactViewModel;
         pictureListViewController.elementFrom = @"new_detail";
     } else {
         pictureListViewController.isShowSegmentTitleView = NO;
-        pictureListViewController.floorPanShowModel = self.dataHelper.photoAlbumData.floorPanModel;
     }
+    pictureListViewController.floorPanShowModel = self.dataHelper.photoAlbumData.floorPanModel;
+    
     __weak typeof(self) weakSelf = self;
     pictureListViewController.albumImageStayBlock = ^(NSInteger index, NSInteger stayTime) {
         [weakSelf stayPictureShowPictureWithIndex:index andTime:stayTime];
@@ -450,19 +451,23 @@
     if (index < 0 || index >= self.dataHelper.headerViewData.mediaItemArray.count) {
         return;
     }
-//    FHMultiMediaItemModel *itemModel = self.dataHelper.headerViewData.mediaItemArray[index];
-//    switch (itemModel.mediaType) {
-//        case FHMultiMediaTypeVRPicture:
-//            [self gotoVRDetail:itemModel];
-//            break;
-//        case FHMultiMediaTypePicture:
-//            index -= self.dataHelper.headerViewData.vrNumber;
-//            [self showImagesWithCurrentIndex:index];
-//            break;
-//        default:
-//            break;
-//    }
-    [self showImagesWithCurrentIndex:index];
+    FHMultiMediaItemModel *itemModel = self.dataHelper.headerViewData.mediaItemArray[index];
+    
+    if (itemModel.mediaType == FHMultiMediaTypeVRPicture) {
+        [self gotoVRDetail:itemModel];
+        return;
+    }
+    
+    NSUInteger detailIndex = 0;
+    
+    for (NSInteger i = 0; i < self.dataHelper.pictureDetailData.mediaItemArray.count; i++) {
+        FHMultiMediaItemModel *nextModel = self.dataHelper.pictureDetailData.mediaItemArray[i];
+        if ([nextModel.imageUrl isEqualToString:itemModel.imageUrl] && nextModel.mediaType == itemModel.mediaType) {
+            detailIndex = i;
+            break;
+        }
+    }
+    [self showImagesWithCurrentIndex:detailIndex];
 }
 
 - (void)willDisplayCellForItemAtIndex:(NSInteger)index {

@@ -65,7 +65,7 @@
             FHMultiMediaItemModel *item = [[FHMultiMediaItemModel alloc] init];
             if (mediaStr.videoInfo) {   //视频
                 item.mediaType = FHMultiMediaTypeVideo;
-                item.groupType = @"视频";
+                item.groupType = tabInfo.tabName;
                 item.imageUrl = mediaStr.image.url;
                 item.videoID = mediaStr.videoInfo.vid;
                 item.vHeight = mediaStr.videoInfo.vHeight;
@@ -74,14 +74,14 @@
                 [groupModels addObject:item];
             } else if (mediaStr.vrInfo) {   //VR
                 item.mediaType = FHMultiMediaTypeVRPicture;
-                item.groupType = @"VR";
+                item.groupType = tabInfo.tabName;
                 item.imageUrl = mediaStr.image.url;
                 item.vrOpenUrl = mediaStr.vrInfo.openUrl;
                 item.pictureTypeName = rootName;
                 [groupModels addObject:item];
             } else {                        //图片
                 item.mediaType = FHMultiMediaTypePicture;
-                item.groupType = @"图片";
+                item.groupType = tabInfo.tabName;
                 item.imageUrl = mediaStr.image.url;
                 item.pictureTypeName = rootName;
                 [groupModels addObject:item];
@@ -100,7 +100,7 @@
     FHDetailNewMediaHeaderDataHelperHeaderViewData *headerViewData = [[FHDetailNewMediaHeaderDataHelperHeaderViewData alloc] init];
     
     NSMutableArray *itemArray = [NSMutableArray array];
-    for (FHHouseDetailMediaTabInfo *mediaTabInfo in newMediaHeaderModel.albumInfo.tabList) {
+    for (FHHouseDetailMediaTabInfo *mediaTabInfo in newMediaHeaderModel.courtTopImage.tabList) {
         [itemArray addObjectsFromArray:[FHDetailNewMediaHeaderDataHelper getMultiMediaItem:mediaTabInfo rootName:mediaTabInfo.tabName]];
     }
     

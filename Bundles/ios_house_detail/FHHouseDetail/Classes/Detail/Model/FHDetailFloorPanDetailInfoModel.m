@@ -154,7 +154,8 @@
     @"imageAssociateInfo" : @"image_associate_info",
     @"discountInfo": @"discount_info",
     @"priceConsult": @"price_consult",
-    @"baseExtra": @"base_extra"
+    @"baseExtra": @"base_extra",
+    @"albumInfo": @"album_info"
   };
   return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
      return dict[keyName]?:keyName;

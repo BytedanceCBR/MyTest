@@ -523,6 +523,7 @@
 + (JSONKeyMapper*)keyMapper
 {
     NSDictionary *dict = @{
+        @"desc": @"desc",
         @"videoInfo": @"video_info",
         @"vrInfo": @"vr_info",
         @"image": @"image",

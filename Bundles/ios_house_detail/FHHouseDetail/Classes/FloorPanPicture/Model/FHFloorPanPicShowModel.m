@@ -49,6 +49,9 @@
         FHFloorPanPicShowGroupModel *groupModel = [[FHFloorPanPicShowGroupModel alloc] init];
         groupModel.groupName = tabInfo.tabName;
         groupModel.rootGroupName = rootName;
+        //如果rootName 与 groupName 相同就显示数量，否则不显示（针对新房户型）
+        groupModel.showQuantity = [tabInfo.tabName isEqualToString:rootName];
+        
         NSMutableArray *itemModels = [[NSMutableArray alloc] init];
         for (FHHouseDetailMediaStruct *mediaStr in tabInfo.tabContent) {
             if (mediaStr.videoInfo) {   //视频

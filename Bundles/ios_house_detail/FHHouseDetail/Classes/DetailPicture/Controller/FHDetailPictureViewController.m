@@ -77,7 +77,7 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
 @property(nonatomic, strong)UIView * topBar;
 @property (nonatomic, strong)   FHDetailPictureNavView       *naviView;
 @property (nonatomic, strong)   FHDetailPictureTitleView       *pictureTitleView;
-
+@property (nonatomic, strong)   UILabel  *bottomTitleLabel;
 @property(nonatomic, strong)UIView * bottomBar;
 @property (nonatomic, strong)   UIButton       *onlineBtn;
 @property (nonatomic, strong)   FHLoadingButton       *contactBtn;
@@ -314,18 +314,17 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
             make.edges.mas_equalTo(UIEdgeInsetsZero);
         }];
         
-        if (self.bottomBarTitle.length) {
-            UILabel *bottomTitleLabel = [[UILabel alloc] init];
-            bottomTitleLabel.text = self.bottomBarTitle;
-            bottomTitleLabel.font = [UIFont themeFontSemibold:20];
-            bottomTitleLabel.textColor = [UIColor whiteColor];
-            [self.bottomBar addSubview:bottomTitleLabel];
-            [bottomTitleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-                make.left.mas_equalTo(20);
-                make.height.mas_equalTo(60);
-                make.top.mas_equalTo(0);
-            }];
-        }
+        UILabel *bottomTitleLabel = [[UILabel alloc] init];
+        bottomTitleLabel.font = [UIFont themeFontSemibold:20];
+        bottomTitleLabel.textColor = [UIColor whiteColor];
+        [self.bottomBar addSubview:bottomTitleLabel];
+        [bottomTitleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.left.mas_equalTo(20);
+            make.height.mas_equalTo(60);
+            make.top.mas_equalTo(0);
+        }];
+        self.bottomTitleLabel = bottomTitleLabel;
+        bottomTitleLabel.hidden = YES;
         
         if (self.contactViewModel) {
             CGFloat itemWidth = self.view.width - 30;
@@ -692,6 +691,19 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
     [self scrollToIndex:_currentIndex];
 }
 
+- (void)updateBottomTitleLabel {
+    if (self.currentIndex < 0 && self.currentIndex >= self.detailPictureModel.itemList.count) {
+        return;
+    }
+    FHDetailPictureItemModel *itemModel = self.detailPictureModel.itemList[self.currentIndex];
+    if (itemModel.desc.length > 0) {
+        self.bottomTitleLabel.hidden = NO;
+        self.bottomTitleLabel.text = itemModel.desc;
+    } else {
+        self.bottomTitleLabel.hidden= YES;
+    }
+}
+
 - (void)updateNavHeaderTitle {
     NSInteger titleIndex = 0;
     NSInteger left = 0, right = self.pretitleSum.count - 1;
@@ -729,7 +741,7 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
     NSMutableArray *preSum = [NSMutableArray array];
     
     for (FHDetailPictureItemModel *item in detailPictureModel.itemList) {
-        if ([item.rootGroupName isEqualToString:rootGroupName.lastObject]) {
+        if (item.rootGroupName.length > 0 && [item.rootGroupName isEqualToString:rootGroupName.lastObject]) {
             NSNumber *lastNumber = numbers.lastObject;
             NSNumber *itemCount = [NSNumber numberWithUnsignedInteger:lastNumber.unsignedIntegerValue + 1];
             [numbers removeLastObject];
@@ -989,6 +1001,7 @@ static BOOL kFHStaticPhotoBrowserAtTop = NO;
     
     _currentIndex = newIndex;
     [self updateNavHeaderTitle];
+    [self updateBottomTitleLabel];
     if (self.pictureTitleView) {
         self.pictureTitleView.selectIndex = newIndex;
     }

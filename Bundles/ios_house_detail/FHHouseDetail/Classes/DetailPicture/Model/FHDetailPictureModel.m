@@ -34,6 +34,7 @@
                 FHDetailPictureItemVideoModel *videoItemModel = [[FHDetailPictureItemVideoModel alloc] init];
                 videoItemModel.itemType = FHDetailPictureModelTypeVideo;
                 videoItemModel.image = mediaStr.image;
+                videoItemModel.desc = mediaStr.desc;
                 videoItemModel.rootGroupName = rootName;
                 videoItemModel.videoModel = [FHDetailPictureItemModel getVideoModelFromMediaStructVideoInfo:mediaStr.videoInfo];
                 videoItemModel.videoModel.coverImageUrl = mediaStr.image.url;
@@ -42,6 +43,7 @@
                 FHDetailPictureItemVRModel *vrItemModel = [[FHDetailPictureItemVRModel alloc] init];
                 vrItemModel.itemType = FHDetailPictureModelTypeVR;
                 vrItemModel.image = mediaStr.image;
+                vrItemModel.desc = mediaStr.desc;
                 vrItemModel.rootGroupName = rootName;
                 vrItemModel.vrModel = mediaStr.vrInfo;
                 [groupModels addObject:vrItemModel];
@@ -49,6 +51,7 @@
                 FHDetailPictureItemPictureModel *pictureItemModel = [[FHDetailPictureItemPictureModel alloc] init];
                 pictureItemModel.itemType = FHDetailPictureModelTypePicture;
                 pictureItemModel.image = mediaStr.image;
+                pictureItemModel.desc = mediaStr.desc;
                 pictureItemModel.rootGroupName = rootName;
                 [groupModels addObject:pictureItemModel];
             }

@@ -153,122 +153,115 @@
 }
 
 - (void)showImagesWithCurrentIndex:(NSInteger)index {
-    NSArray<FHDetailPhotoHeaderModelProtocol> *images = self.dataHelper.pictureDetailData.photoArray;
-    if (index < 0 || index >= (images.count + self.dataHelper.headerViewData.videoNumer)) {
+    if (index < 0 || index >= self.dataHelper.pictureDetailData.detailPictureModel.itemList.count) {
         return;
     }
     
     __weak typeof(self) weakSelf = self;
     self.baseViewModel.detailController.ttNeedIgnoreZoomAnimation = YES;
     FHDetailPictureViewController *pictureDetailViewController = [[FHDetailPictureViewController alloc] init];
-//    pictureDetailViewController.houseType = self.baseViewModel.houseType;
-//    if (self.pictureListViewController) {
-//        pictureDetailViewController.topVC = self.pictureListViewController;
-//    } else {
-//        pictureDetailViewController.topVC = self.baseViewModel.detailController;
-//    }
-//
-//    // 分享
-//    pictureDetailViewController.shareActionBlock = ^{
-//        NSString *v_id = @"be_null";
-//        if (weakSelf.mediaView.videoVC.model.videoID.length > 0) {
-//            v_id = weakSelf.mediaView.videoVC.model.videoID;
-//        }
-//        NSDictionary *dict = @{ @"item_id": v_id,
-//                                @"element_from": @"video" };
-//        [weakSelf.baseViewModel.contactViewModel shareActionWithShareExtra:dict];
-//    };
-//    // 收藏
-//    pictureDetailViewController.collectActionBlock = ^(BOOL followStatus) {
-//        if (followStatus) {
-//            [weakSelf.baseViewModel.contactViewModel cancelFollowAction];
-//        } else {
-//            NSString *v_id = @"be_null";
-//            if (weakSelf.mediaView.videoVC.model.videoID.length > 0) {
-//                v_id = weakSelf.mediaView.videoVC.model.videoID;
-//            }
-//            NSDictionary *dict = @{ @"item_id": v_id,
-//                                    @"element_from": @"video" };
-//            [weakSelf.baseViewModel.contactViewModel followActionWithExtra:dict];
-//        }
-//    };
-//    pictureDetailViewController.dragToCloseDisabled = YES;
-//    if (self.dataHelper.headerViewData.videoNumer > 0) {
-//        pictureDetailViewController.videoVC = self.mediaView.videoVC;
-//    }
-//    self.currentIndex = index;
-//    pictureDetailViewController.startWithIndex = index;
-//    pictureDetailViewController.albumImageBtnClickBlock = ^(NSInteger index) {
-//        [weakSelf enterPictureShowPictureWithIndex:index from:@"all_pic"];
-//    };
-//    pictureDetailViewController.albumImageStayBlock = ^(NSInteger index, NSInteger stayTime) {
-//        [weakSelf stayPictureShowPictureWithIndex:index andTime:stayTime];
-//    };
-//    pictureDetailViewController.clickTitleTabBlock = ^(NSInteger index) {
-//        [weakSelf trackClickTabWithIndex:index element:@"big_photo_album"];
-//    };
-//
-//    [pictureDetailViewController setMediaHeaderModel:self.currentData mediaImages:images];
-//    pictureDetailViewController.smallImageInfosModels = self.dataHelper.photoAlbumData.floorPanModel;
-//
-//    //如果是小区，移除按钮 或者户型详情页也移除按钮
-//    //099 户型详情页 显示底部按钮
-//
-//    pictureDetailViewController.isShowBottomBar = NO;
-//
-//    UIImage *placeholder = [UIImage imageNamed:@"default_image"];
-//    UIWindow *window = [[[UIApplication sharedApplication] delegate] window];
-//    CGRect frame = [self convertRect:self.bounds toView:window];
-//    NSMutableArray *frames = [[NSMutableArray alloc] initWithCapacity:index + 1];
-//    NSMutableArray *placeholders = [[NSMutableArray alloc] initWithCapacity:images.count];
-//    for (NSInteger i = 0; i < images.count + self.dataHelper.headerViewData.videoNumer; i++) {
-//        [placeholders addObject:placeholder];
-//        NSValue *frameValue = [NSValue valueWithCGRect:frame];
-//        [frames addObject:frameValue];
-//    }
-//    if (!self.pictureListViewController) {
-//        pictureDetailViewController.placeholderSourceViewFrames = frames;
-//        pictureDetailViewController.placeholders = placeholders;
-//    }
-//    __weak FHDetailPictureViewController *weakPictureController = pictureDetailViewController;
-//    [pictureDetailViewController setAllPhotoActionBlock:^{
-//        __strong typeof(weakSelf) strongSelf = weakSelf;
-//        if (strongSelf.pictureListViewController) {
-//            [weakPictureController dismissSelf];
-//        } else {
-//            [strongSelf showPictureList];
-//        }
-//    }];
-//
-//    pictureDetailViewController.indexUpdatedBlock = ^(NSInteger lastIndex, NSInteger currentIndex) {
-//        weakSelf.currentIndex = currentIndex;
-//        [weakSelf trackHeaderViewMediaShowWithIndex:currentIndex isLarge:YES];
-//    };
-//    self.mediaView.isShowenPictureVC = YES;
-//    [pictureDetailViewController presentPhotoScrollViewWithDismissBlock:^{
-//        if ([weakSelf.mediaView.currentMediaCell isKindOfClass:[FHMultiMediaVideoCell class]]) {
-//            [weakSelf resetVideoCell:frame];
-//        }
-//        NSInteger currentIndex = weakSelf.currentIndex;
-//        if(weakSelf.dataHelper.headerViewData.baiduPanoramaIndex != -1) {
-//            if(currentIndex >= weakSelf.dataHelper.headerViewData.baiduPanoramaIndex){
-//                currentIndex = currentIndex + 1;
-//            }
-//        }
-//        NSIndexPath *indexPath = [NSIndexPath indexPathForRow:currentIndex + 1 inSection:0];
-//        [weakSelf.mediaView scrollToItemAtIndexPath:indexPath atScrollPosition:UICollectionViewScrollPositionLeft animated:NO];
-//        [weakSelf.mediaView updateItemAndInfoLabel];
-//        [weakSelf.mediaView updateVideoState];
-//        [weakSelf trackPictureLargeStayWithIndex:weakSelf.currentIndex];
-//        weakSelf.mediaView.isShowenPictureVC = NO;
-//    }];
-//
-//    pictureDetailViewController.saveImageBlock = ^(NSInteger currentIndex) {
-//        [weakSelf trackSavePictureWithIndex:currentIndex];
-//    };
-//    [self trackHeaderViewMediaShowWithIndex:index isLarge:YES];
-//    self.enterTimestamp = [[NSDate date] timeIntervalSince1970];
-//    self.pictureDetailVC = pictureDetailViewController;
+    pictureDetailViewController.detailPictureModel = self.dataHelper.pictureDetailData.detailPictureModel;
+    pictureDetailViewController.houseType = self.baseViewModel.houseType;
+    if (self.pictureListViewController) {
+        pictureDetailViewController.topVC = self.pictureListViewController;
+    } else {
+        pictureDetailViewController.topVC = self.baseViewModel.detailController;
+    }
+
+    // 分享
+    pictureDetailViewController.shareActionBlock = ^{
+        NSString *v_id = @"be_null";
+        if (weakSelf.mediaView.videoVC.model.videoID.length > 0) {
+            v_id = weakSelf.mediaView.videoVC.model.videoID;
+        }
+        NSDictionary *dict = @{ @"item_id": v_id,
+                                @"element_from": @"video" };
+        [weakSelf.baseViewModel.contactViewModel shareActionWithShareExtra:dict];
+    };
+    // 收藏
+    pictureDetailViewController.collectActionBlock = ^(BOOL followStatus) {
+        if (followStatus) {
+            [weakSelf.baseViewModel.contactViewModel cancelFollowAction];
+        } else {
+            NSString *v_id = @"be_null";
+            if (weakSelf.mediaView.videoVC.model.videoID.length > 0) {
+                v_id = weakSelf.mediaView.videoVC.model.videoID;
+            }
+            NSDictionary *dict = @{ @"item_id": v_id,
+                                    @"element_from": @"video" };
+            [weakSelf.baseViewModel.contactViewModel followActionWithExtra:dict];
+        }
+    };
+    pictureDetailViewController.dragToCloseDisabled = YES;
+    if (self.dataHelper.headerViewData.videoNumer > 0) {
+        pictureDetailViewController.videoVC = self.mediaView.videoVC;
+    }
+    self.currentIndex = index;
+    pictureDetailViewController.startWithIndex = index;
+    pictureDetailViewController.clickTitleTabBlock = ^(NSInteger index) {
+        [weakSelf trackClickTabWithIndex:index element:@"big_photo_album"];
+    };
+    
+
+    //如果是小区，移除按钮 或者户型详情页也移除按钮
+    //099 户型详情页 显示底部按钮
+
+    pictureDetailViewController.isShowBottomBar = NO;
+
+    UIImage *placeholder = [UIImage imageNamed:@"default_image"];
+    UIWindow *window = [[[UIApplication sharedApplication] delegate] window];
+    CGRect frame = [self convertRect:self.bounds toView:window];
+    NSMutableArray *frames = [[NSMutableArray alloc] initWithCapacity:index + 1];
+    NSMutableArray *placeholders = [[NSMutableArray alloc] initWithCapacity:self.dataHelper.pictureDetailData.detailPictureModel.itemList.count];
+    for (NSInteger i = 0; i < self.dataHelper.pictureDetailData.detailPictureModel.itemList.count; i++) {
+        [placeholders addObject:placeholder];
+        NSValue *frameValue = [NSValue valueWithCGRect:frame];
+        [frames addObject:frameValue];
+    }
+    if (!self.pictureListViewController) {
+        pictureDetailViewController.placeholderSourceViewFrames = frames;
+        pictureDetailViewController.placeholders = placeholders;
+    }
+    __weak FHDetailPictureViewController *weakPictureController = pictureDetailViewController;
+    pictureDetailViewController.albumImageBtnClickBlock = ^(NSInteger index) {
+        [weakSelf enterPictureShowPictureWithIndex:index from:@"all_pic"];
+        __strong typeof(weakSelf) strongSelf = weakSelf;
+        if (strongSelf.pictureListViewController) {
+            [weakPictureController dismissSelf];
+        } else {
+            [strongSelf showPictureList];
+        }
+    };
+
+    pictureDetailViewController.indexUpdatedBlock = ^(NSInteger lastIndex, NSInteger currentIndex) {
+        weakSelf.currentIndex = currentIndex;
+        [weakSelf trackHeaderViewMediaShowWithIndex:currentIndex isLarge:YES];
+    };
+    self.mediaView.isShowenPictureVC = YES;
+    [pictureDetailViewController presentPhotoScrollViewWithDismissBlock:^{
+        if ([weakSelf.mediaView.currentMediaCell isKindOfClass:[FHMultiMediaVideoCell class]]) {
+            [weakSelf resetVideoCell:frame];
+        }
+        NSInteger currentIndex = weakSelf.currentIndex;
+        if(weakSelf.dataHelper.headerViewData.baiduPanoramaIndex != -1) {
+            if(currentIndex >= weakSelf.dataHelper.headerViewData.baiduPanoramaIndex){
+                currentIndex = currentIndex + 1;
+            }
+        }
+        NSIndexPath *indexPath = [NSIndexPath indexPathForRow:currentIndex + 1 inSection:0];
+        [weakSelf.mediaView scrollToItemAtIndexPath:indexPath atScrollPosition:UICollectionViewScrollPositionLeft animated:NO];
+        [weakSelf.mediaView updateItemAndInfoLabel];
+        [weakSelf.mediaView updateVideoState];
+        [weakSelf trackPictureLargeStayWithIndex:weakSelf.currentIndex];
+        weakSelf.mediaView.isShowenPictureVC = NO;
+    }];
+
+    pictureDetailViewController.saveImageBlock = ^(NSInteger currentIndex) {
+        [weakSelf trackSavePictureWithIndex:currentIndex];
+    };
+    [self trackHeaderViewMediaShowWithIndex:index isLarge:YES];
+    self.enterTimestamp = [[NSDate date] timeIntervalSince1970];
+    self.pictureDetailVC = pictureDetailViewController;
 }
 
 - (void)showPictureList {

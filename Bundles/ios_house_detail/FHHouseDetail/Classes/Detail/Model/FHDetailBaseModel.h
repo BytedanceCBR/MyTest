@@ -346,6 +346,7 @@ typedef NS_ENUM (NSUInteger, FHHouseDetailImageListDataUsedSceneType) {
 @end
 
 @interface FHHouseDetailMediaStruct : JSONModel
+@property (nonatomic, copy, nullable) NSString *desc;
 @property (nonatomic, strong, nullable) FHVideoHouseVideoVideoInfosModel *videoInfo;
 @property (nonatomic, strong, nullable) FHDetailHouseVRDataModel *vrInfo;
 @property (nonatomic, strong, nullable) FHImageModel *image;

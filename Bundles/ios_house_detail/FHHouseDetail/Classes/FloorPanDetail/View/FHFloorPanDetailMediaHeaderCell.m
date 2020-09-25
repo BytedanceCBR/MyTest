@@ -107,79 +107,71 @@
 
 
 - (void)showImagesWithCurrentIndex:(NSInteger)index {
-    NSArray<FHDetailPhotoHeaderModelProtocol> *images = self.dataHelper.pictureDetailData.photoArray;
-    if (index < 0 || index >= (images.count)) {
+    if (index < 0 || index >= self.dataHelper.pictureDetailData.detailPictureModel.itemList.count) {
         return;
     }
     __weak typeof(self) weakSelf = self;
     self.baseViewModel.detailController.ttNeedIgnoreZoomAnimation = YES;
     FHDetailPictureViewController *pictureDetailViewController = [[FHDetailPictureViewController alloc] init];
-//    pictureDetailViewController.associateInfo = ((FHDetailFloorPanDetailInfoModel *)self.baseViewModel.detailData).data.imageAssociateInfo;
-//
-//    pictureDetailViewController.houseType = self.baseViewModel.houseType;
-//    pictureDetailViewController.topVC = self.baseViewModel.detailController;
-//
-//    pictureDetailViewController.dragToCloseDisabled = YES;
-//    pictureDetailViewController.startWithIndex = index;
-//    self.currentIndex = index;
-//    pictureDetailViewController.albumImageBtnClickBlock = ^(NSInteger index) {
-//        [weakSelf enterPictureShowPictureWithIndex:index from:@"all_pic"];
-//    };
-//    pictureDetailViewController.albumImageStayBlock = ^(NSInteger index, NSInteger stayTime) {
-//        [weakSelf stayPictureShowPictureWithIndex:index andTime:stayTime];
-//    };
-//    pictureDetailViewController.clickTabBlock = ^(NSInteger index) {
-//        [weakSelf trackClickTabWithIndex:index element:@"big_photo_album"];
-//    };
-//    pictureDetailViewController.indexUpdatedBlock = ^(NSInteger lastIndex, NSInteger currentIndex) {
-//        weakSelf.currentIndex = currentIndex;
-//        [weakSelf trackHeaderViewMediaShowWithIndex:currentIndex isLarge:YES];
-//    };
-//
-//
-//    pictureDetailViewController.saveImageBlock = ^(NSInteger currentIndex) {
-//        [weakSelf trackSavePictureWithIndex:currentIndex];
-//    };
-//
-//    [pictureDetailViewController setMediaHeaderModel:self.currentData mediaImages:images];
-//
-//    FHFloorPanDetailMediaHeaderModel *model = ((FHFloorPanDetailMediaHeaderModel *)self.currentData);
-//
-//    if (model.titleDataModel.titleStr.length) {
-//        NSMutableString *bottomBarTitle = model.titleDataModel.titleStr.mutableCopy;
-//        if (model.titleDataModel.squaremeter.length) {
-//            [bottomBarTitle appendFormat:@" %@",model.titleDataModel.squaremeter];
-//        }
-//        if (model.titleDataModel.facingDirection.length) {
-//            [bottomBarTitle appendFormat:@" %@",model.titleDataModel.facingDirection];
-//        }
-//        if (model.titleDataModel.saleStatus.length) {
-//             [bottomBarTitle appendFormat:@" %@",model.titleDataModel.saleStatus];
-//        }
-//        pictureDetailViewController.bottomBarTitle = bottomBarTitle.copy;
-//    }
-//
-//    UIImage *placeholder = [UIImage imageNamed:@"default_image"];
-//    UIWindow *window = [[[UIApplication sharedApplication] delegate] window];
-//    CGRect frame = [self convertRect:self.bounds toView:window];
-//    NSMutableArray *frames = [[NSMutableArray alloc] initWithCapacity:index + 1];
-//    NSMutableArray *placeholders = [[NSMutableArray alloc] initWithCapacity:images.count];
-//    for (NSInteger i = 0; i < images.count; i++) {
-//        [placeholders addObject:placeholder];
-//        NSValue *frameValue = [NSValue valueWithCGRect:frame];
-//        [frames addObject:frameValue];
-//    }
-//    pictureDetailViewController.placeholderSourceViewFrames = frames;
-//    pictureDetailViewController.placeholders = placeholders;
-//
-//    [pictureDetailViewController presentPhotoScrollViewWithDismissBlock:^{
-//        NSInteger currentIndex = weakSelf.currentIndex;
-//        [weakSelf.headerView scrollToItemAtIndex:currentIndex];
-//        [weakSelf trackPictureLargeStayWithIndex:weakSelf.currentIndex];
-//    }];
-//    [self trackHeaderViewMediaShowWithIndex:index isLarge:YES];
-//    self.enterTimestamp = [[NSDate date] timeIntervalSince1970];
-//    self.pictureDetailVC = pictureDetailViewController;
+    pictureDetailViewController.detailPictureModel = self.dataHelper.pictureDetailData.detailPictureModel;
+    pictureDetailViewController.contactViewModel = self.dataHelper.pictureDetailData.contactViewModel;
+    //大图图片线索
+    pictureDetailViewController.imageGroupAssociateInfo = self.dataHelper.pictureDetailData.imageGroupAssociateInfo;
+    //VR线索
+    pictureDetailViewController.vrImageAssociateInfo = self.dataHelper.pictureDetailData.vrImageAssociateInfo;
+    //视频线索
+    pictureDetailViewController.videoImageAssociateInfo = self.dataHelper.pictureDetailData.videoImageAssociateInfo;
+    
+
+    pictureDetailViewController.houseType = self.baseViewModel.houseType;
+    pictureDetailViewController.topVC = self.baseViewModel.detailController;
+
+    pictureDetailViewController.dragToCloseDisabled = YES;
+    pictureDetailViewController.startWithIndex = index;
+    self.currentIndex = index;
+    pictureDetailViewController.clickTitleTabBlock = ^(NSInteger index) {
+        [weakSelf trackClickTabWithIndex:index element:@"big_photo_album"];
+    };
+    
+    pictureDetailViewController.clickImageBlock = ^(NSInteger currentIndex) {
+        FHMultiMediaItemModel *itemModel = weakSelf.dataHelper.pictureDetailData.mediaItemArray[currentIndex];
+        if (itemModel.mediaType == FHMultiMediaTypeVRPicture) {
+            [weakSelf gotoVRDetail:itemModel];
+        }
+    };
+    
+    pictureDetailViewController.indexUpdatedBlock = ^(NSInteger lastIndex, NSInteger currentIndex) {
+        weakSelf.currentIndex = currentIndex;
+        [weakSelf trackHeaderViewMediaShowWithIndex:currentIndex isLarge:YES];
+    };
+
+
+    pictureDetailViewController.saveImageBlock = ^(NSInteger currentIndex) {
+        [weakSelf trackSavePictureWithIndex:currentIndex];
+    };
+    
+
+    UIImage *placeholder = [UIImage imageNamed:@"default_image"];
+    UIWindow *window = [[[UIApplication sharedApplication] delegate] window];
+    CGRect frame = [self convertRect:self.bounds toView:window];
+    NSMutableArray *frames = [[NSMutableArray alloc] initWithCapacity:index + 1];
+    NSMutableArray *placeholders = [[NSMutableArray alloc] initWithCapacity:self.dataHelper.pictureDetailData.mediaItemArray.count];
+    for (NSInteger i = 0; i < self.dataHelper.pictureDetailData.mediaItemArray.count; i++) {
+        [placeholders addObject:placeholder];
+        NSValue *frameValue = [NSValue valueWithCGRect:frame];
+        [frames addObject:frameValue];
+    }
+    pictureDetailViewController.placeholderSourceViewFrames = frames;
+    pictureDetailViewController.placeholders = placeholders;
+
+    [pictureDetailViewController presentPhotoScrollViewWithDismissBlock:^{
+        NSInteger currentIndex = weakSelf.currentIndex;
+        [weakSelf.headerView scrollToItemAtIndex:currentIndex];
+        [weakSelf trackPictureLargeStayWithIndex:weakSelf.currentIndex];
+    }];
+    [self trackHeaderViewMediaShowWithIndex:index isLarge:YES];
+    self.enterTimestamp = [[NSDate date] timeIntervalSince1970];
+    self.pictureDetailVC = pictureDetailViewController;
 }
 
 
@@ -380,7 +372,6 @@
             [self gotoVRDetail:itemModel];
             break;
         case FHMultiMediaTypePicture:
-            index -= self.dataHelper.headerViewData.vrNumber;
             [self showImagesWithCurrentIndex:index];
             break;
         default:

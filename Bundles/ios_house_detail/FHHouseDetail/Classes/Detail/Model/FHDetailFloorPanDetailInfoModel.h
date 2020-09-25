@@ -121,6 +121,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 /// 1.0.0 新增所属楼盘和项目地址
 @property (nonatomic, strong , nullable) FHFloorPanDetailInfoModelBaseExtraModel *baseExtra;
+
+@property (nonatomic, strong , nullable) FHHouseDetailMediaInfo *albumInfo;
 @end
 
 @interface FHDetailFloorPanDetailInfoModel : JSONModel 
