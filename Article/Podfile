@@ -450,7 +450,7 @@ def appPods
 
     #************业务SDK**********
 
-    pod_binary 'YYImage', '1.0.3'
+    pod_binary 'YYImage', '1.0.5'
     pod_binary 'YYCache'
     pod_binary 'YYModel', '1.0.4'
     
