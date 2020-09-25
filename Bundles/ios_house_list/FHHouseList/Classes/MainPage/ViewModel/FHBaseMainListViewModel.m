@@ -1651,8 +1651,8 @@ extern NSString *const INSTANT_DATA_KEY;
                 [newCell updateHeightByIsFirst:isFirstCell];
             }
             if ([cell isKindOfClass:[FHDynamicLynxCell class]]) {
-                FHDynamicLynxCellModel *cellModel = [self.houseList btd_objectAtIndex:indexPath.row];
-                if (cellModel) {
+                FHDynamicLynxCellModel *cellModel = data;
+                if (cellModel && [cellModel isKindOfClass:[FHDynamicLynxCellModel class]]) {
                     cellModel.cell = cell;
                     [(FHDynamicLynxCell *)cell updateWithCellModel:cellModel];
                 }
@@ -2449,7 +2449,7 @@ extern NSString *const INSTANT_DATA_KEY;
                                  @"element_type":@"driving_find_house_card",
                                 };
         [FHUserTracker writeEvent:@"element_show" params:params];
-    }else if ([cellModel isKindOfClass:[FHDynamicLynxModel class]]) {
+    }else if ([cellModel isKindOfClass:[FHDynamicLynxCellModel class]]) {
         FHDynamicLynxModel *model = ((FHDynamicLynxCellModel *)cellModel).model;
         NSDictionary *reportData = [((FHDynamicLynxModel *)model).lynxData objectForKey:@"report_params"];
         if (reportData && [reportData isKindOfClass:[NSDictionary class]]) {
