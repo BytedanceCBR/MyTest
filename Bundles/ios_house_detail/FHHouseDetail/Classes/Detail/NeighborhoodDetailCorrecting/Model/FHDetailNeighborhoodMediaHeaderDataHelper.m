@@ -28,7 +28,7 @@
     _photoAlbumData = nil;
 }
 
-- (FHDetailNeighborhoodMediaHeaderDataHelperHeaderViewData *)flheaderViewData {
+- (FHDetailNeighborhoodMediaHeaderDataHelperHeaderViewData *)headerViewData {
     if (!_headerViewData) {
         _headerViewData = [FHDetailNeighborhoodMediaHeaderDataHelper generateMediaHeaderViewData:self.mediaHeaderModel];
     }
