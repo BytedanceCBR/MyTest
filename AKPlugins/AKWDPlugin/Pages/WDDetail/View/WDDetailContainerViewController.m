@@ -231,8 +231,6 @@
 }
 
 - (void)addDetailVC {
-    
-    self.detailViewController.ttNavigationBar = self.ttNavigationBar;
     [self.detailViewController willMoveToParentViewController:self];
     self.detailViewController.view.frame = self.view.bounds;
     [self addChildViewController:self.detailViewController];

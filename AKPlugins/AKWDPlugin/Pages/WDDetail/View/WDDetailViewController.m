@@ -139,6 +139,7 @@ static NSUInteger const kOldAnimationViewTag = 20161221;
 
 @property (nonatomic,assign) double commentShowTimeTotal;
 @property (nonatomic,strong) NSDate *commentShowDate;
+@property (nonatomic,strong) dispatch_semaphore_t mutex;
 
 @end
 
@@ -235,8 +236,7 @@ static NSUInteger const kOldAnimationViewTag = 20161221;
     [self p_buildViews];
     [self.detailView tt_initializeServerRequestMonitorWithName:WDDetailInfoTimeService];
     [self p_startLoadArticleInfo];
-    [self p_updateNavigationTitleView];
-    
+
     WeakSelf;
     [self.KVOController observe:self.natantViewModel keyPath:@"isShowDeleteAnswer" options:NSKeyValueObservingOptionNew block:^(id  _Nullable observer, id  _Nonnull object, NSDictionary<NSString *,id> * _Nonnull change) {
         StrongSelf;
@@ -277,6 +277,7 @@ static NSUInteger const kOldAnimationViewTag = 20161221;
     _isCommentViewWillShow = NO;
     self.infoLoadFinished = NO;
     self.infoLoadFailed = NO;
+    self.mutex = dispatch_semaphore_create(0);
     
     if (!_isNewVersion && _detailModel.isArticleReliable) {
 #pragma clang diagnostic push
@@ -565,7 +566,6 @@ static NSUInteger const kOldAnimationViewTag = 20161221;
         [self p_buildDetailNatant];
         [self p_buildToolbarViewIfNeeded];
         [self p_setDetailViewBars];
-        [self p_buildNaviBar];
     }
 }
 
@@ -575,9 +575,7 @@ static NSUInteger const kOldAnimationViewTag = 20161221;
     [self p_buildDetailView];
     [self.view addSubview:self.detailView];
     [self.view addSubview:self.headerView];
-    self.headerView.frame = [self p_frameForHeaderView];
     [self.detailView willAppear];
-    self.detailView.frame = [self p_frameForDetailView];
     [self p_addDetailViewKVO];
     
     [self.detailView.detailWebView.webView becomeFirstResponder];
@@ -662,9 +660,6 @@ static NSUInteger const kOldAnimationViewTag = 20161221;
 - (void)didMoveToParentViewController:(UIViewController *)parent
 {
     [super didMoveToParentViewController:parent];
-    if (parent) {
-        [self p_buildTitleView];
-    }
 }
 
 - (void)p_showChangePageAlert
@@ -681,7 +676,12 @@ static NSUInteger const kOldAnimationViewTag = 20161221;
 
 - (void)p_updateNavigationTitleView
 {
-    [self.profileTitleView updateWithDetailModel:self.detailModel];
+    dispatch_async(dispatch_get_global_queue(0, 0), ^{
+        dispatch_semaphore_wait(self.mutex, DISPATCH_TIME_FOREVER);
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self.profileTitleView updateWithDetailModel:self.detailModel];
+        });
+    });
 }
 
 - (void)p_preloadNextPage
@@ -1746,9 +1746,14 @@ static NSUInteger const kOldAnimationViewTag = 20161221;
 }
 
 -(void)setTtNavigationBar:(TTNavigationBar *)ttNavigationBar {
-    [super setTtNavigationBar:ttNavigationBar];
-    self.headerView.frame = [self p_frameForHeaderView];
-    self.detailView.frame = [self p_frameForDetailView];
+    if(!self.ttNavigationBar){
+        [super setTtNavigationBar:ttNavigationBar];
+        self.headerView.frame = [self p_frameForHeaderView];
+        self.detailView.frame = [self p_frameForDetailView];
+        [self p_buildNaviBar];
+        [self p_buildTitleView];
+        dispatch_semaphore_signal(self.mutex);
+    }
 }
 
 - (void)tt_WDDetailViewWillShowLargeImage
