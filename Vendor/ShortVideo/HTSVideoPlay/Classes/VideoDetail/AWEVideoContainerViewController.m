@@ -123,6 +123,7 @@ const static CGFloat kAWEVideoContainerSpacing = 2;
 
         [[SSImpressionManager shareInstance] addRegist:self];
         self.tracker = [[AWEVideoDetailTracker alloc] init];
+        self.feedClientShowCache = [[NSMutableArray alloc]init];
     }
 
     return self;
@@ -682,7 +683,11 @@ const static CGFloat kAWEVideoContainerSpacing = 2;
 }
 
 - (void)sendFeedClientShowAndVideoPlayWithCell:(AWEVideoContainerCollectionViewCell *)cell {
-//    FHShortVideoTracerUtil feedClientShow:<#(nonnull NSString *)#> model:<#(nonnull FHFeedUGCCellModel *)#> eventIndex:<#(NSInteger)#>
+    NSString *groupId = cell.videoDetail.groupId;
+    if (![self.feedClientShowCache containsObject:groupId]) {
+        [self.feedClientShowCache addObject:groupId];
+        [FHShortVideoTracerUtil feedClientShowWithmodel:cell.videoDetail eventIndex:self.initialItemIndex];
+    };
 }
 
 - (void)sendGoDetailAndVideoPlayWithCell:(AWEVideoContainerCollectionViewCell *)cell

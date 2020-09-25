@@ -596,9 +596,13 @@ static const CGFloat kCheckChallengeButtonLeftPadding = 28;
     [self refreshTitleLabel];
 
     [self.view setNeedsUpdateConstraints];
-
     [self.avatarView updateAvatarWithTSVUserModel:model];
     [self.sourceImage bd_setImageWithURL:[NSURL URLWithString:model.videoSourceIcon]];
+    if (self.model.videoSourceIcon.length > 0) {
+        self.avatarView.hidden = YES;
+    }else {
+        self.avatarView.hidden = NO;
+    }
     self.nameLabel.text = self.model.user.name;
 
     self.logoViewController.view.hidden = ![self shouldShowLogoViewController];

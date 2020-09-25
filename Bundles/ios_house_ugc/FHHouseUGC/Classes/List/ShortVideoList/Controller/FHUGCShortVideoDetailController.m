@@ -678,15 +678,15 @@ static const CGFloat kFloatingViewOriginY = 230;
         [self loadMoreAutomatically:YES];
     }
     
-    if ([AWEVideoDetailScrollConfig direction] == AWEVideoDetailScrollDirectionVertical) {
-        self.slideLeftGesture = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handleSlideLeftGesture:)];
-        self.slideLeftGesture.delegate = self;
-        [self.view addGestureRecognizer:self.slideLeftGesture];
-    } else {
-        self.slideUpGesture = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handleSlideUpGesture:)];
-        self.slideUpGesture.delegate = self;
-        [self.view addGestureRecognizer:self.slideUpGesture];
-    }
+//    if ([AWEVideoDetailScrollConfig direction] == AWEVideoDetailScrollDirectionVertical) {
+//        self.slideLeftGesture = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handleSlideLeftGesture:)];
+//        self.slideLeftGesture.delegate = self;
+//        [self.view addGestureRecognizer:self.slideLeftGesture];
+//    } else {
+//        self.slideUpGesture = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handleSlideUpGesture:)];
+//        self.slideUpGesture.delegate = self;
+//        [self.view addGestureRecognizer:self.slideUpGesture];
+//    }
 
     self.commentSlideDownGesture = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handleCommentSlideDownGesture:)];
     self.commentSlideDownGesture.delegate = self;

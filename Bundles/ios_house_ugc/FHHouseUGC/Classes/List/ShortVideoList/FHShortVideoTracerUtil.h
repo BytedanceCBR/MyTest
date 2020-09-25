@@ -10,8 +10,7 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @interface FHShortVideoTracerUtil : NSObject
-+ (void)feedClientShow:(NSString *)event
-             model:(FHFeedUGCCellModel *)model eventIndex:(NSInteger)index;
++ (void)feedClientShowWithmodel:(FHFeedUGCCellModel *)model eventIndex:(NSInteger)index;
 @end
 
 NS_ASSUME_NONNULL_END

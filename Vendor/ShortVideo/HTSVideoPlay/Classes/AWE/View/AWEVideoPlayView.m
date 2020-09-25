@@ -236,6 +236,7 @@ static NSString * const VideoPrepareTimeTechKey = @"prepare_time_tech";
             }
         }
     }
+    self.playImage.hidden = self.isPlaying;
 }
 
 - (void)pause
