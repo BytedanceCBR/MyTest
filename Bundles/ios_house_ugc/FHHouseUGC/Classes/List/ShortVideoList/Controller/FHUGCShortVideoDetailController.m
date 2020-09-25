@@ -248,13 +248,6 @@ static const CGFloat kFloatingViewOriginY = 230;
 
 @implementation FHUGCShortVideoDetailController
 
-+ (void)load
-{
-    RegisterRouteObjWithEntryName(@"awemevideo");
-    RegisterRouteObjWithEntryName(@"ugc_video_recommend");
-    RegisterRouteObjWithEntryName(@"huoshanvideo");
-}
-
 - (instancetype)initWithRouteParamObj:(TTRouteParamObj *)paramObj
 {
     self = [super initWithRouteParamObj:paramObj];
@@ -2240,15 +2233,18 @@ static const CGFloat kFloatingViewOriginY = 230;
     switch (currentState) {
         case TTPreviewAnimateStateWillBegin:
         {
-            TTShortVideoModel *model = [self.originalDataFetchManager itemAtIndex:self.originalDataFetchManager.currentIndex replaced:NO];
+            FHFeedUGCCellModel *model = (FHFeedUGCCellModel*)[self.originalDataFetchManager itemAtIndex:self.originalDataFetchManager.currentIndex replaced:NO];
 
             NSURL *URL = nil;
-            URL = [NSURL URLWithString:[model.animatedImageModel.urlWithHeader firstObject][@"url"] ?:@""];
+//            URL = [NSURL URLWithString:[model.animatedImageModel.urlWithHeader firstObject][@"url"] ?:@""];
+            FHFeedContentImageListModel *imageModel = [model.animatedImageList firstObject];
+            URL = [NSURL URLWithString:imageModel.url?:@""];
             NSString *cacheKey = [[YYWebImageManager sharedManager] cacheKeyForURL:URL];
             if ([[[YYWebImageManager sharedManager] cache] containsImageForKey:cacheKey]) {
                 self.fakeBackImage = [[[YYWebImageManager sharedManager] cache]  getImageForKey:cacheKey];
-            } else if (model.detailCoverImageModel.urlWithHeader) {
-                NSURL *stillImageURL = [NSURL URLWithString:[model.detailCoverImageModel.urlWithHeader firstObject][@"url"] ?:@""];
+            } else if (model.largeImageList.count>0) {
+                FHFeedContentImageListModel *largeImage = [model.animatedImageList firstObject];
+                NSURL *stillImageURL = [NSURL URLWithString:largeImage.url?:@""];
                 NSString *stillImageCacheKey = [[YYWebImageManager sharedManager] cacheKeyForURL:stillImageURL];
                 if ([[[YYWebImageManager sharedManager] cache] containsImageForKey:stillImageCacheKey]) {
                    self.fakeBackImage = [[[YYWebImageManager sharedManager] cache]  getImageForKey:stillImageCacheKey];

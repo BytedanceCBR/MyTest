@@ -382,9 +382,7 @@
         }
         [info setValue:tracerDic forKey:@"extraDic"];
     }
-    
-    NSURL *openUrl = [NSURL URLWithString:cellModel.openUrl];
-    [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:TTRouteUserInfoWithDict(info)];
+    [[TTRoute sharedRoute] openURLByPushViewController:cellModel.openUrl userInfo:TTRouteUserInfoWithDict(info)];
 }
 
 //投票

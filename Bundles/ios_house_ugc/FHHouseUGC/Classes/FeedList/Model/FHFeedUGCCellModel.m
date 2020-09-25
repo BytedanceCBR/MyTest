@@ -758,9 +758,9 @@
         double time = [model.rawData.createTime doubleValue];
         NSString *publishTime = [FHBusinessManager ugcCustomtimeAndCustomdateStringSince1970:time type:@"onlyDate"];
         cellModel.desc = [[NSAttributedString alloc] initWithString:publishTime];
-        
+        cellModel.animatedImageList = model.rawData.animatedImageList;
         cellModel.imageList = model.rawData.firstFrameImageList;
-        cellModel.largeImageList = nil;
+        cellModel.largeImageList = model.rawData.detailCoverImageModel;
         if([model.cellCtrls.cellLayoutStyle isEqualToString:@"10001"]){
         [FHUGCCellHelper setRichContentWithModel:cellModel width:(screenWidth - 60) numberOfLines:3];
         }else {

@@ -272,9 +272,9 @@ static const CGFloat kFloatingViewOriginY = 230;
 
 + (void)load
 {
-//    RegisterRouteObjWithEntryName(@"awemevideo");
-//    RegisterRouteObjWithEntryName(@"ugc_video_recommend");
-//    RegisterRouteObjWithEntryName(@"huoshanvideo");
+    RegisterRouteObjWithEntryName(@"awemevideo");
+    RegisterRouteObjWithEntryName(@"ugc_video_recommend");
+    RegisterRouteObjWithEntryName(@"huoshanvideo");
 }
 
 - (instancetype)initWithRouteParamObj:(TTRouteParamObj *)paramObj
@@ -480,7 +480,12 @@ static const CGFloat kFloatingViewOriginY = 230;
 
     self.ttStatusBarStyle = UIStatusBarStyleLightContent;
     self.modeChangeActionType = ModeChangeActionTypeNone;
-
+    CGFloat topInset = 0;
+    CGFloat bottomInset = 0;
+    if (@available(iOS 11.0, *)) {
+        topInset = [UIApplication sharedApplication].keyWindow.safeAreaInsets.top;
+         bottomInset = [UIApplication sharedApplication].keyWindow.safeAreaInsets.bottom;
+    }
     // Views
     self.videoContainerViewController = ({
         AWEVideoContainerViewController *controller = [[AWEVideoContainerViewController alloc] init];
@@ -530,7 +535,7 @@ static const CGFloat kFloatingViewOriginY = 230;
     @weakify(self);
 
     [self addChildViewController:self.videoContainerViewController];
-    self.videoContainerViewController.view.frame = self.view.bounds;
+     self.videoContainerViewController.view.frame = CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height - 50 -bottomInset);
     [self.view addSubview:self.videoContainerViewController.view];
     [self.videoContainerViewController didMoveToParentViewController:self];
 
@@ -673,12 +678,6 @@ static const CGFloat kFloatingViewOriginY = 230;
 //    }]];
     
     self.topBarView = [[UIView alloc] init];
-        CGFloat topInset = 0;
-    CGFloat bottomInset = 0;
-    if (@available(iOS 11.0, *)) {
-        topInset = [UIApplication sharedApplication].keyWindow.safeAreaInsets.top;
-         bottomInset = [UIApplication sharedApplication].keyWindow.safeAreaInsets.bottom;
-    }
     self.topBarView.frame = CGRectMake(15, topInset, CGRectGetWidth(self.view.bounds) -30, 64.0);
     self.topBarView.autoresizingMask = UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleBottomMargin;
     [self.view addSubview:self.topBarView];
@@ -2289,15 +2288,18 @@ static const CGFloat kFloatingViewOriginY = 230;
     switch (currentState) {
         case TTPreviewAnimateStateWillBegin:
         {
-            TTShortVideoModel *model = [self.originalDataFetchManager itemAtIndex:self.originalDataFetchManager.currentIndex replaced:NO];
+            FHFeedUGCCellModel *model = [self.originalDataFetchManager itemAtIndex:self.originalDataFetchManager.currentIndex replaced:NO];
 
             NSURL *URL = nil;
-            URL = [NSURL URLWithString:[model.animatedImageModel.urlWithHeader firstObject][@"url"] ?:@""];
+//            URL = [NSURL URLWithString:[model.animatedImageModel.urlWithHeader firstObject][@"url"] ?:@""];
+            FHFeedContentImageListModel *imageModel = [model.animatedImageList firstObject];
+            URL = [NSURL URLWithString:imageModel.url?:@""];
             NSString *cacheKey = [[YYWebImageManager sharedManager] cacheKeyForURL:URL];
             if ([[[YYWebImageManager sharedManager] cache] containsImageForKey:cacheKey]) {
                 self.fakeBackImage = [[[YYWebImageManager sharedManager] cache]  getImageForKey:cacheKey];
-            } else if (model.detailCoverImageModel.urlWithHeader) {
-                NSURL *stillImageURL = [NSURL URLWithString:[model.detailCoverImageModel.urlWithHeader firstObject][@"url"] ?:@""];
+            } else if (model.largeImageList.count>0) {
+                FHFeedContentImageListModel *largeImage = [model.animatedImageList firstObject];
+                NSURL *stillImageURL = [NSURL URLWithString:largeImage.url?:@""];
                 NSString *stillImageCacheKey = [[YYWebImageManager sharedManager] cacheKeyForURL:stillImageURL];
                 if ([[[YYWebImageManager sharedManager] cache] containsImageForKey:stillImageCacheKey]) {
                    self.fakeBackImage = [[[YYWebImageManager sharedManager] cache]  getImageForKey:stillImageCacheKey];

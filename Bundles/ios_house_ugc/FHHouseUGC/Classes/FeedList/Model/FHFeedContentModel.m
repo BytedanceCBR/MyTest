@@ -495,7 +495,9 @@
                            @"fromGid":@"from_gid",
                            @"fromGroupSource":@"from_group_source",
                            @"userRepin":@"user_repin",
-                           @"videoSourceIcon":@"video_source_icon"
+                           @"videoSourceIcon":@"video_source_icon",
+                           @"animatedImageList":@"animated_image_list",
+                           @"detailCoverImageModel":@"large_image_list"
                            };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
         return dict[keyName]?:keyName;

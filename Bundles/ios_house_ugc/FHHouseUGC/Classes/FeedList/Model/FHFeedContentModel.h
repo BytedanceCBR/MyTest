@@ -757,6 +757,9 @@ typedef NS_ENUM(NSUInteger, FHFeedContentStickStyle) {
 
 @property (nonatomic, strong, nullable) FHFeedContentRawDataSmallVideoShareModel *share;
 @property (nonatomic, copy, nullable) NSString *videoSourceIcon;
+@property (nonatomic, strong , nullable) NSArray<FHFeedContentImageListModel> *animatedImageList;
+@property (nonatomic, strong , nullable) NSArray<FHFeedContentImageListModel> *detailCoverImageModel;
+
 
 @end
 

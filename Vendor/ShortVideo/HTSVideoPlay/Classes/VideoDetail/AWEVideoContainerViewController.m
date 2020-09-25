@@ -48,6 +48,7 @@
 #import "AWEVideoDetailControlAdOverlayViewController.h"
 #import "TTShortVideoModel+TTAdFactory.h"
 #import "ToastManager.h"
+#import "FHShortVideoTracerUtil.h"
 
 // 与西瓜视频共用的流量播放开关，全局变量哦，名字别乱改
 BOOL kBDTAllowCellularVideoPlay = NO;
@@ -99,6 +100,7 @@ static BOOL kTSVCellularAlertShouldShow = YES;
 @property (nonatomic, assign) BOOL preventVideoPlay;
 @property (nonatomic, assign) NSInteger initialItemIndex;
 @property (nullable, nonatomic, strong) AWEVideoContainerCollectionViewCell *currentVideoCell;
+@property (nonatomic, strong) NSMutableArray *feedClientShowCache;
 
 @end
 
@@ -675,14 +677,17 @@ const static CGFloat kAWEVideoContainerSpacing = 2;
     [TTFFantasyTracker sharedInstance].lastGid = cell.videoDetail.groupId;
 
     [self sendGoDetailAndVideoPlayWithCell:cell];
-    
+    [self sendFeedClientShowAndVideoPlayWithCell:cell];
     [[TSVMonitorManager sharedManager] recordCurrentMemoryUsage];
+}
+
+- (void)sendFeedClientShowAndVideoPlayWithCell:(AWEVideoContainerCollectionViewCell *)cell {
+//    FHShortVideoTracerUtil feedClientShow:<#(nonnull NSString *)#> model:<#(nonnull FHFeedUGCCellModel *)#> eventIndex:<#(NSInteger)#>
 }
 
 - (void)sendGoDetailAndVideoPlayWithCell:(AWEVideoContainerCollectionViewCell *)cell
 {
     NSParameterAssert(cell);
-    
     NSString *videoPlayEventName = self.firstPageShown ? @"video_play_draw" : @"video_play";
     NSMutableDictionary *paramters = @{}.mutableCopy;
     paramters[@"user_id"] = self.currentVideoCell.videoDetail.user.userId;
