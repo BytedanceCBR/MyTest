@@ -7,7 +7,7 @@
 
 #import "FHDetailNewMediaHeaderDataHelper.h"
 #import "FHMultiMediaModel.h"
-#import "FHDetailNewMediaHeaderCell.h"
+#import "FHNewHouseDetailHeaderMediaCollectionCell.h"
 #import "FHFloorPanPicShowModel.h"
 
 @interface FHDetailNewMediaHeaderDataHelper ()
@@ -22,10 +22,7 @@
 
 @implementation FHDetailNewMediaHeaderDataHelper
 
-- (void)setMediaHeaderModel:(FHDetailNewMediaHeaderModel *)mediaHeaderModel {
-    if (![mediaHeaderModel isKindOfClass:[FHDetailNewMediaHeaderModel class]]) {
-        return;
-    }
+- (void)setMediaHeaderModel:(FHNewHouseDetailHeaderMediaModel *)mediaHeaderModel {
     _mediaHeaderModel = mediaHeaderModel;
     _headerViewData = nil;
     _pictureDetailData = nil;
@@ -96,7 +93,7 @@
     return groupModels.copy;
 }
 
-+ (FHDetailNewMediaHeaderDataHelperHeaderViewData *)generateMediaHeaderViewData:(FHDetailNewMediaHeaderModel *)newMediaHeaderModel {
++ (FHDetailNewMediaHeaderDataHelperHeaderViewData *)generateMediaHeaderViewData:(FHNewHouseDetailHeaderMediaModel *)newMediaHeaderModel {
     FHDetailNewMediaHeaderDataHelperHeaderViewData *headerViewData = [[FHDetailNewMediaHeaderDataHelperHeaderViewData alloc] init];
     
     NSMutableArray *itemArray = [NSMutableArray array];
@@ -110,7 +107,7 @@
 }
 
 //大图详情页的数据
-+ (FHDetailNewMediaHeaderDataHelperPictureDetailData *)generatePictureDetailData:(FHDetailNewMediaHeaderModel *)newMediaHeaderModel {
++ (FHDetailNewMediaHeaderDataHelperPictureDetailData *)generatePictureDetailData:(FHNewHouseDetailHeaderMediaModel *)newMediaHeaderModel {
     FHDetailNewMediaHeaderDataHelperPictureDetailData *pictureDetailData = [[FHDetailNewMediaHeaderDataHelperPictureDetailData alloc] init];
     FHDetailPictureModel *pictureModel = [[FHDetailPictureModel alloc] init];
     NSMutableArray *itemArray = [NSMutableArray array];
@@ -135,7 +132,7 @@
     return pictureDetailData;
 }
 
-+ (FHDetailNewMediaHeaderDataHelperPhotoAlbumData *)generatePhotoAlbumData:(FHDetailNewMediaHeaderModel *)newMediaHeaderModel {
++ (FHDetailNewMediaHeaderDataHelperPhotoAlbumData *)generatePhotoAlbumData:(FHNewHouseDetailHeaderMediaModel *)newMediaHeaderModel {
     
     FHDetailNewMediaHeaderDataHelperPhotoAlbumData *photoAlbumData = [[FHDetailNewMediaHeaderDataHelperPhotoAlbumData alloc] init];
     
