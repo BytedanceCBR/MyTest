@@ -39,6 +39,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong , nullable) FHSaleStatusModel *saleStatus ;
 @property (nonatomic, copy , nullable) NSString *searchId;
 @property (nonatomic, assign) NSInteger index;
+@property (nonatomic, strong, nullable) FHDetailHouseFloorpanListVRDataModel *vrInfo;
 @end
 
 @interface FHFloorPanDetailInfoModelPriceConsultModel : JSONModel

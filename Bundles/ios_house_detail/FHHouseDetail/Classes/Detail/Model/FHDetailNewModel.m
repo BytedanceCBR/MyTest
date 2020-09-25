@@ -49,6 +49,29 @@
 }
 @end
 
+@implementation FHDetailHouseFloorpanListVRDataModel
+
++ (JSONKeyMapper*)keyMapper
+{
+    NSDictionary *dict = @{
+                                   @"hasVr": @"has_vr",
+                                   @"vrId": @"vr_id",
+                                   @"vrImage": @"vr_image",
+                                   @"openUrl":@"open_url",
+                                   @"spaceType":@"space_type"
+                                   };
+    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+        return dict[keyName]?:keyName;
+    }];
+}
+
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+
+@end
+
 @implementation FHDetailNewDataCoreInfoModel
 + (JSONKeyMapper*)keyMapper
 {
@@ -118,7 +141,8 @@
                            @"groupId": @"group_id",
                            @"imOpenUrl":@"im_openurl",
                            @"associateInfo": @"associate_info",
-                           @"displayPrice": @"display_price"
+                           @"displayPrice": @"display_price",
+                           @"vrInfo": @"vr_info"
                            };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
         return dict[keyName]?:keyName;

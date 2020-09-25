@@ -393,6 +393,14 @@
 //        }];
         //1.0.2 需求缩小户型图大小，横屏查看2.5个左右，不能显示更多tag
         [self.tagBacView refreshWithTags:model.tags withNum:model.tags.count withMaxLen:ITEM_WIDTH - width - 4];
+        if (model.vrInfo.hasVr) {
+            self.vrBackView.hidden = NO;
+            self.vrLoadingView.hidden = NO;
+            [self.vrLoadingView play];
+        } else {
+            self.vrBackView.hidden = YES;
+            self.vrLoadingView.hidden = YES;
+        }
     }
     [self layoutIfNeeded];
 }
@@ -419,6 +427,29 @@
     [self.icon mas_makeConstraints:^(MASConstraintMaker *make) {
         make.center.equalTo(self.iconView);
         make.width.height.equalTo(self.iconView);
+    }];
+    
+    _vrBackView = [[UIView alloc] init];
+    _vrBackView.layer.cornerRadius = 11;
+    _vrBackView.layer.masksToBounds = YES;
+    _vrBackView.backgroundColor = RGBA(0, 0, 0, 0.4);
+    _vrBackView.hidden = YES;
+    [self.iconView addSubview:_vrBackView];
+    [self.vrBackView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.mas_equalTo(6);
+        make.bottom.mas_equalTo(-6);
+        make.width.height.mas_equalTo(22);
+    }];
+    
+    NSString *path = [[NSBundle mainBundle] pathForResource:@"VRImageLoading" ofType:@"json"];
+    _vrLoadingView = [LOTAnimationView animationWithFilePath:path];
+    _vrLoadingView.loopAnimation = YES;
+    _vrLoadingView.hidden = YES;
+    [self.iconView addSubview:_vrLoadingView];
+    [self.vrLoadingView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.mas_equalTo(9);
+        make.bottom.mas_equalTo(-9);
+        make.height.width.mas_equalTo(16);
     }];
     
     _titleLabel = [[UILabel alloc] init];
