@@ -87,6 +87,9 @@
     }
     else {
         self.navigationItem.title = @"";
+        if (!self.detailViewController) {
+            [self constructDetailViewController];
+        }
         [self firstLoadContent];
     }
 }
@@ -95,6 +98,7 @@
     [super viewWillAppear:animated];
     self.navigationController.navigationBar.translucent = NO;
     self.extendedLayoutIncludesOpaqueBars = YES;
+    self.detailViewController.ttNavigationBar = self.ttNavigationBar;
 }
 
 - (void)viewDidAppear:(BOOL)animated {
@@ -131,9 +135,6 @@
     WeakSelf;
     [self.viewModel fetchContentFromRemoteIfNeededWithComplete:^(WDFetchResultType type) {
         StrongSelf;
-        if (!self.detailViewController) {
-            [self constructDetailViewController];
-        }
         if (type == WDFetchResultTypeDone) {
             [self tt_endUpdataData];
             if (!isArticleReliable) {

@@ -1745,6 +1745,12 @@ static NSUInteger const kOldAnimationViewTag = 20161221;
     }
 }
 
+-(void)setTtNavigationBar:(TTNavigationBar *)ttNavigationBar {
+    [super setTtNavigationBar:ttNavigationBar];
+    self.headerView.frame = [self p_frameForHeaderView];
+    self.detailView.frame = [self p_frameForDetailView];
+}
+
 - (void)tt_WDDetailViewWillShowLargeImage
 {
     _hiddenByDisplayImage = YES;
