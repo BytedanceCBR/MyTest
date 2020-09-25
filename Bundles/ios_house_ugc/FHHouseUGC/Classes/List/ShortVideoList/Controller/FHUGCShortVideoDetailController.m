@@ -119,6 +119,7 @@
 
 #import "FHShortVideoDetailFetchManager.h"
 #import "TSVWriteCommentButton.h"
+#import "FHShortVideoTracerUtil.h"
 
 #define kPostMessageFinishedNotification    @"kPostMessageFinishedNotification"
 
@@ -1649,10 +1650,11 @@ static const CGFloat kFloatingViewOriginY = 230;
 
 - (void)handleFakeInputBarClick:(id)sender
 {
-    [AWEVideoDetailTracker trackEvent:@"comment_write_button"
-                                model:self.model
-                      commonParameter:self.commonTrackingParameter
-                       extraParameter:[self writeCommentExtraPositionDict]];
+//    [AWEVideoDetailTracker trackEvent:@"comment_write_button"
+//                                model:self.model
+//                      commonParameter:self.commonTrackingParameter
+//                       extraParameter:[self writeCommentExtraPositionDict]];
+    [FHShortVideoTracerUtil clickCommentSubmitWithModel:self.model eventIndex:self.dataFetchManager.currentIndex];
 
     if ([self alertIfNotValid]) {
         return;
@@ -1803,12 +1805,7 @@ static const CGFloat kFloatingViewOriginY = 230;
 - (void)playView:(AWEVideoPlayView *)view didClickInputWithModel:(FHFeedUGCCellModel *)model
 {
    //point:在详情页点击写评论
-    [AWEVideoDetailTracker trackEvent:@"comment_write_button"
-                                model:self.model
-                      commonParameter:self.commonTrackingParameter
-                       extraParameter:@{
-                                        @"position": @"detail_bottom_bar",
-                                        }];
+    [FHShortVideoTracerUtil clickCommentSubmitWithModel:self.model eventIndex:self.dataFetchManager.currentIndex];
 
     if ([self alertIfNotValid]) {
         return;
@@ -1903,14 +1900,7 @@ static const CGFloat kFloatingViewOriginY = 230;
 {
     NSString *eventName = commentModel.userDigg ? @"click_dislike" : @"click_like";
     NSString *position = @"comment";
-    if(commentModel.replyToComment){
-        position = @"reply";
-    }
-    [AWEVideoDetailTracker trackEvent:eventName
-                                model:self.model
-                      commonParameter:self.commonTrackingParameter
-                       extraParameter:@{@"click_position": position,
-                                        @"comment_id": [commentModel.id stringValue]}];
+    [FHShortVideoTracerUtil clickLikeOrdisLikeWithWithName:eventName eventPosition:position eventModel:self.model eventIndex:self.dataFetchManager.currentIndex commentId:[commentModel.id stringValue]];
 
     if ([self alertIfNotValid]) {
         return;
@@ -2079,15 +2069,16 @@ static const CGFloat kFloatingViewOriginY = 230;
 //                [self showProfileView];
 //            }
             if (self.slideUpViewType == TSVDetailSlideUpViewTypeComment) {
-                [AWEVideoDetailTracker trackEvent:@"enter_comment"
-                                            model:self.model
-                                  commonParameter:self.commonTrackingParameter
-                                   extraParameter:@{@"position": @"draw_bottom"}];
+                [FHShortVideoTracerUtil clickCommentWithModel:self.model eventIndex:self.dataFetchManager.currentIndex];
+//                [AWEVideoDetailTracker trackEvent:@"enter_comment"
+//                                            model:self.model
+//                                  commonParameter:self.commonTrackingParameter
+//                                   extraParameter:@{@"position": @"draw_bottom"}];
 
-                [AWEVideoDetailTracker trackEvent:@"comment_list_show"
-                                            model:self.model
-                                  commonParameter:self.commonTrackingParameter
-                                   extraParameter:@{@"position": @"draw_bottom"}];
+//                [AWEVideoDetailTracker trackEvent:@"comment_list_show"
+//                                            model:self.model
+//                                  commonParameter:self.commonTrackingParameter
+//                                   extraParameter:@{@"position": @"draw_bottom"}];
 
                 [self showCommentsListWithStatus:TSVDetailCommentViewStatusPopBySlideUp];
             }
@@ -2379,33 +2370,12 @@ static const CGFloat kFloatingViewOriginY = 230;
                                             }];
         [self handleDeleteVideo];
     } else if ([contentItem.contentItemType isEqualToString:TTActivityContentItemTypeForwardWeitoutiao]) {
-        [AWEVideoDetailTracker trackEvent:@"rt_share_to_platform"
-                                    model:self.model
-                          commonParameter:self.commonTrackingParameter
-                           extraParameter:@{
-                                            @"share_platform":@"weitoutiao",
-                                            @"position": @"detail",
-                                            @"event_type": @"house_app2c_v2"
-                                            }];
+        [FHShortVideoTracerUtil clicksharePlatForm:self.model eventPlantFrom:@"weitoutiao"];
         [TSVVideoDetailShareHelper handleForwardUGCVideoWithModel:self.model];
-//    } else if ([contentItem.contentItemType isEqualToString:TTActivityContentItemTypeSaveVideo]) {
-//        [AWEVideoDetailTracker trackEvent:@"video_cache"
-//                                    model:self.model
-//                          commonParameter:self.commonTrackingParameter
-//                           extraParameter:nil];
-//        [TSVVideoDetailShareHelper handleSaveVideoWithModel:self.model];
-//    }
     } else if (!isEmptyString(contentItem.contentItemType)){
         NSString *type = [AWEVideoShareModel labelForContentItemType:contentItem.contentItemType];
         NSAssert(type, @"Type should not be empty");
-        [AWEVideoDetailTracker trackEvent:@"rt_share_to_platform"
-                                    model:self.model
-                          commonParameter:self.commonTrackingParameter
-                           extraParameter:@{
-                                            @"share_platform": type?:@"",
-                                            @"position": @"detail",
-                                            @"event_type": @"house_app2c_v2"
-                                            }];
+        [FHShortVideoTracerUtil clicksharePlatForm:self.model eventPlantFrom:type?:@""];
     } else {
         [AWEVideoDetailTracker trackEvent:@"click_more_cancel"
                                     model:self.model

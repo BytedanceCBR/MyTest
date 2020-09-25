@@ -11,6 +11,27 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FHShortVideoTracerUtil : NSObject
 + (void)feedClientShowWithmodel:(FHFeedUGCCellModel *)model eventIndex:(NSInteger)index;
+
++ (void)videoPlayOrPauseWithName:(NSString *)event eventModel:(FHFeedUGCCellModel *)model eventIndex:(NSInteger)index;
+
++ (void)videoOverWithModel:(FHFeedUGCCellModel *)model eventIndex:(NSInteger)index forStayTime:(NSString *)stayTime;
+
++ (void)goDetailWithModel:(FHFeedUGCCellModel *)model eventIndex:(NSInteger)index;
+
++ (void)stayPageWithModel:(FHFeedUGCCellModel *)model eventIndex:(NSInteger)index forStayTime:(NSString *)stayTime;
+
++ (void)clickLikeOrdisLikeWithWithName:(NSString *)event eventPosition:(NSString *)position eventModel:(FHFeedUGCCellModel *)model eventIndex:(NSInteger)index commentId:(NSString *)commentId;
+
++ (void)clickCommentWithModel:(FHFeedUGCCellModel *)model eventIndex:(NSInteger)index;
+
++ (void)clickCommentSubmitWithModel:(FHFeedUGCCellModel *)model eventIndex:(NSInteger)index;
+
++ (void)clickshareBtn:(FHFeedUGCCellModel *)model;
+
++ (void)clicksharePlatForm:(FHFeedUGCCellModel *)model eventPlantFrom:(NSString *)platFrom;
+
+- (void)flushStayPageTime;
+- (NSTimeInterval)timeIntervalForStayPage;
 @end
 
 NS_ASSUME_NONNULL_END

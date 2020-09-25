@@ -18,6 +18,7 @@
 
 @property (nonatomic, nullable, readonly) AWEVideoPlayView *videoPlayView;
 @property (nonatomic, nullable, strong, readonly) FHFeedUGCCellModel *videoDetail;
+@property (nonatomic, assign) NSInteger selfIndex;
 @property (nonatomic, assign) CGFloat spacingMargin;
 @property (nonatomic, nullable, strong) UIViewController<TSVControlOverlayViewController> *overlayViewController;
 

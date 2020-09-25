@@ -47,6 +47,7 @@
 #import <TTKitchenExtension/TTKitchenExtension.h>
 #import "FHCommonApi.h"
 #import "FHFeedUGCCellModel.h"
+#import "FHShortVideoTracerUtil.h"
 
 NSString *const TSVLastShareActivityName = @"TSVLastShareActivityName";
 
@@ -567,10 +568,11 @@ NSString *const TSVLastShareActivityName = @"TSVLastShareActivityName";
 
 - (void)clickShareButton
 {
-    [AWEVideoDetailTracker trackEvent:@"share_button"
-                                model:self.model
-                      commonParameter:self.commonTrackingParameter
-                       extraParameter:@{@"position": @"detail"}];
+//    [AWEVideoDetailTracker trackEvent:@"share_button"
+//                                model:self.model
+//                      commonParameter:self.commonTrackingParameter
+//                       extraParameter:@{@"position": @"detail"}];
+    [FHShortVideoTracerUtil clickshareBtn:self.model];
 
     [self.detailPromptManager updateVisibleFloatingViewCountForVisibility:YES];
     //小视频暂时不出分享广告

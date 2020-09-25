@@ -13,4 +13,5 @@
 
 @property (nonatomic, strong, nullable) TSVControlOverlayViewModel *viewModel;
 
+@property (nonatomic, assign) NSInteger selfIndex;
 @end

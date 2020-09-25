@@ -133,6 +133,7 @@
     self.awemedDetailItems = [[NSMutableArray alloc]init];
     if (currentShortVideoModel) {
             [self.awemedDetailItems addObject:currentShortVideoModel];
+
     }else {
         [self requestDataForGroupIdAutomatically:YES finishBlock:^(NSUInteger increaseCount, NSError *error) {
         }];

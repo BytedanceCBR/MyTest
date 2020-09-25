@@ -21,7 +21,6 @@ NS_ASSUME_NONNULL_BEGIN;
 @property (nonatomic, strong, nullable) FHFeedUGCCellModel *model;
 @property (nonatomic, copy, nullable) NSDictionary *commonTrackingParameter;
 @property (nonatomic, strong, nullable) TSVControlOverlayViewModel *viewModel;
-
 @property (nonatomic, copy, nullable) void (^closeButtonDidClick)();
 @property (nonatomic, strong) TSVVideoDetailPromptManager *detailPromptManager;
 

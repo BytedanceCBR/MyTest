@@ -83,6 +83,7 @@
 #import <FHHouseBase/FHRealtorAvatarView.h>
 #import "NSString+BTDAdditions.h"
 #import <BDWebImage/UIImageView+BDWebImage.h>
+#import "FHShortVideoTracerUtil.h"
 
 static const CGFloat kCheckChallengeButtonWidth = 72;
 static const CGFloat kCheckChallengeButtonHeight = 28;
@@ -703,14 +704,14 @@ static const CGFloat kCheckChallengeButtonLeftPadding = 28;
     } else {
         eventName = @"click_dislike";
     }
-    [AWEVideoDetailTracker trackEvent:eventName
-                                model:self.model
-                      commonParameter:self.commonTrackingParameter
-                       extraParameter:@{
-                                        @"user_id": self.model.user.userId ?: @"",
-                                        @"position": @"feed_detail",
-                                        }];
-
+//    [AWEVideoDetailTracker trackEvent:eventName
+//                                model:self.model
+//                      commonParameter:self.commonTrackingParameter
+//                       extraParameter:@{
+//                                        @"user_id": self.model.user.userId ?: @"",
+//                                        @"position": @"feed_detail",
+//                                        }];
+        [FHShortVideoTracerUtil clickLikeOrdisLikeWithWithName:eventName eventPosition:@"video" eventModel:self.model eventIndex:self.selfIndex commentId:nil];
     if (!userDigg) {
             [self digg];
             //point:视频点赞

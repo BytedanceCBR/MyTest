@@ -17,7 +17,6 @@
 #import "TTThemedAlertController.h"
 #import "EXTScope.h"
 #import "AWEVideoDetailFirstUsePromptViewController.h"
-#import "AWEVideoDetailTracker.h"
 #import "extobjc.h"
 #import "AWEVideoPlayTrackerBridge.h"
 #import <SSImpressionManager.h>
@@ -91,7 +90,7 @@ static BOOL kTSVCellularAlertShouldShow = YES;
 
 @property (nonatomic, strong) AWEVideoContainerCollectionView *collectionView;
 @property (nonatomic, assign) BOOL firstPageShown;  //用于区分发 go_detail 还是 go_detail_draw
-@property (nonatomic, strong, nullable) AWEVideoDetailTracker *tracker;
+@property (nonatomic, strong) FHShortVideoTracerUtil *tracker;
 @property (nullable, nonatomic, copy) NSIndexPath *currentIndexPath;
 @property (nonatomic, assign) BOOL loadingCellOnScreen;
 @property (nonatomic, assign) BOOL needsLoadingCell;
@@ -122,7 +121,7 @@ const static CGFloat kAWEVideoContainerSpacing = 2;
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(skStoreViewDidDisappear:) name:@"SKStoreProductViewDidDisappearKey" object:nil];
 
         [[SSImpressionManager shareInstance] addRegist:self];
-        self.tracker = [[AWEVideoDetailTracker alloc] init];
+        self.tracker = [[FHShortVideoTracerUtil alloc] init];
         self.feedClientShowCache = [[NSMutableArray alloc]init];
     }
 
@@ -448,6 +447,7 @@ const static CGFloat kAWEVideoContainerSpacing = 2;
         [self addChildViewController:cell.overlayViewController];
         [cell.contentView addSubview:cell.overlayViewController.view];
         [cell.overlayViewController didMoveToParentViewController:self];
+        cell.overlayViewController.selfIndex = self.initialItemIndex;
         cell.overlayViewController.viewModel.model = [self.dataFetchManager itemAtIndex:indexPath.item];
 
         [cell setNeedsLayout];
@@ -530,7 +530,7 @@ const static CGFloat kAWEVideoContainerSpacing = 2;
         self.currentIndexPath = indexPath;
         
         cell.videoDetail.tracerDic = self.extraDic;
-        
+        cell.selfIndex = indexPath.row;
         [self beginFirstImpression];
         [self alertCeullarPlayWithCompletion:^(BOOL continuePlaying) {
             if (continuePlaying) {
@@ -693,29 +693,10 @@ const static CGFloat kAWEVideoContainerSpacing = 2;
 - (void)sendGoDetailAndVideoPlayWithCell:(AWEVideoContainerCollectionViewCell *)cell
 {
     NSParameterAssert(cell);
-    NSString *videoPlayEventName = self.firstPageShown ? @"video_play_draw" : @"video_play";
-    NSMutableDictionary *paramters = @{}.mutableCopy;
-    paramters[@"user_id"] = self.currentVideoCell.videoDetail.user.userId;
-    paramters[@"position"] = @"detail";
-    paramters[@"is_follow"] = @([cell.videoDetail.user.relation.isFollowing floatValue]);
-    paramters[@"is_friend"] = @([cell.videoDetail.user.relation.isFriend floatValue]);
-    [AWEVideoDetailTracker trackEvent:videoPlayEventName
-                                model:cell.videoDetail
-                      commonParameter:self.commonTrackingParameter
-                       extraParameter:paramters];
-
-    NSString *goDetailEventName = self.firstPageShown ? @"go_detail_draw" : @"go_detail";
-    [AWEVideoDetailTracker trackEvent:goDetailEventName
-                                model:cell.videoDetail
-                      commonParameter:self.commonTrackingParameter extraParameter:@{@"is_follow": @([cell.videoDetail.user.relation.isFollowing floatValue]),
-                                                                                    @"is_friend": @([cell.videoDetail.user.relation.isFriend floatValue])
-                                                                                    }];
+    [FHShortVideoTracerUtil videoPlayOrPauseWithName:@"video_play" eventModel:cell.videoDetail eventIndex:self.initialItemIndex];
+    [FHShortVideoTracerUtil goDetailWithModel:cell.videoDetail eventIndex:self.initialItemIndex];
     [self.tracker flushStayPageTime];
-    
-    
-    //NSAssert(cell.videoDetail.itemID, @"videoDetail awemeID must not be nil");
     cell.videoDetail.videoAction.playCount = [NSString stringWithFormat:@"%ld",[cell.videoDetail.videoAction.playCount intValue]+ 1];
-    
     [self sendStayPageTracking];
 }
 
@@ -738,20 +719,7 @@ const static CGFloat kAWEVideoContainerSpacing = 2;
     NSString *playCount = [NSString stringWithFormat:@"%.2f", totalPlayTime / videoDuration];
     NSString *duration = [NSString stringWithFormat:@"%.0f", totalPlayTime * 1000];
 
-    NSMutableDictionary *paramters = @{}.mutableCopy;
-    paramters[@"user_id"] = self.currentVideoCell.videoDetail.user.userId;
-    paramters[@"position"] = @"detail";
-    paramters[@"percent"] = percent;
-    paramters[@"play_count"] = @([playCount floatValue]);
-    paramters[@"duration"] = duration;
-    paramters[@"is_follow"] = @([self.currentVideoCell.videoDetail.user.relation.isFollowing floatValue]);
-    paramters[@"is_friend"] = @([self.currentVideoCell.videoDetail.user.relation.isFriend floatValue]);
-    
-    [AWEVideoDetailTracker trackEvent:eventName
-                                model:self.currentVideoCell.videoDetail
-                      commonParameter:self.commonTrackingParameter
-                       extraParameter:paramters];
-    
+    [FHShortVideoTracerUtil videoOverWithModel:self.currentVideoCell.videoDetail eventIndex:self.initialItemIndex forStayTime:duration];
 }
 
 - (void)sendStayPageTracking
@@ -766,13 +734,13 @@ const static CGFloat kAWEVideoContainerSpacing = 2;
     NSMutableDictionary *paramters = @{}.mutableCopy;
 //    paramters[@"user_id"] = self.currentVideoCell.videoDetail.author.userID;
     paramters[@"stay_time"] = stayTime;
-
-
-    [AWEVideoDetailTracker trackEvent:eventName
-                                model:self.currentVideoCell.videoDetail
-                      commonParameter:self.commonTrackingParameter
-                       extraParameter:paramters];
-
+//
+//
+//    [AWEVideoDetailTracker trackEvent:eventName
+//                                model:self.currentVideoCell.videoDetail
+//                      commonParameter:self.commonTrackingParameter
+//                       extraParameter:paramters];
+    [FHShortVideoTracerUtil stayPageWithModel:self.currentVideoCell.videoDetail eventIndex:self.initialItemIndex forStayTime:stayTime];
     FHFeedUGCCellModel *video = self.currentVideoCell.videoDetail;
     NSString *enterFrom = video.enterFrom ?: self.commonTrackingParameter[@"enter_from"];
     NSString *categoryName = video.categoryId ?: self.commonTrackingParameter[@"category_name"];

@@ -16,6 +16,7 @@
 #import "TTSettingsManager.h"
 #import "TSVVideoDetailControlOverlayUITypeConfig.h"
 #import <AVFoundation/AVFoundation.h>
+#import "FHShortVideoTracerUtil.h"
 
 @interface AWEVideoContainerCollectionViewCell () <AWEVideoPlayViewDelegate>
 
@@ -88,6 +89,12 @@
         [(AWEVideoDetailControlOverlayViewController *)self.overlayViewController tapToFoldRecCard];
     }
     [self.videoPlayView pauseOrPlayVideo];
+    if (self.videoPlayView.isPlaying) {
+        [FHShortVideoTracerUtil videoPlayOrPauseWithName:@"video_play" eventModel:self.videoDetail eventIndex:_selfIndex];
+    }else {
+        [FHShortVideoTracerUtil videoPlayOrPauseWithName:@"video_pause" eventModel:self.videoDetail eventIndex:_selfIndex];
+    }
+    
 }
 # pragma mark - Digg Animation
 
