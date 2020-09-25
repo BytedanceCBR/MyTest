@@ -16,7 +16,6 @@
 #import "UIImage+FIconFont.h"
 #import "TTAccountManager.h"
 #import "UIButton+FHUGCMultiDigg.h"
-#import <NSString+BTDAdditions.h>
 
 @interface WDListAnswerCellBottomView ()
 
@@ -43,7 +42,9 @@
     [self.commentButton setImage:ICON_FONT_IMG(20, @"\U0000e699", [UIColor themeGray1]) forState:UIControlStateNormal] ;
     [self.commentButton setTitle:@"0" forState:UIControlStateNormal];
     [self.commentButton setTitleColor:[UIColor themeGray1] forState:UIControlStateNormal];
-    [self.commentButton setTitleEdgeInsets:UIEdgeInsetsMake(0, 5, 0, 0)];
+    [self.commentButton setImageEdgeInsets:UIEdgeInsetsMake(0, -2, 0, 2)];
+    [self.commentButton setTitleEdgeInsets:UIEdgeInsetsMake(0, 2, 0, -2)];
+    [self.commentButton sizeToFit];
     self.commentButton.titleLabel.font = [UIFont themeFontRegular:14];
     self.commentButton.titleLabel.layer.masksToBounds = YES;
     [self.commentButton addTarget:self action:@selector(commentButtonClick) forControlEvents:UIControlEventTouchUpInside];
@@ -51,9 +52,11 @@
     // 点赞
     self.digButton = [[UIButton alloc] init];
     [self.digButton setTitle:@"0" forState:UIControlStateNormal];
-    [self.digButton setTitleEdgeInsets:UIEdgeInsetsMake(0, 5, 0, 0)];
+    [self.digButton setImageEdgeInsets:UIEdgeInsetsMake(0, -2, 0, 2)];
+    [self.digButton setTitleEdgeInsets:UIEdgeInsetsMake(0, 2, 0, -2)];
     self.digButton.titleLabel.font = [UIFont themeFontRegular:14];
     self.digButton.titleLabel.layer.masksToBounds = YES;
+    [self.digButton sizeToFit];
     self.digButton.hitTestEdgeInsets = UIEdgeInsetsMake(-10, -10, -10, -10);
     [self.digButton addTarget:self action:@selector(digButtonClick) forControlEvents:UIControlEventTouchUpInside];
     [self addSubview:self.digButton];
@@ -70,7 +73,7 @@
     }];
     [self.commentButton mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(self).offset(10);
-        make.right.mas_equalTo(self.digButton.mas_left).offset(-5);
+        make.right.mas_equalTo(self.digButton.mas_left).offset(-20);
         make.height.mas_equalTo(20);
     }];
 }
@@ -78,18 +81,8 @@
 - (void)setAnsEntity:(WDAnswerEntity *)ansEntity {
     _ansEntity = ansEntity;
     if (ansEntity) {
-        NSString *commentCount = [NSString stringWithFormat:@"%lld",[ansEntity.commentCount longLongValue]];
-        NSString *diggCount = [NSString stringWithFormat:@"%lld",[ansEntity.diggCount longLongValue]];
-        [self.commentButton setTitle:commentCount forState:UIControlStateNormal];
-        [self.digButton setTitle:diggCount forState:UIControlStateNormal];
-        CGFloat commentWidth = [diggCount btd_sizeWithFont:[UIFont themeFontRegular:14] width:100].width;
-        CGFloat diggWidth = [commentCount btd_sizeWithFont:[UIFont themeFontRegular:14] width:100].width;
-        [self.commentButton mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.width.mas_equalTo(commentWidth + 40);
-        }];
-        [self.digButton mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.width.mas_equalTo(diggWidth + 40);
-        }];
+        [self.commentButton setTitle:[NSString stringWithFormat:@"%lld",[ansEntity.commentCount longLongValue]] forState:UIControlStateNormal] ;
+        [self.digButton setTitle:[NSString stringWithFormat:@"%lld",[ansEntity.diggCount longLongValue]] forState:UIControlStateNormal];
         self.digButton.selected = ansEntity.isDigg;
     }
     [self layoutIfNeeded];
