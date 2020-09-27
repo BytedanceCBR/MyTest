@@ -128,6 +128,8 @@
     }
 
     NSMutableArray *topArray = [[TSVVideoShareManager synchronizeUserDefaultsWithItemArray:needAddItem] mutableCopy];
+    [topArray addObject:[self copyContentItem]];
+    
     NSMutableArray *secondArray = [NSMutableArray array];
     NSNumber *shareEnable = @YES;
     switch (_shareType) {
@@ -165,7 +167,7 @@
 //                    [secondArray addObject:[self dislikeContentItem]];
                     [secondArray addObject:[self reportContentItem]];
 //                    [secondArray addObject:[self saveVideoContentItem]];
-                    [secondArray addObject:[self copyContentItem]];
+//                    [secondArray addObject:[self copyContentItem]];
                 } else {
                     [secondArray addObject:[self deleteContentItem]];
                 }
