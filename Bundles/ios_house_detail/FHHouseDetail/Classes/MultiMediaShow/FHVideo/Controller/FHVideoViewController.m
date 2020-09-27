@@ -152,7 +152,6 @@
         self.videoView.playerView = self.player.view;
         [self updateVideo];
     }
-    [self.viewModel hideCoverView];
 }
 
 - (void)play {
@@ -161,6 +160,7 @@
     [self readyToPlay];
 
     if(!self.isShowingNetFlow && self.playbackState != TTVPlaybackState_Playing){
+        [self.viewModel hideCoverView];
         [self.player play];
     }
 }

@@ -33,19 +33,19 @@
 }
 
 - (void)setVideoVC:(FHVideoViewController *)videoVC {
-//    if (videoVC != _videoVC) {
+    if (videoVC != _videoVC) {
         _videoVC = videoVC;
         videoVC.delegate = self;
         // 状态维护
         videoVC.model.isShowControl = YES;
         videoVC.model.isShowStartBtnWhenPause = NO;
         videoVC.model.isShowMiniSlider = NO;
-        [self.videoVC updateData:videoVC.model];
+//        [self.videoVC updateData:videoVC.model];
         _videoVC.view.backgroundColor = [UIColor clearColor];
         _vedioView = _videoVC.view;
         
         [self addSubview:_vedioView];
-//    }
+    }
 }
 
 // 不支持手势放大

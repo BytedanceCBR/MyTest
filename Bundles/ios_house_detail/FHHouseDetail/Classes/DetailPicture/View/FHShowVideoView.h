@@ -31,7 +31,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface FHShowVideoView : TTShowImageView
 
 @property (nonatomic, weak)     id<FHVideoViewDelegate>    delegate;
-@property (nonatomic, weak)     FHVideoViewController      *videoVC;
+@property (nonatomic, strong)     FHVideoViewController      *videoVC;
 @property (nonatomic, weak)   UIView       *vedioView;
 - (void)play;
 - (void)pause;
