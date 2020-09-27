@@ -1227,7 +1227,7 @@ extern NSString *const INSTANT_DATA_KEY;
     self.tableView.mj_footer.hidden = NO;
     self.lastHasMore = hasMore;
     if (hasMore == NO) {
-        [self.refreshFooter setUpNoMoreDataText:@"没有更多信息了" offsetY:-3];
+        [self.refreshFooter setUpNoMoreDataText:@"已加载全部" offsetY:-3];
         [self.tableView.mj_footer endRefreshingWithNoMoreData];
     }else {
         [self.tableView.mj_footer endRefreshing];
