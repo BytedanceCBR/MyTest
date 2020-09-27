@@ -34,10 +34,11 @@
 @property (nonatomic, copy) NSString *activitySortType;
 @property (nonatomic, strong) FHUGCShortVideoRealtorInfo *realtorInfo;
 
-
 @end
 
+
 @implementation TSVShortVideoDetailFetchManager
+@synthesize isFromFollowVc = _isFromFollowVc;
 
 - (instancetype)initWithGroupID:(NSString *)groupID loadMoreType:(TSVShortVideoListLoadMoreType)loadMoreType
 {
@@ -68,6 +69,10 @@
         _activitySortType = activitySortType;
     }
     return self;
+}
+
+- (void)setIsFromFollowVc:(BOOL)isFromFollowVc {
+    _isFromFollowVc = isFromFollowVc;
 }
 
 - (NSUInteger)numberOfShortVideoItems
@@ -119,6 +124,9 @@
             
             NSDictionary *dic = @{@"raw_data":jsonObj[@"data"],@"cell_type":@(FHUGCFeedListCellTypeUGCSmallVideo)};
             FHFeedUGCCellModel *cellModle = [FHFeedUGCCellModel modelFromFeed:dic];
+            if (self.isFromFollowVc) {
+                cellModle.userRepin = YES;
+            }
             if (!cellModle) {
                 return;
             }

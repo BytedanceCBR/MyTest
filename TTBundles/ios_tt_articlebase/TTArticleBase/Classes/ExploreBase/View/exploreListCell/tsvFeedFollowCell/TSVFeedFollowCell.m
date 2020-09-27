@@ -349,6 +349,7 @@ static NSString * const kTSVOpenTabHost = @"ugc_video_tab";
             
             [info setValue:self.cellData forKey:HTSVideoDetailOrderedData];
         }
+        [info setValue:@(YES) forKey:@"isFromFlollow"];
 
         //自定义push方式打开火山详情页
         [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:TTRouteUserInfoWithDict(info) pushHandler:^(UINavigationController *nav, TTRouteObject *routeObj) {

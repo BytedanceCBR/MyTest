@@ -165,7 +165,7 @@ static const CGFloat kCheckChallengeButtonLeftPadding = 28;
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(skStoreViewDidDisappear:) name:@"SKStoreProductViewDidDisappearKey" object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationWillEnterForeground:) name:UIApplicationWillEnterForegroundNotification object:nil];
-
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(likeStateChange:) name:@"kFHUGCDiggStateChangeNotification" object:nil];
     [RACObserve(self, viewModel.likeCountString) subscribeNext:^(id  _Nullable x) {
         [self updateDiggState];
     }];
@@ -336,7 +336,7 @@ static const CGFloat kCheckChallengeButtonLeftPadding = 28;
     // UI交互View
     self.titleLabel = ({
         TTUGCAttributedLabel *label = [[TTUGCAttributedLabel alloc] initWithFrame:CGRectZero];
-        label.numberOfLines = 2;
+        label.numberOfLines = 0;
         label.delegate = self;
         label.extendsLinkTouchArea = NO;
         label.longPressGestureRecognizer.enabled = NO;
@@ -392,6 +392,26 @@ static const CGFloat kCheckChallengeButtonLeftPadding = 28;
 
 }
 
+- (void)likeStateChange:(NSNotification *)notification {
+    NSDictionary *userInfo = notification.userInfo;
+    if(userInfo){
+        NSInteger user_digg = [userInfo[@"action"] integerValue];
+        NSInteger diggCount = self.model.diggCount;
+        NSInteger groupType = [userInfo[@"group_type"] integerValue];
+        NSString *groupId = userInfo[@"group_id"];
+        
+        if(groupType == FHDetailDiggTypeSMALLVIDEO && [groupId isEqualToString:self.model.groupId]){
+            if(user_digg == 0) {
+                self.model.diggCount = [NSString stringWithFormat:@"%ld",[self.model.diggCount intValue] - 1];
+                self.model.userDigg = @"0";
+            }else {
+                self.model.diggCount = [NSString stringWithFormat:@"%ld",[self.model.diggCount intValue] + 1];
+                self.model.userDigg = @"1";
+            }
+            [self updateDiggState];
+        }
+    }
+}
 
 - (void)activityTagTap:(id)sender
 {
@@ -420,7 +440,7 @@ static const CGFloat kCheckChallengeButtonLeftPadding = 28;
     }];
     
     [_commentButton mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.bottom.equalTo(self.shareButton.mas_top).offset(-15);
+        make.bottom.equalTo(self.shareButton.mas_top).offset(-7);
         make.centerX.equalTo(self.rightInfoView);
         make.size.mas_equalTo(CGSizeMake(40, 50));
     }];
@@ -432,7 +452,7 @@ static const CGFloat kCheckChallengeButtonLeftPadding = 28;
     }];
     
     [_avatarView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.bottom.equalTo(self.likeButton.mas_top).offset(-15);
+        make.bottom.equalTo(self.likeButton.mas_top).offset(-20);
         make.width.height.equalTo(@(avatarSize));
         make.centerX.equalTo(self.rightInfoView);
         make.top.equalTo(self.rightInfoView);
@@ -676,7 +696,6 @@ static const CGFloat kCheckChallengeButtonLeftPadding = 28;
 
     if (![self.model.userDigg boolValue]) {
         [self.viewModel doubleTapView];
-        [self updateDiggState];
         //point:视频点赞
     }
 }
@@ -765,23 +784,20 @@ static const CGFloat kCheckChallengeButtonLeftPadding = 28;
 }
 - (void)doSafeCancelDigg
 {
-
-    self.model.diggCount = [NSString stringWithFormat:@"%ld",[self.model.diggCount intValue] - 1];
-    self.model.userDigg = @"0";
-    [self postDiggCountSyncNotification];
-//    [self.model save];
-    [self updateDiggState];
-    // [AWEVideoDetailManager cancelDiggVideoItemWithID:self.model.groupID completion:nil];
+//    self.model.diggCount = [NSString stringWithFormat:@"%ld",[self.model.diggCount intValue] - 1];
+//    self.model.userDigg = @"0";
+//    [self postDiggCountSyncNotification];
+//
     [FHCommonApi requestCommonDigg:[NSString stringWithFormat:@"%@", self.model.groupId] groupType:FHDetailDiggTypeSMALLVIDEO action:0 completion:nil];
 }
 
-- (void)postDiggCountSyncNotification
-{
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"TSVShortVideoDiggCountSyncNotification"
-                                                        object:nil
-                                                      userInfo:@{@"group_id" : self.model.groupId ?:@"",
-                                                                 @"user_digg" : @([self.model.userDigg intValue]),}];
-}
+//- (void)postDiggCountSyncNotification
+//{
+//    [[NSNotificationCenter defaultCenter] postNotificationName:@"TSVShortVideoDiggCountSyncNotification"
+//                                                        object:nil
+//                                                      userInfo:@{@"group_id" : self.model.groupId ?:@"",
+//                                                                 @"user_digg" : @([self.model.userDigg intValue]),}];
+//}
 
 
 - (void)_onCommentButtonClicked:(UIButton *)sender

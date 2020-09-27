@@ -362,7 +362,9 @@ static const CGFloat kFloatingViewOriginY = 230;
                                                                              loadMoreType:TSVShortVideoListLoadMoreTypeNone];
             self.dataFetchManager.shouldShowNoMoreVideoToast = NO;
         }
+         self.dataFetchManager.isFromFollowVc = _pageParams[@"isFromFlollow"]?:NO;
         self.originalDataFetchManager = self.dataFetchManager;
+        
 
         @weakify(self);
         [RACObserve(self, dataFetchManager) subscribeNext:^(id  _Nullable x) {
@@ -597,25 +599,31 @@ static const CGFloat kFloatingViewOriginY = 230;
     self.emptyHintView.hidden = YES;
     [self.commentView addSubview:self.emptyHintView];
 
+   UIGestureRecognizer *imageGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleFakeInputBarClick:)];
     UIImageView *imageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"short_video_comment"]];
     imageView.size = CGSizeMake(115, 115);
+    imageView.userInteractionEnabled = YES;
+    [imageView addGestureRecognizer:imageGesture];
     imageView.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin|UIViewAutoresizingFlexibleRightMargin;
     imageView.centerX = CGRectGetWidth(self.emptyHintView.bounds) / 2,
     imageView.centerY = CGRectGetHeight(self.emptyHintView.bounds) / 2.0-20;
     [self.emptyHintView addSubview:imageView];
 
+     UIGestureRecognizer *labelGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleFakeInputBarClick:)];
     UILabel *emptyHintLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, CGRectGetMaxY(imageView.frame)+15, CGRectGetWidth(self.emptyHintView.bounds), 18)];
     emptyHintLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth;
     emptyHintLabel.font = [UIFont boldSystemFontOfSize:15];
+    emptyHintLabel.userInteractionEnabled = YES;
+    [emptyHintLabel addGestureRecognizer:labelGesture];
     emptyHintLabel.textColor = [UIColor colorWithHexString:@"999999"];
     emptyHintLabel.textAlignment = NSTextAlignmentCenter;
     emptyHintLabel.text = @"暂无评论，点击抢沙发";
     [self.emptyHintView addSubview:emptyHintLabel];
     
+    UIGestureRecognizer *inputTapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleFakeInputBarClick:)];
     SSThemedView *fakeInputBar = [[SSThemedView alloc] initWithFrame:CGRectMake(0, CGRectGetMaxY(self.tableView.frame), CGRectGetWidth(self.commentView.bounds), 44)];
     fakeInputBar.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     fakeInputBar.backgroundColorThemeKey = kColorBackground4;
-    UIGestureRecognizer *inputTapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleFakeInputBarClick:)];
     fakeInputBar.borderColorThemeKey = kColorLine7;
     fakeInputBar.separatorAtTOP = YES;
     [fakeInputBar addGestureRecognizer:inputTapGesture];

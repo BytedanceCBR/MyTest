@@ -502,7 +502,6 @@ NSString *const TSVLastShareActivityName = @"TSVLastShareActivityName";
     } else {
         self.model.diggCount = [NSString stringWithFormat:@"%d",[self.model.diggCount intValue] - 1];
         self.model.userDigg = @"0";
-//        [self.model save];
         [AWEVideoDetailManager cancelDiggVideoItemWithID:self.model.groupId
                                               completion:nil];
     }
@@ -533,24 +532,15 @@ NSString *const TSVLastShareActivityName = @"TSVLastShareActivityName";
 
 - (void)markLikeDirectly
 {
-    // Legacy
     [self showShareButtonIfNeeded];
-
-    self.model.diggCount = [NSString stringWithFormat:@"%d",[self.model.diggCount intValue] + 1];
-    self.model.userDigg = @"1";
-//    [self.model save];
-    /*[AWEVideoDetailManager diggVideoItemWithID:self.model.groupID
-                                   groupSource:self.model.groupSource
-                                    completion:nil];*/
     [FHCommonApi requestCommonDigg:[NSString stringWithFormat:@"%@", self.model.groupId] groupType:FHDetailDiggTypeSMALLVIDEO action:1 completion:nil];
 
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"TSVShortVideoDiggCountSyncNotification"
-                                                        object:nil
-                                                      userInfo:@{@"group_id" : self.model.groupId ?:@"",
-                                                                 @"user_digg" : @([self.model.userDigg floatValue]),}];
-
-
+//    [[NSNotificationCenter defaultCenter] postNotificationName:@"TSVShortVideoDiggCountSyncNotification"
+//                                                        object:nil
+//                                                      userInfo:@{@"group_id" : self.model.groupId ?:@"",
+//                                                                 @"user_digg" : @([self.model.userDigg floatValue]),}];
 }
+
 
 - (void)clickCommentButton
 {
