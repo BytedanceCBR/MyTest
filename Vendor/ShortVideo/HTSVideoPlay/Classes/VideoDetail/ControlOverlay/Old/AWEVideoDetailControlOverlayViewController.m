@@ -674,6 +674,8 @@ static const CGFloat kCheckChallengeButtonLeftPadding = 28;
 
 - (void)digg
 {
+    
+    
     [self _showPlusOneDiggAnimation];
 
     CGFloat viewWidth = 100;

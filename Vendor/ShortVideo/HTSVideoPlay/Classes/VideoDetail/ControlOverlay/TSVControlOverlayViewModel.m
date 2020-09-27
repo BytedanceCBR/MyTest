@@ -519,25 +519,8 @@ NSString *const TSVLastShareActivityName = @"TSVLastShareActivityName";
         //                                            @"user_id": self.model.author.userID,
         //                                            @"position": @"double_like",
         //                                            }];
-        if (![TTAccountManager isLogin]) {
-            NSMutableDictionary *params = [NSMutableDictionary dictionary];
-            NSString *page_type = [FHShortVideoTracerUtil pageType];
-            [params setObject:page_type forKey:@"enter_from"];
-            [params setObject:@"click_publisher" forKey:@"enter_type"];
-            // 登录成功之后不自己Pop，先进行页面跳转逻辑，再pop
-            [params setObject:@(YES) forKey:@"need_pop_vc"];
-            [TTAccountLoginManager showAlertFLoginVCWithParams:params completeBlock:^(TTAccountAlertCompletionEventType type, NSString * _Nullable phoneNum) {
-                if (type == TTAccountAlertCompletionEventTypeDone) {
-                    //登录成功 走发送逻辑
-                    if ([TTAccountManager isLogin]) {
-                        [self markLikeDirectly];
-                    }
-                }
-            }];
-        }else {
             [self markLikeDirectly];
         }
-    }
 }
 
 - (void)singleTapView

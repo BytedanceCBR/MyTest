@@ -17,6 +17,7 @@
 #import "TSVVideoDetailControlOverlayUITypeConfig.h"
 #import <AVFoundation/AVFoundation.h>
 #import "FHShortVideoTracerUtil.h"
+#import "TTAccountManager.h"
 
 @interface AWEVideoContainerCollectionViewCell () <AWEVideoPlayViewDelegate>
 
@@ -75,7 +76,25 @@
                                         }];
 
     if ([self.overlayViewController isKindOfClass:[AWEVideoDetailControlOverlayViewController class]]) {
-        [(AWEVideoDetailControlOverlayViewController *)self.overlayViewController digg];
+        if (![TTAccountManager isLogin]) {
+            NSMutableDictionary *params = [NSMutableDictionary dictionary];
+            NSString *page_type = [FHShortVideoTracerUtil pageType];
+            [params setObject:page_type forKey:@"enter_from"];
+            [params setObject:@"click_publisher" forKey:@"enter_type"];
+            // 登录成功之后不自己Pop，先进行页面跳转逻辑，再pop
+            [params setObject:@(YES) forKey:@"need_pop_vc"];
+            [TTAccountLoginManager showAlertFLoginVCWithParams:params completeBlock:^(TTAccountAlertCompletionEventType type, NSString * _Nullable phoneNum) {
+                if (type == TTAccountAlertCompletionEventTypeDone) {
+                    //登录成功 走发送逻辑
+                    if ([TTAccountManager isLogin]) {
+                        [(AWEVideoDetailControlOverlayViewController *)self.overlayViewController digg];
+                    }
+                }
+            }];
+            
+        }else {
+            [(AWEVideoDetailControlOverlayViewController *)self.overlayViewController digg];
+        }
     }
 }
 
