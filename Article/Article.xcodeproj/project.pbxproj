@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		17EA67A425209D8F00E373FD /* ShortVideoGuide.json in Resources */ = {isa = PBXBuildFile; fileRef = 17EA67A325209D8F00E373FD /* ShortVideoGuide.json */; };
 		30B80968186F20525FA8F916 /* libPods-f100.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 9024DDF5E410548C9797A57D /* libPods-f100.a */; };
 		3D2F39962270545700AE567D /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 3D2F398A2270545700AE567D /* InfoPlist.strings */; };
 		3D2F39982270545700AE567D /* TargetLogicSetting.strings in Resources */ = {isa = PBXBuildFile; fileRef = 3D2F398E2270545700AE567D /* TargetLogicSetting.strings */; };
@@ -257,6 +258,7 @@
 		01FA60521E9F5D7300CE6FD3 /* area.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = area.plist; sourceTree = "<group>"; };
 		06479D701ACD71FB00A44FB9 /* OpenGLES.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGLES.framework; path = System/Library/Frameworks/OpenGLES.framework; sourceTree = SDKROOT; };
 		0695AFD018EEEEE50009444F /* ImageIO.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ImageIO.framework; path = System/Library/Frameworks/ImageIO.framework; sourceTree = SDKROOT; };
+		17EA67A325209D8F00E373FD /* ShortVideoGuide.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = ShortVideoGuide.json; sourceTree = "<group>"; };
 		2B1A0B4B24C053C2009D40FF /* F100BaiduMapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = F100BaiduMapKit.framework; path = ../Bundles/BaiduMapKit/BaiduMapKit/F100BaiduMapKit.framework; sourceTree = "<group>"; };
 		2B53A10C24C5787200923B3C /* libsqlite3.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.tbd; path = usr/lib/libsqlite3.tbd; sourceTree = SDKROOT; };
 		2D33175D1F30AE6D009D2936 /* PushNotification.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = PushNotification.xcassets; sourceTree = "<group>"; };
@@ -725,6 +727,7 @@
 				D37495DF23965409006D44D2 /* gaode_house_detail_style.data */,
 				7623E3AF2275EAED009AD3D4 /* TTVPlayerStyle.plist */,
 				D48E93C0233CF142005A42CD /* VRImageLoading.json */,
+				17EA67A325209D8F00E373FD /* ShortVideoGuide.json */,
 				D45F59FB2458039E00A14982 /* LynxLocalChannels */,
 				3D7D2F3722704CAA00A95FAF /* AppIcon */,
 				8416BB2D1C8EAE9A00BB9C97 /* Account.xcassets */,
@@ -1099,6 +1102,7 @@
 				D37495E223965409006D44D2 /* gaode_house_detail_style.data in Resources */,
 				3DB49F8E2265E34900A0780E /* ProjectNightModeThemeUISetting.strings in Resources */,
 				7623E3B12275EAEE009AD3D4 /* TTVPlayerStyle.plist in Resources */,
+				17EA67A425209D8F00E373FD /* ShortVideoGuide.json in Resources */,
 				3D7D2F3D22704CAA00A95FAF /* Icon.png in Resources */,
 				FEFA5A1C205FB1A8001F50D8 /* NewsResource.xcassets in Resources */,
 				FEFA5A1D205FB1A8001F50D8 /* FrameworkResource.xcassets in Resources */,

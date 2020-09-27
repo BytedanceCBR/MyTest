@@ -40,9 +40,14 @@ static CGFloat alphaThatTransparentButTouchable = 0.02;
 - (void)viewDidLoad {
     [super viewDidLoad];
     [self.loadingView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.edges.equalTo(self.view);
+        make.center.equalTo(self.view);
+        make.size.mas_equalTo(CGSizeMake(215, 335));
     }];
-    
+    [self.loadingView play];
+    __weak typeof(self)weakSelf = self;
+    self.loadingView.completionBlock = ^(BOOL animationFinished) {
+        [self dismiss];
+    };
 //    self.view.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0.5];
 //
 //    self.containerView = [[UIView alloc] init];
@@ -92,9 +97,9 @@ static CGFloat alphaThatTransparentButTouchable = 0.02;
 -(LOTAnimationView *)loadingView
 {
     if (!_loadingView) {
-        NSString *path = [[NSBundle mainBundle] pathForResource:@"VRImageLoading" ofType:@"json"];
+        NSString *path = [[NSBundle mainBundle] pathForResource:@"ShortVideoGuide" ofType:@"json"];
         _loadingView = [LOTAnimationView animationWithFilePath:path];
-        _loadingView.loopAnimation = YES;
+        _loadingView.loopAnimation = NO;
         [self.view addSubview:_loadingView];
     }
     return _loadingView;
@@ -243,18 +248,17 @@ static CGFloat alphaThatTransparentButTouchable = 0.02;
 
 - (void)dismiss
 {
-//    [self willMoveToParentViewController:nil];
-//    [self.view removeFromSuperview];
-//    [self removeFromParentViewController];
-//
-//    if (dismissCompleteBlock) {
-//        dismissCompleteBlock();
-//    }
+    [self willMoveToParentViewController:nil];
+    [self.view removeFromSuperview];
+    [self removeFromParentViewController];
+    if (dismissCompleteBlock) {
+        dismissCompleteBlock();
+    }
 }
 
 - (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event
 {
-//    [self dismiss];
+    [self dismiss];
 }
 
 @end

@@ -464,9 +464,8 @@ static const CGFloat kCheckChallengeButtonLeftPadding = 28;
         make.right.equalTo(self.userInfoContainerView);
         make.height.equalTo(@24.0);
     }];
-    
     [_sourceImage mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.equalTo(self.userInfoContainerView);
+        make.left.equalTo(self.view).offset(15);
         make.bottom.equalTo(self.userInfoContainerView.mas_top).offset(-2);
         make.height.mas_offset(16);
     }];
