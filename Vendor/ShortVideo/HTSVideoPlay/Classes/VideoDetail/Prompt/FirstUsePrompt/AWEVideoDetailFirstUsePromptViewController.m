@@ -54,9 +54,9 @@ static UIViewController<AWEVideoDetailFirstUsePromptViewController> *promptViewC
                                   category:(AWEPromotionCategory)category
                           inViewController:(UIViewController *)containerViewController;
 {
-//    if (![self needPromotionForDirection:direction category:category]) {
-//        return;
-//    }
+    if (![self needPromotionForDirection:direction category:category]) {
+        return;
+    }
 
     if (promptViewController && [promptViewController respondsToSelector:@selector(dismiss)]) {
         [promptViewController dismiss];
