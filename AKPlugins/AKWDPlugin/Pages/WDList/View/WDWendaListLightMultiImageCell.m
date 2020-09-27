@@ -211,6 +211,7 @@
         [imageView setTagLabelText:tips position:position];
         if (idx == 2 && fullCount > 3) {
             [imageView setExtraCount:[NSString stringWithFormat:@"+%ld",fullCount - 3]];
+            imageView.userInteractionEnabled = NO;
         }
     }];
     return self.answerImagesBgView.bottom;
