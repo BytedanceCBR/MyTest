@@ -1472,7 +1472,11 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
         [self.mapView setZoomLevel:zoomLevel animated:YES]; //atPivot:annotationView.center
         
         [self addGeoFencePolygonRegion:model.coordinateEnclosure];
-        self.currentSelectNid = houseAnnotation.houseData.nid;
+        
+        
+        if (self.showMode != FHMapSearchShowModeSubway && self.showMode != FHMapSearchShowModeDrawLine) {
+            self.currentSelectNid = houseAnnotation.houseData.nid;
+        }
         
         
         UIImage *bgImg = SYS_IMG(@"mapsearch_area_bg");
