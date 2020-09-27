@@ -240,6 +240,9 @@
     pictureListViewController.albumImageBtnClickBlock = ^(NSInteger index) {
         __strong typeof(weakSelf) strongSelf = weakSelf;
         //如果是从大图进入的图片列表，dismiss picturelist
+        if (index < 0 || index >= weakSelf.dataHelper.pictureDetailData.mediaItemArray.count) {
+            return;
+        }
         FHMultiMediaItemModel *itemModel = weakSelf.dataHelper.pictureDetailData.mediaItemArray[index];
         if (itemModel.mediaType == FHMultiMediaTypeVRPicture) {
             [weakSelf gotoVRDetail:itemModel];
