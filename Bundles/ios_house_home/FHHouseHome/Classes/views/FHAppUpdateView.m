@@ -85,7 +85,7 @@
         UILabel *contentLabel = [[UILabel alloc] init];
         contentLabel.textColor = [UIColor colorWithHexString:@"#ff3c00"];;
         contentLabel.font = [UIFont themeFontRegular:14];
-        contentLabel.numberOfLines = 0;
+        contentLabel.numberOfLines = 6;
         contentLabel.backgroundColor = [UIColor clearColor];
         [self.contentView addSubview:contentLabel];
         self.contentLabel = contentLabel;
@@ -104,7 +104,7 @@
     if (content.length) {
         NSMutableAttributedString *string = [[NSMutableAttributedString alloc] initWithString:content attributes:@{NSForegroundColorAttributeName : [UIColor colorWithHexString:@"#ff3c00"], NSFontAttributeName : [UIFont themeFontRegular:14]}];
         NSMutableParagraphStyle *style = [NSParagraphStyle defaultParagraphStyle].mutableCopy;
-        style.lineSpacing = 10;
+        style.lineSpacing = 6;
         [string addAttributes:@{NSParagraphStyleAttributeName: style.copy} range:NSMakeRange(0, string.length)];
         self.contentLabel.attributedText = string.copy;
     }
