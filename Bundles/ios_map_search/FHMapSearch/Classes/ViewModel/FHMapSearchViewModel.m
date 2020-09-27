@@ -1478,6 +1478,8 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
         UIImage *bgImg = SYS_IMG(@"mapsearch_area_bg");
         self.houseAnnotationSlectNidView.layer.contents = (id)[bgImg CGImage];
         
+
+        
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
             //待地图缩放完之后
             [self requestHouses:NO showTip:YES];
@@ -3077,7 +3079,7 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
 // 清除上一次按钮点击创建的围栏
 - (void)doClear {
     
-    if (self.houseAnnotationSlectNidView) {
+    if (self.currentSelectNid) {
         UIImage *bgImg = SYS_IMG(@"mapsearch_area_bg");
         self.houseAnnotationSlectNidView.layer.contents = (id)[bgImg CGImage];
         self.currentSelectNid = @"";
