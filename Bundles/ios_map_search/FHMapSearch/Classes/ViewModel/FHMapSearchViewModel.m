@@ -3074,6 +3074,13 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
 
 // 清除上一次按钮点击创建的围栏
 - (void)doClear {
+    
+    if (self.houseAnnotationSlectNidView) {
+        UIImage *bgImg = SYS_IMG(@"mapsearch_area_bg");
+        self.houseAnnotationSlectNidView.layer.contents = (id)[bgImg CGImage];
+        self.currentSelectNid = @"";
+    }
+
     [self.mapView removeOverlays:self.mapView.overlays];  //把之前添加的Overlay都移除掉
     [self.geoFenceManager removeAllGeoFenceRegions];  //移除所有已经添加的围栏，如果有正在请求的围栏也会丢弃
 //    [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(removeRegionStatusLable) object:nil];
