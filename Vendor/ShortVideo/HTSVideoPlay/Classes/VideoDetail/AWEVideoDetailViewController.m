@@ -548,10 +548,13 @@ static const CGFloat kFloatingViewOriginY = 230;
     self.commentView.backgroundColorThemeKey = kColorBackground4;
     self.commentView.hidden = YES;
     [self.view addSubview:self.commentView];
+    
 
     self.commentHeaderLabel = [[SSThemedLabel alloc] initWithFrame:CGRectMake(15, 0, CGRectGetWidth(self.commentView.bounds) - 15.0 - 44.0 - 15.0, 49.0)];
+    self.commentHeaderLabel.centerX = self.commentView.centerY;
     self.commentHeaderLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleBottomMargin;
     self.commentHeaderLabel.font = [UIFont systemFontOfSize:17.0f];
+//    self.commentHeaderLabel.textAlignment = NSTextAlignmentCenter;
     self.commentHeaderLabel.textColorThemeKey = kColorText1;
     [self.commentView addSubview:self.commentHeaderLabel];
 
@@ -577,6 +580,38 @@ static const CGFloat kFloatingViewOriginY = 230;
     self.tableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, CGRectGetWidth(self.tableView.bounds), 37)];
     [self.commentView addSubview:self.tableView];
 
+
+//    SSThemedImageView *inputIcon = [[SSThemedImageView alloc] initWithFrame:CGRectMake(9, 4, 24, 24)];
+//    inputIcon.imageName = @"hts_vp_write_new";
+//    [fakeTextBackgroundView addSubview:inputIcon];
+
+    [self.tableView registerClass:[AWEVideoCommentCell class] forCellReuseIdentifier:CommentCellIdentifier];
+
+    [self.tableView addPullUpWithInitText:@"上拉可以加载更多数据" pullText:@"松开立即加载更多数据" loadingText:@"加载中..." noMoreText:@"没有更多啦～" timeText:nil lastTimeKey:nil ActioinHandler:^{
+        @strongify(self);
+        [self handleLoadMoreComments];
+    }];
+
+    self.emptyHintView = [[UIView alloc] initWithFrame:CGRectMake(0, CGRectGetHeight(self.commentHeaderLabel.frame), CGRectGetWidth(self.view.bounds), 90.0)];
+    self.emptyHintView.autoresizingMask = UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight;
+    self.emptyHintView.hidden = YES;
+    [self.commentView addSubview:self.emptyHintView];
+
+    UIImageView *imageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"short_video_comment"]];
+    imageView.size = CGSizeMake(115, 115);
+    imageView.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin|UIViewAutoresizingFlexibleRightMargin;
+    imageView.centerX = CGRectGetWidth(self.emptyHintView.bounds) / 2,
+    imageView.centerY = CGRectGetHeight(self.emptyHintView.bounds) / 2.0-20;
+    [self.emptyHintView addSubview:imageView];
+
+    UILabel *emptyHintLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, CGRectGetMaxY(imageView.frame)+15, CGRectGetWidth(self.emptyHintView.bounds), 18)];
+    emptyHintLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth;
+    emptyHintLabel.font = [UIFont boldSystemFontOfSize:15];
+    emptyHintLabel.textColor = [UIColor colorWithHexString:@"999999"];
+    emptyHintLabel.textAlignment = NSTextAlignmentCenter;
+    emptyHintLabel.text = @"暂无评论，点击抢沙发";
+    [self.emptyHintView addSubview:emptyHintLabel];
+    
     SSThemedView *fakeInputBar = [[SSThemedView alloc] initWithFrame:CGRectMake(0, CGRectGetMaxY(self.tableView.frame), CGRectGetWidth(self.commentView.bounds), 44)];
     fakeInputBar.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     fakeInputBar.backgroundColorThemeKey = kColorBackground4;
@@ -594,41 +629,12 @@ static const CGFloat kFloatingViewOriginY = 230;
     fakeTextBackgroundView.layer.borderWidth = [TTDeviceHelper ssOnePixel];
     fakeTextBackgroundView.borderColorThemeKey = @"grey7";
     [fakeInputBar addSubview:fakeTextBackgroundView];
-
-//    SSThemedImageView *inputIcon = [[SSThemedImageView alloc] initWithFrame:CGRectMake(9, 4, 24, 24)];
-//    inputIcon.imageName = @"hts_vp_write_new";
-//    [fakeTextBackgroundView addSubview:inputIcon];
-
+    
     SSThemedLabel *inputLabel = [[SSThemedLabel alloc] initWithFrame:CGRectMake(15, 6, CGRectGetWidth(fakeTextBackgroundView.frame) - 15 , 20)];
     inputLabel.text = @"写评论...";
     inputLabel.font = [UIFont systemFontOfSize:14.0];
     inputLabel.textColorThemeKey = @"grey3";
     [fakeTextBackgroundView addSubview:inputLabel];
-
-    [self.tableView registerClass:[AWEVideoCommentCell class] forCellReuseIdentifier:CommentCellIdentifier];
-
-    [self.tableView addPullUpWithInitText:@"上拉可以加载更多数据" pullText:@"松开立即加载更多数据" loadingText:@"加载中..." noMoreText:@"没有更多啦～" timeText:nil lastTimeKey:nil ActioinHandler:^{
-        @strongify(self);
-        [self handleLoadMoreComments];
-    }];
-
-    self.emptyHintView = [[UIView alloc] initWithFrame:CGRectMake(0, CGRectGetHeight(self.commentHeaderLabel.frame), CGRectGetWidth(self.view.bounds), 90.0)];
-    self.emptyHintView.autoresizingMask = UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight;
-    self.emptyHintView.hidden = YES;
-    [self.commentView addSubview:self.emptyHintView];
-
-    UIImageView *imageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"hts_vp_sofa_icon"]];
-    imageView.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin|UIViewAutoresizingFlexibleRightMargin;
-    imageView.center = CGPointMake(CGRectGetWidth(self.emptyHintView.bounds) / 2.0, 33.0);
-    [self.emptyHintView addSubview:imageView];
-
-    UILabel *emptyHintLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 58, CGRectGetWidth(self.emptyHintView.bounds), 18)];
-    emptyHintLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth;
-    emptyHintLabel.font = [UIFont boldSystemFontOfSize:15];
-    emptyHintLabel.textColor = [UIColor colorWithHexString:@"999999"];
-    emptyHintLabel.textAlignment = NSTextAlignmentCenter;
-    emptyHintLabel.text = @"暂无评论，还不快抢沙发～";
-    [self.emptyHintView addSubview:emptyHintLabel];
 
 //    self.inputBar = [[AWECommentInputBar alloc] initWithFrame:CGRectMake(0, CGRectGetHeight(self.view.bounds), CGRectGetWidth(self.view.bounds), 44) textViewDelegate:self sendBlock:^(AWECommentInputBar * _Nonnull inputBar, NSString * _Nullable text) {
 //        @strongify(self);
@@ -983,7 +989,9 @@ static const CGFloat kFloatingViewOriginY = 230;
 
 - (void)reloadCommentHeaderWithCount:(NSNumber *)commentCount
 {
-    self.commentHeaderLabel.text = commentCount ? [NSString stringWithFormat:@"%@条回复", [TTBusinessManager formatCommentCount:commentCount.longLongValue]] : @"暂无回复";
+    
+//    self.commentHeaderLabel.text = commentCount ? [NSString stringWithFormat:@"%@条回复", [TTBusinessManager formatCommentCount:commentCount.longLongValue]] : @"暂无回复";
+    self.commentHeaderLabel.text = @"评论";
 }
 
 - (void)updateModel
