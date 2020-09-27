@@ -152,7 +152,6 @@
         self.videoView.playerView = self.player.view;
         [self updateVideo];
     }
-    [self.viewModel hideCoverView];
 }
 
 - (void)play {
@@ -161,6 +160,7 @@
     [self readyToPlay];
 
     if(!self.isShowingNetFlow && self.playbackState != TTVPlaybackState_Playing){
+        [self.viewModel hideCoverView];
         [self.player play];
     }
 }
@@ -461,6 +461,7 @@
 - (void)trackWithName:(NSString *)name {
     NSMutableDictionary *dict = [self.tracerDic mutableCopy];
     dict[@"item_id"] = self.model.videoID;
+    dict[@"group_id"] = self.model.videoID;
     
     if([name isEqualToString:@"video_pause"] || [name isEqualToString:@"video_over"]){
         dict[@"stay_time"] = @(self.stayTime);

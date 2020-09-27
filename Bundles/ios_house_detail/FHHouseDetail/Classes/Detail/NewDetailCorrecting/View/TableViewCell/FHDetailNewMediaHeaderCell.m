@@ -24,7 +24,6 @@
 #import "ToastManager.h"
 #import "FHDetailNewMediaHeaderDataHelper.h"
 #import "FHDetailNewMediaHeaderView.h"
-#import "FHDetailMediaUtils.h"
 #import "FHVideoViewController.h"
 
 @interface FHDetailNewMediaHeaderCell ()
@@ -327,7 +326,10 @@
         dict[@"picture_id"] = itemModel.imageUrl;
         dict[@"picture_type"] = itemModel.pictureTypeName;
         dict[@"show_type"] = showType;
-        dict[@"event_tracking_id"] = @"104162";
+        dict[@"event_tracking_id"] = @"110859";
+        if (isLarge) {
+            dict[@"element_type"] = @"large_picture_preview";
+        }
         TRACK_EVENT(@"picture_show", dict);
     } else {
         NSAssert(NO, @"传入的detailTracerDic不是字典");
@@ -400,11 +402,12 @@
 
     if ([dict isKindOfClass:[NSDictionary class]]) {
         [dict removeObjectsForKeys:@[@"card_type", @"rank", @"element_from", @"origin_search_id", @"log_pb", @"origin_from"]];
-
-        dict[@"click_position"] = [FHDetailMediaUtils optionFromName:str];
-
+        if (str.length > 0) {
+            dict[@"click_position"] = str;
+        }
+        
         dict[@"rank"] = @"be_null";
-        dict[@"event_tracking_id"] = @"104163";
+        dict[@"event_tracking_id"] = @"110853";
 
         TRACK_EVENT(@"click_options", dict);
     } else {
@@ -460,7 +463,7 @@
     
     NSUInteger detailIndex = 0;
     
-    for (NSInteger i = 0; i < self.dataHelper.pictureDetailData.mediaItemArray.count; i++) {
+    for (NSUInteger i = 0; i < self.dataHelper.pictureDetailData.mediaItemArray.count; i++) {
         FHMultiMediaItemModel *nextModel = self.dataHelper.pictureDetailData.mediaItemArray[i];
         if ([nextModel.imageUrl isEqualToString:itemModel.imageUrl] && nextModel.mediaType == itemModel.mediaType) {
             detailIndex = i;

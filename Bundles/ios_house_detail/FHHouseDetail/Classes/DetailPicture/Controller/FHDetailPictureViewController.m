@@ -1008,15 +1008,11 @@ static BOOL kFHStaticPhotoBrowserAtTop = NO;
     [self unloadPhoto:_currentIndex + 2];
     [self unloadPhoto:_currentIndex - 2];
     
-    [self loadPhoto:_currentIndex visible:YES];
     [[self showImageViewAtIndex:_currentIndex] restartGifIfNeeded];
     [self loadPhoto:_currentIndex + 1 visible:NO];
     [self loadPhoto:_currentIndex - 1 visible:NO];
-    if ([self isVideoImageView:newIndex]) {
-        FHDetailPictureItemPictureModel *itemModel = self.detailPictureModel.itemList[newIndex];
-        FHDetailPictureItemVideoModel *videoModel = (FHDetailPictureItemVideoModel *)itemModel;
-        [self.videoVC updateData:videoModel.videoModel];
-    }
+    [self loadPhoto:_currentIndex visible:YES];
+
     self.isShowenVideo = [self isVideoImageView:newIndex];
 }
 
@@ -1100,15 +1096,20 @@ static BOOL kFHStaticPhotoBrowserAtTop = NO;
         if ([self isPhotoViewExistInScrollViewForIndex:index]) {
             [[self showImageViewAtIndex:index] setVisible:visible];
             FHShowVideoView * tempVedioView = (FHShowVideoView *)[self showImageViewAtIndex:index];
-            
-            if (visible) {
-                [tempVedioView setNeedsLayout];
-                // 是否可见
-                tempVedioView.videoVC = self.videoVC;
-            }
             tempVedioView.frame = [self frameForPageAtIndex:index];
             [tempVedioView currentImageView].alpha = 0;
             tempVedioView.visible = visible;
+
+            if (visible) {
+                [tempVedioView setNeedsLayout];
+                // 是否可见
+                [tempVedioView.videoVC play];
+            } else {
+                FHDetailPictureItemPictureModel *itemModel = self.detailPictureModel.itemList[index];
+                FHDetailPictureItemVideoModel *videoModel = (FHDetailPictureItemVideoModel *)itemModel;
+                [tempVedioView.videoVC updateData:videoModel.videoModel];
+                [tempVedioView.videoVC pause];
+            }
             return;
         }
         
@@ -1118,6 +1119,15 @@ static BOOL kFHStaticPhotoBrowserAtTop = NO;
             showVedioView = [[FHShowVideoView alloc] initWithFrame:[self frameForPageAtIndex:index]];
             showVedioView.delegate = self;
             showVedioView.backgroundColor = [UIColor clearColor];
+            [_photoScrollView addSubview:showVedioView];
+            
+            FHDetailPictureItemPictureModel *itemModel = self.detailPictureModel.itemList[index];
+            FHDetailPictureItemVideoModel *videoModel = (FHDetailPictureItemVideoModel *)itemModel;
+            FHVideoViewController *videoVC = [[FHVideoViewController alloc] init];
+            videoVC.view.frame = self.videoVC.view.frame;
+            videoVC.tracerDic = self.videoVC.tracerDic;
+            showVedioView.videoVC = videoVC;
+            [videoVC updateData:videoModel.videoModel];
         }
         else {
             [_videoViewPools removeObject:showVedioView];
@@ -1131,16 +1141,15 @@ static BOOL kFHStaticPhotoBrowserAtTop = NO;
         [self setUpShowImageView:showVedioView atIndex:index];
         showVedioView.visible = visible;
         [showVedioView currentImageView].alpha = 0;
+
         // 设置视频数据
         if (visible) {
             // 是否可见
             [showVedioView setNeedsLayout];
-            showVedioView.videoVC = self.videoVC;
-        } else {
-            
+            [showVedioView.videoVC play];
         }
         
-        [_photoScrollView addSubview:showVedioView];
+        
     } else if ([self isVRImageView:index]) {
         // VR
         if ([self isPhotoViewExistInScrollViewForIndex:index]) {

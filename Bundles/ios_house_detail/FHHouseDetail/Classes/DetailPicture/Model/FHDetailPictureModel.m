@@ -20,7 +20,7 @@
     videoModel.vHeight = videoInfo.vHeight;
     videoModel.muted = NO;
     videoModel.repeated = NO;
-    videoModel.isShowControl = NO;
+    videoModel.isShowControl = YES;
     videoModel.isShowMiniSlider = YES;
     videoModel.isShowStartBtnWhenPause = YES;
     return videoModel;

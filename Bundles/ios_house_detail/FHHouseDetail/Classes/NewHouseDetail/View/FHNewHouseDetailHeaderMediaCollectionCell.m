@@ -26,7 +26,6 @@
 #import "FHDetailNewMediaHeaderDataHelper.h"
 #import "FHDetailNewMediaHeaderView.h"
 #import "FHVideoViewController.h"
-#import "FHDetailMediaUtils.h"
 @interface FHNewHouseDetailHeaderMediaCollectionCell ()
 
 @property (nonatomic, strong) FHVideoViewController *videoVC;
@@ -330,6 +329,9 @@
         dict[@"picture_type"] = itemModel.pictureTypeName;
         dict[@"show_type"] = showType;
         dict[@"event_tracking_id"] = @"104162";
+        if (isLarge) {
+            dict[@"element_type"] = @"large_picture_preview";
+        }
         TRACK_EVENT(@"picture_show", dict);
     } else {
         NSAssert(NO, @"传入的detailTracerDic不是字典");
@@ -403,9 +405,12 @@
     if ([dict isKindOfClass:[NSDictionary class]]) {
         [dict removeObjectsForKeys:@[@"card_type", @"rank", @"element_from", @"origin_search_id", @"log_pb", @"origin_from"]];
 
-        dict[@"click_position"] = [FHDetailMediaUtils optionFromName:str];
+        if (str.length > 0) {
+            dict[@"click_position"] = str;
+        }
         dict[@"rank"] = @"be_null";
-        dict[@"event_tracking_id"] = @"104163";
+        dict[@"event_tracking_id"] = @"110853";
+        
 
         TRACK_EVENT(@"click_options", dict);
     } else {
