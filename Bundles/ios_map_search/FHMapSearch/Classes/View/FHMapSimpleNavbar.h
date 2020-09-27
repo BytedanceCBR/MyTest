@@ -35,6 +35,8 @@ typedef NS_ENUM(NSInteger , FHMapSimpleNavbarType) {
 
 - (void)updateShowBtn:(BOOL)isShow;
 
+-(void)setTitle:(NSString *)title withHouseTypeArray:(BOOL)isSingle;
+
 @end
 
 NS_ASSUME_NONNULL_END

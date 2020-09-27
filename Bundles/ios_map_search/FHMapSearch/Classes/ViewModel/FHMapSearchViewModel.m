@@ -267,10 +267,10 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
 
 - (void)changeHouseType
 {
-    if (self.mapView.zoomLevel > 13){
-        [self doClear];
-    }
-    
+//    if (self.mapView.zoomLevel > 16){
+//        [self doClear];
+//    }
+
     [self addClickTabLog];
     
     [self.mapView removeAnnotations:(NSArray <MAAnnotation>*)self.oldHouseAnnotions];
@@ -2540,7 +2540,6 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
 -(void)chooseSubWay
 {
     self.selectionStation = nil;
-    [self doClear];
     
     [self.tipView removeFromSuperview];
     self.showMode = FHMapSearchShowModeSubway;
@@ -2670,6 +2669,9 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
                 [[FHMainManager sharedInstance] showToast:@"网络异常" duration:1];
                 return ;
             }
+            
+            
+            [self doClear];
             
             wself.lastBubble =  [FHMapSearchBubbleModel bubbleFromUrl:@"http://a"];
             wself.lastNewHouseBubble =  [FHMapSearchBubbleModel bubbleFromUrl:@"http://a"];

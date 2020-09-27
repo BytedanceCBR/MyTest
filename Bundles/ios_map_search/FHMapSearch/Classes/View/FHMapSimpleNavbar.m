@@ -145,9 +145,6 @@
         return;
     }
     
-    if (titlesArray.count >= 2) {
-        _titleLabel.hidden = YES;
-    }
 
     _houseSegmentControl = [[HMSegmentedControl alloc] initWithSectionTitles:titlesArray];
     
@@ -191,6 +188,15 @@
         make.width.mas_equalTo(140);
         make.height.mas_equalTo(50);
     }];
+    
+    
+    if (titlesArray.count >= 2) {
+        _titleLabel.hidden = YES;
+        _houseSegmentControl.hidden = NO;
+    }else{
+        _titleLabel.hidden = NO;
+        _houseSegmentControl.hidden = YES;
+    }
     
     [self updateSegementedTitles:titlesArray andSelectIndex:0];
 }
@@ -327,6 +333,7 @@
         img = ICON_FONT_IMG(24, @"\U0000e673",[UIColor themeGray1]);
         _rightTitleLabel.hidden = YES;
         _houseSegmentControl.hidden = NO;
+        _titleLabel.hidden = YES;
     }else if(type == FHMapSimpleNavbarTypeDrawLine){
         img = ICON_FONT_IMG(24, @"\U0000e673",[UIColor themeGray1]);
         [_rightButton setImage:[UIImage imageNamed:@"draw_line_btn"] forState:UIControlStateNormal];
@@ -345,6 +352,7 @@
         }];
         _houseSegmentControl.hidden = NO;
         _rightTitleLabel.hidden = YES;
+        _titleLabel.hidden = YES;
     }
 
     [self.backButton setImage:img forState:UIControlStateNormal];
@@ -353,6 +361,16 @@
 -(void)setTitle:(NSString *)title
 {
     _titleLabel.text = title;
+}
+
+-(void)setTitle:(NSString *)title withHouseTypeArray:(BOOL)isSingle{
+    _titleLabel.text = title;
+    if (isSingle) {
+        _titleLabel.hidden = NO;
+        _houseSegmentControl.hidden = YES;
+    }else{
+        _titleLabel.hidden = YES;
+    }
 }
 
 -(NSString *)title
