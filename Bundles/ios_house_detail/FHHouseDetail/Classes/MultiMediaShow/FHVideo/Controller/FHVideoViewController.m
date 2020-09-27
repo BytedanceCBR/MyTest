@@ -162,6 +162,7 @@
     if(!self.isShowingNetFlow && self.playbackState != TTVPlaybackState_Playing){
         [self.viewModel hideCoverView];
         [self.player play];
+        
     }
 }
 
