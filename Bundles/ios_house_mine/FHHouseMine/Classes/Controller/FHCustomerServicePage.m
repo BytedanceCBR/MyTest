@@ -89,7 +89,9 @@
     
     UIButton *callPhone = [UIButton buttonWithType:UIButtonTypeCustom];
     [callPhone setImage:ICON_FONT_IMG(24, @"\U0000E69A", [UIColor themeGray1]) forState:UIControlStateNormal];
+    @weakify(self);
     [[[callPhone rac_signalForControlEvents:UIControlEventTouchUpInside] throttle:0.3] subscribeNext:^(__kindof UIControl * _Nullable x) {
+        @strongify(self);
         // 点击埋点
         NSMutableDictionary *param = [[NSMutableDictionary alloc] init];
         param[UT_ENTER_FROM] = self.tracerModel.enterFrom;
@@ -109,6 +111,10 @@
         make.top.equalTo(self.customNavBarView.mas_bottom);
     }];
     
+    [self loadContent];
+}
+
+- (void)loadContent {
     if(self.linkChatPageUrlStr.length > 0) {
         [self.webView loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:self.linkChatPageUrlStr]]];
     }
