@@ -15,17 +15,27 @@
 #import "TTRoute.h"
 #import "FHMineAPI.h"
 #import "ToastManager.h"
+#import "TTReachability.h"
+#import "SSWebViewContainer.h"
+#import "SSWebViewController.h"
+#import "ByteDanceKit.h"
+#import "TTRoute.h"
 
 #define FH_MINE_LINK_CHAT_PAGE_URL_KEY @"linkchat_url_key"
 
 @interface FHCustomerServicePage ()
 @property (nonatomic, strong) SSWebViewContainer *webView;
+@property (nonatomic, strong) FHErrorView * errorView;
 @property (nonatomic, copy)   NSString *linkChatPageUrlStr;
 @end
 
 @implementation FHCustomerServicePage
 
 + (void)jumpToLinkChatPage:(NSDictionary *)params {
+    if(![TTReachability isNetworkConnected]) {
+        [[ToastManager manager] showToast:@"网络不给力，请重试"];
+        return;
+    }
     [FHMineAPI requestLinkChatPageUrlWithParams:nil completion:^(NSError * _Nonnull error, id  _Nonnull obj) {
         if(error) {
             [[ToastManager manager] showToast:@"网络不给力，请重试"];
@@ -71,6 +81,14 @@
     }
     return _webView;
 }
+
+- (FHErrorView *)errorView {
+    if(!_errorView) {
+        _errorView = [[FHErrorView alloc] init];
+        _errorView.hidden = [TTReachability isNetworkConnected];
+    }
+    return _errorView;
+}
 - (instancetype)initWithRouteParamObj:(TTRouteParamObj *)paramObj {
     if(self = [super initWithRouteParamObj:paramObj]) {
         self.linkChatPageUrlStr = paramObj.allParams[FH_MINE_LINK_CHAT_PAGE_URL_KEY];
@@ -104,18 +122,49 @@
     [self.customNavBarView addRightViews:@[callPhone] viewsWidth:@[@(44)] viewsHeight:@[@(44)] viewsRightOffset:@[@(15)]];
     
     self.customNavBarView.title.text = @"欢迎咨询";
-    [self.view addSubview:self.webView];
     
+    [self.view addSubview:self.webView];
     [self.webView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.right.bottom.equalTo(self.view);
         make.top.equalTo(self.customNavBarView.mas_bottom);
     }];
     
+    [self.view addSubview:self.errorView];
+    [self.errorView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.edges.equalTo(self.webView);
+    }];
+    
+    self.errorView.retryBlock = ^{
+        @strongify(self);
+        if ([TTReachability isNetworkConnected]) {
+            [self.errorView hideEmptyView];
+        }
+    };
+    
+    if (![TTReachability isNetworkConnected]) {
+        [self.errorView showEmptyWithTip:@"网络异常,请检查网络链接" errorImageName:@"group-4"
+                                showRetry:YES];
+        self.errorView.retryButton.userInteractionEnabled = YES;
+        [self.errorView.retryButton setTitle:@"刷新" forState:UIControlStateNormal];
+        [self.errorView setBackgroundColor:self.view.backgroundColor];
+        [self.errorView.retryButton mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.size.mas_equalTo(CGSizeMake(104, 30));
+        }];
+        
+        return;;
+    }
+    
+    [[[[NSNotificationCenter defaultCenter] rac_addObserverForName:TTReachabilityChangedNotification object:nil] deliverOnMainThread] subscribeNext:^(NSNotification * _Nullable x) {
+        @strongify(self);
+        BOOL isConnected = [TTReachability isNetworkConnected];
+        self.errorView.hidden = isConnected;
+    }];
+    
     [self loadContent];
 }
-
 - (void)loadContent {
     if(self.linkChatPageUrlStr.length > 0) {
+        [self.errorView hideEmptyView];
         [self.webView loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:self.linkChatPageUrlStr]]];
     }
 }
