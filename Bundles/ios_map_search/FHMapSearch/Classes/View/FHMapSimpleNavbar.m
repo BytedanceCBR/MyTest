@@ -187,7 +187,7 @@
     
     [_houseSegmentControl mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerX.equalTo(self);
-        make.centerY.equalTo(self).offset([UIDevice btd_isIPhoneXSeries] ? -10 : -20);
+        make.centerY.equalTo(self).offset([UIDevice btd_isIPhoneXSeries] ? -10 : -22);
         make.width.mas_equalTo(140);
         make.height.mas_equalTo(50);
     }];
@@ -275,7 +275,7 @@
     SAFE_AREA
     CGFloat top = 0;
     if (safeInsets.top == 0) {
-        top = 27;
+        top = 29;
     }else{
         
         top = safeInsets.top + 7;
