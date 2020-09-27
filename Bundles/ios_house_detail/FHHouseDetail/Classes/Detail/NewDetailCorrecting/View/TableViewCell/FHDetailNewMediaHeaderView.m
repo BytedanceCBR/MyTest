@@ -192,18 +192,21 @@
     NSIndexPath *indexPath = [NSIndexPath indexPathForItem:item inSection:0];
     
     self.segmentViewChangedFlag = YES;
-    [UIView animateWithDuration:0.5 animations:^{
+    [UIView animateWithDuration:0.3 animations:^{
         [self.scrollView scrollToItemAtIndexPath:indexPath atScrollPosition:UICollectionViewScrollPositionNone animated:YES];
     } completion:^(BOOL finished) {
-        self.segmentViewChangedFlag = NO;
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            self.segmentViewChangedFlag = NO;
+        });
     }];
-    
+
     if (self.didClickItemViewName) {
         self.didClickItemViewName(self.itemArray[index]);
     }
 }
 
 - (void)updateItemAndInfoLabel:(NSInteger)index {
+    NSLog(@"segmentViewChangedFlag %d",self.segmentViewChangedFlag);
     if (self.segmentViewChangedFlag) {
         return;
     }
