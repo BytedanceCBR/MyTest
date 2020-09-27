@@ -213,7 +213,7 @@ static const CGFloat kCheckChallengeButtonLeftPadding = 28;
         _nameLabel.numberOfLines = 1;
         _nameLabel.textAlignment = NSTextAlignmentLeft;
         _nameLabel.layer.shadowOffset = CGSizeZero;
-        _nameLabel.font = [UIFont fontWithName:@"PingFangSC-Medium" size:16] ? : [UIFont boldSystemFontOfSize:16.0];
+        _nameLabel.font = [UIFont themeFontMedium:14];
         _nameLabel.layer.shadowColor = [[UIColor blackColor] colorWithAlphaComponent:0.6].CGColor;
         _nameLabel.layer.shadowRadius = 1.0;
         _nameLabel.layer.shadowOpacity = 1.0;
@@ -468,7 +468,7 @@ static const CGFloat kCheckChallengeButtonLeftPadding = 28;
     [_sourceImage mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.equalTo(self.userInfoContainerView);
         make.bottom.equalTo(self.userInfoContainerView.mas_top).offset(-2);
-        make.size.mas_offset(25);
+        make.height.mas_offset(16);
     }];
 
     UIView *topmostView;
@@ -625,7 +625,7 @@ static const CGFloat kCheckChallengeButtonLeftPadding = 28;
     }else {
         self.avatarView.hidden = NO;
     }
-    self.nameLabel.text = self.model.user.name;
+    self.nameLabel.text = [NSString stringWithFormat:@"@%@",self.model.user.name];
 
     self.logoViewController.view.hidden = ![self shouldShowLogoViewController];
 
