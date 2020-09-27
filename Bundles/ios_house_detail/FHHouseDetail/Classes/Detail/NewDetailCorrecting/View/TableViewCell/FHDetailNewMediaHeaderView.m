@@ -33,6 +33,7 @@
     if (self) {
         [self createUI];
         [self initConstaints];
+        
     }
     return self;
 }
@@ -48,6 +49,7 @@
 
 - (void)createUI {
     self.scrollView = [[FHDetailNewMediaHeaderScrollView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, [FHDetailNewMediaHeaderView cellHeight])];
+    self.scrollView.closeInfinite = YES;
     [self addSubview:self.scrollView];
     [self addSubview:self.bottomGradientView];
     self.titleView = [[FHDetailHeaderTitleView alloc]init];
