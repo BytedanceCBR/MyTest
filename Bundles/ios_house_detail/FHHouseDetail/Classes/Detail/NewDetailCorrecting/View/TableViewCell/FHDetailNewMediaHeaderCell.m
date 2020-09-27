@@ -24,7 +24,6 @@
 #import "ToastManager.h"
 #import "FHDetailNewMediaHeaderDataHelper.h"
 #import "FHDetailNewMediaHeaderView.h"
-#import "FHDetailMediaUtils.h"
 #import "FHVideoViewController.h"
 
 @interface FHDetailNewMediaHeaderCell ()
@@ -400,9 +399,10 @@
 
     if ([dict isKindOfClass:[NSDictionary class]]) {
         [dict removeObjectsForKeys:@[@"card_type", @"rank", @"element_from", @"origin_search_id", @"log_pb", @"origin_from"]];
-
-        dict[@"click_position"] = [FHDetailMediaUtils optionFromName:str];
-
+        if (str.length > 0) {
+            dict[@"click_position"] = str;
+        }
+        
         dict[@"rank"] = @"be_null";
         dict[@"event_tracking_id"] = @"104163";
 

@@ -26,7 +26,6 @@
 #import "FHDetailNewMediaHeaderDataHelper.h"
 #import "FHDetailNewMediaHeaderView.h"
 #import "FHVideoViewController.h"
-#import "FHDetailMediaUtils.h"
 @interface FHNewHouseDetailHeaderMediaCollectionCell ()
 
 @property (nonatomic, strong) FHVideoViewController *videoVC;
@@ -403,9 +402,11 @@
     if ([dict isKindOfClass:[NSDictionary class]]) {
         [dict removeObjectsForKeys:@[@"card_type", @"rank", @"element_from", @"origin_search_id", @"log_pb", @"origin_from"]];
 
-        dict[@"click_position"] = [FHDetailMediaUtils optionFromName:str];
+        if (str.length > 0) {
+            dict[@"click_position"] = str;
+        }
         dict[@"rank"] = @"be_null";
-        dict[@"event_tracking_id"] = @"104163";
+        dict[@"event_tracking_id"] = @"110853";
 
         TRACK_EVENT(@"click_options", dict);
     } else {

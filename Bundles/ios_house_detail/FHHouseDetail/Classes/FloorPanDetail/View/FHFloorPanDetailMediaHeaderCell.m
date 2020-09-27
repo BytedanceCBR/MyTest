@@ -23,7 +23,6 @@
 #import "ToastManager.h"
 #import "FHFloorPanDetailMediaHeaderDataHelper.h"
 #import "FHFloorPanDetailMediaHeaderView.h"
-#import "FHDetailMediaUtils.h"
 
 @interface FHFloorPanDetailMediaHeaderCell ()
 
@@ -317,7 +316,9 @@
     if ([dict isKindOfClass:[NSDictionary class]]) {
         [dict removeObjectsForKeys:@[@"card_type", @"rank", @"element_from", @"origin_search_id", @"log_pb", @"origin_from"]];
         
-        dict[@"click_position"] = [FHDetailMediaUtils optionFromName:str];
+        if (str.length > 0) {
+            dict[@"click_position"] = str;
+        }
 
         dict[@"rank"] = @"be_null";
 

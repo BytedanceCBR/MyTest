@@ -29,7 +29,6 @@
 #import <TTUIWidget/TTNavigationController.h>
 #import "TTReachability.h"
 #import "ToastManager.h"
-#import "FHDetailMediaUtils.h"
 
 @interface FHDetailMediaHeaderCorrectingCell ()<FHMultiMediaCorrectingScrollViewDelegate,FHDetailScrollViewDidScrollProtocol,FHDetailVCViewLifeCycleProtocol>
 
@@ -730,7 +729,9 @@
     if([dict isKindOfClass:[NSDictionary class]]){
         [dict removeObjectsForKeys:@[@"card_type",@"rank",@"element_from",@"origin_search_id",@"log_pb",@"origin_from"]];
         
-        dict[@"click_position"] = [FHDetailMediaUtils optionFromName:str];
+        if (str.length > 0) {
+            dict[@"click_position"] = str;
+        }
 
         dict[@"rank"] = @"be_null";
 
