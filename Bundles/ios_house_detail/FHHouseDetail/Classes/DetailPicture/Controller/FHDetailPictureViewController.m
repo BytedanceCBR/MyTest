@@ -998,7 +998,9 @@ static BOOL kFHStaticPhotoBrowserAtTop = NO;
     if (_currentIndex == newIndex || newIndex < 0) {
         return;
     }
-    
+    if ([self isVideoImageView:_currentIndex]) {
+        [self loadPhoto:_currentIndex visible:NO];
+    }
     _currentIndex = newIndex;
     [self updateNavHeaderTitle];
     [self updateBottomTitleLabel];
@@ -1101,9 +1103,9 @@ static BOOL kFHStaticPhotoBrowserAtTop = NO;
             tempVedioView.visible = visible;
 
             if (visible) {
-                [tempVedioView setNeedsLayout];
+//                [tempVedioView setNeedsLayout];
                 // 是否可见
-                [tempVedioView.videoVC play];
+//                [tempVedioView.videoVC play];
             } else {
                 FHDetailPictureItemPictureModel *itemModel = self.detailPictureModel.itemList[index];
                 FHDetailPictureItemVideoModel *videoModel = (FHDetailPictureItemVideoModel *)itemModel;
@@ -1145,8 +1147,8 @@ static BOOL kFHStaticPhotoBrowserAtTop = NO;
         // 设置视频数据
         if (visible) {
             // 是否可见
-            [showVedioView setNeedsLayout];
-            [showVedioView.videoVC play];
+//            [showVedioView setNeedsLayout];
+//            [showVedioView.videoVC play];
         }
         
         

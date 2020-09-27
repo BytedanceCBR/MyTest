@@ -58,7 +58,7 @@
 }
 
 - (void)hideCoverViewStartBtn {
-//    self.view.coverView.alpha = 0;
+    self.view.coverView.alpha = 0;
 }
 
 @end
