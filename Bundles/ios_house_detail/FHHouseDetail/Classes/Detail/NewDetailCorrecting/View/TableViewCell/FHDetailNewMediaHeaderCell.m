@@ -242,13 +242,18 @@
     pictureListViewController.albumImageBtnClickBlock = ^(NSInteger index) {
         __strong typeof(weakSelf) strongSelf = weakSelf;
         //如果是从大图进入的图片列表，dismiss picturelist
-        if (strongSelf.pictureDetailVC) {
-            [strongSelf.pictureListViewController dismissViewControllerAnimated:NO completion:nil];
-            if (index >= 0) {
-                [strongSelf.pictureDetailVC.photoScrollView setContentOffset:CGPointMake(weakSelf.pictureDetailVC.view.frame.size.width * index, 0) animated:NO];
-            }
+        FHMultiMediaItemModel *itemModel = weakSelf.dataHelper.pictureDetailData.mediaItemArray[index];
+        if (itemModel.mediaType == FHMultiMediaTypeVRPicture) {
+            [weakSelf gotoVRDetail:itemModel];
         } else {
-            [strongSelf showImagesWithCurrentIndex:index];
+            if (strongSelf.pictureDetailVC) {
+                [strongSelf.pictureListViewController dismissViewControllerAnimated:NO completion:nil];
+                if (index >= 0) {
+                    [strongSelf.pictureDetailVC.photoScrollView setContentOffset:CGPointMake(weakSelf.pictureDetailVC.view.frame.size.width * index, 0) animated:NO];
+                }
+            } else {
+                [strongSelf showImagesWithCurrentIndex:index];
+            }
         }
     };
     pictureListViewController.topImageClickTabBlock = ^(NSInteger index) {
