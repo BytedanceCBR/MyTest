@@ -22,7 +22,6 @@
     FHNewHouseDetailHeaderMediaModel *headerCellModel = [[FHNewHouseDetailHeaderMediaModel alloc] init];
     headerCellModel.albumInfo = model.data.albumInfo;
     headerCellModel.courtTopImage = model.data.courtTopImages;
-    headerCellModel.isShowTopImageTab = model.data.isShowTopImageTab;
     self.headerCellModel = headerCellModel;
     self.items = [NSArray arrayWithObject:self.headerCellModel];
 }

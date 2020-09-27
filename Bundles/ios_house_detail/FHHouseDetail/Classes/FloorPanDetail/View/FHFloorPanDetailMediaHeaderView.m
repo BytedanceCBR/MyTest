@@ -21,6 +21,8 @@
 @property (nonatomic, strong) NSMutableArray *itemArray;
 
 @property (nonatomic, copy) NSArray<FHMultiMediaItemModel *> *medias;
+
+@property (nonatomic, assign) BOOL segmentViewChangedFlag;
 @end
 
 
@@ -210,7 +212,16 @@
     }
     NSInteger item = [self.itemIndexArray[index] integerValue] + 1;
     NSIndexPath *indexPath = [NSIndexPath indexPathForItem:item inSection:0];
-    [self.scrollView scrollToItemAtIndexPath:indexPath atScrollPosition:UICollectionViewScrollPositionNone animated:NO];
+    
+    self.segmentViewChangedFlag = YES;
+    [UIView animateWithDuration:0.5 animations:^{
+        [self.scrollView scrollToItemAtIndexPath:indexPath atScrollPosition:UICollectionViewScrollPositionNone animated:YES];
+    } completion:^(BOOL finished) {
+        self.segmentViewChangedFlag = NO;
+    }];
+    
+
+    
     NSInteger curPage = [self.scrollView getCurPagae];
 
     [self setInfoLabelText:[NSString stringWithFormat:@"%ld/%lu", (long)curPage, (unsigned long)self.medias.count]];
@@ -228,6 +239,9 @@
 }
 
 - (void)updateItemAndInfoLabel:(NSInteger)index {
+    if (self.segmentViewChangedFlag) {
+        return;
+    }
     if (index >= 0 && index < self.medias.count) {
         FHMultiMediaItemModel *itemModel = self.medias[index];
         NSString *groupType = itemModel.groupType;

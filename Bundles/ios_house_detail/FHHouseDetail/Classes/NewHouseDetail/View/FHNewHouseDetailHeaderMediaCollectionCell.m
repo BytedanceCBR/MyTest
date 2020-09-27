@@ -63,7 +63,6 @@
     self.model = [[FHMultiMediaModel alloc] init];
     [self.dataHelper setMediaHeaderModel:data];
     self.model.medias = self.dataHelper.headerViewData.mediaItemArray;
-    self.headerView.showHeaderImageNewType = ((FHNewHouseDetailHeaderMediaModel *)data).isShowTopImageTab;
     [self.headerView updateMultiMediaModel:self.model];
     [self.headerView setTotalPagesLabelText:[NSString stringWithFormat:@"共%lu张", (unsigned long)self.dataHelper.pictureDetailData.detailPictureModel.itemList.count]];
 }
@@ -147,13 +146,6 @@
     } else {
         pictureDetailViewController.topVC = [TTUIResponderHelper topViewControllerFor:self];
     }
-
-    FHNewHouseDetailHeaderMediaModel *model = (FHNewHouseDetailHeaderMediaModel *)self.currentData;
-    
-    if (!model.isShowTopImageTab) {
-        //如果是新房，非北京、江州以外的城市，暂时隐藏头部
-        pictureDetailViewController.isShowSegmentView = NO;
-    }
     
     pictureDetailViewController.dragToCloseDisabled = YES;
     pictureDetailViewController.startWithIndex = index;
@@ -231,18 +223,14 @@
 }
 
 - (void)showPictureList {
-    FHNewHouseDetailHeaderMediaModel *data = (FHNewHouseDetailHeaderMediaModel *)self.currentData;
     NSMutableDictionary *routeParam = [NSMutableDictionary dictionary];
     FHFloorPanPicShowViewController *pictureListViewController = [[FHFloorPanPicShowViewController alloc] initWithRouteParamObj:TTRouteParamObjWithDict(routeParam)];
     pictureListViewController.modalPresentationStyle = UIModalPresentationFullScreen;
-    if (data.isShowTopImageTab) {
-        pictureListViewController.isShowSegmentTitleView = YES;
-        pictureListViewController.imageAlbumAssociateInfo = self.dataHelper.photoAlbumData.imageAlbumAssociateInfo;
-        pictureListViewController.contactViewModel = self.dataHelper.photoAlbumData.contactViewModel;
-        pictureListViewController.elementFrom = @"new_detail";
-    } else {
-        pictureListViewController.isShowSegmentTitleView = NO;
-    }
+    pictureListViewController.isShowSegmentTitleView = YES;
+    pictureListViewController.imageAlbumAssociateInfo = self.dataHelper.photoAlbumData.imageAlbumAssociateInfo;
+    pictureListViewController.contactViewModel = self.dataHelper.photoAlbumData.contactViewModel;
+    pictureListViewController.elementFrom = @"new_detail";
+
     pictureListViewController.floorPanShowModel = self.dataHelper.photoAlbumData.floorPanModel;
     
     __weak typeof(self) weakSelf = self;
