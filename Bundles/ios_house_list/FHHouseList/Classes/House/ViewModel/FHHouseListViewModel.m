@@ -2278,12 +2278,10 @@ extern NSString *const INSTANT_DATA_KEY;
         FHDynamicLynxModel *model = ((FHDynamicLynxCellModel *)cellModel).model;
         NSDictionary *reportData = [((FHDynamicLynxModel *)model).lynxData objectForKey:@"report_params"];
         NSString *trackingID = @"be_null";
-        NSString *houseType = @"be_null";
         if (self.houseType == FHHouseTypeSecondHandHouse) {
             trackingID = @"107653";
         } else if (self.houseType == FHHouseTypeNewHouse) {
             trackingID = @"110832";
-            houseType = @"new";
         }
         if (reportData && [reportData isKindOfClass:[NSDictionary class]]) {
             NSDictionary *params = @{@"origin_from":reportData[@"origin_from"] ?: @"be_null",
@@ -2293,7 +2291,6 @@ extern NSString *const INSTANT_DATA_KEY;
                                      @"element_type":reportData[@"element_type"] ?: @"be_null",
                                      @"search_id":reportData[@"search_id"] ?: @"be_null",
                                      @"event_tracking_id":trackingID,
-                                     @"house_type": houseType,
                                     };
             [FHUserTracker writeEvent:@"element_show" params:params];
         }
