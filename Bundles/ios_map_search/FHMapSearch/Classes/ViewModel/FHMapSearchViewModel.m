@@ -1478,11 +1478,15 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
             self.currentSelectNid = houseAnnotation.houseData.nid;
         }
         
+        if ([annotationView isKindOfClass:[FHDistrictAreaAnnotationView class]]) {
+            FHDistrictAreaAnnotationView *annotationViewArea = (FHDistrictAreaAnnotationView *)annotationView;
+            UIImage *bgImg = SYS_IMG(@"mapsearch_area_bg_red");
+            annotationViewArea.layer.contents = (id)[bgImg CGImage];
+        }
         
         UIImage *bgImg = SYS_IMG(@"mapsearch_area_bg");
         self.houseAnnotationSlectNidView.layer.contents = (id)[bgImg CGImage];
         
-
         
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
             //待地图缩放完之后
