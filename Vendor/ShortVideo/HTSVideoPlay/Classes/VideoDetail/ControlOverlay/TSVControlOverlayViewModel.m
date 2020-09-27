@@ -255,6 +255,7 @@ NSString *const TSVLastShareActivityName = @"TSVLastShareActivityName";
     if (self.moreButtonDidClick) {
         self.moreButtonDidClick();
     }
+    [FHShortVideoTracerUtil clickshareBtn:self.model];
 }
 
 
@@ -579,7 +580,6 @@ NSString *const TSVLastShareActivityName = @"TSVLastShareActivityName";
 //                                model:self.model
 //                      commonParameter:self.commonTrackingParameter
 //                       extraParameter:@{@"position": @"detail"}];
-    [FHShortVideoTracerUtil clickshareBtn:self.model];
 
     [self.detailPromptManager updateVisibleFloatingViewCountForVisibility:YES];
     //小视频暂时不出分享广告

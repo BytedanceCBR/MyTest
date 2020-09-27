@@ -804,6 +804,7 @@ static const CGFloat kFloatingViewOriginY = 230;
     if (!self.model) {
         return;
     }
+     [FHShortVideoTracerUtil clickCommentWithModel:self.model eventIndex:self.dataFetchManager.currentIndex eventPosition:@"detail_comment"];
      [self playView:nil didClickInputWithModel:self.model];
 }
 
@@ -1723,7 +1724,7 @@ static const CGFloat kFloatingViewOriginY = 230;
 
 - (void)handleFakeInputBarClick:(id)sender
 {
-    [FHShortVideoTracerUtil clickCommentSubmitWithModel:self.model eventIndex:self.dataFetchManager.currentIndex];
+     [FHShortVideoTracerUtil clickCommentWithModel:self.model eventIndex:self.dataFetchManager.currentIndex eventPosition:@"feed_comment"];
 
     if ([self alertIfNotValid]) {
         return;
@@ -2145,7 +2146,6 @@ static const CGFloat kFloatingViewOriginY = 230;
 //                [self showProfileView];
 //            }
             if (self.slideUpViewType == TSVDetailSlideUpViewTypeComment) {
-                 [FHShortVideoTracerUtil clickCommentWithModel:self.model eventIndex:self.dataFetchManager.currentIndex];
 //                [AWEVideoDetailTracker trackEvent:@"enter_comment"
 //                                            model:self.model
 //                                  commonParameter:self.commonTrackingParameter
@@ -2528,6 +2528,7 @@ static const CGFloat kFloatingViewOriginY = 230;
 }
 
 - (void)clickSubmitComment {
+     [FHShortVideoTracerUtil clickCommentSubmitWithModel:self.model eventIndex:self.dataFetchManager.currentIndex];
 //    NSMutableDictionary *tracerDict = self.tracerDict.mutableCopy;
 //    tracerDict[@"click_position"] = @"submit_comment";
 //    [FHUserTracker writeEvent:@"click_submit_comment" params:tracerDict];

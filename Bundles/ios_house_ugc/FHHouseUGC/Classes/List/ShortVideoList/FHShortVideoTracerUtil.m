@@ -24,7 +24,7 @@
     [dic setObject:logPb?:@"" forKey:@"log_pb"];
     [dic setObject:@"110841" forKey:@"event_tracking_id"];
     [dic setObject:model.tracerDic[@"origin_from"]?:@"be_null" forKey:@"origin_from"];
-    [dic setObject:model.tracerDic[@"page_type"]?:@"be_null" forKey:@"enter_from"];
+    [dic setObject:model.tracerDic[@"enter_from"]?:@"be_null" forKey:@"enter_from"];
     [FHUserTracker writeEvent:@"feed_client_show" params:dic];
 }
 
@@ -38,13 +38,13 @@
         [dic setObject:logPb[@"group_source"]?:@"" forKey:@"group_source"];
         [dic setObject:logPb?:@"" forKey:@"log_pb"];
         [dic setObject:model.tracerDic[@"origin_from"]?:@"be_null" forKey:@"origin_from"];
-        [dic setObject:model.tracerDic[@"page_type"]?:@"be_null" forKey:@"enter_from"];
+        [dic setObject:model.tracerDic[@"enter_from"]?:@"be_null" forKey:@"enter_from"];
     if ([event isEqualToString:@"video_play"]) {
         [dic setObject:@"110842" forKey:@"event_tracking_id"];
     }else {
          [dic setObject:@"110844" forKey:@"event_tracking_id"];
     }
-        [FHUserTracker writeEvent:@"video_play" params:dic];
+        [FHUserTracker writeEvent:event params:dic];
 }
 
 + (void)videoOverWithModel:(FHFeedUGCCellModel *)model eventIndex:(NSInteger)index forStayTime:(NSString *)stayTime {
@@ -59,7 +59,7 @@
     [dic setObject:stayTime forKey:@"stay_time"];
     [dic setObject:logPb?:@"" forKey:@"log_pb"];
     [dic setObject:model.tracerDic[@"origin_from"]?:@"be_null" forKey:@"origin_from"];
-    [dic setObject:model.tracerDic[@"page_type"]?:@"be_null" forKey:@"enter_from"];
+    [dic setObject:model.tracerDic[@"enter_from"]?:@"be_null" forKey:@"enter_from"];
     [FHUserTracker writeEvent:@"video_over" params:dic];
 }
 
@@ -75,7 +75,7 @@
     [dic setObject:@"110845" forKey:@"event_tracking_id"];
     [dic setObject:logPb[@"impr_id"]?:@"be_null" forKey:@"impr_id"];
     [dic setObject:model.tracerDic[@"origin_from"]?:@"be_null" forKey:@"origin_from"];
-    [dic setObject:model.tracerDic[@"page_type"]?:@"be_null" forKey:@"enter_from"];
+    [dic setObject:model.tracerDic[@"enter_from"]?:@"be_null" forKey:@"enter_from"];
     [FHUserTracker writeEvent:@"go_detail" params:dic];
 }
 
@@ -91,8 +91,8 @@
     [dic setObject:@"110846" forKey:@"event_tracking_id"];
     [dic setObject:logPb[@"impr_id"]?:@"be_null" forKey:@"impr_id"];
     [dic setObject:model.tracerDic[@"origin_from"]?:@"be_null" forKey:@"origin_from"];
-    [dic setObject:model.tracerDic[@"page_type"]?:@"be_null" forKey:@"enter_from"];
-    
+    [dic setObject:model.tracerDic[@"enter_from"]?:@"be_null" forKey:@"enter_from"];
+    [dic setObject:stayTime forKey:@"stay_time"];
     [FHUserTracker writeEvent:@"stay_page" params:dic];
 }
 
@@ -108,7 +108,7 @@
     [dic setObject:position forKey:@"click_positon"];
     [dic setObject:logPb[@"impr_id"]?:@"be_null" forKey:@"impr_id"];
     [dic setObject:model.tracerDic[@"origin_from"]?:@"be_null" forKey:@"origin_from"];
-    [dic setObject:model.tracerDic[@"page_type"]?:@"be_null" forKey:@"enter_from"];
+    [dic setObject:model.tracerDic[@"enter_from"]?:@"be_null" forKey:@"enter_from"];
      [dic setObject:commentId?:@"" forKey:@"comment_id"];
     if ([event isEqualToString:@"click_like"]) {
         [dic setObject:@"110847" forKey:@"event_tracking_id"];
@@ -119,7 +119,7 @@
     [FHUserTracker writeEvent:event params:dic];
 }
 
-+ (void)clickCommentWithModel:(FHFeedUGCCellModel *)model eventIndex:(NSInteger)index {
++ (void)clickCommentWithModel:(FHFeedUGCCellModel *)model eventIndex:(NSInteger)index eventPosition:(NSString *)position {
     NSMutableDictionary *dic = [[NSMutableDictionary alloc]init];
     NSDictionary *logPb = [model.logPb copy];
     [dic setObject:model.groupId?:@"" forKey:@"group_id"];
@@ -128,10 +128,11 @@
     [dic setObject:index?@(index):@(0) forKey:@"rank"];
     [dic setObject:logPb[@"group_source"]?:@"" forKey:@"group_source"];
     [dic setObject:logPb?:@"" forKey:@"log_pb"];
+    [dic setObject:position forKey:@"click_position"];
     [dic setObject:@"110849" forKey:@"event_tracking_id"];
     [dic setObject:logPb[@"impr_id"]?:@"be_null" forKey:@"impr_id"];
     [dic setObject:model.tracerDic[@"origin_from"]?:@"be_null" forKey:@"origin_from"];
-    [dic setObject:model.tracerDic[@"page_type"]?:@"be_null" forKey:@"enter_from"];
+    [dic setObject:model.tracerDic[@"enter_from"]?:@"be_null" forKey:@"enter_from"];
     [FHUserTracker writeEvent:@"click_comment" params:dic];
 }
 
@@ -147,7 +148,7 @@
     [dic setObject:@"110850" forKey:@"event_tracking_id"];
     [dic setObject:logPb[@"impr_id"]?:@"be_null" forKey:@"impr_id"];
     [dic setObject:model.tracerDic[@"origin_from"]?:@"be_null" forKey:@"origin_from"];
-    [dic setObject:model.tracerDic[@"page_type"]?:@"be_null" forKey:@"enter_from"];
+    [dic setObject:model.tracerDic[@"enter_from"]?:@"be_null" forKey:@"enter_from"];
     [FHUserTracker writeEvent:@"click_submit_comment" params:dic];
 }
 + (void)clickshareBtn:(FHFeedUGCCellModel *)model {
@@ -160,7 +161,7 @@
     [dic setObject:@"110851" forKey:@"event_tracking_id"];
     [dic setObject:logPb[@"impr_id"]?:@"be_null" forKey:@"impr_id"];
     [dic setObject:model.tracerDic[@"origin_from"]?:@"be_null" forKey:@"origin_from"];
-    [dic setObject:model.tracerDic[@"page_type"]?:@"be_null" forKey:@"enter_from"];
+    [dic setObject:model.tracerDic[@"enter_from"]?:@"be_null" forKey:@"enter_from"];
     [FHUserTracker writeEvent:@"click_share" params:dic];
 }
 
@@ -174,7 +175,7 @@
     [dic setObject:@"110852" forKey:@"event_tracking_id"];
     [dic setObject:logPb[@"impr_id"]?:@"be_null" forKey:@"impr_id"];
     [dic setObject:model.tracerDic[@"origin_from"]?:@"be_null" forKey:@"origin_from"];
-    [dic setObject:model.tracerDic[@"page_type"]?:@"be_null" forKey:@"enter_from"];
+    [dic setObject:model.tracerDic[@"enter_from"]?:@"be_null" forKey:@"enter_from"];
     [dic setObject:logPb[@"impr_id"]?:@"be_null" forKey:@"platform"];
     [FHUserTracker writeEvent:@"share_platfrom" params:dic];
 }

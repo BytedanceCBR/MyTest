@@ -22,7 +22,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (void)clickLikeOrdisLikeWithWithName:(NSString *)event eventPosition:(NSString *)position eventModel:(FHFeedUGCCellModel *)model eventIndex:(NSInteger)index commentId:(NSString *)commentId;
 
-+ (void)clickCommentWithModel:(FHFeedUGCCellModel *)model eventIndex:(NSInteger)index;
++ (void)clickCommentWithModel:(FHFeedUGCCellModel *)model eventIndex:(NSInteger)index eventPosition:(NSString *)position;
 
 + (void)clickCommentSubmitWithModel:(FHFeedUGCCellModel *)model eventIndex:(NSInteger)index;
 

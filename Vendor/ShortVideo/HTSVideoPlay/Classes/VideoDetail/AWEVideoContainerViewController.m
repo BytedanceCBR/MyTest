@@ -699,7 +699,7 @@ const static CGFloat kAWEVideoContainerSpacing = 2;
 
 - (void)sendFeedClientShowAndVideoPlayWithCell:(AWEVideoContainerCollectionViewCell *)cell {
     NSString *groupId = cell.videoDetail.groupId;
-    if (![self.feedClientShowCache containsObject:groupId]) {
+    if (groupId && ![self.feedClientShowCache containsObject:groupId]) {
         [self.feedClientShowCache addObject:groupId];
         [FHShortVideoTracerUtil feedClientShowWithmodel:cell.videoDetail eventIndex:self.initialItemIndex];
     };
