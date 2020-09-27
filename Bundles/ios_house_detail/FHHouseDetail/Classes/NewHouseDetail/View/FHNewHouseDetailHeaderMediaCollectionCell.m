@@ -329,6 +329,9 @@
         dict[@"picture_type"] = itemModel.pictureTypeName;
         dict[@"show_type"] = showType;
         dict[@"event_tracking_id"] = @"104162";
+        if (isLarge) {
+            dict[@"element_type"] = @"large_picture_preview";
+        }
         TRACK_EVENT(@"picture_show", dict);
     } else {
         NSAssert(NO, @"传入的detailTracerDic不是字典");
@@ -407,6 +410,7 @@
         }
         dict[@"rank"] = @"be_null";
         dict[@"event_tracking_id"] = @"110853";
+        
 
         TRACK_EVENT(@"click_options", dict);
     } else {
