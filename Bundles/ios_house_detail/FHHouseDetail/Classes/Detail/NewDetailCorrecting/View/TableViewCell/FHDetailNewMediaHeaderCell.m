@@ -326,7 +326,10 @@
         dict[@"picture_id"] = itemModel.imageUrl;
         dict[@"picture_type"] = itemModel.pictureTypeName;
         dict[@"show_type"] = showType;
-        dict[@"event_tracking_id"] = @"104162";
+        dict[@"event_tracking_id"] = @"110859";
+        if (isLarge) {
+            dict[@"element_type"] = @"large_picture_preview";
+        }
         TRACK_EVENT(@"picture_show", dict);
     } else {
         NSAssert(NO, @"传入的detailTracerDic不是字典");
@@ -404,7 +407,7 @@
         }
         
         dict[@"rank"] = @"be_null";
-        dict[@"event_tracking_id"] = @"104163";
+        dict[@"event_tracking_id"] = @"110853";
 
         TRACK_EVENT(@"click_options", dict);
     } else {
@@ -460,7 +463,7 @@
     
     NSUInteger detailIndex = 0;
     
-    for (NSInteger i = 0; i < self.dataHelper.pictureDetailData.mediaItemArray.count; i++) {
+    for (NSUInteger i = 0; i < self.dataHelper.pictureDetailData.mediaItemArray.count; i++) {
         FHMultiMediaItemModel *nextModel = self.dataHelper.pictureDetailData.mediaItemArray[i];
         if ([nextModel.imageUrl isEqualToString:itemModel.imageUrl] && nextModel.mediaType == itemModel.mediaType) {
             detailIndex = i;
