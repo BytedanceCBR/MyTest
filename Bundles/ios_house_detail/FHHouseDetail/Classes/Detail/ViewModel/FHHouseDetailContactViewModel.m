@@ -64,6 +64,7 @@
 #import "FHUtils.h"
 #import "BDABTestManager.h"
 #import <ByteDanceKit/NSDictionary+BTDAdditions.h>
+#import "FHNewHouseDetailViewController.h"
 
 NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
 
@@ -712,7 +713,8 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
     }
     
     // ------------- 房源详情页 --------------------//
-    if([self.belongsVC isKindOfClass:FHHouseDetailViewController.class]) {
+    if([self.belongsVC isKindOfClass:FHHouseDetailViewController.class] ||
+       [self.belongsVC isKindOfClass:FHNewHouseDetailViewController.class]) {
         FHHouseDetailViewController *houseDetailVC = (FHHouseDetailViewController *)self.belongsVC;
         NSObject *detailData  = houseDetailVC.viewModel.detailData;
         switch(houseDetailVC.viewModel.houseType) {
