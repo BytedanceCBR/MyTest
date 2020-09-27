@@ -288,6 +288,7 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
             if (currentIndex >= 0 && currentIndex < weakSelf.detailPictureModel.itemList.count) {
                 CGFloat pageWidth = weakSelf.photoScrollView.frame.size.width;
                 [weakSelf.photoScrollView setContentOffset:CGPointMake(pageWidth * currentIndex, 0) animated:NO];
+                [weakSelf playIfCurrentIndexIsVideo];
             }
         };
         [self.pictureTitleView reloadData];
@@ -1196,6 +1197,18 @@ static BOOL kFHStaticPhotoBrowserAtTop = NO;
     }
 }
 
+- (void)playIfCurrentIndexIsVideo {
+    // 视频
+    if ([self isVideoImageView:self.currentIndex]) {
+        FHShowVideoView * tempVedioView = (FHShowVideoView *)[self showImageViewAtIndex:self.currentIndex];
+        [tempVedioView setNeedsLayout];
+        [tempVedioView.videoVC play];
+        if (tempVedioView.videoVC.view.alpha < 1.0) {
+            tempVedioView.videoVC.view.alpha = 1.0;
+        }
+    }
+}
+
 - (BOOL)isPhotoViewExistInScrollViewForIndex:(NSInteger)index
 {
     BOOL exist = NO;
@@ -1315,15 +1328,7 @@ static BOOL kFHStaticPhotoBrowserAtTop = NO;
 }
 
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
-    // 视频
-    if ([self isVideoImageView:self.currentIndex]) {
-        FHShowVideoView * tempVedioView = (FHShowVideoView *)[self showImageViewAtIndex:self.currentIndex];
-        [tempVedioView setNeedsLayout];
-        [tempVedioView.videoVC play];
-        if (tempVedioView.videoVC.view.alpha < 1.0) {
-            tempVedioView.videoVC.view.alpha = 1.0;
-        }
-    }
+    [self playIfCurrentIndexIsVideo];
 }
 
 #pragma mark - TTShowImageViewDelegate

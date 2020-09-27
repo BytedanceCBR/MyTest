@@ -74,6 +74,11 @@
     [self showWithImageUrl:imageUrl placeHoder:nil];
 }
 
+- (void)setLoadingView:(UIView *)loadingView {
+    _loadingView = loadingView;
+    [_loadingView removeFromSuperview];
+    [self addSubview:loadingView];
+}
 
 - (void)playVideo {
     if(self.delegate && [self.delegate respondsToSelector:@selector(playVideo)]){
