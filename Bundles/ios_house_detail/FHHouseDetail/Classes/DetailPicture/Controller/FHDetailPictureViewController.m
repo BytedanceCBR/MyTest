@@ -65,8 +65,6 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
 @property(nonatomic, strong) NSMutableSet * videoViewPools;
 @property(nonatomic, strong) NSMutableSet * vrViewPools;
 
-@property (nonatomic, assign)   BOOL       isShowenVideo;// 是否正在显示视频
-
 @property (nonatomic, strong)   FHDetailVideoInfoView       *videoInfoView;
 
 
@@ -108,7 +106,6 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
         _startWithIndex = 0;
         _currentIndex = -1;
         _photoCount = 0;
-        _isShowenVideo = NO;
         _longPressToSave = YES;
         _disableAutoPlayVideo = NO;
         _didEnterFullscreen = NO;
@@ -414,29 +411,11 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
 //        self.videoInfoView.shareActionBlock = self.shareActionBlock;
 //        self.videoInfoView.collectActionBlock = self.collectActionBlock;
 //    }
-    
-    self.isShowenVideo = [self isVideoImageView:self.currentIndex];
-    
+        
 //    _naviView.videoTitle.isSelectVideo;
     // lead_show 埋点
     if (self.contactViewModel && self.bottomBar && self.bottomBar.hidden == NO) {
         [self addLeadShowLog:self.contactViewModel.contactPhone baseParams:[self.contactViewModel baseParams]];
-    }
-}
-
-- (void)setIsShowenVideo:(BOOL)isShowenVideo {
-    _isShowenVideo = isShowenVideo;
-    if (isShowenVideo) {
-//        _pictureTitleView.hidden = YES;
-        _videoInfoView.hidden = NO;
-        if (self.videoVC.view.alpha < 1.0) {
-            self.videoVC.view.alpha = 1.0;
-        }
-        [self.videoVC play];
-    } else {
-//        _pictureTitleView.hidden = NO;
-        _videoInfoView.hidden = YES;
-        [self.videoVC pause];
     }
 }
 
@@ -620,8 +599,9 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
     });
     if ([self isVideoImageView:self.currentIndex] && !self.disableAutoPlayVideo) {
         // 视频
-        if (self.videoVC.playbackState != TTVPlaybackState_Playing) {
-            [self.videoVC play];
+        FHShowVideoView *tempVedioView = (FHShowVideoView *)[self showImageViewAtIndex:self.currentIndex];
+        if (tempVedioView.videoVC.playbackState != TTVPlaybackState_Playing) {
+            [tempVedioView.videoVC play];
         }
     }
     self.disableAutoPlayVideo = NO;
@@ -638,8 +618,9 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
     }
     if ([self isVideoImageView:self.currentIndex]/*&&!self.startDismissSelf */&& !self.disableAutoPlayVideo) {
         // 视频
-        if (self.videoVC.playbackState == TTVPlaybackState_Playing) {
-            [self.videoVC pause];
+        FHShowVideoView *tempVedioView = (FHShowVideoView *)[self showImageViewAtIndex:self.currentIndex];
+        if (tempVedioView.videoVC.playbackState == TTVPlaybackState_Playing) {
+            [tempVedioView.videoVC pause];
         }
     }
     self.disableAutoPlayVideo = NO;
@@ -999,7 +980,8 @@ static BOOL kFHStaticPhotoBrowserAtTop = NO;
         return;
     }
     if ([self isVideoImageView:_currentIndex]) {
-        [self loadPhoto:_currentIndex visible:NO];
+        FHShowVideoView * tempVedioView = (FHShowVideoView *)[self showImageViewAtIndex:self.currentIndex];
+        [tempVedioView.videoVC pause];
     }
     _currentIndex = newIndex;
     [self updateNavHeaderTitle];
@@ -1014,8 +996,6 @@ static BOOL kFHStaticPhotoBrowserAtTop = NO;
     [self loadPhoto:_currentIndex + 1 visible:NO];
     [self loadPhoto:_currentIndex - 1 visible:NO];
     [self loadPhoto:_currentIndex visible:YES];
-
-    self.isShowenVideo = [self isVideoImageView:newIndex];
 }
 
 - (void)scrollToIndex:(NSInteger)index
@@ -1101,15 +1081,17 @@ static BOOL kFHStaticPhotoBrowserAtTop = NO;
             tempVedioView.frame = [self frameForPageAtIndex:index];
             [tempVedioView currentImageView].alpha = 0;
             tempVedioView.visible = visible;
-
+            
+            FHDetailPictureItemPictureModel *itemModel = self.detailPictureModel.itemList[index];
+            FHDetailPictureItemVideoModel *videoModel = (FHDetailPictureItemVideoModel *)itemModel;
+            [tempVedioView.videoVC updateData:videoModel.videoModel];
+            [tempVedioView setNeedsLayout];
             if (visible) {
-//                [tempVedioView setNeedsLayout];
-                // 是否可见
 //                [tempVedioView.videoVC play];
+//                if (tempVedioView.videoVC.view.alpha < 1.0) {
+//                    tempVedioView.videoVC.view.alpha = 1.0;
+//                }
             } else {
-                FHDetailPictureItemPictureModel *itemModel = self.detailPictureModel.itemList[index];
-                FHDetailPictureItemVideoModel *videoModel = (FHDetailPictureItemVideoModel *)itemModel;
-                [tempVedioView.videoVC updateData:videoModel.videoModel];
                 [tempVedioView.videoVC pause];
             }
             return;
@@ -1121,21 +1103,23 @@ static BOOL kFHStaticPhotoBrowserAtTop = NO;
             showVedioView = [[FHShowVideoView alloc] initWithFrame:[self frameForPageAtIndex:index]];
             showVedioView.delegate = self;
             showVedioView.backgroundColor = [UIColor clearColor];
-            [_photoScrollView addSubview:showVedioView];
             
-            FHDetailPictureItemPictureModel *itemModel = self.detailPictureModel.itemList[index];
-            FHDetailPictureItemVideoModel *videoModel = (FHDetailPictureItemVideoModel *)itemModel;
             FHVideoViewController *videoVC = [[FHVideoViewController alloc] init];
             videoVC.view.frame = self.videoVC.view.frame;
+            videoVC.videoFrame = self.videoVC.view.frame;
             videoVC.tracerDic = self.videoVC.tracerDic;
             showVedioView.videoVC = videoVC;
-            [videoVC updateData:videoModel.videoModel];
         }
         else {
             [_videoViewPools removeObject:showVedioView];
         }
         
         showVedioView.frame = [self frameForPageAtIndex:index];
+        [_photoScrollView addSubview:showVedioView];
+        
+        FHDetailPictureItemPictureModel *itemModel = self.detailPictureModel.itemList[index];
+        FHDetailPictureItemVideoModel *videoModel = (FHDetailPictureItemVideoModel *)itemModel;
+        [showVedioView.videoVC updateData:videoModel.videoModel];
         showVedioView.loadingCompletedAnimationBlock = ^{
             // nothing
         };
@@ -1146,11 +1130,12 @@ static BOOL kFHStaticPhotoBrowserAtTop = NO;
 
         // 设置视频数据
         if (visible) {
-            // 是否可见
-//            [showVedioView setNeedsLayout];
 //            [showVedioView.videoVC play];
+//            if (showVedioView.videoVC.view.alpha < 1.0) {
+//                showVedioView.videoVC.view.alpha = 1.0;
+//            }
         }
-        
+        [showVedioView setNeedsLayout];
         
     } else if ([self isVRImageView:index]) {
         // VR
@@ -1326,6 +1311,18 @@ static BOOL kFHStaticPhotoBrowserAtTop = NO;
             self.indexUpdatedBlock(_currentIndex, page);
         }
         [self setCurrentIndex:page];
+    }
+}
+
+- (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
+    // 视频
+    if ([self isVideoImageView:self.currentIndex]) {
+        FHShowVideoView * tempVedioView = (FHShowVideoView *)[self showImageViewAtIndex:self.currentIndex];
+        [tempVedioView setNeedsLayout];
+        [tempVedioView.videoVC play];
+        if (tempVedioView.videoVC.view.alpha < 1.0) {
+            tempVedioView.videoVC.view.alpha = 1.0;
+        }
     }
 }
 

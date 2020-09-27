@@ -442,6 +442,10 @@
     }
 }
 
+- (void)playerDidStartLoading:(TTVPlayer *)player {
+    
+}
+
 #pragma mark - 埋点相关
 
 - (void)trackPlayBackState {

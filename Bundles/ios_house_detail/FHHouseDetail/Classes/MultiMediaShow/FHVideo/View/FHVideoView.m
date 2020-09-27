@@ -6,6 +6,7 @@
 //
 
 #import "FHVideoView.h"
+#import <Masonry/Masonry.h>
 
 @interface FHVideoView ()<FHVideoCoverViewDelegate>
 
@@ -16,21 +17,19 @@
 - (instancetype)initWithFrame:(CGRect)frame {
     self = [super initWithFrame:frame];
     if (self) {
-        [self initViews];
+        //未播放视频时的封面视图
+        self.coverView = [[FHVideoCoverView alloc] initWithFrame:self.bounds];
+        self.coverView.delegate = self;
+        [self addSubview:self.coverView];
+        [self.coverView mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.edges.mas_equalTo(UIEdgeInsetsZero);
+        }];
     }
     return self;
 }
 
-- (void)initViews {
-    //未播放视频时的封面视图
-    self.coverView = [[FHVideoCoverView alloc] initWithFrame:CGRectZero];
-    _coverView.delegate = self;
-    [self addSubview:_coverView];
-}
-
 - (void)layoutSubviews {
     [super layoutSubviews];
-    self.coverView.frame = self.bounds;
     self.playerView.frame = self.bounds;
 }
 
