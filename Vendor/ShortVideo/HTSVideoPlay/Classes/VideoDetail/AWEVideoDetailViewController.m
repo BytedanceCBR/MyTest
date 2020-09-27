@@ -1029,6 +1029,7 @@ static const CGFloat kFloatingViewOriginY = 230;
 - (void)loadMoreAutomatically:(BOOL)isAuto
 {
     if(![TTReachability isNetworkConnected]){
+        [[ToastManager manager] showToast:@"网络异常"];
         return;
     }
     

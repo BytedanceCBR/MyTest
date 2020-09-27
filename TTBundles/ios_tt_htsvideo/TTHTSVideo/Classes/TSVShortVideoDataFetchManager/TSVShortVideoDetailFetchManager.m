@@ -18,6 +18,8 @@
 #import "FHHouseUGCAPI.h"
 #import "FHUGCShortVideoRealtorInfoModel.h"
 #import "FHFeedUGCCellModel.h"
+#import "TTReachability.h"
+#import "ToastManager.h"
 
 
 @interface TSVShortVideoDetailFetchManager ()
@@ -87,8 +89,10 @@
 
 - (TTShortVideoModel *)itemAtIndex:(NSInteger)index replaced:(BOOL)replaced
 {
+    if (!self.awemedDetailItems) {
+        return nil;
+    }
     NSParameterAssert(index < [self.awemedDetailItems count]);
-    
     if (replaced && self.replacedModel && index == self.replacedIndex) {
         return self.replacedModel;
     } else if (index < [self.awemedDetailItems count]) {
