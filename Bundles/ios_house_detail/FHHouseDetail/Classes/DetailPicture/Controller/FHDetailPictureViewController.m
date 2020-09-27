@@ -636,7 +636,7 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
     if (navi && [navi isKindOfClass:[TTNavigationController class]]) {
         [(TTNavigationController *)navi panRecognizer].enabled = YES;
     }
-    if ([self isVideoImageView:self.currentIndex] && !self.startDismissSelf && !self.disableAutoPlayVideo) {
+    if ([self isVideoImageView:self.currentIndex]/*&&!self.startDismissSelf */&& !self.disableAutoPlayVideo) {
         // 视频
         if (self.videoVC.playbackState == TTVPlaybackState_Playing) {
             [self.videoVC pause];
