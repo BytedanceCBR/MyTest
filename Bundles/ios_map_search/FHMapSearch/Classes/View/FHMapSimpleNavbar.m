@@ -223,6 +223,10 @@
     }
 }
 
+- (void)changeHouseSegementStatas:(BOOL)isCanClick{
+    _houseSegmentControl.touchEnabled = isCanClick;
+}
+
 - (void)updateCicleBtn:(BOOL)isShowCircle{
 //    _isShowCircle = isShowCircle;
 //    UIImage *img = nil;

@@ -286,6 +286,7 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
 //        }
 //    }
 
+    
     [self requestHouses:NO showTip:YES];
      
     
@@ -884,6 +885,8 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
         [_requestHouseTask cancel];
     }
     
+    [self.simpleNavBar changeHouseSegementStatas:NO];
+    
     BOOL firstEnter = _firstEnterLogAdded;
     _firstEnterLogAdded = YES;
     
@@ -999,6 +1002,8 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
     __weak typeof(self) wself = self;
     TTHttpTask *task = [FHHouseSearcher mapSearch:houseType searchId:self.searchId query:query maxLocation:CLLocationCoordinate2DMake(maxLat, maxLong) minLocation:CLLocationCoordinate2DMake(minLat, minLong) resizeLevel:_mapView.zoomLevel targetType:targetType suggestionParams:nil extraParams:extraParams callback:^(NSError * _Nullable error, FHMapSearchDataModel * _Nullable model) {
         
+        [wself.simpleNavBar changeHouseSegementStatas:YES];
+
         if (!wself) {
             return ;
         }
