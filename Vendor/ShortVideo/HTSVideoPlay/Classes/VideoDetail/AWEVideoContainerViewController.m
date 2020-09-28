@@ -448,7 +448,7 @@ const static CGFloat kAWEVideoContainerSpacing = 2;
 
         [cell setNeedsLayout];
         cell.commonTrackingParameter = self.commonTrackingParameter;
-        [cell updateWithModel:[self.dataFetchManager itemAtIndex:indexPath.item] usingFirstFrameCover:self.firstPageShown || (self.currentIndexPath && ![self.currentIndexPath isEqual:indexPath])];
+        [cell updateWithModel:[self.dataFetchManager itemAtIndex:indexPath.item] usingFirstFrameCover:YES];
         cell.spacingMargin = kAWEVideoContainerSpacing;
       
         BOOL forward = !self.currentIndexPath || self.currentIndexPath.item < indexPath.item;
