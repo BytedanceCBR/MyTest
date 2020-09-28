@@ -471,7 +471,7 @@ static const CGFloat kCheckChallengeButtonLeftPadding = 28;
     
     [_rightInfoView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.right.equalTo(self.view).offset(-10);
-        make.bottom.equalTo(self.operationView.mas_top).offset(-10);
+        make.bottom.equalTo(self.operationView.mas_top).offset(-50);
         make.width.mas_offset(40);
     }];
     
