@@ -49,7 +49,7 @@
 
 -(UIImage *)resizeableImage:(UIImage *)img
 {
-    return [img resizableImageWithCapInsets:UIEdgeInsetsMake(25, 40, 30, 40)];
+    return [img resizableImageWithCapInsets:UIEdgeInsetsMake(31, 40, 35, 40)];
 }
 
 -(void)updateWithAnnotation:(id<MAAnnotation>) annotation
