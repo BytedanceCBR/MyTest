@@ -80,6 +80,7 @@
 - (SSWebViewContainer *)webView {
     if(!_webView) {
         _webView = [[SSWebViewContainer alloc] init];
+        _webView.ssWebView.scrollView.bounces = NO;
     }
     return _webView;
 }
@@ -101,6 +102,7 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     [self setupDefaultNavBar:NO];
+    self.ttDisableDragBack = YES;
     [self.customNavBarView.leftBtn setBackgroundImage:nil forState:UIControlStateNormal];
     [self.customNavBarView.leftBtn setBackgroundImage:nil forState:UIControlStateHighlighted];
     UIImage *backImage = ICON_FONT_IMG(24, @"\U0000E68A", [UIColor themeGray1]);
