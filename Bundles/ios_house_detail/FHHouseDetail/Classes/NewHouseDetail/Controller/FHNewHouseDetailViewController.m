@@ -1005,22 +1005,22 @@
 - (NSString *)getTabNameBySectionType:(FHNewHouseDetailSectionType)sectionType {
     switch (sectionType) {
         case FHNewHouseDetailSectionTypeBaseInfo:
-            return @"basic_info";
+            return @"基础信息";
         case FHNewHouseDetailSectionTypeFloorpan:
-            return @"house_model";
+            return @"户型";
         case FHNewHouseDetailSectionTypeSales:
         case FHNewHouseDetailSectionTypeAgent:
-            return @"discounts";
+            return @"优惠";
         case FHNewHouseDetailSectionTypeTimeline:
         case FHNewHouseDetailSectionTypeAssess:
         case FHNewHouseDetailSectionTypeRGC:
-            return @"dynamic";
+            return @"动态";
         case FHNewHouseDetailSectionTypeSurrounding:
-            return @"related";
+            return @"周边";
         case FHNewHouseDetailSectionTypeBuildings:
-            return @"building";
+            return @"楼栋";
         case FHNewHouseDetailSectionTypeRecommend:
-            return @"recommend";
+            return @"推荐";
         default:
             return @"";
     }

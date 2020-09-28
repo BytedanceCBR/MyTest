@@ -32,10 +32,12 @@
         _timeLabel = [UILabel new];
         _timeLabel.font = [UIFont themeFontSemibold:16];
         _timeLabel.textColor = [UIColor themeGray1];
+        _timeLabel.layer.cornerRadius = 2;
+        _timeLabel.layer.masksToBounds = YES;
         [self.contentView addSubview:_timeLabel];
         [_timeLabel mas_makeConstraints:^(MASConstraintMaker *make) {
             make.left.mas_equalTo(33);
-            make.width.mas_equalTo(MAXFLOAT);
+            //make.width.mas_equalTo(MAXFLOAT);
             make.top.equalTo(0);
             make.height.mas_equalTo(22);
         }];
@@ -44,8 +46,6 @@
         _titleLabel = [UILabel new];
         _titleLabel.font = [UIFont themeFontMedium:12];
         _titleLabel.textColor = [UIColor themeOrange1];
-        _timeLabel.layer.cornerRadius = 2;
-        _timeLabel.layer.masksToBounds = YES;
         _titleLabel.textAlignment = NSTextAlignmentCenter;
         _titleLabel.backgroundColor = [UIColor colorWithHexStr:@"#fff8ef"];
         [self.contentView addSubview:_titleLabel];
@@ -53,7 +53,7 @@
             make.top.equalTo(self.timeLabel);
             make.left.equalTo(self.timeLabel.mas_right).offset(4);
             make.height.mas_equalTo(22);
-            make.width.mas_equalTo(MAXFLOAT);
+           // make.width.mas_equalTo(MAXFLOAT);
         }];
 
         _contentLabel = [UILabel new];
@@ -103,9 +103,9 @@
             _timeLabel.text = [FHUtils ConvertStrToTimeForm:model.createdTime];
         }
         CGFloat timeWidth = [self.timeLabel btd_widthWithHeight:22];
-        [self.timeLabel mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.width.mas_equalTo(timeWidth);
-        }];
+//        [self.timeLabel mas_updateConstraints:^(MASConstraintMaker *make) {
+//            make.width.mas_equalTo(timeWidth);
+//        }];
         self.titleLabel.text = model.title;
         CGFloat width = MIN([self.titleLabel btd_widthWithHeight:17] + 12, 60);
         CGFloat maxWidth = MAIN_SCREEN_WIDTH - 15 - 33 - timeWidth - 4;
