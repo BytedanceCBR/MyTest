@@ -480,7 +480,7 @@
     }
     self.lastIndexPath = [NSIndexPath indexPathForItem:0 inSection:index];
     FHNewHouseDetailSectionModel *model = self.viewModel.sectionModels[index];
-    [self clickTabTrackWithEnterType:@"click_tab" sectionType:model.sectionType];
+    [self clickTabTrackWithEnterType:@"click" sectionType:model.sectionType];
     UICollectionViewLayoutAttributes *attributes = [self.detailFlowLayout layoutAttributesForSupplementaryViewOfKind:UICollectionElementKindSectionHeader atIndexPath:self.lastIndexPath];
     if (attributes.frame.size.height < 0.1) {
         attributes = [self.detailFlowLayout layoutAttributesForItemAtIndexPath:self.lastIndexPath];
