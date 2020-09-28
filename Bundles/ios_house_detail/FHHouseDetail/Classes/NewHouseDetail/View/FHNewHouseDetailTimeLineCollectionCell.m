@@ -228,8 +228,7 @@
     self.titleLabel.textAlignment = NSTextAlignmentLeft;
     [self.containerView addSubview:self.titleLabel];
     [self.titleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(8);
-        make.right.mas_equalTo(0);
+        make.centerX.mas_equalTo(0);
         make.top.mas_equalTo(6);
         make.height.mas_equalTo(22);
     }];
@@ -240,8 +239,7 @@
     self.timeLabel.textAlignment = NSTextAlignmentLeft;
     [self.containerView addSubview:self.timeLabel];
     [self.timeLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(8);
-        make.right.mas_equalTo(0);
+        make.centerX.mas_equalTo(0);
         make.top.mas_equalTo(self.titleLabel.mas_bottom).offset(1);
         make.height.mas_equalTo(17);
     }];
