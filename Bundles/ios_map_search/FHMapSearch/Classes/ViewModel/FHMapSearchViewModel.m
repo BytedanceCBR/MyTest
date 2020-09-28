@@ -1478,7 +1478,7 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
             self.currentSelectNid = houseAnnotation.houseData.nid;
         }
         
-        if ([annotationView isKindOfClass:[FHDistrictAreaAnnotationView class]]) {
+        if ([annotationView isKindOfClass:[FHDistrictAreaAnnotationView class]] && self.showMode != FHMapSearchShowModeSubway) {
             FHDistrictAreaAnnotationView *annotationViewArea = (FHDistrictAreaAnnotationView *)annotationView;
             UIImage *bgImg = SYS_IMG(@"mapsearch_area_bg_red");
             annotationViewArea.layer.contents = (id)[bgImg CGImage];
