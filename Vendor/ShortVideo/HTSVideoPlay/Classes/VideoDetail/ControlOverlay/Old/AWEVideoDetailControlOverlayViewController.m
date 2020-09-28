@@ -598,7 +598,7 @@ static const CGFloat kCheckChallengeButtonLeftPadding = 28;
     self.likeButton.imageString =  [self.model.userDigg boolValue]? @"shortvideo_dig_select" : @"shortvideo_dig_normal";
 //    self.likeButton.iconImageView.image = self.model.userDigg ? ICON_FONT_IMG(24, @"\U0000e6b1", [UIColor themeOrange4]) : ICON_FONT_IMG(24, @"\U0000e69c", [UIColor themeWhite]);
     self.likeButton.selected = [self.model.userDigg boolValue];
-    self.likeButton.label.textColor = [self.model.userDigg boolValue] ? [UIColor themeOrange4] : [UIColor themeWhite];
+//    self.likeButton.label.textColor = [self.model.userDigg boolValue] ? [UIColor themeOrange4] : [UIColor themeWhite];
 
 //    NSString *musicLabelString = self.viewModel.musicLabelString;
 //    if (!isEmptyString(musicLabelString)) {
@@ -657,7 +657,7 @@ static const CGFloat kCheckChallengeButtonLeftPadding = 28;
     self.likeButton.imageString = userDigg ? @"shortvideo_dig_select" : @"shortvideo_dig_normal";
 //    self.likeButton.iconImageView.image = self.model.userDigg ? ICON_FONT_IMG(24, @"\U0000e6b1", [UIColor themeOrange4]) : ICON_FONT_IMG(24, @"\U0000e69c", [UIColor themeWhite]);
     self.likeButton.selected = userDigg;
-    self.likeButton.label.textColor = userDigg ? [UIColor themeOrange4] : [UIColor themeWhite];
+//    self.likeButton.label.textColor = userDigg ? [UIColor themeOrange4] : [UIColor themeWhite];
     [self.view setNeedsLayout];
 }
 
