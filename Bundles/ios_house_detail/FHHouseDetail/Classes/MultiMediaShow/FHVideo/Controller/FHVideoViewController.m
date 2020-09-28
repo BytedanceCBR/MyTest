@@ -16,6 +16,7 @@
 #import <BDWebImage/BDWebImageManager.h>
 #import "FHHMDTManager.h"
 #import "FHVideoCoverView.h"
+#import <ByteDanceKit/ByteDanceKit.h>
 
 @interface FHVideoViewController ()<FHVideoCoverViewDelegate,TTVPlayerDelegate,TTVPlayerCustomViewDelegate>
 
@@ -42,6 +43,22 @@
 //- (void)dealloc {
 //    NSLog(@"FHVideoViewController dealloc");
 //}
+
+- (void)setTracerDic:(NSDictionary *)tracerDic {
+    NSDictionary *logPbDict = nil;
+    id logPb = tracerDic[@"log_pb"];
+    if (logPb && [logPb isKindOfClass:[NSDictionary class]]) {
+        logPbDict = (NSDictionary *)logPb;
+    } else if (logPb && [logPb isKindOfClass:[NSString class]]){
+        logPbDict = [(NSString *)logPb btd_jsonDictionary];
+    }
+    NSMutableDictionary *tracer = [tracerDic mutableCopy];
+    if (logPbDict) {
+        [tracer removeObjectForKey:@"log_pb"];
+        tracer[@"from_gid"] = logPbDict[@"group_id"]?:@"be_null";
+    }
+    _tracerDic = tracer.copy;
+}
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -503,7 +520,7 @@
 - (void)trackWithName:(NSString *)name {
     NSMutableDictionary *dict = [self.tracerDic mutableCopy];
     dict[@"item_id"] = self.model.videoID;
-    
+    dict[@"group_id"] = self.model.videoID;
     if([name isEqualToString:@"video_pause"] || [name isEqualToString:@"video_over"]){
         dict[@"stay_time"] = @(self.stayTime);
     }
