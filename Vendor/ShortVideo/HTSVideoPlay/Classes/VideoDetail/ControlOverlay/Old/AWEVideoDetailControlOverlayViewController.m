@@ -169,9 +169,9 @@ static const CGFloat kCheckChallengeButtonLeftPadding = 28;
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(skStoreViewDidDisappear:) name:@"SKStoreProductViewDidDisappearKey" object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationWillEnterForeground:) name:UIApplicationWillEnterForegroundNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(likeStateChange:) name:@"kFHUGCDiggStateChangeNotification" object:nil];
-    [RACObserve(self, viewModel.likeCountString) subscribeNext:^(id  _Nullable x) {
-        [self updateDiggState];
-    }];
+//    [RACObserve(self, viewModel.likeCountString) subscribeNext:^(id  _Nullable x) {
+//        [self updateDiggState];
+//    }];
     
     // 解决较低版本的 iOS 中布局可能会产生问题，例如隐式动画、布局错位等问题，猜测可能是 UICollectionView 的问题
     void (^fuckLayout)() = ^{
@@ -405,16 +405,16 @@ static const CGFloat kCheckChallengeButtonLeftPadding = 28;
     NSDictionary *userInfo = notification.userInfo;
     if(userInfo){
         NSInteger user_digg = [userInfo[@"action"] integerValue];
-        NSInteger diggCount = self.model.diggCount;
+        NSInteger diggCount = [self.model.diggCount integerValue];
         NSInteger groupType = [userInfo[@"group_type"] integerValue];
         NSString *groupId = userInfo[@"group_id"];
         
         if(groupType == FHDetailDiggTypeSMALLVIDEO && [groupId isEqualToString:self.model.groupId]){
             if(user_digg == 0) {
-                self.model.diggCount = [NSString stringWithFormat:@"%ld",[self.model.diggCount intValue] - 1];
+                self.model.diggCount = [NSString stringWithFormat:@"%ld",diggCount - 1];
                 self.model.userDigg = @"0";
             }else {
-                self.model.diggCount = [NSString stringWithFormat:@"%ld",[self.model.diggCount intValue] + 1];
+                self.model.diggCount = [NSString stringWithFormat:@"%ld",diggCount + 1];
                 self.model.userDigg = @"1";
             }
             [self updateDiggState];
