@@ -6,7 +6,6 @@
 //
 
 #import "FHDetailBaseCell.h"
-#import <lottie-ios/Lottie/LOTAnimationView.h>
 
 @class FHDetailFloorPanDetailInfoDataRecommendModel,FHHouseDetailSubPageViewController;
 
@@ -28,9 +27,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong)   UILabel       *statusLabel;
 @property (nonatomic, strong)   UILabel       *priceLabel;
 @property (nonatomic, strong)   UILabel       *spaceLabel;
-@property (nonatomic, strong)   LOTAnimationView *vrLoadingView;
-@property (nonatomic, strong)   UIView        *vrBackView;
-
+@property (nonatomic, strong)   UIImageView   *vrImageView;
+ 
 @end
 
 @interface FHFloorPanDetailMutiFloorPanCellModel : FHDetailBaseModel

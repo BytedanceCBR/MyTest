@@ -10,8 +10,7 @@
 
 @implementation FHNewHouseDetailRGCListSM
 
-- (void)updateDetailModel:(FHDetailNewModel *)model {
-    [super updateDetailModel:model];
+- (void)updateModel:(FHDetailNewModel *)model {
     
     self.contentModel = model.data.realtorContent.content;
     NSMutableArray *dataArr = [[NSMutableArray alloc] init];
@@ -58,6 +57,8 @@
     self.title = model.data.realtorContent.title;
     self.count = model.data.realtorContent.content.count;
 }
+
+
 
 - (id<NSObject>)diffIdentifier {
     return self;

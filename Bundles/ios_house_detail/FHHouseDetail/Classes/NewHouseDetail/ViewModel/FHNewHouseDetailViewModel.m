@@ -178,6 +178,7 @@
             @"channelId":@"f_hosue_wtt"
         };
         RGCListModel.extraDic = extraDic;
+        [RGCListModel updateModel:self.detailData];
         [sectionModels addObject:RGCListModel];
     }
     

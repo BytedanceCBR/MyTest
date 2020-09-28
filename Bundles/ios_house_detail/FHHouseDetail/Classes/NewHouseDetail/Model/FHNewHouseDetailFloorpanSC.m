@@ -39,7 +39,14 @@
     if ([model isKindOfClass:[FHDetailNewDataFloorpanListModel class]]) {
         NSMutableDictionary *infoDict = [NSMutableDictionary new];
         [infoDict setValue:model.list forKey:@"court_id"];
-        [infoDict addEntriesFromDictionary:[self subPageParams]];
+        NSMutableDictionary *dictM = [self subPageParams].mutableCopy;
+        if (dictM[@"tracer"] && [dictM[@"tracer"] isKindOfClass:[NSDictionary class]]) {
+            NSDictionary *tempDict = dictM[@"tracer"];
+            NSMutableDictionary *tracerDict = tempDict.mutableCopy;
+            tracerDict[@"enter_from"] = @"new_detail";
+            dictM[@"tracer"] = tracerDict;
+        }
+        [infoDict addEntriesFromDictionary:dictM];
         infoDict[@"house_type"] = @(FHHouseTypeNewHouse);
         TTRouteUserInfo *info = [[TTRouteUserInfo alloc] initWithInfo:infoDict];
         [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:@"sslocal://floor_pan_list"] userInfo:info];
@@ -115,7 +122,7 @@
         if (itemModel.imprId) {
             [tracerDic setValue:itemModel.imprId forKey:@"impr_id"];
         }
-        [tracerDic removeObjectForKey:@"enter_from"];
+        //[tracerDic removeObjectForKey:@"enter_from"];
         [tracerDic removeObjectForKey:@"element_from"];
         [FHUserTracker writeEvent:@"house_show" params:tracerDic];
     }

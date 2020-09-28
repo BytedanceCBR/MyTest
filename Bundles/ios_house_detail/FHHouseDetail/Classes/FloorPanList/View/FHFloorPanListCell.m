@@ -10,7 +10,6 @@
 #import "FHDetailTagBackgroundView.h"
 #import "FHCommonDefines.h"
 #import <BDWebImage/BDWebImage.h>
-#import <lottie-ios/Lottie/LOTAnimationView.h>
 
 @interface FHFloorPanListCell ()
 
@@ -23,8 +22,7 @@
 @property (nonatomic, strong) UIView *statusBGView;
 @property (nonatomic, strong) UIView *topLine;
 @property (nonatomic, strong) UIView *cellBackView;
-@property (nonatomic, strong) LOTAnimationView *vrLoadingView;
-@property (nonatomic, strong) UIView *vrBackView;
+@property (nonatomic, strong) UIImageView *vrImageView;
 
 @end
 
@@ -63,27 +61,13 @@
             make.height.mas_equalTo(66);
         }];
         
-        _vrBackView = [[UIView alloc] init];
-        _vrBackView.layer.cornerRadius = 9;
-        _vrBackView.layer.masksToBounds = YES;
-        _vrBackView.backgroundColor = RGBA(0, 0, 0, 0.4);
-        _vrBackView.hidden = YES;
-        [self.contentView addSubview:_vrBackView];
-        [self.vrBackView mas_makeConstraints:^(MASConstraintMaker *make) {
+        _vrImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"detail_vr_movie_icon"]];
+        _vrImageView.hidden = YES;
+        [self.contentView addSubview:_vrImageView];
+        [self.vrImageView mas_makeConstraints:^(MASConstraintMaker *make) {
             make.left.mas_equalTo(self.iconView.mas_left).offset(6);
             make.bottom.mas_equalTo(self.iconView.mas_bottom).offset(-6);
             make.width.height.mas_equalTo(18);
-        }];
-        
-        NSString *path = [[NSBundle mainBundle] pathForResource:@"VRImageLoading" ofType:@"json"];
-        _vrLoadingView = [LOTAnimationView animationWithFilePath:path];
-        _vrLoadingView.loopAnimation = YES;
-        _vrLoadingView.hidden = YES;
-        [self.contentView addSubview:_vrLoadingView];
-        [self.vrLoadingView mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.left.mas_equalTo(self.iconView.mas_left).offset(8);
-            make.bottom.mas_equalTo(self.iconView.mas_bottom).offset(-8);
-            make.height.width.mas_equalTo(14);
         }];
         
         _nameLabel = [UILabel new];
@@ -246,12 +230,9 @@
             }];
         }
         if (model.vrInfo.hasVr) {
-            self.vrBackView.hidden = NO;
-            self.vrLoadingView.hidden = NO;
-            [self.vrLoadingView play];
+            self.vrImageView.hidden = NO;
         } else {
-            self.vrBackView.hidden = YES;
-            self.vrLoadingView.hidden = YES;
+            self.vrImageView.hidden = YES;
         }
 
     }

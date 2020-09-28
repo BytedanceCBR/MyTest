@@ -142,6 +142,9 @@
     }
 }
 
+- (NSString *)elementType {
+    return @"house_model";
+}
 @end
 
 @implementation FHNewHouseDetailMultiFloorpanCellModel

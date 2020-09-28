@@ -156,6 +156,11 @@
     }
 }
 
+- (NSString *)elementType
+{
+    return @"";
+}
+
 @end
 
 @implementation FHNewHouseDetailSurroundingCellModel

@@ -106,11 +106,6 @@
     [model.salesCellModel.contactViewModel fillFormActionWithParams:associateParamDict];
 }
 
-- (NSString *)elementTypeString:(FHHouseType)houseType
-{
-    return @"coupon";
-}
-
 -(void)addClickOptionLog:(NSNumber *)actionType
 {
     //click_position: recieve（领取），subscribe（预约）

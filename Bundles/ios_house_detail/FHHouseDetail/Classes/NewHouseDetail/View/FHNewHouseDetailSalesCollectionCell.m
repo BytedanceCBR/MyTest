@@ -276,6 +276,11 @@
         self.clickRecive(itemInfo);
     }
 }
+
+- (NSString *)elementType
+{
+    return @"coupon";
+}
     
 - (void)awakeFromNib {
     [super awakeFromNib];
