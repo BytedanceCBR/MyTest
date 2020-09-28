@@ -501,7 +501,6 @@
 - (void)trackWithName:(NSString *)name {
     NSMutableDictionary *dict = [self.tracerDic mutableCopy];
     dict[@"item_id"] = self.model.videoID;
-    dict[@"group_id"] = self.model.videoID;
     
     if([name isEqualToString:@"video_pause"] || [name isEqualToString:@"video_over"]){
         dict[@"stay_time"] = @(self.stayTime);
