@@ -81,7 +81,6 @@
     if(!_webView) {
         _webView = [[SSWebViewContainer alloc] init];
         _webView.ssWebView.scrollView.bounces = NO;
-        _webView.ssWebView.scrollView.scrollEnabled = NO;
     }
     return _webView;
 }
@@ -174,8 +173,17 @@
         [self.webView loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:self.linkChatPageUrlStr]]];
     }
 }
-
 - (NSString *)pageType {
     return @"ask_page";
+}
+-(void)willMoveToParentViewController:(UIViewController *)parent {
+    [super willMoveToParentViewController:parent];
+    [self disableNavPanGesture:(parent!=nil)];
+}
+- (void)disableNavPanGesture:(BOOL)disable {
+    if([self.navigationController isKindOfClass:TTNavigationController.class]) {
+        TTNavigationController *nav = (TTNavigationController *)self.navigationController;
+        nav.panRecognizer.enabled = !disable;
+    }
 }
 @end
