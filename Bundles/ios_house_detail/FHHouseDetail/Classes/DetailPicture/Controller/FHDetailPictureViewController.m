@@ -441,11 +441,7 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
 
 - (NSString *)elementFrom {
     NSString *element_from = @"be_null";
-    if ([self isVideoImageView:self.currentIndex]) {
-        element_from = @"video";
-    } else {
-        element_from = @"large";
-    }
+    element_from = @"large";
     return element_from;
 }
 
