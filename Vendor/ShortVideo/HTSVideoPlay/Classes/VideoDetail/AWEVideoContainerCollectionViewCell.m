@@ -206,7 +206,8 @@
 - (void)playView:(AWEVideoPlayView *)view didPlayNextLoopWithModel:(TTShortVideoModel *)model
 {
     [self.overlayViewController.viewModel videoDidPlayOneLoop];
-
+    NSString *duration = [NSString stringWithFormat:@"%.0f", self.totalPlayTime * 1000];
+    [FHShortVideoTracerUtil videoOverWithModel:self.videoDetail eventIndex:self.selfIndex forStayTime:duration];
     if (self.videoDidPlayOneLoop) {
         self.videoDidPlayOneLoop();
     }
