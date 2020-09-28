@@ -343,16 +343,16 @@
 //        [[ToastManager manager] showToast:@"网络异常"];
 //        return;
 //    }
-    WeakSelf;
-    TSVShortVideoDetailExitManager *exitManager = [[TSVShortVideoDetailExitManager alloc] initWithUpdateBlock:^CGRect{
-        StrongSelf;
-        CGRect imageFrame = [self selectedSmallVideoFrame];
-        imageFrame.origin = CGPointZero;
-        return imageFrame;
-    } updateTargetViewBlock:^UIView *{
-        StrongSelf;
-        return [self currentSelectSmallVideoView];
-    }];
+//    WeakSelf;
+//    TSVShortVideoDetailExitManager *exitManager = [[TSVShortVideoDetailExitManager alloc] initWithUpdateBlock:^CGRect{
+//        StrongSelf;
+//        CGRect imageFrame = [self selectedSmallVideoFrame];
+//        imageFrame.origin = CGPointZero;
+//        return imageFrame;
+//    } updateTargetViewBlock:^UIView *{
+//        StrongSelf;
+//        return [self currentSelectSmallVideoView];
+//    }];
     NSMutableDictionary *info = [NSMutableDictionary dictionaryWithCapacity:2];
     if(cellModel){
         [info setValue:cellModel forKey:@"current_video"];
@@ -361,7 +361,7 @@
         [info setValue:otherVideos forKey:@"other_videos"];
     }
 
-    [info setValue:exitManager forKey:HTSVideoDetailExitManager];
+//    [info setValue:exitManager forKey:HTSVideoDetailExitManager];
     if (showComment) {
         [info setValue:@(1) forKey:AWEVideoShowComment];
     }
