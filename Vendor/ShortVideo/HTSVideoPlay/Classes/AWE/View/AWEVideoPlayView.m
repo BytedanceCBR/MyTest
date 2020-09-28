@@ -51,6 +51,7 @@
 #import "UIView+BTDAdditions.h"
 #import <TTVideoEngine/TTVideoEngine.h>
 #import "ToastManager.h"
+#import "TTVPlayerIdleController.h"
 
 static NSString * const VideoPlayTimeKey =  @"video_play_time";
 static NSString * const VideoStallTimeKey =  @"video_stall_time";
@@ -649,6 +650,7 @@ static NSString * const VideoPrepareTimeTechKey = @"prepare_time_tech";
     switch (playbackAction) {
         case IESVideoPlaybackActionStart:
         {
+            [[TTVPlayerIdleController sharedInstance] lockScreen:NO later:NO];
             self.videoDuration = [self.playerController videoDuration];
             
             self.backgroundView.hidden = YES;
@@ -664,6 +666,7 @@ static NSString * const VideoPrepareTimeTechKey = @"prepare_time_tech";
             break;
         case IESVideoPlaybackActionStop:
         {
+            [[TTVPlayerIdleController sharedInstance] lockScreen:YES later:NO];
             // 播放时长统计
             NSTimeInterval playDuration = [self.timingTracker endTimingForKey:VideoPlayTimeKey];
             if (playDuration != NSNotFound && [self.delegate respondsToSelector:@selector(playView:didStopPlayWithModel:duration:)]) {
@@ -696,6 +699,7 @@ static NSString * const VideoPrepareTimeTechKey = @"prepare_time_tech";
             break;
         case IESVideoPlaybackActionPause:
         {
+            [[TTVPlayerIdleController sharedInstance] lockScreen:YES later:NO];
             NSTimeInterval playDuration = [self.timingTracker pauseTimingForKey:VideoPlayTimeKey];
             if (playDuration != NSNotFound && [self.delegate respondsToSelector:@selector(playView:didPausePlayWithModel:duration:)]) {
                 [self.delegate playView:self didPausePlayWithModel:self.model duration:playDuration];
@@ -704,7 +708,7 @@ static NSString * const VideoPrepareTimeTechKey = @"prepare_time_tech";
             break;
         case IESVideoPlaybackActionResume:
         {
-        
+            [[TTVPlayerIdleController sharedInstance] lockScreen:NO later:NO];
             NSTimeInterval playDuration = [self.timingTracker resumeTimingForKey:VideoPlayTimeKey];
             if (playDuration != NSNotFound && [self.delegate respondsToSelector:@selector(playView:didResumePlayWithModel:duration:)]) {
                 [self.delegate playView:self didResumePlayWithModel:self.model duration:playDuration];
