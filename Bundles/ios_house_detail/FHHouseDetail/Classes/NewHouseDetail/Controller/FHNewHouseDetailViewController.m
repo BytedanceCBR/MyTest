@@ -984,6 +984,7 @@
         NSMutableDictionary *tracerDic = self.tracerDict.mutableCopy;
         tracerDic[@"element_type"] = elementType;
         [tracerDic removeObjectForKey:@"element_from"];
+        tracerDic[@"page_type"] = [self pageTypeString];
         [FHUserTracker writeEvent:@"element_show" params:tracerDic];
     }
 }

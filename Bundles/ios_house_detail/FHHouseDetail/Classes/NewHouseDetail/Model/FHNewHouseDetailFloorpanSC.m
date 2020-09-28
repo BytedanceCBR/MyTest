@@ -41,6 +41,7 @@
         [infoDict setValue:model.list forKey:@"court_id"];
         [infoDict addEntriesFromDictionary:[self subPageParams]];
         infoDict[@"house_type"] = @(FHHouseTypeNewHouse);
+        infoDict[@"enter_from"] = @"new_detail";
         TTRouteUserInfo *info = [[TTRouteUserInfo alloc] initWithInfo:infoDict];
         [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:@"sslocal://floor_pan_list"] userInfo:info];
     }
@@ -115,7 +116,7 @@
         if (itemModel.imprId) {
             [tracerDic setValue:itemModel.imprId forKey:@"impr_id"];
         }
-        [tracerDic removeObjectForKey:@"enter_from"];
+        //[tracerDic removeObjectForKey:@"enter_from"];
         [tracerDic removeObjectForKey:@"element_from"];
         [FHUserTracker writeEvent:@"house_show" params:tracerDic];
     }

@@ -592,7 +592,7 @@
     }
 }
 
-- (NSString *)elementTypeString:(FHHouseType)houseType {
+- (NSString *)elementType {
     return @"map";
 }
 @end

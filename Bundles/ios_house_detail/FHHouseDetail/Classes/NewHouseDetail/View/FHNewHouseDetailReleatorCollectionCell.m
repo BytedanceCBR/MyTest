@@ -198,6 +198,10 @@
     self.licenceIcon.hidden = !result;
 }
 
+- (NSString *)elementTypeString {
+    return @"new_detail_related";
+}
+
 @end
 
 //@implementation FHNewHouseDetailReleatorCellModel

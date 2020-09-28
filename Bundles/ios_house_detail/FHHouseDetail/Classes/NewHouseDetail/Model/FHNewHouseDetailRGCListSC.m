@@ -19,7 +19,7 @@
 #import "FHRealtorEvaluatingPhoneCallModel.h"
 #import "FHRealtorEvaluatingTracerHelper.h"
 
-@interface FHNewHouseDetailRGCListSC () <IGListSupplementaryViewSource>
+@interface FHNewHouseDetailRGCListSC () <IGListSupplementaryViewSource, IGListDisplayDelegate>
 
 @property (nonatomic, strong) FHUGCFeedDetailJumpManager *detailJumpManager;
 @property (nonatomic, strong) FHRealtorEvaluatingPhoneCallModel *realtorPhoneCallModel;
@@ -34,7 +34,7 @@
     if (self = [super init]) {
         //        self.minimumLineSpacing = 20;
         self.supplementaryViewSource = self;
-
+        self.displayDelegate = self;
         self.detailJumpManager = [[FHUGCFeedDetailJumpManager alloc] init];
         self.detailJumpManager.refer = 1;
         self.tracerHelper = [[FHRealtorEvaluatingTracerHelper alloc] init];
@@ -206,6 +206,8 @@
     return nil;
 }
 
+
+
 - (void)didSelectItemAtIndex:(NSInteger)index {
     FHNewHouseDetailRGCListSM *model = (FHNewHouseDetailRGCListSM *)self.sectionModel;
     FHFeedUGCCellModel *cellModel = model.items[index];
@@ -245,4 +247,55 @@
     }
     return CGSizeZero;
 }
+
+#pragma mark - IGListDisplayDelegate
+
+- (void)listAdapter:(IGListAdapter *)listAdapter willDisplaySectionController:(IGListSectionController *)sectionController {
+    
+}
+
+/**
+ Tells the delegate that the specified section controller is no longer being displayed.
+
+ @param listAdapter       The list adapter for the section controller.
+ @param sectionController The section controller that is no longer displayed.
+ */
+- (void)listAdapter:(IGListAdapter *)listAdapter didEndDisplayingSectionController:(IGListSectionController *)sectionController {
+    
+}
+
+/**
+ Tells the delegate that a cell in the specified list is about to be displayed.
+
+ @param listAdapter The list adapter in which the cell will display.
+ @param sectionController The section controller that is displaying the cell.
+ @param cell The cell about to be displayed.
+ @param index The index of the cell in the section.
+ */
+
+- (void)listAdapter:(IGListAdapter *)listAdapter willDisplaySectionController:(IGListSectionController *)sectionController cell:(UICollectionViewCell *)cell atIndex:(NSInteger)index {
+    FHNewHouseDetailRGCListSM *model = (FHNewHouseDetailRGCListSM *)self.sectionModel;
+    FHFeedUGCCellModel *cellModel = model.items[index];
+    NSString *tempKey = [NSString stringWithFormat:@"%@_%ld", NSStringFromClass([self class]), index];
+    if ([self.elementShowCaches valueForKey:tempKey]) {
+        return;
+    }
+    [self.elementShowCaches setValue:@(YES) forKey:tempKey];
+    
+}
+
+/**
+ Tells the delegate that a cell in the specified list is no longer being displayed.
+
+ @param listAdapter The list adapter in which the cell was displayed.
+ @param sectionController The section controller that is no longer displaying the cell.
+ @param cell The cell that is no longer displayed.
+ @param index The index of the cell in the section.
+ */
+- (void)listAdapter:(IGListAdapter *)listAdapter didEndDisplayingSectionController:(IGListSectionController *)sectionController
+               cell:(UICollectionViewCell *)cell
+            atIndex:(NSInteger)index {
+    
+}
+
 @end
