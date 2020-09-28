@@ -47,19 +47,7 @@
 
         [self.detailViewController.viewModel.contactViewModel onlineActionWithExtraDict:imExtra];
         
-        NSMutableDictionary *param = [NSMutableDictionary new];
-        
-        param[UT_PAGE_TYPE] = self.detailTracerDict[UT_PAGE_TYPE];
-        param[UT_ENTER_FROM] = self.detailTracerDict[UT_ENTER_FROM];
-        param[UT_ORIGIN_FROM] = self.detailTracerDict[UT_ORIGIN_FROM];
-        param[UT_ORIGIN_SEARCH_ID] = self.detailTracerDict[UT_ORIGIN_SEARCH_ID];
-        param[UT_LOG_PB] = self.detailTracerDict[UT_LOG_PB];
-        
-        param[UT_ELEMENT_FROM] = @"education_type";
-        
-        [param addEntriesFromDictionary:self.detailTracerDict];
-        param[@"click_position"] = @"education_type";
-        TRACK_EVENT(@"click_options", param);
+        [self.detailViewController.viewModel addClickOptionLog:@"education_type"];
     }
 }
 
