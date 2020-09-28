@@ -133,6 +133,15 @@
         if ([paramObj.allParams[@"source"] isKindOfClass:[NSString class]]) {
             self.source = paramObj.allParams[@"source"];
         }
+        
+        // 后续会构建基础埋点数据
+        // 取log_pb字段数据
+        id log_pb = self.tracerDict[@"log_pb"];
+        if ([log_pb isKindOfClass:[NSDictionary class]]) {
+            self.listLogPB = log_pb;
+            self.searchId = log_pb[@"search_id"];
+            self.imprId = log_pb[@"impr_id"];
+        }
 
         if (self.houseId.length < 1) {
             [[HMDTTMonitor defaultManager] hmdTrackService:@"detail_schema_error" metric:nil category:@{ @"status" : @(1) } extra:@{ @"openurl" : paramObj.sourceURL.absoluteString }];

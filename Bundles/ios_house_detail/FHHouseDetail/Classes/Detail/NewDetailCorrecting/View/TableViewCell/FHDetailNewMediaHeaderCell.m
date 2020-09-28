@@ -92,7 +92,9 @@
     if (!_videoVC) {
         _videoVC = [[FHVideoViewController alloc] init];
         _videoVC.view.frame = CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, [FHDetailNewMediaHeaderView cellHeight]);
-        _videoVC.tracerDic = [NSDictionary dictionary];
+        NSMutableDictionary *dict = [self tracerDic].mutableCopy;
+        dict[@"element_type"] = @"large_picture_preview";
+        _videoVC.tracerDic = dict.copy;
     }
     return _videoVC;
 }
@@ -144,9 +146,6 @@
     } else {
         pictureDetailViewController.topVC = self.baseViewModel.detailController;
     }
-
-    FHDetailNewMediaHeaderModel *model = (FHDetailNewMediaHeaderModel *)self.currentData;
-    
     
     pictureDetailViewController.dragToCloseDisabled = YES;
     pictureDetailViewController.startWithIndex = index;

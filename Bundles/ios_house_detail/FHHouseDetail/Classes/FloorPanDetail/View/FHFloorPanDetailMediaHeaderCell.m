@@ -25,7 +25,7 @@
 #import "FHFloorPanDetailMediaHeaderView.h"
 
 @interface FHFloorPanDetailMediaHeaderCell ()
-
+@property (nonatomic, strong) FHVideoViewController *videoVC;
 @property (nonatomic, strong) FHFloorPanDetailMediaHeaderView *headerView;
 @property (nonatomic, strong) FHFloorPanDetailMediaHeaderDataHelper *dataHelper;
 @property (nonatomic, strong) FHMultiMediaModel *model;
@@ -56,6 +56,7 @@
     [self.dataHelper setMediaHeaderModel:data];
     self.model.medias = self.dataHelper.headerViewData.mediaItemArray;
     [self.headerView updateMultiMediaModel:self.model];
+    self.headerView.baseViewModel = self.baseViewModel;
     //后面要变成全部图片个数+VR个数+视频个数
 
     [self.headerView updateTitleModel:((FHFloorPanDetailMediaHeaderModel *)data).titleDataModel];
@@ -82,6 +83,17 @@
         [self createUI];
     }
     return self;
+}
+
+- (FHVideoViewController *)videoVC {
+    if (!_videoVC) {
+        _videoVC = [[FHVideoViewController alloc] init];
+        _videoVC.view.frame = CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, [FHFloorPanDetailMediaHeaderView cellHeight]);
+        NSMutableDictionary *dict = [self tracerDic].mutableCopy;
+        dict[@"element_type"] = @"large_picture_preview";
+        _videoVC.tracerDic = dict.copy;
+    }
+    return _videoVC;
 }
 
 #pragma mark - UI
@@ -121,7 +133,7 @@
     //视频线索
     pictureDetailViewController.videoImageAssociateInfo = self.dataHelper.pictureDetailData.videoImageAssociateInfo;
     
-
+    pictureDetailViewController.videoVC = self.videoVC;
     pictureDetailViewController.houseType = self.baseViewModel.houseType;
     pictureDetailViewController.topVC = self.baseViewModel.detailController;
 

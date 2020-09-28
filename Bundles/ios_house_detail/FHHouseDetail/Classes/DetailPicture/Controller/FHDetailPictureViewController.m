@@ -597,6 +597,7 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
     if ([self isVideoImageView:self.currentIndex] && !self.disableAutoPlayVideo) {
         // 视频
         FHShowVideoView *tempVedioView = (FHShowVideoView *)[self showImageViewAtIndex:self.currentIndex];
+        tempVedioView.videoVC.hasLeftCurrentVC = NO;
         if (tempVedioView.videoVC.playbackState != TTVPlaybackState_Playing) {
             [tempVedioView.videoVC play];
         }
@@ -607,20 +608,25 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
     }
 }
 
+- (void)viewWillDisappear:(BOOL)animated {
+    [super viewWillDisappear:animated];
+    if ([self isVideoImageView:self.currentIndex]/*&&!self.startDismissSelf */&& !self.disableAutoPlayVideo) {
+        // 视频
+        FHShowVideoView *tempVedioView = (FHShowVideoView *)[self showImageViewAtIndex:self.currentIndex];
+        tempVedioView.videoVC.hasLeftCurrentVC = YES;
+        if (tempVedioView.videoVC.playbackState == TTVPlaybackState_Playing) {
+            [tempVedioView.videoVC pause];
+        }
+    }
+    self.disableAutoPlayVideo = NO;
+}
+
 - (void)viewDidDisappear:(BOOL)animated {
     [super viewDidDisappear:animated];
     UINavigationController *navi = self.topVC.navigationController;
     if (navi && [navi isKindOfClass:[TTNavigationController class]]) {
         [(TTNavigationController *)navi panRecognizer].enabled = YES;
     }
-    if ([self isVideoImageView:self.currentIndex]/*&&!self.startDismissSelf */&& !self.disableAutoPlayVideo) {
-        // 视频
-        FHShowVideoView *tempVedioView = (FHShowVideoView *)[self showImageViewAtIndex:self.currentIndex];
-        if (tempVedioView.videoVC.playbackState == TTVPlaybackState_Playing) {
-            [tempVedioView.videoVC pause];
-        }
-    }
-    self.disableAutoPlayVideo = NO;
 }
 
 - (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration
@@ -1197,6 +1203,9 @@ static BOOL kFHStaticPhotoBrowserAtTop = NO;
     // 视频
     if ([self isVideoImageView:self.currentIndex]) {
         FHShowVideoView * tempVedioView = (FHShowVideoView *)[self showImageViewAtIndex:self.currentIndex];
+        if (tempVedioView.videoVC.hasLeftCurrentVC) {
+            return;
+        }
         [tempVedioView setNeedsLayout];
         [tempVedioView.videoVC play];
         if (tempVedioView.videoVC.view.alpha < 1.0) {

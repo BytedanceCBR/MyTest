@@ -45,6 +45,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property(nonatomic, strong) NSDictionary *tracerDic;
 
+@property (nonatomic) BOOL hasLeftCurrentVC;
+
 - (void)updateData:(FHVideoModel *)model;
 
 - (void)play;

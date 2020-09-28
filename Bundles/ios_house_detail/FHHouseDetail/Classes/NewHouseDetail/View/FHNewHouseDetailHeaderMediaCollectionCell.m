@@ -71,7 +71,9 @@
     if (!_videoVC) {
         _videoVC = [[FHVideoViewController alloc] init];
         _videoVC.view.frame = CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, [FHDetailNewMediaHeaderView cellHeight]);
-        _videoVC.tracerDic = [self tracerDic];
+        NSMutableDictionary *dict = [self tracerDic].mutableCopy;
+        dict[@"element_type"] = @"large_picture_preview";
+        _videoVC.tracerDic = dict.copy;
     }
     return _videoVC;
 }

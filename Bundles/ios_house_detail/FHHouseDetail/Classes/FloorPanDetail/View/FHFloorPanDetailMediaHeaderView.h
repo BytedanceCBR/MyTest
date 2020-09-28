@@ -10,10 +10,11 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @interface FHFloorPanDetailMediaHeaderView : UIView
-
+@property (nonatomic, weak) FHHouseDetailBaseViewModel *baseViewModel;
 - (void)updateMultiMediaModel :(FHMultiMediaModel *)model;
 - (void)updateTitleModel: (FHDetailHouseTitleModel *)model;
 - (void)scrollToItemAtIndex:(NSInteger)index;
++ (CGFloat)cellHeight;
 //点击了某个Cell
 @property (nonatomic, copy) FHDetailNewMediaHeaderViewEventByIndex didSelectiItemAtIndex;
 //某个Cell展示时

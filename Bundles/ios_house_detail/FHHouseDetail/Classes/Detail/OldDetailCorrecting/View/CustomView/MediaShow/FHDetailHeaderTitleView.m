@@ -515,7 +515,7 @@
 
 - (void)priceAskViewAction:(id)sender {
     if (self.model.priceConsult.openurl.length && self.baseViewModel.contactViewModel) {
-        NSMutableDictionary *extraDic = self.baseViewModel.detailTracerDic;
+        NSMutableDictionary *extraDic = [self.baseViewModel.detailTracerDic mutableCopy];
         extraDic[@"click_position"] = self.model.priceConsult.text?:@"be_null";
         extraDic[@"im_open_url"] = self.model.priceConsult.openurl;
         if (self.model.priceConsult.associateInfo) {
