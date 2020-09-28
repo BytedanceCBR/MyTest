@@ -703,16 +703,11 @@ const static CGFloat kAWEVideoContainerSpacing = 2;
         return;
     }
 
-    NSString *eventName = self.firstPageShown ? @"video_over_draw" : @"video_over";
     NSTimeInterval totalPlayTime = self.currentVideoCell.totalPlayTime;
-    NSTimeInterval videoDuration = [self.currentVideoCell.videoPlayView videoDuration];
     
-    if (videoDuration <= 0){
+    if (totalPlayTime <= 0  ){
         return;
     }
-    
-    NSString *percent = [NSString stringWithFormat:@"%.0f", MIN(totalPlayTime / videoDuration * 100, 100)];
-    NSString *playCount = [NSString stringWithFormat:@"%.2f", totalPlayTime / videoDuration];
     NSString *duration = [NSString stringWithFormat:@"%.0f", totalPlayTime * 1000];
 
     [FHShortVideoTracerUtil videoOverWithModel:self.currentVideoCell.videoDetail eventIndex:self.initialItemIndex forStayTime:duration];
