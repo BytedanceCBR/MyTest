@@ -134,7 +134,8 @@
 
 - (void)readyToPlay {
     if(self.isFirstDisplay){
-        [self.view insertSubview:self.player.view belowSubview:self.coverView];
+//        [self.view insertSubview:self.player.view belowSubview:self.coverView];
+        self.coverView.playerView = self.player.view;
         [self updateVideo];
     }
 }
@@ -185,7 +186,7 @@
     if (self.playState == TTVPlaybackState_Stopped) {
         [self changeVideoFrame];
     }
-    self.player.view.frame = self.coverView.frame;
+//    self.player.view.frame = self.coverView.frame;
 }
 
 // 只是改变 所播放视频的frame：videoFrame 值，布局并不改变
@@ -249,11 +250,11 @@
 
 - (void)showStartBtnWhenPause {
     if(self.playbackState == TTVPlaybackState_Paused && self.model.isShowStartBtnWhenPause && !self.isShowingNetFlow){
-        [self showCoverViewStartBtn];
+//        [self showCoverViewStartBtn];
     }
     
     if(self.playbackState == TTVPlaybackState_Playing && self.model.isShowStartBtnWhenPause){
-        [self hideCoverViewStartBtn];
+//        [self hideCoverViewStartBtn];
     }
 }
 
@@ -280,34 +281,31 @@
 }
 
 - (void)hideCoverView {
-    if(self.coverView.alpha == 1){
+    if(self.coverView.coverView.alpha == 1){
         [UIView animateWithDuration:0.1 delay:0 options:UIViewAnimationOptionCurveEaseInOut animations:^{
-            self.coverView.alpha = 0;
+            self.coverView.coverView.alpha = 0;
         } completion:^(BOOL finished) {
-            self.coverView.alpha = 0;
-            self.coverView.hidden = YES;
+            self.coverView.coverView.hidden = YES;
         }];
     }
 }
 
 - (void)showCoverView {
-    self.coverView.hidden = NO;
+    self.coverView.coverView.hidden = NO;
     self.coverView.startBtn.hidden = NO;
     [UIView animateWithDuration:0.1 delay:0 options:UIViewAnimationOptionCurveEaseInOut animations:^{
-        self.coverView.alpha = 1;
+        self.coverView.coverView.alpha = 1;
     } completion:^(BOOL finished) {
-        self.coverView.alpha = 1;
-        [self.view bringSubviewToFront:self.coverView];
     }];
 }
 
-- (void)showCoverViewStartBtn {
-    self.coverView.alpha = 1;
-}
+//- (void)showCoverViewStartBtn {
+//    self.coverView.alpha = 1;
+//}
 
-- (void)hideCoverViewStartBtn {
-    self.coverView.alpha = 0;
-}
+//- (void)hideCoverViewStartBtn {
+//    self.coverView.alpha = 0;
+//}
 
 #pragma mark - FHVideoCoverViewDelegate
 
@@ -320,7 +318,7 @@
 // control layout的代理
 - (void)viewDidLoad:(TTVPlayer *)player state:(TTVPlayerState *)state {
     ///传入旋转 view
-    TTVFullScreenPart * part = (TTVFullScreenPart *)[self.player partForKey:TTVPlayerPartKey_Full];
+    TTVFullScreenPart *part = (TTVFullScreenPart *)[self.player partForKey:TTVPlayerPartKey_Full];
     part.customAnimator.rotateView = self.view;
 }
 
@@ -333,6 +331,10 @@
     }
     
     [self hideCoverView];
+    
+    if (self.hasLeftCurrentVC) {
+        [self pause];
+    }
 }
 
 - (void)playerViewDidLayoutSubviews:(TTVPlayer *)player state:(TTVPlayerState *)state {

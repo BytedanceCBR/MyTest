@@ -29,10 +29,12 @@
 
 - (void)initViews {
     self.coverView = [[UIImageView alloc] initWithFrame:self.bounds];
-    _coverView.contentMode = UIViewContentModeScaleAspectFill;
-    _coverView.clipsToBounds = YES;
-    _coverView.autoresizingMask = UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight;
-    [self addSubview:_coverView];
+    self.coverView.contentMode = UIViewContentModeScaleAspectFill;
+    self.coverView.clipsToBounds = YES;
+    self.coverView.autoresizingMask = UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight;
+    self.coverView.userInteractionEnabled = YES;
+    [self addSubview:self.coverView];
+    
     _maskView = [[UIView alloc] init];
     _maskView.backgroundColor = [UIColor colorWithWhite:0 alpha:0.1];
     [self.coverView addSubview:self.maskView];
@@ -44,7 +46,7 @@
     [_startBtn setImage:[UIImage imageNamed:@"detail_video_start"] forState:UIControlStateNormal];
     [_startBtn setImage:[UIImage imageNamed:@"detail_video_start"] forState:UIControlStateHighlighted];
     [_startBtn addTarget:self action:@selector(playVideo) forControlEvents:UIControlEventTouchUpInside];
-    [self addSubview:_startBtn];
+    [self.coverView addSubview:_startBtn];
 }
 
 - (void)initConstaints {
@@ -79,6 +81,20 @@
     [_loadingView removeFromSuperview];
     [self addSubview:loadingView];
 }
+
+- (void)layoutSubviews {
+    [super layoutSubviews];
+    self.playerView.frame = self.bounds;
+}
+
+- (void)setPlayerView:(UIView *)playerView {
+    if(!_playerView){
+        _playerView = playerView;
+        _playerView.frame = self.bounds;
+        [self insertSubview:_playerView belowSubview:_coverView];
+    }
+}
+
 
 - (void)playVideo {
     if(self.delegate && [self.delegate respondsToSelector:@selector(playVideo)]){
