@@ -56,6 +56,7 @@
     [self.dataHelper setMediaHeaderModel:data];
     self.model.medias = self.dataHelper.headerViewData.mediaItemArray;
     [self.headerView updateMultiMediaModel:self.model];
+    self.headerView.baseViewModel = self.baseViewModel;
     //后面要变成全部图片个数+VR个数+视频个数
 
     [self.headerView updateTitleModel:((FHFloorPanDetailMediaHeaderModel *)data).titleDataModel];

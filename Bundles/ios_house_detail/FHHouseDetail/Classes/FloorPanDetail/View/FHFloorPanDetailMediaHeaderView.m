@@ -206,6 +206,11 @@
     [self layoutIfNeeded];
 }
 
+- (void)setBaseViewModel:(FHHouseDetailBaseViewModel *)baseViewModel {
+    _baseViewModel = baseViewModel;
+    self.titleView.baseViewModel = baseViewModel;
+}
+
 - (void)selectItem:(NSInteger)index {
     if (index < 0 || index >= self.itemIndexArray.count) {
         return;
