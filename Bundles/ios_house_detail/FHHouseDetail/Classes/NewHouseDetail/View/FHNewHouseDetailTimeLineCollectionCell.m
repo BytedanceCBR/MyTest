@@ -225,10 +225,10 @@
     self.titleLabel = [[UILabel alloc] init];
     self.titleLabel.font = [UIFont themeFontMedium:16];
     self.titleLabel.textColor = [UIColor themeGray1];
-    self.titleLabel.textAlignment = NSTextAlignmentLeft;
+    self.titleLabel.textAlignment = NSTextAlignmentCenter;
     [self.containerView addSubview:self.titleLabel];
     [self.titleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.centerX.mas_equalTo(0);
+        make.left.right.mas_equalTo(0);
         make.top.mas_equalTo(6);
         make.height.mas_equalTo(22);
     }];
@@ -236,10 +236,10 @@
     self.timeLabel = [[UILabel alloc] init];
     self.timeLabel.font = [UIFont themeFontRegular:12];
     self.timeLabel.textColor = [UIColor themeGray3];
-    self.timeLabel.textAlignment = NSTextAlignmentLeft;
+    self.timeLabel.textAlignment = NSTextAlignmentCenter;
     [self.containerView addSubview:self.timeLabel];
     [self.timeLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.centerX.mas_equalTo(0);
+        make.left.right.mas_equalTo(0);
         make.top.mas_equalTo(self.titleLabel.mas_bottom).offset(1);
         make.height.mas_equalTo(17);
     }];

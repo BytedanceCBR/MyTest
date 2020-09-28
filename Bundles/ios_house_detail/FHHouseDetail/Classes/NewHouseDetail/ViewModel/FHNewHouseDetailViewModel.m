@@ -154,14 +154,26 @@
             timeLineSM.sectionType = FHNewHouseDetailSectionTypeTimeline;
             [sectionModels addObject:timeLineSM];
         }
-        
+    
         // 小区评测
         if (model.data.strategy && model.data.strategy.articleList.count > 0) {
             FHNewHouseDetailAssessSM *assessSM = [[FHNewHouseDetailAssessSM alloc] initWithDetailModel:self.detailData];
             assessSM.sectionType = FHNewHouseDetailSectionTypeAssess;
+            NSMutableDictionary *paramsDict = @{}.mutableCopy;
+            if (self.detailTracerDic) {
+                [paramsDict addEntriesFromDictionary:self.detailTracerDic];
+            }
+            paramsDict[@"page_type"] = [self pageTypeString];
+            paramsDict[@"from_gid"] = self.houseId;
+            paramsDict[@"element_type"] = @"guide";
+            NSString *searchId = self.listLogPB[@"search_id"];
+            NSString *imprId = self.listLogPB[@"impr_id"];
+            paramsDict[@"search_id"] = searchId.length > 0 ? searchId : @"be_null";
+            paramsDict[@"impr_id"] = imprId.length > 0 ? imprId : @"be_null";
+            [assessSM updateDetailTracer:paramsDict.copy];
             [sectionModels addObject:assessSM];
         }
-        
+    
     //    用户房源评价
         if (model.data.realtorContent.content.data.count > 0) {
             FHNewHouseDetailRGCListSM *RGCListModel = [[FHNewHouseDetailRGCListSM alloc] initWithDetailModel:self.detailData];
@@ -180,7 +192,7 @@
             [RGCListModel updateModel:self.detailData];
             [sectionModels addObject:RGCListModel];
         }
-        
+    
         if (model.data.surroundingInfo || (model.data.coreInfo.gaodeLat && model.data.coreInfo.gaodeLng)) {
             FHNewHouseDetailSurroundingSM *surroundingSM = [[FHNewHouseDetailSurroundingSM alloc] initWithDetailModel:self.detailData];
             surroundingSM.sectionType = FHNewHouseDetailSectionTypeSurrounding;
@@ -210,6 +222,7 @@
                 [weakSelf processDetailRelatedData];
             }];
         }
+
     });
     
 }

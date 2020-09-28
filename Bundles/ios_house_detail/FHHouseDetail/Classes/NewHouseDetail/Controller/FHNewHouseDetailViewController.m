@@ -44,6 +44,8 @@
 #import "FHNewHouseDetailDisclaimerSC.h"
 #import "FHDetailPictureTitleView.h"
 #import <FHHouseBase/FHEventShowProtocol.h>
+#import <FHHouseBase/NSObject+FHOptimize.h>
+
 
 @interface FHNewHouseDetailViewController () <UIGestureRecognizerDelegate, IGListAdapterDataSource, UICollectionViewDelegate, UIScrollViewDelegate>
 @property (nonatomic, assign) FHHouseType houseType; // 房源类型
@@ -184,7 +186,9 @@
     [self updateStatusBar:self.collectionView.contentOffset];
     [self refreshContentOffset:self.collectionView.contentOffset];
     [self.view endEditing:YES];
-    [self clickTabTrackWithEnterType:@"default" sectionType:FHNewHouseDetailSectionTypeBaseInfo];
+    [self executeOnce:^{
+        [self clickTabTrackWithEnterType:@"default" sectionType:FHNewHouseDetailSectionTypeBaseInfo];
+    } token:FHExecuteOnceUniqueTokenForCurrentContext];
     //    [self.viewModel vc_viewDidAppear:animated];
 }
 
@@ -1001,22 +1005,22 @@
 - (NSString *)getTabNameBySectionType:(FHNewHouseDetailSectionType)sectionType {
     switch (sectionType) {
         case FHNewHouseDetailSectionTypeBaseInfo:
-            return @"basic_info";
+            return @"基础信息";
         case FHNewHouseDetailSectionTypeFloorpan:
-            return @"house_model";
+            return @"户型";
         case FHNewHouseDetailSectionTypeSales:
         case FHNewHouseDetailSectionTypeAgent:
-            return @"discounts";
+            return @"优惠";
         case FHNewHouseDetailSectionTypeTimeline:
         case FHNewHouseDetailSectionTypeAssess:
         case FHNewHouseDetailSectionTypeRGC:
-            return @"dynamic";
+            return @"动态";
         case FHNewHouseDetailSectionTypeSurrounding:
-            return @"related";
+            return @"周边";
         case FHNewHouseDetailSectionTypeBuildings:
-            return @"building";
+            return @"楼栋";
         case FHNewHouseDetailSectionTypeRecommend:
-            return @"recommend";
+            return @"推荐";
         default:
             return @"";
     }
@@ -1077,10 +1081,6 @@
         }
         NSUInteger selectIndex = [self.segmentTitleView.titleNames indexOfObject:title];
         if (selectIndex < self.segmentTitleView.titleNames.count) {
-            if (selectIndex != self.segmentTitleView.selectIndex) {
-                FHNewHouseDetailSectionModel *model = self.viewModel.sectionModels[indexPath.section];
-                [self clickTabTrackWithEnterType:@"slide" sectionType:model.sectionType];
-            }
             if (self.segmentTitleView) {
                 self.segmentTitleView.selectIndex = selectIndex;
             }
