@@ -108,12 +108,7 @@
     }
 }
 
-- (NSString *)elementTypeString:(FHHouseType)houseType
-{
-    return @"";
-}
-
-- (NSArray *)elementTypeStringArray:(FHHouseType)houseType
+- (NSArray *)elementTypes
 {
     return @[@"price_notice",@"openning_notice"];
 }

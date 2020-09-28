@@ -183,6 +183,11 @@
     return 0;
 }
 
+- (NSString *)elementType
+{
+    return @"house_history";
+}
+
 @end
 
 @interface FHNewHouseDetailTimeLineItemCollectionCell()

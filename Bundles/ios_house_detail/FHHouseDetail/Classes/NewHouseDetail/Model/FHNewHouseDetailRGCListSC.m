@@ -24,6 +24,7 @@
 @property (nonatomic, strong) FHUGCFeedDetailJumpManager *detailJumpManager;
 @property (nonatomic, strong) FHRealtorEvaluatingPhoneCallModel *realtorPhoneCallModel;
 @property (nonatomic, strong) FHRealtorEvaluatingTracerHelper *tracerHelper;
+@property (nonatomic, assign) BOOL canElementShow;
 
 @end
 
@@ -38,6 +39,7 @@
         self.detailJumpManager = [[FHUGCFeedDetailJumpManager alloc] init];
         self.detailJumpManager.refer = 1;
         self.tracerHelper = [[FHRealtorEvaluatingTracerHelper alloc] init];
+        _canElementShow = YES;
     }
     return self;
 }
@@ -289,6 +291,15 @@
     [extraDic setValue:cellModel.groupId forKey:@"group_id"];
     [extraDic setValue:@"realtor_evaluate" forKey:@"element_type"];
     [self.tracerHelper trackFeedClientShow:cellModel withExtraDic:extraDic];
+    
+    if (self.canElementShow) {
+        self.canElementShow = NO;
+        NSMutableDictionary *tracerDic = self.detailTracerDict.mutableCopy;
+        tracerDic[@"element_type"] = @"realtor_evaluate";
+        [tracerDic removeObjectForKey:@"element_from"];
+        tracerDic[@"page_type"] = @"new_detail";
+        [FHUserTracker writeEvent:@"element_show" params:tracerDic];
+    }
 }
 
 /**
