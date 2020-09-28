@@ -915,8 +915,7 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
            CLLocationCoordinate2D center = _mapView.centerCoordinate;
             [_lastNewHouseBubble updateResizeLevel:_mapView.zoomLevel centerLatitude:center.latitude centerLongitude:center.longitude];
            _lastRequestCenter = _mapView.centerCoordinate;
-    }
-    else{
+    }else{
         if (self.currentHouseType == FHHouseTypeNewHouse) {
             _lastRequestCenter = CLLocationCoordinate2DMake(_lastNewHouseBubble.centerLatitude, _lastNewHouseBubble.centerLongitude);
          }else{
@@ -1412,7 +1411,7 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
             self.lastNewHouseBubble = [FHMapSearchBubbleModel bubbleFromUrl:model.mapFindHouseOpenUrl];
         }
         
-        if (self.lastBubble && self.currentHouseType == FHHouseTypeSecondHandHouse) {
+        if (self.lastBubble && (self.currentHouseType == FHHouseTypeSecondHandHouse)) {
             zoomLevel = self.lastBubble.resizeLevel;
             if (zoomLevel < 1 || zoomLevel > 20) {
                 if (houseAnnotation.searchType == FHMapSearchTypeSegment) {
@@ -1482,7 +1481,7 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
             self.currentSelectNid = houseAnnotation.houseData.nid;
         }
         
-        if ([annotationView isKindOfClass:[FHDistrictAreaAnnotationView class]] && self.showMode != FHMapSearchShowModeSubway) {
+        if ([annotationView isKindOfClass:[FHDistrictAreaAnnotationView class]] && self.showMode != FHMapSearchShowModeSubway && self.currentHouseType != FHHouseTypeRentHouse) {
             FHDistrictAreaAnnotationView *annotationViewArea = (FHDistrictAreaAnnotationView *)annotationView;
             UIImage *bgImg = SYS_IMG(@"mapsearch_area_bg_red");
             annotationViewArea.layer.contents = (id)[bgImg CGImage];
@@ -1490,7 +1489,6 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
         
         UIImage *bgImg = SYS_IMG(@"mapsearch_area_bg");
         self.houseAnnotationSlectNidView.layer.contents = (id)[bgImg CGImage];
-        
         
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
             //待地图缩放完之后
@@ -1660,7 +1658,7 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
             //设置中心点偏移，使得标注底部中间点成为经纬度对应点
             annotationView.centerOffset = CGPointMake(0, 0);
             annotationView.canShowCallout = NO;
-            if([houseAnnotation.houseData.nid isEqualToString:self.currentSelectNid] && self.showMode != FHMapSearchShowModeSubway){
+            if([houseAnnotation.houseData.nid isEqualToString:self.currentSelectNid] && self.showMode != FHMapSearchShowModeSubway && self.currentHouseType != FHHouseTypeRentHouse){
                 annotationView.frame = CGRectMake(0, 0, annotationView.frame.size.width, annotationView.frame.size.height);
                 UIImage *bgImg = SYS_IMG(@"mapsearch_area_bg_red");
                 annotationView.layer.contents = (id)[bgImg CGImage];
