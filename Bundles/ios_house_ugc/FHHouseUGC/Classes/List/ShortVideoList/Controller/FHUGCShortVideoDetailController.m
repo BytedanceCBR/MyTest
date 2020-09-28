@@ -1822,9 +1822,6 @@ static const CGFloat kFloatingViewOriginY = 230;
 
 - (void)playView:(AWEVideoPlayView *)view didClickInputWithModel:(FHFeedUGCCellModel *)model
 {
-   //point:在详情页点击写评论
-    [FHShortVideoTracerUtil clickCommentSubmitWithModel:self.model eventIndex:self.dataFetchManager.currentIndex];
-
     if ([self alertIfNotValid]) {
         return;
     }

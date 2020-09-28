@@ -614,21 +614,21 @@ const static CGFloat kAWEVideoContainerSpacing = 2;
     [AWEVideoDetailFirstUsePromptViewController showPromotionIfNeededWithDirection:direction
                                                                              category:category
                                                                      inViewController:self.parentViewController];
-//    if ([AWEVideoDetailFirstUsePromptViewController needPromotionForDirection:direction category:category]) {
-//        if (self.dataFetchManager.numberOfShortVideoItems >2) {
-//            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-//                [UIView animateKeyframesWithDuration:0.5 delay:0 options:UIViewAnimationOptionCurveEaseInOut animations:^{
-//                    [self.collectionView setContentOffset:CGPointMake(0, 80)];
-//                } completion:^(BOOL finished) {
-//                    [UIView animateKeyframesWithDuration:0.5 delay:0 options:UIViewAnimationOptionCurveEaseInOut animations:^{
-//                        [self.collectionView setContentOffset:CGPointMake(0, 0)];
-//                    } completion:^(BOOL finished) {
-//                    }];
-//                }];
-//            });
-//
-//        }
-//    }
+    if ([AWEVideoDetailFirstUsePromptViewController needPromotionForDirection:direction category:category]) {
+        if (self.dataFetchManager.numberOfShortVideoItems >2) {
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                [UIView animateKeyframesWithDuration:0.5 delay:0 options:UIViewAnimationOptionCurveEaseInOut animations:^{
+                    [self.collectionView setContentOffset:CGPointMake(0, 80)];
+                } completion:^(BOOL finished) {
+                    [UIView animateKeyframesWithDuration:0.5 delay:0 options:UIViewAnimationOptionCurveEaseInOut animations:^{
+                        [self.collectionView setContentOffset:CGPointMake(0, 0)];
+                    } completion:^(BOOL finished) {
+                    }];
+                }];
+            });
+
+        }
+    }
 }
 
 - (void)viewWillDisappear:(BOOL)animated
