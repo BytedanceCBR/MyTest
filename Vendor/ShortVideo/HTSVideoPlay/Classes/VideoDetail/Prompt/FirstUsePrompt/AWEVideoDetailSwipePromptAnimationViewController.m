@@ -44,10 +44,6 @@ static CGFloat alphaThatTransparentButTouchable = 0.02;
         make.size.mas_equalTo(CGSizeMake(215, 335));
     }];
     [self.loadingView play];
-    __weak typeof(self)weakSelf = self;
-    self.loadingView.completionBlock = ^(BOOL animationFinished) {
-        [self dismiss];
-    };
 //    self.view.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0.5];
 //
 //    self.containerView = [[UIView alloc] init];
@@ -101,6 +97,10 @@ static CGFloat alphaThatTransparentButTouchable = 0.02;
         _loadingView = [LOTAnimationView animationWithFilePath:path];
         _loadingView.loopAnimation = NO;
         [self.view addSubview:_loadingView];
+        __weak typeof(self)weakSelf = self;
+        [_loadingView playWithCompletion:^(BOOL animationFinished) {
+            [weakSelf dismiss];
+        }];
     }
     return _loadingView;
 }

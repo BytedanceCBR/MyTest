@@ -66,15 +66,6 @@
     if (!self.videoDetail) {
         return;
     }
-    
-    [AWEVideoDetailTracker trackEvent:@"rt_like"
-                                model:self.videoDetail
-                      commonParameter:self.commonTrackingParameter
-                       extraParameter:@{
-                                        @"user_id": self.videoDetail.user.userId,
-                                        @"position": @"double_like",
-                                        }];
-
     if ([self.overlayViewController isKindOfClass:[AWEVideoDetailControlOverlayViewController class]]) {
         if (![TTAccountManager isLogin]) {
             NSMutableDictionary *params = [NSMutableDictionary dictionary];

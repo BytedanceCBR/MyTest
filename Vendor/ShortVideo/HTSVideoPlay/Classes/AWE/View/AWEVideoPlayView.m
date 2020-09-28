@@ -466,8 +466,9 @@ static NSString * const VideoPrepareTimeTechKey = @"prepare_time_tech";
     if (@available(iOS 11.0, *)) {
         bottomInset = [UIApplication sharedApplication].keyWindow.safeAreaInsets.bottom;
     }
-    _miniSlider = [[ExploreMovieMiniSliderView alloc] initWithFrame:CGRectMake(0, CGRectGetMaxY(self.frame)-2,
+    _miniSlider = [[ExploreMovieMiniSliderView alloc] initWithFrame:CGRectMake(0, CGRectGetMaxY(self.frame)-2 -50 - bottomInset,
     CGRectGetWidth(self.frame), 2)];
+    _miniSlider.watchBacColor = [UIColor whiteColor];
     _miniSlider.autoresizingMask = UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleTopMargin;
     _miniSlider.userInteractionEnabled = NO;
     [self addSubview:_miniSlider];

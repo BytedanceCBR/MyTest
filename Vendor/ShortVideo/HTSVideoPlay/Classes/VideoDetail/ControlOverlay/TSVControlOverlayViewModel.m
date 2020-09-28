@@ -258,6 +258,12 @@ NSString *const TSVLastShareActivityName = @"TSVLastShareActivityName";
     [FHShortVideoTracerUtil clickshareBtn:self.model];
 }
 
+- (void)clickWriteCommentButton
+{
+    if (self.writeCommentButtonDidClick) {
+        self.writeCommentButtonDidClick();
+    }
+}
 
 - (void)clickActivityTag
 {

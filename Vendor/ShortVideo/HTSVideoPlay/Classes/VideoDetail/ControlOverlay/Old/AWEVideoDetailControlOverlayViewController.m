@@ -121,6 +121,9 @@ static const CGFloat kCheckChallengeButtonLeftPadding = 28;
 @property (nonatomic, strong) NSLock *diggLock;     // Seems overkill to me, a boolean will do the trick
 @property (nonatomic, assign) BOOL challengeTagHasShowed;
 
+@property (nonatomic, strong) UIView *operationView;
+@property (nonatomic, strong) UIButton *inputButton;
+
 @end
 
 @implementation AWEVideoDetailControlOverlayViewController
@@ -352,6 +355,12 @@ static const CGFloat kCheckChallengeButtonLeftPadding = 28;
     _rightInfoView = [[UIView alloc]init];
      [self.view addSubview:_rightInfoView];
 
+    _operationView = [[UIView alloc] init];
+    [self.view addSubview:_operationView];
+
+    _inputButton = [[TSVWriteCommentButton alloc] init];
+    [_inputButton addTarget:self action:@selector(_onInputButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
+    [_operationView addSubview:_inputButton];
 
 
     _commentButton = [[TSVIconLabelButton alloc] initWithImage:@"shortvideo_comment" label:nil];
@@ -427,9 +436,24 @@ static const CGFloat kCheckChallengeButtonLeftPadding = 28;
 {
     
     CGFloat avatarSize = 40;
+    
+    CGFloat bottomInset = 0;
+    if (@available(iOS 11.0, *)) {
+         bottomInset = [UIApplication sharedApplication].keyWindow.safeAreaInsets.bottom;
+    }
+    
+    [_operationView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.right.equalTo(self.view);
+        make.bottom.equalTo(self.view);
+        make.height.mas_offset(50+bottomInset);
+    }];
+    [_inputButton mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.edges.equalTo(self.operationView);
+    }];
+    
     [_rightInfoView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.right.equalTo(self.view).offset(-10);
-        make.bottom.equalTo(self.view).offset(-60);
+        make.bottom.equalTo(self.operationView.mas_top).offset(-10);
         make.width.mas_offset(40);
     }];
     
@@ -508,7 +532,7 @@ static const CGFloat kCheckChallengeButtonLeftPadding = 28;
         [self.titleLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
             make.left.equalTo(self.view).offset(15);
             make.right.equalTo(self.rightInfoView.mas_left).offset(-15);
-            make.bottom.equalTo(self.view).offset(-20);
+            make.bottom.equalTo(self.operationView.mas_top).offset(-20);
         }];
 //    }
     
@@ -761,6 +785,15 @@ static const CGFloat kCheckChallengeButtonLeftPadding = 28;
         } else {
             [self cancelDigg];
         }
+}
+
+- (void)_onInputButtonClicked:(UIButton *)sender
+{
+    if (!self.model) {
+        return;
+    }
+    
+    [self.viewModel clickWriteCommentButton];
 }
 
 - (void)_showPlusOneDiggAnimation

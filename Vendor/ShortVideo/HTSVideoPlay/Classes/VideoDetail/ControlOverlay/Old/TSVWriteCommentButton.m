@@ -7,6 +7,7 @@
 
 #import "TSVWriteCommentButton.h"
 #import "HTSVideoPlayColor.h"
+#import "UIColor+Theme.h"
 
 @interface TSVWriteCommentButton ()
 
@@ -22,11 +23,11 @@
     if (self = [super initWithFrame:frame]) {
 //        self.backgroundColor = [[UIColor whiteColor] colorWithAlphaComponent:0.1f];
 //        self.layer.cornerRadius = 16.;
-        self.backgroundColor = [UIColor blackColor];
+        self.backgroundColor = [UIColor clearColor];
         self.label = ({
             UILabel *label = [[UILabel alloc] init];
             label.font = [UIFont systemFontOfSize:14.0];
-            label.textColor = [UIColor grayColor];
+            label.textColor = [UIColor colorWithHexStr:@"#ffffff"];
             label.text = @"写评论...";
             label;
         });

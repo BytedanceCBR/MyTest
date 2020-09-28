@@ -243,8 +243,6 @@ typedef NS_ENUM(NSInteger, TSVDetailCommentViewStatus) {
 
 @property (nonatomic, strong) UIView *topBarView;
 @property (nonatomic, strong) UIButton *closeButton;
-@property (nonatomic, strong) UIView *operationView;
-@property (nonatomic, strong) UIButton *inputButton;
 @end
 
 static const CGFloat kFloatingViewOriginY = 230;
@@ -421,10 +419,8 @@ static const CGFloat kFloatingViewOriginY = 230;
 
     self.ttStatusBarStyle = UIStatusBarStyleLightContent;
         CGFloat topInset = 0;
-    CGFloat bottomInset = 0;
     if (@available(iOS 11.0, *)) {
         topInset = [UIApplication sharedApplication].keyWindow.safeAreaInsets.top;
-         bottomInset = [UIApplication sharedApplication].keyWindow.safeAreaInsets.bottom;
     }
 
     // Views
@@ -450,6 +446,11 @@ static const CGFloat kFloatingViewOriginY = 230;
                 TSVControlOverlayViewModel *viewModel = [[TSVControlOverlayViewModel alloc] init];
                 viewModel.commonTrackingParameter = self.commonTrackingParameter;
                 viewModel.listEntrance = [self entrance];
+                viewModel.writeCommentButtonDidClick = ^{
+                            @strongify(self);
+                            [FHShortVideoTracerUtil clickCommentWithModel:self.model eventIndex:self.dataFetchManager.currentIndex eventPosition:@"detail_comment"];
+                            [self playView:nil didClickInputWithModel:self.model];
+                        };
                 viewModel.showProfilePopupBlock = ^{
 //                    @strongify(self);
 //                    [self layoutProfileViewController];
@@ -477,7 +478,7 @@ static const CGFloat kFloatingViewOriginY = 230;
 
     [self addChildViewController:self.videoContainerViewController];
     
-    self.videoContainerViewController.view.frame = CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height - 50 -bottomInset);
+    self.videoContainerViewController.view.frame = CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height);
     [self.view addSubview:self.videoContainerViewController.view];
     [self.videoContainerViewController didMoveToParentViewController:self];
 
@@ -498,22 +499,6 @@ static const CGFloat kFloatingViewOriginY = 230;
         make.top.left.equalTo(self.topBarView);
         make.height.equalTo(@48.0);
         make.width.equalTo(@30.0);
-    }];
-    
-    _operationView = [[UIView alloc] init];
-    [self.view addSubview:_operationView];
-
-    _inputButton = [[TSVWriteCommentButton alloc] init];
-    [_inputButton addTarget:self action:@selector(_onInputButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
-    [_operationView addSubview:_inputButton];
-
-    [_operationView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.right.equalTo(self.view);
-        make.bottom.equalTo(self.view);
-        make.height.mas_offset(50+bottomInset);
-    }];
-    [_inputButton mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.edges.equalTo(self.operationView);
     }];
     
     
@@ -739,14 +724,13 @@ static const CGFloat kFloatingViewOriginY = 230;
       [self dismissByClickingCloseButton];
 }
 
-- (void)_onInputButtonClicked:(UIButton *)sender
-{
-    if (!self.model) {
-        return;
-    }
-     [FHShortVideoTracerUtil clickCommentWithModel:self.model eventIndex:self.dataFetchManager.currentIndex eventPosition:@"detail_comment"];
-     [self playView:nil didClickInputWithModel:self.model];
-}
+//- (void)_onInputButtonClicked:(UIButton *)sender
+//{
+//    if (!self.model) {
+//        return;
+//    }
+//     [self playView:nil didClickInputWithModel:self.model];
+//}
 
 - (void)viewWillAppear:(BOOL)animated
 {

@@ -75,7 +75,7 @@
     [dic setObject:@"110845" forKey:@"event_tracking_id"];
     [dic setObject:logPb[@"impr_id"]?:@"be_null" forKey:@"impr_id"];
     [dic setObject:model.tracerDic[@"origin_from"]?:@"be_null" forKey:@"origin_from"];
-    [dic setObject:model.tracerDic[@"page_type"]?:@"be_null" forKey:@"enter_from"];
+    [dic setObject:model.tracerDic[@"enter_from"]?:@"be_null" forKey:@"enter_from"];
     [FHUserTracker writeEvent:@"go_detail" params:dic];
 }
 

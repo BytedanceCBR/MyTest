@@ -47,6 +47,10 @@
     return self;
 }
 
+- (void)setWatchBacColor:(UIColor *)watchBacColor {
+    self.watchedProgressView.backgroundColor = watchBacColor;
+}
+
 - (void)setPlayerStateStore:(TTVPlayerStateStore *)playerStateStore
 {
     if (_playerStateStore != playerStateStore) {

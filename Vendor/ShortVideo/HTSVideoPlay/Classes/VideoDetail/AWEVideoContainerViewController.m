@@ -186,11 +186,7 @@ const static CGFloat kAWEVideoContainerSpacing = 2;
         }
         layout.minimumLineSpacing = 0;
         layout.minimumInteritemSpacing = 0;
-        CGFloat bottomInset = 0;
-        if (@available(iOS 11.0, *)) {
-             bottomInset = [UIApplication sharedApplication].keyWindow.safeAreaInsets.bottom;
-        }
-        CGRect collectionFrame = CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height - 50 -bottomInset);
+        CGRect collectionFrame = CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height);
         AWEVideoContainerCollectionView *view = [[AWEVideoContainerCollectionView alloc] initWithFrame:collectionFrame collectionViewLayout:layout];
         CGRect frame = collectionFrame;
         switch ([AWEVideoDetailScrollConfig direction]) {

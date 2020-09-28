@@ -13,6 +13,8 @@
 @interface ExploreMovieMiniSliderView : SSThemedView<TTVPlayerContext>
 @property (nonatomic, strong) TTVPlayerStateStore *playerStateStore;
 
+@property (nonatomic, strong) UIColor *watchBacColor;
+
 @property(nonatomic, assign)CGFloat cacheProgress;
 @property(nonatomic, assign)CGFloat watchedProgress;
 @property(nonatomic, assign)BOOL isVerticle;
