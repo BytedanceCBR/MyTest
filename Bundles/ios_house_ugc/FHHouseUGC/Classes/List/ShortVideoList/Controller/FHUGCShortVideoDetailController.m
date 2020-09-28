@@ -2226,9 +2226,9 @@ static const CGFloat kFloatingViewOriginY = 230;
 #pragma mark - TTPreviewPanBackDelegate
 - (BOOL)ttPreviewPanGestureRecognizerShouldBegin:(UIGestureRecognizer *)gestureRecognizer;
 {
-    if ([gestureRecognizer isKindOfClass:[UIPanGestureRecognizer class]]) {
-        return [self.videoContainerViewController canPullToClose];
-    }
+//    if ([gestureRecognizer isKindOfClass:[UIPanGestureRecognizer class]]) {
+//        return [self.videoContainerViewController canPullToClose];
+//    }
     return NO;
 }
 

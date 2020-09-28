@@ -753,15 +753,15 @@ static const CGFloat kFloatingViewOriginY = 230;
         [self loadMoreAutomatically:YES];
     }
     
-    if ([AWEVideoDetailScrollConfig direction] == AWEVideoDetailScrollDirectionVertical) {
-        self.slideLeftGesture = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handleSlideLeftGesture:)];
-        self.slideLeftGesture.delegate = self;
-        [self.view addGestureRecognizer:self.slideLeftGesture];
-    } else {
-        self.slideUpGesture = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handleSlideUpGesture:)];
-        self.slideUpGesture.delegate = self;
-        [self.view addGestureRecognizer:self.slideUpGesture];
-    }
+//    if ([AWEVideoDetailScrollConfig direction] == AWEVideoDetailScrollDirectionVertical) {
+//        self.slideLeftGesture = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handleSlideLeftGesture:)];
+//        self.slideLeftGesture.delegate = self;
+//        [self.view addGestureRecognizer:self.slideLeftGesture];
+//    } else {
+//        self.slideUpGesture = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handleSlideUpGesture:)];
+//        self.slideUpGesture.delegate = self;
+//        [self.view addGestureRecognizer:self.slideUpGesture];
+//    }
 
     self.commentSlideDownGesture = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handleCommentSlideDownGesture:)];
     self.commentSlideDownGesture.delegate = self;
@@ -1823,9 +1823,10 @@ static const CGFloat kFloatingViewOriginY = 230;
 
 - (void)dismissByClickingCloseButton
 {
-    self.closeStyle = AWEVideoDetailCloseStyleCloseButton;
-    self.blackMaskView.hidden = YES;
-    [self.animateManager dismissWithoutGesture];
+//    self.closeStyle = AWEVideoDetailCloseStyleCloseButton;
+//    self.blackMaskView.hidden = YES;
+//    [self.animateManager dismissWithoutGesture];
+    [self.navigationController popViewControllerAnimated:YES];
 }
 
 - (void)topView:(UIViewController *)viewController didClickReportWithModel:(FHFeedUGCCellModel *)model
@@ -2128,32 +2129,11 @@ static const CGFloat kFloatingViewOriginY = 230;
     } else if (gesture.state == UIGestureRecognizerStateEnded ||
                gesture.state == UIGestureRecognizerStateCancelled) {
         if (CGRectGetMaxY(floatingView.frame) - CGRectGetHeight(self.view.bounds) >= CGRectGetHeight(floatingView.bounds) * 2.0 / 3.0 && - velocity.y < 500) {
-//            if (self.slideUpViewType == TSVDetailSlideUpViewTypeProfile) {
-//                [self dismissProfileViewWithCancelType:@"gesture"];
-//            }
             if (self.slideUpViewType == TSVDetailSlideUpViewTypeComment) {
                 [self dismissCommentListWithCancelType:@"gesture"];
             }
         } else {
-//            if (self.slideUpViewType == TSVDetailSlideUpViewTypeProfile) {
-//                [AWEVideoDetailTracker trackEvent:@"draw_profile"
-//                                            model:self.model
-//                                  commonParameter:self.commonTrackingParameter
-//                                   extraParameter:@{@"position": @"draw_bottom"}];
-//                //滑出过一次不再出引导
-//                [TSVSlideUpPromptViewController setSlideUpPromotionShown];
-//                [self showProfileView];
-//            }
             if (self.slideUpViewType == TSVDetailSlideUpViewTypeComment) {
-//                [AWEVideoDetailTracker trackEvent:@"enter_comment"
-//                                            model:self.model
-//                                  commonParameter:self.commonTrackingParameter
-//                                   extraParameter:@{@"position": @"draw_bottom"}];
-
-//                [AWEVideoDetailTracker trackEvent:@"comment_list_show"
-//                                            model:self.model
-//                                  commonParameter:self.commonTrackingParameter
-//                                   extraParameter:@{@"position": @"draw_bottom"}];
 
                 [self showCommentsListWithStatus:TSVDetailCommentViewStatusPopBySlideUp];
             }
@@ -2287,9 +2267,9 @@ static const CGFloat kFloatingViewOriginY = 230;
 #pragma mark - TTPreviewPanBackDelegate
 - (BOOL)ttPreviewPanGestureRecognizerShouldBegin:(UIGestureRecognizer *)gestureRecognizer;
 {
-    if ([gestureRecognizer isKindOfClass:[UIPanGestureRecognizer class]]) {
-        return [self.videoContainerViewController canPullToClose];
-    }
+//    if ([gestureRecognizer isKindOfClass:[UIPanGestureRecognizer class]]) {
+//        return [self.videoContainerViewController canPullToClose];
+//    }
     return NO;
 }
 
