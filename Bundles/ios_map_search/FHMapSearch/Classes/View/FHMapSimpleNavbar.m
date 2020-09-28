@@ -184,7 +184,7 @@
     
     [_houseSegmentControl mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerX.equalTo(self);
-        make.centerY.equalTo(self).offset([UIDevice btd_isIPhoneXSeries] ? -10 : -20);
+        make.centerY.equalTo(self).offset([UIDevice btd_isIPhoneXSeries] ? -10 : -18);
         make.width.mas_equalTo(160);
         make.height.mas_equalTo(50);
     }];
