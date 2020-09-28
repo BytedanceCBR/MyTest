@@ -88,11 +88,6 @@
 
 - (void)processDetailData:(FHDetailNewModel *)model{
     self.detailData = model;
-    [self addDetailCoreInfoExcetionLog];
-//    
-//    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, <#uintptr_t flags#>), <#^(void)block#>)
-    // 清空数据源
-    NSMutableArray *sectionModels = [NSMutableArray array];
     FHDetailContactModel *contactPhone = nil;
     
     if (model.data.highlightedRealtor) {
@@ -109,127 +104,139 @@
     self.contactViewModel.highlightedRealtorAssociateInfo = model.data.highlightedRealtorAssociateInfo;
     self.weakSocialInfo = model.data.socialInfo;
     
-    BOOL showTitleMapBtn = NO;
-    if (model.data.coreInfo.gaodeLat.length>0 && model.data.coreInfo.gaodeLng.length>0) {
-        showTitleMapBtn = YES;
-    }else {
-        showTitleMapBtn = NO;
-    }
-    //头图
-    FHNewHouseDetailHeaderMediaSM *headerMediaSM = [[FHNewHouseDetailHeaderMediaSM alloc] initWithDetailModel:self.detailData];
-    [headerMediaSM updatewithContactViewModel:self.contactViewModel];
-    headerMediaSM.sectionType = FHNewHouseDetailSectionTypeHeader;
-    [sectionModels addObject:headerMediaSM];
-    
-    //基础信息
-    FHNewHouseDetailCoreInfoSM *coreInfoSM = [[FHNewHouseDetailCoreInfoSM alloc] initWithDetailModel:self.detailData];
-    coreInfoSM.sectionType = FHNewHouseDetailSectionTypeBaseInfo;
-    [sectionModels addObject:coreInfoSM];
-        
-    //户型
-    if ([model.data.floorpanList.list isKindOfClass:[NSArray class]] && model.data.floorpanList.list.count > 0) {
-        FHNewHouseDetailFloorpanSM *floorpanSM = [[FHNewHouseDetailFloorpanSM alloc] initWithDetailModel:self.detailData];
-        floorpanSM.sectionType = FHNewHouseDetailSectionTypeFloorpan;
-        [sectionModels addObject:floorpanSM];
-    }
-    
-    // 优惠信息
-    if (model.data.discountInfo) {
-        FHNewHouseDetailSalesSM *salesSM = [[FHNewHouseDetailSalesSM alloc] initWithDetailModel:self.detailData];
-        salesSM.sectionType = FHNewHouseDetailSectionTypeSales;
-        [salesSM updateDetailModel:self.detailData contactViewModel:self.contactViewModel];
-        [sectionModels addObject:salesSM];
-    }
-    
-//     推荐经纪人
-    if (model.data.recommendedRealtors.count > 0) {
-        // 添加分割线--当存在某个数据的时候在顶部添加分割线
-        FHNewHouseDetailAgentSM *agentSM = [[FHNewHouseDetailAgentSM alloc] initWithDetailModel:self.detailData];
-        agentSM.sectionType = FHNewHouseDetailSectionTypeAgent;
-        [sectionModels addObject:agentSM];
-    }
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
+        [self addDetailCoreInfoExcetionLog];
+        // 清空数据源
+        NSMutableArray *sectionModels = [NSMutableArray array];
 
-    //楼盘动态
-    if (model.data.timeline.list.count > 0) {
-        FHNewHouseDetailTimelineSM *timeLineSM = [[FHNewHouseDetailTimelineSM alloc] initWithDetailModel:self.detailData];
-        timeLineSM.sectionType = FHNewHouseDetailSectionTypeTimeline;
-        [sectionModels addObject:timeLineSM];
-    }
+        //头图
+        FHNewHouseDetailHeaderMediaSM *headerMediaSM = [[FHNewHouseDetailHeaderMediaSM alloc] initWithDetailModel:self.detailData];
+        [headerMediaSM updatewithContactViewModel:self.contactViewModel];
+        headerMediaSM.sectionType = FHNewHouseDetailSectionTypeHeader;
+        [sectionModels addObject:headerMediaSM];
+        
+        //基础信息
+        FHNewHouseDetailCoreInfoSM *coreInfoSM = [[FHNewHouseDetailCoreInfoSM alloc] initWithDetailModel:self.detailData];
+        coreInfoSM.sectionType = FHNewHouseDetailSectionTypeBaseInfo;
+        [sectionModels addObject:coreInfoSM];
+            
+        //户型
+        if ([model.data.floorpanList.list isKindOfClass:[NSArray class]] && model.data.floorpanList.list.count > 0) {
+            FHNewHouseDetailFloorpanSM *floorpanSM = [[FHNewHouseDetailFloorpanSM alloc] initWithDetailModel:self.detailData];
+            floorpanSM.sectionType = FHNewHouseDetailSectionTypeFloorpan;
+            [sectionModels addObject:floorpanSM];
+        }
+        
+        // 优惠信息
+        if (model.data.discountInfo) {
+            FHNewHouseDetailSalesSM *salesSM = [[FHNewHouseDetailSalesSM alloc] initWithDetailModel:self.detailData];
+            salesSM.sectionType = FHNewHouseDetailSectionTypeSales;
+            [salesSM updateDetailModel:self.detailData contactViewModel:self.contactViewModel];
+            [sectionModels addObject:salesSM];
+        }
+        
+    //     推荐经纪人
+        if (model.data.recommendedRealtors.count > 0) {
+            // 添加分割线--当存在某个数据的时候在顶部添加分割线
+            FHNewHouseDetailAgentSM *agentSM = [[FHNewHouseDetailAgentSM alloc] initWithDetailModel:self.detailData];
+            agentSM.sectionType = FHNewHouseDetailSectionTypeAgent;
+            [sectionModels addObject:agentSM];
+        }
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            self.sectionModels = sectionModels.copy;
+            self.firstReloadInterval = CFAbsoluteTimeGetCurrent();
+        });
+
+        //楼盘动态
+        if (model.data.timeline.list.count > 0) {
+            FHNewHouseDetailTimelineSM *timeLineSM = [[FHNewHouseDetailTimelineSM alloc] initWithDetailModel:self.detailData];
+            timeLineSM.sectionType = FHNewHouseDetailSectionTypeTimeline;
+            [sectionModels addObject:timeLineSM];
+        }
+        
+        // 小区评测
+        if (model.data.strategy && model.data.strategy.articleList.count > 0) {
+            FHNewHouseDetailAssessSM *assessSM = [[FHNewHouseDetailAssessSM alloc] initWithDetailModel:self.detailData];
+            assessSM.sectionType = FHNewHouseDetailSectionTypeAssess;
+            [sectionModels addObject:assessSM];
+        }
+        
+    //    用户房源评价
+        if (model.data.realtorContent.content.data.count > 0) {
+            FHNewHouseDetailRGCListSM *RGCListModel = [[FHNewHouseDetailRGCListSM alloc] initWithDetailModel:self.detailData];
+            RGCListModel.sectionType = FHNewHouseDetailSectionTypeRGC;
+            RGCListModel.detailTracerDic = self.detailTracerDic;
+            NSString *searchId = self.listLogPB[@"search_id"];
+            NSString *imprId = self.listLogPB[@"impr_id"];
+            NSDictionary *extraDic = @{
+                @"searchId":searchId?:@"be_null",
+                @"imprId":imprId?:@"be_null",
+                @"houseId":self.houseId,
+                @"houseType":@(FHHouseTypeNewHouse),
+                @"channelId":@"f_hosue_wtt"
+            };
+            RGCListModel.extraDic = extraDic;
+            [RGCListModel updateModel:self.detailData];
+            [sectionModels addObject:RGCListModel];
+        }
+        
+        if (model.data.surroundingInfo || (model.data.coreInfo.gaodeLat && model.data.coreInfo.gaodeLng)) {
+            FHNewHouseDetailSurroundingSM *surroundingSM = [[FHNewHouseDetailSurroundingSM alloc] initWithDetailModel:self.detailData];
+            surroundingSM.sectionType = FHNewHouseDetailSectionTypeSurrounding;
+            [sectionModels addObject:surroundingSM];
+        }
+        
+        //楼栋信息
+        if (model.data.buildingInfo && model.data.buildingInfo.list.count) {
+            FHNewHouseDetailBuildingsSM *BuildingSM = [[FHNewHouseDetailBuildingsSM alloc] initWithDetailModel:self.detailData];
+            BuildingSM.sectionType = FHNewHouseDetailSectionTypeBuildings;
+            [sectionModels addObject:BuildingSM];
+        }
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            self.sectionModels = sectionModels.copy;
+            [self.detailController updateLayout:model.isInstantData];
+        });
+        
+        __weak typeof(self) weakSelf = self;
+        [self executeOnce:^{
+            [weakSelf addPageLoadLog];
+        } token:FHExecuteOnceUniqueTokenForCurrentContext];
+        
+        if (!model.isInstantData && model.data) {
+            [FHHouseDetailAPI requestRelatedFloorSearch:self.houseId offset:@"0" query:nil count:0 completion:^(FHListResultHouseModel * _Nullable model, NSError * _Nullable error) {
+                weakSelf.relatedHouseData = model;
+                [weakSelf processDetailRelatedData];
+            }];
+        }
+    });
     
-    // 小区评测
-    if (model.data.strategy && model.data.strategy.articleList.count > 0) {
-        FHNewHouseDetailAssessSM *assessSM = [[FHNewHouseDetailAssessSM alloc] initWithDetailModel:self.detailData];
-        assessSM.sectionType = FHNewHouseDetailSectionTypeAssess;
-        [sectionModels addObject:assessSM];
-    }
-    
-//    用户房源评价
-    if (model.data.realtorContent.content.data.count > 0) {
-        FHNewHouseDetailRGCListSM *RGCListModel = [[FHNewHouseDetailRGCListSM alloc] initWithDetailModel:self.detailData];
-        RGCListModel.sectionType = FHNewHouseDetailSectionTypeRGC;
-        RGCListModel.detailTracerDic = self.detailTracerDic;
-        NSString *searchId = self.listLogPB[@"search_id"];
-        NSString *imprId = self.listLogPB[@"impr_id"];
-        NSDictionary *extraDic = @{
-            @"searchId":searchId?:@"be_null",
-            @"imprId":imprId?:@"be_null",
-            @"houseId":self.houseId,
-            @"houseType":@(FHHouseTypeNewHouse),
-            @"channelId":@"f_hosue_wtt"
-        };
-        RGCListModel.extraDic = extraDic;
-        [RGCListModel updateModel:self.detailData];
-        [sectionModels addObject:RGCListModel];
-    }
-    
-    if (model.data.surroundingInfo || (model.data.coreInfo.gaodeLat && model.data.coreInfo.gaodeLng)) {
-        FHNewHouseDetailSurroundingSM *surroundingSM = [[FHNewHouseDetailSurroundingSM alloc] initWithDetailModel:self.detailData];
-        surroundingSM.sectionType = FHNewHouseDetailSectionTypeSurrounding;
-        [sectionModels addObject:surroundingSM];
-    }
-    
-    //楼栋信息
-    if (model.data.buildingInfo && model.data.buildingInfo.list.count) {
-        FHNewHouseDetailBuildingsSM *BuildingSM = [[FHNewHouseDetailBuildingsSM alloc] initWithDetailModel:self.detailData];
-        BuildingSM.sectionType = FHNewHouseDetailSectionTypeBuildings;
-        [sectionModels addObject:BuildingSM];
-    }
-    self.sectionModels = sectionModels.copy;
-    [self.detailController updateLayout:model.isInstantData];
-    
-    __weak typeof(self) weakSelf = self;
-    [self executeOnce:^{
-        [weakSelf addPageLoadLog];
-    } token:FHExecuteOnceUniqueTokenForCurrentContext];
-    
-    if (!model.isInstantData && model.data) {
-        [FHHouseDetailAPI requestRelatedFloorSearch:self.houseId offset:@"0" query:nil count:0 completion:^(FHListResultHouseModel * _Nullable model, NSError * _Nullable error) {
-            weakSelf.relatedHouseData = model;
-            [weakSelf processDetailRelatedData];
-        }];
-    }
 }
 
 // 处理详情页周边新盘请求数据
 - (void)processDetailRelatedData {
-    self.detailController.isLoadingData = NO;
-    NSMutableArray *sectionModels = self.sectionModels.mutableCopy;
-    if(_relatedHouseData.data && self.relatedHouseData.data.items.count > 0)
-    {
-        
-        FHNewHouseDetailRecommendSM *recommendSM = [[FHNewHouseDetailRecommendSM alloc] initWithDetailModel:self.detailData];
-        recommendSM.sectionType = FHNewHouseDetailSectionTypeRecommend;
-        [recommendSM updateRelatedModel:self.relatedHouseData];
-        [sectionModels addObject:recommendSM];
-    }
-    // 免责声明
-    FHDetailNewModel * model = (FHDetailNewModel *)self.detailData;
-    if (model.data.contact || model.data.disclaimer) {
-        FHNewHouseDetailDisclaimerSM *disclaimerSM = [[FHNewHouseDetailDisclaimerSM alloc] initWithDetailModel:self.detailData];
-        disclaimerSM.sectionType = FHNewHouseDetailSectionTypeDisclaimer;
-        [sectionModels addObject:disclaimerSM];
-    }
-    self.sectionModels = sectionModels.copy;
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
+        self.detailController.isLoadingData = NO;
+        NSMutableArray *sectionModels = self.sectionModels.mutableCopy;
+        if(_relatedHouseData.data && self.relatedHouseData.data.items.count > 0)
+        {
+            FHNewHouseDetailRecommendSM *recommendSM = [[FHNewHouseDetailRecommendSM alloc] initWithDetailModel:self.detailData];
+            recommendSM.sectionType = FHNewHouseDetailSectionTypeRecommend;
+            [recommendSM updateRelatedModel:self.relatedHouseData];
+            [sectionModels addObject:recommendSM];
+        }
+        // 免责声明
+        FHDetailNewModel * model = (FHDetailNewModel *)self.detailData;
+        if (model.data.contact || model.data.disclaimer) {
+            FHNewHouseDetailDisclaimerSM *disclaimerSM = [[FHNewHouseDetailDisclaimerSM alloc] initWithDetailModel:self.detailData];
+            disclaimerSM.sectionType = FHNewHouseDetailSectionTypeDisclaimer;
+            [sectionModels addObject:disclaimerSM];
+        }
+        dispatch_async(dispatch_get_main_queue(), ^{
+            self.sectionModels = sectionModels.copy;
+        });
+    });
 }
 
 - (NSString *)pageTypeString {
@@ -413,18 +420,12 @@
             self.firstReloadInterval = CFAbsoluteTimeGetCurrent();
         }
         if (self.initTimeInterval > 0 && self.firstReloadInterval > 0) {
-            
             double duration = self.firstReloadInterval - self.initTimeInterval;
-            //为了避免出现特别大的无效数据 App切换前后台的时候数据大的也不添加
             NSMutableDictionary *metricDict = [NSMutableDictionary dictionary];
             //单位 秒 -> 毫秒
             metricDict[@"total_duration"] = @(duration * 1000);
-            
-            [[HMDTTMonitor defaultManager] hmdTrackService:@"pss_house_detail_old" metric:metricDict.copy category:@{@"status":@(0)} extra:nil];
-
+            [[HMDTTMonitor defaultManager] hmdTrackService:@"pss_new_house_detail" metric:metricDict.copy category:@{@"status":@(0)} extra:nil];
         }
-        
-
     });
 }
 
