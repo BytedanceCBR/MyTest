@@ -62,7 +62,8 @@
     FHDetailSectionTitleCollectionView *titleView = [self.collectionContext dequeueReusableSupplementaryViewOfKind:UICollectionElementKindSectionHeader forSectionController:self class:[FHDetailSectionTitleCollectionView class] atIndex:index];
     titleView.titleLabel.font = [UIFont themeFontMedium:18];
     titleView.titleLabel.textColor = [UIColor themeGray1];
-    titleView.titleLabel.text = @"楼盘动态";
+    FHNewHouseDetailTimelineSM *model = (FHNewHouseDetailTimelineSM *)self.sectionModel;
+    titleView.titleLabel.text = model.newsCellModel.timeLineModel.totalCount.length ? model.newsCellModel.timeLineModel.totalCount : @"楼盘动态";
     titleView.arrowsImg.hidden = NO;
     titleView.userInteractionEnabled = YES;
     __weak typeof(self) wself = self;

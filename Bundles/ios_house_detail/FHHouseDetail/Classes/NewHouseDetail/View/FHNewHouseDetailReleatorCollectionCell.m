@@ -198,7 +198,7 @@
     self.licenceIcon.hidden = !result;
 }
 
-- (NSString *)elementTypeString {
+- (NSString *)elementType {
     return @"new_detail_related";
 }
 

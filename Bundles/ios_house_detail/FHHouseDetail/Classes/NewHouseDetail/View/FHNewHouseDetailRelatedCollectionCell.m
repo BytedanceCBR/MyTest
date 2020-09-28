@@ -223,8 +223,8 @@
     return _houseVideoImageView;
 }
 
-- (NSString *)elementTypeString:(FHHouseType)houseType {
-    return @"related";// 周边房源
+- (NSString *)elementType {
+    return @"related";
 }
 
 @end

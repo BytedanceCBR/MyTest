@@ -252,10 +252,6 @@
     }
 }
 
-- (NSString *)elementTypeString {
-    return @"realtor_evaluate";
-}
-
 #pragma mark - TTUGCAsyncLabelDelegate
 - (void)asyncLabel:(TTUGCAsyncLabel *)label didSelectLinkWithURL:(NSURL *)url {
     if([url.absoluteString isEqualToString:defaultTruncationLinkURLString] || url){

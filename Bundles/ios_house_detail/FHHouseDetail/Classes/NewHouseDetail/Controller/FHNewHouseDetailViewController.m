@@ -941,7 +941,7 @@
 }
 
 - (void)collectionView:(UICollectionView *)collectionView willDisplayCell:(UICollectionViewCell *)cell forItemAtIndexPath:(NSIndexPath *)indexPath {
-    NSString *tempKey = [NSString stringWithFormat:@"%@_%ld_%ld",NSStringFromClass([self class]), (long)indexPath.section, (long)indexPath.item];
+    NSString *tempKey = [NSString stringWithFormat:@"%@_%ld",NSStringFromClass([cell class]), (long)indexPath.section];
     if (self.elementShowCaches[tempKey]) {
         return;
     }
