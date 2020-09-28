@@ -149,6 +149,7 @@
 
 - (void)show {
     UIWindow *keyWindow = [UIApplication sharedApplication].keyWindow;
+    [keyWindow endEditing:YES];
     [keyWindow addSubview:self];
     self.frame = keyWindow.bounds;
     
