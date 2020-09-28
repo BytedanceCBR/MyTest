@@ -905,7 +905,7 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
         houseType = FHMapSearchTypeNewHouse;
     }
     
-    if ((byUser || ![_lastBubble validCenter]) && self.currentHouseType == FHHouseTypeSecondHandHouse) {
+    if ((byUser || ![_lastBubble validCenter]) && (self.currentHouseType == FHHouseTypeSecondHandHouse || self.currentHouseType == FHHouseTypeRentHouse)) {
         //用户手动操作使用当前地图的数据
         CLLocationCoordinate2D center = _mapView.centerCoordinate;
         [_lastBubble updateResizeLevel:_mapView.zoomLevel centerLatitude:center.latitude centerLongitude:center.longitude];
@@ -972,7 +972,7 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
     
     
     NSString *query = nil;
-    if (self.lastBubble && self.currentHouseType == FHHouseTypeSecondHandHouse) {
+    if (self.lastBubble && (self.currentHouseType == FHHouseTypeSecondHandHouse || self.currentHouseType == FHHouseTypeRentHouse)) {
 //        self.lastBubble.resizeLevel = self.mapView.zoomLevel;
         query = [self.lastBubble query];
     }else if (self.lastNewHouseBubble && self.currentHouseType == FHHouseTypeNewHouse){
@@ -1405,13 +1405,13 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
 //            [self.lastBubble overwriteFliter:url.query];
 //        }
         
-        if (self.currentHouseType == FHHouseTypeSecondHandHouse) {
+        if (self.currentHouseType == FHHouseTypeSecondHandHouse || self.currentHouseType == FHHouseTypeRentHouse) {
             self.lastBubble = [FHMapSearchBubbleModel bubbleFromUrl:model.mapFindHouseOpenUrl];
         }else{
             self.lastNewHouseBubble = [FHMapSearchBubbleModel bubbleFromUrl:model.mapFindHouseOpenUrl];
         }
         
-        if (self.lastBubble && (self.currentHouseType == FHHouseTypeSecondHandHouse)) {
+        if (self.lastBubble && (self.currentHouseType == FHHouseTypeSecondHandHouse || self.currentHouseType == FHHouseTypeRentHouse)) {
             zoomLevel = self.lastBubble.resizeLevel;
             if (zoomLevel < 1 || zoomLevel > 20) {
                 if (houseAnnotation.searchType == FHMapSearchTypeSegment) {
@@ -2226,7 +2226,7 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
         return;
     }
     
-    if (self.currentHouseType == FHHouseTypeSecondHandHouse) {
+    if ((self.currentHouseType == FHHouseTypeSecondHandHouse || self.currentHouseType == FHHouseTypeRentHouse)) {
         self.lastBubble = [FHMapSearchBubbleModel bubbleFromUrl:openUrl];
         [self.filterView selectedWithOpenUrl:openUrl];
         self.lastBubble.noneFilterQuery = self.filterView.noneFilterQuery;
