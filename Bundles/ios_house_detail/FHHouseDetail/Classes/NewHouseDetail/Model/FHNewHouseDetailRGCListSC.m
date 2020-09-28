@@ -281,7 +281,14 @@
         return;
     }
     [self.elementShowCaches setValue:@(YES) forKey:tempKey];
-    
+    NSDictionary *houseInfo = model.extraDic;
+    NSDictionary *extraDic = @{}.mutableCopy;
+    [extraDic setValue:self.detailTracerDict[@"page_type"] forKey:@"page_type"];
+    [extraDic setValue:[NSString stringWithFormat:@"%ld",(long)index] forKey:@"rank"];
+    [extraDic setValue:houseInfo[@"houseId"] forKey:@"from_gid"];
+    [extraDic setValue:cellModel.groupId forKey:@"group_id"];
+    [extraDic setValue:@"realtor_evaluate" forKey:@"element_type"];
+    [self.tracerHelper trackFeedClientShow:cellModel withExtraDic:extraDic];
 }
 
 /**

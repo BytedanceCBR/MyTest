@@ -10,6 +10,9 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @interface FHNewHouseDetailRGCListSM : FHNewHouseDetailSectionModel
+
+- (void)updateModel:(FHDetailNewModel *)model;
+
 @property(copy, nonatomic) FHDetailBrokerContentModel *contentModel;
 @property (copy, nonatomic) NSString *title;
 @property (copy, nonatomic) NSString *houseInfoBizTrace;
