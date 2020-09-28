@@ -287,6 +287,7 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
 //    }
 
     
+    [self.simpleNavBar changeHouseSegementStatas:NO];
     [self requestHouses:NO showTip:YES];
      
     
@@ -884,9 +885,7 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
     if (_requestHouseTask &&  _requestHouseTask.state == TTHttpTaskStateRunning) {
         [_requestHouseTask cancel];
     }
-    
-    [self.simpleNavBar changeHouseSegementStatas:NO];
-    
+        
     BOOL firstEnter = _firstEnterLogAdded;
     _firstEnterLogAdded = YES;
     
