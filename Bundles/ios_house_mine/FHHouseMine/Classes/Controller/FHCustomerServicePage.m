@@ -157,7 +157,9 @@
     [[[[NSNotificationCenter defaultCenter] rac_addObserverForName:TTReachabilityChangedNotification object:nil] deliverOnMainThread] subscribeNext:^(NSNotification * _Nullable x) {
         @strongify(self);
         BOOL isConnected = [TTReachability isNetworkConnected];
-        self.errorView.hidden = isConnected;
+        if(!isConnected) {
+            self.errorView.hidden = isConnected;
+        }
     }];
     
     [self loadContent];
