@@ -33,7 +33,9 @@
 
 + (void)jumpToLinkChatPage:(NSDictionary *)params {
     if(![TTReachability isNetworkConnected]) {
-        [[ToastManager manager] showToast:@"网络不给力，请重试"];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [[ToastManager manager] showToast:@"网络不给力，请重试"];
+        });
         return;
     }
     [FHMineAPI requestLinkChatPageUrlWithParams:nil completion:^(NSError * _Nonnull error, id  _Nonnull obj) {
