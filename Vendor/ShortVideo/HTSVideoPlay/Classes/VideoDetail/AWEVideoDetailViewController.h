@@ -12,7 +12,7 @@
 #import "TTRoute.h"
 #import "SSThemed.h"
 #import "FHFeedUGCCellModel.h"
-
+#import "AWEVideoCommentCell.h"
 @class TTShortVideoModel;
 
 extern NSString * const TSVVideoDetailVisibilityDidChangeNotification;

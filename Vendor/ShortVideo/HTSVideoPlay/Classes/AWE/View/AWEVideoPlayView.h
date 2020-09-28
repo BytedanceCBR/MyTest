@@ -9,6 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "ExploreMovieMiniSliderView.h"
 #import "FHFeedUGCCellModel.h"
+#import "IESVideoPlayerProtocol.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -36,11 +37,12 @@ NS_ASSUME_NONNULL_BEGIN
 @interface AWEVideoPlayView : UIView
 
 @property (nonatomic, strong, readonly) FHFeedUGCCellModel *model;
+// 视频播放器
+@property (nonatomic, strong) id<IESVideoPlayerProtocol> playerController;
 @property (nonatomic, assign, readonly) BOOL isPlaying;
 @property (nonatomic, copy, nullable) NSDictionary *commonTrackingParameter;
 @property (nonatomic, readonly, assign) NSTimeInterval videoDuration;
 @property (nonatomic, weak, nullable) id<AWEVideoPlayViewDelegate> delegate;
-@property(nonatomic, strong)ExploreMovieMiniSliderView * miniSlider;
 /// 自动改变frame以适配视频大小，默认YES
 @property (nonatomic, assign) BOOL autoAdjustViewFrame;
 

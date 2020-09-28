@@ -6,12 +6,14 @@
 //
 
 #import <Foundation/Foundation.h>
-
+#import "IESVideoPlayerProtocol.h"
+#import "ExploreMovieMiniSliderView.h"
 @class TSVControlOverlayViewModel;
 
 @protocol TSVControlOverlayViewController <NSObject>
 
 @property (nonatomic, strong, nullable) TSVControlOverlayViewModel *viewModel;
-
+@property (weak, nonatomic, nullable) id<IESVideoPlayerProtocol> playerController;
+@property(nonatomic, strong, nullable)ExploreMovieMiniSliderView * miniSlider;
 @property (nonatomic, assign) NSInteger selfIndex;
 @end

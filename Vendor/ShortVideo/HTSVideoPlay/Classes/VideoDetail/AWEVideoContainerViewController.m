@@ -259,14 +259,14 @@ const static CGFloat kAWEVideoContainerSpacing = 2;
             self.dataFetchManager.shouldShowNoMoreVideoToast) {
             self.showingNoMoreVideoIndicator = YES;
             @weakify(self);
-            [TTIndicatorView showWithIndicatorStyle:TTIndicatorViewStyleImage
-                                      indicatorText:@"暂无更多视频"
-                                     indicatorImage:nil
-                                        autoDismiss:YES
-                                     dismissHandler:^(BOOL isUserDismiss) {
-                                         @strongify(self);
-                                         self.showingNoMoreVideoIndicator = NO;
-                                     }];
+//            [TTIndicatorView showWithIndicatorStyle:TTIndicatorViewStyleImage
+//                                      indicatorText:@"暂无更多视频"
+//                                     indicatorImage:nil
+//                                        autoDismiss:YES
+//                                     dismissHandler:^(BOOL isUserDismiss) {
+//                                         @strongify(self);
+//                                         self.showingNoMoreVideoIndicator = NO;
+//                                     }];
         }
     }
 
@@ -301,8 +301,8 @@ const static CGFloat kAWEVideoContainerSpacing = 2;
 
 - (void)refresh
 {
-    [self.currentVideoCell.videoPlayView.miniSlider setWatchedProgress:0];
-    [self.currentVideoCell.videoPlayView.miniSlider setCacheProgress:0];
+    [self.currentVideoCell.overlayViewController.miniSlider setWatchedProgress:0];
+    [self.currentVideoCell.overlayViewController.miniSlider setCacheProgress:0];
     // 动画可能导致 loading cell 一闪而过
     [UIView performWithoutAnimation:^{
         [self.collectionView performBatchUpdates:^{
@@ -440,6 +440,7 @@ const static CGFloat kAWEVideoContainerSpacing = 2;
                     self.configureOverlayViewController(cell.overlayViewController);
                 }
             }
+        cell.overlayViewController.playerController = cell.videoPlayView.playerController;
         [self addChildViewController:cell.overlayViewController];
         [cell.contentView addSubview:cell.overlayViewController.view];
         [cell.overlayViewController didMoveToParentViewController:self];
@@ -661,7 +662,7 @@ const static CGFloat kAWEVideoContainerSpacing = 2;
 - (void)didSwitchToCell:(AWEVideoContainerCollectionViewCell *)cell
 {
     NSParameterAssert(cell);
-
+    cell.videoDetail.tracerDic = self.extraDic;
     self.detailPromptManager.dataFetchManager = self.dataFetchManager;
     self.detailPromptManager.containerViewController = self;
     self.detailPromptManager.scrollView = self.collectionView;
@@ -863,7 +864,7 @@ const static CGFloat kAWEVideoContainerSpacing = 2;
 
 - (void)needRerecordImpressions
 {
-    TTShortVideoModel *videoDetail = self.currentVideoCell.videoDetail;
+    FHFeedUGCCellModel *videoDetail = self.currentVideoCell.videoDetail;
     if (videoDetail) {
         [self sendImpressionWithVideoDetail:videoDetail status:SSImpressionStatusRecording];
     }

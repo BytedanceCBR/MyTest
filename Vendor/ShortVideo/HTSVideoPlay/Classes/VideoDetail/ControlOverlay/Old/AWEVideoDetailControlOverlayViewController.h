@@ -23,9 +23,11 @@ NS_ASSUME_NONNULL_BEGIN;
 @property (nonatomic, strong, nullable) TSVControlOverlayViewModel *viewModel;
 @property (nonatomic, assign) NSInteger selfIndex;
 @property (nonatomic, copy, nullable) void (^closeButtonDidClick)();
+@property(nonatomic, strong)ExploreMovieMiniSliderView * miniSlider;
+@property (weak, nonatomic, nullable) id<IESVideoPlayerProtocol> playerController;
 @property (nonatomic, strong) TSVVideoDetailPromptManager *detailPromptManager;
 
-- (void)digg;
+- (void)diggShowAnima:(BOOL)showAnima;
 
 - (void)tapToFoldRecCard;
 

@@ -32,7 +32,7 @@
         self.cachedProgressView = [[SSThemedView alloc] initWithFrame:CGRectMake(0, 0, 0, frame.size.height)];
         [self addSubview:_cachedProgressView];
         _cachedProgressView.autoresizingMask = UIViewAutoresizingFlexibleRightMargin;
-        _cachedProgressView.backgroundColorThemeKey = kColorBackground1;
+        _cachedProgressView.backgroundColor = [UIColor grayColor];
         
         self.watchedProgressView = [[SSThemedView alloc] initWithFrame:CGRectMake(0, 0, 0, frame.size.height)];
         [self addSubview:_watchedProgressView];

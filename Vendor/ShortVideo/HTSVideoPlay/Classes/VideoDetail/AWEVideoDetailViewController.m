@@ -10,7 +10,6 @@
 #import "AWEReportViewController.h"
 // View
 #import "AWEVideoPlayView.h"
-#import "AWEVideoCommentCell.h"
 //#import "AWECommentInputBar.h"
 // Model
 #import "TSVShortVideoOriginalData.h"
@@ -118,6 +117,7 @@
 #import "FHShortVideoTracerUtil.h"
 #import "TTReachability.h"
 #import "ToastManager.h"
+#import "TTAccountManager.h"
 
 
 #define kPostMessageFinishedNotification    @"kPostMessageFinishedNotification"
@@ -1955,16 +1955,29 @@ static const CGFloat kFloatingViewOriginY = 230;
 
 - (void)commentCell:(AWEVideoCommentCell *)cell didClickLikeWithModel:(AWECommentModel *)commentModel
 {
+    if (![TTAccountManager isLogin]) {
+        NSMutableDictionary *params = [NSMutableDictionary dictionary];
+        NSString *page_type = [FHShortVideoTracerUtil pageType];
+        [params setObject:page_type forKey:@"enter_from"];
+        [params setObject:@"click_publisher" forKey:@"enter_type"];
+        // 登录成功之后不自己Pop，先进行页面跳转逻辑，再pop
+        [params setObject:@(YES) forKey:@"need_pop_vc"];
+        [TTAccountLoginManager showAlertFLoginVCWithParams:params completeBlock:^(TTAccountAlertCompletionEventType type, NSString * _Nullable phoneNum) {
+            if (type == TTAccountAlertCompletionEventTypeDone) {
+                //登录成功 走发送逻辑
+                if ([TTAccountManager isLogin]) {
+                    [self commentCellLoginSuccess:cell didClickLikeWithModel:commentModel];
+                }
+            }
+        }];
+    }else {
+        [self commentCellLoginSuccess:cell didClickLikeWithModel:commentModel];
+    }
+}
+
+- (void)commentCellLoginSuccess:(AWEVideoCommentCell *)cell didClickLikeWithModel:(AWECommentModel *)commentModel {
     NSString *eventName = commentModel.userDigg ? @"click_dislike" : @"click_like";
     NSString *position = @"comment";
-//    if(commentModel.replyToComment){
-//        position = @"reply";
-//    }
-//    [AWEVideoDetailTracker trackEvent:eventName
-//                                model:self.model
-//                      commonParameter:self.commonTrackingParameter
-//                       extraParameter:@{@"click_position": position,
-//                                        @"comment_id": }];
     [FHShortVideoTracerUtil clickLikeOrdisLikeWithWithName:eventName eventPosition:position eventModel:self.model eventIndex:self.dataFetchManager.currentIndex commentId:[commentModel.id stringValue]];
     if ([self alertIfNotValid]) {
         return;
@@ -1972,6 +1985,7 @@ static const CGFloat kFloatingViewOriginY = 230;
 
     BOOL cancelDigg = commentModel.userDigg;
     [self doCommentSafeDiggWithCell:cell model:commentModel cancelDigg:cancelDigg];
+    
 }
 
 - (void)commentCell:(AWEVideoCommentCell *)cell didClickUserWithModel:(AWECommentModel *)commentModel

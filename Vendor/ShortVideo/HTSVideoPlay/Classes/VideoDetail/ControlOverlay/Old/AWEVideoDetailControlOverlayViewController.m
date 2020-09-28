@@ -85,6 +85,7 @@
 #import <BDWebImage/UIImageView+BDWebImage.h>
 #import "FHShortVideoTracerUtil.h"
 #import "TTAccountManager.h"
+#import "IESOwnPlayerWrapper.h"
 
 static const CGFloat kCheckChallengeButtonWidth = 72;
 static const CGFloat kCheckChallengeButtonHeight = 28;
@@ -123,7 +124,8 @@ static const CGFloat kCheckChallengeButtonLeftPadding = 28;
 
 @property (nonatomic, strong) UIView *operationView;
 @property (nonatomic, strong) UIButton *inputButton;
-
+@property (nonatomic, readwrite, assign) NSTimeInterval videoDuration;
+@property (nonatomic,strong) NSTimer *videoTimer;
 @end
 
 @implementation AWEVideoDetailControlOverlayViewController
@@ -141,6 +143,7 @@ static const CGFloat kCheckChallengeButtonLeftPadding = 28;
 {
     self.view = [[AWEVideoOverlayView alloc] init];
 }
+
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -172,7 +175,8 @@ static const CGFloat kCheckChallengeButtonLeftPadding = 28;
     [RACObserve(self, viewModel.likeCountString) subscribeNext:^(id  _Nullable x) {
         [self updateDiggState];
     }];
-    
+    __weak typeof(self)weakSelf = self;
+    self.videoTimer = [NSTimer scheduledTimerWithTimeInterval:0.5 target:self selector:@selector(getVideoTimers) userInfo:nil repeats:YES];
     // 解决较低版本的 iOS 中布局可能会产生问题，例如隐式动画、布局错位等问题，猜测可能是 UICollectionView 的问题
     void (^fuckLayout)() = ^{
         [UIView performWithoutAnimation:^{
@@ -186,6 +190,17 @@ static const CGFloat kCheckChallengeButtonLeftPadding = 28;
         fuckLayout();
     });
 }
+
+- (void)getVideoTimers {
+      IESOwnPlayerWrapper *player = (IESOwnPlayerWrapper *)self.playerController;
+    if (player.currPlaybackTime) {
+        CGFloat watch = (player.currPlaybackTime/player.videoDuration)*100;
+        [self.miniSlider setWatchedProgress:(player.currPlaybackTime/player.videoDuration) *100];
+        [self.miniSlider setCacheProgress:(player.currPlayableDuration/player.videoDuration) *100];
+
+    };
+}
+
 
 - (void)sendShareTrakingWithActivityName:(NSString *)activityName
 {
@@ -362,7 +377,14 @@ static const CGFloat kCheckChallengeButtonLeftPadding = 28;
     [_inputButton addTarget:self action:@selector(_onInputButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
     [_operationView addSubview:_inputButton];
 
+    _miniSlider = [[ExploreMovieMiniSliderView alloc] init];
+    _miniSlider.watchBacColor = [UIColor whiteColor];
+    _miniSlider.autoresizingMask = UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleTopMargin;
+    _miniSlider.userInteractionEnabled = NO;
+    [self.view addSubview:_miniSlider];
+    _miniSlider.hidden = NO;
 
+    [self.view addSubview:_miniSlider];
     _commentButton = [[TSVIconLabelButton alloc] initWithImage:@"shortvideo_comment" label:nil];
     _commentButton.label.textColor = [UIColor tt_defaultColorForKey:kColorText7];
     [_commentButton addTarget:self action:@selector(_onCommentButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
@@ -455,6 +477,12 @@ static const CGFloat kCheckChallengeButtonLeftPadding = 28;
         make.right.equalTo(self.view).offset(-10);
         make.bottom.equalTo(self.operationView.mas_top).offset(-10);
         make.width.mas_offset(40);
+    }];
+    
+    [_miniSlider mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.bottom.equalTo(self.operationView.mas_top);
+        make.left.right.equalTo(self.view);
+        make.height.mas_offset(2);
     }];
     
     [_shareButton mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -574,6 +602,8 @@ static const CGFloat kCheckChallengeButtonLeftPadding = 28;
 - (void)viewWillDisappear:(BOOL)animated
 {
     [super viewWillDisappear:animated];
+    [self.videoTimer invalidate];
+    self.videoTimer = nil;
 //
 //    if (!isEmptyString(self.viewModel.musicLabelString)) {
 //        [self.musicInfoView stopAnimation];
@@ -610,7 +640,6 @@ static const CGFloat kCheckChallengeButtonLeftPadding = 28;
 //    if ([self.model.groupSource isEqualToString:AwemeGroupSource]){
 //        [self.musicInfoView stopAnimation];
 //    }
-
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
@@ -648,8 +677,9 @@ static const CGFloat kCheckChallengeButtonLeftPadding = 28;
     }else {
         self.avatarView.hidden = NO;
     }
-    self.nameLabel.text = [NSString stringWithFormat:@"@%@",self.model.user.name];
-
+    if (self.model.user.name && self.model.user.name.length>0 ) {
+            self.nameLabel.text = [NSString stringWithFormat:@"@%@",self.model.user.name];
+    }
     self.logoViewController.view.hidden = ![self shouldShowLogoViewController];
 
 }
@@ -696,25 +726,25 @@ static const CGFloat kCheckChallengeButtonLeftPadding = 28;
     return !self.model;
 }
 
-- (void)digg
+- (void)diggShowAnima:(BOOL)showAnima
 {
     
     
-    [self _showPlusOneDiggAnimation];
-
-    CGFloat viewWidth = 100;
-    NSString *animationPath = [[NSBundle mainBundle] pathForResource:@"like" ofType:@"json" inDirectory:@"HTSVideoPlay.bundle"];
-    LOTAnimationView *animationView = [LOTAnimationView animationWithFilePath:animationPath];
-    animationView.contentMode = UIViewContentModeScaleAspectFit;
-    animationView.bounds = CGRectMake(0, 0, viewWidth, CGRectGetHeight(self.view.frame));
-    animationView.center = self.view.center;
-    [self.view addSubview:animationView];
-    [[UIApplication sharedApplication] beginIgnoringInteractionEvents];
-    [animationView playWithCompletion:^(BOOL animationFinished) {
-        [animationView removeFromSuperview];
-        [[UIApplication sharedApplication] endIgnoringInteractionEvents];
-    }];
-
+    if (showAnima) {
+         [self _showPlusOneDiggAnimation];
+        CGFloat viewWidth = 100;
+        NSString *animationPath = [[NSBundle mainBundle] pathForResource:@"like" ofType:@"json" inDirectory:@"HTSVideoPlay.bundle"];
+        LOTAnimationView *animationView = [LOTAnimationView animationWithFilePath:animationPath];
+        animationView.contentMode = UIViewContentModeScaleAspectFit;
+        animationView.bounds = CGRectMake(0, 0, viewWidth, CGRectGetHeight(self.view.frame));
+        animationView.center = self.view.center;
+        [self.view addSubview:animationView];
+        [[UIApplication sharedApplication] beginIgnoringInteractionEvents];
+        [animationView playWithCompletion:^(BOOL animationFinished) {
+            [animationView removeFromSuperview];
+            [[UIApplication sharedApplication] endIgnoringInteractionEvents];
+        }];
+    }
     if ([self alertIfNotValid]) {
         return;
     }
@@ -780,7 +810,7 @@ static const CGFloat kCheckChallengeButtonLeftPadding = 28;
     //                                        }];
             [FHShortVideoTracerUtil clickLikeOrdisLikeWithWithName:eventName eventPosition:@"video" eventModel:self.model eventIndex:self.selfIndex commentId:nil];
         if (!userDigg) {
-                [self digg];
+                [self diggShowAnima:NO];
                 //point:视频点赞
         } else {
             [self cancelDigg];
@@ -858,7 +888,7 @@ static const CGFloat kCheckChallengeButtonLeftPadding = 28;
 
 - (void)handleUserNameClick:(id)sender
 {
-//    [self.viewModel clickUserNameButton];
+//    [self.viewModel clickUserNameButton]
 }
 
 - (void)handleFollowClick:(id)sender

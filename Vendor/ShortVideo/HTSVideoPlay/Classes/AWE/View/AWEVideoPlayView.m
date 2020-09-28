@@ -35,7 +35,7 @@
 
 // IES Video Play
 #import "IESVideoPlayer.h"
-#import "IESVideoPlayerProtocol.h"
+
 #import "IESVideoCacheProtocol.h"
 #import "IESOwnPlayerWrapper.h"
 #import "AWEVideoDetailFirstFrameConfig.h"
@@ -60,8 +60,6 @@ static NSString * const VideoPrepareTimeTechKey = @"prepare_time_tech";
 
 // 详情页数据
 @property (nonatomic, strong) FHFeedUGCCellModel *model;
-// 视频播放器
-@property (nonatomic, strong) id<IESVideoPlayerProtocol> playerController;
 // UI交互组件
 @property (nonatomic, strong) SSThemedImageView *backgroundView;
 @property (nonatomic, strong) UIImageView *loadingIndicatorView;
@@ -78,8 +76,7 @@ static NSString * const VideoPrepareTimeTechKey = @"prepare_time_tech";
 
 @property (nonatomic, assign) NSInteger videoStalledCount;
 @property (nonatomic, assign) BOOL usingFirstFrameCover;
-@property (nonatomic, readwrite, assign) NSTimeInterval videoDuration;
-@property (nonatomic,strong) CADisplayLink *displayLink;
+
 
 
 
@@ -94,8 +91,6 @@ static NSString * const VideoPrepareTimeTechKey = @"prepare_time_tech";
 }
 
 - (void)removeFromSuperview {
-    [self.displayLink invalidate];
-    self.displayLink = nil;
     [super removeFromSuperview];
 }
 
@@ -114,7 +109,7 @@ static NSString * const VideoPrepareTimeTechKey = @"prepare_time_tech";
         _autoAdjustViewFrame = YES;
         _videoStalledCount = 0;
         _timingTracker = [[HTSVideoTimingTracker alloc] init];
-        _videoDuration = 0;
+//        _videoDuration = 0;
         
         [self _loadView];
         [self _addObservers];
@@ -184,7 +179,7 @@ static NSString * const VideoPrepareTimeTechKey = @"prepare_time_tech";
 
     self.playerController.useCache = YES;
     self.videoStalledCount = 0;
-    self.videoDuration = 0;
+//    self.videoDuration = 0;
 }
 
 - (void)prepareToPlay
@@ -306,20 +301,10 @@ static NSString * const VideoPrepareTimeTechKey = @"prepare_time_tech";
             });
         }
     }]];
-        _displayLink = [CADisplayLink displayLinkWithTarget:self selector:@selector(getVideoTimers)];
-         [_displayLink addToRunLoop:[NSRunLoop currentRunLoop] forMode:NSRunLoopCommonModes];
-         _displayLink.frameInterval = 1;
+
 
 }
-- (void)getVideoTimers {
-          IESOwnPlayerWrapper *player = (IESOwnPlayerWrapper *)self.playerController;
-        if (player.currPlaybackTime) {
-            CGFloat watch = (player.currPlaybackTime/player.videoDuration)*100;
-            [self.miniSlider setWatchedProgress:(player.currPlaybackTime/player.videoDuration) *100];
-            [self.miniSlider setCacheProgress:(player.currPlayableDuration/player.videoDuration) *100];
 
-        };
-    }
 
 - (void)_removeObservers
 {
@@ -462,17 +447,6 @@ static NSString * const VideoPrepareTimeTechKey = @"prepare_time_tech";
         }
     }
 
-    CGFloat bottomInset = 0;
-    if (@available(iOS 11.0, *)) {
-        bottomInset = [UIApplication sharedApplication].keyWindow.safeAreaInsets.bottom;
-    }
-    _miniSlider = [[ExploreMovieMiniSliderView alloc] initWithFrame:CGRectMake(0, CGRectGetMaxY(self.frame)-2 -50 - bottomInset,
-    CGRectGetWidth(self.frame), 2)];
-    _miniSlider.watchBacColor = [UIColor whiteColor];
-    _miniSlider.autoresizingMask = UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleTopMargin;
-    _miniSlider.userInteractionEnabled = NO;
-    [self addSubview:_miniSlider];
-    _miniSlider.hidden = NO;
 
     [self.playImage mas_makeConstraints:^(MASConstraintMaker *make) {
         make.center.equalTo(self);
@@ -649,7 +623,7 @@ static NSString * const VideoPrepareTimeTechKey = @"prepare_time_tech";
     switch (playbackAction) {
         case IESVideoPlaybackActionStart:
         {
-            self.videoDuration = [self.playerController videoDuration];
+//            self.videoDuration = [self.playerController videoDuration];
             
             self.backgroundView.hidden = YES;
             

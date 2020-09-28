@@ -78,13 +78,13 @@
                 if (type == TTAccountAlertCompletionEventTypeDone) {
                     //登录成功 走发送逻辑
                     if ([TTAccountManager isLogin]) {
-                        [(AWEVideoDetailControlOverlayViewController *)self.overlayViewController digg];
+                        [(AWEVideoDetailControlOverlayViewController *)self.overlayViewController diggShowAnima:YES];
                     }
                 }
             }];
             
         }else {
-            [(AWEVideoDetailControlOverlayViewController *)self.overlayViewController digg];
+            [(AWEVideoDetailControlOverlayViewController *)self.overlayViewController diggShowAnima:YES];
         }
     }
 }
