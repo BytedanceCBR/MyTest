@@ -160,6 +160,18 @@
     if (model.data.strategy && model.data.strategy.articleList.count > 0) {
         FHNewHouseDetailAssessSM *assessSM = [[FHNewHouseDetailAssessSM alloc] initWithDetailModel:self.detailData];
         assessSM.sectionType = FHNewHouseDetailSectionTypeAssess;
+        NSMutableDictionary *paramsDict = @{}.mutableCopy;
+        if (self.detailTracerDic) {
+            [paramsDict addEntriesFromDictionary:self.detailTracerDic];
+        }
+        paramsDict[@"page_type"] = [self pageTypeString];
+        paramsDict[@"from_gid"] = self.houseId;
+        paramsDict[@"element_type"] = @"guide";
+        NSString *searchId = self.listLogPB[@"search_id"];
+        NSString *imprId = self.listLogPB[@"impr_id"];
+        paramsDict[@"search_id"] = searchId.length > 0 ? searchId : @"be_null";
+        paramsDict[@"impr_id"] = imprId.length > 0 ? imprId : @"be_null";
+        [assessSM updateDetailTracer:paramsDict.copy];
         [sectionModels addObject:assessSM];
     }
     

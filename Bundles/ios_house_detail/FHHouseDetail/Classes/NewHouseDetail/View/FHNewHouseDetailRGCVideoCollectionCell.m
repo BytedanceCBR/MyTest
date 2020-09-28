@@ -59,7 +59,7 @@
         
         __weak typeof(self) weakSelf = self;
         self.headerView
-            = [[FHHouseDeatilRGCCellHeader alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, 40)];
+            = [[FHHouseDeatilRGCCellHeader alloc] init];
         self.headerView.hidden = YES;
         self.headerView.imClick = ^{
             [weakSelf clickImAction];
@@ -72,8 +72,9 @@
         };
         [self.contentView addSubview:_headerView];
         [self.headerView mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.top.left.right.mas_equalTo(0);
+            make.top.left.mas_equalTo(0);
             make.height.mas_equalTo(40);
+            make.right.mas_equalTo(-10);
         }];
 
         self.contentLabel = [[TTUGCAsyncLabel alloc] initWithFrame:CGRectMake(0, 0, CGRectGetWidth(self.contentView.bounds), 0)];

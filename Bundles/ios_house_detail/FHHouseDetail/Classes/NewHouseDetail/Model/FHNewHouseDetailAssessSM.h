@@ -13,6 +13,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FHNewHouseDetailAssessSM : FHNewHouseDetailSectionModel
 
+- (void)updateDetailTracer:(NSDictionary *)tracerDict;
+
 @property (nonatomic, strong) FHNewHouseDetailAssessCellModel *assessCellModel;
 
 @end

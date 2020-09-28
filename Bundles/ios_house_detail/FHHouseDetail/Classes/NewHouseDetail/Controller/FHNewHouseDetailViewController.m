@@ -44,6 +44,8 @@
 #import "FHNewHouseDetailDisclaimerSC.h"
 #import "FHDetailPictureTitleView.h"
 #import <FHHouseBase/FHEventShowProtocol.h>
+#import <FHHouseBase/NSObject+FHOptimize.h>
+
 
 @interface FHNewHouseDetailViewController () <UIGestureRecognizerDelegate, IGListAdapterDataSource, UICollectionViewDelegate, UIScrollViewDelegate>
 @property (nonatomic, assign) FHHouseType houseType; // 房源类型
@@ -175,7 +177,9 @@
     [self updateStatusBar:self.collectionView.contentOffset];
     [self refreshContentOffset:self.collectionView.contentOffset];
     [self.view endEditing:YES];
-    [self clickTabTrackWithEnterType:@"default" sectionType:FHNewHouseDetailSectionTypeBaseInfo];
+    [self executeOnce:^{
+        [self clickTabTrackWithEnterType:@"default" sectionType:FHNewHouseDetailSectionTypeBaseInfo];
+    } token:FHExecuteOnceUniqueTokenForCurrentContext];
     //    [self.viewModel vc_viewDidAppear:animated];
 }
 
@@ -1068,10 +1072,6 @@
         }
         NSUInteger selectIndex = [self.segmentTitleView.titleNames indexOfObject:title];
         if (selectIndex < self.segmentTitleView.titleNames.count) {
-            if (selectIndex != self.segmentTitleView.selectIndex) {
-                FHNewHouseDetailSectionModel *model = self.viewModel.sectionModels[indexPath.section];
-                [self clickTabTrackWithEnterType:@"slide" sectionType:model.sectionType];
-            }
             if (self.segmentTitleView) {
                 self.segmentTitleView.selectIndex = selectIndex;
             }

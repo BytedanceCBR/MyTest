@@ -18,6 +18,10 @@
     self.assessCellModel = cellModel;
 }
 
+- (void)updateDetailTracer:(NSDictionary *)tracerDict {
+    self.assessCellModel.tracerDic = tracerDict;
+}
+
 - (id<NSObject>)diffIdentifier {
     return self;
 }
