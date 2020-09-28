@@ -81,6 +81,7 @@
     if(!_webView) {
         _webView = [[SSWebViewContainer alloc] init];
         _webView.ssWebView.scrollView.bounces = NO;
+        _webView.ssWebView.scrollView.scrollEnabled = NO;
     }
     return _webView;
 }
