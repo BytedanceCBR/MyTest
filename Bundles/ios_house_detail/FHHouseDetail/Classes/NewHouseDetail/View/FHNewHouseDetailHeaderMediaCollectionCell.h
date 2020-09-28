@@ -23,7 +23,6 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong) FHHouseDetailMediaInfo *albumInfo;
 @property (nonatomic, strong) FHHouseDetailMediaInfo *courtTopImage;
 @property (nonatomic, weak) FHHouseDetailContactViewModel *contactViewModel;
-@property (nonatomic, assign) BOOL isShowTopImageTab;
 @end
 
 NS_ASSUME_NONNULL_END

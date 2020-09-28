@@ -37,7 +37,7 @@
     _maskView.backgroundColor = [UIColor colorWithWhite:0 alpha:0.1];
     [self.coverView addSubview:self.maskView];
     [_maskView mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.edges.mas_equalTo(self.coverView);
+        make.edges.mas_equalTo(self.coverView);
     }];
     
     self.startBtn = [[UIButton alloc] init];
@@ -53,8 +53,8 @@
     }];
     
     [self.startBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-             make.width.height.mas_equalTo(70);
-            make.center.equalTo(self);
+        make.width.height.mas_equalTo(70);
+        make.center.equalTo(self);
     }];
 }
 
@@ -74,6 +74,11 @@
     [self showWithImageUrl:imageUrl placeHoder:nil];
 }
 
+- (void)setLoadingView:(UIView *)loadingView {
+    _loadingView = loadingView;
+    [_loadingView removeFromSuperview];
+    [self addSubview:loadingView];
+}
 
 - (void)playVideo {
     if(self.delegate && [self.delegate respondsToSelector:@selector(playVideo)]){

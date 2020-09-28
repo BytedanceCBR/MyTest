@@ -58,7 +58,6 @@
     self.model = [[FHMultiMediaModel alloc] init];
     [self.dataHelper setMediaHeaderModel:data];
     self.model.medias = self.dataHelper.headerViewData.mediaItemArray;
-    self.headerView.showHeaderImageNewType = ((FHDetailNewMediaHeaderModel *)data).isShowTopImageTab;
     [self.headerView updateMultiMediaModel:self.model];
     //后面要变成全部图片个数+VR个数+视频个数
     [self.headerView setTotalPagesLabelText:[NSString stringWithFormat:@"共%lu张", (unsigned long)self.dataHelper.pictureDetailData.detailPictureModel.itemList.count]];
@@ -148,10 +147,6 @@
 
     FHDetailNewMediaHeaderModel *model = (FHDetailNewMediaHeaderModel *)self.currentData;
     
-    if (!model.isShowTopImageTab) {
-        //如果是新房，非北京、江州以外的城市，暂时隐藏头部
-        pictureDetailViewController.isShowSegmentView = NO;
-    }
     
     pictureDetailViewController.dragToCloseDisabled = YES;
     pictureDetailViewController.startWithIndex = index;
@@ -233,14 +228,11 @@
     NSMutableDictionary *routeParam = [NSMutableDictionary dictionary];
     FHFloorPanPicShowViewController *pictureListViewController = [[FHFloorPanPicShowViewController alloc] initWithRouteParamObj:TTRouteParamObjWithDict(routeParam)];
     pictureListViewController.modalPresentationStyle = UIModalPresentationFullScreen;
-    if (data.isShowTopImageTab) {
-        pictureListViewController.isShowSegmentTitleView = YES;
-        pictureListViewController.imageAlbumAssociateInfo = self.dataHelper.photoAlbumData.imageAlbumAssociateInfo;
-        pictureListViewController.contactViewModel = self.dataHelper.photoAlbumData.contactViewModel;
-        pictureListViewController.elementFrom = @"new_detail";
-    } else {
-        pictureListViewController.isShowSegmentTitleView = NO;
-    }
+    pictureListViewController.isShowSegmentTitleView = YES;
+    pictureListViewController.imageAlbumAssociateInfo = self.dataHelper.photoAlbumData.imageAlbumAssociateInfo;
+    pictureListViewController.contactViewModel = self.dataHelper.photoAlbumData.contactViewModel;
+    pictureListViewController.elementFrom = @"new_detail";
+
     pictureListViewController.floorPanShowModel = self.dataHelper.photoAlbumData.floorPanModel;
     
     __weak typeof(self) weakSelf = self;
@@ -250,13 +242,21 @@
     pictureListViewController.albumImageBtnClickBlock = ^(NSInteger index) {
         __strong typeof(weakSelf) strongSelf = weakSelf;
         //如果是从大图进入的图片列表，dismiss picturelist
-        if (strongSelf.pictureDetailVC) {
-            [strongSelf.pictureListViewController dismissViewControllerAnimated:NO completion:nil];
-            if (index >= 0) {
-                [strongSelf.pictureDetailVC.photoScrollView setContentOffset:CGPointMake(weakSelf.pictureDetailVC.view.frame.size.width * index, 0) animated:NO];
-            }
+        if (index < 0 || index >= weakSelf.dataHelper.pictureDetailData.mediaItemArray.count) {
+            return;
+        }
+        FHMultiMediaItemModel *itemModel = weakSelf.dataHelper.pictureDetailData.mediaItemArray[index];
+        if (itemModel.mediaType == FHMultiMediaTypeVRPicture) {
+            [weakSelf gotoVRDetail:itemModel];
         } else {
-            [strongSelf showImagesWithCurrentIndex:index];
+            if (strongSelf.pictureDetailVC) {
+                [strongSelf.pictureListViewController dismissViewControllerAnimated:NO completion:nil];
+                if (index >= 0) {
+                    [strongSelf.pictureDetailVC.photoScrollView setContentOffset:CGPointMake(weakSelf.pictureDetailVC.view.frame.size.width * index, 0) animated:NO];
+                }
+            } else {
+                [strongSelf showImagesWithCurrentIndex:index];
+            }
         }
     };
     pictureListViewController.topImageClickTabBlock = ^(NSInteger index) {
