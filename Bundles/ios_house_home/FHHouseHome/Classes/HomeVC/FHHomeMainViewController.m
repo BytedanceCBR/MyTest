@@ -50,6 +50,16 @@ static NSString * const kFUGCPrefixStr = @"fugc";
 
 @implementation FHHomeMainViewController
 
+- (instancetype)init {
+    if (self = [super init]) {
+        static dispatch_once_t onceToken;
+        dispatch_once(&onceToken, ^{
+            [self checkLocalTestUpgradeVersionAlert];
+        });
+    }
+    return self;
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     
@@ -78,9 +88,6 @@ static NSString * const kFUGCPrefixStr = @"fugc";
     //UGC地推包检查粘贴板
 //    [self checkPasteboard:NO];
     self.stayTime = [[NSDate date] timeIntervalSince1970];
-    [self executeOnce:^{
-        [self checkLocalTestUpgradeVersionAlert];
-    } token:FHExecuteOnceUniqueTokenForCurrentContext];
 }
 
 - (void)viewWillDisappear:(BOOL)animated{
