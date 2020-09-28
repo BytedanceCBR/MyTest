@@ -301,8 +301,6 @@ const static CGFloat kAWEVideoContainerSpacing = 2;
 
 - (void)refresh
 {
-    [self.currentVideoCell.overlayViewController.miniSlider setWatchedProgress:0];
-    [self.currentVideoCell.overlayViewController.miniSlider setCacheProgress:0];
     // 动画可能导致 loading cell 一闪而过
     [UIView performWithoutAnimation:^{
         [self.collectionView performBatchUpdates:^{
@@ -661,6 +659,7 @@ const static CGFloat kAWEVideoContainerSpacing = 2;
 
 - (void)didSwitchToCell:(AWEVideoContainerCollectionViewCell *)cell
 {
+    
     NSParameterAssert(cell);
     cell.videoDetail.tracerDic = self.extraDic;
     self.detailPromptManager.dataFetchManager = self.dataFetchManager;
@@ -893,6 +892,8 @@ const static CGFloat kAWEVideoContainerSpacing = 2;
             if ([cell isKindOfClass:[AWEVideoContainerCollectionViewCell class]] ||
                 [cell isKindOfClass:[AWEVideoContainerAdCollectionViewCell class]]) {
                 if (![newIndexPath isEqual:self.currentIndexPath]) {
+                    [self.currentVideoCell.overlayViewController.miniSlider setWatchedProgress:0];
+                    [self.currentVideoCell.overlayViewController.miniSlider setCacheProgress:0];
                     // 左右划的播放
                     [self showPromotionIfNecessaryWithIndex:itemIndex];
                     

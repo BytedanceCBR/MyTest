@@ -172,6 +172,7 @@ static const CGFloat kCheckChallengeButtonLeftPadding = 28;
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(skStoreViewDidDisappear:) name:@"SKStoreProductViewDidDisappearKey" object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationWillEnterForeground:) name:UIApplicationWillEnterForegroundNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(likeStateChange:) name:@"kFHUGCDiggStateChangeNotification" object:nil];
+    self.videoTimer = [NSTimer scheduledTimerWithTimeInterval:0.5 target:self selector:@selector(getVideoTimers) userInfo:nil repeats:YES];
     // 解决较低版本的 iOS 中布局可能会产生问题，例如隐式动画、布局错位等问题，猜测可能是 UICollectionView 的问题
     void (^fuckLayout)() = ^{
         [UIView performWithoutAnimation:^{
