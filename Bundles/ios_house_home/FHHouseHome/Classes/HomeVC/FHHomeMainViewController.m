@@ -482,7 +482,7 @@ static NSString * const kFUGCPrefixStr = @"fugc";
                                params:@{
                                    @"page_type": @"maintab",
                                    @"popup_name": @"version_upgrade",
-                                   @"ab_sdk_version": model.tipsVersionCode.stringValue?:@"be_null",
+                                   @"version_number": model.tipsVersionCode.stringValue?:@"be_null",
                                    @"is_preload": @"0",
                                    @"click_position": @"instant_upgrade",
                                    @"event_tracking_id": @"110831"
@@ -496,7 +496,7 @@ static NSString * const kFUGCPrefixStr = @"fugc";
                                params:@{
                                    @"page_type": @"maintab",
                                    @"popup_name": @"version_upgrade",
-                                   @"ab_sdk_version": model.tipsVersionCode.stringValue?:@"be_null",
+                                   @"version_number": model.tipsVersionCode.stringValue?:@"be_null",
                                    @"is_preload": @"0",
                                    @"click_position": @"close",
                                    @"event_tracking_id": @"110831"
@@ -509,7 +509,7 @@ static NSString * const kFUGCPrefixStr = @"fugc";
                            params:@{
                                @"page_type": @"maintab",
                                @"popup_name": @"version_upgrade",
-                               @"ab_sdk_version": model.tipsVersionCode.stringValue?:@"be_null",
+                               @"version_number": model.tipsVersionCode.stringValue?:@"be_null",
                                @"is_preload": @"0",
                                @"event_tracking_id": @"110830"
                            }];
