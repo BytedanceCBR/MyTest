@@ -727,7 +727,7 @@ static const CGFloat kCheckChallengeButtonLeftPadding = 28;
     
     
     if (showAnima) {
-         [self _showPlusOneDiggAnimation];
+//         [self _showPlusOneDiggAnimation];
         CGFloat viewWidth = 100;
         NSString *animationPath = [[NSBundle mainBundle] pathForResource:@"like" ofType:@"json" inDirectory:@"HTSVideoPlay.bundle"];
         LOTAnimationView *animationView = [LOTAnimationView animationWithFilePath:animationPath];

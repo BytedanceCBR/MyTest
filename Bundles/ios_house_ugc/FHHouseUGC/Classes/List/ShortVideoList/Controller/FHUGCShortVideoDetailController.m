@@ -387,19 +387,6 @@ static const CGFloat kFloatingViewOriginY = 230;
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    
-//    [[TTCustomAnimationManager sharedManager] registerFromVCClass:[self class] toVCClass:[self class] animationClass:[TSVProfileVCEnterDetailAnimation class]];
-//    [TSVDetailRouteHelper registerCustomPushAnimationFromVCClass:[self class]];
-//
-//    self.animateManager = ({
-//        TTImagePreviewAnimateManager *manager = [[TTImagePreviewAnimateManager alloc] init];
-//        if (!isEmptyString(self.exitManager.maskViewThemeColorKey)) {
-//            manager.maskViewThemeColorKey = self.exitManager.maskViewThemeColorKey;
-//        }
-//        manager.panDelegate = self;
-//        [manager registeredPanBackWithGestureView:self.view];
-//        manager;
-//    });
 
     //黑色背景
     self.blackMaskView = ({
@@ -411,7 +398,6 @@ static const CGFloat kFloatingViewOriginY = 230;
     
     if (![AWEVideoPlayAccountBridge isLogin]) {
         [AWEVideoPlayAccountBridge fetchTTAccount];
-//        [AWEVideoPlayAccountBridge checkin];
     }
     self.view.backgroundColor = [UIColor blackColor];
     self.automaticallyAdjustsScrollViewInsets = NO;
@@ -432,10 +418,6 @@ static const CGFloat kFloatingViewOriginY = 230;
         controller.extraDic = self.extraDic;
         controller.needCellularAlert = (self.pageParams[AWEVideoPageParamNonWiFiAlert] && [self.pageParams[AWEVideoPageParamNonWiFiAlert] isKindOfClass:[NSNumber class]]) ? [self.pageParams[AWEVideoPageParamNonWiFiAlert] boolValue] : YES;
         @weakify(self)
-//        controller.wantToClosePage = ^{
-//            @strongify(self);
-          
-//        };
         controller.loadMoreBlock = ^(BOOL preload) {
             @strongify(self);
             [self loadMoreAutomatically:preload];
@@ -453,10 +435,6 @@ static const CGFloat kFloatingViewOriginY = 230;
                             [self playView:nil didClickInputWithModel:self.model];
                         };
                 viewModel.showProfilePopupBlock = ^{
-//                    @strongify(self);
-//                    [self layoutProfileViewController];
-//                    [self updateProfileViewModelIfNeeded];
-//                    [self showProfileView];
                 };
                 viewModel.showCommentPopupBlock = ^{
                     @strongify(self);
@@ -469,8 +447,6 @@ static const CGFloat kFloatingViewOriginY = 230;
                 };
                 viewModel;
             });
-//            viewController.delegate = self;
-//            viewController.detailPromptManager = self.detailPromptManager;
         };
         controller;
     });
