@@ -31,7 +31,7 @@
 - (instancetype)initWithFrame:(CGRect)frame {
     if (self = [super initWithFrame:frame]) {
         UIView *backgroundView = [[UIView alloc] initWithFrame:self.bounds];
-        backgroundView.backgroundColor = [[UIColor colorWithHexString:@"#212121"] colorWithAlphaComponent:0.9];
+        backgroundView.backgroundColor = [[UIColor colorWithHexString:@"#333333"] colorWithAlphaComponent:0.7];
         [self addSubview:backgroundView];
         self.backgroundView = backgroundView;
         [self.backgroundView mas_makeConstraints:^(MASConstraintMaker *make) {
