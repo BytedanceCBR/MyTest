@@ -74,6 +74,7 @@
                            @"houseListOpenUrl": @"house_list_open_url",
                            @"mapFindHouseOpenUrl": @"map_find_house_open_url",
                            @"nid":@"id",
+                           @"coordinateEnclosure":@"coordinate_enclosure"
                            };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
         return dict[keyName]?:keyName;
