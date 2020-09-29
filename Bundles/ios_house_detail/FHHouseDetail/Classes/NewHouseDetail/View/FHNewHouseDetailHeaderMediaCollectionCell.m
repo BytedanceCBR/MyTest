@@ -165,6 +165,9 @@
         [weakSelf trackClickTabWithIndex:index element:@"big_photo_album"];
     };
     pictureDetailViewController.clickImageBlock = ^(NSInteger currentIndex) {
+        if (currentIndex < 0 || currentIndex >= weakSelf.dataHelper.pictureDetailData.mediaItemArray.count) {
+            return;
+        }
         FHMultiMediaItemModel *itemModel = weakSelf.dataHelper.pictureDetailData.mediaItemArray[currentIndex];
         if (itemModel.mediaType == FHMultiMediaTypeVRPicture) {
             [weakSelf gotoVRDetail:itemModel];
