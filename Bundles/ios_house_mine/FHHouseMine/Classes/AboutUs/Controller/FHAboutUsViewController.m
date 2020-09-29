@@ -12,6 +12,7 @@
 #import "UIColor+Theme.h"
 #import "UIFont+House.h"
 #import "TTSandBoxHelper.h"
+#import "UIImage+FIconFont.h"
 
 @interface FHAboutUsViewController ()
 
@@ -42,6 +43,10 @@
 - (void)initNaviBar {
     [self setupDefaultNavBar:NO];
     self.customNavBarView.title.text = @"关于我们";
+    [self.customNavBarView.leftBtn setBackgroundImage:nil forState:UIControlStateNormal];
+    [self.customNavBarView.leftBtn setBackgroundImage:nil forState:UIControlStateHighlighted];
+    [self.customNavBarView.leftBtn setImage:ICON_FONT_IMG(24, @"\U0000E68A", [UIColor themeGray1]) forState:UIControlStateNormal];
+    
 }
 
 - (void)initViews {
