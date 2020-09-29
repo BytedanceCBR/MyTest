@@ -547,19 +547,18 @@ static const CGFloat kFloatingViewOriginY = 230;
     [self.view addSubview:self.videoContainerViewController.view];
     [self.videoContainerViewController didMoveToParentViewController:self];
 
+    //111
     self.commentView = [[SSThemedView alloc] initWithFrame:CGRectMake(0, CGRectGetHeight([UIScreen mainScreen].bounds), CGRectGetWidth(self.view.bounds), CGRectGetHeight([UIScreen mainScreen].bounds) - kFloatingViewOriginY)];
-//    self.commentView.autoresizingMask = UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight;
     self.commentView.layer.cornerRadius = 6.0;
     self.commentView.backgroundColorThemeKey = kColorBackground4;
     self.commentView.hidden = YES;
     [self.view addSubview:self.commentView];
-    
 
     self.commentHeaderLabel = [[SSThemedLabel alloc] initWithFrame:CGRectMake(15, 0, CGRectGetWidth(self.commentView.bounds) - 15.0 - 44.0 - 15.0, 49.0)];
-    self.commentHeaderLabel.centerX = self.commentView.centerY;
+    self.commentHeaderLabel.centerX = self.commentView.centerX;
+     self.commentHeaderLabel.textAlignment = NSTextAlignmentCenter;
     self.commentHeaderLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleBottomMargin;
     self.commentHeaderLabel.font = [UIFont systemFontOfSize:17.0f];
-//    self.commentHeaderLabel.textAlignment = NSTextAlignmentCenter;
     self.commentHeaderLabel.textColorThemeKey = kColorText1;
     [self.commentView addSubview:self.commentHeaderLabel];
 
@@ -568,7 +567,6 @@ static const CGFloat kFloatingViewOriginY = 230;
     [self.commentView addSubview:sepline];
 
     SSThemedButton *commentViewCloseButton = [[SSThemedButton alloc] initWithFrame:CGRectMake(0, 0, 44, 44)];
-    commentViewCloseButton.right = self.commentView.width;
     commentViewCloseButton.centerY = self.commentHeaderLabel.centerY;
     commentViewCloseButton.imageName = @"tsv_close";
     [commentViewCloseButton addTarget:self action:@selector(closeCommentList:) forControlEvents:UIControlEventTouchUpInside];
@@ -585,11 +583,6 @@ static const CGFloat kFloatingViewOriginY = 230;
     self.tableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, CGRectGetWidth(self.tableView.bounds), 37)];
     [self.commentView addSubview:self.tableView];
 
-
-//    SSThemedImageView *inputIcon = [[SSThemedImageView alloc] initWithFrame:CGRectMake(9, 4, 24, 24)];
-//    inputIcon.imageName = @"hts_vp_write_new";
-//    [fakeTextBackgroundView addSubview:inputIcon];
-
     [self.tableView registerClass:[AWEVideoCommentCell class] forCellReuseIdentifier:CommentCellIdentifier];
 
     [self.tableView addPullUpWithInitText:@"上拉可以加载更多数据" pullText:@"松开立即加载更多数据" loadingText:@"加载中..." noMoreText:@"没有更多啦～" timeText:nil lastTimeKey:nil ActioinHandler:^{
@@ -597,23 +590,23 @@ static const CGFloat kFloatingViewOriginY = 230;
         [self handleLoadMoreComments];
     }];
 
-    self.emptyHintView = [[UIView alloc] initWithFrame:CGRectMake(0, CGRectGetHeight(self.commentHeaderLabel.frame), CGRectGetWidth(self.view.bounds), 90.0)];
+    self.emptyHintView = [[UIView alloc] initWithFrame:CGRectMake(0, CGRectGetHeight(self.commentHeaderLabel.frame), CGRectGetWidth(self.view.bounds),CGRectGetHeight(self.tableView.bounds))];
     self.emptyHintView.autoresizingMask = UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight;
     self.emptyHintView.hidden = YES;
     [self.commentView addSubview:self.emptyHintView];
 
-   UIGestureRecognizer *imageGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleFakeInputBarClick:)];
+    UIGestureRecognizer *imageGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleFakeInputBarClick:)];
     UIImageView *imageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"short_video_comment"]];
     imageView.size = CGSizeMake(115, 115);
     imageView.userInteractionEnabled = YES;
     [imageView addGestureRecognizer:imageGesture];
     imageView.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin|UIViewAutoresizingFlexibleRightMargin;
-    imageView.centerX = CGRectGetWidth(self.emptyHintView.bounds) / 2,
+    imageView.centerX = CGRectGetWidth(self.emptyHintView.bounds) / 2;
     imageView.centerY = CGRectGetHeight(self.emptyHintView.bounds) / 2.0-20;
     [self.emptyHintView addSubview:imageView];
 
      UIGestureRecognizer *labelGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleFakeInputBarClick:)];
-    UILabel *emptyHintLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, CGRectGetMaxY(imageView.frame)+15, CGRectGetWidth(self.emptyHintView.bounds), 18)];
+    UILabel *emptyHintLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, CGRectGetMaxY(imageView.frame)+10, CGRectGetWidth(self.emptyHintView.bounds), 18)];
     emptyHintLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth;
     emptyHintLabel.font = [UIFont boldSystemFontOfSize:15];
     emptyHintLabel.userInteractionEnabled = YES;
@@ -625,21 +618,21 @@ static const CGFloat kFloatingViewOriginY = 230;
     
     UIGestureRecognizer *inputTapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleFakeInputBarClick:)];
     SSThemedView *fakeInputBar = [[SSThemedView alloc] initWithFrame:CGRectMake(0, CGRectGetMaxY(self.tableView.frame), CGRectGetWidth(self.commentView.bounds), 44)];
-    fakeInputBar.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-    fakeInputBar.backgroundColorThemeKey = kColorBackground4;
-    fakeInputBar.borderColorThemeKey = kColorLine7;
-    fakeInputBar.separatorAtTOP = YES;
-    [fakeInputBar addGestureRecognizer:inputTapGesture];
-    [self.commentView addSubview:fakeInputBar];
-    self.fakeInputBar = fakeInputBar;
-    
-    SSThemedView *fakeTextBackgroundView = [[SSThemedView alloc] initWithFrame:CGRectMake(14, 6, CGRectGetWidth(fakeInputBar.bounds) - 28, CGRectGetHeight(fakeInputBar.bounds) - 12)];
-    fakeTextBackgroundView.backgroundColorThemeKey = @"grey7";
-    fakeTextBackgroundView.layer.cornerRadius = CGRectGetHeight(fakeTextBackgroundView.bounds) / 2;
-    fakeTextBackgroundView.layer.masksToBounds = YES;
-    fakeTextBackgroundView.layer.borderWidth = [TTDeviceHelper ssOnePixel];
-    fakeTextBackgroundView.borderColorThemeKey = @"grey7";
-    [fakeInputBar addSubview:fakeTextBackgroundView];
+       fakeInputBar.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+       fakeInputBar.backgroundColorThemeKey = kColorBackground4;
+       fakeInputBar.borderColorThemeKey = kColorLine7;
+       fakeInputBar.separatorAtTOP = YES;
+       [fakeInputBar addGestureRecognizer:inputTapGesture];
+       [self.commentView addSubview:fakeInputBar];
+       self.fakeInputBar = fakeInputBar;
+       
+       SSThemedView *fakeTextBackgroundView = [[SSThemedView alloc] initWithFrame:CGRectMake(14, 6, CGRectGetWidth(fakeInputBar.bounds) - 28, CGRectGetHeight(fakeInputBar.bounds) - 12)];
+       fakeTextBackgroundView.backgroundColorThemeKey = @"grey7";
+       fakeTextBackgroundView.layer.cornerRadius = CGRectGetHeight(fakeTextBackgroundView.bounds) / 2;
+       fakeTextBackgroundView.layer.masksToBounds = YES;
+       fakeTextBackgroundView.layer.borderWidth = [TTDeviceHelper ssOnePixel];
+       fakeTextBackgroundView.borderColorThemeKey = @"grey7";
+       [fakeInputBar addSubview:fakeTextBackgroundView];
     
     SSThemedLabel *inputLabel = [[SSThemedLabel alloc] initWithFrame:CGRectMake(15, 6, CGRectGetWidth(fakeTextBackgroundView.frame) - 15 , 20)];
     inputLabel.text = @"写评论...";

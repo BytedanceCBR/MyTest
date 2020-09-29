@@ -135,9 +135,7 @@
     self.videoPlayView.frame = frame;
     self.overlayViewController.view.frame = frame;
 
-    BOOL useEdgeToEdgeUI = [[[TTSettingsManager sharedManager] settingForKey:@"tt_huoshan_detail_edge_to_edge_adjustment"
-                                                                defaultValue:@YES
-                                                                      freeze:NO] boolValue];
+    BOOL useEdgeToEdgeUI = NO;
     if (useEdgeToEdgeUI) {
         CGFloat videoAspectRatio;
 //        NSString *videoLocalPlayAddr = self.videoDetail.videoLocalPlayAddr;
