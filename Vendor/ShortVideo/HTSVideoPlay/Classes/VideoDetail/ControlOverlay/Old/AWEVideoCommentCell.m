@@ -29,6 +29,8 @@
 #import "UIColor+Theme.h"
 #import "UIFont+House.h"
 #import "UIImage+FIconFont.h"
+#import "UIButton+FHUGCMultiDigg.h"
+#import <ReactiveObjC/ReactiveObjC.h>
 
 #define kTTCommentContentLabelQuotedCommentUserURLString @"com.bytedance.kTTCommentContentLabelQuotedCommentUserURLString"
 
@@ -150,18 +152,15 @@
         }];
         
         self.likeButton = [UIButton new];
-        [self.likeButton setTitleColor:[UIColor colorWithHexStr:@"0x979f9c"] forState:UIControlStateNormal];
-        [self.likeButton setTitleColor:[UIColor themeOrange4] forState:UIControlStateSelected];
         [self.likeButton setTitle:@"赞" forState:UIControlStateNormal];
         [self.likeButton setTitle:@"赞" forState:UIControlStateSelected];
         self.likeButton.titleLabel.font = [UIFont systemFontOfSize:13.0];
         self.likeButton.titleEdgeInsets = UIEdgeInsetsMake(0, 6, 0, 0);
-        [self.likeButton setImage:ICON_FONT_IMG(24, @"\U0000e69c", [UIColor colorWithHexStr:@"0x979f9c"]) forState:UIControlStateNormal];
-        [self.likeButton setImage:ICON_FONT_IMG(24, @"\U0000e6b1", [UIColor themeOrange4]) forState:UIControlStateSelected];
         [self.likeButton addTarget:self action:@selector(likeButtonTapped) forControlEvents:UIControlEventTouchUpInside];
         UIEdgeInsets insets = self.likeButton.titleEdgeInsets;
         self.likeButton.titleEdgeInsets = UIEdgeInsetsMake(4, insets.left, insets.bottom, insets.right);
         [self addSubview:self.likeButton];
+        [self.likeButton enableMulitDiggEmojiAnimation];
         
         self.deleteButton = [UIButton new];
         [self.deleteButton setTitleColor:[UIColor tt_themedColorForKey:kColorText1] forState:UIControlStateNormal];
@@ -271,6 +270,7 @@
     }
     
     self.likeButton.selected = model.userDigg;
+    RAC(self.likeButton,selected) = RACObserve(model, userDigg);
     NSNumber *diggCount = @(model.diggCount.unsignedIntegerValue);
     [self.likeButton setTitle:[self showStringFromNumber:diggCount] forState:UIControlStateNormal];
     [self.likeButton setTitle:[self showStringFromNumber:diggCount] forState:UIControlStateSelected];
@@ -302,61 +302,10 @@
 
 - (void)refreshCellWithDiggModel:(AWECommentModel *)model cancelDigg:(BOOL)cancelDigg
 {
-    if (!self.likeButton.selected && model.userDigg) {
-        [self.class motionInView:self.likeButton.imageView image:[UIImage imageNamed:@"hts_add_all_dynamic"] offsetPoint:CGPointMake(4.0, -9.0)];
-        
-        self.likeButton.imageView.transform = CGAffineTransformMakeScale(1.f, 1.f);
-        self.likeButton.imageView.contentMode = UIViewContentModeCenter;
-        __weak typeof(self) weakSelf = self;
-        [UIView animateWithDuration:0.1f delay:0.f options:UIViewAnimationOptionCurveEaseOut animations:^{
-            __strong typeof(weakSelf) strongSelf = weakSelf;
-            strongSelf.likeButton.imageView.transform = CGAffineTransformMakeScale(0.6f, 0.6f);
-            strongSelf.likeButton.alpha = 0;
-        } completion:^(BOOL finished) {
-            __strong typeof(weakSelf) strongSelf = weakSelf;
-            strongSelf.likeButton.selected = YES;
-            strongSelf.likeButton.alpha = 0;
-            [UIView animateWithDuration:0.2f delay:0.f options:UIViewAnimationOptionCurveEaseIn animations:^{
-                __strong typeof(weakSelf) strongSelf = weakSelf;
-                strongSelf.likeButton.imageView.transform = CGAffineTransformMakeScale(1.f,1.f);
-                strongSelf.likeButton.alpha = 1;
-            } completion:^(BOOL finished) {
-            }];
-        }];
-    }
-    
-    self.likeButton.selected = model.userDigg;
     [self.likeButton setTitle:[self showStringFromNumber:model.diggCount] forState:UIControlStateNormal];
     [self.likeButton setTitle:[self showStringFromNumber:model.diggCount] forState:UIControlStateSelected];
     [self setNeedsLayout];
     [self layoutIfNeeded];
-}
-
-+ (void)motionInView:(UIView *)targetView image:(UIImage *)img offsetPoint:(CGPoint)offset
-{
-    UIView *motionView = [[UIImageView alloc] initWithImage:img];
-    motionView.center = CGPointMake(targetView.frame.size.width/2 + offset.x, targetView.frame.size.height/8 + offset.y);
-    UIView *topmostView = [UIApplication sharedApplication].keyWindow;
-    if (!topmostView) {
-        UIViewController *topmostController = [BTDResponder topViewControllerForView:nil];
-        topmostView = topmostController.view;
-    }
-    motionView.center = [topmostView convertPoint:motionView.center fromView:targetView];
-    [topmostView addSubview:motionView];
-    
-    motionView.alpha = 0.f;
-    motionView.transform = CGAffineTransformMakeScale(0.01f, 0.01f);
-    [UIView animateWithDuration:0.3f delay:0.f options:UIViewAnimationOptionCurveLinear animations:^{
-        motionView.alpha = 1.f;
-        motionView.transform = CGAffineTransformMakeScale(1.f, 1.f);
-    } completion:^(BOOL finished) {
-        [UIView animateWithDuration:0.1f delay:0.f options:UIViewAnimationOptionCurveEaseIn animations:^{
-            motionView.alpha = 0.f;
-            motionView.transform = CGAffineTransformMakeScale(1.3, 1.3);
-        } completion:^(BOOL finished) {
-            [motionView removeFromSuperview];
-        }];
-    }];
 }
 
 - (void)nameTapped

@@ -21,6 +21,7 @@
 #import "TTVideoArticleService+Action.h"
 #import "TTVideoArticleServiceMessage.h"
 #import "TTVFeedUserOpDataSyncMessage.h"
+#import "UIButton+FHUGCMultiDigg.h"
 
 @interface FHUGCCellBottomView ()
 
@@ -72,7 +73,7 @@
     self.commentBtn = [[UIButton alloc] init];
     _commentBtn.opaque = YES;
     _commentBtn.imageView.contentMode = UIViewContentModeCenter;
-    [_commentBtn setImage:ICON_FONT_IMG(24, @"\U0000e699", [UIColor themeGray1]) forState:UIControlStateNormal];// @"fh_ugc_comment"
+    [_commentBtn setImage:ICON_FONT_IMG(20, @"\U0000e699", [UIColor themeGray1]) forState:UIControlStateNormal];// @"fh_ugc_comment"
     [_commentBtn setTitleColor:[UIColor themeGray1] forState:UIControlStateNormal];
     _commentBtn.titleLabel.font = [UIFont themeFontRegular:14];
     [_commentBtn setImageEdgeInsets:UIEdgeInsetsMake(0, -2, 0, 2)];
@@ -85,8 +86,6 @@
     
     self.likeBtn = [[UIButton alloc] init];
     _likeBtn.imageView.contentMode = UIViewContentModeCenter;
-    [_likeBtn setImage:ICON_FONT_IMG(24, @"\U0000e69c", [UIColor themeGray1]) forState:UIControlStateNormal];// @"fh_ugc_comment"
-    [_likeBtn setTitleColor:[UIColor themeGray1] forState:UIControlStateNormal];
     _likeBtn.titleLabel.font = [UIFont themeFontRegular:14];
     [_likeBtn setImageEdgeInsets:UIEdgeInsetsMake(0, -2, 0, 2)];
     [_likeBtn setTitleEdgeInsets:UIEdgeInsetsMake(0, 2, 0, -2)];
@@ -96,6 +95,7 @@
     _likeBtn.titleLabel.backgroundColor = [UIColor whiteColor];
     [_likeBtn sizeToFit];
     [self addSubview:_likeBtn];
+    [self.likeBtn enableMulitDiggEmojiAnimation];
 
     self.bottomSepView = [[UIView alloc] init];
     _bottomSepView.backgroundColor = [UIColor themeGray7];
@@ -229,14 +229,7 @@
     }else{
         [self.likeBtn setTitle:[TTBusinessManager formatCommentCount: count] forState:UIControlStateNormal];
     }
-    if([userDigg boolValue]){
-        [self.likeBtn setImage:ICON_FONT_IMG(24, @"\U0000e6b1", [UIColor themeOrange4]) forState:UIControlStateNormal];
-        [self.likeBtn setTitleColor:[UIColor themeOrange4] forState:UIControlStateNormal];
-        
-    }else{
-        [self.likeBtn setImage:ICON_FONT_IMG(24, @"\U0000e69c", [UIColor themeGray1]) forState:UIControlStateNormal];
-        [self.likeBtn setTitleColor:[UIColor themeGray1] forState:UIControlStateNormal];
-    }
+    self.likeBtn.selected = [userDigg boolValue];
     //补充逻辑，如果用户状态为已点赞，但是点赞数为零，这时候默认点赞数设为1
     if([userDigg boolValue] && count == 0){
         [self.likeBtn setTitle:@"1" forState:UIControlStateNormal];

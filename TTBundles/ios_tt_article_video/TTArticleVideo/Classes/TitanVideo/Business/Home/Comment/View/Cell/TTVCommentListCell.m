@@ -567,6 +567,7 @@
             StrongSelf;
             [self digButtonOnClick:nil];
         }];
+        
     }
     return _digButton;
 }
