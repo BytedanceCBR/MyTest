@@ -486,19 +486,6 @@ NSString *const TSVLastShareActivityName = @"TSVLastShareActivityName";
 
 - (void)clickLikeButton
 {
-    NSString *eventName;
-    if (!self.model.userDigg) {
-        eventName = @"rt_like";
-    } else {
-        eventName = @"rt_unlike";
-    }
-    [AWEVideoDetailTracker trackEvent:eventName
-                                model:self.model
-                      commonParameter:self.commonTrackingParameter
-                       extraParameter:@{
-                                        @"user_id": self.model.user.userId ?: @"",
-                                        @"position": @"detail",
-                                        }];
 
     if (!self.model.userDigg) {
         self.model.diggCount = [NSString stringWithFormat:@"%d",[self.model.diggCount intValue] + 1];
@@ -518,13 +505,6 @@ NSString *const TSVLastShareActivityName = @"TSVLastShareActivityName";
 - (void)doubleTapView
 {
     if (!self.isLiked) {
-        //        [AWEVideoDetailTracker trackEvent:@"rt_like"
-        //                                    model:self.model
-        //                          commonParameter:self.commonTrackingParameter
-        //                           extraParameter:@{
-        //                                            @"user_id": self.model.author.userID,
-        //                                            @"position": @"double_like",
-        //                                            }];
             [self markLikeDirectly];
         }
 }
@@ -551,13 +531,6 @@ NSString *const TSVLastShareActivityName = @"TSVLastShareActivityName";
 
 - (void)clickCommentButton
 {
-    [AWEVideoDetailTracker trackEvent:@"enter_comment"
-                                model:self.model
-                      commonParameter:self.commonTrackingParameter
-                       extraParameter:@{
-                                        @"user_id": self.model.user.userId ?: @"",
-                                        @"position": @"detail",
-                                        }];
     if (self.showCommentPopupBlock) {
         self.showCommentPopupBlock();
     }
@@ -565,10 +538,6 @@ NSString *const TSVLastShareActivityName = @"TSVLastShareActivityName";
 
 - (void)clickShareButton
 {
-//    [AWEVideoDetailTracker trackEvent:@"share_button"
-//                                model:self.model
-//                      commonParameter:self.commonTrackingParameter
-//                       extraParameter:@{@"position": @"detail"}];
 
     [self.detailPromptManager updateVisibleFloatingViewCountForVisibility:YES];
     //小视频暂时不出分享广告
@@ -592,10 +561,6 @@ NSString *const TSVLastShareActivityName = @"TSVLastShareActivityName";
 
 - (void)clickCheckChallengeButton
 {
-    [AWEVideoDetailTracker trackEvent:@"shortvideo_pk_check"
-                                model:self.model
-                      commonParameter:self.commonTrackingParameter
-                       extraParameter:nil];
     
 //    [TSVDetailRouteHelper openURLByPushViewController:[NSURL URLWithString:self.model.checkChallenge.challengeSchemaUrl]];
 }
@@ -660,15 +625,7 @@ NSString *const TSVLastShareActivityName = @"TSVLastShareActivityName";
     [self didShareToActivityNamed:activity.contentItemType];
 
     id<TTActivityContentItemProtocol> contentItem = activity.contentItem;
-//    if ([contentItem.contentItemType isEqualToString:TTActivityContentItemTypeSaveVideo]) {
-//        [AWEVideoDetailTracker trackEvent:@"video_cache"
-//                                    model:self.model
-//                          commonParameter:self.commonTrackingParameter
-//                           extraParameter:nil];
-//        [TSVVideoDetailShareHelper handleSaveVideoWithModel:self.model];
-//    }
     if ([contentItem.contentItemType isEqualToString:TTActivityContentItemTypeForwardWeitoutiao]) {
-
         NSMutableDictionary *params = @{}.mutableCopy;
         params[@"enter_from"] = self.commonTrackingParameter[@"enter_from"];
         params[@"category_name"] = self.commonTrackingParameter[@"category_name"];

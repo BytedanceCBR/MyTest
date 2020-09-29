@@ -58,7 +58,6 @@
 #import "UIViewController+TabBarSnapShot.h"
 #import "UIImageView+WebCache.h"
 #import "AWEVideoDetailFirstUsePromptViewController.h"
-#import "AWEVideoDetailTracker.h"
 #import <TTReporter/TTReportManager.h>
 #import "TTMonitor.h"
 #import "TSVVideoDetailPromptManager.h"
@@ -876,12 +875,6 @@ static const CGFloat kFloatingViewOriginY = 230;
             default:
                 break;
         }
-        [AWEVideoDetailTracker trackEvent:@"detail_back"
-                                    model:self.model
-                          commonParameter:self.commonTrackingParameter
-                           extraParameter:@{
-                                            @"back_type": backType
-                                            }];
     }
 }
 
@@ -1270,10 +1263,6 @@ static const CGFloat kFloatingViewOriginY = 230;
 
     NSMutableDictionary *extra = [NSMutableDictionary dictionaryWithDictionary:[self commentExtraPositionDict]];
     [extra setValue:cancelType forKey:@"cancel_type"];
-    [AWEVideoDetailTracker trackEvent:@"comment_cancel"
-                                model:self.model
-                      commonParameter:self.commonTrackingParameter
-                       extraParameter:extra];
 
     self.commentViewStatus = TSVDetailCommentViewStatusNone;
 
@@ -1439,14 +1428,6 @@ static const CGFloat kFloatingViewOriginY = 230;
         }else{
             reasonStr = parameters[@"criticism"];
         }
-
-        [AWEVideoDetailTracker trackEvent:@"rt_report"
-                                    model:self.model
-                          commonParameter:self.commonTrackingParameter
-                           extraParameter:@{
-                                            @"reason" : reasonStr ?: @"",
-                                            @"position": @"detail_top_bar",
-                                            }];
     }];
 }
 
@@ -1822,12 +1803,6 @@ static const CGFloat kFloatingViewOriginY = 230;
     self.loadingShareImage = YES;
     
     @weakify(self);
-    [AWEVideoDetailTracker trackEvent:@"click_more"
-                                model:self.model
-                      commonParameter:self.commonTrackingParameter
-                       extraParameter:@{
-                                        @"position": @"detail_top_bar",
-                                        }];
 
     [self.detailPromptManager updateVisibleFloatingViewCountForVisibility:YES];
 
@@ -1877,10 +1852,6 @@ static const CGFloat kFloatingViewOriginY = 230;
 
 - (void)playView:(AWEVideoPlayView *)view didClickCommentWithModel:(FHFeedUGCCellModel *)model
 {
-    [AWEVideoDetailTracker trackEvent:@"comment_list_show"
-                                model:self.model
-                      commonParameter:self.commonTrackingParameter
-                       extraParameter:@{@"position": @"detail"}];
 
     [self showCommentsListWithStatus:TSVDetailCommentViewStatusPopByClick];
 }
@@ -1985,10 +1956,6 @@ static const CGFloat kFloatingViewOriginY = 230;
 {
     NSMutableDictionary *extra = [NSMutableDictionary dictionaryWithDictionary:[self commentExtraPositionDict]];
     [extra setValue:[commentModel.userId stringValue] ?: @"" forKey:@"user_id"];
-    [AWEVideoDetailTracker trackEvent:@"comment_click_avatar"
-                                model:self.model
-                      commonParameter:self.commonTrackingParameter
-                       extraParameter:extra];
 
     NSMutableDictionary *params = [NSMutableDictionary dictionary];
     [params setValue:self.categoryName forKey:@"category_name"];
@@ -2001,10 +1968,6 @@ static const CGFloat kFloatingViewOriginY = 230;
 {
     NSMutableDictionary *extra = [NSMutableDictionary dictionaryWithDictionary:[self commentExtraPositionDict]];
     [extra setValue:[commentModel.userId stringValue] ?: @"" forKey:@"user_id"];
-    [AWEVideoDetailTracker trackEvent:@"comment_click_nick_name"
-                                model:self.model
-                      commonParameter:self.commonTrackingParameter
-                       extraParameter:extra];
 
     //进入个人主页ab
     [AWEVideoPlayTransitionBridge openProfileViewWithUserId:[commentModel.userId stringValue] params:nil];
@@ -2054,10 +2017,6 @@ static const CGFloat kFloatingViewOriginY = 230;
         if (progress > 0.3 || fabs(velocity.x) > 500) {
             //用户左滑进过个人主页，标记下，之后不在出引导
             [TSVSlideLeftEnterProfilePromptViewController setSlideLeftPromotionShown];
-            [AWEVideoDetailTracker trackEvent:@"draw_profile"
-                                        model:self.model
-                              commonParameter:self.commonTrackingParameter
-                               extraParameter:@{@"position": @"draw_bottom"}];
             [[TSVTransitionAnimationManager sharedManager].enterProfilePercentDrivenTransition finishInteractiveTransition];
         } else {
             [[TSVTransitionAnimationManager sharedManager].enterProfilePercentDrivenTransition cancelInteractiveTransition];
@@ -2393,30 +2352,12 @@ static const CGFloat kFloatingViewOriginY = 230;
 
     id<TTActivityContentItemProtocol> contentItem = activity.contentItem;
     if ([contentItem.contentItemType isEqualToString:TTActivityContentItemTypeFavourite]) {
-        [AWEVideoDetailTracker trackEvent:self.model.userRepin? @"rt_unfavourite" : @"rt_favourite"
-                                    model:self.model
-                          commonParameter:self.commonTrackingParameter
-                           extraParameter:@{
-                                            @"position": @"detail",
-                                            }];
         [self handleFavoriteVideoWithContentItem:(TTFavouriteContentItem *)contentItem];
     } else if ([contentItem.contentItemType isEqualToString:TTActivityContentItemTypeDislike]) {
-        [AWEVideoDetailTracker trackEvent:@"rt_dislike"
-                                    model:self.model
-                          commonParameter:self.commonTrackingParameter
-                           extraParameter:@{
-                                            @"position": @"detail_top_bar",
-                                            }];
         [self handleDislikeVideo];
     } else if ([contentItem.contentItemType isEqualToString:TTActivityContentItemTypeReport]) {
         [self handleReportVideo];
     } else if ([contentItem.contentItemType isEqualToString:TTActivityContentItemTypeDelete]) {
-        [AWEVideoDetailTracker trackEvent:@"profile_delete"
-                                    model:self.model
-                          commonParameter:self.commonTrackingParameter
-                           extraParameter:@{
-                                            @"position": @"detail_top_bar",
-                                            }];
         [self handleDeleteVideo];
     } else if ([contentItem.contentItemType isEqualToString:TTActivityContentItemTypeForwardWeitoutiao]) {
             [FHShortVideoTracerUtil clicksharePlatForm:self.model eventPlantFrom:@"weitoutiao"];
@@ -2425,13 +2366,6 @@ static const CGFloat kFloatingViewOriginY = 230;
             NSString *type = [AWEVideoShareModel labelForContentItemType:contentItem.contentItemType];
             NSAssert(type, @"Type should not be empty");
             [FHShortVideoTracerUtil clicksharePlatForm:self.model eventPlantFrom:type?:@""];
-    } else {
-        [AWEVideoDetailTracker trackEvent:@"click_more_cancel"
-                                    model:self.model
-                          commonParameter:self.commonTrackingParameter
-                           extraParameter:@{
-                                            @"position": @"detail_top_bar",
-                                            }];
     }
 }
 
@@ -2441,27 +2375,6 @@ static const CGFloat kFloatingViewOriginY = 230;
                error:(NSError *)error
                 desc:(NSString *)desc
 {
-    NSString *eventName = error ? @"share_fail" : @"share_done";
-    NSString *sharePlatform = [AWEVideoShareModel labelForContentItemType:activity.contentItemType] ?: @"";
-    id<TTActivityContentItemProtocol> contentItem = activity.contentItem;
-    NSArray *shareContentItemTypes = @[
-                                       TTActivityContentItemTypeWechat,
-                                       TTActivityContentItemTypeWechatTimeLine,
-                                       TTActivityContentItemTypeForwardWeitoutiao,
-                                       TTActivityContentItemTypeQQFriend,
-                                       TTActivityContentItemTypeQQZone
-//                                       TTActivityContentItemTypeSystem,
-                                       ];
-    if ([shareContentItemTypes containsObject:contentItem.contentItemType]) {
-        [AWEVideoDetailTracker trackEvent:eventName
-                                    model:self.model
-                          commonParameter:self.commonTrackingParameter
-                           extraParameter:@{
-                                            @"share_platform": sharePlatform,
-                                            @"position": @"detail_top_bar",
-                                            @"event_type": @"house_app2c_v2"
-                                            }];
-    }
     [TSVVideoShareManager synchronizeUserDefaultsWithAvtivityType:activity.contentItemType];
 }
 
@@ -2531,12 +2444,6 @@ static const CGFloat kFloatingViewOriginY = 230;
     
     commentWriteManager.delegate = nil;
     [self.commentWriteView dismissAnimated:YES];
-    if (model.replyToComment == nil) {
-        [AWEVideoDetailTracker trackEvent:@"rt_post_comment"
-                                    model:self.model
-                          commonParameter:self.commonTrackingParameter
-                           extraParameter:[self writeCommentExtraPositionDict]];
-    }
     
     [self.commentWriteView clearInputBar];
     self.model.commentCount = [NSString stringWithFormat:@"%ld", [self.commentManager totalCommentCount]];
