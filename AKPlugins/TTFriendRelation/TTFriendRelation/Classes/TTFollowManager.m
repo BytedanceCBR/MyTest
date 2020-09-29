@@ -75,7 +75,7 @@ extern NSString * const TTFollowSuccessForPushGuideNotification;
     requestModel.to_user_list = followStr;
     if (source > 0) requestModel.source = @(source);
     requestModel.reason = @(reason);
-    [FRRequestManager requestModel:requestModel callBackWithMonitor:^(NSError *error, NSObject<TTResponseModelProtocol> *responseModel, FRForumMonitorModel *monitorModel) {
+    [FRRequestManager requestModel:requestModel callBackWithMonitor:^(NSError *error, id<TTResponseModelProtocol> responseModel, FRForumMonitorModel *monitorModel) {
         for (NSString *userID in idArray) {
             [TTFollowManager updateUserFollowStateChangeForAction:FriendActionTypeFollow userID:userID];
         }
@@ -90,7 +90,7 @@ extern NSString * const TTFollowSuccessForPushGuideNotification;
                                                 userId:(NSString *)uid
                                             actionType:(FriendActionType)type
                                             completion:(FRMonitorNetworkModelFinishBlock)completionClk {
-    [FRRequestManager requestModel:model callBackWithMonitor:^(NSError *error, NSObject<TTResponseModelProtocol> *responseModel, FRForumMonitorModel *monitorModel) {
+    [FRRequestManager requestModel:model callBackWithMonitor:^(NSError *error, id<TTResponseModelProtocol> responseModel, FRForumMonitorModel *monitorModel) {
         [TTFollowManager updateUserFollowStateChangeForAction:type userID:uid];
         
         if (completionClk) {
@@ -106,9 +106,9 @@ extern NSString * const TTFollowSuccessForPushGuideNotification;
                                               keypath:(nullable NSString *)userIDKeyPath
                                        finalClassPair:(nullable NSDictionary<NSString *, NSString *> *)finalPair
                                            completion:(nullable FRMonitorNetworkModelFinishBlock)completionClk {
-    [FRRequestManager requestModel:model callBackWithMonitor:^(NSError *error, NSObject<TTResponseModelProtocol> *responseModel, FRForumMonitorModel *monitorModel) {
+    [FRRequestManager requestModel:model callBackWithMonitor:^(NSError *error, id<TTResponseModelProtocol> responseModel, FRForumMonitorModel *monitorModel) {
         if ([responseModel isKindOfClass:resClass]) {
-            id userObject = [responseModel valueForKeyPath:userIDKeyPath];
+            id userObject = [((NSObject *)responseModel) valueForKeyPath:userIDKeyPath];
             
             if ([userObject isKindOfClass:[NSString class]]) {
                 [TTFollowManager updateUserFollowStateChangeForAction:type userID:userObject];

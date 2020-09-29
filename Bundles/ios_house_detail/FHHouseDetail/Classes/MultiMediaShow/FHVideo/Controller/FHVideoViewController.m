@@ -6,22 +6,22 @@
 //
 
 #import "FHVideoViewController.h"
-#import "FHVideoView.h"
 #import "Masonry.h"
-#import "FHVideoViewModel.h"
 #import "UIViewAdditions.h"
 #import "FHVideoErrorView.h"
 #import "FHVideoNetFlowTipView.h"
 #import "FHUserTracker.h"
 #import "TTVFullScreenPart.h"
+#import "TTVLoadingPart.h"
 #import <BDWebImage/BDWebImageManager.h>
 #import "FHHMDTManager.h"
+#import "FHVideoCoverView.h"
+#import <ByteDanceKit/ByteDanceKit.h>
 
-@interface FHVideoViewController ()<FHVideoViewDelegate,TTVPlayerDelegate,TTVPlayerCustomViewDelegate>
+@interface FHVideoViewController ()<FHVideoCoverViewDelegate,TTVPlayerDelegate,TTVPlayerCustomViewDelegate>
 
 @property(nonatomic, strong) TTVPlayer *player;
-@property(nonatomic, strong) FHVideoView *videoView;
-@property(nonatomic, strong) FHVideoViewModel *viewModel;
+@property(nonatomic, strong) FHVideoCoverView *coverView;
 @property(nonatomic, assign) TTVPlaybackState playState;
 @property(nonatomic, assign) CGRect firstVideoFrame;
 //是否正在显示流量提示view
@@ -40,6 +40,26 @@
 
 @implementation FHVideoViewController
 
+//- (void)dealloc {
+//    NSLog(@"FHVideoViewController dealloc");
+//}
+
+- (void)setTracerDic:(NSDictionary *)tracerDic {
+    NSDictionary *logPbDict = nil;
+    id logPb = tracerDic[@"log_pb"];
+    if (logPb && [logPb isKindOfClass:[NSDictionary class]]) {
+        logPbDict = (NSDictionary *)logPb;
+    } else if (logPb && [logPb isKindOfClass:[NSString class]]){
+        logPbDict = [(NSString *)logPb btd_jsonDictionary];
+    }
+    NSMutableDictionary *tracer = [tracerDic mutableCopy];
+    if (logPbDict) {
+        [tracer removeObjectForKey:@"log_pb"];
+        tracer[@"from_gid"] = logPbDict[@"group_id"]?:@"be_null";
+    }
+    _tracerDic = tracer.copy;
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
@@ -48,28 +68,14 @@
 //    self.view.autoresizingMask = UIViewAutoresizingNone;
     self.isFirstDisplay = YES;
     
-    [self initViews];
-    [self initConstaints];
-    [self initViewModel];
-}
-
-- (void)initViews {
-//    self.player = [[TTVPlayer alloc] initWithOwnPlayer:YES configFileName:@"TTVPlayerStyle.plist"];
-//    self.player.delegate = self;
-//    self.player.customViewDelegate = self;
-//    self.player.showPlaybackControlsOnViewFirstLoaded = NO;
-//    self.player.enableNoPlaybackStatus = YES;
-    
-    self.videoView = [[FHVideoView alloc] initWithFrame:CGRectZero];
-    _videoView.delegate = self;
-    [self.view addSubview:_videoView];
-}
-
-- (void)initConstaints {
-    [self.videoView mas_makeConstraints:^(MASConstraintMaker *make) {
+    self.coverView = [[FHVideoCoverView alloc] initWithFrame:self.view.bounds];
+    self.coverView.delegate = self;
+    [self.view addSubview:self.coverView];
+    [self.coverView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.edges.mas_equalTo(self.view);
     }];
 }
+
 
 - (TTVPlayer *)player {
     if(!_player){
@@ -100,10 +106,6 @@
     return hei;
 }
 
-- (void)initViewModel {
-    self.viewModel = [[FHVideoViewModel alloc] initWithView:self.videoView controller:self];
-}
-
 - (void)updateData:(FHVideoModel *)model {
     if(model){
         // 是否是新的vid
@@ -117,7 +119,7 @@
         UIImage *placeHolder = [[BDWebImageManager sharedManager].imageCache imageForKey:key];
         
 //        self.videoView.coverView.imageUrl = _model.coverImageUrl;
-        [self.videoView.coverView showWithImageUrl:_model.coverImageUrl placeHoder:placeHolder];
+        [self.coverView showWithImageUrl:_model.coverImageUrl placeHoder:placeHolder];
         
         if(!self.isFirstDisplay){
             [self updateVideo];
@@ -149,10 +151,10 @@
 
 - (void)readyToPlay {
     if(self.isFirstDisplay){
-        self.videoView.playerView = self.player.view;
+//        [self.view insertSubview:self.player.view belowSubview:self.coverView];
+        self.coverView.playerView = self.player.view;
         [self updateVideo];
     }
-    [self.viewModel hideCoverView];
 }
 
 - (void)play {
@@ -162,6 +164,7 @@
 
     if(!self.isShowingNetFlow && self.playbackState != TTVPlaybackState_Playing){
         [self.player play];
+        
     }
 }
 
@@ -200,6 +203,7 @@
     if (self.playState == TTVPlaybackState_Stopped) {
         [self changeVideoFrame];
     }
+//    self.player.view.frame = self.coverView.frame;
 }
 
 // 只是改变 所播放视频的frame：videoFrame 值，布局并不改变
@@ -263,11 +267,11 @@
 
 - (void)showStartBtnWhenPause {
     if(self.playbackState == TTVPlaybackState_Paused && self.model.isShowStartBtnWhenPause && !self.isShowingNetFlow){
-        [self.viewModel showCoverViewStartBtn];
+//        [self showCoverViewStartBtn];
     }
     
     if(self.playbackState == TTVPlaybackState_Playing && self.model.isShowStartBtnWhenPause){
-        [self.viewModel hideCoverViewStartBtn];
+//        [self hideCoverViewStartBtn];
     }
 }
 
@@ -286,9 +290,43 @@
     }
 }
 
-#pragma mark - FHVideoViewDelegate
+- (void)didFinishedWithStatus:(TTVPlayFinishStatus *)finishStatus {
+    //用户正常停止播放视频
+    if(!finishStatus.playError){
+        [self showCoverView];
+    }
+}
 
-- (void)startPlayVideo {
+- (void)hideCoverView {
+    if(self.coverView.coverView.alpha == 1){
+        [UIView animateWithDuration:0.1 delay:0 options:UIViewAnimationOptionCurveEaseInOut animations:^{
+            self.coverView.coverView.alpha = 0;
+        } completion:^(BOOL finished) {
+            self.coverView.coverView.hidden = YES;
+        }];
+    }
+}
+
+- (void)showCoverView {
+    self.coverView.coverView.hidden = NO;
+    self.coverView.startBtn.hidden = NO;
+    [UIView animateWithDuration:0.1 delay:0 options:UIViewAnimationOptionCurveEaseInOut animations:^{
+        self.coverView.coverView.alpha = 1;
+    } completion:^(BOOL finished) {
+    }];
+}
+
+//- (void)showCoverViewStartBtn {
+//    self.coverView.alpha = 1;
+//}
+
+//- (void)hideCoverViewStartBtn {
+//    self.coverView.alpha = 0;
+//}
+
+#pragma mark - FHVideoCoverViewDelegate
+
+- (void)playVideo {
     [self play];
 }
 
@@ -297,13 +335,23 @@
 // control layout的代理
 - (void)viewDidLoad:(TTVPlayer *)player state:(TTVPlayerState *)state {
     ///传入旋转 view
-    TTVFullScreenPart * part = (TTVFullScreenPart *)[self.player partForKey:TTVPlayerPartKey_Full];
+    TTVFullScreenPart *part = (TTVFullScreenPart *)[self.player partForKey:TTVPlayerPartKey_Full];
     part.customAnimator.rotateView = self.view;
 }
 
 /// 播放器展示第一帧
 - (void)playerReadyToDisplay:(TTVPlayer *)player {
     [[FHHMDTManager sharedInstance] videoFirstFrameReport:VIDEO_FHVideoViewController];
+    UIView <TTVPlayerLoadingViewProtocol> *loadingView = (UIView <TTVPlayerLoadingViewProtocol> *)self.coverView.loadingView;
+    if ([loadingView respondsToSelector:@selector(stopLoading)]) {
+        [loadingView stopLoading];
+    }
+    
+    [self hideCoverView];
+    
+    if (self.hasLeftCurrentVC) {
+        [self pause];
+    }
 }
 
 - (void)playerViewDidLayoutSubviews:(TTVPlayer *)player state:(TTVPlayerState *)state {
@@ -385,7 +433,7 @@
 }
 
 - (void)player:(TTVPlayer *)player didFinishedWithStatus:(TTVPlayFinishStatus *)finishStatus {
-    [self.viewModel didFinishedWithStatus:finishStatus];
+    [self didFinishedWithStatus:finishStatus];
 }
 
 /// 播放器播放状态变化通知
@@ -441,6 +489,17 @@
     }
 }
 
+- (void)playerDidStartLoading:(TTVPlayer *)player {
+    TTVLoadingPart * part = (TTVLoadingPart *)[self.player partForKey:TTVPlayerPartKey_Loading];
+    UIView <TTVPlayerLoadingViewProtocol> *loadingView = part.loadingView;
+    self.coverView.loadingView = loadingView;
+    if ([loadingView respondsToSelector:@selector(startLoading)]) {
+        [loadingView startLoading];
+    }
+    
+    self.coverView.startBtn.hidden = YES;
+}
+
 #pragma mark - 埋点相关
 
 - (void)trackPlayBackState {
@@ -461,7 +520,7 @@
 - (void)trackWithName:(NSString *)name {
     NSMutableDictionary *dict = [self.tracerDic mutableCopy];
     dict[@"item_id"] = self.model.videoID;
-    
+    dict[@"group_id"] = self.model.videoID;
     if([name isEqualToString:@"video_pause"] || [name isEqualToString:@"video_over"]){
         dict[@"stay_time"] = @(self.stayTime);
     }
@@ -486,14 +545,11 @@
 }
 
 - (UIView<TTVFlowTipViewProtocol> *)customCellularNetTipView {
-    FHVideoNetFlowTipView *view = [[FHVideoNetFlowTipView alloc] initWithFrame:self.videoView.bounds tipText:nil isSubscribe:nil];
-    
+    FHVideoNetFlowTipView *view = [[FHVideoNetFlowTipView alloc] initWithFrame:self.coverView.bounds tipText:nil isSubscribe:nil];
     __weak typeof(self) wself = self;
     view.continuePlayBlockAddtion = ^{
-        __strong typeof(wself) self = wself;
         wself.isShowingNetFlow = NO;
     };
-    
     return view;
 }
 

@@ -197,28 +197,18 @@ extern NSString *const INSTANT_DATA_KEY;
             self.searchType = FHHouseListSearchTypeNeighborhoodDeal;
         }
         self.houseSearchDic = paramObj.userInfo.allInfo[@"houseSearch"];
-        NSDictionary *tracerDict = paramObj.allParams[@"tracer"];
         
-        NSMutableDictionary *traceDictParams = [NSMutableDictionary new];
-        if (tracerDict) {
-            [traceDictParams addEntriesFromDictionary:tracerDict];
-        }
-        
-        NSString *report_params = paramObj.allParams[@"report_params"];
-        if ([report_params isKindOfClass:[NSString class]]) {
-            NSDictionary *report_params_dic = [self getDictionaryFromJSONString:report_params];
-            if (report_params_dic) {
-                [traceDictParams addEntriesFromDictionary:report_params_dic];
-            }
-        }
-        
-        if (traceDictParams) {
-            self.tracerModel = [FHTracerModel makerTracerModelWithDic:traceDictParams];
-            self.originFrom = self.tracerModel.originFrom;
-        }
+
         [self configTableView];
     }
     return self;
+}
+
+- (void)updateTracerDict:(NSDictionary *)tracerDict {
+    if (tracerDict && tracerDict.count) {
+        self.tracerModel = [FHTracerModel makerTracerModelWithDic:tracerDict];
+        self.originFrom = self.tracerModel.originFrom;
+    }
 }
 
 - (void)addTagsViewClick:(NSString *)value_id
@@ -509,8 +499,11 @@ extern NSString *const INSTANT_DATA_KEY;
     }
     switch (self.houseType) {
         case FHHouseTypeNewHouse:
-            
-            [self requestNewHouseListData:isRefresh query:query offset:offset searchId:searchId];
+            if (isFromRecommend) {
+                [self requestRecommendNewHouseListData:isRefresh query:query offset:offset searchId:self.recommendSearchId];
+            } else {
+                [self requestNewHouseListData:isRefresh query:query offset:offset searchId:searchId];
+            }
             break;
         case FHHouseTypeSecondHandHouse:
             if (isFromRecommend) {
@@ -567,7 +560,7 @@ extern NSString *const INSTANT_DATA_KEY;
 
     __weak typeof(self) wself = self;
     
-    TTHttpTask *task = [FHHouseListAPI searchNewHouseList:query params:nil offset:offset searchId:searchId sugParam:nil class:[FHListSearchHouseModel class] completion:^(FHListSearchHouseModel *  _Nullable model, NSError * _Nullable error) {
+    TTHttpTask *task = [FHHouseListAPI searchNewHouseList:query params:nil offset:offset searchId:searchId sugParam:nil class:[FHListSearchHouseModel class] completion:(FHMainApiCompletion)^(FHListSearchHouseModel *  _Nullable model, NSError * _Nullable error) {
         
         if (!wself) {
             return ;
@@ -585,7 +578,7 @@ extern NSString *const INSTANT_DATA_KEY;
     
     __weak typeof(self) wself = self;
 
-    TTHttpTask *task = [FHHouseListAPI searchNeighborhoodList:query params:nil offset:offset searchId:searchId sugParam:nil class:[FHListSearchHouseModel class] completion:^(FHListSearchHouseModel *  _Nullable model, NSError * _Nullable error) {
+    TTHttpTask *task = [FHHouseListAPI searchNeighborhoodList:query params:nil offset:offset searchId:searchId sugParam:nil class:[FHListSearchHouseModel class] completion:(FHMainApiCompletion)^(FHListSearchHouseModel *  _Nullable model, NSError * _Nullable error) {
         
         if (!wself) {
             return ;
@@ -604,7 +597,7 @@ extern NSString *const INSTANT_DATA_KEY;
     
     __weak typeof(self) wself = self;
     
-    TTHttpTask *task = [FHHouseListAPI searchNeighborhoodDealList:query searchType:[self searchTypeString] offset:offset searchId:searchId class:[FHListSearchHouseModel class] completion:^(FHListSearchHouseModel *  _Nullable model, NSError * _Nullable error) {
+    TTHttpTask *task = [FHHouseListAPI searchNeighborhoodDealList:query searchType:[self searchTypeString] offset:offset searchId:searchId class:[FHListSearchHouseModel class] completion:(FHMainApiCompletion)^(FHListSearchHouseModel *  _Nullable model, NSError * _Nullable error) {
         
         if (!wself) {
             return ;
@@ -636,7 +629,7 @@ extern NSString *const INSTANT_DATA_KEY;
     
     __weak typeof(self) wself = self;
     
-    TTHttpTask *task = [FHHouseListAPI searchRent:query params:nil offset:offset searchId:searchId sugParam:nil class:[FHListSearchHouseModel class] completion:^(FHListSearchHouseModel * _Nonnull model, NSError * _Nonnull error) {
+    TTHttpTask *task = [FHHouseListAPI searchRent:query params:nil offset:offset searchId:searchId sugParam:nil class:[FHListSearchHouseModel class] completion:(FHMainApiCompletion)^(FHListSearchHouseModel * _Nonnull model, NSError * _Nonnull error) {
         
         if (!wself) {
             return ;
@@ -670,7 +663,7 @@ extern NSString *const INSTANT_DATA_KEY;
         _showFakeHouseTop = NO;
     }
     
-    TTHttpTask *task = [FHHouseListAPI searchErshouHouseList:query params:nil offset:offset searchId:searchId sugParam:nil class:[FHListSearchHouseModel class] completion:^(FHListSearchHouseModel *  _Nullable model, NSError * _Nullable error) {
+    TTHttpTask *task = [FHHouseListAPI searchErshouHouseList:query params:nil offset:offset searchId:searchId sugParam:nil class:[FHListSearchHouseModel class] completion:(FHMainApiCompletion)^(FHListSearchHouseModel *  _Nullable model, NSError * _Nullable error) {
         
         if (!wself) {
             return ;
@@ -817,7 +810,7 @@ extern NSString *const INSTANT_DATA_KEY;
     
     __weak typeof(self) wself = self;
     
-    TTHttpTask *task = [FHHouseListAPI recommendErshouHouseList:query params:nil offset:offset searchId:searchId sugParam:nil class:[FHListSearchHouseModel class] completion:^(FHListSearchHouseModel *  _Nullable model, NSError * _Nullable error) {
+    TTHttpTask *task = [FHHouseListAPI recommendErshouHouseList:query params:nil offset:offset searchId:searchId sugParam:nil class:[FHListSearchHouseModel class] completion:(FHMainApiCompletion)^(FHListSearchHouseModel *  _Nullable model, NSError * _Nullable error) {
         
         if (!wself) {
             return ;
@@ -830,7 +823,22 @@ extern NSString *const INSTANT_DATA_KEY;
     self.requestTask = task;
 }
 
-
+-(void)requestRecommendNewHouseListData:(BOOL)isRefresh query: (NSString *)query offset: (NSInteger)offset searchId: (NSString *)searchId{
+    
+    [self.requestTask cancel];
+    
+    __weak typeof(self) wself = self;
+    
+    TTHttpTask *task = [FHHouseListAPI recommendNewHouseList:query params:nil offset:offset searchId:searchId class:[FHListSearchHouseModel class] completion:(FHMainApiCompletion)^(FHListSearchHouseModel *  _Nullable model, NSError * _Nullable error) {
+        
+        if (!wself) {
+            return ;
+        }
+        [wself processData:model error:error isRecommendSearch:YES];
+    }];
+    
+    self.requestTask = task;
+}
 
 - (void)processData:(id<FHBaseModelProtocol>)model error: (NSError *)error isRecommendSearch:(BOOL)isRecommendSearch
 {
@@ -1129,7 +1137,8 @@ extern NSString *const INSTANT_DATA_KEY;
         }else{
             [self updateTableViewWithMoreData:hasMore];
         }
-        if (self.houseType != FHHouseTypeSecondHandHouse) {
+        ///TODO: 确认一下新房列表底部展示“没有更多信息了”文案是否正确？
+        if (self.houseType != FHHouseTypeSecondHandHouse && self.houseType != FHHouseTypeNewHouse) {
             if (!hasMore && self.houseList.count < 10) {
                 self.refreshFooter.hidden = YES;
             }
@@ -1208,7 +1217,7 @@ extern NSString *const INSTANT_DATA_KEY;
     self.tableView.mj_footer.hidden = NO;
     self.lastHasMore = hasMore;
     if (hasMore == NO) {
-        [self.refreshFooter setUpNoMoreDataText:@"没有更多信息了" offsetY:-3];
+        [self.refreshFooter setUpNoMoreDataText:@"已加载全部" offsetY:-3];
         [self.tableView.mj_footer endRefreshingWithNoMoreData];
     }else {
         [self.tableView.mj_footer endRefreshing];
@@ -2258,6 +2267,12 @@ extern NSString *const INSTANT_DATA_KEY;
     }else if ([cellModel isKindOfClass:[FHDynamicLynxCellModel class]]) {
         FHDynamicLynxModel *model = ((FHDynamicLynxCellModel *)cellModel).model;
         NSDictionary *reportData = [((FHDynamicLynxModel *)model).lynxData objectForKey:@"report_params"];
+        NSString *trackingID = @"be_null";
+        if (self.houseType == FHHouseTypeSecondHandHouse) {
+            trackingID = @"107653";
+        } else if (self.houseType == FHHouseTypeNewHouse) {
+            trackingID = @"110832";
+        }
         if (reportData && [reportData isKindOfClass:[NSDictionary class]]) {
             NSDictionary *params = @{@"origin_from":reportData[@"origin_from"] ?: @"be_null",
                                      @"enter_from":reportData[@"enter_from"] ?: @"be_null",
@@ -2265,7 +2280,7 @@ extern NSString *const INSTANT_DATA_KEY;
                                      @"page_type":reportData[@"page_type"] ?: @"be_null",
                                      @"element_type":reportData[@"element_type"] ?: @"be_null",
                                      @"search_id":reportData[@"search_id"] ?: @"be_null",
-                                     @"event_tracking_id":@"107653",
+                                     @"event_tracking_id":trackingID,
                                     };
             [FHUserTracker writeEvent:@"element_show" params:params];
         }

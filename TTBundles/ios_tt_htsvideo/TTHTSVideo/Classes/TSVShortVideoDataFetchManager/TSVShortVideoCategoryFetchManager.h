@@ -24,7 +24,6 @@ typedef BOOL (^TTFetchListShouldLoadMoreBlock)();
 @property (nonatomic, copy) NSString *cardID;
 @property (nonatomic, assign) BOOL cardItemsHasMoreToLoad;
 @property (nonatomic, copy) TTFetchListShouldLoadMoreBlock cardItemsShouldLoadMore;
-
 - (instancetype)init;
 
 - (instancetype)initWithOrderedDataArray:(NSArray *)orderedDataArray cardID:(NSString *)cardID;
@@ -41,5 +40,4 @@ typedef BOOL (^TTFetchListShouldLoadMoreBlock)();
 - (NSUInteger)indexOfItem:(id)orderedData;
 
 - (BOOL)shouldShowLoadingCell;
-
 @end

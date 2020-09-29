@@ -6,6 +6,7 @@
 //
 
 #import "FHHouseDetailBaseViewModel.h"
+#import "FHDetailNewModel.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -14,7 +15,11 @@ NS_ASSUME_NONNULL_BEGIN
 
 -(instancetype)initWithController:(FHHouseDetailSubPageViewController *)viewController tableView:(UITableView *)tableView courtId:(NSString *)courtId;
 
-- (void)startLoadData;
+@property (nonatomic, strong) FHDetailNewDataTimelineModel *timeLineModel;
+
+- (void)scrollToItemAtRow:(NSInteger)index;
+
+- (void)processDetailData:(FHDetailNewDataTimelineModel *)model;
 
 @end
 

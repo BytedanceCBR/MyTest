@@ -195,8 +195,6 @@
 
 - (void)setupDetailNaviBar {
     self.customNavBarView.title.text = @"详情";
-    [self.customNavBarView.leftBtn setBackgroundImage:ICON_FONT_IMG(24, @"\U0000e68a", [UIColor themeGray1]) forState:UIControlStateNormal];
-    [self.customNavBarView.leftBtn setBackgroundImage:ICON_FONT_IMG(24, @"\U0000e68a", [UIColor themeGray1]) forState:UIControlStateHighlighted];
     // 分享按钮
     self.shareButton = [[UIButton alloc] init];
     [self.shareButton setBackgroundImage:self.shareBlackImage forState:UIControlStateNormal];

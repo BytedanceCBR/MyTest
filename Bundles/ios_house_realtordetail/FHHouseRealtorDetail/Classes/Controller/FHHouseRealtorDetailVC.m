@@ -141,9 +141,8 @@
 - (void)setNavBar {
     self.customNavBarView.title.text = @"经纪人主页";
     self.customNavBarView.title.textColor = [UIColor whiteColor];
-    UIImage *whiteBackArrowImage = ICON_FONT_IMG(24, @"\U0000e68a", [UIColor whiteColor]);
-    [self.customNavBarView.leftBtn setBackgroundImage:whiteBackArrowImage forState:UIControlStateNormal];
-    [self.customNavBarView.leftBtn setBackgroundImage:whiteBackArrowImage forState:UIControlStateHighlighted];
+    [self.customNavBarView.leftBtn setBackgroundImage:FHBackWhiteImage forState:UIControlStateNormal];
+    [self.customNavBarView.leftBtn setBackgroundImage:FHBackWhiteImage forState:UIControlStateHighlighted];
     [self.customNavBarView setNaviBarTransparent:YES];
     self.customNavBarView.seperatorLine.hidden = YES;
 }

@@ -123,7 +123,7 @@
                              @"page_type":@"price_analysis_list"
                              };
     
-    TTHttpTask *task = [FHHouseListAPI searchErshouHouseList:query params:params offset:offset searchId:searchId sugParam:nil class:[FHListResultHouseModel class] completion:^(FHListResultHouseModel *  _Nullable model, NSError * _Nullable error) {
+    TTHttpTask *task = [FHHouseListAPI searchErshouHouseList:query params:params offset:offset searchId:searchId sugParam:nil class:[FHListResultHouseModel class] completion:(FHMainApiCompletion)^(FHListResultHouseModel *  _Nullable model, NSError * _Nullable error) {
         
         if (!wself) {
             return ;

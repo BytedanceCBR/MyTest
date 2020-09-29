@@ -15,7 +15,7 @@
 }
 
 + (void)hmdTrackService:(NSString *)serviceName status:(NSInteger)status extra:(NSDictionary *)extraValue {
-    [self hmdTrackService:serviceName metric:nil category:@{@"status": @(status)} extra:nil];
+    [self hmdTrackService:serviceName metric:nil category:@{@"status": @(status)} extra:extraValue];
 }
 
 @end

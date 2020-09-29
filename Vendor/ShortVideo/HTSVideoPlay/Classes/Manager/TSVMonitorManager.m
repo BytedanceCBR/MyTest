@@ -14,6 +14,7 @@
 #import "IESVideoPlayer.h"
 #import <ReactiveObjC/ReactiveObjC.h>
 #import "TTNetworkHelper.h"
+#import "FHFeedUGCCellModel.h"
 
 @interface TSVMonitorManager()
 
@@ -137,7 +138,7 @@ NS_INLINE NSString *IESVideoPlayerTypeStr()
     [[TTMonitor shareManager] trackService:serviceName value:[mutDict copy] extra:nil];
 }
 
-- (void)trackVideoPlayStatus:(TSVMonitorVideoPlayStatus)status model:(TTShortVideoModel *)model error:(NSError *)error
+- (void)trackVideoPlayStatus:(TSVMonitorVideoPlayStatus)status model:(FHFeedUGCCellModel *)model error:(NSError *)error
 {
     NSMutableDictionary *mutDict = [NSMutableDictionary dictionary];
     
@@ -147,7 +148,7 @@ NS_INLINE NSString *IESVideoPlayerTypeStr()
     if (status == TSVMonitorVideoPlayFailed) {
         [mutDict setValue:@(error.code) forKey:@"err_code"];
         [mutDict setValue:error.localizedDescription forKey:@"err_des"];
-        [mutDict setValue:model.itemID forKey:@"mediaId"];
+        [mutDict setValue:model.groupId forKey:@"mediaId"];
         [mutDict setValue:model.video.playAddr.uri forKey:@"videoUri"];
     }
     

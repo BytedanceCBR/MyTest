@@ -64,9 +64,6 @@
 
 - (void)initUI {
     [self setupDefaultNavBar:NO];
-    UIImage *backimage = ICON_FONT_IMG(24, @"\U0000e68a", [UIColor themeGray1]);
-    [self.customNavBarView.leftBtn setBackgroundImage:backimage forState:UIControlStateNormal];
-     [self.customNavBarView.leftBtn setBackgroundImage:backimage forState:UIControlStateHighlighted];
     self.view.backgroundColor = [UIColor colorWithHexStr:@"#f8f8f8"];
     self.customNavBarView.title.text = self.vcTitle;
     [self.evaluationHeader mas_makeConstraints:^(MASConstraintMaker *make) {

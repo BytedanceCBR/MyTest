@@ -9,8 +9,9 @@
 #import <UIKit/UIKit.h>
 
 #import "AWEVideoPlayView.h"
-#import "TSVShortVideoDataFetchManagerProtocol.h"
+#import "FHShortVideoDetailFetchManager.h"
 #import "TSVControlOverlayViewController.h"
+
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -21,7 +22,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface AWEVideoContainerViewController : UIViewController
 
-@property (nonatomic, nullable, strong) id<TSVShortVideoDataFetchManagerProtocol> dataFetchManager;
+@property (nonatomic, nullable, strong) FHShortVideoDetailFetchManager *dataFetchManager;
 @property (nonatomic, nullable, strong) TSVDetailViewModel *viewModel;
 @property (nonatomic, copy, nullable) NSDictionary *commonTrackingParameter;
 
@@ -37,7 +38,7 @@ NS_ASSUME_NONNULL_BEGIN
 //外面传的埋点信息 by xsm
 @property (nonatomic, strong) NSDictionary *extraDic;
 
-- (void)replaceDataFetchManager:(id<TSVShortVideoDataFetchManagerProtocol>)dataFetchManager;
+//- (void)replaceDataFetchManager:(id<TSVShortVideoDataFetchManagerProtocol>)dataFetchManager;
 - (void)refreshCurrentModel;
 
 - (void)refresh;

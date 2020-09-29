@@ -13,8 +13,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property(nonatomic , strong) UICollectionView *colletionView;
 
-@property (nonatomic, strong)   NSArray       *titleNames;
-@property (nonatomic, strong)   NSArray       *titleNums;
+@property (nonatomic, strong)   NSArray <NSString *>       *titleNames;
+@property (nonatomic, strong)   NSArray <NSNumber *>       *titleNums;
 
 @property (nonatomic, assign)   NSInteger       selectIndex;// 选中的索引
 
@@ -22,6 +22,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 /// 如果是true，说明是图片列表页使用，需要重新layout titlelabel 以及 color
 @property (nonatomic, assign) BOOL usedInPictureList;
+
+@property (nonatomic, assign) BOOL usedInNewHouseDetail;
 
 @property (nonatomic, strong) UIView *seperatorLine;
 

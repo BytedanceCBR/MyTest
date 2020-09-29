@@ -13,6 +13,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 -(void)showIn:(UIView *)view at:(CGPoint)topCenter content:(NSString *)content duration:(NSTimeInterval)duration above:(UIView *)aboveView;
 
+- (void)changeTipTextFontSize:(CGFloat)fontSize;
+
 -(void)removeTip;
 
 @end

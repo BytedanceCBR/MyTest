@@ -230,6 +230,11 @@
     if ([fhSettings valueForKey:@"show_house"] && [[fhSettings valueForKey:@"show_house"] isKindOfClass:[NSString class]]) {
         experiments[@"show_house"] = fhSettings[@"show_house"];
     }
+    
+    if ([fhSettings valueForKey:@"discover_type"]) {
+        experiments[@"discover_type"] = @([fhSettings[@"discover_type"] integerValue]);
+    }
+    
     if (experiments.count > 0) {
         [BDABTestManager saveServerSettingsForClientExperiments:experiments];
     }

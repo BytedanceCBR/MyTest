@@ -10,10 +10,9 @@
 #import "Masonry.h"
 #import "UIFont+House.h"
 #import "UIColor+Theme.h"
-#import "TTDeviceHelper.h"
 #import "FHExtendHotAreaButton.h"
-#import "TTDeviceHelper.h"
 #import "UIImage+FIconFont.h"
+#import <ByteDanceKit/ByteDanceKit.h>
 
 @interface FHDetailMapPageNaviBarView ()
 
@@ -40,14 +39,13 @@
     // backBtn
     
     CGFloat iphoneXPading = 5;
-    if ([TTDeviceHelper isIPhoneXDevice]) {
+    if ([UIDevice btd_isIPhoneXSeries]) {
         iphoneXPading = 0;
     }
     
     _backBtn = [[FHExtendHotAreaButton alloc] init];
-    UIImage *blackBackArrowImage = ICON_FONT_IMG(24, @"\U0000e68a", [UIColor themeGray1]);
-    [_backBtn setImage:blackBackArrowImage forState:UIControlStateNormal];
-    [_backBtn setImage:blackBackArrowImage forState:UIControlStateHighlighted];
+    [_backBtn setImage:FHBackBlackImage forState:UIControlStateNormal];
+    [_backBtn setImage:FHBackBlackImage forState:UIControlStateHighlighted];
     [self addSubview:_backBtn];
     [_backBtn mas_makeConstraints:^(MASConstraintMaker *make) {
         make.height.width.mas_equalTo(24);

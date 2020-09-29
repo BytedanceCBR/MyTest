@@ -9,6 +9,7 @@
 #import "AWEVideoDetailFirstFrameConfig.h"
 #import "TTShortVideoModel.h"
 #import "SDWebImagePrefetcher.h"
+#import "FHFeedUGCCellModel.h"
 
 @implementation TSVPrefetchImageManager
 
@@ -56,9 +57,9 @@
     NSURL *url;
     
     if (index < [dataFetchManager numberOfShortVideoItems]) {
-        TTShortVideoModel *model = [dataFetchManager itemAtIndex:index];
+        FHFeedUGCCellModel *model = [dataFetchManager itemAtIndex:index];
         if (model) {
-            NSString *imageUrl = [model.firstFrameImageModel.urlWithHeader firstObject][@"url"];
+            NSString *imageUrl = [model.imageList firstObject].url;
             if (imageUrl) {
                 url = [NSURL URLWithString:imageUrl];
             }

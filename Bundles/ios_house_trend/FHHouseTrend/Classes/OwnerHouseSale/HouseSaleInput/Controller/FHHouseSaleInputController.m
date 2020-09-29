@@ -12,6 +12,7 @@
 #import "TTBaseMacro.h"
 #import "FHHouseSaleLeaveView.h"
 #import "FHUserTracker.h"
+#import <FHHouseBase/UIImage+FIconFont.h>
 
 @interface FHHouseSaleInputController ()<UIGestureRecognizerDelegate,UIScrollViewDelegate>
 
@@ -96,13 +97,13 @@
     if (alpha > 0) {
         self.customNavBarView.title.text = @"在线卖房";
         self.customNavBarView.title.textColor = [UIColor themeGray1];
-        [self.customNavBarView.leftBtn setBackgroundImage:[UIImage imageNamed:@"icon-return"] forState:UIControlStateNormal];
-        [self.customNavBarView.leftBtn setBackgroundImage:[UIImage imageNamed:@"icon-return"] forState:UIControlStateHighlighted];
+        [self.customNavBarView.leftBtn setBackgroundImage:FHBackBlackImage forState:UIControlStateNormal];
+        [self.customNavBarView.leftBtn setBackgroundImage:FHBackBlackImage forState:UIControlStateHighlighted];
     }else {
         self.customNavBarView.title.text = @"";
         self.customNavBarView.title.textColor = [UIColor whiteColor];
-        [self.customNavBarView.leftBtn setBackgroundImage:[UIImage imageNamed:@"icon-return-white"] forState:UIControlStateNormal];
-        [self.customNavBarView.leftBtn setBackgroundImage:[UIImage imageNamed:@"icon-return-white"] forState:UIControlStateHighlighted];
+        [self.customNavBarView.leftBtn setBackgroundImage:FHBackWhiteImage forState:UIControlStateNormal];
+        [self.customNavBarView.leftBtn setBackgroundImage:FHBackWhiteImage forState:UIControlStateHighlighted];
     }
     [self.customNavBarView refreshAlpha:alpha];
     

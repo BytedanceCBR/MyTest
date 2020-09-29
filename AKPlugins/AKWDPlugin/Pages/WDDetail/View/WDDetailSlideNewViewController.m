@@ -554,7 +554,6 @@ static NSString * const kkHasShownCommentPolicyIndicatorViewKey = @"HasShownCome
     }
     NSMutableArray *contentItems = @[].mutableCopy;
     [contentItems addObject:[_currentAnswerCell.natantViewModel wd_shareItems]];
-    [contentItems addObject:[_currentAnswerCell.natantViewModel wd_customItems]];
     [self.shareManager displayActivitySheetWithContent:[contentItems copy]];
     //是0的情况下，可以删掉 @尹浩已确认
     //    [TTAdManageInstance share_showInAdPage:@"0" groupId:_currentAnswerCell.detailModel.answerEntity.ansid];
@@ -1116,7 +1115,6 @@ static NSString * const kkHasShownCommentPolicyIndicatorViewKey = @"HasShownCome
     self.toolbarView = [[WDBottomToolView alloc] initWithFrame:[self p_frameForToolBarViewIsStatusHeightChanged:NO]];
     self.toolbarView.detailModel = self.slideViewModel.initialDetailModel;
     self.toolbarView.delegate = self;
-    self.toolbarView.banEmojiInput = YES;
     [self.view addSubview:self.toolbarView];
 }
 

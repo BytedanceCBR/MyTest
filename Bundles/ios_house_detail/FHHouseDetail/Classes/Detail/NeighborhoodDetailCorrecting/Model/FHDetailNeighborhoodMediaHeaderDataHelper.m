@@ -100,12 +100,37 @@ FHDetailNeighborhoodMediaHeaderDataHelperHeaderViewData *headerViewData = [[FHDe
 
 + (FHDetailNeighborhoodMediaHeaderDataHelperPictureDetailData *)generatePictureDetailData:(FHDetailNeighborhoodMediaHeaderModel *)newMediaHeaderModel {
     FHDetailNeighborhoodMediaHeaderDataHelperPictureDetailData *pictureDetailData = [[FHDetailNeighborhoodMediaHeaderDataHelperPictureDetailData alloc] init];
-    NSMutableArray<FHDetailPhotoHeaderModelProtocol> *imageList = [NSMutableArray<FHDetailPhotoHeaderModelProtocol> array];
+    
+    FHDetailPictureModel *pictureModel = [[FHDetailPictureModel alloc] init];
     NSMutableArray *itemArray = [NSMutableArray array];
+    
+    NSMutableArray *pictureArray = [NSMutableArray array];
     
     FHMultiMediaItemModel *videoModel = newMediaHeaderModel.vedioModel;
     if (videoModel && videoModel.videoID.length > 0) {
         [itemArray addObject:videoModel];
+        FHDetailPictureItemVideoModel *videoItemModel = [[FHDetailPictureItemVideoModel alloc] init];
+        videoItemModel.itemType = FHDetailPictureModelTypeVideo;
+        
+        FHImageModel *image = [[FHImageModel alloc] init];
+        image.url = videoModel.imageUrl;
+        image.urlList = [NSArray arrayWithObject:videoModel.imageUrl];
+        videoItemModel.image = image;
+        
+        FHVideoModel *pictureVideoModel = [[FHVideoModel alloc] init];
+        pictureVideoModel.videoID = videoModel.videoID;
+        pictureVideoModel.vWidth = videoModel.vWidth;
+        pictureVideoModel.vHeight = videoModel.vHeight;
+        pictureVideoModel.muted = NO;
+        pictureVideoModel.repeated = NO;
+        pictureVideoModel.isShowControl = NO;
+        pictureVideoModel.isShowMiniSlider = YES;
+        pictureVideoModel.isShowStartBtnWhenPause = YES;
+        
+        videoItemModel.videoModel = pictureVideoModel;
+        videoItemModel.rootGroupName = @"视频";
+        [pictureArray addObject:videoItemModel];
+        
     }
     
     NSArray *houseImageDict = newMediaHeaderModel.houseImageDictList;
@@ -117,13 +142,20 @@ FHDetailNeighborhoodMediaHeaderDataHelperHeaderViewData *headerViewData = [[FHDe
                 itemModel.imageUrl = imageModel.url;
                 itemModel.pictureType = listModel.houseImageType;
                 itemModel.pictureTypeName = listModel.houseImageTypeName;
-                [imageList addObject:imageModel];
                 [itemArray addObject:itemModel];
+                
+                FHDetailPictureItemPictureModel *pictureModel = [[FHDetailPictureItemPictureModel alloc] init];
+                pictureModel.image = imageModel;
+                pictureModel.rootGroupName = listModel.houseImageTypeName;
+                [pictureArray addObject:pictureModel];
             }
         }
     }
+    
+    pictureModel.itemList = pictureArray.copy;
+    pictureDetailData.detailPictureModel = pictureModel;
     pictureDetailData.mediaItemArray = itemArray.copy;
-    pictureDetailData.photoArray = imageList.copy;
+    
     return pictureDetailData;
 }
 
@@ -148,7 +180,7 @@ FHDetailNeighborhoodMediaHeaderDataHelperHeaderViewData *headerViewData = [[FHDe
         
     }
     
-    for (FHHouseDetailImageTabInfo *tabInfo in newMediaHeaderModel.albumInfo.tabList) {
+    for (FHHouseDetailMediaTabInfo *tabInfo in newMediaHeaderModel.albumInfo.tabList) {
         [mArr addObjectsFromArray:[FHFloorPanPicShowGroupModel getTabGroupInfo:tabInfo rootName:tabInfo.tabName]];
     }
     picShowModel.itemGroupList = mArr.copy;

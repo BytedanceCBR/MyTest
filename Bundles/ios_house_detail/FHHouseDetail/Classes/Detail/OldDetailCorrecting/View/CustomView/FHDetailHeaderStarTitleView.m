@@ -6,7 +6,6 @@
 //
 
 #import "FHDetailHeaderStarTitleView.h"
-#import "FHDetailStarsCountView.h"
 #import <FHCommonUI/UIColor+Theme.h>
 #import <FHCommonUI/UIFont+House.h>
 #import "Masonry.h"
