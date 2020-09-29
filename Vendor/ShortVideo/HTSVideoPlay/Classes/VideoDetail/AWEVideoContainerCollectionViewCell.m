@@ -135,41 +135,46 @@
     self.videoPlayView.frame = frame;
     self.overlayViewController.view.frame = frame;
 
-    BOOL useEdgeToEdgeUI = NO;
+    BOOL useEdgeToEdgeUI = [[[TTSettingsManager sharedManager] settingForKey:@"tt_huoshan_detail_edge_to_edge_adjustment"
+                                                                defaultValue:@YES
+                                                                      freeze:NO] boolValue];
+    
     if (useEdgeToEdgeUI) {
-        CGFloat videoAspectRatio;
-//        NSString *videoLocalPlayAddr = self.videoDetail.videoLocalPlayAddr;
-//        if (videoLocalPlayAddr.length > 0) {
-//            //获取视频尺寸
-//            AVURLAsset *asset = [AVURLAsset assetWithURL:[NSURL fileURLWithPath:videoLocalPlayAddr]];
-//            NSArray *array = asset.tracks;
-//            CGSize videoSize = CGSizeZero;
-//            for (AVAssetTrack *track in array) {
-//                if ([track.mediaType isEqualToString:AVMediaTypeVideo]) {
-//                    videoSize = track.naturalSize;
-//                }
-//            }
-//            if (videoSize.width > 0 && videoSize.height > 0) {
-//                videoAspectRatio = videoSize.height / videoSize.width;
-//            } else {
-//                videoAspectRatio = 16 / 9;
-//            }
-//        } else {
-            videoAspectRatio = [self.videoDetail.video.height floatValue] / [self.videoDetail.video.width floatValue];
-//        }
-        if ([TTDeviceHelper isIPhoneXDevice]) {
-            if (videoAspectRatio > 1.7) {
-                self.videoPlayView.contentMode = UIViewContentModeScaleAspectFill;
-            } else {
-                self.videoPlayView.contentMode = UIViewContentModeScaleAspectFit;
-            }
-        } else {
-            if (videoAspectRatio > 1.6) {
-                self.videoPlayView.contentMode = UIViewContentModeScaleAspectFill;
-            } else {
+        CGFloat videoAspectRatio = [self.videoDetail.video.height floatValue] / [self.videoDetail.video.width floatValue];
+
+        CGSize screenSize = [UIScreen mainScreen].bounds.size;
+ 
+        CGFloat screenAspectRatio = screenSize.height > screenSize.width ? (screenSize.height / screenSize.width) : (screenSize.width / screenSize.height);
+
+        if(videoAspectRatio >= screenAspectRatio){
+            self.videoPlayView.contentMode = UIViewContentModeScaleAspectFill;
+        }else{
+            if ([TTDeviceHelper isIPhoneXDevice]) {
+                self.videoPlayView.top = self.tt_safeAreaInsets.top;
+                self.videoPlayView.height = ceil(CGRectGetWidth(frame) * 16 / 9);
+                if(videoAspectRatio >= (16.0 / 9.0)){
+                    self.videoPlayView.contentMode = UIViewContentModeScaleAspectFill;
+                }else{
+                    self.videoPlayView.contentMode = UIViewContentModeScaleAspectFit;
+                }
+            }else{
                 self.videoPlayView.contentMode = UIViewContentModeScaleAspectFit;
             }
         }
+        
+//        if ([TTDeviceHelper isIPhoneXDevice]) {
+//            if (videoAspectRatio > 1.7) {
+//                self.videoPlayView.contentMode = UIViewContentModeScaleAspectFill;
+//            } else {
+//                self.videoPlayView.contentMode = UIViewContentModeScaleAspectFit;
+//            }
+//        } else {
+//            if (videoAspectRatio > 1.6) {
+//                self.videoPlayView.contentMode = UIViewContentModeScaleAspectFill;
+//            } else {
+//                self.videoPlayView.contentMode = UIViewContentModeScaleAspectFit;
+//            }
+//        }
     } else {
         if ([TTDeviceHelper isIPhoneXDevice]) {
             self.videoPlayView.top = self.tt_safeAreaInsets.top;
