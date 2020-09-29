@@ -133,12 +133,7 @@
     }
     self.videoPlayView.frame = frame;
     self.overlayViewController.view.frame = frame;
-
-    BOOL useEdgeToEdgeUI = [[[TTSettingsManager sharedManager] settingForKey:@"tt_huoshan_detail_edge_to_edge_adjustment"
-                                                                defaultValue:@YES
-                                                                      freeze:NO] boolValue];
     
-    if (useEdgeToEdgeUI) {
         CGFloat videoAspectRatio = [self.videoDetail.video.height floatValue] / [self.videoDetail.video.width floatValue];
 
         CGSize screenSize = [UIScreen mainScreen].bounds.size;
@@ -148,18 +143,18 @@
         if(videoAspectRatio >= screenAspectRatio){
             self.videoPlayView.contentMode = UIViewContentModeScaleAspectFill;
         }else{
-            if ([TTDeviceHelper isIPhoneXDevice]) {
-                self.videoPlayView.top = self.tt_safeAreaInsets.top;
-                CGFloat height = CGRectGetHeight(frame) - self.tt_safeAreaInsets.top;
-                self.videoPlayView.height = ceil(CGRectGetWidth(frame) * 16 / 9);
-                if(videoAspectRatio >= (16.0 / 9.0)){
-                    self.videoPlayView.contentMode = UIViewContentModeScaleAspectFill;
-                }else{
-                    self.videoPlayView.contentMode = UIViewContentModeScaleAspectFit;
-                }
-            }else{
+//            if ([TTDeviceHelper isIPhoneXDevice]) {
+//                self.videoPlayView.top = self.tt_safeAreaInsets.top;
+//                CGFloat height = CGRectGetHeight(frame) - self.tt_safeAreaInsets.top;
+//                self.videoPlayView.height = ceil(CGRectGetWidth(frame) * 16 / 9);
+//                if(videoAspectRatio >= (16.0 / 9.0)){
+//                    self.videoPlayView.contentMode = UIViewContentModeScaleAspectFill;
+//                }else{
+//                    self.videoPlayView.contentMode = UIViewContentModeScaleAspectFit;
+//                }
+//            }else{
                 self.videoPlayView.contentMode = UIViewContentModeScaleAspectFit;
-            }
+//            }
         }
         
 //        if ([TTDeviceHelper isIPhoneXDevice]) {
@@ -175,13 +170,6 @@
 //                self.videoPlayView.contentMode = UIViewContentModeScaleAspectFit;
 //            }
 //        }
-    } else {
-        if ([TTDeviceHelper isIPhoneXDevice]) {
-            self.videoPlayView.top = self.tt_safeAreaInsets.top;
-            self.videoPlayView.height = ceil(CGRectGetWidth(frame) * 16 / 9);
-        }
-        self.videoPlayView.contentMode = UIViewContentModeScaleAspectFit;
-    }
 }
 
 - (void)playView:(AWEVideoPlayView *)view didStartPlayWithModel:(TTShortVideoModel *)model
