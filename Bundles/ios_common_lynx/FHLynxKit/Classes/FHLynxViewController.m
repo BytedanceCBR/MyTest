@@ -22,6 +22,8 @@
 #import "UIViewController+Refresh_ErrorHandler.h"
 #import "BDWebViewBlankDetect.h"
 #import "FHUtils.h"
+#import "UIImage+FIconFont.h"
+#import "UIColor+Theme.h"
 
 @interface FHLynxViewController ()<LynxViewClient>
 @property(nonatomic, assign) NSTimeInterval loadTime; //页面加载时间
@@ -121,6 +123,11 @@
     [self setupDefaultNavBar:NO];
     
     self.customNavBarView.title.text = _titleStr;
+    [self.customNavBarView.leftBtn setBackgroundImage:nil forState:UIControlStateNormal];
+    [self.customNavBarView.leftBtn setBackgroundImage:nil forState:UIControlStateHighlighted];
+    UIImage *backImage  = ICON_FONT_IMG(24, @"\U0000E68A", [UIColor themeGray1]);
+    [self.customNavBarView.leftBtn setImage:backImage forState:UIControlStateNormal];
+    
     
  
     [self tt_startUpdate];

@@ -280,7 +280,11 @@
             }];
             self.statusLabel.hidden = YES;
         }
-        
+        if (model.vrInfo.hasVr) {
+            self.vrImageView.hidden = NO;
+        } else {
+            self.vrImageView.hidden = YES;
+        }
 //        self.priceLabel.text = model.pricingPerSqm;
 //        self.spaceLabel.text = [NSString stringWithFormat:@"建面 %@",model.squaremeter];;
     }
@@ -312,6 +316,15 @@
     _statusLabel.layer.cornerRadius = 9;
     [self addSubview:_statusLabel];
 
+    _vrImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"detail_vr_movie_icon"]];
+    _vrImageView.hidden = YES;
+    [self addSubview:_vrImageView];
+    [self.vrImageView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.mas_equalTo(self.icon).offset(6);
+        make.bottom.mas_equalTo(self.icon).offset(-6);
+        make.width.height.mas_equalTo(22);
+    }];
+    
     
     [self.iconView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.right.mas_equalTo(self);

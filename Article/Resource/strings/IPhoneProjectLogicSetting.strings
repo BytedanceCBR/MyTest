@@ -14,7 +14,7 @@
 "aboutUs"               = "FHAboutUsViewController";
 "old_house_detail"      = "FHHouseDetailViewController";
 "neighborhood_detail"   = "FHHouseDetailViewController";
-"new_house_detail"      = "FHHouseDetailViewController";
+"new_house_detail"      = "FHNewHouseDetailViewController";
 "rent_detail"           = "FHHouseDetailViewController";
 "house_search"          = "FHSuggestionListViewController";
 "sug_subscribe_list"    = "FHSugSubscribeListViewController";
@@ -245,3 +245,6 @@
 
 //业务卖房提交结果
 "house_sale_result" = "FHHouseSaleResultController";
+
+// linkChat客服页面
+"linkchat_customer_service" = "FHCustomerServicePage";

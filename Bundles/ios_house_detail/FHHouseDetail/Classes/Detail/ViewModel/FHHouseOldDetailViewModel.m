@@ -711,7 +711,6 @@ logPB:self.listLogPB extraInfo:self.extraInfo completion:^(FHDetailOldModel * _N
         staticMapModel.score = model.data.neighborEval.score;
         staticMapModel.tableView = self.tableView;
         staticMapModel.staticImage = model.data.neighborhoodInfo.gaodeImage;
-        staticMapModel.mapOnly = NO;
         if(hasOtherNeighborhoodInfo){
             staticMapModel.topMargin = 30;
             staticMapModel.bottomMargin = 0;

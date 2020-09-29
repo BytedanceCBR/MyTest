@@ -14,13 +14,11 @@
 #import "FHDetailNewCoreDetailModel.h"
 #import "FHFloorPanCorePropertyCell.h"
 #import "FHDetailFloorPanDetailInfoModel.h"
-#import "FHDetailPhotoHeaderCell.h"
 #import "FHFloorPanTitleCell.h"
 #import "FHFloorPanDetailPropertyCell.h"
 #import "FHFloorPanDetailMutiFloorPanCell.h"
 #import "FHHouseDetailSubPageViewController.h"
 #import "FHDetailBottomBar.h"
-#import "FHDetailMediaHeaderCorrectingCell.h"
 #import "FHDetailPropertyListCorrectingCell.h"
 #import "FHFloorPanDetailModuleHelper.h"
 #import "FHOldDetailDisclaimerCell.h"
@@ -28,6 +26,7 @@
 #import "FHFloorPanDetailPropertyListCell.h"
 #import "FHDetailBaseModel.h"
 #import "FHDetailSalesCell.h"
+#import "FHFloorPanDetailMediaHeaderCell.h"
 
 @interface FHFloorPanDetailViewModel()<UITableViewDelegate,UITableViewDataSource>
 @property (copy, readwrite, nonatomic) NSString *floorPanId;
@@ -52,11 +51,9 @@
         FHDetailBottomBar *bottomBar = [_subPageVC getBottomBar];
         if ([bottomBar isKindOfClass:[FHDetailBottomBar class]]) {
             bottomBar.bottomBarContactBlock = ^{
-                StrongSelf;
                 [wself contactAction];
             };
             bottomBar.bottomBarImBlock = ^{
-                StrongSelf;
                 [wself imAction];
             };
         }
@@ -91,7 +88,7 @@
 // 注册cell类型
 - (void)registerCellClasses {
     //头部轮播
-    [self.infoListTable registerClass:[FHDetailMediaHeaderCorrectingCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailMediaHeaderCorrectingModel class])];
+    [self.infoListTable registerClass:[FHFloorPanDetailMediaHeaderCell class] forCellReuseIdentifier:NSStringFromClass([FHFloorPanDetailMediaHeaderModel class])];
     
     //户型信息
     [self.infoListTable registerClass:[FHFloorPanDetailPropertyListCell class] forCellReuseIdentifier:NSStringFromClass([FHFloorPanDetailPropertyListModel class])];
@@ -151,25 +148,10 @@
 }
 
 - (void)processDetailData:(FHDetailFloorPanDetailInfoModel *)model {
-    NSMutableArray *itemsArray = [NSMutableArray new];
     self.detailData = model;
     self.currentModel = model;
     //头部轮播图
-    FHMultiMediaItemModel *itemModel = nil;
-    FHDetailMediaHeaderCorrectingModel *headerCellModel = [[FHDetailMediaHeaderCorrectingModel alloc] init];
-    if (model.data.imageDictList && [model.data.imageDictList isKindOfClass:[NSArray class]] && model.data.imageDictList.count > 0) {
-        NSMutableArray *houseImageList = [NSMutableArray array];
-        for (FHHouseDetailImageListDataModel *imageInfo in model.data.imageDictList) {
-            FHHouseDetailImageListDataModel *houseImageDictList = [[FHHouseDetailImageListDataModel alloc] init];
-            houseImageDictList.usedSceneType = FHHouseDetailImageListDataUsedSceneTypeFloorPan;
-            houseImageDictList.houseImageType = imageInfo.houseImageType;
-            houseImageDictList.houseImageTypeName = imageInfo.houseImageTypeName;
-            houseImageDictList.houseImageList = imageInfo.houseImageList.copy;
-            [houseImageList addObject:houseImageDictList];
-        }
-        headerCellModel.houseImageDictList = houseImageList.copy;
-    }
-    headerCellModel.houseImageAssociateInfo = model.data.imageAssociateInfo;
+    FHFloorPanDetailMediaHeaderModel *headerCellModel = [[FHFloorPanDetailMediaHeaderModel alloc] init];
     
     FHDetailHouseTitleModel *houseTitleModel = [[FHDetailHouseTitleModel alloc] init];
     houseTitleModel.titleStr = model.data.title;
@@ -177,21 +159,15 @@
     houseTitleModel.facingDirection = model.data.facingDirection;
     houseTitleModel.saleStatus = model.data.saleStatus.content;
     houseTitleModel.tags = model.data.tags;
-//    if (model.data.tags) {
-//        FHHouseTagsModel *tag = [[FHHouseTagsModel alloc]init];
-//        tag.backgroundColor = model.data.saleStatus.backgroundColor;
-//        tag.content = model.data.saleStatus.content;
-//        tag.id = model.data.saleStatus.id;
-//        tag.textColor = model.data.saleStatus.textColor;
-//        houseTitleModel.tags = @[tag];
-//    }
+    
+    
     houseTitleModel.Picing = model.data.pricing;
     houseTitleModel.displayPrice = model.data.displayPrice;
     houseTitleModel.isFloorPan = YES;
     houseTitleModel.priceConsult = model.data.priceConsult;
-    headerCellModel.vedioModel = itemModel;
     headerCellModel.contactViewModel = self.contactViewModel;
-    headerCellModel.isInstantData = nil;
+    headerCellModel.albumInfo = model.data.albumInfo;
+    headerCellModel.topImages = model.data.albumInfo;
     headerCellModel.titleDataModel = houseTitleModel;
     [self.items addObject:headerCellModel];
     

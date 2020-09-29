@@ -226,14 +226,14 @@
 - (void)setNavBar:(BOOL)showJoinButton {
     if (showJoinButton) {
         self.customNavBarView.title.textColor = [UIColor themeGray1];
-        UIImage *blackBackArrowImage = ICON_FONT_IMG(24, @"\U0000e68a", [UIColor themeGray1]);
+        UIImage *blackBackArrowImage = FHBackBlackImage;
         [self.customNavBarView.leftBtn setBackgroundImage:blackBackArrowImage forState:UIControlStateNormal];
         [self.customNavBarView.leftBtn setBackgroundImage:blackBackArrowImage forState:UIControlStateHighlighted];
         self.shareButton.hidden = YES;
         [self.customNavBarView setNaviBarTransparent:NO];
     } else {
         self.customNavBarView.title.textColor = [UIColor whiteColor];
-        UIImage *whiteBackArrowImage = ICON_FONT_IMG(24, @"\U0000e68a", [UIColor whiteColor]);
+        UIImage *whiteBackArrowImage = FHBackWhiteImage;
         [self.customNavBarView.leftBtn setBackgroundImage:whiteBackArrowImage forState:UIControlStateNormal];
         [self.customNavBarView.leftBtn setBackgroundImage:whiteBackArrowImage forState:UIControlStateHighlighted];
         self.shareButton.hidden = NO;

@@ -140,10 +140,9 @@
 -(void)onNetworError:(BOOL)showEmpty showToast:(BOOL)showToast{
     if(showEmpty){
         [self.detailController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoNetWorkAndRefresh];
-        UIImage *whiteBackArrowImage = ICON_FONT_IMG(24, @"\U0000e68a", [UIColor blackColor]);
         self.detailController.customNavBarView.title.textColor = [UIColor blackColor];
-        [self.detailController.customNavBarView.leftBtn setBackgroundImage:whiteBackArrowImage forState:UIControlStateNormal];
-        [self.detailController.customNavBarView.leftBtn setBackgroundImage:whiteBackArrowImage forState:UIControlStateHighlighted];
+        [self.detailController.customNavBarView.leftBtn setBackgroundImage:FHBackBlackImage forState:UIControlStateNormal];
+        [self.detailController.customNavBarView.leftBtn setBackgroundImage:FHBackBlackImage forState:UIControlStateHighlighted];
     }
     if(showToast){
         [[ToastManager manager] showToast:@"网络异常"];
@@ -156,8 +155,8 @@
     [self updateNavBarWithAlpha:alpha];
 }
 - (void)updateNavBarWithAlpha:(CGFloat)alpha {
-    UIImage *whiteBackArrowImage = ICON_FONT_IMG(24, @"\U0000e68a", [UIColor whiteColor]);
-    UIImage *blackBackArrowImage = ICON_FONT_IMG(24, @"\U0000e68a", [UIColor themeGray1]);
+    UIImage *whiteBackArrowImage = FHBackWhiteImage;
+    UIImage *blackBackArrowImage = FHBackBlackImage;
     alpha = fminf(fmaxf(0.0f, alpha), 1.0f);
     if (alpha <= 0.1f) {
         [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
@@ -436,7 +435,7 @@
     TRACK_EVENT(@"house_show", tracerDic);
 }
 - (void)refNav {
-    UIImage *whiteBackArrowImage = ICON_FONT_IMG(24, @"\U0000e68a", [UIColor whiteColor]);
+    UIImage *whiteBackArrowImage = FHBackWhiteImage;
     self.detailController.customNavBarView.title.textColor = [UIColor whiteColor];
     [self.detailController.customNavBarView.leftBtn setBackgroundImage:whiteBackArrowImage forState:UIControlStateNormal];
     [self.detailController.customNavBarView.leftBtn setBackgroundImage:whiteBackArrowImage forState:UIControlStateHighlighted];

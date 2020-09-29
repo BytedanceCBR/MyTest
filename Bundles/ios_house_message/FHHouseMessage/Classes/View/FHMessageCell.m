@@ -18,6 +18,9 @@
 #import "TIMMessageStoreBridge.h"
 #import "FHShadowLabel.h"
 #import "FHMessageEditView.h"
+#import <Heimdallr/HMDTTMonitor.h>
+#import "ByteDanceKit.h"
+#import "IMManager.h"
 
 #define CURRENT_CALENDAR [NSCalendar currentCalendar]
 
@@ -354,6 +357,45 @@
 
     [self displaySendState:lastMsg isMute:conv.mute];
     self.timeLabel.text = [self timeLabelByDate:conv.updatedAt];
+    // 监牢会话更新日期无效问题
+    [self monitorConversatonUpdateDateInvalidFor:conv];
+}
+
+- (void)monitorConversatonUpdateDateInvalidFor:(IMConversation *)conv {
+    
+    if(conv && conv.type == IMConversationType1to1Chat) {
+        
+        NSString *currentUserId = [TTAccount sharedAccount].userIdString;
+        NSDate *updatedDate = conv.updatedAt;
+        if([updatedDate isEqual:[NSDate dateWithTimeIntervalSince1970:0]]) {
+            NSMutableDictionary *extra = [NSMutableDictionary dictionary];
+            extra[@"conversation_id"] = conv.identifier;
+            extra[@"uid"] = currentUserId;
+            IMConversation *con = [[IMManager shareInstance].chatService conversationWithIdentifier:conv.identifier];
+            if(con) {
+                extra[@"updateLabelText"] = [self timeLabelByDate:updatedDate];
+            }
+            [[HMDTTMonitor defaultManager] hmdTrackService:@"im_conversation_invalid" metric:nil category:@{@"category": @"updateDateInvalid"} extra:extra];
+        }
+        
+        if(currentUserId.length > 0) {
+            __block BOOL isValid = NO;
+            [conv.someParticipants enumerateObjectsUsingBlock:^(BaseChatUser * _Nonnull user, NSUInteger idx, BOOL * _Nonnull stop) {
+                if([user.userId isEqual:currentUserId]) {
+                    isValid = YES;
+                    *stop = YES;
+                }
+            }];
+            if(!isValid) {
+                NSMutableDictionary *extra = [NSMutableDictionary dictionary];
+                extra[@"conversation_id"] = conv.identifier;
+                extra[@"uid"] = currentUserId;
+                [[HMDTTMonitor defaultManager] hmdTrackService:@"im_conversation_invalid" metric:nil category:@{@"category": @"wrongConversation"} extra:extra];
+            }
+        }
+    }
+    
+
 }
 - (void)composeSubTitleLabelTextForConversation:(IMConversation *)conv msgText: (NSString *)text isCutLineBreak:(BOOL)cutLineBreak {
     switch ([conv lastChatMsg].type) {

@@ -12,15 +12,18 @@
 #import <BDWebImage/BDWebImage.h>
 
 @interface FHFloorPanListCell ()
-@property (nonatomic , strong) UIImageView *iconView;
-@property (nonatomic , strong) UILabel *nameLabel;
-@property (nonatomic , strong) UILabel *roomSpaceLabel;
-@property (nonatomic , strong) UILabel *priceLabel;
+
+@property (nonatomic, strong) UIImageView *iconView;
+@property (nonatomic, strong) UILabel *nameLabel;
+@property (nonatomic, strong) UILabel *roomSpaceLabel;
+@property (nonatomic, strong) UILabel *priceLabel;
 @property (nonatomic, strong) FHDetailTagBackgroundView        *tagBacView;
-@property (nonatomic , strong) UIButton *mapMaskBtn;
-@property (nonatomic , strong) UIView *statusBGView;
-@property (nonatomic , strong) UIView *topLine;
-@property (nonatomic , strong) UIView *cellBackView;
+@property (nonatomic, strong) UIButton *mapMaskBtn;
+@property (nonatomic, strong) UIView *statusBGView;
+@property (nonatomic, strong) UIView *topLine;
+@property (nonatomic, strong) UIView *cellBackView;
+@property (nonatomic, strong) UIImageView *vrImageView;
+
 @end
 
 @implementation FHFloorPanListCell
@@ -56,6 +59,15 @@
             make.bottom.mas_equalTo(-20);
             make.width.mas_equalTo(66);
             make.height.mas_equalTo(66);
+        }];
+        
+        _vrImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"detail_vr_movie_icon"]];
+        _vrImageView.hidden = YES;
+        [self.contentView addSubview:_vrImageView];
+        [self.vrImageView mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.left.mas_equalTo(self.iconView.mas_left).offset(6);
+            make.bottom.mas_equalTo(self.iconView.mas_bottom).offset(-6);
+            make.width.height.mas_equalTo(18);
         }];
         
         _nameLabel = [UILabel new];
@@ -216,6 +228,11 @@
             [self.nameLabel mas_updateConstraints:^(MASConstraintMaker *make) {
                 make.top.mas_equalTo(20 + 12);
             }];
+        }
+        if (model.vrInfo.hasVr) {
+            self.vrImageView.hidden = NO;
+        } else {
+            self.vrImageView.hidden = YES;
         }
 
     }
