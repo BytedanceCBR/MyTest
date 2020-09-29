@@ -932,7 +932,12 @@ static NSUInteger const kOldAnimationViewTag = 20161221;
 
 - (CGFloat)DetailGetToolbarHeight
 {
-    return (self.view.tt_safeAreaInsets.bottom ? self.view.tt_safeAreaInsets.bottom + 44 : 44) + [TTDeviceHelper ssOnePixel];
+    CGFloat bottom = 0;
+    if (@available(iOS 11.0, *)) {
+        bottom += [[[[UIApplication sharedApplication] delegate] window] safeAreaInsets].bottom;
+    }
+    
+    return bottom + 44 + [TTDeviceHelper ssOnePixel];
 }
 
 - (CGRect)p_frameForToolBarView
