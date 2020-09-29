@@ -16,8 +16,6 @@
 #import "FHTracerModel.h"
 #import "FHErrorMaskView.h"
 #import "FHHouseListViewModel.h"
-
-#import "TTDeviceHelper.h"
 #import "NSDictionary+TTAdditions.h"
 #import "FHConditionFilterViewModel.h"
 #import "HMDTTMonitor.h"
@@ -29,6 +27,7 @@
 #import <FHHouseBase/FHBaseTableView.h>
 #import "FHMainOldTopTagsView.h"
 #import "TTNavigationController.h"
+#import <ByteDanceKit/ByteDanceKit.h>
 
 #define kFilterBarHeight 44
 #define COMMUTE_TOP_MARGIN 6
@@ -64,7 +63,6 @@
 @property (nonatomic , copy) NSString *associationalWord;// 联想词
 @property (nonatomic , copy) NSString *suggestionParams; // sug
 @property (nonatomic , copy) NSString *queryString;
-@property (nonatomic , strong) NSDictionary *tracerDict; // 埋点
 
 @property (nonatomic , assign) FHHouseListSearchType searchType;
 @property(nonatomic , strong) FHMainOldTopTagsView *topTagsView;
@@ -117,8 +115,7 @@
             self.searchType = FHHouseListSearchTypeNeighborhoodDeal;
         }
         self.tracerModel.categoryName = [self categoryName];
-        self.tracerDict = [paramObj.userInfo.allInfo tt_dictionaryValueForKey:@"tracer"];
-        NSDictionary *sugDict = [paramObj.userInfo.allInfo tt_dictionaryValueForKey:@"sugParams"];
+//        NSDictionary *sugDict = [paramObj.userInfo.allInfo btd_dictionaryValueForKey:@"sugParams"];
 //        self.associationalWord = [sugDict tt_stringValueForKey:@"associateWord"];
 //        self.suggestionParams = [sugDict tt_stringValueForKey:@"sug"];
         
@@ -231,7 +228,7 @@
     [self.bottomLine mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.right.mas_equalTo(0);
         make.top.mas_equalTo(0);
-        make.height.mas_equalTo(TTDeviceHelper.ssOnePixel);
+        make.height.mas_equalTo([UIDevice btd_onePixel]);
     }];
 //    if (!self.viewModel.isCommute) {
 //        //非通勤找房下才显示分隔线
@@ -566,7 +563,8 @@
     
     [self initNavbar];
     
-    self.viewModel = [[FHHouseListViewModel alloc]initWithTableView:self.tableView routeParam:self.paramObj];
+    self.viewModel = [[FHHouseListViewModel alloc] initWithTableView:self.tableView routeParam:self.paramObj];
+    [self.viewModel updateTracerDict:self.tracerDict.copy];
     self.viewModel.searchType = self.searchType;
     self.viewModel.listVC = self;
     [self.viewModel addNotiWithNaviBar:self.navbar];
@@ -694,7 +692,7 @@
 
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         [UIView animateWithDuration:0.3 animations:^{
-            _tableView.contentInset = UIEdgeInsetsMake(0, 0, 34 , 0);
+            self.tableView.contentInset = UIEdgeInsetsMake(0, 0, 34 , 0);
         }];
     });
 
@@ -721,9 +719,12 @@
         NSArray *tableCells = [self.tableView visibleCells];
         if (tableCells) {
             [tableCells enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-                    if ([obj respondsToSelector:@selector(resumeVRIcon)]) {
-                        [obj performSelector:@selector(resumeVRIcon)];
-                    }
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored   "-Wundeclared-selector"
+                if ([obj respondsToSelector:@selector(resumeVRIcon)]) {
+                    [obj performSelector:@selector(resumeVRIcon)];
+                }
+#pragma clang diagnostic pop
             }];
         }
     }
@@ -742,7 +743,7 @@
             _tableView.estimatedSectionFooterHeight = 0;
             _tableView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
         }
-        if ([TTDeviceHelper isIPhoneXDevice]) {
+        if ([UIDevice btd_isIPhoneXSeries]) {
             
             _tableView.contentInset = UIEdgeInsetsMake(0, 0, 34, 0);
         }

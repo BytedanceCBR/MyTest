@@ -9,6 +9,7 @@
 #import "FHPriceValuationViewModel.h"
 #import "FHPriceValuationView.h"
 #import "UIFont+House.h"
+#import <FHHouseBase/UIImage+FIconFont.h>
 
 @interface FHPriceValuationViewController ()<TTRouteInitializeProtocol>
 
@@ -57,8 +58,8 @@
 
 - (void)initNavbar {
     [self setupDefaultNavBar:NO];
-    [self.customNavBarView.leftBtn setBackgroundImage:[UIImage imageNamed:@"icon-return-white"] forState:UIControlStateNormal];
-    [self.customNavBarView.leftBtn setBackgroundImage:[UIImage imageNamed:@"icon-return-white"] forState:UIControlStateHighlighted];
+    [self.customNavBarView.leftBtn setBackgroundImage:FHBackWhiteImage forState:UIControlStateNormal];
+    [self.customNavBarView.leftBtn setBackgroundImage:FHBackWhiteImage forState:UIControlStateHighlighted];
     [self.customNavBarView setNaviBarTransparent:YES];
     
     self.historyBtn = [[UIButton alloc] init];

@@ -152,14 +152,14 @@
 }
 
 - (void)showImagesWithCurrentIndex:(NSInteger)index {
-    NSArray<FHDetailPhotoHeaderModelProtocol> *images = self.dataHelper.pictureDetailData.photoArray;
-    if (index < 0 || index >= (images.count + self.dataHelper.headerViewData.videoNumer)) {
+    if (index < 0 || index >= self.dataHelper.pictureDetailData.detailPictureModel.itemList.count) {
         return;
     }
     
     __weak typeof(self) weakSelf = self;
     self.baseViewModel.detailController.ttNeedIgnoreZoomAnimation = YES;
     FHDetailPictureViewController *pictureDetailViewController = [[FHDetailPictureViewController alloc] init];
+    pictureDetailViewController.detailPictureModel = self.dataHelper.pictureDetailData.detailPictureModel;
     pictureDetailViewController.houseType = self.baseViewModel.houseType;
     if (self.pictureListViewController) {
         pictureDetailViewController.topVC = self.pictureListViewController;
@@ -197,18 +197,10 @@
     }
     self.currentIndex = index;
     pictureDetailViewController.startWithIndex = index;
-    pictureDetailViewController.albumImageBtnClickBlock = ^(NSInteger index) {
-        [weakSelf enterPictureShowPictureWithIndex:index from:@"all_pic"];
-    };
-    pictureDetailViewController.albumImageStayBlock = ^(NSInteger index, NSInteger stayTime) {
-        [weakSelf stayPictureShowPictureWithIndex:index andTime:stayTime];
-    };
-    pictureDetailViewController.topImageClickTabBlock = ^(NSInteger index) {
+    pictureDetailViewController.clickTitleTabBlock = ^(NSInteger index) {
         [weakSelf trackClickTabWithIndex:index element:@"big_photo_album"];
     };
-
-    [pictureDetailViewController setMediaHeaderModel:self.currentData mediaImages:images];
-    pictureDetailViewController.smallImageInfosModels = self.dataHelper.photoAlbumData.floorPanModel;
+    
 
     //如果是小区，移除按钮 或者户型详情页也移除按钮
     //099 户型详情页 显示底部按钮
@@ -219,8 +211,8 @@
     UIWindow *window = [[[UIApplication sharedApplication] delegate] window];
     CGRect frame = [self convertRect:self.bounds toView:window];
     NSMutableArray *frames = [[NSMutableArray alloc] initWithCapacity:index + 1];
-    NSMutableArray *placeholders = [[NSMutableArray alloc] initWithCapacity:images.count];
-    for (NSInteger i = 0; i < images.count + self.dataHelper.headerViewData.videoNumer; i++) {
+    NSMutableArray *placeholders = [[NSMutableArray alloc] initWithCapacity:self.dataHelper.pictureDetailData.detailPictureModel.itemList.count];
+    for (NSInteger i = 0; i < self.dataHelper.pictureDetailData.detailPictureModel.itemList.count; i++) {
         [placeholders addObject:placeholder];
         NSValue *frameValue = [NSValue valueWithCGRect:frame];
         [frames addObject:frameValue];
@@ -230,14 +222,15 @@
         pictureDetailViewController.placeholders = placeholders;
     }
     __weak FHDetailPictureViewController *weakPictureController = pictureDetailViewController;
-    [pictureDetailViewController setAllPhotoActionBlock:^{
+    pictureDetailViewController.albumImageBtnClickBlock = ^(NSInteger index) {
+        [weakSelf enterPictureShowPictureWithIndex:index from:@"all_pic"];
         __strong typeof(weakSelf) strongSelf = weakSelf;
         if (strongSelf.pictureListViewController) {
             [weakPictureController dismissSelf];
         } else {
             [strongSelf showPictureList];
         }
-    }];
+    };
 
     pictureDetailViewController.indexUpdatedBlock = ^(NSInteger lastIndex, NSInteger currentIndex) {
         weakSelf.currentIndex = currentIndex;
@@ -446,20 +439,8 @@
     if ([dict isKindOfClass:[NSDictionary class]]) {
         [dict removeObjectsForKeys:@[@"card_type", @"rank", @"element_from", @"origin_search_id", @"log_pb", @"origin_from"]];
 
-        if ([str isEqualToString:@"图片"]) {
-            dict[@"click_position"] = @"picture";
-        } else if ([str isEqualToString:@"户型"]) {
-            dict[@"click_position"] = @"house_model";
-        } else if ([str isEqualToString:@"视频"]) {
-            dict[@"click_position"] = @"video";
-        } else if ([str isEqualToString:@"house_vr_icon"]) {
-            dict[@"click_position"] = @"house_vr_icon";
-        } else if ([str isEqualToString:@"VR"]) {
-            dict[@"click_position"] = @"house_vr";
-        } else if ([str isEqualToString:@"样板间"]) {
-            dict[@"click_position"] = @"prototype";
-        } else if ([str isEqualToString:@"街景"]) {
-            dict[@"click_position"] = @"panorama";
+        if (str.length > 0) {
+            dict[@"click_position"] = str;
         }
 
         dict[@"rank"] = @"be_null";

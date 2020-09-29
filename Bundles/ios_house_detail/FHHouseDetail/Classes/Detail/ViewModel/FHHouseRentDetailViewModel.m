@@ -324,7 +324,6 @@ extern NSString *const kFHSubscribeHouseCacheKey;
         staticMapModel.houseType = [NSString stringWithFormat:@"%ld",(long)FHHouseTypeRentHouse];
         staticMapModel.tableView = self.tableView;
         staticMapModel.staticImage = model.data.neighborhoodInfo.gaodeImage;
-        staticMapModel.mapOnly = YES;
         staticMapModel.baiduPanoramaUrl = model.data.neighborhoodInfo.baiduPanoramaUrl;
         [self.items addObject:staticMapModel];
 

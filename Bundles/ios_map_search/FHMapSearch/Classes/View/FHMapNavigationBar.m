@@ -29,7 +29,7 @@
         
         self.backgroundColor = [UIColor whiteColor];
         
-        UIImage *img = ICON_FONT_IMG(24, @"\U0000e68a", [UIColor themeGray1]);
+        UIImage *img = FHBackBlackImage;
         UIButton *backButton = [UIButton buttonWithType:UIButtonTypeCustom];
         [backButton setImage:img forState:UIControlStateNormal];
         [backButton setImage:img forState:UIControlStateHighlighted];

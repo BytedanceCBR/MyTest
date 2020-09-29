@@ -33,6 +33,7 @@
 @interface FHDetailMediaHeaderCorrectingCell ()<FHMultiMediaCorrectingScrollViewDelegate,FHDetailScrollViewDidScrollProtocol,FHDetailVCViewLifeCycleProtocol>
 
 @property(nonatomic, strong) FHMultiMediaCorrectingScrollView *mediaView;
+@property(nonatomic, strong) FHDetailPictureModel *pictureModel;
 @property(nonatomic, strong) FHMultiMediaModel *model;
 @property(nonatomic, strong) NSMutableArray *imageList;
 @property(nonatomic, strong) NSMutableDictionary *pictureShowDict;
@@ -231,7 +232,8 @@
         self.baiduPanoramaIndex = itemArray.count;
         [itemArray addObject:baiduPanoramaModel];
     }
-    
+    self.pictureModel = [[FHDetailPictureModel alloc] init];
+    NSMutableArray *pictureArray = [NSMutableArray array];
     for (FHHouseDetailImageListDataModel *listModel in houseImageDict) {
         NSString *groupType = nil;
         if (listModel.usedSceneType == FHHouseDetailImageListDataUsedSceneTypeFloorPan) {
@@ -266,11 +268,16 @@
                 }
                 [itemArray addObject:itemModel];
                 [self.imageList addObject:imageModel];
+                FHDetailPictureItemPictureModel *pictureModel = [[FHDetailPictureItemPictureModel alloc] init];
+                pictureModel.image = imageModel;
+                pictureModel.itemType = FHDetailPictureModelTypePicture;
+                pictureModel.rootGroupName = listModel.houseImageTypeName;
+                [pictureArray addObject:pictureModel];
             }
             index++;
         }
     }
-    
+    self.pictureModel.itemList = pictureArray.copy;
     self.model.medias = itemArray;
     if([self.baseViewModel.detailData isKindOfClass:[FHDetailOldModel class]]) {
         FHDetailOldModel *detailOldModel = (FHDetailOldModel *)self.baseViewModel.detailData;
@@ -280,7 +287,7 @@
 
 -(void)showImagesWithCurrentIndex:(NSInteger)index {
     NSArray *images = self.imageList;
-    
+
     if([images.firstObject isKindOfClass:[FHMultiMediaItemModel class]])
     {
         FHMultiMediaItemModel *model = (FHMultiMediaItemModel *)images.firstObject;
@@ -291,7 +298,7 @@
             index = index - 1;
         }
     }
-    
+
     FHDetailHouseVRDataModel *vrModel = ((FHDetailMediaHeaderCorrectingModel *)self.currentData).vrModel;
     //VR
     if (index < 0 && vrModel && [vrModel isKindOfClass:[FHDetailHouseVRDataModel class]] && vrModel.hasVr) {
@@ -299,11 +306,11 @@
             [[ToastManager manager] showToast:@"网络异常"];
             return;
         }
-        
+
         if (vrModel.openUrl) {
-            
+
             [self trackClickOptions:@"house_vr_icon"];
-            
+
 //            if ([self.preloadRouteObj.instance isKindOfClass:[UIViewController class]] && [self.weakDetailVC isKindOfClass:[UIViewController class]]) {
 //                [self.weakDetailVC.navigationController pushViewController:self.preloadRouteObj.instance animated:YES];
 //            }else{
@@ -323,14 +330,14 @@
         }
         return;
     }
-    
-    
+
+
     FHMultiMediaItemModel *vedioModel = ((FHDetailMediaHeaderCorrectingModel *)self.currentData).vedioModel;
 
-    if (index < 0 || index >= (images.count + self.vedioCount)) {
+    if (index < 0 || index >= self.pictureModel.itemList.count) {
         return;
     }
-    
+
 //    if (index < self.vedioCount && vedioModel.cellHouseType != FHMultiMediaCellHouseNeiborhood) {
 //        // 视频
 //        if (self.mediaView.videoVC.playbackState == TTVideoEnginePlaybackStateStopped || self.mediaView.videoVC.playbackState == TTVideoEnginePlaybackStatePaused) {
@@ -339,17 +346,18 @@
 //            return;
 //        }
 //    }
-    
+
     __weak typeof(self) weakSelf = self;
     self.baseViewModel.detailController.ttNeedIgnoreZoomAnimation = YES;
     FHDetailPictureViewController *pictureDetailViewController = [[FHDetailPictureViewController alloc] init];
+    pictureDetailViewController.detailPictureModel = self.pictureModel;
     pictureDetailViewController.houseType = self.baseViewModel.houseType;
     if (self.pictureListViewController) {
         pictureDetailViewController.topVC = self.pictureListViewController;
     } else {
         pictureDetailViewController.topVC = self.baseViewModel.detailController;
     }
-    
+
     // 获取图片需要的房源信息数据
     if ([self.baseViewModel.detailData isKindOfClass:[FHDetailOldModel class]]) {
         // 二手房数据
@@ -364,27 +372,28 @@
         pictureDetailViewController.houseId = houseId;
         pictureDetailViewController.priceStr = priceStr;
         pictureDetailViewController.infoStr = infoStr;
-        pictureDetailViewController.associateInfo = model.data.houseImageAssociateInfo;
-
+        pictureDetailViewController.imageGroupAssociateInfo = model.data.houseImageAssociateInfo;
+        pictureDetailViewController.contactViewModel = ((FHDetailMediaHeaderCorrectingModel *)self.currentData).contactViewModel;
         pictureDetailViewController.followStatus = self.baseViewModel.contactViewModel.followStatus;
-    } else if ([self.baseViewModel.detailData isKindOfClass:[FHDetailNewModel class]]) {
-        FHDetailNewModel *model = (FHDetailNewModel *)self.baseViewModel.detailData;
-        pictureDetailViewController.associateInfo = model.data.imageGroupAssociateInfo;
-        if (!model.data.isShowTopImageTab) {
-            //如果是新房，非北京、江州以外的城市，暂时隐藏头部
-            pictureDetailViewController.isShowSegmentView = NO;
-        }
-    }else if ([self.baseViewModel.detailData isKindOfClass:[FHDetailNeighborhoodModel class]]) {
-//        FHDetailNeighborhoodModel *model = (FHDetailNeighborhoodModel *)self.baseViewModel.detailData;
-        pictureDetailViewController.isShowBottomBar = NO;
-    } else if ([self.baseViewModel.detailData isKindOfClass:[FHDetailFloorPanDetailInfoModel class]]) {
-        //户型详情
-        FHDetailFloorPanDetailInfoModel *model = (FHDetailFloorPanDetailInfoModel *)self.baseViewModel.detailData;
-        pictureDetailViewController.associateInfo = model.data.imageAssociateInfo;
     }
-    
+//    } else if ([self.baseViewModel.detailData isKindOfClass:[FHDetailNewModel class]]) {
+//        FHDetailNewModel *model = (FHDetailNewModel *)self.baseViewModel.detailData;
+//        pictureDetailViewController.associateInfo = model.data.imageGroupAssociateInfo;
+//        if (!model.data.isShowTopImageTab) {
+//            //如果是新房，非北京、江州以外的城市，暂时隐藏头部
+//            pictureDetailViewController.isShowSegmentView = NO;
+//        }
+//    }else if ([self.baseViewModel.detailData isKindOfClass:[FHDetailNeighborhoodModel class]]) {
+////        FHDetailNeighborhoodModel *model = (FHDetailNeighborhoodModel *)self.baseViewModel.detailData;
+//        pictureDetailViewController.isShowBottomBar = NO;
+//    } else if ([self.baseViewModel.detailData isKindOfClass:[FHDetailFloorPanDetailInfoModel class]]) {
+//        //户型详情
+//        FHDetailFloorPanDetailInfoModel *model = (FHDetailFloorPanDetailInfoModel *)self.baseViewModel.detailData;
+//        pictureDetailViewController.associateInfo = model.data.imageAssociateInfo;
+//    }
 
-    
+
+
     // 分享
     pictureDetailViewController.shareActionBlock = ^{
         NSString *v_id = @"be_null";
@@ -414,47 +423,47 @@
         pictureDetailViewController.videoVC = self.mediaView.videoVC;
     }
     pictureDetailViewController.startWithIndex = index;
-    pictureDetailViewController.albumImageBtnClickBlock = ^(NSInteger index){
-        [weakSelf enterPictureShowPictureWithIndex:index from:@"all_pic"];
-    };
-    pictureDetailViewController.albumImageStayBlock = ^(NSInteger index,NSInteger stayTime) {
-        [weakSelf stayPictureShowPictureWithIndex:index andTime:stayTime];
-    };
-    pictureDetailViewController.topImageClickTabBlock = ^(NSInteger index) {
+//    pictureDetailViewController.albumImageBtnClickBlock = ^(NSInteger index){
+//        [weakSelf enterPictureShowPictureWithIndex:index from:@"all_pic"];
+//    };
+//    pictureDetailViewController.albumImageStayBlock = ^(NSInteger index,NSInteger stayTime) {
+//        [weakSelf stayPictureShowPictureWithIndex:index andTime:stayTime];
+//    };
+    pictureDetailViewController.clickTitleTabBlock = ^(NSInteger index) {
         [weakSelf trackClickTabWithIndex:index element:@"big_photo_album"];
     };
-    
-    [pictureDetailViewController setMediaHeaderModel:self.currentData mediaImages:images];
+
+//    [pictureDetailViewController setMediaHeaderModel:self.currentData mediaImages:images];
     FHDetailMediaHeaderCorrectingModel *model = ((FHDetailMediaHeaderCorrectingModel *)self.currentData);
     //去除flag判断，改为判断详情页type
-    if (self.baseViewModel.houseType == FHHouseTypeNewHouse && [model.topImages isKindOfClass:[NSArray class]] && model.topImages.count > 0) {
+//    if (self.baseViewModel.houseType == FHHouseTypeNewHouse && [model.topImages isKindOfClass:[NSArray class]] && model.topImages.count > 0) {
 //        FHDetailNewTopImage *topImage = model.topImages.firstObject;
 //        pictureDetailViewController.smallImageInfosModels = topImage.smallImageGroup;
       //  pictureDetailViewController.smallImageInfosModels = [model processTopImagesToSmallImageGroups];
-    }
-    if (self.baseViewModel.houseType == FHHouseTypeNeighborhood) {
-        pictureDetailViewController.smallImageInfosModels = [model processFloorPanPicShowModel];
-    }
+//    }
+//    if (self.baseViewModel.houseType == FHHouseTypeNeighborhood) {
+//        pictureDetailViewController.smallImageInfosModels = [model processFloorPanPicShowModel];
+//    }
     //如果是小区，移除按钮 或者户型详情页也移除按钮
     //099 户型详情页 显示底部按钮
-    
-    if (vedioModel && vedioModel.cellHouseType == FHMultiMediaCellHouseNeiborhood) {// || model.titleDataModel.isFloorPan
-        pictureDetailViewController.isShowBottomBar = NO;
-    }
-    if (model.titleDataModel.isFloorPan && model.titleDataModel.titleStr.length) {
-        NSMutableString *bottomBarTitle = model.titleDataModel.titleStr.mutableCopy;
-        if (model.titleDataModel.squaremeter.length) {
-            [bottomBarTitle appendFormat:@" %@",model.titleDataModel.squaremeter];
-        }
-        if (model.titleDataModel.facingDirection.length) {
-            [bottomBarTitle appendFormat:@" %@",model.titleDataModel.facingDirection];
-        }
-        if (model.titleDataModel.saleStatus.length) {
-             [bottomBarTitle appendFormat:@" %@",model.titleDataModel.saleStatus];
-        }
-        pictureDetailViewController.bottomBarTitle = bottomBarTitle.copy;
-    }
-    
+
+//    if (vedioModel && vedioModel.cellHouseType == FHMultiMediaCellHouseNeiborhood) {// || model.titleDataModel.isFloorPan
+//        pictureDetailViewController.isShowBottomBar = NO;
+//    }
+//    if (model.titleDataModel.isFloorPan && model.titleDataModel.titleStr.length) {
+//        NSMutableString *bottomBarTitle = model.titleDataModel.titleStr.mutableCopy;
+//        if (model.titleDataModel.squaremeter.length) {
+//            [bottomBarTitle appendFormat:@" %@",model.titleDataModel.squaremeter];
+//        }
+//        if (model.titleDataModel.facingDirection.length) {
+//            [bottomBarTitle appendFormat:@" %@",model.titleDataModel.facingDirection];
+//        }
+//        if (model.titleDataModel.saleStatus.length) {
+//             [bottomBarTitle appendFormat:@" %@",model.titleDataModel.saleStatus];
+//        }
+//        pictureDetailViewController.bottomBarTitle = bottomBarTitle.copy;
+//    }
+
     UIImage *placeholder = [UIImage imageNamed:@"default_image"];
     UIWindow *window = [[[UIApplication sharedApplication] delegate] window];
     CGRect frame = [self convertRect:self.bounds toView:window];
@@ -469,16 +478,16 @@
         pictureDetailViewController.placeholderSourceViewFrames = frames;
         pictureDetailViewController.placeholders = placeholders;
     }
-    __weak FHDetailPictureViewController * weakPictureController = pictureDetailViewController;
-    [pictureDetailViewController setAllPhotoActionBlock:^{
-        __strong typeof(weakSelf) strongSelf = weakSelf;
-        if (strongSelf.pictureListViewController) {
-            [weakPictureController dismissSelf];
-        } else {
-            [strongSelf showPictureList];
-        }
-    }];
-    
+//    __weak FHDetailPictureViewController * weakPictureController = pictureDetailViewController;
+//    [pictureDetailViewController setAllPhotoActionBlock:^{
+//        __strong typeof(weakSelf) strongSelf = weakSelf;
+//        if (strongSelf.pictureListViewController) {
+//            [weakPictureController dismissSelf];
+//        } else {
+//            [strongSelf showPictureList];
+//        }
+//    }];
+
     pictureDetailViewController.indexUpdatedBlock = ^(NSInteger lastIndex, NSInteger currentIndex) {
         if (currentIndex >= 0 && currentIndex < weakSelf.model.medias.count) {
             if(weakSelf.baiduPanoramaIndex != -1) {
@@ -488,7 +497,7 @@
             }
             weakSelf.currentIndex = currentIndex;
             weakSelf.isLarge = YES;
-            
+
             NSInteger vrOffset = 0;
             FHDetailHouseVRDataModel *vrModel = ((FHDetailMediaHeaderCorrectingModel *)weakSelf.currentData).vrModel;
             //VR增加偏移
@@ -504,22 +513,22 @@
     };
     self.mediaView.isShowenPictureVC = YES;
     [pictureDetailViewController presentPhotoScrollViewWithDismissBlock:^{
-        
-        
+
+
         weakSelf.mediaView.isShowenPictureVC = NO;
         if ([weakSelf.mediaView.currentMediaCell isKindOfClass:[FHMultiMediaVideoCell class]]) {
             [weakSelf resetVideoCell:frame];
         }
-        
+
         weakSelf.isLarge = NO;
         [weakSelf trackPictureShowWithIndex:weakSelf.currentIndex];
         [weakSelf trackPictureLargeStayWithIndex:weakSelf.currentIndex];
     }];
-    
+
     pictureDetailViewController.saveImageBlock = ^(NSInteger currentIndex) {
         [weakSelf trackSavePictureWithIndex:currentIndex];
     };
-    
+
     self.isLarge = YES;
     [self trackPictureShowWithIndex:index];
     self.enterTimestamp = [[NSDate date] timeIntervalSince1970];
@@ -720,20 +729,8 @@
     if([dict isKindOfClass:[NSDictionary class]]){
         [dict removeObjectsForKeys:@[@"card_type",@"rank",@"element_from",@"origin_search_id",@"log_pb",@"origin_from"]];
         
-        if([str isEqualToString:@"图片"]){
-            dict[@"click_position"] = @"picture";
-        }else if([str isEqualToString:@"户型"]){
-            dict[@"click_position"] = @"house_model";
-        }else if([str isEqualToString:@"视频"]){
-            dict[@"click_position"] = @"video";
-        }else if([str isEqualToString:@"house_vr_icon"]){
-            dict[@"click_position"] = @"house_vr_icon";
-        }else if([str isEqualToString:@"VR"]){
-            dict[@"click_position"] = @"house_vr";
-        }else if ([str isEqualToString:@"样板间"]) {
-            dict[@"click_position"] = @"prototype";
-        }else if ([str isEqualToString:@"街景"]) {
-            dict[@"click_position"] = @"panorama";
+        if (str.length > 0) {
+            dict[@"click_position"] = str;
         }
 
         dict[@"rank"] = @"be_null";
@@ -990,7 +987,7 @@
         
     }
     
-    for (FHHouseDetailImageTabInfo *tabInfo in self.albumInfo.tabList) {
+    for (FHHouseDetailMediaTabInfo *tabInfo in self.albumInfo.tabList) {
         [mArr addObjectsFromArray:[FHFloorPanPicShowGroupModel getTabGroupInfo:tabInfo rootName:tabInfo.tabName]];
     }
     picShowModel.itemGroupList = mArr.copy;

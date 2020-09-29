@@ -7,11 +7,11 @@
 //
 
 #import "ExploreVideoTopView.h"
-
 #import "UIButton+TTAdditions.h"
 #import "ExploreVideoDetailHelper.h"
 #import "TTDeviceHelper.h"
 #import <Masonry/Masonry.h>
+#import <FHHouseBase/UIImage+FIconFont.h>
 
 #define kLeftMargin     10.f
 
@@ -57,8 +57,8 @@
 {
     [super themeChanged:notification];
     self.backgroundColor = [UIColor clearColor];
-    [_backButton setImage:[UIImage imageNamed:@"icon-return-white"] forState:UIControlStateNormal];
-    [_backButton setImage:[UIImage imageNamed:@"icon-return-white"] forState:UIControlStateHighlighted];
+    [_backButton setImage:FHBackWhiteImage forState:UIControlStateNormal];
+    [_backButton setImage:FHBackWhiteImage forState:UIControlStateHighlighted];
 }
 
 - (BOOL)pointInside:(CGPoint)point withEvent:(UIEvent *)event

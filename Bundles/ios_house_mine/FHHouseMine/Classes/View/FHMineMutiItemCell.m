@@ -50,7 +50,7 @@
     self.bgView = [[UIView alloc] init];
     _bgView.backgroundColor = [UIColor whiteColor];
     _bgView.layer.masksToBounds = YES;
-    _bgView.layer.cornerRadius = 4;
+    _bgView.layer.cornerRadius = 10;
     [self.contentView addSubview:_bgView];
     
     self.titleLabel = [self LabelWithFont:[UIFont themeFontMedium:16] textColor:[UIColor themeGray1]];

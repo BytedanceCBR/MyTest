@@ -238,6 +238,9 @@ static const float timerInterval = 3.0f;
         _collectionView.showsHorizontalScrollIndicator = NO;
         _collectionView.showsVerticalScrollIndicator = NO;
         _collectionView.pagingEnabled = YES;
+        if (@available(iOS 11.0 , *)) {
+            _collectionView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
+        }
         [_collectionView registerClass:[FHCardSliderCell class] forCellWithReuseIdentifier:NSStringFromClass([FHCardSliderCell class])];
     }
     return _collectionView;

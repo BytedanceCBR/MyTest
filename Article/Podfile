@@ -52,23 +52,22 @@ def fhPods
 #    pod 'FHCommonUI',:path => '../../ios_common_ui/'
 #    pod 'FHCommonUI', :git => 'git@code.byted.org:fproject/ios_common_ui.git', :commit => 'df694e57a8c75b599b241fbd5114c55c767bf0a5'
 
-    pod 'FHPopupViewCenter', '0.0.2', :inhibit_warnings => false, :subspecs => [
+    pod 'FHPopupViewCenter', '0.0.3-rc.0', :inhibit_warnings => false, :subspecs => [
     'Core',
     'DelegateForC'
     ]
-
 #    pod 'FHPopupViewCenter', :path => '../../../FHPopupViewCenter', :subspecs => [
 #    'Core',
 #    'DelegateForC'
-#    ]
+#    ], :inhibit_warnings => false
 #    pod 'FHPopupViewCenter', :git => 'git@code.byted.org:fproject/FHPopupViewCenter.git', :commit => '5b26764059a67e7206cf26133491a243ccc6f523', :subspecs => [
 #    'Core',
 #    'DelegateForC'
 #    ]
     
-#    pod 'ios_house_im' , :path => '../../../im/bugfix', :inhibit_warnings => false
-#    pod 'ios_house_im' ,'0.2.16-rc.8', :inhibit_warnings => false
-     pod 'ios_house_im' ,'0.2.16-rc.9', :inhibit_warnings => false
+#    pod 'ios_house_im' , :path => '../../../im/feature', :inhibit_warnings => false
+#    pod 'ios_house_im' ,'0.2.16-rc.9', :inhibit_warnings => false
+     pod 'ios_house_im' ,'0.9.0.3', :inhibit_warnings => false
 
 end
 
@@ -424,13 +423,12 @@ def appPods
 #    ]
 
     #----内测升级弹窗----
-    pod_binary 'TTAppUpdateHelper', '1.0.9', :subspecs => [
-    'TTUpdateHelper',
-    'TTUpdateView'
+    pod 'TTAppUpdateHelper', '3.0.14.13', :subspecs => [
+    'TTUpdateHelper'
     ]
 
     #-----TTAccountSDK-----
-    pod 'TTAccountSDK', '5.10.1-rc.4', :subspecs => [
+    pod_binary 'TTAccountSDK', '5.10.1-rc.4', :subspecs => [
     'Account',
 #    'Logger',
     'WeChatAccount',
@@ -451,8 +449,8 @@ def appPods
 
     #************业务SDK**********
 
-    pod_binary 'YYImage', '1.0.3'
-    pod 'YYCache'
+    pod_binary 'YYImage', '1.0.5'
+    pod_binary 'YYCache'
     pod_binary 'YYModel', '1.0.4'
     
     pod_binary 'YYWebImage', '1.0.4'
@@ -491,6 +489,7 @@ def appPods
     #IMSDK依赖
     pod 'lz4', '1.0.1'
     pod 'ByteRtcSDK', '2.6.13'
+#    pod 'TTIMSDK', :git => 'git@code.byted.org:im/TIMSDK.git', :branch => 'yang_release_1.0', :subspecs => [
     pod 'TTIMSDK', '1.1.3-rc.2-xingfuli', :subspecs => [
         'IMKit_Default',
         'IMKit_WebSocket',

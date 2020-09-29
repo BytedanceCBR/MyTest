@@ -10,22 +10,14 @@
 #import "AppAlertManager.h"
 #import "TTRoute.h"
 #import "TTInstallIDManager.h"
-//#import "CommonURLSetting.h"
 #import "TTTrackerSessionHandler.h"
 #import "TTStringHelper.h"
-//#import "TTSingleResponseModel.h"
 #import "TTTrackerWrapper.h"
 #import "TTRoute.h"
 #import "TTUserSettings/TTUserSettingsManager+Notification.h"
 #import "TTUserSettings/TTUserSettingsHeader.h"
 #import "TTUserSettings/TTUserSettingsReporter.h"
-
 #import "TTNetworkManager.h"
-//#import "TTSFShareManager.h"
-
-//#import "TSVPushLaunchManager.h"
-//#import "TTArticleTabBarController.h"
-//#import "TTLaunchTracer.h"
 #import <FHHouseBase/FHHouseBridgeManager.h>
 #import "FHLocManager.h"
 #import <TTBaseLib/NSDictionary+TTAdditions.h>
@@ -37,9 +29,9 @@
 #import "UIViewController+TTMovieUtil.h"
 #import "FHIntroduceManager.h"
 #import "TTPushServiceDelegate.h"
-
 #import <BDALog/BDAgileLog.h>
 #import "FHCHousePushUtils.h"
+#import <ByteDanceKit/ByteDanceKit.h>
 
 extern NSString * const TTArticleTabBarControllerChangeSelectedIndexNotification;
 
@@ -117,8 +109,8 @@ static APNsManager *_sharedManager = nil;
         [[FHIntroduceManager sharedInstance] hideIntroduceView];
     }
     //news_notification_view埋点，用户在后台点击推送时上报，如果有rid则上报rid
-    NSString *rid = [userInfo tt_stringValueForKey:@"rid"];
-    NSString *postBack = [userInfo tt_stringValueForKey:@"post_back"];
+    NSString *rid = [userInfo btd_stringValueForKey:@"rid"];
+    NSString *postBack = [userInfo btd_stringValueForKey:@"post_back"];
     if (![TTTrackerWrapper isOnlyV3SendingEnable]) {
         wrapperTrackEventWithCustomKeys(@"apn", @"news_notification_view", rid, nil, nil);
     }
@@ -137,8 +129,8 @@ static APNsManager *_sharedManager = nil;
         TTRouteParamObj *paramObj = [[TTRoute sharedRoute] routeParamObjWithURL:theUrl];
         
         //对齐安卓逻辑
-        NSString *extGrowth = [paramObj.allParams valueForKey:@"ext_growth"] ?:@"be_null";
-        NSDictionary *apsDict = [userInfo tt_dictionaryValueForKey:@"aps"];
+//        NSString *extGrowth = [paramObj.allParams valueForKey:@"ext_growth"] ?:@"be_null";
+        NSDictionary *apsDict = [userInfo btd_dictionaryValueForKey:@"aps"];
         NSInteger badgeNumber = [apsDict[@"badge"]integerValue];
         [self writeLaunchLogEvent:[paramObj.allParams valueForKey:@"ext_growth"] badgeNumber:badgeNumber];
         

@@ -129,6 +129,8 @@
             cell = [collectionView dequeueReusableCellWithReuseIdentifier:k_VRELLID forIndexPath:indexPath];
         } else if (model.mediaType == FHMultiMediaTypePicture) {
             cell = [collectionView dequeueReusableCellWithReuseIdentifier:k_IMAGECELLID forIndexPath:indexPath];
+        } else if (model.mediaType == FHMultiMediaTypeVideo) {
+            cell = [collectionView dequeueReusableCellWithReuseIdentifier:k_VIDEOCELLID forIndexPath:indexPath];
         }
         [cell updateViewModel:model];
     }

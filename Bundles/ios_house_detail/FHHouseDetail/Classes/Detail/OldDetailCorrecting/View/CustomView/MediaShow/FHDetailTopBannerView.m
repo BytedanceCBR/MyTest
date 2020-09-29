@@ -16,7 +16,6 @@
 
 @interface FHDetailTopBannerView ()
 @property (nonatomic, strong) UIImageView *shadowImage;
-@property (nonatomic, strong) UIView *containerView;
 @property (nonatomic, strong) UIView *leftView;
 @property (nonatomic, strong) UIView *rightView;
 @property (nonatomic, strong) UIImageView *leftIcon;

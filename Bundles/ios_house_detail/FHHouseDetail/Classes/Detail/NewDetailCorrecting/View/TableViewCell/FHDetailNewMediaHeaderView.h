@@ -11,8 +11,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FHDetailNewMediaHeaderView : UIView
 
-@property (nonatomic, assign) BOOL showHeaderImageNewType;
-
 - (void)updateMultiMediaModel :(FHMultiMediaModel *)model;
 - (void)updateTitleModel: (FHDetailHouseTitleModel *)model;
 - (void)setTotalPagesLabelText:(NSString *)text;

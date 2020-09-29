@@ -13,6 +13,7 @@
 #import "UIImageView+BDWebImage.h"
 #import <BDWebImage/BDWebImageManager.h>
 #import "TTDeviceHelper.h"
+#import <ByteDanceKit/UIDevice+BTDAdditions.h>
 
 static CGFloat widthXRate = 0.20f;
 static CGFloat heightYRate = 0.4f;
@@ -163,7 +164,7 @@ static CGFloat multiplier = 2;
     if (_cellHouseType == FHMultiMediaCellHouseSecond)  {
         [self.vrLoadingView  mas_remakeConstraints:^(MASConstraintMaker *make) {
             make.width.height.mas_equalTo(60);
-            make.top.mas_equalTo([TTDeviceHelper isScreenWidthLarge320] ? 110 : 86);
+            make.top.mas_equalTo([UIDevice btd_isScreenWidthLarge320] ? 110 : 86);
             make.centerX.mas_equalTo(self);
         }];
     }
