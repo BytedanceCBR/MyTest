@@ -34,6 +34,7 @@
 #import "FHHouseListBaseItemCell.h"
 #import "FHErrorHubManagerUtil.h"
 #import "FHLynxManager.h"
+#import "UIDevice+BTDAdditions.h"
 static NSMutableArray  * _Nullable identifierArr;
 
 @interface FHHomeCellHelper ()
@@ -244,8 +245,8 @@ static NSMutableArray  * _Nullable identifierArr;
 //        padding = 90;
 //    }
     // 108: topbar   49:tahbar  45:sectionHeader
-    if ([TTDeviceHelper isIPhoneXSeries]) {
-        return MAIN_SCREENH_HEIGHT - 108 - 49  + padding;
+    if ([UIDevice btd_isIPhoneXSeries]) {
+        return MAIN_SCREENH_HEIGHT - 108 - 67  + padding;
     }else
     {
         return MAIN_SCREENH_HEIGHT - 64 - 49  + padding;
