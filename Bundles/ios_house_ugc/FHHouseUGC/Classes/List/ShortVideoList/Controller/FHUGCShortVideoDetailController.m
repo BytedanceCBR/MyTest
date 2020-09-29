@@ -488,7 +488,7 @@ static const CGFloat kFloatingViewOriginY = 230;
     self.commentHeaderLabel.textColorThemeKey = kColorText1;
     [self.commentView addSubview:self.commentHeaderLabel];
 
-    SSThemedView *sepline = [[SSThemedView alloc] initWithFrame:CGRectMake(0, CGRectGetHeight(self.commentHeaderLabel.frame), CGRectGetWidth(self.commentView.bounds), [UIDevice btd_screenScale])];
+    SSThemedView *sepline = [[SSThemedView alloc] initWithFrame:CGRectMake(0, CGRectGetHeight(self.commentHeaderLabel.frame), CGRectGetWidth(self.commentView.bounds), [UIDevice btd_onePixel])];
     sepline.backgroundColorThemeKey = kColorLine1;
     [self.commentView addSubview:sepline];
 
@@ -563,7 +563,7 @@ static const CGFloat kFloatingViewOriginY = 230;
        fakeTextBackgroundView.backgroundColorThemeKey = @"grey7";
        fakeTextBackgroundView.layer.cornerRadius = CGRectGetHeight(fakeTextBackgroundView.bounds) / 2;
        fakeTextBackgroundView.layer.masksToBounds = YES;
-       fakeTextBackgroundView.layer.borderWidth = [UIDevice btd_screenScale];
+       fakeTextBackgroundView.layer.borderWidth = [UIDevice btd_onePixel];
        fakeTextBackgroundView.borderColorThemeKey = @"grey7";
        [fakeInputBar addSubview:fakeTextBackgroundView];
     
