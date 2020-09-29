@@ -583,6 +583,8 @@ def appPods
     ]
     
     pod_binary 'BDXElement', '1.0.0', :subspecs=> ['Core', 'ScrollView', 'ImpressionView']
+    #头条连续点赞组件
+    pod_binary 'TTMultiDiggManager', '0.1.18-rc.5'
 end
 
 
@@ -602,6 +604,7 @@ def testPods
 #        pod 'FHErrorHubManager', :git => 'git@code.byted.org:fproject/FHErrorHubManager.git' , :commit => 'b04a60e50b4564346962b47d582f78eddc007408'
 #    pod 'FHErrorHubManager', :path => '../../FHErrorHubManager'
     pod 'FHErrorHubManager', '1.0.15'
+    pod 'BDiOSDebugBinary', '0.0.4'
 end
 
 target 'NewsLiteInHouse' do

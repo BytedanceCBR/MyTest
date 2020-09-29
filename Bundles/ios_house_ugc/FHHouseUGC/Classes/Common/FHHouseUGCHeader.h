@@ -68,6 +68,7 @@ typedef NS_ENUM(NSInteger, FHUGCFeedListCellType)
     FHUGCFeedListCellTypeUGCHotTopic = 1104,               //热门话题
     FHUGCFeedListCellTypeUGCVote = 1103,                   //投票pk
     FHUGCFeedListCellTypeUGCSmallVideo = 333,              //小视频
+    FHUGCFeedListCellTypeUGCSmallVideo2 = 49,              //抖音火山小视频
     FHUGCFeedListCellTypeUGCVoteInfo = 1107,               //UGC投票，新投票类型
     FHUGCFeedListCellTypeUGCRecommendCircle = 1108,        //推荐圈子
     FHUGCFeedListCellTypeUGCEncyclopedias = 1109,          //百科

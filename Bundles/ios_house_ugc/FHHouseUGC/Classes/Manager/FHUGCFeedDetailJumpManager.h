@@ -33,6 +33,9 @@ NS_ASSUME_NONNULL_BEGIN
 //进入视频详情页
 - (void)jumpToVideoDetail:(FHFeedUGCCellModel *)cellModel showComment:(BOOL)showComment enterType:(NSString *)enterType extraDic:(NSDictionary *)extraDic;
 
+//小视频
+- (void)jumpToSmallVideoDetail:(FHFeedUGCCellModel *)cellModel otherVideos:(nullable NSArray<FHFeedUGCCellModel *> *)otherVideos showComment:(BOOL)showComment enterType:(NSString *)enterType extraDic:(nullable NSDictionary *)extraDic;
+
 @end
 
 NS_ASSUME_NONNULL_END

@@ -8,20 +8,17 @@
 
 #import "WDDetailViewController.h"
 #import "WDBottomToolView.h"
-#import "WDNewDetailTitleView.h"
 #import "WDDetailModel.h"
 #import "WDServiceHelper.h"
 #import "WDAnswerService.h"
 #import "WDMonitorManager.h"
 #import "WDSettingHelper.h"
 #import "WDDetailHeaderView.h"
-#import "WDNewDetailHeaderView.h"
 #import "WDDetailView.h"
 #import "WDDefines.h"
 #import "WDDetailViewModel.h"
 #import "WDDetailNatantViewModel.h"
 #import "WDDetailNatantViewModel+ShareCategory.h"
-#import "WDParseHelper.h"
 #import "WDAnswerEntity.h"
 #import "WDCommonLogic.h"
 #import "WDNewsHelpView.h"
@@ -66,6 +63,12 @@
 #import <TTVideoService/TTFFantasyTracker.h>
 #import "TTCommentViewController.h"
 #import <BDTrackerProtocol/BDTrackerProtocol.h>
+#import "FHAnswerDetailTitleView.h"
+#import "FHCommonDefines.h"
+#import "UIColor+Theme.h"
+#import "UIFont+House.h"
+#import <TTActivityPanelDefine.h>
+#import <TTActivitiesManager.h>
 
 
 extern NSInteger const kWDPostCommentBindingErrorCode;
@@ -88,24 +91,21 @@ static NSUInteger const kOldAnimationViewTag = 20161221;
     BOOL _headerViewPulled;
 }
 
-@property (nonatomic, strong) TTViewWrapper *wrapperView;
 @property (nonatomic, strong) UIViewController<TTCommentViewControllerProtocol> *commentViewController;
 
 @property (nonatomic, strong) WDDetailNatantContainerView *natantContainerView;
-@property (nonatomic, strong) TTAlphaThemedButton *rightBarButtonItemView;
-@property (nonatomic, strong) TTFollowThemeButton *rightFollowButton;
 
 @property (nonatomic, strong) SSThemedImageView *logoTitleView;
-@property (nonatomic, strong) WDNewDetailTitleView *profileTitleView;
+@property (nonatomic, strong) FHAnswerDetailTitleView *profileTitleView;
 @property (nonatomic, strong) UIView<WDDetailHeaderView> *headerView;
 @property (nonatomic, strong) WDDetailView *detailView;
-@property (nonatomic, strong) SSThemedView *whiteGapView; // iPad适配专用顶部白底View，配合wrapperView
 
 @property (nonatomic, strong) SSWebViewBackButtonView *backButtonView;
 
 @property (nonatomic, strong) WDNewsHelpView *sliderHelpView;
 @property (nonatomic, strong) WDBottomToolView *toolbarView;
 @property (nonatomic, strong) TTBubbleView *bubbleView;
+@property (nonatomic, strong) UIButton *nextButton;
 
 @property (nonatomic, strong) TTCommentWriteView *commentWriteView;
 
@@ -139,6 +139,7 @@ static NSUInteger const kOldAnimationViewTag = 20161221;
 
 @property (nonatomic,assign) double commentShowTimeTotal;
 @property (nonatomic,strong) NSDate *commentShowDate;
+@property (nonatomic,strong) dispatch_semaphore_t mutex;
 
 @end
 
@@ -235,8 +236,7 @@ static NSUInteger const kOldAnimationViewTag = 20161221;
     [self p_buildViews];
     [self.detailView tt_initializeServerRequestMonitorWithName:WDDetailInfoTimeService];
     [self p_startLoadArticleInfo];
-    [self p_updateNavigationTitleView];
-    
+
     WeakSelf;
     [self.KVOController observe:self.natantViewModel keyPath:@"isShowDeleteAnswer" options:NSKeyValueObservingOptionNew block:^(id  _Nullable observer, id  _Nonnull object, NSDictionary<NSString *,id> * _Nonnull change) {
         StrongSelf;
@@ -277,6 +277,7 @@ static NSUInteger const kOldAnimationViewTag = 20161221;
     _isCommentViewWillShow = NO;
     self.infoLoadFinished = NO;
     self.infoLoadFailed = NO;
+    self.mutex = dispatch_semaphore_create(0);
     
     if (!_isNewVersion && _detailModel.isArticleReliable) {
 #pragma clang diagnostic push
@@ -306,17 +307,15 @@ static NSUInteger const kOldAnimationViewTag = 20161221;
     
     if (_isNewVersion) {
         if (self.showSlideType == AnswerDetailShowSlideTypeBlueHeaderWithHint) {
-            if (![TTDeviceHelper isPadDevice]) {
-                if ([[TTThemeManager sharedInstance_tt] currentThemeMode] == TTThemeModeDay) {
-                    BOOL isDefault = [[WDSettingHelper sharedInstance_tt] wdDetailStatusBarStyleIsDefault];
-                    if (isDefault) {
-                        self.ttStatusBarStyle = UIStatusBarStyleDefault;
-                        [UIApplication sharedApplication].statusBarStyle = UIStatusBarStyleDefault;
-                    }
-                    else {
-                        self.ttStatusBarStyle = UIStatusBarStyleLightContent;
-                        [UIApplication sharedApplication].statusBarStyle = UIStatusBarStyleLightContent;
-                    }
+            if ([[TTThemeManager sharedInstance_tt] currentThemeMode] == TTThemeModeDay) {
+                BOOL isDefault = [[WDSettingHelper sharedInstance_tt] wdDetailStatusBarStyleIsDefault];
+                if (isDefault) {
+                    self.ttStatusBarStyle = UIStatusBarStyleDefault;
+                    [UIApplication sharedApplication].statusBarStyle = UIStatusBarStyleDefault;
+                }
+                else {
+                    self.ttStatusBarStyle = UIStatusBarStyleLightContent;
+                    [UIApplication sharedApplication].statusBarStyle = UIStatusBarStyleLightContent;
                 }
             }
         }
@@ -337,10 +336,6 @@ static NSUInteger const kOldAnimationViewTag = 20161221;
     [self.detailView didAppear];
     
     _hasDisappear = NO;
-    __weak typeof(self) weakSelf = self;
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(3.0f * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        [weakSelf.toolbarView showSupportsEmojiInputBubbleViewIfNeeded];
-    });
 }
 
 - (void)viewWillDisappear:(BOOL)animated
@@ -377,20 +372,6 @@ static NSUInteger const kOldAnimationViewTag = 20161221;
 - (void)viewDidLayoutSubviews
 {
     [super viewDidLayoutSubviews];
-    if ([TTDeviceHelper isPadDevice]) {
-        CGFloat natantWidth = [TTUIResponderHelper splitViewFrameForView:self.view].size.width;
-        self.natantContainerView.width = natantWidth;
-        [self.natantContainerView.items enumerateObjectsUsingBlock:^(WDDetailNatantViewBase * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-            WDDetailNatantViewBase * natantViewItem = (WDDetailNatantViewBase *)obj;
-            natantViewItem.width = natantWidth-30;
-        }];
-        // 文章页有
-        self.commentViewController.commentTableView.tableHeaderView = self.natantContainerView;
-        if (!_isNewVersion) {
-            self.toolbarView.frame = [self p_frameForToolBarView];
-            [self.toolbarView layoutIfNeeded];
-        }
-    }
 }
 
 - (void)viewSafeAreaInsetsDidChange
@@ -571,7 +552,7 @@ static NSUInteger const kOldAnimationViewTag = 20161221;
     if (self.headerView) {
         self.headerView.hidden = NO;
         if (self.detailModel.shouldHideHeader) {
-            CGFloat minTop = kNavigationBarHeight - self.headerView.height;
+            CGFloat minTop = self.ttNavigationBar.bottom - self.headerView.height;
             self.headerView.top = minTop;
             self.detailView.top = self.headerView.bottom;
         }
@@ -585,31 +566,16 @@ static NSUInteger const kOldAnimationViewTag = 20161221;
         [self p_buildDetailNatant];
         [self p_buildToolbarViewIfNeeded];
         [self p_setDetailViewBars];
-        [self p_buildNaviBar];
     }
 }
 
 - (void)p_buildMainView
 {
-    if (!_isNewVersion && [TTDeviceHelper isPadDevice]) {
-        self.wrapperView = [[TTViewWrapper alloc] initWithFrame:self.view.bounds];
-        [self p_buildHeaderViewIfNeed];
-        [self p_buildDetailView];
-        self.wrapperView.targetView = self.detailView;
-        [self.view addSubview:self.wrapperView];
-        [self.view addSubview:self.whiteGapView];
-        [self.view addSubview:self.detailView];
-        [self.view addSubview:self.headerView];
-    } else {
-        [self p_buildHeaderViewIfNeed];
-        [self p_buildDetailView];
-        [self.view addSubview:self.detailView];
-        [self.view addSubview:self.headerView];
-    }
-    
-    self.headerView.frame = [self p_frameForHeaderView];
+    [self p_buildHeaderViewIfNeed];
+    [self p_buildDetailView];
+    [self.view addSubview:self.detailView];
+    [self.view addSubview:self.headerView];
     [self.detailView willAppear];
-    self.detailView.frame = [self p_frameForDetailView];
     [self p_addDetailViewKVO];
     
     [self.detailView.detailWebView.webView becomeFirstResponder];
@@ -627,11 +593,6 @@ static NSUInteger const kOldAnimationViewTag = 20161221;
         return;
     }
     Class headerViewClass = [WDDetailHeaderView class];
-//    if ([WDSettingHelper sharedInstance_tt].wendaDetailHeaderViewStyle == WDDetailHeaderViewStyleNew) {
-//        headerViewClass = [WDNewDetailHeaderView class];
-//    } else {
-//        headerViewClass = [WDDetailHeaderView class];
-//    }
     self.headerView = [[headerViewClass alloc] initWithFrame:[self p_frameForHeaderView] detailModel:self.detailModel];
     self.headerView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
     self.headerView.delegate = self;
@@ -657,26 +618,15 @@ static NSUInteger const kOldAnimationViewTag = 20161221;
 
 - (void)p_buildTitleView
 {
-    self.profileTitleView = [[WDNewDetailTitleView alloc] initWithFrame:CGRectZero];
-    [self.navigationItem setTitleView:self.profileTitleView];
-    WeakSelf;
-    [self.profileTitleView setTapHandler:^{
-        StrongSelf;
-        [WDServiceHelper openProfileForUserID:[self.detailModel.answerEntity.user.userID longLongValue]];
-    }];
+    self.profileTitleView = [[FHAnswerDetailTitleView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, 44)];
+    self.profileTitleView.isShow = NO;
+    self.navigationItem.titleView = self.profileTitleView;
+    self.profileTitleView.userInteractionEnabled = YES;
+    [self.profileTitleView addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(titleViewTaped:)]];
+    UIView *view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 20, 0)];
     
-    [self.KVOController observe:self.detailModel.answerEntity.user keyPath:NSStringFromSelector(@selector(followerCount)) options:NSKeyValueObservingOptionNew block:^(id  _Nullable observer, id  _Nonnull object, NSDictionary<NSString *,id> * _Nonnull change) {
-        StrongSelf;
-        [self.profileTitleView updateNavigationTitle:self.detailModel.answerEntity.user.name imageURL:self.detailModel.answerEntity.user.avatarURLString verifyInfo:self.detailModel.answerEntity.user.userAuthInfo decoration:self.detailModel.answerEntity.user.userDecoration fansNum:self.detailModel.answerEntity.user.followerCount];
-    }];
-    
-//    SSThemedImageView *imageView = [[SSThemedImageView alloc] initWithFrame:CGRectZero];
-//    imageView.imageName = @"wukonglogo_ask_bar";
-//    [imageView sizeToFit];
-//    imageView.userInteractionEnabled = YES;
-//    [imageView addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(titleViewTaped:)]];
-//    self.logoTitleView = imageView;
-//    self.navigationItem.titleView = imageView;
+    UIBarButtonItem *buttonItem = [[UIBarButtonItem alloc] initWithCustomView:view];
+    self.navigationItem.rightBarButtonItems = @[buttonItem];
 }
 
 - (void)p_buildNaviBar
@@ -696,41 +646,20 @@ static NSUInteger const kOldAnimationViewTag = 20161221;
         return;
     }
     
-    NSMutableArray *buttons = [[NSMutableArray alloc] init];
-    _rightBarButtonItemView = [self p_generateBarButtonWithImageName:@"new_more_titlebar"];
-    [_rightBarButtonItemView addTarget:self action:@selector(p_showSharePanel) forControlEvents:UIControlEventTouchUpInside];
-    
-    CGFloat padding = 16.0f;
-    if ([TTDeviceHelper is480Screen] || [TTDeviceHelper is568Screen]) {
-        padding = 0.0;
-    }
-    SSThemedView *view = [[SSThemedView alloc] initWithFrame:CGRectMake(0, 0, self.rightFollowButton.width + [TTDeviceUIUtils tt_newPadding:padding], self.rightFollowButton.height)];
-    self.rightFollowButton.centerX = view.width / 2;
-    [view addSubview:self.rightFollowButton];
-
-    [buttons addObject:[[UIBarButtonItem alloc] initWithCustomView:_rightBarButtonItemView]];
-    if (![[TTAccountManager userID] isEqualToString:[self.detailModel.answerEntity.user userID]]) {
-        [buttons addObject:[[UIBarButtonItem alloc] initWithCustomView:view]];
-    }
-    
-    
-    self.navigationItem.rightBarButtonItems = buttons;
 }
 
 - (void)titleViewTaped:(UITapGestureRecognizer *)gesture
 {
-    NSString *urlString = [WDCommonLogic wukongURL];
-    if (!isEmptyString(urlString) && [NSURL URLWithString:urlString]) {
-        [[TTRoute sharedRoute] openURLByViewController:[NSURL URLWithString:urlString] userInfo:nil];
+    if ([self.detailModel needReturn]) {
+        [self dismissSelf];
+    } else {
+        [self.detailModel openListPage];
     }
 }
 
 - (void)didMoveToParentViewController:(UIViewController *)parent
 {
     [super didMoveToParentViewController:parent];
-    if (parent) {
-        [self p_buildTitleView];
-    }
 }
 
 - (void)p_showChangePageAlert
@@ -747,24 +676,12 @@ static NSUInteger const kOldAnimationViewTag = 20161221;
 
 - (void)p_updateNavigationTitleView
 {
-    [self.profileTitleView updateNavigationTitle:self.detailModel.answerEntity.user.name imageURL:self.detailModel.answerEntity.user.avatarURLString verifyInfo:self.detailModel.answerEntity.user.userAuthInfo decoration:self.detailModel.answerEntity.user.userDecoration fansNum:self.detailModel.answerEntity.user.followerCount];
-
-    self.rightFollowButton.hidden = YES;
-
-    if (self.detailModel.redPack) {
-        self.rightFollowButton.unfollowedType = [TTFollowThemeButton redpacketButtonUnfollowTypeButtonStyle:self.detailModel.redPack.button_style.integerValue defaultType:TTUnfollowedType201];
-    } else {
-        self.rightFollowButton.unfollowedType = TTUnfollowedType101;
-    }
-    
-    CGPoint followButtonCenter = self.rightFollowButton.center;
-    CGFloat width = self.rightFollowButton.width;
-    [self.rightFollowButton refreshUI];
-    if (width > self.rightFollowButton.width) {
-        self.rightFollowButton.constWidth = kRedPacketFollowButtonWidth();
-        [self.rightFollowButton refreshUI];
-    }
-    self.rightFollowButton.center = followButtonCenter;
+    dispatch_async(dispatch_get_global_queue(0, 0), ^{
+        dispatch_semaphore_wait(self.mutex, DISPATCH_TIME_FOREVER);
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self.profileTitleView updateWithDetailModel:self.detailModel];
+        });
+    });
 }
 
 - (void)p_preloadNextPage
@@ -784,20 +701,15 @@ static NSUInteger const kOldAnimationViewTag = 20161221;
 
 - (void)p_updateNavigationTitleViewWithScrollViewContentOffset:(CGFloat)offset
 {
-    BOOL show = offset > self.detailView.titleViewAnimationTriggerPosY;
+    BOOL show = offset > 0;
     [self p_showTitle:show];
     self.wasTitleViewShowed = show;
 }
 
 - (void)p_showTitle:(BOOL)show
 {
-    if (show) {
-        self.navigationItem.titleView = self.profileTitleView;
-    }
-    self.rightFollowButton.hidden = YES;
-    if(show != self.profileTitleView.isShow) {
-        [self.profileTitleView show:show animated:YES];
-    }
+    self.navigationItem.titleView = self.profileTitleView;
+    self.profileTitleView.isShow = show;
 }
 
 - (void)p_buildToolbarViewIfNeeded
@@ -811,7 +723,26 @@ static NSUInteger const kOldAnimationViewTag = 20161221;
     self.toolbarView.delegate = self;
     [self.view addSubview:self.toolbarView];
     self.toolbarView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleTopMargin;
-    self.toolbarView.banEmojiInput = YES;
+    [self initNextButton];
+}
+
+-(void)initNextButton {
+    self.nextButton = [[UIButton alloc] init];
+    [self.nextButton setBackgroundColor:[UIColor themeWhite]];
+    [self.nextButton setTitle:@"下一个回答" forState:UIControlStateNormal];
+    [self.nextButton setTitleColor:[UIColor themeGray1] forState:UIControlStateNormal];
+    self.nextButton.titleLabel.font = [UIFont themeFontRegular:12];
+    self.nextButton.layer.cornerRadius = 15;
+    self.nextButton.layer.borderWidth = 0.5;
+    self.nextButton.layer.borderColor = [UIColor themeGray6].CGColor;
+    [self.view addSubview:self.nextButton];
+    [self.nextButton mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.width.mas_equalTo(80);
+        make.height.mas_equalTo(30);
+        make.right.equalTo(self).offset(-15);
+        make.bottom.equalTo(self.toolbarView.mas_top).offset(-15);
+    }];
+    [self.nextButton addTarget:self action:@selector(nextButtonClicked) forControlEvents:UIControlEventTouchUpInside];
 }
 
 - (void)p_buildCommentViewController
@@ -985,17 +916,8 @@ static NSUInteger const kOldAnimationViewTag = 20161221;
 
 - (CGRect)p_frameForHeaderView
 {
-    CGFloat yOffset = kNavigationBarHeight;
-    if (yOffset < 64) {
-        yOffset = 64;
-    }
-    if (!_isNewVersion && [TTDeviceHelper isPadDevice]) {
-        CGSize windowSize = [TTUIResponderHelper windowSize];
-        CGFloat edgePadding = [TTUIResponderHelper paddingForViewWidth:windowSize.width];
-        return CGRectMake(edgePadding, yOffset, windowSize.width - edgePadding*2, SSHeight(self.headerView));
-    } else {
-        return CGRectMake(0, yOffset, self.view.width, SSHeight(self.headerView));
-    }
+    CGFloat yOffset = self.ttNavigationBar.bottom;
+    return CGRectMake(0, yOffset, self.view.width, SSHeight(self.headerView));
 }
 
 - (CGRect)p_frameForDetailView
@@ -1004,35 +926,25 @@ static NSUInteger const kOldAnimationViewTag = 20161221;
     CGFloat bottomHeight = _isNewVersion ? 0 : [self DetailGetToolbarHeight];
     CGFloat headerBottom = _isNewVersion ? 0 : self.headerView.bottom;
     
-    if (!_isNewVersion && [TTDeviceHelper isPadDevice]) {
-        CGSize windowSize = [TTUIResponderHelper windowSize];
-        CGFloat edgePadding = [TTUIResponderHelper paddingForViewWidth:windowSize.width];
-        rect = CGRectMake(edgePadding, headerBottom, windowSize.width - edgePadding*2, SSHeight(self.view) - bottomHeight);
-    } else {
-        rect = CGRectMake(0, headerBottom, SSWidth(self.view), SSHeight(self.view) - bottomHeight);
-    }
-    
+    rect = CGRectMake(0, headerBottom, SSWidth(self.view), SSHeight(self.view) - bottomHeight);
     return rect;
 }
 
 - (CGFloat)DetailGetToolbarHeight
 {
-    return ([TTDeviceHelper isPadDevice] ? 50 : self.view.tt_safeAreaInsets.bottom ? self.view.tt_safeAreaInsets.bottom + 44 : 44) + [TTDeviceHelper ssOnePixel];
+    CGFloat bottom = 0;
+    if (@available(iOS 11.0, *)) {
+        bottom += [[[[UIApplication sharedApplication] delegate] window] safeAreaInsets].bottom;
+    }
+    
+    return bottom + 44 + [TTDeviceHelper ssOnePixel];
 }
 
 - (CGRect)p_frameForToolBarView
 {
     CGRect rect;
     CGFloat barHeight = [self DetailGetToolbarHeight];
-    
-    if (!_isNewVersion && [TTDeviceHelper isPadDevice]) {
-        CGSize windowSize = [TTUIResponderHelper windowSize];
-        rect = CGRectMake(0, self.view.height - barHeight, windowSize.width, barHeight);
-    }
-    else {
-        rect = CGRectMake(0, self.view.height - barHeight, SSWidth(self.view), barHeight);
-    }
-    
+    rect = CGRectMake(0, self.view.height - barHeight, SSWidth(self.view), barHeight);
     return rect;
 }
 
@@ -1256,7 +1168,6 @@ static NSUInteger const kOldAnimationViewTag = 20161221;
     }
     [self.detailView.detailWebView openFooterView:NO];
     self.wasTitleViewShowed = self.profileTitleView.isShow;
-    self.rightFollowButton.hidden = YES;
     self.navigationItem.titleView = self.profileTitleView;
 }
 
@@ -1426,80 +1337,9 @@ static NSUInteger const kOldAnimationViewTag = 20161221;
 
 #pragma mark - TTDetailViewController protocol (NavBarItems)
 
-- (TTFollowThemeButton *)rightFollowButton {
-    if (!_rightFollowButton) {
-        _rightFollowButton = [[TTFollowThemeButton alloc] initWithUnfollowedType:TTUnfollowedType101 followedType:TTFollowedType101];
-        _rightFollowButton.followed = self.detailModel.answerEntity.user.isFollowing;
-        
-        WeakSelf;
-        [_rightFollowButton.KVOController observe:self.detailModel.answerEntity.user keyPath:NSStringFromSelector(@selector(isFollowing)) options:NSKeyValueObservingOptionNew block:^(id  _Nullable observer, id  _Nonnull object, NSDictionary<NSString *,id> * _Nonnull change) {
-            StrongSelf;
-            BOOL isFollowing = [change tt_boolValueForKey:NSKeyValueChangeNewKey];
-            self.rightFollowButton.followed = isFollowing;
-            if (self.detailModel.redPack && isFollowing) {
-                self.rightFollowButton.unfollowedType = [TTFollowThemeButton redpacketButtonUnfollowTypeButtonStyle:self.detailModel.redPack.button_style.integerValue defaultType:TTUnfollowedType201];
-            } else {
-                self.rightFollowButton.unfollowedType = TTUnfollowedType101;
-            }
-            [self.rightFollowButton refreshUI];
-        }];
-        [_rightFollowButton addTarget:self withActionBlock:^{
-            StrongSelf;
-            if (!TTNetworkConnected()) {
-                [TTIndicatorView showWithIndicatorStyle:TTIndicatorViewStyleImage
-                                          indicatorText:@"网络不给力，请稍后重试"
-                                         indicatorImage:[UIImage themedImageNamed:@"close_popup_textpage"]
-                                            autoDismiss:YES
-                                         dismissHandler:nil];
-                return;
-            }
-            
-            BOOL isFollowed = self.detailModel.answerEntity.user.isFollowing;
-            self.rightFollowButton.followed = isFollowed;
-            [self.rightFollowButton startLoading];
-            
-            BOOL isFollowing = self.detailModel.answerEntity.user.isFollowing;
-            NSString *event = isFollowing ? @"rt_unfollow" : @"rt_follow";
-            NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithDictionary:self.detailModel.gdExtJsonDict];
-            [dict setValue:@"answer_detail_top_banner" forKey:@"source"];
-            [dict setValue:@"detail" forKey:@"position"];
-            [dict setValue:self.detailModel.answerEntity.ansid forKey:@"group_id"];
-            [dict setValue:self.detailModel.answerEntity.user.userID forKey:@"to_user_id"];
-            [dict setValue:@"from_group" forKey:@"follow_type"];
-            if (self.detailModel.needSendRedPackFlag) {
-                if (isFollowing) {
-                    self.detailModel.needSendRedPackFlag = NO;
-                }
-                [dict setValue:@1 forKey:@"is_redpacket"];
-            }
-            [BDTrackerProtocol eventV3:event params:[dict copy]];
-            
-            NSMutableDictionary *followDic = [NSMutableDictionary dictionary];
-            [followDic setValue:self.detailModel.answerEntity.user.userID forKey:@"id"];
-            [followDic setValue:@(101) forKey:@"new_source"];
-            [followDic setValue:@(32) forKey:@"new_reason"];//FriendFollowNewReasonUnknown
-            [followDic setValue:kWDDetailViewControllerUMEventName forKey:@"from"];
-            
-            FriendActionType actionType = self.detailModel.answerEntity.user.isFollowing ? FriendActionTypeUnfollow: FriendActionTypeFollow;
-            if (actionType == FriendActionTypeFollow) {
-                [[TTFollowManager  sharedManager] follow:followDic completion:^(NSError * _Nullable error, NSDictionary * _Nullable result) {
-                    [self finishActionType:actionType error:error result:result];
-                }];
-            } else {
-                [[TTFollowManager  sharedManager] unfollow:followDic completion:^(NSError * _Nullable error, NSDictionary * _Nullable result) {
-                    [self finishActionType:actionType error:error result:result];
-                }];
-            }
-            
-        } forControlEvent:UIControlEventTouchUpInside];
-    }
-    return _rightFollowButton;
-}
 
 - (void)finishActionType:(FriendActionType)type error:(nullable NSError*)error result:(nullable NSDictionary*)result
 {
-    [self.rightFollowButton stopLoading:nil];
-    
     if (!error) {
         NSDictionary *response = [result tt_dictionaryValueForKey:@"result"];
         NSDictionary *data = [response tt_dictionaryValueForKey:@"data"];
@@ -1614,15 +1454,8 @@ static NSUInteger const kOldAnimationViewTag = 20161221;
     [self p_removeIndicatorPolicyView];
     
     NSMutableArray *contentItems = @[].mutableCopy;
-    NSDictionary *dictSetting = [[NSUserDefaults standardUserDefaults] objectForKey:@"kFHSettingsKey"];
-    
-    if ([dictSetting tta_boolForKey:@"f_wenda_share_enable"]){
-        [contentItems addObject:[self.natantViewModel wd_shareItems]];
-    }
-    [contentItems addObject:[self.natantViewModel wd_customItems]];
+    [contentItems addObject:[self.natantViewModel wd_shareItems]];
     [self.shareManager displayActivitySheetWithContent:[contentItems copy]];
-    
-    [BDTrackerProtocol category:@"umeng" event:kWDDetailViewControllerUMEventName label:@"more_clicked" dict:self.detailModel.gdExtJsonDict];
 }
 
 #pragma mark - Tracker
@@ -1893,7 +1726,7 @@ static NSUInteger const kOldAnimationViewTag = 20161221;
 - (void)updateHeaderViewWithOffset:(CGFloat)offsetY scrollView:(UIScrollView *)scrollView
 {
     if (offsetY >= 0) {
-        CGFloat minTop = kNavigationBarHeight - self.headerView.height;
+        CGFloat minTop = self.ttNavigationBar.bottom - self.headerView.height;
         if ((self.headerView.top - offsetY) < minTop) {
             self.headerView.top = minTop;
             self.detailView.top = self.headerView.bottom;
@@ -1903,10 +1736,11 @@ static NSUInteger const kOldAnimationViewTag = 20161221;
             [scrollView setContentOffset:CGPointMake(0.0f, 0.0f)];
         }
     } else {
-        CGFloat maxTop = kNavigationBarHeight;
+        CGFloat maxTop = self.ttNavigationBar.bottom;
         if ((self.headerView.top - offsetY) >= maxTop) {
-            self.headerView.top = maxTop - offsetY;
-            self.detailView.top = maxTop + self.headerView.height;
+            self.headerView.top = maxTop;
+            self.detailView.top = self.headerView.bottom;
+            [scrollView setContentOffset:CGPointMake(0.0f, 0.0f)];
         } else {
             self.headerView.top = self.headerView.top - offsetY;
             self.detailView.top = self.headerView.bottom;
@@ -1914,15 +1748,16 @@ static NSUInteger const kOldAnimationViewTag = 20161221;
         }
         [self headerViewDidPull:self.headerView];
     }
-    
-    if (!_isNewVersion && [TTDeviceHelper isPadDevice]) {
-        if (self.headerView.top > kNavigationBarHeight) {
-            self.whiteGapView.height = self.headerView.top - kNavigationBarHeight;
-            [self.view bringSubviewToFront:self.whiteGapView];
-        } else {
-            self.whiteGapView.height = 0.0f;
-            [self.view sendSubviewToBack:self.whiteGapView];
-        }
+}
+
+-(void)setTtNavigationBar:(TTNavigationBar *)ttNavigationBar {
+    if(!self.ttNavigationBar){
+        [super setTtNavigationBar:ttNavigationBar];
+        self.headerView.frame = [self p_frameForHeaderView];
+        self.detailView.frame = [self p_frameForDetailView];
+        [self p_buildNaviBar];
+        [self p_buildTitleView];
+        dispatch_semaphore_signal(self.mutex);
     }
 }
 
@@ -2015,27 +1850,6 @@ static NSUInteger const kOldAnimationViewTag = 20161221;
     [self p_sendDetailLogicTrackWithLabel:@"write_button"];
 }
 
-- (void)bottomView:(WDBottomToolView *)bottomView emojiButtonClicked:(SSThemedButton *)wirteButton
-{
-    if ([self.commentViewController respondsToSelector:@selector(tt_defaultReplyCommentModel)] && self.commentViewController.tt_defaultReplyCommentModel) {
-        [self tt_commentViewController:self.commentViewController didSelectWithInfo:({
-            NSMutableDictionary *baseCondition = [[NSMutableDictionary alloc] init];
-            TTGroupModel *groupModel = [[TTGroupModel alloc] initWithGroupID:self.detailModel.answerEntity.ansid];
-            [baseCondition setValue:groupModel forKey:@"groupModel"];
-            [baseCondition setValue:@(1) forKey:@"from"];
-            [baseCondition setValue:@(YES) forKey:@"writeComment"];
-            [baseCondition setValue:self.commentViewController.tt_defaultReplyCommentModel forKey:@"commentModel"];
-            baseCondition;
-        })];
-        if ([self.commentViewController respondsToSelector:@selector(tt_clearDefaultReplyCommentModel)]) {
-            [self.commentViewController tt_clearDefaultReplyCommentModel];
-        }
-        [self.toolbarView.writeButton setTitle:@"写评论" forState:UIControlStateNormal];
-        return;
-    }
-    [self p_willOpenWriteCommentViewWithReservedText:nil switchToEmojiInput:YES];
-}
-
 - (void)bottomView:(WDBottomToolView *)bottomView commentButtonClicked:(SSThemedButton *)commentButton
 {
     [self p_willShowComment];
@@ -2058,8 +1872,7 @@ static NSUInteger const kOldAnimationViewTag = 20161221;
     }
 }
 
-- (void)bottomView:(WDBottomToolView *)bottomView nextButtonClicked:(SSThemedButton *)nextButton
-{
+-(void)nextButtonClicked {
     [self p_tryNextAnswer];
     NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithDictionary:self.detailModel.gdExtJsonDict];
     [dict setValue:@"umeng" forKey:@"category"];
@@ -2067,6 +1880,18 @@ static NSUInteger const kOldAnimationViewTag = 20161221;
     [dict setValue:@"click_next_answer" forKey:@"label"];
     [dict setValue:self.detailModel.answerEntity.ansid forKey:@"value"];
     [BDTrackerProtocol eventData:[dict copy]];
+}
+
+-(void)bottomView:(WDBottomToolView *)bottomView collectButtonClicked:(SSThemedButton *)collectButton {
+    if(!TTNetworkConnected()){
+        [TTIndicatorView showWithIndicatorStyle:TTIndicatorViewStyleImage indicatorText:NSLocalizedString(@"没有网络连接", nil) indicatorImage:[UIImage themedImageNamed:@"close_popup_textpage.png"] autoDismiss:YES dismissHandler:nil];
+        return;
+    }
+    [self.natantViewModel tt_willChangeArticleFavoriteState];
+}
+
+-(void)bottomView:(WDBottomToolView *)bottomView shareButtonClicked:(SSThemedButton *)shareButton {
+    [self p_showSharePanel];
 }
 
 #pragma mark - TTCommentDataSource
@@ -2146,24 +1971,7 @@ static NSUInteger const kOldAnimationViewTag = 20161221;
         [self.toolbarView.writeButton setTitle:isEmptyString(userName)? @"写评论": [NSString stringWithFormat:@"回复 %@：", userName] forState:UIControlStateNormal];
     }
     
-    // toolbar 禁表情
-    if ([self.commentViewController respondsToSelector:@selector(tt_banEmojiInput)]) {
-        BOOL isBanRepostOrEmoji = ![[WDAdapterSetting sharedInstance] commentToolBarEnable];
-        self.toolbarView.banEmojiInput = self.commentViewController.tt_banEmojiInput || isBanRepostOrEmoji;
-    }
-    self.toolbarView.banEmojiInput = YES;
-    
     [self.detailView tt_serverRequestTimeMonitorWithName:WDDetailCommentTimeService error:error];
-}
-
-- (void)tt_commentViewController:(id<TTCommentViewControllerProtocol>)ttController didClickCommentCellWithCommentModel:(nonnull id<TTCommentModelProtocol>)model
-{
-    [self.toolbarView hideSupportsEmojiInputBubbleViewIfNeeded];
-}
-
-- (void)tt_commentViewController:(id<TTCommentViewControllerProtocol>)ttController didClickReplyButtonWithCommentModel:(id<TTCommentModelProtocol>)model
-{
-    [self.toolbarView hideSupportsEmojiInputBubbleViewIfNeeded];
 }
 
 - (void)tt_commentViewController:(id<TTCommentViewControllerProtocol>)ttController avatarTappedWithCommentModel:(id<TTCommentModelProtocol>)model
@@ -2178,8 +1986,6 @@ static NSUInteger const kOldAnimationViewTag = 20161221;
     
     NSString *result = [WDTrackerHelper schemaTrackForPersonalHomeSchema:schema categoryName:categoryName fromPage:@"comment_list" groupId:self.detailModel.answerEntity.ansid profileUserId:userID];
     [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:result]];
-    
-    [self.toolbarView hideSupportsEmojiInputBubbleViewIfNeeded];
 }
 
 - (void)tt_commentViewController:(id<TTCommentViewControllerProtocol>)ttController tappedWithUserID:(NSString *)userID
@@ -2190,8 +1996,6 @@ static NSUInteger const kOldAnimationViewTag = 20161221;
     NSString *userIDstr = [NSString stringWithFormat:@"%@", userID];
     NSMutableString *linkURLString = [NSMutableString stringWithFormat:@"sslocal://profile?uid=%@&from_page=at_user_profile_comment", userIDstr];
     [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:linkURLString]];
-
-    [self.toolbarView hideSupportsEmojiInputBubbleViewIfNeeded];
 }
 
 - (void)tt_commentViewController:(id<TTCommentViewControllerProtocol>)ttController startWriteComment:(id<TTCommentModelProtocol>)model
@@ -2243,8 +2047,6 @@ static NSUInteger const kOldAnimationViewTag = 20161221;
             self.commentShowDate = [NSDate date];
         }];
     }
-    
-    [self.toolbarView hideSupportsEmojiInputBubbleViewIfNeeded];
     
     //停止评论时间
     if (self.commentShowDate) {
@@ -2404,18 +2206,6 @@ static NSUInteger const kOldAnimationViewTag = 20161221;
         [barButton setImageEdgeInsets:UIEdgeInsetsMake(0, 0, 0, -4)];
     }
     return barButton;
-}
-
-- (SSThemedView *)whiteGapView
-{
-    if (!_whiteGapView) {
-        CGSize windowSize = [TTUIResponderHelper windowSize];
-        CGFloat edgePadding = [TTUIResponderHelper paddingForViewWidth:windowSize.width];
-        SSThemedView *whiteView = [[SSThemedView alloc] initWithFrame:CGRectMake(edgePadding, kNavigationBarHeight, windowSize.width - edgePadding*2, 0.0f)];
-        whiteView.backgroundColorThemeKey = kColorBackground4;
-        _whiteGapView = whiteView;
-    }
-    return _whiteGapView;
 }
 
 - (WDDetailNatantViewModel *)natantViewModel

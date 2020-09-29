@@ -19,7 +19,7 @@ static AWEVideoDetailScrollDirection direction;
         NSString *key = @"kSSCommonLogicShortVideoDetailScrollDirectionKey";
         NSNumber *value = [[NSUserDefaults standardUserDefaults] objectForKey:key];
         if (!value) {
-            value = @1;
+            value = @2;
         }
         direction = [value integerValue];
         NSAssert(direction != 0, @"不支持不滑动");
