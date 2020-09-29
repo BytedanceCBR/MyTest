@@ -227,7 +227,7 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
     configModel.houseType = self.houseType;
     configModel.followId = self.houseId;
     configModel.actionType = self.houseType;
-    if (![TTAccount sharedAccount].isLogin && [FHUtils getSettingEnableBooleanForKey:@"f_login_before_house_subscribe"]) {
+    if (![TTAccount sharedAccount].isLogin) {
         NSMutableDictionary *params = [NSMutableDictionary dictionary];
         NSString *page_type = self.tracerDict[@"page_type"] ?: @"be_null";
         [params setObject:page_type forKey:@"enter_from"];
