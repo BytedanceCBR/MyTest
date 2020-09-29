@@ -17,13 +17,16 @@
 #import <TTBaseLib/NSDictionary+TTAdditions.h>
 #import "FHHouseUGCAPI.h"
 #import "FHUGCShortVideoRealtorInfoModel.h"
+#import "FHFeedUGCCellModel.h"
+#import "TTReachability.h"
+#import "ToastManager.h"
 
 
 @interface TSVShortVideoDetailFetchManager ()
 
 @property (nonatomic, copy) NSString *groupID;
 @property (nonatomic, assign) TSVShortVideoListLoadMoreType loadMoreType;
-@property (nonatomic, copy) NSArray<TTShortVideoModel *> *awemedDetailItems;
+@property (nonatomic, copy) NSArray<FHFeedUGCCellModel *> *awemedDetailItems;
 @property (nonatomic, strong) TSVShortVideoDecoupledFetchManager *decoupledFetchManager;
 
 @property (nonatomic, copy) NSString *activityForumID;
@@ -33,10 +36,12 @@
 @property (nonatomic, copy) NSString *activitySortType;
 @property (nonatomic, strong) FHUGCShortVideoRealtorInfo *realtorInfo;
 
-
 @end
 
+
 @implementation TSVShortVideoDetailFetchManager
+@synthesize isFromFollowVc = _isFromFollowVc;
+@synthesize tracerDic = _tracerDic;
 
 - (instancetype)initWithGroupID:(NSString *)groupID loadMoreType:(TSVShortVideoListLoadMoreType)loadMoreType
 {
@@ -69,6 +74,10 @@
     return self;
 }
 
+- (void)setIsFromFollowVc:(BOOL)isFromFollowVc {
+    _isFromFollowVc = isFromFollowVc;
+}
+
 - (NSUInteger)numberOfShortVideoItems
 {
     return [self.awemedDetailItems count];
@@ -81,8 +90,10 @@
 
 - (TTShortVideoModel *)itemAtIndex:(NSInteger)index replaced:(BOOL)replaced
 {
+    if (!self.awemedDetailItems) {
+        return nil;
+    }
     NSParameterAssert(index < [self.awemedDetailItems count]);
-    
     if (replaced && self.replacedModel && index == self.replacedIndex) {
         return self.replacedModel;
     } else if (index < [self.awemedDetailItems count]) {
@@ -115,25 +126,42 @@
             NSError *mappingError = nil;
             NSMutableDictionary *fixedDict = [NSMutableDictionary dictionary];
             [fixedDict setValue:jsonObj[@"data"] forKey:@"raw_data"];
-            TTShortVideoModel *model = [[TTShortVideoModel alloc] initWithDictionary:fixedDict error:&mappingError];
             
+            NSDictionary *dic = @{@"raw_data":jsonObj[@"data"],@"cell_type":@(FHUGCFeedListCellTypeUGCSmallVideo)};
+            FHFeedUGCCellModel *cellModle = [FHFeedUGCCellModel modelFromFeed:dic];
+            cellModle.tracerDic = [self trackDict:cellModle rank:0];
+            if (self.isFromFollowVc) {
+                cellModle.userRepin = YES;
+            }
+            if (!cellModle) {
+                return;
+            }
             [FHHouseUGCAPI requestShortVideoWithGroupId:self.groupID completion:^(id<FHBaseModelProtocol>  _Nonnull models, NSError * _Nonnull errors) {
                  if (!errors && models) {
                      FHUGCShortVideoRealtor *realtor = [(FHUGCShortVideoRealtorInfoModel *)models data];
                      _realtorInfo = realtor.realtor;
                  }
                 if (_realtorInfo) {
-                    TSVUserModel *userModel = model.author;
-                    userModel.avatarURL = _realtorInfo.avatarUrl;
-                    userModel.name = _realtorInfo.realtorName;
-                    userModel.firstBizType = _realtorInfo.firstBizType;
-                    userModel.realtorId = _realtorInfo.realtorId;
-                    userModel.avatarTagUrl = _realtorInfo.imageTag.imageUrl;
-                    model.author = userModel;
+                    FHFeedUGCCellRealtorModel *realtor = [[FHFeedUGCCellRealtorModel alloc] init];
+                    realtor.avatarUrl  = _realtorInfo.avatarUrl;
+                    realtor.avatarTagUrl =  _realtorInfo.imageTag.imageUrl;
+                    realtor.realtorId  = _realtorInfo.realtorId;
+                    realtor.realtorName  =  _realtorInfo.realtorName;
+                    realtor.firstBizType = _realtorInfo.firstBizType;
+                    cellModle.realtor = realtor;
+                    
+                    FHFeedUGCCellUserModel *user = cellModle.user;
+                    
+                    if (realtor.realtorId.length>0) {
+                          user.name = realtor.realtorName;
+                          user.avatarUrl = realtor.avatarUrl;
+                          user.realtorId = realtor.realtorId;
+                          user.firstBizType = realtor.firstBizType;
+                      }
                 }
                 NSMutableArray *awemeDetailItems = [NSMutableArray array];
-                if (model) {
-                    [awemeDetailItems addObject:model];
+                if (cellModle) {
+                    [awemeDetailItems addObject:cellModle];
                 }
                 self.awemedDetailItems = awemeDetailItems;
                 self.isLoadingRequest = NO;
@@ -304,6 +332,29 @@
     } else {
         return TSVShortVideoListEntranceOther;
     }
+}
+
+- (NSMutableDictionary *)trackDict:(FHFeedUGCCellModel *)cellModel rank:(NSInteger)rank {
+    NSMutableDictionary *dict = [NSMutableDictionary dictionary];
+    dict[@"origin_from"] = self.tracerDic[@"origin_from"] ?: @"be_null";
+    dict[@"enter_from"] = self.tracerDic[@"enter_from"] ?: @"be_null";
+    dict[@"page_type"] = self.tracerDic[@"page_type"]?:@"be_null";
+    dict[@"log_pb"] = cellModel.logPb;
+    dict[@"rank"] = @(rank);
+    dict[@"group_id"] = cellModel.groupId;
+    if(cellModel.logPb[@"impr_id"]){
+        dict[@"impr_id"] = cellModel.logPb[@"impr_id"];
+    }
+    if(cellModel.logPb[@"group_source"]){
+        dict[@"group_source"] = cellModel.logPb[@"group_source"];
+    }
+    if(cellModel.fromGid){
+        dict[@"from_gid"] = cellModel.fromGid;
+    }
+    if(cellModel.fromGroupSource){
+        dict[@"from_group_source"] = cellModel.fromGroupSource;
+    }
+    return dict;
 }
 
 @end

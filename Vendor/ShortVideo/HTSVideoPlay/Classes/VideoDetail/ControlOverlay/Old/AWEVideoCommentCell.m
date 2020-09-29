@@ -119,7 +119,7 @@
         self.commentLabel.textColor = [UIColor tt_themedColorForKey:kColorText1];
         [self addSubview:self.commentLabel];
         [self.commentLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.top.equalTo(self.userLabel.mas_bottom).offset(8);
+            make.top.equalTo(self.userLabel.mas_bottom).offset(10);
             make.left.equalTo(@60);
             make.right.equalTo(self.mas_right).offset(-15);
         }];
@@ -156,6 +156,8 @@
         [self.likeButton setTitle:@"赞" forState:UIControlStateSelected];
         self.likeButton.titleLabel.font = [UIFont systemFontOfSize:13.0];
         self.likeButton.titleEdgeInsets = UIEdgeInsetsMake(0, 6, 0, 0);
+        [self.likeButton setImage:ICON_FONT_IMG(18, @"\U0000e69c", [UIColor colorWithHexStr:@"0x979f9c"]) forState:UIControlStateNormal];
+        [self.likeButton setImage:ICON_FONT_IMG(18, @"\U0000e6b1", [UIColor themeOrange4]) forState:UIControlStateSelected];
         [self.likeButton addTarget:self action:@selector(likeButtonTapped) forControlEvents:UIControlEventTouchUpInside];
         UIEdgeInsets insets = self.likeButton.titleEdgeInsets;
         self.likeButton.titleEdgeInsets = UIEdgeInsetsMake(4, insets.left, insets.bottom, insets.right);

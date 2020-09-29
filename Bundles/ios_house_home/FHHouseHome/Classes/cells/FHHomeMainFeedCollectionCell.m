@@ -8,6 +8,7 @@
 #import "FHHomeMainFeedCollectionCell.h"
 #import "ArticleTabbarStyleNewsListViewController.h"
 #import "FHCommunityViewController.h"
+#import "FHUGCShortVideoListController.h"
 #import "FHEnvContext.h"
 
 @implementation FHHomeMainFeedCollectionCell
@@ -15,10 +16,10 @@
     self = [super initWithFrame:frame];
     if (self){
         self.contentView.backgroundColor = [UIColor clearColor];
-        if([FHEnvContext isHomeNewDiscovery]){
-            [self addCommunityVC];
+        if([FHEnvContext isHasShortVideoList]){
+            [self addShortVideoVC];
         }else{
-            [self addArticleVC];
+            [self addCommunityVC];
         }
     }
     return self;
@@ -39,7 +40,20 @@
         @"origin_from":@"discover_stream",
         @"enter_from":@"maintab",
         @"category_name":@"discover_stream"
-    };
+    }.mutableCopy;
+    
+    self.contentVC = vc;
+    vc.view.frame = self.bounds;
+    [self.contentView addSubview:vc.view];
+}
+
+- (void)addShortVideoVC {
+    FHUGCShortVideoListController *vc = [[FHUGCShortVideoListController alloc] init];
+    vc.tracerDict = @{
+        @"origin_from":@"discover_stream",
+        @"enter_from":@"maintab",
+        @"category_name":@"discover_stream"
+    }.mutableCopy;
     
     self.contentVC = vc;
     vc.view.frame = self.bounds;
