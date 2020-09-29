@@ -544,11 +544,19 @@ static NSString * const kFUGCPrefixStr = @"fugc";
  TF弹窗必须实现，在此处理TF跳转下载链接的网页
  */
 - (void)openWithDownloadUrl:(NSString *)downloadUrl {
-    if([downloadUrl hasPrefix:@"http://"] ||
-       [downloadUrl hasPrefix:@"https://"]) {
-        NSURL *url = [NSURL URLWithString:[[NSString stringWithFormat:@"sslocal://webview?url=%@",downloadUrl] stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLQueryAllowedCharacterSet]]];
-        TTRouteUserInfo *routeInfo = [[TTRouteUserInfo alloc] initWithInfo:@{@"hide_more":@(YES)}];
-        [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:routeInfo];
+    if ([downloadUrl rangeOfString:@"apple"].location != NSNotFound) {
+        if (@available(iOS 11.0, *)) {
+            [[UIApplication sharedApplication] openURL:[NSURL URLWithString:downloadUrl] options:@{UIApplicationOpenURLOptionUniversalLinksOnly : @NO} completionHandler:nil];
+        }else{
+            [[UIApplication sharedApplication] openURL:[NSURL URLWithString:downloadUrl]];
+        }
+    } else {
+        if([downloadUrl hasPrefix:@"http://"] ||
+           [downloadUrl hasPrefix:@"https://"]) {
+            NSURL *url = [NSURL URLWithString:[[NSString stringWithFormat:@"sslocal://webview?url=%@",downloadUrl] stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLQueryAllowedCharacterSet]]];
+            TTRouteUserInfo *routeInfo = [[TTRouteUserInfo alloc] initWithInfo:@{@"hide_more":@(YES)}];
+            [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:routeInfo];
+        }
     }
 }
 
