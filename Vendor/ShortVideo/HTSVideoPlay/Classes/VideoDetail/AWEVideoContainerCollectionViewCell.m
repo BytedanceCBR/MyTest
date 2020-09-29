@@ -17,6 +17,7 @@
 #import <AVFoundation/AVFoundation.h>
 #import "FHShortVideoTracerUtil.h"
 #import "TTAccountManager.h"
+#import "NSDictionary+BTDAdditions.h"
 
 @interface AWEVideoContainerCollectionViewCell () <AWEVideoPlayViewDelegate>
 
@@ -98,10 +99,11 @@
         [(AWEVideoDetailControlOverlayViewController *)self.overlayViewController tapToFoldRecCard];
     }
     [self.videoPlayView pauseOrPlayVideo];
+    NSInteger rank = [self.videoDetail.tracerDic btd_integerValueForKey:@"rank" default:0];
     if (self.videoPlayView.isPlaying) {
-        [FHShortVideoTracerUtil videoPlayOrPauseWithName:@"video_play" eventModel:self.videoDetail eventIndex:_selfIndex];
+        [FHShortVideoTracerUtil videoPlayOrPauseWithName:@"video_play" eventModel:self.videoDetail eventIndex:rank];
     }else {
-        [FHShortVideoTracerUtil videoPlayOrPauseWithName:@"video_pause" eventModel:self.videoDetail eventIndex:_selfIndex];
+        [FHShortVideoTracerUtil videoPlayOrPauseWithName:@"video_pause" eventModel:self.videoDetail eventIndex:rank];
     }
     
 }
@@ -189,7 +191,8 @@
 {
     [self.overlayViewController.viewModel videoDidPlayOneLoop];
     NSString *duration = [NSString stringWithFormat:@"%.0f", self.totalPlayTime * 1000];
-    [FHShortVideoTracerUtil videoOverWithModel:self.videoDetail eventIndex:self.selfIndex forStayTime:duration];
+    NSInteger rank = [self.videoDetail.tracerDic btd_integerValueForKey:@"rank" default:0];
+    [FHShortVideoTracerUtil videoOverWithModel:self.videoDetail eventIndex:rank forStayTime:duration];
     if (self.videoDidPlayOneLoop) {
         self.videoDidPlayOneLoop();
     }

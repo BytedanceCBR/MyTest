@@ -479,7 +479,6 @@ NSString *const TSVLastShareActivityName = @"TSVLastShareActivityName";
 {
     NSMutableDictionary *paramsDict = [NSMutableDictionary dictionary];
     [paramsDict setValue:self.model.categoryId forKey:@"category_name"];
-    [paramsDict setValue:@"small_video_detail" forKey:@"from_page"];
     [paramsDict setValue:self.model.groupId forKey:@"group_id"];
     [AWEVideoPlayTransitionBridge openProfileViewWithUserId:self.model.user.userId params:paramsDict];
 }

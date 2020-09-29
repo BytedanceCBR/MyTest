@@ -185,7 +185,7 @@
 }
 
 + (NSString *)pageType {
-    return @"f_house_smallvideo_flow";
+    return @"small_video_detail";
 }
 
 - (void)flushStayPageTime

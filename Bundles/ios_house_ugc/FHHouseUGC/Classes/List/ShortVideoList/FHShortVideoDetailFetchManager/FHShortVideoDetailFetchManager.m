@@ -133,7 +133,7 @@
     self.awemedDetailItems = [[NSMutableArray alloc]init];
     if (currentShortVideoModel) {
             [self.awemedDetailItems addObject:currentShortVideoModel];
-
+            [self trackDict:currentShortVideoModel rank:0];
     }else {
         [self requestDataForGroupIdAutomatically:YES finishBlock:^(NSUInteger increaseCount, NSError *error) {
         }];
@@ -141,7 +141,10 @@
 }
 
 - (void)setOtherShortVideoModels:(NSArray<FHFeedUGCCellModel *> *)otherShortVideoModels {
-    [self.awemedDetailItems addObjectsFromArray:otherShortVideoModels];
+    for (int m =0; m>otherShortVideoModels.count; m ++) {
+        FHFeedUGCCellModel *itemModel = otherShortVideoModels[m];
+        [self trackDict:itemModel rank:self.awemedDetailItems.count + m];
+    }
     NSInteger numberOfItemLeft = self.numberOfShortVideoItems - self.currentIndex;
     if (numberOfItemLeft<=4) {
         [self requestDataAutomatically:YES finishBlock:^(NSUInteger increaseCount, NSError *error) {
@@ -151,26 +154,40 @@
 
 - (NSArray *)convertModel:(NSArray *)feedList isHead:(BOOL)isHead {
     NSMutableArray *resultArray = [[NSMutableArray alloc] init];
-    for (FHFeedListDataModel *itemModel in feedList) {
+    for (int m =0; m<feedList.count; m++) {
+        FHFeedListDataModel *itemModel = feedList[m];
         FHFeedUGCCellModel *cellModel = [FHFeedUGCCellModel modelFromFeed:itemModel.content];
         if(cellModel.cellType == FHUGCFeedListCellTypeUGCSmallVideo || cellModel.cellType == FHUGCFeedListCellTypeUGCSmallVideo2){
             cellModel.categoryId = self.categoryId;
             cellModel.enterFrom = self.enterFrom;
-//            if(cellModel){
-//                if(isHead){
-                    [resultArray addObject:cellModel];
-//                    //去重逻辑
-//                    [self removeDuplicaionModel:cellModel.groupId];
-//                }else{
-//                    NSInteger index = [self getCellIndex:cellModel];
-//                    if(index < 0){
-//                        [resultArray addObject:cellModel];
-//                    }
-//                }
-//            }
+            cellModel.tracerDic = [self trackDict:cellModel rank:self.awemedDetailItems.count + m];
+           [resultArray addObject:cellModel];
         }
     }
     return resultArray;
+}
+
+- (NSMutableDictionary *)trackDict:(FHFeedUGCCellModel *)cellModel rank:(NSInteger)rank {
+    NSMutableDictionary *dict = [NSMutableDictionary dictionary];
+    dict[@"origin_from"] = self.tracerDic[@"origin_from"] ?: @"be_null";
+    dict[@"enter_from"] = self.tracerDic[@"enter_from"] ?: @"be_null";
+    dict[@"page_type"] = self.tracerDic[@"page_type"]?:@"be_null";
+    dict[@"log_pb"] = cellModel.logPb;
+    dict[@"rank"] = @(rank);
+    dict[@"group_id"] = cellModel.groupId;
+    if(cellModel.logPb[@"impr_id"]){
+        dict[@"impr_id"] = cellModel.logPb[@"impr_id"];
+    }
+    if(cellModel.logPb[@"group_source"]){
+        dict[@"group_source"] = cellModel.logPb[@"group_source"];
+    }
+    if(cellModel.fromGid){
+        dict[@"from_gid"] = cellModel.fromGid;
+    }
+    if(cellModel.fromGroupSource){
+        dict[@"from_group_source"] = cellModel.fromGroupSource;
+    }
+    return dict;
 }
 
 - (void)removeDuplicaionModel:(NSString *)groupId {

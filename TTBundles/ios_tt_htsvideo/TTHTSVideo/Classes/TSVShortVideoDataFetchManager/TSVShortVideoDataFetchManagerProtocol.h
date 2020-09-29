@@ -28,6 +28,7 @@ typedef enum : NSUInteger {
 
 @property (nonatomic, assign) NSInteger listCellCurrentIndex;//列表上归位cell的index
 @property (nonatomic, strong) id detailCellCurrentItem;        //列表上归位cell的model
+@property (nonatomic, strong) NSDictionary *tracerDic;        //列表上归位cell的model
 
 /*
  *  列表items数量

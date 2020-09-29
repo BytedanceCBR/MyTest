@@ -41,6 +41,7 @@
 
 @implementation TSVShortVideoDetailFetchManager
 @synthesize isFromFollowVc = _isFromFollowVc;
+@synthesize tracerDic = _tracerDic;
 
 - (instancetype)initWithGroupID:(NSString *)groupID loadMoreType:(TSVShortVideoListLoadMoreType)loadMoreType
 {
@@ -128,6 +129,7 @@
             
             NSDictionary *dic = @{@"raw_data":jsonObj[@"data"],@"cell_type":@(FHUGCFeedListCellTypeUGCSmallVideo)};
             FHFeedUGCCellModel *cellModle = [FHFeedUGCCellModel modelFromFeed:dic];
+            cellModle.tracerDic = [self trackDict:cellModle rank:0];
             if (self.isFromFollowVc) {
                 cellModle.userRepin = YES;
             }
@@ -330,6 +332,29 @@
     } else {
         return TSVShortVideoListEntranceOther;
     }
+}
+
+- (NSMutableDictionary *)trackDict:(FHFeedUGCCellModel *)cellModel rank:(NSInteger)rank {
+    NSMutableDictionary *dict = [NSMutableDictionary dictionary];
+    dict[@"origin_from"] = self.tracerDic[@"origin_from"] ?: @"be_null";
+    dict[@"enter_from"] = self.tracerDic[@"enter_from"] ?: @"be_null";
+    dict[@"page_type"] = self.tracerDic[@"page_type"]?:@"be_null";
+    dict[@"log_pb"] = cellModel.logPb;
+    dict[@"rank"] = @(rank);
+    dict[@"group_id"] = cellModel.groupId;
+    if(cellModel.logPb[@"impr_id"]){
+        dict[@"impr_id"] = cellModel.logPb[@"impr_id"];
+    }
+    if(cellModel.logPb[@"group_source"]){
+        dict[@"group_source"] = cellModel.logPb[@"group_source"];
+    }
+    if(cellModel.fromGid){
+        dict[@"from_gid"] = cellModel.fromGid;
+    }
+    if(cellModel.fromGroupSource){
+        dict[@"from_group_source"] = cellModel.fromGroupSource;
+    }
+    return dict;
 }
 
 @end

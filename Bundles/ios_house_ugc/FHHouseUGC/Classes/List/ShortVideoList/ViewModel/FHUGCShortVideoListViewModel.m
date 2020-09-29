@@ -406,7 +406,6 @@
         if (self.clientShowDict[groupId]) {
             return;
         }
-        
         self.clientShowDict[groupId] = @(indexPath.row);
         [self trackClientShow:cellModel rank:indexPath.row];
     }

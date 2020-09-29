@@ -48,6 +48,7 @@
 #import "TTShortVideoModel+TTAdFactory.h"
 #import "ToastManager.h"
 #import "FHShortVideoTracerUtil.h"
+#import "NSDictionary+BTDAdditions.h"
 
 // 与西瓜视频共用的流量播放开关，全局变量哦，名字别乱改
 BOOL kBDTAllowCellularVideoPlay = NO;
@@ -442,7 +443,6 @@ const static CGFloat kAWEVideoContainerSpacing = 2;
         [self addChildViewController:cell.overlayViewController];
         [cell.contentView addSubview:cell.overlayViewController.view];
         [cell.overlayViewController didMoveToParentViewController:self];
-        cell.overlayViewController.selfIndex = self.initialItemIndex?:0;
         cell.overlayViewController.viewModel.model = [self.dataFetchManager itemAtIndex:indexPath.item];
 
         [cell setNeedsLayout];
@@ -523,14 +523,10 @@ const static CGFloat kAWEVideoContainerSpacing = 2;
     if (!self.currentVideoCell.videoPlayView && (indexPath.section == 0 && indexPath.item == self.dataFetchManager.currentIndex)) {
         self.currentVideoCell = cell;
         self.currentIndexPath = indexPath;
-        
-        cell.videoDetail.tracerDic = self.extraDic;
-        cell.selfIndex = indexPath.row;
         [self beginFirstImpression];
         [self alertCeullarPlayWithCompletion:^(BOOL continuePlaying) {
             if (continuePlaying) {
                 [self showPromotionIfNecessaryWithIndex:indexPath.item];
-
                 // 首次进入的播放
                 [self.currentVideoCell.videoPlayView prepareToPlay];
                 [self.currentVideoCell.videoPlayView play];
@@ -661,7 +657,6 @@ const static CGFloat kAWEVideoContainerSpacing = 2;
 {
     
     NSParameterAssert(cell);
-    cell.videoDetail.tracerDic = self.extraDic;
     self.detailPromptManager.dataFetchManager = self.dataFetchManager;
     self.detailPromptManager.containerViewController = self;
     self.detailPromptManager.scrollView = self.collectionView;
@@ -682,14 +677,16 @@ const static CGFloat kAWEVideoContainerSpacing = 2;
     NSString *groupId = cell.videoDetail.groupId;
     if (groupId && ![self.feedClientShowCache containsObject:groupId]) {
         [self.feedClientShowCache addObject:groupId];
-        [FHShortVideoTracerUtil feedClientShowWithmodel:cell.videoDetail eventIndex:self.initialItemIndex];
+        NSInteger rank = [cell.videoDetail.tracerDic btd_integerValueForKey:@"rank" default:0];
+        [FHShortVideoTracerUtil feedClientShowWithmodel:cell.videoDetail eventIndex:rank];
     };
 }
 
 - (void)sendGoDetailAndVideoPlayWithCell:(AWEVideoContainerCollectionViewCell *)cell
 {
     NSParameterAssert(cell);
-    [FHShortVideoTracerUtil videoPlayOrPauseWithName:@"video_play" eventModel:cell.videoDetail eventIndex:self.initialItemIndex];
+    NSInteger rank = [cell.videoDetail.tracerDic btd_integerValueForKey:@"rank" default:0];
+    [FHShortVideoTracerUtil videoPlayOrPauseWithName:@"video_play" eventModel:cell.videoDetail eventIndex:rank];
     [FHShortVideoTracerUtil goDetailWithModel:cell.videoDetail eventIndex:self.initialItemIndex];
     [self.tracker flushStayPageTime];
     cell.videoDetail.videoAction.playCount = [NSString stringWithFormat:@"%ld",[cell.videoDetail.videoAction.playCount intValue]+ 1];
@@ -709,8 +706,8 @@ const static CGFloat kAWEVideoContainerSpacing = 2;
         return;
     }
     NSString *duration = [NSString stringWithFormat:@"%.0f", totalPlayTime * 1000];
-
-    [FHShortVideoTracerUtil videoOverWithModel:self.currentVideoCell.videoDetail eventIndex:self.initialItemIndex forStayTime:duration];
+   NSInteger rank = [self.currentVideoCell.videoDetail.tracerDic btd_integerValueForKey:@"rank" default:0];
+    [FHShortVideoTracerUtil videoOverWithModel:self.currentVideoCell.videoDetail eventIndex:rank forStayTime:duration];
 }
 
 - (void)sendStayPageTracking
@@ -731,7 +728,8 @@ const static CGFloat kAWEVideoContainerSpacing = 2;
 //                                model:self.currentVideoCell.videoDetail
 //                      commonParameter:self.commonTrackingParameter
 //                       extraParameter:paramters];
-    [FHShortVideoTracerUtil stayPageWithModel:self.currentVideoCell.videoDetail eventIndex:self.initialItemIndex forStayTime:stayTime];
+    NSInteger rank = [self.currentVideoCell.videoDetail.tracerDic btd_integerValueForKey:@"rank" default:0];
+    [FHShortVideoTracerUtil stayPageWithModel:self.currentVideoCell.videoDetail eventIndex:rank forStayTime:stayTime];
     FHFeedUGCCellModel *video = self.currentVideoCell.videoDetail;
     NSString *enterFrom = video.enterFrom ?: self.commonTrackingParameter[@"enter_from"];
     NSString *categoryName = video.categoryId ?: self.commonTrackingParameter[@"category_name"];

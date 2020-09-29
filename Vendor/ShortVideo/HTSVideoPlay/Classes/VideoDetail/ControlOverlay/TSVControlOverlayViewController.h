@@ -15,5 +15,4 @@
 @property (nonatomic, strong, nullable) TSVControlOverlayViewModel *viewModel;
 @property (weak, nonatomic, nullable) id<IESVideoPlayerProtocol> playerController;
 @property(nonatomic, strong, nullable)ExploreMovieMiniSliderView * miniSlider;
-@property (nonatomic, assign) NSInteger selfIndex;
 @end

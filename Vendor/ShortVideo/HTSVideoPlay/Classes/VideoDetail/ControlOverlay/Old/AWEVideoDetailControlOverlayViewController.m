@@ -86,6 +86,7 @@
 #import "FHShortVideoTracerUtil.h"
 #import "TTAccountManager.h"
 #import "IESOwnPlayerWrapper.h"
+#import "NSDictionary+BTDAdditions.h"
 
 static const CGFloat kCheckChallengeButtonWidth = 72;
 static const CGFloat kCheckChallengeButtonHeight = 28;
@@ -126,6 +127,7 @@ static const CGFloat kCheckChallengeButtonLeftPadding = 28;
 @property (nonatomic, strong) UIButton *inputButton;
 @property (nonatomic, readwrite, assign) NSTimeInterval videoDuration;
 @property (nonatomic,strong) NSTimer *videoTimer;
+
 @end
 
 @implementation AWEVideoDetailControlOverlayViewController
@@ -804,7 +806,8 @@ static const CGFloat kCheckChallengeButtonLeftPadding = 28;
     //                                        @"user_id": self.model.user.userId ?: @"",
     //                                        @"position": @"feed_detail",
     //                                        }];
-            [FHShortVideoTracerUtil clickLikeOrdisLikeWithWithName:eventName eventPosition:@"video" eventModel:self.model eventIndex:self.selfIndex commentId:nil];
+         NSInteger rank = [self.model.tracerDic btd_integerValueForKey:@"rank" default:0];
+            [FHShortVideoTracerUtil clickLikeOrdisLikeWithWithName:eventName eventPosition:@"video" eventModel:self.model eventIndex:rank commentId:nil];
         if (!userDigg) {
                 [self diggShowAnima:NO];
                 //point:视频点赞

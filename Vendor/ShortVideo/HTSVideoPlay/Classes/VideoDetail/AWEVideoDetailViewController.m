@@ -117,7 +117,7 @@
 #import "TTReachability.h"
 #import "ToastManager.h"
 #import "TTAccountManager.h"
-
+#import "NSDictionary+BTDAdditions.h"
 
 #define kPostMessageFinishedNotification    @"kPostMessageFinishedNotification"
 
@@ -323,7 +323,9 @@ static const CGFloat kFloatingViewOriginY = 230;
         
         [self initReportOptions];
         [self initProperty];
-
+        if(paramObj.allParams[@"extraDic"] && [paramObj.allParams[@"extraDic"] isKindOfClass:[NSDictionary class]]){
+               self.extraDic = paramObj.allParams[@"extraDic"];
+           }
         if (extraParams[HTSVideoListFetchManager]) {
             self.dataFetchManager = extraParams[HTSVideoListFetchManager];
         } else if ([params[@"load_more"] integerValue] == 1) {
@@ -358,6 +360,9 @@ static const CGFloat kFloatingViewOriginY = 230;
             self.dataFetchManager = [[TSVShortVideoDetailFetchManager alloc] initWithGroupID:self.groupID
                                                                              loadMoreType:TSVShortVideoListLoadMoreTypeNone];
             self.dataFetchManager.shouldShowNoMoreVideoToast = NO;
+            if(paramObj.allParams[@"extraDic"] && [paramObj.allParams[@"extraDic"] isKindOfClass:[NSDictionary class]]){
+                self.dataFetchManager.tracerDic = paramObj.allParams[@"extraDic"];
+            };
         }
          self.dataFetchManager.isFromFollowVc = _pageParams[@"isFromFlollow"]?:NO;
         self.originalDataFetchManager = self.dataFetchManager;
@@ -385,9 +390,7 @@ static const CGFloat kFloatingViewOriginY = 230;
             self.orderedData = extraParams[HTSVideoDetailOrderedData];
         }
         
-        if(paramObj.allParams[@"extraDic"] && [paramObj.allParams[@"extraDic"] isKindOfClass:[NSDictionary class]]){
-            self.extraDic = paramObj.allParams[@"extraDic"];
-        }
+   
         
         TTGroupModel *groupModel = [[TTGroupModel alloc] initWithGroupID:self.groupID itemID:self.groupID impressionID:nil aggrType:1];
         self.groupModel = groupModel;
@@ -513,7 +516,8 @@ static const CGFloat kFloatingViewOriginY = 230;
                 viewModel.listEntrance = [self entrance];
                 viewModel.writeCommentButtonDidClick = ^{
                             @strongify(self);
-                         [FHShortVideoTracerUtil clickCommentWithModel:self.model eventIndex:self.dataFetchManager.currentIndex eventPosition:@"detail_comment"];
+                    NSInteger rank = [self.model.tracerDic btd_integerValueForKey:@"rank" default:0];
+                         [FHShortVideoTracerUtil clickCommentWithModel:self.model eventIndex:rank eventPosition:@"detail_comment"];
                             [self playView:nil didClickInputWithModel:self.model];
                         };
                 viewModel.showProfilePopupBlock = ^{
@@ -783,7 +787,8 @@ static const CGFloat kFloatingViewOriginY = 230;
     if (!self.model) {
         return;
     }
-     [FHShortVideoTracerUtil clickCommentWithModel:self.model eventIndex:self.dataFetchManager.currentIndex eventPosition:@"detail_comment"];
+    NSInteger rank = [self.model.tracerDic btd_integerValueForKey:@"rank" default:0];
+     [FHShortVideoTracerUtil clickCommentWithModel:self.model eventIndex:rank eventPosition:@"detail_comment"];
      [self playView:nil didClickInputWithModel:self.model];
 }
 
@@ -1686,7 +1691,8 @@ static const CGFloat kFloatingViewOriginY = 230;
 
 - (void)handleFakeInputBarClick:(id)sender
 {
-     [FHShortVideoTracerUtil clickCommentWithModel:self.model eventIndex:self.dataFetchManager.currentIndex eventPosition:@"feed_comment"];
+    NSInteger rank = [self.model.tracerDic btd_integerValueForKey:@"rank" default:0];
+     [FHShortVideoTracerUtil clickCommentWithModel:self.model eventIndex:rank eventPosition:@"feed_comment"];
 
     if ([self alertIfNotValid]) {
         return;
@@ -1942,7 +1948,8 @@ static const CGFloat kFloatingViewOriginY = 230;
 - (void)commentCellLoginSuccess:(AWEVideoCommentCell *)cell didClickLikeWithModel:(AWECommentModel *)commentModel {
     NSString *eventName = commentModel.userDigg ? @"click_dislike" : @"click_like";
     NSString *position = @"comment";
-    [FHShortVideoTracerUtil clickLikeOrdisLikeWithWithName:eventName eventPosition:position eventModel:self.model eventIndex:self.dataFetchManager.currentIndex commentId:[commentModel.id stringValue]];
+    NSInteger rank = [self.model.tracerDic btd_integerValueForKey:@"rank" default:0];
+    [FHShortVideoTracerUtil clickLikeOrdisLikeWithWithName:eventName eventPosition:position eventModel:self.model eventIndex:rank commentId:[commentModel.id stringValue]];
     if ([self alertIfNotValid]) {
         return;
     }
@@ -2414,7 +2421,8 @@ static const CGFloat kFloatingViewOriginY = 230;
 }
 
 - (void)clickSubmitComment {
-     [FHShortVideoTracerUtil clickCommentSubmitWithModel:self.model eventIndex:self.dataFetchManager.currentIndex];
+    NSInteger rank = [self.model.tracerDic btd_integerValueForKey:@"rank" default:0];
+     [FHShortVideoTracerUtil clickCommentSubmitWithModel:self.model eventIndex:rank];
 //    NSMutableDictionary *tracerDict = self.tracerDict.mutableCopy;
 //    tracerDict[@"click_position"] = @"submit_comment";
 //    [FHUserTracker writeEvent:@"click_submit_comment" params:tracerDict];
