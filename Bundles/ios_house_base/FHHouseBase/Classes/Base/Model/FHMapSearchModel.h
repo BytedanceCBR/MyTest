@@ -42,6 +42,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *nid;
 @property (nonatomic, copy , nullable) NSString *desc;
 @property (nonatomic, copy , nullable) NSString *path;
+@property (nonatomic, strong , nullable) NSArray *coordinateEnclosure;
 
 @end
 

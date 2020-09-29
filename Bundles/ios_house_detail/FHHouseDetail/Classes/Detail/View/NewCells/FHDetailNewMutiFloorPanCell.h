@@ -29,6 +29,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong)   UILabel       *priceLabel;
 @property (nonatomic, strong)   UILabel       *spaceLabel;
 @property (nonatomic, strong)   UIButton      *consultDetailButton;
+@property (nonatomic, strong)   UIImageView        *vrImageView;
 
 @end
 

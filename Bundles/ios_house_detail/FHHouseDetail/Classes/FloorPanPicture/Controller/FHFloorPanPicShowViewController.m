@@ -25,9 +25,9 @@
 @property (nonatomic, strong) UICollectionView *collectionView;
 
 @property (nonatomic, strong) FHDetailPictureTitleView *segmentTitleView;
-@property (nonatomic, copy)   NSArray *pictureTitles;
-@property (nonatomic, copy)   NSArray *pictureNumbers;
-@property (nonatomic, copy)   NSArray *prePictureSum;
+@property (nonatomic, copy)   NSArray <NSString *>* pictureTitles;
+@property (nonatomic, copy)   NSArray <NSNumber *>* pictureNumbers;
+@property (nonatomic, copy)   NSArray <NSNumber *>* prePictureSum;
 
 @property (nonatomic, strong) NSIndexPath *lastIndexPath;
 
@@ -190,7 +190,6 @@
     [_collectionView registerClass:[FHFloorPanPicCollectionCell class] forCellWithReuseIdentifier:NSStringFromClass([FHFloorPanPicShowItemPictureModel class])];
     [_collectionView registerClass:[FHFloorPanVideoCollectionCell class] forCellWithReuseIdentifier:NSStringFromClass([FHFloorPanPicShowItemVideoModel class])];
     [_collectionView registerClass:[FHFloorPanVRCollectionCell class] forCellWithReuseIdentifier:NSStringFromClass([FHFloorPanPicShowItemVRModel class])];
-
     //注册headerView  此处的ReuseIdentifier 必须和 cellForItemAtIndexPath 方法中 一致  均为reusableView
     [_collectionView registerClass:[FHDetailSectionTitleCollectionView class] forSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:NSStringFromClass([FHDetailSectionTitleCollectionView class])];
     //设置代理
@@ -287,8 +286,6 @@
     [self setupDefaultNavBar:NO];
     [self.customNavBarView setNaviBarTransparent:YES];
     self.customNavBarView.title.text = self.navBarName.length ? self.navBarName : @"楼盘相册";
-    [self.customNavBarView.leftBtn setBackgroundImage:ICON_FONT_IMG(24, @"\U0000e68a", [UIColor themeGray1]) forState:UIControlStateNormal];
-    [self.customNavBarView.leftBtn setBackgroundImage:ICON_FONT_IMG(24, @"\U0000e68a", [UIColor themeGray1]) forState:UIControlStateHighlighted];
 }
 
 - (void)scrollToCurrentIndex:(NSInteger)toIndex {
@@ -328,9 +325,6 @@
     } completion:^(BOOL finished) {
         self.segmentViewChangedFlag = NO;
     }];
-
-//    [self.mainCollectionView scrollRectToVisible:frame animated:YES];
-//    [self.mainCollectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:titleIndex] atScrollPosition:UICollectionViewScrollPositionBottom animated:YES];
 }
 
 - (void)processImagesList {
@@ -343,7 +337,6 @@
         if ([groupModel.rootGroupName isEqualToString:rootGroupName.lastObject]) {
             NSNumber *lastNumber = numbers.lastObject;
             NSNumber *itemCount = [NSNumber numberWithUnsignedInteger:lastNumber.unsignedIntegerValue + groupModel.items.count];
-
             [numbers removeLastObject];
             [numbers addObject:itemCount];
         } else {
@@ -358,7 +351,7 @@
     for (NSUInteger i = 0; i < rootGroupName.count; i++) {
         NSNumber *number = numbers[i];
         NSString *groupName = rootGroupName[i];
-        [titles addObject:[NSString stringWithFormat:@"%@（%lu）", groupName, number.unsignedIntegerValue]];
+        [titles addObject:[NSString stringWithFormat:@"%@（%lu）", groupName, (unsigned long)number.unsignedIntegerValue]];
     }
     self.prePictureSum = preSum.copy;
     self.pictureTitles = titles.copy;
@@ -380,7 +373,7 @@
 //            extraDic[kFHCluePage] = cluePage;
 //        }
         FHDetailContactModel *contactPhone = self.contactViewModel.contactPhone;
-        NSDictionary *associateInfoDict = contactPhone.enablePhone ? self.associateInfo.phoneInfo : self.associateInfo.reportFormInfo;
+        NSDictionary *associateInfoDict = contactPhone.enablePhone ? self.imageAlbumAssociateInfo.phoneInfo : self.imageAlbumAssociateInfo.reportFormInfo;
         extraDic[kFHAssociateInfo] = associateInfoDict ? : @{};
         [self.contactViewModel contactActionWithExtraDict:extraDic];
     }
@@ -395,8 +388,8 @@
         extraDic[@"element_from"] = self.elementFrom ? : @"be_null";
         extraDic[@"from"] = @"app_newhouse_property_picture";
         // 头图im入口线索透传
-        if (self.associateInfo) {
-            extraDic[kFHAssociateInfo] = self.associateInfo;
+        if (self.imageAlbumAssociateInfo) {
+            extraDic[kFHAssociateInfo] = self.imageAlbumAssociateInfo;
         }
         [self.contactViewModel onlineActionWithExtraDict:extraDic];
     }
@@ -493,6 +486,7 @@
             } else {
                 titleView.titleLabel.text = [NSString stringWithFormat:@"(%lu)", (unsigned long)groupModel.items.count];
             }
+            
         }
         reusableView = titleView;
     }
@@ -503,6 +497,7 @@
 //点击item方法
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 {
+
     if (self.albumImageBtnClickBlock && self.floorPanShowModel.itemGroupList.count > indexPath.section) {
         NSInteger total = 0;
         total += indexPath.row;
@@ -512,10 +507,6 @@
         }
         self.albumImageBtnClickBlock(total);
     }
-
-//    if (self.albumImageStayBlock) {
-//        self.albumImageStayBlock(0,self.ttTrackStartTime);
-//    }
 }
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {

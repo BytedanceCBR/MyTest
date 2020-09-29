@@ -51,6 +51,9 @@
 #import "TTCanvasBundleManager.h"
 #import <TTServiceKit/TTServiceCenter.h>
 #import "TTAdManagerProtocol.h"
+#import "ByteDanceKit.h"
+#import "UIColor+Theme.h"
+#import "ToastManager.h"
 
 @implementation STTableViewCellItem
 
@@ -256,8 +259,8 @@
     CGFloat top = 44.f + [UIApplication sharedApplication].statusBarFrame.size.height;
     self.tableView.frame = CGRectMake(0, top, self.view.width, self.view.height - top);
     [self.view addSubview:self.tableView];
-    
     [self.tableView registerClass:[STTableViewCell class] forCellReuseIdentifier:@"Identifier"];
+    self.tableView.sectionIndexMinimumDisplayRowCount = 10;
 }
 
 #pragma mark - textFieldResignFirstResponder
@@ -410,6 +413,20 @@
     }
 }
 
+- (NSArray<NSString *> *)sectionIndexTitlesForTableView:(UITableView *)tableView {
+    NSArray<NSString *> *ret = [self.dataSource btd_map:^id _Nullable(STTableViewSectionItem * _Nonnull section) {
+        if(section.headerTitle.length >= 4) {
+            return [section.headerTitle substringToIndex:4];
+        };
+        return section.headerTitle;
+    }];
+    return ret;
+}
+
+- (NSInteger)tableView:(UITableView *)tableView sectionForSectionIndexTitle:(NSString *)title atIndex:(NSInteger)index {
+    [[ToastManager manager] showToast:title];
+    return index;
+}
 @end
 
 #endif

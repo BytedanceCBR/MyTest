@@ -156,8 +156,6 @@
     [self setupDefaultNavBar:NO];
 //    [self.customNavBarView setNaviBarTransparent:YES];
     self.customNavBarView.title.text = @"楼栋信息";
-    [self.customNavBarView.leftBtn setBackgroundImage:ICON_FONT_IMG(24, @"\U0000e68a", [UIColor themeGray1]) forState:UIControlStateNormal];
-    [self.customNavBarView.leftBtn setBackgroundImage:ICON_FONT_IMG(24, @"\U0000e68a", [UIColor themeGray1]) forState:UIControlStateHighlighted];
 }
 
 - (void)setupUI {

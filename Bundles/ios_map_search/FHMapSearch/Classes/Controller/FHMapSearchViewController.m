@@ -295,7 +295,7 @@
     _viewModel.simpleNavBar = self.simpleNavBar;
     
     self.title = _viewModel.navTitle;
-    [self.simpleNavBar setTitle:self.title];
+    [self.simpleNavBar setTitle:self.title withHouseTypeArray:self.configModel.houseTypeArray.count < 2];
     [self.view bringSubviewToFront:self.simpleNavBar];
     
     [_viewModel tryUpdateSideBar];
@@ -426,8 +426,15 @@
 -(void)switchNavbarMode:(FHMapSearchShowMode)mode
 {
     self.title =  self.viewModel.navTitle ;
+
     [self.simpleNavBar setTitle:self.title];
+    
+    if (mode == FHMapSearchShowModeSubway) {
+        [self.simpleNavBar setTitle:self.title withHouseTypeArray:YES];
+    }
+    
     self.simpleNavBar.type = (mode == FHMapSearchShowModeDrawLine ? FHMapSimpleNavbarTypeDrawLine : (FHMapSearchShowModeMap == mode ? FHMapSimpleNavbarTypeBack : FHMapSimpleNavbarTypeClose));
+    
 }
 
 -(void)showNavTopViews:(CGFloat)ratio animated:(BOOL)animated

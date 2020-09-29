@@ -118,7 +118,8 @@
                            @"groupId": @"group_id",
                            @"imOpenUrl":@"im_openurl",
                            @"associateInfo": @"associate_info",
-                           @"displayPrice": @"display_price"
+                           @"displayPrice": @"display_price",
+                           @"vrInfo": @"vr_info"
                            };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
         return dict[keyName]?:keyName;
@@ -171,14 +172,6 @@
 }
 @end
 
-@implementation FHDetailNewVRInfo
-
-+ (BOOL)propertyIsOptional:(NSString *)propertyName
-{
-    return YES;
-}
-
-@end
 
 @implementation FHDetailNewDataDisclaimerModel
 + (JSONKeyMapper*)keyMapper
@@ -387,7 +380,9 @@
                            @"isShowTopImageTab": @"is_show_top_image_tab",
                            @"imageAlbumAssociateInfo": @"image_album_associate_info",
                            @"realtorContent": @"realtor_content",
-                           @"buildingInfo": @"building_info"
+                           @"buildingInfo": @"building_info",
+                           @"albumInfo": @"album_info",
+                           @"courtTopImages":@"court_top_images"
                            };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
         return dict[keyName]?:keyName;

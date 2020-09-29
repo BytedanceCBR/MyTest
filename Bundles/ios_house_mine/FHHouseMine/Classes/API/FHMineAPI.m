@@ -217,5 +217,13 @@
         }
     }];
 }
-
++ (TTHttpTask *)requestLinkChatPageUrlWithParams:(NSDictionary *)params completion:(void (^)(NSError * _Nonnull, id _Nonnull))completion {
+    NSString *queryPath = @"/f100/api/link_chat_url";
+    NSString *url = QURL(queryPath);
+    return [[TTNetworkManager shareInstance] requestForBinaryWithURL:url params:params method:GET needCommonParams:YES callback:^(NSError *error, id obj) {
+        if(completion) {
+            completion(error, obj);
+        }
+    }];
+}
 @end
