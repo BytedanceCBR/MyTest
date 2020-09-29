@@ -304,7 +304,7 @@
              TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
              
              NSURL* url = [NSURL URLWithString:model.openUrl];
-             if(model.openUrl && [model.openUrl containsString:@"slocal://myFocus"] && [FHUtils getSettingEnableBooleanForKey:@"f_login_before_house_subscribe"] && ![TTAccountManager isLogin]){
+             if(model.openUrl && [model.openUrl containsString:@"slocal://myFocus"] && ![TTAccountManager isLogin]){
                  NSString *clickTrackDic = @{
                          @"click_type":@"login",
                          @"page_type":@"minetab"
