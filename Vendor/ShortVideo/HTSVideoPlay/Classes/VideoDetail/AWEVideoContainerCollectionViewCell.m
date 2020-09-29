@@ -7,7 +7,6 @@
 //
 
 #import "AWEVideoContainerCollectionViewCell.h"
-#import "AWEVideoDetailTracker.h"
 #import "TSVShortVideoOriginalData.h"
 #import "AWEVideoDetailScrollConfig.h"
 #import "UIViewAdditions.h"

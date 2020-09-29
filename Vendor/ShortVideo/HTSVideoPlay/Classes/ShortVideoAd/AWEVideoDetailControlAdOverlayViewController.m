@@ -9,7 +9,6 @@
 #import "AWEVideoDetailControlAdOverlayViewController.h"
 
 #import "AWEVideoDetailManager.h"
-#import "AWEVideoDetailTracker.h"
 #import "AWEVideoPlayTrackerBridge.h"
 #import "AWEVideoPlayTransitionBridge.h"
 #import "AWEVideoDetailScrollConfig.h"
@@ -817,13 +816,6 @@ CGFloat const userInfoHeight = 40.f;
     if (!self.model) {
         return;
     }
-    NSMutableDictionary *paramters = @{}.mutableCopy;
-    paramters[@"user_id"] = self.model.author.userID;
-    paramters[@"position"] = @"double_like";
-    [AWEVideoDetailTracker trackEvent:@"rt_like"
-                                model:self.model
-                      commonParameter:self.commonTrackingParameter
-                       extraParameter:paramters];
     
     [self digg];
 }
