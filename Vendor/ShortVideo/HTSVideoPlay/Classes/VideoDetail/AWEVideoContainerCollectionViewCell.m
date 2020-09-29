@@ -150,6 +150,7 @@
         }else{
             if ([TTDeviceHelper isIPhoneXDevice]) {
                 self.videoPlayView.top = self.tt_safeAreaInsets.top;
+                CGFloat height = CGRectGetHeight(frame) - self.tt_safeAreaInsets.top;
                 self.videoPlayView.height = ceil(CGRectGetWidth(frame) * 16 / 9);
                 if(videoAspectRatio >= (16.0 / 9.0)){
                     self.videoPlayView.contentMode = UIViewContentModeScaleAspectFill;
