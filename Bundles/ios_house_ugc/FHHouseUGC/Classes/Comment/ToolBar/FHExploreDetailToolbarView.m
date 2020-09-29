@@ -26,6 +26,7 @@
 #import "UIColor+Theme.h"
 #import "UIFont+House.h"
 #import "UIImage+FIconFont.h"
+#import "UIButton+FHUGCMultiDigg.h"
 
 @interface FHExploreDetailToolbarView ()
 
@@ -70,9 +71,8 @@
         TTAlphaThemedButton *digButton = [TTAlphaThemedButton buttonWithType:UIButtonTypeCustom];
         _digButton = digButton;
         _digButton.hitTestEdgeInsets = toolBarButtonHitTestInsets;
-        [_digButton setImage:ICON_FONT_IMG(24, @"\U0000e69c", [UIColor themeGray1]) forState:UIControlStateNormal];
-        [_digButton setImage:ICON_FONT_IMG(24, @"\U0000e6b1", [UIColor themeOrange4]) forState:UIControlStateSelected];
         [self addSubview:digButton];
+        [self.digButton enableMulitDiggEmojiAnimation];
         
         _separatorView = [[SSThemedView alloc] init];
         _separatorView.backgroundColorThemeKey = kColorLine7;

@@ -22,6 +22,8 @@
 #import "TTVFeedCellMoreActionManager.h"
 #import "TTVVideoDetailCollectService.h"
 #import "TTVFeedItem+TTVArticleProtocolSupport.h"
+#import "UIImage+FIconFont.h"
+#import "UIButton+FHUGCMultiDigg.h"
 
 @interface FHUGCToolView ()<TTVVideoDetailCollectServiceDelegate>
 
@@ -69,6 +71,7 @@
     
     self.diggButton = [self buttonWithFrame:CGRectMake(3 * self.bounds.size.width/4, 0, self.bounds.size.width/4, self.bounds.size.height) title:@"赞" imageName:@"fh_ugc_digg_normal" action:@selector(diggBtnClicked)];
     [self addSubview:_diggButton];
+    [self.diggButton enableMulitDiggEmojiAnimation];
     
     self.bottomLine = [[UIView alloc] initWithFrame:CGRectMake(15, self.bounds.size.height - 0.5, self.bounds.size.width - 30, 0.5)];
     _bottomLine.backgroundColor = [UIColor themeGray7];
@@ -185,14 +188,7 @@
     }else{
         [self.diggButton setTitle:[TTBusinessManager formatCommentCount: count] forState:UIControlStateNormal];
     }
-    if([userDigg boolValue]){
-        [self.diggButton setImage:[UIImage imageNamed:@"fh_ugc_digg_selected"] forState:UIControlStateNormal];
-        [self.diggButton setTitleColor:[UIColor themeOrange4] forState:UIControlStateNormal];
-        
-    }else{
-        [self.diggButton setImage:[UIImage imageNamed:@"fh_ugc_digg_normal"] forState:UIControlStateNormal];
-        [self.diggButton setTitleColor:[UIColor themeGray1] forState:UIControlStateNormal];
-    }
+    self.diggButton.selected = [userDigg boolValue];
     //补充逻辑，如果用户状态为已点赞，但是点赞数为零，这时候默认点赞数设为1
     if([userDigg boolValue] && count == 0){
         [self.diggButton setTitle:@"1" forState:UIControlStateNormal];

@@ -13,7 +13,6 @@
 #import "WDAnswerEntity.h"
 #import "TTBusinessManager+StringUtils.h"
 #import "WDAnswerService.h"
-#import <TTUIWidget/TTBubbleView.h>
 #import <TTBaseLib/NSDictionary+TTAdditions.h>
 #import <TTBaseLib/UIViewAdditions.h>
 #import <TTBaseLib/TTDeviceHelper.h>
@@ -24,17 +23,14 @@
 #import <KVOController/NSObject+FBKVOController.h>
 #import "UIImage+FIconFont.h"
 #import "UIColor+Theme.h"
+#import <UIFont+House.h>
 #import "TTAccountManager.h"
-
-//#import "TTUGCEmojiTextAttachment.h"
+#import "FHCommonDefines.h"
+#import <ReactiveObjC/ReactiveObjC.h>
+#import "UIButton+FHUGCMultiDigg.h"
+#import "UIDevice+BTDAdditions.h"
 
 static NSString * const kWDHasTipSupportsEmojiInputDefaultKey = @"WDHasTipSupportsEmojiInputDefaultKey";
-
-@interface WDBottomToolView ()
-
-@property (nonatomic, strong) TTBubbleView *bubbleView;
-
-@end
 
 @implementation WDBottomToolView
 
@@ -45,85 +41,75 @@ static NSString * const kWDHasTipSupportsEmojiInputDefaultKey = @"WDHasTipSuppor
 - (instancetype)initWithFrame:(CGRect)frame {
     self = [super initWithFrame:frame];
     if (self) {
-        BOOL _isIPad = [TTDeviceHelper isPadDevice];
-        TTAlphaThemedButton *writeButton = [TTAlphaThemedButton buttonWithType:UIButtonTypeCustom];
-        [writeButton setTitle:@"写评论..." forState:UIControlStateNormal];
-        writeButton.height = [TTDeviceHelper isPadDevice] ? [TTDeviceUIUtils tt_newPadding:36] : [TTDeviceUIUtils tt_newPadding:32];
-        writeButton.titleLabel.font = [UIFont systemFontOfSize:(_isIPad ? 18 : 13)];
-        writeButton.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;
-        writeButton.imageEdgeInsets = UIEdgeInsetsMake(0, 16.f, 0, 0);
-        writeButton.titleEdgeInsets = UIEdgeInsetsMake(0, _isIPad ? 25 : 16, 0, 0);
-        writeButton.titleLabel.textAlignment = NSTextAlignmentLeft;
-        [writeButton addTarget:self action:@selector(writeButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
-        [self addSubview:writeButton];
-        _writeButton = writeButton;
-        _writeButton.borderColors = nil;
-        _writeButton.borderColorThemeKey = kColorLine1;
-        _writeButton.layer.borderWidth = [TTDeviceHelper ssOnePixel];
-        _writeButton.titleColorThemeKey = @"grey3";
-        _writeButton.layer.cornerRadius = _writeButton.height / 2.f;
-        _writeButton.backgroundColorThemeKey = @"grey7";
-        _writeButton.layer.masksToBounds = YES;
-        
-//        [_writeButton setImageName:@"write_new"];
-        _writeButton.tintColor = [UIColor tt_themedColorForKey:kColorText1];
-        
-        UIEdgeInsets toolBarButtonHitTestInsets = UIEdgeInsetsMake(-8.f, -12.f, -15.f, -12.f);
-        
-        TTAlphaThemedButton *emojiButton = [TTAlphaThemedButton buttonWithType:UIButtonTypeCustom];
-        [self addSubview:emojiButton];
-        _emojiButton = emojiButton;
-        [_emojiButton addTarget:self action:@selector(emojiButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
-        _emojiButton.hitTestEdgeInsets = toolBarButtonHitTestInsets;
-        _emojiButton.imageName = @"input_emoji";
-        if ([TTDeviceHelper isPadDevice]) { // iPad 暂时不支持
-            [self setBanEmojiInput:YES];
-        }
-
-        TTAlphaThemedButton *commentButton = [TTAlphaThemedButton buttonWithType:UIButtonTypeCustom];
-        [self addSubview:commentButton];
-        _commentButton = commentButton;
-        [_commentButton addTarget:self action:@selector(commentButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
-        _commentButton.hitTestEdgeInsets = toolBarButtonHitTestInsets;
-        [_commentButton setImage:ICON_FONT_IMG(24, @"\U0000e699", [UIColor themeGray1]) forState:UIControlStateNormal];
-
-        self.badgeLabel = [[SSThemedLabel alloc] init];
-        self.badgeLabel.backgroundColorThemeKey = kColorBackground7;
-        self.badgeLabel.textColorThemeKey = kColorText8;
-        self.badgeLabel.font = [UIFont systemFontOfSize:8];
-        self.badgeLabel.layer.cornerRadius = 5;
-        self.badgeLabel.layer.masksToBounds = YES;
-        self.badgeLabel.textAlignment = NSTextAlignmentCenter;
-        [_commentButton addSubview:self.badgeLabel];
-        
-        TTAlphaThemedButton *digButton = [TTAlphaThemedButton buttonWithType:UIButtonTypeCustom];
-        _digButton = digButton;
-        _digButton.hitTestEdgeInsets = toolBarButtonHitTestInsets;
-        [_digButton setImage:ICON_FONT_IMG(24, @"\U0000e69c", [UIColor themeGray1]) forState:UIControlStateNormal];
-        [_digButton setImage:ICON_FONT_IMG(24, @"\U0000e6b1", [UIColor themeOrange4]) forState:UIControlStateSelected];
-        [_digButton addTarget:self action:@selector(diggButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
-        [self addSubview:digButton];
-        
-        SSThemedButton *nextButton = [SSThemedButton buttonWithType:UIButtonTypeCustom];
-        [self addSubview:nextButton];
-        _nextButton = nextButton;
-        UIImage *backArrowImage = ICON_FONT_IMG(24, @"\U0000e68a", [UIColor themeGray1]);
-        UIImage *nextArrowImage = [UIImage imageWithCGImage:backArrowImage.CGImage scale:backArrowImage.scale orientation:UIImageOrientationDown];
-        [_nextButton setImage:nextArrowImage forState:UIControlStateNormal];
-        _nextButton.hitTestEdgeInsets = toolBarButtonHitTestInsets;
-        [_nextButton addTarget:self action:@selector(nextButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
-        
-        _separatorView = [[SSThemedView alloc] init];
-        _separatorView.backgroundColorThemeKey = kColorLine7;
-        _separatorView.frame = CGRectMake(0, 0, self.width, [TTDeviceHelper ssOnePixel]);
-        _separatorView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
-        [self addSubview:_separatorView];
-        
-        self.backgroundColorThemeKey = kColorBackground4;
-
+        [self initView];
+        [self initConstraints];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateWriteTitle:) name:@"TTCOMMENT_UPDATE_WRITETITLE" object:nil];
     }
     return self;
+}
+
+-(void)initView {
+    UIEdgeInsets toolBarButtonHitTestInsets = UIEdgeInsetsMake(-10, -10, -10, -10);
+    
+    _writeButton = [TTAlphaThemedButton buttonWithType:UIButtonTypeCustom];
+    [_writeButton setTitle:@"写评论..." forState:UIControlStateNormal];
+    _writeButton.titleLabel.font = [UIFont themeFontLight:14];
+    _writeButton.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;
+    _writeButton.imageEdgeInsets = UIEdgeInsetsMake(0, 16, 0, 0);
+    _writeButton.titleEdgeInsets = UIEdgeInsetsMake(0, 16, 0, 0);
+    _writeButton.titleLabel.textAlignment = NSTextAlignmentLeft;
+    _writeButton.borderColors = nil;
+    _writeButton.borderColorThemeKey = kColorLine1;
+    _writeButton.layer.borderWidth = 0.5;
+    _writeButton.titleColorThemeKey = @"grey3";
+    _writeButton.layer.cornerRadius = 16;
+    _writeButton.backgroundColorThemeKey = @"grey7";
+    _writeButton.layer.masksToBounds = YES;
+    _writeButton.tintColor = [UIColor tt_themedColorForKey:kColorText1];
+    [_writeButton addTarget:self action:@selector(writeButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
+    [self addSubview:_writeButton];
+
+    _commentButton = [TTAlphaThemedButton buttonWithType:UIButtonTypeCustom];
+    _commentButton.hitTestEdgeInsets = toolBarButtonHitTestInsets;
+    [_commentButton setImage:ICON_FONT_IMG(20, @"\U0000e699", [UIColor themeGray1]) forState:UIControlStateNormal];
+    [_commentButton addTarget:self action:@selector(commentButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
+    [self addSubview:_commentButton];
+    
+    _badgeLabel = [[SSThemedLabel alloc] init];
+    _badgeLabel.backgroundColorThemeKey = kColorBackground7;
+    _badgeLabel.textColorThemeKey = kColorText8;
+    _badgeLabel.font = [UIFont systemFontOfSize:8];
+    _badgeLabel.layer.cornerRadius = 5;
+    _badgeLabel.layer.masksToBounds = YES;
+    _badgeLabel.textAlignment = NSTextAlignmentCenter;
+    [self.commentButton addSubview:_badgeLabel];
+    
+    _digButton = [TTAlphaThemedButton buttonWithType:UIButtonTypeCustom];
+    _digButton.hitTestEdgeInsets = toolBarButtonHitTestInsets;
+    [_digButton addTarget:self action:@selector(diggButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
+    [self addSubview:_digButton];
+    [_digButton enableMulitDiggEmojiAnimation];
+    
+    _collectButton = [TTAlphaThemedButton buttonWithType:UIButtonTypeCustom];
+    _collectButton.hitTestEdgeInsets = toolBarButtonHitTestInsets;
+    [_collectButton setImage:ICON_FONT_IMG(24, @"\U0000e696", [UIColor themeGray1]) forState:UIControlStateNormal];
+    [_collectButton setImage:ICON_FONT_IMG(24, @"\U0000e6b2", [UIColor themeOrange4]) forState:UIControlStateSelected];
+    [_collectButton addTarget:self action:@selector(collectButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
+    [self addSubview:_collectButton];
+    
+    _shareButton = [TTAlphaThemedButton buttonWithType:UIButtonTypeCustom];
+    _shareButton.hitTestEdgeInsets = toolBarButtonHitTestInsets;
+    [_shareButton setImage:ICON_FONT_IMG(24, @"\U0000e692", [UIColor themeGray1])forState:UIControlStateNormal];
+    [_shareButton addTarget:self action:@selector(shareButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
+    [self addSubview:_shareButton];
+    
+    _separatorView = [[SSThemedView alloc] init];
+    _separatorView.backgroundColorThemeKey = kColorLine7;
+    _separatorView.frame = CGRectMake(0, 0, self.width, [TTDeviceHelper ssOnePixel]);
+    _separatorView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
+    [self addSubview:_separatorView];
+    
+    self.backgroundColorThemeKey = kColorBackground4;
 }
 
 - (void)setDetailModel:(WDDetailModel *)detailModel
@@ -153,29 +139,10 @@ static NSString * const kWDHasTipSupportsEmojiInputDefaultKey = @"WDHasTipSuppor
                                                                      userInfo:userInfo];
         
     }];
-    
+    self.collectButton.selected = self.detailModel.answerEntity.userRepined;
+    RAC(self.collectButton,selected) = RACObserve(self.detailModel.answerEntity, userRepined);
     self.digButton.selected = self.detailModel.answerEntity.isDigg;
-    [self.KVOController observe:self.detailModel.answerEntity keyPath:NSStringFromSelector(@selector(isDigg)) options:NSKeyValueObservingOptionNew block:^(id  _Nullable observer, id  _Nonnull object, NSDictionary<NSString *,id> * _Nonnull change) {
-        BOOL isDigg = [change tt_boolValueForKey:NSKeyValueChangeNewKey];
-        WDBottomToolView *bottomToolView = observer;
-        bottomToolView.digButton.selected = isDigg;
-    }];
-    
-    [self updateNextButtonWithHasNext:self.detailModel.hasNext];
-    [self.KVOController observe:self.detailModel keyPath:NSStringFromSelector(@selector(hasNext)) options:NSKeyValueObservingOptionNew block:^(id  _Nullable observer, id  _Nonnull object, NSDictionary<NSString *,id> * _Nonnull change) {
-        WDBottomToolView *bottomToolView = observer;
-        BOOL hasNext = [change tt_boolValueForKey:NSKeyValueChangeNewKey];
-        [bottomToolView updateNextButtonWithHasNext:hasNext];
-    }];
-}
-
-- (void)updateNextButtonWithHasNext:(BOOL)hasNext
-{
-    if (hasNext) {
-        self.nextButton.alpha = 1.0f;
-    } else {
-        self.nextButton.alpha = 0.5f;
-    }
+    RAC(self.digButton,selected) = RACObserve(self.detailModel.answerEntity, isDigg);
 }
 
 - (void)updateWriteTitle:(NSNotification *)notification {
@@ -188,35 +155,35 @@ static NSString * const kWDHasTipSupportsEmojiInputDefaultKey = @"WDHasTipSuppor
     }
 }
 
-- (void)layoutSubviews
-{
-    [super layoutSubviews];
-    CGFloat leftInset = self.tt_safeAreaInsets.left;
-    CGFloat rightInset = self.tt_safeAreaInsets.right;
-    CGFloat hInset = leftInset + rightInset;//水平缩进
-    CGFloat bottomSafeInset = self.tt_safeAreaInsets.bottom;
-    CGFloat writeButtonHeight = [TTDeviceHelper isPadDevice] ? 36 : 32;
-    CGFloat writeTopMargin = ((NSInteger)self.height - writeButtonHeight - bottomSafeInset) / 2;
-    CGFloat iconTopMargin = ((NSInteger)self.height - 24 - bottomSafeInset) / 2;
-    CGRect writeFrame = CGRectZero, emojiFrame = CGRectZero, commentFrame = CGRectZero, nextFrame = CGRectZero, digFrame = CGRectZero;
-    CGFloat width = self.width;
-    CGFloat margin = [TTDeviceHelper is736Screen] ? 10 : ([TTDeviceHelper is667Screen] || [TTDeviceHelper isIPhoneXDevice]?5:0);
-    writeFrame = CGRectMake(15 + leftInset, writeTopMargin, width - (169 + margin * 3) - hInset, writeButtonHeight);
-    emojiFrame = CGRectMake(CGRectGetMaxX(writeFrame) - 22 - 6, CGRectGetMinY(writeFrame) + 5, 22, 22);
-    commentFrame = CGRectMake(CGRectGetMaxX(writeFrame) + 22 + margin, iconTopMargin, 24, 24);
-    nextFrame = CGRectMake(width - 38 - rightInset, iconTopMargin, 24, 24);
-    digFrame = CGRectMake(CGRectGetMinX(nextFrame) - 46 - margin, iconTopMargin, 24, 24);
-    
-    _writeButton.frame = writeFrame;
-    _emojiButton.frame = emojiFrame;
-    _commentButton.frame = commentFrame;
-    _digButton.frame = digFrame;
-    _nextButton.frame = nextFrame;
-    
-    BOOL _isIPad = [TTDeviceHelper isPadDevice];
-//    _writeButton.titleEdgeInsets = UIEdgeInsetsMake(0, _isIPad ? 25 : 8, 0, _emojiButton.width + 4);
-    
-    [self relayoutItems];
+- (void)initConstraints {
+    NSInteger buttonNumber = 4;
+    CGFloat writeButtonWidth = SCREEN_WIDTH - 44 * buttonNumber - 8 * (buttonNumber + 4);
+    [self.writeButton mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.equalTo(self).offset(16);
+        make.top.equalTo(self).offset(6);
+        make.width.mas_equalTo(writeButtonWidth);
+        make.height.mas_equalTo(32);
+    }];
+    [self.commentButton mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.width.height.mas_equalTo(24);
+        make.left.equalTo(self.writeButton.mas_right).offset(18);
+        make.top.equalTo(self).offset(10);
+    }];
+    [self.collectButton mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.width.height.mas_equalTo(24);
+        make.left.equalTo(self.commentButton.mas_right).offset(28);
+        make.top.equalTo(self).offset(10);
+    }];
+    [self.digButton mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.width.height.mas_equalTo(24);
+        make.left.equalTo(self.collectButton.mas_right).offset(28);
+        make.top.equalTo(self).offset(10);
+    }];
+    [self.shareButton mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.width.height.mas_equalTo(24);
+        make.left.equalTo(self.digButton.mas_right).offset(28);
+        make.top.equalTo(self).offset(10);
+    }];
 }
 
 - (void)safeAreaInsetsDidChange
@@ -242,79 +209,6 @@ static NSString * const kWDHasTipSupportsEmojiInputDefaultKey = @"WDHasTipSuppor
     [super setFrame:frame];
 }
 
-/*
- *  ipad上根据屏幕宽度重刷item位置
- */
-- (void)relayoutItems
-{
-    if (![TTDeviceHelper isPadDevice]) {
-        return;
-    }
-    /*
-     *  ipad下toolbarItem布局规则: l表示_writeButton宽度，m0_m1_m2表示四个item的三个间距；
-     *  整个toolbar两边边距按基本规则算出；
-     *  屏幕最窄时，l取最小宽度120, m0_m1_m2压缩；
-     *  (1)屏幕逐渐变宽，m0_m1_m2持续拉伸；
-     *  (2)m0_m1_m2到达44_44_40后不再拉伸，l开始拉伸；
-     *  (3)l拉伸至最大宽度465后不再拉伸，转而拉伸m0_m1_m2；
-     *  (4)m0_m1_m2再次拉伸至最大值110_110_106后不再拉伸，转而拉伸l，直至无限大；
-     *
-     *  特殊情况：图集详情界面会多出个下载按钮，
-     *          与上述最后一个 Button 的间距为 44(对应上述情况(2)) 和 110(对应上述情况(4))，
-     *          间距变化计算规则同上述。
-     */
-    
-    
-    static CGFloat writeMinLen = 120.f;
-    static CGFloat writeMaxLen = 465.f;
-    static CGFloat firstMarginAspect = 1.1f;
-    
-    CGFloat mSumMinLen = 44.f + 44.f + 40.f;
-    CGFloat mSumMaxLen = 110.f + 110.f + 106.f;
-    CGFloat marginAspects = 1.1f + 1.1f + 1.0f;
-    
-    CGFloat baseItemMargin;
-    CGFloat edgeMargin = [TTUIResponderHelper paddingForViewWidth:self.width];
-  
-    CGFloat fixWidthOfRightItems = _commentButton.width + _nextButton.width + _digButton.width;
-    CGFloat checkWidth = self.width - edgeMargin * 2 - fixWidthOfRightItems;
-    _writeButton.left = edgeMargin;
-    if (checkWidth < writeMinLen + mSumMinLen) {
-        //case(1)
-        _writeButton.width = writeMinLen;
-        baseItemMargin = (checkWidth - _writeButton.width)/marginAspects;
-        _commentButton.left = _writeButton.right + baseItemMargin * firstMarginAspect;
-        _emojiButton.right = _commentButton.right - 22 - 6;
-        _digButton.left = _commentButton.right + baseItemMargin * firstMarginAspect;
-        _nextButton.left = _digButton.right + baseItemMargin;
-    }
-    else if (checkWidth < writeMaxLen + mSumMinLen) {
-        //case(2)
-        _writeButton.width = checkWidth - mSumMinLen;
-        _emojiButton.right = _commentButton.right - 22 - 6;
-        _commentButton.left = _writeButton.right + 44.f;
-        _digButton.left = _commentButton.right + 44.f;
-        _nextButton.left = _digButton.right + 40.f;
-    }
-    else if (checkWidth < writeMaxLen + mSumMaxLen) {
-        //case(3)
-        _writeButton.width = writeMaxLen;
-        _emojiButton.right = _commentButton.right - 22 - 6;
-        baseItemMargin = (checkWidth - _writeButton.width)/marginAspects;
-        _commentButton.left = _writeButton.right + baseItemMargin * firstMarginAspect;
-        _digButton.left = _commentButton.right + baseItemMargin * firstMarginAspect;
-        _nextButton.left = _digButton.right + baseItemMargin;
-    }
-    else {
-        //case(4)
-        _writeButton.width = checkWidth - mSumMaxLen;
-        _emojiButton.right = _commentButton.right - 22 - 6;
-        _commentButton.left = _writeButton.right + 110.f;
-        _digButton.left = _commentButton.right + 110.f;
-        _nextButton.left = _digButton.right + 106.f;
-    }
-}
-
 - (void)setCommentBadgeValue:(NSString *)commentBadgeValue {
     int64_t value = [commentBadgeValue longLongValue];
     commentBadgeValue = [TTBusinessManager formatCommentCount:value];
@@ -335,32 +229,6 @@ static NSString * const kWDHasTipSupportsEmojiInputDefaultKey = @"WDHasTipSuppor
     }
 }
 
-- (void)setBanEmojiInput:(BOOL)banEmojiInput {
-    if ([TTDeviceHelper isPadDevice]) { // iPad 暂时不支持
-        banEmojiInput = YES;
-    }
-    
-    _banEmojiInput = banEmojiInput;
-    
-    self.emojiButton.hidden = banEmojiInput;
-    self.emojiButton.enabled = !banEmojiInput;
-    
-    if (banEmojiInput && self.bubbleView && self.bubbleView.isShowing) {
-        [self.bubbleView hideTipWithAnimation:NO forceHide:YES];
-    }
-}
-
-- (UIView *)hitTest:(CGPoint)point withEvent:(UIEvent *)event
-{
-    if (self.bubbleView && self.bubbleView.isShowing) {
-        if (CGRectContainsPoint(self.bubbleView.frame, point)) {
-            return self.bubbleView;
-        }
-    }
-    
-    return [super hitTest:point withEvent:event];
-}
-
 #pragma mark - Action & Reponse
 
 - (void)writeButtonClicked:(SSThemedButton *)writeButton
@@ -370,15 +238,9 @@ static NSString * const kWDHasTipSupportsEmojiInputDefaultKey = @"WDHasTipSuppor
     }
 }
 
-- (void)emojiButtonClicked:(SSThemedButton *)writeButton
-{
-    if ([self.delegate respondsToSelector:@selector(bottomView:emojiButtonClicked:)]) {
-        [self.delegate bottomView:self emojiButtonClicked:writeButton];
-    }
-}
-
 - (void)commentButtonClicked:(SSThemedButton *)commentButton
 {
+    [commentButton generateImpactFeedback];
     if ([self.delegate respondsToSelector:@selector(bottomView:commentButtonClicked:)]) {
         [self.delegate bottomView:self commentButtonClicked:commentButton];
     }
@@ -393,12 +255,13 @@ static NSString * const kWDHasTipSupportsEmojiInputDefaultKey = @"WDHasTipSuppor
         // 登录成功之后不自己Pop，先进行页面跳转逻辑，再pop
         [params setObject:@(YES) forKey:@"need_pop_vc"];
         params[@"from_ugc"] = @(YES);
-        __weak typeof(self) wSelf = self;
+        WeakSelf;
         [TTAccountLoginManager showAlertFLoginVCWithParams:params completeBlock:^(TTAccountAlertCompletionEventType type, NSString * _Nullable phoneNum) {
+            StrongSelf;
             if (type == TTAccountAlertCompletionEventTypeDone) {
                 // 登录成功
                 if ([TTAccountManager isLogin]) {
-                    [wSelf diggButtonClicked:diggButton];
+                    [self diggButtonClicked:diggButton];
                 }
             }
         }];
@@ -410,7 +273,6 @@ static NSString * const kWDHasTipSupportsEmojiInputDefaultKey = @"WDHasTipSuppor
         [TTIndicatorView showWithIndicatorStyle:TTIndicatorViewStyleImage indicatorText:NSLocalizedString(@"您已经反对过", nil) indicatorImage:nil autoDismiss:YES dismissHandler:nil];
     } else {
         if (![self.detailModel.answerEntity isDigg]) {
-            [self diggAnimationWith:diggButton];
             self.detailModel.answerEntity.diggCount = @([self.detailModel.answerEntity.diggCount longLongValue] + 1);
             self.detailModel.answerEntity.isDigg = YES;
             [WDAnswerService digWithAnswerID:self.detailModel.answerEntity.ansid
@@ -435,95 +297,32 @@ static NSString * const kWDHasTipSupportsEmojiInputDefaultKey = @"WDHasTipSuppor
     }
 }
 
-- (void)nextButtonClicked:(SSThemedButton *)nextButton
+- (void)shareButtonClicked:(SSThemedButton *)shareButton
 {
-    if ([self.delegate respondsToSelector:@selector(bottomView:nextButtonClicked:)]) {
-        [self.delegate bottomView:self nextButtonClicked:nextButton];
+    if ([self.delegate respondsToSelector:@selector(bottomView:shareButtonClicked:)]) {
+        [self.delegate bottomView:self shareButtonClicked:shareButton];
     }
 }
 
-#pragma mark - Animation
-
-- (void)diggAnimationWith:(SSThemedButton *)button
+- (void)collectButtonClicked:(SSThemedButton *)collectButton
 {
-    [SSMotionRender motionInView:button.imageView byType:SSMotionTypeZoomInAndDisappear image:[UIImage themedImageNamed:@"add_all_dynamic.png"] offsetPoint:CGPointMake(10.f, 2.0f)];
-    
-    button.imageView.transform = CGAffineTransformMakeScale(1.f, 1.f);
-    button.imageView.contentMode = UIViewContentModeCenter;
-    [UIView animateWithDuration:0.1f delay:0.f options:UIViewAnimationOptionCurveEaseOut animations:^{
-        button.imageView.transform = CGAffineTransformMakeScale(0.6f, 0.6f);
-        button.alpha = 0;
-    } completion:^(BOOL finished) {
-        button.selected = YES;
-        button.alpha = 0;
-        [UIView animateWithDuration:0.2f delay:0.f options:UIViewAnimationOptionCurveEaseIn animations:^{
-            button.imageView.transform = CGAffineTransformMakeScale(1.f,1.f);
-            button.alpha = 1;
-        } completion:^(BOOL finished) {
+    [collectButton generateImpactFeedback];
+    collectButton.imageView.contentMode = UIViewContentModeCenter;
+    collectButton.imageView.transform = CGAffineTransformMakeScale(1, 1);
+    collectButton.alpha = 1;
+    [UIView animateWithDuration:0.1 delay:0.f options:UIViewAnimationOptionCurveEaseOut animations:^{
+        collectButton.imageView.transform = CGAffineTransformMakeScale(0.6, 0.6);
+        collectButton.alpha = 0;
+    } completion:^(BOOL finished){
+        if ([self.delegate respondsToSelector:@selector(bottomView:collectButtonClicked:)]) {
+            [self.delegate bottomView:self collectButtonClicked:collectButton];
+        }
+        [UIView animateWithDuration:0.2 delay:0 options:UIViewAnimationOptionCurveEaseIn animations:^{
+            collectButton.imageView.transform = CGAffineTransformMakeScale(1, 1);
+            collectButton.alpha = 1.f;
+        } completion:^(BOOL finished){
         }];
     }];
-}
-
-#pragma mark - TTBubbleView supportsEmojiInput
-
-- (void)showSupportsEmojiInputBubbleViewIfNeeded {
-    if (!self.detailModel.hasNext) {
-        return;
-    }
-    
-    // 避免重复展现
-    if (self.bubbleView && self.bubbleView.isShowing) {
-        return;
-    }
-
-    // 展现过一次
-    BOOL hasSupportsEmojiInputTip = [[NSUserDefaults standardUserDefaults] boolForKey:kWDHasTipSupportsEmojiInputDefaultKey];
-    if (hasSupportsEmojiInputTip) {
-        return;
-    }
-    
-    // iPad 不展现
-    if ([TTDeviceHelper isPadDevice]) {
-        return;
-    }
-    
-    TTBubbleView *bubbleView = [[TTBubbleView alloc] initWithAnchorPoint:CGPointMake(self.nextButton.origin.x + 11, 0.0f) imageName:@"detail_close_icon" tipText:@"查看下一个回答" attributedText:nil arrowDirection:TTBubbleViewArrowDown lineHeight:0 viewType:1];
-    [self addSubview:bubbleView];
-    
-    WeakSelf;
-    [bubbleView showTipWithAnimation:YES
-                       automaticHide:YES
-             animationCompleteHandle:nil
-                      autoHideHandle:^{
-                          StrongSelf;
-                          self.bubbleView = nil;
-                      } tapHandle:^{
-                          StrongSelf;
-                          [self dismissBubbleView:nil];
-                      } closeHandle:^{
-                          StrongSelf;
-                          [self dismissBubbleView:nil];
-                      }];
-    
-    self.bubbleView = bubbleView;
-    
-    [[NSUserDefaults standardUserDefaults] setBool:YES forKey:kWDHasTipSupportsEmojiInputDefaultKey];
-    [[NSUserDefaults standardUserDefaults] synchronize];
-}
-
-- (void)hideSupportsEmojiInputBubbleViewIfNeeded {
-    [self dismissBubbleView:nil];
-}
-
-#pragma mark - target-action
-- (void)dismissBubbleView:(id)sender {
-    if (self.bubbleView && self.bubbleView.isShowing) {
-        [self.bubbleView hideTipWithAnimation:NO forceHide:YES];
-    }
-}
-
-- (void)shareButtonOnClicked:(id)sender
-{
 }
 
 - (void)themeChanged:(NSNotification *)notification
@@ -531,20 +330,8 @@ static NSString * const kWDHasTipSupportsEmojiInputDefaultKey = @"WDHasTipSuppor
     _writeButton.tintColor = [UIColor tt_themedColorForKey:kColorText1];
 }
 
-
-- (NSString *)_shareIconName
-{
-    return @"tab_share";
-}
-
-- (NSString *)_photoShareIconName
-{
-    return @"icon_details_share";
-}
-
 @end
 
 CGFloat WDDetailGetToolbarHeight(void) {
-    return ([TTDeviceHelper isPadDevice] ? 50 : 44) + [TTDeviceHelper ssOnePixel];
+    return 44 + [UIDevice btd_onePixel];
 }
-

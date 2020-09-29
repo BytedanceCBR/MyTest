@@ -2287,9 +2287,6 @@ static const CGFloat kFloatingViewOriginY = 230;
 - (void)clickSubmitComment {
     NSInteger rank = [self.model.tracerDic btd_integerValueForKey:@"rank" default:0];
      [FHShortVideoTracerUtil clickCommentSubmitWithModel:self.model eventIndex:rank];
-//    NSMutableDictionary *tracerDict = self.tracerDict.mutableCopy;
-//    tracerDict[@"click_position"] = @"submit_comment";
-//    [FHUserTracker writeEvent:@"click_submit_comment" params:tracerDict];
 }
 
 #pragma mark - TTWriteCommentViewDelegate

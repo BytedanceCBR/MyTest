@@ -72,6 +72,15 @@ NS_ASSUME_NONNULL_BEGIN
 +(TTHttpTask *)recommendErshouHouseList:(NSString *_Nullable)query params:(NSDictionary *_Nullable)param offset:(NSInteger)offset searchId:(NSString *_Nullable)searchId sugParam:(NSString *_Nullable)sugParam class:(Class)cls completion:(void(^_Nullable)(id<FHBaseModelProtocol> _Nullable model , NSError * _Nullable error))completion;
 
 /*
+ *  新房猜你想找列表请求
+ *  @param: query 筛选等请求
+ *  @param: param 其他请求参数
+ *  @param: offset 偏移
+ *  @param: searchId 请求id
+ */
++ (TTHttpTask *)recommendNewHouseList:(NSString *_Nullable)query params:(NSDictionary *_Nullable)param offset:(NSInteger)offset searchId:(NSString *_Nullable)searchId class:(Class)cls completion:(void(^_Nullable)(id<FHBaseModelProtocol> _Nullable model , NSError * _Nullable error))completion;
+
+/*
  *  新房列表请求
  *  @param: query 筛选等请求
  *  @param: param 其他请求参数

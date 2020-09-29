@@ -14,7 +14,7 @@
 "aboutUs"               = "FHAboutUsViewController";
 "old_house_detail"      = "FHHouseDetailViewController";
 "neighborhood_detail"   = "FHHouseDetailViewController";
-"new_house_detail"      = "FHHouseDetailViewController";
+"new_house_detail"      = "FHNewHouseDetailViewController";
 "rent_detail"           = "FHHouseDetailViewController";
 "house_search"          = "FHSuggestionListViewController";
 "sug_subscribe_list"    = "FHSugSubscribeListViewController";
@@ -248,3 +248,6 @@
 
 //小视频页面
 "small_video_detail" = "FHUGCShortVideoDetailController";
+
+// linkChat客服页面
+"linkchat_customer_service" = "FHCustomerServicePage";

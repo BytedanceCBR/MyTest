@@ -39,6 +39,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong , nullable) FHSaleStatusModel *saleStatus ;
 @property (nonatomic, copy , nullable) NSString *searchId;
 @property (nonatomic, assign) NSInteger index;
+@property (nonatomic, strong, nullable) FHDetailHouseVRDataModel *vrInfo;
 @end
 
 @interface FHFloorPanDetailInfoModelPriceConsultModel : JSONModel
@@ -121,6 +122,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 /// 1.0.0 新增所属楼盘和项目地址
 @property (nonatomic, strong , nullable) FHFloorPanDetailInfoModelBaseExtraModel *baseExtra;
+
+@property (nonatomic, strong , nullable) FHHouseDetailMediaInfo *albumInfo;
 @end
 
 @interface FHDetailFloorPanDetailInfoModel : JSONModel 

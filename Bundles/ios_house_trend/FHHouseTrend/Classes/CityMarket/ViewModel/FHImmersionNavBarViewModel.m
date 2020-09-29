@@ -8,6 +8,7 @@
 #import "FHImmersionNavBarViewModel.h"
 #import "UIColor+Theme.h"
 #import "UIFont+House.h"
+#import <FHHouseBase/UIImage+FIconFont.h>
 @interface FHImmersionNavBarViewModel ()
 {
     CGFloat _throttle;
@@ -51,23 +52,23 @@
     if (!_isHasData) {
         theAlpha = 1;
         self.titleColor = [UIColor blackColor];
-        self.backButtonImage = [UIImage imageNamed:@"icon-return"];
+        self.backButtonImage = FHBackBlackImage;
         self.statusBarStyle = UIStatusBarStyleDefault;
     } else {
         if (offset == 0) {
             theAlpha = 0;
             self.titleColor = [UIColor whiteColor];
-            self.backButtonImage = [UIImage imageNamed:@"icon-return-white"];
+            self.backButtonImage = FHBackWhiteImage;
             self.statusBarStyle = UIStatusBarStyleLightContent;
         } else if (offset > _throttle) {
             theAlpha = 1;
             self.titleColor = [UIColor blackColor];
-            self.backButtonImage = [UIImage imageNamed:@"icon-return"];
+            self.backButtonImage = FHBackBlackImage;
             self.statusBarStyle = UIStatusBarStyleDefault;
         } else if (_throttle - offset >= 0) {
             theAlpha = offset / _throttle;
             self.titleColor = [UIColor blackColor];
-            self.backButtonImage = [UIImage imageNamed:@"icon-return"];
+            self.backButtonImage = FHBackBlackImage;
             self.statusBarStyle = UIStatusBarStyleLightContent;
         }
     }

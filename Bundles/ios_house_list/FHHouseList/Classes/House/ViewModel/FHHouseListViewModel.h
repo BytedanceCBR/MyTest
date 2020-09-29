@@ -24,7 +24,6 @@ NS_ASSUME_NONNULL_BEGIN
 @class FHHouseListCommuteTipView;
 @class FHFakeInputNavbar;
 @interface FHHouseListViewModel : FHBaseHouseListViewModel <FHHouseSuggestionDelegate>
-
 @property (nonatomic , copy) NSString *houseListOpenUrl;
 @property (nonatomic , copy) NSString *searchPageOpenUrl;
 @property (nonatomic , assign) FHHouseType houseType;
@@ -46,6 +45,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic , strong) FHHouseListCommuteTipView *commuteTipView;
 
 #pragma mark - log相关
+- (void)updateTracerDict:(NSDictionary *)tracerDict;
 -(void)addStayCategoryLog:(NSTimeInterval)stayTime;
 // findTab过来的houseSearch需要单独处理下埋点数据
 -(void)updateHouseSearchDict:(NSDictionary *)houseSearchDic;

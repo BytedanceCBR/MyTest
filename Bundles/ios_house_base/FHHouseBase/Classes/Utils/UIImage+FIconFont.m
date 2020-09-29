@@ -7,6 +7,7 @@
 
 #import "UIImage+FIconFont.h"
 #import <CoreText/CoreText.h>
+#import "UIColor+Theme.h"
 
 @implementation UIImage (FIconFont)
 

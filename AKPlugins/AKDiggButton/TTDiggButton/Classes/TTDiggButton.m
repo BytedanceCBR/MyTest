@@ -14,6 +14,7 @@
 #import <TTThemed/UIImage+TTThemeExtension.h>
 #import "UIColor+Theme.h"
 #import "UIImage+FIconFont.h"
+#import "UIButton+FHUGCMultiDigg.h"
 
 
 @interface TTDiggButton()
@@ -117,9 +118,9 @@
         }
         break;
         case TTDiggButtonStyleTypeBigNumber:{
-            [self setImage:ICON_FONT_IMG(24, @"\U0000e69c", [UIColor colorWithHexStr:@"0x979f9c"]) forState:UIControlStateNormal];
-            [self setImage:ICON_FONT_IMG(24, @"\U0000e6b1", [UIColor themeOrange4]) forState:UIControlStateSelected];
-            [self setImage:ICON_FONT_IMG(24, @"\U0000e6b1", [UIColor themeOrange4]) forState:UIControlStateHighlighted];
+            [self setImage:ICON_FONT_IMG(20, @"\U0000e69c", [UIColor colorWithHexStr:@"0x979f9c"]) forState:UIControlStateNormal];
+            [self setImage:ICON_FONT_IMG(20, @"\U0000e6b1", [UIColor themeOrange4]) forState:UIControlStateSelected];
+            [self setImage:ICON_FONT_IMG(20, @"\U0000e6b1", [UIColor themeOrange4]) forState:UIControlStateHighlighted];
             [self setTitleEdgeInsets:UIEdgeInsetsMake(1, 0, 0, 0)];
             if ([TTDeviceHelper OSVersionNumber] < 8.f) {
 #pragma clang diagnostic push
@@ -252,33 +253,12 @@
     TTDiggButtonClickType type = TTDiggButtonClickTypeDigg;
     if (self.selected) {
         type = TTDiggButtonClickTypeAlreadyDigg;
-    }
-    else {
-        [SSMotionRender motionInView:self.imageView byType:SSMotionTypeZoomInAndDisappear image:[UIImage themedImageNamed:@"add_all_dynamic.png"] offsetPoint:CGPointMake(4.f, -9.f)];
-    }
-    if (!self.selected){
-        self.imageView.transform = CGAffineTransformMakeScale(1.f, 1.f);
-        self.imageView.contentMode = UIViewContentModeCenter;
-        [UIView animateWithDuration:0.1f delay:0.f options:UIViewAnimationOptionCurveEaseOut animations:^{
-            self.imageView.transform = CGAffineTransformMakeScale(0.6f, 0.6f);
-            self.alpha = 0;
-        } completion:^(BOOL finished) {
-            self.selected = YES;
-            self.alpha = 0;
-            if (self.buttonClickBlock) {
-                self.buttonClickBlock(type);
-            }
-            [UIView animateWithDuration:0.2f delay:0.f options:UIViewAnimationOptionCurveEaseIn animations:^{
-                self.imageView.transform = CGAffineTransformMakeScale(1.f,1.f);
-                self.alpha = 1;
-            } completion:^(BOOL finished) {
-            }];
-        }];
-    } else {
-        if (_buttonClickBlock) {
-            _buttonClickBlock(type);
-        }
         self.selected = NO;
+    } else {
+        self.selected = YES;
+    }
+    if (self.buttonClickBlock) {
+        self.buttonClickBlock(type);
     }
 }
 
@@ -287,7 +267,10 @@
 }
 
 - (void)didMoveToSuperview {
-    
+    [super didMoveToSuperview];
+    if(self.superview) {
+        [self enableMulitDiggEmojiAnimation];
+    }
 }
 
 - (void)setSelected:(BOOL)selected {

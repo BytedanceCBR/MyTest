@@ -387,7 +387,7 @@ static const CGFloat kCheckChallengeButtonLeftPadding = 28;
     _commentButton.label.textColor = [UIColor tt_defaultColorForKey:kColorText7];
     [_commentButton addTarget:self action:@selector(_onCommentButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
     [self.rightInfoView addSubview:_commentButton];
-
+    
     _likeButton = [[TSVIconLabelButton alloc] initWithImage:@"shortvideo_dig_normal" label:nil];
     _likeButton.iconImageView.image = ICON_FONT_IMG(24, @"\U0000e69c", [UIColor themeWhite]);
     _likeButton.label.textColor = [UIColor themeWhite];

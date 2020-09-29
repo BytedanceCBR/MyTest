@@ -616,11 +616,6 @@
 }
 
 #pragma poi Delegate
-//- (void)AMapSearchRequest:(id)request didFailWithError:(NSError *)error {
-//    if (error) {
-//        NSLog(@"error: %@",error);
-//    }
-//}
 
 - (void)onPOISearchDone:(AMapPOISearchBaseRequest *)request response:(AMapPOISearchResponse *)response {
     NSInteger poiCount = MIN(response.pois.count, 50);
