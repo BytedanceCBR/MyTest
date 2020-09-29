@@ -90,11 +90,11 @@
 
 - (void)refreshButtonStyle {
     if (_style == SSWebViewBackButtonStyleDefault) {
-        [_backButton setImage:ICON_FONT_IMG(24, @"\U0000e68a", [UIColor themeGray1]) forState:UIControlStateNormal];
+        [_backButton setImage:FHBackBlackImage forState:UIControlStateNormal];
         [_closeButton setImage:ICON_FONT_IMG(24, @"\U0000e673", [UIColor themeWhite]) forState:UIControlStateNormal];
     }
     else if (_style == SSWebViewBackButtonStyleLightContent) {
-        [_backButton setImage:ICON_FONT_IMG(24, @"\U0000e68a", [UIColor themeWhite]) forState:UIControlStateNormal];
+        [_backButton setImage:FHBackWhiteImage forState:UIControlStateNormal];
         [_closeButton setImage:ICON_FONT_IMG(24, @"\U0000e673", [UIColor themeWhite]) forState:UIControlStateNormal];
     }
 }

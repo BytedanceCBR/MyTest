@@ -14,7 +14,7 @@
 "aboutUs"               = "FHAboutUsViewController";
 "old_house_detail"      = "FHHouseDetailViewController";
 "neighborhood_detail"   = "FHHouseDetailViewController";
-"new_house_detail"      = "FHHouseDetailViewController";
+"new_house_detail"      = "FHNewHouseDetailViewController";
 "rent_detail"           = "FHHouseDetailViewController";
 "house_search"          = "FHSuggestionListViewController";
 "sug_subscribe_list"    = "FHSugSubscribeListViewController";

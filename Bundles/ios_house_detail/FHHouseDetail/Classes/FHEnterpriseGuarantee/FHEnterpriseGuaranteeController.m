@@ -29,9 +29,6 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     self.customNavBarView.title.text = @"企业担保";
-    UIImage *backImage = ICON_FONT_IMG(24, @"\U0000e68a", [UIColor blackColor]);
-    [self.customNavBarView.leftBtn setBackgroundImage:backImage forState:UIControlStateNormal];
-    [self.customNavBarView.leftBtn setBackgroundImage:backImage forState:UIControlStateHighlighted];
     [self addGoDetailLog];
 }
 

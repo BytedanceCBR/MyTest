@@ -22,14 +22,18 @@ typedef NS_ENUM(NSUInteger, FHMultiMediaCellHouseType) {
 };
 
 NS_ASSUME_NONNULL_BEGIN
+@protocol FHMultiMediaItemModel <NSObject>
+
+
+@end
 
 @interface FHMultiMediaItemModel : NSObject
 
-@property(nonatomic, copy) NSString *pictureTypeName;
-@property(nonatomic, assign) FHDetailHouseImageType pictureType;
-@property(nonatomic, assign) FHMultiMediaType mediaType;
-@property(nonatomic, copy) NSString *vrOpenUrl;
-@property(nonatomic, copy) NSString *groupType;
+@property(nonatomic, copy) NSString *pictureTypeName;           //rootName
+@property(nonatomic, assign) FHDetailHouseImageType pictureType;//并没有用到
+@property(nonatomic, assign) FHMultiMediaType mediaType;        //轮播图需要
+@property(nonatomic, copy) NSString *vrOpenUrl;                 //vr的URL
+@property(nonatomic, copy) NSString *groupType;                 //所属下面tab的名称
 @property(nonatomic, assign) FHMultiMediaCellHouseType cellHouseType;
 @property(nonatomic, copy) NSString *videoID;
 @property(nonatomic, copy) NSString *imageUrl;
@@ -40,6 +44,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *infoSubTitle;
 @property (nonatomic, copy , nullable) NSString *infoTitle;
 @property(nonatomic, copy) NSString *instantImageUrl;
+
+
 @end
 
 @interface FHMultiMediaModel : NSObject

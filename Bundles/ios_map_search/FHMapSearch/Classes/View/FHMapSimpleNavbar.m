@@ -50,7 +50,7 @@
         
         [self.layer addSublayer:_bgLayer];
         
-        UIImage *backImg = ICON_FONT_IMG(24, @"\U0000e68a", [UIColor themeGray1]);
+        UIImage *backImg = FHBackBlackImage;
     
         _backButton = [UIButton buttonWithType:UIButtonTypeCustom];
         [_backButton setImage:backImg forState:UIControlStateNormal];

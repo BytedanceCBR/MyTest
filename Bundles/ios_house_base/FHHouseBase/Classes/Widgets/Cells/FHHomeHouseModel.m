@@ -47,6 +47,22 @@
 }
 @end
 
+@implementation FHHomeHouseVideoModel
++ (JSONKeyMapper*)keyMapper
+{
+    NSDictionary *dict = @{
+        @"hasVideo": @"has_video",
+    };
+    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+        return dict[keyName]?:keyName;
+    }];
+}
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+@end
+
 //for implementation
 @implementation  FHHomeHouseDataItemsFloorpanListModel
 
@@ -377,6 +393,7 @@
         @"displayPricePerSqm": @"display_price_per_sqm",
         @"imprId": @"impr_id",
         @"vrInfo": @"vr_info",
+        @"videoInfo": @"video_info",
         @"advantageDescription":@"advantage_description",
         @"cellStyle": @"cell_style",
         @"contactModel": @"realtor_info",
