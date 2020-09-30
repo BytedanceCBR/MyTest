@@ -537,7 +537,9 @@ static NSString * const kFUGCPrefixStr = @"fugc";
 
 //弹窗不展示回调
 - (void)updateViewShouldNotShow {
-    
+    tt_dispatch_main_async_safe(^{
+        [[FHPopupViewManager shared] outerPopupViewHide];
+    });
 }
  
 /*
