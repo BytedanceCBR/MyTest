@@ -11,9 +11,9 @@
 #import "SSViewControllerBase.h"
 #import "TTRoute.h"
 #import "SSThemed.h"
-
+#import "FHFeedUGCCellModel.h"
+#import "AWEVideoCommentCell.h"
 @class TTShortVideoModel;
-@class AWEVideoDetailViewController;
 
 extern NSString * const TSVVideoDetailVisibilityDidChangeNotification;
 extern NSString * const TSVVideoDetailVisibilityDidChangeNotificationVisibilityKey;
@@ -25,6 +25,6 @@ extern NSString * const TSVVideoDetailVisibilityDidChangeNotificationEntranceKey
 
 @property (nonatomic, strong, readonly) SSThemedView *commentView;
 
-@property (nonatomic, strong, readonly) TTShortVideoModel *model;
+@property (nonatomic, strong, readonly) FHFeedUGCCellModel *model;
 
 @end

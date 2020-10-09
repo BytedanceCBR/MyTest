@@ -100,7 +100,7 @@
     CGFloat naviHeight = 44 + (isIphoneX ? 44 : 20);
     CGFloat searchHeight = 0;
     if (self.searchType == FHSugListSearchTypePriceValuation) {
-        searchHeight = 64;
+        searchHeight = 50;
         [_naviBar mas_makeConstraints:^(MASConstraintMaker *make) {
             make.top.left.right.mas_equalTo(self.view);
             make.height.mas_equalTo(naviHeight);
@@ -121,7 +121,7 @@
 - (void)setupNaviBar
 {
     if (self.searchType == FHSugListSearchTypePriceValuation) {
-        [self setupDefaultNavBar:YES];
+        [self setupDefaultNavBar:NO];
         self.customNavBarView.title.text = @"查房价";
         return;
     }

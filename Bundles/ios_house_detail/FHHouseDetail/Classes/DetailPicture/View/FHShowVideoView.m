@@ -40,7 +40,7 @@
         videoVC.model.isShowControl = YES;
         videoVC.model.isShowStartBtnWhenPause = NO;
         videoVC.model.isShowMiniSlider = NO;
-        [self.videoVC updateData:videoVC.model];
+//        [self.videoVC updateData:videoVC.model];
         _videoVC.view.backgroundColor = [UIColor clearColor];
         _vedioView = _videoVC.view;
         

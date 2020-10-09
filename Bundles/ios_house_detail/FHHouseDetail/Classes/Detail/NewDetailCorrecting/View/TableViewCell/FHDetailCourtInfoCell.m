@@ -18,7 +18,6 @@
 #import "FHDetailFoldViewButton.h"
 #import "UILabel+House.h"
 #import "FHDetailBottomOpenAllView.h"
-#import "FHDetailStarsCountView.h"
 #import <FHCommonUI/UILabel+House.h>
 #import "UIColor+Theme.h"
 #import <FHCommonUI/UIView+House.h>

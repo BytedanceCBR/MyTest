@@ -25,7 +25,6 @@
 #import "WDShareUtilsHelper.h"
 #import "WDDefines.h"
 
-#import "TTActionSheetController.h"
 #import "SSWebViewBackButtonView.h"
 #import "TTGroupModel.h"
 #import "NSObject+FBKVOController.h"
@@ -58,6 +57,8 @@
 #import "UIColor+Theme.h"
 #import "UIFont+House.h"
 #import "FHUtils.h"
+#import "FHCommonDefines.h"
+#import "FHAnswerListTitleView.h"
 
 #define kListBottomBarHeight (self.view.tt_safeAreaInsets.bottom ? self.view.tt_safeAreaInsets.bottom + 44 : 44)
 
@@ -65,17 +66,11 @@ static NSString * const WukongListTipsHasShown = @"kWukongListTipsHasShown";
 
 @interface WDWendaListViewController ()<UIViewControllerErrorHandler, WDWendaFirstWritterPopupViewDelegate, UIActionSheetDelegate, TTShareManagerDelegate,TTInteractExitProtocol>
 
-@property (nonatomic, strong) TTViewWrapper *wrapperView;
-
-@property (nonatomic, strong) WDWendaListQuestionHeader <WDWendaListQuestionHeaderProtocol>*questionHeaderA;
-@property (nonatomic, strong) WDWendaListQuestionHeaderNew <WDWendaListQuestionHeaderProtocol>*questionHeaderB;
+@property (nonatomic, strong) WDWendaListQuestionHeader <WDWendaListQuestionHeaderProtocol>*questionHeader;
 
 @property (nonatomic, strong) WDWendaListFooterView *listFooterView;
-@property (nonatomic, strong) WDWendaListTabView *bottomTabView;
+@property (nonatomic, strong) FHAnswerListTitleView *titleView;
 
-@property (nonatomic, strong) SSThemedView *topBgView; // 顶部白色背景条
-
-@property (nonatomic, strong) TTActionSheetController  *actionSheetController;
 @property (nonatomic, strong) DetailActionRequestManager *actionManager;
 @property (nonatomic, strong) TTShareManager *shareManager;
 
@@ -167,9 +162,6 @@ static NSString * const WukongListTipsHasShown = @"kWukongListTipsHasShown";
                        apiParameter:apiParam
                          needReturn:needReturn
                                 rid:rid];
-    if (self) {
-        
-    }
     return self;
 }
 
@@ -326,17 +318,6 @@ static NSString * const WukongListTipsHasShown = @"kWukongListTipsHasShown";
 - (void)viewDidLayoutSubviews
 {
     [super viewDidLayoutSubviews];
-    
-    if ([TTDeviceHelper isPadDevice]) {
-        
-        if (!_answerListView) return;
-        
-        [self layoutSubviewFrame];
-    
-        [self.questionHeader reload];
-
-        [self reloadListView];
-    }
 }
 
 - (void)viewDidLoad
@@ -357,7 +338,11 @@ static NSString * const WukongListTipsHasShown = @"kWukongListTipsHasShown";
     
 //    UIBarButtonItem *moreButtonItem = [[UIBarButtonItem alloc] initWithCustomView:[self moreButton]];
     self.navigationItem.rightBarButtonItems = @[moreButtonItem];
- 
+    
+    self.titleView = [[FHAnswerListTitleView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, 44)];
+    self.titleView.hidden = YES;
+    self.navigationItem.titleView = self.titleView;
+    
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(postAnswerSuccess:) name:@"kFHWDAnswerPictureTextPostSuccessNotification" object:nil];
     
     [self firstLoadContent];
@@ -389,20 +374,7 @@ static NSString * const WukongListTipsHasShown = @"kWukongListTipsHasShown";
     
     self.hasAddsubviews = YES;
     
-    if ([TTDeviceHelper isPadDevice]) {
-        self.wrapperView = [[TTViewWrapper alloc] initWithFrame:self.view.bounds];
-        self.wrapperView.height = self.view.bounds.size.height - 44;
-        
-        [self.wrapperView addSubview:[self centerBgView]];
-        [self.wrapperView addSubview:self.topBgView];
-        [self.wrapperView addSubview:self.answerListView];
-        
-        self.wrapperView.targetView = self.answerListView;
-        [self.view addSubview:self.wrapperView];
-    } else {
-        [self.view addSubview:self.topBgView];
-        [self.view addSubview:self.answerListView];
-    }
+    [self.view addSubview:self.answerListView];
     CGFloat bottomSafeHeight = 0;
     if (@available(iOS 13.0 , *)) {
         bottomSafeHeight = [UIApplication sharedApplication].keyWindow.safeAreaInsets.bottom;
@@ -414,8 +386,6 @@ static NSString * const WukongListTipsHasShown = @"kWukongListTipsHasShown";
     [self.view addSubview:self.bottomButton];
     self.bottomButton.frame = CGRectMake(0, SSScreenHeight - self.bottomButtonHeight, SSScreenWidth, self.bottomButtonHeight);
     [self.bottomButton addTarget:self action:@selector(writeAnswer) forControlEvents:UIControlEventTouchUpInside];
-//    //底部tab
-//    [self.view addSubview:self.bottomTabView];
     [self feed_answer_element_show];
     
     //监听变化
@@ -516,15 +486,8 @@ static void extracted(WDWendaListViewController *object, WDWendaListViewControll
             
             // 此时再去加载子view
             [self addSubviewsIfNeeded];
-            self.topBgView.hidden = NO;
-            self.bottomTabView.hidden = NO;
             [self layoutSubviewFrame];
-            if (self.wrapperView) {
-                [self.view bringSubviewToFront:self.wrapperView];
-            } else {
-                [self.view bringSubviewToFront:self.answerListView];
-            }
-            [self.view bringSubviewToFront:self.bottomTabView];
+            [self.view bringSubviewToFront:self.answerListView];
             [self.view bringSubviewToFront:self.bottomButton];
             
             [self reloadListViewNeedRefreshHeader:YES];
@@ -536,8 +499,7 @@ static void extracted(WDWendaListViewController *object, WDWendaListViewControll
                     [self sendTrackWithLabel:@"enter_0"];
                 }
             }
-            //刷新底部tab按钮数据
-            //            [self.bottomTabView refresh];
+            [self.titleView updateWithViewModel:self.viewModel];
         } else {
             if (error.code == 67686) {
                 self.ttErrorView.viewType = TTFullScreenErrorViewTypeDeleted;
@@ -608,11 +570,6 @@ static void extracted(WDWendaListViewController *object, WDWendaListViewControll
     }
 
     [self reloadListView];
-    
-//    if (!_adjustPosition && ![TTDeviceHelper isPadDevice] && !self.viewModel.canEditTags && (self.viewModel.hasTags && self.answerListView.contentOffset.y == 0) && (self.viewModel.questionRelatedStatus == WDQuestionRelatedStatusNormal) && !self.viewModel.showRewardView) {
-//        [self.answerListView setContentOffset:CGPointMake(0, 35) animated:NO];
-//    }
-    
 }
 
 - (void)reloadListView
@@ -689,17 +646,11 @@ static void extracted(WDWendaListViewController *object, WDWendaListViewControll
 
 - (void)layoutSubviewFrame
 {
-    self.topBgView.frame = [self p_frameForTopBgView];
-    
     //需要及时根据参数更新位置
     CGRect frame = [self p_frameForListView];
     CGFloat bottomHeight = 48;
     frame.size.height -= bottomHeight;
     self.answerListView.frame = frame;
-    
-    frame.origin.y = frame.size.height + kNavigationBarHeight;
-    frame.size.height = bottomHeight;
-    self.bottomTabView.frame = frame;
 }
 
 - (WDListCellLayoutModel *)getCellLayoutModelFromDataModel:(WDListCellDataModel *)dataModel {
@@ -756,26 +707,8 @@ static void extracted(WDWendaListViewController *object, WDWendaListViewControll
 
 - (CGRect)p_frameForListView
 {
-    if ([TTDeviceHelper isPadDevice]) {
-        CGSize windowSize = [TTUIResponderHelper windowSize];
-        CGFloat edgePadding = [TTUIResponderHelper paddingForViewWidth:windowSize.width];
-        return CGRectMake(edgePadding, kNavigationBarHeight, windowSize.width - edgePadding*2, windowSize.height - kNavigationBarHeight);
-    }
-    else {
-        CGRect rect = CGRectMake(0, kNavigationBarHeight, SSWidth(self.view), SSHeight(self.view) - kNavigationBarHeight);
-        return rect;
-    }
-}
-
-- (CGRect)p_frameForTopBgView {
-    if ([TTDeviceHelper isPadDevice]) {
-        CGSize windowSize = [TTUIResponderHelper windowSize];
-        CGFloat edgePadding = [TTUIResponderHelper paddingForViewWidth:windowSize.width];
-        return CGRectMake(edgePadding, kNavigationBarHeight, windowSize.width - edgePadding*2, 0);
-    }
-    else {
-        return CGRectMake(0, kNavigationBarHeight, [UIScreen mainScreen].bounds.size.width, 0);
-    }
+    CGFloat offset = self.ttNavigationBar.bottom;
+    return CGRectMake(0,offset, SSWidth(self.view), SSHeight(self.view) - offset);
 }
 
 #pragma mark - Notification
@@ -812,10 +745,6 @@ static void extracted(WDWendaListViewController *object, WDWendaListViewControll
         CGFloat bottomHeight = 48;
         frame.size.height -= bottomHeight;
         self.answerListView.frame = frame;
-        
-        frame.origin.y = frame.size.height + kNavigationBarHeight;
-        frame.size.height = bottomHeight;
-        self.bottomTabView.frame = frame;
     }
 }
 
@@ -966,11 +895,11 @@ static void extracted(WDWendaListViewController *object, WDWendaListViewControll
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView
 {
-    CGFloat offsetY = -scrollView.contentOffset.y;
-    if (offsetY <= 0) {
-        offsetY = 0;
+    if(scrollView.contentOffset.y > self.questionHeader.frame.size.height && self.titleView.hidden) {
+        self.titleView.hidden = NO;
+    }else if(scrollView.contentOffset.y < self.questionHeader.frame.size.height && !self.titleView.hidden) {
+        self.titleView.hidden = YES;
     }
-    self.topBgView.height = offsetY;
 }
 
 #pragma mark - UIActionSheetDelegate
@@ -1151,11 +1080,11 @@ static void extracted(WDWendaListViewController *object, WDWendaListViewControll
 
 - (SSThemedView<WDWendaListQuestionHeaderProtocol> *)questionHeader
 {
-    if (!_questionHeaderA) {
-        _questionHeaderA = [[WDWendaListQuestionHeader alloc] initWithFrame:CGRectMake(0, 0, SSWidth(self.answerListView), 0) viewModel:self.viewModel];
-        _questionHeaderA.hidden = YES;
+    if (!_questionHeader) {
+        _questionHeader = [[WDWendaListQuestionHeader alloc] initWithFrame:CGRectMake(0, 0, SSWidth(self.answerListView), 0) viewModel:self.viewModel];
+        _questionHeader.hidden = YES;
     }
-    return _questionHeaderA;
+    return _questionHeader;
 }
 
 - (SSThemedTableView *)answerListView
@@ -1173,21 +1102,6 @@ static void extracted(WDWendaListViewController *object, WDWendaListViewControll
     return _answerListView;
 }
 
-- (SSThemedView *)bottomTabView
-{
-    if (!_bottomTabView) {
-        CGRect frame = [self p_frameForListView];
-        CGFloat bottomHeight = kListBottomBarHeight;
-        frame.origin.y = frame.size.height + kNavigationBarHeight - bottomHeight;
-        frame.size.height = bottomHeight;
-        _bottomTabView = [[WDWendaListTabView alloc] initWithFrame:frame viewModel:self.viewModel];
-        _bottomTabView.backgroundColorThemeKey = kColorBackground4;
-        _bottomTabView.hidden = YES;
-    }
-    
-    return _bottomTabView;
-}
-
 - (SSThemedView *)centerBgView {
     CGSize windowSize = [TTUIResponderHelper windowSize];
     CGFloat edgePadding = [TTUIResponderHelper paddingForViewWidth:windowSize.width];
@@ -1196,15 +1110,6 @@ static void extracted(WDWendaListViewController *object, WDWendaListViewControll
     SSThemedView *bgView = [[SSThemedView alloc] initWithFrame:CGRectMake(bgLeft, 0, bgWidth, self.view.bounds.size.height - 44)];
     bgView.backgroundColorThemeKey = kColorBackground3;
     return bgView;
-}
-
-- (SSThemedView *)topBgView {
-    if (!_topBgView) {
-        _topBgView = [[SSThemedView alloc] initWithFrame:[self p_frameForTopBgView]];
-        _topBgView.backgroundColorThemeKey = kColorBackground4;
-        _topBgView.hidden = YES;
-    }
-    return _topBgView;
 }
 
 - (DetailActionRequestManager *)actionManager

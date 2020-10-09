@@ -24,9 +24,11 @@ typedef enum : NSUInteger {
 @property (nonatomic, assign) BOOL hasMoreToLoad;//是否还能loadmore
 @property (nonatomic, assign) BOOL isLoadingRequest;//是否正在加载中
 @property (nonatomic, assign) BOOL shouldShowNoMoreVideoToast;//是否需要弹没有更多视频的toast
+@property (nonatomic, assign) BOOL isFromFollowVc;
 
 @property (nonatomic, assign) NSInteger listCellCurrentIndex;//列表上归位cell的index
 @property (nonatomic, strong) id detailCellCurrentItem;        //列表上归位cell的model
+@property (nonatomic, strong) NSDictionary *tracerDic;        //列表上归位cell的model
 
 /*
  *  列表items数量

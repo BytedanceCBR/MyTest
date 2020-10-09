@@ -349,7 +349,14 @@ static NSString * const kTSVOpenTabHost = @"ugc_video_tab";
             
             [info setValue:self.cellData forKey:HTSVideoDetailOrderedData];
         }
-
+        [info setValue:@(YES) forKey:@"isFromFlollow"];
+        NSMutableDictionary *tracerDic = @[].mutableCopy;
+        NSDictionary *trackParams = [self trackParamsDictForData:self.orderedData];
+//        tracerDic[@"page_type"] = @"small_video_detail";
+//        tracerDic[@"enter_from"] = trackParams[@"enter_from"];
+//        tracerDic[@"enter_type"] = enterType ? enterType : @"be_null";
+//        tracerDic[@"rank"] = cellModel.tracerDic[@"rank"];
+//        [info setValue:tracerDic forKey:@"extraDic"];
         //自定义push方式打开火山详情页
         [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:TTRouteUserInfoWithDict(info) pushHandler:^(UINavigationController *nav, TTRouteObject *routeObj) {
             if ([nav isKindOfClass:[TTNavigationController class]] &&

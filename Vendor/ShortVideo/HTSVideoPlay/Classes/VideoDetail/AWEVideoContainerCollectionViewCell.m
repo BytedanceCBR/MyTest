@@ -7,7 +7,6 @@
 //
 
 #import "AWEVideoContainerCollectionViewCell.h"
-#import "AWEVideoDetailTracker.h"
 #import "TSVShortVideoOriginalData.h"
 #import "AWEVideoDetailScrollConfig.h"
 #import "UIViewAdditions.h"
@@ -16,13 +15,16 @@
 #import "TTSettingsManager.h"
 #import "TSVVideoDetailControlOverlayUITypeConfig.h"
 #import <AVFoundation/AVFoundation.h>
+#import "FHShortVideoTracerUtil.h"
+#import "TTAccountManager.h"
+#import "NSDictionary+BTDAdditions.h"
 
 @interface AWEVideoContainerCollectionViewCell () <AWEVideoPlayViewDelegate>
 
 @property (nonatomic, strong) AWEVideoPlayView *videoPlayView;
 @property (nonatomic, assign) NSTimeInterval totalPlayTime;
 @property (nonatomic, assign) BOOL usingFirstFrameCover;
-@property (nonatomic, strong, readwrite) TTShortVideoModel *videoDetail;
+@property (nonatomic, strong, readwrite) FHFeedUGCCellModel *videoDetail;
 
 @end
 
@@ -64,17 +66,26 @@
     if (!self.videoDetail) {
         return;
     }
-    
-    [AWEVideoDetailTracker trackEvent:@"rt_like"
-                                model:self.videoDetail
-                      commonParameter:self.commonTrackingParameter
-                       extraParameter:@{
-                                        @"user_id": self.videoDetail.author.userID,
-                                        @"position": @"double_like",
-                                        }];
-
     if ([self.overlayViewController isKindOfClass:[AWEVideoDetailControlOverlayViewController class]]) {
-        [(AWEVideoDetailControlOverlayViewController *)self.overlayViewController digg];
+        if (![TTAccountManager isLogin]) {
+            NSMutableDictionary *params = [NSMutableDictionary dictionary];
+            NSString *page_type = [FHShortVideoTracerUtil pageType];
+            [params setObject:page_type forKey:@"enter_from"];
+            [params setObject:@"click_publisher" forKey:@"enter_type"];
+            // 登录成功之后不自己Pop，先进行页面跳转逻辑，再pop
+            [params setObject:@(YES) forKey:@"need_pop_vc"];
+            [TTAccountLoginManager showAlertFLoginVCWithParams:params completeBlock:^(TTAccountAlertCompletionEventType type, NSString * _Nullable phoneNum) {
+                if (type == TTAccountAlertCompletionEventTypeDone) {
+                    //登录成功 走发送逻辑
+                    if ([TTAccountManager isLogin]) {
+                        [(AWEVideoDetailControlOverlayViewController *)self.overlayViewController diggShowAnima:YES];
+                    }
+                }
+            }];
+            
+        }else {
+            [(AWEVideoDetailControlOverlayViewController *)self.overlayViewController diggShowAnima:YES];
+        }
     }
 }
 
@@ -87,6 +98,14 @@
     if ([self.overlayViewController isKindOfClass:[AWEVideoDetailControlOverlayViewController class]]) {
         [(AWEVideoDetailControlOverlayViewController *)self.overlayViewController tapToFoldRecCard];
     }
+    [self.videoPlayView pauseOrPlayVideo];
+    NSInteger rank = [self.videoDetail.tracerDic btd_integerValueForKey:@"rank" default:0];
+    if (self.videoPlayView.isPlaying) {
+        [FHShortVideoTracerUtil videoPlayOrPauseWithName:@"video_play" eventModel:self.videoDetail eventIndex:rank];
+    }else {
+        [FHShortVideoTracerUtil videoPlayOrPauseWithName:@"video_pause" eventModel:self.videoDetail eventIndex:rank];
+    }
+    
 }
 # pragma mark - Digg Animation
 
@@ -116,51 +135,43 @@
     }
     self.videoPlayView.frame = frame;
     self.overlayViewController.view.frame = frame;
+    
+        CGFloat videoAspectRatio = [self.videoDetail.video.height floatValue] / [self.videoDetail.video.width floatValue];
 
-    BOOL useEdgeToEdgeUI = [[[TTSettingsManager sharedManager] settingForKey:@"tt_huoshan_detail_edge_to_edge_adjustment"
-                                                                defaultValue:@YES
-                                                                      freeze:NO] boolValue];
-    if (useEdgeToEdgeUI) {
-        CGFloat videoAspectRatio;
-        NSString *videoLocalPlayAddr = self.videoDetail.videoLocalPlayAddr;
-        if (videoLocalPlayAddr.length > 0) {
-            //获取视频尺寸
-            AVURLAsset *asset = [AVURLAsset assetWithURL:[NSURL fileURLWithPath:videoLocalPlayAddr]];
-            NSArray *array = asset.tracks;
-            CGSize videoSize = CGSizeZero;
-            for (AVAssetTrack *track in array) {
-                if ([track.mediaType isEqualToString:AVMediaTypeVideo]) {
-                    videoSize = track.naturalSize;
-                }
-            }
-            if (videoSize.width > 0 && videoSize.height > 0) {
-                videoAspectRatio = videoSize.height / videoSize.width;
-            } else {
-                videoAspectRatio = 16 / 9;
-            }
-        } else {
-            videoAspectRatio = self.videoDetail.video.height / self.videoDetail.video.width;
-        }
-        if ([TTDeviceHelper isIPhoneXDevice]) {
-            if (videoAspectRatio > 1.7) {
-                self.videoPlayView.contentMode = UIViewContentModeScaleAspectFill;
-            } else {
+        CGSize screenSize = [UIScreen mainScreen].bounds.size;
+ 
+        CGFloat screenAspectRatio = screenSize.height > screenSize.width ? (screenSize.height / screenSize.width) : (screenSize.width / screenSize.height);
+
+        if(videoAspectRatio >= screenAspectRatio){
+            self.videoPlayView.contentMode = UIViewContentModeScaleAspectFill;
+        }else{
+//            if ([TTDeviceHelper isIPhoneXDevice]) {
+//                self.videoPlayView.top = self.tt_safeAreaInsets.top;
+//                CGFloat height = CGRectGetHeight(frame) - self.tt_safeAreaInsets.top;
+//                self.videoPlayView.height = ceil(CGRectGetWidth(frame) * 16 / 9);
+//                if(videoAspectRatio >= (16.0 / 9.0)){
+//                    self.videoPlayView.contentMode = UIViewContentModeScaleAspectFill;
+//                }else{
+//                    self.videoPlayView.contentMode = UIViewContentModeScaleAspectFit;
+//                }
+//            }else{
                 self.videoPlayView.contentMode = UIViewContentModeScaleAspectFit;
-            }
-        } else {
-            if (videoAspectRatio > 1.6) {
-                self.videoPlayView.contentMode = UIViewContentModeScaleAspectFill;
-            } else {
-                self.videoPlayView.contentMode = UIViewContentModeScaleAspectFit;
-            }
+//            }
         }
-    } else {
-        if ([TTDeviceHelper isIPhoneXDevice]) {
-            self.videoPlayView.top = self.tt_safeAreaInsets.top;
-            self.videoPlayView.height = ceil(CGRectGetWidth(frame) * 16 / 9);
-        }
-        self.videoPlayView.contentMode = UIViewContentModeScaleAspectFit;
-    }
+        
+//        if ([TTDeviceHelper isIPhoneXDevice]) {
+//            if (videoAspectRatio > 1.7) {
+//                self.videoPlayView.contentMode = UIViewContentModeScaleAspectFill;
+//            } else {
+//                self.videoPlayView.contentMode = UIViewContentModeScaleAspectFit;
+//            }
+//        } else {
+//            if (videoAspectRatio > 1.6) {
+//                self.videoPlayView.contentMode = UIViewContentModeScaleAspectFill;
+//            } else {
+//                self.videoPlayView.contentMode = UIViewContentModeScaleAspectFit;
+//            }
+//        }
 }
 
 - (void)playView:(AWEVideoPlayView *)view didStartPlayWithModel:(TTShortVideoModel *)model
@@ -179,7 +190,9 @@
 - (void)playView:(AWEVideoPlayView *)view didPlayNextLoopWithModel:(TTShortVideoModel *)model
 {
     [self.overlayViewController.viewModel videoDidPlayOneLoop];
-
+    NSString *duration = [NSString stringWithFormat:@"%.0f", self.totalPlayTime * 1000];
+    NSInteger rank = [self.videoDetail.tracerDic btd_integerValueForKey:@"rank" default:0];
+    [FHShortVideoTracerUtil videoOverWithModel:self.videoDetail eventIndex:rank forStayTime:duration];
     if (self.videoDidPlayOneLoop) {
         self.videoDidPlayOneLoop();
     }
@@ -205,7 +218,7 @@
     self.videoPlayView.commonTrackingParameter = self.commonTrackingParameter;
 }
 
-- (void)updateWithModel:(TTShortVideoModel *)videoDetail usingFirstFrameCover:(BOOL)usingFirstFrameCover
+- (void)updateWithModel:(FHFeedUGCCellModel *)videoDetail usingFirstFrameCover:(BOOL)usingFirstFrameCover
 {
     self.videoDetail = videoDetail;
     self.usingFirstFrameCover = usingFirstFrameCover;

@@ -15,11 +15,12 @@
 #import "FHUserTracker.h"
 #import "UIImage+FIconFont.h"
 #import "TTAccountManager.h"
+#import "UIButton+FHUGCMultiDigg.h"
 
 @interface WDListAnswerCellBottomView ()
 
-@property (nonatomic, strong)   WDListAnswerCellBottomButton       *commentBtn;
-@property (nonatomic, strong)   WDListAnswerCellBottomButton       *followBtn;
+@property (nonatomic, strong) UIButton *commentButton;
+@property (nonatomic, strong) UIButton *digButton;
 
 @end
 
@@ -37,53 +38,57 @@
 - (void)setupUI {
     self.backgroundColor = [UIColor whiteColor];
     // 评论
-    self.commentBtn = [[WDListAnswerCellBottomButton alloc] init];
-    self.commentBtn.icon.image = ICON_FONT_IMG(20, @"\U0000e699", [UIColor themeGray1]);
-    self.commentBtn.textLabel.text = @"0";
-    [self.commentBtn addTarget:self action:@selector(commentBtnClick) forControlEvents:UIControlEventTouchUpInside];
-    [self addSubview:self.commentBtn];
+    self.commentButton = [[UIButton alloc] init];
+    [self.commentButton setImage:ICON_FONT_IMG(20, @"\U0000e699", [UIColor themeGray1]) forState:UIControlStateNormal] ;
+    [self.commentButton setTitle:@"0" forState:UIControlStateNormal];
+    [self.commentButton setTitleColor:[UIColor themeGray1] forState:UIControlStateNormal];
+    [self.commentButton setImageEdgeInsets:UIEdgeInsetsMake(0, -2, 0, 2)];
+    [self.commentButton setTitleEdgeInsets:UIEdgeInsetsMake(0, 2, 0, -2)];
+    [self.commentButton sizeToFit];
+    self.commentButton.titleLabel.font = [UIFont themeFontRegular:14];
+    self.commentButton.titleLabel.layer.masksToBounds = YES;
+    [self.commentButton addTarget:self action:@selector(commentButtonClick) forControlEvents:UIControlEventTouchUpInside];
+    [self addSubview:self.commentButton];
     // 点赞
-    self.followBtn = [[WDListAnswerCellBottomButton alloc] init];
-    self.followBtn.icon.image = ICON_FONT_IMG(20, @"\U0000e69c", [UIColor themeGray1]);
-    self.followBtn.textLabel.text = @"0";
-    [self.followBtn addTarget:self action:@selector(followBtnClick) forControlEvents:UIControlEventTouchUpInside];
-    [self addSubview:self.followBtn];
+    self.digButton = [[UIButton alloc] init];
+    [self.digButton setTitle:@"0" forState:UIControlStateNormal];
+    [self.digButton setImageEdgeInsets:UIEdgeInsetsMake(0, -2, 0, 2)];
+    [self.digButton setTitleEdgeInsets:UIEdgeInsetsMake(0, 2, 0, -2)];
+    self.digButton.titleLabel.font = [UIFont themeFontRegular:14];
+    self.digButton.titleLabel.layer.masksToBounds = YES;
+    [self.digButton sizeToFit];
+    self.digButton.hitTestEdgeInsets = UIEdgeInsetsMake(-10, -10, -10, -10);
+    [self.digButton addTarget:self action:@selector(digButtonClick) forControlEvents:UIControlEventTouchUpInside];
+    [self addSubview:self.digButton];
+    [self.digButton enableMulitDiggEmojiAnimation];
     
     [self setupConstraints];
 }
 
 - (void)setupConstraints {
-    [self.followBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self);
+    [self.digButton mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.mas_equalTo(self).offset(10);
         make.right.mas_equalTo(self).offset(-20);
-        make.bottom.mas_equalTo(self);
+        make.height.mas_equalTo(20);
     }];
-    [self.commentBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self);
-        make.right.mas_equalTo(self.followBtn.mas_left).offset(-20);
-        make.bottom.mas_equalTo(self);
+    [self.commentButton mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.mas_equalTo(self).offset(10);
+        make.right.mas_equalTo(self.digButton.mas_left).offset(-20);
+        make.height.mas_equalTo(20);
     }];
 }
 
 - (void)setAnsEntity:(WDAnswerEntity *)ansEntity {
     _ansEntity = ansEntity;
     if (ansEntity) {
-        self.commentBtn.textLabel.text = [NSString stringWithFormat:@"%lld",[ansEntity.commentCount longLongValue]];
-        self.followBtn.textLabel.text = [NSString stringWithFormat:@"%lld",[ansEntity.diggCount longLongValue]];
-        if (ansEntity.isDigg) {
-            self.followBtn.followed = YES;
-            self.followBtn.icon.image = ICON_FONT_IMG(20, @"\U0000e6b1", [UIColor themeOrange4]);
-            self.followBtn.textLabel.textColor = [UIColor themeOrange4];
-        } else {
-            self.followBtn.followed = NO;
-            self.followBtn.icon.image = ICON_FONT_IMG(20, @"\U0000e69c", [UIColor themeGray1]);
-            self.followBtn.textLabel.textColor = [UIColor themeGray1];
-        }
+        [self.commentButton setTitle:[NSString stringWithFormat:@"%lld",[ansEntity.commentCount longLongValue]] forState:UIControlStateNormal] ;
+        [self.digButton setTitle:[NSString stringWithFormat:@"%lld",[ansEntity.diggCount longLongValue]] forState:UIControlStateNormal];
+        self.digButton.selected = ansEntity.isDigg;
     }
     [self layoutIfNeeded];
 }
 
-- (void)commentBtnClick {
+- (void)commentButtonClick {
     if (isEmptyString(self.ansEntity.answerSchema)) {
         return;
     }
@@ -95,7 +100,7 @@
     [[TTRoute sharedRoute] openURLByViewController:[NSURL URLWithString:self.ansEntity.answerSchema] userInfo:userInfo];
 }
 
-- (void)followBtnClick {
+- (void)digButtonClick {
     if(![TTAccountManager isLogin]) {
         NSMutableDictionary *params = [NSMutableDictionary dictionary];
         [params setObject:@"question" forKey:@"enter_from"];
@@ -108,7 +113,7 @@
             if (type == TTAccountAlertCompletionEventTypeDone) {
                 // 登录成功
                 if ([TTAccountManager isLogin]) {
-                    [wSelf followBtnClick];
+                    [wSelf digButtonClick];
                 }
             }
         }];
@@ -119,7 +124,7 @@
     NSMutableDictionary *tempDic = [self.apiParams mutableCopy];
     tempDic[@"page_type"] = @"question";
     self.apiParams = [tempDic copy];
-    if (self.followBtn.followed) {
+    if (self.digButton.selected) {
         // 取消点赞
         [self click_answer_dislike];
         self.ansEntity.isDigg = NO;
@@ -175,57 +180,6 @@
         tracerDict[@"page_type"] = @"question";
         [FHUserTracker writeEvent:@"click_dislike" params:tracerDict];
     }
-}
-
-@end
-
-// WDListAnswerCellBottomButton
-@interface WDListAnswerCellBottomButton ()
-
-@end
-
-@implementation WDListAnswerCellBottomButton
-
-- (instancetype)initWithFrame:(CGRect)frame
-{
-    self = [super initWithFrame:frame];
-    if (self) {
-        [self setupUI];
-        self.followed = NO;
-    }
-    return self;
-}
-
-- (void)setupUI {
-    self.icon = [[UIImageView alloc] init];
-    [self addSubview:_icon];
-    
-    self.textLabel = [self labelWithFont:[UIFont themeFontRegular:14] textColor:[UIColor themeGray1]];
-    [self addSubview:_textLabel];
-    
-    [self setupConstraints];
-}
-
-
-- (void)setupConstraints {
-    [self.icon mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.left.mas_equalTo(self);
-        make.width.height.mas_equalTo(20);
-    }];
-    
-    [self.textLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self);
-        make.left.mas_equalTo(self.icon.mas_right).mas_offset(4);
-        make.right.mas_equalTo(self);
-        make.height.mas_equalTo(20);
-    }];
-}
-
-- (UILabel *)labelWithFont:(UIFont *)font textColor:(UIColor *)textColor {
-    UILabel *label = [[UILabel alloc] init];
-    label.font = font;
-    label.textColor = textColor;
-    return label;
 }
 
 @end

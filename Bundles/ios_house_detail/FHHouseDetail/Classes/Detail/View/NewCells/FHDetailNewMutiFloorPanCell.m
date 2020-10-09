@@ -16,7 +16,6 @@
 #import "FHDetailHeaderView.h"
 #import "FHHouseNewDetailViewModel.h"
 #import "FHDetailMultitemCollectionView.h"
-#import <TTAccountSDK/TTAccount.h>
 #import <FHHouseBase/FHHouseIMClueHelper.h>
 #import "FHEnvContext.h"
 
@@ -393,6 +392,11 @@
 //        }];
         //1.0.2 需求缩小户型图大小，横屏查看2.5个左右，不能显示更多tag
         [self.tagBacView refreshWithTags:model.tags withNum:model.tags.count withMaxLen:ITEM_WIDTH - width - 4];
+        if (model.vrInfo.hasVr) {
+            self.vrImageView.hidden = NO;
+        } else {
+            self.vrImageView.hidden = YES;
+        }
     }
     [self layoutIfNeeded];
 }
@@ -420,6 +424,16 @@
         make.center.equalTo(self.iconView);
         make.width.height.equalTo(self.iconView);
     }];
+    
+    _vrImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"detail_vr_movie_icon"]];
+    _vrImageView.hidden = YES;
+    [self.iconView addSubview:_vrImageView];
+    [self.vrImageView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.mas_equalTo(6);
+        make.bottom.mas_equalTo(-6);
+        make.width.height.mas_equalTo(22);
+    }];
+    
     
     _titleLabel = [[UILabel alloc] init];
     _titleLabel.font = [UIFont themeFontMedium:14];

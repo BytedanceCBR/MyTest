@@ -41,10 +41,6 @@
     _containerView.layer.cornerRadius = 10;
     _containerView.layer.borderWidth = 0.5;
     _containerView.layer.borderColor = [UIColor themeGray6].CGColor;
-    _containerView.layer.shadowColor = [UIColor themeBlack].CGColor;
-    _containerView.layer.shadowOpacity = 0.1;
-    _containerView.layer.shadowOffset = CGSizeMake(0, 4);
-    _containerView.layer.shadowRadius = 3;
     [self.contentView addSubview:_containerView];
     [_containerView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(0);

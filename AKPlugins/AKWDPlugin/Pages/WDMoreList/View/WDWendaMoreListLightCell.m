@@ -7,7 +7,6 @@
 
 #import "WDWendaMoreListLightCell.h"
 #import "WDWendaListCellUserHeaderView.h"
-#import "WDWendaListCellActionFooterView.h"
 #import "WDWendaListCellPureCharacterView.h"
 #import "WDCommonLogic.h"
 #import "NSObject+FBKVOController.h"
@@ -30,10 +29,9 @@
 #import "WDAdapterSetting.h"
 #import "WDUIHelper.h"
 
-@interface WDWendaMoreListLightCell ()<WDWendaListCellUserHeaderViewDelegate,WDWendaListCellActionFooterViewDelegate>
+@interface WDWendaMoreListLightCell ()<WDWendaListCellUserHeaderViewDelegate>
 
 @property (nonatomic, strong) WDWendaListCellUserHeaderView *headerView;
-@property (nonatomic, strong) WDWendaListCellActionFooterView *actionView;
 @property (nonatomic, strong) WDWendaListCellPureCharacterView *characterView;
 
 @property (nonatomic, strong) SSThemedLabel *bottomLabel;
@@ -109,7 +107,6 @@
     }
     [self createSubviewsIfNeeded];
     self.headerView.width = self.cellWidth;
-    self.actionView.width = self.cellWidth;
     self.characterView.width = self.cellWidth;
     if (self.cellLayoutModel.cellCacheHeight == 0) {
         [cellLayoutModel calculateLayoutIfNeedWithCellWidth:cellWidth];
@@ -121,7 +118,6 @@
     CGFloat originY = [self refreshUserInfoViewContentAndLayout];
     originY = [self refreshAnswerTextContentAndLayout:originY];
     originY = [self refreshBottomViewContentAndLayout:originY];
-//    originY = [self refreshActionViewContentAndLayout:originY];
     [self refreshFooterViewLayout:originY];
     
     [self addObserveKVO];
@@ -148,12 +144,6 @@
     self.bottomLabel.left = kWDCellLeftPadding;
     
     return self.bottomLabel.bottom + self.cellLayoutModel.bottomLabelBottomPadding;
-}
-
-- (CGFloat)refreshActionViewContentAndLayout:(CGFloat)top {
-    self.actionView.top = top;
-    [self.actionView refreshForwardCount:self.cellViewModel.forwardCount commentCount:self.cellViewModel.commentCount diggCount:self.cellViewModel.diggCount isDigg:self.cellViewModel.ansEntity.isDigg];
-    return self.actionView.bottom;
 }
 
 - (void)refreshFooterViewLayout:(CGFloat)top {
@@ -187,18 +177,6 @@
     self.bottomLabel.height = [WDMoreListCellLayoutModel answerReadCountsLineHeight];
 }
 
-- (void)refreshDiggCount {
-    [self.actionView refreshDiggCount:self.cellViewModel.diggCount isDigg:self.cellViewModel.ansEntity.isDigg];
-}
-
-- (void)refreshCommentCount {
-    [self.actionView refreshCommentCount:self.cellViewModel.commentCount];
-}
-
-- (void)refreshForwardCount {
-    [self.actionView refreshForwardCount:self.cellViewModel.forwardCount];
-}
-
 #pragma mark - Private
 
 - (void)createSubviewsIfNeeded {
@@ -206,7 +184,6 @@
     [self.contentView addSubview:self.headerView];
     [self.contentView addSubview:self.characterView];
     [self.contentView addSubview:self.bottomLabel];
-//    [self.contentView addSubview:self.actionView];
     [self.contentView addSubview:self.footerView];
 }
 
@@ -313,52 +290,6 @@
                                          }];
 }
 
-#pragma mark - WDWendaListCellActionFooterViewDelegate
-
-- (void)listCellActionFooterViewDiggButtonClick:(TTAlphaThemedButton *)diggButton {
-    if ([self.ansEntity isBuryed]) {
-        [TTIndicatorView showWithIndicatorStyle:TTIndicatorViewStyleImage indicatorText:NSLocalizedString(@"您已经反对过", nil) indicatorImage:nil autoDismiss:YES dismissHandler:nil];
-    } else {
-        WDDiggType digType = WDDiggTypeDigg;
-        if (![self.ansEntity isDigg]) {
-            [self diggAnimationWith:diggButton];
-            NSDictionary *dict = [self.cellViewModel diggButtonTappedTrackDict];
-            NSMutableDictionary *fullDict = [NSMutableDictionary dictionaryWithDictionary:self.gdExtJson];
-            [fullDict addEntriesFromDictionary:dict];
-            [BDTrackerProtocol eventV3:WDMoreListCellDiggButtonClickTrackerEvent params:fullDict];
-        } else {
-            NSDictionary *dict = [self.cellViewModel diggButtonTappedTrackDict];
-            NSMutableDictionary *fullDict = [NSMutableDictionary dictionaryWithDictionary:self.gdExtJson];
-            [fullDict addEntriesFromDictionary:dict];
-            [BDTrackerProtocol eventV3:WDMoreListCellUnDiggButtonClickTrackerEvent params:fullDict];
-            if (diggButton.selected) {
-                diggButton.selected = NO;
-            }
-            self.ansEntity.diggCount = (self.ansEntity.diggCount.longLongValue >= 1) ? @(self.ansEntity.diggCount.longLongValue - 1) : @0;
-            self.ansEntity.isDigg = NO;
-            [self.ansEntity save];
-            digType = WDDiggTypeUnDigg;
-        }
-        [WDAnswerService digWithAnswerID:self.ansEntity.ansid diggType:digType enterFrom:kWDWendaMoreListViewControllerUMEventName apiParam:self.apiParams finishBlock:nil];
-    }
-}
-
-- (void)listCellActionFooterViewCommentButtonClick {
-    [self.cellViewModel enterAnswerDetailPageFromComment];
-    NSDictionary *dict = [self.cellViewModel commentButtonTappedTrackDict];
-    NSMutableDictionary *fullDict = [NSMutableDictionary dictionaryWithDictionary:self.gdExtJson];
-    [fullDict addEntriesFromDictionary:dict];
-    [BDTrackerProtocol eventV3:WDMoreListCellCommentButtonClickTrackerEvent params:fullDict];
-}
-
-- (void)listCellActionFooterViewForwardButtonClick {
-    [self.cellViewModel forwardCurrentAnswerToUGC];
-    NSDictionary *dict = [self.cellViewModel forwardButtonTappedTrackDict];
-    NSMutableDictionary *fullDict = [NSMutableDictionary dictionaryWithDictionary:self.gdExtJson];
-    [fullDict addEntriesFromDictionary:dict];
-    [BDTrackerProtocol eventV3:WDMoreListCellForwardButtonClickTrackerEvent params:fullDict];
-}
-
 #pragma mark - Notification
 
 - (void)themeChanged:(NSNotification *)notification
@@ -407,14 +338,6 @@
         _headerView.delegate = self;
     }
     return _headerView;
-}
-
-- (WDWendaListCellActionFooterView *)actionView {
-    if (!_actionView) {
-        _actionView = [[WDWendaListCellActionFooterView alloc] initWithFrame:CGRectMake(0, 0, self.width, 0) answerEntity:self.ansEntity];
-        _actionView.delegate = self;
-    }
-    return _actionView;
 }
 
 - (WDWendaListCellPureCharacterView *)characterView {

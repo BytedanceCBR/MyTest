@@ -7,6 +7,7 @@
 
 #import <Foundation/Foundation.h>
 #import "FHDetailBaseModel.h"
+#import "FHDetailPictureModel.h"
 @class FHMultiMediaItemModel,FHDetailNeighborhoodMediaHeaderDataHelperHeaderViewData,FHDetailNeighborhoodMediaHeaderDataHelperPictureDetailData,FHDetailNeighborhoodMediaHeaderDataHelperPhotoAlbumData;
 NS_ASSUME_NONNULL_BEGIN
 @class FHDetailNewMediaHeaderDataHelperData,FHDetailNeighborhoodMediaHeaderModel,FHHouseDetailImageGroupModel;
@@ -41,7 +42,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface FHDetailNeighborhoodMediaHeaderDataHelperPictureDetailData : NSObject
 
 @property (nonatomic, copy) NSArray<FHMultiMediaItemModel*> *mediaItemArray;
-@property (nonatomic, copy) NSArray<FHDetailPhotoHeaderModelProtocol> *photoArray;
+@property (nonatomic, strong) FHDetailPictureModel *detailPictureModel;
 @end
 
 @interface FHDetailNeighborhoodMediaHeaderDataHelperPhotoAlbumData : NSObject

@@ -50,7 +50,7 @@
         
         [self.layer addSublayer:_bgLayer];
         
-        UIImage *backImg = ICON_FONT_IMG(24, @"\U0000e68a", [UIColor themeGray1]);
+        UIImage *backImg = FHBackBlackImage;
     
         _backButton = [UIButton buttonWithType:UIButtonTypeCustom];
         [_backButton setImage:backImg forState:UIControlStateNormal];
@@ -145,9 +145,6 @@
         return;
     }
     
-    if (titlesArray.count >= 2) {
-        _titleLabel.hidden = YES;
-    }
 
     _houseSegmentControl = [[HMSegmentedControl alloc] initWithSectionTitles:titlesArray];
     
@@ -187,10 +184,19 @@
     
     [_houseSegmentControl mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerX.equalTo(self);
-        make.centerY.equalTo(self).offset(-10);
-        make.width.mas_equalTo(140);
+        make.centerY.equalTo(self).offset([UIDevice btd_isIPhoneXSeries] ? -10 : -18);
+        make.width.mas_equalTo(160);
         make.height.mas_equalTo(50);
     }];
+    
+    
+    if (titlesArray.count >= 2) {
+        _titleLabel.hidden = YES;
+        _houseSegmentControl.hidden = NO;
+    }else{
+        _titleLabel.hidden = NO;
+        _houseSegmentControl.hidden = YES;
+    }
     
     [self updateSegementedTitles:titlesArray andSelectIndex:0];
 }
@@ -215,6 +221,10 @@
     if (self.backActionBlock) {
         self.backActionBlock(self.type);
     }
+}
+
+- (void)changeHouseSegementStatas:(BOOL)isCanClick{
+    _houseSegmentControl.touchEnabled = isCanClick;
 }
 
 - (void)updateCicleBtn:(BOOL)isShowCircle{
@@ -275,7 +285,7 @@
     SAFE_AREA
     CGFloat top = 0;
     if (safeInsets.top == 0) {
-        top = 27;
+        top = 29;
     }else{
         
         top = safeInsets.top + 7;
@@ -327,6 +337,7 @@
         img = ICON_FONT_IMG(24, @"\U0000e673",[UIColor themeGray1]);
         _rightTitleLabel.hidden = YES;
         _houseSegmentControl.hidden = NO;
+        _titleLabel.hidden = YES;
     }else if(type == FHMapSimpleNavbarTypeDrawLine){
         img = ICON_FONT_IMG(24, @"\U0000e673",[UIColor themeGray1]);
         [_rightButton setImage:[UIImage imageNamed:@"draw_line_btn"] forState:UIControlStateNormal];
@@ -345,6 +356,7 @@
         }];
         _houseSegmentControl.hidden = NO;
         _rightTitleLabel.hidden = YES;
+        _titleLabel.hidden = YES;
     }
 
     [self.backButton setImage:img forState:UIControlStateNormal];
@@ -353,6 +365,16 @@
 -(void)setTitle:(NSString *)title
 {
     _titleLabel.text = title;
+}
+
+-(void)setTitle:(NSString *)title withHouseTypeArray:(BOOL)isSingle{
+    _titleLabel.text = title;
+    if (isSingle) {
+        _titleLabel.hidden = NO;
+        _houseSegmentControl.hidden = YES;
+    }else{
+        _titleLabel.hidden = YES;
+    }
 }
 
 -(NSString *)title

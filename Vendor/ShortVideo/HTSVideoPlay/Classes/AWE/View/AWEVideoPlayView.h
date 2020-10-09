@@ -7,6 +7,9 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "ExploreMovieMiniSliderView.h"
+#import "FHFeedUGCCellModel.h"
+#import "IESVideoPlayerProtocol.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -14,18 +17,18 @@ NS_ASSUME_NONNULL_BEGIN
 @class AWEVideoPlayView;
 @protocol AWEVideoPlayViewDelegate <NSObject>
 @optional
-- (void)playView:(AWEVideoPlayView *)view didStartPlayWithModel:(TTShortVideoModel *)model;
-- (void)playView:(AWEVideoPlayView *)view didPlayNextLoopWithModel:(TTShortVideoModel *)model;
+- (void)playView:(AWEVideoPlayView *)view didStartPlayWithModel:(FHFeedUGCCellModel *)model;
+- (void)playView:(AWEVideoPlayView *)view didPlayNextLoopWithModel:(FHFeedUGCCellModel *)model;
 /** 返回duration后会清零 */
-- (void)playView:(AWEVideoPlayView *)view didPausePlayWithModel:(TTShortVideoModel *)model duration:(NSTimeInterval)duration;
-- (void)playView:(AWEVideoPlayView *)view didResumePlayWithModel:(TTShortVideoModel *)model duration:(NSTimeInterval)duration;
+- (void)playView:(AWEVideoPlayView *)view didPausePlayWithModel:(FHFeedUGCCellModel *)model duration:(NSTimeInterval)duration;
+- (void)playView:(AWEVideoPlayView *)view didResumePlayWithModel:(FHFeedUGCCellModel *)model duration:(NSTimeInterval)duration;
 /** 返回duration后会清零 */
-- (void)playView:(AWEVideoPlayView *)view didStopPlayWithModel:(TTShortVideoModel *)model duration:(NSTimeInterval)duration;
-- (void)playView:(AWEVideoPlayView *)view didClickInputWithModel:(TTShortVideoModel *)model;
-- (void)playView:(AWEVideoPlayView *)view didClickCommentWithModel:(TTShortVideoModel *)model;
-- (void)playView:(AWEVideoPlayView *)view didClickLikeWithModel:(TTShortVideoModel *)model;
-- (void)playView:(AWEVideoPlayView *)view didClickMoreWithModel:(TTShortVideoModel *)model;
-- (void)playView:(AWEVideoPlayView *)view didDoubleTapWithModel:(TTShortVideoModel *)model;
+- (void)playView:(AWEVideoPlayView *)view didStopPlayWithModel:(FHFeedUGCCellModel *)model duration:(NSTimeInterval)duration;
+- (void)playView:(AWEVideoPlayView *)view didClickInputWithModel:(FHFeedUGCCellModel *)model;
+- (void)playView:(AWEVideoPlayView *)view didClickCommentWithModel:(FHFeedUGCCellModel *)model;
+- (void)playView:(AWEVideoPlayView *)view didClickLikeWithModel:(FHFeedUGCCellModel *)model;
+- (void)playView:(AWEVideoPlayView *)view didClickMoreWithModel:(FHFeedUGCCellModel *)model;
+- (void)playView:(AWEVideoPlayView *)view didDoubleTapWithModel:(FHFeedUGCCellModel *)model;
 - (void)playView:(AWEVideoPlayView *)view didUpdateFrame:(CGRect)theNewFrame;
 
 @end
@@ -33,7 +36,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface AWEVideoPlayView : UIView
 
-@property (nonatomic, strong, readonly) TTShortVideoModel *model;
+@property (nonatomic, strong, readonly) FHFeedUGCCellModel *model;
+// 视频播放器
+@property (nonatomic, strong) id<IESVideoPlayerProtocol> playerController;
 @property (nonatomic, assign, readonly) BOOL isPlaying;
 @property (nonatomic, copy, nullable) NSDictionary *commonTrackingParameter;
 @property (nonatomic, readonly, assign) NSTimeInterval videoDuration;
@@ -41,7 +46,7 @@ NS_ASSUME_NONNULL_BEGIN
 /// 自动改变frame以适配视频大小，默认YES
 @property (nonatomic, assign) BOOL autoAdjustViewFrame;
 
-- (void)updateWithModel:(TTShortVideoModel *)model usingFirstFrameCover:(BOOL)usingFirstFrameCover;
+- (void)updateWithModel:(FHFeedUGCCellModel *)model usingFirstFrameCover:(BOOL)usingFirstFrameCover;
 
 - (void)prepareToPlay;
 
@@ -50,6 +55,8 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)stop;
 
 - (void)pause;
+
+- (void)pauseOrPlayVideo;
 
 @end
 

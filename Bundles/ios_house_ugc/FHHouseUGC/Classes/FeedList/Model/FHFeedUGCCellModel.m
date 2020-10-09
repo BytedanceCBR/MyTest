@@ -138,6 +138,7 @@
                  type == FHUGCFeedListCellTypeUGCHotTopic ||
                  type == FHUGCFeedListCellTypeUGCVote ||
                  type == FHUGCFeedListCellTypeUGCSmallVideo ||
+                 type == FHUGCFeedListCellTypeUGCSmallVideo2 ||
                  type == FHUGCFeedListCellTypeUGCVoteInfo ||
                  type == FHUGCFeedListCellTypeUGCRecommendCircle ||
                  type == FHUGCFeedListCellTypeUGCEncyclopedias ){
@@ -691,10 +692,16 @@
         [FHUGCCellHelper setUGCVoteContentString:cellModel width:(screenWidth - 60) numberOfLines:2];
         cellModel.voteInfo.descHeight = 17;
     }
-    else if(cellModel.cellType == FHUGCFeedListCellTypeUGCSmallVideo){
+    else if(cellModel.cellType == FHUGCFeedListCellTypeUGCSmallVideo || cellModel.cellType == FHUGCFeedListCellTypeUGCSmallVideo2){
         cellModel.cellSubType = FHUGCFeedListCellSubTypeUGCSmallVideo;
         cellModel.groupId = model.rawData.groupId;
         cellModel.openUrl = model.rawData.detailSchema;
+        cellModel.video = model.rawData.video;
+        cellModel.itemId  = model.rawData.itemId;
+        cellModel.share = [model.rawData.share copy];
+        cellModel.videoSourceIcon = model.rawData.videoSourceIcon;
+        cellModel.userRepin = model.rawData.userRepin;
+        cellModel.videoAction = [model.rawData.action copy];
         cellModel.showLookMore = YES;
         cellModel.numberOfLines = 3;
         cellModel.createTime = [FHBusinessManager ugcCustomtimeAndCustomdateStringSince1970:model.rawData.createTime.doubleValue type:@"onlyDate"];
@@ -735,7 +742,8 @@
             user.name = model.rawData.user.info.name;
             user.avatarUrl = model.rawData.user.info.avatarUrl;
         }
-
+        user.relation = [model.rawData.user.relation copy];
+        user.relationCount = [model.rawData.user.relationCount copy];
         user.userId = model.rawData.user.info.userId;
         user.schema = model.rawData.user.info.schema;
         cellModel.user = user;
@@ -750,9 +758,9 @@
         double time = [model.rawData.createTime doubleValue];
         NSString *publishTime = [FHBusinessManager ugcCustomtimeAndCustomdateStringSince1970:time type:@"onlyDate"];
         cellModel.desc = [[NSAttributedString alloc] initWithString:publishTime];
-        
+        cellModel.animatedImageList = model.rawData.animatedImageList;
         cellModel.imageList = model.rawData.firstFrameImageList;
-        cellModel.largeImageList = nil;
+        cellModel.largeImageList = model.rawData.detailCoverImageModel;
         if([model.cellCtrls.cellLayoutStyle isEqualToString:@"10001"]){
         [FHUGCCellHelper setRichContentWithModel:cellModel width:(screenWidth - 60) numberOfLines:3];
         }else {

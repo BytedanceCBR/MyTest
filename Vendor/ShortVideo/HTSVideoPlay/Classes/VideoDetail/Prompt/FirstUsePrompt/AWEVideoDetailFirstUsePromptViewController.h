@@ -17,4 +17,7 @@
 
 + (BOOL)hasShownFirstLeftPromotion;
 
++ (BOOL)needPromotionForDirection:(AWEPromotionDiretion)direction
+                         category:(AWEPromotionCategory)category;
+
 @end

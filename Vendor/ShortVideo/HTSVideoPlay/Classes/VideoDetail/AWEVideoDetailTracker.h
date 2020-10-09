@@ -7,13 +7,12 @@
 //
 
 #import <Foundation/Foundation.h>
-
-@class TTShortVideoModel;
+#import "FHFeedUGCCellModel.h"
 
 @interface AWEVideoDetailTracker : NSObject
 
 + (void)trackEvent:(NSString *)event
-             model:(TTShortVideoModel *)model
+             model:(FHFeedUGCCellModel *)model
    commonParameter:(NSDictionary *)commonParameter
     extraParameter:(NSDictionary *)dictionary;
 

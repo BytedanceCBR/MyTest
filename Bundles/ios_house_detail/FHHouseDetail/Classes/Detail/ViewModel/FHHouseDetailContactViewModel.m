@@ -64,6 +64,7 @@
 #import "FHUtils.h"
 #import "BDABTestManager.h"
 #import <ByteDanceKit/NSDictionary+BTDAdditions.h>
+#import "FHNewHouseDetailViewController.h"
 
 NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
 
@@ -226,7 +227,7 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
     configModel.houseType = self.houseType;
     configModel.followId = self.houseId;
     configModel.actionType = self.houseType;
-    if (![TTAccount sharedAccount].isLogin && [FHUtils getSettingEnableBooleanForKey:@"f_login_before_house_subscribe"]) {
+    if (![TTAccount sharedAccount].isLogin) {
         NSMutableDictionary *params = [NSMutableDictionary dictionary];
         NSString *page_type = self.tracerDict[@"page_type"] ?: @"be_null";
         [params setObject:page_type forKey:@"enter_from"];
@@ -706,7 +707,8 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
     }
     
     // ------------- 房源详情页 --------------------//
-    if([self.belongsVC isKindOfClass:FHHouseDetailViewController.class]) {
+    if([self.belongsVC isKindOfClass:FHHouseDetailViewController.class] ||
+       [self.belongsVC isKindOfClass:FHNewHouseDetailViewController.class]) {
         FHHouseDetailViewController *houseDetailVC = (FHHouseDetailViewController *)self.belongsVC;
         NSObject *detailData  = houseDetailVC.viewModel.detailData;
         switch(houseDetailVC.viewModel.houseType) {

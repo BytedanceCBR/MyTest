@@ -20,6 +20,7 @@
 #import <FHIntroduceManager.h>
 #import <TTBaseLib/TTDeviceHelper.h>
 #import <ByteDanceKit/ByteDanceKit.h>
+#import "UIImage+FIconFont.h"
 
 @interface FHBaseViewController ()<TTRouteInitializeProtocol, UIViewControllerErrorHandler>
 
@@ -44,6 +45,7 @@
         self.isFirstViewDidAppear = YES;
         self.needRemoveLastVC = NO;
         self.isResetStatusBar = YES;
+        self.ttDragBackLeftEdge = UIScreen.mainScreen.bounds.size.width * 0.2;
 
         self.titleName = [paramObj.allParams objectForKey:VCTITLE_KEY];
         NSDictionary *tracer = paramObj.allParams[TRACER_KEY];
@@ -79,7 +81,8 @@
             return currentValue;
         }
         //allParams 包含通用埋点字段， 并且tracerModel中为有值，赋值
-        if (!currentValue.length) {
+        //或者传be_null 的时候也需要调换
+        if (!currentValue.length || [currentValue isEqualToString:@"be_null"]) {
             return trackerValue;
         }
         return currentValue;
@@ -106,6 +109,14 @@
         self.tracerModel.logPb = [(NSString *)logPb btd_jsonDictionary];
     }
     [self.tracerDict addEntriesFromDictionary:[self.tracerModel toDictionary]];
+    
+    NSString *report_params = allParams[@"report_params"];
+    if (report_params && [report_params isKindOfClass:[NSString class]]) {
+        NSDictionary *report_params_dic = [report_params btd_jsonDictionary];
+        if (report_params_dic && report_params_dic.count) {
+            [self.tracerDict addEntriesFromDictionary:report_params_dic];
+        }
+    }
 }
 
 -(void)initNavbar
@@ -253,7 +264,9 @@
         // 自定义NaviBar
         self.ttHideNavigationBar = YES;
         self.navigationController.navigationBar.hidden = YES;
-        _customNavBarView = [[FHNavBarView alloc] init];
+        self.customNavBarView = [[FHNavBarView alloc] init];
+        [self.customNavBarView.leftBtn setBackgroundImage:FHBackBlackImage forState:UIControlStateNormal];
+        [self.customNavBarView.leftBtn setBackgroundImage:FHBackBlackImage forState:UIControlStateHighlighted];
         [self.view addSubview:_customNavBarView];
         _customNavBarView.title.text = self.titleName;
         [_customNavBarView mas_makeConstraints:^(MASConstraintMaker *maker) {
