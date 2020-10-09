@@ -194,6 +194,8 @@
 	</dict>
 	<key>NSCameraUsageDescription</key>
 	<string>方便您使用拍照功能上传头像，发送图片以及发帖</string>
+	<key>NSLocalNetworkUsageDescription</key>
+	<string>此 app 不会连接到您所用网络上的设备，只会检测与您本地网关的连通性。</string>
 	<key>NSLocationAlwaysUsageDescription</key>
 	<string>以便我们更好地为您推荐房源及丰富信息推荐维度</string>
 	<key>NSLocationUsageDescription</key>
