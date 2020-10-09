@@ -35,6 +35,7 @@
 #import "NSDictionary+BTDAdditions.h"
 #import "FHLocManager.h"
 #import "NSData+BTDAdditions.h"
+#import "NSArray+BTDAdditions.h"
 #import "FHMainApi+Contact.h"
 #import "HMDTTMonitor.h"
 #import <FHHouseBase/FHUserInfoManager.h>
@@ -54,6 +55,7 @@
 #define REGION_MAX_COUNT 3
 
 extern NSString *const kFHFindHouseTypeNumberCacheKey;
+static const NSInteger kDefaultPriceIndex = 4;  //1.0.8版本将价格区间的默认值改为第四个
 
 @interface FHHouseFindHelpViewModel ()<UICollectionViewDataSource,UICollectionViewDelegate,UITableViewDataSource, UITableViewDelegate, FHHouseFindPriceCellDelegate, UITextFieldDelegate, UIGestureRecognizerDelegate>
 
@@ -929,7 +931,7 @@ extern NSString *const kFHFindHouseTypeNumberCacheKey;
     }
     selectItem.lowerPrice = nil;
     selectItem.higherPrice = nil;
-    [model clearAddSelecteItem:selectItem withIndex:3];
+    [model clearAddSelecteItem:selectItem withIndex:kDefaultPriceIndex];
     
     item = self.roomConfigItem;
     options = [item.options firstObject];
@@ -950,7 +952,9 @@ extern NSString *const kFHFindHouseTypeNumberCacheKey;
         [model clearAddSelecteItem:selectItem withIndex:1];
     }
     
-    FHSearchFilterConfigOption *optionHouse = self.houseTypeConfigItem.options.firstObject;
+    NSInteger defaultHouseIndex = [self defaultHouseIndex];
+    defaultHouseIndex = defaultHouseIndex < self.houseTypeConfigItem.options.count ? defaultHouseIndex : 0;
+    FHSearchFilterConfigOption *optionHouse = [self.houseTypeConfigItem.options btd_objectAtIndex:defaultHouseIndex];
     if ([optionHouse isKindOfClass:[FHSearchFilterConfigOption class]]) {
         _houseTypeSelectedValue = optionHouse.houseType;
         self.userHouseTypeSelected = NO;
@@ -1004,6 +1008,27 @@ extern NSString *const kFHFindHouseTypeNumberCacheKey;
 - (NSString *)readHouseTypeNum{
     YYCache *findHousePhoneNumberCache = [[FHEnvContext sharedInstance].generalBizConfig findHousePhoneNumberCache];
     return (NSString *)[findHousePhoneNumberCache objectForKey:kFHFindHouseTypeNumberCacheKey];
+}
+
+/**
+ 获取买房类型所对应的index
+ 二手房：0，新房：1
+ */
+- (NSInteger)defaultHouseIndex {
+    NSInteger result = 0;
+    switch (self.houseTypeSelectedValue) {
+        case FHHouseTypeNewHouse:
+            result = 1;
+            break;
+        case FHHouseTypeSecondHandHouse:
+            result = 0;
+            break;
+            
+        default:
+            break;
+    }
+    
+    return result;
 }
 
 #pragma mark - price cell delegate
@@ -1156,7 +1181,10 @@ extern NSString *const kFHFindHouseTypeNumberCacheKey;
             if (item.options.count > indexPath.item) {
                 FHSearchFilterConfigOption *option = item.options[indexPath.item];
                 if (self.houseTypeSelectedValue == option.houseType && !self.userHouseTypeSelected) {
-                  selected = YES;
+                    NSInteger selectedIndex = [self defaultHouseIndex];
+                    if (selectedIndex == indexPath.item) {
+                        selected = YES;
+                    }
                 }
             }
       
@@ -1781,12 +1809,13 @@ extern NSString *const kFHFindHouseTypeNumberCacheKey;
 #pragma mark - 埋点
 - (void)addGoDetailLog
 {
+    NSString *trackingID = self.houseType == FHHouseTypeSecondHandHouse ? @"93414" : @"110833";
     NSMutableDictionary *params = @{}.mutableCopy;
     params[@"enter_from"] = self.tracerDict[@"enter_from"] ? : @"be_null";
     params[@"origin_from"] = self.tracerDict[@"origin_from"] ?: @"be_null";
     params[@"element_from"] = self.tracerDict[@"element_from"] ?: @"be_null";
     params[@"page_type"] = [self pageTypeString];
-    params[@"event_tracking_id"] = @"93414";
+    params[@"event_tracking_id"] = trackingID;
     [FHUserTracker writeEvent:@"go_detail" params:params];
 }
 

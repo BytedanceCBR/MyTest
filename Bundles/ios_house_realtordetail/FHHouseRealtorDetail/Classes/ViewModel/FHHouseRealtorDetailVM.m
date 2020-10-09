@@ -295,7 +295,7 @@
 
 - (void)updateNavBarWithAlpha:(CGFloat)alpha {
     UIImage *whiteBackArrowImage = ICON_FONT_IMG(24, @"\U0000e68a",self.isHeightScoreRealtor?[UIColor colorWithHexStr:@"#E7C494"]:[UIColor whiteColor]);
-    UIImage *blackBackArrowImage = ICON_FONT_IMG(24, @"\U0000e68a", [UIColor themeGray1]);
+    UIImage *blackBackArrowImage = FHBackBlackImage;
     alpha = fminf(fmaxf(0.0f, alpha), 1.0f);
     if (alpha <= 0.1f) {
         [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];

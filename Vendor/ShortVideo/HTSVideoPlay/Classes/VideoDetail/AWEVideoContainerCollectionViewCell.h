@@ -10,13 +10,14 @@
 
 #import "AWEVideoPlayView.h"
 #import "TSVControlOverlayViewController.h"
+#import "FHFeedUGCCellModel.h"
 
 @class TTShortVideoModel, AWEVideoDetailControlOverlayViewController;
 
 @interface AWEVideoContainerCollectionViewCell : UICollectionViewCell
 
 @property (nonatomic, nullable, readonly) AWEVideoPlayView *videoPlayView;
-@property (nonatomic, nullable, strong, readonly) TTShortVideoModel *videoDetail;
+@property (nonatomic, nullable, strong, readonly) FHFeedUGCCellModel *videoDetail;
 @property (nonatomic, assign) CGFloat spacingMargin;
 @property (nonatomic, nullable, strong) UIViewController<TSVControlOverlayViewController> *overlayViewController;
 
@@ -26,7 +27,7 @@
 @property (nonatomic, copy, nullable) void (^videoDidStartPlay)();
 @property (nonatomic, copy, nullable) void (^videoDidPlayOneLoop)();
 
-- (void)updateWithModel:(TTShortVideoModel * _Nonnull)videoDetail usingFirstFrameCover:(BOOL)usingFirstFrameCover;
+- (void)updateWithModel:(FHFeedUGCCellModel * _Nonnull)videoDetail usingFirstFrameCover:(BOOL)usingFirstFrameCover;
 - (void)cellWillDisplay;
 
 @end

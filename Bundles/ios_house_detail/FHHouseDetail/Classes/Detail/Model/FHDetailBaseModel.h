@@ -292,11 +292,16 @@ typedef NS_ENUM(NSUInteger, FHRealtorCellShowStyle) {
 
 @interface FHDetailHouseVRDataModel: JSONModel
 @property (nonatomic, assign) BOOL hasVr;
+@property (nonatomic, copy, nullable) NSString *vrId;
 @property (nonatomic, strong , nullable) FHImageModel *vrImage;
 @property (nonatomic, copy , nullable) NSString *openUrl;
 @property (nonatomic, assign) NSInteger spaceType;       //（售楼处：0  鸟瞰图：1   样板间：2）
 @end
+@interface FHDetailVRInfo : JSONModel
 
+@property (nonatomic, strong , nullable) NSArray<FHDetailHouseVRDataModel> *items;
+
+@end
 @protocol FHHouseDetailImageListDataModel<NSObject>
 @end
 
@@ -337,25 +342,36 @@ typedef NS_ENUM (NSUInteger, FHHouseDetailImageListDataUsedSceneType) {
 @property (nonatomic, strong , nullable) NSArray<FHImageModel> *instantHouseImageList;
 @end
 
-@protocol FHHouseDetailImageStruct <NSObject>
+@protocol FHHouseDetailMediaStruct <NSObject>
 @end
 
-@interface FHHouseDetailImageStruct : JSONModel
+@interface FHHouseDetailMediaStruct : JSONModel
+@property (nonatomic, copy, nullable) NSString *desc;
+@property (nonatomic, strong, nullable) FHVideoHouseVideoVideoInfosModel *videoInfo;
+@property (nonatomic, strong, nullable) FHDetailHouseVRDataModel *vrInfo;
 @property (nonatomic, strong, nullable) FHImageModel *image;
 @property (nonatomic, strong, nullable) FHImageModel *smallImage;
 @end
 
-@protocol FHHouseDetailImageTabInfo <NSObject>
+@protocol FHHouseDetailMediaTabInfo <NSObject>
 @end
 
-@interface FHHouseDetailImageTabInfo : JSONModel
+@interface FHHouseDetailMediaTabInfo : JSONModel
 @property (nonatomic, strong, nullable) NSString *tabName;
-@property (nonatomic, strong, nullable) NSArray<FHHouseDetailImageStruct>  *tabContent;
-@property (nonatomic, strong, nullable) NSArray<FHHouseDetailImageTabInfo> *subTab;
+@property (nonatomic, strong, nullable) NSArray<FHHouseDetailMediaStruct>  *tabContent;
+@property (nonatomic, strong, nullable) NSArray<FHHouseDetailMediaTabInfo> *subTab;
 @end
 
-@interface FHHouseDetailAlbumInfo : JSONModel
-@property (nonatomic, strong, nullable) NSArray<FHHouseDetailImageTabInfo> *tabList;
+@interface FHHouseDetailMediaInfo : JSONModel
+@property (nonatomic, strong, nullable) NSArray<FHHouseDetailMediaTabInfo> *tabList;
+//大图图片线索
+@property (nonatomic, strong, nullable) FHClueAssociateInfoModel *imageGroupAssociateInfo;
+//相册线索
+@property (nonatomic, strong, nullable) FHClueAssociateInfoModel *imageAlbumAssociateInfo;
+//VR线索
+@property (nonatomic, strong, nullable) FHClueAssociateInfoModel *vrImageAssociateInfo;
+//视频线索
+@property (nonatomic, strong, nullable) FHClueAssociateInfoModel *videoImageAssociateInfo;
 @end
 
 

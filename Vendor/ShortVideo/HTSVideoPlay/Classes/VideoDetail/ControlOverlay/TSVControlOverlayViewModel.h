@@ -7,6 +7,7 @@
 
 #import <Foundation/Foundation.h>
 #import "TSVShortVideoDataFetchManagerProtocol.h"
+#import "FHFeedUGCCellModel.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -26,8 +27,7 @@ typedef NS_ENUM(NSInteger, TSVGroupSource) {
 
 // Configuration
 @property (nonatomic, copy, nullable) NSDictionary *commonTrackingParameter;
-@property (nonatomic, strong, nullable) TTShortVideoModel *model;
-@property (nonatomic, copy, nullable) void (^closeButtonDidClick)();
+@property (nonatomic, strong, nullable) FHFeedUGCCellModel *model;
 @property (nonatomic, copy, nullable) void (^moreButtonDidClick)();
 @property (nonatomic, copy, nullable) void (^writeCommentButtonDidClick)();
 @property (nonatomic, copy, nullable) void (^showProfilePopupBlock)();

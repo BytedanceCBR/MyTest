@@ -35,6 +35,7 @@ extern NSString const *CHANNEL_ID_SAME_NEIGHBORHOOD_HOUSE; //同小区房源 ✅
 extern NSString const *CHANNEL_ID_SAME_NEIGHBORHOOD_RENT; //同小区租房 ✅
 
 extern NSString const *CHANNEL_ID_RECOMMEND_SEARCH; //猜你想找 ✅
+extern NSString const *CHANNEL_ID_RECOMMEND_SEARCH_NEW; //新房猜你想找 ✅
 //extern NSString const *CHANNEL_ID_GUESS_SEARCH; //猜你想搜 ❎
 extern NSString const *CHANNEL_ID_RENT_COMMUTING; //通勤找房 ✅
 extern NSString const *CHANNEL_ID_SEARCH_NEIGHBORHOOD_DEAL; //查成交 ✅

@@ -58,7 +58,7 @@
     }else if(cellModel.cellType == FHUGCFeedListCellTypeUGCVote){
         //投票pk
         [self jumpToVotePKDetail:cellModel value:0 extraDic:extraDic];
-    }else if(cellModel.cellType == FHUGCFeedListCellTypeUGCSmallVideo){
+    }else if(cellModel.cellType == FHUGCFeedListCellTypeUGCSmallVideo || cellModel.cellType == FHUGCFeedListCellTypeUGCSmallVideo2){
         //小视频
         [self jumpToSmallVideoDetail:cellModel showComment:showComment enterType:enterType extraDic:extraDic];
     }  else if(cellModel.cellType == FHUGCFeedListCellTypeUGCVoteInfo) {
@@ -334,22 +334,34 @@
 
 //小视频
 - (void)jumpToSmallVideoDetail:(FHFeedUGCCellModel *)cellModel showComment:(BOOL)showComment enterType:(NSString *)enterType extraDic:(NSDictionary *)extraDic {
-    if (![TTReachability isNetworkConnected]) {
-        [[ToastManager manager] showToast:@"网络异常"];
-        return;
-    }
-    WeakSelf;
-    TSVShortVideoDetailExitManager *exitManager = [[TSVShortVideoDetailExitManager alloc] initWithUpdateBlock:^CGRect{
-        StrongSelf;
-        CGRect imageFrame = [self selectedSmallVideoFrame];
-        imageFrame.origin = CGPointZero;
-        return imageFrame;
-    } updateTargetViewBlock:^UIView *{
-        StrongSelf;
-        return [self currentSelectSmallVideoView];
-    }];
+    [self jumpToSmallVideoDetail:cellModel otherVideos:nil showComment:showComment enterType:enterType extraDic:extraDic];
+}
+
+//小视频
+- (void)jumpToSmallVideoDetail:(FHFeedUGCCellModel *)cellModel otherVideos:(NSArray<FHFeedUGCCellModel *> *)otherVideos showComment:(BOOL)showComment enterType:(NSString *)enterType extraDic:(NSDictionary *)extraDic {
+//    if (![TTReachability isNetworkConnected]) {
+//        [[ToastManager manager] showToast:@"网络异常"];
+//        return;
+//    }
+//    WeakSelf;
+//    TSVShortVideoDetailExitManager *exitManager = [[TSVShortVideoDetailExitManager alloc] initWithUpdateBlock:^CGRect{
+//        StrongSelf;
+//        CGRect imageFrame = [self selectedSmallVideoFrame];
+//        imageFrame.origin = CGPointZero;
+//        return imageFrame;
+//    } updateTargetViewBlock:^UIView *{
+//        StrongSelf;
+//        return [self currentSelectSmallVideoView];
+//    }];
     NSMutableDictionary *info = [NSMutableDictionary dictionaryWithCapacity:2];
-    [info setValue:exitManager forKey:HTSVideoDetailExitManager];
+    if(cellModel){
+        [info setValue:cellModel forKey:@"current_video"];
+    }
+    if(otherVideos){
+        [info setValue:otherVideos forKey:@"other_videos"];
+    }
+
+//    [info setValue:exitManager forKey:HTSVideoDetailExitManager];
     if (showComment) {
         [info setValue:@(1) forKey:AWEVideoShowComment];
     }

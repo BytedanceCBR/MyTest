@@ -32,7 +32,6 @@
 #import "UIColor+Theme.h"
 #import "TTAccountManager.h"
 
-
 #define kTTCommentCellDigButtonHitTestInsets UIEdgeInsetsMake(-30, -30, -10, -30)
 #define kTTCommentContentLabelQuotedCommentUserURLString @"com.bytedance.kTTCommentContentLabelQuotedCommentUserURLString"
 #define kTTCommentContentLabelTruncationTokenURLString @"com.bytedance.kTTCommentContentLabelTruncationTokenURLString"

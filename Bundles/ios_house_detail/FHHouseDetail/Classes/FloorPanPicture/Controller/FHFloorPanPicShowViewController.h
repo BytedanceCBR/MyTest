@@ -24,7 +24,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic, copy) void (^topImageClickTabBlock)(NSInteger index);
 
 @property (nonatomic, strong) FHHouseDetailContactViewModel *contactViewModel;
-@property (nonatomic, strong, nullable) FHClueAssociateInfoModel *associateInfo;
+//相册线索
+@property (nonatomic, strong, nullable) FHClueAssociateInfoModel *imageAlbumAssociateInfo;
 
 @property (nonatomic, copy) NSString *elementFrom;
 

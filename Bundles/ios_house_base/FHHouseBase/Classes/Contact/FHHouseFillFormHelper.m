@@ -271,6 +271,9 @@ extern NSString *const kFHToastCountKey;
     if (reportParams[@"event_tracking_id"]) {
         params[@"event_tracking_id"] = reportParams[@"event_tracking_id"];
     }
+    if (reportParams[@"picture_type"]) {
+        params[@"picture_type"] = reportParams[@"picture_type"];
+    }
 
     [FHUserTracker writeEvent:@"inform_show" params:params];
 }
@@ -293,7 +296,9 @@ extern NSString *const kFHToastCountKey;
     params[@"position"] = reportParams[@"position"] ? : @"be_null";
 
     params[@"item_id"] = reportParams[@"item_id"] ? : @"be_null";
-
+    if (reportParams[@"picture_type"]) {
+        params[@"picture_type"] = reportParams[@"picture_type"];
+    }
     NSMutableDictionary *dict = @{}.mutableCopy;
     NSArray *selectAgencyList = [alertView selectAgencyList] ? : associateReport.chooseAgencyList;
     for (FHFillFormAgencyListItemModel *item in selectAgencyList) {

@@ -400,7 +400,7 @@
     }];
 
     [self layoutIfNeeded];
-    [FHUtils addShadowToView:self.cardView withOpacity:0.1 shadowColor:[UIColor blackColor] shadowOffset:CGSizeMake(2, 6) shadowRadius:8 andCornerRadius:4];
+    [FHUtils addShadowToView:self.cardView withOpacity:0.1 shadowColor:[UIColor blackColor] shadowOffset:CGSizeMake(2, 6) shadowRadius:8 andCornerRadius:10];
 }
 
 - (UILabel *)LabelWithFont:(UIFont *)font textColor:(UIColor *)textColor {

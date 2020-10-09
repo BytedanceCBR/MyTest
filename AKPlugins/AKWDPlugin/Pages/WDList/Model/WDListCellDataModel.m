@@ -30,7 +30,7 @@
 - (instancetype)initWithListCellStructModel:(WDWendaListCellStructModel *)structModel {
     if (self) {
         self.cellType = structModel.cell_type;
-        self.layoutType = structModel.layout_type;
+        self.layoutType = WDWendaListLayoutTypeLIGHT_ANSWER;
         if (self.cellType == WDWendaListCellTypeANSWER) {
             self.answerEntity = [WDAnswerEntity generateAnswerEntityFromAnswerModel:structModel.answer];
             self.uniqueId = self.answerEntity.ansid;

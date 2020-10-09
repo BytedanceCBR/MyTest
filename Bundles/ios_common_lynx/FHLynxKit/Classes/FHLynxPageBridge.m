@@ -6,6 +6,7 @@
 //
 
 #import "FHLynxPageBridge.h"
+#import "FHCustomerServicePage.h"
 
 @interface FHLynxPageBridge()
 @property(nonatomic,weak)UIViewController *weakVC;
@@ -33,10 +34,12 @@
 
 + (NSDictionary<NSString *,NSString *> *)methodLookup {
     return @{
-        @"updateStatusPage" : NSStringFromSelector(@selector(updateStatusPage:)),
-        @"close" : NSStringFromSelector(@selector(close)),
+        @"updateStatusPage":NSStringFromSelector(@selector(updateStatusPage:)),
+        @"close":NSStringFromSelector(@selector(close)),
         @"disLike":NSStringFromSelector(@selector(disLike:)),
         @"tapFHEncyclopediaAction":NSStringFromSelector(@selector(tapFHEncyclopediaAction)),
+        @"clickPhone":NSStringFromSelector(@selector(clickPhone:)),
+        @"clickIM":NSStringFromSelector(@selector(clickIM:)),
     };
 }
 
@@ -103,8 +106,14 @@
         dispatch_sync(dispatch_get_main_queue(), invokBlock);
     }
 }
+ 
+- (void)clickPhone:(id)param {
+    [FHCustomerServicePage callCustomerService];
+}
 
-
-
-
+- (void)clickIM:(id)param {    
+    [FHCustomerServicePage jumpToLinkChatPage:@{
+        UT_ENTER_FROM: @"common_problem",
+    }];
+}
 @end

@@ -183,7 +183,7 @@
     }];
 
     [self layoutIfNeeded];
-    [FHUtils addShadowToView:self.inputView withOpacity:0.1 shadowColor:[UIColor blackColor] shadowOffset:CGSizeMake(2, 6) shadowRadius:8 andCornerRadius:4];
+    [FHUtils addShadowToView:self.inputView withOpacity:0.1 shadowColor:[UIColor blackColor] shadowOffset:CGSizeMake(2, 6) shadowRadius:8 andCornerRadius:10];
 }
 
 //- (void)setAgreementContent {
