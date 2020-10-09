@@ -65,7 +65,6 @@ static const CGFloat kDefaultCellHeight = 0;
                 [self.dynamicView updateData:lynxData];
             }
         }
-        
     }
 }
 

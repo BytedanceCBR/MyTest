@@ -31,13 +31,13 @@ NSString * const klistEntranceKey = @"more_shortvideo";
 @property (nonatomic, assign) TSVShortVideoCardPreFetchType preFetchType;
 
 @property (nonatomic, copy) NSArray *cardItems; // Feed card stream
-
 @property (nonatomic, assign) BOOL hasFetchDataSucceed;
 @end
 
 @implementation TSVShortVideoCategoryFetchManager
 
 @synthesize dataDidChangeBlock = _dataDidChangeBlock;
+@synthesize isFromFollowVc = _isFromFollowVc;
 
 - (instancetype)init
 {

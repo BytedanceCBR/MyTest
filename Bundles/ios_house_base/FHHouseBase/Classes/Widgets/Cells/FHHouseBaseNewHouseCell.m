@@ -57,6 +57,7 @@
 
 
 @property(nonatomic, strong) UIImageView *houseVideoImageView;
+@property(nonatomic, strong) UIImageView *videoImageView;
 @property(nonatomic, strong) UIView *houseMainImageBackView;
 
 
@@ -173,6 +174,13 @@
         _vrLoadingView.loopAnimation = YES;
     }
     return _vrLoadingView;
+}
+
+- (UIImageView *)videoImageView {
+    if (!_videoImageView) {
+        _videoImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"video_image"]];
+    }
+    return _videoImageView;
 }
 
 -(UIImageView *)houseVideoImageView
@@ -404,6 +412,16 @@
         layout.isEnabled = YES;
         layout.marginLeft = YGPointValue(6);
         layout.marginTop = YGPointValue(58);
+        layout.width = YGPointValue(16);
+        layout.height = YGPointValue(16);
+    }];
+    
+    [self.leftInfoView addSubview:self.videoImageView];
+    self.videoImageView.hidden = YES;
+    [self.videoImageView configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
+        layout.isEnabled = YES;
+        layout.marginLeft = YGPointValue(6 + 5.5);
+        layout.marginTop = YGPointValue(58 + 11.5);
         layout.width = YGPointValue(16);
         layout.height = YGPointValue(16);
     }];
@@ -797,10 +815,16 @@
 - (void)updateVrInfo:(id)data {
     FHSearchHouseItemModel *model = (FHSearchHouseItemModel *)data;
     if (model.vrInfo.hasVr) {
+        self.videoImageView.hidden = YES;
         self.vrLoadingView.hidden = NO;
         [self.vrLoadingView play];
     } else {
         self.vrLoadingView.hidden = YES;
+        if (model.videoInfo.hasVideo) {
+            self.videoImageView.hidden = NO;
+        } else {
+            self.videoImageView.hidden = YES;
+        }
     }
 }
 

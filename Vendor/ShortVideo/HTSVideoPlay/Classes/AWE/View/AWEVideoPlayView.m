@@ -18,14 +18,13 @@
 // View
 #import "SSThemed.h"
 // Model
-#import "TTShortVideoModel.h"
+#import "FHFeedUGCCellModel.h"
 // Manager Service
 #import "TTFlowStatisticsManager+Helper.h"
 // Track
 #import "HTSVideoTimingTracker.h"
 // Util
 #import <Masonry/Masonry.h>
-#import "HTSVideoPlayToast.h"
 #import "HTSVideoPlayColor.h"
 #import "UIImageView+WebCache.h"
 #import "AWEVideoConstants.h"
@@ -36,9 +35,9 @@
 
 // IES Video Play
 #import "IESVideoPlayer.h"
-#import "IESVideoPlayerProtocol.h"
+
 #import "IESVideoCacheProtocol.h"
-#import "IESSysPlayerWrapper.h"
+#import "IESOwnPlayerWrapper.h"
 #import "AWEVideoDetailFirstFrameConfig.h"
 #import "TTHTSVideoConfiguration.h"
 #import "TTImageInfosModel.h"
@@ -48,6 +47,11 @@
 #import <BDWebImage/SDWebImageAdapter.h>
 #import "TTReachability.h"
 #import "FHHMDTManager.h"
+#import "UIViewAdditions.h"
+#import "UIView+BTDAdditions.h"
+#import <TTVideoEngine/TTVideoEngine.h>
+#import "ToastManager.h"
+#import "TTVPlayerIdleController.h"
 
 static NSString * const VideoPlayTimeKey =  @"video_play_time";
 static NSString * const VideoStallTimeKey =  @"video_stall_time";
@@ -56,9 +60,7 @@ static NSString * const VideoPrepareTimeTechKey = @"prepare_time_tech";
 @interface AWEVideoPlayView () <IESVideoPlayerDelegate>
 
 // 详情页数据
-@property (nonatomic, strong) TTShortVideoModel *model;
-// 视频播放器
-@property (nonatomic, strong) id<IESVideoPlayerProtocol> playerController;
+@property (nonatomic, strong) FHFeedUGCCellModel *model;
 // UI交互组件
 @property (nonatomic, strong) SSThemedImageView *backgroundView;
 @property (nonatomic, strong) UIImageView *loadingIndicatorView;
@@ -67,6 +69,7 @@ static NSString * const VideoPrepareTimeTechKey = @"prepare_time_tech";
 @property (nonatomic, assign) BOOL isPlaying;
 @property (nonatomic, assign) BOOL isVideoDeleted;
 @property (nonatomic, assign) BOOL isFirstInit;
+@property (nonatomic, strong) UIImageView *playImage;
 @property (nonatomic, strong) HTSVideoTimingTracker *timingTracker;
 
 // observers
@@ -74,7 +77,9 @@ static NSString * const VideoPrepareTimeTechKey = @"prepare_time_tech";
 
 @property (nonatomic, assign) NSInteger videoStalledCount;
 @property (nonatomic, assign) BOOL usingFirstFrameCover;
-@property (nonatomic, readwrite, assign) NSTimeInterval videoDuration;
+
+
+
 
 @end
 
@@ -85,6 +90,11 @@ static NSString * const VideoPrepareTimeTechKey = @"prepare_time_tech";
 {
     [self _removeObservers];
 }
+
+- (void)removeFromSuperview {
+    [super removeFromSuperview];
+}
+
 
 - (instancetype)initWithFrame:(CGRect)frame
 {
@@ -100,7 +110,7 @@ static NSString * const VideoPrepareTimeTechKey = @"prepare_time_tech";
         _autoAdjustViewFrame = YES;
         _videoStalledCount = 0;
         _timingTracker = [[HTSVideoTimingTracker alloc] init];
-        _videoDuration = 0;
+//        _videoDuration = 0;
         
         [self _loadView];
         [self _addObservers];
@@ -122,7 +132,7 @@ static NSString * const VideoPrepareTimeTechKey = @"prepare_time_tech";
 
 #pragma mark - Public Methods
 
-- (void)updateWithModel:(TTShortVideoModel *)model usingFirstFrameCover:(BOOL)usingFirstFrameCover
+- (void)updateWithModel:(FHFeedUGCCellModel *)model usingFirstFrameCover:(BOOL)usingFirstFrameCover
 {
     _backgroundView.hidden = NO;
     //避免复用时首帧时长统计不对
@@ -139,27 +149,30 @@ static NSString * const VideoPrepareTimeTechKey = @"prepare_time_tech";
 
     if (self.usingFirstFrameCover && [AWEVideoDetailFirstFrameConfig firstFrameEnabled]) {
         // 滑动切换视频时，背景图使用首帧图
-        if ([model.firstFrameImageModel.urlWithHeader count] > 0) {
-            NSURL *url = [NSURL URLWithString:[model.firstFrameImageModel.urlWithHeader firstObject][@"url"] ?:@""];
+        if ([model.imageList count] > 0) {
+            FHFeedContentImageListModel *urlContent = [model.imageList firstObject];
+            NSURL *url = [NSURL URLWithString:urlContent.url?:@""];
             [self.backgroundView sda_setImageWithURL:url placeholderImage:[UIImage imageNamed:@"img_video_loading"] completed:nil];
         }
-    } else {
-        NSURL *URL = [NSURL URLWithString:[model.animatedImageModel.urlWithHeader firstObject][@"url"] ?:@""];
-        NSString *cacheKey = [[YYWebImageManager sharedManager] cacheKeyForURL:URL];
-        if ([[[YYWebImageManager sharedManager] cache] containsImageForKey:cacheKey]) {
-            [self.backgroundView yy_setImageWithURL:URL placeholder:nil];
-        } else if (model.detailCoverImageModel.urlWithHeader) {
-            NSURL *stillImageURL = [NSURL URLWithString:[model.detailCoverImageModel.urlWithHeader firstObject][@"url"] ?:@""];
-            NSString *stillImageCacheKey = [[YYWebImageManager sharedManager] cacheKeyForURL:stillImageURL];
-            if ([[[YYWebImageManager sharedManager] cache] containsImageForKey:stillImageCacheKey]) {
-                [self.backgroundView yy_setImageWithURL:stillImageURL placeholder:nil];
-            } else {
-                [self.backgroundView sda_setImageWithURL:stillImageURL placeholderImage:[UIImage imageNamed:@"img_video_loading"] completed:nil];
-            }
-        }
     }
+    
+//    else {
+//        NSURL *URL = [NSURL URLWithString:[model.imageList firstObject].url ?:@""];
+//        NSString *cacheKey = [[YYWebImageManager sharedManager] cacheKeyForURL:URL];
+//        if ([[[YYWebImageManager sharedManager] cache] containsImageForKey:cacheKey]) {
+//            [self.backgroundView yy_setImageWithURL:URL placeholder:nil];
+//        } else if (model.imageList) {
+//            NSURL *stillImageURL = [NSURL URLWithString:[model.detailCoverImageModel.urlWithHeader firstObject][@"url"] ?:@""];
+//            NSString *stillImageCacheKey = [[YYWebImageManager sharedManager] cacheKeyForURL:stillImageURL];
+//            if ([[[YYWebImageManager sharedManager] cache] containsImageForKey:stillImageCacheKey]) {
+//                [self.backgroundView yy_setImageWithURL:stillImageURL placeholder:nil];
+//            } else {
+//                [self.backgroundView sda_setImageWithURL:stillImageURL placeholderImage:[UIImage imageNamed:@"img_video_loading"] completed:nil];
+//            }
+//        }
+//    }
 
-    self.isVideoDeleted = self.model.isDelete;
+//    self.isVideoDeleted = self.model..isde;
 
     if ((widthChanged || heightChanged) && self.autoAdjustViewFrame) {
         [self _updateFrame];
@@ -167,7 +180,7 @@ static NSString * const VideoPrepareTimeTechKey = @"prepare_time_tech";
 
     self.playerController.useCache = YES;
     self.videoStalledCount = 0;
-    self.videoDuration = 0;
+//    self.videoDuration = 0;
 }
 
 - (void)prepareToPlay
@@ -187,14 +200,14 @@ static NSString * const VideoPrepareTimeTechKey = @"prepare_time_tech";
 
 - (void)resetVideoPlayAddress
 {
-    NSString *videoLocalPlayAddr = self.model.videoLocalPlayAddr;
-    if (!isEmptyString(videoLocalPlayAddr)) {
-         [self.playerController resetLocalVideoURLPath:videoLocalPlayAddr];
-    } else {
+//    NSString *videoLocalPlayAddr = self.model.videoLocalPlayAddr;
+//    if (!isEmptyString(videoLocalPlayAddr)) {
+//         [self.playerController resetLocalVideoURLPath:videoLocalPlayAddr];
+//    } else {
         if (self.model.video.playAddr.uri.length > 0 || self.model.video.playAddr.urlList.count > 0) {
             [self.playerController resetVideoID:self.model.video.playAddr.uri andPlayURLs:self.model.video.playAddr.urlList];
         }
-    }
+//    }
     // 如果不prepareToPlay，playerController不会发开始播放的Notification，会导致菊花不消失、首帧端监控不结束
     [self.playerController prepareToPlay];
 }
@@ -212,13 +225,14 @@ static NSString * const VideoPrepareTimeTechKey = @"prepare_time_tech";
             self.isPlaying = YES;
             [self _doPlay];
         } else {
-            [HTSVideoPlayToast show:(self.isVideoDeleted ? @"视频已删除，播放失败" : @"视频信息加载失败")];
+            [[ToastManager manager] showToast:(self.isVideoDeleted ? @"视频已删除，播放失败" : @"视频信息加载失败")];
             
             if (!self.isVideoDeleted) {
                 [[TSVMonitorManager sharedManager] trackVideoPlayStatus:TSVMonitorVideoPlayFailed model:self.model error:[[NSError alloc] initWithDomain:@"TSVVideoPlayFailed" code:1 userInfo:@{NSLocalizedDescriptionKey : @"视频信息加载失败"}]];
             }
         }
     }
+    self.playImage.hidden = self.isPlaying;
 }
 
 - (void)pause
@@ -228,6 +242,20 @@ static NSString * const VideoPrepareTimeTechKey = @"prepare_time_tech";
         [self _showLoadingIndicator:NO];
         [self.playerController pause];
     }
+}
+
+- (void)pauseOrPlayVideo {
+    if (!self.model) {
+        return;
+    }
+    if (self.isPlaying) {
+        [self.playerController pause];
+    }else {
+         [self.playerController play];
+    }
+    self.isPlaying = !self.isPlaying;
+    self.playImage.hidden = self.isPlaying;
+    
 }
 
 - (void)stop
@@ -265,16 +293,19 @@ static NSString * const VideoPrepareTimeTechKey = @"prepare_time_tech";
             [dict setValue:@(stallCountRate) forKey:@"count_rate"];
             [dict setValue:@(duration) forKey:@"block_duration"];
             [dict setValue:@(self.videoStalledCount) forKey:@"block_count"];
-            [dict setValue:self.model.itemID.description forKey:@"mediaId"];
+            [dict setValue:self.model.groupId forKey:@"mediaId"];
             [dict setValue:self.model.video.playAddr.uri forKey:@"videoUri"];
-            [dict setValue:@(IESVideoPlayerTypeSpecify) forKey:@"playerType"];
+            [dict setValue:@(IESVideoPlayerTypeTTOwn) forKey:@"playerType"];
             dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
                 [dict setValue:[TTNetworkHelper connectMethodName] forKey:@"app_network_type"];
                 [[TTMonitor shareManager] trackService:@"short_video_media_play_log" attributes:dict];
             });
         }
     }]];
+
+
 }
+
 
 - (void)_removeObservers
 {
@@ -337,7 +368,7 @@ static NSString * const VideoPrepareTimeTechKey = @"prepare_time_tech";
     // 清空当前视频缓存
     NSString *urlStr = [self.playerController.videoPlayURLs firstObject];
     if (!isEmptyString(urlStr) && !isEmptyString(self.model.video.playAddr.uri)) {
-        id<IESVideoCacheProtocol> AWEVideoCache = [IESVideoCache cacheWithType:IESVideoPlayerTypeSpecify];
+        id<IESVideoCacheProtocol> AWEVideoCache = [IESVideoCache cacheWithType:IESVideoPlayerTypeTTOwn];
         [AWEVideoCache clearCacheForVideoID:self.model.video.playAddr.uri URLString:urlStr];
     }
     
@@ -352,9 +383,9 @@ static NSString * const VideoPrepareTimeTechKey = @"prepare_time_tech";
         self.isPlaying = NO;
         [self _showLoadingIndicator:NO];
         if ([TTReachability isNetworkConnected]) {
-            [HTSVideoPlayToast show:@"播放失败"];
+            [[ToastManager manager] showToast:@"播放失败"];
         } else {
-            [HTSVideoPlayToast show:@"网络不可用"];
+            [[ToastManager manager] showToast:@"网络异常"];
         }
         
         // 停止并关闭缓存
@@ -394,7 +425,7 @@ static NSString * const VideoPrepareTimeTechKey = @"prepare_time_tech";
     _backgroundView.enableNightCover = NO;
 
     // 播放视图层
-    _playerController = [IESVideoPlayer playerWithType:IESVideoPlayerTypeSpecify];
+    _playerController = [IESVideoPlayer playerWithType:IESVideoPlayerTypeTTOwn];
     _playerController.scalingMode = IESVideoScaleModeAspectFit;
     _playerController.view.backgroundColor = [UIColor clearColor];
     _playerController.view.frame = self.bounds;
@@ -406,7 +437,21 @@ static NSString * const VideoPrepareTimeTechKey = @"prepare_time_tech";
     _playerController.deleagte = self;
     [self addSubview:_playerController.view];
     [self addSubview:_backgroundView];
+    
+    if([_playerController isKindOfClass:[IESOwnPlayerWrapper class]]){
+        IESOwnPlayerWrapper *playerWrapper = (IESOwnPlayerWrapper *)_playerController;
+        id player = [playerWrapper valueForKey:@"player"];
+        if([player isKindOfClass:[TTVideoEngine class]]){
+            TTVideoEngine *videoEngine = (TTVideoEngine *)player;
+            [videoEngine setTag:@"short_video"];
+            [videoEngine configResolution:TTVideoEngineResolutionType1080P];
+        }
+    }
 
+
+    [self.playImage mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.center.equalTo(self);
+    }];
     
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
@@ -423,7 +468,7 @@ static NSString * const VideoPrepareTimeTechKey = @"prepare_time_tech";
 - (void)_updateFrame
 {
     if (self.model.video.width > 0) {
-        CGFloat height = self.model.video.height / self.model.video.width * CGRectGetWidth(self.frame);
+        CGFloat height = [self.model.video.height floatValue]/ [self.model.video.width floatValue] * CGRectGetWidth(self.frame);
         CGFloat dHeight = CGRectGetHeight(self.superview.bounds) - height;
         if (dHeight > 0 && dHeight < 5) { // 兼容视频与屏幕宽高比差一点点引起的底部白条问题
             height += dHeight;
@@ -445,6 +490,18 @@ static NSString * const VideoPrepareTimeTechKey = @"prepare_time_tech";
 - (void)_showLoadingIndicator
 {
     [self _showLoadingIndicator:YES];
+}
+
+
+- (UIImageView *)playImage {
+    if (!_playImage) {
+        UIImageView *playImage = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, 48, 48)];
+        playImage.image = [UIImage imageNamed:@"short_video_play"];
+        [self addSubview:playImage];
+        playImage.hidden = YES;
+        _playImage = playImage;
+    }
+    return _playImage;
 }
 
 - (void)_showLoadingIndicator:(BOOL)show
@@ -567,7 +624,8 @@ static NSString * const VideoPrepareTimeTechKey = @"prepare_time_tech";
     switch (playbackAction) {
         case IESVideoPlaybackActionStart:
         {
-            self.videoDuration = [self.playerController videoDuration];
+
+            [[TTVPlayerIdleController sharedInstance] lockScreen:NO later:NO];
             
             self.backgroundView.hidden = YES;
             
@@ -582,6 +640,7 @@ static NSString * const VideoPrepareTimeTechKey = @"prepare_time_tech";
             break;
         case IESVideoPlaybackActionStop:
         {
+            [[TTVPlayerIdleController sharedInstance] lockScreen:YES later:NO];
             // 播放时长统计
             NSTimeInterval playDuration = [self.timingTracker endTimingForKey:VideoPlayTimeKey];
             if (playDuration != NSNotFound && [self.delegate respondsToSelector:@selector(playView:didStopPlayWithModel:duration:)]) {
@@ -602,9 +661,9 @@ static NSString * const VideoPrepareTimeTechKey = @"prepare_time_tech";
                 [dict setValue:@(stallCountRate) forKey:@"count_rate"];
                 [dict setValue:@(duration) forKey:@"block_duration"];
                 [dict setValue:@(self.videoStalledCount) forKey:@"block_count"];
-                [dict setValue:self.model.itemID.description forKey:@"mediaId"];
+                [dict setValue:self.model.groupId forKey:@"mediaId"];
                 [dict setValue:self.model.video.playAddr.uri forKey:@"videoUri"];
-                [dict setValue:@(IESVideoPlayerTypeSpecify) forKey:@"playerType"];
+                [dict setValue:@(IESVideoPlayerTypeTTOwn) forKey:@"playerType"];
                 dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
                     [dict setValue:[TTNetworkHelper connectMethodName] forKey:@"app_network_type"];
                     [[TTMonitor shareManager] trackService:@"short_video_media_play_log" attributes:dict];
@@ -614,6 +673,7 @@ static NSString * const VideoPrepareTimeTechKey = @"prepare_time_tech";
             break;
         case IESVideoPlaybackActionPause:
         {
+            [[TTVPlayerIdleController sharedInstance] lockScreen:YES later:NO];
             NSTimeInterval playDuration = [self.timingTracker pauseTimingForKey:VideoPlayTimeKey];
             if (playDuration != NSNotFound && [self.delegate respondsToSelector:@selector(playView:didPausePlayWithModel:duration:)]) {
                 [self.delegate playView:self didPausePlayWithModel:self.model duration:playDuration];
@@ -622,7 +682,7 @@ static NSString * const VideoPrepareTimeTechKey = @"prepare_time_tech";
             break;
         case IESVideoPlaybackActionResume:
         {
-        
+            [[TTVPlayerIdleController sharedInstance] lockScreen:NO later:NO];
             NSTimeInterval playDuration = [self.timingTracker resumeTimingForKey:VideoPlayTimeKey];
             if (playDuration != NSNotFound && [self.delegate respondsToSelector:@selector(playView:didResumePlayWithModel:duration:)]) {
                 [self.delegate playView:self didResumePlayWithModel:self.model duration:playDuration];

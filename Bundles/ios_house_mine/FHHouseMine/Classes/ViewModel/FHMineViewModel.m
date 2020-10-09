@@ -22,6 +22,7 @@
 #import "FHCommuteManager.h"
 #import "FHEnvContext.h"
 #import "FHUtils.h"
+#import "FHCustomerServicePage.h"
 
 #define mutiItemCellId @"mutiItemCellId"
 
@@ -256,9 +257,9 @@
 }
 
 - (void)callPhone {
-    NSString *phoneUrl = [NSString stringWithFormat:@"telprompt://%@",@"400-6124-360"];
-    NSURL *url = [NSURL URLWithString:phoneUrl];
-    [[UIApplication sharedApplication]openURL:url];
+    [FHCustomerServicePage jumpToLinkChatPage:@{
+        UT_ENTER_FROM: @"minetab"
+    }];
 }
 
 - (void)updateFocusTitles {
@@ -303,7 +304,7 @@
              TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
              
              NSURL* url = [NSURL URLWithString:model.openUrl];
-             if(model.openUrl && [model.openUrl containsString:@"slocal://myFocus"] && [FHUtils getSettingEnableBooleanForKey:@"f_login_before_house_subscribe"] && ![TTAccountManager isLogin]){
+             if(model.openUrl && [model.openUrl containsString:@"slocal://myFocus"] && ![TTAccountManager isLogin]){
                  NSString *clickTrackDic = @{
                          @"click_type":@"login",
                          @"page_type":@"minetab"

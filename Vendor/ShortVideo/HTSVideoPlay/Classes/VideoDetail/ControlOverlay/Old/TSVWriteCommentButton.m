@@ -7,6 +7,7 @@
 
 #import "TSVWriteCommentButton.h"
 #import "HTSVideoPlayColor.h"
+#import "UIColor+Theme.h"
 
 @interface TSVWriteCommentButton ()
 
@@ -20,13 +21,13 @@
 - (instancetype)initWithFrame:(CGRect)frame
 {
     if (self = [super initWithFrame:frame]) {
-        self.backgroundColor = [[UIColor whiteColor] colorWithAlphaComponent:0.1f];
-        self.layer.cornerRadius = 16.;
-
+//        self.backgroundColor = [[UIColor whiteColor] colorWithAlphaComponent:0.1f];
+//        self.layer.cornerRadius = 16.;
+        self.backgroundColor = [UIColor clearColor];
         self.label = ({
             UILabel *label = [[UILabel alloc] init];
             label.font = [UIFont systemFontOfSize:14.0];
-            label.textColor = LiveStandardColorS5;
+            label.textColor = [UIColor colorWithHexStr:@"#ffffff"];
             label.text = @"写评论...";
             label;
         });
@@ -42,6 +43,11 @@
 - (void)layoutSubviews
 {
     [super layoutSubviews];
+    
+    CGFloat bottomInset = 0;
+    if (@available(iOS 11.0, *)) {
+         bottomInset = [UIApplication sharedApplication].keyWindow.safeAreaInsets.bottom;
+    }
 
     [UIView performWithoutAnimation:^{
 //        self.iconImageView.bounds = CGRectMake(0, 0, 24, 24);
@@ -53,7 +59,7 @@
         
         self.label.frame = CGRectMake(20, 0,
                                       CGRectGetWidth(self.frame) - 20,
-                                      CGRectGetHeight(self.frame));
+                                       CGRectGetHeight(self.frame) - bottomInset);
     }];
 }
 

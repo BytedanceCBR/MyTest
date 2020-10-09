@@ -24,6 +24,7 @@
 #import <TTPlatformBaseLib/TTTrackerWrapper.h>
 #import "UIImage+FIconFont.h"
 #import "UIColor+Theme.h"
+#import "UIButton+FHUGCMultiDigg.h"
 
 @interface ExploreDetailToolbarView ()
 
@@ -98,6 +99,7 @@
         _digButton = digButton;
         _digButton.hitTestEdgeInsets = toolBarButtonHitTestInsets;
         [self addSubview:digButton];
+        [self.digButton enableMulitDiggEmojiAnimation];
         
         _separatorView = [[SSThemedView alloc] init];
         _separatorView.backgroundColorThemeKey = kColorLine7;
@@ -475,7 +477,7 @@
     _viewStyle = viewStyle;
     
     UIImage *input_emoji = ICON_FONT_IMG(24, @"\U0000e651", [UIColor themeGray1]);
-    UIImage *tab_comment = ICON_FONT_IMG(24, @"\U0000e699", [UIColor themeGray1]);
+    UIImage *tab_comment = ICON_FONT_IMG(20, @"\U0000e699", [UIColor themeGray1]);
     UIImage *tab_collect = ICON_FONT_IMG(24, @"\U0000e696", [UIColor themeGray1]);
     UIImage *tab_collect_press = ICON_FONT_IMG(24, @"\U0000e6b2", [UIColor themeOrange4]);
     UIImage *tab_share = ICON_FONT_IMG(24, @"\U0000e692", [UIColor themeGray1]);
@@ -581,8 +583,8 @@
         [_emojiButton setImage:input_emoji forState:UIControlStateNormal];
         [_shareButton setImage:tab_share forState:UIControlStateNormal];
         
-        [_digButton setImage:ICON_FONT_IMG(24, @"\U0000e69c", [UIColor themeGray1]) forState:UIControlStateNormal];
-        [_digButton setImage:ICON_FONT_IMG(24, @"\U0000e6b1", [UIColor themeOrange4]) forState:UIControlStateSelected];
+        [_digButton setImage:ICON_FONT_IMG(20, @"\U0000e69c", [UIColor themeGray1]) forState:UIControlStateNormal];
+        [_digButton setImage:ICON_FONT_IMG(20, @"\U0000e6b1", [UIColor themeOrange4]) forState:UIControlStateSelected];
         
         _writeButton.borderColorThemeKey = kColorLine1;
         _writeButton.layer.borderWidth = [TTDeviceHelper ssOnePixel];

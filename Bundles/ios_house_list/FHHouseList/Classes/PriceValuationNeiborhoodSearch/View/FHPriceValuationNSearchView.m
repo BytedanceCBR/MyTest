@@ -37,15 +37,15 @@
     _searchAreaPanel = [[UIView alloc] init];
     _searchAreaPanel.backgroundColor = [UIColor whiteColor];
     _searchAreaPanel.layer.masksToBounds = YES;
-    _searchAreaPanel.layer.cornerRadius = 22.0;
+    _searchAreaPanel.layer.cornerRadius = 17.0;
     _searchAreaPanel.layer.borderWidth = 1.0;
     _searchAreaPanel.layer.borderColor = [UIColor themeGray6].CGColor;
     [self addSubview:_searchAreaPanel];
     [_searchAreaPanel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(10);
+        make.top.mas_equalTo(7);
         make.left.mas_equalTo(20);
-        make.height.mas_equalTo(44);
         make.right.mas_equalTo(-20);
+        make.height.mas_equalTo(34);
     }];
     
     // searchIcon

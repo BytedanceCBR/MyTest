@@ -236,21 +236,12 @@
     self.detailModel.answerEntity.userRepined = !self.detailModel.answerEntity.userRepined;
     [self.detailModel.answerEntity save];
     
-    //由于分享面板在pod中，暂时使用string构造class
-    __block UIWindow * activityPanelControllerWindow = nil;
-    Class activityPanelControllerWindowClass = NSClassFromString(@"TTActivityPanelControllerWindow");
-    [[UIApplication sharedApplication].windows enumerateObjectsUsingBlock:^(__kindof UIWindow * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-        if ([obj isKindOfClass:activityPanelControllerWindowClass]) {
-            activityPanelControllerWindow = obj;
-            *stop = YES;
-        }
-    }];
     if(self.detailModel.answerEntity.userRepined) {
         TTIndicatorView * indicatorView = [[TTIndicatorView alloc] initWithIndicatorStyle:TTIndicatorViewStyleImage
                                                                             indicatorText:NSLocalizedString(@"收藏成功", nil)
                                                                            indicatorImage:[UIImage themedImageNamed:@"doneicon_popup_textpage.png"]
                                                                            dismissHandler:nil];
-        [indicatorView showFromParentView:activityPanelControllerWindow];
+        [indicatorView showFromParentView:nil];
         
         [self sendFavoriteAction:DetailActionTypeFavourite entity:self.detailModel.answerEntity];
     }
@@ -259,7 +250,7 @@
                                                                             indicatorText:NSLocalizedString(@"取消收藏", nil)
                                                                            indicatorImage:[UIImage themedImageNamed:@"doneicon_popup_textpage.png"]
                                                                            dismissHandler:nil];
-        [indicatorView showFromParentView:activityPanelControllerWindow];
+        [indicatorView showFromParentView:nil];
         
         [self sendFavoriteAction:DetailActionTypeUnFavourite entity:self.detailModel.answerEntity];
     }

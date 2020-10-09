@@ -46,6 +46,9 @@
 #import <TTKitchen/TTKitchen.h> 
 #import <TTKitchenExtension/TTKitchenExtension.h>
 #import "FHCommonApi.h"
+#import "FHFeedUGCCellModel.h"
+#import "FHShortVideoTracerUtil.h"
+#import "TTAccountManager.h"
 
 NSString *const TSVLastShareActivityName = @"TSVLastShareActivityName";
 
@@ -94,7 +97,7 @@ NSString *const TSVLastShareActivityName = @"TSVLastShareActivityName";
                  return TTActivityContentItemTypeWechat;
              }
          }];
-        RAC(self, isFollowing) = [RACObserve(self, model.author.isFollowing) filter:^BOOL(id  _Nullable value) {
+        RAC(self, isFollowing) = [RACObserve(self, model.user.relation.isFollowing) filter:^BOOL(id  _Nullable value) {
             return [value isKindOfClass:[NSNumber class]];
         }];
         RAC(self, isLiked, @NO) = [RACObserve(self, model.userDigg)
@@ -102,14 +105,14 @@ NSString *const TSVLastShareActivityName = @"TSVLastShareActivityName";
                                        return [liked isKindOfClass:[NSNumber class]];
                                    }];
         RAC(self, likeCountString) = [RACObserve(self, model.diggCount)
-                                      map:^id _Nullable(NSNumber *likeCount) {
-                                          return [TTBusinessManager formatCommentCount:[likeCount integerValue]];
+                                      map:^id _Nullable(NSString *likeCount) {
+                                          return [TTBusinessManager formatCommentCount:[likeCount intValue]];
                                       }];
         RAC(self, commentCountString) = [RACObserve(self, model.commentCount)
                                          map:^id _Nullable(id  _Nullable value) {
-                                             return [TTBusinessManager formatCommentCount:[value integerValue]];
+                                             return [TTBusinessManager formatCommentCount:[value intValue]];
                                          }];
-        RAC(self, debugInfo) = RACObserve(self, model.debugInfo);
+//        RAC(self, debugInfo) = RACObserve(self, model.debugInfo);
         RAC(self, showRecommendCard) = RACObserve(self, recViewModel.isRecommendCardFinishFetching);
 
         self.showOnlyOneShareIconOnBottomBar = ![TTDeviceHelper isScreenWidthLarge320];
@@ -236,12 +239,6 @@ NSString *const TSVLastShareActivityName = @"TSVLastShareActivityName";
     self.playCount = 0;
 }
 
-- (void)clickCloseButton
-{
-    if (self.closeButtonDidClick) {
-        self.closeButtonDidClick();
-    }
-}
 
 #pragma mark - Logo
 
@@ -258,6 +255,7 @@ NSString *const TSVLastShareActivityName = @"TSVLastShareActivityName";
     if (self.moreButtonDidClick) {
         self.moreButtonDidClick();
     }
+    [FHShortVideoTracerUtil clickshareBtn:self.model];
 }
 
 - (void)clickWriteCommentButton
@@ -269,154 +267,157 @@ NSString *const TSVLastShareActivityName = @"TSVLastShareActivityName";
 
 - (void)clickActivityTag
 {
-    [TSVDetailRouteHelper openURLByPushViewController:[NSURL URLWithString:self.model.activity.openURL] userInfo:TTRouteUserInfoWithDict([[self enterConcernParamsWithURLStr:self.model.activity.openURL] copy])];
+//    [TSVDetailRouteHelper openURLByPushViewController:[NSURL URLWithString:self.model.activity.openURL] userInfo:TTRouteUserInfoWithDict([[self enterConcernParamsWithURLStr:self.model.activity.openURL] copy])];
 }
 
 - (void)clickChallengeTag
 {
-    [AWEVideoDetailTracker trackEvent:@"shortvideo_pk_click"
-                                model:self.model
-                      commonParameter:self.commonTrackingParameter
-                       extraParameter:nil];
-    
-    NSMutableDictionary *params = [@{
-                                     @"style":@"shortvideo",
-                                     @"shoot_entrance":@"shortvideo_detail", //入口
-                                     } mutableCopy];
-    [params setValue:self.model.activity.concernID forKey:@"cid"];
-    NSString *hashTag = self.model.activity.name;
-    if (hashTag.length > 0) {
-        hashTag = [NSString stringWithFormat:@"#%@#",hashTag];
-    }
-    [params setValue:hashTag forKey:@"title"];
-    [params setValue:self.model.activity.openURL forKey:@"schema"];
-    [params setValue:self.model.groupID forKey:@"challenge_group_id"];
-    [params setValue:self.model.challengeInfo.challengeRule forKey:@"challenge_rule"];
-    [params setValue:self.model.challengeInfo.challengeSchemaUrl forKey:@"challenge_schema_url"];
-    [params setValue:self.model.music.musicId forKey:@"music_id"];
-    [params setValue:@(-1) forKey:@"request_red_packet_type"];
-    UIViewController *topMostVC = [TSVUIResponderHelper topmostViewController];
-    [params setValue:topMostVC.view forKey:@"presenting_vc_view"];
-    NSURL *url = [NSURL URLWithString:@"sslocal://record_import_video"];
-    if ([[TTRoute sharedRoute] canOpenURL:url]) {
-        [[TTRoute sharedRoute] openURL:url userInfo:TTRouteUserInfoWithDict(params) objHandler:^(TTRouteObject *routeObj) {
-            TTCustomAnimationNavigationController *nav = [[TTCustomAnimationNavigationController alloc] initWithRootViewController:(UIViewController *)routeObj.instance animationStyle:TTCustomAnimationStyleUGCPostEntrance];
-            nav.ttDefaultNavBarStyle = @"White";
-            if (topMostVC) {
-                [topMostVC presentViewController:nav animated:YES completion:nil];
-            }
-        }];
-    }
+//    [AWEVideoDetailTracker trackEvent:@"shortvideo_pk_click"
+//                                model:self.model
+//                      commonParameter:self.commonTrackingParameter
+//                       extraParameter:nil];
+//
+//    NSMutableDictionary *params = [@{
+//                                     @"style":@"shortvideo",
+//                                     @"shoot_entrance":@"shortvideo_detail", //入口
+//                                     } mutableCopy];
+//    [params setValue:self.model.activity.concernID forKey:@"cid"];
+//    NSString *hashTag = self.model.activity.name;
+//    if (hashTag.length > 0) {
+//        hashTag = [NSString stringWithFormat:@"#%@#",hashTag];
+//    }
+//    [params setValue:hashTag forKey:@"title"];
+//    [params setValue:self.model.activity.openURL forKey:@"schema"];
+//    [params setValue:self.model.groupID forKey:@"challenge_group_id"];
+//    [params setValue:self.model.challengeInfo.challengeRule forKey:@"challenge_rule"];
+//    [params setValue:self.model.challengeInfo.challengeSchemaUrl forKey:@"challenge_schema_url"];
+//    [params setValue:self.model.music.musicId forKey:@"music_id"];
+//    [params setValue:@(-1) forKey:@"request_red_packet_type"];
+//    UIViewController *topMostVC = [TSVUIResponderHelper topmostViewController];
+//    [params setValue:topMostVC.view forKey:@"presenting_vc_view"];
+//    NSURL *url = [NSURL URLWithString:@"sslocal://record_import_video"];
+//    if ([[TTRoute sharedRoute] canOpenURL:url]) {
+//        [[TTRoute sharedRoute] openURL:url userInfo:TTRouteUserInfoWithDict(params) objHandler:^(TTRouteObject *routeObj) {
+//            TTCustomAnimationNavigationController *nav = [[TTCustomAnimationNavigationController alloc] initWithRootViewController:(UIViewController *)routeObj.instance animationStyle:TTCustomAnimationStyleUGCPostEntrance];
+//            nav.ttDefaultNavBarStyle = @"White";
+//            if (topMostVC) {
+//                [topMostVC presentViewController:nav animated:YES completion:nil];
+//            }
+//        }];
+//    }
 }
 
 - (NSDictionary *)enterConcernParamsWithURLStr:(NSString *)urlStr
 {
-    NSMutableDictionary *params = [NSMutableDictionary dictionary];
-    if ([urlStr containsString:@"sslocal://concern"]) {
-        //进关心主页需要这些参数
-        NSString *categoryName = self.commonTrackingParameter[@"category_name"];
-        if (!isEmptyString(self.model.categoryName)) {
-            categoryName = self.model.categoryName;
-        }
-        if (!isEmptyString(categoryName)) {
-            [params setValue:categoryName forKey:@"category_name"];
-        }
-
-        NSString *enterFrom = self.commonTrackingParameter[@"category_name"];
-        if (!isEmptyString(self.model.enterFrom)) {
-            enterFrom = self.model.enterFrom;
-        }
-        if (!isEmptyString(enterFrom)) {
-            [params setValue:enterFrom forKey:@"enter_from"];
-        }
-        [params setValue:self.model.listEntrance forKey:@"list_entrance"];
-        [params setValue:self.model.activity.forumID forKey:@"forum_id"];
-        [params setValue:@"shortvideo_detail_bottom_bar" forKey:@"from_page"];
-    }
-    return [params copy];
+//    NSMutableDictionary *params = [NSMutableDictionary dictionary];
+//    if ([urlStr containsString:@"sslocal://concern"]) {
+//        //进关心主页需要这些参数
+//        NSString *categoryName = self.commonTrackingParameter[@"category_name"];
+//        if (!isEmptyString(self.model.categoryName)) {
+//            categoryName = self.model.categoryName;
+//        }
+//        if (!isEmptyString(categoryName)) {
+//            [params setValue:categoryName forKey:@"category_name"];
+//        }
+//
+//        NSString *enterFrom = self.commonTrackingParameter[@"category_name"];
+//        if (!isEmptyString(self.model.enterFrom)) {
+//            enterFrom = self.model.enterFrom;
+//        }
+//        if (!isEmptyString(enterFrom)) {
+//            [params setValue:enterFrom forKey:@"enter_from"];
+//        }
+//        [params setValue:self.model.listEntrance forKey:@"list_entrance"];
+//        [params setValue:self.model.activity.forumID forKey:@"forum_id"];
+//        [params setValue:@"shortvideo_detail_bottom_bar" forKey:@"from_page"];
+//    }
+//    return [params copy];
 }
 
 - (void)clickFollowButton
 {
-    NSString *userId = self.model.author.userID;
-
-    NSString *position = @"detail";
-
-    if ([AWEVideoPlayAccountBridge isCurrentLoginUser:self.model.author.userID]) {
-        return;
-    }
-    
-    self.isStartFollowLoading = YES;
-    self.isArrowRotationBackground = YES;
-    if (!self.model.author.isFollowing) {
-        [self.recViewModel fetchRecommendArrayWithUserID:userId];
-        @weakify(self);
-        //关注
-        [AWEVideoDetailTracker trackEvent:@"rt_follow"
-                                    model:self.model
-                          commonParameter:self.commonTrackingParameter
-                           extraParameter:@{
-                                            @"position": position,
-                                            @"follow_type": @"from_group",
-                                            @"to_user_id": self.model.author.userID ?: @"",
-                                            }];
-
-        [AWEVideoUserInfoManager followUser:self.model.author.userID completion:^(AWEUserModel *user, NSError *error) {
-            @strongify(self);
-            if (self && error) {
-                NSString *prompts = error.userInfo[@"prompts"] ?: @"关注失败，请稍后重试";
-                [HTSVideoPlayToast show:prompts];
-            } else if (self) {
-                self.model.author.isFollowing = user.isFollowing;
-                [self.model save];
-                [[NSNotificationCenter defaultCenter] postNotificationName:@"RelationActionSuccessNotification" object:self
-                                                                  userInfo:@{
-                                                                             @"kRelationActionSuccessNotificationUserIDKey": userId ?: @"",
-                                                                             @"kRelationActionSuccessNotificationActionTypeKey": @11
-                                                                             }
-                 ];
-            }
-            self.isStartFollowLoading = NO;
-        }];
-    } else { //取消关注
-        self.showRecommendCard = NO;
-        [self.recViewModel resetContentOffsetIfNeed];
-        [AWEVideoDetailTracker trackEvent:@"rt_unfollow"
-                                    model:self.model
-                          commonParameter:self.commonTrackingParameter
-                           extraParameter:@{
-                                            @"position": position,
-                                            @"follow_type": @"from_group",
-                                            @"to_user_id": userId,
-                                            }];
-
-        @weakify(self);
-        [AWEVideoUserInfoManager unfollowUser:userId completion:^(AWEUserModel *user, NSError *error) {
-            @strongify(self);
-            if (self && error) {
-                NSString *prompts = error.userInfo[@"prompts"] ?: @"取消关注失败，请稍后重试";
-                [HTSVideoPlayToast show:prompts];
-            } else if (self) {
-                self.model.author.isFollowing = user.isFollowing;
-                [self.model save];
-                [[NSNotificationCenter defaultCenter] postNotificationName:@"RelationActionSuccessNotification" object:self
-                                                                  userInfo:@{
-                                                                             @"kRelationActionSuccessNotificationUserIDKey": userId ?: @"",
-                                                                             @"kRelationActionSuccessNotificationActionTypeKey": @12 }
-                 ];
-            }
-            self.isStartFollowLoading = NO;
-        }];
-    }
+//    NSString *userId = self.model.user.userId;
+//
+//    NSString *position = @"detail";
+//
+//    if ([AWEVideoPlayAccountBridge isCurrentLoginUser:self.model.user.userId]) {
+//        return;
+//    }
+//
+//    self.isStartFollowLoading = YES;
+//    self.isArrowRotationBackground = YES;
+//    if (!self.model.author.isFollowing) {
+//        [self.recViewModel fetchRecommendArrayWithUserID:userId];
+//        @weakify(self);
+//        //关注
+//        [AWEVideoDetailTracker trackEvent:@"rt_follow"
+//                                    model:self.model
+//                          commonParameter:self.commonTrackingParameter
+//                           extraParameter:@{
+//                                            @"position": position,
+//                                            @"follow_type": @"from_group",
+//                                            @"to_user_id": self.model.author.userID ?: @"",
+//                                            }];
+//
+//        [AWEVideoUserInfoManager followUser:self.model.author.userID completion:^(AWEUserModel *user, NSError *error) {
+//            @strongify(self);
+//            if (self && error) {
+//                NSString *prompts = error.userInfo[@"prompts"] ?: @"关注失败，请稍后重试";
+//                [HTSVideoPlayToast show:prompts];
+//            } else if (self) {
+//                self.model.author.isFollowing = user.isFollowing;
+//                [self.model save];
+//                [[NSNotificationCenter defaultCenter] postNotificationName:@"RelationActionSuccessNotification" object:self
+//                                                                  userInfo:@{
+//                                                                             @"kRelationActionSuccessNotificationUserIDKey": userId ?: @"",
+//                                                                             @"kRelationActionSuccessNotificationActionTypeKey": @11
+//                                                                             }
+//                 ];
+//            }
+//            self.isStartFollowLoading = NO;
+//        }];
+//    } else { //取消关注
+//        self.showRecommendCard = NO;
+//        [self.recViewModel resetContentOffsetIfNeed];
+//        [AWEVideoDetailTracker trackEvent:@"rt_unfollow"
+//                                    model:self.model
+//                          commonParameter:self.commonTrackingParameter
+//                           extraParameter:@{
+//                                            @"position": position,
+//                                            @"follow_type": @"from_group",
+//                                            @"to_user_id": userId,
+//                                            }];
+//
+//        @weakify(self);
+//        [AWEVideoUserInfoManager unfollowUser:userId completion:^(AWEUserModel *user, NSError *error) {
+//            @strongify(self);
+//            if (self && error) {
+//                NSString *prompts = error.userInfo[@"prompts"] ?: @"取消关注失败，请稍后重试";
+//                [HTSVideoPlayToast show:prompts];
+//            } else if (self) {
+//                self.model.author.isFollowing = user.isFollowing;
+//                [self.model save];
+//                [[NSNotificationCenter defaultCenter] postNotificationName:@"RelationActionSuccessNotification" object:self
+//                                                                  userInfo:@{
+//                                                                             @"kRelationActionSuccessNotificationUserIDKey": userId ?: @"",
+//                                                                             @"kRelationActionSuccessNotificationActionTypeKey": @12 }
+//                 ];
+//            }
+//            self.isStartFollowLoading = NO;
+//        }];
+//    }
 }
 - (void)clickUserNameButton
 {
         [self goRealtorHomePage];
-//    [self handleAvatarOrUserNameClick];
 }
 
 - (void)goRealtorHomePage {
-    if ([self.model.author.firstBizType isEqualToString:@"1"]) {
+    if ([self.model.user.firstBizType isEqualToString:@"1"]) {
+        return;
+    }
+    if (!self.model.user.firstBizType) {
+          [self handleAvatarOrUserNameClick];
         return;
     }
      NSDictionary *fhSettings = [self fhSettings];
@@ -427,33 +428,33 @@ NSString *const TSVLastShareActivityName = @"TSVLastShareActivityName";
                       commonParameter:self.commonTrackingParameter
                        extraParameter:@{
                                         @"position": position,
-                                        @"user_id": self.model.author.userID ?: @"",
+                                        @"user_id": self.model.user.userId ?: @"",
                                         }];
     
     if (openNewRealtor) {
           NSURL *openUrl = [NSURL URLWithString:[NSString stringWithFormat:@"sslocal://new_realtor_detail"]];
                   NSMutableDictionary *info = @{}.mutableCopy;
                   info[@"title"] = @"经纪人主页";
-                  info[@"realtor_id"] = self.model.author.realtorId;
-                  NSMutableDictionary *tracerDic = self.model.extraDic.mutableCopy;
+                  info[@"realtor_id"] = self.model.user.realtorId;
+                  NSMutableDictionary *tracerDic = self.model.tracerDic.mutableCopy;
                   info[@"tracer"] = tracerDic;
                   TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:info];
               [[TTRoute sharedRoute]openURLByViewController:openUrl userInfo:userInfo];
     }else {
         NSError *parseError = nil;
         NSString *reportParams = nil;
-        NSData *jsonData = [NSJSONSerialization dataWithJSONObject:self.model.extraDic options:0 error:&parseError];
+        NSData *jsonData = [NSJSONSerialization dataWithJSONObject:self.model.tracerDic options:0 error:&parseError];
         if (!parseError) {
             reportParams = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
         }
         NSMutableDictionary *info = @{}.mutableCopy;
         NSString * host = [FHURLSettings baseURL] ?: @"https://i.haoduofangs.com";
         NSURL *openUrl = [NSURL URLWithString:@"sslocal://realtor_detail"];
-        NSString *jumpUrl = [NSString stringWithFormat:@"%@/f100/client/realtor_detail?realtor_id=%@&report_params=%@",host,self.model.author.realtorId,reportParams ? : @""];
+        NSString *jumpUrl = [NSString stringWithFormat:@"%@/f100/client/realtor_detail?realtor_id=%@&report_params=%@",host,self.model.user.realtorId,reportParams ? : @""];
         info[@"url"] = jumpUrl;
         info[@"title"] = @"经纪人主页";
-        info[@"realtor_id"] = self.model.author.realtorId;
-        info[@"trace"] = self.model.extraDic;
+        info[@"realtor_id"] = self.model.user.realtorId;
+        info[@"trace"] = self.model.tracerDic;
             TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc]initWithInfo:info];
             [[TTRoute sharedRoute]openURLByViewController:openUrl userInfo:userInfo];
     }
@@ -477,40 +478,25 @@ NSString *const TSVLastShareActivityName = @"TSVLastShareActivityName";
 - (void)handleAvatarOrUserNameClick
 {
     NSMutableDictionary *paramsDict = [NSMutableDictionary dictionary];
-    [paramsDict setValue:self.model.categoryName forKey:@"category_name"];
-    [paramsDict setValue:@"small_video_detail" forKey:@"from_page"];
-    [paramsDict setValue:self.model.groupID forKey:@"group_id"];
-    [AWEVideoPlayTransitionBridge openProfileViewWithUserId:self.model.author.userID params:paramsDict];
+    [paramsDict setValue:self.model.categoryId forKey:@"category_name"];
+    [paramsDict setValue:self.model.groupId forKey:@"group_id"];
+    [AWEVideoPlayTransitionBridge openProfileViewWithUserId:self.model.user.userId params:paramsDict];
 }
 
 - (void)clickLikeButton
 {
-    NSString *eventName;
-    if (!self.model.userDigg) {
-        eventName = @"rt_like";
-    } else {
-        eventName = @"rt_unlike";
-    }
-    [AWEVideoDetailTracker trackEvent:eventName
-                                model:self.model
-                      commonParameter:self.commonTrackingParameter
-                       extraParameter:@{
-                                        @"user_id": self.model.author.userID ?: @"",
-                                        @"position": @"detail",
-                                        }];
 
     if (!self.model.userDigg) {
-        self.model.diggCount++;
-        self.model.userDigg = YES;
-        [self.model save];
-        [AWEVideoDetailManager diggVideoItemWithID:self.model.groupID
+        self.model.diggCount = [NSString stringWithFormat:@"%d",[self.model.diggCount intValue] + 1];
+        self.model.userDigg = @"1";
+//        [self.model save];
+        [AWEVideoDetailManager diggVideoItemWithID:self.model.groupId
                                        groupSource:self.model.groupSource
                                         completion:nil];
     } else {
-        self.model.diggCount--;
-        self.model.userDigg = NO;
-        [self.model save];
-        [AWEVideoDetailManager cancelDiggVideoItemWithID:self.model.groupID
+        self.model.diggCount = [NSString stringWithFormat:@"%d",[self.model.diggCount intValue] - 1];
+        self.model.userDigg = @"0";
+        [AWEVideoDetailManager cancelDiggVideoItemWithID:self.model.groupId
                                               completion:nil];
     }
 }
@@ -518,16 +504,8 @@ NSString *const TSVLastShareActivityName = @"TSVLastShareActivityName";
 - (void)doubleTapView
 {
     if (!self.isLiked) {
-//        [AWEVideoDetailTracker trackEvent:@"rt_like"
-//                                    model:self.model
-//                          commonParameter:self.commonTrackingParameter
-//                           extraParameter:@{
-//                                            @"user_id": self.model.author.userID,
-//                                            @"position": @"double_like",
-//                                            }];
-
-        [self markLikeDirectly];
-    }
+            [self markLikeDirectly];
+        }
 }
 
 - (void)singleTapView
@@ -540,34 +518,18 @@ NSString *const TSVLastShareActivityName = @"TSVLastShareActivityName";
 
 - (void)markLikeDirectly
 {
-    // Legacy
     [self showShareButtonIfNeeded];
+    [FHCommonApi requestCommonDigg:[NSString stringWithFormat:@"%@", self.model.groupId] groupType:FHDetailDiggTypeSMALLVIDEO action:1 completion:nil];
 
-    self.model.diggCount++;
-    self.model.userDigg = YES;
-    [self.model save];
-    /*[AWEVideoDetailManager diggVideoItemWithID:self.model.groupID
-                                   groupSource:self.model.groupSource
-                                    completion:nil];*/
-    [FHCommonApi requestCommonDigg:[NSString stringWithFormat:@"%@", self.model.groupID] groupType:FHDetailDiggTypeSMALLVIDEO action:1 completion:nil];
-
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"TSVShortVideoDiggCountSyncNotification"
-                                                        object:nil
-                                                      userInfo:@{@"group_id" : self.model.groupID ?:@"",
-                                                                 @"user_digg" : @(self.model.userDigg),}];
-
-
+//    [[NSNotificationCenter defaultCenter] postNotificationName:@"TSVShortVideoDiggCountSyncNotification"
+//                                                        object:nil
+//                                                      userInfo:@{@"group_id" : self.model.groupId ?:@"",
+//                                                                 @"user_digg" : @([self.model.userDigg floatValue]),}];
 }
+
 
 - (void)clickCommentButton
 {
-    [AWEVideoDetailTracker trackEvent:@"enter_comment"
-                                model:self.model
-                      commonParameter:self.commonTrackingParameter
-                       extraParameter:@{
-                                        @"user_id": self.model.author.userID ?: @"",
-                                        @"position": @"detail",
-                                        }];
     if (self.showCommentPopupBlock) {
         self.showCommentPopupBlock();
     }
@@ -575,15 +537,11 @@ NSString *const TSVLastShareActivityName = @"TSVLastShareActivityName";
 
 - (void)clickShareButton
 {
-    [AWEVideoDetailTracker trackEvent:@"share_button"
-                                model:self.model
-                      commonParameter:self.commonTrackingParameter
-                       extraParameter:@{@"position": @"detail"}];
 
     [self.detailPromptManager updateVisibleFloatingViewCountForVisibility:YES];
     //小视频暂时不出分享广告
     id<TTAdManagerProtocol> adManagerInstance = [[TTServiceCenter sharedInstance] getServiceByProtocol:@protocol(TTAdManagerProtocol)];
-    [adManagerInstance share_showInAdPage:@"1" groupId:self.model.groupID];
+    [adManagerInstance share_showInAdPage:@"1" groupId:self.model.groupId];
     NSString *imageURL = [self.model.video.originCover.urlList firstObject];
     @weakify(self);
     [AWEVideoPlayShareBridge loadImageWithUrl:imageURL completion:^(UIImage * _Nonnull image) {
@@ -602,15 +560,11 @@ NSString *const TSVLastShareActivityName = @"TSVLastShareActivityName";
 
 - (void)clickCheckChallengeButton
 {
-    [AWEVideoDetailTracker trackEvent:@"shortvideo_pk_check"
-                                model:self.model
-                      commonParameter:self.commonTrackingParameter
-                       extraParameter:nil];
     
-    [TSVDetailRouteHelper openURLByPushViewController:[NSURL URLWithString:self.model.checkChallenge.challengeSchemaUrl]];
+//    [TSVDetailRouteHelper openURLByPushViewController:[NSURL URLWithString:self.model.checkChallenge.challengeSchemaUrl]];
 }
 
-- (void)setModel:(TTShortVideoModel *)model
+- (void)setModel:(FHFeedUGCCellModel *)model
 {
     _model = model;
 
@@ -628,33 +582,34 @@ NSString *const TSVLastShareActivityName = @"TSVLastShareActivityName";
     }
 
     self.titleString = self.model.title;
-    if (self.groupSource == TSVGroupSourceDouyin) {
-        self.musicLabelString = [NSString stringWithFormat:@"%@ - %@",
-                                 isEmptyString(self.model.music.title) ? @"视频原声" : self.model.music.title ,
-                                 isEmptyString(self.model.music.author) ? [NSString stringWithFormat:@"@%@", self.model.author.name]: self.model.music.author];
-    } else if (!isEmptyString(self.model.music.title)){
-        self.musicLabelString = [NSString stringWithFormat:@"%@ - %@",
-                                 self.model.music.title ,
-                                 isEmptyString(self.model.music.author) ? [NSString stringWithFormat:@"@%@", self.model.author.name]: self.model.music.author];
-    } else {
-        self.musicLabelString = nil;
-    }
+//    if (self.groupSource == TSVGroupSourceDouyin) {
+//        self.musicLabelString = [NSString stringWithFormat:@"%@ - %@",
+//                                 isEmptyString(self.model.music.title) ? @"视频原声" : self.model.music.title ,
+//                                 isEmptyString(self.model.music.author) ? [NSString stringWithFormat:@"@%@", self.model.author.name]: self.model.music.author];
+//    } else if (!isEmptyString(self.model.music.title)){
+//        self.musicLabelString = [NSString stringWithFormat:@"%@ - %@",
+//                                 self.model.music.title ,
+//                                 isEmptyString(self.model.music.author) ? [NSString stringWithFormat:@"@%@", self.model.author.name]: self.model.music.author];
+//    } else {
+//        self.musicLabelString = nil;
+//    }
 
-    self.avatarImageURL = [NSURL URLWithString:self.model.author.avatarURL];
-    self.followButtonHidden = [self.model isAuthorMyself];
-    self.authorUserName = self.model.author.name;
+    self.avatarImageURL = [NSURL URLWithString:self.model.user.avatarUrl];
+//    BOOL  = [self.author.userID isEqualToString:[TTAccountManager userID]];
+//    self.followButtonHidden = [self.model isAuthorMyself];
+    self.authorUserName = self.model.user.name;
 
     NSMutableArray *tagArray = [NSMutableArray array];
-    if ([self.model.labelForDetail length]) {
-        [tagArray addObject:self.model.labelForDetail];
-    }
-    if ([self.model.labelForInteract length]) {
-        [tagArray addObject:self.model.labelForInteract];
-    }
+//    if ([self.model.labelForDetail length]) {
+//        [tagArray addObject:self.model.labelForDetail];
+//    }
+//    if ([self.model.labelForInteract length]) {
+//        [tagArray addObject:self.model.labelForInteract];
+//    }
     self.normalTagArray = [tagArray copy];
-
-    self.activityTagString = self.model.activity.name;
-    self.titleRichTextStyleConfig = self.model.titleRichSpanJSONString;
+//
+//    self.activityTagString = self.model.activity.name;
+//    self.titleRichTextStyleConfig = self.model.titleRichSpanJSONString;
 }
 
 #pragma TTShareManagerDelegate
@@ -669,20 +624,12 @@ NSString *const TSVLastShareActivityName = @"TSVLastShareActivityName";
     [self didShareToActivityNamed:activity.contentItemType];
 
     id<TTActivityContentItemProtocol> contentItem = activity.contentItem;
-//    if ([contentItem.contentItemType isEqualToString:TTActivityContentItemTypeSaveVideo]) {
-//        [AWEVideoDetailTracker trackEvent:@"video_cache"
-//                                    model:self.model
-//                          commonParameter:self.commonTrackingParameter
-//                           extraParameter:nil];
-//        [TSVVideoDetailShareHelper handleSaveVideoWithModel:self.model];
-//    }
     if ([contentItem.contentItemType isEqualToString:TTActivityContentItemTypeForwardWeitoutiao]) {
-
         NSMutableDictionary *params = @{}.mutableCopy;
         params[@"enter_from"] = self.commonTrackingParameter[@"enter_from"];
         params[@"category_name"] = self.commonTrackingParameter[@"category_name"];
-        params[@"group_id"] = self.model.groupID;
-        params[@"item_id"] = self.model.itemID;
+        params[@"group_id"] = self.model.groupId;
+        params[@"item_id"] = self.model.itemId;
         params[@"log_pb"] = self.model.logPb ?: @{};
         params[@"share_platform"] = @"weitoutiao";
         params[@"event_type"] = @"house_app2c_v2";
@@ -753,8 +700,8 @@ NSString *const TSVLastShareActivityName = @"TSVLastShareActivityName";
 {
     if (!_recViewModel) {
         _recViewModel = [[TSVRecommendCardViewModel alloc] init];
-        RAC(_recViewModel, detailPageUserID) = RACObserve(self, model.author.userID);
-        RAC(_recViewModel, listEntrance) = RACObserve(self, model.listEntrance);
+        RAC(_recViewModel, detailPageUserID) = RACObserve(self, model.user.userId);
+//        RAC(_recViewModel, listEntrance) = RACObserve(self, model.listEntrance);
         RAC(_recViewModel, logPb) = RACObserve(self, model.logPb);
         RAC(_recViewModel, commonParameter) = RACObserve(self, commonTrackingParameter);
     }
@@ -764,10 +711,10 @@ NSString *const TSVLastShareActivityName = @"TSVLastShareActivityName";
 - (void)trackFollowCardEvent
 {
     NSMutableDictionary *params = [[NSMutableDictionary alloc] initWithDictionary:self.commonTrackingParameter];
-    [params setValue:self.model.listEntrance forKey:@"list_entrance"];
+//    [params setValue:self.model.listEntrance forKey:@"list_entrance"];
     [params setValue:@"show" forKey:@"action_type"];
     [params setValue:@0 forKey:@"is_direct"];
-    [params setValue:self.model.author.userID forKey:@"profile_user_id"];
+    [params setValue:self.model.user.userId forKey:@"profile_user_id"];
     [params setValue:[NSNumber numberWithInteger:self.recViewModel.userCards.count] forKey:@"show_num"];
     [params setValue:@"shortvideo_detail_follow_card" forKey:@"source"];
     [BDTrackerProtocol eventV3:@"follow_card" params:[params copy]];

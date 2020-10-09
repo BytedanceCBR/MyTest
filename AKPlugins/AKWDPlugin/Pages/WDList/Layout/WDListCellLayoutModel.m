@@ -18,7 +18,6 @@
 #import "WDListCellViewModel.h"
 #import "WDListCellDataModel.h"
 #import "WDWendaListCellUserHeaderView.h"
-#import "WDWendaListCellActionFooterView.h"
 #import <TTImage/TTImageInfosModel.h>
 
 @interface WDListCellLayoutModel ()
@@ -158,8 +157,6 @@
     }
     self.bottomLabelBottomPadding = 10;
     totalHeight += self.bottomLabelTopPadding + [self heightForBottomLabel] + self.bottomLabelBottomPadding;
-    
-//    totalHeight += [WDWendaListCellActionFooterView actionFooterHeight];
     
     return totalHeight;
 }
@@ -371,7 +368,7 @@
 }
 
 + (CGFloat)answerReadCountsLineHeight {
-    return WDConstraintPadding(30.0);// 本来是20 为了扩大按钮的点击范围
+    return WDConstraintPadding(40.0);// 本来是20 为了扩大按钮的点击范围
 }
 
 + (CGFloat)moreImageCountsFontSize {

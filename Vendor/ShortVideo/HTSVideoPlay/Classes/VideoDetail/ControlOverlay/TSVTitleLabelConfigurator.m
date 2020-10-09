@@ -57,11 +57,16 @@
 
     NSDictionary *attrDic = [self titleLabelAttributedDictionaryWithAllBoldFont:allBoldFont
                                                                        fontSize:fontSize];
+    NSMutableDictionary *attrDics = [attrDic mutableCopy];
+    NSShadow *shadow = [[NSShadow alloc]init];
+    shadow.shadowOffset = CGSizeMake(2, 2);
+    shadow.shadowColor = [UIColor blackColor];
+    shadow.shadowBlurRadius = 1;
+    [attrDics setValue:shadow forKey:NSShadowAttributeName];
     NSMutableAttributedString *mutableAttributedString = [attrStr mutableCopy];
-    [mutableAttributedString addAttributes:attrDic range:NSMakeRange(0, attrStr.length)];
+    [mutableAttributedString addAttributes:[attrDics copy] range:NSMakeRange(0, attrStr.length)];
 
     [label setText:[mutableAttributedString copy]];
-
     NSArray <TTRichSpanLink *> *richSpanLinks = [titleRichSpanText richSpanLinksOfAttributedString];
     NSDictionary *attributesDict = @{NSForegroundColorAttributeName : [UIColor whiteColor], NSFontAttributeName: [UIFont boldSystemFontOfSize:fontSize]};
     if (richSpanLinks) {

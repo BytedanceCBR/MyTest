@@ -198,10 +198,23 @@ typedef NS_ENUM(NSUInteger, FHFeedContentStickStyle) {
 @property (nonatomic, copy , nullable) NSString *isBlocked;
 @end
 
-@interface FHFeedContentRawDataCommentBaseUserModel : JSONModel
+@interface FHFeedContentRawDataCommentRelationModel : JSONModel
+@property (nonatomic, copy , nullable) NSString *isFollowed;
+@property (nonatomic, copy , nullable) NSString *isFollowing;
+@property (nonatomic, copy , nullable) NSString *isFriend;
+@property (nonatomic, copy , nullable) NSString *isRealFriend;
+@end
 
+@interface FHFeedContentRawDataCommentRelationCountModel : JSONModel
+@property (nonatomic, copy , nullable) NSString *followersCount;
+@property (nonatomic, copy , nullable) NSString *followingsCount;
+@end
+
+@interface FHFeedContentRawDataCommentBaseUserModel : JSONModel
 @property (nonatomic, strong , nullable) FHFeedContentRawDataCommentBaseUserInfoModel *info ;
 @property (nonatomic, strong , nullable) FHFeedContentRawDataCommentBaseUserBlockModel *block ;
+@property (nonatomic, strong , nullable) FHFeedContentRawDataCommentRelationModel *relation;
+@property (nonatomic, strong , nullable) FHFeedContentRawDataCommentRelationCountModel *relationCount;
 @end
 
 @interface FHFeedContentRawDataRealtorImageTagModel : JSONModel
@@ -656,6 +669,15 @@ typedef NS_ENUM(NSUInteger, FHFeedContentStickStyle) {
 @property (nonatomic, copy , nullable) NSString *id;
 @end
 
+@interface FHFeedContentRawDataSmallVideoShareModel : JSONModel
+
+@property (nonatomic, copy , nullable) NSString *shareCover;
+@property (nonatomic, copy , nullable) NSString *shareDesc;
+@property (nonatomic, copy , nullable) NSString *shareTitle;
+@property (nonatomic, copy , nullable) NSString *shareUrl;
+@property (nonatomic, copy , nullable) NSString *shareWeiboDesc;
+@end
+
 @interface FHFeedContentRawDataModel : JSONModel
 
 @property (nonatomic, strong , nullable) FHFeedContentRawDataOperationModel *operation ;
@@ -668,6 +690,7 @@ typedef NS_ENUM(NSUInteger, FHFeedContentStickStyle) {
 @property (nonatomic, strong , nullable) NSArray<FHFeedContentRawDataHotTopicListModel> *hotTopicList;
 @property (nonatomic, strong , nullable) FHFeedContentRawDataVoteModel *vote ;
 @property (nonatomic, copy , nullable) NSString *articleSchema;
+@property (nonatomic, assign) BOOL userRepin;
 @property (nonatomic, copy , nullable) NSString *itemId;
 @property (nonatomic, copy , nullable) NSString *groupId;
 @property (nonatomic, copy , nullable) NSString *originType;
@@ -699,7 +722,7 @@ typedef NS_ENUM(NSUInteger, FHFeedContentStickStyle) {
 @property (nonatomic, copy , nullable) NSString *userDigg;
 @property (nonatomic, copy , nullable) NSString *distance;
 @property (nonatomic, copy , nullable) NSString *distanceInfo;
-// 是否被删除
+//// 是否被删除
 @property (nonatomic, copy)     NSString       *status;
 @property (nonatomic, strong , nullable) NSArray<FHFeedContentRawDataHotCellListModel> *hotCellList;
 @property (nonatomic, copy , nullable) NSString *subCellType;
@@ -731,6 +754,12 @@ typedef NS_ENUM(NSUInteger, FHFeedContentStickStyle) {
 @property (nonatomic, copy , nullable) NSString *fromGid;
 //转评来源类型
 @property (nonatomic, copy , nullable) NSString *fromGroupSource;
+
+@property (nonatomic, strong, nullable) FHFeedContentRawDataSmallVideoShareModel *share;
+@property (nonatomic, copy, nullable) NSString *videoSourceIcon;
+@property (nonatomic, strong , nullable) NSArray<FHFeedContentImageListModel> *animatedImageList;
+@property (nonatomic, strong , nullable) NSArray<FHFeedContentImageListModel> *detailCoverImageModel;
+
 
 @end
 

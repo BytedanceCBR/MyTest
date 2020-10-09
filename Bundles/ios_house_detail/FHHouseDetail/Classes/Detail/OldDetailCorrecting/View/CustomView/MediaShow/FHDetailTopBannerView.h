@@ -13,6 +13,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)updateWithTitle:(NSString *)title content:(NSString *)content isCanClick:(BOOL)isCanClick clickUrl:(NSString *)clickUrl;
 
+@property (nonatomic, strong) UIView *containerView;
 @end
 
 

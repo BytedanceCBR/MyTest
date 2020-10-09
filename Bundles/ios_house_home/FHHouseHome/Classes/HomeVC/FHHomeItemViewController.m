@@ -990,7 +990,7 @@ static NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
         return;
     }
     
-    FHHomeHouseDataItemsModel *cellModel = [_houseDataItemsModel objectAtIndex:indexPath.row];
+    FHHomeHouseDataItemsModel *cellModel = [self.houseDataItemsModel objectAtIndex:indexPath.row];
     if ([cellModel.cardType integerValue] == kFHHomeAgentCardType) {
         return;
     }

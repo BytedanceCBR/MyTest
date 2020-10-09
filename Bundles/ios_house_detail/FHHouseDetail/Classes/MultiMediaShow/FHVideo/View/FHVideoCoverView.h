@@ -20,6 +20,9 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic, strong) UIButton *startBtn;
 @property(nonatomic, copy) NSString *imageUrl;
 @property(nonatomic , weak) id<FHVideoCoverViewDelegate> delegate;
+@property (nonatomic, strong) UIView *loadingView;
+
+@property(nonatomic ,strong) UIView *playerView;
 
 -(void)showWithImageUrl:(NSString *)imageUrl placeHoder:(UIImage *)placeHolder;
 

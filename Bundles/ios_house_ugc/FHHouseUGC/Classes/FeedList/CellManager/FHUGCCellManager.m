@@ -158,6 +158,7 @@
             type = SSImpressionModelTypeThread;
             break;
         case FHUGCFeedListCellTypeUGCSmallVideo:
+        case FHUGCFeedListCellTypeUGCSmallVideo2:
             type = SSImpressionModelTypeUGCVideo;
             break;
         case FHUGCFeedListCellTypeAnswer:

@@ -106,9 +106,18 @@
     [self updateIdentifyImageURL:cellModel.realtor.avatarTagUrl];
 }
 
--(void)updateAvatarWithTSVUserModel:(TSVUserModel *)userModel {
-    [self updateAvatarImageURL:userModel.avatarURL];
-    [self updateIdentifyImageURL:userModel.avatarTagUrl];
+-(void)updateAvatarWithTSVUserModel:(FHFeedUGCCellModel *)userModel {
+    if(userModel.realtor.avatarUrl.length) {
+        [self updateAvatarImageURL:userModel.realtor.avatarUrl];
+    }else if(userModel.user.avatarUrl.length) {
+        [self updateAvatarImageURL:userModel.user.avatarUrl];
+    }else{
+         [self updateAvatarImageURL:nil];
+    }
+    
+//    [self updateIdentifyImageURL:cellModel.realtor.avatarTagUrl];
+//    [self updateAvatarImageURL:userModel.avatarUrl];
+//    [self updateIdentifyImageURL:userModel.avatarTagUrl];
 }
 
 @end
