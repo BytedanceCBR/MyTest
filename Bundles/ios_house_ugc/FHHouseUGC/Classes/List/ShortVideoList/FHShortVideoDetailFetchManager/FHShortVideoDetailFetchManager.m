@@ -131,9 +131,12 @@
 
 - (void)setCurrentShortVideoModel:(FHFeedUGCCellModel *)currentShortVideoModel {
     self.awemedDetailItems = [[NSMutableArray alloc]init];
-    if (currentShortVideoModel) {
-        [self.awemedDetailItems addObject:currentShortVideoModel];
-        currentShortVideoModel.tracerDic =  [self trackDict:currentShortVideoModel rank:0];
+    if (currentShortVideoModel && currentShortVideoModel.originContent) {
+        FHFeedUGCCellModel *cellmodel = [FHFeedUGCCellModel modelFromFeed:currentShortVideoModel.originContent];
+        if (cellmodel) {
+            cellmodel.tracerDic =  [self trackDict:currentShortVideoModel rank:0];
+            [self.awemedDetailItems addObject:cellmodel];
+        }
     }else {
         [self requestDataForGroupIdAutomatically:YES finishBlock:^(NSUInteger increaseCount, NSError *error) {
         }];
@@ -143,7 +146,11 @@
 - (void)setOtherShortVideoModels:(NSArray<FHFeedUGCCellModel *> *)otherShortVideoModels {
     for (int m =0; m>otherShortVideoModels.count; m ++) {
         FHFeedUGCCellModel *itemModel = otherShortVideoModels[m];
-        itemModel.tracerDic =   [self trackDict:itemModel rank:self.awemedDetailItems.count + m];
+        if (itemModel && itemModel.originContent) {
+        FHFeedUGCCellModel *cellmodel = [FHFeedUGCCellModel modelFromFeed:itemModel.originContent];
+        cellmodel.tracerDic =   [self trackDict:itemModel rank:self.awemedDetailItems.count + m];
+        [self.awemedDetailItems addObject:cellmodel];
+        }
     }
     NSInteger numberOfItemLeft = self.numberOfShortVideoItems - self.currentIndex;
     if (numberOfItemLeft<=4) {
