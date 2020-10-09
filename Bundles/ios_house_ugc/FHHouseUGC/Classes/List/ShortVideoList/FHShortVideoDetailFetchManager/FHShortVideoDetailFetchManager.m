@@ -142,12 +142,12 @@
 }
 
 - (void)setOtherShortVideoModels:(NSArray<FHFeedUGCCellModel *> *)otherShortVideoModels {
-    for (int m =0; m>otherShortVideoModels.count; m ++) {
+    for (int m =0; m < otherShortVideoModels.count; m ++) {
         FHFeedUGCCellModel *itemModel = otherShortVideoModels[m];
         if (itemModel && itemModel.originContent) {
-        FHFeedUGCCellModel *cellmodel = [FHFeedUGCCellModel modelFromFeed:itemModel.originContent];
-        cellmodel.tracerDic =   [self trackDict:itemModel rank:self.awemedDetailItems.count + m];
-        [self.awemedDetailItems addObject:cellmodel];
+            FHFeedUGCCellModel *cellmodel = [FHFeedUGCCellModel modelFromFeed:itemModel.originContent];
+            cellmodel.tracerDic =   [self trackDict:itemModel rank:self.awemedDetailItems.count + m];
+            [self.awemedDetailItems addObject:cellmodel];
         }
     }
     NSInteger numberOfItemLeft = self.numberOfShortVideoItems - self.currentIndex;
