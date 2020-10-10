@@ -57,12 +57,6 @@
         [self addSubview:nameLabel];
         self.nameLabel = nameLabel;
         
-        [self.nameLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.left.mas_equalTo(self).offset(15);
-            make.right.mas_equalTo(self).offset(-15);
-            make.top.mas_equalTo(self.topBanner.mas_bottom).offset(20);
-        }];
-        
         UILabel *addressLab = [UILabel createLabel:@"" textColor:@"" fontSize:14];
         addressLab.textColor = [UIColor themeGray3];
         addressLab.font = [UIFont themeFontRegular:14];
@@ -73,13 +67,13 @@
         self.addressLab.numberOfLines = 1;
         
         [self.nameLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.left.mas_equalTo(self).offset(31);
+            make.left.mas_equalTo(self).offset(15);
             make.right.mas_equalTo(self).offset(-100);
             make.top.mas_equalTo(self.topBanner.mas_bottom);
         }];
         
         [self.addressLab mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.left.mas_equalTo(self).offset(31);
+            make.left.mas_equalTo(self).offset(15);
             make.right.mas_equalTo(self).offset(-100);
             make.top.mas_equalTo(self.nameLabel.mas_bottom).offset(4);
             make.bottom.mas_equalTo(self);
