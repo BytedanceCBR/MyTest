@@ -17,7 +17,7 @@
 #import "TTStringHelper.h"
 #import "TTBaseMacro.h"
 #import "TTVPlayerCacheProgressController.h"
-#import "TTVideoEngine.h"
+#import "TTVideoEngineEnvConfig+CN.h"
 #import "TTVVideoURLParser.h"
 #import "KVOController.h"
 #import "TTVResolutionStore.h"
