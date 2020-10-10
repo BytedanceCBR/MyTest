@@ -306,10 +306,19 @@ def appPods
     pod_binary 'TTNetworkManager', '3.2.24.1'
 
     #-----播放器SDK相关-----
-    pod 'TTPlayerSDK', '2.9.9.10'
-    pod 'TTFFmpeg', '1.4.3'
-    pod_binary 'TTVideoEngine', '1.9.3.24'
+    pod 'TTPlayerSDK', '2.10.5.42'
+    pod 'TTFFmpeg', '1.25.5.101'
+    pod_binary 'TTVideoEngine', '1.10.5.2'
     pod 'TTPreloaderSDK', '1.4.20-rc.0'
+    
+    pod_binary 'ABRInterface', '0.6.1'
+    pod_binary 'VCPreloadStrategy', '0.1.2', :subspecs => ['Interface']
+    pod_binary 'MDLMediaDataLoader', '1.1.6.2'
+    pod_binary 'VCNVCloudNetwork', '3.0.2'
+    pod_binary 'lib_h_dec', '1.2.2.4-bugfix'
+    pod_binary 'TTNetworkPredict', '0.1.6'
+    
+    
 
     #-----头条sercive中间件-----
     pod_binary 'TTServiceKit', '0.4.1'
@@ -528,7 +537,7 @@ def appPods
     pod_binary 'WCDBOptimizedSQLCipher' , '1.2.1'
     # pod_binary 'SocketRocket', '0.5.1'
     
-    pod_binary 'TTFileUploadClient', '1.9.2.5'
+    pod_binary 'TTFileUploadClient', '1.9.17.4'
     pod 'RXCollections' , '1.0'
 
     pod_binary 'MBProgressHUD' , '1.1.0'
@@ -539,7 +548,7 @@ def appPods
     
     pod_binary 'OpenSSL-Universal' , '1.0.1.20'
     
-    pod        'boringssl' , '0.0.7'
+    pod        'boringssl' , '0.1.4'
     
     pod_binary 'AFNetworking' , '2.5.1'
     
