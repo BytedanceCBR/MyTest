@@ -232,7 +232,7 @@
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
         self.detailController.isLoadingData = NO;
         NSMutableArray *sectionModels = self.sectionModels.mutableCopy;
-        if(_relatedHouseData.data && self.relatedHouseData.data.items.count > 0)
+        if(self.relatedHouseData.data && self.relatedHouseData.data.items.count > 0)
         {
             FHNewHouseDetailRecommendSM *recommendSM = [[FHNewHouseDetailRecommendSM alloc] initWithDetailModel:self.detailData];
             recommendSM.sectionType = FHNewHouseDetailSectionTypeRecommend;
