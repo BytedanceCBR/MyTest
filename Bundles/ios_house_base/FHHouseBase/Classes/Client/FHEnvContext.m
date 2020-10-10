@@ -1181,6 +1181,14 @@ static NSInteger kGetLightRequestRetryCount = 3;
     return YES;
 }
 
++ (BOOL)isHasShortVideoList {
+    id res = [BDABTestManager getExperimentValueForKey:@"discover_type" withExposure:YES];
+    if(res){
+        return [res boolValue];
+    }
+    return NO;
+}
+
 + (BOOL)isIntroduceOpen {
     return YES;
 }

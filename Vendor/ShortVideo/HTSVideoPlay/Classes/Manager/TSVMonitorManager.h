@@ -25,7 +25,7 @@ typedef NS_ENUM(NSInteger, TSVMonitorVideoPlayStatus)
     TSVMonitorVideoPlayFailed
 };
 
-@class TTShortVideoModel;
+@class FHFeedUGCCellModel;
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -37,7 +37,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)endMonitorNetworkService:(TSVMonitorNetworkService)service identifier:(NSString *)identifier error:(nullable NSError *)error;
 
-- (void)trackVideoPlayStatus:(TSVMonitorVideoPlayStatus)status model:(TTShortVideoModel *)model error:(nullable NSError *)error;
+- (void)trackVideoPlayStatus:(TSVMonitorVideoPlayStatus)status model:(FHFeedUGCCellModel *)model error:(nullable NSError *)error;
 
 - (void)didEnterShortVideoTab;
 

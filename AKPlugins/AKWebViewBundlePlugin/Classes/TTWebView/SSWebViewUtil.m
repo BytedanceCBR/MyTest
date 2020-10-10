@@ -341,4 +341,15 @@ static NSString *s_referrer = nil;
     
     return paramString;
 }
+
+static NSString* CFPropertyListRefToNSString(CFPropertyListRef ref) {
+    if (ref == NULL) {
+        return nil;
+    }
+    if (CFGetTypeID(ref) == CFStringGetTypeID()) {
+        return (NSString *)CFBridgingRelease(ref);
+    }
+    return nil;
+}
+
 @end

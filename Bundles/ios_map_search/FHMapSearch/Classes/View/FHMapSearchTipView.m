@@ -104,6 +104,10 @@
     [self performSelector:@selector(removeTip) withObject:nil afterDelay:duration];
 }
 
+- (void)changeTipTextFontSize:(CGFloat)fontSize{
+   _tipLabel.font = [UIFont themeFontMedium:fontSize];
+}
+
 
 /*
 // Only override drawRect: if you perform custom drawing.

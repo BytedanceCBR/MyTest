@@ -28,13 +28,15 @@
 #import "TTAccountLoginManager.h"
 #import "TTAccountManager.h"
 #import "UIDevice+BTDAdditions.h"
+#import <FHHouseBase/NSObject+FHOptimize.h>
+#import "FHAppUpdateView.h"
+#import <FHHouseBase/FHUserTracker.h>
 
 static NSString * const kFUGCPrefixStr = @"fugc";
 
 @interface FHHomeMainViewController ()<TTAppUpdateHelperProtocol>
 @property (nonatomic,strong)FHHomeMainViewModel *viewModel;
 @property (nonatomic, assign) BOOL isShowing;
-@property (nonatomic, assign) BOOL isHaveCheckUpgrage;
 @property (nonatomic, assign) NSTimeInterval stayTime; //页面停留时间
 @property (nonatomic,strong)NSTimer *switchTimer;
 @property (nonatomic,assign)NSInteger totalNum;
@@ -42,10 +44,21 @@ static NSString * const kFUGCPrefixStr = @"fugc";
 @property (nonatomic, strong) FHLoginTipView *loginTipview;
 @property (nonatomic, assign) BOOL isShowLoginTip;
 @property (nonatomic, assign) BOOL firstLanchCanShowLogin;
-
+@property (nonatomic, strong) TTAppUpdateHelper *appUpdateHelper;
+@property (nonatomic, weak) FHAppUpdateView *appUpdateView;
 @end
 
 @implementation FHHomeMainViewController
+
+- (instancetype)init {
+    if (self = [super init]) {
+        static dispatch_once_t onceToken;
+        dispatch_once(&onceToken, ^{
+            [self checkLocalTestUpgradeVersionAlert];
+        });
+    }
+    return self;
+}
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -74,15 +87,6 @@ static NSString * const kFUGCPrefixStr = @"fugc";
     [self initLoginTipView];
     //UGC地推包检查粘贴板
 //    [self checkPasteboard:NO];
-    
-    //如果是inhouse的，弹升级弹窗
-    if ([TTSandBoxHelper isInHouseApp] && !self.isHaveCheckUpgrage) {
-        //#if INHOUSE
-        self.isHaveCheckUpgrage = YES;
-        [self checkLocalTestUpgradeVersionAlert];
-        //#endif
-    }
-    
     self.stayTime = [[NSDate date] timeIntervalSince1970];
 }
 
@@ -127,7 +131,6 @@ static NSString * const kFUGCPrefixStr = @"fugc";
 }
 - (void)initView {
     self.view.backgroundColor = [UIColor themeHomeColor];
-    self.isHaveCheckUpgrage = NO;
     
     self.topView = [[FHHomeMainTopView alloc] init];
     _topView.backgroundColor = [UIColor themeHomeColor];
@@ -440,89 +443,131 @@ static NSString * const kFUGCPrefixStr = @"fugc";
 }
 
 #pragma mark 内测弹窗
+
 - (void)checkLocalTestUpgradeVersionAlert
 {
+    [[FHPopupViewManager shared] outerPopupViewShow];
     //内测弹窗
     NSString * iidValue = [[TTInstallIDManager sharedInstance] installID];
     NSString * didValue = [[TTInstallIDManager sharedInstance] deviceID];
     NSString * channelValue = [[NSBundle mainBundle] infoDictionary][@"CHANNEL_NAME"];
-    NSString * aidValue = @"1370";
-    NSString * baseUrl = [CommonURLSetting baseURL];
+//    NSString * baseUrl = [CommonURLSetting baseURL];
     //    NSString * baseUrl = @"https://i.snssdk.com";
-    
-    [TTAppUpdateHelper sharedInstance].delegate = self;
-    [[TTAppUpdateHelper sharedInstance] checkVersionUpdateWithInstallID:iidValue deviceID:didValue channel:channelValue aid:aidValue checkVersionBaseUrl:baseUrl correctVC:self completionBlock:^(__kindof UIView *view, NSError * _Nullable error) {
-        [self.view addSubview:view];
-        [[FHPopupViewManager shared] outerPopupViewShow];
-    } updateBlock:^(BOOL isTestFlightUpdate, NSString *downloadUrl) {
-        //        if (!downloadUrl) {
-        //            return;
-        //        }
-        //        NSURL *url = [NSURL URLWithString:downloadUrl];
-        //        [[UIApplication sharedApplication] openURL:url];
-    } closeBlock:^{
+    self.appUpdateHelper = [[TTAppUpdateHelper alloc] initWithInstallID:iidValue deviceID:didValue channel:channelValue aid:@"1370" delegate:self];
+    [self.appUpdateHelper startCheckVersion];
+//#if DEBUG
+//    self.appUpdateHelper.maxAppStorePopTimes = 100;
+//    self.appUpdateHelper.maxTestFlightPopTimes = 100;
+//    self.appUpdateHelper.maxInhousePopTimes = 100;
+//#endif
+}
+
+#pragma mark - TTAppUpdateHelperProtocol
+
+//@required
+/**
+ @param model 弹窗显示Model
+ @param error 错误信息
+ */
+- (void)showUpdateViewWithModel:(TTAppUpdateModel *)model error:(NSError *)error {
+    if (error) {
         [[FHPopupViewManager shared] outerPopupViewHide];
-    }];
+        return;
+    }
+    CGFloat delay = 0;
+    if (model.latency.floatValue > 0) {
+        delay = model.latency.floatValue;
+    }
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delay * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        __weak typeof(self) weakSelf = self;
+        FHAppUpdateView *appUpdateView = [[FHAppUpdateView alloc] initWithFrame:self.view.bounds];
+        [appUpdateView setUpdateBlock:^{
+            if (weakSelf.appUpdateHelper.updateBlock) {
+                weakSelf.appUpdateHelper.updateBlock();
+            }
+            [FHUserTracker writeEvent:@"popup_click"
+                               params:@{
+                                   @"page_type": @"maintab",
+                                   @"popup_name": @"version_upgrade",
+                                   @"version_number": model.tipsVersionCode.stringValue?:@"be_null",
+                                   @"is_preload": @"0",
+                                   @"click_position": @"instant_upgrade",
+                                   @"event_tracking_id": @"110831"
+                               }];
+        }];
+        [appUpdateView setCloseBlock:^{
+            if (weakSelf.appUpdateHelper.closeBlock) {
+                weakSelf.appUpdateHelper.closeBlock();
+            }
+            [FHUserTracker writeEvent:@"popup_click"
+                               params:@{
+                                   @"page_type": @"maintab",
+                                   @"popup_name": @"version_upgrade",
+                                   @"version_number": model.tipsVersionCode.stringValue?:@"be_null",
+                                   @"is_preload": @"0",
+                                   @"click_position": @"close",
+                                   @"event_tracking_id": @"110831"
+                               }];
+        }];
+        [appUpdateView updateInfoWithVersion:model.tipsVersionName content:model.whatsNew forceUpdate:model.forceUpdate.boolValue];
+        [appUpdateView show];
+        self.appUpdateView = appUpdateView;
+        [FHUserTracker writeEvent:@"popup_show"
+                           params:@{
+                               @"page_type": @"maintab",
+                               @"popup_name": @"version_upgrade",
+                               @"version_number": model.tipsVersionCode.stringValue?:@"be_null",
+                               @"is_preload": @"0",
+                               @"event_tracking_id": @"110830"
+                           }];
+    });
 }
 
-/** 通知代理对象已获取到弹窗升级Title和具体升级内容,如果自定义弹窗，必须实现此方法
- @params title 弹窗升级title,ex: 6.x.x内测更新了..
- @param content 更新具体内容
- @params tipVersion 弹窗升级版本号,ex: 6.7.8
- @param downloadUrl TF弹窗下载地址
+/**
+ 告诉代理需要关闭弹窗,代理对象应该只在该方法中关闭弹窗
  */
-//- (void)showUpdateTipTitle:(NSString *)title content:(NSString *)content tipVersion:(NSString *)tipVersion updateButtonText:(NSString *)text downloadUrl:(NSString *)downloadUrl error:(NSError * _Nullable)error
-//{
-//
-//}
+- (void)dismissTipView {
+    if (self.appUpdateView) {
+        [self.appUpdateView dismiss];
+    }
+    [[FHPopupViewManager shared] outerPopupViewHide];
+}
 
-/** 通知代理对象弹窗需要remove
- *  代理对象需要在此方法里面将弹窗remove掉
+//@optional
+
+//弹窗不展示回调
+- (void)updateViewShouldNotShow {
+    tt_dispatch_main_async_safe(^{
+        [[FHPopupViewManager shared] outerPopupViewHide];
+    });
+}
+ 
+/*
+ TF弹窗必须实现，在此处理TF跳转下载链接的网页
  */
-- (void)dismissTipView
-{
-    
+- (void)openWithDownloadUrl:(NSString *)downloadUrl {
+    if ([downloadUrl rangeOfString:@"apple"].location != NSNotFound) {
+        if (@available(iOS 11.0, *)) {
+            [[UIApplication sharedApplication] openURL:[NSURL URLWithString:downloadUrl] options:@{UIApplicationOpenURLOptionUniversalLinksOnly : @NO} completionHandler:nil];
+        }else{
+            [[UIApplication sharedApplication] openURL:[NSURL URLWithString:downloadUrl]];
+        }
+    } else {
+        if([downloadUrl hasPrefix:@"http://"] ||
+           [downloadUrl hasPrefix:@"https://"]) {
+            NSURL *url = [NSURL URLWithString:[[NSString stringWithFormat:@"sslocal://webview?url=%@",downloadUrl] stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLQueryAllowedCharacterSet]]];
+            TTRouteUserInfo *routeInfo = [[TTRouteUserInfo alloc] initWithInfo:@{@"hide_more":@(YES)}];
+            [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:routeInfo];
+        }
+    }
 }
-
-///*
-// 判断是否是内测包，当打包注入与头条主工程不一致时
-// 可以实现自行进行判断，默认与头条判断方式相同
-// 通过检查bundleID是否有inHouse字段进行判断
-// */
-- (BOOL)decideIsInhouseApp
-{
-    return YES;
-}
-//
-///*
-// 判断是否是LR包，当打包注入与头条主工程不一致时
-// 可以实现自行进行判断，默认与头条判断方式相同
-// 通过检查buildinfo字段进行判断
-// 注意：只有lr包才弹内测弹窗，如果业务方没有
-// lr包的概念，则返回YES即可
-// */
-- (BOOL)decideIsLrPackage
-{
-    return YES;
-}
-//
-///*
-// 判断是否需要上报用户did，主要用来上报用户是否安装tTestFlight
-// 的情况，业务方可以自行通过开关控制
-// */
-//- (BOOL)decideShouldReportDid
-//{
-//
-//}
 
 /*
- #pragma mark - Navigation
- 
- // In a storyboard-based application, you will often want to do a little preparation before navigation
- - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
- // Get the new view controller using [segue destinationViewController].
- // Pass the selected object to the new view controller.
- }
+ 判断是否是内测包，默认是通过检查bundleID是否有inHouse字段进行判断
+ 也可以通过实现此方法自行进行判断
  */
+- (BOOL)decideIsInhouseApp {
+    return [TTSandBoxHelper isInHouseApp];
+}
 
 @end

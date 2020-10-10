@@ -37,6 +37,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (TTHttpTask *)setHomePageAuth:(BOOL)isOn completion:(void (^ _Nonnull)(BOOL success, NSError *error))completion;
 
++ (TTHttpTask *)requestLinkChatPageUrlWithParams:(nullable NSDictionary *)params completion:(void (^ _Nonnull)(NSError *error, id obj))completion;
+
 @end
 
 NS_ASSUME_NONNULL_END

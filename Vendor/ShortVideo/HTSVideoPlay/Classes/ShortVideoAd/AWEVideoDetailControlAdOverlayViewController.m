@@ -9,7 +9,6 @@
 #import "AWEVideoDetailControlAdOverlayViewController.h"
 
 #import "AWEVideoDetailManager.h"
-#import "AWEVideoDetailTracker.h"
 #import "AWEVideoPlayTrackerBridge.h"
 #import "AWEVideoPlayTransitionBridge.h"
 #import "AWEVideoDetailScrollConfig.h"
@@ -18,7 +17,6 @@
 #import "EXTKeyPathCoding.h"
 #import "EXTScope.h"
 #import "HTSDeviceManager.h"
-#import "HTSVideoPlayToast.h"
 #import "MBProgressHUD.h"
 #import "SSMotionRender.h"
 #import "SSThemed.h"
@@ -42,6 +40,7 @@
 #import <TTThemed/UIColor+TTThemeExtension.h>
 #import <BDWebImage/SDWebImageAdapter.h>
 #import "UIView+CustomTimingFunction.h"
+#import "ToastManager.h"
 
 @import AssetsLibrary;
 
@@ -527,7 +526,7 @@ CGFloat const userInfoHeight = 40.f;
 - (BOOL)alertIfNotValid
 {
     if (self.model.isDelete) {
-        [HTSVideoPlayToast show:@"视频已被删除"];
+        [[ToastManager manager] showToast:@"视频已被删除"];
         return YES;
     }
     return !self.model;
@@ -817,13 +816,6 @@ CGFloat const userInfoHeight = 40.f;
     if (!self.model) {
         return;
     }
-    NSMutableDictionary *paramters = @{}.mutableCopy;
-    paramters[@"user_id"] = self.model.author.userID;
-    paramters[@"position"] = @"double_like";
-    [AWEVideoDetailTracker trackEvent:@"rt_like"
-                                model:self.model
-                      commonParameter:self.commonTrackingParameter
-                       extraParameter:paramters];
     
     [self digg];
 }

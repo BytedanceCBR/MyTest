@@ -354,7 +354,21 @@
 }
 @end
 
-
+@implementation FHSearchHouseVideoModel
++ (JSONKeyMapper*)keyMapper
+{
+    NSDictionary *dict = @{
+                           @"hasVideo": @"has_video",
+                           };
+    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+        return dict[keyName]?:keyName;
+    }];
+}
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+@end
 
 
 
@@ -683,6 +697,7 @@
                            @"uploadAt": @"upload_at",
                            @"imprId": @"impr_id",
                            @"vrInfo": @"vr_info",
+                           @"videoInfo": @"video_info",
                            @"contactModel": @"realtor_info",
                            @"associateInfo": @"associate_info",
                            

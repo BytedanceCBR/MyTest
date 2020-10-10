@@ -13,8 +13,7 @@
 #import "TTProjectLogicManager.h"
 #import "TTNavigationController.h"
 #import "TTAccountBusiness.h"
-
-
+#import <ByteDanceKit/ByteDanceKit.h>
 
 @implementation TTRouteService
 
@@ -53,7 +52,25 @@ SINGLETON_GCD(TTRouteService)
 
 - (NSString *)ttRouteLogic_classForKey:(NSString *)key
 {
+    NSString *onlineConfigClass = [self onlineConfigClassForKey:key];
+    if (onlineConfigClass && onlineConfigClass.length) {
+        return onlineConfigClass;
+    }
     return [[TTProjectLogicManager sharedInstance_tt] logicStringForKey:key];
+}
+
+- (NSString *)onlineConfigClassForKey:(NSString *)key {
+    if ([[NSUserDefaults standardUserDefaults] objectForKey:@"kFHSettingsKey"]) {
+        NSDictionary *settings = [[NSUserDefaults standardUserDefaults] dictionaryForKey:@"kFHSettingsKey"];
+        NSString *routeConfigKey = @"online_route_config";//[[NSBundle btd_versionName] stringByAppendingFormat:@"online_route_config"];
+        if (settings[routeConfigKey]) {
+            NSDictionary *routeConfig = [settings btd_dictionaryValueForKey:routeConfigKey];
+            if (routeConfig && routeConfig[key]) {
+                return [routeConfig btd_stringValueForKey:key];
+            }
+        }
+    }
+    return nil;
 }
 
 #pragma mark - TTRouteLogicDelegate

@@ -45,9 +45,9 @@ NSString *const kFHToastCountKey = @"kFHToastCountKey";
 + (void)silentFollowHouseWithConfigModel:(FHHouseFollowUpConfigModel *)configModel completionBlock:(void(^)(BOOL isSuccess))completionBlock
 {
     
-    if ([FHUtils getSettingEnableBooleanForKey:@"f_login_before_house_subscribe"]) {
+//    if ([FHUtils getSettingEnableBooleanForKey:@"f_login_before_house_subscribe"]) {
         return;
-    }
+//    }
     
     if (![TTReachability isNetworkConnected]) {
         if (completionBlock) {

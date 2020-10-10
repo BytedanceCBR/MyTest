@@ -10,7 +10,6 @@
 #import "AWEReportViewController.h"
 // View
 #import "AWEVideoPlayView.h"
-#import "AWEVideoCommentCell.h"
 //#import "AWECommentInputBar.h"
 // Model
 #import "TSVShortVideoOriginalData.h"
@@ -59,7 +58,6 @@
 #import "UIViewController+TabBarSnapShot.h"
 #import "UIImageView+WebCache.h"
 #import "AWEVideoDetailFirstUsePromptViewController.h"
-#import "AWEVideoDetailTracker.h"
 #import <TTReporter/TTReportManager.h>
 #import "TTMonitor.h"
 #import "TSVVideoDetailPromptManager.h"
@@ -114,6 +112,12 @@
 #import "SSCommonLogic.h"
 #import "SSCommentInputHeader.h"
 #import "FHUserTracker.h"
+#import "TSVWriteCommentButton.h"
+#import "FHShortVideoTracerUtil.h"
+#import "TTReachability.h"
+#import "ToastManager.h"
+#import "TTAccountManager.h"
+#import "NSDictionary+BTDAdditions.h"
 
 #define kPostMessageFinishedNotification    @"kPostMessageFinishedNotification"
 
@@ -134,51 +138,72 @@ typedef NS_ENUM(NSInteger, TSVDetailCommentViewStatus) {
 
 // View
 @property (nonatomic, strong) SSThemedView *commentView;
+///评论数量
 @property (nonatomic, strong) SSThemedLabel *commentHeaderLabel;
+///评论table
 @property (nonatomic, strong) UITableView *tableView;
+///小视频控制器
 @property (nonatomic, strong) AWEVideoContainerViewController *videoContainerViewController;
 //@property (nonatomic, strong) TSVProfileViewController *profileViewController;
+///暂无评论沙发视图
 @property (nonatomic, strong) UIView *emptyHintView;
 //@property (nonatomic, strong) AWECommentInputBar *inputBar;
 @property (nonatomic, strong) UIView *keyboardMaskView;
+///评论举报，目前好像未使用
 @property (nonatomic, strong) AWEReportViewController *commentReportVC;
+///视频举报功能，点击右上角查看更多->举报操作
 @property (nonatomic, strong) AWEReportViewController *videoReportVC;
+///点击评论按钮弹出table上面的输入框
 @property (nonatomic, strong) SSThemedView *fakeInputBar;
 // Data
 @property (nonatomic, strong) TSVDetailViewModel *viewModel;
+///评论区工具类
 @property (nonatomic, strong) AWEVideoCommentDataManager *commentManager;
+///小视频数据处理工具类，包括请求等等
 @property (nonatomic, strong) id<TSVShortVideoDataFetchManagerProtocol> dataFetchManager;
 @property (nonatomic, strong) id<TSVShortVideoDataFetchManagerProtocol> originalDataFetchManager;
+///页面所有数据
 @property (nonatomic, copy) NSDictionary *pageParams;
+///小视频gid
 @property (nonnull, copy) NSString *groupID;
+///类型
 @property (nonatomic, copy) NSString *groupSource;
+///渠道名
 @property (nonatomic, copy) NSString *categoryName;
+//自动弹起输入框或者评论
 @property (nonatomic, strong) NSNumber *showComment;//0不弹，1弹起评论浮层，2弹输入框
 @property (nonatomic, copy) NSDictionary *commonTrackingParameter;
 @property (nonatomic, copy) NSDictionary *initialLogPb;
 //外面传的埋点信息 by xsm
 @property (nonatomic, strong) NSDictionary *extraDic;
-// 状态
+///是否为第一次请求
 @property (nonatomic, assign) BOOL firstLoadFinished;
+///目前未使用到
 @property (nonatomic, assign) BOOL isFirstTimeShowCommentListOrKeyboard;
 
 @property (nonatomic, assign) BOOL isDisliked;
-@property (nonatomic, assign) BOOL hasMore;      // 还有没有评论数据可以拉取
-@property (nonatomic, assign) NSInteger offset;  // 请求新数据的时候，offet参数
+/// 还有没有评论数据可以拉取
+@property (nonatomic, assign) BOOL hasMore;
+/// 请求新数据的时候，offet参数
+@property (nonatomic, assign) NSInteger offset;
+/// 关闭类型
 @property (nonatomic, assign) AWEVideoDetailCloseStyle closeStyle;
 @property (nonatomic, assign) NSTimeInterval totalDuration;
-// 详情页数据
-@property (nonatomic, strong) TTShortVideoModel *model;
+///当前详情页数据
+@property (nonatomic, strong) FHFeedUGCCellModel *model;
+//用户举报信息
 @property (nonatomic, strong) NSArray<NSDictionary *> *userReportOptions;
+///视频举报信息
 @property (nonatomic, strong) NSArray<NSDictionary *> *videoReportOptions;
 // 用于避免重复digg
 @property (nonatomic, strong) NSLock *diggLock;
 @property (nonatomic, strong) NSLock *commentDiggLock;
-// observers
+/// observers
 @property (nonatomic, strong) NSMutableArray *observerArray;
 
-///下拉关闭相关属性
+///点击close相关属性
 @property (nonatomic, strong) TTImagePreviewAnimateManager *animateManager;
+///推出视频详情页的回调
 @property (nonatomic, strong) TSVShortVideoDetailExitManager *exitManager;
 @property (nonatomic, strong) UIView *finishBackView;
 @property (nonatomic, strong) SSThemedView *blackMaskView;
@@ -225,16 +250,20 @@ typedef NS_ENUM(NSInteger, TSVDetailCommentViewStatus) {
 
 //push
 @property (nonatomic, copy) NSString *ruleID;   //推送gid对应的唯一标识
-@property (nonatomic, copy) NSString *originalGroupID;  //schema中的初始gid
+///schema中的初始gid
+@property (nonatomic, copy) NSString *originalGroupID;
 
 @property (nonatomic, strong) ExploreOrderedData            *orderedData;
 
 @property (nonatomic, assign) BOOL loadingShareImage;//加载分享图片时 点击分享按钮
-
+///评论相关
 @property (nonatomic, strong) FHPostDetailCommentWriteView *commentWriteView;
 @property (nonatomic, strong) TTGroupModel *groupModel;
-
+///埋点数据
 @property (nonatomic, strong) NSDictionary *tracerDic;
+
+@property (nonatomic, strong) UIView *topBarView;
+@property (nonatomic, strong) UIButton *closeButton;
 @end
 
 static const CGFloat kFloatingViewOriginY = 230;
@@ -294,7 +323,9 @@ static const CGFloat kFloatingViewOriginY = 230;
         
         [self initReportOptions];
         [self initProperty];
-
+        if(paramObj.allParams[@"extraDic"] && [paramObj.allParams[@"extraDic"] isKindOfClass:[NSDictionary class]]){
+               self.extraDic = paramObj.allParams[@"extraDic"];
+           }
         if (extraParams[HTSVideoListFetchManager]) {
             self.dataFetchManager = extraParams[HTSVideoListFetchManager];
         } else if ([params[@"load_more"] integerValue] == 1) {
@@ -329,8 +360,13 @@ static const CGFloat kFloatingViewOriginY = 230;
             self.dataFetchManager = [[TSVShortVideoDetailFetchManager alloc] initWithGroupID:self.groupID
                                                                              loadMoreType:TSVShortVideoListLoadMoreTypeNone];
             self.dataFetchManager.shouldShowNoMoreVideoToast = NO;
+            if(paramObj.allParams[@"extraDic"] && [paramObj.allParams[@"extraDic"] isKindOfClass:[NSDictionary class]]){
+                self.dataFetchManager.tracerDic = paramObj.allParams[@"extraDic"];
+            };
         }
+         self.dataFetchManager.isFromFollowVc = _pageParams[@"isFromFlollow"]?:NO;
         self.originalDataFetchManager = self.dataFetchManager;
+        
 
         @weakify(self);
         [RACObserve(self, dataFetchManager) subscribeNext:^(id  _Nullable x) {
@@ -354,9 +390,7 @@ static const CGFloat kFloatingViewOriginY = 230;
             self.orderedData = extraParams[HTSVideoDetailOrderedData];
         }
         
-        if(paramObj.allParams[@"extraDic"] && [paramObj.allParams[@"extraDic"] isKindOfClass:[NSDictionary class]]){
-            self.extraDic = paramObj.allParams[@"extraDic"];
-        }
+   
         
         TTGroupModel *groupModel = [[TTGroupModel alloc] initWithGroupID:self.groupID itemID:self.groupID impressionID:nil aggrType:1];
         self.groupModel = groupModel;
@@ -451,7 +485,12 @@ static const CGFloat kFloatingViewOriginY = 230;
 
     self.ttStatusBarStyle = UIStatusBarStyleLightContent;
     self.modeChangeActionType = ModeChangeActionTypeNone;
-
+    CGFloat topInset = 0;
+    CGFloat bottomInset = 0;
+    if (@available(iOS 11.0, *)) {
+        topInset = [UIApplication sharedApplication].keyWindow.safeAreaInsets.top;
+         bottomInset = [UIApplication sharedApplication].keyWindow.safeAreaInsets.bottom;
+    }
     // Views
     self.videoContainerViewController = ({
         AWEVideoContainerViewController *controller = [[AWEVideoContainerViewController alloc] init];
@@ -475,14 +514,12 @@ static const CGFloat kFloatingViewOriginY = 230;
                 TSVControlOverlayViewModel *viewModel = [[TSVControlOverlayViewModel alloc] init];
                 viewModel.commonTrackingParameter = self.commonTrackingParameter;
                 viewModel.listEntrance = [self entrance];
-                viewModel.closeButtonDidClick = ^{
-                    @strongify(self);
-                    [self dismissByClickingCloseButton];
-                };
                 viewModel.writeCommentButtonDidClick = ^{
-                    @strongify(self);
-                    [self playView:nil didClickInputWithModel:self.model];
-                };
+                            @strongify(self);
+                    NSInteger rank = [self.model.tracerDic btd_integerValueForKey:@"rank" default:0];
+                         [FHShortVideoTracerUtil clickCommentWithModel:self.model eventIndex:rank eventPosition:@"detail_comment"];
+                            [self playView:nil didClickInputWithModel:self.model];
+                        };
                 viewModel.showProfilePopupBlock = ^{
                     @strongify(self);
 //                    [self layoutProfileViewController];
@@ -509,18 +546,20 @@ static const CGFloat kFloatingViewOriginY = 230;
     @weakify(self);
 
     [self addChildViewController:self.videoContainerViewController];
-    self.videoContainerViewController.view.frame = self.view.bounds;
+     self.videoContainerViewController.view.frame = CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height);
     [self.view addSubview:self.videoContainerViewController.view];
     [self.videoContainerViewController didMoveToParentViewController:self];
 
+    //111
     self.commentView = [[SSThemedView alloc] initWithFrame:CGRectMake(0, CGRectGetHeight([UIScreen mainScreen].bounds), CGRectGetWidth(self.view.bounds), CGRectGetHeight([UIScreen mainScreen].bounds) - kFloatingViewOriginY)];
-//    self.commentView.autoresizingMask = UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight;
     self.commentView.layer.cornerRadius = 6.0;
     self.commentView.backgroundColorThemeKey = kColorBackground4;
     self.commentView.hidden = YES;
     [self.view addSubview:self.commentView];
 
     self.commentHeaderLabel = [[SSThemedLabel alloc] initWithFrame:CGRectMake(15, 0, CGRectGetWidth(self.commentView.bounds) - 15.0 - 44.0 - 15.0, 49.0)];
+    self.commentHeaderLabel.centerX = self.commentView.centerX;
+     self.commentHeaderLabel.textAlignment = NSTextAlignmentCenter;
     self.commentHeaderLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleBottomMargin;
     self.commentHeaderLabel.font = [UIFont systemFontOfSize:17.0f];
     self.commentHeaderLabel.textColorThemeKey = kColorText1;
@@ -531,7 +570,6 @@ static const CGFloat kFloatingViewOriginY = 230;
     [self.commentView addSubview:sepline];
 
     SSThemedButton *commentViewCloseButton = [[SSThemedButton alloc] initWithFrame:CGRectMake(0, 0, 44, 44)];
-    commentViewCloseButton.right = self.commentView.width;
     commentViewCloseButton.centerY = self.commentHeaderLabel.centerY;
     commentViewCloseButton.imageName = @"tsv_close";
     [commentViewCloseButton addTarget:self action:@selector(closeCommentList:) forControlEvents:UIControlEventTouchUpInside];
@@ -548,34 +586,6 @@ static const CGFloat kFloatingViewOriginY = 230;
     self.tableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, CGRectGetWidth(self.tableView.bounds), 37)];
     [self.commentView addSubview:self.tableView];
 
-    SSThemedView *fakeInputBar = [[SSThemedView alloc] initWithFrame:CGRectMake(0, CGRectGetMaxY(self.tableView.frame), CGRectGetWidth(self.commentView.bounds), 44)];
-    fakeInputBar.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-    fakeInputBar.backgroundColorThemeKey = kColorBackground4;
-    UIGestureRecognizer *inputTapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleFakeInputBarClick:)];
-    fakeInputBar.borderColorThemeKey = kColorLine7;
-    fakeInputBar.separatorAtTOP = YES;
-    [fakeInputBar addGestureRecognizer:inputTapGesture];
-    [self.commentView addSubview:fakeInputBar];
-    self.fakeInputBar = fakeInputBar;
-    
-    SSThemedView *fakeTextBackgroundView = [[SSThemedView alloc] initWithFrame:CGRectMake(14, 6, CGRectGetWidth(fakeInputBar.bounds) - 28, CGRectGetHeight(fakeInputBar.bounds) - 12)];
-    fakeTextBackgroundView.backgroundColorThemeKey = @"grey7";
-    fakeTextBackgroundView.layer.cornerRadius = CGRectGetHeight(fakeTextBackgroundView.bounds) / 2;
-    fakeTextBackgroundView.layer.masksToBounds = YES;
-    fakeTextBackgroundView.layer.borderWidth = [TTDeviceHelper ssOnePixel];
-    fakeTextBackgroundView.borderColorThemeKey = @"grey7";
-    [fakeInputBar addSubview:fakeTextBackgroundView];
-
-//    SSThemedImageView *inputIcon = [[SSThemedImageView alloc] initWithFrame:CGRectMake(9, 4, 24, 24)];
-//    inputIcon.imageName = @"hts_vp_write_new";
-//    [fakeTextBackgroundView addSubview:inputIcon];
-
-    SSThemedLabel *inputLabel = [[SSThemedLabel alloc] initWithFrame:CGRectMake(15, 6, CGRectGetWidth(fakeTextBackgroundView.frame) - 15 , 20)];
-    inputLabel.text = @"写评论...";
-    inputLabel.font = [UIFont systemFontOfSize:14.0];
-    inputLabel.textColorThemeKey = @"grey3";
-    [fakeTextBackgroundView addSubview:inputLabel];
-
     [self.tableView registerClass:[AWEVideoCommentCell class] forCellReuseIdentifier:CommentCellIdentifier];
 
     [self.tableView addPullUpWithInitText:@"上拉可以加载更多数据" pullText:@"松开立即加载更多数据" loadingText:@"加载中..." noMoreText:@"没有更多啦～" timeText:nil lastTimeKey:nil ActioinHandler:^{
@@ -583,23 +593,55 @@ static const CGFloat kFloatingViewOriginY = 230;
         [self handleLoadMoreComments];
     }];
 
-    self.emptyHintView = [[UIView alloc] initWithFrame:CGRectMake(0, CGRectGetHeight(self.commentHeaderLabel.frame), CGRectGetWidth(self.view.bounds), 90.0)];
+    self.emptyHintView = [[UIView alloc] initWithFrame:CGRectMake(0, CGRectGetHeight(self.commentHeaderLabel.frame), CGRectGetWidth(self.view.bounds),CGRectGetHeight(self.tableView.bounds))];
     self.emptyHintView.autoresizingMask = UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight;
     self.emptyHintView.hidden = YES;
     [self.commentView addSubview:self.emptyHintView];
 
-    UIImageView *imageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"hts_vp_sofa_icon"]];
+    UIGestureRecognizer *imageGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleFakeInputBarClick:)];
+    UIImageView *imageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"short_video_comment"]];
+    imageView.size = CGSizeMake(115, 115);
+    imageView.userInteractionEnabled = YES;
+    [imageView addGestureRecognizer:imageGesture];
     imageView.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin|UIViewAutoresizingFlexibleRightMargin;
-    imageView.center = CGPointMake(CGRectGetWidth(self.emptyHintView.bounds) / 2.0, 33.0);
+    imageView.centerX = CGRectGetWidth(self.emptyHintView.bounds) / 2;
+    imageView.centerY = CGRectGetHeight(self.emptyHintView.bounds) / 2.0-20;
     [self.emptyHintView addSubview:imageView];
 
-    UILabel *emptyHintLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 58, CGRectGetWidth(self.emptyHintView.bounds), 18)];
+     UIGestureRecognizer *labelGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleFakeInputBarClick:)];
+    UILabel *emptyHintLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, CGRectGetMaxY(imageView.frame)+10, CGRectGetWidth(self.emptyHintView.bounds), 18)];
     emptyHintLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth;
     emptyHintLabel.font = [UIFont boldSystemFontOfSize:15];
+    emptyHintLabel.userInteractionEnabled = YES;
+    [emptyHintLabel addGestureRecognizer:labelGesture];
     emptyHintLabel.textColor = [UIColor colorWithHexString:@"999999"];
     emptyHintLabel.textAlignment = NSTextAlignmentCenter;
-    emptyHintLabel.text = @"暂无评论，还不快抢沙发～";
+    emptyHintLabel.text = @"暂无评论，点击抢沙发";
     [self.emptyHintView addSubview:emptyHintLabel];
+    
+    UIGestureRecognizer *inputTapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleFakeInputBarClick:)];
+    SSThemedView *fakeInputBar = [[SSThemedView alloc] initWithFrame:CGRectMake(0, CGRectGetMaxY(self.tableView.frame), CGRectGetWidth(self.commentView.bounds), 44)];
+       fakeInputBar.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+       fakeInputBar.backgroundColorThemeKey = kColorBackground4;
+       fakeInputBar.borderColorThemeKey = kColorLine7;
+       fakeInputBar.separatorAtTOP = YES;
+       [fakeInputBar addGestureRecognizer:inputTapGesture];
+       [self.commentView addSubview:fakeInputBar];
+       self.fakeInputBar = fakeInputBar;
+       
+       SSThemedView *fakeTextBackgroundView = [[SSThemedView alloc] initWithFrame:CGRectMake(14, 6, CGRectGetWidth(fakeInputBar.bounds) - 28, CGRectGetHeight(fakeInputBar.bounds) - 12)];
+       fakeTextBackgroundView.backgroundColorThemeKey = @"grey7";
+       fakeTextBackgroundView.layer.cornerRadius = CGRectGetHeight(fakeTextBackgroundView.bounds) / 2;
+       fakeTextBackgroundView.layer.masksToBounds = YES;
+       fakeTextBackgroundView.layer.borderWidth = [TTDeviceHelper ssOnePixel];
+       fakeTextBackgroundView.borderColorThemeKey = @"grey7";
+       [fakeInputBar addSubview:fakeTextBackgroundView];
+    
+    SSThemedLabel *inputLabel = [[SSThemedLabel alloc] initWithFrame:CGRectMake(15, 6, CGRectGetWidth(fakeTextBackgroundView.frame) - 15 , 20)];
+    inputLabel.text = @"写评论...";
+    inputLabel.font = [UIFont systemFontOfSize:14.0];
+    inputLabel.textColorThemeKey = @"grey3";
+    [fakeTextBackgroundView addSubview:inputLabel];
 
 //    self.inputBar = [[AWECommentInputBar alloc] initWithFrame:CGRectMake(0, CGRectGetHeight(self.view.bounds), CGRectGetWidth(self.view.bounds), 44) textViewDelegate:self sendBlock:^(AWECommentInputBar * _Nonnull inputBar, NSString * _Nullable text) {
 //        @strongify(self);
@@ -650,18 +692,37 @@ static const CGFloat kFloatingViewOriginY = 230;
 //            [[UIApplication sharedApplication] setStatusBarHidden:[self shouldHideStatusBar] withAnimation:UIStatusBarAnimationNone];
 //        }
 //    }]];
+    
+    self.topBarView = [[UIView alloc] init];
+    self.topBarView.frame = CGRectMake(15, topInset, CGRectGetWidth(self.view.bounds) -30, 64.0);
+    self.topBarView.autoresizingMask = UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleBottomMargin;
+    [self.view addSubview:self.topBarView];
+
+    _closeButton = [[UIButton alloc] init];
+    [_closeButton setImage:[UIImage imageNamed:@"shortvideo_close"] forState:UIControlStateNormal];
+    [_closeButton setImageEdgeInsets:UIEdgeInsetsMake(8, 0, 8, 0)];
+    [_closeButton addTarget:self action:@selector(handleCloseClick:) forControlEvents:UIControlEventTouchUpInside];
+    _closeButton.hitTestEdgeInsets = UIEdgeInsetsMake(-12, -12, -12, -12);
+
+    [self.topBarView addSubview:_closeButton];
+    
+    [_closeButton mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.left.equalTo(self.topBarView);
+        make.height.equalTo(@48.0);
+        make.width.equalTo(@30.0);
+    }];
     [self.observerArray addObject:[[NSNotificationCenter defaultCenter] addObserverForName:@"RelationActionSuccessNotification" object:nil queue:[NSOperationQueue mainQueue] usingBlock:^(NSNotification * _Nonnull note) { // 头条关注通知
         @strongify(self);
         NSString *userID = note.userInfo[@"kRelationActionSuccessNotificationUserIDKey"];
-        if ([self.model.author.userID isEqualToString:userID]) {
+        if ([self.model.user.userId isEqualToString:userID]) {
             NSInteger actionType = [(NSNumber *)note.userInfo[@"kRelationActionSuccessNotificationActionTypeKey"] integerValue];
             if (actionType == 11) {//关注
-                self.model.author.isFollowing = YES;
-                [self.model save];
+                self.model.user.relation.isFollowing = @"1";
+//                [self.model save];
                 [self updateViews];
             }else if (actionType == 12) {//取消关注
-                self.model.author.isFollowing = NO;
-                [self.model save];
+                self.model.user.relation.isFollowing = @"0";
+//                [self.model save];
                 [self updateViews];
             }
         }
@@ -675,15 +736,15 @@ static const CGFloat kFloatingViewOriginY = 230;
         [self loadMoreAutomatically:YES];
     }
     
-    if ([AWEVideoDetailScrollConfig direction] == AWEVideoDetailScrollDirectionVertical) {
-        self.slideLeftGesture = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handleSlideLeftGesture:)];
-        self.slideLeftGesture.delegate = self;
-        [self.view addGestureRecognizer:self.slideLeftGesture];
-    } else {
-        self.slideUpGesture = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handleSlideUpGesture:)];
-        self.slideUpGesture.delegate = self;
-        [self.view addGestureRecognizer:self.slideUpGesture];
-    }
+//    if ([AWEVideoDetailScrollConfig direction] == AWEVideoDetailScrollDirectionVertical) {
+//        self.slideLeftGesture = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handleSlideLeftGesture:)];
+//        self.slideLeftGesture.delegate = self;
+//        [self.view addGestureRecognizer:self.slideLeftGesture];
+//    } else {
+//        self.slideUpGesture = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handleSlideUpGesture:)];
+//        self.slideUpGesture.delegate = self;
+//        [self.view addGestureRecognizer:self.slideUpGesture];
+//    }
 
     self.commentSlideDownGesture = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handleCommentSlideDownGesture:)];
     self.commentSlideDownGesture.delegate = self;
@@ -709,12 +770,26 @@ static const CGFloat kFloatingViewOriginY = 230;
         }
     }];
 
-    RAC(self, groupID) = RACObserve(self, model.groupID);
+    RAC(self, groupID) = RACObserve(self, model.groupId);
 
     self.viewModel = [[TSVDetailViewModel alloc] init];
     RAC(self, viewModel.dataFetchManager) = RACObserve(self, dataFetchManager);
     RAC(self, viewModel.commonTrackingParameter) = RACObserve(self, commonTrackingParameter);
     RAC(self, videoContainerViewController.viewModel) = RACObserve(self, viewModel);
+}
+
+- (void)handleCloseClick:(UIButton *)btn {
+      [self dismissByClickingCloseButton];
+}
+
+- (void)_onInputButtonClicked:(UIButton *)sender
+{
+    if (!self.model) {
+        return;
+    }
+    NSInteger rank = [self.model.tracerDic btd_integerValueForKey:@"rank" default:0];
+     [FHShortVideoTracerUtil clickCommentWithModel:self.model eventIndex:rank eventPosition:@"detail_comment"];
+     [self playView:nil didClickInputWithModel:self.model];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -805,12 +880,6 @@ static const CGFloat kFloatingViewOriginY = 230;
             default:
                 break;
         }
-        [AWEVideoDetailTracker trackEvent:@"detail_back"
-                                    model:self.model
-                          commonParameter:self.commonTrackingParameter
-                           extraParameter:@{
-                                            @"back_type": backType
-                                            }];
     }
 }
 
@@ -832,7 +901,7 @@ static const CGFloat kFloatingViewOriginY = 230;
 
 #pragma mark - getter & setter
 
-- (void)setModel:(TTShortVideoModel *)model
+- (void)setModel:(FHFeedUGCCellModel *)model
 {
     if ([model isEqual:_model]) {
         return;
@@ -907,7 +976,9 @@ static const CGFloat kFloatingViewOriginY = 230;
 
 - (void)reloadCommentHeaderWithCount:(NSNumber *)commentCount
 {
-    self.commentHeaderLabel.text = commentCount ? [NSString stringWithFormat:@"%@条回复", [TTBusinessManager formatCommentCount:commentCount.longLongValue]] : @"暂无回复";
+    
+//    self.commentHeaderLabel.text = commentCount ? [NSString stringWithFormat:@"%@条回复", [TTBusinessManager formatCommentCount:commentCount.longLongValue]] : @"暂无回复";
+    self.commentHeaderLabel.text = @"评论";
 }
 
 - (void)updateModel
@@ -935,10 +1006,11 @@ static const CGFloat kFloatingViewOriginY = 230;
 
 - (void)loadMoreAutomatically:(BOOL)isAuto
 {
-    if (!BTDNetworkConnected()) {
-        [HTSVideoPlayToast show:@"没有网络"];
+    if(![TTReachability isNetworkConnected]){
+        [[ToastManager manager] showToast:@"网络异常"];
         return;
     }
+    
     if (self.dataFetchManager.isLoadingRequest) {
         return;
     }
@@ -951,14 +1023,13 @@ static const CGFloat kFloatingViewOriginY = 230;
             NSMutableDictionary *params = [NSMutableDictionary dictionary];
             [params setValue:self.commonTrackingParameter[@"enter_from"] forKey:@"enter_from"];
             [params setValue:self.categoryName forKey:@"category_name"];
-            TTShortVideoModel *videoDetail = nil;
+            FHFeedUGCCellModel *videoDetail = nil;
             if ([self.dataFetchManager numberOfShortVideoItems]) {
                 videoDetail = [self.dataFetchManager itemAtIndex:[self.dataFetchManager numberOfShortVideoItems] - 1];//取最后一个
-                [params setValue:videoDetail.listEntrance forKey:@"list_entrance"];
-                [params setValue:videoDetail.groupID forKey:@"from_group_id"];
+                [params setValue:videoDetail.groupId forKey:@"from_group_id"];
                 [params setValue:videoDetail.groupSource forKey:@"from_group_source"];
-                if (videoDetail.categoryName) {
-                    [params setValue:videoDetail.categoryName forKey:@"category_name"];
+                if (videoDetail.categoryId) {
+                    [params setValue:videoDetail.categoryId forKey:@"category_name"];
                 }
                 if (videoDetail.enterFrom) {
                     [params setValue:videoDetail.enterFrom forKey:@"enter_from"];
@@ -1008,7 +1079,7 @@ static const CGFloat kFloatingViewOriginY = 230;
 
 - (void)updateViews
 {
-    [self reloadCommentHeaderWithCount:@(self.model.commentCount)];
+    [self reloadCommentHeaderWithCount:@([self.model.commentCount floatValue])];
 }
 
 - (void)doCommentSafeDiggWithCell:(AWEVideoCommentCell *)cell model:(AWECommentModel *)commentModel cancelDigg:(BOOL)cancelDigg
@@ -1028,8 +1099,8 @@ static const CGFloat kFloatingViewOriginY = 230;
 
     NSString *userId = [AWEVideoPlayAccountBridge currentLoginUserId];
     [self.commentManager diggCommentItemWithCommentId:commentModel.id
-                                               itemID:self.model.itemID
-                                              groupID:self.model.groupID
+                                               itemID:self.model.itemId
+                                              groupID:self.model.groupId
                                                userID:userId
                                            cancelDigg:cancelDigg
                                            completion:nil];
@@ -1067,28 +1138,28 @@ static const CGFloat kFloatingViewOriginY = 230;
 
 - (BOOL)alertIfCanNotShare
 {
-    if (!self.model.allowShare) {
-        [HTSVideoPlayToast show:@"视频正在审核中，暂时不能分享。"];
-        return YES;
-    }
+//    if (!self.model.allowShare) {
+//        [HTSVideoPlayToast show:@"视频正在审核中，暂时不能分享。"];
+//        return YES;
+//    }
     return NO;
 }
 
 - (BOOL)alertIfCanNotComment
 {
-    if (!self.model.allowComment) {
-        [HTSVideoPlayToast show:@"视频正在审核中，暂时不能评论。"];
-        return YES;
-    }
+//    if (!self.model.allowComment) {
+//        [HTSVideoPlayToast show:@"视频正在审核中，暂时不能评论。"];
+//        return YES;
+//    }
     return NO;
 }
 
 - (BOOL)alertIfNotValid
 {
-    if (self.model.isDelete) {
-        [HTSVideoPlayToast show:@"视频已被删除"];
-        return YES;
-    }
+//    if (self.model.isDelete) {
+//        [HTSVideoPlayToast show:@"视频已被删除"];
+//        return YES;
+//    }
     return !self.model;
 }
 
@@ -1177,8 +1248,12 @@ static const CGFloat kFloatingViewOriginY = 230;
 
     self.commentView.hidden = NO;
 
-    [UIView animateWithDuration:0.2 customTimingFunction:CustomTimingFunctionCubicOut animation:^{
+    [UIView animateWithDuration:.2 customTimingFunction:CustomTimingFunctionCubicOut animation:^{
         self.commentView.frame = CGRectMake(0, kFloatingViewOriginY, CGRectGetWidth(self.view.bounds), CGRectGetHeight(self.view.bounds) - kFloatingViewOriginY);
+    } completion:^(BOOL finished) {
+        if ([self.model.commentCount intValue] == 0) {
+            [self p_willOpenWriteCommentViewWithReservedText:nil switchToEmojiInput:NO replyToCommentID:nil];
+        };
     }];
 
     [self showCommentViewMaskView:YES];
@@ -1193,10 +1268,6 @@ static const CGFloat kFloatingViewOriginY = 230;
 
     NSMutableDictionary *extra = [NSMutableDictionary dictionaryWithDictionary:[self commentExtraPositionDict]];
     [extra setValue:cancelType forKey:@"cancel_type"];
-    [AWEVideoDetailTracker trackEvent:@"comment_cancel"
-                                model:self.model
-                      commonParameter:self.commonTrackingParameter
-                       extraParameter:extra];
 
     self.commentViewStatus = TSVDetailCommentViewStatusNone;
 
@@ -1276,8 +1347,8 @@ static const CGFloat kFloatingViewOriginY = 230;
 #pragma mark - Actions
 - (void)handleFavoriteVideoWithContentItem:(TTFavouriteContentItem *)contentItem
 {
-    NSString *itemID = self.model.itemID;
-    NSString *groupID = self.model.groupID ?: self.groupID;
+    NSString *itemID = self.model.itemId;
+    NSString *groupID = self.model.groupId ?: self.groupID;
 
     TTDetailActionReuestContext *context = [TTDetailActionReuestContext new];
     context.groupModel = [[TTGroupModel alloc] initWithGroupID:groupID itemID:itemID impressionID:nil aggrType:1];
@@ -1295,7 +1366,6 @@ static const CGFloat kFloatingViewOriginY = 230;
         }];
         if (!error) {
             self.model.userRepin = !self.model.userRepin;
-            [self.model save];
 
             [self.orderedData setValue:@(self.model.userRepin) forKeyPath:@"originalData.userRepined"];
             
@@ -1335,9 +1405,9 @@ static const CGFloat kFloatingViewOriginY = 230;
     [self.videoReportVC performWithReportOptions:self.videoReportOptions completion:^(NSDictionary * _Nonnull parameters) {
         @strongify(self);
         TTReportContentModel *model = [[TTReportContentModel alloc] init];
-        model.groupID = self.model.groupID;
-        model.videoID = self.model.itemID;
-        [[TTReportManager shareInstance] startReportVideoWithType:parameters[@"report"] inputText:parameters[@"criticism"] contentType:kTTReportContentTypeAWEVideo reportFrom:TTReportFromByEnterFromAndCategory(self.model.enterFrom, self.model.categoryName) contentModel:model extraDic:nil animated:YES];
+        model.groupID = self.model.groupId;
+        model.videoID = self.model.itemId;
+        [[TTReportManager shareInstance] startReportVideoWithType:parameters[@"report"] inputText:parameters[@"criticism"] contentType:kTTReportContentTypeAWEVideo reportFrom:TTReportFromByEnterFromAndCategory(self.model.enterFrom, self.model.categoryId) contentModel:model extraDic:nil animated:YES];
 
         if((!parameters[@"report"] && !parameters[@"criticism"]) || (isEmptyString(((NSString *)parameters[@"report"])) && isEmptyString(((NSString *)parameters[@"criticism"])))){
             return;
@@ -1363,38 +1433,30 @@ static const CGFloat kFloatingViewOriginY = 230;
         }else{
             reasonStr = parameters[@"criticism"];
         }
-
-        [AWEVideoDetailTracker trackEvent:@"rt_report"
-                                    model:self.model
-                          commonParameter:self.commonTrackingParameter
-                           extraParameter:@{
-                                            @"reason" : reasonStr ?: @"",
-                                            @"position": @"detail_top_bar",
-                                            }];
     }];
 }
 
 - (void)handleDislikeVideo
 {
-    NSString *itemID = self.model.itemID;
-    NSString *groupID = self.model.groupID ?: self.groupID;
+    NSString *itemID = self.model.itemId;
+    NSString *groupID = self.model.groupId ?: self.groupID;
 
     TTDetailActionReuestContext *context = [TTDetailActionReuestContext new];
     context.groupModel = [[TTGroupModel alloc] initWithGroupID:groupID itemID:itemID impressionID:nil aggrType:1];
-    context.actionExtra = self.model.actionExtra;
+//    context.actionExtra = self.model.actionExtra;
     context.dislikeSource = @"1";//1表示详情页
     
-    if ([self.model isAd]) {
-        TTAdShortVideoModel *rawAd = self.model.rawAd;
-        context.adID = rawAd.ad_id;
-        NSMutableDictionary *adExtra = @{}.mutableCopy;
-        adExtra[@"clicked"] = @(1);
-        adExtra[@"log_extra"] = rawAd.log_extra2;
-        context.adExtra = adExtra;
-        if (isEmptyString(context.groupModel.groupID)) {
-            context.groupModel = [[TTGroupModel alloc] initWithGroupID:rawAd.ad_id itemID:rawAd.ad_id impressionID:nil aggrType:1];
-        }
-    }
+//    if ([self.model isAd]) {
+//        TTAdShortVideoModel *rawAd = self.model.rawAd;
+//        context.adID = rawAd.ad_id;
+//        NSMutableDictionary *adExtra = @{}.mutableCopy;
+//        adExtra[@"clicked"] = @(1);
+//        adExtra[@"log_extra"] = rawAd.log_extra2;
+//        context.adExtra = adExtra;
+//        if (isEmptyString(context.groupModel.groupID)) {
+//            context.groupModel = [[TTGroupModel alloc] initWithGroupID:rawAd.ad_id itemID:rawAd.ad_id impressionID:nil aggrType:1];
+//        }
+//    }
     
     @weakify(self);
     self.actionManager.finishBlock = ^(id userInfo, NSError *error) {
@@ -1403,25 +1465,25 @@ static const CGFloat kFloatingViewOriginY = 230;
             //通知feed删除cell
             
             NSMutableDictionary *userInfo = @{}.mutableCopy;
-            userInfo[@"group_id"] = self.model.groupID;
-            if ([self.model isAd]) {
-                TTAdShortVideoModel *rawAd = self.model.rawAd;
-                [rawAd trackDrawWithTag:@"embeded_ad" label:@"final_dislike" extra:nil];
-                userInfo[@"ad_id"] = rawAd.ad_id;
-            }
+            userInfo[@"group_id"] = self.model.groupId;
+//            if ([self.model isAd]) {
+//                TTAdShortVideoModel *rawAd = self.model.rawAd;
+//                [rawAd trackDrawWithTag:@"embeded_ad" label:@"final_dislike" extra:nil];
+//                userInfo[@"ad_id"] = rawAd.ad_id;
+//            }
             [[NSNotificationCenter defaultCenter] postNotificationName:@"TSVShortVideoDislikeNotification"
                                                                 object:self
                                                               userInfo:userInfo];
             if (!self.dislikeGroupIDArray) {
                 self.dislikeGroupIDArray = [NSMutableArray array];
             }
-            if (!isEmptyString(self.model.groupID)){
-                [self.dislikeGroupIDArray addObject:self.model.groupID];
+            if (!isEmptyString(self.model.groupId)){
+                [self.dislikeGroupIDArray addObject:self.model.groupId];
             }
-            [HTSVideoPlayToast show:@"将减少推荐类似内容"];
+            [[ToastManager manager] showToast:@"将减少推荐类似内容"];
             self.isDisliked = YES;
         } else {
-            [HTSVideoPlayToast show:@"操作失败"];
+            [[ToastManager manager] showToast:@"操作失败"];
         }
     };
     [self.actionManager setContext:context];
@@ -1431,8 +1493,8 @@ static const CGFloat kFloatingViewOriginY = 230;
 - (void)handleDeleteVideo
 {
     NSMutableDictionary *params = [NSMutableDictionary dictionary];
-    [params setValue:self.model.author.userID forKey:@"user_id"];
-    [params setValue:self.model.groupID forKey:@"item_id"];
+    [params setValue:self.model.user.userId forKey:@"user_id"];
+    [params setValue:self.model.groupId forKey:@"item_id"];
     [[TTNetworkManager shareInstance] requestForJSONWithURL:[CommonURLSetting deleteUGCMovieURLString] params:params method:@"GET" needCommonParams:YES callback:^(NSError *error, id jsonObj) {
         NSInteger errorCode = 0;
         if ([jsonObj isKindOfClass:[NSDictionary class]]) {
@@ -1446,9 +1508,9 @@ static const CGFloat kFloatingViewOriginY = 230;
             [TTIndicatorView showWithIndicatorStyle:TTIndicatorViewStyleImage indicatorText:tip indicatorImage:[UIImage themedImageNamed:@"doneicon_popup_textpage"] autoDismiss:YES dismissHandler:nil];
             
             /// 给混排列表发通知
-            [[NSNotificationCenter defaultCenter] postNotificationName:kTSVShortVideoDeleteNotification object:nil userInfo:@{kTSVShortVideoDeleteUserInfoKeyGroupID : self.model.groupID? : @""}];
+            [[NSNotificationCenter defaultCenter] postNotificationName:kTSVShortVideoDeleteNotification object:nil userInfo:@{kTSVShortVideoDeleteUserInfoKeyGroupID : self.model.groupId? : @""}];
             /// 标记下需要删除
-            self.model.shouldDelete = YES;
+//            self.model.shouldDelete = YES;
             /// 如果已收藏需要取消收藏
             self.model.userRepin = NO;
             self.closeStyle = AWEVideoDetailCloseStyleNavigationPan;
@@ -1580,18 +1642,18 @@ static const CGFloat kFloatingViewOriginY = 230;
     [self showEmptyHint:NO];
 
     if ([self.commentManager canLoadMore]) {
-        TTShortVideoModel *model = self.model;
+        FHFeedUGCCellModel *model = self.model;
 
         @weakify(self, model);
-        [self.commentManager requestCommentListWithID:self.model.itemID groupID:self.model.groupID count:@(CommentFetchCount) offset:[NSNumber numberWithInteger:self.offset] completion:^(AWECommentResponseModel *response, NSError *error) {
+        [self.commentManager requestCommentListWithID:self.model.itemId groupID:self.model.groupId count:@(CommentFetchCount) offset:[NSNumber numberWithInteger:self.offset] completion:^(AWECommentResponseModel *response, NSError *error) {
             if (error || !response) {
                 return;
             }
 
             @strongify(self, model);
             if(response.totalNumber){
-                model.commentCount = [response.totalNumber integerValue];
-                [model save];
+                model.commentCount = [NSString stringWithFormat:@"%@",response.totalNumber] ;
+//                [model save];
                 [self reloadCommentHeaderWithCount:response.totalNumber];
             }
 
@@ -1629,10 +1691,8 @@ static const CGFloat kFloatingViewOriginY = 230;
 
 - (void)handleFakeInputBarClick:(id)sender
 {
-    [AWEVideoDetailTracker trackEvent:@"comment_write_button"
-                                model:self.model
-                      commonParameter:self.commonTrackingParameter
-                       extraParameter:[self writeCommentExtraPositionDict]];
+    NSInteger rank = [self.model.tracerDic btd_integerValueForKey:@"rank" default:0];
+     [FHShortVideoTracerUtil clickCommentWithModel:self.model eventIndex:rank eventPosition:@"feed_comment"];
 
     if ([self alertIfNotValid]) {
         return;
@@ -1674,7 +1734,7 @@ static const CGFloat kFloatingViewOriginY = 230;
     }
     AWECommentModel *commentModel = [self.commentManager commentForIndexPath:indexPath];
 
-    [cell configCellWithCommentModel:commentModel videoId:self.model.itemID authorId:self.model.author.userID];
+    [cell configCellWithCommentModel:commentModel videoId:self.model.itemId authorId:self.model.user.userId];
     cell.delegate = self;
     return cell;
 }
@@ -1723,19 +1783,20 @@ static const CGFloat kFloatingViewOriginY = 230;
 
 #pragma mark - HTSVideoDetailTopViewDelegate
 
-- (void)topView:(UIViewController *)viewController didClickCloseWithModel:(TTShortVideoModel *)model
+- (void)topView:(UIViewController *)viewController didClickCloseWithModel:(FHFeedUGCCellModel *)model
 {
     [self dismissByClickingCloseButton];
 }
 
 - (void)dismissByClickingCloseButton
 {
-    self.closeStyle = AWEVideoDetailCloseStyleCloseButton;
-    self.blackMaskView.hidden = YES;
-    [self.animateManager dismissWithoutGesture];
+//    self.closeStyle = AWEVideoDetailCloseStyleCloseButton;
+//    self.blackMaskView.hidden = YES;
+//    [self.animateManager dismissWithoutGesture];
+    [self.navigationController popViewControllerAnimated:YES];
 }
 
-- (void)topView:(UIViewController *)viewController didClickReportWithModel:(TTShortVideoModel *)model
+- (void)topView:(UIViewController *)viewController didClickReportWithModel:(FHFeedUGCCellModel *)model
 {
     if (!self.model) {
         return;
@@ -1748,18 +1809,12 @@ static const CGFloat kFloatingViewOriginY = 230;
     self.loadingShareImage = YES;
     
     @weakify(self);
-    [AWEVideoDetailTracker trackEvent:@"click_more"
-                                model:self.model
-                      commonParameter:self.commonTrackingParameter
-                       extraParameter:@{
-                                        @"position": @"detail_top_bar",
-                                        }];
 
     [self.detailPromptManager updateVisibleFloatingViewCountForVisibility:YES];
 
     //小视频暂时不出分享广告
     id<TTAdManagerProtocol> adManagerInstance = [[TTServiceCenter sharedInstance] getServiceByProtocol:@protocol(TTAdManagerProtocol)];
-    [adManagerInstance share_showInAdPage:@"1" groupId:self.model.groupID];
+    [adManagerInstance share_showInAdPage:@"1" groupId:self.model.groupId];
 
     NSString *imageURL = [self.model.video.originCover.urlList firstObject];
     [AWEVideoPlayShareBridge loadImageWithUrl:imageURL completion:^(UIImage * _Nonnull image) {
@@ -1769,9 +1824,9 @@ static const CGFloat kFloatingViewOriginY = 230;
         if ([self entrance] == TSVShortVideoListEntranceStory) {
             shareType = AWEVideoShareTypeMoreForStory;
         }
-        if ([self.model isAd]) {
-            shareType = AWEVideoShareTypeAd;
-        }
+//        if ([self.model isAd]) {
+//            shareType = AWEVideoShareTypeAd;
+//        }
         AWEVideoShareModel *shareModel = [[AWEVideoShareModel alloc] initWithModel:self.model image:image shareType:shareType];
 
         [self.shareManager displayActivitySheetWithContent:[shareModel shareContentItems]];
@@ -1780,16 +1835,9 @@ static const CGFloat kFloatingViewOriginY = 230;
 
 #pragma mark -
 
-- (void)playView:(AWEVideoPlayView *)view didClickInputWithModel:(TTShortVideoModel *)model
+- (void)playView:(AWEVideoPlayView *)view didClickInputWithModel:(FHFeedUGCCellModel *)model
 {
-   //point:在详情页点击写评论
-    [AWEVideoDetailTracker trackEvent:@"comment_write_button"
-                                model:self.model
-                      commonParameter:self.commonTrackingParameter
-                       extraParameter:@{
-                                        @"position": @"detail_bottom_bar",
-                                        }];
-
+    
     if ([self alertIfNotValid]) {
         return;
     }
@@ -1808,12 +1856,8 @@ static const CGFloat kFloatingViewOriginY = 230;
     [self p_willOpenWriteCommentViewWithReservedText:nil switchToEmojiInput:NO replyToCommentID:nil];
 }
 
-- (void)playView:(AWEVideoPlayView *)view didClickCommentWithModel:(TTShortVideoModel *)model
+- (void)playView:(AWEVideoPlayView *)view didClickCommentWithModel:(FHFeedUGCCellModel *)model
 {
-    [AWEVideoDetailTracker trackEvent:@"comment_list_show"
-                                model:self.model
-                      commonParameter:self.commonTrackingParameter
-                       extraParameter:@{@"position": @"detail"}];
 
     [self showCommentsListWithStatus:TSVDetailCommentViewStatusPopByClick];
 }
@@ -1822,44 +1866,44 @@ static const CGFloat kFloatingViewOriginY = 230;
 
 - (void)commentCell:(AWEVideoCommentCell *)cell didClickDeleteWithModel:(AWECommentModel *)commentModel
 {
-    if ([self alertIfNotValid]) {
-        return;
-    }
-    if ([self alertIfNotLogin]) {
-        return;
-    }
-
-    if (![AWEVideoPlayAccountBridge isCurrentLoginUser:[commentModel.userId stringValue]]) {// 加保护
-        [HTSVideoPlayToast show:@"不能删除别人的评论！"];
-        return;
-    }
-
-    @weakify(self);
-    [self.commentManager deleteCommentItemWithId:commentModel.id completion:^(id response, NSError *error) {
-        if (!error && [response[@"message"] isEqualToString:@"success"]) {
-            dispatch_async(dispatch_get_main_queue(), ^{
-                @strongify(self);
-                [self.tableView reloadData];
-                [HTSVideoPlayToast show:@"评论删除成功！"];
-                if ([self.commentManager isEmpty]) {
-                    [self showEmptyHint:YES];
-                }
-                self.model.commentCount = [self.commentManager totalCommentCount];
-                [self.model save];
-                [self updateViews];
-                //发送通知 其他页面同步评论数
-                NSMutableDictionary *userInfo = @{}.mutableCopy;
-                userInfo[@"group_id"] = self.model.groupID;
-                userInfo[@"comment_conut"] = @(self.model.commentCount);
-                [[NSNotificationCenter defaultCenter] postNotificationName:kPostMessageFinishedNotification
-                                                                    object:nil
-                                                                  userInfo:userInfo];
-                
-            });
-        }else{
-            [HTSVideoPlayToast show:@"操作失败，请重试"];
+        if ([self alertIfNotValid]) {
+            return;
         }
-    }];
+        if ([self alertIfNotLogin]) {
+            return;
+        }
+
+        if (![AWEVideoPlayAccountBridge isCurrentLoginUser:[commentModel.userId stringValue]]) {// 加保护
+            [[ToastManager manager] showToast:@"不能删除别人的评论！"];
+            return;
+        }
+
+        @weakify(self);
+        [self.commentManager deleteCommentItemWithId:commentModel.id completion:^(id response, NSError *error) {
+            if (!error && [response[@"message"] isEqualToString:@"success"]) {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    @strongify(self);
+                    [self.tableView reloadData];
+                    [[ToastManager manager] showToast:@"评论删除成功！"];
+                    if ([self.commentManager isEmpty]) {
+                        [self showEmptyHint:YES];
+                    }
+                    self.model.commentCount = [NSString stringWithFormat:@"%ld",[self.commentManager totalCommentCount]] ;
+    //                [self.model save];
+                    [self updateViews];
+                    //发送通知 其他页面同步评论数
+                    NSMutableDictionary *userInfo = @{}.mutableCopy;
+                    userInfo[@"group_id"] = self.model.groupId;
+                    userInfo[@"comment_conut"] = @([self.model.commentCount floatValue]);
+                    [[NSNotificationCenter defaultCenter] postNotificationName:kPostMessageFinishedNotification
+                                                                        object:nil
+                                                                      userInfo:userInfo];
+                    
+                });
+            }else{
+                [[ToastManager manager] showToast:@"操作失败，请重试"];
+            }
+        }];
 }
 
 - (void)commentCell:(AWEVideoCommentCell *)cell didClickReportWithModel:(AWECommentModel *)commentModel
@@ -1869,11 +1913,11 @@ static const CGFloat kFloatingViewOriginY = 230;
     @weakify(self);
     [self.commentReportVC performWithReportOptions:self.userReportOptions completion:^(NSDictionary * _Nonnull parameters) {
         @strongify(self);
-        [self.commentManager reportCommentWithType:parameters[@"report"] userInputText:parameters[@"criticism"] userID:[commentModel.userId stringValue] commentID:commentModel.id momentID:nil groupID:self.model.groupID postID:self.model.itemID completion:^(id response, NSError *error) {
+        [self.commentManager reportCommentWithType:parameters[@"report"] userInputText:parameters[@"criticism"] userID:[commentModel.userId stringValue] commentID:commentModel.id momentID:nil groupID:self.model.groupId postID:self.model.itemId completion:^(id response, NSError *error) {
             if(error || response[@"extra"]){
-                [HTSVideoPlayToast show:@"举报失败"];
+                [[ToastManager manager] showToast:@"举报失败"];
             }else{
-                [HTSVideoPlayToast show:@"举报成功"];
+                [[ToastManager manager] showToast:@"举报成功"];
             }
         }];
     }];
@@ -1881,38 +1925,49 @@ static const CGFloat kFloatingViewOriginY = 230;
 
 - (void)commentCell:(AWEVideoCommentCell *)cell didClickLikeWithModel:(AWECommentModel *)commentModel
 {
+    if (![TTAccountManager isLogin]) {
+        NSMutableDictionary *params = [NSMutableDictionary dictionary];
+        NSString *page_type = [FHShortVideoTracerUtil pageType];
+        [params setObject:page_type forKey:@"enter_from"];
+        [params setObject:@"click_publisher" forKey:@"enter_type"];
+        // 登录成功之后不自己Pop，先进行页面跳转逻辑，再pop
+        [params setObject:@(YES) forKey:@"need_pop_vc"];
+        [TTAccountLoginManager showAlertFLoginVCWithParams:params completeBlock:^(TTAccountAlertCompletionEventType type, NSString * _Nullable phoneNum) {
+            if (type == TTAccountAlertCompletionEventTypeDone) {
+                //登录成功 走发送逻辑
+                if ([TTAccountManager isLogin]) {
+                    [self commentCellLoginSuccess:cell didClickLikeWithModel:commentModel];
+                }
+            }
+        }];
+    }else {
+        [self commentCellLoginSuccess:cell didClickLikeWithModel:commentModel];
+    }
+}
+
+- (void)commentCellLoginSuccess:(AWEVideoCommentCell *)cell didClickLikeWithModel:(AWECommentModel *)commentModel {
     NSString *eventName = commentModel.userDigg ? @"click_dislike" : @"click_like";
     NSString *position = @"comment";
-    if(commentModel.replyToComment){
-        position = @"reply";
-    }
-    [AWEVideoDetailTracker trackEvent:eventName
-                                model:self.model
-                      commonParameter:self.commonTrackingParameter
-                       extraParameter:@{@"click_position": position,
-                                        @"comment_id": [commentModel.id stringValue]}];
-
+    NSInteger rank = [self.model.tracerDic btd_integerValueForKey:@"rank" default:0];
+    [FHShortVideoTracerUtil clickLikeOrdisLikeWithWithName:eventName eventPosition:position eventModel:self.model eventIndex:rank commentId:[commentModel.id stringValue]];
     if ([self alertIfNotValid]) {
         return;
     }
 
     BOOL cancelDigg = commentModel.userDigg;
     [self doCommentSafeDiggWithCell:cell model:commentModel cancelDigg:cancelDigg];
+    
 }
 
 - (void)commentCell:(AWEVideoCommentCell *)cell didClickUserWithModel:(AWECommentModel *)commentModel
 {
     NSMutableDictionary *extra = [NSMutableDictionary dictionaryWithDictionary:[self commentExtraPositionDict]];
     [extra setValue:[commentModel.userId stringValue] ?: @"" forKey:@"user_id"];
-    [AWEVideoDetailTracker trackEvent:@"comment_click_avatar"
-                                model:self.model
-                      commonParameter:self.commonTrackingParameter
-                       extraParameter:extra];
 
     NSMutableDictionary *params = [NSMutableDictionary dictionary];
     [params setValue:self.categoryName forKey:@"category_name"];
     [params setValue:@"comment_list" forKey:@"from_page"];
-    [params setValue:self.model.groupID forKey:@"group_id"];
+    [params setValue:self.model.groupId forKey:@"group_id"];
     [AWEVideoPlayTransitionBridge openProfileViewWithUserId:[commentModel.userId stringValue] params:params];
 }
 
@@ -1920,10 +1975,6 @@ static const CGFloat kFloatingViewOriginY = 230;
 {
     NSMutableDictionary *extra = [NSMutableDictionary dictionaryWithDictionary:[self commentExtraPositionDict]];
     [extra setValue:[commentModel.userId stringValue] ?: @"" forKey:@"user_id"];
-    [AWEVideoDetailTracker trackEvent:@"comment_click_nick_name"
-                                model:self.model
-                      commonParameter:self.commonTrackingParameter
-                       extraParameter:extra];
 
     //进入个人主页ab
     [AWEVideoPlayTransitionBridge openProfileViewWithUserId:[commentModel.userId stringValue] params:nil];
@@ -1956,15 +2007,15 @@ static const CGFloat kFloatingViewOriginY = 230;
     if (gesture.state == UIGestureRecognizerStateBegan) {
         [TSVTransitionAnimationManager sharedManager].enterProfilePercentDrivenTransition = [UIPercentDrivenInteractiveTransition new];
         NSMutableDictionary *extraUserInfo = [NSMutableDictionary dictionary];
-        [extraUserInfo setValue:self.model.author.name forKey:@"username"];
-        [extraUserInfo setValue:self.model.author.avatarURL forKey:@"avatar"];
-        [extraUserInfo setValue:self.model.author.userAuthInfo forKey:@"userAuthInfo"];
-        [extraUserInfo setValue:@(self.model.author.isFollowing) forKey:@"isFollowing"];
-        [extraUserInfo setValue:@(self.model.author.isFollowed) forKey:@"isFollowed"];
-        [extraUserInfo setValue:self.model.author.desc forKey:@"desc"];
-        [extraUserInfo setValue:@(self.model.author.followingsCount) forKey:@"followingCount"];
-        [extraUserInfo setValue:@(self.model.author.followersCount) forKey:@"followedCount"];
-        [AWEVideoPlayTransitionBridge openProfileViewWithUserId:self.model.author.userID params:nil userInfo:@{@"extra_user_info": extraUserInfo}];
+        [extraUserInfo setValue:self.model.user.name forKey:@"username"];
+        [extraUserInfo setValue:self.model.user.avatarUrl forKey:@"avatar"];
+        [extraUserInfo setValue:self.model.user.userAuthInfo forKey:@"userAuthInfo"];
+        [extraUserInfo setValue:@([self.model.user.relation.isFollowing floatValue]) forKey:@"isFollowing"];
+        [extraUserInfo setValue:@([self.model.user.relation.isFollowed floatValue]) forKey:@"isFollowed"];
+        [extraUserInfo setValue:self.model.user.desc forKey:@"desc"];
+        [extraUserInfo setValue:@([self.model.user.relationCount.followingsCount floatValue]) forKey:@"followingCount"];
+        [extraUserInfo setValue:@([self.model.user.relationCount.followersCount floatValue]) forKey:@"followedCount"];
+        [AWEVideoPlayTransitionBridge openProfileViewWithUserId:self.model.user.userId params:nil userInfo:@{@"extra_user_info": extraUserInfo}];
     } else if (gesture.state == UIGestureRecognizerStateChanged) {
         [[TSVTransitionAnimationManager sharedManager].enterProfilePercentDrivenTransition updateInteractiveTransition:progress];
     } else if (gesture.state == UIGestureRecognizerStateEnded ||
@@ -1973,10 +2024,6 @@ static const CGFloat kFloatingViewOriginY = 230;
         if (progress > 0.3 || fabs(velocity.x) > 500) {
             //用户左滑进过个人主页，标记下，之后不在出引导
             [TSVSlideLeftEnterProfilePromptViewController setSlideLeftPromotionShown];
-            [AWEVideoDetailTracker trackEvent:@"draw_profile"
-                                        model:self.model
-                              commonParameter:self.commonTrackingParameter
-                               extraParameter:@{@"position": @"draw_bottom"}];
             [[TSVTransitionAnimationManager sharedManager].enterProfilePercentDrivenTransition finishInteractiveTransition];
         } else {
             [[TSVTransitionAnimationManager sharedManager].enterProfilePercentDrivenTransition cancelInteractiveTransition];
@@ -2042,32 +2089,11 @@ static const CGFloat kFloatingViewOriginY = 230;
     } else if (gesture.state == UIGestureRecognizerStateEnded ||
                gesture.state == UIGestureRecognizerStateCancelled) {
         if (CGRectGetMaxY(floatingView.frame) - CGRectGetHeight(self.view.bounds) >= CGRectGetHeight(floatingView.bounds) * 2.0 / 3.0 && - velocity.y < 500) {
-//            if (self.slideUpViewType == TSVDetailSlideUpViewTypeProfile) {
-//                [self dismissProfileViewWithCancelType:@"gesture"];
-//            }
             if (self.slideUpViewType == TSVDetailSlideUpViewTypeComment) {
                 [self dismissCommentListWithCancelType:@"gesture"];
             }
         } else {
-//            if (self.slideUpViewType == TSVDetailSlideUpViewTypeProfile) {
-//                [AWEVideoDetailTracker trackEvent:@"draw_profile"
-//                                            model:self.model
-//                                  commonParameter:self.commonTrackingParameter
-//                                   extraParameter:@{@"position": @"draw_bottom"}];
-//                //滑出过一次不再出引导
-//                [TSVSlideUpPromptViewController setSlideUpPromotionShown];
-//                [self showProfileView];
-//            }
             if (self.slideUpViewType == TSVDetailSlideUpViewTypeComment) {
-                [AWEVideoDetailTracker trackEvent:@"enter_comment"
-                                            model:self.model
-                                  commonParameter:self.commonTrackingParameter
-                                   extraParameter:@{@"position": @"draw_bottom"}];
-
-                [AWEVideoDetailTracker trackEvent:@"comment_list_show"
-                                            model:self.model
-                                  commonParameter:self.commonTrackingParameter
-                                   extraParameter:@{@"position": @"draw_bottom"}];
 
                 [self showCommentsListWithStatus:TSVDetailCommentViewStatusPopBySlideUp];
             }
@@ -2201,9 +2227,9 @@ static const CGFloat kFloatingViewOriginY = 230;
 #pragma mark - TTPreviewPanBackDelegate
 - (BOOL)ttPreviewPanGestureRecognizerShouldBegin:(UIGestureRecognizer *)gestureRecognizer;
 {
-    if ([gestureRecognizer isKindOfClass:[UIPanGestureRecognizer class]]) {
-        return [self.videoContainerViewController canPullToClose];
-    }
+//    if ([gestureRecognizer isKindOfClass:[UIPanGestureRecognizer class]]) {
+//        return [self.videoContainerViewController canPullToClose];
+//    }
     return NO;
 }
 
@@ -2213,15 +2239,18 @@ static const CGFloat kFloatingViewOriginY = 230;
     switch (currentState) {
         case TTPreviewAnimateStateWillBegin:
         {
-            TTShortVideoModel *model = [self.originalDataFetchManager itemAtIndex:self.originalDataFetchManager.currentIndex replaced:NO];
+            FHFeedUGCCellModel *model = [self.originalDataFetchManager itemAtIndex:self.originalDataFetchManager.currentIndex replaced:NO];
 
             NSURL *URL = nil;
-            URL = [NSURL URLWithString:[model.animatedImageModel.urlWithHeader firstObject][@"url"] ?:@""];
+//            URL = [NSURL URLWithString:[model.animatedImageModel.urlWithHeader firstObject][@"url"] ?:@""];
+            FHFeedContentImageListModel *imageModel = [model.animatedImageList firstObject];
+            URL = [NSURL URLWithString:imageModel.url?:@""];
             NSString *cacheKey = [[YYWebImageManager sharedManager] cacheKeyForURL:URL];
             if ([[[YYWebImageManager sharedManager] cache] containsImageForKey:cacheKey]) {
                 self.fakeBackImage = [[[YYWebImageManager sharedManager] cache]  getImageForKey:cacheKey];
-            } else if (model.detailCoverImageModel.urlWithHeader) {
-                NSURL *stillImageURL = [NSURL URLWithString:[model.detailCoverImageModel.urlWithHeader firstObject][@"url"] ?:@""];
+            } else if (model.largeImageList.count>0) {
+                FHFeedContentImageListModel *largeImage = [model.animatedImageList firstObject];
+                NSURL *stillImageURL = [NSURL URLWithString:largeImage.url?:@""];
                 NSString *stillImageCacheKey = [[YYWebImageManager sharedManager] cacheKeyForURL:stillImageURL];
                 if ([[[YYWebImageManager sharedManager] cache] containsImageForKey:stillImageCacheKey]) {
                    self.fakeBackImage = [[[YYWebImageManager sharedManager] cache]  getImageForKey:stillImageCacheKey];
@@ -2330,66 +2359,20 @@ static const CGFloat kFloatingViewOriginY = 230;
 
     id<TTActivityContentItemProtocol> contentItem = activity.contentItem;
     if ([contentItem.contentItemType isEqualToString:TTActivityContentItemTypeFavourite]) {
-        [AWEVideoDetailTracker trackEvent:self.model.userRepin? @"rt_unfavourite" : @"rt_favourite"
-                                    model:self.model
-                          commonParameter:self.commonTrackingParameter
-                           extraParameter:@{
-                                            @"position": @"detail",
-                                            }];
         [self handleFavoriteVideoWithContentItem:(TTFavouriteContentItem *)contentItem];
     } else if ([contentItem.contentItemType isEqualToString:TTActivityContentItemTypeDislike]) {
-        [AWEVideoDetailTracker trackEvent:@"rt_dislike"
-                                    model:self.model
-                          commonParameter:self.commonTrackingParameter
-                           extraParameter:@{
-                                            @"position": @"detail_top_bar",
-                                            }];
         [self handleDislikeVideo];
     } else if ([contentItem.contentItemType isEqualToString:TTActivityContentItemTypeReport]) {
         [self handleReportVideo];
     } else if ([contentItem.contentItemType isEqualToString:TTActivityContentItemTypeDelete]) {
-        [AWEVideoDetailTracker trackEvent:@"profile_delete"
-                                    model:self.model
-                          commonParameter:self.commonTrackingParameter
-                           extraParameter:@{
-                                            @"position": @"detail_top_bar",
-                                            }];
         [self handleDeleteVideo];
     } else if ([contentItem.contentItemType isEqualToString:TTActivityContentItemTypeForwardWeitoutiao]) {
-        [AWEVideoDetailTracker trackEvent:@"rt_share_to_platform"
-                                    model:self.model
-                          commonParameter:self.commonTrackingParameter
-                           extraParameter:@{
-                                            @"share_platform":@"weitoutiao",
-                                            @"position": @"detail",
-                                            @"event_type": @"house_app2c_v2"
-                                            }];
-        [TSVVideoDetailShareHelper handleForwardUGCVideoWithModel:self.model];
-//    } else if ([contentItem.contentItemType isEqualToString:TTActivityContentItemTypeSaveVideo]) {
-//        [AWEVideoDetailTracker trackEvent:@"video_cache"
-//                                    model:self.model
-//                          commonParameter:self.commonTrackingParameter
-//                           extraParameter:nil];
-//        [TSVVideoDetailShareHelper handleSaveVideoWithModel:self.model];
-//    }
-    } else if (!isEmptyString(contentItem.contentItemType)){
-        NSString *type = [AWEVideoShareModel labelForContentItemType:contentItem.contentItemType];
-        NSAssert(type, @"Type should not be empty");
-        [AWEVideoDetailTracker trackEvent:@"rt_share_to_platform"
-                                    model:self.model
-                          commonParameter:self.commonTrackingParameter
-                           extraParameter:@{
-                                            @"share_platform": type?:@"",
-                                            @"position": @"detail",
-                                            @"event_type": @"house_app2c_v2"
-                                            }];
-    } else {
-        [AWEVideoDetailTracker trackEvent:@"click_more_cancel"
-                                    model:self.model
-                          commonParameter:self.commonTrackingParameter
-                           extraParameter:@{
-                                            @"position": @"detail_top_bar",
-                                            }];
+            [FHShortVideoTracerUtil clicksharePlatForm:self.model eventPlantFrom:@"weitoutiao"];
+            [TSVVideoDetailShareHelper handleForwardUGCVideoWithModel:self.model];
+        } else if (!isEmptyString(contentItem.contentItemType)){
+            NSString *type = [AWEVideoShareModel labelForContentItemType:contentItem.contentItemType];
+            NSAssert(type, @"Type should not be empty");
+            [FHShortVideoTracerUtil clicksharePlatForm:self.model eventPlantFrom:type?:@""];
     }
 }
 
@@ -2399,27 +2382,6 @@ static const CGFloat kFloatingViewOriginY = 230;
                error:(NSError *)error
                 desc:(NSString *)desc
 {
-    NSString *eventName = error ? @"share_fail" : @"share_done";
-    NSString *sharePlatform = [AWEVideoShareModel labelForContentItemType:activity.contentItemType] ?: @"";
-    id<TTActivityContentItemProtocol> contentItem = activity.contentItem;
-    NSArray *shareContentItemTypes = @[
-                                       TTActivityContentItemTypeWechat,
-                                       TTActivityContentItemTypeWechatTimeLine,
-                                       TTActivityContentItemTypeForwardWeitoutiao,
-                                       TTActivityContentItemTypeQQFriend,
-                                       TTActivityContentItemTypeQQZone
-//                                       TTActivityContentItemTypeSystem,
-                                       ];
-    if ([shareContentItemTypes containsObject:contentItem.contentItemType]) {
-        [AWEVideoDetailTracker trackEvent:eventName
-                                    model:self.model
-                          commonParameter:self.commonTrackingParameter
-                           extraParameter:@{
-                                            @"share_platform": sharePlatform,
-                                            @"position": @"detail_top_bar",
-                                            @"event_type": @"house_app2c_v2"
-                                            }];
-    }
     [TSVVideoShareManager synchronizeUserDefaultsWithAvtivityType:activity.contentItemType];
 }
 
@@ -2459,6 +2421,8 @@ static const CGFloat kFloatingViewOriginY = 230;
 }
 
 - (void)clickSubmitComment {
+    NSInteger rank = [self.model.tracerDic btd_integerValueForKey:@"rank" default:0];
+     [FHShortVideoTracerUtil clickCommentSubmitWithModel:self.model eventIndex:rank];
 //    NSMutableDictionary *tracerDict = self.tracerDict.mutableCopy;
 //    tracerDict[@"click_position"] = @"submit_comment";
 //    [FHUserTracker writeEvent:@"click_submit_comment" params:tracerDict];
@@ -2488,22 +2452,16 @@ static const CGFloat kFloatingViewOriginY = 230;
     
     commentWriteManager.delegate = nil;
     [self.commentWriteView dismissAnimated:YES];
-    if (model.replyToComment == nil) {
-        [AWEVideoDetailTracker trackEvent:@"rt_post_comment"
-                                    model:self.model
-                          commonParameter:self.commonTrackingParameter
-                           extraParameter:[self writeCommentExtraPositionDict]];
-    }
     
     [self.commentWriteView clearInputBar];
-    self.model.commentCount = [self.commentManager totalCommentCount];
+    self.model.commentCount = [NSString stringWithFormat:@"%ld", [self.commentManager totalCommentCount]];
     NSMutableDictionary *userInfo = @{}.mutableCopy;
-    userInfo[@"group_id"] = self.model.groupID;
-    userInfo[@"comment_conut"] = @(self.model.commentCount);
+    userInfo[@"group_id"] = self.model.groupId;
+    userInfo[@"comment_conut"] = @([self.model.commentCount floatValue]);
     [[NSNotificationCenter defaultCenter] postNotificationName:kPostMessageFinishedNotification
                                                         object:nil
                                                       userInfo:userInfo];
-    [self.model save];
+//    [self.model save];
     dispatch_async(dispatch_get_main_queue(), ^{
         [self showEmptyHint:NO];
         [self.tableView reloadData];

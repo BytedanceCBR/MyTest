@@ -76,13 +76,3 @@ static NSString *const kWebViewReferrerDefaultValue = @"http://nativeapp.toutiao
 
 + (NSString *)jointQueryParams:(NSString *)query toURL:(NSString *)urlStr;
 @end
-
-static NSString * CFPropertyListRefToNSString(CFPropertyListRef ref) {
-    if (ref == NULL) {
-        return nil;
-    }
-    if (CFGetTypeID(ref) == CFStringGetTypeID()) {
-        return (NSString *)CFBridgingRelease(ref);
-    }
-    return nil;
-}

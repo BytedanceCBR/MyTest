@@ -39,7 +39,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *schema;
 @property (nonatomic, copy , nullable) NSString *userAuthInfo;
 @property (nonatomic, copy , nullable) NSString *desc;
-
+@property (nonatomic, copy, nullable) FHFeedContentRawDataCommentRelationModel *relation;
+@property (nonatomic, copy, nullable) FHFeedContentRawDataCommentRelationCountModel *relationCount;
 @end
 
 @interface FHFeedUGCCellRealtorModel : NSObject
@@ -260,6 +261,14 @@ typedef NS_ENUM(NSUInteger, FHFeedUGCDiggType) {
 @property (nonatomic, assign) BOOL forbidVideoClick;
 //是否显示静音按钮，默认为NO
 @property (nonatomic, assign) BOOL showMuteBtn;
+//小视频使用
+@property (nonatomic, strong , nullable) FHFeedContentRawDataVideoModel *video ;
+@property (nonatomic, strong , nullable) FHFeedContentRawDataCommentBaseActionModel *videoAction;
+@property (nonatomic, strong , nullable) FHFeedContentRawDataSmallVideoShareModel *share;
+@property (nonatomic, strong , nullable) NSArray<FHFeedContentImageListModel> *animatedImageList;
+@property (nonatomic, copy , nullable) NSString *itemId;
+@property (nonatomic, assign ) BOOL userRepin;
+@property (nonatomic, copy, nullable) NSString *videoSourceIcon;
 
 + (FHFeedContentModel *)contentModelFromFeedContent:(NSString *)content;
 

@@ -144,12 +144,14 @@
     [_buttonOpenMore setBackgroundColor:[UIColor themeGray7]];
     [_buttonOpenMore setTitleColor:[UIColor themeGray1] forState:UIControlStateNormal];
     [_buttonOpenMore.titleLabel setFont:[UIFont themeFontRegular:14]];
+    _buttonOpenMore.layer.masksToBounds = YES;
+    _buttonOpenMore.layer.cornerRadius = 10;
     [_buttonOpenMore addTarget:self action:@selector(openMoreClick) forControlEvents:UIControlEventTouchUpInside];
     
     [self.bottomView addSubview:_buttonOpenMore];
     [_buttonOpenMore mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(20);
-        make.right.mas_equalTo(-20);
+        make.left.mas_equalTo(15);
+        make.right.mas_equalTo(-15);
         make.centerY.equalTo(self.buttonOpenMore);
         make.height.mas_equalTo(40);
     }];
@@ -300,7 +302,7 @@
     if (self.houseType == FHHouseTypeSecondHandHouse) {
         self.refreshFooter.hidden = YES;
         __weak typeof(self) wself = self;
-        TTHttpTask *task = [FHHouseListAPI searchErshouHouseList:query params:paramsRequest offset:offset searchId:searchId sugParam:nil class:[FHListResultHouseModel class] completion:^(FHListResultHouseModel *  _Nullable model, NSError * _Nullable error) {
+        TTHttpTask *task = [FHHouseListAPI searchErshouHouseList:query params:paramsRequest offset:offset searchId:searchId sugParam:nil class:[FHListResultHouseModel class] completion:(FHMainApiCompletion)^(FHListResultHouseModel *  _Nullable model, NSError * _Nullable error) {
         
                 if (!wself) {
                     return ;
@@ -318,7 +320,7 @@
         if (self.houseType == FHHouseTypeNewHouse) {
             __weak typeof(self) wself = self;
             paramsRequest[CHANNEL_ID] = @"94349556491";
-            TTHttpTask *task = [FHHouseListAPI searchNewHouseListForFindHouse:query params:paramsRequest offset:offset searchId:searchId sugParam:nil class:[FHListSearchHouseModel class] completion:^(FHListResultHouseModel *  _Nullable model, NSError * _Nullable error) {
+            TTHttpTask *task = [FHHouseListAPI searchNewHouseListForFindHouse:query params:paramsRequest offset:offset searchId:searchId sugParam:nil class:[FHListSearchHouseModel class] completion:(FHMainApiCompletion)^(FHListResultHouseModel *  _Nullable model, NSError * _Nullable error) {
                     if (!wself) {
                         return ;
                     }

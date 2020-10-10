@@ -471,14 +471,14 @@
 - (UIImage *)backBlackImage
 {
     if (!_backBlackImage) {
-        _backBlackImage = ICON_FONT_IMG(24, @"\U0000e68a", [UIColor themeGray1]); // detail_back_black
+        _backBlackImage = FHBackBlackImage;
     }
     return _backBlackImage;
 }
 - (UIImage *)backWhiteImage
 {
     if (!_backWhiteImage) {
-        _backWhiteImage = ICON_FONT_IMG(24, @"\U0000e68a", [UIColor whiteColor]); //detail_back_white
+        _backWhiteImage = FHBackWhiteImage;
     }
     return _backWhiteImage;
 }

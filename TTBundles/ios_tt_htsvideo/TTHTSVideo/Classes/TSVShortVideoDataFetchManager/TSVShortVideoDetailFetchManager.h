@@ -30,5 +30,4 @@ typedef NS_ENUM(NSInteger, TSVShortVideoListLoadMoreType) {
                activitySortType:(NSString *)activitySortType;
 
 - (instancetype)initWithGroupID:(NSString *)groupID loadMoreType:(TSVShortVideoListLoadMoreType)loadMoreType;
-
 @end

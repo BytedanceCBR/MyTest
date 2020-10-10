@@ -37,7 +37,7 @@ static id _instance;
     param.user_id = userID;
     param.media_id = mediaID;
     param.refer = refer;
-    [FRRequestManager requestModel:param callBackWithMonitor:^(NSError *error, NSObject<TTResponseModelProtocol> *responseModel, FRForumMonitorModel *monitorModel) {
+    [FRRequestManager requestModel:param callBackWithMonitor:^(NSError *error, id<TTResponseModelProtocol> responseModel, FRForumMonitorModel *monitorModel) {
         TTPersonalHomeUserInfoResponseModel *model = (TTPersonalHomeUserInfoResponseModel *)responseModel;
         if(completion) {
             completion(error,model,monitorModel);
@@ -60,7 +60,7 @@ static id _instance;
     TTPersonalHomeRecommendFollowRequestModel *param = [[TTPersonalHomeRecommendFollowRequestModel alloc] init];
     param.to_user_id = userID;
     param.page = page;
-    [FRRequestManager requestModel:param callBackWithMonitor:^(NSError *error, NSObject<TTResponseModelProtocol> *responseModel, FRForumMonitorModel *monitorModel) {
+    [FRRequestManager requestModel:param callBackWithMonitor:^(NSError *error, id<TTResponseModelProtocol> responseModel, FRForumMonitorModel *monitorModel) {
         TTPersonalHomeRecommendFollowResponseModel *model = (TTPersonalHomeRecommendFollowResponseModel *)responseModel;
         if(completion) {
             completion(error,model);

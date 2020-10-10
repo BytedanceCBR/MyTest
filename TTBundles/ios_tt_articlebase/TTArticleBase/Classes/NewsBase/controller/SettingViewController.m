@@ -12,6 +12,8 @@
 #import "SSDebugViewController.h"
 #import "TTNavigationController.h"
 #import <TTBaseLib/TTSandBoxHelper.h>
+#import "UIImage+FIconFont.h"
+#import "UIColor+Theme.h"
 
 
 @interface SettingViewController ()
@@ -60,7 +62,6 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-        
     self.settingView = [[SettingView alloc] initWithFrame:self.view.bounds];
     self.settingView.autoresizingMask = UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight;
     
@@ -68,7 +69,10 @@
     
     self.navigationItem.titleView = [SSNavigationBar navigationTitleViewWithTitle: NSLocalizedString(@"设置", nil)];
 
-    self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView: [SSNavigationBar navigationBackButtonWithTarget:self action:@selector(goBack:)]];
+    TTNavigationBarItemContainerView *leftBtnView = [SSNavigationBar navigationBackButtonWithTarget:self action:@selector(goBack:)];
+    UIImage *backImage  = ICON_FONT_IMG(24, @"\U0000E68A", [UIColor themeGray1]);
+    [leftBtnView.button setImage:backImage forState:UIControlStateNormal];
+    self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:leftBtnView];
     if ([TTSandBoxHelper isInHouseApp] && NSClassFromString(@"SSDebugViewController")) {
 //        if ([SSDebugViewController supportDebugItem:SSDebugItemController]) {
             self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:[SSNavigationBar navigationButtonOfOrientation:SSNavigationButtonOrientationOfRight withTitle:@"高级调试" target:self action:@selector(_debugModeActionFired:)]];
