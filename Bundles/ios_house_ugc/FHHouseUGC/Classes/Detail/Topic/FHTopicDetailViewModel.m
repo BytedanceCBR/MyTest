@@ -81,11 +81,8 @@
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(acceptMsg:) name:@"kFHUGCLeaveTop" object:@"topicDetail"];
         // 删帖成功
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(postDeleteSuccess:) name:kFHUGCDelPostNotification object:nil];
-        // 举报成功
-//        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(postDeleteSuccess:) name:kFHUGCReportPostNotification object:nil];
         // 发帖成功
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(postThreadSuccess:) name:kTTForumPostThreadSuccessNotification object:nil];
-        
         // 编辑成功
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(postEditNoti:) name:@"kTTForumPostEditedThreadSuccessNotification" object:nil]; // 编辑发送成功
     }
@@ -494,7 +491,13 @@
         return;
     }
     if (noti && noti.userInfo && self.dataList) {
-        FHFeedUGCCellModel *cellModel = noti.userInfo[@"cell_model"];
+        FHFeedUGCCellModel *cellModel = nil;
+        FHFeedContentModel *ugcContent = noti.userInfo[@"feed_content"];
+        if(ugcContent && [ugcContent isKindOfClass:[FHFeedContentModel class]]){
+            cellModel = [FHFeedUGCCellModel modelFromFeedContent:ugcContent];
+        }else if(noti.userInfo[@"cell_model"]){
+            cellModel = noti.userInfo[@"cell_model"];
+        }
         if(cellModel){
             dispatch_async(dispatch_get_main_queue(), ^{
                 cellModel.showCommunity = YES;
