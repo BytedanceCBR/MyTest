@@ -36,6 +36,7 @@
 #import "TTSettingsManager.h"
 #import "NSDictionary+TTAdditions.h"
 #import "FHHouseAgentCardCell.h"
+#import "FHHouseSearchSecondHouseCell.h"
 
 extern NSString *const INSTANT_DATA_KEY;
 
@@ -43,7 +44,7 @@ static NSString const * kCellSmallItemImageId = @"FHHomeSmallImageItemCell";
 static NSString const * kCellNewHouseItemImageId = @"FHHouseBaseNewHouseCell";
 static NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
 
-@interface FHHomeItemViewController ()<UITableViewDataSource,UITableViewDelegate,FHHouseBaseItemCellDelegate>
+@interface FHHomeItemViewController ()<UITableViewDataSource,UITableViewDelegate,FHHouseBaseItemCellDelegate, FHHouseSearchSecondHouseCellDelegate>
 
 @property (nonatomic , strong) FHRefreshCustomFooter *refreshFooter;
 @property (nonatomic , assign) NSInteger itemCount;
@@ -797,6 +798,9 @@ static NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
                 if ([model.cardType integerValue] == kFHHomeAgentCardType) {
                     return 116;
                 }
+                if ([model.houseType integerValue] == FHHouseTypeSecondHandHouse) {
+                    return [FHHouseSearchSecondHouseCell heightForData:model];
+                }
             }
         }
         return kFHHomeHouseItemHeight;
@@ -958,8 +962,11 @@ static NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
                 [cell bindAgentData:model traceParams:traceDict];
                 return cell;
             }
+            FHHouseSearchSecondHouseCell *cell = [tableView dequeueReusableCellWithIdentifier:@"FHHouseHomeSecondHouseCell"];
+            cell.delegate = self;
+            [cell refreshWithData:model];
+            return cell;
         }
-        
         
         //to do 房源cell
         NSString *identifier = self.houseType == FHHouseTypeRentHouse ? kCellRentHouseItemImageId : kCellSmallItemImageId;

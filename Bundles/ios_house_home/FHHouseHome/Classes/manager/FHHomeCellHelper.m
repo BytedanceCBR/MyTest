@@ -35,6 +35,8 @@
 #import "FHErrorHubManagerUtil.h"
 #import "FHLynxManager.h"
 #import "UIDevice+BTDAdditions.h"
+#import "FHHouseSearchSecondHouseCell.h"
+
 static NSMutableArray  * _Nullable identifierArr;
 
 @interface FHHomeCellHelper ()
@@ -85,6 +87,8 @@ static NSMutableArray  * _Nullable identifierArr;
     [tableView registerClass:[UITableViewCell class] forCellReuseIdentifier:NSStringFromClass([UITableViewCell class])];
     
     [tableView registerClass:[FHHouseListBaseItemCell class] forCellReuseIdentifier:@"FHSynchysisNewHouseCell"];
+    
+    [tableView registerClass:[FHHouseSearchSecondHouseCell class] forCellReuseIdentifier:@"FHHouseHomeSecondHouseCell"];
 }
 
 + (void)registerDelegate:(UITableView *)tableView andDelegate:(id)delegate

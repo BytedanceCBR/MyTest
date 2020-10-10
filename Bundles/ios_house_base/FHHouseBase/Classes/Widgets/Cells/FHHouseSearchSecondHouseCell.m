@@ -19,13 +19,20 @@
 #import <YYText/YYLabel.h>
 #import "FHSingleImageInfoCellModel.h"
 #import "UILabel+BTDAdditions.h"
+#import "FHHouseDislikeView.h"
+#import "ToastManager.h"
+#import "TTReachability.h"
+#import "FHUserTracker.h"
+#import "FHHomeRequestAPI.h"
 
 @interface FHHouseSearchSecondHouseCell()
 
+@property(nonatomic, strong) FHSingleImageInfoCellModel *cellModel;
+@property(nonatomic, strong) FHHomeHouseDataItemsModel *homeItemModel;
 @property (nonatomic, strong) UIView *containerView;
 
 @property (nonatomic, strong) UIView *leftInfoView;
-@property(nonatomic, strong) UIView *maskVRImageView;
+@property (nonatomic, strong) UIView *maskVRImageView;
 @property (nonatomic, strong) UIImageView *mainImageView;
 @property (nonatomic, strong) LOTAnimationView *vrLoadingView;
 
@@ -46,7 +53,7 @@
 @property (nonatomic, strong) UILabel *bottomRecommendLabel;
 @property (nonatomic, strong) UIView *bottomLine;
 
-@property (nonatomic, strong) FHSearchHouseItemModel *model;
+@property (nonatomic, strong) id model;
 
 @end
 
@@ -63,15 +70,23 @@
 }
 
 + (CGFloat)heightForData:(id)data {
+    CGFloat height = 102;
     if ([data isKindOfClass:[FHSearchHouseItemModel class]]) {
         FHSearchHouseItemModel *model = (FHSearchHouseItemModel *)data;
-        CGFloat height = 102;
         FHHouseListHouseAdvantageTagModel *adModel = model.advantageDescription;
         if ([adModel.text length] > 0 || (adModel.icon && [adModel.icon.url length] > 0)) {
             height += 25;
         }
         height += [self getMaintitleHeight:model];
         return height + model.topMargin;
+    } else if ([data isKindOfClass:[FHHomeHouseDataItemsModel class]]) {
+        FHHomeHouseDataItemsModel *model = (FHHomeHouseDataItemsModel *)data;
+        FHHomeHouseAdvantageTagModel *adModel = model.advantageDescription;
+        if ([adModel.text length] > 0 || (adModel.icon && [adModel.icon.url length] > 0)) {
+            height += 25;
+        }
+        height += [self getMaintitleHeight:model];
+        return height;
     }
     return 124;
 }
@@ -84,23 +99,44 @@
     return size.width;
 }
 
-+ (CGFloat)getMaintitleHeight:(FHSearchHouseItemModel *)model {
++ (CGFloat)getMaintitleHeight:(id)data {
     CGFloat width = SCREEN_WIDTH - 152;
     CGFloat indent = 0;
-    if ([model.titleTags count] > 0) {
-        for (NSInteger i = 0; i < [model.titleTags count]; i++) {
-            FHSearchHouseItemTitleTagModel *tag = model.titleTags[i];
-            CGFloat tagWidth = [self getWidthFromText:tag.text textFont:[UIFont themeFontMedium:10]];
-            tagWidth += 6;
-            if (i == 0) {
-                tagWidth += 4;
-            } else {
-                tagWidth += 2;
+    NSString *displayTitle = @"";
+    if ([data isKindOfClass:[FHSearchHouseItemModel class]]) {
+        FHSearchHouseItemModel *model = (FHSearchHouseItemModel *)data;
+        displayTitle = model.displayTitle;
+        if ([model.titleTags count] > 0) {
+            for (NSInteger i = 0; i < [model.titleTags count]; i++) {
+                FHSearchHouseItemTitleTagModel *tag = model.titleTags[i];
+                CGFloat tagWidth = [self getWidthFromText:tag.text textFont:[UIFont themeFontMedium:10]];
+                tagWidth += 6;
+                if (i == 0) {
+                    tagWidth += 4;
+                } else {
+                    tagWidth += 2;
+                }
+                indent += tagWidth;
             }
-            indent += tagWidth;
+        }
+    } else if ([data isKindOfClass:[FHHomeHouseDataItemsModel class]]) {
+        FHHomeHouseDataItemsModel *model = (FHHomeHouseDataItemsModel *)data;
+        displayTitle = model.displayTitle;
+        if ([model.titleTags count] > 0) {
+            for (NSInteger i = 0; i < [model.titleTags count]; i++) {
+                FHHomeHouseItemTitleTagModel *tag = model.titleTags[i];
+                CGFloat tagWidth = [self getWidthFromText:tag.text textFont:[UIFont themeFontMedium:10]];
+                tagWidth += 6;
+                if (i == 0) {
+                    tagWidth += 4;
+                } else {
+                    tagWidth += 2;
+                }
+                indent += tagWidth;
+            }
         }
     }
-    return [self sizeOfText:model.displayTitle fontSize:16 forWidth:width - indent forLineHeight:[UIFont themeFontSemibold:16].lineHeight constraintToMaxNumberOfLines:2 firstLineIndent:0 textAlignment:NSTextAlignmentLeft lineBreakMode:NSLineBreakByCharWrapping];
+    return [self sizeOfText:displayTitle fontSize:16 forWidth:width - indent forLineHeight:[UIFont themeFontSemibold:16].lineHeight constraintToMaxNumberOfLines:2 firstLineIndent:0 textAlignment:NSTextAlignmentLeft lineBreakMode:NSLineBreakByCharWrapping];
 }
 
 + (CGFloat)sizeOfText:(NSString *)text fontSize:(CGFloat)fontSize forWidth:(CGFloat)width forLineHeight:(CGFloat)lineHeight constraintToMaxNumberOfLines:(NSInteger)numberOfLines firstLineIndent:(CGFloat)indent textAlignment:(NSTextAlignment)alignment lineBreakMode:(NSLineBreakMode)lineBreakMode
@@ -134,6 +170,8 @@
     if (self) {
         if ([reuseIdentifier isEqualToString:@"FHHouseSearchSecondHouseCell"]) {
             [self initUI];
+        } else if ([reuseIdentifier isEqualToString:@"FHHouseHomeSecondHouseCell"]) {
+            [self initHomeHouseUI];
         }
         self.selectionStyle = UITableViewCellSelectionStyleNone;
     }
@@ -148,6 +186,10 @@
     [self.containerView mas_updateConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(top);
     }];
+}
+
+- (void)initHomeHouseUI {
+    [self initUI];
 }
 
 - (void)initUI {
@@ -260,60 +302,113 @@
 }
 
 - (void)refreshWithData:(id)data {
+    self.model = data;
     if ([data isKindOfClass:[FHSearchHouseItemModel class]]) {
-        self.model = data;
         FHSearchHouseItemModel *model = (FHSearchHouseItemModel *)data;
-        
         [self updateMainTitleView:model];
-        [self updateTagContainerView:model];
+        [self updateTagContainerView:model.tags];
         [self updateBottomView:model];
         self.subTitleLabel.text = model.displaySubtitle;
-        [self resetPriceFrame];
-        self.pricePerSqmLabel.text = self.model.displayPricePerSqm;
-        FHImageModel *imageModel = self.model.houseImage.firstObject;
+        [self resetPriceFrame:model.displayPrice];
+        self.pricePerSqmLabel.text = model.displayPricePerSqm;
+        FHImageModel *imageModel = model.houseImage.firstObject;
         [self updateMainImageWithUrl:imageModel.url];
-        if (self.maskVRImageView) {
-            [self.maskVRImageView removeFromSuperview];
-            self.maskVRImageView = nil;
-        }
-        if (self.model.vrInfo.hasVr) {
-            if (![self.leftInfoView.subviews containsObject:self.vrLoadingView]) {
-                [self.leftInfoView addSubview:self.vrLoadingView];
-                self.vrLoadingView.hidden = YES;
-                [self.vrLoadingView mas_makeConstraints:^(MASConstraintMaker *make) {
-                    make.left.mas_equalTo(8);
-                    make.bottom.mas_equalTo(-8);
-                    make.width.height.mas_equalTo(16);
-                }];
-            }
-            _vrLoadingView.hidden = NO;
-            [_vrLoadingView play];
-            self.maskVRImageView = [UIView new];
-            self.maskVRImageView.backgroundColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:0.1];
-            [self.mainImageView addSubview:self.maskVRImageView];
-            [self.maskVRImageView setFrame:CGRectMake(0.0f, 0.0f, 84, 84)];
+        [self updateVrInfo:model.vrInfo.hasVr];
+    } else if ([data isKindOfClass:[FHHomeHouseDataItemsModel class]]) {
+        FHHomeHouseDataItemsModel *model = (FHHomeHouseDataItemsModel *)data;
+        [self updateMainTitleView:model];
+        [self updateTagContainerView:model.tags];
+        [self updateBottomView:model];
+        self.subTitleLabel.text = model.displaySubtitle;
+        [self resetPriceFrame:model.displayPrice];
+        self.pricePerSqmLabel.text = model.displayPricePerSqm;
+        FHImageModel *imageModel = model.houseImage.firstObject;
+        [self updateMainImageWithUrl:imageModel.url];
+        [self updateVrInfo:model.vrInfo.hasVr];
+        self.homeItemModel = data;
+        if (model.dislikeInfo) {
+            self.closeBtn.hidden = NO;
         } else {
-            if (_vrLoadingView) {
-                _vrLoadingView.hidden = YES;
-            }
+            self.closeBtn.hidden = YES;
         }
     }
 }
 
-- (void)updateMainTitleView:(FHSearchHouseItemModel *)model {
-    CGFloat height = [FHHouseSearchSecondHouseCell getMaintitleHeight:model];
+- (void)updateVrInfo:(BOOL)hasVr {
+    if (self.maskVRImageView) {
+        [self.maskVRImageView removeFromSuperview];
+        self.maskVRImageView = nil;
+    }
+    if (hasVr) {
+        if (![self.leftInfoView.subviews containsObject:self.vrLoadingView]) {
+            [self.leftInfoView addSubview:self.vrLoadingView];
+            self.vrLoadingView.hidden = YES;
+            [self.vrLoadingView mas_makeConstraints:^(MASConstraintMaker *make) {
+                make.left.mas_equalTo(8);
+                make.bottom.mas_equalTo(-8);
+                make.width.height.mas_equalTo(16);
+            }];
+        }
+        _vrLoadingView.hidden = NO;
+        [_vrLoadingView play];
+        self.maskVRImageView = [UIView new];
+        self.maskVRImageView.backgroundColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:0.1];
+        [self.mainImageView addSubview:self.maskVRImageView];
+        [self.maskVRImageView setFrame:CGRectMake(0.0f, 0.0f, 84, 84)];
+    } else {
+        if (_vrLoadingView) {
+            _vrLoadingView.hidden = YES;
+        }
+    }
+}
+
+- (void)updateMainTitleView:(id)data {
+    CGFloat height = [FHHouseSearchSecondHouseCell getMaintitleHeight:data];
     [self.mainTitleView mas_updateConstraints:^(MASConstraintMaker *make) {
         make.height.mas_equalTo(height);
     }];
     CGFloat left = 0;
     UILabel *mainTitleLabel = [[UILabel alloc] init];
-    if ([model.titleTags count] > 0) {
-        for (NSInteger i = 0; i < [model.titleTags count]; i++) {
-            FHSearchHouseItemTitleTagModel *tag = model.titleTags[i];
+    NSArray *titleTags = [[NSArray alloc] init];
+    NSString *displayTitle = @"";
+    if ([data isKindOfClass:[FHSearchHouseItemModel class]]) {
+        FHSearchHouseItemModel *model = (FHSearchHouseItemModel *)data;
+        displayTitle = model.displayTitle;
+        titleTags = model.titleTags;
+    } else if ([data isKindOfClass:[FHHomeHouseDataItemsModel class]]) {
+        FHHomeHouseDataItemsModel *model = (FHHomeHouseDataItemsModel *)data;
+        displayTitle = model.displayTitle;
+        titleTags = model.titleTags;
+    }
+    if ([titleTags count] > 0) {
+        for (NSInteger i = 0; i < [titleTags count]; i++) {
+            NSString *text = @"";
+            NSString *textColor = @"";
+            NSString *topBackgroundColor = @"";
+            NSString *bottomBackgroundColor = @"";
+            NSString *backgroundColor = @"";
+            BOOL isGradient = NO;
+            if ([titleTags[i] isKindOfClass:[FHSearchHouseItemTitleTagModel class]]) {
+                FHSearchHouseItemTitleTagModel *tag = titleTags[i];
+                text = tag.text;
+                textColor = tag.textColor;
+                topBackgroundColor = tag.topBackgroundColor;
+                bottomBackgroundColor = tag.bottomBackgroundColor;
+                isGradient = tag.isGradient;
+                backgroundColor = tag.backgroundColor;
+            } else if ([titleTags[i] isKindOfClass:[FHHomeHouseItemTitleTagModel class]]) {
+                FHHomeHouseItemTitleTagModel *tag = titleTags[i];
+                text = tag.text;
+                textColor = tag.textColor;
+                topBackgroundColor = tag.topBackgroundColor;
+                bottomBackgroundColor = tag.bottomBackgroundColor;
+                isGradient = tag.isGradient;
+                backgroundColor = tag.backgroundColor;
+            }
             UILabel *label = [[UILabel alloc] init];
             label.textAlignment = NSTextAlignmentCenter;
-            label.text = tag.text;
-            label.textColor = [UIColor colorWithHexStr:tag.textColor];
+            label.text = text;
+            label.textColor = [UIColor colorWithHexStr:textColor];
             label.font = [UIFont themeFontMedium:10];
             CGFloat width = [label btd_widthWithHeight:16] + 6;
             if (i > 0) {
@@ -326,9 +421,9 @@
             [view addSubview:label];
             label.backgroundColor = [UIColor clearColor];
             
-            if (tag.isGradient) {
+            if (isGradient) {
                 CAGradientLayer *gradientLayer = [CAGradientLayer layer];
-                gradientLayer.colors = @[(__bridge id)[UIColor colorWithHexStr:tag.topBackgroundColor].CGColor, (__bridge id)[UIColor colorWithHexStr:tag.bottomBackgroundColor].CGColor];
+                gradientLayer.colors = @[(__bridge id)[UIColor colorWithHexStr:topBackgroundColor].CGColor, (__bridge id)[UIColor colorWithHexStr:bottomBackgroundColor].CGColor];
                 gradientLayer.startPoint = CGPointMake(0, 0);
                 gradientLayer.endPoint = CGPointMake(1, 1);
                 gradientLayer.cornerRadius = 2;
@@ -336,7 +431,7 @@
                 [view.layer insertSublayer:gradientLayer atIndex:0];
             } else {
                 view.layer.cornerRadius = 2;
-                view.layer.backgroundColor = [UIColor colorWithHexStr:tag.backgroundColor].CGColor;
+                view.layer.backgroundColor = [UIColor colorWithHexStr:backgroundColor].CGColor;
             }
             left += width;
         }
@@ -352,8 +447,8 @@
     style.minimumLineHeight = font.lineHeight * lineHeightMultiple;
     style.maximumLineHeight = font.lineHeight * lineHeightMultiple;
     style.firstLineHeadIndent = left;
-    NSMutableAttributedString *attrStr = [[NSMutableAttributedString alloc] initWithString:model.displayTitle];
-    [attrStr addAttributes:@{NSFontAttributeName:[UIFont themeFontSemibold:16], NSParagraphStyleAttributeName:style} range:[model.displayTitle  rangeOfString:model.displayTitle]];
+    NSMutableAttributedString *attrStr = [[NSMutableAttributedString alloc] initWithString:displayTitle];
+    [attrStr addAttributes:@{NSFontAttributeName:[UIFont themeFontSemibold:16], NSParagraphStyleAttributeName:style} range:[displayTitle  rangeOfString:displayTitle]];
     mainTitleLabel.attributedText = attrStr;
     mainTitleLabel.numberOfLines = 0;
     [self.mainTitleView insertSubview:mainTitleLabel atIndex:0];
@@ -363,14 +458,28 @@
     }];
 }
 
-- (void)updateTagContainerView:(FHSearchHouseItemModel *)model {
-    NSAttributedString *attributeString =  [FHSingleImageInfoCellModel tagsStringWithTagList:model.tags];
+- (void)updateTagContainerView:(NSArray<FHHouseTagsModel *> *)tagList {
+    NSAttributedString *attributeString =  [FHSingleImageInfoCellModel tagsStringWithTagList:tagList];
     self.tagLabel.attributedText = attributeString;
 }
 
-- (void)updateBottomView:(FHSearchHouseItemModel *)model {
-    FHHouseListHouseAdvantageTagModel *adModel = model.advantageDescription;
-    if ([adModel.text length] > 0 || (adModel.icon && [adModel.icon.url length] > 0)) {
+- (void)updateBottomView:(id)data {
+    NSString *text = @"";
+    NSString *url = @"";
+    if ([data isKindOfClass:[FHSearchHouseItemModel class]]) {
+        FHSearchHouseItemModel *model = (FHSearchHouseItemModel *)data;
+        text = model.advantageDescription.text;
+        if (model.advantageDescription.icon) {
+            url = model.advantageDescription.icon.url;
+        }
+    } else if ([data isKindOfClass:[FHHomeHouseDataItemsModel class]]) {
+        FHHomeHouseDataItemsModel *model = (FHHomeHouseDataItemsModel *)data;
+        text = model.advantageDescription.text;
+        if (model.advantageDescription.icon) {
+            url = model.advantageDescription.icon.url;
+        }
+    }
+    if ([text length] > 0 || [url length] > 0) {
         [self.bottomView setHidden:NO];
         if (!_bottomLine) {
             _bottomLine = [[UIView alloc] init];
@@ -384,7 +493,7 @@
             }];
         }
         CGFloat left = 0;
-        if (adModel.icon && [adModel.icon.url length] > 0) {
+        if ([url length] > 0) {
             left += 20;
             if (!_bottomIconImageView) {
                 [self.bottomView addSubview:self.bottomIconImageView];
@@ -394,10 +503,10 @@
                     make.height.width.mas_equalTo(20);
                 }];
             }
-            [self.bottomIconImageView bd_setImageWithURL:[NSURL URLWithString:adModel.icon.url]];
+            [self.bottomIconImageView bd_setImageWithURL:[NSURL URLWithString:url]];
             self.bottomIconImageView.hidden = NO;
         }
-        if ([adModel.text length] > 0) {
+        if ([text length] > 0) {
             if (!_bottomRecommendLabel) {
                 [self.bottomView addSubview:self.bottomRecommendLabel];
                 [self.bottomRecommendLabel mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -407,7 +516,7 @@
                     make.right.mas_equalTo(0);
                 }];
             }
-            self.bottomRecommendLabel.text = adModel.text;
+            self.bottomRecommendLabel.text = text;
         }
     } else {
         [self.bottomView setHidden:YES];
@@ -424,16 +533,12 @@
     }
 }
 
-- (void)resetPriceFrame {
-    self.priceLabel.text = self.model.displayPrice;
+- (void)resetPriceFrame:(NSString *)displayPrice {
+    self.priceLabel.text = displayPrice;
     CGFloat width = [self.priceLabel btd_widthWithHeight:22];
     [self.priceLabel mas_updateConstraints:^(MASConstraintMaker *make) {
         make.width.mas_equalTo(width);
     }];
-}
-
-- (void)dislike {
-    
 }
 
 - (void)prepareForReuse {
@@ -543,5 +648,90 @@
     }
     return _closeBtn;
 }
+
+- (void)dislike {
+    if(self.delegate && [self.delegate respondsToSelector:@selector(canDislikeClick)]){
+        BOOL canDislike = [self.delegate canDislikeClick];
+        if(!canDislike){
+            return;
+        }
+    }
+    
+    [self trackClickHouseDislke];
+    NSArray *dislikeInfo = self.homeItemModel.dislikeInfo;
+    if(dislikeInfo && [dislikeInfo isKindOfClass:[NSArray class]]){
+        __weak typeof(self) wself = self;
+        FHHouseDislikeView *dislikeView = [[FHHouseDislikeView alloc] init];
+        FHHouseDislikeViewModel *viewModel = [[FHHouseDislikeViewModel alloc] init];
+        
+        NSMutableArray *keywords = [NSMutableArray array];
+        for (FHHomeHouseDataItemsDislikeInfoModel *infoModel in dislikeInfo) {
+            NSMutableDictionary *dic = [NSMutableDictionary dictionary];
+            if(infoModel.id){
+                [dic setObject:infoModel.id forKey:@"id"];
+            }
+            if(infoModel.text){
+                [dic setObject:infoModel.text forKey:@"name"];
+            }
+            if(infoModel.mutualExclusiveIds){
+                [dic setObject:infoModel.mutualExclusiveIds forKey:@"mutual_exclusive_ids"];
+            }
+            [keywords addObject:dic];
+        }
+        
+        viewModel.keywords = keywords;
+        viewModel.groupID = self.cellModel.houseId;
+        viewModel.extrasDict = self.homeItemModel.tracerDict;
+        [dislikeView refreshWithModel:viewModel];
+        CGPoint point = self.closeBtn.center;
+        [dislikeView showAtPoint:point
+                        fromView:self.closeBtn
+                 didDislikeBlock:^(FHHouseDislikeView * _Nonnull view) {
+            [wself dislikeConfirm:view];
+        }];
+    }
+}
+
+- (void)dislikeConfirm:(FHHouseDislikeView *)view {
+    if (![TTReachability isNetworkConnected]) {
+        [[ToastManager manager] showToast:@"网络异常"];
+        return;
+    }
+    
+    NSMutableArray *dislikeInfo = [NSMutableArray array];
+    for (FHHouseDislikeWord *word in view.dislikeWords) {
+        if(word.isSelected){
+            [dislikeInfo addObject:@([word.ID integerValue])];
+        }
+    }
+    //发起请求
+    [FHHomeRequestAPI requestHomeHouseDislike:self.homeItemModel.idx houseType:[self.homeItemModel.houseType integerValue] dislikeInfo:dislikeInfo completion:^(bool success, NSError * _Nonnull error) {
+        if(success){
+            [[ToastManager manager] showToast:@"感谢反馈，将减少推荐类似房源"];
+            //代理
+            if(self.delegate && [self.delegate respondsToSelector:@selector(dislikeConfirm:cell:)] && self.homeItemModel){
+                [self.delegate dislikeConfirm:self.homeItemModel cell:self];
+            }
+        }else{
+            [[ToastManager manager] showToast:@"反馈失败"];
+        }
+    }];
+}
+
+#pragma mark - dislike埋点
+
+- (void)trackClickHouseDislke {
+    if(self.homeItemModel.tracerDict){
+        NSMutableDictionary *tracerDict = [self.homeItemModel.tracerDict mutableCopy];
+        tracerDict[@"click_position"] = @"house_dislike";
+        [tracerDict removeObjectsForKeys:@[@"enter_from",@"element_from"]];
+        TRACK_EVENT(@"click_house_dislike", tracerDict);
+    }
+}
+
+- (void)hiddenCloseBtn {
+    self.closeBtn.hidden = YES;
+}
+
 
 @end
