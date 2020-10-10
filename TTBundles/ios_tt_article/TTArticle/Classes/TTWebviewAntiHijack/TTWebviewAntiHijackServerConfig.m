@@ -101,7 +101,7 @@ SINGLETON_GCD(TTWebviewAntiHijackServerConfig);
 #pragma mark - public APIs
 
 - (void)updateServerConfig:(NSDictionary *)serverData {
-    ENTER;
+//    ENTER;
     
     BOOL isEnabled = [serverData tt_boolValueForKey:kTTWebviewAntiHijackServerConfigEnabledKey];
 
@@ -257,7 +257,7 @@ SINGLETON_GCD(TTWebviewAntiHijackServerConfig);
         return;
     }
     
-    ENTER;
+//    ENTER;
     
     __weak typeof(self) wself = self;
     

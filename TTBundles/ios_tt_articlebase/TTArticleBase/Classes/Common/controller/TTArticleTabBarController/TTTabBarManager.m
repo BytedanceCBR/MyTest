@@ -841,7 +841,7 @@ SINGLETON_GCD(TTTabBarManager);
 //如果有任一tab文案和图片不成套则都置为默认
 - (void)resetToDefualtIfNeed {
     if (!self.tabConfigValid.boolValue) {
-        LOGD(@"TTTabBar 文案与图片资源不匹配！！！改变文案个数：%lu，改变图片个数%lu", (unsigned long)self.customTextKeySet.count, (unsigned long)self.customImageNameSet.count);
+//        LOGD(@"TTTabBar 文案与图片资源不匹配！！！改变文案个数：%lu，改变图片个数%lu", (unsigned long)self.customTextKeySet.count, (unsigned long)self.customImageNameSet.count);
         [self.imageList.normalItems enumerateKeysAndObjectsUsingBlock:^(NSString * _Nonnull key, TTTabBarImageModel * _Nonnull obj, BOOL * _Nonnull stop) {
             if (NO == obj.isDefaultImage) {
                 obj.name = [_defaultImageNames tt_stringValueForKey:key];

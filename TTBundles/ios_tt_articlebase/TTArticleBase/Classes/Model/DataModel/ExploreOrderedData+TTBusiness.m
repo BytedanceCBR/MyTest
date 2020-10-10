@@ -286,7 +286,7 @@ extern NSInteger ttvs_autoPlayModeServerSetting(void);
         
         LOGD(@"%@ : %@", @"ExploreOrderedData", orderedDataCount);
         LOGD(@"%@ : %@", @"Article", articleCount);
-        LOGD(@"%@ : %@", @"Thread", threadCount);
+//        LOGD(@"%@ : %@", @"Thread", threadCount);
         LOGD(@"%@ : %@", @"Comment", commentCount);
         LOGD(@"%@ : %@", @"Card", cardCount);
         LOGD(@"%@ : %@", @"WapData", wapDataCount);

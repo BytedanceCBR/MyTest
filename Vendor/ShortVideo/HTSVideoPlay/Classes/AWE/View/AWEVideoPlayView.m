@@ -366,11 +366,11 @@ static NSString * const VideoPrepareTimeTechKey = @"prepare_time_tech";
 - (void)_didPlayFailedWithError:(NSError *)error
 {
     // 清空当前视频缓存
-    NSString *urlStr = [self.playerController.videoPlayURLs firstObject];
-    if (!isEmptyString(urlStr) && !isEmptyString(self.model.video.playAddr.uri)) {
-        id<IESVideoCacheProtocol> AWEVideoCache = [IESVideoCache cacheWithType:IESVideoPlayerTypeTTOwn];
-        [AWEVideoCache clearCacheForVideoID:self.model.video.playAddr.uri URLString:urlStr];
-    }
+//    NSString *urlStr = [self.playerController.videoPlayURLs firstObject];
+//    if (!isEmptyString(urlStr) && !isEmptyString(self.model.video.playAddr.uri)) {
+//        id<IESVideoCacheProtocol> AWEVideoCache = [IESVideoCache cacheWithType:IESVideoPlayerTypeTTOwn];
+//        [AWEVideoCache clearCacheForVideoID:self.model.video.playAddr.uri URLString:urlStr];
+//    }
     
     if (self.playerController.useCache) { // 尝试无缓存播放
         self.playerController.useCache = NO;
@@ -434,7 +434,7 @@ static NSString * const VideoPrepareTimeTechKey = @"prepare_time_tech";
     _playerController.repeated = YES;
     _playerController.useCache = YES;
     _playerController.ignoreAudioInterruption = YES;
-    _playerController.deleagte = self;
+    _playerController.delegate = self;
     [self addSubview:_playerController.view];
     [self addSubview:_backgroundView];
     

@@ -45,7 +45,7 @@
 #import "TTMovieStore.h"
 #import "TTUIResponderHelper.h"
 #import "TTNetworkHelper.h"
-#import "TTHTTPDNSManager.h"
+//#import "TTHTTPDNSManager.h"
 #import "TTVPlayVideo.h"
 #import "TTVVideoRotateScreenWindow.h"
 #import "TTVAudioActiveCenter.h"
@@ -1313,12 +1313,12 @@ static __weak ExploreMovieView *currentFullScreenMovieView_ = nil;
     {
         self.hostName = playURL.host;
         if (playURL && !isEmptyString(self.hostName)) {
-            NSString *ipAddress = [[TTHTTPDNSManager shareInstance] resolveHost:playURL];
-            if (isEmptyString(ipAddress)) {
-                [self playUrlWithoutipAddress:playURL];
-            }else{
-                [self playUrl:playURL ipAddress:ipAddress];
-            }
+//            NSString *ipAddress = [[TTHTTPDNSManager shareInstance] resolveHost:playURL];
+//            if (isEmptyString(ipAddress)) {
+//                [self playUrlWithoutipAddress:playURL];
+//            }else{
+//                [self playUrl:playURL ipAddress:ipAddress];
+//            }
         }
     }
 
