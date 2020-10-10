@@ -30,8 +30,8 @@
 #import "TTVPlayerLogEvent.h"
 #import "TTVPlayerAudioController.h"
 #import "TTVVideoNetClient.h"
-#import "TTVOwnPlayerPreloaderWrapper.h"
-#import "TTVOwnPlayerCacheWrapper.h"
+//#import "TTVOwnPlayerPreloaderWrapper.h"
+//#import "TTVOwnPlayerCacheWrapper.h"
 #import "TTVAudioActiveCenter.h"
 #include <sys/types.h>
 #include <sys/sysctl.h>
@@ -107,11 +107,6 @@ static NSString *platformString;
 }
 
 - (void)dealloc {
-    // 不需要时释放缓存文件强引用(允许删除文件)
-    for (NSNumber *task in self.retainTaskSet) {
-        TTAVPreloader *preloader = [TTVOwnPlayerPreloaderWrapper sharedPreloader].preloader;
-        [preloader releaseFileForKey:[task longLongValue]];
-    }
     [self.videoEngine removeTimeObserver];
     [_playerStateStore unregisterForActionClass:[TTVPlayerStateAction class] observer:self];
 }
@@ -128,10 +123,6 @@ static NSString *platformString;
 }
 
 - (void)ttv_setup {
-    for (NSNumber *task in self.retainTaskSet) {
-        TTAVPreloader *preloader = [TTVOwnPlayerPreloaderWrapper sharedPreloader].preloader;
-        [preloader releaseFileForKey:[task longLongValue]];
-    }
     [self.retainTaskSet removeAllObjects];
     [_watchTimer reset];
     [_watchTimer endWatch];
@@ -166,9 +157,10 @@ static NSString *platformString;
     if (!isEmptyString(self.playerModel.localURL)) {
         isOwn = NO;
     }
+    
     self.videoEngine = [[TTVideoEngine alloc] initWithOwnPlayer:isOwn];
+    self.videoEngine.startTime = [[TTVPlayerCacheProgressController sharedInstance] playTimeForVideoID:self.playerModel.videoID];
     self.videoEngine.resolutionServerControlEnabled = YES;
-    self.videoEngine.h265Enabled = [[TTSettingsManager sharedManager] settingForKey:@"video_h265_enable" defaultValue:@(NO) freeze:NO];
     if (self.playerStateStore.state.enableSmothlySwitch) {
         self.videoEngine.smoothlySwitching = YES;
         self.videoEngine.smoothDelayedSeconds = 3;
@@ -203,24 +195,19 @@ static NSString *platformString;
             self.playerStateStore.state.currentResolution = completeResolution;
 
         }];
-        // 播放开始时增加缓存文件强引用(不允许删除文件)
-        TTAVPreloader *preloader = [TTVOwnPlayerPreloaderWrapper sharedPreloader].preloader;
-        HandleType handler = [preloader getHandle:self.playerModel.videoID resolution:TTVOwnPlayerPreloaderDefaultResolution];
-        if (![self.retainTaskSet containsObject:@(handler)]) {
-            [self.retainTaskSet addObject:@(handler)];
-            
-            [preloader stopTask:handler];
-            [preloader retainFileForKey:handler];
-        }
         
-        TTAVPreloaderItem *item = [preloader preloadItemForKey:handler];
-        if (self.useCache && item) {
-            self.playerStateStore.state.playingWithCache = item.filePath.length > 0;
-            [self.videoEngine setPreloaderItem:item];
+        self.playerStateStore.state.playingWithCache = NO;
+        
+        if (videoInfo) {
+            [self.videoEngine setVideoInfo:videoInfo];
         } else {
-            self.playerStateStore.state.playingWithCache = NO;
             [self.videoEngine setVideoID:self.playerModel.videoID];
         }
+        
+//        if (self.playerModel.audioBalanceEnable && [TTKitchen getBOOL:KTTVideoPasterADAudioBalanceEnable]) {
+//            [self.videoEngine setOptionForKey:VEKKeyPlayerAudioEffectEnable_BOOL value:@(YES)];
+//        }
+
     }
     self.videoEngine.dataSource = self;
     self.videoEngine.delegate = self;
@@ -359,10 +346,6 @@ static NSString *platformString;
     if (hasError) {
         [self.watchTimer endWatch];
         [self saveCacheProgress];
-        // 清空当前视频缓存
-        if (!isEmptyString(self.playerModel.videoID)) {
-            [[TTVOwnPlayerCacheWrapper sharedCache] clearCacheForVideoID:self.playerModel.videoID];
-        }
     }else{
         [self.watchTimer endWatch];
         if (self.playerStateStore.state.duration > 0 && self.playerStateStore.state.currentPlaybackTime + 2 > self.playerStateStore.state.duration) {//播放结束了就不要cache播放进度了
@@ -639,7 +622,9 @@ static NSString *platformString;
     if (self.playerStateStore.state.currentPlaybackTime + 2 >= self.playerStateStore.state.duration) {
         return;
     }
-    [[TTVPlayerCacheProgressController sharedInstance] cacheProgress:progress currentTime:self.playerStateStore.state.currentPlaybackTime VideoID:self.playerModel.videoID];
+    
+    [[TTVPlayerCacheProgressController sharedInstance] cacheProgress:progress currentTime:self.playerStateStore.state.currentPlaybackTime VideoID:self.playerModel.videoID isDetailFeed:self.isPlayInDetailFeed];
+//    [[TTVPlayerCacheProgressController sharedInstance] cacheProgress:progress currentTime:self.playerStateStore.state.currentPlaybackTime VideoID:self.playerModel.videoID];
 }
 
 #pragma mark - fetch video

@@ -49,7 +49,7 @@
 #import "FHHMDTManager.h"
 #import "UIViewAdditions.h"
 #import "UIView+BTDAdditions.h"
-#import <TTVideoEngine/TTVideoEngine.h>
+#import <TTVideoEngine/TTVideoEngineHeader.h>
 #import "ToastManager.h"
 #import "TTVPlayerIdleController.h"
 

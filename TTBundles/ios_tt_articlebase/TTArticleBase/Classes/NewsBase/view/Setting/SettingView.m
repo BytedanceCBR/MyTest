@@ -78,7 +78,7 @@
 #import "IESVideoPlayer.h"
 #import <TTRexxar/TTRPackageManager.h>
 #import <TTSettingsManager/TTSettingsManager.h>
-#import <BDTBasePlayer/TTVOwnPlayerCacheWrapper.h>
+//#import <BDTBasePlayer/TTVOwnPlayerCacheWrapper.h>
 
 //#import "TTLivePlayerTrafficViewController.h"
 #import "TTAdSplashMediator.h"
@@ -1925,7 +1925,7 @@ TTEditUserProfileViewControllerDelegate
     id<IESVideoCacheProtocol> shortVideoOwnPlayerCache = [IESVideoCache cacheWithType:IESVideoPlayerTypeTTOwn];
     [shortVideoOwnPlayerCache clearAllCache];//自研播放器
     
-    [[TTVOwnPlayerCacheWrapper sharedCache] clearAllCache];
+//    [[TTVOwnPlayerCacheWrapper sharedCache] clearAllCache];
     
     [[NSURLCache sharedURLCache] removeAllCachedResponses];
     
