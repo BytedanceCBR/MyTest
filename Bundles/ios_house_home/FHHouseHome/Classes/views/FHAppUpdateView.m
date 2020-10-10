@@ -169,6 +169,13 @@
     } completion:^(BOOL finished) {
         
     }];
+    
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        [keyWindow endEditing:YES];
+        if (topViewController && [topViewController isKindOfClass:[UIViewController class]]) {
+            [topViewController.view endEditing:YES];
+        }
+    });
 }
 
 - (void)dismiss {
