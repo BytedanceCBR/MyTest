@@ -733,5 +733,4 @@
     self.closeBtn.hidden = YES;
 }
 
-
 @end

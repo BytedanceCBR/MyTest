@@ -17,6 +17,7 @@
 #import "FHSearchHouseModel.h"
 #import "FHSingleImageInfoCellModel.h"
 #import "UILabel+BTDAdditions.h"
+#import "FHHomeHouseModel.h"
 
 @interface FHHouseSearchNewHouseCell()
 
@@ -67,11 +68,20 @@
 
 + (CGFloat)heightForData:(id)data {
     if ([data isKindOfClass:[JSONModel class]]) {
-        FHSearchHouseItemModel *itemModel = (FHSearchHouseItemModel *)data;
-        if (itemModel.advantageDescription.text) {
-            return 146 + itemModel.topMargin;
+        CGFloat height = 124;
+        if ([data isKindOfClass:[FHSearchHouseItemModel class]]) {
+            FHSearchHouseItemModel *itemModel = (FHSearchHouseItemModel *)data;
+            height += itemModel.topMargin;
+            if (itemModel.advantageDescription.text) {
+                height += 22;
+            }
+        } else if ([data isKindOfClass:[FHHomeHouseDataItemsModel class]]) {
+            FHHomeHouseDataItemsModel *itemModel = (FHHomeHouseDataItemsModel *)data;
+            if (itemModel.advantageDescription.text) {
+                height += 22;
+            }
         }
-        return 124 + itemModel.topMargin;
+        return height;
     }
     return 124;
 }
@@ -221,28 +231,10 @@
         FHImageModel *imageModel = model.images.firstObject;
         [self updateMainImageWithUrl:imageModel.url];
         if (model.tagImage) {
-            self.mainImaTag.hidden = NO;
-            FHImageModel *tagimageModel = model.tagImage.firstObject;
-            [self.mainImaTag bd_setImageWithURL:[NSURL URLWithString:tagimageModel.url]];
+            [self updateImageTag:model.tagImage.firstObject];
         }
         self.mainTitleLabel.text = model.displayTitle;
-        if (model.propertyTag && [model.propertyTag.content length] > 0) {
-            self.propertyTagLabel.hidden = NO;
-            self.propertyTagLabel.text = model.propertyTag.content;
-            self.propertyTagLabel.layer.borderColor = [UIColor colorWithHexStr:model.propertyTag.borderColor].CGColor;
-            CGFloat width = [self.propertyTagLabel btd_widthWithHeight:16] + 6;
-            [self.propertyTagLabel mas_updateConstraints:^(MASConstraintMaker *make) {
-                make.width.mas_equalTo(width);
-            }];
-            [self.mainTitleLabel mas_updateConstraints:^(MASConstraintMaker *make) {
-                make.right.mas_equalTo(-width - 1);
-            }];
-        } else {
-            self.propertyTagLabel.hidden = YES;
-            [self.mainTitleLabel mas_updateConstraints:^(MASConstraintMaker *make) {
-                make.right.mas_equalTo(0);
-            }];
-        }
+        [self updatePropertyTag:model.propertyTag];
         self.priceLabel.text = model.displayPricePerSqm;
         self.subTitleLabel.text = model.displayDescription;
         NSAttributedString *attributeString =  [FHSingleImageInfoCellModel tagsStringWithTagList:model.tags];
@@ -253,7 +245,27 @@
             self.priceLabel.textColor = [UIColor themeOrange1];
         }
         [self updateAdvantage:model];
-        [self updateVRAndVideoInfo:model];
+        [self updateVr:model.vrInfo.hasVr Video:model.videoInfo.hasVideo];
+    } else if ([data isKindOfClass:[FHHomeHouseDataItemsModel class]]) {
+        FHHomeHouseDataItemsModel *model = (FHHomeHouseDataItemsModel *)data;
+        FHImageModel *imageModel = model.images.firstObject;
+        [self updateMainImageWithUrl:imageModel.url];
+        if (model.tagImage) {
+            [self updateImageTag:model.tagImage.firstObject];
+        }
+        self.mainTitleLabel.text = model.displayTitle;
+        [self updatePropertyTag:model.propertyTag];
+        self.priceLabel.text = model.displayPricePerSqm;
+        self.subTitleLabel.text = model.displayDescription;
+        NSAttributedString *attributeString =  [FHSingleImageInfoCellModel tagsStringWithTagList:model.tags];
+        self.tagLabel.attributedText = attributeString;
+        if ([model.displayPricePerSqm isKindOfClass:[NSString class]] && [model.displayPricePerSqm isEqualToString:@"暂无报价"]) {
+            self.priceLabel.textColor = [UIColor themeGray3];
+        } else {
+            self.priceLabel.textColor = [UIColor themeOrange1];
+        }
+        [self updateAdvantage:model];
+        [self updateVr:model.vrInfo.hasVr Video:model.videoInfo.hasVideo];
     }
 }
 
@@ -264,12 +276,41 @@
     }
 }
 
-- (void)updateVRAndVideoInfo:(FHSearchHouseItemModel *)model {
+- (void)updateImageTag:(FHImageModel *)tagImageModel {
+    if (tagImageModel) {
+        self.mainImaTag.hidden = NO;
+        [self.mainImaTag bd_setImageWithURL:[NSURL URLWithString:tagImageModel.url]];
+    } else {
+        self.mainImaTag.hidden = YES;
+    }
+}
+
+- (void)updatePropertyTag:(FHHouseTagsModel *)propertyTag {
+    if (propertyTag && [propertyTag.content length] > 0) {
+        self.propertyTagLabel.hidden = NO;
+        self.propertyTagLabel.text = propertyTag.content;
+        self.propertyTagLabel.layer.borderColor = [UIColor colorWithHexStr:propertyTag.borderColor].CGColor;
+        CGFloat width = [self.propertyTagLabel btd_widthWithHeight:16] + 6;
+        [self.propertyTagLabel mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.width.mas_equalTo(width);
+        }];
+        [self.mainTitleLabel mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.right.mas_equalTo(-width - 1);
+        }];
+    } else {
+        self.propertyTagLabel.hidden = YES;
+        [self.mainTitleLabel mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.right.mas_equalTo(0);
+        }];
+    }
+}
+
+- (void)updateVr:(BOOL)hasVr Video:(BOOL)hasVideo {
     if (self.maskVRImageView) {
         [self.maskVRImageView removeFromSuperview];
         self.maskVRImageView = nil;
     }
-    if (model.vrInfo.hasVr) {
+    if (hasVr) {
         self.videoImageView.hidden = YES;
         self.vrLoadingView.hidden = NO;
         [self.vrLoadingView play];
@@ -279,7 +320,7 @@
         [self.maskVRImageView setFrame:CGRectMake(0.0f, 0.0f, 84, 84)];
     } else {
         self.vrLoadingView.hidden = YES;
-        if (model.videoInfo.hasVideo) {
+        if (hasVideo) {
             self.videoImageView.hidden = NO;
         } else {
             self.videoImageView.hidden = YES;
@@ -287,18 +328,32 @@
     }
 }
 
-- (void)updateAdvantage:(FHSearchHouseItemModel *)model {
-    FHHouseListHouseAdvantageTagModel *adModel = model.advantageDescription;
-    if (adModel && ([adModel.text length] > 0 || (adModel.icon && [adModel.icon.url length] > 0))) {
-        self.bottomRecommendView.hidden = NO;
-        if (adModel.icon && [adModel.icon.url length] > 0) {
-            [self.bottomIconImageView bd_setImageWithURL:[NSURL URLWithString:adModel.icon.url]];
+- (void)updateAdvantage:(id)data {
+    NSString *text = @"";
+    NSString *url = @"";
+    if ([data isKindOfClass:[FHSearchHouseItemModel class]]) {
+        FHSearchHouseItemModel *model = (FHSearchHouseItemModel *)data;
+        text = model.advantageDescription.text;
+        if (model.advantageDescription.icon) {
+            url = model.advantageDescription.icon.url;
         }
-        if ([adModel.text length] > 0) {
-            if (adModel.text.length <= 17) {
-                self.bottomRecommendLabel.text = adModel.text;
+    } else if ([data isKindOfClass:[FHHomeHouseDataItemsModel class]]) {
+        FHHomeHouseDataItemsModel *model = (FHHomeHouseDataItemsModel *)data;
+        text = model.advantageDescription.text;
+        if (model.advantageDescription.icon) {
+            url = model.advantageDescription.icon.url;
+        }
+    }
+    if ([text length] > 0 || [url length] > 0) {
+        self.bottomRecommendView.hidden = NO;
+        if ([url length] > 0) {
+            [self.bottomIconImageView bd_setImageWithURL:[NSURL URLWithString:url]];
+        }
+        if ([text length] > 0) {
+            if (text.length <= 17) {
+                self.bottomRecommendLabel.text = text;
             } else {
-                self.bottomRecommendLabel.text = [adModel.text substringToIndex:17];
+                self.bottomRecommendLabel.text = [text substringToIndex:17];
             }
         }
     } else {
