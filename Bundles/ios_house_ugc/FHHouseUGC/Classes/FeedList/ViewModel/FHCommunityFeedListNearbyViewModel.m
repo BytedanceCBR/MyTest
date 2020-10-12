@@ -391,7 +391,13 @@
 
 // 发帖成功，插入数据
 - (void)postThreadSuccess:(NSNotification *)noti {
-    FHFeedUGCCellModel *cellModel = noti.userInfo[@"cell_model"];
+    FHFeedUGCCellModel *cellModel = nil;
+    FHFeedContentModel *ugcContent = noti.userInfo[@"feed_content"];
+    if(ugcContent && [ugcContent isKindOfClass:[FHFeedContentModel class]]){
+        cellModel = [FHFeedUGCCellModel modelFromFeedContent:ugcContent];
+    }else if(noti.userInfo[@"cell_model"]){
+        cellModel = noti.userInfo[@"cell_model"];
+    }
     if(cellModel) {
         [self insertPostData:cellModel];
     }
