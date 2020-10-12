@@ -27,7 +27,9 @@
         FHNeighborhoodDetailHeaderTitleModel *model = (FHNeighborhoodDetailHeaderTitleModel *)data;
         CGFloat height = 0;
         height += 20; //title margin
-        height += [model.titleStr btd_sizeWithFont:[UIFont themeFontRegular:24] width:width - 15 * 2 maxLine:2].height;
+        height += [model.titleStr btd_sizeWithFont:[UIFont themeFontRegular:24] width:width - 15 * 2 maxLine:1].height;
+        height += [model.address btd_sizeWithFont:[UIFont themeFontRegular:14] width:width - 15 * 2 maxLine:1].height;
+        height += 2;
         return CGSizeMake(width, height);
     }
     return CGSizeZero;
@@ -41,19 +43,9 @@
 {
     self = [super initWithFrame:frame];
     if (self) {
-        self.topBanner = [[FHDetailTopBannerView alloc] init];
-        [self addSubview:self.topBanner];
-        [self.topBanner mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.left.right.equalTo(self);
-            make.top.mas_equalTo(0);
-            make.height.mas_equalTo(0);
-        }];
-        self.topBanner.hidden = YES;
-        
         UILabel *nameLabel = [UILabel createLabel:@"" textColor:@"" fontSize:24];
         nameLabel.textColor = [UIColor themeGray1];
         nameLabel.font = [UIFont themeFontMedium:24];
-        nameLabel.numberOfLines = 2;
         [self addSubview:nameLabel];
         self.nameLabel = nameLabel;
         
@@ -68,14 +60,14 @@
         
         [self.nameLabel mas_makeConstraints:^(MASConstraintMaker *make) {
             make.left.mas_equalTo(self).offset(15);
-            make.right.mas_equalTo(self).offset(-100);
-            make.top.mas_equalTo(self.topBanner.mas_bottom);
+            make.right.mas_equalTo(self).offset(-15);
+            make.top.mas_equalTo(self).offset(20);
         }];
         
         [self.addressLab mas_makeConstraints:^(MASConstraintMaker *make) {
             make.left.mas_equalTo(self).offset(15);
-            make.right.mas_equalTo(self).offset(-100);
-            make.top.mas_equalTo(self.nameLabel.mas_bottom).offset(4);
+            make.right.mas_equalTo(self).offset(-15);
+            make.top.mas_equalTo(self.nameLabel.mas_bottom).offset(2);
             make.bottom.mas_equalTo(self);
         }];
     }
