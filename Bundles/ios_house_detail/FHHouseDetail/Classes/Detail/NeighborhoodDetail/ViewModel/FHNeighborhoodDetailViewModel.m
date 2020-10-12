@@ -25,6 +25,8 @@
 #import "FHNeighborhoodDetailCoreInfoSM.h"
 #import "FHNeighborhoodDetailHouseSaleSC.h"
 #import "FHNeighborhoodDetailHouseSaleSM.h"
+#import "FHNeighborhoodDetailCommentAndQuestionSC.h"
+#import "FHNeighborhoodDetailCommentAndQuestionSM.h"
 
 @interface FHNeighborhoodDetailViewModel ()
 
@@ -103,15 +105,67 @@
     
     FHNeighborhoodDetailHeaderMediaSM *headerMediaSM = [[FHNeighborhoodDetailHeaderMediaSM alloc] initWithDetailModel:self.detailData];
     
-    [headerMediaSM updatewithContactViewModel:self.contactViewModel];
+    [headerMediaSM updateWithContactViewModel:self.contactViewModel];
     headerMediaSM.sectionType = FHNeighborhoodDetailSectionTypeHeader;
     [sectionModels addObject:headerMediaSM];
     
-    FHNeighborhoodDetailCoreInfoSM *coreInfoSM = [[FHNeighborhoodDetailCoreInfoSM alloc] initWithDetailModel:self.detailData];
-    
-    coreInfoSM.sectionType = FHNeighborhoodDetailSectionTypeBaseInfo;
-    [sectionModels addObject:coreInfoSM];
-    
+    if (model.data.name.length ||
+        model.data.neighborhoodInfo.address.length ||
+        model.data.neighborhoodInfo.id.length > 0 ||
+        model.data.baseInfo.count > 0) {
+        FHNeighborhoodDetailCoreInfoSM *coreInfoSM = [[FHNeighborhoodDetailCoreInfoSM alloc] initWithDetailModel:self.detailData];
+        
+        coreInfoSM.sectionType = FHNeighborhoodDetailSectionTypeBaseInfo;
+        [sectionModels addObject:coreInfoSM];
+    }
+
+//    // 小区点评
+//    if(model.data.comments) {
+//        FHDetailCommentsCellModel *commentsModel = [[FHDetailCommentsCellModel alloc] init];
+//        NSMutableDictionary *paramsDict = @{}.mutableCopy;
+//        if (self.detailTracerDic) {
+//            [paramsDict addEntriesFromDictionary:self.detailTracerDic];
+//        }
+//        paramsDict[@"page_type"] = [self pageTypeString];
+//        commentsModel.tracerDict = paramsDict;
+//        commentsModel.neighborhoodId = self.houseId;
+//        commentsModel.comments = model.data.comments;
+//         commentsModel.houseModelType = FHPlotHouseModelTypeNeighborhoodComment;
+//        [self.items addObject:commentsModel];
+//    }
+//    // 小区问答
+//    if (model.data.question) {
+//        // 添加分割线--当存在某个数据的时候在顶部添加分割线
+//        FHDetailQACellModel *qaModel = [[FHDetailQACellModel alloc] init];
+//        NSMutableDictionary *paramsDict = @{}.mutableCopy;
+//        if (self.detailTracerDic) {
+//            [paramsDict addEntriesFromDictionary:self.detailTracerDic];
+//        }
+//        paramsDict[@"page_type"] = [self pageTypeString];
+//        qaModel.tracerDict = paramsDict;
+//        qaModel.neighborhoodId = self.houseId;
+//        qaModel.question = model.data.question;
+//        qaModel.houseModelType = FHPlotHouseModelTypeNeighborhoodQA;
+//        [self.items addObject:qaModel];
+//    }
+    //小区点评和问答
+    if (model.data.comments.content.data.count > 0 || model.data.question.content.data.count > 0) {
+        FHNeighborhoodDetailCommentAndQuestionSM *RGCListModel = [[FHNeighborhoodDetailCommentAndQuestionSM alloc] initWithDetailModel:self.detailData];
+        RGCListModel.sectionType = FHNeighborhoodDetailSectionTypeCommentAndQuestion;
+        RGCListModel.detailTracerDic = self.detailTracerDic;
+        NSString *searchId = self.listLogPB[@"search_id"];
+        NSString *imprId = self.listLogPB[@"impr_id"];
+        NSDictionary *extraDic = @{
+            @"searchId":searchId?:@"be_null",
+            @"imprId":imprId?:@"be_null",
+            @"houseId":self.houseId,
+            @"houseType":@(FHHouseTypeNeighborhood),
+            @"channelId":@"f_hosue_wtt"
+        };
+        RGCListModel.extraDic = extraDic;
+//        [RGCListModel updateModel:self.detailData];
+        [sectionModels addObject:RGCListModel];
+    }
     self.sectionModels = sectionModels.copy;
     
     
