@@ -74,7 +74,7 @@
     self.items = [NSArray arrayWithObject:self.headerCellModel];
 }
 
-- (void)updatewithContactViewModel:(FHHouseDetailContactViewModel *)contactViewModel {
+- (void)updateWithContactViewModel:(FHHouseDetailContactViewModel *)contactViewModel {
     self.headerCellModel.contactViewModel = contactViewModel;
 }
 

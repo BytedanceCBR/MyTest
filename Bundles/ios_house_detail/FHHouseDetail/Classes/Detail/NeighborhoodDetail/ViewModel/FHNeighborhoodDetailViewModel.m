@@ -101,7 +101,7 @@
     
     FHNeighborhoodDetailHeaderMediaSM *headerMediaSM = [[FHNeighborhoodDetailHeaderMediaSM alloc] initWithDetailModel:self.detailData];
     
-    [headerMediaSM updatewithContactViewModel:self.contactViewModel];
+    [headerMediaSM updateWithContactViewModel:self.contactViewModel];
     headerMediaSM.sectionType = FHNeighborhoodDetailSectionTypeHeader;
     [sectionModels addObject:headerMediaSM];
     
