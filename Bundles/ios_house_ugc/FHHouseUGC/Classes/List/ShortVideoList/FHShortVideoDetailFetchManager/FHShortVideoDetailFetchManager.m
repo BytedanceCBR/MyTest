@@ -27,8 +27,9 @@
 @interface FHShortVideoDetailFetchManager()
 @property (nonatomic, strong) NSMutableArray<FHFeedUGCCellModel *> *awemedDetailItems;
 @property (nonatomic, strong) TSVShortVideoDecoupledFetchManager *decoupledFetchManager;
-@property(nonatomic, weak) TTHttpTask *requestTask;
+@property (nonatomic, weak) TTHttpTask *requestTask;
 @property (nonatomic, strong) FHUGCShortVideoRealtorInfo *realtorInfo;
+@property (nonatomic, assign) BOOL isLoadingMoreData;
 @end
 @implementation FHShortVideoDetailFetchManager
 
@@ -91,9 +92,11 @@
 - (void)requestDataAutomatically:(BOOL)isAutomatically
                      finishBlock:(TTFetchListFinishBlock)finishBlock
 {
-//    NSString *refreshType = @"pre_load_more";
+    if(self.isLoadingMoreData){
+        return;
+    }
     
-//    [self trackCategoryRefresh:refreshType];
+    self.isLoadingMoreData = YES;
     
     NSInteger listCount = self.awemedDetailItems.count;
     
@@ -113,6 +116,7 @@
     self.requestTask = [FHHouseUGCAPI requestFeedListWithCategory:self.categoryId behotTime:behotTime loadMore:YES isFirst:NO listCount:10 extraDic:extraDic completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
         FHFeedListModel *feedListModel = (FHFeedListModel *)model;
         if (error) {
+            wself.isLoadingMoreData = NO;
             return;
         }
         if(model){
@@ -123,8 +127,11 @@
                     if (wself.dataDidChangeBlock) {
                         wself.dataDidChangeBlock();
                     }
+                    wself.isLoadingMoreData = NO;
                 });
             });
+        }else{
+            wself.isLoadingMoreData = NO;
         }
     }];
     
