@@ -298,7 +298,7 @@ def appPods
     'BDPlatformSDK',
     'BDDeprecatedSDK'
     ]
-    pod 'ByteDanceKit', '2.1.0-rc.8', :subspecs => [
+    pod 'ByteDanceKit', '2.1.0-rc.8.1-bugfix', :subspecs => [
     'Foundation',
     'UIKit'
     ]

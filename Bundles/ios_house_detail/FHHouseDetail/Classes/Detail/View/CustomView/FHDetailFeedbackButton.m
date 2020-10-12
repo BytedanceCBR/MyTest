@@ -68,6 +68,24 @@
 
 // 二手房-房源问题反馈
 - (void)gotoReportVC {
+    BOOL isJumpToH5 = NO;
+    if(isJumpToH5) {
+        [self gotoReportH5Page]; // 之后准备废弃
+    }
+    else {
+        [self gotoReportNativePage];
+    }
+}
+
+- (void)gotoReportNativePage {
+    NSString *openUrl = @"sslocal://house_detail_report_page";
+    NSMutableDictionary *info = [NSMutableDictionary dictionary];
+    
+    TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:info];
+    [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:openUrl] userInfo:userInfo];
+}
+
+- (void)gotoReportH5Page {
     if (self.reportUrl.length > 0) {
         NSString *openUrl = @"sslocal://webview";
         NSDictionary *commonParams = [[FHEnvContext sharedInstance] getRequestCommonParams];

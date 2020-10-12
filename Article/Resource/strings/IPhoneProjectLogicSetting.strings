@@ -251,3 +251,4 @@
 
 // linkChat客服页面
 "linkchat_customer_service" = "FHCustomerServicePage";
+"house_detail_report_page" = "FHHouseDetailReportViewController";
