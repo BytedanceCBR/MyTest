@@ -150,11 +150,11 @@
             [self.awemedDetailItems addObject:cellmodel];
         }
     }
-    NSInteger numberOfItemLeft = self.numberOfShortVideoItems - self.currentIndex;
-    if (numberOfItemLeft<=4) {
-        [self requestDataAutomatically:YES finishBlock:^(NSUInteger increaseCount, NSError *error) {
-        }];
-    }
+//    NSInteger numberOfItemLeft = self.numberOfShortVideoItems - self.currentIndex;
+//    if (numberOfItemLeft<=4) {
+//        [self requestDataAutomatically:YES finishBlock:^(NSUInteger increaseCount, NSError *error) {
+//        }];
+//    }
 }
 
 - (NSArray *)convertModel:(NSArray *)feedList isHead:(BOOL)isHead {
