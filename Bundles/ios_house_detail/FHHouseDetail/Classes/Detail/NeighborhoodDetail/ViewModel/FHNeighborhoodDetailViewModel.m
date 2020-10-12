@@ -105,11 +105,17 @@
     headerMediaSM.sectionType = FHNeighborhoodDetailSectionTypeHeader;
     [sectionModels addObject:headerMediaSM];
     
-    FHNeighborhoodDetailCoreInfoSM *coreInfoSM = [[FHNeighborhoodDetailCoreInfoSM alloc] initWithDetailModel:self.detailData];
+    if (model.data.name.length ||
+        model.data.neighborhoodInfo.address.length ||
+        model.data.neighborhoodInfo.id.length > 0 ||
+        model.data.baseInfo.count > 0) {
+        FHNeighborhoodDetailCoreInfoSM *coreInfoSM = [[FHNeighborhoodDetailCoreInfoSM alloc] initWithDetailModel:self.detailData];
+        
+        coreInfoSM.sectionType = FHNeighborhoodDetailSectionTypeBaseInfo;
+        [sectionModels addObject:coreInfoSM];
+    }
     
-    coreInfoSM.sectionType = FHNeighborhoodDetailSectionTypeBaseInfo;
-    [sectionModels addObject:coreInfoSM];
-    
+
     self.sectionModels = sectionModels.copy;
     
     
