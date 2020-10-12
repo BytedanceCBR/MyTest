@@ -54,19 +54,7 @@
         _isViewAppear = YES;
         self.dataList = [[NSMutableArray alloc] init];
         [self configTableView];
-        // 删帖成功
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(postDeleteSuccess:) name:kFHUGCDelPostNotification object:nil];
-        // 编辑成功
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(postEditNoti:) name:@"kTTForumPostEditedThreadSuccessNotification" object:nil]; // 编辑发送成功
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(mutedStateChange:) name:FHUGCFullScreenVideoCellMutedStateChangeNotification object:nil];
-        
-        if(self.viewController.isInsertFeedWhenPublish){
-            // 发帖成功
-            [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(postThreadSuccess:) name:kTTForumPostThreadSuccessNotification object:nil];
-            
-            //防止第一次进入headview高度不对的问题
-            [self updateJoinProgressView];
-        }
     }
     
     return self;
