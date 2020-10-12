@@ -6,10 +6,10 @@
 //
 
 #import "FHDetailBaseCell.h"
-
+#import "FHDetailNeighborhoodPropertyInfoCell.h"
 NS_ASSUME_NONNULL_BEGIN
 
-@interface FHNeighborhoodDetailPropertyItemCollectionCell : FHDetailBaseCollectionCell
+@interface FHNeighborhoodDetailPropertyInfoCollectionCell : FHDetailBaseCollectionCell
 
 @end
 
