@@ -24,9 +24,9 @@
     // 设置 DecorationView
     __block NSMutableArray *sections = [NSMutableArray array];
     [array enumerateObjectsUsingBlock:^(UICollectionViewLayoutAttributes * attribute, NSUInteger idx, BOOL * _Nonnull stop) {
-//        if (attribute.indexPath.section == 0) {
-//            attribute.zIndex = -2;
-//        }
+        if (attribute.indexPath.section == 0) {
+            attribute.zIndex = -2;
+        }
         
         if (attribute.representedElementCategory == UICollectionElementCategorySupplementaryView) {
             CGRect frame = attribute.frame;
