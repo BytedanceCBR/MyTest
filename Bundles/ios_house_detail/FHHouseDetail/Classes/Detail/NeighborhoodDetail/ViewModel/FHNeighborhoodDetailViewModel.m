@@ -23,6 +23,8 @@
 #import "FHNeighborhoodDetailHeaderMediaSM.h"
 #import "FHNeighborhoodDetailCoreInfoSC.h"
 #import "FHNeighborhoodDetailCoreInfoSM.h"
+#import "FHNeighborhoodDetailHouseSaleSC.h"
+#import "FHNeighborhoodDetailHouseSaleSM.h"
 
 @interface FHNeighborhoodDetailViewModel ()
 
@@ -147,7 +149,18 @@
 - (void)processDetailRelatedData {
     if (self.requestRelatedCount >= 3) {
         self.detailController.isLoadingData = NO;
+        NSMutableArray *sectionModels = self.sectionModels.mutableCopy;
         
+        if (self.sameNeighborhoodErshouHouseData.items.count > 0){
+            FHNeighborhoodDetailHouseSaleSM *houseSaleSM = [[FHNeighborhoodDetailHouseSaleSM alloc] initWithDetailModel:self.detailData];
+            [houseSaleSM updateWithDataModel:self.sameNeighborhoodErshouHouseData];
+            houseSaleSM.sectionType = FHNeighborhoodDetailSectionTypeHouseSale;
+            [sectionModels addObject:houseSaleSM];
+        }
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            self.sectionModels = sectionModels.copy;
+        });
     }
 }
 

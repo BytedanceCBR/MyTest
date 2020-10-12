@@ -6,11 +6,17 @@
 //
 
 #import "FHDetailBaseCell.h"
+#import "FHDetailSameNeighborhoodHouseResponseModel.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
 @interface FHNeighborhoodDetailHouseSaleCollectionCell : FHDetailBaseCollectionCell
 
+@end
+
+
+@interface FHNeighborhoodDetailHouseSaleCellModel : NSObject
+@property (nonatomic, strong , nullable) FHDetailSameNeighborhoodHouseResponseDataModel *neighborhoodSoldHouseData;
 @end
 
 NS_ASSUME_NONNULL_END

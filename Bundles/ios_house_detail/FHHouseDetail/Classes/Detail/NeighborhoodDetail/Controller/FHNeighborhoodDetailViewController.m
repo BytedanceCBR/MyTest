@@ -38,6 +38,8 @@
 #import "FHNeighborhoodDetailHeaderMediaSM.h"
 #import "FHNeighborhoodDetailCoreInfoSC.h"
 #import "FHNeighborhoodDetailCoreInfoSM.h"
+#import "FHNeighborhoodDetailHouseSaleSC.h"
+#import "FHNeighborhoodDetailHouseSaleSM.h"
 
 
 @interface FHNeighborhoodDetailViewController ()<UIGestureRecognizerDelegate, IGListAdapterDataSource, UICollectionViewDelegate, UIScrollViewDelegate>
@@ -869,6 +871,9 @@
                 break;
             case FHNeighborhoodDetailSectionTypeBaseInfo:
                 return [[FHNeighborhoodDetailCoreInfoSC alloc] init];
+                break;
+            case FHNeighborhoodDetailSectionTypeHouseSale:
+                return [[FHNeighborhoodDetailHouseSaleSC alloc] init];
                 break;
 //            case FHNewHouseDetailSectionTypeFloorpan:
 //                return [[FHNewHouseDetailFloorpanSC alloc] init];
