@@ -10,6 +10,15 @@ NS_ASSUME_NONNULL_BEGIN
 @protocol FHHouseMsgDataItemsItemsTagsModel<NSObject>
 @end
 
+@protocol FHMsgDataItemsReportButtonListModel<NSObject>
+@end
+
+@interface FHMsgDataItemsReportButtonListModel : JSONModel
+
+@property (nonatomic, copy , nullable) NSString *openUrl;
+@property (nonatomic, copy , nullable) NSString *name;
+@end
+
 @interface FHHouseMsgDataItemsItemsTagsModel : JSONModel 
 
 @property (nonatomic, copy , nullable) NSString *content;
@@ -76,6 +85,11 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *id;
 @property (nonatomic, assign) BOOL isSoldout;
 
+/**
+ 109 新增举报消息类型
+ */
+@property (nonatomic, copy, nullable) NSString *content;
+@property (nonatomic, copy, nullable) NSArray<FHMsgDataItemsReportButtonListModel> *buttonList;
 @end
 
 @interface FHHouseMsgDataModel : JSONModel 

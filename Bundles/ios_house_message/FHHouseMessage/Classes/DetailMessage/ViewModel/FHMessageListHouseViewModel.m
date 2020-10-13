@@ -18,7 +18,6 @@
 #import "FHHouseType.h"
 #import <FHHouseBase/FHHouseTypeManager.h>
 
-#define kCellId @"FHHouseMsgCell_id"
 
 @interface FHMessageListHouseViewModel()<UITableViewDelegate,UITableViewDataSource>
 
@@ -38,7 +37,9 @@
     if (self) {
         self.listId = listId;
         self.dataList = [[NSMutableArray alloc] init];
-        [tableView registerClass:[FHHouseMsgCell class] forCellReuseIdentifier:kCellId];
+        [tableView registerClass:[FHHouseMsgCell class] forCellReuseIdentifier:NSStringFromClass([FHHouseMsgCell class])];
+        [tableView registerClass:[FHHouseHeaderView class] forHeaderFooterViewReuseIdentifier:NSStringFromClass([FHHouseHeaderView class])];
+        [tableView registerClass:[FHHouseMsgFooterView class] forHeaderFooterViewReuseIdentifier:NSStringFromClass([FHHouseMsgFooterView class])];
         tableView.delegate = self;
         tableView.dataSource = self;
     }
@@ -55,7 +56,7 @@
     tracerDict[@"origin_search_id"] = self.originSearchId ? self.originSearchId : @"be_null";
     tracerDict[@"search_id"] = self.searchId ? self.searchId : @"be_null";
     
-    return tracerDict;
+    return tracerDict.copy;
 }
 
 - (void)addEnterCategoryLog {
@@ -153,7 +154,7 @@
 }
 
 - (void)viewMoreDetail:(NSString *)moreDetail model:(FHHouseMsgDataItemsModel *)model {
-    NSMutableDictionary *tracerDict = [self categoryLogDict];
+    NSMutableDictionary *tracerDict = [self categoryLogDict].mutableCopy;
     tracerDict[@"element_from"] = @"messagetab";
     tracerDict[@"enter_from"] = @"messagetab";
     tracerDict[@"category_name"] = @"be_null";
@@ -196,7 +197,7 @@
 
 //埋点
 - (void)trackOperationWithModel:(FHHouseMsgDataItemsItemsModel *)model index:(NSInteger)index trackName:(NSString *)trackName {
-    NSMutableDictionary *tracerDict = [self categoryLogDict];
+    NSMutableDictionary *tracerDict = [self categoryLogDict].mutableCopy;
     tracerDict[@"card_type"] = @"left_pic";
     tracerDict[@"element_type"] = @"be_null";
     tracerDict[@"group_id"] = model.id;
@@ -230,7 +231,7 @@
 
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    FHHouseMsgCell *cell = [tableView dequeueReusableCellWithIdentifier:kCellId];
+    FHHouseMsgCell *cell = [tableView dequeueReusableCellWithIdentifier:NSStringFromClass([FHHouseMsgCell class]) forIndexPath:indexPath];
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
     
     FHHouseMsgDataItemsModel *model = self.dataList[indexPath.section];
@@ -268,7 +269,10 @@
 
 - (nullable UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
 {
-    FHHouseHeaderView *headerView = [[FHHouseHeaderView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, 90)];
+    FHHouseHeaderView *headerView = [tableView dequeueReusableHeaderFooterViewWithIdentifier:NSStringFromClass([FHHouseHeaderView class])];
+    if (!headerView) {
+        headerView = [[FHHouseHeaderView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, 90)];
+    }
     
     FHHouseMsgDataItemsModel *model = self.dataList[section];
     headerView.dateLabel.text = model.dateStr;
@@ -300,7 +304,10 @@
     if(section < self.dataList.count){
         FHHouseMsgDataItemsModel *model = self.dataList[section];
         if(model.moreLabel.length > 0){
-            FHHouseMsgFooterView *footerView = [[FHHouseMsgFooterView alloc] initWithFrame:CGRectMake(0, 0, UIScreen.mainScreen.bounds.size.width, 40)];
+            FHHouseMsgFooterView *footerView = [tableView dequeueReusableHeaderFooterViewWithIdentifier:NSStringFromClass([FHHouseMsgFooterView class])];
+            if (!footerView) {
+                footerView = [[FHHouseMsgFooterView alloc] initWithFrame:CGRectMake(0, 0, UIScreen.mainScreen.bounds.size.width, 40)];
+            }
             footerView.contentLabel.text = model.moreLabel;
             footerView.footerViewClickedBlock = ^{
                 [wself viewMoreDetail:model.moreDetail model:model];
@@ -354,7 +361,7 @@
     NSInteger index = [_clientShowDict[section_row] integerValue];
     
     NSDictionary *logPb = itemsModel.logPb;
-    NSMutableDictionary *tracerDict = [self categoryLogDict];
+    NSMutableDictionary *tracerDict = [self categoryLogDict].mutableCopy;
     tracerDict[@"card_type"] = @"left_pic";
     tracerDict[@"element_from"] = @"be_null";
     tracerDict[@"enter_from"] = [self.viewController categoryName];
