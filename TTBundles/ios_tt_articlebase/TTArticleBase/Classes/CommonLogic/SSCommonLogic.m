@@ -5521,7 +5521,14 @@ static NSString *const kFFeedRefreshStrategy = @"feed_refresh_settings";
     }
     return NO;
 }
-
++ (BOOL)isEnableHouseDetailLinkChatReport {
+    NSDictionary *fhSettings = [self fhSettings];
+    if (fhSettings != nil && [fhSettings objectForKey:@"f_house_detail_link_chat_report"] != nil) {
+        BOOL isEnableLinkChatReport = [[fhSettings objectForKey:@"f_house_detail_link_chat_report"] boolValue];
+        return isEnableLinkChatReport;
+    }
+    return NO;
+}
 @end
 
 #endif
