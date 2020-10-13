@@ -10,6 +10,8 @@
 #import <FHCommonUI/UIFont+House.h>
 #import <FHCommonUI/UIColor+Theme.h>
 #import <ByteDanceKit/ByteDanceKit.h>
+#import <ios_house_im/UIView+Utils.h>
+#import <TTBaseLib/TTUIResponderHelper.h>
 
 @interface FHAppUpdateView ()
 
@@ -148,10 +150,16 @@
 }
 
 - (void)show {
-    UIWindow *keyWindow = [UIApplication sharedApplication].keyWindow;
+    
+    UIWindow *keyWindow = [UIView keyWindow];
     [keyWindow endEditing:YES];
     [keyWindow addSubview:self];
     self.frame = keyWindow.bounds;
+    
+    UIViewController *topViewController = [TTUIResponderHelper topmostViewController];
+    if (topViewController && [topViewController isKindOfClass:[UIViewController class]]) {
+        [topViewController.view endEditing:YES];
+    }
     
     self.backgroundView.alpha = 0.0;
     self.contentView.transform = CGAffineTransformMakeScale(0.1, 0.1);
@@ -161,7 +169,13 @@
     } completion:^(BOOL finished) {
         
     }];
-
+    
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        [keyWindow endEditing:YES];
+        if (topViewController && [topViewController isKindOfClass:[UIViewController class]]) {
+            [topViewController.view endEditing:YES];
+        }
+    });
 }
 
 - (void)dismiss {

@@ -78,6 +78,21 @@
     [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:@"sslocal://fh_map_detail"] userInfo:info];
 }
 
+- (void)baiduPanoramaAction {
+    NSMutableDictionary *param = [NSMutableDictionary new];
+    FHNewHouseDetailSurroundingSM *model = (FHNewHouseDetailSurroundingSM *)self.sectionModel;
+    FHNewHouseDetailMapCellModel *dataModel = [(FHNewHouseDetailSurroundingSM *)model mapCellModel];
+    NSMutableDictionary *tracerDict = self.detailTracerDict.mutableCopy;
+    tracerDict[@"element_from"] = @"map";
+    tracerDict[@"enter_from"] = @"new_detail";
+    param[TRACER_KEY] = tracerDict.copy;
+    if (dataModel.gaodeLat.length && dataModel.gaodeLng.length) {
+        param[@"gaodeLat"] = dataModel.gaodeLat;
+        param[@"gaodeLon"] = dataModel.gaodeLng;
+        [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:[NSString stringWithFormat:@"sslocal://baidu_panorama_detail"]] userInfo:TTRouteUserInfoWithDict(param)];
+    }
+}
+
 - (NSInteger)numberOfItems {
     FHNewHouseDetailSurroundingSM *model = (FHNewHouseDetailSurroundingSM *)self.sectionModel;
     return model.dataItems.count;
@@ -126,6 +141,9 @@
         };
         [cell setRefreshActionBlock:^{
             [weakSelf.detailViewController refreshSectionModel:weakSelf.sectionModel animated:YES];
+        }];
+        [cell setBaiduPanoramaBlock:^{
+            [weakSelf baiduPanoramaAction];
         }];
         return cell;
     } else if ([model.dataItems[index] isKindOfClass:[FHStaticMapAnnotation class]]) {
