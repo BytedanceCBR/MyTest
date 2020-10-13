@@ -42,11 +42,15 @@
     WeakSelf;
     cell.didSelectItem = ^(NSInteger index) {
         StrongSelf;
-        [self collectionCellClick:index];
+        if(index == model.houseSaleCellModel.neighborhoodSoldHouseData.items.count) {
+            [self moreButtonClick];
+        } else {
+            [self collectionCellClick:index];
+        }
     };
-    cell.didSelectMoreItem = ^{
+    cell.willShowItem = ^(NSInteger index) {
         StrongSelf;
-        [self moreButtonClick];
+        [self collectionCellShow:index];
     };
     [cell refreshWithData:model.houseSaleCellModel];
     return cell;
@@ -80,7 +84,7 @@
 
 - (CGSize)sizeForSupplementaryViewOfKind:(NSString *)elementKind atIndex:(NSInteger)index {
     if ([elementKind isEqualToString:UICollectionElementKindSectionHeader]) {
-        return CGSizeMake(self.collectionContext.containerSize.width - 15 * 2, 61);
+        return CGSizeMake(self.collectionContext.containerSize.width - 15 * 2, 46);
     }
     return CGSizeZero;
 }
@@ -151,6 +155,26 @@
             NSURL *url = [NSURL URLWithString:urlStr];
             [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
         }
+    }
+}
+
+// 不重复调用
+- (void)collectionCellShow:(NSInteger)index {
+    FHNeighborhoodDetailHouseSaleCellModel *model = [(FHNeighborhoodDetailHouseSaleSM *)self.sectionModel houseSaleCellModel];
+    if (model.neighborhoodSoldHouseData && model.neighborhoodSoldHouseData.items.count > 0 && index >= 0 && index < model.neighborhoodSoldHouseData.items.count) {
+        // cell 显示 处理
+        FHSearchHouseDataItemsModel *dataItem = model.neighborhoodSoldHouseData.items[index];
+        // house_show
+        NSMutableDictionary *tracerDic = [[self detailTracerDict] mutableCopy];
+        tracerDic[@"rank"] = @(index);
+        tracerDic[@"card_type"] = @"left_pic";
+        tracerDic[@"log_pb"] = dataItem.logPb ? dataItem.logPb : @"be_null";
+        tracerDic[@"house_type"] = @"old";
+        tracerDic[@"element_type"] = @"sale_same_neighborhood";
+        tracerDic[@"search_id"] = dataItem.searchId.length > 0 ? dataItem.searchId : @"be_null";
+        tracerDic[@"group_id"] = dataItem.groupId.length > 0 ? dataItem.groupId : (dataItem.hid ? dataItem.hid : @"be_null");
+        tracerDic[@"impr_id"] = dataItem.imprId.length > 0 ? dataItem.imprId : @"be_null";
+        [FHUserTracker writeEvent:@"house_show" params:tracerDic];
     }
 }
 

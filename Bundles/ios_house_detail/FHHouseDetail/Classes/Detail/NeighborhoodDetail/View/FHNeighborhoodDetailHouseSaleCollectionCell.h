@@ -14,7 +14,6 @@ NS_ASSUME_NONNULL_BEGIN
 @interface FHNeighborhoodDetailHouseSaleCollectionCell : FHDetailBaseCollectionCell
 
 @property (nonatomic, copy) void (^didSelectItem)(NSInteger index);
-@property (nonatomic, copy) void (^didSelectMoreItem)(void);
 @property (nonatomic, copy) void (^willShowItem)(NSInteger index);
 
 @end

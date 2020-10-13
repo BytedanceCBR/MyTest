@@ -10,7 +10,7 @@
 #import "UIImageView+BDWebImage.h"
 #import "FHDetailSurroundingAreaCell.h"
 
-@interface FHNeighborhoodDetailHouseSaleCollectionCell () <UICollectionViewDataSource,UICollectionViewDelegate>
+@interface FHNeighborhoodDetailHouseSaleCollectionCell () <UICollectionViewDataSource,UICollectionViewDelegate,UICollectionViewDelegateFlowLayout>
 
 @property (nonatomic,strong) UICollectionView *collectionView;
 @property (nonatomic,strong) UICollectionViewFlowLayout *flowLayout;
@@ -21,7 +21,7 @@
 @implementation FHNeighborhoodDetailHouseSaleCollectionCell
 
 + (CGSize)cellSizeWithData:(id)data width:(CGFloat)width {
-    return CGSizeMake(width, 210);
+    return CGSizeMake(width, 220);
 }
 
 - (instancetype)initWithFrame:(CGRect)frame
@@ -29,7 +29,6 @@
     if(self = [super initWithFrame:frame]) {
         self.flowLayout = [[UICollectionViewFlowLayout alloc] init];
         self.flowLayout.sectionInset = UIEdgeInsetsMake(0, 20, 0, 20);
-        self.flowLayout.itemSize = CGSizeMake(120, 190);
         self.flowLayout.minimumLineSpacing = 0;
         self.flowLayout.minimumInteritemSpacing = 0;
         self.flowLayout.scrollDirection = UICollectionViewScrollDirectionHorizontal;
@@ -43,9 +42,9 @@
 
         [self.contentView addSubview:self.collectionView];
         [self.collectionView mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.top.mas_equalTo(10);
-            make.left.mas_equalTo(self.contentView).offset(15);
-            make.right.mas_equalTo(self.contentView).offset(-15);
+            make.top.mas_equalTo(self.contentView);
+            make.left.mas_equalTo(self.contentView);
+            make.right.mas_equalTo(self.contentView);
             make.bottom.mas_equalTo(self.contentView).offset(-10);
         }];
     }
@@ -93,18 +92,26 @@
 
 -(void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
     [collectionView deselectItemAtIndexPath:indexPath animated:NO];
-    FHNeighborhoodDetailHouseSaleCellModel *model = (FHNeighborhoodDetailHouseSaleCellModel *) self.currentData;
-    if(indexPath.row == model.neighborhoodSoldHouseData.items.count) {
-        if(self.didSelectMoreItem){
-            self.didSelectMoreItem();
-        }
-    } else {
-        if(self.didSelectItem){
-            self.didSelectItem(indexPath.row);
-        }
+    if(self.didSelectItem){
+        self.didSelectItem(indexPath.row);
     }
 }
 
+-(CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath {
+    if(indexPath.row < self.items.count) {
+        id data = self.items[indexPath.row];
+        if([data isKindOfClass:[FHDetailMoreItemModel class]]){
+            return CGSizeMake(94, 210);
+        }
+    }
+    return CGSizeMake(150, 210);
+}
+
+-(void)collectionView:(UICollectionView *)collectionView willDisplayCell:(UICollectionViewCell *)cell forItemAtIndexPath:(NSIndexPath *)indexPath {
+    if(self.willShowItem){
+        self.willShowItem(indexPath.row);
+    }
+}
 
 @end
 
