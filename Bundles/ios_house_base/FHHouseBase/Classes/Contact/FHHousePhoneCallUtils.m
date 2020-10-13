@@ -154,7 +154,9 @@ typedef enum : NSUInteger {
             }
             return;
         }
-        [[ToastManager manager] showToast:@"网络异常，请稍后重试!"];
+        if([model.status isEqualToString:@"100"]){
+            [[ToastManager manager] showToast:model.message];
+        }
         NSMutableDictionary *extraDict = @{}.mutableCopy;
 //        extraDict[@"realtor_id"] = realtorId;
         extraDict[@"house_id"] = houseId;
