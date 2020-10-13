@@ -1,32 +1,30 @@
 //
-//  FHNeighborhoodDetailCommentHeaderCell.m
+//  FHNeighborhoodDetailQuestionHeaderCell.m
 //  FHHouseDetail
 //
-//  Created by 谢思铭 on 2020/10/12.
+//  Created by 谢思铭 on 2020/10/13.
 //
 
-#import "FHNeighborhoodDetailCommentHeaderCell.h"
+#import "FHNeighborhoodDetailQuestionHeaderCell.h"
 #import <TTRoute.h>
 #import "TTBaseMacro.h"
 #import "FHUserTracker.h"
+#import "UIDevice+BTDAdditions.h"
 
-@interface FHNeighborhoodDetailCommentHeaderCell ()
+@interface FHNeighborhoodDetailQuestionHeaderCell ()
+
+@property (nonatomic, strong) UIView *topLine;
 @property (nonatomic, strong) UILabel *titleLabel;
-@property (nonatomic, strong) UILabel *subTitleLabel;
 @property (nonatomic, strong) UIButton *rightBtn;
 
 @end
 
-@implementation FHNeighborhoodDetailCommentHeaderCell
+@implementation FHNeighborhoodDetailQuestionHeaderCell
 
 + (CGSize)cellSizeWithData:(id)data width:(CGFloat)width {
-    if (data && [data isKindOfClass:[FHNeighborhoodDetailCommentHeaderModel class]]) {
-        FHNeighborhoodDetailCommentHeaderModel *model = (FHNeighborhoodDetailCommentHeaderModel *)data;
-        CGFloat height = 20 + 25;
-        
-        if(model.subTitle.length > 0){
-            height += 24;
-        }
+    if (data && [data isKindOfClass:[FHNeighborhoodDetailQuestionHeaderModel class]]) {
+        FHNeighborhoodDetailQuestionHeaderModel *model = (FHNeighborhoodDetailQuestionHeaderModel *)data;
+        CGFloat height = model.topMargin + 25 + 7;
         
         return CGSizeMake(width, height);
     }
@@ -34,19 +32,14 @@
 }
 
 - (void)refreshWithData:(id)data {
-    if (self.currentData == data || ![data isKindOfClass:[FHNeighborhoodDetailCommentHeaderModel class]]) {
+    if (self.currentData == data || ![data isKindOfClass:[FHNeighborhoodDetailQuestionHeaderModel class]]) {
         return;
     }
     self.currentData = data;
-    FHNeighborhoodDetailCommentHeaderModel *model = (FHNeighborhoodDetailCommentHeaderModel *)data;
+    FHNeighborhoodDetailQuestionHeaderModel *model = (FHNeighborhoodDetailQuestionHeaderModel *)data;
     if (model) {
         self.titleLabel.text = model.title;
-        if(model.subTitle.length > 0){
-            self.subTitleLabel.hidden = NO;
-            self.subTitleLabel.text = model.subTitle;
-        }else{
-            self.subTitleLabel.hidden = YES;
-        }
+        self.topLine.hidden = model.hiddenTopLine;
     }
 }
 
@@ -61,15 +54,14 @@
 }
 
 - (void)initViews {
+    self.topLine = [[UIView alloc] init];
+    _topLine.backgroundColor = [UIColor themeGray6];
+    [self.contentView addSubview:_topLine];
+    
     self.titleLabel = [UILabel createLabel:@"" textColor:@"" fontSize:18];
     _titleLabel.textColor = [UIColor themeGray1];
     _titleLabel.font = [UIFont themeFontMedium:18];
     [self.contentView addSubview:_titleLabel];
-    
-    self.subTitleLabel = [UILabel createLabel:@"" textColor:@"" fontSize:12];
-    _subTitleLabel.textColor = [UIColor themeGray3];
-    _subTitleLabel.font = [UIFont themeFontRegular:12];
-    [self.contentView addSubview:_subTitleLabel];
     
     self.rightBtn = [[UIButton alloc] init];
     [_rightBtn setContentCompressionResistancePriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisHorizontal];
@@ -82,23 +74,23 @@
     [_rightBtn sizeToFit];
     [_rightBtn setTitleEdgeInsets:UIEdgeInsetsMake(0, - _rightBtn.imageView.image.size.width, 0, _rightBtn.imageView.image.size.width)];
     [_rightBtn setImageEdgeInsets:UIEdgeInsetsMake(0, _rightBtn.titleLabel.bounds.size.width, 0, -_rightBtn.titleLabel.bounds.size.width)];
-    [_rightBtn addTarget:self action:@selector(gotoCommentList) forControlEvents:UIControlEventTouchUpInside];
+    [_rightBtn addTarget:self action:@selector(gotoQuestionList) forControlEvents:UIControlEventTouchUpInside];
     [self.contentView addSubview:_rightBtn];
 }
 
 - (void)initConstraints {
+    [self.topLine mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.mas_equalTo(self.contentView);
+        make.left.mas_equalTo(self.contentView).offset(16);
+        make.right.mas_equalTo(self.contentView).offset(-16);
+        make.height.mas_equalTo([UIDevice btd_onePixel]);
+    }];
+    
     [self.titleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.contentView).offset(20);
+        make.bottom.mas_equalTo(self.contentView).offset(-7);
         make.left.mas_equalTo(self.contentView).offset(16);
         make.right.mas_equalTo(self.rightBtn.mas_left).offset(-5);
         make.height.mas_equalTo(25);
-    }];
-    
-    [self.subTitleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.titleLabel.mas_bottom).offset(4);
-        make.left.mas_equalTo(self.contentView).offset(16);
-        make.right.mas_equalTo(self.contentView).offset(-16);
-        make.height.mas_equalTo(20);
     }];
     
     [self.rightBtn mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -108,10 +100,10 @@
     }];
 }
 
-- (void)gotoCommentList {
-    FHNeighborhoodDetailCommentHeaderModel *cellModel = (FHNeighborhoodDetailCommentHeaderModel *)self.currentData;
-    if(!isEmptyString(cellModel.commentsListSchema)){
-        NSURL *url = [NSURL URLWithString:cellModel.commentsListSchema];
+- (void)gotoQuestionList {
+    FHNeighborhoodDetailQuestionHeaderModel *cellModel = (FHNeighborhoodDetailQuestionHeaderModel *)self.currentData;
+    if(!isEmptyString(cellModel.questionListSchema)){
+        NSURL *url = [NSURL URLWithString:cellModel.questionListSchema];
         NSMutableDictionary *dict = @{}.mutableCopy;
         dict[@"neighborhood_id"] = cellModel.neighborhoodId;
         dict[@"title"] = cellModel.title;
@@ -129,7 +121,7 @@
 
 @end
 
-@implementation FHNeighborhoodDetailCommentHeaderModel
+@implementation FHNeighborhoodDetailQuestionHeaderModel
 
 
 @end

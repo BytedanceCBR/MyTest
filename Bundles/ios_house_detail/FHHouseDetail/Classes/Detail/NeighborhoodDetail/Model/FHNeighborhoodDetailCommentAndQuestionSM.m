@@ -12,33 +12,37 @@
 
 - (void)updateDetailModel:(FHDetailNeighborhoodModel *)model {
     //有点评
-    BOOL isHaveComment = NO;
+    BOOL isHaveComment = model.data.comments.content.data.count > 0;
+    //有问答
+    BOOL isHaveQuestion = model.data.question.content.data.count > 0;
+    
     NSMutableArray *itemArray = [NSMutableArray array];
     if(model.data.comments.content.data.count > 0){
-        isHaveComment = YES;
-        FHNeighborhoodDetailCommentHeaderModel *commentHeaderModel = [[FHNeighborhoodDetailCommentHeaderModel alloc] init];
-        commentHeaderModel.title = model.data.comments.title;
-        commentHeaderModel.subTitle = @"超过XX位小区业主和附近居民进行了评分";
-        commentHeaderModel.commentsListSchema = model.data.comments.content.commentsListSchema;
-        [itemArray addObject:commentHeaderModel];
+        FHDetailNeighborhoodDataCommentsContentModel *contentModel = model.data.comments.content;
+        self.commentHeaderModel = [[FHNeighborhoodDetailCommentHeaderModel alloc] init];
+        _commentHeaderModel.title = model.data.comments.title;
         
-        self.contentModel = model.data.comments.content;
-        for (int m = 0; m < _contentModel.data.count;  m++) {
-            NSString *content = _contentModel.data[m];
-            FHFeedUGCCellModel *model = [FHFeedUGCCellModel modelFromFeed:content];
-            model.realtorIndex = m;
-            model.isShowLineView = m < _contentModel.data.count -1;
-            switch (model.cellType) {
-                case FHUGCFeedListCellTypeUGC:
-                    model.cellSubType = FHUGCFeedListCellSubTypeUGCBrokerImage;
-                    break;
-                case FHUGCFeedListCellTypeUGCSmallVideo:
-                    model.cellSubType = FHUGCFeedListCellSubTypeUGCBrokerVideo;
-                    break;
-                default:
-                    break;
+        if(!isEmptyString(model.data.comments.content.count)){
+            NSInteger totalCount = [contentModel.count integerValue];
+            if(totalCount > 0 && contentModel.data.count > 0){
+                _commentHeaderModel.title = [NSString stringWithFormat:@"%@（%li）",_commentHeaderModel.title,(long)totalCount];
             }
-            //        model.tracerDic = self.detailTracerDic;
+        }
+        
+        _commentHeaderModel.subTitle = @"超过XX位小区业主和附近居民进行了评分";
+        _commentHeaderModel.commentsListSchema = model.data.comments.content.commentsListSchema;
+        _commentHeaderModel.neighborhoodId = model.data.id;
+        _commentHeaderModel.detailTracerDic = self.detailTracerDic;
+        [itemArray addObject:_commentHeaderModel];
+        
+        for (int m = 0; m < contentModel.data.count;  m++) {
+            NSString *content = contentModel.data[m];
+            FHFeedUGCCellModel *model = [FHFeedUGCCellModel modelFromFeed:content];
+            model.isInNeighbourhoodCommentsList = NO;
+            model.realtorIndex = m;
+            model.isShowLineView = m < contentModel.data.count -1;
+
+
             NSMutableDictionary *tracerDic = [NSMutableDictionary dictionary];
             tracerDic[@"rank"] = @(m);
             tracerDic[@"origin_from"] = self.detailTracerDic[@"origin_from"] ?: @"be_null";
@@ -57,15 +61,68 @@
             model.tracerDic = [tracerDic copy];
             
             if (model) {
-//                [itemArray addObject:model];
+                [itemArray addObject:model];
             }
         }
+        
+        FHNeighborhoodDetailSpaceModel *spaceModel = [[FHNeighborhoodDetailSpaceModel alloc] init];
+        spaceModel.height = isHaveQuestion ? 16 : 20;
+        [itemArray addObject:spaceModel];
+    }
+    
+    if(model.data.question.content.data.count > 0){
+        FHDetailNeighborhoodDataQuestionContentModel *contentModel = model.data.question.content;
+        self.questionHeaderModel = [[FHNeighborhoodDetailQuestionHeaderModel alloc] init];
+        _questionHeaderModel.title = model.data.question.title;
+        
+        if(!isEmptyString(model.data.question.content.count)){
+            NSInteger totalCount = [contentModel.count integerValue];
+            if(totalCount > 0 && contentModel.data.count > 0){
+                _questionHeaderModel.title = [NSString stringWithFormat:@"%@（%li）",_questionHeaderModel.title,(long)totalCount];
+            }
+        }
+        
+        _questionHeaderModel.hiddenTopLine = !isHaveComment;
+        _questionHeaderModel.topMargin = isHaveComment ? 14 : 18;
+        _questionHeaderModel.questionListSchema = model.data.question.content.questionListSchema;
+        _questionHeaderModel.neighborhoodId = model.data.id;
+        _questionHeaderModel.detailTracerDic = self.detailTracerDic;
+        [itemArray addObject:_questionHeaderModel];
+        
+        for (int m = 0; m < contentModel.data.count;  m++) {
+            NSString *content = contentModel.data[m];
+            FHFeedUGCCellModel *model = [FHFeedUGCCellModel modelFromFeed:content];
+            model.realtorIndex = m;
+            model.isShowLineView = m < contentModel.data.count -1;
+
+            NSMutableDictionary *tracerDic = [NSMutableDictionary dictionary];
+            tracerDic[@"rank"] = @(m);
+            tracerDic[@"origin_from"] = self.detailTracerDic[@"origin_from"] ?: @"be_null";
+            tracerDic[@"enter_from"] = self.detailTracerDic[@"enter_from"] ?: @"be_null";
+            tracerDic[@"page_type"] = self.detailTracerDic[@"page_type"] ?: @"be_null";
+            tracerDic[@"element_type"] = @"realtor_evaluate";
+            tracerDic[@"group_id"] = model.groupId;
+            tracerDic[@"from_gid"] = self.extraDic[@"houseId"];
+            tracerDic[@"log_pb"] = model.logPb;
+            if(model.logPb[@"impr_id"]){
+                tracerDic[@"impr_id"] = model.logPb[@"impr_id"];
+            }
+            if(model.logPb[@"group_source"]){
+                tracerDic[@"group_source"] = model.logPb[@"group_source"];
+            }
+            model.tracerDic = [tracerDic copy];
+            
+            if (model) {
+                [itemArray addObject:model];
+            }
+        }
+        
+        FHNeighborhoodDetailSpaceModel *spaceModel = [[FHNeighborhoodDetailSpaceModel alloc] init];
+        spaceModel.height = 15;
+        [itemArray addObject:spaceModel];
     }
     
     self.items = [itemArray copy];
-        
-    self.title = model.data.comments.title;
-    self.count = @([model.data.comments.content.count integerValue]);
 }
 
 - (id<NSObject>)diffIdentifier {
