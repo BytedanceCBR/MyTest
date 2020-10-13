@@ -214,7 +214,7 @@
       } range:numRange];
       
     _drawLineLabel.attributedText = contentAttr;
-     _drawTitleLineLabel.text = @"区域内共找到：";
+     _drawTitleLineLabel.text = @"区域内找到：";
 //    content = @"区域内共找到20000000123452000000012345套房源";
 //    _drawLineLabel.text = content;
 //    _subwayBgView.hidden = YES;

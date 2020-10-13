@@ -18,6 +18,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic , copy) NSString *title;
 @property(nonatomic , copy) NSString *subTitle;
 @property(nonatomic , copy) NSString *commentsListSchema;
+@property(nonatomic , copy) NSString *neighborhoodId;
+@property(nonatomic , strong) NSDictionary *detailTracerDic;
 
 @end
 
