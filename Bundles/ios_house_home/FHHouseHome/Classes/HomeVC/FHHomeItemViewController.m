@@ -38,7 +38,8 @@
 #import "FHHouseAgentCardCell.h"
 #import "FHHouseSearchSecondHouseCell.h"
 #import "FHHouseSearchNewHouseCell.h"
-
+#import "BDABTestManager.h"
+#import "NSString+BTDAdditions.h"
 extern NSString *const INSTANT_DATA_KEY;
 
 static NSString const * kCellSmallItemImageId = @"FHHomeSmallImageItemCell";
@@ -493,7 +494,11 @@ static NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
     if (self.requestTask) {
         [self.requestTask cancel];
     }
-    
+    if (self.houseType != FHHouseTypeRentHouse) {
+        NSString *group = [[BDABTestManager ABGroup]
+                       btd_stringByURLEncode];
+        requestDictonary[@"client_ab_version"] = group;
+    }
     WeakSelf;
     self.requestTask = [FHHomeRequestAPI requestRecommendForLoadMore:requestDictonary completion:^(FHHomeHouseModel * _Nonnull model, NSError * _Nonnull error) {
         StrongSelf;

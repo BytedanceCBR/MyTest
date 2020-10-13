@@ -114,6 +114,8 @@ DEC_TASK("TTABHelperTask",FHTaskTypeSerial,TASK_PRIORITY_HIGH+4);
     id res = [BDABTestManager getExperimentValueForKey:@"discover_type" withExposure:YES];
     NSLog(@"BDClientABTest discover_type is %@",res);
     
+    id res2 = [BDABTestManager getExperimentValueForKey:@"home_recommend_card" withExposure:YES];
+    NSLog(@"BDClientABTest home_recommend_card is %@",res2);
     //queryExposureExperiments决定了你上报到alog的实验数据，如果上报时候没有你的vid，则表示上报的不对
 //    NSString *exposureExperiments = [BDABTestManager queryExposureExperiments];
 //    NSLog(@"queryExposureExperiments result is %@", exposureExperiments);
