@@ -19,6 +19,7 @@
 #import <ByteDanceKit/UIDevice+BTDAdditions.h>
 #import <FHHouseBase/FHRealtorAvatarView.h>
 #import "UIButton+BDWebImage.h"
+#import <ByteDanceKit/ByteDanceKit.h>
 
 @interface FHOldDetailBottomBarView ()
 
@@ -242,7 +243,13 @@
         self.agencyLabel.hidden = YES;
     }
     CGFloat maxAgencyLabelWidth = [UIScreen mainScreen].bounds.size.width - 124 -AdaptOffset(176);//176为两个按钮大小
-    CGFloat agencyLabelWidth = [contactPhone.agencyName boundingRectWithSize:CGSizeMake(maxAgencyLabelWidth, MAXFLOAT) options:NSStringDrawingUsesLineFragmentOrigin attributes:@{NSFontAttributeName: self.agencyLabel.font} context:nil].size.width + 1;
+    CGFloat agencyLabelWidth = [contactPhone.agencyName btd_widthWithFont:self.agencyLabel.font height:20];
+    if (agencyLabelWidth > maxAgencyLabelWidth) {
+        if (agencyLabelWidth - maxAgencyLabelWidth > 5.0) {
+            agencyLabelWidth = maxAgencyLabelWidth;
+        }
+    }
+//    CGFloat agencyLabelWidth = [contactPhone.agencyName boundingRectWithSize:CGSizeMake(maxAgencyLabelWidth, MAXFLOAT) options:NSStringDrawingUsesLineFragmentOrigin attributes:@{NSFontAttributeName: self.agencyLabel.font} context:nil].size.width + 1;
     CGFloat realtorContentWidth = 0;
     if ([UIDevice btd_deviceWidthType] == BTDDeviceWidthMode320) {
         realtorContentWidth = [UIScreen mainScreen].bounds.size.width - 178;
