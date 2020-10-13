@@ -36,6 +36,8 @@
         self.propertyInfoModel = propertyInfoModel;
         [items addObject:self.propertyInfoModel];
     }
+    
+    
 
     self.items = items.copy;
 }
