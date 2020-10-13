@@ -127,7 +127,7 @@ static NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
     
     self.tableView.mj_footer = self.refreshFooter;
     
-    if (self.houseType != FHHouseTypeSecondHandHouse && self.houseType != FHHouseTypeNewHouse) {
+    if (self.houseType == FHHouseTypeRentHouse || ![FHEnvContext isShowHomeHouseCard]) {
         [self.refreshFooter setUpWhiteBackGroud];
     }
     
@@ -773,16 +773,20 @@ static NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    CGFloat abHeight = 0;
+    if ([FHEnvContext isShowHomeHouseCard]) {
+        abHeight = 12;
+    }
     if (indexPath.section == 0) {
         if ([self checkIsHaveEntrancesList]) {
             //适配5s
             if ([TTDeviceHelper isScreenWidthLarge320]) {
-                return 93;
+                return 105 - abHeight;
             }else{
-                return 73;
+                return 85 - abHeight;
             }
         }
-        if (self.houseType == FHHouseTypeNewHouse) {
+        if (self.houseType == FHHouseTypeNewHouse && [FHEnvContext isShowHomeHouseCard]) {
             return 7;
         }
         return 12;
@@ -795,7 +799,11 @@ static NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
         if (self.houseType == FHHouseTypeNewHouse) {
             if (indexPath.row < self.houseDataItemsModel.count) {
                 JSONModel *model = self.houseDataItemsModel[indexPath.row];
-                return [FHHouseSearchNewHouseCell heightForData:model];
+                if ([FHEnvContext isShowHomeHouseCard]) {
+                    return [FHHouseSearchNewHouseCell heightForData:model];
+                } else {
+                    return [FHHouseBaseNewHouseCell heightForData:model];
+                }
             }
         }
         
@@ -808,10 +816,10 @@ static NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
                 if ([model.cardType integerValue] == kFHHomeAgentCardType) {
                     return 116;
                 }
-                if ([model.houseType integerValue] == FHHouseTypeSecondHandHouse) {
+                if ([model.houseType integerValue] == FHHouseTypeSecondHandHouse && [FHEnvContext isShowHomeHouseCard]) {
                     return [FHHouseSearchSecondHouseCell heightForData:model];
                 }
-                if ([model.houseType integerValue] == FHHouseTypeNewHouse && [model.cellStyle isEqualToString:@"6"]) {
+                if ([model.houseType integerValue] == FHHouseTypeNewHouse && [model.cellStyle isEqualToString:@"6"] && [FHEnvContext isShowHomeHouseCard]) {
                     return [FHHouseSearchNewHouseCell heightForData:model];
                 }
             }
@@ -938,6 +946,22 @@ static NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
         if (self.houseDataItemsModel.count>0) {
                FHHomeHouseDataItemsModel *model = (FHHomeHouseDataItemsModel *)self.houseDataItemsModel[indexPath.row];
             if ([model.houseType integerValue] == FHHouseTypeNewHouse && [model.cellStyle isEqualToString:@"6"]) {
+                if ([FHEnvContext isShowHomeHouseCard]) {
+                    FHHouseSearchNewHouseCell *cell = [tableView dequeueReusableCellWithIdentifier:@"FHHouseSearchNewHouseCell"];
+                    if (indexPath.row < self.houseDataItemsModel.count) {
+                        JSONModel *model = self.houseDataItemsModel[indexPath.row];
+                        [cell refreshWithData:model];
+                    }
+                    return cell;
+                }
+                FHHouseListBaseItemCell *cell = [tableView dequeueReusableCellWithIdentifier:@"FHSynchysisNewHouseCell"];
+                [cell updateSynchysisNewHouseCellWithModel:model];
+                [cell refreshIndexCorner:(indexPath.row == 0) andLast:(indexPath.row == (self.houseDataItemsModel.count - 1) && !self.hasMore)];
+                      return cell;
+            }
+        }
+        if (self.houseType == FHHouseTypeNewHouse) {
+            if ([FHEnvContext isShowHomeHouseCard]) {
                 FHHouseSearchNewHouseCell *cell = [tableView dequeueReusableCellWithIdentifier:@"FHHouseSearchNewHouseCell"];
                 if (indexPath.row < self.houseDataItemsModel.count) {
                     JSONModel *model = self.houseDataItemsModel[indexPath.row];
@@ -945,22 +969,6 @@ static NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
                 }
                 return cell;
             }
-            if ([model.houseType integerValue] == FHHouseTypeNewHouse && [model.cellStyle isEqualToString:@"6"]) {
-                      FHHouseListBaseItemCell *cell = [tableView dequeueReusableCellWithIdentifier:@"FHSynchysisNewHouseCell"];
-                [cell updateSynchysisNewHouseCellWithModel:model];
-                  [cell refreshIndexCorner:(indexPath.row == 0) andLast:(indexPath.row == (self.houseDataItemsModel.count - 1) && !self.hasMore)];
-                      return cell;
-                  }
-        }
-        if (self.houseType == FHHouseTypeNewHouse) {
-            FHHouseSearchNewHouseCell *cell = [tableView dequeueReusableCellWithIdentifier:@"FHHouseSearchNewHouseCell"];
-            if (indexPath.row < self.houseDataItemsModel.count) {
-                JSONModel *model = self.houseDataItemsModel[indexPath.row];
-                [cell refreshWithData:model];
-            }
-            return cell;
-        }
-        if (self.houseType == FHHouseTypeNewHouse) {
             //to do 房源cell
             FHHouseBaseNewHouseCell *cell = [tableView dequeueReusableCellWithIdentifier:kCellNewHouseItemImageId];
             cell.delegate = self;
@@ -991,10 +999,12 @@ static NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
                 [cell bindAgentData:model traceParams:traceDict];
                 return cell;
             }
-            FHHouseSearchSecondHouseCell *cell = [tableView dequeueReusableCellWithIdentifier:@"FHHouseHomeSecondHouseCell"];
-            cell.delegate = self;
-            [cell refreshWithData:model];
-            return cell;
+            if ([FHEnvContext isShowHomeHouseCard]) {
+                FHHouseSearchSecondHouseCell *cell = [tableView dequeueReusableCellWithIdentifier:@"FHHouseHomeSecondHouseCell"];
+                cell.delegate = self;
+                [cell refreshWithData:model];
+                return cell;
+            }
         }
         
         //to do 房源cell

@@ -1189,6 +1189,14 @@ static NSInteger kGetLightRequestRetryCount = 3;
     return NO;
 }
 
++ (BOOL)isShowHomeHouseCard {
+    id res = [BDABTestManager getExperimentValueForKey:@"home_recommend_card" withExposure:YES];
+    if(res){
+        return [res boolValue];
+    }
+    return NO;
+}
+
 + (BOOL)isIntroduceOpen {
     return YES;
 }
