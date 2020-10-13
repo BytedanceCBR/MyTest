@@ -62,7 +62,7 @@ SINGLETON_GCD(TTRouteService)
 - (NSString *)onlineConfigClassForKey:(NSString *)key {
     if ([[NSUserDefaults standardUserDefaults] objectForKey:@"kFHSettingsKey"]) {
         NSDictionary *settings = [[NSUserDefaults standardUserDefaults] dictionaryForKey:@"kFHSettingsKey"];
-        NSString *routeConfigKey = [[NSBundle btd_versionName] stringByAppendingFormat:@"_route_config"];
+        NSString *routeConfigKey = @"online_route_config";//[[NSBundle btd_versionName] stringByAppendingFormat:@"online_route_config"];
         if (settings[routeConfigKey]) {
             NSDictionary *routeConfig = [settings btd_dictionaryValueForKey:routeConfigKey];
             if (routeConfig && routeConfig[key]) {
