@@ -19,6 +19,7 @@
 #import <ios_house_im/UIView+Utils.h>
 #import "UIImage+FIconFont.h"
 #import "ToastManager.h"
+#import "TTReachability.h"
 
 typedef NS_ENUM(NSUInteger, FHHouseDetailReportItemType) {
     FHHouseDetailReportItemType_Type,
@@ -614,11 +615,22 @@ typedef NS_ENUM(NSUInteger, FHHouseDetailReportItemType) {
         }
     }];
     
+    
+    if(![TTReachability isNetworkConnected]) {
+        [[ToastManager manager] showToast:@"网络不给力，请重试"];
+        return;
+    }
+    
     @weakify(self);
     [FHMainApi requestHouseFeedbackReport:params completion:^(NSError * _Nonnull error, id  _Nonnull jsonObj) {
         @strongify(self);
-        // TODO: 处理请求结果
         
+        if(error) {
+            [[ToastManager manager] showToast:@"网络错误，请稍后重试"];
+            return;
+        }
+        
+        // TODO: 成功后退出并弹窗引导
         [self goBack];
         [self showHintView];
         

@@ -5521,11 +5521,11 @@ static NSString *const kFFeedRefreshStrategy = @"feed_refresh_settings";
     }
     return NO;
 }
-+ (BOOL)isEnableHouseDetailLinkChatReport {
++ (BOOL)isEnableHouseDetailH5Report {
     NSDictionary *fhSettings = [self fhSettings];
-    if (fhSettings != nil && [fhSettings objectForKey:@"f_house_detail_link_chat_report"] != nil) {
-        BOOL isEnableLinkChatReport = [[fhSettings objectForKey:@"f_house_detail_link_chat_report"] boolValue];
-        return isEnableLinkChatReport;
+    if (fhSettings != nil && [fhSettings objectForKey:@"f_house_detail_h5_report"] != nil) {
+        BOOL isEnableH5Report = [[fhSettings objectForKey:@"f_house_detail_h5_report"] boolValue];
+        return isEnableH5Report;
     }
     return NO;
 }
