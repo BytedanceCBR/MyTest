@@ -127,7 +127,9 @@ static NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
     
     self.tableView.mj_footer = self.refreshFooter;
     
-    [self.refreshFooter setUpWhiteBackGroud];
+    if (self.houseType != FHHouseTypeSecondHandHouse && self.houseType != FHHouseTypeNewHouse) {
+        [self.refreshFooter setUpWhiteBackGroud];
+    }
     
     [self.refreshFooter setBackgroundColor:[UIColor themeHomeColor]];
     [self.tableView setBackgroundColor:[UIColor themeHomeColor]];
@@ -775,10 +777,13 @@ static NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
         if ([self checkIsHaveEntrancesList]) {
             //适配5s
             if ([TTDeviceHelper isScreenWidthLarge320]) {
-                return 105;
+                return 93;
             }else{
-                return 85;
+                return 73;
             }
+        }
+        if (self.houseType == FHHouseTypeNewHouse) {
+            return 7;
         }
         return 12;
     }else
