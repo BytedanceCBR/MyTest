@@ -94,13 +94,13 @@
         return;
     }
     
-    [_interestedVC removeFromParentViewController];
-    _interestedVC = nil;
-    
-    if(_currentView.superview){
+    if(_currentView){
         [_currentView removeFromSuperview];
         _currentView = nil;
     }
+    
+    [_interestedVC removeFromParentViewController];
+    _interestedVC = nil;
     
     FHCommunityFeedListController *vc = [[FHCommunityFeedListController alloc] init];
     vc.listType = FHCommunityFeedListTypeMyJoin;
@@ -124,13 +124,13 @@
         return;
     }
     
-    [_feedListVC removeFromParentViewController];
-    _feedListVC = nil;
-    
     if(_currentView){
         [_currentView removeFromSuperview];
         _currentView = nil;
     }
+    
+    [_feedListVC removeFromParentViewController];
+    _feedListVC = nil;
     
     FHUGCMyInterestedController *vc =[[FHUGCMyInterestedController alloc] init];
     vc.type = FHUGCMyInterestedTypeEmpty;
