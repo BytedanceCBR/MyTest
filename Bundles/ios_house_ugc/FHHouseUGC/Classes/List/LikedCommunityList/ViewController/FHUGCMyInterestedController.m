@@ -15,6 +15,12 @@
 #import "FHUserTracker.h"
 #import <FHHouseBase/FHBaseTableView.h>
 #import "FHUGCSearchView.h"
+#import <FHUGCConfig.h>
+#import "YYLabel.h"
+#import "UIFont+House.h"
+#import "UIColor+Theme.h"
+#import "NSAttributedString+YYText.h"
+#import <ToastManager.h>
 
 @interface FHUGCMyInterestedController ()<TTRouteInitializeProtocol,UIViewControllerErrorHandler>
 
@@ -22,7 +28,8 @@
 @property (nonatomic , strong) UITableView *tableView;
 @property (nonatomic , assign) NSTimeInterval lastRequestTime;
 @property (nonatomic , strong) FHUGCSearchView *searchView;
-
+@property (nonatomic , strong) UILabel *guessYouLikeLabel;
+@property (nonatomic , strong) YYLabel *refreshTipLabel;
 @end
 
 @implementation FHUGCMyInterestedController
@@ -134,13 +141,75 @@
     searchView.tracerDict = tracerDict;
     [headerView addSubview:searchView];
     
-    UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(20, 15 + 49, [UIScreen mainScreen].bounds.size.width, 21)];
-    label.font = [UIFont themeFontRegular:15];
-    label.textColor = [UIColor themeGray1];
-    label.text = @"猜你喜欢";
-    [headerView addSubview:label];
+    self.guessYouLikeLabel = [[UILabel alloc] initWithFrame:CGRectMake(20, 15 + 49, [UIScreen mainScreen].bounds.size.width, 21)];
+    self.guessYouLikeLabel.font = [UIFont themeFontRegular:15];
+    self.guessYouLikeLabel.textColor = [UIColor themeGray1];
+    self.guessYouLikeLabel.text = @"猜你喜欢";
+    [headerView addSubview:self.guessYouLikeLabel];
     
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(addRefreshTip) name:kFHUGCFollowNotification object:nil];
     return headerView;
+}
+
+
+- (void)addRefreshTip {
+    BOOL needRefresh = [FHUGCConfig sharedInstance].followList.count > 0;
+    if(self.refreshTipLabel.hidden == !needRefresh) {
+        return;
+    }
+    
+    UIView *headerView = self.tableView.tableHeaderView;
+    self.tableView.tableHeaderView = nil;
+    
+    if(needRefresh) {
+        CGRect frame = headerView.frame;
+        frame.size.height = 120;
+        headerView.frame = frame;
+        
+        frame = self.guessYouLikeLabel.frame;
+        frame.origin.y = 99;
+        self.guessYouLikeLabel.frame = frame;
+        
+        self.refreshTipLabel.hidden = NO;
+        [headerView addSubview:self.refreshTipLabel];
+        [self.refreshTipLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.top.equalTo(headerView).offset(64);
+            make.centerX.equalTo(headerView);
+            make.width.mas_equalTo(252);
+            make.height.mas_equalTo(20);
+        }];
+    }else{
+        self.refreshTipLabel.hidden = YES;
+        [self.refreshTipLabel removeFromSuperview];
+        
+        CGRect frame = headerView.frame;
+        frame.size.height = 85;
+        headerView.frame = frame;
+        
+        frame = self.guessYouLikeLabel.frame;
+        frame.origin.y = 64;
+        self.guessYouLikeLabel.frame = frame;
+        
+    }
+
+    self.tableView.tableHeaderView = headerView;
+}
+
+-(YYLabel *)refreshTipLabel {
+    if(!_refreshTipLabel){
+        NSMutableAttributedString *attrText = [[NSMutableAttributedString alloc] initWithString:@"你关注的圈子有内容更新，点击刷新查看"];
+        NSDictionary *commonTextStyle = @{ NSFontAttributeName:[UIFont themeFontRegular:14],NSForegroundColorAttributeName:[UIColor themeGray3]};
+        [attrText addAttributes:commonTextStyle range:NSMakeRange(0, attrText.length)];
+        [attrText yy_setAlignment:NSTextAlignmentCenter range:NSMakeRange(0, attrText.length)];
+        NSRange tapRange = [attrText.string rangeOfString:@"点击刷新查看"];
+        [attrText yy_setTextHighlightRange:tapRange color:[UIColor themeOrange1] backgroundColor:nil tapAction:^(UIView * _Nonnull containerView, NSAttributedString * _Nonnull text, NSRange range, CGRect rect) {
+            [[NSNotificationCenter defaultCenter] postNotificationName:kFHMyJoinVCReloadVCNotification object:nil];
+        }];
+        _refreshTipLabel = [[YYLabel alloc] init];
+        _refreshTipLabel.attributedText = attrText;
+        _refreshTipLabel.hidden = YES;
+    }
+    return _refreshTipLabel;
 }
 
 - (void)initConstraints {

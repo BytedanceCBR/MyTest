@@ -34,6 +34,7 @@
     // Do any additional setup after loading the view.
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationDidBecomeActive) name:UIApplicationDidBecomeActiveNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationDidEnterBackground) name:UIApplicationDidEnterBackgroundNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(loadVC) name:kFHMyJoinVCReloadVCNotification object:nil];
     self.view.backgroundColor = [UIColor whiteColor];
     [self loadVC];
 }
@@ -93,9 +94,10 @@
         return;
     }
     
+    [_interestedVC removeFromParentViewController];
     _interestedVC = nil;
     
-    if(_currentView){
+    if(_currentView.superview){
         [_currentView removeFromSuperview];
         _currentView = nil;
     }
@@ -122,6 +124,7 @@
         return;
     }
     
+    [_feedListVC removeFromParentViewController];
     _feedListVC = nil;
     
     if(_currentView){
