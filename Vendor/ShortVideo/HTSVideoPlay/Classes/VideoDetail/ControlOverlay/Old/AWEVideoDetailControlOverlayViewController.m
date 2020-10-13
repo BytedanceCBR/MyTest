@@ -901,7 +901,9 @@ static const CGFloat kCheckChallengeButtonLeftPadding = 28;
 
 - (void)handleUserNameClick:(id)sender
 {
-    [self.viewModel clickUserNameButton];
+    if (!self.model.videoSourceIcon) {
+           [self.viewModel clickUserNameButton];
+    }
 }
 
 - (void)handleFollowClick:(id)sender
