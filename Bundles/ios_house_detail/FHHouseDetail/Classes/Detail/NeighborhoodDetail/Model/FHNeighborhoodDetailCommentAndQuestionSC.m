@@ -19,12 +19,14 @@
 #import "FHNewHouseDetailViewModel.h"
 #import "FHHouseDetailContactViewModel.h"
 #import "FHHouseIMClueHelper.h"
-#import "FHNewHouseDetailRGCImageCollectionCell.h"
-#import "FHNewHouseDetailRGCVideoCollectionCell.h"
 #import "FHNeighborhoodDetailCommentHeaderCell.h"
+#import "FHNeighborhoodDetailQuestionHeaderCell.h"
 #import "FHUGCFeedDetailJumpManager.h"
 #import "FHRealtorEvaluatingPhoneCallModel.h"
 #import "FHRealtorEvaluatingTracerHelper.h"
+#import "FHNeighborhoodDetailQuestionCell.h"
+#import "FHNeighborhoodDetailPostCell.h"
+#import "FHNeighborhoodDetailSpaceCell.h"
 
 @interface FHNeighborhoodDetailCommentAndQuestionSC () <IGListSupplementaryViewSource, IGListDisplayDelegate>
 
@@ -40,6 +42,7 @@
 {
     if (self = [super init]) {
         //        self.minimumLineSpacing = 20;
+        self.inset = UIEdgeInsetsMake(0, 15, 12, 15);
         self.supplementaryViewSource = self;
         self.displayDelegate = self;
         self.detailJumpManager = [[FHUGCFeedDetailJumpManager alloc] init];
@@ -144,18 +147,19 @@
     CGSize size = CGSizeZero;
     if([cellModel isKindOfClass:[FHNeighborhoodDetailCommentHeaderModel class]]){
         size = [FHNeighborhoodDetailCommentHeaderCell cellSizeWithData:cellModel width:width];
+    }else if([cellModel isKindOfClass:[FHNeighborhoodDetailQuestionHeaderModel class]]){
+        size = [FHNeighborhoodDetailQuestionHeaderCell cellSizeWithData:cellModel width:width];
     }else if([cellModel isKindOfClass:[FHFeedUGCCellModel class]]){
         FHFeedUGCCellModel *feedCellModel = (FHFeedUGCCellModel *)cellModel;
         if (feedCellModel.cellType == FHUGCFeedListCellTypeUGC) {
-            size = [FHNewHouseDetailRGCImageCollectionCell cellSizeWithData:cellModel width:width];
-        } else if (feedCellModel.cellType == FHUGCFeedListCellTypeUGCSmallVideo) {
-            size = [FHNewHouseDetailRGCVideoCollectionCell cellSizeWithData:cellModel width:width];
+            size = [FHNeighborhoodDetailPostCell cellSizeWithData:cellModel width:width];
+        } else if (feedCellModel.cellType == FHUGCFeedListCellTypeAnswer) {
+            size = [FHNeighborhoodDetailQuestionCell cellSizeWithData:cellModel width:width];
         }
+    }else if([cellModel isKindOfClass:[FHNeighborhoodDetailSpaceModel class]]){
+        size = [FHNeighborhoodDetailSpaceCell cellSizeWithData:cellModel width:width];
     }
-
-//    if (index < model.items.count - 1) {
-//        size.height += 10;
-//    }
+    
     return size;
 }
 
@@ -168,41 +172,25 @@
         FHNeighborhoodDetailCommentHeaderCell *cell = [self.collectionContext dequeueReusableCellOfClass:[FHNeighborhoodDetailCommentHeaderCell class] withReuseIdentifier:@"FHNeighborhoodDetailCommentHeaderCell" forSectionController:self atIndex:index];
         [cell refreshWithData:cellModel];
         return cell;
+    }else if([cellModel isKindOfClass:[FHNeighborhoodDetailQuestionHeaderModel class]]){
+        FHNeighborhoodDetailQuestionHeaderCell *cell = [self.collectionContext dequeueReusableCellOfClass:[FHNeighborhoodDetailQuestionHeaderCell class] withReuseIdentifier:@"FHNeighborhoodDetailQuestionHeaderCell" forSectionController:self atIndex:index];
+        [cell refreshWithData:cellModel];
+        return cell;
     }else if([cellModel isKindOfClass:[FHFeedUGCCellModel class]]){
         FHFeedUGCCellModel *feedCellModel = (FHFeedUGCCellModel *)cellModel;
         if (feedCellModel.cellType == FHUGCFeedListCellTypeUGC) {
-            FHNewHouseDetailRGCImageCollectionCell *cell = [self.collectionContext dequeueReusableCellOfClass:[FHNewHouseDetailRGCImageCollectionCell class] withReuseIdentifier:@"FHUGCFeedListCellTypeUGC" forSectionController:self atIndex:index];
+            FHNeighborhoodDetailPostCell *cell = [self.collectionContext dequeueReusableCellOfClass:[FHNeighborhoodDetailPostCell class] withReuseIdentifier:@"FHNeighborhoodDetailPostCell" forSectionController:self atIndex:index];
             [cell refreshWithData:cellModel];
-            [cell setClickIMBlock:^(FHFeedUGCCellModel * _Nonnull model) {
-                [weakSelf clickRealtorIm:model];
-            }];
-            [cell setClickPhoneBlock:^(FHFeedUGCCellModel * _Nonnull model) {
-                [weakSelf clickRealtorPhone:model];
-            }];
-            [cell setClickRealtorHeaderBlock:^(FHFeedUGCCellModel * _Nonnull model) {
-                [weakSelf clickRealtorHeader:model];
-            }];
-            [cell setClickLinkBlock:^(FHFeedUGCCellModel * _Nonnull model, NSURL * _Nonnull url) {
-                [weakSelf gotoLinkUrl:model url:url];
-            }];
             return cell;
-        } else if (feedCellModel.cellType == FHUGCFeedListCellTypeUGCSmallVideo) {
-            FHNewHouseDetailRGCVideoCollectionCell *cell = [self.collectionContext dequeueReusableCellOfClass:[FHNewHouseDetailRGCVideoCollectionCell class] withReuseIdentifier:@"FHUGCFeedListCellTypeUGCSmallVideo" forSectionController:self atIndex:index];
+        } else if (feedCellModel.cellType == FHUGCFeedListCellTypeAnswer) {
+            FHNeighborhoodDetailQuestionCell *cell = [self.collectionContext dequeueReusableCellOfClass:[FHNeighborhoodDetailQuestionCell class] withReuseIdentifier:@"FHNeighborhoodDetailQuestionCell" forSectionController:self atIndex:index];
             [cell refreshWithData:cellModel];
-            [cell setClickIMBlock:^(FHFeedUGCCellModel * _Nonnull model) {
-                [weakSelf clickRealtorIm:model];
-            }];
-            [cell setClickPhoneBlock:^(FHFeedUGCCellModel * _Nonnull model) {
-                [weakSelf clickRealtorPhone:model];
-            }];
-            [cell setClickRealtorHeaderBlock:^(FHFeedUGCCellModel * _Nonnull model) {
-                [weakSelf clickRealtorHeader:model];
-            }];
-            [cell setClickLinkBlock:^(FHFeedUGCCellModel * _Nonnull model, NSURL * _Nonnull url) {
-                [weakSelf gotoLinkUrl:model url:url];
-            }];
             return cell;
         }
+    }else if([cellModel isKindOfClass:[FHNeighborhoodDetailSpaceModel class]]){
+        FHNeighborhoodDetailSpaceCell *cell = [self.collectionContext dequeueReusableCellOfClass:[FHNeighborhoodDetailSpaceCell class] withReuseIdentifier:@"FHNeighborhoodDetailSpaceCell" forSectionController:self atIndex:index];
+        [cell refreshWithData:cellModel];
+        return cell;
     }
     
     return nil;
