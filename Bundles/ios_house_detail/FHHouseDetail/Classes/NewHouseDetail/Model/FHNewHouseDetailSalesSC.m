@@ -73,7 +73,7 @@
         //@"https://m.xflapp.com/magic/page/ejs/5ecb69c9d7ff73025f6ea4e0?appType=manyhouse";
         if([urlString hasPrefix:@"http://"] ||
            [urlString hasPrefix:@"https://"]) {
-            UIViewController *topController = [TTUIResponderHelper topViewControllerFor:self];
+            UIViewController *topController = [TTUIResponderHelper topViewControllerFor:self.detailViewController.view];
             ssOpenWebView([NSURL URLWithString:urlString], @"", topController.navigationController, NO, nil);
             return;
         }
