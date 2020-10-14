@@ -20,7 +20,6 @@
 #import "UIFont+House.h"
 #import "UIColor+Theme.h"
 #import "NSAttributedString+YYText.h"
-#import <ToastManager.h>
 
 @interface FHUGCMyInterestedController ()<TTRouteInitializeProtocol,UIViewControllerErrorHandler>
 
@@ -29,7 +28,7 @@
 @property (nonatomic , assign) NSTimeInterval lastRequestTime;
 @property (nonatomic , strong) FHUGCSearchView *searchView;
 @property (nonatomic , strong) UILabel *guessYouLikeLabel;
-@property (nonatomic , strong) YYLabel *refreshTipLabel;
+@property (nonatomic , strong) UIView *refreshTipView;
 @end
 
 @implementation FHUGCMyInterestedController
@@ -147,14 +146,14 @@
     self.guessYouLikeLabel.text = @"猜你喜欢";
     [headerView addSubview:self.guessYouLikeLabel];
     
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(addRefreshTip) name:kFHUGCFollowNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(showRefreshTip) name:kFHUGCFollowNotification object:nil];
     return headerView;
 }
 
 
-- (void)addRefreshTip {
+- (void)showRefreshTip {
     BOOL needRefresh = [FHUGCConfig sharedInstance].followList.count > 0;
-    if(self.refreshTipLabel.hidden == !needRefresh) {
+    if(self.refreshTipView.hidden == !needRefresh) {
         return;
     }
     
@@ -170,17 +169,17 @@
         frame.origin.y = 99;
         self.guessYouLikeLabel.frame = frame;
         
-        self.refreshTipLabel.hidden = NO;
-        [headerView addSubview:self.refreshTipLabel];
-        [self.refreshTipLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        self.refreshTipView.hidden = NO;
+        [headerView addSubview:self.refreshTipView];
+        [self.refreshTipView mas_makeConstraints:^(MASConstraintMaker *make) {
             make.top.equalTo(headerView).offset(64);
-            make.centerX.equalTo(headerView);
-            make.width.mas_equalTo(252);
+            make.left.equalTo(headerView).offset(15);
+            make.right.equalTo(headerView).offset(-15);
             make.height.mas_equalTo(20);
         }];
     }else{
-        self.refreshTipLabel.hidden = YES;
-        [self.refreshTipLabel removeFromSuperview];
+        self.refreshTipView.hidden = YES;
+        [self.refreshTipView removeFromSuperview];
         
         CGRect frame = headerView.frame;
         frame.size.height = 85;
@@ -195,8 +194,8 @@
     self.tableView.tableHeaderView = headerView;
 }
 
--(YYLabel *)refreshTipLabel {
-    if(!_refreshTipLabel){
+-(UIView *)refreshTipView {
+    if(!_refreshTipView){
         NSMutableAttributedString *attrText = [[NSMutableAttributedString alloc] initWithString:@"你关注的圈子有内容更新，点击刷新查看"];
         NSDictionary *commonTextStyle = @{ NSFontAttributeName:[UIFont themeFontRegular:14],NSForegroundColorAttributeName:[UIColor themeGray3]};
         [attrText addAttributes:commonTextStyle range:NSMakeRange(0, attrText.length)];
@@ -205,11 +204,40 @@
         [attrText yy_setTextHighlightRange:tapRange color:[UIColor themeOrange1] backgroundColor:nil tapAction:^(UIView * _Nonnull containerView, NSAttributedString * _Nonnull text, NSRange range, CGRect rect) {
             [[NSNotificationCenter defaultCenter] postNotificationName:kFHMyJoinVCReloadVCNotification object:nil];
         }];
-        _refreshTipLabel = [[YYLabel alloc] init];
-        _refreshTipLabel.attributedText = attrText;
-        _refreshTipLabel.hidden = YES;
+        YYLabel *refreshTipLabel = [[YYLabel alloc] init];
+        refreshTipLabel.attributedText = attrText;
+        
+        UIView *leftLine = [[UIView alloc] init];
+        leftLine.backgroundColor = [UIColor colorWithHexString:@"d8d8d8"];
+        UIView *rightLine = [[UIView alloc] init];
+        rightLine.backgroundColor = [UIColor colorWithHexString:@"d8d8d8"];
+        UIView *refreshTipView = [[UIView alloc] init];
+        refreshTipView.hidden = YES;
+        
+        [refreshTipView addSubview:refreshTipLabel];
+        [refreshTipView addSubview:leftLine];
+        [refreshTipView addSubview:rightLine];
+        
+        [refreshTipLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.top.bottom.equalTo(refreshTipView);
+            make.centerX.equalTo(refreshTipView);
+            make.width.mas_equalTo(252);
+        }];
+        [leftLine mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.centerY.equalTo(refreshTipView);
+            make.left.equalTo(refreshTipView);
+            make.right.equalTo(refreshTipLabel.mas_left).offset(-20);
+            make.height.mas_equalTo(1);
+        }];
+        [rightLine mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.centerY.equalTo(refreshTipView);
+            make.right.equalTo(refreshTipView);
+            make.left.equalTo(refreshTipLabel.mas_right).offset(20);
+            make.height.mas_equalTo(1);
+        }];
+        _refreshTipView = refreshTipView;
     }
-    return _refreshTipLabel;
+    return _refreshTipView;
 }
 
 - (void)initConstraints {
