@@ -36,6 +36,44 @@
         _commentHeaderModel.detailTracerDic = self.detailTracerDic;
         [itemArray addObject:_commentHeaderModel];
         
+        //有评论时候
+        FHNeighborhoodDetailSpaceModel *spaceModel = [[FHNeighborhoodDetailSpaceModel alloc] init];
+        spaceModel.height = 14;
+        [itemArray addObject:spaceModel];
+        //评论tag
+        self.commentTagsModel = [[FHNeighborhoodDetailCommentTagsModel alloc] init];
+        
+        NSMutableArray *tags = [NSMutableArray array];
+        
+        FHNeighborhoodDetailCommentTagModel *tag = [[FHNeighborhoodDetailCommentTagModel alloc] init];
+        tag.persent = @"80%";
+        tag.content = @"小区的物业很棒";
+        [tags addObject:tag];
+        
+        FHNeighborhoodDetailCommentTagModel *tag1 = [[FHNeighborhoodDetailCommentTagModel alloc] init];
+        tag1.persent = @"77%";
+        tag1.content = @"离地铁很近";
+        [tags addObject:tag1];
+        
+        FHNeighborhoodDetailCommentTagModel *tag2 = [[FHNeighborhoodDetailCommentTagModel alloc] init];
+        tag2.persent = @"53%";
+        tag2.content = @"附近菜市场物美价廉";
+        [tags addObject:tag2];
+        
+        FHNeighborhoodDetailCommentTagModel *tag3 = [[FHNeighborhoodDetailCommentTagModel alloc] init];
+        tag3.persent = @"21%";
+        tag3.content = @"交通便利";
+        [tags addObject:tag3];
+        
+        FHNeighborhoodDetailCommentTagModel *tag4 = [[FHNeighborhoodDetailCommentTagModel alloc] init];
+        tag4.persent = @"3%";
+        tag4.content = @"周边配套设施完善 教育资源丰富 环境很优美";
+        [tags addObject:tag4];
+        
+        _commentTagsModel.tags = tags;
+        
+        [itemArray addObject:_commentTagsModel];
+        
         for (int m = 0; m < contentModel.data.count;  m++) {
             NSString *content = contentModel.data[m];
             FHFeedUGCCellModel *model = [FHFeedUGCCellModel modelFromFeed:content];
@@ -66,9 +104,9 @@
             }
         }
         
-        FHNeighborhoodDetailSpaceModel *spaceModel = [[FHNeighborhoodDetailSpaceModel alloc] init];
-        spaceModel.height = isHaveQuestion ? 16 : 20;
-        [itemArray addObject:spaceModel];
+        FHNeighborhoodDetailSpaceModel *spaceModel1 = [[FHNeighborhoodDetailSpaceModel alloc] init];
+        spaceModel1.height = isHaveQuestion ? 16 : 20;
+        [itemArray addObject:spaceModel1];
     }
     
     if(model.data.question){
