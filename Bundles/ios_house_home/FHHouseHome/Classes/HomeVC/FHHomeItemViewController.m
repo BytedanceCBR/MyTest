@@ -777,17 +777,13 @@ static NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    CGFloat abHeight = 0;
-    if ([FHEnvContext isShowHomeHouseCard]) {
-        abHeight = 12;
-    }
     if (indexPath.section == 0) {
         if ([self checkIsHaveEntrancesList]) {
             //适配5s
             if ([TTDeviceHelper isScreenWidthLarge320]) {
-                return 105 - abHeight;
+                return 105;
             }else{
-                return 85 - abHeight;
+                return 85;
             }
         }
         if (self.houseType == FHHouseTypeNewHouse && [FHEnvContext isShowHomeHouseCard]) {
