@@ -25,6 +25,7 @@ NS_ASSUME_NONNULL_BEGIN;
 @property(nonatomic, strong)ExploreMovieMiniSliderView * miniSlider;
 @property (weak, nonatomic, nullable) id<IESVideoPlayerProtocol> playerController;
 @property (nonatomic, strong) TSVVideoDetailPromptManager *detailPromptManager;
+@property (nonatomic, strong) TTVPlayerStateStore *playerStateStore;
 
 - (void)diggShowAnima:(BOOL)showAnima;
 

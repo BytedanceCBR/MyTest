@@ -8,7 +8,6 @@
 
 #import "AWEVideoContainerViewController.h"
 #import "AWEVideoPlayView.h"
-#import "AWEVideoContainerCollectionViewCell.h"
 #import "EXTKeyPathCoding.h"
 #import "BTDNetworkUtilities.h"
 #import "TTNavigationController.h"
@@ -49,6 +48,7 @@
 #import "ToastManager.h"
 #import "FHShortVideoTracerUtil.h"
 #import "NSDictionary+BTDAdditions.h"
+#import "FHUGCShortVideoFullScreenCell.h"
 
 // 与西瓜视频共用的流量播放开关，全局变量哦，名字别乱改
 BOOL kBDTAllowCellularVideoPlay = NO;
@@ -99,7 +99,7 @@ static BOOL kTSVCellularAlertShouldShow = YES;
 @property (nonatomic, assign) BOOL scrollViewExceeedsBoundary;
 @property (nonatomic, assign) BOOL preventVideoPlay;
 @property (nonatomic, assign) NSInteger initialItemIndex;
-@property (nullable, nonatomic, strong) AWEVideoContainerCollectionViewCell *currentVideoCell;
+@property (nullable, nonatomic, strong) FHUGCShortVideoFullScreenCell *currentVideoCell;
 @property (nonatomic, strong) NSMutableArray *feedClientShowCache;
 
 @end
@@ -141,7 +141,7 @@ const static CGFloat kAWEVideoContainerSpacing = 2;
 - (void)applicationWillResignActive:(id)object
 {
     if (self.viewLoaded && [self.view window]) {
-        [self.currentVideoCell.videoPlayView pause];
+        [self.currentVideoCell pause];
         [self sendStayPageTracking];
     }
 }
@@ -149,7 +149,7 @@ const static CGFloat kAWEVideoContainerSpacing = 2;
 - (void)applicationDidBecomeActive:(id)object
 {
     if (self.viewLoaded && [self.view window] && !self.preventVideoPlay) {
-        [self.currentVideoCell.videoPlayView play];
+        [self.currentVideoCell play];
         [self.tracker flushStayPageTime];
     }
 }
@@ -157,7 +157,7 @@ const static CGFloat kAWEVideoContainerSpacing = 2;
 - (void)skStoreViewDidAppear:(NSNotification *)notification
 {
     if (self.viewLoaded && [self.view window]) {
-        [self.currentVideoCell.videoPlayView pause];
+        [self.currentVideoCell pause];
         [self sendStayPageTracking];
         self.preventVideoPlay = YES;
     }
@@ -166,7 +166,7 @@ const static CGFloat kAWEVideoContainerSpacing = 2;
 - (void)skStoreViewDidDisappear:(NSNotification *)notification
 {
     if (self.viewLoaded && [self.view window]) {
-        [self.currentVideoCell.videoPlayView play];
+        [self.currentVideoCell play];
         [self.tracker flushStayPageTime];
         self.preventVideoPlay = NO;
     }
@@ -212,7 +212,7 @@ const static CGFloat kAWEVideoContainerSpacing = 2;
         view.showsVerticalScrollIndicator = NO;
         view.pagingEnabled = YES;
         view.backgroundColor = [UIColor clearColor];
-        [view registerClass:[AWEVideoContainerCollectionViewCell class] forCellWithReuseIdentifier:videoCellReuseIdentifier];
+        [view registerClass:[FHUGCShortVideoFullScreenCell class] forCellWithReuseIdentifier:videoCellReuseIdentifier];
         [view registerClass:[AWEVideoLoadingCollectionViewCell class] forCellWithReuseIdentifier:loadingCellReuseIdentifier];
         [view registerClass:[AWEVideoContainerAdCollectionViewCell class] forCellWithReuseIdentifier:adVideoCellReuseIdentifier];
         view;
@@ -295,7 +295,7 @@ const static CGFloat kAWEVideoContainerSpacing = 2;
         
     }
 
-    [self.currentVideoCell.videoPlayView play];
+    [self.currentVideoCell play];
     [self beginFirstImpression];
     [self.tracker flushStayPageTime];
 }
@@ -371,7 +371,7 @@ const static CGFloat kAWEVideoContainerSpacing = 2;
 {
     //清理上一个视频的状态
     [self endLastImpression];
-    [self.currentVideoCell.videoPlayView stop];
+    [self.currentVideoCell stop];
     [self sendVideoOverTracking];
     [self sendStayPageTracking];
     
@@ -425,7 +425,8 @@ const static CGFloat kAWEVideoContainerSpacing = 2;
 {
     if (indexPath.section == 0) {
         FHFeedUGCCellModel *model = [self.dataFetchManager itemAtIndex:indexPath.row];
-        AWEVideoContainerCollectionViewCell *cell = nil;
+        FHUGCShortVideoFullScreenCell *cell = nil;
+//        AWEVideoContainerCollectionViewCell
         cell = [collectionView dequeueReusableCellWithReuseIdentifier:videoCellReuseIdentifier forIndexPath:indexPath];
             if (!cell.overlayViewController) {
                 UIViewController<TSVControlOverlayViewController> *viewController;
@@ -438,17 +439,23 @@ const static CGFloat kAWEVideoContainerSpacing = 2;
                 if (self.configureOverlayViewController) {
                     self.configureOverlayViewController(cell.overlayViewController);
                 }
+                [self addChildViewController:cell.overlayViewController];
+                [cell.contentView addSubview:cell.overlayViewController.view];
+                cell.overlayViewController.view.frame = self.collectionView.bounds;
+                [cell.overlayViewController.view mas_makeConstraints:^(MASConstraintMaker *make) {
+                    make.edges.equalTo(cell.contentView);
+                }];
+                [cell.overlayViewController didMoveToParentViewController:self];
             }
-        cell.overlayViewController.playerController = cell.videoPlayView.playerController;
-        [self addChildViewController:cell.overlayViewController];
-        [cell.contentView addSubview:cell.overlayViewController.view];
-        [cell.overlayViewController didMoveToParentViewController:self];
+//        cell.overlayViewController.playerStateStore = cell.playerView.player.controlView.playerStateStore;
+
         cell.overlayViewController.viewModel.model = [self.dataFetchManager itemAtIndex:indexPath.item];
 
         [cell setNeedsLayout];
         cell.commonTrackingParameter = self.commonTrackingParameter;
-        [cell updateWithModel:[self.dataFetchManager itemAtIndex:indexPath.item] usingFirstFrameCover:YES];
-        cell.spacingMargin = kAWEVideoContainerSpacing;
+        [cell updateWithModel:[self.dataFetchManager itemAtIndex:indexPath.item]];
+//        [cell updateWithModel:[self.dataFetchManager itemAtIndex:indexPath.item] usingFirstFrameCover:YES];
+//        cell.spacingMargin = kAWEVideoContainerSpacing;
       
         BOOL forward = !self.currentIndexPath || self.currentIndexPath.item < indexPath.item;
         
@@ -506,21 +513,21 @@ const static CGFloat kAWEVideoContainerSpacing = 2;
     }
 }
 
-- (void)collectionView:(UICollectionView *)collectionView willDisplayCell:(AWEVideoContainerCollectionViewCell *)cell forItemAtIndexPath:(NSIndexPath *)indexPath
+- (void)collectionView:(UICollectionView *)collectionView willDisplayCell:(FHUGCShortVideoFullScreenCell *)cell forItemAtIndexPath:(NSIndexPath *)indexPath
 {
     if ([cell respondsToSelector:@selector(cellWillDisplay)]) {
-        [(AWEVideoContainerCollectionViewCell *)cell cellWillDisplay];
+        [(FHUGCShortVideoFullScreenCell *)cell cellWillDisplay];
         
         if (BTDNetworkWifiConnected() && [[[TTSettingsManager sharedManager] settingForKey:@"tt_huoshan_iOS_video_prepare_optimise" defaultValue:@1 freeze:NO] boolValue]) {
-            [((AWEVideoContainerCollectionViewCell *)cell).videoPlayView prepareToPlay];
+            [((FHUGCShortVideoFullScreenCell *)cell) readyToPlay];
         }
     }
     
-    if ([cell isKindOfClass:[AWEVideoLoadingCollectionViewCell class]]) {
-        [self.viewModel willShowLoadingCell];
-    }
+//    if ([cell isKindOfClass:[AWEVideoLoadingCollectionViewCell class]]) {
+//        [self.viewModel willShowLoadingCell];
+//    }
 
-    if (!self.currentVideoCell.videoPlayView && (indexPath.section == 0 && indexPath.item == self.dataFetchManager.currentIndex)) {
+    if (!self.currentVideoCell.playerView && (indexPath.section == 0 && indexPath.item == self.dataFetchManager.currentIndex)) {
         self.currentVideoCell = cell;
         self.currentIndexPath = indexPath;
         [self beginFirstImpression];
@@ -528,8 +535,8 @@ const static CGFloat kAWEVideoContainerSpacing = 2;
             if (continuePlaying) {
                 [self showPromotionIfNecessaryWithIndex:indexPath.item];
                 // 首次进入的播放
-                [self.currentVideoCell.videoPlayView prepareToPlay];
-                [self.currentVideoCell.videoPlayView play];
+                [self.currentVideoCell readyToPlay];
+                [self.currentVideoCell play];
                 [self didSwitchToCell:self.currentVideoCell];
             } else {
                 if (self.wantToClosePage) {
@@ -611,7 +618,7 @@ const static CGFloat kAWEVideoContainerSpacing = 2;
 {
     [super viewWillDisappear:animated];
 
-    [self.currentVideoCell.videoPlayView pause];
+    [self.currentVideoCell pause];
     [self endLastImpression];
     
     [self sendStayPageTracking];
@@ -620,7 +627,7 @@ const static CGFloat kAWEVideoContainerSpacing = 2;
 - (void)didMoveToParentViewController:(UIViewController *)parent
 {
     if (!parent) {
-        [self.currentVideoCell.videoPlayView stop];
+//        [self.currentVideoCell reset];
         [self sendVideoOverTracking];
         [TSVPrefetchVideoManager cancelPrefetchShortVideoInDetail];
     }
@@ -653,7 +660,7 @@ const static CGFloat kAWEVideoContainerSpacing = 2;
     }
 }
 
-- (void)didSwitchToCell:(AWEVideoContainerCollectionViewCell *)cell
+- (void)didSwitchToCell:(FHUGCShortVideoFullScreenCell *)cell
 {
     
     NSParameterAssert(cell);
@@ -666,30 +673,30 @@ const static CGFloat kAWEVideoContainerSpacing = 2;
     // 取消上一个视频的预加载
     [TSVPrefetchVideoManager cancelPrefetchShortVideoInDetail];
 
-    [TTFFantasyTracker sharedInstance].lastGid = cell.videoDetail.groupId;
+    [TTFFantasyTracker sharedInstance].lastGid = cell.cellModel.groupId;
 
     [self sendGoDetailAndVideoPlayWithCell:cell];
     [self sendFeedClientShowAndVideoPlayWithCell:cell];
     [[TSVMonitorManager sharedManager] recordCurrentMemoryUsage];
 }
 
-- (void)sendFeedClientShowAndVideoPlayWithCell:(AWEVideoContainerCollectionViewCell *)cell {
-    NSString *groupId = cell.videoDetail.groupId;
+- (void)sendFeedClientShowAndVideoPlayWithCell:(FHUGCShortVideoFullScreenCell *)cell {
+    NSString *groupId = cell.cellModel.groupId;
     if (groupId && ![self.feedClientShowCache containsObject:groupId]) {
         [self.feedClientShowCache addObject:groupId];
-        NSInteger rank = [cell.videoDetail.tracerDic btd_integerValueForKey:@"rank" default:0];
-        [FHShortVideoTracerUtil feedClientShowWithmodel:cell.videoDetail eventIndex:rank];
+        NSInteger rank = [cell.cellModel.tracerDic btd_integerValueForKey:@"rank" default:0];
+        [FHShortVideoTracerUtil feedClientShowWithmodel:cell.cellModel eventIndex:rank];
     };
 }
 
-- (void)sendGoDetailAndVideoPlayWithCell:(AWEVideoContainerCollectionViewCell *)cell
+- (void)sendGoDetailAndVideoPlayWithCell:(FHUGCShortVideoFullScreenCell *)cell
 {
     NSParameterAssert(cell);
-    NSInteger rank = [cell.videoDetail.tracerDic btd_integerValueForKey:@"rank" default:0];
-    [FHShortVideoTracerUtil videoPlayOrPauseWithName:@"video_play" eventModel:cell.videoDetail eventIndex:rank];
-    [FHShortVideoTracerUtil goDetailWithModel:cell.videoDetail eventIndex:self.initialItemIndex];
+    NSInteger rank = [cell.cellModel.tracerDic btd_integerValueForKey:@"rank" default:0];
+    [FHShortVideoTracerUtil videoPlayOrPauseWithName:@"video_play" eventModel:cell.cellModel eventIndex:rank];
+    [FHShortVideoTracerUtil goDetailWithModel:cell.cellModel eventIndex:self.initialItemIndex];
     [self.tracker flushStayPageTime];
-    cell.videoDetail.videoAction.playCount = [NSString stringWithFormat:@"%ld",[cell.videoDetail.videoAction.playCount intValue]+ 1];
+    cell.cellModel.videoAction.playCount = [NSString stringWithFormat:@"%ld",[cell.cellModel.videoAction.playCount intValue]+ 1];
     [self sendStayPageTracking];
 }
 
@@ -700,14 +707,14 @@ const static CGFloat kAWEVideoContainerSpacing = 2;
         return;
     }
 
-    NSTimeInterval totalPlayTime = self.currentVideoCell.totalPlayTime;
+    NSTimeInterval totalPlayTime = self.currentVideoCell.playerView.player.playerStateStore.state.currentPlaybackTime;
     
     if (totalPlayTime <= 0  ){
         return;
     }
     NSString *duration = [NSString stringWithFormat:@"%.0f", totalPlayTime * 1000];
-   NSInteger rank = [self.currentVideoCell.videoDetail.tracerDic btd_integerValueForKey:@"rank" default:0];
-    [FHShortVideoTracerUtil videoOverWithModel:self.currentVideoCell.videoDetail eventIndex:rank forStayTime:duration];
+   NSInteger rank = [self.currentVideoCell.cellModel.tracerDic btd_integerValueForKey:@"rank" default:0];
+    [FHShortVideoTracerUtil videoOverWithModel:self.currentVideoCell.cellModel eventIndex:rank forStayTime:duration];
 }
 
 - (void)sendStayPageTracking
@@ -728,17 +735,17 @@ const static CGFloat kAWEVideoContainerSpacing = 2;
 //                                model:self.currentVideoCell.videoDetail
 //                      commonParameter:self.commonTrackingParameter
 //                       extraParameter:paramters];
-    NSInteger rank = [self.currentVideoCell.videoDetail.tracerDic btd_integerValueForKey:@"rank" default:0];
-    [FHShortVideoTracerUtil stayPageWithModel:self.currentVideoCell.videoDetail eventIndex:rank forStayTime:stayTime];
-    FHFeedUGCCellModel *video = self.currentVideoCell.videoDetail;
+    NSInteger rank = [self.currentVideoCell.cellModel.tracerDic btd_integerValueForKey:@"rank" default:0];
+    [FHShortVideoTracerUtil stayPageWithModel:self.currentVideoCell.cellModel eventIndex:rank forStayTime:stayTime];
+    FHFeedUGCCellModel *video = self.currentVideoCell.cellModel;
     NSString *enterFrom = video.enterFrom ?: self.commonTrackingParameter[@"enter_from"];
     NSString *categoryName = video.categoryId ?: self.commonTrackingParameter[@"category_name"];
-    [[TTRelevantDurationTracker sharedTracker] appendRelevantDurationWithGroupID:self.currentVideoCell.videoDetail.groupId
-                                                                          itemID:self.currentVideoCell.videoDetail.groupId
+    [[TTRelevantDurationTracker sharedTracker] appendRelevantDurationWithGroupID:self.currentVideoCell.cellModel.groupId
+                                                                          itemID:self.currentVideoCell.cellModel.groupId
                                                                        enterFrom:enterFrom
                                                                     categoryName:categoryName
                                                                         stayTime:[self.tracker timeIntervalForStayPage] * 1000
-                                                                           logPb:self.currentVideoCell.videoDetail.logPb];
+                                                                           logPb:self.currentVideoCell.cellModel.logPb];
     
     
     
@@ -763,7 +770,6 @@ const static CGFloat kAWEVideoContainerSpacing = 2;
         [self playCurrentVideoIfAllowed];
     } else {
         if (self.currentVideoCell) {
-            [self.currentVideoCell.videoPlayView stop];
             [self sendStayPageTracking];
             [self sendVideoOverTracking];
             self.currentVideoCell = nil;
@@ -783,7 +789,7 @@ const static CGFloat kAWEVideoContainerSpacing = 2;
     @try {
 #endif
         NSInteger itemIndex = [self currentItemIndex];
-        TTShortVideoModel *oldVideoDetail = self.currentVideoCell.videoDetail;
+        TTShortVideoModel *oldVideoDetail = self.currentVideoCell.cellModel;
         if (itemIndex >= [self.dataFetchManager numberOfShortVideoItems]) {
             [self sendImpressionWithVideoDetail:oldVideoDetail status:SSImpressionStatusEnd];
         } else {
@@ -811,7 +817,7 @@ const static CGFloat kAWEVideoContainerSpacing = 2;
      * 有一次无效的调用是在第一次进来的 -viewWillAppear: 中，这个时候 videoDetail 会为 nil，这也是在 cellForItemAtIndexPath 调用的原因
      */
     
-    TTShortVideoModel *videoDetail = self.currentVideoCell.videoDetail;
+    TTShortVideoModel *videoDetail = self.currentVideoCell.cellModel;
     if (videoDetail) {
         [self sendImpressionWithVideoDetail:videoDetail status:SSImpressionStatusRecording];
     }
@@ -819,7 +825,7 @@ const static CGFloat kAWEVideoContainerSpacing = 2;
 
 - (void)endLastImpression
 {
-    TTShortVideoModel *videoDetail = self.currentVideoCell.videoDetail;
+    TTShortVideoModel *videoDetail = self.currentVideoCell.cellModel;
     //NSAssert(videoDetail, @"videoDetail should exist, otherwise we will lose impression");
     if (videoDetail) {
         [self sendImpressionWithVideoDetail:videoDetail status:SSImpressionStatusEnd];
@@ -856,7 +862,7 @@ const static CGFloat kAWEVideoContainerSpacing = 2;
 
 - (void)needRerecordImpressions
 {
-    FHFeedUGCCellModel *videoDetail = self.currentVideoCell.videoDetail;
+    FHFeedUGCCellModel *videoDetail = self.currentVideoCell.cellModel;
     if (videoDetail) {
         [self sendImpressionWithVideoDetail:videoDetail status:SSImpressionStatusRecording];
     }
@@ -880,17 +886,15 @@ const static CGFloat kAWEVideoContainerSpacing = 2;
         } else {
             NSInteger itemIndex = [self currentItemIndex];
             NSIndexPath *newIndexPath = [NSIndexPath indexPathForItem:itemIndex inSection:0];
-            AWEVideoContainerCollectionViewCell *cell = (AWEVideoContainerCollectionViewCell *)[self.collectionView cellForItemAtIndexPath:newIndexPath];
+            FHUGCShortVideoFullScreenCell *cell = (FHUGCShortVideoFullScreenCell *)[self.collectionView cellForItemAtIndexPath:newIndexPath];
 
-            if ([cell isKindOfClass:[AWEVideoContainerCollectionViewCell class]] ||
+            if ([cell isKindOfClass:[FHUGCShortVideoFullScreenCell class]] ||
                 [cell isKindOfClass:[AWEVideoContainerAdCollectionViewCell class]]) {
                 if (![newIndexPath isEqual:self.currentIndexPath]) {
                     [self.currentVideoCell.overlayViewController.miniSlider setWatchedProgress:0];
                     [self.currentVideoCell.overlayViewController.miniSlider setCacheProgress:0];
                     // 左右划的播放
                     [self showPromotionIfNecessaryWithIndex:itemIndex];
-                    
-                    [self.currentVideoCell.videoPlayView stop];
                     [self sendVideoOverTracking];
                     [self sendStayPageTracking];
                     self.firstPageShown = YES;
@@ -898,12 +902,12 @@ const static CGFloat kAWEVideoContainerSpacing = 2;
                     self.dataFetchManager.currentIndex = itemIndex;
                     self.currentVideoCell = cell;
                     self.currentIndexPath = newIndexPath;
-                    [self.currentVideoCell.videoPlayView prepareToPlay];
-                    [self.currentVideoCell.videoPlayView play];
+                    [self.currentVideoCell readyToPlay];
+                    [self.currentVideoCell play];
                     [self didSwitchToCell:self.currentVideoCell];
                 }
             } else {
-                [self.currentVideoCell.videoPlayView stop];
+//                [self.currentVideoCell.videoPlayView stop];
                 [self sendVideoOverTracking];
                 [self sendStayPageTracking];
                 self.currentVideoCell = nil;
@@ -935,24 +939,22 @@ const static CGFloat kAWEVideoContainerSpacing = 2;
 
 - (void)playCurrentVideo
 {
-    if (![self.currentVideoCell.videoPlayView isPlaying]) {
-        [self.currentVideoCell.videoPlayView play];
-    }
+        [self.currentVideoCell.playerView.player sendAction:TTVPlayerEventTypePlayerBeginPlay payload:nil];
 }
 
 - (void)pauseCurrentVideo
 {
-    if ([self.currentVideoCell.videoPlayView isPlaying]) {
-        [self.currentVideoCell.videoPlayView pause];
-    }
+//    if ([self.currentVideoCell.playerView isPlaying]) {
+         [self.currentVideoCell.playerView.player sendAction:TTVPlayerEventTypePlayerPause payload:nil];
+//    }
 }
 
 - (UIView *)exitScreenshotView
 {
-    if (!self.currentVideoCell.videoPlayView) {
-        return self.view;
-    }
-    return self.currentVideoCell.videoPlayView;
+//    if (!self.currentVideoCell.videoPlayView) {
+//        return self.view;
+//    }
+//    return self.currentVideoCell.videoPlayView;
 }
 
 @end

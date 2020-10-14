@@ -15,4 +15,5 @@
 @property (nonatomic, strong, nullable) TSVControlOverlayViewModel *viewModel;
 @property (weak, nonatomic, nullable) id<IESVideoPlayerProtocol> playerController;
 @property(nonatomic, strong, nullable)ExploreMovieMiniSliderView * miniSlider;
+@property (nonatomic, strong) TTVPlayerStateStore * _Nullable playerStateStore;
 @end
