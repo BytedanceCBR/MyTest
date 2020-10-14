@@ -495,8 +495,8 @@ static NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
         [self.requestTask cancel];
     }
     if (self.houseType != FHHouseTypeRentHouse) {
-        NSString *group = [[BDABTestManager ABGroup]
-                       btd_stringByURLEncode];
+        NSString *group = [BDABTestManager ABGroup];
+    
         requestDictonary[@"client_ab_version"] = group;
     }
     WeakSelf;
