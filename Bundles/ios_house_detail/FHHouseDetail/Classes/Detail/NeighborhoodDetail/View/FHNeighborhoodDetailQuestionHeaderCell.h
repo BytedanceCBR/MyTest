@@ -16,11 +16,17 @@ NS_ASSUME_NONNULL_BEGIN
 @interface FHNeighborhoodDetailQuestionHeaderModel : NSObject
 
 @property(nonatomic , copy) NSString *title;
+@property(nonatomic , assign) NSInteger totalCount;
+@property(nonatomic , assign) NSInteger count;
 @property(nonatomic , copy) NSString *questionListSchema;
 @property(nonatomic , copy) NSString *neighborhoodId;
 @property(nonatomic , strong) NSDictionary *detailTracerDic;
 @property(nonatomic , assign) CGFloat topMargin;
 @property(nonatomic , assign) BOOL hiddenTopLine;
+@property(nonatomic , assign) BOOL isEmpty;
+@property(nonatomic , copy) NSString *questionWriteTitle;
+@property(nonatomic , copy) NSString *questionWriteSchema;
+@property(nonatomic , copy) NSString *questionWriteEmptyContent;
 
 @end
 

@@ -12,16 +12,17 @@
 
 - (void)updateDetailModel:(FHDetailNeighborhoodModel *)model {
     //有点评
-    BOOL isHaveComment = model.data.comments.content.data.count > 0;
+    BOOL isHaveComment = (model.data.comments.content.data.count > 0);
     //有问答
-    BOOL isHaveQuestion = model.data.question.content.data.count > 0;
+    BOOL isHaveQuestion = (model.data.question != nil);
     
     NSMutableArray *itemArray = [NSMutableArray array];
     if(model.data.comments.content.data.count > 0){
         FHDetailNeighborhoodDataCommentsContentModel *contentModel = model.data.comments.content;
         self.commentHeaderModel = [[FHNeighborhoodDetailCommentHeaderModel alloc] init];
         _commentHeaderModel.title = model.data.comments.title;
-        
+        _commentHeaderModel.totalCount = [contentModel.count integerValue];
+        _commentHeaderModel.count = contentModel.data.count;
         if(!isEmptyString(model.data.comments.content.count)){
             NSInteger totalCount = [contentModel.count integerValue];
             if(totalCount > 0 && contentModel.data.count > 0){
@@ -70,56 +71,73 @@
         [itemArray addObject:spaceModel];
     }
     
-    if(model.data.question.content.data.count > 0){
-        FHDetailNeighborhoodDataQuestionContentModel *contentModel = model.data.question.content;
+    if(model.data.question){
         self.questionHeaderModel = [[FHNeighborhoodDetailQuestionHeaderModel alloc] init];
-        _questionHeaderModel.title = model.data.question.title;
-        
-        if(!isEmptyString(model.data.question.content.count)){
-            NSInteger totalCount = [contentModel.count integerValue];
-            if(totalCount > 0 && contentModel.data.count > 0){
-                _questionHeaderModel.title = [NSString stringWithFormat:@"%@（%li）",_questionHeaderModel.title,(long)totalCount];
+        if(model.data.question.content.data.count > 0){
+            FHDetailNeighborhoodDataQuestionContentModel *contentModel = model.data.question.content;
+            _questionHeaderModel.title = model.data.question.title;
+            _questionHeaderModel.totalCount = [contentModel.count integerValue];
+            _questionHeaderModel.count = contentModel.data.count;
+            if(!isEmptyString(model.data.question.content.count)){
+                NSInteger totalCount = [contentModel.count integerValue];
+                if(totalCount > 0 && contentModel.data.count > 0){
+                    _questionHeaderModel.title = [NSString stringWithFormat:@"%@（%li）",_questionHeaderModel.title,(long)totalCount];
+                }
             }
-        }
-        
-        _questionHeaderModel.hiddenTopLine = !isHaveComment;
-        _questionHeaderModel.topMargin = isHaveComment ? 14 : 18;
-        _questionHeaderModel.questionListSchema = model.data.question.content.questionListSchema;
-        _questionHeaderModel.neighborhoodId = model.data.id;
-        _questionHeaderModel.detailTracerDic = self.detailTracerDic;
-        [itemArray addObject:_questionHeaderModel];
-        
-        for (int m = 0; m < contentModel.data.count;  m++) {
-            NSString *content = contentModel.data[m];
-            FHFeedUGCCellModel *model = [FHFeedUGCCellModel modelFromFeed:content];
-            model.realtorIndex = m;
-            model.isShowLineView = m < contentModel.data.count -1;
-
-            NSMutableDictionary *tracerDic = [NSMutableDictionary dictionary];
-            tracerDic[@"rank"] = @(m);
-            tracerDic[@"origin_from"] = self.detailTracerDic[@"origin_from"] ?: @"be_null";
-            tracerDic[@"enter_from"] = self.detailTracerDic[@"enter_from"] ?: @"be_null";
-            tracerDic[@"page_type"] = self.detailTracerDic[@"page_type"] ?: @"be_null";
-            tracerDic[@"element_type"] = @"realtor_evaluate";
-            tracerDic[@"group_id"] = model.groupId;
-            tracerDic[@"from_gid"] = self.extraDic[@"houseId"];
-            tracerDic[@"log_pb"] = model.logPb;
-            if(model.logPb[@"impr_id"]){
-                tracerDic[@"impr_id"] = model.logPb[@"impr_id"];
-            }
-            if(model.logPb[@"group_source"]){
-                tracerDic[@"group_source"] = model.logPb[@"group_source"];
-            }
-            model.tracerDic = [tracerDic copy];
             
-            if (model) {
-                [itemArray addObject:model];
+            _questionHeaderModel.isEmpty = NO;
+            _questionHeaderModel.hiddenTopLine = !isHaveComment;
+            _questionHeaderModel.topMargin = isHaveComment ? 14 : 18;
+            _questionHeaderModel.questionListSchema = model.data.question.content.questionListSchema;
+            _questionHeaderModel.neighborhoodId = model.data.id;
+            _questionHeaderModel.detailTracerDic = self.detailTracerDic;
+            [itemArray addObject:_questionHeaderModel];
+            
+            for (int m = 0; m < contentModel.data.count;  m++) {
+                NSString *content = contentModel.data[m];
+                FHFeedUGCCellModel *model = [FHFeedUGCCellModel modelFromFeed:content];
+                model.realtorIndex = m;
+                model.isShowLineView = m < contentModel.data.count -1;
+
+                NSMutableDictionary *tracerDic = [NSMutableDictionary dictionary];
+                tracerDic[@"rank"] = @(m);
+                tracerDic[@"origin_from"] = self.detailTracerDic[@"origin_from"] ?: @"be_null";
+                tracerDic[@"enter_from"] = self.detailTracerDic[@"enter_from"] ?: @"be_null";
+                tracerDic[@"page_type"] = self.detailTracerDic[@"page_type"] ?: @"be_null";
+                tracerDic[@"element_type"] = @"realtor_evaluate";
+                tracerDic[@"group_id"] = model.groupId;
+                tracerDic[@"from_gid"] = self.extraDic[@"houseId"];
+                tracerDic[@"log_pb"] = model.logPb;
+                if(model.logPb[@"impr_id"]){
+                    tracerDic[@"impr_id"] = model.logPb[@"impr_id"];
+                }
+                if(model.logPb[@"group_source"]){
+                    tracerDic[@"group_source"] = model.logPb[@"group_source"];
+                }
+                model.tracerDic = [tracerDic copy];
+                
+                if (model) {
+                    [itemArray addObject:model];
+                }
             }
+            
+            FHNeighborhoodDetailSpaceModel *spaceModel = [[FHNeighborhoodDetailSpaceModel alloc] init];
+            spaceModel.height = 15;
+            [itemArray addObject:spaceModel];
+        }else{
+            _questionHeaderModel.title = @"暂无回答";
+            _questionHeaderModel.totalCount = 0;
+            _questionHeaderModel.count = 0;
+            _questionHeaderModel.hiddenTopLine = !isHaveComment;
+            _questionHeaderModel.topMargin = isHaveComment ? 14 : 18;
+            _questionHeaderModel.isEmpty = YES;
+            _questionHeaderModel.questionWriteTitle = model.data.question.questionWrite.title;
+            _questionHeaderModel.questionWriteSchema = model.data.question.questionWrite.schema;
+            _questionHeaderModel.questionWriteEmptyContent = model.data.question.questionWrite.contentEmptyTitle;
+            _questionHeaderModel.neighborhoodId = model.data.id;
+            _questionHeaderModel.detailTracerDic = self.detailTracerDic;
+            [itemArray addObject:_questionHeaderModel];
         }
-        
-        FHNeighborhoodDetailSpaceModel *spaceModel = [[FHNeighborhoodDetailSpaceModel alloc] init];
-        spaceModel.height = 15;
-        [itemArray addObject:spaceModel];
     }
     
     self.items = [itemArray copy];

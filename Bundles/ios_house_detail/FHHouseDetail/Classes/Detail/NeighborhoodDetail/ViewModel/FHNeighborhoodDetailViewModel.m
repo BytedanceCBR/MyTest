@@ -31,6 +31,10 @@
 #import "FHSearchChannelTypes.h"
 #import "FHSearchHouseModel.h"
 #import "FHNeighborhoodDetailRecommendSM.h"
+#import "FHNeighborhoodDetailAgentSM.h"
+#import "FHNeighborhoodDetailAgentSC.h"
+#import "FHNeighborhoodDetailStrategySC.h"
+#import "FHNeighborhoodDetailStrategySM.h"
 
 @interface FHNeighborhoodDetailViewModel ()
 
@@ -122,40 +126,11 @@
         [sectionModels addObject:coreInfoSM];
     }
 
-//    // 小区点评
-//    if(model.data.comments) {
-//        FHDetailCommentsCellModel *commentsModel = [[FHDetailCommentsCellModel alloc] init];
-//        NSMutableDictionary *paramsDict = @{}.mutableCopy;
-//        if (self.detailTracerDic) {
-//            [paramsDict addEntriesFromDictionary:self.detailTracerDic];
-//        }
-//        paramsDict[@"page_type"] = [self pageTypeString];
-//        commentsModel.tracerDict = paramsDict;
-//        commentsModel.neighborhoodId = self.houseId;
-//        commentsModel.comments = model.data.comments;
-//         commentsModel.houseModelType = FHPlotHouseModelTypeNeighborhoodComment;
-//        [self.items addObject:commentsModel];
-//    }
-//    // 小区问答
-//    if (model.data.question) {
-//        // 添加分割线--当存在某个数据的时候在顶部添加分割线
-//        FHDetailQACellModel *qaModel = [[FHDetailQACellModel alloc] init];
-//        NSMutableDictionary *paramsDict = @{}.mutableCopy;
-//        if (self.detailTracerDic) {
-//            [paramsDict addEntriesFromDictionary:self.detailTracerDic];
-//        }
-//        paramsDict[@"page_type"] = [self pageTypeString];
-//        qaModel.tracerDict = paramsDict;
-//        qaModel.neighborhoodId = self.houseId;
-//        qaModel.question = model.data.question;
-//        qaModel.houseModelType = FHPlotHouseModelTypeNeighborhoodQA;
-//        [self.items addObject:qaModel];
-//    }
-    //小区点评和问答
-    if (model.data.comments.content.data.count > 0 || model.data.question.content.data.count > 0) {
-        FHNeighborhoodDetailCommentAndQuestionSM *RGCListModel = [[FHNeighborhoodDetailCommentAndQuestionSM alloc] initWithDetailModel:self.detailData];
-        RGCListModel.sectionType = FHNeighborhoodDetailSectionTypeCommentAndQuestion;
-        RGCListModel.detailTracerDic = self.detailTracerDic;
+    //小区测评
+    if (model.data.strategy.articleList.count > 0) {
+        FHNeighborhoodDetailStrategySM *strategyModel = [[FHNeighborhoodDetailStrategySM alloc] initWithDetailModel:self.detailData];
+        strategyModel.sectionType = FHNeighborhoodDetailSectionTypeStrategy;
+        strategyModel.detailTracerDic = self.detailTracerDic;
         NSString *searchId = self.listLogPB[@"search_id"];
         NSString *imprId = self.listLogPB[@"impr_id"];
         NSDictionary *extraDic = @{
@@ -165,10 +140,37 @@
             @"houseType":@(FHHouseTypeNeighborhood),
             @"channelId":@"f_hosue_wtt"
         };
-        RGCListModel.extraDic = extraDic;
-        [RGCListModel updateDetailModel:self.detailData];
-        [sectionModels addObject:RGCListModel];
+        strategyModel.extraDic = extraDic;
+        [strategyModel updateDetailModel:self.detailData];
+        [sectionModels addObject:strategyModel];
     }
+    
+    //小区点评和问答
+    if (model.data.comments.content.data.count > 0 || model.data.question) {
+        FHNeighborhoodDetailCommentAndQuestionSM *commentAndQuestionModel = [[FHNeighborhoodDetailCommentAndQuestionSM alloc] initWithDetailModel:self.detailData];
+        commentAndQuestionModel.sectionType = FHNeighborhoodDetailSectionTypeCommentAndQuestion;
+        commentAndQuestionModel.detailTracerDic = self.detailTracerDic;
+        NSString *searchId = self.listLogPB[@"search_id"];
+        NSString *imprId = self.listLogPB[@"impr_id"];
+        NSDictionary *extraDic = @{
+            @"searchId":searchId?:@"be_null",
+            @"imprId":imprId?:@"be_null",
+            @"houseId":self.houseId,
+            @"houseType":@(FHHouseTypeNeighborhood),
+            @"channelId":@"f_hosue_wtt"
+        };
+        commentAndQuestionModel.extraDic = extraDic;
+        [commentAndQuestionModel updateDetailModel:self.detailData];
+        [sectionModels addObject:commentAndQuestionModel];
+    }
+    
+    
+    if (model.data.recommendedRealtors.count > 0) {
+        FHNeighborhoodDetailAgentSM *agentSM = [[FHNeighborhoodDetailAgentSM alloc] initWithDetailModel:self.detailData];
+        agentSM.sectionType = FHNeighborhoodHouseDetailSectionTypeAgent;
+        [sectionModels addObject:agentSM];
+    }
+    
     self.sectionModels = sectionModels.copy;
     
     
