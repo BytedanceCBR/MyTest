@@ -154,7 +154,7 @@ typedef enum : NSUInteger {
             }
             return;
         }
-        if([model.status isEqualToString:@"100"]){
+        if(![model.status isEqualToString:@"0"]){
             [[ToastManager manager] showToast:model.message];
         }
         else{
