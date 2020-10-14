@@ -15,6 +15,11 @@
 #import <FHHouseBase/FHCommonDefines.h>
 #import <TTAccountSDK/TTAccountUserEntity.h>
 #import <TTAccountSDK/TTAccount.h>
+#import "FHMainApi.h"
+#import <ios_house_im/UIView+Utils.h>
+#import "UIImage+FIconFont.h"
+#import "ToastManager.h"
+#import "TTReachability.h"
 
 typedef NS_ENUM(NSUInteger, FHHouseDetailReportItemType) {
     FHHouseDetailReportItemType_Type,
@@ -322,6 +327,11 @@ typedef NS_ENUM(NSUInteger, FHHouseDetailReportItemType) {
     return _hintLabel;
 }
 
+- (void)setItem:(FHHouseDetailReportItem *)item {
+    [super setItem: item];
+    
+    self.phoneTextField.text = item.phoneNumber;
+}
 @end
 
 @interface FHHouseDetailReportExtraCell: FHHouseDetailReportBaseCell
@@ -576,7 +586,160 @@ typedef NS_ENUM(NSUInteger, FHHouseDetailReportItemType) {
 }
 - (void)submitAction {
     // 提交动作
+    
+    NSMutableDictionary *params = [NSMutableDictionary dictionary];
+    // TODO: 参数传入
+    params[@"house_url"]= @"";
+    params[@"house_id"] = @"";
+    params[@"house_type"] = @"";
+    
+    [self.items enumerateObjectsUsingBlock:^(FHHouseDetailReportItem * _Nonnull item, NSUInteger idx, BOOL * _Nonnull stop) {
+        switch (item.type) {
+            case FHHouseDetailReportItemType_Type:
+            {
+                params[@"problem"] = item.selectedOption.content;
+            }
+                break;
+            case FHHouseDetailReportItemType_Phone:
+            {
+                params[@"phone"] = item.phoneNumber;
+            }
+                break;
+            case FHHouseDetailReportItemType_Extra:
+            {
+                params[@"other_problem"] = item.extraContent;
+            }
+                break;
+            default:
+                break;
+        }
+    }];
+    
+    
+    if(![TTReachability isNetworkConnected]) {
+        [[ToastManager manager] showToast:@"网络不给力，请重试"];
+        return;
+    }
+    
+    @weakify(self);
+    [FHMainApi requestHouseFeedbackReport:params completion:^(NSError * _Nonnull error, id  _Nonnull jsonObj) {
+        @strongify(self);
+        
+        if(error) {
+            [[ToastManager manager] showToast:@"网络错误，请稍后重试"];
+            return;
+        }
+        
+        // TODO: 成功后退出并弹窗引导
+        [self goBack];
+        [self showHintView];
+        
+    }];
 }
+
+- (void)showHintView {
+
+    // 创建弹窗
+    CGFloat duration = 0.25f;
+    UIView *hintView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT)];
+    hintView.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0.5];
+    UITapGestureRecognizer *tap = [UITapGestureRecognizer new];
+    
+    void(^dismissHintViewBlock)(void) = ^(void) {
+        [UIView animateWithDuration:duration animations:^{
+            hintView.alpha = 0;
+        } completion:^(BOOL finished) {
+            [hintView removeFromSuperview];
+        }];
+    };
+    
+    // 背景点击消失
+    [[tap.rac_gestureSignal deliverOnMainThread] subscribeNext:^(__kindof UIGestureRecognizer * _Nullable x) {
+        dismissHintViewBlock();
+    }];
+    [hintView addGestureRecognizer:tap];
+    
+    UIView *contentView = [UIView new];
+    contentView.backgroundColor = [UIColor themeWhite];
+    contentView.layer.cornerRadius = 10;
+    contentView.layer.masksToBounds = YES;
+    [hintView addSubview:contentView];
+    [contentView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.center.equalTo(hintView);
+        make.width.mas_equalTo(279);
+        make.height.mas_equalTo(269);
+    }];
+    UITapGestureRecognizer *fakeTap = [UITapGestureRecognizer new];
+    [contentView addGestureRecognizer:fakeTap];
+    
+    // 背景图片
+    UIImageView *backgroundImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"detail_house_report_bg_pop"]];
+    [contentView addSubview:backgroundImageView];
+    [backgroundImageView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.edges.equalTo(contentView);
+    }];
+    // 关闭按钮点击消失
+    UIButton *closeBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+    [closeBtn setImage:ICON_FONT_IMG(24, @"\U0000E673", [UIColor themeGray5]) forState:UIControlStateNormal];
+    [[[closeBtn rac_signalForControlEvents:UIControlEventTouchUpInside] deliverOnMainThread] subscribeNext:^(__kindof UIControl * _Nullable x) {
+        dismissHintViewBlock();
+    }];
+    [contentView addSubview:closeBtn];
+    [closeBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.width.height.mas_equalTo(24);
+        make.top.equalTo(contentView).offset(5);
+        make.right.equalTo(contentView).offset(-15);
+    }];
+    // 标题
+    UILabel *titleLabel = [UILabel new];
+    titleLabel.text = @"房源举报";
+    titleLabel.font = [UIFont themeFontMedium:24];
+    titleLabel.textColor = [UIColor themeGray1];
+    [contentView addSubview:titleLabel];
+    [titleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.equalTo(contentView).offset(20);
+        make.top.equalTo(contentView).offset(60);
+        make.right.equalTo(contentView).offset(-20);
+        make.height.mas_offset(33);
+    }];
+    // 副标题
+    UILabel *subtitleLabel = [UILabel new];
+    subtitleLabel.text = @"提交成功！您可以在“消息-通知”中查看反馈进度。";
+    subtitleLabel.textColor = [UIColor themeGray1];
+    subtitleLabel.numberOfLines = 0;
+    subtitleLabel.font = [UIFont themeFontMedium:14];
+    [contentView addSubview:subtitleLabel];
+    [subtitleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.right.equalTo(titleLabel);
+        make.top.equalTo(titleLabel.mas_bottom).offset(16);
+    }];
+    // 知道了按钮
+    UIButton *knownBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+    [knownBtn setTitle:@"知道了" forState:UIControlStateNormal];
+    knownBtn.titleLabel.textColor = [UIColor themeWhite];
+    knownBtn.titleLabel.font = [UIFont themeFontRegular:16];
+    knownBtn.layer.cornerRadius = 20;
+    knownBtn.layer.masksToBounds = YES;
+    knownBtn.backgroundColor = [UIColor themeOrange4];
+    [contentView addSubview:knownBtn];
+    [knownBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.right.equalTo(titleLabel);
+        make.bottom.equalTo(contentView).offset(-50);
+        make.height.mas_equalTo(40);
+    }];
+    [[[knownBtn rac_signalForControlEvents:UIControlEventTouchUpInside] deliverOnMainThread] subscribeNext:^(__kindof UIControl * _Nullable x) {
+        dismissHintViewBlock();
+    }];
+    
+    // 显示弹窗
+    hintView.alpha = 0;
+    UIWindow *keyWindow = [UIView keyWindow];
+    [keyWindow addSubview:hintView];
+    [UIView animateWithDuration:duration animations:^{
+        hintView.alpha = 1;
+    }];
+}
+
 #pragma  mark - UITableViewDelegate
 
 

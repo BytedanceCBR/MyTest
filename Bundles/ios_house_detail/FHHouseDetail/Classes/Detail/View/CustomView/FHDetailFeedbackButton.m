@@ -18,6 +18,7 @@
 #import "TTRoute.h"
 #import "FHDetailOldModel.h"
 #import "NSDictionary+BTDAdditions.h"
+#import "SSCommonLogic.h"
 
 @interface FHDetailFeedbackButton ()
 
@@ -68,9 +69,9 @@
 
 // 二手房-房源问题反馈
 - (void)gotoReportVC {
-    BOOL isJumpToH5 = NO;
+    BOOL isJumpToH5 = [SSCommonLogic isEnableHouseDetailH5Report];
     if(isJumpToH5) {
-        [self gotoReportH5Page]; // 之后准备废弃
+        [self gotoReportH5Page];
     }
     else {
         [self gotoReportNativePage];
