@@ -37,7 +37,7 @@
 
         FHNeighborhoodDetailSectionModel *model = self.sectionModels[attribute.indexPath.section];
 
-        if (model.sectionType != FHNeighborhoodDetailSectionTypeHeader && ![sections containsObject:@(attribute.indexPath.section)]) {
+        if (model.sectionType != FHNeighborhoodDetailSectionTypeHeader && model.sectionType != FHNeighborhoodDetailSectionTypeFloorpan && ![sections containsObject:@(attribute.indexPath.section)]) {
             [sections addObject:@(attribute.indexPath.section)];
             UICollectionViewLayoutAttributes *newAttrs = [self layoutAttributesForDecorationViewOfKind:NSStringFromClass([FHBuildingDetailShadowView class]) atIndexPath:[NSIndexPath indexPathForItem:0 inSection:attribute.indexPath.section]];
             if (newAttrs && newAttrs.frame.size.height > 0) {
