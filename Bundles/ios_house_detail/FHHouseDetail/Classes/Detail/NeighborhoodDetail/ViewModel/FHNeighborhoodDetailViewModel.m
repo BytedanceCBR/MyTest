@@ -27,6 +27,8 @@
 #import "FHNeighborhoodDetailHouseSaleSM.h"
 #import "FHNeighborhoodDetailCommentAndQuestionSC.h"
 #import "FHNeighborhoodDetailCommentAndQuestionSM.h"
+#import "FHNeighborhoodDetailAgentSM.h"
+#import "FHNeighborhoodDetailAgentSC.h"
 #import "FHNeighborhoodDetailStrategySC.h"
 #import "FHNeighborhoodDetailStrategySM.h"
 
@@ -156,6 +158,14 @@
         [commentAndQuestionModel updateDetailModel:self.detailData];
         [sectionModels addObject:commentAndQuestionModel];
     }
+    
+    
+    if (model.data.recommendedRealtors.count > 0) {
+        FHNeighborhoodDetailAgentSM *agentSM = [[FHNeighborhoodDetailAgentSM alloc] initWithDetailModel:self.detailData];
+        agentSM.sectionType = FHNeighborhoodHouseDetailSectionTypeAgent;
+        [sectionModels addObject:agentSM];
+    }
+    
     self.sectionModels = sectionModels.copy;
     
     
