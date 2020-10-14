@@ -53,34 +53,48 @@ static const char tabSwitchedKey;
 
 - (void)trackSuggestionWithWord:(NSString *)word houseType:(NSInteger)houseType result:(FHSuggestionResponseModel *)result {
     if (self.houseType != houseType || !word || !word.length) return;
+    
+    NSString *tagsStr = @"{}";
+    NSInteger count = result.data.count;
+    if (count) {
+        NSArray *filteredResultArray = [result.data filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(id object, NSDictionary *bindings) {
+            if (![object isKindOfClass:FHSuggestionResponseDataModel.class]) return NO;
+            FHSuggestionResponseDataModel *item = (FHSuggestionResponseDataModel *)object;
+            return item.cardType == 16;
+        }]];
+        
+        count = filteredResultArray.count;
+        tagsStr = [self resultTagsString:filteredResultArray houseType:houseType];
+    }
+    
     NSDictionary *parameters = @{
         UT_ORIGIN_FROM: [self fh_originFrom],
         UT_ENTER_FROM: self.tabSwitched ? [self fh_pageType] : [self fh_fromPageType],
         UT_PAGE_TYPE: [self fh_pageType],
         TrackKeyTabName: [self trackTabName],
-        TrackKeySuggestionResultCount: @(result.data.count),
+        TrackKeySuggestionResultCount: @(count),
         TrackKeySuggestionWord: word,
-        TrackKeySuggestionResultTags: [self resultTagsString:result]
+        TrackKeySuggestionResultTags: tagsStr
     };
     TRACK_EVENT(TrackEventSuggestionResultShow, parameters);
 }
 
 //{小区|牡丹园,小区|牡丹园中兴大厦,地铁|牡丹园站}
-- (NSString *)resultTagsString:(FHSuggestionResponseModel *)result {
+- (NSString *)resultTagsString:(NSArray *)resultArray houseType:(NSInteger)houseType {
     NSMutableString *tagStr = [NSMutableString string];
     [tagStr appendString:@"{"];
     BOOL firstTag = YES;
-    for (FHSuggestionResponseDataModel *item in result.data) {
+    for (FHSuggestionResponseDataModel *item in resultArray) {
         if (!firstTag) {
             [tagStr appendFormat:@","];
         }
         
-        firstTag = NO;
         NSString *name = item.name;
         if (!name || !name.length) name = item.text;
         if (!name || !name.length) continue;;
         
-        if (item.recallType && item.recallType.length) {
+        firstTag = NO;
+        if (item.recallType && item.recallType.length && houseType == FHHouseTypeSecondHandHouse) {
             [tagStr appendFormat:@"%@|%@", item.recallType, name];
         } else {
             [tagStr appendFormat:@"%@", name];
