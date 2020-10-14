@@ -77,10 +77,10 @@
         for (int m = 0; m < contentModel.data.count;  m++) {
             NSString *content = contentModel.data[m];
             FHFeedUGCCellModel *model = [FHFeedUGCCellModel modelFromFeed:content];
+            model.isNewNeighbourhoodDetail = YES;
             model.isInNeighbourhoodCommentsList = NO;
             model.realtorIndex = m;
             model.isShowLineView = m < contentModel.data.count -1;
-
 
             NSMutableDictionary *tracerDic = [NSMutableDictionary dictionary];
             tracerDic[@"rank"] = @(m);

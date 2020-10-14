@@ -222,6 +222,7 @@ typedef NS_ENUM(NSUInteger, FHFeedUGCDiggType) {
 //小区点评模块
 
 //是否在小区点评列表页
+@property (nonatomic, assign) BOOL isNewNeighbourhoodDetail;
 @property (nonatomic, assign) BOOL isInNeighbourhoodCommentsList;
 //底部分割线高度
 @property (nonatomic, assign) CGFloat bottomLineHeight;

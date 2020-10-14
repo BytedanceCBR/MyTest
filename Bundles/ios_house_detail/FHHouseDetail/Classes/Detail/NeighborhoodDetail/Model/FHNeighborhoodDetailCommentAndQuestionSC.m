@@ -130,7 +130,11 @@
     }else if([cellModel isKindOfClass:[FHFeedUGCCellModel class]]){
         FHFeedUGCCellModel *feedCellModel = (FHFeedUGCCellModel *)cellModel;
         if (feedCellModel.cellType == FHUGCFeedListCellTypeUGC) {
+            __weak typeof(self) weakSelf = self;
             FHNeighborhoodDetailPostCell *cell = [self.collectionContext dequeueReusableCellOfClass:[FHNeighborhoodDetailPostCell class] withReuseIdentifier:@"FHNeighborhoodDetailPostCell" forSectionController:self atIndex:index];
+            [cell setClickLinkBlock:^(FHFeedUGCCellModel * _Nonnull model, NSURL * _Nonnull url) {
+                [weakSelf gotoLinkUrl:model url:url];
+            }];
             [cell refreshWithData:cellModel];
             return cell;
         } else if (feedCellModel.cellType == FHUGCFeedListCellTypeAnswer) {
