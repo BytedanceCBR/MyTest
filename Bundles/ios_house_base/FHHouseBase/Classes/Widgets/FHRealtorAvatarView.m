@@ -114,10 +114,7 @@
     }else{
          [self updateAvatarImageURL:nil];
     }
-    
-//    [self updateIdentifyImageURL:cellModel.realtor.avatarTagUrl];
-//    [self updateAvatarImageURL:userModel.avatarUrl];
-//    [self updateIdentifyImageURL:userModel.avatarTagUrl];
+    [self updateIdentifyImageURL:userModel.realtor.avatarTagUrl];
 }
 
 @end
