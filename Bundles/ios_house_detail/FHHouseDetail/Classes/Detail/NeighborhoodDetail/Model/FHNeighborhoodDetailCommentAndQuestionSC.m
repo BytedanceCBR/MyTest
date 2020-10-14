@@ -21,6 +21,7 @@
 #import "FHNeighborhoodDetailQuestionCell.h"
 #import "FHNeighborhoodDetailPostCell.h"
 #import "FHNeighborhoodDetailSpaceCell.h"
+#import "FHNeighborhoodDetailCommentTagsCell.h"
 
 @interface FHNeighborhoodDetailCommentAndQuestionSC () <IGListSupplementaryViewSource, IGListDisplayDelegate>
 
@@ -106,6 +107,8 @@
         }
     }else if([cellModel isKindOfClass:[FHNeighborhoodDetailSpaceModel class]]){
         size = [FHNeighborhoodDetailSpaceCell cellSizeWithData:cellModel width:width];
+    }else if([cellModel isKindOfClass:[FHNeighborhoodDetailCommentTagsModel class]]){
+        size = [FHNeighborhoodDetailCommentTagsCell cellSizeWithData:cellModel width:width];
     }
     
     return size;
@@ -127,7 +130,11 @@
     }else if([cellModel isKindOfClass:[FHFeedUGCCellModel class]]){
         FHFeedUGCCellModel *feedCellModel = (FHFeedUGCCellModel *)cellModel;
         if (feedCellModel.cellType == FHUGCFeedListCellTypeUGC) {
+            __weak typeof(self) weakSelf = self;
             FHNeighborhoodDetailPostCell *cell = [self.collectionContext dequeueReusableCellOfClass:[FHNeighborhoodDetailPostCell class] withReuseIdentifier:@"FHNeighborhoodDetailPostCell" forSectionController:self atIndex:index];
+            [cell setClickLinkBlock:^(FHFeedUGCCellModel * _Nonnull model, NSURL * _Nonnull url) {
+                [weakSelf gotoLinkUrl:model url:url];
+            }];
             [cell refreshWithData:cellModel];
             return cell;
         } else if (feedCellModel.cellType == FHUGCFeedListCellTypeAnswer) {
@@ -137,6 +144,10 @@
         }
     }else if([cellModel isKindOfClass:[FHNeighborhoodDetailSpaceModel class]]){
         FHNeighborhoodDetailSpaceCell *cell = [self.collectionContext dequeueReusableCellOfClass:[FHNeighborhoodDetailSpaceCell class] withReuseIdentifier:@"FHNeighborhoodDetailSpaceCell" forSectionController:self atIndex:index];
+        [cell refreshWithData:cellModel];
+        return cell;
+    }else if([cellModel isKindOfClass:[FHNeighborhoodDetailCommentTagsModel class]]){
+        FHNeighborhoodDetailCommentTagsCell *cell = [self.collectionContext dequeueReusableCellOfClass:[FHNeighborhoodDetailCommentTagsCell class] withReuseIdentifier:@"FHNeighborhoodDetailCommentTagsCell" forSectionController:self atIndex:index];
         [cell refreshWithData:cellModel];
         return cell;
     }

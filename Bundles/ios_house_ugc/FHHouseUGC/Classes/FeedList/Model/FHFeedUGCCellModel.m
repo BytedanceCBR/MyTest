@@ -1098,7 +1098,11 @@
     if(isInNeighbourhoodCommentsList){
         width = screenWidth - 70;
     }
-    self.numberOfLines = self.imageList.count > 0 ? 3 : 5;
+    if(self.isNewNeighbourhoodDetail){
+        self.numberOfLines = 2;
+    }else{
+        self.numberOfLines = self.imageList.count > 0 ? 3 : 5;
+    }
     [FHUGCCellHelper setRichContentWithModel:self width:width numberOfLines:self.numberOfLines];
 }
 

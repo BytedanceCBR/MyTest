@@ -41,6 +41,7 @@
     FHNeighborhoodDetailCommentHeaderModel *model = (FHNeighborhoodDetailCommentHeaderModel *)data;
     if (model) {
         self.titleLabel.text = model.title;
+        self.rightBtn.hidden = !(model.totalCount > model.count);
         if(model.subTitle.length > 0){
             self.subTitleLabel.hidden = NO;
             self.subTitleLabel.text = model.subTitle;

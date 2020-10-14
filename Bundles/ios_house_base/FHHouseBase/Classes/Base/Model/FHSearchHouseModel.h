@@ -57,6 +57,21 @@ NS_ASSUME_NONNULL_BEGIN
 //
 //@end
 
+@protocol FHSearchHouseItemTitleTagModel<NSObject>
+
+@end
+
+@interface FHSearchHouseItemTitleTagModel : JSONModel
+
+@property (nonatomic, assign) BOOL isGradient;
+@property (nonatomic, copy , nullable) NSString *text;
+@property (nonatomic, copy , nullable) NSString *textColor;
+@property (nonatomic, copy , nullable) NSString *backgroundColor;
+@property (nonatomic, copy , nullable) NSString *topBackgroundColor;
+@property (nonatomic, copy , nullable) NSString *bottomBackgroundColor;
+
+@end
+
 @interface FHHouseListHouseAdvantageTagModel : JSONModel
 
 @property (nonatomic, strong , nullable) FHImageModel *icon;
@@ -244,8 +259,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign) BOOL isRecommendCell;
 @property (nonatomic, assign) NSInteger recommendType;
 @property (nonatomic, strong, nullable) FHClueAssociateInfoModel *associateInfo;
-
 @property (nonatomic, strong, nullable) NSArray<FHImageModel> *tagImage;  //企业担保图标
+@property (nonatomic, strong, nullable) NSArray<FHSearchHouseItemTitleTagModel> *titleTags;
 
 @end
 
@@ -375,21 +390,6 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic, weak) UITableView *tableView;
 @property (nonatomic, strong) NSMutableDictionary *subscribeCache;
 @property(nonatomic, assign) BOOL isSubcribed;
-
-@end
-
-@protocol FHSearchHouseItemTitleTagModel<NSObject>
-
-@end
-
-@interface FHSearchHouseItemTitleTagModel : JSONModel
-
-@property (nonatomic, assign) BOOL isGradient;
-@property (nonatomic, copy , nullable) NSString *text;
-@property (nonatomic, copy , nullable) NSString *textColor;
-@property (nonatomic, copy , nullable) NSString *backgroundColor;
-@property (nonatomic, copy , nullable) NSString *topBackgroundColor;
-@property (nonatomic, copy , nullable) NSString *bottomBackgroundColor;
 
 @end
 

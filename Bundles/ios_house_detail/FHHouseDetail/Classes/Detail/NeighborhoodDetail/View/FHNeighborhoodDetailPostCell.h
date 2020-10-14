@@ -6,10 +6,13 @@
 //
 
 #import "FHDetailBaseCell.h"
+#import "FHFeedUGCCellModel.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
 @interface FHNeighborhoodDetailPostCell : FHDetailBaseCollectionCell
+
+@property (nonatomic, copy) void (^clickLinkBlock)(FHFeedUGCCellModel *model, NSURL *url);
 
 @end
 
