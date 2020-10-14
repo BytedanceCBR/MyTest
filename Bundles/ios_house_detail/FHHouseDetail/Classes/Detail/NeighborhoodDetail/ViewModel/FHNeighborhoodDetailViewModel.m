@@ -23,17 +23,19 @@
 #import "FHNeighborhoodDetailHeaderMediaSM.h"
 #import "FHNeighborhoodDetailCoreInfoSC.h"
 #import "FHNeighborhoodDetailCoreInfoSM.h"
+#import "FHNeighborhoodDetailHouseSaleSC.h"
+#import "FHNeighborhoodDetailHouseSaleSM.h"
 #import "FHNeighborhoodDetailCommentAndQuestionSC.h"
 #import "FHNeighborhoodDetailCommentAndQuestionSM.h"
 #import "FHNeighborhoodDetailAgentSM.h"
 #import "FHNeighborhoodDetailAgentSC.h"
+#import "FHNeighborhoodDetailStrategySC.h"
+#import "FHNeighborhoodDetailStrategySM.h"
 
 @interface FHNeighborhoodDetailViewModel ()
 
 @property (nonatomic, assign)   NSInteger       requestRelatedCount;
-@property (nonatomic, strong , nullable) FHDetailRelatedNeighborhoodResponseDataModel *relatedNeighborhoodData;// 周边小区
 @property (nonatomic, strong , nullable) FHDetailSameNeighborhoodHouseResponseDataModel *sameNeighborhoodErshouHouseData;// 同小区房源，二手房
-@property (nonatomic, strong , nullable) FHRentSameNeighborhoodResponseDataModel *sameNeighborhoodRentHouseData;// 同小区房源，租房
 @property (nonatomic, copy , nullable) NSString *neighborhoodId;// 周边小区房源id
 
 @end
@@ -119,40 +121,11 @@
         [sectionModels addObject:coreInfoSM];
     }
 
-//    // 小区点评
-//    if(model.data.comments) {
-//        FHDetailCommentsCellModel *commentsModel = [[FHDetailCommentsCellModel alloc] init];
-//        NSMutableDictionary *paramsDict = @{}.mutableCopy;
-//        if (self.detailTracerDic) {
-//            [paramsDict addEntriesFromDictionary:self.detailTracerDic];
-//        }
-//        paramsDict[@"page_type"] = [self pageTypeString];
-//        commentsModel.tracerDict = paramsDict;
-//        commentsModel.neighborhoodId = self.houseId;
-//        commentsModel.comments = model.data.comments;
-//         commentsModel.houseModelType = FHPlotHouseModelTypeNeighborhoodComment;
-//        [self.items addObject:commentsModel];
-//    }
-//    // 小区问答
-//    if (model.data.question) {
-//        // 添加分割线--当存在某个数据的时候在顶部添加分割线
-//        FHDetailQACellModel *qaModel = [[FHDetailQACellModel alloc] init];
-//        NSMutableDictionary *paramsDict = @{}.mutableCopy;
-//        if (self.detailTracerDic) {
-//            [paramsDict addEntriesFromDictionary:self.detailTracerDic];
-//        }
-//        paramsDict[@"page_type"] = [self pageTypeString];
-//        qaModel.tracerDict = paramsDict;
-//        qaModel.neighborhoodId = self.houseId;
-//        qaModel.question = model.data.question;
-//        qaModel.houseModelType = FHPlotHouseModelTypeNeighborhoodQA;
-//        [self.items addObject:qaModel];
-//    }
-    //小区点评和问答
-    if (model.data.comments.content.data.count > 0 || model.data.question.content.data.count > 0) {
-        FHNeighborhoodDetailCommentAndQuestionSM *RGCListModel = [[FHNeighborhoodDetailCommentAndQuestionSM alloc] initWithDetailModel:self.detailData];
-        RGCListModel.sectionType = FHNeighborhoodDetailSectionTypeCommentAndQuestion;
-        RGCListModel.detailTracerDic = self.detailTracerDic;
+    //小区测评
+    if (model.data.strategy.articleList.count > 0) {
+        FHNeighborhoodDetailStrategySM *strategyModel = [[FHNeighborhoodDetailStrategySM alloc] initWithDetailModel:self.detailData];
+        strategyModel.sectionType = FHNeighborhoodDetailSectionTypeStrategy;
+        strategyModel.detailTracerDic = self.detailTracerDic;
         NSString *searchId = self.listLogPB[@"search_id"];
         NSString *imprId = self.listLogPB[@"impr_id"];
         NSDictionary *extraDic = @{
@@ -162,9 +135,28 @@
             @"houseType":@(FHHouseTypeNeighborhood),
             @"channelId":@"f_hosue_wtt"
         };
-        RGCListModel.extraDic = extraDic;
-        [RGCListModel updateDetailModel:self.detailData];
-        [sectionModels addObject:RGCListModel];
+        strategyModel.extraDic = extraDic;
+        [strategyModel updateDetailModel:self.detailData];
+        [sectionModels addObject:strategyModel];
+    }
+    
+    //小区点评和问答
+    if (model.data.comments.content.data.count > 0 || model.data.question.content.data.count > 0) {
+        FHNeighborhoodDetailCommentAndQuestionSM *commentAndQuestionModel = [[FHNeighborhoodDetailCommentAndQuestionSM alloc] initWithDetailModel:self.detailData];
+        commentAndQuestionModel.sectionType = FHNeighborhoodDetailSectionTypeCommentAndQuestion;
+        commentAndQuestionModel.detailTracerDic = self.detailTracerDic;
+        NSString *searchId = self.listLogPB[@"search_id"];
+        NSString *imprId = self.listLogPB[@"impr_id"];
+        NSDictionary *extraDic = @{
+            @"searchId":searchId?:@"be_null",
+            @"imprId":imprId?:@"be_null",
+            @"houseId":self.houseId,
+            @"houseType":@(FHHouseTypeNeighborhood),
+            @"channelId":@"f_hosue_wtt"
+        };
+        commentAndQuestionModel.extraDic = extraDic;
+        [commentAndQuestionModel updateDetailModel:self.detailData];
+        [sectionModels addObject:commentAndQuestionModel];
     }
     
     
@@ -199,31 +191,27 @@
     if (neighborhoodId.length < 1) {
         return;
     }
-    // 周边小区
-    [self requestRelatedNeighborhoodSearch:neighborhoodId];
     // 同小区房源-二手房
     [self requestHouseInSameNeighborhoodSearchErShou:neighborhoodId];
-    // 同小区房源-租房
-    [self requestHouseInSameNeighborhoodSearchRent:neighborhoodId];
 }
 
 // 处理详情页周边请求数据
 - (void)processDetailRelatedData {
     if (self.requestRelatedCount >= 3) {
         self.detailController.isLoadingData = NO;
+        NSMutableArray *sectionModels = self.sectionModels.mutableCopy;
         
+        if (self.sameNeighborhoodErshouHouseData.items.count > 0){
+            FHNeighborhoodDetailHouseSaleSM *houseSaleSM = [[FHNeighborhoodDetailHouseSaleSM alloc] initWithDetailModel:self.detailData];
+            [houseSaleSM updateWithDataModel:self.sameNeighborhoodErshouHouseData];
+            houseSaleSM.sectionType = FHNeighborhoodDetailSectionTypeHouseSale;
+            [sectionModels addObject:houseSaleSM];
+        }
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            self.sectionModels = sectionModels.copy;
+        });
     }
-}
-
-
-// 周边小区
-- (void)requestRelatedNeighborhoodSearch:(NSString *)neighborhoodId {
-    __weak typeof(self) wSelf = self;
-    [FHHouseDetailAPI requestRelatedNeighborhoodSearchByNeighborhoodId:neighborhoodId searchId:nil offset:@"0" query:nil count:5 completion:^(FHDetailRelatedNeighborhoodResponseModel * _Nullable model, NSError * _Nullable error) {
-        wSelf.requestRelatedCount += 1;
-        wSelf.relatedNeighborhoodData = model.data;
-        [wSelf processDetailRelatedData];
-    }];
 }
 
 // 同小区房源-二手房
@@ -233,17 +221,6 @@
     [FHHouseDetailAPI requestHouseInSameNeighborhoodSearchByNeighborhoodId:neighborhoodId houseId:houseId searchId:nil offset:@"0" query:nil count:5 completion:^(FHDetailSameNeighborhoodHouseResponseModel * _Nullable model, NSError * _Nullable error) {
         wSelf.requestRelatedCount += 1;
         wSelf.sameNeighborhoodErshouHouseData = model.data;
-        [wSelf processDetailRelatedData];
-    }];
-}
-
-// 同小区房源-租房
-- (void)requestHouseInSameNeighborhoodSearchRent:(NSString *)neighborhoodId {
-    NSString *houseId = self.houseId;
-    __weak typeof(self) wSelf = self;
-    [FHHouseDetailAPI requestHouseRentSameNeighborhood:houseId withNeighborhoodId:neighborhoodId completion:^(FHRentSameNeighborhoodResponseModel * _Nonnull model, NSError * _Nonnull error) {
-        wSelf.requestRelatedCount += 1;
-        wSelf.sameNeighborhoodRentHouseData = model.data;
         [wSelf processDetailRelatedData];
     }];
 }
