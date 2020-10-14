@@ -167,9 +167,12 @@
     }
     
     //小区户型
-    FHNeighborhoodDetailFloorpanSM *floorpanSM = [[FHNeighborhoodDetailFloorpanSM alloc] initWithDetailModel:self.detailData];
-    floorpanSM.sectionType = FHNeighborhoodDetailSectionTypeFloorpan;
-    [sectionModels addObject:floorpanSM];
+    if(model.data.neighborhoodSaleHouseInfo.neighborhoodSaleHouseList.count > 0) {
+        FHNeighborhoodDetailFloorpanSM *floorpanSM = [[FHNeighborhoodDetailFloorpanSM alloc] initWithDetailModel:self.detailData];
+        [floorpanSM updateWithDataModel:model.data.neighborhoodSaleHouseInfo];
+        floorpanSM.sectionType = FHNeighborhoodDetailSectionTypeFloorpan;
+        [sectionModels addObject:floorpanSM];
+    }
 
     if (model.data.recommendedRealtors.count > 0) {
         FHNeighborhoodDetailAgentSM *agentSM = [[FHNeighborhoodDetailAgentSM alloc] initWithDetailModel:self.detailData];
