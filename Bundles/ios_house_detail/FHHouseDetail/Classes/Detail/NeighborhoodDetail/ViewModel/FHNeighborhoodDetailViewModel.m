@@ -27,11 +27,16 @@
 #import "FHNeighborhoodDetailHouseSaleSM.h"
 #import "FHNeighborhoodDetailCommentAndQuestionSC.h"
 #import "FHNeighborhoodDetailCommentAndQuestionSM.h"
+#import "FHHouseSearcher.h"
+#import "FHSearchChannelTypes.h"
+#import "FHSearchHouseModel.h"
+#import "FHNeighborhoodDetailRecommendSM.h"
 
 @interface FHNeighborhoodDetailViewModel ()
 
 @property (nonatomic, assign)   NSInteger       requestRelatedCount;
 @property (nonatomic, strong , nullable) FHDetailSameNeighborhoodHouseResponseDataModel *sameNeighborhoodErshouHouseData;// 同小区房源，二手房
+@property (nonatomic, strong , nullable) FHSearchHouseDataModel *recommendHouseData;
 @property (nonatomic, copy , nullable) NSString *neighborhoodId;// 周边小区房源id
 
 @end
@@ -191,11 +196,14 @@
     }
     // 同小区房源-二手房
     [self requestHouseInSameNeighborhoodSearchErShou:neighborhoodId];
+    
+    //推荐房源-二手房
+    [self requestHouseInRecommendHouse:neighborhoodId];
 }
 
 // 处理详情页周边请求数据
 - (void)processDetailRelatedData {
-    if (self.requestRelatedCount >= 3) {
+    if (self.requestRelatedCount >= 2) {
         self.detailController.isLoadingData = NO;
         NSMutableArray *sectionModels = self.sectionModels.mutableCopy;
         
@@ -206,10 +214,32 @@
             [sectionModels addObject:houseSaleSM];
         }
         
+        if (self.recommendHouseData.items.count > 0) {
+            FHNeighborhoodDetailRecommendSM *recommendSM = [[FHNeighborhoodDetailRecommendSM alloc] initWithDetailModel:self.detailData];
+            [recommendSM updateWithDataModel:self.recommendHouseData];
+            recommendSM.sectionType = FHNeighborhoodDetailSectionTypeRecommend;
+            [sectionModels addObject:recommendSM];
+        }
+        
         dispatch_async(dispatch_get_main_queue(), ^{
             self.sectionModels = sectionModels.copy;
         });
     }
+}
+
+// 推荐房源
+- (void)requestHouseInRecommendHouse:(NSString *)neighborhoodId {
+    NSMutableDictionary *param = [NSMutableDictionary new];
+    NSMutableString *query = [[NSMutableString alloc] init];
+    [query appendFormat:@"%@=%@",HOUSE_TYPE_KEY,@(FHHouseTypeSecondHandHouse)];
+    param[@"neighborhood_id[]"] = neighborhoodId;
+    query = [NSMutableString stringWithFormat:@"%@&%@=%@",query,CHANNEL_ID,CHANNEL_ID_NEIGHBORHOOD_RECOMMEND_HOUSE];
+    __weak typeof(self) wSelf = self;
+    [FHHouseSearcher houseSearchWithQuery:query param:param offset:0 class:[FHSearchHouseModel class] needCommonParams:YES callback:^(NSError * _Nullable error, id<FHBaseModelProtocol>  _Nullable model) {
+        wSelf.requestRelatedCount += 1;
+        wSelf.recommendHouseData = ((FHSearchHouseModel *)model).data;
+        [wSelf processDetailRelatedData];
+    }];
 }
 
 // 同小区房源-二手房

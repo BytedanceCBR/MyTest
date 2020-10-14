@@ -14,7 +14,8 @@ typedef NS_ENUM(NSUInteger, FHNeighborhoodDetailSectionType) {
     FHNeighborhoodDetailSectionTypeHeader,
     FHNeighborhoodDetailSectionTypeBaseInfo,
     FHNeighborhoodDetailSectionTypeHouseSale,
-    FHNeighborhoodDetailSectionTypeCommentAndQuestion
+    FHNeighborhoodDetailSectionTypeCommentAndQuestion,
+    FHNeighborhoodDetailSectionTypeRecommend
 };
 
 @interface FHNeighborhoodDetailSectionModel : NSObject<IGListDiffable>
