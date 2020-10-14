@@ -298,7 +298,7 @@ typedef NS_ENUM(NSUInteger, FHHouseDetailReportItemType) {
         _phoneTextField.backgroundColor = [UIColor themeGray7];
         _phoneTextField.layer.cornerRadius = 4;
         _phoneTextField.layer.masksToBounds = YES;
-        _phoneTextField.keyboardType = UIKeyboardTypePhonePad;
+        _phoneTextField.keyboardType = UIKeyboardTypeNumberPad;
         _phoneTextField.leftViewMode = UITextFieldViewModeAlways;
         _phoneTextField.leftView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 10, 40)];
         
@@ -584,7 +584,15 @@ typedef NS_ENUM(NSUInteger, FHHouseDetailReportItemType) {
     self.submitButton.enabled = isEnable;
     self.submitButton.alpha = isEnable ? 1 : 0.4;
 }
+- (void)testGotoReportAdditionPage {
+    NSMutableDictionary *dict = [NSMutableDictionary dictionary];
+    
+    TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
+    [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:@"sslocal://house_detail_report_addition_page"] userInfo:userInfo];
+}
 - (void)submitAction {
+    [self testGotoReportAdditionPage];
+    return;
     // 提交动作
     
     NSMutableDictionary *params = [NSMutableDictionary dictionary];
@@ -643,7 +651,6 @@ typedef NS_ENUM(NSUInteger, FHHouseDetailReportItemType) {
     CGFloat duration = 0.25f;
     UIView *hintView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT)];
     hintView.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0.5];
-    UITapGestureRecognizer *tap = [UITapGestureRecognizer new];
     
     void(^dismissHintViewBlock)(void) = ^(void) {
         [UIView animateWithDuration:duration animations:^{
@@ -652,12 +659,6 @@ typedef NS_ENUM(NSUInteger, FHHouseDetailReportItemType) {
             [hintView removeFromSuperview];
         }];
     };
-    
-    // 背景点击消失
-    [[tap.rac_gestureSignal deliverOnMainThread] subscribeNext:^(__kindof UIGestureRecognizer * _Nullable x) {
-        dismissHintViewBlock();
-    }];
-    [hintView addGestureRecognizer:tap];
     
     UIView *contentView = [UIView new];
     contentView.backgroundColor = [UIColor themeWhite];
@@ -738,6 +739,10 @@ typedef NS_ENUM(NSUInteger, FHHouseDetailReportItemType) {
     [UIView animateWithDuration:duration animations:^{
         hintView.alpha = 1;
     }];
+}
+
+- (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView {
+    [self.view endEditing:YES];
 }
 
 #pragma  mark - UITableViewDelegate
