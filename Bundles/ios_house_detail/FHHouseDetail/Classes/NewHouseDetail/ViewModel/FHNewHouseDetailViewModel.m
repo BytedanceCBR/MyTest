@@ -281,6 +281,7 @@
     if (self.houseId.length) {
         params[@"group_id"] = self.houseId;
     }
+    params[@"growth_deepevent"] = @(1);
     if (self.trackingId && self.trackingId.length) {
         params[@"event_tracking_id"] = self.trackingId;
     }

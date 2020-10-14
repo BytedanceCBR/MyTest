@@ -162,7 +162,7 @@
     _tableView.sectionFooterHeight = 0.0;
     
     _tableView.estimatedRowHeight = 85;
-    _tableView.estimatedSectionHeaderHeight = 0;
+    _tableView.estimatedSectionHeaderHeight = 90;
     _tableView.estimatedSectionFooterHeight = 0;
     
     if (@available(iOS 11.0 , *)) {
