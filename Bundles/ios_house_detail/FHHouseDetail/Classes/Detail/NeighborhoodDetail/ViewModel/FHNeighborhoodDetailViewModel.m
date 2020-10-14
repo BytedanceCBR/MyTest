@@ -139,7 +139,7 @@
     }
     
     //小区点评和问答
-    if (model.data.comments.content.data.count > 0 || model.data.question.content.data.count > 0) {
+    if (model.data.comments.content.data.count > 0 || model.data.question) {
         FHNeighborhoodDetailCommentAndQuestionSM *commentAndQuestionModel = [[FHNeighborhoodDetailCommentAndQuestionSM alloc] initWithDetailModel:self.detailData];
         commentAndQuestionModel.sectionType = FHNeighborhoodDetailSectionTypeCommentAndQuestion;
         commentAndQuestionModel.detailTracerDic = self.detailTracerDic;
