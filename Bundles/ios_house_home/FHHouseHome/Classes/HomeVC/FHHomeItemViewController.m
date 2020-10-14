@@ -123,7 +123,6 @@ static NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
             [[ToastManager manager] showToast:@"网络异常"];
         }
     }];
-    
     self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     
     self.tableView.mj_footer = self.refreshFooter;
@@ -439,7 +438,7 @@ static NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
 - (void)updateTableViewWithMoreData:(BOOL)hasMore {
     self.tableView.mj_footer.hidden = NO;
     if (hasMore == NO) {
-        [self.refreshFooter setUpNoMoreDataText:@"没有更多信息了" offsetY:0];
+        [self.refreshFooter setUpNoMoreDataText:@"已加载全部" offsetY:0];
         [self.tableView.mj_footer endRefreshingWithNoMoreData];
     }else {
         [self.tableView.mj_footer endRefreshing];
@@ -824,7 +823,7 @@ static NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
                 if ([model.houseType integerValue] == FHHouseTypeSecondHandHouse && [FHEnvContext isShowHomeHouseCard]) {
                     return [FHHouseSearchSecondHouseCell heightForData:model];
                 }
-                if ([model.houseType integerValue] == FHHouseTypeNewHouse && [model.cellStyle isEqualToString:@"6"] && [FHEnvContext isShowHomeHouseCard]) {
+                if ([model.houseType integerValue] == FHHouseTypeNewHouse && [model.cellStyle isEqualToString:@"8"] && [FHEnvContext isShowHomeHouseCard]) {
                     return [FHHouseSearchNewHouseCell heightForData:model];
                 }
             }
@@ -950,8 +949,8 @@ static NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
         }
         if (self.houseDataItemsModel.count>0) {
                FHHomeHouseDataItemsModel *model = (FHHomeHouseDataItemsModel *)self.houseDataItemsModel[indexPath.row];
-            if ([model.houseType integerValue] == FHHouseTypeNewHouse && [model.cellStyle isEqualToString:@"6"]) {
-                if ([FHEnvContext isShowHomeHouseCard]) {
+            if ([model.houseType integerValue] == FHHouseTypeNewHouse && ([model.cellStyle isEqualToString:@"6"] || [model.cellStyle isEqualToString:@"8"])) {
+                if ([model.cellStyle isEqualToString:@"8"]) {
                     FHHouseSearchNewHouseCell *cell = [tableView dequeueReusableCellWithIdentifier:@"FHHouseSearchNewHouseCell"];
                     if (indexPath.row < self.houseDataItemsModel.count) {
                         JSONModel *model = self.houseDataItemsModel[indexPath.row];
