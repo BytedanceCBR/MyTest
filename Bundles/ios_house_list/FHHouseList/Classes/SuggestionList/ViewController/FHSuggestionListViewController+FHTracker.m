@@ -23,7 +23,7 @@ static NSString *const TrackKeySuggestionResultTags = @"tags";
 
 static const char tabSwitchedKey;
 - (void)setTabSwitched:(BOOL)tabSwitched {
-    objc_setAssociatedObject(self, &tabSwitchedKey, @(tabSwitchedKey), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    objc_setAssociatedObject(self, &tabSwitchedKey, @(tabSwitched), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
 - (BOOL)tabSwitched {
