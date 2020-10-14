@@ -277,6 +277,7 @@
     if (self.detailTracerDic) {
         [params addEntriesFromDictionary:self.detailTracerDic];
     }
+    params[@"growth_deepevent"] = @(1);
     params[kFHClueExtraInfo] = self.extraInfo;
     if (self.houseId.length) {
         params[@"group_id"] = self.houseId;
