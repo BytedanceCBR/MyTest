@@ -62,6 +62,7 @@ NSString *const UT_SEARCH_ID = @"search_id";
 NSString *const UT_ORIGIN_SEARCH_ID = @"origin_search_id";
 NSString *const UT_STAY_TIME = @"stay_time";
 NSString *const UT_PAGE_TYPE = @"page_type";
+NSString *const UT_FROM_PAGE_TYPE = @"from_page_type";
 NSString *const UT_LOG_PB = @"log_pb";
 NSString *const UT_HOUSE_TYPE = @"house_type";
 NSString *const UT_GROUP_ID = @"group_id";

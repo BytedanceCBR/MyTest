@@ -1006,7 +1006,7 @@ extern NSString *const INSTANT_DATA_KEY;
             fromHome = 4;//rent
             traceParam[UT_ELEMENT_FROM] = originFrom;
             traceParam[UT_PAGE_TYPE] = @"renting";
-            traceParam[UT_ORIGIN_FROM] = originFrom;
+//            traceParam[UT_ORIGIN_FROM] = originFrom;
         }else if (_houseType == FHHouseTypeSecondHandHouse){
             fromHome = 5; // list main
             sugDelegateTable = nil;
@@ -1014,7 +1014,7 @@ extern NSString *const INSTANT_DATA_KEY;
         
     }
     traceParam[UT_ORIGIN_SEARCH_ID] = self.originSearchId ? : @"be_null";
-    
+    traceParam[UT_FROM_PAGE_TYPE] = [self pageTypeString];
     NSMutableDictionary *dict = @{@"house_type":@(_houseType) ,
                            @"tracer": traceParam,
                            @"from_home":@(fromHome)
@@ -1033,7 +1033,11 @@ extern NSString *const INSTANT_DATA_KEY;
 {
     if (_houseType == FHHouseTypeRentHouse && _mainListPage && self.mapFindHouseOpenUrl.length > 0) {
         NSURL *url = [NSURL URLWithString:self.mapFindHouseOpenUrl];
-        NSDictionary *dict = @{@"enter_from_list":@"1"};
+        NSDictionary *dict = @{
+            @"enter_from_list":@"1",
+            UT_FROM_PAGE_TYPE: [self pageTypeString],
+            UT_ORIGIN_FROM: self.tracerModel.originFrom ? : @"be_null"
+        };
         TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
         [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
     }else{
@@ -1144,6 +1148,10 @@ extern NSString *const INSTANT_DATA_KEY;
         NSHashTable *hashMap = [[NSHashTable alloc]initWithOptions:NSPointerFunctionsWeakMemory capacity:1];
         [hashMap addObject:self];
         dict[OPENURL_CALLBAK] = hashMap;
+        dict[@"tracer"] = @{
+            UT_FROM_PAGE_TYPE: [self pageTypeString],
+            UT_ORIGIN_FROM: self.tracerModel.originFrom ? : @"be_null",
+        };
         TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
         [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
     }
