@@ -7,6 +7,15 @@
 
 #import "FHNeighborhoodDetailAgentSM.h"
 
+
+
 @implementation FHNeighborhoodDetailAgentSM
+
+- (void)updateDetailModel:(FHDetailNeighborhoodModel *)model {
+    self.recommendedRealtorsTitle = model.data.recommendedRealtorsTitle;
+    self.recommendedRealtors = model.data.recommendedRealtors;
+    self.associateInfo = model.data.recommendRealtorsAssociateInfo;
+    self.isFold = YES;
+}
 
 @end

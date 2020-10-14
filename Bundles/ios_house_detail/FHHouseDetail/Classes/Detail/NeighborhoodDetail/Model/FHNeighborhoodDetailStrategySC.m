@@ -1,12 +1,18 @@
 //
-//  FHNeighborhoodDetailCommentAndQuestionSC.m
+//  FHNeighborhoodDetailStrategySC.m
 //  FHHouseDetail
 //
-//  Created by 谢思铭 on 2020/10/12.
+//  Created by 谢思铭 on 2020/10/13.
 //
 
-#import "FHNeighborhoodDetailCommentAndQuestionSC.h"
-#import "FHNeighborhoodDetailCommentAndQuestionSM.h"
+//#import "FHNeighborhoodDetailStrategySC.h"
+//
+//@implementation FHNeighborhoodDetailStrategySC
+//
+//@end
+
+#import "FHNeighborhoodDetailStrategySC.h"
+#import "FHNeighborhoodDetailStrategySM.h"
 #import "FHDetailSectionTitleCollectionView.h"
 #import "FHAssociateIMModel.h"
 #import "FHNewHouseDetailViewController.h"
@@ -19,10 +25,10 @@
 #import "FHRealtorEvaluatingPhoneCallModel.h"
 #import "FHRealtorEvaluatingTracerHelper.h"
 #import "FHNeighborhoodDetailQuestionCell.h"
-#import "FHNeighborhoodDetailPostCell.h"
+#import "FHNeighborhoodDetailStrategyArticleCell.h"
 #import "FHNeighborhoodDetailSpaceCell.h"
 
-@interface FHNeighborhoodDetailCommentAndQuestionSC () <IGListSupplementaryViewSource, IGListDisplayDelegate>
+@interface FHNeighborhoodDetailStrategySC () <IGListSupplementaryViewSource, IGListDisplayDelegate>
 
 @property (nonatomic, strong) FHUGCFeedDetailJumpManager *detailJumpManager;
 @property (nonatomic, strong) FHRealtorEvaluatingTracerHelper *tracerHelper;
@@ -30,12 +36,11 @@
 
 @end
 
-@implementation FHNeighborhoodDetailCommentAndQuestionSC
+@implementation FHNeighborhoodDetailStrategySC
 
 - (instancetype)init
 {
     if (self = [super init]) {
-        //        self.minimumLineSpacing = 20;
         self.inset = UIEdgeInsetsMake(0, 15, 12, 15);
         self.supplementaryViewSource = self;
         self.displayDelegate = self;
@@ -55,55 +60,20 @@
 
 }
 
-- (void)clickRealtorHeader:(FHFeedUGCCellModel *)cellModel {
-//    FHNewHouseDetailRGCListSM *sectionModel = (FHNewHouseDetailRGCListSM *)self.sectionModel;
-//    NSDictionary *houseInfo = sectionModel.extraDic;
-//    if ([houseInfo[@"houseType"] integerValue] == FHHouseTypeSecondHandHouse) {
-//        NSMutableDictionary *dict = [NSMutableDictionary dictionary];
-//         dict[@"element_from"] = @"old_detail_related";
-//        dict[@"enter_from"] = [self.detailViewController.viewModel pageTypeString];
-//        [self.realtorPhoneCallModel jump2RealtorDetailWithPhone:cellModel.realtor isPreLoad:NO extra:dict];
-//    }
-}
-
-- (void)moreButtonClick {
-//    FHNewHouseDetailRGCListSM *sectionModel = (FHNewHouseDetailRGCListSM *)self.sectionModel;
-//    NSDictionary *houseInfo = sectionModel.extraDic;
-//    NSMutableDictionary *tracer = @{}.mutableCopy;
-//    [tracer addEntriesFromDictionary:sectionModel.detailTracerDic];
-//    [tracer setValue:houseInfo[@"houseId"] forKey:@"from_gid"];
-//    [tracer setValue:tracer[@"page_type"] forKey:@"enter_from"];
-//    NSDictionary *dict = @{@"tracer":tracer};
-//    TTRouteUserInfo* userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
-//    NSURL *openURL = [NSURL URLWithString:sectionModel.contentModel.schema];
-//    if ([[TTRoute sharedRoute] canOpenURL:openURL]) {
-//        [[TTRoute sharedRoute] openURLByPushViewController:openURL userInfo:userInfo];
-//    }
-}
-
 #pragma mark -
 - (NSInteger)numberOfItems {
-    FHNeighborhoodDetailCommentAndQuestionSM *model = (FHNeighborhoodDetailCommentAndQuestionSM *)self.sectionModel;
+    FHNeighborhoodDetailStrategySM *model = (FHNeighborhoodDetailStrategySM *)self.sectionModel;
     return model.items.count;
 }
 
 - (CGSize)sizeForItemAtIndex:(NSInteger)index
 {
     CGFloat width = self.collectionContext.containerSize.width - 15 * 2;
-    FHNeighborhoodDetailCommentAndQuestionSM *model = (FHNeighborhoodDetailCommentAndQuestionSM *)self.sectionModel;
+    FHNeighborhoodDetailStrategySM *model = (FHNeighborhoodDetailStrategySM *)self.sectionModel;
     id cellModel = model.items[index];
     CGSize size = CGSizeZero;
-    if([cellModel isKindOfClass:[FHNeighborhoodDetailCommentHeaderModel class]]){
-        size = [FHNeighborhoodDetailCommentHeaderCell cellSizeWithData:cellModel width:width];
-    }else if([cellModel isKindOfClass:[FHNeighborhoodDetailQuestionHeaderModel class]]){
-        size = [FHNeighborhoodDetailQuestionHeaderCell cellSizeWithData:cellModel width:width];
-    }else if([cellModel isKindOfClass:[FHFeedUGCCellModel class]]){
-        FHFeedUGCCellModel *feedCellModel = (FHFeedUGCCellModel *)cellModel;
-        if (feedCellModel.cellType == FHUGCFeedListCellTypeUGC) {
-            size = [FHNeighborhoodDetailPostCell cellSizeWithData:cellModel width:width];
-        } else if (feedCellModel.cellType == FHUGCFeedListCellTypeAnswer) {
-            size = [FHNeighborhoodDetailQuestionCell cellSizeWithData:cellModel width:width];
-        }
+    if([cellModel isKindOfClass:[FHDetailNeighborhoodDataStrategyArticleListModel class]]){
+        size = [FHNeighborhoodDetailStrategyArticleCell cellSizeWithData:cellModel width:width];
     }else if([cellModel isKindOfClass:[FHNeighborhoodDetailSpaceModel class]]){
         size = [FHNeighborhoodDetailSpaceCell cellSizeWithData:cellModel width:width];
     }
@@ -113,28 +83,13 @@
 
 - (__kindof UICollectionViewCell *)cellForItemAtIndex:(NSInteger)index
 {
-    FHNeighborhoodDetailCommentAndQuestionSM *model = (FHNeighborhoodDetailCommentAndQuestionSM *)self.sectionModel;
+    FHNeighborhoodDetailStrategySM *model = (FHNeighborhoodDetailStrategySM *)self.sectionModel;
     id cellModel = model.items[index];
 
-    if([cellModel isKindOfClass:[FHNeighborhoodDetailCommentHeaderModel class]]){
-        FHNeighborhoodDetailCommentHeaderCell *cell = [self.collectionContext dequeueReusableCellOfClass:[FHNeighborhoodDetailCommentHeaderCell class] withReuseIdentifier:@"FHNeighborhoodDetailCommentHeaderCell" forSectionController:self atIndex:index];
+    if([cellModel isKindOfClass:[FHDetailNeighborhoodDataStrategyArticleListModel class]]){
+        FHNeighborhoodDetailStrategyArticleCell *cell = [self.collectionContext dequeueReusableCellOfClass:[FHNeighborhoodDetailStrategyArticleCell class] withReuseIdentifier:@"FHNeighborhoodDetailStrategyArticleCell" forSectionController:self atIndex:index];
         [cell refreshWithData:cellModel];
         return cell;
-    }else if([cellModel isKindOfClass:[FHNeighborhoodDetailQuestionHeaderModel class]]){
-        FHNeighborhoodDetailQuestionHeaderCell *cell = [self.collectionContext dequeueReusableCellOfClass:[FHNeighborhoodDetailQuestionHeaderCell class] withReuseIdentifier:@"FHNeighborhoodDetailQuestionHeaderCell" forSectionController:self atIndex:index];
-        [cell refreshWithData:cellModel];
-        return cell;
-    }else if([cellModel isKindOfClass:[FHFeedUGCCellModel class]]){
-        FHFeedUGCCellModel *feedCellModel = (FHFeedUGCCellModel *)cellModel;
-        if (feedCellModel.cellType == FHUGCFeedListCellTypeUGC) {
-            FHNeighborhoodDetailPostCell *cell = [self.collectionContext dequeueReusableCellOfClass:[FHNeighborhoodDetailPostCell class] withReuseIdentifier:@"FHNeighborhoodDetailPostCell" forSectionController:self atIndex:index];
-            [cell refreshWithData:cellModel];
-            return cell;
-        } else if (feedCellModel.cellType == FHUGCFeedListCellTypeAnswer) {
-            FHNeighborhoodDetailQuestionCell *cell = [self.collectionContext dequeueReusableCellOfClass:[FHNeighborhoodDetailQuestionCell class] withReuseIdentifier:@"FHNeighborhoodDetailQuestionCell" forSectionController:self atIndex:index];
-            [cell refreshWithData:cellModel];
-            return cell;
-        }
     }else if([cellModel isKindOfClass:[FHNeighborhoodDetailSpaceModel class]]){
         FHNeighborhoodDetailSpaceCell *cell = [self.collectionContext dequeueReusableCellOfClass:[FHNeighborhoodDetailSpaceCell class] withReuseIdentifier:@"FHNeighborhoodDetailSpaceCell" forSectionController:self atIndex:index];
         [cell refreshWithData:cellModel];
@@ -147,35 +102,54 @@
 
 
 - (void)didSelectItemAtIndex:(NSInteger)index {
-    FHNeighborhoodDetailCommentAndQuestionSM *model = (FHNeighborhoodDetailCommentAndQuestionSM *)self.sectionModel;
+    FHNeighborhoodDetailStrategySM *model = (FHNeighborhoodDetailStrategySM *)self.sectionModel;
     id cellModel = model.items[index];
-    if([cellModel isKindOfClass:[FHFeedUGCCellModel class]]){
-        FHFeedUGCCellModel *feedCellModel = (FHFeedUGCCellModel *)cellModel;
-        [self.detailJumpManager jumpToDetail:feedCellModel showComment:NO enterType:@"feed_content_blank"];
+    if([cellModel isKindOfClass:[FHDetailNeighborhoodDataStrategyArticleListModel class]]){
+        FHDetailNeighborhoodDataStrategyArticleListModel *articleModel = (FHDetailNeighborhoodDataStrategyArticleListModel *)cellModel;
+        if(articleModel.schema.length > 0){
+            NSMutableDictionary *dict = @{}.mutableCopy;
+            // 埋点
+//            NSMutableDictionary *traceParam = @{}.mutableCopy;
+//            traceParam[@"origin_from"] = self.tracerDic[@"origin_from"];
+//            traceParam[@"enter_from"] = self.tracerDic[@"page_type"];
+//            traceParam[@"element_type"] = self.tracerDic[@"element_type"];
+//            traceParam[@"from_gid"] = self.tracerDic[@"from_gid"];
+//            traceParam[@"group_id"] = cellModel.groupId;
+//            if(cellModel.tracer[@"log_pb"][@"group_source"]){
+//                traceParam[@"group_source"] = cellModel.tracer[@"log_pb"][@"group_source"];
+//            }
+//            if(cellModel.tracer[@"log_pb"][@"impr_id"]){
+//                traceParam[@"impr_id"] = cellModel.tracer[@"log_pb"][@"impr_id"];
+//            }
+//            dict[@"tracer"] = traceParam;
+
+            TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
+            
+            NSURL *url = [NSURL URLWithString:articleModel.schema];
+            [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
+        }
     }
 }
 
 #pragma mark - IGListSupplementaryViewSource
 - (NSArray<NSString *> *)supportedElementKinds
 {
-    return @[];
+    return @[ UICollectionElementKindSectionHeader ];
 }
 
 - (__kindof UICollectionReusableView *)viewForSupplementaryElementOfKind:(NSString *)elementKind
                                                                  atIndex:(NSInteger)index
 {
     FHDetailSectionTitleCollectionView *titleView = [self.collectionContext dequeueReusableSupplementaryViewOfKind:UICollectionElementKindSectionHeader forSectionController:self class:[FHDetailSectionTitleCollectionView class] atIndex:index];
-    titleView.titleLabel.font = [UIFont themeFontMedium:20];
+    titleView.titleLabel.font = [UIFont themeFontMedium:18];
     titleView.titleLabel.textColor = [UIColor themeGray1];
-    __weak typeof(self) weakSelf = self;
-    titleView.arrowsImg.hidden = NO;
-    titleView.userInteractionEnabled = YES;
-    [titleView setMoreActionBlock:^{
-        [weakSelf moreButtonClick];
+    FHNeighborhoodDetailStrategySM *sectionModel = (FHNeighborhoodDetailStrategySM *)self.sectionModel;
+    titleView.titleLabel.text = sectionModel.title;
+    [titleView.titleLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.left.mas_equalTo(16);
+        make.top.mas_equalTo(titleView).offset(20);
     }];
-
-    FHNeighborhoodDetailCommentAndQuestionSM *sectionModel = (FHNeighborhoodDetailCommentAndQuestionSM *)self.sectionModel;
-//    titleView.titleLabel.text = [NSString stringWithFormat:@"%@ (%@)",sectionModel.title,sectionModel.count];
+    
     return titleView;
 }
 
@@ -183,7 +157,7 @@
                                  atIndex:(NSInteger)index
 {
     if ([elementKind isEqualToString:UICollectionElementKindSectionHeader]) {
-        return CGSizeMake(self.collectionContext.containerSize.width - 15 * 2, 61);
+        return CGSizeMake(self.collectionContext.containerSize.width - 15 * 2, 45);
     }
     return CGSizeZero;
 }
@@ -214,7 +188,7 @@
  */
 
 - (void)listAdapter:(IGListAdapter *)listAdapter willDisplaySectionController:(IGListSectionController *)sectionController cell:(UICollectionViewCell *)cell atIndex:(NSInteger)index {
-    FHNeighborhoodDetailCommentAndQuestionSM *model = (FHNeighborhoodDetailCommentAndQuestionSM *)self.sectionModel;
+    FHNeighborhoodDetailStrategySM *model = (FHNeighborhoodDetailStrategySM *)self.sectionModel;
 //    FHFeedUGCCellModel *cellModel = model.items[index];
 //    NSString *tempKey = [NSString stringWithFormat:@"%@_%ld", NSStringFromClass([self class]), index];
 //    if ([self.elementShowCaches valueForKey:tempKey]) {

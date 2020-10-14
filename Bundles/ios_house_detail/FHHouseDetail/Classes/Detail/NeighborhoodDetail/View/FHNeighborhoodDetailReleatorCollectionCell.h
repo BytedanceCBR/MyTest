@@ -10,6 +10,12 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @interface FHNeighborhoodDetailReleatorCollectionCell : FHDetailBaseCollectionCell
+@property (nonatomic, copy) void (^licenseClickBlock)(FHDetailContactModel *model);
+
+@property (nonatomic, copy) void (^phoneClickBlock)(FHDetailContactModel *model);
+
+@property (nonatomic, copy) void (^imClickBlock)(FHDetailContactModel *model);
+
 
 @end
 

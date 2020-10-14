@@ -40,10 +40,16 @@
 #import "FHNeighborhoodDetailCoreInfoSM.h"
 #import "FHNeighborhoodDetailFloorpanSC.h"
 #import "FHNeighborhoodDetailFloorpanSM.h"
+#import "FHNeighborhoodDetailAgentSC.h"
+#import "FHNeighborhoodDetailAgentSM.h"
 #import "FHNeighborhoodDetailHouseSaleSC.h"
 #import "FHNeighborhoodDetailHouseSaleSM.h"
 #import "FHNeighborhoodDetailCommentAndQuestionSC.h"
 #import "FHNeighborhoodDetailCommentAndQuestionSM.h"
+#import "FHNeighborhoodDetailRecommendSC.h"
+#import "FHNeighborhoodDetailRecommendSM.h"
+#import "FHNeighborhoodDetailStrategySC.h"
+#import "FHNeighborhoodDetailStrategySM.h"
 
 @interface FHNeighborhoodDetailViewController ()<UIGestureRecognizerDelegate, IGListAdapterDataSource, UICollectionViewDelegate, UIScrollViewDelegate>
 @property (nonatomic, assign) FHHouseType houseType; // 房源类型
@@ -884,12 +890,18 @@
             case FHNeighborhoodDetailSectionTypeCommentAndQuestion:
                 return [[FHNeighborhoodDetailCommentAndQuestionSC alloc] init];
                 break;
+            case FHNeighborhoodDetailSectionTypeRecommend:
+                return [[FHNeighborhoodDetailRecommendSC alloc] init];
+                break;
 //            case FHNewHouseDetailSectionTypeSales:
 //                return [[FHNewHouseDetailSalesSC alloc] init];
 //                break;
-//            case FHNewHouseDetailSectionTypeAgent:
-//                return [[FHNewHouseDetailAgentSC alloc] init];
-//                break;
+            case FHNeighborhoodHouseDetailSectionTypeAgent:
+                return [[FHNeighborhoodDetailAgentSC alloc] init];
+                break;
+            case FHNeighborhoodDetailSectionTypeStrategy:
+                return [[FHNeighborhoodDetailStrategySC alloc] init];
+                break;
 //            case FHNewHouseDetailSectionTypeTimeline:
 //                return [[FHNewHouseDetailTimelineSC alloc] init];
 //                break;
