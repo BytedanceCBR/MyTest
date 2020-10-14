@@ -31,9 +31,7 @@
 @interface FHNeighborhoodDetailViewModel ()
 
 @property (nonatomic, assign)   NSInteger       requestRelatedCount;
-@property (nonatomic, strong , nullable) FHDetailRelatedNeighborhoodResponseDataModel *relatedNeighborhoodData;// 周边小区
 @property (nonatomic, strong , nullable) FHDetailSameNeighborhoodHouseResponseDataModel *sameNeighborhoodErshouHouseData;// 同小区房源，二手房
-@property (nonatomic, strong , nullable) FHRentSameNeighborhoodResponseDataModel *sameNeighborhoodRentHouseData;// 同小区房源，租房
 @property (nonatomic, copy , nullable) NSString *neighborhoodId;// 周边小区房源id
 
 @end
@@ -191,12 +189,8 @@
     if (neighborhoodId.length < 1) {
         return;
     }
-    // 周边小区
-    [self requestRelatedNeighborhoodSearch:neighborhoodId];
     // 同小区房源-二手房
     [self requestHouseInSameNeighborhoodSearchErShou:neighborhoodId];
-    // 同小区房源-租房
-    [self requestHouseInSameNeighborhoodSearchRent:neighborhoodId];
 }
 
 // 处理详情页周边请求数据
@@ -218,17 +212,6 @@
     }
 }
 
-
-// 周边小区
-- (void)requestRelatedNeighborhoodSearch:(NSString *)neighborhoodId {
-    __weak typeof(self) wSelf = self;
-    [FHHouseDetailAPI requestRelatedNeighborhoodSearchByNeighborhoodId:neighborhoodId searchId:nil offset:@"0" query:nil count:5 completion:^(FHDetailRelatedNeighborhoodResponseModel * _Nullable model, NSError * _Nullable error) {
-        wSelf.requestRelatedCount += 1;
-        wSelf.relatedNeighborhoodData = model.data;
-        [wSelf processDetailRelatedData];
-    }];
-}
-
 // 同小区房源-二手房
 - (void)requestHouseInSameNeighborhoodSearchErShou:(NSString *)neighborhoodId {
     NSString *houseId = self.houseId;
@@ -236,17 +219,6 @@
     [FHHouseDetailAPI requestHouseInSameNeighborhoodSearchByNeighborhoodId:neighborhoodId houseId:houseId searchId:nil offset:@"0" query:nil count:5 completion:^(FHDetailSameNeighborhoodHouseResponseModel * _Nullable model, NSError * _Nullable error) {
         wSelf.requestRelatedCount += 1;
         wSelf.sameNeighborhoodErshouHouseData = model.data;
-        [wSelf processDetailRelatedData];
-    }];
-}
-
-// 同小区房源-租房
-- (void)requestHouseInSameNeighborhoodSearchRent:(NSString *)neighborhoodId {
-    NSString *houseId = self.houseId;
-    __weak typeof(self) wSelf = self;
-    [FHHouseDetailAPI requestHouseRentSameNeighborhood:houseId withNeighborhoodId:neighborhoodId completion:^(FHRentSameNeighborhoodResponseModel * _Nonnull model, NSError * _Nonnull error) {
-        wSelf.requestRelatedCount += 1;
-        wSelf.sameNeighborhoodRentHouseData = model.data;
         [wSelf processDetailRelatedData];
     }];
 }
