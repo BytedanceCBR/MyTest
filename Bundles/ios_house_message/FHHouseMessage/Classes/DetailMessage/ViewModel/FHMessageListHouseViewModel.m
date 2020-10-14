@@ -17,7 +17,8 @@
 #import "TTRoute.h"
 #import "FHHouseType.h"
 #import <FHHouseBase/FHHouseTypeManager.h>
-
+#import "FHFeedbackMsgCell.h"
+#import "FHFeedbackMsgHeaderView.h"
 
 @interface FHMessageListHouseViewModel()<UITableViewDelegate,UITableViewDataSource>
 
@@ -40,6 +41,8 @@
         [tableView registerClass:[FHHouseMsgCell class] forCellReuseIdentifier:NSStringFromClass([FHHouseMsgCell class])];
         [tableView registerClass:[FHHouseHeaderView class] forHeaderFooterViewReuseIdentifier:NSStringFromClass([FHHouseHeaderView class])];
         [tableView registerClass:[FHHouseMsgFooterView class] forHeaderFooterViewReuseIdentifier:NSStringFromClass([FHHouseMsgFooterView class])];
+        [tableView registerClass:[FHFeedbackMsgCell class] forCellReuseIdentifier:NSStringFromClass([FHFeedbackMsgCell class])];
+        [tableView registerClass:[FHFeedbackMsgHeaderView class] forHeaderFooterViewReuseIdentifier:NSStringFromClass([FHFeedbackMsgHeaderView class])];
         tableView.delegate = self;
         tableView.dataSource = self;
     }
@@ -197,6 +200,9 @@
 
 //埋点
 - (void)trackOperationWithModel:(FHHouseMsgDataItemsItemsModel *)model index:(NSInteger)index trackName:(NSString *)trackName {
+    if (!model) {
+        return;
+    }
     NSMutableDictionary *tracerDict = [self categoryLogDict].mutableCopy;
     tracerDict[@"card_type"] = @"left_pic";
     tracerDict[@"element_type"] = @"be_null";
@@ -222,6 +228,12 @@
 {
     if(section < self.dataList.count){
         FHHouseMsgDataItemsModel *model = self.dataList[section];
+        if (self.listId == FHMessageTypeHouseReport) {
+            if (model.content.length) {
+                return 1;
+            }
+            return 0;
+        }
         NSArray *houses = model.items;
         return [houses count];
     }else{
@@ -231,13 +243,39 @@
 
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    FHHouseMsgCell *cell = [tableView dequeueReusableCellWithIdentifier:NSStringFromClass([FHHouseMsgCell class]) forIndexPath:indexPath];
-    cell.selectionStyle = UITableViewCellSelectionStyleNone;
-    
     FHHouseMsgDataItemsModel *model = self.dataList[indexPath.section];
-    FHHouseMsgDataItemsItemsModel *itemsModel = model.items[indexPath.row];
-    
-    [cell updateWithModel:itemsModel];
+    FHHouseMsgDataItemsItemsModel *itemsModel = nil;
+    UITableViewCell *cell = nil;
+    if (self.listId == FHMessageTypeHouseReport) {
+        FHFeedbackMsgCell *msgCell = [tableView dequeueReusableCellWithIdentifier:NSStringFromClass([FHFeedbackMsgCell class]) forIndexPath:indexPath];
+        msgCell.selectionStyle = UITableViewCellSelectionStyleNone;
+        [msgCell updateWithModel:model];
+        [msgCell setPushURLBlock:^(NSString * _Nonnull URLString) {
+            NSDictionary *logPb = model.logPb;
+            NSMutableDictionary *tracerDict = [self categoryLogDict].mutableCopy;
+            tracerDict[@"card_type"] = @"left_pic";
+            tracerDict[@"element_from"] = @"be_null";
+            tracerDict[@"enter_from"] = [self.viewController categoryName];
+            tracerDict[@"log_pb"] = logPb ? logPb : @"be_null";
+            tracerDict[@"origin_search_id"] = self.originSearchId ? self.originSearchId : @"be_null";
+            tracerDict[@"rank"] = @(indexPath.section);
+           
+            NSDictionary *dict = @{@"house_type":@(FHHouseTypeSecondHandHouse),
+                                   @"tracer": tracerDict
+                                   };
+            TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
+            
+            NSURL* url = [NSURL URLWithString:URLString];
+            [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
+        }];
+        cell = msgCell;
+    } else {
+        FHHouseMsgCell *msgCell = [tableView dequeueReusableCellWithIdentifier:NSStringFromClass([FHHouseMsgCell class]) forIndexPath:indexPath];
+        msgCell.selectionStyle = UITableViewCellSelectionStyleNone;
+        itemsModel = model.items[indexPath.row];
+        [msgCell updateWithModel:itemsModel];
+        cell = msgCell;
+    }
     
     if (!_clientShowDict) {
         _clientShowDict = [NSMutableDictionary new];
@@ -269,20 +307,30 @@
 
 - (nullable UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
 {
-    FHHouseHeaderView *headerView = [tableView dequeueReusableHeaderFooterViewWithIdentifier:NSStringFromClass([FHHouseHeaderView class])];
-    if (!headerView) {
-        headerView = [[FHHouseHeaderView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, 90)];
+    if (self.listId == FHMessageTypeHouseReport) {
+        FHFeedbackMsgHeaderView *headerView = [tableView dequeueReusableHeaderFooterViewWithIdentifier:NSStringFromClass([FHFeedbackMsgHeaderView class])];
+        if (!headerView) {
+            headerView = [[FHFeedbackMsgHeaderView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, 50)];
+        }
+        FHHouseMsgDataItemsModel *model = self.dataList[section];
+        headerView.dateLabel.text = model.dateStr;
+        return headerView;
+    } else {
+        FHHouseHeaderView *headerView = [tableView dequeueReusableHeaderFooterViewWithIdentifier:NSStringFromClass([FHHouseHeaderView class])];
+        if (!headerView) {
+            headerView = [[FHHouseHeaderView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, 90)];
+        }
+        
+        FHHouseMsgDataItemsModel *model = self.dataList[section];
+        headerView.dateLabel.text = model.dateStr;
+        headerView.contentLabel.text = model.title;
+        if (model.isSoldout) {
+            headerView.contentLabel.textColor = [UIColor themeGray3];
+        }else {
+            headerView.contentLabel.textColor = [UIColor themeGray1];
+        }
+        return headerView;
     }
-    
-    FHHouseMsgDataItemsModel *model = self.dataList[section];
-    headerView.dateLabel.text = model.dateStr;
-    headerView.contentLabel.text = model.title;
-    if (model.isSoldout) {
-        headerView.contentLabel.textColor = [UIColor themeGray3];
-    }else {
-        headerView.contentLabel.textColor = [UIColor themeGray1];
-    }
-    return headerView;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section
@@ -323,6 +371,9 @@
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     if(indexPath.section < self.dataList.count){
+        if (self.listId == FHMessageTypeHouseReport) {
+            return UITableViewAutomaticDimension;
+        }
         FHHouseMsgDataItemsModel *model = self.dataList[indexPath.section];
         if(indexPath.row == model.items.count - 1){
             return 125;
@@ -333,6 +384,9 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    if (self.listId == FHMessageTypeHouseReport) {
+        return;
+    }
     FHHouseMsgDataItemsModel *model = self.dataList[indexPath.section];
     FHHouseMsgDataItemsItemsModel *itemsModel = model.items[indexPath.row];
     

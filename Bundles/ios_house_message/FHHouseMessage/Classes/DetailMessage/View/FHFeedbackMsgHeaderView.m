@@ -29,7 +29,7 @@
 
 - (void)initViews {
     self.backgroundColor = [UIColor themeGray7];
-    self.contentView.backgroundColor = [UIColor whiteColor];
+    self.contentView.backgroundColor = [UIColor themeGray7];
     
     self.dateView = [[UIView alloc] init];
     self.dateView.backgroundColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:0.1];
@@ -40,6 +40,7 @@
         make.top.mas_equalTo(20);
         make.height.mas_equalTo(20);
         make.centerX.equalTo(self);
+        make.bottom.mas_equalTo(-10);
     }];
     
     self.dateLabel = [[UILabel alloc] init];
@@ -49,7 +50,7 @@
     [self.dateLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(self.dateView.mas_left).offset(10);
         make.right.mas_equalTo(self.dateView.mas_right).offset(-10);
-        make.center.mas_equalTo(self.dateView);
+        make.centerY.mas_equalTo(self.dateView);
     }];
 }
 
