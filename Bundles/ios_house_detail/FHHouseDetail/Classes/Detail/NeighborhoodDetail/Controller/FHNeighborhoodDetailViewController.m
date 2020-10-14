@@ -38,6 +38,8 @@
 #import "FHNeighborhoodDetailHeaderMediaSM.h"
 #import "FHNeighborhoodDetailCoreInfoSC.h"
 #import "FHNeighborhoodDetailCoreInfoSM.h"
+#import "FHNeighborhoodDetailAgentSC.h"
+#import "FHNeighborhoodDetailAgentSM.h"
 #import "FHNeighborhoodDetailCommentAndQuestionSC.h"
 #import "FHNeighborhoodDetailCommentAndQuestionSM.h"
 
@@ -877,9 +879,9 @@
 //            case FHNewHouseDetailSectionTypeSales:
 //                return [[FHNewHouseDetailSalesSC alloc] init];
 //                break;
-//            case FHNewHouseDetailSectionTypeAgent:
-//                return [[FHNewHouseDetailAgentSC alloc] init];
-//                break;
+            case FHNeighborhoodHouseDetailSectionTypeAgent:
+                return [[FHNeighborhoodDetailAgentSC alloc] init];
+                break;
 //            case FHNewHouseDetailSectionTypeTimeline:
 //                return [[FHNewHouseDetailTimelineSC alloc] init];
 //                break;
