@@ -358,6 +358,11 @@ typedef NS_ENUM(NSUInteger, FHHouseDetailReportAdditionItemType) {
 
 @implementation FHHouseDetailReportAddtionViewController
 
++ (void)gotoReportAdditionPageWithUserInfoDict:(NSDictionary *)userInfoDict {
+    TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:userInfoDict];
+    [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:@"sslocal://house_detail_report_addition_page"] userInfo:userInfo];
+}
+
 - (instancetype)initWithRouteParamObj:(TTRouteParamObj *)paramObj {
     if(self = [super initWithRouteParamObj:paramObj]) {
     }

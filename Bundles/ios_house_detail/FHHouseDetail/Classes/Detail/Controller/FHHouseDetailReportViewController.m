@@ -584,17 +584,10 @@ typedef NS_ENUM(NSUInteger, FHHouseDetailReportItemType) {
     self.submitButton.enabled = isEnable;
     self.submitButton.alpha = isEnable ? 1 : 0.4;
 }
-- (void)testGotoReportAdditionPage {
-    NSMutableDictionary *dict = [NSMutableDictionary dictionary];
-    
-    TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
-    [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:@"sslocal://house_detail_report_addition_page"] userInfo:userInfo];
-}
+
 - (void)submitAction {
-    [self testGotoReportAdditionPage];
-    return;
+
     // 提交动作
-    
     NSMutableDictionary *params = [NSMutableDictionary dictionary];
     // TODO: 参数传入
     params[@"house_url"]= @"";
