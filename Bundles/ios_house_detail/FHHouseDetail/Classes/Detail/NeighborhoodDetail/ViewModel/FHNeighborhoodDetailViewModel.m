@@ -23,6 +23,8 @@
 #import "FHNeighborhoodDetailHeaderMediaSM.h"
 #import "FHNeighborhoodDetailCoreInfoSC.h"
 #import "FHNeighborhoodDetailCoreInfoSM.h"
+#import "FHNeighborhoodDetailFloorpanSC.h"
+#import "FHNeighborhoodDetailFloorpanSM.h"
 #import "FHNeighborhoodDetailHouseSaleSC.h"
 #import "FHNeighborhoodDetailHouseSaleSM.h"
 #import "FHNeighborhoodDetailCommentAndQuestionSC.h"
@@ -166,6 +168,12 @@
         [RGCListModel updateDetailModel:self.detailData];
         [sectionModels addObject:RGCListModel];
     }
+    
+    //小区户型
+    FHNeighborhoodDetailFloorpanSM *floorpanSM = [[FHNeighborhoodDetailFloorpanSM alloc] initWithDetailModel:self.detailData];
+    floorpanSM.sectionType = FHNeighborhoodDetailSectionTypeFloorpan;
+    [sectionModels addObject:floorpanSM];
+    
     self.sectionModels = sectionModels.copy;
     
     
