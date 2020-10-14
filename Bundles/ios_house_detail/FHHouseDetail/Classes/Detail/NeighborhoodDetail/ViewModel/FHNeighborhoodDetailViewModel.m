@@ -114,7 +114,9 @@
     if (model.data.name.length ||
         model.data.neighborhoodInfo.address.length ||
         model.data.neighborhoodInfo.id.length > 0 ||
-        model.data.baseInfo.count > 0) {
+        model.data.baseInfo.count > 0 ||
+        ((model.data.neighborhoodInfo.gaodeLat.length > 0 && model.data.neighborhoodInfo.gaodeLng.length > 0 )|| model.data.neighborhoodInfo.baiduPanoramaUrl.length > 0)
+        ) {
         FHNeighborhoodDetailCoreInfoSM *coreInfoSM = [[FHNeighborhoodDetailCoreInfoSM alloc] initWithDetailModel:self.detailData];
         
         coreInfoSM.sectionType = FHNeighborhoodDetailSectionTypeBaseInfo;

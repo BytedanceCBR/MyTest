@@ -123,8 +123,13 @@ static NSInteger  const FHNeighborhoodDetailAgentLimit = 3;
     }
 }
 
-- (void)didSelectItemAtIndex:(NSInteger)index {
+- (void)cellClick:(FHDetailContactModel *)model {
+    
     FHNeighborhoodDetailAgentSM *agentSM = (FHNeighborhoodDetailAgentSM *)self.sectionModel;
+    NSUInteger index = [agentSM.recommendedRealtors indexOfObject:model];
+    if (index < 0 || index >= agentSM.recommendedRealtors.count) {
+        return;
+    }
     if ((!agentSM.isFold && agentSM.recommendedRealtors.count > FHNeighborhoodDetailAgentLimit && index == agentSM.recommendedRealtors.count) || (agentSM.isFold && agentSM.recommendedRealtors.count > FHNeighborhoodDetailAgentLimit && index == FHNeighborhoodDetailAgentLimit)) {
         return;
     } else {
@@ -200,6 +205,9 @@ static NSInteger  const FHNeighborhoodDetailAgentLimit = 3;
         }];
         [cell setLicenseClickBlock:^(FHDetailContactModel * _Nonnull model) {
             [weakSelf licenseClick:model];
+        }];
+        [cell setReleatorClickBlock:^(FHDetailContactModel * _Nonnull model) {
+                    [weakSelf cellClick:model];
         }];
         return cell;
     }

@@ -64,12 +64,15 @@
     }
     __weak typeof(self) weakSelf = self;
     
+    
+    [itemView addTarget:self action:@selector(cellClick:) forControlEvents:UIControlEventTouchUpInside];
+    
     [itemView.licenseIcon btd_addActionBlockForTouchUpInside:^(__kindof UIButton * _Nonnull sender) {
         if (weakSelf.licenseClickBlock) {
             weakSelf.licenseClickBlock(weakSelf.currentData);
         }
     }];
-    
+
     [itemView.callBtn btd_addActionBlockForTouchUpInside:^(__kindof UIButton * _Nonnull sender) {
         if (weakSelf.phoneClickBlock) {
             weakSelf.phoneClickBlock(weakSelf.currentData);
@@ -140,4 +143,9 @@
     return @"neighborhood_detail_related";
 }
 
+- (void)cellClick:(UIControl *)control {
+    if (self.releatorClickBlock) {
+        self.releatorClickBlock(self.currentData);
+    }
+}
 @end
