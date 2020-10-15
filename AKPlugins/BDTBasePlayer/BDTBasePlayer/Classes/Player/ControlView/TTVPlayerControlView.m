@@ -79,7 +79,6 @@ static const CGFloat kBottomBarHeight = 80;
 @property(nonatomic, strong)NSTimer *playbackControlViewTimer;
 @property(nonatomic, strong)TTVResolutionSelect *resolutionSelect;
 //@property(nonatomic, strong ,readonly)UIView <TTVPlayerControlBottomView, TTVPlayerContext> *bottomBarView;
-@property(nonatomic, strong)ExploreMovieMiniSliderView * miniSlider;
 @property (nonatomic, strong) UITapGestureRecognizer *singleTap;
 @property (nonatomic, strong) UITapGestureRecognizer *dummySingleTap;
 @property (nonatomic, strong) UITapGestureRecognizer *doubleTap;

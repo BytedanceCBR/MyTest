@@ -18,6 +18,7 @@
 #import "FHShortVideoTracerUtil.h"
 #import "TTAccountManager.h"
 #import "NSDictionary+BTDAdditions.h"
+#import "FHUGCVideoView.h"
 
 @interface AWEVideoContainerCollectionViewCell () <AWEVideoPlayViewDelegate>
 

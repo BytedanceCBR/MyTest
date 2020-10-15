@@ -104,13 +104,6 @@ static const NSString *kFHUGCPublisherHistoryDataKey = @"key_ugc_publisher_histo
 }
 
 - (void)registerNoti {
-    // 发帖成功通知 数放在userinfo的：social_group_id
-    //    static NSString *const kFHUGCPostSuccessNotification = @"k_fh_ugc_post_finish";
-    // 删除帖子成功通知 数放在userinfo的：social_group_id
-    //    static NSString *const kFHUGCDelPostNotification = @"k_fh_ugc_del_post_finish";
-//    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(postThreadSuccess:) name:kTTForumPostThreadSuccessNotification object:nil];
-//    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(delPostThreadSuccess:) name:kFHUGCDelPostNotification object:nil];
-    
     //获取到did之后取消拦截
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(deviceDidRefreshed:) name:@"kFHTrackerDidRefreshDeviceId" object:nil];
 }
