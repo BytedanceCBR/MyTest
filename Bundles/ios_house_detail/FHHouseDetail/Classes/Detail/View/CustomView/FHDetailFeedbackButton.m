@@ -71,12 +71,12 @@
 
 // 二手房-房源问题反馈
 - (void)gotoReportVC {
-    BOOL isJumpToH5 = [SSCommonLogic isEnableHouseDetailH5Report];
-    if(isJumpToH5) {
-        [self gotoReportH5Page];
+    BOOL isJumpToNative = [SSCommonLogic isEnableHouseDetailNativeReport];
+    if(isJumpToNative) {
+        [self gotoReportNativePage];
     }
     else {
-        [self gotoReportNativePage];
+        [self gotoReportH5Page];
     }
 }
 

@@ -5522,11 +5522,11 @@ static NSString *const kFFeedRefreshStrategy = @"feed_refresh_settings";
     return NO;
 }
 
-+ (BOOL)isEnableHouseDetailH5Report {
++ (BOOL)isEnableHouseDetailNativeReport {
     NSDictionary *fhSettings = [self fhSettings];
-    if (fhSettings != nil && [fhSettings objectForKey:@"f_house_detail_h5_report"] != nil) {
-        BOOL isEnableH5Report = [[fhSettings objectForKey:@"f_house_detail_h5_report"] boolValue];
-        return isEnableH5Report;
+    if (fhSettings != nil && [fhSettings objectForKey:@"f_house_detail_native_report"] != nil) {
+        BOOL isEnableNativeReport = [[fhSettings objectForKey:@"f_house_detail_native_report"] boolValue];
+        return isEnableNativeReport;
     }
     return NO;
 }

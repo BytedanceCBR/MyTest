@@ -22,6 +22,7 @@
 #import "TTReachability.h"
 #import "FHEnvContext.h"
 #import "FHGeneralBizConfig.h"
+#import "UIViewController+HUD.h"
 
 typedef NS_ENUM(NSUInteger, FHHouseDetailReportItemType) {
     FHHouseDetailReportItemType_Type,
@@ -121,10 +122,6 @@ typedef NS_ENUM(NSUInteger, FHHouseDetailReportItemType) {
 @property (nonatomic, strong) UILabel *titleLabel;
 @property (nonatomic, strong) UIView  *contentArea;
 @property (nonatomic, strong) FHHouseDetailReportItem *item;
-
-/// 是否在标题后面显示必选字样
-/// @param isRequired 是否必选
-- (void)showMustRequiredTitle:(BOOL)isRequired;
 @end
 
 @implementation FHHouseDetailReportBaseCell
@@ -184,18 +181,38 @@ typedef NS_ENUM(NSUInteger, FHHouseDetailReportItemType) {
     if(_item != item) {
         _item = item;
         self.titleLabel.text = item.title;
+        
+        if(item.type == FHHouseDetailReportItemType_Phone) {
+            [self showMustRequiredTitle:YES text:@"（必填）"];
+        } else if(item.type == FHHouseDetailReportItemType_Type) {
+            [self showMustRequiredTitle:YES text:@"（必选）"];
+        }
     }
 }
 
-- (void)showMustRequiredTitle:(BOOL)isRequired {
-    NSString *requiredText = @"（必填）";
+- (void)showMustRequiredTitle:(BOOL)isRequired text:(NSString *)showText {
+    NSString *requiredText = showText;
     if(isRequired) {
         if(![self.titleLabel.text containsString:requiredText]) {
-            self.titleLabel.text = [self.titleLabel.text stringByAppendingString:requiredText];
+            NSAttributedString *requiredAttributeText = [[NSAttributedString alloc] initWithString:requiredText attributes:@{
+                NSForegroundColorAttributeName: [UIColor themeGray3],
+                NSFontAttributeName: self.titleLabel.font
+            }];
+            NSMutableAttributedString *titleAttributeText = [[NSMutableAttributedString alloc] initWithString:self.titleLabel.text attributes:@{
+                NSForegroundColorAttributeName: self.titleLabel.textColor,
+                NSFontAttributeName: self.titleLabel.font
+            }];
+            [titleAttributeText appendAttributedString:requiredAttributeText];
+            self.titleLabel.attributedText = titleAttributeText;
         }
     } else {
         if([self.titleLabel.text containsString:requiredText]) {
-            self.titleLabel.text = [self.titleLabel.text stringByReplacingOccurrencesOfString:requiredText withString:@""];
+            NSString *title = [self.titleLabel.text stringByReplacingOccurrencesOfString:requiredText withString:@""];
+            NSMutableAttributedString *titleAttributeText = [[NSMutableAttributedString alloc] initWithString:title attributes:@{
+                NSForegroundColorAttributeName: self.titleLabel.textColor,
+                NSFontAttributeName: self.titleLabel.font
+            }];
+            self.titleLabel.attributedText = titleAttributeText;
         }
     }
 }
@@ -258,7 +275,7 @@ typedef NS_ENUM(NSUInteger, FHHouseDetailReportItemType) {
         self.item.options[idx].isSelected = optionView.isSelected;
         if(self.item.options[idx].isSelected) {
             self.item.selectedOption = self.item.options[idx];
-            self.item.isValid = (idx < self.item.options.count - 1);
+            self.item.isValid = YES;
         }
     }];
 }
@@ -557,19 +574,8 @@ typedef NS_ENUM(NSUInteger, FHHouseDetailReportItemType) {
             @strongify(self);
             
             RACTupleUnpack(NSNumber *typeValid, NSNumber *phoneValid) = x;
-            BOOL isEnableSubmit = (typeValid.boolValue || (typeItem.selectedOption && phoneValid.boolValue));
+            BOOL isEnableSubmit = typeValid.boolValue && phoneValid.boolValue;
             [self updateSubmitButtonStatus:isEnableSubmit];
-        }];
-        
-        
-        [[[[[RACObserve(typeItem, selectedOption) distinctUntilChanged] map:^NSNumber * _Nullable(FHHouseDetailReportOption *  _Nullable option) {
-            return @(option == typeItem.options.lastObject);
-        }] distinctUntilChanged] deliverOnMainThread] subscribeNext:^(NSNumber *  _Nullable showRequiredNumber) {
-            @strongify(self);
-            FHHouseDetailReportBaseCell *phoneNumberCell = [self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:1 inSection:0]];
-            if(phoneNumberCell) {
-                [phoneNumberCell showMustRequiredTitle:showRequiredNumber.boolValue];
-            }
         }];
     }
     return _items;
@@ -657,7 +663,7 @@ typedef NS_ENUM(NSUInteger, FHHouseDetailReportItemType) {
     
     params[@"house_url"]= self.houseUrl;
     params[@"house_id"] = self.houseId;
-    params[@"house_type"] = self.houseType;
+    params[@"house_type"] = @(self.houseType.integerValue);
     
 
     __block BOOL isValidPhoneNumber = YES;
@@ -670,7 +676,9 @@ typedef NS_ENUM(NSUInteger, FHHouseDetailReportItemType) {
                 break;
             case FHHouseDetailReportItemType_Phone:
             {
-                isValidPhoneNumber = [item.phoneNumber validateContactNumber];
+                if(item.phoneNumber.length > 0) {
+                    isValidPhoneNumber = [item.phoneNumber validateContactNumber];
+                }
                 if(isValidPhoneNumber) {
                     params[@"phone"] = item.phoneNumber;
                 }
@@ -698,18 +706,24 @@ typedef NS_ENUM(NSUInteger, FHHouseDetailReportItemType) {
     }
     
     @weakify(self);
+    [self showLoadingAlert:@"正在提交"];
     [FHMainApi requestHouseFeedbackReport:params completion:^(NSError * _Nonnull error, id  _Nonnull jsonObj) {
         @strongify(self);
-        
+        [self dismissLoadingAlert];
         if(error) {
             [[ToastManager manager] showToast:@"网络错误，请稍后重试"];
             return;
         }
         
-        // TODO: 成功后退出并弹窗引导
-        [self goBack];
-        [self showHintView];
-        
+        if(jsonObj && [jsonObj[@"status"] longValue] == 0) {
+            [self goBack];
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.25 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                [self showHintView];
+            });
+        }
+        else {
+            [[ToastManager manager] showToast:@"网络错误，请稍后重试"];
+        }
     }];
 }
 
