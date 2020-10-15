@@ -29,6 +29,7 @@ static NSInteger  const FHNeighborhoodDetailAgentLimit = 3;
     self = [super init];
     if (self) {
         self.supplementaryViewSource = self;
+        self.displayDelegate = self;
     }
     return self;
 }
