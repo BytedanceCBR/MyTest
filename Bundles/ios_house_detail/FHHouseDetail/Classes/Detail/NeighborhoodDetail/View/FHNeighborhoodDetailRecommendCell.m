@@ -232,6 +232,7 @@
 
 - (void)refreshWithData:(id)data {
     if ([data isKindOfClass:[FHSearchHouseDataItemsModel class]]) {
+        self.model = data;
         FHSearchHouseDataItemsModel *model = (FHSearchHouseDataItemsModel *)data;
         [self updateMainTitleView:model];
         [self updateTagContainerView:model];
@@ -241,6 +242,31 @@
         self.pricePerSqmLabel.text = model.displayPricePerSqm;
         FHImageModel *imageModel = model.houseImage.firstObject;
         [self updateMainImageWithUrl:imageModel.url];
+        if (self.maskVRImageView) {
+            [self.maskVRImageView removeFromSuperview];
+            self.maskVRImageView = nil;
+        }
+        if (self.model.vrInfo.hasVr) {
+            if (![self.leftInfoView.subviews containsObject:self.vrLoadingView]) {
+                [self.leftInfoView addSubview:self.vrLoadingView];
+                self.vrLoadingView.hidden = YES;
+                [self.vrLoadingView mas_makeConstraints:^(MASConstraintMaker *make) {
+                    make.left.mas_equalTo(8);
+                    make.bottom.mas_equalTo(-8);
+                    make.width.height.mas_equalTo(16);
+                }];
+            }
+            _vrLoadingView.hidden = NO;
+            [_vrLoadingView play];
+            self.maskVRImageView = [UIView new];
+            self.maskVRImageView.backgroundColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:0.1];
+            [self.mainImageView addSubview:self.maskVRImageView];
+            [self.maskVRImageView setFrame:CGRectMake(0.0f, 0.0f, 84, 84)];
+        } else {
+            if (_vrLoadingView) {
+                _vrLoadingView.hidden = YES;
+            }
+        }
     }
 }
 

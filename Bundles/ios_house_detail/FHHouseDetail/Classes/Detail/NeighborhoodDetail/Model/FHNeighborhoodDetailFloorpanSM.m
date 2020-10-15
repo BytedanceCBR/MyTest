@@ -9,4 +9,10 @@
 
 @implementation FHNeighborhoodDetailFloorpanSM
 
+
+-(void)updateWithDataModel:(FHDetailNeighborhoodSaleHouseInfoModel *)model{
+    self.floorpanCellModel = [[FHNeighborhoodDetailFloorpanCellModel alloc] init];
+    self.floorpanCellModel.saleHouseInfoModel = model;
+}
+
 @end

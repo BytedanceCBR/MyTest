@@ -167,6 +167,22 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *title;
 @end
 
+//小区户型
+@protocol FHDetailNeighborhoodSaleHouseInfoNeighborhoodSaleHouseListModel<NSObject>
+@end
+
+@interface FHDetailNeighborhoodSaleHouseInfoNeighborhoodSaleHouseListModel : JSONModel
+@property (nonatomic, copy , nullable) NSString *count;
+@property (nonatomic, copy , nullable) NSString *queryValue;
+@property (nonatomic, copy , nullable) NSString *priceRange;
+@property (nonatomic, copy , nullable) NSString *roomNum;
+@property (nonatomic, copy , nullable) NSString *areaRange;
+@end
+
+@interface FHDetailNeighborhoodSaleHouseInfoModel : JSONModel
+@property (nonatomic, strong , nullable) NSArray<FHDetailNeighborhoodSaleHouseInfoNeighborhoodSaleHouseListModel> *neighborhoodSaleHouseList;
+@end
+
 // 小区点评
 @interface FHDetailNeighborhoodDataCommentsContentModel : JSONModel
 @property (nonatomic, copy , nullable) NSString *count;
@@ -208,6 +224,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *recommendedRealtorsTitle;
 @property (nonatomic, strong , nullable) NSArray<FHDetailContactModel> *recommendedRealtors;
 @property (nonatomic, strong , nullable) FHDetailNeighborhoodSaleHouseEntranceModel *saleHouseEntrance;
+@property (nonatomic, strong , nullable) FHDetailNeighborhoodSaleHouseInfoModel *neighborhoodSaleHouseInfo;
 @property (nonatomic, strong , nullable) FHDetailContactModel *highlightedRealtor;
 @property (nonatomic, strong , nullable) FHDetailContactModel *contact;
 @property (nonatomic, strong , nullable) FHDetailNeighborhoodDataQuestionModel *question;
