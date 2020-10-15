@@ -12,6 +12,21 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+@protocol FHDetailNeighborhoodDataNeighborhoodEvaluationEvaluationListModel<NSObject>
+@end
+
+@interface FHDetailNeighborhoodDataNeighborhoodEvaluationEvaluationListModel : JSONModel
+
+@property (nonatomic, copy , nullable) NSString *rate;
+@property (nonatomic, copy , nullable) NSString *title;
+@end
+
+@interface FHDetailNeighborhoodDataNeighborhoodEvaluationModel : JSONModel
+
+@property (nonatomic, strong , nullable) NSArray<FHDetailNeighborhoodDataNeighborhoodEvaluationEvaluationListModel> *evaluationList;
+@property (nonatomic, copy , nullable) NSString *desc;
+@end
+
 @protocol FHDetailNeighborhoodDataStrategyArticleListModel<NSObject>
 @end
 
@@ -24,6 +39,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *groupId;
 @property (nonatomic, copy , nullable) NSString *schema;
 @property (nonatomic, strong , nullable) NSDictionary *logPb;
+@property (nonatomic, copy , nullable) NSString *iconUrl;
 @property (nonatomic, assign) BOOL hiddenBottomLine;
 @end
 
@@ -233,6 +249,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong , nullable) FHClueAssociateInfoModel *recommendRealtorsAssociateInfo;
 @property (nonatomic, strong , nullable) FHClueAssociateInfoModel *highlightedRealtorAssociateInfo;
 @property (nonatomic, strong , nullable) FHHouseDetailMediaInfo *albumInfo;
+@property (nonatomic, strong , nullable) FHDetailNeighborhoodDataNeighborhoodEvaluationModel *neighborhoodEvaluation ; 
 
 @end
 
