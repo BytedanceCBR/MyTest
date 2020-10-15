@@ -6,7 +6,6 @@
 //
 
 #import "FHDetailBaseCell.h"
-#import "YYText.h"
 #import "FHDetailSameNeighborhoodHouseResponseModel.h"
 
 NS_ASSUME_NONNULL_BEGIN
@@ -20,17 +19,17 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FHNeighborhoodDetailHouseSaleItemCollectionCell : FHDetailBaseCollectionCell
 
-@property (nonatomic, strong) UIImageView *icon;
-@property (nonatomic, strong) UIImageView *houseVideoImageView;
-@property (nonatomic, weak) UIImageView *iconBacImageView;
-@property (nonatomic, strong) YYLabel *descLabel;
-@property (nonatomic, strong) UILabel *priceLabel;
-@property (nonatomic, strong) UILabel *spaceLabel;
+@end
+@interface FHNeighborhoodDetailHouseSaleMoreItemCollectionCell : FHDetailBaseCollectionCell
 
 @end
 
 @interface FHNeighborhoodDetailHouseSaleCellModel : NSObject
 @property (nonatomic, strong , nullable) FHDetailSameNeighborhoodHouseResponseDataModel *neighborhoodSoldHouseData;
+@end
+
+@interface FHNeighborhoodDetailHouseSaleMoreItemModel : FHDetailBaseModel
+
 @end
 
 NS_ASSUME_NONNULL_END

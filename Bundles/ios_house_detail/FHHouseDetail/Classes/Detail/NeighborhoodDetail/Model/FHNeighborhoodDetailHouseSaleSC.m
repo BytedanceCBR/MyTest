@@ -61,19 +61,11 @@
     titleView.titleLabel.font = [UIFont themeFontMedium:20];
     titleView.titleLabel.textColor = [UIColor themeGray1];
     WeakSelf;
-    titleView.moreActionBlock = ^{
-        StrongSelf;
-        [self moreButtonClick];
-    };
     FHNeighborhoodDetailHouseSaleCellModel *cellModel= [(FHNeighborhoodDetailHouseSaleSM *)self.sectionModel houseSaleCellModel];
     if(cellModel.neighborhoodSoldHouseData.total.length > 0){
-        titleView.titleLabel.text = [NSString stringWithFormat:@"在售房源 (%@)",cellModel.neighborhoodSoldHouseData.total];
-        titleView.arrowsImg.hidden = !cellModel.neighborhoodSoldHouseData.hasMore;
-        titleView.userInteractionEnabled = YES;
+        titleView.titleLabel.text = [NSString stringWithFormat:@"同小区房源 (%@)",cellModel.neighborhoodSoldHouseData.total];
     } else {
-        titleView.titleLabel.text = @"在售房源";
-        titleView.arrowsImg.hidden = YES;
-        titleView.userInteractionEnabled = NO;
+        titleView.titleLabel.text = @"同小区房源";
     }
     return titleView;
 }
