@@ -52,6 +52,8 @@
 #import "FHNeighborhoodDetailStrategySM.h"
 #import "FHNeighborhoodDetailOwnerSellHouseSC.h"
 #import "FHNeighborhoodDetailOwnerSellHouseSM.h"
+#import "FHNeighborhoodDetailSurroundingSC.h"
+#import "FHNeighborhoodDetailSurroundingSM.h"
 
 @interface FHNeighborhoodDetailViewController ()<UIGestureRecognizerDelegate, IGListAdapterDataSource, UICollectionViewDelegate, UIScrollViewDelegate>
 @property (nonatomic, assign) FHHouseType houseType; // 房源类型
@@ -895,9 +897,6 @@
             case FHNeighborhoodDetailSectionTypeRecommend:
                 return [[FHNeighborhoodDetailRecommendSC alloc] init];
                 break;
-//            case FHNewHouseDetailSectionTypeSales:
-//                return [[FHNewHouseDetailSalesSC alloc] init];
-//                break;
             case FHNeighborhoodDetailSectionTypeAgent:
                 return [[FHNeighborhoodDetailAgentSC alloc] init];
                 break;
@@ -906,6 +905,8 @@
                 break;
             case FHNeighborhoodDetailSectionTypeOwnerSellHouse:
                 return [[FHNeighborhoodDetailOwnerSellHouseSC alloc] init];
+            case FHNeighborhoodDetailSectionTypeSurrounding:
+                return [[FHNeighborhoodDetailSurroundingSC alloc] init];
             default:
                 break;
         }

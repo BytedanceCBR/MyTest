@@ -20,6 +20,7 @@ typedef NS_ENUM(NSUInteger, FHNeighborhoodDetailSectionType) {
     FHNeighborhoodDetailSectionTypeAgent,
     FHNeighborhoodDetailSectionTypeStrategy,
     FHNeighborhoodDetailSectionTypeOwnerSellHouse,
+    FHNeighborhoodDetailSectionTypeSurrounding,
     
 };
 
