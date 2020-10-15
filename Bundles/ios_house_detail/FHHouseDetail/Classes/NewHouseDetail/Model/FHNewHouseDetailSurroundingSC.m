@@ -193,8 +193,6 @@
 }
 
 - (void)didSelectItemAtIndex:(NSInteger)index {
-    //新房暂时不需要跳转
-//    FHNewHouseDetailAgentSM *agentSM = (FHNewHouseDetailAgentSM *)self.sectionModel;
     FHNewHouseDetailSurroundingSM *model = (FHNewHouseDetailSurroundingSM *)self.sectionModel;
     if ([model.dataItems[index] isKindOfClass:[FHStaticMapAnnotation class]] || [model.dataItems[index] isKindOfClass:[NSString class]]) {
         [self mapMaskBtnClick:@"map_click"];

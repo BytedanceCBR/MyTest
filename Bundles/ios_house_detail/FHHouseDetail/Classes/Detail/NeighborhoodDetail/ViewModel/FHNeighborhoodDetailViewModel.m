@@ -39,6 +39,7 @@
 #import "FHNeighborhoodDetailStrategySM.h"
 #import "FHNeighborhoodDetailOwnerSellHouseSC.h"
 #import "FHNeighborhoodDetailOwnerSellHouseSM.h"
+#import "FHNeighborhoodDetailSurroundingSM.h"
 
 @interface FHNeighborhoodDetailViewModel ()
 
@@ -182,6 +183,13 @@
         FHNeighborhoodDetailAgentSM *agentSM = [[FHNeighborhoodDetailAgentSM alloc] initWithDetailModel:self.detailData];
         agentSM.sectionType = FHNeighborhoodDetailSectionTypeAgent;
         [sectionModels addObject:agentSM];
+    }
+    
+    //周边 地图+均价走势
+    if ((model.data.neighborhoodInfo.gaodeLat.length && model.data.neighborhoodInfo.gaodeLng.length) || model.data.priceTrend.count > 0) {
+        FHNeighborhoodDetailSurroundingSM *surroundingSM = [[FHNeighborhoodDetailSurroundingSM alloc] initWithDetailModel:self.detailData];
+        surroundingSM.sectionType = FHNeighborhoodDetailSectionTypeSurrounding;
+        [sectionModels addObject:surroundingSM];
     }
 
     self.sectionModels = sectionModels.copy;
