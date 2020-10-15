@@ -51,7 +51,11 @@
             }];
         }
         
-        self.iconImageView.image = [UIImage imageNamed:@"neighborhood_detail_xingfu_icon"];
+        if(isEmptyString(model.iconUrl)){
+            self.iconImageView.image = [UIImage imageNamed:@"neighborhood_detail_xingfu_icon"];
+        }else{
+            [self.iconImageView bd_setImageWithURL:[NSURL URLWithString:model.iconUrl] placeholder:nil];
+        }
     }
 }
 

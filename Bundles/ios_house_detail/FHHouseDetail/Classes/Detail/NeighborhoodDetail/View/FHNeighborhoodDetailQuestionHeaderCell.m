@@ -96,6 +96,7 @@
     [_rightBtn setContentHuggingPriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisHorizontal];
     _rightBtn.imageView.contentMode = UIViewContentModeCenter;
     [_rightBtn setImage:[UIImage imageNamed:@"neighborhood_detail_comment_right_arror"] forState:UIControlStateNormal];
+    [_rightBtn setImage:[UIImage imageNamed:@"neighborhood_detail_comment_right_arror"] forState:UIControlStateHighlighted];
     [_rightBtn setTitleColor:[UIColor themeOrange4] forState:UIControlStateNormal];
     _rightBtn.titleLabel.font = [UIFont themeFontRegular:14];
     [_rightBtn setTitle:@"查看全部" forState:UIControlStateNormal];
