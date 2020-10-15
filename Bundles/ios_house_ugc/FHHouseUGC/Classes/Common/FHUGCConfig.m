@@ -346,6 +346,7 @@ static const NSString *kFHUGCPublisherHistoryDataKey = @"key_ugc_publisher_histo
 - (void)updateFollowData {
     [self saveFollowListData];
     [[NSNotificationCenter defaultCenter] postNotificationName:kFHUGCLoadFollowDataFinishedNotification object:nil];
+    [[NSNotificationCenter defaultCenter] postNotificationName:kFHUGCUpdateFollowDataFinishedNotification object:nil];
 }
 
 - (void)setFocusTimerState {
