@@ -106,29 +106,9 @@
         userInfoDict[@"extra_info"] = associateIM.extraInfo;
         TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:userInfoDict];
         
-        // 跳转全屏登录页面
-        if(![TTAccount sharedAccount].isLogin) {
-            //先弹IM会话页
-            [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:userInfo pushHandler:^(UINavigationController *nav, TTRouteObject *routeObj) {
-                if([routeObj.instance isKindOfClass:UIViewController.class])
-                {
-                    UIViewController *vc = (UIViewController *)routeObj.instance;
-                    [nav pushViewController:vc animated:NO];
-                }
-            }];
-            // 登录页盖在上一层
-            NSURL *URL = [NSURL URLWithString:@"sslocal://flogin"];
-            NSMutableDictionary *params = [NSMutableDictionary dictionary];
-            params[@"ttDisableDragBack"] = @(YES);
-            params[@"enter_type"] = @"click_im";
-            params[@"enter_from"] = @"conversation_detail";
-            TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:params];
-            [[TTRoute sharedRoute] openURLByPushViewController:URL userInfo:userInfo];
-        }
-        // 直接跳转IM会话页
-        else {
-            [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:userInfo];
-        }
+
+        // 跳转IM会话页
+        [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:userInfo];
 
         // 静默关注处理
         [self silentFollowHouseWithAssociateIM:associateIM];
