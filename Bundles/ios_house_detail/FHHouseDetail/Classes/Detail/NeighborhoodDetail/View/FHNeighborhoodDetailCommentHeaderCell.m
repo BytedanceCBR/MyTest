@@ -116,13 +116,12 @@
         NSMutableDictionary *dict = @{}.mutableCopy;
         dict[@"neighborhood_id"] = cellModel.neighborhoodId;
         dict[@"title"] = cellModel.title;
-//        NSMutableDictionary *tracerDict = @{}.mutableCopy;
-//        tracerDict[UT_ORIGIN_FROM] = cellModel.tracerDict[@"origin_from"] ?: @"be_null";
-//        tracerDict[UT_ENTER_FROM] = cellModel.tracerDict[@"page_type"] ?: @"be_null";
-//        tracerDict[UT_ELEMENT_FROM] = @"";
-//        tracerDict[UT_LOG_PB] = cellModel.tracerDict[@"log_pb"] ?: @"be_null";
-//        tracerDict[@"from_gid"] = self.baseViewModel.houseId;
-//        dict[TRACER_KEY] = tracerDict;
+        NSMutableDictionary *tracerDict = @{}.mutableCopy;
+        tracerDict[UT_ORIGIN_FROM] = cellModel.detailTracerDic[@"origin_from"] ?: @"be_null";
+        tracerDict[UT_ENTER_FROM] = cellModel.detailTracerDic[@"page_type"] ?: @"be_null";
+        tracerDict[UT_LOG_PB] = cellModel.detailTracerDic[@"log_pb"] ?: @"be_null";
+        tracerDict[@"from_gid"] = cellModel.neighborhoodId;
+        dict[TRACER_KEY] = tracerDict;
         TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
         [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
     }

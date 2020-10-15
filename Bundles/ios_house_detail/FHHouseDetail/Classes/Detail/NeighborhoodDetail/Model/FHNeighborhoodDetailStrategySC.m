@@ -5,33 +5,18 @@
 //  Created by 谢思铭 on 2020/10/13.
 //
 
-//#import "FHNeighborhoodDetailStrategySC.h"
-//
-//@implementation FHNeighborhoodDetailStrategySC
-//
-//@end
-
 #import "FHNeighborhoodDetailStrategySC.h"
 #import "FHNeighborhoodDetailStrategySM.h"
 #import "FHDetailSectionTitleCollectionView.h"
-#import "FHAssociateIMModel.h"
-#import "FHNewHouseDetailViewController.h"
-#import "FHNewHouseDetailViewModel.h"
-#import "FHHouseDetailContactViewModel.h"
-#import "FHHouseIMClueHelper.h"
 #import "FHNeighborhoodDetailCommentHeaderCell.h"
 #import "FHNeighborhoodDetailQuestionHeaderCell.h"
-#import "FHUGCFeedDetailJumpManager.h"
 #import "FHRealtorEvaluatingPhoneCallModel.h"
-#import "FHRealtorEvaluatingTracerHelper.h"
 #import "FHNeighborhoodDetailQuestionCell.h"
 #import "FHNeighborhoodDetailStrategyArticleCell.h"
 #import "FHNeighborhoodDetailSpaceCell.h"
 
 @interface FHNeighborhoodDetailStrategySC () <IGListSupplementaryViewSource, IGListDisplayDelegate>
 
-@property (nonatomic, strong) FHUGCFeedDetailJumpManager *detailJumpManager;
-@property (nonatomic, strong) FHRealtorEvaluatingTracerHelper *tracerHelper;
 @property (nonatomic, assign) BOOL canElementShow;
 
 @end
@@ -44,20 +29,9 @@
         self.inset = UIEdgeInsetsMake(0, 15, 12, 15);
         self.supplementaryViewSource = self;
         self.displayDelegate = self;
-        self.detailJumpManager = [[FHUGCFeedDetailJumpManager alloc] init];
-        self.detailJumpManager.refer = 1;
-        self.tracerHelper = [[FHRealtorEvaluatingTracerHelper alloc] init];
         _canElementShow = YES;
     }
     return self;
-}
-
-#pragma mark - Action
-
-- (void)gotoLinkUrl:(FHFeedUGCCellModel *)cellModel url:(NSURL *)url {
-    // PM要求点富文本链接也进入详情页
-    [self.detailJumpManager jumpToDetail:cellModel showComment:NO enterType:@"feed_content_blank"];
-
 }
 
 #pragma mark -
@@ -109,19 +83,28 @@
         if(articleModel.schema.length > 0){
             NSMutableDictionary *dict = @{}.mutableCopy;
             // 埋点
-//            NSMutableDictionary *traceParam = @{}.mutableCopy;
-//            traceParam[@"origin_from"] = self.tracerDic[@"origin_from"];
-//            traceParam[@"enter_from"] = self.tracerDic[@"page_type"];
-//            traceParam[@"element_type"] = self.tracerDic[@"element_type"];
-//            traceParam[@"from_gid"] = self.tracerDic[@"from_gid"];
-//            traceParam[@"group_id"] = cellModel.groupId;
-//            if(cellModel.tracer[@"log_pb"][@"group_source"]){
-//                traceParam[@"group_source"] = cellModel.tracer[@"log_pb"][@"group_source"];
-//            }
-//            if(cellModel.tracer[@"log_pb"][@"impr_id"]){
-//                traceParam[@"impr_id"] = cellModel.tracer[@"log_pb"][@"impr_id"];
-//            }
-//            dict[@"tracer"] = traceParam;
+            NSMutableDictionary *traceParam = @{}.mutableCopy;
+            
+            traceParam[@"origin_from"] = model.detailTracerDic[@"origin_from"] ?: @"be_null";
+            traceParam[@"enter_from"] = model.detailTracerDic[@"enter_from"] ?: @"be_null";
+            traceParam[@"page_type"] = model.detailTracerDic[@"page_type"] ?: @"be_null";
+            traceParam[@"element_type"] = @"neighborhood_test_evaluate";
+            traceParam[@"rank"] = [NSString stringWithFormat:@"%ld",(long)index];
+            traceParam[@"log_pb"] = articleModel.logPb;
+            if(model.detailTracerDic[@"log_pb"][@"group_id"]){
+                traceParam[@"from_gid"] = model.detailTracerDic[@"log_pb"][@"group_id"];
+            }
+            if(articleModel.logPb[@"group_id"]){
+                traceParam[@"group_id"] = articleModel.logPb[@"group_id"];
+            }
+            if(articleModel.logPb[@"impr_id"]){
+                traceParam[@"impr_id"] = articleModel.logPb[@"impr_id"];
+            }
+            if(articleModel.logPb[@"group_source"]){
+                traceParam[@"group_source"] = articleModel.logPb[@"group_source"];
+            }
+            
+            dict[@"tracer"] = traceParam;
 
             TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
             
@@ -146,7 +129,7 @@
     FHNeighborhoodDetailStrategySM *sectionModel = (FHNeighborhoodDetailStrategySM *)self.sectionModel;
     titleView.titleLabel.text = sectionModel.title;
     [titleView.titleLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(16);
+        make.left.mas_equalTo(15);
         make.top.mas_equalTo(titleView).offset(20);
     }];
     
@@ -189,29 +172,42 @@
 
 - (void)listAdapter:(IGListAdapter *)listAdapter willDisplaySectionController:(IGListSectionController *)sectionController cell:(UICollectionViewCell *)cell atIndex:(NSInteger)index {
     FHNeighborhoodDetailStrategySM *model = (FHNeighborhoodDetailStrategySM *)self.sectionModel;
-//    FHFeedUGCCellModel *cellModel = model.items[index];
-//    NSString *tempKey = [NSString stringWithFormat:@"%@_%ld", NSStringFromClass([self class]), index];
-//    if ([self.elementShowCaches valueForKey:tempKey]) {
-//        return;
-//    }
-//    [self.elementShowCaches setValue:@(YES) forKey:tempKey];
-//    NSDictionary *houseInfo = model.extraDic;
-//    NSDictionary *extraDic = @{}.mutableCopy;
-//    [extraDic setValue:self.detailTracerDict[@"page_type"] forKey:@"page_type"];
-//    [extraDic setValue:[NSString stringWithFormat:@"%ld",(long)index] forKey:@"rank"];
-//    [extraDic setValue:houseInfo[@"houseId"] forKey:@"from_gid"];
-//    [extraDic setValue:cellModel.groupId forKey:@"group_id"];
-//    [extraDic setValue:@"realtor_evaluate" forKey:@"element_type"];
-//    [self.tracerHelper trackFeedClientShow:cellModel withExtraDic:extraDic];
-//
-//    if (self.canElementShow) {
-//        self.canElementShow = NO;
-//        NSMutableDictionary *tracerDic = self.detailTracerDict.mutableCopy;
-//        tracerDic[@"element_type"] = @"realtor_evaluate";
-//        [tracerDic removeObjectForKey:@"element_from"];
-//        tracerDic[@"page_type"] = @"new_detail";
-//        [FHUserTracker writeEvent:@"element_show" params:tracerDic];
-//    }
+    
+    id cellModel = model.items[index];
+    if([cellModel isKindOfClass:[FHDetailNeighborhoodDataStrategyArticleListModel class]]){
+        FHDetailNeighborhoodDataStrategyArticleListModel *articleModel = (FHDetailNeighborhoodDataStrategyArticleListModel *)cellModel;
+        NSString *tempKey = [NSString stringWithFormat:@"%@_%ld", NSStringFromClass([self class]), index];
+        if ([self.elementShowCaches valueForKey:tempKey]) {
+            return;
+        }
+        [self.elementShowCaches setValue:@(YES) forKey:tempKey];
+
+        NSMutableDictionary *tracerDic = @{}.mutableCopy;
+        tracerDic[@"origin_from"] = model.detailTracerDic[@"origin_from"] ?: @"be_null";
+        tracerDic[@"enter_from"] = model.detailTracerDic[@"enter_from"] ?: @"be_null";
+        tracerDic[@"page_type"] = model.detailTracerDic[@"page_type"] ?: @"be_null";
+        tracerDic[@"element_type"] = @"neighborhood_test_evaluate";
+        tracerDic[@"rank"] = [NSString stringWithFormat:@"%ld",(long)index];
+        tracerDic[@"log_pb"] = articleModel.logPb;
+        if(articleModel.logPb[@"group_id"]){
+            tracerDic[@"group_id"] = articleModel.logPb[@"group_id"];
+        }
+        if(articleModel.logPb[@"impr_id"]){
+            tracerDic[@"impr_id"] = articleModel.logPb[@"impr_id"];
+        }
+        if(articleModel.logPb[@"group_source"]){
+            tracerDic[@"group_source"] = articleModel.logPb[@"group_source"];
+        }
+        [FHUserTracker writeEvent:@"feed_client_show" params:tracerDic];
+    }
+
+    if (self.canElementShow) {
+        self.canElementShow = NO;
+        NSMutableDictionary *tracerDic = self.detailTracerDict.mutableCopy;
+        tracerDic[@"element_type"] = @"neighborhood_test_evaluate";
+        [tracerDic removeObjectForKey:@"element_from"];
+        [FHUserTracker writeEvent:@"element_show" params:tracerDic];
+    }
 }
 
 /**

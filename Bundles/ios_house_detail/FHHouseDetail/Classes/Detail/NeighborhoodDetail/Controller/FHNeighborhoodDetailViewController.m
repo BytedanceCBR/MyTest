@@ -50,6 +50,10 @@
 #import "FHNeighborhoodDetailRecommendSM.h"
 #import "FHNeighborhoodDetailStrategySC.h"
 #import "FHNeighborhoodDetailStrategySM.h"
+#import "FHNeighborhoodDetailOwnerSellHouseSC.h"
+#import "FHNeighborhoodDetailOwnerSellHouseSM.h"
+#import "FHNeighborhoodDetailSurroundingSC.h"
+#import "FHNeighborhoodDetailSurroundingSM.h"
 
 @interface FHNeighborhoodDetailViewController ()<UIGestureRecognizerDelegate, IGListAdapterDataSource, UICollectionViewDelegate, UIScrollViewDelegate>
 @property (nonatomic, assign) FHHouseType houseType; // 房源类型
@@ -87,9 +91,55 @@
 @property (nonatomic, strong) FHDetailPictureTitleView *segmentTitleView;
 @property (nonatomic, strong) NSIndexPath *lastIndexPath;
 @property (nonatomic, assign) BOOL segmentViewChangedFlag;
+
+@property (nonatomic, strong) NSDictionary<NSNumber *,NSString *> * titleNamesMap;
+@property (nonatomic, strong) NSDictionary<NSString *,NSNumber *> * sectionTypesMap;
+@property (nonatomic, strong) NSArray<NSString *> * names;
+@property (nonatomic, strong) NSArray<NSNumber *> * types;
+
 @end
 
 @implementation FHNeighborhoodDetailViewController
+
+- (void)initMapping {
+    
+    NSArray *name = @[@"基础信息",@"小区户型",@"小区点评",@"小区测评",@"周边配套",@"推荐房源"];
+    NSArray *type = @[@(FHNeighborhoodDetailSectionTypeBaseInfo),
+                      @(FHNeighborhoodDetailSectionTypeFloorpan),
+                      @(FHNeighborhoodDetailSectionTypeCommentAndQuestion),
+                      @(FHNeighborhoodDetailSectionTypeStrategy),
+                      @(FHNeighborhoodDetailSectionTypeSurrounding),
+                      @(FHNeighborhoodDetailSectionTypeRecommend)
+    ];
+    
+    NSMutableDictionary *nameDictionary = [NSMutableDictionary dictionary];
+    NSMutableDictionary *typeDictionary = [NSMutableDictionary dictionary];
+    for (NSInteger i = 0; i < MIN(name.count, type.count); i++) {
+        [nameDictionary btd_setObject:name[i] forKey:type[i]];
+        [typeDictionary btd_setObject:type[i] forKey:name[i]];
+    }
+    
+    self.titleNamesMap = nameDictionary.copy;
+    self.sectionTypesMap = typeDictionary.copy;
+    
+    self.names = name.copy;
+    self.types = type.copy;
+    
+}
+
+- (NSString *)getTabNameBySectionType:(FHNeighborhoodDetailSectionType)sectionType {
+    
+    return [self.titleNamesMap btd_stringValueForKey:@(sectionType) default:@"be_null"];
+    
+}
+
+- (FHNeighborhoodDetailSectionType )getSectionTypeByTabName:(NSString *)titleName {
+    
+    NSNumber *type = [self.sectionTypesMap btd_numberValueForKey:titleName default:@(0)];
+    
+    return type.unsignedIntegerValue;
+    
+}
 
 - (void)dealloc
 {
@@ -156,6 +206,7 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     self.automaticallyAdjustsScrollViewInsets = NO;
+    [self initMapping];
     [self setupUI];
     [self setupCallCenter];
     self.isViewDidDisapper = NO;
@@ -185,10 +236,10 @@
     [self updateStatusBar:self.collectionView.contentOffset];
     [self refreshContentOffset:self.collectionView.contentOffset];
     [self.view endEditing:YES];
-//    [self executeOnce:^{
-//        [self clickTabTrackWithEnterType:@"default" sectionType:FHNeighborhoodDetailSectionTypeBaseInfo];
-//    } token:FHExecuteOnceUniqueTokenForCurrentContext];
-    //    [self.viewModel vc_viewDidAppear:animated];
+    [self executeOnce:^{
+        [self clickTabTrackWithEnterType:@"default" sectionType:FHNeighborhoodDetailSectionTypeBaseInfo];
+    } token:FHExecuteOnceUniqueTokenForCurrentContext];
+     //   [self.viewModel vc_viewDidAppear:animated];
 }
 
 - (void)viewWillDisappear:(BOOL)animated
@@ -267,7 +318,7 @@
                         options:NSKeyValueObservingOptionNew
                           block:^(id _Nullable observer, id _Nonnull object, NSDictionary<NSString *, id> *_Nonnull change) {
                               if (change[NSKeyValueChangeNewKey] && [change[NSKeyValueChangeNewKey] isKindOfClass:[NSArray class]]) {
-//                                  [weakSelf updateTitleNames];
+                                  [weakSelf updateTitleNames];
                                   weakSelf.detailFlowLayout.sectionModels = weakSelf.viewModel.sectionModels;
                                   [weakSelf.listAdapter performUpdatesAnimated:NO
                                                                     completion:^(BOOL finished) {
@@ -346,161 +397,95 @@
     
     [self.view bringSubviewToFront:_navBar];
     
-//    self.segmentTitleView = [[FHDetailPictureTitleView alloc] initWithFrame:CGRectMake(0, CGRectGetMaxY(self.navBar.frame), CGRectGetWidth(self.view.bounds), 42)];
-//    self.segmentTitleView.backgroundColor = [UIColor whiteColor];
-//    self.segmentTitleView.alpha = 0;
-//    self.segmentTitleView.usedInNewHouseDetail = YES;
-//    self.segmentTitleView.seperatorLine.hidden = NO;
-//    [self.segmentTitleView setCurrentIndexBlock:^(NSInteger currentIndex) {
-//        __strong typeof(weakSelf) strongSelf = weakSelf;
-//        [strongSelf scrollToCurrentIndex:currentIndex];
-//    }];
-//    [self.view addSubview:self.segmentTitleView];
-//    [self.segmentTitleView mas_makeConstraints:^(MASConstraintMaker *make) {
-//        make.left.right.mas_equalTo(0);
-//        make.height.mas_equalTo(42);
-//        make.top.mas_equalTo(self.navBar.mas_bottom);
-//    }];
-//    [self.segmentTitleView reloadData];
-//    self.segmentTitleView.selectIndex = 0;
+    
+    self.segmentTitleView = [[FHDetailPictureTitleView alloc] initWithFrame:CGRectMake(0, CGRectGetMaxY(self.navBar.frame), CGRectGetWidth(self.view.bounds), 42)];
+    self.segmentTitleView.backgroundColor = [UIColor whiteColor];
+    self.segmentTitleView.alpha = 0;
+    self.segmentTitleView.usedInNewHouseDetail = YES;
+    self.segmentTitleView.seperatorLine.hidden = NO;
+    [self.segmentTitleView setCurrentIndexBlock:^(NSInteger currentIndex) {
+        __strong typeof(weakSelf) strongSelf = weakSelf;
+        [strongSelf scrollToCurrentIndex:currentIndex];
+    }];
+    [self.view addSubview:self.segmentTitleView];
+    [self.segmentTitleView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.right.mas_equalTo(0);
+        make.height.mas_equalTo(42);
+        make.top.mas_equalTo(self.navBar.mas_bottom);
+    }];
+    [self.segmentTitleView reloadData];
+    self.segmentTitleView.selectIndex = 0;
 }
-//
-//- (void)updateTitleNames {
-//    NSMutableArray *titles = [NSMutableArray array];
-//    for (FHNewHouseDetailSectionModel *model in self.viewModel.sectionModels) {
-//        switch (model.sectionType) {
-//            case FHNewHouseDetailSectionTypeHeader:
-//
-//                break;
-//            case FHNewHouseDetailSectionTypeBaseInfo:
-//                [titles addObject:@"基础信息"];
-//                break;
-//            case FHNewHouseDetailSectionTypeFloorpan:
-//                [titles addObject:@"户型"];
-//                break;
-//            case FHNewHouseDetailSectionTypeSales:
-//            case FHNewHouseDetailSectionTypeAgent:
-//                if ([titles containsObject:@"优惠"]) {
-//                    continue;
-//                }
-//                [titles addObject:@"优惠"];
-//                break;
-//            case FHNewHouseDetailSectionTypeTimeline:
-//            case FHNewHouseDetailSectionTypeAssess:
-//            case FHNewHouseDetailSectionTypeRGC:
-//                if ([titles containsObject:@"动态"]) {
-//                    continue;
-//                }
-//                [titles addObject:@"动态"];
-//                break;
-//            case FHNewHouseDetailSectionTypeSurrounding:
-//                [titles addObject:@"周边"];
-//                break;
-//            case FHNewHouseDetailSectionTypeBuildings:
-//                [titles addObject:@"楼栋"];
-//                break;
-//            case FHNewHouseDetailSectionTypeRecommend:
-//                [titles addObject:@"推荐"];
-//                break;
-//            case FHNewHouseDetailSectionTypeDisclaimer:
-//                break;
-//            default:
-//                break;
-//        }
-//    }
-//
-//    self.segmentTitleView.titleNames = titles.copy;
-//    [self.segmentTitleView reloadData];
-//    if (self.segmentTitleView.selectIndex == 0) {
-//        self.segmentTitleView.selectIndex = 0;
-//    }
-//}
-//
-//- (void)scrollToCurrentIndex:(NSInteger )toIndex {
-//    NSString *title = self.segmentTitleView.titleNames[toIndex];
-//    NSArray *sectionModels = self.viewModel.sectionModels.copy;
-//    __block NSUInteger index = NSNotFound;
-//    [sectionModels enumerateObjectsUsingBlock:^(FHNewHouseDetailSectionModel *model, NSUInteger idx, BOOL * _Nonnull stop) {
-//        if ([title isEqualToString:@"基础信息"]) {
-//            if (model.sectionType == FHNewHouseDetailSectionTypeBaseInfo) {
-//                index = idx;
-//                *stop = YES;
-//            }
-//        }
-//        if ([title isEqualToString:@"户型"]) {
-//            if (model.sectionType == FHNewHouseDetailSectionTypeFloorpan) {
-//                index = idx;
-//                *stop = YES;
-//            }
-//        }
-//        if ([title isEqualToString:@"优惠"]) {
-//            if (model.sectionType == FHNewHouseDetailSectionTypeSales || model.sectionType == FHNewHouseDetailSectionTypeAgent) {
-//                index = idx;
-//                *stop = YES;
-//            }
-//        }
-//        if ([title isEqualToString:@"动态"]) {
-//            if (model.sectionType == FHNewHouseDetailSectionTypeTimeline|| model.sectionType == FHNewHouseDetailSectionTypeAssess || model.sectionType == FHNewHouseDetailSectionTypeRGC) {
-//                index = idx;
-//                *stop = YES;
-//            }
-//        }
-//        if ([title isEqualToString:@"周边"]) {
-//            if (model.sectionType == FHNewHouseDetailSectionTypeSurrounding) {
-//                index = idx;
-//                *stop = YES;
-//            }
-//        }
-//        if ([title isEqualToString:@"楼栋"]) {
-//            if (model.sectionType == FHNewHouseDetailSectionTypeBuildings) {
-//                index = idx;
-//                *stop = YES;
-//            }
-//        }
-//        if ([title isEqualToString:@"推荐"]) {
-//            if (model.sectionType == FHNewHouseDetailSectionTypeRecommend) {
-//                index = idx;
-//                *stop = YES;
-//            }
-//        }
-//    }];
-//    if (index == NSNotFound) {
-//        return;
-//    }
-//    self.lastIndexPath = [NSIndexPath indexPathForItem:0 inSection:index];
-//    FHNewHouseDetailSectionModel *model = self.viewModel.sectionModels[index];
-//    [self clickTabTrackWithEnterType:@"click" sectionType:model.sectionType];
-//    UICollectionViewLayoutAttributes *attributes = [self.detailFlowLayout layoutAttributesForSupplementaryViewOfKind:UICollectionElementKindSectionHeader atIndexPath:self.lastIndexPath];
-//    if (attributes.frame.size.height < 0.1) {
-//        attributes = [self.detailFlowLayout layoutAttributesForItemAtIndexPath:self.lastIndexPath];
-////        attributes = [self.collectionView layoutAttributesForItemAtIndexPath:self.lastIndexPath];
-//    }
-//
-//    CGRect frame = attributes.frame;
-//    //section header frame
-//    //需要滚到到顶部，如果滚动的距离超过contengsize，则滚动到底部
-//    CGPoint contentOffset = self.collectionView.contentOffset;
-//    contentOffset.y = frame.origin.y - (self.navBar.btd_height + self.segmentTitleView.btd_height);
-//    if (contentOffset.y + CGRectGetHeight(self.collectionView.frame) > (self.collectionView.contentSize.height + self.collectionView.contentInset.bottom)) {
-//        contentOffset.y = self.collectionView.contentSize.height - CGRectGetHeight(self.collectionView.frame) + self.collectionView.contentInset.bottom;
-//    }
-//    //防止向上滑动
-//    if (contentOffset.y < 0) {
-//        contentOffset.y = 0;
-//    }
-//    if (index == 1) {
-//        contentOffset.y = 0;
-//    }
-////    [self.collectionView scrollToItemAtIndexPath:_lastIndexPath atScrollPosition:UICollectionViewScrollPositionTop animated:NO];
-////    [self.collectionView setContentOffset:contentOffset];
-//    self.segmentViewChangedFlag = YES;
-//    [UIView animateWithDuration:0.2 animations:^{
-//        [self.collectionView setContentOffset:contentOffset];
-//    } completion:^(BOOL finished) {
-//        self.segmentViewChangedFlag = NO;
-//    }];
-//
-//}
+
+- (void)updateTitleNames {
+    NSMutableArray *titles = [NSMutableArray array];
+    NSString *beNull = @"be_null";
+    for (FHNeighborhoodDetailSectionModel *model in self.viewModel.sectionModels) {
+        NSString *title = [self getTabNameBySectionType:model.sectionType];
+        if ([title isEqualToString:beNull] || [titles containsObject:title]) {
+            continue;
+        }
+        [titles addObject:title];
+    }
+    
+    self.segmentTitleView.titleNames = titles.copy;
+    [self.segmentTitleView reloadData];
+    if (self.segmentTitleView.selectIndex == 0) {
+        self.segmentTitleView.selectIndex = 0;
+    }
+}
+
+- (void)scrollToCurrentIndex:(NSInteger )toIndex {
+    NSString *title = self.segmentTitleView.titleNames[toIndex];
+    NSArray *sectionModels = self.viewModel.sectionModels.copy;
+    __block NSUInteger index = NSNotFound;
+    FHNeighborhoodDetailSectionType sectionType = [self getSectionTypeByTabName:title];
+    
+    [sectionModels enumerateObjectsUsingBlock:^(FHNeighborhoodDetailSectionModel *model, NSUInteger idx, BOOL * _Nonnull stop) {
+        
+        if (sectionType == model.sectionType) {
+            index = idx;
+            *stop = YES;
+        }
+
+    }];
+    if (index == NSNotFound) {
+        return;
+    }
+    self.lastIndexPath = [NSIndexPath indexPathForItem:0 inSection:index];
+    FHNeighborhoodDetailSectionModel *model = self.viewModel.sectionModels[index];
+    [self clickTabTrackWithEnterType:@"click" sectionType:model.sectionType];
+    UICollectionViewLayoutAttributes *attributes = [self.detailFlowLayout layoutAttributesForSupplementaryViewOfKind:UICollectionElementKindSectionHeader atIndexPath:self.lastIndexPath];
+    if (attributes.frame.size.height < 0.1) {
+        attributes = [self.detailFlowLayout layoutAttributesForItemAtIndexPath:self.lastIndexPath];
+//        attributes = [self.collectionView layoutAttributesForItemAtIndexPath:self.lastIndexPath];
+    }
+    
+    CGRect frame = attributes.frame;
+    //section header frame
+    //需要滚到到顶部，如果滚动的距离超过contengsize，则滚动到底部
+    CGPoint contentOffset = self.collectionView.contentOffset;
+    contentOffset.y = frame.origin.y - (self.navBar.btd_height + self.segmentTitleView.btd_height);
+    if (contentOffset.y + CGRectGetHeight(self.collectionView.frame) > (self.collectionView.contentSize.height + self.collectionView.contentInset.bottom)) {
+        contentOffset.y = self.collectionView.contentSize.height - CGRectGetHeight(self.collectionView.frame) + self.collectionView.contentInset.bottom;
+    }
+    //防止向上滑动
+    if (contentOffset.y < 0) {
+        contentOffset.y = 0;
+    }
+    if (index == 1) {
+        contentOffset.y = 0;
+    }
+//    [self.collectionView scrollToItemAtIndexPath:_lastIndexPath atScrollPosition:UICollectionViewScrollPositionTop animated:NO];
+//    [self.collectionView setContentOffset:contentOffset];
+    self.segmentViewChangedFlag = YES;
+    [UIView animateWithDuration:0.2 animations:^{
+        [self.collectionView setContentOffset:contentOffset];
+    } completion:^(BOOL finished) {
+        self.segmentViewChangedFlag = NO;
+    }];
+
+}
 
 - (void)setNavBarTitle:(NSString *)navTitle
 {
@@ -893,35 +878,17 @@
             case FHNeighborhoodDetailSectionTypeRecommend:
                 return [[FHNeighborhoodDetailRecommendSC alloc] init];
                 break;
-//            case FHNewHouseDetailSectionTypeSales:
-//                return [[FHNewHouseDetailSalesSC alloc] init];
-//                break;
-            case FHNeighborhoodHouseDetailSectionTypeAgent:
+            case FHNeighborhoodDetailSectionTypeAgent:
                 return [[FHNeighborhoodDetailAgentSC alloc] init];
                 break;
             case FHNeighborhoodDetailSectionTypeStrategy:
                 return [[FHNeighborhoodDetailStrategySC alloc] init];
                 break;
-//            case FHNewHouseDetailSectionTypeTimeline:
-//                return [[FHNewHouseDetailTimelineSC alloc] init];
-//                break;
-//            case FHNewHouseDetailSectionTypeAssess:
-//                return [[FHNewHouseDetailAssessSC alloc] init];
-//                break;
-//            case FHNewHouseDetailSectionTypeRGC:
-//                return [[FHNewHouseDetailRGCListSC alloc] init];
-//                break;
-//            case FHNewHouseDetailSectionTypeSurrounding:
-//                return [[FHNewHouseDetailSurroundingSC alloc] init];
-//                break;
-//            case FHNewHouseDetailSectionTypeBuildings:
-//                return [[FHNewHouseDetailBuildingsSC alloc] init];
-//                break;
-//            case FHNewHouseDetailSectionTypeRecommend:
-//                return [[FHNewHouseDetailRecommendSC alloc] init];
-//                break;
-//            case FHNewHouseDetailSectionTypeDisclaimer:
-//                return [[FHNewHouseDetailDisclaimerSC alloc] init];
+            case FHNeighborhoodDetailSectionTypeOwnerSellHouse:
+                return [[FHNeighborhoodDetailOwnerSellHouseSC alloc] init];
+                break;
+            case FHNeighborhoodDetailSectionTypeSurrounding:
+                return [[FHNeighborhoodDetailSurroundingSC alloc] init];
             default:
                 break;
         }
@@ -945,7 +912,8 @@
     return nil;
 }
 
-#pragma mark - UICollectionViewDelegate
+//#pragma mark - UICollectionViewDelegate
+
 - (NSMutableDictionary *)elementShowCaches {
     if (!_elementShowCaches) {
         _elementShowCaches = [NSMutableDictionary dictionary];
@@ -973,24 +941,22 @@
         }
     });
 }
-//
-//- (void)clickTabTrackWithEnterType:(NSString *)enterType sectionType:(FHNewHouseDetailSectionType)sectionType {
-//    switch (sectionType) {
-//        case FHNewHouseDetailSectionTypeHeader:
-//        case FHNewHouseDetailSectionTypeDisclaimer:
-//            return;
-//        default:
-//            break;
-//    }
-//    NSMutableDictionary *tracerDic = [[NSMutableDictionary alloc] init];
-//    tracerDic[@"event_tracking_id"] = @"107645";
-//    tracerDic[@"event_type"] = @"house_app2c_v2";
-//    tracerDic[@"enter_type"] = enterType;
-//    tracerDic[@"tab_name"] = [self getTabNameBySectionType:sectionType];
-//    tracerDic[@"page_type"] = [self pageTypeString];
-//    [FHUserTracker writeEvent:@"click_tab" params:tracerDic];
-//}
-//
+
+- (void)clickTabTrackWithEnterType:(NSString *)enterType sectionType:(FHNeighborhoodDetailSectionType)sectionType {
+    
+    if( ![self.types containsObject:@(sectionType) ]) {
+        return;
+    }
+    
+    NSMutableDictionary *tracerDic = [[NSMutableDictionary alloc] init];
+    tracerDic[@"event_tracking_id"] = @"107645";
+    tracerDic[@"event_type"] = @"house_app2c_v2";
+    tracerDic[@"enter_type"] = enterType;
+    tracerDic[@"tab_name"] = [self getTabNameBySectionType:sectionType];
+    tracerDic[@"page_type"] = [self pageTypeString];
+    [FHUserTracker writeEvent:@"click_tab" params:tracerDic];
+}
+
 - (void)trackElementType:(NSString *)elementType
 {
     if (elementType.length) {
@@ -1001,91 +967,35 @@
         [FHUserTracker writeEvent:@"element_show" params:tracerDic];
     }
 }
-//
-//- (NSString *)getTabNameBySectionType:(FHNewHouseDetailSectionType)sectionType {
-//    switch (sectionType) {
-//        case FHNewHouseDetailSectionTypeBaseInfo:
-//            return @"基础信息";
-//        case FHNewHouseDetailSectionTypeFloorpan:
-//            return @"户型";
-//        case FHNewHouseDetailSectionTypeSales:
-//        case FHNewHouseDetailSectionTypeAgent:
-//            return @"优惠";
-//        case FHNewHouseDetailSectionTypeTimeline:
-//        case FHNewHouseDetailSectionTypeAssess:
-//        case FHNewHouseDetailSectionTypeRGC:
-//            return @"动态";
-//        case FHNewHouseDetailSectionTypeSurrounding:
-//            return @"周边";
-//        case FHNewHouseDetailSectionTypeBuildings:
-//            return @"楼栋";
-//        case FHNewHouseDetailSectionTypeRecommend:
-//            return @"推荐";
-//        default:
-//            return @"";
-//    }
-//    return @"";
-//}
-//
-//- (void)collectionView:(UICollectionView *)collectionView didEndDisplayingCell:(UICollectionViewCell *)cell forItemAtIndexPath:(NSIndexPath *)indexPath
-//{
-//}
-//
-//#pragma mark - UIScrollViewDelegate
-//- (void)scrollViewDidScroll:(UIScrollView *)scrollView
-//{
-//    [self refreshContentOffset:scrollView.contentOffset];
-//    if (self.segmentViewChangedFlag) {
-//        return;
-//    }
-//    //locate the scrollview which is in the centre
-//    CGPoint centerPoint = CGPointMake(20, scrollView.contentOffset.y + self.navBar.btd_height + self.segmentTitleView.btd_height);
-//    NSArray *attributesArray = [self.detailFlowLayout layoutAttributesForElementsInRect:CGRectMake(centerPoint.x, centerPoint.y, 1, 1)];
-//    UICollectionViewLayoutAttributes *attributes = attributesArray.firstObject;
-//    NSIndexPath *indexPath = attributes.indexPath;
-//    if (indexPath && self.lastIndexPath.section != indexPath.section) {
-//        self.lastIndexPath = indexPath;
-//        FHNewHouseDetailSectionModel *model = self.viewModel.sectionModels[indexPath.section];
-//        NSString *title = @"";
-//        switch (model.sectionType) {
-//            case FHNewHouseDetailSectionTypeHeader:
-//                break;
-//            case FHNewHouseDetailSectionTypeBaseInfo:
-//                title = @"基础信息";
-//                break;
-//            case FHNewHouseDetailSectionTypeFloorpan:
-//                title = @"户型";
-//                break;
-//            case FHNewHouseDetailSectionTypeSales:
-//            case FHNewHouseDetailSectionTypeAgent:
-//                title = @"优惠";
-//                break;
-//            case FHNewHouseDetailSectionTypeTimeline:
-//            case FHNewHouseDetailSectionTypeAssess:
-//            case FHNewHouseDetailSectionTypeRGC:
-//                title = @"动态";
-//                break;
-//            case FHNewHouseDetailSectionTypeSurrounding:
-//                title = @"周边";
-//                break;
-//            case FHNewHouseDetailSectionTypeBuildings:
-//                title = @"楼栋";
-//                break;
-//            case FHNewHouseDetailSectionTypeRecommend:
-//                title = @"推荐";
-//                break;
-//            case FHNewHouseDetailSectionTypeDisclaimer:
-//                break;
-//            default:
-//                break;
-//        }
-//        NSUInteger selectIndex = [self.segmentTitleView.titleNames indexOfObject:title];
-//        if (selectIndex < self.segmentTitleView.titleNames.count) {
-//            if (self.segmentTitleView) {
-//                self.segmentTitleView.selectIndex = selectIndex;
-//            }
-//        }
-//    }
-//}
 
+
+- (void)collectionView:(UICollectionView *)collectionView didEndDisplayingCell:(UICollectionViewCell *)cell forItemAtIndexPath:(NSIndexPath *)indexPath
+{
+}
+
+#pragma mark - UIScrollViewDelegate
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView
+{
+    [self refreshContentOffset:scrollView.contentOffset];
+    if (self.segmentViewChangedFlag) {
+        return;
+    }
+    //locate the scrollview which is in the centre
+    CGPoint centerPoint = CGPointMake(20, scrollView.contentOffset.y + self.navBar.btd_height + self.segmentTitleView.btd_height);
+    NSArray *attributesArray = [self.detailFlowLayout layoutAttributesForElementsInRect:CGRectMake(centerPoint.x, centerPoint.y, 1, 1)];
+    UICollectionViewLayoutAttributes *attributes = attributesArray.firstObject;
+    NSIndexPath *indexPath = attributes.indexPath;
+    if (indexPath && self.lastIndexPath.section != indexPath.section) {
+        self.lastIndexPath = indexPath;
+        FHNeighborhoodDetailSectionModel *model = self.viewModel.sectionModels[indexPath.section];
+        NSString *title = [self getTabNameBySectionType:model.sectionType];
+        
+        NSUInteger selectIndex = [self.segmentTitleView.titleNames indexOfObject:title];
+        if (selectIndex < self.segmentTitleView.titleNames.count) {
+            if (self.segmentTitleView) {
+                self.segmentTitleView.selectIndex = selectIndex;
+            }
+        }
+    }
+}
 @end

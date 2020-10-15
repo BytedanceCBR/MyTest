@@ -352,6 +352,7 @@
 {
     NSDictionary *dict = @{
         @"openUrl": @"open_url",
+        @"buttonText": @"button_text",
     };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
         return dict[keyName]?:keyName;
@@ -363,21 +364,6 @@
 }
 @end
 
-@implementation FHDetailNeighborhoodSaleHouseEntranceImgModel
-+ (JSONKeyMapper*)keyMapper
-{
-    NSDictionary *dict = @{
-        @"urlList": @"url_list",
-    };
-    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
-        return dict[keyName]?:keyName;
-    }];
-}
-+ (BOOL)propertyIsOptional:(NSString *)propertyName
-{
-    return YES;
-}
-@end
 
 
 @implementation FHDetailNeighborhoodSaleHouseInfoNeighborhoodSaleHouseListModel

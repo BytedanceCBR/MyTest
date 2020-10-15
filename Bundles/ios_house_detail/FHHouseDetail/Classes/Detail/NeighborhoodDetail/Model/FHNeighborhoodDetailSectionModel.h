@@ -11,14 +11,17 @@
 NS_ASSUME_NONNULL_BEGIN
 
 typedef NS_ENUM(NSUInteger, FHNeighborhoodDetailSectionType) {
-    FHNeighborhoodDetailSectionTypeHeader,
+    FHNeighborhoodDetailSectionTypeHeader = 10086,
     FHNeighborhoodDetailSectionTypeBaseInfo,
     FHNeighborhoodDetailSectionTypeFloorpan,
     FHNeighborhoodDetailSectionTypeHouseSale,
     FHNeighborhoodDetailSectionTypeCommentAndQuestion,
     FHNeighborhoodDetailSectionTypeRecommend,
-    FHNeighborhoodHouseDetailSectionTypeAgent,
+    FHNeighborhoodDetailSectionTypeAgent,
     FHNeighborhoodDetailSectionTypeStrategy,
+    FHNeighborhoodDetailSectionTypeOwnerSellHouse,
+    FHNeighborhoodDetailSectionTypeSurrounding,
+    
 };
 
 @interface FHNeighborhoodDetailSectionModel : NSObject<IGListDiffable>

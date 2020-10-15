@@ -37,6 +37,9 @@
 #import "FHNeighborhoodDetailAgentSC.h"
 #import "FHNeighborhoodDetailStrategySC.h"
 #import "FHNeighborhoodDetailStrategySM.h"
+#import "FHNeighborhoodDetailOwnerSellHouseSC.h"
+#import "FHNeighborhoodDetailOwnerSellHouseSM.h"
+#import "FHNeighborhoodDetailSurroundingSM.h"
 
 @interface FHNeighborhoodDetailViewModel ()
 
@@ -178,8 +181,15 @@
 
     if (model.data.recommendedRealtors.count > 0) {
         FHNeighborhoodDetailAgentSM *agentSM = [[FHNeighborhoodDetailAgentSM alloc] initWithDetailModel:self.detailData];
-        agentSM.sectionType = FHNeighborhoodHouseDetailSectionTypeAgent;
+        agentSM.sectionType = FHNeighborhoodDetailSectionTypeAgent;
         [sectionModels addObject:agentSM];
+    }
+    
+    //周边 地图+均价走势
+    if ((model.data.neighborhoodInfo.gaodeLat.length && model.data.neighborhoodInfo.gaodeLng.length) || model.data.priceTrend.count > 0) {
+        FHNeighborhoodDetailSurroundingSM *surroundingSM = [[FHNeighborhoodDetailSurroundingSM alloc] initWithDetailModel:self.detailData];
+        surroundingSM.sectionType = FHNeighborhoodDetailSectionTypeSurrounding;
+        [sectionModels addObject:surroundingSM];
     }
 
     self.sectionModels = sectionModels.copy;
@@ -233,6 +243,16 @@
             recommendSM.sectionType = FHNeighborhoodDetailSectionTypeRecommend;
             [sectionModels addObject:recommendSM];
         }
+        
+        FHDetailNeighborhoodModel *model = self.detailData;
+        FHDetailNeighborhoodSaleHouseEntranceModel *saleHouseEntrance = model.data.saleHouseEntrance;
+        if(saleHouseEntrance.title.length > 0 && saleHouseEntrance.subtitle.length > 0 && saleHouseEntrance.buttonText.length > 0 && saleHouseEntrance.openUrl.length > 0) {
+            FHNeighborhoodDetailOwnerSellHouseSM *ownerSellHouseSM = [[FHNeighborhoodDetailOwnerSellHouseSM alloc] initWithDetailModel:self.detailData];
+            ownerSellHouseSM.sectionType = FHNeighborhoodDetailSectionTypeOwnerSellHouse;
+            
+            [sectionModels addObject:ownerSellHouseSM];
+        }
+        
         
         dispatch_async(dispatch_get_main_queue(), ^{
             self.sectionModels = sectionModels.copy;
