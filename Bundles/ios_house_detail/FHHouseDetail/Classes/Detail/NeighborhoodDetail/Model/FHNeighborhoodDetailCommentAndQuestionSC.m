@@ -8,16 +8,9 @@
 #import "FHNeighborhoodDetailCommentAndQuestionSC.h"
 #import "FHNeighborhoodDetailCommentAndQuestionSM.h"
 #import "FHDetailSectionTitleCollectionView.h"
-#import "FHAssociateIMModel.h"
-#import "FHNewHouseDetailViewController.h"
-#import "FHNewHouseDetailViewModel.h"
-#import "FHHouseDetailContactViewModel.h"
-#import "FHHouseIMClueHelper.h"
 #import "FHNeighborhoodDetailCommentHeaderCell.h"
 #import "FHNeighborhoodDetailQuestionHeaderCell.h"
 #import "FHUGCFeedDetailJumpManager.h"
-#import "FHRealtorEvaluatingPhoneCallModel.h"
-#import "FHRealtorEvaluatingTracerHelper.h"
 #import "FHNeighborhoodDetailQuestionCell.h"
 #import "FHNeighborhoodDetailPostCell.h"
 #import "FHNeighborhoodDetailSpaceCell.h"
@@ -26,8 +19,8 @@
 @interface FHNeighborhoodDetailCommentAndQuestionSC () <IGListSupplementaryViewSource, IGListDisplayDelegate>
 
 @property (nonatomic, strong) FHUGCFeedDetailJumpManager *detailJumpManager;
-@property (nonatomic, strong) FHRealtorEvaluatingTracerHelper *tracerHelper;
-@property (nonatomic, assign) BOOL canElementShow;
+@property (nonatomic, assign) BOOL canCommentElementShow;
+@property (nonatomic, assign) BOOL canQuestionElementShow;
 
 @end
 
@@ -36,14 +29,13 @@
 - (instancetype)init
 {
     if (self = [super init]) {
-        //        self.minimumLineSpacing = 20;
         self.inset = UIEdgeInsetsMake(0, 15, 12, 15);
         self.supplementaryViewSource = self;
         self.displayDelegate = self;
         self.detailJumpManager = [[FHUGCFeedDetailJumpManager alloc] init];
         self.detailJumpManager.refer = 1;
-        self.tracerHelper = [[FHRealtorEvaluatingTracerHelper alloc] init];
-        _canElementShow = YES;
+        _canCommentElementShow = YES;
+        _canQuestionElementShow = YES;
     }
     return self;
 }
@@ -54,32 +46,6 @@
     // PM要求点富文本链接也进入详情页
     [self.detailJumpManager jumpToDetail:cellModel showComment:NO enterType:@"feed_content_blank"];
 
-}
-
-- (void)clickRealtorHeader:(FHFeedUGCCellModel *)cellModel {
-//    FHNewHouseDetailRGCListSM *sectionModel = (FHNewHouseDetailRGCListSM *)self.sectionModel;
-//    NSDictionary *houseInfo = sectionModel.extraDic;
-//    if ([houseInfo[@"houseType"] integerValue] == FHHouseTypeSecondHandHouse) {
-//        NSMutableDictionary *dict = [NSMutableDictionary dictionary];
-//         dict[@"element_from"] = @"old_detail_related";
-//        dict[@"enter_from"] = [self.detailViewController.viewModel pageTypeString];
-//        [self.realtorPhoneCallModel jump2RealtorDetailWithPhone:cellModel.realtor isPreLoad:NO extra:dict];
-//    }
-}
-
-- (void)moreButtonClick {
-//    FHNewHouseDetailRGCListSM *sectionModel = (FHNewHouseDetailRGCListSM *)self.sectionModel;
-//    NSDictionary *houseInfo = sectionModel.extraDic;
-//    NSMutableDictionary *tracer = @{}.mutableCopy;
-//    [tracer addEntriesFromDictionary:sectionModel.detailTracerDic];
-//    [tracer setValue:houseInfo[@"houseId"] forKey:@"from_gid"];
-//    [tracer setValue:tracer[@"page_type"] forKey:@"enter_from"];
-//    NSDictionary *dict = @{@"tracer":tracer};
-//    TTRouteUserInfo* userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
-//    NSURL *openURL = [NSURL URLWithString:sectionModel.contentModel.schema];
-//    if ([[TTRoute sharedRoute] canOpenURL:openURL]) {
-//        [[TTRoute sharedRoute] openURLByPushViewController:openURL userInfo:userInfo];
-//    }
 }
 
 #pragma mark -
@@ -176,17 +142,7 @@
                                                                  atIndex:(NSInteger)index
 {
     FHDetailSectionTitleCollectionView *titleView = [self.collectionContext dequeueReusableSupplementaryViewOfKind:UICollectionElementKindSectionHeader forSectionController:self class:[FHDetailSectionTitleCollectionView class] atIndex:index];
-    titleView.titleLabel.font = [UIFont themeFontMedium:20];
-    titleView.titleLabel.textColor = [UIColor themeGray1];
-    __weak typeof(self) weakSelf = self;
-    titleView.arrowsImg.hidden = NO;
-    titleView.userInteractionEnabled = YES;
-    [titleView setMoreActionBlock:^{
-        [weakSelf moreButtonClick];
-    }];
 
-    FHNeighborhoodDetailCommentAndQuestionSM *sectionModel = (FHNeighborhoodDetailCommentAndQuestionSM *)self.sectionModel;
-//    titleView.titleLabel.text = [NSString stringWithFormat:@"%@ (%@)",sectionModel.title,sectionModel.count];
     return titleView;
 }
 
@@ -226,29 +182,38 @@
 
 - (void)listAdapter:(IGListAdapter *)listAdapter willDisplaySectionController:(IGListSectionController *)sectionController cell:(UICollectionViewCell *)cell atIndex:(NSInteger)index {
     FHNeighborhoodDetailCommentAndQuestionSM *model = (FHNeighborhoodDetailCommentAndQuestionSM *)self.sectionModel;
-//    FHFeedUGCCellModel *cellModel = model.items[index];
-//    NSString *tempKey = [NSString stringWithFormat:@"%@_%ld", NSStringFromClass([self class]), index];
-//    if ([self.elementShowCaches valueForKey:tempKey]) {
-//        return;
-//    }
-//    [self.elementShowCaches setValue:@(YES) forKey:tempKey];
-//    NSDictionary *houseInfo = model.extraDic;
-//    NSDictionary *extraDic = @{}.mutableCopy;
-//    [extraDic setValue:self.detailTracerDict[@"page_type"] forKey:@"page_type"];
-//    [extraDic setValue:[NSString stringWithFormat:@"%ld",(long)index] forKey:@"rank"];
-//    [extraDic setValue:houseInfo[@"houseId"] forKey:@"from_gid"];
-//    [extraDic setValue:cellModel.groupId forKey:@"group_id"];
-//    [extraDic setValue:@"realtor_evaluate" forKey:@"element_type"];
-//    [self.tracerHelper trackFeedClientShow:cellModel withExtraDic:extraDic];
-//
-//    if (self.canElementShow) {
-//        self.canElementShow = NO;
-//        NSMutableDictionary *tracerDic = self.detailTracerDict.mutableCopy;
-//        tracerDic[@"element_type"] = @"realtor_evaluate";
-//        [tracerDic removeObjectForKey:@"element_from"];
-//        tracerDic[@"page_type"] = @"new_detail";
-//        [FHUserTracker writeEvent:@"element_show" params:tracerDic];
-//    }
+    id cellModel = model.items[index];
+    if([cellModel isKindOfClass:[FHNeighborhoodDetailCommentHeaderModel class]]){
+        if (self.canCommentElementShow) {
+            self.canCommentElementShow = NO;
+            NSMutableDictionary *tracerDic = self.detailTracerDict.mutableCopy;
+            tracerDic[@"element_type"] = @"neighborhood_evaluate";
+            [tracerDic removeObjectForKey:@"element_from"];
+            [FHUserTracker writeEvent:@"element_show" params:tracerDic];
+        }
+    }else if([cellModel isKindOfClass:[FHNeighborhoodDetailQuestionHeaderModel class]]){
+        if (self.canQuestionElementShow) {
+            self.canQuestionElementShow = NO;
+            NSMutableDictionary *tracerDic = self.detailTracerDict.mutableCopy;
+            tracerDic[@"element_type"] = @"neighborhood_question";
+            [tracerDic removeObjectForKey:@"element_from"];
+            [FHUserTracker writeEvent:@"element_show" params:tracerDic];
+        }
+    }else if([cellModel isKindOfClass:[FHFeedUGCCellModel class]]){
+        FHFeedUGCCellModel *feedCellModel = (FHFeedUGCCellModel *)cellModel;
+        
+        NSString *tempKey = [NSString stringWithFormat:@"%@_%ld", NSStringFromClass([self class]), index];
+        if ([self.elementShowCaches valueForKey:tempKey]) {
+            return;
+        }
+        [self.elementShowCaches setValue:@(YES) forKey:tempKey];
+
+        NSMutableDictionary *tracerDic = @{}.mutableCopy;
+        if(feedCellModel.tracerDic){
+            [tracerDic addEntriesFromDictionary:feedCellModel.tracerDic];
+        }
+        [FHUserTracker writeEvent:@"feed_client_show" params:tracerDic];
+    }
 }
 
 /**

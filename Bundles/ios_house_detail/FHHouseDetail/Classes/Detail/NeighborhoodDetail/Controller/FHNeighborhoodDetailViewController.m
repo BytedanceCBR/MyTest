@@ -946,12 +946,12 @@
 }
 //
 //#pragma mark - UICollectionViewDelegate
-//- (NSMutableDictionary *)elementShowCaches {
-//    if (!_elementShowCaches) {
-//        _elementShowCaches = [NSMutableDictionary dictionary];
-//    }
-//    return _elementShowCaches;
-//}
+- (NSMutableDictionary *)elementShowCaches {
+    if (!_elementShowCaches) {
+        _elementShowCaches = [NSMutableDictionary dictionary];
+    }
+    return _elementShowCaches;
+}
 //
 //- (void)collectionView:(UICollectionView *)collectionView willDisplayCell:(UICollectionViewCell *)cell forItemAtIndexPath:(NSIndexPath *)indexPath {
 //    NSString *tempKey = [NSString stringWithFormat:@"%@_%ld",NSStringFromClass([cell class]), (long)indexPath.section];
