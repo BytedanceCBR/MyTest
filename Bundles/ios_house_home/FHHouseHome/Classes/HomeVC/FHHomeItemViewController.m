@@ -780,10 +780,14 @@ static NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
     if (indexPath.section == 0) {
         if ([self checkIsHaveEntrancesList]) {
             //适配5s
+            CGFloat height = 0;
+            if ([FHEnvContext isShowHomeHouseCard]) {
+                height = 5;
+            }
             if ([TTDeviceHelper isScreenWidthLarge320]) {
-                return 105;
+                return 105 - height;
             }else{
-                return 85;
+                return 85 - height;
             }
         }
         if (self.houseType == FHHouseTypeNewHouse && [FHEnvContext isShowHomeHouseCard]) {
