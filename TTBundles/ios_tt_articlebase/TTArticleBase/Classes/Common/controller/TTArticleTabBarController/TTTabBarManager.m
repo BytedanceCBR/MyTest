@@ -275,7 +275,7 @@ SINGLETON_GCD(TTTabBarManager);
             return;
         }
         if ([dict tt_longlongValueForKey:@"version"] > [cachedDict tt_longlongValueForKey:@"version"]) {
-            LOGD(@"TTTabBar 版本号变化，开始更新!!!，当前版本%lld,更新版本%lld",[cachedDict tt_longlongValueForKey:@"version"],[dict tt_longlongValueForKey:@"version"]);
+//            LOGD(@"TTTabBar 版本号变化，开始更新!!!，当前版本%lld,更新版本%lld",[cachedDict tt_longlongValueForKey:@"version"],[dict tt_longlongValueForKey:@"version"]);
             TTPersistence *persistence = [TTPersistence persistenceWithName:kTTTabConfigurationPath];
             [persistence setValue:dict forKey:kTTTabBarConfigKey];
             if (!isEmptyString([dict tt_stringValueForKey:@"url"])) {
@@ -299,7 +299,7 @@ SINGLETON_GCD(TTTabBarManager);
             }
             [persistence save];
         } else {
-            LOGD(@"TTTabBar 版本号不变，无需更新!!!");
+//            LOGD(@"TTTabBar 版本号不变，无需更新!!!");
         }
     });
 }
@@ -867,7 +867,7 @@ SINGLETON_GCD(TTTabBarManager);
         self.followHeaderText = nil;
         
     } else {
-        LOGD(@"配置成功");
+//        LOGD(@"配置成功");
         //只有下发配置有效而且关注tab有改动的时候，关注页头部标题生效
         if (!isEmptyString([self.dict tt_stringValueForKey:@"solicitude_tab_header_text"])) {
             self.followHeaderText = [self.dict tt_stringValueForKey:@"solicitude_tab_header_text"];
@@ -1057,7 +1057,7 @@ SINGLETON_GCD(TTTabBarManager);
             if (!removeZipError) {
                 [persistence setValue:@(YES) forKey:kTTTabBarImagesDownloadKey];
                 [persistence save];
-                LOGD(@"TTTabBar资源包下载成功");
+//                LOGD(@"TTTabBar资源包下载成功");
                 [TTSandBoxHelper disableBackupForPath:[kTTTabImagesPath stringDocumentsPath]];
                 
                 [[NSNotificationCenter defaultCenter] postNotificationName:kTTTabBarImagesDownloadKey object:nil];
@@ -1072,7 +1072,7 @@ SINGLETON_GCD(TTTabBarManager);
                 });
             }
         } else {
-            LOGD(@"TTTabBar 资源包md5不匹配!!!");
+//            LOGD(@"TTTabBar 资源包md5不匹配!!!");
             static dispatch_once_t onceToken;
             dispatch_once(&onceToken, ^{
                 [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(connectionChanged:) name:TTReachabilityChangedNotification object:nil];

@@ -85,7 +85,7 @@
 #import <BDWebImage/UIImageView+BDWebImage.h>
 #import "FHShortVideoTracerUtil.h"
 #import "TTAccountManager.h"
-#import "IESOwnPlayerWrapper.h"
+//#import "IESOwnPlayerWrapper.h"
 #import "NSDictionary+BTDAdditions.h"
 
 static const CGFloat kCheckChallengeButtonWidth = 72;

@@ -1271,12 +1271,12 @@ static __weak ExploreMovieView *currentFullScreenMovieView_ = nil;
         [_moviePlayerController moviePlayContentForURL:playURL];
     }
     @catch (NSException *exception) {
-        LOGD(@"moviePlayContentForURL: %@", exception);
+//        LOGD(@"moviePlayContentForURL: %@", exception);
         wrapperTrackEvent(@"video", @"play_url_exception");
     }
 
     if (playURL == nil) {
-        LOGD(@"showRetryTipView");
+//        LOGD(@"showRetryTipView");
         [self showRetryTipView];
         [_moviePlayerController movieStop];
     }
@@ -1286,7 +1286,7 @@ static __weak ExploreMovieView *currentFullScreenMovieView_ = nil;
             [self userPlay];
         }
         @catch (NSException *exception) {
-            LOGD(@"playMovie: %@", exception);
+//            LOGD(@"playMovie: %@", exception);
             wrapperTrackEvent(@"video", @"play_movie_exception");
         }
     }
@@ -1343,7 +1343,7 @@ static __weak ExploreMovieView *currentFullScreenMovieView_ = nil;
 - (void)trackManagerExecuteWithOriginUrl:(NSURL *)playURL
 {
     if (playURL) {
-        LOGD(@"checkLoadingTimeout");
+//        LOGD(@"checkLoadingTimeout");
         [self performSelector:@selector(checkLoadingTimeout) withObject:nil afterDelay:[ExploreMovieManager videoPlayRetryInterval] inModes:@[NSRunLoopCommonModes]];
         [self.moviePlayerController.trackManager setMovieOriginVideoURL:playURL.absoluteString];
     }
@@ -2364,7 +2364,7 @@ ResolutionButtonClickedWithType:(ExploreVideoDefinitionType)type
             [self.pasterADDelegate pasterADWillStart];
         }
 
-        LOGD(@"movieControllerShowedOneFrame");
+//        LOGD(@"movieControllerShowedOneFrame");
         [self playStart];
     }
 }
@@ -2439,7 +2439,7 @@ ResolutionButtonClickedWithType:(ExploreVideoDefinitionType)type
 {
     if (movieController == _moviePlayerController) {
         self.videoDidPlayable = YES;
-        LOGD(@"movieControllerMoviePlayable");
+//        LOGD(@"movieControllerMoviePlayable");、
         if (!self.willPlayableBlock) {
             [_moviePlayerController hideLoadingTipView];
         }

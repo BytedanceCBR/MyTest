@@ -19,7 +19,7 @@
 #import "ArticleModelUpdateHelper.h"
 #import "TTDBCenter.h"
 #import "TTStartupTasksTracker.h"
-#import "IESVideoPlayer.h"
+//#import "IESVideoPlayer.h"
 #import "AWEVideoConstants.h"
 //#import <BDTBasePlayer/TTVOwnPlayerCacheWrapper.h>
 #import <TTMonitor/TTMonitor.h>
@@ -137,15 +137,15 @@ BOOL isShareToPlatformEnterBackground = NO;
 //    result += [[TTVOwnPlayerCacheWrapper sharedCache] getCacheSize];
     
     if (shortVideoSize) {
-        id<IESVideoCacheProtocol> shortVideoCache = [IESVideoCache cacheWithType:IESVideoPlayerTypeSpecify];
-        [shortVideoCache getCacheSizeWithCompletion:^(CGFloat shortVideoCacheSize) {
-            result += shortVideoCacheSize;
-            [[TTMonitor shareManager] trackService:@"huoshanCache" value:@(shortVideoCacheSize) extra:nil];
-            
-            if (completionBlock) {
-                completionBlock(result);
-            }
-        }];
+//        id<IESVideoCacheProtocol> shortVideoCache = [IESVideoCache cacheWithType:IESVideoPlayerTypeSpecify];
+//        [shortVideoCache getCacheSizeWithCompletion:^(CGFloat shortVideoCacheSize) {
+//            result += shortVideoCacheSize;
+//            [[TTMonitor shareManager] trackService:@"huoshanCache" value:@(shortVideoCacheSize) extra:nil];
+//            
+//            if (completionBlock) {
+//                completionBlock(result);
+//            }
+//        }];
     } else {
         if (completionBlock) {
             completionBlock(result);

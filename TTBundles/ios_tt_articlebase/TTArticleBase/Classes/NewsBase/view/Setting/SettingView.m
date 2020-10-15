@@ -75,7 +75,7 @@
 #import "TTUserSettings/TTUserSettingsManager+NetworkTraffic.h"
 #import "TTUserSettings/TTUserSettingsManager+Notification.h"
 
-#import "IESVideoPlayer.h"
+//#import "IESVideoPlayer.h"
 #import <TTRexxar/TTRPackageManager.h>
 #import <TTSettingsManager/TTSettingsManager.h>
 //#import <BDTBasePlayer/TTVOwnPlayerCacheWrapper.h>
@@ -1918,12 +1918,12 @@ TTEditUserProfileViewControllerDelegate
         [[SSTrashManager sharedManager] trashItemAtPath:webCache resultingItemPath:&resultPath error:nil];
     }
     
-    //火山短视频缓存
-    id<IESVideoCacheProtocol> shortVideoSysPlayerCache = [IESVideoCache cacheWithType:IESVideoPlayerTypeSystem];
-    [shortVideoSysPlayerCache clearAllCache];//系统播放器
-    
-    id<IESVideoCacheProtocol> shortVideoOwnPlayerCache = [IESVideoCache cacheWithType:IESVideoPlayerTypeTTOwn];
-    [shortVideoOwnPlayerCache clearAllCache];//自研播放器
+//    //火山短视频缓存
+//    id<IESVideoCacheProtocol> shortVideoSysPlayerCache = [IESVideoCache cacheWithType:IESVideoPlayerTypeSystem];
+//    [shortVideoSysPlayerCache clearAllCache];//系统播放器
+//    
+//    id<IESVideoCacheProtocol> shortVideoOwnPlayerCache = [IESVideoCache cacheWithType:IESVideoPlayerTypeTTOwn];
+//    [shortVideoOwnPlayerCache clearAllCache];//自研播放器
     
 //    [[TTVOwnPlayerCacheWrapper sharedCache] clearAllCache];
     

@@ -58,14 +58,14 @@ DEC_TASK("TTNetworkSerializerTask",FHTaskTypeSerial,TASK_PRIORITY_HIGH+6);
 + (void)settingNetworkSerializerClass {
     //add by songlu
     Monitorblock block = ^(NSDictionary* data, NSString* logType) {
-        LOGD(@"%s logType %@", __FUNCTION__, logType);
+//        LOGD(@"%s logType %@", __FUNCTION__, logType);
         [[TTMonitor shareManager] trackData:data logTypeStr:logType];
     };
     [TTNetworkManager setMonitorBlock:block];
 
     GetDomainblock GetDomainblock = ^(NSData* data) {
         NSError *jsonError = nil;
-        LOGD(@"%s GetDomainblock is %@", __FUNCTION__, data);
+//        LOGD(@"%s GetDomainblock is %@", __FUNCTION__, data);
         id jsonDict = [NSJSONSerialization JSONObjectWithData:data options:0 error:&jsonError];
 
         if ([SSCommonLogic isRefactorGetDomainsEnabled]) {
@@ -272,7 +272,7 @@ DEC_TASK("TTNetworkSerializerTask",FHTaskTypeSerial,TASK_PRIORITY_HIGH+6);
     }
     [[TTNetworkManager shareInstance] start];
     
-    LOGI(@"isEncryptQueryInHeader = %d, isEncryptQuery = %d, isKeepPlainQuery = %d", [TTNetworkManager shareInstance].isEncryptQueryInHeader, [TTNetworkManager shareInstance].isEncryptQuery, [TTNetworkManager shareInstance].isKeepPlainQuery);
+//    LOGI(@"isEncryptQueryInHeader = %d, isEncryptQuery = %d, isKeepPlainQuery = %d", [TTNetworkManager shareInstance].isEncryptQueryInHeader, [TTNetworkManager shareInstance].isEncryptQuery, [TTNetworkManager shareInstance].isKeepPlainQuery);
 }
 
 

@@ -34,10 +34,10 @@
 #import "YYWebImage.h"
 
 // IES Video Play
-#import "IESVideoPlayer.h"
+//#import "IESVideoPlayer.h"
 
-#import "IESVideoCacheProtocol.h"
-#import "IESOwnPlayerWrapper.h"
+//#import "IESVideoCacheProtocol.h"
+//#import "IESOwnPlayerWrapper.h"
 #import "AWEVideoDetailFirstFrameConfig.h"
 #import "TTHTSVideoConfiguration.h"
 #import "TTImageInfosModel.h"
@@ -57,7 +57,8 @@ static NSString * const VideoPlayTimeKey =  @"video_play_time";
 static NSString * const VideoStallTimeKey =  @"video_stall_time";
 static NSString * const VideoPrepareTimeTechKey = @"prepare_time_tech";
 
-@interface AWEVideoPlayView () <IESVideoPlayerDelegate>
+@interface AWEVideoPlayView ()
+//<IESVideoPlayerDelegate>
 
 // 详情页数据
 @property (nonatomic, strong) FHFeedUGCCellModel *model;
@@ -121,13 +122,13 @@ static NSString * const VideoPrepareTimeTechKey = @"prepare_time_tech";
 - (void)setContentMode:(UIViewContentMode)contentMode
 {
     [super setContentMode:contentMode];
-
-    if (self.contentMode == UIViewContentModeScaleAspectFit) {
-        self.playerController.scalingMode = IESVideoScaleModeAspectFit;
-    } else if (self.contentMode == UIViewContentModeScaleAspectFill) {
-        self.playerController.scalingMode = IESVideoScaleModeAspectFill;
-    }
-    self.backgroundView.contentMode = self.contentMode;
+//
+//    if (self.contentMode == UIViewContentModeScaleAspectFit) {
+//        self.playerController.scalingMode = IESVideoScaleModeAspectFit;
+//    } else if (self.contentMode == UIViewContentModeScaleAspectFill) {
+//        self.playerController.scalingMode = IESVideoScaleModeAspectFill;
+//    }
+//    self.backgroundView.contentMode = self.contentMode;
 }
 
 #pragma mark - Public Methods
@@ -178,7 +179,7 @@ static NSString * const VideoPrepareTimeTechKey = @"prepare_time_tech";
         [self _updateFrame];
     }
 
-    self.playerController.useCache = YES;
+//    self.playerController.useCache = YES;
     self.videoStalledCount = 0;
 //    self.videoDuration = 0;
 }
@@ -189,27 +190,21 @@ static NSString * const VideoPrepareTimeTechKey = @"prepare_time_tech";
         return;
     }
     
-    [self resetVideoPlayAddress];
-        
-    if (IESVideoPlayerTypeSpecify == IESVideoPlayerTypeSystem) {
-        if (![self.timingTracker hasTimingForKey:VideoPrepareTimeTechKey]) {
-            [self.timingTracker startTimingForKey:VideoPrepareTimeTechKey ignoreBackgroundTime:NO];
-        }
-    }
+//    [self resetVideoPlayAddress];
+//
+//    if (IESVideoPlayerTypeSpecify == IESVideoPlayerTypeSystem) {
+//        if (![self.timingTracker hasTimingForKey:VideoPrepareTimeTechKey]) {
+//            [self.timingTracker startTimingForKey:VideoPrepareTimeTechKey ignoreBackgroundTime:NO];
+//        }
+//    }
 }
 
 - (void)resetVideoPlayAddress
 {
-//    NSString *videoLocalPlayAddr = self.model.videoLocalPlayAddr;
-//    if (!isEmptyString(videoLocalPlayAddr)) {
-//         [self.playerController resetLocalVideoURLPath:videoLocalPlayAddr];
-//    } else {
-        if (self.model.video.playAddr.uri.length > 0 || self.model.video.playAddr.urlList.count > 0) {
-            [self.playerController resetVideoID:self.model.video.playAddr.uri andPlayURLs:self.model.video.playAddr.urlList];
-        }
-//    }
-    // 如果不prepareToPlay，playerController不会发开始播放的Notification，会导致菊花不消失、首帧端监控不结束
-    [self.playerController prepareToPlay];
+//        if (self.model.video.playAddr.uri.length > 0 || self.model.video.playAddr.urlList.count > 0) {
+//            [self.playerController resetVideoID:self.model.video.playAddr.uri andPlayURLs:self.model.video.playAddr.urlList];
+//        }
+//    [self.playerController prepareToPlay];
 }
 
 - (void)play
@@ -240,7 +235,7 @@ static NSString * const VideoPrepareTimeTechKey = @"prepare_time_tech";
     if (self.isPlaying) {
         self.isPlaying = NO;
         [self _showLoadingIndicator:NO];
-        [self.playerController pause];
+//        [self.playerController pause];
     }
 }
 
@@ -248,13 +243,13 @@ static NSString * const VideoPrepareTimeTechKey = @"prepare_time_tech";
     if (!self.model) {
         return;
     }
-    if (self.isPlaying) {
-        [self.playerController pause];
-    }else {
-         [self.playerController play];
-    }
-    self.isPlaying = !self.isPlaying;
-    self.playImage.hidden = self.isPlaying;
+//    if (self.isPlaying) {
+//        [self.playerController pause];
+//    }else {
+//         [self.playerController play];
+//    }
+//    self.isPlaying = !self.isPlaying;
+//    self.playImage.hidden = self.isPlaying;
     
 }
 
@@ -267,41 +262,41 @@ static NSString * const VideoPrepareTimeTechKey = @"prepare_time_tech";
 
 - (void)_addObservers
 {
-    @weakify(self)
-    NSNotificationCenter *notificationCenter = [NSNotificationCenter defaultCenter];
-    
-    [self.observerArray addObject:[notificationCenter addObserverForName:UIApplicationWillTerminateNotification object:nil queue:[NSOperationQueue mainQueue] usingBlock:^(NSNotification * _Nonnull note) {
-        @strongify(self);
-        // 播放时长统计
-        static NSString *playTimeKey = VideoPlayTimeKey;
-        NSTimeInterval playDuration = [self.timingTracker endTimingForKey:playTimeKey];
-        if (playDuration != NSNotFound && [self.delegate respondsToSelector:@selector(playView:didStopPlayWithModel:duration:)]) {
-            [self.delegate playView:self didStopPlayWithModel:self.model duration:playDuration];
-        }
-        
-        // 卡顿统计
-        if (playDuration != 0 && playDuration != NSNotFound) {
-            NSTimeInterval duration = [self.timingTracker endTimingForKey:VideoStallTimeKey];
-            if (duration == NSNotFound) {
-                duration = 0;
-            }
-            CGFloat stallTimeRate = duration / playDuration;
-            CGFloat stallCountRate = self.videoStalledCount * 1000.0 / playDuration;
-            NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithCapacity:5];
-            [dict setValue:@"video_block" forKey:@"service"];
-            [dict setValue:@(stallTimeRate) forKey:@"duration_rate"];
-            [dict setValue:@(stallCountRate) forKey:@"count_rate"];
-            [dict setValue:@(duration) forKey:@"block_duration"];
-            [dict setValue:@(self.videoStalledCount) forKey:@"block_count"];
-            [dict setValue:self.model.groupId forKey:@"mediaId"];
-            [dict setValue:self.model.video.playAddr.uri forKey:@"videoUri"];
-            [dict setValue:@(IESVideoPlayerTypeTTOwn) forKey:@"playerType"];
-            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-                [dict setValue:[TTNetworkHelper connectMethodName] forKey:@"app_network_type"];
-                [[TTMonitor shareManager] trackService:@"short_video_media_play_log" attributes:dict];
-            });
-        }
-    }]];
+//    @weakify(self)
+//    NSNotificationCenter *notificationCenter = [NSNotificationCenter defaultCenter];
+//
+//    [self.observerArray addObject:[notificationCenter addObserverForName:UIApplicationWillTerminateNotification object:nil queue:[NSOperationQueue mainQueue] usingBlock:^(NSNotification * _Nonnull note) {
+//        @strongify(self);
+//        // 播放时长统计
+//        static NSString *playTimeKey = VideoPlayTimeKey;
+//        NSTimeInterval playDuration = [self.timingTracker endTimingForKey:playTimeKey];
+//        if (playDuration != NSNotFound && [self.delegate respondsToSelector:@selector(playView:didStopPlayWithModel:duration:)]) {
+//            [self.delegate playView:self didStopPlayWithModel:self.model duration:playDuration];
+//        }
+//
+//        // 卡顿统计
+//        if (playDuration != 0 && playDuration != NSNotFound) {
+//            NSTimeInterval duration = [self.timingTracker endTimingForKey:VideoStallTimeKey];
+//            if (duration == NSNotFound) {
+//                duration = 0;
+//            }
+//            CGFloat stallTimeRate = duration / playDuration;
+//            CGFloat stallCountRate = self.videoStalledCount * 1000.0 / playDuration;
+//            NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithCapacity:5];
+//            [dict setValue:@"video_block" forKey:@"service"];
+//            [dict setValue:@(stallTimeRate) forKey:@"duration_rate"];
+//            [dict setValue:@(stallCountRate) forKey:@"count_rate"];
+//            [dict setValue:@(duration) forKey:@"block_duration"];
+//            [dict setValue:@(self.videoStalledCount) forKey:@"block_count"];
+//            [dict setValue:self.model.groupId forKey:@"mediaId"];
+//            [dict setValue:self.model.video.playAddr.uri forKey:@"videoUri"];
+//            [dict setValue:@(IESVideoPlayerTypeTTOwn) forKey:@"playerType"];
+//            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+//                [dict setValue:[TTNetworkHelper connectMethodName] forKey:@"app_network_type"];
+//                [[TTMonitor shareManager] trackService:@"short_video_media_play_log" attributes:dict];
+//            });
+//        }
+//    }]];
 
 
 }
@@ -317,39 +312,39 @@ static NSString * const VideoPrepareTimeTechKey = @"prepare_time_tech";
 
 - (void)_doPlay
 {
-    //不隐藏的话做优化的时候会闪
-    self.playerController.view.hidden = NO;
-
-    //开始记录首帧时长
-    [TTMonitor startTimingForKey:[NSString stringWithFormat:@"%p-FirstFrame", self]];
-    [TTMonitor startTimingForKey:[NSString stringWithFormat:@"%p-FirstFrame-Display", self]];
-    
-    [self performSelector:@selector(_showLoadingIndicator) withObject:nil afterDelay:1.0];
-    
-    if (self.playerController.actionState == IESVideoActionStateInit) {
-        [self resetVideoPlayAddress];
-    }
-    
-    [FHHMDTManager sharedInstance].shortVideoCreateTime = [[NSDate date] timeIntervalSince1970];
-    [self.playerController play];
-    self.isPlaying = YES;
+//    //不隐藏的话做优化的时候会闪
+//    self.playerController.view.hidden = NO;
+//
+//    //开始记录首帧时长
+//    [TTMonitor startTimingForKey:[NSString stringWithFormat:@"%p-FirstFrame", self]];
+//    [TTMonitor startTimingForKey:[NSString stringWithFormat:@"%p-FirstFrame-Display", self]];
+//
+//    [self performSelector:@selector(_showLoadingIndicator) withObject:nil afterDelay:1.0];
+//
+//    if (self.playerController.actionState == IESVideoActionStateInit) {
+//        [self resetVideoPlayAddress];
+//    }
+//
+//    [FHHMDTManager sharedInstance].shortVideoCreateTime = [[NSDate date] timeIntervalSince1970];
+//    [self.playerController play];
+//    self.isPlaying = YES;
 }
 
 - (void)_doStop
 {
-    self.playerController.view.hidden = YES;
-
-    // 更改状态
-    self.isPlaying = NO;
-    [self _showLoadingIndicator:NO];
-    
-    // 关闭缓存
-    [self.playerController stop];
-    
-    // 结束播放时清理首帧时长
-    [TTMonitor cancelTimingForKey:[NSString stringWithFormat:@"%p-FirstFrame", self]];
-    [TTMonitor cancelTimingForKey:[NSString stringWithFormat:@"%p-FirstFrame-Display", self]];
-    [FHHMDTManager sharedInstance].shortVideoCreateTime = 0;
+//    self.playerController.view.hidden = YES;
+//
+//    // 更改状态
+//    self.isPlaying = NO;
+//    [self _showLoadingIndicator:NO];
+//
+//    // 关闭缓存
+//    [self.playerController stop];
+//
+//    // 结束播放时清理首帧时长
+//    [TTMonitor cancelTimingForKey:[NSString stringWithFormat:@"%p-FirstFrame", self]];
+//    [TTMonitor cancelTimingForKey:[NSString stringWithFormat:@"%p-FirstFrame-Display", self]];
+//    [FHHMDTManager sharedInstance].shortVideoCreateTime = 0;
 }
 
 - (void)_didStartDisplayFrames
@@ -365,39 +360,33 @@ static NSString * const VideoPrepareTimeTechKey = @"prepare_time_tech";
 
 - (void)_didPlayFailedWithError:(NSError *)error
 {
-    // 清空当前视频缓存
-//    NSString *urlStr = [self.playerController.videoPlayURLs firstObject];
-//    if (!isEmptyString(urlStr) && !isEmptyString(self.model.video.playAddr.uri)) {
-//        id<IESVideoCacheProtocol> AWEVideoCache = [IESVideoCache cacheWithType:IESVideoPlayerTypeTTOwn];
-//        [AWEVideoCache clearCacheForVideoID:self.model.video.playAddr.uri URLString:urlStr];
-//    }
     
-    if (self.playerController.useCache) { // 尝试无缓存播放
-        self.playerController.useCache = NO;
-        [self resetVideoPlayAddress];
-        if (self.isPlaying) {
-            [self.playerController play];
-        }
-    } else { // 无缓存播放失败
-        // 更改状态
-        self.isPlaying = NO;
-        [self _showLoadingIndicator:NO];
-        if ([TTReachability isNetworkConnected]) {
-            [[ToastManager manager] showToast:@"播放失败"];
-        } else {
-            [[ToastManager manager] showToast:@"网络异常"];
-        }
-        
-        // 停止并关闭缓存
-        [self.playerController stop];
-        
-        [TTMonitor cancelTimingForKey:[NSString stringWithFormat:@"%p-FirstFrame", self]];
-        [TTMonitor cancelTimingForKey:[NSString stringWithFormat:@"%p-FirstFrame-Display", self]];
-        [FHHMDTManager sharedInstance].shortVideoCreateTime = 0;
-        
-        // 统计播放失败率（失败）
-        [[TSVMonitorManager sharedManager] trackVideoPlayStatus:TSVMonitorVideoPlayFailed model:self.model error:error];
-    }
+//    if (self.playerController.useCache) { // 尝试无缓存播放
+//        self.playerController.useCache = NO;
+//        [self resetVideoPlayAddress];
+//        if (self.isPlaying) {
+//            [self.playerController play];
+//        }
+//    } else { // 无缓存播放失败
+//        // 更改状态
+//        self.isPlaying = NO;
+//        [self _showLoadingIndicator:NO];
+//        if ([TTReachability isNetworkConnected]) {
+//            [[ToastManager manager] showToast:@"播放失败"];
+//        } else {
+//            [[ToastManager manager] showToast:@"网络异常"];
+//        }
+//
+//        // 停止并关闭缓存
+//        [self.playerController stop];
+//
+//        [TTMonitor cancelTimingForKey:[NSString stringWithFormat:@"%p-FirstFrame", self]];
+//        [TTMonitor cancelTimingForKey:[NSString stringWithFormat:@"%p-FirstFrame-Display", self]];
+//        [FHHMDTManager sharedInstance].shortVideoCreateTime = 0;
+//
+//        // 统计播放失败率（失败）
+//        [[TSVMonitorManager sharedManager] trackVideoPlayStatus:TSVMonitorVideoPlayFailed model:self.model error:error];
+//    }
 }
 
 
@@ -419,72 +408,72 @@ static NSString * const VideoPrepareTimeTechKey = @"prepare_time_tech";
 - (void)_loadView
 {
     // 背景图层
-    _backgroundView = [[SSThemedImageView alloc] initWithFrame:self.bounds];
-    _backgroundView.autoresizingMask = UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight;
-    _backgroundView.backgroundColor = [UIColor blackColor];
-    _backgroundView.enableNightCover = NO;
-
-    // 播放视图层
-    _playerController = [IESVideoPlayer playerWithType:IESVideoPlayerTypeTTOwn];
-    _playerController.scalingMode = IESVideoScaleModeAspectFit;
-    _playerController.view.backgroundColor = [UIColor clearColor];
-    _playerController.view.frame = self.bounds;
-    _playerController.view.autoresizingMask = UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight;
-    _playerController.enhancementType = IESVideoEnhancementTypeNone;
-    _playerController.repeated = YES;
-    _playerController.useCache = YES;
-    _playerController.ignoreAudioInterruption = YES;
-    _playerController.delegate = self;
-    [self addSubview:_playerController.view];
-    [self addSubview:_backgroundView];
-    
-    if([_playerController isKindOfClass:[IESOwnPlayerWrapper class]]){
-        IESOwnPlayerWrapper *playerWrapper = (IESOwnPlayerWrapper *)_playerController;
-        id player = [playerWrapper valueForKey:@"player"];
-        if([player isKindOfClass:[TTVideoEngine class]]){
-            TTVideoEngine *videoEngine = (TTVideoEngine *)player;
-            [videoEngine setTag:@"short_video"];
-            [videoEngine configResolution:TTVideoEngineResolutionType1080P];
-        }
-    }
-
-
-    [self.playImage mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.center.equalTo(self);
-    }];
-    
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        //老版本小视频缓存 升级时需要清理
-        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-            NSArray *paths = NSSearchPathForDirectoriesInDomains(NSLibraryDirectory, NSUserDomainMask, YES);
-            NSString *aweVideoCachePath = [[paths objectAtIndex:0] stringByAppendingPathComponent:@"AWEVideoCache"];
-            YYCache *aweVideoCache = [YYCache cacheWithPath:aweVideoCachePath];
-            [aweVideoCache removeAllObjects];
-        });
-    });
+//    _backgroundView = [[SSThemedImageView alloc] initWithFrame:self.bounds];
+//    _backgroundView.autoresizingMask = UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight;
+//    _backgroundView.backgroundColor = [UIColor blackColor];
+//    _backgroundView.enableNightCover = NO;
+//
+//    // 播放视图层
+//    _playerController = [IESVideoPlayer playerWithType:IESVideoPlayerTypeTTOwn];
+//    _playerController.scalingMode = IESVideoScaleModeAspectFit;
+//    _playerController.view.backgroundColor = [UIColor clearColor];
+//    _playerController.view.frame = self.bounds;
+//    _playerController.view.autoresizingMask = UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight;
+//    _playerController.enhancementType = IESVideoEnhancementTypeNone;
+//    _playerController.repeated = YES;
+//    _playerController.useCache = YES;
+//    _playerController.ignoreAudioInterruption = YES;
+//    _playerController.delegate = self;
+//    [self addSubview:_playerController.view];
+//    [self addSubview:_backgroundView];
+//
+//    if([_playerController isKindOfClass:[IESOwnPlayerWrapper class]]){
+//        IESOwnPlayerWrapper *playerWrapper = (IESOwnPlayerWrapper *)_playerController;
+//        id player = [playerWrapper valueForKey:@"player"];
+//        if([player isKindOfClass:[TTVideoEngine class]]){
+//            TTVideoEngine *videoEngine = (TTVideoEngine *)player;
+//            [videoEngine setTag:@"short_video"];
+//            [videoEngine configResolution:TTVideoEngineResolutionType1080P];
+//        }
+//    }
+//
+//
+//    [self.playImage mas_makeConstraints:^(MASConstraintMaker *make) {
+//        make.center.equalTo(self);
+//    }];
+//
+//    static dispatch_once_t onceToken;
+//    dispatch_once(&onceToken, ^{
+//        //老版本小视频缓存 升级时需要清理
+//        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+//            NSArray *paths = NSSearchPathForDirectoriesInDomains(NSLibraryDirectory, NSUserDomainMask, YES);
+//            NSString *aweVideoCachePath = [[paths objectAtIndex:0] stringByAppendingPathComponent:@"AWEVideoCache"];
+//            YYCache *aweVideoCache = [YYCache cacheWithPath:aweVideoCachePath];
+//            [aweVideoCache removeAllObjects];
+//        });
+//    });
 }
 
 - (void)_updateFrame
 {
-    if (self.model.video.width > 0) {
-        CGFloat height = [self.model.video.height floatValue]/ [self.model.video.width floatValue] * CGRectGetWidth(self.frame);
-        CGFloat dHeight = CGRectGetHeight(self.superview.bounds) - height;
-        if (dHeight > 0 && dHeight < 5) { // 兼容视频与屏幕宽高比差一点点引起的底部白条问题
-            height += dHeight;
-        }
-        if (!self.isFirstInit && fabs(CGRectGetHeight(self.bounds) - height) < 0.1) {
-            return;
-        }
-        self.isFirstInit = NO;
-        
-        self.frame = CGRectMake(CGRectGetMinX(self.frame), CGRectGetMinY(self.frame), CGRectGetWidth(self.frame), height);
-        self.playerController.view.frame = self.bounds;
-        
-        if ([self.delegate respondsToSelector:@selector(playView:didUpdateFrame:)]) {
-            [self.delegate playView:self didUpdateFrame:self.frame];
-        }
-    }
+//    if (self.model.video.width > 0) {
+//        CGFloat height = [self.model.video.height floatValue]/ [self.model.video.width floatValue] * CGRectGetWidth(self.frame);
+//        CGFloat dHeight = CGRectGetHeight(self.superview.bounds) - height;
+//        if (dHeight > 0 && dHeight < 5) { // 兼容视频与屏幕宽高比差一点点引起的底部白条问题
+//            height += dHeight;
+//        }
+//        if (!self.isFirstInit && fabs(CGRectGetHeight(self.bounds) - height) < 0.1) {
+//            return;
+//        }
+//        self.isFirstInit = NO;
+//        
+//        self.frame = CGRectMake(CGRectGetMinX(self.frame), CGRectGetMinY(self.frame), CGRectGetWidth(self.frame), height);
+//        self.playerController.view.frame = self.bounds;
+//        
+//        if ([self.delegate respondsToSelector:@selector(playView:didUpdateFrame:)]) {
+//            [self.delegate playView:self didUpdateFrame:self.frame];
+//        }
+//    }
 }
 
 - (void)_showLoadingIndicator
@@ -607,150 +596,150 @@ static NSString * const VideoPrepareTimeTechKey = @"prepare_time_tech";
 /**
  *  播放器将要开始下一个播放循环
  */
-- (void)playerWillLoopPlaying:(id<IESVideoPlayerProtocol>)player
-{
-    if ([self.delegate respondsToSelector:@selector(playView:didPlayNextLoopWithModel:)]) {
-        [self.delegate playView:self didPlayNextLoopWithModel:self.model];
-    }
-}
+//- (void)playerWillLoopPlaying:(id<IESVideoPlayerProtocol>)player
+//{
+//    if ([self.delegate respondsToSelector:@selector(playView:didPlayNextLoopWithModel:)]) {
+//        [self.delegate playView:self didPlayNextLoopWithModel:self.model];
+//    }
+//}
 
 /**
  *  无论手动停止还是自动停止，从IESVideoPlaybackActionStart到IESVideoPlaybackActionStop是一个完整的播放周期。
  *  stop之后播放器可能被重置，所有操作和回调会等同于新建一个播放器。
  *  ⚠️IESVideoPlaybackActionStart事件用作首帧时间(prepare_time)的统一口径⚠️
  */
-- (void)player:(id<IESVideoPlayerProtocol>)player didChangePlaybackStateWithAction:(IESVideoPlaybackAction)playbackAction
-{
-    switch (playbackAction) {
-        case IESVideoPlaybackActionStart:
-        {
-
-            [[TTVPlayerIdleController sharedInstance] lockScreen:NO later:NO];
-            
-            self.backgroundView.hidden = YES;
-            
-            [self.timingTracker startTimingForKey:VideoPlayTimeKey ignoreBackgroundTime:YES];
-            
-            [self _didStartDisplayFrames];
-            
-            if ([self.delegate respondsToSelector:@selector(playView:didStartPlayWithModel:)]) {
-                [self.delegate playView:self didStartPlayWithModel:self.model];
-            }
-        }
-            break;
-        case IESVideoPlaybackActionStop:
-        {
-            [[TTVPlayerIdleController sharedInstance] lockScreen:YES later:NO];
-            // 播放时长统计
-            NSTimeInterval playDuration = [self.timingTracker endTimingForKey:VideoPlayTimeKey];
-            if (playDuration != NSNotFound && [self.delegate respondsToSelector:@selector(playView:didStopPlayWithModel:duration:)]) {
-                [self.delegate playView:self didStopPlayWithModel:self.model duration:playDuration];
-            }
-            
-            // 卡顿统计
-            if (playDuration != 0 && playDuration != NSNotFound) {
-                NSTimeInterval duration = [self.timingTracker endTimingForKey:VideoStallTimeKey];
-                if (duration == NSNotFound) {
-                    duration = 0;
-                }
-                CGFloat stallTimeRate = duration / playDuration;
-                CGFloat stallCountRate = self.videoStalledCount * 1000.0 / playDuration;
-                NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithCapacity:5];
-                [dict setValue:@"video_block" forKey:@"service"];
-                [dict setValue:@(stallTimeRate) forKey:@"duration_rate"];
-                [dict setValue:@(stallCountRate) forKey:@"count_rate"];
-                [dict setValue:@(duration) forKey:@"block_duration"];
-                [dict setValue:@(self.videoStalledCount) forKey:@"block_count"];
-                [dict setValue:self.model.groupId forKey:@"mediaId"];
-                [dict setValue:self.model.video.playAddr.uri forKey:@"videoUri"];
-                [dict setValue:@(IESVideoPlayerTypeTTOwn) forKey:@"playerType"];
-                dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-                    [dict setValue:[TTNetworkHelper connectMethodName] forKey:@"app_network_type"];
-                    [[TTMonitor shareManager] trackService:@"short_video_media_play_log" attributes:dict];
-                });
-            }
-        }
-            break;
-        case IESVideoPlaybackActionPause:
-        {
-            [[TTVPlayerIdleController sharedInstance] lockScreen:YES later:NO];
-            NSTimeInterval playDuration = [self.timingTracker pauseTimingForKey:VideoPlayTimeKey];
-            if (playDuration != NSNotFound && [self.delegate respondsToSelector:@selector(playView:didPausePlayWithModel:duration:)]) {
-                [self.delegate playView:self didPausePlayWithModel:self.model duration:playDuration];
-            }
-        }
-            break;
-        case IESVideoPlaybackActionResume:
-        {
-            [[TTVPlayerIdleController sharedInstance] lockScreen:NO later:NO];
-            NSTimeInterval playDuration = [self.timingTracker resumeTimingForKey:VideoPlayTimeKey];
-            if (playDuration != NSNotFound && [self.delegate respondsToSelector:@selector(playView:didResumePlayWithModel:duration:)]) {
-                [self.delegate playView:self didResumePlayWithModel:self.model duration:playDuration];
-            }
-            [self _showLoadingIndicator:NO];
-            //从暂停状态返回时，清理首帧时长
-            [TTMonitor cancelTimingForKey:[NSString stringWithFormat:@"%p-FirstFrame", self]];
-            [TTMonitor cancelTimingForKey:[NSString stringWithFormat:@"%p-FirstFrame-Display", self]];
-            [FHHMDTManager sharedInstance].shortVideoCreateTime = 0;
-        }
-            break;
-        default:
-            break;
-    }
-    
-    
-}
-
-/**
- *  播放失败
- */
-- (void)player:(id<IESVideoPlayerProtocol>)player playbackFailedWithError:(NSError *)error
-{
-    [self _didPlayFailedWithError:error];
-}
-
-/**
- *  已准备好显示，用作首帧时间(prepare_time_display)的统一口径
- *  实际含义：(自研)自研官方首帧回调，实际测试中与开始播放基本一致，时间差<10ms
- (系统)系统播放器layer的readyForDisplay事件回调，可能已显示首帧但未开始播放
- */
-- (void)playerDidReadyForDisplay:(id<IESVideoPlayerProtocol>)player
-{
-    [TTMonitor endTimingForKey:[NSString stringWithFormat:@"%p-FirstFrame", self] serviceName:@"short_video_prepare_time"];
-    
-    if (IESVideoPlayerTypeSpecify == IESVideoPlayerTypeSystem) {
-        NSTimeInterval duration = [self.timingTracker endTimingForKey:VideoPrepareTimeTechKey];
-        if (duration != NSNotFound) {
-            [[TTMonitor shareManager] trackService:@"short_video_prepare_time_tech" value:@(duration) extra:nil];
-        }
-    }
-}
-
-/**
- *  播放器卡顿状态变化，用作卡顿统计的统一口径。
- *  由播放到卡顿、由卡顿到播放会调用
- */
-- (void)player:(id<IESVideoPlayerProtocol>)player didChangeStallState:(IESVideoStallAction)stallState
-{
-    switch (stallState) {
-        case IESVideoStallActionBegin:
-        {
-            if ([self.timingTracker hasTimingForKey:VideoStallTimeKey]) {
-                [self.timingTracker resumeTimingForKey:VideoStallTimeKey];
-            } else {
-                [self.timingTracker startTimingForKey:VideoStallTimeKey ignoreBackgroundTime:YES];
-            }
-            self.videoStalledCount++;
-        }
-            break;
-        case IESVideoStallActionEnd:
-        {
-            [self.timingTracker pauseTimingForKey:VideoStallTimeKey];
-        }
-            break;
-        default:
-            break;
-    }
-}
+//- (void)player:(id<IESVideoPlayerProtocol>)player didChangePlaybackStateWithAction:(IESVideoPlaybackAction)playbackAction
+//{
+//    switch (playbackAction) {
+//        case IESVideoPlaybackActionStart:
+//        {
+//
+//            [[TTVPlayerIdleController sharedInstance] lockScreen:NO later:NO];
+//
+//            self.backgroundView.hidden = YES;
+//
+//            [self.timingTracker startTimingForKey:VideoPlayTimeKey ignoreBackgroundTime:YES];
+//
+//            [self _didStartDisplayFrames];
+//
+//            if ([self.delegate respondsToSelector:@selector(playView:didStartPlayWithModel:)]) {
+//                [self.delegate playView:self didStartPlayWithModel:self.model];
+//            }
+//        }
+//            break;
+//        case IESVideoPlaybackActionStop:
+//        {
+//            [[TTVPlayerIdleController sharedInstance] lockScreen:YES later:NO];
+//            // 播放时长统计
+//            NSTimeInterval playDuration = [self.timingTracker endTimingForKey:VideoPlayTimeKey];
+//            if (playDuration != NSNotFound && [self.delegate respondsToSelector:@selector(playView:didStopPlayWithModel:duration:)]) {
+//                [self.delegate playView:self didStopPlayWithModel:self.model duration:playDuration];
+//            }
+//
+//            // 卡顿统计
+//            if (playDuration != 0 && playDuration != NSNotFound) {
+//                NSTimeInterval duration = [self.timingTracker endTimingForKey:VideoStallTimeKey];
+//                if (duration == NSNotFound) {
+//                    duration = 0;
+//                }
+//                CGFloat stallTimeRate = duration / playDuration;
+//                CGFloat stallCountRate = self.videoStalledCount * 1000.0 / playDuration;
+//                NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithCapacity:5];
+//                [dict setValue:@"video_block" forKey:@"service"];
+//                [dict setValue:@(stallTimeRate) forKey:@"duration_rate"];
+//                [dict setValue:@(stallCountRate) forKey:@"count_rate"];
+//                [dict setValue:@(duration) forKey:@"block_duration"];
+//                [dict setValue:@(self.videoStalledCount) forKey:@"block_count"];
+//                [dict setValue:self.model.groupId forKey:@"mediaId"];
+//                [dict setValue:self.model.video.playAddr.uri forKey:@"videoUri"];
+//                [dict setValue:@(IESVideoPlayerTypeTTOwn) forKey:@"playerType"];
+//                dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+//                    [dict setValue:[TTNetworkHelper connectMethodName] forKey:@"app_network_type"];
+//                    [[TTMonitor shareManager] trackService:@"short_video_media_play_log" attributes:dict];
+//                });
+//            }
+//        }
+//            break;
+//        case IESVideoPlaybackActionPause:
+//        {
+//            [[TTVPlayerIdleController sharedInstance] lockScreen:YES later:NO];
+//            NSTimeInterval playDuration = [self.timingTracker pauseTimingForKey:VideoPlayTimeKey];
+//            if (playDuration != NSNotFound && [self.delegate respondsToSelector:@selector(playView:didPausePlayWithModel:duration:)]) {
+//                [self.delegate playView:self didPausePlayWithModel:self.model duration:playDuration];
+//            }
+//        }
+//            break;
+//        case IESVideoPlaybackActionResume:
+//        {
+//            [[TTVPlayerIdleController sharedInstance] lockScreen:NO later:NO];
+//            NSTimeInterval playDuration = [self.timingTracker resumeTimingForKey:VideoPlayTimeKey];
+//            if (playDuration != NSNotFound && [self.delegate respondsToSelector:@selector(playView:didResumePlayWithModel:duration:)]) {
+//                [self.delegate playView:self didResumePlayWithModel:self.model duration:playDuration];
+//            }
+//            [self _showLoadingIndicator:NO];
+//            //从暂停状态返回时，清理首帧时长
+//            [TTMonitor cancelTimingForKey:[NSString stringWithFormat:@"%p-FirstFrame", self]];
+//            [TTMonitor cancelTimingForKey:[NSString stringWithFormat:@"%p-FirstFrame-Display", self]];
+//            [FHHMDTManager sharedInstance].shortVideoCreateTime = 0;
+//        }
+//            break;
+//        default:
+//            break;
+//    }
+//
+//
+//}
+//
+///**
+// *  播放失败
+// */
+//- (void)player:(id<IESVideoPlayerProtocol>)player playbackFailedWithError:(NSError *)error
+//{
+//    [self _didPlayFailedWithError:error];
+//}
+//
+///**
+// *  已准备好显示，用作首帧时间(prepare_time_display)的统一口径
+// *  实际含义：(自研)自研官方首帧回调，实际测试中与开始播放基本一致，时间差<10ms
+// (系统)系统播放器layer的readyForDisplay事件回调，可能已显示首帧但未开始播放
+// */
+//- (void)playerDidReadyForDisplay:(id<IESVideoPlayerProtocol>)player
+//{
+//    [TTMonitor endTimingForKey:[NSString stringWithFormat:@"%p-FirstFrame", self] serviceName:@"short_video_prepare_time"];
+//
+//    if (IESVideoPlayerTypeSpecify == IESVideoPlayerTypeSystem) {
+//        NSTimeInterval duration = [self.timingTracker endTimingForKey:VideoPrepareTimeTechKey];
+//        if (duration != NSNotFound) {
+//            [[TTMonitor shareManager] trackService:@"short_video_prepare_time_tech" value:@(duration) extra:nil];
+//        }
+//    }
+//}
+//
+///**
+// *  播放器卡顿状态变化，用作卡顿统计的统一口径。
+// *  由播放到卡顿、由卡顿到播放会调用
+// */
+//- (void)player:(id<IESVideoPlayerProtocol>)player didChangeStallState:(IESVideoStallAction)stallState
+//{
+//    switch (stallState) {
+//        case IESVideoStallActionBegin:
+//        {
+//            if ([self.timingTracker hasTimingForKey:VideoStallTimeKey]) {
+//                [self.timingTracker resumeTimingForKey:VideoStallTimeKey];
+//            } else {
+//                [self.timingTracker startTimingForKey:VideoStallTimeKey ignoreBackgroundTime:YES];
+//            }
+//            self.videoStalledCount++;
+//        }
+//            break;
+//        case IESVideoStallActionEnd:
+//        {
+//            [self.timingTracker pauseTimingForKey:VideoStallTimeKey];
+//        }
+//            break;
+//        default:
+//            break;
+//    }
+//}
 
 @end

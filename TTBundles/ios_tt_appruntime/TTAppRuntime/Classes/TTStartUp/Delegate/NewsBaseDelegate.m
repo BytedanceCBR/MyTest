@@ -291,7 +291,7 @@ static NSTimeInterval lastTime;
     
     uint64_t mainEndTime = [NSObject currentUnixTime];
     dispatch_barrier_sync(self.barrierQueue, ^{
-        LOGD(@"startup done!!!!!!!");
+//        LOGD(@"startup done!!!!!!!");
     });
     uint64_t allEndTime = [NSObject currentUnixTime];
     double waitTime = [NSObject machTimeToSecs:(allEndTime - mainEndTime)] * 1000;
@@ -732,7 +732,7 @@ static NSTimeInterval lastTime;
 - (void)trackCurrentIntervalInMainThreadWithTag:(NSString *)tag {
     NSTimeInterval current = CFAbsoluteTimeGetCurrent();
     double timeInterval = lastTime == 0 ? (current - startTime) * 1000 : (current - lastTime) * 1000;
-    LOGD(@"TTLaunch For %@ Total = %fms Interval = %fms", tag, (current - startTime) * 1000, timeInterval);
+//    LOGD(@"TTLaunch For %@ Total = %fms Interval = %fms", tag, (current - startTime) * 1000, timeInterval);
     lastTime = current;
     [[TTStartupTasksTracker sharedTracker] trackStartupTaskInMainThread:tag withInterval:timeInterval];
 }

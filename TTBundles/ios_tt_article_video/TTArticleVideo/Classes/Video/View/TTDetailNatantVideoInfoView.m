@@ -1173,7 +1173,7 @@ extern BOOL ttvs_isShareIndividuatioEnable(void);
         
         int newNum = [[change objectForKey:NSKeyValueChangeNewKey] intValue];
         int oldNum = [[change objectForKey:NSKeyValueChangeOldKey] intValue];
-        LOGD(@"CellView KVO: %p %@", object, keyPath);
+//        LOGD(@"CellView KVO: %p %@", object, keyPath);
 //        if (!newNum){
 //            return;
 //        }

@@ -105,7 +105,7 @@ SINGLETON_GCD(TTWebviewAntiHijackServerConfig);
     
     BOOL isEnabled = [serverData tt_boolValueForKey:kTTWebviewAntiHijackServerConfigEnabledKey];
 
-    LOGI(@"hijack_intercept_enable = %d", isEnabled);
+//    LOGI(@"hijack_intercept_enable = %d", isEnabled);
     
     BOOL needSave = NO;
     
@@ -241,7 +241,7 @@ SINGLETON_GCD(TTWebviewAntiHijackServerConfig);
     }
     
     if (!TTNetworkConnected()) {
-        LOGW(@"network is down, skip");
+//        LOGW(@"network is down, skip");
         return;
     }
     
@@ -292,17 +292,17 @@ SINGLETON_GCD(TTWebviewAntiHijackServerConfig);
                         
                         [[TTWebviewAntiHijackServerConfig cache_] save];
                     } else {
-                        LOGW(@"get wrong black list response! repsonse = %@", jsonObj);
+//                        LOGW(@"get wrong black list response! repsonse = %@", jsonObj);
                     }
                 }
                 @catch (NSException *exception) {
-                    LOGW(@"exception in parsing json, repsonse = %@, exception = %@", jsonObj, exception);
+//                    LOGW(@"exception in parsing json, repsonse = %@, exception = %@", jsonObj, exception);
                 }
                 @finally {
                     
                 }
             } else {
-                LOGW(@"fail to get the black list! error = %@", error);
+//                LOGW(@"fail to get the black list! error = %@", error);
             }
             
             wself.isProcessing = NO;
@@ -328,7 +328,7 @@ SINGLETON_GCD(TTWebviewAntiHijackServerConfig);
         
         [[TTMonitor shareManager] trackData:dict logTypeStr:@"ss_hijack_intercept"];
         
-        LOGD(@"send feedback log = %@", dict);
+//        LOGD(@"send feedback log = %@", dict);
         
         NSDate *now = [NSDate date];
         NSTimeInterval interval = [now timeIntervalSinceDate:self.lastSendFeedbackLogTime];

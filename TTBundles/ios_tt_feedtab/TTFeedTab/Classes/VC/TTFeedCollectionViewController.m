@@ -501,7 +501,7 @@ TTFeedCollectionCellDelegate>
             [self.delegate ttFeedCollectionViewController:self didScrollToIndex:self.currentIndex];
         }
 
-        LOGD(@"~~~didEndDecelerating appear %@", self.pageCategories[_currentIndex].categoryID);
+//        LOGD(@"~~~didEndDecelerating appear %@", self.pageCategories[_currentIndex].categoryID);
         [self currentPageCellAppear:userDrag];
         
         if (![self.lastCategoryID isEqualToString:category.categoryID]) {

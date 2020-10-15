@@ -255,7 +255,7 @@ extern NSInteger ttvs_autoPlayModeServerSetting(void);
             }];
             
             NSNumber *countAfterClean = [self aggregate:@"count(*)" where:nil arguments:nil];
-            LOGD(@"%@ : %@ -> %@", NSStringFromClass(self), countBeforeClean, countAfterClean);
+//            LOGD(@"%@ : %@ -> %@", NSStringFromClass(self), countBeforeClean, countAfterClean);
             
             NSTimeInterval t2 = CFAbsoluteTimeGetCurrent();
             
@@ -267,7 +267,7 @@ extern NSInteger ttvs_autoPlayModeServerSetting(void);
             Class tableClass = NSClassFromString(key);
             if ([tableClass isSubclassOfClass:[TTEntityBase class]]) {
                 __unused NSNumber *count = [tableClass aggregate:@"count(*)" where:nil arguments:nil];
-                LOGD(@"%@ : %lld -> %@", key, (count.longLongValue + obj.longLongValue), count);
+//                LOGD(@"%@ : %lld -> %@", key, (count.longLongValue + obj.longLongValue), count);
             }
         }];
 #endif
@@ -284,17 +284,17 @@ extern NSInteger ttvs_autoPlayModeServerSetting(void);
 //        NSNumber *liveCount = [Live aggregate:@"count(*)" where:nil arguments:nil];
         NSNumber *userDataCount = [TTUserData aggregate:@"count(*)" where:nil arguments:nil];
         
-        LOGD(@"%@ : %@", @"ExploreOrderedData", orderedDataCount);
-        LOGD(@"%@ : %@", @"Article", articleCount);
+//        LOGD(@"%@ : %@", @"ExploreOrderedData", orderedDataCount);
+//        LOGD(@"%@ : %@", @"Article", articleCount);
 //        LOGD(@"%@ : %@", @"Thread", threadCount);
-        LOGD(@"%@ : %@", @"Comment", commentCount);
-        LOGD(@"%@ : %@", @"Card", cardCount);
-        LOGD(@"%@ : %@", @"WapData", wapDataCount);
+//        LOGD(@"%@ : %@", @"Comment", commentCount);
+//        LOGD(@"%@ : %@", @"Card", cardCount);
+//        LOGD(@"%@ : %@", @"WapData", wapDataCount);
 //        LOGD(@"%@ : %@", @"Live", liveCount);
-        LOGD(@"%@ : %@", @"TTUserData", userDataCount);
+//        LOGD(@"%@ : %@", @"TTUserData", userDataCount);
         
         NSTimeInterval t2 = CFAbsoluteTimeGetCurrent();
-        LOGD(@"DB aggregate cost: %f", t2 - t1);
+//        LOGD(@"DB aggregate cost: %f", t2 - t1);
         
         NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithCapacity:10];
         [dict setValue:orderedDataCount forKey:@"order_data_count"];

@@ -61,7 +61,7 @@
 
 + (void)changeFavoriteStatus:(ExploreOriginalData *)originData
 {
-    LOGD(@"changeFavoriteStatus %p", originData);
+//    LOGD(@"changeFavoriteStatus %p", originData);
     if (originData.userRepined) {
         [self unRepinData:originData];
     }
