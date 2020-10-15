@@ -11,6 +11,8 @@
 #import <TTNetworkManager/TTNetworkManager.h>
 #import <TTBaseLib/NSDictionary+TTAdditions.h>
 #import "FHWebViewConfig.h"
+#import <FHHouseBase/FHCommonDefines.h>
+#import <ByteDanceKit/NSURL+BTDAdditions.h>
 
 typedef enum : NSInteger {
     FHBridgeMsgSuccess = 1,
@@ -33,6 +35,19 @@ callback(status, @{@"msg": [NSString stringWithFormat:msg]? [NSString stringWith
                constructingBodyBlock:(TTConstructingBodyBlock)bodyBlock
                         commonParams:(NSDictionary *)commonParam
 {
+    NSURL *origURL = [NSURL URLWithString:URL];
+    NSDictionary *allParams = [origURL btd_queryItems];
+    NSMutableDictionary *resultDict = @{}.mutableCopy;
+    [commonParam enumerateKeysAndObjectsUsingBlock:^(NSString *  _Nonnull key, id  _Nonnull obj, BOOL * _Nonnull stop) {
+        if (![allParams.allKeys containsObject:key]) {
+            [resultDict setValue:obj forKey:key];
+        }else {
+            NSLog(@"zjing test replace key:%@, value:%@", key, obj);
+        }
+    }];
+    
+    commonParam = [self commonParams:resultDict byRemoveParams:params];
+    
     TTHttpRequest *request = [super URLRequestWithURL:URL params:params method:method constructingBodyBlock:bodyBlock commonParams:commonParam];
     
     [request setValue:@"application/json; encoding=utf-8" forHTTPHeaderField:@"Content-Type"];
@@ -47,6 +62,117 @@ callback(status, @{@"msg": [NSString stringWithFormat:msg]? [NSString stringWith
     
     
     return request;
+}
+
+//- (NSDictionary *)queryParamsWithURL:(NSURL *)url
+//{
+//    NSString *urlString = [url absoluteString];
+//    if (!url || IS_EMPTY_STRING(urlString)) {
+//        NSAssert(NO, @"url为空，请确保url创建成功!");
+//        return nil;
+//    }
+//
+//    //先做decode才能确保url解析成功
+//    //@fengjingjun 传入的URL正确做法是对query做encode，而不是整体；直接对正确encode的URL解析参数，再对各个参数逐一decode
+////    [self _decodeWithEncodedURLString:&urlString];
+//
+//    NSString *scheme = nil;
+//    NSString *host = nil;
+//    NSMutableDictionary *queryParams = [NSMutableDictionary dictionary];
+//
+//    NSRange schemeSegRange = [urlString rangeOfString:@"://"];
+//    NSString *outScheme = nil;
+//    if (schemeSegRange.location != NSNotFound) {
+//        scheme = [urlString substringToIndex:NSMaxRange(schemeSegRange)];
+//        outScheme = [urlString substringFromIndex:NSMaxRange(schemeSegRange)];
+//    }
+//    else {
+//        outScheme = urlString;
+//    }
+//
+//    NSArray *substrings = [outScheme componentsSeparatedByString:@"?"];
+//    NSString *path = [substrings objectAtIndex:0];
+//    NSArray *hostSeg = [path componentsSeparatedByString:@"/"];
+//
+//    host = [hostSeg objectAtIndex:0];
+//    // deal with profile page depend on is login
+//    if ([substrings count] > 1) {
+//        NSString *queryString =  [[substrings subarrayWithRange:NSMakeRange(1, [substrings count]-1)] componentsJoinedByString:@"?"];
+//        NSArray *paramsList = [queryString componentsSeparatedByString:@"&"];
+//        [paramsList enumerateObjectsUsingBlock:^(NSString *param, NSUInteger idx, BOOL *stop){
+//            NSArray *keyAndValue = [param componentsSeparatedByString:@"="];
+//            if ([keyAndValue count] > 1) {
+//                NSString *paramKey = [keyAndValue objectAtIndex:0];
+//                NSString *paramValue = [keyAndValue objectAtIndex:1];
+////                if ([paramValue rangeOfString:@"%"].length > 0) {
+////                    //v0.2.17 递归decode解析query参数
+////                    paramValue = [TTRoute recursiveDecodeForParamValue:paramValue];
+////                }
+//
+//                //v0.2.19 去掉递归decode，外部保证传入合法encode的url
+//                [self _decodeWithEncodedURLString:&paramValue];
+//
+//                if (paramValue && paramKey) {
+//                    [[self class] setQueryValue:paramValue forKey:paramKey toDict:queryParams];
+//                }
+//            }
+//        }];
+//    }
+//    return [queryParams copy];
+//}
+
+//- (void)_decodeWithEncodedURLString:(NSString **)urlString
+//{
+//    if ([*urlString rangeOfString:@"%"].length == 0){
+//        return;
+//    }
+//#pragma clang diagnostic push
+//#pragma clang diagnostic ignored "-Wdeprecated-declarations"
+//    *urlString = (__bridge_transfer NSString *)(CFURLCreateStringByReplacingPercentEscapesUsingEncoding(kCFAllocatorDefault, (__bridge CFStringRef)*urlString, CFSTR(""), kCFStringEncodingUTF8));
+//#pragma clang diagnostic pop
+//}
+
+//+(void)setQueryValue:(nullable id)value forKey: (NSString *)key toDict:(NSMutableDictionary*)dict {
+//    //判断数据是否是数组类型
+//    NSString* arrayParamRegularExpressionStr = @".*%5B%5D";
+//    NSRegularExpression* regex = [[NSRegularExpression alloc] initWithPattern:arrayParamRegularExpressionStr options:0 error:nil];
+//    if ([regex firstMatchInString:key options:0 range:NSMakeRange(0, key.length)]) {
+//        if (dict[key] != nil) {
+//            NSArray* values = dict[key];
+//            NSMutableArray* newValues = [[NSMutableArray alloc] initWithCapacity:values.count + 1];
+//            [newValues addObjectsFromArray:values];
+//            [newValues addObject:value];
+//            dict[key] = newValues;
+//        } else {
+//            dict[key] = @[value];
+//        }
+//    } else {
+//        dict[key] = value;
+//    }
+//}
+
+-(NSDictionary *)commonParams:(NSDictionary *)commonParams byRemoveParams:(NSDictionary *)params
+{
+    if (params.count == 0 || commonParams.count == 0) {
+        return commonParams;
+    }
+    
+    NSSet *commonKeys = [[NSSet alloc] initWithArray:commonParams.allKeys];
+    NSSet *paramKeys = [[NSSet alloc] initWithArray:params.allKeys];
+    
+    if ([commonKeys intersectsSet:paramKeys]) {
+        
+        NSMutableDictionary *mCommonParams = [[NSMutableDictionary alloc] initWithDictionary:commonParams];
+        for (NSString *key in params.allKeys) {
+            if ([commonKeys containsObject:key]) {
+                [mCommonParams removeObjectForKey:key];
+            }
+        }
+        return mCommonParams;
+    }
+    
+    return commonParams;
+    
 }
 
 @end
