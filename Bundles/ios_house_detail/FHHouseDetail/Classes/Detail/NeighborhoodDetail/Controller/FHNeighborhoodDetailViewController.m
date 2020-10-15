@@ -911,8 +911,9 @@
 {
     return nil;
 }
-//
-#pragma mark - UICollectionViewDelegate
+
+//#pragma mark - UICollectionViewDelegate
+
 - (NSMutableDictionary *)elementShowCaches {
     if (!_elementShowCaches) {
         _elementShowCaches = [NSMutableDictionary dictionary];
