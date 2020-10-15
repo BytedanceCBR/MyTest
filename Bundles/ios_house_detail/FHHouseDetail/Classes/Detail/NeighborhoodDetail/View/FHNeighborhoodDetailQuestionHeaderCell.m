@@ -187,13 +187,12 @@
         NSMutableDictionary *dict = @{}.mutableCopy;
         dict[@"neighborhood_id"] = cellModel.neighborhoodId;
         dict[@"title"] = cellModel.title;
-//        NSMutableDictionary *tracerDict = @{}.mutableCopy;
-//        tracerDict[UT_ORIGIN_FROM] = cellModel.tracerDict[@"origin_from"] ?: @"be_null";
-//        tracerDict[UT_ENTER_FROM] = cellModel.tracerDict[@"page_type"] ?: @"be_null";
-//        tracerDict[UT_ELEMENT_FROM] = @"";
-//        tracerDict[UT_LOG_PB] = cellModel.tracerDict[@"log_pb"] ?: @"be_null";
-//        tracerDict[@"from_gid"] = self.baseViewModel.houseId;
-//        dict[TRACER_KEY] = tracerDict;
+        NSMutableDictionary *tracerDict = @{}.mutableCopy;
+        tracerDict[UT_ORIGIN_FROM] = cellModel.detailTracerDic[@"origin_from"] ?: @"be_null";
+        tracerDict[UT_ENTER_FROM] = cellModel.detailTracerDic[@"page_type"] ?: @"be_null";
+        tracerDict[UT_LOG_PB] = cellModel.detailTracerDic[@"log_pb"] ?: @"be_null";
+        tracerDict[@"from_gid"] = cellModel.neighborhoodId;
+        dict[TRACER_KEY] = tracerDict;
         TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
         [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
     }
@@ -213,9 +212,9 @@
         NSURLComponents *components = [[NSURLComponents alloc] initWithString:cellModel.questionWriteSchema];
         NSMutableDictionary *dict = @{}.mutableCopy;
         NSMutableDictionary *tracerDict = @{}.mutableCopy;
-//        tracerDict[UT_ENTER_FROM] = cellModel.tracerDict[@"page_type"];
-//        tracerDict[UT_LOG_PB] = cellModel.tracerDict[@"log_pb"] ?: @"be_null";
-//        tracerDict[UT_ELEMENT_FROM] = [self elementTypeString:FHHouseTypeNeighborhood] ?: @"be_null";
+        tracerDict[UT_ENTER_FROM] = cellModel.detailTracerDic[@"page_type"];
+        tracerDict[UT_LOG_PB] = cellModel.detailTracerDic[@"log_pb"] ?: @"be_null";
+        tracerDict[UT_ELEMENT_FROM] = @"neighborhood_question";
         dict[TRACER_KEY] = tracerDict;
         dict[@"neighborhood_id"] = cellModel.neighborhoodId;
         TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
@@ -226,8 +225,8 @@
 - (void)gotoLogin {
     FHNeighborhoodDetailQuestionHeaderModel *cellModel = (FHNeighborhoodDetailQuestionHeaderModel *)self.currentData;
     NSMutableDictionary *params = [NSMutableDictionary dictionary];
-//    NSString *page_type = cellModel.tracerDict[@"page_type"] ?: @"be_null";
-//    [params setObject:page_type forKey:@"enter_from"];
+    NSString *page_type = cellModel.detailTracerDic[@"page_type"] ?: @"be_null";
+    [params setObject:page_type forKey:@"enter_from"];
     [params setObject:@"click_publisher" forKey:@"enter_type"];
     // 登录成功之后不自己Pop，先进行页面跳转逻辑，再pop
     [params setObject:@(YES) forKey:@"need_pop_vc"];
