@@ -13,4 +13,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
+@interface NSString(validateContactNumber)
+- (BOOL)validateContactNumber;
+@end
 NS_ASSUME_NONNULL_END

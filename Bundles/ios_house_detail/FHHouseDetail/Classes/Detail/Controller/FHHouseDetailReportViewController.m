@@ -20,12 +20,18 @@
 #import "UIImage+FIconFont.h"
 #import "ToastManager.h"
 #import "TTReachability.h"
+#import "FHEnvContext.h"
+#import "FHGeneralBizConfig.h"
 
 typedef NS_ENUM(NSUInteger, FHHouseDetailReportItemType) {
     FHHouseDetailReportItemType_Type,
     FHHouseDetailReportItemType_Phone,
     FHHouseDetailReportItemType_Extra,
 };
+
+#define kFHHouseDetailReportPhoneNumberStatusNotification @"kFHHouseDetailReportPhoneNumberStatusNotification"
+
+#define FHHouseDetailReportItemPhoneNumberDigitCount 11
 
 @interface FHHouseDetailReportOption: NSObject
 @property (nonatomic, copy) NSString *content;
@@ -244,24 +250,32 @@ typedef NS_ENUM(NSUInteger, FHHouseDetailReportItemType) {
 
 -(void)selectOption:(UITapGestureRecognizer *)tap {
     @weakify(self);
-    self.item.isValid = NO;
     self.item.selectedOption = nil;
+    self.item.isValid = NO;
     [self.optionViews enumerateObjectsUsingBlock:^(FHHouseDetailReportOptionView * _Nonnull optionView, NSUInteger idx, BOOL * _Nonnull stop) {
         @strongify(self);
         optionView.isSelected = (optionView == tap.view);
         self.item.options[idx].isSelected = optionView.isSelected;
         if(self.item.options[idx].isSelected) {
-            self.item.isValid = (idx < self.item.options.count - 1);
             self.item.selectedOption = self.item.options[idx];
+            self.item.isValid = (idx < self.item.options.count - 1);
         }
     }];
-    
 }
 @end
 
-@interface FHHouseDetailReportPhoneNumberCell: FHHouseDetailReportBaseCell
-@property (nonatomic, strong) UITextField *phoneTextField;
+@interface FHHouseDetailReportPhoneNumberInvalidTextField : UITextField
+@end
+@implementation FHHouseDetailReportPhoneNumberInvalidTextField
+- (CGRect)rightViewRectForBounds:(CGRect)bounds {
+    return CGRectMake(bounds.size.width - 94, 0, 94, 40);
+}
+@end
+
+@interface FHHouseDetailReportPhoneNumberCell: FHHouseDetailReportBaseCell<UITextFieldDelegate>
+@property (nonatomic, strong) FHHouseDetailReportPhoneNumberInvalidTextField *phoneTextField;
 @property (nonatomic, strong) UILabel *hintLabel;
+@property (nonatomic, strong) UILabel *textViewRightLabel;
 @end
 
 @implementation FHHouseDetailReportPhoneNumberCell
@@ -282,13 +296,33 @@ typedef NS_ENUM(NSUInteger, FHHouseDetailReportItemType) {
             make.top.equalTo(self.phoneTextField.mas_bottom).offset(10);
             make.height.mas_equalTo(17);
         }];
+        
+        @weakify(self);
+        [[[[NSNotificationCenter defaultCenter] rac_addObserverForName:kFHHouseDetailReportPhoneNumberStatusNotification object:nil] deliverOnMainThread] subscribeNext:^(NSNotification * _Nullable x) {
+            @strongify(self);
+            [self updatePhoneNumberHint:@"手机号格式错误" isShow:YES];
+        }];
     }
     return self;
 }
 
-- (UITextField *)phoneTextField {
+- (UILabel *)textViewRightLabel {
+    if(!_textViewRightLabel) {
+        _textViewRightLabel = [UILabel new];
+        _textViewRightLabel.font = [UIFont themeFontLight:12];
+        _textViewRightLabel.textColor = [UIColor redColor];
+        _textViewRightLabel.textAlignment = NSTextAlignmentLeft;
+    }
+    return _textViewRightLabel;
+}
+- (void)updatePhoneNumberHint:(NSString *)hint isShow:(BOOL)show {
+    self.textViewRightLabel.text = show ? hint : @"";
+    self.phoneTextField.textColor = show ? self.textViewRightLabel.textColor : [UIColor themeGray1];
+}
+
+- (FHHouseDetailReportPhoneNumberInvalidTextField *)phoneTextField {
     if(!_phoneTextField) {
-        _phoneTextField = [UITextField new];
+        _phoneTextField = [FHHouseDetailReportPhoneNumberInvalidTextField new];
         _phoneTextField.attributedPlaceholder = [[NSAttributedString alloc] initWithString:@"手机号" attributes:@{
             NSForegroundColorAttributeName: [UIColor themeGray4],
             NSFontAttributeName: [UIFont themeFontRegular:12],
@@ -301,16 +335,22 @@ typedef NS_ENUM(NSUInteger, FHHouseDetailReportItemType) {
         _phoneTextField.keyboardType = UIKeyboardTypeNumberPad;
         _phoneTextField.leftViewMode = UITextFieldViewModeAlways;
         _phoneTextField.leftView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 10, 40)];
+        _phoneTextField.delegate = self;
+        _phoneTextField.rightView = self.textViewRightLabel;
+        _phoneTextField.rightViewMode = UITextFieldViewModeAlways;
         
-        NSUInteger validPhoneNumberDigitCount = 11;
+        NSUInteger validPhoneNumberDigitCount = FHHouseDetailReportItemPhoneNumberDigitCount;
         @weakify(self);
-        [[_phoneTextField.rac_textSignal deliverOnMainThread] subscribeNext:^(NSString * _Nullable x) {
+        [[[_phoneTextField.rac_textSignal deliverOnMainThread] distinctUntilChanged] subscribeNext:^(NSString * _Nullable x) {
             @strongify(self);
+            [self updatePhoneNumberHint:nil isShow:NO];
             if(x.length > validPhoneNumberDigitCount) {
                 x = [x substringWithRange:NSMakeRange(0, validPhoneNumberDigitCount)];
                 self.phoneTextField.text = x;
             }
-            self.item.phoneNumber = x;
+            if(![x containsString:@"*"]) {
+                self.item.phoneNumber = x;
+            }
             self.item.isValid = (self.item.phoneNumber.length == validPhoneNumberDigitCount);
         }];
     }
@@ -330,7 +370,25 @@ typedef NS_ENUM(NSUInteger, FHHouseDetailReportItemType) {
 - (void)setItem:(FHHouseDetailReportItem *)item {
     [super setItem: item];
     
-    self.phoneTextField.text = item.phoneNumber;
+    self.phoneTextField.text = [self maskPhoneNumber];
+}
+
+#pragma mark - UITextFieldDelegate
+- (void)textFieldDidBeginEditing:(UITextField *)textField {
+    self.phoneTextField.text = self.item.phoneNumber;
+}
+- (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string {
+    NSString *replacedString = [textField.text stringByReplacingCharactersInRange:range withString:string];
+    return ![string isEqualToString:@"\n"] && replacedString.length <= FHHouseDetailReportItemPhoneNumberDigitCount;
+}
+
+- (NSString *)maskPhoneNumber {
+    NSString *ret;
+    if(self.item && self.item.phoneNumber.length == 11) {
+        self.item.isValid = YES;
+        ret = [self.item.phoneNumber stringByReplacingCharactersInRange:NSMakeRange(3, 4) withString:@"****"];
+    }
+    return ret;
 }
 @end
 
@@ -386,9 +444,12 @@ typedef NS_ENUM(NSUInteger, FHHouseDetailReportItemType) {
 @property (nonatomic, strong) NSDictionary *itemMap;
 @property (nonatomic, strong) UIButton *submitButton;
 @property (nonatomic, strong) UIView *submitView;
+@property (nonatomic, copy) NSString *houseId;
+@property (nonatomic, copy) NSString *houseUrl;
+@property (nonatomic, copy) NSString *houseType;
 @end
 
-@implementation FHHouseDetailReportViewController\
+@implementation FHHouseDetailReportViewController
 
 - (UIView *)submitView {
     if(!_submitView) {
@@ -477,7 +538,7 @@ typedef NS_ENUM(NSUInteger, FHHouseDetailReportItemType) {
         FHHouseDetailReportItem *phoneItem = [[FHHouseDetailReportItem alloc] init];
         phoneItem.type = FHHouseDetailReportItemType_Phone;
         phoneItem.title = @"请输入手机号";
-        phoneItem.phoneNumber = [TTAccount sharedAccount].user.mobile;
+        phoneItem.phoneNumber = [self phoneNumber];
         phoneItem.height = 159;
         
         FHHouseDetailReportItem *extraItem = [[FHHouseDetailReportItem alloc] init];
@@ -498,10 +559,6 @@ typedef NS_ENUM(NSUInteger, FHHouseDetailReportItemType) {
             RACTupleUnpack(NSNumber *typeValid, NSNumber *phoneValid) = x;
             BOOL isEnableSubmit = (typeValid.boolValue || (typeItem.selectedOption && phoneValid.boolValue));
             [self updateSubmitButtonStatus:isEnableSubmit];
-            
-            if(typeItem.selectedOption && typeValid.boolValue == NO) {
-                
-            }
         }];
         
         
@@ -518,9 +575,17 @@ typedef NS_ENUM(NSUInteger, FHHouseDetailReportItemType) {
     return _items;
 }
 
+- (NSString *)phoneNumber {
+    YYCache *sendPhoneNumberCache = [[FHEnvContext sharedInstance].generalBizConfig sendPhoneNumberCache];
+    NSString *phoneNumber = (NSString *)[sendPhoneNumberCache objectForKey:kFHPLoginhoneNumberCacheKey];
+    return phoneNumber;
+}
+
 - (instancetype)initWithRouteParamObj:(TTRouteParamObj *)paramObj {
     if(self = [super initWithRouteParamObj:paramObj]) {
-        
+        self.houseId = [paramObj.allParams tta_stringForKey:@"house_id"];
+        self.houseType = [paramObj.allParams tta_stringForKey:@"house_type"];
+        self.houseUrl = [paramObj.allParams tta_stringForKey:@"house_url"];
     }
     return self;
 }
@@ -586,14 +651,16 @@ typedef NS_ENUM(NSUInteger, FHHouseDetailReportItemType) {
 }
 
 - (void)submitAction {
-
+    
     // 提交动作
     NSMutableDictionary *params = [NSMutableDictionary dictionary];
-    // TODO: 参数传入
-    params[@"house_url"]= @"";
-    params[@"house_id"] = @"";
-    params[@"house_type"] = @"";
     
+    params[@"house_url"]= self.houseUrl;
+    params[@"house_id"] = self.houseId;
+    params[@"house_type"] = self.houseType;
+    
+
+    __block BOOL isValidPhoneNumber = YES;
     [self.items enumerateObjectsUsingBlock:^(FHHouseDetailReportItem * _Nonnull item, NSUInteger idx, BOOL * _Nonnull stop) {
         switch (item.type) {
             case FHHouseDetailReportItemType_Type:
@@ -603,7 +670,10 @@ typedef NS_ENUM(NSUInteger, FHHouseDetailReportItemType) {
                 break;
             case FHHouseDetailReportItemType_Phone:
             {
-                params[@"phone"] = item.phoneNumber;
+                isValidPhoneNumber = [item.phoneNumber validateContactNumber];
+                if(isValidPhoneNumber) {
+                    params[@"phone"] = item.phoneNumber;
+                }
             }
                 break;
             case FHHouseDetailReportItemType_Extra:
@@ -616,6 +686,11 @@ typedef NS_ENUM(NSUInteger, FHHouseDetailReportItemType) {
         }
     }];
     
+    if(!isValidPhoneNumber) {
+        [self updateSubmitButtonStatus:NO];
+        [[NSNotificationCenter defaultCenter] postNotificationName:kFHHouseDetailReportPhoneNumberStatusNotification object:nil];
+        return;
+    }
     
     if(![TTReachability isNetworkConnected]) {
         [[ToastManager manager] showToast:@"网络不给力，请重试"];
@@ -758,5 +833,59 @@ typedef NS_ENUM(NSUInteger, FHHouseDetailReportItemType) {
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     FHHouseDetailReportItem *item = self.items[indexPath.row];
     return item.height;
+}
+@end
+
+@implementation NSString(validateContactNumber)
+- (BOOL)validateContactNumber {
+    
+    /**
+     * 手机号码
+     * 移动：134[0-8],135,136,137,138,139,150,151,157,158,159,182,187,188
+     * 联通：130,131,132,152,155,156,185,186
+     * 电信：133,1349,153,180,189
+     */
+    NSString * MOBILE = @"^1(3[0-9]|5[0-35-9]|8[025-9])\\d{8}$";
+    
+    /**
+     10         * 中国移动：China Mobile
+     11         * 134[0-8],135,136,137,138,139,150,151,157,158,159,182,187,188
+     12         */
+    NSString * CM = @"^1(34[0-8]|(3[5-9]|5[017-9]|8[278])\\d)\\d{7}$";
+    
+    /**
+     15         * 中国联通：China Unicom
+     16         * 130,131,132,152,155,156,175,176,185,186
+     17         */
+    NSString * CU = @"^1(3[0-2]|5[256]|7[56]|8[56])\\d{8}$";
+    
+    /**
+     20         * 中国电信：China Telecom
+     21         * 133,1349,153,177,180,189
+     22         */
+    NSString * CT = @"^1((33|53|77|8[09])[0-9]|349)\\d{7}$";
+    
+    /**
+     25         * 大陆地区固话及小灵通
+     26         * 区号：010,020,021,022,023,024,025,027,028,029
+     27         * 号码：七位或八位
+     28         */
+    NSString * PHS = @"^0(10|2[0-5789]|\\d{3})\\d{7,8}$";
+    
+    NSPredicate *regextestmobile = [NSPredicate predicateWithFormat:@"SELF MATCHES %@", MOBILE];
+    NSPredicate *regextestcm = [NSPredicate predicateWithFormat:@"SELF MATCHES %@", CM];
+    NSPredicate *regextestcu = [NSPredicate predicateWithFormat:@"SELF MATCHES %@", CU];
+    NSPredicate *regextestct = [NSPredicate predicateWithFormat:@"SELF MATCHES %@", CT];
+    NSPredicate *regextestPHS = [NSPredicate predicateWithFormat:@"SELF MATCHES %@", PHS];
+    
+    if(([regextestmobile evaluateWithObject:self] == YES)
+       || ([regextestcm evaluateWithObject:self] == YES)
+       || ([regextestct evaluateWithObject:self] == YES)
+       || ([regextestcu evaluateWithObject:self] == YES)
+       || ([regextestPHS evaluateWithObject:self] == YES)){
+        return YES;
+    }else{
+        return NO;
+    }
 }
 @end

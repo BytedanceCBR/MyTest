@@ -26,6 +26,7 @@
 @property (nonatomic, strong) NSDictionary *listLogPB;
 @property (nonatomic, copy)   NSString *reportUrl;
 @property (nonatomic, strong) FHDetailOldDataModel *ershouData;
+@property (nonatomic, assign) FHHouseType houseType;
 
 @end
 
@@ -60,11 +61,12 @@
     [self gotoReportVC];
 }
 
-- (void)updateWithDetailTracerDic:(NSDictionary *)detailTracerDic listLogPB:(NSDictionary *)listLogPB houseData:(FHDetailOldModel *)houseData reportUrl:(NSString *)reportUrl {
+- (void)updateWithDetailTracerDic:(NSDictionary *)detailTracerDic listLogPB:(NSDictionary *)listLogPB houseData:(FHDetailOldDataModel *)houseData houseType:(FHHouseType)type reportUrl:(NSString *)reportUrl {
     self.detailTracerDic = detailTracerDic;
     self.listLogPB = listLogPB;
     self.ershouData = houseData;
     self.reportUrl = reportUrl;
+    self.houseType = type;
 }
 
 // 二手房-房源问题反馈
@@ -81,7 +83,9 @@
 - (void)gotoReportNativePage {
     NSString *openUrl = @"sslocal://house_detail_report_page";
     NSMutableDictionary *info = [NSMutableDictionary dictionary];
-    
+    info[@"house_url"] = self.ershouData.shareInfo.shareUrl;
+    info[@"house_type"] = @(self.houseType).stringValue;
+    info[@"house_id"] = self.ershouData.id;
     TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:info];
     [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:openUrl] userInfo:userInfo];
 }
