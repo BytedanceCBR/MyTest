@@ -480,7 +480,7 @@
 //    [self.collectionView setContentOffset:contentOffset];
     self.segmentViewChangedFlag = YES;
     [UIView animateWithDuration:0.2 animations:^{
-        [self.collectionView setContentOffset:contentOffset];
+        [self.collectionView setContentOffset:contentOffset animated:NO];
     } completion:^(BOOL finished) {
         self.segmentViewChangedFlag = NO;
     }];
