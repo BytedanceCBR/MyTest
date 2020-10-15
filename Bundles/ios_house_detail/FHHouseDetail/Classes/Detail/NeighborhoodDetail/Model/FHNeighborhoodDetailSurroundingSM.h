@@ -11,8 +11,8 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@class FHNewHouseDetailSurroundingCellModel;
 @class FHNewHouseDetailMapCellModel;
+@class FHNeighborhoodDetailPriceTrendCellModel;
 
 @interface FHNeighborhoodDetailSurroundingSM : FHNeighborhoodDetailSectionModel
 @property (nonatomic, copy) NSString *baiduPanoramaUrl;
@@ -21,6 +21,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic, copy) NSString *curCategory;
 
 @property (nonatomic, strong) FHNewHouseDetailMapCellModel *mapCellModel;
+@property (nonatomic, strong) FHNeighborhoodDetailPriceTrendCellModel *priceTrendModel;
 
 - (NSArray *)dataItems;
 @end

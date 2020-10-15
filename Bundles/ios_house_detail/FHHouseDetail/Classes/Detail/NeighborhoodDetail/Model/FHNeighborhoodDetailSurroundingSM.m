@@ -8,11 +8,11 @@
 #import "FHNeighborhoodDetailSurroundingSM.h"
 #import "FHNewHouseDetailMapCollectionCell.h"
 #import "FHNewHouseDetailMapResultCollectionCell.h"
+#import "FHNeighborhoodDetailPriceTrendCollectionCell.h"
 
 @implementation FHNeighborhoodDetailSurroundingSM
 
 - (void)updateDetailModel:(FHDetailNeighborhoodModel *)model {
-    NSMutableArray *items = [NSMutableArray array];
     self.centerPoint = CLLocationCoordinate2DMake(39.98269504123264, 116.3078908962674);
     //地图
     if(model.data.neighborhoodInfo.gaodeLat.length && model.data.neighborhoodInfo.gaodeLng.length){
@@ -27,7 +27,6 @@
         self.baiduPanoramaUrl = staticMapModel.baiduPanoramaUrl;
         self.centerPoint = CLLocationCoordinate2DMake([staticMapModel.gaodeLat floatValue], [staticMapModel.gaodeLng floatValue]);
         self.mapCentertitle = staticMapModel.mapCentertitle;
-        [items addObject:staticMapModel];
         self.mapCellModel = staticMapModel;
     } else{
         NSString *eventName = @"detail_map_location_failed";
@@ -43,14 +42,31 @@
         [[HMDTTMonitor defaultManager] hmdTrackService:eventName metric:nil category:cat extra:params];
     }
     
-    self.items = items.copy;
+    // 均价走势
+    if (model.data.priceTrend.count > 0) {
+        FHNeighborhoodDetailPriceTrendCellModel *priceTrendModel = [[FHNeighborhoodDetailPriceTrendCellModel alloc] init];
+//        priceTrendModel.housetype  = self.houseType;
+//        priceTrendModel.houseModelType = FHPlotHouseModelTypeLocationPeriphery;
+        priceTrendModel.priceTrends = model.data.priceTrend;
+//        priceTrendModel.tableView = self.tableView;
+        self.priceTrendModel = priceTrendModel;
+    }
 }
 
 - (NSArray *)dataItems {
-    if (self.mapCellModel.annotations.count) {
-        return [[[NSArray arrayWithArray:self.items] arrayByAddingObjectsFromArray:self.mapCellModel.annotations] arrayByAddingObject:@""];
+    NSMutableArray *items = [NSMutableArray array];
+    if (self.mapCellModel) {
+        [items addObject:self.mapCellModel];
     }
-    return [[NSArray arrayWithArray:self.items] arrayByAddingObject:self.mapCellModel.emptyString?:@"附近没有交通信息"];
+    if (self.mapCellModel.annotations.count) {
+        [items addObjectsFromArray:self.mapCellModel.annotations];
+    } else {
+        [items addObject:self.mapCellModel.emptyString?:@"附近没有交通信息"];
+    }
+    if (self.priceTrendModel) {
+        [items addObject:self.priceTrendModel];
+    }
+    return items.copy;
 }
 
 - (id<NSObject>)diffIdentifier {

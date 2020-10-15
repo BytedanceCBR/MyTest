@@ -14,6 +14,7 @@
 #import "FHDetailStaticMap.h"
 #import "MAMapKit.h"
 #import "FHNeighborhoodDetailViewController.h"
+#import "FHNeighborhoodDetailPriceTrendCollectionCell.h"
 
 @interface FHNeighborhoodDetailSurroundingSC ()<IGListSupplementaryViewSource>
 
@@ -71,6 +72,26 @@
     }
 }
 
+- (void)addClickPriceTrendLog
+{
+    //    1. event_type：house_app2c_v2
+    //    2. page_type：页面类型,{'新房详情页': 'new_detail', '二手房详情页': 'old_detail', '小区详情页': 'neighborhood_detail'}
+    //    3. rank
+    //    4. origin_from
+    //    5. origin_search_id
+    //    6.log_pb
+    NSMutableDictionary *params = @{}.mutableCopy;
+    NSDictionary *traceDict = [self detailTracerDict];
+    params[@"page_type"] = traceDict[@"page_type"] ? : @"be_null";
+    params[@"rank"] = traceDict[@"rank"] ? : @"be_null";
+    params[@"origin_from"] = traceDict[@"origin_from"] ? : @"be_null";
+    params[@"origin_search_id"] = traceDict[@"origin_search_id"] ? : @"be_null";
+    params[@"log_pb"] = traceDict[@"log_pb"] ? : @"be_null";
+    [FHUserTracker writeEvent:@"click_price_trend" params:params];
+}
+
+#pragma mark - datasource
+
 - (NSInteger)numberOfItems {
     FHNeighborhoodDetailSurroundingSM *model = (FHNeighborhoodDetailSurroundingSM *)self.sectionModel;
     return model.dataItems.count;
@@ -90,6 +111,8 @@
         } else {
             return CGSizeMake(width, 20);
         }
+    } else if (model.dataItems[index] == model.priceTrendModel) {
+        return [FHNeighborhoodDetailPriceTrendCollectionCell cellSizeWithData:model.priceTrendModel width:width];
     }
     
     return CGSizeZero;
@@ -156,6 +179,13 @@
         } else {
             cell.titleLabel.hidden = YES;
         }
+        return cell;
+    } else if (model.dataItems[index] == model.priceTrendModel) {
+        FHNeighborhoodDetailPriceTrendCollectionCell *cell = [self.collectionContext dequeueReusableCellOfClass:[FHNeighborhoodDetailPriceTrendCollectionCell class] withReuseIdentifier:NSStringFromClass([model.priceTrendModel class]) forSectionController:self atIndex:index];
+        [cell refreshWithData:model.priceTrendModel];
+        [cell setAddClickPriceTrendLogBlock:^{
+            [weakSelf addClickPriceTrendLog];
+        }];
         return cell;
     }
     return nil;
