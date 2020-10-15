@@ -1425,6 +1425,8 @@ typedef NS_ENUM(NSInteger, SSCommentType)  {
 + (BOOL)isSurveyRealtorFirst;
 /// 是否使用房源详情linkChat反馈页面
 + (BOOL)isEnableHouseDetailH5Report;
+// 是否使用link chat页面
++ (BOOL)isEnableLinkChatPage;
 @end
 
 
