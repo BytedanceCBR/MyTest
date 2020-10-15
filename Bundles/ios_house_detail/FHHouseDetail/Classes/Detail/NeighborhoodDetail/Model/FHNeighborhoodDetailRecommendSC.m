@@ -8,7 +8,7 @@
 #import "FHNeighborhoodDetailRecommendSC.h"
 #import "FHNeighborhoodDetailRecommendSM.h"
 #import "FHNeighborhoodDetailRecommendCell.h"
-#import "FHDetailSectionTitleCollectionView.h"
+#import "FHNeighborhoodDetailRecommendTitleView.h"
 
 @interface FHNeighborhoodDetailRecommendSC()<IGListSupplementaryViewSource, IGListDisplayDelegate>
 
@@ -146,25 +146,19 @@
 
 - (__kindof UICollectionReusableView *)viewForSupplementaryElementOfKind:(NSString *)elementKind
                                                                  atIndex:(NSInteger)index {
-    FHDetailSectionTitleCollectionView *titleView = [self.collectionContext dequeueReusableSupplementaryViewOfKind:UICollectionElementKindSectionHeader forSectionController:self class:[FHDetailSectionTitleCollectionView class] atIndex:index];
+    FHNeighborhoodDetailRecommendTitleView *titleView = [self.collectionContext dequeueReusableSupplementaryViewOfKind:UICollectionElementKindSectionHeader forSectionController:self class:[FHNeighborhoodDetailRecommendTitleView class] atIndex:index];
     titleView.titleLabel.font = [UIFont themeFontMedium:18];
     titleView.titleLabel.textColor = [UIColor themeGray1];
     titleView.titleLabel.text = @"推荐房源";
     titleView.arrowsImg.hidden = YES;
     titleView.userInteractionEnabled = NO;
-    titleView.backgroundColor = [UIColor themeGray7];
-    if (titleView.titleLabel.frame.origin.x != 0) {
-        [titleView.titleLabel mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.left.mas_equalTo(0);
-        }];
-    }
     return titleView;
 }
 
 - (CGSize)sizeForSupplementaryViewOfKind:(NSString *)elementKind
                                  atIndex:(NSInteger)index {
     if ([elementKind isEqualToString:UICollectionElementKindSectionHeader]) {
-        return CGSizeMake(self.collectionContext.containerSize.width, 42);
+        return CGSizeMake(self.collectionContext.containerSize.width - 30, 42);
     }
     return CGSizeZero;
 }
