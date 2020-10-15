@@ -36,11 +36,14 @@ static CGFloat const kFHPropertyItemInfoHeight = 30.0f;
             foldCount = value;
         }
     }
+    foldCount = MIN(foldCount, model.baseInfo.count);
     NSInteger baseInfoCount = model.isFold ? foldCount : model.baseInfo.count;
     height = baseInfoCount * kFHPropertyItemInfoHeight;
     
     if (model.baseInfo.count > foldCount) {
         height += 58;
+    } else {
+        height += 20;
     }
     
     return CGSizeMake(width, height);
@@ -80,6 +83,7 @@ static CGFloat const kFHPropertyItemInfoHeight = 30.0f;
             foldCount = value;
         }
     }
+    foldCount = MIN(foldCount, model.baseInfo.count);
     NSInteger baseInfoCount = model.isFold ? foldCount : model.baseInfo.count;
     for (NSInteger i = 0; i < baseInfoCount; i++) {
         FHNeighborhoodDetailPropertyItemView *itemView = [[FHNeighborhoodDetailPropertyItemView alloc] init];

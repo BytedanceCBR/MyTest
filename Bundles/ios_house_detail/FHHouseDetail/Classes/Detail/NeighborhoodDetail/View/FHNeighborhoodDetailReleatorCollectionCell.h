@@ -16,6 +16,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, copy) void (^imClickBlock)(FHDetailContactModel *model);
 
+@property (nonatomic, copy) void (^releatorClickBlock)(FHDetailContactModel *model);
+
 
 @end
 

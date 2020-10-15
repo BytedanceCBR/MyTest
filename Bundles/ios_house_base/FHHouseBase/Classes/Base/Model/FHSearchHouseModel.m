@@ -432,6 +432,7 @@
                            @"associateInfo": @"associate_info",
                            @"tagImage": @"tag_image",
                            @"recommendType": @"recommend_type",
+                           @"titleTags": @"title_tags",
                            };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
         return dict[keyName]?:keyName;

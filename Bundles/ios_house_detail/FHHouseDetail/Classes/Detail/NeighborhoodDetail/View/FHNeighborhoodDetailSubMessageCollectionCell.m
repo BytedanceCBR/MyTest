@@ -21,7 +21,7 @@
 + (CGSize)cellSizeWithData:(id)data width:(CGFloat)width {
     if (data && [data isKindOfClass:[FHNeighborhoodDetailSubMessageModel class]]) {
         FHNeighborhoodDetailSubMessageModel *model = (FHNeighborhoodDetailSubMessageModel *)data;
-        CGFloat height = 40;
+        CGFloat height = 55;
         
         return CGSizeMake(width, height);
     }
@@ -64,8 +64,9 @@
     self = [super initWithFrame:frame];
     if (self) {
         [self.containerView mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.top.left.right.bottom.mas_equalTo(0);
+            make.top.left.right.mas_equalTo(0);
             make.height.mas_equalTo(40);
+            make.bottom.mas_equalTo(-15);
         }];
         [self.priceLabel mas_makeConstraints:^(MASConstraintMaker *make) {
             make.left.equalTo(self.containerView).offset(16);

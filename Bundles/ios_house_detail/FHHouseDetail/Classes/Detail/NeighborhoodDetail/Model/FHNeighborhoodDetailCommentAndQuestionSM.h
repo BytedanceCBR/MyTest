@@ -9,12 +9,14 @@
 #import "FHNeighborhoodDetailCommentHeaderCell.h"
 #import "FHNeighborhoodDetailQuestionHeaderCell.h"
 #import "FHNeighborhoodDetailSpaceCell.h"
+#import "FHNeighborhoodDetailCommentTagsCell.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
 @interface FHNeighborhoodDetailCommentAndQuestionSM : FHNeighborhoodDetailSectionModel
 
 @property(nonatomic , strong) FHNeighborhoodDetailCommentHeaderModel *commentHeaderModel;
+@property(nonatomic , strong) FHNeighborhoodDetailCommentTagsModel *commentTagsModel;
 @property(nonatomic , strong) FHNeighborhoodDetailQuestionHeaderModel *questionHeaderModel;
 
 @property(nonatomic, copy) NSDictionary *extraDic;

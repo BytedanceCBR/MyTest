@@ -20,7 +20,7 @@
 #define minImageCount 1
 #define maxImageCount 3
 
-@interface FHNeighborhoodDetailPostCell ()
+@interface FHNeighborhoodDetailPostCell ()<TTUGCAsyncLabelDelegate>
 
 @property(nonatomic ,strong) UIView *contentContainer;
 @property(nonatomic ,strong) TTUGCAsyncLabel *contentLabel;
@@ -66,6 +66,7 @@
     self.contentLabel = [TTUGCAsyncLabel new];
     self.contentLabel.numberOfLines = maxLines;
     self.contentLabel.layer.masksToBounds = YES;
+    self.contentLabel.delegate = self;
     self.contentLabel.backgroundColor = [UIColor whiteColor];
     [self.contentContainer addSubview:self.contentLabel];
     
@@ -196,6 +197,16 @@
         self.essenceIcon.hidden = NO;
     }else{
         self.essenceIcon.hidden = YES;
+    }
+}
+
+#pragma mark - TTUGCAsyncLabelDelegate
+
+- (void)asyncLabel:(TTUGCAsyncLabel *)label didSelectLinkWithURL:(NSURL *)url {
+    if([url.absoluteString isEqualToString:defaultTruncationLinkURLString] || url){
+        if (self.clickLinkBlock) {
+            self.clickLinkBlock(self.currentData, url);
+        }
     }
 }
 

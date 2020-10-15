@@ -28,10 +28,29 @@
         self.subMessageModel = subMessageModel;
         [items addObject:self.subMessageModel];
     }
+    
+    if ((model.data.neighborhoodInfo.gaodeLat.length > 0 && model.data.neighborhoodInfo.gaodeLng.length > 0 )|| model.data.neighborhoodInfo.baiduPanoramaUrl.length > 0) {
+        FHNeighborhoodDetailQuickEntryModel *quickEntryModel = [[FHNeighborhoodDetailQuickEntryModel alloc] init];
+        quickEntryModel.baiduPanoramaUrl = model.data.neighborhoodInfo.baiduPanoramaUrl;
+        quickEntryModel.gaodeLat = model.data.neighborhoodInfo.gaodeLat;
+        quickEntryModel.gaodeLng = model.data.neighborhoodInfo.gaodeLng;
+        quickEntryModel.mapCentertitle = model.data.neighborhoodInfo.name;
+        [quickEntryModel clearUpQuickEntryNames];
+        self.quickEntryModel = quickEntryModel;
+        [items addObject:self.quickEntryModel];
+    }
+    
 
-    if (model.data.baseInfo.count > 0) {
+    NSMutableArray *mArr = [NSMutableArray array];
+    [model.data.baseInfo enumerateObjectsUsingBlock:^(FHHouseBaseInfoModel*  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+            if (obj.value.length > 0 && ![obj.value isEqualToString:@"-"]) {
+                [mArr addObject:obj];
+            }
+    }];
+    
+    if (mArr.count > 0) {
         FHNeighborhoodDetailPropertyInfoModel *propertyInfoModel = [[FHNeighborhoodDetailPropertyInfoModel alloc] init];
-        propertyInfoModel.baseInfo = model.data.baseInfo;
+        propertyInfoModel.baseInfo = mArr.copy;
         propertyInfoModel.baseInfoFoldCount = model.data.baseInfoFoldCount;
         self.propertyInfoModel = propertyInfoModel;
         [items addObject:self.propertyInfoModel];
