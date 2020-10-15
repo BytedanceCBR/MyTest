@@ -86,9 +86,9 @@
     traceParam[@"page_type"] = @"neighborhood_detail";
     traceParam[@"house_type"] = @"old";
     traceParam[@"search_id"] = model.searchId ? : UT_BE_NULL;
-    traceParam[@"group_id"] = model.groupId;
+    traceParam[@"group_id"] = model.groupId ? : UT_BE_NULL;
     traceParam[@"rank"] = @(index);
-    traceParam[@"impr_id"] = model.imprId;
+    traceParam[@"impr_id"] = model.imprId ? : UT_BE_NULL;
     traceParam[@"enter_from"] = self.detailTracerDict[@"enter_from"];
     [FHUserTracker writeEvent:@"house_show" params:traceParam];
 }
