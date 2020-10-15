@@ -40,6 +40,7 @@
         if (model.sectionType != FHNeighborhoodDetailSectionTypeHeader &&
             model.sectionType != FHNeighborhoodDetailSectionTypeFloorpan &&
             model.sectionType != FHNeighborhoodDetailSectionTypeOwnerSellHouse &&
+            model.sectionType != FHNeighborhoodDetailSectionTypeRecommend &&
             ![sections containsObject:@(attribute.indexPath.section)]) {
             [sections addObject:@(attribute.indexPath.section)];
             UICollectionViewLayoutAttributes *newAttrs = [self layoutAttributesForDecorationViewOfKind:NSStringFromClass([FHBuildingDetailShadowView class]) atIndexPath:[NSIndexPath indexPathForItem:0 inSection:attribute.indexPath.section]];

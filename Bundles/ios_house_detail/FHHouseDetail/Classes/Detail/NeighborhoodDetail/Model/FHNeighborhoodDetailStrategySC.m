@@ -129,7 +129,7 @@
     FHNeighborhoodDetailStrategySM *sectionModel = (FHNeighborhoodDetailStrategySM *)self.sectionModel;
     titleView.titleLabel.text = sectionModel.title;
     [titleView.titleLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(16);
+        make.left.mas_equalTo(15);
         make.top.mas_equalTo(titleView).offset(20);
     }];
     
