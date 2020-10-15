@@ -27,8 +27,7 @@
     if(self = [super initWithFrame:frame]) {
         self.flowLayout = [[UICollectionViewFlowLayout alloc] init];
         self.flowLayout.sectionInset = UIEdgeInsetsMake(0, 15, 0, 15);
-        self.flowLayout.minimumLineSpacing = 10;
-        self.flowLayout.minimumInteritemSpacing = 0;
+        self.flowLayout.minimumInteritemSpacing = 10;
         self.flowLayout.scrollDirection = UICollectionViewScrollDirectionHorizontal;
         self.collectionView = [[UICollectionView alloc] initWithFrame:CGRectMake(0, 0, CGRectGetWidth(self.contentView.bounds), CGRectGetHeight(self.contentView.bounds)) collectionViewLayout:self.flowLayout];
         self.collectionView.backgroundColor = [UIColor clearColor];

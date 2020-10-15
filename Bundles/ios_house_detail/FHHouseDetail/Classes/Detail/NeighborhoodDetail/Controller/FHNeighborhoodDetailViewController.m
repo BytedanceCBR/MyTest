@@ -50,6 +50,10 @@
 #import "FHNeighborhoodDetailRecommendSM.h"
 #import "FHNeighborhoodDetailStrategySC.h"
 #import "FHNeighborhoodDetailStrategySM.h"
+#import "FHNeighborhoodDetailOwnerSellHouseSC.h"
+#import "FHNeighborhoodDetailOwnerSellHouseSM.h"
+#import "FHNeighborhoodDetailSurroundingSC.h"
+#import "FHNeighborhoodDetailSurroundingSM.h"
 
 @interface FHNeighborhoodDetailViewController ()<UIGestureRecognizerDelegate, IGListAdapterDataSource, UICollectionViewDelegate, UIScrollViewDelegate>
 @property (nonatomic, assign) FHHouseType houseType; // 房源类型
@@ -893,35 +897,16 @@
             case FHNeighborhoodDetailSectionTypeRecommend:
                 return [[FHNeighborhoodDetailRecommendSC alloc] init];
                 break;
-//            case FHNewHouseDetailSectionTypeSales:
-//                return [[FHNewHouseDetailSalesSC alloc] init];
-//                break;
-            case FHNeighborhoodHouseDetailSectionTypeAgent:
+            case FHNeighborhoodDetailSectionTypeAgent:
                 return [[FHNeighborhoodDetailAgentSC alloc] init];
                 break;
             case FHNeighborhoodDetailSectionTypeStrategy:
                 return [[FHNeighborhoodDetailStrategySC alloc] init];
                 break;
-//            case FHNewHouseDetailSectionTypeTimeline:
-//                return [[FHNewHouseDetailTimelineSC alloc] init];
-//                break;
-//            case FHNewHouseDetailSectionTypeAssess:
-//                return [[FHNewHouseDetailAssessSC alloc] init];
-//                break;
-//            case FHNewHouseDetailSectionTypeRGC:
-//                return [[FHNewHouseDetailRGCListSC alloc] init];
-//                break;
-//            case FHNewHouseDetailSectionTypeSurrounding:
-//                return [[FHNewHouseDetailSurroundingSC alloc] init];
-//                break;
-//            case FHNewHouseDetailSectionTypeBuildings:
-//                return [[FHNewHouseDetailBuildingsSC alloc] init];
-//                break;
-//            case FHNewHouseDetailSectionTypeRecommend:
-//                return [[FHNewHouseDetailRecommendSC alloc] init];
-//                break;
-//            case FHNewHouseDetailSectionTypeDisclaimer:
-//                return [[FHNewHouseDetailDisclaimerSC alloc] init];
+            case FHNeighborhoodDetailSectionTypeOwnerSellHouse:
+                return [[FHNeighborhoodDetailOwnerSellHouseSC alloc] init];
+            case FHNeighborhoodDetailSectionTypeSurrounding:
+                return [[FHNeighborhoodDetailSurroundingSC alloc] init];
             default:
                 break;
         }
@@ -944,8 +929,9 @@
 {
     return nil;
 }
-//
+
 //#pragma mark - UICollectionViewDelegate
+
 - (NSMutableDictionary *)elementShowCaches {
     if (!_elementShowCaches) {
         _elementShowCaches = [NSMutableDictionary dictionary];

@@ -157,20 +157,14 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *value;
 @end
 
-//帮我卖房入口
-@interface FHDetailNeighborhoodSaleHouseEntranceImgModel : JSONModel
-
-@property (nonatomic, copy , nullable) NSString *url;
-@property (nonatomic, copy , nullable) NSString *width;
-@property (nonatomic, strong , nullable) NSArray *urlList;
-@property (nonatomic, copy , nullable) NSString *uri;
-@property (nonatomic, copy , nullable) NSString *height;
-@end
 
 @interface FHDetailNeighborhoodSaleHouseEntranceModel : JSONModel
 
 @property (nonatomic, copy , nullable) NSString *openUrl;
-@property (nonatomic, strong , nullable) FHDetailNeighborhoodSaleHouseEntranceImgModel *img ;
+@property (nonatomic, strong , nullable) FHImageModel *img ;
+@property (nonatomic, copy , nullable) NSString *subtitle;
+@property (nonatomic, copy , nullable) NSString *buttonText;
+@property (nonatomic, copy , nullable) NSString *title;
 @end
 
 //小区户型
