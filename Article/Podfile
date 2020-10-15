@@ -311,13 +311,14 @@ def appPods
     pod 'TTFFmpeg', '1.25.5.101'
     pod_binary 'TTVideoEngine', '1.10.5.2',:subspecs => ['CN','Base','Public','Private','NewLogger','OldModel']
 #    pod 'TTPreloaderSDK', '1.4.23'
-    pod 'audiosdk', '0.17.0.4'
+    pod_binary 'audiosdk', '0.25.0.1'
     pod_binary 'ABRInterface', '0.6.1'
     pod_binary 'VCPreloadStrategy', '0.1.2', :subspecs => ['Interface']
     pod_binary 'MDLMediaDataLoader', '1.1.5.2'
     pod_binary 'VCNVCloudNetwork', '3.0.2'
     pod_binary 'lib_h_dec', '1.2.2.4-bugfix'
     pod_binary 'TTNetworkPredict', '0.1.6'
+    pod_binary 'TTTopSignature', '0.0.5'
     
     
 
@@ -584,7 +585,7 @@ def appPods
     pod_binary 'SocketRocket', '0.5.1'
     pod 'TikTokOpenPlatformSDK', '3.0.0'
     pod 'objc-geohash', '0.0.3'
-    pod 'protobuf_lite', '0.0.1'
+    pod 'protobuf_lite', '1.0.2'
 
     pod 'BDNativeWebComponent','0.1.0',:subspecs => [
         'Core',
