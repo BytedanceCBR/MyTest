@@ -50,6 +50,8 @@
 #import "FHNeighborhoodDetailRecommendSM.h"
 #import "FHNeighborhoodDetailStrategySC.h"
 #import "FHNeighborhoodDetailStrategySM.h"
+#import "FHNeighborhoodDetailOwnerSellHouseSC.h"
+#import "FHNeighborhoodDetailOwnerSellHouseSM.h"
 
 @interface FHNeighborhoodDetailViewController ()<UIGestureRecognizerDelegate, IGListAdapterDataSource, UICollectionViewDelegate, UIScrollViewDelegate>
 @property (nonatomic, assign) FHHouseType houseType; // 房源类型
@@ -896,32 +898,14 @@
 //            case FHNewHouseDetailSectionTypeSales:
 //                return [[FHNewHouseDetailSalesSC alloc] init];
 //                break;
-            case FHNeighborhoodHouseDetailSectionTypeAgent:
+            case FHNeighborhoodDetailSectionTypeAgent:
                 return [[FHNeighborhoodDetailAgentSC alloc] init];
                 break;
             case FHNeighborhoodDetailSectionTypeStrategy:
                 return [[FHNeighborhoodDetailStrategySC alloc] init];
                 break;
-//            case FHNewHouseDetailSectionTypeTimeline:
-//                return [[FHNewHouseDetailTimelineSC alloc] init];
-//                break;
-//            case FHNewHouseDetailSectionTypeAssess:
-//                return [[FHNewHouseDetailAssessSC alloc] init];
-//                break;
-//            case FHNewHouseDetailSectionTypeRGC:
-//                return [[FHNewHouseDetailRGCListSC alloc] init];
-//                break;
-//            case FHNewHouseDetailSectionTypeSurrounding:
-//                return [[FHNewHouseDetailSurroundingSC alloc] init];
-//                break;
-//            case FHNewHouseDetailSectionTypeBuildings:
-//                return [[FHNewHouseDetailBuildingsSC alloc] init];
-//                break;
-//            case FHNewHouseDetailSectionTypeRecommend:
-//                return [[FHNewHouseDetailRecommendSC alloc] init];
-//                break;
-//            case FHNewHouseDetailSectionTypeDisclaimer:
-//                return [[FHNewHouseDetailDisclaimerSC alloc] init];
+            case FHNeighborhoodDetailSectionTypeOwnerSellHouse:
+                return [[FHNeighborhoodDetailOwnerSellHouseSC alloc] init];
             default:
                 break;
         }
