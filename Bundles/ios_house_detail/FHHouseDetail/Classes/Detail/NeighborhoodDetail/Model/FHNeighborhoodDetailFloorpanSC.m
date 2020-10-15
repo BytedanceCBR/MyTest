@@ -34,7 +34,7 @@
 }
 
 -(CGSize)sizeForItemAtIndex:(NSInteger)index {
-    CGFloat width = self.collectionContext.containerSize.width - 15 * 2;
+    CGFloat width = self.collectionContext.containerSize.width;
     return CGSizeMake(width, 115);
 }
 
@@ -57,6 +57,11 @@
     titleView.titleLabel.text = @"小区户型";
     titleView.arrowsImg.hidden = YES;
     titleView.userInteractionEnabled = NO;
+    [titleView.titleLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.left.equalTo(titleView);
+        make.height.mas_equalTo(25);
+        make.bottom.equalTo(titleView.mas_bottom).offset(-12);
+    }];
     return titleView;
 }
 
@@ -105,8 +110,13 @@
         userInfo[@"list_vc_type"] = @(5);
         
         TTRouteUserInfo *userInf = [[TTRouteUserInfo alloc] initWithInfo:userInfo];
-        NSString *conditionParam = [[NSString stringWithFormat:@"room_num[]=%@",item.queryValue] stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLQueryAllowedCharacterSet]];
-        NSString * urlStr = [NSString stringWithFormat:@"snssdk1370://house_list_in_neighborhood?%@",conditionParam];
+        NSString *urlStr = nil;
+        if(item.queryValue.length > 0) {
+            NSString *conditionParam = [[NSString stringWithFormat:@"room_num[]=%@",item.queryValue] stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLQueryAllowedCharacterSet]];
+            urlStr = [NSString stringWithFormat:@"snssdk1370://house_list_in_neighborhood?%@",conditionParam];
+        } else {
+            urlStr = @"snssdk1370://house_list_in_neighborhood";
+        }
         if (urlStr.length > 0) {
             NSURL *url = [NSURL URLWithString:urlStr];
             [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInf];
