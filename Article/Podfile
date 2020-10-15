@@ -304,7 +304,7 @@ def appPods
     'UIKit'
     ]
     #-----头条网络库-----
-    pod 'TTNetworkManager', '4.0.24.1'
+    pod 'TTNetworkManager', '4.0.10.9'
 
     #-----播放器SDK相关-----
     pod 'TTPlayerSDK', '2.10.5.42'
