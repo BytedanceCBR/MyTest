@@ -13,7 +13,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface FHNeighborhoodDetailFloorpanCollectionCell : FHDetailBaseCollectionCell
 
 @property (nonatomic, copy) void (^didSelectItem)(NSInteger index);
-@property (nonatomic, copy) void (^willShowItem)(NSInteger index);
+@property (nonatomic, copy) void (^willShowItem)(NSIndexPath *indexPath);
 
 @end
 

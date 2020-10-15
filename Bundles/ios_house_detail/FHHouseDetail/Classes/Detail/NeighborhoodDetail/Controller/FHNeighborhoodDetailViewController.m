@@ -944,35 +944,35 @@
 {
     return nil;
 }
-//
-//#pragma mark - UICollectionViewDelegate
-//- (NSMutableDictionary *)elementShowCaches {
-//    if (!_elementShowCaches) {
-//        _elementShowCaches = [NSMutableDictionary dictionary];
-//    }
-//    return _elementShowCaches;
-//}
-//
-//- (void)collectionView:(UICollectionView *)collectionView willDisplayCell:(UICollectionViewCell *)cell forItemAtIndexPath:(NSIndexPath *)indexPath {
-//    NSString *tempKey = [NSString stringWithFormat:@"%@_%ld",NSStringFromClass([cell class]), (long)indexPath.section];
-//    if (self.elementShowCaches[tempKey]) {
-//        return;
-//    }
-//    self.elementShowCaches[tempKey] = @(YES);
-//    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-//        if ([cell conformsToProtocol:@protocol(FHEventShowProtocol)]) {
-//            UICollectionViewCell<FHEventShowProtocol> *showCell = (UICollectionViewCell<FHEventShowProtocol> *)cell;
-//            if ([showCell respondsToSelector:@selector(elementType)]) {
-//                [self trackElementType:[showCell elementType]];
-//            } else if ([showCell respondsToSelector:@selector(elementTypes)]) {
-//                NSArray *elementArray = [showCell elementTypes];
-//                for (NSString *elementType in elementArray) {
-//                    [self trackElementType:elementType];
-//                }
-//            }
-//        }
-//    });
-//}
+
+#pragma mark - UICollectionViewDelegate
+- (NSMutableDictionary *)elementShowCaches {
+    if (!_elementShowCaches) {
+        _elementShowCaches = [NSMutableDictionary dictionary];
+    }
+    return _elementShowCaches;
+}
+
+- (void)collectionView:(UICollectionView *)collectionView willDisplayCell:(UICollectionViewCell *)cell forItemAtIndexPath:(NSIndexPath *)indexPath {
+    NSString *tempKey = [NSString stringWithFormat:@"%@_%ld",NSStringFromClass([cell class]), (long)indexPath.section];
+    if (self.elementShowCaches[tempKey]) {
+        return;
+    }
+    self.elementShowCaches[tempKey] = @(YES);
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        if ([cell conformsToProtocol:@protocol(FHEventShowProtocol)]) {
+            UICollectionViewCell<FHEventShowProtocol> *showCell = (UICollectionViewCell<FHEventShowProtocol> *)cell;
+            if ([showCell respondsToSelector:@selector(elementType)]) {
+                [self trackElementType:[showCell elementType]];
+            } else if ([showCell respondsToSelector:@selector(elementTypes)]) {
+                NSArray *elementArray = [showCell elementTypes];
+                for (NSString *elementType in elementArray) {
+                    [self trackElementType:elementType];
+                }
+            }
+        }
+    });
+}
 //
 //- (void)clickTabTrackWithEnterType:(NSString *)enterType sectionType:(FHNewHouseDetailSectionType)sectionType {
 //    switch (sectionType) {
@@ -991,16 +991,16 @@
 //    [FHUserTracker writeEvent:@"click_tab" params:tracerDic];
 //}
 //
-//- (void)trackElementType:(NSString *)elementType
-//{
-//    if (elementType.length) {
-//        NSMutableDictionary *tracerDic = self.tracerDict.mutableCopy;
-//        tracerDic[@"element_type"] = elementType;
-//        [tracerDic removeObjectForKey:@"element_from"];
-//        tracerDic[@"page_type"] = [self pageTypeString];
-//        [FHUserTracker writeEvent:@"element_show" params:tracerDic];
-//    }
-//}
+- (void)trackElementType:(NSString *)elementType
+{
+    if (elementType.length) {
+        NSMutableDictionary *tracerDic = self.tracerDict.mutableCopy;
+        tracerDic[@"element_type"] = elementType;
+        [tracerDic removeObjectForKey:@"element_from"];
+        tracerDic[@"page_type"] = [self pageTypeString];
+        [FHUserTracker writeEvent:@"element_show" params:tracerDic];
+    }
+}
 //
 //- (NSString *)getTabNameBySectionType:(FHNewHouseDetailSectionType)sectionType {
 //    switch (sectionType) {
