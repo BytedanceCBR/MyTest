@@ -58,7 +58,7 @@
     FHNeighborhoodDetailHouseSaleCellModel *model = (FHNeighborhoodDetailHouseSaleCellModel *) data;
     if(model.neighborhoodSoldHouseData) {
         self.items = model.neighborhoodSoldHouseData.items.mutableCopy;
-        if(model.neighborhoodSoldHouseData.hasMore && self.items.count > 3) {
+        if(model.neighborhoodSoldHouseData.hasMore) {
             FHNeighborhoodDetailHouseSaleMoreItemModel *moreItem = [[FHNeighborhoodDetailHouseSaleMoreItemModel alloc] init];
             [self.items addObject:moreItem];
         }
