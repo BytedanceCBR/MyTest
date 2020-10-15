@@ -110,10 +110,10 @@ NSString * const kFHTopSwitchCityLocalKey = @"f_switch_city_top_time_local_key";
         [self cleanLocationData];
         NSMutableDictionary *commonParams =  (NSMutableDictionary *)[[FHEnvContext sharedInstance] getRequestCommonParams];
         if ([commonParams isKindOfClass:[NSMutableDictionary class]]) {
-            commonParams[@"gaode_lng"] = @(0);
-            commonParams[@"gaode_lat"] = @(0);
-            commonParams[@"longitude"] = @(0);
-            commonParams[@"latitude"] = @(0);
+            [commonParams removeObjectForKey:@"gaode_lng"];
+            [commonParams removeObjectForKey:@"gaode_lat"];
+            [commonParams removeObjectForKey:@"longitude"];
+            [commonParams removeObjectForKey:@"latitude"];
         }
     }
 }
