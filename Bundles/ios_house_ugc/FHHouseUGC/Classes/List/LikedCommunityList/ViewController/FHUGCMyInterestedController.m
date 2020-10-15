@@ -208,9 +208,9 @@
         refreshTipLabel.attributedText = attrText;
         
         UIView *leftLine = [[UIView alloc] init];
-        leftLine.backgroundColor = [UIColor colorWithHexString:@"d8d8d8"];
+        leftLine.backgroundColor = [UIColor themeGray6];
         UIView *rightLine = [[UIView alloc] init];
-        rightLine.backgroundColor = [UIColor colorWithHexString:@"d8d8d8"];
+        rightLine.backgroundColor = [UIColor themeGray6];
         UIView *refreshTipView = [[UIView alloc] init];
         refreshTipView.hidden = YES;
         
