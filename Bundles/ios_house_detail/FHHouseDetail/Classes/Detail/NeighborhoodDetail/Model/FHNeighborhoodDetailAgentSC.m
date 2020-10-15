@@ -29,6 +29,7 @@ static NSInteger  const FHNeighborhoodDetailAgentLimit = 3;
     self = [super init];
     if (self) {
         self.supplementaryViewSource = self;
+        self.displayDelegate = self;
     }
     return self;
 }
@@ -229,7 +230,7 @@ static NSInteger  const FHNeighborhoodDetailAgentLimit = 3;
 - (__kindof UICollectionReusableView *)viewForSupplementaryElementOfKind:(NSString *)elementKind
                                                                  atIndex:(NSInteger)index {
     FHDetailSectionTitleCollectionView *titleView = [self.collectionContext dequeueReusableSupplementaryViewOfKind:UICollectionElementKindSectionHeader forSectionController:self class:[FHDetailSectionTitleCollectionView class] atIndex:index];
-    titleView.titleLabel.font = [UIFont themeFontMedium:20];
+    titleView.titleLabel.font = [UIFont themeFontMedium:18];
     titleView.titleLabel.textColor = [UIColor themeGray1];
     FHNeighborhoodDetailAgentSM *agentSM = (FHNeighborhoodDetailAgentSM *)self.sectionModel;
 

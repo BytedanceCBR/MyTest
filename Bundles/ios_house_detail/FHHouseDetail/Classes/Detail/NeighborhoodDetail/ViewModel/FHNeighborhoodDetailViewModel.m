@@ -65,7 +65,7 @@
                 [wSelf.navBar showMessageNumber];
                 wSelf.neighborhoodId = neighborhoodId;
                 // 周边数据请求
-                [wSelf requestRelatedData:neighborhoodId];
+
             } else {
                 wSelf.detailController.isLoadingData = NO;
                 wSelf.detailController.hasValidateData = NO;
@@ -111,106 +111,100 @@
 
     
 
-   
-    [self addDetailCoreInfoExcetionLog];
-    NSMutableArray *sectionModels = [NSMutableArray array];
-    
-    FHNeighborhoodDetailHeaderMediaSM *headerMediaSM = [[FHNeighborhoodDetailHeaderMediaSM alloc] initWithDetailModel:self.detailData];
-    
-    [headerMediaSM updateWithContactViewModel:self.contactViewModel];
-    headerMediaSM.sectionType = FHNeighborhoodDetailSectionTypeHeader;
-    [sectionModels addObject:headerMediaSM];
-    
-    if (model.data.name.length ||
-        model.data.neighborhoodInfo.address.length ||
-        model.data.neighborhoodInfo.id.length > 0 ||
-        model.data.baseInfo.count > 0 ||
-        ((model.data.neighborhoodInfo.gaodeLat.length > 0 && model.data.neighborhoodInfo.gaodeLng.length > 0 )|| model.data.neighborhoodInfo.baiduPanoramaUrl.length > 0)
-        ) {
-        FHNeighborhoodDetailCoreInfoSM *coreInfoSM = [[FHNeighborhoodDetailCoreInfoSM alloc] initWithDetailModel:self.detailData];
-        
-        coreInfoSM.sectionType = FHNeighborhoodDetailSectionTypeBaseInfo;
-        [sectionModels addObject:coreInfoSM];
-    }
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
+        [self addDetailCoreInfoExcetionLog];
+        NSMutableArray *sectionModels = [NSMutableArray array];
 
-    //小区测评
-    if (model.data.strategy.articleList.count > 0) {
-        FHNeighborhoodDetailStrategySM *strategyModel = [[FHNeighborhoodDetailStrategySM alloc] initWithDetailModel:self.detailData];
-        strategyModel.sectionType = FHNeighborhoodDetailSectionTypeStrategy;
-        strategyModel.detailTracerDic = self.detailTracerDic;
-        NSString *searchId = self.listLogPB[@"search_id"];
-        NSString *imprId = self.listLogPB[@"impr_id"];
-        NSDictionary *extraDic = @{
-            @"searchId":searchId?:@"be_null",
-            @"imprId":imprId?:@"be_null",
-            @"houseId":self.houseId,
-            @"houseType":@(FHHouseTypeNeighborhood),
-            @"channelId":@"f_hosue_wtt"
-        };
-        strategyModel.extraDic = extraDic;
-        [strategyModel updateDetailModel:self.detailData];
-        [sectionModels addObject:strategyModel];
-    }
-    
-    //小区点评和问答
-    if (model.data.comments.content.data.count > 0 || model.data.question) {
-        FHNeighborhoodDetailCommentAndQuestionSM *commentAndQuestionModel = [[FHNeighborhoodDetailCommentAndQuestionSM alloc] initWithDetailModel:self.detailData];
-        commentAndQuestionModel.sectionType = FHNeighborhoodDetailSectionTypeCommentAndQuestion;
-        commentAndQuestionModel.detailTracerDic = self.detailTracerDic;
-        NSString *searchId = self.listLogPB[@"search_id"];
-        NSString *imprId = self.listLogPB[@"impr_id"];
-        NSDictionary *extraDic = @{
-            @"searchId":searchId?:@"be_null",
-            @"imprId":imprId?:@"be_null",
-            @"houseId":self.houseId,
-            @"houseType":@(FHHouseTypeNeighborhood),
-            @"channelId":@"f_hosue_wtt"
-        };
-        commentAndQuestionModel.extraDic = extraDic;
-        [commentAndQuestionModel updateDetailModel:self.detailData];
-        [sectionModels addObject:commentAndQuestionModel];
-    }
-    
-    //小区户型
-    if(model.data.neighborhoodSaleHouseInfo.neighborhoodSaleHouseList.count > 0) {
-        FHNeighborhoodDetailFloorpanSM *floorpanSM = [[FHNeighborhoodDetailFloorpanSM alloc] initWithDetailModel:self.detailData];
-        [floorpanSM updateWithDataModel:model.data.neighborhoodSaleHouseInfo];
-        floorpanSM.sectionType = FHNeighborhoodDetailSectionTypeFloorpan;
-        [sectionModels addObject:floorpanSM];
-    }
+        FHNeighborhoodDetailHeaderMediaSM *headerMediaSM = [[FHNeighborhoodDetailHeaderMediaSM alloc] initWithDetailModel:self.detailData];
 
-    if (model.data.recommendedRealtors.count > 0) {
-        FHNeighborhoodDetailAgentSM *agentSM = [[FHNeighborhoodDetailAgentSM alloc] initWithDetailModel:self.detailData];
-        agentSM.sectionType = FHNeighborhoodDetailSectionTypeAgent;
-        [sectionModels addObject:agentSM];
-    }
-    
-    //周边 地图+均价走势
-    if ((model.data.neighborhoodInfo.gaodeLat.length && model.data.neighborhoodInfo.gaodeLng.length) || model.data.priceTrend.count > 0) {
-        FHNeighborhoodDetailSurroundingSM *surroundingSM = [[FHNeighborhoodDetailSurroundingSM alloc] initWithDetailModel:self.detailData];
-        surroundingSM.sectionType = FHNeighborhoodDetailSectionTypeSurrounding;
-        [sectionModels addObject:surroundingSM];
-    }
+        [headerMediaSM updateWithContactViewModel:self.contactViewModel];
+        headerMediaSM.sectionType = FHNeighborhoodDetailSectionTypeHeader;
+        [sectionModels addObject:headerMediaSM];
 
-    self.sectionModels = sectionModels.copy;
-    
+        if (model.data.name.length ||
+            model.data.neighborhoodInfo.address.length ||
+            model.data.neighborhoodInfo.id.length > 0 ||
+            model.data.baseInfo.count > 0 ||
+            ((model.data.neighborhoodInfo.gaodeLat.length > 0 && model.data.neighborhoodInfo.gaodeLng.length > 0 )|| model.data.neighborhoodInfo.baiduPanoramaUrl.length > 0)
+            ) {
+            FHNeighborhoodDetailCoreInfoSM *coreInfoSM = [[FHNeighborhoodDetailCoreInfoSM alloc] initWithDetailModel:self.detailData];
+            
+            coreInfoSM.sectionType = FHNeighborhoodDetailSectionTypeBaseInfo;
+            [sectionModels addObject:coreInfoSM];
+        }
+
+        //小区测评
+        if (model.data.strategy.articleList.count > 0) {
+            FHNeighborhoodDetailStrategySM *strategyModel = [[FHNeighborhoodDetailStrategySM alloc] initWithDetailModel:self.detailData];
+            strategyModel.sectionType = FHNeighborhoodDetailSectionTypeStrategy;
+            strategyModel.detailTracerDic = self.detailTracerDic;
+            NSString *searchId = self.listLogPB[@"search_id"];
+            NSString *imprId = self.listLogPB[@"impr_id"];
+            NSDictionary *extraDic = @{
+                @"searchId":searchId?:@"be_null",
+                @"imprId":imprId?:@"be_null",
+                @"houseId":self.houseId,
+                @"houseType":@(FHHouseTypeNeighborhood),
+                @"channelId":@"f_hosue_wtt"
+            };
+            strategyModel.extraDic = extraDic;
+            [strategyModel updateDetailModel:self.detailData];
+            [sectionModels addObject:strategyModel];
+        }
+
+        //小区点评和问答
+        if (model.data.comments.content.data.count > 0 || model.data.question) {
+            FHNeighborhoodDetailCommentAndQuestionSM *commentAndQuestionModel = [[FHNeighborhoodDetailCommentAndQuestionSM alloc] initWithDetailModel:self.detailData];
+            commentAndQuestionModel.sectionType = FHNeighborhoodDetailSectionTypeCommentAndQuestion;
+            commentAndQuestionModel.detailTracerDic = self.detailTracerDic;
+            NSString *searchId = self.listLogPB[@"search_id"];
+            NSString *imprId = self.listLogPB[@"impr_id"];
+            NSDictionary *extraDic = @{
+                @"searchId":searchId?:@"be_null",
+                @"imprId":imprId?:@"be_null",
+                @"houseId":self.houseId,
+                @"houseType":@(FHHouseTypeNeighborhood),
+                @"channelId":@"f_hosue_wtt"
+            };
+            commentAndQuestionModel.extraDic = extraDic;
+            [commentAndQuestionModel updateDetailModel:self.detailData];
+            [sectionModels addObject:commentAndQuestionModel];
+        }
+
+        //小区户型
+        if(model.data.neighborhoodSaleHouseInfo.neighborhoodSaleHouseList.count > 0) {
+            FHNeighborhoodDetailFloorpanSM *floorpanSM = [[FHNeighborhoodDetailFloorpanSM alloc] initWithDetailModel:self.detailData];
+            [floorpanSM updateWithDataModel:model.data.neighborhoodSaleHouseInfo];
+            floorpanSM.sectionType = FHNeighborhoodDetailSectionTypeFloorpan;
+            [sectionModels addObject:floorpanSM];
+        }
+        //经纪人
+        if (model.data.recommendedRealtors.count > 0) {
+            FHNeighborhoodDetailAgentSM *agentSM = [[FHNeighborhoodDetailAgentSM alloc] initWithDetailModel:self.detailData];
+            agentSM.sectionType = FHNeighborhoodDetailSectionTypeAgent;
+            [sectionModels addObject:agentSM];
+        }
+
+        //周边 地图+均价走势
+        if ((model.data.neighborhoodInfo.gaodeLat.length && model.data.neighborhoodInfo.gaodeLng.length) || model.data.priceTrend.count > 0) {
+            FHNeighborhoodDetailSurroundingSM *surroundingSM = [[FHNeighborhoodDetailSurroundingSM alloc] initWithDetailModel:self.detailData];
+            surroundingSM.sectionType = FHNeighborhoodDetailSectionTypeSurrounding;
+            [sectionModels addObject:surroundingSM];
+        }
+        dispatch_async(dispatch_get_main_queue(), ^{
+            self.sectionModels = sectionModels.copy;
+            self.firstReloadInterval = CFAbsoluteTimeGetCurrent();
+        });
+        __weak typeof(self) weakSelf = self;
+        if (!model.isInstantData && model.data) {
+            [weakSelf requestRelatedData:model.data.neighborhoodInfo.id];
+        }
+    });
+
     
     [self.detailController updateLayout:model.isInstantData];
 }
 
-//小区顶部i地图按钮点击事件
-//- (void)mapImageClick {
-//    [self.items enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-//        if ([obj isKindOfClass:[FHDetailStaticMapCellModel class]]) {
-//           CGRect indexRect =  [self.tableView rectForRowAtIndexPath:[NSIndexPath indexPathForRow:idx inSection:0]];
-//            CGPoint scrollPoint = CGPointMake(0, indexRect.origin.y-([TTDeviceHelper isIPhoneXSeries]?84:64));
-//            [self.tableView setContentOffset:scrollPoint animated:YES];
-////            [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:idx inSection:0] atScrollPosition:UITableViewScrollPositionBottom animated:YES];
-//        }
-//    }];
-//
-//
-//}
 // 周边数据请求，当网络请求都返回后刷新数据
 - (void)requestRelatedData:(NSString *)neighborhoodId {
     self.requestRelatedCount = 0;
@@ -227,35 +221,37 @@
 // 处理详情页周边请求数据
 - (void)processDetailRelatedData {
     if (self.requestRelatedCount >= 2) {
-        self.detailController.isLoadingData = NO;
-        NSMutableArray *sectionModels = self.sectionModels.mutableCopy;
-        
-        if (self.sameNeighborhoodErshouHouseData.items.count > 0){
-            FHNeighborhoodDetailHouseSaleSM *houseSaleSM = [[FHNeighborhoodDetailHouseSaleSM alloc] initWithDetailModel:self.detailData];
-            [houseSaleSM updateWithDataModel:self.sameNeighborhoodErshouHouseData];
-            houseSaleSM.sectionType = FHNeighborhoodDetailSectionTypeHouseSale;
-            [sectionModels addObject:houseSaleSM];
-        }
-        
-        if (self.recommendHouseData.items.count > 0) {
-            FHNeighborhoodDetailRecommendSM *recommendSM = [[FHNeighborhoodDetailRecommendSM alloc] initWithDetailModel:self.detailData];
-            [recommendSM updateWithDataModel:self.recommendHouseData];
-            recommendSM.sectionType = FHNeighborhoodDetailSectionTypeRecommend;
-            [sectionModels addObject:recommendSM];
-        }
-        
-        FHDetailNeighborhoodModel *model = self.detailData;
-        FHDetailNeighborhoodSaleHouseEntranceModel *saleHouseEntrance = model.data.saleHouseEntrance;
-        if(saleHouseEntrance.title.length > 0 && saleHouseEntrance.subtitle.length > 0 && saleHouseEntrance.buttonText.length > 0 && saleHouseEntrance.openUrl.length > 0) {
-            FHNeighborhoodDetailOwnerSellHouseSM *ownerSellHouseSM = [[FHNeighborhoodDetailOwnerSellHouseSM alloc] initWithDetailModel:self.detailData];
-            ownerSellHouseSM.sectionType = FHNeighborhoodDetailSectionTypeOwnerSellHouse;
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
+            self.detailController.isLoadingData = NO;
+            NSMutableArray *sectionModels = self.sectionModels.mutableCopy;
             
-            [sectionModels addObject:ownerSellHouseSM];
-        }
-        
-        
-        dispatch_async(dispatch_get_main_queue(), ^{
-            self.sectionModels = sectionModels.copy;
+            if (self.sameNeighborhoodErshouHouseData.items.count > 0){
+                FHNeighborhoodDetailHouseSaleSM *houseSaleSM = [[FHNeighborhoodDetailHouseSaleSM alloc] initWithDetailModel:self.detailData];
+                [houseSaleSM updateWithDataModel:self.sameNeighborhoodErshouHouseData];
+                houseSaleSM.sectionType = FHNeighborhoodDetailSectionTypeHouseSale;
+                [sectionModels addObject:houseSaleSM];
+            }
+            
+            if (self.recommendHouseData.items.count > 0) {
+                FHNeighborhoodDetailRecommendSM *recommendSM = [[FHNeighborhoodDetailRecommendSM alloc] initWithDetailModel:self.detailData];
+                [recommendSM updateWithDataModel:self.recommendHouseData];
+                recommendSM.sectionType = FHNeighborhoodDetailSectionTypeRecommend;
+                [sectionModels addObject:recommendSM];
+            }
+            
+            FHDetailNeighborhoodModel *model = self.detailData;
+            FHDetailNeighborhoodSaleHouseEntranceModel *saleHouseEntrance = model.data.saleHouseEntrance;
+            if(saleHouseEntrance.title.length > 0 && saleHouseEntrance.subtitle.length > 0 && saleHouseEntrance.buttonText.length > 0 && saleHouseEntrance.openUrl.length > 0) {
+                FHNeighborhoodDetailOwnerSellHouseSM *ownerSellHouseSM = [[FHNeighborhoodDetailOwnerSellHouseSM alloc] initWithDetailModel:self.detailData];
+                ownerSellHouseSM.sectionType = FHNeighborhoodDetailSectionTypeOwnerSellHouse;
+                
+                [sectionModels addObject:ownerSellHouseSM];
+            }
+            
+            
+            dispatch_async(dispatch_get_main_queue(), ^{
+                self.sectionModels = sectionModels.copy;
+            });
         });
     }
 }

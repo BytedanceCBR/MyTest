@@ -95,8 +95,12 @@
 
 -(void)collectionView:(UICollectionView *)collectionView willDisplayCell:(UICollectionViewCell *)cell forItemAtIndexPath:(NSIndexPath *)indexPath {
     if(self.willShowItem){
-        self.willShowItem(indexPath.row);
+        self.willShowItem(indexPath);
     }
+}
+
+-(NSString *)elementType {
+    return @"neighborhood_model";
 }
 
 @end

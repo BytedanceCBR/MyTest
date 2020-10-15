@@ -34,7 +34,7 @@
 }
 
 -(CGSize)sizeForItemAtIndex:(NSInteger)index {
-    CGFloat width = self.collectionContext.containerSize.width - 15 * 2;
+    CGFloat width = self.collectionContext.containerSize.width;
     return CGSizeMake(width, 115);
 }
 
@@ -52,11 +52,16 @@
 
 - (__kindof UICollectionReusableView *)viewForSupplementaryElementOfKind:(NSString *)elementKind atIndex:(NSInteger)index {
     FHDetailSectionTitleCollectionView *titleView = [self.collectionContext dequeueReusableSupplementaryViewOfKind:UICollectionElementKindSectionHeader forSectionController:self class:[FHDetailSectionTitleCollectionView class] atIndex:index];
-    titleView.titleLabel.font = [UIFont themeFontMedium:20];
+    titleView.titleLabel.font = [UIFont themeFontMedium:18];
     titleView.titleLabel.textColor = [UIColor themeGray1];
     titleView.titleLabel.text = @"小区户型";
     titleView.arrowsImg.hidden = YES;
     titleView.userInteractionEnabled = NO;
+    [titleView.titleLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.left.equalTo(titleView);
+        make.height.mas_equalTo(25);
+        make.bottom.equalTo(titleView.mas_bottom).offset(-12);
+    }];
     return titleView;
 }
 
@@ -66,7 +71,7 @@
 
 - (CGSize)sizeForSupplementaryViewOfKind:(NSString *)elementKind atIndex:(NSInteger)index {
     if ([elementKind isEqualToString:UICollectionElementKindSectionHeader]) {
-        return CGSizeMake(self.collectionContext.containerSize.width - 15 * 2, 46);
+        return CGSizeMake(self.collectionContext.containerSize.width - 15 * 2, 61);
     }
     return CGSizeZero;
 }
@@ -81,18 +86,21 @@
         if (detailModel && detailModel.data.neighborhoodInfo.id.length > 0) {
             neighborhood_id = detailModel.data.neighborhoodInfo.id;
         }
-//        NSMutableDictionary *tracerDic = [[self detailTracerDict] mutableCopy];
-//        tracerDic[@"enter_type"] = @"click";
-//        tracerDic[@"log_pb"] = self.detailViewController.viewModel.listLogPB ?: @"be_null";
-//        tracerDic[@"category_name"] = @"same_neighborhood_list";
-//        tracerDic[@"element_from"] = @"same_neighborhood";
-//        tracerDic[@"enter_from"] = @"neighborhood_detail";
-//        [tracerDic removeObjectsForKeys:@[@"page_type",@"card_type"]];
+        NSMutableDictionary *tracerDic = [[self detailTracerDict] mutableCopy];
+        tracerDic[@"enter_type"] = @"click";
+        tracerDic[@"element_from"] = @"neighborhood_model";
+        tracerDic[@"enter_from"] = @"neighborhood_detail";
+        tracerDic[@"category_name"] = @"neighborhood_house_list";
+        [tracerDic removeObjectsForKeys:@[@"page_type",@"card_type"]];
         
         NSMutableDictionary *userInfo = [NSMutableDictionary new];
-//        userInfo[@"tracer"] = tracerDic;
+        userInfo[@"tracer"] = tracerDic;
         userInfo[@"house_type"] = @(FHHouseTypeSecondHandHouse);
-        userInfo[@"title"] = @"小区房源";
+        if(item.count.length > 0) {
+            userInfo[@"title"] = [NSString stringWithFormat:@"小区房源(%@)",item.count];
+        } else {
+            userInfo[@"title"] = @"小区房源";
+        }
         if (neighborhood_id.length > 0) {
             userInfo[@"neighborhood_id"] = neighborhood_id;
         }
@@ -102,8 +110,13 @@
         userInfo[@"list_vc_type"] = @(5);
         
         TTRouteUserInfo *userInf = [[TTRouteUserInfo alloc] initWithInfo:userInfo];
-        NSString *conditionParam = [[NSString stringWithFormat:@"room_num[]=%@",item.queryValue] stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLQueryAllowedCharacterSet]];
-        NSString * urlStr = [NSString stringWithFormat:@"snssdk1370://house_list_in_neighborhood?%@",conditionParam];
+        NSString *urlStr = nil;
+        if(item.queryValue.length > 0) {
+            NSString *conditionParam = [[NSString stringWithFormat:@"room_num[]=%@",item.queryValue] stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLQueryAllowedCharacterSet]];
+            urlStr = [NSString stringWithFormat:@"snssdk1370://house_list_in_neighborhood?%@",conditionParam];
+        } else {
+            urlStr = @"snssdk1370://house_list_in_neighborhood";
+        }
         if (urlStr.length > 0) {
             NSURL *url = [NSURL URLWithString:urlStr];
             [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInf];
