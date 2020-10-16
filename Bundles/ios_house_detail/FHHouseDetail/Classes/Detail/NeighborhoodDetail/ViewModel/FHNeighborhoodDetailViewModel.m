@@ -172,12 +172,12 @@
         }
 
         //小区户型
-        if(model.data.neighborhoodSaleHouseInfo.neighborhoodSaleHouseList.count > 0) {
+        if(model.data.neighborhoodSaleHouseInfo.neighborhoodSaleHouseList.count > 1) {
             FHNeighborhoodDetailFloorpanSM *floorpanSM = [[FHNeighborhoodDetailFloorpanSM alloc] initWithDetailModel:self.detailData];
             [floorpanSM updateWithDataModel:model.data.neighborhoodSaleHouseInfo];
             floorpanSM.sectionType = FHNeighborhoodDetailSectionTypeFloorpan;
             [sectionModels addObject:floorpanSM];
-        }
+        } 
         //经纪人
         if (model.data.recommendedRealtors.count > 0) {
             FHNeighborhoodDetailAgentSM *agentSM = [[FHNeighborhoodDetailAgentSM alloc] initWithDetailModel:self.detailData];
@@ -225,7 +225,14 @@
             self.detailController.isLoadingData = NO;
             NSMutableArray *sectionModels = self.sectionModels.mutableCopy;
             
-            if (self.sameNeighborhoodErshouHouseData.items.count > 0){
+            if (self.sameNeighborhoodErshouHouseData.items.count > 0 &&
+                (![self.sectionModels btd_contains:^BOOL(FHNeighborhoodDetailSectionModel   * _Nonnull obj) {
+                if (obj.sectionType == FHNeighborhoodDetailSectionTypeFloorpan) {
+                    return YES;
+                } else {
+                    return NO;
+                }}])
+                ){
                 FHNeighborhoodDetailHouseSaleSM *houseSaleSM = [[FHNeighborhoodDetailHouseSaleSM alloc] initWithDetailModel:self.detailData];
                 [houseSaleSM updateWithDataModel:self.sameNeighborhoodErshouHouseData];
                 houseSaleSM.sectionType = FHNeighborhoodDetailSectionTypeHouseSale;
