@@ -35,8 +35,7 @@
 #import <TTBaseLib/TTSandBoxHelper.h>
 #import "IESFalconManager.h"
 #import "FHIESGeckoManager.h"
-#import <ByteDanceKit/NSDictionary+BTDAdditions.h>
-#import "ArticleURLSetting.h"
+
 
 #if __has_include(<BDNativeWebComponent/WKWebView+BDNative.h>)
 #import <BDNativeWebComponent/WKWebView+BDNative.h>
@@ -47,36 +46,6 @@
 #endif
 
 NSString *const  SSViewControllerBaseConditionADIDKey = @"SSViewControllerBaseConditionADIDKey";
-
-@interface SSWebViewController(whiteListForUIWebView)
-
-+ (BOOL)enableUseUIWebView:(NSString *)urlString;
-
-@end
-
-@implementation SSWebViewController(whiteListForUIWebView)
-
-
-+ (NSArray *)whiteListForUIWebView {
-    return @[
-        kThirdPartySDKURL
-    ];
-}
-
-//TODO iOS12下《我的-设置-第三方SDK目录-联通一键登录url》在wkwebview下加载完成后会停留在页面底部，原因未知待研究，先临时切换到UIWebView
-+ (BOOL)enableUseUIWebView:(NSString *)urlString {
-    float systemVersion = [[[UIDevice currentDevice] systemVersion] floatValue];
-    if (systemVersion < 9.0) return YES;
-    if (systemVersion > 12.9999 || systemVersion < 11.9999) return NO;
-    NSArray *whiteList = [self whiteListForUIWebView];
-    for (NSString *whiteUrl in whiteList) {
-        if ([urlString containsString:whiteUrl]) return YES;
-    }
-    
-    return NO;
-}
-
-@end
 
 @interface SSWebViewController ()<YSWebViewDelegate>
 {
@@ -186,10 +155,6 @@ NSString *const  SSViewControllerBaseConditionADIDKey = @"SSViewControllerBaseCo
                 urlStr = [TTStringHelper decodeStringFromBase64Str:urlStr];
             }
         }
-    }
-    
-    if ([SSWebViewController enableUseUIWebView:urlStr]) {
-        params[@"use_wk"] = @"0";
     }
     
     BOOL supportIphoneRotate = [params tt_boolValueForKey:@"supportRotate"];
