@@ -19,7 +19,7 @@
 {
     self = [super init];
     if (self) {
-        self.inset = UIEdgeInsetsMake(-50, 15, 12, 15);
+        self.inset = UIEdgeInsetsMake(-20, 15, 12, 15);
     }
     return self;
 }

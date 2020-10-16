@@ -106,7 +106,7 @@
 
     [self.itemView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerX.mas_equalTo(self);
-        make.bottom.mas_equalTo(self.scrollView.mas_bottom).offset(-65);//
+        make.bottom.mas_equalTo(self.scrollView.mas_bottom).offset(-35);//
         make.width.mas_equalTo(self.scrollView.mas_width);
         make.height.mas_equalTo(20);
     }];
@@ -115,7 +115,7 @@
         make.width.mas_equalTo(44);
         make.height.mas_equalTo(22);
         make.right.mas_equalTo(self.scrollView.mas_right).offset(-15);
-        make.bottom.mas_equalTo(self.scrollView.mas_bottom).offset(-65);
+        make.bottom.mas_equalTo(self.scrollView.mas_bottom).offset(-35);
     }];
 
     [self layoutIfNeeded];
@@ -144,7 +144,7 @@
     if (_itemArray.count > 1) {
         self.itemView.hidden = NO;
         [self setNeedsLayout];
-//        [self layoutIfNeeded];
+        [self layoutIfNeeded];
         self.itemView.titleArray = _itemArray;
         [self.itemView selectedItem:_itemArray[0]];
     } else {
@@ -155,7 +155,7 @@
 
 - (UIView *)bottomGradientView {
     if (!_bottomGradientView) {
-        CGFloat aspect = 375.0 / 25;
+        CGFloat aspect = 375.0 / 22;
         CGFloat width = SCREEN_WIDTH;
 
         CGFloat height = round(width / aspect + 0.5);
