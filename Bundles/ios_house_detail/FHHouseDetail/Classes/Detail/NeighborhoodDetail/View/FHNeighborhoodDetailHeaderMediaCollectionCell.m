@@ -462,6 +462,7 @@
             NSMutableDictionary *tracerDict = [[self tracerDic] mutableCopy];
             NSMutableDictionary *param = [NSMutableDictionary new];
             tracerDict[@"element_from"] = @"picture";
+            [tracerDict setObject:tracerDict[@"page_type"] forKey:@"enter_from"];
             param[TRACER_KEY] = tracerDict.copy;
 
             NSString *gaodeLat = nil;
