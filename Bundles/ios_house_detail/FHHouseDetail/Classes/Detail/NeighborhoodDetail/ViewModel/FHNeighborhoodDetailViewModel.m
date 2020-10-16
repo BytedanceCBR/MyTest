@@ -44,6 +44,7 @@
 @interface FHNeighborhoodDetailViewModel ()
 
 @property (nonatomic, assign)   NSInteger       requestRelatedCount;
+@property (nonatomic, assign)   BOOL dontRequestSameNeighborhoodHouse;
 @property (nonatomic, strong , nullable) FHDetailSameNeighborhoodHouseResponseDataModel *sameNeighborhoodErshouHouseData;// 同小区房源，二手房
 @property (nonatomic, strong , nullable) FHSearchHouseDataModel *recommendHouseData;
 @property (nonatomic, copy , nullable) NSString *neighborhoodId;// 周边小区房源id
@@ -170,14 +171,17 @@
             [commentAndQuestionModel updateDetailModel:self.detailData];
             [sectionModels addObject:commentAndQuestionModel];
         }
-
+        __weak typeof(self) weakSelf = self;
         //小区户型
-        if(model.data.neighborhoodSaleHouseInfo.neighborhoodSaleHouseList.count > 1) {
+        if(model.data.neighborhoodSaleHouseInfo.neighborhoodSaleHouseList.count > 0) {
             FHNeighborhoodDetailFloorpanSM *floorpanSM = [[FHNeighborhoodDetailFloorpanSM alloc] initWithDetailModel:self.detailData];
             [floorpanSM updateWithDataModel:model.data.neighborhoodSaleHouseInfo];
             floorpanSM.sectionType = FHNeighborhoodDetailSectionTypeFloorpan;
             [sectionModels addObject:floorpanSM];
-        } 
+            weakSelf.dontRequestSameNeighborhoodHouse = YES;
+        } else {
+            weakSelf.dontRequestSameNeighborhoodHouse = NO;
+        }
         //经纪人
         if (model.data.recommendedRealtors.count > 0) {
             FHNeighborhoodDetailAgentSM *agentSM = [[FHNeighborhoodDetailAgentSM alloc] initWithDetailModel:self.detailData];
@@ -195,7 +199,7 @@
             self.sectionModels = sectionModels.copy;
             self.firstReloadInterval = CFAbsoluteTimeGetCurrent();
         });
-        __weak typeof(self) weakSelf = self;
+        
         if (!model.isInstantData && model.data) {
             [weakSelf requestRelatedData:model.data.neighborhoodInfo.id];
         }
@@ -211,28 +215,25 @@
     if (neighborhoodId.length < 1) {
         return;
     }
-    // 同小区房源-二手房
-    [self requestHouseInSameNeighborhoodSearchErShou:neighborhoodId];
-    
+    if (!self.dontRequestSameNeighborhoodHouse) {
+        // 同小区房源-二手房
+        [self requestHouseInSameNeighborhoodSearchErShou:neighborhoodId];
+    }
+
     //推荐房源-二手房
     [self requestHouseInRecommendHouse:neighborhoodId];
 }
 
 // 处理详情页周边请求数据
 - (void)processDetailRelatedData {
-    if (self.requestRelatedCount >= 2) {
+    NSInteger needRequestCount = 2;
+    needRequestCount -= self.dontRequestSameNeighborhoodHouse;
+    if (self.requestRelatedCount >= needRequestCount) {
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
             self.detailController.isLoadingData = NO;
             NSMutableArray *sectionModels = self.sectionModels.mutableCopy;
             
-            if (self.sameNeighborhoodErshouHouseData.items.count > 0 &&
-                (![self.sectionModels btd_contains:^BOOL(FHNeighborhoodDetailSectionModel   * _Nonnull obj) {
-                if (obj.sectionType == FHNeighborhoodDetailSectionTypeFloorpan) {
-                    return YES;
-                } else {
-                    return NO;
-                }}])
-                ){
+            if (self.sameNeighborhoodErshouHouseData.items.count > 0) {
                 FHNeighborhoodDetailHouseSaleSM *houseSaleSM = [[FHNeighborhoodDetailHouseSaleSM alloc] initWithDetailModel:self.detailData];
                 [houseSaleSM updateWithDataModel:self.sameNeighborhoodErshouHouseData];
                 houseSaleSM.sectionType = FHNeighborhoodDetailSectionTypeHouseSale;
