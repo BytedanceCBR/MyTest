@@ -92,8 +92,6 @@
 @property (nonatomic, strong) NSIndexPath *lastIndexPath;
 @property (nonatomic, assign) BOOL segmentViewChangedFlag;
 
-@property (nonatomic, strong) NSDictionary<NSNumber *,NSString *> * titleNamesMap;
-@property (nonatomic, strong) NSDictionary<NSString *,NSNumber *> * sectionTypesMap;
 @property (nonatomic, strong) NSArray<NSString *> * names;
 @property (nonatomic, strong) NSArray<NSNumber *> * types;
 
@@ -103,41 +101,61 @@
 
 - (void)initMapping {
     
-    NSArray *name = @[@"基础信息",@"小区户型",@"小区点评",@"小区测评",@"周边配套",@"推荐房源"];
+    NSArray *name = @[@"基础信息",@"小区户型",@"小区点评",@"小区测评",@"周边配套",@"周边配套",@"推荐房源"];
     NSArray *type = @[@(FHNeighborhoodDetailSectionTypeBaseInfo),
                       @(FHNeighborhoodDetailSectionTypeFloorpan),
                       @(FHNeighborhoodDetailSectionTypeCommentAndQuestion),
                       @(FHNeighborhoodDetailSectionTypeStrategy),
                       @(FHNeighborhoodDetailSectionTypeSurrounding),
+                      @(FHNeighborhoodDetailSectionTypeHouseSale),
                       @(FHNeighborhoodDetailSectionTypeRecommend)
     ];
     
-    NSMutableDictionary *nameDictionary = [NSMutableDictionary dictionary];
-    NSMutableDictionary *typeDictionary = [NSMutableDictionary dictionary];
-    for (NSInteger i = 0; i < MIN(name.count, type.count); i++) {
-        [nameDictionary btd_setObject:name[i] forKey:type[i]];
-        [typeDictionary btd_setObject:type[i] forKey:name[i]];
-    }
-    
-    self.titleNamesMap = nameDictionary.copy;
-    self.sectionTypesMap = typeDictionary.copy;
-    
     self.names = name.copy;
     self.types = type.copy;
-    
 }
-
+//这个只会是一对一
 - (NSString *)getTabNameBySectionType:(FHNeighborhoodDetailSectionType)sectionType {
     
-    return [self.titleNamesMap btd_stringValueForKey:@(sectionType) default:@"be_null"];
+    NSInteger index = [self.types indexOfObject:@(sectionType)];
+    
+    NSString *name = @"be_null";
+    if (index >= 0 && index < self.names.count) {
+        name = [self.names btd_objectAtIndex:index class:[NSString class]];
+    }
+    
+    if (index < 0 ||
+        index >= self.names.count ||
+        index >= self.types.count ||
+        ! ([[self.names btd_objectAtIndex:index class:[NSString class]] isEqualToString:name]) ||
+        ! ([[self.types btd_objectAtIndex:index class:[NSNumber class]] isEqualToNumber:@(sectionType) ]) ) {
+        name = @"be_null";
+    }
+    
+    return name;
     
 }
-
-- (FHNeighborhoodDetailSectionType )getSectionTypeByTabName:(NSString *)titleName {
+//做这么复杂是因为要满足多对多的映射
+- (NSArray *)getSectionTypeByTabName:(NSString *)titleName {
     
-    NSNumber *type = [self.sectionTypesMap btd_numberValueForKey:titleName default:@(0)];
+    if (titleName.length <= 0) {
+        return nil;
+    }
     
-    return type.unsignedIntegerValue;
+    WeakSelf;
+    
+    NSMutableArray *result = [NSMutableArray arrayWithCapacity:self.types.count];
+    [self.names enumerateObjectsUsingBlock:^(NSString *obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        if ([obj isEqualToString:titleName]) {
+            NSNumber *number = [wself.types btd_objectAtIndex:idx class:[NSNumber class]];
+            if (number) {
+                [result addObject:number];
+            }
+        }
+    }];
+    
+    
+    return result.copy;
     
 }
 
@@ -439,11 +457,16 @@
     NSString *title = self.segmentTitleView.titleNames[toIndex];
     NSArray *sectionModels = self.viewModel.sectionModels.copy;
     __block NSUInteger index = NSNotFound;
-    FHNeighborhoodDetailSectionType sectionType = [self getSectionTypeByTabName:title];
+    NSArray *sectionTypes = [self getSectionTypeByTabName:title];
     
     [sectionModels enumerateObjectsUsingBlock:^(FHNeighborhoodDetailSectionModel *model, NSUInteger idx, BOOL * _Nonnull stop) {
         
-        if (sectionType == model.sectionType) {
+        if ([sectionTypes btd_contains:^BOOL(NSNumber *obj) {
+            if (obj.unsignedIntegerValue == model.sectionType) {
+                return YES;
+            }
+            return NO;
+        }  ] ) {
             index = idx;
             *stop = YES;
         }

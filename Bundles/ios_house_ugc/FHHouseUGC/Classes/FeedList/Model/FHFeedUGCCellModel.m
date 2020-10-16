@@ -899,12 +899,18 @@
         user.userId = model.user.userId;
         user.schema = model.user.schema;
         user.userAuthInfo = model.user.userAuthInfo;
+        user.userBackgroundColor = model.user.userBackgroundColor;
+        user.userBorderColor = model.user.userBorderColor;
+        user.userFontColor = model.user.userFontColor;
     } else if(model.rawData.user) {
         user.name = model.rawData.user.name;
         user.avatarUrl = model.rawData.user.avatarUrl;
         user.userId = model.rawData.user.userId;
         user.schema = model.rawData.user.schema;
         user.userAuthInfo = model.rawData.user.userAuthInfo;
+        user.userBackgroundColor = model.rawData.user.userBackgroundColor;
+        user.userBorderColor = model.rawData.user.userBorderColor;
+        user.userFontColor = model.rawData.user.userFontColor;
     }
 
     
