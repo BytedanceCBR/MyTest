@@ -288,6 +288,10 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *id;
 @property (nonatomic, strong , nullable) NSArray *medals;
 @property (nonatomic, copy , nullable) NSString *desc;
+@property (nonatomic, copy , nullable) NSString *userBackgroundColor;
+@property (nonatomic, copy , nullable) NSString *userBorderColor;
+@property (nonatomic, copy , nullable) NSString *userFontColor;
+
 @end
 
 @interface FHFeedUGCContentRawDataModel: JSONModel

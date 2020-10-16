@@ -82,7 +82,7 @@
             }
             model.tracerDic = [tracerDic copy];
             
-            if (model) {
+            if (model && model.cellType == FHUGCFeedListCellTypeUGC) {
                 [itemArray addObject:model];
             }
         }
@@ -137,7 +137,7 @@
                 }
                 model.tracerDic = [tracerDic copy];
                 
-                if (model) {
+                if (model && (model.cellType == FHUGCFeedListCellTypeAnswer || model.cellType == FHUGCFeedListCellTypeQuestion)) {
                     [itemArray addObject:model];
                 }
             }
