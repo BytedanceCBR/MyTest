@@ -9,6 +9,9 @@
 #import <UIKit/UIKit.h>
 #import "CommonURLSetting.h"
 
+extern NSString *const kThirdPartySDKURL;
+extern NSString *const kAppPermissionURL;
+
 @interface ArticleURLSetting : CommonURLSetting
 
 /**
