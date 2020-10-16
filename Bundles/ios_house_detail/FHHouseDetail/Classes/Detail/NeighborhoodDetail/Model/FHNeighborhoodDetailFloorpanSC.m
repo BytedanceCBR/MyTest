@@ -10,6 +10,7 @@
 #import "FHNeighborhoodDetailViewController.h"
 #import "FHNeighborhoodDetailViewModel.h"
 #import "FHNeighborhoodDetailFloorpanCollectionCell.h"
+#import "FHNeighborhoodDetailFloorpanTitleView.h"
 #import "FHDetailSectionTitleCollectionView.h"
 #import "UIColor+Theme.h"
 #import "UIFont+House.h"
@@ -51,17 +52,12 @@
 }
 
 - (__kindof UICollectionReusableView *)viewForSupplementaryElementOfKind:(NSString *)elementKind atIndex:(NSInteger)index {
-    FHDetailSectionTitleCollectionView *titleView = [self.collectionContext dequeueReusableSupplementaryViewOfKind:UICollectionElementKindSectionHeader forSectionController:self class:[FHDetailSectionTitleCollectionView class] atIndex:index];
+    FHNeighborhoodDetailFloorpanTitleView *titleView = [self.collectionContext dequeueReusableSupplementaryViewOfKind:UICollectionElementKindSectionHeader forSectionController:self class:[FHNeighborhoodDetailFloorpanTitleView class] atIndex:index];
     titleView.titleLabel.font = [UIFont themeFontMedium:18];
     titleView.titleLabel.textColor = [UIColor themeGray1];
     titleView.titleLabel.text = @"小区户型";
     titleView.arrowsImg.hidden = YES;
     titleView.userInteractionEnabled = NO;
-    [titleView.titleLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
-        make.left.equalTo(titleView);
-        make.height.mas_equalTo(25);
-        make.bottom.equalTo(titleView.mas_bottom).offset(-12);
-    }];
     return titleView;
 }
 
@@ -71,7 +67,7 @@
 
 - (CGSize)sizeForSupplementaryViewOfKind:(NSString *)elementKind atIndex:(NSInteger)index {
     if ([elementKind isEqualToString:UICollectionElementKindSectionHeader]) {
-        return CGSizeMake(self.collectionContext.containerSize.width - 15 * 2, 61);
+        return CGSizeMake(self.collectionContext.containerSize.width - 15 * 2, 45);
     }
     return CGSizeZero;
 }

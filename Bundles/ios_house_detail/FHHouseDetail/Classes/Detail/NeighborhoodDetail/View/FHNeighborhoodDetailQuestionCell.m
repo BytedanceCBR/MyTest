@@ -104,7 +104,7 @@
     self.cellModel = cellModel;
     //问题
     [self.questionLabel setText:cellModel.questionStr];
-    self.descLabel.attributedText = [self convertDescToAttributeString:cellModel.answerCountText count:cellModel.answerCount];
+    self.descLabel.text = cellModel.answerCountText;
 }
 
 + (CGSize)cellSizeWithData:(id)data width:(CGFloat)width {

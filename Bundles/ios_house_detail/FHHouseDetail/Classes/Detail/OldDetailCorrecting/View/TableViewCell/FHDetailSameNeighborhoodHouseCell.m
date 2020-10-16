@@ -107,7 +107,7 @@
             [wSelf collectionDisplayCell:index];
         };
         [colView mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.top.mas_equalTo(10);
+            make.top.mas_equalTo(self.containerView).offset(6);
             make.left.mas_equalTo(self.containerView).offset(15);
             make.right.mas_equalTo(self.containerView).offset(-15);
             make.bottom.mas_equalTo(self.containerView).offset(-10);

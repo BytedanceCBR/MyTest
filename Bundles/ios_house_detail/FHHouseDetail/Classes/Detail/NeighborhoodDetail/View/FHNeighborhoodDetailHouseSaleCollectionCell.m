@@ -145,6 +145,7 @@
     
     self.descriptionLabel.font = [UIFont themeFontMedium:16];
     self.descriptionLabel.textColor = [UIColor themeGray1];
+    self.descriptionLabel.lineBreakMode = NSLineBreakByCharWrapping;
     self.pricePerUnitLabel.font = [UIFont themeFontRegular:12];
     self.pricePerUnitLabel.textColor = [UIColor themeGray3];
     self.totalPriceLabel.font = [UIFont themeFontMedium:16];
