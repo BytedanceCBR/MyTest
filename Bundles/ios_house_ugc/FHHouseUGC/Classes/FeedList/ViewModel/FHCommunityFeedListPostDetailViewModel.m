@@ -130,7 +130,14 @@
     
     if (noti && noti.userInfo) {
         NSDictionary *userInfo = noti.userInfo;
-        FHFeedUGCCellModel *cellModel = userInfo[@"cell_model"];
+        FHFeedUGCCellModel *cellModel = nil;
+        FHFeedContentModel *ugcContent = userInfo[@"feed_content"];
+        if(ugcContent && [ugcContent isKindOfClass:[FHFeedContentModel class]]){
+            cellModel = [FHFeedUGCCellModel modelFromFeedContent:ugcContent];
+        }else if(userInfo[@"cell_model"]){
+            cellModel = userInfo[@"cell_model"];
+        }
+        
         if(cellModel) {
             cellModel.tableView = self.tableView;
             cellModel.isFromDetail = NO;

@@ -23,6 +23,7 @@
 #import "FHEnvContext.h"
 #import "FHUtils.h"
 #import "FHCustomerServicePage.h"
+#import "SSCommonLogic.h"
 
 #define mutiItemCellId @"mutiItemCellId"
 
@@ -257,9 +258,17 @@
 }
 
 - (void)callPhone {
-    [FHCustomerServicePage jumpToLinkChatPage:@{
-        UT_ENTER_FROM: @"minetab"
-    }];
+    
+    BOOL isEnableLinkChat = [SSCommonLogic isEnableLinkChatPage];
+    if(isEnableLinkChat) {
+        [FHCustomerServicePage jumpToLinkChatPage:@{
+            UT_ENTER_FROM: @"minetab"
+        }];
+    }
+    else {
+        [FHCustomerServicePage callCustomerService];
+    }
+
 }
 
 - (void)updateFocusTitles {
