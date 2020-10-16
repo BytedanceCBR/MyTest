@@ -29,7 +29,6 @@
 @property (nonatomic , strong) FHUGCSearchView *searchView;
 @property (nonatomic , strong) UILabel *guessYouLikeLabel;
 @property (nonatomic , strong) UIView *refreshTipView;
-@property (nonatomic , assign) BOOL originLoginStatus;
 @end
 
 @implementation FHUGCMyInterestedController
@@ -146,18 +145,13 @@
     self.guessYouLikeLabel.text = @"猜你喜欢";
     [headerView addSubview:self.guessYouLikeLabel];
     
-    self.originLoginStatus = [[TTAccount sharedAccount] isLogin];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateFollowStatus) name:kFHUGCUpdateFollowDataFinishedNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateFollowStatus) name:kFHUGCUpdateFollowDataAfterAccountStatuschangedNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(showRefreshTip) name:kFHUGCLoadFollowDataFinishedNotification object:nil];
     return headerView;
 }
 
 -(void)updateFollowStatus {
-    BOOL isLogin = [[TTAccount sharedAccount] isLogin];
-    if(self.originLoginStatus != isLogin){
-        self.originLoginStatus = isLogin;
-        [self.viewModel updateDataListFollowStatus];
-    }
-    [self showRefreshTip];
+    [self.viewModel updateDataListFollowStatus];
 }
 
 - (void)showRefreshTip {

@@ -13,8 +13,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 // 加载关注的小区数据ok通知，数据放在followData中
 static NSString *const kFHUGCLoadFollowDataFinishedNotification = @"k_fh_ugc_load_follow_data_finish";
-// 完成关注更新通知
-static NSString *const kFHUGCUpdateFollowDataFinishedNotification = @"k_fh_ugc_update_follow_data_finish";
+// 账号切换完成关注更新通知
+static NSString *const kFHUGCUpdateFollowDataAfterAccountStatuschangedNotification = @"k_fh_ugc_update_follow_data_after_account_status_changed";
 // 关注 和 取消关注
 static NSString *const kFHUGCFollowNotification = @"k_fh_ugc_follow_finish";
 // 发帖成功通知 数放在userinfo的：social_group_id
