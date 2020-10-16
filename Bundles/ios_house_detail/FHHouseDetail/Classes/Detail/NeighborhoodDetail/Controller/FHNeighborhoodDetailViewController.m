@@ -120,7 +120,7 @@
     NSInteger index = [self.types indexOfObject:@(sectionType)];
     
     NSString *name = @"be_null";
-    if (index > 0 && index < self.names.count) {
+    if (index >= 0 && index < self.names.count) {
         name = [self.names btd_objectAtIndex:index class:[NSString class]];
     }
     
