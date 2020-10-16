@@ -91,6 +91,7 @@
     NSMutableDictionary *tracerDict = self.detailTracerDict.mutableCopy;
     NSMutableDictionary *param = [NSMutableDictionary new];
     tracerDict[@"element_from"] = @"panorama";
+    [tracerDict setObject:tracerDict[@"page_type"] forKey:@"enter_from"];
     param[TRACER_KEY] = tracerDict.copy;
     
 
