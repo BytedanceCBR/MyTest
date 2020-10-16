@@ -60,6 +60,9 @@
     }
     if (self.mapCellModel.annotations.count) {
         [items addObjectsFromArray:self.mapCellModel.annotations];
+        if (!self.priceTrendModel.priceTrends.count) {
+            [items addObject:@""];
+        }
     } else {
         [items addObject:self.mapCellModel.emptyString?:@"附近没有交通信息"];
     }

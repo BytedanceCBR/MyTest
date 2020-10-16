@@ -16,7 +16,7 @@
         self.foldButton = [[FHDetailFoldViewButton alloc] initWithDownText:@"查看全部" upText:@"收起" isFold:YES];
         self.foldButton.openImage = [UIImage imageNamed:@"message_more_arrow"];
         self.foldButton.foldImage = [UIImage imageNamed:@"message_flod_arrow"];
-        self.foldButton.keyLabel.textColor = [UIColor themeGray3];
+        self.foldButton.keyLabel.textColor = [UIColor colorWithHexString:@"#333333"];
          self.foldButton.keyLabel.font = [UIFont themeFontRegular:16];
         [self.foldButton btd_addActionBlockForTouchUpInside:^(__kindof UIButton * _Nonnull sender) {
             if (weakSelf.foldButtonActionBlock) {
