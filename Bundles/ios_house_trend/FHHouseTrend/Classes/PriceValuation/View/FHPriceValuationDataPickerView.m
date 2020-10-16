@@ -167,26 +167,20 @@
     return 0;
 }
 
-//- (CGFloat)pickerView:(UIPickerView *)pickerView widthForComponent:(NSInteger)component {
-//    if(component == 0){
-//        return 130.0f;
-//    }else if(component == 1){
-//        //            return SCREEN_WIDTH - 40.0f - 130.0f - 60.0f - 10.0f;
-//        return self.width - 40.0f - 130.0f - 60.0f - 10.0f;
-//    }else{
-//        return 60.0f;
-//    }
-//}
-
 - (NSString *)pickerView:(UIPickerView *)pickerView titleForRow:(NSInteger)row forComponent:(NSInteger)component {
     if(component < self.dataSource.count){
         NSInteger viewCount = pickerView.subviews.count;
-        if(1 < viewCount){
-            ((UILabel *)[pickerView.subviews objectAtIndex:1]).backgroundColor = [UIColor themeGray6];//显示分隔线
+        if (@available(iOS 14.0, *)) {
+            //ios 14 改变了这个层级，没有分割线了
+        }else{
+            if(1 < viewCount){
+                ((UILabel *)[pickerView.subviews objectAtIndex:1]).backgroundColor = [UIColor themeGray6];//显示分隔线
+            }
+            if(2 < viewCount){
+                ((UILabel *)[pickerView.subviews objectAtIndex:2]).backgroundColor = [UIColor themeGray6];//显示分隔线
+            }
         }
-        if(2 < viewCount){
-            ((UILabel *)[pickerView.subviews objectAtIndex:2]).backgroundColor = [UIColor themeGray6];//显示分隔线
-        }
+        
         NSArray *subArray = nil;
         if(self.titleSource && component < self.titleSource.count){
             subArray = self.titleSource[component];
