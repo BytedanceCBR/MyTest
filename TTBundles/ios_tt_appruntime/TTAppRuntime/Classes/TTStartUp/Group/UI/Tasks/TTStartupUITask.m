@@ -33,6 +33,7 @@
 #import "FHUtils.h"
 #import <FHHouseBase/FHPermissionAlertViewController.h>
 #import <FHHouseBase/FHIntroduceManager.h>
+#import <FHPopupViewCenter/FHPopupViewManager.h>
 
 
 DEC_TASK_N(TTStartupUITask,FHTaskTypeUI,TASK_PRIORITY_HIGH);
@@ -145,9 +146,10 @@ DEC_TASK_N(TTStartupUITask,FHTaskTypeUI,TASK_PRIORITY_HIGH);
     } else {
         SharedAppDelegate.window.rootViewController = [[UIStoryboard storyboardWithName:name bundle:nil] instantiateInitialViewController];
     }
-
     [SharedAppDelegate.window makeKeyAndVisible];
     [[FHEnvContext sharedInstance] onStartApp];
+    
+    [[FHPopupViewManager shared].delegate bindTabControllerTabBarHidden];
 }
 
 - (void)registerHomePageViewControllers {

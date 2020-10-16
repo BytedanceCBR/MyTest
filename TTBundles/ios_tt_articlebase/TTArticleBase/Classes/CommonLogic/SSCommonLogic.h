@@ -1423,6 +1423,8 @@ typedef NS_ENUM(NSInteger, SSCommentType)  {
 + (BOOL)enableIMRealtorLocking;
 // 实勘经纪人是否在最前
 + (BOOL)isSurveyRealtorFirst;
+// 是否使用link chat页面
++ (BOOL)isEnableLinkChatPage;
 @end
 
 
