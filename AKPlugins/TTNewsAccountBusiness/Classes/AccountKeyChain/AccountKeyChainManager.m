@@ -11,6 +11,7 @@
 #import "SSCookieManager.h"
 #import <TTBaseLib/TTSandBoxHelper.h>
 #import "TTAccountManager.h"
+#import <BDInstall/BDInstall.h>
 #import <BDTrackerProtocol/BDTrackerProtocol.h>
 
 
@@ -57,7 +58,7 @@ static AccountKeyChainManager *s_manager;
     
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(installIDAvailable:)
-                                                 name:TTInstallDeviceDidRegisteredNotification
+                                                 name:BDInstallDeviceDidRegisteredNotification
                                                object:nil];
     
 }

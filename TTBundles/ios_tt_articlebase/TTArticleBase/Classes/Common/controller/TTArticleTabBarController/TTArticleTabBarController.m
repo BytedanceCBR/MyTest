@@ -28,7 +28,6 @@
 #import "ArticleCategoryManagerView.h"
 #import "SSWebViewController.h"
 
-#import "TTInstallIDManager.h"
 #import "TTUISettingHelper.h"
 #import "TTTabbar+Private.h"
 #import "TTTabBarManager.h"

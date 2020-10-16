@@ -18,7 +18,7 @@
 #import "FHOldDetailDisclaimerCell.h"
 #import "FHFloorPanCorePermitCell.h"
 #import "UIDevice+BTDAdditions.h"
-#import <TTInstallIDManager.h>
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 #import "FHUtils.h"
 @interface FHFloorCoreInfoViewModel()<UITableViewDelegate,UITableViewDataSource>
 
@@ -269,7 +269,7 @@
       [dataCommonparmas setValue:@(top) forKey:@"status_bar_height"];
       NSString * buildVersionRaw = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"UPDATE_VERSION_CODE"];
       [dataCommonparmas setValue:buildVersionRaw forKey:@"update_version_code"];
-      [dataCommonparmas setValue:[[TTInstallIDManager sharedInstance] deviceID] forKey:@"device_id"];
+      [dataCommonparmas setValue:[BDTrackerProtocol deviceID] forKey:@"device_id"];
       [dataCommonparmas setValue:@"iOS" forKey:@"platform"];
       [dataCommonparmas setValue:@"f100" forKey:@"app_name"];
       [dataCommonparmas setValue:@(screenFrame.size.height) forKey:@"screen_height"];

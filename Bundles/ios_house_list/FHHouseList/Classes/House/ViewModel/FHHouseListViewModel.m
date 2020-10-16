@@ -31,7 +31,6 @@
 #import "FHCityListViewModel.h"
 #import <FHHouseBase/FHHouseBaseItemCell.h>
 #import "HMDTTMonitor.h"
-#import "TTInstallIDManager.h"
 #import "FHSugSubscribeModel.h"
 #import "FHSuggestionSubscribCell.h"
 #import <FHCommonUI/ToastManager.h>

@@ -12,7 +12,7 @@
 #import "FHUploaderManager.h"
 #import "UIColor+Theme.h"
 #import "TTAccount.h"
-#import "TTInstallIDManager.h"
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 #import "FHIMAccountCenterImpl.h"
 #import "FHBubbleTipManager.h"
 #import "FHURLSettings.h"
@@ -87,11 +87,11 @@ DEC_TASK("FHIMStartupTask",FHTaskTypeSerial,TASK_PRIORITY_HIGH+16);
 }
 
 - (NSString *)appId {
-    return [[TTInstallIDManager sharedInstance] appID];
+    return [TTSandBoxHelper ssAppID];
 }
 
 - (NSString *)deviceId {
-    return [[TTInstallIDManager sharedInstance] deviceID];
+    return [BDTrackerProtocol deviceID];
 }
 
 - (void)onMessageRecieved:(ChatMsg *)msg {
