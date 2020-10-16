@@ -160,6 +160,9 @@
     @"isBlocked": @"is_blocked",
     @"userVerified": @"user_verified",
     @"userAuthInfo": @"user_auth_info",
+    @"userBackgroundColor": @"user_background_color",
+    @"userBorderColor": @"user_border_color",
+    @"userFontColor": @"user_font_color",
   };
   return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
      return dict[keyName]?:keyName;

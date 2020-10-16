@@ -68,7 +68,7 @@
         FHFeedUGCCellModel *feedCellModel = (FHFeedUGCCellModel *)cellModel;
         if (feedCellModel.cellType == FHUGCFeedListCellTypeUGC) {
             size = [FHNeighborhoodDetailPostCell cellSizeWithData:cellModel width:width];
-        } else if (feedCellModel.cellType == FHUGCFeedListCellTypeAnswer) {
+        } else if (feedCellModel.cellType == FHUGCFeedListCellTypeAnswer || feedCellModel.cellType == FHUGCFeedListCellTypeQuestion) {
             size = [FHNeighborhoodDetailQuestionCell cellSizeWithData:cellModel width:width];
         }
     }else if([cellModel isKindOfClass:[FHNeighborhoodDetailSpaceModel class]]){
@@ -103,7 +103,7 @@
             }];
             [cell refreshWithData:cellModel];
             return cell;
-        } else if (feedCellModel.cellType == FHUGCFeedListCellTypeAnswer) {
+        } else if (feedCellModel.cellType == FHUGCFeedListCellTypeAnswer || feedCellModel.cellType == FHUGCFeedListCellTypeQuestion) {
             FHNeighborhoodDetailQuestionCell *cell = [self.collectionContext dequeueReusableCellOfClass:[FHNeighborhoodDetailQuestionCell class] withReuseIdentifier:@"FHNeighborhoodDetailQuestionCell" forSectionController:self atIndex:index];
             [cell refreshWithData:cellModel];
             return cell;

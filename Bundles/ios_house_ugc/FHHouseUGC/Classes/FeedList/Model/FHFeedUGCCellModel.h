@@ -38,6 +38,9 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *firstBizType;
 @property (nonatomic, copy , nullable) NSString *schema;
 @property (nonatomic, copy , nullable) NSString *userAuthInfo;
+@property (nonatomic, copy , nullable) NSString *userBackgroundColor;
+@property (nonatomic, copy , nullable) NSString *userBorderColor;
+@property (nonatomic, copy , nullable) NSString *userFontColor;
 @property (nonatomic, copy , nullable) NSString *desc;
 @property (nonatomic, copy, nullable) FHFeedContentRawDataCommentRelationModel *relation;
 @property (nonatomic, copy, nullable) FHFeedContentRawDataCommentRelationCountModel *relationCount;
