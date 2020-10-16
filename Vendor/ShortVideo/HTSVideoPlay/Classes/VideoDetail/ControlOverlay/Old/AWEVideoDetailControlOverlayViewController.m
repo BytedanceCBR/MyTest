@@ -667,7 +667,21 @@ static const CGFloat kCheckChallengeButtonLeftPadding = 28;
 
     [self.view setNeedsUpdateConstraints];
     [self.avatarView updateAvatarWithTSVUserModel:model];
-    [self.sourceImage bd_setImageWithURL:[NSURL URLWithString:model.videoSourceIcon]];
+    if (model.videoSourceIcon) {
+        [[BDWebImageManager sharedManager] requestImage:[NSURL URLWithString:model.videoSourceIcon] options:BDImageRequestHighPriority complete:^(BDWebImageRequest *request, UIImage *image, NSData *data, NSError *error, BDWebImageResultFrom from) {
+            if (!error && image) {
+                self.sourceImage.image = image;
+                CGFloat ratio = 0;
+                if (image.size.height > 0) {
+                    ratio = image.size.width / image.size.height;
+                }
+                [self.sourceImage mas_updateConstraints:^(MASConstraintMaker *make) {
+                    make.width.mas_equalTo(16 * ratio);
+                }];
+            }
+        }];
+    }
+    
     if (self.model.videoSourceIcon.length > 0) {
         self.avatarView.hidden = YES;
     }else {
@@ -885,7 +899,9 @@ static const CGFloat kCheckChallengeButtonLeftPadding = 28;
 
 - (void)handleUserNameClick:(id)sender
 {
-    [self.viewModel clickUserNameButton];
+    if (!self.model.videoSourceIcon) {
+           [self.viewModel clickUserNameButton];
+    }
 }
 
 - (void)handleFollowClick:(id)sender

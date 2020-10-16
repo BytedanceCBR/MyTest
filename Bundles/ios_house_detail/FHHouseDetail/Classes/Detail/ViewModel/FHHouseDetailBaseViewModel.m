@@ -523,7 +523,7 @@
     if (self.detailTracerDic) {
         [params addEntriesFromDictionary:self.detailTracerDic];
     }
-    if (self.houseType == FHHouseTypeNeighborhood || self.houseType == FHHouseTypeSecondHandHouse) {
+    if (self.houseType == FHHouseTypeNeighborhood || self.houseType == FHHouseTypeSecondHandHouse || self.houseType == FHHouseTypeNewHouse) {
         params[@"growth_deepevent"] = @(1);
     }
     if(self.houseType == FHHouseTypeSecondHandHouse){
