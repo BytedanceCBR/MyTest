@@ -60,6 +60,11 @@
     FHDetailSectionTitleCollectionView *titleView = [self.collectionContext dequeueReusableSupplementaryViewOfKind:UICollectionElementKindSectionHeader forSectionController:self class:[FHDetailSectionTitleCollectionView class] atIndex:index];
     titleView.titleLabel.font = [UIFont themeFontMedium:18];
     titleView.titleLabel.textColor = [UIColor themeGray1];
+    [titleView.titleLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.left.equalTo(titleView).offset(15);
+        make.height.mas_equalTo(25);
+        make.bottom.equalTo(titleView.mas_bottom).offset(-16);
+    }];
     FHNeighborhoodDetailHouseSaleCellModel *cellModel= [(FHNeighborhoodDetailHouseSaleSM *)self.sectionModel houseSaleCellModel];
     if(cellModel.neighborhoodSoldHouseData.total.length > 0){
         titleView.titleLabel.text = [NSString stringWithFormat:@"同小区房源 (%@)",cellModel.neighborhoodSoldHouseData.total];
