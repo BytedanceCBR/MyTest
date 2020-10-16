@@ -379,6 +379,8 @@
             self.locationBar.isLocationSuccess = NO;
             [FHLocManager sharedInstance].isLocationSuccess = NO;
             [[ToastManager manager] showToast:@"定位失败" duration:1.0 isUserInteraction:YES];
+            [[FHLocManager sharedInstance] clearCommonParamsLocation];
+            [[FHLocManager sharedInstance] showLocationGuideAlert];
             return;
         }
         [self requestCurrentLocationWithToast:YES needSwitchCity:NO];
