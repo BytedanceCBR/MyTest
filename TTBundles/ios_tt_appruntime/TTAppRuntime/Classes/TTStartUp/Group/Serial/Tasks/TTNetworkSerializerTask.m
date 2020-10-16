@@ -92,6 +92,9 @@ DEC_TASK("TTNetworkSerializerTask",FHTaskTypeSerial,TASK_PRIORITY_HIGH+6);
     } else {
         [TTNetworkManager setLibraryImpl:TTNetworkManagerImplTypeAFNetworking];
     }
+    
+    [[TTNetworkManager shareInstance] setDomainHttpDns:@"dig.bdurl.net"];
+    [[TTNetworkManager shareInstance] setDomainNetlog:@"crash.snssdk.com"];
 
 //    // 初始化SafeGuard配置
 //    [[AKSafeGuardHelper sharedInstance] initSafeGuard];
