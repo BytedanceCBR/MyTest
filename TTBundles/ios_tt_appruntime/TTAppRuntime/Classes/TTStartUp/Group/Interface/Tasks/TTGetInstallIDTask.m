@@ -44,6 +44,11 @@ DEC_TASK("TTGetInstallIDTask",FHTaskTypeSerial,TASK_PRIORITY_HIGH+7);
     [BDInstallGlobalConfig sharedInstance].appName = [TTSandBoxHelper appName];
     [BDInstallGlobalConfig sharedInstance].channel = [TTSandBoxHelper getCurrentChannel];
     [BDInstallGlobalConfig sharedInstance].service = [TTGetInstallIDTask class];
+    BOOL needEncrypt = [SSCommonLogic useEncrypt];
+    if ([TTSandBoxHelper isInHouseApp]) {
+        needEncrypt = NO;
+    }
+    [BDInstallGlobalConfig sharedInstance].encrypt = needEncrypt;
     [BDInstallGlobalConfig sharedInstance].autoActivated = YES;
     [[BDInstall sharedInstance] startRegisterDeviceWithSuccess:^(NSString * _Nonnull deviceID, NSString * _Nonnull installID) {
         // 更新installID
