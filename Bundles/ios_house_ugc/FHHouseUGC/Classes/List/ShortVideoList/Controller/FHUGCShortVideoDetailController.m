@@ -127,6 +127,8 @@
 
 #import "UIDevice+BTDAdditions.h"
 #import "NSDictionary+BTDAdditions.h"
+#import "FHHouseUGCAPI.h"
+
 #define kPostMessageFinishedNotification    @"kPostMessageFinishedNotification"
 
 @import AVFoundation;
@@ -1778,6 +1780,18 @@ static const CGFloat kFloatingViewOriginY = 230;
         }];
     }];
 }
+
+- (void)commentCell:(AWEVideoCommentCell *)cell didClickShieldWithModel:(AWECommentModel *)commentModel
+{
+//    [FHHouseUGCAPI commentShield:self.model.groupId commentId:commentModel.id.stringValue completion:^(bool success, NSError * _Nonnull error) {
+//        if(success){
+            [[ToastManager manager] showToast:@"屏蔽成功"];
+//        }else{
+//            [[ToastManager manager] showToast:@"屏蔽失败"];
+//        }
+//    }];
+}
+
 - (void)commentCell:(AWEVideoCommentCell *)cell didClickLikeWithModel:(AWECommentModel *)commentModel
 {
     if (![TTAccountManager isLogin]) {
@@ -2225,7 +2239,9 @@ static const CGFloat kFloatingViewOriginY = 230;
         [self handleFavoriteVideoWithContentItem:(TTFavouriteContentItem *)contentItem];
     } else if ([contentItem.contentItemType isEqualToString:TTActivityContentItemTypeDislike]) {
         [self handleDislikeVideo];
-    } else if ([contentItem.contentItemType isEqualToString:TTActivityContentItemTypeReport]) {
+    } else if ([contentItem.contentItemType isEqualToString:TTActivityContentItemTypeBlock]) {
+        [self handleDislikeVideo];
+    }else if ([contentItem.contentItemType isEqualToString:TTActivityContentItemTypeReport]) {
         [self handleReportVideo];
     } else if ([contentItem.contentItemType isEqualToString:TTActivityContentItemTypeDelete]) {
         [self handleDeleteVideo];

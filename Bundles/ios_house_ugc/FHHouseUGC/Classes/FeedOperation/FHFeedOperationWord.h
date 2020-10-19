@@ -18,6 +18,8 @@ typedef NS_ENUM(NSUInteger, FHFeedOperationWordType) {
     FHFeedOperationWordTypeSelfLook = 7,    //自见
     FHFeedOperationWordTypeEdit = 8,        //编辑
     FHFeedOperationWordTypeEditHistory = 9, //编辑记录
+    FHFeedOperationWordTypeShield = 10,     //屏蔽
+    FHFeedOperationWordTypeBlackList = 11,      //拉黑
 };
 
 @interface FHFeedOperationWord : NSObject
