@@ -9,6 +9,7 @@
 #define FHUserTrackerDefine_h
 
 //keys
+extern NSString *const UT_EVENT_TRACKING_ID;//@"event_tracking_id"
 extern NSString *const UT_EVENT_TYPE; //@"event_type"
 extern NSString *const UT_ORIGIN_FROM; //@"origin_from"
 extern NSString *const UT_ENTER_FROM; //@"enter_from"

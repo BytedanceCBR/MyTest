@@ -47,6 +47,8 @@
 }
 
 @end
+
+NSString *const UT_EVENT_TRACKING_ID = @"event_tracking_id";
 //#define UT_EVENT_TYPE  @"event_type"
 NSString *const UT_EVENT_TYPE = @"event_type";
 NSString *const UT_ORIGIN_FROM = @"origin_from";

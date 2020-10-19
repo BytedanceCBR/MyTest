@@ -11,13 +11,15 @@
 #import <objc/runtime.h>
 
 static NSString *const TrackEventPageShow = @"go_detail";
-static NSString *const TrackEventTabIndexChange = @"go_detail";
 static NSString *const TrackEventSuggestionResultShow = @"sug_word_show";
 
 static NSString *const TrackKeyTabName = @"tab_name";
 static NSString *const TrackKeySuggestionResultCount = @"result_num";
 static NSString *const TrackKeySuggestionWord = @"word";
 static NSString *const TrackKeySuggestionResultTags = @"tags";
+
+static NSString *const TrackValuePageShowTrackingID = @"113200";
+static NSString *const TrackValueSuggestionResultShowTrackingID = @"113201";
 
 @implementation FHSuggestionListViewController(FHTracker)
 
@@ -33,22 +35,17 @@ static const char tabSwitchedKey;
 - (void)trackPageShow {
     NSDictionary *parameters = @{
         UT_ORIGIN_FROM: [self fh_originFrom],
-        UT_ENTER_FROM: [self fh_fromPageType],
+        UT_ENTER_FROM:  self.tabSwitched ? [self fh_pageType] : [self fh_fromPageType],
         UT_PAGE_TYPE: [self fh_pageType],
-        TrackKeyTabName: [self trackTabName]
+        TrackKeyTabName: [self trackTabName],
+        UT_EVENT_TRACKING_ID: TrackValuePageShowTrackingID,
     };
     TRACK_EVENT(TrackEventPageShow, parameters);
 }
 
 - (void)trackTabIndexChange {
     self.tabSwitched = YES;
-    NSDictionary *parameters = @{
-        UT_ORIGIN_FROM: [self fh_originFrom],
-        UT_ENTER_FROM: [self fh_pageType],
-        UT_PAGE_TYPE: [self fh_pageType],
-        TrackKeyTabName: [self trackTabName]
-    };
-    TRACK_EVENT(TrackEventPageShow, parameters);
+    [self trackPageShow];
 }
 
 - (void)trackSuggestionWithWord:(NSString *)word houseType:(NSInteger)houseType result:(FHSuggestionResponseModel *)result {
@@ -74,7 +71,8 @@ static const char tabSwitchedKey;
         TrackKeyTabName: [self trackTabName],
         TrackKeySuggestionResultCount: @(count),
         TrackKeySuggestionWord: word,
-        TrackKeySuggestionResultTags: tagsStr
+        TrackKeySuggestionResultTags: tagsStr,
+        UT_EVENT_TRACKING_ID: TrackValueSuggestionResultShowTrackingID,
     };
     TRACK_EVENT(TrackEventSuggestionResultShow, parameters);
 }
