@@ -256,7 +256,7 @@ typedef NS_ENUM(NSUInteger, FHHouseDetailReportAdditionItemType) {
             self.titleLabel.attributedText = titleAttributeText;
         }
     } else {
-        if([self.titleLabel.text containsString:requiredText]) {
+        if(requiredText.length > 0 && [self.titleLabel.text containsString:requiredText]) {
             NSString *title = [self.titleLabel.text stringByReplacingOccurrencesOfString:requiredText withString:@""];
             NSMutableAttributedString *titleAttributeText = [[NSMutableAttributedString alloc] initWithString:title attributes:@{
                 NSForegroundColorAttributeName: self.titleLabel.textColor,
@@ -435,7 +435,6 @@ typedef NS_ENUM(NSUInteger, FHHouseDetailReportInfoState) {
 @property (nonatomic, copy) NSString *problem;
 @property (nonatomic, assign) FHHouseDetailReportInfoState status;
 @property (nonatomic, copy) NSString *ticketId;
-@property (nonatomic, copy) NSString *creatorId;
 @end
 @implementation FHHouseDetailRerportInfoDataModel
 + (BOOL)propertyIsOptional:(NSString *)propertyName {
@@ -448,7 +447,6 @@ typedef NS_ENUM(NSUInteger, FHHouseDetailReportInfoState) {
     @"problem": @"problem",
     @"status": @"status",
     @"ticketId": @"ticket_id",
-    @"creatorId": @"creator_id",
   };
   return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
      return dict[keyName]?:keyName;
@@ -485,7 +483,6 @@ typedef NS_ENUM(NSUInteger, FHHouseDetailReportInfoState) {
 
 // 数据
 @property (nonatomic, copy  ) NSString *ticketID;
-@property (nonatomic, copy  ) NSString *creatorID;
 @property (nonatomic, strong) FRUploadImageManager *uploadImageManager;
 @end
 
@@ -580,7 +577,6 @@ typedef NS_ENUM(NSUInteger, FHHouseDetailReportInfoState) {
             NSError *error = nil;
             FHHouseDetailRerportInfoModel *model = [[FHHouseDetailRerportInfoModel alloc] initWithDictionary:jsonObj error:&error];
             if(model && [model.status isEqual:@"0"]) {
-                self.creatorID = model.data.creatorId;
                 switch (model.data.status) {
                     case FHHouseDetailReportInfoState_Submitted:
                     {
@@ -933,9 +929,8 @@ typedef NS_ENUM(NSUInteger, FHHouseDetailReportInfoState) {
         // 提交动作
         NSMutableDictionary *params = [NSMutableDictionary dictionary];
         params[@"ticket_id"] = self.ticketID;
-        params[@"image_list"] = [image_urls componentsJoinedByString:@","];
+        params[@"uri_list"] = [image_urls componentsJoinedByString:@","];
         params[@"more_info"] = self.additionCell.item.detail;
-        params[@"creator_id"] = self.creatorID;
         
         if(![TTReachability isNetworkConnected]) {
             [[ToastManager manager] showToast:@"网络不给力，请重试"];
