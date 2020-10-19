@@ -152,14 +152,6 @@ static NSString *const kTTNewDislikeReportOptions = @"tt_new_dislike_report_opti
             }else{
                 word.items = @[word];
             }
-            // 拉黑
-            if(word.type == FHFeedOperationWordTypeBlackList){
-                [items addObject:word];
-            }
-            // 屏蔽
-            if(word.type == FHFeedOperationWordTypeShield){
-                [items addObject:word];
-            }
             // 编辑
             if(word.type == FHFeedOperationWordTypeEdit && isShowDelete && viewModel.cellType == FHUGCFeedListCellTypeUGC && [viewModel.groupSource isEqualToString:@"113"]){
                 [items addObject:word];
@@ -174,6 +166,14 @@ static NSString *const kTTNewDislikeReportOptions = @"tt_new_dislike_report_opti
             }
             //显示删除就不会显示举报
             if(word.type == FHFeedOperationWordTypeReport && (!isShowDelete || [useAuth isEqualToString:@"2"])){
+                [items addObject:word];
+            }
+            // 拉黑
+            if(word.type == FHFeedOperationWordTypeBlackList && (!isShowDelete || [useAuth isEqualToString:@"2"])){
+                [items addObject:word];
+            }
+            // 屏蔽
+            if(word.type == FHFeedOperationWordTypeShield && (!isShowDelete || [useAuth isEqualToString:@"2"])){
                 [items addObject:word];
             }
         }
