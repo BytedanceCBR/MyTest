@@ -24,6 +24,7 @@
 #import "TTThemedAlertController.h"
 #import "TTCertificationConfirmCertificationViewController.h"
 #import "TTCertificationConst.h"
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 
 #define kSegmentViewHeight 41
 #define kTopNavViewHeight (TTNavigationBarHeight + [UIApplication sharedApplication].statusBarFrame.size.height)
@@ -377,7 +378,7 @@
 
 - (void)takePhoto
 {
-    [TTTrackerWrapper eventV3:@"certificate_identity_add" params:@{@"from" : @"professional"}];
+    [BDTrackerProtocol eventV3:@"certificate_identity_add" params:@{@"from" : @"professional"}];
     UINavigationController *nav = [TTUIResponderHelper topNavigationControllerFor:self.view];
     TTCertificationTakePhotoTipView *takePhotoTipView = [[TTCertificationTakePhotoTipView alloc] initWithFrame:nav.view.bounds];
     takePhotoTipView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
@@ -421,7 +422,7 @@
          [TTIndicatorView showWithIndicatorStyle:TTIndicatorViewStyleImage indicatorText:@"网络异常" indicatorImage:nil autoDismiss:YES dismissHandler:nil];
         return;
     }
-    [TTTrackerWrapper eventV3:@"certificate_submit" params:nil];
+    [BDTrackerProtocol eventV3:@"certificate_submit" params:nil];
     UINavigationController *nav = [TTUIResponderHelper topNavigationControllerFor:self.view];
     nav.view.userInteractionEnabled = NO;
     TTIndicatorView *indicatorView = [[TTIndicatorView alloc] initWithIndicatorStyle:TTIndicatorViewStyleWaitingView indicatorText:@"正在加载..." indicatorImage:nil dismissHandler:nil];
@@ -646,14 +647,14 @@
     UIImagePickerController *pick = [[UIImagePickerController alloc] init];
     pick.delegate = self;
     if(buttonIndex == 0) {
-        [TTTrackerWrapper eventV3:@"certificate_take_phone" params:@{@"from" : @"professional"}];
+        [BDTrackerProtocol eventV3:@"certificate_take_phone" params:@{@"from" : @"professional"}];
         pick.sourceType = UIImagePickerControllerSourceTypeCamera;
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
             UINavigationController *nav = [TTUIResponderHelper topNavigationControllerFor:self.view];
             [nav presentViewController:pick animated:YES completion:nil];
         });
     } else if(buttonIndex == 1) {
-        [TTTrackerWrapper eventV3:@"certificate_upload_photo" params:@{@"from" : @"professional"}];
+        [BDTrackerProtocol eventV3:@"certificate_upload_photo" params:@{@"from" : @"professional"}];
         pick.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
             UINavigationController *nav = [TTUIResponderHelper topNavigationControllerFor:self.view];
@@ -677,7 +678,7 @@
 {
     [self tapClick];
     if(toIndex == 1) {
-        [TTTrackerWrapper eventV3:@"certificate_identity_click_org" params:@{@"refer" : @"professional"}];
+        [BDTrackerProtocol eventV3:@"certificate_identity_click_org" params:@{@"refer" : @"professional"}];
         [self.view addSubview:self.organizationVC.view];
         self.organizationVC.view.left = 0;
         self.organizationVC.view.top = self.segmentView.bottom;

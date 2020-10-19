@@ -13,6 +13,7 @@
 #import "TTArticleCategoryManager.h"
 #import "SSNavigationBar.h"
 #import "TTDeviceHelper.h"
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 
 
 
@@ -120,7 +121,7 @@
 
 - (void)backButtonClicked:(id)sender
 {
-    wrapperTrackEvent(@"category_nav", @"local_news_setting_cancel");
+    [BDTrackerProtocol event:@"category_nav" label:@"local_news_setting_cancel"];
     UINavigationController *nav = [TTUIResponderHelper topNavigationControllerFor: self];
     [nav popViewControllerAnimated:YES];
 }

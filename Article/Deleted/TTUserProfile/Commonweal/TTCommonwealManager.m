@@ -9,6 +9,7 @@
 #import "TTCommonwealManager.h"
 #import "TTNetworkManager.h"
 #import <TTAccountManager.h>
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 
 @interface TTCommonwealManager ()
 
@@ -65,7 +66,7 @@ static id _instance;
     [param setValue:@([self receiveMoneyEnable])  forKey:@"is_prize"];
     [param setValue:[NSString stringWithFormat:@"%.0lf",[self todayUsingTime]] forKey:@"read_time"];
     [param setValue:[NSString stringWithFormat:@"%.0lf",[self receiveMoney]] forKey:@"prize"];
-    [TTTracker eventV3:@"welfare_click" params:param];
+    [BDTrackerProtocol eventV3:@"welfare_click" params:param];
 
 }
 

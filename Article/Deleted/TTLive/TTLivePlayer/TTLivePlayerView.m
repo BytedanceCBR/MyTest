@@ -15,7 +15,7 @@
 #import <AVFoundation/AVAudioSession.h>
 #import "TTLivePlayerTrafficViewController.h"
 
-#import "TTTrackerWrapper.h"
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 
 
 @interface TTLivePlayerView () <TVLDelegate, TTLivePlayerControlViewDelegate>
@@ -310,7 +310,7 @@
 //NSLog(@">>>>>> log: %@", logDict);
     if (!logDict || logDict.count == 0) return;
     
-    [TTTrackerWrapper eventV3:@"live_sdk_log" params:[logDict copy]];
+    [BDTrackerProtocol eventV3:@"live_sdk_log" params:[logDict copy]];
 }
 
 @end

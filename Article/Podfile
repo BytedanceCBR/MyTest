@@ -397,16 +397,14 @@ def appPods
     pod 'BDInstall', '1.5.0-alpha.3',:subspecs => [
     	'Core',
     	'IDFA',
-    	'URLConfig/China',
-      'Debug'
+    	'URLConfig/China'
     ]
     pod 'BDTracker','2.5.2',:subspecs => [
         'Base',
         'Network',
         'Core',
         'IDFA',
-        'URLConfig/CN',
-        'Debug'
+        'URLConfig/CN'
     ]
     pod 'BDDataDecorator','2.0.4-alpha.1',:subspecs => [
       'Data',
@@ -621,6 +619,8 @@ def testPods
 #    pod 'FHErrorHubManager', :path => '../../FHErrorHubManager'
     pod 'FHErrorHubManager', '1.0.15'
     pod 'BDiOSDebugBinary', '0.0.4'
+    pod 'BDTracker/Debug', '2.5.2'
+    pod 'BDInstall/Debug', '1.5.0-alpha.3'
 end
 
 target 'NewsLiteInHouse' do

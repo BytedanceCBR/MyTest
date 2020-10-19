@@ -25,6 +25,7 @@
 
 ///...
 #import <HTSVideoEditor.h>
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 
 
 #define TTCameraMaxFactor    4
@@ -1296,7 +1297,7 @@ typedef NS_ENUM(NSUInteger, TTLiveCameraCurrentState)
     if (isEmptyString(label)) {
         return;
     }
-    wrapperTrackEventWithCustomKeys(@"liveshot" , label, nil, nil, self.ssTrackerDic);
+    [BDTrackerProtocol trackEventWithCustomKeys:@"liveshot" label:label value:nil source:nil extraDic:self.ssTrackerDic];
 }
 
 @end

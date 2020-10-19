@@ -99,7 +99,6 @@
 #import "ExploreItemActionManager.h"
 #import "UIView+SupportFullScreen.h"
 #import "TTVAutoPlayManager.h"
-#import <TTTracker/TTTrackerProxy.h>
 #import "Article+TTAdDetailInnerArticleProtocolSupport.h"
 //#import "TTShareToRepostManager.h"
 #import "TTCommentDetailModel+TTCommentDetailModelProtocolSupport.h"
@@ -120,6 +119,7 @@
 //爱看
 #import "AKHelper.h"
 
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 #define kTopViewHeight  44.f
 
 extern CGFloat ttvs_detailVideoMaxHeight(void);
@@ -937,21 +937,21 @@ extern NSString * const TTActivityContentItemTypeQQZone;
                     case TTVideoBannerTypeWebDetail:
                     {
                         if (viewModel.appName && banner.groupID) {
-                            [TTTrackerWrapper eventV3:@"video_banner_subscribe_show_h5page" params:@{@"app" : viewModel.appName, @"group_id": banner.groupID}];
+                            [BDTrackerProtocol eventV3:@"video_banner_subscribe_show_h5page" params:@{@"app" : viewModel.appName, @"group_id": banner.groupID}];
                         }
                     }
                         break;
                     case TTVideoBannerTypeOpenApp:
                     {
                         if (viewModel.appName) {
-                            wrapperTrackEventWithCustomKeys(@"video_banner", @"subscribe_show_jump", [self.detailModel uniqueID], nil, @{@"app" : viewModel.appName});
+                            [BDTrackerProtocol trackEventWithCustomKeys:@"video_banner" label:@"subscribe_show_jump" value:[self.detailModel uniqueID] source:nil extraDic:@{@"app" : viewModel.appName}];
                         }
                     }
                         break;
                     case TTVideoBannerTypeDownloadApp:
                     {
                         if (viewModel.appName) {
-                            wrapperTrackEventWithCustomKeys(@"video_banner", @"subscribe_show_download", [self.detailModel uniqueID], nil, @{@"app" : viewModel.appName});
+                            [BDTrackerProtocol trackEventWithCustomKeys:@"video_banner" label:@"subscribe_show_download" value:[self.detailModel uniqueID] source:nil extraDic:@{@"app" : viewModel.appName}];
                         }
                     }
                         break;
@@ -1333,7 +1333,7 @@ extern NSString * const TTActivityContentItemTypeQQZone;
 - (void)_writeCommentActionFired:(id)sender {
     BOOL switchToEmojiInput = (sender == self.toolbarView.emojiButton);
     if (switchToEmojiInput) {
-        [TTTrackerWrapper eventV3:@"emoticon_click" params:@{
+        [BDTrackerProtocol eventV3:@"emoticon_click" params:@{
             @"status" : @"no_keyboard",
             @"source" : @"comment"
         }];
@@ -1428,7 +1428,7 @@ extern NSString * const TTActivityContentItemTypeQQZone;
     if (self.infoManager.promotionModel) {
         TTActivity *promtionActivity = [TTActivity activityWithModel:self.infoManager.promotionModel];
         [activityItems insertObject:promtionActivity atIndex:0];
-        wrapperTrackEventWithCustomKeys(@"share_btn", @"show", self.detailModel.article.groupModel.groupID, nil, nil);
+        [BDTrackerProtocol trackEventWithCustomKeys:@"share_btn" label:@"show" value:self.detailModel.article.groupModel.groupID source:nil extraDic:nil];
     }
     
     SSActivityView *phoneShareView = [[SSActivityView alloc] init];
@@ -1565,7 +1565,7 @@ extern NSString * const TTActivityContentItemTypeQQZone;
         [eventContext setValue:[@(self.detailModel.article.uniqueID) stringValue] forKey:@"group_id"];
         [eventContext setValue:self.detailModel.article.itemID forKey:@"item_id"];
         [eventContext setValue:[article.mediaInfo[@"media_id"] stringValue] forKey:@"media_id"];
-        wrapperTrackEvent(@"list_content", @"share_channel");
+        [BDTrackerProtocol event:@"list_content" label:@"share_channel"];
     }
 }
 
@@ -1631,7 +1631,7 @@ extern NSString * const TTActivityContentItemTypeQQZone;
                 StrongSelf;
                 if (![TTAccountManager isLogin] && ![TTVideoTip hasTipFavLoginUserDefaultKey]) {
                     
-                    wrapperTrackEvent(@"pop", @"login_detail_favor_show");
+                    [BDTrackerProtocol event:@"pop" label:@"login_detail_favor_show"];
                     
                     [TTAccountManager showLoginAlertWithType:TTAccountLoginAlertTitleTypeFavor source:@"detail_first_favor" completion:^(TTAccountAlertCompletionEventType type, NSString *phoneNum) {
                         if (type == TTAccountAlertCompletionEventTypeTip) {
@@ -1813,9 +1813,9 @@ extern NSString * const TTActivityContentItemTypeQQZone;
 - (void)_logBack
 {
     if (self.clickedBackBtn) {
-        wrapperTrackEvent(@"detail", @"page_close_button");
+        [BDTrackerProtocol event:@"detail" label:@"page_close_button"];
     } else {
-        wrapperTrackEvent(@"detail", @"back_gesture");
+        [BDTrackerProtocol event:@"detail" label:@"back_gesture"];
     }
 }
 
@@ -1887,7 +1887,7 @@ extern NSString * const TTActivityContentItemTypeQQZone;
     }
     
     if (![TTTrackerWrapper isOnlyV3SendingEnable]) {
-        [TTTrackerWrapper eventData:dict];
+        [BDTrackerProtocol eventData:dict];
     }
     
     [self goDetailSendEvent3Data];
@@ -2341,7 +2341,7 @@ extern NSString * const TTActivityContentItemTypeQQZone;
         [extraDict setValue:@"click_video" forKey:@"source"];
         [extraDict setValue:@(1) forKey:@"aggr_type"];
         [extraDict setValue:@(1) forKey:@"type"];
-        wrapperTrackEventWithCustomKeys(@"detail_share", @"delete_ugc", [self.detailModel uniqueID], nil, extraDict);
+        [BDTrackerProtocol trackEventWithCustomKeys:@"detail_share" label:@"delete_ugc" value:[self.detailModel uniqueID] source:nil extraDic:extraDict];
         NSMutableDictionary *params = [NSMutableDictionary dictionary];
         [params setValue:[[self userInfo] stringValueForKey:@"user_id" defaultValue:nil] forKey:@"user_id"];
         [params setValue:itemID forKey:@"item_id"];
@@ -2367,7 +2367,7 @@ extern NSString * const TTActivityContentItemTypeQQZone;
         }];
     } else if (itemType == TTActivityTypePromotion) {
         [TTAdPromotionManager handleModel:self.infoManager.promotionModel  condition:nil];
-        wrapperTrackEventWithCustomKeys(@"share_btn", @"click", self.detailModel.article.groupModel.groupID, nil, nil);
+        [BDTrackerProtocol trackEventWithCustomKeys:@"share_btn" label:@"click" value:self.detailModel.article.groupModel.groupID source:nil extraDic:nil];
     } else if (itemType == TTActivityTypeDigUp){
         [self digUpActivityClicked];
     }else if (itemType == TTActivityTypeDigDown){
@@ -2423,7 +2423,7 @@ extern NSString * const TTActivityContentItemTypeQQZone;
         [params setValue:@"video" forKey:@"article_type"];
         [params setValue:[self.detailModel.article.userInfo ttgc_contentID] forKey:@"author_id"];
 
-        [TTTrackerWrapper eventV3:@"rt_unlike" params:params];
+        [BDTrackerProtocol eventV3:@"rt_unlike" params:params];
     }
     else if (article.userBury){
         NSString * tipMsg = NSLocalizedString(@"您已经踩过", nil);
@@ -2450,7 +2450,7 @@ extern NSString * const TTActivityContentItemTypeQQZone;
         NSMutableDictionary *dict = [NSMutableDictionary dictionary];
         [dict setValue:@"video" forKey:@"article_type"];
         [dict setValue:[self.detailModel.article.userInfo ttgc_contentID] forKey:@"author_id"];
-        wrapperTrackEventWithCustomKeys(@"xiangping", @"video_list_digg",nil,nil,dict);
+        [BDTrackerProtocol trackEventWithCustomKeys:@"xiangping" label:@"video_list_digg" value:nil source:nil extraDic:dict];
 
     }
 }
@@ -2492,7 +2492,7 @@ extern NSString * const TTActivityContentItemTypeQQZone;
         [dict setValue:@"video" forKey:@"article_type"];
         [dict setValue:[self.detailModel.article.userInfo ttgc_contentID] forKey:@"author_id"];
 
-        [TTTracker eventV3:@"rt_unbury" params:[dict copy]];
+        [BDTrackerProtocol eventV3:@"rt_unbury" params:[dict copy]];
 
     }
     else{
@@ -2514,7 +2514,7 @@ extern NSString * const TTActivityContentItemTypeQQZone;
         NSMutableDictionary *dict = [NSMutableDictionary dictionary];
         [dict setValue:@"video" forKey:@"article_type"];
         [dict setValue:[self.detailModel.article.userInfo ttgc_contentID] forKey:@"author_id"];
-        wrapperTrackEventWithCustomKeys(@"xiangping", @"video_list_bury",nil,nil,dict);
+        [BDTrackerProtocol trackEventWithCustomKeys:@"xiangping" label:@"video_list_bury" value:nil source:nil extraDic:dict];
     }
 }
 
@@ -2547,7 +2547,7 @@ extern NSString * const TTActivityContentItemTypeQQZone;
         NSMutableDictionary *dict = [NSMutableDictionary dictionary];
         [dict setValue:@"video" forKey:@"article_type"];
         [dict setValue:[self.detailModel.article.userInfo ttgc_contentID] forKey:@"author_id"];
-        wrapperTrackEventWithCustomKeys(@"xiangping", @"video_detail_unfavorite",nil,nil,dict);
+        [BDTrackerProtocol trackEventWithCustomKeys:@"xiangping" label:@"video_detail_unfavorite" value:nil source:nil extraDic:dict];
     }
     else {
         __weak __typeof__(self) wself = self;
@@ -2567,7 +2567,7 @@ extern NSString * const TTActivityContentItemTypeQQZone;
         NSMutableDictionary *dict = [NSMutableDictionary dictionary];
         [dict setValue:@"video" forKey:@"article_type"];
         [dict setValue:[self.detailModel.article.userInfo ttgc_contentID] forKey:@"author_id"];
-        wrapperTrackEventWithCustomKeys(@"xiangping", @"video_detail_favorite",nil,nil,dict);
+        [BDTrackerProtocol trackEventWithCustomKeys:@"xiangping" label:@"video_detail_favorite" value:nil source:nil extraDic:dict];
     }
     
 }
@@ -2615,7 +2615,7 @@ extern NSString * const TTActivityContentItemTypeQQZone;
                 }
                 [dict setValue:@(self.enterFromClickComment) forKey:@"is_click_button"];
                 [dict setValue:@"video" forKey:@"group_type"];
-                wrapperTrackEventWithCustomKeys(@"comment", @"write_confirm_unlog_done", self.detailModel.uniqueID, nil, dict);
+                [BDTrackerProtocol trackEventWithCustomKeys:@"comment" label:@"write_confirm_unlog_done" value:self.detailModel.uniqueID source:nil extraDic:dict];
             }
         }
     }
@@ -2638,7 +2638,7 @@ extern NSString * const TTActivityContentItemTypeQQZone;
         }
         [dict setValue:@(self.enterFromClickComment) forKey:@"is_click_button"];
         [dict setValue:@"video" forKey:@"group_type"];
-        wrapperTrackEventWithCustomKeys(@"comment", @"write_confirm_unlog", self.detailModel.article.groupModel.groupID, nil, dict);
+        [BDTrackerProtocol trackEventWithCustomKeys:@"comment" label:@"write_confirm_unlog" value:self.detailModel.article.groupModel.groupID source:nil extraDic:dict];
     }
     
     return YES;
@@ -2675,10 +2675,10 @@ extern NSString * const TTActivityContentItemTypeQQZone;
     if (col_no) {
         NSMutableDictionary *dic = [NSMutableDictionary dictionary];
         [dic setValue:media_id forKey:@"media_id"];
-        wrapperTrackEventWithCustomKeys(@"video", @"detail_click_album", col_no, nil, dic);
+        [BDTrackerProtocol trackEventWithCustomKeys:@"video" label:@"detail_click_album" value:col_no source:nil extraDic:dic];
     }
     else if ([self.detailModel.article hasVideoSubjectID]) {
-        wrapperTrackEventWithCustomKeys(@"video", @"detail_click_album", nil, nil, @{@"video_subject_id": [self.detailModel.article videoSubjectID]});
+        [BDTrackerProtocol trackEventWithCustomKeys:@"video" label:@"detail_click_album" value:nil source:nil extraDic:@{@"video_subject_id": [self.detailModel.article videoSubjectID]}];
     }
 }
 
@@ -2895,7 +2895,7 @@ extern NSString * const TTActivityContentItemTypeQQZone;
         [params setValue:self.detailModel.orderedData.logPb forKey:@"log_pb"];
         [params setValue:self.detailModel.orderedData.categoryID forKey:@"category_name"];
         [params setValue:self.detailModel.clickLabel forKey:@"enter_from"];
-        [TTTrackerWrapper eventV3:@"comment_undigg" params:params];
+        [BDTrackerProtocol eventV3:@"comment_undigg" params:params];
     }
 }
 
@@ -3031,7 +3031,7 @@ extern NSString * const TTActivityContentItemTypeQQZone;
 {
     NSMutableDictionary *extra = [[NSMutableDictionary alloc] init];
     [extra setValue:self.detailModel.article.itemID forKey:@"item_id"];
-    wrapperTrackEventWithCustomKeys(@"fold_comment", @"click", self.detailModel.article.groupModel.groupID, nil, extra);
+    [BDTrackerProtocol trackEventWithCustomKeys:@"fold_comment" label:@"click" value:self.detailModel.article.groupModel.groupID source:nil extraDic:extra];
     NSMutableDictionary *condition = [[NSMutableDictionary alloc] init];
     [condition setValue:self.detailModel.article.groupModel.groupID forKey:@"groupID"];
     [condition setValue:self.detailModel.article.groupModel.itemID forKey:@"itemID"];
@@ -3319,7 +3319,7 @@ extern NSString * const TTActivityContentItemTypeQQZone;
         [extra setValue:_isCommentButtonClicked? @"click": @"pull" forKey:@"action"];
         [extra setValue:@"video" forKey:@"source"];
         [extra setValue:self.detailModel.article.itemID forKey:@"item_id"];
-        wrapperTrackEventWithCustomKeys(@"enter_comment", [NSString stringWithFormat:@"click_%@", self.detailModel.categoryID], [self.detailModel uniqueID], nil, extra);
+        [BDTrackerProtocol trackEventWithCustomKeys:@"enter_comment" label:[NSString stringWithFormat:@"click_%@", self.detailModel.categoryID] value:[self.detailModel uniqueID] source:nil extraDic:extra];
         self.shouldSendCommentTrackEvent = NO;
     }
     if (_showStatus == showStatus) {
@@ -3525,7 +3525,7 @@ extern NSString * const TTActivityContentItemTypeQQZone;
     [event3Dic setValue:self.detailModel.categoryID forKey:@"category_id"];
     [event3Dic setValue:[self.detailModel.article.userInfo ttgc_contentID] forKey:@"author_id"];
     [event3Dic setValue:@"video" forKey:@"article_type"];
-    [TTTrackerWrapper eventV3:@"go_detail" params:event3Dic isDoubleSending:YES];
+    [BDTrackerProtocol eventV3:@"go_detail" params:event3Dic isDoubleSending:YES];
     
     /** TODO
      *parent_enterfrom

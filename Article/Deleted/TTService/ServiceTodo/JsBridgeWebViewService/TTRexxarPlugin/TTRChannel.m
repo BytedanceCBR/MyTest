@@ -8,6 +8,7 @@
 
 #import "TTRChannel.h"
 #import "TTArticleCategoryManager.h"
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 
 @implementation TTRChannel
 TTR_PROTECTED_HANDLER(@"TTRChannel.addChannel", @"TTRChannel.getSubScribedChannelList")
@@ -33,7 +34,7 @@ TTR_PROTECTED_HANDLER(@"TTRChannel.addChannel", @"TTRChannel.getSubScribedChanne
     NSMutableDictionary * extraDict = [[NSMutableDictionary alloc] initWithDictionary:param];
     [extraDict setValue:categoryID forKey:@"category_name"];
     [extraDict setValue:nil forKey:@"category"];
-    wrapperTrackEventWithCustomKeys(@"add_channel", @"click", nil, nil, extraDict);
+    [BDTrackerProtocol trackEventWithCustomKeys:@"add_channel" label:@"click" value:nil source:nil extraDic:extraDict];
     
     NSMutableDictionary *userInfo = [NSMutableDictionary dictionary];
     [userInfo setValue:categoryModel forKey:kTTInsertCategoryNotificationCategoryKey];

@@ -11,7 +11,7 @@
 #import "TTLiveMessage.h"
 #import "TTNetworkManager.h"
 #import "TTIndicatorView.h"
-#import "TTTrackerWrapper.h"
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 #import "UIImageAdditions.h"
 
 
@@ -306,7 +306,7 @@
         return;
     }
     
-    wrapperTrackEventWithCustomKeys(event, label, nil, nil, self.eventTrackParams);
+    [BDTrackerProtocol trackEventWithCustomKeys:event label:label value:nil source:nil extraDic:self.eventTrackParams];
 }
 
 - (void)evnetTrack4MsgInfoPostWithResultSuccess:(BOOL)success

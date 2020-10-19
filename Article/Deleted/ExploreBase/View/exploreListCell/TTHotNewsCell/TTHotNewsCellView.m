@@ -26,6 +26,7 @@
 #import "NSObject+FBKVOController.h"
 #import "TTLabelTextHelper.h"
 #import "TTLabel.h"
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 
 #define ItemPadding 27.f
 #define MAX_NEWS_COUNT 10
@@ -466,7 +467,7 @@
     [params setValue:descCategory forKey:@"to_category_name"];
     [params setValue:@"list" forKey:@"position"];
     [params setValue:@"click_headline" forKey:@"enter_from"];
-    [TTTrackerWrapper eventV3:@"click_more_news" params:params];
+    [BDTrackerProtocol eventV3:@"click_more_news" params:params];
     [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:hotNewsData.showMoreSchemaUrl]];
 }
 
@@ -496,7 +497,7 @@
     [params setValue:self.orderedData.categoryID forKey:@"category_name"];
     [params setValue:@"stream" forKey:@"tab_name"];
     [params setValue:@"list" forKey:@"position"];
-    [TTTrackerWrapper eventV3:@"rt_dislike" params:params];
+    [BDTrackerProtocol eventV3:@"rt_dislike" params:params];
     
 }
 

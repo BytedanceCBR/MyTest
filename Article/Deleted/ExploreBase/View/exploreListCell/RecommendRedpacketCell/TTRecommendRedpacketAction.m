@@ -21,6 +21,7 @@
 #import "TTContactsRedPacketView.h"
 #import "TTFollowNotifyServer.h"
 #import "TTRedPacketDetailBaseView.h"
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 
 
 @implementation TTRecommendRedpacketAction
@@ -33,7 +34,7 @@
     NSMutableDictionary *dict = [NSMutableDictionary dictionary];
     [dict setValue:self.orderedData.categoryID forKey:@"category_name"];
     [dict setValue:@"list_follow_card_with_redpacket" forKey:@"source"];
-    [TTTrackerWrapper eventV3:@"rt_dislike" params:dict];
+    [BDTrackerProtocol eventV3:@"rt_dislike" params:dict];
     
     [TTFeedDislikeView dismissIfVisible];
     
@@ -148,7 +149,7 @@
                 [dict setValue:@([extraParams tt_integerValueForKey:@"head_image_num"]) forKey:@"head_image_num"];
                 [dict setValue:@(0) forKey:@"is_redpacket"];
                 [dict setValue:[extraParams tt_stringValueForKey:@"relation_type"] forKey:@"relation_type"];
-                [TTTrackerWrapper eventV3:@"rt_follow" params:dict];
+                [BDTrackerProtocol eventV3:@"rt_follow" params:dict];
 
                 [[NSNotificationCenter defaultCenter] postNotificationName:kNotificationFollowAndGainMoneySuccessNotification object:nil userInfo:@{
                     @"show_label" : model.data.show_label ?: @"",
@@ -167,7 +168,7 @@
                 });
 
                 if (!isEmptyString([error.userInfo tt_stringValueForKey:@"description"])) {
-                    [TTTrackerWrapper eventV3:@"red_button" params:@{
+                    [BDTrackerProtocol eventV3:@"red_button" params:@{
                         @"position" : @"list",
                         @"action_type" : @"fail_over",
                         @"source" : @"all_follow_card",
@@ -190,7 +191,7 @@
             });
 
             if (!isEmptyString([error.userInfo tt_stringValueForKey:@"description"])) {
-                [TTTrackerWrapper eventV3:@"red_button" params:@{
+                [BDTrackerProtocol eventV3:@"red_button" params:@{
                     @"position" : @"list",
                     @"action_type" : @"fail_over",
                     @"source" : @"all_follow_card",

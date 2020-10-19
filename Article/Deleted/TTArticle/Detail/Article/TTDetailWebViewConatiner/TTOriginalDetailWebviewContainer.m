@@ -33,6 +33,7 @@
 #import "TTThemeManager.h"
 #import <TTAccountBusiness.h>
 #import "FriendDataManager.h"
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 
 #define kFooterDivKey @"toutiao_ios_footer_div"
 
@@ -613,7 +614,7 @@
             [_delegate processRequestOpenWebViewUseURL:requestURL supportRotate:NO];
         }
     }
-    wrapperTrackEvent(@"detail", @"open_url");
+    [BDTrackerProtocol event:@"detail" label:@"open_url"];
 }
 
 
@@ -697,10 +698,10 @@
         }
         if (originStatus != _footerStatus) {
             if (_footerStatus == TTDetailWebViewFooterStatusDisplayHalf && originStatus == TTDetailWebViewFooterStatusNoDisplay) {
-                wrapperTrackEvent(@"detail", @"pull_open_drawer");
+                [BDTrackerProtocol event:@"detail" label:@"pull_open_drawer"];
             }
             else if (_footerStatus == TTDetailWebViewFooterStatusNoDisplay && originStatus == TTDetailWebViewFooterStatusDisplayHalf) {
-                wrapperTrackEvent(@"detail", @"pull_close_drawer");
+                [BDTrackerProtocol event:@"detail" label:@"pull_close_drawer"];
             }
         }
         
@@ -1452,7 +1453,7 @@
         [dict setValue:concernType forKey:@"concern_type"];
     }
     
-    wrapperTrackEventWithCustomKeys(@"detail", label, [NSString stringWithFormat:@"%@", self.detailModel.article.mediaInfo[@"media_id"]], nil, dict);
+    [BDTrackerProtocol trackEventWithCustomKeys:@"detail" label:label value:[NSString stringWithFormat:@"%@", self.detailModel.article.mediaInfo[@"media_id"]] source:nil extraDic:dict];
 }
 
 - (void)setNatantStyle:(TTDetailNatantStyle)natantStyle {

@@ -9,6 +9,7 @@
 #import "TTArticleSearchViewModel.h"
 #import "TTArticleSearchManager.h"
 #import "TTArticleSearchHistoryView.h"
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 
 const NSInteger TTArticleSearchCellItemCountPerRow  = 2;
 const NSInteger TTArticleSearchInboxCellItemCountPerRow  = 3;
@@ -361,7 +362,7 @@ static const NSInteger kMaxAllHistoryShownCount     = 20;
     if (isEmptyString(eventTag) || isEmptyString(label)) {
         return;
     }
-    wrapperTrackEvent(eventTag, label);
+    [BDTrackerProtocol event:eventTag label:label];
 }
 
 - (void)eventTrackLog3:(NSDictionary *)params {
@@ -369,7 +370,7 @@ static const NSInteger kMaxAllHistoryShownCount     = 20;
     if (isEmptyString(eventTag)) {
         return;
     }
-    [TTTrackerWrapper eventV3:eventTag params:params];
+    [BDTrackerProtocol eventV3:eventTag params:params];
 }
 
 @end

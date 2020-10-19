@@ -19,6 +19,7 @@
 #import "TTVPlayerSettingUtility.h"
 #import "AWEVideoDiskCacheConfiguration.h"
 #import "TTSettingsManager.h"
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 
 @implementation TTHTSVideoConfiguration
 
@@ -34,7 +35,7 @@
         NSMutableDictionary *commonParams = [NSMutableDictionary dictionary];
         [commonParams setValue:@([TTDeviceHelper OSVersionNumber]) forKey:@"os_version"];
         [commonParams setValue:[TTSandBoxHelper ssAppID] forKey:@"aid"];
-        [commonParams setValue:[[TTInstallIDManager sharedInstance] deviceID] forKey:@"device_id"];
+        [commonParams setValue:[BDTrackerProtocol deviceID] forKey:@"device_id"];
         [commonParams setValue:[TTAccountManager userID] forKey:@"user_id"];
         [commonParams setValue:[TTNetworkHelper connectMethodName] forKey:@"cx"];
         [commonParams setValue:[TTDeviceHelper platformName] forKey:@"device_platform"];

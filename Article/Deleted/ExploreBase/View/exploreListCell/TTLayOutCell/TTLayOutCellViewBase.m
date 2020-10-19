@@ -25,7 +25,6 @@
 //#import "TTRecommendUserCollectionViewWrapper.h"
 #import "TTLayOutUFLargePicCellModel.h"
 //#import "RecommendCardCache.h"
-#import <TTTracker/TTTrackerProxy.h>
 #import <TTAccountBusiness.h>
 #import "TTRichSpanText+Emoji.h"
 #import "UILabel+Tapping.h"
@@ -34,7 +33,6 @@
 //#import "TTRedPacketManager.h"
 #import "TTAuthorizeManager.h"
 #import "Card+CoreDataClass.h"
-#import "TTTrackerProxy.h"
 
 #import "Article+TTADComputedProperties.h"
 #import "ExploreOrderedData+TTAd.h"
@@ -53,6 +51,7 @@
 #import "JSONAdditions.h"
 
 extern BOOL ttvs_isVideoFeedURLEnabled(void);
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 
 @interface TTLayOutCellViewBase() </*TTRecommendUserCollectionViewDelegate,*/ TTLabelTappingDelegate>
 // 优化：系统prepareforCell时会调用setHighlighted:NO，setSelected:NO，函数中代码会在列表滚动时调用，记录此变量避免不必要的调用
@@ -1371,7 +1370,7 @@ extern BOOL ttvs_isVideoFeedURLEnabled(void);
         [dict setValue:@"main_tab" forKey:@"list_entrance"];
     }
     
-    [TTTracker eventV3:@"rt_unlike" params:[dict copy]];
+    [BDTrackerProtocol eventV3:@"rt_unlike" params:[dict copy]];
 }
 
 - (void)digButtonAnimationWith:(TTAlphaThemedButton *)button
@@ -1504,8 +1503,6 @@ extern BOOL ttvs_isVideoFeedURLEnabled(void);
     [events setValue:tag forKey:@"tag"];
     [events setValue:label forKey:@"label"];
     [events setValue:@"1" forKey:@"is_ad_event"];
-    TTInstallNetworkConnection nt = [[TTTrackerProxy sharedProxy] connectionType];
-    [events setValue:@(nt) forKey:@"nt"];
     [events setValue:self.orderedData.ad_id forKey:@"value"];
     [events setValue:self.orderedData.log_extra forKey:@"log_extra"];
     [events setValue:self.orderedData.uniqueID forKey:@"ext_value"];
@@ -1513,7 +1510,7 @@ extern BOOL ttvs_isVideoFeedURLEnabled(void);
         [events addEntriesFromDictionary:extra];
     }
     
-    [TTTrackerWrapper eventData:events];
+    [BDTrackerProtocol eventData:events];
 }
 
 - (void)commentButtonClick {
@@ -1534,7 +1531,7 @@ extern BOOL ttvs_isVideoFeedURLEnabled(void);
                 [trackExtraDict setValue:@"comment"forKey:@"group_type"];
                 [trackExtraDict setValue:comment.commentID forKey:@"comment_id"];
                 [trackExtraDict setValue:self.orderedData.categoryID forKey:@"category_id"];
-                wrapperTrackEventWithCustomKeys(@"list_comment", @"click", comment.groupID, nil, trackExtraDict);
+                [BDTrackerProtocol trackEventWithCustomKeys:@"list_comment" label:@"click" value:comment.groupID source:nil extraDic:trackExtraDict];
             }
             NSURL *commentURL = [TTStringHelper URLWithURLString:commentOpenURL];
             
@@ -1559,7 +1556,7 @@ extern BOOL ttvs_isVideoFeedURLEnabled(void);
                 [trackExtraDict setValue:@"video"forKey:@"group_type"];
                 [trackExtraDict setValue:self.orderedData.article.groupModel.itemID forKey:@"item_id"];
                 [trackExtraDict setValue:self.orderedData.categoryID forKey:@"category_id"];
-                wrapperTrackEventWithCustomKeys(@"list_comment", @"click", self.orderedData.article.groupModel.groupID, nil, trackExtraDict);
+                [BDTrackerProtocol trackEventWithCustomKeys:@"list_comment" label:@"click" value:self.orderedData.article.groupModel.groupID source:nil extraDic:trackExtraDict];
             }
         }
         if ([self.orderedData isUGCCell]) {
@@ -1681,7 +1678,7 @@ extern BOOL ttvs_isVideoFeedURLEnabled(void);
                     forKey:@"source"];
         [extraDic setValue:self.orderedData.logPb
                     forKey:@"log_pb"];
-        [TTTrackerWrapper eventV3:followEvent
+        [BDTrackerProtocol eventV3:followEvent
                            params:extraDic];
         
         if (!TTNetworkConnected()) {
@@ -1729,7 +1726,7 @@ extern BOOL ttvs_isVideoFeedURLEnabled(void);
                     forKey:@"source"];
         [extraDic setValue:self.orderedData.logPb
                     forKey:@"log_pb"];
-        [TTTrackerWrapper eventV3:followEvent
+        [BDTrackerProtocol eventV3:followEvent
                            params:extraDic];
         
         if (!TTNetworkConnected()) {
@@ -2018,17 +2015,15 @@ extern BOOL ttvs_isVideoFeedURLEnabled(void);
 
 + (void)trackRealTime:(ExploreOrderedData*)orderData extraData:(NSDictionary *)extraData
 {
-    TTInstallNetworkConnection connectionType = [[TTTrackerProxy sharedProxy] connectionType];
     NSMutableDictionary* params = [NSMutableDictionary dictionary];
     [params setValue:@"umeng" forKey:@"category"];
     [params setValue:orderData.ad_id forKey:@"value"];
     [params setValue:@"realtime_ad" forKey:@"tag"];
     [params setValue:orderData.log_extra forKey:@"log_extra"];
     [params setValue:@"2" forKey:@"ext_value"];
-    [params setValue:@(connectionType) forKey:@"nt"];
     [params setValue:@"1" forKey:@"is_ad_event"];
     [params addEntriesFromDictionary:[orderData realTimeAdExtraData:@"embeded_ad" label:@"click" extraData:extraData]];
-    [TTTracker eventV3:@"realtime_click" params:params];
+    [BDTrackerProtocol eventV3:@"realtime_click" params:params];
 }
 
 //监听电话状态
@@ -2152,7 +2147,7 @@ extern BOOL ttvs_isVideoFeedURLEnabled(void);
 //                self.orderedData.cellLayOut.isExpand = YES;
 //                [self.collectionViewWrapper.collectionView configUserModels:models requesetModel:nil];
 //
-//                [TTTrackerWrapper eventV3:@"follow_card" params:@{@"action_type":@"show",
+//                [BDTrackerProtocol eventV3:@"follow_card" params:@{@"action_type":@"show",
 //                                                                  @"category_name":self.orderedData.categoryID,
 //                                                                  @"source": @"list",
 //                                                                  @"is_direct" : @(0)
@@ -2267,7 +2262,7 @@ extern BOOL ttvs_isVideoFeedURLEnabled(void);
             [extraDic setValue:self.orderedData.categoryID forKey:@"source"];
             [extraDic setValue:self.orderedData.categoryID forKey:@"category_name"];
             [extraDic setValue:self.orderedData.logPb forKey:@"log_pb"];
-            [TTTrackerWrapper eventV3:@"cell_show" params:extraDic isDoubleSending:YES];
+            [BDTrackerProtocol eventV3:@"cell_show" params:extraDic isDoubleSending:YES];
         }
         else if ([self.orderedData.originalData isKindOfClass:[Comment class]]){
             [TTTrackerWrapper ttTrackEventWithCustomKeys:@"cell" label:@"show" value:self.orderedData.comment.groupID source:nil extraDic:self.extraDicForUFCell];
@@ -2277,7 +2272,7 @@ extern BOOL ttvs_isVideoFeedURLEnabled(void);
             [extraDic setValue:self.orderedData.categoryID forKey:@"source"];
             [extraDic setValue:self.orderedData.categoryID forKey:@"category_name"];
             [extraDic setValue:self.orderedData.logPb forKey:@"log_pb"];
-            [TTTrackerWrapper eventV3:@"cell_show" params:extraDic isDoubleSending:YES];
+            [BDTrackerProtocol eventV3:@"cell_show" params:extraDic isDoubleSending:YES];
         }
     }
 }
@@ -2406,12 +2401,12 @@ extern BOOL ttvs_isVideoFeedURLEnabled(void);
         [rtFollowDict setValue:[extraDic objectForKey:@"is_redpacket"] forKey:@"is_redpacket"];
         
         if ([event isEqualToString:@"follow"]) {
-            [TTTrackerWrapper eventV3:@"rt_follow" params:rtFollowDict];
+            [BDTrackerProtocol eventV3:@"rt_follow" params:rtFollowDict];
         } else {
-            [TTTrackerWrapper eventV3:@"rt_unfollow" params:rtFollowDict];
+            [BDTrackerProtocol eventV3:@"rt_unfollow" params:rtFollowDict];
         }
     } else {
-        [TTTrackerWrapper eventV3:event params:dict];
+        [BDTrackerProtocol eventV3:event params:dict];
     }
 }
 

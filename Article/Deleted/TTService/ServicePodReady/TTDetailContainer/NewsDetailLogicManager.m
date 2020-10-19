@@ -13,6 +13,7 @@
 #import <TTUserSettings/TTUserSettingsManager+NetworkTraffic.h>
 #import <TTUserSettings/TTUserSettingsManager+FontSettings.h>
 #import <TTBaseLib/NetworkUtilities.h>
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 
 static NewsDetailLogicManager * shareManager;
 
@@ -406,7 +407,7 @@ static NewsDetailLogicManager * shareManager;
     if (adID.longLongValue > 0) {
         [dict setValue:adID forKey:@"ad_id"];
     }
-    [TTTrackerWrapper eventData:dict];
+    [BDTrackerProtocol eventData:dict];
 }
 
 @end

@@ -29,6 +29,7 @@
 #import <TTAlphaThemedButton.h>
 #import <TTAccountBusiness.h>
 #import <TTBaseLib/JSONAdditions.h>
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 
 static NSString * const kFollowTipCanShowKey = @"kFollowTipCanShowKey";
 static NSString * const kPreloadEnableKey = @"kPreloadEnableKey";
@@ -413,7 +414,7 @@ TTAccountMulticastProtocol
 {
     NSTimeInterval duration = [[NSDate date] timeIntervalSince1970] - self.startInterval;
     self.startInterval = 0;
-    [TTTrackerWrapper category:@"umeng" event:@"stay_tab_total" label:@"follow" dict:@{@"value":@((long long)(duration*1000))}];
+    [BDTrackerProtocol category:@"umeng" event:@"stay_tab_total" label:@"follow" dict:@{@"value":@((long long)(duration*1000))}];
 }
 
 @end

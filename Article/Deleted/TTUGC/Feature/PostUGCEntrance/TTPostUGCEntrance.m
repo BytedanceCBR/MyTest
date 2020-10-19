@@ -37,6 +37,7 @@
 //#import "TTXiguaLiveManager.h"
 #import "TSVPublishShortVideoHelper.h"
 #import "PopoverAction.h"
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 
 static CGFloat const kAnimateDuration = 0.5;
 static CGFloat kEntrancePanelHeight = 195.f;
@@ -629,7 +630,7 @@ static BOOL isShowing;
     NSMutableDictionary *trackDict = [NSMutableDictionary new];
     [trackDict setValue:self.entrance forKey:@"entrance"];
     [trackDict setValue:self.enterConcernID forKey:@"concern_id"];
-    [TTTrackerWrapper eventV3:@"show_publisher" params:trackDict];
+    [BDTrackerProtocol eventV3:@"show_publisher" params:trackDict];
 }
 
 - (void)translateView:(UIView *)view toY:(CGFloat)y delay:(CGFloat)delay {
@@ -761,7 +762,7 @@ static BOOL isShowing;
     switch (entranceButton.tag) {
         case TTPostUGCEntranceButtonTypeImageAndText:
         case TTPostUGCEntranceButtonTypeText:{
-            [TTTrackerWrapper eventV3:@"click_publisher_text" params:trackDict];
+            [BDTrackerProtocol eventV3:@"click_publisher_text" params:trackDict];
             NSUInteger postEditStatus = [GET_SERVICE_BY_PROTOCOL(TTUGCPermissionService) postUGCShowEtStatus];
             NSString * postHint = [GET_SERVICE_BY_PROTOCOL(TTUGCPermissionService) postUGCHint];
             
@@ -795,7 +796,7 @@ static BOOL isShowing;
             
         case TTPostUGCEntranceButtonTypeImage: {
             
-            [TTTrackerWrapper eventV3:@"click_publisher_image" params:trackDict];
+            [BDTrackerProtocol eventV3:@"click_publisher_image" params:trackDict];
             [TTImagePickerManager manager].accessIcloud = YES;
             
             TTImagePickerController *picVC = [[TTImagePickerController alloc]initWithDelegate:self];
@@ -818,7 +819,7 @@ static BOOL isShowing;
             break;
 
         case TTPostUGCEntranceButtonTypeShortVideo: {
-            [TTTrackerWrapper eventV3:@"click_publisher_shortvideo" params:trackDict];
+            [BDTrackerProtocol eventV3:@"click_publisher_shortvideo" params:trackDict];
             
             NSString *concernID = [TSVPublishShortVideoHelper publishShortVideoInsertToConcernID];
             NSString *categoryID = [TSVPublishShortVideoHelper publishShortVideoInsertToCategoryID];
@@ -881,7 +882,7 @@ static BOOL isShowing;
         }
             break;
         case TTPostUGCEntranceButtonTypeVideo: {
-            [TTTrackerWrapper eventV3:@"click_publisher_video" params:trackDict];
+            [BDTrackerProtocol eventV3:@"click_publisher_video" params:trackDict];
             
             __block NSString *concernID = [[TTForumPostThreadToPageViewModel sharedInstance_tt] postThreadToPageConcernID];
             __block NSString *categoryID = [[TTForumPostThreadToPageViewModel sharedInstance_tt] postThreadToPageCategoryID];
@@ -944,7 +945,7 @@ static BOOL isShowing;
             break;
         case TTPostUGCEntranceButtonTypeWenda: {
 
-            [TTTrackerWrapper eventV3:@"click_publisher_question" params:trackDict];
+            [BDTrackerProtocol eventV3:@"click_publisher_question" params:trackDict];
             NSMutableString * urlStr = [NSMutableString stringWithFormat:@"sslocal://wenda_question_post"];
             NSString *component = @"?";
 
@@ -965,7 +966,7 @@ static BOOL isShowing;
             break;
 //        case TTPostUGCEntranceButtonTypeXiguaLive:
 //        {
-//            [TTTrackerWrapper eventV3:@"live_click" params:nil];
+//            [BDTrackerProtocol eventV3:@"live_click" params:nil];
 //            NSMutableDictionary *extraDic = [NSMutableDictionary dictionary];
 //            [extraDic setValue:@"publisher_enter" forKey:@"category_name"];
 //            [extraDic setValue:@"click_other" forKey:@"enter_from"];
@@ -982,7 +983,7 @@ static BOOL isShowing;
     [trackDict setValue:self.entrance forKey:@"entrance"];
     [trackDict setValue:self.enterConcernID forKey:@"concern_id"];
     
-    [TTTrackerWrapper eventV3:@"close_publisher" params:trackDict];
+    [BDTrackerProtocol eventV3:@"close_publisher" params:trackDict];
     
     [self hideWithDealloc:YES];
 }
@@ -1242,7 +1243,7 @@ static BOOL isShowing;
             switch (model.type.integerValue) {
                 case TTPostUGCEntranceButtonTypeWenda:{
                     action = [PopoverAction actionWithImage:remoteIconImage ?: [UIImage imageNamed:@"icon_ask_titlebar"] title:model.name ?: @"提问" handler:^(PopoverAction *action) {
-                        [TTTrackerWrapper eventV3:@"click_publisher_question" params:trackDict];
+                        [BDTrackerProtocol eventV3:@"click_publisher_question" params:trackDict];
                         NSMutableString * urlStr = [NSMutableString stringWithFormat:@"sslocal://wenda_question_post"];
                         NSString *component = @"?";
 
@@ -1263,7 +1264,7 @@ static BOOL isShowing;
                     break;
                 case TTPostUGCEntranceButtonTypeImage:{
                     action = [PopoverAction actionWithImage:remoteIconImage ?: [UIImage imageNamed:@"image_allshare"] title:model.name ?: @"图片" handler:^(PopoverAction *action) {
-                        [TTTrackerWrapper eventV3:@"click_publisher_image" params:trackDict];
+                        [BDTrackerProtocol eventV3:@"click_publisher_image" params:trackDict];
                         [TTImagePickerManager manager].accessIcloud = YES;
 
                         TTImagePickerController *picVC = [[TTImagePickerController alloc]initWithDelegate:self];
@@ -1286,7 +1287,7 @@ static BOOL isShowing;
                     break;
                 case TTPostUGCEntranceButtonTypeVideo:{
                     action = [PopoverAction actionWithImage:remoteIconImage ?: [UIImage imageNamed:@"icon_video_titlebar"] title:model.name ?: @"视频" handler:^(PopoverAction *action) {
-                        [TTTrackerWrapper eventV3:@"click_publisher_video" params:trackDict];
+                        [BDTrackerProtocol eventV3:@"click_publisher_video" params:trackDict];
 
                         NSString *concernID = [[TTForumPostThreadToPageViewModel sharedInstance_tt] postThreadToPageConcernID];
                         NSString *categoryID = [[TTForumPostThreadToPageViewModel sharedInstance_tt] postThreadToPageCategoryID];
@@ -1379,7 +1380,7 @@ static BOOL isShowing;
                     break;
 //                case TTPostUGCEntranceButtonTypeXiguaLive:{
 //                    action = [PopoverAction actionWithImage:remoteIconImage ?: [UIImage imageNamed:@"xiguaLive&article_titlebar"] title:model.name ?: @"直播" handler:^(PopoverAction *action) {
-//                        [TTTrackerWrapper eventV3:@"live_click" params:nil];
+//                        [BDTrackerProtocol eventV3:@"live_click" params:nil];
 //                        NSMutableDictionary *extraDic = [NSMutableDictionary dictionary];
 //                        [extraDic setValue:@"publisher_enter" forKey:@"category_name"];
 //                        [extraDic setValue:@"click_other" forKey:@"enter_from"];
@@ -1459,7 +1460,7 @@ static BOOL isShowing;
         BOOL isInShortVideoTab = [[TTTabBarProvider currentSelectedTabTag] isEqualToString:kTTTabHTSTabKey];
         UITabBarController * tabbarController = (UITabBarController *)[[UIApplication sharedApplication].delegate window].rootViewController;
 
-        [TTTrackerWrapper eventV3:@"click_publisher_shortvideo" params:trackDict];
+        [BDTrackerProtocol eventV3:@"click_publisher_shortvideo" params:trackDict];
 
         NSString *concernID = [[TTForumPostThreadToPageViewModel sharedInstance_tt] postThreadToPageConcernID];
         NSString *categoryID = [[TTForumPostThreadToPageViewModel sharedInstance_tt] postThreadToPageCategoryID];
@@ -1522,7 +1523,7 @@ static BOOL isShowing;
 - (void)triggerTextAndImageCallback {
     NSDictionary *trackDict = [self getTrackDict];
 
-    [TTTrackerWrapper eventV3:@"click_publisher_text" params:trackDict];
+    [BDTrackerProtocol eventV3:@"click_publisher_text" params:trackDict];
     NSUInteger postEditStatus = [GET_SERVICE_BY_PROTOCOL(TTUGCPermissionService) postUGCShowEtStatus];
     NSString * postHint = [GET_SERVICE_BY_PROTOCOL(TTUGCPermissionService) postUGCHint];
 

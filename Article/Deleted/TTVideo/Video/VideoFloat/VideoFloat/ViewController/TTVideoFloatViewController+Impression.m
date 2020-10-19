@@ -9,6 +9,7 @@
 #import "TTVideoFloatViewController+Impression.h"
 #import "TTVideoFloatCell.h"
 #import <objc/runtime.h>
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 
 static NSInteger const vaildStayPageMinInterval = 1;
 static NSInteger const vaildStayPageMaxInterval = MAXFLOAT;
@@ -49,13 +50,13 @@ static NSInteger const vaildStayPageMaxInterval = MAXFLOAT;
 
 - (void)tt_logBack
 {
-    wrapperTrackEventWithCustomKeys(@"video_float", @"close", self.detailModel.article.groupModel.groupID, nil, nil);
+    [BDTrackerProtocol trackEventWithCustomKeys:@"video_float" label:@"close" value:self.detailModel.article.groupModel.groupID source:nil extraDic:nil];
 
 }
 
 - (void)tt_logEnter
 {
-    wrapperTrackEventWithCustomKeys(@"video_float", @"enter", self.detailModel.article.groupModel.groupID, nil, nil);
+    [BDTrackerProtocol trackEventWithCustomKeys:@"video_float" label:@"enter" value:self.detailModel.article.groupModel.groupID source:nil extraDic:nil];
 }
 
 - (void)tt_logGoDetail
@@ -69,7 +70,7 @@ static NSInteger const vaildStayPageMaxInterval = MAXFLOAT;
     if (hasZzComment) {
         [dic setValue:self.detailModel.article.firstZzCommentMediaId forKey:@"mid"];
     }
-    wrapperTrackEventWithCustomKeys(@"go_detail", self.detailModel.clickLabel, self.detailModel.article.groupModel.groupID, nil, dic);
+    [BDTrackerProtocol trackEventWithCustomKeys:@"go_detail" label:self.detailModel.clickLabel value:self.detailModel.article.groupModel.groupID source:nil extraDic:dic];
 
 }
 
@@ -213,7 +214,7 @@ static NSInteger const vaildStayPageMaxInterval = MAXFLOAT;
     if (!isEmptyString(self.detailModel.article.groupModel.groupID) && (timeInterval >= vaildStayPageMinInterval && timeInterval <= vaildStayPageMaxInterval)) {
         //业务统计打点
         if (timeInterval >= vaildStayPageMinInterval && timeInterval <= MAXFLOAT) {
-            wrapperTrackEventWithCustomKeys(@"stay_category", @"video_float", [NSString stringWithFormat:@"%lld",timeInterval], nil, [[self class] baseExtraWithArticle:self.detailModel.article]);
+            [BDTrackerProtocol trackEventWithCustomKeys:@"stay_category" label:@"video_float" value:[NSString stringWithFormat:@"%lld",timeInterval] source:nil extraDic:[[self class] baseExtraWithArticle:self.detailModel.article]];
         }
     }
 }

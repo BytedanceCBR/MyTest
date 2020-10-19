@@ -104,7 +104,7 @@ DEC_TASK("TTAppLogStartupTask",FHTaskTypeSerial,TASK_PRIORITY_HIGH+7);
     
     //用户id
     config.userIDBlock = ^NSString * _Nullable{
-        return [[TTAccount sharedAccount].user.userID stringValue];
+        return [TTAccount sharedAccount].userIdString;
     };
     @weakify(self);
     config.URLBlock = ^NSString * _Nullable(BDTrackerURLType type) {

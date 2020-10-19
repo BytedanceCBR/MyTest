@@ -20,6 +20,7 @@
 #import "TTThemeConst.h"
 #import "UIImage+TTThemeExtension.h"
 #import "TTTabBarProvider.h"
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 
 #define kViewNoDiggUsersTopPadding 8
 
@@ -270,13 +271,13 @@
             NSMutableDictionary *extra = [[NSMutableDictionary alloc] init];
             [extra setValue:self.momentModel.ID forKey:@"item_id"];
             [extra setValue:self.momentModel.group.ID forKey:@"value"];
-            [TTTrackerWrapper event:@"micronews_tab" label:@"add_comment" value:nil extValue:nil extValue2:nil dict:[extra copy]];
+            [BDTrackerProtocol event:@"micronews_tab" label:@"add_comment" value:nil extValue:nil extValue2:nil dict:[extra copy]];
         }
         else {
-            wrapperTrackEvent(@"update_tab", @"add_comment");
+            [BDTrackerProtocol event:@"update_tab" label:@"add_comment"];
         }
     } else if (self.sourceType == ArticleMomentSourceTypeForum) {
-        wrapperTrackEvent(@"topic_tab", @"add_comment");
+        [BDTrackerProtocol event:@"topic_tab" label:@"add_comment"];
     }
     
     if (_delegate && [_delegate respondsToSelector:@selector(momentCellCommentViewWriteCommentButtonClicked:rectInKeyWindow:)]) {
@@ -318,7 +319,7 @@
             NSMutableDictionary *extra = [[NSMutableDictionary alloc] init];
             [extra setValue:self.momentModel.ID forKey:@"item_id"];
             [extra setValue:self.momentModel.group.ID forKey:@"value"];
-            [TTTrackerWrapper event:@"micronews_tab" label:@"replier_avatar" value:nil extValue:nil extValue2:nil dict:[extra copy]];
+            [BDTrackerProtocol event:@"micronews_tab" label:@"replier_avatar" value:nil extValue:nil extValue2:nil dict:[extra copy]];
         }
         ArticleMomentCommentModel * model = [self.momentModel.comments objectAtIndex:item.orderIndex];
         [ArticleMomentHelper openMomentProfileView:model.replyUser navigationController:[TTUIResponderHelper topNavigationControllerFor: self] from:kFromFeedCom];
@@ -332,7 +333,7 @@
             NSMutableDictionary *extra = [[NSMutableDictionary alloc] init];
             [extra setValue:self.momentModel.ID forKey:@"item_id"];
             [extra setValue:self.momentModel.group.ID forKey:@"value"];
-            [TTTrackerWrapper event:@"micronews_tab" label:@"replier_avatar" value:nil extValue:nil extValue2:nil dict:[extra copy]];
+            [BDTrackerProtocol event:@"micronews_tab" label:@"replier_avatar" value:nil extValue:nil extValue2:nil dict:[extra copy]];
         }
         ArticleMomentCommentModel * model = [self.momentModel.comments objectAtIndex:item.orderIndex];
         [ArticleMomentHelper openMomentProfileView:model.user navigationController:[TTUIResponderHelper topNavigationControllerFor: self] from:kFromFeedCom];
@@ -347,17 +348,17 @@
             [extra setValue:self.momentModel.ID forKey:@"item_id"];
             [extra setValue:self.momentModel.group.ID forKey:@"value"];
             if ([self.momentModel.comments count] <= self.momentModel.visibleCommentsCount) {
-                [TTTrackerWrapper event:@"micronews_tab" label:@"all_comments" value:nil extValue:nil extValue2:nil dict:[extra copy]];
+                [BDTrackerProtocol event:@"micronews_tab" label:@"all_comments" value:nil extValue:nil extValue2:nil dict:[extra copy]];
             }
             else {
-                [TTTrackerWrapper event:@"micronews_tab" label:@"more_comments" value:nil extValue:nil extValue2:nil dict:[extra copy]];
+                [BDTrackerProtocol event:@"micronews_tab" label:@"more_comments" value:nil extValue:nil extValue2:nil dict:[extra copy]];
             }
         }
         else {
-            wrapperTrackEvent(@"update_tab", @"more_comment");
+            [BDTrackerProtocol event:@"update_tab" label:@"more_comment"];
         }
     } else if (self.sourceType == ArticleMomentSourceTypeForum) {
-        wrapperTrackEvent(@"topic_tab", @"more_comment");
+        [BDTrackerProtocol event:@"topic_tab" label:@"more_comment"];
     }
     
     if (_delegate && [_delegate respondsToSelector:@selector(momentCellCommentViewShowMoreLabelClicked:)]) {

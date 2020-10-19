@@ -31,6 +31,7 @@
 #import "UIView+CustomTimingFunction.h"
 #import <TTAccountBusiness.h>
 #import <BDWebImage/SDWebImageAdapter.h>
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 
 #define loginButtonWidth ceilf([TTDeviceUIUtils tt_newPadding:66.f])
 #define moreLoginButtonHorPadding ceilf([TTDeviceUIUtils tt_newPadding:17.5f])
@@ -1039,7 +1040,7 @@
                     }
                     
                     if (self.appFansView.appInfos.count >= 2) {
-                        [TTTrackerWrapper eventV3:@"followers_show" params:@{@"position":@"mine"}];
+                        [BDTrackerProtocol eventV3:@"followers_show" params:@{@"position":@"mine"}];
                     }
                 }
                 
@@ -1078,7 +1079,7 @@
 
 - (void)didTapAvatarView
 {
-    wrapperTrackEventWithCustomKeys(@"mine_tab", @"enter_mine_profile", nil, @"avatar", nil);
+    [BDTrackerProtocol trackEventWithCustomKeys:@"mine_tab" label:@"enter_mine_profile" value:nil source:@"avatar" extraDic:nil];
     
     ArticleMomentProfileViewController *vc = [[ArticleMomentProfileViewController alloc] initWithUserID:[TTAccountManager userID]];
     vc.categoryName = @"mine_tab";

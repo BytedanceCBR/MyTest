@@ -26,6 +26,7 @@
 #import "UIButton+TTAdditions.h"
 #import "TTSandBoxHelper.h"
 #import "CommonURLSetting.h"
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 //#import "TTDebugAssistant.h"
 //#import "TTSystemInfoManager.h"
 
@@ -472,10 +473,10 @@
 
 - (void)clearSettings {
     NSMutableDictionary * getPara = [NSMutableDictionary dictionaryWithCapacity:10];
-    [getPara setValue:[[TTInstallIDManager sharedInstance] deviceID] forKey:@"device_id"];
+    [getPara setValue:[BDTrackerProtocol deviceID] forKey:@"device_id"];
     [getPara setValue:[TTSandBoxHelper appName] forKey:@"app_name"];
     [getPara setValue:[TTSandBoxHelper ssAppID] forKey:@"aid"];
-    [getPara setValue:[[TTInstallIDManager sharedInstance] installID] forKey:@"iid"];
+    [getPara setValue:[BDTrackerProtocol installID] forKey:@"iid"];
     [getPara setObject:@1 forKey:@"app"];
     if ([TTSandBoxHelper isInHouseApp]) {
         [getPara setValue:@(1) forKey:@"inhouse"];

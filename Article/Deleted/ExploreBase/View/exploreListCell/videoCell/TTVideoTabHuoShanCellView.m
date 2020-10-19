@@ -42,6 +42,7 @@
 
 #import <TTUserSettings/TTUserSettingsManager+FontSettings.h>
 #import "ExploreOrderedData+TTAd.h"
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 
 #define kVideoTitleX 15
 #define kVideoTitleY ([TTDeviceHelper isScreenWidthLarge320]?15.0:8.0)
@@ -531,14 +532,14 @@ static NSDictionary *fontSizes = nil;
         
 //        if (self.cell.tabType == TTCategoryModelTopTypeNews) {
 //            
-//            [TTTrackerWrapper category:@"umeng" event:@"hotsoon" label:@"feed_enter_pgc" dict:dict];
+//            [BDTrackerProtocol category:@"umeng" event:@"hotsoon" label:@"feed_enter_pgc" dict:dict];
 //        }
 //        else if (self.cell.tabType == TTCategoryModelTopTypeVideo) {
 //            
-//            [TTTrackerWrapper category:@"umeng" event:@"hotsoon" label:@"video_enter_pgc" dict:dict];
+//            [BDTrackerProtocol category:@"umeng" event:@"hotsoon" label:@"video_enter_pgc" dict:dict];
 //        }
         
-        [TTTrackerWrapper category:@"umeng" event:@"hotsoon" label:@"feed_enter_pgc" dict:dict];
+        [BDTrackerProtocol category:@"umeng" event:@"hotsoon" label:@"feed_enter_pgc" dict:dict];
         
         if (userId) {
             openPGCURL = [NSString stringWithFormat:@"sslocal://profile?uid=%@", userId];
@@ -578,7 +579,7 @@ static NSDictionary *fontSizes = nil;
     
     
     if (self.orderedData.huoShan) {
-        wrapperTrackEvent(@"list_content", @"share_channel");
+        [BDTrackerProtocol event:@"list_content" label:@"share_channel"];
     }
 }
 
@@ -634,7 +635,7 @@ static NSDictionary *fontSizes = nil;
     if (!isEmptyString(self.orderedData.ad_id)) {
         extValueDic[@"ext_value"] = self.orderedData.ad_id;
     }
-    wrapperTrackEventWithCustomKeys(tag, label, uniqueID, @"hotsoon", extValueDic);
+    [BDTrackerProtocol trackEventWithCustomKeys:tag label:label value:uniqueID source:@"hotsoon" extraDic:extValueDic];
     //[super sendVideoShareTrackWithItemType:itemType];
 }
 

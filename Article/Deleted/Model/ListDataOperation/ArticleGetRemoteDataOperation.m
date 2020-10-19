@@ -37,6 +37,7 @@
 //#import "TTRNBundleManager.h"
 #import "TTCategoryBadgeNumberManager.h"
 #import "ExploreFetchListManager.h"
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 
 @interface ArticleGetRemoteDataOperation ()
 @property(nonatomic, strong)TTHttpTask *httpTask;
@@ -462,7 +463,7 @@
             NSMutableDictionary *events = [@{@"category":@"umeng", @"label":@"json", @"tag":@"api_error"} mutableCopy];
             NSData *subdata = [responseData subdataWithRange:NSMakeRange(0, MIN(16, responseData.length))];
             [events setValue:[subdata hexadecimalString] forKey:@"data"];
-            [TTTrackerWrapper eventData:events];
+            [BDTrackerProtocol eventData:events];
         }
     }
     else {

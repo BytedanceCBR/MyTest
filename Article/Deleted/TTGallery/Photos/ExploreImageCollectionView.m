@@ -37,6 +37,7 @@
 #import "SSCommonLogic.h"
 #import <TTPlatformBaseLib/TTIconFontDefine.h>
 #import "UIImageview+BDTSource.h"
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 
 #pragma mark - ExploreImageCollectionViewCell
 
@@ -571,7 +572,7 @@ static NSString * const kTTImageRecommendOneSearchWordCellIdentifier = @"kTTImag
         if([[TTRoute sharedRoute] canOpenURL:openURL]){
             [[TTRoute sharedRoute] openURLByPushViewController:openURL];
         }
-        wrapperTrackEvent(@"gallery1", @"click");
+        [BDTrackerProtocol event:@"gallery1" label:@"click"];
         return;
     }
     
@@ -650,7 +651,7 @@ static NSString * const kTTImageRecommendOneSearchWordCellIdentifier = @"kTTImag
         [data addEntriesFromDictionary:extra];
     }
     
-    [TTTrackerWrapper eventData:data];
+    [BDTrackerProtocol eventData:data];
 }
 #pragma mark - 搜索词
 
@@ -1062,7 +1063,7 @@ static CGFloat maxAnimationHeight = 154;//超过这个高度才做动画
     NSMutableDictionary *params = [[NSMutableDictionary alloc] init];
     [params setValue:self.sourceArticle.groupModel.groupID forKey:@"group_id"];
     [params setValue:@"page_detail_gallery_pic" forKey:@"obj_id"];
-    [TTTracker eventV3:@"clk_event" params:params];
+    [BDTrackerProtocol eventV3:@"clk_event" params:params];
     [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:_currSubjectModel.carOpenURL]];
 }
 
@@ -1368,7 +1369,7 @@ static CGFloat maxAnimationHeight = 154;//超过这个高度才做动画
         NSMutableDictionary *params = [[NSMutableDictionary alloc] init];
         [params setValue:self.sourceArticle.groupModel.groupID forKey:@"group_id"];
         [params setValue:@"page_detail_gallery_pic" forKey:@"obj_id"];
-        [TTTracker eventV3:@"show_event" params:params];
+        [BDTrackerProtocol eventV3:@"show_event" params:params];
     }
     CGFloat maxNatantHeight = lineHeight * 7;
     if(UIInterfaceOrientationIsLandscape([UIApplication sharedApplication].statusBarOrientation)){
@@ -1604,10 +1605,10 @@ static CGFloat maxAnimationHeight = 154;//超过这个高度才做动画
     
     
     if([_recommendSearchWordsArray count] > 1){
-        wrapperTrackEvent(@"gallery2", @"show");
+        [BDTrackerProtocol event:@"gallery2" label:@"show"];
     }
     else if([_recommendSearchWordsArray count] == 1 && [(TTPhotoSearchWordModel *)_recommendSearchWordsArray[0] isValidSingleSearchWord]){
-        wrapperTrackEvent(@"gallery1", @"show");
+        [BDTrackerProtocol event:@"gallery1" label:@"show"];
     }
 }
 
@@ -1619,7 +1620,7 @@ static CGFloat maxAnimationHeight = 154;//超过这个高度才做动画
                            @"value":    @(self.sourceArticle.uniqueID) ? : @"",
                            @"item_id":  self.sourceArticle.groupModel.itemID ? : @""
                            };
-    [TTTrackerWrapper eventData:data];
+    [BDTrackerProtocol eventData:data];
 }
 #pragma mark - Helper
 

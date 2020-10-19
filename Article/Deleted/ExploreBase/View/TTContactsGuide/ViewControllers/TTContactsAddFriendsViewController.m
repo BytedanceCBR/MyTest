@@ -24,6 +24,7 @@
 #import "TTFollowManager.h"
 #import "FriendDataManager.h"
 #import "TTContactsGuideManager.h"
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 
 
 @interface TTContactsAddFriendModel : NSObject
@@ -313,7 +314,7 @@ NSString *const kUploadContactsSuccessForInvitePageNotification = @"kUploadConta
                          [self showCompleteHud];
                      }];
     
-    [TTTrackerWrapper eventV3:@"upload_concat_list_follow_show" params:@{
+    [BDTrackerProtocol eventV3:@"upload_concat_list_follow_show" params:@{
                                                                          @"value" : @(users.count),
                                                                          @"frequency" : @([[TTContactsGuideManager sharedManager] contactsGuidePresentingTimes])
                                                                          }];
@@ -341,7 +342,7 @@ NSString *const kUploadContactsSuccessForInvitePageNotification = @"kUploadConta
     
     self.numberOfFollowingUsers = numberOfFollowingUsers;
     
-    [TTTrackerWrapper eventV3:@"rt_follow" params:@{
+    [BDTrackerProtocol eventV3:@"rt_follow" params:@{
                                                     @"to_user_id_list": [to_user_ids componentsJoinedByString:@","],
                                                     @"follow_num": @(numberOfFollowingUsers),
                                                     @"follow_type": @"auto_follow",
@@ -412,7 +413,7 @@ NSString *const kUploadContactsSuccessForInvitePageNotification = @"kUploadConta
 - (void)dismissAction {
     [self closeIfNeeded];
     
-    [TTTrackerWrapper eventV3:@"upload_concat_list_follow_click" params:@{
+    [BDTrackerProtocol eventV3:@"upload_concat_list_follow_click" params:@{
                                                                           @"action_type" : @"cancel",
                                                                           @"value" : @0,
                                                                           @"frequency" : @([[TTContactsGuideManager sharedManager] contactsGuidePresentingTimes])
@@ -454,7 +455,7 @@ NSString *const kUploadContactsSuccessForInvitePageNotification = @"kUploadConta
     [extraDict setValue:@"from_others" forKey:@"follow_type"];
     [extraDict setValue:@"upload_concat_list_follow" forKey:@"source"];
     [extraDict setValue:@(index + 1) forKey:@"order"];
-    [TTTracker eventV3:event params:extraDict];
+    [BDTrackerProtocol eventV3:event params:extraDict];
     
     WeakSelf;
     [[TTFollowManager sharedManager] startFollowAction:actionType

@@ -9,6 +9,7 @@
 #import "TTUserShareToRepostCell.h"
 #import <TTAccountManager.h>
 #import <TTNetworkManager.h>
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 //#import "TTShareToRepostManager.h"
 
 @interface TTUserShareToRepostCell ()
@@ -96,7 +97,7 @@
 }
 
 - (void)changeShareToRepost:(UISwitch *)sender {
-    [TTTrackerWrapper eventV3:@"forward_weitoutiao_switch_click"
+    [BDTrackerProtocol eventV3:@"forward_weitoutiao_switch_click"
                        params:@{@"switch_type":sender.on?@"on":@"off"}];
     BOOL isShareToRepost = sender.on;
     NSString * userID = [TTAccountManager currentUser].userID.stringValue;

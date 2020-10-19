@@ -12,7 +12,6 @@
 #import "TTVideoMovieBanner.h"
 #import "TTDetailContainerViewController.h"
 #import "TTVideoDetailViewController.h"
-#import "TTTrackerProxy.h"
 #import "TTVideoTabBaseCellPlayControl.h"
 #import "TTVPlayVideo.h"
 #import "TTVPlayerStateStore.h"
@@ -31,6 +30,7 @@
 #import "ExploreOrderedData.h"
 #import "ExploreOrderedData+TTAd.h"
 
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 
 extern NSInteger ttvs_isVideoShowOptimizeShare(void);
 extern NSInteger ttvs_isVideoShowDirectShare(void);
