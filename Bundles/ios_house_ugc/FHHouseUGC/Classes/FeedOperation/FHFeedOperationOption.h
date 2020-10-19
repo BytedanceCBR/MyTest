@@ -21,6 +21,8 @@ typedef NS_ENUM(NSUInteger, FHFeedOperationOptionType) {
     FHFeedOperationOptionTypeSelfLook,
     FHFeedOperationOptionTypeEdit,
     FHFeedOperationOptionTypeEditList,
+    FHFeedOperationOptionTypeShield,
+    FHFeedOperationOptionTypeBlackList,
 };
 
 @interface FHFeedOperationOption : NSObject
