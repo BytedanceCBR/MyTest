@@ -1710,62 +1710,6 @@
     }];
 }
 
-//+ (TTHttpTask *)requestShieldCommentWithGroupId:(NSString *)groupId commentId:(NSString *)commentId completion:(void (^)(id<FHBaseModelProtocol> _Nonnull, NSError * _Nonnull))completion {
-//
-//    NSString *queryPath = @"/f100/ugc/post/edit";
-//    NSString *url = QURL(queryPath);
-//
-//    NSDate *startDate = [NSDate date];
-//    return [[TTNetworkManager shareInstance] requestForBinaryWithResponse:url params:params method:@"POST" needCommonParams:YES callback:^(NSError *error, id obj, TTHttpResponse *response) {
-//
-//        NSDate *backDate = [NSDate date];
-//        __block NSError *backError = error;
-//        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
-//            NSDate *serDate = [NSDate date];
-//            FHNetworkMonitorType resultType = FHNetworkMonitorTypeSuccess;
-//            NSInteger code = 0;
-//            NSString *errMsg = nil;
-//            NSMutableDictionary *extraDict = nil;
-//            NSDictionary *exceptionDict = nil;
-//            FHUGCEditedPostModel *model = nil;
-//            NSInteger responseCode = -1;
-//            if (response.statusCode) {
-//                responseCode = response.statusCode;
-//            }
-//            if (backError && !obj) {
-//                code = backError.code;
-//                resultType = FHNetworkMonitorTypeNetFailed;
-//            } else {
-//                model = (id<FHBaseModelProtocol>)[FHMainApi generateModel:obj class:cls error:&backError];
-//                serDate = [NSDate date];
-//                if (!model) {
-//                    // model 为nil
-//                    code = 1;
-//                    resultType = FHNetworkMonitorTypeBizFailed + 1;
-//                } else {
-//                    // model 不为nil
-//                    if ([model respondsToSelector:@selector(status)]) {
-//                        NSString *status = [model performSelector:@selector(status)];
-//                        if (status.integerValue != 0 || backError != nil) {
-//                            code = [status integerValue];
-//                            errMsg = backError.domain;
-//                            resultType = FHNetworkMonitorTypeBizFailed+code;
-//                        }
-//                    }
-//                }
-//            }
-//
-//            [FHMainApi addRequestLog:queryPath startDate:startDate backDate:backDate serializeDate:serDate resultType:resultType errorCode:code errorMsg:errMsg extra:extraDict exceptionDict:exceptionDict responseCode:responseCode];
-//
-//            if (completion) {
-//                dispatch_async(dispatch_get_main_queue(), ^{
-//                    completion(model,error);
-//                });
-//            }
-//        });
-//    }];
-//}
-
 + (TTHttpTask *)requestPublishHotTagsWithParam:(NSDictionary *)params class:(Class)cls completion:(void (^)(id<FHBaseModelProtocol> _Nonnull, NSError * _Nonnull))completion {
     
     NSString *queryPath = @"/f100/ugc/get_hot_socials";
