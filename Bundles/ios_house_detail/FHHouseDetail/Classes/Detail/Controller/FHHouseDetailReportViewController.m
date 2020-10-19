@@ -25,6 +25,7 @@
 #import "UIViewController+HUD.h"
 #import "FHHouseDetailReportAddtionViewController.h"
 #import "FHIMConfigManager.h"
+#import "FHUserTracker.h"
 
 typedef NS_ENUM(NSUInteger, FHHouseDetailReportItemType) {
     FHHouseDetailReportItemType_Type,
@@ -657,6 +658,16 @@ typedef NS_ENUM(NSUInteger, FHHouseDetailReportItemType) {
 }
 
 - (void)submitAction {
+    // 点击埋点
+    NSMutableDictionary *reportParams = [NSMutableDictionary dictionary];
+    reportParams[UT_ORIGIN_FROM] = self.tracerDict[UT_ORIGIN_FROM]?:UT_BE_NULL;
+    reportParams[UT_ENTER_FROM] = self.tracerDict[UT_ENTER_FROM]?:UT_BE_NULL;
+    reportParams[UT_PAGE_TYPE] = @"feedback_detail";
+    reportParams[@"group_id"] = self.houseId?:UT_BE_NULL;
+    reportParams[@"event_tracking_id"] = @"113945";
+    TRACK_EVENT(@"feedback_confirm", reportParams);
+    // ---
+    
     // 提交动作
     NSMutableDictionary *params = [NSMutableDictionary dictionary];
     

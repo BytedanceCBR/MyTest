@@ -854,11 +854,27 @@
     }
 }
 - (void)gotoReportNativePage:(id)model {
+    // 点击埋点
+    NSMutableDictionary *params = [NSMutableDictionary dictionary];
+    params[UT_ORIGIN_FROM] = self.detailTracerDic[UT_ORIGIN_FROM] ?:@"be_null";
+    params[UT_ENTER_FROM] = self.detailTracerDic[UT_ENTER_FROM] ?:@"be_null";
+    params[UT_PAGE_TYPE] = self.detailTracerDic[UT_PAGE_TYPE] ?:@"be_null";
+    params[@"group_id"] = self.houseId;
+    params[@"event_tracking_id"] = @"113944";
+    TRACK_EVENT(@"click_feedback", params);
+    // ---
+    
     NSString *openUrl = @"sslocal://house_detail_report_page";
     NSMutableDictionary *info = [NSMutableDictionary dictionary];
     info[@"house_url"] = self.contactViewModel.shareInfo.shareUrl;
     info[@"house_type"] = @(self.houseType).stringValue;
     info[@"house_id"] = self.houseId;
+    
+    NSMutableDictionary *tracer = [self.detailTracerDic mutableCopy];
+    if(tracer) {
+        tracer[UT_ENTER_FROM] = self.detailTracerDic[UT_PAGE_TYPE] ?:@"be_null";
+    }
+    info[TRACER_KEY] = tracer;
     TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:info];
     [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:openUrl] userInfo:userInfo];
 }

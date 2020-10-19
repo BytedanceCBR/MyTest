@@ -19,6 +19,7 @@
 #import "FHDetailOldModel.h"
 #import "NSDictionary+BTDAdditions.h"
 #import "SSCommonLogic.h"
+#import "FHBaseViewController.h"
 
 @interface FHDetailFeedbackButton ()
 
@@ -81,14 +82,31 @@
 }
 
 - (void)gotoReportNativePage {
+    // 点击埋点
+    NSMutableDictionary *params = [NSMutableDictionary dictionary];
+    params[UT_ORIGIN_FROM] = self.detailTracerDic[UT_ORIGIN_FROM] ?:@"be_null";
+    params[UT_ENTER_FROM] = self.detailTracerDic[UT_ENTER_FROM] ?:@"be_null";
+    params[UT_PAGE_TYPE] = self.detailTracerDic[UT_PAGE_TYPE] ?:@"be_null";
+    params[@"group_id"] = self.ershouData.id;
+    params[@"event_tracking_id"] = @"113944";
+    TRACK_EVENT(@"click_feedback", params);
+    // ---
+    
+    // 跳转
     NSString *openUrl = @"sslocal://house_detail_report_page";
     NSMutableDictionary *info = [NSMutableDictionary dictionary];
     info[@"house_url"] = self.ershouData.shareInfo.shareUrl;
     info[@"house_type"] = @(self.houseType).stringValue;
     info[@"house_id"] = self.ershouData.id;
+    NSMutableDictionary *tracer = [self.detailTracerDic mutableCopy];
+    if(tracer) {
+        tracer[UT_ENTER_FROM] = self.detailTracerDic[UT_PAGE_TYPE] ?:@"be_null";
+    }
+    info[TRACER_KEY] = tracer;
     TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:info];
     [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:openUrl] userInfo:userInfo];
 }
+
 
 - (void)gotoReportH5Page {
     if (self.reportUrl.length > 0) {
