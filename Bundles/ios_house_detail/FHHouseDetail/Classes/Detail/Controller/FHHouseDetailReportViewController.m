@@ -655,15 +655,8 @@ typedef NS_ENUM(NSUInteger, FHHouseDetailReportItemType) {
     self.submitButton.enabled = isEnable;
     self.submitButton.alpha = isEnable ? 1 : 0.4;
 }
-- (void)testGotoReportAdditionPage {
-    [FHHouseDetailReportAddtionViewController gotoReportAdditionPageWithUserInfoDict:@{
-        @"ticket_id": @"27526"
-    }];
-}
+
 - (void)submitAction {
-    [self testGotoReportAdditionPage];
-    return;;
-    
     // 提交动作
     NSMutableDictionary *params = [NSMutableDictionary dictionary];
     
