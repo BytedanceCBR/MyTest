@@ -627,10 +627,6 @@
 
 -(void)addEnterCategoryLog {
     NSMutableDictionary *tracerDict = [self categoryLogDict].mutableCopy;
-    NSDictionary *logPb = self.listController.tracerDict[@"log_pb"];
-    if(logPb){
-        tracerDict[@"impr_id"] = logPb[@"impr_id"] ?: @"be_null";
-    }
     tracerDict[@"event_tracking_id"] = @"113196";
     [FHUserTracker writeEvent:@"enter_category" params:tracerDict];
 }
