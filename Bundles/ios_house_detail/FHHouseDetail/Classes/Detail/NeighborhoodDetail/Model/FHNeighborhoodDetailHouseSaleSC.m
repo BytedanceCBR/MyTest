@@ -102,9 +102,9 @@
         userInfo[@"house_type"] = @(FHHouseTypeSecondHandHouse);
         if (detailModel.data.neighborhoodInfo.name.length > 0) {
             if (model.neighborhoodSoldHouseData.total.length > 0) {
-                userInfo[@"title"] = [NSString stringWithFormat:@"小区房源(%@)",model.neighborhoodSoldHouseData.total];
+                userInfo[@"title"] = [NSString stringWithFormat:@"%@(%@)",detailModel.data.neighborhoodInfo.name,model.neighborhoodSoldHouseData.total];
             } else {
-                userInfo[@"title"] = @"小区房源";
+                userInfo[@"title"] = detailModel.data.neighborhoodInfo.name;
             }
         } else {
             userInfo[@"title"] = @"小区房源";// 默认值

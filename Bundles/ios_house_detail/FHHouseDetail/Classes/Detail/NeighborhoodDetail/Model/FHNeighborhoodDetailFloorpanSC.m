@@ -92,10 +92,14 @@
         NSMutableDictionary *userInfo = [NSMutableDictionary new];
         userInfo[@"tracer"] = tracerDic;
         userInfo[@"house_type"] = @(FHHouseTypeSecondHandHouse);
-        if(item.count.length > 0) {
-            userInfo[@"title"] = [NSString stringWithFormat:@"小区房源(%@)",item.count];
+        if(detailModel.data.neighborhoodInfo.name.length > 0) {
+            if(item.count.length > 0) {
+                userInfo[@"title"] = [NSString stringWithFormat:@"%@(%@)",detailModel.data.neighborhoodInfo.name,item.count];
+            } else {
+                userInfo[@"title"] = detailModel.data.neighborhoodInfo.name;
+            }
         } else {
-            userInfo[@"title"] = @"小区房源";
+            userInfo[@"title"] = @"同小区房源";
         }
         if (neighborhood_id.length > 0) {
             userInfo[@"neighborhood_id"] = neighborhood_id;
