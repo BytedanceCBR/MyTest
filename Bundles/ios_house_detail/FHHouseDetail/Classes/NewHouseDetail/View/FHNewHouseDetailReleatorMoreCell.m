@@ -35,4 +35,20 @@
     return self;
 }
 
+- (void)bindViewModel:(id)viewModel {
+    
+}
+
+@end
+
+@implementation FHNewHouseDetailReleatorMoreCellModel
+
+- (id<NSObject>)diffIdentifier {
+    return self;
+}
+
+- (BOOL)isEqualToDiffableObject:(id<IGListDiffable>)object {
+    return self == object;
+}
+
 @end

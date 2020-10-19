@@ -131,6 +131,10 @@
     return self;
 }
 
+- (void)bindViewModel:(id)viewModel {
+    [self refreshWithData:viewModel];
+}
+
 - (void)refreshWithData:(id)data {
     if (self.currentData == data || ![data isKindOfClass:[FHNewHouseDetailSurroundingCellModel class]]) {
         return;
@@ -164,5 +168,13 @@
 @end
 
 @implementation FHNewHouseDetailSurroundingCellModel
+
+- (id<NSObject>)diffIdentifier {
+    return self;
+}
+
+- (BOOL)isEqualToDiffableObject:(id<IGListDiffable>)object {
+    return self == object;
+}
 
 @end

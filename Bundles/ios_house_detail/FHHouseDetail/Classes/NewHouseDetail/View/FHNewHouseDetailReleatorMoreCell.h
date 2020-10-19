@@ -7,14 +7,18 @@
 
 #import "FHDetailBaseCell.h"
 #import "FHDetailFoldViewButton.h"
-
+#import <IGListKit/IGListKit.h>
 NS_ASSUME_NONNULL_BEGIN
 
-@interface FHNewHouseDetailReleatorMoreCell : FHDetailBaseCollectionCell
+@interface FHNewHouseDetailReleatorMoreCell : FHDetailBaseCollectionCell<IGListBindable>
 
 @property (nonatomic, strong) FHDetailFoldViewButton *foldButton;
 
 @property (nonatomic, copy) void (^foldButtonActionBlock)(void);
+
+@end
+
+@interface FHNewHouseDetailReleatorMoreCellModel : NSObject<IGListDiffable>
 
 @end
 

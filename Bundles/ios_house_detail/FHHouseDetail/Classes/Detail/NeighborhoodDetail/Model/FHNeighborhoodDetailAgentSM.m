@@ -18,4 +18,14 @@
     self.isFold = YES;
 }
 
+- (nonnull id<NSObject>)diffIdentifier {
+    return self;
+}
+
+- (BOOL)isEqualToDiffableObject:(nullable id<IGListDiffable>)object {
+//    FHNeighborhoodDetailAgentSM *agentSectionModel = (FHNeighborhoodDetailAgentSM *)object;
+    return self == object;
+}
+
+
 @end

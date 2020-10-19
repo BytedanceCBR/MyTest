@@ -74,7 +74,7 @@
     FHDetailSectionTitleCollectionView *titleView = [self.collectionContext dequeueReusableSupplementaryViewOfKind:UICollectionElementKindSectionHeader forSectionController:self class:[FHDetailSectionTitleCollectionView class] atIndex:index];
     titleView.titleLabel.font = [UIFont themeFontMedium:20];
     titleView.titleLabel.textColor = [UIColor themeGray1];
-    __weak typeof(self) weakSelf = self;
+//    __weak typeof(self) weakSelf = self;
     [titleView setMoreActionBlock:^{
 //        [weakSelf moreButtonAction];
     }];
