@@ -56,13 +56,17 @@
     self.currentData = data;
     
     FHNeighborhoodDetailHouseSaleCellModel *model = (FHNeighborhoodDetailHouseSaleCellModel *) data;
-    if(model.neighborhoodSoldHouseData) {
-        self.items = model.neighborhoodSoldHouseData.items.mutableCopy;
-        if(model.neighborhoodSoldHouseData.hasMore) {
-            FHNeighborhoodDetailHouseSaleMoreItemModel *moreItem = [[FHNeighborhoodDetailHouseSaleMoreItemModel alloc] init];
-            [self.items addObject:moreItem];
-        }
-        [self.collectionView reloadData];
+    if(model.neighborhoodSoldHouseData.items.count > 0) {
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
+            self.items = [model.neighborhoodSoldHouseData.items mutableCopy];
+            if(model.neighborhoodSoldHouseData.hasMore) {
+                FHNeighborhoodDetailHouseSaleMoreItemModel *moreItem = [[FHNeighborhoodDetailHouseSaleMoreItemModel alloc] init];
+                [self.items addObject:moreItem];
+            }
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [self.collectionView reloadData];
+            });
+        });
     }
 }
 
@@ -212,43 +216,33 @@
     }
     self.currentData = data;
     FHSearchHouseDataItemsModel *model = (FHSearchHouseDataItemsModel *)data;
-    if (model) {
-        if (model.houseImage.count > 0) {
-            FHImageModel *imageModel = model.houseImage.firstObject;
-            if(imageModel.url.length > 0) {
-                [self.houseImageView bd_setImageWithURL:[NSURL URLWithString:imageModel.url] placeholder:[UIImage imageNamed:@"default_image"]];
-            } else {
-                self.houseImageView.image = [UIImage imageNamed:@"default_image"];
-            }
-        } else {
-            self.houseImageView.image = [UIImage imageNamed:@"default_image"];
-        }
-        
-        //优先展示企业担保标签，然后展示降价房源标签
-        if(model.tagImage.count > 0) {
-            FHImageModel *imageModel = model.tagImage.firstObject;
-            if(imageModel.url.length > 0) {
-                [self.tagImageView bd_setImageWithURL:[NSURL URLWithString:imageModel.url]];
-                self.tagImageView.hidden = NO;
-            }
-        } else if(model.houseImageTag.text > 0){
-            self.tagLabel.text = model.houseImageTag.text;
-            self.tagView.hidden = NO;
-        } else {
-            self.tagImageView.hidden = YES;
-            self.tagView.hidden = YES;
-        }
-
-        if(model.displayNewNeighborhoodTitle.length > 0) {
-            self.descriptionLabel.text = model.displayNewNeighborhoodTitle;
-        }
-        if(model.displayPrice.length > 0) {
-            self.totalPriceLabel.text = model.displayPrice;
-        }
-        if(model.displayPricePerSqm.length > 0) {
-            self.pricePerUnitLabel.text = model.displayPricePerSqm;
+    
+    self.houseImageView.image = [UIImage imageNamed:@"default_image"];
+    self.tagImageView.hidden = YES;
+    self.tagView.hidden = YES;
+    
+    if (model.houseImage.count > 0) {
+        FHImageModel *imageModel = model.houseImage.firstObject;
+        if(imageModel.url.length > 0) {
+            [self.houseImageView bd_setImageWithURL:[NSURL URLWithString:imageModel.url] placeholder:[UIImage imageNamed:@"default_image"]];
         }
     }
+    
+    //优先展示企业担保标签，然后展示降价房源标签
+    if(model.tagImage.count > 0) {
+        FHImageModel *imageModel = model.tagImage.firstObject;
+        if(imageModel.url.length > 0) {
+            [self.tagImageView bd_setImageWithURL:[NSURL URLWithString:imageModel.url]];
+            self.tagImageView.hidden = NO;
+        }
+    } else if(model.houseImageTag.text.length > 0){
+        self.tagLabel.text = model.houseImageTag.text;
+        self.tagView.hidden = NO;
+    }
+    
+    self.descriptionLabel.text = model.displayNewNeighborhoodTitle;
+    self.totalPriceLabel.text = model.displayPrice;
+    self.pricePerUnitLabel.text = model.displayPricePerSqm;
 }
 
 
