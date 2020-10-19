@@ -25,6 +25,7 @@
 #import "FHErrorHubManagerUtil.h"
 #import <Heimdallr/HMDTTMonitor.h>
 #import <TTInstallService/TTInstallUtil.h>
+#import "SSCommonLogic.h"
 
 @interface FHHouseDetailBaseViewModel ()<UITableViewDelegate, UITableViewDataSource>
 
@@ -843,7 +844,25 @@
 
 // 二手房-房源问题反馈
 - (void)gotoReportVC:(id)model
-{    
+{
+    BOOL isJumpToNative = [SSCommonLogic isEnableHouseDetailNativeReport];
+    if(isJumpToNative) {
+        [self gotoReportNativePage:model];
+    }
+    else {
+        [self gotoReportH5Page:model];
+    }
+}
+- (void)gotoReportNativePage:(id)model {
+    NSString *openUrl = @"sslocal://house_detail_report_page";
+    NSMutableDictionary *info = [NSMutableDictionary dictionary];
+    info[@"house_url"] = self.contactViewModel.shareInfo.shareUrl;
+    info[@"house_type"] = @(self.houseType).stringValue;
+    info[@"house_id"] = self.houseId;
+    TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:info];
+    [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:openUrl] userInfo:userInfo];
+}
+- (void)gotoReportH5Page:(id)model {
     NSString *reportUrl = nil;
     if ([model isKindOfClass:[FHDetailDataBaseExtraOfficialModel class]]) {
         reportUrl = [(FHDetailDataBaseExtraOfficialModel *)model dialogs].reportUrl;
