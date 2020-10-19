@@ -97,7 +97,7 @@
     _singleImageView.contentMode = UIViewContentModeScaleAspectFill;
     _singleImageView.backgroundColor = [UIColor themeGray6];
     _singleImageView.layer.borderColor = [[UIColor themeGray6] CGColor];
-    _singleImageView.layer.borderWidth = 0.5;
+    _singleImageView.layer.borderWidth = 1;
     _singleImageView.layer.masksToBounds = YES;
     _singleImageView.layer.cornerRadius = 10;
     [self.contentView addSubview:_singleImageView];
