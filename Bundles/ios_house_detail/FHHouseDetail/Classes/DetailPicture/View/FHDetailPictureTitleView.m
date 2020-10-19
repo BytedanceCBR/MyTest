@@ -171,7 +171,7 @@
         NSString *title = self.titleNames[row];
         CGSize size = CGSizeMake([title btd_widthWithFont:[UIFont themeFontRegular:16] height:22], CGRectGetHeight(collectionView.frame));
         if (self.usedInNewHouseDetail) {
-            size.width += 10 * 2;
+            size.width += 13 * 2;
         }
         return size;
     }
