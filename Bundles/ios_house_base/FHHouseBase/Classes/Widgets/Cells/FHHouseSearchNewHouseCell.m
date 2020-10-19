@@ -96,6 +96,12 @@
     }];
 }
 
+- (void)updateHeightByTopMargin:(CGFloat)topMarigin {
+    [self.containerView mas_updateConstraints:^(MASConstraintMaker *make) {
+        make.top.mas_equalTo(topMarigin);
+    }];
+}
+
 -(void)initUI
 {
     self.contentView.backgroundColor = [UIColor themeGray7];

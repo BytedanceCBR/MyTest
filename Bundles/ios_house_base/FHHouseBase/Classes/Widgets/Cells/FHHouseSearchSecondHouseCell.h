@@ -25,6 +25,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, weak) id<FHHouseSearchSecondHouseCellDelegate> delegate;
 
+- (void)updateHeightByTopMargin:(CGFloat)topMarigin;
+
 - (void)resumeVRIcon;
 
 - (void)updateHeightByIsFirst:(BOOL)isFirst;

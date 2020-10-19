@@ -165,6 +165,12 @@
     return size.height;
 }
 
+- (void)updateHeightByTopMargin:(CGFloat)topMarigin {
+    [self.containerView mas_updateConstraints:^(MASConstraintMaker *make) {
+        make.top.mas_equalTo(topMarigin);
+    }];
+}
+
 - (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
     if (self) {
