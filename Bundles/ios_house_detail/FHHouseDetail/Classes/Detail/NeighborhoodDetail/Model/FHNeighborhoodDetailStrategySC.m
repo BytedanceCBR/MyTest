@@ -91,8 +91,8 @@
             traceParam[@"element_type"] = @"neighborhood_test_evaluate";
             traceParam[@"rank"] = [NSString stringWithFormat:@"%ld",(long)index];
             traceParam[@"log_pb"] = articleModel.logPb;
-            if(model.detailTracerDic[@"log_pb"][@"group_id"]){
-                traceParam[@"from_gid"] = model.detailTracerDic[@"log_pb"][@"group_id"];
+            if(model.extraDic[@"houseId"]){
+                traceParam[@"from_gid"] = model.extraDic[@"houseId"];
             }
             if(articleModel.logPb[@"group_id"]){
                 traceParam[@"group_id"] = articleModel.logPb[@"group_id"];
