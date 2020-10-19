@@ -146,7 +146,7 @@
             spaceModel.height = 15;
             [itemArray addObject:spaceModel];
         }else{
-            _questionHeaderModel.title = @"暂无回答";
+            _questionHeaderModel.title = @"暂无问答";
             _questionHeaderModel.totalCount = 0;
             _questionHeaderModel.count = 0;
             _questionHeaderModel.hiddenTopLine = !isHaveComment;
