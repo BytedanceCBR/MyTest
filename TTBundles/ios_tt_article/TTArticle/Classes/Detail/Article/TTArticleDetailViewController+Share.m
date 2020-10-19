@@ -93,6 +93,11 @@ extern BOOL ttvs_isShareIndividuatioEnable(void);
         TTActivity * reportActivity = [TTActivity activityOfReport];
         [activityItems addObject:reportActivity];
         
+        TTActivity *disLike  = [TTActivity activityOfDislike];
+        [activityItems addObject:disLike];
+        
+        TTActivity *blockUser  = [TTActivity activityOfBlockUser];
+        [activityItems addObject:blockUser];
         
         if (self.navMoreShareView) {
             self.navMoreShareView = nil;
@@ -293,6 +298,16 @@ extern BOOL ttvs_isShareIndividuatioEnable(void);
         else if (itemType == TTActivityTypePromotion) {
             [TTAdPromotionManager handleModel:self.articleInfoManager.promotionModel condition:nil];
             wrapperTrackEventWithCustomKeys(@"setting_btn", @"click", self.detailModel.article.groupModel.groupID, nil, nil);
+        }
+        else if (itemType == TTActivityTypeDislike) {
+            [TTIndicatorView showWithIndicatorStyle:TTIndicatorViewStyleImage indicatorText:@"将减少类似推荐" indicatorImage:[UIImage themedImageNamed:@"doneicon_popup_textpage.png"] autoDismiss:YES dismissHandler:nil];
+//            [TTAdPromotionManager handleModel:self.articleInfoManager.promotionModel condition:nil];
+//            wrapperTrackEventWithCustomKeys(@"setting_btn", @"click", self.detailModel.article.groupModel.groupID, nil, nil);
+        }
+        else if ( itemType == TTActivityTypeBlockUser) {
+            [TTIndicatorView showWithIndicatorStyle:TTIndicatorViewStyleImage indicatorText:@"将减少类似推荐" indicatorImage:[UIImage themedImageNamed:@"doneicon_popup_textpage.png"] autoDismiss:YES dismissHandler:nil];
+//            [TTAdPromotionManager handleModel:self.articleInfoManager.promotionModel condition:nil];
+//            wrapperTrackEventWithCustomKeys(@"setting_btn", @"click", self.detailModel.article.groupModel.groupID, nil, nil);
         }
         else { // Share
             NSString *adId = nil;

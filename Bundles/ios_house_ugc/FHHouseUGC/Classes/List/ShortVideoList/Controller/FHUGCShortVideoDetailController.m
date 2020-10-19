@@ -2239,7 +2239,9 @@ static const CGFloat kFloatingViewOriginY = 230;
         [self handleFavoriteVideoWithContentItem:(TTFavouriteContentItem *)contentItem];
     } else if ([contentItem.contentItemType isEqualToString:TTActivityContentItemTypeDislike]) {
         [self handleDislikeVideo];
-    } else if ([contentItem.contentItemType isEqualToString:TTActivityContentItemTypeReport]) {
+    } else if ([contentItem.contentItemType isEqualToString:TTActivityContentItemTypeBlock]) {
+        [self handleDislikeVideo];
+    }else if ([contentItem.contentItemType isEqualToString:TTActivityContentItemTypeReport]) {
         [self handleReportVideo];
     } else if ([contentItem.contentItemType isEqualToString:TTActivityContentItemTypeDelete]) {
         [self handleDeleteVideo];

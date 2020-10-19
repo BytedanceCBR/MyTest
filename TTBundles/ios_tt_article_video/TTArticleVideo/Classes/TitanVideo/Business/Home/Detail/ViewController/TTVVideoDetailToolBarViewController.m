@@ -1037,6 +1037,8 @@ extern NSInteger ttvs_isShareTimelineOptimize(void);
         [self reportAction];
     } else if (itemType == TTActivityTypeDetele) {
         [self deleteAction];
+    }else if (itemType == TTActivityTypeDislike || itemType == TTActivityTypeBlockUser) {
+        [TTIndicatorView showWithIndicatorStyle:TTIndicatorViewStyleImage indicatorText:@"将减少类似推荐" indicatorImage:[UIImage themedImageNamed:@"doneicon_popup_textpage.png"] autoDismiss:YES dismissHandler:nil];
     } else  if (itemType == TTActivityTypeDigUp)
     {
         if (self.detailModel.protocoledArticle.userBury) {
