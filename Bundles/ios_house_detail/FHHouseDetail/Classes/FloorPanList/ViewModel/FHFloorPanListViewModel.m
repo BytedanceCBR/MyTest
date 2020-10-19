@@ -319,7 +319,11 @@ static const NSString *kDefaultTopFilterStatus = @"-1";
         traceParam[@"house_type"] = @"house_model";
         //[traceParam removeObjectForKey:@"enter_from"];
         [traceParam removeObjectForKey:@"element_from"];
-        [traceParam addEntriesFromDictionary:tracer[@"log_pb"]];
+        
+        if ([tracer isKindOfClass:[NSDictionary class]] && [tracer[@"log_pb"] isKindOfClass:[NSDictionary class]]) {
+            [traceParam addEntriesFromDictionary:tracer[@"log_pb"]];
+        }
+        
         if (_currentItems.count > indexPath.row) {
             FHDetailNewDataFloorpanListListModel *itemModel = (FHDetailNewDataFloorpanListListModel *)_currentItems[indexPath.row];
             
