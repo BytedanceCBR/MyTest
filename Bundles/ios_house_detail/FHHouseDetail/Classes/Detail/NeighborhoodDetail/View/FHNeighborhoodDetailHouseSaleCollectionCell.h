@@ -32,4 +32,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
+@interface FHSameHouseTagImageView : UIImageView
+
+@end
 NS_ASSUME_NONNULL_END
