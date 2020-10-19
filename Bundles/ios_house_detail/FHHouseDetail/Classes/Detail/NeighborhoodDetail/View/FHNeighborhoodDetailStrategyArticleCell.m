@@ -9,6 +9,7 @@
 #import "UIImageView+BDWebImage.h"
 #import <TTBaseMacro.h>
 #import "UIDevice+BTDAdditions.h"
+#import <UILabel+BTDAdditions.h>
 
 @interface FHNeighborhoodDetailStrategyArticleCell ()
 
@@ -38,19 +39,30 @@
         self.iconLabel.text = model.articleType;
         self.descLabel.text = model.desc;
         self.bottomLine.hidden = model.hiddenBottomLine;
+        CGFloat labelWidth = self.contentView.bounds.size.width;
         if(isEmptyString(model.picture)){
             _singleImageView.hidden = YES;
             [self.contentLabel mas_updateConstraints:^(MASConstraintMaker *make) {
                 make.right.mas_equalTo(self.contentView).offset(-16);
             }];
+            labelWidth = labelWidth - 16 * 2;
         }else{
             _singleImageView.hidden = NO;
             [self.singleImageView bd_setImageWithURL:[NSURL URLWithString:model.picture] placeholder:nil];
             [self.contentLabel mas_updateConstraints:^(MASConstraintMaker *make) {
                 make.right.mas_equalTo(self.contentView).offset(-102);
             }];
+            labelWidth = labelWidth - 16 - 102;
         }
         
+        CGFloat labelHeight = [self.contentLabel btd_heightWithWidth:labelWidth];
+        if(labelHeight < 25) {
+            CGFloat labelTop = 50 - (labelHeight + 12 + 16) / 2;
+            [self.contentLabel mas_updateConstraints:^(MASConstraintMaker *make) {
+                make.top.mas_equalTo(labelTop);
+            }];
+        }
+
         if(isEmptyString(model.iconUrl)){
             self.iconImageView.image = [UIImage imageNamed:@"neighborhood_detail_xingfu_icon"];
         }else{
@@ -85,7 +97,7 @@
     _singleImageView.contentMode = UIViewContentModeScaleAspectFill;
     _singleImageView.backgroundColor = [UIColor themeGray6];
     _singleImageView.layer.borderColor = [[UIColor themeGray6] CGColor];
-    _singleImageView.layer.borderWidth = 0.5;
+    _singleImageView.layer.borderWidth = 1;
     _singleImageView.layer.masksToBounds = YES;
     _singleImageView.layer.cornerRadius = 10;
     [self.contentView addSubview:_singleImageView];
@@ -127,7 +139,7 @@
     }];
     
     [self.iconImageView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.bottom.mas_equalTo(self.singleImageView.mas_bottom);
+        make.top.mas_equalTo(self.contentLabel.mas_bottom).offset(12);
         make.left.mas_equalTo(self.contentView).offset(16);
         make.width.height.mas_equalTo(16);
     }];

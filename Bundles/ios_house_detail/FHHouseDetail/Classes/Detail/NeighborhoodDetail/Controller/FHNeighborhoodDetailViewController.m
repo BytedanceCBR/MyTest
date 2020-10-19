@@ -27,7 +27,7 @@
 #import <ByteDanceKit/ByteDanceKit.h>
 #import "TTNavigationController.h"
 #import <IGListKit/IGListKit.h>
-#import "FHDetailPictureTitleView.h"
+#import "FHDetailNavigationTitleView.h"
 #import "HMDTTMonitor.h"
 #import "FHUserTracker.h"
 #import "FHNeighborhoodDetailFlowLayout.h"
@@ -88,7 +88,7 @@
 @property (nonatomic, strong) IGListAdapter *listAdapter;
 @property (nonatomic, strong) IGListAdapterUpdater *listAdapterUpdater;
 
-@property (nonatomic, strong) FHDetailPictureTitleView *segmentTitleView;
+@property (nonatomic, strong) FHDetailNavigationTitleView *segmentTitleView;
 @property (nonatomic, strong) NSIndexPath *lastIndexPath;
 @property (nonatomic, assign) BOOL segmentViewChangedFlag;
 
@@ -416,10 +416,9 @@
     [self.view bringSubviewToFront:_navBar];
     
     
-    self.segmentTitleView = [[FHDetailPictureTitleView alloc] initWithFrame:CGRectMake(0, CGRectGetMaxY(self.navBar.frame), CGRectGetWidth(self.view.bounds), 42)];
+    self.segmentTitleView = [[FHDetailNavigationTitleView alloc] initWithFrame:CGRectMake(0, CGRectGetMaxY(self.navBar.frame), CGRectGetWidth(self.view.bounds), 42)];
     self.segmentTitleView.backgroundColor = [UIColor whiteColor];
     self.segmentTitleView.alpha = 0;
-    self.segmentTitleView.usedInNewHouseDetail = YES;
     self.segmentTitleView.seperatorLine.hidden = NO;
     [self.segmentTitleView setCurrentIndexBlock:^(NSInteger currentIndex) {
         __strong typeof(weakSelf) strongSelf = weakSelf;
@@ -735,7 +734,7 @@
     detailTracerDic[@"rank"] = self.tracerDict[@"rank"] ?: @"be_null";
     detailTracerDic[@"origin_from"] = self.tracerDict[@"origin_from"] ?: @"be_null";
     detailTracerDic[@"origin_search_id"] = self.tracerDict[@"origin_search_id"] ?: @"be_null";
-    detailTracerDic[@"log_pb"] = self.tracerDict[@"log_pb"] ?: @"be_null";
+    detailTracerDic[@"log_pb"] = self.tracerDict[@"log_pb"] ?: @{};
     detailTracerDic[@"from_gid"] = self.tracerDict[@"from_gid"];
     // 以下3个参数都在:log_pb中
     // group_id

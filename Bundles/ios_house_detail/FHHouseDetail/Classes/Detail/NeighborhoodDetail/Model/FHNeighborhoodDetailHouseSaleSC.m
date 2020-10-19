@@ -91,7 +91,7 @@
         }
         NSMutableDictionary *tracerDic = [[self detailTracerDict] mutableCopy];
         tracerDic[@"enter_type"] = @"click";
-        tracerDic[@"log_pb"] = self.detailViewController.viewModel.listLogPB ?: @"be_null";
+        tracerDic[@"log_pb"] = self.detailViewController.viewModel.listLogPB;
         tracerDic[@"category_name"] = @"same_neighborhood_list";
         tracerDic[@"element_from"] = @"same_neighborhood";
         tracerDic[@"enter_from"] = @"neighborhood_detail";
@@ -102,9 +102,9 @@
         userInfo[@"house_type"] = @(FHHouseTypeSecondHandHouse);
         if (detailModel.data.neighborhoodInfo.name.length > 0) {
             if (model.neighborhoodSoldHouseData.total.length > 0) {
-                userInfo[@"title"] = [NSString stringWithFormat:@"小区房源(%@)",model.neighborhoodSoldHouseData.total];
+                userInfo[@"title"] = [NSString stringWithFormat:@"%@(%@)",detailModel.data.neighborhoodInfo.name,model.neighborhoodSoldHouseData.total];
             } else {
-                userInfo[@"title"] = @"小区房源";
+                userInfo[@"title"] = detailModel.data.neighborhoodInfo.name;
             }
         } else {
             userInfo[@"title"] = @"小区房源";// 默认值
@@ -137,7 +137,7 @@
         NSMutableDictionary *tracerDic = [[self detailTracerDict] mutableCopy];
         tracerDic[@"rank"] = @(index);
         tracerDic[@"card_type"] = @"left_pic";
-        tracerDic[@"log_pb"] = item.logPb ? item.logPb : @"be_null";
+        tracerDic[@"log_pb"] = item.logPb;
         tracerDic[@"house_type"] = [[FHHouseTypeManager sharedInstance] traceValueForType:FHHouseTypeSecondHandHouse];
         tracerDic[@"element_from"] = @"same_neighborhood";
         tracerDic[@"enter_from"] = @"neighborhood_detail";
@@ -170,7 +170,7 @@
         tracerDic[@"house_type"] = @"old";
         tracerDic[@"element_type"] = @"sale_same_neighborhood";
         tracerDic[@"search_id"] = item.searchId.length > 0 ? item.searchId : @"be_null";
-        tracerDic[@"group_id"] = item.groupId.length > 0 ? item.groupId : (item.hid ? item.hid : @"be_null");
+        tracerDic[@"group_id"] = item.groupId.length > 0 ? item.groupId : (item.hid.length > 0 ? item.hid : @"be_null");
         tracerDic[@"impr_id"] = item.imprId.length > 0 ? item.imprId : @"be_null";
         [FHUserTracker writeEvent:@"house_show" params:tracerDic];
     }

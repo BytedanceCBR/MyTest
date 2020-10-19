@@ -1105,6 +1105,7 @@
         width = screenWidth - 70;
     }
     if(self.isNewNeighbourhoodDetail){
+        width = screenWidth - 62;
         self.numberOfLines = 2;
     }else{
         self.numberOfLines = self.imageList.count > 0 ? 3 : 5;

@@ -11,7 +11,7 @@
 
 @property (nonatomic,strong) UICollectionView *collectionView;
 @property (nonatomic,strong) UICollectionViewFlowLayout *flowLayout;
-@property (nonatomic,strong) NSMutableArray *items;
+@property (nonatomic,strong) NSArray *items;
 
 @end
 
@@ -55,7 +55,7 @@
 
     FHNeighborhoodDetailFloorpanCellModel *model = (FHNeighborhoodDetailFloorpanCellModel *) data;
     if(model.saleHouseInfoModel.neighborhoodSaleHouseList.count > 0) {
-        self.items = model.saleHouseInfoModel.neighborhoodSaleHouseList.mutableCopy;
+        self.items = model.saleHouseInfoModel.neighborhoodSaleHouseList;
         [self.collectionView reloadData];
     }
 }
@@ -169,6 +169,10 @@
     }
     self.currentData = data;
     FHDetailNeighborhoodSaleHouseInfoNeighborhoodSaleHouseListModel *model =(FHDetailNeighborhoodSaleHouseInfoNeighborhoodSaleHouseListModel *) data;
+    
+    self.numberLabel.attributedText = nil;
+    self.roomLabel.text = nil;
+    
     if(model.count.length > 0) {
         NSString *numberText = [NSString stringWithFormat:@"%@套",model.count];
         NSMutableAttributedString *attrText = [[NSMutableAttributedString alloc] initWithString:numberText];
@@ -176,12 +180,12 @@
         [attrText addAttribute:NSFontAttributeName value:[UIFont themeFontMedium:12] range:[numberText rangeOfString:@"套"]];
         self.numberLabel.attributedText = attrText;
     }
+    
     if(model.roomNum.length > 0 && model.areaRange.length > 0){
         self.roomLabel.text = [NSString stringWithFormat:@"%@居室 %@",[self transformNumber:model.roomNum],model.areaRange];
     }
-    if(model.priceRange.length > 0) {
-        self.priceLabel.text = model.priceRange;
-    }
+    
+    self.priceLabel.text = model.priceRange;
 }
 
 -(NSString *)transformNumber:(NSString *)roomNumber {

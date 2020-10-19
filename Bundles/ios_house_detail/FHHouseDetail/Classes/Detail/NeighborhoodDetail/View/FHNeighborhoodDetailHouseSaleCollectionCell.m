@@ -56,13 +56,17 @@
     self.currentData = data;
     
     FHNeighborhoodDetailHouseSaleCellModel *model = (FHNeighborhoodDetailHouseSaleCellModel *) data;
-    if(model.neighborhoodSoldHouseData) {
-        self.items = model.neighborhoodSoldHouseData.items.mutableCopy;
-        if(model.neighborhoodSoldHouseData.hasMore) {
-            FHNeighborhoodDetailHouseSaleMoreItemModel *moreItem = [[FHNeighborhoodDetailHouseSaleMoreItemModel alloc] init];
-            [self.items addObject:moreItem];
-        }
-        [self.collectionView reloadData];
+    if(model.neighborhoodSoldHouseData.items.count > 0) {
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
+            self.items = [model.neighborhoodSoldHouseData.items mutableCopy];
+            if(model.neighborhoodSoldHouseData.hasMore) {
+                FHNeighborhoodDetailHouseSaleMoreItemModel *moreItem = [[FHNeighborhoodDetailHouseSaleMoreItemModel alloc] init];
+                [self.items addObject:moreItem];
+            }
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [self.collectionView reloadData];
+            });
+        });
     }
 }
 
@@ -121,9 +125,12 @@
 @interface FHNeighborhoodDetailHouseSaleItemCollectionCell ()
 
 @property(nonatomic,strong) UIImageView *houseImageView;
-@property(nonatomic, strong) UILabel *descriptionLabel;
-@property(nonatomic, strong) UILabel *pricePerUnitLabel;
-@property(nonatomic, strong) UILabel *totalPriceLabel;
+@property(nonatomic,strong) UILabel *descriptionLabel;
+@property(nonatomic,strong) UILabel *pricePerUnitLabel;
+@property(nonatomic,strong) UILabel *totalPriceLabel;
+@property(nonatomic,strong) FHSameHouseTagView *tagView;
+@property(nonatomic,strong) FHSameHouseTagImageView *tagImageView;
+@property(nonatomic,strong) UILabel *tagLabel;
 @end
 
 @implementation FHNeighborhoodDetailHouseSaleItemCollectionCell
@@ -135,13 +142,18 @@
     return self;
 }
 
--(void) initView {
+-(void)initView {
     self.houseImageView = [[UIImageView alloc] init];
     self.houseImageView.layer.cornerRadius = 10;
     self.houseImageView.layer.masksToBounds = YES;
+    self.houseImageView.layer.borderWidth = 1;
+    self.houseImageView.layer.borderColor = [UIColor themeGray6].CGColor;
     self.descriptionLabel = [[UILabel alloc] init];
     self.pricePerUnitLabel = [[UILabel alloc] init];
     self.totalPriceLabel = [[UILabel alloc] init];
+    self.tagView = [[FHSameHouseTagView alloc] init];
+    self.tagImageView = [[FHSameHouseTagImageView alloc] init];
+    self.tagLabel = [[UILabel alloc] init];
     
     self.descriptionLabel.font = [UIFont themeFontMedium:16];
     self.descriptionLabel.textColor = [UIColor themeGray1];
@@ -150,11 +162,21 @@
     self.pricePerUnitLabel.textColor = [UIColor themeGray3];
     self.totalPriceLabel.font = [UIFont themeFontMedium:16];
     self.totalPriceLabel.textColor = [UIColor themeOrange1];
-    
+    self.tagView.backgroundColor = [UIColor themeOrange4];
+    self.tagView.hidden = YES;
+    self.tagImageView.backgroundColor = [UIColor themeOrange4];
+    self.tagImageView.hidden = YES;
+    self.tagLabel.textColor = [UIColor themeWhite];
+    self.tagLabel.textAlignment = NSTextAlignmentCenter;
+    self.tagLabel.font = [UIFont themeFontRegular:12];
+
     [self.contentView addSubview:self.houseImageView];
     [self.contentView addSubview:self.descriptionLabel];
     [self.contentView addSubview:self.pricePerUnitLabel];
     [self.contentView addSubview:self.totalPriceLabel];
+    [self.contentView addSubview:self.tagImageView];
+    [self.tagView addSubview:self.tagLabel];
+    [self.contentView addSubview:self.tagView];
     
     [self.houseImageView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.left.right.equalTo(self.contentView);
@@ -175,6 +197,19 @@
         make.left.equalTo(self.totalPriceLabel.mas_right).offset(4);
         make.height.mas_equalTo(14);
     }];
+    [self.tagImageView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.top.equalTo(self.contentView);
+        make.size.mas_equalTo(CGSizeMake(60, 20));
+    }];
+    [self.tagView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.top.equalTo(self.contentView);
+        make.height.mas_equalTo(20);
+    }];
+    [self.tagLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.bottom.equalTo(self.tagView);
+        make.left.equalTo(self.tagView).offset(6);
+        make.right.equalTo(self.tagView).offset(-6);
+    }];
 }
 
 - (void)refreshWithData:(id)data {
@@ -183,27 +218,33 @@
     }
     self.currentData = data;
     FHSearchHouseDataItemsModel *model = (FHSearchHouseDataItemsModel *)data;
-    if (model) {
-        if (model.houseImage.count > 0) {
-            FHImageModel *imageModel = model.houseImage[0];
-            if(imageModel.url.length > 0) {
-                [self.houseImageView bd_setImageWithURL:[NSURL URLWithString:imageModel.url] placeholder:[UIImage imageNamed:@"default_image"]];
-            } else {
-                self.houseImageView.image = [UIImage imageNamed:@"default_image"];
-            }
-        } else {
-            self.houseImageView.image = [UIImage imageNamed:@"default_image"];
-        }
-        if(model.displayNewNeighborhoodTitle.length > 0) {
-            self.descriptionLabel.text = model.displayNewNeighborhoodTitle;
-        }
-        if(model.displayPrice.length > 0) {
-            self.totalPriceLabel.text =model.displayPrice;
-        }
-        if(model.displayPricePerSqm.length > 0) {
-            self.pricePerUnitLabel.text = model.displayPricePerSqm;
+    
+    self.houseImageView.image = [UIImage imageNamed:@"default_image"];
+    self.tagImageView.hidden = YES;
+    self.tagView.hidden = YES;
+    
+    if (model.houseImage.count > 0) {
+        FHImageModel *imageModel = model.houseImage.firstObject;
+        if(imageModel.url.length > 0) {
+            [self.houseImageView bd_setImageWithURL:[NSURL URLWithString:imageModel.url] placeholder:[UIImage imageNamed:@"default_image"]];
         }
     }
+    
+    //优先展示企业担保标签，然后展示降价房源标签
+    if(model.tagImage.count > 0) {
+        FHImageModel *imageModel = model.tagImage.firstObject;
+        if(imageModel.url.length > 0) {
+            [self.tagImageView bd_setImageWithURL:[NSURL URLWithString:imageModel.url]];
+            self.tagImageView.hidden = NO;
+        }
+    } else if(model.houseImageTag.text.length > 0){
+        self.tagLabel.text = model.houseImageTag.text;
+        self.tagView.hidden = NO;
+    }
+    
+    self.descriptionLabel.text = model.displayNewNeighborhoodTitle;
+    self.totalPriceLabel.text = model.displayPrice;
+    self.pricePerUnitLabel.text = model.displayPricePerSqm;
 }
 
 
@@ -257,6 +298,20 @@
         make.centerX.equalTo(self.contentView);
         make.top.equalTo(self.moreImageView.mas_bottom).offset(10);
     }];
+}
+
+@end
+
+
+@implementation FHSameHouseTagImageView
+
+- (void)layoutSubviews {
+    [super layoutSubviews];
+    UIBezierPath *maskPath = [UIBezierPath bezierPathWithRoundedRect:self.bounds byRoundingCorners:UIRectCornerTopLeft | UIRectCornerBottomRight cornerRadii:CGSizeMake(10, 10)];
+    CAShapeLayer *layer = [[CAShapeLayer alloc] init];
+    layer.frame = self.bounds;
+    layer.path = maskPath.CGPath;
+    self.layer.mask = layer;
 }
 
 @end

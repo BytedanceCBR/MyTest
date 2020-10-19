@@ -41,7 +41,7 @@
         
         [[HMDTTMonitor defaultManager] hmdTrackService:eventName metric:nil category:cat extra:params];
     }
-    
+
     // 均价走势
     if (model.data.priceTrend.count > 0) {
         FHNeighborhoodDetailPriceTrendCellModel *priceTrendModel = [[FHNeighborhoodDetailPriceTrendCellModel alloc] init];
@@ -63,8 +63,12 @@
     } else {
         [items addObject:self.mapCellModel.emptyString?:@"附近没有交通信息"];
     }
-    if (self.priceTrendModel) {
-        [items addObject:self.priceTrendModel];
+    if (!self.priceTrendModel.priceTrends.count) {
+        [items addObject:@""];
+    } else {
+        if (self.priceTrendModel) {
+            [items addObject:self.priceTrendModel];
+        }
     }
     return items.copy;
 }

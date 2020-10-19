@@ -40,6 +40,7 @@
             CGFloat value = [model.neighborhoodInfo.monthUp floatValue] * 100;
             if (fabs(value) < 0.0001) {
                 self.monthUpLabel.text = @"持平";
+                self.monthUpLabel.font = [UIFont themeFontMedium:14];
                 self.per.hidden = YES;
                 self.monthUpTrend.hidden = YES;
                 [self.monthUpLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
@@ -48,6 +49,7 @@
                 }];
             } else {
                 self.monthUpLabel.text = [NSString stringWithFormat:@"%.2f",fabs(value)];
+                self.monthUpLabel.font = [UIFont themeFontDINAlternateBold:18];
                 self.monthUpTrend.hidden = NO;
                 if (value > 0) {
                     self.monthUpTrend.image = [UIImage imageNamed:@"plot-red-arrow"];
