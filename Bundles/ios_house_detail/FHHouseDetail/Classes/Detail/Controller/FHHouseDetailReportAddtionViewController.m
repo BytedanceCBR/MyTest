@@ -548,6 +548,8 @@ typedef NS_ENUM(NSUInteger, FHHouseDetailReportInfoState) {
 
             [self.view setNeedsLayout];
             [self.view layoutIfNeeded];
+        } completion:^(BOOL finished) {
+            [self scrollToDisplayFirstResponder];
         }];
     }];
     
@@ -632,6 +634,7 @@ typedef NS_ENUM(NSUInteger, FHHouseDetailReportInfoState) {
                             @[hintItem],
                         ];
                         [self.tableView reloadData];
+                        self.submitView.hidden = NO;
                     }
                         break;
                     default:
@@ -750,6 +753,7 @@ typedef NS_ENUM(NSUInteger, FHHouseDetailReportInfoState) {
         _tableView.backgroundColor = [UIColor themeWhite];
         _tableView.rowHeight = UITableViewAutomaticDimension;
         _tableView.estimatedRowHeight = UITableViewAutomaticDimension;
+        _tableView.tableHeaderView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, CGFLOAT_MIN)];
         
         
         self.problemCell = [FHHouseDetailReportAdditionCell createCell];
@@ -799,6 +803,7 @@ typedef NS_ENUM(NSUInteger, FHHouseDetailReportInfoState) {
     if(!_submitView) {
         _submitView = [UIView new];
         _submitView.backgroundColor = [UIColor themeWhite];
+        _submitView.hidden = YES;
     }
     return _submitView;
 }
@@ -929,7 +934,7 @@ typedef NS_ENUM(NSUInteger, FHHouseDetailReportInfoState) {
         // 提交动作
         NSMutableDictionary *params = [NSMutableDictionary dictionary];
         params[@"ticket_id"] = self.ticketID;
-        params[@"uri_list"] = [image_urls componentsJoinedByString:@","];
+        params[@"uri_list"] = image_urls;
         params[@"more_info"] = self.additionCell.item.detail;
         
         if(![TTReachability isNetworkConnected]) {
@@ -947,6 +952,7 @@ typedef NS_ENUM(NSUInteger, FHHouseDetailReportInfoState) {
                 return;
             }
             if(jsonObj && [jsonObj[@"status"] longValue] == 0) {
+                [[ToastManager manager] showToast:@"提交完成"];
                 [self goBack];
             }
             else {
@@ -956,7 +962,11 @@ typedef NS_ENUM(NSUInteger, FHHouseDetailReportInfoState) {
         }];
     }];
 }
-
+- (void)scrollToDisplayFirstResponder {
+    if(self.additionCell.inputTextView.isFirstResponder) {
+        [self.tableView scrollToRowAtIndexPath:self.additionCell.indexPath atScrollPosition:UITableViewScrollPositionBottom animated:YES];
+    }
+}
 #pragma mark - FHHouseDetailReportAdditionCellDelegate
 - (CGFloat)heightForImageCount:(NSUInteger)count {
     count++;
@@ -966,7 +976,6 @@ typedef NS_ENUM(NSUInteger, FHHouseDetailReportInfoState) {
 - (void)reloadSection:(NSIndexPath *)indexPath {
     [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:indexPath.section] withRowAnimation:UITableViewRowAnimationNone];
 }
-
 #pragma mark UITableViewDataSource
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
