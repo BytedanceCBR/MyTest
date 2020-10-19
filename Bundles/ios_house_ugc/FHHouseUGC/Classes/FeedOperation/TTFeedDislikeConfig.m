@@ -227,7 +227,7 @@ static NSString *const kTTNewDislikeReportOptions = @"tt_new_dislike_report_opti
         items = [[self operationWordListWith:viewModel] mutableCopy];
     }
     
-    return items;
+    return [items copy];
 }
 
 + (NSArray<FHFeedOperationWord *> *)operationWordListWithPermission:(NSArray<FHUGCConfigDataPermissionModel> *)permission {
