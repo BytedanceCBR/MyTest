@@ -68,7 +68,7 @@ extern BOOL ttvs_isShareIndividuatioEnable(void);
             NSMutableDictionary *shareInfo = [self.articleInfoManager makeADShareInfo];
             activityItems = [ArticleShareManager shareActivityManager:self.activityActionManager shareInfo:shareInfo showReport:NO];
         } else {
-            activityItems = [ArticleShareManager shareActivityManager:self.activityActionManager setArticleCondition:self.detailModel.article adID:self.detailModel.adID showReport:NO];
+            activityItems = [ArticleShareManager shareActivityManager:self.activityActionManager setArticleCondition:self.detailModel.article adID:self.detailModel.adID showReport:YES];
         }
         
         if (self.articleInfoManager.promotionModel) {
@@ -89,15 +89,6 @@ extern BOOL ttvs_isShareIndividuatioEnable(void);
         // add by zjing 去掉问答字体设置
 //        TTActivity * fontSetting = [TTActivity activityOfFontSetting];
 //        [activityItems addObject:fontSetting];
-        
-        TTActivity * reportActivity = [TTActivity activityOfReport];
-        [activityItems addObject:reportActivity];
-        
-        TTActivity *disLike  = [TTActivity activityOfDislike];
-        [activityItems addObject:disLike];
-        
-        TTActivity *blockUser  = [TTActivity activityOfBlockUser];
-        [activityItems addObject:blockUser];
         
         if (self.navMoreShareView) {
             self.navMoreShareView = nil;
@@ -137,7 +128,7 @@ extern BOOL ttvs_isShareIndividuatioEnable(void);
         NSMutableDictionary *shareInfo = [self.articleInfoManager makeADShareInfo];
         activityItems = [ArticleShareManager shareActivityManager:self.activityActionManager shareInfo:shareInfo showReport:NO];
     } else {
-        activityItems = [ArticleShareManager shareActivityManager:self.activityActionManager setArticleCondition:self.detailModel.article adID:self.detailModel.adID showReport:NO];
+        activityItems = [ArticleShareManager shareActivityManager:self.activityActionManager setArticleCondition:self.detailModel.article adID:self.detailModel.adID showReport:YES];
     }
     
     if (self.articleInfoManager.promotionModel) {
@@ -215,6 +206,16 @@ extern BOOL ttvs_isShareIndividuatioEnable(void);
             self.toolbarShareView = nil;
             [self report_showReportOnSharePannel];
             
+        }
+        else if (itemType == TTActivityTypeDislike) {
+            [TTIndicatorView showWithIndicatorStyle:TTIndicatorViewStyleImage indicatorText:@"将减少类似推荐" indicatorImage:[UIImage themedImageNamed:@"doneicon_popup_textpage.png"] autoDismiss:YES dismissHandler:nil];
+//            [TTAdPromotionManager handleModel:self.articleInfoManager.promotionModel condition:nil];
+//            wrapperTrackEventWithCustomKeys(@"setting_btn", @"click", self.detailModel.article.groupModel.groupID, nil, nil);
+        }
+        else if ( itemType == TTActivityTypeBlockUser) {
+            [TTIndicatorView showWithIndicatorStyle:TTIndicatorViewStyleImage indicatorText:@"将减少类似推荐" indicatorImage:[UIImage themedImageNamed:@"doneicon_popup_textpage.png"] autoDismiss:YES dismissHandler:nil];
+//            [TTAdPromotionManager handleModel:self.articleInfoManager.promotionModel condition:nil];
+//            wrapperTrackEventWithCustomKeys(@"setting_btn", @"click", self.detailModel.article.groupModel.groupID, nil, nil);
         }
         else if (itemType == TTActivityTypePromotion) {
             [TTAdPromotionManager handleModel:self.articleInfoManager.promotionModel  condition:nil];
