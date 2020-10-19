@@ -1,11 +1,11 @@
 //
-//  FHDetailPictureTitleView.m
+//  FHDetailNavigationTitleView.m
 //  FHHouseDetail
 //
-//  Created by 张元科 on 2019/4/17.
+//  Created by luowentao on 2020/10/19.
 //
 
-#import "FHDetailPictureTitleView.h"
+#import "FHDetailNavigationTitleView.h"
 #import <Masonry/Masonry.h>
 #import <FHCommonUI/UIColor+Theme.h>
 #import <FHCommonUI/UIFont+House.h>
@@ -13,14 +13,14 @@
 #import <FHHouseBase/FHBaseCollectionView.h>
 #import <ByteDanceKit/ByteDanceKit.h>
 
-@interface FHDetailPictureTitleView()<UICollectionViewDelegate,UICollectionViewDataSource,UICollectionViewDelegateFlowLayout>
+@interface FHDetailNavigationTitleView()<UICollectionViewDelegate,UICollectionViewDataSource,UICollectionViewDelegateFlowLayout>
 
 @property (nonatomic, strong) UIView *indicatorView;
 @property (nonatomic, copy) NSArray <NSNumber *>* preTitleSums;
 @property (nonatomic, assign) NSInteger titleIndex;
 @end
 
-@implementation FHDetailPictureTitleView
+@implementation FHDetailNavigationTitleView
 
 -(instancetype)initWithFrame:(CGRect)frame
 {
@@ -66,7 +66,7 @@
     layout.sectionInset = UIEdgeInsetsMake(0, 15, 0, 15);
     layout.scrollDirection = UICollectionViewScrollDirectionHorizontal;
     layout.minimumLineSpacing = 0;
-    layout.minimumInteritemSpacing = 10;
+    layout.minimumInteritemSpacing = 0.01f;
     
     _colletionView = [[FHBaseCollectionView alloc] initWithFrame:CGRectMake(0, 0, CGRectGetWidth(self.frame), CGRectGetHeight(self.frame)) collectionViewLayout:layout];
     _colletionView.backgroundColor = [UIColor clearColor];
@@ -75,7 +75,7 @@
     if(@available(iOS 11.0 , *)){
         _colletionView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
     }
-    [_colletionView registerClass:[FHDetailPictureTitleCell class] forCellWithReuseIdentifier:NSStringFromClass([FHDetailPictureTitleCell class])];
+    [_colletionView registerClass:[FHDetailNavigationTitleCell class] forCellWithReuseIdentifier:NSStringFromClass([FHDetailNavigationTitleCell class])];
     
     _colletionView.delegate = self;
     _colletionView.dataSource = self;
@@ -99,9 +99,8 @@
     if (_selectIndex != selectIndex || selectIndex == 0) {
         _selectIndex = selectIndex; // 图片索引
         NSInteger titleIndex = [self titleIndexBySelectIndex];
-        if (self.usedInNewHouseDetail) {
-            titleIndex = self.selectIndex;
-        }
+        titleIndex = self.selectIndex;
+        
         _titleIndex = titleIndex;
         [self.colletionView reloadData];
         if (titleIndex >= 0 && titleIndex < self.titleNames.count) {
@@ -109,20 +108,16 @@
             if (indexPath) {
                 [self.colletionView scrollToItemAtIndexPath:indexPath atScrollPosition:UICollectionViewScrollPositionCenteredHorizontally animated:YES];
             }
-            if (self.usedInPictureList || self.usedInNewHouseDetail) {
-                UICollectionViewLayoutAttributes *attributes = [self.colletionView layoutAttributesForItemAtIndexPath:indexPath];
-                CGRect frame = attributes.frame;
-                
-                CGFloat bottomSpace = 13;
-                if (self.usedInNewHouseDetail) {
-                    bottomSpace = 9;
-                }
+            UICollectionViewLayoutAttributes *attributes = [self.colletionView layoutAttributesForItemAtIndexPath:indexPath];
+            CGRect frame = attributes.frame;
+            
+            CGFloat bottomSpace = 9;
 
-                [self.colletionView bringSubviewToFront:self.indicatorView];
-                [UIView animateWithDuration:0.2 animations:^{
-                    self.indicatorView.frame = CGRectMake(frame.origin.x + frame.size.width/2 - 10, CGRectGetHeight(self.colletionView.frame) - bottomSpace, 20, 4);
-                }];
-            }
+            [self.colletionView bringSubviewToFront:self.indicatorView];
+            [UIView animateWithDuration:0.2 animations:^{
+                self.indicatorView.frame = CGRectMake(frame.origin.x + frame.size.width/2 - 10, CGRectGetHeight(self.colletionView.frame) - bottomSpace, 20, 4);
+            }];
+            
         }
     }
     _selectIndex = selectIndex; // 图片索引
@@ -170,9 +165,8 @@
     if (row >= 0 && row < self.titleNames.count) {
         NSString *title = self.titleNames[row];
         CGSize size = CGSizeMake([title btd_widthWithFont:[UIFont themeFontRegular:16] height:22], CGRectGetHeight(collectionView.frame));
-        if (self.usedInNewHouseDetail) {
-            size.width += 10 * 2;
-        }
+        size.width += 13 * 2;
+        
         return size;
     }
     CGSize retSize = CGSizeMake(71, 22);
@@ -185,39 +179,27 @@
 
 - (__kindof UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    FHDetailPictureTitleCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:NSStringFromClass([FHDetailPictureTitleCell class]) forIndexPath:indexPath];
+    FHDetailNavigationTitleCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:NSStringFromClass([FHDetailNavigationTitleCell class]) forIndexPath:indexPath];
     NSInteger index = indexPath.row;
     if (index >= 0 && index < self.titleNames.count) {
         NSString *title = self.titleNames[index];
         cell.titleLabel.text = title;
     }
     NSInteger titleIndex = self.titleIndex;
-    if (self.usedInNewHouseDetail) {
-        titleIndex = self.selectIndex;
-    }
+    titleIndex = self.selectIndex;
+    
     UIColor *selectColor = [UIColor whiteColor];
     UIColor *normalColor = [UIColor colorWithHexString:@"#ffffff" alpha:0.4];
     UIFont *selectFont = [UIFont themeFontRegular:16];
     UIFont *normalFont = [UIFont themeFontRegular:16];
-    if (self.usedInPictureList) {
-        selectColor = [UIColor themeGray1];
-        normalColor = [UIColor colorWithHexStr:@"#6d7278"];
-        selectFont = [UIFont themeFontSemibold:16];
-        [cell.titleLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
-            make.height.mas_equalTo(22);
-            make.bottom.mas_equalTo(-15);
-            make.centerX.mas_equalTo(cell.contentView);
-        }];
-    }
-    if (self.usedInNewHouseDetail) {
-        normalColor = [UIColor themeGray1];
-        selectFont = [UIFont themeFontMedium:18];
-        selectColor = [UIColor themeGray1];
-        [cell.titleLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
-            make.centerY.mas_equalTo(cell.contentView);
-            make.centerX.mas_equalTo(cell.contentView);
-        }];
-    }
+    normalColor = [UIColor themeGray1];
+    selectFont = [UIFont themeFontMedium:18];
+    selectColor = [UIColor themeGray1];
+    [cell.titleLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.centerY.mas_equalTo(cell.contentView);
+        make.centerX.mas_equalTo(cell.contentView);
+    }];
+
     if (titleIndex == index) {
         cell.titleLabel.textColor = selectColor;
         cell.titleLabel.font = selectFont;
@@ -233,9 +215,8 @@
     NSInteger index = indexPath.row;
     if (index >= 0 && index < self.titleNames.count) {
         NSInteger currentSelectIndex = [self currentSelectIndexByTitleIndex:index];
-        if (self.usedInNewHouseDetail) {
-            currentSelectIndex = index;
-        }
+        currentSelectIndex = index;
+        
         self.selectIndex = currentSelectIndex;
         // 回传给VC
         if (self.currentIndexBlock) {
@@ -254,7 +235,7 @@
 
 
 // FHDetailPictureTitleCell
-@implementation FHDetailPictureTitleCell
+@implementation FHDetailNavigationTitleCell
 
 -(instancetype)initWithFrame:(CGRect)frame
 {
@@ -275,6 +256,5 @@
     }
     return self;
 }
-
-
 @end
+

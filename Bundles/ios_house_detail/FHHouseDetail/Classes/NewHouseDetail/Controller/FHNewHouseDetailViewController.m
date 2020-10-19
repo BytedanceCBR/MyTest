@@ -42,7 +42,7 @@
 #import "FHNewHouseDetailBuildingsSC.h"
 #import "FHNewHouseDetailRecommendSC.h"
 #import "FHNewHouseDetailDisclaimerSC.h"
-#import "FHDetailPictureTitleView.h"
+#import "FHDetailNavigationTitleView.h"
 #import <FHHouseBase/FHEventShowProtocol.h>
 #import <FHHouseBase/NSObject+FHOptimize.h>
 
@@ -81,7 +81,7 @@
 @property (nonatomic, strong) IGListAdapter *listAdapter;
 @property (nonatomic, strong) IGListAdapterUpdater *listAdapterUpdater;
 
-@property (nonatomic, strong) FHDetailPictureTitleView *segmentTitleView;
+@property (nonatomic, strong) FHDetailNavigationTitleView *segmentTitleView;
 @property (nonatomic, strong) NSIndexPath *lastIndexPath;
 @property (nonatomic, assign) BOOL segmentViewChangedFlag;
 @end
@@ -357,10 +357,9 @@
 
     [self.view bringSubviewToFront:_navBar];
     
-    self.segmentTitleView = [[FHDetailPictureTitleView alloc] initWithFrame:CGRectMake(0, CGRectGetMaxY(self.navBar.frame), CGRectGetWidth(self.view.bounds), 42)];
+    self.segmentTitleView = [[FHDetailNavigationTitleView alloc] initWithFrame:CGRectMake(0, CGRectGetMaxY(self.navBar.frame), CGRectGetWidth(self.view.bounds), 42)];
     self.segmentTitleView.backgroundColor = [UIColor whiteColor];
     self.segmentTitleView.alpha = 0;
-    self.segmentTitleView.usedInNewHouseDetail = YES;
     self.segmentTitleView.seperatorLine.hidden = NO;
     [self.segmentTitleView setCurrentIndexBlock:^(NSInteger currentIndex) {
         __strong typeof(weakSelf) strongSelf = weakSelf;
