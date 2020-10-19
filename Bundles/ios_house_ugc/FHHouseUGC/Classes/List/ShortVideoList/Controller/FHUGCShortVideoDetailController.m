@@ -127,6 +127,8 @@
 
 #import "UIDevice+BTDAdditions.h"
 #import "NSDictionary+BTDAdditions.h"
+#import "FHHouseUGCAPI.h"
+
 #define kPostMessageFinishedNotification    @"kPostMessageFinishedNotification"
 
 @import AVFoundation;
@@ -1778,6 +1780,18 @@ static const CGFloat kFloatingViewOriginY = 230;
         }];
     }];
 }
+
+- (void)commentCell:(AWEVideoCommentCell *)cell didClickShieldWithModel:(AWECommentModel *)commentModel
+{
+    [FHHouseUGCAPI commentShield:self.model.groupId commentId:commentModel.id.stringValue completion:^(bool success, NSError * _Nonnull error) {
+        if(success){
+            [[ToastManager manager] showToast:@"屏蔽成功"];
+        }else{
+            [[ToastManager manager] showToast:@"屏蔽失败"];
+        }
+    }];
+}
+
 - (void)commentCell:(AWEVideoCommentCell *)cell didClickLikeWithModel:(AWECommentModel *)commentModel
 {
     if (![TTAccountManager isLogin]) {

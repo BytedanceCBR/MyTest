@@ -653,6 +653,7 @@
     
     return [FHMainApi queryData:queryPath params:paramDic class:cls completion:completion];
 }
+
 + (TTHttpTask *)postDelete:(NSString *)groupId cellType:(NSInteger)cellType socialGroupId:(NSString *)socialGroupId enterFrom:(NSString *)enterFrom pageType:(NSString *)pageType completion:(void(^)(bool success , NSError *error))completion {
     NSString *queryPath = @"/f100/ugc/delete_post";
     NSString *url = QURL(queryPath);
@@ -733,6 +734,82 @@
     
     }];
 }
+
++ (TTHttpTask *)commentShield:(NSString *)groupId commentId:(NSString *)commentId completion:(void(^)(bool success , NSError *error))completion {
+    NSString *queryPath = @"/comment/v1/feed_back/";
+    NSString *url = QURL(queryPath);
+    NSMutableDictionary *paramDic = [NSMutableDictionary new];
+    if(groupId){
+        paramDic[@"group_id"] = groupId;
+    }
+    if(commentId){
+        paramDic[@"comment_id"] = commentId;
+    }
+
+    paramDic[@"source"] = @(1);
+    
+    NSDate *startDate = [NSDate date];
+    return [[TTNetworkManager shareInstance] requestForBinaryWithResponse:url params:paramDic method:@"POST" needCommonParams:YES callback:^(NSError *error, id obj, TTHttpResponse *response) {
+        
+        NSDate *backDate = [NSDate date];
+        __block NSError *backError = error;
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
+            
+            NSDate *serDate = [NSDate date];
+            FHNetworkMonitorType resultType = FHNetworkMonitorTypeSuccess;
+            NSInteger code = 0;
+            NSString *errMsg = nil;
+            NSMutableDictionary *extraDict = nil;
+            NSDictionary *exceptionDict = nil;
+            NSInteger responseCode = -1;
+            if (response.statusCode) {
+                responseCode = response.statusCode;
+            }
+            BOOL success = NO;
+            if(backError && !obj) {
+                code = backError.code;
+                resultType = FHNetworkMonitorTypeNetFailed;
+            } else {
+                if (!backError) {
+                    @try{
+                        NSDictionary *json = [NSJSONSerialization JSONObjectWithData:obj options:kNilOptions error:&backError];
+                        serDate = [NSDate date];
+                        
+                        if(!json) {
+                            code = 1;
+                            resultType = FHNetworkMonitorTypeBizFailed + 1;
+                        }
+                        else {
+                            NSInteger status = [json[@"err_no"] integerValue];
+                            if (status != 0 || backError != nil) {
+                                code = status;
+                                errMsg = backError.domain;
+                                resultType = FHNetworkMonitorTypeBizFailed+code;
+                            }
+                            
+                            success = (status == 0);
+                            if (!success) {
+                                NSString *msg = json[@"message"];
+                                backError = [NSError errorWithDomain:msg?:DEFULT_ERROR code:API_ERROR_CODE userInfo:nil];
+                            }
+                        }
+                    }
+                    @catch(NSException *e){
+                        backError = [NSError errorWithDomain:e.reason code:API_ERROR_CODE userInfo:e.userInfo ];
+                    }
+                }
+            }
+            [FHMainApi addRequestLog:queryPath startDate:startDate backDate:backDate serializeDate:serDate resultType:resultType errorCode:code errorMsg:errMsg extra:extraDict exceptionDict:exceptionDict responseCode:responseCode];
+            if (completion) {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    completion(success,error);
+                });
+            }
+        });
+    
+    }];
+}
+
 + (TTHttpTask *)postOperation:(NSString *)groupId cellType:(NSInteger)cellType socialGroupId:(NSString *)socialGroupId operationCode:(NSString *)operationCode enterFrom:(NSString *)enterFrom pageType:(NSString *)pageType completion:(void (^ _Nonnull)(id<FHBaseModelProtocol> model, NSError *error))completion {
     NSString *queryPath = @"/f100/ugc/stick_operate";
     NSString *url = QURL(queryPath);
@@ -1576,6 +1653,7 @@
         });
     }];
 }
+
 + (TTHttpTask *)requestPublishEditedPostWithParam:(NSDictionary *)params class:(Class)cls completion:(void (^)(id<FHBaseModelProtocol> _Nonnull, NSError * _Nonnull))completion {
     
     NSString *queryPath = @"/f100/ugc/post/edit";
@@ -1631,6 +1709,63 @@
         });
     }];
 }
+
+//+ (TTHttpTask *)requestShieldCommentWithGroupId:(NSString *)groupId commentId:(NSString *)commentId completion:(void (^)(id<FHBaseModelProtocol> _Nonnull, NSError * _Nonnull))completion {
+//
+//    NSString *queryPath = @"/f100/ugc/post/edit";
+//    NSString *url = QURL(queryPath);
+//
+//    NSDate *startDate = [NSDate date];
+//    return [[TTNetworkManager shareInstance] requestForBinaryWithResponse:url params:params method:@"POST" needCommonParams:YES callback:^(NSError *error, id obj, TTHttpResponse *response) {
+//
+//        NSDate *backDate = [NSDate date];
+//        __block NSError *backError = error;
+//        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
+//            NSDate *serDate = [NSDate date];
+//            FHNetworkMonitorType resultType = FHNetworkMonitorTypeSuccess;
+//            NSInteger code = 0;
+//            NSString *errMsg = nil;
+//            NSMutableDictionary *extraDict = nil;
+//            NSDictionary *exceptionDict = nil;
+//            FHUGCEditedPostModel *model = nil;
+//            NSInteger responseCode = -1;
+//            if (response.statusCode) {
+//                responseCode = response.statusCode;
+//            }
+//            if (backError && !obj) {
+//                code = backError.code;
+//                resultType = FHNetworkMonitorTypeNetFailed;
+//            } else {
+//                model = (id<FHBaseModelProtocol>)[FHMainApi generateModel:obj class:cls error:&backError];
+//                serDate = [NSDate date];
+//                if (!model) {
+//                    // model 为nil
+//                    code = 1;
+//                    resultType = FHNetworkMonitorTypeBizFailed + 1;
+//                } else {
+//                    // model 不为nil
+//                    if ([model respondsToSelector:@selector(status)]) {
+//                        NSString *status = [model performSelector:@selector(status)];
+//                        if (status.integerValue != 0 || backError != nil) {
+//                            code = [status integerValue];
+//                            errMsg = backError.domain;
+//                            resultType = FHNetworkMonitorTypeBizFailed+code;
+//                        }
+//                    }
+//                }
+//            }
+//
+//            [FHMainApi addRequestLog:queryPath startDate:startDate backDate:backDate serializeDate:serDate resultType:resultType errorCode:code errorMsg:errMsg extra:extraDict exceptionDict:exceptionDict responseCode:responseCode];
+//
+//            if (completion) {
+//                dispatch_async(dispatch_get_main_queue(), ^{
+//                    completion(model,error);
+//                });
+//            }
+//        });
+//    }];
+//}
+
 + (TTHttpTask *)requestPublishHotTagsWithParam:(NSDictionary *)params class:(Class)cls completion:(void (^)(id<FHBaseModelProtocol> _Nonnull, NSError * _Nonnull))completion {
     
     NSString *queryPath = @"/f100/ugc/get_hot_socials";
@@ -1692,6 +1827,7 @@
     NSString *queryPath = @"/f100/ugc/neighborhood_remark";
     return [FHMainApi queryData:queryPath uploadLog:YES params:params class:cls completion:completion];
 }
+
 + (TTHttpTask *)requestSpecialTopicContentWithTabId:(NSString *)tabId queryPath:(NSString *)queryPath categoryName:(NSString *)categoryName queryId:(NSString *)queryId extraDic:(NSDictionary *)extraDic completion:(void (^ _Nullable)(id <FHBaseModelProtocol> model, NSError *error))completion {
     
     NSString *url = nil;
@@ -1939,4 +2075,5 @@
     return request;
     
 }
+
 @end

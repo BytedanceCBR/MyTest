@@ -132,6 +132,14 @@
             icon = [UIImage imageNamed:@"fh_ugc_report"];
         }
             break;
+        case FHFeedOperationOptionTypeShield: {
+            icon = [UIImage imageNamed:@"fh_ugc_shield"];
+        }
+            break;
+        case FHFeedOperationOptionTypeBlackList: {
+            icon = [UIImage imageNamed:@"fh_ugc_black_list"];
+        }
+            break;
         case FHFeedOperationOptionTypeDelete: {
             icon = [UIImage imageNamed:@"fh_ugc_delete"];
         }
@@ -164,6 +172,9 @@
             icon = [UIImage imageNamed:@"fh_ugc_feed_edit_history"];
         }
             break;
+        case FHFeedOperationOptionTypeOther: {
+            break;
+        }
     }
     
     self.iconImageView.image = icon;

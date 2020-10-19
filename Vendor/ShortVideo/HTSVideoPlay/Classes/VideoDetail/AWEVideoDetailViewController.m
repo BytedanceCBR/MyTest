@@ -118,6 +118,7 @@
 #import "ToastManager.h"
 #import "TTAccountManager.h"
 #import "NSDictionary+BTDAdditions.h"
+#import "FHHouseUGCAPI.h"
 
 #define kPostMessageFinishedNotification    @"kPostMessageFinishedNotification"
 
@@ -1920,6 +1921,17 @@ static const CGFloat kFloatingViewOriginY = 230;
                 [[ToastManager manager] showToast:@"举报成功"];
             }
         }];
+    }];
+}
+
+- (void)commentCell:(AWEVideoCommentCell *)cell didClickShieldWithModel:(AWECommentModel *)commentModel
+{
+    [FHHouseUGCAPI commentShield:self.model.groupId commentId:commentModel.id.stringValue completion:^(bool success, NSError * _Nonnull error) {
+        if(success){
+            [[ToastManager manager] showToast:@"屏蔽成功"];
+        }else{
+            [[ToastManager manager] showToast:@"屏蔽失败"];
+        }
     }];
 }
 

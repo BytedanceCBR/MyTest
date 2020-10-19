@@ -90,6 +90,18 @@ static NSString *const kTTNewDislikeReportOptions = @"tt_new_dislike_report_opti
                               @"subTitle": @"广告、低俗、重复、过时",
                               @"serverType":@"report"
                               },
+                          @{
+                              @"id": @"10",
+                              @"title": @"屏蔽",
+                              @"subTitle": @"",
+                              @"serverType":@"shield"
+                              },
+                          @{
+                              @"id": @"11",
+                              @"title": @"拉黑",
+                              @"subTitle": @"",
+                              @"serverType":@"putBlackList"
+                              },
                           ].mutableCopy;
 
     }
@@ -140,6 +152,14 @@ static NSString *const kTTNewDislikeReportOptions = @"tt_new_dislike_report_opti
             }else{
                 word.items = @[word];
             }
+            // 拉黑
+            if(word.type == FHFeedOperationWordTypeBlackList){
+                [items addObject:word];
+            }
+            // 屏蔽
+            if(word.type == FHFeedOperationWordTypeShield){
+                [items addObject:word];
+            }
             // 编辑
             if(word.type == FHFeedOperationWordTypeEdit && isShowDelete && viewModel.cellType == FHUGCFeedListCellTypeUGC && [viewModel.groupSource isEqualToString:@"113"]){
                 [items addObject:word];
@@ -158,7 +178,7 @@ static NSString *const kTTNewDislikeReportOptions = @"tt_new_dislike_report_opti
             }
         }
     }
-    return items;
+    return [items copy];
 }
 
 + (NSArray<FHFeedOperationWord *> *)operationWordListWithViewModel:(FHFeedOperationViewModel *)viewModel {
@@ -204,7 +224,7 @@ static NSString *const kTTNewDislikeReportOptions = @"tt_new_dislike_report_opti
         }
         
     }else{
-        items = [self operationWordListWith:viewModel];
+        items = [[self operationWordListWith:viewModel] mutableCopy];
     }
     
     return items;
@@ -271,11 +291,15 @@ static NSString *const kTTNewDislikeReportOptions = @"tt_new_dislike_report_opti
         type = FHFeedOperationWordTypeEdit;
     }else if([serverKey isEqualToString:@"edit_history"]){
         type = FHFeedOperationWordTypeEditHistory;
+    }else if([serverKey isEqualToString:@"shield"]){
+        type = FHFeedOperationWordTypeShield;
+    }else if([serverKey isEqualToString:@"putBlackList"]){
+        type = FHFeedOperationWordTypeBlackList;
     }else{
         type = FHFeedOperationWordTypeOther;
     }
     
-    return [NSString stringWithFormat:@"%d",type];
+    return [NSString stringWithFormat:@"%ld",(long)type];
 }
 
 @end
