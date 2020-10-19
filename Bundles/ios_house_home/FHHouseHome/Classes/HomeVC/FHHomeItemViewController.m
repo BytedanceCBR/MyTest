@@ -494,8 +494,9 @@ static NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
         [self.requestTask cancel];
     }
     if (self.houseType != FHHouseTypeRentHouse) {
-        NSString *group = [BDABTestManager ABGroup];
-    
+        NSNumber *res = [BDABTestManager getExperimentValueForKey:@"home_recommend_card" withExposure:YES];
+        NSInteger vid = [res integerValue] + 2087053;
+        NSString *group = [NSString stringWithFormat:@"%ld", vid];
         requestDictonary[@"client_ab_version"] = group;
     }
     WeakSelf;
