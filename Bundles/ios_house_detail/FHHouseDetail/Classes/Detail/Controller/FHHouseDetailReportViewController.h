@@ -10,7 +10,9 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @interface FHHouseDetailReportViewController : FHBaseViewController
+@end
 
+@interface FHHouseDetailReportPhoneNumberInvalidTextField : UITextField
 @end
 
 @interface NSString(validateContactNumber)

@@ -14,8 +14,14 @@
 #import <ReactiveObjC/ReactiveObjC.h>
 #import "ToastManager.h"
 #import <ios_house_im/FHIMSafeAreasGuide.h>
+#import "FHHouseDetailReportViewController.h"
+#import "UIViewController+HUD.h"
+#import "FRUploadImageManager.h"
+#import "TTPostThreadDefine.h"
 
 #define FH_HOUSE_DETAIL_ADDITION_TEXT_COUNT_LIMIN 200
+#define FHHouseDetailReportItemPhoneNumberDigitCount 11
+#define kFHHouseDetailReportPhoneNumberStatusNotification @"kFHHouseDetailReportPhoneNumberStatusNotification"
 
 typedef NS_ENUM(NSUInteger, FHHouseDetailReportAdditionItemType) {
     FHHouseDetailReportAdditionItemType_Problem,
@@ -37,14 +43,16 @@ typedef NS_ENUM(NSUInteger, FHHouseDetailReportAdditionItemType) {
 @protocol FHHouseDetailReportAdditionCellDelegate <NSObject>
 - (void)reloadSection:(NSIndexPath *)indexPath;
 - (CGFloat)heightForImageCount:(NSUInteger)count;
-
+- (void)checkIfCanSubmit;
 @end
+
 @interface FHHouseDetailReportAdditionCell : UITableViewCell<FRAddMultiImagesViewDelegate, UITextViewDelegate>
 @property (nonatomic, strong) NSIndexPath *indexPath;
 @property (nonatomic, strong) FHHouseDetailReportAdditionItem *item;
 @property (nonatomic, strong) UILabel *titleLabel;
 @property (nonatomic, strong) UILabel *detailLabel;
-@property (nonatomic, strong) UITextField *phoneTextField;
+@property (nonatomic, strong) FHHouseDetailReportPhoneNumberInvalidTextField *phoneTextField;
+@property (nonatomic, strong) UILabel *textViewRightLabel;
 @property (nonatomic, strong) UITextView *inputTextView;
 @property (nonatomic, strong) UILabel *inputTextViewLimitLabel;
 @property (nonatomic, strong) FRAddMultiImagesView *imagesView;
@@ -54,12 +62,19 @@ typedef NS_ENUM(NSUInteger, FHHouseDetailReportAdditionItemType) {
 @property (nonatomic, assign) id<FHHouseDetailReportAdditionCellDelegate> delegate;
 
 + (instancetype)createCell;
+- (void)checkIfValidForSubmit;
 @end
 
 @implementation FHHouseDetailReportAdditionCell
 
 + (instancetype)createCell {
     return [[FHHouseDetailReportAdditionCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:nil];
+}
+
+- (void)checkIfValidForSubmit {
+    if(self.delegate && [self.delegate respondsToSelector:@selector(checkIfCanSubmit)]) {
+        [self.delegate checkIfCanSubmit];
+    }
 }
 
 - (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
@@ -89,18 +104,55 @@ typedef NS_ENUM(NSUInteger, FHHouseDetailReportAdditionItemType) {
     return _detailLabel;
 }
 
-- (UITextField *)phoneTextField {
+- (FHHouseDetailReportPhoneNumberInvalidTextField *)phoneTextField {
     if(!_phoneTextField) {
-        _phoneTextField = [UITextField new];
+        _phoneTextField = [FHHouseDetailReportPhoneNumberInvalidTextField new];
         _phoneTextField.textColor = [UIColor themeGray1];
         _phoneTextField.attributedPlaceholder = [[NSAttributedString alloc] initWithString:@"请填写" attributes:@{
             NSForegroundColorAttributeName: [UIColor themeGray3],
             NSFontAttributeName: [UIFont themeFontRegular:16]
         }];
         _phoneTextField.keyboardType = UIKeyboardTypeNumberPad;
+        _phoneTextField.rightView = self.textViewRightLabel;
+        _phoneTextField.rightViewMode = UITextFieldViewModeAlways;
+        
+        NSUInteger validPhoneNumberDigitCount = FHHouseDetailReportItemPhoneNumberDigitCount;
+        @weakify(self);
+        [[[_phoneTextField.rac_textSignal distinctUntilChanged] deliverOnMainThread] subscribeNext:^(NSString * _Nullable x) {
+            @strongify(self);
+            [self updatePhoneNumberHint:nil isShow:NO];
+            if(x.length > validPhoneNumberDigitCount) {
+                x = [x substringWithRange:NSMakeRange(0, validPhoneNumberDigitCount)];
+                self.phoneTextField.text = x;
+            }
+            self.item.detail = x;
+            [self checkIfValidForSubmit];
+            
+        }];
+        
+        [[[[NSNotificationCenter defaultCenter] rac_addObserverForName:kFHHouseDetailReportPhoneNumberStatusNotification object:nil] deliverOnMainThread] subscribeNext:^(NSNotification * _Nullable x) {
+            @strongify(self);
+            [self updatePhoneNumberHint:@"手机号格式错误" isShow:YES];
+        }];
     }
     return _phoneTextField;
 }
+
+- (UILabel *)textViewRightLabel {
+    if(!_textViewRightLabel) {
+        _textViewRightLabel = [UILabel new];
+        _textViewRightLabel.font = [UIFont themeFontLight:12];
+        _textViewRightLabel.textColor = [UIColor redColor];
+        _textViewRightLabel.textAlignment = NSTextAlignmentLeft;
+    }
+    return _textViewRightLabel;
+}
+
+- (void)updatePhoneNumberHint:(NSString *)hint isShow:(BOOL)show {
+    self.textViewRightLabel.text = show ? hint : @"";
+    self.phoneTextField.textColor = show ? self.textViewRightLabel.textColor : [UIColor themeGray1];
+}
+
 - (UITextView *)inputTextView {
     if(!_inputTextView) {
         _inputTextView = [UITextView new];
@@ -118,6 +170,8 @@ typedef NS_ENUM(NSUInteger, FHHouseDetailReportAdditionItemType) {
         [[[self.inputTextView.rac_textSignal deliverOnMainThread] distinctUntilChanged] subscribeNext:^(NSString * _Nullable x) {
             @strongify(self);
             self.inputTextViewLimitLabel.attributedText = [self textViewLimitTip];
+            self.item.detail = x;
+            [self checkIfValidForSubmit];
         }];
     }
     return _inputTextView;
@@ -186,6 +240,33 @@ typedef NS_ENUM(NSUInteger, FHHouseDetailReportAdditionItemType) {
     [self layoutContent];
 }
 
+- (void)showMustRequiredTitle:(BOOL)isRequired text:(NSString *)showText {
+    NSString *requiredText = showText;
+    if(isRequired) {
+        if(![self.titleLabel.text containsString:requiredText]) {
+            NSAttributedString *requiredAttributeText = [[NSAttributedString alloc] initWithString:requiredText attributes:@{
+                NSForegroundColorAttributeName: [UIColor themeGray3],
+                NSFontAttributeName: self.titleLabel.font
+            }];
+            NSMutableAttributedString *titleAttributeText = [[NSMutableAttributedString alloc] initWithString:self.titleLabel.text attributes:@{
+                NSForegroundColorAttributeName: self.titleLabel.textColor,
+                NSFontAttributeName: self.titleLabel.font
+            }];
+            [titleAttributeText appendAttributedString:requiredAttributeText];
+            self.titleLabel.attributedText = titleAttributeText;
+        }
+    } else {
+        if([self.titleLabel.text containsString:requiredText]) {
+            NSString *title = [self.titleLabel.text stringByReplacingOccurrencesOfString:requiredText withString:@""];
+            NSMutableAttributedString *titleAttributeText = [[NSMutableAttributedString alloc] initWithString:title attributes:@{
+                NSForegroundColorAttributeName: self.titleLabel.textColor,
+                NSFontAttributeName: self.titleLabel.font
+            }];
+            self.titleLabel.attributedText = titleAttributeText;
+        }
+    }
+}
+
 - (void)layoutContent {
         
     [self.contentView addSubview:self.bottomLine];
@@ -197,6 +278,7 @@ typedef NS_ENUM(NSUInteger, FHHouseDetailReportAdditionItemType) {
         make.bottom.equalTo(self.contentView);
     }];
     
+    [self showMustRequiredTitle:NO text:nil];
     switch (self.item.type) {
         case FHHouseDetailReportAdditionItemType_Problem:
         case FHHouseDetailReportAdditionItemType_Name:
@@ -277,6 +359,7 @@ typedef NS_ENUM(NSUInteger, FHHouseDetailReportAdditionItemType) {
             self.titleLabel.text = self.item.title;
             self.inputTextView.text = self.item.detail;
             self.inputTextViewLimitLabel.attributedText = [self textViewLimitTip];
+            [self showMustRequiredTitle:YES text:@"（必填）"];
         }
             break;
         case FHHouseDetailReportAdditionItemType_ReportImages:
@@ -298,6 +381,7 @@ typedef NS_ENUM(NSUInteger, FHHouseDetailReportAdditionItemType) {
             }];
             
             self.titleLabel.text = self.item.title;
+            [self showMustRequiredTitle:YES text:@"（必填，支持多张图片）"];
         }
             break;
         case FHHouseDetailReportAdditionItemType_Hint:
@@ -327,6 +411,7 @@ typedef NS_ENUM(NSUInteger, FHHouseDetailReportAdditionItemType) {
             [self.delegate reloadSection:self.indexPath];
         }
     }
+    [self checkIfValidForSubmit];
 }
 
 #pragma mark - UITextViewDelegate
@@ -335,6 +420,49 @@ typedef NS_ENUM(NSUInteger, FHHouseDetailReportAdditionItemType) {
     NSString *replacedString = [textView.text stringByReplacingCharactersInRange:range withString:text];
     return ![text isEqualToString:@"\n"] && replacedString.length <= FH_HOUSE_DETAIL_ADDITION_TEXT_COUNT_LIMIN;
     
+}
+@end
+
+typedef NS_ENUM(NSUInteger, FHHouseDetailReportInfoState) {
+    FHHouseDetailReportInfoState_Unknown,
+    FHHouseDetailReportInfoState_OutDate,
+    FHHouseDetailReportInfoState_UnCompleted,
+    FHHouseDetailReportInfoState_Submitted
+};
+
+@interface FHHouseDetailRerportInfoDataModel : JSONModel
+@property (nonatomic, copy) NSString *houseName;
+@property (nonatomic, copy) NSString *problem;
+@property (nonatomic, assign) FHHouseDetailReportInfoState status;
+@property (nonatomic, copy) NSString *ticketId;
+@property (nonatomic, copy) NSString *creatorId;
+@end
+@implementation FHHouseDetailRerportInfoDataModel
++ (BOOL)propertyIsOptional:(NSString *)propertyName {
+    return YES;
+}
++ (JSONKeyMapper*)keyMapper
+{
+  NSDictionary *dict = @{
+    @"houseName": @"house_name",
+    @"problem": @"problem",
+    @"status": @"status",
+    @"ticketId": @"ticket_id",
+    @"creatorId": @"creator_id",
+  };
+  return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+     return dict[keyName]?:keyName;
+  }];
+}
+@end
+@interface FHHouseDetailRerportInfoModel : JSONModel<FHBaseModelProtocol>
+@property (nonatomic, copy , nullable) NSString *status;
+@property (nonatomic, copy , nullable) NSString *message;
+@property (nonatomic, strong , nullable) FHHouseDetailRerportInfoDataModel *data ;
+@end
+@implementation FHHouseDetailRerportInfoModel
++ (BOOL)propertyIsOptional:(NSString *)propertyName {
+    return YES;
 }
 @end
 
@@ -354,6 +482,11 @@ typedef NS_ENUM(NSUInteger, FHHouseDetailReportAdditionItemType) {
 @property (nonatomic, strong) FHHouseDetailReportAdditionCell *additionCell;
 @property (nonatomic, strong) FHHouseDetailReportAdditionCell *imagesCell;
 @property (nonatomic, strong) FHHouseDetailReportAdditionCell *hintCell;
+
+// 数据
+@property (nonatomic, copy  ) NSString *ticketID;
+@property (nonatomic, copy  ) NSString *creatorID;
+@property (nonatomic, strong) FRUploadImageManager *uploadImageManager;
 @end
 
 @implementation FHHouseDetailReportAddtionViewController
@@ -365,6 +498,7 @@ typedef NS_ENUM(NSUInteger, FHHouseDetailReportAdditionItemType) {
 
 - (instancetype)initWithRouteParamObj:(TTRouteParamObj *)paramObj {
     if(self = [super initWithRouteParamObj:paramObj]) {
+        self.ticketID = [paramObj.allParams btd_stringValueForKey:@"ticket_id"];
     }
     return self;
 }
@@ -431,68 +565,82 @@ typedef NS_ENUM(NSUInteger, FHHouseDetailReportAdditionItemType) {
     }
     
     NSMutableDictionary *params = [NSMutableDictionary dictionary];
+    params[@"ticket_id"] = self.ticketID;
+    
     [self startLoading];
-    [FHMainApi requestHouseFeedbackAddition:params completion:^(NSError * _Nonnull error, id  _Nonnull jsonObj) {
+    [FHMainApi requestHouseFeedbackInfo:params completion:^(NSError * _Nonnull error, id  _Nonnull jsonObj) {
         [self endLoading];
         // 处理请求结果
-        if(!error) {
-            
+        if(error) {
+            [[ToastManager manager] showToast:@"网络错误，请稍后重试"];
+            return;
         }
         else {
-            BOOL isSubmitted = NO;
-            BOOL isOutDated = NO;
-            if(isSubmitted) {
-                [self showSubmitted];
-            }
             
-            else if(isOutDated) {
-                [self showOutDated];
-            }
-            
-            else {
-                // TODO: 正常展示tableView
-                FHHouseDetailReportAdditionItem *problemItem = [FHHouseDetailReportAdditionItem new];
-                problemItem.type = FHHouseDetailReportAdditionItemType_Problem;
-                problemItem.height = 50;
-                problemItem.title = @"反馈问题:";
-                problemItem.detail = @"房源价格造假";
-                FHHouseDetailReportAdditionItem *nameItem = [FHHouseDetailReportAdditionItem new];
-                nameItem.type = FHHouseDetailReportAdditionItemType_Name;
-                nameItem.height = 50;
-                nameItem.title = @"房源名称:";
-                nameItem.detail = @"2室0厅 马泾桥二村";
-                
-                FHHouseDetailReportAdditionItem *phoneItem = [FHHouseDetailReportAdditionItem new];
-                phoneItem.type = FHHouseDetailReportAdditionItemType_PhoneNumber;
-                phoneItem.height = 50;
-                phoneItem.title = @"联系电话";
-                phoneItem.detail = @"";
-                
-                FHHouseDetailReportAdditionItem *additionItem = [FHHouseDetailReportAdditionItem new];
-                additionItem.type = FHHouseDetailReportAdditionItemType_AdditionContent;
-                additionItem.height = 190;
-                additionItem.title = @"补充信息";
-                additionItem.detail = @"";
-                
-                FHHouseDetailReportAdditionItem *imagesItem = [FHHouseDetailReportAdditionItem new];
-                imagesItem.type = FHHouseDetailReportAdditionItemType_ReportImages;
-                imagesItem.height = [self heightForImageCount:0];
-                imagesItem.title = @"上传凭证（支持多张图片/视频上传） ";
-                imagesItem.detail = @"";
-                
-                FHHouseDetailReportAdditionItem *hintItem = [FHHouseDetailReportAdditionItem new];
-                hintItem.type = FHHouseDetailReportAdditionItemType_Hint;
-                hintItem.height = 108;
-                hintItem.title = @"";
-                hintItem.detail = @"为了更好的解决您反馈的房源问题，提高核实效率，请您上传该房源的举报凭证，包括但不限于聊天记录等。该链接有效期为3个自然日，我们会在收到后尽快核实回复，感谢您的配合！";
-                
-                self.items = @[
-                    @[problemItem,nameItem],
-                    @[phoneItem,additionItem],
-                    @[imagesItem],
-                    @[hintItem],
-                ];
-                [self.tableView reloadData];
+            NSError *error = nil;
+            FHHouseDetailRerportInfoModel *model = [[FHHouseDetailRerportInfoModel alloc] initWithDictionary:jsonObj error:&error];
+            if(model && [model.status isEqual:@"0"]) {
+                self.creatorID = model.data.creatorId;
+                switch (model.data.status) {
+                    case FHHouseDetailReportInfoState_Submitted:
+                    {
+                        [self showSubmitted];
+                    }
+                        break;
+                    case FHHouseDetailReportInfoState_OutDate:
+                    {
+                        [self showOutDated];
+                    }
+                        break;
+                    case FHHouseDetailReportInfoState_UnCompleted:
+                    {
+                        FHHouseDetailReportAdditionItem *problemItem = [FHHouseDetailReportAdditionItem new];
+                        problemItem.type = FHHouseDetailReportAdditionItemType_Problem;
+                        problemItem.height = 50;
+                        problemItem.title = @"反馈问题:";
+                        problemItem.detail = model.data.problem;
+                        FHHouseDetailReportAdditionItem *nameItem = [FHHouseDetailReportAdditionItem new];
+                        nameItem.type = FHHouseDetailReportAdditionItemType_Name;
+                        nameItem.height = 50;
+                        nameItem.title = @"房源名称:";
+                        nameItem.detail = model.data.houseName;
+                        
+//                        FHHouseDetailReportAdditionItem *phoneItem = [FHHouseDetailReportAdditionItem new];
+//                        phoneItem.type = FHHouseDetailReportAdditionItemType_PhoneNumber;
+//                        phoneItem.height = 50;
+//                        phoneItem.title = @"联系电话";
+//                        phoneItem.detail = @"";
+                        
+                        FHHouseDetailReportAdditionItem *additionItem = [FHHouseDetailReportAdditionItem new];
+                        additionItem.type = FHHouseDetailReportAdditionItemType_AdditionContent;
+                        additionItem.height = 190;
+                        additionItem.title = @"补充信息";
+                        additionItem.detail = @"";
+                        
+                        FHHouseDetailReportAdditionItem *imagesItem = [FHHouseDetailReportAdditionItem new];
+                        imagesItem.type = FHHouseDetailReportAdditionItemType_ReportImages;
+                        imagesItem.height = [self heightForImageCount:0];
+                        imagesItem.title = @"上传凭证";
+                        imagesItem.detail = @"";
+                        
+                        FHHouseDetailReportAdditionItem *hintItem = [FHHouseDetailReportAdditionItem new];
+                        hintItem.type = FHHouseDetailReportAdditionItemType_Hint;
+                        hintItem.height = 108;
+                        hintItem.title = @"";
+                        hintItem.detail = @"为了更好的解决您反馈的房源问题，提高核实效率，请您上传该房源的举报凭证，包括但不限于聊天记录等。该链接有效期为3个自然日，我们会在收到后尽快核实回复，感谢您的配合！";
+                        
+                        self.items = @[
+                            @[problemItem,nameItem],
+                            @[additionItem],
+                            @[imagesItem],
+                            @[hintItem],
+                        ];
+                        [self.tableView reloadData];
+                    }
+                        break;
+                    default:
+                        break;
+                }
             }
         }
     }];
@@ -611,8 +759,11 @@ typedef NS_ENUM(NSUInteger, FHHouseDetailReportAdditionItemType) {
         self.problemCell = [FHHouseDetailReportAdditionCell createCell];
         self.nameCell = [FHHouseDetailReportAdditionCell createCell];
         self.phoneCell = [FHHouseDetailReportAdditionCell createCell];
+        self.phoneCell.delegate = self;
         self.additionCell = [FHHouseDetailReportAdditionCell createCell];
+        self.additionCell.delegate = self;
         self.imagesCell = [FHHouseDetailReportAdditionCell createCell];
+        self.imagesCell.delegate = self;
         self.hintCell = [FHHouseDetailReportAdditionCell createCell];
     }
     return _tableView;
@@ -620,6 +771,13 @@ typedef NS_ENUM(NSUInteger, FHHouseDetailReportAdditionItemType) {
 
 - (void)tapAction:(UITapGestureRecognizer *)tap {
     [self.view endEditing:YES];
+}
+
+- (FRUploadImageManager *)uploadImageManager {
+    if (!_uploadImageManager) {
+        _uploadImageManager = [[FRUploadImageManager alloc] init];
+    }
+    return _uploadImageManager;
 }
 
 #pragma mark UITableViewDelegate
@@ -673,27 +831,134 @@ typedef NS_ENUM(NSUInteger, FHHouseDetailReportAdditionItemType) {
     self.submitButton.alpha = isEnable ? 1 : 0.4;
 }
 
-- (void)submitAction {
-    // 提交动作
-    NSMutableDictionary *params = [NSMutableDictionary dictionary];
-    // TODO: 参数传入
+- (void)checkIfCanSubmit {
     
-    if(![TTReachability isNetworkConnected]) {
-        [[ToastManager manager] showToast:@"网络不给力，请重试"];
-        return;
+//    BOOL isPhoneValid = [self.phoneCell.item.detail validateContactNumber];
+//    if(!isPhoneValid && self.phoneCell.item.detail.length == FHHouseDetailReportItemPhoneNumberDigitCount) {
+//        [[NSNotificationCenter defaultCenter] postNotificationName:kFHHouseDetailReportPhoneNumberStatusNotification object:nil];
+//    }
+    BOOL isAdditionContentValid = self.additionCell.item.detail.length > 0;
+    BOOL isImagesValid = self.imagesCell.imagesView.selectedImageCacheTasks.count > 0;
+
+    BOOL isEnableSubmit = isAdditionContentValid && isImagesValid;
+    [self updateSubmitButtonStatus: isEnableSubmit];
+}
+
+- (void)uploadImagesWithCompletion:(void(^)(NSArray<FRUploadImageModel*> *uploadImageModels))completion {
+    
+    NSMutableArray<FRUploadImageModel *> * images = (NSMutableArray<FRUploadImageModel*> *)[NSMutableArray array];
+    
+    // 图片压缩任务
+    NSArray<TTUGCImageCompressTask*> *taskImages = self.imagesCell.imagesView.selectedImageCacheTasks;
+    // 选中的图片
+    NSArray<UIImage*> *thumbImages = self.imagesCell.imagesView.selectedThumbImages;
+    
+    // 构造图片上传数据模型
+    for (int i = 0; i < [taskImages count]; i ++) {
+        TTUGCImageCompressTask* task = [taskImages objectAtIndex:i];
+        UIImage* thumbImage = nil;
+        if (thumbImages.count > i) {
+            thumbImage = thumbImages[i];
+        }
+        FRUploadImageModel * model = [[FRUploadImageModel alloc] initWithCacheTask:task thumbnail:thumbImage];
+        model.webURI = task.assetModel.imageURI;
+        model.imageOriginWidth = task.assetModel.width;
+        model.imageOriginHeight = task.assetModel.height;
+        [images addObject:model];
     }
     
     @weakify(self);
-    [FHMainApi requestHouseFeedbackAddition:params completion:^(NSError * _Nonnull error, id  _Nonnull jsonObj) {
+    [self.uploadImageManager uploadPhotos:images extParameter:@{} progressBlock:^(int expectCount, int receivedCount) {
+        // TODO: 展示进度
+        
+    } finishBlock:^(NSError *error, NSArray<FRUploadImageModel*> *finishUpLoadModels) {
+        @strongify(self);
+        NSError *finishError = nil;
+        for (FRUploadImageModel *model in finishUpLoadModels) {
+            if (isEmptyString(model.webURI)) {
+                finishError = [NSError errorWithDomain:kFRPostThreadErrorDomain code:TTPostThreadErrorCodeUploadImgError userInfo:nil];
+                break;
+            }
+        }
+        
+        if (error || finishError) {
+            [self dismissLoadingAlert];
+            //端监控
+            //图片上传失败
+            NSMutableDictionary * monitorDictionary = [NSMutableDictionary dictionary];
+            [monitorDictionary setValue:@(images.count) forKey:@"img_count"];
+            NSMutableArray * imageNetworks = [NSMutableArray arrayWithCapacity:images.count];
+            
+            for (FRUploadImageModel * imageModel in images) {
+                NSInteger status = isEmptyString(imageModel.webURI)?0:1;
+                NSInteger code = 0;
+                if (imageModel.error) {
+                    code = imageModel.error.code;
+                }
+                [imageNetworks addObject:@{@"network":@(imageModel.networkConsume)
+                                           , @"local":@(imageModel.localCompressConsume)
+                                           , @"status":@(status)
+                                           , @"code":@(code)
+                                           , @"count":@(imageModel.uploadCount)
+                                           , @"size":@(imageModel.size)
+                                           , @"gif":@(imageModel.isGIF)
+                                           }];
+            }
+            [monitorDictionary setValue:imageNetworks.copy forKey:@"img_networks"];
+            if (error) {
+                [monitorDictionary setValue:@(error.code) forKey:@"error"];
+            }
+            [[ToastManager manager] showToast:@"提交失败！"];
+        }
+        else {
+            if(completion) {
+                completion(finishUpLoadModels);
+            }
+        }
+    }];
+}
+- (void)submitAction {
+    @weakify(self);
+    [self showLoadingAlert:@"正在提交"];
+    [self uploadImagesWithCompletion:^(NSArray<FRUploadImageModel *> *uploadImageModels) {
         @strongify(self);
         
-        if(error) {
-            [[ToastManager manager] showToast:@"网络错误，请稍后重试"];
+        NSMutableArray<NSString *> *image_urls = [NSMutableArray arrayWithCapacity:uploadImageModels.count];
+        [uploadImageModels enumerateObjectsUsingBlock:^(FRUploadImageModel * _Nonnull model, NSUInteger idx, BOOL * _Nonnull stop) {
+            if (!isEmptyString(model.webURI)) {
+                [image_urls addObject:model.webURI];
+            }
+        }];
+        
+        // 提交动作
+        NSMutableDictionary *params = [NSMutableDictionary dictionary];
+        params[@"ticket_id"] = self.ticketID;
+        params[@"image_list"] = [image_urls componentsJoinedByString:@","];
+        params[@"more_info"] = self.additionCell.item.detail;
+        params[@"creator_id"] = self.creatorID;
+        
+        if(![TTReachability isNetworkConnected]) {
+            [[ToastManager manager] showToast:@"网络不给力，请重试"];
             return;
         }
         
-        // TODO: 成功后退出并弹窗引导
-        [self goBack];
+        @weakify(self);
+        [FHMainApi requestHouseFeedbackAddition:params completion:^(NSError * _Nonnull error, id  _Nonnull jsonObj) {
+            @strongify(self);
+            [self dismissLoadingAlert];
+            
+            if(error) {
+                [[ToastManager manager] showToast:@"网络错误，请稍后重试"];
+                return;
+            }
+            if(jsonObj && [jsonObj[@"status"] longValue] == 0) {
+                [self goBack];
+            }
+            else {
+                [[ToastManager manager] showToast:@"网络错误，请稍后重试"];
+                return;
+            }
+        }];
     }];
 }
 
@@ -756,5 +1021,4 @@ typedef NS_ENUM(NSUInteger, FHHouseDetailReportAdditionItemType) {
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     return  UITableViewAutomaticDimension;
 }
-
 @end

@@ -23,6 +23,8 @@
 #import "FHEnvContext.h"
 #import "FHGeneralBizConfig.h"
 #import "UIViewController+HUD.h"
+#import "FHHouseDetailReportAddtionViewController.h"
+#import "FHIMConfigManager.h"
 
 typedef NS_ENUM(NSUInteger, FHHouseDetailReportItemType) {
     FHHouseDetailReportItemType_Type,
@@ -281,11 +283,9 @@ typedef NS_ENUM(NSUInteger, FHHouseDetailReportItemType) {
 }
 @end
 
-@interface FHHouseDetailReportPhoneNumberInvalidTextField : UITextField
-@end
 @implementation FHHouseDetailReportPhoneNumberInvalidTextField
 - (CGRect)rightViewRectForBounds:(CGRect)bounds {
-    return CGRectMake(bounds.size.width - 94, 0, 94, 40);
+    return CGRectMake(bounds.size.width - 94, (bounds.size.height - 40) /2.0, 94, 40);
 }
 @end
 
@@ -655,8 +655,14 @@ typedef NS_ENUM(NSUInteger, FHHouseDetailReportItemType) {
     self.submitButton.enabled = isEnable;
     self.submitButton.alpha = isEnable ? 1 : 0.4;
 }
-
+- (void)testGotoReportAdditionPage {
+    [FHHouseDetailReportAddtionViewController gotoReportAdditionPageWithUserInfoDict:@{
+        @"ticket_id": @"27526"
+    }];
+}
 - (void)submitAction {
+    [self testGotoReportAdditionPage];
+    return;;
     
     // 提交动作
     NSMutableDictionary *params = [NSMutableDictionary dictionary];
