@@ -281,7 +281,7 @@
         _clientShowDict = [NSMutableDictionary new];
     }
     
-    NSString *section_row = [NSString stringWithFormat:@"%i_%i",indexPath.section,indexPath.row];
+    NSString *section_row = [NSString stringWithFormat:@"%li_%li",(long)indexPath.section,(long)indexPath.row];
     if (_clientShowDict[section_row]) {
         return cell;
     }
