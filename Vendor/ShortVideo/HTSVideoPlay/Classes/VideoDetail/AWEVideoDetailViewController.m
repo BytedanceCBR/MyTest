@@ -1926,13 +1926,13 @@ static const CGFloat kFloatingViewOriginY = 230;
 
 - (void)commentCell:(AWEVideoCommentCell *)cell didClickShieldWithModel:(AWECommentModel *)commentModel
 {
-    [FHHouseUGCAPI commentShield:self.model.groupId commentId:commentModel.id.stringValue completion:^(bool success, NSError * _Nonnull error) {
-        if(success){
+//    [FHHouseUGCAPI commentShield:self.model.groupId commentId:commentModel.id.stringValue completion:^(bool success, NSError * _Nonnull error) {
+//        if(success){
             [[ToastManager manager] showToast:@"屏蔽成功"];
-        }else{
-            [[ToastManager manager] showToast:@"屏蔽失败"];
-        }
-    }];
+//        }else{
+//            [[ToastManager manager] showToast:@"屏蔽失败"];
+//        }
+//    }];
 }
 
 - (void)commentCell:(AWEVideoCommentCell *)cell didClickLikeWithModel:(AWECommentModel *)commentModel

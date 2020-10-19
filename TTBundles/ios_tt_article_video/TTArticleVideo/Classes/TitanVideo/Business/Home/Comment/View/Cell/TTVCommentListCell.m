@@ -504,13 +504,13 @@
 }
 
 - (void)shieldComment:(__unused id)sender {
-    [FHHouseUGCAPI commentShield:self.commentModel.groupModel.groupID commentId:self.commentModel.commentIDNum.stringValue completion:^(bool success, NSError * _Nonnull error) {
-        if(success){
+//    [FHHouseUGCAPI commentShield:self.commentModel.groupModel.groupID commentId:self.commentModel.commentIDNum.stringValue completion:^(bool success, NSError * _Nonnull error) {
+//        if(success){
             [[ToastManager manager] showToast:@"屏蔽成功"];
-        }else{
-            [[ToastManager manager] showToast:@"屏蔽失败"];
-        }
-    }];
+//        }else{
+//            [[ToastManager manager] showToast:@"屏蔽失败"];
+//        }
+//    }];
 }
 
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
