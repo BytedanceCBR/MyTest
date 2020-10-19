@@ -146,6 +146,8 @@
     self.houseImageView = [[UIImageView alloc] init];
     self.houseImageView.layer.cornerRadius = 10;
     self.houseImageView.layer.masksToBounds = YES;
+    self.houseImageView.layer.borderWidth = 1;
+    self.houseImageView.layer.borderColor = [UIColor themeGray6].CGColor;
     self.descriptionLabel = [[UILabel alloc] init];
     self.pricePerUnitLabel = [[UILabel alloc] init];
     self.totalPriceLabel = [[UILabel alloc] init];
